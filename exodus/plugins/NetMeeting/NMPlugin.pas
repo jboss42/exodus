@@ -26,6 +26,8 @@ type
       const XTags: WideString): WideString; safecall;
     procedure MsgMenuClick(const ID, jid: WideString; var Body,
       Subject: WideString); safecall;
+    procedure NewOutgoingIM(const jid: WideString;
+      const InstantMsg: IExodusChat); safecall;
     { Protected declarations }
   private
     _menu_id: Widestring;
@@ -161,6 +163,12 @@ end;
 
 procedure TExNetmeetingPlugin.MsgMenuClick(const ID, jid: WideString;
   var Body, Subject: WideString);
+begin
+
+end;
+
+procedure TExNetmeetingPlugin.NewOutgoingIM(const jid: WideString;
+  const InstantMsg: IExodusChat);
 begin
 
 end;

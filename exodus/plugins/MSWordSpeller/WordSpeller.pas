@@ -23,6 +23,8 @@ type
       const XTags: WideString): WideString; safecall;
     procedure MsgMenuClick(const ID, jid: WideString; var Body,
       Subject: WideString); safecall;
+    procedure NewOutgoingIM(const jid: WideString;
+      const InstantMsg: IExodusChat); safecall;
     { Protected declarations }
   private
     _exodus: IExodusController;
@@ -113,6 +115,12 @@ procedure TWordSpeller.MsgMenuClick(const ID, jid: WideString; var Body,
   Subject: WideString);
 begin
     //
+end;
+
+procedure TWordSpeller.NewOutgoingIM(const jid: WideString;
+  const InstantMsg: IExodusChat);
+begin
+
 end;
 
 initialization

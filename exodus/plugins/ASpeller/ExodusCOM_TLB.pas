@@ -12,7 +12,7 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/1/2003 1:15:33 PM from Type Library described below.
+// File generated on 3/1/2003 3:05:43 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.exe (1)
@@ -361,6 +361,7 @@ type
     procedure MenuClick(const ID: WideString); safecall;
     procedure MsgMenuClick(const ID: WideString; const jid: WideString; var Body: WideString; 
                            var Subject: WideString); safecall;
+    procedure NewOutgoingIM(const jid: WideString; const InstantMsg: IExodusChat); safecall;
   end;
 
 // *********************************************************************//
@@ -381,6 +382,7 @@ type
     procedure MenuClick(const ID: WideString); dispid 201;
     procedure MsgMenuClick(const ID: WideString; const jid: WideString; var Body: WideString; 
                            var Subject: WideString); dispid 202;
+    procedure NewOutgoingIM(const jid: WideString; const InstantMsg: IExodusChat); dispid 203;
   end;
 
 // *********************************************************************//

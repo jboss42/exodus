@@ -12,7 +12,7 @@ unit RosterTools_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 2/27/2003 7:03:25 AM from Type Library described below.
+// File generated on 3/1/2003 3:42:08 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\RosterTools\RosterTools.tlb (1)

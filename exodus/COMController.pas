@@ -126,6 +126,7 @@ type
 
     procedure fireNewChat(jid: WideString; ExodusChat: IExodusChat);
     procedure fireNewRoom(jid: Widestring; ExodusChat: IExodusChat);
+    procedure fireNewOutgoingIM(jid: Widestring; ExodusChat: IExodusChat);
     procedure fireMenuClick(Sender: TObject);
     procedure fireRosterMenuClick(Sender: TObject);
     function fireIM(Jid: Widestring; var Body: Widestring;
@@ -411,6 +412,15 @@ var
 begin
     for i := 0 to plugs.count - 1 do
         TPlugin(plugs.Objects[i]).com.NewChat(jid, ExodusChat);
+end;
+
+{---------------------------------------}
+procedure TExodusController.fireNewOutgoingIM(jid: Widestring; ExodusChat: IExodusChat);
+var
+    i: integer;
+begin
+    for i := 0 to plugs.Count - 1 do
+        TPlugin(plugs.Objects[i]).com.NewOutgoingIM(jid, ExodusChat);
 end;
 
 {---------------------------------------}

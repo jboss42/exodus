@@ -12,7 +12,7 @@ unit AIMImport_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 2/27/2003 7:03:26 AM from Type Library described below.
+// File generated on 3/1/2003 3:28:21 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\AIM-Import\AIMImport.tlb (1)

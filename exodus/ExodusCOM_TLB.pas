@@ -12,7 +12,7 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/1/2003 1:09:24 PM from Type Library described below.
+// File generated on 3/1/2003 2:36:07 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -22,6 +22,7 @@ unit ExodusCOM_TLB;
 // HelpString: Exodus COM Plugin interfaces
 // DepndLst: 
 //   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
+//   (2) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -359,6 +360,7 @@ type
     procedure MenuClick(const ID: WideString); safecall;
     procedure MsgMenuClick(const ID: WideString; const jid: WideString; var Body: WideString; 
                            var Subject: WideString); safecall;
+    procedure NewOutgoingIM(const JID: WideString; const InstantMsg: IExodusChat); safecall;
   end;
 
 // *********************************************************************//
@@ -379,6 +381,7 @@ type
     procedure MenuClick(const ID: WideString); dispid 201;
     procedure MsgMenuClick(const ID: WideString; const jid: WideString; var Body: WideString; 
                            var Subject: WideString); dispid 202;
+    procedure NewOutgoingIM(const JID: WideString; const InstantMsg: IExodusChat); dispid 203;
   end;
 
 // *********************************************************************//

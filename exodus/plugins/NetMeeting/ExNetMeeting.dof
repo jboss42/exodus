@@ -91,9 +91,9 @@ ImageBase=4194304
 ExeDescription=
 [Directories]
 OutputDir=..
-UnitOutputDir=..\..\output
+UnitOutputDir=.\output
 PackageDLLOutputDir=
-PackageDCPOutputDir=..\..\output
+PackageDCPOutputDir=.\output
 SearchPath=
 Packages=vcl;rtl;vclshlctrls
 Conditionals=
@@ -134,3 +134,15 @@ OriginalFilename=
 ProductName=
 ProductVersion=1.0.0.0
 Comments=
+[HistoryLists\hlUnitAliases]
+Count=1
+Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
+[HistoryLists\hlUnitOutputDirectory]
+Count=1
+Item0=.\output
+[HistoryLists\hlOutputDirectorry]
+Count=1
+Item0=..
+[HistoryLists\hlDCPOutput]
+Count=1
+Item0=.\output

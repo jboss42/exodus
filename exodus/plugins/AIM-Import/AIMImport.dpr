@@ -4,7 +4,6 @@ uses
   ComServ,
   AIMImport_TLB in 'AIMImport_TLB.pas',
   AIMPlugin in 'AIMPlugin.pas' {AIMImportPlugin: CoClass},
-  ExodusCOM_TLB in 'ExodusCOM_TLB.pas',
   Importer in 'Importer.pas' {frmImport},
   Unicode in '..\..\..\jopl\Unicode.pas',
   XMLAttrib in '..\..\..\jopl\XMLAttrib.pas',

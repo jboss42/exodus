@@ -6,7 +6,7 @@ interface
 
 uses
     ExodusCOM_TLB, 
-    Session, ChatController, ChatWin, Chat, Room, Unicode,
+    Session, ChatController, ChatWin, Chat, Room, MsgRecv, Unicode,
     Windows, Classes, ComObj, ActiveX, StdVcl;
 
 type
@@ -29,6 +29,7 @@ type
     constructor Create();
     destructor Destroy(); override;
 
+    procedure setIM(im: TfrmMsgRecv);
     procedure setRoom(room: TfrmRoom);
     procedure setChatSession(chat_session: TChatController);
     procedure fireMsgKeyPress(Key: Char);
@@ -40,6 +41,7 @@ type
     procedure fireClose();
 
   private
+    _im: TfrmMsgRecv;
     _room: TfrmRoom;
     _chat: TChatController;
     _plugs: TList;
@@ -88,9 +90,17 @@ begin
     inherited Destroy();
 end;
 
+procedure TExodusChat.setIM(im: TfrmMsgRecv);
+begin
+    _im := im;
+    _room := nil;
+    _chat := nil;
+end;
+
 {---------------------------------------}
 procedure TExodusChat.setChatSession(chat_session: TChatController);
 begin
+    _im   := nil;
     _room := nil;
     _chat := chat_session;
 end;
@@ -98,6 +108,7 @@ end;
 {---------------------------------------}
 procedure TExodusChat.setRoom(room: TfrmRoom);
 begin
+  _im   := nil;
   _chat := nil;
   _room := room;
 end;
@@ -174,8 +185,10 @@ end;
 {---------------------------------------}
 function TExodusChat.Get_jid: WideString;
 begin
+    Result := '';
     if (_chat <> nil) then Result := _chat.JID
-    else Result := _room.getJid;
+    else if (_im <> nil) then Result := _im.JID
+    else if (_room <> nil) then Result := _room.getJid;
 end;
 
 {---------------------------------------}
@@ -193,13 +206,23 @@ begin
         mi.Caption := caption;
         _room.popRoom.Items.Add(mi);
     end
-    else begin
+    else if (_chat <> nil) then begin
         mi := TMenuItem.Create(TfrmChat(_chat.window));
         mi.Name := id;
         mi.OnClick := TfrmChat(_chat.window).pluginMenuClick;
         mi.Caption := caption;
         TfrmChat(_chat.window).popContact.Items.Add(mi);
-    end;
+    end
+    else if (_im <> nil) then begin
+        mi := TMenuItem.Create(_im);
+        mi.Name := id;
+        mi.OnClick := _im.pluginMenuClick;
+        mi.Caption := caption;
+        _im.popContact.Items.Add(mi);
+    end
+    else
+        exit;
+
     _menu_items.AddObject(id, mi);
     Result := id;
 end;
@@ -219,13 +242,23 @@ begin
         mi.Caption := caption;
         _room.popOut.Items.Add(mi);
     end
-    else begin
+    else if (_chat <> nil) then begin
         mi := TMenuItem.Create(TfrmChat(_chat.window));
         mi.Name := id;
         mi.OnClick := TfrmChat(_chat.window).pluginMenuClick;
         mi.Caption := caption;
         TfrmChat(_chat.window).popOut.Items.Add(mi);
-    end;
+    end
+    else if (_im <> nil) then begin
+        mi := TMenuItem.Create(_im);
+        mi.Name := id;
+        mi.OnClick := _im.pluginMenuClick;
+        mi.Caption := caption;
+        _im.popClipboard.Items.Add(mi);
+    end
+    else
+        exit;
+
     _menu_items.AddObject(id, mi);
     Result := id;
 end;
@@ -256,8 +289,11 @@ function TExodusChat.Get_MsgOutText: WideString;
 begin
     if (_chat <> nil) then
         Result := TfrmChat(_chat.window).MsgOut.Text
-    else
-        Result := _room.MsgOut.Text;
+    else if (_room <> nil) then
+        Result := _room.MsgOut.Text
+    else if (_im <> nil) then
+        Result := _im.MsgOut.Text;
+
 end;
 
 {---------------------------------------}
@@ -292,36 +328,48 @@ function TExodusChat.getMagicInt(Part: ChatParts): Integer;
 var
     p: Pointer;
 begin
+    Result := -1;
     case Part of
     HWND_MsgInput: begin
         if (_chat <> nil) then
             Result := TfrmChat(_chat.window).MsgOut.Handle
-        else
-            Result := _room.MsgOut.Handle;
+        else if (_room <> nil) then
+            Result := _room.MsgOut.Handle
+        else if (_im <> nil) then
+            Result := _im.MsgOut.Handle
+        else exit;
     end;
     HWND_MsgOutput: begin
         if (_chat <> nil) then
             Result := TfrmChat(_chat.window).MsgList.Handle
-        else
-            Result := _room.MsgOut.Handle;
+        else if (_room <> nil) then
+            Result := _room.MsgOut.Handle
+        else if (_im <> nil) then
+            Result := _im.txtMsg.Handle
+        else exit;
     end;
     Ptr_MsgInput: begin
         if (_chat <> nil) then
             p := @(TfrmChat(_chat.window).MsgOut)
-        else
-            p := @(_room.MsgOut);
+        else if (_room <> nil) then
+            p := @(_room.MsgOut)
+        else if (_im <> nil) then
+            p := @(_im.MsgOut)
+        else exit;
         Result := integer(p);
     end;
     Ptr_MsgOutput: begin
         if (_chat <> nil) then
             p := @(TfrmChat(_chat.window).MsgList)
-        else
-            p := @(_room.MsgList);
+        else if (_room <> nil) then
+            p := @(_room.MsgList)
+        else if (_im <> nil) then
+            p := @(_im.txtMsg)
+        else exit;
         Result := integer(p);
-    end
-    else
-        Result := -1;
     end;
+    end;
+
 end;
 
 {---------------------------------------}
@@ -330,8 +378,10 @@ begin
     // add something to the RichEdit control
     if (_chat <> nil) then
         TfrmChat(_chat.window).MsgList.WideLines.Add(Value)
-    else
-        _room.MsgList.WideLines.Add(Value);
+    else if (_room <> nil) then
+        _room.MsgList.WideLines.Add(Value)
+    else if (_im <> nil) then
+        _im.txtMsg.WideLines.Add(Value);
 end;
 
 initialization

@@ -41,6 +41,8 @@ type
       const XTags: WideString): WideString; safecall;
     procedure MsgMenuClick(const ID, jid: WideString; var Body,
       Subject: WideString); safecall;
+    procedure NewOutgoingIM(const jid: WideString;
+      const InstantMsg: IExodusChat); safecall;
     { Protected declarations }
   private
     _controller: IExodusController;
@@ -155,6 +157,13 @@ end;
 {---------------------------------------}
 procedure TAIMImportPlugin.MsgMenuClick(const ID, jid: WideString;
   var Body, Subject: WideString);
+begin
+
+end;
+
+{---------------------------------------}
+procedure TAIMImportPlugin.NewOutgoingIM(const jid: WideString;
+  const InstantMsg: IExodusChat);
 begin
 
 end;
