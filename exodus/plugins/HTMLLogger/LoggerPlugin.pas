@@ -84,8 +84,8 @@ type
 {---------------------------------------}
 implementation
 uses
-    Prefs, 
-    JabberUtils, XMLUtils, Windows, IdGlobal,
+    Prefs,
+    JabberUtils, XMLUtils, Windows, IdGlobal, StrUtils, 
     Controls, ShellAPI, Dialogs, SysUtils, Classes, JabberID, ComServ;
 
 const
@@ -96,7 +96,7 @@ const
     sHistoryNone = 'No history file for this user.';
     sConfirmClearLog = 'Do you really want to clear the log for %s?';
     sConfirmClearAllLogs = 'Are you sure you want to delete all of your message and room logs?';
-    sFilesDeleted = '%d log files deleted.';
+    sFilesDeleted = 'HTML log files deleted.';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -443,30 +443,21 @@ end;
 {---------------------------------------}
 procedure THTMLLogger.purgeLogs();
 var
-    fn: string;
-    sr: TSearchRec;
-    count: integer;
+    cmd, fn: string;
 begin
     if (MessageDlgW(sConfirmClearAllLogs,
                    mtConfirmation, [mbOK,mbCancel], 0) = mrCancel) then
         exit;
 
     fn := _path;
-    if (Copy(fn, length(fn), 1) <> '\') then
+    if (AnsiRightStr(fn, 1) <> '\') then
         fn := fn + '\';
 
-    count := 0;
-
     // bleh.  FindClose is both a SysUtils thing and a Win32 thing.
-    if SysUtils.FindFirst(fn + '*.html', 0, sr) = 0 then begin
-        repeat
-            SysUtils.DeleteFile(PChar(fn + sr.Name));
-            count := count + 1;
-        until SysUtils.FindNext(sr) <> 0;
-        SysUtils.FindClose(sr);
-    end;
+    cmd := 'del ' + fn + '*.html';
+    ShellExecute(0, PChar(cmd), nil, nil, nil, SW_HIDE);
 
-    MessageDlgW(WideFormat(sFilesDeleted, [count]), mtInformation, [mbOK], 0);
+    MessageDlgW(sFilesDeleted, mtInformation, [mbOK], 0);
 end;
 
 initialization

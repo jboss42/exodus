@@ -12,7 +12,7 @@ unit ExHTMLLogger_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 6/14/2004 8:30:06 PM from Type Library described below.
+// File generated on 11/16/2004 9:37:01 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\HTMLLogger\ExHTMLLogger.tlb (1)
@@ -21,8 +21,8 @@ unit ExHTMLLogger_TLB;
 // Helpfile: 
 // HelpString: ExHTMLLogger Library
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
-//   (2) v1.0 ExodusCOM, (D:\src\exodus\runner\Exodus.exe)
+//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
+//   (2) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
