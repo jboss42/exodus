@@ -665,8 +665,12 @@ begin
     // Disconnect the stream and stop the thread
     _timer.Enabled := false;
     if ((_socket <> nil) and (_socket.Connected)) then begin
-        _socket.ioHandler.Close();
-        //_socket.Disconnect();
+        {$ifdef INDY9}
+        if (_ssl_int <> nil) then begin
+            _ssl_int.PassThrough := true;
+        end;
+        {$endif}
+        _socket.Disconnect();
     end;
 end;
 

@@ -59,6 +59,7 @@ type
         _id: longint;
         _cb_id: longint;
 
+        _authd: boolean;
         _first_pres: boolean;
         _avails: TWidestringlist;
 
@@ -408,8 +409,10 @@ begin
     if (_stream = nil) then exit;
 
     if (Self.Stream.Active) then begin
-        Prefs.SaveServerPrefs();
-        _stream.Send('<presence type="unavailable"/>');
+        if (_authd) then begin
+            Prefs.SaveServerPrefs();
+            _stream.Send('<presence type="unavailable"/>');
+        end;
         _stream.Disconnect;
     end
     else
@@ -451,6 +454,7 @@ procedure TJabberSession.handleDisconnect();
 begin
     // Clear the roster, ppdb and fire the callbacks
     _first_pres := false;
+    _authd := false;
     _dispatcher.DispatchSignal('/session/disconnected', nil);
 
     if (_paused) then
@@ -918,6 +922,7 @@ var
 begin
     // our auth-agent is all set
     if (ok) then begin
+        _authd := true;
         _first_pres := true;
         _dispatcher.DispatchSignal('/session/authenticated', tag);
         cur_agents := TAgents.Create();

@@ -444,7 +444,6 @@ begin
                     try
                         sig(event, tag);
                     except
-
                     end;
                 end;
             end
