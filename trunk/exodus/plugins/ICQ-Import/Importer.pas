@@ -153,6 +153,12 @@ begin
         icqDB.DatFile := fn + '.dat';
     end;
 
+    if (not FileExists(icqDB.DatFile)) then begin
+        MessageDlg('The DAT file you specified does not exist.',
+            mtError, [mbOK], 0);
+        exit;
+    end;
+
     btnNext.Enabled := false;
     icqDB.StartParsing();
 end;
