@@ -100,11 +100,13 @@ object frmAdd: TfrmAdd
     TabOrder = 3
     inherited Panel2: TPanel
       Width = 251
+      Height = 34
       inherited Bevel1: TBevel
         Width = 251
       end
       inherited Panel1: TPanel
         Left = 91
+        Height = 29
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end

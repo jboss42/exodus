@@ -77,6 +77,7 @@ type
     pnlNodeID: TTntPanel;
     cboNode: TTntComboBox;
     mAddContact: TTntMenuItem;
+    mRunCommand: TTntMenuItem;
     procedure btnGoClick(Sender: TObject);
     procedure ResizeAddressBar(Sender: TObject);
     procedure cboJIDKeyPress(Sender: TObject; var Key: Char);
@@ -108,6 +109,8 @@ type
     procedure ToolButton3Click(Sender: TObject);
     procedure btnNodeClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure mRunCommandClick(Sender: TObject);
+    procedure mAddContactClick(Sender: TObject);
   private
     { Private declarations }
     _cur: integer;
@@ -154,7 +157,7 @@ function ShowBrowser(jid: string = ''): TfrmBrowse;
 {---------------------------------------}
 implementation
 uses
-    EntityCache, GnuGetText,
+    EntityCache, GnuGetText, CommandWizard, 
     JabberConst, JoinRoom, Room, Roster, JabberID, Bookmark,
     JabberUtils, ExUtils,  Session, JUD, Profile, RegForm, Jabber1;
 
@@ -892,6 +895,37 @@ begin
   inherited;
     _blist.Clear();
     vwBrowse.Items.Count := 0;
+end;
+
+{---------------------------------------}
+procedure TfrmBrowse.mRunCommandClick(Sender: TObject);
+var
+    cjid: Widestring;
+    itm: TTntListItem;
+begin
+  inherited;
+    cjid := '';
+    itm := vwBrowse.Selected;
+    if (itm = nil) then exit;
+
+    cjid := itm.SubItems[0];
+    StartCommandWizard(cjid);
+end;
+
+{---------------------------------------}
+procedure TfrmBrowse.mAddContactClick(Sender: TObject);
+var
+    cjid: Widestring;
+    itm: TTntListItem;
+begin
+  inherited;
+    // add this contact
+    cjid := '';
+    itm := vwBrowse.Selected;
+    if (itm = nil) then exit;
+
+    cjid := itm.SubItems[0];
+    
 end;
 
 end.
