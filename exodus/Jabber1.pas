@@ -281,6 +281,7 @@ type
     _appclosing: boolean;               // is the entire app closing
     _new_tabindex: integer;             // new tab which was just docked
     _new_account: boolean;              // is this a new account
+    _pending_passwd: Widestring;
 
     // Stuff for the Autoaway DLL
     _idle_hooks: THandle;               // handle the lib
@@ -2510,6 +2511,7 @@ begin
         Namespace := XMLNS_REGISTER;
         qTag.AddBasicTag('username', MainSession.Username);
         qTag.AddBasicTag('password', f.txtNewPassword.Text);
+        _pending_passwd := f.txtNewPassword.Text;
     end;
     f.Free();
     iq.Send();
@@ -2521,8 +2523,11 @@ begin
     if (event <> 'xml') then
         MessageDlgW(_(sPasswordError), mtError, [mbOK], 0)
     else begin
-        if (tag.GetAttribute('type') = 'result') then
-            MessageDlgW(_(sPasswordChanged), mtInformation, [mbOK], 0)
+        if (tag.GetAttribute('type') = 'result') then begin
+            MessageDlgW(_(sPasswordChanged), mtInformation, [mbOK], 0);
+            MainSession.Profile.password := _pending_passwd;
+            MainSession.Prefs.SaveProfiles();
+        end
         else
             MessageDlgW(_(sPasswordError), mtError, [mbOK], 0);
     end;
