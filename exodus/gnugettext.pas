@@ -29,6 +29,7 @@ procedure TranslateProperties(AnObject: TObject);
 
 // Set language to use
 procedure UseLanguage(LanguageCode: string);
+function GetCurrentLanguage:string;
 
 
 
@@ -49,6 +50,10 @@ const
 *)
 procedure TP_Ignore(AnObject:TObject; const name:string);
 
+// Add this class to a global ignore list. This will make all
+// calls to translateproperties ignore objects of that class
+procedure TP_GlobalIgnoreClass (IgnClass:TClass);
+
 // Save all untranslated texts, that are found during program run,
 // in this file. This is for debugging only.
 procedure SaveUntranslatedMsgids(filename: string);
@@ -58,6 +63,10 @@ procedure SaveUntranslatedMsgids(filename: string);
 // loaded, this function can be used to query whether it was loaded.
 // On Linux, this function does nothing and always returns True.
 function LoadDLLifPossible (dllname:string='gnu_gettext.dll'):boolean;
+
+// Add more domains that resourcestrings can be extracted from. If a translation
+// is not found in the default domain, this domain will be searched, too.
+procedure AddDomainForResourceString (domain:string);
 
 // These functions are also from the orginal GNU gettext implementation.
 // Only use these, if you need to split up your translation into several
@@ -126,10 +135,11 @@ var
   DLLisLoaded: boolean;
   curlang: string;
   curmsgdomain: string = DefaultTextDomain;
-  curresourcestringdomain: string = DefaultTextDomain;
   savefileCS: TMultiReadExclusiveWriteSynchronizer;
   savefile: TextFile;
   savememory: TStringList;
+  TPDomainListCS:TMultiReadExclusiveWriteSynchronizer;
+  TPDomainList:TStringList;
 {$ifdef MSWINDOWS}
   domainlist: TStringList; // List of domain names. Objects are TDomain.
   pgettext: tpgettext;
@@ -164,6 +174,34 @@ type
     function autoswap32(i: cardinal): cardinal;
     function CardinalInMem(baseptr: PChar; Offset: Cardinal): Cardinal;
   end;
+
+function StripCR (s:string):string;
+var
+  i:integer;
+begin
+  Assert (sLinebreak=#13#10);
+  i:=1;
+  while i<=length(s) do begin
+    if s[i]=#13 then delete (s,i,1) else inc (i);
+  end;
+  Result:=s;
+end;
+
+function LF2LineBreak (s:string):string;
+var
+  i:integer;
+begin
+  Assert (sLinebreak=#13#10);
+  i:=1;
+  while i<=length(s) do begin
+    if (s[i]=#10) and (copy(s,i-1,1)<>#13) then begin
+      insert (#13,s,i);
+      inc (i,2);
+    end else
+      inc (i);
+  end;
+  Result:=s;
+end;
 
 function getdomain(domain: string): TDomain;
 // Retrieves the TDomain object for the specified domain.
@@ -248,15 +286,17 @@ function gettext(const szMsgId: widestring): widestring;
 begin
   {$ifdef LINUX}
   Result := utf8decode(StrPas(Libc.gettext(PChar(utf8encode(szMsgId)))));
-  {$endif}
-  {$ifdef MSWINDOWS}
-  if DLLisLoaded then
-    Result := utf8decode(StrPas(pgettext(PChar(utf8encode(szMsgId)))))
-  else
-    Result := dgettext(curmsgdomain, szMsgId);
-  {$endif}
   if Result = szMsgId then
     SaveCheck(szMsgId);
+  {$endif}
+  {$ifdef MSWINDOWS}
+  if DLLisLoaded then begin
+    Result := LF2LineBreak(utf8decode(StrPas(pgettext(PChar(utf8encode(StripCR(szMsgId)))))));
+    if Result = szMsgId then
+      SaveCheck(szMsgId);
+  end else
+    Result := dgettext(curmsgdomain, szMsgId);
+  {$endif}
 end;
 
 function _(const szMsgId: widestring): widestring;
@@ -271,9 +311,9 @@ begin
   {$endif}
   {$ifdef MSWINDOWS}
   if DLLisLoaded then 
-    Result := utf8decode(StrPas(pdgettext(PChar(szDomain), PChar(utf8encode(szMsgId)))))
+    Result := LF2LineBreak(utf8decode(StrPas(pdgettext(PChar(szDomain), PChar(utf8encode(StripCR(szMsgId)))))))
   else
-    Result := UTF8Decode(getdomain(szDomain).gettext(utf8encode(szMsgId)));
+    Result := LF2LineBreak(UTF8Decode(getdomain(szDomain).gettext(utf8encode(StripCR(szMsgId)))));
   {$endif}
   if (Result = szMsgId) and (szDomain = DefaultTextDomain) then
     SaveCheck(szMsgId);
@@ -323,7 +363,8 @@ begin
 end;
 
 var
-  TranslatePropertiesIgnoreList:TStringList;
+  TranslatePropertiesIgnoreList:TStringList; 
+  TranslatePropertiesIgnoreClasses:TList;  // Elements are of type TClass
 
 procedure TP_Ignore(AnObject:TObject; const name:string);
 begin
@@ -331,9 +372,14 @@ begin
   TranslatePropertiesIgnoreList.Add(uppercase(name));
 end;
 
+procedure TP_GlobalIgnoreClass (IgnClass:TClass);
+begin
+  TranslatePropertiesIgnoreClasses.Add(IgnClass);
+end;
+
 procedure TranslatePropertiesSub(AnObject: TObject;Name:string);
 var
-  i: integer;
+  i, k: integer;
   j, Count: integer;
   PropList: PPropList;
   PropName, UPropName: string;
@@ -351,6 +397,11 @@ var
 begin
   if (AnObject = nil) then
     Exit;
+  for j:=0 to TranslatePropertiesIgnoreClasses.Count-1 do begin
+    if AnObject.InheritsFrom(TClass(TranslatePropertiesIgnoreClasses.Items[j])) then
+      // Ignore this one
+      exit;
+  end;
   {$ifdef DELPHI5OROLDER}
   Data := GetTypeData(AnObject.Classinfo);
   Count := Data^.PropCount;
@@ -368,44 +419,57 @@ begin
         UPropName:=uppercase(PropName);
         // Ignore the name property - this should never be translated
         if (UPropName<>'NAME') and (not TranslatePropertiesIgnoreList.Find(Name+'.'+UPropName,i)) then begin
-          // Translate certain types of properties
-          case PropInfo^.PropType^.Kind of
-            tkString, tkLString, tkWString:
-              begin
-                {$ifdef DELPHI5OROLDER}
-                old := GetStrProp(AnObject, PropName);
-                {$ELSE}
-                old := GetWideStrProp(AnObject, PropName);
-                {$endif}
-                if (old <> '') and (IsWriteProp(PropInfo)) then begin
-                  ws := gettext(old);
-                  if ws <> old then begin
-                    {$ifdef DELPHI5OROLDER}
-                    SetStrProp(AnObject, PropName, ws);
-                    {$ELSE}
-                    SetWideStrProp(AnObject, PropName, ws);
-                    {$endif}
+          try
+            // Translate certain types of properties
+            case PropInfo^.PropType^.Kind of
+              tkString, tkLString, tkWString:
+                begin
+                  {$ifdef DELPHI5OROLDER}
+                  old := GetStrProp(AnObject, PropName);
+                  {$ELSE}
+                  old := GetWideStrProp(AnObject, PropName);
+                  {$endif}
+                  if (old <> '') and (IsWriteProp(PropInfo)) then begin
+                    ws := gettext(old);
+                    if ws <> old then begin
+                      {$ifdef DELPHI5OROLDER}
+                      SetStrProp(AnObject, PropName, ws);
+                      {$ELSE}
+                      SetWideStrProp(AnObject, PropName, ws);
+                      {$endif}
+                    end;
                   end;
                 end;
-              end;
-            tkClass:
-              begin
-                sl := GetObjectProp(AnObject, PropName);
-                if (sl = nil) then
-                  Continue;
-                if sl is TStrings then begin
-                  old := TStrings(sl).Text;
-                  if old <> '' then begin
-                    ws := gettext(old);
-                    if (old <> ws) then
-                      TStrings(sl).Text := ws;
-                  end
-                end else
-                if sl is TCollection then
-                  for i := 0 to TCollection(sl).Count - 1 do
-                    TranslateProperties(TCollection(sl).Items[i]);
-              end;
-            end; // case
+              tkClass:
+                begin
+                  sl := GetObjectProp(AnObject, PropName);
+                  if (sl = nil) then
+                    Continue;
+                  // Check the global class ignore list
+                  for k:=0 to TranslatePropertiesIgnoreClasses.Count-1 do begin
+                    if AnObject.InheritsFrom(TClass(TranslatePropertiesIgnoreClasses.Items[k])) then
+                      exit;
+                  end;
+                  // Check for TStrings translation
+                  if sl is TStrings then begin
+                    old := TStrings(sl).Text;
+                    if old <> '' then begin
+                      ws := gettext(old);
+                      if (old <> ws) then
+                        TStrings(sl).Text := ws;
+                    end
+                  end else
+                  // Check for TCollection
+                  if sl is TCollection then
+                    for i := 0 to TCollection(sl).Count - 1 do
+                      TranslateProperties(TCollection(sl).Items[i]);
+                end;
+              end; // case
+          except
+            { TODO -cgettext : This error message could be improved, by including the hierarchical name of the component. It is known to be triggered by TAdvStringGrid by TMS Software. }
+            on E:Exception do
+              raise Exception.Create ('Property "'+UPropName+'" of "'+Name+':'+AnObject.ClassName+'" can not be translated. Put it on the ignore list.'#13#10'Reason: '+e.Message);
+          end;
         end;  // if
       end;  // for
   finally
@@ -426,6 +490,22 @@ procedure TranslateProperties(AnObject: TObject);
 begin
   TranslatePropertiesSub (AnObject,'');
   TranslatePropertiesIgnoreList.Clear;
+end;
+
+function ResourceStringGettext (MsgId:string):string;
+var
+  i:integer;
+begin
+  TPDomainListCS.BeginRead;
+  try
+    for i:=0 to TPDomainList.Count-1 do begin
+      Result:=dgettext(TPDomainList.Strings[i], MsgId);
+      if Result<>MsgId then
+        break;
+    end;
+  finally
+    TPDomainListCS.EndRead;
+  end;
 end;
 
 {$ifdef MSWINDOWS}
@@ -583,7 +663,7 @@ begin
   end else
     Result := PChar(ResStringRec.Identifier);
   if Result <> '' then
-    Result := dgettext(curresourcestringdomain, Result);
+    Result := ResourceStringGettext(Result);
 end;
 
 procedure OverwriteProcedure(OldProcedure, NewProcedure: pointer);
@@ -643,7 +723,7 @@ begin
   else
     Result := PChar(Tab) + Tab[ResStringRec^.Identifier mod ResStringTableLen];
   if Result <> '' then
-    Result := dgettext(curresourcestringdomain, Result);
+    Result := ResourceStringGettext(Result);
 end;
 {$endif}
 
@@ -667,6 +747,11 @@ begin
   {$ifdef LINUX}
   setlocale (LC_MESSAGES, PChar(LanguageCode));
   {$endif}
+end;
+
+function GetCurrentLanguage:string;
+begin
+  Result:=curlang;
 end;
 
 {$ifdef mswindows}
@@ -921,13 +1006,27 @@ begin
   {$endif}
 end;
 
+procedure AddDomainForResourceString (domain:string);
+begin
+  TPDomainListCS.BeginWrite;
+  try
+    TPDomainList.Add (domain);
+  finally
+    TPDomainListCS.EndWrite;
+  end;
+end;
+
 initialization
   savefileCS := TMultiReadExclusiveWriteSynchronizer.Create;
+  TPDomainList:=TStringList.Create;
+  TPDomainList.Add(DefaultTextDomain);
+  TPDomainListCS:=TMultiReadExclusiveWriteSynchronizer.Create;
 {$ifdef MSWINDOWS}
   domainlist := TStringList.Create;
 {$endif}
   TranslatePropertiesIgnoreList:=TStringList.Create;
   TranslatePropertiesIgnoreList.Sorted:=True;
+  TranslatePropertiesIgnoreClasses:=TList.Create;
   SetSystemDefaults;
 
 {$ifdef MSWINDOWS}
@@ -947,6 +1046,9 @@ finalization
     FreeAndNil(savefileCS);
   end;
   FreeAndNil (TranslatePropertiesIgnoreList);
+  FreeAndNil (TranslatePropertiesIgnoreClasses);
+  FreeAndNil (TPDomainListCS);
+  FreeAndNil (TPDomainList);
 {$ifdef MSWINDOWS}
   while domainlist.Count <> 0 do begin
     domainlist.Objects[0].Free;
@@ -959,3 +1061,4 @@ finalization
 {$endif}
 
 end.
+

@@ -420,6 +420,7 @@ var
     frmExodus: TfrmExodus;
     sExodusPresence: Cardinal;
     sExodusMutex: Cardinal;
+    sShellRestart: Cardinal;
     sExodusGMHook: HHOOK;
     sExodusCWPHook: HHOOK;
 
@@ -2818,6 +2819,13 @@ begin
         ShowWindow(Handle, SW_RESTORE);
         SetForegroundWindow(Self.Handle);
     end
+    else if (m.Msg = sShellRestart) then begin
+        // the shell was restarted...
+        // reshow our tray icons
+        setupTrayIcon();
+        setTrayInfo(_tray_tip);
+        setTrayIcon(_tray_icon_idx);
+    end
     else
         inherited;
 end;
@@ -3138,5 +3146,7 @@ end;
 initialization
     sExodusPresence := RegisterWindowMessage('EXODUS_PRESENCE');
     sExodusMutex := RegisterWindowMessage('EXODUS_MESSAGE');
+    sShellRestart := RegisterWindowMessage('TaskbarCreated');
+
 end.
 
