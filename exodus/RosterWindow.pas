@@ -336,7 +336,7 @@ begin
 
     s := MainSession.Prefs.getString('brand_ad');
     if (s <> '') then begin
-        imgAd.Picture.LoadFromFile(s);
+        imgAd.Picture.LoadFromFile(ExtractFilePath(Application.EXEName) + s);
         imgAd.Visible := true;
     end;
     _adURL := MainSession.Prefs.getString('brand_ad_url');
