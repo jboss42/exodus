@@ -6,13 +6,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-03-31 20:24\n"
-"PO-Revision-Date: 2004-03-31 20:24\n"
+"POT-Creation-Date: 2004-04-01 09:15\n"
+"PO-Revision-Date: 2004-04-01 09:15\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: dxgettext 1.2 beta 2\n"
+"X-Generator: dxgettext 1.1.1\n"
 
 #. frmAbout..Caption
 #: About.dfm:8
@@ -151,7 +151,7 @@ msgstr ""
 #. frmAbout..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: About.dfm:1424
 #. frmException..frameButtons1..Panel2..Panel1..btnCancel..Caption
-#: ExTracer.dfm:48
+#: ExTracer.dfm:46
 #. frmInvalidRoster..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: InvalidRoster.dfm:42
 #. frmMsgRecv..frameButtons1..Panel2..Panel1..btnCancel..Caption
@@ -651,7 +651,7 @@ msgstr ""
 #. frmExodus..popTray..N01..Caption
 #: Jabber1.dfm:2707
 #. frmJud..PopupMenu1..N1..Caption
-#: Jud.dfm:220
+#: jud.dfm:220
 #. frmMsgRecv..popContact..N1..Caption
 #: MsgRecv.dfm:519
 #. frmMsgRecv..popContact..N2..Caption
@@ -1477,6 +1477,7 @@ msgstr ""
 #: ChatWin.pas:458
 #: ChatWin.pas:470
 #: ChatWin.pas:472
+#: ChatWin.pas:474
 msgid "Chat"
 msgstr ""
 
@@ -1947,7 +1948,7 @@ msgstr ""
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Hint
 #: Jabber1.dfm:146
 #. frmJud..PopupMenu1..popAdd..Caption
-#: Jud.dfm:212
+#: jud.dfm:212
 #. frmAdd..Caption
 #: RosterAdd.dfm:6
 #. frmRosterWindow..popActions..popAddContact..Caption
@@ -2256,7 +2257,7 @@ msgstr ""
 #. frmExodus..popTray..trayMessage..Caption
 #: Jabber1.dfm:2695
 #. frmJud..PopupMenu1..popMessage..Caption
-#: Jud.dfm:227
+#: jud.dfm:227
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
 #: subscribe.dfm:150
 msgid "Send Message"
@@ -2339,7 +2340,7 @@ msgstr ""
 #. frmJoinRoom..Tabs..TabSheet2..Caption
 #: JoinRoom.dfm:148
 #. frmJud..Tabs..TabSheet2..Caption
-#: Jud.dfm:78
+#: jud.dfm:78
 #. frmRegister..Tabs..TabSheet2..Caption
 #: RegForm.dfm:60
 msgid "TabSheet2"
@@ -2373,79 +2374,79 @@ msgid "Fetch Rooms"
 msgstr ""
 
 #. frmJud..Caption
-#: Jud.dfm:5
+#: jud.dfm:5
 msgid "Jabber Search"
 msgstr ""
 
 #. frmJud..Panel1..lblWizardTitle..Caption
-#: Jud.dfm:43
+#: jud.dfm:43
 msgid "Jabber Search Wizard"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet1..lblSelect....Align
-#: Jud.dfm:64
+#: jud.dfm:64
 msgid "Select the user database or enter in the Jabber ID of the search "
 "agent to use:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet2..lblWait..Caption
-#: Jud.dfm:86
+#: jud.dfm:86
 msgid "Please wait. Contacting search agent:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..Caption
-#: Jud.dfm:100
+#: jud.dfm:100
 #. frmRegister..Tabs..TabSheet3..Caption
 #: RegForm.dfm:95
 msgid "TabSheet3"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..lblInstructions..Caption
-#: Jud.dfm:108
+#: jud.dfm:108
 msgid "Fill in the search criteria to find contacts "
 "on."
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Caption
-#: Jud.dfm:124
+#: jud.dfm:124
 #. frmRegister..Tabs..TabSheet4..Caption
 #: RegForm.dfm:115
 msgid "TabSheet4"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Label3..Caption
-#: Jud.dfm:140
+#: jud.dfm:140
 msgid "Add Contacts to this group:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Caption
-#: Jud.dfm:148
+#: jud.dfm:148
 #. frmAdd..lblAddGrp..Caption
 #: RosterAdd.dfm:49
 msgid "Add a new Group"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblCount..Caption
-#: Jud.dfm:159
+#: jud.dfm:159
 msgid "N items found"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Button1..Caption
-#: Jud.dfm:176
+#: jud.dfm:176
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: RosterRecv.dfm:38
-#: Jud.pas:641
-#: Jud.pas:643
+#: jud.pas:641
+#: jud.pas:643
 msgid "Add Contacts"
 msgstr ""
 
 #. frmJud..PopupMenu1..popProfile..Caption
-#: Jud.dfm:216
+#: jud.dfm:216
 msgid "View Profile"
 msgstr ""
 
 #. frmJud..PopupMenu1..popChat..Caption
-#: Jud.dfm:223
+#: jud.dfm:223
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:146
 #: Jabber1.pas:2293
@@ -6490,68 +6491,68 @@ msgid "Objects"
 msgstr ""
 
 #. Setup the cache'd old versions in ChangePresImage
-#: ChatWin.pas:549
+#: ChatWin.pas:552
 msgid " is replying."
 msgstr ""
 
-#: ChatWin.pas:627
+#: ChatWin.pas:630
 msgid "Chat Activity: "
 msgstr ""
 
-#: ChatWin.pas:744
+#: ChatWin.pas:747
 #. post a msg to the window and disable the text input box.
 #: Room.pas:657
 msgid "You have been disconnected."
 msgstr ""
 
 #. if this jid just got blocked, just close the window.
-#: ChatWin.pas:761
+#: ChatWin.pas:764
 msgid "This user is now blocked."
 msgstr ""
 
 #. Change the bulb
-#: ChatWin.pas:783
+#: ChatWin.pas:786
 #. make sure the user is still connected
-#: ChatWin.pas:828
-#: ChatWin.pas:829
+#: ChatWin.pas:831
+#: ChatWin.pas:832
 msgid "offline"
 msgstr ""
 
-#: ChatWin.pas:785
+#: ChatWin.pas:788
 msgid "unknown"
 msgstr ""
 
-#: ChatWin.pas:787
+#: ChatWin.pas:790
 msgid "away"
 msgstr ""
 
-#: ChatWin.pas:789
+#: ChatWin.pas:792
 msgid "xa"
 msgstr ""
 
-#: ChatWin.pas:791
+#: ChatWin.pas:794
 msgid "dnd"
 msgstr ""
 
-#: ChatWin.pas:793
+#: ChatWin.pas:796
 msgid "chat"
 msgstr ""
 
-#: ChatWin.pas:843
+#: ChatWin.pas:846
 msgid "available"
 msgstr ""
 
-#: ChatWin.pas:847
-#: ChatWin.pas:849
+#: ChatWin.pas:850
+#: ChatWin.pas:852
 msgid "is now"
 msgstr ""
 
 #. check to see if we're already subscribed...
-#: ChatWin.pas:878
+#: ChatWin.pas:881
 msgid "You are already subscribed to this contact"
 msgstr ""
 
-#: ChatWin.pas:1196
+#: ChatWin.pas:1199
 msgid "This chat window is busy. Close anyways?"
 msgstr ""
 
@@ -7173,22 +7174,22 @@ msgid "You must enter a nickname"
 msgstr ""
 
 #. timeout
-#: Jud.pas:317
+#: jud.pas:317
 #. we got an iq-error back
-#: Jud.pas:323
+#: jud.pas:323
 msgid "Could not contact the search agent."
 msgstr ""
 
 #. timeout
-#: Jud.pas:425
+#: jud.pas:425
 msgid "The search timed out."
 msgstr ""
 
-#: Jud.pas:454
+#: jud.pas:454
 msgid "No Results were found."
 msgstr ""
 
-#: Jud.pas:556
+#: jud.pas:556
 msgid "%d items found."
 msgstr ""
 

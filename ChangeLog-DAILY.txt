@@ -1,35 +1,84 @@
-2004-03-18 08:23  pgmillard
+2004-04-01 09:16  pgmillard
 
 	* exodus/: default.po, version.h, version.nsi: daily build
 
-2004-03-18 07:20  pgmillard
+2004-03-31 21:44  pgmillard
 
-	* jopl/PrefFile.pas: Add in bits to check for writability before
-	  saving prefs files.
+	* exodus/branding.xml: [no log message]
 
-2004-03-17 21:41  pgmillard
+2004-03-31 21:40  pgmillard
 
-	* exodus/branding.xml: Make sure branding.xml is not some test
-	  version.
+	* exodus/branding.xml: [no log message]
 
-2004-03-17 21:36  pgmillard
+2004-03-31 20:52  pgmillard
 
-	* exodus/ExUtils.pas, exodus/GUIFactory.pas, jopl/Session.pas,
-	  jopl/StandardAuth.pas: Bug #3483, Bug #3484 - Give the user the
-	  chance to force registration with 1.0 servers. Also allow SASL
-	  auth to work after inband registration
+	* exodus/ChatWin.pas: Bug #3449 - Use full jids for captions on
+	  chat windows when all else fails.
 
-2004-03-17 21:15  pgmillard
+2004-03-31 20:31  pgmillard
 
-	* exodus/GUIFactory.pas, jopl/Session.pas: Bug #3483 - Allow
-	  StartTLS to happen before inband registration, and check for the
-	  in-band stream feature when connecting to 1.0 servers and
-	  attempting inband reg.
+	* exodus/: default.po, locale/lt/LC_MESSAGES/default.po: Fixup LT
+	  translation for duplicate entries
 
-2004-03-17 20:58  pgmillard
+2004-03-31 07:14  pgmillard
 
-	* exodus/RosterWindow.pas, exodus/SendStatus.pas,
-	  exodus/XferManager.pas, jopl/Entity.pas, jopl/EntityCache.pas:
-	  Refactor send file to use the master entity cache. Eliminates
-	  tons of whacky race conditions, and orphan'd TJabberIQ objects
+	* exodus/ExSession.pas: Bug #3513 - Check for relative path before
+	  loading the icon.
+
+2004-03-30 10:05  pgmillard
+
+	* build.pl, exodus/ExTracer.pas, exodus/default.po, exodus/xml.res,
+	  exodus/plugins/AIM-Import/ExodusCOM_TLB.pas,
+	  exodus/plugins/ASpeller/ExodusCOM_TLB.pas,
+	  exodus/plugins/ICQ-Import/ExodusCOM_TLB.pas,
+	  exodus/plugins/JabberStats/ExodusCOM_TLB.pas,
+	  exodus/plugins/NetMeeting/ExodusCOM_TLB.pas,
+	  exodus/plugins/RosterTools/ExodusCOM_TLB.pas: Tweaks to build
+	  scripts to include the JCL directory for stack tracing
+
+2004-03-30 07:39  pgmillard
+
+	* jopl/: Session.pas, XMLSocketStream.pas: Bug #3562 - Fixup
+	  various AV's during connection/disconnection. Setup the active
+	  bit correctly.
+
+2004-03-30 07:19  pgmillard
+
+	* exodus/: ExTracer.pas, Jabber1.pas: Bug #3562 - Fixup various
+	  AV's during connection/disconnection. Setup the active bit
+	  correctly.
+
+2004-03-30 07:07  pgmillard
+
+	* exodus/MsgQueue.pas: Bug #3553 - Add some gaurds against write
+	  errors when saving the msg queue.
+
+2004-03-29 09:19  rimas
+
+	* exodus/locale/lt/LC_MESSAGES/default.po: The translation is now
+	  synchronized to v1.104 of the main default.po
+
+2004-03-29 07:15  pgmillard
+
+	* exodus/ExTracer.pas, jopl/Session.pas: Fixup exception tracking
+	  to ignore a few more exceptions related to Indy sockets.
+
+2004-03-29 06:54  pgmillard
+
+	* exodus/exodus-new.nsi: Fixup new installer script to include MAP
+	  file for daily build installers.
+
+2004-03-28 18:24  pgmillard
+
+	* build.pl, exodus/ExResponders.pas, exodus/ExTracer.pas,
+	  exodus/Exodus.dof, exodus/ExodusCOM_TLB.pas, exodus/Jabber1.pas,
+	  exodus/Register.pas, exodus/exodus.nsi: Bug #3527 - Fix RegProxy
+	  removal. Modify build script to build a detailed MAP file, and
+	  build w/ TRACE_EXCEPTIONS when building daily builds. Modify the
+	  installer script to install the MAP file.
+
+2004-03-21 22:19  llong
+
+	* exodus/locale/pt_PT/LC_MESSAGES/default.po: Translated the new
+	  strings to synchronize with version 1.104 of the main default.po
 
