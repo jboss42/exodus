@@ -46,7 +46,8 @@ implementation
 {---------------------------------------}
 constructor TJabberResponder.Create(Session: TJabberSession; namespace: string);
 begin
-    inherited Create;
+    inherited Create();
+
     _cb := Session.RegisterCallback(iqCallback, '/packet/iq[@type="get"]/query[@xmlns="' + namespace + '"]');
     _session := Session;
 end;
@@ -55,7 +56,6 @@ end;
 destructor TJabberResponder.Destroy;
 begin
     _session.UnRegisterCallback(_cb);
-
     inherited Destroy;
 end;
 

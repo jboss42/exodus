@@ -960,7 +960,11 @@ begin
         mnu.ImageIndex := imidx;
 
         trayCustom.Add(mnu);
+        cp.Free();
         end;
+
+    plist.Clear();
+    plist.Free();
 end;
 
 {---------------------------------------}
@@ -1117,9 +1121,22 @@ procedure TExodus.FormCloseQuery(Sender: TObject;
 begin
     // Unregister callbacks, etc.
 
+    if (MainSession.Stream.Active) then begin
+        MainSession.Stream.Disconnect();
+        _event := next_Exit;
+        CanClose := false;
+        exit;
+        end;
+
     MainSession.UnRegisterCallback(_sessioncb);
     MainSession.UnRegisterCallback(_msgcb);
     MainSession.UnRegisterCallback(_iqcb);
+
+    // Free the responders
+    _version.Free();
+    _time.Free();
+    _last.Free();
+    _browse.Free();
 
     if (_hookLib <> 0) then begin
         dec(_lpHookRec^.InstanceCount);
@@ -1135,15 +1152,16 @@ begin
     if MainSession <> nil then begin
         _event := next_Exit;
         if frmDebug <> nil then
-            frmDebug.Free;
-        frmRosterWindow.Free;
+            frmDebug.Close;
+        frmRosterWindow.ClearNodes();
+        frmRosterWindow.Close;
         ChatWin.CloseAllChats();
 
         _notify.Free();
         _guiBuilder.Free();
         _regController.Free();
 
-        MainSession.Free;
+        MainSession.Free();
         MainSession := nil;
         end;
 

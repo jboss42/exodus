@@ -73,8 +73,8 @@ type
         _ssl_int: TIdConnectionInterceptOpenSSL;
         _thread: TDataThread;
         _timer: TTimer;
-        _callbacks: TList;
-        _sock_callbacks: TList;
+        _callbacks: TObjectList;
+        _sock_callbacks: TObjectList;
         _Server: string;
         _port: integer;
         _active: boolean;
@@ -193,11 +193,18 @@ begin
         _Data := 'Reader socket terminated.';
         doMessage(WM_DROPPED);
         end;
+
+    _indata.Free();
+    _tag_parser.Free();
+    _lock.Free();
+    _domStack.Free();
 end;
 
 {---------------------------------------}
 procedure TDataThread.doMessage(msg: integer);
 begin
+    if (_stream = nil) then exit;
+
     _cur_msg.msg := WM_JABBER;
     _cur_msg.lparam := msg;
 
@@ -243,7 +250,9 @@ begin
         end
     else begin
         // Read in the current buffer, yadda.
-        if not _Socket.Connected then begin
+        if (_socket = nil) then
+            Self.Terminate
+        else if not _Socket.Connected then begin
             doMessage(WM_DISCONNECTED);
             Self.Terminate;
             end
@@ -524,38 +533,54 @@ begin
 
     Also create the socket here, and setup the callback lists.
     }
+    inherited Create();
+
     _ssl_int := TIdConnectionInterceptOpenSSL.Create(nil);
     with _ssl_int do begin
         SSLOptions.CertFile := '';
         SSLOptions.RootCertFile := '';
         end;
-    _Socket := TIdTCPClient.Create(nil);
-    _Socket.Intercept := _ssl_int;
-    _Socket.InterceptEnabled := false;
+    _socket := TIdTCPClient.Create(nil);
+    _socket.Intercept := _ssl_int;
+    _socket.InterceptEnabled := false;
+    _socket.RecvBufferSize := 4096;
 
     _root_tag := root;
-    _callbacks := TList.Create;
-    _sock_callbacks := TList.Create;
+    _callbacks := TObjectList.Create;
+    _sock_callbacks := TObjectList.Create;
     _active := false;
+
     _timer := TTimer.Create(nil);
     _timer.Interval := 60000;
     _timer.Enabled := false;
     _timer.OnTimer := KeepAlive;
-
-
-    _socket.RecvBufferSize := 4096;
 end;
 
 {---------------------------------------}
 destructor TXMLStream.Destroy;
 begin
     // free all our objects and free the window handle
-    if _thread <> nil then
-        _thread.Terminate;
+    {
+    if (_socket.Connected) then
+        _socket.DisconnectSocket();
+    }
 
-    // _socket.Free;
+    _callbacks.Clear();
+    _sock_callbacks.Clear();
+
+    if _thread <> nil then begin
+        _thread._stream := nil;
+        _thread.Terminate;
+        end;
+
+    _Socket.Free();
+    _ssl_int.Free();
+    _timer.Free();
+
     _callbacks.Free;
     _sock_callbacks.Free;
+
+    inherited Destroy;
 end;
 
 {---------------------------------------}

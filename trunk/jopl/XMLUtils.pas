@@ -36,6 +36,7 @@ function NameMatch(s1, s2: string): boolean;
 function Sha1Hash(fkey: string): string;
 function MungeName(str: string): string;
 function SafeInt(str: string): integer;
+procedure ClearStringListObjects(sl: TStringList);
 
 {---------------------------------------}
 {---------------------------------------}
@@ -226,6 +227,19 @@ begin
     except
         Result := 0;
     end;
+end;
+
+procedure ClearStringListObjects(sl: TStringList);
+var
+    i: integer;
+    o: TObject;
+begin
+    //
+    for i := 0 to sl.Count - 1 do begin
+        o := TObject(sl.Objects[i]);
+        if (o <> nil) then
+            o.Free();
+        end;
 end;
 
 

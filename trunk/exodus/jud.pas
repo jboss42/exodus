@@ -264,6 +264,7 @@ begin
                     end;
                 end;
             end;
+        fields.Free();
         if (cur_frame <> nil) then
             cur_frame.txtData.SetFocus();
         end;
@@ -336,6 +337,8 @@ begin
             col.Width := ColumnTextWidth;
             end;
 
+        cols.Free();
+
         // populate the listview.
         for i := 0 to items.count - 1 do begin
             cur := items[i];
@@ -344,6 +347,7 @@ begin
             cols := cur.ChildTags();
             for c := 0 to cols.count - 1 do
                 item.SubItems.Add(cols[c].Data);
+            cols.Free();
             end;
 
         lstContacts.Items.EndUpdate();

@@ -166,6 +166,8 @@ begin
     if f.TabSheet <> nil then
         frmJabber.Tabs.ActivePage := f.TabSheet;
 
+    tmp_jid.Free();
+
     Result := f;
 end;
 
@@ -197,6 +199,7 @@ begin
             Msg.Nick := tmp_jid.resource
         else
             Msg.Nick := '';
+        tmp_jid.Free();
         Msg.IsMe := false;
         end
     else begin
@@ -596,6 +599,7 @@ begin
         if (rm.Nick = sel_nick) then begin
             tmp_jid := TJabberID.Create(rm.jid);
             StartChat(tmp_jid.jid, tmp_jid.resource, true, sel_nick);
+            tmp_jid.Free();
             end;
         end;
 end;

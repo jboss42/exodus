@@ -77,7 +77,6 @@ type
     TJabberRoster = class(TStringList)
     private
         _js: TObject;
-        _callbacks: TList;
         procedure ParseFullRoster(event: string; tag: TXMLTag);
         procedure Callback(event: string; tag: TXMLTag);
         procedure bmCallback(event: string; tag: TXMLTag);
@@ -137,7 +136,8 @@ uses
 constructor TJabberBookmark.Create(tag: TXMLTag);
 begin
     //
-    inherited Create;
+    inherited Create();
+
     jid := nil;
     bmName := '';
     bmType := 'conference';
@@ -154,7 +154,8 @@ end;
 {---------------------------------------}
 destructor TJabberBookmark.Destroy;
 begin
-    jid.Free;
+    if (jid <> nil) then
+        jid.Free;
     inherited Destroy;
 end;
 
@@ -176,7 +177,7 @@ end;
 {---------------------------------------}
 constructor TJabberRosterItem.Create;
 begin
-    inherited Create;
+    inherited;
 
     Groups := TStringList.Create;
     jid := TJabberID.Create('');
@@ -277,18 +278,26 @@ end;
 {---------------------------------------}
 constructor TJabberRoster.Create;
 begin
-    inherited Create;
+    inherited;
 
     GrpList := TStringList.Create;
-    _callbacks := TList.Create;
     Bookmarks := TStringList.Create;
 end;
 
 {---------------------------------------}
 destructor TJabberRoster.Destroy;
 begin
+
+    {
+    NB:
+    The GrpList list contains group nodes in the treeview
+    The Bookmarks list contains bm nodes in the treeview.
+    We should NOT free these objects since they will be free'd
+    when the window shuts down.
+    }
+
     GrpList.Free;
-    _callbacks.Free;
+    Bookmarks.Free;
 
     inherited Destroy;
 end;
@@ -297,11 +306,13 @@ end;
 procedure TJabberRoster.Clear;
 begin
     // Free all the roster items.
-    while Count > 0 do begin
-        TJabberRosterItem(Objects[Count - 1]).Free;
-        Delete(Count - 1);
-        end;
+    ClearStringListObjects(Bookmarks);
+    ClearStringListObjects(GrpList);
+    ClearStringListObjects(Self);
+    Bookmarks.Clear;
     GrpList.Clear;
+
+    inherited Clear();
 end;
 
 {---------------------------------------}
@@ -389,6 +400,7 @@ begin
                 checkGroup('Bookmarks');
                 s.FireEvent('/roster/bookmark', bms[i], TJabberRosterItem(nil));
                 end;
+            bms.Free();
             end;
         end;
 end;
@@ -591,7 +603,7 @@ constructor TRosterAddItem.Create(sjid, nickname, group: string; subscribe: bool
 var
     iq: TJabberIQ;
 begin
-    inherited Create;
+    inherited Create();
 
     jid := sjid;
     nick := nickname;

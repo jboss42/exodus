@@ -21,16 +21,16 @@ unit ExEvents;
 
 interface
 uses
-    XMLTag, 
+    XMLTag,
     Types, SysUtils, Classes;
 
 type
     TJabberEventType = (
-        evt_None, 
+        evt_None,
         evt_Message,
-        evt_Invite, 
+        evt_Invite,
         evt_Presence,
-        evt_OOB, 
+        evt_OOB,
         evt_Version,
         evt_Time,
         evt_Last);
@@ -98,7 +98,8 @@ end;
 {---------------------------------------}
 constructor TJabberEvent.create;
 begin
-    inherited Create;
+    inherited;
+
     _data_list := TStringList.Create;
     delayed := false;
     edate := Now();
@@ -140,6 +141,7 @@ begin
                     data_type := tmp_tag.GetAttribute('jid');
                 end
             end;
+        c_tags.Free();
 
         from := tag.getAttribute('from');
         id := tag.getAttribute('id');

@@ -102,6 +102,7 @@ begin
                     cboGroup.ItemIndex := cboGroup.Items.IndexOf(ri.Groups[0]);
                 end;
             end;
+        tmp_jid.Free();
         sub.Show;
         end;
 

@@ -71,8 +71,8 @@ uses
 {---------------------------------------}
 Constructor TSubController.Create;
 begin
-    inherited Create;
-
+    inherited;
+    
     _sub    := MainSession.RegisterCallback(Subscribe, '/packet/presence[@type="subscribe"]');
     _subd   := MainSession.RegisterCallback(Subscribed, '/packet/presence[@type="subscribed"]');
     _unsub  := MainSession.RegisterCallback(UnSubscribe, '/packet/presence[@type="unsubscribe"]');

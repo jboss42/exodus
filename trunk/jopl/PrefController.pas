@@ -100,6 +100,7 @@ type
         procedure ServerPrefsCallback(event: string; tag: TXMLTag);
     public
         constructor Create(filename: string);
+        Destructor Destroy; override;
 
         function getString(pkey: string; server_side: boolean = false): string;
         function getInt(pkey: string; server_side: boolean = false): integer;
@@ -244,25 +245,39 @@ end;
 {---------------------------------------}
 constructor TPrefController.Create(filename: string);
 begin
-    inherited Create;
+    inherited Create();
 
     _pref_filename := filename;
     _parser := TXMLTagParser.Create;
     _parser.ParseFile(_pref_filename);
-
     if (_parser.Count > 0) then begin
         // we have something to read.. hopefully it's correct :)
         _pref_node := _parser.popTag();
         end
     else
+        // create some default node
         _pref_node := TXMLTag.Create('exodus');
-
     _server_node := nil;
     _server_dirty := false;
-
     _profiles := TStringList.Create;
-
     getDefaultPos();
+end;
+
+{---------------------------------------}
+destructor TPrefController.Destroy;
+begin
+    // Kill our cache'd nodes, etc.
+    if (_pref_node <> nil) then
+        _pref_node.Free();
+    if (_server_node <> nil) then
+        _server_node.Free();
+    _parser.Free();
+    ClearStringListObjects(_profiles);
+
+    _profiles.Free();
+
+    inherited Destroy;
+
 end;
 
 {---------------------------------------}
@@ -273,6 +288,7 @@ begin
     fs := TStringList.Create;
     fs.Text := _pref_node.xml;
     fs.SaveToFile(_pref_filename);
+    fs.Free();
 end;
 
 {---------------------------------------}
@@ -544,6 +560,7 @@ begin
         cp.Parse(ptags[i]);
         Result.Add(cp);
         end;
+    ptags.Free();
 end;
 
 {---------------------------------------}

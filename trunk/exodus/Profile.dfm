@@ -1135,6 +1135,7 @@ object frmProfile: TfrmProfile
     end
     inherited Panel1: TPanel
       Left = 291
+      Height = 29
       inherited btnOK: TButton
         OnClick = frameButtons1btnOKClick
       end

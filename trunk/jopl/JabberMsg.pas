@@ -77,7 +77,7 @@ implementation
 
 constructor TJabberMessage.Create;
 begin
-    inherited Create;
+    inherited;
 
     _toJID := '';
     _fromJID := '';
@@ -97,7 +97,7 @@ var
     t: TXMLTag;
 begin
     // create a msg object based on the msg tag
-    inherited Create;
+    Create();
 
     with mTag do begin
         _id := GetAttribute('id');
@@ -126,9 +126,9 @@ end;
 {---------------------------------------}
 constructor TJabberMessage.Create(cToJID, cMsgType, cBody, cSubject : string);
 begin
-    inherited create;
-
     //initialize variables for now
+    Create();
+
     _toJID := cToJid;
     _thread := '';
     _nick := '';

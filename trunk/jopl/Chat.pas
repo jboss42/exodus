@@ -69,7 +69,7 @@ uses
 {---------------------------------------}
 constructor TJabberChat.Create;
 begin
-    inherited Create;
+    inherited;
 
     jid := TJabberID.Create('');
 end;
@@ -87,6 +87,7 @@ end;
 {---------------------------------------}
 constructor TJabberChatList.Create;
 begin
+    inherited;
 end;
 
 {---------------------------------------}
@@ -112,8 +113,12 @@ begin
     if (Self.indexOf(fjid) < 0) then begin
         // Create a new session
         tmp_jid := TJabberID.Create(fjid);
-        if (Self.indexOf(tmp_jid.jid) >= 0) then exit;
+        if (Self.indexOf(tmp_jid.jid) >= 0) then begin
+            tmp_jid.Free();
+            exit;
+            end;
 
+        tmp_jid.Free();
         if MainSession.IsPaused then
             MainSession.QueueEvent(event, tag, Self.MsgCallback)
         else
@@ -156,6 +161,7 @@ begin
     // Create a new chat session for this jid + resource
     tmp_jid := TJabberID.Create(sjid);
     tmps := tmp_jid.jid;
+    tmp_jid.Free();
     if sresource <> '' then
         tmps := tmps + '/' + sresource;
 
