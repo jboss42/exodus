@@ -357,7 +357,7 @@ var
 begin
     // callback from the session
     if event = '/roster/start' then begin
-        frmExodus.tabs.ActivePage := frmExodus.tbsMsg;
+        frmExodus.tabs.ActivePage := frmExodus.tbsRoster;
         _FullRoster := true;
         treeRoster.Items.BeginUpdate;
         // Don't clear the nodes here so mod_groups works ok..

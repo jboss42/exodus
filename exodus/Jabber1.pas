@@ -57,7 +57,7 @@ type
 type
   TfrmExodus = class(TForm)
     Tabs: TPageControl;
-    tbsMsg: TTabSheet;
+    tbsRoster: TTabSheet;
     pnlRoster: TPanel;
     MainMenu1: TMainMenu;
     WInJab1: TMenuItem;
@@ -800,7 +800,7 @@ begin
     _last := TLastResponder.Create(MainSession);
     _browse := TBrowseResponder.Create(MainSession);
 
-    Tabs.ActivePage := tbsMsg;
+    Tabs.ActivePage := tbsRoster;
     restoreToolbar();
 
     exp := MainSession.Prefs.getBool('expanded');
@@ -1015,7 +1015,7 @@ begin
             p.Status := 'available';
 
         SendTag(p);
-        Tabs.ActivePage := tbsMsg;
+        Tabs.ActivePage := tbsRoster;
         restoreMenus(true);
         timAutoAway.Enabled := true;
         end
@@ -1059,7 +1059,7 @@ begin
         restoreAlpha();
         restoreEvents(MainSession.Prefs.getBool('expanded'));
         if not MainSession.Prefs.getBool('expanded') then
-            tbsMsg.TabVisible := false;
+            tbsRoster.TabVisible := false;
         end
 
     else if (event = '/session/presence') then begin
@@ -1458,7 +1458,7 @@ begin
     // either expand or compress the whole thing
     newval := not MainSession.Prefs.getBool('expanded');
     mnuExpanded.Checked := newval;
-    delta := Self.ClientWidth - tbsMsg.Width + Splitter1.Width;
+    delta := Self.ClientWidth - tbsRoster.Width + Splitter1.Width;
 
     if newval then begin
         // we are expanded now
@@ -1522,7 +1522,7 @@ begin
             pnlRoster.Width := ew;
             pnlRight.Visible := true;
             pnlRight.Width := w;
-            tbsMsg.TabVisible := true;
+            tbsRoster.TabVisible := true;
 
             // make sure the MsgQueue window is docked
             if (frmMsgQueue <> nil) then begin
@@ -1539,10 +1539,10 @@ begin
         else begin
             w := pnlRight.Width;
             setInt('event_width', w);
-            tbsMsg.TabVisible := false;
+            tbsRoster.TabVisible := false;
             //tbsDebug.TabVisible := false;
             Tabs.Docksite := false;
-            Tabs.ActivePage := tbsMsg;
+            Tabs.ActivePage := tbsRoster;
             pnlRoster.align := alClient;
 
             FloatDebugForm();
@@ -2153,7 +2153,16 @@ var
   p          : TPoint;
   Node       : TTreeNode;
   ri         : TJabberRosterItem;
+  f          : TForm;
 begin
+    if ((MainSession.Prefs.getBool('expanded')) and
+        (Tabs.ActivePage <> tbsRoster)) then begin
+        f := getTabForm(Tabs.ActivePage);
+         if (f is TfrmChat) then begin
+            TfrmChat(f).AcceptFiles(msg);
+            end;
+        exit;
+        end;
     // figure out which node was the drop site.
     if (DragQueryPoint(msg.Drop, p) = false) then exit;
 

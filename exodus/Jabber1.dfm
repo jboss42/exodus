@@ -30,7 +30,7 @@ object frmExodus: TfrmExodus
     Top = 30
     Width = 449
     Height = 194
-    ActivePage = tbsMsg
+    ActivePage = tbsRoster
     Align = alClient
     DockSite = True
     PopupMenu = popTabs
@@ -39,7 +39,7 @@ object frmExodus: TfrmExodus
     OnDockDrop = TabsDockDrop
     OnMouseDown = TabsMouseDown
     OnUnDock = TabsUnDock
-    object tbsMsg: TTabSheet
+    object tbsRoster: TTabSheet
       Caption = 'Messenger'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
