@@ -662,6 +662,12 @@ var
 begin
     // Send the actual message out
     txt := getInputText(MsgOut);
+    if (txt = '/clear') then begin
+      Clear1Click(self);
+      MsgOut.Clear();
+      exit;
+    end;
+
     _sendMsg(txt);
 
     inherited;
