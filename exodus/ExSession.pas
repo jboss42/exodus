@@ -22,7 +22,7 @@ unit ExSession;
 interface
 uses
     // Exodus'y stuff
-    COMController, COMRoster, COMPPDB,
+    COMController, COMRoster, COMPPDB, JabberID,
     Unicode, Signals, XMLTag, Session, GUIFactory, Register, Notify,
     S10n, FileServer,
 
@@ -43,6 +43,9 @@ type
 
 procedure PlayXMPPActions();
 procedure ClearXMPPActions();
+procedure ParseXMPPFile(filename: string; var connect_node: TXMLTag;
+    var jid: TJabberID);
+
 
 // forward declares
 {---------------------------------------}
@@ -92,7 +95,7 @@ implementation
 uses
     ActnList, Graphics, ExtCtrls, ExRichEdit,
     Controls, GnuGetText, ConnDetails, IdWinsock2,
-    ChatWin, GetOpt, Jabber1, JabberID, PrefController, StandardAuth,
+    ChatWin, GetOpt, Jabber1, PrefController, StandardAuth,
     PrefNotify, Room, RosterAdd, MsgRecv, Profile, RegForm,
     ExResponders, MsgDisplay,
     XMLParser, XMLUtils;
@@ -129,13 +132,9 @@ var
     auth: TStandardAuth;
 
     // stuff for .xmpp
-    parser: TXMLTagParser;
-    xmpp_node: TXMLTag;
     connect_node: TXMLTag;
     auth_node: TXMLTag;
     node: TXMLTag;
-    xmpp_children: TXMLTagList;
-    i: integer;
 
     ws2: THandle;
 
@@ -312,31 +311,9 @@ begin
         if (xmpp_file <> '') then begin
             if (not FileExists(xmpp_file)) then
                 MessageDlg('NO file:' + xmpp_file, mtWarning, [mbOK], 0);
-            parser := TXMLTagParser.Create;
-            parser.ParseFile(xmpp_file);
-
-            if (parser.Count > 0) then begin
-                xmpp_node := parser.popTag();
-
-                ClearXMPPActions();
-                xmpp_children := xmpp_node.ChildTags;
-                for i := 0 to xmpp_children.Count - 1 do begin
-                    node := xmpp_children.Tags[i];
-                    if (node.Name = 'delete') then
-                        SysUtils.DeleteFile(xmpp_file)  // ignore return, on purpose.
-                    else if (node.Name = 'connect') then begin
-                        connect_node := TXMLTag.Create(node);
-                        jid := TJabberID.Create(connect_node.GetBasicText('host'));
-                    end
-                    else
-                        _xmpp_action_list.Add(TXMLTag.Create(node));
-                end;
-                xmpp_children.Free();
-                xmpp_node.Free();
-            end
-            else
-              MessageDlg('Bad file:' + xmpp_file, mtWarning, [mbOK], 0);
-            parser.Free();
+            connect_node := nil;
+            jid := nil;
+            ParseXMPPFile(xmpp_file, connect_node, jid);
         end;
 
         // if a profile name was specified, use it.
@@ -484,6 +461,43 @@ begin
     ExStartup.status := cli_status;
 
     Result := true;
+
+end;
+
+procedure ParseXMPPFile(filename: string; var connect_node: TXMLTag;
+    var jid: TJabberID);
+var
+    parser: TXMLTagParser;
+    xmpp_children: TXMLTagList;
+    xmpp_node, node: TXMLTag;
+    i: integer;
+begin
+    if (not FileExists(filename)) then exit;
+
+    parser := TXMLTagParser.Create;
+    parser.ParseFile(filename);
+
+    if (parser.Count > 0) then begin
+        xmpp_node := parser.popTag();
+
+        ClearXMPPActions();
+        xmpp_children := xmpp_node.ChildTags;
+        for i := 0 to xmpp_children.Count - 1 do begin
+            node := xmpp_children.Tags[i];
+            if (node.Name = 'delete') then
+                SysUtils.DeleteFile(filename)  // ignore return, on purpose.
+            else if (node.Name = 'connect') then begin
+                connect_node := TXMLTag.Create(node);
+                jid := TJabberID.Create(connect_node.GetBasicText('host'));
+            end
+            else
+                _xmpp_action_list.Add(TXMLTag.Create(node));
+        end;
+        xmpp_children.Free();
+        xmpp_node.Free();
+    end;
+
+    parser.Free();
 
 end;
 
