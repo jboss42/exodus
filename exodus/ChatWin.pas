@@ -24,7 +24,7 @@ uses
     Avatar, Chat, ChatController, JabberID, XMLTag, IQ, Unicode, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2,
-    RichEdit, TntStdCtrls, Buttons, TntMenus;
+    RichEdit, TntStdCtrls, Buttons, TntMenus, FloatingImage;
 
 type
   TfrmChat = class(TfrmBaseChat)
@@ -87,6 +87,8 @@ type
     procedure timBusyTimer(Sender: TObject);
     procedure popResourcesClick(Sender: TObject);
     procedure imgAvatarPaint(Sender: TObject);
+    procedure imgAvatarMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
   private
     { Private declarations }
     jid: widestring;        // jid of the person we are talking to
@@ -1380,6 +1382,27 @@ begin
         else
             _avatar.Draw(imgAvatar.Canvas);
     end;
+end;
+
+procedure TfrmChat.imgAvatarMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+var
+  r : TRect;
+begin
+  inherited;
+  if FloatingImage.FloatImage.Active then exit;
+
+  with FloatingImage.FloatImage do
+  begin
+    r := imgAvatar.ClientRect;
+    r.TopLeft := imgAvatar.ClientOrigin;
+    r.Right := r.Right + imgAvatar.ClientOrigin.X;
+    r.Bottom := r.Bottom + imgAvatar.ClientOrigin.Y;
+    ParentRect := r;
+    Avatar := _avatar;
+    Show();
+  end;
+
 end;
 
 end.
