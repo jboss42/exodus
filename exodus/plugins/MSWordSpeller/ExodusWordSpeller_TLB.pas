@@ -11,18 +11,18 @@ unit ExodusWordSpeller_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.4 $
-// File generated on 1/3/2003 3:47:53 PM from Type Library described below.
+// PASTLWTR : $Revision: 1.5 $
+// File generated on 1/7/2003 7:38:47 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\src\exodus\exodus\plugins\MSWordSpeller\ExodusWordSpeller.tlb (1)
+// Type Lib: C:\src\jabber\exodus\exodus\plugins\MSWordSpeller\ExodusWordSpeller.tlb (1)
 // LIBID: {ADD14710-280B-4B21-8AA5-DC33EC6B1C4B}
 // LCID: 0
 // Helpfile: 
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
-//   (2) v4.0 StdVCL, (C:\WINNT\System32\STDVCL40.DLL)
-//   (3) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
+//   (1) v2.0 stdole, (C:\WINNT\System32\Stdole2.tlb)
+//   (2) v4.0 StdVCL, (C:\WINNT\System32\stdvcl40.dll)
+//   (3) v1.0 ExodusCOM, (C:\Program Files\Exodus\Exodus.exe)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -47,110 +47,64 @@ const
 
   LIBID_ExodusWordSpeller: TGUID = '{ADD14710-280B-4B21-8AA5-DC33EC6B1C4B}';
 
-  IID_IWordSpeller: TGUID = '{402309A8-0C58-423F-B261-0694F7D8328D}';
   CLASS_WordSpeller: TGUID = '{DD794B33-096B-4B73-93F1-AD85F372B395}';
-  IID_IChatSpeller: TGUID = '{A3485E71-8423-4FFF-8FA6-B3273B406A78}';
   CLASS_ChatSpeller: TGUID = '{F3A13654-7BF1-4FE2-99BC-3ECB5B5E7B15}';
 type
-
-// *********************************************************************//
-// Forward declaration of types defined in TypeLibrary                    
-// *********************************************************************//
-  IWordSpeller = interface;
-  IWordSpellerDisp = dispinterface;
-  IChatSpeller = interface;
-  IChatSpellerDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
 // (NOTE: Here we map each CoClass to its Default Interface)              
 // *********************************************************************//
-  WordSpeller = IWordSpeller;
-  ChatSpeller = IChatSpeller;
+  WordSpeller = IExodusPlugin;
+  ChatSpeller = IExodusChatPlugin;
 
-
-// *********************************************************************//
-// Interface: IWordSpeller
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {402309A8-0C58-423F-B261-0694F7D8328D}
-// *********************************************************************//
-  IWordSpeller = interface(IDispatch)
-    ['{402309A8-0C58-423F-B261-0694F7D8328D}']
-  end;
-
-// *********************************************************************//
-// DispIntf:  IWordSpellerDisp
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {402309A8-0C58-423F-B261-0694F7D8328D}
-// *********************************************************************//
-  IWordSpellerDisp = dispinterface
-    ['{402309A8-0C58-423F-B261-0694F7D8328D}']
-  end;
-
-// *********************************************************************//
-// Interface: IChatSpeller
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {A3485E71-8423-4FFF-8FA6-B3273B406A78}
-// *********************************************************************//
-  IChatSpeller = interface(IDispatch)
-    ['{A3485E71-8423-4FFF-8FA6-B3273B406A78}']
-  end;
-
-// *********************************************************************//
-// DispIntf:  IChatSpellerDisp
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {A3485E71-8423-4FFF-8FA6-B3273B406A78}
-// *********************************************************************//
-  IChatSpellerDisp = dispinterface
-    ['{A3485E71-8423-4FFF-8FA6-B3273B406A78}']
-  end;
 
 // *********************************************************************//
 // The Class CoWordSpeller provides a Create and CreateRemote method to          
-// create instances of the default interface IWordSpeller exposed by              
+// create instances of the default interface IExodusPlugin exposed by              
 // the CoClass WordSpeller. The functions are intended to be used by             
 // clients wishing to automate the CoClass objects exposed by the         
 // server of this typelibrary.                                            
 // *********************************************************************//
   CoWordSpeller = class
-    class function Create: IWordSpeller;
-    class function CreateRemote(const MachineName: string): IWordSpeller;
+    class function Create: IExodusPlugin;
+    class function CreateRemote(const MachineName: string): IExodusPlugin;
   end;
 
 // *********************************************************************//
 // The Class CoChatSpeller provides a Create and CreateRemote method to          
-// create instances of the default interface IChatSpeller exposed by              
+// create instances of the default interface IExodusChatPlugin exposed by              
 // the CoClass ChatSpeller. The functions are intended to be used by             
 // clients wishing to automate the CoClass objects exposed by the         
 // server of this typelibrary.                                            
 // *********************************************************************//
   CoChatSpeller = class
-    class function Create: IChatSpeller;
-    class function CreateRemote(const MachineName: string): IChatSpeller;
+    class function Create: IExodusChatPlugin;
+    class function CreateRemote(const MachineName: string): IExodusChatPlugin;
   end;
 
 implementation
 
 uses ComObj;
 
-class function CoWordSpeller.Create: IWordSpeller;
+class function CoWordSpeller.Create: IExodusPlugin;
 begin
-  Result := CreateComObject(CLASS_WordSpeller) as IWordSpeller;
+  Result := CreateComObject(CLASS_WordSpeller) as IExodusPlugin;
 end;
 
-class function CoWordSpeller.CreateRemote(const MachineName: string): IWordSpeller;
+class function CoWordSpeller.CreateRemote(const MachineName: string): IExodusPlugin;
 begin
-  Result := CreateRemoteComObject(MachineName, CLASS_WordSpeller) as IWordSpeller;
+  Result := CreateRemoteComObject(MachineName, CLASS_WordSpeller) as IExodusPlugin;
 end;
 
-class function CoChatSpeller.Create: IChatSpeller;
+class function CoChatSpeller.Create: IExodusChatPlugin;
 begin
-  Result := CreateComObject(CLASS_ChatSpeller) as IChatSpeller;
+  Result := CreateComObject(CLASS_ChatSpeller) as IExodusChatPlugin;
 end;
 
-class function CoChatSpeller.CreateRemote(const MachineName: string): IChatSpeller;
+class function CoChatSpeller.CreateRemote(const MachineName: string): IExodusChatPlugin;
 begin
-  Result := CreateRemoteComObject(MachineName, CLASS_ChatSpeller) as IChatSpeller;
+  Result := CreateRemoteComObject(MachineName, CLASS_ChatSpeller) as IExodusChatPlugin;
 end;
 
 end.

@@ -9,7 +9,7 @@ uses
     Classes, ComObj, ActiveX, ExodusWordSpeller_TLB, StdVcl;
 
 type
-  TWordSpeller = class(TAutoObject, IWordSpeller, IExodusPlugin)
+  TWordSpeller = class(TAutoObject, IExodusPlugin)
   protected
     procedure Startup(const ExodusController: IExodusController); safecall;
     procedure Shutdown; safecall;
