@@ -48,6 +48,7 @@ inherited frmJud: TfrmJud
   end
   inherited Tabs: TPageControl
     Width = 409
+    ActivePage = TabSheet3
     inherited TabSheet1: TTabSheet
       object lblSelect: TTntLabel
         Left = 0
@@ -98,7 +99,7 @@ inherited frmJud: TfrmJud
       object lblInstructions: TTntLabel
         Left = 0
         Top = 0
-        Width = 204
+        Width = 401
         Height = 13
         Align = alTop
         Caption = 'Fill in the search criteria to find contacts on.'
@@ -158,7 +159,7 @@ inherited frmJud: TfrmJud
           Width = 225
           Height = 21
           Style = csDropDownList
-          ItemHeight = 0
+          ItemHeight = 13
           Sorted = True
           TabOrder = 0
         end
