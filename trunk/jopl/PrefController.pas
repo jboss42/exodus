@@ -172,7 +172,7 @@ function getUserDir: string;
 {---------------------------------------}
 implementation
 uses
-    Session, IQ, XMLUtils, StrUtils,
+    IdGlobal, IdCoder3To4, Session, IQ, XMLUtils, StrUtils,
     {$ifdef Win32}
     Graphics;
     {$else}
@@ -869,15 +869,25 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 procedure TJabberProfile.Load(tag: TXMLTag);
+var
+    ptag: TXMLTag;
+    decoder: TIdBase64Decoder;
+    tmps: string;
 begin
     // Read this profile from the registry
     Name := tag.getAttribute('name');
     Username := tag.GetBasicText('username');
     Server := tag.GetBasicText('server');
-    Password := tag.GetBasicText('password');
+
+    // Password := tag.GetBasicText('password');
+    ptag := tag.GetFirstTag('password');
+    if (ptag.GetAttribute('encoded') = 'true') then
+        Password := DecodeString(ptag.Data)
+    else
+        Password := ptag.Data;
+
     Resource := tag.GetBasicText('resource');
     Priority := SafeInt(tag.GetBasicText('priority'));
-
     ConnectionType := SafeInt(tag.GetBasicText('connection_type'));
 
     // Socket connection
@@ -908,12 +918,21 @@ end;
 
 {---------------------------------------}
 procedure TJabberProfile.Save(node: TXMLTag);
+var
+    ptag: TXMLTag;
+    code: TIdBase64Encoder;
+    tmps: String;
 begin
     node.ClearTags();
     node.PutAttribute('name', Name);
     node.AddBasicTag('username', Username);
     node.AddBasicTag('server', Server);
-    node.AddBasicTag('password', Password);
+
+    // node.AddBasicTag('password', Password);
+    ptag := node.AddTag('password');
+    ptag.PutAttribute('encoded', 'true');
+    ptag.AddCData(EncodeString(Password));
+
     node.AddBasicTag('resource', Resource);
     node.AddBasicTag('priority', IntToStr(Priority));
 

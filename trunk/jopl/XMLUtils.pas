@@ -34,6 +34,8 @@ function LeftChar(instring: string; nchar: word): string;
 function SToInt(inp: string): integer;
 function NameMatch(s1, s2: string): boolean;
 function Sha1Hash(fkey: string): string;
+function EncodeString(value: string): string;
+function DecodeString(value: string): string;
 function MungeName(str: string): string;
 function SafeInt(str: string): integer;
 procedure ClearStringListObjects(sl: TStringList);
@@ -43,7 +45,7 @@ procedure ClearStringListObjects(sl: TStringList);
 {---------------------------------------}
 implementation
 uses
-    sechash;
+    IdGlobal, IdCoder3To4, sechash;
 
 
 {---------------------------------------}
@@ -192,6 +194,7 @@ var
     i: integer;
     s: string;
 begin
+    // Do a SHA1 hash using the sechash.pas unit
     hasher := TSecHash.Create(nil);
     h := hasher.ComputeString(fkey);
     s := '';
@@ -203,11 +206,39 @@ begin
 end;
 
 {---------------------------------------}
+function EncodeString(value: string): string;
+var
+    e: TIdBase64Encoder;
+begin
+    // do base64 encode
+    e := TIdBase64Encoder.Create(nil);
+    e.CodeString(value);
+    Result := e.CompletedInput();
+    Fetch(Result, ';');
+    e.Free();
+end;
+
+{---------------------------------------}
+function DecodeString(value: string): string;
+var
+    d: TIdBase64Decoder;
+begin
+    // do base64 decode
+    d := TIdBase64Decoder.Create(nil);
+    d.CodeString(value);
+    Result := d.CompletedInput();
+    Fetch(Result, ';');
+    d.Free();
+end;
+
+{---------------------------------------}
 function MungeName(str: string): string;
 var
     i: integer;
     c, fn: string;
 begin
+    // Munge some string into a filename
+    // Removes all chars which aren't allowed
     fn := '';
     for i := 0 to Length(str) - 1 do begin
         c := str[i + 1];
@@ -220,8 +251,10 @@ begin
     Result := fn;
 end;
 
+{---------------------------------------}
 function SafeInt(str: string): integer;
 begin
+    // Null safe string to int function
     try
         Result := StrToInt(str);
     except
@@ -229,6 +262,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure ClearStringListObjects(sl: TStringList);
 var
     i: integer;
