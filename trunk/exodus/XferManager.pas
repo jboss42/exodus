@@ -93,8 +93,6 @@ type
 
     procedure ClientWork(Sender: TObject;
         AWorkMode: TWorkMode; const AWorkCount: Integer);
-    procedure ClientWorkBegin(Sender: TObject;
-        AWorkMode: TWorkMode; const AWorkCountMax: Integer);
 
   private
     { Private declarations }
@@ -572,7 +570,6 @@ procedure TfrmXferManager.tcpServerConnect(AThread: TIdPeerThread);
 begin
   inherited;
     // someone connected to us..
-    AThread.Connection.OnWorkBegin := Self.ClientWork;
     AThread.Connection.OnWork := Self.ClientWork;
 end;
 
@@ -675,11 +672,11 @@ begin
         exit;
     end;
     spkg := TStreamPkg(_stream_list.Objects[idx]);
-    AThread.Data := spkg;
+    AThread.Connection.Tag := spkg.frame.Handle;
     _stream_list.Delete(idx);
     _slock.Release();
-    stat := 'Connected...';
-    PostMessage(spkg.frame.Handle, WM_SEND_STATUS, Integer(stat), 0);
+    PostMessage(spkg.frame.Handle, WM_SEND_STATUS, 1, 0);
+    PostMessage(spkg.frame.Handle, WM_SEND_START, spkg.stream.Size, 0);
 
     // Reply back
     myip := MainSession.Stream.LocalIP;
@@ -701,7 +698,7 @@ begin
     killFrame(spkg.frame);
 
     FreeAndNil(spkg.stream);
-    FreeAndNil(spkg);
+    //FreeAndNil(spkg);
 
     AThread.Connection.Disconnect();
 end;
@@ -737,25 +734,11 @@ end;
 {---------------------------------------}
 procedure TfrmXferManager.ClientWork(Sender: TObject;
   AWorkMode: TWorkMode; const AWorkCount: Integer);
-var
-    s: string;
 begin
     // Update the progress meter
-    s := 'WORK OBJECT: ' + Sender.Classname;
-    OutputDebugString(PChar(s));
+    PostMessage(TIdTCPServerConnection(Sender).Tag, WM_SEND_UPDATE,
+        AWorkCount, 0);
 end;
-
-{---------------------------------------}
-procedure TfrmXferManager.ClientWorkBegin(Sender: TObject;
-  AWorkMode: TWorkMode; const AWorkCountMax: Integer);
-var
-    s: string;
-begin
-    // setup the progress meter
-    s := 'WORK OBJECT: ' + Sender.Classname;
-    OutputDebugString(PChar(s));
-end;
-
 
 {---------------------------------------}
 procedure TfrmXferManager.tcpServerDisconnect(AThread: TIdPeerThread);

@@ -40,6 +40,7 @@ const
     WM_SEND_BAD = WM_USER + 6022;
     WM_SEND_UPDATE = WM_USER + 6023;
     WM_SEND_STATUS = WM_USER + 6024;
+    WM_SEND_START = WM_USER + 6025;
 
 type
 
@@ -84,6 +85,7 @@ type
         procedure WMSendOK(var msg: TMessage); message WM_SEND_OK;
         procedure WMSendBad(var msg: TMessage); message WM_SEND_BAD;
         procedure WMSendUpdate(var msg: TMessage); message WM_SEND_UPDATE;
+        procedure WMSendStart(var msg: TMessage); message WM_SEND_START;
         procedure WMSendStatus(var msg: TMessage); message WM_SEND_STATUS;
 
     published
@@ -898,20 +900,26 @@ end;
 procedure TfSendStatus.WMSendUpdate(var msg: TMessage);
 begin
     // Setup the progress bar
-    if (msg.LParam > 0) then
-        bar1.Max := msg.LParam;
     bar1.Position := msg.WParam;
+end;
+
+{---------------------------------------}
+procedure TfSendStatus.WMSendStart(var msg: TMessage);
+begin
+    // Setup the progress bar
+    bar1.Max := msg.WParam;
 end;
 
 {---------------------------------------}
 procedure TfSendStatus.WMSendStatus(var msg: TMessage);
 var
-    n: PChar;
+    n: string;
 begin
     // Setup the progress bar
     // PChar is in lparam
-    n := Pointer(msg.LParam);
-    lblStatus.Caption := String(n);
+    if (msg.WParam = 1) then
+        n := 'Connected.';
+    lblStatus.Caption := n;
 end;
 
 initialization
