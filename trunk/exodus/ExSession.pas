@@ -118,7 +118,7 @@ var
 {---------------------------------------}
 function SetupSession(): boolean;
 var
-    invisible, show_help: boolean;
+    regdll, invisible, show_help: boolean;
     jid: TJabberID;
     expanded, pass, resource, profile_name, config, xmpp_file : String;
     prof_index: integer;
@@ -176,6 +176,7 @@ begin
     jid := nil;
     invisible := false;
     show_help := false;
+    regdll := false;
 
     ExStartup := TExStartParams.Create();
     ExStartup.xmllang := '';
@@ -197,6 +198,7 @@ begin
             // -m          : minimized
             // -v          : invisible
             // -?          : help
+            // -0          : DLLRegisterServer
             // -x [yes|no] : expanded
             // -j [jid]    : jid
             // -p [pass]   : password
@@ -206,11 +208,11 @@ begin
             // -c [file]   : config file name
             // -s [status] : presence status
             // -w [show]   : presence show
-            // -l [xmllang]
-            Options  := 'dmva?xjprifcswol';
-            OptFlags := '-----:::::::::::';
-            ReqFlags := '                ';
-            LongOpts := 'debug,minimized,invisible,aatest,help,expanded,jid,password,resource,priority,profile,config,status,show,xmpp,xmllang';
+            // -l [xmllang]: xmllang
+            Options  := 'dmva?0xjprifcswol';
+            OptFlags := '------:::::::::::';
+            ReqFlags := '                 ';
+            LongOpts := 'debug,minimized,invisible,aatest,help,register,expanded,jid,password,resource,priority,profile,config,status,show,xmpp,xmllang';
             while GetOpt do begin
                 case Ord(OptChar) of
                     0: raise EConfigException.Create(format(sUnkArg, [CmdLine()]));
@@ -226,6 +228,7 @@ begin
                     Ord('f'): profile_name := OptArg;
                     Ord('c'): config := OptArg;
                     Ord('?'): show_help := true;
+                    Ord('0'): regdll := true;
                     Ord('w'): cli_show := OptArg;
                     Ord('s'): cli_status := OptArg;
                     Ord('o'): xmpp_file := OptArg;
@@ -235,6 +238,11 @@ begin
         finally
             Free();
         end;
+    end;
+
+    if (regdll) then begin
+        Result := false;
+        exit;
     end;
 
     if (show_help) then begin
