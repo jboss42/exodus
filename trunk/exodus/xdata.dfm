@@ -1,6 +1,6 @@
 object frmXData: TfrmXData
-  Left = 262
-  Top = 249
+  Left = 264
+  Top = 251
   Width = 537
   Height = 243
   BorderWidth = 5
