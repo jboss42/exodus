@@ -31,9 +31,6 @@ uses
     QExtCtrls, IdSSLIntercept,
     {$else}
     ExtCtrls, IdSSLOpenSSL,
-    {$ifdef INDY9}
-    IdIOHandlerSocket,
-    {$endif}
     {$endif}
 
     IdTCPConnection, IdTCPClient, IdException, IdThread, IdSocks,
@@ -51,7 +48,6 @@ type
             {$ifdef INDY9}
             _ssl_int: TIdSSLIOHandlerSocket;
             _socks_info: TIdSocksInfo;
-            _iohandler: TIdIOHandlerSocket;
             {$else}
             _ssl_int: TIdConnectionInterceptOpenSSL;
             _socks_info: TObject;
@@ -103,6 +99,7 @@ type
         procedure DataTerminate (Sender: TObject);
         {$ifdef INDY9}
         procedure GotException (Sender: TIdThread; E: Exception);
+        procedure StatusInfo(info: string);
         {$else}
         procedure GotException (Sender: TObject; E: Exception);
         {$endif}
@@ -116,6 +113,7 @@ uses
     Controls, Dialogs,
     {$endif}
     Classes;
+
 {---------------------------------------}
 {      TSocketThread Class                }
 {---------------------------------------}
@@ -215,6 +213,14 @@ begin
     doMessage(WM_CONNECTED);
 end;
 
+{$ifdef INDY9}
+{---------------------------------------}
+procedure TSocketThread.StatusInfo(Info: string);
+begin
+    Debug(Info);
+end;
+{$endif}
+
 {---------------------------------------}
 procedure TSocketThread.Sock_Disconnect(Sender: TObject);
 begin
@@ -292,10 +298,6 @@ begin
     _socket     := nil;
     _sock_lock  := TCriticalSection.Create();
     _socks_info := nil;
-
-    {$ifdef INDY9}
-    _iohandler := nil;
-    {$endif}
 
     _timer := TTimer.Create(nil);
     _timer.Interval := 60000;
@@ -403,6 +405,11 @@ begin
             // Socket is connected
             {$ifdef INDY9}
             _local_ip := _socket.Socket.Binding.IP;
+
+            if ((_profile.ssl) and (_profile.SocksType <> 0) and
+                (_ssl_int.PassThrough)) then
+                _ssl_int.PassThrough := false;
+
             {$else}
             _local_ip := _Socket.Binding.IP;
             {$endif}
@@ -499,18 +506,19 @@ begin
     {$ifdef INDY9}
     _ssl_int := TIdSSLIOHandlerSocket.Create(nil);
     _socks_info := TIdSocksInfo.Create(nil);
-    _iohandler := TIdIOHandlerSocket.Create(nil);
     {$else}
     _ssl_int := TIdConnectionInterceptOpenSSL.Create(nil);
     {$endif}
     with _ssl_int do begin
+        Passthrough := false;
+        UseNagle := false;
+        SSLOptions.Method :=  sslvTLSv1;
         // TODO: get certs from profile, that would be *cool*.
         SSLOptions.CertFile := '';
         SSLOptions.RootCertFile := '';
         // TODO: Indy9 problems... if we try and verify, it disconnects us.
         // SSLOptions.VerifyMode := [sslvrfPeer, sslvrfFailIfNoPeerCert];
-        SSLOptions.VerifyDepth := 2;
-        SSLOptions.Method :=  sslvSSLv23;
+        // SSLOptions.VerifyDepth := 2;
         // OnVerifyPeer := VerifyPeer;
     end;
     {$endif}
@@ -520,8 +528,7 @@ begin
     _socket.RecvBufferSize := 4096;
     _socket.Port := _profile.port;
     {$ifdef INDY9}
-    if (_profile.ssl) then
-        _socket.IOHandler := _ssl_int;
+    _socket.IOHandler := _ssl_int;
     {$else}
     _socket.UseNagle := false;
     _socket.Intercept := _ssl_int;
@@ -535,8 +542,7 @@ begin
         _socket.Host := _profile.Host;
 
     if (_profile.SocksType = 0) then begin
-        // don't do anything here??
-        // _socket.Intercept := _ssl_int;
+        _ssl_int.PassThrough := not _profile.ssl;
     end
     else begin
         {$ifdef INDY9}
@@ -567,11 +573,9 @@ begin
             end;
 
             {$ifdef INDY9}
-            if (_profile.ssl) then begin
-                _socks_info.IOHandler := _ssl_int;
-            end;
-            _iohandler.SocksInfo := _socks_info;
-            _socket.IOHandler := _iohandler;
+            _ssl_int.SocksInfo := _socks_info;
+            _ssl_int.PassThrough := true;
+            _socket.IOHandler := _ssl_int;
             {$endif}
         end;
     end;
@@ -579,6 +583,9 @@ begin
     // Create the socket reader thread and start it.
     // The thread will open the socket and read all of the data.
     _thread := TSocketThread.Create(Self, _socket, _root_tag);
+    {$ifdef INDY9}
+    _ssl_int.OnStatusInfo := TSocketThread(_thread).StatusInfo;
+    {$endif}
     _thread.Start;
 end;
 
@@ -603,11 +610,13 @@ begin
         _socket.Intercept := nil;
         {$endif}
 
+        {
         if (_ssl_int <> nil) then
             FreeAndNil(_ssl_int);
 
         if (_socks_info <> nil) then
             FreeAndNil(_socks_info);
+        }
 
         _socket.Free();
         _socket := nil;

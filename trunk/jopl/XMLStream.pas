@@ -47,7 +47,7 @@ const
     WM_DROPPED = WM_USER + 7004;
     WM_CONNECTED = WM_USER + 7006;
     WM_DISCONNECTED = WM_USER + 7007;
-    WM_SEND = WM_USER + 7008;
+    WM_DEBUG = WM_USER + 7008;
     WM_SOCKET = WM_USER + 7010;
     WM_TIMEOUT = WM_USER + 7011;
 
@@ -121,6 +121,7 @@ end;
     protected
         _stream:     TXMLStream;
         function GetData(): Widestring;
+        procedure Debug(buff: Widestring);
         procedure Push(buff: Widestring);
         procedure ThreadCleanUp();
         procedure doMessage(msg: integer);
@@ -163,14 +164,20 @@ begin
 end;
 
 {---------------------------------------}
-procedure TParseThread.Push(buff: Widestring);
+procedure TParseThread.Debug(buff: Widestring);
 begin
     _lock.Acquire;
     _indata.Add(buff);
     _lock.Release;
 
     doMessage(WM_SOCKET);
+end;
 
+{---------------------------------------}
+procedure TParseThread.Push(buff: Widestring);
+begin
+    Debug(buff);
+    
     if (Copy(buff, 1, _root_len + 2) = '</' + _root_tag) then
         doMessage(WM_COMMERROR)
     else begin
