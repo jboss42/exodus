@@ -1,36 +1,58 @@
-2004-06-17 09:01  pgmillard
+2004-06-24 08:29  pgmillard
 
 	* exodus/: default.po, version.h, version.nsi: daily build
 
-2004-06-17 08:24  rimas
+2004-06-24 07:02  pgmillard
 
-	* exodus/locale/lt/LC_MESSAGES/default.po: minor update
+	* exodus/: default.po, plugins/plugin-sections-new.nsi,
+	  plugins/AIM-Import/ExodusCOM_TLB.pas,
+	  plugins/ASpeller/ExodusCOM_TLB.pas,
+	  plugins/HTMLLogger/ExodusCOM_TLB.pas,
+	  plugins/ICQ-Import/ExodusCOM_TLB.pas,
+	  plugins/JabberStats/ExodusCOM_TLB.pas,
+	  plugins/NetMeeting/ExodusCOM_TLB.pas,
+	  plugins/RosterTools/ExodusCOM_TLB.pas,
+	  plugins/SQLLogger/ExodusCOM_TLB.pas: [no log message]
 
-2004-06-17 08:20  rimas
+2004-06-23 22:32  pgmillard
 
-	* exodus/locale/lt/LC_MESSAGES/default.po: latest updates according
-	  to the main default.po v1.123
+	* exodus/: RecvStatus.pas, SendStatus.pas, XferManager.dfm,
+	  XferManager.pas: Bug #3765 - Fix a bunch more FT bugs.. including
+	  a neat infinite loop related to dupes getting into the shosts
+	  list for sending. FUN!
 
-2004-06-17 04:07  llong
+2004-06-23 21:23  pgmillard
 
-	* exodus/locale/pt_PT/LC_MESSAGES/default.po: Translated the new
-	  strings to synchronize with version 1.123 of the main default.po
+	* exodus/: ExResponders.pas, RecvStatus.pas, SendStatus.pas,
+	  XferManager.pas: Bug #3745 - Lots and lots of file-transfer
+	  issues. DAV didn't appear to be working at all. *sigh*
 
-2004-06-16 21:38  pgmillard
+2004-06-23 20:18  pgmillard
 
-	* exodus/plugins/SQLLogger/Viewer.dfm: [no log message]
+	* exodus/Prefs.dfm: Bug #3910 - Rename window title from prefs ->
+	  options
 
-2004-06-16 21:32  pgmillard
+2004-06-23 20:15  pgmillard
 
-	* exodus/plugins/SQLLogger/: ExSQLLogger_TLB.pas,
-	  ExodusCOM_TLB.pas, Viewer.dfm, Viewer.pas: Tweak gui stuff in the
-	  sql logger plugin.
+	* exodus/: ExEvents.pas, Exodus.dof, ExodusCOM_TLB.pas: Bug #3902 -
+	  Only insert once since we can't always be ensured that _data_list
+	  has one element in it.
 
-2004-06-16 20:53  pgmillard
+2004-06-23 20:04  pgmillard
 
-	* exodus/Bookmark.dfm, exodus/Bookmark.pas, exodus/Browser.dfm,
-	  exodus/Browser.pas, exodus/Exodus.dof, exodus/Exodus.dpr,
-	  exodus/ExodusCOM_TLB.pas, exodus/RegExpr.pas, jopl/RegExpr.pas,
-	  jopl/stringprep.pas, jopl_tests/test_jopl.dpr: Bug #3871 - Fixup
-	  browsing and bookmarking from the browser window.
+	* exodus/: Jabber1.pas, RosterWindow.pas: Bug #3878 - Tweaks to
+	  shutdown logic to make sure things are NULL safe. Not sure what
+	  caused this unusual stack trace tho.
+
+2004-06-19 17:21  pgmillard
+
+	* exodus/: ExUtils.pas, Jabber1.dfm, Jabber1.pas: Bug #3892 - Use
+	  the stock GetLastInputInfo instead of scary home-brew version
+	  which used ASM code.
+
+2004-06-19 16:31  pgmillard
+
+	* exodus/ExResponders.pas, exodus/Exodus.dpr,
+	  exodus/ExodusCOM_TLB.pas, jopl/JabberID.pas: Use resource-prep
+	  for resources. duh.
 

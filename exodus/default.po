@@ -6,13 +6,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-06-24 06:56\n"
-"PO-Revision-Date: 2004-06-24 06:56\n"
+"POT-Creation-Date: 2004-06-24 08:28\n"
+"PO-Revision-Date: 2004-06-24 08:28\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: dxgettext 1.2 beta 2\n"
+"X-Generator: dxgettext 1.1.1\n"
 
 #. frmAbout..Caption
 #: About.dfm:8
@@ -92,7 +92,7 @@ msgstr ""
 #. frmMsgRecv..Font.Name
 #: MsgRecv.dfm:12
 #. frmMsgRecv..pnlTop..pnlError..Font.Name
-#: MsgRecv.dfm:415
+#: MsgRecv.dfm:413
 #. frmPathSelector..Font.Name
 #: PathSelector.dfm:14
 #. frmPathSelector..Label1..Font.Name
@@ -153,11 +153,11 @@ msgstr ""
 #. frmAbout..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: About.dfm:1424
 #. frmException..frameButtons1..Panel2..Panel1..btnCancel..Caption
-#: ExTracer.dfm:48
+#: ExTracer.dfm:46
 #. frmInvalidRoster..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: InvalidRoster.dfm:42
 #. frmMsgRecv..frameButtons1..Panel2..Panel1..btnCancel..Caption
-#: MsgRecv.dfm:476
+#: MsgRecv.dfm:474
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: RosterRecv.dfm:42
 #. show the next event
@@ -189,9 +189,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:72
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:77
+#: MsgRecv.dfm:75
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:176
+#: MsgRecv.dfm:174
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:101
 #. fRTFMsgList..MsgList......Name
@@ -212,9 +212,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:78
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:83
+#: MsgRecv.dfm:81
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:182
+#: MsgRecv.dfm:180
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:107
 #. fRTFMsgList..MsgList......Name
@@ -235,9 +235,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:84
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:89
+#: MsgRecv.dfm:87
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:188
+#: MsgRecv.dfm:186
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:113
 #. fRTFMsgList..MsgList......Name
@@ -258,9 +258,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:90
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:95
+#: MsgRecv.dfm:93
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:194
+#: MsgRecv.dfm:192
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:119
 #. fRTFMsgList..MsgList......Name
@@ -281,9 +281,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:96
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:101
+#: MsgRecv.dfm:99
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:200
+#: MsgRecv.dfm:198
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:125
 #. fRTFMsgList..MsgList......Name
@@ -304,9 +304,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:102
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:107
+#: MsgRecv.dfm:105
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:206
+#: MsgRecv.dfm:204
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:131
 #. fRTFMsgList..MsgList......Name
@@ -327,9 +327,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:108
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:113
+#: MsgRecv.dfm:111
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:212
+#: MsgRecv.dfm:210
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:137
 #. fRTFMsgList..MsgList......Name
@@ -350,9 +350,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:114
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:119
+#: MsgRecv.dfm:117
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:218
+#: MsgRecv.dfm:216
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:143
 #. fRTFMsgList..MsgList......Name
@@ -373,9 +373,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:120
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:125
+#: MsgRecv.dfm:123
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:224
+#: MsgRecv.dfm:222
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:149
 #. fRTFMsgList..MsgList......Name
@@ -396,9 +396,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:126
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:131
+#: MsgRecv.dfm:129
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:230
+#: MsgRecv.dfm:228
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:155
 #. fRTFMsgList..MsgList......Name
@@ -419,9 +419,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:132
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:137
+#: MsgRecv.dfm:135
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:236
+#: MsgRecv.dfm:234
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:161
 #. fRTFMsgList..MsgList......Name
@@ -442,9 +442,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:138
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:143
+#: MsgRecv.dfm:141
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:242
+#: MsgRecv.dfm:240
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:167
 #. fRTFMsgList..MsgList......Name
@@ -574,7 +574,7 @@ msgstr ""
 #. frmBaseChat..popOut..Copy3..Caption
 #: BaseChat.dfm:192
 #. frmMsgRecv..popClipboard..popCopy..Caption
-#: MsgRecv.dfm:538
+#: MsgRecv.dfm:536
 msgid "Copy"
 msgstr ""
 
@@ -647,11 +647,11 @@ msgstr ""
 #. frmExodus..popTray..N01..Caption
 #: Jabber1.dfm:2707
 #. frmJud..PopupMenu1..N1..Caption
-#: Jud.dfm:220
+#: jud.dfm:220
 #. frmMsgRecv..popContact..N1..Caption
-#: MsgRecv.dfm:521
+#: MsgRecv.dfm:519
 #. frmMsgRecv..popContact..N2..Caption
-#: MsgRecv.dfm:530
+#: MsgRecv.dfm:528
 #. frmRoom..popRoom..popAdmin..N4..Caption
 #: Room.dfm:210
 #. frmRoom..popRoom..popAdmin..N5..Caption
@@ -778,7 +778,7 @@ msgstr ""
 #. frmTracer..Panel1..Font.Name
 #: ExceptTracer.dfm:53
 #. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..Panel1..btnClose..Font.Name
-#: MsgRecv.dfm:396
+#: MsgRecv.dfm:394
 #. frmPrefs..Font.Name
 #: Prefs.dfm:13
 #. frmRegister..Tabs..TabSheet1..Label1..Font.Name
@@ -812,7 +812,7 @@ msgstr ""
 #. frmDebug..pnlTop..btnClose..Caption
 #: Debug.dfm:252
 #. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..Panel1..btnClose..Caption
-#: MsgRecv.dfm:391
+#: MsgRecv.dfm:389
 #. frmRoom..Panel1..btnClose..Caption
 #: Room.dfm:91
 #. frmRosterWindow..pnlFind..btnFindClose..Caption
@@ -1047,7 +1047,7 @@ msgstr ""
 #. frmChat..popContact..popClearHistory..Caption
 #: ChatWin.dfm:101
 #. frmMsgRecv..popContact..popClearHistory..Caption
-#: MsgRecv.dfm:490
+#: MsgRecv.dfm:488
 #. frmRoom..popRoom..popClearHistory..Caption
 #: Room.dfm:167
 msgid "Clear History"
@@ -1056,7 +1056,7 @@ msgstr ""
 #. frmChat..popContact..popResources..Caption
 #: ChatWin.dfm:109
 #. frmMsgRecv..popContact..mnuResources..Caption
-#: MsgRecv.dfm:525
+#: MsgRecv.dfm:523
 #. frmProfile..PageControl1..TabSheet7..Caption
 #: Profile.dfm:163
 #: Profile.pas:295
@@ -1086,7 +1086,7 @@ msgstr ""
 #. frmChat..popContact..C1..mnuVersionRequest..Caption
 #: ChatWin.dfm:129
 #. frmMsgRecv..popContact..C1..mnuVersionRequest..Caption
-#: MsgRecv.dfm:500
+#: MsgRecv.dfm:498
 #. frmRosterWindow..popRoster..popClientInfo..popVersion..Caption
 #: RosterWindow.dfm:341
 msgid "Version Request"
@@ -1095,7 +1095,7 @@ msgstr ""
 #. frmChat..popContact..C1..mnuTimeRequest..Caption
 #: ChatWin.dfm:133
 #. frmMsgRecv..popContact..C1..mnuTimeRequest..Caption
-#: MsgRecv.dfm:504
+#: MsgRecv.dfm:502
 #. frmRosterWindow..popRoster..popClientInfo..popTime..Caption
 #: RosterWindow.dfm:345
 msgid "Time Request"
@@ -1104,7 +1104,7 @@ msgstr ""
 #. frmChat..popContact..C1..mnuLastActivity..Caption
 #: ChatWin.dfm:137
 #. frmMsgRecv..popContact..C1..mnuLastActivity..Caption
-#: MsgRecv.dfm:508
+#: MsgRecv.dfm:506
 #. frmProfile..PageControl1..TabSheet7..Panel2..btnLast..Caption
 #: Profile.dfm:207
 #. frmRosterWindow..popRoster..popClientInfo..popLast..Caption
@@ -1116,7 +1116,7 @@ msgstr ""
 #. frmChat..popContact..mnuBlock..Caption
 #: ChatWin.dfm:142
 #. frmMsgRecv..popContact..mnuBlock..Caption
-#: MsgRecv.dfm:513
+#: MsgRecv.dfm:511
 msgid "Block Contact"
 msgstr ""
 
@@ -1979,7 +1979,7 @@ msgstr ""
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Hint
 #: Jabber1.dfm:146
 #. frmJud..PopupMenu1..popAdd..Caption
-#: Jud.dfm:212
+#: jud.dfm:212
 #. frmAdd..Caption
 #: RosterAdd.dfm:6
 #. frmRosterWindow..popActions..popAddContact..Caption
@@ -2288,7 +2288,7 @@ msgstr ""
 #. frmExodus..popTray..trayMessage..Caption
 #: Jabber1.dfm:2695
 #. frmJud..PopupMenu1..popMessage..Caption
-#: Jud.dfm:227
+#: jud.dfm:227
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
 #: subscribe.dfm:150
 msgid "Send Message"
@@ -2371,7 +2371,7 @@ msgstr ""
 #. frmJoinRoom..Tabs..TabSheet2..Caption
 #: JoinRoom.dfm:148
 #. frmJud..Tabs..TabSheet2..Caption
-#: Jud.dfm:78
+#: jud.dfm:78
 #. frmRegister..Tabs..TabSheet2..Caption
 #: RegForm.dfm:60
 msgid "TabSheet2"
@@ -2405,79 +2405,79 @@ msgid "Fetch Rooms"
 msgstr ""
 
 #. frmJud..Caption
-#: Jud.dfm:5
+#: jud.dfm:5
 msgid "Jabber Search"
 msgstr ""
 
 #. frmJud..Panel1..lblWizardTitle..Caption
-#: Jud.dfm:43
+#: jud.dfm:43
 msgid "Jabber Search Wizard"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet1..lblSelect....Align
-#: Jud.dfm:64
+#: jud.dfm:64
 msgid "Select the user database or enter in the Jabber ID of the search "
 "agent to use:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet2..lblWait..Caption
-#: Jud.dfm:86
+#: jud.dfm:86
 msgid "Please wait. Contacting search agent:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..Caption
-#: Jud.dfm:100
+#: jud.dfm:100
 #. frmRegister..Tabs..TabSheet3..Caption
 #: RegForm.dfm:95
 msgid "TabSheet3"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..lblInstructions..Caption
-#: Jud.dfm:108
+#: jud.dfm:108
 msgid "Fill in the search criteria to find contacts "
 "on."
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Caption
-#: Jud.dfm:124
+#: jud.dfm:124
 #. frmRegister..Tabs..TabSheet4..Caption
 #: RegForm.dfm:115
 msgid "TabSheet4"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Label3..Caption
-#: Jud.dfm:140
+#: jud.dfm:140
 msgid "Add Contacts to this group:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Caption
-#: Jud.dfm:148
+#: jud.dfm:148
 #. frmAdd..lblAddGrp..Caption
 #: RosterAdd.dfm:49
 msgid "Add a new Group"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblCount..Caption
-#: Jud.dfm:159
+#: jud.dfm:159
 msgid "N items found"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Button1..Caption
-#: Jud.dfm:176
+#: jud.dfm:176
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: RosterRecv.dfm:38
-#: Jud.pas:650
-#: Jud.pas:652
+#: jud.pas:650
+#: jud.pas:652
 msgid "Add Contacts"
 msgstr ""
 
 #. frmJud..PopupMenu1..popProfile..Caption
-#: Jud.dfm:216
+#: jud.dfm:216
 msgid "View Profile"
 msgstr ""
 
 #. frmJud..PopupMenu1..popChat..Caption
-#: Jud.dfm:223
+#: jud.dfm:223
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:146
 #: Jabber1.pas:2362
@@ -2558,70 +2558,70 @@ msgid "Delete"
 msgstr ""
 
 #. frmMsgRecv..pnlReply..frameButtons2..Panel2..Panel1..btnOK..Caption
-#: MsgRecv.dfm:62
+#: MsgRecv.dfm:60
 msgid "&Send"
 msgstr ""
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlSendSubject..lblSubject1..Caption
-#: MsgRecv.dfm:298
+#: MsgRecv.dfm:296
 msgid "Subject: "
 msgstr ""
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlSubject..txtSubject..Caption
-#: MsgRecv.dfm:329
+#: MsgRecv.dfm:327
 msgid "txtSubject"
 msgstr ""
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlSubject..lblSubject2..Caption
-#: MsgRecv.dfm:337
+#: MsgRecv.dfm:335
 #. frmRoom..Panel1..pnlSubj..lblSubjectURL..Caption
 #: Room.dfm:117
 msgid "Subject:"
 msgstr ""
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..txtFrom..Caption
-#: MsgRecv.dfm:360
+#: MsgRecv.dfm:358
 msgid "txtFrom"
 msgstr ""
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..lblFrom..Caption
-#: MsgRecv.dfm:373
+#: MsgRecv.dfm:371
 msgid "From: "
 msgstr ""
 
 #. frmMsgRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
-#: MsgRecv.dfm:472
+#: MsgRecv.dfm:470
 msgid "Reply"
 msgstr ""
 
 #. frmMsgRecv..popContact..mnuHistory..Caption
-#: MsgRecv.dfm:486
+#: MsgRecv.dfm:484
 #. frmRoom..popRoom..popShowHistory..Caption
 #: Room.dfm:163
 msgid "Show History"
 msgstr ""
 
 #. frmMsgRecv..popContact..mnuProfile..Caption
-#: MsgRecv.dfm:494
+#: MsgRecv.dfm:492
 #. frmSubscribe..PopupMenu1..mnuProfile..Caption
 #: subscribe.dfm:142
 msgid "Show Profile"
 msgstr ""
 
 #. frmMsgRecv..popContact..C1..Caption
-#: MsgRecv.dfm:498
+#: MsgRecv.dfm:496
 #. frmRosterWindow..popRoster..popClientInfo..Caption
 #: RosterWindow.dfm:339
 msgid "Client Info"
 msgstr ""
 
 #. frmMsgRecv..popContact..mnuSendFile..Caption
-#: MsgRecv.dfm:517
+#: MsgRecv.dfm:515
 msgid "Send File"
 msgstr ""
 
 #. frmMsgRecv..popClipboard..popPaste..Caption
-#: MsgRecv.dfm:542
+#: MsgRecv.dfm:540
 msgid "Paste"
 msgstr ""
 
@@ -7205,22 +7205,22 @@ msgid "You must enter a nickname"
 msgstr ""
 
 #. timeout
-#: Jud.pas:318
+#: jud.pas:318
 #. we got an iq-error back
-#: Jud.pas:324
+#: jud.pas:324
 msgid "Could not contact the search agent."
 msgstr ""
 
 #. timeout
-#: Jud.pas:426
+#: jud.pas:426
 msgid "The search timed out."
 msgstr ""
 
-#: Jud.pas:455
+#: jud.pas:455
 msgid "No Results were found."
 msgstr ""
 
-#: Jud.pas:565
+#: jud.pas:565
 msgid "%d items found."
 msgstr ""
 
