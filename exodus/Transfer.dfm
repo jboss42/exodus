@@ -90,7 +90,7 @@ object frmTransfer: TfrmTransfer
     Left = 0
     Top = 57
     Width = 259
-    Height = 60
+    Height = 62
     Align = alClient
     AutoURLDetect = adDefault
     CustomURLs = <
@@ -182,7 +182,7 @@ object frmTransfer: TfrmTransfer
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 142
+    Top = 144
     Width = 259
     Height = 34
     Align = alBottom
@@ -209,7 +209,7 @@ object frmTransfer: TfrmTransfer
   end
   object pnlProgress: TPanel
     Left = 0
-    Top = 117
+    Top = 119
     Width = 259
     Height = 25
     Align = alBottom

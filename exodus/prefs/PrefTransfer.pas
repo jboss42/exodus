@@ -31,14 +31,31 @@ type
     Label15: TLabel;
     txtXFerPath: TEdit;
     btnTransferBrowse: TButton;
-    Label1: TLabel;
-    chkIP: TCheckBox;
-    txtPort: TEdit;
-    txtIP: TEdit;
     Label2: TLabel;
+    optPeer: TRadioButton;
+    grpPeer: TGroupBox;
+    Label1: TLabel;
+    txtPort: TEdit;
+    chkIP: TCheckBox;
+    txtIP: TEdit;
+    optWebDav: TRadioButton;
+    grpWebDav: TGroupBox;
+    Label3: TLabel;
+    txtDavHost: TEdit;
+    txtDavPort: TEdit;
+    Label4: TLabel;
+    txtDavPath: TEdit;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    txtDavUsername: TEdit;
+    txtDavPassword: TEdit;
+    Label8: TLabel;
+    Label9: TLabel;
     procedure btnTransferBrowseClick(Sender: TObject);
     procedure chkIPClick(Sender: TObject);
     procedure Label2Click(Sender: TObject);
+    procedure optWebDavClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -70,12 +87,22 @@ begin
         if (p <= 0) then p := 5280;
         txtPort.Text := IntToStr(p);
         txtIP.Text := getString('xfer_ip');
+
+        optWebDav.Checked := getBool('xfer_webdav');
+        optPeer.Checked := not optWebDav.Checked;
+
+        txtDavHost.Text := getString('xfer_davhost');
+        txtDavPort.Text := getString('xfer_davport');
+        txtDavPath.Text := getString('xfer_davpath');
+        txtDavUsername.Text := getString('xfer_davusername');
+        txtDavPassword.Text := getString('xfer_davpassword');
     end;
 end;
 
 procedure TfrmPrefTransfer.SavePrefs();
 var
     p: integer;
+    s: Widestring;
 begin
     with MainSession.Prefs do begin
         setString('xfer_path', txtXFerPath.Text);
@@ -84,6 +111,13 @@ begin
         if (p > 65535) then p := 5280;
         setInt('xfer_port', p);
         setString('xfer_ip', txtIP.Text);
+
+        setBool('xfer_webdav', optWebDav.Checked);
+        setString('xfer_davhost', txtDavHost.Text);
+        setString('xfer_davport', txtDavPort.Text);
+        setString('xfer_davpath', txtDavPath.Text);
+        setString('xfer_davusername', txtDavUsername.Text);
+        setString('xfer_davpassword', txtDavPassword.Text);
     end;
 end;
 
@@ -108,10 +142,19 @@ begin
   inherited;
     // reset everything to defaults..
     txtXFerPath.Text := ExtractFilePath(Application.EXEName);
+    optPeer.Checked := true;
+    optWebDavClick(Self);
     txtPort.Text := '5280';
     chkIP.Checked := false;
     txtIP.Text := '';
     chkIPClick(Self);
+end;
+
+procedure TfrmPrefTransfer.optWebDavClick(Sender: TObject);
+begin
+  inherited;
+    grpPeer.Enabled := optPeer.Checked;
+    grpWebDav.Enabled := optWebDav.Checked;
 end;
 
 end.
