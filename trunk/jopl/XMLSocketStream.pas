@@ -537,6 +537,8 @@ begin
     end
     else
         _iohandler := TIdIOHandlerSocket.Create(nil);
+
+    _iohandler.UseNagle := false;
     _socket.IOHandler := _iohandler;
 
     if (_profile.SocksType <> 0) then begin
