@@ -105,10 +105,11 @@ begin
         frm.Visible := true;
         frm.render(flds[i]);
         frm.Align := alTop;
+        frm.TabOrder := 0;
         end;
 
     Self.Caption := Format(sFormFrom, [to_jid]);
-    
+
     insBevel.Visible := lblIns.Visible;
     if (lblIns.Visible) then begin
         insBevel.Align := alTop;
