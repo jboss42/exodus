@@ -288,7 +288,7 @@ begin
             frmx := TframeGeneric(tabAgent.Controls[i]);
             if (xdata = nil) then begin
                 xdata := cur_iq.qTag.AddTag('x');
-                xdata.PutAttribute('xmns', XMLNS_XDATA);
+                xdata.PutAttribute('xmlns', XMLNS_XDATA);
                 xdata.PutAttribute('type', 'submit');
                 end;
 
