@@ -190,6 +190,7 @@ type
     btnLogClearAll: TButton;
     chkCloseQueue: TCheckBox;
     chkFlashInfinite: TCheckBox;
+    chkAAReducePri: TCheckBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -439,6 +440,7 @@ begin
 
         // Autoaway options
         chkAutoAway.Checked := getBool('auto_away');
+        chkAAReducePri.Checked := getBool('aa_reduce_pri');
         spnAway.Position := getInt('away_time');
         spnXA.Position := getInt('xa_time');
         txtAway.Text := getString('away_status');
@@ -565,6 +567,7 @@ begin
 
         // Autoaway options
         setBool('auto_away', chkAutoAway.Checked);
+        setBool('aa_reduce_pri', chkAAReducePri.Checked);
         setInt('away_time', spnAway.Position);
         setInt('xa_time', spnXA.Position);
         setString('away_status', txtAway.Text);
