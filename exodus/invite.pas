@@ -22,7 +22,7 @@ unit Invite;
 interface
 
 uses
-    Unicode, XMLTag,
+    Unicode, XMLTag, SelContact,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, CheckLst, ExtCtrls, buttonFrame, ComCtrls, Grids;
 
@@ -50,8 +50,11 @@ type
     procedure btnRemoveClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnAddClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
+    _selector: TfrmSelContact;
+
   public
     { Public declarations }
     procedure AddRecip(jid: WideString);
@@ -73,8 +76,8 @@ procedure ShowInvite(room_jid: WideString; jids: TWideStringList); overload;
 {---------------------------------------}
 implementation
 uses
-    JabberConst, InputPassword,
     ExEvents, ExUtils, GnuGetText, Jabber1, JabberID, PrefController,
+    JabberConst, InputPassword,
     Session, Room, RosterWindow, Roster;
 
 {$R *.dfm}
@@ -226,6 +229,8 @@ begin
     Self.ClientWidth := pnlMain.Width + 2;
     cboRoom.Items.Assign(room.room_list);
     pnlMain.Align := alClient;
+
+    _selector := TfrmSelContact.Create(nil);
 end;
 
 {---------------------------------------}
@@ -234,18 +239,23 @@ procedure TfrmInvite.lstJIDSDragOver(Sender, Source: TObject; X,
 begin
     // accept roster items from the main roster as well
     // as the string grid on this form
-    Accept := (Source = frmRosterWindow.treeRoster);
+    Accept := (Source = frmRosterWindow.treeRoster) or
+        (Source = _selector.frameTreeRoster1.treeRoster);
 end;
 
 {---------------------------------------}
 procedure TfrmInvite.lstJIDSDragDrop(Sender, Source: TObject; X,
   Y: Integer);
 var
+    tree: TTreeView;
     r, n: TTreeNode;
     i,j: integer;
 begin
     // dropping from main roster window
-    with frmRosterWindow.treeRoster do begin
+
+    tree := TTreeView(Source);
+
+    with tree do begin
         for i := 0 to SelectionCount - 1 do begin
             n := Selections[i];
             if ((n.Data <> nil) and (TObject(n.Data) is TJabberRosterItem)) then
@@ -283,17 +293,16 @@ end;
 
 {---------------------------------------}
 procedure TfrmInvite.btnAddClick(Sender: TObject);
-var
-    jid: WideString;
 begin
     // Add a JID
-    if InputQueryW(sEnterJID, sJID, jid) then begin
-        if (not IsValidJID(jid)) then begin
-            MessageDlg(sInvalidJID, mtError, [mbOK], 0);
-            exit;
-        end;
-        Self.AddRecip(jid);
+    if (_selector.ShowModal = mrOK) then begin
+        self.AddRecip(_selector.GetSelectedJID());
     end;
+end;
+
+procedure TfrmInvite.FormDestroy(Sender: TObject);
+begin
+    _selector.Free();
 end;
 
 end.

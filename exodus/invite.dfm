@@ -15,6 +15,7 @@ object frmInvite: TfrmInvite
   Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   inline frameButtons1: TframeButtons
@@ -25,18 +26,22 @@ object frmInvite: TfrmInvite
     Align = alBottom
     AutoScroll = False
     TabOrder = 0
-    inherited Bevel1: TBevel
+    inherited Panel2: TPanel
       Width = 323
-    end
-    inherited Panel1: TPanel
-      Left = 159
-      Width = 164
-      Height = 29
-      inherited btnOK: TButton
-        OnClick = frameButtons1btnOKClick
+      Height = 34
+      inherited Bevel1: TBevel
+        Width = 323
       end
-      inherited btnCancel: TButton
-        OnClick = frameButtons1btnCancelClick
+      inherited Panel1: TPanel
+        Left = 159
+        Width = 164
+        Height = 29
+        inherited btnOK: TButton
+          OnClick = frameButtons1btnOKClick
+        end
+        inherited btnCancel: TButton
+          OnClick = frameButtons1btnCancelClick
+        end
       end
     end
   end

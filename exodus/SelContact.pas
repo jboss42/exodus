@@ -21,8 +21,9 @@ unit SelContact;
 interface
 
 uses
+  ComCtrls, 
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, fRosterTree, buttonFrame, Menus;
+  Dialogs, fRosterTree, buttonFrame, Menus, StdCtrls, TntStdCtrls, ExtCtrls;
 
 type
   TfrmSelContact = class(TForm)
@@ -30,15 +31,20 @@ type
     frameTreeRoster1: TframeTreeRoster;
     PopupMenu1: TPopupMenu;
     ShowOnlineOnly1: TMenuItem;
+    Panel1: TPanel;
+    Label1: TLabel;
+    txtJID: TTntEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure frameTreeRoster1treeRosterDblClick(Sender: TObject);
     procedure ShowOnlineOnly1Click(Sender: TObject);
+    procedure frameTreeRoster1treeRosterChange(Sender: TObject;
+      Node: TTreeNode);
   private
     { Private declarations }
   public
     { Public declarations }
-    function GetSelectedJID(): string;
+    function GetSelectedJID(): Widestring;
   end;
 
 var
@@ -51,7 +57,7 @@ implementation
 
 {$R *.dfm}
 uses
-    GnuGetText, Session, Roster, ComCtrls;
+    GnuGetText, Session, Roster;
 
 {---------------------------------------}
 procedure TfrmSelContact.FormCreate(Sender: TObject);
@@ -75,28 +81,34 @@ begin
     if (frameTreeRoster1.treeRoster.Selected = nil) then exit;
     if (frameTreeRoster1.treeRoster.Selected.Level = 0) then exit;
 
+    frameTreeRoster1treeRosterChange(Self, frameTreeRoster1.treeRoster.Selected);
+
     Self.ModalResult := mrOK;
     Self.Hide();
 end;
 
 {---------------------------------------}
-function TfrmSelContact.GetSelectedJID(): string;
-var
-    n: TTreeNode;
+function TfrmSelContact.GetSelectedJID(): Widestring;
 begin
-    Result := '';
-    n := frameTreeRoster1.treeRoster.Selected;
-    if (n = nil) then exit;
-    if (n.Level = 0) then exit;
-
-    Result := TJabberRosterItem(n.Data).jid.full;
+    Result := txtJid.Text;
 end;
 
+{---------------------------------------}
 procedure TfrmSelContact.ShowOnlineOnly1Click(Sender: TObject);
 begin
     // toggle online on/off
     ShowOnlineOnly1.Checked := not ShowOnlineOnly1.Checked;
     frameTreeRoster1.DrawRoster(ShowOnlineOnly1.Checked);
+end;
+
+{---------------------------------------}
+procedure TfrmSelContact.frameTreeRoster1treeRosterChange(Sender: TObject;
+  Node: TTreeNode);
+begin
+    if (Node = nil) then exit;
+    if (Node.Level = 0) then exit;
+
+    txtJid.Text := TJabberRosterItem(Node.Data).jid.full;
 end;
 
 end.
