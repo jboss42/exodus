@@ -1435,12 +1435,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 340
-    ActivePage = tbsNotify
+    ActivePage = tbsRoster
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 6
+    TabIndex = 0
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1488,7 +1488,7 @@ object frmPrefs: TfrmPrefs
       end
       object optDblClick: TRadioGroup
         Left = 8
-        Top = 184
+        Top = 208
         Width = 161
         Height = 55
         Caption = 'Double Click Action '
@@ -1500,7 +1500,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkInlineStatus: TCheckBox
         Left = 8
-        Top = 120
+        Top = 144
         Width = 241
         Height = 17
         Caption = 'Show status in the roster: Joe <Meeting>'
@@ -1509,7 +1509,7 @@ object frmPrefs: TfrmPrefs
       end
       object cboInlineStatus: TColorBox
         Left = 32
-        Top = 144
+        Top = 168
         Width = 145
         Height = 22
         DefaultColorColor = clBlue
@@ -1526,6 +1526,14 @@ object frmPrefs: TfrmPrefs
         Height = 17
         Caption = 'Hide blocked contacts '
         TabOrder = 7
+      end
+      object chkPresErrors: TCheckBox
+        Left = 8
+        Top = 118
+        Width = 209
+        Height = 17
+        Caption = 'Detect invalid roster items'
+        TabOrder = 8
       end
     end
     object tbsSubscriptions: TTabSheet
@@ -1909,7 +1917,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 97
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2103,7 +2111,7 @@ object frmPrefs: TfrmPrefs
       object StaticText11: TStaticText
         Left = 0
         Top = 0
-        Width = 111
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter

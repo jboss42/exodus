@@ -73,6 +73,7 @@ function BroadcastMsg(jids: TStringlist): TfrmMsgRecv;
 procedure ShowEvent(e: TJabberEvent);
 
 resourcestring
+    sRemove = 'Remove';
     sAccept = 'Accept';
     sDecline = 'Decline';
     sTo = 'To:';
@@ -84,7 +85,7 @@ implementation
 uses
     ShellAPI,
     ExUtils, JabberMsg,
-    RosterRecv, Room,
+    RemoveContact, RosterRecv, Room,
     Session, Jabber1;
 
 {$R *.DFM}
@@ -117,6 +118,12 @@ begin
                 frameButtons1.btnOK.Caption := sAccept;
                 frameButtons1.btnCancel.Caption := sDecline;
                 end
+
+            else if eType = evt_PresError then begin
+                // show a "Remove" button
+                frameButtons1.btnOK.Caption := sRemove;
+                end
+
             else
                 // normally, we don't want a REPLY button
                 frameButtons1.btnOK.Visible := (eType = evt_Message);
@@ -224,8 +231,15 @@ begin
         // join this grp... grp is in the subject
         jid := txtSubject.Caption;
         StartRoom(jid, MainSession.Username);
-        Self.Close;
+        Self.Close();
         end
+        
+    else if eType = evt_PresError then begin
+        // remove this roster item from our roster
+        RemoveRosterItem(recips[0]);
+        Self.Close();
+        end
+
     else begin
         Self.ClientHeight := Self.ClientHeight + pnlReply.Height - frameButtons1.Height - 3;
         frameButtons1.Visible := false;

@@ -274,6 +274,8 @@ type
     _browse: TBrowseResponder;
 
     _tray: NOTIFYICONDATA;
+    _tray_tip: string;
+    _tray_icon_idx: integer;
     _tray_icon: TIcon;
     _hidden: boolean;
     _logoff: boolean;
@@ -296,13 +298,15 @@ type
     _cli_priority: integer;
     _cli_show: string;
     _cli_status: string;
-    
+
     procedure presCustomPresClick(Sender: TObject);
 
     procedure restoreEvents(expanded: boolean);
     procedure restoreToolbar;
     procedure restoreAlpha;
     procedure restoreMenus(enable: boolean);
+
+    procedure setupTrayIcon();
 
     procedure setTrayInfo(tip: string);
     procedure setTrayIcon(iconNum: integer);
@@ -461,6 +465,7 @@ const
     ico_Unknown = 6;
     ico_msg = 11;
     ico_info = 12;
+    ico_userbook = 13;
 
     ico_key = 16;
     ico_application = 19;
@@ -667,7 +672,6 @@ var
     config: string;
     help_msg: string;
     win_ver: string;
-    picon: TIcon;
     timestamp : boolean;
 begin
     // initialize vars.  wish we were using a 'real' compiler.
@@ -900,21 +904,6 @@ begin
     setupAutoAwayTimer();
     ConfigEmoticons();
 
-    // Create the tray icon, etc..
-    picon := TIcon.Create();
-    ImageList2.GetIcon(0, picon);
-
-    with _tray do begin
-        Wnd := Self.Handle;
-        uFlags := NIF_ICON + NIF_MESSAGE + NIF_TIP;
-        uCallbackMessage := WM_TRAY;
-        hIcon := picon.Handle;
-        strPCopy(szTip, sExodus);
-        cbSize := SizeOf(_tray);
-        end;
-    Shell_NotifyIcon(NIM_ADD, @_tray);
-    picon.Free();
-
     _hidden := false;
     _shutdown := false;
     _close_min := MainSession.prefs.getBool('close_min');
@@ -951,13 +940,34 @@ begin
     // Make sure we read in and setup the prefs..
     Self.SessionCallback('/session/prefs', nil);
 
+    Self.setupTrayIcon();
+
     // Accept files dragged from Explorer
     DragAcceptFiles(Handle, True);
     MainSession.setPresence(_cli_show, _cli_status, _cli_priority);
-    
+
     // check for new version
     if (MainSession.Prefs.getBool('auto_updates')) then
         mnuNewVersionClick(nil);
+end;
+
+procedure TfrmExodus.setupTrayIcon();
+var
+    picon: TIcon;
+begin
+    // Create the tray icon, etc..
+    picon := TIcon.Create();
+    ImageList2.GetIcon(0, picon);
+    with _tray do begin
+        Wnd := Self.Handle;
+        uFlags := NIF_ICON + NIF_MESSAGE + NIF_TIP;
+        uCallbackMessage := WM_TRAY;
+        hIcon := picon.Handle;
+        strPCopy(szTip, sExodus);
+        cbSize := SizeOf(_tray);
+        end;
+    Shell_NotifyIcon(NIM_ADD, @_tray);
+    picon.Free();
 end;
 
 {---------------------------------------}
@@ -1063,7 +1073,8 @@ end;
 procedure TfrmExodus.setTrayInfo(tip: string);
 begin
     // setup the tray tool-tip
-    StrPCopy(@_tray.szTip, tip);
+    _tray_tip := tip;
+    StrPCopy(@_tray. szTip, tip);
     Shell_NotifyIcon(NIM_MODIFY, @_tray);
 end;
 
@@ -1071,6 +1082,7 @@ end;
 procedure TfrmExodus.setTrayIcon(iconNum: integer);
 begin
     // setup the tray icon based on a specific icon index
+    _tray_icon_idx := iconNum;
     ImageList2.GetIcon(iconNum, _tray_icon);
     _tray.hIcon := _tray_icon.Handle;
     Shell_NotifyIcon(NIM_MODIFY, @_tray);
@@ -1192,6 +1204,7 @@ begin
 
         if (MainSession.Prefs.getBool('window_toolbox')) then begin
             if (Self.BorderStyle <> bsSizeToolWin) then begin
+                // todo: requires a restart of the application
                 Self.BorderStyle := bsSizeToolWin;
                 end;
             end
@@ -1201,12 +1214,11 @@ begin
                 end;
             end;
 
-        // resetup the tray icon..
-        // Shell_NotifyIcon(NIM_MODIFY, @_tray);
-        {
+        // reset the tray icon stuff
         Shell_NotifyIcon(NIM_DELETE, @_tray);
-        Shell_NotifyIcon(NIM_ADD, @_tray);
-        }
+        Self.setupTrayIcon();
+        setTrayInfo(_tray_tip);
+        setTrayIcon(_tray_icon_idx);
 
         // do other stuff
         restoreMenus(MainSession.Active);
@@ -1419,30 +1431,7 @@ var
     mqueue: TfrmMsgQueue;
 begin
     // create a listview item for this event
-    img_idx := 0;
-
     case e.etype of
-    evt_Presence: begin
-        if  (e.data_type = 'subscribe') or
-            (e.data_type = 'subscribed') or
-            (e.data_type = 'unsubscribe') or
-            (e.data_type = 'unsubscribed') then
-            img_idx := 16
-        else if (e.data_type = 'available') then
-            img_idx := 1
-        else if (e.data_type = 'unavailable') then
-            img_idx := 0
-        else if (e.data_type = 'away') then
-            img_idx := 2
-        else if (e.data_type = 'dnd') then
-            img_idx := 3
-        else if (e.data_type = 'chat') then
-            img_idx := 4
-        else if (e.data_type = 'xa') then
-            img_idx := 10;
-        msg := e.Data[0];
-        end;
-
     evt_Time: begin
         img_idx := 12;
         msg := e.data_type;
@@ -1466,6 +1455,11 @@ begin
     evt_RosterItems: begin
         img_idx := 26;
         msg := e.data_type;
+        end;
+
+    evt_PresError: begin
+        img_idx := ico_userbook;
+        msg := e.data_type;
         end
 
     else begin
@@ -1477,6 +1471,7 @@ begin
     if MainSession.Prefs.getBool('expanded') then begin
         getMsgQueue().LogEvent(e, msg, img_idx);
         end
+
     else if (e.delayed) or (MainSession.Prefs.getBool('msg_queue')) then begin
         // we are collapsed, but this event was delayed (offline'd)
         // or we always want to use the msg queue
@@ -1485,6 +1480,7 @@ begin
         mqueue.Show;
         mqueue.LogEvent(e, msg, img_idx);
         end
+
     else
         // we are collapsed, just display in regular windows
         ShowEvent(e);
@@ -2351,7 +2347,6 @@ var
     f          : TForm;
 begin
     // Accept some files being dropped on this form
-
     // If we are expaned, and not showing the roster tab,
     // and the current tab has a chat window, then
     // call the chat window's AcceptFiles() method.
@@ -2543,6 +2538,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.mnuNewVersionClick(Sender: TObject);
 var
     http : TIdHTTP;

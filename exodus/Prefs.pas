@@ -175,6 +175,7 @@ type
     colorChat: TExRichEdit;
     Label5: TLabel;
     chkHideBlocked: TCheckBox;
+    chkPresErrors: TCheckBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -279,6 +280,7 @@ begin
         cboInlineStatus.Selected := TColor(getInt('inline_color'));
         cboInlineStatus.Enabled := chkInlineStatus.Checked;
         chkHideBlocked.Checked := getBool('roster_hide_block');
+        chkPresErrors.Checked := getBool('roster_pres_errors');
 
         if (getBool('roster_chat')) then
             optDblClick.ItemIndex := 0
@@ -432,6 +434,7 @@ begin
         setBool('inline_status', chkInlineStatus.Checked);
         setInt('inline_color', integer(cboInlineStatus.Selected));
         setBool('roster_chat', (optDBlClick.ItemIndex = 0));
+        setBool('roster_pres_errors', chkPresErrors.Checked);
 
         // S10n prefs
         setInt('s10n_auto_accept', optIncomingS10n.ItemIndex);
