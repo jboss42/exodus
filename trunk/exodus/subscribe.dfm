@@ -100,6 +100,7 @@ object frmSubscribe: TfrmSubscribe
       Height = 21
       Style = csDropDownList
       ItemHeight = 13
+      Sorted = True
       TabOrder = 1
     end
   end
