@@ -188,7 +188,7 @@ begin
             _system.SavePrefs();
 
         if (_subscription <> nil) then
-            _system.SavePrefs();
+            _subscription.SavePrefs();
 
         if (_font <> nil) then
             _font.SavePrefs();
