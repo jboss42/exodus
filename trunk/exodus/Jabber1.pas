@@ -639,7 +639,10 @@ begin
     // Show the login window
     _reconnect_tries := 0;
     _new_account := false;
-    ShowLogin();
+
+    // only show the login window if the stream is nil.
+    if ((MainSession <> nil) and (MainSession.Stream = nil)) then
+        ShowLogin();
 end;
 
 {---------------------------------------}
