@@ -1040,6 +1040,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.setupAutoAwayTimer();
+var
+    lii: TLastInputInfo;
 begin
     // Setup the auto-away timer
     // Note that for W2k and XP, we are just going to
@@ -1074,10 +1076,11 @@ begin
     else begin
         // Use the GetLastInputInfo API call
         // do nothing here..
-        if (_GetLastInputInfo <> nil) then begin
+        lii.cbSize := sizeof(tagLASTINPUTINFO);
+        if (Windows.GetLastInputInfo(lii)) then begin
             DebugMsg(_(sAutoAwayWin32));
             _valid_aa := true;
-            end
+        end
         else
             DebugMsg(_(sAutoAwayFailWin32));
     end;
@@ -2048,7 +2051,7 @@ end;
 {---------------------------------------}
 function TfrmExodus.getLastTick(): dword;
 var
-    last_info: TLastInputInfo;
+    lii: TLastInputInfo;
 begin
     // Return the last tick count of activity
     Result := 0;
@@ -2058,9 +2061,9 @@ begin
     end
     else begin
         // use GetLastInputInfo
-        last_info.cbSize := sizeof(last_info);
-        if (GetLastInputInfo(last_info)) then
-            Result := last_info.dwTime
+        lii.cbSize := sizeof(tagLASTINPUTINFO);
+        if (GetLastInputInfo(lii)) then
+            Result := lii.dwTime;
     end;
 end;
 
@@ -2069,9 +2072,7 @@ procedure TfrmExodus.timAutoAwayTimer(Sender: TObject);
 var
     mins, away, xa, dis: integer;
     cur_idle: longword;
-    {$ifdef TEST_AUTOAWAY}
     dmsg: string;
-    {$endif}
     do_xa, do_dis: boolean;
     avail: boolean;
 begin
@@ -2103,14 +2104,14 @@ begin
             else
                 mins := cur_idle;
 
-            {$ifdef TEST_AUTOAWAY}
-            if (not _is_autoaway) and (not _is_autoxa) then begin
-                dmsg := 'Idle Check: ' + SafeBoolStr(_is_autoaway) + ', ' +
-                    SafeBoolStr(_is_autoxa) + ', ' +
-                    IntToStr(cur_idle ) + ' secs'#13#10;
-                DebugMsg(dmsg);
+            if (ExStartup.testaa) then begin
+                if (not _is_autoaway) and (not _is_autoxa) then begin
+                    dmsg := 'Idle Check: ' + SafeBoolStr(_is_autoaway) + ', ' +
+                        SafeBoolStr(_is_autoxa) + ', ' +
+                        IntToStr(cur_idle ) + ' secs'#13#10;
+                    DebugMsg(dmsg);
+                end;
             end;
-            {$endif}
 
             away := getInt('away_time');
             xa := getInt('xa_time');
