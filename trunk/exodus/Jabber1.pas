@@ -239,6 +239,7 @@ type
     _regController: TRegController;
     _Notify: TNotifyController;
 
+    _windows_ver: integer;
     _is_autoaway: boolean;
     _is_autoxa: boolean;
     _is_min: boolean;
@@ -451,6 +452,7 @@ var
     profile_name: string;
     config: string;
     help_msg: string;
+    win_ver: string;
 begin
     // initialize vars.  wish we were using a 'real' compiler.
     debug := false;
@@ -655,6 +657,7 @@ begin
     _is_autoxa := false;
     _is_min := false;
 
+    _windows_ver := WindowsVersion(win_ver);
     setupAutoAwayTimer();
     ConfigEmoticons();
 
@@ -710,25 +713,36 @@ end;
 procedure TExodus.setupAutoAwayTimer();
 begin
     DebugMsg('Trying to setup the Auto Away timer.'#13#10);
-    @_GetHookPointer := nil;
-    @_InitHooks := nil;
-    @_StopHooks := nil;
-    _lpHookRec := nil;
-    _hookLib := LoadLibrary('IdleHooks.dll');
-    if (_hookLib <> 0) then begin
-        // start the hooks
-        @_GetHookPointer := GetProcAddress(_hookLib, 'GetHookPointer');
-        @_InitHooks := GetProcAddress(_hookLib, 'InitHooks');
-        @_StopHooks := GetProcAddress(_hookLib, 'StopHooks');
-        _lpHookRec := _GetHookPointer();
-        inc(_lpHookRec^.InstanceCount);
-        // if (_lpHookRec^.KeyHook = 0) then
-        _InitHooks();
-        _lpHookRec^.LastTick := GetTickCount();
+    if (_windows_ver < 4) then begin
+        // Use the DLL
+        @_GetHookPointer := nil;
+        @_InitHooks := nil;
+        @_StopHooks := nil;
+        _lpHookRec := nil;
+        _hookLib := LoadLibrary('IdleHooks.dll');
+        if (_hookLib <> 0) then begin
+            // start the hooks
+            @_GetHookPointer := GetProcAddress(_hookLib, 'GetHookPointer');
+            @_InitHooks := GetProcAddress(_hookLib, 'InitHooks');
+            @_StopHooks := GetProcAddress(_hookLib, 'StopHooks');
+            _lpHookRec := _GetHookPointer();
+            inc(_lpHookRec^.InstanceCount);
+            // if (_lpHookRec^.KeyHook = 0) then
+            _InitHooks();
+            _lpHookRec^.LastTick := GetTickCount();
+            end
+        else
+            DebugMsg('AutoAway Setup FAILED!');
+        last_tick := GetTickCount();
         end
-    else
-        DebugMsg('AutoAway Setup FAILED!');
-    last_tick := GetTickCount();
+    else begin
+        // Use the GetLastInputInfo API call
+        // do nothing here..
+        if (_GetLastInputInfo <> nil) then
+            DebugMsg('Using Win32 API for Autoaway checks!!'#13#10)
+        else
+            DebugMsg('ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!'#13#10);
+        end;
 end;
 
 {---------------------------------------}
@@ -1495,14 +1509,28 @@ var
     mins, away, xa: integer;
     cur_idle: longword;
     dmsg: string;
+    last_info: TLastInputInfo;
 begin
     // get the latest idle amount
     if (MainSession = nil) then exit;
     if (not MainSession.Stream.Active) then exit;
 
     with MainSession.Prefs do begin
-        if ((_auto_away) and (_lpHookRec <> nil)) then begin
-            last_tick := _lpHookRec^.LastTick;
+        if ((_auto_away)) then begin
+            if (_windows_ver < 4) then begin
+                if (_lpHookRec <> nil) then
+                    last_tick := _lpHookRec^.LastTick
+                else
+                    exit;
+                end
+            else begin
+                // use GetLastInputInfo
+                last_info.cbSize := sizeof(last_info);
+                if (GetLastInputInfo(last_info)) then
+                    last_tick := last_info.dwTime
+                else
+                    exit;
+                end;
             cur_idle := (GetTickCount() - last_tick) div 1000;
             mins := cur_idle div 60;
 
@@ -1742,6 +1770,8 @@ end;
 {---------------------------------------}
 procedure TExodus.ResetLastTick(value: longint);
 begin
+    if (_windows_ver >= 4) then exit;
+    
     DebugMsg('Setting LastTick to ' + IntToStr(value) + ', Current=' + IntToStr(GetTickCount()) + ''#13#10);
     _lpHookRec^.LastTick := value;
 end;
