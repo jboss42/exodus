@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2005-03-23 08:30\n"
-"PO-Revision-Date: 2005-03-23 08:30\n"
+"POT-Creation-Date: 2005-03-25 08:16\n"
+"PO-Revision-Date: 2005-03-25 08:16\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -629,13 +629,13 @@ msgstr ""
 #. frmExodus..MainMenu1..Help1..N12..Caption
 #: Jabber1.dfm:473
 #. frmExodus..popTray..trayPresence..N5..Caption
-#: Jabber1.dfm:2686
+#: Jabber1.dfm:2687
 #. frmExodus..popTray..N4..Caption
-#: Jabber1.dfm:2700
+#: Jabber1.dfm:2701
 #. frmExodus..popTray..N01..Caption
-#: Jabber1.dfm:2707
+#: Jabber1.dfm:2708
 #. frmJud..PopupMenu1..N1..Caption
-#: jud.dfm:226
+#: jud.dfm:228
 #. frmMsgRecv..popContact..N1..Caption
 #: MsgRecv.dfm:519
 #. frmMsgRecv..popContact..N2..Caption
@@ -1034,7 +1034,7 @@ msgstr ""
 
 #. frmChat..Panel1..pnlJID..lblReply..Caption
 #: ChatWin.dfm:89
-msgid "  (is replying)"
+msgid "(is replying)"
 msgstr ""
 
 #. frmChat..popContact..mnuSave..Caption
@@ -1551,12 +1551,12 @@ msgstr ""
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presOnline..Caption
 #: Jabber1.dfm:360
 #. frmExodus..popTray..trayPresence..trayPresOnline..Caption
-#: Jabber1.dfm:2656
+#: Jabber1.dfm:2657
 #. frmRosterWindow..popStatus..presOnline..Caption
 #: RosterWindow.dfm:403
 #. init the cmd line stuff
 #: ExSession.pas:193
-#: Jabber1.pas:2978
+#: Jabber1.pas:2986
 #: RosterWindow.pas:361
 #: RosterWindow.pas:385
 #: RosterWindow.pas:1689
@@ -1575,10 +1575,10 @@ msgstr ""
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presAway..Caption
 #: Jabber1.dfm:372
 #. frmExodus..popTray..trayPresence..trayPresAway..Caption
-#: Jabber1.dfm:2668
+#: Jabber1.dfm:2669
 #. frmRosterWindow..popStatus..presAway..Caption
 #: RosterWindow.dfm:415
-#: Jabber1.pas:2976
+#: Jabber1.pas:2984
 #: RosterWindow.pas:363
 #: RosterWindow.pas:386
 #: RosterWindow.pas:1673
@@ -1603,7 +1603,7 @@ msgstr ""
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presDND..Caption
 #: Jabber1.dfm:384
 #. frmExodus..popTray..trayPresence..trayPresDND..Caption
-#: Jabber1.dfm:2680
+#: Jabber1.dfm:2681
 #. frmRosterWindow..popStatus..presDND..Caption
 #: RosterWindow.dfm:427
 #: RosterWindow.pas:365
@@ -1701,7 +1701,7 @@ msgstr ""
 #. frmDebug..PopupMenu1..popPres..Caption
 #: Debug.dfm:319
 #. frmExodus..popTray..trayPresence..Caption
-#: Jabber1.dfm:2653
+#: Jabber1.dfm:2654
 #. frmPrefs..Scroller..lblCustomPres..Caption
 #: Prefs.dfm:1932
 #. frmRosterWindow..popRoster..popPresence..Caption
@@ -1908,7 +1908,7 @@ msgstr ""
 #. frmInputPass..Caption
 #: InputPassword.dfm:8
 #. accordingly.
-#: Jabber1.pas:982
+#: Jabber1.pas:990
 msgid "Exodus Password"
 msgstr ""
 
@@ -2011,7 +2011,7 @@ msgstr ""
 #: ConnDetails.pas:386
 #. do this.
 #: ExSession.pas:490
-#: Jabber1.pas:1312
+#: Jabber1.pas:1320
 #: Login.pas:113
 #: Login.pas:189
 #: /src/exodus/jopl/JabberUtils.pas:212
@@ -2041,7 +2041,7 @@ msgstr ""
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Hint
 #: Jabber1.dfm:146
 #. frmJud..PopupMenu1..popAdd..Caption
-#: jud.dfm:218
+#: jud.dfm:220
 #. frmAdd..Caption
 #: RosterAdd.dfm:6
 #. frmRosterWindow..popActions..popAddContact..Caption
@@ -2231,7 +2231,7 @@ msgstr ""
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presChat..Caption
 #: Jabber1.dfm:366
 #. frmExodus..popTray..trayPresence..trayPresChat..Caption
-#: Jabber1.dfm:2662
+#: Jabber1.dfm:2663
 #. frmRosterWindow..popStatus..presChat..Caption
 #: RosterWindow.dfm:409
 #: RosterWindow.pas:362
@@ -2245,7 +2245,7 @@ msgstr ""
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presXA..Caption
 #: Jabber1.dfm:378
 #. frmExodus..popTray..trayPresence..trayPresXA..Caption
-#: Jabber1.dfm:2674
+#: Jabber1.dfm:2675
 #. frmRosterWindow..popStatus..presXA..Caption
 #: RosterWindow.dfm:421
 #: RosterWindow.pas:364
@@ -2337,43 +2337,43 @@ msgid "About"
 msgstr ""
 
 #. frmExodus..popTabs..popCloseTab..Caption
-#: Jabber1.dfm:2634
+#: Jabber1.dfm:2635
 msgid "Close Window"
 msgstr ""
 
 #. frmExodus..popTabs..popFloatTab..Caption
-#: Jabber1.dfm:2639
+#: Jabber1.dfm:2640
 msgid "Float Window"
 msgstr ""
 
 #. frmExodus..popTray..trayShow..Caption
-#: Jabber1.dfm:2649
+#: Jabber1.dfm:2650
 msgid "Show Exodus"
 msgstr ""
 
 #. frmExodus..popTray..trayPresence..Custom2..Caption
-#: Jabber1.dfm:2690
+#: Jabber1.dfm:2691
 #. frmRosterWindow..popStatus..Custom1..Caption
 #: RosterWindow.dfm:437
 msgid "Custom ..."
 msgstr ""
 
 #. frmExodus..popTray..trayMessage..Caption
-#: Jabber1.dfm:2695
+#: Jabber1.dfm:2696
 #. frmJud..PopupMenu1..popMessage..Caption
-#: jud.dfm:233
+#: jud.dfm:235
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
 #: subscribe.dfm:150
 msgid "Send Message"
 msgstr ""
 
 #. frmExodus..popTray..trayConnect..Caption
-#: Jabber1.dfm:2703
+#: Jabber1.dfm:2704
 msgid "Log On/Off"
 msgstr ""
 
 #. frmExodus..popTray..trayExit..Caption
-#: Jabber1.dfm:2710
+#: Jabber1.dfm:2711
 msgid "Exit Exodus"
 msgstr ""
 
@@ -2444,7 +2444,7 @@ msgstr ""
 #. frmJoinRoom..Tabs..TabSheet2..Caption
 #: JoinRoom.dfm:148
 #. frmJud..Tabs..TabSheet2..Caption
-#: jud.dfm:78
+#: jud.dfm:77
 #. frmRegister..Tabs..TabSheet2..Caption
 #: RegForm.dfm:61
 msgid "TabSheet2"
@@ -2488,70 +2488,75 @@ msgid "Jabber Search Wizard"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet1..lblSelect....Align
-#: jud.dfm:64
+#: jud.dfm:63
 msgid "Select the user database or enter in the Jabber ID of the search "
 "agent to use:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet2..lblWait..Caption
-#: jud.dfm:86
+#: jud.dfm:85
 msgid "Please wait. Contacting search agent:"
 msgstr ""
 
 #. frmJud..Tabs..TabFields..Caption
-#: jud.dfm:100
+#: jud.dfm:99
 msgid "TabFields"
 msgstr ""
 
 #. frmJud..Tabs..TabFields..lblInstructions..Caption
-#: jud.dfm:108
+#: jud.dfm:107
 msgid "Fill in the search criteria to find contacts "
 "on."
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Caption
-#: jud.dfm:130
+#: jud.dfm:112
 #. frmRegister..Tabs..TabSheet4..Caption
 #: RegForm.dfm:116
 msgid "TabSheet4"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Label3..Caption
-#: jud.dfm:146
+#: jud.dfm:128
 msgid "Add Contacts to this group:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Caption
-#: jud.dfm:154
+#: jud.dfm:136
 #. frmAdd..lblAddGrp..Caption
 #: RosterAdd.dfm:49
 msgid "Add a new Group"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblCount..Caption
-#: jud.dfm:165
+#: jud.dfm:147
 msgid "N items found"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Button1..Caption
-#: jud.dfm:182
+#: jud.dfm:164
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: RosterRecv.dfm:45
-#: jud.pas:626
-#: jud.pas:628
+#: jud.pas:627
+#: jud.pas:629
 msgid "Add Contacts"
 msgstr ""
 
+#. frmJud..Tabs..TabXData..Caption
+#: jud.dfm:196
+msgid "TabXData"
+msgstr ""
+
 #. frmJud..PopupMenu1..popProfile..Caption
-#: jud.dfm:222
+#: jud.dfm:224
 msgid "View Profile"
 msgstr ""
 
 #. frmJud..PopupMenu1..popChat..Caption
-#: jud.dfm:229
+#: jud.dfm:231
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:146
-#: Jabber1.pas:2470
+#: Jabber1.pas:2478
 msgid "Start Chat"
 msgstr ""
 
@@ -6607,7 +6612,7 @@ msgstr ""
 
 #. frmXData..Caption
 #: xdata.dfm:6
-msgid "xdata"
+msgid "Jabber Form"
 msgstr ""
 
 #. frmXferManager..Caption
@@ -6727,47 +6732,47 @@ msgstr ""
 msgid "This user is now blocked."
 msgstr ""
 
-#: ChatWin.pas:888
+#: ChatWin.pas:890
 #. make sure the user is still connected
-#: ChatWin.pas:931
-#: ChatWin.pas:932
+#: ChatWin.pas:939
+#: ChatWin.pas:940
 msgid "offline"
 msgstr ""
 
-#: ChatWin.pas:890
+#: ChatWin.pas:892
 msgid "unknown"
 msgstr ""
 
-#: ChatWin.pas:892
+#: ChatWin.pas:894
 msgid "away"
 msgstr ""
 
-#: ChatWin.pas:894
+#: ChatWin.pas:896
 msgid "xa"
 msgstr ""
 
-#: ChatWin.pas:896
+#: ChatWin.pas:898
 msgid "dnd"
 msgstr ""
 
-#: ChatWin.pas:898
+#: ChatWin.pas:900
 msgid "chat"
 msgstr ""
 
-#: ChatWin.pas:946
+#: ChatWin.pas:954
 msgid "available"
 msgstr ""
 
-#: ChatWin.pas:953
+#: ChatWin.pas:961
 msgid "is now"
 msgstr ""
 
 #. check to see if we're already subscribed...
-#: ChatWin.pas:979
+#: ChatWin.pas:987
 msgid "You are already subscribed to this contact"
 msgstr ""
 
-#: ChatWin.pas:1282
+#: ChatWin.pas:1290
 msgid "This chat window is busy. Close anyways?"
 msgstr ""
 
@@ -7277,119 +7282,119 @@ msgid "Conference Room:"
 msgstr ""
 
 #. enable a logging plugin now.
-#: Jabber1.pas:935
+#: Jabber1.pas:943
 msgid "Message logging is now performed by plugins. Please enable a logging "
 "plugin to regain this functionality."
 msgstr ""
 
-#: Jabber1.pas:982
+#: Jabber1.pas:990
 msgid "Enter Password"
 msgstr ""
 
 #. For other OS's we need to use the wicked nasty DLL
-#: Jabber1.pas:1082
+#: Jabber1.pas:1090
 msgid "Trying to setup the Auto Away timer."
 msgstr ""
 
-#: Jabber1.pas:1104
+#: Jabber1.pas:1112
 msgid "AutoAway Setup FAILED!"
 msgstr ""
 
 #. depending on that API call.
-#: Jabber1.pas:1117
+#: Jabber1.pas:1125
 msgid "Using Win32 API for Autoaway checks!!"
 msgstr ""
 
-#: Jabber1.pas:1122
+#: Jabber1.pas:1130
 msgid "ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!"
 msgstr ""
 
-#: Jabber1.pas:1185
+#: Jabber1.pas:1193
 msgid "There was an error trying to authenticate you.\n"
 "Either you used the wrong password, or this account is already in use "
 "by someone else."
 msgstr ""
 
-#: Jabber1.pas:1192
+#: Jabber1.pas:1200
 msgid "There was an error trying to setup SSL."
 msgstr ""
 
-#: Jabber1.pas:1228
+#: Jabber1.pas:1236
 msgid "An Error occurred trying to register your new account. This server "
 "may not allow open registration."
 msgstr ""
 
-#: Jabber1.pas:1243
+#: Jabber1.pas:1251
 msgid "This account does not exist on this server. Create a new "
 "account?"
 msgstr ""
 
 #. if we have a new account, prompt for reg info
-#: Jabber1.pas:1293
+#: Jabber1.pas:1301
 msgid "Your new jabber account is activated. Would you like to fill out "
 "additional registration information?"
 msgstr ""
 
 #. set us to away
-#: Jabber1.pas:2266
+#: Jabber1.pas:2274
 msgid "Setting AutoAway"
 msgstr ""
 
 #. set us to xa
-#: Jabber1.pas:2302
+#: Jabber1.pas:2310
 msgid "Setting AutoXA"
 msgstr ""
 
 #. reset our status to available
-#: Jabber1.pas:2319
+#: Jabber1.pas:2327
 msgid "Setting Auto Available"
 msgstr ""
 
 #. lookup some arbitrary vcard..
-#: Jabber1.pas:2354
+#: Jabber1.pas:2362
 msgid "Lookup Profile"
 msgstr ""
 
-#: Jabber1.pas:2354
-#: Jabber1.pas:2470
-#: Jabber1.pas:2749
+#: Jabber1.pas:2362
+#: Jabber1.pas:2478
+#: Jabber1.pas:2757
 msgid "Enter Jabber ID: "
 msgstr ""
 
-#: Jabber1.pas:2571
+#: Jabber1.pas:2579
 msgid "Old password is incorrect."
 msgstr ""
 
-#: Jabber1.pas:2575
+#: Jabber1.pas:2583
 msgid "New password does not match."
 msgstr ""
 
-#: Jabber1.pas:2596
 #: Jabber1.pas:2604
+#: Jabber1.pas:2612
 msgid "Error changing password."
 msgstr ""
 
-#: Jabber1.pas:2599
+#: Jabber1.pas:2607
 msgid "Password changed."
 msgstr ""
 
 #. kick off a service registration..
-#: Jabber1.pas:2689
+#: Jabber1.pas:2697
 msgid "Register with Service"
 msgstr ""
 
-#: Jabber1.pas:2689
+#: Jabber1.pas:2697
 msgid "Enter Jabber ID of Service: "
 msgstr ""
 
-#: Jabber1.pas:2749
+#: Jabber1.pas:2757
 msgid "Send a Message"
 msgstr ""
 
 #. fire up an invite for this room using the selected contacts
-#: Jabber1.pas:3080
+#: Jabber1.pas:3088
 #. send roster items to this contact.
-#: Jabber1.pas:3090
+#: Jabber1.pas:3098
 #. Send contacts to this JID..
 #: RosterWindow.pas:2751
 #: RosterWindow.pas:2963
@@ -7399,7 +7404,7 @@ msgstr ""
 msgid "You must select one or more contacts."
 msgstr ""
 
-#: Jabber1.pas:3217
+#: Jabber1.pas:3225
 msgid "Branding error!"
 msgstr ""
 
@@ -7417,22 +7422,22 @@ msgid "You must enter a valid server name."
 msgstr ""
 
 #. timeout
-#: jud.pas:314
+#: jud.pas:316
 #. we got an iq-error back
-#: jud.pas:320
+#: jud.pas:322
 msgid "Could not contact the search agent."
 msgstr ""
 
 #. timeout
-#: jud.pas:404
+#: jud.pas:405
 msgid "The search timed out."
 msgstr ""
 
-#: jud.pas:433
+#: jud.pas:434
 msgid "No Results were found."
 msgstr ""
 
-#: jud.pas:543
+#: jud.pas:544
 msgid "%d items found."
 msgstr ""
 
