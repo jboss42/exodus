@@ -2418,9 +2418,11 @@ begin
     jid := '';
     if (frmRosterWindow.treeRoster.SelectionCount > 0) then begin
         n := frmRosterWindow.treeRoster.Selected;
-        ritem := TJabberRosterItem(n.Data);
-        if ritem <> nil then
-            jid := ritem.jid.jid
+        if (TObject(n.Data) is TJabberRosterItem) then begin
+            ritem := TJabberRosterItem(n.Data);
+            if ritem <> nil then
+                jid := ritem.jid.jid
+            end;
         end;
 
     if InputQuery(sSendMessage, sEnterJID, jid) then
