@@ -25,13 +25,15 @@ uses
     Jabber1, ExEvents, Contnrs, Unicode, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Dockable, ComCtrls, StdCtrls, ExtCtrls, ToolWin, RichEdit2,
-    ExRichEdit;
+    ExRichEdit, Menus;
 
 type
   TfrmMsgQueue = class(TfrmDockable)
     lstEvents: TListView;
     Splitter1: TSplitter;
     txtMsg: TExRichEdit;
+    PopupMenu1: TPopupMenu;
+    D1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure lstEventsChange(Sender: TObject; Item: TListItem;
       Change: TItemChange);
@@ -42,11 +44,13 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure lstEventsData(Sender: TObject; Item: TListItem);
     procedure txtMsgURLClick(Sender: TObject; URL: String);
+    procedure D1Click(Sender: TObject);
   private
     { Private declarations }
     _queue: TObjectList;
     procedure SaveEvents();
     procedure LoadEvents();
+    procedure removeItems();
   public
     { Public declarations }
     procedure LogEvent(e: TJabberEvent; msg: string; img_idx: integer);
@@ -267,56 +271,61 @@ begin
     Self.SaveEvents();
 end;
 
-{---------------------------------------}
-procedure TfrmMsgQueue.lstEventsKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
+procedure TfrmMsgQueue.removeItems();
 var
     i: integer;
     first : integer;
     item : TListItem;
     e : TJabberEvent;
 begin
+    first := -1;
+    if (lstEvents.SelCount = 0) then begin
+        exit;
+        end
+    else if (lstEvents.SelCount = 1) then begin
+        item := lstEvents.Selected;
+        i := item.Index;
+        first := i;
+        RemoveItem(i);
+        end
+    else begin
+        for i := lstEvents.Items.Count-1 downto 0 do begin
+            if (lstEvents.Items[i].Selected) then begin
+                _queue.Delete(i);
+                lstEvents.Items.Count := lstEvents.Items.Count - 1;
+                first := i;
+                end;
+            end;
+        Self.SaveEvents();
+        lstEvents.ClearSelection();
+        end;
+
+    if ((first <> -1) and (first < lstEvents.Items.Count)) then begin
+        lstEvents.Selected := lstEvents.Items[first];
+        e := TJabberEvent(_queue[first]);
+        if ((e <> nil) and (lstEvents.SelCount = 1) and (e.Data.Text <> '')) then
+            txtMsg.WideText := e.Data.Text;
+        end
+    else if (lstEvents.Items.Count > 0) then
+        lstEvents.Selected := lstEvents.Items[lstEvents.Items.Count - 1];
+
+    if (lstEvents.Selected <> nil) then begin
+        lstEvents.Selected.MakeVisible(false);
+        lstEvents.ItemFocused := lstEvents.Selected;
+        end;
+
+    lstEvents.Refresh;
+end;
+
+{---------------------------------------}
+procedure TfrmMsgQueue.lstEventsKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
     // pickup hot-keys on the list view..
     case Key of
     VK_DELETE, VK_BACK, Ord('d'), Ord('D'): begin
         Key := $0;
-        first := -1;
-        if (lstEvents.SelCount = 0) then begin
-            exit;
-            end
-        else if (lstEvents.SelCount = 1) then begin
-            item := lstEvents.Selected;
-            i := item.Index;
-            first := i;
-            RemoveItem(i);
-            end
-        else begin
-            for i := lstEvents.Items.Count-1 downto 0 do begin
-                if (lstEvents.Items[i].Selected) then begin
-                    _queue.Delete(i);
-                    lstEvents.Items.Count := lstEvents.Items.Count - 1;
-                    first := i;
-                    end;
-                end;
-            Self.SaveEvents();
-            lstEvents.ClearSelection();
-            end;
-
-        if ((first <> -1) and (first < lstEvents.Items.Count)) then begin
-            lstEvents.Selected := lstEvents.Items[first];
-            e := TJabberEvent(_queue[first]);
-            if ((e <> nil) and (lstEvents.SelCount = 1) and (e.Data.Text <> '')) then
-                txtMsg.WideText := e.Data.Text;
-            end
-        else if (lstEvents.Items.Count > 0) then
-            lstEvents.Selected := lstEvents.Items[lstEvents.Items.Count - 1];
-
-        if (lstEvents.Selected <> nil) then begin
-            lstEvents.Selected.MakeVisible(false);
-            lstEvents.ItemFocused := lstEvents.Selected;
-            end;
-            
-        lstEvents.Refresh;
+        removeItems();
         end;
 
     end;
@@ -352,10 +361,18 @@ begin
     item.SubItems.Add(e.msg);         // Subject
 end;
 
+{---------------------------------------}
 procedure TfrmMsgQueue.txtMsgURLClick(Sender: TObject; URL: String);
 begin
   inherited;
     ShellExecute(0, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
+end;
+
+{---------------------------------------}
+procedure TfrmMsgQueue.D1Click(Sender: TObject);
+begin
+  inherited;
+    removeItems();
 end;
 
 end.
