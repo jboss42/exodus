@@ -17,15 +17,15 @@ inherited frmPrefRoster: TfrmPrefRoster
   object chkShowUnsubs: TTntCheckBox
     Left = 0
     Top = 33
-    Width = 265
+    Width = 337
     Height = 17
-    Caption = 'Show contacts who can not see my presence'
+    Caption = 'Show contacts which I do not have a subscription to.'
     TabOrder = 0
   end
   object chkHideBlocked: TTntCheckBox
     Left = 0
     Top = 68
-    Width = 201
+    Width = 337
     Height = 17
     Caption = 'Hide blocked contacts '
     TabOrder = 1
@@ -33,7 +33,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   object chkPresErrors: TTntCheckBox
     Left = 0
     Top = 86
-    Width = 321
+    Width = 337
     Height = 17
     Caption = 'Detect contacts which are unreachable or no longer exist'
     TabOrder = 2
@@ -41,7 +41,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   object chkShowPending: TTntCheckBox
     Left = 0
     Top = 50
-    Width = 289
+    Width = 337
     Height = 17
     Caption = 'Show contacts I have asked to add as "Pending"'
     TabOrder = 3
@@ -62,7 +62,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   object chkRosterUnicode: TTntCheckBox
     Left = 0
     Top = 103
-    Width = 328
+    Width = 337
     Height = 17
     Caption = 'Allow Unicode characters in the roster (requires 2000, ME, XP).'
     TabOrder = 5
