@@ -12,17 +12,17 @@ unit ExNetMeeting_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 5/26/2003 9:55:08 PM from Type Library described below.
+// File generated on 6/16/2003 9:43:20 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\NetMeeting\ExNetMeeting.tlb (1)
-// LIBID: {D00007FF-BE47-4D97-9DC9-C700FC050CE3}
+// LIBID: {E6B4D6BB-6346-4D99-92BD-BAA6213E4FDB}
 // LCID: 0
 // Helpfile: 
-// HelpString: Send Netmeeting requests to other Jabber users.
+// HelpString: ExNetMeeting Library
 // DepndLst: 
-//   (1) v1.0 ExodusCOM, (D:\src\exodus\runner\Exodus.exe)
-//   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
+//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
+//   (2) v1.0 ExodusCOM, (C:\Program Files\Exodus\Exodus.exe)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -45,9 +45,9 @@ const
   ExNetMeetingMajorVersion = 1;
   ExNetMeetingMinorVersion = 0;
 
-  LIBID_ExNetMeeting: TGUID = '{D00007FF-BE47-4D97-9DC9-C700FC050CE3}';
+  LIBID_ExNetMeeting: TGUID = '{E6B4D6BB-6346-4D99-92BD-BAA6213E4FDB}';
 
-  CLASS_ExNetmeetingPlugin: TGUID = '{A4C0B3FE-BCA0-4AE2-A77A-0A816855DF5B}';
+  CLASS_ExNetmeetingPlugin: TGUID = '{D44676BB-8F88-4A46-8981-4FFCE436AF76}';
 type
 
 // *********************************************************************//
