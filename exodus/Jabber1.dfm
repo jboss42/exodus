@@ -112,6 +112,7 @@ object frmExodus: TfrmExodus
         MinHeight = 27
         Width = 209
       end>
+    Ctl3D = True
     object ToolBar1: TToolBar
       Left = 9
       Top = 0
