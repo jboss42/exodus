@@ -93,7 +93,7 @@ begin
             1: begin
                 // domain
                 case c of
-                $2D, $2E, $5F, $41..$5A, $61..$7A: valid_char := true;
+                $2D, $2E, $30..$39, $5F, $41..$5A, $61..$7A: valid_char := true;
                 end;
                 if (not valid_char) then exit;
                 if (curlen > 256) then exit;
