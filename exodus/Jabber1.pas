@@ -737,9 +737,18 @@ begin
     // setup some branding stuff
     with (MainSession.Prefs) do begin
         mnuConference.Visible := getBool('brand_muc');
+        if (not mnuConference.Visible) then
+            mnuConference.ShortCut := 0;
         btnRoom.Visible := getBool('brand_muc');
+
         mnuPlugins.Visible := getBool('brand_plugs');
         mnuMyVCard.Visible := getBool('brand_vcard');
+        mnuRegistration.Visible := getBool('brand_registration');
+
+        mnuBrowser.Visible := getBool('brand_browser');
+        if (not mnuBrowser.Visible) then
+            mnuBrowser.ShortCut := 0;
+
     end;
 
     // Make sure presence menus have unified captions

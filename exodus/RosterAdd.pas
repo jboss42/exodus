@@ -171,6 +171,7 @@ begin
     cboGroup.Text := MainSession.Prefs.getString('roster_default');
     cboType.ItemIndex := 0;
     txtGateway.Text := MainSession.Server;
+    cboType.Enabled := MainSession.Prefs.getBool('brand_addcontact_gateways')
 end;
 
 {---------------------------------------}
