@@ -443,6 +443,7 @@ begin
             items := tag.QueryXPTags('//x[@xmlns="jabber:x:data"]/item');
 
         if ((items = nil) or (items.Count = 0)) then begin
+            if (items <> nil) then items.Free();
             cur_state := 'get_fields';
             lstContacts.Clear();
             self.reset();
@@ -507,7 +508,7 @@ begin
                 ji.xdata := false;
                 cols := cur.ChildTags();
                 ji.jid := cur.GetAttribute('jid');
-                ji.count := cols.Count;
+                ji.count := lstContacts.Columns.Count + 1;
                 for c := 0 to cols.count - 1 do
                     ji.cols[c + 1] := cols[c].Data;
                 cols.Free();
@@ -534,6 +535,10 @@ begin
 
         lstContacts.Items.Count := virtlist.Count;
 
+        if (clist <> nil) then clist.Free();
+        if (items <> nil) then Items.Free();
+
+
         // show results panel
         lblSelect.Visible := false;
         cboJID.Visible := false;
@@ -557,10 +562,12 @@ var
     c: TControl;
 begin
     // clear all frames from the pnlFields panel
+    pnlFields.Visible := false;
     while (pnlFields.ControlCount > 0) do begin
         c := pnlFields.Controls[0];
         c.Free();
         end;
+    pnlFields.Visible := true;
 end;
 
 {---------------------------------------}
