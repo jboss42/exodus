@@ -257,7 +257,7 @@ begin
                                 started := true;
                                 result := result + ' style="';
                             end;
-                            result := result + XML_EscapeChars(chunks[j]) + ';';
+                            result := result + HTML_EscapeChars(chunks[j], false) + ';';
                         end;
                     end;
                     if (started) then
@@ -267,7 +267,7 @@ begin
             else if (tag.Name = 'a') then begin
                 if (attr.Name = 'href') then
                     result := result + ' ' +
-                        attr.Name + '="' + XML_EscapeChars(attr.Value) + '"';
+                        attr.Name + '="' + HTML_EscapeChars(attr.Value, false) + '"';
             end
             else if (tag.Name = 'img') then begin
                 if ((attr.Name = 'alt') or
@@ -276,7 +276,7 @@ begin
                     (attr.Name = 'src') or
                     (attr.Name = 'width')) then begin
                     result := result + ' ' +
-                        attr.Name + '="' + XML_EscapeChars(attr.Value) + '"';
+                        attr.Name + '="' + HTML_EscapeChars(attr.Value, false) + '"';
                 end;
             end
         end;
@@ -298,7 +298,7 @@ begin
         // Check for URLs
         if ((parent = nil) or (parent.Name <> 'a')) then begin
             str := url_regex.Replace(TXMLCData(n).Data,
-                                  '<a href="$0">$0</a>', true);
+                                     '<a href="$0">$0</a>', true);
             result := result + ProcessIEEmoticons(str);
         end
         else
@@ -323,7 +323,7 @@ begin
     end;
 
     if (txt = '') then begin
-        cd := TXMLCData.Create(XML_EscapeChars(Msg.Body));
+        cd := TXMLCData.Create(HTML_EscapeChars(Msg.Body, false));
         txt := ProcessTag(nil, cd);
     end;
 
