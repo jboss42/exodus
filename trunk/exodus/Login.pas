@@ -45,6 +45,7 @@ type
     lblNewProfile: TLabel;
     lblDelete: TLabel;
     chkSSL: TCheckBox;
+    chkInvisible: TCheckBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cboProfilesChange(Sender: TObject);
     procedure lblNewProfileClick(Sender: TObject);
@@ -103,6 +104,7 @@ begin
         MainSession.Prefs.SaveProfiles();
 
         MainSession.ActivateProfile(i);
+        MainSession.Invisible := l.chkInvisible.Checked;
         MainSession.Connect;
 
         frmJabber.Tabs.ActivePageIndex := 1;
@@ -134,6 +136,7 @@ begin
     cboResource.Text := p.Resource;
     spnPriority.Position := p.Priority;
     chkSSL.Checked := p.ssl;
+    chkInvisible.Checked := false;
 end;
 
 {---------------------------------------}
