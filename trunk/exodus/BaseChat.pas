@@ -165,7 +165,7 @@ begin
     if ( Key = #27 ) then
         Close()
     else if ((Key = #127) and
-             (HiWord(DWORD(GetKeyState(VK_CONTROL))) <> 0)) then begin
+             ((GetKeyState(VK_CONTROL) and (1 shl 16)) = (1 shl 16))) then begin
         Key := #0;
         // delete the last word.
         // JJH: yes, this is at least slight overkill, but it was bothering me.
