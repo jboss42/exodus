@@ -1,6 +1,6 @@
 object frmVCard: TfrmVCard
-  Left = 384
-  Top = 410
+  Left = 201
+  Top = 119
   Width = 450
   Height = 360
   Caption = 'My Profile'
@@ -92,7 +92,7 @@ object frmVCard: TfrmVCard
         Width = 75
         Height = 25
         Caption = 'Browse'
-        TabOrder = 0
+        TabOrder = 5
         OnClick = btnPicBrowseClick
       end
       object txtNick: TTntEdit
@@ -100,35 +100,35 @@ object frmVCard: TfrmVCard
         Top = 69
         Width = 187
         Height = 21
-        TabOrder = 1
+        TabOrder = 2
       end
       object txtPriEmail: TTntEdit
         Left = 56
         Top = 95
         Width = 187
         Height = 21
-        TabOrder = 2
+        TabOrder = 3
       end
       object txtFirst: TTntEdit
         Left = 73
         Top = 6
         Width = 168
         Height = 21
-        TabOrder = 3
+        TabOrder = 0
       end
       object txtLast: TTntEdit
         Left = 73
         Top = 33
         Width = 169
         Height = 21
-        TabOrder = 4
+        TabOrder = 1
       end
       object txtWeb: TTntEdit
         Left = 56
         Top = 121
         Width = 187
         Height = 21
-        TabOrder = 5
+        TabOrder = 4
       end
     end
     object TabSheet3: TTntTabSheet
