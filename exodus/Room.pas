@@ -308,7 +308,7 @@ function ItemCompare(Item1, Item2: Pointer): integer;
 {---------------------------------------}
 implementation
 uses
-    Browser, 
+    Browser,
     CapPresence,
     ChatWin, COMChatController, CustomNotify,
     ExSession, JabberUtils, ExUtils, 
@@ -494,7 +494,7 @@ begin
                      ico_conf, 'notify_keyword');
             Msg.highlight := true;
         end
-        else if (not Msg.IsMe) then
+        else if (not Msg.IsMe) and ((Msg.FromJID <> self.jid) or (Msg.Subject <> '')) then
             DoNotify(Self, _notify[0],
                      _(sNotifyActivity) + Self.Caption,
                      ico_conf, 'notify_roomactivity');
@@ -828,6 +828,13 @@ begin
             else if (cmd = '/dnd') then
                 _sendPresence('dnd', tmps);
         end;
+        Result := true;
+    end
+    else begin
+        m := TJabberMessage.Create(self.jid, 'groupchat', 'Unknown / command: "' +
+                    cmd +'"'#13#10 + 'Try /help', '');
+        DisplayMsg(m, MsgList);
+        m.Destroy();
         Result := true;
     end;
 
