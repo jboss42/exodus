@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: exodus 0.1\n"
 "POT-Creation-Date: 2003-08-03 07:30\n"
-"PO-Revision-Date: 2003-12-04 23:06+0100\n"
+"PO-Revision-Date: 2003-12-04 23:33+0100\n"
 "Last-Translator: Mariusz Smykuła <smys@lodz.mm.pl>\n"
 "Language-Team: Mariusz Smykuła <redakcja@jabberpl.org>\n"
 "MIME-Version: 1.0\n"
@@ -170,7 +170,7 @@ msgstr "Zamknij"
 #: About.pas:81
 #: ExEvents.pas:285
 msgid "Version: "
-msgstr "Wesja:"
+msgstr "Wersja: "
 
 #. frmAbout..InfoBox......Name
 #. frmBaseChat..Panel3..MsgList......Name
@@ -667,7 +667,7 @@ msgstr "Pokój konferencyjny"
 #. frmBookmark..chkAutoJoin..Caption
 #: Bookmark.dfm:111
 msgid "Join on login"
-msgstr "Wejdź podczas logowania"
+msgstr "Wejdź przy starcie"
 
 #. frmBrowse..Caption
 #: Browser.dfm:6
@@ -1027,7 +1027,7 @@ msgstr "ID kontaktu:"
 #: MsgRecv.dfm:497
 #: RosterWindow.dfm:336
 msgid "Version Request"
-msgstr "Prośba o numer wersji"
+msgstr "Zapytaj o wersję"
 
 #. frmChat..popContact..C1..mnuTimeRequest..Caption
 #. frmMsgRecv..popContact..C1..mnuTimeRequest..Caption
@@ -1036,7 +1036,7 @@ msgstr "Prośba o numer wersji"
 #: MsgRecv.dfm:501
 #: RosterWindow.dfm:340
 msgid "Time Request"
-msgstr "Prośba o czas"
+msgstr "Zapytaj o czas"
 
 #. frmChat..popContact..C1..mnuLastActivity..Caption
 #. frmMsgRecv..popContact..C1..mnuLastActivity..Caption
@@ -1062,7 +1062,7 @@ msgstr "Zablokuj kontakt"
 #: ChatWin.dfm:153
 #: Room.dfm:241
 msgid "Notification Options ..."
-msgstr "Ustawienia zawiadomień ..."
+msgstr "Ustawienia powiadomień ..."
 
 #. frmChat..popContact..mnuOnTop..Caption
 #. frmRoom..popRoom..mnuOnTop..Caption
@@ -1261,7 +1261,7 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.WideStrings
 #: ConnDetails.dfm:290
 msgid "Use StartTLS whenever the server allows it."
-msgstr ""
+msgstr "Używaj StartTLS gdy tylko pozwala na to serwer."
 
 #. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.WideStrings
 #: ConnDetails.dfm:291
@@ -1315,7 +1315,7 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsHttp..Label1..Caption
 #: ConnDetails.dfm:412
 msgid "URL:"
-msgstr ""
+msgstr "Adres:"
 
 #. frmConnDetails..PageControl1..tbsHttp..Label2..Caption
 #: ConnDetails.dfm:420
@@ -1335,7 +1335,7 @@ msgstr "Ilość kluczy:"
 #. frmConnDetails..PageControl1..tbsHttp..lblNote....AutoSize
 #: ConnDetails.dfm:449
 msgid "NOTE: You must use the URL of your jabber server's HTTP tunnelling proxy. You can not use some \"standard\" HTTP proxy for this to work. Contact your server administrator for additional information."
-msgstr ""
+msgstr "UWAGA: Musisz użyć adresu pod którym znajduje się tunel proxy HTTP twojego serwera jabbera. Może to nie działać z niektórymy \"standardami\" proxy HTTP. Skontaktuj się ze swoim administratorem aby uzyskać dodatkowe informacje."
 
 #. frmConnDetails..OpenDialog1..DefaultExt
 #: ConnDetails.dfm:476
@@ -1961,7 +1961,7 @@ msgstr "Dokuj okienko"
 #. frmExodus..MainMenu1..Exodus1..View1..ShowEventsWindow1..Caption
 #: Jabber1.dfm:253
 msgid "Instant Messages"
-msgstr "Wiadomości natychmiastowe"
+msgstr "Wydarzenia"
 
 #. frmExodus..MainMenu1..Exodus1..ClearMessages1..Caption
 #: Jabber1.dfm:258
@@ -2209,12 +2209,12 @@ msgstr "Dołącz do pokoju"
 #. frmJoinRoom..Panel1..lblWizardTitle..Caption
 #: JoinRoom.dfm:25
 msgid "Join or Browse for a Room"
-msgstr "Wejdź lub obejrzyj pokój"
+msgstr "Wejdź do, lub obejrzyj pokój"
 
 #. frmJoinRoom..Panel1..lblWizardDetails..Caption
 #: JoinRoom.dfm:28
 msgid "Specify or browse for a room to join or create."
-msgstr "Wymyśl lub wybierz pokój "
+msgstr "Załóż nowy pokój lub wybierz pokój jeden z dostępnych."
 
 #. frmJoinRoom..Tabs..TabSheet1..Label2..Caption
 #: JoinRoom.dfm:39
@@ -2281,7 +2281,7 @@ msgstr "Serwer"
 #: JoinRoom.dfm:136
 #: prefs/PrefPlugins.dfm:89
 msgid "Description"
-msgstr "Opis:"
+msgstr "Opis"
 
 #. frmJoinRoom..Tabs..TabSheet2..Panel2..lblFetch..Caption
 #: JoinRoom.dfm:163
@@ -2351,7 +2351,7 @@ msgstr "Dodaj nową grupę"
 #: jud.pas:641
 #: jud.pas:643
 msgid "Add Contacts"
-msgstr "Dodawanie kontaów"
+msgstr "Dodaj"
 
 #. frmJud..PopupMenu1..popProfile..Caption
 #: jud.dfm:207
@@ -2450,14 +2450,14 @@ msgstr "Temat: "
 #. frmMsgRecv..pnlTop..pnlHeader..pnlSubject..txtSubject..Caption
 #: MsgRecv.dfm:326
 msgid "txtSubject"
-msgstr ""
+msgstr "Temat"
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlSubject..lblSubject2..Caption
 #. frmRoom..Panel1..pnlSubj..lblSubjectURL..Caption
 #: MsgRecv.dfm:334
 #: Room.dfm:124
 msgid "Subject:"
-msgstr "Temat:"
+msgstr "Temat: "
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..txtFrom..Caption
 #: MsgRecv.dfm:357
@@ -2558,7 +2558,7 @@ msgstr "Czcionki, kolory"
 #. frmPrefs..Scroller..lblS10n..Caption
 #: Prefs.dfm:629
 msgid "Subscriptions"
-msgstr "Autoryzacja"
+msgstr "Autoryzacje"
 
 #. frmPrefs..Scroller..lblRoster..Caption
 #: Prefs.dfm:823
@@ -2733,7 +2733,7 @@ msgstr "Uaktualnij pseudonim w oparciu o imię i nazwisko."
 #. frmProfile..PageControl1..TabSheet1..optSubscrip..Caption
 #: Profile.dfm:150
 msgid "Subscription Type"
-msgstr "Rodzaj subskrycji"
+msgstr "Rodzaj autoryzacji"
 
 #. frmProfile..PageControl1..TabSheet1..optSubscrip....Items.WideStrings
 #: Profile.dfm:155
@@ -5783,7 +5783,7 @@ msgstr ""
 #. frmRoom..Panel1..pnlSubj..lblSubject..Caption
 #: Room.dfm:142
 msgid " lblSubject"
-msgstr ""
+msgstr "Temat"
 
 #. frmRoom..popRoom..popClear..Caption
 #: Room.dfm:164
@@ -6088,7 +6088,7 @@ msgstr "Wyślij niedostępność"
 #. frmRosterWindow..popRoster..popPresence..popSendSubscribe..Caption
 #: RosterWindow.dfm:362
 msgid "Subscribe Again"
-msgstr "Zapisz ponownie"
+msgstr "Autoryzuj ponownie"
 
 #. frmRosterWindow..popRoster..popRename..Caption
 #: RosterWindow.dfm:367
@@ -6210,7 +6210,7 @@ msgstr "Zawsze zezwalaj na ten certyfikat SSL"
 #. frmSubscribe..Caption
 #: subscribe.dfm:7
 msgid "Subscription Request"
-msgstr "Zapytanie o subskrypcję"
+msgstr "Prośba o autoryzację"
 
 #. frmSubscribe..Label1....Align
 #: subscribe.dfm:32
@@ -6413,7 +6413,7 @@ msgstr "jest teraz"
 #. check to see if we're already subscribed...
 #: ChatWin.pas:877
 msgid "You are already subscribed to this contact"
-msgstr "Jesteś już zapisany u tego kontaktu."
+msgstr "Jesteś już autoryzowany u tego kontaktu."
 
 #: ChatWin.pas:1195
 msgid "This chat window is busy. Close anyways?"
@@ -6477,7 +6477,7 @@ msgstr "Czas odpowiedzi: %s sekund."
 
 #: ExEvents.pas:145
 msgid "Msg from "
-msgstr ""
+msgstr "Wiad. od "
 
 #: ExEvents.pas:180
 msgid "Invite from "
@@ -6486,7 +6486,7 @@ msgstr "Zaproszenie od"
 #: ExEvents.pas:259
 #: ExEvents.pas:475
 msgid "Time Response"
-msgstr ""
+msgstr "Informacja o czasie"
 
 #: ExEvents.pas:262
 msgid "Local Time: "
@@ -6495,15 +6495,15 @@ msgstr "Czas lokalny:"
 #: ExEvents.pas:281
 #: ExEvents.pas:481
 msgid "Version Response"
-msgstr ""
+msgstr "Informacja o wersji"
 
 #: ExEvents.pas:281
 msgid "Description: "
-msgstr "Opis:"
+msgstr "Opis: "
 
 #: ExEvents.pas:289
 msgid "OS: "
-msgstr ""
+msgstr "System op.: "
 
 #: ExEvents.pas:303
 msgid "Idle for "
@@ -6665,7 +6665,7 @@ msgstr "Aktywność w pokoju"
 #: ExSession.pas:484
 #: prefs/PrefNotify.pas:97
 msgid "Subscription request"
-msgstr "Zapytanie o subskrypcję"
+msgstr "Prośba o autoryzację"
 
 #: ExSession.pas:486
 #: prefs/PrefNotify.pas:103
@@ -7013,7 +7013,7 @@ msgstr "Wiadomość do "
 #: MsgRecv.pas:683
 #: MsgRecv.pas:690
 msgid "Message from "
-msgstr "Wiadomość od"
+msgstr "Wiadomość od "
 
 #: MsgRecv.pas:760
 msgid "You have unread messages. Read all messages before closing the window."
@@ -7236,7 +7236,7 @@ msgstr "Wyrażenie regularne dla tego pokoju są niepoprawne. Dopasowywanie sł�
 #. send the msg out
 #: Room.pas:1243
 msgid "/me has changed the subject to: "
-msgstr "/me zmienił temat na:"
+msgstr "/me zmienił temat na: "
 
 #. Change the subject
 #: Room.pas:1257
@@ -7341,7 +7341,7 @@ msgstr "Próbuję się połączyć..."
 #: RosterWindow.pas:517
 #: RosterWindow.pas:2624
 msgid "Click to Cancel..."
-msgstr "Kliknij aby anulować"
+msgstr "Kliknij aby anulować..."
 
 #: RosterWindow.pas:509
 msgid ""
@@ -8249,7 +8249,7 @@ msgstr "Nie pokazuj zmian obecności"
 #. frmPrefPresence..Panel1..chkClientCaps..Caption
 #: prefs/PrefPresence.dfm:120
 msgid "Send client capabilities in presence."
-msgstr "Wysyłaj możliwość klienta"
+msgstr "Wysyłaj możliwości klienta"
 
 #. frmPrefPresence..GroupBox1..txtCPPriority..Hint
 #. frmPrefPresence..GroupBox1..spnPriority..Hint
