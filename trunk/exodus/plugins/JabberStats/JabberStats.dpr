@@ -14,7 +14,9 @@ uses
   XMLConstants in '..\..\..\jopl\XMLConstants.pas',
   XMLNode in '..\..\..\jopl\XMLNode.pas',
   XMLParser in '..\..\..\jopl\XMLParser.pas',
-  XMLTag in '..\..\..\jopl\XMLTag.pas';
+  XMLTag in '..\..\..\jopl\XMLTag.pas',
+  Config in 'Config.pas' {frmConfig},
+  buttonFrame in '..\..\buttonFrame.pas' {frameButtons: TFrame};
 
 exports
   DllGetClassObject,
