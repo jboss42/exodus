@@ -104,7 +104,8 @@ uses
   WStrList in '..\jopl\WStrList.pas',
   Langs in '..\jopl\Langs.pas',
   Unicode in '..\jopl\Unicode.pas',
-  InvalidRoster in 'InvalidRoster.pas' {frmInvalidRoster};
+  InvalidRoster in 'InvalidRoster.pas' {frmInvalidRoster},
+  AutoUpdate in 'AutoUpdate.pas';
 
 {$R *.RES}
 
