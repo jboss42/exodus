@@ -119,6 +119,10 @@ begin
 
     singleToast._clickForm := clickForm;
     singleToast._clickHandle := clickHandle;
+
+    if ((clickForm <> nil) and (clickHandle = 0)) then
+        singleToast._clickHandle := clickForm.Handle;
+         
     with singleToast.Label1 do begin
         Top := 5;
         Left := singleToast.Image1.Left + singleToast.Image1.Width + 2;
@@ -281,9 +285,13 @@ begin
             frmExodus.Show();
             exit;
         end;
+    end
+    else begin
+        SetForegroundWindow(_clickHandle);
     end;
 
-    _clickForm.Show();
+    if (_clickForm <> nil) then
+        _clickForm.Show();
 end;
 
 {---------------------------------------}
