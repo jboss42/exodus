@@ -532,8 +532,8 @@ uses
 
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
     ChatController, ChatWin, Debug, Dockable, ExSession, ExUtils,
-    GetOpt, InputPassword, Invite, GnuGetText,
-    Iq, JUD, JabberID, JabberMsg, IdGlobal, LocalUtils, 
+    InputPassword, Invite, GnuGetText,
+    Iq, JUD, JabberID, JabberMsg, IdGlobal, LocalUtils,
     JabberConst, ComController, CommCtrl, CustomPres,
     JoinRoom, Login, MsgController, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow, Room,
@@ -662,7 +662,6 @@ procedure TfrmExodus.WMInstaller(var msg: TMessage);
 var
     reg : TRegistry;
     cmd : string;
-    i : integer;
 begin
     // We are getting a Windows Msg from the installer
     if (not _shutdown) then begin
@@ -670,20 +669,9 @@ begin
         reg.RootKey := HKEY_CURRENT_USER;
         reg.OpenKey('\Software\Jabber\Exodus\Restart\' + IntToStr(Application.Handle), true);
 
-        for i := 1 to ParamCount do
-            cmd := cmd + ' ' + ParamStr(i);
-        reg.WriteString('cmdline', cmd);
+        reg.WriteString('cmdline', ParamStr(0));
         GetDir(0, cmd);
         reg.WriteString('cwd', cmd);
-        reg.WriteString('show', MainSession.Show);
-        reg.WriteString('status', MainSession.Status);
-        if (MainSession.Priority = -1) then
-            reg.WriteInteger('priority', 0)
-        else
-            reg.WriteInteger('priority', MainSession.Priority);
-
-        if (MainSession.Profile <> nil) then
-            reg.WriteString('profile', MainSession.Profile.Name);
 
         reg.CloseKey();
         reg.Free();
