@@ -111,6 +111,8 @@ procedure centerMainForm(f: TForm);
 
 procedure BuildPresMenus(parent: TObject; clickev: TNotifyEvent);
 
+function UTCNow(): TDateTime;
+
 resourcestring
     sDownloading      = 'Downloading...';
     sDownloadComplete = 'Download Complete';
@@ -1148,6 +1150,19 @@ begin
 
 end;
 
+
+{---------------------------------------}
+function UTCNow(): TDateTime;
+var
+    tzi: TTimeZoneInformation;
+    res: integer;
+begin
+    res := GetTimeZoneInformation(tzi);
+    if res = TIME_ZONE_ID_DAYLIGHT then
+        result := Now + ((tzi.Bias - 60) / 1440.0)
+    else
+        result := Now + (tzi.Bias / 1440.0);;
+end;
 
 {---------------------------------------}
 {---------------------------------------}
