@@ -1,4 +1,15 @@
 unit icqUtils;
+{
+    This code was taken from sample code which
+    comes with the ICQClient component (Licensed as freeware)
+    from:
+    (C) Alex Demchenko(alex@ritlabs.com)
+    See http://www.cobans.net for updates & more info.
+
+    It was modified for the Exodus project (http://exodus.jabberstudio.org)
+    for more generic operation.
+}
+
 
 interface
 uses
@@ -11,7 +22,6 @@ const
 
 // Forward declares
 function findICQDatabases(): TStringList;
-
 
 // private functions
 function GetDualIcqFiles(DbPath: String; var FList: TStringList): Boolean;

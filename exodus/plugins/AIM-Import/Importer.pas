@@ -1,4 +1,23 @@
 unit Importer;
+{
+    Copyright 2003, Peter Millard
+
+    This file is part of Exodus.
+
+    Exodus is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Exodus is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Exodus; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
 
 interface
 
@@ -42,13 +61,18 @@ var
 
 function getImportForm(controller: IExodusController; create: boolean): TfrmImport;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 
 {$R *.dfm}
 
 uses
-    Selector, StrUtils;
+    StrUtils;
 
+{---------------------------------------}
+{---------------------------------------}
 function getImportForm(controller: IExodusController; create: boolean): TfrmImport;
 begin
     if (frmImport <> nil) then begin
@@ -68,6 +92,8 @@ begin
         Result := nil;
 end;
 
+{---------------------------------------}
+{---------------------------------------}
 procedure TfrmImport.btnCancelClick(Sender: TObject);
 begin
     Self.Close;
@@ -79,6 +105,7 @@ begin
     Action := caFree;
 end;
 
+{---------------------------------------}
 procedure TfrmImport.btnFileBrowseClick(Sender: TObject);
 begin
     with OpenDialog1 do begin
@@ -88,6 +115,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmImport.validateGateway();
 begin
     // wait for the callback
@@ -95,6 +123,7 @@ begin
     exodus.getAgentList(txtGateway.Text);
 end;
 
+{---------------------------------------}
 procedure TfrmImport.processAgents();
 begin
     // make sure we have a AIM service
@@ -111,7 +140,7 @@ begin
     importFile();
 end;
 
-
+{---------------------------------------}
 procedure TfrmImport.importFile();
 var
     jid, cur_grp, tmps, fn: String;
@@ -173,6 +202,7 @@ begin
     btnNext.Caption := 'Finish';
 end;
 
+{---------------------------------------}
 procedure TfrmImport.addItems();
 var
     li: TListItem;
@@ -190,6 +220,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmImport.btnNextClick(Sender: TObject);
 begin
     inc(_stage);
@@ -201,6 +232,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmImport.FormCreate(Sender: TObject);
 begin
     _stage := 0;
