@@ -1,4 +1,4 @@
-object frmJabber: TfrmJabber
+object Exodus: TExodus
   Left = 245
   Top = 198
   Width = 539

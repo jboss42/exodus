@@ -85,7 +85,7 @@ begin
         SelStart := GetTextLen;
         SelLength := 0;
         SelAttributes.Color := clRed;
-        SelText := 'DEBUG: ' + txt;
+        SelText := txt;
         SelAttributes.Color := clBlack;
         end;
 end;
