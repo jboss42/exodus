@@ -1,64 +1,36 @@
-2004-08-05 09:54  pgmillard
+2004-08-12 10:08  pgmillard
 
 	* exodus/: default.po, version.h, version.nsi: daily build
 
-2004-08-04 22:15  pgmillard
+2004-08-12 07:02  pgmillard
 
-	* exodus/: BaseChat.dfm, BaseChat.pas, Dockable.pas,
-	  RTFMsgList.dfm, RTFMsgList.pas: More triumphant handling for
-	  turning off flashing. Trap the WMActivate message and pass it
-	  down thru the subclasses.
+	* exodus/: default.po, plugins/AIM-Import/ExodusCOM_TLB.pas,
+	  plugins/ASpeller/ExodusCOM_TLB.pas,
+	  plugins/HTMLLogger/ExodusCOM_TLB.pas,
+	  plugins/ICQ-Import/ExodusCOM_TLB.pas,
+	  plugins/JabberStats/ExodusCOM_TLB.pas,
+	  plugins/NetMeeting/ExodusCOM_TLB.pas,
+	  plugins/RosterTools/ExodusCOM_TLB.pas,
+	  plugins/SQLLogger/ExodusCOM_TLB.pas: [no log message]
 
-2004-08-04 21:49  pgmillard
+2004-08-11 20:16  pgmillard
 
-	* exodus/: RTFMsgList.dfm, RTFMsgList.pas: Bug #4100 - Intercept
-	  mouse-down events to prevent extra flashing
+	* exodus/locale/de/LC_MESSAGES/default.po: Missing space from
+	  german translation.
 
-2004-08-04 21:15  pgmillard
+2004-08-11 20:14  pgmillard
 
-	* exodus/: RecvStatus.pas, SendStatus.pas: Bug #4099 - Stringprep
-	  jids before hashing for file xfers.
+	* exodus/Profile.pas: Bug #4140 - Fix list index out of bounds when
+	  displaying groups.
 
-2004-07-29 12:09  pgmillard
+2004-08-11 20:11  pgmillard
 
-	* exodus/Browser.pas, exodus/CommandWizard.pas,
-	  exodus/ExSession.pas, exodus/Exodus.dof,
-	  exodus/ExodusCOM_TLB.pas, exodus/Jabber1.dfm, exodus/Jabber1.pas,
-	  jopl/Presence.pas, jopl/Roster.pas, jopl/Signals.pas: Bug #4079 -
-	  Speculative fix for recursive dispatching bug.
+	* exodus/BaseChat.pas: Bug #4134 - Fixup emoticon dialog box.
 
-2004-07-28 17:56  pgmillard
+2004-08-11 19:44  pgmillard
 
-	* exodus/: Browser.dfm, Browser.pas, ChatWin.dfm, ChatWin.pas,
-	  CommandWizard.dfm, CommandWizard.pas, RosterAdd.dfm,
-	  RosterAdd.pas, fResults.pas, xdata.pas: Finish up command wizard
-	  stuff, and integrate with the browser
-
-2004-07-28 01:30  pgmillard
-
-	* exodus/: CommandWizard.dfm, CommandWizard.pas, Jabber1.pas,
-	  fResults.dfm, fResults.pas: Finish up -50 command wizard.. still
-	  needs integration
-
-2004-07-27 21:09  pgmillard
-
-	* jopl/DNSUtils.pas: Fixup DNS code so it tries all DNS servers
-	  until we find a result.
-
-2004-07-27 07:55  rimas
-
-	* exodus/locale/lt/LC_MESSAGES/default.po: [no log message]
-
-2004-07-27 00:22  pgmillard
-
-	* exodus/BaseChat.dfm, exodus/COMController.pas,
-	  exodus/CommandWizard.dfm, exodus/CommandWizard.pas,
-	  exodus/ExUtils.pas, exodus/Exodus.dpr, exodus/Exodus.tlb,
-	  exodus/ExodusCOM_TLB.pas, exodus/Jabber1.dfm, exodus/Jabber1.pas,
-	  exodus/fGeneric.pas, exodus/fResults.dfm, exodus/fResults.pas,
-	  exodus/jud.dfm, exodus/jud.pas, exodus/xdata.dfm,
-	  exodus/xdata.pas, exodus/prefs/PrefPanel.dfm,
-	  jopl/AutoUpdate.pas, jopl/DNSUtils.pas, jopl/EntityCache.pas,
-	  jopl/JabberConst.pas, jopl/JabberMsg.pas: Most of the -50
-	  jabber-commands wizard
+	* exodus/: plugins/example-plugin-i18n-new.nsh,
+	  plugins/example-plugin-i18n.nsi,
+	  plugins/example-plugin-locale.nsh, web/branding.html: Fixup
+	  branding links, and remove un-needed install examples.
 
