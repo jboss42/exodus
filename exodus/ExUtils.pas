@@ -36,6 +36,7 @@ const
     node_ritem = 1;
     node_bm = 2;
     node_grp = 3;
+    node_transport = 4;
 
 type
     PLASTINPUTINFO = ^LASTINPUTINFO;

@@ -1,6 +1,6 @@
 object frmRosterWindow: TfrmRosterWindow
-  Left = 731
-  Top = 227
+  Left = 241
+  Top = 165
   Width = 197
   Height = 448
   AlphaBlendValue = 220
@@ -1723,7 +1723,7 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object popBookmark: TPopupMenu
     Left = 8
-    Top = 296
+    Top = 272
     object Join1: TMenuItem
       Caption = 'Join Group'
       OnClick = treeRosterDblClick
@@ -1739,6 +1739,32 @@ object frmRosterWindow: TfrmRosterWindow
     object Properties1: TMenuItem
       Caption = 'Properties'
       OnClick = popPropertiesClick
+    end
+  end
+  object popTransport: TPopupMenu
+    Left = 40
+    Top = 272
+    object popTransLogoff: TMenuItem
+      Caption = 'Log Off'
+      OnClick = popTransLogoffClick
+    end
+    object popTransLogon: TMenuItem
+      Caption = 'Log On'
+      OnClick = popTransLogoffClick
+    end
+    object N6: TMenuItem
+      Caption = '-'
+    end
+    object popTransProperties: TMenuItem
+      Caption = 'Properties'
+    end
+    object popTransUnRegister: TMenuItem
+      Caption = 'Un-Register'
+      OnClick = popTransUnRegisterClick
+    end
+    object popTransRemove: TMenuItem
+      Caption = 'Remove from Roster'
+      OnClick = popTransRemoveClick
     end
   end
 end

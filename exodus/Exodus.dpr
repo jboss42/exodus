@@ -111,7 +111,8 @@ uses
   ExodusController in 'ExodusController.pas' {ExodusController: CoClass},
   ExodusPlugin_TLB in 'plugins\ExodusPlugin_TLB.pas',
   xdata in 'xdata.pas' {frmXData},
-  fGeneric in 'fGeneric.pas' {frameGeneric: TFrame};
+  fGeneric in 'fGeneric.pas' {frameGeneric: TFrame},
+  Transports in 'Transports.pas';
 
 {$R *.TLB}
 

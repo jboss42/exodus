@@ -88,6 +88,13 @@ type
     Properties1: TMenuItem;
     Delete1: TMenuItem;
     N5: TMenuItem;
+    popTransport: TPopupMenu;
+    popTransLogoff: TMenuItem;
+    popTransLogon: TMenuItem;
+    N6: TMenuItem;
+    popTransUnRegister: TMenuItem;
+    popTransProperties: TMenuItem;
+    popTransRemove: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -137,6 +144,9 @@ type
     procedure treeRosterChange(Sender: TObject; Node: TTreeNode);
     procedure treeRosterExit(Sender: TObject);
     procedure FormActivate(Sender: TObject);
+    procedure popTransLogoffClick(Sender: TObject);
+    procedure popTransUnRegisterClick(Sender: TObject);
+    procedure popTransRemoveClick(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;
@@ -221,7 +231,7 @@ uses
     Transfer,
     MsgRecv,
     PrefController,
-    ExEvents, 
+    ExEvents,
     ExUtils,
     Room,
     Profile,
@@ -232,6 +242,7 @@ uses
     GrpRemove, RemoveContact,
     ChatWin,
     Jabber1,
+    Transports, 
     Session;
 
 {$R *.DFM}
@@ -565,7 +576,6 @@ begin
             TJabberBookmark(Bookmarks.Objects[i]).Data := nil;
         end;
 
-
     _bookmark := nil;
     _offline := nil;
 
@@ -575,7 +585,7 @@ end;
 {---------------------------------------}
 function TfrmRosterWindow.getNodeType(Node: TTreeNode): integer;
 var
-    n: TTreeNode;
+    grp_node, n: TTreeNode;
 begin
     // return the type of node this is..
     if (Node = nil) then
@@ -604,6 +614,13 @@ begin
     else if (TObject(n.Data) is TJabberRosterItem) then begin
         Result := node_ritem;
         _cur_ritem := TJabberRosterItem(n.Data);
+
+        // check to see if it's a transport
+        if (n.Level > 0) then begin
+            grp_node := n.Parent;
+            if (grp_node.Text = 'Transports') then
+                Result := node_transport;
+            end;
         end;
 end;
 
@@ -1263,7 +1280,6 @@ begin
         if ritem <> nil then
             p := MainSession.ppdb.FindPres(ritem.jid.jid, '');
 
-        // popClientInfo.Enabled := (p <> nil);
         popVersion.Enabled := (p <> nil);
         popTime.Enabled := (p <> nil);
         end;
@@ -1393,6 +1409,10 @@ begin
         end;
     node_bm: begin
         treeRoster.PopupMenu := popBookmark;
+        treeRoster.Selected := n;
+        end;
+    node_transport: begin
+        treeRoster.PopupMenu := popTransport;
         treeRoster.Selected := n;
         end;
     node_ritem: begin
@@ -1616,6 +1636,7 @@ begin
         treeRoster.Canvas.Font.Style := [];
         case getNodeType(Node) of
         node_bm: DefaultDraw := true;
+        node_transport: DefaultDraw := true;
         node_ritem: begin
             // draw a roster item
             if (_show_status) then begin
@@ -1965,6 +1986,36 @@ end;
 procedure TfrmRosterWindow.FormActivate(Sender: TObject);
 begin
     _change_node := nil;
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.popTransLogoffClick(Sender: TObject);
+var
+    p: TXMLTag;
+begin
+    // send unavail pres to this jid..
+    if (_cur_ritem <> nil) then begin
+        p := TXMLTag.Create('presence');
+        if (Sender = popTransLogoff) then
+            p.PutAttribute('type', 'unavailable');
+        p.PutAttribute('to', _cur_ritem.jid.full);
+        MainSession.SendTag(p);
+        end;
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.popTransUnRegisterClick(Sender: TObject);
+begin
+    // unregister from the transport.
+    if MessageDlg('Remove Registration?', mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
+
+    RemoveTransport(_cur_ritem.jid.jid);
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.popTransRemoveClick(Sender: TObject);
+begin
+    RemoveRosterItem(_cur_ritem.jid.full);
 end;
 
 end.
