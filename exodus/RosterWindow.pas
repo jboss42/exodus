@@ -1698,7 +1698,6 @@ begin
             me := true;
             e := (_cur_myres.item <> nil);
             ri := _cur_myres.item;
-            pri := _cur_myres.Presence;
         end
         else begin
             me := false;
