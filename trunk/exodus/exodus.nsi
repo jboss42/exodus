@@ -21,7 +21,14 @@
 
 ; exodus.nsi
 ;
-!verbose 2
+!verbose 1
+!define SF_SELECTED   1
+!define SF_SUBSEC     2
+!define SF_SUBSECEND  4
+!define SF_BOLD       8
+!define SF_RO         16
+!define SF_EXPAND     32
+!define SECTION_OFF   0xFFFFFFFE
 
 ; The name of the installer
 !define MUI_PRODUCT "Exodus" ;Define your own software name here
@@ -54,7 +61,7 @@ InstallDirRegKey HKLM "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
 
 !define MUI_FINISHPAGE
   !define MUI_FINISHPAGE_RUN "$INSTDIR\Exodus.exe"  
-  !define MUI_FINISHPAGE_RUN_NOTCHECKED
+;  !define MUI_FINISHPAGE_RUN_NOTCHECKED
   !define MUI_FINISHPAGE_NOAUTOCLOSE
 
 ; !define MUI_ABORTWARNING
@@ -82,6 +89,15 @@ LangString DESC_Bleed ${LANG_ENGLISH} \
 
 LangString DESC_Plugins ${LANG_ENGLISH} \
 "Download Exodus plugins via the Internet, using your IE proxy settings."
+
+LangString DESC_AIM ${LANG_ENGLISH} \
+"Import contacts from AOL Instant Messenger"
+
+LangString DESC_ICQ ${LANG_ENGLISH} \
+"Import contacts from ICQ"
+
+LangString DESC_Word ${LANG_ENGLISH} \
+"Check spelling using Microsoft Word"
 
 ; BRANDING: YOU MUST NOT REMOVE THE GPL!
 LicenseData GPL-LICENSE.TXT
@@ -220,49 +236,56 @@ Section "SSL Support" SEC_SSL
         ssl_done:
 SectionEnd
 
-Section /e "Plugins" SEC_Plugins
-  AddSize 1693
-  CreateDirectory "$INSTDIR\plugins"
-  ; BRANDING: Change this URL
-  NSISdl::download "${HOME_URL}/daily/plugins.zip" \
-                   "$INSTDIR\plugins\plugins.zip"
-  StrCmp $0 "success" plugins
-    Abort "Error downloading plugin libraries"
+SubSection /e "Plugins" SEC_Plugins
+	Section "AIM Importer" SEC_AIM
+	  AddSize 610
+	  Push "AIMImport"
+	  Call DownloadPlugin
+	SectionEnd
 
-  plugins:
-  ZipDLL::extractall "$INSTDIR" "$INSTDIR\plugins\plugins.zip" 
+	Section "ICQ Importer" SEC_ICQ
+	  AddSize 670
+	  Push "ICQImport"
+	  Call DownloadPlugin
+	SectionEnd
 
-  ; register all of the plugin .dll's
-  ClearErrors
-  FindFirst $0 $1 "$INSTDIR\plugins\*.dll"
-  IfErrors nodlls
-  nextdll:
+	Section "MS Word Speller" SEC_Word
+	  AddSize 450
+	  Push "WordSpeller"
+	  Call DownloadPlugin
+	SectionEnd
 
-  ClearErrors
-  RegDll $INSTDIR\plugins\$1
-  IfErrors regerror findnextdll
-    regerror:
-    DetailPrint "Error trying to register $INSTDIR\plugins\$1"
-    
-  findnextdll:
-  ClearErrors
-  FindNext $0 $1
-  IfErrors dllregdone nextdll
-
-  dllregdone:
-  FindClose $0
-  goto pluginend
-  
-  nodlls:
-  DetailPrint "$0 $1 No dlls found in $INSTDIR\plugins"
-
-  pluginend:
-  Delete "$INSTDIR\plugins\plugins.zip"
-SectionEnd
+SubSectionEnd
 
 ; Start menu shortcuts
 Section "" SEC_Menu
-    ; if in silent mode, don't do any of this, ever
+  	; register all of the plugin .dll's
+  	ClearErrors
+  	FindFirst $0 $1 "$INSTDIR\plugins\*.dll"
+  	IfErrors nodlls
+  nextdll:
+
+  	ClearErrors
+  	RegDll $INSTDIR\plugins\$1
+  	IfErrors regerror findnextdll
+  regerror:
+    DetailPrint "Error trying to register $INSTDIR\plugins\$1"
+    
+  findnextdll:
+  	ClearErrors
+  	FindNext $0 $1
+  	IfErrors dllregdone nextdll
+
+  dllregdone:
+  	FindClose $0
+  	goto pluginend
+  
+  nodlls:
+  	DetailPrint "$0 $1 No dlls found in $INSTDIR\plugins"
+
+  pluginend:
+
+    ; if in silent mode, don't do any of the menu stuff, ever
     Push $CMDLINE
     Push "/S"
     Call StrStr
@@ -304,6 +327,9 @@ SectionEnd
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC_SSL} $(DESC_SSL)
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Bleed} $(DESC_Bleed)
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Plugins} $(DESC_Plugins)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_AIM} $(DESC_AIM)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_ICQ} $(DESC_ICQ)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Word} $(DESC_Word)
 !insertmacro MUI_FUNCTIONS_DESCRIPTION_END
 
 !insertmacro MUI_SECTIONS_FINISHHEADER
@@ -500,7 +526,45 @@ Function StrStr
   Exch $1
 FunctionEnd
 
+Function DownloadPlugin
+	Exch $1
+
+  	CreateDirectory "$INSTDIR\plugins"
+  	; BRANDING: Change this URL
+  	NSISdl::download "${HOME_URL}/plugins/$1.zip" \
+                     "$INSTDIR\plugins\$1.zip"
+
+	StrCmp $0 "success" unzip
+    Abort "Error downloading $1 plugin"
+
+  unzip:
+  	ZipDLL::extractall "$INSTDIR\plugins" "$INSTDIR\plugins\$1.zip" 
+  	Delete "$INSTDIR\plugins\$1.zip"
+FunctionEnd
+
+Function TurnOff
+	Exch $0
+	Push $1
+	SectionGetFlags $0 $1
+	IntOp $1 $1 & ${SECTION_OFF}
+	SectionSetFlags $0 $1
+	Pop $1
+FunctionEnd
+
+
 Function .onInit
-        SectionSetFlags ${SEC_Plugins} 0
-        SectionSetFlags ${SEC_Bleed} 0
+	Push ${SEC_AIM}
+	Call TurnOff
+
+	Push ${SEC_ICQ}
+	Call TurnOff
+
+	Push ${SEC_Word}
+	Call TurnOff
+
+	Push ${SEC_Plugins}
+	Call TurnOff
+
+	Push ${SEC_Bleed}
+	Call TurnOff
 FunctionEnd
