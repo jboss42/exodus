@@ -442,7 +442,7 @@ begin
     tmps := Lowercase(_profile.server);
     res := SVE_NONE;
     for i := 0 to sl.Count - 1 do begin
-        if (Lowercase(sl[i]) = ('CN=' + tmps)) then begin
+        if (Lowercase(sl[i]) = ('cn=' + tmps)) then begin
             _ssl_ok := true;
             break;
         end;
