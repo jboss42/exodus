@@ -143,10 +143,8 @@ begin
     txtPassword.Text := p.Password;
     cboServer.Text := p.Server;
     cboResource.Text := p.Resource;
-    // spnPriority.Position := p.Priority;
     chkSavePasswd.Checked := p.SavePasswd;
     chkInvisible.Checked := false;
-    // cboConnection.ItemIndex := p.ConnectionType;
 end;
 
 {---------------------------------------}

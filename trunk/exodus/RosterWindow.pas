@@ -1388,7 +1388,7 @@ begin
         popChat.Enabled := e;
         popMsg.Enabled := e;
         popProperties.Enabled := true;
-        popSendFile.Enabled := o;
+        popSendFile.Enabled := o and (MainSession.Profile.ConnectionType = conn_normal);
         popPresence.Enabled := e;
         popClientInfo.Enabled := true;
         popVersion.Enabled := o;

@@ -180,6 +180,7 @@ begin
             end;
         url := 'http://' + MainSession.Stream.LocalIP + ':5280/' +
                ExtractFileName(filename);
+        txtMsg.Lines.Clear();
         txtMsg.Lines.Add(sXferURL + url);
         end;
     xfer.Show;
@@ -195,6 +196,11 @@ begin
     else if Mode = 1 then begin
         if OpenDialog1.Execute then begin
             // reset the text in the txtMsg richedit..
+            filename := OpenDialog1.FileName;
+            url := 'http://' + MainSession.Stream.LocalIP + ':5280/' +
+                   ExtractFileName(filename);
+            txtMsg.Lines.Clear();
+            txtMsg.Lines.Add(sXferURL + url);
             end;
         end
     else if Mode = 2 then
