@@ -1571,12 +1571,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 384
-    ActivePage = tbsDialog
+    ActivePage = tbsPlugins
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 4
+    TabIndex = 11
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -2130,7 +2130,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 97
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -3058,20 +3058,16 @@ object frmPrefs: TfrmPrefs
       Caption = 'tbsPlugins'
       ImageIndex = 11
       object Label6: TLabel
-        Left = 0
-        Top = 20
-        Width = 335
-        Height = 26
-        Align = alTop
-        Caption = 
-          'Enter the COM object to instantiate as a plugin when Exodus star' +
-          'ts up. Adding new plugins requires restarting Exodus.'
-        WordWrap = True
+        Left = 6
+        Top = 279
+        Width = 191
+        Height = 13
+        Caption = 'Plugin Directory (automatically scanned):'
       end
       object StaticText12: TStaticText
         Left = 0
         Top = 0
-        Width = 51
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -3086,13 +3082,69 @@ object frmPrefs: TfrmPrefs
         ParentFont = False
         TabOrder = 0
       end
-      object memPlugins: TTntMemo
+      object btnAddPlugin: TButton
+        Left = 6
+        Top = 240
+        Width = 75
+        Height = 25
+        Caption = 'Add'
+        TabOrder = 2
+      end
+      object btnConfigPlugin: TButton
+        Left = 90
+        Top = 240
+        Width = 75
+        Height = 25
+        Caption = 'Configure'
+        TabOrder = 3
+      end
+      object btnRemove: TButton
+        Left = 174
+        Top = 240
+        Width = 75
+        Height = 25
+        Caption = 'Remove'
+        TabOrder = 4
+      end
+      object txtPluginDir: TEdit
+        Left = 8
+        Top = 300
+        Width = 225
+        Height = 21
+        TabOrder = 5
+        OnChange = txtCPTitleChange
+      end
+      object btnBrowsePluginPath: TButton
+        Left = 239
+        Top = 299
+        Width = 75
+        Height = 25
+        Caption = 'Browse'
+        TabOrder = 6
+      end
+      object lstPlugins: TTntListView
         Left = 0
-        Top = 46
+        Top = 20
         Width = 363
-        Height = 280
-        Align = alClient
+        Height = 213
+        Align = alTop
+        BevelWidth = 0
+        Checkboxes = True
+        Columns = <
+          item
+            Caption = 'Plugin'
+            Width = 100
+          end
+          item
+            Caption = 'Description'
+            Width = 150
+          end
+          item
+            Caption = 'Filename'
+            Width = 80
+          end>
         TabOrder = 1
+        ViewStyle = vsReport
       end
     end
   end
