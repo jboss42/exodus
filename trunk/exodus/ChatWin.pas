@@ -178,16 +178,18 @@ begin
 
     if (((r = msg_existing_chat) or (m > 0)) and (chat <> nil)) then begin
         win := TfrmChat(chat.window);
-        if ((win.Docked) or (win.Redock)) then begin
-            if (not win.Visible) then
-                win.ShowDefault()
+        if (win <> nil) then begin
+            if ((win.Docked) or (win.Redock)) then begin
+                if (not win.Visible) then
+                    win.ShowDefault()
+                else
+                    frmExodus.Tabs.ActivePage := win.TabSheet;
+            end
             else
-                frmExodus.Tabs.ActivePage := win.TabSheet;
-        end
-        else
-            win.ShowDefault();
-        Result := win;
-        exit;
+                win.ShowDefault();
+            Result := win;
+            exit;
+        end;
     end;
 
     // Create a new chat controller if we don't have one
