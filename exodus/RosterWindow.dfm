@@ -1,6 +1,6 @@
 object frmRosterWindow: TfrmRosterWindow
-  Left = 827
-  Top = 172
+  Left = 657
+  Top = 191
   Width = 197
   Height = 448
   AlphaBlendValue = 220
@@ -57,9 +57,9 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object treeRoster: TTreeView
     Left = 0
-    Top = 0
+    Top = 41
     Width = 189
-    Height = 288
+    Height = 247
     Cursor = crArrow
     Hint = 'Roster Hint'
     Align = alClient
@@ -219,13 +219,30 @@ object frmRosterWindow: TfrmRosterWindow
       end
     end
   end
+  object pnlConnect: TPanel
+    Left = 0
+    Top = 0
+    Width = 189
+    Height = 41
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 4
+    Visible = False
+    object Animate1: TAnimate
+      Left = 56
+      Top = 3
+      Width = 65
+      Height = 31
+      Active = False
+    end
+  end
   object ImageList1: TImageList
     DrawingStyle = dsTransparent
     ShareImages = True
     Left = 24
     Top = 66
     Bitmap = {
-      494C01011F002200040010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C01011F002200040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000009000000001002000000000000090
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1417,7 +1434,8 @@ object frmRosterWindow: TfrmRosterWindow
       E03FE03FE01FE03FE00FE01FE00FE00FE007E00FE007E007E003E007C003E003
       C003C003C003C003C001C003C001C001C001C001C001C001C001C001C001C001
       C001C001C001C001C001C001C003C001E003E003E003E003E007E003F007E003
-      F00FF007F80FF007FC1FF80FFE3FFC1F}
+      F00FF007F80FF007FC1FF80FFE3FFC1F00000000000000000000000000000000
+      000000000000}
   end
   object popRoster: TPopupMenu
     OnPopup = popRosterPopup

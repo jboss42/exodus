@@ -161,8 +161,15 @@ begin
         if (_socket = nil) then
             Self.Terminate
         else if not _Socket.Connected then begin
-            _socket := nil;
-            doMessage(WM_DISCONNECTED);
+            _socket.CheckForGracefulDisconnect(false);
+            if (not _socket.ClosedGracefully) then begin
+                _socket := nil;
+                doMessage(WM_COMMERROR);
+                end
+            else begin
+                _socket := nil;
+                doMessage(WM_DISCONNECTED);
+                end;
             Self.Terminate;
             end
         else begin

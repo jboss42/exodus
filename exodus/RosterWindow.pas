@@ -85,6 +85,8 @@ type
     popBlock: TMenuItem;
     popGroupBlock: TMenuItem;
     BroadcastMessage1: TMenuItem;
+    pnlConnect: TPanel;
+    Animate1: TAnimate;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
