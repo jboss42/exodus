@@ -84,6 +84,7 @@ type
     SendContactsTo1: TMenuItem;
     popBlock: TMenuItem;
     Block1: TMenuItem;
+    BroadcastMessage1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -125,6 +126,7 @@ type
     procedure popGrpInviteClick(Sender: TObject);
     procedure popSendContactsClick(Sender: TObject);
     procedure popBlockClick(Sender: TObject);
+    procedure BroadcastMessage1Click(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;
@@ -1568,6 +1570,7 @@ begin
     else begin
         recips := getSelectedContacts(false);
         RemoveGroup('', recips);
+        recips.Free();
         end;
 end;
 
@@ -1610,6 +1613,8 @@ begin
         jids.Add(TJabberRosterItem(sel[i]).jid.full);
 
     ShowInvite('', jids);
+    sel.Free();
+    jids.Free();
 end;
 
 {---------------------------------------}
@@ -1660,6 +1665,7 @@ begin
     fSel.Free();
 end;
 
+{---------------------------------------}
 procedure TfrmRosterWindow.popBlockClick(Sender: TObject);
 var
     recips: TList;
@@ -1672,6 +1678,30 @@ begin
         end;
     for i := 0 to recips.Count - 1 do
         MainSession.Block(TJabberRosterItem(recips[i]).jid);
+
+    recips.Clear();
+    recips.Free();
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.BroadcastMessage1Click(Sender: TObject);
+var
+    r: TList;
+    jl: TStringList;
+    i: integer;
+begin
+    // Broadcast a message to the grp
+    r := getSelectedContacts(true);
+    if (r.Count > 1) then begin
+        jl := TStringlist.Create();
+        for i := 0 to r.Count - 1 do
+            jl.Add(TJabberRosterItem(r[i]).jid.full);
+        BroadcastMsg(jl);
+        jl.Free();
+        end;
+
+    r.Clear();
+    r.Free();
 end;
 
 end.
