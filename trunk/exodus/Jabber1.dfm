@@ -1,5 +1,5 @@
 object frmExodus: TfrmExodus
-  Left = 297
+  Left = 299
   Top = 204
   Width = 209
   Height = 371
