@@ -10,7 +10,7 @@ DCC = $(ROOT)\bin\dcc32.exe $**
 BRCC = $(ROOT)\bin\brcc32.exe $**
 #------------------------------------------------------------------------------
 PROJECTS = AIMImport.dll ICQImport.dll JabberStats.dll ExodusWordSpeller.dll \
-  ExNetMeeting.dll RosterTools.dll
+  ExNetMeeting.dll RosterTools.dll ExAspell.dll
 #------------------------------------------------------------------------------
 default: $(PROJECTS)
 #------------------------------------------------------------------------------
@@ -31,6 +31,9 @@ ExNetMeeting.dll: NetMeeting\ExNetMeeting.dpr
   $(DCC)
 
 RosterTools.dll: RosterTools\RosterTools.dpr
+  $(DCC)
+
+ExAspell.dll: ASpeller\ExAspell.dpr
   $(DCC)
 
 
