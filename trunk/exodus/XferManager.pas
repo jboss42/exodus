@@ -589,7 +589,6 @@ var
     resp: PChar;
     ip_len: Byte;
     myip: string;
-    stat: PChar;
 begin
   inherited;
     // we need to do something

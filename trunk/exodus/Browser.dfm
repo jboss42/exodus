@@ -4049,6 +4049,7 @@ object frmBrowse: TfrmBrowse
     end
   end
   object popContext: TPopupMenu
+    OnPopup = popContextPopup
     Left = 73
     Top = 269
     object mBrowse: TMenuItem
