@@ -128,6 +128,7 @@ resourceString
     sConfirmClearLog = 'Do you really want to clear the log for %s?';
     sConfirmClearAllLogs = 'Are you sure you want to delete all of your message and room logs?';
     sFilesDeleted = '%d log files deleted.';
+
 {---------------------------------------}
 constructor TAtom.Create(at: ATOM);
 begin
