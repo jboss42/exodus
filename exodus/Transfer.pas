@@ -37,13 +37,14 @@ uses
     // Normal Delphi things
     SyncObjs, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, ComCtrls, StdCtrls, ExtCtrls, TntExtCtrls, TntStdCtrls;
+    Dialogs, ComCtrls, StdCtrls, ExtCtrls, TntExtCtrls, TntStdCtrls,
+    IdSocks, IdTCPServer;
 
 const
     WM_THREAD_DONE = WM_USER + 6001;
 
 type
-    TTransferThread = class;
+    TFileRecvThread = class;
 
     TfrmTransfer = class(TfrmDockable)
         pnlFrom: TPanel;
@@ -53,38 +54,35 @@ type
         Label1: TTntLabel;
         bar1: TProgressBar;
         httpClient: TIdHTTP;
-        OpenDialog1: TOpenDialog;
         SaveDialog1: TSaveDialog;
         lblFrom: TTntLabel;
         txtFrom: TTntLabel;
         lblFile: TTntLabel;
         Label5: TTntLabel;
         lblDesc: TTntLabel;
+        IdTCPClient1: TIdTCPClient;
+        IdSocksInfo1: TIdSocksInfo;
         procedure frameButtons1btnOKClick(Sender: TObject);
         procedure frameButtons1btnCancelClick(Sender: TObject);
         procedure FormClose(Sender: TObject; var Action: TCloseAction);
-        procedure lblFileClick(Sender: TObject);
         procedure txtMsgKeyDown(Sender: TObject; var Key: Word;
           Shift: TShiftState);
         procedure FormCreate(Sender: TObject);
         procedure FormDestroy(Sender: TObject);
-        protected
+    protected
         procedure WMThreadDone(var msg: TMessage); message WM_THREAD_DONE;
     private
         { Private declarations }
-        _thread: TTransferThread;
-
-        procedure doSendIQ();
+        _thread: TFileRecvThread;
     public
         { Public declarations }
         Mode: integer;
         url: string;
         filename: string;
         jid: string;
-        send_dav: boolean;
     end;
 
-    TTransferThread = class(TIdThread)
+    TFileRecvThread = class(TThread)
     private
         _http: TIdHTTP;
         _stream: TFileStream;
@@ -95,7 +93,7 @@ type
         _lock: TCriticalSection;
         _url: string;
         _method: string;
-        
+
         procedure Update();
         procedure setHttp(value: TIdHttp);
 
@@ -106,7 +104,7 @@ type
         procedure httpClientWork(Sender: TObject; AWorkMode: TWorkMode; const AWorkCount: Integer);
         procedure httpClientWorkBegin(Sender: TObject; AWorkMode: TWorkMode; const AWorkCountMax: Integer);
     protected
-        procedure Run; override;
+        procedure Execute; override;
     public
         constructor Create(); reintroduce;
 
@@ -154,8 +152,6 @@ resourcestring
 procedure FileReceive(tag: TXMLTag); overload;
 procedure FileReceive(from, url, desc: string); overload;
 
-procedure FileSend(tojid: string; fn: string = '');
-
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -164,7 +160,7 @@ implementation
 {$R *.dfm}
 
 uses
-    ExSession,
+    ExSession, 
     JabberConst, Notify, JabberID, Roster, Session, Presence,
     ShellAPI, Jabber1, ExUtils;
 
@@ -236,100 +232,15 @@ begin
     DoNotify(xfer, 'notify_oob', 'File from ' + tmps, ico_service);
 end;
 
-{---------------------------------------}
-procedure FileSend(tojid: string; fn: string = '');
-var
-    xfer: TFrmTransfer;
-    tmp_id: TJabberID;
-    ip, tmps: string;
-    pri: TJabberPres;
-    ritem: TJabberRosterItem;
-    p: integer;
-    dav_path: Widestring;
-begin
-    xfer := TfrmTransfer.Create(Application);
 
-    with xfer do begin
-        Mode := xfer_send;
-
-        // Make sure the contact is online
-        tmp_id := TJabberID.Create(tojid);
-        if (tmp_id.resource = '') then begin
-            pri := MainSession.ppdb.FindPres(tmp_id.jid, '');
-            if (pri = nil) then begin
-                MessageDlg(sXferOnline, mtError, [mbOK], 0);
-                Mode := xfer_invalid;
-                xfer.Close;
-                exit;
-            end;
-            tmps := pri.fromJID.full;
-        end
-        else
-            tmps := tojid;
-
-        jid := tmps;
-        tmp_id.Free();
-
-        tmp_id := TJabberID.Create(tmps);
-        ritem := MainSession.Roster.Find(tmp_id.jid);
-        if (ritem = nil) then
-            ritem := MainSession.Roster.Find(tmp_id.full);
-
-        if (ritem <> nil) then begin
-            tmps := ritem.Nickname;
-            txtFrom.Hint := tmps;
-        end
-        else
-            tmps := tmp_id.full;
-        tmp_id.Free();
-
-        // Setup the GUI
-        txtFrom.Caption := tmps;
-        txtFrom.Hint := jid;
-        lblFrom.Caption := sTo;
-
-        pnlProgress.Visible := false;
-        frameButtons1.btnOK.Caption := sSend;
-        if (fn <> '') then
-            filename := fn
-        else begin
-            if not OpenDialog1.Execute then exit;
-            filename := OpenDialog1.Filename;
-        end;
-
-        // get xfer prefs, and spin up URL
-        with MainSession.Prefs do begin
-            if (getBool('xfer_webdav')) then begin
-                send_dav := true;
-                ip := getString('xfer_davhost');
-                dav_path := getString('xfer_davpath');
-                url := ip + dav_path + '/' + ExtractFilename(filename);
-            end
-            else begin
-                send_dav := false;
-                ip := getString('xfer_ip');
-                p := getInt('xfer_port');
-
-                if (ip = '') then ip := MainSession.Stream.LocalIP;
-                url := 'http://' + ip + ':' + IntToStr(p) + '/' + ExtractFileName(filename);
-            end;
-        end;
-
-        txtMsg.Lines.Clear();
-        txtMsg.Lines.Add(sXferDefaultDesc);
-        lblFile.Hint := filename;
-        lblFile.Caption := ExtractFileName(filename);
-    end;
-    xfer.ShowDefault();
-end;
 
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-constructor TTransferThread.Create();
+constructor TFileRecvThread.Create();
 begin
     //
-    inherited Create;
+    inherited Create(true);
     
     _pos := 0;
     _form := nil;
@@ -339,7 +250,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TTransferThread.setHttp(value: TIdHttp);
+procedure TFileRecvThread.setHttp(value: TIdHttp);
 begin
     _http := Value;
     with _http do begin
@@ -354,7 +265,7 @@ end;
 
 
 {---------------------------------------}
-procedure TTransferThread.Run();
+procedure TFileRecvThread.Execute();
 begin
     try
         try
@@ -367,19 +278,18 @@ begin
         end;
     except
     end;
-    
+
     SendMessage(_form.Handle, WM_THREAD_DONE, 0, _http.ResponseCode);
-    Self.Terminate();
 end;
 
 {---------------------------------------}
-procedure TTransferThread.Update();
+procedure TFileRecvThread.Update();
 var
     i: integer;
 begin
     _lock.Acquire();
 
-    if ((Self.Stopped) or (Self.Terminated)) then begin
+    if ((Self.Suspended) or (Self.Terminated)) then begin
         _lock.Release();
         _http.DisconnectSocket();
         FreeAndNil(_stream);
@@ -397,7 +307,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TTransferThread.httpClientStatus(ASender: TObject;
+procedure TFileRecvThread.httpClientStatus(ASender: TObject;
   const AStatus: TIdStatus; const AStatusText: String);
 begin
     _lock.Acquire();
@@ -407,7 +317,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TTransferThread.httpClientConnected(Sender: TObject);
+procedure TFileRecvThread.httpClientConnected(Sender: TObject);
 begin
     _lock.Acquire();
     _new_txt.Add(sXferConn);
@@ -416,7 +326,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TTransferThread.httpClientDisconnected(Sender: TObject);
+procedure TFileRecvThread.httpClientDisconnected(Sender: TObject);
 begin
     // NB: For Indy9, it fires disconnected before it actually
     // connects. So if we drop the stream here, our GETs
@@ -429,7 +339,7 @@ end;
 
 
 {---------------------------------------}
-procedure TTransferThread.httpClientWorkEnd(Sender: TObject;
+procedure TFileRecvThread.httpClientWorkEnd(Sender: TObject;
   AWorkMode: TWorkMode);
 begin
     _lock.Acquire();
@@ -439,7 +349,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TTransferThread.httpClientWork(Sender: TObject;
+procedure TFileRecvThread.httpClientWork(Sender: TObject;
   AWorkMode: TWorkMode; const AWorkCount: Integer);
 begin
     // Update the progress meter
@@ -448,7 +358,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TTransferThread.httpClientWorkBegin(Sender: TObject;
+procedure TFileRecvThread.httpClientWorkBegin(Sender: TObject;
   AWorkMode: TWorkMode; const AWorkCountMax: Integer);
 begin
     _pos_max := AWorkCountMax;
@@ -462,9 +372,7 @@ end;
 {---------------------------------------}
 procedure TfrmTransfer.frameButtons1btnCancelClick(Sender: TObject);
 begin
-    if ((Self.Mode = xfer_davputting) or
-        (Self.Mode = xfer_recv)) then
-        httpClient.DisconnectSocket();
+    httpClient.DisconnectSocket();
     Self.Close;
 end;
 
@@ -472,9 +380,7 @@ end;
 {---------------------------------------}
 procedure TfrmTransfer.frameButtons1btnOKClick(Sender: TObject);
 var
-    u, p: string;
     file_path: String;
-    dp: integer;
     fStream: TFileStream;
 begin
     if Self.Mode = xfer_recv then begin
@@ -509,59 +415,15 @@ begin
             end;
         end;
 
-        _thread := TTransferThread.Create();
+        _thread := TFileRecvThread.Create();
         _thread.url := Url;
         _thread.form := Self;
         _thread.http := httpClient;
         _thread.stream := fstream;
         _thread.method := 'get';
-        _thread.Start();
+        _thread.Resume();
     end
-    else if Self.Mode = xfer_send then begin
-        // send mode
-        if (send_dav) then begin
-            // first do the HTTP PUT
-            Self.Mode := xfer_davputting;
 
-            // check to see if we need to auth
-            u := MainSession.Prefs.getString('xfer_davusername');
-            p := MainSession.Prefs.getString('xfer_davpassword');
-            if (u <> '') then with httpClient.Request do begin
-                BasicAuthentication := true;
-                Username := u;
-                Password := p;
-            end;
-
-            dp := MainSession.Prefs.getInt('xfer_davport');
-            if (dp > 0) then
-                httpClient.Port := dp;
-
-            // get a handle to the stream
-            try
-                fStream := TFileStream.Create(filename, fmOpenRead);
-            except
-                on EStreamError do begin
-                    MessageDlg(sXferStreamError, mtError, [mbOK], 0);
-                    exit;
-                end;
-            end;
-
-            _thread := TTransferThread.Create();
-            _thread.url := Url;
-            _thread.form := Self;
-            _thread.http := httpClient;
-            _thread.stream := fstream;
-            _thread.method := 'put';
-
-            _thread.Start();
-        end
-        else begin
-            Self.Mode := xfer_sending;
-            doSendIQ();
-            ExFileServer.AddFile(filename);
-            Self.Close();
-        end;
-    end
     else if Self.Mode = xfer_recvd then begin
         // Open the file.
         ShellExecute(0, 'open', PChar(filename), '', '', SW_NORMAL);
@@ -573,17 +435,7 @@ end;
 procedure TfrmTransfer.WMThreadDone(var msg: TMessage);
 begin
     // our thread completed.
-    if (Self.Mode = xfer_davputting) then begin
-        Self.Mode := xfer_sending;
-        if ((msg.LParam >= 200) and
-            (msg.LParam < 300)) then
-            doSendIQ()
-        else
-            MessageDlg(sXferDavError, mtError, [mbOK], 0);
-
-        Self.Close();
-    end
-    else if (Self.Mode = xfer_recv) then begin
+    if (Self.Mode = xfer_recv) then begin
         if ((msg.LParam >= 200) and
             (msg.LParam < 300)) then begin
             frameButtons1.btnOK.Caption := sOpen;
@@ -598,53 +450,12 @@ begin
     end;
 end;
 
-{---------------------------------------}
-procedure TfrmTransfer.doSendIQ();
-var
-    iq: TXMLTag;
-begin
-    // normal p2p... just add it to our server,
-    // and close the form.
-    iq := TXMLTag.Create('iq');
-    with iq do begin
-        setAttribute('to', jid);
-        setAttribute('id', MainSession.generateID());
-        setAttribute('type', 'set');
-        with AddTag('query') do begin
-            setAttribute('xmlns', XMLNS_IQOOB);
-            AddBasicTag('url', url);
-            AddBasicTag('desc', txtMsg.WideText);
-        end;
-    end;
-    MainSession.SendTag(iq);
-end;
 
 {---------------------------------------}
 procedure TfrmTransfer.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
     Action := caFree;
-end;
-
-{---------------------------------------}
-procedure TfrmTransfer.lblFileClick(Sender: TObject);
-begin
-    // Browse for a new file..
-    if Mode = xfer_recv then begin
-        frameButtons1btnOKClick(Sender);
-    end
-    else if Mode = xfer_send then begin
-        if OpenDialog1.Execute then begin
-            // reset the text in the txtMsg richedit..
-            filename := OpenDialog1.FileName;
-            url := 'http://' + MainSession.Stream.LocalIP + ':5280/' +
-                   ExtractFileName(filename);
-            txtMsg.Lines.Clear();
-            txtMsg.Lines.Add(sXferURL + url);
-        end;
-    end
-    else if Mode = xfer_send then
-        ShellExecute(0, 'open', PChar(filename), '', '', SW_NORMAL);
 end;
 
 {---------------------------------------}
@@ -660,7 +471,6 @@ procedure TfrmTransfer.FormCreate(Sender: TObject);
 begin
     //
     AssignUnicodeFont(Self);
-    URLLabel(lblFile);
 end;
 
 {---------------------------------------}

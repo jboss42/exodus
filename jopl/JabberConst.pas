@@ -56,6 +56,9 @@ const
     XMLNS_DISCOITEMS = 'http://jabber.org/protocol/disco#items';
     XMLNS_DISCOINFO  = 'http://jabber.org/protocol/disco#info';
 
+    XMLNS_SI         = 'http://jabber.org/protocol/si';
+    XMLNS_FTPROFILE  = 'http://jabber.org/protocol/si/profile/file-transfer';
+
 var
     XP_MSGXDATA: TXPLite;
     XP_MUCINVITE: TXPLite;

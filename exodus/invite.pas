@@ -66,6 +66,7 @@ var
 
 resourcestring
     sConfRoom = 'Conference Room:';
+    sInviteBody = 'You have been invited to the %s room.';
 
 procedure showConfInvite(tag: TXMLTag);
 procedure showRecvInvite(tag: TXMLTag);
@@ -197,6 +198,7 @@ begin
     frm := FindRoom(room);
 
     // Send out invites.
+    b := Format(sInviteBody, [room]);
     memReason.Lines.Add(sConfRoom + ' ' + room);
 
     for i := 0 to lstJIDS.Items.Count - 1 do begin

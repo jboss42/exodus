@@ -168,7 +168,8 @@ resourcestring
 {---------------------------------------}
 implementation
 uses
-    Clipbrd, COMChatController, JabberConst, ShellAPI, Profile, Transfer,
+    Clipbrd, COMChatController, JabberConst, ShellAPI, Profile,
+    Transfer, SendFile, 
     ExSession, ExUtils, JabberMsg, JabberID,
     RosterWindow, RemoveContact, RosterRecv, Room, Roster,
     Presence, Session, Jabber1;

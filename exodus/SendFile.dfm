@@ -1,39 +1,54 @@
-object frmTransfer: TfrmTransfer
-  Left = 228
-  Top = 173
-  Width = 267
+inherited frmSendFile: TfrmSendFile
+  Left = 233
+  Top = 223
+  Width = 279
   Height = 207
-  ActiveControl = frameButtons1.btnOK
   BorderWidth = 2
-  Caption = 'File Transfer'
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
-  OldCreateOrder = False
-  Position = poMainFormCenter
+  Caption = 'Send A File'
   OnClose = FormClose
-  OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
+  inline frameButtons1: TframeButtons
+    Left = 0
+    Top = 136
+    Width = 267
+    Height = 36
+    Align = alBottom
+    AutoScroll = False
+    TabOrder = 0
+    inherited Panel2: TPanel
+      Width = 267
+      inherited Bevel1: TBevel
+        Width = 267
+      end
+      inherited Panel1: TPanel
+        Left = 107
+        inherited btnOK: TTntButton
+          Caption = 'Send'
+          OnClick = frameButtons1btnOKClick
+        end
+        inherited btnCancel: TTntButton
+          OnClick = frameButtons1btnCancelClick
+        end
+      end
+    end
+  end
   object pnlFrom: TPanel
     Left = 0
     Top = 0
-    Width = 255
+    Width = 267
     Height = 57
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 2
-    TabOrder = 0
+    TabOrder = 1
     object lblFrom: TTntLabel
       Left = 0
       Top = 0
-      Width = 32
+      Width = 20
       Height = 13
-      Caption = 'From:'
+      Caption = 'To:'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -41,21 +56,21 @@ object frmTransfer: TfrmTransfer
       Font.Style = [fsBold]
       ParentFont = False
     end
-    object txtFrom: TTntLabel
+    object lblTo: TTntLabel
       Left = 50
       Top = 0
-      Width = 34
+      Width = 23
       Height = 13
-      Caption = 'txtFrom'
+      Caption = 'lblTo'
       ParentShowHint = False
       ShowHint = True
     end
     object lblFile: TTntLabel
       Left = 50
       Top = 16
-      Width = 32
+      Width = 52
       Height = 13
-      Caption = 'Label3'
+      Caption = 'lblFilename'
       ParentShowHint = False
       ShowHint = True
     end
@@ -83,8 +98,8 @@ object frmTransfer: TfrmTransfer
   object txtMsg: TExRichEdit
     Left = 0
     Top = 57
-    Width = 255
-    Height = 56
+    Width = 267
+    Height = 79
     Align = alClient
     AutoURLDetect = adDefault
     CustomURLs = <
@@ -163,10 +178,9 @@ object frmTransfer: TfrmTransfer
     LangOptions = [loAutoFont]
     Language = 1033
     ShowSelectionBar = False
-    TabOrder = 1
+    TabOrder = 2
     URLColor = clBlue
     URLCursor = crHandPoint
-    OnKeyDown = txtMsgKeyDown
     InputFormat = ifRTF
     OutputFormat = ofRTF
     SelectedInOut = False
@@ -174,67 +188,45 @@ object frmTransfer: TfrmTransfer
     UndoLimit = 0
     AllowInPlace = False
   end
-  inline frameButtons1: TframeButtons
-    Left = 0
-    Top = 138
-    Width = 255
-    Height = 34
-    Align = alBottom
-    AutoScroll = False
-    TabOrder = 2
-    inherited Panel2: TPanel
-      Width = 255
-      Height = 34
-      inherited Bevel1: TBevel
-        Width = 255
-      end
-      inherited Panel1: TPanel
-        Left = 95
-        Height = 29
-        inherited btnOK: TTntButton
-          Caption = 'Receive'
-          OnClick = frameButtons1btnOKClick
-        end
-        inherited btnCancel: TTntButton
-          OnClick = frameButtons1btnCancelClick
-        end
-      end
-    end
+  object OpenDialog1: TOpenDialog
+    Left = 128
   end
-  object pnlProgress: TTntPanel
-    Left = 0
-    Top = 113
-    Width = 255
-    Height = 25
-    Align = alBottom
-    BevelOuter = bvNone
-    BorderWidth = 3
-    TabOrder = 3
-    object Label1: TTntLabel
-      Left = 3
-      Top = 3
-      Width = 53
-      Height = 19
-      Align = alLeft
-      Alignment = taCenter
-      Caption = 'Progress:   '
-    end
-    object bar1: TProgressBar
-      Left = 56
-      Top = 3
-      Width = 196
-      Height = 19
-      Align = alClient
-      TabOrder = 0
-    end
+  object TCPServer: TIdTCPServer
+    Bindings = <>
+    CommandHandlers = <>
+    DefaultPort = 0
+    Greeting.NumericCode = 0
+    MaxConnectionReply.NumericCode = 0
+    ReplyExceptionCode = 0
+    ReplyTexts = <>
+    ReplyUnknownCommand.NumericCode = 0
+    Left = 160
+  end
+  object SocksInfo: TIdSocksInfo
+    Left = 192
+  end
+  object httpServer: TIdHTTPServer
+    Bindings = <>
+    CommandHandlers = <>
+    DefaultPort = 5280
+    Greeting.NumericCode = 0
+    ListenQueue = 1
+    MaxConnectionReply.NumericCode = 0
+    OnConnect = httpServerConnect
+    OnDisconnect = httpServerDisconnect
+    ReplyExceptionCode = 0
+    ReplyTexts = <>
+    ReplyUnknownCommand.NumericCode = 0
+    OnCommandGet = httpServerCommandGet
+    Left = 224
   end
   object httpClient: TIdHTTP
     MaxLineAction = maException
     ReadTimeout = 0
-    AllowCookies = False
+    AllowCookies = True
     ProxyParams.BasicAuthentication = False
     ProxyParams.ProxyPort = 0
-    Request.ContentLength = 0
+    Request.ContentLength = -1
     Request.ContentRangeEnd = 0
     Request.ContentRangeStart = 0
     Request.ContentType = 'text/html'
@@ -242,18 +234,6 @@ object frmTransfer: TfrmTransfer
     Request.BasicAuthentication = False
     Request.UserAgent = 'Mozilla/3.0 (compatible; Indy Library)'
     HTTPOptions = [hoForceEncodeParams]
-    Left = 128
-  end
-  object SaveDialog1: TSaveDialog
     Left = 96
-  end
-  object IdTCPClient1: TIdTCPClient
-    MaxLineAction = maException
-    ReadTimeout = 0
-    Port = 0
-    Left = 160
-  end
-  object IdSocksInfo1: TIdSocksInfo
-    Left = 192
   end
 end

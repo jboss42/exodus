@@ -561,7 +561,7 @@ begin
     case server_side of
         pkClient:  t := _pref_node.GetFirstTag(pkey);
         pkServer:  t := _server_node.GetFirstTag(pkey);
-end;
+    end;
 
     if (t = nil) then
         Result := getDefault(pkey)
@@ -1405,6 +1405,7 @@ begin
         result := '';
 end;
 
+{---------------------------------------}
 procedure init();
 var
     res: TResourceStream;

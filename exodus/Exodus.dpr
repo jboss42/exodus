@@ -154,7 +154,8 @@ uses
   PrefLayouts in 'prefs\PrefLayouts.pas' {frmPrefLayouts},
   Wizard in 'Wizard.pas' {frmWizard},
   RegForm in 'RegForm.pas' {frmRegister},
-  LocalUtils in 'LocalUtils.pas';
+  LocalUtils in 'LocalUtils.pas',
+  SendFile in 'SendFile.pas' {frmSendFile};
 
 {$R *.TLB}
 
@@ -177,6 +178,7 @@ begin
   if (not continue) then exit;
 
   Application.CreateForm(TfrmExodus, frmExodus);
+  Application.CreateForm(TfrmSendFile, frmSendFile);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);
