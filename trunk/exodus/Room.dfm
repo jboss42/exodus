@@ -50,6 +50,7 @@ inherited frmRoom: TfrmRoom
         IconOptions.WrapText = False
         MultiSelect = True
         OwnerData = True
+        ReadOnly = True
         ParentShowHint = False
         PopupMenu = popRoomRoster
         ShowColumnHeaders = False
