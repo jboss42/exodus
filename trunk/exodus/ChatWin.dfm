@@ -1,12 +1,11 @@
 inherited frmChat: TfrmChat
-  Left = 276
-  Top = 166
+  Left = 839
+  Top = 454
   Caption = 'Chat Window'
   OldCreateOrder = True
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnEndDock = FormEndDock
-  OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
   inherited pnlInput: TPanel
