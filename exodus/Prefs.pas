@@ -233,6 +233,18 @@ resourcestring
     sPrefsLogDir = 'Select log directory';
     sPrefsXFerDir = 'Select download directory';
 
+    sSoundChatactivity = 'Activity in a chat window';
+    sSoundInvite = 'Invited to a room';
+    sSoundKeyword = 'Keyword in a room';
+    sSoundNewchat = 'New conversation';
+    sSoundNormalmsg = 'Received a normal message';
+    sSoundOffline = 'Contact went offline';
+    sSoundOnline = 'Contact came online';
+    sSoundRoomactivity = 'Activity in a room';
+    sSoundS10n = 'Subscription request';
+    sSoundOOB = 'File Transfers';
+    sSoundAutoResponse = 'Auto response generated';
+    
 procedure StartPrefs;
 
 {---------------------------------------}
@@ -253,7 +265,7 @@ uses
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
-    NUM_NOTIFIES = 10;
+    NUM_NOTIFIES = 11;
 
 {---------------------------------------}
 procedure StartPrefs;
@@ -376,16 +388,17 @@ begin
 
         chkSound.Checked := getBool('notify_sounds');
         chkNotifyActive.Checked := getBool('notify_active');
-        _notify[0] := getInt('notify_online');
-        _notify[1] := getInt('notify_offline');
-        _notify[2] := getInt('notify_newchat');
-        _notify[3] := getInt('notify_normalmsg');
-        _notify[4] := getInt('notify_s10n');
-        _notify[5] := getInt('notify_invite');
-        _notify[6] := getInt('notify_keyword');
-        _notify[7] := getInt('notify_chatactivity');
-        _notify[8] := getInt('notify_roomactivity');
-        _notify[9] := getInt('notify_oob');
+        _notify[0]  := getInt('notify_online');
+        _notify[1]  := getInt('notify_offline');
+        _notify[2]  := getInt('notify_newchat');
+        _notify[3]  := getInt('notify_normalmsg');
+        _notify[4]  := getInt('notify_s10n');
+        _notify[5]  := getInt('notify_invite');
+        _notify[6]  := getInt('notify_keyword');
+        _notify[7]  := getInt('notify_chatactivity');
+        _notify[8]  := getInt('notify_roomactivity');
+        _notify[9]  := getInt('notify_oob');
+        _notify[10] := getInt('notify_autoresponse');
 
         for i := 0 to NUM_NOTIFIES - 1 do
             chkNotify.Checked[i] := (_notify[i] > 0);
@@ -511,6 +524,8 @@ begin
         setInt('notify_keyword', _notify[6]);
         setInt('notify_chatactivity', _notify[7]);
         setInt('notify_roomactivity', _notify[8]);
+        setInt('notify_oob', _notify[9]);
+        setInt('notify_autoresponse', _notify[10]);
 
         // Autoaway options
         setBool('auto_away', chkAutoAway.Checked);
@@ -558,6 +573,18 @@ begin
     tbsKeywords.TabVisible := false;
     tbsBlockList.TabVisible := false;
     tbsCustomPres.TabVisible := false;
+
+    chkNotify.Items.Strings[0]  := sSoundOnline;
+    chkNotify.Items.Strings[1]  := sSoundOffline;
+    chkNotify.Items.Strings[2]  := sSoundNewchat;
+    chkNotify.Items.Strings[3]  := sSoundNormalmsg;
+    chkNotify.Items.Strings[4]  := sSoundS10n;
+    chkNotify.Items.Strings[5]  := sSoundInvite;
+    chkNotify.Items.Strings[6]  := sSoundKeyword;
+    chkNotify.Items.Strings[7]  := sSoundChatactivity;
+    chkNotify.Items.Strings[8]  := sSoundRoomactivity;
+    chkNotify.Items.Strings[9]  := sSoundOOB;
+    chkNotify.Items.Strings[10] := sSoundAutoResponse;
 
     PageControl1.ActivePage := tbsRoster;
 
