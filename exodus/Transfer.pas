@@ -28,61 +28,96 @@ interface
 uses
     // Exodus things
     XMLTag, Dockable, ExRichEdit, RichEdit2, buttonFrame,
+    Unicode, 
 
     // Indy Things
     IdTCPConnection, IdTCPClient, IdHTTP, IdBaseComponent,
-    IdComponent, IdThreadMgr,
+    IdComponent, IdThreadMgr, IdThread, IdAntiFreezeBase, IdAntiFreeze,
 
     // Normal Delphi things
+    SyncObjs, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, ComCtrls, StdCtrls, ExtCtrls, TntExtCtrls, TntStdCtrls;
 
-type
-  TfrmTransfer = class(TfrmDockable)
-    pnlFrom: TPanel;
-    txtMsg: TExRichEdit;
-    frameButtons1: TframeButtons;
-    pnlProgress: TTntPanel;
-    Label1: TTntLabel;
-    bar1: TProgressBar;
-    httpClient: TIdHTTP;
-    OpenDialog1: TOpenDialog;
-    SaveDialog1: TSaveDialog;
-    lblFrom: TTntLabel;
-    txtFrom: TTntLabel;
-    lblFile: TTntLabel;
-    Label5: TTntLabel;
-    lblDesc: TTntLabel;
-    procedure frameButtons1btnOKClick(Sender: TObject);
-    procedure httpClientWork(Sender: TObject; AWorkMode: TWorkMode;
-      const AWorkCount: Integer);
-    procedure httpClientWorkBegin(Sender: TObject; AWorkMode: TWorkMode;
-      const AWorkCountMax: Integer);
-    procedure httpClientWorkEnd(Sender: TObject; AWorkMode: TWorkMode);
-    procedure frameButtons1btnCancelClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure lblFileClick(Sender: TObject);
-    procedure txtMsgKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure FormCreate(Sender: TObject);
-    procedure httpClientDisconnected(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
-    procedure httpClientStatus(ASender: TObject; const AStatus: TIdStatus;
-      const AStatusText: String);
-    procedure httpClientConnected(Sender: TObject);
-  private
-    { Private declarations }
-    fstream: TFileStream;
+const
+    WM_THREAD_DONE = WM_USER + 6001;
 
-    procedure doSendIQ();
-  public
-    { Public declarations }
-    Mode: integer;
-    url: string;
-    filename: string;
-    jid: string;
-    send_dav: boolean;
-  end;
+type
+    TTransferThread = class;
+
+    TfrmTransfer = class(TfrmDockable)
+        pnlFrom: TPanel;
+        txtMsg: TExRichEdit;
+        frameButtons1: TframeButtons;
+        pnlProgress: TTntPanel;
+        Label1: TTntLabel;
+        bar1: TProgressBar;
+        httpClient: TIdHTTP;
+        OpenDialog1: TOpenDialog;
+        SaveDialog1: TSaveDialog;
+        lblFrom: TTntLabel;
+        txtFrom: TTntLabel;
+        lblFile: TTntLabel;
+        Label5: TTntLabel;
+        lblDesc: TTntLabel;
+        procedure frameButtons1btnOKClick(Sender: TObject);
+        procedure frameButtons1btnCancelClick(Sender: TObject);
+        procedure FormClose(Sender: TObject; var Action: TCloseAction);
+        procedure lblFileClick(Sender: TObject);
+        procedure txtMsgKeyDown(Sender: TObject; var Key: Word;
+          Shift: TShiftState);
+        procedure FormCreate(Sender: TObject);
+        procedure FormDestroy(Sender: TObject);
+        protected
+        procedure WMThreadDone(var msg: TMessage); message WM_THREAD_DONE;
+    private
+        { Private declarations }
+        _thread: TTransferThread;
+
+        procedure doSendIQ();
+    public
+        { Public declarations }
+        Mode: integer;
+        url: string;
+        filename: string;
+        jid: string;
+        send_dav: boolean;
+    end;
+
+    TTransferThread = class(TIdThread)
+    private
+        _http: TIdHTTP;
+        _stream: TFileStream;
+        _form: TfrmTransfer;
+        _done: boolean;
+        _pos_max: longint;
+        _pos: longint;
+        _new_txt: TWidestringlist;
+        _lock: TCriticalSection;
+        _url: string;
+        _method: string;
+        
+        procedure Update();
+        procedure setHttp(value: TIdHttp);
+
+        procedure httpClientStatus(ASender: TObject; const AStatus: TIdStatus; const AStatusText: String);
+        procedure httpClientConnected(Sender: TObject);
+        procedure httpClientDisconnected(Sender: TObject);
+        procedure httpClientWorkEnd(Sender: TObject; AWorkMode: TWorkMode);
+        procedure httpClientWork(Sender: TObject; AWorkMode: TWorkMode; const AWorkCount: Integer);
+        procedure httpClientWorkBegin(Sender: TObject; AWorkMode: TWorkMode; const AWorkCountMax: Integer);
+    protected
+        procedure Run; override;
+    public
+        constructor Create(); reintroduce;
+
+        property http: TIdHttp read _http write setHttp;
+        property stream: TFileStream read _stream write _stream;
+        property form: TfrmTransfer read _form write _form;
+        property url: String read _url write _url;
+        property method: String read _method write _method;
+    end;
+
 
 var
   frmTransfer: TfrmTransfer;
@@ -288,11 +323,156 @@ begin
 end;
 
 {---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+constructor TTransferThread.Create();
+begin
+    //
+    inherited Create;
+    
+    _pos := 0;
+    _form := nil;
+    _new_txt := TWidestringlist.Create();
+    _lock := TCriticalSection.Create();
+
+end;
+
+procedure TTransferThread.setHttp(value: TIdHttp);
+begin
+    _http := Value;
+    with _http do begin
+        OnConnected := Self.httpClientConnected;
+        OnDisconnected := Self.httpClientDisconnected;
+        OnWork := Self.httpClientWork;
+        OnWorkBegin := Self.httpClientWorkBegin;
+        OnWorkEnd := Self.httpClientWorkEnd;
+        OnStatus := httpClientStatus;
+    end;
+end;
+
+
+{---------------------------------------}
+procedure TTransferThread.Run();
+begin
+    try
+        if (_method = 'get') then
+            _http.Get(_url, _stream)
+        else
+            _http.Put(Self.url, _stream);
+    finally
+        FreeAndNil(_stream);
+    end;
+    PostMessage(_form.Handle, WM_THREAD_DONE, 0, _http.ResponseCode);
+    Self.Terminate();
+end;
+
+{---------------------------------------}
+procedure TTransferThread.Update();
+var
+    i: integer;
+begin
+    _lock.Acquire();
+
+    if ((Self.Stopped) or (Self.Terminated)) then begin
+        _lock.Release();
+        _http.DisconnectSocket();
+        FreeAndNil(_stream);
+        Self.Terminate();
+    end;
+
+    if (_done) then with _form do begin
+        frameButtons1.btnOK.Caption := sOpen;
+        frameButtons1.btnCancel.Caption := sClose;
+        mode := xfer_recvd;
+    end
+    else with _form do begin
+        bar1.Max := _pos_max;
+        bar1.Position := _pos;
+        for i := 0 to _new_txt.Count - 1 do
+            txtMsg.Lines.Add(_new_txt[i]);
+        _new_txt.Clear();
+    end;
+    _lock.Release();
+end;
+
+{---------------------------------------}
+procedure TTransferThread.httpClientStatus(ASender: TObject;
+  const AStatus: TIdStatus; const AStatusText: String);
+begin
+    _lock.Acquire();
+    _new_txt.Add(AStatusText);
+    _lock.Release();
+    Synchronize(Update);
+end;
+
+{---------------------------------------}
+procedure TTransferThread.httpClientConnected(Sender: TObject);
+begin
+    _lock.Acquire();
+    _new_txt.Add(sXferConn);
+    _lock.Release();
+    Synchronize(Update);
+end;
+
+{---------------------------------------}
+procedure TTransferThread.httpClientDisconnected(Sender: TObject);
+begin
+    // NB: For Indy9, it fires disconnected before it actually
+    // connects. So if we drop the stream here, our GETs
+    // never work since the response stream gets freed.
+    {$ifndef INDY9}
+    if (_stream <> nil) then
+        FreeAndNil(_stream);
+    {$endif}
+end;
+
+
+{---------------------------------------}
+procedure TTransferThread.httpClientWorkEnd(Sender: TObject;
+  AWorkMode: TWorkMode);
+begin
+    _done := true;
+    Synchronize(Update);
+end;
+
+{---------------------------------------}
+procedure TTransferThread.httpClientWork(Sender: TObject;
+  AWorkMode: TWorkMode; const AWorkCount: Integer);
+begin
+    // Update the progress meter
+    _pos := AWorkCount;
+    Synchronize(Update);
+end;
+
+{---------------------------------------}
+procedure TTransferThread.httpClientWorkBegin(Sender: TObject;
+  AWorkMode: TWorkMode; const AWorkCountMax: Integer);
+begin
+    _pos_max := AWorkCountMax;
+    _pos := 0;
+    Synchronize(Update);
+end;
+
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+procedure TfrmTransfer.frameButtons1btnCancelClick(Sender: TObject);
+begin
+    if ((Self.Mode = xfer_davputting) or
+        (Self.Mode = xfer_recv)) then
+        httpClient.DisconnectSocket();
+    Self.Close;
+end;
+
+
+{---------------------------------------}
 procedure TfrmTransfer.frameButtons1btnOKClick(Sender: TObject);
 var
     u, p: string;
     file_path: String;
     dp: integer;
+    fStream: TFileStream;
 begin
     if Self.Mode = xfer_recv then begin
         // receive mode
@@ -326,12 +506,13 @@ begin
             end;
         end;
 
-        try
-            httpClient.Get(Self.url, fStream);
-        finally
-            FreeAndNil(fstream);
-        end;
-        exit;
+        _thread := TTransferThread.Create();
+        _thread.url := Url;
+        _thread.form := Self;
+        _thread.http := httpClient;
+        _thread.stream := fstream;
+        _thread.method := 'get';
+        _thread.Start();
     end
     else if Self.Mode = xfer_send then begin
         // send mode
@@ -362,21 +543,14 @@ begin
                 end;
             end;
 
-            // Try and do the HTTP PUT
-            try
-                httpClient.Put(Self.url, fStream);
-            finally
-                FreeAndNil(fstream);
-            end;
+            _thread := TTransferThread.Create();
+            _thread.url := Url;
+            _thread.form := Self;
+            _thread.http := httpClient;
+            _thread.stream := fstream;
+            _thread.method := 'put';
 
-            Self.Mode := xfer_sending;
-            if ((httpClient.ResponseCode >= 200) and
-                (httpClient.ResponseCode < 300)) then
-                doSendIQ()
-            else
-                MessageDlg(sXferDavError, mtError, [mbOK], 0);
-
-            Self.Close();
+            _thread.Start();
         end
         else begin
             Self.Mode := xfer_sending;
@@ -392,6 +566,23 @@ begin
     end;
 end;
 
+{---------------------------------------}
+procedure TfrmTransfer.WMThreadDone(var msg: TMessage);
+begin
+    // our thread completed.
+    if (Self.Mode = xfer_davputting) then begin
+        Self.Mode := xfer_sending;
+        if ((httpClient.ResponseCode >= 200) and
+            (httpClient.ResponseCode < 300)) then
+            doSendIQ()
+        else
+            MessageDlg(sXferDavError, mtError, [mbOK], 0);
+            
+        Self.Close();
+    end;
+end;
+
+{---------------------------------------}
 procedure TfrmTransfer.doSendIQ();
 var
     iq: TXMLTag;
@@ -410,39 +601,6 @@ begin
         end;
     end;
     MainSession.SendTag(iq);
-end;
-
-{---------------------------------------}
-procedure TfrmTransfer.httpClientWork(Sender: TObject;
-  AWorkMode: TWorkMode; const AWorkCount: Integer);
-begin
-    // Update the progress meter
-    bar1.Position := AWorkCount;
-end;
-
-{---------------------------------------}
-procedure TfrmTransfer.httpClientWorkBegin(Sender: TObject;
-  AWorkMode: TWorkMode; const AWorkCountMax: Integer);
-begin
-    bar1.Max := AWorkCountMax;
-end;
-
-{---------------------------------------}
-procedure TfrmTransfer.httpClientWorkEnd(Sender: TObject;
-  AWorkMode: TWorkMode);
-begin
-    frameButtons1.btnOK.Caption := sOpen;
-    frameButtons1.btnCancel.Caption := sClose;
-    Self.mode := xfer_recvd;
-end;
-
-{---------------------------------------}
-procedure TfrmTransfer.frameButtons1btnCancelClick(Sender: TObject);
-begin
-    if ((Self.Mode = xfer_davputting) or
-        (Self.Mode = xfer_recv)) then
-        httpClient.DisconnectSocket();
-    Self.Close;
 end;
 
 {---------------------------------------}
@@ -490,35 +648,12 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmTransfer.httpClientDisconnected(Sender: TObject);
-begin
-    // NB: For Indy9, it fires disconnected before it actually
-    // connects. So if we drop the stream here, our GETs
-    // never work since the response stream gets freed.
-    {$ifndef INDY9}
-    if (fstream <> nil) then
-        FreeAndNil(fstream);
-    {$endif}
-end;
-
-{---------------------------------------}
 procedure TfrmTransfer.FormDestroy(Sender: TObject);
 begin
-    if (fstream <> nil) then
-        FreeAndNil(fstream);
-end;
-
-{---------------------------------------}
-procedure TfrmTransfer.httpClientStatus(ASender: TObject;
-  const AStatus: TIdStatus; const AStatusText: String);
-begin
-    txtMsg.Lines.Add(AStatusText);
-end;
-
-{---------------------------------------}
-procedure TfrmTransfer.httpClientConnected(Sender: TObject);
-begin
-    txtMsg.Lines.Add(sXferConn);
+    if (_thread <> nil) then begin
+        _thread.Terminate();
+        _thread := nil;
+    end;
 end;
 
 end.

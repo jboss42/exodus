@@ -229,14 +229,8 @@ object frmTransfer: TfrmTransfer
     end
   end
   object httpClient: TIdHTTP
-    OnStatus = httpClientStatus
     MaxLineAction = maException
     ReadTimeout = 0
-    OnDisconnected = httpClientDisconnected
-    OnWork = httpClientWork
-    OnWorkBegin = httpClientWorkBegin
-    OnWorkEnd = httpClientWorkEnd
-    OnConnected = httpClientConnected
     AllowCookies = False
     ProxyParams.BasicAuthentication = False
     ProxyParams.ProxyPort = 0
