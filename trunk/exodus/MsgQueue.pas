@@ -284,6 +284,7 @@ begin
         else if (lstEvents.SelCount = 1) then begin
             item := lstEvents.Selected;
             i := item.Index;
+            first := i;
             RemoveItem(i);
             end
         else begin

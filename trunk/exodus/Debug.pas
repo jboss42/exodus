@@ -62,8 +62,7 @@ type
     procedure lblJIDClick(Sender: TObject);
     procedure Find1Click(Sender: TObject);
     procedure FindDialog1Find(Sender: TObject);
-    procedure MsgDebugKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
+    procedure MsgDebugKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     _cb: integer;
@@ -413,13 +412,10 @@ begin
         end;
 end;
 
-procedure TfrmDebug.MsgDebugKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
+procedure TfrmDebug.MsgDebugKeyPress(Sender: TObject; var Key: Char);
 begin
   inherited;
-    memoSend.SetFocus();
-    Beep();
-    Key := 0;
+    Key := Chr(0);
 end;
 
 end.

@@ -1969,6 +1969,7 @@ procedure TfrmRosterWindow.treeRosterEdited(Sender: TObject;
   Node: TTreeNode; var S: String);
 begin
     // user is done editing a node
+    getNodeType(Node);
     if (_cur_ritem <> nil) then begin
         _cur_ritem.Nickname := s;
         _cur_ritem.update();
