@@ -1,10 +1,11 @@
 object frmMsgRecv: TfrmMsgRecv
-  Left = 249
+  Left = 498
   Top = 170
   Width = 385
   Height = 416
   Caption = 'Message'
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

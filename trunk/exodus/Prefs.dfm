@@ -6,6 +6,7 @@ object frmPrefs: TfrmPrefs
   BorderWidth = 1
   Caption = 'Exodus Preferences'
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

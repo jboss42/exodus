@@ -6,6 +6,7 @@ object frmBookmark: TfrmBookmark
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Bookmark Properties'
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -47,7 +48,7 @@ object frmBookmark: TfrmBookmark
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 153
+    Top = 148
     Width = 338
     Height = 34
     Align = alBottom

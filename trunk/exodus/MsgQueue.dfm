@@ -5,6 +5,7 @@ object frmMsgQueue: TfrmMsgQueue
   Height = 324
   Caption = 'Events'
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

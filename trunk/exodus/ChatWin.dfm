@@ -1,6 +1,6 @@
 inherited frmChat: TfrmChat
-  Left = 290
-  Top = 159
+  Left = 253
+  Top = 160
   Height = 305
   ActiveControl = MsgOut
   Caption = 'Chat Window'

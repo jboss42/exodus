@@ -2,6 +2,7 @@ inherited frmRegister: TfrmRegister
   Width = 429
   BorderStyle = bsSizeable
   Caption = 'Registration'
+  DefaultMonitor = dmDesktop
   TransparentColor = True
   TransparentColorValue = clFuchsia
   OldCreateOrder = True

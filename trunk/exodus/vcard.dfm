@@ -5,6 +5,7 @@ object frmVCard: TfrmVCard
   Height = 360
   Caption = 'My Profile'
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

@@ -6,6 +6,7 @@ object frmWizard: TfrmWizard
   ClientHeight = 358
   ClientWidth = 410
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

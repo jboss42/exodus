@@ -4,6 +4,7 @@ inherited frmJoinRoom: TfrmJoinRoom
   Height = 390
   BorderStyle = bsSizeable
   Caption = 'Join Room'
+  DefaultMonitor = dmDesktop
   OldCreateOrder = True
   OnClose = FormClose
   OnCreate = FormCreate

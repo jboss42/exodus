@@ -4,6 +4,7 @@ object frmWebDownload: TfrmWebDownload
   Width = 362
   Height = 128
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -34,7 +35,7 @@ object frmWebDownload: TfrmWebDownload
     AutoScroll = False
     TabOrder = 0
     inherited Panel2: TPanel
-      Top = 1
+      Top = 3
       Width = 354
       Align = alBottom
       inherited Bevel1: TBevel

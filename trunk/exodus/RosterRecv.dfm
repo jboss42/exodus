@@ -5,6 +5,7 @@ object frmRosterRecv: TfrmRosterRecv
   Height = 321
   Caption = 'Receiving Contacts'
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -25,7 +26,7 @@ object frmRosterRecv: TfrmRosterRecv
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 258
+    Top = 253
     Width = 374
     Height = 34
     Align = alBottom
@@ -192,7 +193,7 @@ object frmRosterRecv: TfrmRosterRecv
     Left = 0
     Top = 115
     Width = 374
-    Height = 143
+    Height = 138
     Align = alClient
     Checkboxes = True
     Columns = <

@@ -7,6 +7,7 @@ object frmPathSelector: TfrmPathSelector
   BorderWidth = 3
   Caption = 'Browse for Folder'
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

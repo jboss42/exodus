@@ -6,6 +6,7 @@ object frmLogin: TfrmLogin
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Login'
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -12

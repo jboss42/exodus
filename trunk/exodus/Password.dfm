@@ -7,6 +7,7 @@ object frmPassword: TfrmPassword
   ClientHeight = 184
   ClientWidth = 233
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   ParentFont = True
   OldCreateOrder = True
   Position = poScreenCenter

@@ -5,6 +5,7 @@ object frmInvalidRoster: TfrmInvalidRoster
   Height = 271
   Caption = 'Invalid Roster Items'
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

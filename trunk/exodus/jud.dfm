@@ -3,6 +3,7 @@ inherited frmJud: TfrmJud
   BorderIcons = [biSystemMenu, biMaximize]
   BorderStyle = bsSizeable
   Caption = 'Jabber Search'
+  DefaultMonitor = dmDesktop
   OldCreateOrder = True
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery

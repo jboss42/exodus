@@ -6,6 +6,7 @@ object frmConnDetails: TfrmConnDetails
   ActiveControl = txtUsername
   Caption = 'Connection Details'
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

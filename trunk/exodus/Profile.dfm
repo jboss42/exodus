@@ -6,6 +6,7 @@ object frmProfile: TfrmProfile
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Contact Properties'
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
