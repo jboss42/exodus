@@ -28,8 +28,7 @@ package ExComponents;
 requires
   rtl,
   vcl,
-  designide,
-  vcldb;
+  designide;
 
 contains
   ExRichEdit in 'ExRichEdit.pas',
