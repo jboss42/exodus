@@ -363,7 +363,7 @@ begin
     if (_updating) then exit;
     
     fs := TStringList.Create;
-    fs.Text := _pref_node.xml;
+    fs.Text := UTF8Encode(_pref_node.xml);
     fs.SaveToFile(_pref_filename);
     fs.Free();
 end;

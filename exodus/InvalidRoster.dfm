@@ -30,10 +30,12 @@ object frmInvalidRoster: TfrmInvalidRoster
       Left = 154
       inherited btnOK: TButton
         Caption = 'Remove'
+        Default = False
         OnClick = frameButtons1btnOKClick
       end
       inherited btnCancel: TButton
         Caption = 'Close'
+        Default = True
         OnClick = frameButtons1btnCancelClick
       end
     end

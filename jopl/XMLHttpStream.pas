@@ -309,7 +309,7 @@ begin
         exit;
         end;
 
-    r := _response.DataString;
+    r := UTF8Decode(_response.DataString);
     if (r <> '') then begin
         Push(r);
         _poll_time := MIN_TIME;

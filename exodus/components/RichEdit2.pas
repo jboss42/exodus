@@ -3914,7 +3914,8 @@ begin
         URLType := nil;
         FWide:= False;
         URL:= WideText;
-        URL:= Copy(URL, chrg.cpMin + 1, chrg.cpMax - chrg.cpMin {+ 1});
+        // URL:= Copy(URL, chrg.cpMin + 1, chrg.cpMax - chrg.cpMin {+ 1});
+        URL := Copy(WideText, chrg.cpMin + 1, chrg.cpMax - chrg.cpMin { + 1});
         P:= Pos(':', URL);
         if P>1 then
           for I:= 1 to FURLs.Count-1 do

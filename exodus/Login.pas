@@ -80,7 +80,7 @@ implementation
 {$R *.DFM}
 
 uses
-    Jabber1,  
+    Jabber1,
     ConnDetails, PrefController;
 
 {---------------------------------------}
@@ -92,7 +92,9 @@ var
 begin
     l := TfrmLogin.Create(Application);
     l.cboProfiles.Items.Assign(MainSession.Prefs.Profiles);
-    l.cboProfiles.ItemIndex := MainSession.Prefs.getInt('profile_active');
+    i := MainSession.Prefs.getInt('profile_active');
+    if (i < 0) then i := 0;
+    l.cboProfiles.ItemIndex := i;
     l.cboProfilesChange(nil);
 
     if l.ShowModal = mrOK then begin
@@ -118,7 +120,6 @@ begin
         end
     else
         l.Close();
-
 end;
 
 {---------------------------------------}

@@ -239,6 +239,7 @@ type
     procedure timReconnectTimer(Sender: TObject);
     procedure ShowEventsWindow1Click(Sender: TObject);
     procedure presToggleClick(Sender: TObject);
+    procedure ApplicationEvents1Activate(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -472,7 +473,6 @@ const
     ico_key = 16;
     ico_application = 19;
     ico_user = 20;
-    ico_Error = 21;
     ico_conf = 21;
     ico_service = 22;
     ico_headline = 23;
@@ -482,6 +482,7 @@ const
     ico_down = 27;
     ico_right = 28;
     ico_blocked = 30;
+    ico_error = 32;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -1502,6 +1503,7 @@ begin
         msg := e.data_type;
         DoNotify(nil, 'notify_normalmsg',
                  sMsgMessage + TJabberID.Create(e.from).jid, img_idx);
+        if (e.error) then img_idx := ico_error;
         end;
 
     evt_Invite: begin
@@ -2630,6 +2632,16 @@ begin
     else
         MainSession.setPresence('', sRosterAvail, MainSession.Priority)
 
+end;
+
+procedure TfrmExodus.ApplicationEvents1Activate(Sender: TObject);
+var
+    last: hwnd;
+begin
+    // if prefs or login are showing bring them to the top w/ SetWindowsPos
+    last := GetLastActivePopup(Application.Handle);
+    if (last <> Application.Handle) then
+        SetWindowPos(last, HWND_TOP, 0, 0, 0, 0, (SWP_NOSIZE or SWP_NOMOVE or SWP_SHOWWINDOW));
 end;
 
 initialization
