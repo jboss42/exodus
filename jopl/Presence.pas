@@ -111,6 +111,7 @@ uses
     Dialogs,
     {$endif}
     Session,
+    PrefController,
     XMLStream,
     XMLUtils;
 
@@ -153,6 +154,8 @@ end;
 
 {---------------------------------------}
 function TJabberPres.xml: Widestring;
+var
+    caps : TXMLTag;
 begin
     if toJID.jid <> '' then
         setAttribute('to', toJID.full);
@@ -171,6 +174,15 @@ begin
 
     if Priority >= 0 then
         Self.AddBasicTag('priority', IntToStr(priority));
+
+    with MainSession.Prefs do begin
+        if getBool('client_caps') then begin
+            caps := Self.AddTag('c');
+            caps.setAttribute('xmlns', 'http://jabber.org/protocols/caps');
+            caps.setAttribute('node', getString('client_caps_uri'));
+            caps.setAttribute('ver', GetAppVersion())
+        end;
+    end;
 
     Result := inherited xml;
 end;

@@ -604,6 +604,8 @@ procedure TDiscoInfoResponder.iqCallback(event: string; tag:TXMLTag);
 var
     i: integer;
     r, q: TXMLTag;
+    node: WideString;
+    vsharp: WideString;
 begin
     // return info results
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
@@ -612,50 +614,69 @@ begin
                                           getNick(tag.getAttribute('from'))]),
              ico_info);
 
+    q := tag.GetFirstTag('query');
+    node := q.GetAttribute('node');
+    vsharp := _session.Prefs.getString('client_caps_uri') + '#' + GetAppVersion();
+
     r := TXMLTag.Create('iq');
     with r do begin
         setAttribute('to', tag.getAttribute('from'));
         setAttribute('id', tag.GetAttribute('id'));
+
+        // TODO: look for known extensions, as well
+        if (node <> '') and (node <> vsharp) then begin
+            setAttribute('type', 'error');
+            with r.AddBasicTag('error', 'Unknown node') do
+                setAttribute('code', '404');
+            _session.SendTag(r);
+            exit;
+        end;
+
         setAttribute('type', 'result');
         q := AddTag('query');
-        with q do begin
-            setAttribute('xmlns', XMLNS_DISCOINFO);
-            with AddTag('identity') do begin
+
+        if (node = '') or (node = vsharp) then begin
+            with q do begin
+                setAttribute('xmlns', XMLNS_DISCOINFO);
+            end;
+
+            addFeature(q, XMLNS_SEARCH);
+            addFeature(q, XMLNS_AGENTS);
+
+            addFeature(q, XMLNS_IQOOB);
+            addFeature(q, XMLNS_BROWSE);
+            addFeature(q, XMLNS_TIME);
+            addFeature(q, XMLNS_VERSION);
+            addFeature(q, XMLNS_LAST);
+            addFeature(q, XMLNS_DISCOITEMS);
+            addFeature(q, XMLNS_DISCOINFO);
+
+            // Various core extensions
+            addFeature(q, XMLNS_BM);
+            addFeature(q, XMLNS_XDATA);
+            addFeature(q, XMLNS_XCONFERENCE);
+            addFeature(q, XMLNS_XEVENT);
+
+            // MUC Stuff
+            addFeature(q, XMLNS_MUC);
+            addFeature(q, XMLNS_MUCUSER);
+            addFeature(q, XMLNS_MUCOWNER);
+
+            // File xfer
+            addFeature(q, XMLNS_SI);
+            addFeature(q, XMLNS_FTPROFILE);
+            addFeature(q, XMLNS_BYTESTREAMS);
+        end;
+
+        if node <> vsharp then begin
+            with q.AddTag('identity') do begin
                 setAttribute('category', 'user');
                 setAttribute('type', 'client');
                 setAttribute('name', _session.Username);
             end;
+            for i := 0 to Features.Count - 1 do
+                addFeature(q, Features[i]);
         end;
-
-        addFeature(q, XMLNS_SEARCH);
-        addFeature(q, XMLNS_AGENTS);
-
-        addFeature(q, XMLNS_IQOOB);
-        addFeature(q, XMLNS_BROWSE);
-        addFeature(q, XMLNS_TIME);
-        addFeature(q, XMLNS_VERSION);
-        addFeature(q, XMLNS_LAST);
-        addFeature(q, XMLNS_DISCOITEMS);
-        addFeature(q, XMLNS_DISCOINFO);
-
-        // Various core extensions
-        addFeature(q, XMLNS_BM);
-        addFeature(q, XMLNS_XDATA);
-        addFeature(q, XMLNS_XCONFERENCE);
-        addFeature(q, XMLNS_XEVENT);
-
-        // MUC Stuff
-        addFeature(q, XMLNS_MUC);
-        addFeature(q, XMLNS_MUCUSER);
-        addFeature(q, XMLNS_MUCOWNER);
-
-        // File xfer
-        addFeature(q, XMLNS_SI);
-        addFeature(q, XMLNS_FTPROFILE);
-        addFeature(q, XMLNS_BYTESTREAMS);
-
-        for i := 0 to Features.Count - 1 do
-            addFeature(q, Features[i]);
     end;
 
     _session.SendTag(r);

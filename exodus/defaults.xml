@@ -55,6 +55,8 @@
     <brand_profile_username></brand_profile_username>
     <browse_view>0</browse_view>
     <chat_memory>60</chat_memory>
+    <client_caps>1</client_caps>
+    <client_caps_uri>http://exodus.jabberstudio.org/caps</client_caps_uri>
     <close_min>1</close_min>
     <color_bg>$ffffff</color_bg>
     <color_me>$ff0000</color_me>
