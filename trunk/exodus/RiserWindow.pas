@@ -85,6 +85,9 @@ begin
         singleToast := TfrmRiser.Create(Application);
         animate := true;
         AssignDefaultFont(singleToast.Label1.Font);
+
+        // reduce the font size by 1 pt.
+        singleToast.Label1.Font.Size := singleToast.Label1.Font.Size - 1;
         
         // Setup alpha blending..
         if MainSession.Prefs.getBool('toast_alpha') then begin
