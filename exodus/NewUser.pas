@@ -22,7 +22,7 @@ unit NewUser;
 interface
 
 uses
-    IQ, 
+    IQ,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Wizard, ComCtrls, ExtCtrls, StdCtrls, TntStdCtrls, TntExtCtrls,
     fXData;
@@ -163,6 +163,8 @@ begin
             NewAccount := true;
         end;
         MainSession.Connect();
+    end;
+
     end;
 end;
 
