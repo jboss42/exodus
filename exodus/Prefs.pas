@@ -275,6 +275,7 @@ resourcestring
 
     sRosterFontLabel = 'Roster Font and Background';
     sChatFontLabel = 'Roster Font and Background';
+    sNoUpdate = 'No new update available.';
 
 procedure StartPrefs;
 
@@ -1144,8 +1145,15 @@ begin
 end;
 
 procedure TfrmPrefs.btnUpdateCheckClick(Sender: TObject);
+var
+    available : boolean;
 begin
-    InitAutoUpdate(false);
+    Screen.Cursor := crHourGlass;
+    available := InitAutoUpdate(false);
+    Screen.Cursor := crDefault;
+
+    if (not available) then
+        MessageDlg(sNoUpdate, mtInformation, [mbOK], 0);
 end;
 
 end.

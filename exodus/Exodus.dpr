@@ -105,7 +105,6 @@ uses
   Langs in '..\jopl\Langs.pas',
   Unicode in '..\jopl\Unicode.pas',
   InvalidRoster in 'InvalidRoster.pas' {frmInvalidRoster},
-  AutoUpdate in 'AutoUpdate.pas',
   AutoUpdateStatus in 'AutoUpdateStatus.pas' {frmAutoUpdateStatus},
   Exodus_TLB in 'Exodus_TLB.pas',
   ExodusController in 'ExodusController.pas' {ExodusController: CoClass},
@@ -116,7 +115,8 @@ uses
   ExceptDlg in 'tracer\ExceptDlg.pas' {ExceptionDialog},
   ExceptTracer in 'ExceptTracer.pas' {frmTracer},
   RoomAdminList in 'RoomAdminList.pas' {frmRoomAdminList},
-  JabberConst in '..\jopl\JabberConst.pas';
+  JabberConst in '..\jopl\JabberConst.pas',
+  AutoUpdate in '..\jopl\AutoUpdate.pas';
 
 {$R *.TLB}
 

@@ -1193,6 +1193,8 @@ begin
         restoreMenus(true);
         timAutoAway.Enabled := true;
 
+        // check for new brand.
+        InitUpdateBranding();
         // check for new version
         InitAutoUpdate();
         end
