@@ -235,7 +235,7 @@ end;
 {---------------------------------------}
 procedure TfrmPrefs.FormCreate(Sender: TObject);
 begin
-    TranslateProperties(Self);
+    TranslateComponent(Self);
 
     tbsKeywords.TabVisible := false;
     tbsBlockList.TabVisible := false;

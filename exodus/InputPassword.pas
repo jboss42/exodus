@@ -73,7 +73,7 @@ end;
 
 procedure TfrmInputPass.FormCreate(Sender: TObject);
 begin
-    TranslateProperties(Self);
+    TranslateComponent(Self);
 end;
 
 end.

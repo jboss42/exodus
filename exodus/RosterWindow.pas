@@ -311,7 +311,7 @@ begin
     lblStatusLink.Font.Assign(lblLogin.Font);
     StatBar.Font.Size := 8;
 
-    TranslateProperties(Self);
+    TranslateComponent(Self);
 
     g_offline := _('Offline');
     g_online := _('Available');

@@ -80,7 +80,7 @@ end;
 {---------------------------------------}
 procedure TfrmAutoUpdateStatus.FormCreate(Sender: TObject);
 begin
-    TranslateProperties(Self);
+    TranslateComponent(Self);
     Image1.Picture.Icon.Handle := LoadIcon(0, IDI_QUESTION);
     _downloading := false;
     _url := '';

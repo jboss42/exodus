@@ -62,7 +62,7 @@ uses
 {---------------------------------------}
 procedure TfrmSelContact.FormCreate(Sender: TObject);
 begin
-    TranslateProperties(Self);
+    TranslateComponent(Self);
     frameTreeRoster1.Initialize();
     ShowOnlineOnly1.Checked := MainSession.Prefs.getBool('roster_only_online');
     frameTreeRoster1.DrawRoster(ShowOnlineOnly1.Checked);

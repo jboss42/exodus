@@ -234,7 +234,7 @@ end;
 procedure TfrmInvite.FormCreate(Sender: TObject);
 begin
     // make the form the same width as the list view
-    TranslateProperties(Self);
+    TranslateComponent(Self);
     Self.ClientWidth := pnlMain.Width + 2;
     AssignTntStrings(room.room_list, cboRoom.Items);
     pnlMain.Align := alClient;

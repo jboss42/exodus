@@ -105,7 +105,7 @@ uses
 {---------------------------------------}
 procedure TfrmRegister.FormCreate(Sender: TObject);
 begin
-    TranslateProperties(Self);
+    TranslateComponent(Self);
 
     // Hide all the tabs and make the welcome tab visible
     TabSheet1.TabVisible := false;

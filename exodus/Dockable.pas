@@ -86,7 +86,7 @@ begin
 
     // do translation magic
     AssignUnicodeFont(Self);
-    TranslateProperties(Self);
+    TranslateComponent(Self);
 
     if (Self is TfrmChat) then
         // do nothing

@@ -58,7 +58,7 @@ end;
 
 procedure TfrmPrefPanel.FormCreate(Sender: TObject);
 begin
-    TranslateProperties(Self);
+    TranslateComponent(Self);
     LoadPrefs();
 end;
 

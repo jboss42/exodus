@@ -414,7 +414,7 @@ var
     i : integer;
 begin
     AssignUnicodeFont(Self, 9);
-    TranslateProperties(Self);
+    TranslateComponent(Self);
 
     URLLabel(lblServerList);
     lblNote.Font.Size := 10;

@@ -153,7 +153,7 @@ end;
 
 procedure TfrmEmoticons.FormCreate(Sender: TObject);
 begin
-    TranslateProperties(Self);
+    TranslateComponent(Self);
 end;
 
 end.

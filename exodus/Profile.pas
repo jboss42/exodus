@@ -266,7 +266,7 @@ end;
 procedure TfrmProfile.FormCreate(Sender: TObject);
 begin
     AssignUnicodeFont(Self);
-    TranslateProperties(Self);
+    TranslateComponent(Self);
 
     URLLabel(lblUpdateNick);
     URLLabel(lblEmail);
