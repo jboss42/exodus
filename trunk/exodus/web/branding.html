@@ -33,8 +33,7 @@
 <td><a href="shots.html">Screenshots</a> | </td>
 <td><a href="http://www.jabberstudio.org/projects/exodus/bugs/">Bugs</a> | </td>
 <td><a href="http://www.jabberstudio.org/projects/exodus/features/">Feature Requests</a> | </td>
-<td><a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/?root=Exodus">Subversion</a> | </td>
-<td><a href="http://exodus.jabberstudio.org/exodus-src.zip">Source</a></td>
+<td><a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/exodus">Subversion</a></td>
 </tr>
 </table>
 
@@ -53,7 +52,7 @@
 <h1 align="center">Creating a Branded version of Exodus</h1>
 
 <ol>
-  <li>The easiest way to do these is to check out from <a href="http://www.jabberstudio.org/cvs.html">cvs</a>.</li>
+  <li>The easiest way to do these is to check out from <a href="http://www.jabberstudio.org/cvs.html">Subversion</a>.</li>
   <li>Get or build a copy of these files:
     <ul>
       <!-- The binaries -->
@@ -61,15 +60,15 @@
       <li>IdleHooks.dll</li>
 
       <!-- icons, etc... -->
-      <li><a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/trunk/exodus/exodus.ico?root=Exodus">exodus.ico</a></li>
-      <li><a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/trunk/exodus/exodus-installer.bmp?root=Exodus">exodus-installer.bmp</a></li>
-      <li><a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/trunk/exodus/GPL-LICENSE.TXT?root=Exodus">GPL-LICENSE.TXT</a></li>
-      <li><a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/trunk/redist/ZipDLL.dll?root=Exodus">ZipDLL.dll</a></li>
+      <li><a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/exodus/trunk/exodus/exodus.ico">exodus.ico</a></li>
+      <li><a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/exodus/trunk/exodus/exodus-installer.bmp">exodus-installer.bmp</a></li>
+      <li><a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/exodus/trunk/exodus/GPL-LICENSE.TXT">GPL-LICENSE.TXT</a></li>
+      <li><a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/exodus/trunk/redist/ZipDLL.dll">ZipDLL.dll</a></li>
 
       <!-- NSIS installer scripts -->
-      <li><a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/trunk/exodus/exodus-new.nsi?root=Exodus&amp;content-type=text/plain">exodus-new.nsi</a></li>
-      <li><a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/trunk/exodus/version.nsi?root=Exodus&amp;content-type=text/plain">version.nsi</a></li>
-      <li><a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/trunk/exodus/plugins/example-plugin-i18n-new.nsi?root=Exodus&content-type=text/plain">example-plugin-i18n-new.nsi</a></li>
+      <li><a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/exodus/trunk/exodus/exodus-new.nsi">exodus-new.nsi</a></li>
+      <li><a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/exodus/trunk/exodus/version.nsi">version.nsi</a></li>
+      <li><a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/exodus/trunk/exodus/plugins/example-plugin-i18n-new.nsi">example-plugin-i18n-new.nsi</a></li>
 
       <!-- NSIS -->
       <li><a href="http://sourceforge.net/project/showfiles.php?group_id=22049">NSIS 2</a></li>
@@ -82,10 +81,10 @@
       <li>branding.xml</li>
     </ul>
   </li>
-  <li>Create a branding.xml file.&nbsp; <a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/trunk/exodus/branding_defaults.xml?root=Exodus&amp;content-type=text/xml">Here</a>
+  <li>Create a branding.xml file.&nbsp; <a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/exodus/trunk/exodus/branding_defaults.xml">Here</a>
     is a template, with the defaults.&nbsp; Any preference you set in this file
     will become the default.&nbsp; You can set other preferences in here as
-    well, such as <a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/trunk/exodus/defaults.xml?root=Exodus&amp;content-type=text/xml">these</a>,
+    well, such as <a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/exodus/trunk/exodus/defaults.xml">these</a>,
     or things that you find in your exodus.xml file.&nbsp; Good candidates are
     fonts and colors.</li>
   <li>Move ZipDll.dll to $NSIS_HOME\Plugins.</li>
