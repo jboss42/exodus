@@ -219,6 +219,7 @@ begin
     chat := MainSession.ChatList.FindChat(sjid, resource, '');
     new_chat := false;
     do_scroll := false;
+    hist := '';
 
     // If we have an existing chat, we may just want to raise it
     // or redock it, etc...
@@ -257,10 +258,6 @@ begin
         win.chat_object := chat;
         win.chat_object.AddRef();
         hist := TrimRight(chat.getHistory());
-        if (hist <> '') then begin
-            win.MsgList.populate(hist);
-            do_scroll := true;
-        end;
         DebugMsg('new window chat refcount: ' + IntToStr(chat.RefCount));
     end;
 
@@ -311,6 +308,11 @@ begin
                 if (TfrmChat(chat.window).Visible) then
                     TfrmChat(chat.window).SetFocus();
             end;
+        end;
+
+        if (hist <> '') then begin
+            win.MsgList.populate(hist);
+            do_scroll := true;
         end;
 
         PlayQueue();
