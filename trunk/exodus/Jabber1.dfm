@@ -7621,6 +7621,7 @@ object frmExodus: TfrmExodus
     Top = 75
   end
   object Resolver: TIdDNSResolver
+    OnStatus = ResolverStatus
     Port = 53
     QueryRecords = []
     Left = 120
