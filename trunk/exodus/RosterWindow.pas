@@ -247,11 +247,11 @@ type
     procedure RemoveGroupNode(node: TTreeNode);
     procedure RemoveEmptyGroups();
     procedure ResetPanels;
-    //procedure DoShowHint(var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
     procedure ChangeStatusImage(idx: integer);
     procedure showAniStatus();
     procedure DrawNodeText(Node: TTreeNode; State: TCustomDrawState; c1, c2: Widestring);
     procedure InvalidateGrps(node: TTreeNode);
+    procedure ExpandGrpNode(n: TTreeNode);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -690,8 +690,33 @@ begin
         bm_node.Data := bm;
     end;
 
-    if (not _collapse_all) then _bookmark.Expand(true);
+    if (not _collapse_all) then _bookmark.Expand(false);
     treeRoster.AlphaSort(true);
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.ExpandGrpNode(n: TTreeNode);
+var
+    p: TTreeNode;
+    pi: TJabberNodeItem;
+    p_grp: Widestring;
+begin
+    // This sucks, but we have to check for OUR grp, and all possible
+    // parents above us are in the collapsed list
+    p := n.Parent;
+    while (p <> nil) do begin
+        if (not p.Expanded) then begin
+            pi := TJabberNodeItem(p.Data);
+            if (pi is TJabberGroup) then begin
+                p_grp := TJabberGroup(pi).Fullname;
+                if (_collapsed_grps.indexOf(p_grp) >= 0) then
+                    exit;
+            end;
+            p.Expand(false);
+        end;
+        p := p.parent;
+    end;
+    n.Expand(false);
 end;
 
 {---------------------------------------}
@@ -707,11 +732,10 @@ begin
         n := treeRoster.Items[i];
         ni := TJabberNodeItem(n.Data);
         assert(ni <> nil);
-        if (((ni is TJabberGroup) and (n <> _offline)) or
-            (n = _bookmark)) then begin
+        if (((ni is TJabberGroup) and (n <> _offline)) or (n = _bookmark)) then begin
             cur_grp := TJabberGroup(ni).Fullname;
-            if (_collapsed_grps.indexOf(cur_grp) = -1) then
-                n.Expand(true);
+            if ((_collapsed_grps.indexOf(cur_grp) = -1)) then
+                ExpandGrpNode(n);
         end;
     end;
 end;
@@ -1363,8 +1387,7 @@ begin
 
         // only invalid if we're not doing a full roster draw.
         if ((not _FullRoster) and (grp_node <> nil)) then begin
-            if (exp_grpnode) then
-                grp_node.Expand(true);
+            if (exp_grpnode) then ExpandGrpNode(grp_node);
             node_rect := cur_node.DisplayRect(false);
 
             // invalidate just the rect which contains our node
@@ -1677,6 +1700,7 @@ begin
             go := TJabberGroup(Node.Data)
         else
             exit;
+
         if (_collapsed_grps.indexOf(go.FullName) = -1) then begin
             _collapsed_grps.Add(go.FullName);
             MainSession.Prefs.setStringlist('col_groups', _collapsed_grps);
@@ -1943,7 +1967,7 @@ begin
 
     // Make sure d_grp is expanded if it's not in _collapsed_grps
     if ((not d_node.expanded) and (_collapsed_grps.IndexOf(d_grp) < 0)) then
-        d_node.Expand(true);
+        ExpandGrpNode(d_node);
 
     // Re-Draw both group nodes
     InvalidateGrps(d_node);

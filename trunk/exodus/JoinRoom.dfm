@@ -1,7 +1,7 @@
 inherited frmJoinRoom: TfrmJoinRoom
   Left = 249
   Top = 151
-  Height = 390
+  Height = 389
   BorderStyle = bsSizeable
   Caption = 'Join Room'
   OldCreateOrder = True
@@ -11,7 +11,7 @@ inherited frmJoinRoom: TfrmJoinRoom
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
-    Top = 315
+    Top = 314
     TabOrder = 2
     inherited Panel3: TPanel
       inherited btnBack: TTntButton
@@ -35,7 +35,7 @@ inherited frmJoinRoom: TfrmJoinRoom
     end
   end
   inherited Tabs: TPageControl
-    Height = 255
+    Height = 254
     TabOrder = 0
     inherited TabSheet1: TTabSheet
       object Label2: TTntLabel
