@@ -114,19 +114,6 @@ var
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-function checkSSL(): boolean;
-var
-    c, s: THandle;
-begin
-    c := LoadLibrary('libeay32.dll');
-    s := LoadLibrary('ssleay32.dll');
-
-    Result := ((c > 0) and (s > 0));
-
-    FreeLibrary(c);
-    FreeLibrary(s);
-end;
-
 function SetupSession(): boolean;
 var
     invisible, show_help: boolean;
@@ -530,6 +517,21 @@ begin
 
     parser.Free();
 
+end;
+
+{---------------------------------------}
+{---------------------------------------}
+function checkSSL(): boolean;
+var
+    c, s: THandle;
+begin
+    c := LoadLibrary('libeay32.dll');
+    s := LoadLibrary('ssleay32.dll');
+
+    Result := ((c > 0) and (s > 0));
+
+    FreeLibrary(c);
+    FreeLibrary(s);
 end;
 
 {---------------------------------------}

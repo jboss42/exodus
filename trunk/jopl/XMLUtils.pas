@@ -80,7 +80,6 @@ uses
     {$endif}
     SecHash;
 
-
 function XPLiteEscape(value: widestring): widestring;
 var
     r: WideString;
@@ -584,8 +583,6 @@ begin
     result := '1.0';
 end;
 {$endif}
-
-
 
 
 end.

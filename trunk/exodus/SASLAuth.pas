@@ -47,7 +47,9 @@ type
     published
         procedure C1Callback(event: string; xml: TXMLTag);
         procedure C2Callback(event: string; xml: TXMLTag);
-        
+
+        procedure PlainCallback(event: string; xml: TXMLTag);
+
         procedure FailCallback(event: string; xml: TXMLTag);
         procedure SuccessCallback(event: string; xml: TXMLTag);
 
@@ -104,19 +106,19 @@ begin
             mstr := mechs[i].Data;
             if (mstr = 'DIGEST-MD5') then begin
                 // We have Digest!
+                mechs.Free();
                 StartDigest();
                 exit;
             end
             else if (mstr = 'PLAIN') then begin
                 // We have plain!
+                mechs.Free();
                 StartPlain();
                 exit;
             end;
         end;
     end;
-
-    _session.FireEvent('/session/autherror', nil);
-    _session.setAuthenticated(false, nil);    
+    _session.setAuthenticated(false, nil);
 end;
 
 {---------------------------------------}
@@ -151,6 +153,7 @@ var
 begin
     _digest := true;
     RegCallbacks();
+    _ccb := _session.RegisterCallback(C1Callback, '/packet/challenge');
 
     _nonce := '';
     _cnonce := '';
@@ -169,6 +172,7 @@ var
 begin
     _digest := false;
     RegCallbacks();
+    //_ccb := _session.RegisterCallback(C1Callback, '/packet/challenge');
 
     a := TXMLTag.Create('auth');
     a.setAttribute('xmlns', 'urn:ietf:params:xml:ns:xmpp-sasl');
@@ -179,7 +183,6 @@ end;
 {---------------------------------------}
 procedure TSASLAuth.RegCallbacks();
 begin
-    _ccb := _session.RegisterCallback(C1Callback, '/packet/challenge');
     _fail := _session.RegisterCallback(FailCallback, '/packet/failure');
     _resp := _session.RegisterCallback(SuccessCallback, '/packet/success');
 end;
@@ -195,9 +198,12 @@ var
     r: TXMLTag;
     a1s: TMemoryStream;
 begin
-    if (event <> 'xml') then exit;
-    c := _decoder.DecodeString(xml.Data);
+    if (event <> 'xml') then begin
+        _session.SetAuthenticated(false, nil);
+        exit;
+    end;
 
+    c := _decoder.DecodeString(xml.Data);
     pairs := TStringlist.Create();
     parseNameValues(pairs, c);
 
@@ -224,23 +230,6 @@ begin
         _session.Resource;
     uri := 'xmpp/' + _session.Server;
 
-    // STUFF FROM RFC
-    {
-    uname := 'chris';
-    pass := 'secret';
-    _realm := 'elwood.innosoft.com';
-    _nonce := 'OA6MG9tEQGm2hh';
-    _cnonce := 'OA6MHXh6VqTrRk';
-    az := '';
-    uri := 'imap/elwood.innosoft.com';
-    }
-
-    // STUFF FROM CYRUS TEST
-    {
-    _nonce := 'aa33bf09f4527a7f699a22f109a119ac03b2e5ca';
-    _cnonce := '/iheWwe4OUy3hHKcYUw53LcWPN51QXVNpeTE6zUXMpk=';
-    }
-
     resp := 'username="' + _session.Username + '",';
     resp := resp + 'realm="' + _realm + '",';
     resp := resp + 'nonce="' + _nonce + '",';
@@ -259,15 +248,12 @@ begin
     // NB: H(A1) is just 16 bytes, not HEX(H(A1))
     a1s := TMemoryStream.Create();
     a1s.Write(tmp, 16);
-
     if (az <> '') then
         a1 := ':' + _nonce + ':' + _cnonce + ':' + az
     else
         a1 := ':' + _nonce + ':' + _cnonce;
-
     a1s.Write(Pointer(a1)^, Length(a1));
     a1s.Seek(0, soFromBeginning);
-
     ha1 := _hasher.HashValue(a1s);
     FreeAndNil(a1s);
 
@@ -283,27 +269,8 @@ begin
 
     if (az <> '') then
         resp := resp + 'authzid="' + az + '",';
-
     resp := resp + 'response=' + dig;
 
-    {
-
-    OURS:
-    username="pgm-foo",realm="jabberd.jabberstudio.org",
-    nonce="37efc218e90b35b8b6395001160a992d831f6e98",
-    cnonce="f7048eaefd00b0f971a8bb7afd8936c3",
-    nc=00000001,qop=auth,digest-uri="xmpp/jabberd.jabberstudio.org",
-    response=a7f8ff1bcf62f30b97b061c27e563fd4,
-    charset=utf-8,authzid="pgm-foo@jabberd.jabberstudio.org/Exodus"
-
-    CYRUS:
-    username="pgm-foo",realm="jabberd.jabberstudio.org",
-    authzid="pgm-foo@jabberd.jabberstudio.org/Test",
-    nonce="aa33bf09f4527a7f699a22f109a119ac03b2e5ca",
-    cnonce="/iheWwe4OUy3hHKcYUw53LcWPN51QXVNpeTE6zUXMpk=",
-    nc=00000001,qop=auth,maxbuf=8192,digest-uri="xmpp/jabberd.jabberstudio.org",
-    response=7643aa03c992391fa71b4597d5d528eb
-    }
 
     _session.UnRegisterCallback(_ccb);
     _ccb := _session.RegisterCallback(C2Callback, '/packet/challenge');
@@ -314,8 +281,30 @@ begin
     r.AddCData(_encoder.Encode(resp));
     _session.SendTag(r);
 
+    pairs.Free();
+
 end;
 
+{---------------------------------------}
+procedure TSASLAuth.PlainCallback(event: string; xml: TXMLTag);
+var
+    c: String;
+    pairs: TStringlist;
+begin
+    if (event <> 'xml') then begin
+        _session.SetAuthenticated(false, nil);
+        exit;
+    end;
+
+    c := _decoder.DecodeString(xml.Data);
+    pairs := TStringlist.Create();
+    parseNameValues(pairs, c);
+
+    // XXX: do stuff here!!
+
+end;
+
+{---------------------------------------}
 procedure TSASLAuth.C2Callback(event: string; xml: TXMLTag);
 var
     r: TXMLTag;
