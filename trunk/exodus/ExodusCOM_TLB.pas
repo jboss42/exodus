@@ -11,8 +11,8 @@ unit ExodusCOM_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.18 $
-// File generated on 1/25/2003 8:49:02 PM from Type Library described below.
+// PASTLWTR : $Revision: 1.19 $
+// File generated on 1/26/2003 9:19:39 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -74,6 +74,14 @@ const
   Ptr_MsgInput = $00000001;
   HWND_MsgOutput = $00000002;
   Ptr_MsgOutput = $00000003;
+
+// Constants for enum ActiveItem
+type
+  ActiveItem = TOleEnum;
+const
+  RosterItem = $00000000;
+  Bookmark = $00000001;
+  Group = $00000002;
 
 type
 
@@ -188,6 +196,9 @@ type
     procedure trackWindowsMsg(Message: Integer); safecall;
     function addContactMenu(const Caption: WideString): WideString; safecall;
     procedure removeContactMenu(const ID: WideString); safecall;
+    function getActiveContact: WideString; safecall;
+    function getActiveGroup: WideString; safecall;
+    function getActiveContacts(Online: WordBool): WideString; safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -273,6 +284,9 @@ type
     procedure trackWindowsMsg(Message: Integer); dispid 59;
     function addContactMenu(const Caption: WideString): WideString; dispid 60;
     procedure removeContactMenu(const ID: WideString); dispid 61;
+    function getActiveContact: WideString; dispid 62;
+    function getActiveGroup: WideString; dispid 63;
+    function getActiveContacts(Online: WordBool): WideString; dispid 65;
   end;
 
 // *********************************************************************//

@@ -183,9 +183,9 @@ type
     _transports: Widestring;    // current group name for special transports grp
     _roster_unicode: boolean;   // Use unicode chars in the roster?
 
-    function getNodeType(node: TTreeNode = nil): integer;
     procedure popUnBlockClick(Sender: TObject);
-    procedure ExpandNodes;
+    procedure ExpandNodes();
+    procedure CollapseNodes();
     procedure RenderNode(ritem: TJabberRosterItem; p: TJabberPres);
     procedure RenderBookmark(bm: TJabberBookmark);
     procedure RemoveItemNodes(ritem: TJabberRosterItem);
@@ -210,13 +210,19 @@ type
     Docked: boolean;
     inMessenger: boolean;
 
+    function getNodeType(node: TTreeNode = nil): integer;
+
     procedure ClearNodes;
     procedure Redraw;
     procedure DockRoster;
     procedure FloatRoster;
     procedure ShowPresence(show: string);
+
     function RenderGroup(grp_idx: integer): TTreeNode;
     function getSelectedContacts(online: boolean = true): TList;
+
+    property CurRosterItem: TJabberRosterItem read _cur_ritem;
+    property CurGroup: Widestring read _cur_grp;
   end;
 
 var
@@ -517,7 +523,12 @@ begin
         Self.SessionCallback('/roster/end', nil);
         treeRoster.Items.EndUpdate;
         treeRoster.AlphaSort;
-        Self.ExpandNodes();
+        
+        if (MainSession.Prefs.getBool('roster_collapsed')) then
+            Self.CollapseNodes()
+        else
+            Self.ExpandNodes();
+
         if treeRoster.items.Count > 0 then
             treeRoster.TopItem := treeRoster.Items[0];
     end
@@ -592,6 +603,19 @@ begin
             if (_collapsed_grps.IndexOf(n.Text) < 0) then
                 n.Expand(true);
         end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.CollapseNodes();
+var
+    i: integer;
+    n: TTreeNode;
+begin
+    for i := 0 to treeRoster.Items.Count - 1 do begin
+        n := treeRoster.Items[i];
+        if (n.Level = 0) then
+            n.Collapse(true);
     end;
 end;
 
