@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exodus 0.8-Daily\n"
 "POT-Creation-Date: 2003-05-08 06:59\n"
-"PO-Revision-Date: 2003-12-09 22:33-0000\n"
+"PO-Revision-Date: 2003-12-10 17:44-0000\n"
 "Last-Translator: Lazarus Long <lazarus.long@bigfoot.com>\n"
 "Language-Team: pt_PT <lazarus.long@bigfoot.com>\n"
 "MIME-Version: 1.0\n"
@@ -136,7 +136,7 @@ msgstr "Acerca do Exodus"
 #: fService.dfm:86
 #: fService.dfm:113
 #: invite.dfm:12
-#: prefs/PrefFont.dfm:209
+#: prefs/PrefFont.dfm:205
 #: prefs/PrefPanel.dfm:13
 #: subscribe.dfm:14
 #: subscribe.dfm:54
@@ -168,7 +168,7 @@ msgstr "Fechar"
 #. frmAbout..pnlVersion..Caption
 #: About.dfm:1436
 #: About.pas:81
-#: ExEvents.pas:285
+#: ExEvents.pas:284
 msgid "Version: "
 msgstr "Versão: "
 
@@ -191,7 +191,7 @@ msgstr "Versão: "
 #: MsgRecv.dfm:74
 #: MsgRecv.dfm:173
 #: RosterRecv.dfm:107
-#: prefs/PrefFont.dfm:112
+#: prefs/PrefFont.dfm:95
 msgid "e-mail"
 msgstr "e-mail"
 
@@ -214,7 +214,7 @@ msgstr "e-mail"
 #: MsgRecv.dfm:80
 #: MsgRecv.dfm:179
 #: RosterRecv.dfm:113
-#: prefs/PrefFont.dfm:118
+#: prefs/PrefFont.dfm:101
 msgid "http"
 msgstr "http"
 
@@ -237,7 +237,7 @@ msgstr "http"
 #: MsgRecv.dfm:86
 #: MsgRecv.dfm:185
 #: RosterRecv.dfm:119
-#: prefs/PrefFont.dfm:124
+#: prefs/PrefFont.dfm:107
 msgid "file"
 msgstr "file"
 
@@ -260,7 +260,7 @@ msgstr "file"
 #: MsgRecv.dfm:92
 #: MsgRecv.dfm:191
 #: RosterRecv.dfm:125
-#: prefs/PrefFont.dfm:130
+#: prefs/PrefFont.dfm:113
 msgid "mailto"
 msgstr "mailto"
 
@@ -283,7 +283,7 @@ msgstr "mailto"
 #: MsgRecv.dfm:98
 #: MsgRecv.dfm:197
 #: RosterRecv.dfm:131
-#: prefs/PrefFont.dfm:136
+#: prefs/PrefFont.dfm:119
 msgid "ftp"
 msgstr "ftp"
 
@@ -306,7 +306,7 @@ msgstr "ftp"
 #: MsgRecv.dfm:104
 #: MsgRecv.dfm:203
 #: RosterRecv.dfm:137
-#: prefs/PrefFont.dfm:142
+#: prefs/PrefFont.dfm:125
 msgid "https"
 msgstr "https"
 
@@ -329,7 +329,7 @@ msgstr "https"
 #: MsgRecv.dfm:110
 #: MsgRecv.dfm:209
 #: RosterRecv.dfm:143
-#: prefs/PrefFont.dfm:148
+#: prefs/PrefFont.dfm:131
 msgid "gopher"
 msgstr "gopher"
 
@@ -352,7 +352,7 @@ msgstr "gopher"
 #: MsgRecv.dfm:116
 #: MsgRecv.dfm:215
 #: RosterRecv.dfm:149
-#: prefs/PrefFont.dfm:154
+#: prefs/PrefFont.dfm:137
 msgid "nntp"
 msgstr "nntp"
 
@@ -375,7 +375,7 @@ msgstr "nntp"
 #: MsgRecv.dfm:122
 #: MsgRecv.dfm:221
 #: RosterRecv.dfm:155
-#: prefs/PrefFont.dfm:160
+#: prefs/PrefFont.dfm:143
 msgid "prospero"
 msgstr "prospero"
 
@@ -398,7 +398,7 @@ msgstr "prospero"
 #: MsgRecv.dfm:128
 #: MsgRecv.dfm:227
 #: RosterRecv.dfm:161
-#: prefs/PrefFont.dfm:166
+#: prefs/PrefFont.dfm:149
 msgid "telnet"
 msgstr "telnet"
 
@@ -421,7 +421,7 @@ msgstr "telnet"
 #: MsgRecv.dfm:134
 #: MsgRecv.dfm:233
 #: RosterRecv.dfm:167
-#: prefs/PrefFont.dfm:172
+#: prefs/PrefFont.dfm:155
 msgid "news"
 msgstr "news"
 
@@ -444,7 +444,7 @@ msgstr "news"
 #: MsgRecv.dfm:140
 #: MsgRecv.dfm:239
 #: RosterRecv.dfm:173
-#: prefs/PrefFont.dfm:178
+#: prefs/PrefFont.dfm:161
 msgid "wais"
 msgstr "wais"
 
@@ -476,11 +476,46 @@ msgstr "Encontra-se disponível uma nova versão do Exodus. Gostaria de a instal
 msgid "What's New?"
 msgstr "O que há de novo?"
 
+#. frmAutoUpdateStatus..Panel1..Panel2..btnOK..Caption
+#. frameButtons..Panel2..Panel1..btnOK..Caption
+#. frmTracer..frameButtons1..Panel1..btnCancel..Caption
+#. frmPrefs..Panel1..Panel3..btnOK..Caption
+#. frmSSLWarn..frameButtons1..Panel2..Panel1..btnCancel..Caption
+#: AutoUpdateStatus.dfm:94
+#: ExceptTracer.dfm:36
+#: Prefs.dfm:3162
+#: SSLWarn.dfm:182
+#: buttonFrame.dfm:37
+msgid "OK"
+msgstr "OK"
+
+#. frmAutoUpdateStatus..Panel1..Panel2..btnSkip..Caption
+#: AutoUpdateStatus.dfm:104
+msgid "Skip"
+msgstr "Omitir"
+
+#. frmAutoUpdateStatus..Panel1..Panel2..btnCancel..Caption
+#. frameButtons..Panel2..Panel1..btnCancel..Caption
+#. frmDockWizard..TntPanel1..btnCancel..Caption
+#. frmPrefs..Panel1..Panel3..btnCancel..Caption
+#. fRecvStatus..Panel1..btnCancel..Caption
+#. fSendStatus..Panel1..btnCancel..Caption
+#. frmWizard..TntPanel1..Panel3..btnCancel..Caption
+#: AutoUpdateStatus.dfm:114
+#: DockWizard.dfm:55
+#: Prefs.dfm:3172
+#: RecvStatus.dfm:100
+#: SendStatus.dfm:20
+#: Wizard.dfm:63
+#: buttonFrame.dfm:48
+msgid "Cancel"
+msgstr "Cancelar"
+
 #. frmAutoUpdateStatus..HttpClient..Request.ContentType
 #. fRecvStatus..httpClient..Request.ContentType
 #. fSendStatus..httpClient..Request.ContentType
 #. frmWebDownload..IdHTTP1..Request.ContentType
-#: AutoUpdateStatus.dfm:101
+#: AutoUpdateStatus.dfm:131
 #: RecvStatus.dfm:114
 #: SendStatus.dfm:105
 #: WebGet.dfm:75
@@ -491,7 +526,7 @@ msgstr "text/html"
 #. fRecvStatus..httpClient..Request.Accept
 #. fSendStatus..httpClient..Request.Accept
 #. frmWebDownload..IdHTTP1..Request.Accept
-#: AutoUpdateStatus.dfm:102
+#: AutoUpdateStatus.dfm:132
 #: RecvStatus.dfm:115
 #: SendStatus.dfm:106
 #: WebGet.dfm:76
@@ -502,7 +537,7 @@ msgstr "text/html, */*"
 #. fRecvStatus..httpClient..Request.UserAgent
 #. fSendStatus..httpClient..Request.UserAgent
 #. frmWebDownload..IdHTTP1..Request.UserAgent
-#: AutoUpdateStatus.dfm:104
+#: AutoUpdateStatus.dfm:134
 #: RecvStatus.dfm:117
 #: SendStatus.dfm:108
 #: WebGet.dfm:78
@@ -942,32 +977,6 @@ msgstr "Registar"
 msgid "Join Conference"
 msgstr "Entrar na conferência"
 
-#. frameButtons..Panel2..Panel1..btnOK..Caption
-#. frmTracer..frameButtons1..Panel1..btnCancel..Caption
-#. frmPrefs..Panel1..Panel3..btnOK..Caption
-#. frmSSLWarn..frameButtons1..Panel2..Panel1..btnCancel..Caption
-#: ExceptTracer.dfm:36
-#: Prefs.dfm:3162
-#: SSLWarn.dfm:182
-#: buttonFrame.dfm:37
-msgid "OK"
-msgstr "OK"
-
-#. frameButtons..Panel2..Panel1..btnCancel..Caption
-#. frmDockWizard..TntPanel1..btnCancel..Caption
-#. frmPrefs..Panel1..Panel3..btnCancel..Caption
-#. fRecvStatus..Panel1..btnCancel..Caption
-#. fSendStatus..Panel1..btnCancel..Caption
-#. frmWizard..TntPanel1..Panel3..btnCancel..Caption
-#: DockWizard.dfm:55
-#: Prefs.dfm:3172
-#: RecvStatus.dfm:100
-#: SendStatus.dfm:20
-#: Wizard.dfm:63
-#: buttonFrame.dfm:48
-msgid "Cancel"
-msgstr "Cancelar"
-
 #. frmChat..Caption
 #: ChatWin.dfm:6
 msgid "Chat Window"
@@ -1057,7 +1066,7 @@ msgstr "Requisição da hora local"
 #. frmProfile..PageControl1..TabSheet7..Panel2..btnLast..Caption
 #. frmRosterWindow..popRoster..popClientInfo..popLast..Caption
 #: ChatWin.dfm:141
-#: ExEvents.pas:487
+#: ExEvents.pas:486
 #: MsgRecv.dfm:505
 #: Profile.dfm:206
 #: RosterWindow.dfm:344
@@ -2455,7 +2464,7 @@ msgid "Subject"
 msgstr "Assunto"
 
 #. frmMsgQueue..PopupMenu1..D1..Caption
-#: MsgQueue.dfm:161
+#: MsgQueue.dfm:162
 msgid "Delete"
 msgstr "Eliminar"
 
@@ -6351,27 +6360,27 @@ msgstr "Biblioteca Unicode com Copyright (c) 1999, 2000 de Mike Lischke (public@
 msgid "RichEdit98 and DBRichEdit98 components for Delphi 3.0-4.0. version 1.40 Author Alexander Obukhov, Minsk, Belarus <alex@niiomr.belpak.minsk.by>"
 msgstr "Componentes para Delphi 3.0-4.0 RichEdit98 e DBRichEdit98 versão 1.40. Autor Alexander Obukhov, Minsk, Belarus <alex@niiomr.belpak.minsk.by>"
 
-#: AutoUpdateStatus.pas:187
+#: AutoUpdateStatus.pas:140
 #: WebGet.pas:120
 msgid "Downloading..."
 msgstr "A transferir..."
 
-#: AutoUpdateStatus.pas:210
+#: AutoUpdateStatus.pas:163
 #: WebGet.pas:74
 msgid "Initializing..."
 msgstr "A inicializar..."
 
-#: AutoUpdateStatus.pas:226
+#: AutoUpdateStatus.pas:179
 #: WebGet.pas:82
 msgid "Download Complete"
 msgstr "Transferência completa"
 
-#: AutoUpdateStatus.pas:237
+#: AutoUpdateStatus.pas:190
 msgid "Installing..."
 msgstr "A instalar..."
 
-#: AutoUpdateStatus.pas:245
-#: AutoUpdateStatus.pas:252
+#: AutoUpdateStatus.pas:198
+#: AutoUpdateStatus.pas:205
 #: WebGet.pas:94
 msgid "Error: %s"
 msgstr "Erro: %s"
@@ -6503,68 +6512,66 @@ msgstr "A transferir a lista de servidores públicos"
 msgid "Disconnected"
 msgstr "Desligado"
 
-#. create a listview item for this event
-#: ExEvents.pas:138
-#: ExEvents.pas:265
-msgid "Ping Time: %s seconds."
-msgstr "Tempo de resposta: %s segundos."
-
-#: ExEvents.pas:145
+#: ExEvents.pas:144
 msgid "Msg from "
 msgstr "Mensagem de "
 
-#: ExEvents.pas:180
+#: ExEvents.pas:179
 msgid "Invite from "
 msgstr "Convite de "
 
-#: ExEvents.pas:259
-#: ExEvents.pas:475
+#: ExEvents.pas:258
+#: ExEvents.pas:474
 msgid "Time Response"
 msgstr "Resposta de hora local"
 
-#: ExEvents.pas:262
+#: ExEvents.pas:261
 msgid "Local Time: "
 msgstr "Hora local: "
 
-#: ExEvents.pas:281
-#: ExEvents.pas:481
+#: ExEvents.pas:264
+msgid "Ping Time: %s seconds."
+msgstr "Tempo de resposta: %s segundos."
+
+#: ExEvents.pas:280
+#: ExEvents.pas:480
 msgid "Version Response"
 msgstr "Resposta de versão"
 
-#: ExEvents.pas:281
+#: ExEvents.pas:280
 msgid "Description: "
 msgstr "Descrição: "
 
-#: ExEvents.pas:289
+#: ExEvents.pas:288
 msgid "OS: "
 msgstr "Sistema operativo: "
 
-#: ExEvents.pas:303
+#: ExEvents.pas:302
 msgid "Idle for "
 msgstr "Inactivo durante "
 
 #. check for x:oob URL's
-#: ExEvents.pas:429
+#: ExEvents.pas:428
 msgid "This message contains a URL: "
 msgstr "Esta mensagem contém um URL: "
 
 #. check for errors..
+#: ExEvents.pas:446
 #: ExEvents.pas:447
-#: ExEvents.pas:448
 #: Room.pas:449
 #: Room.pas:451
 msgid "ERROR: "
 msgstr "Erro: "
 
-#: ExEvents.pas:448
+#: ExEvents.pas:447
 msgid ", Code="
 msgstr ", Código="
 
-#: ExEvents.pas:452
+#: ExEvents.pas:451
 msgid "Unknown Error"
 msgstr "Erro desconhecido"
 
-#: ExEvents.pas:454
+#: ExEvents.pas:453
 msgid "Original Message was:"
 msgstr "A mensagem original era:"
 
@@ -7856,12 +7863,12 @@ msgid "Element Name"
 msgstr "Nome do elemento"
 
 #. frmPrefFont..btnFont..Caption
-#: prefs/PrefFont.dfm:100
+#: prefs/PrefFont.dfm:83
 msgid "Change Font"
 msgstr "Alterar o tipo de letra"
 
 #. frmPrefFont..pnlHeader..Caption
-#: prefs/PrefFont.dfm:202
+#: prefs/PrefFont.dfm:185
 msgid "Fonts and Colors"
 msgstr "Tipos de letra e cores"
 
@@ -8591,13 +8598,41 @@ msgstr "Utilizar um servidor web para alojar os ficheiros que enviar."
 msgid "Jabber Address of File Transfer Server:"
 msgstr "Endereço Jabber do servidor de transferência de ficheiros:"
 
+#: prefs/PrefFont.pas:88
+msgid "Sample Group"
+msgstr "Grupo de exemplo"
+
+#: prefs/PrefFont.pas:89
+msgid "Peter M."
+msgstr "António R."
+
+#: prefs/PrefFont.pas:90
+msgid "Cowboy Neal"
+msgstr "Lazarus Long"
+
 #. Select the chat window
 #. find the "thing" that we clicked on in the window..
-#: prefs/PrefFont.pas:112
-#: prefs/PrefFont.pas:201
-#: prefs/PrefFont.pas:258
+#: prefs/PrefFont.pas:118
+#: prefs/PrefFont.pas:207
+#: prefs/PrefFont.pas:264
 msgid "Roster Font and Background"
 msgstr "Tipo de letra e fundo do rol"
+
+#: prefs/PrefFont.pas:181
+msgid "Some text from me"
+msgstr "Texto escrito por si"
+
+#: prefs/PrefFont.pas:183
+msgid "Your nick"
+msgstr "A sua alcunha"
+
+#: prefs/PrefFont.pas:187
+msgid "Some reply text"
+msgstr "Texto de resposta"
+
+#: prefs/PrefFont.pas:189
+msgid "Other nick"
+msgstr "Outra alcunha"
 
 #: prefs/PrefGroups.pas:113
 msgid "The offline group will only show up if you have show only online contacts turned off."
