@@ -28,10 +28,10 @@ object frmVCard: TfrmVCard
     Top = 0
     Width = 318
     Height = 292
-    ActivePage = TabSheet3
+    ActivePage = TabSheet1
     Align = alClient
     Style = tsFlatButtons
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'General'
@@ -360,7 +360,7 @@ object frmVCard: TfrmVCard
           'Armenia  '
           'Aruba  '
           'Australia  '
-          'Austia  '
+          'Austria  '
           'Azerbaijan  '
           'Bahamas  '
           'Bahrain  '
@@ -831,7 +831,7 @@ object frmVCard: TfrmVCard
           'Armenia  '
           'Aruba  '
           'Australia  '
-          'Austia  '
+          'Austria  '
           'Azerbaijan  '
           'Bahamas  '
           'Bahrain  '
