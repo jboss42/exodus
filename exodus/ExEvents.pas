@@ -59,6 +59,33 @@ type
 function getTaskBarRect(): TRect;
 function CreateJabberEvent(tag: TXMLTag): TJabberEvent;
 
+resourcestring
+    sPresUnavailable = 'Unavailable presence';
+    sPresAvailable = 'Available presence';
+    sPresChat = 'Chat presence';
+    sPresAway = 'Away presence';
+    sPresXA = 'Ext. Away presence';
+    sPresDND = 'Do Not Disturb presence';
+    sPresS10n = 'Subscription request';
+    sPresGrant = 'Subscription granted';
+    sPresDeny = 'Subscription denied/revoked';
+    sPresUnsub = 'Unsubscribe presence packet';
+
+    sMsgTime = 'Time Response';
+    sMsgTimeInfo = 'Time, Ping Response: ';
+    sMsgLocalTime = 'Local Time: ';
+
+    sMsgVersion = 'Version Response';
+    sMsgVerClient = 'Client: ';
+    sMsgVerVersion = 'Version: ';
+    sMsgVerOS = 'OS: ';
+
+    sMsgLast = 'Last Activity';
+    sMsgLastInfo = 'Idle for ';
+    
+
+
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -194,31 +221,31 @@ begin
         data_type := ptype;
 
         if (ptype = 'unavailable') then
-            tmps := 'Unavailable presence'
+            tmps := sPresUnavailable
         else if (ptype = 'subscribe') then
-            tmps := 'Subscription request'
+            tmps := sPresS10n
         else if (ptype = 'subscribed') then
-            tmps := 'Subscription granted'
+            tmps := sPresGrant
         else if (ptype = 'unsubscribed') then
-            tmps := 'Subscription denied/revoked'
+            tmps := sPresDeny
         else if (ptype = 'unsubscribe') then
-            tmps := 'Unsubscribe presence packet'
+            tmps := sPresUnsub
         else begin
             tmp_tag := tag.GetFirstTag('show');
             if (tmp_tag <> nil) then begin
                 data_type := tmp_tag.Data;
                 if data_type = 'xa' then
-                    tmps := 'Ext. Away presence'
+                    tmps := sPresXA
                 else if data_type = 'away' then
-                    tmps := 'Away presence'
+                    tmps := sPresAway
                 else if data_type = 'chat' then
-                    tmps := 'Chat presence'
+                    tmps := sPresChat
                 else if data_type = 'dnd' then
-                    tmps := 'Do Not Disturb presence';
+                    tmps := sPresDND
                 end
             else begin
                 data_type := 'available';
-                tmps := 'Available presence';
+                tmps := sPresAvailable;
                 end;
             s := tag.getAttribute('status');
             if s <> '' then
@@ -233,34 +260,34 @@ begin
         ns := tag.Namespace;
         if ns = XMLNS_TIME then begin
             eType := evt_Time;
-            data_type := 'Time Response';
+            data_type := sMsgTime;
             qTag := tag.getFirstTag('query');
             tmp_tag := qtag.getFirstTag('display');
-            _data_list.Add('Time, Ping Response');
-            _data_list.Add('Local Time: ' + tmp_tag.Data);
+            _data_list.Add(sMsgTimeInfo);
+            _data_list.Add(sMsgLocalTime + tmp_tag.Data);
             end
 
         else if ns = XMLNS_VERSION then begin
             eType := evt_Version;
-            data_type := 'Version Response';
+            data_type := sMsgVersion;
             qTag := tag.getFirstTag('query');
-            _data_list.Add('Version Response');
+            _data_list.Add(sMsgVersion);
 
             tmp_tag := qtag.getFirstTag('name');
-            _data_list.Add('Client: ' + tmp_tag.Data);
+            _data_list.Add(sMsgVerClient + tmp_tag.Data);
 
             tmp_tag := qtag.getFirstTag('version');
-            _data_list.Add('Version: ' + tmp_tag.Data);
+            _data_list.Add(sMsgVerVersion + tmp_tag.Data);
 
             tmp_tag := qtag.getFirstTag('os');
-            _data_list.Add('OS: ' + tmp_tag.Data);
+            _data_list.Add(sMsgVerOS + tmp_tag.Data);
             end
 
         else if ns = XMLNS_LAST then begin
             eType := evt_Last;
             qTag := tag.getFirstTag('query');
-            data_type := 'Last Activity';
-            _data_list.Add('Idle for' + secsToDuration(qTag.getAttribute('seconds')) + '.');
+            data_type := sMsgLast;
+            _data_list.Add(sMsgLastInfo + secsToDuration(qTag.getAttribute('seconds')) + '.');
             end;
         end;
 end;
