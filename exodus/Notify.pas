@@ -117,6 +117,12 @@ begin
         n := sess.Prefs.getInt('notify_online');
         end;
 
+    // someone is coming online for the first time..
+    if (event = '/presence/unavailable') then begin
+        msg := nick + #10#13' is now offline.';
+        n := sess.Prefs.getInt('notify_offline');
+        end;
+
     // Someone started a chat session w/ us
     if (event = '/session/gui/chat') then begin
         msg := 'Chat with '#10#13 + nick;
