@@ -710,12 +710,14 @@ begin
     xml := ExCOMController.fireIM(to_jid, b, s, xtags);
 
     // don't put in two body elements.
-    btag := (mtag.GetFirstTag('body'));
-    if (btag = nil) then
-        mtag.AddBasicTag('body', b)
-    else begin
-        btag.ClearCData();
-        btag.AddCData(body);
+    if (b <> '') then begin
+        btag := (mtag.GetFirstTag('body'));
+        if (btag = nil) then
+            mtag.AddBasicTag('body', b)
+        else begin
+            btag.ClearCData();
+            btag.AddCData(b);
+        end;
     end;
 
     if (s <> '') then begin
