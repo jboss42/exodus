@@ -21,7 +21,7 @@ unit RoomAdminList;
 interface
 
 uses
-    XMLTag, 
+    XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, StdCtrls, ExtCtrls, CheckLst, ComCtrls;
 
@@ -35,6 +35,8 @@ type
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+  published
+    procedure listAdminCallback(event: string; tag: TXMLTag);
   private
     { Private declarations }
     room_jid: Widestring;
@@ -43,12 +45,13 @@ type
     offList: Widestring;
   public
     { Public declarations }
+    procedure Start();
   end;
 
 var
   frmRoomAdminList: TfrmRoomAdminList;
 
-procedure ShowRoomAdminList(tag: TXMLTag);
+procedure ShowRoomAdminList(room_jid, role, affiliation: WideString);
 
 {---------------------------------------}
 {---------------------------------------}
@@ -56,51 +59,77 @@ procedure ShowRoomAdminList(tag: TXMLTag);
 implementation
 
 uses
-    JabberConst, JabberID, Session, Room;
+    IQ, JabberConst, JabberID, Session, Room;
 
 {$R *.dfm}
 
 {---------------------------------------}
-procedure ShowRoomAdminList(tag: TXMLTag);
+procedure ShowRoomAdminList(room_jid, role, affiliation: WideString);
 var
-    i: integer;
     f: TfrmRoomAdminList;
-    items: TXMLTagList;
-    li: TListItem;
-    rjid, r,a: WideString;
 begin
     //
+    f := TfrmRoomAdminList.Create(Application);
+    f.room_jid := room_jid;
+    if (role <> '') then begin
+        f.role := true;
+        f.onList := role;
+        f.offList := MUC_NONE;
+        end
+    else begin
+        f.role := false;
+        f.onList := affiliation;
+        f.offList := MUC_NONE;
+        end;
+    f.Start();
+end;
+
+{---------------------------------------}
+procedure TfrmRoomAdminList.Start();
+var
+    iq: TJabberIQ;
+    item: TXMLTag;
+begin
+    //
+    iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
+        listAdminCallback, 30);
+    with iq do begin
+        toJid := room_jid;
+        Namespace := XMLNS_MUCADMIN;
+        iqType := 'get';
+        end;
+
+    item := iq.qTag.AddTag('item');
+    if (role) then
+        item.putAttribute('role', onList)
+    else
+        item.putAttribute('affiliation', onList);
+    iq.Send();
+
+    Show();
+end;
+
+{---------------------------------------}
+procedure TfrmRoomAdminList.listAdminCallback(event: string; tag: TXMLTag);
+var
+    li: TListItem;
+    i: integer;
+    rjid: WideString;
+    items: TXMLTagList;
+begin
+    // callback for list administration
+    if event <> 'xml' then exit;
+    if tag = nil then exit;
+
     if ((tag.Name <> 'iq') or (tag.Namespace <> XMLNS_MUCADMIN)) then
         exit;
 
-    f := TfrmRoomAdminList.Create(Application);
     rjid := tag.GetAttribute('from');
     items := tag.QueryXPTags('/iq/query/item');
 
+    room_jid := rjid;
 
-    if (items.Count > 0) then with f do begin
-        room_jid := rjid;
-
-        // figure out what we're modifying
-        r := items[0].GetAttribute('role');
-        a := items[0].GetAttribute('affiliation');
-
-        if (a = MUC_MEMBER) then begin
-            role := false;
-            onList := MUC_MEMBER;
-            offList := MUC_NONE;
-            end
-        else if (a = MUC_OUTCAST) then begin
-            role := false;
-            onList := MUC_OUTCAST;
-            offList := MUC_OUTCAST;
-            end
-        else if (r = MUC_PART) then begin
-            role := true;
-            onList := MUC_PART;
-            offList := MUC_VISITOR;
-            end;
-
+    if (items.Count > 0) then begin
         for i := 0 to items.Count - 1 do begin
             li := lstItems.Items.Add();
             li.Caption := items[i].GetAttribute('nick');
@@ -109,8 +138,8 @@ begin
         end;
 
     items.Free();
-    f.Show();
 end;
+
 
 {---------------------------------------}
 procedure TfrmRoomAdminList.frameButtons1btnOKClick(Sender: TObject);

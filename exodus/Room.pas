@@ -138,7 +138,6 @@ type
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
     procedure ConfigCallback(event: string; Tag: TXMLTag);
-    procedure listAdminCallback(event: string; tag: TXMLTag);
   public
     { Public declarations }
     mynick: Widestring;
@@ -147,6 +146,7 @@ type
 
     property HintText: Widestring read _hint_text;
     property getJid: WideString read jid;
+    property isGC: boolean read _isGC;
 
     procedure DockForm; override;
     procedure FloatForm; override;
@@ -215,6 +215,7 @@ const
     MUC_NONE = 'none';
 
 
+function FindRoom(rjid: Widestring): TfrmRoom;
 function StartRoom(rjid, rnick: Widestring; Password: WideString = ''): TfrmRoom;
 function IsRoom(rjid: Widestring): boolean;
 function FindRoomNick(rjid: Widestring): Widestring;
@@ -315,7 +316,7 @@ begin
     Msg := TJabberMessage.Create(tag);
 
     if (Msg.isXdata) then exit;
-    
+
     from := tag.GetAttribute('from');
     i := _roster.indexOf(from);
     if (i < 0) then begin
@@ -505,7 +506,8 @@ begin
     i := _roster.indexOf(from);
     xtag := tag.QueryXPTag(xp_muc_presence);
 
-    if ((ptype = 'error') and (_jid.resource = mynick)) then begin
+    // if ((ptype = 'error') and (_jid.resource = mynick)) then begin
+    if ((ptype = 'error') and (from = jid)) then begin
         // check for 409, conflicts.
         etag := tag.GetFirstTag('error');
         if (etag <> nil) then begin
@@ -575,18 +577,21 @@ begin
             member.Nick := _jid.resource;
 
             t := tag.GetFirstTag('created');
-            if (t <> nil) then
+            if (t <> nil) then begin
                 // we are the owner... config the room
+                _isGC := false;
                 configRoom();
+                end;
 
             _roster.AddObject(from, member);
             member.Node := AddMember(member);
 
             // show new user message
             if (xtag <> nil) then begin
-              mtag := newRoomMessage(Format(sNewUser, [member.nick]));
-              showMsg(mtag);
-              end;
+                _isGC := false;
+                mtag := newRoomMessage(Format(sNewUser, [member.nick]));
+                showMsg(mtag);
+                end;
             end
         else begin
             member := TRoomMember(_roster.Objects[i]);
@@ -610,6 +615,7 @@ begin
 
         // get extended stuff for MUC, and update the member struct
         if (xtag <> nil) then begin
+            _isGC := false;
             t := xtag.GetFirstTag('item');
             if (t <> nil) then begin
                 member.role := t.GetAttribute('role');
@@ -1022,7 +1028,7 @@ function TfrmRoom.GetNick(rjid: Widestring): Widestring;
 var
     i: integer;
 begin
-    // Get a nick based on the NickJID 
+    // Get a nick based on the NickJID
     i := _roster.indexOf(rjid);
     if (i >= 0) then
         Result := TRoomMember(_roster.Objects[i]).Nick
@@ -1034,6 +1040,19 @@ end;
 function IsRoom(rjid: Widestring): boolean;
 begin
     result := (room_list.IndexOf(rjid) >= 0);
+end;
+
+{---------------------------------------}
+function FindRoom(rjid: Widestring): TfrmRoom;
+var
+    idx: integer;
+begin
+    // finds a room form given a jid.
+    idx := room_list.IndexOf(rjid);
+    if (idx >= 0) then
+        Result := TfrmRoom(room_list[idx])
+    else
+        Result := nil;
 end;
 
 {---------------------------------------}
@@ -1365,38 +1384,15 @@ end;
 
 {---------------------------------------}
 procedure TfrmRoom.popVoiceListClick(Sender: TObject);
-var
-    iq: TJabberIQ;
-    item: TXMLTag;
 begin
   inherited;
     // edit a list
-    iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
-        listAdminCallback, 30);
-    with iq do begin
-        toJid := Self.jid;
-        Namespace := XMLNS_MUCADMIN;
-        iqType := 'get';
-        end;
-
-    item := iq.qTag.AddTag('item');
     if (Sender = popVoiceList) then
-        item.PutAttribute('role', MUC_PART)
+        ShowRoomAdminList(self.jid, MUC_PART, '')
     else if (Sender = popBanList) then
-        item.PutAttribute('affiliation', MUC_OUTCAST)
+        ShowRoomAdminList(self.jid, '', MUC_OUTCAST)
     else if (Sender = popMemberList) then
-        item.PutAttribute('affiliation', MUC_MEMBER);
-
-    iq.Send();
-end;
-
-{---------------------------------------}
-procedure TfrmRoom.listAdminCallback(event: string; tag: TXMLTag);
-begin
-    // callback for list administration
-    if event <> 'xml' then exit;
-    if tag = nil then exit;
-    ShowRoomAdminList(tag);
+        ShowRoomAdminList(self.jid, '', MUC_MEMBER);
 end;
 
 {---------------------------------------}
