@@ -37,8 +37,8 @@ type
     btnDetails: TTntButton;
     lblProfile: TTntLabel;
     cboProfiles: TTntComboBox;
-    lblJID: TTntLabel;
     chkInvisible: TTntCheckBox;
+    lblJid: TTntStaticText;
 
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cboProfilesChange(Sender: TObject);
@@ -142,6 +142,9 @@ begin
     TranslateComponent(Self);
     URLLabel(lblProfile);
     MainSession.Prefs.RestorePosition(Self);
+
+    lblJid.Top := cboProfiles.Top + cboProfiles.Height + 2;
+    chkInvisible.Top := lblJid.Top + lblJid.Height + 2;
 end;
 
 {---------------------------------------}

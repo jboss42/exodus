@@ -61,13 +61,6 @@ object frmLogin: TfrmLogin
       Caption = 'Profile:'
       OnClick = lblProfileClick
     end
-    object lblJID: TTntLabel
-      Left = 61
-      Top = 32
-      Width = 110
-      Height = 13
-      Caption = 'foo@bar.com/resource'
-    end
     object Panel2: TPanel
       Left = 282
       Top = 2
@@ -106,11 +99,19 @@ object frmLogin: TfrmLogin
     end
     object chkInvisible: TTntCheckBox
       Left = 61
-      Top = 54
+      Top = 62
       Width = 97
       Height = 14
       Caption = 'In&visible'
       TabOrder = 2
+    end
+    object lblJid: TTntStaticText
+      Left = 60
+      Top = 33
+      Width = 27
+      Height = 17
+      Caption = 'lblJid'
+      TabOrder = 3
     end
   end
   object popProfiles: TPopupMenu
