@@ -125,6 +125,7 @@ uses
     Session,
     JabberID,
     MsgDisplay,
+    Notify,
     PrefController,
     JabberMsg, Jabber1;
 
@@ -190,7 +191,6 @@ var
     Msg: TJabberMessage;
     from: string;
     tmp_jid: TJabberID;
-    cn : integer;
 begin
     // display the body of the msg
     Msg := TJabberMessage.Create(tag);
@@ -220,29 +220,19 @@ begin
         lblSubject.Hint := Msg.Subject;
         end;
 
+    // this check is needed only to prevent extraneous regexing.
     if ((not Application.Active) and (not MainSession.IsPaused)) then begin
         // check for keywords
-        if (_keywords <> nil) then begin
-            if (_keywords.Exec(Msg.Body)) then begin
-                ShowRiserWindow('Keyword in ' + Self.Caption + ': ' + _keywords.Match[1], 12);
-                end;
-            end
-        else begin
-            cn := MainSession.Prefs.getInt('notify_roomactivity');
-
-            // Pop toast
-            if (cn and notify_toast) > 0 then begin
-                ShowRiserWindow('Activity in ' + Self.Caption, 21);
-                end;
-
-            // Flash Window
-            if (cn and notify_flash) > 0 then begin
-                if (Self.Docked) then
-                    FlashWindow(frmExodus.Handle, true)
-                else
-                    FlashWindow(Self.Handle, true);
-                end;
-            end;
+        if ((_keywords <> nil) and (_keywords.Exec(Msg.Body))) then
+            DoNotify(Self,
+                     'notify_keyword',
+                     'Keyword in ' + Self.Caption + ': ' + _keywords.Match[1],
+                     21)
+        else
+            DoNotify(Self,
+                     'notify_roomactivity',
+                     'Activity in ' + Self.Caption,
+                     21);
         end;
 end;
 
@@ -463,29 +453,31 @@ begin
     _nick_start := 0;
     _hint_text := '';
 
-    kw_list := TStringList.Create();
-    MainSession.Prefs.fillStringlist('keywords', kw_list);
-    if (kw_list.Count > 0) then begin
-        re := MainSession.Prefs.getBool('regex_keywords');
-        first := true;
-        e :=  '(';
-        for i := 0 to kw_list.Count-1 do begin
-            if (first) then
-                first := false
-            else
-                e := e + '|';
-            if (re) then
-                e := e + kw_list[i]
-            else
-                e := e + QuoteRegExprMetaChars(kw_list[i]);
+    if (MainSession.Prefs.getInt('notify_keyword') <> 0) then begin
+        kw_list := TStringList.Create();
+        MainSession.Prefs.fillStringlist('keywords', kw_list);
+        if (kw_list.Count > 0) then begin
+            re := MainSession.Prefs.getBool('regex_keywords');
+            first := true;
+            e :=  '(';
+            for i := 0 to kw_list.Count-1 do begin
+                if (first) then
+                    first := false
+                else
+                    e := e + '|';
+                if (re) then
+                    e := e + kw_list[i]
+                else
+                    e := e + QuoteRegExprMetaChars(kw_list[i]);
+                end;
+                e := e + ')';
+            _keywords := TRegExpr.Create();
+            _keywords.Expression := e;
+            _keywords.Compile();
             end;
-            e := e + ')';
-        _keywords := TRegExpr.Create();
-        _keywords.Expression := e;
-        _keywords.Compile();
+        kw_list.Free();
         end;
-    kw_list.Free();
-    
+
     MyNick := '';
 end;
 

@@ -122,7 +122,7 @@ implementation
 
 uses
     Presence, PrefController,
-    Transfer, RosterAdd, RiserWindow,
+    Transfer, RosterAdd, RiserWindow, Notify,
     Jabber1, Profile, ExUtils, MsgDisplay, IQ,
     JabberMsg, Roster, Session, XMLUtils,
     ShellAPI, RosterWindow, Emoticons;
@@ -379,7 +379,6 @@ end;
 {---------------------------------------}
 procedure TfrmChat.showMsg(tag: TXMLTag);
 var
-    cn: integer;
     etag, btag: TXMLTag;
     Msg: TJabberMessage;
 begin
@@ -394,22 +393,7 @@ begin
         Self.ResetPresImage();
     _check_event := false;
 
-    cn := MainSession.Prefs.getInt('notify_chatactivity');
-
-    if (not Application.Active) then begin
-        // Pop toast
-        if (cn and notify_toast) > 0 then begin
-            ShowRiserWindow(sChatActivity + OtherNick, 20);
-            end;
-
-        // Flash Window
-        if (cn and notify_flash) > 0 then begin
-            if (Self.Docked) then
-                FlashWindow(frmExodus.Handle, true)
-            else
-                FlashWindow(Self.Handle, true);
-            end;
-        end;
+    DoNotify(Self, 'notify_chatactivity', sChatActivity + OtherNick, 20);
 
     if ((btag = nil) or (btag.Data = '')) then exit;
 

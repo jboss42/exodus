@@ -1428,12 +1428,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 310
     Height = 370
-    ActivePage = tbsCustomPres
+    ActivePage = tbsNotify
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 10
+    TabIndex = 6
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -2142,8 +2142,8 @@ object frmPrefs: TfrmPrefs
           Width = 97
           Height = 17
           Caption = 'Play a Sound'
-          Enabled = False
           TabOrder = 2
+          OnClick = chkToastClick
         end
       end
       object StaticText6: TStaticText

@@ -38,7 +38,7 @@ type
 implementation
 
 uses
-    ChatWin, Subscribe,
+    ChatWin, Subscribe, Notify,
     Roster, JabberID, Session;
 
 procedure TGUIFactory.setSession(js: TObject);
@@ -106,8 +106,11 @@ begin
                     cboGroup.ItemIndex := cboGroup.Items.IndexOf(ri.Groups[0]);
                 end;
             end;
+        DoNotify(nil, 'notify_s10n',
+                 'Subscription from '#10#13 + sjid, 16);
         tmp_jid.Free();
         sub.Show;
+
         end;
 
 

@@ -25,6 +25,7 @@ uses
     XMLTag,
     JabberID,
     Presence,
+    Dockable,
     Windows, Forms, Contnrs, SysUtils, classes;
 
 type
@@ -42,6 +43,7 @@ type
         procedure SetSession(js: TObject);
     end;
 
+procedure DoNotify(win: TfrmDockable; pref_name: string; msg: string; icon: integer);
 
 implementation
 uses
@@ -51,6 +53,8 @@ uses
     ExEvents,
     RiserWindow,
     Roster,
+    MMSystem,
+    Debug,
     Session;
 
 {---------------------------------------}
@@ -88,10 +92,9 @@ end;
 procedure TNotifyController.Callback(event: string; tag: TXMLTag);
 var
     sess: TJabberSession;
-    nick, j, from, msg: string;
+    nick, j, from: string;
     ritem: TJabberRosterItem;
     tmp_jid: TJabberID;
-    n: integer;
 begin
     // we are getting some event to do notification on
 
@@ -105,38 +108,48 @@ begin
     from := tag.GetAttribute('from');
     tmp_jid := TJabberID.Create(from);
     j := tmp_jid.jid;
-    n := 0;
     ritem := sess.roster.Find(j);
     if ritem <> nil then nick := ritem.nickname else nick := tmp_jid.user;
 
     tmp_jid.Free();
 
     // someone is coming online for the first time..
-    if (event = '/presence/online') then begin
-        msg := nick + #10#13' is now online.';
-        n := sess.Prefs.getInt('notify_online');
-        end;
+    if (event = '/presence/online') then
+        DoNotify(nil, 'notify_online', nick + #10#13' is now online.', 1)
 
     // someone is coming online for the first time..
-    if (event = '/presence/unavailable') then begin
-        msg := nick + #10#13' is now offline.';
-        n := sess.Prefs.getInt('notify_offline');
-        end;
+    else if (event = '/presence/unavailable') then
+        DoNotify(nil, 'notify_offline', nick + #10#13' is now offline.', 0)
 
     // Someone started a chat session w/ us
-    if (event = '/session/gui/chat') then begin
-        msg := 'Chat with '#10#13 + nick;
-        ShowRiserWindow(msg, 20);
-        n := sess.Prefs.getInt('notify_newchat')
+    else if (event = '/session/gui/chat') then
+        DoNotify(nil, 'notify_newchat', 'Chat with '#10#13 + nick, 20)
+
+    // unkown.
+    else
+        DebugMessage('Unknown notify event: ' + event);
+end;
+
+{---------------------------------------}
+procedure DoNotify(win: TfrmDockable; pref_name: string; msg: string; icon: integer);
+var
+    notify : integer;
+begin
+    if (Application.Active or MainSession.IsPaused) then exit;
+
+    notify := MainSession.Prefs.getInt(pref_name);
+    if ((notify and notify_toast) > 0) then
+        ShowRiserWindow(msg, icon);
+    if ((notify and notify_flash) > 0) then begin
+        if ((win = nil) or win.Docked) then
+            FlashWindow(frmExodus.Handle, true)
+        else
+            FlashWindow(win.Handle, true);
         end;
+    if ((notify and notify_sound) > 0) then
+        PlaySound(pchar('EXODUS_' + pref_name), 0,
+                  SND_APPLICATION or SND_ASYNC or SND_NOWAIT or SND_NODEFAULT);
 
-    if ((n and notify_toast) > 0) then
-        // Show toast
-        ShowRiserWindow(msg, 1);
-
-    if ((n and notify_flash) > 0) then
-        // flash the main window
-        FlashWindow(frmExodus.Handle, true);
 end;
 
 end.
