@@ -27,25 +27,11 @@ uses
     {$else}
     Forms,
     {$endif}
-    XMLTag,
+    ChatController, XMLTag,
     JabberID,
     SysUtils, Classes;
 
 type
-    TJabberChat = class
-    private
-    public
-        jid: TJabberID;
-        useResource: boolean;
-        nick: string;
-        thread: string;
-        buff: string;
-        window: TForm;
-
-        constructor Create;
-        destructor Destroy; override;
-    end;
-
     TJabberChatList = class(TStringList)
     private
         _callback: integer;
@@ -53,8 +39,8 @@ type
         constructor Create;
         destructor Destroy; override;
 
-        function FindChat(sjid, sresource, sthread: string): TJabberChat;
-        function AddChat(sjid, sresource: string): TJabberChat;
+        function FindChat(sjid, sresource, sthread: string): TChatController;
+        function AddChat(sjid, sresource: string): TChatController; overload;
 
         procedure MsgCallback(event: string; tag: TXMLTag);
     end;
@@ -66,24 +52,6 @@ implementation
 uses
     Session;
 
-{---------------------------------------}
-constructor TJabberChat.Create;
-begin
-    inherited;
-
-    jid := TJabberID.Create('');
-end;
-
-{---------------------------------------}
-destructor TJabberChat.Destroy;
-begin
-    jid.Free;
-
-    inherited Destroy;
-end;
-
-{---------------------------------------}
-{---------------------------------------}
 {---------------------------------------}
 constructor TJabberChatList.Create;
 begin
@@ -101,6 +69,7 @@ procedure TJabberChatList.MsgCallback(event: string; tag: TXMLTag);
 var
     fjid: string;
     tmp_jid: TJabberID;
+    c: TChatController;
     // c: TfrmChat;
 begin
     // check to see if we have a session already open for
@@ -111,30 +80,29 @@ begin
     if (tag.QueryXPTag('/message/body') = nil) then exit;
 
     if (Self.indexOf(fjid) < 0) then begin
-
         // Create a new session
         tmp_jid := TJabberID.Create(fjid);
         if (Self.indexOf(tmp_jid.jid) >= 0) then begin
             tmp_jid.Free();
             exit;
             end;
-            
+
         // in the blocker list?
         if (MainSession.IsBlocked(tmp_jid)) then  begin
             tmp_jid.Free();
             exit;
             end;
 
+        // Create a new chat controller
+        c := Self.AddChat(tmp_jid.jid, tmp_jid.resource);
+        c.MsgCallback(event, tag);
+
         tmp_jid.Free();
-        if MainSession.IsPaused then
-            MainSession.QueueEvent(event, tag, Self.MsgCallback)
-        else
-            MainSession.FireEvent('/session/gui/chat', tag);
         end;
 end;
 
 {---------------------------------------}
-function TJabberChatList.FindChat(sjid, sresource, sthread: string): TJabberChat;
+function TJabberChatList.FindChat(sjid, sresource, sthread: string): TChatController;
 var
     full: string;
     i: integer;
@@ -155,30 +123,18 @@ begin
     if (i < 0) then
         Result := nil
     else
-        Result := TJabberChat(Objects[i]);
+        Result := TChatController(Objects[i]);
 end;
 
 {---------------------------------------}
-function TJabberChatList.AddChat(sjid, sresource: string): TJabberChat;
-var
-    tmps: string;
-    tmp_jid: TJabberID;
-    c: TJabberChat;
+function TJabberChatList.AddChat(sjid, sresource: string): TChatController; 
 begin
-    // Create a new chat session for this jid + resource
-    tmp_jid := TJabberID.Create(sjid);
-    tmps := tmp_jid.jid;
-    tmp_jid.Free();
-    if sresource <> '' then
-        tmps := tmps + '/' + sresource;
-
-    c := TJabberChat.Create;
-    c.jid.ParseJID(tmps);
-    c.useResource := (sresource <> '');
-
-    Self.AddObject(tmps, c);
-
-    Result := c;
+    //
+    Result := TChatController.Create(sjid, sresource);
+    if (sresource = '') then
+        Self.AddObject(sjid, Result)
+    else
+        Self.AddObject(sjid + '/' + sresource, Result);
 end;
 
 
