@@ -824,6 +824,13 @@ begin
         l := Screen.Width - w;
     end;
 
+    // Make sure it's not "maximized"
+    if (h >= (Screen.Height - 50)) then
+        h := form.Height;
+    if (w >= (Screen.Width - 50)) then
+        w := form.Width;
+
+
     Form.SetBounds(l, t, w, h);
     Result := true;
 end;
@@ -869,6 +876,12 @@ begin
     if (l + w > Screen.Width) then begin
         l := Screen.Width - w;
     end;
+
+    // Make sure it's not "maximized"
+    if (h >= (Screen.Height - 50)) then
+        h := Screen.Height - 100;
+    if (w >= (Screen.Width - 50)) then
+        w := Screen.Width - 100;
 
     Form.SetBounds(l, t, w, h);
 end;
