@@ -4711,7 +4711,7 @@ begin
       Stream.Free;
     end;
   except
-    RaiseLastWin32Error;
+    RaiseLastOSError;
   end;
 end;
 
@@ -5934,12 +5934,24 @@ function StrAllocW(Size: Cardinal): PWideChar;
 // Allocates a buffer for a null-terminated wide string and returns a pointer
 // to the first character of the string.
 
+// pgm 5/8/02 - Define a new local var, so that are guaranteed to get a new
+// chunk-o-memory.
 begin
   Size := SizeOf(WideChar) * Size + SizeOf(Cardinal);
+  {
+  new_buff := nil;
+  GetMem(new_buff, Size);
+  FillChar(new_buff^, Size, 0);
+  Cardinal(Pointer(new_buff)^) := Size;
+  Inc(new_buff, SizeOf(Cardinal) div SizeOf(WideChar));
+  Result := new_buff;
+  }
+
   GetMem(Result, Size);
   FillChar(Result^, Size, 0);
   Cardinal(Pointer(Result)^) := Size;
   Inc(Result, SizeOf(Cardinal) div SizeOf(WideChar));
+
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -6967,5 +6979,6 @@ initialization
   if (Win32Platform and VER_PLATFORM_WIN32_NT) <> 0 then @WideCompareText := @CompareTextWinNT
                                                     else @WideCompareText := @CompareTextWin95;
 finalization
-  LoadInProgress.Free;
+  if LoadInProgress <> nil then
+    LoadInProgress.Free;
 end.

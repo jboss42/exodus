@@ -82,7 +82,7 @@ type
         procedure AuthCallback(event: string; tag: TXMLTag);
         procedure RegistrationCallback(event: string; xml: TXMLTag);
 
-        procedure DataEvent(send: boolean; data: string);
+        procedure DataEvent(send: boolean; data: Widestring);
     public
         ppdb: TJabberPPDB;
         roster: TJabberRoster;
@@ -379,7 +379,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberSession.DataEvent(send: boolean; data: string);
+procedure TJabberSession.DataEvent(send: boolean; data: Widestring);
 begin
     // we are getting data from the socket
     if (send) then

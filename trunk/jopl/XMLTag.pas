@@ -22,7 +22,7 @@ unit XMLTag;
 interface
 
 uses
-    WStrList, 
+    Unicode,
     XMLNode,
     XMLAttrib,
     XMLCData,

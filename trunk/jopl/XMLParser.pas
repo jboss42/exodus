@@ -22,7 +22,7 @@ unit XMLParser;
 interface
 
 uses
-    WStrList, 
+    Unicode,
     XMLTag,
     XMLUtils,
     LibXMLParser,
@@ -49,8 +49,6 @@ type
 {---------------------------------------}
 {---------------------------------------}
 implementation
-uses
-    Unicode;
 
 {---------------------------------------}
 constructor TXMLTagParser.Create();
@@ -89,7 +87,7 @@ end;
 {---------------------------------------}
 procedure TXMLTagParser.ParseFile(filename: String);
 var
-    f: TWideStringList;
+    f: TStringList;
     s: WideString;
 begin
     // Open the file, suck it into a stringlist
@@ -97,10 +95,10 @@ begin
 
     if (not FileExists(filename)) then exit;
 
-    f := TWideStringList.Create();
+    f := TStringList.Create();
     f.LoadFromFile(filename);
 
-    s := f.Text;
+    s := UTF8Decode(f.Text);
     Self.ParseString(s, '');
     f.Free();
 end;

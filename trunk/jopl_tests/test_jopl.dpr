@@ -33,7 +33,8 @@ uses
   Roster in '..\jopl\Roster.pas',
   IQ in '..\jopl\IQ.pas',
   XMLHttpStream in '..\jopl\XMLHttpStream.pas',
-  S10n in '..\jopl\S10n.pas';
+  S10n in '..\jopl\S10n.pas',
+  Unicode in '..\jopl\Unicode.pas';
 
 {$R *.res}
 

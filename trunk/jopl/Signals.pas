@@ -147,13 +147,13 @@ type
 
     {---------------------------------------}
     // Signal that handles an additional string at the end
-    TDataStringEvent = procedure(event: string; tag: TXMLTag; data: string) of object;
+    TDataStringEvent = procedure(event: string; tag: TXMLTag; data: Widestring) of object;
     TStringListener = class(TSignalListener);
 
     TStringSignal = class(TSignal)
     public
         function addListener(callback: TDataStringEvent): TStringListener; overload;
-        procedure Invoke(event: string; tag: TXMLTag; data: string); overload;
+        procedure Invoke(event: string; tag: TXMLTag; data: Widestring); overload;
     end;
 
 
@@ -189,6 +189,7 @@ end;
 constructor TSignalDispatcher.Create();
 begin
     inherited;
+
     _lid_info := TStringList.Create();
 end;
 
@@ -518,7 +519,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TStringSignal.Invoke(event: string; tag: TXMLTag; data: string);
+procedure TStringSignal.Invoke(event: string; tag: TXMLTag; data: Widestring);
 var
     sl: TStringListener;
     se: TDataStringEvent;

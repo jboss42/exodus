@@ -12,7 +12,8 @@ type
         procedure Setup; override;
         procedure TearDown; override;
     published
-        // procedure testFileParse;
+        procedure testUnicode;
+        procedure testFileParse;
         procedure testStringParser;
     end;
 
@@ -38,7 +39,7 @@ begin
 end;
 
 {---------------------------------------}
-(*
+
 procedure TXMLParserTest.testFileParse;
 var
     t, f: TXMLTag;
@@ -60,7 +61,6 @@ begin
     CheckEquals('100', f.QueryXPData('/jabber/service/jsm/filter/max_size'),
         'Failed getting deep tag cdata');
 end;
-*)
 
 {---------------------------------------}
 procedure TXMLParserTest.testStringParser;
@@ -77,6 +77,38 @@ begin
 
     CheckEquals('foo', f.Name, 'Fragment parent has the wrong name');
 end;
+
+{---------------------------------------}
+procedure TXMLParserTest.testUnicode;
+var
+    cur_name: WideString;
+    i: integer;
+    t, f: TXMLTag;
+    c: TXMLTagList;
+begin
+    parser.ParseFile('unicode.xml');
+    CheckEquals(1, parser.Count, 'Wrong fragment count');
+
+    f := parser.popTag();
+    CheckEquals('xml', f.Name, 'Tag has the wrong name');
+
+    c := f.ChildTags();
+    CheckEquals(2, c.Count, 'Wrong number of child tags');
+
+    t := c[1];
+    CheckEquals(3, Length(t.name), 'Wrong length of unicode tag name');
+    CheckEquals('wierd', t.getAttribute('attribute'), 'Wrong attribute on unicode tag');
+
+    // Check our Unicode values.
+    CheckEquals($5B80, Ord(t.name[1]), 'Wrong first unicode char');
+    CheckEquals($5B50, Ord(t.name[2]), 'Wrong second unicode char');
+    CheckEquals($5B87, Ord(t.name[3]), 'Wrong second unicode char');
+
+
+    c.Free();
+    f.Free();
+end;
+
 
 {---------------------------------------}
 initialization

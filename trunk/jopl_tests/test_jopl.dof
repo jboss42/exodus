@@ -45,7 +45,7 @@ OutputDir=
 UnitOutputDir=
 PackageDLLOutputDir=
 PackageDCPOutputDir=
-SearchPath=..\jopl;..\dunit
+SearchPath=$(DELPHI)\Lib\Debug;..\jopl;..\dunit
 Packages=vcl;rtl;dbrtl;adortl;vcldb;vclx;bdertl;vcldbx;ibxpress;dsnap;cds;bdecds;qrpt;teeui;teedb;tee;dss;teeqr;visualclx;visualdbclx;dsnapcrba;dsnapcon;VclSmp;vclshlctrls;vclie;xmlrtl;inet;inetdbbde;inetdbxpress;inetdb;nmfast;webdsnap;websnap;dbexpress;dbxcds;indy;dclOffice2k;ExComponents;jabbercom
 Conditionals=
 DebugSourceDirs=
@@ -89,6 +89,7 @@ Comments=
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlSearchPath]
-Count=2
-Item0=..\jopl;..\dunit
-Item1=..\jopl
+Count=3
+Item0=$(DELPHI)\Lib\Debug;..\jopl;..\dunit
+Item1=..\jopl;..\dunit
+Item2=..\jopl
