@@ -470,6 +470,7 @@ begin
     // playback the stuff in the queue
     _paused := false;
 
+    // WOAH! Make sure things are played back or cleared when we get disconnected.
     while (_pauseQueue.Count > 0) do begin
         q := TQueuedEvent(_pauseQueue.pop);
         sig := TSignalEvent(q.callback);

@@ -28,7 +28,7 @@ uses
 
 type
   TMemberNode = TTntListItem;
-  
+
   TRoomMember = class
   public
     Nick: Widestring;
@@ -419,7 +419,7 @@ begin
             Self.Close();
             end;
         end
-        
+
     else if ptype = 'unavailable' then begin
         if (i >= 0) then begin
             member := TRoomMember(_roster.Objects[i]);
@@ -510,8 +510,10 @@ end;
 procedure TfrmRoom.RemoveMember(member: TRoomMember);
 begin
     // delete this node
-    if (member.Node <> nil) then
+    if (member.Node <> nil) then begin
         member.Node.Free;
+        lstRoster.Refresh();
+        end;
 end;
 
 {---------------------------------------}

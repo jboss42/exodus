@@ -294,7 +294,7 @@ var
 begin
     f := TfrmPrefs.Create(Application);
     f.LoadPrefs;
-    frmExodus.PreModal(f);
+    // frmExodus.PreModal(f);
     f.ShowModal;
     frmExodus.PostModal();
 end;
@@ -433,15 +433,15 @@ begin
         _notify[9]  := getInt('notify_oob');
         _notify[10] := getInt('notify_autoresponse');
 
+        optNotify.Enabled;
+        chkToast.Checked := false;
+        chkFlash.Checked := false;
+
         for i := 0 to NUM_NOTIFIES - 1 do
             chkNotify.Checked[i] := (_notify[i] > 0);
 
         chkNotify.ItemIndex := 0;
         chkNotifyClick(Self);
-
-        optNotify.Enabled;
-        chkToast.Checked := false;
-        chkFlash.Checked := false;
 
         // Autoaway options
         chkAutoAway.Checked := getBool('auto_away');
