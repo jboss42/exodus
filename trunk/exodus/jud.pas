@@ -61,7 +61,8 @@ type
     popProfile: TTntMenuItem;
     popAdd: TTntMenuItem;
     lblCount: TTntLabel;
-    xDataBox: TframeXData;
+    TabXData: TTabSheet;
+    xdataBox: TframeXData;
     procedure btnCloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnNextClick(Sender: TObject);
@@ -205,6 +206,7 @@ begin
     TabSheet2.TabVisible := false;
     TabFields.TabVisible := false;
     TabSheet4.TabVisible := false;
+    TabXData.TabVisible := false;
     Tabs.ActivePage := TabSheet1;
 end;
 
@@ -327,15 +329,15 @@ begin
         x := tag.QueryXPTag('/iq/query/x[@xmlns="jabber:x:data"]');
         if (x <> nil) then begin
             cur_state := 'xsearch';
-            lblInstructions.Visible := false;
-            xDataBox.Visible := true;
             xDataBox.Render(x);
+            Tabs.ActivePage := TabXData;
+            xDataBox.SetFocus();
         end
         else begin
-          fields := tag.QueryXPTag('/iq/query').ChildTags();
-          ti := 0;
-          tt := 0;
-          for i := 0 to fields.Count -1 do begin
+            fields := tag.QueryXPTag('/iq/query').ChildTags();
+            ti := 0;
+            tt := 0;
+            for i := 0 to fields.Count -1 do begin
               cur_tag := fields[i];
               if (cur_tag.Name = 'instructions') then
                   // do nothing
@@ -366,12 +368,11 @@ begin
                   if (ff = nil) then
                       ff := cur_frame;
               end;
-          end;
-          fields.Free();
-      end;
+            end;
+            fields.Free();
+            Tabs.ActivePage := TabFields;
+        end;
     end;
-
-    Tabs.ActivePage := TabFields;
 
     if (ff <> nil) then
         ff.txtData.SetFocus();
