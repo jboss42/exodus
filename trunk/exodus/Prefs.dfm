@@ -20,7 +20,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 362
+    Height = 357
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1569,13 +1569,13 @@ object frmPrefs: TfrmPrefs
     Left = 89
     Top = 0
     Width = 371
-    Height = 362
-    ActivePage = tbsPlugins
+    Height = 357
+    ActivePage = tbsFonts
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 11
+    TabIndex = 2
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1765,9 +1765,9 @@ object frmPrefs: TfrmPrefs
       object Label5: TLabel
         Left = 8
         Top = 32
-        Width = 286
+        Width = 283
         Height = 13
-        Caption = 'Click on the approprriate font or window to change elements.'
+        Caption = 'Click on the appropriate font or window to change elements.'
       end
       object StaticText3: TStaticText
         Left = 0
@@ -1950,7 +1950,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 102
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2052,7 +2052,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 97
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2524,7 +2524,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 124
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2610,7 +2610,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 112
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2644,7 +2644,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TLabel
           Left = 0
           Top = 0
-          Width = 363
+          Width = 306
           Height = 13
           Align = alTop
           Caption = 
@@ -2668,7 +2668,7 @@ object frmPrefs: TfrmPrefs
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 363
+        Width = 352
         Height = 26
         Align = alTop
         Caption = 
@@ -2679,7 +2679,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 146
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2953,7 +2953,7 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 46
         Width = 363
-        Height = 285
+        Height = 280
         Align = alClient
         TabOrder = 1
       end
@@ -2961,7 +2961,7 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 362
+    Top = 357
     Width = 460
     Height = 37
     Align = alBottom
