@@ -84,6 +84,9 @@
         <brand_muc value="1"></brand_muc>
         <brand_ft value="1"></brand_ft>
         <brand_plugs value="1"></brand_plugs>
+        <brand_addcontact_gateways value="1"/>
+        <brand_registration value="1"/>
+        <brand_browser value="1"/>
         <brand_vcard value="1"></brand_vcard>
         <browse_view value="0"></browse_view>
         <chat_memory value="60"></chat_memory>

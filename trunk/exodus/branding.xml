@@ -1,1 +1,6 @@
-<exodus version="0.9"><branding_url value="http://exodus.jabberstudio.org/daily/branding.xml"/><auto_update_url value="http://exodus.jabberstudio.org/daily/setup.exe"/><auto_update_changelog_url value="http://exodus.jabberstudio.org/daily/ChangeLog-DAILY.txt"/><presii/><positions/><profiles/></exodus>
+<exodus version="0.9">
+<prefs>
+<branding_url value="http://exodus.jabberstudio.org/daily/branding.xml"/>
+<auto_update_url value="http://exodus.jabberstudio.org/daily/setup.exe"/>
+<auto_update_changelog_url value="http://exodus.jabberstudio.org/daily/ChangeLog-DAILY.txt"/>
+</prefs><presii/><positions/><profiles/></exodus>
