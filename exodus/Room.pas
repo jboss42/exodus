@@ -909,7 +909,7 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.presCallback(event: string; tag: TXMLTag);
 var
-    ptype, from: Widestring;
+    emsg, ptype, from: Widestring;
     tmp_jid: TJabberID;
     i: integer;
     member: TRoomMember;
@@ -969,7 +969,12 @@ begin
                 exit;
             end
             else if (ecode = '403') then begin
-                MessageDlgW(etag.Data(), mtError, [mbOK], 0);
+                emsg := etag.QueryXPData('/error/text[@xmlns="urn:ietf:params:xml:ns:xmpp-streams"]');
+                if (emsg = '') then
+                    emsg := etag.Data();
+                if (emsg = '') then
+                    emsg := _('You are not allowed to join this room. The room could be password protected, or you could be on the ban list.');
+                MessageDlgW(emsg, mtError, [mbOK], 0);
                 Self.Close();
                 exit;
             end
