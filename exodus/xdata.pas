@@ -94,7 +94,6 @@ begin
     packet := tag.Name;
     to_jid := tag.GetAttribute('from');
     AssignDefaultFont(Self.Font);
-    
 
     if (packet = 'iq') then
         ns := tag.QueryXPData('/iq/query@xmlns')

@@ -505,7 +505,7 @@ uses
     Debug, Dockable, ExUtils, GetOpt, InputPassword,
     Iq, JUD, JabberID, JabberMsg, IdGlobal,
     JoinRoom, Login, MsgDisplay, MsgQueue, MsgRecv, Password,
-    PrefController, Prefs, Profile, RegForm, RemoveContact, RiserWindow,
+    PrefController, Prefs, Profile, RegForm, RemoveContact, RiserWindow, Room,
     Roster, RosterAdd, Session, Transfer, VCard, xData, XMLUtils;
 
 {$R *.DFM}
@@ -1547,6 +1547,10 @@ begin
         msg := e.data_type;
         DoNotify(nil, 'notify_invite',
                  sMsgInvite + TJabberID.Create(e.from).jid, img_idx);
+        if (MainSession.Prefs.getBool('auto_accept_invites')) then begin
+            StartRoom(msg, MainSession.Username);
+            exit;
+            end;
         end;
 
     evt_RosterItems: begin

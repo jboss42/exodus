@@ -191,6 +191,7 @@ type
     chkCloseQueue: TCheckBox;
     chkFlashInfinite: TCheckBox;
     chkAAReducePri: TCheckBox;
+    chkAutoAcceptInvites: TCheckBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -380,6 +381,7 @@ begin
         chkLog.Checked := getBool('log');
         chkLogRooms.Checked := getBool('log_rooms');
         txtLogPath.Text := getString('log_path');
+        chkAutoAcceptInvites.Checked := getBool('auto_accept_invites');
         cboMsgOptions.ItemIndex := getInt('msg_treatment');
         cboPresTracking.ItemIndex := getInt('pres_tracking');
         self.chkLogClick(nil);
@@ -508,6 +510,7 @@ begin
         setBool('msg_queue', chkMsgQueue.Checked);
         setBool('close_queue', chkCloseQueue.Checked);
         setBool('log', chkLog.Checked);
+        setBool('auto_accept_invites', chkAutoAcceptInvites.Checked);
         setBool('log_rooms', chkLogRooms.Checked);
         setString('log_path', txtLogPath.Text);
         setInt('msg_treatment', cboMsgOptions.ItemIndex);

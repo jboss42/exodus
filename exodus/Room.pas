@@ -234,6 +234,8 @@ begin
     // display the body of the msg
     Msg := TJabberMessage.Create(tag);
 
+    if (Msg.isXdata) then exit;
+    
     from := tag.GetAttribute('from');
     i := _roster.indexOf(from);
     if (i < 0) then begin
