@@ -95,9 +95,9 @@ object frmRosterWindow: TfrmRosterWindow
       OnClick = btnFindCloseClick
     end
     object txtFind: TTntEdit
-      Left = 38
+      Left = 56
       Top = 1
-      Width = 119
+      Width = 101
       Height = 21
       Hint = 'Esc to quit, Enter to select current,  F3 to search again'
       ParentShowHint = False

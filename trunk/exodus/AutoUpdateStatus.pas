@@ -136,6 +136,7 @@ end;
 {---------------------------------------}
 procedure TfrmAutoUpdateStatus.FormCreate(Sender: TObject);
 begin
+    AssignUnicodeFont(Self, 8);
     TranslateComponent(Self);
     Image1.Picture.Icon.Handle := LoadIcon(0, IDI_QUESTION);
     _downloading := false;

@@ -330,6 +330,7 @@ begin
     // Deal with fonts & stuff
     AssignUnicodeFont(Self, 9);
     AssignUnicodeURL(lblLogin.Font, 8);
+    AssignUnicodeFont(pnlFind.Font, 8);
     StatBar.Font.Size := 8;
     TranslateComponent(Self);
 
