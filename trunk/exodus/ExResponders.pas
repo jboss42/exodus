@@ -602,7 +602,7 @@ var
     b, e: TXMLTag;
 begin
     //
-    if (tag.Name = 'iq') then begin
+    if ((tag.Name = 'iq') and (tag.GetAttribute('type') <> 'error')) then begin
         b := TXMLTag.Create(tag);
         f := b.GetAttribute('from');
         b.setAttribute('from', b.getAttribute('to'));
