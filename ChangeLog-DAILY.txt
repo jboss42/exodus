@@ -1,72 +1,47 @@
-2004-03-02 08:14  pgmillard
+2004-03-04 08:13  pgmillard
 
-	* exodus/: default.po, version.h, version.nsi: daily build
+	* exodus/: version.h, default.po, version.nsi: daily build
 
-2004-03-01 23:32  pgmillard
+2004-03-04 07:13  pgmillard
 
-	* exodus/Dockable.dfm, exodus/ExEvents.pas, exodus/Exodus.dof,
-	  exodus/ExodusCOM_TLB.pas, exodus/Jabber1.dfm,
-	  exodus/MsgQueue.dfm, exodus/MsgQueue.pas, exodus/buttonFrame.dfm,
-	  exodus/xdata.dfm, jopl/ChatController.pas: Queue'd chats are now
-	  saving to the spool properly.
+	* exodus/: Room.pas, xdata.pas: Fixup x-data handling.. Make sure
+	  forms get set TO valid.
 
-2004-03-01 17:37  pgmillard
+2004-03-03 21:53  pgmillard
 
-	* exodus/: ExEvents.pas, Exodus.dof, ExodusCOM_TLB.pas,
-	  MsgQueue.dfm, MsgQueue.pas, exodus-new.nsi: Fixup bugs found
-	  during use today with queue'd chats
+	* exodus/: Debug.pas, MsgDisplay.pas: Fix algorithm for determining
+	  if the scroll bars for chat windows and debug window are
+	  'at-bottom' or not
 
-2004-03-01 08:56  rimas
+2004-03-03 21:22  pgmillard
 
-	* exodus/locale/lt/LC_MESSAGES/default.po: Node ID related strings
-	  translated.
+	* exodus/ExUtils.pas: Further fixes for NetMeeting co-existance
 
-2004-03-01 07:12  pgmillard
+2004-03-03 21:15  pgmillard
 
-	* exodus/: BaseChat.dfm, Dockable.dfm, ExodusCOM_TLB.pas,
-	  Jabber1.dfm, MsgQueue.dfm, xdata.dfm, prefs/PrefPanel.dfm: Queued
-	  chat windows.
+	* exodus/: Login.dfm, Login.pas: Fix the 'craig' bug where you can
+	  open multiple login windows.
 
-2004-02-29 22:55  pgmillard
+2004-03-03 21:01  pgmillard
 
-	* exodus/ChatWin.pas, exodus/ExEvents.pas, exodus/GUIFactory.pas,
-	  exodus/MsgQueue.pas, exodus/MsgRecv.pas, exodus/RosterRecv.dfm,
-	  exodus/RosterRecv.pas, exodus/defaults.xml, exodus/invite.pas,
-	  exodus/xml.res, exodus/prefs/PrefMsg.dfm,
-	  exodus/prefs/PrefMsg.pas, jopl/Chat.pas, jopl/ChatController.pas,
-	  jopl/MsgList.pas, jopl/Session.pas, jopl/Signals.pas: Allow chats
-	  to be queued if they are offline or the user is DND
+	* exodus/Browser.dfm, jopl/Entity.pas: Fixup up entity cache so it
+	  works properly with multiple items with the same JID but
+	  different NODE id's
 
-2004-02-29 19:35  pgmillard
+2004-03-03 20:36  pgmillard
 
-	* exodus/: About.dfm, About.pas: Bug #3413 - Fixup link to
-	  foood.net icons in About dialog.
+	* exodus/Exodus.dpr, exodus/ExodusCOM_TLB.pas, exodus/Room.pas,
+	  exodus/xdata.pas, jopl/Session.pas: Bug #3444, #3445 - Weird dupe
+	  stream:stream issue, and take into account empty x-data packets
+	  for muc configs.
 
-2004-02-29 19:20  pgmillard
+2004-03-03 19:55  pgmillard
 
-	* exodus/: RosterWindow.pas, exodus-new.nsi: Bug #3409 - Transports
-	  were not showing as available.
+	* exodus/Room.pas: Bug #3436 - Use full jid whenver sending
+	  presence updates to rooms.
 
-2004-02-29 19:07  llong
+2004-03-03 19:49  pgmillard
 
-	* exodus/locale/fr/LC_MESSAGES/default.po: Updated from
-	  translator's post to exodus-dev dated 2004/02/29 to synchronize
-	  with version 1.98 of the main default.po (Just updates from last
-	  PO file)
-
-2004-02-28 16:12  rimas
-
-	* exodus/locale/lt/LC_MESSAGES/default.po: Translation update. A
-	  few strings (Those regarding Node ID) are left untranslated until
-	  someone explains me what they mean. :)
-
-2004-02-28 08:21  marian
-
-	* exodus/locale/pl/LC_MESSAGES/default.po: [no log message]
-
-2004-02-27 13:56  llong
-
-	* exodus/locale/sl/LC_MESSAGES/default.po: Updated from
-	  translator's post to exodus-dev dated 2004/02/05 to synchronize
-	  with version 1.97 of the main default.po
+	* exodus/Room.pas: Bug #3435 - Send unavail presence to
+	  room@service/nick when leaving rooms.
 

@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-03-02 08:13\n"
-"PO-Revision-Date: 2004-03-02 08:13\n"
+"POT-Creation-Date: 2004-03-04 08:12\n"
+"PO-Revision-Date: 2004-03-04 08:12\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -165,7 +165,7 @@ msgstr ""
 #: RecvStatus.pas:621
 #: SendStatus.pas:842
 #: SendStatus.pas:962
-#: xdata.pas:188
+#: xdata.pas:197
 msgid "Close"
 msgstr ""
 
@@ -609,7 +609,7 @@ msgstr ""
 #. frmBaseChat..popOut..emot_sep..Caption
 #: BaseChat.dfm:321
 #. frmBrowse..popContext..N1..Caption
-#: Browser.dfm:3867
+#: Browser.dfm:3869
 #. frmChat..popContact..N5..Caption
 #: ChatWin.dfm:109
 #. frmChat..popContact..N4..Caption
@@ -906,47 +906,47 @@ msgid "btnNode"
 msgstr ""
 
 #. frmBrowse..pnlJid..btnGo..Caption
-#: Browser.dfm:272
+#: Browser.dfm:273
 msgid "GO"
 msgstr ""
 
 #. frmBrowse..pnlJid..btnRefresh..Hint
-#: Browser.dfm:281
+#: Browser.dfm:282
 msgid "Re-Browse this object"
 msgstr ""
 
 #. frmBrowse..pnlJid..pnlJidID..Caption
-#: Browser.dfm:301
+#: Browser.dfm:302
 msgid "Jabber Address:   "
 msgstr ""
 
 #. frmBrowse..pnlNode..pnlNodeID..Caption
-#: Browser.dfm:334
+#: Browser.dfm:336
 msgid "Node Identifier:"
 msgstr ""
 
 #. frmBrowse..popViewStyle..Details1..Caption
-#: Browser.dfm:3834
+#: Browser.dfm:3836
 msgid "Details"
 msgstr ""
 
 #. frmBrowse..popViewStyle..LargeIcons1..Caption
-#: Browser.dfm:3838
+#: Browser.dfm:3840
 msgid "Large Icons"
 msgstr ""
 
 #. frmBrowse..popViewStyle..SmallIcons1..Caption
-#: Browser.dfm:3842
+#: Browser.dfm:3844
 msgid "Small Icons"
 msgstr ""
 
 #. frmBrowse..popViewStyle..List1..Caption
-#: Browser.dfm:3846
+#: Browser.dfm:3848
 msgid "List"
 msgstr ""
 
 #. frmBrowse..popContext..mBrowse..Caption
-#: Browser.dfm:3855
+#: Browser.dfm:3857
 #. frmConnDetails..PageControl1..tbsSSL..btnCertBrowse..Caption
 #: ConnDetails.dfm:281
 #: ExResponders.pas:461
@@ -962,30 +962,30 @@ msgid "Browse"
 msgstr ""
 
 #. frmBrowse..popContext..mBrowseNew..Caption
-#: Browser.dfm:3859
+#: Browser.dfm:3861
 msgid "Browse in New Window"
 msgstr ""
 
 #. frmBrowse..popContext..mBookmark..Caption
-#: Browser.dfm:3863
+#: Browser.dfm:3865
 msgid "Add Bookmark to Roster"
 msgstr ""
 
 #. frmBrowse..popContext..mVCard..Caption
-#: Browser.dfm:3870
+#: Browser.dfm:3872
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuServerVCard..Caption
 #: Jabber1.dfm:448
 msgid "vCard"
 msgstr ""
 
 #. frmBrowse..popContext..mVersion..Caption
-#: Browser.dfm:3874
+#: Browser.dfm:3876
 #: ExResponders.pas:323
 msgid "Version"
 msgstr ""
 
 #. frmBrowse..popContext..mTime..Caption
-#: Browser.dfm:3878
+#: Browser.dfm:3880
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuTime..Caption
 #: Jabber1.dfm:444
 #: ExResponders.pas:375
@@ -993,22 +993,22 @@ msgid "Time"
 msgstr ""
 
 #. frmBrowse..popContext..mLast..Caption
-#: Browser.dfm:3882
+#: Browser.dfm:3884
 msgid "Last Time/Activity"
 msgstr ""
 
 #. frmBrowse..popContext..mSearch..Caption
-#: Browser.dfm:3886
+#: Browser.dfm:3888
 msgid "Search"
 msgstr ""
 
 #. frmBrowse..popContext..mRegister..Caption
-#: Browser.dfm:3890
+#: Browser.dfm:3892
 msgid "Register"
 msgstr ""
 
 #. frmBrowse..popContext..mJoinConf..Caption
-#: Browser.dfm:3894
+#: Browser.dfm:3896
 msgid "Join Conference"
 msgstr ""
 
@@ -1919,8 +1919,8 @@ msgstr ""
 #: ExSession.pas:470
 #: ExUtils.pas:1224
 #: Jabber1.pas:1217
-#: Login.pas:104
-#: Login.pas:177
+#: Login.pas:110
+#: Login.pas:184
 msgid "Exodus"
 msgstr ""
 
@@ -2472,7 +2472,7 @@ msgstr ""
 #. otherwise, if we have no profiles yet, use the default profile name.
 #: ExSession.pas:368
 #. make sure we have at least a default profile
-#: Login.pas:200
+#: Login.pas:207
 msgid "Default Profile"
 msgstr ""
 
@@ -5929,37 +5929,37 @@ msgstr ""
 #. frmRoom..popRoom..popAdmin..popVoiceList..Caption
 #: Room.dfm:202
 #. edit a list
-#: Room.pas:1748
+#: Room.pas:1750
 msgid "Edit Voice List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popBanList..Caption
 #: Room.dfm:206
-#: Room.pas:1750
+#: Room.pas:1752
 msgid "Edit Ban List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popMemberList..Caption
 #: Room.dfm:210
-#: Room.pas:1752
+#: Room.pas:1754
 msgid "Edit Member List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popModeratorList..Caption
 #: Room.dfm:214
-#: Room.pas:1754
+#: Room.pas:1756
 msgid "Edit Moderator List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popAdminList..Caption
 #: Room.dfm:221
-#: Room.pas:1756
+#: Room.pas:1758
 msgid "Edit Admin List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popOwnerList..Caption
 #: Room.dfm:225
-#: Room.pas:1758
+#: Room.pas:1760
 msgid "Edit Owner List"
 msgstr ""
 
@@ -5970,7 +5970,7 @@ msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popDestroy..Caption
 #: Room.dfm:236
-#: Room.pas:1772
+#: Room.pas:1774
 msgid "Destroy Room"
 msgstr ""
 
@@ -5990,7 +5990,7 @@ msgstr ""
 #: RosterWindow.dfm:380
 #. frmRosterWindow..popGroup..popGroupBlock..Caption
 #: RosterWindow.dfm:634
-#: Room.pas:1491
+#: Room.pas:1493
 #: RosterWindow.pas:2076
 #. do blocking madness
 #: RosterWindow.pas:2113
@@ -6609,7 +6609,7 @@ msgid "Downloading public server list"
 msgstr ""
 
 #: Debug.pas:184
-#: Debug.pas:388
+#: Debug.pas:379
 msgid "Disconnected"
 msgstr ""
 
@@ -7188,20 +7188,20 @@ msgid "%d items found."
 msgstr ""
 
 #. Create a new profile
-#: Login.pas:170
+#: Login.pas:177
 msgid "Untitled Profile"
 msgstr ""
 
-#: Login.pas:171
+#: Login.pas:178
 msgid "New Profile"
 msgstr ""
 
-#: Login.pas:171
+#: Login.pas:178
 msgid "Enter Profile Name"
 msgstr ""
 
 #. Delete this profile
-#: Login.pas:191
+#: Login.pas:198
 msgid "Remove this profile?"
 msgstr ""
 
@@ -7383,13 +7383,13 @@ msgstr ""
 
 #. if blocked ignore anything they say, even subject changes.
 #: Room.pas:464
-#: Room.pas:1042
-#: Room.pas:1448
+#: Room.pas:1044
+#: Room.pas:1450
 #. block
-#: Room.pas:1456
-#: Room.pas:1488
+#: Room.pas:1458
+#: Room.pas:1490
 #. get the data for this person..
-#: Room.pas:1942
+#: Room.pas:1944
 msgid "Blocked"
 msgstr ""
 
@@ -7403,162 +7403,162 @@ msgid "Activity in "
 msgstr ""
 
 #. check for various presence errors
-#: Room.pas:733
-#: Room.pas:970
+#: Room.pas:730
+#: Room.pas:967
 #. they match
-#: Room.pas:1315
+#: Room.pas:1317
 msgid "Your nickname is already being used. Please select another "
 "one."
 msgstr ""
 
-#: Room.pas:742
+#: Room.pas:739
 msgid "You supplied an invalid password to enter this "
 "room."
 msgstr ""
 
-#: Room.pas:750
+#: Room.pas:747
 msgid "The room is being created. Please try again "
 "later."
 msgstr ""
 
-#: Room.pas:755
+#: Room.pas:752
 msgid "You are not allowed to enter the room. You must be on the member "
 "list."
 msgstr ""
 
-#: Room.pas:760
-#: Room.pas:969
+#: Room.pas:757
+#: Room.pas:966
 msgid "You are not on the member list for this room. Try and "
 "register?"
 msgstr ""
 
-#: Room.pas:776
+#: Room.pas:773
 msgid "The room has been destroyed for an unknown "
 "reason."
 msgstr ""
 
 #. this user has changed their nick..
-#: Room.pas:799
-#: Room.pas:965
+#: Room.pas:796
+#: Room.pas:962
 msgid "%s is now known as %s."
 msgstr ""
 
-#: Room.pas:807
-#: Room.pas:963
+#: Room.pas:804
+#: Room.pas:960
 msgid "%s has been banned from this room. %s"
 msgstr ""
 
-#: Room.pas:808
-#: Room.pas:966
+#: Room.pas:805
+#: Room.pas:963
 msgid "%s has been kicked from this room. %s"
 msgstr ""
 
-#: Room.pas:814
+#: Room.pas:811
 msgid "%s has left the room."
 msgstr ""
 
 #. show new user message
-#: Room.pas:839
+#: Room.pas:836
 msgid "%s has entered the room."
 msgstr ""
 
 #. someone maybe changed my role
-#: Room.pas:864
+#: Room.pas:861
 msgid "You have been granted voice."
 msgstr ""
 
-#: Room.pas:866
+#: Room.pas:863
 msgid "Your voice has been revoked."
 msgstr ""
 
-#: Room.pas:868
+#: Room.pas:865
 msgid "%s has a new role of %s."
 msgstr ""
 
-#: Room.pas:964
+#: Room.pas:961
 msgid "This room has been destroyed."
 msgstr ""
 
-#: Room.pas:967
+#: Room.pas:964
 msgid "You are on the ban list for this room."
 msgstr ""
 
-#: Room.pas:968
+#: Room.pas:965
 msgid "You are not allowed to create rooms."
 msgstr ""
 
-#: Room.pas:1012
+#: Room.pas:1009
 msgid "There was an error using the default room configuration. Configuring "
 "it manually."
 msgstr ""
 
-#: Room.pas:1138
+#: Room.pas:1140
 msgid "Your room keyword regular expressions are invalid. Keyword matching "
 "will be turned off for this room."
 msgstr ""
 
 #. send the msg out
-#: Room.pas:1278
+#: Room.pas:1280
 msgid "/me has changed the subject to: "
 msgstr ""
 
 #. Change the subject
-#: Room.pas:1291
+#: Room.pas:1293
 msgid "Change room subject"
 msgstr ""
 
-#: Room.pas:1291
+#: Room.pas:1293
 msgid "New subject"
 msgstr ""
 
-#: Room.pas:1334
-#: Room.pas:1334
+#: Room.pas:1336
+#: Room.pas:1336
 msgid "New nickname"
 msgstr ""
 
-#: Room.pas:1357
+#: Room.pas:1359
 msgid "Bookmark Room"
 msgstr ""
 
-#: Room.pas:1357
+#: Room.pas:1359
 msgid "Enter bookmark name:"
 msgstr ""
 
-#: Room.pas:1489
+#: Room.pas:1491
 #: RosterWindow.pas:2072
 #: RosterWindow.pas:2123
 msgid "UnBlock"
 msgstr ""
 
-#: Room.pas:1650
+#: Room.pas:1652
 msgid "You have been kicked."
 msgstr ""
 
-#: Room.pas:1651
-#: Room.pas:1651
+#: Room.pas:1653
+#: Room.pas:1653
 msgid "Kick Reason"
 msgstr ""
 
-#: Room.pas:1654
+#: Room.pas:1656
 msgid "You have been banned."
 msgstr ""
 
-#: Room.pas:1655
-#: Room.pas:1655
+#: Room.pas:1657
+#: Room.pas:1657
 msgid "Ban Reason"
 msgstr ""
 
 #. Destroy Room
-#: Room.pas:1769
+#: Room.pas:1771
 msgid "Do you really want to destroy the room? All users will be "
 "removed."
 msgstr ""
 
-#: Room.pas:1771
+#: Room.pas:1773
 msgid "The owner has destroyed the room."
 msgstr ""
 
-#: Room.pas:1772
+#: Room.pas:1774
 msgid "Destroy Reason"
 msgstr ""
 
@@ -7760,27 +7760,27 @@ msgid "No vCard response was ever returned."
 msgstr ""
 
 #. this is a cancel notice
-#: xdata.pas:122
+#: xdata.pas:131
 msgid "Cancelled"
 msgstr ""
 
-#: xdata.pas:123
+#: xdata.pas:132
 msgid "%s cancelled your form."
 msgstr ""
 
 #. Get instructions and title
-#: xdata.pas:135
+#: xdata.pas:144
 msgid "Form from %s"
 msgstr ""
 
 #. do something
-#: xdata.pas:210
-#: xdata.pas:308
+#: xdata.pas:220
+#: xdata.pas:318
 msgid "You are currently disconnected. Please reconnect before responding to "
 "this form."
 msgstr ""
 
-#: xdata.pas:239
+#: xdata.pas:249
 msgid "All required fields must be filled out"
 msgstr ""
 
