@@ -24,17 +24,18 @@ interface
 uses
     XMLTag, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, buttonFrame, StdCtrls, ComCtrls, ExtCtrls;
+    Dialogs, buttonFrame, StdCtrls, ComCtrls, ExtCtrls, TntStdCtrls;
 
 type
   TfrmXData = class(TForm)
     frameButtons1: TframeButtons;
-    lblIns: TLabel;
     box: TScrollBox;
     insBevel: TBevel;
+    lblIns: TTntLabel;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormResize(Sender: TObject);
   private
     { Private declarations }
     packet: string;
@@ -109,8 +110,10 @@ begin
         end;
         
     ins := x.GetFirstTag('instructions');
-    if (ins <> nil) then
+    if (ins <> nil) then begin
+        AssignDefaultFont(lblIns.Font);
         lblIns.Caption := ins.Data
+        end
     else begin
         lblIns.Visible := false;
         lblIns.Height := 0;
@@ -278,8 +281,15 @@ end;
 procedure TfrmXData.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     Action := caFree;
-    MainSession.Prefs.SavePosition(Self);
+    if (MainSession <> nil) then
+        MainSession.Prefs.SavePosition(Self);
     inherited;
+end;
+
+procedure TfrmXData.FormResize(Sender: TObject);
+begin
+    lblIns.AutoSize := false;
+    lblIns.AutoSize := true;
 end;
 
 end.

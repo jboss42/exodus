@@ -24,11 +24,12 @@ interface
 uses
     Unicode, XMLTag,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    StdCtrls;
+    StdCtrls, TntStdCtrls;
 
 type
   TframeGeneric = class(TFrame)
-    lblLabel: TLabel;
+    lblLabel: TTnTLabel;
+    procedure FrameResize(Sender: TObject);
   private
     { Private declarations }
     value: Widestring;
@@ -59,7 +60,7 @@ uses
     Jabber1,
     JabberID,
     SelContact,
-    ExUtils;
+    ExUtils, CheckLst;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -72,6 +73,9 @@ var
     dot : TButton;
 begin
     // take a x-data field tag and do the right thing
+    dot := nil;
+    Self.BorderWidth := 1;
+    AssignDefaultFont(Self.Font);
 
     fld_var := tag.GetAttribute('var');
     t := tag.GetAttribute('type');
@@ -98,23 +102,26 @@ begin
         end;
 
     if (t = 'text-multi') then begin
-        c := TMemo.Create(Self);
-        with TMemo(c) do begin
+        lblLabel.Width := lblLabel.Width + 5;
+        lblLabel.Layout := tlTop;
+        c := TTntMemo.Create(Self);
+        with TTntMemo(c) do begin
             Text := value;
-            Width := Self.ClientWidth - 5 - lblLabel.Width;
             Align := alClient;
             end;
         Self.Height := Self.Height * 3;
         end
+
     else if (t = 'list-multi') then begin
-        c := TListbox.Create(self);
+        lblLabel.Width := lblLabel.Width + 5;
+        lblLabel.Layout := tlTop;
+        c := TTntCheckListbox.Create(self);
         c.Parent := Self;
         opts_vals := TStringList.Create();
         opts := tag.QueryTags('option');
-        with TListbox(c) do begin
-            IntegralHeight := true;
+        with TTntCheckListbox(c) do begin
+            //IntegralHeight := true;
             Align := alClient;
-            MultiSelect := true;
             for i := 0 to opts.Count - 1 do begin
                 Items.Add(opts[i].GetAttribute('label'));
                 opts_vals.Add(opts[i].GetBasicText('value'));
@@ -124,25 +131,29 @@ begin
         opts := tag.QueryTags('value');
         for i := 0 to opts.Count - 1 do begin
             idx := opts_vals.IndexOf(opts[i].Data);
-            TListbox(c).Selected[idx] := true;
+            TTntCheckListbox(c).Checked[idx] := true;
             end;
 
-        if (TListbox(c).Items.Count < 6) then
-            i := TListbox(c).Items.Count
+        if (TTntCheckListbox(c).Items.Count < 6) then
+            i := TTntCheckListbox(c).Items.Count
         else
             i := 5;
-        Self.Height := Self.Height * i;
-        TListbox(c).TopIndex := 0;
+        Self.Height := (TTntCheckListbox(c).ItemHeight * i) + 5;
+        TTntCheckListbox(c).TopIndex := 0;
+        TTntCheckListbox(c).Repaint();
         end
     else if (t = 'list-single') then begin
-        c := TCombobox.Create(self);
+        lblLabel.Width := lblLabel.Width + 5;
+        lblLabel.Layout := tlTop;
+        c := TTntCombobox.Create(self);
         c.Parent := Self;
         opts_vals := TStringList.Create();
         opts := tag.QueryTags('option');
-        with TCombobox(c) do begin
+        with TTntCombobox(c) do begin
             Style := csDropDownList;
-            Width := Self.ClientWidth - 5 - lblLabel.Width;
-            Anchors := [akLeft, akTop, akRight];
+            Align := alClient;
+            //Width := Self.ClientWidth - 0 - lblLabel.Width;
+            //Anchors := [akLeft, akTop, akRight];
             for i := 0 to opts.Count - 1 do begin
                 Items.Add(opts[i].GetAttribute('label'));
                 opts_vals.Add(opts[i].GetBasicText('value'));
@@ -150,51 +161,66 @@ begin
             ItemIndex := opts_vals.IndexOf(value);
             end;
         end
+
     else if (t = 'boolean') then begin
-        c := TCheckbox.Create(Self);
-        with TCheckbox(c) do begin
+        Self.AutoSize := true;
+        lblLabel.Width := lblLabel.Width + 5;
+        lblLabel.Layout := tlTop;
+        c := TTntCheckbox.Create(Self);
+        with TTntCheckbox(c) do begin
+            Align := alClient;
             Caption := '';
             Checked := (value = '1');
             end;
         end
     else if (t = 'fixed') then begin
         c := lblLabel;
-        lblLabel.AutoSize := true;
-        lblLabel.WordWrap := true;
-        lblLabel.Caption := value;
-        lblLabel.Align := alClient;
+        self.AutoSize := true;
+        with lblLabel do begin
+            AutoSize := true;
+            Layout := tlTop;
+            WordWrap := true;
+            Caption := value;
+            Align := alTop;
+            end;
         end
+
     else if ((t = 'hidden') and (frm_type <> 'submit')) then begin
         Self.Height := 0;
         c := nil;
         end
+
     else if (t = 'jid') then begin
+        c :=  TTntEdit.Create(Self);
+        with TTntEdit(c) do begin
+            Text := value;
+            // Anchors := [akLeft, akTop, akBottom, akRight];
+            Parent := Self;
+            Align := alClient;
+            end;
+
         dot := TButton.Create(Self);
         with TButton(dot) do begin
             Caption := '...';
             OnClick := JidFieldDotClick;
-            Top := 5;
-            Left := Self.ClientWidth - 20;
-            Width := 20;
-            Height := 20;
-            Anchors := [akTop, akRight];
+            Top := 1;
             Parent := Self;
             Visible := true;
+            Width := c.Height - 2;
+            Align := alRight;
             end;
-        c :=  TEdit.Create(Self);
-        with TEdit(c) do begin
-            Text := value;
-            Width := Self.ClientWidth - lblLabel.Width - dot.Width - 10;
-            Anchors := [akLeft, akTop, akRight];
-            end;
+
+        c.Width := Self.ClientWidth - lblLabel.Width - dot.Width - 10;
         end
     else begin  // 'text-single', 'text-private', or unknown
-        c := TEdit.Create(Self);
-        with TEdit(c) do begin
+        lblLabel.Width := lblLabel.Width + 5;
+        lblLabel.Layout := tlTop;
+        c := TTntEdit.Create(Self);
+        with TTntEdit(c) do begin
             Text := value;
-            Width := Self.ClientWidth - 5 - lblLabel.Width;
-            Anchors := [akLeft, akTop, akRight];
-
+            //Width := Self.ClientWidth - 5 - lblLabel.Width;
+            //Anchors := [akLeft, akTop, akRight];
+            Align := alClient;
             if (t = 'text-private') then
                 PasswordChar := '*';
             end;
@@ -204,7 +230,12 @@ begin
         c.Parent := Self;
         c.Visible := true;
         c.Left := lblLabel.Width + 5;
-        c.Top := 5;
+        c.Top := 1;
+        Self.ClientHeight := c.Height + (2 * Self.BorderWidth);
+        end;
+
+    // This sucks... but its a chicken-egg problem
+    if (dot <> nil) then begin
         end;
 
     fld_type := t;
@@ -257,29 +288,29 @@ begin
     Result := TWideStringlist.Create();
     if (c = lblLabel) then exit;
 
-    if (c is TEdit) then begin
-        tmps := Trim(TEdit(c).Text);
+    if (c is TTntEdit) then begin
+        tmps := Trim(TTntEdit(c).Text);
         if (tmps <> '') then
-            Result.Add(TEdit(c).Text);
+            Result.Add(TTntEdit(c).Text);
         end
-    else if (c is TMemo) then begin
-        tmps := Trim(TMemo(c).Text);
+    else if (c is TTntMemo) then begin
+        tmps := Trim(TTntMemo(c).Text);
         if (tmps <> '') then
-            Result.Add(TMemo(c).Text);
+            Result.Add(TTntMemo(c).Text);
         end
-    else if (c is TListbox) then with TListbox(c) do begin
+    else if (c is TTntCheckListbox) then with TTntCheckListbox(c) do begin
         for i := 0 to Items.Count - 1 do begin
-            if Selected[i] then
+            if Checked[i] then
                 Result.Add(opts_vals[i]);
             end;
         end
-    else if (c is TCombobox) then begin
-        i := TCombobox(c).ItemIndex;
+    else if (c is TTntCombobox) then begin
+        i := TTntCombobox(c).ItemIndex;
         if (i <> -1) then
             Result.Add(opts_vals[i]);
         end
-    else if (c is TCheckbox) then begin
-        if (TCheckbox(c).checked) then
+    else if (c is TTntCheckbox) then begin
+        if (TTntCheckbox(c).checked) then
             Result.Add('1')
         else
             Result.Add('0');
@@ -303,6 +334,14 @@ begin
         end;
 
     frmExodus.PostModal();
+end;
+
+procedure TframeGeneric.FrameResize(Sender: TObject);
+begin
+    if (c = lblLabel) then with TTntLabel(c) do begin
+        AutoSize := false;
+        AutoSize := true;
+        end;
 end;
 
 end.

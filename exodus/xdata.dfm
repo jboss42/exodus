@@ -15,17 +15,9 @@ object frmXData: TfrmXData
   OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
+  OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
-  object lblIns: TLabel
-    Left = 0
-    Top = 0
-    Width = 310
-    Height = 13
-    Align = alTop
-    Caption = 'lblIns'
-    WordWrap = True
-  end
   object insBevel: TBevel
     Left = 0
     Top = 13
@@ -33,6 +25,15 @@ object frmXData: TfrmXData
     Height = 10
     Align = alTop
     Shape = bsBottomLine
+  end
+  object lblIns: TTntLabel
+    Left = 0
+    Top = 0
+    Width = 310
+    Height = 13
+    Align = alTop
+    Caption = 'lblIns'
+    WordWrap = True
   end
   inline frameButtons1: TframeButtons
     Left = 0
