@@ -335,7 +335,8 @@ end;
 {---------------------------------------}
 procedure TfrmBaseChat.FormDestroy(Sender: TObject);
 begin
-    frmExodus.ActiveChat := nil;
+    if (frmExodus <> nil) then
+        frmExodus.ActiveChat := nil;
     TfBaseMsgList(_msgframe).Free();
     _msgHistory.Free();
     inherited;

@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-07-01 08:21\n"
-"PO-Revision-Date: 2004-07-01 08:21\n"
+"POT-Creation-Date: 2004-07-08 08:00\n"
+"PO-Revision-Date: 2004-07-08 08:00\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +38,7 @@ msgstr ""
 #. frmCustomPres..Font.Name
 #: CustomPres.dfm:13
 #. frmCustomPres..txtStatus..Font.Name
-#: CustomPres.dfm:89
+#: CustomPres.dfm:91
 #. frmDebug..Font.Name
 #: Debug.dfm:14
 #. frmDockable..Font.Name
@@ -948,7 +948,7 @@ msgstr ""
 #. frmBrowse..popContext..mBrowse..Caption
 #: Browser.dfm:3858
 #. frmConnDetails..PageControl1..tbsSSL..btnCertBrowse..Caption
-#: ConnDetails.dfm:284
+#: ConnDetails.dfm:285
 #. frmEmoteProps..btnBrowse..Caption
 #: EmoteProps.dfm:46
 #: ExResponders.pas:480
@@ -1171,7 +1171,7 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsProfile..lblUsername..Caption
 #: ConnDetails.dfm:60
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksUsername..Caption
-#: ConnDetails.dfm:334
+#: ConnDetails.dfm:335
 #. frmPrefNetwork..GroupBox2..lblProxyUsername..Caption
 #: prefs/PrefNetwork.dfm:110
 #. frmPrefTransfer..grpWebDav..lblDavUsername..Caption
@@ -1182,7 +1182,7 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsProfile..Label10..Caption
 #: ConnDetails.dfm:68
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksPassword..Caption
-#: ConnDetails.dfm:343
+#: ConnDetails.dfm:344
 #. frmJoinRoom..Tabs..TabSheet1..lblPassword..Caption
 #: JoinRoom.dfm:60
 #. frmPrefNetwork..GroupBox2..lblProxyPassword..Caption
@@ -1230,9 +1230,9 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsProfile..txtPassword..PasswordChar
 #: ConnDetails.dfm:140
 #. frmConnDetails..PageControl1..tbsSocket..txtSocksPassword..PasswordChar
-#: ConnDetails.dfm:403
+#: ConnDetails.dfm:404
 #. frmInputPass..txtPassword..PasswordChar
-#: InputPassword.dfm:61
+#: InputPassword.dfm:59
 #. frmJoinRoom..Tabs..TabSheet1..txtPassword..PasswordChar
 #: JoinRoom.dfm:107
 #. frmPassword..txtOldPassword..PasswordChar
@@ -1261,7 +1261,7 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsConn..Label8..Caption
 #: ConnDetails.dfm:170
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksType..Caption
-#: ConnDetails.dfm:326
+#: ConnDetails.dfm:327
 #. frmPrefPresence..GroupBox1..Label13..Caption
 #: prefs/PrefPresence.dfm:166
 msgid "Type:"
@@ -1284,28 +1284,28 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsConn..cboConnection....Items.WideStrings
 #: ConnDetails.dfm:195
 #. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.Strings
-#: ConnDetails.dfm:387
+#: ConnDetails.dfm:388
 msgid "HTTP"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsConn..chkSRV..Caption
-#: ConnDetails.dfm:219
+#: ConnDetails.dfm:220
 msgid "Automatically discover host and port"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsConn..boxHost..Label4..Caption
-#: ConnDetails.dfm:234
+#: ConnDetails.dfm:235
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksHost..Caption
-#: ConnDetails.dfm:308
+#: ConnDetails.dfm:309
 #. frmPrefNetwork..GroupBox2..lblProxyHost..Caption
 #: prefs/PrefNetwork.dfm:92
 msgid "Host:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsConn..boxHost..Label7..Caption
-#: ConnDetails.dfm:242
+#: ConnDetails.dfm:243
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksPort..Caption
-#: ConnDetails.dfm:317
+#: ConnDetails.dfm:318
 #. frmPrefNetwork..GroupBox2..lblProxyPort..Caption
 #: prefs/PrefNetwork.dfm:101
 #. frmPrefTransfer..grpWebDav..lblDavPort..Caption
@@ -1314,93 +1314,93 @@ msgid "Port:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSSL..Caption
-#: ConnDetails.dfm:263
+#: ConnDetails.dfm:264
 msgid "SSL"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSSL..TntLabel1..Caption
-#: ConnDetails.dfm:269
+#: ConnDetails.dfm:270
 msgid "SSL Certificate:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.WideStrings
-#: ConnDetails.dfm:294
+#: ConnDetails.dfm:295
 msgid "Use StartTLS whenever the server allows "
 "it."
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.WideStrings
-#: ConnDetails.dfm:295
+#: ConnDetails.dfm:296
 msgid "Only allow connections which use StartTLS."
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.WideStrings
-#: ConnDetails.dfm:296
+#: ConnDetails.dfm:297
 msgid "Use SSL immediately when connected."
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSocket..Caption
-#: ConnDetails.dfm:301
+#: ConnDetails.dfm:302
 msgid "Proxy"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSocket..chkSocksAuth..Caption
-#: ConnDetails.dfm:352
+#: ConnDetails.dfm:353
 #. frmPrefNetwork..GroupBox2..chkProxyAuth..Caption
 #: prefs/PrefNetwork.dfm:152
 msgid "Authentication Required"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.Strings
-#: ConnDetails.dfm:383
+#: ConnDetails.dfm:384
 #. frmProfile..PageControl1..TabSheet1..optSubscrip....Items.WideStrings
 #: Profile.dfm:155
 msgid "None"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.Strings
-#: ConnDetails.dfm:384
+#: ConnDetails.dfm:385
 msgid "Version 4"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.Strings
-#: ConnDetails.dfm:385
+#: ConnDetails.dfm:386
 msgid "Version 4a"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.Strings
-#: ConnDetails.dfm:386
+#: ConnDetails.dfm:387
 msgid "Version 5"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..Caption
-#: ConnDetails.dfm:409
+#: ConnDetails.dfm:410
 msgid "HTTP Polling"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..Label1..Caption
-#: ConnDetails.dfm:416
+#: ConnDetails.dfm:417
 msgid "URL:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..Label2..Caption
-#: ConnDetails.dfm:424
+#: ConnDetails.dfm:425
 msgid "Poll Time:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..Label5..Caption
-#: ConnDetails.dfm:432
-#: ExUtils.pas:431
+#: ConnDetails.dfm:433
+#: ExUtils.pas:432
 msgid "seconds"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..Label9..Caption
-#: ConnDetails.dfm:439
+#: ConnDetails.dfm:440
 msgid "# of Keys:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..lblNote....AutoSize
-#: ConnDetails.dfm:453
+#: ConnDetails.dfm:454
 msgid "NOTE: You must use the URL of your jabber server's HTTP tunnelling "
 "proxy. You can not use some \"standard\" HTTP proxy for this to work. "
 "Contact your server administrator for additional "
@@ -1408,12 +1408,12 @@ msgid "NOTE: You must use the URL of your jabber server's HTTP tunnelling "
 msgstr ""
 
 #. frmConnDetails..OpenDialog1..DefaultExt
-#: ConnDetails.dfm:480
+#: ConnDetails.dfm:481
 msgid "pem"
 msgstr ""
 
 #. frmConnDetails..OpenDialog1..Filter
-#: ConnDetails.dfm:481
+#: ConnDetails.dfm:482
 msgid "SSL Key Files|*.pem|All Files|*.*"
 msgstr ""
 
@@ -1478,7 +1478,7 @@ msgid "Priority"
 msgstr ""
 
 #. frmCustomPres..cboType....Items.WideStrings
-#: CustomPres.dfm:75
+#: CustomPres.dfm:77
 #. frmRoom..popRoomRoster..popRosterChat..Caption
 #: Room.dfm:265
 #: ChatWin.pas:462
@@ -1489,7 +1489,7 @@ msgid "Chat"
 msgstr ""
 
 #. frmCustomPres..cboType....Items.WideStrings
-#: CustomPres.dfm:76
+#: CustomPres.dfm:78
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presOnline..Caption
 #: Jabber1.dfm:364
 #. frmExodus..popTray..trayPresence..trayPresOnline..Caption
@@ -1498,7 +1498,7 @@ msgstr ""
 #: RosterWindow.dfm:403
 #. init the cmd line stuff
 #: ExSession.pas:184
-#: Jabber1.pas:2849
+#: Jabber1.pas:2857
 #: RosterWindow.pas:351
 #: RosterWindow.pas:373
 #: RosterWindow.pas:1658
@@ -1513,14 +1513,14 @@ msgid "Available"
 msgstr ""
 
 #. frmCustomPres..cboType....Items.WideStrings
-#: CustomPres.dfm:77
+#: CustomPres.dfm:79
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presAway..Caption
 #: Jabber1.dfm:376
 #. frmExodus..popTray..trayPresence..trayPresAway..Caption
 #: Jabber1.dfm:2674
 #. frmRosterWindow..popStatus..presAway..Caption
 #: RosterWindow.dfm:415
-#: Jabber1.pas:2847
+#: Jabber1.pas:2855
 #: RosterWindow.pas:353
 #: RosterWindow.pas:374
 #: RosterWindow.pas:1642
@@ -1533,7 +1533,7 @@ msgid "Away"
 msgstr ""
 
 #. frmCustomPres..cboType....Items.WideStrings
-#: CustomPres.dfm:78
+#: CustomPres.dfm:80
 #: RosterWindow.pas:375
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:68
@@ -1541,7 +1541,7 @@ msgid "Ext. Away"
 msgstr ""
 
 #. frmCustomPres..cboType....Items.WideStrings
-#: CustomPres.dfm:79
+#: CustomPres.dfm:81
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presDND..Caption
 #: Jabber1.dfm:388
 #. frmExodus..popTray..trayPresence..trayPresDND..Caption
@@ -1559,12 +1559,12 @@ msgid "Do Not Disturb"
 msgstr ""
 
 #. frmCustomPres..chkSave..Caption
-#: CustomPres.dfm:107
+#: CustomPres.dfm:109
 msgid "Save this presence to my preferences."
 msgstr ""
 
 #. frmCustomPres..boxSave..lblTitle..Caption
-#: CustomPres.dfm:122
+#: CustomPres.dfm:124
 #. frmProfile..PageControl1..TabSheet5..Label24..Caption
 #: Profile.dfm:749
 #. frmVCard..PageControl1..TabSheet5..Label24..Caption
@@ -1573,7 +1573,7 @@ msgid "Title:"
 msgstr ""
 
 #. frmCustomPres..boxSave..lblHotkey..Caption
-#: CustomPres.dfm:130
+#: CustomPres.dfm:132
 #. frmPrefPresence..GroupBox1..lblHotkey..Caption
 #: prefs/PrefPresence.dfm:182
 msgid "HotKey:"
@@ -1843,12 +1843,12 @@ msgstr ""
 #. frmInputPass..Caption
 #: InputPassword.dfm:8
 #. accordingly.
-#: Jabber1.pas:961
+#: Jabber1.pas:963
 msgid "Exodus Password"
 msgstr ""
 
 #. frmInputPass..Label1..Caption
-#: InputPassword.dfm:32
+#: InputPassword.dfm:30
 msgid "Enter password:"
 msgstr ""
 
@@ -1951,7 +1951,7 @@ msgstr ""
 #: ConnDetails.pas:403
 #. do this.
 #: ExSession.pas:473
-#: Jabber1.pas:1281
+#: Jabber1.pas:1289
 #: Login.pas:113
 #: Login.pas:189
 #: /src/exodus/jopl/JabberUtils.pas:212
@@ -2487,7 +2487,7 @@ msgstr ""
 #: jud.dfm:223
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:146
-#: Jabber1.pas:2362
+#: Jabber1.pas:2370
 msgid "Start Chat"
 msgstr ""
 
@@ -6116,7 +6116,7 @@ msgstr ""
 #: RosterAdd.dfm:34
 #. frmSubscribe..boxAdd..lblNickname..Caption
 #: subscribe.dfm:83
-#: ExUtils.pas:316
+#: ExUtils.pas:317
 msgid "Nickname:"
 msgstr ""
 
@@ -6200,9 +6200,9 @@ msgstr ""
 
 #. frmRosterWindow..pnlShow..pnlStatus..lblStatusLink..Caption
 #: RosterWindow.dfm:245
-#: ExUtils.pas:652
-#: ExUtils.pas:670
-#: ExUtils.pas:688
+#: ExUtils.pas:653
+#: ExUtils.pas:671
+#: ExUtils.pas:689
 #: RosterWindow.pas:372
 #. it at all times (if it exists).
 #: RosterWindow.pas:1275
@@ -6628,26 +6628,26 @@ msgid "This chat window is busy. Close anyways?"
 msgstr ""
 
 #. remove from list?
-#: COMController.pas:220
+#: COMController.pas:221
 msgid "Remove this plugin from the list of plugins to be loaded at "
 "startup?"
 msgstr ""
 
-#: COMController.pas:319
+#: COMController.pas:320
 msgid "Plugin could not be created. (%s)"
 msgstr ""
 
-#: COMController.pas:329
+#: COMController.pas:330
 msgid "Plugin class does not support IExodusPlugin. "
 "(%s)"
 msgstr ""
 
-#: COMController.pas:341
+#: COMController.pas:342
 msgid "Plugin class could not be initialized. "
 "(%s)"
 msgstr ""
 
-#: COMController.pas:363
+#: COMController.pas:364
 msgid "Plugin could not be initialized or configured."
 msgstr ""
 
@@ -6912,95 +6912,100 @@ msgstr ""
 msgid "Auto response generated"
 msgstr ""
 
-#: ExUtils.pas:317
+#: ExUtils.pas:318
 msgid "First Name:"
 msgstr ""
 
-#: ExUtils.pas:318
+#: ExUtils.pas:319
 msgid "Last Name:"
 msgstr ""
 
-#: ExUtils.pas:319
+#: ExUtils.pas:320
 msgid "EMail Address:"
 msgstr ""
 
-#: ExUtils.pas:320
+#: ExUtils.pas:321
 msgid "Password"
 msgstr ""
 
-#: ExUtils.pas:321
+#: ExUtils.pas:322
 msgid "UserName:"
 msgstr ""
 
-#: ExUtils.pas:428
+#: ExUtils.pas:429
 msgid "days"
 msgstr ""
 
-#: ExUtils.pas:429
+#: ExUtils.pas:430
 msgid "hours"
 msgstr ""
 
-#: ExUtils.pas:430
+#: ExUtils.pas:431
 msgid "minutes"
 msgstr ""
 
-#: ExUtils.pas:434
+#: ExUtils.pas:435
 msgid " unknown last result: "
 msgstr ""
 
-#: ExUtils.pas:445
+#: ExUtils.pas:446
 msgid "%d day, "
 msgid_plural ""
 msgstr[0] ""
 
-#: ExUtils.pas:446
+#: ExUtils.pas:447
 msgid "%d hour, "
 msgid_plural ""
 msgstr[0] ""
 
-#: ExUtils.pas:447
+#: ExUtils.pas:448
 msgid "%d minute, "
 msgid_plural ""
 msgstr[0] ""
 
-#: ExUtils.pas:448
+#: ExUtils.pas:449
 msgid "%d second."
 msgid_plural ""
 msgstr[0] ""
 
-#: ExUtils.pas:584
+#: ExUtils.pas:585
 msgid "This message contains %d roster items."
 msgstr ""
 
-#: ExUtils.pas:646
-#: ExUtils.pas:664
-#: ExUtils.pas:682
+#: ExUtils.pas:647
+#: ExUtils.pas:665
+#: ExUtils.pas:683
 #: RosterWindow.pas:378
 #: RosterWindow.pas:673
 msgid "Bookmarks"
 msgstr ""
 
-#: ExUtils.pas:649
-#: ExUtils.pas:667
-#: ExUtils.pas:685
+#: ExUtils.pas:650
+#: ExUtils.pas:668
+#: ExUtils.pas:686
 #: RosterWindow.pas:377
 msgid "Unfiled"
 msgstr ""
 
-#: ExUtils.pas:963
+#: ExUtils.pas:965
 msgid "Untitled Group"
 msgstr ""
 
-#: ExUtils.pas:964
+#: ExUtils.pas:966
+msgid "Enter new group name below. "
+msgstr ""
+
+#: ExUtils.pas:969
+msgid "To create a nested group a name like "
+"foo%sbar."
+msgstr ""
+
+#: ExUtils.pas:971
 msgid "New Roster Group"
 msgstr ""
 
-#: ExUtils.pas:964
-msgid "Enter new group name: "
-msgstr ""
-
 #. add the new grp.
-#: ExUtils.pas:969
+#: ExUtils.pas:976
 msgid "This group already exists!"
 msgstr ""
 
@@ -7074,114 +7079,114 @@ msgstr ""
 msgid "Conference Room:"
 msgstr ""
 
-#: Jabber1.pas:961
+#: Jabber1.pas:963
 msgid "Enter Password"
 msgstr ""
 
 #. For other OS's we need to use the wicked nasty DLL
-#: Jabber1.pas:1054
+#: Jabber1.pas:1056
 msgid "Trying to setup the Auto Away timer."
 msgstr ""
 
-#: Jabber1.pas:1076
+#: Jabber1.pas:1078
 msgid "AutoAway Setup FAILED!"
 msgstr ""
 
-#. do nothing here..
-#: Jabber1.pas:1084
+#. depending on that API call.
+#: Jabber1.pas:1091
 msgid "Using Win32 API for Autoaway checks!!"
 msgstr ""
 
-#: Jabber1.pas:1088
+#: Jabber1.pas:1096
 msgid "ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!"
 msgstr ""
 
-#: Jabber1.pas:1151
+#: Jabber1.pas:1159
 msgid "There was an error trying to authenticate you.\n"
 "Either you used the wrong password, or this account is already in use "
 "by someone else."
 msgstr ""
 
-#: Jabber1.pas:1158
+#: Jabber1.pas:1166
 msgid "There was an error trying to setup SSL."
 msgstr ""
 
-#: Jabber1.pas:1194
+#: Jabber1.pas:1202
 msgid "An Error occurred trying to register your new account. This server "
 "may not allow open registration."
 msgstr ""
 
-#: Jabber1.pas:1209
+#: Jabber1.pas:1217
 msgid "This account does not exist on this server. Create a new "
 "account?"
 msgstr ""
 
 #. if we have a new account, prompt for reg info
-#: Jabber1.pas:1259
+#: Jabber1.pas:1267
 msgid "Your new jabber account is activated. Would you like to fill out "
 "additional registration information?"
 msgstr ""
 
 #. set us to away
-#: Jabber1.pas:2158
+#: Jabber1.pas:2166
 msgid "Setting AutoAway"
 msgstr ""
 
 #. set us to xa
-#: Jabber1.pas:2194
+#: Jabber1.pas:2202
 msgid "Setting AutoXA"
 msgstr ""
 
 #. reset our status to available
-#: Jabber1.pas:2211
+#: Jabber1.pas:2219
 msgid "Setting Auto Available"
 msgstr ""
 
 #. lookup some arbitrary vcard..
-#: Jabber1.pas:2246
+#: Jabber1.pas:2254
 msgid "Lookup Profile"
 msgstr ""
 
-#: Jabber1.pas:2246
-#: Jabber1.pas:2362
-#: Jabber1.pas:2630
+#: Jabber1.pas:2254
+#: Jabber1.pas:2370
+#: Jabber1.pas:2638
 msgid "Enter Jabber ID: "
 msgstr ""
 
-#: Jabber1.pas:2463
+#: Jabber1.pas:2471
 msgid "Old password is incorrect."
 msgstr ""
 
-#: Jabber1.pas:2467
+#: Jabber1.pas:2475
 msgid "New password does not match."
 msgstr ""
 
-#: Jabber1.pas:2487
-#: Jabber1.pas:2492
+#: Jabber1.pas:2495
+#: Jabber1.pas:2500
 msgid "Error changing password."
 msgstr ""
 
-#: Jabber1.pas:2490
+#: Jabber1.pas:2498
 msgid "Password changed."
 msgstr ""
 
 #. kick off a service registration..
-#: Jabber1.pas:2577
+#: Jabber1.pas:2585
 msgid "Register with Service"
 msgstr ""
 
-#: Jabber1.pas:2577
+#: Jabber1.pas:2585
 msgid "Enter Jabber ID of Service: "
 msgstr ""
 
-#: Jabber1.pas:2630
+#: Jabber1.pas:2638
 msgid "Send a Message"
 msgstr ""
 
 #. fire up an invite for this room using the selected contacts
-#: Jabber1.pas:2942
+#: Jabber1.pas:2950
 #. send roster items to this contact.
-#: Jabber1.pas:2952
+#: Jabber1.pas:2960
 #. Send contacts to this JID..
 #: RosterWindow.pas:2582
 #: RosterWindow.pas:2794
@@ -7191,7 +7196,7 @@ msgstr ""
 msgid "You must select one or more contacts."
 msgstr ""
 
-#: Jabber1.pas:3079
+#: Jabber1.pas:3087
 msgid "Branding error!"
 msgstr ""
 

@@ -298,6 +298,7 @@ function StartRoom(rjid: Widestring; rnick: Widestring = '';
     default_config: boolean = false): TfrmRoom;
 function IsRoom(rjid: Widestring): boolean;
 function FindRoomNick(rjid: Widestring): Widestring;
+procedure CloseAllRooms();
 
 {---------------------------------------}
 function ItemCompare(Item1, Item2: Pointer): integer;
@@ -1608,6 +1609,19 @@ end;
 function IsRoom(rjid: Widestring): boolean;
 begin
     result := (room_list.IndexOf(rjid) >= 0);
+end;
+
+{---------------------------------------}
+procedure CloseAllRooms();
+var
+    i: integer;
+    f: TfrmRoom;
+begin
+    for i := 0 to room_list.Count - 1 do begin
+        f := TfrmRoom(room_list.Objects[i]);
+        f.Close();
+    end;
+    room_list.Clear();
 end;
 
 {---------------------------------------}

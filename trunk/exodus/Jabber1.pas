@@ -1595,6 +1595,9 @@ begin
         frmRosterWindow.Close;
     end;
 
+    // Close whatever rooms we have
+    CloseAllRooms();
+
     // If we have a session, close it up
     // and all of the associated windows
     if MainSession <> nil then begin
@@ -1612,6 +1615,9 @@ begin
         TeardownSession();
     end;
 
+    // give stuff a bit of time to shutdown
+    Application.ProcessMessages();
+    Application.ProcessMessages();
 
     // Kill the tray icon stuff
     if (_tray_icon <> nil) then
