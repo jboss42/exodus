@@ -76,9 +76,14 @@ var
 }
 begin
     //GetLocaleFormatSettings(LANG_NEUTRAL, f);
-    // Result := StrToDateTime(DateTimeToStr(val), f);
+    //Result := StrToDateTime(DateTimeToStr(val), f);
     //Result := StrToDateTime(DateTimeToStr(val, f), f);
-    Result := StrToDateTime(DateTimeToStr(val));
+    try
+        Result := StrToDateTime(DateTimeToStr(val));
+    except
+        on EConvertError do
+            Result := val;
+    end;
 end;
 
 {---------------------------------------}
