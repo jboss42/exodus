@@ -379,6 +379,7 @@ begin
 
     if (bm.Data <> nil) then begin
         bm_node := TTreeNode(bm.Data);
+        assert(bm_node <> nil);
         bm_node.Text := bm.bmName;
         end
     else begin
@@ -431,7 +432,10 @@ begin
             node_list := TList(ri.Data);
             if (node_list <> nil) then node_list.Clear;
             end;
+        for i := 0 to Bookmarks.Count - 1 do
+            TJabberBookmark(Bookmarks.Objects[i]).Data := nil;
         end;
+
 
     _bookmark := nil;
     _offline := nil;
