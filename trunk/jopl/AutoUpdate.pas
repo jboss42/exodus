@@ -139,19 +139,25 @@ begin
       http := TIdHTTP.Create(nil);
       http.HandleRedirects := true;
       MainSession.Prefs.setProxy(http);
-      http.Get(url, bfs);
-      bfs.Free();
-      if (http.ResponseCode = 200) then begin
-          DeleteFile(pchar(ExtractFilePath(Application.EXEName) + 'branding.xml'));
-          RenameFile(bfn, 'branding.xml');
-          MainSession.Prefs.setString('last_branding_update', DateTimeToStr(http.Response.LastModified));
-          // Harumph.  There's no good way to reparse the branding file.  Even if
-          // there was, there's no way to know where those prefs have been used
-          // at this time.  Therefore, just wait patiently until the next time
-          // the client starts up.
-      end
-      else
-          DeleteFile(pchar(bfn));
+
+      // just eat exceptions here
+      try
+        http.Get(url, bfs);
+          bfs.Free();
+          if (http.ResponseCode = 200) then begin
+              DeleteFile(pchar(ExtractFilePath(Application.EXEName) + 'branding.xml'));
+              RenameFile(bfn, 'branding.xml');
+              MainSession.Prefs.setString('last_branding_update', DateTimeToStr(http.Response.LastModified));
+              // Harumph.  There's no good way to reparse the branding file.  Even if
+              // there was, there's no way to know where those prefs have been used
+              // at this time.  Therefore, just wait patiently until the next time
+              // the client starts up.
+          end
+          else
+              DeleteFile(pchar(bfn));
+      except
+      end;
+
     finally
         if (http <> nil) then http.Free();
   end;

@@ -146,7 +146,7 @@ var
     _unhandled: TUnhandledResponder;
 
 {---------------------------------------}
-function getNick(j: string): string;
+function getNick(j: Widestring): Widestring;
 var
     jid: TJabberID;
     ritem: TJabberRosterItem;
