@@ -254,8 +254,6 @@ type
     procedure timTrayAlertTimer(Sender: TObject);
     procedure JabberUserGuide1Click(Sender: TObject);
     procedure mnuPluginDummyClick(Sender: TObject);
-    procedure ApplicationEvents1Message(var Msg: tagMSG;
-      var Handled: Boolean);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -352,6 +350,8 @@ type
     _hook_mouse: HHOOK;
 
     // Window message handlers
+    // procedure WndProc(var Message: TMessage); override;
+
     procedure CreateParams(var Params: TCreateParams); override;
     procedure WMSysCommand(var msg: TWmSysCommand); message WM_SYSCOMMAND;
     procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
@@ -364,6 +364,7 @@ type
     procedure WMInstaller(var msg: TMessage); message WM_INSTALLER;
 
     function WMAppBar(dwMessage: DWORD; var pData: TAppBarData): UINT; stdcall;
+    // function AppHook(var Message: TMessage): boolean;
 
   published
     // Callbacks
@@ -387,6 +388,8 @@ type
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
     procedure DefaultHandler(var msg); override;
     procedure TrackWindowsMsg(windows_msg: integer);
+    procedure fireWndMessage(handle: HWND; msg: Cardinal;
+        wParam: integer; lParam: integer);
 
     procedure PreModal(frm: TForm);
     procedure PostModal();
@@ -407,10 +410,15 @@ type
 procedure StartTrayAlert();
 procedure StopTrayAlert();
 
+function ExodusGMHook(code: integer; wParam: word; lParam: longword): longword; stdcall;
+function ExodusCWPHook(code: integer; wParam: word; lParam: longword): longword; stdcall;
+
 var
     frmExodus: TfrmExodus;
     sExodusPresence: Cardinal;
     sExodusMutex: Cardinal;
+    sExodusGMHook: HHOOK;
+    sExodusCWPHook: HHOOK;
 
 resourcestring
     sCommandLine =  'The following command line parameters are available in Exodus: '#13#10#13#10;
@@ -758,15 +766,16 @@ begin
     minimized := false;
     invisible := false;
     show_help := false;
-    _testaa := false;
     jid := nil;
     ActiveChat := nil;
+    ChatHiding := false;
+
+    _testaa := false;
     _cli_priority := -1;
     _cli_status := sAvailable;
     _cli_show := '';
     _updating := false;
     _new_tabindex := -1;
-    ChatHiding := false;
 
     // Hide the application's window, and set our own
     // window to the proper parameters..
@@ -1053,6 +1062,13 @@ begin
     Test1.Visible := true;
     {$endif}
 
+    sExodusCWPHook := SetWindowsHookEx(WH_CALLWNDPROC, @ExodusCWPHook,
+        0, GetCurrentThreadID);
+    sExodusGMHook := SetWindowsHookEx(WH_GETMESSAGE, @ExodusGMHook,
+        0, GetCurrentThreadID);
+        
+    OutputDebugString(PChar('CWP HOOK: ' + IntToStr(sExodusCWPHook)));
+    OutputDebugString(PChar('GM HOOK: ' + IntToStr(sExodusGMHook)));
 end;
 
 {---------------------------------------}
@@ -1742,6 +1758,17 @@ begin
         _StopHooks();
         _hookLib := 0;
     end;
+
+    // Unhook the other Win32 hooks.
+    if (sExodusGMHook <> 0) then begin
+        UnHookWindowsHookEx(sExodusGMHook);
+        sExodusGMHook := 0;
+    end;
+    if (sExodusCWPHook <> 0) then begin
+        UnhookWindowsHookEx(sExodusCWPHook);
+        sExodusCWPHook := 0;
+    end;
+
 
     // Free the Richedit library
     if (_richedit <> 0) then begin
@@ -2763,9 +2790,11 @@ procedure TfrmExodus.Test1Click(Sender: TObject);
 var
     i: integer;
 }
+{
 var
     i: integer;
     c: TChatController;
+}
 begin
     // Test something..
     // LoadPlugin('RosterClean.ExodusRosterClean');
@@ -2783,16 +2812,20 @@ begin
     }
     //ShowRiserWindow(Self, 'Test Toast ' + IntToStr(i), i);
 
-    {
-    TrackWindowsMsg(WM_ACTIVATEAPP);
-    TrackWindowsMsg(WM_ACTIVATE);
-    }
+    //TrackWindowsMsg(WM_ACTIVATEAPP);
+    //TrackWindowsMsg(WM_ACTIVATE);
+    TrackWindowsMsg(WM_LBUTTONDOWN);
+    TrackWindowsMsg(BM_CLICK);
+    TrackWindowsMsg(WM_SETTEXT);
+    TrackWindowsMsg(WM_COMMAND);
 
+    {
     for i := MainSession.ChatList.Count - 1 downto 0 do begin
         c := TChatController(MainSession.ChatList.Objects[i]);
         if ((c <> nil) and (c.window is TfrmChat)) then
             c.window.Free();
     end;
+    }
 
 end;
 
@@ -3063,24 +3096,55 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmExodus.ApplicationEvents1Message(var Msg: tagMSG;
-  var Handled: Boolean);
+procedure TfrmExodus.fireWndMessage(handle: HWND; msg: Cardinal;
+    wParam: integer; lParam: integer);
 var
-    idx: integer;
     etag: TXMLTag;
 begin
     // check to see if this Msg is one we are tracking..
     // and fire the appropriate event if it is.
-    idx := win32TrackerIndex(Msg.message);
-    if (idx >= 0) then begin
-        etag := TXMLTag.Create('event');
-        etag.setAttribute('msg', IntToStr(Msg.message));
-        etag.setAttribute('hwnd', IntToStr(Msg.hwnd));
-        etag.setAttribute('lparam', IntToStr(Msg.lParam));
-        etag.setAttribute('wparam', IntToStr(Msg.wParam));
-        OutputDebugString('firing windows event msg');
-        MainSession.FireEvent('/windows/msg', etag);
+    OutputDebugString(PChar('firing windows event msg: ' + IntToHex(msg, 4)));
+    etag := TXMLTag.Create('event');
+    etag.setAttribute('msg', IntToStr(msg));
+    etag.setAttribute('hwnd', IntToStr(Handle));
+    etag.setAttribute('lparam', IntToStr(lParam));
+    etag.setAttribute('wparam', IntToStr(wParam));
+    MainSession.FireEvent('/windows/msg', etag);
+end;
+
+{---------------------------------------}
+function ExodusGMHook(code: integer; wParam: word; lParam: longword): longword; stdcall;
+var
+    idx: integer;
+    msg: TMsg;
+begin
+    // Something is coming from our WH_GETMESSAGE Hook
+    msg := TMsg(Ptr(lParam)^);
+
+    if (frmExodus <> nil) then begin
+        idx := frmExodus.win32TrackerIndex(msg.message);
+        if (idx >= 0) then
+            frmExodus.fireWndMessage(msg.hwnd, msg.message, msg.wParam, msg.lParam);
     end;
+
+    Result := CallNextHookEx(sExodusGMHook, Code, wParam, lParam);
+end;
+
+{---------------------------------------}
+function ExodusCWPHook(code: integer; wParam: word; lParam: longword): longword; stdcall;
+var
+    idx: integer;
+    cwp: TCWPStruct;
+begin
+    // Something is coming from CALLWNDPROC Hook
+    if ((Code = HC_ACTION) and (frmExodus <> nil)) then begin
+        cwp := TCWPStruct(Ptr(lParam)^);
+        idx := frmExodus.win32TrackerIndex(cwp.message);
+        if (idx >= 0) then
+            frmExodus.fireWndMessage(cwp.hwnd, cwp.message, cwp.wParam, cwp.lParam);
+    end;
+
+    Result := CallNextHookEx(sExodusCWPHook, Code, wParam, lParam);
 end;
 
 initialization

@@ -193,6 +193,8 @@ type
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
+    // procedure WndProc(var Message: TMessage); override;
+
   published
     procedure RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
     procedure PresCallback(event: string; tag: TXMLTag; p: TJabberPres);
@@ -243,6 +245,15 @@ uses
     Transports, Session;
 
 {$R *.DFM}
+
+{---------------------------------------}
+{
+procedure TfrmRosterWindow.WndProc(var Message: TMessage);
+begin
+    frmExodus.CheckWndMessage(Self.Handle, Message);
+    inherited;
+end;
+}
 
 {---------------------------------------}
 procedure TfrmRosterWindow.FormCreate(Sender: TObject);
