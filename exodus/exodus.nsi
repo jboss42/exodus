@@ -266,49 +266,6 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
     WriteRegStr HKCR "MIME\Database\Content Type\application/xmpp" \
         "Extension" ".xmpp"
     
-    StrCpy $0 0
-  outer_loop:
-
-    EnumRegKey $1 HKCU "Software\Jabber\Exodus\Restart" $0
-    StrCmp $1 "" abort
-    
-    ReadRegStr $2 HKCU "Software\Jabber\Exodus\Restart\$1" "cwd"
-    StrCmp $2 "" done
-    SetOutPath $2
-    
-    ReadRegStr $2 HKCU "Software\Jabber\Exodus\Restart\$1" "cmdline"
-    
-    ReadRegDWORD $3 HKCU "Software\Jabber\Exodus\Restart\$1" "priority"
-    StrCmp $3 "" profile
-	StrCpy $3 '-i "$3"'
-
-  profile:
-    ReadRegStr $4 HKCU "Software\Jabber\Exodus\Restart\$1" "profile"
-    StrCmp $4 "" show
-    StrCpy $4 '-f "$4"'
-
-  show:
-    ReadRegStr $5 HKCU "Software\Jabber\Exodus\Restart\$1" "show"
-    StrCmp $5 "" status
-    StrCpy $5 '-w "$5"'
-    
-  status:
-    ReadRegStr $6 HKCU "Software\Jabber\Exodus\Restart\$1" "status"
-    StrCmp $6 "" exec
-    StrCpy $6 '-s "$6"'
-
-  exec:
-    DetailPrint '"$INSTDIR\Exodus.exe" $2 $3 $4 $5 $6'
-    Exec '"$INSTDIR\Exodus.exe" $2 $3 $4 $5 $6'
-    SetAutoClose "true"
-
-  done:
-    DeleteRegKey HKCU "Software\Jabber\Exodus\Restart\$1"
-
-;    IntOp $0 $0 + 1
-    Goto outer_loop
-  abort:
-
 SectionEnd ; end the section
 
 Section "SSL Support" SEC_SSL
@@ -412,6 +369,12 @@ Section "Daily updates" SEC_Bleed
     SetOverwrite on
 SectionEnd
 
+Section "Laguage packs" SEC_Locale
+	File "locale.zip"
+    ZipDLL::extractall "$INSTDIR\locale.zip" "$INSTDIR"
+	Delete "$INSTDIR\locale.zip"
+    WriteRegStr HKCU SOFTWARE\Jabber\Exodus "InstallLocales" "1"
+SectionEnd
 
 ; special uninstall section.
 ;UninstallText "This will uninstall Exodus.  Click Uninstall to continue."
@@ -493,6 +456,9 @@ LangString DESC_SSL ${LANG_ENGLISH} \
 LangString DESC_Bleed ${LANG_ENGLISH} \
     "Check for the latest development build whenever you login. This can happen more than once a day."
 
+LangString DESC_Locale ${LANG_ENGLISH} \
+    "Install translations for non-English languages."
+
 LangString DESC_Plugins ${LANG_ENGLISH} \
     "Download plugins via the Internet using your IE proxy settings. Will not work with auto-configured proxies."
 
@@ -520,6 +486,7 @@ SubCaption 3 ": Exit running Exodus versions!"
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Exodus} $(DESC_Exodus)
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_SSL} $(DESC_SSL)
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Bleed} $(DESC_Bleed)
+    !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Locale} $(DESC_Locale)
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Plugins} $(DESC_Plugins)
     !include plugins\plugin-desc.nsi
 !insertmacro MUI_FUNCTIONS_DESCRIPTION_END
@@ -725,12 +692,79 @@ Function .onInit
     ; Comment these 2 lines out.
     Push ${SEC_Bleed}
     Call TurnOff
+
+    ; if in silent mode, and locales were installed last time, reinstall them
+    Push $CMDLINE
+    Push "/S"
+    Call StrStr
+    Pop $0
+    StrCmp $0 "/S" silent
+
+	; turn off locales by default
+    DeleteRegValue HKCU SOFTWARE\Jabber\Exodus "InstallLocales"
+	Push ${SEC_Locale}
+	Call TurnOff
+	goto locale_done
+silent:
+    ReadRegStr $0 HKCU "SOFTWARE\Jabber\Exodus" "InstallLocales"
+    StrCmp $0 "1" locale_done
+	Push ${SEC_Locale}
+	Call TurnOff
+	goto locale_done
+
+locale_done:
     
 !ifndef NO_NETWORK
     Push ${SEC_SSL}
     Call TurnOff
 !endif
 
+FunctionEnd
+
+Function .onInstSuccess
+ ; start up any instances that were previously closed.
+  StrCpy $0 0
+  outer_loop:
+
+    EnumRegKey $1 HKCU "Software\Jabber\Exodus\Restart" $0
+    StrCmp $1 "" abort
+    
+    ReadRegStr $2 HKCU "Software\Jabber\Exodus\Restart\$1" "cwd"
+    StrCmp $2 "" done
+    SetOutPath $2
+    
+    ReadRegStr $2 HKCU "Software\Jabber\Exodus\Restart\$1" "cmdline"
+    
+    ReadRegDWORD $3 HKCU "Software\Jabber\Exodus\Restart\$1" "priority"
+    StrCmp $3 "" profile
+	StrCpy $3 '-i "$3"'
+
+  profile:
+    ReadRegStr $4 HKCU "Software\Jabber\Exodus\Restart\$1" "profile"
+    StrCmp $4 "" show
+    StrCpy $4 '-f "$4"'
+
+  show:
+    ReadRegStr $5 HKCU "Software\Jabber\Exodus\Restart\$1" "show"
+    StrCmp $5 "" status
+    StrCpy $5 '-w "$5"'
+    
+  status:
+    ReadRegStr $6 HKCU "Software\Jabber\Exodus\Restart\$1" "status"
+    StrCmp $6 "" exec
+    StrCpy $6 '-s "$6"'
+
+  exec:
+    DetailPrint '"$INSTDIR\Exodus.exe" $2 $3 $4 $5 $6'
+    Exec '"$INSTDIR\Exodus.exe" $2 $3 $4 $5 $6'
+    SetAutoClose "true"
+
+  done:
+    DeleteRegKey HKCU "Software\Jabber\Exodus\Restart\$1"
+
+;    IntOp $0 $0 + 1
+    Goto outer_loop
+  abort:
 FunctionEnd
 
 Function SetCustomShell
