@@ -32,10 +32,23 @@ type
     procedure CreateDockableWindow(HWND: Integer; const Caption: WideString);
       safecall;
     { Protected declarations }
+  public
+    constructor Create();
+
+    procedure fireNewChat(jid: WideString);
+
+  private
+    _chats: TList;
+    _rooms: TList;
+
   end;
 
   TPlugin = class
     com: IExodusPlugin;
+    end;
+
+  TChatPlugin = class
+    com: IExodusChatPlugin;
     end;
 
   TPluginProxy = class
@@ -56,7 +69,8 @@ procedure UnloadPlugins();
 implementation
 
 uses
-    Jabber1, Session, Roster, PrefController, Unicode, 
+    COMChatController,
+    Jabber1, Session, Roster, PrefController, Unicode,
     Dialogs, Variants, Forms, SysUtils, ComServ;
 
 var
@@ -169,6 +183,27 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
+constructor TExodusController.Create();
+begin
+    inherited Create();
+
+    _chats := TList.Create();
+    _rooms := TList.Create();
+end;
+
+{---------------------------------------}
+procedure TExodusController.fireNewChat(jid: WideString);
+var
+    i: integer;
+    cp: IExodusChatPlugin;
+begin
+    for i := 0 to _chats.Count - 1 do begin
+        cp := IUnknown(TChatPlugin(_chats[0]).com) as IExodusChatPlugin;
+        cp.NewChat(jid);
+        end;
+end;
+
+{---------------------------------------}
 function TExodusController.Get_Connected: WordBool;
 begin
     Result := MainSession.Active;
@@ -265,13 +300,21 @@ begin
 end;
 
 procedure TExodusController.RegisterChatPlugin(var Plugin: OleVariant);
+var
+    cp: TChatPlugin;
 begin
-
+    cp := TChatPlugin.Create();
+    cp.com := IUnknown(Plugin) as IExodusChatPlugin;
+    _chats.Add(cp);
 end;
 
 procedure TExodusController.RegisterRoomPlugin(var Plugin: OleVariant);
+var
+    cp: TChatPlugin;
 begin
-
+    cp := TChatPlugin.Create();
+    cp.com := IUnknown(Plugin) as IExodusChatPlugin;
+    _rooms.Add(cp);
 end;
 
 procedure TExodusController.CreateDockableWindow(HWND: Integer;
