@@ -12,18 +12,16 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 9/12/2003 6:57:03 AM from Type Library described below.
+// File generated on 9/29/2003 7:03:16 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\src\exodus\exodus\Exodus.exe (1)
-// LIBID: {219E0029-5710-4C9B-BE33-4C7F046D7792}
+// Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
+// LIBID: {5BABCA07-A359-4B42-8C03-C5B329E79E31}
 // LCID: 0
 // Helpfile: 
 // HelpString: Exodus COM Plugin interfaces
 // DepndLst: 
 //   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
-// Parent TypeLibrary:
-//   (0) v1.0 ExImportAIM, (D:\src\exodus\exodus\plugins\AIM-Import\ExImportAIM.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -46,13 +44,13 @@ const
   ExodusCOMMajorVersion = 1;
   ExodusCOMMinorVersion = 0;
 
-  LIBID_ExodusCOM: TGUID = '{219E0029-5710-4C9B-BE33-4C7F046D7792}';
+  LIBID_ExodusCOM: TGUID = '{5BABCA07-A359-4B42-8C03-C5B329E79E31}';
 
-  IID_IExodusController: TGUID = '{C61D9B1C-6CC8-4E7E-83B7-C8CA730911F0}';
+  IID_IExodusController: TGUID = '{808426B8-8C56-49FD-AE15-5D91DE1DE5EF}';
   CLASS_ExodusController: TGUID = '{E89B1EBA-8CF8-4A00-B15D-18149A0FA830}';
   IID_IExodusChat: TGUID = '{DA56D31B-1D1D-4F33-A04E-E28611E3011E}';
   CLASS_ExodusChat: TGUID = '{80A3C1AA-71CA-4504-9A81-EE29F91C63C3}';
-  IID_IExodusPlugin: TGUID = '{BCF0FB71-F2EF-4AC5-953E-36E8C4A06490}';
+  IID_IExodusPlugin: TGUID = '{DCDFAD67-6CB2-4202-B29C-50D633C02596}';
   IID_IExodusChatPlugin: TGUID = '{2C576B16-DD6A-4E8C-8DEB-38E255B48A88}';
   IID_IExodusRoster: TGUID = '{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}';
   CLASS_ExodusRoster: TGUID = '{438DF52E-F892-456B-9FB0-3C64DBB85240}';
@@ -129,10 +127,10 @@ type
 // *********************************************************************//
 // Interface: IExodusController
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {C61D9B1C-6CC8-4E7E-83B7-C8CA730911F0}
+// GUID:      {808426B8-8C56-49FD-AE15-5D91DE1DE5EF}
 // *********************************************************************//
   IExodusController = interface(IDispatch)
-    ['{C61D9B1C-6CC8-4E7E-83B7-C8CA730911F0}']
+    ['{808426B8-8C56-49FD-AE15-5D91DE1DE5EF}']
     function Get_Connected: WordBool; safecall;
     function Get_Username: WideString; safecall;
     function Get_Server: WideString; safecall;
@@ -199,7 +197,7 @@ type
     procedure removeContactMenu(const ID: WideString); safecall;
     function getActiveContact: WideString; safecall;
     function getActiveGroup: WideString; safecall;
-    function getActiveContacts(Online: WordBool): PSafeArray; safecall;
+    function getActiveContacts(Online: WordBool): OleVariant; safecall;
     function Get_LocalIP: WideString; safecall;
     procedure setPluginAuth(const AuthAgent: IExodusAuth); safecall;
     procedure setAuthenticated(Authed: WordBool; const xml: WideString); safecall;
@@ -227,10 +225,10 @@ type
 // *********************************************************************//
 // DispIntf:  IExodusControllerDisp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {C61D9B1C-6CC8-4E7E-83B7-C8CA730911F0}
+// GUID:      {808426B8-8C56-49FD-AE15-5D91DE1DE5EF}
 // *********************************************************************//
   IExodusControllerDisp = dispinterface
-    ['{C61D9B1C-6CC8-4E7E-83B7-C8CA730911F0}']
+    ['{808426B8-8C56-49FD-AE15-5D91DE1DE5EF}']
     property Connected: WordBool readonly dispid 1;
     property Username: WideString readonly dispid 2;
     property Server: WideString readonly dispid 3;
@@ -297,7 +295,7 @@ type
     procedure removeContactMenu(const ID: WideString); dispid 61;
     function getActiveContact: WideString; dispid 62;
     function getActiveGroup: WideString; dispid 63;
-    function getActiveContacts(Online: WordBool): {??PSafeArray}OleVariant; dispid 65;
+    function getActiveContacts(Online: WordBool): OleVariant; dispid 65;
     property LocalIP: WideString readonly dispid 64;
     procedure setPluginAuth(const AuthAgent: IExodusAuth); dispid 66;
     procedure setAuthenticated(Authed: WordBool; const xml: WideString); dispid 67;
@@ -368,10 +366,10 @@ type
 // *********************************************************************//
 // Interface: IExodusPlugin
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {BCF0FB71-F2EF-4AC5-953E-36E8C4A06490}
+// GUID:      {DCDFAD67-6CB2-4202-B29C-50D633C02596}
 // *********************************************************************//
   IExodusPlugin = interface(IDispatch)
-    ['{BCF0FB71-F2EF-4AC5-953E-36E8C4A06490}']
+    ['{DCDFAD67-6CB2-4202-B29C-50D633C02596}']
     procedure Startup(const ExodusController: IExodusController); safecall;
     procedure Shutdown; safecall;
     procedure Process(const xpath: WideString; const event: WideString; const xml: WideString); safecall;
@@ -389,10 +387,10 @@ type
 // *********************************************************************//
 // DispIntf:  IExodusPluginDisp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {BCF0FB71-F2EF-4AC5-953E-36E8C4A06490}
+// GUID:      {DCDFAD67-6CB2-4202-B29C-50D633C02596}
 // *********************************************************************//
   IExodusPluginDisp = dispinterface
-    ['{BCF0FB71-F2EF-4AC5-953E-36E8C4A06490}']
+    ['{DCDFAD67-6CB2-4202-B29C-50D633C02596}']
     procedure Startup(const ExodusController: IExodusController); dispid 1;
     procedure Shutdown; dispid 2;
     procedure Process(const xpath: WideString; const event: WideString; const xml: WideString); dispid 3;
