@@ -44,7 +44,7 @@ object frmExodus: TfrmExodus
     Font.Charset = ANSI_CHARSET
     Font.Color = clBlack
     Font.Height = -11
-    Font.Name = 'Arial Unicode MS'
+    Font.Name = 'MS Sans Serif'
     Font.Style = []
     Images = ImageList3
     ParentFont = False
@@ -68,7 +68,7 @@ object frmExodus: TfrmExodus
       object SplitterRight: TSplitter
         Left = 105
         Top = 0
-        Height = 281
+        Height = 282
         ResizeStyle = rsUpdate
         OnMoved = SplitterRightMoved
       end
@@ -76,7 +76,7 @@ object frmExodus: TfrmExodus
         Left = 0
         Top = 0
         Width = 105
-        Height = 281
+        Height = 282
         Align = alLeft
         BevelOuter = bvNone
         BorderWidth = 1
@@ -89,7 +89,7 @@ object frmExodus: TfrmExodus
         Left = 108
         Top = 0
         Width = 37
-        Height = 281
+        Height = 282
         Align = alClient
         BevelOuter = bvNone
         Caption = 'THIS IS PNLRIGHT'

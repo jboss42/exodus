@@ -54,7 +54,7 @@ begin
     pf.Caption := ACaption;
     pf.Label1.Caption := APrompt;
     pf.txtPassword.Text := Value;
-    AssignDefaultFont(pf.Font);
+    AssignUnicodeFont(pf, 9);
     if (not password) then
         pf.txtPassword.PasswordChar := #0;
 

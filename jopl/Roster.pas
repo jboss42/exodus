@@ -473,7 +473,7 @@ begin
         if (stag <> nil) then begin
             bms := stag.ChildTags();
             for i := 0 to bms.count -1  do begin
-                jid := Lowercase(bms[i].GetAttribute('jid'));
+                jid := WideLowerCase(bms[i].GetAttribute('jid'));
                 idx := Bookmarks.IndexOf(jid);
                 if (idx >= 0) then begin
                     // remove the existing bm
@@ -542,7 +542,7 @@ begin
     ritems := q.QueryTags('item');
 
     for i := 0 to ritems.Count - 1 do begin
-        j := Lowercase(ritems[i].GetAttribute('jid'));
+        j := WideLowerCase(ritems[i].GetAttribute('jid'));
         ri := Find(j);
 
         if ri = nil then begin
@@ -697,7 +697,7 @@ function TJabberRoster.Find(sjid: Widestring): TJabberRosterItem;
 var
     i: integer;
 begin
-    i := indexOf(Lowercase(sjid));
+    i := indexOf(WideLowerCase(sjid));
     if (i >= 0) and (i < Count) then
         Result := TJabberRosterItem(Objects[i])
     else
@@ -847,7 +847,7 @@ begin
             ri.parse(ct);
             checkGroups(ri);
             if (idx = -1) then
-                AddObject(Lowercase(ri.jid.Full), ri);
+                AddObject(WideLowerCase(ri.jid.Full), ri);
             s.FireEvent('/roster/item', ritems.Tags[i], ri);
         end;
 
@@ -863,7 +863,7 @@ begin
         ct.setAttribute('name', s.Username);
         ri := TJabberRosterItem.Create();
         ri.parse(ct);
-        Self.AddObject(Lowercase(ri.jid.Full), ri);
+        Self.AddObject(WideLowerCase(ri.jid.Full), ri);
         s.FireEvent('/roster/item', ct, ri);
         ct.Free();
 

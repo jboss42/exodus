@@ -73,7 +73,7 @@ type
     spnPriority: TUpDown;
     lblServerList: TLabel;
     Label13: TLabel;
-    Label14: TLabel;
+    lblNote: TLabel;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure chkSocksAuthClick(Sender: TObject);
     procedure cboSocksTypeChange(Sender: TObject);
@@ -405,7 +405,11 @@ var
     list : TWideStrings;
     i : integer;
 begin
+    AssignUnicodeFont(Self, 9);
     TranslateProperties(Self);
+
+    URLLabel(lblServerList);
+    lblNote.Font.Size := 10;
 
     MainSession.Prefs.RestorePosition(Self);
 

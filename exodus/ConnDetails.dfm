@@ -3,19 +3,19 @@ object frmConnDetails: TfrmConnDetails
   Top = 168
   Width = 304
   Height = 305
-  ActiveControl = txtUsername
+  ActiveControl = txtURL
   Caption = 'Connection Details'
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
-  Font.Height = -12
-  Font.Name = 'Arial Unicode MS'
+  Font.Height = -11
+  Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
-  TextHeight = 16
+  TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
     Top = 244
@@ -45,76 +45,64 @@ object frmConnDetails: TfrmConnDetails
     Top = 0
     Width = 296
     Height = 244
-    ActivePage = tbsProfile
+    ActivePage = tbsHttp
     Align = alClient
     TabOrder = 1
     object tbsProfile: TTabSheet
       Caption = 'Profile'
       ImageIndex = -1
       object Label3: TLabel
-        Left = 9
+        Left = 2
         Top = 8
-        Width = 61
-        Height = 16
+        Width = 51
+        Height = 13
         Caption = '&Username:'
       end
       object Label10: TLabel
-        Left = 8
+        Left = 2
         Top = 151
-        Width = 57
-        Height = 16
+        Width = 49
+        Height = 13
         Caption = '&Password:'
       end
       object Label11: TLabel
-        Left = 9
+        Left = 2
         Top = 71
-        Width = 39
-        Height = 16
+        Width = 34
+        Height = 13
         Caption = '&Server:'
       end
       object Label12: TLabel
-        Left = 9
+        Left = 2
         Top = 120
-        Width = 56
-        Height = 16
+        Width = 49
+        Height = 13
         Caption = '&Resource:'
       end
       object lblServerList: TLabel
-        Left = 82
+        Left = 90
         Top = 93
-        Width = 126
-        Height = 15
+        Width = 121
+        Height = 13
         Cursor = crHandPoint
         Caption = 'Download a list of servers'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clBlue
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = [fsUnderline]
-        ParentFont = False
         OnClick = lblServerListClick
       end
       object Label13: TLabel
-        Left = 83
+        Left = 91
         Top = 32
-        Width = 160
+        Width = 175
         Height = 29
         AutoSize = False
         Caption = 'Enter desired username for new accounts'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
         WordWrap = True
       end
       object cboServer: TTntComboBox
-        Left = 82
+        Left = 90
         Top = 67
-        Width = 152
-        Height = 24
-        ItemHeight = 16
+        Width = 175
+        Height = 21
+        ItemHeight = 13
         TabOrder = 1
         OnKeyPress = txtUsernameKeyPress
         Items.WideStrings = (
@@ -122,35 +110,35 @@ object frmConnDetails: TfrmConnDetails
           'jabber.com')
       end
       object chkSavePasswd: TCheckBox
-        Left = 82
+        Left = 90
         Top = 173
-        Width = 127
+        Width = 175
         Height = 17
         Caption = 'Save pass&word'
         TabOrder = 4
       end
       object txtUsername: TTntEdit
-        Left = 82
+        Left = 90
         Top = 5
-        Width = 152
-        Height = 24
+        Width = 175
+        Height = 21
         TabOrder = 0
         OnKeyPress = txtUsernameKeyPress
       end
       object txtPassword: TTntEdit
-        Left = 82
+        Left = 90
         Top = 148
-        Width = 152
-        Height = 24
+        Width = 175
+        Height = 21
         PasswordChar = '*'
         TabOrder = 3
       end
       object cboResource: TTntComboBox
-        Left = 82
+        Left = 90
         Top = 117
-        Width = 152
-        Height = 24
-        ItemHeight = 16
+        Width = 175
+        Height = 21
+        ItemHeight = 0
         TabOrder = 2
         OnKeyPress = txtUsernameKeyPress
       end
@@ -161,45 +149,44 @@ object frmConnDetails: TfrmConnDetails
       object Label4: TLabel
         Left = 2
         Top = 38
-        Width = 28
-        Height = 16
+        Width = 25
+        Height = 13
         Caption = 'Host:'
       end
       object Label7: TLabel
         Left = 2
         Top = 65
-        Width = 25
-        Height = 16
+        Width = 22
+        Height = 13
         Caption = 'Port:'
       end
       object Label8: TLabel
-        Left = -1
+        Left = 2
         Top = 9
-        Width = 30
-        Height = 16
+        Width = 27
+        Height = 13
         Alignment = taRightJustify
         Caption = 'Type:'
       end
       object Label6: TLabel
         Left = 2
         Top = 94
-        Width = 41
-        Height = 16
-        Alignment = taRightJustify
+        Width = 34
+        Height = 13
         Caption = 'Priority:'
       end
       object txtHost: TEdit
         Left = 59
         Top = 34
         Width = 190
-        Height = 24
+        Height = 21
         TabOrder = 1
       end
       object txtPort: TEdit
         Left = 59
         Top = 62
         Width = 46
-        Height = 24
+        Height = 21
         TabOrder = 2
         Text = '5222'
       end
@@ -232,7 +219,7 @@ object frmConnDetails: TfrmConnDetails
         Left = 59
         Top = 90
         Width = 46
-        Height = 24
+        Height = 21
         TabOrder = 4
         Text = '0'
       end
@@ -240,7 +227,7 @@ object frmConnDetails: TfrmConnDetails
         Left = 105
         Top = 90
         Width = 16
-        Height = 24
+        Height = 21
         Associate = txtPriority
         Max = 1000
         TabOrder = 5
@@ -252,39 +239,39 @@ object frmConnDetails: TfrmConnDetails
       object lblSocksHost: TLabel
         Left = 5
         Top = 38
-        Width = 28
-        Height = 16
+        Width = 25
+        Height = 13
         Caption = 'Host:'
         Enabled = False
       end
       object lblSocksPort: TLabel
         Left = 5
         Top = 65
-        Width = 25
-        Height = 16
+        Width = 22
+        Height = 13
         Caption = 'Port:'
         Enabled = False
       end
       object lblSocksType: TLabel
         Left = 5
         Top = 13
-        Width = 30
-        Height = 16
+        Width = 27
+        Height = 13
         Caption = 'Type:'
       end
       object lblSocksUsername: TLabel
         Left = 5
         Top = 112
-        Width = 61
-        Height = 16
+        Width = 51
+        Height = 13
         Caption = 'Username:'
         Enabled = False
       end
       object lblSocksPassword: TLabel
         Left = 5
         Top = 140
-        Width = 57
-        Height = 16
+        Width = 49
+        Height = 13
         Caption = 'Password:'
         Enabled = False
       end
@@ -302,7 +289,7 @@ object frmConnDetails: TfrmConnDetails
         Left = 75
         Top = 34
         Width = 130
-        Height = 24
+        Height = 21
         Enabled = False
         TabOrder = 1
       end
@@ -310,7 +297,7 @@ object frmConnDetails: TfrmConnDetails
         Left = 75
         Top = 61
         Width = 39
-        Height = 24
+        Height = 21
         Enabled = False
         TabOrder = 2
       end
@@ -334,7 +321,7 @@ object frmConnDetails: TfrmConnDetails
         Left = 74
         Top = 108
         Width = 130
-        Height = 24
+        Height = 21
         Enabled = False
         TabOrder = 4
       end
@@ -342,83 +329,77 @@ object frmConnDetails: TfrmConnDetails
         Left = 74
         Top = 136
         Width = 130
-        Height = 24
+        Height = 21
         Enabled = False
         PasswordChar = '*'
         TabOrder = 5
       end
     end
     object tbsHttp: TTabSheet
+      BorderWidth = 2
       Caption = 'HTTP Polling'
       ImageIndex = -1
       object Label1: TLabel
-        Left = 2
-        Top = 3
-        Width = 28
-        Height = 16
-        Alignment = taRightJustify
+        Left = 1
+        Top = 5
+        Width = 25
+        Height = 13
         Caption = 'URL:'
       end
       object Label2: TLabel
-        Left = 2
+        Left = 1
         Top = 38
-        Width = 55
-        Height = 16
-        Alignment = taRightJustify
+        Width = 46
+        Height = 13
         Caption = 'Poll Time:'
       end
       object Label5: TLabel
-        Left = 130
+        Left = 140
         Top = 39
-        Width = 46
-        Height = 16
+        Width = 40
+        Height = 13
         Caption = 'seconds'
       end
       object Label9: TLabel
-        Left = 2
+        Left = 1
         Top = 73
-        Width = 53
-        Height = 16
+        Width = 48
+        Height = 13
         Caption = '# of Keys:'
       end
-      object Label14: TLabel
-        Left = 4
-        Top = 104
-        Width = 249
-        Height = 89
+      object lblNote: TLabel
+        Left = 0
+        Top = 100
+        Width = 284
+        Height = 112
+        Align = alBottom
         AutoSize = False
         Caption = 
           'NOTE: You must use the URL of your jabber server'#39's HTTP tunnelli' +
           'ng proxy. You can not use some "standard" HTTP proxy for this to' +
           ' work. Contact your server administrator for additional informat' +
           'ion.'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = [fsItalic]
-        ParentFont = False
         WordWrap = True
       end
       object txtURL: TEdit
-        Left = 68
+        Left = 76
         Top = 2
         Width = 197
-        Height = 24
+        Height = 21
         TabOrder = 0
       end
       object txtTime: TEdit
-        Left = 68
+        Left = 76
         Top = 35
         Width = 53
-        Height = 24
+        Height = 21
         TabOrder = 1
       end
       object txtKeys: TEdit
-        Left = 68
+        Left = 76
         Top = 68
         Width = 53
-        Height = 24
+        Height = 21
         TabOrder = 2
       end
     end

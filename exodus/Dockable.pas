@@ -85,6 +85,7 @@ begin
     _top := false;
 
     // do translation magic
+    AssignUnicodeFont(Self);
     TranslateProperties(Self);
 
     if (Self is TfrmChat) then

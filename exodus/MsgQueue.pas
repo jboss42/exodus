@@ -240,7 +240,8 @@ begin
     lstEvents.Color := TColor(MainSession.Prefs.getInt('roster_bg'));
     txtMsg.Color := lstEvents.Color;
 
-    AssignDefaultFont(lstEvents.Font);
+    // AssignDefaultFont(lstEvents.Font);
+    AssignUnicodeFont(Self);
     AssignDefaultFont(txtMsg.Font);
 
     with lstEvents do begin

@@ -123,7 +123,7 @@ inherited frmRoom: TfrmRoom
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -12
-        Font.Name = 'Arial Unicode MS'
+        Font.Name = 'MS Sans Serif'
         Font.Style = []
         ParentFont = False
         Layout = tlCenter

@@ -46,7 +46,7 @@ type
     Find1: TMenuItem;
     WordWrap1: TMenuItem;
     FindDialog1: TFindDialog;
-    Label1: TLabel;
+    lblLabel: TLabel;
     MemoSend: TExRichEdit;
     procedure FormCreate(Sender: TObject);
     procedure chkDebugWrapClick(Sender: TObject);
@@ -168,6 +168,10 @@ procedure TfrmDebug.FormCreate(Sender: TObject);
 begin
     // make sure the output is showing..
     inherited;
+
+    lblJID.Left := lblLabel.Left + lblLabel.Width + 5;
+    lblJID.Font.Color := clBlue;
+    lblJID.Font.Style := [fsUnderline];
 
     _cb := MainSession.RegisterCallback(DataCallback);
     _scb := MainSession.RegisterCallback(SessionCallback, '/session');

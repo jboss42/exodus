@@ -51,7 +51,7 @@ object frmSubscribe: TfrmSubscribe
     Font.Charset = ANSI_CHARSET
     Font.Color = clBlue
     Font.Height = -13
-    Font.Name = 'Arial Unicode MS'
+    Font.Name = 'MS Sans Serif'
     Font.Style = [fsUnderline]
     ParentFont = False
     Transparent = False

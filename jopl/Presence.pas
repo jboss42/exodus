@@ -383,7 +383,7 @@ begin
         pl := TWideStringList.Create;
         pl.AddObject(p.fromJID.Resource, p);
 
-        Self.AddObject(Lowercase(p.fromJID.jid), pl);
+        Self.AddObject(WideLowerCase(p.fromJID.jid), pl);
     end;
 end;
 
@@ -414,7 +414,7 @@ function TJabberPPDB.GetPresList(sjid: WideString): TWideStringList;
 var
     pi: integer;
 begin
-    pi := indexOf(Lowercase(sjid));
+    pi := indexOf(WideLowerCase(sjid));
     if pi >= 0 then
         Result := TWideStringList(Objects[pi])
     else

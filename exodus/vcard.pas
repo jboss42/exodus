@@ -123,7 +123,7 @@ implementation
 
 {$R *.dfm}
 uses
-    GnuGetText, IQ, Session;
+    ExUtils, GnuGetText, IQ, Session;
 
 {---------------------------------------}
 procedure ShowMyProfile;
@@ -140,6 +140,7 @@ var
     tmps: Widestring;
     iq: TJabberIQ;
 begin
+    AssignUnicodeFont(Self);
     TranslateProperties(Self);
 
     // Hide all the tabs

@@ -66,7 +66,7 @@ procedure CloseSubscribeWindows();
 {---------------------------------------}
 implementation
 uses
-    ChatWin, GnuGetText, JabberID, MsgRecv, Session, Profile, Presence;
+    ChatWin, ExUtils, GnuGetText, JabberID, MsgRecv, Session, Profile, Presence;
 
 var
     _subscribe_windows: TList;
@@ -148,8 +148,8 @@ end;
 {---------------------------------------}
 procedure TfrmSubscribe.FormCreate(Sender: TObject);
 begin
+    AssignUnicodeFont(Self);
     TranslateProperties(Self);
-
     _subscribe_windows.Add(Self);
 end;
 

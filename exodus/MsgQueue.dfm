@@ -62,7 +62,7 @@ object frmMsgQueue: TfrmMsgQueue
     Left = 0
     Top = 153
     Width = 456
-    Height = 140
+    Height = 142
     Align = alClient
     AutoURLDetect = adDefault
     CustomURLs = <
