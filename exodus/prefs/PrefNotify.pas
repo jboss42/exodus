@@ -43,6 +43,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure chkNotifyClick(Sender: TObject);
     procedure chkToastClick(Sender: TObject);
+    procedure chkSoundClick(Sender: TObject);
   private
     { Private declarations }
     _notify: array of integer;
@@ -69,6 +70,7 @@ resourcestring
     sSoundS10n = 'Subscription request';
     sSoundOOB = 'File Transfers';
     sSoundAutoResponse = 'Auto response generated';
+    sSoundSetup = 'Make sure to configure sounds in your Sounds Control Panel using the hotlink provided.';
 
 implementation
 {$R *.dfm}
@@ -228,6 +230,13 @@ begin
     if (chkFlash.Checked) then _notify[i] := _notify[i] + notify_flash;
     if (chkTrayNotify.Checked) then _notify[i] := _notify[i] + notify_tray;
     if (chkFront.Checked) then _notify[i] := _notify[i] + notify_front;
+end;
+
+procedure TfrmPrefNotify.chkSoundClick(Sender: TObject);
+begin
+  inherited;
+    if (chkSound.Checked) then
+        MessageDlg(sSoundSetup, mtInformation, [mbOK], 0);
 end;
 
 end.

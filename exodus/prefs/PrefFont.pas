@@ -31,7 +31,6 @@ type
     Label23: TLabel;
     Label24: TLabel;
     Label25: TLabel;
-    lblColor: TLabel;
     Label5: TLabel;
     StaticText3: TStaticText;
     colorRoster: TTreeView;
@@ -40,6 +39,10 @@ type
     btnFont: TButton;
     colorChat: TExRichEdit;
     FontDialog1: TFontDialog;
+    chkInlineStatus: TCheckBox;
+    cboInlineStatus: TColorBox;
+    Bevel2: TBevel;
+    lblColor: TLabel;
     procedure btnFontClick(Sender: TObject);
     procedure colorChatMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -47,6 +50,7 @@ type
     procedure clrBoxFontChange(Sender: TObject);
     procedure colorRosterMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure chkInlineStatusClick(Sender: TObject);
   private
     { Private declarations }
     _clr_control: TControl;
@@ -70,11 +74,15 @@ resourcestring
     sChatFontLabel = 'Roster Font and Background';
 
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 {$R *.dfm}
 uses
     JabberMsg, MsgDisplay, Session;
 
+{---------------------------------------}
 procedure TfrmPrefFont.LoadPrefs();
 begin
     //
@@ -113,15 +121,26 @@ begin
         btnFont.Enabled := true;
         clrBoxBG.Selected := TColor(MainSession.Prefs.getInt(_clr_bg));
         clrBoxFont.Selected := TColor(Mainsession.Prefs.getInt(_clr_font_color));
+
+        chkInlineStatus.Checked := getBool('inline_status');
+        cboInlineStatus.Selected := TColor(getInt('inline_color'));
+        cboInlineStatus.Enabled := chkInlineStatus.Checked;
+
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmPrefFont.SavePrefs();
 begin
     //
+    with MainSession.Prefs do begin
+        setBool('inline_status', chkInlineStatus.Checked);
+        setInt('inline_color', integer(cboInlineStatus.Selected));
+    end;
 end;
 
 
+{---------------------------------------}
 procedure TfrmPrefFont.btnFontClick(Sender: TObject);
 begin
   inherited;
@@ -214,6 +233,7 @@ begin
     clrBoxFont.Selected := TColor(Mainsession.Prefs.getInt(_clr_font_color));
 end;
 
+{---------------------------------------}
 procedure TfrmPrefFont.clrBoxBGChange(Sender: TObject);
 begin
   inherited;
@@ -225,6 +245,7 @@ begin
         colorRoster.Color := clrBoxBG.Selected;
 end;
 
+{---------------------------------------}
 procedure TfrmPrefFont.clrBoxFontChange(Sender: TObject);
 begin
   inherited;
@@ -236,6 +257,7 @@ begin
         colorRoster.Font.Color := clrBoxFont.Selected;
 end;
 
+{---------------------------------------}
 procedure TfrmPrefFont.colorRosterMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
@@ -250,6 +272,14 @@ begin
     btnFont.Enabled := true;
     clrBoxBG.Selected := TColor(MainSession.Prefs.getInt(_clr_bg));
     clrBoxFont.Selected := TColor(Mainsession.Prefs.getInt(_clr_font_color));
+end;
+
+{---------------------------------------}
+procedure TfrmPrefFont.chkInlineStatusClick(Sender: TObject);
+begin
+  inherited;
+    // toggle the color drop down on/off
+    cboInlineStatus.Enabled := chkInlineStatus.Checked;
 end;
 
 end.

@@ -36,7 +36,6 @@ type
     chkLog: TCheckBox;
     txtLogPath: TEdit;
     StaticText11: TStaticText;
-    txtTimestampFmt: TEdit;
     btnLogBrowse: TButton;
     chkMsgQueue: TCheckBox;
     chkLogRooms: TCheckBox;
@@ -48,6 +47,7 @@ type
     cboInviteOptions: TComboBox;
     chkBlockNonRoster: TCheckBox;
     OpenDialog1: TOpenDialog;
+    txtTimestampFmt: TComboBox;
     procedure btnLogBrowseClick(Sender: TObject);
     procedure btnLogClearAllClick(Sender: TObject);
     procedure btnSpoolBrowseClick(Sender: TObject);

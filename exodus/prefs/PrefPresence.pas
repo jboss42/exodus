@@ -46,8 +46,7 @@ type
     spnPriority: TUpDown;
     txtCPHotkey: THotKey;
     Panel1: TPanel;
-    chkPresenceMessageSend: TCheckBox;
-    chkPresenceMessageListen: TCheckBox;
+    chkPresenceSync: TCheckBox;
     Label8: TLabel;
     cboPresTracking: TComboBox;
     Label1: TLabel;
@@ -92,8 +91,7 @@ begin
         for i := 0 to _pres_list.Count - 1 do
             lstCustomPres.Items.Add(TJabberCustomPres(_pres_list[i]).title);
         cboPresTracking.ItemIndex := getInt('pres_tracking');
-        chkPresenceMessageSend.Checked := getBool('presence_message_send');
-        chkPresenceMessageListen.Checked := getBool('presence_message_listen');
+        chkPresenceSync.Checked := getBool('presence_message_listen');
     end;
 end;
 
@@ -110,8 +108,8 @@ begin
             setPresence(cp);
         end;
         setInt('pres_tracking', cboPresTracking.ItemIndex);
-        setBool('presence_message_send', chkPresenceMessageSend.Checked);
-        setBool('presence_message_listen', chkPresenceMessageListen.Checked);
+        setBool('presence_message_send', chkPresenceSync.Checked);
+        setBool('presence_message_listen', chkPresenceSync.Checked);
     end;
 end;
 
@@ -146,7 +144,7 @@ begin
     // show the props of this presence object
     _no_pres_change := true;
 
-    e := (lstCustomPres.ItemIndex >= 0);
+    e := ((lstCustomPres.Items.Count > 0) and (lstCustomPres.ItemIndex >= 0));
     txtCPTitle.Enabled := e;
     txtCPStatus.Enabled := e;
     txtCPPriority.Enabled := e;

@@ -2,26 +2,28 @@ inherited frmPrefRoster: TfrmPrefRoster
   Left = 236
   Top = 161
   Caption = 'frmPrefRoster'
+  ClientHeight = 337
+  ClientWidth = 344
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   object Label18: TLabel
     Left = 8
-    Top = 328
+    Top = 280
     Width = 150
     Height = 13
     Caption = 'Group to be used for Gateways:'
   end
   object Label21: TLabel
     Left = 8
-    Top = 245
+    Top = 197
     Width = 93
     Height = 13
     Caption = 'Double Click Action'
   end
   object Label1: TLabel
     Left = 8
-    Top = 284
+    Top = 236
     Width = 69
     Height = 13
     Caption = 'Default Group:'
@@ -37,7 +39,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   object StaticText1: TStaticText
     Left = 0
     Top = 0
-    Width = 336
+    Width = 344
     Height = 20
     Align = alTop
     Alignment = taCenter
@@ -69,34 +71,13 @@ inherited frmPrefRoster: TfrmPrefRoster
     Caption = 'Show offline contacts in the "Offline" group.'
     TabOrder = 3
   end
-  object chkInlineStatus: TCheckBox
-    Left = 8
-    Top = 198
-    Width = 241
-    Height = 17
-    Caption = 'Show status in the roster: Joe <Meeting>'
-    TabOrder = 4
-    OnClick = chkInlineStatusClick
-  end
-  object cboInlineStatus: TColorBox
-    Left = 32
-    Top = 214
-    Width = 201
-    Height = 22
-    DefaultColorColor = clBlue
-    Selected = clBlue
-    Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
-    DropDownCount = 12
-    ItemHeight = 16
-    TabOrder = 5
-  end
   object chkHideBlocked: TCheckBox
     Left = 8
     Top = 93
     Width = 201
     Height = 17
     Caption = 'Hide blocked contacts '
-    TabOrder = 6
+    TabOrder = 4
   end
   object chkPresErrors: TCheckBox
     Left = 8
@@ -104,7 +85,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Width = 209
     Height = 17
     Caption = 'Detect invalid roster items'
-    TabOrder = 7
+    TabOrder = 5
   end
   object chkShowPending: TCheckBox
     Left = 8
@@ -112,7 +93,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Width = 161
     Height = 17
     Caption = 'Show pending contacts'
-    TabOrder = 8
+    TabOrder = 6
   end
   object chkMessenger: TCheckBox
     Left = 8
@@ -120,16 +101,16 @@ inherited frmPrefRoster: TfrmPrefRoster
     Width = 273
     Height = 17
     Caption = 'Roster && Msg Queue share a tab when expanded'
-    TabOrder = 9
+    TabOrder = 7
   end
   object cboDblClick: TComboBox
     Left = 32
-    Top = 261
+    Top = 213
     Width = 201
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 10
+    TabOrder = 8
     Items.Strings = (
       'A new one to one chat window'
       'An instant message window'
@@ -141,7 +122,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Width = 328
     Height = 17
     Caption = 'Allow Unicode characters in the roster (requires 2000, ME, XP).'
-    TabOrder = 11
+    TabOrder = 9
   end
   object chkCollapsed: TCheckBox
     Left = 8
@@ -149,7 +130,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Width = 200
     Height = 17
     Caption = 'Collapse all roster groups initially.'
-    TabOrder = 12
+    TabOrder = 10
   end
   object chkGroupCounts: TCheckBox
     Left = 8
@@ -157,22 +138,22 @@ inherited frmPrefRoster: TfrmPrefRoster
     Width = 288
     Height = 17
     Caption = 'Show online and total group counts in roster (eg, 5/10)'
-    TabOrder = 13
+    TabOrder = 11
   end
   object txtGatewayGrp: TTntComboBox
     Left = 32
-    Top = 346
+    Top = 298
     Width = 201
     Height = 21
     ItemHeight = 13
-    TabOrder = 14
+    TabOrder = 12
   end
   object txtDefaultGrp: TTntComboBox
     Left = 32
-    Top = 302
+    Top = 254
     Width = 201
     Height = 21
     ItemHeight = 13
-    TabOrder = 15
+    TabOrder = 13
   end
 end
