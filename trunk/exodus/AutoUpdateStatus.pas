@@ -86,6 +86,7 @@ type
     ProgressBar1: TProgressBar;
     Image1: TImage;
     HttpClient: TIdHTTP;
+    TntLabel1: TTntLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure frameButtons1btnCancelClick(Sender: TObject);
@@ -94,6 +95,7 @@ type
     procedure HttpClientWorkBegin(Sender: TObject; AWorkMode: TWorkMode;
       const AWorkCountMax: Integer);
     procedure frameButtons1btnOKClick(Sender: TObject);
+    procedure TntLabel1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -246,6 +248,14 @@ begin
 
     if (_cancel) then Self.Close();
 
+end;
+
+procedure TfrmAutoUpdateStatus.TntLabel1Click(Sender: TObject);
+var
+    url: String; // *not* widestring.
+begin
+    url := MainSession.Prefs.getString('auto_update_changelog_url');
+    ShellExecute(Application.Handle, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
 end;
 
 end.

@@ -5,8 +5,8 @@ object frmAutoUpdateStatus: TfrmAutoUpdateStatus
   BorderStyle = bsDialog
   BorderWidth = 5
   Caption = 'Auto Update'
-  ClientHeight = 89
-  ClientWidth = 216
+  ClientHeight = 92
+  ClientWidth = 217
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,7 +22,7 @@ object frmAutoUpdateStatus: TfrmAutoUpdateStatus
   TextHeight = 13
   object Label1: TTntLabel
     Left = 40
-    Top = 6
+    Top = 0
     Width = 178
     Height = 26
     Caption = 
@@ -36,22 +36,36 @@ object frmAutoUpdateStatus: TfrmAutoUpdateStatus
     Width = 32
     Height = 32
   end
+  object TntLabel1: TTntLabel
+    Left = 40
+    Top = 26
+    Width = 64
+    Height = 13
+    Caption = 'What'#39's New?'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlue
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsUnderline]
+    ParentFont = False
+    OnClick = TntLabel1Click
+  end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 57
-    Width = 216
+    Top = 60
+    Width = 217
     Height = 32
     Align = alBottom
     AutoScroll = False
     TabOrder = 0
     inherited Panel2: TPanel
-      Width = 216
+      Width = 217
       Height = 32
       inherited Bevel1: TBevel
-        Width = 216
+        Width = 217
       end
       inherited Panel1: TPanel
-        Left = 56
+        Left = 57
         Height = 27
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
@@ -64,8 +78,8 @@ object frmAutoUpdateStatus: TfrmAutoUpdateStatus
   end
   object ProgressBar1: TProgressBar
     Left = 0
-    Top = 40
-    Width = 216
+    Top = 43
+    Width = 217
     Height = 17
     Align = alBottom
     Max = 1
@@ -89,6 +103,6 @@ object frmAutoUpdateStatus: TfrmAutoUpdateStatus
     Request.UserAgent = 'Mozilla/3.0 (compatible; Indy Library)'
     HTTPOptions = [hoForceEncodeParams]
     Left = 6
-    Top = 57
+    Top = 73
   end
 end

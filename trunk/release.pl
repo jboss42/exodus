@@ -49,21 +49,26 @@ chomp $version;
 print "$version\n";
 chdir ".." or die;
 
+my $urtype = uc($::RTYPE);
+my $cl = "ChangeLog-$urtype.txt";
 e("perl build.pl $::RTYPE");
 e("$::CVS ci -m \"$::RTYPE build\" exodus/version.h exodus/version.nsi exodus/default.po") if $::CVS;
-e("$::CVS tag -F " . uc($::RTYPE)) if $::CVS;
+
+e("perl cvs2cl.pl --delta $urtype:HEAD -f $cl");
+e("$::CVS tag -F $urtype") if $::CVS;
 
 chdir "exodus" or die;
 if ($::RTYPE eq "daily") {
-  e("$::SCP setup.exe Exodus.zip plugins/*.zip $userhost:$::ROOT/www/daily/stage");
-  e("$::SSH $userhost \"cd $::ROOT/www/daily/stage; chmod 644 *; mv setup.exe ..; mv Exodus.zip ..; mv *.zip ../plugins\"");
+  e("$::SCP ../$cl setup.exe Exodus.zip plugins/*.zip $userhost:$::ROOT/www/daily/stage");
+  e("$::SSH $userhost \"cd $::ROOT/www/daily/stage; chmod 644 *; mv setup.exe $cl ..; mv Exodus.zip ..; mv *.zip ../plugins\"");
 } else {
   my $uver;
   ($uver = $version) =~ s/\./_/g;
   e("$::CVS tag -F v_$uver") if $::CVS;
   e("$::SCP setup.exe $userhost:$::ROOT/files/exodus_$version.exe");
   e("$::SCP plugins/*.zip $userhost:$::ROOT/www/plugins");
-  e("$::SSH $userhost \"chmod 644 $::ROOT/files/exodus_$version.exe $::ROOT/www/plugins/*.zip\"");
+  e("$::SCP ../$cl $userhost:$::ROOT/www");
+  e("$::SSH $userhost \"chmod 644 $::ROOT/files/exodus_$version.exe $::ROOT/www/plugins/*.zip $::ROOT/www/$cl\"");
 }
 
 print "\n\nSUCCESS!\n";
