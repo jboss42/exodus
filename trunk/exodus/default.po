@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-06-19 09:33\n"
-"PO-Revision-Date: 2003-06-19 09:33\n"
+"POT-Creation-Date: 2003-06-25 11:09\n"
+"PO-Revision-Date: 2003-06-25 11:09\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -174,7 +174,7 @@ msgstr ""
 #. Programmer's name for it: sBtnClose
 #: MsgRecv.pas:162
 #. Programmer's name for it: sClose
-#: Transfer.pas:105
+#: Transfer.pas:139
 #. Programmer's name for it: sClose
 #: xdata.pas:65
 msgid "Close"
@@ -511,7 +511,7 @@ msgstr ""
 #. frmAutoUpdateStatus..HttpClient..Request.ContentType
 #: AutoUpdateStatus.dfm:86
 #. frmTransfer..httpClient..Request.ContentType
-#: Transfer.dfm:246
+#: Transfer.dfm:240
 #. frmWebDownload..IdHTTP1..Request.ContentType
 #: WebGet.dfm:75
 msgid "text/html"
@@ -520,7 +520,7 @@ msgstr ""
 #. frmAutoUpdateStatus..HttpClient..Request.Accept
 #: AutoUpdateStatus.dfm:87
 #. frmTransfer..httpClient..Request.Accept
-#: Transfer.dfm:247
+#: Transfer.dfm:241
 #. frmWebDownload..IdHTTP1..Request.Accept
 #: WebGet.dfm:76
 msgid "text/html, */*"
@@ -529,7 +529,7 @@ msgstr ""
 #. frmAutoUpdateStatus..HttpClient..Request.UserAgent
 #: AutoUpdateStatus.dfm:89
 #. frmTransfer..httpClient..Request.UserAgent
-#: Transfer.dfm:249
+#: Transfer.dfm:243
 #. frmWebDownload..IdHTTP1..Request.UserAgent
 #: WebGet.dfm:78
 msgid "Mozilla/3.0 (compatible; Indy Library)"
@@ -1376,6 +1376,7 @@ msgstr ""
 #: Jabber1.pas:417
 #. Programmer's name for it: sRosterAvail
 #: Jabber1.pas:424
+#: RosterWindow.pas:313
 msgid "Available"
 msgstr ""
 
@@ -1395,6 +1396,7 @@ msgstr ""
 #: Jabber1.pas:418
 #. Programmer's name for it: sRosterAway
 #: Jabber1.pas:426
+#: RosterWindow.pas:314
 msgid "Away"
 msgstr ""
 
@@ -1406,6 +1408,7 @@ msgstr ""
 #: Jabber1.pas:419
 #. Programmer's name for it: sRosterXA
 #: Jabber1.pas:427
+#: RosterWindow.pas:315
 msgid "Ext. Away"
 msgstr ""
 
@@ -1421,6 +1424,7 @@ msgstr ""
 #: Jabber1.pas:420
 #. Programmer's name for it: sRosterDND
 #: Jabber1.pas:428
+#: RosterWindow.pas:316
 msgid "Do Not Disturb"
 msgstr ""
 
@@ -5712,7 +5716,7 @@ msgstr ""
 #. Programmer's name for it: sBlock
 #: Room.pas:204
 #. Programmer's name for it: sBtnBlock
-#: RosterWindow.pas:270
+#: RosterWindow.pas:279
 msgid "Block"
 msgstr ""
 
@@ -5841,13 +5845,14 @@ msgstr ""
 #: Jabber1.pas:421
 #. Programmer's name for it: sRosterOffline
 #: Jabber1.pas:429
+#: RosterWindow.pas:312
 msgid "Offline"
 msgstr ""
 
 #. frmRosterWindow..pnlConnect..lblStatus..Caption
 #: RosterWindow.dfm:189
 #. Programmer's name for it: sDisconnected
-#: RosterWindow.pas:265
+#: RosterWindow.pas:274
 msgid "Disconnected."
 msgstr ""
 
@@ -6612,6 +6617,7 @@ msgstr ""
 
 #. Programmer's name for it: sGrpUnfiled
 #: Jabber1.pas:416
+#: RosterWindow.pas:317
 msgid "Unfiled"
 msgstr ""
 
@@ -7020,7 +7026,7 @@ msgstr ""
 #. Programmer's name for it: sUnblock
 #: Room.pas:205
 #. Programmer's name for it: sBtnUnBlock
-#: RosterWindow.pas:271
+#: RosterWindow.pas:280
 msgid "UnBlock"
 msgstr ""
 
@@ -7191,166 +7197,181 @@ msgid "You can not add yourself to your roster."
 msgstr ""
 
 #. Programmer's name for it: sRemoveBookmark
-#: RosterWindow.pas:256
+#: RosterWindow.pas:265
 msgid "Remove this bookmark?"
 msgstr ""
 
 #. Programmer's name for it: sRenameGrp
-#: RosterWindow.pas:257
+#: RosterWindow.pas:266
 msgid "Rename group"
 msgstr ""
 
 #. Programmer's name for it: sRenameGrpPrompt
-#: RosterWindow.pas:258
+#: RosterWindow.pas:267
 msgid "New group name:"
 msgstr ""
 
 #. Programmer's name for it: sNoContactsSel
-#: RosterWindow.pas:259
+#: RosterWindow.pas:268
 msgid "You must select one or more contacts."
 msgstr ""
 
 #. Programmer's name for it: sUnblockContacts
-#: RosterWindow.pas:260
+#: RosterWindow.pas:269
 msgid "Unblock %d contacts?"
 msgstr ""
 
 #. Programmer's name for it: sBlockContacts
-#: RosterWindow.pas:261
+#: RosterWindow.pas:270
 msgid "Block %d contacts?"
 msgstr ""
 
 #. Programmer's name for it: sNoBroadcast
-#: RosterWindow.pas:262
+#: RosterWindow.pas:271
 msgid "You must select more than one online contact to "
 "broadcast."
 msgstr ""
 
 #. Programmer's name for it: sSignOn
-#: RosterWindow.pas:263
+#: RosterWindow.pas:272
 msgid "Click to Sign On"
 msgstr ""
 
 #. Programmer's name for it: sCancelLogin
-#: RosterWindow.pas:264
+#: RosterWindow.pas:273
 msgid "Click to Cancel..."
 msgstr ""
 
 #. Programmer's name for it: sConnecting
-#: RosterWindow.pas:266
+#: RosterWindow.pas:275
 msgid "Trying to connect..."
 msgstr ""
 
 #. Programmer's name for it: sAuthenticating
-#: RosterWindow.pas:267
+#: RosterWindow.pas:276
 msgid "Connected. \n"
 "Authenticating..."
 msgstr ""
 
 #. Programmer's name for it: sAuthenticated
-#: RosterWindow.pas:268
+#: RosterWindow.pas:277
 msgid "Authenticated.\n"
 "Getting Settings..."
 msgstr ""
 
 #. Programmer's name for it: sMyResources
-#: RosterWindow.pas:272
+#: RosterWindow.pas:281
+#: RosterWindow.pas:319
 msgid "My Resources"
 msgstr ""
 
 #. Programmer's name for it: sNetMeetingConnError
-#: RosterWindow.pas:274
+#: RosterWindow.pas:283
 msgid "Your connection type does not support direct "
 "connections."
 msgstr ""
 
+#: RosterWindow.pas:318
+msgid "Bookmarks"
+msgstr ""
+
 #. Programmer's name for it: sXferRecv
-#: Transfer.pas:99
+#: Transfer.pas:133
 msgid "%s is sending you a file."
 msgstr ""
 
 #. Programmer's name for it: sXferURL
-#: Transfer.pas:100
+#: Transfer.pas:134
 msgid "File transfer URL: "
 msgstr ""
 
 #. Programmer's name for it: sXferDesc
-#: Transfer.pas:101
+#: Transfer.pas:135
 msgid "File Description: "
 msgstr ""
 
 #. Programmer's name for it: sXferOnline
-#: Transfer.pas:102
+#: Transfer.pas:136
 msgid "The Contact must be online before you can send a "
 "file."
 msgstr ""
 
 #. Programmer's name for it: sSend
-#: Transfer.pas:103
+#: Transfer.pas:137
 msgid "Send"
 msgstr ""
 
 #. Programmer's name for it: sOpen
-#: Transfer.pas:104
+#: Transfer.pas:138
 msgid "Open"
 msgstr ""
 
 #. Programmer's name for it: sTo
-#: Transfer.pas:106
+#: Transfer.pas:140
 msgid "To:     "
 msgstr ""
 
 #. Programmer's name for it: sXferOverwrite
-#: Transfer.pas:107
+#: Transfer.pas:141
 msgid "This file already exists. Overwrite?"
 msgstr ""
 
 #. Programmer's name for it: sXferWaiting
-#: Transfer.pas:108
+#: Transfer.pas:142
 msgid "Waiting for connection..."
 msgstr ""
 
 #. Programmer's name for it: sXferSending
-#: Transfer.pas:109
+#: Transfer.pas:143
 msgid "Sending file..."
 msgstr ""
 
 #. Programmer's name for it: sXferRecvDisconnected
-#: Transfer.pas:110
+#: Transfer.pas:144
 msgid "Receiver disconnected."
 msgstr ""
 
 #. Programmer's name for it: sXferTryingClose
-#: Transfer.pas:111
+#: Transfer.pas:145
 msgid "Trying to close."
 msgstr ""
 
+#. Programmer's name for it: sXferDone
+#: Transfer.pas:146
+msgid "File transfer is done."
+msgstr ""
+
 #. Programmer's name for it: sXferConn
-#: Transfer.pas:112
+#: Transfer.pas:147
 msgid "Got connection."
 msgstr ""
 
 #. Programmer's name for it: sXferDefaultDesc
-#: Transfer.pas:113
+#: Transfer.pas:148
 msgid "Sending you a file."
 msgstr ""
 
 #. Programmer's name for it: sXferCreateDir
-#: Transfer.pas:114
+#: Transfer.pas:149
 msgid "This directory does not exist. Create "
 "it?"
 msgstr ""
 
 #. Programmer's name for it: sXferStreamError
-#: Transfer.pas:115
+#: Transfer.pas:150
 msgid "There was an error trying to create the "
 "file."
 msgstr ""
 
 #. Programmer's name for it: sXferDavError
-#: Transfer.pas:116
+#: Transfer.pas:151
 msgid "There was an error trying to upload the file to your web "
 "host."
+msgstr ""
+
+#. Programmer's name for it: sXferRecvError
+#: Transfer.pas:152
+msgid "There was an error receiving the file."
 msgstr ""
 
 #. Programmer's name for it: sTransportRemove
