@@ -3,9 +3,9 @@ unit stringprep;
 interface
 
 // Jabber idn stuff
-function jabber_nodeprep(input: PChar): PChar; cdecl; external 'libidn.dll' name 'jabber_nodeprep';
-function jabber_nameprep(input: PChar): PChar; cdecl; external 'libidn.dll' name 'jabber_nameprep';
-function jabber_resourceprep(input: PChar): PChar; cdecl; external 'libidn.dll' name 'jabber_resourceprep';
+function jabber_nodeprep(input: PChar; output: PChar; buf_sz: integer): integer; cdecl; external 'libidn.dll' name 'jabber_nodeprep';
+function jabber_nameprep(input: PChar; output: PChar; buf_sz: integer): integer; cdecl; external 'libidn.dll' name 'jabber_nameprep';
+function jabber_resourceprep(input: PChar; output: PChar; buf_sz: integer): integer; cdecl; external 'libidn.dll' name 'jabber_resourceprep';
 
 // Our stuff
 function xmpp_nodeprep(input: Widestring): Widestring;
@@ -19,14 +19,13 @@ uses
 function xmpp_nodeprep(input: Widestring): Widestring;
 var
     uin: String;
-    uout: PChar;
+    uout: array[0..1024] of Char;
 begin
     Result := '';
     try
         uin := UTF8Encode(input);
-        uout := jabber_nodeprep(PChar(uin));
-        Result := UTF8Decode(uout);
-        if (uout <> nil) then SysFreeMem(uout);
+        if (jabber_nodeprep(PChar(uin), @uout, 1024) = 0) then
+            Result := UTF8Decode(uout);
     except
     end;
 end;
@@ -34,14 +33,13 @@ end;
 function xmpp_nameprep(input: Widestring): Widestring;
 var
     uin: String;
-    uout: PChar;
+    uout: array[0..1024] of Char;
 begin
     Result := '';
     try
         uin := UTF8Encode(input);
-        uout := jabber_nameprep(PChar(uin));
-        Result := UTF8Decode(uout);
-        if (uout <> nil) then SysFreeMem(uout);
+        if (jabber_nameprep(PChar(uin), @uout, 1024) = 0) then
+            Result := UTF8Decode(uout);
     except
     end;
 end;
@@ -49,14 +47,13 @@ end;
 function xmpp_resourceprep(input: Widestring): Widestring;
 var
     uin: String;
-    uout: PChar;
+    uout: array[0..1024] of Char;
 begin
     Result := '';
     try
         uin := UTF8Encode(input);
-        uout := jabber_resourceprep(PChar(uin));
-        Result := UTF8Decode(uout);
-        if (uout <> nil) then SysFreeMem(uout);
+        if (jabber_resourceprep(PChar(uin), @uout, 1024) = 0) then
+            Result := UTF8Decode(uout);
     except
     end;
 end;
