@@ -3,7 +3,7 @@ object frmConnDetails: TfrmConnDetails
   Top = 169
   Width = 304
   Height = 323
-  ActiveControl = cboConnection
+  ActiveControl = txtUsername
   Caption = 'Connection Details'
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -45,7 +45,7 @@ object frmConnDetails: TfrmConnDetails
     Top = 0
     Width = 296
     Height = 257
-    ActivePage = tbsConn
+    ActivePage = tbsProfile
     Align = alClient
     TabOrder = 1
     object tbsProfile: TTntTabSheet
