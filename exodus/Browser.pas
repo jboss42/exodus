@@ -38,7 +38,7 @@ type
 
     constructor create;
     destructor destroy; override;
-    end;
+end;
 
   TfrmBrowse = class(TfrmDockable)
     Panel3: TPanel;
@@ -231,12 +231,12 @@ begin
         pRegister.Visible := false;
         pSearch.Visible := false;
         pConf.Visible := false;
-    end;
+end;
 
     if (_iq <> nil) then begin
         _iq.Free();
         _iq := nil;
-        end;
+    end;
 
 end;
 
@@ -261,35 +261,35 @@ begin
     if (cat = 'service') then begin
         image_index := 5;
         title := sService;
-        end
+    end
     else if (cat = 'conference') then begin
         image_index := 1;
         title := sConference;
-        end
+    end
     else if (cat = 'user') then begin
         image_index := 0;
         title := sUser;
-        end
+    end
     else if (cat = 'application') then begin
         image_index := 7;
         title := sApplication;
-        end
+    end
     else if (cat = 'headline') then begin
         image_index := 6;
         title := sHeadline;
-        end
+    end
     else if (cat = 'render') then begin
         image_index := 2;
         title := sRender;
-        end
+    end
     else if (cat = 'keyword') then begin
         image_index := 3;
         title := sKeyword;
-        end
+    end
     else begin
         image_index := 4;
         title := sItem;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -314,7 +314,7 @@ begin
         ImageList2.GetBitmap(idx, bmp);
         imgIcon.Picture.Assign(bmp);
         bmp.Free();
-        end;
+    end;
 
     Self.SetupTitle(title, tag.GetAttribute('name'), '');
     StatBar.Panels[0].Text := IntToStr(_blist.Count) + ' ' + sObjects;
@@ -333,8 +333,8 @@ begin
                 pSearch.Visible := true;
             if (cur_ns = XMLNS_CONFERENCE) then
                 pConf.Visible := true;
-            end;
         end;
+    end;
 
     StopBar;
 end;
@@ -369,7 +369,7 @@ begin
         ns := tag.QueryTags('ns');
         for i := 0 to ns.Count - 1 do
             nslist.Add(ns[i].Data);
-        end;
+    end;
     _blist.Add(itm);
 end;
 
@@ -383,7 +383,7 @@ begin
     if (not isValidJID(jid)) then begin
         MessageDlg(sInvalidJID, mtError, [mbOK], 0);
         exit;
-        end;
+    end;
 
     StartList;
     StartBar;
@@ -395,8 +395,8 @@ begin
             // we have the tag in the cache
             BrowseCallback('cache', TXMLTag(browseCache.Objects[i]));
             exit;
-            end;
         end;
+    end;
 
     // do the browse query
     id := MainSession.generateID();
@@ -406,7 +406,7 @@ begin
         iqType := 'get';
         toJid := jid;
         Send();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -428,7 +428,7 @@ begin
         // clear the history stack from here.
         for i := _history.count - 1 downto _cur + 1 do
             _history.Delete(i);
-        end;
+    end;
 
     _history.Add(jid);
     hi := _history.Count - 1;
@@ -495,7 +495,7 @@ begin
         _cur := 0;
         btnBack.Enabled := false;
         exit;
-        end;
+    end;
 
     btnFwd.Enabled := true;
     cboJID.Text := _history[_cur];
@@ -512,7 +512,7 @@ begin
         _cur := _History.Count;
         btnFwd.Enabled := false;
         exit;
-        end;
+    end;
     btnBack.Enabled := true;
     DoBrowse(_history[_cur], false);
     if _cur = _history.Count then btnFwd.Enabled := false;
@@ -528,7 +528,7 @@ begin
     if itm <> nil then begin
         cboJID.Text := itm.SubItems[0];
         btnGOClick(Self);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -537,16 +537,16 @@ begin
     // Change the View
     if Sender = Details1 then begin
         vwBrowse.ViewStyle := vsReport;
-        end
+    end
     else if Sender = LargeIcons1 then begin
         vwBrowse.ViewStyle := vsIcon;
-        end
+    end
     else if Sender = SmallIcons1 then begin
         vwBrowse.ViewStyle := vsSmallIcon;
-        end
+    end
     else if Sender = List1 then begin
         vwBrowse.ViewStyle := vsList;
-        end;
+    end;
 
     MainSession.Prefs.setInt('browse_view', integer(vwBrowse.ViewStyle));
 
@@ -590,7 +590,7 @@ begin
         mSearch.Enabled := IndexOf(XMLNS_SEARCH) >= 0;
         mRegister.Enabled := IndexOf(XMLNS_REGISTER) >= 0;
         mJoinConf.Enabled := IndexOf(XMLNS_CONFERENCE) >= 0;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -605,7 +605,7 @@ begin
     else begin
         if vwBrowse.Selected = nil then exit;
         j := vwBrowse.Selected.SubItems[0];
-        end;
+    end;
 
     regform := TfrmRegister.Create(Application);
     regform.jid := j;
@@ -643,7 +643,7 @@ begin
         if Sender = mVersion then jabberSendCTCP(jid, XMLNS_VERSION);
         if Sender = mTime then jabberSendCTCP(jid, XMLNS_TIME);
         if Sender = mLast then jabberSendCTCP(jid, XMLNS_LAST);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -703,7 +703,7 @@ begin
     else begin
         itm := vwBrowse.Selected;
         j := itm.SubItems[0];
-        end;
+    end;
 
     if (j <> '') then
         StartSearch(j);
@@ -735,7 +735,7 @@ begin
             Self.ShowError(tag);
             _iq := nil;
             exit;
-            end;
+        end;
 
         // we have some kind of result
         clist := tag.ChildTags();
@@ -743,7 +743,7 @@ begin
             Self.ShowError(tag);
             _iq := nil;
             exit;
-            end;
+        end;
 
         ptag := clist[0];
         clist.Free();
@@ -753,7 +753,7 @@ begin
         for i := 0 to clist.Count - 1 do begin
             if (clist[i].Name <> 'ns') then
                 ShowBrowse(clist[i]);
-            end;
+        end;
         ShowMain(ptag);
 
         if (event <> 'cache') then begin
@@ -767,12 +767,12 @@ begin
             else begin
                 TXMLTag(browseCache.Objects[i]).Free();
                 browseCache.Objects[i] := dup;
-                end;
             end;
-        end
+        end;
+    end
     else begin
         // probably a timeout
-        end;
+    end;
 
     vwBrowse.Items.Count := _blist.Count;
     _iq := nil;
@@ -793,7 +793,7 @@ begin
         ImageIndex := b.img_idx;
         SubItems.Add(b.jid);
         SubItems.Add(b.stype);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -819,7 +819,7 @@ begin
     if (cur_sort = -1) then begin
         Result := 0;
         exit;
-        end;
+    end;
 
     j1 := TBrowseItem(Item1);
     j2 := TBrowseItem(Item2);
@@ -828,20 +828,20 @@ begin
     0: begin
         s1 := j1.name;
         s2 := j2.name;
-        end;
+    end;
     1: begin
         s1 := j1.jid;
         s2 := j2.jid;
-        end;
+    end;
     2: begin
         s1 := j1.stype;
         s2 := j2.stype;
-        end
+    end
     else begin
         Result := 0;
         exit;
-        end;
     end;
+end;
 
     if (cur_dir) then
         Result := StrComp(PChar(LowerCase(s1)),

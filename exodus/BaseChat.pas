@@ -107,11 +107,11 @@ begin
     if (Self.Docked) then begin
         t := frmExodus.Top + frmExodus.ClientHeight - 10;
         frmEmoticons.Left := l + 10;
-        end
+    end
     else begin
         t := Self.Top + Self.ClientHeight - 10;
         frmEmoticons.Left := l + 10;
-        end;
+    end;
 
     if ((t + frmEmoticons.Height) > Screen.Height) then
         t := Screen.Height - frmEmoticons.Height;
@@ -141,16 +141,16 @@ begin
             if (eo.idx = imgIndex) then begin
                 m := i;
                 break;
-                end;
             end;
         end;
+    end;
 
     if (m >= 0) then begin
         l := length(MsgOut.Text);
         if ((l > 0) and ((MsgOut.Text[l]) <> ' ')) then
             MsgOut.SelText := ' ';
         MsgOut.SelText := emoticon_list[m];
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -193,20 +193,20 @@ begin
                 if (cur_buff[i] <> ' ') then begin
                     start := false;
                     dec(i);
-                    end;
-                end
+                end;
+            end
             else if (cur_buff[i] = ' ') then
                 break;
 
             dec(i);
-            end;
+        end;
 
         if (i >= 0) then with MsgOut do begin
             SelStart := i;
             SelLength := (e - i);
             SelText := '';
-            end;
         end;
+    end;
 
     if (key <> #0) then
         inherited;
@@ -226,24 +226,24 @@ begin
         if (_lastMsg < 0) then begin
             _lastMsg := 0;
             exit;
-            end;
+        end;
         m := _msgHistory[_lastMsg];
         MsgOut.Text := m;
         MsgOut.SelStart := length(m);
         MsgOut.SetFocus();
-        end
+    end
     else if ((Key = VK_DOWN) and (Shift = [ssCtrl])) then begin
         if (_lastMsg = _msgHistory.Count) then exit;
         inc(_lastMsg);
         if (_lastMsg >= _msgHistory.Count) then begin
             _lastMsg := _msgHistory.Count - 1;
             exit;
-            end;
+        end;
         m := _msgHistory[_lastMsg];
         MsgOut.Text := m;
         MsgOut.SelStart := length(m);
         MsgOut.SetFocus();
-        end
+    end
     else
         inherited;
 end;
@@ -258,19 +258,19 @@ begin
     if ((Key = VK_TAB) and (ssCtrl in Shift) and (self.Docked))then begin
         Self.TabSheet.PageControl.SelectNextPage(not (ssShift in Shift));
         Key := 0;
-        end
+    end
 
     // handle Ctrl-ENTER and ENTER to send msgs
     else if (Key = VK_RETURN) then begin
         if ((Shift = []) and (not _embed_returns)) then begin
             Key := 0;
             SendMsg();
-            end
+        end
         else if (Shift = [ssCtrl]) then begin
             Key := 0;
             SendMsg()
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -299,7 +299,7 @@ begin
             pnlInput.Height := ht
         else
             MainSession.prefs.setInt('chat_textbox', pnlInput.Height);
-        end;
+    end;
 
     inherited;
 end;
@@ -324,7 +324,7 @@ begin
     if (pnlInput.Visible) then begin
         MsgOut.SetFocus();
         MsgOut.SelText := Key;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -403,7 +403,7 @@ begin
     if ((Button = mbRight) and (MsgList.PopupMenu <> nil)) then begin
         GetCursorPos(cp);
         MsgList.PopupMenu.Popup(cp.x, cp.y);
-        end;
+    end;
 end;
 
 end.

@@ -121,8 +121,8 @@ begin
             if (Lowercase(Copy(_body, 1, 4)) = '/me ') then begin
                 _action := true;
                 Delete(_body, 1, 4);
-                end;
             end;
+        end;
 
         _isxdata := (mtag.QueryXPTag(XP_MSGXDATA) <> nil);
 
@@ -138,8 +138,8 @@ begin
         else begin
             // we have a delay tag
             _time := JabberToDateTime(t.getAttribute('stamp'));
-            end
-        end;
+        end
+    end;
 end;
 
 {---------------------------------------}
@@ -188,7 +188,7 @@ begin
         if _action then raw_body := '/me ' + raw_body;
 
         AddBasicTag('body', raw_body);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -201,7 +201,7 @@ begin
     if (Pos ('/me', _body) = 1) then begin
         _action := true;
         Delete(_body, 1, 3);
-        end
+    end
     else
         _action := false;
 

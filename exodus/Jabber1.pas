@@ -537,7 +537,7 @@ begin
     with Params do begin
         ExStyle := ExStyle or WS_EX_APPWINDOW;
         WndParent := GetDesktopWindow();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -551,23 +551,23 @@ begin
         _hidden := true;
         ShowWindow(Handle, SW_HIDE);
         msg.Result := 0;
-        end;
+    end;
     SC_RESTORE: begin
         ShowWindow(Handle, SW_RESTORE);
         msg.Result := 0;
-        end;
+    end;
     SC_CLOSE: begin
         if ((_close_min) and (not _shutdown)) then begin
             _hidden := true;
             ShowWindow(Handle, SW_HIDE);
             msg.Result := 0;
-            end
+        end
         else
             inherited;
-        end;
+    end;
     else
         inherited;
-    end;
+end;
 end;
 
 {---------------------------------------}
@@ -585,24 +585,24 @@ begin
             ShowWindow(Handle, SW_RESTORE);
             SetForegroundWindow(Self.Handle);
             msg.Result := 0;
-            end
+        end
         else begin
             _hidden := true;
             self.WindowState := wsMinimized;
             ShowWindow(Handle, SW_HIDE);
             PostMessage(Self.handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
-            end;
-        end
+        end;
+    end
     else if ((Msg.LParam = WM_LBUTTONDOWN) and (not Application.Active) and (not _hidden))then begin
         SetForegroundWindow(Self.Handle);
-        end
+    end
 
     else if (Msg.LParam = WM_RBUTTONDOWN) then begin
         GetCursorPos(cp);
         SetForegroundWindow(Self.Handle);
         Application.ProcessMessages;
         popTray.Popup(cp.x, cp.y);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -676,7 +676,7 @@ begin
 
         _shutdown := true;
         Self.Close;
-        end;
+    end;
 end;
 
 
@@ -799,12 +799,12 @@ begin
                      Ord('?'): show_help := true;
                      Ord('w'): _cli_show := OptArg;
                      Ord('s'): _cli_status := OptArg;
-                  end;
-                end;
+              end;
+            end;
             finally
                 Free
-            end;
         end;
+    end;
 
         if (_testaa) then
             _auto_away_interval := 1
@@ -829,7 +829,7 @@ begin
             help_msg := help_msg + sCmdConfig;
             MessageDlg(help_msg, mtInformation, [mbOK], 0);
             Halt;
-            end;
+        end;
 
         if (config = '') then
             config := getUserDir() + 'exodus.xml';
@@ -843,14 +843,14 @@ begin
                 ExtractFileName(config)));
             if (_mutex <> 0) and (GetLastError = 0) then begin
                 // we are good to go..
-                end
+            end
             else begin
                 // We are not good to go..
                 // Send the Windows Msg, and bail.
                 PostMessage(HWND_BROADCAST, sExodusMutex, 0, 0);
                 Halt;
-                end;
             end;
+        end;
 
         _guibuilder := TGUIFactory.Create();
         _guibuilder.SetSession(MainSession);
@@ -885,7 +885,7 @@ begin
                     profile_name := jid.jid
                 else if (Profiles.Count = 0) then
                     profile_name := sDefaultProfile;
-                end;
+            end;
 
             // if a profile was specified, use it, or create it if it doesn't exist.
             if (profile_name <> '') then begin
@@ -905,14 +905,14 @@ begin
                     if (_cli_priority = -1) then
                         _cli_priority := 0;
                         }
-                    end
+                end
                 else
                     profile := TJabberProfile(Profiles.Objects[_prof_index]);
 
                 if (jid <> nil) then begin
                     profile.Username := jid.user;
                     profile.Server := jid.domain;
-                    end;
+                end;
 
                 if (resource <> '') then
                     profile.Resource := resource;
@@ -927,29 +927,29 @@ begin
                 if (profile.IsValid()) then begin
                     setInt('profile_active', _prof_index);
                     _auto_login := true;
-                    end;
-                end
+                end;
+            end
             else begin
                 _prof_index := getInt('profile_active');
                 _auto_login := getBool('autologin');
-                end;
+            end;
 
             if (minimized) then begin
                 _hidden := true;
                 self.WindowState := wsMinimized;
                 ShowWindow(Handle, SW_HIDE);
                 PostMessage(Self.handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
-                end;
+            end;
 
             MainSession.Invisible := invisible;
             if (debug) then ShowDebugForm();
-            end;
+        end;
     except
         on E : EConfigException do begin
             MessageDlg(E.Message, mtError, [mbOK], 0);
             Halt;
-        end;
     end;
+end;
 
     // Setup callbacks
     _sessioncb := MainSession.RegisterCallback(SessionCallback, '/session');
@@ -1047,7 +1047,7 @@ begin
         hIcon := picon.Handle;
         strPCopy(szTip, sExodus);
         cbSize := SizeOf(_tray);
-        end;
+    end;
     Shell_NotifyIcon(NIM_ADD, @_tray);
     picon.Free();
 end;
@@ -1066,7 +1066,7 @@ begin
         frmMsgQueue.ManualDock(Self.pnlRight, nil, alClient);
         frmMsgQueue.Align := alClient;
         frmMsgQueue.Show;
-        end;
+    end;
 
     // auto-login if enabled, otherwise, show the login window
     // Note that we use a Windows Msg to do this to show the login
@@ -1079,10 +1079,10 @@ begin
                 MainSession.Priority := _cli_priority;
 
             Self.DoConnect();
-            end
+        end
         else
             PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1099,7 +1099,7 @@ begin
         if ((not InputQueryW(sPasswordCaption, sPasswordPrompt, pw, True)) or
             (pw = '')) then exit;
         MainSession.Password := pw;
-        end;
+    end;
     MainSession.FireEvent('/session/connecting', nil);
     MainSession.Connect();
 end;
@@ -1130,11 +1130,11 @@ begin
             DebugMsg('_StopHooks = ' + IntToStr(integer(@_StopHooks)));
 
             _InitHooks();
-            end
+        end
         else
             DebugMsg(sAutoAwayFail);
         last_tick := GetTickCount();
-        end
+    end
     else begin
         // Use the GetLastInputInfo API call
         // do nothing here..
@@ -1142,7 +1142,7 @@ begin
             DebugMsg(sAutoAwayWin32)
         else
             DebugMsg(sAutoAwayFailWin32);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1178,31 +1178,31 @@ begin
         Self.Caption := MainSession.Prefs.getString('brand_caption') + ' - ' + MainSession.Username + '@' + MainSession.Server;
         setTrayInfo(Self.Caption);
         setTrayIcon(1);
-        end
+    end
 
     else if event = '/session/autherror' then begin
         _logoff := true;
         MessageDlg(sAuthError, mtError, [mbOK], 0);
         PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
         exit;
-        end
+    end
 
     else if event = '/session/regerror' then begin
         _logoff := true;
         MessageDlg(sRegError, mtError, [mbOK], 0);
         exit;
-        end
+    end
 
     else if event = '/session/noaccount' then begin
         if (MessageDlg(sAuthNoAccount, mtConfirmation, [mbYes, mbNo], 0) = mrNo) then begin
             // Just disconnect, they don't want an account
             _logoff := true;
             MainSession.Disconnect()
-            end
+        end
         else
             // create the new account
             MainSession.CreateAccount();
-        end
+    end
 
     else if event = '/session/authenticated' then with MainSession do begin
         // Accept files dragged from Explorer
@@ -1235,7 +1235,7 @@ begin
 
         // check for new version
         InitAutoUpdate();
-        end
+    end
 
     else if (event = '/session/disconnected') then begin
         // Make sure windows knows we don't want files
@@ -1273,30 +1273,30 @@ begin
                 _reconnect_cur := 0;
                 frmRosterWindow.aniWait.Visible := false;
                 PostMessage(Self.Handle, WM_RECONNECT, 0, 0);
-                end
+            end
             else
                 DebugMsg('Attempted to reconnect too many times.');
-            end
+        end
         else begin
             _last_show := '';
             _last_status := '';
-            end;
-        end
+        end;
+    end
     else if event = '/session/commtimeout' then begin
         timAutoAway.Enabled := false;
         _logoff := true;
-        end
+    end
 
     else if event = '/session/commerror' then begin
         timAutoAway.Enabled := false;
-        end
+    end
 
     else if event = '/session/stream:error' then begin
         // we got a stream error.
         // _logoff is set to tell the client to NOT to auto-reconnect
         // This prevents the clients from resource-battling
         _logoff := true;
-        end
+    end
 
     else if event = '/session/prefs' then begin
         // some private vars we want to cache
@@ -1308,7 +1308,7 @@ begin
             _close_min := getBool('close_min');
             _auto_away := getBool('auto_away');
             use_emoticons := getBool('emoticons');
-            end;
+        end;
 
         // setup the Exodus window..
         if (MainSession.Prefs.getBool('window_ontop')) then
@@ -1322,13 +1322,13 @@ begin
             if (Self.BorderStyle <> bsSizeToolWin) then begin
                 // todo: requires a restart of the application
                 Self.BorderStyle := bsSizeToolWin;
-                end;
-            end
+            end;
+        end
         else begin
             if (Self.BorderStyle <> bsSizeable) then begin
                 Self.BorderStyle := bsSizeable;
-                end;
             end;
+        end;
 
         // reset the tray icon stuff
         Shell_NotifyIcon(NIM_DELETE, @_tray);
@@ -1344,7 +1344,7 @@ begin
         
         if not MainSession.Prefs.getBool('expanded') then
             tbsRoster.TabVisible := false;
-        end
+    end
 
     else if (event = '/session/presence') then begin
         // Our presence was changed.. reflect that in the tray icon
@@ -1368,7 +1368,7 @@ begin
         msg.LParamHi := GetPresenceAtom(MainSession.Show);
         msg.LParamLo := GetPresenceAtom(MainSession.Status);
         PostMessage(HWND_BROADCAST, sExodusPresence, self.Handle, msg.LParam);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1381,13 +1381,13 @@ begin
         btnOnlineRoster.Down := getBool('roster_only_online');
         if getBool('expanded') then begin
             btnExpanded.ImageIndex := 9;
-            end
+        end
         else begin
             btnExpanded.ImageIndex := 8;
-            end;
+        end;
         Toolbar.Visible := getBool('toolbar');
         mnuToolbar.Checked := Toolbar.Visible;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1408,8 +1408,8 @@ begin
             frmMsgQueue.lstEvents.Color := TColor(getInt('roster_bg'));
             frmMsgQueue.txtMsg.Color := TColor(getInt('roster_bg'));
             AssignDefaultFont(frmMsgQueue.txtMsg.Font);
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1483,7 +1483,7 @@ begin
 
         trayCustom.Add(mnu);
         cp.Free();
-        end;
+    end;
 
     plist.Clear();
     plist.Free();
@@ -1523,7 +1523,7 @@ begin
             b := 'This msg contains a URL: '#13#10;
             b := b + xoob.GetBasicText('desc');
             b := b + xoob.GetBasicText('url');
-            end;
+        end;
 
         // if we have a normal msg (not a headline),
         // check for msg_treatments.
@@ -1539,20 +1539,20 @@ begin
                 if (cc = nil) then
                     cc := MainSession.ChatList.FindChat(tmp_jid.jid, tmp_jid.resource, '');
                 if (cc <> nil) then exit;
-                end;
             end;
+        end;
 
         if MainSession.IsPaused then begin
             with tag.AddTag('x') do begin
                 setAttribute('xmlns', XMLNS_DELAY);
                 setAttribute('stamp', DateTimeToJabber(Now + TimeZoneBias()));
-                end;
+            end;
             MainSession.QueueEvent(event, tag, Self.MsgCallback)
-            end
+        end
         else begin
             e := CreateJabberEvent(tag);
             RenderEvent(e);
-            end;
+        end;
 
         // log the msg if we're logging.
         if (MainSession.Prefs.getBool('log')) then begin
@@ -1565,8 +1565,8 @@ begin
                 msg.Nick := msg.FromJID;
             LogMessage(msg);
             msg.Free();
-            end;
         end;
+    end;
 
     tmp_jid.Free();
 end;
@@ -1584,8 +1584,8 @@ begin
             e := CreateJabberEvent(tag);
             e.elapsed_time := SafeInt(tag.GetAttribute('iq_elapsed_time'));
             RenderEvent(e);
-            end;
-        end
+        end;
+    end
 end;
 
 {---------------------------------------}
@@ -1594,46 +1594,53 @@ var
     msg: string;
     img_idx: integer;
     mqueue: TfrmMsgQueue;
+    tmp_jid: TJabberID;
 begin
     // create a listview item for this event
+    tmp_jid := TJabberID.Create(e.from);
     case e.etype of
     evt_Time: begin
         img_idx := 12;
         msg := e.data_type;
         e.Data.Add(Format(sMsgPing, [IntToStr(e.elapsed_time)]));
-        end;
+    end;
 
     evt_Message: begin
         img_idx := 18;
         msg := e.data_type;
         DoNotify(nil, 'notify_normalmsg',
-                 sMsgMessage + TJabberID.Create(e.from).jid, img_idx);
+                 sMsgMessage + tmp_jid.jid, img_idx);
         if (e.error) then img_idx := ico_error;
-        end;
+    end;
 
     evt_Invite: begin
         img_idx := 21;
         msg := e.data_type;
         DoNotify(nil, 'notify_invite',
-                 sMsgInvite + TJabberID.Create(e.from).jid, img_idx);
-        end;
+                 sMsgInvite + tmp_jid.jid, img_idx);
+    end;
 
     evt_RosterItems: begin
         img_idx := 26;
         msg := e.data_type;
-        end;
+    end;
 
     else begin
         img_idx := 12;
         msg := e.data_type;
-        end;
     end;
+    end;
+
+    tmp_jid.Free();
 
     if MainSession.Prefs.getBool('expanded') then begin
         getMsgQueue().LogEvent(e, msg, img_idx);
         if ((MainSession.Prefs.getInt('invite_treatment') = invite_popup) and
-            (e.eType = evt_Invite)) then ShowEvent(e)
-        end
+            (e.eType = evt_Invite)) then begin
+            ShowEvent(e);
+            e.Free();
+        end;
+    end
 
     else if (e.delayed) or (MainSession.Prefs.getBool('msg_queue')) then begin
         // we are collapsed, but this event was delayed (offline'd)
@@ -1641,12 +1648,16 @@ begin
         // so display it in the msg queue, not live
         mqueue := getMsgQueue();
         mqueue.Show;
-        mqueue.LogEvent(e, msg, img_idx);
-        end
 
-    else
+        // Note that LogEvent takes ownership of e
+        mqueue.LogEvent(e, msg, img_idx);
+    end
+
+    else begin
         // we are collapsed, just display in regular windows
         ShowEvent(e);
+        e.Free();
+    end;
 end;
 
 {---------------------------------------}
@@ -1656,11 +1667,11 @@ begin
     if MainSession.Active then begin
         _logoff := true;
         MainSession.Disconnect();
-        end
+    end
     else begin
         _reconnect_tries := 0;
         ShowLogin;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1678,7 +1689,7 @@ begin
             MainSession.Stream.Disconnect();
             CanClose := false;
             exit;
-            end;
+        end;
 
         // Unload all of the remaining plugins
         UnloadPlugins();
@@ -1687,7 +1698,7 @@ begin
         MainSession.UnRegisterCallback(_sessioncb);
         MainSession.UnRegisterCallback(_msgcb);
         MainSession.Prefs.SavePosition(Self);
-        end;
+    end;
 
     // kill all of the auto-responders..
     cleanupResponders();
@@ -1696,19 +1707,19 @@ begin
     if (_hookLib <> 0) then begin
         _StopHooks();
         _hookLib := 0;
-        end;
+    end;
 
     // Free the Richedit library
     if (_richedit <> 0) then begin
         FreeLibrary(_richedit);
         _richedit := 0;
-        end;
+    end;
 
     // Close up the msg queue
     if (frmMsgQueue <> nil) then begin
         frmMsgQueue.lstEvents.Items.Clear;
         frmMsgQueue.Close;
-        end;
+    end;
 
     // If we have a session, close it up
     // and all of the associated windows
@@ -1726,12 +1737,12 @@ begin
 
         MainSession.Free();
         MainSession := nil;
-        end;
+    end;
 
     if (_mutex <> 0) then begin
         CloseHandle(_mutex);
         _mutex := 0;
-        end;
+    end;
 
     // Kill the tray icon stuff
     if (_tray_icon <> nil) then
@@ -1761,7 +1772,7 @@ begin
         setBool('roster_only_online', e);
         btnOnlineRoster.Down := e;
         mnuOnline.Checked := e;
-        end;
+    end;
 
     if MainSession.Active then begin
         frmRosterWindow.Redraw;
@@ -1769,7 +1780,7 @@ begin
         if ((MainSession.Prefs.getBool('expanded')) and
             (Tabs.ActivePage <> tbsRoster)) then
             Tabs.ActivePage := tbsRoster;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1824,7 +1835,7 @@ begin
         w := MainSession.Prefs.getInt('event_width');
         Self.ClientWidth := Self.ClientWidth + w - delta;
         restoreRoster();
-        end
+    end
     else begin
         // we are compressed now
         w := pnlRight.Width;
@@ -1832,7 +1843,7 @@ begin
         restoreRoster();
         Self.ClientWidth := Self.ClientWidth - w;
         Self.Show;
-        end;
+    end;
 
 
     MainSession.Prefs.RestorePosition(Self);
@@ -1877,11 +1888,11 @@ begin
             pnlRoster.Align := alLeft;
             SplitterRight.align := alRight;
             SplitterRight.align := alLeft;
-            end
+        end
         else begin
             pnlRoster.Align := alClient;
-            end;
-        end
+        end;
+    end
     else begin
         if ((frmRosterWindow <> nil) and (frmRosterWindow.inMessenger)) then
             frmRosterWindow.DockRoster();
@@ -1901,11 +1912,11 @@ begin
             pnlLeft.Align := alLeft;
             SplitterLeft.align := alRight;
             SplitterLeft.Align := alLeft;
-            end
+        end
         else begin
             pnlLeft.Align := alClient;
-            end;
         end;
+    end;
 
     // Show or hide the MsgQueue
     // Tabs.Visible := (expanded);
@@ -1921,7 +1932,7 @@ begin
             frmMsgQueue.ManualDock(pnlRight, nil, alClient);
             frmMsgQueue.Show;
             frmMsgQueue.Align := alClient;
-            end;
+        end;
 
         // make sure the debug window is docked
         active_tab := Tabs.ActivePage.PageIndex;
@@ -1929,7 +1940,7 @@ begin
         Tabs.ActivePage := Tabs.Pages[active_tab];
         if (frmRosterWindow <> nil) then
             frmRosterWindow.Refresh();
-        end
+    end
 
     else begin
         // Undock the MsgQueue... if it's empty, close it.
@@ -1938,16 +1949,16 @@ begin
                 (not MainSession.Prefs.getBool('close_queue'))) then begin
                 frmMsgQueue.Align := alNone;
                 frmMsgQueue.FloatForm;
-                end
+            end
             else
                 frmMsgQueue.Close;
-            end;
+        end;
 
         // make sure we undock all of the tabs..
         while (Tabs.DockClientCount > 0) do begin
             docked := TfrmDockable(Tabs.DockClients[0]);
             docked.FloatForm;
-            end;
+        end;
 
         Tabs.ActivePage := tbsRoster;
         FloatDebugForm();
@@ -1955,7 +1966,7 @@ begin
             frmRosterWindow.Refresh();
         rpanel.Align := alClient;
         Self.Width := Self.Width + 1;
-        end;
+    end;
 end;
 
 
@@ -1966,7 +1977,7 @@ begin
     if (frmMsgQueue <> nil) then with frmMsgQueue do begin
         while (lstEvents.Items.Count > 0) do
             frmMsgQueue.RemoveItem(0);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -2004,19 +2015,19 @@ begin
                 if abs(x -  r.left) < _edge_snap then begin
                     cx := cx - (r.left - x);
                     x := r.Left;
-                    end; { if }
                 end; { if }
+            end; { if }
 
             if abs( (y + cy) - r.bottom ) < _edge_snap then begin
                 y := r.bottom - cy;
                 if abs(y -  r.top) < _edge_snap then begin
                     cy := cy - (r.top - y);
                     y := r.top;
-                    end; { if }
                 end; { if }
-            end; { With }
+            end; { if }
+        end; { With }
 
-        end;
+    end;
 
     inherited;
 end;
@@ -2102,7 +2113,7 @@ begin
     2: Show := 'away';
     3: Show := 'xa';
     4: Show := 'dnd';
-    end;
+end;
 
     Status := m.Caption;
     MainSession.setPresence(show, status, MainSession.Priority);
@@ -2138,15 +2149,15 @@ begin
     if (gl.IndexOf(new_grp) >= 0) then begin
         // this grp already exists
         MessageDlg(sNewGroupExists, mtError, [mbOK], 0);
-        end
+    end
     else begin
         // add the new grp.
         gl.Add(new_grp);
         with frmRosterWindow do begin
             RenderGroup(gl.Count - 1);
             treeRoster.AlphaSort(true);
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -2159,13 +2170,13 @@ begin
     if ((_windows_ver < cWIN_2000) or (_windows_ver = cWIN_ME)) then begin
         if (_GetLastTick <> 0) then
             Result := _GetLastTick();
-        end
+    end
     else begin
         // use GetLastInputInfo
         last_info.cbSize := sizeof(last_info);
         if (GetLastInputInfo(last_info)) then
             Result := last_info.dwTime
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -2212,7 +2223,7 @@ begin
                     SafeBoolStr(_is_autoxa, true) + ', ' +
                     IntToStr(cur_idle ) + ' secs'#13#10;
                 DebugMsg(dmsg);
-                end;
+            end;
             {$endif}
 
             away := getInt('away_time');
@@ -2225,8 +2236,8 @@ begin
             else if (_is_autoxa) then exit
             else if ((mins >= xa) and (_is_autoaway)) then SetAutoXA()
             else if ((mins >= away) and (not _is_autoaway) and (avail)) then SetAutoAway();
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -2351,16 +2362,16 @@ begin
                 if PtInRect(R, Point(x, y)) then begin
                     tab := i;
                     break;
-                    end;
-                inc(v);
                 end;
+                inc(v);
             end;
+        end;
 
         if (tab = -1) then exit;
         cp := Tabs.Pages[tab];
         if (cp <> Tabs.ActivePage) then
             Tabs.ActivePage := cp;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -2372,8 +2383,8 @@ begin
         if (tab.Controls[0] is TForm) then begin
             Result := TForm(tab.Controls[0]);
             exit;
-        end;
     end;
+end;
 end;
 
 {---------------------------------------}
@@ -2403,12 +2414,12 @@ begin
         getMsgQueue().Align := alNone;
         getMsgQueue().FloatForm();
         //FloatMsgQueue();
-        end
+    end
     else begin
         f := getTabForm(t);
         if ((f <> nil) and (f is TfrmDockable)) then
             TfrmDockable(f).FloatForm();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -2426,8 +2437,8 @@ begin
             ritem := TJabberRosterItem(n.Data);
             if ritem <> nil then
                 jid := ritem.jid.jid
-            end;
         end;
+    end;
 
     if InputQueryW(sStartChat, sEnterJID, jid) then
         StartChat(jid, '', true);
@@ -2542,11 +2553,11 @@ begin
     if (f.txtOldPassword.Text <> MainSession.Password) then begin
         MessageDlg(sPasswordOldError, mtError, [mbOK], 0);
         exit;
-        end;
+    end;
     if (f.txtNewPassword.Text <> f.txtConfirmPassword.Text) then begin
         MessageDlg(sPasswordNewError, mtError, [mbOK], 0);
         exit;
-        end;
+    end;
 
     iq := TJabberIQ.Create(MainSession, MainSession.generateID, Self.ChangePasswordCallback);
     with iq do begin
@@ -2555,7 +2566,7 @@ begin
         Namespace := XMLNS_REGISTER;
         qTag.AddBasicTag('username', MainSession.Username);
         qTag.AddBasicTag('password', f.txtNewPassword.Text);
-        end;
+    end;
     f.Free();
     iq.Send();
 end;
@@ -2570,7 +2581,7 @@ begin
             MessageDlg(sPasswordChanged, mtInformation, [mbOK], 0)
         else
             MessageDlg(sPasswordError, mtError, [mbOK], 0);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -2595,9 +2606,9 @@ begin
         f := getTabForm(Tabs.ActivePage);
         if (f is TfrmChat) then begin
             TfrmChat(f).AcceptFiles(msg);
-            end;
-        exit;
         end;
+        exit;
+    end;
 
     // figure out which node was the drop site.
     if (DragQueryPoint(msg.Drop, p) = false) then exit;
@@ -2626,7 +2637,7 @@ begin
         DragQueryFile( msg.Drop, i,
                        acFileName, cnMaxFileNameLen );
         FileSend(ri.jid.full, acFileName);
-        end;
+    end;
 
     // let Windows know that we're done
     DragFinish( msg.Drop );
@@ -2672,7 +2683,7 @@ begin
     if (Source.Control is TfrmDockable) then begin
         TfrmDockable(Source.Control).Docked := true;
         _new_tabindex := Tabs.PageCount;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -2690,8 +2701,8 @@ begin
             ritem := TJabberRosterItem(n.Data);
             if ritem <> nil then
                 jid := ritem.jid.jid
-            end;
         end;
+    end;
 
     if InputQueryW(sSendMessage, sEnterJID, jid) then
         StartMsg(jid);
@@ -2735,7 +2746,7 @@ begin
         else
             StartMsg(jid);
 
-        end;
+    end;
     fSel.Free();
 end;
 
@@ -2759,13 +2770,13 @@ begin
         _is_broadcast := true;
         MainSession.setPresence(show, status, MainSession.Priority);
         _is_broadcast := false;
-        end
+    end
     else if (m.Msg = sExodusMutex) then begin
         // show the form
         Self.Show;
         ShowWindow(Handle, SW_RESTORE);
         SetForegroundWindow(Self.Handle);
-        end
+    end
     else
         inherited;
 end;
@@ -2785,12 +2796,12 @@ begin
     if (_reconnect_cur >= _reconnect_interval) then begin
         timReconnect.Enabled := false;
         DoConnect();
-        end
+    end
     else begin
         frmRosterWindow.lblLogin.Caption := sCancelReconnect;
         frmRosterWindow.lblStatus.Caption := 'Reconnect in: ' +
             IntToStr(_reconnect_interval - _reconnect_cur) + ' secs.';
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -2821,7 +2832,7 @@ begin
     if (MainSession.Prefs.getBool('window_ontop')) then begin
         SetWindowPos(frmExodus.Handle, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE + SWP_NOMOVE);
         BringWindowToTop(frm.Handle);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -2863,7 +2874,7 @@ begin
         form := getTabForm(Tabs.Pages[dest_tab]);
         Accept := ((Source = frmRosterWindow.treeRoster) and
                    ((form is TfrmRoom) or (form is TfrmChat)));
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -2886,7 +2897,7 @@ begin
                 else
                     MessageDlg(sNoContactsSel, mtError, [mbOK], 0);
                 sel_contacts.Free();
-                end
+            end
 
             else if ((form is TfrmChat) and (Source = frmRosterWindow.treeRoster)) then begin
                 // send roster items to this contact.
@@ -2896,9 +2907,9 @@ begin
                 else
                     MessageDlg(sNoContactsSel, mtError, [mbOK], 0);
                 sel_contacts.Free();
-                end;
             end;
         end;
+    end;
 end;
 
 procedure TfrmExodus.timTrayAlertTimer(Sender: TObject);
@@ -2909,7 +2920,7 @@ begin
      if (_tray_notify) then begin
         iconNum := _tray_icon_idx + 33;
         if (iconNum > 38) then iconNum := 38;
-        end
+    end
      else
          iconNum := _tray_icon_idx;
 
@@ -2929,7 +2940,7 @@ begin
          frmExodus.timTrayAlert.Enabled := false;
          frmExodus._tray_notify := false;
          frmExodus.setTrayIcon(frmExodus._tray_icon_idx);
-         end;
+     end;
 end;
 
 procedure TfrmExodus.JabberUserGuide1Click(Sender: TObject);

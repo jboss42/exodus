@@ -60,7 +60,7 @@ begin
     if (pf.ShowModal) = mrOK then begin
         Value := pf.txtPassword.Text;
         result := true;
-        end;
+    end;
     pf.Close();
 end;
 

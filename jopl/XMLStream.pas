@@ -54,12 +54,12 @@ const
 type
     EXMLStream = class(Exception)
     public
-    end;
+end;
 
     TJabberMsg = record
         msg: Cardinal;
         lparam: integer;
-    end;
+end;
 
     TDataEvent = procedure (send: boolean; data: Widestring) of object;
     TXMLStreamCallback = procedure (msg: string; tag: TXMLTag) of object;
@@ -98,7 +98,7 @@ type
         property LocalIP: string read _local_ip;
 
         property OnData: TDataEvent read _data_event write _data_event;
-    end;
+end;
 
     TParseThread = class(TIdThread)
     private
@@ -130,7 +130,7 @@ type
         constructor Create(strm: TXMLStream; root: Widestring); reintroduce;
         property Data: Widestring read GetData;
         function GetTag: TXMLTag;
-    end;
+end;
 
 
 implementation
@@ -175,7 +175,7 @@ begin
         doMessage(WM_COMMERROR)
     else begin
         handleBuffer(buff);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -198,7 +198,7 @@ begin
             if (fc <> '?') and (fc <> '!') then
                 ParseTags(frag);
             _root := '';
-            end;
+        end;
     until ((frag = '') or (_rbuff = ''));
 end;
 
@@ -214,7 +214,7 @@ begin
     if _indata.Count > 0 then begin
         Result := _indata.Strings[0];
         _indata.Delete(0);
-        end
+    end
     else
         Result := '';
     _lock.Release;
@@ -306,7 +306,7 @@ begin
             _domStack.Add(c_tag);
             doMessage(WM_XML);
             _lock.Release;
-            end;
+        end;
     until (c_tag = nil);
 
 end;
@@ -387,8 +387,8 @@ begin
             _rbuff := Copy(sbuff, p + e , l - e - p + 1);
             Result := r;
             exit;
-            end;
         end;
+    end;
 
     if (e = (i + 1)) then begin
         // basic tag.. <foo/>
@@ -396,7 +396,7 @@ begin
         r := Copy(sbuff, p, e);
         _root := '';
         _rbuff := Copy(sbuff, p + e, l - e - p + 1);
-        end
+    end
     else begin
         // some other "normal" xml'ish thing..
         // count start/end tags of _root
@@ -415,7 +415,7 @@ begin
             if (ps > 0) then begin
                 _counter := _counter + 1;
                 i := i + ps + ls - 1;
-                end;
+            end;
 
             // find the end tag, and dec the counter
             tmps := Copy(sbuff, i, l - i + 1);
@@ -429,10 +429,10 @@ begin
                     _root := '';
                     _rbuff := Copy(sbuff, i, l - i + 1);
                     break;
-                    end;
                 end;
+            end;
         until ((pe <= 0) or (ps <= 0) or (tmps = ''));
-        end;
+    end;
     result := r;
 end;
 
@@ -457,7 +457,7 @@ begin
     if _thread <> nil then begin
         _thread._stream := nil;
         _thread.Terminate;
-        end;
+    end;
 
     _callbacks.Free;
     inherited;
@@ -489,8 +489,8 @@ begin
         if (@cb = @p) then begin
             _callbacks.Delete(i);
             exit;
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -515,7 +515,7 @@ begin
         l := TSignalListener(_callbacks[i]);
         cb := TXMLStreamCallback(l.callback);
         cb(msg, tag);
-        end;
+    end;
 
     // free the tag here after it's been dispatched thru the system
     if (tag <> nil) then

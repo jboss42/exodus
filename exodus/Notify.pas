@@ -40,7 +40,7 @@ type
         constructor Create;
         destructor Destroy; override;
         procedure SetSession(js: TObject);
-    end;
+end;
 
 procedure DoNotify(win: TForm; pref_name: string; msg: Widestring; icon: integer);
 
@@ -86,7 +86,7 @@ begin
     _session := js;
     with TJabberSession(_session) do begin
         _presCallback := RegisterCallback(PresCallback);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -110,7 +110,7 @@ begin
     if MainSession.IsPaused then begin
         MainSession.QueueEvent(event, tag, Self.Callback);
         exit;
-        end;
+    end;
 
     sess := TJabberSession(_session);
     from := tag.GetAttribute('from');
@@ -166,7 +166,7 @@ begin
     else if (w is TfrmDockable) then begin
         if TfrmDockable(w).Docked then
             tw := frmExodus.getTabForm(frmExodus.Tabs.ActivePage);
-        end;
+    end;
     active_win := getActiveWindow();
     if (active_win = frmExodus.Handle) and (tw <> nil) then
         active_win := tw.Handle;
@@ -188,23 +188,23 @@ begin
         if (w = frmExodus) then begin
             if frmExodus.Tabs.ActivePage <> frmExodus.tbsRoster then
                 frmExodus.tbsRoster.ImageIndex := tab_notify;
-            end
+        end
         else if (w is TfrmDockable) then begin
             d := TfrmDockable(w);
             if d.Docked then begin
                 if frmExodus.Tabs.ActivePage <> d.TabSheet then begin
                     d.TabSheet.ImageIndex := tab_notify;
                     frmExodus.Tabs.Repaint();
-                    end;
-                end
+                end;
+            end
             else
                 d.Flash();
-            end
+        end
         else begin
             FlashWindow(w.Handle, true);
             FlashWindow(w.Handle, true);
-            end;
         end;
+    end;
 
     if (MainSession.prefs.getBool('notify_sounds')) then
         PlaySound(pchar('EXODUS_' + pref_name), 0,

@@ -79,7 +79,7 @@ type
         procedure Connect(profile: TJabberProfile); override;
         procedure Send(xml: Widestring); override;
         procedure Disconnect; override;
-    end;
+end;
 
 
     TSocketThread = class(TParseThread)
@@ -104,7 +104,7 @@ type
         procedure GotException (Sender: TObject; E: Exception);
         {$endif}
 
-    end;
+end;
 implementation
 
 uses
@@ -170,7 +170,7 @@ begin
         catch exceptions in this thread.
         }
         _Stage := 1;
-        end
+    end
     else begin
         // Read in the current buffer, yadda.
         if (_socket = nil) then
@@ -180,13 +180,13 @@ begin
             if (not _socket.ClosedGracefully) then begin
                 _socket := nil;
                 doMessage(WM_COMMERROR);
-                end
+            end
             else begin
                 _socket := nil;
                 doMessage(WM_DISCONNECTED);
-                end;
+            end;
             Self.Terminate;
-            end
+        end
         else begin
             // Get any pending incoming data
             utf := _Socket.CurrentReadBuffer;
@@ -201,8 +201,8 @@ begin
                 // stuff the socket data into the stream
                 // add the raw txt to the indata list
                 Push(buff);
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -237,13 +237,13 @@ begin
                 _Data := 'Server not listening on that port.';
                 doMessage(WM_TIMEOUT);
                 exit;
-                end;
+            end;
             _Data := 'Could not connect to the server.';
-            end
+        end
         else
             _Data := 'Exception: ' + E.Message;
         doMessage(WM_COMMERROR);
-        end
+    end
     else begin
         // Some exception occured during Read ops
         _socket := nil;
@@ -258,16 +258,16 @@ begin
                 // some other socket exception
                 _Data := E.Message;
                 doMessage(WM_COMMERROR);
-                end;
-            end
+            end;
+        end
         else begin
             _Data := E.Message;
             doMessage(WM_COMMERROR);
-            end;
+        end;
 
         // reset the stage
         _Stage := 0;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -325,8 +325,8 @@ begin
         if (sl[i] = ('CN=' + _profile.Server)) then begin
             _ssl_ok := true;
             break;
-            end;
         end;
+    end;
     sl.Free();
 
     // TODO: timing.  really shouldn't have graphics here, also.
@@ -335,7 +335,7 @@ begin
         MessageDlg('Certificate does not match host: ' +
                    _cert.Subject.OneLine,
                    mtWarning, [mbOK], 0);
-        end;
+    end;
 
     // TODO: check issuer.
     n := Now();
@@ -343,13 +343,13 @@ begin
         _ssl_ok := false;
         MessageDlg('Certificate not valid until ' + DateTimeToStr(_cert.NotBefore),
                                mtWarning, [mbOK], 0);
-        end;
+    end;
 
     if (n > _cert.NotAfter) then begin
         _ssl_ok := false;
         MessageDlg('Certificate expired on ' + DateTimeToStr(_cert.NotAfter),
                                mtWarning, [mbOK], 0);
-        end;
+    end;
 end;
 }
 
@@ -360,7 +360,7 @@ begin
         _cert := Certificate;
         _thread.synchronize(VerifyUI);
         _ssl_check := true;
-        end;
+    end;
 
     result := _ssl_ok;
 end;
@@ -377,7 +377,7 @@ begin
         xml := '    ';
         DoDataCallbacks(true, xml);
         _socket.Write(xml);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -402,7 +402,7 @@ begin
             _active := true;
             _timer.Enabled := true;
             DoCallbacks('connected', nil);
-            end;
+        end;
 
         WM_DISCONNECTED: begin
             // Socket is disconnected
@@ -413,14 +413,14 @@ begin
             _active := false;
             _thread := nil;
             DoCallbacks('disconnected', nil);
-            end;
+        end;
 
         WM_SOCKET: begin
             // We are getting something on the socket
             tmps := _thread.Data;
             if tmps <> '' then
                 DoDataCallbacks(false, tmps);
-            end;
+        end;
 
         WM_XML: begin
             // We are getting XML data from the thread
@@ -429,8 +429,8 @@ begin
             tag := _thread.GetTag;
             if tag <> nil then begin
                 DoCallbacks('xml', tag);
-                end;
             end;
+        end;
 
         WM_TIMEOUT: begin
             // That server isn't listening on that port.
@@ -448,7 +448,7 @@ begin
             _thread := nil;
             DoCallbacks('commtimeout', nil);
             DoCallbacks('disconnected', nil);
-            end;
+        end;
             
         WM_COMMERROR: begin
             // There was a COMM ERROR
@@ -466,7 +466,7 @@ begin
             _thread := nil;
             DoCallbacks('commerror', nil);
             DoCallbacks('disconnected', nil);
-            end;
+        end;
 
         WM_DROPPED: begin
             // something dropped our connection
@@ -474,11 +474,11 @@ begin
                 _socket.Disconnect();
             _thread := nil;
             _timer.Enabled := false;
-            end;
+        end;
 
         else
             inherited;
-    end;
+end;
 end;
 
 {---------------------------------------}
@@ -505,7 +505,7 @@ begin
         SSLOptions.VerifyDepth := 2;
         SSLOptions.Method :=  sslvSSLv23;
         // OnVerifyPeer := VerifyPeer;
-        end;
+    end;
     {$endif}
 
     // connect to this server
@@ -530,7 +530,7 @@ begin
     if (_profile.SocksType = 0) then begin
         // don't do anything here??
         // _socket.Intercept := _ssl_int;
-        end
+    end
     else begin
         {$ifdef INDY9}
         with _socks_info do begin
@@ -541,7 +541,7 @@ begin
             1: Version := svSocks4;
             2: Version := svSocks4a;
             3: Version := svSocks5;
-            end;
+        end;
             Host := _profile.SocksHost;
             Port := _profile.SocksPort;
             if (_profile.SocksAuth) then begin
@@ -553,9 +553,9 @@ begin
                 Password := _profile.SocksPassword;
                 {$endif}
                 Authentication := saUsernamePassword;
-                end;
             end;
         end;
+    end;
 
     // Create the socket reader thread and start it.
     // The thread will open the socket and read all of the data.
@@ -570,7 +570,7 @@ begin
     _timer.Enabled := false;
     if ((_socket <> nil) and (_socket.Connected)) then begin
         _socket.Disconnect();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -584,14 +584,15 @@ begin
         _socket.Intercept := nil;
         {$endif}
 
-        if (_ssl_int <> nil) then begin
-            _ssl_int.Free();
-            _ssl_int := nil;
-            end;
+        if (_ssl_int <> nil) then
+            FreeAndNil(_ssl_int);
+
+        if (_socks_info <> nil) then
+            FreeAndNil(_socks_info);
 
         _socket.Free();
         _socket := nil;
-        end;
+    end;
 
     _sock_lock.Release();
 end;
@@ -613,8 +614,8 @@ begin
     except
         on E: EIdException do begin
             _timer.Enabled := false;
-            end;
-    end;
+        end;
+end;
 end;
 
 end.

@@ -104,7 +104,7 @@ begin
     if (url <> '') then begin
         MainSession.Prefs.setString('auto_update_url', url);
         reg.DeleteValue('Update_URL');
-        end;
+    end;
     {$endif}
 
     // NOTE: if you want to do auto-update, the easiest way to turn it on is
@@ -120,8 +120,8 @@ begin
         on EConvertError do begin
             last := Now();
             MainSession.Prefs.setString('last_update', DateTimeToStr(last));
-            end;
-    end;
+        end;
+end;
 
     t := TAutoUpdateThread.Create(true);
     t.URL := url;
@@ -131,11 +131,11 @@ begin
     if (background) then begin
         t.FreeOnTerminate := true;
         t.Resume();
-        end
+    end
     else begin
         t.Execute();
         result := t.Available;
-        end;
+    end;
 end;
 
 procedure OnNewBrand(url : string);
@@ -160,12 +160,12 @@ begin
           // there was, there's no way to know where those prefs have been used
           // at this time.  Therefore, just wait patiently until the next time
           // the client starts up.
-          end
+      end
       else
           DeleteFile(pchar(bfn));
     finally
         if (http <> nil) then http.Free();
-      end;
+  end;
 end;
 
 {---------------------------------------}
@@ -184,8 +184,8 @@ begin
         on EConvertError do begin
             last := Now();
             MainSession.Prefs.setString('last_branding_update', DateTimeToStr(last));
-            end;
-    end;
+        end;
+end;
 
     t := TAutoUpdateThread.Create(true);
     t.URL := url;
@@ -213,7 +213,7 @@ begin
         http.Head(_url);
         if (http.ResponseCode <> 200) then begin
             exit;
-            end;
+        end;
 
         if (RoundDateTime(http.Response.LastModified) <= _last) then
             exit;
@@ -222,12 +222,12 @@ begin
                 synchronize(checkDoUpdate)
             else
                 _onNew(_url);
-            end;
+        end;
 
         _available := true;
     finally
         if (http <> nil) then http.Free();
-        end;
+    end;
 end;
 
 {---------------------------------------}

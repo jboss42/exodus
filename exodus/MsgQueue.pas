@@ -82,7 +82,7 @@ function getMsgQueue: TfrmMsgQueue;
 begin
     if frmMsgQueue = nil then begin
         frmMsgQueue := TfrmMsgQueue.Create(Application);
-        end;
+    end;
 
     Result := frmMsgQueue;
 end;
@@ -108,6 +108,7 @@ begin
     else
         e.Caption := e.from;
 
+    // NB: _queue now owns e... it needs to free it, etc.
     _queue.Add(e);
     lstEvents.Items.Count := lstEvents.Items.Count + 1;
     SaveEvents();
@@ -135,8 +136,8 @@ begin
         if (not DirectoryExists(dir)) then begin
             MessageDlg(sNoSpoolDir, mtError, [mbOK], 0);
             exit;
-            end;
         end;
+    end;
 
     s := TXMLTag.Create('spool');
     for i := 0 to _queue.Count - 1 do begin
@@ -155,8 +156,8 @@ begin
             e.setAttribute('data_type', event.data_type);
             for d := 0 to event.Data.Count - 1 do
                 e.AddBasicTag('data', event.Data.Strings[d]);
-            end;
         end;
+    end;
 
     ss := TStringlist.Create();
     ss.Add(UTF8Encode(s.xml));
@@ -211,10 +212,10 @@ begin
                 e.Data.Add(dtags[d].Data);
             dtags.Free();
 
-            end;
+        end;
         etags.Free();
         s.Free();
-        end;
+    end;
     p.Free();
 end;
 
@@ -249,7 +250,7 @@ begin
         e := TJabberEvent(_queue[lstEvents.Selected.Index]);
         if ((e <> nil) and (lstEvents.SelCount = 1) and (e.Data.Text <> '')) then
             txtMsg.WideText := e.Data.Text;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -281,7 +282,7 @@ begin
     if (_queue.Count = 0) then begin
         lstEvents.Items.Clear();
         txtMsg.WideLines.Clear();
-        end;
+    end;
     Self.SaveEvents();
 end;
 
@@ -295,38 +296,38 @@ begin
     first := -1;
     if (lstEvents.SelCount = 0) then begin
         exit;
-        end
+    end
     else if (lstEvents.SelCount = 1) then begin
         item := lstEvents.Selected;
         i := item.Index;
         first := i;
         RemoveItem(i);
-        end
+    end
     else begin
         for i := lstEvents.Items.Count-1 downto 0 do begin
             if (lstEvents.Items[i].Selected) then begin
                 _queue.Delete(i);
                 lstEvents.Items.Count := lstEvents.Items.Count - 1;
                 first := i;
-                end;
             end;
+        end;
         Self.SaveEvents();
         lstEvents.ClearSelection();
-        end;
+    end;
 
     if ((first <> -1) and (first < lstEvents.Items.Count)) then begin
         lstEvents.Selected := lstEvents.Items[first];
         e := TJabberEvent(_queue[first]);
         if ((e <> nil) and (lstEvents.SelCount = 1) and (e.Data.Text <> '')) then
             txtMsg.WideText := e.Data.Text;
-        end
+    end
     else if (lstEvents.Items.Count > 0) then
         lstEvents.Selected := lstEvents.Items[lstEvents.Items.Count - 1];
 
     if (lstEvents.Selected <> nil) then begin
         lstEvents.Selected.MakeVisible(false);
         lstEvents.ItemFocused := lstEvents.Selected;
-        end;
+    end;
 
     lstEvents.Refresh;
 end;
@@ -340,9 +341,9 @@ begin
     VK_DELETE, VK_BACK, Ord('d'), Ord('D'): begin
         Key := $0;
         removeItems();
-        end;
-
     end;
+
+end;
 
 end;
 
@@ -358,7 +359,7 @@ begin
         CanClose := false;
         // frmExodus.DockMsgQueue();
         exit;
-        end
+    end
     else
         lstEvents.Items.Clear;
 end;

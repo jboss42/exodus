@@ -64,7 +64,7 @@ begin
     with f do begin
         lblJID.Caption := sjid;
         Show;
-        end;
+    end;
 end;
 
 procedure QuietRemoveRosterItem(sjid: string);
@@ -81,9 +81,9 @@ begin
             with AddTag('item') do begin
                 setAttribute('jid', sjid);
                 setAttribute('subscription', 'remove');
-                end;
             end;
         end;
+    end;
     MainSession.SendTag(iq);
 end;
 
@@ -102,19 +102,19 @@ begin
                 with AddTag('item') do begin
                     setAttribute('jid', lblJID.Caption);
                     setAttribute('subscription', 'remove');
-                    end;
                 end;
             end;
+        end;
         MainSession.SendTag(iq);
-        end
+    end
     else if chkRemove1.Checked then begin
         // send an unsubscribe
         SendUnSubscribe(lblJID.Caption, MainSession);
-        end
+    end
     else if chkRemove2.Checked then begin
         // send an unsubscribed
         SendUnSubscribed(lblJID.Caption, MainSession);
-        end;
+    end;
     Self.Close;
 end;
 

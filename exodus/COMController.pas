@@ -39,7 +39,7 @@ type
 
   TPlugin = class
     com: IExodusPlugin;
-    end;
+end;
 
   TPluginProxy = class
     id: integer;
@@ -48,7 +48,7 @@ type
     destructor Destroy; override;
 
     procedure Callback(event: string; tag: TXMLTag);
-    end;
+end;
 
 
 // Forward declares for plugin utils
@@ -101,8 +101,8 @@ begin
             MessageDlg('Plugin class could not be initialized.',
                 mtError, [mbOK], 0);
             exit;
-            end;
-    end;
+        end;
+end;
 
     try
         plugin := IUnknown(idisp) as IExodusPlugin;
@@ -111,8 +111,8 @@ begin
             MessageDlg('Plugin class does not support IExodusPlugin',
                 mtError, [mbOK], 0);
             exit;
-            end;
-    end;
+        end;
+end;
 
     p := TPlugin.Create();
     p.com := plugin;
@@ -123,7 +123,7 @@ begin
         MessageDlg('Plugin class could not be initialized.',
             mtError, [mbOK], 0);
         exit;
-    end;
+end;
 end;
 
 {---------------------------------------}
@@ -143,7 +143,7 @@ begin
         pp := TPlugin(plugs.Objects[i]);
         plugs.Delete(i);
         pp.com.Shutdown();
-        end;
+    end;
 
     plugs.Clear();
 end;
@@ -252,7 +252,7 @@ begin
         if (ritem.subscription = 'to') or
         (ritem.subscription = 'both') then
             Result := true;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -283,7 +283,7 @@ begin
     if (idx <> -1) then begin
         TPluginProxy(proxies.Objects[idx]).Free;
         proxies.Delete(idx);
-        end;
+    end;
 
 end;
 

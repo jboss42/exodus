@@ -110,10 +110,10 @@ begin
             agents := MainSession.NewAgentsList(gw);
             agents.Fetch(gw);
             Self.Hide;
-            end
+        end
         else
             doAdd();
-        end
+    end
     else begin
         // Adding a normal Jabber user
         // check to see if we have an "@" sign
@@ -123,7 +123,8 @@ begin
         if (tmp_jid.resource <> '') then
             if MessageDlg(sResourceSpec, mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
         doAdd();
-        end;
+        tmp_jid.Free();
+    end;
 end;
 
 {---------------------------------------}
@@ -148,7 +149,7 @@ begin
     if InputQueryW(sNewGroup, sNewGroupPrompt, ngrp) then begin
         MainSession.Roster.GrpList.Add(ngrp);
         cboGroup.Items.Assign(MainSession.Roster.GrpList);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -170,7 +171,8 @@ begin
     if (txtNickname.Text = '') then begin
         tmp_id := TJabberID.Create(txtJID.Text);
         txtNickname.Text := tmp_id.user;
-        end;
+        tmp_id.Free();
+    end;
 end;
 
 {---------------------------------------}
@@ -197,7 +199,7 @@ begin
     if (svc = 'jabber') then begin
         MainSession.Roster.AddItem(sjid, snick, sgrp, true);
         Self.Close;
-        end
+    end
     else begin
         a := agents.findService(Lowercase(svc));
         if (a <> nil) then begin
@@ -208,18 +210,18 @@ begin
                     j := j + '%'
                 else
                     j := j + sjid[i];
-                end;
+            end;
             sjid := j + '@' + a.jid;
             frmExodus.RegisterController.MonitorJid(sjid, false);
             MainSession.Roster.AddItem(sjid, snick, sgrp, true);
             Self.Close;
-            end
+        end
         else begin
             // we don't have this svc..
             MessageDlg(sNoGatewayFound, mtError, [mbOK], 0);
             Self.Show();
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -229,7 +231,7 @@ begin
     if (tag.GetAttribute('from') = gw) then begin
         MainSession.UnRegisterCallback(cb);
         doAdd();
-        end;
+    end;
 end;
 
 

@@ -69,7 +69,7 @@ begin
     if (jid <> '') then begin
         i := MainSession.Roster.Bookmarks.IndexOf(jid);
         if (i < 0) then exit;
-        end
+    end
     else
         i := -1;
 
@@ -80,7 +80,7 @@ begin
         if (i < 0) then begin
             new := true;
             txtNick.Text := MainSession.Profile.Username;
-            end
+        end
         else begin
             new := false;
             bm := TJabberBookmark(MainSession.Roster.Bookmarks.Objects[i]);
@@ -88,9 +88,9 @@ begin
             txtName.Text := bm.bmName;
             txtNick.Text := bm.nick;
             chkAutoJoin.Checked := bm.autoJoin;
-            end;
-        Show();
         end;
+        Show();
+    end;
 end;
 
 
@@ -109,16 +109,16 @@ begin
             bmName := txtName.Text;
             nick := txtNick.Text;
             autoJoin := chkAutoJoin.Checked;
-            end;
+        end;
         MainSession.roster.AddBookmark(txtJID.Text, bm)
-        end
+    end
     else with bm do begin
         bmName := txtName.Text;
         jid.ParseJID(txtJID.Text);
         nick := txtNick.Text;
         autoJoin := chkAutoJoin.Checked;
         MainSession.Roster.UpdateBookmark(bm);
-        end;
+    end;
     Self.Close;
 end;
 

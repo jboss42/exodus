@@ -61,7 +61,7 @@ type
         procedure Send;
 
         property ElapsedTime: longint read _ticks;
-    end;
+end;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -110,7 +110,7 @@ begin
         _js.UnRegisterCallback(_cbIndex);
         _cbIndex := -1;
         Self.Free;
-        end;
+    end;
 end;
 
 {---------------------------------------}

@@ -43,7 +43,7 @@ type
         property user: widestring read _user;
         property domain: widestring read _domain;
         property resource: widestring read _resource;
-    end;
+end;
 
 
 function isValidJID(jid: Widestring): boolean;
@@ -71,11 +71,11 @@ begin
         if ((jid[i] = '@') and (part = 0)) then begin
             part := 1;
             curlen := 0;
-            end
+        end
         else if ((jid[i] = '/') and (part < 2)) then begin
             part := 2;
             curlen := 0;
-            end
+        end
         else begin
             inc(curlen);
             case part of
@@ -86,32 +86,32 @@ begin
                 $30..$39, $3B, $3D, $3F,
                 $41..$7E, $80..$D7FF,
                 $E000..$FFFD, $10000..$10FFFF: valid_char := true;
-                end;
+            end;
                 if (not valid_char) then exit;
                 if (curlen > 256) then exit;
-                end;
+            end;
             1: begin
                 // domain
                 case c of
                 $2D, $2E, $30..$39, $5F, $41..$5A, $61..$7A: valid_char := true;
-                end;
+            end;
                 if (not valid_char) then exit;
                 if (curlen > 256) then exit;
-                end;
+            end;
             2: begin
                 // resource
                 case c of
                 $20..$D7FF, $E000..$FFFD,
                 $10000..$10FFFF: valid_char := true;
-                end;
+            end;
 
                 if (not valid_char) then exit;
                 if (curlen > 256) then exit;
-                end;
-            end;
-            
             end;
         end;
+            
+        end;
+    end;
     Result := true;
 end;
 
@@ -146,12 +146,12 @@ begin
         // pull off the resource..
         _resource := Copy(tmps, p2 + 1, length(tmps) - p2 + 1);
         tmps := Copy(tmps, 1, p2 - 1);
-        end;
+    end;
 
     if p1 > 0 then begin
         _domain := Copy(tmps, p1 + 1, length(tmps) - p1 + 1);
         _user := Copy(tmps, 1, p1 - 1);
-        end
+    end
     else
         _domain := tmps;
 end;

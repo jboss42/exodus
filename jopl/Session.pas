@@ -334,7 +334,7 @@ begin
     else
         // don't I18N
         raise Exception.Create('Invalid connection type');
-    end;
+end;
 
     // Register our session to get XML Tags
     _stream.RegisterStreamCallback(Self.StreamCallback);
@@ -353,7 +353,7 @@ begin
         Prefs.SaveServerPrefs();
         _stream.Send('<presence type="unavailable"/>');
         _stream.Disconnect;
-        end
+    end
     else
         Self.handleDisconnect();
 
@@ -367,11 +367,11 @@ begin
     if (_stream <> nil) then begin
         _stream.SendTag(tag);
         tag.Free;
-        end
+    end
     else begin
         tag.Free;
         raise Exception.Create('Invalid stream');
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -409,7 +409,7 @@ begin
         // we are connected... send auth stuff.
         tmps := '<stream:stream to="' + Trim(Server) + '" xmlns="jabber:client" xmlns:stream="http://etherx.jabber.org/streams">';
         _stream.Send(tmps);
-        end
+    end
 
     else if msg = 'disconnected' then
         Self.handleDisconnect()
@@ -433,14 +433,14 @@ begin
             else
                 AuthGet();
 
-            end
+        end
         else if (tag.Name = 'stream:error') then begin
             // we got a stream error
             FireEvent('/session/stream:error', tag);
-            end
+        end
         else
             _dispatcher.DispatchSignal('/packet', tag);
-        end;
+    end;
 
 end;
 
@@ -466,7 +466,7 @@ begin
         sig := TSignalEvent(q.callback);
         sig(q.event, q.tag);
         q.Free;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -508,12 +508,12 @@ begin
     if tok1 = '/packet' then begin
         pk := _packetSignal.addListener(xplite, callback);
         result := pk.cb_id;
-        end
+    end
     else if i >= 0 then begin
         sig := TBasicSignal(_dispatcher.Objects[i]);
         l := sig.addListener(xplite, callback);
         result := l.cb_id;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -601,7 +601,7 @@ begin
         iqType := 'get';
         with qTag do
             AddBasicTag('username', Username);
-        end;
+    end;
     _auth_iq.Send;
 end;
 
@@ -618,8 +618,8 @@ begin
         with qTag do begin
             AddBasicTag('username', Username);
             AddBasicTag('password', Password);
-            end;
         end;
+    end;
     _auth_iq.Send;
 end;
 
@@ -631,12 +631,12 @@ begin
     if ((xml = nil) or (xml.getAttribute('type') = 'error')) then begin
         Disconnect();
         _dispatcher.DispatchSignal('/session/regerror', xml);
-        end
+    end
     else begin
         // We got a good registration...
         // Go do the entire Auth sequence now.
         AuthGet();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -656,12 +656,12 @@ begin
                 (etag.getAttribute('code') = '401'))then begin
                 _dispatcher.DispatchSignal('/session/noaccount', xml);
                 exit;
-                end;
             end;
+        end;
 
         // otherwise, auth-error
         _dispatcher.DispatchSignal('/session/autherror', xml);
-        end;
+    end;
 
     qtag := xml.GetFirstTag('query');
     if qtag = nil then exit;
@@ -677,7 +677,7 @@ begin
         iqType := 'set';
         qTag.AddBasicTag('username', Username);
         qTag.AddBasicTag('resource', Resource);
-        end;
+    end;
 
     if seq <> nil then begin
         if tok = nil then exit;
@@ -691,20 +691,20 @@ begin
             key := Sha1Hash(key);
         authHash := key;
         _auth_iq.qTag.AddBasicTag('hash', authHash);
-        end
+    end
 
     else if dig <> nil then begin
         // Digest (basic Sha1)
         _AuthType := jatDigest;
         authDigest := Sha1Hash(Trim(_stream_id + Password));
         _auth_iq.qTag.AddBasicTag('digest', authDigest);
-        end
+    end
 
     else begin
         // Plaintext
         _AuthType := jatPlainText;
         _auth_iq.qTag.AddBasicTag('password', Password);
-        end;
+    end;
     _auth_iq.Send;
 end;
 
@@ -719,7 +719,7 @@ begin
         // timeout
         _dispatcher.DispatchSignal('/session/autherror', tag);
         Disconnect();
-        end
+    end
     else begin
         _dispatcher.DispatchSignal('/session/authenticated', tag);
         // Self.RegisterCallback(ChatList.MsgCallback, '/packet/message[@type="chat"]');
@@ -728,7 +728,7 @@ begin
         Agents.AddObject(Server, cur_agents);
         cur_agents.Fetch(Server);
         Prefs.FetchServerPrefs();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -772,8 +772,8 @@ begin
             // to available, or chat, then make sure we play the session
             if ((_show <> 'away') and (_show <> 'xa') and (_show <> 'dnd')) then
                 Self.Play();
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -843,11 +843,12 @@ begin
     if (i >= 0) then begin
         blockers.Delete(i);
         Prefs.setStringlist('blockers', blockers);
-        end;
+    end;
     blockers.Free();
     block := TXMLTag.Create('unblock');
     block.setAttribute('jid', jid.jid);
     MainSession.FireEvent('/session/unblock', block);
+    block.Free();
 end;
 
 {---------------------------------------}
@@ -861,11 +862,12 @@ begin
     if (blockers.IndexOf(jid.jid) < 0) then begin
         blockers.Add(jid.jid);
         Prefs.setStringlist('blockers', blockers);
-        end;
+    end;
     blockers.Free();
     block := TXMLTag.Create('block');
     block.setAttribute('jid', jid.jid);
     MainSession.FireEvent('/session/block', block);
+    block.Free();
 end;
 
 function TJabberSession.GetActive(): boolean;

@@ -54,12 +54,12 @@ unit getopt;
              Ord('d'): iDebugLevel := StrToInt(OptArg);
              Ord('n'): bDryRun := True;
              Ord('f'): strFileName := OptArg;
-          end;
-        end;
-      finally
-        Free
       end;
     end;
+      finally
+        Free
+  end;
+end;
 }
 
 interface
@@ -195,7 +195,7 @@ begin
     if Trim(OptsNeeded) <> '' then begin  // required option(s) missing
       raise EGetOpt.Create(Format(SReqOptMissing,
                                   [Paramstr(0), FOptions[Pos('x', OptsNeeded)]]));
-    end;
+end;
     Result := False;
     exit;
   end;
@@ -225,9 +225,9 @@ begin
       if iPosEq > 0 then begin          // yes, split into option and argument
         FOptArg := Copy(strOpt, iPosEq + 1, Length(strOpt) - iPosEq);
         strOpt  := Copy(strOpt, 1, iPosEq - 1);
-      end else begin                    // argument is seperate (if any)
+  end else begin                    // argument is seperate (if any)
         FOptArg := '';
-      end;
+  end;
                                         // handle long option
       for i := 0 to FLongOpts.Count - 1 do begin
         if strOpt = FLongOpts.Strings[i] then begin
@@ -236,8 +236,8 @@ begin
             strOptDef := FDefaults.Strings[FOptInd - 1];
           FOptChar := FOptions[FOptInd];
           break;
-        end;
-      end;
+    end;
+  end;
       if FOptInd < 0 then                // unknown option
         raise EGetOpt.Create(Format(SOptUnknown, [ParamStr(0), s1]));
                                          // found a long option
@@ -246,20 +246,20 @@ begin
           if FIndex > ParamCount then begin   // no, any arguments left ?
             if strOptDef = '-' then begin     // no, and no default either
               raise EGetOpt.Create(Format(SOptNeedsArg, [ParamStr(0), s1]));
-            end else begin                    // none left, but have default
+        end else begin                    // none left, but have default
               FOptArg := strOptDef;
-            end;
-          end else begin                      // some left,
+        end;
+      end else begin                      // some left,
             if (ParamStr(Findex)[1] <> '-') and (ParamStr(Findex)[1] <> '/') then begin  // and it's not an option
               FOptArg := ParamStr(FIndex);            // so get the argument
               Inc(Findex);
-            end else begin                            // it is an option,
+        end else begin                            // it is an option,
               FOptArg := strOptDef;                   // so use default argument
-            end;
-          end;
         end;
       end;
-    end else begin                       // short option
+    end;
+  end;
+end else begin                       // short option
       Inc(Findex);
       strOpt := s1[2];                   // get option letter
       FOptChar := LowerCase(s1)[2];
@@ -272,19 +272,19 @@ begin
         if FIndex > ParamCount then begin   // yes, any arguments left ?
           if strOptDef = '-' then begin     // no, and no default either
             raise EGetOpt.Create(Format(SOptNeedsArg, [ParamStr(0), s1]));
-          end else begin                    // none left, but have default
+      end else begin                    // none left, but have default
             FOptArg := strOptDef;
-          end;
-        end else begin                      // some left,
+      end;
+    end else begin                      // some left,
           if (ParamStr(Findex)[1] <> '-') and (ParamStr(Findex)[1] <> '/') then begin  // and not an option
             FOptArg := ParamStr(FIndex);            // so get the argument
             Inc(Findex);
-          end else begin
+      end else begin
             FOptArg := strOptDef;                   // but an option, so use default
-          end;
-        end;
       end;
     end;
+  end;
+end;
     OptsNeeded[Foptind] := ' ';        // flag option found
   end else begin
   // arguments without option letter get OptInd = 0

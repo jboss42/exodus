@@ -44,7 +44,7 @@ type
     tagLASTINPUTINFO = record
         cbSize: UINT;
         dwTime: DWORD;
-        end;
+    end;
     {$EXTERNALSYM tagLASTINPUTINFO}
     LASTINPUTINFO = tagLASTINPUTINFO;
     {$EXTERNALSYM LASTINPUTINFO}
@@ -102,7 +102,7 @@ type
     public
         a : ATOM;
         constructor Create(at: ATOM);
-    end;
+end;
 
 var
     presenceToAtom: TStringList;
@@ -132,7 +132,7 @@ begin
         mov esp, ebp
         pop ebp
         jmp [_GetLastInputInfo]
-    end;
+end;
 end;
 
 {---------------------------------------}
@@ -168,7 +168,7 @@ begin
                     [dwMajorVersion, dwMinorVersion,
                     Lo(dwBuildNumber),
                     szCSDVersion]);
-            end
+        end
             else if (dwMinorVersion < 90) then begin
                 { Windows 98 }
                 Result := cWIN_98;
@@ -176,7 +176,7 @@ begin
                     [dwMajorVersion, dwMinorVersion,
                     Lo(dwBuildNumber),
                     szCSDVersion]);
-            end
+        end
             else if (dwMinorVersion >= 90) then begin
                 { Windows ME }
                 Result := cWIN_ME;
@@ -184,9 +184,9 @@ begin
                     [dwMajorVersion, dwMinorVersion,
                     Lo(dwBuildNumber),
                     szCSDVersion]);
-            end;
-        end; { end with }
-    end;
+        end;
+    end; { end with }
+end;
     VER_PLATFORM_WIN32_NT:
     begin
         with OSVersionInfo32 do begin
@@ -195,24 +195,24 @@ begin
                 Result := cWIN_NT;
                 verinfo := Format('Windows-NT %d.%.2d.%d%s', [dwMajorVersion,
                     dwMinorVersion, dwBuildNumber, szCSDVersion]);
-            end
+        end
             else begin
                 if (dwMinorVersion > 0) then begin
                     { Windows XP }
                     Result := cWIN_XP;
                     verinfo := Format('Windows-XP %d.%.2d.%d%s', [dwMajorVersion,
                         dwMinorVersion, dwBuildNumber, szCSDVersion]);
-                end
+            end
                 else begin
                     { Windows 2000 }
                     Result := cWIN_2000;
                     verinfo := Format('Windows-2000 %d.%.2d.%d%s', [dwMajorVersion,
                         dwMinorVersion, dwBuildNumber, szCSDVersion]);
-                end;
             end;
         end;
     end;
-    end; { end case }
+end;
+end; { end case }
 
 end;
 
@@ -236,7 +236,7 @@ begin
     if (TryEncodeDate(yw, mw, dw, rdate)) then begin
         rdate := rdate + StrToTime(ts);
         Result := rdate - TimeZoneBias();
-        end
+    end
     else
         Result := Now;
 end;
@@ -271,7 +271,7 @@ begin
             fn := fp + fn
         else
             fn := fp + '\' + fn;
-        end
+    end
     else
         fn := url;
     Result := fn;
@@ -289,8 +289,8 @@ begin
         else begin
             MainSession.Prefs.setBool('log', true);
             exit;
-            end;
         end;
+    end;
 
     fn := 'iexplore.exe ';
     fn := MainSession.Prefs.getString('log_path');
@@ -299,7 +299,7 @@ begin
     if (not FileExists(fn)) then begin
         MessageDlg(sNoHistory, mtError, [mbOK], 0);
         exit;
-        end;
+    end;
 
     ShellExecute(0, 'open', PChar(fn), '', '', SW_NORMAL);
 end;
@@ -325,7 +325,7 @@ begin
             MessageDlg(sHistoryDeleted, mtInformation, [mbOK], 0)
         else
             MessageDlg(sHistoryError, mtError, [mbCancel], 0);
-        end
+    end
     else
         MessageDlg(sHistoryNone, mtWarning, [mbOK,mbCancel], 0);
 end;
@@ -355,7 +355,7 @@ begin
             count := count + 1;
         until SysUtils.FindNext(sr) <> 0;
         SysUtils.FindClose(sr);
-        end;
+    end;
 
     MessageDlg(Format(sFilesDeleted, [count]), mtInformation, [mbOK], 0);
 end;
@@ -381,8 +381,8 @@ begin
         if CreateDir(fn) = false then begin
             MessageDlg(sBadLogDir, mtError, [mbOK], 0);
             exit;
-            end;
         end;
+    end;
 
     if (Msg.isMe) then
         _jid := TJabberID.Create(Msg.ToJID)
@@ -398,11 +398,11 @@ begin
         FileClose(fh);
         header := (abs(Now - nDate) > 0.04);
         Append(f);
-        end
+    end
     else begin
         header := true;
         ReWrite(f);
-        end;
+    end;
 
     // if the file is over an hour old..put a new header on it.
     if (header) then
@@ -412,6 +412,7 @@ begin
     h := GetMsgHTML(Msg);
     Writeln(f, h);
     CloseFile(f);
+    _jid.Free();
 end;
 
 {---------------------------------------}
@@ -456,7 +457,7 @@ begin
             Font.Style := Font.Style + [fsItalic];
         if getBool('font_underline') then
             Font.Style := Font.Style + [fsUnderline];
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -475,17 +476,17 @@ var
             result := ' ' + IntToStr(i) + ' ' + modifier
         else
             result := ' ' + IntToStr(i) + ' ' + modifier + 's';
-    end;
+end;
 
 begin
     s := StrToIntDef(seconds, -1);
 
     if (s < 0) then begin
         result := ' unknown last result: ' + seconds
-        end
+    end
     else if (s = 0) then begin
         result := ' 0 seconds';
-        end
+    end
     else begin
         d := s div 86400;
         h := (s mod 86400) div 3600;
@@ -493,7 +494,7 @@ begin
         s := s mod 60;
         result := toText(d, 'day') + toText(h, 'hour') +
                   toText(m, 'minute') + toText(s, 'second');
-    end;
+end;
 end;
 
 {---------------------------------------}
@@ -506,7 +507,7 @@ begin
     if (status = '') then begin
         result := 0;
         exit;
-        end;
+    end;
 
     ind := presenceToAtom.IndexOf(status);
     if (ind = -1) then begin
@@ -515,7 +516,7 @@ begin
             raise Exception.Create('Bad string to atom: ' + status);
         presenceToAtom.AddObject(status, TAtom.Create(a));
         result := a;
-        end
+    end
     else
         result := TAtom(presenceToAtom.Objects[ind]).a;
 end;
@@ -530,7 +531,7 @@ begin
     if (a = 0) then begin
         result := '';
         exit;
-        end;
+    end;
 
     // hm.  better data structure needed...
     // Luckily, there shouldn't be more than ~10 of these,
@@ -539,8 +540,8 @@ begin
         if (TAtom(presenceToAtom.Objects[i]).a = a) then begin
             result := presenceToAtom[i];
             exit;
-            end;
         end;
+    end;
     // not found
     if (GlobalGetAtomName(a, buf, sizeof(buf)) = 0) then
         raise Exception.Create('Global atom not found for: ' + IntToStr(a));
@@ -559,7 +560,7 @@ begin
         a := TAtom(pta.Objects[i]);
         GlobalDeleteAtom(a.a);
         a.Free();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -620,7 +621,7 @@ begin
             tmps := tmps + Trim(ins_list[i]) + ' ';
         Result := tmps;
         ins_list.Free();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -644,7 +645,7 @@ begin
         item.setAttribute('jid', ri.jid.full);
         item.setAttribute('name', ri.RawNickname);
         b := b + Chr(13) + Chr(10) + ri.RawNickname + ': ' + ri.jid.full;
-        end;
+    end;
     msg.AddBasicTag('body', b);
     MainSession.SendTag(msg);
 end;
@@ -672,7 +673,7 @@ begin
         list.Add(Copy(tmps, l, i - l));
         l := i + 1;
 
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -687,7 +688,7 @@ begin
         if (Result <> '') then
             Result := Result + Chr(13);
         Result := Result + TrimRight(Input.WideLines[i]);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -725,6 +726,6 @@ finalization
     if (presenceToAtom <> nil) then begin
         FreeAtoms(presenceToAtom);
         presenceToAtom.Free();
-        end;
+    end;
 end.
 

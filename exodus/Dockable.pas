@@ -161,7 +161,7 @@ begin
     with Params do begin
         ExStyle := ExStyle or WS_EX_APPWINDOW;
         // WndParent := GetDesktopWindow();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -171,7 +171,7 @@ begin
     if MainSession.Prefs.getBool('expanded') then begin
     	if (TabSheet <> nil) then begin
             frmExodus.Tabs.ActivePage := TabSheet;
-            end
+        end
         else begin
             Self.DockForm;
             Self.Show;
@@ -179,15 +179,15 @@ begin
             if ((not Application.Active) or
             (frmExodus.Tabs.ActivePage = frmExodus.tbsRoster)) then
                 frmExodus.Tabs.ActivePage := TabSheet;
-            end;
-        end
+        end;
+    end
     else begin
         if frmExodus.WindowState = wsMinimized then
             ShowWindow(Handle, SW_SHOWMINNOACTIVE)
         else
             ShowWindow(Handle, SW_SHOWNOACTIVATE);
         Self.Visible := true;
-        end;
+    end;
 
 end;
 
@@ -199,7 +199,7 @@ begin
     if _noMoveCheck then begin
         inherited;
         exit;
-        end;
+    end;
 
     {
     _top indicates that we are moving the window to the top of
@@ -239,18 +239,18 @@ begin
                 if abs(x -  r.left) < _edge_snap then begin
                     cx := cx - (r.left - x);
                     x := r.Left;
-                    end; { if }
                 end; { if }
+            end; { if }
 
             if abs( (y + cy) - r.bottom ) < _edge_snap then begin
                 y := r.bottom - cy;
                 if abs(y -  r.top) < _edge_snap then begin
                     cy := cy - (r.top - y);
                     y := r.top;
-                    end; { if }
                 end; { if }
-            end; { With }
-        end;
+            end; { if }
+        end; { With }
+    end;
 
     inherited;
 end;
@@ -266,7 +266,7 @@ begin
             Self.Width, Self.Height, HWND_TOP);
         _top := false;
         inherited;
-        end
+    end
     else
         inherited;
 end;
@@ -279,7 +279,7 @@ begin
         SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
             Self.Width, Self.Height, HWND_TOP);
         _top := false;
-        end
+    end
     else
         inherited;
 end;
@@ -308,7 +308,7 @@ begin
     else begin
         timFlasher.Enabled := false;
         timFlasherTimer(Self);
-        end;
+    end;
 end;
 
 
@@ -328,7 +328,7 @@ begin
     if Self.TabSheet <> nil then begin
         Self.TabSheet.ImageIndex := -1;
         frmExodus.Tabs.ActivePage.ImageIndex := -1;
-        end;
+    end;
 end;
 
 procedure TfrmDockable.FormPaint(Sender: TObject);

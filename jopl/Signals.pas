@@ -44,7 +44,7 @@ type
         lid: longint;
         sig: TSignal;
         l: TSignalListener;
-    end;
+end;
 
     {---------------------------------------}
     {
@@ -64,7 +64,7 @@ type
         procedure AddListenerInfo(lid: integer; sig: TSignal; l: TSignalListener);
 
         function TotalCount: longint;
-    end;
+end;
 
     {---------------------------------------}
     TSignalListener = class
@@ -75,7 +75,7 @@ type
         methodname: string;
 
         constructor Create;
-    end;
+end;
 
     TQueuedEvent = class
     public
@@ -84,7 +84,7 @@ type
         tag: TXMLTag;
         constructor Create;
         destructor Destroy; override;
-    end;
+end;
 
     {---------------------------------------}
     // classes for change list stuff.
@@ -94,7 +94,7 @@ type
         l: TSignalListener;
         event: string;
         op: TChangeListOps;
-    end;
+end;
 
 
     {---------------------------------------}
@@ -115,14 +115,14 @@ type
         destructor Destroy; override;
 
         property change_list: TObjectQueue read _change_list;
-    end;
+end;
 
     {---------------------------------------}
     // Just a simple implementation of TSignal
     TBasicSignal = class(TSignal)
     public
         function addListener(event: string; callback: TSignalEvent): TSignalListener; overload;
-    end;
+end;
 
 
     {---------------------------------------}
@@ -137,13 +137,13 @@ type
         destructor Destroy; override;
         procedure ParseXPLite(xplite: string);
         property XPLite: TXPLite read xp;
-    end;
+end;
 
     TPacketSignal = class(TSignal)
     public
         function addListener(xplite: string; callback: TPacketEvent): TPacketListener; overload;
         procedure Invoke(event: string; tag: TXMLTag); override;
-    end;
+end;
 
     {---------------------------------------}
     // Signal that handles an additional string at the end
@@ -154,7 +154,7 @@ type
     public
         function addListener(callback: TDataStringEvent): TStringListener; overload;
         procedure Invoke(event: string; tag: TXMLTag; data: Widestring); overload;
-    end;
+end;
 
 
     {M-}
@@ -226,8 +226,8 @@ begin
             sig := TSignal(Objects[i]);
             if (sig <> nil) then
                 sig.Invoke(event, tag);
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -244,7 +244,7 @@ begin
     if (i < 0) then begin
         i := _lid_info.Add(ls);
         li := TListenerInfo.Create();
-        end
+    end
     else
         li := TListenerInfo(_lid_info.Objects[i]);
 
@@ -273,9 +273,9 @@ begin
             // we have a good entry..
             li.sig.delListener(li.l);
             li.Free();
-            end;
-        _lid_info.Delete(i);
         end;
+        _lid_info.Delete(i);
+    end;
 end;
 
 {---------------------------------------}
@@ -288,7 +288,7 @@ begin
     for i := 0 to Self.Count - 1 do begin
         sig := TSignal(Objects[i]);
         Result := Result + sig.Count;
-        end;
+    end;
 end;
 
 {------------------------------------------------------------------------------}
@@ -338,7 +338,7 @@ begin
         _change_list.Push(co);
 
         Result := false;
-        end
+    end
     else begin
         l.classname := TObject(l.callback.Data).ClassName;
         l.methodname := TObject(l.callback.Data).MethodName(l.callback.code);
@@ -347,7 +347,7 @@ begin
         if (Dispatcher <> nil) then
             Dispatcher.AddListenerInfo(l.cb_id, Self, l);
         Result := true;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -365,13 +365,13 @@ begin
         l.Free();
         Self.Delete(idx);
         Result := true;
-        end
+    end
     else if (invoking) then begin
         co := TChangeListEvent.Create();
         co.l := l;
         co.op := cl_delete;
         _change_list.Push(co);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -395,12 +395,12 @@ begin
                 // check to see if the listener's string is a substring of the event
                 if (Pos(e, cmp) >= 1) then
                     sig(event, tag);
-                end
+            end
             else
                 // otherwise, signal
                 sig(event, tag);
-            end;
         end;
+    end;
     invoking := false;
 
     if change_list.Count > 0 then
@@ -420,7 +420,7 @@ begin
         else
             Self.delListener(co.l);
         co.Free;
-        end;
+    end;
 end;
 
 {------------------------------------------------------------------------------}
@@ -496,8 +496,8 @@ begin
         if xp.Compare(tag) then begin
             pe := TPacketEvent(pl.Callback);
             pe('xml', tag);
-            end;
         end;
+    end;
     invoking := false;
 
     if change_list.Count > 0 then
@@ -531,7 +531,7 @@ begin
         sl := TStringListener(Self.Objects[i]);
         se := TDataStringEvent(sl.Callback);
         se(event, tag, data);
-        end;
+    end;
     invoking := false;
 
     if change_list.Count > 0 then

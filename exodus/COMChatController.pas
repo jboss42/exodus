@@ -39,7 +39,7 @@ type
 
   TChatPlugin = class
     com: IExodusChatPlugin;
-    end;
+end;
 
 
 implementation
@@ -61,7 +61,7 @@ begin
     for i := 0 to _plugs.Count - 1 do begin
         // todo: send chat plugins a shutdown signal
         TChatPlugin(_plugs[i]).Free();
-        end;
+    end;
     _plugs.Clear();
     _plugs.Free();
 
@@ -152,7 +152,7 @@ begin
         _plugs.Delete(id);
         cp.Free();
         Result := true;
-        end
+    end
     else
         Result := false;
 end;
@@ -177,21 +177,21 @@ begin
     case Part of
     HWND_MsgInput: begin
         Result := TfrmChat(_chat.window).MsgOut.Handle;
-        end;
+    end;
     HWND_MsgOutput: begin
         Result := TfrmChat(_chat.window).MsgList.Handle;
-        end;
+    end;
     Ptr_MsgInput: begin
         p := @(TfrmChat(_chat.window).MsgOut);
         Result := integer(p);
-        end;
+    end;
     Ptr_MsgOutput: begin
         p := @(TfrmChat(_chat.window).MsgList);
         Result := integer(p);
-        end
+    end
     else
         Result := -1;
-    end;
+end;
 end;
 
 initialization

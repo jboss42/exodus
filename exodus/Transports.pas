@@ -38,7 +38,7 @@ type
         procedure RemoveSetCallback(event: string; tag: TXMLTag);
     public
         procedure UnRegister();
-    end;
+end;
 
 procedure RemoveTransport(jid: WideString; Quiet: boolean = false);
 
@@ -66,7 +66,7 @@ begin
     if (Quiet = false) then begin
         if MessageDlg(sTransportRemove, mtConfirmation, [mbYes, mbNo], 0) = mrNo then
             exit;
-        end;
+    end;
 
     proxy := TTransportProxy.Create();
     proxy.jid := jid;
@@ -86,7 +86,7 @@ begin
         Namespace := XMLNS_REGISTER;
         iq.qTag.AddTag('remove');
         Send();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -107,12 +107,12 @@ begin
     if (event = 'timeout') then begin
         ShowError(sTransportTimeout);
         exit;
-        end;
+    end;
 
     if (tag.GetAttribute('type') = 'error') then begin
         ShowError(sTransportError);
         exit;
-        end;
+    end;
 
     if (action = 'remove') then begin
         key_tag := tag.QueryXPTag('/iq/query/key');
@@ -126,7 +126,7 @@ begin
         if (user = '') then begin
             ShowError(sTransportNotReg);
             exit;
-            end;
+        end;
 
         iq := TJabberIQ.Create(MainSession, MainSession.generateID(), RemoveSetCallback, 4);
         with iq do begin
@@ -138,9 +138,9 @@ begin
                 AddBasicTag('key', key);
             AddBasicTag('username', user);
             Send();
-            end;
-
         end;
+
+    end;
 end;
 
 {---------------------------------------}
@@ -150,17 +150,17 @@ begin
     if (event = 'timeout') then begin
         ShowError(sTransportTimeout);
         exit;
-        end;
+    end;
 
     if (tag.GetAttribute('type') = 'error') then begin
         ShowError(sTransportError);
         exit;
-        end
+    end
     else begin
         MessageDlg(sTransportSuccess, mtInformation, [mbOK], 0);
         self.free();
         exit;
-        end;
+    end;
 end;
 
 

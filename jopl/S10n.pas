@@ -44,7 +44,7 @@ type
         procedure Subscribed(event: string; tag: TXMLTag);
         procedure UnSubscribe(event: string; tag: TXMLTag);
         procedure UnSubscribed(event: string; tag: TXMLTag);
-    end;
+end;
 
 var
     SubController: TSubController;
@@ -137,12 +137,12 @@ begin
             if ((ritem = nil) or (ritem.subscription = 'none')) then begin
                 SendSubscribe(j.jid, MainSession);
                 SendSubscribed(j.jid, MainSession);
-                end
+            end
             else if (ritem.subscription = 'to') then
                 SendSubscribed(j.jid, MainSession);
-            end;
-
         end;
+
+    end;
     j.Free;
 end;
 
@@ -171,7 +171,7 @@ begin
         // we are got denied by this person
         MessageDlg(Format(sS10nDeny, [from.jid]), mtInformation, [mbOK], 0);
         ritem.remove();
-        end;
+    end;
     from.Free();
 end;
 

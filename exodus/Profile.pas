@@ -170,15 +170,15 @@ begin
             for i := 0 to ritem.Groups.Count - 1 do begin
                 gi := GrpListBox.Items.IndexOf(ritem.Groups[i]);
                 GrpListBox.Checked[gi] := true;
-                end;
             end;
+        end;
 
         // Show all the resources
         p := MainSession.ppdb.FindPres(tmp_jid.jid, '');
         while p <> nil do begin
             ResListBox.Items.Add(p.fromJID.resource);
             p := MainSession.ppdb.NextPres(p)
-            end;
+        end;
 
         tmps := MainSession.generateID();
         iq := TJabberIQ.Create(MainSession, tmps, vcard);
@@ -190,7 +190,7 @@ begin
         TreeView1.Selected := TreeView1.Items[0];
         TreeView1.FullExpand();
         PageControl1.ActivePageIndex := 0;
-        end;
+    end;
 
     tmp_jid.Free();
 
@@ -234,7 +234,7 @@ begin
             txtWorkState.Text := Region;
             txtWorkZip.Text := PCode;
             txtWorkCountry.Text := Country;
-            end;
+        end;
 
         with Home do begin
             txtHomeStreet1.Text := Street;
@@ -243,13 +243,13 @@ begin
             txtHomeState.Text := Region;
             txtHomeZip.Text := PCode;
             txtHomeCountry.Text := Country;
-            end;
+        end;
 
         txtOrgName.Text := OrgName;
         txtOrgUnit.Text := OrgUnit;
         txtOrgTitle.Text := OrgTitle;
         memDesc.Lines.Text := Desc;
-        end;
+    end;
 
     vcard.Free();
 end;
@@ -309,31 +309,31 @@ begin
         if ritem.RawNickname <> txtNick.Text then begin
             ritem.RawNickname := txtNick.Text;
             changed := true;
-            end;
+        end;
 
         tmp_grplist := TStringlist.Create;
         for i := 0 to GrpListBox.Items.Count - 1 do begin
             if GrpListBox.Checked[i] then
                 tmp_grplist.Add(grpListBox.Items[i]);
-            end;
+        end;
 
         for i := 0 to tmp_grplist.Count - 1 do begin
             if ritem.Groups.indexOf(tmp_grplist[i]) < 0 then begin
                 ritem.Groups.Add(tmp_grplist[i]);
                 changed := true;
-                end;
             end;
+        end;
 
         for i := ritem.Groups.Count - 1 downto 0 do begin
             if tmp_grpList.indexOf(ritem.Groups[i]) < 0 then begin
                 ritem.Groups.Delete(i);
                 changed := true;
-                end;
             end;
+        end;
 
         if changed then ritem.update();
         MainSession.FireEvent('/roster/item', nil, ritem);
-        end;
+    end;
     Self.Close;
 end;
 

@@ -239,7 +239,7 @@ uses
     ExUtils, RiserWindow, ShellAPI, RichEdit,
     Invite, ChatWin, RosterWindow, Presence, Roster,
     Session, StrUtils, JabberID, MsgDisplay, Notify,
-    PrefController, JabberMsg, Jabber1, XMLNode;
+    PrefController, JabberMsg, Jabber1, XMLNode, XMLUtils;
 
 {$R *.DFM}
 
@@ -267,7 +267,7 @@ begin
             setAttribute('xmlns', XMLNS_MUC);
             if (password <> '') then
                 AddBasicTag('password', password);
-            end;
+        end;
 
         MainSession.SendTag(p);
         f.Caption := tmp_jid.user + ' ' + sRoom;
@@ -287,11 +287,11 @@ begin
             lstRoster.Font.Charset := MainSession.Prefs.getInt('roster_font_charset');
             if (lstRoster.Font.Charset = 0) then
                 lstRoster.Font.Charset := 1;
-            end;
+        end;
 
         tmp_jid.Free();
         room_list.AddObject(rjid, f);
-        end;
+    end;
 
     f.Show;
     if f.TabSheet <> nil then
@@ -338,7 +338,7 @@ begin
         tmp_jid.Free();
         Msg.IsMe := false;
         server := true;
-        end
+    end
     else begin
         rm := TRoomMember(_roster.Objects[i]);
         // if blocked ignore anything they say, even subject changes.
@@ -347,7 +347,7 @@ begin
         Msg.Nick := rm.Nick;
         Msg.IsMe := (Msg.Nick = MyNick);
         server := false;
-        end;
+    end;
 
     if (Msg.Body <> '') then begin
         DisplayMsg(Msg, MsgList);
@@ -357,11 +357,11 @@ begin
             (MainSession.Prefs.getBool('log'))) then begin
             Msg.isMe := False;
             LogMessage(Msg);
-            end;
+        end;
 
         if (GetActiveWindow = Self.Handle) and (pnlInput.Visible) then
             MsgOut.SetFocus();
-        end;
+    end;
 
     if Msg.Subject <> '' then begin
         lblSubject.Caption := Msg.Subject;
@@ -369,7 +369,7 @@ begin
         tmps := AnsiReplaceText(tmps, '|', Chr(13));
         tmps := AnsiReplaceText(tmps, '&', '&&');
         lblSubject.Hint := tmps;
-        end;
+    end;
 
     // this check is needed only to prevent extraneous regexing.
     if ((not server) and
@@ -385,7 +385,7 @@ begin
                      'notify_roomactivity',
                      sNotifyActivity + Self.Caption,
                      ico_conf);
-        end;
+    end;
 
     Msg.Free();
 end;
@@ -406,12 +406,13 @@ begin
     if (txt[1] = '/') then begin
         if (checkCommand(txt)) then
             exit;
-        end;
+    end;
     msg := TJabberMessage.Create(jid, 'groupchat', txt, '');
     msg.nick := MyNick;
     msg.isMe := true;
     msg.ID := MainSession.generateID();
     MainSession.SendTag(msg.Tag);
+    msg.Free();
     inherited;
 end;
 
@@ -432,12 +433,12 @@ begin
     if (wsl.Count = 0) then begin
         wsl.Destroy();
         exit;
-        end;
+    end;
     cmd := wsl[0];
     if (cmd = '') or (cmd[1] <> '/') then begin
         wsl.Destroy();
         exit;
-        end;
+    end;
 
     wsl.Delete(0);
     c := pos(cmd, txt) + length(cmd) + 1;
@@ -446,55 +447,55 @@ begin
     if (cmd = '/clear') then begin
         msgList.Lines.Clear;
         Result := true;
-        end
+    end
     else if (cmd = '/config') then begin
         configRoom();
         Result := true;
-        end
+    end
     else if (cmd = '/help') then begin
         m := TJabberMessage.Create(self.jid, 'groupchat',
         '/ commands: '#13#10'/clear'#13#10'/config'#13#10'/subject <subject>'#13#10'/invite <jid>'#13#10'/block <nick>'#13#10'/kick <nick>'#13#10'/ban <nick>'#13#10'/nick <nick>'#13#10'/voice <nick>', '');
         DisplayMsg(m, MsgList);
         m.Destroy();
         Result := true;
-        end
+    end
     else if (cmd = '/nick') then begin
         // change nickname
         if (rest = '') then exit;
         changeNick(rest);
         Result := true;
-        end
+    end
     else if (cmd = '/subject') then begin
         // set subject
         changeSubject(rest);
         Result := true;
-        end
+    end
     else if (cmd = '/invite') then begin
         ShowInvite(Self.jid, wsl);
         Result := true;
-        end
+    end
     else if (cmd = '/kick') then begin
         selectNicks(wsl);
         popKickClick(popKick);
         Result := true;
-        end
+    end
     else if (cmd = '/ban') then begin
         selectNicks(wsl);
         popKickClick(popBan);
         Result := true;
-        end
+    end
     else if (cmd = '/voice') then begin
         selectNicks(wsl);
         popVoiceClick(nil);
 
         Result := true;
-        end
+    end
     else if (cmd = '/block') then begin
         selectNicks(wsl);
         popRosterBlockClick(nil);
 
         Result := true;
-        end;
+    end;
 
     wsl.Destroy();
     if (Result) then
@@ -520,7 +521,7 @@ begin
         _mcallback := -1;
         _ecallback := -1;
         _pcallback := -1;
-        end
+    end
     else if (event = '/session/presence') then begin
         // We changed our own presence, send it to the room
         p := TJabberPres.Create();
@@ -528,7 +529,7 @@ begin
         p.Show := MainSession.Show;
         p.Status := MainSession.Status;
         MainSession.SendTag(p);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -573,25 +574,25 @@ begin
                     Self.Close()
                 else
                     myNick := _old_nick;
-                end
+            end
             else if (ecode = '401') then begin
                 MessageDlg('You supplied an invalid password to enter this room.',
                     mtError, [mbOK], 0);
                 Self.Close();
                 StartJoinRoom(_jid, MyNick, '');
-                end
+            end
             else if (ecode = '404') then begin
                 MessageDlg('The room is being created. Please try again later.',
                     mtError, [mbOK], 0);
                 Self.Close();
                 exit;
-                end
+            end
             else if (ecode = '405') then begin
                 MessageDlg('You are not allowed to enter the room. You must be on the member list.',
                     mtError, [mbOK], 0);
                 Self.Close();
                 exit;
-                end
+            end
             else if (ecode = '407') then begin
                 if (messageDlg('You are not on the member list for this room. Try and register?',
                     mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
@@ -599,17 +600,17 @@ begin
                     t.setAttribute('jid', Self.jid);
                     MainSession.FireEvent('/session/register', t);
                     t.Free();
-                    end;
+                end;
                 Self.Close();
                 exit;
-                end
+            end
             else if (ecode = '403') then begin
                 MessageDlg(etag.Data(), mtError, [mbOK], 0);
                 Self.Close();
                 exit;
-                end;
             end;
-        end
+        end;
+    end
 
     else if ptype = 'unavailable' then begin
         t := tag.QueryXPTag(xp_muc_status);
@@ -617,7 +618,7 @@ begin
             if (t <> nil) then
                 ShowStatusCode(t);
             Self.Close();
-            end
+        end
         else if (i >= 0) then begin
             member := TRoomMember(_roster.Objects[i]);
 
@@ -632,8 +633,8 @@ begin
                         mtag := newRoomMessage(Format(sStatus_303,
                             [tmp1, tmp2]));
                         ShowMsg(mtag);
-                        end;
-                    end
+                    end;
+                end
                 else if ((scode = '301') or (scode = '307')) then begin
                     itag := tag.QueryXPTag(xp_muc_reason);
                     if (itag <> nil) then tmp1 := itag.Data else tmp1 := '';
@@ -641,18 +642,18 @@ begin
                     else if (scode = '307') then tmp2 := sStatus_307;
                     mtag := newRoomMessage(Format(tmp2, [member.Nick, tmp1]));
                     ShowMsg(mtag);
-                    end;
-                end
+                end;
+            end
             else if (member.role <> '') then begin
                 mtag := newRoomMessage(Format(sUserLeave, [member.Nick]));
                 ShowMsg(mtag);
-                end;
+            end;
 
             RemoveMember(member);
             member.Free;
             _roster.Delete(i);
-            end;
-        end
+        end;
+    end
     else begin
         // SOME KIND OF AVAIL
         if i < 0 then begin
@@ -666,7 +667,7 @@ begin
                 // we are the owner... config the room
                 _isMUC := true;
                 configRoom();
-                end;
+            end;
 
             _roster.AddObject(from, member);
             member.Node := AddMember(member);
@@ -676,8 +677,8 @@ begin
                 _isMUC := true;
                 mtag := newRoomMessage(Format(sNewUser, [member.nick]));
                 showMsg(mtag);
-                end;
-            end
+            end;
+        end
         else begin
             member := TRoomMember(_roster.Objects[i]);
 
@@ -686,7 +687,7 @@ begin
             if (itag <> nil) then begin
                 _isMUC := true;
                 tmp1 := itag.getAttribute('role');
-                end;
+            end;
 
             if ((tmp1 <> '') and (member.nick = myNick)) then begin
                 // someone maybe changed my role
@@ -697,8 +698,8 @@ begin
                 else
                     mtag := newRoomMessage(Format(sNewRole, [member.nick, tmp1]));
                 showMsg(mtag);
-                end;
             end;
+        end;
 
         // get extended stuff for MUC, and update the member struct
         if (xtag <> nil) then begin
@@ -708,8 +709,8 @@ begin
                 member.role := t.GetAttribute('role');
                 member.real_jid := t.GetAttribute('jid');
                 member.affil := t.GetAttribute('affiliation');
-                end;
             end;
+        end;
 
 
         // for all protocols, our nick is our resource
@@ -726,10 +727,10 @@ begin
             popBan.Enabled := popAdmin.Enabled;
             popVoice.Enabled := popAdmin.Enabled;
             popOwner.Enabled := popConfigure.Enabled;
-            end;
+        end;
 
         RenderMember(member, tag);
-        end;
+    end;
 
     _jid.Free();
 end;
@@ -771,7 +772,7 @@ begin
         toJid := Self.jid;
         Namespace := XMLNS_MUCOWNER;
         iqType := 'get';
-        end;
+    end;
     iq.Send();
 end;
 
@@ -819,10 +820,10 @@ begin
             else member.Node.ImageIndex := 1;
 
             member.show := p.Show;
-            end;
+        end;
 
         member.status := p.Status;
-        end;
+    end;
 
     if (member.show = '') then
         member.show := 'Available';
@@ -837,7 +838,7 @@ begin
     if (member.Node <> nil) then begin
         member.Node.Free;
         lstRoster.Refresh();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -882,14 +883,14 @@ begin
                     e := e + kw_list[i]
                 else
                     e := e + QuoteRegExprMetaChars(kw_list[i]);
-                end;
+            end;
                 e := e + ')';
             _keywords := TRegExpr.Create();
             _keywords.Expression := e;
             _keywords.Compile();
-            end;
-        kw_list.Free();
         end;
+        kw_list.Free();
+    end;
     MyNick := '';
 end;
 
@@ -903,7 +904,7 @@ begin
         _pcallback := MainSession.RegisterCallback(PresCallback, '/packet/presence[@from="' + sjid + '*"]');
         if (_scallback = -1) then
             _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
-        end;
+    end;
     Self.jid := sjid;
 end;
 
@@ -933,26 +934,26 @@ begin
                     prefix := Copy(tmps, i+1, length(tmps) - i);
                     MsgOut.SelLength := Length(prefix);
                     break;
-                    end;
+                end;
 
             if prefix = '' then begin
                 _nick_start := 0;
                 prefix := tmps;
                 MsgOut.SelStart := 0;
                 MsgOut.SelLength := Length(prefix);
-                end;
+            end;
 
             prefix := Trim(lowercase(prefix));
             _nick_prefix := prefix;
             _nick_idx := 0;
-            end
+        end
         else begin
             with MsgOut do begin
                 SelStart := _nick_start;
                 SelLength := _nick_len;
                 SelText := '';
-                end;
             end;
+        end;
 
         found := false;
         exloop := false;
@@ -974,8 +975,8 @@ begin
                     exloop := true;
                     found := true;
                     break;
-                    end;
                 end;
+            end;
 
             if (not found) and (_nick_idx = 0) then
                 exloop := true
@@ -987,9 +988,9 @@ begin
             MsgOut.SelText := _nick_prefix;
             _nick_prefix := '';
             _nick_idx := 0;
-            end;
+        end;
         Key := Chr(0);
-        end
+    end
     {
     else if (Key = #13) then
         SendMsg()
@@ -997,7 +998,7 @@ begin
     else begin
         _nick_prefix := '';
         _nick_idx := 0;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1023,9 +1024,12 @@ begin
         p.toJID := TJabberID.Create(jid);
         p.PresType := 'unavailable';
         MainSession.SendTag(p);
-        end;
+    end;
 
     _keywords.Free;
+    ClearStringListObjects(_roster);
+    _roster.Free();
+
     i := room_list.IndexOf(jid);
     if (i >= 0) then
         room_list.Delete(i);
@@ -1058,7 +1062,7 @@ begin
     s := lblSubject.Caption;
     if InputQueryW(sRoomSubjPrompt, sRoomNewSubj, s) then begin
         changeSubject(s);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1082,8 +1086,8 @@ begin
             // they match
             MessageDlg(sStatus_409, mtError, [mbOK], 0);
             exit;
-            end;
         end;
+    end;
 
     // go ahead and change it
     myNick := new_nick;
@@ -1102,7 +1106,7 @@ begin
     if (InputQueryW(sRoomNewNick, sRoomNewNick, new_nick)) then begin
         if (new_nick = myNick) then exit;
         changeNick(new_nick);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1129,7 +1133,7 @@ begin
         bm.nick := myNick;
         bm.bmName := bm_name;
         MainSession.roster.AddBookmark(bm.jid.full, bm);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1219,14 +1223,14 @@ begin
           else if rm.Show = 'dnd' then rm.Node.ImageIndex := ico_DND
           else if rm.Show = 'chat' then rm.Node.ImageIndex := ico_Chat
           else rm.Node.ImageIndex := ico_Online;
-          end
+      end
        else begin
           //block
           rm.blockShow := rm.show;
           rm.show := sBlocked;
           rm.Node.ImageIndex := ico_blocked;
-          end;
-       end;
+      end;
+   end;
 end;
 
 {---------------------------------------}
@@ -1240,7 +1244,7 @@ begin
         popRosterBlock.Caption := sUnblock
      else
         popRosterBlock.Caption := sBlock;
-     end;
+ end;
   inherited;
 end;
 
@@ -1262,8 +1266,8 @@ begin
         if (rm.Nick = sel_nick) then begin
            result := rm;
            exit;
-           end;
-        end;
+       end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1332,7 +1336,7 @@ begin
         if (chat_win.TabSheet <> nil) then
             frmExodus.Tabs.ActivePage := chat_win.TabSheet;
         tmp_jid.Free();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1364,18 +1368,18 @@ begin
                 if ((n.Data <> nil) and (TObject(n.Data) is TJabberRosterItem)) then begin
                     ritem := TJabberRosterItem(n.Data);
                     jids.Add(ritem.jid.jid);
-                    end
+                end
                 else if (n.Level = 0) then begin
                     for j := 0 to n.Count - 1 do begin
                         r := n.Item[j];
                         if ((r.Data <> nil) and (TObject(r.Data) is TJabberRosterItem)) then
                             jids.Add(TJabberRosterItem(r.Data).jid.jid);
-                        end;
                     end;
                 end;
             end;
-        ShowInvite(Self.jid, jids);
         end;
+        ShowInvite(Self.jid, jids);
+    end;
 end;
 
 {---------------------------------------}
@@ -1392,7 +1396,7 @@ begin
         InfoTip := m.show;
         if (m.status <> '') then
             InfoTip := InfoTip + ': ' + m.status;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1415,11 +1419,11 @@ begin
     if (Sender = popKick) then begin
         reason := sKickDefault;
         if (not InputQueryW(sKickReason, sKickReason, reason)) then exit;
-        end
+    end
     else if (Sender = popBan) then begin
         reason := sBanDefault;
         if (not InputQueryW(sBanReason, sBanReason, reason)) then exit;
-        end;
+    end;
 
     iq := TXMLTag.Create('iq');
     iq.setAttribute('type', 'set');
@@ -1454,9 +1458,9 @@ begin
                     AddBasicTag('reason', reason);
                 if (NewAffiliation <> '') then
                     setAttribute('affiliation', NewAffiliation);
-                end;
             end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1492,10 +1496,10 @@ begin
                 with q.AddTag('item') do begin
                     setAttribute('nick', cur_member.Nick);
                     setAttribute('role', new_role);
-                    end;
                 end;
             end;
         end;
+    end;
 
     MainSession.SendTag(iq);
 end;
@@ -1548,7 +1552,7 @@ begin
         c := _roster.indexOf(Self.jid + '/' + wsl[i]);
         if (c >=0) then
             lstRoster.Items[c].Selected := true;
-        end;
+    end;
 end;
 
 initialization

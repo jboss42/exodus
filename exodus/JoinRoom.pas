@@ -85,10 +85,10 @@ begin
                 a := agents.getAgent(i);
                 if (a.groupchat) then
                     Items.Add(a.jid);
-                end;
             end;
-        Show;
         end;
+        Show;
+    end;
 end;
 
 procedure StartJoinRoom(room_jid: TJabberID; nick, password: WideString); overload;
@@ -114,10 +114,10 @@ begin
                 a := agents.getAgent(i);
                 if (a.groupchat) then
                     Items.Add(a.jid);
-                end;
             end;
-        Show;
         end;
+        Show;
+    end;
 end;
 
 procedure TfrmJoinRoom.frameButtons1btnOKClick(Sender: TObject);
@@ -130,12 +130,12 @@ begin
     if (not isValidJid(rjid)) then begin
         MessageDlg(sInvalidRoomJID, mtError, [mbOK], 0);
         exit;
-        end;
+    end;
 
     if (txtNick.Text = '') then begin
         MessageDlg(sInvalidNick, mtError, [mbOK], 0);
         exit;
-        end;
+    end;
 
     pass := Trim(txtPassword.Text);
     StartRoom(rjid, txtNick.Text, pass);
@@ -144,7 +144,7 @@ begin
         setString('tc_lastroom', txtRoom.Text);
         setString('tc_lastserver', txtServer.Text);
         setString('tc_lastnick', txtNick.Text);
-        end;
+    end;
 
     Self.Close;
 end;

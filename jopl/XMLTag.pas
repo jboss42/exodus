@@ -38,14 +38,14 @@ type
   TXPLite = class;
 
   TXMLNodeList = class(TObjectList)
-    end;
+end;
 
   TXMLTagList = class(TList)
     private
         function GetTag(index: integer): TXMLTag;
     public
         property Tags[index: integer]: TXMLTag read GetTag; default;
-    end;
+end;
 
   TXMLTag = class(TXMLNode)
   private
@@ -246,7 +246,7 @@ begin
         n := TXMLNode(_children[i]);
         if n is TXMLTag then
             _children.Delete(i);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -271,7 +271,7 @@ begin
         n := TXMLNode(_children[i]);
         if n is TXMLCDATA then
             _children.Delete(i);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -295,7 +295,7 @@ begin
     attr := _AttrList.Node(key);
     if attr <> nil then
         Result := attr.Value;
-    end;
+end;
 
 {---------------------------------------}
 procedure TXMLTag.setAttribute(key, value: WideString);
@@ -307,7 +307,7 @@ begin
     if a = nil then begin
         a := TAttr.Create(key, value);
         _AttrList.Add(a);
-        end
+    end
     else
         a.value := value;
 
@@ -374,21 +374,21 @@ begin
             att := Copy(path, i + 1, length(path) - i);
             spath := Copy(path, 1, i-1);
             break;
-            end
+        end
         else if (path[i] = '/') then
             break;
         dec(i);
-        end;
+    end;
 
     if (att <> '') then begin
         t := Self.QueryXPTag(spath);
         Result := t.GetAttribute(att);
-        end
+    end
     else begin
         ftags := Self.QueryXPTags(spath);
         for i := 0 to ftags.Count - 1 do
             Result := Result + ftags.tags[i].Data;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -404,7 +404,7 @@ begin
         n := TXMLNode(_Children[i]);
         if (n.IsTag) then
             t.Add(TXMLTag(n));
-        end;
+    end;
     Result := t;
 end;
 
@@ -425,7 +425,7 @@ begin
         n := TXMLNode(_Children[i]);
         if ((n.IsTag) and (NameMatch(sname, n.name))) then
             t.Add(TXMLTag(n));
-        end;
+    end;
 
     Result := t;
 end;
@@ -449,12 +449,12 @@ begin
                 for j := 0 to s.count - 1 do begin
                     t.Add(s[j]);
                     if (first) then break;
-                    end;
-                if (s <> nil) then s.Free();
                 end;
+                if (s <> nil) then s.Free();
             end;
-        if (c <> nil) then c.Free();
         end;
+        if (c <> nil) then c.Free();
+    end;
     Result := t;
 end;
 
@@ -479,8 +479,8 @@ begin
         if ((n.IsTag) and (NameMatch(sname, n.name))) then begin
             Result := TXMLTag(n);
             exit;
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -508,8 +508,8 @@ begin
         if (n.NodeType = xml_CDATA) then begin
             Result := Result + TXMLCData(n).Data + ' ';
             break;
-            end;
         end;
+    end;
     if Result <> '' then Result := Trim(Result);
 end;
 
@@ -531,10 +531,10 @@ begin
                     _ns := TXMLTag(n).GetAttribute('xmlns');
                     if _ns <> '' then
                         break;
-                    end;
                 end;
             end;
         end;
+    end;
     Result := _ns;
 end;
 
@@ -567,7 +567,7 @@ begin
             x := x + TXMLNode(_Children[i]).xml;
         x := x + _xml_buff;
         x := x + '</' + Self.name + '>';
-        end;
+    end;
     Result := x;
 end;
 
@@ -585,7 +585,7 @@ begin
     for i := 0 to tags.Count - 1 do begin
         c := Self.AddTag(tags[i].Name);
         c.AssignTag(tags[i]);
-        end;
+    end;
 
     tags.Free();
 
@@ -662,7 +662,7 @@ begin
     if ((l > 2) and (xp[1] = '/') and (xp[2] = '/')) then begin
         recursive := true;
         i := 3;
-        end;
+    end;
 
     while (i <= l) do begin
         c := xp[i];
@@ -687,7 +687,7 @@ begin
             setAttribute(name, val);
             state := 1;
             inc(i);
-            end
+        end
         else if (c = '@') then begin
             // specific attribute
             if (state = 0) then
@@ -699,11 +699,11 @@ begin
             name := Copy(xp, s, (i-s));
             val := '';
             setAttribute(name, val);
-            end
+        end
         else if (state = 0) then
             cur := cur + c;
         inc(i);
-        end;
+    end;
 
     if (state = 0) then
         tag_name := cur;
@@ -765,7 +765,7 @@ begin
                 inc(f);
             if (f <= l) then
                 i := f;
-            end;
+        end;
 
         if ((c = '/') or (i = l)) then begin
             // we've reached a seperator
@@ -773,11 +773,11 @@ begin
                 cur := Copy(xps, s, (i-s));
                 s := i;
                 if (xps[i+1] = '/') then inc(i);
-                end
+            end
             else begin
                 cur := Copy(xps, s, (i - s) + 1);
                 s := i;
-                end;
+            end;
 
             if ((Lowercase(cur) = 'cdata') and (m <> nil)) then
                 m.get_cdata := true
@@ -785,10 +785,10 @@ begin
                 m := TXPMatch.Create;
                 m.parse(cur);
                 Matches.AddObject(m.tag_name, m)
-                end;
             end;
-        inc(i);
         end;
+        inc(i);
+    end;
 end;
 
 {---------------------------------------}
@@ -820,7 +820,7 @@ begin
     else if (match_idx = 0) then begin
         tl := TXMLTagList.Create();
         tl.Add(Tag);
-        end
+    end
     // check to see if we have a wildcard tag name..
     else if (cm.tag_name = '*') then
         tl := Tag.ChildTags()
@@ -845,18 +845,18 @@ begin
                     Delete(tmps, length(tmps), 1);
                     if (Pos(Lowercase(tmps), Lowercase(t.getAttribute(ca.Name))) <= 0) then
                         add := false;
-                    end
+                end
                 else if (ca.Value <> '') then begin
                     if (Lowercase(t.getAttribute(ca.name)) <> Lowercase(ca.Value)) then
                         add := false;
-                    end;
                 end;
             end;
+        end;
 
         // If the add flag is still true, add the tag to the result set
         if (add) then
             r.Add(t);
-        end;
+    end;
     tl.Free();
     
     Result := r;
@@ -889,13 +889,13 @@ begin
                 ntags.Clear;
                 for i := 0 to mtags.Count - 1 do
                     r.add(mtags.tags[i]);
-                end
+            end
             else begin
                 for i := 0 to mtags.Count - 1 do
                     ntags.Add(mtags[i]);
-                end;
-            mtags.Free;
             end;
+            mtags.Free;
+        end;
         inc(m);
         ctags.Assign(ntags);
         ntags.Clear;
@@ -922,14 +922,14 @@ begin
         if (next = Matches.Count) then begin
             // we have successfully matched everything
             Result := true;
-            end
+        end
         else begin
             // Check the next level
             Result := true;
             for t := 0 to mtags.Count - 1 do
                 Result := Result and (doCompare(mtags.Tags[t], next));
-            end;
-        end
+        end;
+    end
     else
         Result := false;
 
@@ -943,7 +943,7 @@ begin
     if (Matches.Count <= 0) then begin
         Result := true;
         exit;
-        end;
+    end;
 
     // check the first level, and kick off doCompares
     Result := doCompare(Tag, 0);
@@ -969,8 +969,8 @@ begin
                 Result := Result + '@' + ca.Name
             else
                 Result := Result + '[@' + ca.Name + '="' + ca.Value + '"]';
-            end;
         end;
+    end;
 end;
 
 end.

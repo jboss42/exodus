@@ -30,7 +30,7 @@ type
     TEmoticon = class
         il: TImageList;
         idx: integer;
-    end;
+end;
 
 var
     use_emoticons: boolean;
@@ -78,7 +78,7 @@ begin
         bot_thumb := ScrollInfo.nPos + Integer(ScrollInfo.nPage) + 2;
         Result := (bot_thumb >= ScrollInfo.nMax) or (ScrollInfo.nMax = 0) or
             (ts >= Trunc(0.8 * r));
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -110,14 +110,14 @@ begin
         RichEdit.WideSelText := '[' +
                             FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
                             Msg.Time) + ']';
-        end;
+    end;
 
     if (Msg.Nick = '') then begin
         // Server generated msgs (mostly in TC Rooms)
         c := clGreen;
         RichEdit.SelAttributes.Color := c;
         RichEdit.WideSelText := ' ' + txt;
-        end
+    end
 
     else if not Msg.Action then begin
         // This is a normal message
@@ -138,7 +138,7 @@ begin
             ProcessEmoticons(RichEdit, c, txt)
         else
             RichEdit.WideSelText := txt;
-        end
+    end
 
     else begin
         // This is an action
@@ -148,7 +148,7 @@ begin
             ProcessEmoticons(RichEdit, clPurple, Trim(txt))
         else
             RichEdit.WideSelText := txt;
-        end;
+    end;
 
     RichEdit.SelAttributes.Color := TColor(MainSession.Prefs.getInt('font_color'));
     RichEdit.WideSelText := #13#10;
@@ -190,18 +190,18 @@ begin
             im := emoticon_list.IndexOf(ms);
             if (im >= 0) then
                 eo := TEmoticon(emoticon_list.Objects[im]);
-            end;
+        end;
 
         // if we have a legal emoticon object, insert it..
         // otherwise insert the matched text
         if (eo <> nil) then begin
             eo.il.GetBitmap(eo.idx, _pic.Bitmap);
             RichEdit.InsertBitmap(_pic.Bitmap);
-            end
+        end
         else begin
             RichEdit.SelAttributes.Color := color;
             RichEdit.WideSelText := ms;
-            end;
+        end;
 
         // Match-6 is any trailing whitespace
         RichEdit.SelAttributes.Color := color;
@@ -216,15 +216,15 @@ begin
         if (m) then begin
             if (length(txt) < emoticon_regex.MatchPos[0]) then
                 m := false;
-            end;
         end;
+    end;
 
     if (lm <= length(txt)) then begin
         // we have a remainder
         txt := Copy(txt, lm, length(txt) - lm + 1);
         RichEdit.SelAttributes.Color := color;
         RichEdit.WideSelText := txt;
-        end;
+    end;
 
     RichEdit.ReadOnly := true;
 end;
@@ -240,7 +240,7 @@ procedure ConfigEmoticons();
         eo.il := il;
         eo.idx := idx;
         emoticon_list.AddObject(val, eo);
-    end;
+end;
 
 var
     e: string;
@@ -490,14 +490,14 @@ begin
             Browser.SelLength := 1;
             if (Browser.SelAttributes.Color = clGray) then
                 Browser.WideLines.Delete(Browser.Lines.Count-1);
-            end;
+        end;
 
         SelStart := Length(Lines.Text);
         SelLength := 0;
 
         SelAttributes.Color := clGray;
         WideSelText := txt + #13#10;
-        end;
+    end;
 
     if (at_bottom) then scrollRichEdit(Browser);
 end;
@@ -515,7 +515,7 @@ begin
         if cr_pos > 0 then begin
             Delete(txt, cr_pos, 2);
             Insert('<br />', txt, cr_pos);
-            end;
+        end;
     until (cr_pos <= 0);
 
     with MainSession.Prefs do begin
@@ -547,8 +547,8 @@ begin
                 html := '<div style="' + bg + font + '">' +
                     time + '<span style="color: green;">' +
                     txt + '</span></div>';
-            end;
         end;
+    end;
     Result := html;
 end;
 
@@ -566,7 +566,7 @@ begin
          nPos := pos(smile,txt);
          delete(txt,nPos,3);
          insert('<img src='+ExtractFilePath(Application.ExeName)+'smiley.gif height='+inttostr(hw)+' width='+inttostr(hw)+'>',txt,nPos);
-       end;
+   end;
     }
 
     // replace CR's w/ <br> tags
@@ -576,7 +576,7 @@ begin
         if cr_pos > 0 then begin
             Delete(txt, cr_pos, 2);
             Insert('<br />', txt, cr_pos);
-            end;
+        end;
     until (cr_pos <= 0);
 
     if Msg.Action then
@@ -584,7 +584,7 @@ begin
     else begin
         if Msg.isMe then color := 'red' else color := 'blue';
         html := '<div><span style="color: ' + color + ';">&lt;' + Msg.Nick + '&gt;</span> ' + txt + '</div>';
-        end;
+    end;
     AddHTML(html, Browser);
 end;
 

@@ -76,7 +76,7 @@ implementation
 
 {$R *.dfm}
 uses
-    ExUtils, Jabber1, Session;
+    XMLUtils, ExUtils, Jabber1, Session;
 
 {---------------------------------------}
 procedure TframeTreeRoster.Initialize();
@@ -91,6 +91,9 @@ end;
 {---------------------------------------}
 procedure TframeTreeRoster.Cleanup();
 begin
+    ClearStringListObjects(_jid_nodes);
+    ClearStringListObjects(_grp_nodes);
+
     _jid_nodes.Free();
     _grp_nodes.Free();
     _collapsed_grps.Free();
@@ -118,8 +121,8 @@ begin
             ri := TJabberRosterItem(Objects[i]);
             p := MainSession.ppdb.FindPres(ri.JID.jid, '');
             RenderNode(ri, p);
-            end;
         end;
+    end;
 
     _FullRoster := false;
     treeRoster.AlphaSort;
@@ -158,8 +161,8 @@ begin
             if (p.Count <= 0) then
                 Self.RemoveGroupNode(p);
             node_list.Delete(i);
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -180,7 +183,7 @@ begin
     for i := 0 to _jid_nodes.Count - 1 do begin
         node_list := TList(_jid_nodes.Objects[i]);
         node_list.Clear();
-        end;
+    end;
 
     {
     for i := 0 to Bookmarks.Count - 1 do
@@ -205,8 +208,8 @@ begin
         if ((n.Level = 0) and (n <> _offline)) then begin
             if (_collapsed_grps.IndexOf(n.Text) < 0) then
                 n.Expand(true);
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -236,7 +239,7 @@ begin
 
     if (ritem.ask = 'subscribe') then begin
         // allow these items to pass thru
-        end
+    end
 
     else if (((_show_online) and (not show_offgrp)) and
         ((p = nil) or (p.PresType = 'unavailable'))) then begin
@@ -244,7 +247,7 @@ begin
         // This person is not online, remove all nodes and bail
         RemoveItemNodes(ritem);
         exit;
-        end
+    end
 
     else if ((ritem.subscription = 'none') or
         (ritem.subscription = '') or
@@ -253,7 +256,7 @@ begin
         // or we are removing them from the roster
         RemoveItemNodes(ritem);
         exit;
-        end;
+    end;
 
     // Create a list to contain all nodes for this
     // roster item, and assign it to the .Data property
@@ -264,7 +267,7 @@ begin
     if node_list = nil then begin
         node_list := TList.Create;
         _jid_nodes.AddObject(ritem.jid.full, node_list);
-        end;
+    end;
 
     // Create a temporary list of grps that this
     // contact should be in.
@@ -290,8 +293,8 @@ begin
             // nuke this old node
             cur_node.Free;
             node_list.Delete(i);
-            end;
         end;
+    end;
 
     // determine the caption for the node
     if (ritem.Nickname <> '') then
@@ -306,8 +309,8 @@ begin
         if (p <> nil) then begin
             if (p.Status <> '') then
                 tmps := tmps + ' (' + p.Status + ')';
-            end;
         end;
+    end;
 
 
     // For each grp in the temp. grp list,
@@ -324,9 +327,9 @@ begin
                 _offline := treeRoster.Items.AddChild(nil, 'Offline');
                 _offline.ImageIndex := ico_right;
                 _offline.SelectedIndex := ico_right;
-                end;
+            end;
             grp_node := _offline;
-            end
+        end
         else begin
             // Make sure the grp exists in the GrpList
             grp_idx := _grp_nodes.IndexOf(cur_grp);
@@ -338,8 +341,8 @@ begin
             grp_node := TTreeNode(_grp_nodes.Objects[grp_idx]);
             if (grp_node = nil) then begin
                 grp_node := RenderGroup(grp_idx);
-                end;
             end;
+        end;
 
         // Expand any grps that are not supposed to be collapsed
         if ((not _FullRoster) and
@@ -356,14 +359,14 @@ begin
             if n.HasAsParent(grp_node) then begin
                 cur_node := n;
                 break;
-                end;
             end;
+        end;
 
         if cur_node = nil then begin
             // add a node for this person under this group
             cur_node := treeRoster.Items.AddChild(grp_node, tmps);
             node_list.Add(cur_node);
-            end;
+        end;
 
         cur_node.Text := tmps;
         cur_node.Data := ritem;
@@ -380,11 +383,11 @@ begin
                 cur_node.ImageIndex := ico_DND
             else
                 cur_node.ImageIndex := ico_Online
-            end;
+        end;
 
         cur_node.SelectedIndex := cur_node.ImageIndex;
         if (exp_grpnode) then grp_node.Expand(true);
-        end;
+    end;
 
     tmp_grps.Free();
 
@@ -397,7 +400,7 @@ begin
         treeRoster.AlphaSort;
         treeRoster.Refresh;
         RemoveEmptyGroups();
-        end;
+    end;
 
 end;
 
@@ -428,7 +431,7 @@ begin
         node := TTreeNode(_grp_nodes.Objects[i]);
         if ((node <> nil) and (node.Count = 0)) then
             RemoveGroupNode(node);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -456,8 +459,8 @@ begin
         if (_collapsed_grps.IndexOf(Node.Text) < 0) then begin
             _collapsed_grps.Add(Node.Text);
             // MainSession.Prefs.setStringlist('col_groups', _collapsed_grps, true);
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -476,14 +479,14 @@ begin
             if (i >= 0) then begin
                 // dirty := true;
                 _collapsed_grps.Delete(i);
-                end;
+            end;
         until (i < 0);
 
         {
         if (dirty) then
             MainSession.Prefs.setStringlist('col_groups', _collapsed_grps, true);
         }
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -508,17 +511,17 @@ begin
     ((treeRoster.SelectionCount > 1) and (node = nil))) then begin
         Result := node_grp;
         _cur_grp := n.Text;
-        end
+    end
 
     else if (TObject(n.Data) is TJabberBookmark) then begin
         Result := node_bm;
         _cur_bm := TJabberBookmark(n.Data);
-        end
+    end
 
     else if (TObject(n.Data) is TJabberRosterItem) then begin
         Result := node_ritem;
         _cur_ritem := TJabberRosterItem(n.Data);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -559,7 +562,7 @@ begin
                 if (p <> nil) then begin
                     if (p.Status <> '') then
                         c2 := '(' + p.Status + ')';
-                    end;
+                end;
 
                 with treeRoster.Canvas do begin
                     TextFlags := ETO_OPAQUE;
@@ -573,13 +576,13 @@ begin
                         Font.Color := clHighlightText;
                         Brush.Color := clHighlight;
                         FillRect(xRect);
-                        end
+                    end
                     else begin
                         Font.Color := clWindowText;
                         Brush.Color := treeRoster.Color;
                         Brush.Style := bsSolid;
                         FillRect(xRect);
-                        end;
+                    end;
 
                     // draw the image
                     ImageList1.Draw(treeRoster.Canvas, nRect.Left + treeRoster.Indent,
@@ -589,11 +592,11 @@ begin
                     if (cdsSelected in State) then begin
                         main_color := clHighlightText;
                         stat_color := main_color;
-                        end
+                    end
                     else begin
                         main_color := treeRoster.Font.Color;
                         stat_color := _status_color;
-                    end;
+                end;
 
                     SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(main_color));
                     TextOut(xRect.Left + 1, xRect.Top + 1, c1);
@@ -603,16 +606,16 @@ begin
                     if (cdsSelected in State) then
                         // Draw the focus box.
                         treeRoster.Canvas.DrawFocusRect(xRect);
-                    end;
+                end;
 
                 DefaultDraw := false;
-                end
+            end
             else
                 DefaultDraw := true;
-            end;
         end;
+    end;
 
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -632,7 +635,7 @@ begin
             n.Collapse(false)
         else
             n.Expand(false);
-        end;
+    end;
 end;
 
 end.

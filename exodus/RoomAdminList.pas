@@ -77,12 +77,12 @@ begin
         f.role := true;
         f.onList := role;
         f.offList := MUC_NONE;
-        end
+    end
     else begin
         f.role := false;
         f.onList := affiliation;
         f.offList := MUC_NONE;
-        end;
+    end;
 
     if (caption <> '') then
         f.Caption := caption;
@@ -106,7 +106,7 @@ begin
         else
             Namespace := XMLNS_MUCADMIN;
         iqType := 'get';
-        end;
+    end;
 
     item := iq.qTag.AddTag('item');
     if (role) then
@@ -136,7 +136,7 @@ begin
             mtError, [mbOK], 0);
         Self.Close;
         exit;
-        end;
+    end;
 
     rjid := tag.GetAttribute('from');
     items := tag.QueryXPTags('/iq/query/item');
@@ -149,8 +149,8 @@ begin
             li.Caption := items[i].GetAttribute('nick');
             li.SubItems.Add(items[i].GetAttribute('jid'));
             li.Checked := true;
-            end;
         end;
+    end;
 
     items.Free();
 end;
@@ -182,8 +182,8 @@ begin
                 item.setAttribute('role', offList)
             else
                 item.setAttribute('affiliation', offList);
-            end;
         end;
+    end;
 
     // Add the following jids to the list.
     for i := 0 to memNew.Lines.Count - 1 do begin
@@ -195,8 +195,8 @@ begin
                 item.setAttribute('role', onList)
             else
                 item.setAttribute('affiliation', onList);
-            end;
         end;
+    end;
 
     MainSession.SendTag(iq);
     Self.Close();

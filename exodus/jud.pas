@@ -157,8 +157,8 @@ begin
             a := MainSession.MyAgents.getAgent(i);
             if (a.search) then
                 Add(a.jid);
-            end;
         end;
+    end;
 
     f.Show;
 
@@ -170,11 +170,11 @@ begin
     if (sjid <> '') then begin
         f.cboJID.Text := sjid;
         f.getFields();
-        end
+    end
     else if (f.cboJID.Items.Count > 0) then begin
         f.cboJID.ItemIndex := 0;
         f.getFields();
-        end;
+    end;
 
     Result := f;
 end;
@@ -233,7 +233,7 @@ begin
         Namespace := XMLNS_SEARCH;
         toJid := cur_jid;
         Send();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -258,11 +258,11 @@ begin
             x := cur_iq.qTag.AddTag('x');
             x.setAttribute('xmlns', XMLNS_XDATA);
             cur_state := 'xitems';
-            end
+        end
         else begin
             cur_state := 'items';
             x := nil;
-            end;
+        end;
 
         // go thru all the frames and add tags for each field
         for i := 0 to pnlFields.ControlCount - 1 do begin
@@ -270,8 +270,8 @@ begin
                 with TframeTopLabel(pnlFields.Controls[i]) do begin
                     if (txtData.Text <> '') then
                         cur_iq.qTag.AddBasicTag(field_name, txtData.Text);
-                    end;
-                end
+                end;
+            end
             else if (pnlFields.Controls[i] is TframeGeneric) then begin
                 with TframeGeneric(pnlFields.Controls[i]) do begin
                     if (not isValid()) then
@@ -281,11 +281,11 @@ begin
                         fx := getXML();
                         if (fx <> nil) then
                             x.AddTag(fx);
-                        end;
                     end;
                 end;
             end;
         end;
+    end;
 
     if (valid) then begin
         clearFields();
@@ -296,7 +296,7 @@ begin
         btnAction.Caption := sJUDStop;
 
         cur_iq.Send();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -323,13 +323,13 @@ begin
         MessageDlg(sJUDErrorContacting , mtError, [mbOK], 0);
         self.reset();
         exit;
-        end
+    end
     else if ((tag <> nil) and (tag.GetAttribute('type') = 'error')) then begin
         // we got an iq-error back
         MessageDlg(sJUDErrorContacting, mtError, [mbOK], 0);
         Self.Reset();
         exit;
-        end
+    end
     else if (tag <> nil) then begin
         // *whoop*, we got a result tag
         lblInstructions.Visible := true;
@@ -354,13 +354,13 @@ begin
                     render(fields[i]);
                     Align := alTop;
                     TabOrder := 0;
-                    end;
+                end;
                 AssignDefaultFont(cur_gen.Font);
                 cur_gen.Font.Size := cur_gen.Font.size - 1;
-                end;
+            end;
             pnlFields.Visible := true;
             fields.Free();
-            end
+        end
         else begin
           fields := tag.QueryXPTag('/iq/query').ChildTags();
           for i := fields.Count - 1 downto 0 do begin
@@ -371,7 +371,7 @@ begin
                   // ignore stuff in other namesapces
               else if (cur_tag.Name = 'key') then begin
                   cur_key := cur_tag.Data;
-                  end
+              end
               else begin
                   cur_field := cur_tag.Name;
                   field_set.Add(cur_field);
@@ -385,15 +385,15 @@ begin
                       TabOrder := 0;
                       if (cur_field = 'password') then
                           txtData.PasswordChar := '*';
-                      end;
                   end;
               end;
-          fields.Free();
           end;
+          fields.Free();
+      end;
 
         if (cur_frame <> nil) then
             cur_frame.txtData.SetFocus();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -423,7 +423,7 @@ begin
         MessageDlg(sJUDTimeout, mtError, [mbOK], 0);
         self.reset();
         exit;
-        end
+    end
     else begin
         // tag
         {
@@ -452,7 +452,7 @@ begin
             self.reset();
             MessageDlg(sJUDEmpty, mtInformation, [mbOK], 0);
             exit;
-            end;
+        end;
 
         lstContacts.AllocBy := 25;
         lstContacts.Items.Clear;
@@ -471,16 +471,16 @@ begin
                 Caption := sJID;
                 Width := 100;
                 jid_col := 0;
-                end;
+            end;
 
             for i := 0 to cols.count - 1 do begin
                 col := lstContacts.Columns.Add();
                 col.Caption := getDisplayField(cols[i].Name);
                 col.Width := 100;
-                end;
+            end;
 
             cols.Free();
-            end
+        end
         else begin
             // reported columns for x-data, setup columns
             cols := tag.QueryXPTags('//x[@xmlns="jabber:x:data"]/reported/field');
@@ -494,13 +494,13 @@ begin
                         if ((tmps = 'jid') or (tmps = 'jid-single')) then begin
                             jid_col := i;
                             jid_fld := cols[i].GetAttribute('var');
-                            end;
                         end;
-                    clist.Add(cols[i].GetAttribute('var'));
                     end;
-                cols.Free();
+                    clist.Add(cols[i].GetAttribute('var'));
                 end;
+                cols.Free();
             end;
+        end;
 
         // populate the listview.
         for i := 0 to items.count - 1 do begin
@@ -515,7 +515,7 @@ begin
                 for c := 0 to cols.count - 1 do
                     ji.cols[c + 1] := cols[c].Data;
                 cols.Free();
-                end
+            end
 
             else begin // xitems
                 ji.xdata := true;
@@ -528,13 +528,13 @@ begin
                         ji.cols[cidx] := cols[c].GetBasicText('value');
                         if (tmps = jid_fld) then
                             ji.jid := ji.cols[cidx];
-                        end;
                     end;
-                cols.Free();
                 end;
+                cols.Free();
+            end;
 
             virtlist.Add(ji);
-            end;
+        end;
 
         lstContacts.Items.Count := virtlist.Count;
 
@@ -548,7 +548,7 @@ begin
         pnlResults.Align := alClient;
         btnAction.Caption := sJUDAdd;
         cur_state := 'add';
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -568,7 +568,7 @@ begin
     while (pnlFields.ControlCount > 0) do begin
         c := pnlFields.Controls[0];
         c.Free();
-        end;
+    end;
     pnlFields.Visible := true;
 end;
 
@@ -589,25 +589,25 @@ begin
         cur_iq.Free();
         cur_iq := nil;
         self.reset();
-        end
+    end
 
     else if (cur_state = 'get_fields') then begin
         // get the fields for this agent
         getFields();
-        end
+    end
 
     else if ((cur_state = 'search') or (cur_state = 'xsearch')) then begin
         // fire off the iq-set to do the actual search
         sendRequest();
-        end
+    end
 
     else if (cur_state = 'add') then begin
         // add selected contacts
         popAddClick(self);
-        end
+    end
 
     else begin
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -662,12 +662,12 @@ var
         if (ritem <> nil) then begin
             if ((ritem.subscription = 'to') or (ritem.subscription = 'both')) then
                 exit;
-            end;
+        end;
 
         // add the item
         jid := TJabberID.Create(item.caption);
         MainSession.roster.AddItem(item.caption, jid.user, cboGroup.Text, true);
-    end;
+end;
 
 begin
   inherited;
@@ -679,8 +679,8 @@ begin
         for i := 0 to lstContacts.Items.Count - 1 do begin
             if lstContacts.Items[i].Selected then
                 doAdd(lstContacts.Items[i]);
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -692,7 +692,7 @@ begin
         Items.BeginUpdate;
         Items.Clear;
         Items.EndUpdate;
-        end;
+    end;
 
     self.reset();
 end;
@@ -708,7 +708,7 @@ begin
     if InputQueryW(sNewGroup, sNewGroupPrompt, ngrp) then begin
         MainSession.Roster.GrpList.Add(ngrp);
         cboGroup.Items.Assign(MainSession.Roster.GrpList);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -740,7 +740,7 @@ begin
     if (cur_iq <> nil) then begin
         cur_iq.Free();
         cur_iq := nil;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -771,7 +771,7 @@ begin
     if (cur_sort = -1) then begin
         Result := 0;
         exit;
-        end;
+    end;
 
     j1 := TJUDItem(Item1);
     j2 := TJUDItem(Item2);
@@ -780,22 +780,22 @@ begin
         if (cur_dir) then begin
             s1 := j1.jid;
             s2 := j2.jid;
-            end
+        end
         else begin
             s1 := j2.jid;
             s2 := j1.jid;
-            end;
-        end
+        end;
+    end
     else begin
         if (cur_dir) then begin
             s1 := j1.cols[cur_sort];
             s2 := j2.cols[cur_sort];
-            end
+        end
         else begin
             s1 := j2.cols[cur_sort];
             s2 := j1.cols[cur_sort];
-            end;
         end;
+    end;
 
     Result := StrComp(PChar(LowerCase(s1)),
                       PChar(LowerCase(s2)));
@@ -820,7 +820,7 @@ begin
         Item.SubItems.Clear();
         for i := 1 to ji.count do
             item.SubItems.Add(ji.cols[i]);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -846,13 +846,13 @@ begin
         repeat
             if (i = virtlist.Count - 1) then begin
                 if Wrap then i := 0 else exit;
-                end;
+            end;
             ji := TJUDItem(virtlist[i]);
             f := Pos(Uppercase(FindString), ji.jid) > 0;
             inc(i);
         until (f or (i = StartIndex));
         if (f) then Index := i - 1;
-        end;
+    end;
 end;
 
 

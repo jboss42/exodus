@@ -22,6 +22,7 @@ inherited frmChat: TfrmChat
   inherited pnlInput: TPanel
     inherited MsgOut: TExRichEdit
       WantReturns = False
+      OnChange = MsgOutChange
     end
   end
   inherited Panel1: TPanel

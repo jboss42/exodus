@@ -177,7 +177,7 @@ begin
         MessageDlg(sVCardError,
             mtInformation, [mbOK], 0);
         exit;
-        end;
+    end;
     
     _vcard.parse(tag);
 
@@ -202,7 +202,7 @@ begin
             txtWorkState.Text := Region;
             txtWorkZip.Text := PCode;
             txtWorkCountry.Text := Country;
-            end;
+        end;
 
         with Home do begin
             txtHomeStreet1.Text := Street;
@@ -211,13 +211,13 @@ begin
             txtHomeState.Text := Region;
             txtHomeZip.Text := PCode;
             txtHomeCountry.Text := Country;
-            end;
+        end;
 
         txtOrgName.Text := OrgName;
         txtOrgUnit.Text := OrgUnit;
         txtOrgTitle.Text := OrgTitle;
         memDesc.Lines.Text := Desc;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -269,7 +269,7 @@ begin
             Region := txtWorkState.Text;
             PCode := txtWorkZip.Text;
             Country := txtWorkCountry.Text;
-            end;
+        end;
 
         with Home do begin
             home := true;
@@ -280,12 +280,12 @@ begin
             Region := txtHomeState.Text;
             PCode := txtHomeZip.Text;
             Country := txtHomeCountry.Text;
-            end;
+        end;
 
         OrgName := txtOrgName.Text;
         OrgUnit := txtOrgUnit.Text;
         OrgTitle := txtOrgTitle.Text;
-        end;
+    end;
 
     iq := TXMLTag.Create('iq');
     iq.setAttribute('id', MainSession.generateID());

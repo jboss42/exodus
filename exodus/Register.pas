@@ -38,7 +38,7 @@ type
     public
         constructor Create(jid: WideString; reg_full: boolean);
         destructor Destroy; override;
-    end;
+end;
 
     TRegController = class
     private
@@ -52,7 +52,7 @@ type
         procedure SetSession(s: TObject);
         procedure MonitorJid(jid: WideString; reg_full: boolean = true);
         procedure RemoveProxy(rp: TRegProxy);
-    end;
+end;
 
 implementation
 uses
@@ -85,7 +85,7 @@ begin
         f := TfrmRegister.Create(Application);
         f.jid := tag.getAttribute('jid');
         f.Start();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -135,7 +135,7 @@ begin
         tmp_jid := TJabberID.Create(_jid);
         f.jid := tmp_jid.domain;
         tmp_jid.Free();
-        end;
+    end;
     f.Start();
     frmExodus.RegisterController.RemoveProxy(Self);
 end;
@@ -146,7 +146,7 @@ begin
     if (_cb <> -1) then begin
         MainSession.UnRegisterCallback(_cb);
         _cb := -1;
-        end;
+    end;
 end;
 
 end.

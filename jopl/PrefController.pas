@@ -133,7 +133,7 @@ type
         function IsValid() : boolean;
 
         property password: Widestring read getPassword write setPassword;
-    end;
+end;
 
     TPrefKind = (pkClient, pkServer);
 
@@ -188,7 +188,7 @@ type
         procedure EndUpdate();
 
         property Profiles: TStringlist read _profiles write _profiles;
-    end;
+end;
 
 procedure fillDefaultStringlist(pkey: Widestring; sl: TWideStrings);
 function getDefault(pkey: Widestring): Widestring;
@@ -241,7 +241,7 @@ begin
             if ValueExists('AppData') then begin
                 Result := ReadString('AppData') + '\Exodus\';
                 Result := ReplaceEnvPaths(Result);
-                end
+            end
             else
                 Result := ExtractFilePath(Application.EXEName);
 
@@ -257,18 +257,18 @@ begin
                         if ValueExists('Local AppData') then begin
                             Result := ReadString('Local AppData') + '\Exodus\';
                             Result := ReplaceEnvPaths(Result);
-                            end;
-                        end; // EFOpenError
-                    end; // except
-                end; // if not fileExists
-            end; // with reg
+                        end;
+                    end; // EFOpenError
+                end; // except
+            end; // if not fileExists
+        end; // with reg
     finally
         reg.Free;
-    end;
+end;
     except
         // As a last result, just try the appdir
         Result := ExtractFilePath(Application.EXEName);
-    end;
+end;
 
     // Finally, if the directory doesn't exist.. create it.
     if (not DirectoryExists(Result)) then
@@ -317,23 +317,23 @@ begin
         // left
         dflt_top := 0;
         dflt_left := _taskrect.Left + 10;
-        end;
+    end;
     1: begin
         // right
         dflt_top := 0;
         dflt_left := 0;
-        end;
+    end;
     2: begin
         // top
         dflt_top := _taskrect.Bottom + 10;
         dflt_left := 0;
-        end;
+    end;
     3: begin
         // bottom
         dflt_top := 0;
         dflt_left := 0;
-        end;
     end;
+end;
 end;
 
 {$else}
@@ -358,7 +358,7 @@ begin
         // we have something to read.. hopefully it's correct :)
         _pref_node := _parser.popTag();
         _parser.Clear();
-        end
+    end
     else
         // create some default node
         _pref_node := TXMLTag.Create('exodus');
@@ -413,7 +413,7 @@ begin
     case server_side of
         pkClient:  t := _pref_node.GetFirstTag(pkey);
         pkServer:  t := _server_node.GetFirstTag(pkey);
-    end;
+end;
 
     if (t = nil) then 
         Result := getDefault(pkey)
@@ -445,7 +445,7 @@ begin
         pkClient:   p := _pref_node.GetFirstTag(pkey);
         pkServer:   p := _server_node.GetFirstTag(pkey);
         else p:= nil;
-    end;
+end;
 
     if (p <> nil) then begin
         sl.Clear();
@@ -453,7 +453,7 @@ begin
         for i := 0 to s.Count - 1 do
             sl.Add(s.Tags[i].Data);
         s.Free;
-        end
+    end
     else
         fillDefaultStringList(pkey, sl);
 end;
@@ -475,7 +475,7 @@ begin
     if (server_side = pkServer) then begin
         n := _server_node;
         _server_dirty := true;
-        end
+    end
     else
         n := _pref_node;
         
@@ -483,7 +483,7 @@ begin
     if (t <> nil) then begin
         t.ClearCData;
         t.AddCData(pvalue);
-        end
+    end
     else
         n.AddBasicTag(pkey, pvalue);
 
@@ -508,7 +508,7 @@ begin
     if (Server_side = pkServer) then begin
         n := _server_node;
         _server_dirty := true;
-        end
+    end
     else
         n := _pref_node;
 
@@ -526,7 +526,7 @@ begin
     for i := 0 to pvalue.Count - 1 do begin
         if (pvalue[i] <> '') then
             p.AddBasicTag('s', pvalue[i]);
-        end;
+    end;
 
     if (server_side = pkClient) then
         Self.Save();
@@ -546,8 +546,8 @@ begin
         if (ptags[i].GetAttribute('name') = pkey) then begin
             Result := ptags[i];
             break;
-            end;
         end;
+    end;
 
     ptags.Free;
 end;
@@ -591,7 +591,7 @@ begin
         cp := TJabberCustompres.Create();
         cp.Parse(ptags[i]);
         Result.Add(cp);
-        end;
+    end;
     ptags.Free();
 end;
 
@@ -608,7 +608,7 @@ begin
     if (p <> nil) then begin
         Result := TJabberCustomPres.Create();
         Result.Parse(p);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -681,13 +681,13 @@ begin
         l := SafeInt(f.getAttribute('left'));
         w := SafeInt(f.getAttribute('width'));
         h := SafeInt(f.getAttribute('height'));
-        end
+    end
     else begin
         t := form.Top;
         l := form.Left;
         w := form.Width;
         h := form.Height;
-        end;
+    end;
 
     if (t < dflt_top) then t := dflt_top;
     if (l < dflt_left) then l := dflt_left;
@@ -695,10 +695,10 @@ begin
 
     if (t + h > Screen.Height) then begin
         t := Screen.Height - h;
-    end;
+end;
     if (l + w > Screen.Width) then begin
         l := Screen.Width - w;
-    end;
+end;
 
     Form.SetBounds(l, t, w, h);
 end;
@@ -737,7 +737,7 @@ begin
         cur_profile := TJabberProfile.Create('');
         cur_profile.Load(ptags[i]);
         _profiles.AddObject(cur_profile.name, cur_profile);
-        end;
+    end;
 
     ptags.Free;
 end;
@@ -760,7 +760,7 @@ begin
         cur_profile := TJabberProfile(_profiles.Objects[i]);
         ptag := _pref_node.AddTag('profile');
         cur_profile.Save(ptag);
-        end;
+    end;
 
     Self.Save();
     ptags.Free;
@@ -789,7 +789,7 @@ begin
         with qtag.AddTag('storage') do
             setAttribute('xmlns', XMLNS_PREFS);
         Send();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -814,8 +814,8 @@ begin
             stag := AddTag('storage');
             stag.AssignTag(_server_node);
             stag.setAttribute('xmlns', XMLNS_PREFS);
-            end;
         end;
+    end;
     js.SendTag(iq);
     _server_dirty := false;
 end;
@@ -968,7 +968,7 @@ begin
     if (SavePasswd) then begin
         ptag.setAttribute('encoded', 'yes');
         ptag.AddCData(EncodeString(Password));
-        end;
+    end;
 
     node.AddBasicTag('resource', Resource);
     node.AddBasicTag('priority', IntToStr(Priority));
@@ -1038,13 +1038,13 @@ begin
     if (t <> nil) then begin
         result := t.Data;
         exit;
-        end;
+    end;
 
     t := s_default_node.GetFirstTag(pkey);
     if (t <> nil) then begin
         result := t.Data;
         exit;
-        end;
+    end;
 
     // set the defaults for the pref controller
     if pkey = 'away_status' then
@@ -1095,7 +1095,7 @@ begin
     if (parser.Count > 0) then begin
         s_default_node := parser.popTag();
         parser.Clear();
-        end
+    end
     else
         s_default_node := TXmlTag.Create('brand');
 
@@ -1104,7 +1104,7 @@ begin
         // we have something to read.. hopefully it's correct :)
         s_brand_node := parser.popTag();
         parser.Clear();
-        end
+    end
     else
         // create some default node
         s_brand_node := TXMLTag.Create('brand');

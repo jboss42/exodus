@@ -90,16 +90,16 @@ begin
         if MainSession.Prefs.getBool('toast_alpha') then begin
             singleToast.AlphaBlend := true;
             singleToast.AlphaBlendValue := MainSession.Prefs.getInt('toast_alpha_val');
-            end;
-        end
+        end;
+    end
     else begin
         // we already have an instance, reset the timer
         if singleToast.Timer2.Enabled then begin
             singleToast.Timer2.Enabled := false;
             singleToast.Timer2.Enabled := true;
-            end;
-        animate := false;
         end;
+        animate := false;
+    end;
 
     singleToast._clickForm := clickForm;
     singleToast._clickHandle := clickForm.Handle;
@@ -108,7 +108,7 @@ begin
         Left := 38;
         Width := singleToast.ClientWidth - 55;
         Caption := msg;
-        end;
+    end;
 
     // madness to make sure toast images are transparent.
     with singleToast.Image1 do begin
@@ -116,7 +116,7 @@ begin
         Canvas.FillRect(Rect(0, 0,  Width, Height));
         frmExodus.ImageList2.GetBitmap(imgIndex, Picture.Bitmap);
         if (not animate) then Repaint();
-        end;
+    end;
 
     // raise the window
     if animate then begin
@@ -124,7 +124,7 @@ begin
         ShowWindow(singleToast.Handle, SW_SHOWNOACTIVATE);
         singleToast.Visible := true;
         singleToast.Timer1.Enabled := true;
-        end;
+    end;
 
 end;
 
@@ -135,7 +135,7 @@ begin
     with Params do begin
         ExStyle := ExStyle or WS_EX_NOPARENTNOTIFY;
         //WndParent := 0;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -171,23 +171,23 @@ begin
         // taskbar on left side
         Self.Left := -Self.Width - 2;
         Self.Top := Screen.Height - Self.Height - 2;
-        end;
+    end;
     1: begin
         // taskbar on right side
         Self.Left := Screen.Width + Self.Width + 2;
         Self.Top := Screen.Height - Self.Height - 2;
-        end;
+    end;
     2: begin
         // taskbar on top
         Self.Left := Screen.Width - Self.Width - 2;
         Self.Top := -Self.Height - 2;
-        end;
+    end;
     3: begin
         // taskbar on bottom
         Self.Left := Screen.Width - Self.Width - 2;
         Self.Top := Screen.Height;
-        end;
     end;
+end;
 end;
 
 {---------------------------------------}
@@ -201,28 +201,28 @@ begin
         // taskbar on left
         Self.Left := Self.Left + 2;
         if (Self.Left > _taskrect.Right) then stop := true;
-        end;
+    end;
     1: begin
         // taskbar on right
         Self.Left := Self.Left - 2;
         if ((Self.Left + Self.Width)  < _taskrect.Left) then stop := true;
-        end;
+    end;
     2: begin
         // taskbar on top
         Self.Top := Self.Top + 2;
         if (Self.Top > _taskrect.Bottom) then stop := true;
-        end;
+    end;
     3: begin
         // taskbar on bottom
         Self.Top := Self.Top - 2;
         if (Self.Top + Self.Height) < _taskrect.top then stop := true;
-        end;
     end;
+end;
 
     if (stop) then begin
         Timer1.Enabled := false;
         Timer2.Enabled := true;
-        end;
+    end;
 
 end;
 
@@ -240,8 +240,8 @@ begin
             frmExodus.Tabs.ActivePage := TabSheet;
             frmExodus.Show();
             exit;
-            end;
         end;
+    end;
     _clickForm.Show();
 end;
 

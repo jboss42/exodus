@@ -78,16 +78,16 @@ begin
             cboNewGroup.Enabled := false;
             optNuke.Checked := true;
             ct_list.Assign(contacts);
-            end
+        end
         else begin
             Caption := Format(sRemoveGroup, [grp]);
             cboNewGroup.Items.Assign(MainSession.Roster.GrpList);
             cboNewGroup.Items.Delete(cboNewGroup.Items.IndexOf(grp));
             cboNewGroup.ItemIndex := 0;
-            end;
+        end;
         cur_grp := grp;
         Show();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -126,16 +126,16 @@ begin
                         with AddTag('item') do begin
                             setAttribute('jid', cur_jid);
                             setAttribute('subscription', 'remove');
-                            end;
                         end;
                     end;
-                MainSession.SendTag(iq);
                 end;
+                MainSession.SendTag(iq);
+            end;
             2: SendUnsubscribe(cur_jid, MainSession);
             3: SendUnsubscribed(cur_jid, MainSession);
-            end;
-            end;
-        end
+        end;
+        end;
+    end
     else begin
         // Move all contacts in this group to the new group
         for i := 0 to ct_list.Count - 1 do begin
@@ -144,8 +144,8 @@ begin
             if (gi >= 0) then ri.Groups.Delete(gi);
             ri.Groups.Add(cboNewGroup.Text);
             ri.update();
-            end;
         end;
+    end;
     Self.Close;
 end;
 

@@ -106,7 +106,7 @@ begin
         if p1 > 0 then
             Delete(tmps, p1, 3);
         Name := '#CDATA';
-        end
+    end
     else
         tmps := tmps;
     fData := tmps;

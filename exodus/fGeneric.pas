@@ -90,7 +90,7 @@ begin
           Self.Hint := sRequired
        else
           Self.Hint := Self.Hint + ''#13#10 + sRequired;
-       end;
+   end;
 
     lblLabel.Caption := tag.GetAttribute('label');
     if (lblLabel.Caption = '') then
@@ -102,7 +102,7 @@ begin
         lblLabel.Caption := lblLabel.Caption + ':';
         if (req) then
            lblLabel.Caption := '* ' + lblLabel.Caption;
-        end;
+    end;
 
     if ((t = 'text-multi') or (t = 'jid-multi')) then begin
         lblLabel.Layout := tlTop;
@@ -114,9 +114,9 @@ begin
             for i := 0 to opts.Count - 1 do
                 Lines.Add(opts[i].Data);
             Align := alClient;
-            end;
+        end;
         Self.Height := Self.Height * 3;
-        end
+    end
 
     else if (t = 'list-multi') then begin
         lblLabel.Layout := tlTop;
@@ -129,14 +129,14 @@ begin
             for i := 0 to opts.Count - 1 do begin
                 Items.Add(opts[i].GetAttribute('label'));
                 opts_vals.Add(opts[i].GetBasicText('value'));
-                end;
             end;
+        end;
 
         opts := tag.QueryTags('value');
         for i := 0 to opts.Count - 1 do begin
             idx := opts_vals.IndexOf(opts[i].Data);
             TTntCheckListbox(c).Checked[idx] := true;
-            end;
+        end;
 
         if (TTntCheckListbox(c).Items.Count < 6) then
             i := TTntCheckListbox(c).Items.Count
@@ -145,7 +145,7 @@ begin
         Self.Height := (TTntCheckListbox(c).ItemHeight * i) + 5;
         TTntCheckListbox(c).TopIndex := 0;
         TTntCheckListbox(c).Repaint();
-        end
+    end
     else if (t = 'list-single') then begin
         lblLabel.Layout := tlTop;
         c := TTntCombobox.Create(self);
@@ -158,10 +158,10 @@ begin
             for i := 0 to opts.Count - 1 do begin
                 Items.Add(opts[i].GetAttribute('label'));
                 opts_vals.Add(opts[i].GetBasicText('value'));
-                end;
-            ItemIndex := opts_vals.IndexOf(value);
             end;
-        end
+            ItemIndex := opts_vals.IndexOf(value);
+        end;
+    end
 
     else if (t = 'boolean') then begin
         Self.AutoSize := true;
@@ -171,8 +171,8 @@ begin
             Align := alClient;
             Caption := '';
             Checked := (value = '1');
-            end;
-        end
+        end;
+    end
     else if (t = 'fixed') then begin
         c := lblLabel;
         self.AutoSize := true;
@@ -182,13 +182,13 @@ begin
             WordWrap := true;
             Caption := value;
             Align := alTop;
-            end;
-        end
+        end;
+    end
 
     else if ((t = 'hidden') and (frm_type <> 'submit')) then begin
         Self.Height := 0;
         c := nil;
-        end
+    end
 
     else if ((t = 'jid') or (t = 'jid-single')) then begin
         c :=  TTntEdit.Create(Self);
@@ -197,7 +197,7 @@ begin
             // Anchors := [akLeft, akTop, akBottom, akRight];
             Parent := Self;
             Align := alClient;
-            end;
+        end;
 
         dot := TButton.Create(Self);
         with TButton(dot) do begin
@@ -208,10 +208,10 @@ begin
             Visible := true;
             Width := c.Height - 2;
             Align := alRight;
-            end;
+        end;
 
         c.Width := Self.ClientWidth - lblLabel.Width - dot.Width - 10;
-        end
+    end
     else begin  // 'text-single', 'text-private', or unknown
         lblLabel.Layout := tlCenter;
         c := TTntEdit.Create(Self);
@@ -220,8 +220,8 @@ begin
             Align := alClient;
             if (t = 'text-private') then
                 PasswordChar := '*';
-            end;
         end;
+    end;
 
     if (c <> nil) then begin
         c.Parent := Self;
@@ -229,7 +229,7 @@ begin
         c.Left := lblLabel.Width + 5;
         c.Top := 1;
         Self.ClientHeight := c.Height + (2 * Self.BorderWidth);
-        end;
+    end;
 
     fld_type := t;
     if (frm_type = 'submit') then
@@ -263,7 +263,7 @@ begin
     if (vals.Count = 0) then begin
         Result := nil;
         exit;
-        end;
+    end;
 
     Result := TXMLTag.Create('field');
     Result.setAttribute('var', fld_var);
@@ -287,31 +287,31 @@ begin
         tmps := Trim(TTntEdit(c).Text);
         if (tmps <> '') then
             Result.Add(TTntEdit(c).Text);
-        end
+    end
     else if (c is TTntMemo) then begin
         tmps := Trim(TTntMemo(c).Text);
         if (tmps <> '') then with TTntMemo(c) do begin
             for i := 0 to Lines.Count - 1 do
                 Result.Add(Lines[i]);
-            end;
-        end
+        end;
+    end
     else if (c is TTntCheckListbox) then with TTntCheckListbox(c) do begin
         for i := 0 to Items.Count - 1 do begin
             if Checked[i] then
                 Result.Add(opts_vals[i]);
-            end;
-        end
+        end;
+    end
     else if (c is TTntCombobox) then begin
         i := TTntCombobox(c).ItemIndex;
         if (i <> -1) then
             Result.Add(opts_vals[i]);
-        end
+    end
     else if (c is TTntCheckbox) then begin
         if (TTntCheckbox(c).checked) then
             Result.Add('1')
         else
             Result.Add('0');
-        end
+    end
     else if (c = nil) then
         Result.Add(value);
 end;
@@ -328,7 +328,7 @@ begin
 
     if (fsel.ShowModal = mrOK) then begin
         TEdit(c).Text := fsel.GetSelectedJID();
-        end;
+    end;
 
     frmExodus.PostModal();
 end;
@@ -339,7 +339,7 @@ begin
     if (c = lblLabel) then with TTntLabel(c) do begin
         AutoSize := false;
         AutoSize := true;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -352,7 +352,7 @@ begin
     else begin
         p := TForm(Self.Owner);
         result := p.Canvas.TextWidth(lblLabel.Caption);
-        end;
+    end;
 end;
 
 {---------------------------------------}

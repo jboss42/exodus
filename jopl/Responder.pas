@@ -36,7 +36,7 @@ type
     public
         constructor Create(Session: TJabberSession; namespace: string); overload; virtual;
         destructor Destroy; override;
-    end;
+end;
 
 {---------------------------------------}
 {---------------------------------------}

@@ -52,7 +52,7 @@ type
 
         property RawNickname: Widestring read _nickname write _nickname;
         property Nickname: Widestring read getNick write _nickname;
-    end;
+end;
 
     TJabberBookmark = class
     public
@@ -68,18 +68,18 @@ type
 
         function AddToTag(parent: TXMLTag): TXMLTag;
         procedure Copy(bm: TJabberBookmark);
-    end;
+end;
 
     TRosterEvent = procedure(event: string; tag: TXMLTag; ritem: TJabberRosterItem) of object;
     TRosterListener = class(TSignalListener)
     public
-    end;
+end;
 
     TRosterSignal = class(TSignal)
     public
         procedure Invoke(event: string; tag: TXMLTag; ritem: TJabberRosterItem = nil); overload;
         function addListener(callback: TRosterEvent): TRosterListener; overload;
-    end;
+end;
 
     TJabberRoster = class(TWideStringList)
     private
@@ -113,7 +113,7 @@ type
         function GetGroupItems(grp: Widestring; online: boolean): TList;
 
         property Items[index: integer]: TJabberRosterItem read getItem;
-    end;
+end;
 
     TRosterAddItem = class
     private
@@ -125,7 +125,7 @@ type
         procedure AddCallback(event: string; tag: TXMLTag);
     public
         constructor Create(sjid, nickname, group: string; subscribe: boolean);
-    end;
+end;
 
 
 
@@ -158,7 +158,7 @@ begin
         autoJoin := SafeBool(tag.GetAttribute('autojoin'));
         bmType := tag.name;
         nick := tag.GetBasicText('nick');
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -188,7 +188,7 @@ begin
         setAttribute('autojoin', BoolToStr(autoJoin));
         if (nick <> '') then
             AddBasicTag('nick', nick);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -245,7 +245,7 @@ begin
         setAttribute('xmlns', XMLNS_ROSTER);
         item := AddTag('item');
         Self.fillTag(item);
-        end;
+    end;
 
     MainSession.SendTag(iq);
 end;
@@ -289,7 +289,7 @@ begin
         tmp_grp := Trim(TXMLTag(grps[i]).Data);
         if (tmp_grp <> '') then
             Groups.Add(TXMLTag(grps[i]).Data);
-        end;
+    end;
     grps.Free();
 end;
 
@@ -383,7 +383,7 @@ begin
         toJID := '';
         Namespace := XMLNS_ROSTER;
         Send();
-        end;
+    end;
 
     bm_iq := TJabberIQ.Create(js, js.generateID(), bmCallback, 180);
     with bm_iq do begin
@@ -393,7 +393,7 @@ begin
         with qtag.AddTag('bookmarks') do
             setAttribute('xmlns', XMLNS_BM);
         Send();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -428,17 +428,17 @@ begin
                     // remove the existing bm
                     TJabberBookmark(Bookmarks.Objects[idx]).Free;
                     Bookmarks.Delete(idx);
-                    end;
+                end;
                 bm := TJabberBookmark.Create(bms[i]);
                 Bookmarks.AddObject(jid, bm);
                 checkGroup(sGrpBookmarks);
-                end;
+            end;
 
             for i := 0 to Bookmarks.Count - 1 do
                 FireBookmark(TJabberBookmark(Bookmarks.Objects[i]));
             bms.Free();
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -461,8 +461,8 @@ begin
             stag.setAttribute('xmlns', XMLNS_BM);
             for i := 0 to Bookmarks.Count - 1 do
                 TJabberBookmark(Bookmarks.Objects[i]).AddToTag(stag);
-            end;
         end;
+    end;
     s.SendTag(iq);
 end;
 
@@ -493,7 +493,7 @@ begin
         if ri = nil then begin
             ri := TJabberRosterItem.Create;
             Self.AddObject(j, ri);
-            end;
+        end;
         ri.parse(ritems[i]);
         checkGroups(ri);
         s.FireEvent('/roster/item', tag, ri);
@@ -501,8 +501,8 @@ begin
             idx := Self.indexOfObject(ri);
             ri.Free;
             Self.Delete(idx);
-            end;
         end;
+    end;
     ritems.Free();
 end;
 
@@ -516,7 +516,7 @@ begin
     for g := 0 to ri.Groups.Count - 1 do begin
         cur_grp := ri.Groups[g];
         checkGroup(cur_grp);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -550,8 +550,8 @@ begin
         if (ri.Groups.IndexOf(grp) >= 0) then begin
             if (((online) and (ri.IsOnline)) or (not online)) then
                 Result.add(ri);
-            end;
         end;
+    end;
 end;
 
 
@@ -587,7 +587,7 @@ begin
     if (i >= 0) then begin
         tbm := TJabberBookmark(Bookmarks.Objects[i]);
         tbm.Copy(bm);
-        end
+    end
     else
         Self.Bookmarks.AddObject(sjid, bm);
 
@@ -605,7 +605,7 @@ begin
     if ((i >= 0) and (i < Bookmarks.Count)) then begin
         TJabberBookmark(Bookmarks.Objects[i]).Free;
         Bookmarks.Delete(i);
-        end;
+    end;
     Self.SaveBookmarks();
     // todo: Fire an event here to tell everyone we nuked a BM???
 end;
@@ -636,7 +636,7 @@ begin
     if (event <> 'xml') then begin
         // timeout!
         if (s.Stream <> nil) then Self.Fetch();
-        end
+    end
 
     else if (tag.GetAttribute('type') = 'error') then begin
         // some kind of roster fetch error
@@ -644,8 +644,8 @@ begin
         if (etag <> nil) then begin
             if (etag.GetAttribute('code') = '404') then
                 Self.Fetch();
-            end;
-        end
+        end;
+    end
 
     else begin
         // fire off the start event..
@@ -664,10 +664,10 @@ begin
             if (idx = -1) then
                 AddObject(Lowercase(ri.jid.Full), ri);
             s.FireEvent('/roster/item', ritems.Tags[i], ri);
-            end;
+        end;
         ritems.Free();
         s.FireEvent('/roster/end', nil);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -693,8 +693,8 @@ begin
             setAttribute('name', nick);
             if group <> '' then
                 AddBasicTag('group', grp);
-            end;
         end;
+    end;
     iq.Send;
 end;
 
@@ -709,7 +709,7 @@ begin
         if (((iq_type = 'set') or (iq_type = 'result')) and (do_subscribe)) then
             SendSubscribe(jid, MainSession
             );
-        end;
+    end;
 
     Self.Free();
 end;
@@ -748,10 +748,10 @@ begin
             // check to see if the listener's string is a substring of the event
             if (Pos(e, cmp) >= 1) then
                 sig(event, tag, ritem);
-            end
+        end
         else
             sig(event, tag, ritem);
-        end;
+    end;
     invoking := false;
 
     if change_list.Count > 0 then

@@ -103,7 +103,7 @@ begin
     else if (packet = 'message') then begin
         thread := tag.GetBasicText('thread');
         if (thread <> '') then _thread := thread;
-        end;
+    end;
 
     x := tag.QueryXPTag('//x[@xmlns="jabber:x:data"]');
 
@@ -113,18 +113,18 @@ begin
     if (ins <> nil) then begin
         _title := ins.Data;
         self.Caption := _title;
-        end;
+    end;
 
     ins := x.GetFirstTag('instructions');
     if (ins <> nil) then begin
         lblIns.Caption := ins.Data
-        end
+    end
     else begin
         lblIns.Visible := false;
         lblIns.Height := 0;
         insBevel.Visible := false;
         insBevel.Height := 0;
-        end;
+    end;
 
     flds := x.QueryTags('field');
     h := 10;
@@ -140,15 +140,15 @@ begin
         frm.TabOrder := 0;
         h := h + frm.Height;
         m :=  max(m, frm.getLabelWidth());
-        end;
+    end;
 
     for i := 0 to Self.box.ControlCount - 1 do begin
         c := Self.box.Controls[i];
         if (c is TframeGeneric) then begin
             frm := TframeGeneric(c);
             frm.setLabelWidth(m + 5);
-            end;
         end;
+    end;
 
     if (h > Trunc(Screen.Height * 0.667)) then
         h := Trunc(Screen.Height * 0.667);
@@ -163,12 +163,12 @@ begin
     if (lblIns.Visible) then begin
         insBevel.Align := alTop;
         lblIns.Align := alTop;
-        end;
+    end;
 
     if (_type = 'submit') then begin
         frameButtons1.btnOK.Visible := false;
         frameButtons1.btnCancel.Caption := sClose;
-        end;
+    end;
 
     MainSession.Prefs.RestorePosition(Self);
     Self.ClientHeight := h + lblIns.Height + 10 + frameButtons1.Height;
@@ -203,15 +203,15 @@ begin
             if (x <> nil) then begin
                 fx := f.getXML();
                 if (fx <> nil) then x.AddTag(fx);
-                end;
             end;
         end;
+    end;
 
     if (not valid) then begin
         if (m <> nil) then m.Free();
         MessageDlg(sAllRequired, mtError, [mbOK], 0);
         exit;
-        end;
+    end;
 
     MainSession.SendTag(m);
     Self.Close();
@@ -231,7 +231,7 @@ begin
             m.AddBasicTag('thread', _thread);
         m.AddTag('body');
         x := m.AddTag('x');
-        end
+    end
     else if (packet = 'iq') then begin
         m.setAttribute('type', 'set');
         m.setAttribute('id', MainSession.generateID());
@@ -239,7 +239,7 @@ begin
         q := m.AddTag('query');
         q.setAttribute('xmlns', ns);
         x := q.AddTag('x');
-        end;
+    end;
 
     x.setAttribute('xmlns', XMLNS_XDATA);
 end;
@@ -291,8 +291,8 @@ begin
             field := fields[j];
             // TODO: look up the right column, based on the var of the field.
             it.SubItems.Add(field.GetBasicText('value'));
-            end;
         end;
+    end;
 end;
 *)
 

@@ -140,7 +140,7 @@ begin
         // roster items
         fcts := TfrmRosterRecv.Create(Application);
         fcts.Restore(e);
-        end
+    end
     else begin
         // other things
         fmsg := TfrmMsgRecv.Create(Application);
@@ -158,14 +158,14 @@ begin
                 // Change button captions for TC Invites
                 frameButtons1.btnOK.Caption := sAccept;
                 frameButtons1.btnCancel.Caption := sDecline;
-                end
+            end
 
             else if e.error then begin
                 // This is an error.. show the error panel
                 frameButtons1.btnOK.Visible := false;
                 pnlError.Visible := true;
                 lblSubject2.Caption := sError;
-                end
+            end
 
             else
                 // normally, we don't want a REPLY button
@@ -175,9 +175,9 @@ begin
             pnlTop.Height := pnlSubject.Top + pnlSubject.Height + 3;
             btnClose.Visible := Docked;
             FormResize(nil);
-            end;
         end;
     end;
+end;
 end;
 
 {---------------------------------------}
@@ -199,12 +199,12 @@ begin
             txtFrom.Caption := txtFrom.Caption + recips[i];
             if (i < recips.Count - 1) then
                 txtFrom.Caption := txtFrom.Caption + ', ';
-            end;
+        end;
 
         ShowDefault;
         btnClose.Visible := Docked;
         FormResize(nil);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -225,7 +225,7 @@ begin
         FormResize(nil);
         if (txtSendSubject.Showing) then
             txtSendSubject.SetFocus();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -251,7 +251,7 @@ begin
         m.OnClick := mnuResourceClick;
         mnuResources.Add(m);
         p := MainSession.ppdb.NextPres(p);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -303,7 +303,6 @@ end;
 procedure TfrmMsgRecv.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     recips.Free();
-
     Action := caFree;
 end;
 
@@ -324,14 +323,14 @@ begin
         jid := txtSubject.Caption;
         StartRoom(jid, MainSession.Username);
         Self.Close();
-        end
+    end
 
     else begin
         Self.ClientHeight := Self.ClientHeight + pnlReply.Height - frameButtons1.Height - 3;
         frameButtons1.Visible := false;
         pnlReply.Visible := true;
         MsgOut.SetFocus;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -365,7 +364,7 @@ begin
 
         MainSession.SendTag(m.Tag);
         m.Free();
-        end;
+    end;
 
     Self.Close;
 end;
@@ -390,7 +389,7 @@ begin
     if ((Key = 13) and (Shift = [ssCtrl])) then begin
         Key := 0;
         frameButtons2btnOKClick(self);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -474,7 +473,7 @@ begin
     p := MainSession.ppdb.FindPres(recips[0], '');
     if (p = nil) then begin
         // xxx: can't send to offline contacts
-        end;
+    end;
 
     FileSend(p.fromJID.full);
 end;
@@ -512,14 +511,14 @@ begin
             Self.Caption := sMessageTo + ritem.Nickname
         else
             Self.Caption := sMessageFrom + ritem.Nickname;
-        end
+    end
     else begin
         txtFrom.Caption := jid;
         if (pnlSendSubject.Visible) then
             Self.Caption := sMessageTo + jid
         else
             Self.Caption := sMessageFrom + jid;
-        end;
+    end;
     tmp_jid.Free();
 end;
 
@@ -535,14 +534,14 @@ begin
     if ((Key = VK_TAB) and (ssCtrl in Shift) and (self.Docked))then begin
         Self.TabSheet.PageControl.SelectNextPage(not (ssShift in Shift));
         Key := 0;
-        end
+    end
     }
 
     // handle Ctrl-ENTER and ENTER to send msgs
     if ((Key = VK_RETURN) and (Shift = [ssCtrl])) then begin
         Key := 0;
         frameButtons2btnOKClick(Self);
-        end;
+    end;
 
 end;
 

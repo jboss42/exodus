@@ -57,7 +57,7 @@ type
         procedure Parse(tag: TXMLTag);
 
         property Data: TWideStringlist read _data_list;
-    end;
+end;
 
 function getTaskBarRect(): TRect;
 function CreateJabberEvent(tag: TXMLTag): TJabberEvent;
@@ -95,7 +95,7 @@ resourcestring
 {---------------------------------------}
 implementation
 uses
-    JabberConst, Roster, Messages, Windows, ExUtils, Session;
+    XMLUtils, JabberConst, Roster, Messages, Windows, ExUtils, Session;
 
 var
     _taskbar_rect: TRect;
@@ -120,7 +120,7 @@ begin
     if (_taskbar_rect.left = _taskbar_rect.right) then begin
         taskbar := FindWindow('Shell_TrayWnd', '');
         GetWindowRect(taskbar, _taskbar_rect);
-        end;
+    end;
 
     Result := _taskbar_rect;
 
@@ -142,6 +142,7 @@ end;
 {---------------------------------------}
 destructor TJabberEvent.destroy;
 begin
+    ClearStringListObjects(_data_list);
     _data_list.Free;
     inherited Destroy;
 end;
@@ -178,20 +179,20 @@ begin
             from := tmp_tag.QueryXPData('/x/invite@from');
             data_type := tag.getAttribute('from');
             _data_list.Add(tmp_tag.QueryXPData('/x/invite/reason'));
-            end
+        end
 
         else if (tag.QueryXPTag(XP_CONFINVITE) <> nil) then begin
             // conference invite
             eType := evt_Invite;
             tmp_tag := tag.QueryXPTag(XP_CONFINVITE);
             data_type := tmp_tag.getAttribute('jid');
-            end
+        end
 
         else if (tag.QueryXPTag(XP_JCFINVITE) <> nil) then begin
             // GC Invite
             eType := evt_Invite;
             data_type := tag.GetAttribute('from')
-            end
+        end
 
         else if (tag.QueryXPTag(XP_MSGXROSTER) <> nil) then begin
             // we are getting roster items
@@ -203,16 +204,16 @@ begin
                 ri := TJabberRosterItem.Create();
                 ri.parse(i_tags[j]);
                 _data_list.AddObject(ri.jid.jid, ri);
-                end;
-            i_tags.Free();
             end;
+            i_tags.Free();
+        end;
 
         // When we are doing roster items, the _data_list contains the items.
         if (eType <> evt_RosterItems) then begin
             tmp_tag := tag.GetFirstTag('body');
             if (tmp_tag <> nil) then
                 _data_list.Add(tmp_tag.Data);
-            end;
+        end;
 
         // For messages, pull out the subject
         if (eType = evt_Message) then begin
@@ -227,23 +228,23 @@ begin
                     data_type := 'ERROR: ' + tmp_tag.Data();
                     _data_list.Insert(0, 'ERROR: ' + tmp_tag.Data() + ', Code=' +
                         tmp_tag.getAttribute('code'));
-                    end
+                end
                 else
                     data_type := 'Unknown Error';
                 error := true;
                 _data_list.Insert(1, 'Original Message was:');
-                end;
             end;
+        end;
 
         delay := tag.QueryXPTag(XP_MSGDELAY);
         if (delay <> nil) then begin
             // we have a delay tag
             edate := JabberToDateTime(delay.getAttribute('stamp'));
             delayed := true;
-            end
+        end
         else
             edate := Now();
-        end
+    end
 
     else if (tag.name = 'iq') then begin
         from := tag.getAttribute('from');
@@ -258,7 +259,7 @@ begin
             _data_list.Add(sMsgTimeInfo);
             if (tmp_tag <> nil) then
                 _data_list.Add(sMsgLocalTime + tmp_tag.Data);
-            end
+        end
 
         else if ns = XMLNS_VERSION then begin
             eType := evt_Version;
@@ -274,15 +275,15 @@ begin
 
             tmp_tag := qtag.getFirstTag('os');
             _data_list.Add(sMsgVerOS + tmp_tag.Data);
-            end
+        end
 
         else if ns = XMLNS_LAST then begin
             eType := evt_Last;
             qTag := tag.getFirstTag('query');
             data_type := sMsgLast;
             _data_list.Add(sMsgLastInfo + secsToDuration(qTag.getAttribute('seconds')) + '.');
-            end;
         end;
+    end;
 end;
 
 

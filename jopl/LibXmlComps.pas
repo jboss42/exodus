@@ -57,7 +57,7 @@ TYPE
                   PROPERTY OnDtdError;
                   PROPERTY OnLoadExternal;
                   PROPERTY OnTranslateEncoding;
-                END;
+            end;
 
   // The "Easy" XML Scanner leaves out events and properties which you are unlikely to use
   // for "normal" XML files.
@@ -79,7 +79,7 @@ TYPE
                       PROPERTY OnContent;
                       PROPERTY OnLoadExternal;
                       PROPERTY OnTranslateEncoding;
-                    END;
+                end;
 
 PROCEDURE Register;
 

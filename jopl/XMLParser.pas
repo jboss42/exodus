@@ -43,7 +43,7 @@ type
         procedure Clear();
         function Count: integer;
         function popTag: TXMLTag;
-    end;
+end;
 
 
 {---------------------------------------}
@@ -80,7 +80,7 @@ begin
     if _dom_list.Count > 0 then begin
         Result := TXMLTag(_dom_list[0]);
         _dom_list.Delete(0);
-        end
+    end
     else
         Result := nil;
 end;
@@ -132,7 +132,7 @@ begin
             if (_parser.CurFinal[0] <> '>') then begin
                 // we don't have a full tag..
                 tmps := String(_parser.CurStart);
-                end
+            end
             else begin
                 // create or add the tag element.
                 if curtag = nil then
@@ -153,25 +153,25 @@ begin
                 if _parser.CurName = stream_tag then
                     curtag := processTag(curtag);
 
-                end;
             end;
+        end;
         ptContent, ptCDATA: begin
             // cdata for the current tag
             if curtag <> nil then begin
                 tmps := Trim(_parser.CurContent);
                 if tmps <> '' then
                     curtag.AddCData(_parser.CurContent);
-                end;
             end;
+        end;
         ptEndTag: begin
             // we have an end tag, process the end tag
             if curtag <> nil then begin
                 curtag := processTag(curtag);
-                end;
             end;
         end;
+    end;
 
-        end;
+    end;
     // StrDispose(pbuff);
     StrDisposeW(pbuff);
 end;
@@ -192,11 +192,11 @@ begin
         // end of a fragment.. add it to the list
         _dom_list.Add(curtag);
         Result := nil;
-        end
+    end
 
     else begin
         Result := curtag.pTag;
-        end;
+    end;
 end;
 
 

@@ -40,7 +40,7 @@ type
 
         constructor Create;
         procedure parse(agent: TXMLTag);
-    end;
+end;
 
     TAgents = class(TStringList)
     private
@@ -57,7 +57,7 @@ type
         function getFirstSearch: string;
         function getFirstGroupChat: string;
         function findService(svc: string): TAgentItem;
-    end;
+end;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -123,7 +123,7 @@ begin
         cur := TAgentItem.Create();
         cur.parse(ag_list[i]);
         self.AddObject(cur.jid, cur);
-        end;
+    end;
     ag_list.Free();
     MainSession.FireEvent('/session/agents', iq);
 end;
@@ -159,7 +159,7 @@ begin
     for i := Self.Count - 1 downto 0 do begin
         a := TAgentItem(Objects[i]);
         if (a <> nil) then a.Free;
-        end;
+    end;
 
     inherited Clear;
 end;
@@ -175,8 +175,8 @@ begin
         if a.search then begin
             Result := a.jid;
             exit;
-            end;
         end;
+    end;
 
     Result := '';
 end;
@@ -192,8 +192,8 @@ begin
         if a.groupchat then begin
             Result := a.jid;
             exit;
-            end;
         end;
+    end;
 
     Result := '';
 end;
@@ -210,8 +210,8 @@ begin
         if (a.service = svc) then begin
             Result := a;
             exit;
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}

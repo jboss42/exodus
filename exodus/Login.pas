@@ -126,7 +126,7 @@ begin
         MainSession.Invisible := l.chkInvisible.Checked;
         l.Close();
         frmExodus.DoConnect();
-        end
+    end
     else
         l.Close();
 
@@ -173,18 +173,18 @@ begin
         cboServer.Clear();
         for i := 0 to list.Count - 1 do
             cboServer.Items.Add(list[i]);
-        end;
+    end;
     fillDefaultStringList('brand_profile_resource_list', list);
     if (list.Count > 0) then begin
         cboResource.Clear();
         for i := 0 to list.Count - 1 do
             cboResource.Items.Add(list[i]);
-        end
+    end
     else begin
         cboResource.Items.Add(sResourceHome);
         cboResource.Items.Add(sResourceWork);
         cboResource.Items.Add('Exodus');
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -214,7 +214,7 @@ begin
         cboProfilesChange(Self);
         cboResource.Text := sProfileDefaultResource;
         txtUsername.SetFocus();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -234,7 +234,7 @@ begin
     // make sure we have at least a default profile
     if (MainSession.Prefs.Profiles.Count) <= 0 then begin
         MainSession.Prefs.CreateProfile(sProfileDefault)
-        end;
+    end;
 
     cboProfiles.Items.Assign(MainSession.Prefs.Profiles);
     cboProfiles.ItemIndex := MainSession.Prefs.getInt('profile_active');

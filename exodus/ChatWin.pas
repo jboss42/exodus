@@ -166,14 +166,14 @@ begin
         // Create one
         chat := MainSession.ChatList.AddChat(sjid, resource);
         new_chat := true;
-        end;
+    end;
 
     if (chat.window = nil) then begin
         // if we don't have a window, then create one.
         win := TfrmChat.Create(Application);
         chat.window := win;
         win.chat_object := chat;
-        end;
+    end;
 
     with TfrmChat(chat.window) do begin
         tmp_jid := TJabberID.Create(sjid);
@@ -188,10 +188,10 @@ begin
                     OtherNick := tmp_jid.user
                 else
                     OtherNick := chat_nick;
-                end
+            end
             else
                 OtherNick := ritem.Nickname;
-            end
+        end
         else
             OtherNick := chat_nick;
 
@@ -209,7 +209,7 @@ begin
             Show();
 
         PlayQueue();
-        end;
+    end;
 
     if (new_chat) then
         frmExodus.ComController.fireNewChat(sjid, TExodusChat(chat.ComController));
@@ -231,11 +231,11 @@ begin
                 if c.window <> nil then
                     TfrmChat(c.window).chat_object := nil;
                     TfrmChat(c.window).Close();
-                end;
+            end;
             c.Free;
             Delete(i);
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -306,7 +306,7 @@ begin
             ChangePresImage('offline', 'offline')
         else
             ChangePresImage(p.show, p.status);
-        end
+    end
 
     else begin
         lblNick.Caption := ' ';
@@ -319,7 +319,7 @@ begin
             ChangePresImage('unknown', 'Unknown Presence')
         else
             ChangePresImage(p.show, p.status);
-        end;
+    end;
 
     // synchronize the session chat list with this JID
     i := MainSession.ChatList.indexOfObject(chat_object);
@@ -356,7 +356,7 @@ begin
         if i >= 0 then
             MainSession.ChatList.Delete(i);
         chat_object.Free;
-        end;
+    end;
 
     if (_jid <> nil) then
         _jid.Free();
@@ -375,7 +375,7 @@ begin
     while (chat_object.msg_queue.AtLeast(1)) do begin
         t := TXMLTag(chat_object.msg_queue.Pop());
         Self.MessageEvent(t);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -393,7 +393,7 @@ begin
     if from_jid <> jid then begin
         chat_object.SetJID(from_jid);
         SetJID(from_jid);
-        end;
+    end;
 
     if (_check_event) then begin
         // check for composing events
@@ -418,9 +418,9 @@ begin
                 }
 
                 exit;
-                end;
             end;
         end;
+    end;
 
     // process the msg
     etag := tag.QueryXPTag(XP_MSGCOMPOSING);
@@ -439,7 +439,7 @@ begin
         tagThread := tag.GetFirstTag('thread');
         if tagThread <> nil then
             _thread := tagThread.Data;
-       end;
+   end;
 end;
 
 {---------------------------------------}
@@ -463,7 +463,7 @@ begin
         subj_msg.Subject := '';
         subj_msg.Nick := '';
         DisplayMsg(subj_msg, MsgList);
-        end;
+    end;
 
     if (Msg.Body <> '') then begin
         DoNotify(Self, 'notify_chatactivity', sChatActivity + OtherNick, ico_user);
@@ -472,7 +472,7 @@ begin
         // log if we want..
         if (MainSession.Prefs.getBool('log')) then
             LogMessage(Msg);
-        end;
+    end;
 
     Msg.Free();
 end;
@@ -494,7 +494,7 @@ begin
 
     if _thread = '' then begin   //get thread from message
         _thread := GetThread;
-        end;
+    end;
 
     // send the msg
     msg := TJabberMessage.Create(jid, 'chat', Trim(txt), '');
@@ -510,7 +510,7 @@ begin
     with mtag.AddTag('x') do begin
         setAttribute('xmlns', XMLNS_XEVENT);
         AddTag('composing');
-        end;
+    end;
 
     // additional plugin madness
     xml := TExodusChat(chat_object.ComController).fireAfterMsg(txt);
@@ -522,6 +522,8 @@ begin
     // log the msg
     if (MainSession.Prefs.getBool('log')) then
         LogMessage(Msg);
+
+    Msg.Free();
 
     inherited;
 end;
@@ -544,10 +546,10 @@ begin
         DisplayPresence(sDisconnected, MsgList);
         MainSession.UnRegisterCallback(_pcallback);
         _pcallback := -1;
-        end
+    end
     else if (event = '/session/connected') then begin
         Self.SetJID(jid);
-        end
+    end
     else if (event = '/session/prefs') then
         SetupPrefs()
     else if (event = '/session/block') then begin
@@ -556,8 +558,8 @@ begin
             DisplayPresence(sUserBlocked, Self.MsgList);
             MainSession.UnRegisterCallback(_pcallback);
             _pcallback := -1;
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -619,11 +621,11 @@ begin
     if (p = nil) then begin
         show := sOffline;
         status := sOffline;
-        end
+    end
     else begin
         show := tag.GetBasicText('show');
         status := tag.GetBasicText('status');
-        end;
+    end;
 
     ChangePresImage(show, status);
     if (status = '') then
@@ -670,12 +672,12 @@ begin
         MessageDlg(sAlreadySubscribed, mtInformation,
             [mbOK], 0);
         exit;
-        end
+    end
     else begin
         add := ShowAddContact();
         add.txtJID.Text := _jid.jid;
         add.txtNickname.Text := _jid.user;
-        end;
+    end;
 
 end;
 
@@ -733,7 +735,7 @@ begin
     if (_cur_img = _old_img) then begin
         _cur_img := _old_img + 33;
         if (_cur_img > 38) then _cur_img := 38;
-        end
+    end
     else
         _cur_img := _old_img;
 
@@ -760,10 +762,10 @@ begin
                 setAttribute('xmlns', XMLNS_XEVENT);
                 AddTag('composing');
                 AddBasicTag('id', _reply_id);
-                end;
             end;
-        MainSession.SendTag(c);
         end;
+        MainSession.SendTag(c);
+    end;
 end;
 
 {---------------------------------------}
@@ -783,7 +785,7 @@ begin
         DragQueryFile( msg.Drop, i, acFileName, cnMaxFileNameLen );
         // do your thing with the acFileName
         FileSend(_jid.full, acFileName);
-        end;
+    end;
 
     // let Windows know that you're done
     DragFinish( msg.Drop );
@@ -824,7 +826,7 @@ begin
     // record some kind of CTCP result
     if ((tag <> nil) and (tag.getAttribute('type') = 'result')) then begin
         //
-        end
+    end
 end;
 
 {---------------------------------------}
@@ -866,7 +868,7 @@ begin
     if SaveDialog1.Execute then begin
         MsgList.PlainRTF := false;
         MsgList.WideLines.SaveToFile(SaveDialog1.Filename);
-        end;
+    end;
 end;
 
 {---------------------------------------}

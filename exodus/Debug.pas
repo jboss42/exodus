@@ -122,7 +122,7 @@ begin
     if ((frmDebug <> nil) and (not frmDebug.Docked)) then begin
         frmDebug.DockForm;
         frmDebug.Show;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -132,7 +132,7 @@ begin
     if ((frmDebug <> nil) and (frmDebug.Docked)) then begin
         frmDebug.Hide;
         frmDebug.FloatForm;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -164,7 +164,7 @@ begin
     if MainSession.Active then begin
         lblJID.Caption := MainSession.Username + '@' + MainSession.Server +
             '/' + MainSession.Resource;
-        end
+    end
     else
         lblJID.Caption := '(Disconnected)';
 
@@ -197,7 +197,7 @@ begin
 
         if (at_bottom) then
         Perform(EM_SCROLL, SB_PAGEDOWN, 0);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -212,12 +212,12 @@ begin
         d := (MsgDebug.Lines.Count - DEBUG_LIMIT) + 1;
         for l := 1 to d do
             MsgDebug.Lines.Delete(0);
-        end;
+    end;
 
     if (event = '/data/send') then begin
         if (Trim(data) <> '') then
             AddWideText('SENT: ' + data, clBlue);
-        end
+    end
     else
         AddWideText('RECV: ' + data, clGreen);
 end;
@@ -252,7 +252,7 @@ begin
         else if (cmd = '/args') then begin
             for i := 0 to ParamCount do
                 DebugMessage(ParamStr(i))
-            end
+        end
         else if (cmd = '/dispcount') then
             DebugMessage('Dispatcher listener count: ' + IntToStr(MainSession.Dispatcher.TotalCount))
         else if (cmd = '/dispdump') then begin
@@ -269,12 +269,12 @@ begin
                         msg := msg + l.classname + ', ';
                         msg := msg + l.methodname;
                         DebugMessage(msg);
-                        end;
-                    DebugMessage(''#13#10);
                     end;
+                    DebugMessage(''#13#10);
                 end;
             end;
-        end
+        end;
+    end
     else
         MainSession.Stream.Send(cmd);
 end;
@@ -296,7 +296,7 @@ begin
             Add('<iq type="set" to="" id="' + id + '"><query xmlns=""></query></iq>')
         else if Sender = popPres then
             Add('<presence to="" id="' + id + '"/>');
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -357,7 +357,7 @@ begin
     if (event = '/session/authenticated') then begin
         lblJID.Caption := MainSession.Username + '@' + MainSession.Server +
             '/' + MainSession.Resource;
-        end
+    end
     else if (event = '/session/disconnected') then
         lblJID.Caption := '(Disconnected)';
 end;
@@ -396,15 +396,15 @@ begin
             SetFocus;
             SelStart := FoundAt;
             SelLength := Length(FindDialog1.FindText);
-            end
+        end
         else if (StartPos > 0) then begin
             Beep();
             SelLength := 0;
             FindDialog1Find(Self);
-            end
+        end
         else
             Beep();
-        end;
+    end;
 end;
 
 procedure TfrmDebug.MsgDebugKeyPress(Sender: TObject; var Key: Char);
@@ -423,13 +423,13 @@ begin
     if ((Key = VK_TAB) and (ssCtrl in Shift) and (self.Docked))then begin
         Self.TabSheet.PageControl.SelectNextPage(not (ssShift in Shift));
         Key := 0;
-        end
+    end
 
     // handle Ctrl-ENTER and ENTER to send msgs
     else if ((Key = VK_RETURN) and (Shift = [ssCtrl])) then begin
         Key := 0;
         btnSendRawClick(Self);
-        end;
+    end;
 
 end;
 
