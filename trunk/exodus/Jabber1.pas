@@ -1013,6 +1013,8 @@ var
     rtries, rint: integer; 
     msg : TMessage;
     exp: boolean;
+    tmp: TXMLTag;
+    m: Widestring;
 begin
     // session related events
     if event = '/session/connected' then begin
@@ -1034,7 +1036,17 @@ begin
 
     else if event = '/session/regerror' then begin
         _logoff := true;
-        MessageDlg(sRegError, mtError, [mbOK], 0);
+
+        m := sRegError;
+        if (tag <> nil) then begin
+            // try to find out a more detailed error message
+            tmp := tag.GetFirstTag('error');
+            if (tmp <> nil) then begin
+                m := m + ''#13#10' ERROR: ' + tmp.Data;
+            end;
+        end;
+        
+        MessageDlg(m, mtError, [mbOK], 0);
         PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
         exit;
     end

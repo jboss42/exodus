@@ -75,6 +75,7 @@ type
     Label12: TTntLabel;
     lblServerList: TTntLabel;
     Label13: TTntLabel;
+    chkRegister: TTntCheckBox;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure chkSocksAuthClick(Sender: TObject);
     procedure cboSocksTypeChange(Sender: TObject);
@@ -311,6 +312,7 @@ begin
         cboServer.Text := Server;
         cboResource.Text := Resource;
         chkSavePasswd.Checked := SavePasswd;
+        chkRegister.Checked := NewAccount;
     end;
 end;
 
@@ -324,6 +326,7 @@ begin
         SavePasswd := chkSavePasswd.Checked;
         password := txtPassword.Text;
         resource := cboResource.Text;
+        NewAccount := chkRegister.Checked;
     end;
 end;
 
