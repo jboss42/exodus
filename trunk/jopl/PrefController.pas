@@ -971,9 +971,12 @@ begin
 
     // check for this flag this way, so that if the tag
     // doesn't exist, it'll default to true.
-    SavePasswd := not (tag.GetBasicText('save_passwd') = 'no');
+    ptag := tag.GetFirstTag('save_passwd');
+    if (ptag <> nil) then
+        SavePasswd := StrToBool(tag.GetBasicText('save_passwd'))
+    else
+        SavePasswd := true;
 
-    // Password := tag.GetBasicText('password');
     ptag := tag.GetFirstTag('password');
     if (ptag.GetAttribute('encoded') = 'yes') then
         Password := DecodeString(ptag.Data)
