@@ -34,6 +34,7 @@ type
     Node: TTreeNode;
     status: Widestring;
     show: Widestring;
+    blockShow: Widestring;
   end;
 
   TfrmRoom = class(TfrmBaseChat)
@@ -52,7 +53,9 @@ type
     mnuOnTop: TMenuItem;
     popRoomRoster: TPopupMenu;
     popRosterChat: TMenuItem;
+    popRosterBlock: TMenuItem;
     btnClose: TSpeedButton;
+
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
     procedure btnCloseClick(Sender: TObject);
@@ -72,8 +75,10 @@ type
     procedure treeRosterMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure mnuOnTopClick(Sender: TObject);
+    procedure popRosterBlockClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
+    procedure popRoomRosterPopup(Sender: TObject);
   private
     { Private declarations }
     jid: Widestring;                // jid of the conf. room
@@ -91,6 +96,7 @@ type
 
     function  AddMember(member: TRoomMember): TTreeNode;
     function  checkCommand(txt: Widestring): boolean;
+    function  GetCurrentMember(): TRoomMember;
 
     procedure SetJID(sjid: Widestring);
     procedure ShowMsg(tag: TXMLTag);
@@ -123,6 +129,9 @@ resourcestring
     sRoomNewNick = 'New nickname';
     sRoomBMPrompt = 'Bookmark Room';
     sRoomNewBookmark = 'Enter bookmark name:';
+    sBlocked = 'Blocked';
+    sBlock = 'Block';
+    sUnblock = 'UnBlock';
 
 function StartRoom(rjid, rnick: Widestring): TfrmRoom;
 function IsRoom(rjid: Widestring): boolean;
@@ -212,6 +221,7 @@ var
     from: Widestring;
     tmp_jid: TJabberID;
     server: boolean;
+    rm: TRoomMember;
 begin
     // display the body of the msg
     Msg := TJabberMessage.Create(tag);
@@ -230,7 +240,11 @@ begin
         server := true;
         end
     else begin
-        Msg.Nick := TRoomMember(_roster.Objects[i]).Nick;
+        rm := TRoomMember(_roster.Objects[i]);
+        // if blocked ignore anything they say, even subject changes.
+        if (rm.Show = sBlocked) then
+           exit;
+        Msg.Nick := rm.Nick;
         Msg.IsMe := (Msg.Nick = MyNick);
         server := false;
         end;
@@ -427,13 +441,18 @@ begin
         p := TJabberPres.Create;
         p.parse(tag);
 
-        if p.Show = 'away' then member.Node.ImageIndex := 2
-        else if p.Show = 'xa' then member.Node.ImageIndex := 10
-        else if p.Show = 'dnd' then member.Node.ImageIndex := 3
-        else if p.Show = 'chat' then member.Node.ImageIndex := 4
-        else member.Node.ImageIndex := 1;
+        if (member.show = sBlocked) then
+           member.blockShow := p.Show
+        else begin
+            if p.Show = 'away' then member.Node.ImageIndex := 2
+            else if p.Show = 'xa' then member.Node.ImageIndex := 10
+            else if p.Show = 'dnd' then member.Node.ImageIndex := 3
+            else if p.Show = 'chat' then member.Node.ImageIndex := 4
+            else member.Node.ImageIndex := 1;
 
-        member.show := p.Show;
+            member.show := p.Show;
+            end;
+
         member.status := p.Status;
         end;
 
@@ -655,27 +674,18 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.treeRosterDblClick(Sender: TObject);
 var
-    i: integer;
     rm: TRoomMember;
-    node: TTreeNode;
     tmp_jid: TJabberID;
-    sel_nick: Widestring;
     chat_win: TfrmChat;
 begin
     // Chat w/ this person..
-    node := treeRoster.Selected;
-    if node = nil then exit;
-
-    sel_nick := node.Text;
-    for i := 0 to _roster.Count - 1 do begin
-        rm := TRoomMember(_roster.Objects[i]);
-        if (rm.Nick = sel_nick) then begin
-            tmp_jid := TJabberID.Create(rm.jid);
-            chat_win := StartChat(tmp_jid.jid, tmp_jid.resource, true, sel_nick);
-            if (chat_win.TabSheet <> nil) then
-                frmExodus.Tabs.ActivePage := chat_win.TabSheet;
-            tmp_jid.Free();
-            end;
+    rm := GetCurrentMember();
+    if (rm <> nil) then begin
+        tmp_jid := TJabberID.Create(rm.jid);
+        chat_win := StartChat(tmp_jid.jid, tmp_jid.resource, true, rm.Nick);
+        if (chat_win.TabSheet <> nil) then
+            frmExodus.Tabs.ActivePage := chat_win.TabSheet;
+        tmp_jid.Free();
         end;
 end;
 
@@ -887,6 +897,70 @@ begin
         Self.FormStyle := fsStayOnTop
     else
         Self.FormStyle := fsNormal;
+end;
+
+procedure TfrmRoom.popRosterBlockClick(Sender: TObject);
+var
+    rm: TRoomMember;
+begin
+    inherited;
+    rm := GetCurrentMember();
+    if (rm <> nil) then begin
+       if (rm.show = sBlocked) then begin
+          //unblock
+          rm.show := rm.blockShow;
+
+          if rm.Show = 'away' then rm.Node.ImageIndex := 2
+          else if rm.Show = 'xa' then rm.Node.ImageIndex := 10
+          else if rm.Show = 'dnd' then rm.Node.ImageIndex := 3
+          else if rm.Show = 'chat' then rm.Node.ImageIndex := 4
+          else rm.Node.ImageIndex := 1;
+
+          rm.Node.SelectedIndex := rm.Node.ImageIndex;
+          end
+       else begin
+          //block
+          rm.blockShow := rm.show;
+          rm.show := sBlocked;
+          rm.Node.ImageIndex := 25;
+          rm.Node.SelectedIndex := rm.Node.ImageIndex;
+          end;
+       end;
+end;
+
+procedure TfrmRoom.popRoomRosterPopup(Sender: TObject);
+var
+    rm: TRoomMember;
+begin
+  rm := GetCurrentMember();
+  if (rm <> nil) then begin
+     if (rm.show = sBlocked) then
+        popRosterBlock.Caption := sUnblock
+     else
+        popRosterBlock.Caption := sBlock;
+     end;
+  inherited;
+end;
+
+function TfrmRoom.GetCurrentMember(): TRoomMember;
+var
+    i: integer;
+    rm: TRoomMember;
+    node: TTreeNode;
+    sel_nick: Widestring;
+begin
+    result := nil;
+    node := treeRoster.Selected;
+    if node = nil then exit;
+
+    sel_nick := node.Text;
+    for i := 0 to _roster.Count - 1 do begin
+        rm := TRoomMember(_roster.Objects[i]);
+        if (rm.Nick = sel_nick) then begin
+           result := rm;
+           exit;
+           end;
+        end;
 end;
 
 procedure TfrmRoom.FormResize(Sender: TObject);
