@@ -24,7 +24,7 @@ uses
     XMLTag, RegExpr,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, ExRichEdit, ExtCtrls,
-    RichEdit2, TntStdCtrls;
+    RichEdit2, TntStdCtrls, Buttons;
 
 type
   TRoomMember = class
@@ -52,6 +52,7 @@ type
     mnuOnTop: TMenuItem;
     popRoomRoster: TPopupMenu;
     popRosterChat: TMenuItem;
+    btnClose: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
     procedure btnCloseClick(Sender: TObject);
@@ -71,6 +72,8 @@ type
     procedure treeRosterMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure mnuOnTopClick(Sender: TObject);
+    procedure FormResize(Sender: TObject);
+    procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
   private
     { Private declarations }
     jid: Widestring;                // jid of the conf. room
@@ -884,6 +887,21 @@ begin
         Self.FormStyle := fsStayOnTop
     else
         Self.FormStyle := fsNormal;
+end;
+
+procedure TfrmRoom.FormResize(Sender: TObject);
+begin
+  inherited;
+    // make the close btn right justified, and resize
+    // the text box for the subject
+    btnClose.Left := Panel1.Width - btnClose.Width - 2;
+    lblSubject.Width := btnClose.Left - lblSubject.Left - 10;
+end;
+
+procedure TfrmRoom.FormEndDock(Sender, Target: TObject; X, Y: Integer);
+begin
+  inherited;
+    btnClose.Visible := Docked;
 end;
 
 initialization

@@ -47,6 +47,9 @@ type
         data_type: string;
         delayed: boolean;
         elapsed_time: longint;
+        img_idx: integer;
+        msg: string;
+        caption: string;
 
         constructor create;
         destructor destroy; override;

@@ -106,7 +106,12 @@ uses
   Unicode in '..\jopl\Unicode.pas',
   InvalidRoster in 'InvalidRoster.pas' {frmInvalidRoster},
   AutoUpdate in 'AutoUpdate.pas',
-  AutoUpdateStatus in 'AutoUpdateStatus.pas' {frmAutoUpdateStatus};
+  AutoUpdateStatus in 'AutoUpdateStatus.pas' {frmAutoUpdateStatus},
+  Exodus_TLB in 'Exodus_TLB.pas',
+  ExodusController in 'ExodusController.pas' {ExodusController: CoClass},
+  ExodusPlugin_TLB in 'plugins\ExodusPlugin_TLB.pas';
+
+{$R *.TLB}
 
 {$R *.RES}
 

@@ -1,6 +1,6 @@
 inherited frmChat: TfrmChat
-  Left = 890
-  Top = 566
+  Left = 231
+  Top = 313
   Caption = 'Chat Window'
   OldCreateOrder = True
   OnClose = FormClose
@@ -29,6 +29,21 @@ inherited frmChat: TfrmChat
       ParentShowHint = False
       ShowHint = True
       OnPaint = imgStatusPaint
+    end
+    object btnClose: TSpeedButton
+      Left = 354
+      Top = 2
+      Width = 23
+      Height = 20
+      Caption = 'X'
+      Flat = True
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+      OnClick = btnCloseClick
     end
     object lblJID: TStaticText
       Left = 50

@@ -22,7 +22,7 @@ unit MsgQueue;
 interface
 
 uses
-    Jabber1, ExEvents,  
+    Jabber1, ExEvents, Contnrs,  
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Dockable, ComCtrls, StdCtrls, ExtCtrls, ToolWin;
 
@@ -39,9 +39,11 @@ type
     procedure lstEventsKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure lstEventsData(Sender: TObject; Item: TListItem);
   private
     { Private declarations }
-    procedure SaveEvents(exclude: TListItem = nil);
+    _queue: TObjectList;
+    procedure SaveEvents();
     procedure LoadEvents();
   public
     { Public declarations }
@@ -79,10 +81,10 @@ procedure TfrmMsgQueue.LogEvent(e: TJabberEvent; msg: string; img_idx: integer);
 var
     tmp_jid: TJabberID;
     ritem: TJabberRosterItem;
-    item: TListItem;
 begin
     // display this item
-    item := lstEvents.Items.Add;
+    e.img_idx := img_idx;
+    e.msg := msg;
 
     tmp_jid := TJabberID.Create(e.from);
     ritem := MainSession.roster.Find(tmp_jid.jid);
@@ -91,51 +93,44 @@ begin
     tmp_jid.Free();
 
     if (ritem <> nil) then
-        item.Caption := ritem.nickname
+        e.Caption := ritem.nickname
     else
-        item.Caption := e.from;
-    item.Data := e;
-    item.ImageIndex := img_idx;
-    item.SubItems.Add(DateTimeToStr(e.edate));
-    item.SubItems.Add(msg);         // Subject
+        e.Caption := e.from;
 
+    _queue.Add(e);
+    lstEvents.Items.Count := lstEvents.Items.Count + 1;
     SaveEvents();
 end;
 
 {---------------------------------------}
-procedure TfrmMsgQueue.SaveEvents(exclude: TListItem = nil);
+procedure TfrmMsgQueue.SaveEvents();
 var
     i,d: integer;
-    itm: TListItem;
     fn: string;
     s, e: TXMLTag;
     event: TJabberEvent;
     ss: TStringList;
 begin
     // save all of the events in the listview out to a file
-
     fn := ExtractFilePath(Application.EXEName) + 'spool.xml';
 
     s := TXMLTag.Create('spool');
-    for i := 0 to lstEvents.Items.Count - 1 do begin
-        itm := lstEvents.Items[i];
-        if (itm <> exclude) then begin
-            event := TJabberEvent(itm.Data);
-            e := s.AddTag('event');
-            with e do begin
-                e.PutAttribute('img', IntToStr(itm.ImageIndex));
-                e.PutAttribute('caption', itm.Caption);
-                e.PutAttribute('msg', itm.SubItems[1]);
-                e.PutAttribute('timestamp', DateTimeToStr(event.Timestamp));
-                e.PutAttribute('edate', DateTimeToStr(event.edate));
-                e.PutAttribute('elapsed_time', IntToStr(event.elapsed_time));
-                e.PutAttribute('etype', IntToStr(integer(event.eType)));
-                e.PutAttribute('from', event.from);
-                e.PutAttribute('id', event.id);
-                e.PutAttribute('data_type', event.data_type);
-                for d := 0 to event.Data.Count - 1 do
-                    e.AddBasicTag('data', event.Data.Strings[d]);
-                end;
+    for i := 0 to _queue.Count - 1 do begin
+        event := TJabberEvent(_queue[i]);
+        e := s.AddTag('event');
+        with e do begin
+            e.PutAttribute('img', IntToStr(event.img_idx));
+            e.PutAttribute('caption', event.caption);
+            e.PutAttribute('msg', event.msg);
+            e.PutAttribute('timestamp', DateTimeToStr(event.Timestamp));
+            e.PutAttribute('edate', DateTimeToStr(event.edate));
+            e.PutAttribute('elapsed_time', IntToStr(event.elapsed_time));
+            e.PutAttribute('etype', IntToStr(integer(event.eType)));
+            e.PutAttribute('from', event.from);
+            e.PutAttribute('id', event.id);
+            e.PutAttribute('data_type', event.data_type);
+            for d := 0 to event.Data.Count - 1 do
+                e.AddBasicTag('data', event.Data.Strings[d]);
             end;
         end;
 
@@ -143,7 +138,6 @@ begin
     ss.Add(s.xml);
     ss.SaveToFile(fn);
     ss.Free();
-
     s.Free();
 end;
 
@@ -155,7 +149,6 @@ var
     cur_e, s: TXMLTag;
     dtags, etags: TXMLTagList;
     e: TJabberEvent;
-    itm: TListItem;
     fn: string;
 begin
     // Load events from the spool file
@@ -173,7 +166,7 @@ begin
         for i := 0 to etags.Count - 1 do begin
             cur_e := etags[i];
             e := TJabberEvent.Create();
-            itm := lstEvents.Items.Add();
+            _queue.Add(e);
             e.eType := TJabberEventType(SafeInt(cur_e.GetAttribute('etype')));
             e.from := cur_e.GetAttribute('from');
             e.id := cur_e.GetAttribute('id');
@@ -181,17 +174,16 @@ begin
             e.edate := StrToDateTime(cur_e.GetAttribute('edate'));
             e.data_type := cur_e.GetAttribute('date_type');
             e.elapsed_time := SafeInt(cur_e.GetAttribute('elapsed_time'));
+            e.msg := cur_e.GetAttribute('msg');
+            e.caption := cur_e.GetAttribute('caption');
+            e.img_idx := SafeInt(cur_e.GetAttribute('img'));
 
-            itm.ImageIndex := SafeInt(cur_e.GetAttribute('img'));
-            itm.Caption := cur_e.GetAttribute('caption');
-            itm.SubItems.Add(DateTimeToStr(e.edate));
-            itm.SubItems.Add(cur_e.GetAttribute('msg'));
+            lstEvents.Items.Count := lstEvents.Items.Count + 1;
 
             dtags := cur_e.QueryTags('data');
             for d := 0 to dtags.Count - 1 do
                 e.Data.Add(dtags[d].Data);
 
-            itm.Data := e;
             end;
         end;
 
@@ -204,6 +196,9 @@ end;
 procedure TfrmMsgQueue.FormCreate(Sender: TObject);
 begin
     inherited;
+
+    _queue := TObjectList.Create();
+    _queue.OwnsObjects := true;
 
     lstEvents.Color := TColor(MainSession.Prefs.getInt('roster_bg'));
     txtMsg.Color := lstEvents.Color;
@@ -220,11 +215,13 @@ procedure TfrmMsgQueue.lstEventsChange(Sender: TObject; Item: TListItem;
 var
     e: TJabberEvent;
 begin
-    e := TJabberEvent(Item.Data);
     if (lstEvents.SelCount <= 0) then
         txtMsg.Lines.Clear
-    else if ((e <> nil) and (lstEvents.SelCount = 1)) then
-        txtMsg.Lines.Assign(e.Data);
+    else begin
+        e := TJabberEvent(_queue[lstEvents.Selected.Index]);
+        if ((e <> nil) and (lstEvents.SelCount = 1)) then
+            txtMsg.Lines.Assign(e.Data);
+        end;
 end;
 
 {---------------------------------------}
@@ -234,7 +231,7 @@ var
 begin
     if (lstEvents.SelCount <= 0) then exit;
 
-    e := TJabberEvent(lstEvents.Selected.Data);
+    e := TJabberEvent(_queue.Items[lstEvents.Selected.Index]);
     ShowEvent(e);
 end;
 
@@ -242,6 +239,7 @@ end;
 procedure TfrmMsgQueue.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
+
     Action := caFree;
     frmMsgQueue := nil;
 
@@ -268,13 +266,19 @@ begin
             item := lstEvents.Selected;
             i := item.Index;
             first := i;
-            lstEvents.Items.Delete(i);
+            _queue.Delete(i);
+            lstEvents.Items.Count := _queue.Count;
+            if (_queue.Count = 0) then begin
+                lstEvents.Items.Clear();
+                txtMsg.Lines.Clear();
+                end;
             Self.SaveEvents();
             end
         else begin
             for i := lstEvents.Items.Count-1 downto 0 do begin
                 if (lstEvents.Items[i].Selected) then begin
-                    lstEvents.Items.Delete(i);
+                    _queue.Delete(i);
+                    lstEvents.Items.Count := lstEvents.Items.Count - 1;
                     first := i;
                     end;
                 end;
@@ -295,7 +299,28 @@ procedure TfrmMsgQueue.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
     inherited;
-    lstEvents.Items.Clear;
+
+    if (MainSession.prefs.getBool('expanded')) and (not Docked) then begin
+        CanClose := false;
+        frmExodus.DockMsgQueue();
+        exit;
+        end
+    else
+        lstEvents.Items.Clear;
+end;
+
+{---------------------------------------}
+procedure TfrmMsgQueue.lstEventsData(Sender: TObject; Item: TListItem);
+var
+    e: TJabberEvent;
+begin
+  inherited;
+    e := TJabberEvent(_queue[item.Index]);
+
+    item.Caption := e.caption;
+    item.ImageIndex := e.img_idx;
+    item.SubItems.Add(DateTimeToStr(e.edate));
+    item.SubItems.Add(e.msg);         // Subject
 end;
 
 end.

@@ -4,6 +4,7 @@ inherited frmRoom: TfrmRoom
   Caption = 'Conference Room'
   OldCreateOrder = True
   OnClose = FormClose
+  OnEndDock = FormEndDock
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel3: TPanel
@@ -64,9 +65,8 @@ inherited frmRoom: TfrmRoom
     object lblSubject: TLabel
       Left = 41
       Top = 2
-      Width = 339
+      Width = 312
       Height = 16
-      Align = alClient
       ParentShowHint = False
       ShowHint = True
     end
@@ -85,6 +85,21 @@ inherited frmRoom: TfrmRoom
       Font.Style = [fsUnderline]
       ParentFont = False
       OnClick = lblSubjectURLClick
+    end
+    object btnClose: TSpeedButton
+      Left = 354
+      Top = 0
+      Width = 23
+      Height = 20
+      Caption = 'X'
+      Flat = True
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+      OnClick = btnCloseClick
     end
   end
   object popRoom: TPopupMenu
