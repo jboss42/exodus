@@ -5089,7 +5089,7 @@ begin
   Dec(FCount);
   if Index < FCount then begin
     System.Move(FList[Index + 1], FList[Index], (FCount - Index) * SizeOf(TWideStringItem));
-    // pgm: change from JclUnicode
+    // pgm: change from JclUnicode, make sure we don't try to free this?
     Pointer(FList[FCount].FString) := nil;
   end;
   Changed;

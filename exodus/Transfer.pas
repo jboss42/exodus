@@ -19,6 +19,10 @@ unit Transfer;
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
 
+{$ifdef VER150}
+    {$define INDY9}
+{$endif}
+
 interface
 
 uses

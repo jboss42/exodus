@@ -201,10 +201,12 @@ Date        Author Version Changes
                    (*$DEFINE K1_OR_NEWER *)
                  (*$ENDIF *)
                  (*$IFNDEF VER140 *)
-                   If the compiler gets stuck here,
-                   you are using a compiler version unknown to this code.
-                   You will probably have to change this code accordingly.
-                   At first, try to comment out these lines and see what will happen.
+                    (*$IFNDEF VER150 *)
+                       If the compiler gets stuck here,
+                       you are using a compiler version unknown to this code.
+                       You will probably have to change this code accordingly.
+                       At first, try to comment out these lines and see what will happen.
+                    (*$ENDIF *)
                  (*$ENDIF *)
                (*$ENDIF *)
              (*$ENDIF *)
