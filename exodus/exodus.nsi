@@ -96,12 +96,9 @@ Section "!Exodus (Required)"
 	WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Runonce "Exodus-Setup" "$CMDLINE"
 	Exec $INSTDIR\richupd.exe
 	Quit
-  lbl_badrichupd:
-	Abort "Error installing richtext update"
   lbl_reportVer:
 	DetailPrint "Richedit verion ok."
 
-  lbl_HiVersion:
 	; delete any leftover richupd.exe file.  This should not error
 	; if the file doesn't exist.
 	Delete $INSTDIR\richupd.exe
