@@ -2270,7 +2270,7 @@ begin
             if (visitor) then
                 Font.Color := clGrayText
             else
-                Font.Color := clWindowText;
+                Font.Color := lstRoster.Font.Color;
             Brush.Color := lstRoster.Color;
             Brush.Style := bsSolid;
             FillRect(xRect);
