@@ -45,7 +45,7 @@ e("$rcc version.rc");
 e("$rcc xml.rc");
 e("$dcc $opts -Noutput -U\"$::TNT\" Exodus.dpr");
 
-e("$::DXGETTEXT *.pas *.inc *.rc *.dpr *.xfm *.dfm prefs\\*.pas prefs\\*.inc prefs\\*.rc prefs\\*.dpr prefs\\*.xfm prefs\\*.dfm ..\\jopl\\*.pas ..\\jopl\\*.inc ..\\jopl\\*.rc ..\\jopl\\*.dpr ..\\jopl\\*.xfm ..\\jopl\\*.dfm");
+e("$::DXGETTEXT *.pas *.inc *.dpr *.xfm *.dfm prefs\\*.pas prefs\\*.inc prefs\\*.rc prefs\\*.dpr prefs\\*.xfm prefs\\*.dfm ..\\jopl\\*.pas ..\\jopl\\*.inc ..\\jopl\\*.rc ..\\jopl\\*.dpr ..\\jopl\\*.xfm ..\\jopl\\*.dfm");
 
 unlink "locale.zip";
 grep unlink, glob("locale/*/LC_MESSAGES/default.mo");
