@@ -54,7 +54,7 @@ implementation
 uses
 
     Clipbrd,
-    Jabber1,
+    Jabber1, ExUtils,
     ExtCtrls, Dialogs,
     XMLUtils, Session;
 
@@ -450,7 +450,7 @@ end;
 {---------------------------------------}
 function GetMsgHTML(Msg: TJabberMessage): string;
 var
-    color, txt, html: string;
+    color, txt, html, time, bg, font: string;
     cr_pos: integer;
 begin
     // replace CR's w/ <br> tags
@@ -463,13 +463,32 @@ begin
             end;
     until (cr_pos <= 0);
 
-    if Msg.Action then
-        html := '<div><span style="color: purple;">* ' + txt + '</span></div>'
-    else begin
-        if Msg.isMe then color := 'red' else color := 'blue';
-        html := '<div><span style="color: ' + color + ';">&lt;' + Msg.Nick + '&gt;</span> ' + txt + '</div>';
-        end;
+    with MainSession.Prefs do begin
+        if (getBool('timestamp')) then
+            time := '<span style="color: gray;">[' +
+                    FormatDateTime(getString('timestamp_format'), Msg.Time) +
+                    ']</span>'
+        else
+            time := '';
+        bg := 'background-color: ' + ColorToHTML(TColor(getInt('color_bg'))) + ';';
 
+        //font-family: Arial Black; font-size: 10pt
+        font := 'font-family: ' + getString('font_name') + '; ' +
+                'font-size: ' +getString('font_size') + 'pt;';
+        if Msg.Action then
+            html := '<div style="' + bg + font + '">' + time +
+                    '<span style="color: purple;">* ' + txt + '</span></div>'
+        else begin
+            if Msg.isMe then
+                color := ColorToHTML(TColor(MainSession.Prefs.getInt('color_me')))
+            else
+                color := ColorToHTML(TColor(MainSession.Prefs.getInt('color_other')));
+
+            html := '<div style="' + bg + font + '">' +
+                    time + '<span style="color: ' + color + ';">&lt;' +
+                    Msg.Nick + '&gt;</span> ' + txt + '</div>';
+            end;
+        end;
     Result := html;
 end;
 
