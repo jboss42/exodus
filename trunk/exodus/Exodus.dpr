@@ -112,7 +112,9 @@ uses
   xdata in 'xdata.pas' {frmXData},
   fGeneric in 'fGeneric.pas' {frameGeneric: TFrame},
   Transports in 'Transports.pas',
+  {$ifdef TRACE_EXCEPTIONS}
   ExceptDlg in 'tracer\ExceptDlg.pas' {ExceptionDialog},
+  {$endif}
   ExceptTracer in 'ExceptTracer.pas' {frmTracer};
 
 {$R *.TLB}
