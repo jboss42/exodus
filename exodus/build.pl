@@ -25,6 +25,11 @@ chdir "plugins";
 grep unlink, glob("*.zip"); # rm *.zip
 grep unlink, glob("*.dll"); # rm *.dll
 
+open OFF,">plugin-off.nsi" or die $!;
+open SEC,">plugin-sections.nsi" or die $!;
+open DESC,">plugin-desc.nsi" or die $!;
+open EN,">plugin-en.nsi" or die $!;
+
 # for each non-CVS directory
 my $f;
 for (glob("*")) {
@@ -33,6 +38,11 @@ for (glob("*")) {
   print "$_\n";
   plug($_);
 }
+
+close OFF;
+close SEC;
+close DESC;
+close EN;
 
 print "SUCCESS!!!\n";
 
@@ -51,10 +61,39 @@ sub plug {
 
   my $thisopts = $plugopts;
   if ($p =~ /ICQ/) { $thisopts .= " -U$::ICQ"; }
+
+  (my $base = $dpr) =~ s/\.dpr$//;
+  (my $bare = $base) =~ s/^Ex//;
+
+  e("$dcc $thisopts -U$imports -E.. -N.\\\\output $dpr");
+
+  print OFF <<"EOF";
+	Push \${SEC_$base}
+	Call TurnOff
+
+EOF
+
+  my $size = -s("../$base.dll");
+  $size = int $size / 1024;
+  print SEC <<"EOF";
+	Section "$bare" SEC_$base
+	  AddSize $size
+	  Push "$base"
+	  Call DownloadPlugin
+	SectionEnd
+	
+EOF
+
+  print DESC <<"EOF";
+  !insertmacro MUI_DESCRIPTION_TEXT \${SEC_$base} \$(DESC_$base)
+EOF
+
+  my $readme = `cat README.txt`;
+  print EN <<"EOF";
+LangString DESC_$base \${LANG_ENGLISH} "$readme"
+
+EOF
   
-  e("$dcc $thisopts -E.. -Noutput -U$imports $dpr");
   chdir "..";
-  (my $dll = $dpr) =~ s/\.dpr$/.dll/;
-  (my $zip = $dpr) =~ s/\.dpr$/.zip/;
-  e("zip -9 $zip $dll");
+  e("zip -9 $base.zip $base.dll");
 }
