@@ -52,13 +52,13 @@ type
     public
         jid: TJabberID;
         bmType: string;
-        name: string;
+        bmName: string;
         nick: string;
 
         constructor Create(tag: TXMLTag);
         destructor Destroy; override;
 
-        procedure AddToTag(parent: TXMLTag);
+        function AddToTag(parent: TXMLTag): TXMLTag;
     end;
 
     TRosterEvent = procedure(event: string; tag: TXMLTag; ritem: TJabberRosterItem) of object;
@@ -95,6 +95,8 @@ type
         procedure SaveBookmarks;
 
         procedure AddItem(sjid, nickname, group: string; subscribe: boolean);
+        procedure AddBookmark(sjid: string; bm: TJabberBookmark);
+        procedure RemoveBookmark(sjid: string);
         function Find(sjid: string): TJabberRosterItem; reintroduce; overload;
     end;
 
@@ -129,13 +131,13 @@ begin
     //
     inherited Create;
     jid := nil;
-    name := '';
+    bmName := '';
     bmType := 'conference';
     nick := '';
 
     if (tag <> nil) then begin
         jid := TJabberID.Create(tag.GetAttribute('jid'));
-        name := tag.getAttribute('name');
+        bmName := tag.getAttribute('name');
         bmType := tag.name;
         nick := tag.GetBasicText('nick');
         end;
@@ -149,12 +151,13 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberBookmark.AddToTag(parent: TXMLTag);
+function TJabberBookmark.AddToTag(parent: TXMLTag): TXMLTag;
 begin
     // add this bookmark as another tag onto the parent
-    with parent.AddTag(bmType) do begin
+    Result := parent.AddTag(bmType);
+    with Result do begin
         putAttribute('jid', jid.full);
-        putAttribute('name', name);
+        putAttribute('name', bmName);
         if (nick <> '') then
             AddBasicTag('nick', nick);
         end;
@@ -467,6 +470,35 @@ procedure TJabberRoster.AddItem(sjid, nickname, group: string; subscribe: boolea
 begin
     // send a iq-set
     TRosterAddItem.Create(sjid, nickname, group, subscribe);
+end;
+
+{---------------------------------------}
+procedure TJabberRoster.AddBookmark(sjid: string; bm: TJabberBookmark);
+var
+    t: TXMLTag;
+begin
+    // Add a new bookmark to the list,
+    // save them, and fire out a new event
+    Self.Bookmarks.AddObject(sjid, bm);
+    Self.SaveBookmarks();
+    t := bm.AddToTag(TXMLTag.Create('bm'));
+    with TJabberSession(_js) do
+        FireEvent('/roster/bookmark', t, TJabberRosterItem(nil));
+end;
+
+{---------------------------------------}
+procedure TJabberRoster.RemoveBookmark(sjid: string);
+var
+    i: integer;
+begin
+    // remove a bm from the list
+    i := Bookmarks.IndexOf(sjid);
+    if ((i >= 0) and (i < Bookmarks.Count)) then begin
+        TJabberBookmark(Bookmarks.Objects[i]).Free;
+        Bookmarks.Delete(i);
+        end;
+    Self.SaveBookmarks();
+    // todo: Fire an event here to tell everyone we nuked a BM???
 end;
 
 {---------------------------------------}
