@@ -35,6 +35,7 @@ type
 var
     use_emoticons: boolean;
     emoticon_regex: TRegExpr;
+    paren_emoticon_list: TStringList;
     emoticon_list: TStringList;
 
 procedure DisplayMsg(Msg: TJabberMessage; RichEdit: TRichEdit);
@@ -135,7 +136,7 @@ procedure ProcessEmoticons(RichEdit: TOLEEdit; txt: string);
 var
     m: boolean;
     pic: TPicture;
-    s: string;
+    ms, s: string;
     im, lm: integer;
     eo: TEmoticon;
 begin
@@ -154,14 +155,25 @@ begin
 
         if (pic = nil) then pic := TPicture.Create();
 
-        im := emoticon_list.IndexOf(emoticon_regex.Match[2]);
-        if (im >= 0) then begin
-            eo := TEmoticon(emoticon_list.Objects[im]);
+        eo := nil;
+        ms := emoticon_regex.Match[2];
+        if (ms <> '') then begin
+            im := paren_emoticon_list.indexOf(ms);
+            if (im >= 0) then
+                eo := TEmoticon(paren_emoticon_list.Objects[im])
+            else begin
+                im := emoticon_list.IndexOf(ms);
+                if (im >= 0) then
+                    eo := TEmoticon(emoticon_list.Objects[im]);
+                end;
+            end;
+
+        if (eo <> nil) then begin
             eo.il.GetBitmap(eo.idx, pic.Bitmap);
             RichEdit.InsertBitmap(pic.Bitmap);
             end
         else
-            RichEdit.SelText := emoticon_regex.Match[2];
+            RichEdit.SelText := ms;
 
         // RichEdit.SelText := ' ';
         m := emoticon_regex.ExecNext();
@@ -179,15 +191,17 @@ end;
 {---------------------------------------}
 procedure ConfigEmoticons();
 
-    function AddEmot(val: string; il: TImageList; idx: integer): string;
+    procedure AddEmot(val: string; il: TImageList; idx: integer);
     var
         eo: TEmoticon;
     begin
         eo := TEmoticon.Create();
         eo.il := il;
         eo.idx := idx;
-        emoticon_list.AddObject(val, eo);
-        Result := QuoteRegExprMetaChars(val);
+        if (val[1] = '(') then
+            paren_emoticon_list.AddObject(val, eo)
+        else
+            emoticon_list.AddObject(val, eo);
     end;
 
 var
@@ -201,116 +215,108 @@ begin
 
     // build up the regex expression as we go..
     // AddEmot returns the proper string
-    e := '(.*)(';
+    //e := '(.*)(\([a-zA-Z0-9@{}%&~?^]+\))|([:;BoOxX][a-zA-Z=@"''\[\])-:(>/|\\]+)|(=;)\b';
+    e := '(.*)((\([a-zA-Z0-9@{}%&~?^]+\))|([:;BoOxX][^\t ]+)|(=;))';
 
     // Normal smileys
-    e := e + AddEmot(':)', msn, 0) + '|';       // normal
-    e := e + AddEmot(':-)', msn, 0) + '|';
-    e := e + AddEmot('(:', msn, 0) + '|';
-    e := e + AddEmot('(-:', msn, 0) + '|';
-    e := e + AddEmot(':(', msn, 9) + '|';       // unhappy
-    e := e + AddEmot(':-(', msn, 9) + '|';
-    e := e + AddEmot(';)', msn, 38) + '|';      // wink
-    e := e + AddEmot(';-)', msn, 38) + '|';
-    e := e + AddEmot(':D', msn, 42) + '|';      // big smile
-    e := e + AddEmot(':-D', msn, 42) + '|';
-    e := e + AddEmot(':>', msn, 42) + '|';
-    e := e + AddEmot(':->', msn, 42) + '|';
-    e := e + AddEmot(':-/', y, 5) + '|';        // question
-    e := e + AddEmot(':-\', y, 5) + '|';
-    e := e + AddEmot(':x', y, 6) + '|';         // love
-    e := e + AddEmot(':-x', y, 6) + '|';
-    e := e + AddEmot(':X', y, 6) + '|';
-    e := e + AddEmot(':-X', y, 6) + '|';
-    e := e + AddEmot(':">', y, 7) + '|';        // blushing
-    e := e + AddEmot(':p', msn, 45) + '|';      // tongue
-    e := e + AddEmot(':-p', msn, 45) + '|';
-    e := e + AddEmot(':P', msn, 45) + '|';
-    e := e + AddEmot(':-P', msn, 45) + '|';
-    e := e + AddEmot(':o', msn, 44) + '|';      // surprise
-    e := e + AddEmot(':O', msn, 44) + '|';
-    e := e + AddEmot(':-o', msn, 44) + '|';
-    e := e + AddEmot(':-O', msn, 44) + '|';
-    e := e + AddEmot(':|', msn, 2) + '|';       // undecided
-    e := e + AddEmot(':-|', msn, 2) + '|';
-    e := e + AddEmot(':cool', msn, 22) + '|';   // sunglasses
-    e := e + AddEmot('B)', msn, 22) + '|';
-    e := e + AddEmot('B-)', msn, 22) + '|';
-    e := e + AddEmot('>:)', y, 13) + '|';       // yahoo devil
-    e := e + AddEmot('O:)', y, 17) + '|';       // yahoo angel
-    e := e + AddEmot('O:-)', y, 17) + '|';
-    e := e + AddEmot('o:)', y, 17) + '|';
-    e := e + AddEmot('o:-)', y, 17) + '|';
-    e := e + AddEmot(':B', y, 18) + '|';        // smiley wearing glasses
-    e := e + AddEmot(':-B', y, 18) + '|';
-    e := e + AddEmot('=;', y, 19) + '|';        // talk to the hand
-    e := e + AddEmot('I-)', y, 20) + '|';       // sleeping
-    e := e + AddEmot('|-)', y, 20) + '|';
-    e := e + AddEmot('I-|', y, 20) + '|';
-    e := e + AddEmot('@}:-', msn, 20) + '|';    // rose
-    e := e + AddEmot('(F)', msn, 20) + '|';
-    e := e + AddEmot(':rose', msn, 20) + '|';
-    e := e + AddEmot('8-X', y, 25) + '|';       // skull
-    e := e + AddEmot('8-x', y, 25) + '|';
-    e := e + AddEmot('(A)', msn, 15) + '|';     // Angel
-    e := e + AddEmot(':saint', msn, 15) + '|';
+    AddEmot(':)', msn, 0);       // normal
+    AddEmot(':-)', msn, 0);
+    AddEmot(':(', msn, 9);       // unhappy
+    AddEmot(':-(', msn, 9);
+    AddEmot(';)', msn, 38);      // wink
+    AddEmot(';-)', msn, 38);
+    AddEmot(':D', msn, 42);      // big smile
+    AddEmot(':-D', msn, 42);
+    AddEmot(':>', msn, 42);
+    AddEmot(':->', msn, 42);
+    AddEmot(':-/', y, 5);        // question
+    AddEmot(':-\', y, 5);
+    AddEmot(':x', y, 6);         // love
+    AddEmot(':-x', y, 6);
+    AddEmot(':X', y, 6);
+    AddEmot(':-X', y, 6);
+    AddEmot(':">', y, 7);        // blushing
+    AddEmot(':p', msn, 45);      // tongue
+    AddEmot(':-p', msn, 45);
+    AddEmot(':P', msn, 45);
+    AddEmot(':-P', msn, 45);
+    AddEmot(':o', msn, 44);      // surprise
+    AddEmot(':O', msn, 44);
+    AddEmot(':-o', msn, 44);
+    AddEmot(':-O', msn, 44);
+    AddEmot(':|', msn, 2);       // undecided
+    AddEmot(':-|', msn, 2);
+    AddEmot(':cool', msn, 22);   // sunglasses
+    AddEmot('B)', msn, 22);
+    AddEmot('B-)', msn, 22);
+    AddEmot('>:)', y, 13);       // yahoo devil
+    AddEmot('O:)', y, 17);       // yahoo angel
+    AddEmot('O:-)', y, 17);
+    AddEmot('o:)', y, 17);
+    AddEmot('o:-)', y, 17);
+    AddEmot(':B', y, 18);        // smiley wearing glasses
+    AddEmot(':-B', y, 18);
+    AddEmot('=;', y, 19);        // talk to the hand
+    AddEmot(':sleep', y, 20);       // sleeping
+    AddEmot('@}:-', msn, 20);    // rose
+    AddEmot('(F)', msn, 20);
+    AddEmot(':rose', msn, 20);
+    AddEmot(':skull', y, 25);       // skull
+    AddEmot('(A)', msn, 15);     // Angel
+    AddEmot(':saint', msn, 15);
+    AddEmot(':S', msn, 1);       // confused look
+    AddEmot(':-S', msn, 1);
+    AddEmot(':s', msn, 1);
+    AddEmot(':-s', msn, 1);
+    AddEmot(':conf', msn, 1);
+    AddEmot('(Y)', msn, 36);     // yes, thumb up
+    AddEmot('(N)', msn, 27);     // no, thumb down
+    AddEmot('(X)', msn, 35);     // girl
+    AddEmot(':girl', msn, 35);
+    AddEmot('(Z)', msn, 37);     // boy
+    AddEmot('(L)', msn, 25);     // Love
+    AddEmot('(U)', msn, 33);     // Unlove
+    AddEmot('(P)', msn, 29);     // Picture
+    AddEmot('(G)', msn, 21);     // Gift
+    AddEmot('(%)', msn, 6);      // handcuffs
+    AddEmot('(D)', msn, 18);     // Drink (martini)
+    AddEmot(':[', msn, 40);      // bat/vampire
+    AddEmot(':=[', msn, 40);
+    AddEmot('(E)', msn, 19);     // Email
+    AddEmot('(T)', msn, 32);     // Telephone
+    AddEmot('(K)', msn, 24);     // kiss
+    AddEmot(':lips', msn, 24);
+    AddEmot('(I)', msn, 23);     // idea/light bulb
+    AddEmot('(S)', msn, 31);     // asleep
+    AddEmot('(8)', msn, 5);      // music
+    AddEmot('o/~', msn, 5);
+    AddEmot('o/`', msn, 5);
+    AddEmot('(@)', msn, 10);     // cat
+    AddEmot('(C)', msn, 18);     // cup
+    AddEmot('(^)', msn, 11);     // cake
+    AddEmot('(W)', msn, 34);     // Wilted rose
+    AddEmot('(?)', msn, 41);     // ASL/Age Sex Location
+    AddEmot(':@', msn, 39);      // angry
+    AddEmot(':-@', msn, 39);
+    AddEmot(':mad', msn, 39);
+    AddEmot(':grrr', msn, 39);
+    AddEmot('X(', msn, 39);
+    AddEmot('X-(', msn, 39);
+    AddEmot('x(', msn, 39);
+    AddEmot('x-(', msn, 39);
+    AddEmot('({)', msn, 12);     // hug right
+    AddEmot('(})', msn, 13);     // hug left
+    AddEmot(':''(', msn, 11);   // cry
+    AddEmot(';''(', msn, 11);
+    AddEmot('(&)', msn, 7);      // dog
+    AddEmot('(~)', msn, 14);     // movie
+    AddEmot('(R)', msn, 30);     // Rainbow
+    AddEmot('(O)', msn, 28);     // time/clock
+    AddEmot('(6)', msn, 4);      // devil
+    AddEmot(':eek2', msn, 4);
+    AddEmot(':jester', y, 0);    // clown
 
-    e := e + AddEmot(':S', msn, 1) + '|';       // confused look
-    e := e + AddEmot(':-S', msn, 1) + '|';
-    e := e + AddEmot(':s', msn, 1) + '|';
-    e := e + AddEmot(':-s', msn, 1) + '|';
-    e := e + AddEmot(':conf', msn, 1) + '|';
-    e := e + AddEmot('(Y)', msn, 36) + '|';     // yes, thumb up
-    e := e + AddEmot('(N)', msn, 27) + '|';     // no, thumb down
-    e := e + AddEmot('(X)', msn, 35) + '|';     // girl
-    e := e + AddEmot(':girl', msn, 35) + '|';
-    e := e + AddEmot('(Z)', msn, 37) + '|';     // boy
-    e := e + AddEmot('(L)', msn, 25) + '|';     // Love
-    e := e + AddEmot('(U)', msn, 33) + '|';     // Unlove
-    e := e + AddEmot('(P)', msn, 29) + '|';     // Picture
-    e := e + AddEmot('(G)', msn, 21) + '|';     // Gift
-    e := e + AddEmot('(%)', msn, 6) + '|';      // handcuffs
-    e := e + AddEmot('(D)', msn, 18) + '|';     // Drink (martini)
-    e := e + AddEmot(':[', msn, 40) + '|';      // bat/vampire
-    e := e + AddEmot(':=[', msn, 40) + '|';
-    e := e + AddEmot('(E)', msn, 19) + '|';     // Email
-    e := e + AddEmot('(T)', msn, 32) + '|';     // Telephone
-    e := e + AddEmot('(K)', msn, 24) + '|';     // kiss
-    e := e + AddEmot(':lips', msn, 24) + '|';
-    e := e + AddEmot('(I)', msn, 23) + '|';     // idea/light bulb
-    e := e + AddEmot('(S)', msn, 31) + '|';     // asleep
-    e := e + AddEmot('(8)', msn, 5) + '|';      // music
-    e := e + AddEmot('o/~', msn, 5) + '|';
-    e := e + AddEmot('o/`', msn, 5) + '|';
-    e := e + AddEmot('(@)', msn, 10) + '|';     // cat
-    e := e + AddEmot('(C)', msn, 18) + '|';     // cup
-    e := e + AddEmot('(^)', msn, 11) + '|';     // cake
-    e := e + AddEmot('(W)', msn, 34) + '|';     // Wilted rose
-    e := e + AddEmot('(?)', msn, 41) + '|';     // ASL/Age Sex Location
-    e := e + AddEmot(':@', msn, 39) + '|';      // angry
-    e := e + AddEmot(':-@', msn, 39) + '|';
-    e := e + AddEmot(':mad', msn, 39) + '|';
-    e := e + AddEmot(':grrr', msn, 39) + '|';
-    e := e + AddEmot('X(', msn, 39) + '|';
-    e := e + AddEmot('X-(', msn, 39) + '|';
-    e := e + AddEmot('x(', msn, 39) + '|';
-    e := e + AddEmot('x-(', msn, 39) + '|';
-    e := e + AddEmot('({)', msn, 12) + '|';     // hug right
-    e := e + AddEmot('(})', msn, 13) + '|';     // hug left
-    e := e + AddEmot(':' + Chr(39) + '(', msn, 11) + '|';   // cry
-    e := e + AddEmot(';' + Chr(39) + '(', msn, 11) + '|';
-    e := e + AddEmot('(&)', msn, 7) + '|';      // dog
-    e := e + AddEmot('(~)', msn, 14) + '|';     // movie
-    e := e + AddEmot('(R)', msn, 30) + '|';     // Rainbow
-    e := e + AddEmot('(O)', msn, 28) + '|';     // time/clock
-    e := e + AddEmot('(6)', msn, 4) + '|';      // devil
-    e := e + AddEmot(':eek2', msn, 4) + '|';
-    e := e + AddEmot(':jester', y, 0) + '|';    // clown
-
-    e := e + AddEmot('(B)', msn, 16);
-
-    e := e + ')';
-
+    AddEmot('(B)', msn, 16);
     (*
     Emoticon map:
     :bones
@@ -525,9 +531,11 @@ end;
 *)
 
 initialization
+    paren_emoticon_list := TStringList.Create();
     emoticon_list := TStringList.Create();
 
 finalization
+    paren_emoticon_list.Free();
     emoticon_list.Free();
 
 end.
