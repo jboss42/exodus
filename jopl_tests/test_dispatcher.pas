@@ -47,10 +47,10 @@ var
 begin
     //
     disp := TSignalDispatcher.Create();
-    psig := TPacketSignal.Create('/packet');
+    psig := TPacketSignal.Create();
     disp.AddSignal('/packet', psig);
 
-    l := psig.addListener(pCallback, '/packet/message');
+    l := psig.addListener('/packet/message', pCallback);
     _cb1 := l.cb_id;
 
     tag := TXMLTag.Create('message');
@@ -102,18 +102,23 @@ var
     l: TPacketListener;
 begin
     // First add the new callback to the signal
-    ct := TcbContainer.Create();
     s := disp.TotalCount();
     checkEquals(1, s, 'Dispatcher total count, before add is wrong');
 
     // Add the signal and check
-    l := psig.addListener(ct.pCallback, '/packet/message');
+    ct := TcbContainer.Create();
+    l := psig.addListener('/packet/message', ct.pCallback);
     ct.idx := l.cb_id;
     checkEquals( (s+1), disp.TotalCount(), 'Dispatcher total count did not increase after add.');
 
     // cache the current count
     Check(ct.idx >= 0, 'cbContainer callback index is < 0');
     s := disp.TotalCount();
+
+    // Add another ct object to really test
+    ct := TcbContainer.Create();
+    l := psig.addListener('/packet/message', ct.pCallback);
+    ct.idx := l.cb_id;
 
     // dispatch the tag
     disp.DispatchSignal('/packet', tag);

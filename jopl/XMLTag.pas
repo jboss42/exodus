@@ -99,6 +99,7 @@ type
     function getAttribute(i: integer): TAttr;
 
     property AttrCount: integer read GetAttrCount;
+    property AttrList: TAttrList read _AttrList;
   end;
 
   TXPLite = class
@@ -120,6 +121,7 @@ type
     function GetTags(tag: TXMLTag): TXMLTagList;
 
     property AsString: string read GetString;
+    property XPMatchList: TStringList read Matches;
   end;
 
 

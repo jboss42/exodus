@@ -50,7 +50,7 @@ type
         // Dispatcher
         _dispatcher: TSignalDispatcher;
         _packetSignal: TPacketSignal;
-        _sessionSignal: TSignal;
+        _sessionSignal: TBasicSignal;
         _rosterSignal: TRosterSignal;
         _presSignal: TPresenceSignal;
 
@@ -174,15 +174,15 @@ begin
 
     // Create the event dispatcher mechanism
     _dispatcher := TSignalDispatcher.Create;
-    _packetSignal := TPacketSignal.Create('/packet');
-    _sessionSignal := TSignal.Create('/session');
-    _rosterSignal := TRosterSignal.Create('/roster');
-    _presSignal := TPresenceSignal.Create('/presence');
+    _packetSignal := TPacketSignal.Create();
+    _sessionSignal := TBasicSignal.Create();
+    _rosterSignal := TRosterSignal.Create();
+    _presSignal := TPresenceSignal.Create();
 
-    _dispatcher.AddObject('/packet', _packetSignal);
-    _dispatcher.AddObject('/session', _sessionSignal);
-    _dispatcher.AddObject('/roster', _rosterSignal);
-    _dispatcher.AddObject('/presence', _presSignal);
+    _dispatcher.AddSignal('/packet', _packetSignal);
+    _dispatcher.AddSignal('/session', _sessionSignal);
+    _dispatcher.AddSignal('/roster', _rosterSignal);
+    _dispatcher.AddSignal('/presence', _presSignal);
 
     _pauseQueue := TQueue.Create();
 
@@ -342,7 +342,7 @@ var
     p, i: integer;
     l: TSignalListener;
     pk: TPacketListener;
-    sig: TSignal;
+    sig: TBasicSignal;
     msg, tok1: string;
 begin
     // add this callback to the packet signal
@@ -355,14 +355,12 @@ begin
 
     i := _dispatcher.IndexOf(tok1);
     if tok1 = '/packet' then begin
-        pk := _packetSignal.addListener(callback, xplite);
-        pk.cb_id := _dispatcher.getNextID();
+        pk := _packetSignal.addListener(xplite, callback);
         result := pk.cb_id;
         end
     else if i >= 0 then begin
-        sig := TSignal(_dispatcher.Objects[i]);
+        sig := TBasicSignal(_dispatcher.Objects[i]);
         l := sig.addListener(xplite, callback);
-        l.cb_id := _dispatcher.getNextID();
         result := l.cb_id;
         end;
 
@@ -378,7 +376,6 @@ var
 begin
     // add a callback to the roster signal
     l := _rosterSignal.addListener(callback);
-    l.cb_id := _dispatcher.getNextID();
     Result := l.cb_id;
 
     msg := 'Registering roster callback. Total=' + IntToStr(_dispatcher.TotalCount);
@@ -393,7 +390,6 @@ var
 begin
     // add a callback to the presence signal
     l := _presSignal.addListener(callback);
-    l.cb_id := _dispatcher.getNextID();
     Result := l.cb_id;
 
     msg := 'Registering presence callback. Total=' + IntToStr(_dispatcher.TotalCount);

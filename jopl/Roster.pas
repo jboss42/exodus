@@ -639,7 +639,7 @@ var
 begin
     l := TRosterListener.Create();
     l.callback := TMethod(callback);
-    Self.AddObject('', l);
+    inherited addListener('', l);
     Result := l;
 end;
 
@@ -653,6 +653,7 @@ var
 begin
     // dispatch this to all interested listeners
     cmp := Lowercase(Trim(event));
+    invoking := true;
     for i := 0 to Self.Count - 1 do begin
         e := Strings[i];
         l := TRosterListener(Objects[i]);
@@ -665,6 +666,11 @@ begin
         else
             sig(event, tag, ritem);
         end;
+    invoking := false;
+
+    if change_list.Count > 0 then
+        Self.processChangeList();
+
 end;
 
 end.
