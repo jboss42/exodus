@@ -1,8 +1,8 @@
 object frmDockable: TfrmDockable
-  Left = 305
-  Top = 183
-  Width = 273
-  Height = 266
+  Left = 307
+  Top = 185
+  Width = 269
+  Height = 262
   Caption = 'frmDockable'
   Color = clBtnFace
   DragKind = dkDock

@@ -1,6 +1,6 @@
 unit ChatWin;
 {
-    Copyright 2001, Peter Millard
+    Copyright 2002, Peter Millard
 
     This file is part of Exodus.
 
@@ -18,67 +18,46 @@ unit ChatWin;
     along with Exodus; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
-
 interface
 
 uses
-    XMLTag,
-    Clipbrd,
-    RichEdit,
-    JabberID,
-    Chat, Dockable,
-    Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    StdCtrls, ComCtrls, ExtCtrls, Buttons, Menus, ToolWin, ExRichEdit,
-    AppEvnts, OLERichEdit, ImgList;
+    Chat, JabberID, XMLTag,
+    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+    Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, OLERichEdit,
+    ExRichEdit;
 
 type
-  TfrmChat = class(TfrmDockable)
-    Splitter1: TSplitter;
-    Panel2: TPanel;
-    PopupMenu1: TPopupMenu;
-    Clear1: TMenuItem;
-    CopyAll1: TMenuItem;
-    Panel3: TPanel;
-    pnlInput: TPanel;
-    SaveDialog1: TSaveDialog;
-    Copy1: TMenuItem;
-    MsgOut: TMemo;
-    Panel7: TPanel;
-    MsgList: TExRichEdit;
-    pnlFrom: TPanel;
+  TfrmChat = class(TfrmBaseChat)
     lblJID: TStaticText;
+    lblNick: TStaticText;
+    imgStatus: TPaintBox;
     popContact: TPopupMenu;
     mnuHistory: TMenuItem;
-    mnuBlock: TMenuItem;
     mnuProfile: TMenuItem;
+    mnuAdd: TMenuItem;
+    mnuBlock: TMenuItem;
     mnuSendFile: TMenuItem;
     mnuSave: TMenuItem;
     N1: TMenuItem;
     mnuReturns: TMenuItem;
     mnuEncrypt: TMenuItem;
-    mnuAdd: TMenuItem;
-    lblNick: TStaticText;
-    imgStatus: TPaintBox;
     timFlash: TTimer;
-    Emoticons1: TMenuItem;
+    SaveDialog1: TSaveDialog;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure btnCloseClick(Sender: TObject);
-    procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
     procedure FormActivate(Sender: TObject);
+    procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
     procedure MsgOutKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
-    procedure btnHistoryClick(Sender: TObject);
-    procedure btnProfileClick(Sender: TObject);
-    procedure btnAddRosterClick(Sender: TObject);
-    procedure MsgListURLClick(Sender: TObject; url: String);
+        Shift: TShiftState);
+    procedure doHistory(Sender: TObject);
+    procedure doProfile(Sender: TObject);
+    procedure doAddToRoster(Sender: TObject);
     procedure lblJIDClick(Sender: TObject);
     procedure mnuReturnsClick(Sender: TObject);
     procedure mnuSendFileClick(Sender: TObject);
     procedure imgStatusPaint(Sender: TObject);
     procedure timFlashTimer(Sender: TObject);
     procedure MsgOutChange(Sender: TObject);
-    procedure Emoticons1Click(Sender: TObject);
   private
     { Private declarations }
     jid: string;            // jid of the person we are talking to
@@ -102,15 +81,10 @@ type
     procedure ResetPresImage;
 
     function GetThread: String;
-
-  protected
-    {protected stuff}
-
   published
     procedure MsgCallback(event: string; tag: TXMLTag);
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
-
   public
     { Public declarations }
     OtherNick: string;
@@ -120,7 +94,6 @@ type
     procedure showPres(tag: TXMLTag);
     procedure sendMsg;
     procedure SetJID(cjid: string);
-    procedure SetEmoticon(msn: boolean; imgIndex: integer);
   end;
 
 var
@@ -129,20 +102,16 @@ var
 function StartChat(sjid, resource: string; show_window: boolean; chat_nick: string=''): TfrmChat;
 procedure CloseAllChats;
 
-{---------------------------------------}
-{---------------------------------------}
-{---------------------------------------}
 implementation
-{$R *.DFM}
+
+{$R *.dfm}
 
 uses
-    BaseChat, Emoticons,
     Presence, PrefController,
     Transfer, RosterAdd, RiserWindow,
     Jabber1, Profile, ExUtils, MsgDisplay,
     JabberMsg, Roster, Session, XMLUtils,
-    ShellAPI, RosterWindow;
-
+    ShellAPI, RosterWindow, Emoticons;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -220,7 +189,6 @@ begin
             end;
         end;
 end;
-
 
 {---------------------------------------}
 procedure TfrmChat.FormCreate(Sender: TObject);
@@ -320,12 +288,6 @@ begin
         end;
 
     Action := caFree;
-end;
-
-{---------------------------------------}
-procedure TfrmChat.btnCloseClick(Sender: TObject);
-begin
-    Self.Close;
 end;
 
 {---------------------------------------}
@@ -434,6 +396,8 @@ var
     mtag: TXMLTag;
 begin
     // Send the actual message out
+    if (Trim(MsgOut.Text) = '') then exit;
+
     if _thread = '' then begin   //get thread from message
         _thread := GetThread;
         end;
@@ -587,21 +551,21 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmChat.btnHistoryClick(Sender: TObject);
+procedure TfrmChat.doHistory(Sender: TObject);
 begin
   inherited;
     ShowLog(_jid.jid);
 end;
 
 {---------------------------------------}
-procedure TfrmChat.btnProfileClick(Sender: TObject);
+procedure TfrmChat.doProfile(Sender: TObject);
 begin
   inherited;
     ShowProfile(_jid.jid);
 end;
 
 {---------------------------------------}
-procedure TfrmChat.btnAddRosterClick(Sender: TObject);
+procedure TfrmChat.doAddToRoster(Sender: TObject);
 var
     ritem: TJabberRosterItem;
     add: TfrmAdd;
@@ -620,13 +584,6 @@ begin
         add.txtNickname.Text := _jid.user;
         end;
 
-end;
-
-{---------------------------------------}
-procedure TfrmChat.MsgListURLClick(Sender: TObject; url: String);
-begin
-  inherited;
-    ShellExecute(0, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
 end;
 
 {---------------------------------------}
@@ -707,65 +664,4 @@ begin
         end;
 end;
 
-{---------------------------------------}
-procedure TfrmChat.Emoticons1Click(Sender: TObject);
-var
-    l, t: integer;
-    cp: TPoint;
-begin
-  inherited;
-    // Show the emoticons form
-    GetCaretPos(cp);
-    l := MsgOut.ClientOrigin.x + cp.X;
-
-    if (Self.Docked) then begin
-        t := frmJabber.Top + frmJabber.ClientHeight - 10;
-        frmEmoticons.Left := l + 10;
-        end
-    else begin
-        t := Self.Top + Self.ClientHeight - 10;
-        frmEmoticons.Left := l + 10;
-        end;
-
-    if ((t + frmEmoticons.Height) > Screen.Height) then
-        t := Screen.Height - frmEmoticons.Height;
-
-    frmEmoticons.Top := t;
-    frmEmoticons.ChatWindow := TfrmBaseChat(Self);
-    frmEmoticons.Show;
-end;
-
-{---------------------------------------}
-procedure TfrmChat.SetEmoticon(msn: boolean; imgIndex: integer);
-var
-    l, i, m: integer;
-    eo: TEmoticon;
-begin
-    // Setup some Emoticon
-    m := -1;
-
-    if (emoticon_list.Count = 0) then
-        ConfigEmoticons();
-
-    for i := 0 to emoticon_list.Count - 1 do begin
-        eo := TEmoticon(emoticon_list.Objects[i]);
-        if (((msn) and (eo.il = frmJabber.imgMSNEmoticons)) or
-        ((not msn) and (eo.il = frmJabber.imgYahooEmoticons))) then begin
-            // the image lists match
-            if (eo.idx = imgIndex) then begin
-                m := i;
-                break;
-                end;
-            end;
-        end;
-
-    if (m >= 0) then begin
-        l := length(MsgOut.Text);
-        if ((l > 0) and ((MsgOut.Text[l]) <> ' ')) then
-            MsgOut.SelText := ' ';
-        MsgOut.SelText := emoticon_list[m];
-        end;
-end;
-
 end.
-

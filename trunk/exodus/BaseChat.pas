@@ -117,7 +117,7 @@ begin
         end;
 end;
 
-
+{---------------------------------------}
 procedure TfrmBaseChat.MsgListURLClick(Sender: TObject; url: String);
 begin
     ShellExecute(0, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);

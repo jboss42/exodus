@@ -1,6 +1,6 @@
 unit Room;
 {
-    Copyright 2001, Peter Millard
+    Copyright 2002, Peter Millard
 
     This file is part of Exodus.
 
@@ -18,15 +18,13 @@ unit Room;
     along with Exodus; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
-
 interface
 
 uses
-    XMLTag,
-    Dockable, 
-    Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    ToolWin, ComCtrls, StdCtrls, Buttons, ExtCtrls, ExRichEdit, Menus,
-  OLERichEdit, RegExpr;
+    XMLTag, RegExpr,
+    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+    Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, OLERichEdit, ExRichEdit,
+    ExtCtrls;
 
 type
   TRoomMember = class
@@ -36,19 +34,12 @@ type
     Node: TTreeNode;
   end;
 
-  TfrmRoom = class(TfrmDockable)
-    Panel3: TPanel;
-    pnlInput: TPanel;
-    MsgOut: TMemo;
-    Panel7: TPanel;
-    Panel2: TPanel;
+  TfrmRoom = class(TfrmBaseChat)
     lblSubject: TLabel;
+    lblSubjectURL: TLabel;
     Panel6: TPanel;
-    Splitter1: TSplitter;
     treeRoster: TTreeView;
     Splitter2: TSplitter;
-    lblSubjectURL: TLabel;
-    MsgList: TExRichEdit;
     popRoom: TPopupMenu;
     popClear: TMenuItem;
     popBookmark: TMenuItem;
@@ -65,9 +56,6 @@ type
     procedure treeRosterDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
     procedure treeRosterDragDrop(Sender, Source: TObject; X, Y: Integer);
-    procedure MsgListDragOver(Sender, Source: TObject; X, Y: Integer;
-      State: TDragState; var Accept: Boolean);
-    procedure MsgListURLClick(Sender: TObject; url: String);
     procedure popClearClick(Sender: TObject);
     procedure popNickClick(Sender: TObject);
     procedure popCloseClick(Sender: TObject);
@@ -95,7 +83,6 @@ type
     // procedure ShowPresence(nick, msg: string);
     procedure RenderMember(member: TRoomMember; tag: TXMLTag);
     procedure changeSubject(subj: string);
-
   published
     procedure MsgCallback(event: string; tag: TXMLTag);
     procedure PresCallback(event: string; tag: TXMLTag);
@@ -116,8 +103,8 @@ function StartRoom(rjid, rnick: string): TfrmRoom;
 {---------------------------------------}
 implementation
 uses
-    ExUtils, 
-    RiserWindow, 
+    ExUtils,
+    RiserWindow,
     ShellAPI, 
     RichEdit, 
     Invite,
@@ -231,6 +218,8 @@ var
 begin
     // Send the actual message out
     txt := MsgOut.Text;
+    if (Trim(txt) = '') then exit;
+
     if (txt[1] = '/') then begin
         if (checkCommand(txt)) then exit;
         end;
@@ -659,19 +648,6 @@ begin
             end;
         ShowInvite(Self.jid, jids);
         end;
-end;
-
-{---------------------------------------}
-procedure TfrmRoom.MsgListDragOver(Sender, Source: TObject; X, Y: Integer;
-  State: TDragState; var Accept: Boolean);
-begin
-    Accept := false;
-end;
-
-{---------------------------------------}
-procedure TfrmRoom.MsgListURLClick(Sender: TObject; url: String);
-begin
-    ShellExecute(0, 'open', pchar(url), '', '', SW_NORMAL);
 end;
 
 procedure TfrmRoom.popClearClick(Sender: TObject);
