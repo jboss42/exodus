@@ -37,6 +37,7 @@ uses
 const
     MAX_HOSTNAME_LEN = 128;
     MAX_SCOPE_ID_LEN = 256;
+    DNS_TIMEOUT = 3000; // milleseconds.
 
 type
     TIP_ADDRESS_STRING = array[0..15] of char;
@@ -70,9 +71,13 @@ type
         _resolver: TIdDNSResolver;
         _srv: string;
         _a: string;
+        _ip: string;
+        _p: Word;
         _session: TJabberSession;
+        _res: boolean;
     public
         procedure Execute(); override;
+        procedure SendResult();
     end;
 
 procedure GetSRVAsync(Session: TJabberSession; Resolver: TIdDNSResolver;
@@ -106,7 +111,7 @@ begin
     cur_thd._srv := srv_req;
     cur_thd._resolver := Resolver;
     cur_thd.FreeOnTerminate := true;
-    cur_thd.Execute();
+    cur_thd.Resume();
 end;
 
 {---------------------------------------}
@@ -118,28 +123,34 @@ end;
 
 {---------------------------------------}
 procedure TDNSResolverThread.Execute();
+begin
+    _res := GetSRVRecord(_resolver, _srv, _a, _ip, _p);
+    Synchronize(SendResult);
+    cur_thd := nil;
+end;
+
+{---------------------------------------}
+procedure TDNSResolverThread.SendResult();
 var
-    ip: string;
-    p: Word;
     t: TXMLTag;
 begin
-    t := TXMLTag.Create('dns');
-    if (GetSRVRecord(_resolver, _srv, _a, ip, p)) then begin
+    if (_res) then begin
         // it worked..
-        if (p > 0) then
+        t := TXMLTag.Create('dns');
+        if (_p > 0) then
             t.setAttribute('type', 'srv')
         else
             t.setAttribute('type', 'a');
-        t.setAttribute('ip', ip);
-        t.setAttribute('port', IntToStr(p));
+        t.setAttribute('ip', _ip);
+        t.setAttribute('port', IntToStr(_p));
     end
     else begin
         // failed.
+        t := TXMLTag.Create('dns');
         t.setAttribute('type', 'failed');
     end;
     _session.FireEvent('/session/dns', t);
     t.Free();
-    cur_thd := nil;
 end;
 
 {---------------------------------------}
@@ -213,6 +224,7 @@ var
 begin
     // Make a SRV request first..
     // if that fails, fall back on A Records
+
     dns := GetNameServers();
     if (dns = '') then begin
         ip := a_req;
@@ -233,6 +245,11 @@ begin
     end;
 
     Resolver.Host := slist[0];
+
+    // Use this for testing
+    Resolver.Host := '192.168.2.1';
+
+    Resolver.ReceiveTimeout := DNS_TIMEOUT;
     Resolver.AllowRecursiveQueries := true;
     slist.Free();
 
