@@ -49,6 +49,8 @@ type
     procedure chkAutoAwayClick(Sender: TObject);
   private
     { Private declarations }
+    procedure DoEnables();
+
   public
     { Public declarations }
     procedure LoadPrefs(); override;
@@ -100,24 +102,38 @@ begin
 end;
 
 procedure TfrmPrefAway.chkAutoAwayClick(Sender: TObject);
-var
-    e: boolean;
 begin
   inherited;
-    e := chkAutoAway.Checked;
+    DoEnables();
+end;
 
+procedure TfrmPrefAway.DoEnables();
+var
+    e, xa, dis: boolean;
+begin
+    e := chkAutoAway.Checked;
+    if (e) then begin
+        xa := chkAutoXA.Checked;
+        dis := chkAutoDisconnect.Checked;
+    end
+    else begin
+        xa := false;
+        dis := false;
+    end;
+
+    chkAAReducePri.Enabled := e;
     chkAutoXA.Enabled := e;
     chkAutoDisconnect.Enabled := e;
-    chkAAReducePri.Enabled := e;
 
     txtAwayTime.Enabled := e;
-    txtXATime.Enabled := e;
-    txtDisconnectTime.Enabled := e;
+    txtXATime.Enabled := xa;
+    txtDisconnectTime.Enabled := dis;
     txtAway.Enabled := e;
-    txtXA.Enabled := e;
+    txtXA.Enabled := xa;
     spnAway.Enabled := e;
-    spnXA.Enabled := e;
-    spnDisconnect.Enabled := e;
+    spnXA.Enabled := xa;
+    spnDisconnect.Enabled := dis;
 end;
+
 
 end.

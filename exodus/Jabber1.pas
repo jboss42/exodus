@@ -2035,7 +2035,12 @@ begin
 
     // must be before SetPresence
     _is_autoaway := true;
-    _is_autoxa := false;
+
+    // If we aren't doing auto-xa, then just set the flag now.
+    if (not MainSession.Prefs.getBool('auto_xa')) then
+        _is_autoxa := true
+    else
+        _is_autoxa := false;
 
     if MainSession.Prefs.getBool('aa_reduce_pri') then
         new_pri := 0
