@@ -55,17 +55,32 @@ InstallDirRegKey HKLM "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
 ;!define MUI_CHECKBITMAP "checks.bmp"
 !define MUI_ICON "exodus.ico"
 !define MUI_UNICON "exodus.ico"
+
+!define MUI_CUSTOMPAGECOMMANDS
+
+
 !define MUI_LICENSEPAGE
 !define MUI_COMPONENTSPAGE
-;!define MUI_COMPONENTSPAGE_SMALLDESC
+!define MUI_COMPONENTSPAGE_SMALLDESC
 !define MUI_DIRECTORYPAGE
 !define MUI_STARTMENUPAGE
 !define MUI_STARTMENUPAGE_DEFAULTFOLDER "${MUI_PRODUCT}"
 
 !define MUI_FINISHPAGE
 !define MUI_FINISHPAGE_RUN "$INSTDIR\Exodus.exe"
-;  !define MUI_FINISHPAGE_RUN_NOTCHECKED
+  !define MUI_FINISHPAGE_RUN_NOTCHECKED
 !define MUI_FINISHPAGE_NOAUTOCLOSE
+!define MUI_CUSTOMFUNCTION_FINISH_PRE FinishCustomPre
+!define MUI_CUSTOMFUNCTION_FINISH FinishCustom
+
+!insertmacro MUI_PAGECOMMAND_LICENSE
+!insertmacro MUI_PAGECOMMAND_COMPONENTS
+!insertmacro MUI_PAGECOMMAND_DIRECTORY
+!insertmacro MUI_PAGECOMMAND_STARTMENU
+Page custom SetCustomNotify ;Custom page
+!insertmacro MUI_PAGECOMMAND_INSTFILES
+!insertmacro MUI_PAGECOMMAND_FINISH
+;Page custom SetCustomFinish ;Custom page
 
 ; !define MUI_ABORTWARNING
 
@@ -78,6 +93,9 @@ InstallDirRegKey HKLM "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
 !define MUI_HEADERBITMAP "exodus-installer.bmp"
 !insertmacro MUI_LANGUAGE "English"
 
+ReserveFile "notify.ini"
+;ReserveFile "finish.ini"
+!insertmacro MUI_RESERVEFILE_INSTALLOPTIONS
 
 ; The stuff to install
 Section "!${MUI_PRODUCT}" SEC_Exodus
@@ -366,6 +384,12 @@ LangString DESC_Bleed ${LANG_ENGLISH} \
 LangString DESC_Plugins ${LANG_ENGLISH} \
 "Download Exodus plugins via the Internet, using your IE proxy settings. This does not work with auto-configured proxies."
 
+LangString NOTIFY_TITLE ${LANG_ENGLISH} "Notify running copies"
+LangString NOTIFY_SUBTITLE ${LANG_ENGLISH} "Exodus needs to be shut down to install a new version"
+
+;LangString FINISH_TITLE ${LANG_ENGLISH} "Finished Installing Exodus"
+;LangString FINISH_SUBTITLE ${LANG_ENGLISH} "Final options"
+
 !include plugins\plugin-en.nsi
 
 ; BRANDING: YOU MUST NOT REMOVE THE GPL!
@@ -400,9 +424,9 @@ start:
         ; if we do, show a warning..
         FindWindow $0 "TfrmExodus" "" 0
         IntCmp $0 0 done
-        MessageBox MB_OKCANCEL|MB_ICONQUESTION "Click OK, to close all running copies of Exodus, and install the new version. Cancel will abort the installation." IDOK loop
+;        MessageBox MB_OKCANCEL|MB_ICONQUESTION "Click OK, to close all running copies of Exodus, and install the new version. Cancel will abort the installation." IDOK loop
         ; cancel
-        Quit
+;        Quit
 loop:
     FindWindow $0 "TfrmExodus" "" 0
     IntCmp $0 0 done
@@ -494,8 +518,9 @@ FunctionEnd
 
 
 Function .onInit
-
-    !include plugins\plugin-off.nsi
+	!insertmacro MUI_INSTALLOPTIONS_EXTRACT "notify.ini"
+;	!insertmacro MUI_INSTALLOPTIONS_EXTRACT "finish.ini"
+	!include plugins\plugin-off.nsi
 	Push ${SEC_Plugins}
 	Call TurnOff
 
@@ -509,4 +534,29 @@ Function .onInit
 	Call TurnOff
 !endif
 
+FunctionEnd
+
+Function SetCustomNotify
+  !insertmacro MUI_HEADER_TEXT "$(NOTIFY_TITLE)" "$(NOTIFY_SUBTITLE)"
+  !insertmacro MUI_INSTALLOPTIONS_DISPLAY "notify.ini"
+FunctionEnd
+
+;Function SetCustomFinish
+;  !insertmacro MUI_HEADER_TEXT "$(FINISH_TITLE)" "$(FINISH_SUBTITLE)"
+;  !insertmacro MUI_INSTALLOPTIONS_DISPLAY "finish.ini"
+;FunctionEnd
+
+Function FinishCustomPre
+  !insertmacro MUI_INSTALLOPTIONS_WRITE "ioSpecial.ini" "Settings" "Numfields" "5"
+  !insertmacro MUI_INSTALLOPTIONS_WRITE "ioSpecial.ini" "Field 5" "Type" "CheckBox"
+  !insertmacro MUI_INSTALLOPTIONS_WRITE "ioSpecial.ini" "Field 5" "Text" "Foo: Start Exodus when Windows starts"
+  !insertmacro MUI_INSTALLOPTIONS_WRITE "ioSpecial.ini" "Field 5" "Left" "120"
+  !insertmacro MUI_INSTALLOPTIONS_WRITE "ioSpecial.ini" "Field 5" "Right" "315"
+  !insertmacro MUI_INSTALLOPTIONS_WRITE "ioSpecial.ini" "Field 5" "Top" "100"
+  !insertmacro MUI_INSTALLOPTIONS_WRITE "ioSpecial.ini" "Field 5" "Bottom" "110"
+
+FunctionEnd
+
+Function FinishCustom
+  !insertmacro MUI_INSTALLOPTIONS_WRITE "ioSpecial.ini" "Settings" "Numfields" "5"
 FunctionEnd
