@@ -184,7 +184,7 @@ procedure TfrmBaseChat.MsgOutKeyUp(Sender: TObject;
                                    Shift: TShiftState);
     procedure newText(m: WideString);
     begin
-        MsgOut.Text := m;
+        MsgOut.WideText := m;
         MsgOut.SelStart := length(m);
         MsgOut.SetFocus();
     end;
