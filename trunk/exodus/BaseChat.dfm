@@ -312,6 +312,9 @@ object frmBaseChat: TfrmBaseChat
       ShortCut = 16453
       OnClick = Emoticons1Click
     end
+    object emot_sep: TMenuItem
+      Caption = '-'
+    end
   end
   object timWinFlash: TTimer
     Enabled = False

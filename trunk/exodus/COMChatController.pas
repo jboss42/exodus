@@ -21,6 +21,8 @@ type
     function getMagicInt(Part: ChatParts): Integer; safecall;
     procedure RemoveContextMenu(const ID: WideString); safecall;
     procedure AddMsgOut(const Value: WideString); safecall;
+    function AddMsgOutMenu(const Caption: WideString): WideString; safecall;
+    procedure RemoveMsgOutMenu(const MenuID: WideString); safecall;
     { Protected declarations }
 
   public
@@ -183,22 +185,70 @@ var
     mi: TMenuItem;
 begin
     // add a new TMenuItem to the Plugins menu
+    id := 'plugin_' + IntToStr(_menu_items.Count);
     if (_room <> nil) then begin
         mi := TMenuItem.Create(_room);
+        mi.Name := id;
         mi.OnClick := _room.pluginMenuClick;
         mi.Caption := caption;
         _room.popRoom.Items.Add(mi);
     end
     else begin
         mi := TMenuItem.Create(TfrmChat(_chat.window));
+        mi.Name := id;
         mi.OnClick := TfrmChat(_chat.window).pluginMenuClick;
         mi.Caption := caption;
         TfrmChat(_chat.window).popContact.Items.Add(mi);
     end;
-
-    id := 'plugin_' + IntToStr(_menu_items.Count);
     _menu_items.AddObject(id, mi);
     Result := id;
+end;
+
+{---------------------------------------}
+function TExodusChat.AddMsgOutMenu(const Caption: WideString): WideString;
+var
+    id: Widestring;
+    mi: TMenuItem;
+begin
+    // add a new TMenuItem to the Plugins menu
+    id := 'plugin_' + IntToStr(_menu_items.Count);
+    if (_room <> nil) then begin
+        mi := TMenuItem.Create(_room);
+        mi.Name := id;
+        mi.OnClick := _room.pluginMenuClick;
+        mi.Caption := caption;
+        _room.popOut.Items.Add(mi);
+    end
+    else begin
+        mi := TMenuItem.Create(TfrmChat(_chat.window));
+        mi.Name := id;
+        mi.OnClick := TfrmChat(_chat.window).pluginMenuClick;
+        mi.Caption := caption;
+        TfrmChat(_chat.window).popOut.Items.Add(mi);
+    end;
+    _menu_items.AddObject(id, mi);
+    Result := id;
+end;
+
+{---------------------------------------}
+procedure TExodusChat.RemoveContextMenu(const ID: WideString);
+var
+    idx: integer;
+    mi: TMenuItem;
+begin
+    // remove this menu item.
+    idx := _menu_items.indexOf(ID);
+    if (idx < 0) then exit;
+    mi := TMenuItem(_menu_items.Objects[idx]);
+    _menu_items.Delete(idx);
+    mi.Free();
+end;
+
+{---------------------------------------}
+procedure TExodusChat.RemoveMsgOutMenu(const MenuID: WideString);
+begin
+    // remove this menu item.
+    RemoveContextMenu(MenuID);
 end;
 
 {---------------------------------------}
@@ -272,12 +322,6 @@ begin
     else
         Result := -1;
     end;
-end;
-
-{---------------------------------------}
-procedure TExodusChat.RemoveContextMenu(const ID: WideString);
-begin
-    // remove this menu item.
 end;
 
 {---------------------------------------}

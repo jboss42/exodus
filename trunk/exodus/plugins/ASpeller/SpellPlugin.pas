@@ -38,32 +38,40 @@ resourcestring
     sAspellLoadError = 'Could not load the aspell system. Make sure you have properly installed aspell, and it is registered.';
     sAspellNoDicts = 'The ASpell plugin was unable to load any dictionaries. Make sure you have at least 1 aspell dictionary installed.';
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 uses
     ComServ, ChatSpeller, Dialogs;
 
+{---------------------------------------}
 function TSpellPlugin.NewIM(const jid: WideString; var Body,
   Subject: WideString; const XTags: WideString): WideString;
 begin
 
 end;
 
+{---------------------------------------}
 procedure TSpellPlugin.Configure;
 begin
 
 end;
 
+{---------------------------------------}
 procedure TSpellPlugin.MenuClick(const ID: WideString);
 begin
 
 end;
 
+{---------------------------------------}
 procedure TSpellPlugin.MsgMenuClick(const ID, jid: WideString; var Body,
   Subject: WideString);
 begin
 
 end;
 
+{---------------------------------------}
 procedure TSpellPlugin.NewChat(const jid: WideString;
   const Chat: IExodusChat);
 var
@@ -77,17 +85,20 @@ begin
     cp.reg_id := chat_com.RegisterPlugin(IExodusChatPlugin(cp));
 end;
 
+{---------------------------------------}
 procedure TSpellPlugin.NewRoom(const jid: WideString;
   const Room: IExodusChat);
 begin
 
 end;
 
+{---------------------------------------}
 procedure TSpellPlugin.Process(const xpath, event, xml: WideString);
 begin
 
 end;
 
+{---------------------------------------}
 procedure TSpellPlugin.Shutdown;
 begin
     delete_aspell_config(_config);
@@ -95,6 +106,7 @@ begin
     _dicts.Free();
 end;
 
+{---------------------------------------}
 procedure TSpellPlugin.Startup(const ExodusController: IExodusController);
 
     procedure showError(msg: string);
