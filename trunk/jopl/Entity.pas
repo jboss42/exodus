@@ -298,6 +298,7 @@ procedure TJabberEntity.ItemsCallback(event: string; tag: TXMLTag);
 var
     js: TJabberSession;
 begin
+    assert(_iq <> nil);
     js := _iq.JabberSession;
     assert(js <> nil);
     _iq := nil;
@@ -322,6 +323,7 @@ var
     js: TJabberSession;
 begin
     // if disco didn't so much workout, try browse next
+    assert(_iq <> nil);
     js := _iq.JabberSession;
     assert(js <> nil);
     _iq := nil;
@@ -508,6 +510,7 @@ var
 
 begin
     // if disco didn't so much workout, try browse next
+    assert(_iq <> nil);
     js := _iq.JabberSession;
     assert(js <> nil);
     _iq := nil;
@@ -537,6 +540,7 @@ var
     js: TJabberSession;
     i: integer;
 begin
+    assert(_iq <> nil);
     js := _iq.JabberSession;
     assert(js <> nil);
     _iq := nil;
@@ -599,6 +603,7 @@ var
     ce: TJabberEntity;
 begin
     // if browse didn't work out so well, try agents
+    assert(_iq <> nil);
     js := _iq.JabberSession;
     assert(js <> nil);
     _iq := nil;
@@ -721,6 +726,7 @@ var
     i: integer;
     agents: TXMLTagList;
 begin
+    assert(_iq <> nil);
     js := _iq.JabberSession;
     assert(js <> nil);
     _iq := nil;
