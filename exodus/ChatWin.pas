@@ -438,7 +438,12 @@ end;
 
 {---------------------------------------}
 procedure TfrmChat.MsgOutKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);var    cur_buff: string;    s,e, i: integer;begin  inherited;
+  Shift: TShiftState);
+var
+    cur_buff: string;
+    s,e, i: integer;
+begin
+  inherited;
     if ((Key = VK_BACK) and (ssCtrl in Shift)) then begin
         // delete the last word
         cur_buff := MsgOut.Lines.Text;
