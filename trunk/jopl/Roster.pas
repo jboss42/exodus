@@ -587,8 +587,18 @@ end;
 
 {---------------------------------------}
 procedure TJabberRoster.AddItem(sjid, nickname, group: Widestring; subscribe: boolean);
+var
+    ritem: TJabberRosterItem;
 begin
     // send a iq-set
+    ritem := Self.Find(sjid);
+    if (ritem <> nil) then begin
+        if ((ritem.subscription = 'to') or (ritem.subscription = 'both')) then begin
+            ritem.Groups.Add(group);
+            ritem.Update();
+            exit;
+        end;
+    end;
     TRosterAddItem.Create(sjid, nickname, group, subscribe);
 end;
 

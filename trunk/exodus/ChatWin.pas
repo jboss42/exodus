@@ -1098,7 +1098,7 @@ begin
                 msg := msg + #13 + sMsgLocalTime + tmp_tag.Data;
             s := tag.GetAttribute('iq_elapsed_time');
             if (s <> '') then
-                msg := msg + #13 + Format(sMsgPing, [s]);
+                msg := msg + #13 + WideFormat(sMsgPing, [s]);
             DispString(msg);
         end
 

@@ -1806,6 +1806,7 @@ procedure TfrmRosterWindow.popRemoveClick(Sender: TObject);
 var
     n: TTreeNode;
     g: Widestring;
+    go: TJabberGroup;
 begin
     // Remove this roster item.
     case getNodeType() of
@@ -1819,8 +1820,11 @@ begin
     node_ritem: begin
         // remove a roster item
         if _cur_ritem <> nil then begin
+            go := nil;
             n := treeRoster.Selected.Parent;
-            if (n <> nil) then  g := n.Text else g := '';
+            if (n.Data <> nil) then
+                go := TJabberGroup(n.Data);
+            if (go <> nil) then g := go.FullName else g := '';
             RemoveRosterItem(_cur_ritem.jid.full, g);
         end;
     end;
@@ -2512,7 +2516,7 @@ begin
     // Block or Unblock this user
     recips := getSelectedContacts(false);
     if (recips.Count > 1) then begin
-        if (MessageDlg(Format(sBlockContacts, [recips.Count]), mtConfirmation,
+        if (MessageDlg(WideFormat(sBlockContacts, [recips.Count]), mtConfirmation,
             [mbYes, mbNo], 0) = mrNo) then exit;
     end;
     for i := 0 to recips.Count - 1 do begin
@@ -2541,7 +2545,7 @@ begin
     // Block or Unblock this user
     recips := getSelectedContacts(false);
     if (recips.Count > 1) then begin
-        if (MessageDlg(Format(sUnblockContacts, [recips.Count]), mtConfirmation,
+        if (MessageDlg(WideFormat(sUnblockContacts, [recips.Count]), mtConfirmation,
             [mbYes, mbNo], 0) = mrNo) then exit;
     end;
     for i := 0 to recips.Count - 1 do begin

@@ -364,7 +364,7 @@ begin
             MainSession.SendTag(p);
         end;
 
-        f.Caption := Format(sRoom, [tmp_jid.user]);
+        f.Caption := WideFormat(sRoom, [tmp_jid.user]);
         if MainSession.Prefs.getBool('expanded') then
             f.DockForm;
 
@@ -772,7 +772,7 @@ begin
                     if (itag <> nil) then begin
                         tmp1 := member.Nick;
                         tmp2 := itag.GetAttribute('nick');
-                        mtag := newRoomMessage(Format(sStatus_303,
+                        mtag := newRoomMessage(WideFormat(sStatus_303,
                             [tmp1, tmp2]));
                         ShowMsg(mtag);
                     end;
@@ -782,12 +782,12 @@ begin
                     if (itag <> nil) then tmp1 := itag.Data else tmp1 := '';
                     if (scode = '301') then tmp2 := sStatus_301
                     else if (scode = '307') then tmp2 := sStatus_307;
-                    mtag := newRoomMessage(Format(tmp2, [member.Nick, tmp1]));
+                    mtag := newRoomMessage(WideFormat(tmp2, [member.Nick, tmp1]));
                     ShowMsg(mtag);
                 end;
             end
             else if (member.role <> '') then begin
-                mtag := newRoomMessage(Format(sUserLeave, [member.Nick]));
+                mtag := newRoomMessage(WideFormat(sUserLeave, [member.Nick]));
                 ShowMsg(mtag);
             end;
 
@@ -812,7 +812,7 @@ begin
             // show new user message
             if (xtag <> nil) then begin
                 _isMUC := true;
-                mtag := newRoomMessage(Format(sNewUser, [member.nick]));
+                mtag := newRoomMessage(WideFormat(sNewUser, [member.nick]));
                 showMsg(mtag);
 
                 t := xtag.GetFirstTag('status');
@@ -841,7 +841,7 @@ begin
                 else if ((member.role = MUC_PART) and (tmp1 = MUC_VISITOR)) then
                     mtag := newRoomMessage(sRevokeVoice)
                 else if (member.role <> tmp1) then
-                    mtag := newRoomMessage(Format(sNewRole, [member.nick, tmp1]));
+                    mtag := newRoomMessage(WideFormat(sNewRole, [member.nick, tmp1]));
                 if (mtag <> nil) then showMsg(mtag);
             end;
         end;
@@ -946,7 +946,7 @@ begin
     else if (scode = '409') then msg := sStatus_409;
 
     if (fmt <> '') then
-        msg := Format(fmt, [MyNick, '']);
+        msg := WideFormat(fmt, [MyNick, '']);
 
     if (msg <> '') then
         MessageDlg(msg, mtInformation, [mbOK], 0);

@@ -336,7 +336,7 @@ begin
         // otherwise, if a jid was specified, use it as the profile name.
         // otherwise, if we have no profiles yet, use the default profile name.
         if (connect_node <> nil) then begin
-            profile_name := Format(sXMPP_Profile, [jid.jid]);
+            profile_name := WideFormat(sXMPP_Profile, [jid.jid]);
             profile := CreateProfile(profile_name);
             profile.temp := true;
         end

@@ -84,7 +84,7 @@ begin
             f.Free();
         on E: EIdProtocolReplyError do begin
             f.Free();
-            MessageDlg(Format(sError, [E.Message]), mtError, [mbOK], 0);
+            MessageDlg(WideFormat(sError, [E.Message]), mtError, [mbOK], 0);
         end;
     end;
 end;

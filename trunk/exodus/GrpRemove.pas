@@ -73,14 +73,14 @@ begin
 
     with f do begin
         if (contacts <> nil) then begin
-            Caption := Format(sRemoveContacts, [contacts.Count]);
+            Caption := WideFormat(sRemoveContacts, [contacts.Count]);
             optMove.Enabled := false;
             cboNewGroup.Enabled := false;
             optNuke.Checked := true;
             ct_list.Assign(contacts);
         end
         else begin
-            Caption := Format(sRemoveGroup, [grp]);
+            Caption := WideFormat(sRemoveGroup, [grp]);
             MainSession.Roster.AssignGroups(cboNewGroup.Items);
             cboNewGroup.Items.Delete(cboNewGroup.Items.IndexOf(grp));
             cboNewGroup.ItemIndex := 0;

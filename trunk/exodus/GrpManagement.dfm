@@ -72,6 +72,7 @@ object frmGrpManagement: TfrmGrpManagement
     Anchors = [akLeft, akTop, akRight]
     ExtendedSelect = False
     ItemHeight = 13
+    Sorted = True
     TabOrder = 3
   end
 end

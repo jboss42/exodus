@@ -52,7 +52,7 @@ type
     { Private declarations }
     cb: integer;
     agents: TAgents;
-    svc, gw, sjid, snick, sgrp: string;
+    svc, gw, sjid, snick, sgrp: Widestring;
     procedure doAdd;
   published
     procedure agentsCallback(event: string; tag: TXMLTag);
@@ -211,7 +211,6 @@ var
 begin
     // check to see if there is an agent for this type
     // of contact type
-
     if (svc = 'jabber') then begin
         MainSession.Roster.AddItem(sjid, snick, sgrp, true);
         Self.Close;
