@@ -8,7 +8,6 @@ unit XMLHttpStream;
 interface
 
 uses
-    XMLUtils,
     XMLTag,
     XMLStream,
     PrefController,
@@ -17,7 +16,6 @@ uses
     {$else}
     ExtCtrls,
     {$endif}
-    WStrList, 
     Classes, SysUtils, IdException,
     IdHTTP, SyncObjs;
 
@@ -44,7 +42,7 @@ type
         _poll_id: string;
         _poll_time: integer;
         _http: TIdHttp;
-        _request: TWideStringlist;
+        _request: TStringlist;
         _response: TStringStream;
         _cookie_list : TStringList;
         _lock: TCriticalSection;
@@ -188,7 +186,7 @@ begin
     _lock := TCriticalSection.Create();
     _event := TEvent.Create(nil, false, false, 'exodus_http_poll');
 
-    _request := TWideStringlist.Create();
+    _request := TStringlist.Create();
     _response := TStringstream.Create('');
 
     if (_profile.ProxyApproach = http_proxy_ie) then begin
@@ -239,7 +237,7 @@ end;
 procedure THttpThread.Send(xml: Widestring);
 begin
     _lock.Acquire();
-    _request.Add(WideStringToUTF8(xml));
+    _request.Add(UTF8Encode(xml));
     _lock.Release();
     _event.SetEvent();
 end;

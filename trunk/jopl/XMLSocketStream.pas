@@ -21,7 +21,6 @@ unit XMLSocketStream;
 
 interface
 uses
-    XMLUtils, 
     XMLTag,
     XMLStream,
     PrefController,
@@ -509,13 +508,12 @@ end;
 {---------------------------------------}
 procedure TXMLSocketStream.Send(xml: Widestring);
 var
-    utf: string;
+    buff: UTF8String;
 begin
     // Send this text out the socket
-    // utf := AnsiToUTF8(xml);
-    utf := WideStringToUTF8(xml);
-    DoDataCallbacks(true, utf);
-    _Socket.Write(utf);
+    buff := UTF8Encode(xml);
+    DoDataCallbacks(true, buff);
+    _Socket.Write(buff);
     _timer.Enabled := false;
     _timer.Enabled := true;
 end;

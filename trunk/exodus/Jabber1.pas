@@ -42,7 +42,7 @@ const
     WM_CLOSEAPP = WM_USER + 5274;
     WM_RECONNECT = WM_USER + 5300;
     WM_INSTALLER = WM_USER + 5350;
-    
+
 type
     TNextEventType = (next_none, next_Exit, next_Login, next_Disconnect);
 
