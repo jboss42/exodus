@@ -1,7 +1,4 @@
 inherited fIEMsgList: TfIEMsgList
-  OnCanResize = FrameCanResize
-  OnStartDock = FrameStartDock
-  OnUnDock = FrameUnDock
   object browser: TWebBrowser
     Left = 0
     Top = 0
