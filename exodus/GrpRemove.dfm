@@ -1,6 +1,6 @@
 object frmGrpRemove: TfrmGrpRemove
-  Left = 279
-  Top = 461
+  Left = 280
+  Top = 173
   Width = 314
   Height = 205
   Caption = 'Remove Contacts'
@@ -12,11 +12,13 @@ object frmGrpRemove: TfrmGrpRemove
   Font.Style = []
   OldCreateOrder = False
   Position = poMainFormCenter
+  OnClose = FormClose
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 142
+    Top = 137
     Width = 306
     Height = 34
     Align = alBottom
@@ -30,6 +32,9 @@ object frmGrpRemove: TfrmGrpRemove
       Height = 29
       inherited btnOK: TButton
         OnClick = frameButtons1btnOKClick
+      end
+      inherited btnCancel: TButton
+        OnClick = frameButtons1btnCancelClick
       end
     end
   end
