@@ -201,6 +201,7 @@ type
     _show_filter: integer;          // A filter for the <show> types to display
     _sort_roster: boolean;          // Sort roster by <show> types
     _offline_grp: boolean;          // Use the offline grp
+    _show_unsub: boolean;           // Show unsubscribed contacts
 
     _drop_copy: boolean;            // is the drag operation trying to copy?
 
@@ -506,6 +507,7 @@ begin
         _sort_roster := MainSession.Prefs.getBool('roster_sort');
         _show_pending := MainSession.Prefs.getBool('roster_show_pending');
         _offline_grp := MainSession.Prefs.getBool('roster_offline_group');
+        _show_unsub := MainSession.Prefs.getBool('roster_show_unsub');
 
         frmExodus.pnlRoster.ShowHint := not _show_status;
 
@@ -1023,6 +1025,10 @@ begin
                 RemoveItemNodes(ritem);
             exit;
         end;
+    end
+
+    else if (_show_unsub) then begin
+        // Show all nodes no matter the s10n state
     end
 
     else if ((ritem.subscription = 'none') or

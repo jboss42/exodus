@@ -246,12 +246,12 @@ begin
     e_data.Insert(0, ver);
 
     // Dump current plugins
-    e_data.Add('Plugins:');
     e_data.Add('------------------------------');
+    e_data.Add('Plugins:');
     for s := 0 to plugs.Count - 1 do begin
         e_data.Add(plugs[s]);
     end;
-    e_data.Add('');
+    e_data.Add('------------------------------');
 
     // Dump current dispatcher table:
     e_data.Add('Dispatcher Dump');

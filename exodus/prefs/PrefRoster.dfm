@@ -1,6 +1,6 @@
 inherited frmPrefRoster: TfrmPrefRoster
-  Left = 265
-  Top = 156
+  Left = 253
+  Top = 161
   Caption = 'frmPrefRoster'
   ClientHeight = 244
   ClientWidth = 344
