@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exodus 0.8-Daily\n"
 "POT-Creation-Date: 2003-05-08 06:59\n"
-"PO-Revision-Date: 2003-12-12 01:26-0000\n"
+"PO-Revision-Date: 2003-12-18 05:56-0000\n"
 "Last-Translator: Lazarus Long <lazarus.long@bigfoot.com>\n"
 "Language-Team: pt_PT <lazarus.long@bigfoot.com>\n"
 "MIME-Version: 1.0\n"
@@ -92,15 +92,23 @@ msgstr "Acerca do Exodus"
 #: CustomPres.dfm:13
 #: CustomPres.dfm:89
 #: Debug.dfm:14
+#: Dockable.dfm:14
 #: DockWizard.dfm:13
 #: DockWizard.dfm:89
-#: Dockable.dfm:14
 #: Emoticons.dfm:14
 #: ExceptTracer.dfm:13
+#: fGeneric.dfm:9
+#: fLeftLabel.dfm:16
+#: fListbox.dfm:26
+#: fService.dfm:32
+#: fService.dfm:59
+#: fService.dfm:86
+#: fService.dfm:113
 #: GrpManagement.dfm:12
 #: GrpRemove.dfm:12
 #: InputPassword.dfm:14
 #: InvalidRoster.dfm:12
+#: invite.dfm:13
 #: Jabber1.dfm:13
 #: Jabber1.dfm:47
 #: Jabber1.dfm:64
@@ -123,26 +131,18 @@ msgstr "Acerca do Exodus"
 #: RosterRecv.dfm:75
 #: RosterRecv.dfm:92
 #: RosterWindow.dfm:16
-#: SSLWarn.dfm:12
 #: SelContact.dfm:12
-#: WebGet.dfm:11
-#: Wizard.dfm:13
-#: Wizard.dfm:98
-#: fGeneric.dfm:9
-#: fLeftLabel.dfm:16
-#: fListbox.dfm:26
-#: fService.dfm:32
-#: fService.dfm:59
-#: fService.dfm:86
-#: fService.dfm:113
-#: invite.dfm:13
-#: prefs/PrefFont.dfm:205
-#: prefs/PrefPanel.dfm:13
+#: SSLWarn.dfm:12
 #: subscribe.dfm:15
 #: subscribe.dfm:55
 #: vcard.dfm:12
+#: WebGet.dfm:11
+#: Wizard.dfm:13
+#: Wizard.dfm:98
 #: xdata.dfm:13
 #: xdata.dfm:49
+#: prefs/PrefFont.dfm:205
+#: prefs/PrefPanel.dfm:13
 msgid "MS Sans Serif"
 msgstr "MS Sans Serif"
 
@@ -154,11 +154,11 @@ msgstr "MS Sans Serif"
 #: About.dfm:1424
 #: InvalidRoster.dfm:42
 #: MsgRecv.dfm:474
+#: RosterRecv.dfm:49
 #: MsgRecv.pas:441
 #: RecvStatus.pas:383
 #: RecvStatus.pas:610
 #: RecvStatus.pas:621
-#: RosterRecv.dfm:49
 #: SendStatus.pas:844
 #: SendStatus.pas:964
 #: xdata.pas:188
@@ -480,10 +480,10 @@ msgstr "O que há de novo?"
 #. frmPrefs..Panel1..Panel3..btnOK..Caption
 #. frmSSLWarn..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: AutoUpdateStatus.dfm:95
+#: buttonFrame.dfm:37
 #: ExceptTracer.dfm:37
 #: Prefs.dfm:3163
 #: SSLWarn.dfm:183
-#: buttonFrame.dfm:37
 msgid "OK"
 msgstr "OK"
 
@@ -500,12 +500,12 @@ msgstr "Omitir"
 #. fSendStatus..Panel1..btnCancel..Caption
 #. frmWizard..TntPanel1..Panel3..btnCancel..Caption
 #: AutoUpdateStatus.dfm:115
+#: buttonFrame.dfm:48
 #: DockWizard.dfm:56
 #: Prefs.dfm:3173
 #: RecvStatus.dfm:100
 #: SendStatus.dfm:20
 #: Wizard.dfm:64
-#: buttonFrame.dfm:48
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -650,6 +650,7 @@ msgstr "Colar "
 #: Jabber1.dfm:2686
 #: Jabber1.dfm:2700
 #: Jabber1.dfm:2707
+#: jud.dfm:212
 #: MsgRecv.dfm:519
 #: MsgRecv.dfm:528
 #: Room.dfm:216
@@ -665,7 +666,6 @@ msgstr "Colar "
 #: RosterWindow.dfm:645
 #: RosterWindow.dfm:661
 #: RosterWindow.dfm:686
-#: jud.dfm:212
 msgid "-"
 msgstr "-"
 
@@ -730,9 +730,9 @@ msgstr "Nome"
 #. frmRoomAdminList..lstItems......Caption
 #. frmRosterRecv..lvContacts......Caption
 #: Browser.dfm:45
+#: invite.dfm:76
 #: RoomAdminList.dfm:89
 #: RosterRecv.dfm:205
-#: invite.dfm:76
 msgid "Jabber ID"
 msgstr "ID de Jabber"
 
@@ -832,9 +832,9 @@ msgstr "ToolButton2"
 #. frmProfile..PageControl1..TabSheet4..Caption
 #. frmVCard..PageControl1..TabSheet4..Caption
 #: Browser.dfm:205
-#: ConnDetails.pas:399
 #: Profile.dfm:392
 #: vcard.dfm:212
+#: ConnDetails.pas:399
 msgid "Home"
 msgstr "Início"
 
@@ -950,8 +950,8 @@ msgstr "Versão"
 #. frmBrowse..popContext..mTime..Caption
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuTime..Caption
 #: Browser.dfm:3839
-#: ExResponders.pas:375
 #: Jabber1.dfm:444
+#: ExResponders.pas:375
 msgid "Time"
 msgstr "Hora local"
 
@@ -1064,10 +1064,10 @@ msgstr "Requisição da hora local"
 #. frmProfile..PageControl1..TabSheet7..Panel2..btnLast..Caption
 #. frmRosterWindow..popRoster..popClientInfo..popLast..Caption
 #: ChatWin.dfm:141
-#: ExEvents.pas:486
 #: MsgRecv.dfm:506
 #: Profile.dfm:207
 #: RosterWindow.dfm:345
+#: ExEvents.pas:486
 msgid "Last Activity"
 msgstr "Última actividade"
 
@@ -1130,7 +1130,7 @@ msgstr "Perfil"
 #. frmPrefTransfer..grpWebDav..Label7..Caption
 #: ConnDetails.dfm:60
 #: ConnDetails.dfm:331
-#: prefs/PrefNetwork.dfm:108
+#: prefs/PrefNetwork.dfm:110
 #: prefs/PrefTransfer.dfm:78
 msgid "Username:"
 msgstr "Nome de utilizador:"
@@ -1143,7 +1143,7 @@ msgstr "Nome de utilizador:"
 #: ConnDetails.dfm:68
 #: ConnDetails.dfm:340
 #: JoinRoom.dfm:61
-#: prefs/PrefNetwork.dfm:117
+#: prefs/PrefNetwork.dfm:119
 #: prefs/PrefTransfer.dfm:85
 msgid "Password:"
 msgstr "Palavra-passe:"
@@ -1199,7 +1199,7 @@ msgstr "Guardar palavra-passe"
 #: Password.dfm:43
 #: Password.dfm:71
 #: Password.dfm:79
-#: prefs/PrefNetwork.dfm:169
+#: prefs/PrefNetwork.dfm:171
 #: prefs/PrefTransfer.dfm:127
 msgid "*"
 msgstr "*"
@@ -1254,7 +1254,7 @@ msgstr "Detectar automaticamente o anfitrião e a porta"
 #. frmPrefNetwork..GroupBox2..lblProxyHost..Caption
 #: ConnDetails.dfm:231
 #: ConnDetails.dfm:305
-#: prefs/PrefNetwork.dfm:90
+#: prefs/PrefNetwork.dfm:92
 msgid "Host:"
 msgstr "Anfitrião:"
 
@@ -1264,7 +1264,7 @@ msgstr "Anfitrião:"
 #. frmPrefTransfer..grpWebDav..Label4..Caption
 #: ConnDetails.dfm:239
 #: ConnDetails.dfm:314
-#: prefs/PrefNetwork.dfm:99
+#: prefs/PrefNetwork.dfm:101
 #: prefs/PrefTransfer.dfm:57
 msgid "Port:"
 msgstr "Porta:"
@@ -1302,7 +1302,7 @@ msgstr "Proxy"
 #. frmConnDetails..PageControl1..tbsSocket..chkSocksAuth..Caption
 #. frmPrefNetwork..GroupBox2..chkProxyAuth..Caption
 #: ConnDetails.dfm:349
-#: prefs/PrefNetwork.dfm:150
+#: prefs/PrefNetwork.dfm:152
 msgid "Authentication Required"
 msgstr "Autenticação obrigatória"
 
@@ -1430,11 +1430,11 @@ msgstr "Prioridade"
 
 #. frmCustomPres..cboType....Items.WideStrings
 #. frmRoom..popRoomRoster..popRosterChat..Caption
+#: CustomPres.dfm:75
+#: Room.dfm:271
 #: ChatWin.pas:456
 #: ChatWin.pas:468
 #: ChatWin.pas:470
-#: CustomPres.dfm:75
-#: Room.dfm:271
 msgid "Chat"
 msgstr "Conversa"
 
@@ -1448,12 +1448,12 @@ msgstr "Conversa"
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
 #: CustomPres.dfm:76
-#: ExSession.pas:189
 #: Jabber1.dfm:365
 #: Jabber1.dfm:2656
-#: Jabber1.pas:2700
 #: RosterWindow.dfm:402
 #: RosterWindow.dfm:605
+#: ExSession.pas:189
+#: Jabber1.pas:2700
 #: RosterWindow.pas:346
 #: RosterWindow.pas:368
 #: RosterWindow.pas:1617
@@ -1472,8 +1472,8 @@ msgstr "Disponível"
 #: CustomPres.dfm:77
 #: Jabber1.dfm:377
 #: Jabber1.dfm:2668
-#: Jabber1.pas:2698
 #: RosterWindow.dfm:414
+#: Jabber1.pas:2698
 #: RosterWindow.pas:348
 #: RosterWindow.pas:369
 #: RosterWindow.pas:1601
@@ -1621,9 +1621,9 @@ msgstr "< Anterior"
 #. frmDockWizard..TntPanel1..btnNext..Caption
 #. frmWizard..TntPanel1..Panel3..btnNext..Caption
 #: DockWizard.dfm:47
+#: Wizard.dfm:55
 #: JoinRoom.pas:372
 #: JoinRoom.pas:393
-#: Wizard.dfm:55
 msgid "Next >"
 msgstr "Seguinte >"
 
@@ -1690,8 +1690,8 @@ msgstr "Acções suportadas:"
 
 #. frameTreeRoster..treeRoster..Hint
 #. frmRosterWindow..treeRoster..Hint
-#: RosterWindow.dfm:135
 #: fRosterTree.dfm:13
+#: RosterWindow.dfm:135
 msgid "Roster Hint"
 msgstr "Sugestão do rol"
 
@@ -1707,8 +1707,8 @@ msgstr "Procurar usando este serviço ou agente"
 
 #. frameObjectActions..pConf..lblConf..Caption
 #. frmExodus..Toolbar..ToolBar1..btnRoom..Hint
-#: Jabber1.dfm:156
 #: fService.dfm:82
+#: Jabber1.dfm:156
 msgid "Join a conference"
 msgstr "Juntar-se a uma conferência"
 
@@ -1788,11 +1788,11 @@ msgstr "Ítens do rol inválidos"
 #. frmPrefPlugins..btnRemovePlugin..Caption
 #. frmPrefPresence..pnlCustomPresButtons..btnCustomPresRemove..Caption
 #: InvalidRoster.dfm:37
+#: invite.dfm:100
 #: RosterWindow.dfm:383
 #: RosterWindow.dfm:641
 #: RosterWindow.dfm:664
 #: RosterWindow.dfm:693
-#: invite.dfm:100
 #: prefs/PrefPlugins.dfm:55
 #: prefs/PrefPresence.dfm:48
 msgid "Remove"
@@ -1821,18 +1821,18 @@ msgstr "Alternar caixas de marcação"
 #. frmInvite..Caption
 #. frmRosterWindow..popRoster..popInvite..Caption
 #. frmRosterWindow..popGroup..popGrpInvite..Caption
+#: invite.dfm:5
 #: RosterWindow.dfm:327
 #: RosterWindow.dfm:614
-#: invite.dfm:5
 msgid "Invite to Conference"
 msgstr "Convidar para conferência"
 
 #. frmInvite..pnlMain..lstJIDS......Caption
 #. frmRosterRecv..lvContacts......Caption
 #. frmRosterWindow..pnlFind..radNick..Caption
+#: invite.dfm:72
 #: RosterRecv.dfm:201
 #: RosterWindow.dfm:123
-#: invite.dfm:72
 msgid "Nickname"
 msgstr "Alcunha"
 
@@ -1840,8 +1840,8 @@ msgstr "Alcunha"
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Caption
 #. frmPrefPlugins..btnAddPlugin..Caption
 #. frmPrefPresence..pnlCustomPresButtons..btnCustomPresAdd..Caption
-#: Jabber1.dfm:149
 #: invite.dfm:109
+#: Jabber1.dfm:149
 #: prefs/PrefPlugins.dfm:36
 #: prefs/PrefPresence.dfm:39
 msgid "Add"
@@ -1864,10 +1864,10 @@ msgstr "Junte-se a nós nesta sala de conferência."
 
 #. frmExodus..Caption
 #. do this.
+#: Jabber1.dfm:7
 #: ConnDetails.pas:401
 #: ExSession.pas:475
 #: ExUtils.pas:1214
-#: Jabber1.dfm:7
 #: Jabber1.pas:1197
 #: Login.pas:104
 #: Login.pas:177
@@ -1899,9 +1899,9 @@ msgstr "Ver"
 #. frmAdd..Caption
 #. frmRosterWindow..popActions..popAddContact..Caption
 #: Jabber1.dfm:146
+#: jud.dfm:204
 #: RosterAdd.dfm:6
 #: RosterWindow.dfm:590
-#: jud.dfm:204
 msgid "Add Contact"
 msgstr "Adicionar contacto"
 
@@ -2288,8 +2288,8 @@ msgstr "Aceitar sempre a configuração predefinida para a sala."
 #. frmJud..Tabs..TabSheet2..Caption
 #. frmRegister..Tabs..TabSheet2..Caption
 #: JoinRoom.dfm:149
-#: RegForm.dfm:79
 #: jud.dfm:78
+#: RegForm.dfm:79
 msgid "TabSheet2"
 msgstr "TabSheet2"
 
@@ -2342,8 +2342,8 @@ msgstr "Por favor aguarde. A contactar o agente de busca:"
 
 #. frmJud..Tabs..TabSheet3..Caption
 #. frmRegister..Tabs..TabSheet3..Caption
-#: RegForm.dfm:114
 #: jud.dfm:100
+#: RegForm.dfm:114
 msgid "TabSheet3"
 msgstr "TabSheet3"
 
@@ -2354,8 +2354,8 @@ msgstr "Preencha os parâmetros para localizar os contactos."
 
 #. frmJud..Tabs..TabSheet4..Caption
 #. frmRegister..Tabs..TabSheet4..Caption
-#: RegForm.dfm:134
 #: jud.dfm:124
+#: RegForm.dfm:134
 msgid "TabSheet4"
 msgstr "TabSheet4"
 
@@ -2366,15 +2366,15 @@ msgstr "Adicionar contactos a este grupo:"
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Caption
 #. frmAdd..lblAddGrp..Caption
-#: RosterAdd.dfm:49
 #: jud.dfm:148
+#: RosterAdd.dfm:49
 msgid "Add a new Group"
 msgstr "Adicionar um grupo novo"
 
 #. frmJud..Tabs..TabSheet4..Panel2..Button1..Caption
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
-#: RosterRecv.dfm:45
 #: jud.dfm:168
+#: RosterRecv.dfm:45
 #: jud.pas:641
 #: jud.pas:643
 msgid "Add Contacts"
@@ -2387,9 +2387,9 @@ msgstr "Ver perfil"
 
 #. frmJud..PopupMenu1..popChat..Caption
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
-#: Jabber1.pas:2271
 #: jud.dfm:215
 #: subscribe.dfm:143
+#: Jabber1.pas:2271
 msgid "Start Chat"
 msgstr "Iniciar conversa"
 
@@ -2411,8 +2411,8 @@ msgstr "&Detalhes..."
 #. frmLogin..Panel1..cboProfiles....Items.WideStrings
 #. otherwise, if we have no profiles yet, use the default profile name.
 #. make sure we have at least a default profile
-#: ExSession.pas:373
 #: Login.dfm:99
+#: ExSession.pas:373
 #: Login.pas:200
 msgid "Default Profile"
 msgstr "Perfil predefinido"
@@ -2634,9 +2634,9 @@ msgstr "Plugins"
 #. frmPrefs..Scroller..lblTransfer..Caption
 #. frmXferManager..Panel1..pnlCaption..Caption
 #. frmPrefNotify..chkNotify....Items.WideStrings
-#: ExSession.pas:485
 #: Prefs.dfm:2639
 #: XferManager.dfm:54
+#: ExSession.pas:485
 #: prefs/PrefNotify.dfm:43
 #: prefs/PrefNotify.pas:102
 msgid "File Transfers"
@@ -5684,9 +5684,9 @@ msgstr "Zimbabué  "
 
 #. frmProfile..PageControl1..TabSheet5..Caption
 #. frmVCard..PageControl1..TabSheet5..Caption
-#: ConnDetails.pas:400
 #: Profile.dfm:728
 #: vcard.dfm:543
+#: ConnDetails.pas:400
 msgid "Work"
 msgstr "Emprego"
 
@@ -5917,9 +5917,9 @@ msgstr "Enviar o meu JID"
 #. frmRosterWindow..popGroup..popGroupBlock..Caption
 #. do blocking madness
 #: Room.dfm:279
-#: Room.pas:1487
 #: RosterWindow.dfm:379
 #: RosterWindow.dfm:633
+#: Room.pas:1487
 #: RosterWindow.pas:2048
 #: RosterWindow.pas:2085
 #: RosterWindow.pas:2090
@@ -6072,10 +6072,10 @@ msgstr "JID"
 
 #. frmRosterWindow..pnlShow..pnlStatus..lblStatusLink..Caption
 #. it at all times (if it exists).
+#: RosterWindow.dfm:245
 #: ExUtils.pas:852
 #: ExUtils.pas:870
 #: ExUtils.pas:888
-#: RosterWindow.dfm:245
 #: RosterWindow.pas:367
 #: RosterWindow.pas:1245
 #: RosterWindow.pas:1249
@@ -6270,8 +6270,8 @@ msgstr "Adicionar esta pessoa ao meu rol"
 
 #. frmSubscribe..frameButtons1..Panel2..Panel1..btnOK..Caption
 #. Change button captions for TC Invites
-#: MsgRecv.pas:378
 #: subscribe.dfm:125
+#: MsgRecv.pas:378
 msgid "Accept"
 msgstr "Aceitar"
 
@@ -6848,8 +6848,8 @@ msgid "There was an error attempting to save your options. Another process may b
 msgstr "Houve um erro ao tentar guardar as suas opções. Um outro processo poderá estar a tentar aceder ao seu  ficheiro de opções. Algumas opções poderão ter ficado perdidas. "
 
 #. otherwise, just join..
-#: JoinRoom.pas:243
 #: invite.pas:192
+#: JoinRoom.pas:243
 msgid "The Room Address you entered is invalid. It must be valid Jabber ID."
 msgstr "O endereço da sala que introduziu é inválido. Tem que ser um ID de Jabber válido."
 
@@ -8120,14 +8120,29 @@ msgid "Time is in seconds. Use 0 for a random time period."
 msgstr "O valor é em segundos. Utilize 0 para um intervalo aleatório."
 
 #. frmPrefNetwork..GroupBox2..Caption
-#: prefs/PrefNetwork.dfm:83
+#: prefs/PrefNetwork.dfm:85
 msgid "HTTP Proxy"
 msgstr "Proxy HTTP"
 
 #. frmPrefNetwork..GroupBox2..Label28..Caption
-#: prefs/PrefNetwork.dfm:126
+#: prefs/PrefNetwork.dfm:128
 msgid "Approach:"
 msgstr "Abordagem:"
+
+#. frmPrefNetwork..GroupBox2..cboProxyApproach....Items.WideStrings
+#: prefs/PrefNetwork.dfm:184
+msgid "Use IE Settings"
+msgstr "Utilizar as definições do IE"
+
+#. frmPrefNetwork..GroupBox2..cboProxyApproach....Items.WideStrings
+#: prefs/PrefNetwork.dfm:185
+msgid "No HTTP Proxy"
+msgstr "Não utilizar um proxy"
+
+#. frmPrefNetwork..GroupBox2..cboProxyApproach....Items.WideStrings
+#: prefs/PrefNetwork.dfm:186
+msgid "Custom HTTP Proxy"
+msgstr "Personalizar as definições do proxy"
 
 #. frmPrefNotify..Caption
 #: prefs/PrefNotify.dfm:4
