@@ -151,7 +151,7 @@ begin
         showRecvInvite);
     _conf_invite := TFactoryResponder.Create(MainSession,
         '/packet/message/x[@xmlns="' + XMLNS_XCONFERENCE + '"]',
-        showRecvInvite);
+        showConfInvite);
 end;
 
 {---------------------------------------}
