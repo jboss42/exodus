@@ -1411,7 +1411,6 @@ object frmAbout: TfrmAbout
     inherited Panel2: TPanel
       Width = 371
       Height = 34
-      ParentColor = True
       inherited Bevel1: TBevel
         Width = 371
       end
