@@ -39,6 +39,7 @@ var
 procedure DisplayMsg(Msg: TJabberMessage; RichEdit: TExRichEdit; AutoScroll: boolean = true);
 procedure DisplayPresence(txt: string; Browser: TExRichEdit);
 
+function atBottom(RichEdit: TExRichEdit): boolean;
 function GetMsgHTML(Msg: TJabberMessage): string;
 
 procedure ProcessEmoticons(RichEdit: TExRichEdit; color: TColor; txt: Widestring);
@@ -64,16 +65,15 @@ var
 {---------------------------------------}
 function atBottom(RichEdit: TExRichEdit): boolean;
 var
-    bot_thumb: integer;
-    ScrollInfo: TSCROLLINFO;
+    si: TSCROLLINFO;
 begin
-    with RichEdit do begin
-        ScrollInfo.cbSize := SizeOf(TScrollInfo);
-        ScrollInfo.fMask := SIF_PAGE + SIF_POS + SIF_RANGE;
-        GetScrollInfo(Handle, SB_VERT, ScrollInfo);
-        bot_thumb := ScrollInfo.nPos + Integer(ScrollInfo.nPage) + 2;
-        Result := ((bot_thumb >= ScrollInfo.nMax) or (ScrollInfo.nMax = 0));
-    end;
+    si.cbSize := SizeOf(TScrollInfo);
+    si.fMask := SIF_ALL;
+    GetScrollInfo(RichEdit.Handle, SB_VERT, si);
+    if (si.nMax = -1) then
+        Result := true
+    else
+        Result := ((si.nPos + integer(si.nPage)) >= si.nMax);
 end;
 
 {---------------------------------------}
