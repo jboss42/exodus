@@ -195,7 +195,7 @@ begin
     r := MainSession.Prefs.getInt(P_CHAT);
     m := MainSession.Prefs.getInt('chat_memory');
 
-    if (((r = msg_existing_chat) or (m > 0)) and (chat <> nil)) then begin
+    if (((r = msg_existing_chat) and (m > 0)) and (chat <> nil)) then begin
         win := TfrmChat(chat.window);
         if (win <> nil) then begin
             if ((win.Docked) or (win.Redock)) then begin
@@ -227,6 +227,8 @@ begin
         if (hist <> '') then with win.MsgList do begin
             // repopulate history..
             InputFormat := ifRTF;
+            SelStart := 0;
+            SelLength := Length(Lines.Text);
             RTFSelText := hist;
             InputFormat := ifUnicode;
 
@@ -1142,6 +1144,7 @@ begin
     end;
 
     if ((MainSession.Prefs.getInt('chat_memory') > 0) and
+        (MainSession.Prefs.getInt(P_CHAT) = msg_existing_chat) and
         (MsgList.Lines.Count > 0) and
         (chat_object <> nil) and
         (not _destroying)) then begin
