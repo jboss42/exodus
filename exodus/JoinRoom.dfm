@@ -1,12 +1,11 @@
 object frmJoinRoom: TfrmJoinRoom
   Left = 250
   Top = 168
+  Width = 451
+  Height = 230
   BorderIcons = [biSystemMenu]
-  BorderStyle = bsDialog
   BorderWidth = 2
   Caption = 'Join Room'
-  ClientHeight = 192
-  ClientWidth = 439
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,17 +15,12 @@ object frmJoinRoom: TfrmJoinRoom
   FormStyle = fsStayOnTop
   OldCreateOrder = False
   Position = poMainFormCenter
+  ShowHint = True
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
-  object Splitter1: TSplitter
-    Left = 267
-    Top = 0
-    Height = 158
-    Align = alRight
-  end
   inline frameButtons1: TframeButtons
     Left = 0
     Top = 158
@@ -34,7 +28,7 @@ object frmJoinRoom: TfrmJoinRoom
     Height = 34
     Align = alBottom
     AutoScroll = False
-    TabOrder = 2
+    TabOrder = 1
     inherited Panel2: TPanel
       Width = 439
       inherited Bevel1: TBevel
@@ -51,26 +45,10 @@ object frmJoinRoom: TfrmJoinRoom
       end
     end
   end
-  object treeRooms: TTntTreeView
-    Left = 270
-    Top = 0
-    Width = 169
-    Height = 158
-    Align = alRight
-    AutoExpand = True
-    HideSelection = False
-    Indent = 19
-    MultiSelectStyle = []
-    ShowLines = False
-    SortType = stText
-    TabOrder = 1
-    OnChange = treeRoomsChange
-    OnDblClick = treeRoomsDblClick
-  end
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 267
+    Width = 439
     Height = 158
     Align = alClient
     BevelOuter = bvNone
@@ -112,12 +90,22 @@ object frmJoinRoom: TfrmJoinRoom
       Caption = 'Get room list from this server...'
       OnClick = lblFetchClick
     end
+    object TntSplitter1: TTntSplitter
+      Left = 269
+      Top = 0
+      Height = 158
+      Align = alRight
+      ResizeStyle = rsUpdate
+    end
     object txtServer: TTntComboBox
       Left = 115
       Top = 87
       Width = 143
       Height = 21
+      Hint = 'Select the room server to use.'
       ItemHeight = 13
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 3
       Text = 'txtServer'
     end
@@ -142,6 +130,22 @@ object frmJoinRoom: TfrmJoinRoom
       Width = 140
       Height = 21
       TabOrder = 0
+    end
+    object lstRooms: TTntListBox
+      Left = 272
+      Top = 0
+      Width = 167
+      Height = 158
+      Hint = 'Join Room'
+      Align = alRight
+      ItemHeight = 13
+      ParentShowHint = False
+      ShowHint = True
+      Sorted = True
+      TabOrder = 4
+      OnClick = lstRoomsClick
+      OnDblClick = lstRoomsDblClick
+      OnMouseMove = lstRoomsMouseMove
     end
   end
 end
