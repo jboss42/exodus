@@ -34,18 +34,12 @@ type
     private
         _stream: TXMLStream;
         _register: boolean;
-        _username: string;
-        _password: string;
-        _resource: string;
-        _server: string;
         _stream_id: string;
         _show: string;
         _status: string;
-        _use_ssl: boolean;
-        _port: integer;
-        _priority: integer;
         _AuthType: TJabberAuthType;
         _invisible: boolean;
+        _profile: TJabberProfile;
 
         // Dispatcher
         _dispatcher: TSignalDispatcher;
@@ -56,7 +50,7 @@ type
 
         _paused: boolean;
         _pauseQueue: TQueue;
-        
+
         _id: longint;
         _cb_id: longint;
 
@@ -67,6 +61,19 @@ type
         procedure SendRegistration;
 
         function getMyAgents(): TAgents;
+
+        procedure SetUsername(username: string);
+        function GetUsername(): string;
+        procedure SetPassword(password: string);
+        function GetPassword(): string;
+        procedure SetServer(server: string);
+        function GetServer(): string;
+        procedure SetResource(resource: string);
+        function GetResource(): string;
+        procedure SetPort(port: integer);
+        function GetPort(): integer;
+        procedure SetPriority(priority: integer);
+        function GetPriority(): integer;
     published
         procedure AuthGetCallback(event: string; xml: TXMLTag);
         procedure AuthCallback(event: string; tag: TXMLTag);
@@ -98,7 +105,6 @@ type
         procedure FireEvent(event: string; tag: TXMLTag; const ritem: TJabberRosterItem); overload;
 
         procedure SendTag(tag: TXMLTag);
-        procedure AssignProfile(profile: TJabberProfile);
         procedure ActivateProfile(i: integer);
 
         procedure Pause;
@@ -112,12 +118,12 @@ type
         function IsBlocked(jid : TJabberID): boolean; overload;
         procedure Block(jid : TJabberID);
 
-        property Username: string read _username write _username;
-        property Password: string read _password write _password;
-        property Server: string read _server write _server;
-        property Resource: string read _resource write _resource;
-        property Port: integer read _port write _port;
-        property Priority: integer read _priority write _priority;
+        property Username: string read GetUsername write SetUsername;
+        property Password: string read GetPassword write SetPassword;
+        property Server: string read GetServer write SetServer;
+        property Resource: string read GetResource write SetResource;
+        property Port: integer read GetPort write SetPort;
+        property Priority: integer read GetPriority write SetPriority;
         property Show: string read _show;
         property Status: string read _status;
         property Stream: TXMLStream read _stream;
@@ -168,16 +174,11 @@ begin
     
     _stream := TXMLSocketStream.Create('stream:stream');
 //    _stream := TXMLHttpStream.Create('stream:stream');
-    _username := '';
-    _password := '';
-    _resource := '';
-    _server := '';
     _register := false;
-    _port := 5222;
     _id := 1;
     _cb_id := 1;
-    _use_ssl := false;
-
+    _profile := nil;
+    
     // Create the event dispatcher mechanism
     _dispatcher := TSignalDispatcher.Create;
     _packetSignal := TPacketSignal.Create();
@@ -235,6 +236,95 @@ begin
 end;
 
 {---------------------------------------}
+procedure TJabberSession.SetUsername(username: string);
+begin
+    _profile.Username := username;
+end;
+
+{---------------------------------------}
+function TJabberSession.GetUsername(): string;
+begin
+    if (_profile = nil) then
+        result := ''
+    else
+        result := _profile.Username;
+end;
+
+{---------------------------------------}
+procedure TJabberSession.SetPassword(password: string);
+begin
+    _profile.Password := password;
+end;
+
+{---------------------------------------}
+function TJabberSession.GetPassword(): string;
+begin
+    if (_profile = nil) then
+        result := ''
+    else
+        result := _profile.Password;
+end;
+
+{---------------------------------------}
+procedure TJabberSession.SetServer(server: string);
+begin
+    _profile.Password := server;
+end;
+
+{---------------------------------------}
+function TJabberSession.GetServer(): string;
+begin
+    if (_profile = nil) then
+        result := '';
+    result := _profile.Server;
+end;
+
+{---------------------------------------}
+procedure TJabberSession.SetResource(resource: string);
+begin
+    _profile.Resource := resource;
+end;
+
+{---------------------------------------}
+function TJabberSession.GetResource(): string;
+begin
+    if (_profile = nil) then
+        result := ''
+    else
+        result := _profile.Resource;
+end;
+
+{---------------------------------------}
+procedure TJabberSession.SetPort(port: integer);
+begin
+    _profile.Port := port;
+end;
+
+{---------------------------------------}
+function TJabberSession.GetPort(): integer;
+begin
+    if (_profile = nil) then
+        result := 0
+    else
+        result := _profile.Port;
+end;
+
+{---------------------------------------}
+procedure TJabberSession.SetPriority(priority: integer);
+begin
+    _profile.Priority := priority;
+end;
+
+{---------------------------------------}
+function TJabberSession.GetPriority(): integer;
+begin
+    if (_profile = nil) then
+        result := 0
+    else
+        result := _profile.Priority;
+end;
+
+{---------------------------------------}
 procedure TJabberSession.CreateAccount;
 begin
     _register := true;
@@ -249,7 +339,8 @@ begin
     if (_port = 5222) and (_use_ssl) then
         _port := 5223;
     }
-    _stream.Connect(_server, _port, _use_ssl);
+    if (_profile <> nil) then
+        _stream.Connect(_profile);
 end;
 
 {---------------------------------------}
@@ -280,7 +371,7 @@ begin
     // Process callback info..
     if msg = 'connected' then begin
         // we are connected... send auth stuff.
-        tmps := '<stream:stream to="' + Trim(_Server) + '" xmlns="jabber:client" xmlns:stream="http://etherx.jabber.org/streams">';
+        tmps := '<stream:stream to="' + Trim(Server) + '" xmlns="jabber:client" xmlns:stream="http://etherx.jabber.org/streams">';
         _stream.Send(tmps);
         end
     else if msg = 'disconnected' then begin
@@ -440,17 +531,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberSession.AssignProfile(profile: TJabberProfile);
-begin
-    Username := profile.Username;
-    Server   := profile.Server;
-    Password := profile.Password;
-    Resource := profile.Resource;
-    Priority := profile.Priority;
-    Port     := profile.Port;
-end;
-
-{---------------------------------------}
 procedure TJabberSession.AuthGet;
 var
     iqAuth: TJabberIQ;
@@ -462,7 +542,7 @@ begin
         Namespace := XMLNS_AUTH;
         iqType := 'get';
         with qTag do
-            AddBasicTag('username', _username);
+            AddBasicTag('username', Username);
         end;
     iqAuth.Send;
 end;
@@ -478,8 +558,8 @@ begin
         Namespace := XMLNS_REGISTER;
         iqType := 'set';
         with qTag do begin
-            AddBasicTag('username', _username);
-            AddBasicTag('password', _password);
+            AddBasicTag('username', Username);
+            AddBasicTag('password', Password);
             end;
         end;
     iqReg.Send;
@@ -526,8 +606,8 @@ begin
     with Auth do begin
         Namespace := XMLNS_AUTH;
         iqType := 'set';
-        qTag.AddBasicTag('username', _username);
-        qTag.AddBasicTag('resource', _resource);
+        qTag.AddBasicTag('username', Username);
+        qTag.AddBasicTag('resource', Resource);
         end;
 
     if seq <> nil then begin
@@ -536,7 +616,7 @@ begin
         _AuthType := jatZeroK;
         authSeq := StrToInt(seq.data);
         authToken := tok.Data;
-        hashA := Sha1Hash(_password);
+        hashA := Sha1Hash(Password);
         key := Sha1Hash(Trim(hashA) + Trim(authToken));
         for i := 1 to authSeq do
             key := Sha1Hash(key);
@@ -547,14 +627,14 @@ begin
     else if dig <> nil then begin
         // Digest (basic Sha1)
         _AuthType := jatDigest;
-        authDigest := Sha1Hash(Trim(_stream_id + _password));
+        authDigest := Sha1Hash(Trim(_stream_id + Password));
         Auth.qTag.AddBasicTag('digest', authDigest);
         end
 
     else begin
         // Plaintext
         _AuthType := jatPlainText;
-        Auth.qTag.AddBasicTag('password', _password);
+        Auth.qTag.AddBasicTag('password', Password);
         end;
     Auth.Send;
 end;
@@ -574,30 +654,19 @@ begin
         _dispatcher.DispatchSignal('/session/authenticated', tag);
         Self.RegisterCallback(ChatList.MsgCallback, '/packet/message[@type="chat"]');
         cur_agents := TAgents.Create();
-        Agents.AddObject(_server, cur_agents);
-        cur_agents.Fetch(_server);
+        Agents.AddObject(Server, cur_agents);
+        cur_agents.Fetch(Server);
         Prefs.FetchServerPrefs();
         end;
 end;
 
 {---------------------------------------}
 procedure TJabberSession.ActivateProfile(i: integer);
-var
-    p: TJabberProfile;
 begin
     Assert((i >= 0) and (i < Prefs.Profiles.Count));
 
     // make this profile the active one..
-    p := TJabberProfile(Prefs.Profiles.Objects[i]);
-
-    // Update the session object
-    Server := p.Server;
-    Username := p.Username;
-    password := p.password;
-    resource := p.Resource;
-    Priority := p.Priority;
-    Port     := p.Port;
-    _use_ssl := p.ssl;
+    _profile := TJabberProfile(Prefs.Profiles.Objects[i]);
 end;
 
 {---------------------------------------}
@@ -612,7 +681,7 @@ begin
 
     _show := show;
     _status := status;
-    _priority := priority;
+    _profile.Priority := priority;
     SendTag(p);
 
     // if we are going away or xa, save the prefs

@@ -5,6 +5,7 @@ interface
 uses
     XMLTag,
     XMLStream,
+    PrefController,
     {$ifdef linux}
     QExtCtrls,
     {$else}
@@ -23,24 +24,20 @@ type
         constructor Create(root: string); override;
         destructor Destroy; override;
 
-        procedure Connect(server: string; port: integer; use_ssl: boolean = false); override;
+        procedure Connect(profile: TJabberProfile); override;
         procedure Send(xml: string); override;
         procedure Disconnect; override;
     end;
 
     THttpThread = class(TParseThread)
     private
-        _Http:      TidHTTP;
-        _url:       string;
-        _interval:  cardinal;
-        
+        _profile : TJabberProfile;
+
     protected
         procedure Run; override;
 
     public
-        constructor Create(strm: TXMLHttpStream; url: string; root: string);
-        property Interval : cardinal read _interval write _interval;
-        property URL : string read _url;
+        constructor Create(strm: TXMLHttpStream; profile: TJabberProfile; root: string);
     end;
 implementation
 
@@ -57,15 +54,9 @@ begin
     //
 end;
 
-procedure TXMLHttpStream.Connect(server: string; port: integer; use_ssl: boolean = false);
-var
-    url : string;
+procedure TXMLHttpStream.Connect(profile: TJabberProfile);
 begin
-    if (use_ssl) then
-        url := 'https://www.' + server + '/wc12/webclient'
-    else
-        url := 'http://www.' + server + '/wc12/webclient';
-    _thread := THttpThread.Create(Self, url, _root_tag);
+    _thread := THttpThread.Create(Self, profile, _root_tag);
 end;
 
 procedure TXMLHttpStream.Send(xml: string);
@@ -78,20 +69,38 @@ begin
     //
 end;
 
-constructor THttpThread.Create(strm: TXMLHttpStream; url: string; root: string);
+constructor THttpThread.Create(strm: TXMLHttpStream; profile: TJabberProfile; root: string);
 begin
-    _url := url;
-    _http := TIdHTTP.Create(nil);
+    _profile := profile;
     inherited Create(strm, root);
 end;
 
 procedure THttpThread.Run();
 var
+    request : TStringStream;
     response : TStringStream;
+    http: TIdHTTP;
 begin
+    http := TIdHTTP.Create(nil);
+    if (_profile.ProxyApproach = 0) then begin
+        //TODO: get IE settings from registry
+        end;
+    if (_profile.ProxyApproach = 2) then begin
+        with http.Request do begin
+            ProxyServer := _profile.ProxyHost;
+            ProxyPort := _profile.ProxyPort;
+            if (_profile.ProxyAuth) then begin
+                ProxyUsername := _profile.ProxyUsername;
+                ProxyPassword := _profile.ProxyPassword;
+                end;
+            end;
+        end;
+
+    request := TStringStream.Create('');
     response := TStringStream.Create('');
     repeat
-//        _http.Post();
+        http.Post(_profile.URL, request, response);
+        Sleep(_profile.Poll * 1000);
     until true;
 end;
 

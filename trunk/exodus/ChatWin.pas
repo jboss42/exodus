@@ -254,7 +254,7 @@ begin
         lblNick.Caption := ' ';
         lblJID.Caption := cjid;
         if OtherNick <> '' then
-            Caption := OtherNick + ' - ' + sChat;
+            Caption := OtherNick + ' - ' + sChat
         else
             Caption := _jid.user + ' - ' + sChat;
         end;
