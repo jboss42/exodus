@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: exodus 0.1\n"
 "POT-Creation-Date: 2003-08-03 07:30\n"
-"PO-Revision-Date: 2003-12-05 08:36+0100\n"
+"PO-Revision-Date: 2003-12-05 14:13+0100\n"
 "Last-Translator: Mariusz Smykuła <smys@lodz.mm.pl>\n"
 "Language-Team: Mariusz Smykuła <redakcja@jabberpl.org>\n"
 "MIME-Version: 1.0\n"
@@ -1013,7 +1013,7 @@ msgstr "Dodaj do rostera .."
 #. frmChat..popContact..mnuProfile..Caption
 #: ChatWin.dfm:127
 msgid "Show Profile ..."
-msgstr "Pokaż profil"
+msgstr "Pokaż profil ..."
 
 #. frmChat..popContact..C1..Caption
 #: ChatWin.dfm:131
@@ -1160,7 +1160,7 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsProfile..chkSavePasswd..Caption
 #: ConnDetails.dfm:121
 msgid "Save pass&word"
-msgstr "Zacho&waj hasło"
+msgstr "Zapamiętaj hasło"
 
 #. frmConnDetails..PageControl1..tbsProfile..txtPassword..PasswordChar
 #. frmConnDetails..PageControl1..tbsSocket..txtSocksPassword..PasswordChar
@@ -1235,7 +1235,7 @@ msgstr "Automatycznie określ komputer i port"
 #: ConnDetails.dfm:304
 #: prefs/PrefNetwork.dfm:90
 msgid "Host:"
-msgstr ""
+msgstr "Komputer:"
 
 #. frmConnDetails..PageControl1..tbsConn..boxHost..Label7..Caption
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksPort..Caption
@@ -1256,12 +1256,12 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsSSL..TntLabel1..Caption
 #: ConnDetails.dfm:265
 msgid "SSL Certificate:"
-msgstr ""
+msgstr "Certyfikat SSL:"
 
 #. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.WideStrings
 #: ConnDetails.dfm:290
 msgid "Use StartTLS whenever the server allows it."
-msgstr "Używaj StartTLS gdy tylko pozwala na to serwer."
+msgstr "Używaj StartTLS gdy to możliwe."
 
 #. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.WideStrings
 #: ConnDetails.dfm:291
@@ -1672,7 +1672,7 @@ msgstr "Dostępne namespaces:"
 #: RosterWindow.dfm:134
 #: fRosterTree.dfm:13
 msgid "Roster Hint"
-msgstr ""
+msgstr "Podpowiedź"
 
 #. frameObjectActions..pRegister..lblRegister..Caption
 #: fService.dfm:28
@@ -2653,12 +2653,12 @@ msgstr ""
 #. frmPrefs..PageControl1..tbsBlockList..Memo1......Lines.WideStrings
 #: Prefs.dfm:3105
 msgid "Enter in the Jabber Addresses (JIDs) of the people to block from "
-msgstr "Wprowadź adres Jabbera (JID) ludzi od których nie chcesz otrzymywać "
+msgstr "Wprowadź adres Jabbera (JID) ludzi od których nie chcesz"
 
 #. frmPrefs..PageControl1..tbsBlockList..Memo1....Lines.WideStrings
 #: Prefs.dfm:3106
 msgid "sending "
-msgstr " wiadomości. "
+msgstr "otrzymywać wiadomości"
 
 #. frmPrefs..PageControl1..tbsBlockList..Memo1....Lines.WideStrings
 #: Prefs.dfm:3107
@@ -2839,21 +2839,21 @@ msgstr "Opis:"
 #: Profile.dfm:337
 #: vcard.dfm:162
 msgid "Accounting/Finance"
-msgstr ""
+msgstr "Bankowość/Finanse"
 
 #. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #: Profile.dfm:338
 #: vcard.dfm:163
 msgid "Computer related (IS, MIS, DP)"
-msgstr ""
+msgstr "Związane z komputerami (IS, MIS, DP)"
 
 #. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #: Profile.dfm:339
 #: vcard.dfm:164
 msgid "Computer related (WWW)"
-msgstr ""
+msgstr "Związane z komputerami (WWW)"
 
 #. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
@@ -2867,7 +2867,7 @@ msgstr ""
 #: Profile.dfm:341
 #: vcard.dfm:166
 msgid "Education/training"
-msgstr ""
+msgstr "Edukacja/szkolenia"
 
 #. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
@@ -2951,7 +2951,7 @@ msgstr "Student"
 #: Profile.dfm:353
 #: vcard.dfm:178
 msgid "Unemployed/Between Jobs"
-msgstr ""
+msgstr "Bezrobotny/Poszukujący pracy"
 
 #. frmProfile..PageControl1..TabSheet4..Label13..Caption
 #. frmProfile..PageControl1..TabSheet6..Label16..Caption
@@ -3366,7 +3366,7 @@ msgstr ""
 #: vcard.dfm:293
 #: vcard.dfm:698
 msgid "Brazil  "
-msgstr ""
+msgstr "Brazylia  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3454,7 +3454,7 @@ msgstr ""
 #: vcard.dfm:301
 #: vcard.dfm:706
 msgid "Canada  "
-msgstr ""
+msgstr "Kanada  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3549,7 +3549,7 @@ msgstr ""
 #: vcard.dfm:311
 #: vcard.dfm:716
 msgid "Columbia  "
-msgstr ""
+msgstr "Kolumiba  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3835,7 +3835,7 @@ msgstr ""
 #: vcard.dfm:337
 #: vcard.dfm:742
 msgid "Finland  "
-msgstr ""
+msgstr "Finlandia  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4110,7 +4110,7 @@ msgstr ""
 #: vcard.dfm:362
 #: vcard.dfm:767
 msgid "Hungary  "
-msgstr ""
+msgstr "Węgry  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4132,7 +4132,7 @@ msgstr ""
 #: vcard.dfm:364
 #: vcard.dfm:769
 msgid "India  "
-msgstr ""
+msgstr "Indie  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4220,7 +4220,7 @@ msgstr ""
 #: vcard.dfm:372
 #: vcard.dfm:777
 msgid "Japan  "
-msgstr ""
+msgstr "Japonia  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4924,7 +4924,7 @@ msgstr ""
 #: vcard.dfm:436
 #: vcard.dfm:841
 msgid "Poland  "
-msgstr ""
+msgstr "Polska  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4935,7 +4935,7 @@ msgstr ""
 #: vcard.dfm:437
 #: vcard.dfm:842
 msgid "Portugal  "
-msgstr ""
+msgstr "Portugalia  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -5199,7 +5199,7 @@ msgstr ""
 #: vcard.dfm:461
 #: vcard.dfm:866
 msgid "South Africa  "
-msgstr ""
+msgstr "Południowa Afryka  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -5221,7 +5221,7 @@ msgstr ""
 #: vcard.dfm:463
 #: vcard.dfm:868
 msgid "Spain  "
-msgstr ""
+msgstr "Hiszpania  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -5474,7 +5474,7 @@ msgstr ""
 #: vcard.dfm:486
 #: vcard.dfm:891
 msgid "Ukraine  "
-msgstr ""
+msgstr "Ukraina  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -5562,7 +5562,7 @@ msgstr ""
 #: vcard.dfm:495
 #: vcard.dfm:900
 msgid "Vietnam  "
-msgstr ""
+msgstr "Wietnam  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -5628,7 +5628,7 @@ msgstr ""
 #: vcard.dfm:501
 #: vcard.dfm:906
 msgid "Yugoslavia  "
-msgstr ""
+msgstr "Jugosławia  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -5763,7 +5763,7 @@ msgstr "Nakaż tej osobie aby usunęła mnie ze swojego rostera"
 #: RemoveContact.dfm:102
 #: RosterWindow.dfm:182
 msgid "foo@jabber.org"
-msgstr ""
+msgstr "cokolwiek@jabber.org"
 
 #. frmRiser..Label1..Caption
 #: RiserWindow.dfm:81
@@ -6295,27 +6295,27 @@ msgstr "Zarządca transferu plików"
 
 #: About.pas:83
 msgid "Exodus is the creation of Peter Millard  (mailto:me@pgmillard.com).  Checkout the website at http://exodus.jabberstudio.org for more information. It is currently licensed under the GNU Public License (GPL) see www.gnu.org for more information on the GPL."
-msgstr ""
+msgstr "Autorem Exodusa jest Peter Millard  (mailto:me@pgmillard.com).  Sprawdź stronę internetową http://exodus.jabberstudio.org aby uzyskać więcej informacji. Program jest aktualnie na licencji GNU Public License (GPL) zajrzyj na www.gnu.org aby uzyskać dodatkowe informacje na temat GPL."
 
 #: About.pas:85
 msgid "Preference Icons used with permission from collections of \"Foood\". http://www.foood.net/icons/index.htm"
-msgstr ""
+msgstr "Ikonki w Ustawieniach pochodzą za pozwoleniem właścicieli z kolekcji \"Foood\". http://www.foood.net/icons/index.htm"
 
 #: About.pas:87
 msgid "TCP/IP components are Copyright (c) 1993 - 2002, Chad Z. Hower (Kudzu) and the Indy Pit Crew - http://www.nevrona.com/Indy/. This application may also be using the IndySSL components from Nevrona, and the Open-SSL binaries available from Intellicom.si."
-msgstr ""
+msgstr "Komponenty TCP/IP mają wszystkie prawa zastrzeżone (c) 1993 - 2002, Chad Z. Hower (Kudzu) i Indy Pit Crew - http://www.nevrona.com/Indy/. Aplikacja może również korzystać z komponentu IndySSL od Nevrona, oraz kompilacji Open-SSL dostępnych z Intellicom.si."
 
 #: About.pas:89
 msgid "SAX XML Parser by: Stefan Heymann Eschenweg 3, 72076 Tubingen, GERMANY mailto:stefan@destructor.de, http://www.destructor.de"
-msgstr ""
+msgstr "Parser SAX XML autorstwa: Stefan Heymann Eschenweg 3, 72076 Tubingen, GERMANY mailto:stefan@destructor.de, http://www.destructor.de"
 
 #: About.pas:91
 msgid "Unicode library is Copyright (c) 1999, 2000 Mike Lischke (public@lischke-online.de) and Portions Copyright (c) 1999, 2000 Azret Botash (az)."
-msgstr ""
+msgstr "Biblioteka Unicode ma wszystkie prawa zastrzeżone (c) 1999, 2000 Mike Lischke (public@lischke-online.de) i częściowe prawa zastrzeżone (c) 1999, 2000 Azret Botash (az)."
 
 #: About.pas:93
 msgid "RichEdit98 and DBRichEdit98 components for Delphi 3.0-4.0. version 1.40 Author Alexander Obukhov, Minsk, Belarus <alex@niiomr.belpak.minsk.by>"
-msgstr ""
+msgstr "Komponenty RichEdit98 i DBRichEdit98 dla Delphi 3.0-4.0. wersja 1.40 Author Alexander Obukhov, Minsk, Belarus <alex@niiomr.belpak.minsk.by>"
 
 #: AutoUpdateStatus.pas:187
 #: WebGet.pas:120
@@ -6532,7 +6532,7 @@ msgstr "Nieznany błąd"
 
 #: ExEvents.pas:454
 msgid "Original Message was:"
-msgstr "Orginalna wiadomość brzmiała:"
+msgstr "Oryginalna wiadomość brzmiała:"
 
 #. We got an exception during signal dispatching.
 #: ExResponders.pas:210
@@ -6879,6 +6879,7 @@ msgstr "Ustawienia auto dostępności"
 
 #. lookup some arbitrary vcard..
 #: Jabber1.pas:2140
+#, fuzzy
 msgid "Lookup Profile"
 msgstr "Pokaż profil"
 
@@ -7820,17 +7821,17 @@ msgstr "Gdy pokazuję tylko dostępnych, to widoczne kontakty muszą mieć statu
 #. frmPrefGroups..chkSort..Caption
 #: prefs/PrefGroups.dfm:55
 msgid "Sort Contacts by their availability"
-msgstr "Porządkuj kontakty zgodnie z dostępnością"
+msgstr "Porządkuj kontakty wg. dostępności"
 
 #. frmPrefGroups..chkCollapsed..Caption
 #: prefs/PrefGroups.dfm:77
 msgid "Collapse all roster groups initially."
-msgstr "Zwijaj wszystkie grupy kontaktów przy starcie."
+msgstr "Zwijaj grupy kontaktów przy starcie."
 
 #. frmPrefGroups..chkGroupCounts..Caption
 #: prefs/PrefGroups.dfm:85
 msgid "Show group counts in roster (eg, 5/10)"
-msgstr "Pokazuj liczniki przy nazwie grupy (np. 5/10)"
+msgstr "Pokazuj liczniki przy grupach (np. 5/10)"
 
 #. frmPrefGroups..chkOfflineGrp..Caption
 #: prefs/PrefGroups.dfm:93
@@ -8276,7 +8277,7 @@ msgstr "Separatorem dla zagnieżdzonych grup jest:"
 #. frmPrefRoster..chkShowUnsubs..Caption
 #: prefs/PrefRoster.dfm:29
 msgid "Show contacts which I do not have a subscription to."
-msgstr "Pokaż kontakty od których nie mam autoryzacji."
+msgstr "Pokazuj kontakty od których nie mam autoryzacji."
 
 #. frmPrefRoster..chkHideBlocked..Caption
 #: prefs/PrefRoster.dfm:37
@@ -8291,7 +8292,7 @@ msgstr "Wykryj kontakty nieosiągalne oraz nieistniejące."
 #. frmPrefRoster..chkShowPending..Caption
 #: prefs/PrefRoster.dfm:53
 msgid "Show contacts I have asked to add as \"Pending\""
-msgstr "Pokaż kontakty które prosiłem o autoryzację jako \"Oczekujące\""
+msgstr "Pokazuj kontakty które prosiłem o autoryzację jako \"Oczekujące\""
 
 #. frmPrefRoster..cboDblClick....Items.WideStrings
 #: prefs/PrefRoster.dfm:65
@@ -8411,7 +8412,7 @@ msgstr "Przycisk zamykania chowa do schowka"
 #. frmPrefSystem..chkAutoStart..Caption
 #: prefs/PrefSystem.dfm:75
 msgid "Run Exodus when windows starts"
-msgstr "Uruchom Exodusa przy starcie windows"
+msgstr "Uruchom Exodusa przy starcie systemu"
 
 #. frmPrefSystem..chkOnTop..Caption
 #: prefs/PrefSystem.dfm:83
