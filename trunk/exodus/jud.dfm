@@ -80,7 +80,7 @@ inherited frmJud: TfrmJud
       object lblWait: TTntLabel
         Left = 0
         Top = 0
-        Width = 401
+        Width = 179
         Height = 13
         Align = alTop
         Caption = 'Please wait. Contacting search agent:'
@@ -164,7 +164,7 @@ inherited frmJud: TfrmJud
           Width = 228
           Height = 21
           Style = csDropDownList
-          ItemHeight = 13
+          ItemHeight = 0
           Sorted = True
           TabOrder = 0
         end

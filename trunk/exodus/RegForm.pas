@@ -115,7 +115,9 @@ begin
     regform.jid := jid;
     regform.Start();
     if regform.TabSheet <> nil then
-        frmExodus.Tabs.ActivePage := regform.TabSheet;
+        frmExodus.Tabs.ActivePage := regform.TabSheet
+    else
+        regform.Show();
 end;
 
 {---------------------------------------}

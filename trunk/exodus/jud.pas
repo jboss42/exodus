@@ -153,7 +153,9 @@ begin
     f.reset();
 
     if f.TabSheet <> nil then
-        frmExodus.Tabs.ActivePage := f.TabSheet;
+        frmExodus.Tabs.ActivePage := f.TabSheet
+    else
+        f.Show();
 
     // either get the fields right away,
     // or pre-select the first item
