@@ -1577,25 +1577,25 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 389
-    ActivePage = tbsDialog
+    ActivePage = tbsRoster
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 4
+    TabIndex = 0
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
       object Label18: TLabel
         Left = 8
-        Top = 266
+        Top = 282
         Width = 150
         Height = 13
         Caption = 'Group to be used for Gateways:'
       end
       object Label21: TLabel
         Left = 8
-        Top = 213
+        Top = 229
         Width = 93
         Height = 13
         Caption = 'Double Click Action'
@@ -1644,7 +1644,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkInlineStatus: TCheckBox
         Left = 8
-        Top = 166
+        Top = 182
         Width = 241
         Height = 17
         Caption = 'Show status in the roster: Joe <Meeting>'
@@ -1653,7 +1653,7 @@ object frmPrefs: TfrmPrefs
       end
       object cboInlineStatus: TColorBox
         Left = 32
-        Top = 182
+        Top = 198
         Width = 201
         Height = 22
         DefaultColorColor = clBlue
@@ -1697,14 +1697,14 @@ object frmPrefs: TfrmPrefs
       end
       object txtGatewayGrp: TTntEdit
         Left = 32
-        Top = 280
+        Top = 296
         Width = 201
         Height = 21
         TabOrder = 10
       end
       object cboDblClick: TComboBox
         Left = 26
-        Top = 229
+        Top = 245
         Width = 207
         Height = 21
         Style = csDropDownList
@@ -1722,6 +1722,14 @@ object frmPrefs: TfrmPrefs
         Height = 17
         Caption = 'Allow Unicode characters in the roster (requires 2000, ME, XP).'
         TabOrder = 12
+      end
+      object chkCollapsed: TCheckBox
+        Left = 9
+        Top = 160
+        Width = 200
+        Height = 17
+        Caption = 'Collapse all roster groups initially.'
+        TabOrder = 13
       end
     end
     object tbsSubscriptions: TTabSheet

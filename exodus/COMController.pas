@@ -106,6 +106,9 @@ type
     procedure trackWindowsMsg(Message: Integer); safecall;
     function addContactMenu(const Caption: WideString): WideString; safecall;
     procedure removeContactMenu(const ID: WideString); safecall;
+    function getActiveContact: WideString; safecall;
+    function getActiveGroup: WideString; safecall;
+    function getActiveContacts(Online: WordBool): WideString; safecall;
     { Protected declarations }
   private
     _menu_items: TWideStringList;
@@ -870,6 +873,48 @@ begin
         TMenuItem(_roster_menus.Objects[idx]).Free();
         _roster_menus.Delete(idx);
     end;
+end;
+
+{---------------------------------------}
+function TExodusController.getActiveContact: WideString;
+var
+    ritem: TJabberRosterItem;
+begin
+    ritem := frmRosterWindow.CurRosterItem;
+    if (ritem <> nil) then
+        Result := ritem.jid.full
+    else
+        Result := '';
+end;
+
+{---------------------------------------}
+function TExodusController.getActiveGroup: WideString;
+begin
+    Result := frmRosterWindow.CurGroup;
+end;
+
+{---------------------------------------}
+function TExodusController.getActiveContacts(Online: WordBool): WideString;
+var
+    clist: TList;
+    i: integer;
+    ritem: TJabberRosterItem;
+begin
+    // send back: jid1 | jid2 | jid3 ...
+    Result := '';
+    clist := frmRosterWindow.getSelectedContacts(Online);
+
+    for i := 0 to clist.count - 1 do begin
+        ritem := TJabberRosterItem(clist[i]);
+        if (ritem <> nil) then begin
+            Result := Result + ritem.jid.full;
+            if (i < clist.count - 1) then
+                Result := Result + ' | ';
+            ritem.Free();
+        end;
+    end;
+    clist.Clear();
+    clist.Free();
 end;
 
 initialization
