@@ -1,44 +1,13 @@
-2004-04-08 09:38  pgmillard
+2004-04-08 09:44  pgmillard
 
 	* exodus/: default.po, version.h, version.nsi: daily build
 
-2004-04-07 22:46  pgmillard
+2004-04-08 09:42  pgmillard
 
-	* exodus/: Exodus.dpr, ExodusCOM_TLB.pas, IEMsgList.dfm,
-	  IEMsgList.pas, RTFMsgList.pas: Stub for IEMsgList, and add
-	  license headers
-
-2004-04-07 22:35  pgmillard
-
-	* exodus/BaseChat.dfm, exodus/BaseChat.pas, exodus/BaseMsgList.dfm,
-	  exodus/BaseMsgList.pas, exodus/COMChatController.pas,
-	  exodus/ChatWin.dfm, exodus/ChatWin.pas, exodus/Exodus.dpr,
-	  exodus/ExodusCOM_TLB.pas, exodus/MsgDisplay.pas,
-	  exodus/RTFMsgList.dfm, exodus/RTFMsgList.pas, exodus/Room.pas,
-	  exodus/prefs/PrefFont.pas, jopl/MsgList.pas, jopl/Session.pas:
-	  Refactor TfrmBaseChat so the MsgList portion is pluggable via a
-	  TFrame. Create new TfBaseMsgList descendant classes and provide
-	  appropriate hooks. Still need to fixup the COMController
-	  interface.
-
-2004-04-07 19:45  pgmillard
-
-	* exodus/Browser.dfm, exodus/Browser.pas, exodus/Room.dfm,
-	  exodus/Room.pas, jopl/MsgList.pas: Feature Request #3450 - Add
-	  contacts from the browser.
-
-2004-04-07 19:18  pgmillard
-
-	* exodus/Room.pas: Bug #3600 - Use custom colors when drawing the
-	  room roster.
-
-2004-04-07 19:15  pgmillard
-
-	* jopl/AutoUpdate.pas: Bug #3597 - Catch EConvertErrors in
-	  RoundDate()
-
-2004-04-07 11:37  rimas
-
-	* exodus/locale/lt/LC_MESSAGES/: default.po: latest updates
-	  according to the main default.po
+	* exodus/: xml.res, plugins/AIM-Import/ExodusCOM_TLB.pas,
+	  plugins/ASpeller/ExodusCOM_TLB.pas,
+	  plugins/ICQ-Import/ExodusCOM_TLB.pas,
+	  plugins/JabberStats/ExodusCOM_TLB.pas,
+	  plugins/NetMeeting/ExodusCOM_TLB.pas,
+	  plugins/RosterTools/ExodusCOM_TLB.pas: Fix TC room errors
 
