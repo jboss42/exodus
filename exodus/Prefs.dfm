@@ -1571,25 +1571,25 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 357
-    ActivePage = tbsFonts
+    ActivePage = tbsRoster
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 2
+    TabIndex = 0
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
       object Label18: TLabel
         Left = 8
-        Top = 242
+        Top = 266
         Width = 150
         Height = 13
         Caption = 'Group to be used for Gateways:'
       end
       object Label21: TLabel
         Left = 8
-        Top = 189
+        Top = 213
         Width = 93
         Height = 13
         Caption = 'Double Click Action'
@@ -1638,7 +1638,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkInlineStatus: TCheckBox
         Left = 8
-        Top = 142
+        Top = 166
         Width = 241
         Height = 17
         Caption = 'Show status in the roster: Joe <Meeting>'
@@ -1647,7 +1647,7 @@ object frmPrefs: TfrmPrefs
       end
       object cboInlineStatus: TColorBox
         Left = 32
-        Top = 158
+        Top = 182
         Width = 201
         Height = 22
         DefaultColorColor = clBlue
@@ -1691,14 +1691,14 @@ object frmPrefs: TfrmPrefs
       end
       object txtGatewayGrp: TTntEdit
         Left = 32
-        Top = 256
+        Top = 280
         Width = 201
         Height = 21
         TabOrder = 10
       end
       object cboDblClick: TComboBox
         Left = 26
-        Top = 205
+        Top = 229
         Width = 207
         Height = 21
         Style = csDropDownList
@@ -1708,6 +1708,14 @@ object frmPrefs: TfrmPrefs
           'A new one to one chat window'
           'An instant message window'
           'A new or existing chat window')
+      end
+      object chkRosterUnicode: TCheckBox
+        Left = 9
+        Top = 143
+        Width = 328
+        Height = 17
+        Caption = 'Allow Unicode characters in the roster (requires 2000, ME, XP).'
+        TabOrder = 12
       end
     end
     object tbsSubscriptions: TTabSheet
@@ -2108,7 +2116,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 97
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2609,7 +2617,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 124
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2695,7 +2703,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 112
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2729,7 +2737,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TLabel
           Left = 0
           Top = 0
-          Width = 363
+          Width = 306
           Height = 13
           Align = alTop
           Caption = 
@@ -2753,7 +2761,7 @@ object frmPrefs: TfrmPrefs
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 363
+        Width = 352
         Height = 26
         Align = alTop
         Caption = 
@@ -2764,7 +2772,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 146
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -3008,7 +3016,7 @@ object frmPrefs: TfrmPrefs
       object Label6: TLabel
         Left = 0
         Top = 20
-        Width = 363
+        Width = 335
         Height = 26
         Align = alTop
         Caption = 
@@ -3019,7 +3027,7 @@ object frmPrefs: TfrmPrefs
       object StaticText12: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 51
         Height = 20
         Align = alTop
         Alignment = taCenter

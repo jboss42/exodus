@@ -174,6 +174,7 @@ type
     _blockers: TWideStringlist; // current list of jids being blocked
     _adURL : string;            // the URL for the ad graphic
     _transports: Widestring;    // current group name for special transports grp
+    _roster_unicode: boolean;   // Use unicode chars in the roster?
 
     function getNodeType(node: TTreeNode = nil): integer;
     procedure popUnBlockClick(Sender: TObject);
@@ -267,6 +268,7 @@ begin
     _show_status := MainSession.Prefs.getBool('inline_status');
     _status_color := TColor(MainSession.Prefs.getInt('inline_color'));
     _transports := MainSession.Prefs.getString('roster_transport_grp');
+    _roster_unicode := MainSession.Prefs.getBool('roster_unicode');
 
     frmExodus.pnlRoster.ShowHint := not _show_status;
 
@@ -428,6 +430,7 @@ begin
         _show_status := MainSession.Prefs.getBool('inline_status');
         _status_color := TColor(MainSession.Prefs.getInt('inline_color'));
         _transports := MainSession.Prefs.getString('roster_transport_grp');
+        _roster_unicode := MainSession.Prefs.getBool('roster_unicode');
         treeRoster.Font.Name := MainSession.Prefs.getString('roster_font_name');
         treeRoster.Font.Size := MainSession.Prefs.getInt('roster_font_size');
         treeRoster.Font.Color := TColor(MainSession.Prefs.getInt('roster_font_color'));
@@ -1735,6 +1738,13 @@ begin
         node_bm: DefaultDraw := true;
         node_transport: DefaultDraw := true;
         node_ritem: begin
+            // if we aren't showing status, or don't want unicode,
+            // then bail right now.
+            if ((_roster_unicode = false) and (_show_status = false)) then begin
+                DefaultDraw := true;
+                exit;
+                end;
+
             // always custom draw roster items to get unicode goodness
             // determine the captions (c1 is nick, c2 is status)
             c2 := '';

@@ -22,7 +22,7 @@ unit Prefs;
 interface
 
 uses
-    Menus, ShellAPI, 
+    Menus, ShellAPI,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, 
     ComCtrls, StdCtrls, ExtCtrls, buttonFrame, CheckLst,
     ExRichEdit, Dialogs, RichEdit2, TntStdCtrls;
@@ -206,6 +206,7 @@ type
     txtGatewayGrp: TTntEdit;
     Label21: TLabel;
     cboDblClick: TComboBox;
+    chkRosterUnicode: TCheckBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -340,6 +341,7 @@ begin
         chkHideBlocked.Checked := getBool('roster_hide_block');
         chkPresErrors.Checked := getBool('roster_pres_errors');
         chkMessenger.Checked := getBool('roster_messenger');
+        chkRosterUnicode.Checked := getBool('roster_unicode');
 
         cboDblClick.ItemIndex := getInt('roster_chat');
         txtGatewayGrp.Text := getString('roster_transport_grp');
@@ -517,6 +519,7 @@ begin
         setInt('roster_chat', cboDblClick.ItemIndex);
         setBool('roster_pres_errors', chkPresErrors.Checked);
         setBool('roster_messenger', chkMessenger.Checked);
+        setBool('roster_unicode', chkRosterUnicode.Checked);
         setString('roster_transport_grp', txtGatewayGrp.Text);
 
         // S10n prefs
