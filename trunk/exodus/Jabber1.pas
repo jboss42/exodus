@@ -23,12 +23,9 @@ unit Jabber1;
 interface
 
 uses
-    GUIFactory,
-    ExResponders,
-    ExEvents,
-    RosterWindow,
-    Presence,
-    XMLTag,
+    GUIFactory, Register, Notify,
+    ExResponders, ExEvents,
+    RosterWindow, Presence, XMLTag,
     ShellAPI, Registry, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
@@ -218,7 +215,11 @@ type
     _flash: boolean;
     _edge_snap: integer;
     _fade_limit: integer;
+
+    // Various other key controllers
     _guibuilder: TGUIFactory;
+    _regController: TRegController;
+    _Notify: TNotifyController;
 
     _is_autoaway: boolean;
     _is_autoxa: boolean;
@@ -408,7 +409,14 @@ begin
     MainSession := TJabberSession.Create;
     _guibuilder := TGUIFactory.Create();
     _guibuilder.SetSession(MainSession);
-    
+
+    _regController := TRegController.Create();
+    _regController.SetSession(Self);
+
+    Notify := TNotifyController.Create;
+    Notify.SetSession(Self);
+
+
     with MainSession.Prefs do begin
         RestorePosition(Self);
 
