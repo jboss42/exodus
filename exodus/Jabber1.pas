@@ -1044,7 +1044,7 @@ begin
             ResolvedPort := 5223;
 
         if (p > 0) then
-            DebugMsg('Got SRV: ' + ResolvedIP + '  ' + IntToStr(p))
+            DebugMsg('Got SRV: ' + ResolvedIP + '  ' + IntToStr(ResolvedPort))
         else
             DebugMsg('Got A: ' + ResolvedIP + '  ' + IntToStr(ResolvedPort));
     end;

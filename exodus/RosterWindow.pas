@@ -2422,7 +2422,7 @@ begin
                 c2 := '(' + _cur_myres.Presence.Status + ')';
             DrawNodeText(Node, State, c1, c2);
         end
-        else begin
+        else if (_cur_ritem <> nil) then begin
             if (_cur_ritem.RawNickname <> '') then
                 c1 := _cur_ritem.Nickname
             else

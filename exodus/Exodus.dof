@@ -97,7 +97,7 @@ PackageDCPOutputDir=.\output
 SearchPath=$(DELPHI)\Lib\Debug;.\components
 Packages=vcl;rtl
 Conditionals=Exodus;TRACE_EXCEPTIONS
-DebugSourceDirs=D:\src\exodus\exodus\components\
+DebugSourceDirs=D:\src\exodus\exodus\components\;D:\src\Indy\Source\
 UsePackages=1
 [Parameters]
 RunParams=-d -c debug.xml
