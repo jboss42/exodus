@@ -26,7 +26,13 @@ object frmPrefs: TfrmPrefs
     VertScrollBar.Tracking = True
     Align = alLeft
     Color = clWindow
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
     ParentColor = False
+    ParentFont = False
     TabOrder = 0
     TabStop = True
     OnMouseMove = OffBoxMouseMove
@@ -629,8 +635,6 @@ object frmPrefs: TfrmPrefs
       Alignment = taCenter
       AutoSize = False
       Caption = 'Subscriptions'
-      Color = clWindow
-      ParentColor = False
       Transparent = True
       WordWrap = True
       OnClick = TabSelect
@@ -826,8 +830,6 @@ object frmPrefs: TfrmPrefs
       Alignment = taCenter
       AutoSize = False
       Caption = 'Roster'
-      Color = clWindow
-      ParentColor = False
       Transparent = True
       WordWrap = True
       OnClick = TabSelect
@@ -1023,8 +1025,6 @@ object frmPrefs: TfrmPrefs
       Alignment = taCenter
       AutoSize = False
       Caption = 'System'
-      Color = clWindow
-      ParentColor = False
       Transparent = True
       WordWrap = True
       OnClick = TabSelect
@@ -2862,8 +2862,6 @@ object frmPrefs: TfrmPrefs
       Alignment = taCenter
       AutoSize = False
       Caption = 'Groups'
-      Color = clWindow
-      ParentColor = False
       Transparent = True
       WordWrap = True
       OnClick = TabSelect

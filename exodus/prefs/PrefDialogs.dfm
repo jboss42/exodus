@@ -10,14 +10,14 @@ inherited frmPrefDialogs: TfrmPrefDialogs
   object Label26: TTntLabel
     Left = 8
     Top = 199
-    Width = 289
+    Width = 197
     Height = 13
     Caption = 'Minutes to keep chat windows in memory:'
   end
   object Label27: TTntLabel
     Left = 8
     Top = 213
-    Width = 305
+    Width = 244
     Height = 13
     Caption = 'Use 0 minutes to destroy chat windows immediately.'
   end
@@ -31,7 +31,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
   object TntLabel1: TTntLabel
     Left = 8
     Top = 291
-    Width = 305
+    Width = 242
     Height = 13
     Caption = 'Use this key sequence used to close chat windows'
   end
@@ -143,7 +143,8 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Height = 21
     Enabled = False
     TabOrder = 11
-    Text = '255'
+    Text = '250'
+    OnChange = txtSnapChange
   end
   object spnSnap: TTntUpDown
     Left = 217
@@ -179,6 +180,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Height = 21
     TabOrder = 14
     Text = '60'
+    OnChange = txtChatMemoryChange
   end
   object spnChatMemory: TTntUpDown
     Left = 217
@@ -248,7 +250,6 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Top = 230
     Width = 137
     Height = 19
-    Enabled = False
     Max = 180
     PageSize = 10
     Frequency = 15

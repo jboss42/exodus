@@ -1,11 +1,12 @@
 object frmAbout: TfrmAbout
-  Left = 284
-  Top = 227
-  Width = 344
-  Height = 301
+  Left = 276
+  Top = 230
+  Width = 381
+  Height = 324
+  BorderIcons = []
   BorderWidth = 1
   Caption = 'About Exodus'
-  Color = clBtnFace
+  Color = clWhite
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -20,7 +21,7 @@ object frmAbout: TfrmAbout
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 334
+    Width = 371
     Height = 130
     Align = alTop
     BevelOuter = bvLowered
@@ -29,7 +30,7 @@ object frmAbout: TfrmAbout
     object Image1: TImage
       Left = 1
       Top = 1
-      Width = 332
+      Width = 369
       Height = 128
       Align = alClient
       Center = True
@@ -1401,21 +1402,23 @@ object frmAbout: TfrmAbout
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 236
-    Width = 334
+    Top = 254
+    Width = 371
     Height = 34
     Align = alBottom
     AutoScroll = False
     TabOrder = 1
     inherited Panel2: TPanel
-      Width = 334
+      Width = 371
       Height = 34
+      ParentColor = True
       inherited Bevel1: TBevel
-        Width = 334
+        Width = 371
       end
       inherited Panel1: TPanel
-        Left = 174
+        Left = 211
         Height = 29
+        ParentColor = True
         inherited btnOK: TTntButton
           Visible = False
         end
@@ -1429,22 +1432,23 @@ object frmAbout: TfrmAbout
   object pnlVersion: TPanel
     Left = 0
     Top = 130
-    Width = 334
+    Width = 371
     Height = 20
     Align = alTop
     BevelOuter = bvNone
     Caption = 'Version: '
+    ParentColor = True
     TabOrder = 2
     OnMouseDown = pnlVersionMouseDown
   end
   object InfoBox: TExRichEdit
     Left = 0
     Top = 150
-    Width = 334
-    Height = 86
+    Width = 371
+    Height = 104
     Align = alClient
     AutoURLDetect = adDefault
-    Color = clBtnFace
+    BorderStyle = bsNone
     CustomURLs = <
       item
         Name = 'e-mail'
@@ -1520,6 +1524,7 @@ object frmAbout: TfrmAbout
       end>
     LangOptions = [loAutoFont]
     Language = 1033
+    ParentColor = True
     ScrollBars = ssVertical
     ShowSelectionBar = False
     TabOrder = 3

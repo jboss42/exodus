@@ -62,6 +62,8 @@ type
     procedure txtToastAlphaChange(Sender: TObject);
     procedure trkSnapChange(Sender: TObject);
     procedure trkChatMemoryChange(Sender: TObject);
+    procedure txtSnapChange(Sender: TObject);
+    procedure txtChatMemoryChange(Sender: TObject);
   private
     { Private declarations }
   public
@@ -116,8 +118,11 @@ begin
             spnSnap.Position := getInt('edge_snap')
         else
             spnSnap.Position := 10;
+        trkSnap.Position := spnSnap.Position;
 
         spnChatMemory.Position := getInt('chat_memory');
+        trkChatMemory.Position := spnChatMemory.Position;
+        
         chkEscClose.Checked := getBool('esc_close');
         hkClose.HotKey := TextToShortcut(getString('close_hotkey'));
     end;
@@ -135,8 +140,8 @@ begin
 
         setBool('snap_on', chkSnap.Checked);
         setBool('warn_closebusy', chkBusy.Checked);
-        setInt('edge_snap', spnSnap.Position);
-        setInt('chat_memory', spnChatMemory.Position);
+        setInt('edge_snap', trkSnap.Position);
+        setInt('chat_memory', trkChatMemory.Position);
         setBool('esc_close', chkEscClose.Checked);
         setString('close_hotkey', ShortCutToText(hkClose.HotKey));
     end;
@@ -209,6 +214,24 @@ procedure TfrmPrefDialogs.trkChatMemoryChange(Sender: TObject);
 begin
   inherited;
     spnChatMemory.Position := trkChatMemory.Position;
+end;
+
+procedure TfrmPrefDialogs.txtSnapChange(Sender: TObject);
+begin
+  inherited;
+    try
+        trkSnap.Position := StrToInt(txtSnap.Text);
+    except
+    end;
+end;
+
+procedure TfrmPrefDialogs.txtChatMemoryChange(Sender: TObject);
+begin
+  inherited;
+    try
+        trkChatMemory.Position := StrToInt(txtChatMemory.Text);
+    except
+    end;
 end;
 
 end.
