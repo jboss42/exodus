@@ -90,17 +90,22 @@ object fSendStatus: TfSendStatus
     Request.BasicAuthentication = False
     Request.UserAgent = 'Mozilla/3.0 (compatible; Indy Library)'
     HTTPOptions = [hoForceEncodeParams]
-    Left = 32
+    Left = 248
   end
   object tcpClient: TIdTCPClient
     IOHandler = SocksHandler
     MaxLineAction = maException
     ReadTimeout = 0
     Port = 0
-    Left = 120
+    Left = 216
   end
   object SocksHandler: TIdIOHandlerSocket
+    SocksInfo = IdSocksInfo1
     UseNagle = False
-    Left = 88
+    Left = 184
+  end
+  object IdSocksInfo1: TIdSocksInfo
+    Version = svSocks5
+    Left = 280
   end
 end

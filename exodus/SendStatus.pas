@@ -32,7 +32,7 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, 
     Dialogs, ComCtrls, StdCtrls, ExtCtrls, IdBaseComponent, IdComponent,
     IdTCPConnection, IdTCPClient, IdHTTP, TntStdCtrls, IdIOHandler,
-    IdIOHandlerSocket;
+    IdIOHandlerSocket, IdSocks;
 
 const
     WM_SEND_DONE = WM_USER + 6002;
@@ -59,6 +59,7 @@ type
         lblTo: TTntLabel;
         tcpClient: TIdTCPClient;
         SocksHandler: TIdIOHandlerSocket;
+    IdSocksInfo1: TIdSocksInfo;
     private
         { Private declarations }
         _thread: TFileSendThread;
