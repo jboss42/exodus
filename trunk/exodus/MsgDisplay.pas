@@ -520,7 +520,8 @@ end;
 {---------------------------------------}
 function GetMsgHTML(Msg: TJabberMessage): string;
 var
-    color, txt, html, time, bg, font: string;
+    html, txt: Widestring;
+    ret, color, time, bg, font: string;
     cr_pos: integer;
 begin
     // XXX: Joe, optimize with regex PLEASE!
@@ -565,7 +566,8 @@ begin
                     txt + '</span></div>';
         end;
     end;
-    Result := html;
+    ret := UTF8Encode(html);
+    Result := ret;
 end;
 
 
