@@ -120,6 +120,9 @@ type
     procedure StopBar();
     procedure getBrowseProps(tag: TXMLTag; var title: string; var image_index: integer);
 
+    procedure StartDockChange();
+    procedure EndDockChange();
+
     function ShowError(Tag: TXMLTag): boolean;
 
   public
@@ -428,6 +431,10 @@ procedure TfrmBrowse.FormCreate(Sender: TObject);
 begin
     // Create the History list
     _History := TStringList.Create;
+
+    Self.OnDockStartChange := StartDockChange;
+    Self.OnDockEndChange := EndDockChange;
+
 end;
 
 {---------------------------------------}
@@ -641,8 +648,12 @@ begin
     StartRoom(cjid, MainSession.Username);
 end;
 
-{---------------------------------------}
-procedure TfrmBrowse.FormEndDock(Sender, Target: TObject; X, Y: Integer);
+procedure TfrmBrowse.StartDockChange();
+begin
+    vwBrowse.Items.Clear;
+end;
+
+procedure TfrmBrowse.EndDockChange();
 begin
     // rebrowse to this JID to refresh the dumb listview.
     // *SIGH*
@@ -651,10 +662,16 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmBrowse.FormEndDock(Sender, Target: TObject; X, Y: Integer);
+begin
+    Self.EndDockChange();
+end;
+
+{---------------------------------------}
 procedure TfrmBrowse.FormStartDock(Sender: TObject;
   var DragObject: TDragDockObject);
 begin
-    vwBrowse.Items.Clear;
+    Self.StartDockChange();
 end;
 
 {---------------------------------------}
