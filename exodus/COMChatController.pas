@@ -5,7 +5,7 @@ unit COMChatController;
 interface
 
 uses
-    ExodusPlugin_TLB, 
+    ExodusPlugins_TLB, 
     Session, ChatController, ChatWin, Chat,
     Classes, ComObj, ActiveX, Register_TLB, StdVcl;
 
@@ -20,8 +20,13 @@ type
     { Protected declarations }
 
   public
+    constructor Create();
+    destructor Destroy(); override;
+
     procedure setChatSession(chat_session: TChatController);
     procedure fireMsgKeyPress(Key: Char);
+    procedure fireBeforeMsg(var body: Widestring);
+    procedure fireAfterMsg(var body: WideString; var xml: Widestring);
 
   private
     _chat: TChatController;
@@ -29,9 +34,35 @@ type
 
   end;
 
+  TChatPlugin = class
+    com: IExodusChatPlugin;
+    end;
+
+
 implementation
 
 uses ComServ;
+
+constructor TExodusChat.Create();
+begin
+    inherited Create();
+    _plugs := TList.Create();
+end;
+
+destructor TExodusChat.Destroy();
+var
+    i: integer;
+begin
+    for i := 0 to _plugs.Count - 1 do begin
+        // todo: send chat plugins a shutdown signal
+        TChatPlugin(_plugs[i]).Free();
+        end;
+    _plugs.Clear();
+    _plugs.Free();
+
+    inherited Destroy();
+end;
+
 
 procedure TExodusChat.setChatSession(chat_session: TChatController);
 begin
@@ -39,10 +70,28 @@ begin
 end;
 
 procedure TExodusChat.fireMsgKeyPress(Key: Char);
+var
+    i: integer;
 begin
-
+    for i := 0 to _plugs.count - 1 do
+        TChatPlugin(_plugs[i]).com.onKeyPress(Key);
 end;
 
+procedure TExodusChat.fireBeforeMsg(var body: Widestring);
+var
+    i: integer;
+begin
+    for i := 0 to _plugs.Count - 1 do
+        TChatPlugin(_plugs[i]).com.onBeforeMessage(body);
+end;
+
+procedure TExodusChat.fireAfterMsg(var body: WideString; var xml: Widestring);
+var
+    i: integer;
+begin
+    for i := 0 to _plugs.Count - 1 do
+        TChatPlugin(_plugs[i]).com.onAfterMessage(body, xml);
+end;
 
 function TExodusChat.Get_jid: WideString;
 begin
@@ -62,13 +111,28 @@ begin
 end;
 
 function TExodusChat.UnRegister(ID: Integer): WordBool;
+var
+    cp: TChatPlugin;
 begin
-
+    if ((id >= 0) and (id < _plugs.count)) then begin
+        cp := TChatPlugin(_plugs[id]);
+        cp.Free();
+        _plugs.Delete(id);
+        Result := true;
+        end
+    else
+        Result := false;
 end;
 
 function TExodusChat.RegisterPlugin(var Plugin: OleVariant): Integer;
+var
+    p: IExodusChatPlugin;
+    cp: TChatPlugin;
 begin
-
+    cp := TChatPlugin.Create;
+    p := IUnknown(Plugin) as IExodusChatPlugin;
+    cp.com := p;
+    Result := _plugs.Add(cp);
 end;
 
 initialization

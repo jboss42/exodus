@@ -165,6 +165,7 @@ begin
         chat := MainSession.ChatList.AddChat(sjid, resource);
         echat := TExodusChat.Create();
         echat.setChatSession(chat);
+        echat.ObjAddRef();
         chat.ComController := echat;
         frmExodus.ComController.fireNewChat(sjid, echat);
         end;
@@ -464,13 +465,15 @@ end;
 {---------------------------------------}
 procedure TfrmChat.SendMsg;
 var
-    txt: WideString;
+    xml, txt: WideString;
     msg: TJabberMessage;
     mtag: TXMLTag;
 begin
     // Send the actual message out
     // txt := getMemoText(MsgOut);
     txt := Trim(MsgOut.Text);
+
+    TExodusChat(chat_object.ComController).fireBeforeMsg(txt);
 
     if (txt = '') then exit;
 
@@ -494,7 +497,12 @@ begin
         AddTag('composing');
         end;
 
-    MainSession.SendTag(mtag);
+
+    // MainSession.SendTag(mtag);
+
+    xml := mtag.xml();
+    TExodusChat(chat_object.ComController).fireAfterMsg(txt, xml);
+    MainSession.Stream.Send(xml);
     DisplayMsg(Msg, MsgList);
 
     // log the msg

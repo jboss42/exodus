@@ -6,7 +6,7 @@ interface
 
 uses
     XMLTag,
-    ExodusPlugin_TLB,
+    ExodusPlugins_TLB,
     Classes, ComObj, ActiveX, Register_TLB, StdVcl;
 
 type
@@ -39,10 +39,6 @@ type
 
   TPlugin = class
     com: IExodusPlugin;
-    end;
-
-  TChatPlugin = class
-    com: IExodusChatPlugin;
     end;
 
   TPluginProxy = class
@@ -114,7 +110,7 @@ begin
     p.com := plugin;
     plugs.AddObject(com_name, p);
     try
-        // p.com.Startup(frmExodus.ComController as ExodusController);
+        p.com.Startup(frmExodus.ComController as IUnknown);
     except
         MessageDlg('Plugin class could not be initialized.',
             mtError, [mbOK], 0);
@@ -188,7 +184,7 @@ var
     i: integer;
 begin
     for i := 0 to plugs.count - 1 do
-        // TPlugin(plugs.Objects[i]).com.NewChat(jid, ExodusChat);
+        TPlugin(plugs.Objects[i]).com.NewChat(jid, ExodusChat);
 end;
 
 {---------------------------------------}
@@ -219,7 +215,7 @@ end;
 {---------------------------------------}
 procedure TExodusController.ChangePresence;
 begin
-
+    // todo: plugin change presence
 end;
 
 {---------------------------------------}
@@ -252,7 +248,7 @@ end;
 {---------------------------------------}
 procedure TExodusController.RemoveRosterItem(const jid: WideString);
 begin
-    // todo: remove roster item for COM
+    // todo: plugin remove roster item
 end;
 
 {---------------------------------------}
