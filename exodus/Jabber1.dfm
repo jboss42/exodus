@@ -31,7 +31,7 @@ object frmExodus: TfrmExodus
     Left = 57
     Top = 27
     Width = 3
-    Height = 317
+    Height = 312
     Cursor = crHSplit
     OnMoved = SplitterRightMoved
   end
@@ -39,7 +39,7 @@ object frmExodus: TfrmExodus
     Left = 60
     Top = 27
     Width = 157
-    Height = 317
+    Height = 312
     ActivePage = tbsRoster
     Align = alClient
     DockSite = True
@@ -72,7 +72,7 @@ object frmExodus: TfrmExodus
         Left = 105
         Top = 0
         Width = 3
-        Height = 287
+        Height = 282
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = SplitterRightMoved
@@ -81,7 +81,7 @@ object frmExodus: TfrmExodus
         Left = 0
         Top = 0
         Width = 105
-        Height = 287
+        Height = 282
         Align = alLeft
         BevelOuter = bvNone
         BorderWidth = 1
@@ -94,7 +94,7 @@ object frmExodus: TfrmExodus
         Left = 108
         Top = 0
         Width = 41
-        Height = 287
+        Height = 282
         Align = alClient
         BevelOuter = bvNone
         Caption = 'THIS IS PNLRIGHT'
@@ -210,7 +210,7 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 27
     Width = 57
-    Height = 317
+    Height = 312
     Align = alLeft
     BevelOuter = bvNone
     BorderWidth = 1
@@ -518,26 +518,6 @@ object frmExodus: TfrmExodus
     end
     object Help1: TMenuItem
       Caption = 'Help'
-      object JabberUserGuide1: TMenuItem
-        Caption = 'Jabber User Guide'
-        OnClick = JabberUserGuide1Click
-      end
-      object WinJabWebsite1: TMenuItem
-        Caption = 'Exodus Website'
-        OnClick = WinJabWebsite1Click
-      end
-      object JabberBugzilla1: TMenuItem
-        Caption = 'Submit Exodus Bug'
-        OnClick = JabberBugzilla1Click
-      end
-      object JabberorgWebsite1: TMenuItem
-        Caption = 'Jabber.org Website'
-        OnClick = JabberorgWebsite1Click
-      end
-      object JabberCentralWebsite1: TMenuItem
-        Caption = 'JabberStudio Website'
-        OnClick = JabberCentralWebsite1Click
-      end
       object N12: TMenuItem
         Caption = '-'
       end
@@ -553,7 +533,7 @@ object frmExodus: TfrmExodus
     Left = 88
     Top = 74
     Bitmap = {
-      494C01012A002C00040010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C01012A002C00040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000B0000000010020000000000000B0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -2009,7 +1989,8 @@ object frmExodus: TfrmExodus
       E03FE03FE01FE03FE00FE01FE00FE00FE007E00FE007E007E003E007C003E003
       C003C003C003C003C001C003C001C001C001C001C001C001C001C001C001C001
       C001C001C001C001C001C001C003C001E003E003E003E003E007E003F007E003
-      F00FF007F80FF007FC1FF80FFE3FFC1F}
+      F00FF007F80FF007FC1FF80FFE3FFC1F00000000000000000000000000000000
+      000000000000}
   end
   object timFlasher: TTimer
     Enabled = False
