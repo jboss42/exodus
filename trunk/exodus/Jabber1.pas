@@ -35,6 +35,8 @@ const
     UpdateKey = '001';
 
     WM_TRAY = WM_USER + 5269;
+    WM_AUTOAWAY = WM_USER + 5270;
+    WM_PREFS = WM_USER + 5272;
 
 type
     TNextEventType = (next_none, next_Exit, next_Login);
@@ -208,6 +210,7 @@ type
     procedure presCustomClick(Sender: TObject);
     procedure trayShowClick(Sender: TObject);
     procedure trayExitClick(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -227,6 +230,7 @@ type
     _is_min: boolean;
     _last_show: string;
     _last_status: string;
+    _first_instance: boolean;
 
     _version: TVersionResponder;
     _time: TTimeResponder;
@@ -237,6 +241,7 @@ type
     _hidden: boolean;
     _shutdown: boolean;
     _close_min: boolean;
+    _eHandle: integer;
 
 
     // Callbacks
@@ -252,6 +257,11 @@ type
     procedure restoreMenus(enable: boolean);
 
     procedure setTrayInfo(tip: string);
+
+    procedure SetAutoAway();
+    procedure SetAutoXA();
+    procedure SetAutoAvailable();
+
   protected
     // Window message handlers
     procedure CreateParams(var Params: TCreateParams); override;
@@ -260,6 +270,8 @@ type
     procedure WMTray(var msg: TMessage); message WM_TRAY;
     procedure WMQueryEndSession(var msg: TMessage); message WM_QUERYENDSESSION;
     procedure WMEndSession(var msg: TMessage); message WM_ENDSESSION;
+
+    procedure WMAutoAway(var msg: TMessage); message WM_AUTOAWAY;
   public
     // other stuff..
     function  getTabForm(tab: TTabSheet): TForm;
@@ -386,6 +398,21 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmJabber.WMAutoAway(var msg: TMessage);
+begin
+    if (_first_instance) then exit;
+
+    frmDebug.debugMsg('GOT AUTOAWAY MSG!');
+
+    if msg.LParam = 0 then
+        SetAutoAvailable()
+    else if msg.LParam = 1 then
+        SetAutoAway()
+    else if msg.LParam = 2 then
+        SetAutoXA();
+end;
+
+{---------------------------------------}
 procedure TfrmJabber.FormCreate(Sender: TObject);
 var
     exp: boolean;
@@ -460,7 +487,17 @@ begin
     _is_autoaway := false;
     _is_autoxa := false;
     _is_min := false;
-    IdleUIInit();
+
+    _eHandle := CreateEvent(nil, false, false, 'Exodus');
+    if (GetLastError = ERROR_ALREADY_EXISTS) then
+        _first_instance := false
+    else begin
+        // first instance..
+        _first_instance := true;
+        IdleUIInit();
+        end;
+
+    timAutoAway.Enabled := (_first_instance);
 
     // Create the tray icon, etc..
     with _tray do begin
@@ -605,6 +642,7 @@ begin
             Self.FormStyle := fsStayOnTop
         else
             Self.FormStyle := fsNormal;
+        lstEvents.Color := TColor(getInt('roster_bg'));
         end;
 end;
 
@@ -823,6 +861,7 @@ begin
         end;
 
     IdleUITerm();
+    CloseHandle(_eHandle);
 end;
 
 {---------------------------------------}
@@ -1222,6 +1261,8 @@ var
     mins, away, xa: integer;
     cur_idle: dword;
 begin    // get the latest idle amount
+    if (not MainSession.Stream.Active) then exit;
+
     with MainSession.Prefs do begin
         if getBool('auto_away') then begin
             cur_idle := (GetTickCount() - IdleUIGetLastInputTime()) div 1000;
@@ -1230,40 +1271,42 @@ begin    // get the latest idle amount
             away := getInt('away_time');
             xa := getInt('xa_time');
 
-            if ((mins = 0) and ((_is_autoaway) or (_is_autoxa))) then begin
-                if (mins = 0) then begin
-                    // reset our status to available
-                    MainSession.setPresence(_last_show, _last_status,
-                         MainSession.Priority);
-                     _is_autoaway := false;
-                     _is_autoxa := false;
-                     timAutoAway.Interval := 30000;
-                     end;
-                 end
+            Self.SetAutoAway();
+            {
+            if ((mins = 0) and ((_is_autoaway) or (_is_autoxa))) then
+                SetAutoAvailable()
+            else if (_is_autoxa) then exit
+            else if ((mins >= xa) and (_is_autoaway)) then SetAutoXA()
+            else if ((mins >= away) and (not _is_autoaway)) then SetAutoAway();
+            }
+            end;
+        end;
+end;procedure TfrmJabber.SetAutoAway;begin    // set us to away    if (_first_instance) then
+        SendMessage(HWND_BROADCAST, WM_AUTOAWAY, 0, 1);
+    Application.ProcessMessages;
 
-             else if (_is_autoxa) then
-                 exit
+    _last_show := MainSession.Show;
+    _last_status := MainSession.Status;
 
-             else if ((mins >= xa) and (_is_autoaway)) then begin
-                 // set us to xa
-                 MainSession.setPresence('xa', getString('xa_status'),
-                     MainSession.Priority);
-                 _is_autoaway := false;
-                 _is_autoxa := true;
-                 end
-             else if ((mins >= away) and (not _is_autoaway)) then begin
-                 // set us to away
-                 _last_show := MainSession.Show;
-                 _last_status := MainSession.Status;
-                 MainSession.setPresence('away', getString('away_status'),
-                     MainSession.Priority);
-                 _is_autoaway := true;
-                 _is_autoxa := false;
-                 timAutoAway.Interval := 1000;
-                 end;
-             end;
-         end;
+    MainSession.SetPresence('away', MainSession.prefs.getString('away_status'),
+        MainSession.Priority);
+
+    _is_autoaway := true;
+    _is_autoxa := false;
+
+    timAutoAway.Interval := 1000;
+end;procedure TfrmJabber.SetAutoXA;begin    // set us to xa    _is_autoaway := false;    _is_autoxa := true;
+    MainSession.SetPresence('xa', MainSession.prefs.getString('xa_status'),        MainSession.Priority);
+    if (_first_instance) then        SendMessage(HWND_BROADCAST, WM_AUTOAWAY, 0, 2);
+end;procedure TfrmJabber.SetAutoAvailable;begin    // reset our status to available    _is_autoaway := false;    _is_autoxa := false;
+    MainSession.SetPresence(_last_show, _last_status, MainSession.Priority);
+
+    if (_first_instance) then
+        SendMessage(HWND_BROADCAST, WM_AUTOAWAY, 0, 0);
+
+    timAutoAway.Interval := 30000;
 end;
+
 {---------------------------------------}
 procedure TfrmJabber.MessageHistory2Click(Sender: TObject);begin
     frmRosterWindow.popHistoryClick(Sender);
@@ -1332,6 +1375,7 @@ begin
         f.Close();
 end;
 
+{---------------------------------------}
 procedure TfrmJabber.popFloatTabClick(Sender: TObject);
 var
     t: TTabSheet;
@@ -1346,6 +1390,7 @@ begin
         TfrmDockable(f).FloatForm();
 end;
 
+{---------------------------------------}
 procedure TfrmJabber.mnuChatClick(Sender: TObject);
 var
     n: TTreeNode;
@@ -1364,18 +1409,21 @@ begin
         StartChat(jid, '', true);
 end;
 
+{---------------------------------------}
 procedure TfrmJabber.mnuBookmarkClick(Sender: TObject);
 begin
     // Add a new bookmark to our list..
     ShowBookmark('');
 end;
 
+{---------------------------------------}
 procedure TfrmJabber.presCustomClick(Sender: TObject);
 begin
     // Custom presence
     ShowCustomPresence();
 end;
 
+{---------------------------------------}
 procedure TfrmJabber.presCustomPresClick(Sender: TObject);
 var
     i: integer;
@@ -1390,7 +1438,7 @@ begin
         MainSession.setPresence(cp.show, cp.status, cp.priority);
 end;
 
-
+{---------------------------------------}
 procedure TfrmJabber.trayShowClick(Sender: TObject);
 begin
     // Show the application from the popup Menu
@@ -1398,10 +1446,17 @@ begin
     ShowWindow(Handle, SW_RESTORE);
 end;
 
+{---------------------------------------}
 procedure TfrmJabber.trayExitClick(Sender: TObject);
 begin
     // Close the application
     Self.Close;
+end;
+
+{---------------------------------------}
+procedure TfrmJabber.FormActivate(Sender: TObject);
+begin
+    // FlashWindow(Self.Handle, false);
 end;
 
 end.

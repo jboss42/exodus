@@ -804,7 +804,7 @@ begin
         show := 'dnd';
         end;
     end;
-    MainSession.setPresence(show, MainSession.Status, MainSession.Priority);
+    MainSession.setPresence(show, '', MainSession.Priority);
 end;
 
 {---------------------------------------}

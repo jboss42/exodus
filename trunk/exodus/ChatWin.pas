@@ -450,6 +450,7 @@ procedure TfrmChat.FormActivate(Sender: TObject);
 begin
     if Self.Visible then
         MsgOut.SetFocus;
+    // FlashWindow(Self.Handle, false);
 end;
 
 {---------------------------------------}
