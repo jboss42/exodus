@@ -248,7 +248,6 @@ begin
             // utf := _Socket.CurrentReadBuffer;
             _socket.ReadFromStack();
             utf := _socket.InputBuffer.Extract(_socket.InputBuffer.Size);
-
             if ((_remain_utf) <> '') then begin
                 inp := _remain_utf + utf;
                 _remain_utf := '';

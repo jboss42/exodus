@@ -46,7 +46,7 @@ type
 
     TFileSendState = (send_disco, send_ft_offer, send_get_hosts, send_get_addr,
         send_offer_hosts, send_try_connect, send_activate, send_sending,
-        send_do_oob, send_do_dav, send_done, send_cancel);
+        send_old_ft, send_do_oob, send_do_dav, send_done, send_cancel);
 
     TFileSendThread = class;
 
@@ -78,6 +78,7 @@ type
         _stream: TFileStream;
         _hash: Widestring;
         _size: longint;
+        _recip_si: boolean;
 
         procedure DoState();
         procedure BuildStreamHosts(ptag: TXMLTag);
@@ -390,7 +391,92 @@ begin
         _iq.toJid := _pkg.recip;
         _iq.Send();
         end;
+    send_old_ft: begin
+        if MainSession.Prefs.getBool('xfer_webdav') then begin
+            _state := send_do_dav;
+            SendDav()
+        end
+        else begin
+            if (not getXferManager().httpServer.Active) then
+                getXferManager().httpServer.Active := true;
+            _state := send_do_oob;
+            SendIQ();
+        end;
+        end;
+    send_get_hosts: begin
+        // get our hosts that we want to offer..
+        if (MainSession.Prefs.getBool('xfer_proxy')) then begin
+
+            // always use xfer_prefproxy
+            tmps := MainSession.Prefs.getString('xfer_prefproxy');
+            for i := shosts.Count - 1 downto 0 do begin
+                p := THostPortPair(shosts.Objects[i]);
+                if (p.jid <> tmps) then begin
+                    p.Free();
+                    shosts.Delete(i);
+                end;
+            end;
+
+            // make sure our pref proxy is in the list.
+            // if we already have the addr, then just offer.
+            _state := send_get_addr;
+
+            i := shosts.IndexOf(tmps);
+            if (i = -1) then begin
+                // add it
+                p := THostPortPair.Create();
+                p.jid := tmps;
+                shosts.AddObject(p.jid, p);
+            end
+            else begin
+                p := THostPortPair(shosts.Objects[i]);
+                if ((p.host <> '') and (p.Port > 0)) then
+                    // _state := send_offer_hosts;
+                    _state := send_ft_offer;
+            end;
+
+            DoState();
+        end
+        else begin
+            _iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
+                Self.DiscoItemsCallback, 20);
+            _iq.iqType := 'get';
+            tmp_jid := TJabberID.Create(MainSession.jid);
+            _iq.toJid := tmp_jid.domain;
+            _iq.Namespace := XMLNS_DISCOITEMS;
+            _iq.Send();
+        end;
+        end;
+    send_get_addr: begin
+        // get the addresses for each host..
+        if (not getNextHostAddr()) then begin
+            // _state := send_offer_hosts;
+            _state := send_ft_offer;
+            DoState();
+        end;
+        end;
     send_ft_offer: begin
+
+        // get the file size
+        try
+            fs := TFileStream.Create(_pkg.pathname, (fmOpenRead or fmShareDenyNone));
+            _size := fs.Size;
+            fs.Free();
+        except
+            on EStreamError do begin
+                MessageDlg(sXferStreamError, mtError, [mbOK], 0);
+                exit;
+            end;
+        end;
+
+        if ((shosts.Count = 0) and (not MainSession.Prefs.getBool('xfer_proxy'))) then begin
+            // We don't have any stream hosts to use.
+            // do either webdav or old-school OOB
+            _state := send_old_ft;
+            DoState();
+            exit;
+        end;
+
         _iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
             Self.FTCallback, 600);
         _iq.Namespace := XMLNS_SI;
@@ -407,19 +493,6 @@ begin
 
         x := x.AddTagNS('file', XMLNS_FTPROFILE);
         x.setAttribute('name', ExtractFilename(_pkg.pathname));
-
-        // get the file size
-        try
-            fs := TFileStream.Create(_pkg.pathname, (fmOpenRead or fmShareDenyNone));
-            _size := fs.Size;
-            fs.Free();
-        except
-            on EStreamError do begin
-                MessageDlg(sXferStreamError, mtError, [mbOK], 0);
-                exit;
-            end;
-        end;
-
         x.setAttribute('size', IntToStr(_size));
 
         // put in the fneg stuff
@@ -430,57 +503,7 @@ begin
         fld.setAttribute('type', 'list-single');
         x := fld.AddTag('option');
         x.AddBasicTag('value', XMLNS_BYTESTREAMS);
-
         _iq.Send();
-        end;
-    send_get_hosts: begin
-        // get our hosts that we want to offer..
-        if (MainSession.Prefs.getBool('xfer_proxy')) then begin
-            // always use xfer_prefproxy
-            tmps := MainSession.Prefs.getString('xfer_prefproxy');
-            for i := shosts.Count - 1 downto 0 do begin
-                p := THostPortPair(shosts.Objects[i]);
-                if (p.jid <> tmps) then begin
-                    p.Free();
-                    shosts.Delete(i);
-                end;
-            end;
-
-            // make sure our pref proxy is in the list.
-            // if we already have the addr, then just offer.
-            _state := send_get_addr;
-            i := shosts.IndexOf(tmps);
-            if (i = -1) then begin
-                // add it
-                p := THostPortPair.Create();
-                p.jid := tmps;
-                shosts.AddObject(p.jid, p);
-            end
-            else begin
-                p := THostPortPair(shosts.Objects[i]);
-                if ((p.host <> '') and (p.Port > 0)) then
-                    _state := send_offer_hosts;
-            end;
-
-            DoState();
-        end
-        else begin
-            _iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
-                Self.DiscoItemsCallback, 20);
-            _iq.iqType := 'get';
-            tmp_jid := TJabberID.Create(MainSession.jid);
-            _iq.toJid := tmp_jid.domain;
-            _iq.Namespace := XMLNS_DISCOITEMS;
-            _iq.Send();
-        end;
-
-        end;
-    send_get_addr: begin
-        // get the addresses for each host..
-        if (not getNextHostAddr()) then begin
-            _state := send_offer_hosts;
-            DoState();
-        end;
         end;
     send_offer_hosts: begin
         // offer the hosts to the recipient..
@@ -510,20 +533,10 @@ begin
             end;
         end;
 
-        // Make sure we have at least one host to use..
+        // We should ALWAYS have at least 1 shost here, otherwise,
+        // we should have never sent the SI offer.
         sh := sh + shosts.Count;
-        if (sh = 0) then begin
-            // we have no hosts!
-            MessageDlg(_('Could not contact any usable stream host proxies.'),
-                mtError, [mbOK], 0);
-
-            // XXX: we need to send something to the recip.
-            FreeAndNil(_iq);
-            _state := send_cancel;
-            DoState();
-            getXferManager().killFrame(Self);
-            exit;
-        end;
+        assert(sh > 0);
 
         // Build the pkg object
         tmps := _sid + MainSession.Jid + _pkg.recip;
@@ -703,38 +716,30 @@ end;
 {---------------------------------------}
 procedure TfSendStatus.RecipDiscoCallback(event: string; tag: TXMLTag);
 var
-    ft_support: boolean;
     x, x2, x3: TXMLTag;
 begin
     // determine what mode to use based on disco results
     _iq := nil;
-    ft_support := false;
+    _recip_si := false;
+
     if (event = 'xml') then begin
         // check for SI, and FTPROFILE
         x := tag.QueryXPTag('/iq/query/feature[@var="' + XMLNS_SI + '"]');
         x2 := tag.QueryXPTag('/iq/query/feature[@var="' + XMLNS_FTPROFILE + '"]');
         x3 := tag.QueryXPTag('/iq/query/feature[@var="' + XMLNS_BYTESTREAMS + '"]');
         if ((x <> nil) and (x2 <> nil) and (x3 <> nil)) then
-            ft_support := true;
+            _recip_si := true;
     end;
 
-    if (not ft_support) then begin
+    if (not _recip_si) then begin
         // they don't support FT... so either do OOB, or DAV
-        if MainSession.Prefs.getBool('xfer_webdav') then begin
-            _state := send_do_dav;
-            SendDav()
-        end
-        else begin
-            if (not getXferManager().httpServer.Active) then
-                getXferManager().httpServer.Active := true;
-            _state := send_do_oob;
-            SendIQ();
-        end;
-        exit;
+        _state := send_old_ft;
+    end
+    else begin
+        // they do support FT, and Bytestreams, so lets forge ahead
+        _state := send_get_hosts;
     end;
 
-    // they do support FT, and Bytestreams, so lets forge ahead
-    _state := send_ft_offer;
     DoState();
 end;
 
@@ -778,7 +783,8 @@ begin
             DoState();
         end
         else begin
-            _state := send_offer_hosts;
+            //_state := send_offer_hosts;
+            _state := send_ft_offer;
             DoState();
         end;
     end;
@@ -825,7 +831,7 @@ begin
     end;
 
     if (accept) then
-        _state := send_get_hosts
+        _state := send_offer_hosts
     else begin
         lblStatus.Caption := WideFormat(_('Your file transfer was refused to %s'),
             [_pkg.recip]);
@@ -884,7 +890,8 @@ begin
     end;
 
     if (not getNextHostAddr()) then begin
-        _state := send_offer_hosts;
+        //_state := send_offer_hosts;
+        _state := send_ft_offer;
         DoState();
     end;
 
