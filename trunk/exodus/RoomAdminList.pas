@@ -175,9 +175,9 @@ begin
     // Take the unchecked items off the list
     for i := 0 to lstItems.Items.Count - 1 do begin
         li := lstItems.Items[i];
-        item := q.AddTag('item');
-        item.setAttribute('jid', li.SubItems[0]);
         if (not li.Checked) then begin
+            item := q.AddTag('item');
+            item.setAttribute('jid', li.SubItems[0]);
             if (role) then
                 item.setAttribute('role', offList)
             else

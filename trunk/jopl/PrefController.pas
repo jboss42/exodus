@@ -512,7 +512,10 @@ begin
     else
         n := _pref_node;
 
-    p := n.GetFirstTag(pkey);
+    if (n = nil) then
+        p := nil
+    else
+        p := n.GetFirstTag(pkey);
 
     if (p = nil) then
         p := n.AddTag(pkey)
@@ -824,8 +827,6 @@ begin
     if (tag = nil) then exit;
     _server_node := TXMLTag.Create(tag.QueryXPTag('/iq/query/storage'));
     TJabberSession(_js).FireEvent('/session/server_prefs', _server_node);
-    if (_server_node <> nil) then
-        FreeAndNil(_server_node);
 end;
 
 {---------------------------------------}
