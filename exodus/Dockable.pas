@@ -168,6 +168,15 @@ var
 begin
     if _noMoveCheck then exit;
 
+
+    {
+    _top indicates that we are moving the window to the top of
+    the z-order manually using SetWindowPos()
+    In this case, we don't want to subvert the normal z-order raising,
+    otherwise, we DO want to subvert normal behavior so toast doesn't
+    bring this window to the top of the z-order
+    }
+
     if ((not Application.Active) and (not _top)) then
         // if the application is not active, don't bring the window to the top.
         msg.WindowPos^.flags := msg.WindowPos^.flags or SWP_NOZORDER;
@@ -217,13 +226,16 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.WMActivate(var msg: TMessage);
 begin
-    if ((not _top) and (Application.Active  or (Msg.WParamLo = WA_CLICKACTIVE))) then begin
+    if ((not _top) and
+        ((Application.Active) or
+         (Msg.WParamLo = WA_CLICKACTIVE) )
+        ) then begin
         // we are getting clicked..
         _top := true;
-        PostMessage(Application.Handle, WM_ACTIVATE, 0, 0);
         SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
             Self.Width, Self.Height, HWND_TOP);
         _top := false;
+        inherited;
         end
     else
         inherited;
@@ -234,7 +246,6 @@ procedure TfrmDockable.WMMouseActivate(var msg: TMessage);
 begin
     if (not _top) then begin
         _top := true;
-        PostMessage(Application.Handle, WM_ACTIVATE, 0, 0);
         SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
             Self.Width, Self.Height, HWND_TOP);
         _top := false;

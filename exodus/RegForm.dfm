@@ -1,6 +1,6 @@
 object frmRegister: TfrmRegister
-  Left = 334
-  Top = 167
+  Left = 264
+  Top = 173
   Width = 312
   Height = 327
   Caption = 'Agent Registration'
@@ -11,6 +11,7 @@ object frmRegister: TfrmRegister
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
@@ -56,6 +57,7 @@ object frmRegister: TfrmRegister
         Height = 25
         Caption = 'Cancel'
         TabOrder = 2
+        OnClick = btnCancelClick
       end
     end
   end

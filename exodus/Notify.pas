@@ -95,7 +95,7 @@ var
 begin
     // we are getting some event to do notification on
 
-    // DebugMsg('Notify Callback: ' + BoolToStr(MainSession.IsPaused, true) + ''#13#10);
+    // DebugMsg('Notify Callback: ' + BoolToStr(MainSession.IsPaused, true));
     if MainSession.IsPaused then begin
         MainSession.QueueEvent(event, tag, Self.Callback);
         exit;

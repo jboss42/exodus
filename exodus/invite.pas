@@ -29,20 +29,21 @@ type
   TfrmInvite = class(TForm)
     frameButtons1: TframeButtons;
     pnlMain: TPanel;
-    pnl1: TPanel;
-    memReason: TMemo;
     lstJIDS: TListView;
     Splitter1: TSplitter;
     pnlRight: TPanel;
     Splitter2: TSplitter;
-    Label1: TLabel;
-    Label2: TLabel;
-    cboRoom: TComboBox;
     Panel1: TPanel;
     btnRemove: TButton;
     btnAdd: TButton;
     Label3: TLabel;
     sgContacts: TStringGrid;
+    Panel2: TPanel;
+    memReason: TMemo;
+    Label2: TLabel;
+    pnl1: TPanel;
+    cboRoom: TComboBox;
+    Label1: TLabel;
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure btnAddClick(Sender: TObject);
@@ -154,12 +155,13 @@ var
 begin
     // make sure pnlRight is visible
     if (not pnlRight.Visible) then begin
+        pnlMain.Align := alLeft;
+        btnAdd.Caption := 'Add';
         Self.ClientWidth := Self.ClientWidth + 175;
         pnlRight.Visible := true;
 
         // populate the string grid
         with MainSession.Roster do begin
-
             // build a sorted list on nicks.
             tl := TStringlist.Create();
             for i := 0 to Count - 1 do
@@ -199,6 +201,7 @@ begin
     // make the form the same width as the list view
     Self.ClientWidth := pnlMain.Width + 2;
     cboRoom.Items.Assign(room.room_list);
+    pnlMain.Align := alClient;
 end;
 
 {---------------------------------------}

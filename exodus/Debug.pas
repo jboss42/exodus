@@ -50,7 +50,6 @@ type
     procedure MemoSendKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     procedure DebugCallback(send: boolean; data: string);
@@ -76,9 +75,10 @@ var
     frmDebug: TfrmDebug;
 
 
-// Singleton factory
+{---------------------------------------}
 procedure ShowDebugForm();
 begin
+    // Singleton factory
     if ( frmDebug = nil ) then
         frmDebug := TfrmDebug.Create(nil);
     if (not frmDebug.Visible) then
@@ -90,6 +90,7 @@ begin
         frmDebug.Show();
 end;
 
+{---------------------------------------}
 procedure DockDebugForm();
 begin
     if ((frmDebug <> nil) and (not frmDebug.Docked)) then begin
@@ -98,6 +99,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure FloatDebugForm();
 begin
     // make sure debug window is hidden and undocked
@@ -107,6 +109,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure CloseDebugForm();
 begin
     if ( frmDebug = nil ) then exit;
@@ -118,7 +121,7 @@ procedure DebugMessage(txt: string);
 begin
     if (frmDebug = nil) then exit;
     if (not frmDebug.Visible) then exit;
-        
+
     // add some text to the debug log
     with frmDebug.MsgDebug do begin
         SelStart := GetTextLen;
@@ -136,6 +139,7 @@ procedure TfrmDebug.FormCreate(Sender: TObject);
 begin
     // make sure the output is showing..
     inherited;
+    MainSession.Stream.RegisterDataCallback(DebugCallback);
 end;
 
 
@@ -253,6 +257,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmDebug.MemoSendKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
@@ -263,6 +268,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmDebug.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     Action := caFree;
@@ -270,12 +276,6 @@ begin
     MainSession.Stream.UnregisterDataCallback(DebugCallback);
     inherited;
     frmDebug := nil;
-end;
-
-procedure TfrmDebug.FormShow(Sender: TObject);
-begin
-    inherited;
-    MainSession.Stream.RegisterDataCallback(DebugCallback);
 end;
 
 end.
