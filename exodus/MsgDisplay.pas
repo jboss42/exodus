@@ -317,7 +317,9 @@ begin
     AddEmot(':breath', msn, 46); // hold my breath
     AddEmot('(o)', msn, 46);
     AddEmot('(B)', msn, 16);
-    
+    AddEmot(':kissme', msn, 47);
+    AddEmot(':kissmyass', msn, 47);
+
     (*
     Emoticon map:
 
