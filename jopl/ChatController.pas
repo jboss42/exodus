@@ -202,7 +202,6 @@ end;
 {---------------------------------------}
 procedure TChatController.MsgCallback(event: string; tag: TXMLTag);
 var
-    mt: integer;
     mtype: Widestring;
     m, etag: TXMLTag;
     is_composing: boolean;
