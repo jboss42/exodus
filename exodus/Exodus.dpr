@@ -112,7 +112,6 @@ uses
   InvalidRoster in 'InvalidRoster.pas' {frmInvalidRoster},
   AutoUpdateStatus in 'AutoUpdateStatus.pas' {frmAutoUpdateStatus},
   Exodus_TLB in 'Exodus_TLB.pas',
-  ExodusController in 'ExodusController.pas' {ExodusController: CoClass},
   ExodusPlugin_TLB in 'plugins\ExodusPlugin_TLB.pas',
   xdata in 'xdata.pas' {frmXData},
   fGeneric in 'fGeneric.pas' {frameGeneric: TFrame},
@@ -122,7 +121,8 @@ uses
   RoomAdminList in 'RoomAdminList.pas' {frmRoomAdminList},
   JabberConst in '..\jopl\JabberConst.pas',
   AutoUpdate in '..\jopl\AutoUpdate.pas',
-  ExodusChatPlugin_TLB in 'plugins\ExodusChatPlugin_TLB.pas' {ExodusChat: CoClass};
+  COMController in 'COMController.pas' {ExodusController: CoClass} ,
+  COMChatController in 'COMChatController.pas' {ExodusChatController: CoClass};
 
 {$R *.TLB}
 

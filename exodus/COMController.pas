@@ -1,4 +1,4 @@
-unit ExodusController;
+unit COMController;
 
 {$WARN SYMBOL_PLATFORM OFF}
 
@@ -16,7 +16,8 @@ type
     function Get_Server: WideString; safecall;
     function Get_Username: WideString; safecall;
     procedure AddRosterItem(const jid, nickname, group: WideString); safecall;
-    procedure ChangePresence; safecall;
+    procedure ChangePresence(const Show, Status: WideString;
+        Priority: Integer); safecall;
     function isRosterJID(const jid: WideString): WordBool; safecall;
     function isSubscribed(const jid: WideString): WordBool; safecall;
     procedure RegisterCallback(const xpath: WideString;
@@ -28,7 +29,8 @@ type
     procedure StartChat(const jid, resource, nickname: WideString); safecall;
     procedure RegisterChatPlugin(var Plugin: OleVariant); safecall;
     procedure RegisterRoomPlugin(var Plugin: OleVariant); safecall;
-    procedure CreateDockableWindow(HWND: Integer); safecall;
+    procedure CreateDockableWindow(HWND: Integer; const Caption: WideString);
+      safecall;
     { Protected declarations }
   end;
 
@@ -272,7 +274,8 @@ begin
 
 end;
 
-procedure TExodusController.CreateDockableWindow(HWND: Integer);
+procedure TExodusController.CreateDockableWindow(HWND: Integer;
+  const Caption: WideString);
 begin
 
 end;

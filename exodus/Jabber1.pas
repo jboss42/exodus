@@ -23,8 +23,7 @@ interface
 
 uses
     BaseChat, GUIFactory, Register, Notify, S10n,
-    ExodusController, ExResponders, ExEvents,
-    RosterWindow, Presence, XMLTag,
+    COMController, ExResponders, ExEvents, RosterWindow, Presence, XMLTag,
     ShellAPI, Registry,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
