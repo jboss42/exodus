@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: exodus 0.1\n"
 "POT-Creation-Date: 2003-08-03 07:30\n"
-"PO-Revision-Date: 2003-12-04 21:02+0100\n"
+"PO-Revision-Date: 2003-12-04 23:06+0100\n"
 "Last-Translator: Mariusz Smykuła <smys@lodz.mm.pl>\n"
 "Language-Team: Mariusz Smykuła <redakcja@jabberpl.org>\n"
 "MIME-Version: 1.0\n"
@@ -1144,9 +1144,8 @@ msgstr "Pobierz listę serwerów"
 
 #. frmConnDetails..PageControl1..tbsProfile..Label13..Caption
 #: ConnDetails.dfm:101
-#, fuzzy
 msgid "Enter desired username for new accounts."
-msgstr "Podaj wybraną nazwę użytkownika dla nowego konta"
+msgstr "Podaj wybraną nazwę użytkownika dla nowego konta."
 
 #. frmConnDetails..PageControl1..tbsProfile..cboServer....Items.WideStrings
 #: ConnDetails.dfm:113
@@ -1227,7 +1226,7 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsConn..chkSRV..Caption
 #: ConnDetails.dfm:215
 msgid "Automatically discover host and port"
-msgstr ""
+msgstr "Automatycznie określ komputer i port"
 
 #. frmConnDetails..PageControl1..tbsConn..boxHost..Label4..Caption
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksHost..Caption
@@ -1331,7 +1330,7 @@ msgstr "sekund"
 #. frmConnDetails..PageControl1..tbsHttp..Label9..Caption
 #: ConnDetails.dfm:435
 msgid "# of Keys:"
-msgstr ""
+msgstr "Ilość kluczy:"
 
 #. frmConnDetails..PageControl1..tbsHttp..lblNote....AutoSize
 #: ConnDetails.dfm:449
@@ -1526,9 +1525,8 @@ msgstr "(Rozłączony)"
 
 #. frmDebug..pnlTop..lblLabel..Caption
 #: Debug.dfm:275
-#, fuzzy
 msgid "Current JID:  "
-msgstr "Aktualny JID:"
+msgstr "Aktualny JID:  "
 
 #. frmDebug..PopupMenu1..Clear1..Caption
 #: Debug.dfm:283
@@ -1710,15 +1708,13 @@ msgstr ""
 
 #. frmGrpManagement..optMove..Caption
 #: GrpManagement.dfm:53
-#, fuzzy
 msgid "Move the selected contacts to the following group:"
-msgstr "Przesuń kontakt do innej grupy:"
+msgstr "Przenieś wybrane kontakt do tej grupy:"
 
 #. frmGrpManagement..optCopy..Caption
 #: GrpManagement.dfm:64
-#, fuzzy
 msgid "Copy the selected contacts to the following group:"
-msgstr "Dodaj kontakty do tej grupy:"
+msgstr "Skopiuj wybrane kontakty do tej grupy:"
 
 #. frmGrpRemove..Caption
 #: GrpRemove.dfm:6
@@ -1959,15 +1955,13 @@ msgstr "Wyświetlaj pasek stanu"
 
 #. frmExodus..MainMenu1..Exodus1..View1..mnuExpanded..Caption
 #: Jabber1.dfm:247
-#, fuzzy
 msgid "Dock Windows"
-msgstr "Zamknij okno"
+msgstr "Dokuj okienko"
 
 #. frmExodus..MainMenu1..Exodus1..View1..ShowEventsWindow1..Caption
 #: Jabber1.dfm:253
-#, fuzzy
 msgid "Instant Messages"
-msgstr "Wyślij wiadomość"
+msgstr "Wiadomości natychmiastowe"
 
 #. frmExodus..MainMenu1..Exodus1..ClearMessages1..Caption
 #: Jabber1.dfm:258
@@ -2041,9 +2035,8 @@ msgstr "Znajdź kontakt w Rosterze"
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..mnuFindAgain..Caption
 #: Jabber1.dfm:332
-#, fuzzy
 msgid "Fin&d Contact Again"
-msgstr "Dod&aj kontakt"
+msgstr "Znaj&dź kontakt ponownie"
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..mnuSearch..Caption
 #: Jabber1.dfm:337
@@ -2081,7 +2074,6 @@ msgstr "&Obecność"
 #: RosterWindow.pas:347
 #: RosterWindow.pas:1597
 #: prefs/PrefPresence.dfm:200
-#, fuzzy
 msgid "Free to Chat"
 msgstr "Chętny do rozmowy"
 
@@ -2257,9 +2249,8 @@ msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..optSpecify..Caption
 #: JoinRoom.dfm:101
-#, fuzzy
 msgid "Join or Create the following room:"
-msgstr "Zaproś następujące kontakty do:"
+msgstr "Wejdź do, lub utwórz następujący pokój"
 
 #. frmJoinRoom..Tabs..TabSheet1..optBrowse..Caption
 #: JoinRoom.dfm:112
@@ -2277,21 +2268,18 @@ msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet2..lstRooms......Caption
 #: JoinRoom.dfm:128
-#, fuzzy
 msgid "Room"
-msgstr "Pokoje"
+msgstr "Pokój"
 
 #. frmJoinRoom..Tabs..TabSheet2..lstRooms......Caption
 #: JoinRoom.dfm:132
-#, fuzzy
 msgid "Server"
-msgstr "&Serwer:"
+msgstr "Serwer"
 
 #. frmJoinRoom..Tabs..TabSheet2..lstRooms......Caption
 #. frmPrefPlugins..lstPlugins......Caption
 #: JoinRoom.dfm:136
 #: prefs/PrefPlugins.dfm:89
-#, fuzzy
 msgid "Description"
 msgstr "Opis:"
 
@@ -2302,15 +2290,13 @@ msgstr "Pokaż pokoie na tym serwerze"
 
 #. frmJoinRoom..Tabs..TabSheet2..Panel2..btnFetch..Caption
 #: JoinRoom.dfm:184
-#, fuzzy
 msgid "Fetch Rooms"
-msgstr "Pokoje"
+msgstr "Przejrzyj pokoje"
 
 #. frmJud..Caption
 #: jud.dfm:5
-#, fuzzy
 msgid "Jabber Search"
-msgstr "Użytkownika Jabbera"
+msgstr "Wyszukiwarka Jabbera"
 
 #. frmJud..Panel1..lblWizardTitle..Caption
 #: jud.dfm:42
@@ -2458,9 +2444,8 @@ msgstr "&Wyślij"
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlSendSubject..lblSubject1..Caption
 #: MsgRecv.dfm:295
-#, fuzzy
 msgid "Subject: "
-msgstr "Temat:"
+msgstr "Temat: "
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlSubject..txtSubject..Caption
 #: MsgRecv.dfm:326
@@ -2481,9 +2466,8 @@ msgstr ""
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..lblFrom..Caption
 #: MsgRecv.dfm:370
-#, fuzzy
 msgid "From: "
-msgstr "Od:"
+msgstr "Od: "
 
 #. frmMsgRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: MsgRecv.dfm:469
@@ -2606,7 +2590,7 @@ msgstr "Słowa kluczowe"
 #. frmPrefs..Scroller..lblBlockList..Caption
 #: Prefs.dfm:1737
 msgid "Block List"
-msgstr "Lista zablokowanych"
+msgstr "Czarna lista"
 
 #. frmPrefs..Scroller..lblMessages..Caption
 #: Prefs.dfm:2125
@@ -2627,7 +2611,7 @@ msgstr "Wtyczki"
 #: prefs/PrefNotify.dfm:43
 #: prefs/PrefNotify.pas:102
 msgid "File Transfers"
-msgstr "Przesyłane pliki"
+msgstr "Przesyłanie plików"
 
 #. frmPrefs..Scroller..lblGroups..Caption
 #. frmProfile..PageControl1..TabSheet2..Caption
@@ -2648,19 +2632,18 @@ msgstr "Sieć"
 
 #. frmPrefs..PageControl1..tbsKeywords..Panel2..Label1....Align
 #: Prefs.dfm:3059
-#, fuzzy
 msgid "Exodus can notify you when a keyword appears in chat room. Enter in the keywords that you want Exodus to look for in messages."
-msgstr "Wprowadź ciąg znaków który chcesz odnaleźć w wiadomościach."
+msgstr "Exodus może powiadamiać gdy słowo kluczowe zostanie użyte podczas rozmowy. Wprowadź ciąg znaków który chcesz odnaleźć w wiadomościach."
 
 #. frmPrefs..PageControl1..tbsKeywords..Panel2..chkRegex..Caption
 #: Prefs.dfm:3067
 msgid "Use Regular Expressions for Keyword matches"
-msgstr "Używa wyrażeń regularnych dla słów kluczowych"
+msgstr "Używaj wyrażeń regularnych dla słów kluczowych"
 
 #. frmPrefs..PageControl1..tbsKeywords..pnlKeyword..Caption
 #: Prefs.dfm:3078
 msgid "Notification Keywords"
-msgstr "Powiadamianie dla słów kluczowych"
+msgstr "Powiadomienia o słowach kluczowych"
 
 #. frmPrefs..PageControl1..tbsBlockList..Caption
 #: Prefs.dfm:3085
@@ -2669,26 +2652,23 @@ msgstr ""
 
 #. frmPrefs..PageControl1..tbsBlockList..Memo1......Lines.WideStrings
 #: Prefs.dfm:3105
-#, fuzzy
 msgid "Enter in the Jabber Addresses (JIDs) of the people to block from "
-msgstr "Wprowadź adres Jabbera (JID) ludzi od których nie chcesz otrzymywać wiadomości. (Normalnych, rozmów, itp...) "
+msgstr "Wprowadź adres Jabbera (JID) ludzi od których nie chcesz otrzymywać "
 
 #. frmPrefs..PageControl1..tbsBlockList..Memo1....Lines.WideStrings
 #: Prefs.dfm:3106
-#, fuzzy
 msgid "sending "
-msgstr "(Oczekujący)"
+msgstr " wiadomości. "
 
 #. frmPrefs..PageControl1..tbsBlockList..Memo1....Lines.WideStrings
 #: Prefs.dfm:3107
 msgid "you messages. All messages from these contacts will be blocked."
-msgstr ""
+msgstr "Wszystkie wiadomości od tych kontaktów zostaną zablokowane."
 
 #. frmPrefs..PageControl1..tbsBlockList..pnlBlocked..Caption
 #: Prefs.dfm:3119
-#, fuzzy
 msgid "Blocked Contacts"
-msgstr "Zablokuj kontakt"
+msgstr "Zablokowane kontakty"
 
 #. frmPrefs..Panel1..Panel3..Button6..Caption
 #: Prefs.dfm:3181
@@ -5703,13 +5683,11 @@ msgstr "Adres"
 #. fSendStatus..Panel3..lblFile..Caption
 #: RecvStatus.dfm:22
 #: SendStatus.dfm:66
-#, fuzzy
 msgid "lblFile"
-msgstr "Plik:"
+msgstr "Plik"
 
 #. fRecvStatus..Panel3..lblFrom..Caption
 #: RecvStatus.dfm:32
-#, fuzzy
 msgid "lblFrom"
 msgstr "Od"
 
@@ -5717,9 +5695,8 @@ msgstr "Od"
 #. fSendStatus..Panel2..lblStatus..Caption
 #: RecvStatus.dfm:67
 #: SendStatus.dfm:40
-#, fuzzy
 msgid "Status..."
-msgstr "Zapisz jako..."
+msgstr "Opis stanu..."
 
 #. fRecvStatus..Panel1..btnRecv..Caption
 #: RecvStatus.dfm:91
@@ -5728,9 +5705,8 @@ msgstr "Odebrano"
 
 #. frmRegister..Caption
 #: RegForm.dfm:3
-#, fuzzy
 msgid "Registration"
-msgstr "Rejestracja usługi"
+msgstr "Rejestracja"
 
 #. frmRegister..Tabs..TabSheet1..Label1....AutoSize
 #: RegForm.dfm:33
@@ -5816,15 +5792,13 @@ msgstr "Wyczyść okno"
 
 #. frmRoom..popRoom..popBookmark..Caption
 #: Room.dfm:176
-#, fuzzy
 msgid "Bookmark Room..."
-msgstr "Zakładka z pokojem rozmów"
+msgstr "Zakładka z pokojem rozmów..."
 
 #. frmRoom..popRoom..popRegister..Caption
 #: Room.dfm:180
-#, fuzzy
 msgid "Register with Room..."
-msgstr "Rejestracja w usłudze"
+msgstr "Rejestracja pokoju..."
 
 #. frmRoom..popRoom..popInvite..Caption
 #: Room.dfm:184
@@ -5833,9 +5807,8 @@ msgstr "Zaproś konktakty..."
 
 #. frmRoom..popRoom..popNick..Caption
 #: Room.dfm:188
-#, fuzzy
 msgid "Change Nickname..."
-msgstr "Zmień pseudonim"
+msgstr "Zmień pseudonim..."
 
 #. frmRoom..popRoom..S1..Caption
 #: Room.dfm:192
@@ -5869,9 +5842,8 @@ msgstr "Edytuj listę członków"
 #. frmRoom..popRoom..popAdmin..popModeratorList..Caption
 #: Room.dfm:211
 #: Room.pas:1718
-#, fuzzy
 msgid "Edit Moderator List"
-msgstr "Edytuj listę członków"
+msgstr "Edycja listy moderatorów"
 
 #. frmRoom..popRoom..popAdmin..popAdminList..Caption
 #: Room.dfm:218
@@ -5968,7 +5940,7 @@ msgstr "Zmień listę pokoju"
 #. frmRoomAdminList..Label1..Caption
 #: RoomAdminList.dfm:35
 msgid "Enter New Jabber ID's for this list:"
-msgstr ""
+msgstr "Wprowadź nowy adres Jabbera  (JID) dla tej listy:"
 
 #. frmRoomAdminList..lstItems......Caption
 #: RoomAdminList.dfm:82
@@ -6044,14 +6016,13 @@ msgstr ""
 
 #. frmRosterWindow..pnlFind..lblFind..Caption
 #: RosterWindow.dfm:80
-#, fuzzy
 msgid "Find:"
-msgstr "Znajdź"
+msgstr "Znajdź:"
 
 #. frmRosterWindow..pnlFind..txtFind..Hint
 #: RosterWindow.dfm:102
 msgid "Esc to quit, Enter to select current,  F3 to search again"
-msgstr ""
+msgstr "Esc aby wyjść, Enter aby wybrać aktualny, F3 aby szukać ponownie"
 
 #. frmRosterWindow..pnlFind..radJID..Caption
 #: RosterWindow.dfm:114
@@ -6081,9 +6052,8 @@ msgstr "Rozłączony"
 
 #. frmRosterWindow..pnlConnect..lblLogin..Caption
 #: RosterWindow.dfm:283
-#, fuzzy
 msgid "Click to Login"
-msgstr "Kliknij aby zalogować się"
+msgstr "Kliknij aby się zalogować"
 
 #. frmRosterWindow..popRoster..popChat..Caption
 #: RosterWindow.dfm:314
@@ -6157,9 +6127,8 @@ msgstr "Wyślij kontakty do..."
 
 #. frmRosterWindow..popGroup..MoveorCopyContacts1..Caption
 #: RosterWindow.dfm:625
-#, fuzzy
 msgid "Move or Copy Contacts..."
-msgstr "Usuwanie kontaktów"
+msgstr "Przenoszenie lub kopiowanie kontaktów..."
 
 #. frmRosterWindow..popGroup..popGrpRename..Caption
 #: RosterWindow.dfm:636
@@ -6321,9 +6290,8 @@ msgstr ""
 
 #. frmXferManager..Caption
 #: XferManager.dfm:5
-#, fuzzy
 msgid "File Transfer Manager"
-msgstr "Transfer plików"
+msgstr "Zarządca transferu plików"
 
 #: About.pas:83
 msgid "Exodus is the creation of Peter Millard  (mailto:me@pgmillard.com).  Checkout the website at http://exodus.jabberstudio.org for more information. It is currently licensed under the GNU Public License (GPL) see www.gnu.org for more information on the GPL."
@@ -6418,23 +6386,20 @@ msgid "unknown"
 msgstr ""
 
 #: ChatWin.pas:786
-#, fuzzy
 msgid "away"
-msgstr "Zaraz wracam"
+msgstr "zaraz wracam"
 
 #: ChatWin.pas:788
 msgid "xa"
 msgstr ""
 
 #: ChatWin.pas:790
-#, fuzzy
 msgid "dnd"
-msgstr "Dodaj"
+msgstr "nie przeszkadzać"
 
 #: ChatWin.pas:792
-#, fuzzy
 msgid "chat"
-msgstr "Rozmowa"
+msgstr "rozmowa"
 
 #: ChatWin.pas:842
 msgid "available"
@@ -6472,9 +6437,8 @@ msgid "Plugin class could not be initialized. (%s)"
 msgstr "Klasa wtyczki nie może być zainicjowana. (%s)"
 
 #: COMController.pas:359
-#, fuzzy
 msgid "Plugin could not be initialized or configured."
-msgstr "Wtyczka nie może być utworzona. (%s)"
+msgstr "Wtyczka nie może być zainicjowana lub skonfigurowana."
 
 #: ConnDetails.pas:152
 msgid "%s Details"
@@ -6502,7 +6466,6 @@ msgstr "Pobieranie listy publicznych serwerów"
 
 #: Debug.pas:184
 #: Debug.pas:383
-#, fuzzy
 msgid "Disconnected"
 msgstr "Rozłączony"
 
@@ -6671,9 +6634,8 @@ msgstr "Zaproszenie do pokoju"
 
 #: ExSession.pas:478
 #: prefs/PrefNotify.pas:99
-#, fuzzy
 msgid "Keyword in a room"
-msgstr "Znajdź słowo kluczowe"
+msgstr "Słowa kluczowe w pokojach"
 
 #: ExSession.pas:479
 #: prefs/PrefNotify.pas:95
@@ -6750,9 +6712,8 @@ msgid "The log directory you specified is invalid. Either turn off logging, or s
 msgstr ""
 
 #: ExUtils.pas:466
-#, fuzzy
 msgid "Could not open log file: "
-msgstr "Nie mogę usunąć pliku historii."
+msgstr "Nie mogę otworzyć pliku historii."
 
 #: ExUtils.pas:598
 msgid " unknown last result: "
@@ -6771,9 +6732,8 @@ msgstr "Ta wiadomość zawiera %d składników rostera."
 #: ExUtils.pas:882
 #: RosterWindow.pas:373
 #: RosterWindow.pas:666
-#, fuzzy
 msgid "Bookmarks"
-msgstr "Zakładka z pokojem rozmów"
+msgstr "Zakładki"
 
 #: ExUtils.pas:849
 #: ExUtils.pas:867
@@ -7076,9 +7036,8 @@ msgstr "Otrzymałeś połączenie."
 
 #: RecvStatus.pas:307
 #: SendStatus.pas:312
-#, fuzzy
 msgid "File transfer is done."
-msgstr "Transfer plików"
+msgstr "Transfer pliku zakończony"
 
 #: RecvStatus.pas:382
 msgid "Receive request timed out."
@@ -7127,9 +7086,8 @@ msgstr ""
 
 #. immediately turn around and refuse.
 #: RecvStatus.pas:720
-#, fuzzy
 msgid "Waiting to cancel transfer..."
-msgstr "Czekamy na instrukcje usługi....."
+msgstr "Czekamy na anulowanie transferu...."
 
 #. the sender went offline
 #: RecvStatus.pas:742
@@ -7137,9 +7095,8 @@ msgid "The sender of a file transfer (%s) went offline."
 msgstr ""
 
 #: RegForm.pas:130
-#, fuzzy
 msgid "Jabber Service Registration"
-msgstr "Usuń moją rejestrację"
+msgstr "Rejestracja w usłudze Jabbera"
 
 #: RegForm.pas:131
 msgid "This wizard will guide you through registration with a jabber service."
@@ -7427,7 +7384,7 @@ msgstr "Zablokować %d?"
 #. Block or Unblock this user
 #: RosterWindow.pas:2579
 msgid "Unblock %d contacts?"
-msgstr ""
+msgstr "Odblokuj %d?"
 
 #: RosterWindow.pas:2607
 msgid "You must select more than one online contact to broadcast."
@@ -7440,9 +7397,8 @@ msgid "Click to Cancel Reconnect"
 msgstr "Kliknj aby zrezygnować z ponownego połączenia"
 
 #: RosterWindow.pas:2967
-#, fuzzy
 msgid "Reconnect in %d seconds."
-msgstr "Ponownie połącz po "
+msgstr "Ponownie połącz po %d sekundach."
 
 #: SendStatus.pas:369
 msgid "Waiting for connection..."
@@ -7477,15 +7433,13 @@ msgid "There was an error trying to upload the file to your web host."
 msgstr ""
 
 #: SendStatus.pas:980
-#, fuzzy
 msgid "Send failed."
-msgstr "Wyślij plik..."
+msgstr "Wysłanie nie powiodło się."
 
 #. PChar is in lparam
 #: SendStatus.pas:1004
-#, fuzzy
 msgid "Connected."
-msgstr "Rozłączony"
+msgstr "Połączony."
 
 #: SSLWarn.pas:66
 msgid "The SSL certificate received from the server has errors."
@@ -7516,7 +7470,7 @@ msgstr ""
 
 #: Transports.pas:159
 msgid "Your request was successful."
-msgstr ""
+msgstr "Twoja prośba została powiodła się."
 
 #. callback for vcard info
 #: vcard.pas:179
@@ -7695,37 +7649,37 @@ msgstr ""
 #. frmPrefAway..Label2..Caption
 #: prefs/PrefAway.dfm:15
 msgid "Minutes to wait before setting status to Away:"
-msgstr ""
+msgstr "Czas oczekiwania przed ustawieniem bezczynności (min):"
 
 #. frmPrefAway..Label3..Caption
 #: prefs/PrefAway.dfm:22
 msgid "Minutes to wait before setting status to XA:"
-msgstr ""
+msgstr "Czas oczekiwania przed ustawieniem rozszerzonej bezczynności (min):"
 
 #. frmPrefAway..Label4..Caption
 #: prefs/PrefAway.dfm:29
 msgid "Away Status:"
-msgstr "Opis dla nieobecności:"
+msgstr "Nieobecność:"
 
 #. frmPrefAway..Label9..Caption
 #: prefs/PrefAway.dfm:36
 msgid "XA Status:"
-msgstr ""
+msgstr "Rozszerzona nieob."
 
 #. frmPrefAway..TntLabel1..Caption
 #: prefs/PrefAway.dfm:43
 msgid "Minutes to wait before Disconnecting:"
-msgstr ""
+msgstr "Czas oczekiwania przed rozłączeniem (min)"
 
 #. frmPrefAway..chkAutoAway..Caption
 #: prefs/PrefAway.dfm:88
 msgid "Enable Auto Away"
-msgstr "Włącz bezczynność"
+msgstr "Włącz auto-bezczynność"
 
 #. frmPrefAway..chkAAReducePri..Caption
 #: prefs/PrefAway.dfm:111
 msgid "Reduce priority to 0 during auto-away."
-msgstr "Zredukuj priorytet do 0 podczas automatycznej bezczynności"
+msgstr "Zredukuj priorytet do 0 podczas bezczynności"
 
 #. frmPrefAway..chkAutoXA..Caption
 #: prefs/PrefAway.dfm:119
@@ -7734,14 +7688,13 @@ msgstr "Włącz rozszerzoną bezczynność"
 
 #. frmPrefAway..chkAutoDisconnect..Caption
 #: prefs/PrefAway.dfm:128
-#, fuzzy
 msgid "Enable Auto Disconnect"
-msgstr "Połącz/Rozłącz"
+msgstr "Włącz auto rozłączanie"
 
 #. frmPrefAway..pnlHeader..Caption
 #: prefs/PrefAway.dfm:153
 msgid "Auto Away Options"
-msgstr "Opcje auto-zdala:"
+msgstr "Ustawienia bezczynności"
 
 #. frmPrefDialogs..Caption
 #: prefs/PrefDialogs.dfm:4
@@ -7751,7 +7704,7 @@ msgstr ""
 #. frmPrefDialogs..Label26..Caption
 #: prefs/PrefDialogs.dfm:15
 msgid "Minutes to keep chat windows in memory:"
-msgstr "Czas przetrzymywania okien w pamięci:"
+msgstr "Czas przetrzymywania okien w pamięci (min):"
 
 #. frmPrefDialogs..Label27..Caption
 #: prefs/PrefDialogs.dfm:22
@@ -7806,7 +7759,7 @@ msgstr ""
 #. frmPrefFont..lblRoster..Caption
 #: prefs/PrefFont.dfm:15
 msgid "Roster Window"
-msgstr "Okno rozmowy"
+msgstr "Lista kontaktów"
 
 #. frmPrefFont..lblChat..Caption
 #: prefs/PrefFont.dfm:22
@@ -7891,9 +7844,8 @@ msgstr "Pokazuj tylko dostępnych"
 
 #. frmPrefGroups..pnlHeader..Caption
 #: prefs/PrefGroups.dfm:107
-#, fuzzy
 msgid "Roster Group Options"
-msgstr "Nowa grupa w rosterze"
+msgstr "Ustawienia dla grup w rosterze"
 
 #. frmPrefLayouts..Caption
 #: prefs/PrefLayouts.dfm:4
@@ -7937,24 +7889,23 @@ msgstr ""
 
 #. frmPrefMsg..Label19..Caption
 #: prefs/PrefMsg.dfm:15
-#, fuzzy
 msgid "Format:"
-msgstr "Od:"
+msgstr "Format:"
 
 #. frmPrefMsg..Label7..Caption
 #: prefs/PrefMsg.dfm:22
 msgid "Simple message (non-chat) handling"
-msgstr ""
+msgstr "Obsługa zwykłych wiadomości"
 
 #. frmPrefMsg..Label16..Caption
 #: prefs/PrefMsg.dfm:29
 msgid "Store Unread messages to:"
-msgstr ""
+msgstr "Zapisuj nie przeczytane wiadomości w:"
 
 #. frmPrefMsg..Label17..Caption
 #: prefs/PrefMsg.dfm:36
 msgid "When I get invited to a chat room, do this:"
-msgstr ""
+msgstr "Przy zaproszeniu na konferenencje, wykonaj:"
 
 #. frmPrefMsg..chkEmoticons..Caption
 #: prefs/PrefMsg.dfm:43
@@ -7968,9 +7919,8 @@ msgstr "Znaczniki czasu w wiadomościach"
 
 #. frmPrefMsg..chkLog..Caption
 #: prefs/PrefMsg.dfm:59
-#, fuzzy
 msgid "Log Messages"
-msgstr "Wiadomość"
+msgstr "Archiwizuj wiadomości"
 
 #. frmPrefMsg..chkMsgQueue..Caption
 #: prefs/PrefMsg.dfm:84
@@ -7979,19 +7929,18 @@ msgstr "Komunikator nigdy nie otwiera nowych okienek"
 
 #. frmPrefMsg..chkLogRooms..Caption
 #: prefs/PrefMsg.dfm:92
-#, fuzzy
 msgid "Log conference rooms"
-msgstr "Pokój konferencyjny"
+msgstr "Achiwizuj konferencje"
 
 #. frmPrefMsg..cboMsgOptions....Items.WideStrings
 #: prefs/PrefMsg.dfm:104
 msgid "Use default message handling"
-msgstr ""
+msgstr "Użyj domyślnej obsługi wiadomości"
 
 #. frmPrefMsg..cboMsgOptions....Items.WideStrings
 #: prefs/PrefMsg.dfm:105
 msgid "Treat all messages as chats"
-msgstr ""
+msgstr "Taktuj wszystkie wiadomości jak rozmowę"
 
 #. frmPrefMsg..cboMsgOptions....Items.WideStrings
 #: prefs/PrefMsg.dfm:106
@@ -8001,17 +7950,17 @@ msgstr "Wrzucaj wiadomości do aktualnych rozmów"
 #. frmPrefMsg..btnLogClearAll..Caption
 #: prefs/PrefMsg.dfm:113
 msgid "Clear All Logs"
-msgstr "Wyczyść wszystkie logi"
+msgstr "Skasuj archiwum"
 
 #. frmPrefMsg..cboInviteOptions....Items.WideStrings
 #: prefs/PrefMsg.dfm:142
 msgid "Treat as a normal instant message"
-msgstr ""
+msgstr "Taktuj jak normalną wiadomość IM"
 
 #. frmPrefMsg..cboInviteOptions....Items.WideStrings
 #: prefs/PrefMsg.dfm:143
 msgid "Always popup the invitation"
-msgstr ""
+msgstr "Zawsze powiadom wyskakującym okienkiem"
 
 #. frmPrefMsg..cboInviteOptions....Items.WideStrings
 #: prefs/PrefMsg.dfm:144
@@ -8021,7 +7970,7 @@ msgstr "Automatycznie wejdź do pokoju."
 #. frmPrefMsg..chkBlockNonRoster..Caption
 #: prefs/PrefMsg.dfm:151
 msgid "Block messages from people not on my roster"
-msgstr ""
+msgstr "Zablokuj wiadomości od ludzi spoza rostera"
 
 #. frmPrefMsg..txtTimestampFmt..Text
 #. frmPrefMsg..txtTimestampFmt....Items.WideStrings
@@ -8033,22 +7982,22 @@ msgstr ""
 #. frmPrefMsg..txtTimestampFmt....Items.WideStrings
 #: prefs/PrefMsg.dfm:164
 msgid "hh:mm"
-msgstr ""
+msgstr "gg:mm"
 
 #. frmPrefMsg..txtTimestampFmt....Items.WideStrings
 #: prefs/PrefMsg.dfm:165
 msgid "t"
-msgstr ""
+msgstr "s"
 
 #. frmPrefMsg..txtTimestampFmt....Items.WideStrings
 #: prefs/PrefMsg.dfm:166
 msgid "tt"
-msgstr ""
+msgstr "ss"
 
 #. frmPrefMsg..chkLogRoster..Caption
 #: prefs/PrefMsg.dfm:173
 msgid "Only log messages from people in my roster"
-msgstr ""
+msgstr "Archiwizuj wiadomości tylko od ludzi z rostera"
 
 #. frmPrefMsg..pnlHeader..Caption
 #: prefs/PrefMsg.dfm:178
@@ -8072,30 +8021,28 @@ msgstr ""
 
 #. frmPrefNetwork..pnlHeader..Caption
 #: prefs/PrefNetwork.dfm:12
-#, fuzzy
 msgid "Connection Options"
 msgstr "Właściwości połączenia"
 
 #. frmPrefNetwork..GroupBox1..Caption
 #: prefs/PrefNetwork.dfm:20
-#, fuzzy
 msgid "Reconnect Options"
-msgstr "Ponownie połącz po "
+msgstr "Opcje ponownego połączenia"
 
 #. frmPrefNetwork..GroupBox1..Label2..Caption
 #: prefs/PrefNetwork.dfm:27
 msgid "# of Reconnect attempts:"
-msgstr ""
+msgstr "Ilość prób połączenia:"
 
 #. frmPrefNetwork..GroupBox1..Label3..Caption
 #: prefs/PrefNetwork.dfm:35
 msgid "Time lapse between attempts:"
-msgstr ""
+msgstr "Opóźnienie pomiędzy próbami:"
 
 #. frmPrefNetwork..GroupBox1..Label4..Caption
 #: prefs/PrefNetwork.dfm:43
 msgid "Time is in seconds. Use 0 for a random time period."
-msgstr ""
+msgstr "Czas jest w sekundach. Użyj 0 dla losowego opóźnienia."
 
 #. frmPrefNetwork..GroupBox2..Caption
 #: prefs/PrefNetwork.dfm:83
@@ -8129,15 +8076,13 @@ msgstr "Ustawienia powiadomień"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:34
-#, fuzzy
 msgid "Contact is online"
-msgstr "Kontakty od"
+msgstr "Kontakt jest dostępny"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:35
-#, fuzzy
 msgid "Contact is offline"
-msgstr " jest obecnie niedostępny."
+msgstr "Kontakt jest niedostępny."
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:36
@@ -8146,9 +8091,8 @@ msgstr ""
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:37
-#, fuzzy
 msgid "Normal Messages"
-msgstr "Wiadomość"
+msgstr "Normalna Wiadomość"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:38
@@ -8229,18 +8173,17 @@ msgstr "W&tyczki"
 #. frmPrefPlugins..Label6..Caption
 #: prefs/PrefPlugins.dfm:15
 msgid "Plugin Directory (automatically scanned):"
-msgstr ""
+msgstr "Katalog wtyczek (automatycznie skanowany):"
 
 #. frmPrefPlugins..lblPluginScan..Caption
 #: prefs/PrefPlugins.dfm:23
 msgid "Re-Scan this directory for plugins"
-msgstr ""
+msgstr "Przeskanuj katalog w poszukiwaniu wtyczek"
 
 #. frmPrefPlugins..pnlHeader..Caption
 #: prefs/PrefPlugins.dfm:28
-#, fuzzy
 msgid "Application Plugins"
-msgstr "Aplikacja"
+msgstr "Wtyczki do programu"
 
 #. frmPrefPlugins..btnConfigPlugin..Caption
 #: prefs/PrefPlugins.dfm:45
@@ -8249,9 +8192,8 @@ msgstr "Konfiguracja"
 
 #. frmPrefPlugins..lstPlugins......Caption
 #: prefs/PrefPlugins.dfm:85
-#, fuzzy
 msgid "Plugin"
-msgstr "W&tyczki"
+msgstr "Wtyczki"
 
 #. frmPrefPlugins..lstPlugins......Caption
 #: prefs/PrefPlugins.dfm:93
@@ -8266,9 +8208,8 @@ msgstr "Obecność"
 
 #. frmPrefPresence..pnlHeader..Caption
 #: prefs/PrefPresence.dfm:13
-#, fuzzy
 msgid "Presence Options"
-msgstr "Typ dostępności:"
+msgstr "Ustawienia obecności"
 
 #. frmPrefPresence..pnlCustomPresButtons..btnDefaults..Caption
 #: prefs/PrefPresence.dfm:66
@@ -8283,7 +8224,7 @@ msgstr "Śledzenie obecności w oknach rozmów i pokojach"
 #. frmPrefPresence..Panel1..Label1..Caption
 #: prefs/PrefPresence.dfm:91
 msgid "Custom Presence Entries"
-msgstr ""
+msgstr "Dodatkowe opisy stanu"
 
 #. frmPrefPresence..Panel1..chkPresenceSync..Caption
 #: prefs/PrefPresence.dfm:98
@@ -8298,17 +8239,17 @@ msgstr "Śledź wszystkie zmiany statusu"
 #. frmPrefPresence..Panel1..cboPresTracking....Items.WideStrings
 #: prefs/PrefPresence.dfm:112
 msgid "Show only last presence change"
-msgstr ""
+msgstr "Pokazuj tylko ostatnią zmianę obecności"
 
 #. frmPrefPresence..Panel1..cboPresTracking....Items.WideStrings
 #: prefs/PrefPresence.dfm:113
 msgid "Don't show any presence changes"
-msgstr ""
+msgstr "Nie pokazuj zmian obecności"
 
 #. frmPrefPresence..Panel1..chkClientCaps..Caption
 #: prefs/PrefPresence.dfm:120
 msgid "Send client capabilities in presence."
-msgstr ""
+msgstr "Wysyłaj możliwość klienta"
 
 #. frmPrefPresence..GroupBox1..txtCPPriority..Hint
 #. frmPrefPresence..GroupBox1..spnPriority..Hint
@@ -8474,7 +8415,6 @@ msgstr "Uruchom Exodusa przy starcie windows"
 
 #. frmPrefSystem..chkOnTop..Caption
 #: prefs/PrefSystem.dfm:83
-#, fuzzy
 msgid "Exodus is always on top"
 msgstr "Zawsze na wierzchu"
 
@@ -8512,7 +8452,7 @@ msgstr "Transfer plików"
 #. frmPrefTransfer..Label15..Caption
 #: prefs/PrefTransfer.dfm:15
 msgid "File transfer download directory:"
-msgstr ""
+msgstr "Katalog docelowy dla transferu plików:"
 
 #. frmPrefTransfer..lblDefault..Caption
 #: prefs/PrefTransfer.dfm:23
@@ -8526,29 +8466,28 @@ msgstr "Wyślij plik przy użyciu metody:"
 
 #. frmPrefTransfer..pnlHeader..Caption
 #: prefs/PrefTransfer.dfm:35
-#, fuzzy
 msgid "File Transfer Options"
-msgstr "Transfer plików"
+msgstr "Ustawienia transferu plików"
 
 #. frmPrefTransfer..grpWebDav..Label3..Caption
 #: prefs/PrefTransfer.dfm:50
 msgid "Web Host:"
-msgstr ""
+msgstr "Serwer WWW:"
 
 #. frmPrefTransfer..grpWebDav..Label5..Caption
 #: prefs/PrefTransfer.dfm:64
 msgid "Web Path:"
-msgstr ""
+msgstr "Ścieka WWW:"
 
 #. frmPrefTransfer..grpWebDav..Label6..Caption
 #: prefs/PrefTransfer.dfm:71
 msgid "Example: /~foo/public_html"
-msgstr ""
+msgstr "Np.: /~cokolwiek/public_html"
 
 #. frmPrefTransfer..grpWebDav..Label9..Caption
 #: prefs/PrefTransfer.dfm:92
 msgid "Example: http://dav.server.com"
-msgstr ""
+msgstr "Np.: http://dav.serwer.pl"
 
 #. frmPrefTransfer..grpPeer..Label1..Caption
 #: prefs/PrefTransfer.dfm:159
@@ -8558,17 +8497,17 @@ msgstr "Port HTTP do użycia dla przesyłania plików "
 #. frmPrefTransfer..grpPeer..chkIP..Caption
 #: prefs/PrefTransfer.dfm:173
 msgid "Use a custom IP address for HTTP transfers"
-msgstr ""
+msgstr "Użyj niestandardowego adresu IP dla transferów HTTP"
 
 #. frmPrefTransfer..cboXferMode....Items.WideStrings
 #: prefs/PrefTransfer.dfm:195
 msgid "Discover a file transfer component using my server."
-msgstr ""
+msgstr "Określ komponent transferu plików przy pomocy mojego serwera"
 
 #. frmPrefTransfer..cboXferMode....Items.WideStrings
 #: prefs/PrefTransfer.dfm:196
 msgid "Always use a specific file transfer component."
-msgstr ""
+msgstr "Zawsze używaj określonego komponentu transferu plików"
 
 #. frmPrefTransfer..cboXferMode....Items.WideStrings
 #: prefs/PrefTransfer.dfm:197
