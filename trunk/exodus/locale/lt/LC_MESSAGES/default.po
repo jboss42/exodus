@@ -1,4 +1,3 @@
-# Lithuanian Translation of Exodus.
 # Copyright (C) 1998-2003 The Free Software Foundation.
 # This file is distributed under the same license as the Exodus package.
 # Rimas Kudelis <rq@akl.lt>, 2003.
@@ -7,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exodus\n"
 "POT-Creation-Date: 2003-08-03 07:30\n"
-"PO-Revision-Date: 2004-03-01 17:52+0200\n"
+"PO-Revision-Date: 2004-03-29 19:18+0200\n"
 "Last-Translator: Rimas Kudelis <rq@akl.lt>\n"
 "Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
 "MIME-Version: 1.0\n"
@@ -122,8 +121,8 @@ msgstr "Apie „Exodus“"
 #: RoomAdminList.dfm:13
 #: RosterAdd.dfm:14
 #: RosterRecv.dfm:12
-#: RosterRecv.dfm:75
-#: RosterRecv.dfm:92
+#: RosterRecv.dfm:68
+#: RosterRecv.dfm:85
 #: RosterWindow.dfm:16
 #: SSLWarn.dfm:12
 #: SelContact.dfm:12
@@ -162,6 +161,10 @@ msgstr "MS Sans Serif"
 #: RecvStatus.pas:383
 #: RecvStatus.pas:610
 #: RecvStatus.pas:621
+#: RosterRecv.dfm:42
+#: SendStatus.pas:780
+#: SendStatus.pas:904
+#: xdata.pas:212
 #: RosterRecv.dfm:49
 #: SendStatus.pas:842
 #: SendStatus.pas:962
@@ -172,7 +175,7 @@ msgstr "Užverti"
 #. frmAbout..pnlVersion..Caption
 #: About.dfm:1437
 #: About.pas:81
-#: ExEvents.pas:284
+#: ExEvents.pas:294
 msgid "Version: "
 msgstr "Versija: "
 
@@ -194,7 +197,7 @@ msgstr "Versija: "
 #: MsgQueue.dfm:72
 #: MsgRecv.dfm:75
 #: MsgRecv.dfm:174
-#: RosterRecv.dfm:108
+#: RosterRecv.dfm:101
 #: prefs/PrefFont.dfm:95
 msgid "e-mail"
 msgstr "el. paštas"
@@ -217,7 +220,7 @@ msgstr "el. paštas"
 #: MsgQueue.dfm:78
 #: MsgRecv.dfm:81
 #: MsgRecv.dfm:180
-#: RosterRecv.dfm:114
+#: RosterRecv.dfm:107
 #: prefs/PrefFont.dfm:101
 msgid "http"
 msgstr "http"
@@ -240,7 +243,7 @@ msgstr "http"
 #: MsgQueue.dfm:84
 #: MsgRecv.dfm:87
 #: MsgRecv.dfm:186
-#: RosterRecv.dfm:120
+#: RosterRecv.dfm:113
 #: prefs/PrefFont.dfm:107
 msgid "file"
 msgstr "file"
@@ -263,7 +266,7 @@ msgstr "file"
 #: MsgQueue.dfm:90
 #: MsgRecv.dfm:93
 #: MsgRecv.dfm:192
-#: RosterRecv.dfm:126
+#: RosterRecv.dfm:119
 #: prefs/PrefFont.dfm:113
 msgid "mailto"
 msgstr "mailto"
@@ -286,7 +289,7 @@ msgstr "mailto"
 #: MsgQueue.dfm:96
 #: MsgRecv.dfm:99
 #: MsgRecv.dfm:198
-#: RosterRecv.dfm:132
+#: RosterRecv.dfm:125
 #: prefs/PrefFont.dfm:119
 msgid "ftp"
 msgstr "ftp"
@@ -309,7 +312,7 @@ msgstr "ftp"
 #: MsgQueue.dfm:102
 #: MsgRecv.dfm:105
 #: MsgRecv.dfm:204
-#: RosterRecv.dfm:138
+#: RosterRecv.dfm:131
 #: prefs/PrefFont.dfm:125
 msgid "https"
 msgstr "https"
@@ -332,7 +335,7 @@ msgstr "https"
 #: MsgQueue.dfm:108
 #: MsgRecv.dfm:111
 #: MsgRecv.dfm:210
-#: RosterRecv.dfm:144
+#: RosterRecv.dfm:137
 #: prefs/PrefFont.dfm:131
 msgid "gopher"
 msgstr "gopher"
@@ -355,7 +358,7 @@ msgstr "gopher"
 #: MsgQueue.dfm:114
 #: MsgRecv.dfm:117
 #: MsgRecv.dfm:216
-#: RosterRecv.dfm:150
+#: RosterRecv.dfm:143
 #: prefs/PrefFont.dfm:137
 msgid "nntp"
 msgstr "nntp"
@@ -378,7 +381,7 @@ msgstr "nntp"
 #: MsgQueue.dfm:120
 #: MsgRecv.dfm:123
 #: MsgRecv.dfm:222
-#: RosterRecv.dfm:156
+#: RosterRecv.dfm:149
 #: prefs/PrefFont.dfm:143
 msgid "prospero"
 msgstr "prospero"
@@ -401,7 +404,7 @@ msgstr "prospero"
 #: MsgQueue.dfm:126
 #: MsgRecv.dfm:129
 #: MsgRecv.dfm:228
-#: RosterRecv.dfm:162
+#: RosterRecv.dfm:155
 #: prefs/PrefFont.dfm:149
 msgid "telnet"
 msgstr "telnet"
@@ -424,7 +427,7 @@ msgstr "telnet"
 #: MsgQueue.dfm:132
 #: MsgRecv.dfm:135
 #: MsgRecv.dfm:234
-#: RosterRecv.dfm:168
+#: RosterRecv.dfm:161
 #: prefs/PrefFont.dfm:155
 msgid "news"
 msgstr "news"
@@ -447,20 +450,20 @@ msgstr "news"
 #: MsgQueue.dfm:138
 #: MsgRecv.dfm:141
 #: MsgRecv.dfm:240
-#: RosterRecv.dfm:174
+#: RosterRecv.dfm:167
 #: prefs/PrefFont.dfm:161
 msgid "wais"
 msgstr "wais"
 
 #. frmAbout..InfoBox....AllowInPlace
-#: About.dfm:1540
+#: About.dfm:1553
 msgid ""
-"{\\rtf1\\ansi\\ansicpg950\\deff0{\\fonttbl{\\f0\\fnil\\fcharset0 MS Sans Serif;}}\n"
-"\\viewkind4\\uc1\\pard\\lang1033\\f0\\fs16 Test text - do not translate.\\par\n"
+"{\\rtf1\\fbidis\\ansi\\deff0{\\fonttbl{\\f0\\fmodern\\fprq1\\fcharset136 Arial Unicode MS;}{\\f1\\fmodern\\fprq1\\fcharset129 Arial Unicode MS;}{\\f2\\fmodern\\fprq1\\fcharset134 Arial Unicode MS;}{\\f3\\fmodern\\fprq1\\fcharset128 Arial Unicode MS;}{\\f4\\fmodern\\fprq1\\fcharset0 Arial Unicode MS;}{\\f5\\fnil\\fcharset0 MS Sans Serif;}}\n"
+"\\viewkind4\\uc1\\pard\\ltrpar\\lang1033\\f0\\fs16\\'c9\\'d8\\f1\\u29810?\\'a4\\'d6\\f2\\'91\\'4f\\f0\\'ed\\'64\\'ef\\'c2\\'da\\'42\\f3\\'94\\'80\\'e0\\'73\\u14695?\\u12341?\\f0\\'e1\\'e8\\f3\\'fa\\'d5\\'82\\'c4\\f2\\'8c\\'e3\\'c1\\'ca\\'ac\\'97\\'92\\'53\\'b9\\'66\\'95\\'82\\'8c\\'bb\\'9c\\'a4\\'e3\\'e9\\'95\\'82\\'b5\\'b5\\'c4\\'b5\\'94\\'b2\\f3\\'82\\'d2\\f2\\u19744?\\f4\\u8275?\\f2\\'91\\'47\\'aa\\'9e\\'bd\\'b3\\'a0\\'b0\\'95\\'8a\\'bd\\'44\\u3453?\\'d7\\'f0\\'98\\'50\\'ee\\'a2\\'e9\\'ae\\'93\\'b3\\'de\\'cf\\'92\\'d7\\'be\\'cd\\'ce\\'bf\\'93\\'b7\\'e3\\'e1\\'9c\\'9f\\f1\\'a4\\'d7\\f3\\u13104?\\f0\\'dd\\'4c\\f3\\'82\\'c4\\f1\\u26204?\\'a4\\'e3\\f4\\u8246?\\f2\\'94\\'a0\\'ac\\'9b\\'ac\\'5f\\'b3\\'89\\f4\\u8308?\\u8237?\\f2\\'9d\\'99\\'c7\\'fe\\'ac\\'98\\'ac\\'5f\\'91\\'60\\'aa\\'9e\\'91\\'5b\\'d5\\'fb\\'8c\\'b9\\'ce\\'bf\\u3442?\\'ce\\'c9\\u2573?\\f5\\par\n"
 "}\n"
 msgstr ""
-"{\\rtf1\\ansi\\ansicpg950\\deff0{\\fonttbl{\\f0\\fnil\\fcharset0 MS Sans Serif;}}\n"
-"\\viewkind4\\uc1\\pard\\lang1033\\f0\\fs16 Test text - do not translate.\\par\n"
+"{\\rtf1\\fbidis\\ansi\\deff0{\\fonttbl{\\f0\\fmodern\\fprq1\\fcharset136 Arial Unicode MS;}{\\f1\\fmodern\\fprq1\\fcharset129 Arial Unicode MS;}{\\f2\\fmodern\\fprq1\\fcharset134 Arial Unicode MS;}{\\f3\\fmodern\\fprq1\\fcharset128 Arial Unicode MS;}{\\f4\\fmodern\\fprq1\\fcharset0 Arial Unicode MS;}{\\f5\\fnil\\fcharset0 MS Sans Serif;}}\n"
+"\\viewkind4\\uc1\\pard\\ltrpar\\lang1033\\f0\\fs16\\'c9\\'d8\\f1\\u29810?\\'a4\\'d6\\f2\\'91\\'4f\\f0\\'ed\\'64\\'ef\\'c2\\'da\\'42\\f3\\'94\\'80\\'e0\\'73\\u14695?\\u12341?\\f0\\'e1\\'e8\\f3\\'fa\\'d5\\'82\\'c4\\f2\\'8c\\'e3\\'c1\\'ca\\'ac\\'97\\'92\\'53\\'b9\\'66\\'95\\'82\\'8c\\'bb\\'9c\\'a4\\'e3\\'e9\\'95\\'82\\'b5\\'b5\\'c4\\'b5\\'94\\'b2\\f3\\'82\\'d2\\f2\\u19744?\\f4\\u8275?\\f2\\'91\\'47\\'aa\\'9e\\'bd\\'b3\\'a0\\'b0\\'95\\'8a\\'bd\\'44\\u3453?\\'d7\\'f0\\'98\\'50\\'ee\\'a2\\'e9\\'ae\\'93\\'b3\\'de\\'cf\\'92\\'d7\\'be\\'cd\\'ce\\'bf\\'93\\'b7\\'e3\\'e1\\'9c\\'9f\\f1\\'a4\\'d7\\f3\\u13104?\\f0\\'dd\\'4c\\f3\\'82\\'c4\\f1\\u26204?\\'a4\\'e3\\f4\\u8246?\\f2\\'94\\'a0\\'ac\\'9b\\'ac\\'5f\\'b3\\'89\\f4\\u8308?\\u8237?\\f2\\'9d\\'99\\'c7\\'fe\\'ac\\'98\\'ac\\'5f\\'91\\'60\\'aa\\'9e\\'91\\'5b\\'d5\\'fb\\'8c\\'b9\\'ce\\'bf\\u3442?\\'ce\\'c9\\u2573?\\f5\\par\n"
 "}\n"
 
 #. frmAutoUpdateStatus..Caption
@@ -633,6 +636,7 @@ msgstr "Padėti "
 #. frmRosterWindow..popTransport..N6..Caption
 #: BaseChat.dfm:313
 #: BaseChat.dfm:321
+#: Browser.dfm:3869
 #: Browser.dfm:3867
 #: ChatWin.dfm:109
 #: ChatWin.dfm:116
@@ -735,7 +739,7 @@ msgstr "Vardas"
 #. frmRosterRecv..lvContacts......Caption
 #: Browser.dfm:45
 #: RoomAdminList.dfm:89
-#: RosterRecv.dfm:205
+#: RosterRecv.dfm:198
 #: invite.dfm:76
 msgid "Jabber ID"
 msgstr "Jabber ID"
@@ -786,7 +790,7 @@ msgstr "Klaida: "
 #: Room.dfm:30
 #: Room.dfm:104
 #: RosterWindow.dfm:93
-#: XferManager.dfm:42
+#: XferManager.dfm:41
 msgid "Arial"
 msgstr "Arial"
 
@@ -808,7 +812,7 @@ msgstr "0 objektų"
 #: MsgRecv.dfm:389
 #: Room.dfm:99
 #: RosterWindow.dfm:88
-#: XferManager.dfm:37
+#: XferManager.dfm:36
 msgid "X"
 msgstr "X"
 
@@ -893,14 +897,28 @@ msgid "btnNode"
 msgstr "btnNode"
 
 #. frmBrowse..pnlJid..btnGo..Caption
+#. frmBrowse..pnlJid..btnGo..Caption
+#: Browser.dfm:273
 #: Browser.dfm:272
 msgid "GO"
 msgstr "Eiti"
 
 #. frmBrowse..pnlJid..btnRefresh..Hint
+#. frmBrowse..pnlJid..btnRefresh..Hint
+#: Browser.dfm:282
 #: Browser.dfm:281
 msgid "Re-Browse this object"
 msgstr "Iš naujo naršyti šį objektą"
+
+#. frmBrowse..pnlJid..pnlJidID..Caption
+#: Browser.dfm:302
+msgid "Jabber Address:   "
+msgstr "Jabber adresas:   "
+
+#. frmBrowse..pnlNode..pnlNodeID..Caption
+#: Browser.dfm:336
+msgid "Node Identifier:"
+msgstr "Mazgo identifikatorius:"
 
 #. frmBrowse..pnlJid..pnlJidID..Caption
 #: Browser.dfm:301
@@ -913,21 +931,25 @@ msgid "Node Identifier:"
 msgstr "Mazgo identifikatorius:"
 
 #. frmBrowse..popViewStyle..Details1..Caption
+#: Browser.dfm:3836
 #: Browser.dfm:3834
 msgid "Details"
 msgstr "Detalės"
 
 #. frmBrowse..popViewStyle..LargeIcons1..Caption
+#: Browser.dfm:3840
 #: Browser.dfm:3838
 msgid "Large Icons"
 msgstr "Didelės piktogramos"
 
 #. frmBrowse..popViewStyle..SmallIcons1..Caption
+#: Browser.dfm:3844
 #: Browser.dfm:3842
 msgid "Small Icons"
 msgstr "Mažos piktogramos"
 
 #. frmBrowse..popViewStyle..List1..Caption
+#: Browser.dfm:3848
 #: Browser.dfm:3846
 msgid "List"
 msgstr "Sąrašas"
@@ -938,6 +960,7 @@ msgstr "Sąrašas"
 #. frmPrefMsg..btnSpoolBrowse..Caption
 #. frmPrefPlugins..btnBrowsePluginPath..Caption
 #. frmPrefTransfer..btnTransferBrowse..Caption
+#: Browser.dfm:3857
 #: Browser.dfm:3855
 #: ConnDetails.dfm:281
 #: ExResponders.pas:461
@@ -949,23 +972,27 @@ msgid "Browse"
 msgstr "Naršyti"
 
 #. frmBrowse..popContext..mBrowseNew..Caption
+#: Browser.dfm:3861
 #: Browser.dfm:3859
 msgid "Browse in New Window"
 msgstr "Naršyti naujame lange"
 
 #. frmBrowse..popContext..mBookmark..Caption
+#: Browser.dfm:3865
 #: Browser.dfm:3863
 msgid "Add Bookmark to Roster"
 msgstr "Pridėti žymelę adresinėje"
 
 #. frmBrowse..popContext..mVCard..Caption
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuServerVCard..Caption
+#: Browser.dfm:3872
 #: Browser.dfm:3870
 #: Jabber1.dfm:448
 msgid "vCard"
 msgstr "Vizitinė kortelė"
 
 #. frmBrowse..popContext..mVersion..Caption
+#: Browser.dfm:3876
 #: Browser.dfm:3874
 #: ExResponders.pas:323
 msgid "Version"
@@ -973,6 +1000,7 @@ msgstr "Versija"
 
 #. frmBrowse..popContext..mTime..Caption
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuTime..Caption
+#: Browser.dfm:3880
 #: Browser.dfm:3878
 #: ExResponders.pas:375
 #: Jabber1.dfm:444
@@ -980,21 +1008,25 @@ msgid "Time"
 msgstr "&Laikas"
 
 #. frmBrowse..popContext..mLast..Caption
+#: Browser.dfm:3884
 #: Browser.dfm:3882
 msgid "Last Time/Activity"
 msgstr "Vėliausio veiksmo laikas"
 
 #. frmBrowse..popContext..mSearch..Caption
+#: Browser.dfm:3888
 #: Browser.dfm:3886
 msgid "Search"
 msgstr "Paieška"
 
 #. frmBrowse..popContext..mRegister..Caption
+#: Browser.dfm:3892
 #: Browser.dfm:3890
 msgid "Register"
 msgstr "Registracija"
 
 #. frmBrowse..popContext..mJoinConf..Caption
+#: Browser.dfm:3896
 #: Browser.dfm:3894
 msgid "Join Conference"
 msgstr "Prisijungti prie konferencijos"
@@ -1012,7 +1044,7 @@ msgstr " Foo +fUh9SX1KfUs "
 #. frmChat..Panel1..pnlJID..lblJID..Caption
 #. frmRosterRecv..pnlFrom..txtFrom..Caption
 #: ChatWin.dfm:87
-#: RosterRecv.dfm:87
+#: RosterRecv.dfm:80
 msgid "<JID>"
 msgstr "<JID>"
 
@@ -1088,7 +1120,7 @@ msgstr "Užklausti &laiką"
 #. frmProfile..PageControl1..TabSheet7..Panel2..btnLast..Caption
 #. frmRosterWindow..popRoster..popClientInfo..popLast..Caption
 #: ChatWin.dfm:141
-#: ExEvents.pas:486
+#: ExEvents.pas:520
 #: MsgRecv.dfm:506
 #: Profile.dfm:207
 #: RosterWindow.dfm:345
@@ -1455,9 +1487,9 @@ msgstr "Pirmenybė"
 
 #. frmCustomPres..cboType....Items.WideStrings
 #. frmRoom..popRoomRoster..popRosterChat..Caption
-#: ChatWin.pas:457
-#: ChatWin.pas:469
-#: ChatWin.pas:471
+#: ChatWin.pas:458
+#: ChatWin.pas:470
+#: ChatWin.pas:472
 #: CustomPres.dfm:75
 #: Room.dfm:273
 msgid "Chat"
@@ -1471,15 +1503,18 @@ msgstr "Pokalbis"
 #. reset status to online;
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
-#: /src/exodus/jopl/PrefController.pas:1257
+#: /src/exodus/jopl/PrefController.pas:1227
 #: CustomPres.dfm:76
 #: ExSession.pas:184
 #: Jabber1.dfm:365
 #: Jabber1.dfm:2656
-#: Jabber1.pas:2720
+#: Jabber1.pas:2732
 #: RosterWindow.dfm:403
+#: Jabber1.pas:2720
 #: RosterWindow.pas:346
 #: RosterWindow.pas:368
+#: RosterWindow.pas:1652
+#: RosterWindow.pas:1695
 #: RosterWindow.pas:1642
 #: RosterWindow.pas:1685
 #: prefs/PrefGroups.dfm:70
@@ -1493,14 +1528,16 @@ msgstr "Esu"
 #. frmRosterWindow..popStatus..presAway..Caption
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
-#: /src/exodus/jopl/PrefController.pas:1275
+#: /src/exodus/jopl/PrefController.pas:1245
 #: CustomPres.dfm:77
 #: Jabber1.dfm:377
 #: Jabber1.dfm:2668
-#: Jabber1.pas:2718
+#: Jabber1.pas:2730
 #: RosterWindow.dfm:415
+#: Jabber1.pas:2718
 #: RosterWindow.pas:348
 #: RosterWindow.pas:369
+#: RosterWindow.pas:1636
 #: RosterWindow.pas:1626
 #: prefs/PrefGroups.dfm:69
 #: prefs/PrefPresence.dfm:203
@@ -1527,6 +1564,7 @@ msgstr "Nėra ilgam"
 #: RosterWindow.dfm:427
 #: RosterWindow.pas:350
 #: RosterWindow.pas:371
+#: RosterWindow.pas:1644
 #: RosterWindow.pas:1634
 #: prefs/PrefGroups.dfm:67
 #: prefs/PrefPresence.dfm:205
@@ -1795,6 +1833,7 @@ msgstr "Pašalinti mane iš šių asmenų adresinių"
 #. frmInputPass..Caption
 #. accordingly.
 #: InputPassword.dfm:8
+#: Jabber1.pas:906
 #: Jabber1.pas:903
 msgid "Exodus Password"
 msgstr "Exodus slaptažodis"
@@ -1860,7 +1899,7 @@ msgstr "Pakviesti į konferenciją"
 #. frmInvite..pnlMain..lstJIDS......Caption
 #. frmRosterRecv..lvContacts......Caption
 #. frmRosterWindow..pnlFind..radNick..Caption
-#: RosterRecv.dfm:201
+#: RosterRecv.dfm:194
 #: RosterWindow.dfm:123
 #: invite.dfm:72
 msgid "Nickname"
@@ -1896,8 +1935,12 @@ msgstr "Prašome prisijungti prie mūsų šiame konferencijų kambaryje."
 #. do this.
 #: ConnDetails.pas:402
 #: ExSession.pas:470
+#: ExUtils.pas:1225
 #: ExUtils.pas:1224
 #: Jabber1.dfm:7
+#: Jabber1.pas:1220
+#: Login.pas:110
+#: Login.pas:184
 #: Jabber1.pas:1217
 #: Login.pas:104
 #: Login.pas:177
@@ -2123,6 +2166,7 @@ msgstr "&Būsena"
 #: Jabber1.dfm:2662
 #: RosterWindow.dfm:409
 #: RosterWindow.pas:347
+#: RosterWindow.pas:1632
 #: RosterWindow.pas:1622
 #: prefs/PrefPresence.dfm:201
 msgid "Free to Chat"
@@ -2136,6 +2180,7 @@ msgstr "Noriu kalbėtis"
 #: Jabber1.dfm:2674
 #: RosterWindow.dfm:421
 #: RosterWindow.pas:349
+#: RosterWindow.pas:1640
 #: RosterWindow.pas:1630
 #: prefs/PrefPresence.dfm:204
 msgid "Xtended Away"
@@ -2408,7 +2453,7 @@ msgstr "Rasta n įrašų."
 
 #. frmJud..Tabs..TabSheet4..Panel2..Button1..Caption
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
-#: RosterRecv.dfm:45
+#: RosterRecv.dfm:38
 #: jud.dfm:176
 #: jud.pas:641
 #: jud.pas:643
@@ -2422,6 +2467,7 @@ msgstr "Rodyti profilį"
 
 #. frmJud..PopupMenu1..popChat..Caption
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
+#: Jabber1.pas:2291
 #: Jabber1.pas:2288
 #: jud.dfm:223
 #: subscribe.dfm:146
@@ -2448,7 +2494,7 @@ msgstr "&Išsamiau..."
 #. make sure we have at least a default profile
 #: ExSession.pas:368
 #: Login.dfm:99
-#: Login.pas:200
+#: Login.pas:207
 msgid "Default Profile"
 msgstr "Nutylimasis profilis"
 
@@ -2671,7 +2717,7 @@ msgstr "Priedai"
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: ExSession.pas:480
 #: Prefs.dfm:2639
-#: XferManager.dfm:54
+#: XferManager.dfm:53
 #: prefs/PrefNotify.dfm:43
 #: prefs/PrefNotify.pas:102
 msgid "File Transfers"
@@ -5892,36 +5938,42 @@ msgstr "Administruoti"
 #. frmRoom..popRoom..popAdmin..popVoiceList..Caption
 #. edit a list
 #: Room.dfm:202
+#: Room.pas:1759
 #: Room.pas:1748
 msgid "Edit Voice List"
 msgstr "Keisti turinčių balsą sarašą"
 
 #. frmRoom..popRoom..popAdmin..popBanList..Caption
 #: Room.dfm:206
+#: Room.pas:1761
 #: Room.pas:1750
 msgid "Edit Ban List"
 msgstr "Keisti banų sąrašą"
 
 #. frmRoom..popRoom..popAdmin..popMemberList..Caption
 #: Room.dfm:210
+#: Room.pas:1763
 #: Room.pas:1752
 msgid "Edit Member List"
 msgstr "Keisti dalyvių sąrašą"
 
 #. frmRoom..popRoom..popAdmin..popModeratorList..Caption
 #: Room.dfm:214
+#: Room.pas:1765
 #: Room.pas:1754
 msgid "Edit Moderator List"
 msgstr "Keisti moderatorių sąrašą"
 
 #. frmRoom..popRoom..popAdmin..popAdminList..Caption
 #: Room.dfm:221
+#: Room.pas:1767
 #: Room.pas:1756
 msgid "Edit Admin List"
 msgstr "Keisti administratorių sąrašą"
 
 #. frmRoom..popRoom..popAdmin..popOwnerList..Caption
 #: Room.dfm:225
+#: Room.pas:1769
 #: Room.pas:1758
 msgid "Edit Owner List"
 msgstr "Keisti savininkų sąrašą"
@@ -5933,6 +5985,7 @@ msgstr "Kambario parametrai"
 
 #. frmRoom..popRoom..popAdmin..popDestroy..Caption
 #: Room.dfm:236
+#: Room.pas:1783
 #: Room.pas:1772
 msgid "Destroy Room"
 msgstr "Naikinti kambarį"
@@ -5952,9 +6005,13 @@ msgstr "Išsiųsti mano JID"
 #. frmRosterWindow..popGroup..popGroupBlock..Caption
 #. do blocking madness
 #: Room.dfm:281
-#: Room.pas:1491
+#: Room.pas:1502
 #: RosterWindow.dfm:380
 #: RosterWindow.dfm:634
+#: RosterWindow.pas:2085
+#: RosterWindow.pas:2122
+#: RosterWindow.pas:2127
+#: Room.pas:1491
 #: RosterWindow.pas:2074
 #: RosterWindow.pas:2111
 #: RosterWindow.pas:2116
@@ -6077,12 +6134,12 @@ msgid "Receiving Contacts"
 msgstr "Gaunu įrašus"
 
 #. frmRosterRecv..pnlFrom..StaticText1..Caption
-#: RosterRecv.dfm:70
+#: RosterRecv.dfm:63
 msgid "From:    "
 msgstr "Nuo:"
 
 #. frmRosterRecv..Panel1..Label2..Caption
-#: RosterRecv.dfm:227
+#: RosterRecv.dfm:220
 msgid "Add contacts to this group:"
 msgstr "Pridėti įrašus į šią grupę:"
 
@@ -6113,11 +6170,14 @@ msgstr "JID"
 #: ExUtils.pas:898
 #: RosterWindow.dfm:245
 #: RosterWindow.pas:367
+#: RosterWindow.pas:1269
+#: RosterWindow.pas:1273
+#: RosterWindow.pas:1648
 #: RosterWindow.pas:1267
 #: RosterWindow.pas:1271
 #: RosterWindow.pas:1638
 msgid "Offline"
-msgstr "Neįsiregistravęs(-usi)"
+msgstr "Neįsiregistravę"
 
 #. frmRosterWindow..pnlConnect..lblStatus..Caption
 #. catch session events
@@ -6157,6 +6217,9 @@ msgstr "Kam išsiųsti įrašą..."
 #. frmRosterWindow..popRoster..popPresence..popSendPres..Caption
 #: RosterWindow.dfm:352
 msgid "Send Visible"
+msgstr "Rodytis"
+
+msgid "Send Visible"
 msgstr "&Matytis"
 
 #. frmRosterWindow..popRoster..popPresence..popSendInvisible..Caption
@@ -6188,6 +6251,11 @@ msgstr "Savybės..."
 #: RosterWindow.dfm:604
 msgid "Send Presence"
 msgstr "Rodyti mano būseną"
+
+#. frmRosterWindow..popGroup..popGrpPresence..popGrpAvailable..Caption
+#: RosterWindow.dfm:606
+msgid "Visible"
+msgstr "Matoma(s)"
 
 #. frmRosterWindow..popGroup..popGrpPresence..popGrpAvailable..Caption
 #: RosterWindow.dfm:606
@@ -6382,8 +6450,8 @@ msgid "Exodus is the creation of Peter Millard  (mailto:me@pgmillard.com).  Chec
 msgstr "Exodus autorius - Peter Millard (mailto:me@pgmillard.com). Daugiau informacijos rasite svetainėje http://exodus.jabberstudio.org. Šiuo metu programa platinama pagal GNU viešosios licencijos (GPL) sąlygas. Daugiau informacijos apie GPL rasite adresu www.gnu.org."
 
 #: About.pas:86
-msgid "Preference Icons used with permission from collections of \"Foood\". http://www.foood.net/icons/index.htm"
-msgstr "Nustatymų dialogo piktogramos, gavus leidimą, paimtos iš „Foood“ kolekcijų. http://www.foood.net/icons/index.htm"
+msgid "Preference Icons used with permission from collections of \"Foood\". http://www.foood.net"
+msgstr "Nuostatų dialogo piktogramos, gavus leidimą, paimtos iš „Foood“ kolekcijų. http://www.foood.net/"
 
 #: About.pas:88
 msgid "TCP/IP components are Copyright (c) 1993 - 2002, Chad Z. Hower (Kudzu) and the Indy Pit Crew - http://www.nevrona.com/Indy/. This application may also be using the IndySSL components from Nevrona, and the Open-SSL binaries available from Intellicom.si."
@@ -6436,68 +6504,69 @@ msgid "Objects"
 msgstr "objektai"
 
 #. Setup the cache'd old versions in ChangePresImage
-#: ChatWin.pas:548
+#: ChatWin.pas:549
 msgid " is replying."
 msgstr "atsako."
 
-#: ChatWin.pas:626
+#: ChatWin.pas:627
 msgid "Chat Activity: "
 msgstr "Pokalbio aktyvumas: "
 
 #. post a msg to the window and disable the text input box.
-#: ChatWin.pas:743
+#: ChatWin.pas:744
 #: Room.pas:657
+#: ChatWin.pas:743
 msgid "You have been disconnected."
 msgstr "Jūs buvote atjungtas."
 
 #. if this jid just got blocked, just close the window.
-#: ChatWin.pas:760
+#: ChatWin.pas:761
 msgid "This user is now blocked."
 msgstr "Nuo šiol vartotojas blokuojamas."
 
 #. Change the bulb
 #. make sure the user is still connected
-#: ChatWin.pas:782
-#: ChatWin.pas:827
+#: ChatWin.pas:783
 #: ChatWin.pas:828
+#: ChatWin.pas:829
 msgid "offline"
 msgstr "atsijungęs"
 
-#: ChatWin.pas:784
+#: ChatWin.pas:785
 msgid "unknown"
 msgstr "nežinoma"
 
-#: ChatWin.pas:786
+#: ChatWin.pas:787
 msgid "away"
 msgstr "nėra"
 
-#: ChatWin.pas:788
+#: ChatWin.pas:789
 msgid "xa"
 msgstr "ilgam nėra"
 
-#: ChatWin.pas:790
+#: ChatWin.pas:791
 msgid "dnd"
 msgstr "netrukdyti"
 
-#: ChatWin.pas:792
+#: ChatWin.pas:793
 msgid "chat"
 msgstr "pokalbis"
 
-#: ChatWin.pas:842
+#: ChatWin.pas:843
 msgid "available"
 msgstr "prisijungęs"
 
-#: ChatWin.pas:846
-#: ChatWin.pas:848
+#: ChatWin.pas:847
+#: ChatWin.pas:849
 msgid "is now"
 msgstr "dabar"
 
 #. check to see if we're already subscribed...
-#: ChatWin.pas:877
+#: ChatWin.pas:878
 msgid "You are already subscribed to this contact"
 msgstr "Jūs jau esate užsiprenumeravę šio asmens būsenas"
 
-#: ChatWin.pas:1197
+#: ChatWin.pas:1196
 msgid "This chat window is busy. Close anyways?"
 msgstr "Šiame lange dar vyksta pokalbis. Vistiek užverti?"
 
@@ -6547,49 +6616,60 @@ msgid "Downloading public server list"
 msgstr "Gaunamas viešasis serverių sąrašas"
 
 #: Debug.pas:184
+#: Debug.pas:371
 #: Debug.pas:388
 msgid "Disconnected"
 msgstr "Neprisijungęs(-usi)"
 
-#: ExEvents.pas:144
+#. New Chat Window
+#: ExEvents.pas:147
+#: GUIFactory.pas:111
+msgid "Chat with "
+msgstr "Pokalbis su "
+
+#: ExEvents.pas:154
 msgid "Msg from "
 msgstr "Žinutė nuo "
 
-#: ExEvents.pas:179
+#: ExEvents.pas:187
 msgid "Invite from "
 msgstr "Pakvietimas nuo "
 
-#: ExEvents.pas:258
-#: ExEvents.pas:474
+#: ExEvents.pas:268
+#: ExEvents.pas:508
 msgid "Time Response"
 msgstr "Atsakymas į laiko užklausą"
 
-#: ExEvents.pas:261
+#: ExEvents.pas:271
 msgid "Local Time: "
 msgstr "Vietinis laikas:"
 
-#: ExEvents.pas:264
+#: ExEvents.pas:274
 msgid "Ping Time: %s seconds."
 msgstr "Ping'as: %s sekundžių."
 
-#: ExEvents.pas:280
-#: ExEvents.pas:480
+#: ExEvents.pas:290
+#: ExEvents.pas:514
 msgid "Version Response"
 msgstr "Atsakymas į versijos užklausą"
 
-#: ExEvents.pas:280
+#: ExEvents.pas:290
 msgid "Description: "
 msgstr "Aprašas:"
 
-#: ExEvents.pas:288
+#: ExEvents.pas:298
 msgid "OS: "
 msgstr "OS:"
 
-#: ExEvents.pas:302
+#: ExEvents.pas:312
 msgid "Idle for "
 msgstr "Neveiksnus "
 
 #. check for x:oob URL's
+#: ExEvents.pas:402
+#: ExEvents.pas:403
+#: Room.pas:454
+#: Room.pas:456
 #: ExEvents.pas:428
 msgid "This message contains a URL: "
 msgstr "Šioje žinutėje yra nuoroda:"
@@ -6602,17 +6682,27 @@ msgstr "Šioje žinutėje yra nuoroda:"
 msgid "ERROR: "
 msgstr "KLAIDA: "
 
-#: ExEvents.pas:447
+#: ExEvents.pas:403
 msgid ", Code="
 msgstr ", Kodas="
 
-#: ExEvents.pas:451
+#: ExEvents.pas:407
 msgid "Unknown Error"
 msgstr "Nežinoma klaida"
 
-#: ExEvents.pas:453
+#: ExEvents.pas:409
 msgid "Original Message was:"
 msgstr "Tikra žinutė buvo:"
+
+#. this is a queue'd chat msg
+#: ExEvents.pas:468
+msgid "New chat conversation"
+msgstr "Naujas pokalbis"
+
+#. check for x:oob URL's
+#: ExEvents.pas:491
+msgid "This message contains a URL: "
+msgstr "Šioje žinutėje yra nuoroda:"
 
 #. We got an exception during signal dispatching.
 #: ExResponders.pas:210
@@ -6856,19 +6946,23 @@ msgstr "Žymelės"
 msgid "Unfiled"
 msgstr "Neišrūšiuoti"
 
+#: ExUtils.pas:1246
 #: ExUtils.pas:1245
 msgid "Untitled Group"
 msgstr "Grupė be pavadinimo"
 
+#: ExUtils.pas:1247
 #: ExUtils.pas:1246
 msgid "New Roster Group"
 msgstr "Nauja adresų grupė"
 
+#: ExUtils.pas:1247
 #: ExUtils.pas:1246
 msgid "Enter new group name: "
 msgstr "Įveskite grupės pavadinimą:"
 
 #. add the new grp.
+#: ExUtils.pas:1252
 #: ExUtils.pas:1251
 msgid "This group already exists!"
 msgstr "Tokia grupė jau egzistuoja!"
@@ -6911,16 +7005,15 @@ msgstr "Pašalinti %d įrašus"
 msgid "Remove the %s group"
 msgstr "Pašalinti grupę %s"
 
-#. New Chat Window
-#: GUIFactory.pas:100
-msgid "Chat with "
-msgstr "Pokalbis su "
+#: GUIFactory.pas:130
+msgid "This server does not advertise support for in-band registration. Try to register a new account anyway?"
+msgstr "Šis serveris nesiskelbia palaikąs paskyrų sukūrimą jabber protokolu. Ar vistiek bandyti sukurti naują paskyrą?"
 
-#: GUIFactory.pas:118
+#: GUIFactory.pas:138
 msgid "Your authentication mechanism does not support registration."
 msgstr "Jūsų autentikacijos mechanizmas nepalaiko registracijos."
 
-#: GUIFactory.pas:133
+#: GUIFactory.pas:153
 msgid "There was an error attempting to save your options. Another process may be accessing your options file. Some options may be lost. "
 msgstr "Bandant išsaugoti jūsų nustatymus, įvyko klaida. Gali būti, jog kitas procesas šiuo metu naudoja nustatymų bylą. Dalis nustatymų gali būti prarasta."
 
@@ -6939,28 +7032,34 @@ msgstr "Jus kviečia į kambarį %s."
 msgid "Conference Room:"
 msgstr "Konferencijų salė:"
 
+#: Jabber1.pas:906
 #: Jabber1.pas:903
 msgid "Enter Password"
 msgstr "Įveskite slaptažodį"
 
 #. For other OS's we need to use the wicked nasty DLL
+#: Jabber1.pas:995
 #: Jabber1.pas:992
 msgid "Trying to setup the Auto Away timer."
 msgstr "Bandoma sukonfigūruoti automatinio nebuvimo laikmatį."
 
+#: Jabber1.pas:1017
 #: Jabber1.pas:1014
 msgid "AutoAway Setup FAILED!"
 msgstr "Automatinio nebuvimo konfigūravimas nepavyko!"
 
 #. do nothing here..
+#: Jabber1.pas:1024
 #: Jabber1.pas:1021
 msgid "Using Win32 API for Autoaway checks!!"
 msgstr "Naudojamas Win32 API automatinio nebuvimo patikrinimams!!"
 
+#: Jabber1.pas:1028
 #: Jabber1.pas:1025
 msgid "ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!"
 msgstr "Klaida bandant gauti Win32 API adresą GetLastInputInfo operacijai!!"
 
+#: Jabber1.pas:1091
 #: Jabber1.pas:1088
 msgid ""
 "There was an error trying to authenticate you.\n"
@@ -6969,75 +7068,94 @@ msgstr ""
 "Jus autentikuojant įvyko klaida.\n"
 "Jūs arba įvedėte neteisingą slaptažodį, arba ši paskyra jau naudojama kažkieno kito."
 
+#: Jabber1.pas:1098
 #: Jabber1.pas:1095
 msgid "There was an error trying to setup SSL."
 msgstr "Bandant suderinti SSL, įvyko klaida."
 
+#: Jabber1.pas:1134
 #: Jabber1.pas:1131
 msgid "An Error occurred trying to register your new account. This server may not allow open registration."
 msgstr "Registruojant jūsų naują paskyrą, įvyko klaida. Galbūt šis serveris nepalaiko atviros registracijos."
 
+#: Jabber1.pas:1149
 #: Jabber1.pas:1146
 msgid "This account does not exist on this server. Create a new account?"
 msgstr "Ši paskyra neegzistuoja serveryje. Ar sukurti naują paskyrą?"
 
 #. if we have a new account, prompt for reg info
+#: Jabber1.pas:1199
 #: Jabber1.pas:1196
 msgid "Your new jabber account is activated. Would you like to fill out additional registration information?"
 msgstr "Jūsų naujoji jabber paskyra aktyvuota. Ar norėtumėte užpildyti papildmą registracinę informaciją?"
 
 #. set us to away
+#: Jabber1.pas:2087
 #: Jabber1.pas:2084
 msgid "Setting AutoAway"
 msgstr "Įjungiamas automatinis nebuvimas"
 
 #. set us to xa
+#: Jabber1.pas:2123
 #: Jabber1.pas:2120
 msgid "Setting AutoXA"
 msgstr "Įjungiamas automatinis išplėstinis nebuvimas"
 
 #. reset our status to available
+#: Jabber1.pas:2140
 #: Jabber1.pas:2137
 msgid "Setting Auto Available"
 msgstr "Įjungiamas automatinis buvimas"
 
 #. lookup some arbitrary vcard..
+#: Jabber1.pas:2175
 #: Jabber1.pas:2172
 msgid "Lookup Profile"
 msgstr "Profilio paieška"
 
+#: Jabber1.pas:2175
+#: Jabber1.pas:2291
+#: Jabber1.pas:2559
 #: Jabber1.pas:2172
 #: Jabber1.pas:2288
 #: Jabber1.pas:2547
 msgid "Enter Jabber ID: "
 msgstr "Įveskite Jabber ID:"
 
+#: Jabber1.pas:2392
 #: Jabber1.pas:2389
 msgid "Old password is incorrect."
 msgstr "Senasis slaptažodis neteisngas."
 
+#: Jabber1.pas:2396
 #: Jabber1.pas:2393
 msgid "New password does not match."
 msgstr "Naujasis slaptažodis nesutampa."
 
+#: Jabber1.pas:2416
+#: Jabber1.pas:2421
 #: Jabber1.pas:2413
 #: Jabber1.pas:2418
 msgid "Error changing password."
 msgstr "Klaida keičiant slaptažodį."
 
+#: Jabber1.pas:2419
 #: Jabber1.pas:2416
 msgid "Password changed."
 msgstr "Slaptažodis pakeistas."
 
 #. kick off a service registration..
+#: Jabber1.pas:2506
 #: Jabber1.pas:2494
 msgid "Register with Service"
 msgstr "Registruotis prie serviso"
 
+#: Jabber1.pas:2506
 #: Jabber1.pas:2494
 msgid "Enter Jabber ID of Service: "
 msgstr "Įveskite serviso Jabber ID:"
 
+#: Jabber1.pas:2559
 #: Jabber1.pas:2547
 msgid "Send a Message"
 msgstr "Nusiųsti žinutė"
@@ -7046,6 +7164,11 @@ msgstr "Nusiųsti žinutė"
 #. send roster items to this contact.
 #. Send contacts to this JID..
 #. we got a URL drop
+#: Jabber1.pas:2825
+#: Jabber1.pas:2835
+#: RosterWindow.pas:2561
+#: RosterWindow.pas:2863
+#: RosterWindow.pas:2895
 #: Jabber1.pas:2813
 #: Jabber1.pas:2823
 #: RosterWindow.pas:2548
@@ -7054,6 +7177,7 @@ msgstr "Nusiųsti žinutė"
 msgid "You must select one or more contacts."
 msgstr "Jūs turite pasirinkti vieną ar daugiau įrašų."
 
+#: Jabber1.pas:2963
 #: Jabber1.pas:2951
 msgid "Branding error!"
 msgstr "Pakavimo klaida!"
@@ -7095,23 +7219,24 @@ msgid "%d items found."
 msgstr "Rasta %d įrašų."
 
 #. Create a new profile
-#: Login.pas:170
+#: Login.pas:177
 msgid "Untitled Profile"
 msgstr "Bevardis profilis"
 
-#: Login.pas:171
+#: Login.pas:178
 msgid "New Profile"
 msgstr "Naujas profilis"
 
-#: Login.pas:171
+#: Login.pas:178
 msgid "Enter Profile Name"
 msgstr "Įveskite profilio pavadinimą"
 
 #. Delete this profile
-#: Login.pas:191
+#: Login.pas:198
 msgid "Remove this profile?"
 msgstr "Pašalinti šį profilį?"
 
+#: MsgQueue.pas:166
 #: MsgQueue.pas:149
 msgid "Exodus could not create or write to the spool directory specified in the options."
 msgstr "Exodus nepavyko sukuri arba rašyti į kaupties aplanką, nurodytą nustatymuose."
@@ -7280,6 +7405,11 @@ msgstr "%s kambarys"
 #. block
 #. get the data for this person..
 #: Room.pas:464
+#: Room.pas:1053
+#: Room.pas:1459
+#: Room.pas:1467
+#: Room.pas:1499
+#: Room.pas:1953
 #: Room.pas:1042
 #: Room.pas:1448
 #: Room.pas:1456
@@ -7299,148 +7429,186 @@ msgstr "Veiksmas "
 
 #. check for various presence errors
 #. they match
+#: Room.pas:730
+#: Room.pas:967
+#: Room.pas:1326
 #: Room.pas:733
 #: Room.pas:970
 #: Room.pas:1315
 msgid "Your nickname is already being used. Please select another one."
 msgstr "Jūsų slapyvardis jau vartojamas. Prašome susigalvoti kitą."
 
+#: Room.pas:739
 #: Room.pas:742
 msgid "You supplied an invalid password to enter this room."
 msgstr "Jūsų pateiktas šio kambario slaptažodis neteisingas."
 
+#: Room.pas:747
 #: Room.pas:750
 msgid "The room is being created. Please try again later."
 msgstr "Šis kambarys kuriamas. Prašome pabandyti vėliau."
 
+#: Room.pas:752
 #: Room.pas:755
 msgid "You are not allowed to enter the room. You must be on the member list."
 msgstr "Jums neleidžiama įeiti į kambarį. Jūs turite būti jo vartotojų sąraše, kad galėtumėte įeiti."
 
+#: Room.pas:757
+#: Room.pas:966
 #: Room.pas:760
 #: Room.pas:969
 msgid "You are not on the member list for this room. Try and register?"
 msgstr "Jūsų nėra šio kambario vartotojų sąraše. Bandyti registruotis?"
 
+#: Room.pas:773
 #: Room.pas:776
 msgid "The room has been destroyed for an unknown reason."
 msgstr "Kambarys panaikintas dėl nežinomos priežasties."
 
 #. this user has changed their nick..
+#: Room.pas:796
+#: Room.pas:962
 #: Room.pas:799
 #: Room.pas:965
 msgid "%s is now known as %s."
 msgstr "%s nuo šiol vadinsis %s."
 
+#: Room.pas:804
+#: Room.pas:960
 #: Room.pas:807
 #: Room.pas:963
 msgid "%s has been banned from this room. %s"
 msgstr "%s buvo išspirtas iš šio kambario be teisės grįžti. %s"
 
+#: Room.pas:805
+#: Room.pas:963
 #: Room.pas:808
 #: Room.pas:966
 msgid "%s has been kicked from this room. %s"
 msgstr "%s buvo išspirtas iš kambario. %s"
 
+#: Room.pas:811
 #: Room.pas:814
 msgid "%s has left the room."
 msgstr "%s paliko kambarį."
 
 #. show new user message
+#: Room.pas:836
 #: Room.pas:839
 msgid "%s has entered the room."
 msgstr "%s įėjo į kambarį."
 
 #. someone maybe changed my role
+#: Room.pas:861
 #: Room.pas:864
 msgid "You have been granted voice."
 msgstr "Jums suteiktas balsas."
 
+#: Room.pas:863
 #: Room.pas:866
 msgid "Your voice has been revoked."
 msgstr "Jūsų balsas atimtas."
 
+#: Room.pas:865
 #: Room.pas:868
 msgid "%s has a new role of %s."
 msgstr "%s nuo šiol turi naują rolę - %s."
 
+#: Room.pas:961
 #: Room.pas:964
 msgid "This room has been destroyed."
 msgstr "Šis kambarys sunaikintas."
 
+#: Room.pas:964
 #: Room.pas:967
 msgid "You are on the ban list for this room."
 msgstr "Jūs esate sąraše žmonių, kuriems draudžiama įeiti į šį kambarį."
 
+#: Room.pas:965
 #: Room.pas:968
 msgid "You are not allowed to create rooms."
 msgstr "Jums neleidžiama kurti kambarius."
 
+#: Room.pas:1009
 #: Room.pas:1012
 msgid "There was an error using the default room configuration. Configuring it manually."
 msgstr "Įvyko klaida, bandant naudoti nutylimuosius kambario nustatymus. Konfigūruojame rankiniu būdu."
 
+#: Room.pas:1149
 #: Room.pas:1138
 msgid "Your room keyword regular expressions are invalid. Keyword matching will be turned off for this room."
 msgstr "Jūsų nurodytos kambario norminės išraiškos yra netinkamos. Raktažodžių tikrinimas šiam kambariui bus išjungtas."
 
 #. send the msg out
+#: Room.pas:1289
 #: Room.pas:1278
 msgid "/me has changed the subject to: "
 msgstr "/me pakeitė temą į: "
 
 #. Change the subject
+#: Room.pas:1302
 #: Room.pas:1291
 msgid "Change room subject"
 msgstr "Pakeisti kambario temą"
 
+#: Room.pas:1302
 #: Room.pas:1291
 msgid "New subject"
 msgstr "Nauja tema"
 
-#: Room.pas:1334
+#: Room.pas:1345
 msgid "New nickname"
 msgstr "Naujas slapyvardis"
 
-#: Room.pas:1357
+#: Room.pas:1368
 msgid "Bookmark Room"
 msgstr "Sukurti žymelę kambariui"
 
-#: Room.pas:1357
+#: Room.pas:1368
 msgid "Enter bookmark name:"
 msgstr "Įveskite žymelės pavadinimą:"
 
+#: Room.pas:1500
+#: RosterWindow.pas:2081
+#: RosterWindow.pas:2132
 #: Room.pas:1489
 #: RosterWindow.pas:2070
 #: RosterWindow.pas:2121
 msgid "UnBlock"
 msgstr "Atblokuoti"
 
+#: Room.pas:1661
 #: Room.pas:1650
 msgid "You have been kicked."
 msgstr "Jus išspyrė."
 
+#: Room.pas:1662
 #: Room.pas:1651
 msgid "Kick Reason"
 msgstr "Išspyrimo priežastis"
 
+#: Room.pas:1665
 #: Room.pas:1654
 msgid "You have been banned."
 msgstr "Jus išbanino."
 
+#: Room.pas:1666
 #: Room.pas:1655
 msgid "Ban Reason"
 msgstr "Bano priežastis"
 
 #. Destroy Room
+#: Room.pas:1780
 #: Room.pas:1769
 msgid "Do you really want to destroy the room? All users will be removed."
 msgstr "Ar tikrai norite sunaikinti kambarį? Visi vartotojai bus pašalinti."
 
+#: Room.pas:1782
 #: Room.pas:1771
 msgid "The owner has destroyed the room."
 msgstr "Savininkas sunaikino kambarį"
 
+#: Room.pas:1783
 #: Room.pas:1772
 msgid "Destroy Reason"
 msgstr "Sunaikinimo priežastis"
@@ -7469,6 +7637,8 @@ msgstr "Šliuzas, kurį nurodėte, neturi transporto šiam įrašo tipui."
 
 #. The My resources grp is also special.. same as offline
 #: RosterWindow.pas:374
+#: RosterWindow.pas:1285
+#: RosterWindow.pas:1289
 #: RosterWindow.pas:1283
 #: RosterWindow.pas:1287
 msgid "My Resources"
@@ -7492,6 +7662,7 @@ msgstr "Bandau prisijungti..."
 #: RosterWindow.pas:503
 #: RosterWindow.pas:509
 #: RosterWindow.pas:518
+#: RosterWindow.pas:2663
 #: RosterWindow.pas:2650
 msgid "Click to Cancel..."
 msgstr ""
@@ -7515,37 +7686,46 @@ msgstr ""
 "Siunčiuosi adresinę..."
 
 #. remove a bookmark
+#: RosterWindow.pas:1882
 #: RosterWindow.pas:1872
 msgid "Remove this bookmark?"
 msgstr "Pašalinti šią žymelę?"
 
+#: RosterWindow.pas:2362
 #: RosterWindow.pas:2349
 msgid " (Pending)"
 msgstr " (laukiu)"
 
+#: RosterWindow.pas:2474
 #: RosterWindow.pas:2461
 msgid "Rename group"
 msgstr "Pervadinti grupę"
 
+#: RosterWindow.pas:2474
 #: RosterWindow.pas:2461
 msgid "New group name:"
 msgstr "Naujas grupės pavadinimas:"
 
 #. Block or Unblock this user
+#: RosterWindow.pas:2589
 #: RosterWindow.pas:2576
 msgid "Block %d contacts?"
 msgstr "Užblokuoti %d įrašus?"
 
 #. Block or Unblock this user
+#: RosterWindow.pas:2618
 #: RosterWindow.pas:2605
 msgid "Unblock %d contacts?"
 msgstr "Atblokuoti %d įrašus?"
 
+#: RosterWindow.pas:2646
 #: RosterWindow.pas:2633
 msgid "You must select more than one online contact to broadcast."
 msgstr "Jūs turite išsirinkti daugiau, negu vieną pasiekiamą įrašą, jei norite transliuoti."
 
 #. Cancel the connection
+#: RosterWindow.pas:2667
+#: RosterWindow.pas:3005
 #: RosterWindow.pas:2654
 #: RosterWindow.pas:2992
 msgid "Click to Cancel Reconnect"
@@ -7555,14 +7735,17 @@ msgstr ""
 "pakartotinį prisijungimą"
 
 #. processing of Editing events
+#: RosterWindow.pas:2772
 #: RosterWindow.pas:2759
 msgid "Rename Roster Item"
 msgstr "Pervadinti adresinės įrašą"
 
+#: RosterWindow.pas:2772
 #: RosterWindow.pas:2759
 msgid "New Nickname: "
 msgstr "Naujas slapyvardis: "
 
+#: RosterWindow.pas:3006
 #: RosterWindow.pas:2993
 msgid "Reconnect in %d seconds."
 msgstr "Pakartotinis prisijungimas po %d sekundžių."
@@ -7574,36 +7757,45 @@ msgstr "Laukiu jungties..."
 #. get the file size
 #. get a handle to the stream
 #. get a handle to the stream
+#: SendStatus.pas:509
+#: SendStatus.pas:573
+#: SendStatus.pas:722
 #: SendStatus.pas:471
 #: SendStatus.pas:535
 #: SendStatus.pas:684
 msgid "There was an error trying to read the file."
 msgstr "Bandant nuskaitytii bylą, įvyko klaida."
 
+#: SendStatus.pas:778
 #: SendStatus.pas:840
 msgid "Your file transfer was refused to %s"
 msgstr "Jūsų bylos siuntimas gavėjui %s buvo nutrauktas"
 
 #. they refused
+#: SendStatus.pas:860
 #: SendStatus.pas:919
 msgid "The recipient (%s) refused your file: %s"
 msgstr "Gavėjas (%s) atsisakė priimti jūsų bylą: %s"
 
 #. error
+#: SendStatus.pas:883
 #: SendStatus.pas:941
 msgid "The stream was not activated for file: %s"
 msgstr "Bylai %s nebuvo aktyvuotas ryšio kanalas"
 
 #. our thread completed.
+#: SendStatus.pas:899
 #: SendStatus.pas:957
 msgid "There was an error trying to upload the file to your web host."
 msgstr "Bandant padėti bylą į jūsų interneto mazgą, įvyko klaida."
 
+#: SendStatus.pas:920
 #: SendStatus.pas:978
 msgid "Send failed."
 msgstr "Siuntimas nepavyko."
 
 #. PChar is in lparam
+#: SendStatus.pas:944
 #: SendStatus.pas:1002
 msgid "Connected."
 msgstr "Prisijungęs(-usi)."
@@ -7621,21 +7813,21 @@ msgstr "Sertiikato spaudas:"
 msgid "Remove Registration?"
 msgstr "Pašalinti registraciją?"
 
-#: Transports.pas:107
-#: Transports.pas:150
+#: Transports.pas:105
+#: Transports.pas:151
 msgid "The transport could not be reached. Your request timed out."
 msgstr "Transportas nepasiekiamas. Jūsų užklausai skirtas laikas baigėsi."
 
-#: Transports.pas:112
-#: Transports.pas:155
+#: Transports.pas:111
+#: Transports.pas:154
 msgid "There was an error processing your request."
 msgstr "Apdorojant jūsų užklausą, įvyko klaida."
 
-#: Transports.pas:126
+#: Transports.pas:127
 msgid "You are not registered with this transport."
 msgstr "Jūs nesate įsiregistravę šiame transporte."
 
-#: Transports.pas:159
+#: Transports.pas:157
 msgid "Your request was successful."
 msgstr "Jūsų užklausa apdorota sėkmingai."
 
@@ -7645,98 +7837,98 @@ msgid "No vCard response was ever returned."
 msgstr "vKortelės atsakymas nebuvo gautas."
 
 #. this is a cancel notice
-#: xdata.pas:122
+#: xdata.pas:146
 msgid "Cancelled"
 msgstr "Atšaukiau"
 
-#: xdata.pas:123
+#: xdata.pas:147
 msgid "%s cancelled your form."
 msgstr "%s atšaukė jūsų formą."
 
 #. Get instructions and title
-#: xdata.pas:135
+#: xdata.pas:159
 msgid "Form from %s"
 msgstr "Forma iš %s"
 
 #. do something
-#: xdata.pas:210
-#: xdata.pas:308
+#: xdata.pas:235
+#: xdata.pas:333
 msgid "You are currently disconnected. Please reconnect before responding to this form."
 msgstr "Šiuo metu jūs atsijungęs(-usi). Prisijunkite prieš grąžindami formą."
 
-#: xdata.pas:239
+#: xdata.pas:264
 msgid "All required fields must be filled out"
 msgstr "Visi privalomi laukai turi būti užpildyti."
 
 #. Make sure the contact is online
-#: XferManager.pas:180
+#: XferManager.pas:181
 msgid "The Contact must be online before you can send a file."
 msgstr "Norint siųsti bylą, turi būti pasiekiamas jos gavėjas."
 
-#: XferManager.pas:277
-#: XferManager.pas:344
+#: XferManager.pas:278
+#: XferManager.pas:345
 msgid "%s is sending you a file."
 msgstr "%s siunčia jums bylą."
 
 #. check to see if we should disconnect current xfers
-#: XferManager.pas:473
+#: XferManager.pas:474
 msgid "Your new file transfer port will not take affect until all current trasfers are stopped. Stop existing transfers?"
 msgstr "Jūsų naujasis vylų siuntimo portas įsigalios tik sustabdžius visus vykstančius siuntimus. Ar juos sustabdyti?"
 
 #. set the defaults for the pref controller
-#: /src/exodus/jopl/PrefController.pas:643
+#: /src/exodus/jopl/PrefController.pas:607
 msgid "Away as a result of idle."
 msgstr "Seniai nieko neveikiu."
 
-#: /src/exodus/jopl/PrefController.pas:645
+#: /src/exodus/jopl/PrefController.pas:609
 msgid "XA as a result of idle."
 msgstr "Labai seniai nieko neveikiu."
 
-#: /src/exodus/jopl/PrefController.pas:1266
+#: /src/exodus/jopl/PrefController.pas:1236
 msgid "Free for Chat"
 msgstr "Noriu kalbėtis"
 
-#: /src/exodus/jopl/PrefController.pas:1284
+#: /src/exodus/jopl/PrefController.pas:1254
 msgid "Lunch"
 msgstr "Pietauju"
 
-#: /src/exodus/jopl/PrefController.pas:1293
+#: /src/exodus/jopl/PrefController.pas:1263
 msgid "Meeting"
 msgstr "Susitikime"
 
-#: /src/exodus/jopl/PrefController.pas:1302
+#: /src/exodus/jopl/PrefController.pas:1272
 msgid "Bank"
 msgstr "Banke"
 
-#: /src/exodus/jopl/PrefController.pas:1311
+#: /src/exodus/jopl/PrefController.pas:1281
 msgid "Extended Away"
 msgstr "Nėra ilgam"
 
-#: /src/exodus/jopl/PrefController.pas:1320
+#: /src/exodus/jopl/PrefController.pas:1290
 msgid "Gone Home"
 msgstr "Išėjau namo"
 
-#: /src/exodus/jopl/PrefController.pas:1329
+#: /src/exodus/jopl/PrefController.pas:1299
 msgid "Gone to Work"
 msgstr "Išėjau darban"
 
-#: /src/exodus/jopl/PrefController.pas:1338
+#: /src/exodus/jopl/PrefController.pas:1308
 msgid "Sleeping"
 msgstr "Miegu"
 
-#: /src/exodus/jopl/PrefController.pas:1347
+#: /src/exodus/jopl/PrefController.pas:1317
 msgid "Do Not disturb"
 msgstr "Netrukdyti"
 
-#: /src/exodus/jopl/PrefController.pas:1356
+#: /src/exodus/jopl/PrefController.pas:1326
 msgid "Busy"
 msgstr "Užimtas"
 
-#: /src/exodus/jopl/PrefController.pas:1365
+#: /src/exodus/jopl/PrefController.pas:1335
 msgid "Working"
 msgstr "Dirbu"
 
-#: /src/exodus/jopl/PrefController.pas:1374
+#: /src/exodus/jopl/PrefController.pas:1344
 msgid "Mad"
 msgstr "Įsiutęs"
 
@@ -8142,13 +8334,23 @@ msgstr "Kurti žurnalo įrašus tik žinutėms, kurias atsiunčia mano adresinė
 msgid "Message Options"
 msgstr "Žinučių parametrai"
 
+#. frmPrefMsg..chkQueueDNDChats..Caption
+#: prefs/PrefMsg.dfm:186
+msgid "Queue chat messages when in DND mode."
+msgstr "Esant „Netrukdyti“ būsenoje, pokalbių žinutes dėti į eilę"
+
+#. frmPrefMsg..chkQueueOffline..Caption
+#: prefs/PrefMsg.dfm:194
+msgid "Queue all offline messages (even chats)"
+msgstr "Atsijungus pašnekovui, visas žinutes (net tiesioginius pokalbius) dėti į eilę"
+
 #. frmPrefMsg..OpenDialog1..Filter
-#: prefs/PrefMsg.dfm:182
+#: prefs/PrefMsg.dfm:198
 msgid "XML|*.xml"
 msgstr "XML|*.xml"
 
 #. frmPrefMsg..OpenDialog1..Title
-#: prefs/PrefMsg.dfm:184
+#: prefs/PrefMsg.dfm:200
 msgid "Select a spool file"
 msgstr "Išsirinkite kaupo bylą"
 
