@@ -40,6 +40,7 @@ type
         minimized: boolean;
         testaa: boolean;
         ssl_ok: boolean;
+        test_menu: boolean;
     end;
 
 procedure PlayXMPPActions();
@@ -203,24 +204,25 @@ begin
 
     with TGetOpts.Create(nil) do begin
         try
-            // -d          : debug
-            // -m          : minimized
-            // -v          : invisible
-            // -?          : help
-            // -0          : DLLRegisterServer
-            // -x [yes|no] : expanded
-            // -j [jid]    : jid
-            // -p [pass]   : password
-            // -r [res]    : resource
-            // -i [pri]    : priority
-            // -f [prof]   : profile name
-            // -c [file]   : config file name
-            // -s [status] : presence status
-            // -w [show]   : presence show
-            Options  := 'dmva?0xjprifcswo';
-            OptFlags := '------::::::::::';
-            ReqFlags := '                ';
-            LongOpts := 'debug,minimized,invisible,aatest,help,register,expanded,jid,password,resource,priority,profile,config,status,show,xmpp';
+            // -d           : debug
+            // -m           : minimized
+            // -v           : invisible
+            // -?           : help
+            // -0           : DLLRegisterServer
+            // -x [yes|no]  : expanded
+            // -j [jid]     : jid
+            // -p [pass]    : password
+            // -r [res]     : resource
+            // -i [pri]     : priority
+            // -f [prof]    : profile name
+            // -c [file]    : config file name
+            // -s [status]  : presence status
+            // -w [show]    : presence show
+            // -t           : show test menu
+            Options  := 'dmva?0xjprifcswot';
+            OptFlags := '------::::::::::-';
+            ReqFlags := '                 ';
+            LongOpts := 'debug,minimized,invisible,aatest,help,register,expanded,jid,password,resource,priority,profile,config,status,show,xmpp,testmenu';
             while GetOpt do begin
                 case Ord(OptChar) of
                     0: raise EConfigException.Create(format(_(sUnkArg), [CmdLine()]));
@@ -240,6 +242,7 @@ begin
                     Ord('w'): cli_show := OptArg;
                     Ord('s'): cli_status := OptArg;
                     Ord('o'): xmpp_file := OptArg;
+                    Ord('t'): ExStartup.test_menu := true;
                 end;
             end;
         finally
@@ -495,7 +498,6 @@ begin
     ExStartup.priority := cli_priority;
     ExStartup.show := cli_show;
     ExStartup.status := cli_status;
-
     ExStartup.ssl_ok := checkSSL();
 
     Result := true;

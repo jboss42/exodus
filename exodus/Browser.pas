@@ -477,6 +477,7 @@ begin
     mLast.Enabled := b.hasFeature(XMLNS_LAST);
     mSearch.Enabled := b.hasFeature(FEAT_SEARCH);
     mRegister.Enabled := b.hasFeature(FEAT_REGISTER);
+    mRunCommand.Enabled := b.hasFeature(XMLNS_COMMANDS);
 
     // various conference namespaces
     if (b.hasFeature(XMLNS_CONFERENCE)) then mJoinConf.Enabled := true

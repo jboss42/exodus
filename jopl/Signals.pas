@@ -124,7 +124,9 @@ type
         _my_event: String;
         _change_list: TObjectQueue;
     protected
-        invoking: boolean;
+        // invoking: boolean;
+        _invoking: integer;
+        
         // pointer to the disp that owns us
         Dispatcher: TSignalDispatcher;
         function addListener(event: string;
@@ -383,7 +385,7 @@ begin
 
     // return true if added now,
     // return false if added to the change list
-    if (invoking) then begin
+    if (_invoking > 0) then begin
         // add to change list
         co := TChangeListEvent.Create();
         co.l := l;
@@ -415,12 +417,12 @@ begin
     idx := Self.IndexOfObject(l);
     if (idx < 0) then exit;
 
-    if (not invoking) then begin
+    if (_invoking = 0) then begin
         l.Free();
         Self.Delete(idx);
         Result := true;
     end
-    else if (invoking) then begin
+    else if (_invoking > 0) then begin
         co := TChangeListEvent.Create();
         co.l := l;
         co.op := cl_delete;
@@ -439,7 +441,7 @@ begin
     // dispatch this to all interested listeners
     cmp := Lowercase(Trim(event));
 
-    invoking := true;
+    inc(_invoking);
     for i := 0 to Self.Count - 1 do begin
         e := Strings[i];
         l := TSignalListener(Objects[i]);
@@ -467,9 +469,10 @@ begin
             end;
         end;
     end;
-    invoking := false;
 
-    if change_list.Count > 0 then
+    dec(_invoking);
+
+    if (change_list.Count > 0) and (_invoking = 0) then
         Self.processChangeList();
 end;
 
@@ -568,7 +571,7 @@ begin
     }
     fired := false;
 
-    invoking := true;
+    inc(_invoking);
     for i := 0 to Self.Count - 1 do begin
         pl := TPacketListener(Self.Objects[i]);
         xp := pl.XPLite;
@@ -583,14 +586,14 @@ begin
             end;
         end;
     end;
-    invoking := false;
+    dec(_invoking);
 
     // if we didn't fire, and we have a signal to call next, do so.
     if ((fired = false) and (_next <> '')) then begin
         Dispatcher.DispatchSignal(_next, tag);
     end;
 
-    if change_list.Count > 0 then
+    if (change_list.Count > 0) and (_invoking = 0) then
         Self.processChangeList();
 
 end;
@@ -616,7 +619,7 @@ var
     i: integer;
 begin
     //
-    invoking := true;
+    inc(_invoking);
     for i := 0 to Self.Count - 1 do begin
         sl := TStringListener(Self.Objects[i]);
         se := TDataStringEvent(sl.Callback);
@@ -627,9 +630,9 @@ begin
                 Dispatcher.handleException(Self, e, sl, event, tag);
         end;
     end;
-    invoking := false;
+    dec(_invoking);
 
-    if change_list.Count > 0 then
+    if (change_list.Count > 0) and (_invoking = 0) then
         Self.processChangeList();
 end;
 

@@ -776,6 +776,9 @@ begin
         _auto_away_interval := 10;
     timAutoAway.Interval := _auto_away_interval * 1000;
 
+    // show the test menu if cmd line args say so.
+    Test1.Visible := ExStartup.test_menu;
+
     InitializeEmoticonLists();
 
     with MainSession.Prefs do begin
@@ -812,7 +815,6 @@ begin
         mnuBrowser.Visible := getBool('brand_browser');
         if (not mnuBrowser.Visible) then
             mnuBrowser.ShortCut := 0;
-
     end;
 
     // Make sure presence menus have unified captions
@@ -2669,10 +2671,12 @@ var
 var
     hex: string;
 }
+{
 var
     r: TXMLTag;
     x: Widestring;
     p: TXMLTagParser;
+}
 begin
     // Test something..
     // LoadPlugin('RosterClean.ExodusRosterClean');
@@ -2717,6 +2721,7 @@ begin
     //hex := MD5File('d:\temp\64ptn_en.pdf');
     //ShowMessage(hex);
 
+    {
     x := '<iq type="result" from="responder@domain" to="requester@domain" id="exec1" xml:lang="en-us">';
     x := x + '<command xmlns="http://jabber.org/protocol/commands" sessionid="list:20020923T213616Z-700" node="list" status="completed">';
     x := x + '<x xmlns="jabber:x:data" type="result"> <title>Available Services</title> <reported> <field var="service" label="Service"/> <field var="runlevel-1" label="Single-User mode"/> ';
@@ -2735,6 +2740,9 @@ begin
     r := p.popTag();
 
     StartCommandWizard('', r);
+    }
+
+    StartCommandWizard('');
 
     // Cause an AV
     // PInteger(nil)^ := 0;
