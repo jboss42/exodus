@@ -249,6 +249,10 @@ begin
         Key := 0;
     end
 
+    // handle Ctrl-W to close tab
+    else if ((Key = Ord('W')) and (ssCtrl in Shift)) then
+        Self.Close()
+
     // handle Ctrl-ENTER and ENTER to send msgs
     else if (Key = VK_RETURN) then begin
         if ((Shift = []) and (not _embed_returns)) then begin
