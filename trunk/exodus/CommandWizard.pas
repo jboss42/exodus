@@ -67,7 +67,7 @@ type
     { Public declarations }
     jid: Widestring;
     state: TCommandWizardState;
-    
+
     procedure RunState();
   end;
 
@@ -75,7 +75,7 @@ type
 var
   frmCommandWizard: TfrmCommandWizard;
 
-procedure StartCommandWizard(jid: Widestring);
+procedure StartCommandWizard(jid: Widestring; r: TXMLTag);
 
 {---------------------------------------}
 {---------------------------------------}
@@ -85,18 +85,25 @@ implementation
 {$R *.dfm}
 
 uses
-    fGeneric, xdata, JabberUtils, 
+    fResults, fGeneric, xdata, JabberUtils,
     GnuGetText, JabberConst, Session, Entity, EntityCache;
 
 {---------------------------------------}
-procedure StartCommandWizard(jid: Widestring);
+procedure StartCommandWizard(jid: Widestring; r: TXMLTag);
 var
     f: TfrmCommandWizard;
 begin
     Application.CreateForm(TfrmCommandWizard, f);
     jEntityCache.getByFeature(XMLNS_COMMANDS, f.txtJid.Items);
 
-    if (jid = '') then begin
+    if (r <> nil) then begin
+        f.jid := 'responder@domain';
+        f.state := cwzResults;
+        f.execCallback('xml', r);
+        f.show();
+        exit;
+    end
+    else if (jid = '') then begin
         f.jid := '';
         f.state := cwzJid;
         f.txtJid.Text := '';
@@ -270,9 +277,12 @@ begin
 
     if (c.GetAttribute('status') = 'completed') then begin
         // we're done..
-        x := c.QueryXPTag('/x[@xmlns="jabber:x:data"][@type="result"]');
+        x := c.QueryXPTag('/command/x[@xmlns="jabber:x:data"][@type="result"]');
         if (x <> nil) then begin
-            // process x-data results 
+            // process x-data results
+            buildXDataResults(x, tbsResults);
+            Tabs.ActivePage := tbsResults;
+            exit;
         end;
     end
     else begin

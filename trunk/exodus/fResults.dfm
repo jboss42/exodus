@@ -24,5 +24,6 @@ object frameResults: TframeResults
     RowSelect = True
     TabOrder = 0
     ViewStyle = vsReport
+    OnData = lstResultsData
   end
 end
