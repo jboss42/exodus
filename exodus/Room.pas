@@ -674,9 +674,8 @@ begin
         bm.jid := TJabberID.Create(Self.jid);
         bm.bmType := 'conference';
         bm.nick := myNick;
-        bm.Name := bm_name;
-        MainSession.roster.Bookmarks.AddObject(bm.jid.full, bm);
-        MainSession.roster.SaveBookmarks();
+        bm.bmName := bm_name;
+        MainSession.roster.AddBookmark(bm.jid.full, bm);
         end;
 end;
 

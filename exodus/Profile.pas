@@ -105,6 +105,7 @@ type
     Panel1: TPanel;
     Button4: TButton;
     Splitter1: TSplitter;
+    aniProfile: TAnimate;
     procedure FormCreate(Sender: TObject);
     procedure TreeView1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -153,9 +154,9 @@ begin
         GrpListBox.Items.Assign(MainSession.roster.GrpList);
         ResListBox.Items.Clear;
         optSubscrip.ItemIndex := 3;
+        txtJID.Text := tmp_jid.jid;
         ritem := MainSession.Roster.Find(tmp_jid.jid);
         if (ritem <> nil) then begin
-            txtJID.Text := tmp_jid.jid;
             txtNick.Text := ritem.nickname;
             if ritem.subscription = 'from' then
                 optSubscrip.ItemIndex := 1
@@ -190,6 +191,8 @@ begin
         end;
 
     f.Show;
+    f.aniProfile.Visible := true;
+    f.aniProfile.Active := true;
     Result := f;
 end;
 
@@ -199,6 +202,10 @@ var
     vcard: TXMLVCard;
 begin
     // callback for vcard info
+    aniProfile.Visible := false;
+    aniProfile.Active := false;
+
+    if (event <> 'xml') then exit;
     vcard := TXMLVCard.Create;
     vcard.parse(tag);
 

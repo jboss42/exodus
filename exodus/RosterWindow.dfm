@@ -109,43 +109,26 @@ object frmRosterWindow: TfrmRosterWindow
     BevelOuter = bvNone
     BorderWidth = 2
     TabOrder = 2
-    object Panel2: TPanel
+    object imgStatus: TImage
       Left = 2
       Top = 2
-      Width = 88
+      Width = 18
       Height = 20
       Align = alLeft
-      Alignment = taLeftJustify
-      BevelOuter = bvNone
-      BorderWidth = 2
-      Caption = 'My Status:'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
-      TabOrder = 0
-      OnDblClick = Panel2DblClick
-      object imgStatus: TImage
-        Left = 64
-        Top = 1
-        Width = 18
-        Height = 18
-        Transparent = True
-        OnClick = pnlStatusClick
-      end
+      Transparent = True
+      OnClick = pnlStatusClick
     end
     object pnlStatus: TPanel
-      Left = 90
+      Left = 20
       Top = 2
-      Width = 105
+      Width = 175
       Height = 20
       Align = alClient
       Alignment = taLeftJustify
       BevelOuter = bvNone
+      BorderWidth = 2
       Caption = 'Offline'
-      TabOrder = 1
+      TabOrder = 0
       OnClick = pnlStatusClick
     end
   end

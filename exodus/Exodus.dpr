@@ -59,7 +59,8 @@ uses
   XMLStream in '..\jopl\XMLStream.pas',
   XMLTag in '..\jopl\XMLTag.pas',
   XMLUtils in '..\jopl\XMLUtils.pas',
-  GUIFactory in 'GUIFactory.pas';
+  GUIFactory in 'GUIFactory.pas',
+  Bookmark in 'Bookmark.pas' {frmBookmark};
 
 {$R *.RES}
 
@@ -71,6 +72,7 @@ begin
   Application.CreateForm(TfrmJabber, frmJabber);
   Application.CreateForm(TfrmRosterWindow, frmRosterWindow);
   Application.CreateForm(TfrmDebug, frmDebug);
+  Application.CreateForm(TfrmBookmark, frmBookmark);
   Application.ShowMainForm := false;
   frmRosterWindow.DockRoster;
   frmRosterWindow.Show;

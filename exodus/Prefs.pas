@@ -121,6 +121,7 @@ type
     imgBlockList: TImage;
     lblBlockList: TLabel;
     chkSound: TCheckBox;
+    chkInlineStatus: TCheckBox;
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -203,6 +204,7 @@ begin
         chkOnlineOnly.Checked := getBool('roster_only_online');
         chkShowUnsubs.Checked := getBool('roster_show_unsub');
         chkOfflineGroup.Checked := getBool('roster_offline_group');
+        chkInlineStatus.Checked := getBool('inline_status');
         if (getBool('roster_chat')) then 
             optDblClick.ItemIndex := 0
         else
@@ -310,6 +312,7 @@ begin
         setBool('roster_only_online', chkOnlineOnly.Checked);
         setBool('roster_show_unsub', chkShowUnsubs.Checked);
         setBool('roster_offline_group', chkOfflineGroup.Checked);
+        setBool('inline_status', chkInlineStatus.Checked);
         setBool('roster_chat', (optDBlClick.ItemIndex = 0));
 
         // S10n prefs

@@ -17,7 +17,7 @@ object frmPrefs: TfrmPrefs
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 324
+    Top = 321
     Width = 396
     Height = 37
     Align = alBottom
@@ -39,7 +39,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 324
+    Height = 321
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1351,11 +1351,11 @@ object frmPrefs: TfrmPrefs
     Left = 89
     Top = 0
     Width = 307
-    Height = 324
-    ActivePage = tbsBlockList
+    Height = 321
+    ActivePage = tbsRoster
     Align = alClient
     Style = tsFlatButtons
-    TabIndex = 8
+    TabIndex = 0
     TabOrder = 2
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1403,7 +1403,7 @@ object frmPrefs: TfrmPrefs
       end
       object optDblClick: TRadioGroup
         Left = 8
-        Top = 104
+        Top = 120
         Width = 161
         Height = 73
         Caption = 'Double Click Action '
@@ -1412,6 +1412,14 @@ object frmPrefs: TfrmPrefs
           'One to One Chat'
           'Normal Message')
         TabOrder = 4
+      end
+      object chkInlineStatus: TCheckBox
+        Left = 8
+        Top = 96
+        Width = 241
+        Height = 17
+        Caption = 'Show status in the roster: Joe <Meeting>'
+        TabOrder = 5
       end
     end
     object tbsSubscriptions: TTabSheet
@@ -2074,7 +2082,7 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 46
         Width = 299
-        Height = 247
+        Height = 244
         Align = alClient
         TabOrder = 1
       end

@@ -85,9 +85,14 @@ begin
         txtMsg.Lines.Assign(e.Data);
 
         if eType = evt_Invite then begin
+            // Change button captions for TC Invites
             frameButtons1.btnOK.Caption := 'Accept';
             frameButtons1.btnCancel.Caption := 'Decline';
-            end;
+            end
+        else
+            // normally, we don't want a REPLY button
+            frameButtons1.btnOK.Visible := (eType = evt_Message);
+
         ShowDefault;
         end;
 end;

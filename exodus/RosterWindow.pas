@@ -40,8 +40,6 @@ type
     StatBar: TStatusBar;
     popStatus: TPopupMenu;
     pnlShow: TPanel;
-    Panel2: TPanel;
-    imgStatus: TImage;
     pnlStatus: TPanel;
     presChat: TMenuItem;
     presAvailable: TMenuItem;
@@ -68,6 +66,7 @@ type
     popActions: TPopupMenu;
     popAddContact: TMenuItem;
     popAddGroup: TMenuItem;
+    imgStatus: TImage;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -112,10 +111,14 @@ type
     _bookmark: TTreeNode;
     _hint_text : String;
 
+    _cur_ritem: TJabberRosterItem;
+    _cur_bm: TJabberBookmark;
+
 
     procedure RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
     procedure PresCallback(event: string; tag: TXMLTag; p: TJabberPres);
     procedure SessionCallback(event: string; tag: TXMLTag);
+    function getNodeType: integer;
     procedure ClearNodes;
     procedure RenderNode(ritem: TJabberRosterItem; p: TJabberPres);
     procedure RenderBookmark(bm: TJabberBookmark);
@@ -158,9 +161,14 @@ const
     ico_down = 27;
     ico_right = 28;
 
+    node_none = 0;
+    node_ritem = 1;
+    node_bm = 2;
+
 
 implementation
 uses
+    Bookmark,
     S10n,
     Transfer, 
     MsgRecv,
@@ -255,7 +263,9 @@ begin
         end
     else if event = '/session/presence' then begin
         ShowPresence(MainSession.show);
-        end;
+        end
+    else if event = '/session/prefs' then
+        Redraw();
 end;
 
 {---------------------------------------}
@@ -319,7 +329,7 @@ begin
         end;
 
     // add this conference to the bookmark nodes
-    bm_node := treeRoster.Items.AddChild(_bookmark, bm.Name);
+    bm_node := treeRoster.Items.AddChild(_bookmark, bm.bmName);
     bm_node.ImageIndex := 21;
     bm_node.SelectedIndex := bm_node.ImageIndex;
     bm_node.Data := bm;
@@ -354,6 +364,29 @@ begin
     _bookmark := nil;
 
     treeRoster.Items.EndUpdate;
+end;
+
+{---------------------------------------}
+function TfrmRosterWindow.getNodeType: integer;
+var
+    n: TTreeNode;
+begin
+    // return the type of node this is..
+    n := treeRoster.Selected;
+    Result := node_none;
+    _cur_ritem := nil;
+    _cur_bm := nil;
+
+    if (n = nil) then exit;
+
+    if (TObject(n.Data) is TJabberBookmark) then begin
+        Result := node_bm;
+        _cur_bm := TJabberBookmark(n.Data);
+        end
+    else if (TObject(n.Data) is TJabberRosterItem) then begin
+        Result := node_ritem;
+        _cur_ritem := TJabberRosterItem(n.Data);
+        end;
 end;
 
 {---------------------------------------}
@@ -461,9 +494,12 @@ var
     node_list: TList;
     tmp_grps: TStringlist;
     show_online: boolean;
+    show_status: boolean;
 begin
     // The Data parameter contains a list of nodes for this item
     show_online := MainSession.Prefs.getBool('roster_only_online');
+    show_status := MainSession.Prefs.getBool('inline_status');
+
     if ((show_online) and ((p = nil) or (p.PresType = 'unavailable'))) then begin
         RemoveItemNodes(ritem);
         exit;
@@ -535,6 +571,24 @@ begin
         if (ritem.ask = 'subscribe') then
             tmps := tmps + ' (Pending)';
 
+        if (show_status) then begin
+            if (p <> nil) then begin
+
+                if (p.Status <> '') then
+                    tmps := tmps + ': ' + p.Status
+                else begin
+                    if (p.Show = 'away') then tmps := tmps + ': Away'
+                    else if (p.Show = 'xa') then tmps := tmps + ': Ext. Away'
+                    else if (p.Show = 'dnd') then tmps := tmps + ': DND'
+                    else if (p.Show = 'chat') then tmps := tmps + ': Chatty'
+                    else tmps := tmps + ': Available';
+                    end;
+                end
+            else
+                tmps := tmps + ': Offline';
+            end;
+
+
         if cur_node = nil then begin
             // add a node for this person under this group
             cur_node := treeRoster.Items.AddChild(grp_node, tmps);
@@ -589,30 +643,22 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterDblClick(Sender: TObject);
-var
-    node: TTreeNode;
-    ri: TJabberRosterItem;
-    bm: TJabberBookmark;
 begin
     // Chat with this person
-    node := treeRoster.Selected;
-    if node = nil then exit;
-    if node.Data = nil then exit;
-
-    if (TObject(node.Data) is TJabberRosterItem) then begin
+    case getNodeType() of
+    node_ritem: begin
         // chat w/ this person
-        ri := TJabberRosterItem(node.Data);
         if (MainSession.Prefs.getBool(P_CHAT)) then
-            StartChat(ri.jid.jid, '', true)
+            StartChat(_cur_ritem.jid.jid, '', true)
         else
-            StartMsg(ri.jid.jid);
-        end
-    else if (TObject(node.Data) is TJabberBookmark) then begin
-        // enter this conference
-        bm := TJabberBookmark(node.Data);
-        if bm.bmType = 'conference' then
-            StartRoom(bm.jid.jid, MainSession.Username);
+            StartMsg(_cur_ritem.jid.jid);
         end;
+    node_bm: begin
+        // enter this conference
+        if _cur_bm.bmType = 'conference' then
+            StartRoom(_cur_bm.jid.jid, MainSession.Username);
+        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -637,7 +683,9 @@ begin
     if ri = nil then exit;
 
     p := MainSession.ppdb.FindPres(ri.JID.jid, '');
-    if P = nil then
+    if MainSession.Prefs.getBool('inline_status') then
+        _hint_text := Node.Text
+    else if P = nil then
         _hint_text := Node.Text + ': Offline'
     else
         _hint_text := Node.Text + ': ' + p.Status;
@@ -797,30 +845,27 @@ end;
 procedure TfrmRosterWindow.popVersionClick(Sender: TObject);
 var
     iq: TJabberIQ;
-    n: TTreeNode;
-    ritem: TJabberRosterItem;
     p: TJabberPres;
 begin
     // send a client info request
-    n := treeRoster.Selected;
-    ritem := TJabberRosterItem(n.Data);
-    if ritem <> nil then begin
+    if (getNodeType() <> node_ritem) then exit;
+    if (_cur_ritem = nil) then exit;
+
+    p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
+    if p = nil then begin
+        // this person isn't online.
+        end
+    else begin
         iq := TJabberIQ.Create(MainSession, MainSession.generateID, frmJabber.CTCPCallback);
         iq.iqType := 'get';
-        p := MainSession.ppdb.FindPres(ritem.jid.jid, '');
-        if p = nil then begin
-            // this person isn't online.
-            end
-        else begin
-            iq.toJID := p.fromJID.full;
-            if Sender = popVersion then
-                iq.Namespace := XMLNS_VERSION
-            else if Sender = popTime then
-                iq.Namespace := XMLNS_TIME
-            else if Sender = popLast then
-                iq.Namespace := XMLNS_LAST;
-            iq.Send;
-            end;
+        iq.toJID := p.fromJID.full;
+        if Sender = popVersion then
+            iq.Namespace := XMLNS_VERSION
+        else if Sender = popTime then
+            iq.Namespace := XMLNS_TIME
+        else if Sender = popLast then
+            iq.Namespace := XMLNS_LAST;
+        iq.Send;
         end;
 end;
 
@@ -880,28 +925,38 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popPropertiesClick(Sender: TObject);
-var
-    n: TTreeNode;
-    ritem: TJabberRosterItem;
 begin
     // Show properties for this roster item
-    n := treeRoster.Selected;
-    ritem := TJabberRosterItem(n.Data);
-    if ritem <> nil then
-        ShowProfile(ritem.jid.jid);
+    case getNodeType() of
+    node_ritem: begin
+        if (_cur_ritem <> nil) then
+            ShowProfile(_cur_ritem.jid.jid);
+        end;
+    node_bm: begin
+        if (_cur_bm <> nil) then
+            ShowBookmark(_cur_bm.jid.full);
+        end;
+    end;
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popRemoveClick(Sender: TObject);
-var
-    n: TTreeNode;
-    ritem: TJabberRosterItem;
 begin
     // Remove this roster item.
-    n := treeRoster.Selected;
-    ritem := TJabberRosterItem(n.Data);
-    if ritem <> nil then
-        RemoveRosterItem(ritem.jid.jid);
+    case getNodeType() of
+    node_bm: begin
+        // remove a bookmark
+        if (MessageDlg('Remove this bookmark?', mtConfirmation,
+            [mbYes, mbNo], 0) = mrNo) then exit;
+        MainSession.roster.RemoveBookmark(_cur_bm.jid.full);
+        treeRoster.Selected.Free;
+        end;
+    node_ritem: begin
+        // remove a roster item
+        if _cur_ritem <> nil then
+            RemoveRosterItem(_cur_ritem.jid.jid);
+        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -962,6 +1017,7 @@ begin
         // show the actions popup when no node is hit
         e := false;
         treeRoster.PopupMenu := popActions;
+        popProperties.Enabled := false;
         end
     else begin
         // show the roster menu when a node is hit
@@ -976,12 +1032,13 @@ begin
             end;
         popChat.Enabled := e;
         popMsg.Enabled := e;
+        popProperties.Enabled := true;
         end;
 
     popSendFile.Enabled := o;
+    popPresence.Enabled := e;
     popClientInfo.Enabled := e;
     popHistory.Enabled := e;
-    popProperties.Enabled := e;
 end;
 
 {---------------------------------------}

@@ -1,7 +1,7 @@
 object frmProfile: TfrmProfile
-  Left = 243
-  Top = 253
-  Width = 438
+  Left = 275
+  Top = 204
+  Width = 459
   Height = 279
   Caption = 'Contact Properties'
   Color = clBtnFace
@@ -11,6 +11,7 @@ object frmProfile: TfrmProfile
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
@@ -25,7 +26,7 @@ object frmProfile: TfrmProfile
   object PageControl1: TPageControl
     Left = 124
     Top = 0
-    Width = 296
+    Width = 317
     Height = 211
     ActivePage = TabSheet1
     Align = alLeft
@@ -102,7 +103,6 @@ object frmProfile: TfrmProfile
         Height = 21
         ReadOnly = True
         TabOrder = 0
-        Text = 'txtJID'
       end
       object txtNick: TEdit
         Left = 56
@@ -110,7 +110,6 @@ object frmProfile: TfrmProfile
         Width = 185
         Height = 21
         TabOrder = 1
-        Text = 'Edit1'
       end
       object optSubscrip: TRadioGroup
         Left = 8
@@ -165,6 +164,16 @@ object frmProfile: TfrmProfile
         ReadOnly = True
         TabOrder = 6
       end
+      object aniProfile: TAnimate
+        Left = 248
+        Top = 24
+        Width = 16
+        Height = 16
+        Active = False
+        CommonAVI = aviFindFile
+        StopFrame = 8
+        Visible = False
+      end
     end
     object TabSheet7: TTabSheet
       Caption = 'TabSheet7'
@@ -173,7 +182,7 @@ object frmProfile: TfrmProfile
         Left = 0
         Top = 25
         Width = 161
-        Height = 157
+        Height = 155
         Align = alLeft
         ItemHeight = 13
         TabOrder = 0
@@ -197,7 +206,7 @@ object frmProfile: TfrmProfile
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 288
+        Width = 309
         Height = 25
         Align = alTop
         Alignment = taLeftJustify
@@ -218,12 +227,12 @@ object frmProfile: TfrmProfile
       Caption = 'Groups'
       ImageIndex = 1
       DesignSize = (
-        288
+        309
         180)
       object GrpListBox: TCheckListBox
         Left = 8
         Top = 8
-        Width = 278
+        Width = 299
         Height = 131
         Anchors = [akLeft, akTop, akRight, akBottom]
         ItemHeight = 13
@@ -232,13 +241,13 @@ object frmProfile: TfrmProfile
       object txtNewGrp: TEdit
         Left = 8
         Top = 149
-        Width = 190
+        Width = 211
         Height = 21
         Anchors = [akLeft, akRight, akBottom]
         TabOrder = 1
       end
       object Button1: TButton
-        Left = 203
+        Left = 224
         Top = 147
         Width = 75
         Height = 25
@@ -1116,16 +1125,16 @@ object frmProfile: TfrmProfile
   inline frameButtons1: TframeButtons
     Left = 0
     Top = 211
-    Width = 430
+    Width = 451
     Height = 34
     Align = alBottom
     AutoScroll = False
     TabOrder = 1
     inherited Bevel1: TBevel
-      Width = 430
+      Width = 451
     end
     inherited Panel1: TPanel
-      Left = 270
+      Left = 291
       inherited btnOK: TButton
         Top = 1
         OnClick = frameButtons1btnOKClick
