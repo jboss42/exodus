@@ -5,6 +5,7 @@ use strict;
 $::D = 'f:/lang/Delphi7';
 $::TNT = "D:\\src\\exodus\\exodus\\components\\tntUnicode";
 $::ICQ = "\"D:\\src\\exodus\\exodus\\plugins\\ICQ-Import\\ICQ\\Component\"";
+$::NSIS = "\"D:\\Program Files\\NSIS\\makensis.exe\"";
 
 do "dopts.pl";
 
@@ -43,6 +44,9 @@ close OFF;
 close SEC;
 close DESC;
 close EN;
+
+chdir "..";
+e("$::NSIS /v1 exodus.nsi");
 
 print "SUCCESS!!!\n";
 
