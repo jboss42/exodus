@@ -98,7 +98,7 @@ type
         Tag: integer;
         Data: TObject;
         
-        constructor Create(jid: TJabberID);
+        constructor Create(jid: TJabberID; node: Widestring = '');
         destructor Destroy; override;
 
         procedure getInfo(js: TJabberSession);
@@ -135,7 +135,7 @@ uses
     EntityCache, JabberConst, XMLUtils;
 
 {---------------------------------------}
-constructor TJabberEntity.Create(jid: TJabberID);
+constructor TJabberEntity.Create(jid: TJabberID; node: Widestring);
 begin
     _parent := nil;
     _jid := jid;
@@ -147,6 +147,7 @@ begin
     _has_items := false;
     _items := TWidestringlist.Create();
     _timeout := 10;
+    _node := node;
 
     Tag := -1;
     Data := nil;
