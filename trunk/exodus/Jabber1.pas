@@ -30,7 +30,7 @@ uses
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
     Buttons, OleCtrls, AppEvnts, ToolWin,
-    IdHttp, TntComCtrls;
+    IdHttp, TntComCtrls, DdeMan;
 
 const
     UpdateKey = '001';
@@ -184,6 +184,7 @@ type
     mnuPlugins: TMenuItem;
     mnuRegistration: TMenuItem;
     N3: TMenuItem;
+    XMPPAction: TDdeServerConv;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -253,6 +254,7 @@ type
     procedure ShowBrandURL(Sender: TObject);
     procedure FormPaint(Sender: TObject);
     procedure mnuRegistrationClick(Sender: TObject);
+    procedure XMPPActionExecuteMacro(Sender: TObject; Msg: TStrings);
 
   private
     { Private declarations }
@@ -2837,6 +2839,32 @@ begin
     f := TfrmRegister.Create(Application);
     f.jid := MainSession.Server;
     f.Start();
+end;
+
+procedure TfrmExodus.XMPPActionExecuteMacro(Sender: TObject;
+  Msg: TStrings);
+var
+    c_node: TXMLTag;
+    c_jid: TJabberID;
+    m: string;
+begin
+    // Explorer is giving is something about a XMPP file..
+    if (Msg.Count = 0) then exit;
+    m := Msg[0];
+    if (m = 'ignore') then exit;
+    if (Pos('open', m) = 1) then begin
+        Delete(m, 1, 6);
+        Delete(m, Length(m), 1);
+        c_node := nil;
+        c_jid := nil;
+        ParseXMPPFile(m, c_node, c_jid);
+        if (MainSession.Active) then
+            // ignore c_node, c_jid
+            PlayXMPPActions()
+        else begin
+            // TODO: Handle xmpp connect's via DDE
+        end;
+    end;
 end;
 
 initialization
