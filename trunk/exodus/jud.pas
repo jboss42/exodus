@@ -127,6 +127,7 @@ function ItemCompare(Item1, Item2: Pointer): integer;
 implementation
 
 uses
+    ChatWin, MsgRecv, 
     Unicode, InputPassword, NodeItem, 
     JabberConst, Profile, Roster, Agents, JabberID, fGeneric,
     Session, ExUtils, XMLUtils, fTopLabel, Jabber1;
@@ -737,6 +738,7 @@ procedure TfrmJUD.popChatClick(Sender: TObject);
 begin
   inherited;
     // Chat with this person
+    StartChat(lstContacts.Selected.Caption, '', true);
 end;
 
 {---------------------------------------}
@@ -744,6 +746,7 @@ procedure TfrmJUD.popMessageClick(Sender: TObject);
 begin
   inherited;
     // Send a message to this person
+    StartMsg(lstContacts.Selected.Caption);
 end;
 
 {---------------------------------------}
