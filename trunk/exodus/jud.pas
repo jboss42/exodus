@@ -548,6 +548,7 @@ begin
         (cur_state = 'xitems')) then begin
         // stop waiting for the fields, or results
         cur_iq.Free();
+        cur_iq := nil;
         self.reset();
         end
 
@@ -697,8 +698,10 @@ end;
 procedure TfrmJUD.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   inherited;
-    if (cur_iq <> nil) then
+    if (cur_iq <> nil) then begin
         cur_iq.Free();
+        cur_iq := nil;
+        end;
 end;
 
 {---------------------------------------}
