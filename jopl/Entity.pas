@@ -76,6 +76,7 @@ type
         _cat_type: Widestring;
 
         _use_limit: boolean;
+        _timeout: integer;
 
         function _getFeature(i: integer): Widestring;
         function _getFeatureCount: integer;
@@ -101,7 +102,8 @@ type
 
         procedure getInfo(js: TJabberSession);
         procedure getItems(js: TJabberSession);
-        procedure walk(js: TJabberSession; items_limit: boolean = true);
+        procedure walk(js: TJabberSession; items_limit: boolean = true;
+            timeout: integer = 10);
         procedure refresh(js: TJabberSession);
 
         function ItemByJid(jid: Widestring): TJabberEntity;
@@ -230,7 +232,7 @@ end;
 procedure TJabberEntity._discoInfo(js: TJabberSession; callback: TSignalEvent);
 begin
     // Dispatch a disco#info query
-    _iq := TJabberIQ.Create(js, js.generateID(), callback, 10);
+    _iq := TJabberIQ.Create(js, js.generateID(), callback, _timeout);
     _iq.toJid := _jid.full;
     _iq.Namespace := XMLNS_DISCOINFO;
     _iq.iqType := 'get';
@@ -261,7 +263,7 @@ end;
 procedure TJabberEntity._discoItems(js: TJabberSession; callback: TSignalEvent);
 begin
     // Dispatch a disco#items query
-    _iq := TJabberIQ.Create(js, js.generateID(), callback, 10);
+    _iq := TJabberIQ.Create(js, js.generateID(), callback, _timeout);
     _iq.toJid := _jid.full;
     _iq.Namespace := XMLNS_DISCOITEMS;
     _iq.iqType := 'get';
@@ -300,7 +302,7 @@ begin
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Dispatch a disco#items query
-        _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, 10);
+        _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, _timeout);
         _iq.toJid := _jid.full;
         _iq.Namespace := XMLNS_BROWSE;
         _iq.iqType := 'get';
@@ -324,7 +326,7 @@ begin
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Dispatch a disco#items query
-        _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, 10);
+        _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, _timeout);
         _iq.toJid := _jid.full;
         _iq.Namespace := XMLNS_BROWSE;
         _iq.iqType := 'get';
@@ -337,10 +339,12 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberEntity.walk(js: TJabberSession; items_limit: boolean);
+procedure TJabberEntity.walk(js: TJabberSession; items_limit: boolean;
+    timeout: integer);
 begin
     // Get Items, then get info for each one.
     _use_limit := items_limit;
+    _timeout := timeout;
     _discoInfo(js, WalkCallback);
 end;
 
@@ -508,7 +512,7 @@ begin
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Dispatch a disco#items query
-        _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, 10);
+        _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, _timeout);
         _iq.toJid := _jid.full;
         _iq.Namespace := XMLNS_BROWSE;
         _iq.iqType := 'get';
@@ -599,7 +603,7 @@ begin
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Dispatch a disco#items query
-        _iq := TJabberIQ.Create(js, js.generateID(), Self.AgentsCallback, 10);
+        _iq := TJabberIQ.Create(js, js.generateID(), Self.AgentsCallback, _timeout);
         _iq.toJid := _jid.full;
         _iq.Namespace := XMLNS_AGENTS;
         _iq.iqType := 'get';
@@ -720,7 +724,13 @@ begin
     _iq := nil;
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
-        // BAH! agents didn't work either.. this thing sucks :)
+        // BAH! agents didn't work either.. this thing sucks,
+        // if our event is a timeout, let's retry the whole mess, with a longer
+        // timeout.
+        if ((event = 'timeout') and (_timeout < 60)) then begin
+            _timeout := _timeout * 2;
+            _discoInfo(js, WalkCallback);
+        end;
         exit;
     end;
 
