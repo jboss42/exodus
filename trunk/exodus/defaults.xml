@@ -55,6 +55,7 @@
     <brand_profile_socks_type>0</brand_profile_socks_type>
     <brand_profile_socks_user></brand_profile_socks_user>
     <brand_profile_ssl>false</brand_profile_ssl>
+    <brand_profile_srv>true</brand_profile_srv>
     <brand_profile_username></brand_profile_username>
     <brand_muc>1</brand_muc>
     <brand_ft>1</brand_ft>

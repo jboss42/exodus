@@ -211,14 +211,17 @@ begin
             end;
         end;
 
-        assert(cur >= 0);
-        assert(cur < Resolver.QueryResult.Count);
-        srv := TSRVRecord(Resolver.QueryResult[cur]);
-        ip := srv.IP;
-        port := srv.Port;
-
-        a_req := srv.IP;
-
+        if (cur = -1) then begin
+            // it worked, but we got 0 results back
+            raise EIdDNSResolverError.Create('No SRV records');
+        end
+        else begin
+            assert(cur < Resolver.QueryResult.Count);
+            srv := TSRVRecord(Resolver.QueryResult[cur]);
+            ip := srv.IP;
+            port := srv.Port;
+            a_req := srv.IP;
+        end;
     except
         on E: EIdDNSResolverError do begin
             ip := '';
