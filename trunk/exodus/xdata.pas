@@ -36,6 +36,7 @@ type
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormResize(Sender: TObject);
+    procedure Cancel();
   private
     { Private declarations }
     packet: string;
@@ -44,6 +45,7 @@ type
     _type: string;
     _thread: WideString;
     _title: WideString;
+    _responded: boolean;
 
     procedure getResponseTag(var m, x: TXMLTag);
   public
@@ -60,6 +62,8 @@ resourcestring
     sAllRequired = 'All required fields must be filled out';
     sFormFrom = 'Form from %s';
     sClose = 'Close';
+    sCancelled = 'Cancelled';
+    sCancelMsg = '%s cancelled your form.';
 
 implementation
 
@@ -84,7 +88,7 @@ end;
 {---------------------------------------}
 procedure TfrmXData.render(tag: TXMLTag);
 var
-    report, ins, x: TXMLTag;
+    ins, x: TXMLTag;
     flds: TXMLTagList;
     h, i: integer;
     frm: TframeGeneric;
@@ -108,22 +112,34 @@ begin
     x := tag.QueryXPTag('//x[@xmlns="jabber:x:data"]');
 
     _type := x.GetAttribute('type');
+    _responded := false;
 
-    ins := x.GetFirstTag('title');
-    if (ins <> nil) then begin
-        _title := ins.Data;
-        self.Caption := _title;
-    end;
-
-    ins := x.GetFirstTag('instructions');
-    if (ins <> nil) then begin
-        lblIns.Caption := ins.Data
-    end
-    else begin
-        lblIns.Visible := false;
-        lblIns.Height := 0;
+    if (_type = 'cancel') then begin
+        self.Caption := sCancelled;
+        lblIns.Caption := Format(sCancelMsg, [to_jid]);
         insBevel.Visible := false;
         insBevel.Height := 0;
+    end
+    else begin
+      ins := x.GetFirstTag('title');
+      if (ins <> nil) then begin
+          _title := ins.Data;
+          self.Caption := _title;
+      end
+      else
+        Self.Caption := Format(sFormFrom, [to_jid]);
+
+
+      ins := x.GetFirstTag('instructions');
+      if (ins <> nil) then begin
+          lblIns.Caption := ins.Data
+      end
+      else begin
+          lblIns.Visible := false;
+          lblIns.Height := 0;
+          insBevel.Visible := false;
+          insBevel.Height := 0;
+      end;
     end;
 
     flds := x.QueryTags('field');
@@ -153,11 +169,6 @@ begin
     if (h > Trunc(Screen.Height * 0.667)) then
         h := Trunc(Screen.Height * 0.667);
 
-    report := x.GetFirstTag('title');
-    if (report <> nil) then
-        Self.Caption := report.Data
-    else
-        Self.Caption := Format(sFormFrom, [to_jid]);
 
     insBevel.Visible := lblIns.Visible;
     if (lblIns.Visible) then begin
@@ -165,7 +176,7 @@ begin
         lblIns.Align := alTop;
     end;
 
-    if (_type = 'submit') then begin
+    if (_type <> 'form') then begin
         frameButtons1.btnOK.Visible := false;
         frameButtons1.btnCancel.Caption := sClose;
     end;
@@ -184,36 +195,39 @@ var
     fx, m, x: TXMLTag;
     valid: boolean;
 begin
-    // do something
-    getResponseTag(m, x);
+    if (_type = 'form') then begin
+      // do something
+      getResponseTag(m, x);
 
-    x.setAttribute('xmlns', XMLNS_XDATA);
-    x.setAttribute('type', 'submit');
-    if (_title <> '') then
-        x.AddBasicTag('title', _title);
+      x.setAttribute('xmlns', XMLNS_XDATA);
+      x.setAttribute('type', 'submit');
+      if (_title <> '') then
+          x.AddBasicTag('title', _title);
 
-    valid := true;
-    for i := 0 to Self.box.ControlCount - 1 do begin
-        c := Self.box.Controls[i];
-        if (c is TframeGeneric) then begin
-            f := TframeGeneric(c);
+      valid := true;
+      for i := 0 to Self.box.ControlCount - 1 do begin
+          c := Self.box.Controls[i];
+          if (c is TframeGeneric) then begin
+              f := TframeGeneric(c);
 
-            if (not f.isValid()) then
-                valid := false;
-            if (x <> nil) then begin
-                fx := f.getXML();
-                if (fx <> nil) then x.AddTag(fx);
-            end;
-        end;
+              if (not f.isValid()) then
+                  valid := false;
+              if (x <> nil) then begin
+                  fx := f.getXML();
+                  if (fx <> nil) then x.AddTag(fx);
+              end;
+          end;
+      end;
+
+      if (not valid) then begin
+          if (m <> nil) then m.Free();
+          MessageDlg(sAllRequired, mtError, [mbOK], 0);
+          exit;
+      end;
+      MainSession.SendTag(m);
+      _responded := true;
     end;
 
-    if (not valid) then begin
-        if (m <> nil) then m.Free();
-        MessageDlg(sAllRequired, mtError, [mbOK], 0);
-        exit;
-    end;
-
-    MainSession.SendTag(m);
     Self.Close();
 end;
 
@@ -246,12 +260,9 @@ end;
 
 {---------------------------------------}
 procedure TfrmXData.frameButtons1btnCancelClick(Sender: TObject);
-var
-    m, x: TXMLTag;
 begin
-    getResponseTag(m, x);
-    x.setAttribute('type', 'cancel');
-    MainSession.SendTag(m);
+    Cancel();
+
     Self.Close;
 end;
 
@@ -299,6 +310,8 @@ end;
 {---------------------------------------}
 procedure TfrmXData.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+    if (not _responded) then Cancel();
+
     Action := caFree;
     if (MainSession <> nil) then
         MainSession.Prefs.SavePosition(Self);
@@ -309,6 +322,18 @@ procedure TfrmXData.FormResize(Sender: TObject);
 begin
     lblIns.AutoSize := false;
     lblIns.AutoSize := true;
+end;
+
+procedure TfrmXData.Cancel();
+var
+    m, x: TXMLTag;
+begin
+    if (_type = 'form') then begin
+      getResponseTag(m, x);
+      x.setAttribute('type', 'cancel');
+      MainSession.SendTag(m);
+      _responded := true;
+    end;
 end;
 
 end.
