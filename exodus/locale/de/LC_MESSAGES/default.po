@@ -5861,7 +5861,7 @@ msgstr "Sie haben ungelesene Nachrichten. Lesen Sie alle Nachrichten bevor Sie d
 #. someone is coming online for the first time..
 #: Notify.pas:130
 msgid " is now online."
-msgstr "ist jetzt online."
+msgstr " ist jetzt online."
 
 #. someone is going offline
 #: Notify.pas:134
