@@ -176,7 +176,26 @@ begin
                 inc(j);
                 if (j < sl.Count) then begin
                     tmps := Trim(sl[j]);
-                    if (tmps <> '}') then begin
+                    if (RightStr(tmps, 1) = '{') then begin
+                        // new group
+                        cur_grp := LeftStr(tmps, length(tmps) - 1);
+                        repeat
+                            inc(j);
+                            if (j < sl.Count) then begin
+                                tmps := Trim(sl[j]);
+                                if (tmps <> '}') then begin
+                                    li := ListView1.Items.Add();
+                                    li.Caption := cur_grp;
+                                    li.SubItems.Add(tmps);
+                                    jid := tmps + '@' + _gjid;
+                                    li.SubItems.Add(jid);
+                                    li.Checked := true;
+                                end;
+                            end;
+                        until ((tmps = '}') or (j >= sl.Count));
+                        tmps := '';
+                    end
+                    else if (tmps <> '}') then begin
                         // this is a valid entry.
                         itms.Delimiter := ' ';
                         itms.DelimitedText := tmps;
