@@ -1401,24 +1401,28 @@ object frmAbout: TfrmAbout
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 231
+    Top = 236
     Width = 334
     Height = 34
     Align = alBottom
     AutoScroll = False
     TabOrder = 1
-    inherited Bevel1: TBevel
+    inherited Panel2: TPanel
       Width = 334
-    end
-    inherited Panel1: TPanel
-      Left = 174
-      Height = 29
-      inherited btnOK: TButton
-        Visible = False
+      Height = 34
+      inherited Bevel1: TBevel
+        Width = 334
       end
-      inherited btnCancel: TButton
-        Caption = 'Close'
-        OnClick = frameButtons1btnCancelClick
+      inherited Panel1: TPanel
+        Left = 174
+        Height = 29
+        inherited btnOK: TButton
+          Visible = False
+        end
+        inherited btnCancel: TButton
+          Caption = 'Close'
+          OnClick = frameButtons1btnCancelClick
+        end
       end
     end
   end
@@ -1436,7 +1440,7 @@ object frmAbout: TfrmAbout
     Left = 0
     Top = 150
     Width = 334
-    Height = 81
+    Height = 86
     Align = alClient
     AutoURLDetect = adDefault
     Color = clBtnFace
@@ -1533,18 +1537,20 @@ object frmAbout: TfrmAbout
       'e creation of Peter Millard  (mailto:me@pgmillard.com).  Checkou' +
       't the website at http://exodus.jabberstudio.org for more informa' +
       'tion. It is currently licensed under the GNU Public License (GPL' +
-      ') see www.gnu.org for more information on the GPL.\par'#13#10'\par'#13#10'Po' +
-      'rtions of this software are Copyright (c) 1993 - 2002, Chad Z. H' +
-      'ower (Kudzu) and the Indy Pit Crew - http://www.nevrona.com/Indy' +
-      '/. This application may also be using the IndySSL components fro' +
-      'm Nevrona, and the Open-SSL binaries available from Intellicom.s' +
-      'i.\par'#13#10'\par'#13#10'SAX XML Parser by: Stefan Heymann\par'#13#10'Eschenweg 3' +
-      ', 72076 T\'#39'fcbingen, GERMANY mailto:stefan@destructor.de, http:/' +
-      '/www.destructor.de\par'#13#10'\par'#13#10'Unicode library is Copyright (c) 1' +
-      '999, 2000 Mike Lischke (public@lischke-online.de) and Portions C' +
-      'opyright (c) 1999, 2000 Azret Botash (az).\par'#13#10'\par'#13#10'RichEdit98' +
-      ' and DBRichEdit98 components for Delphi 3.0-4.0. version 1.40 Au' +
-      'thor Alexander Obukhov, Minsk, Belarus <alex@niiomr.belpak.minsk' +
-      '.by>\par'#13#10'\par'#13#10'\par'#13#10'}'#13#10
+      ') see www.gnu.org for more information on the GPL.\par'#13#10'\par'#13#10'Pr' +
+      'eference Icons used with permission from collections of "Foood"\' +
+      'par'#13#10'http://www.foood.net/icons/index.htm\par'#13#10'\par'#13#10'Portions of' +
+      ' this software are Copyright (c) 1993 - 2002, Chad Z. Hower (Kud' +
+      'zu) and the Indy Pit Crew - http://www.nevrona.com/Indy/. This a' +
+      'pplication may also be using the IndySSL components from Nevrona' +
+      ', and the Open-SSL binaries available from Intellicom.si.\par'#13#10'\' +
+      'par'#13#10'SAX XML Parser by: Stefan Heymann\par'#13#10'Eschenweg 3, 72076 T' +
+      '\'#39'fcbingen, GERMANY mailto:stefan@destructor.de, http://www.dest' +
+      'ructor.de\par'#13#10'\par'#13#10'Unicode library is Copyright (c) 1999, 2000' +
+      ' Mike Lischke (public@lischke-online.de) and Portions Copyright ' +
+      '(c) 1999, 2000 Azret Botash (az).\par'#13#10'\par'#13#10'RichEdit98 and DBRi' +
+      'chEdit98 components for Delphi 3.0-4.0. version 1.40 Author Alex' +
+      'ander Obukhov, Minsk, Belarus <alex@niiomr.belpak.minsk.by>\par'#13 +
+      #10'\par'#13#10'\par'#13#10'}'#13#10
   end
 end
