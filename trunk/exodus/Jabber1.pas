@@ -1295,9 +1295,6 @@ begin
         if (MainSession.Profile.ConnectionType = conn_normal) then
             DragAcceptFiles(Handle, False);
 
-        // invalidate the entity cache
-        jEntityCache.Clear();
-
         timAutoAway.Enabled := false;
         CloseSubscribeWindows();
 
