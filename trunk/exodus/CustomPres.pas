@@ -83,7 +83,8 @@ var
     i: integer;
 begin
     AssignUnicodeFont(Self);
-    TranslateProperties(Self);
+    // TranslateProperties(Self);
+    TranslateComponent(Self);
 
     // Default to the current settings
     if (MainSession.Show = 'chat') then i := 0

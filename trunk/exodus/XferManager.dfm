@@ -5,13 +5,14 @@ inherited frmXferManager: TfrmXferManager
   Caption = 'File Transfer Manager'
   OldCreateOrder = True
   OnClose = FormClose
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object box: TScrollBox
     Left = 0
     Top = 0
     Width = 436
-    Height = 216
+    Height = 213
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
