@@ -34,7 +34,6 @@ type
     popContact: TPopupMenu;
     mnuHistory: TMenuItem;
     mnuProfile: TMenuItem;
-    mnuAdd: TMenuItem;
     mnuBlock: TMenuItem;
     mnuSendFile: TMenuItem;
     mnuSave: TMenuItem;
@@ -43,6 +42,10 @@ type
     mnuEncrypt: TMenuItem;
     timFlash: TTimer;
     SaveDialog1: TSaveDialog;
+    C1: TMenuItem;
+    mnuVersionRequest: TMenuItem;
+    mnuTimeRequest: TMenuItem;
+    mnuLastActivity: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormActivate(Sender: TObject);
@@ -57,6 +60,7 @@ type
     procedure timFlashTimer(Sender: TObject);
     procedure MsgOutChange(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure CTCPClick(Sender: TObject);
   private
     { Private declarations }
     jid: string;            // jid of the person we are talking to
@@ -85,6 +89,7 @@ type
     procedure MsgCallback(event: string; tag: TXMLTag);
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
+    procedure CTCPCallback(event: string; tag: TXMLTag);
   public
     { Public declarations }
     OtherNick: string;
@@ -110,7 +115,7 @@ implementation
 uses
     Presence, PrefController,
     Transfer, RosterAdd, RiserWindow,
-    Jabber1, Profile, ExUtils, MsgDisplay,
+    Jabber1, Profile, ExUtils, MsgDisplay, IQ,
     JabberMsg, Roster, Session, XMLUtils,
     ShellAPI, RosterWindow, Emoticons;
 
@@ -711,6 +716,40 @@ procedure TfrmChat.FormDestroy(Sender: TObject);
 begin
     inherited;
     DragAcceptFiles( Handle, false );
+end;
+
+procedure TfrmChat.CTCPClick(Sender: TObject);
+var
+    iq: TJabberIQ;
+    p: TJabberPres;
+begin
+    iq := TJabberIQ.Create(MainSession, MainSession.generateID, frmExodus.CTCPCallback);
+    iq.iqType := 'get';
+
+    p := MainSession.ppdb.FindPres(_jid.jid, '');
+    if p = nil then begin
+        // this person isn't online.
+        iq.toJid := _jid.jid;
+        end
+    else begin
+        iq.toJID := p.fromJID.full;
+        end;
+
+    if Sender = mnuVersionRequest then
+        iq.Namespace := XMLNS_VERSION
+    else if Sender = mnuTimeRequest then
+        iq.Namespace := XMLNS_TIME
+    else if Sender = mnuLastActivity then
+        iq.Namespace := XMLNS_LAST;
+    iq.Send;
+end;
+
+procedure TfrmChat.CTCPCallback(event: string; tag: TXMLTag);
+begin
+    // record some kind of CTCP result
+    if ((tag <> nil) and (tag.getAttribute('type') = 'result')) then begin
+        //
+        end
 end;
 
 end.

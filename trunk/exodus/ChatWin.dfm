@@ -76,9 +76,20 @@ inherited frmChat: TfrmChat
       Caption = 'Show Profile'
       OnClick = doProfile
     end
-    object mnuAdd: TMenuItem
-      Caption = 'Add Contact to Roster'
-      OnClick = doAddToRoster
+    object C1: TMenuItem
+      Caption = 'Client Info'
+      object mnuVersionRequest: TMenuItem
+        Caption = 'Version Request'
+        OnClick = CTCPClick
+      end
+      object mnuTimeRequest: TMenuItem
+        Caption = 'Time Request'
+        OnClick = CTCPClick
+      end
+      object mnuLastActivity: TMenuItem
+        Caption = 'Last Activity'
+        OnClick = CTCPClick
+      end
     end
     object mnuBlock: TMenuItem
       Caption = 'Block Contact'
