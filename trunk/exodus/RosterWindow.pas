@@ -191,7 +191,7 @@ type
 
     _cur_ritem: TJabberRosterItem;  // current roster item selected
     _cur_grp: Widestring;           // current group selected
-    _cur_go: TJabberGroup;      // current group object
+    _cur_go: TJabberGroup;          // current group object
     _cur_bm: TJabberBookmark;       // current bookmark selected
     _cur_myres: TJabberMyResource;  // current My Resource selected
     _cur_status: integer;           // current status for the current item
@@ -1193,7 +1193,7 @@ begin
 
                 _myres_go := TJabberGroup.Create(sMyResources);
                 _myres_go.Data := _myres;
-                _myres.Data := _myres;
+                _myres.Data := _myres_go;
 
                 resort := true;
             end;
@@ -1439,10 +1439,7 @@ begin
     if (Node = nil) then exit;
 
     // For groups just display the group name:
-    if (Node.Data = nil) then begin
-        _hint_text := '';
-    end
-    else if (TObject(Node.Data) is TJabberGroup) then begin
+    if (TObject(Node.Data) is TJabberGroup) then begin
         _hint_text := TJabberGroup(Node.Data).getText();
     end
     else if (TObject(Node.Data) is TJabberBookmark) then begin
@@ -1453,7 +1450,7 @@ begin
         _hint_text := TJabberMyResource(Node.Data).jid.resource;
     end
 
-    else begin
+    else if (TObject(Node.Data) is TJabberRosterItem) then begin
         ri := TJabberRosterItem(Node.Data);
         if ri = nil then exit;
 
@@ -1464,7 +1461,9 @@ begin
             _hint_text := ri.jid.full + ': ' + g_offline
         else
             _hint_text := ri.jid.full + ': ' + p.Status;
-    end;
+    end
+    else
+        _hint_text := '';
 
     if _hint_text = treeRoster.Hint then exit;
     treeRoster.Hint := _hint_text;
