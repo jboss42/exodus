@@ -353,6 +353,19 @@ resourcestring
 
     sExodus = 'Exodus';
     sChat = 'Chat';
+
+    sGrpBookmarks = 'Bookmarks';
+    sGrpUnfiled = 'Unfiled';
+    sGrpOffline = 'Offline';
+
+    sRosterPending = ' (Pending)';
+    sRosterAvail = 'Available';
+    sRosterChat = 'Wants to chat';
+    sRosterAway = 'Away';
+    sRosterXA = 'Ext. Away';
+    sRosterDND = 'Do Not Disturb';
+    sRosterOffline = 'Offline';
+
     sDefaultProfile = 'Default Profile';
     sDefaultGroup = 'Untitled Group';
 
@@ -374,6 +387,7 @@ resourcestring
     sMsgMessage = 'Msg from ';
     sMsgInvite = 'Invite from ';
     sMsgContacts = 'Contacts from ';
+    sMsgRosterItems = 'This message contains %d roster items.';
 
     sNewGroup = 'New Roster Group';
     sNewGroupPrompt = 'Enter new group name: ';

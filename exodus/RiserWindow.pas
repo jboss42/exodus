@@ -56,6 +56,9 @@ var
 
 procedure ShowRiserWindow(clickForm: TForm; msg: string; imgIndex: integer);
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 
 {$R *.dfm}
@@ -63,6 +66,7 @@ uses
     Session,
     Jabber1;
 
+{---------------------------------------}
 procedure ShowRiserWindow(clickForm: TForm; msg: string; imgIndex: integer);
 var
     bmp: TBitmap;
@@ -109,6 +113,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmRiser.CreateParams(var Params: TCreateParams);
 begin
     inherited CreateParams(Params);
@@ -118,7 +123,7 @@ begin
         end;
 end;
 
-
+{---------------------------------------}
 procedure TfrmRiser.FormCreate(Sender: TObject);
 var
     taskbar: HWND;
@@ -170,6 +175,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmRiser.Timer1Timer(Sender: TObject);
 var
     stop: boolean;
@@ -205,6 +211,7 @@ begin
 
 end;
 
+{---------------------------------------}
 procedure TfrmRiser.Panel2Click(Sender: TObject);
 begin
     Self.Close;
@@ -212,6 +219,7 @@ begin
     ShowWindow(_clickForm.Handle, SW_SHOWNOACTIVATE);
 end;
 
+{---------------------------------------}
 procedure TfrmRiser.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     frmExodus.ResetLastTick(pre_last_tick + (5 * 1000));
@@ -219,6 +227,7 @@ begin
     Action := caFree;
 end;
 
+{---------------------------------------}
 procedure TfrmRiser.Timer2Timer(Sender: TObject);
 begin
     // close ourself

@@ -109,6 +109,10 @@ var
 
 procedure ShowMyProfile;
 
+resourcestring
+    sVCardError = 'No vCard response was ever returned.';
+
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -165,7 +169,7 @@ procedure TfrmVCard.Callback(event: string; tag: TXMLTag);
 begin
     // callback for vcard info
     if (tag = nil) then begin
-        MessageDlg('No vCard response was ever returned.',
+        MessageDlg(sVCardError,
             mtInformation, [mbOK], 0);
         exit;
         end;
@@ -175,6 +179,7 @@ begin
     with _vcard do begin
         txtFirst.Text := GivenName;
         txtLast.Text := FamilyName;
+        txtNick.Text := nick;
         txtPriEmail.Text := email;
         txtWeb.Text := url;
         cboOcc.Text := role;
@@ -230,6 +235,7 @@ begin
     with _vcard do begin
         GivenName := txtFirst.Text;
         FamilyName := txtLast.Text;
+        nick := txtNick.Text;
         email := txtPriEmail.Text;
         url := txtWeb.Text;
         role := cboOcc.Text;

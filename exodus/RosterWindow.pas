@@ -183,6 +183,15 @@ type
 var
   frmRosterWindow: TfrmRosterWindow;
 
+resourcestring
+    sRemoveBookmark = 'Remove this bookmark?';
+    sRenameGrp = 'Rename group';
+    sRenameGrpPrompt = 'New group name:';
+    sNoContactsSel = 'You must select one or more contacts.';
+    sBlockContacts = 'Block %d contacts?';
+    
+    
+
 implementation
 uses
     SelContact,
@@ -387,14 +396,14 @@ begin
     // render this bookmark
     if _bookmark = nil then begin
         // create some container for bookmarks
-        bi := MainSession.Roster.GrpList.indexOf('Bookmarks');
+        bi := MainSession.Roster.GrpList.indexOf(sGrpBookmarks);
         if bi >= 0 then
             _bookmark := TTreeNode(MainSession.Roster.GrpList.Objects[bi])
         else
-            bi := MainSession.roster.GrpList.Add('Bookmarks');
+            bi := MainSession.roster.GrpList.Add(sGrpBookmarks);
 
         if (_bookmark = nil) then begin
-            _bookmark := treeRoster.Items.AddChild(nil, 'Bookmarks');
+            _bookmark := treeRoster.Items.AddChild(nil, sGrpBookmarks);
             _bookmark.ImageIndex := ico_down;
             _bookmark.SelectedIndex := ico_down;
             MainSession.roster.GrpList.Objects[bi] :=  _bookmark;
@@ -712,14 +721,14 @@ begin
     tmp_grps := TStringlist.Create;
     if (((p = nil) or (p.PresType = 'unavailble')) and (show_offgrp)) then
         // they are offline, and we want an offline grp
-        tmp_grps.Add('Offline')
+        tmp_grps.Add(sGrpOffline)
     else
         // otherwise, assign the grps from the roster item
         tmp_grps.Assign(ritem.Groups);
 
     // If they aren't in any grps, put them into the Unfiled grp
     if tmp_grps.Count <= 0 then
-        tmp_grps.Add('Unfiled');
+        tmp_grps.Add(sGrpUnfiled);
 
     // Remove nodes that are in node_list but aren't in the grp list
     // This takes care of changing grps, or going to the offline grp
@@ -741,7 +750,7 @@ begin
         tmps := ritem.jid.Full;
 
     if (ritem.ask = 'subscribe') then
-        tmps := tmps + ' (Pending)';
+        tmps := tmps + sRosterPending;
 
     if (_show_status) then begin
         if (p <> nil) then begin
@@ -760,9 +769,9 @@ begin
         The offline grp is special, we keep a pointer to
         it at all times (if it exists).
         }
-        if (cur_grp = 'Offline') then begin
+        if (cur_grp = sGrpOffline) then begin
             if (_offline = nil) then begin
-                _offline := treeRoster.Items.AddChild(nil, 'Offline');
+                _offline := treeRoster.Items.AddChild(nil, sGrpOffline);
                 _offline.ImageIndex := ico_right;
                 _offline.SelectedIndex := ico_right;
                 end;
@@ -902,7 +911,7 @@ begin
     if MainSession.Prefs.getBool('inline_status') then
         _hint_text := ri.jid.full
     else if P = nil then
-        _hint_text := ri.jid.full + ': Offline'
+        _hint_text := ri.jid.full + ': ' + sGrpOffline
     else
         _hint_text := ri.jid.full + ': ' + p.Status;
     if _hint_text = TreeRoster.Hint then exit;
@@ -958,27 +967,27 @@ procedure TfrmRosterWindow.ShowPresence(show: string);
 begin
     // display this show type
     if show = 'chat' then begin
-        pnlStatus.Caption := 'Want to Chat';
+        pnlStatus.Caption := sRosterChat;
         ChangeStatusImage(ico_Chat);
         end
     else if show = 'away' then begin
-        pnlStatus.Caption := 'Away';
+        pnlStatus.Caption := sRosterAway;
         ChangeStatusImage(ico_Away);
         end
     else if show = 'xa' then begin
-        pnlStatus.Caption := 'Ext. Away';
+        pnlStatus.Caption := sRosterXA;
         ChangeStatusImage(ico_XA);
         end
     else if show = 'dnd' then begin
-        pnlStatus.Caption := 'Do Not Disturb';
+        pnlStatus.Caption := sRosterDND;
         ChangeStatusImage(ico_DND);
         end
     else if show = 'offline' then begin
-        pnlStatus.Caption := 'Offline';
+        pnlStatus.Caption := sRosterOffline;
         ChangeStatusImage(ico_Offline);
         end
     else begin
-        pnlStatus.Caption := 'Available';
+        pnlStatus.Caption := sRosterAvail;
         ChangeStatusImage(ico_Online);
         end;
 end;
@@ -1014,7 +1023,7 @@ procedure TfrmRosterWindow.Panel2DblClick(Sender: TObject);
 begin
     // reset status to online;
     ShowPresence('online');
-    MainSession.setPresence('', 'Available', MainSession.Priority);
+    MainSession.setPresence('', sRosterAvail, MainSession.Priority);
 end;
 
 {---------------------------------------}
@@ -1187,7 +1196,7 @@ begin
     case getNodeType() of
     node_bm: begin
         // remove a bookmark
-        if (MessageDlg('Remove this bookmark?', mtConfirmation,
+        if (MessageDlg(sRemoveBookmark, mtConfirmation,
             [mbYes, mbNo], 0) = mrNo) then exit;
         MainSession.roster.RemoveBookmark(_cur_bm.jid.full);
         treeRoster.Selected.Free;
@@ -1467,7 +1476,7 @@ begin
                     c1 := _cur_ritem.jid.Full;
 
                 if (_cur_ritem.ask = 'subscribe') then
-                    c1 := c1 + ' (Pending)';
+                    c1 := c1 + sRosterPending;
 
                 p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
                 if (p <> nil) then begin
@@ -1544,7 +1553,7 @@ var
 begin
     // Rename some grp.
     new_grp := treeRoster.Selected.Text;
-    if (InputQuery('Exodus - Rename Group', 'New Group Name:', new_grp)) then begin
+    if (InputQuery(sRenameGrp, sRenameGrpPrompt, new_grp)) then begin
         old_grp := treeRoster.Selected.Text;
         new_grp := Trim(new_grp);
         if (new_grp <> old_grp) then begin
@@ -1631,8 +1640,7 @@ begin
     // Send contacts to this JID..
     sel := getSelectedContacts(false);
     if (sel.Count = 0) then begin
-        MessageDlg('You must select the contacts you wish to send.', mtError,
-            [mbOK], 0);
+        MessageDlg(sNoContactsSel, mtError, [mbOK], 0);
         sel.Free();
         exit;
         end;
@@ -1650,7 +1658,7 @@ begin
 
         s := treeRoster.SelectionCount;
 
-        msg.AddBasicTag('body', 'This message contains ' + IntToStr(s) + ' roster items.');
+        msg.AddBasicTag('body', Format(sMsgRosterItems, [s]));
         x := msg.AddTag('x');
         x.PutAttribute('xmlns', XMLNS_XROSTER);
         for i := 0 to sel.Count - 1 do begin
@@ -1675,7 +1683,7 @@ var
 begin
     recips := getSelectedContacts(false);
     if (recips.Count > 1) then begin
-        if (MessageDlg('Block ' + IntToStr(recips.Count) + ' contacts?', mtConfirmation,
+        if (MessageDlg(Format(sBlockContacts, [recips.Count]), mtConfirmation,
             [mbYes, mbNo], 0) = mrNo) then exit;
         end;
     for i := 0 to recips.Count - 1 do

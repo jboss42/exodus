@@ -707,6 +707,7 @@ begin
     DragAcceptFiles( Handle, false );
 end;
 
+{---------------------------------------}
 procedure TfrmChat.CTCPClick(Sender: TObject);
 var
     iq: TJabberIQ;
@@ -733,6 +734,7 @@ begin
     iq.Send;
 end;
 
+{---------------------------------------}
 procedure TfrmChat.CTCPCallback(event: string; tag: TXMLTag);
 begin
     // record some kind of CTCP result
@@ -741,6 +743,7 @@ begin
         end
 end;
 
+{---------------------------------------}
 procedure TfrmChat.mnuBlockClick(Sender: TObject);
 begin
     MainSession.Block(_jid);

@@ -74,6 +74,22 @@ type
 var
   frmTransfer: TfrmTransfer;
 
+resourcestring
+    sXferRecv = '%s is sending you a file.';
+    sXferURL = 'File transfer URL: ';
+    sXferDesc = 'File Description: ';
+    sXferOnline = 'The Contact must be online before you can send a file.';
+    sSend = 'Send';
+    sOpen = 'Open';
+    sClose = 'Close';
+    sTo = 'To:     ';
+    sXferOverwrite = 'The Contact must be online before you can send a file.';
+    sXferWaiting = 'Waiting for connection...';
+    sXferSending = 'Sending file...';
+    sXferRecvDisconnected = 'Receiver disconnected.';
+    sXferTryingClose = 'Trying to close.';
+    sXferConn = 'Got connection.';
+
 procedure FileReceive(from, url, desc: string);
 procedure FileSend(tojid: string; fn: string = '');
 
@@ -103,11 +119,11 @@ begin
         Mode := 0;
 
         txtFrom.Caption := from;
-        txtMsg.Lines.Add(from + ' is sending you a file');
-        txtMsg.Lines.Add('File Transfer URL: ' + url);
+        txtMsg.Lines.Add(Format(sXferRecv, [from]));
+        txtMsg.Lines.Add(sXferURL + url);
 
         if (desc <> '') then
-            txtMsg.Lines.Add('File Description: ' + desc);
+            txtMsg.Lines.Add(sXferDesc + desc);
         end;
     xfer.Show;
 end;
@@ -128,8 +144,7 @@ begin
         if (tmp_id.resource = '') then begin
             pri := MainSession.ppdb.FindPres(tmp_id.jid, '');
             if (pri = nil) then begin
-                MessageDlg('The Contact must be online before you can send a file.',
-                    mtError, [mbOK], 0);
+                MessageDlg(sXferOnline, mtError, [mbOK], 0);
                 Mode := -1;
                 xfer.Close;
                 exit;
@@ -139,10 +154,10 @@ begin
         else
             s_jid := tojid;
 
-        lblFrom.Caption := 'To:    ';
+        lblFrom.Caption := sTo;
         txtFrom.Caption := s_jid;
         pnlProgress.Visible := false;
-        frameButtons1.btnOK.Caption := 'Send';
+        frameButtons1.btnOK.Caption := sSend;
         if (fn <> '') then
             filename := fn
         else begin
@@ -151,7 +166,7 @@ begin
             end;
         url := 'http://' + MainSession.Stream.LocalIP + ':5280/' +
                ExtractFileName(filename);
-        txtMsg.Lines.Add('File Transfer URL: ' + url);
+        txtMsg.Lines.Add(sXferURL + url);
         end;
     xfer.Show;
 end;
@@ -188,7 +203,7 @@ begin
         filename := SaveDialog1.filename;
 
         if FileExists(filename) then begin
-            if MessageDlg('This file already exists. Overwrite?',
+            if MessageDlg(sXferOverwrite,
                 mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
             DeleteFile(filename);
             end;
@@ -210,7 +225,7 @@ begin
                 end;
             end;
         MainSession.SendTag(iq);
-        txtMsg.Lines.Add('Waiting for connection...');
+        txtMsg.Lines.Add(sXferWaiting);
         httpServer.Active := true;
         end
     else if Self.Mode = 2 then begin
@@ -240,8 +255,8 @@ end;
 procedure TfrmTransfer.httpClientWorkEnd(Sender: TObject;
   AWorkMode: TWorkMode);
 begin
-    frameButtons1.btnOK.Caption := 'Open';
-    frameButtons1.btnCancel.Caption := 'Close';
+    frameButtons1.btnOK.Caption := sOpen;
+    frameButtons1.btnCancel.Caption := sClose;
     Self.mode := 2;
 end;
 
@@ -266,14 +281,14 @@ procedure TfrmTransfer.httpServerCommandGet(AThread: TIdPeerThread;
   RequestInfo: TIdHTTPRequestInfo; ResponseInfo: TIdHTTPResponseInfo);
 begin
     // send the file
-    txtMsg.Lines.Add('Sending File...');
+    txtMsg.Lines.Add(sXferSending);
     httpServer.ServeFile(AThread, ResponseInfo, filename);
 end;
 
 {---------------------------------------}
 procedure TfrmTransfer.httpServerDisconnect(AThread: TIdPeerThread);
 begin
-    txtMsg.Lines.Add('Receiver Disconnected.');
+    txtMsg.Lines.Add(sXferRecvDisconnected);
     SendMessage(Self.Handle, WM_XFER, 0, 0);
 end;
 
@@ -281,14 +296,14 @@ end;
 procedure TfrmTransfer.WMXFER(var msg: TMessage);
 begin
     // we are getting told to shutdown..
-    txtMsg.Lines.Add('Trying to close');
+    txtMsg.Lines.Add(sXferTryingClose);
     Self.Close();
 end;
 
 {---------------------------------------}
 procedure TfrmTransfer.httpServerConnect(AThread: TIdPeerThread);
 begin
-    txtMsg.Lines.Add('Got Connection.');
+    txtMsg.Lines.Add(sXferConn);
 end;
 
 end.

@@ -44,6 +44,7 @@ object frmBaseChat: TfrmBaseChat
       ReadOnly = True
       ScrollBars = ssBoth
       TabOrder = 0
+      OnKeyPress = MsgListKeyPress
       OnURLClick = MsgListURLClick
     end
   end

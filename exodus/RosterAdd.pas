@@ -63,6 +63,9 @@ type
 var
   frmAdd: TfrmAdd;
 
+resourcestring
+    sNoGatewayFound = 'The gateway server you requested does not have a transport for this contact type.';
+
 function ShowAddContact: TfrmAdd;
 
 {---------------------------------------}
@@ -70,6 +73,7 @@ function ShowAddContact: TfrmAdd;
 {---------------------------------------}
 implementation
 uses
+    Jabber1, 
     JabberID,
     Presence,
     Session;
@@ -126,8 +130,8 @@ var
     ngrp: String;
 begin
     // Add a new group to the list...
-    ngrp := 'Untitled Group';
-    if InputQuery('Add Group', 'New Group Name', ngrp) then begin
+    ngrp := sDefaultGroup;
+    if InputQuery(sNewGroup, sNewGroupPrompt, ngrp) then begin
         MainSession.Roster.GrpList.Add(ngrp);
         cboGroup.Items.Assign(MainSession.Roster.GrpList);
         end;
@@ -197,8 +201,7 @@ begin
             end
         else begin
             // we don't have this svc..
-            MessageDlg('The gateway server you requested does not have a transport for this contact type.',
-                mtError, [mbOK], 0);
+            MessageDlg(sNoGatewayFound, mtError, [mbOK], 0);
             Self.Show();
             end;
         end;

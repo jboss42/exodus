@@ -752,6 +752,7 @@ begin
     blockers.Free();
 end;
 
+{---------------------------------------}
 procedure TJabberSession.Block(jid : TJabberID);
 var
     blockers: TStringList;
