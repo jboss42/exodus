@@ -173,6 +173,8 @@ type
     procedure popCloseTabClick(Sender: TObject);
     procedure popFloatTabClick(Sender: TObject);
     procedure mnuChatClick(Sender: TObject);
+    procedure mnuBookmarkClick(Sender: TObject);
+    procedure presCustomClick(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -249,7 +251,7 @@ const
 {---------------------------------------}
 implementation
 uses
-    JUD,
+    JUD, Bookmark,
     Transfer, Profile,
     RiserWindow, RemoveContact,
     ShellAPI,
@@ -1151,6 +1153,18 @@ begin
 
     if InputQuery('Start Chat', 'Enter Jabber ID:', jid) then
         StartChat(jid, '', true);
+end;
+
+procedure TfrmJabber.mnuBookmarkClick(Sender: TObject);
+begin
+    // Add a new bookmark to our list..
+    ShowBookmark('');
+end;
+
+procedure TfrmJabber.presCustomClick(Sender: TObject);
+begin
+    // Custom presence
+
 end;
 
 end.

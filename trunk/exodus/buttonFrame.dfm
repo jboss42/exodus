@@ -23,7 +23,7 @@ object frameButtons: TframeButtons
     TabOrder = 0
     object btnOK: TButton
       Left = 4
-      Top = 3
+      Top = 1
       Width = 75
       Height = 25
       Caption = 'OK'
@@ -32,7 +32,7 @@ object frameButtons: TframeButtons
     end
     object btnCancel: TButton
       Left = 82
-      Top = 3
+      Top = 1
       Width = 75
       Height = 25
       Caption = 'Cancel'

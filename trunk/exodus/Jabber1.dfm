@@ -1,6 +1,6 @@
 object frmJabber: TfrmJabber
-  Left = 240
-  Top = 135
+  Left = 311
+  Top = 163
   Width = 540
   Height = 341
   AlphaBlendValue = 240
@@ -27,7 +27,7 @@ object frmJabber: TfrmJabber
     Left = 0
     Top = 30
     Width = 532
-    Height = 257
+    Height = 258
     ActivePage = tbsMsg
     Align = alClient
     DockSite = True
@@ -48,7 +48,7 @@ object frmJabber: TfrmJabber
         Left = 209
         Top = 0
         Width = 3
-        Height = 229
+        Height = 230
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = Splitter1Moved
@@ -57,7 +57,7 @@ object frmJabber: TfrmJabber
         Left = 0
         Top = 0
         Width = 209
-        Height = 229
+        Height = 230
         Align = alLeft
         BevelOuter = bvNone
         UseDockManager = False
@@ -69,7 +69,7 @@ object frmJabber: TfrmJabber
         Left = 212
         Top = 0
         Width = 312
-        Height = 229
+        Height = 230
         Align = alClient
         Columns = <
           item
@@ -372,6 +372,7 @@ object frmJabber: TfrmJabber
           Tag = 5
           Caption = 'Custom'
           ShortCut = 16464
+          OnClick = presCustomClick
         end
       end
       object N2: TMenuItem
@@ -390,12 +391,15 @@ object frmJabber: TfrmJabber
       end
       object mnuBookmark: TMenuItem
         Caption = 'Add a Bookmark'
+        OnClick = mnuBookmarkClick
       end
       object mnuFilters: TMenuItem
         Caption = 'Filter Rules'
+        Visible = False
       end
       object mnuBrowser: TMenuItem
         Caption = 'Jabber Browser'
+        Visible = False
       end
       object mnuServer: TMenuItem
         Caption = 'Server Info'

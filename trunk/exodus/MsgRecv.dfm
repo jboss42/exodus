@@ -1,6 +1,6 @@
 object frmMsgRecv: TfrmMsgRecv
-  Left = 258
-  Top = 213
+  Left = 266
+  Top = 169
   Width = 314
   Height = 412
   Caption = 'Message'
@@ -38,10 +38,12 @@ object frmMsgRecv: TfrmMsgRecv
     inherited Panel1: TPanel
       Left = 146
       inherited btnOK: TButton
+        Top = 0
         Caption = 'Reply'
         OnClick = frameButtons1btnOKClick
       end
       inherited btnCancel: TButton
+        Top = 0
         Caption = 'Close'
         OnClick = frameButtons1btnCancelClick
       end
@@ -55,7 +57,6 @@ object frmMsgRecv: TfrmMsgRecv
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 2
-    Color = clHighlight
     TabOrder = 1
     object StaticText1: TStaticText
       Left = 2
@@ -64,7 +65,7 @@ object frmMsgRecv: TfrmMsgRecv
       Height = 18
       Align = alLeft
       Caption = 'From:    '
-      Color = clHighlight
+      Color = clBtnFace
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clHighlightText
       Font.Height = -11
@@ -81,7 +82,7 @@ object frmMsgRecv: TfrmMsgRecv
       Height = 18
       Align = alClient
       Caption = '<JID>'
-      Color = clHighlight
+      Color = clBtnFace
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clHighlightText
       Font.Height = -11
@@ -100,7 +101,6 @@ object frmMsgRecv: TfrmMsgRecv
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 2
-    Color = clHighlight
     TabOrder = 2
     object StaticText3: TStaticText
       Left = 2
@@ -109,7 +109,7 @@ object frmMsgRecv: TfrmMsgRecv
       Height = 18
       Align = alLeft
       Caption = 'Subject:'
-      Color = clHighlight
+      Color = clBtnFace
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clHighlightText
       Font.Height = -11
@@ -126,7 +126,7 @@ object frmMsgRecv: TfrmMsgRecv
       Height = 18
       Align = alClient
       Caption = '<JID>'
-      Color = clHighlight
+      Color = clBtnFace
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clHighlightText
       Font.Height = -11
@@ -197,7 +197,6 @@ object frmMsgRecv: TfrmMsgRecv
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 2
-    Color = clHighlight
     TabOrder = 5
     Visible = False
     object Label1: TLabel
@@ -207,7 +206,7 @@ object frmMsgRecv: TfrmMsgRecv
       Height = 20
       Align = alLeft
       Caption = 'Subject:    '
-      Color = clHighlight
+      Color = clBtnFace
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
