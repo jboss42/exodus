@@ -979,7 +979,8 @@ procedure TfrmJabber.timAutoAwayTimer(Sender: TObject);
 var
     mins, away, xa: integer;
     cur_idle: dword;
-begin    // get the latest idle amount
+begin
+    // get the latest idle amount
     with MainSession.Prefs do begin
         if getBool('auto_away') then begin
             cur_idle := (GetTickCount() - IdleUIGetLastInputTime()) div 1000;
@@ -1021,7 +1022,8 @@ begin    // get the latest idle amount
          end;
 end;
 {---------------------------------------}
-procedure TfrmJabber.MessageHistory2Click(Sender: TObject);begin
+procedure TfrmJabber.MessageHistory2Click(Sender: TObject);
+begin
     frmRosterWindow.popHistoryClick(Sender);
 end;
 
