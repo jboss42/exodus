@@ -107,9 +107,17 @@ begin
 
     if (MainSession.Prefs.getBool('timestamp')) then begin
         RichEdit.SelAttributes.Color := clGray;
-        RichEdit.WideSelText := '[' +
-                            FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
-                            Msg.Time) + ']';
+        try
+            RichEdit.WideSelText := '[' +
+                FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
+                Msg.Time) + ']';
+        except
+            on EConvertError do begin
+                RichEdit.WideSelText := '[' +
+                    FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
+                    Now()) + ']';
+            end;
+        end;
     end;
 
     if (Msg.Nick = '') then begin
@@ -534,7 +542,7 @@ begin
                 'font-size: ' + getString('font_size') + 'pt;';
         if Msg.Action then
             html := '<div style="' + bg + font + '">' + time +
-                    '<span style="color: purple;">* ' + txt + '</span></div>'
+                    '<span style="color: purple;">* ' + Msg.Nick + ' ' + txt + '</span></div>'
         else begin
             if Msg.isMe then
                 color := ColorToHTML(TColor(MainSession.Prefs.getInt('color_me')))

@@ -428,6 +428,7 @@ begin
         fs := TFileStream.Create(fn, fmOpenReadWrite, fmShareDenyNone);
         ndate := FileDateToDateTime(FileGetDate(fs.Handle));
         header := (abs(Now - nDate) > 0.04);
+        fs.Seek(0, soFromEnd);
     end
     else begin
         fs := TFileStream.Create(fn, fmCreate, fmShareDenyNone);
