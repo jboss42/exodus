@@ -158,12 +158,12 @@ end;
 
 {---------------------------------------}
 procedure TfrmCommandWizard.createIQSet();
-var
-    e: TJabberEntity;
+var                          
+    e: TJabberEntity;      
 begin
     assert(_iq = nil);
     _iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
-        Self.execCallback);
+        Self.execCallback, 30);
     _iq.qTag.Name := 'command';
     _iq.Namespace := XMLNS_COMMANDS;
 
