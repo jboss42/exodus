@@ -200,7 +200,15 @@ begin
         // or we always want to use the msg queue
         // so display it in the msg queue, not live
         mqueue := getMsgQueue();
-        mqueue.Show;
+
+        if (not mqueue.Visible) then with mqueue do begin
+            if (frmExodus.isMinimized()) then
+                ShowWindow(Handle, SW_SHOWMINNOACTIVE)
+            else
+                ShowWindow(Handle, SW_SHOWNOACTIVATE);
+            Visible := true;
+        end;
+
 
         // Note that LogEvent takes ownership of e
         mqueue.LogEvent(e, msg, img_idx);

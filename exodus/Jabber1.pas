@@ -31,7 +31,7 @@ uses
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
     Buttons, OleCtrls, AppEvnts, ToolWin,
     IdHttp, TntComCtrls, DdeMan, IdBaseComponent, IdComponent, IdUDPBase,
-    IdUDPClient, IdDNSResolver, TntMenus;
+    IdUDPClient, IdDNSResolver, TntMenus, IdAntiFreezeBase, IdAntiFreeze;
 
 const
     UpdateKey = '001';
@@ -162,6 +162,7 @@ type
     trayPresAway: TTntMenuItem;
     trayPresChat: TTntMenuItem;
     trayPresOnline: TTntMenuItem;
+    IdAntiFreeze1: TIdAntiFreeze;
 
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
@@ -1613,7 +1614,7 @@ begin
 
     // this is how much we're changing
     if ((pnlLeft.Visible) and (pnlLeft.Width > 0)) then
-        delta := -SplitterRight.Width
+        delta := Self.ClientWidth - pnlLeft.Width + SplitterLeft.Width
     else
         delta := Self.ClientWidth - tbsRoster.Width + SplitterLeft.Width;
 
@@ -1634,7 +1635,6 @@ begin
         Self.Show;
     end;
 
-    MainSession.Prefs.RestorePosition(Self);
     restoreToolbar();
     restoreRoster();
 
@@ -1759,7 +1759,6 @@ begin
             docked.FloatForm();
         end;
         _docked_forms.Clear();
-
 
         // make sure all invisible chat windows are undocked
         for i := 0 to MainSession.ChatList.Count - 1 do begin
