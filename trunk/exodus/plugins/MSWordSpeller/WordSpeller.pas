@@ -5,7 +5,7 @@ unit WordSpeller;
 interface
 
 uses
-    ExodusCOM_TLB, Word2000, ChatSpeller,
+    Windows, ExodusCOM_TLB, Word2000, ChatSpeller,
     Classes, ComObj, ActiveX, ExodusWordSpeller_TLB, StdVcl;
 
 type
@@ -39,20 +39,21 @@ end;
 procedure TWordSpeller.Shutdown;
 begin
     // exodus is shutting down... do cleanup
+    OutputDebugString('WORDPLUGIN - SHUTDOWN');
+    _exodus._Release();
+    _word.FreeInstance();
 end;
 
 procedure TWordSpeller.NewChat(const JID: WideString; Const Chat: IExodusChat);
 var
     cp: TChatSpeller;
     chat_com: IExodusChat;
-    e: ExodusChatPlugin;
 begin
     // a new chat window is firing up
     chat_com := IUnknown(Chat) as IExodusChat;
     cp := TChatSpeller.Create(_word, chat_com);
     cp.ObjAddRef();
-    cp.ObjAddRef();
-    cp.reg_id := chat_com.RegisterPlugin(e);
+    cp.reg_id := chat_com.RegisterPlugin(IExodusChatPlugin(cp));
 end;
 
 procedure TWordSpeller.NewRoom(const JID: WideString; Const Room: IExodusChat);

@@ -118,7 +118,7 @@ procedure TExodusChat.fireClose();
 var
     i: integer;
 begin
-    for i := 0 to _plugs.Count - 1 do
+    for i := _plugs.Count - 1 downto 0 do
         TChatPlugin(_plugs[i]).com.onClose();
 end;
 
@@ -149,8 +149,8 @@ var
 begin
     if ((id >= 0) and (id < _plugs.count)) then begin
         cp := TChatPlugin(_plugs[id]);
-        cp.Free();
         _plugs.Delete(id);
+        cp.Free();
         Result := true;
         end
     else
@@ -165,6 +165,7 @@ var
 begin
     cp := TChatPlugin.Create;
     cp.com := Plugin;
+    Plugin._AddRef();
     Result := _plugs.Add(cp);
 end;
 

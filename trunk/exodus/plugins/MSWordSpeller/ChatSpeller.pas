@@ -26,7 +26,6 @@ type
   public
     reg_id: integer;
     constructor Create(word_app: TWordApplication; chat_controller: IExodusChat);
-    destructor Destroy(); override;
   end;
 
 implementation
@@ -44,12 +43,6 @@ begin
     _word := word_app;
     _chat := chat_controller;
     _MsgOut := nil;
-end;
-
-destructor TChatSpeller.Destroy();
-begin
-    //
-    inherited Destroy();
 end;
 
 function TChatSpeller.onAfterMessage(var Body: WideString): WideString;
@@ -122,7 +115,8 @@ end;
 
 procedure TChatSpeller.onClose;
 begin
-    // _chat.UnRegister(reg_id);
+    // the chat session is closing.
+    _chat.UnRegister(reg_id);
 end;
 
 
