@@ -149,7 +149,8 @@ uses
   buttonFrame in 'buttonFrame.pas' {frameButtons: TFrame},
   ExSession in 'ExSession.pas',
   WebGet in 'WebGet.pas' {frmWebDownload},
-  PrefNetwork in 'prefs\PrefNetwork.pas' {frmPrefNetwork};
+  PrefNetwork in 'prefs\PrefNetwork.pas' {frmPrefNetwork},
+  PrefGroups in 'prefs\PrefGroups.pas' {frmPrefGroups};
 
 {$R *.TLB}
 
@@ -173,6 +174,7 @@ begin
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TfrmWebDownload, frmWebDownload);
   Application.CreateForm(TfrmPrefNetwork, frmPrefNetwork);
+  Application.CreateForm(TfrmPrefGroups, frmPrefGroups);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);

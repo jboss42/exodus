@@ -404,6 +404,10 @@ resourcestring
     sChat = 'Chat';
 
     sGrpUnfiled = 'Unfiled';
+    sGrpOnline = 'Available';
+    sGrpAway = 'Away';
+    sGrpXA = 'Ext. Away';
+    sGrpDND = 'Do Not Disturb';
     sGrpOffline = 'Offline';
 
     sRosterPending = ' (Pending)';
