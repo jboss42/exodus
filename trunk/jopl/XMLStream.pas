@@ -70,6 +70,7 @@ type
     private
         _root_tag: string;
         _socket: TidTCPClient;
+        _sock_lock: TCriticalSection;
         _ssl_int: TIdConnectionInterceptOpenSSL;
         _thread: TDataThread;
         _timer: TTimer;
@@ -83,6 +84,7 @@ type
         procedure DoCallbacks(msg: string; tag: TXMLTag);
         procedure DoSocketCallbacks(send: boolean; data: string);
         procedure Keepalive(Sender: TObject);
+        procedure KillSocket();
     protected
         // procedure WndProc(var msg: TMessage);
         procedure MsgHandler(var msg: TJabberMsg); message WM_JABBER;
@@ -146,7 +148,7 @@ type
 
 implementation
 uses
-    Signals, 
+    Signals,
     Math;
 
 {---------------------------------------}
@@ -185,7 +187,9 @@ end;
 {---------------------------------------}
 procedure TDataThread.DataTerminate(Sender: TObject);
 begin
-    // We have an exception, kill the thread and the socket
+    // destructor for the thread
+    {
+    // Why is this crap here?? GotException should be sufficient
     if (_Socket = nil) or (not _Socket.Connected) then begin
         Self.Terminate;
         end
@@ -193,6 +197,7 @@ begin
         _Data := 'Reader socket terminated.';
         doMessage(WM_DROPPED);
         end;
+    }
 
     _indata.Free();
     _tag_parser.Free();
@@ -253,6 +258,7 @@ begin
         if (_socket = nil) then
             Self.Terminate
         else if not _Socket.Connected then begin
+            _socket := nil;
             doMessage(WM_DISCONNECTED);
             Self.Terminate;
             end
@@ -340,6 +346,7 @@ begin
     // Handle gracefull connection closures
     if _Stage = 0 then begin
         // We can't connect
+        _socket := nil;
         if E is EIdSocketError then
             _Data := 'Could not connect to the server.'
         else
@@ -348,6 +355,7 @@ begin
     end
     else begin
         // Some exception occured during Read ops
+        _socket := nil;
         if E is EIdConnClosedGracefully then exit;
 
         if E is EIdSocketError then begin
@@ -540,10 +548,14 @@ begin
         SSLOptions.CertFile := '';
         SSLOptions.RootCertFile := '';
         end;
+    _socket := nil;
+    _sock_lock := TCriticalSection.Create();
+    {
     _socket := TIdTCPClient.Create(nil);
     _socket.Intercept := _ssl_int;
     _socket.InterceptEnabled := false;
     _socket.RecvBufferSize := 4096;
+    }
 
     _root_tag := root;
     _callbacks := TObjectList.Create;
@@ -560,11 +572,6 @@ end;
 destructor TXMLStream.Destroy;
 begin
     // free all our objects and free the window handle
-    {
-    if (_socket.Connected) then
-        _socket.DisconnectSocket();
-    }
-
     _callbacks.Clear();
     _sock_callbacks.Clear();
 
@@ -573,12 +580,13 @@ begin
         _thread.Terminate;
         end;
 
-    _Socket.Free();
     _ssl_int.Free();
     _timer.Free();
 
     _callbacks.Free;
     _sock_callbacks.Free;
+    KillSocket();
+    _sock_lock.Free;
 
     inherited Destroy;
 end;
@@ -618,6 +626,7 @@ begin
 
         WM_DISCONNECTED: begin
             // Socket is disconnected
+            KillSocket();
             if (_thread <> nil) then
                 _thread.Terminate();
             _timer.Enabled := false;
@@ -645,6 +654,7 @@ begin
 
         WM_COMMERROR: begin
             // There was a COMM ERROR
+            KillSocket();
             if _thread <> nil then
                 tmps := _thread.Data
             else
@@ -674,6 +684,11 @@ end;
 procedure TXMLStream.Connect(server: string; port: integer; use_ssl: boolean = false);
 begin
     // connect to this server
+    _socket := TIdTCPClient.Create(nil);
+    _socket.Intercept := _ssl_int;
+    _socket.InterceptEnabled := false;
+    _socket.RecvBufferSize := 4096;
+
     _server := Server;
     _port := port;
     _socket.Host := Server;
@@ -693,6 +708,19 @@ begin
     if ((_socket <> nil) and (_socket.Connected)) then
         _socket.Disconnect;
     _timer.Enabled := false;
+end;
+
+{---------------------------------------}
+procedure TXMLStream.KillSocket();
+begin
+    _sock_lock.Acquire();
+
+    if (_socket <> nil) then begin
+        _socket.Free();
+        _socket := nil;
+        end;
+
+    _sock_lock.Release();
 end;
 
 {---------------------------------------}
