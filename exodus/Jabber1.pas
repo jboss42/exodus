@@ -894,12 +894,14 @@ begin
                     //    raise EConfigException.Create('need jid and password for new profile');
 
                     profile := CreateProfile(profile_name);
+                    {
                     if (jid = nil) then
                         profile.Server := 'jabber.org';
                     if (resource = '') then
                         resource := 'Exodus';
                     if (_cli_priority = -1) then
                         _cli_priority := 0;
+                        }
                     end
                 else
                     profile := TJabberProfile(Profiles.Objects[_prof_index]);

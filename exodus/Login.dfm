@@ -67,7 +67,6 @@ object frmLogin: TfrmLogin
     Height = 21
     ItemHeight = 13
     TabOrder = 3
-    Text = 'jabber.org'
     Items.WideStrings = (
       'jabber.org'
       'jabber.com')
