@@ -3,14 +3,14 @@ inherited frmXData: TfrmXData
   Top = 154
   Width = 363
   Height = 315
-  Caption = 'xdata'
+  Caption = 'Jabber Form'
   OldCreateOrder = True
   OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 251
+    Top = 247
     Width = 355
     Height = 34
     Align = alBottom
@@ -38,15 +38,15 @@ inherited frmXData: TfrmXData
     Left = 0
     Top = 0
     Width = 355
-    Height = 251
+    Height = 247
     Align = alClient
     TabOrder = 1
     inherited Panel1: TPanel
       Width = 355
-      Height = 251
+      Height = 247
       inherited ScrollBox1: TScrollBox
         Width = 345
-        Height = 241
+        Height = 237
       end
     end
   end

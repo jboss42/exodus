@@ -124,7 +124,8 @@ var
 begin
     f := TfrmXData.Create(nil);
     f.Render(tag);
-    f.ShowDefault();
+    //f.ShowDefault();
+    f.Show();
     Result := true;
 end;
 
@@ -192,7 +193,6 @@ begin
         con := TTntCheckBox.Create(_owner);
         con.Parent := _owner;
         con.Visible := false;
-
         with TTntCheckBox(con) do begin
             Caption := x.GetAttribute('label');
             d := Lowercase(d);
@@ -327,7 +327,7 @@ begin
         lbl.Caption := l + ' ' + _('(Required)')
     else
         lbl.Caption := l;
-
+        
     lbl.Hint := _hint;
     lbl.Visible := false;
 end;
