@@ -338,9 +338,10 @@ procedure TfrmMsgQueue.FormCloseQuery(Sender: TObject;
 begin
     inherited;
 
+    // xxx: how do we get into this state???
     if (MainSession.prefs.getBool('expanded')) and (not Docked) then begin
         CanClose := false;
-        frmExodus.DockMsgQueue();
+        // frmExodus.DockMsgQueue();
         exit;
         end
     else
