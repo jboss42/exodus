@@ -119,7 +119,7 @@ function ItemCompare(Item1, Item2: Pointer): integer;
 implementation
 
 uses
-    Profile, Roster, Agents,
+    JabberConst, Profile, Roster, Agents,
     JabberID, fGeneric,
     Session, ExUtils, XMLUtils,
     fTopLabel, Jabber1;

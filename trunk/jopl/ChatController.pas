@@ -50,7 +50,7 @@ type
 {---------------------------------------}
 implementation
 uses
-    XMLUtils, Session, Chat, IdGlobal;
+    JabberConst, XMLUtils, Session, Chat, IdGlobal;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -99,7 +99,10 @@ end;
 procedure TChatController.MsgCallback(event: string; tag: TXMLTag);
 begin
     // do stuff
-    if (tag.QueryXPTag('/message/x[@xmlns="jabber:x:data"]') <> nil) then exit;
+    // check for exclusions.. don't show x-data or invites
+    if (tag.QueryXPTag(XP_MSGXDATA) <> nil) then exit;
+    if (tag.QueryXPTag(XP_MUCINVITE) <> nil) then exit;
+    if (tag.QueryXPTag(XP_CONFINVITE) <> nil) then exit;
     if (tag.GetAttribute('type') = 'groupchat') then exit;
     
     // if we are paused, put on a delay tag.

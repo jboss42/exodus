@@ -232,27 +232,11 @@ resourcestring
 
 implementation
 uses
-    SelContact,
-    Invite,
-    Bookmark,
-    S10n,
-    Transfer,
-    MsgRecv,
-    PrefController,
-    ExEvents,
-    ExUtils,
-    Room,
-    Profile,
-    JabberID,
-    RiserWindow,
-    ShellAPI,
-    IQ,
-    RosterAdd,
-    GrpRemove, RemoveContact,
-    ChatWin,
-    Jabber1,
-    Transports, 
-    Session;
+    JabberConst,
+    SelContact, Invite, Bookmark, S10n, Transfer, MsgRecv, PrefController,
+    ExEvents, ExUtils, Room, Profile, JabberID, RiserWindow, ShellAPI,
+    IQ, RosterAdd, GrpRemove, RemoveContact, ChatWin, Jabber1,
+    Transports, Session;
 
 {$R *.DFM}
 

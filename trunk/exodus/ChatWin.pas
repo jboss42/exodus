@@ -136,7 +136,7 @@ implementation
 {$R *.dfm}
 
 uses
-    ExUtils, Presence, PrefController, Room,
+    JabberConst, ExUtils, Presence, PrefController, Room,
     Transfer, RosterAdd, RiserWindow, Notify,
     Jabber1, Profile, MsgDisplay, IQ,
     JabberMsg, Roster, Session, XMLUtils,

@@ -110,12 +110,8 @@ implementation
 {$R *.dfm}
 
 uses
-    Notify,
-    JabberID, Roster,
-    Session,
-    Presence,
-    ShellAPI,
-    Jabber1, ExUtils;
+    JabberConst, Notify, JabberID, Roster, Session, Presence,
+    ShellAPI, Jabber1, ExUtils;
 
 {---------------------------------------}
 procedure FileReceive(tag: TXMLTag); overload;

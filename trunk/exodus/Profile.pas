@@ -134,11 +134,8 @@ implementation
 
 {$R *.DFM}
 uses
-    XMLVCard,
-    Presence,
-    Roster,
-    JabberID,
-    Session, Jabber1;
+    JabberConst, XMLVCard,
+    Presence, Roster, JabberID, Session, Jabber1;
 
 {---------------------------------------}
 {---------------------------------------}

@@ -55,7 +55,7 @@ resourceString
 {---------------------------------------}
 implementation
 uses
-    Controls, Dialogs;
+    JabberConst, Controls, Dialogs;
 
 {---------------------------------------}
 procedure RemoveTransport(jid: Widestring);

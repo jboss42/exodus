@@ -118,7 +118,7 @@ resourcestring
 {---------------------------------------}
 implementation
 uses
-    ShellAPI, Profile, Transfer,
+    JabberConst, ShellAPI, Profile, Transfer,
     ExUtils, JabberMsg, JabberID,
     RosterWindow, RemoveContact, RosterRecv, Room, Roster, 
     Presence, Session, Jabber1;

@@ -56,6 +56,11 @@ const
     msg_all_chat = 1;
     msg_existing_chat = 2;
 
+    // invite options
+    invite_normal = 0;
+    invite_popup = 1;
+    invite_accept = 2;
+
     P_EXPANDED = 'expanded';
     P_SHOWONLINE = 'roster_only_online';
     P_SHOWUNSUB = 'roster_show_unsub';
@@ -203,6 +208,7 @@ uses
     {$else}
     QGraphics,
     {$endif}
+    JabberConst,
     IdGlobal, IdCoder3To4, Session, IQ, XMLUtils;
 
 

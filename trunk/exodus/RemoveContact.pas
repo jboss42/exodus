@@ -50,7 +50,7 @@ procedure RemoveRosterItem(sjid: string);
 
 implementation
 uses
-    S10n,
+    JabberConst, S10n,
     Session,
     XMLTag;
 {$R *.DFM}

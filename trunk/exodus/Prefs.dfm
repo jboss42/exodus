@@ -1570,12 +1570,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 357
-    ActivePage = tbsSystem
+    ActivePage = tbsMessages
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 3
+    TabIndex = 5
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1607,7 +1607,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkShowUnsubs: TCheckBox
         Left = 8
-        Top = 48
+        Top = 41
         Width = 209
         Height = 17
         Caption = 'Show unsubscribed contacts.'
@@ -1615,7 +1615,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkOfflineGroup: TCheckBox
         Left = 8
-        Top = 96
+        Top = 76
         Width = 241
         Height = 17
         Caption = 'Show offline contacts in the "Offline" group.'
@@ -1623,7 +1623,7 @@ object frmPrefs: TfrmPrefs
       end
       object optDblClick: TRadioGroup
         Left = 8
-        Top = 232
+        Top = 176
         Width = 161
         Height = 55
         Caption = 'Double Click Action '
@@ -1635,7 +1635,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkInlineStatus: TCheckBox
         Left = 8
-        Top = 168
+        Top = 128
         Width = 241
         Height = 17
         Caption = 'Show status in the roster: Joe <Meeting>'
@@ -1644,7 +1644,7 @@ object frmPrefs: TfrmPrefs
       end
       object cboInlineStatus: TColorBox
         Left = 32
-        Top = 192
+        Top = 144
         Width = 145
         Height = 22
         DefaultColorColor = clBlue
@@ -1656,7 +1656,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkHideBlocked: TCheckBox
         Left = 8
-        Top = 120
+        Top = 93
         Width = 201
         Height = 17
         Caption = 'Hide blocked contacts '
@@ -1664,7 +1664,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkPresErrors: TCheckBox
         Left = 8
-        Top = 142
+        Top = 110
         Width = 209
         Height = 17
         Caption = 'Detect invalid roster items'
@@ -1672,7 +1672,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkShowPending: TCheckBox
         Left = 8
-        Top = 72
+        Top = 58
         Width = 161
         Height = 17
         Caption = 'Show pending contacts'
@@ -1950,7 +1950,7 @@ object frmPrefs: TfrmPrefs
       ImageIndex = 3
       object Label15: TLabel
         Left = 8
-        Top = 223
+        Top = 183
         Width = 149
         Height = 13
         Caption = 'File transfer download directory:'
@@ -1975,7 +1975,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkAutoUpdate: TCheckBox
         Left = 8
-        Top = 200
+        Top = 160
         Width = 233
         Height = 17
         Caption = 'Check for updates automatically'
@@ -1983,7 +1983,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkExpanded: TCheckBox
         Left = 8
-        Top = 80
+        Top = 68
         Width = 169
         Height = 17
         Caption = 'Start in Expanded Mode'
@@ -1991,7 +1991,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkDebug: TCheckBox
         Left = 8
-        Top = 104
+        Top = 86
         Width = 169
         Height = 17
         Caption = 'Start with Debug visible'
@@ -2007,7 +2007,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkCloseMin: TCheckBox
         Left = 8
-        Top = 176
+        Top = 141
         Width = 241
         Height = 17
         Caption = 'Close button minimizes to the tray'
@@ -2015,14 +2015,14 @@ object frmPrefs: TfrmPrefs
       end
       object txtXFerPath: TEdit
         Left = 29
-        Top = 241
+        Top = 201
         Width = 188
         Height = 21
         TabOrder = 7
       end
       object btnTransferBrowse: TButton
         Left = 222
-        Top = 239
+        Top = 199
         Width = 75
         Height = 25
         Caption = 'Browse'
@@ -2031,7 +2031,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkAutoStart: TCheckBox
         Left = 8
-        Top = 56
+        Top = 50
         Width = 233
         Height = 17
         Caption = 'Run Exodus when windows starts'
@@ -2039,7 +2039,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkOnTop: TCheckBox
         Left = 8
-        Top = 128
+        Top = 105
         Width = 169
         Height = 17
         Caption = 'Exodus is always on top'
@@ -2047,7 +2047,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkToolbox: TCheckBox
         Left = 8
-        Top = 152
+        Top = 123
         Width = 217
         Height = 17
         Caption = 'Small Titlebar for Exodus window'
@@ -2055,7 +2055,7 @@ object frmPrefs: TfrmPrefs
       end
       object btnUpdateCheck: TButton
         Left = 222
-        Top = 196
+        Top = 156
         Width = 75
         Height = 25
         Caption = 'Check Now'
@@ -2069,7 +2069,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 97
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2223,25 +2223,32 @@ object frmPrefs: TfrmPrefs
       Caption = 'Messages'
       ImageIndex = 5
       object Label19: TLabel
-        Left = 25
-        Top = 117
+        Left = 26
+        Top = 101
         Width = 35
         Height = 13
         Caption = 'Format:'
       end
       object Label7: TLabel
-        Left = 8
-        Top = 236
-        Width = 173
+        Left = 5
+        Top = 197
+        Width = 170
         Height = 13
-        Caption = 'Simple Message (non-chat) Handling'
+        Caption = 'Simple message (non-chat) handling'
       end
       object Label16: TLabel
-        Left = 6
+        Left = 5
         Top = 283
-        Width = 46
+        Width = 85
         Height = 13
-        Caption = 'Spool file:'
+        Caption = 'Event Queue File:'
+      end
+      object Label17: TLabel
+        Left = 5
+        Top = 237
+        Width = 153
+        Height = 13
+        Caption = 'Text Conference invite handling:'
       end
       object chkEmoticons: TCheckBox
         Left = 5
@@ -2253,7 +2260,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkTimestamp: TCheckBox
         Left = 5
-        Top = 116
+        Top = 81
         Width = 156
         Height = 17
         Caption = 'Timestamp messages'
@@ -2261,7 +2268,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkLog: TCheckBox
         Left = 5
-        Top = 163
+        Top = 130
         Width = 97
         Height = 17
         Caption = 'Log Messages'
@@ -2270,7 +2277,7 @@ object frmPrefs: TfrmPrefs
       end
       object txtLogPath: TEdit
         Left = 26
-        Top = 181
+        Top = 148
         Width = 207
         Height = 21
         TabOrder = 3
@@ -2295,14 +2302,14 @@ object frmPrefs: TfrmPrefs
       end
       object txtTimestampFmt: TEdit
         Left = 69
-        Top = 133
+        Top = 98
         Width = 164
         Height = 21
         TabOrder = 5
       end
       object btnLogBrowse: TButton
         Left = 243
-        Top = 179
+        Top = 146
         Width = 75
         Height = 25
         Caption = 'Browse'
@@ -2311,7 +2318,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkMsgQueue: TCheckBox
         Left = 5
-        Top = 47
+        Top = 40
         Width = 284
         Height = 17
         Caption = 'Messages, Events always goto the Events Window'
@@ -2319,7 +2326,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkLogRooms: TCheckBox
         Left = 26
-        Top = 205
+        Top = 172
         Width = 151
         Height = 17
         Caption = 'Log conference rooms'
@@ -2327,7 +2334,7 @@ object frmPrefs: TfrmPrefs
       end
       object cboMsgOptions: TComboBox
         Left = 26
-        Top = 252
+        Top = 213
         Width = 207
         Height = 21
         Style = csDropDownList
@@ -2340,7 +2347,7 @@ object frmPrefs: TfrmPrefs
       end
       object btnLogClearAll: TButton
         Left = 243
-        Top = 209
+        Top = 176
         Width = 75
         Height = 25
         Caption = 'Clear All Logs'
@@ -2349,35 +2356,40 @@ object frmPrefs: TfrmPrefs
       end
       object chkCloseQueue: TCheckBox
         Left = 5
-        Top = 70
+        Top = 56
         Width = 276
         Height = 17
         Caption = 'Close the Event window going to Compressed Mode'
         TabOrder = 11
       end
-      object chkAutoAcceptInvites: TCheckBox
-        Left = 5
-        Top = 95
-        Width = 236
-        Height = 17
-        Caption = 'Automatically accept all room invites'
-        TabOrder = 12
-      end
       object txtSpoolPath: TEdit
-        Left = 66
-        Top = 279
-        Width = 164
+        Left = 26
+        Top = 299
+        Width = 207
         Height = 21
-        TabOrder = 13
+        TabOrder = 12
       end
       object btnSpoolBrowse: TButton
         Left = 243
-        Top = 277
+        Top = 297
         Width = 75
         Height = 25
         Caption = 'Browse'
-        TabOrder = 14
+        TabOrder = 13
         OnClick = btnSpoolBrowseClick
+      end
+      object cboInviteOptions: TComboBox
+        Left = 26
+        Top = 253
+        Width = 207
+        Height = 21
+        Style = csDropDownList
+        ItemHeight = 13
+        TabOrder = 14
+        Items.Strings = (
+          'Treat as a normal event'
+          'Always popup window'
+          'Auto-Accept all invites')
       end
     end
     object tbsNotify: TTabSheet
@@ -2477,7 +2489,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkNotifyActive: TCheckBox
         Left = 8
-        Top = 49
+        Top = 48
         Width = 169
         Height = 17
         Hint = 
@@ -2512,28 +2524,28 @@ object frmPrefs: TfrmPrefs
       ImageIndex = 7
       object Label2: TLabel
         Left = 8
-        Top = 56
+        Top = 72
         Width = 213
         Height = 13
         Caption = 'Minutes to wait before setting status to Away:'
       end
       object Label3: TLabel
         Left = 8
-        Top = 80
+        Top = 96
         Width = 201
         Height = 13
         Caption = 'Minutes to wait before setting status to XA:'
       end
       object Label4: TLabel
         Left = 8
-        Top = 112
+        Top = 128
         Width = 62
         Height = 13
         Caption = 'Away Status:'
       end
       object Label9: TLabel
         Left = 8
-        Top = 136
+        Top = 152
         Width = 50
         Height = 13
         Caption = 'XA Status:'
@@ -2549,7 +2561,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 124
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2566,7 +2578,7 @@ object frmPrefs: TfrmPrefs
       end
       object txtAwayTime: TEdit
         Left = 232
-        Top = 54
+        Top = 70
         Width = 33
         Height = 21
         TabOrder = 2
@@ -2575,7 +2587,7 @@ object frmPrefs: TfrmPrefs
       end
       object spnAway: TUpDown
         Left = 265
-        Top = 54
+        Top = 70
         Width = 15
         Height = 21
         Associate = txtAwayTime
@@ -2587,7 +2599,7 @@ object frmPrefs: TfrmPrefs
       end
       object txtXATime: TEdit
         Left = 232
-        Top = 78
+        Top = 94
         Width = 33
         Height = 21
         TabOrder = 4
@@ -2596,7 +2608,7 @@ object frmPrefs: TfrmPrefs
       end
       object spnXA: TUpDown
         Left = 265
-        Top = 78
+        Top = 94
         Width = 15
         Height = 21
         Associate = txtXATime
@@ -2608,21 +2620,21 @@ object frmPrefs: TfrmPrefs
       end
       object txtAway: TEdit
         Left = 80
-        Top = 110
+        Top = 126
         Width = 201
         Height = 21
         TabOrder = 6
       end
       object txtXA: TEdit
         Left = 80
-        Top = 134
+        Top = 150
         Width = 201
         Height = 21
         TabOrder = 7
       end
       object chkAAReducePri: TCheckBox
         Left = 8
-        Top = 168
+        Top = 48
         Width = 273
         Height = 17
         Caption = 'Reduce priority to 0 during auto-away.'
@@ -2635,7 +2647,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 112
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2654,7 +2666,7 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 73
         Width = 363
-        Height = 258
+        Height = 253
         Align = alClient
         TabOrder = 1
       end
@@ -2669,7 +2681,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TLabel
           Left = 0
           Top = 0
-          Width = 306
+          Width = 363
           Height = 13
           Align = alTop
           Caption = 
@@ -2693,7 +2705,7 @@ object frmPrefs: TfrmPrefs
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 352
+        Width = 363
         Height = 26
         Align = alTop
         Caption = 
@@ -2704,7 +2716,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 146
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2723,7 +2735,7 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 46
         Width = 363
-        Height = 285
+        Height = 280
         Align = alClient
         TabOrder = 1
       end

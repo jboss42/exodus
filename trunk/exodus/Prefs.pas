@@ -191,7 +191,6 @@ type
     chkCloseQueue: TCheckBox;
     chkFlashInfinite: TCheckBox;
     chkAAReducePri: TCheckBox;
-    chkAutoAcceptInvites: TCheckBox;
     txtSpoolPath: TEdit;
     Label16: TLabel;
     btnSpoolBrowse: TButton;
@@ -199,6 +198,8 @@ type
     chkShowPending: TCheckBox;
     chkNotifyActiveWindow: TCheckBox;
     btnUpdateCheck: TButton;
+    Label17: TLabel;
+    cboInviteOptions: TComboBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -393,7 +394,7 @@ begin
         chkLogRooms.Checked := getBool('log_rooms');
         txtLogPath.Text := getString('log_path');
         txtSpoolPath.Text := getString('spool_path');
-        chkAutoAcceptInvites.Checked := getBool('auto_accept_invites');
+        cboInviteOptions.ItemIndex := getInt('invite_treatment');
         cboMsgOptions.ItemIndex := getInt('msg_treatment');
         cboPresTracking.ItemIndex := getInt('pres_tracking');
         self.chkLogClick(nil);
@@ -524,10 +525,10 @@ begin
         setBool('msg_queue', chkMsgQueue.Checked);
         setBool('close_queue', chkCloseQueue.Checked);
         setBool('log', chkLog.Checked);
-        setBool('auto_accept_invites', chkAutoAcceptInvites.Checked);
         setBool('log_rooms', chkLogRooms.Checked);
         setString('log_path', txtLogPath.Text);
         setString('spool_path', txtSpoolPath.Text);
+        setInt('invite_treatment', cboInviteOptions.ItemIndex);
         setInt('msg_treatment', cboMsgOptions.ItemIndex);
         setInt('pres_tracking', cboPresTracking.ItemIndex);
 

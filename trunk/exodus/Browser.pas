@@ -152,7 +152,7 @@ function ShowBrowser(jid: string = ''): TfrmBrowse;
 implementation
 {$R *.DFM}
 uses
-    Room, Roster, JabberID, Bookmark,
+    JabberConst, Room, Roster, JabberID, Bookmark,
     ExUtils, Session, JUD, Profile, RegForm, Jabber1;
 
 var

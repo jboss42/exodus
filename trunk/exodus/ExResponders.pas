@@ -86,6 +86,7 @@ resourcestring
 {---------------------------------------}
 implementation
 uses
+    JabberConst, Invite,
     xData, XMLUtils, Jabber1, JabberID, Notify, Transfer, Roster;
 
 var
@@ -95,6 +96,9 @@ var
     _browse: TBrowseResponder;
     _xdata: TFactoryResponder;
     _iqoob: TFactoryResponder;
+    _muc_invite: TFactoryResponder;
+    _conf_invite: TFactoryResponder;
+
 
 {---------------------------------------}
 function getNick(j: string): string;
@@ -121,16 +125,24 @@ begin
     _last := TLastResponder.Create(MainSession);
     _browse := TBrowseResponder.Create(MainSession);
     _xdata := TFactoryResponder.Create(MainSession,
-                '/packet/message/x[@xmlns="jabber:x:data"]',
-                showXData);
+        '/packet/message/x[@xmlns="' + XMLNS_DATA +'"]',
+        showXData);
     _iqoob := TFactoryResponder.Create(MainSession,
-                '/packet/iq[@type="set"]/query[@xmlns="jabber:iq:oob"]',
-                FileReceive);
+        '/packet/iq[@type="set"]/query[@xmlns="' + XMLNS_IQOOB + '"]',
+        FileReceive);
+    _muc_invite := TFactoryResponder.Create(MainSession,
+        '/packet/message/x[@xmlns="' + XMLNS_MUCUSER + '"]',
+        showRecvInvite);
+    _conf_invite := TFactoryResponder.Create(MainSession,
+        '/packet/message/x[@xmlns="' + XMLNS_XCONFERENCE + '"]',
+        showRecvInvite);
 end;
 
 {---------------------------------------}
 procedure cleanupResponders();
 begin
+    _conf_invite.Free();
+    _muc_invite.Free();
     _iqoob.Free();
     _xdata.Free();
     _browse.Free();

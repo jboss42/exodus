@@ -132,7 +132,7 @@ type
 {---------------------------------------}
 implementation
 uses
-    iq,
+    JabberConst, iq,
     presence,
     s10n,
     XMLUtils,

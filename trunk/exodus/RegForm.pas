@@ -109,7 +109,7 @@ var
 implementation
 {$R *.DFM}
 uses
-    Transports, S10n, Roster, Session;
+    JabberConst, Transports, S10n, Roster, Session;
 
 {---------------------------------------}
 procedure TfrmRegister.FormCreate(Sender: TObject);

@@ -65,7 +65,7 @@ implementation
 
 {$R *.dfm}
 uses
-    Session, ExUtils, StrUtils, fGeneric, IQ, Math;
+    JabberConst, Session, ExUtils, StrUtils, fGeneric, IQ, Math;
 
 {---------------------------------------}
 {---------------------------------------}
