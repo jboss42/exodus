@@ -87,7 +87,6 @@ begin
     if (jids <> nil) then begin
         for i := 0 to jids.Count - 1 do
             f.AddRecip(jids[i]);
-        jids.Free();
         end;
     f.Show;
 end;
