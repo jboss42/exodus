@@ -67,15 +67,6 @@ end;
     mLast: TMenuItem;
     mVCard: TMenuItem;
     pnlInfo: TTntPanel;
-    fNS: TframeListbox;
-    fActions: TframeObjectActions;
-    Image1: TImage;
-    Panel1: TTntPanel;
-    pnlTitle: TTntPanel;
-    lblTitle: TTntLabel;
-    Splitter1: TSplitter;
-    imgIcon: TImage;
-    lblHeader: TTntLabel;
     pnlTop: TTntPanel;
     btnClose: TSpeedButton;
     CoolBar1: TCoolBar;
@@ -92,6 +83,7 @@ end;
     pnlButtons: TTntPanel;
     btnGo: TSpeedButton;
     btnRefresh: TSpeedButton;
+    lblError: TTntLabel;
     procedure btnGoClick(Sender: TObject);
     procedure ResizeAddressBar(Sender: TObject);
     procedure cboJIDKeyPress(Sender: TObject; var Key: Char);
@@ -222,8 +214,8 @@ end;
 {---------------------------------------}
 procedure TfrmBrowse.SetupTitle(title, name, jid: string);
 begin
-    lblTitle.Caption := title + ': ' + name;
-    lblHeader.Caption := title;
+    //lblTitle.Caption := title + ': ' + name;
+    //lblHeader.Caption := title;
 end;
 
 {---------------------------------------}
@@ -233,26 +225,17 @@ begin
     _blist.Clear();
     vwBrowse.Items.Count := 0;
     vwBrowse.Items.Clear();
-
-    fNS.List1.Items.Clear;
-    with fActions do begin
-        pRegister.Visible := false;
-        pSearch.Visible := false;
-        pConf.Visible := false;
-end;
-
-    if (_iq <> nil) then begin
-        _iq.Free();
-        _iq := nil;
-    end;
-
+    pnlInfo.Visible := false;
+    vwBrowse.Visible := true;
 end;
 
 {---------------------------------------}
 function TfrmBrowse.ShowError(Tag: TXMLTag): boolean;
 begin
+    pnlInfo.Visible := true;
+    vwBrowse.Visible := false;
     Result := false;
-    lblTitle.Caption := 'ERROR Browsing this Jabber Object!';
+    lblError.Caption := 'Error browsing jabber object.';
     StopBar;
 end;
 
@@ -303,12 +286,9 @@ end;
 {---------------------------------------}
 procedure TfrmBrowse.ShowMain(tag: TXMLTag);
 var
-    i: integer;
     title: string;
     idx: integer;
     bmp: TBitmap;
-    ns: TXMLTagList;
-    cur_ns: string;
 begin
     // Show the main object info
     title := '';
@@ -316,35 +296,17 @@ begin
     getBrowseProps(tag, title, idx);
 
     if (idx = -1) then
-        Image1.Picture.Assign(nil)
+        //Image1.Picture.Assign(nil)
     else begin
         bmp := TBitmap.Create();
         ImageList2.GetBitmap(idx, bmp);
-        imgIcon.Picture.Assign(bmp);
         bmp.Free();
     end;
 
     Self.SetupTitle(title, tag.GetAttribute('name'), '');
     StatBar.Panels[0].Text := IntToStr(_blist.Count) + ' ' + sObjects;
-    pnlInfo.Visible := true;
+    pnlInfo.Visible := false;
     vwBrowse.Visible := true;
-    ns := tag.QueryTags('ns');
-
-    with fActions do begin
-        // show properties for this object
-        for i := 0 to ns.Count - 1 do begin
-            cur_ns := ns[i].Data;
-            fNS.List1.Items.Add(cur_ns);
-            if (cur_ns = XMLNS_REGISTER) then
-                pRegister.Visible := true;
-            if (cur_ns = XMLNS_SEARCH) then
-                pSearch.Visible := true;
-            if ((cur_ns = XMLNS_CONFERENCE) or
-                (cur_ns = XMLNS_MUC) or
-                (cur_ns = 'gc-1.0')) then
-                pConf.Visible := true;
-        end;
-    end;
 
     StopBar;
 end;
@@ -410,6 +372,9 @@ begin
 
     // do the browse query
     id := MainSession.generateID();
+
+    if (_iq <> nil) then FreeAndNil(_iq);
+
     _iq := TJabberIQ.Create(MainSession, id, BrowseCallback, 30);
     with _iq do begin
         Namespace := XMLNS_BROWSE;
@@ -486,12 +451,17 @@ begin
     // Branding
     mJoinConf.Visible := MainSession.Prefs.getBool('brand_muc');
     mBookmark.Visible := MainSession.Prefs.getBool('brand_muc');
+
+    pnlInfo.Visible := false;
+    pnlInfo.Align := alClient;
 end;
 
 {---------------------------------------}
 procedure TfrmBrowse.FormDestroy(Sender: TObject);
 begin
     // Free the History list
+    if (_iq <> nil) then FreeAndNil(_iq);
+    
     _History.Free();
     _blist.Clear();
     _blist.Free();
@@ -639,12 +609,8 @@ var
     regform: TfrmRegister;
 begin
     // Register to this Service
-    if Sender = fActions.lblRegister then
-        j := cboJID.Text
-    else begin
-        if vwBrowse.Selected = nil then exit;
-        j := vwBrowse.Selected.SubItems[0];
-    end;
+    if vwBrowse.Selected = nil then exit;
+    j := vwBrowse.Selected.SubItems[0];
 
     regform := TfrmRegister.Create(Application);
     regform.jid := j;
@@ -728,12 +694,9 @@ var
 begin
     // join conf. room
     cjid := '';
-    if (Sender = fActions.lblConf) then
-        cjid := cboJID.Text
-    else begin
-        itm := vwBrowse.Selected;
-        cjid := itm.SubItems[0];
-    end;
+    itm := vwBrowse.Selected;
+    cjid := itm.SubItems[0];
+
     tmpjid := TJabberID.Create(cjid);
     if (tmpjid.user = '') then
         StartJoinRoom(tmpjid, MainSession.username, '')
@@ -750,12 +713,8 @@ var
 begin
     // Search using this service.
     j := '';
-    if (Sender = fActions.lblSearch) then
-        j := cboJID.Text
-    else begin
-        itm := vwBrowse.Selected;
-        j := itm.SubItems[0];
-    end;
+    itm := vwBrowse.Selected;
+    j := itm.SubItems[0];
 
     if (j <> '') then
         StartSearch(j);
@@ -782,10 +741,10 @@ var
     jid: string;
 begin
     // IQ Callback for current query
+    _iq := nil;
     if ((event = 'xml') or (event = 'cache')) then begin
         if (tag.GetAttribute('type') = 'error') then begin
             Self.ShowError(tag);
-            _iq := nil;
             exit;
         end;
 
@@ -793,7 +752,6 @@ begin
         clist := tag.ChildTags();
         if (clist.Count <= 0) then begin
             Self.ShowError(tag);
-            _iq := nil;
             exit;
         end;
 
@@ -825,9 +783,7 @@ begin
     else begin
         // probably a timeout
     end;
-
     vwBrowse.Items.Count := _blist.Count;
-    _iq := nil;
 end;
 
 {---------------------------------------}
