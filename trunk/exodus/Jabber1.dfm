@@ -1,8 +1,8 @@
 object frmExodus: TfrmExodus
-  Left = 567
-  Top = 357
-  Width = 456
-  Height = 348
+  Left = 236
+  Top = 277
+  Width = 452
+  Height = 344
   AlphaBlendValue = 240
   Caption = 'Exodus'
   Color = clBtnFace
@@ -28,8 +28,8 @@ object frmExodus: TfrmExodus
   object Tabs: TPageControl
     Left = 0
     Top = 31
-    Width = 448
-    Height = 263
+    Width = 444
+    Height = 259
     ActivePage = tbsRoster
     Align = alClient
     DockSite = True
@@ -52,7 +52,7 @@ object frmExodus: TfrmExodus
         Left = 209
         Top = 0
         Width = 3
-        Height = 235
+        Height = 231
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = Splitter1Moved
@@ -61,7 +61,7 @@ object frmExodus: TfrmExodus
         Left = 0
         Top = 0
         Width = 209
-        Height = 235
+        Height = 231
         Align = alLeft
         BevelOuter = bvNone
         UseDockManager = False
@@ -72,10 +72,11 @@ object frmExodus: TfrmExodus
       object pnlRight: TPanel
         Left = 212
         Top = 0
-        Width = 228
-        Height = 235
+        Width = 224
+        Height = 231
         Align = alClient
         BevelOuter = bvNone
+        Caption = 'THIS IS PNLRIGHT'
         DragCursor = crDefault
         DragKind = dkDock
         TabOrder = 1
@@ -85,7 +86,7 @@ object frmExodus: TfrmExodus
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 448
+    Width = 444
     Height = 31
     AutoSize = True
     Bands = <
@@ -93,7 +94,7 @@ object frmExodus: TfrmExodus
         Control = ToolBar1
         ImageIndex = -1
         MinHeight = 27
-        Width = 444
+        Width = 440
       end>
     object ToolBar1: TToolBar
       Left = 9
@@ -191,7 +192,6 @@ object frmExodus: TfrmExodus
       Caption = 'Exodus'
       object Test1: TMenuItem
         Caption = 'Test'
-        Visible = False
         OnClick = Test1Click
       end
       object Connect2: TMenuItem
@@ -216,6 +216,10 @@ object frmExodus: TfrmExodus
           Caption = 'Expanded Mode'
           Checked = True
           OnClick = btnExpandedClick
+        end
+        object ShowEventsWindow1: TMenuItem
+          Caption = 'Events Window'
+          OnClick = ShowEventsWindow1Click
         end
       end
       object ClearMessages1: TMenuItem

@@ -24,7 +24,7 @@ uses
     Chat, ChatController, JabberID, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2,
-    TntStdCtrls;
+    TntStdCtrls, Buttons;
 
 type
   TfrmChat = class(TfrmBaseChat)
@@ -47,6 +47,7 @@ type
     mnuTimeRequest: TMenuItem;
     mnuLastActivity: TMenuItem;
     mnuOnTop: TMenuItem;
+    btnClose: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -65,6 +66,8 @@ type
     procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
     procedure mnuSaveClick(Sender: TObject);
     procedure mnuOnTopClick(Sender: TObject);
+    procedure FormResize(Sender: TObject);
+    procedure btnCloseClick(Sender: TObject);
   private
     { Private declarations }
     jid: string;            // jid of the person we are talking to
@@ -775,6 +778,7 @@ end;
 procedure TfrmChat.DockForm;
 begin
     inherited;
+    btnClose.Visible := true;
     DragAcceptFiles( Handle, False );
 end;
 
@@ -782,6 +786,7 @@ end;
 procedure TfrmChat.FloatForm;
 begin
     inherited;
+    btnClose.Visible := false;
     DragAcceptFiles( Handle, True );
 end;
 
@@ -789,6 +794,7 @@ end;
 procedure TfrmChat.FormEndDock(Sender, Target: TObject; X, Y: Integer);
 begin
     inherited;
+    btnClose.Visible := Docked;
     DragAcceptFiles( Handle, not Docked);
 end;
 
@@ -813,6 +819,19 @@ begin
         Self.FormStyle := fsStayOnTop
     else
         Self.FormStyle := fsNormal;
+end;
+
+procedure TfrmChat.FormResize(Sender: TObject);
+begin
+  inherited;
+    // make the close btn be right justified..
+    btnClose.Left := Panel1.Width - btnClose.Width - 2;
+end;
+
+procedure TfrmChat.btnCloseClick(Sender: TObject);
+begin
+  inherited;
+    Self.Close();
 end;
 
 end.

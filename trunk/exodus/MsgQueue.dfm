@@ -1,8 +1,8 @@
 object frmMsgQueue: TfrmMsgQueue
-  Left = 231
-  Top = 236
-  Width = 436
-  Height = 328
+  Left = 233
+  Top = 238
+  Width = 432
+  Height = 324
   Caption = 'Events'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,7 +20,7 @@ object frmMsgQueue: TfrmMsgQueue
   object Splitter1: TSplitter
     Left = 0
     Top = 150
-    Width = 428
+    Width = 424
     Height = 3
     Cursor = crVSplit
     Align = alTop
@@ -28,7 +28,7 @@ object frmMsgQueue: TfrmMsgQueue
   object lstEvents: TListView
     Left = 0
     Top = 0
-    Width = 428
+    Width = 424
     Height = 150
     Align = alTop
     Columns = <
@@ -46,20 +46,22 @@ object frmMsgQueue: TfrmMsgQueue
       end>
     ColumnClick = False
     MultiSelect = True
+    OwnerData = True
     ReadOnly = True
     RowSelect = True
     SmallImages = frmExodus.ImageList2
     TabOrder = 0
     ViewStyle = vsReport
     OnChange = lstEventsChange
+    OnData = lstEventsData
     OnDblClick = lstEventsDblClick
     OnKeyDown = lstEventsKeyDown
   end
   object txtMsg: TRichEdit
     Left = 0
     Top = 153
-    Width = 428
-    Height = 141
+    Width = 424
+    Height = 137
     Align = alClient
     ReadOnly = True
     ScrollBars = ssBoth

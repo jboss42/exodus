@@ -24,7 +24,7 @@ interface
 
 uses
     GUIFactory, Register, Notify, S10n,
-    ExResponders, ExEvents,
+    ExodusController, ExResponders, ExEvents,
     RosterWindow, Presence, XMLTag,
     ShellAPI, Registry,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
@@ -181,6 +181,7 @@ type
     btnExpanded: TToolButton;
     trayMessage: TMenuItem;
     timReconnect: TTimer;
+    ShowEventsWindow1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -235,6 +236,7 @@ type
     procedure trayMessageClick(Sender: TObject);
     procedure mnuBrowserClick(Sender: TObject);
     procedure timReconnectTimer(Sender: TObject);
+    procedure ShowEventsWindow1Click(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -296,12 +298,14 @@ type
     _cli_show: string;
     _cli_status: string;
 
+    _controller: TExodusController;
+
     procedure presCustomPresClick(Sender: TObject);
 
-    procedure restoreEvents(expanded: boolean);
     procedure restoreToolbar;
     procedure restoreAlpha;
     procedure restoreMenus(enable: boolean);
+    procedure restoreEvents(expanded: boolean);
 
     procedure setupTrayIcon();
 
@@ -328,6 +332,9 @@ type
     procedure WMCloseApp(var msg: TMessage); message WM_CLOSEAPP;
     procedure WMReconnect(var msg: TMessage); message WM_RECONNECT;
     procedure WMInstaller(var msg: TMessage); message WM_INSTALLER;
+
+    function WMAppBar(dwMessage: DWORD; var pData: TAppBarData): UINT; stdcall;
+
   published
     // Callbacks
     procedure SessionCallback(event: string; tag: TXMLTag);
@@ -348,6 +355,12 @@ type
     procedure CTCPCallback(event: string; tag: TXMLTag);
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
     procedure DefaultHandler(var msg); override;
+
+    procedure FloatMsgQueue();
+    procedure DockMsgQueue();
+
+    property ComController: TExodusController read _controller;
+
   end;
 
 var
@@ -468,7 +481,8 @@ const
 implementation
 uses
     About, AutoUpdate, Bookmark, Browser, ChatWin, CommCtrl, CustomPres,
-    Debug, Dockable, ExUtils, GetOpt, InputPassword, Iq, JUD, JabberID,
+    Debug, Dockable, ExUtils, GetOpt, InputPassword,
+    Iq, JUD, JabberID,
     JoinRoom, Login, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, Profile, RegForm, RemoveContact, RiserWindow,
     Roster, RosterAdd, Session, Transfer, VCard, XMLUtils;
@@ -650,6 +664,10 @@ var
     config: string;
     help_msg: string;
     win_ver: string;
+
+    //appbar: TAppBarData;
+    //res: Cardinal;
+
 begin
     // initialize vars.  wish we were using a 'real' compiler.
     debug := false;
@@ -911,7 +929,40 @@ begin
     Self.setupTrayIcon();
 
     MainSession.setPresence(_cli_show, _cli_status, _cli_priority);
+    _controller := TExodusController.Create();
+
+    (*
+    // test AppBar stuff
+    appbar.cbSize := Sizeof(TAppBarData);
+    appbar.hWnd := Self.Handle;
+    appbar.uEdge := ABE_RIGHT;
+
+    appbar.uCallbackMessage := uint(@TfrmExodus.WMAppBar);
+
+    res := SHAppBarMessage(ABM_NEW, appbar);
+
+    appbar.rc.Left := Screen.Width - Self.Width;
+    appbar.rc.Top := 0;
+    appbar.rc.Bottom := Screen.Height;
+    appbar.rc.Right := appbar.rc.Left + Self.Width;
+    res := SHAppBarMessage(ABM_QUERYPOS, appbar);
+    res := SHAppBarMessage(ABM_SETPOS, appbar);
+    MoveWindow(Self.Handle, appbar.rc.Left, appbar.rc.Top,
+        Self.Width, Screen.Height, true);
+    appbar.lParam := 1;
+    SHAppBarMessage(ABM_SETAUTOHIDEBAR, appbar);
+    *)
+
 end;
+
+function TfrmExodus.WMAppBar(dwMessage: DWORD; var pData: TAppBarData): UINT; stdcall;
+begin
+    //
+    Result := 0;
+    MoveWindow(Self.Handle, pData.rc.Left, pData.rc.Top,
+        Self.Width, Screen.Height, true);
+end;
+
 
 {---------------------------------------}
 procedure TfrmExodus.setupTrayIcon();
@@ -1487,6 +1538,9 @@ begin
             exit;
             end;
 
+        // Unload all of the remaining plugins
+        UnloadPlugins();
+
         // Unregister callbacks, etc.
         MainSession.UnRegisterCallback(_sessioncb);
         MainSession.UnRegisterCallback(_msgcb);
@@ -1539,6 +1593,7 @@ begin
 
     // Kill the tray icon stuff
     _tray_icon.Free();
+
 end;
 
 {---------------------------------------}
@@ -1658,35 +1713,53 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmExodus.DockMsgQueue();
+var
+    ew, w: integer;
+begin
+    w := MainSession.Prefs.getInt(P_EVENT_WIDTH);
+
+    pnlRoster.align := alLeft;
+    Splitter1.align := alRight;
+    Splitter1.align := alLeft;
+    pnlRight.Width := w;
+    ew := Self.ClientWidth - w;
+    if (ew < 0) then ew := Self.ClientWidth div 2;
+    pnlRoster.Width := ew;
+    pnlRight.Visible := true;
+    pnlRight.Width := w;
+
+    if (frmMsgQueue <> nil) then begin
+        frmMsgQueue.ManualDock(pnlRight, nil, alClient);
+        frmMsgQueue.Show;
+        end;
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.FloatMsgQueue();
+var
+    w: integer;
+begin
+    w := pnlRight.Width;
+    MainSession.Prefs.setInt('event_width', w);
+    pnlRight.Visible := false;
+    pnlRoster.align := alClient;
+end;
+
+{---------------------------------------}
 procedure TfrmExodus.restoreEvents(expanded: boolean);
 var
-    ew, w: longint;
     activeTab: integer;
 begin
     // Setup the msg queue window based on the prefs
     with MainSession.Prefs do begin
-        w := getInt(P_EVENT_WIDTH);
         setBool('expanded', expanded);
 
         if expanded then begin
             Tabs.Docksite := true;
-            pnlRoster.align := alLeft;
-            Splitter1.align := alRight;
-            Splitter1.align := alLeft;
-            pnlRight.Width := w;
-            ew := Self.ClientWidth - w;
-            if (ew < 0) then ew := Self.ClientWidth div 2;
-            pnlRoster.Width := ew;
-            pnlRight.Visible := true;
-            pnlRight.Width := w;
+            DockMsgQueue();
+
             tbsRoster.TabVisible := true;
-
-            // make sure the MsgQueue window is docked
-            if (frmMsgQueue <> nil) then begin
-                frmMsgQueue.ManualDock(pnlRight, nil, alClient);
-                frmMsgQueue.Show;
-                end;
-
             // make sure the debug window is docked
             activeTab := Tabs.ActivePage.PageIndex;
             DockDebugForm();
@@ -1694,13 +1767,10 @@ begin
             Tabs.ActivePage := Tabs.Pages[activeTab];
             end
         else begin
-            w := pnlRight.Width;
-            setInt('event_width', w);
             tbsRoster.TabVisible := false;
             Tabs.Docksite := false;
+            FloatMsgQueue();
             Tabs.ActivePage := tbsRoster;
-            pnlRoster.align := alClient;
-
             FloatDebugForm();
             end;
         end;
@@ -2141,12 +2211,18 @@ var
     f: TForm;
 begin
     // Undock this window
-    if Tabs.TabIndex = 0 then exit;
-
     t := Tabs.ActivePage;
-    f := getTabForm(t);
-    if ((f <> nil) and (f is TfrmDockable)) then
-        TfrmDockable(f).FloatForm();
+    if (t = tbsRoster) then begin
+        // Float the msg queue window
+        getMsgQueue().Align := alNone;
+        getMsgQueue().FloatForm();
+        FloatMsgQueue();
+        end
+    else begin
+        f := getTabForm(t);
+        if ((f <> nil) and (f is TfrmDockable)) then
+            TfrmDockable(f).FloatForm();
+        end;
 end;
 
 {---------------------------------------}
@@ -2433,13 +2509,7 @@ end;
 procedure TfrmExodus.Test1Click(Sender: TObject);
 begin
     // Test something..
-    _testaa := not _testaa;
-    if (_testaa) then begin
-        last_tick := GetTickCount() - 100000;
-        Self.SetAutoAway();
-        end
-    else
-        Self.SetAutoAvailable();
+    LoadPlugin('RosterClean.ExodusRosterClean');
 end;
 
 {---------------------------------------}
@@ -2513,6 +2583,11 @@ begin
         end;
 end;
 
+
+procedure TfrmExodus.ShowEventsWindow1Click(Sender: TObject);
+begin
+    getMsgQueue.Show();
+end;
 
 initialization
     sExodusPresence := RegisterWindowMessage('EXODUS_PRESENCE');

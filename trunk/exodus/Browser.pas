@@ -21,12 +21,25 @@ unit Browser;
 interface
 
 uses
-    Dockable, IQ, XMLTag, XMLUtils,
+    Dockable, IQ, XMLTag, XMLUtils, Contnrs,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     StdCtrls, ImgList, Buttons, ComCtrls, ExtCtrls, Menus, ToolWin, fListbox,
     fService;
 
 type
+
+  TBrowseItem = class
+  public
+    img_idx: integer;
+    jid: string;
+    stype: string;
+    name: string;
+    nslist: TStringlist;
+
+    constructor create;
+    destructor destroy; override;
+    end;
+
   TfrmBrowse = class(TfrmDockable)
     Panel3: TPanel;
     ImageList1: TImageList;
@@ -88,7 +101,6 @@ type
     procedure Details1Click(Sender: TObject);
     procedure btnHomeClick(Sender: TObject);
     procedure btnRefreshClick(Sender: TObject);
-    procedure vwBrowseDeletion(Sender: TObject; Item: TListItem);
     procedure vwBrowseChange(Sender: TObject; Item: TListItem;
       Change: TItemChange);
     procedure mRegisterClick(Sender: TObject);
@@ -98,16 +110,14 @@ type
     procedure mBrowseClick(Sender: TObject);
     procedure mBrowseNewClick(Sender: TObject);
     procedure mJoinConfClick(Sender: TObject);
-    procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
-    procedure FormStartDock(Sender: TObject;
-      var DragObject: TDragDockObject);
     procedure mSearchClick(Sender: TObject);
+    procedure vwBrowseData(Sender: TObject; Item: TListItem);
   private
     { Private declarations }
     _cur: integer;
     _history: TStringList;
-
     _iq: TJabberIQ;
+    _blist: TObjectList;
     procedure BrowseCallback(event: string; tag: TXMLTag);
 
     procedure ShowMain(tag: TXMLTag);
@@ -119,9 +129,6 @@ type
     procedure StartBar();
     procedure StopBar();
     procedure getBrowseProps(tag: TXMLTag; var title: string; var image_index: integer);
-
-    procedure StartDockChange();
-    procedure EndDockChange();
 
     function ShowError(Tag: TXMLTag): boolean;
 
@@ -160,6 +167,7 @@ resourceString
     sObjects = 'Objects';
 
 
+{---------------------------------------}
 function ShowBrowser(jid: string = ''): TfrmBrowse;
 begin
     Result := TfrmBrowse.Create(Application);
@@ -173,6 +181,30 @@ begin
 end;
 
 {---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+constructor TBrowseItem.Create();
+begin
+    inherited Create;
+
+    nslist := TStringlist.Create();
+    jid := '';
+    name := '';
+    stype := '';
+    img_idx := -1;
+end;
+
+{---------------------------------------}
+destructor TBrowseItem.destroy();
+begin
+    nslist.Free();
+
+    inherited Destroy;
+end;
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 procedure TfrmBrowse.SetupTitle(title, name, jid: string);
 begin
     lblTitle.Caption := title + ': ' + name;
@@ -181,20 +213,11 @@ end;
 
 {---------------------------------------}
 procedure TfrmBrowse.StartList;
-var
-    i: integer;
-    itm: TListItem;
 begin
     // The clears the list properly.
-    with vwBrowse do begin
-        for i := 0 to Items.Count - 1 do begin
-            itm := items[i];
-            if itm.Data <> nil then
-                TStringList(itm.Data).Free;
-            itm.Data := nil;
-            end;
-        Items.Clear;
-        end;
+    _blist.Clear();
+    vwBrowse.Items.Count := 0;
+    vwBrowse.Items.Clear();
 
     fNS.List1.Items.Clear;
     with fActions do begin
@@ -281,7 +304,7 @@ begin
         end;
 
     Self.SetupTitle(title, tag.GetAttribute('name'), '');
-    StatBar.Panels[0].Text := IntToStr(vwBrowse.Items.Count) + ' ' + sObjects;
+    StatBar.Panels[0].Text := IntToStr(_blist.Count) + ' ' + sObjects;
     pnlInfo.Visible := true;
     vwBrowse.Visible := true;
     ns := tag.QueryTags('ns');
@@ -306,41 +329,35 @@ end;
 {---------------------------------------}
 procedure TfrmBrowse.ShowBrowse(tag: TXMLTag);
 var
-    itm: TListItem;
+    itm: TBrowseItem;
     title, stype, jid, name: string;
     i, idx: integer;
     ns: TXMLTagList;
-    nslist: TStringList;
 begin
     // Show this item.
-    itm := vwBrowse.Items.Add;
+    itm := TBrowseItem.Create();
     jid := tag.getAttribute('jid');
     name := tag.getAttribute('name');
     stype := tag.GetAttribute('type');
+
+    itm.name := name;
+    itm.jid := jid;
+    itm.stype := stype;
+
     with itm do begin
-
-        if (name <> '') then
-            Caption := name
-        else
-            Caption := jid;
-
         // create a list of namespaces linked to the object
-        nslist := TStringList.Create;
-        SubItems.Add(jid);
-        SubItems.Add(stype);
-
         title := '';
         idx := -1;
         getBrowseProps(tag, title, idx);
-        ImageIndex := idx;
+        img_idx := idx;
 
         // Add strings to the nslist to enable the context
         // popup support.
         ns := tag.QueryTags('ns');
         for i := 0 to ns.Count - 1 do
             nslist.Add(ns[i].Data);
-        Data := nsList;
         end;
+    _blist.Add(itm);
 end;
 
 {---------------------------------------}
@@ -431,10 +448,7 @@ procedure TfrmBrowse.FormCreate(Sender: TObject);
 begin
     // Create the History list
     _History := TStringList.Create;
-
-    Self.OnDockStartChange := StartDockChange;
-    Self.OnDockEndChange := EndDockChange;
-
+    _blist := TObjectList.Create();
 end;
 
 {---------------------------------------}
@@ -442,6 +456,8 @@ procedure TfrmBrowse.FormDestroy(Sender: TObject);
 begin
     // Free the History list
     _History.Free();
+    _blist.Clear();
+    _blist.Free();
 end;
 
 {---------------------------------------}
@@ -524,42 +540,23 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmBrowse.vwBrowseDeletion(Sender: TObject; Item: TListItem);
-begin
-    // An object is being deleted from the list view
-    // free the associated stringlist of namespaces
-    if Item.Data <> nil then begin
-        TStringList(Item.Data).Free;
-        Item.Data := nil;
-        end;
-end;
-
-{---------------------------------------}
 procedure TfrmBrowse.vwBrowseChange(Sender: TObject; Item: TListItem;
   Change: TItemChange);
+var
+    b: TBrowseItem;
 begin
     // The selection has changed from one item to another
     if Item = nil then exit;
 
-    if item.Data <> nil then begin
-        with TStringList(Item.Data) do begin
-            mVersion.Enabled := IndexOf(XMLNS_VERSION) >= 0;
-            mTime.Enabled := IndexOf(XMLNS_TIME) >= 0;
-            mLast.Enabled := Indexof(XMLNS_LAST) >= 0;
-            mSearch.Enabled := IndexOf(XMLNS_SEARCH) >= 0;
-            mRegister.Enabled := IndexOf(XMLNS_REGISTER) >= 0;
-            mJoinConf.Enabled := IndexOf(XMLNS_CONFERENCE) >= 0;
-            end;
-        end
-    else begin
-        mVersion.Enabled := false;
-        mTime.Enabled := false;
-        mLast.Enabled := false;
-        mSearch.Enabled := false;
-        mRegister.Enabled := false;
-        mJoinConf.Enabled := false;
+    b := TBrowseItem(_blist[Item.Index]);
+    with b.nslist do begin
+        mVersion.Enabled := IndexOf(XMLNS_VERSION) >= 0;
+        mTime.Enabled := IndexOf(XMLNS_TIME) >= 0;
+        mLast.Enabled := Indexof(XMLNS_LAST) >= 0;
+        mSearch.Enabled := IndexOf(XMLNS_SEARCH) >= 0;
+        mRegister.Enabled := IndexOf(XMLNS_REGISTER) >= 0;
+        mJoinConf.Enabled := IndexOf(XMLNS_CONFERENCE) >= 0;
         end;
-
 end;
 
 {---------------------------------------}
@@ -656,32 +653,6 @@ begin
     StartRoom(cjid, MainSession.Username);
 end;
 
-procedure TfrmBrowse.StartDockChange();
-begin
-    vwBrowse.Items.Clear;
-end;
-
-procedure TfrmBrowse.EndDockChange();
-begin
-    // rebrowse to this JID to refresh the dumb listview.
-    // *SIGH*
-    if cboJID.Text <> '' then
-        DoBrowse(cboJID.Text, false);
-end;
-
-{---------------------------------------}
-procedure TfrmBrowse.FormEndDock(Sender, Target: TObject; X, Y: Integer);
-begin
-    Self.EndDockChange();
-end;
-
-{---------------------------------------}
-procedure TfrmBrowse.FormStartDock(Sender: TObject;
-  var DragObject: TDragDockObject);
-begin
-    Self.StartDockChange();
-end;
-
 {---------------------------------------}
 procedure TfrmBrowse.mSearchClick(Sender: TObject);
 var
@@ -756,8 +727,27 @@ begin
     else begin
         // probably a timeout
         end;
+
+    vwBrowse.Items.Count := _blist.Count;
 end;
 
+{---------------------------------------}
+procedure TfrmBrowse.vwBrowseData(Sender: TObject; Item: TListItem);
+var
+    b: TBrowseItem;
+begin
+  inherited;
+    with Item do begin
+        b := TBrowseItem(_blist[index]);
+        if (b.name <> '') then
+            caption := b.name
+        else
+            caption := b.jid;
+        ImageIndex := b.img_idx;
+        SubItems.Add(b.jid);
+        SubItems.Add(b.stype);
+        end;
+end;
 
 initialization
     browseCache := TStringList.Create();
