@@ -44,12 +44,10 @@ type
         lid: longint;
         sig: TSignal;
         l: TSignalListener;
-end;
+    end;
 
     {---------------------------------------}
-    {
-    This is the main signal dispatcher...
-    }
+    // This is the main signal dispatcher...
     TSignalDispatcher = class(TStringList)
     private
         _lid_info: TStringList;
@@ -64,9 +62,10 @@ end;
         procedure AddListenerInfo(lid: integer; sig: TSignal; l: TSignalListener);
 
         function TotalCount: longint;
-end;
+    end;
 
     {---------------------------------------}
+    // Normal signal event listener
     TSignalListener = class
     public
         cb_id: longint;
@@ -75,7 +74,7 @@ end;
         methodname: string;
 
         constructor Create;
-end;
+    end;
 
     TQueuedEvent = class
     public
@@ -84,7 +83,7 @@ end;
         tag: TXMLTag;
         constructor Create;
         destructor Destroy; override;
-end;
+    end;
 
     {---------------------------------------}
     // classes for change list stuff.
@@ -94,7 +93,7 @@ end;
         l: TSignalListener;
         event: string;
         op: TChangeListOps;
-end;
+    end;
 
 
     {---------------------------------------}
@@ -105,8 +104,10 @@ end;
         _change_list: TObjectQueue;
     protected
         invoking: boolean;
-        Dispatcher: TSignalDispatcher;      // pointer to the disp that owns us
-        function addListener(event: string; l: TSignalListener): boolean; overload; virtual;
+        // pointer to the disp that owns us
+        Dispatcher: TSignalDispatcher;
+        function addListener(event: string;
+            l: TSignalListener): boolean; overload; virtual;
         function delListener(l: TSignalListener): boolean;
         procedure Invoke(event: string; tag: TXMLTag); overload; virtual;
         procedure processChangeList();
@@ -115,14 +116,15 @@ end;
         destructor Destroy; override;
 
         property change_list: TObjectQueue read _change_list;
-end;
+    end;
 
     {---------------------------------------}
     // Just a simple implementation of TSignal
     TBasicSignal = class(TSignal)
     public
-        function addListener(event: string; callback: TSignalEvent): TSignalListener; overload;
-end;
+        function addListener(event: string;
+            callback: TSignalEvent): TSignalListener; overload;
+    end;
 
 
     {---------------------------------------}
@@ -137,13 +139,13 @@ end;
         destructor Destroy; override;
         procedure ParseXPLite(xplite: string);
         property XPLite: TXPLite read xp;
-end;
+    end;
 
     TPacketSignal = class(TSignal)
     public
         function addListener(xplite: string; callback: TPacketEvent): TPacketListener; overload;
         procedure Invoke(event: string; tag: TXMLTag); override;
-end;
+    end;
 
     {---------------------------------------}
     // Signal that handles an additional string at the end
@@ -154,7 +156,7 @@ end;
     public
         function addListener(callback: TDataStringEvent): TStringListener; overload;
         procedure Invoke(event: string; tag: TXMLTag; data: Widestring); overload;
-end;
+    end;
 
 
     {M-}
@@ -483,6 +485,7 @@ var
     pe: TPacketEvent;
     pl: TPacketListener;
     xp: TXPLite;
+    fired: boolean;
 begin
     {
     check this packet against this xplite
@@ -490,15 +493,22 @@ begin
     /iq/query@xmlns='jabber:iq:roster'
     }
     invoking := true;
+    fired := false;
     for i := 0 to Self.Count - 1 do begin
         pl := TPacketListener(Self.Objects[i]);
         xp := pl.XPLite;
         if xp.Compare(tag) then begin
             pe := TPacketEvent(pl.Callback);
             pe('xml', tag);
+            fired := true;
         end;
     end;
     invoking := false;
+
+    if (fired = false) then begin
+        // fire unhandled packet
+        Dispatcher.DispatchSignal('/unhandled', tag);
+    end;
 
     if change_list.Count > 0 then
         Self.processChangeList();

@@ -99,6 +99,17 @@ type
         destructor Destroy; override;
     end;
 
+    TUnhandledResponder = class
+    private
+        _session: TJabberSession;
+        _cbid: integer;
+    published
+        procedure callback(event: string; tag: TXMLTag);
+    public
+        constructor Create(Session: TJabberSession); overload;
+    end;
+
+
 procedure initResponders();
 procedure cleanupResponders();
 
@@ -131,6 +142,7 @@ var
     _iqoob: TFactoryResponder;
     _muc_invite: TFactoryResponder;
     _conf_invite: TFactoryResponder;
+    _unhandled: TUnhandledResponder;
 
 {---------------------------------------}
 function getNick(j: string): string;
@@ -167,6 +179,7 @@ begin
     _conf_invite := TFactoryResponder.Create(MainSession,
         '/packet/message/x[@xmlns="' + XMLNS_XCONFERENCE + '"]',
         showConfInvite);
+    _unhandled := TUnhandledResponder.Create(MainSession);
 
     // Create some globally accessable responders.
     Exodus_Browse := TBrowseResponder.Create(MainSession);
@@ -181,6 +194,7 @@ begin
     FreeAndNil(Exodus_Disco_Items);
     FreeAndNil(Exodus_Browse);
 
+    FreeAndNil(_unhandled);
     FreeAndNil(_conf_invite);
     FreeAndNil(_muc_invite);
     FreeAndNil(_iqoob);
@@ -570,6 +584,36 @@ procedure TFactoryResponder.respCallback(event: string; tag: TXMLTag);
 begin
     _factory(tag);
 end;
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+constructor TUnhandledResponder.Create(Session: TJabberSession);
+begin
+    //
+    _session := Session;
+    _cbid := _session.RegisterCallback(self.Callback, '/unhandled');
+end;
+
+{---------------------------------------}
+procedure TUnhandledResponder.callback(event: string; tag: TXMLTag);
+var
+    f: Widestring;
+    b, e: TXMLTag;
+begin
+    //
+    if (tag.Name = 'iq') then begin
+        b := TXMLTag.Create(tag);
+        f := b.GetAttribute('from');
+        b.setAttribute('from', b.getAttribute('to'));
+        b.setAttribute('to', f);
+        b.setAttribute('type', 'error');
+        e := b.AddBasicTag('error', 'Not Implemented');
+        e.setAttribute('code', '501');
+        _session.SendTag(b);
+    end;
+end;
+
 
 initialization
     Exodus_Browse := nil;
