@@ -198,7 +198,7 @@ begin
         end;
     end;
 
-    if (FileIsReadOnly(fn)) then begin
+    if ((FileExists(fn)) and (FileIsReadOnly(fn))) then begin
         MessageDlgW(_('The file you specified to store queued messages is read only. Please specify another file'),
             mtError, [mbOK], 0);
         exit;
