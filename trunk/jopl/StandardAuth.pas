@@ -92,7 +92,9 @@ end;
 {---------------------------------------}
 procedure TStandardAuth.CancelAuthentication();
 begin
-    //
+    // Clean out pending iq's
+    if (_auth_iq <> nil) then
+        FreeAndNil(_auth_iq);
 end;
 
 {---------------------------------------}
@@ -104,7 +106,9 @@ end;
 
 procedure TStandardAuth.CancelRegistration();
 begin
-    //
+    // Clean out pending iq's
+    if (_auth_iq <> nil) then
+        FreeAndNil(_auth_iq);
 end;
 
 {---------------------------------------}

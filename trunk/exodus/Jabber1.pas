@@ -992,7 +992,8 @@ procedure TfrmExodus.CancelConnect();
 begin
     _logoff := true;
     if (MainSession.Active) then
-        MainSession.Stream.Disconnect()
+        MainSession.Disconnect()
+        //MainSession.Stream.Disconnect()
     else
         timReconnect.Enabled := false;
 end;
@@ -1400,7 +1401,8 @@ begin
         if ((MainSession.Active) and (not _appclosing))then begin
             _appclosing := true;
             _logoff := true;
-            MainSession.Stream.Disconnect();
+            //MainSession.Stream.Disconnect();
+            MainSession.Disconnect();
             CanClose := false;
             exit;
         end;
