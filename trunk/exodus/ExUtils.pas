@@ -95,6 +95,8 @@ procedure jabberSendMsg(to_jid: Widestring; mtag, xtags: TXMLTag;
 procedure jabberSendMsg(to_jid: Widestring; mtag: TXMLTag;
     xtags, body, subject: Widestring); overload;
 
+procedure centerMainForm(f: TForm);
+
 resourcestring
     sDownloading      = 'Downloading...';
     sDownloadComplete = 'Download Complete';
@@ -866,6 +868,43 @@ begin
 
     Result := (GetForegroundWindow = hwnd);
     end;
+end;
+
+{---------------------------------------}
+procedure centerMainForm(f: TForm);
+var
+    x,y,l,t,h,w: integer;
+begin
+    // center the form over frmExodus..
+    // but don't overlay edges.
+
+    with frmExodus do begin
+        x := Left + (Width div 2);
+        y := Top + (Height div 2);
+    end;
+
+    h := f.Height;
+    w := f.Width;
+
+    if (h > Screen.Height) then
+        h := Trunc(Screen.Height * 0.667);
+    if (w > Screen.Width) then
+        w := Trunc(Screen.Width * 0.667);
+
+    l := x - (h div 2);
+    t := y - (w div 2);
+
+    if (t < 10) then
+        t := frmExodus.Top + 10
+    else if ((t + h) > Screen.Height) then
+        t := Screen.Height - h - 10;
+
+    if (l < 10) then
+        l := frmExodus.Left + 10
+    else if ((l + w) > Screen.Width) then
+        l := Screen.Width - w - 10;
+
+    f.SetBounds(l,t,w,h);
 end;
 
 {---------------------------------------}

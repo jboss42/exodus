@@ -1,8 +1,8 @@
 object frmXData: TfrmXData
-  Left = 224
-  Top = 439
+  Left = 214
+  Top = 330
   Width = 328
-  Height = 289
+  Height = 243
   BorderWidth = 5
   Caption = 'x:data Form'
   Color = clBtnFace
@@ -13,7 +13,7 @@ object frmXData: TfrmXData
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
-  Position = poMainFormCenter
+  Position = poDefaultPosOnly
   OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
@@ -23,9 +23,9 @@ object frmXData: TfrmXData
     Left = 0
     Top = 13
     Width = 310
-    Height = 10
+    Height = 8
     Align = alTop
-    Shape = bsBottomLine
+    Shape = bsTopLine
   end
   object lblIns: TTntLabel
     Left = 0
@@ -38,7 +38,7 @@ object frmXData: TfrmXData
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 218
+    Top = 172
     Width = 310
     Height = 32
     Align = alBottom
@@ -50,25 +50,29 @@ object frmXData: TfrmXData
     Font.Style = []
     ParentFont = False
     TabOrder = 0
-    inherited Bevel1: TBevel
+    inherited Panel2: TPanel
       Width = 310
-    end
-    inherited Panel1: TPanel
-      Left = 150
-      Height = 27
-      inherited btnOK: TButton
-        OnClick = frameButtons1btnOKClick
+      Height = 32
+      inherited Bevel1: TBevel
+        Width = 310
       end
-      inherited btnCancel: TButton
-        OnClick = frameButtons1btnCancelClick
+      inherited Panel1: TPanel
+        Left = 150
+        Height = 27
+        inherited btnOK: TButton
+          OnClick = frameButtons1btnOKClick
+        end
+        inherited btnCancel: TButton
+          OnClick = frameButtons1btnCancelClick
+        end
       end
     end
   end
   object box: TScrollBox
     Left = 0
-    Top = 23
+    Top = 21
     Width = 310
-    Height = 195
+    Height = 151
     Align = alClient
     BevelEdges = []
     BevelInner = bvNone
