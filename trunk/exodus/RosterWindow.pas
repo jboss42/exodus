@@ -200,7 +200,7 @@ type
     procedure RemoveGroupNode(node: TTreeNode);
     procedure RemoveEmptyGroups();
     procedure ResetPanels;
-    // procedure DoShowHint(var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
+    //procedure DoShowHint(var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
     procedure ChangeStatusImage(idx: integer);
     procedure showAniStatus();
     procedure DrawNodeText(Node: TTreeNode; State: TCustomDrawState; c1, c2: Widestring);

@@ -201,7 +201,7 @@ begin
             if ((win.Docked) or (win.Redock)) then begin
                 if (not win.Visible) then
                     win.ShowDefault()
-                else
+                else if (win.TabSheet <> nil) then
                     frmExodus.Tabs.ActivePage := win.TabSheet;
             end
             else

@@ -108,7 +108,8 @@ begin
     Self.Align := alClient;
     _docked := true;
     Self.TabSheet := frmExodus.Tabs.Pages[frmExodus.Tabs.PageCount-1];
-    Self.TabSheet.ImageIndex := -1;
+    if (Self.TabSheet <> nil) then
+        Self.TabSheet.ImageIndex := -1;
 
     if Assigned(_onDockEndChange) then
         Self.OnDockEndChange();
