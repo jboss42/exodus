@@ -67,15 +67,19 @@ resourcestring
 {---------------------------------------}
 implementation
 uses
-    XMLUtils, Jabber1, JabberID, Notify;
+    XMLUtils, Jabber1, JabberID, Notify, Roster;
 
 function getNick(j: string): string;
 var
     jid: TJabberID;
+    ritem: TJabberRosterItem;
 begin
-//todo: look up nick in roster, or return bare jid if not found.
     jid := TJabberID.Create(j);
-    result := jid.jid;
+    ritem := MainSession.roster.Find(jid.jid);
+    if (ritem = nil) then
+        result := jid.jid
+    else
+        result := ritem.Nickname;
     jid.Free();
 end;
 
