@@ -456,9 +456,7 @@ begin
     end;
 
     // this check is needed only to prevent extraneous regexing.
-    if ((not server) and
-        (not MainSession.IsPaused)) then begin
-
+    if ((not server) and (not MainSession.IsPaused)) then begin
         // check for keywords
         if ((_keywords <> nil) and (_keywords.Exec(Msg.Body))) then begin
             DoNotify(Self, _notify[1],
@@ -466,12 +464,11 @@ begin
                      ico_conf, 'notify_keyword');
             Msg.highlight := true;
         end
-        else
+        else if (not Msg.IsMe) then
             DoNotify(Self, _notify[0],
                      sNotifyActivity + Self.Caption,
                      ico_conf, 'notify_roomactivity');
     end;
-
 
     if (Msg.Body <> '') then begin
         DisplayMsg(Msg, MsgList);

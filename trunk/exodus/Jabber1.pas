@@ -250,7 +250,6 @@ type
     _is_broadcast: boolean;
     _is_autoaway: boolean;
     _is_autoxa: boolean;
-    _is_min: boolean;
     _last_show: Widestring;             // last show for restoring after auto-away
     _last_status: Widestring;           // last status    (ditto)
     _last_priority: integer;            // last priority  (ditto)
@@ -793,7 +792,6 @@ begin
     // Setup the IdleUI stuff..
     _is_autoaway := false;
     _is_autoxa := false;
-    _is_min := false;
     _is_broadcast := false;
     _windows_ver := WindowsVersion(win_ver);
 
@@ -808,6 +806,7 @@ begin
 
     // If we are supposed to be hidden, make it so.
     if (ExStartup.minimized) then begin
+        Self.Visible := false;
         _hidden := true;
         Self.WindowState := wsMinimized;
         ShowWindow(Self.Handle, SW_HIDE);
