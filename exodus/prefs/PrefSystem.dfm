@@ -29,7 +29,7 @@ object frmPrefSystem: TfrmPrefSystem
     Align = alTop
     Alignment = taCenter
     Caption = 'System Options'
-    Color = clHighlight
+    Color = clMenuHighlight
     Font.Charset = ANSI_CHARSET
     Font.Color = clCaptionText
     Font.Height = -13
@@ -38,6 +38,7 @@ object frmPrefSystem: TfrmPrefSystem
     ParentColor = False
     ParentFont = False
     TabOrder = 0
+    Transparent = False
   end
   object chkAutoUpdate: TCheckBox
     Left = 8

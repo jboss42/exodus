@@ -114,7 +114,6 @@ object frmRosterWindow: TfrmRosterWindow
         Text = 'foo@jabber.org'
         Width = 50
       end>
-    SimplePanel = False
   end
   object pnlShow: TPanel
     Left = 0
@@ -172,6 +171,9 @@ object frmRosterWindow: TfrmRosterWindow
     BevelOuter = bvLowered
     BorderWidth = 4
     Color = clWindow
+    Ctl3D = True
+    ParentBackground = False
+    ParentCtl3D = False
     TabOrder = 3
     object lblStatus: TLabel
       Left = 5
@@ -188,6 +190,7 @@ object frmRosterWindow: TfrmRosterWindow
       Font.Name = 'Arial'
       Font.Style = []
       ParentFont = False
+      Transparent = False
     end
     object lblLogin: TLabel
       Left = 5
@@ -204,6 +207,7 @@ object frmRosterWindow: TfrmRosterWindow
       Font.Name = 'Arial'
       Font.Style = [fsUnderline]
       ParentFont = False
+      Transparent = False
       OnClick = lblLoginClick
     end
     object pnlAnimation: TPanel
@@ -213,14 +217,13 @@ object frmRosterWindow: TfrmRosterWindow
       Height = 57
       Align = alTop
       BevelOuter = bvNone
-      Color = clScrollBar
+      ParentColor = True
       TabOrder = 0
       object aniWait: TAnimate
         Left = 48
         Top = 3
         Width = 30
         Height = 30
-        Active = False
         Color = clWhite
         ParentColor = False
         StopFrame = 12

@@ -158,6 +158,7 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Dialogs'
+      Transparent = False
       WordWrap = True
       OnClick = TabSelect
     end
@@ -411,6 +412,7 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Fonts, Colors'
+      Transparent = False
       WordWrap = True
       OnClick = TabSelect
     end
@@ -665,7 +667,9 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Subscriptions'
+      Color = clWindow
       ParentColor = False
+      Transparent = False
       WordWrap = True
       OnClick = TabSelect
     end
@@ -801,6 +805,7 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Roster'
+      Color = clWindow
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -808,6 +813,7 @@ object frmPrefs: TfrmPrefs
       Font.Style = []
       ParentColor = False
       ParentFont = False
+      Transparent = False
       WordWrap = True
       OnClick = TabSelect
     end
@@ -1069,6 +1075,7 @@ object frmPrefs: TfrmPrefs
       Font.Style = []
       ParentColor = False
       ParentFont = False
+      Transparent = False
       WordWrap = True
       OnClick = TabSelect
     end
@@ -1204,6 +1211,7 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Notification'
+      Transparent = False
       WordWrap = True
       OnClick = TabSelect
     end
@@ -1250,6 +1258,7 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Auto-Away'
+      Transparent = False
       WordWrap = True
       OnClick = TabSelect
     end
@@ -1296,6 +1305,7 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Keywords'
+      Transparent = False
       WordWrap = True
       OnClick = TabSelect
     end
@@ -1342,6 +1352,7 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Block List'
+      Transparent = False
       WordWrap = True
       OnClick = TabSelect
     end
@@ -1388,6 +1399,7 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Presence'
+      Transparent = False
       WordWrap = True
       OnClick = TabSelect
     end
@@ -1434,6 +1446,7 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Messages'
+      Transparent = False
       WordWrap = True
       OnClick = TabSelect
     end
@@ -1569,6 +1582,7 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Plugins'
+      Transparent = False
       WordWrap = True
       OnClick = TabSelect
     end
@@ -1669,6 +1683,7 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Network'
+      Transparent = False
       OnClick = TabSelect
     end
   end
@@ -1682,7 +1697,6 @@ object frmPrefs: TfrmPrefs
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 0
     TabOrder = 1
     object tbsKeywords: TTabSheet
       Caption = 'Keywords'
@@ -1748,7 +1762,7 @@ object frmPrefs: TfrmPrefs
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 363
+        Width = 352
         Height = 26
         Align = alTop
         Caption = 
@@ -1759,7 +1773,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 146
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1969,7 +1983,6 @@ object frmPrefs: TfrmPrefs
     end
   end
   object ColorDialog1: TColorDialog
-    Ctl3D = True
     Left = 69
     Top = 388
   end

@@ -133,7 +133,7 @@ end;
 procedure TSocketThread.DataTerminate(Sender: TObject);
 begin
     // destructor for the thread
-    CleanUp();
+    ThreadCleanUp();
 end;
 
 

@@ -4,6 +4,7 @@ inherited frmPrefPlugins: TfrmPrefPlugins
   Caption = 'frmPrefPlugins'
   ClientHeight = 372
   ClientWidth = 353
+  OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   object Label6: TLabel
@@ -45,6 +46,7 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     ParentColor = False
     ParentFont = False
     TabOrder = 0
+    Transparent = False
   end
   object btnAddPlugin: TButton
     Left = 6

@@ -333,8 +333,11 @@ end;
 {---------------------------------------}
 procedure THttpThread.Run();
 var
-    r, pid, new_cookie: string;
+{$ifndef INDY9}
+    new_cookie: string;
     i: integer;
+{$endif}
+    r, pid: string;
 begin
     // Bail if we're stopped.
     if ((Self.Stopped) or (Self.Suspended) or (Self.Terminated)) then

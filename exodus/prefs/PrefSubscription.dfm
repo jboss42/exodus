@@ -3,6 +3,7 @@ inherited frmPrefSubscription: TfrmPrefSubscription
   Top = 222
   Caption = 'frmPrefSubscription'
   ClientHeight = 134
+  OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   object StaticText2: TStaticText
@@ -22,6 +23,7 @@ inherited frmPrefSubscription: TfrmPrefSubscription
     ParentColor = False
     ParentFont = False
     TabOrder = 0
+    Transparent = False
   end
   object optIncomingS10n: TRadioGroup
     Left = 8
