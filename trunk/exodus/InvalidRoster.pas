@@ -88,7 +88,8 @@ begin
         li.Caption := tag.GetAttribute('from');
         e := tag.GetFirstTag('error');
         li.SubItems.Add(ritem.nickname);
-        li.SubItems.Add(e.Data);
+        if (e <> nil) then
+            li.SubItems.Add(e.Data);
         li.Checked := true;
         li.Data := ritem;
         end;

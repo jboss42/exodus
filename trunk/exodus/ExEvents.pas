@@ -29,7 +29,7 @@ type
         evt_None,
         evt_Message,
         evt_Invite,
-        evt_RosterItems, 
+        evt_RosterItems,
         evt_OOB,
         evt_Version,
         evt_Time,
@@ -85,7 +85,7 @@ resourcestring
 
     sMsgLast = 'Last Activity';
     sMsgLastInfo = 'Idle for ';
-    
+
     sPresError = 'The jabber server can not contact the server where this user is hosted.' +
         'Click "Remove" to remove this contact from your roster.';
 
@@ -212,10 +212,14 @@ begin
             // check for errors..
             if (tag.getAttribute('type') = 'error') then begin
                 tmp_tag := tag.GetFirstTag('error');
-                data_type := 'ERROR: ' + tmp_tag.Data();
+                if (tmp_tag <> nil) then begin
+                    data_type := 'ERROR: ' + tmp_tag.Data();
+                    _data_list.Insert(0, 'ERROR: ' + tmp_tag.Data() + ', Code=' +
+                        tmp_tag.getAttribute('code'));
+                    end
+                else
+                    data_type := 'Unknown Error';
                 error := true;
-                _data_list.Insert(0, 'ERROR: ' + tmp_tag.Data() + ', Code=' +
-                    tmp_tag.getAttribute('code'));
                 _data_list.Insert(1, 'Original Message was:');
                 end;
             end;
