@@ -1,6 +1,6 @@
 inherited frmChat: TfrmChat
-  Left = 321
-  Top = 300
+  Left = 311
+  Top = 370
   Caption = 'Chat Window'
   OldCreateOrder = True
   OnClose = FormClose
@@ -14,6 +14,11 @@ inherited frmChat: TfrmChat
     inherited MsgList: TExRichEdit
       Height = 216
       PlainRTF = True
+    end
+  end
+  inherited pnlInput: TPanel
+    inherited MsgOut: TExRichEdit
+      WantReturns = False
     end
   end
   inherited Panel1: TPanel
