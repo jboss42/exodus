@@ -213,7 +213,6 @@ type
     _sort_roster: boolean;          // Sort roster by <show> types
     _offline_grp: boolean;          // Use the offline grp
     _show_unsub: boolean;           // Show unsubscribed contacts
-
     _drop_copy: boolean;            // is the drag operation trying to copy?
 
     _drop: TExDropTarget;
@@ -791,7 +790,7 @@ begin
             else if (ntype = node_myres) then
                 Result.Add(TJabberMyResource(node.Data).item)
 
-            else if (ntype = node_grp) then begin
+            else if ((ntype = node_grp) and (_cur_go <> nil)) then begin
                 // add this grp to the selection
                 _cur_go.getRosterItems(Result, online);
             end;
@@ -975,7 +974,8 @@ begin
     go := TJabberGroup(node.Data);
     if (go = nil) then exit;
 
-    MainSession.Roster.RemoveGroup(go);
+    //MainSession.Roster.RemoveGroup(go);
+    go.Data := nil;
 
     if (node = _offline) then
         _offline := nil;
@@ -1655,13 +1655,11 @@ begin
         end;
     end;
 
-    // xxx: indent
+    // check for clicking on grp widget
     al := (treeRoster.Indent * (n.Level));
     ar := (al + frmExodus.ImageList2.Width + 5);
     if ((TObject(n.Data) is TJabberGroup) and
         (X > al) and (X < ar)) then begin
-        //(X < (frmExodus.ImageList2.Width + 5))) then begin
-        // clicking on a grp's widget
         if n.Expanded then
             n.Collapse(false)
         else
@@ -1688,27 +1686,11 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-var
-    i: integer;
-    c, n: TTreeNode;
 begin
-    // If they are clicking on an already selected node,
-    // without the Ctrl-key pressed, then deselect everything
-    // except the current node.
-    n := treeRoster.GetNodeAt(X, Y);
-    if (n = nil) then exit;
-
-    // I have no clue why we can't check Shift here,
-    // but it just doesn't seem to work, so use _drop_copy instead
-    // which is set in the MouseDown event.
-    if ((Button = mbLeft) and (_drop_copy = false) and (n.Selected)) then begin
-        for i := 0 to treeRoster.Items.Count - 1 do begin
-            c := treeRoster.Items[i];
-            if ((c.Selected) and (c <> n)) then
-                treeRoster.Deselect(c);
-        end;
-        n.Selected := true;
-    end;
+    // Ignore the bug which does not de-select nodes if you
+    // don't have the Ctrl-key pressed and you click an
+    // already selected node. This is so you can drag-n-drop
+    // selections of > 1 node.
 end;
 
 {---------------------------------------}
@@ -1809,10 +1791,11 @@ end;
 procedure TfrmRosterWindow.treeRosterDragDrop(Sender, Source: TObject; X,
   Y: Integer);
 var
-    i: integer;
+    i,j: integer;
     ritem: TJabberRosterItem;
     d_grp: Widestring;
     s_node, d_node: TTreeNode;
+    items: TList;
 begin
 
     // Drop the roster items onto the roster
@@ -1838,23 +1821,41 @@ begin
 
     for i := 0 to treeRoster.SelectionCount - 1 do begin
         s_node := treeRoster.Selections[i];
-        ritem := TJabberRosterItem(s_node.Data);
-
-        // invalidate the old parent
-        if (s_node.Parent <> nil) then begin
-            InvalidateGrps(s_node);
-        end;
-
-        // change the ritem object
-        if ritem <> nil then begin
-            if (ritem.Groups.IndexOf(d_grp) < 0) then begin
+        if (TObject(s_node.Data) is TJabberGroup) then begin
+            // move all the items a new subgrp in this grp.
+            items := TList.Create();
+            TJabberGroup(s_node.Data).getRosterItems(items, false);
+            // XXX: grp delimiter
+            d_grp := d_grp + '/' + TJabberGroup(s_node.Data).getText();
+            for j := 0 to items.count - 1 do begin
+                ritem := TJabberRosterItem(items[j]);
                 if (not _drop_copy) then
-                    ritem.Groups.Clear;
+                    ritem.Groups.Clear();
                 ritem.Groups.Add(d_grp);
-                ritem.update;
+                ritem.Update();
             end;
-        end;
+        end
+        else if (TObject(s_node.Data) is TJabberRosterItem) then begin
+            ritem := TJabberRosterItem(s_node.Data);
+
+            // invalidate the old parent
+            if (s_node.Parent <> nil) then begin
+                InvalidateGrps(s_node);
+            end;
+
+            // change the ritem object
+            if ritem <> nil then begin
+                if (ritem.Groups.IndexOf(d_grp) < 0) then begin
+                    if (not _drop_copy) then
+                        ritem.Groups.Clear;
+                    ritem.Groups.Add(d_grp);
+                    ritem.update;
+                end;
+            end;
+        end
     end;
+
+    _drop_copy := false;
 
     // Make sure d_grp is expanded if it's not in _collapsed_grps
     if ((not d_node.expanded) and (_collapsed_grps.IndexOf(d_grp) < 0)) then
@@ -1872,7 +1873,11 @@ procedure TfrmRosterWindow.treeRosterDragOver(Sender, Source: TObject; X,
   Y: Integer; State: TDragState; var Accept: Boolean);
 begin
     // Only accept items from the roster
-    Accept := (Source = treeRoster);
+    if (Source = treeRoster) then begin
+        Accept := true;
+    end
+    else
+        Accept := false;
 end;
 
 {---------------------------------------}
@@ -1965,7 +1970,7 @@ begin
     end;
     node_grp: begin
         // check to see if we have the Transports grp selected
-        if (_cur_go.FullName = _transports) then begin
+        if ((_cur_go <> nil) and (_cur_go.FullName = _transports)) then begin
             treeRoster.PopupMenu := popActions;
             popProperties.Enabled := false;
             exit;
