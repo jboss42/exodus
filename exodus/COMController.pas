@@ -75,8 +75,8 @@ type
     procedure setPrefAsString(const Key_, Value: WideString); safecall;
     function findChat(const JabberID, Resource: WideString): Integer; safecall;
     procedure startInstantMsg(const JabberID: WideString); safecall;
-    procedure startRoom(const RoomJID, Nickname, Password: WideString);
-      safecall;
+    procedure startRoom(const RoomJID, nickname, Password: WideString;
+      SendPresence: WordBool); safecall;
     procedure startSearch(const SearchJID: WideString); safecall;
     procedure showJoinRoom(const RoomJID, Nickname, Password: WideString);
       safecall;
@@ -580,8 +580,10 @@ begin
     // subclass frmDockable, and re-parent
     // this HWND to the new form
     f := TfrmDockable.Create(Application);
+
     SetParent(HWND, f.Handle);
     f.ShowDefault();
+
     ShowWindow(HWND, SW_SHOW);
 end;
 
@@ -821,10 +823,10 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusController.startRoom(const RoomJID, Nickname,
-  Password: WideString);
+procedure TExodusController.startRoom(const RoomJID, nickname,
+  Password: WideString; SendPresence: WordBool);
 begin
-    startRoom(RoomJID, Nickname, Password);
+    Room.startRoom(RoomJID, Nickname, Password, SendPresence);
 end;
 
 {---------------------------------------}

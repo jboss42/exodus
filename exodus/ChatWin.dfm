@@ -69,6 +69,7 @@ inherited frmChat: TfrmChat
         Height = 20
         Align = alLeft
         Caption = ' Foo '#32072#32073#32074#32075' '
+        Layout = tlCenter
         Caption_UTF7 = ' Foo +fUh9SX1KfUs '
       end
       object lblJID: TTntLabel
@@ -79,6 +80,7 @@ inherited frmChat: TfrmChat
         Cursor = crHandPoint
         Align = alLeft
         Caption = '<JID>'
+        Layout = tlCenter
         OnClick = lblJIDClick
       end
     end
