@@ -77,6 +77,7 @@ type
         Server: string;
         Resource: string;
         Priority: integer;
+        ssl: boolean;
 
         procedure Load(tag: TXMLTag);
         procedure Save(node: TXMLTag);
@@ -93,7 +94,7 @@ type
         function findPresenceTag(pkey: string): TXMLTag;
         procedure Save;
     public
-        constructor Create(FileName: string);
+        constructor Create(filename: string);
 
         function getString(pkey: string): string;
         function getInt(pkey: string): integer;
@@ -179,11 +180,11 @@ end; //getProfilePath
 {$endif}
 
 {---------------------------------------}
-constructor TPrefController.Create(FileName: string);
+constructor TPrefController.Create(filename: string);
 begin
     inherited Create;
 
-    _pref_filename := FileName;
+    _pref_filename := filename;
     _parser := TXMLTagParser.Create;
     _parser.ParseFile(_pref_filename);
 
@@ -624,6 +625,7 @@ begin
     Password := tag.GetBasicText('password');
     Resource := tag.GetBasicText('resource');
     Priority := SafeInt(tag.GetBasicText('priority'));
+    ssl := (tag.GetBasicText('ssl') = 'yes');
 
     if (Name = '') then Name := 'Untitled Profile';
     if (Server = '') then Server := 'jabber.org';
@@ -640,6 +642,10 @@ begin
     node.AddBasicTag('password', Password);
     node.AddBasicTag('resource', Resource);
     node.AddBasicTag('priority', IntToStr(Priority));
+    if (ssl) then
+        node.AddBasicTag('ssl', 'yes')
+    else
+        node.AddBasicTag('ssl', 'no');
 end;
 
 end.

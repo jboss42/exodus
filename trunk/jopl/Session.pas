@@ -41,6 +41,7 @@ type
         _stream_id: string;
         _show: string;
         _status: string;
+        _use_ssl: boolean;
         _port: integer;
         _priority: integer;
         _AuthType: TJabberAuthType;
@@ -157,6 +158,7 @@ begin
     _port := 5222;
     _id := 1;
     _cb_id := 1;
+    _use_ssl := false;
 
     // Create the event dispatcher mechanism
     _dispatcher := TSignalDispatcher.Create;
@@ -219,7 +221,11 @@ end;
 {---------------------------------------}
 procedure TJabberSession.Connect;
 begin
-    _stream.Connect(_server, _port);
+    // Switch port for SSL connections
+    if (_port = 5222) and (_use_ssl) then
+        _port := 5223;
+        
+    _stream.Connect(_server, _port, _use_ssl);
 end;
 
 {---------------------------------------}
@@ -535,6 +541,7 @@ begin
     password := p.password;
     resource := p.Resource;
     Priority := p.Priority;
+    _use_ssl := p.ssl;
 end;
 
 {---------------------------------------}
