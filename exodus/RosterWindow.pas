@@ -2184,14 +2184,22 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterCompare(Sender: TObject; Node1,
   Node2: TTreeNode; Data: Integer; var Compare: Integer);
+var
+    trans1: boolean;
+    trans2: boolean;
 begin
     // define a custom sort routine for two roster nodes
+
+    trans1 := (node1.Text = _transports);
+    trans2 := (node2.Text = _transports);
 
     // handle special cases
     if (Node1 = _offline) then Compare := +1
     else if (Node2 = _offline) then Compare := -1
     else if (Node1 = _bookmark) then Compare := -1
     else if (Node2 = _bookmark) then Compare := +1
+    else if (trans1) then Compare := +1
+    else if (trans2) then Compare := -1
     else if (Node1.Level = Node2.Level) then begin
         Compare := AnsiCompareText(Node1.Text, Node2.Text);
     end
