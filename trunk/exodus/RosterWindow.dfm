@@ -98,6 +98,7 @@ object frmRosterWindow: TfrmRosterWindow
     OnContextPopup = treeRosterContextPopup
     OnCustomDrawItem = treeRosterCustomDrawItem
     OnDblClick = treeRosterDblClick
+    OnDeletion = treeRosterDeletion
     OnDragDrop = treeRosterDragDrop
     OnDragOver = treeRosterDragOver
     OnEdited = treeRosterEdited

@@ -351,7 +351,7 @@ end;
 {---------------------------------------}
 procedure TXMLVCard.fillTag(tag: TXMLTag);
 var
-    vtag, t1: TXMLTag;
+    e, vtag, t1: TXMLTag;
 begin
     //
     vtag := tag.AddTag('vCard');
@@ -362,7 +362,11 @@ begin
     t1.AddBasicTag('FAMILY', FamilyName);
 
     vtag.AddBasicTag('NICKNAME', nick);
-    vtag.AddBasicTag('EMAIL', email);
+
+    e := vtag.AddBasicTag('EMAIL', email);
+    e.AddTag('INTERNET');
+    e.AddTag('PREF');
+
     vtag.AddBasicTag('URL', url);
     vtag.AddBasicTag('ROLE', role);
     vtag.AddBasicTag('BDAY', bday);
