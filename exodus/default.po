@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-07-29 10:22\n"
-"PO-Revision-Date: 2003-07-29 10:22\n"
+"POT-Creation-Date: 2003-08-05 16:23\n"
+"PO-Revision-Date: 2003-08-05 16:23\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -192,11 +192,11 @@ msgstr ""
 #. Programmer's name for it: sBtnClose
 #: MsgRecv.pas:162
 #. our thread completed.
-#: SendStatus.pas:881
+#: SendStatus.pas:906
 #. Programmer's name for it: sClose
 #: xdata.pas:65
 #. Programmer's name for it: sClose
-#: XferManager.pas:128
+#: XferManager.pas:138
 msgid "Close"
 msgstr ""
 
@@ -531,9 +531,9 @@ msgstr ""
 #. frmAutoUpdateStatus..HttpClient..Request.ContentType
 #: AutoUpdateStatus.dfm:86
 #. fRecvStatus..httpClient..Request.ContentType
-#: RecvStatus.dfm:98
+#: RecvStatus.dfm:114
 #. fSendStatus..httpClient..Request.ContentType
-#: SendStatus.dfm:88
+#: SendStatus.dfm:104
 #. frmWebDownload..IdHTTP1..Request.ContentType
 #: WebGet.dfm:75
 msgid "text/html"
@@ -542,9 +542,9 @@ msgstr ""
 #. frmAutoUpdateStatus..HttpClient..Request.Accept
 #: AutoUpdateStatus.dfm:87
 #. fRecvStatus..httpClient..Request.Accept
-#: RecvStatus.dfm:99
+#: RecvStatus.dfm:115
 #. fSendStatus..httpClient..Request.Accept
-#: SendStatus.dfm:89
+#: SendStatus.dfm:105
 #. frmWebDownload..IdHTTP1..Request.Accept
 #: WebGet.dfm:76
 msgid "text/html, */*"
@@ -553,9 +553,9 @@ msgstr ""
 #. frmAutoUpdateStatus..HttpClient..Request.UserAgent
 #: AutoUpdateStatus.dfm:89
 #. fRecvStatus..httpClient..Request.UserAgent
-#: RecvStatus.dfm:101
+#: RecvStatus.dfm:117
 #. fSendStatus..httpClient..Request.UserAgent
-#: SendStatus.dfm:91
+#: SendStatus.dfm:107
 #. frmWebDownload..IdHTTP1..Request.UserAgent
 #: WebGet.dfm:78
 msgid "Mozilla/3.0 (compatible; Indy Library)"
@@ -803,6 +803,8 @@ msgstr ""
 #: Room.dfm:22
 #. frmRoom..Panel1..btnClose..Font.Name
 #: Room.dfm:83
+#. frmXferManager..Panel1..btnClose..Font.Name
+#: XferManager.dfm:41
 #. frmPrefAway..StaticText4..Font.Name
 #: prefs/PrefAway.dfm:118
 #. frmPrefDialogs..StaticText4..Font.Name
@@ -854,6 +856,8 @@ msgstr ""
 #: MsgRecv.dfm:366
 #. frmRoom..Panel1..btnClose..Caption
 #: Room.dfm:78
+#. frmXferManager..Panel1..btnClose..Caption
+#: XferManager.dfm:36
 msgid "X"
 msgstr ""
 
@@ -1039,7 +1043,7 @@ msgstr ""
 #. frmPrefs..Panel1..Panel3..btnCancel..Caption
 #: Prefs.dfm:3201
 #. fRecvStatus..Panel1..btnCancel..Caption
-#: RecvStatus.dfm:84
+#: RecvStatus.dfm:100
 #. fSendStatus..Panel1..btnCancel..Caption
 #: SendStatus.dfm:20
 #. frmWizard..TntPanel1..btnCancel..Caption
@@ -2593,6 +2597,8 @@ msgstr ""
 
 #. frmPrefs..ScrollBox1..lblTransfer..Caption
 #: Prefs.dfm:2666
+#. frmXferManager..Panel1..pnlCaption..Caption
+#: XferManager.dfm:53
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:44
 #. Programmer's name for it: sSoundOOB
@@ -5676,14 +5682,14 @@ msgid "lblFrom"
 msgstr ""
 
 #. fRecvStatus..Panel2..lblStatus..Caption
-#: RecvStatus.dfm:51
+#: RecvStatus.dfm:67
 #. fSendStatus..Panel2..lblStatus..Caption
 #: SendStatus.dfm:39
 msgid "Status..."
 msgstr ""
 
 #. fRecvStatus..Panel1..btnRecv..Caption
-#: RecvStatus.dfm:75
+#: RecvStatus.dfm:91
 msgid "Receive"
 msgstr ""
 
@@ -7080,7 +7086,7 @@ msgstr ""
 msgid "Chat with "
 msgstr ""
 
-#: RecvStatus.pas:578
+#: RecvStatus.pas:579
 msgid "Negotiating with sender..."
 msgstr ""
 
@@ -7479,108 +7485,108 @@ msgid "%s cancelled your form."
 msgstr ""
 
 #. Programmer's name for it: sXferNewPort
-#: XferManager.pas:121
+#: XferManager.pas:131
 msgid "Your new file transfer port will not take affect until all current "
 "trasfers are stopped. Stop existing "
 "transfers?"
 msgstr ""
 
 #. Programmer's name for it: sXferRecv
-#: XferManager.pas:122
+#: XferManager.pas:132
 msgid "%s is sending you a file."
 msgstr ""
 
 #. Programmer's name for it: sXferURL
-#: XferManager.pas:123
+#: XferManager.pas:133
 msgid "File transfer URL: "
 msgstr ""
 
 #. Programmer's name for it: sXferDesc
-#: XferManager.pas:124
+#: XferManager.pas:134
 msgid "File Description: "
 msgstr ""
 
 #. Programmer's name for it: sXferOnline
-#: XferManager.pas:125
+#: XferManager.pas:135
 msgid "The Contact must be online before you can send a "
 "file."
 msgstr ""
 
 #. Programmer's name for it: sSend
-#: XferManager.pas:126
+#: XferManager.pas:136
 msgid "Send"
 msgstr ""
 
 #. Programmer's name for it: sOpen
-#: XferManager.pas:127
+#: XferManager.pas:137
 msgid "Open"
 msgstr ""
 
 #. Programmer's name for it: sTo
-#: XferManager.pas:129
+#: XferManager.pas:139
 msgid "To:     "
 msgstr ""
 
 #. Programmer's name for it: sXferOverwrite
-#: XferManager.pas:130
+#: XferManager.pas:140
 msgid "This file already exists. Overwrite?"
 msgstr ""
 
 #. Programmer's name for it: sXferWaiting
-#: XferManager.pas:131
+#: XferManager.pas:141
 msgid "Waiting for connection..."
 msgstr ""
 
 #. Programmer's name for it: sXferSending
-#: XferManager.pas:132
+#: XferManager.pas:142
 msgid "Sending file..."
 msgstr ""
 
 #. Programmer's name for it: sXferRecvDisconnected
-#: XferManager.pas:133
+#: XferManager.pas:143
 msgid "Receiver disconnected."
 msgstr ""
 
 #. Programmer's name for it: sXferTryingClose
-#: XferManager.pas:134
+#: XferManager.pas:144
 msgid "Trying to close."
 msgstr ""
 
 #. Programmer's name for it: sXferDone
-#: XferManager.pas:135
+#: XferManager.pas:145
 msgid "File transfer is done."
 msgstr ""
 
 #. Programmer's name for it: sXferConn
-#: XferManager.pas:136
+#: XferManager.pas:146
 msgid "Got connection."
 msgstr ""
 
 #. Programmer's name for it: sXferDefaultDesc
-#: XferManager.pas:137
+#: XferManager.pas:147
 msgid "Sending you a file."
 msgstr ""
 
 #. Programmer's name for it: sXferCreateDir
-#: XferManager.pas:138
+#: XferManager.pas:148
 msgid "This directory does not exist. Create "
 "it?"
 msgstr ""
 
 #. Programmer's name for it: sXferStreamError
-#: XferManager.pas:139
+#: XferManager.pas:149
 msgid "There was an error trying to create the "
 "file."
 msgstr ""
 
 #. Programmer's name for it: sXferDavError
-#: XferManager.pas:140
+#: XferManager.pas:150
 msgid "There was an error trying to upload the file to your web "
 "host."
 msgstr ""
 
 #. Programmer's name for it: sXferRecvError
-#: XferManager.pas:141
+#: XferManager.pas:151
 msgid "There was an error receiving the file. "
 "(%d)"
 msgstr ""
