@@ -297,6 +297,7 @@ begin
                     end;
                 end;
             Self.SaveEvents();
+            lstEvents.ClearSelection();
             end;
 
         if ((first <> -1) and (first < lstEvents.Items.Count)) then begin
@@ -308,6 +309,7 @@ begin
         else if (lstEvents.Items.Count > 0) then
             lstEvents.Selected := lstEvents.Items[lstEvents.Items.Count - 1];
 
+        lstEvents.Selected.MakeVisible(false);
         lstEvents.Refresh;
         end;
 
