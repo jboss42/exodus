@@ -189,8 +189,8 @@ begin
             Nick := _('Other nick');
         end;
 
-        DisplayMsg(m1, colorChat);
-        DisplayMsg(m2, colorChat);
+        DisplayRTFMsg(colorChat, m1);
+        DisplayRTFMsg(colorChat, m2);
 
         m1.Free();
         m2.Free();

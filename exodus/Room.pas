@@ -390,11 +390,10 @@ begin
 
         // setup prefs
         with f do begin
-            AssignDefaultFont(MsgList.Font);
-            MsgList.Color := TColor(MainSession.Prefs.getInt('color_bg'));
-            MsgOut.Color := MsgList.Color;
-            MsgOut.Font.Assign(MsgList.Font);
-            lstRoster.Color := MsgList.Color;
+            MsgList.setupPrefs();
+            MsgOut.Color := TColor(MainSession.Prefs.getInt('color_bg'));
+            AssignDefaultFont(MsgOut.Font);
+            lstRoster.Color := MsgOut.Color;
             lstRoster.Font.Name := MainSession.Prefs.getString('roster_font_name');
             lstRoster.Font.Color := TColor(MainSession.Prefs.getInt('font_color'));
             lstRoster.Font.Size := MainSession.Prefs.getInt('roster_font_size');
@@ -674,7 +673,7 @@ begin
     rest := copy(txt, c, length(txt) - c + 1);
 
     if (cmd = '/clear') then begin
-        msgList.Lines.Clear;
+        msgList.Clear();
         Result := true;
     end
     else if (cmd = '/config') then begin
@@ -845,7 +844,7 @@ begin
     if (event = '/session/disconnected') then begin
         // post a msg to the window and disable the text input box.
         MsgOut.Visible := false;
-        DisplayPresence(_('You have been disconnected.'), MsgList);
+        MsgList.DisplayPresence(_('You have been disconnected.'));
 
         MainSession.UnRegisterCallback(_mcallback);
         MainSession.UnRegisterCallback(_ecallback);
@@ -871,7 +870,7 @@ begin
         // previously disconnected
         if (_mcallback = -1) then begin
             MsgOut.Visible := true;
-            DisplayPresence(sReconnected, MsgList);
+            MsgList.DisplayPresence(sReconnected);
             SetJID(Self.jid);             // re-register callbacks
             sendStartPresence();
         end else begin
@@ -1311,6 +1310,11 @@ begin
     e.setRoom(Self);
     e.ObjAddRef();
     COMController := e;
+
+    // Setup MsgList;
+    MsgList.setContextMenu(popRoom);
+    MsgList.setDragOver(lstRosterDragOver);
+    MsgList.setDragDrop(lstRosterDragDrop);
 end;
 
 {---------------------------------------}
@@ -1507,7 +1511,7 @@ end;
 procedure TfrmRoom.popClearClick(Sender: TObject);
 begin
   inherited;
-    MsgList.Lines.Clear;
+    MsgList.Clear();
 end;
 
 {---------------------------------------}
@@ -2102,21 +2106,11 @@ end;
 procedure TfrmRoom.S1Click(Sender: TObject);
 var
     fn     : widestring;
-    ext    : widestring;
-    fmt : TOutputFormat;
 begin
     dlgSave.FileName := MungeName(self.jid);
     if (not dlgSave.Execute()) then exit;
     fn := dlgSave.FileName;
-    ext := copy(fn, length(fn) - 2, 3);
-
-    fmt := MsgList.OutputFormat;
-    if (ext = 'rtf') then
-        MsgList.OutputFormat := ofRTF
-    else if (ext = 'txt') then
-        MsgList.OutputFormat := ofUnicode;
-    MsgList.WideLines.SaveToFile(fn);
-    MsgList.OutputFormat := fmt;
+    MsgList.Save(fn);
 end;
 
 {---------------------------------------}

@@ -169,7 +169,9 @@ uses
   PrefFile in '..\jopl\PrefFile.pas',
   RegForm in 'RegForm.pas' {frmRegister},
   ExTracer in 'ExTracer.pas' {frmException},
-  NetMeetingFix in 'NetMeetingFix.pas';
+  NetMeetingFix in 'NetMeetingFix.pas',
+  BaseMsgList in 'BaseMsgList.pas' {fBaseMsgList: TFrame},
+  RTFMsgList in 'RTFMsgList.pas' {fRTFMsgList: TFrame};
 
 {$R *.TLB}
 

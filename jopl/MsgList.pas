@@ -158,6 +158,7 @@ begin
     try
         // check for messages we don't care about
         if (event <> '/unhandled') then begin
+
             if (mtype = 'normal') then mtype := '';
 
             // check for headlines w/ JUST a x-oob.

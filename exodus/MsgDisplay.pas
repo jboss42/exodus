@@ -22,6 +22,7 @@ unit MsgDisplay;
 interface
 uses
     iniFiles,
+    BaseMsgList, 
     ExRichEdit, RichEdit2, RegExpr, Classes, JabberMsg,
     Graphics, ComCtrls, Controls,
     Messages, Windows, SysUtils;
@@ -36,10 +37,9 @@ var
     use_emoticons: boolean;
     emoticon_list: THashedStringList;
 
-procedure DisplayMsg(Msg: TJabberMessage; RichEdit: TExRichEdit; AutoScroll: boolean = true);
-procedure DisplayPresence(txt: string; Browser: TExRichEdit);
+procedure DisplayMsg(Msg: TJabberMessage; msglist: TfBaseMsgList; AutoScroll: boolean = true);
+procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true);
 
-function atBottom(RichEdit: TExRichEdit): boolean;
 function GetMsgHTML(Msg: TJabberMessage): string;
 
 procedure ProcessEmoticons(RichEdit: TExRichEdit; color: TColor; txt: Widestring);
@@ -63,29 +63,14 @@ var
     emoticon_regex: TRegExpr;
 
 {---------------------------------------}
-function atBottom(RichEdit: TExRichEdit): boolean;
-var
-    si: TSCROLLINFO;
+procedure DisplayMsg(Msg: TJabberMessage; msglist: TfBaseMsgList; AutoScroll: boolean = true);
 begin
-    si.cbSize := SizeOf(TScrollInfo);
-    si.fMask := SIF_ALL;
-    GetScrollInfo(RichEdit.Handle, SB_VERT, si);
-    if (si.nMax = -1) then
-        Result := true
-    else
-        Result := ((si.nPos + integer(si.nPage)) >= si.nMax);
+    // Just write out using the frame's rendering code
+    msglist.DisplayMsg(msg, AutoScroll);
 end;
 
 {---------------------------------------}
-procedure scrollRichEdit(RichEdit: TExRichEdit);
-begin
-    // Send a "page down" scroll message
-    // RichEdit.Perform(EM_SCROLL, SB_PAGEDOWN, 0);
-    RichEdit.ScrollToBottom();
-end;
-
-{---------------------------------------}
-procedure DisplayMsg(Msg: TJabberMessage; RichEdit: TExRichEdit; AutoScroll: boolean = true);
+procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true);
 var
     txt: WideString;
     c: TColor;
@@ -168,10 +153,10 @@ begin
     RichEdit.WideSelText := #13#10;
 
     // AutoScroll the window
-    if ((at_bottom) and (AutoScroll) and (not is_scrolling)) then scrollRichEdit(RichEdit);
+    if ((at_bottom) and (AutoScroll) and (not is_scrolling)) then
+        RichEdit.ScrollToBottom();
 end;
 
-{---------------------------------------}
 procedure ProcessEmoticons(RichEdit: TExRichEdit; color: TColor; txt: Widestring);
 var
     m: boolean;
@@ -243,6 +228,7 @@ begin
 
     RichEdit.ReadOnly := true;
 end;
+
 
 {---------------------------------------}
 procedure ConfigEmoticons();
@@ -488,33 +474,6 @@ begin
     emoticon_regex.Compile();
 
     _pic := nil;
-end;
-
-{---------------------------------------}
-procedure DisplayPresence(txt: string; Browser: TExRichEdit);
-var
-    pt : integer;
-    at_bottom: boolean;
-begin
-    at_bottom := atBottom(Browser);
-    pt := MainSession.Prefs.getInt('pres_tracking');
-    if (pt = 2) then exit;
-    with Browser do begin
-        if (pt = 1) then begin
-            Browser.SelStart := Length(Browser.Lines.Text) - 3;
-            Browser.SelLength := 1;
-            if (Browser.SelAttributes.Color = clGray) then
-                Browser.WideLines.Delete(Browser.Lines.Count-1);
-        end;
-
-        SelStart := Length(Lines.Text);
-        SelLength := 0;
-
-        SelAttributes.Color := clGray;
-        WideSelText := txt + #13#10;
-    end;
-
-    if (at_bottom) then scrollRichEdit(Browser);
 end;
 
 {---------------------------------------}

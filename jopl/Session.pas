@@ -290,6 +290,7 @@ begin
 
     if (_stream <> nil) then
         _stream.Free();
+
     _pauseQueue.Free();
     Presence_XML.Free();
 

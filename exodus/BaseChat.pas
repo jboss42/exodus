@@ -22,7 +22,7 @@ unit BaseChat;
 interface
 
 uses
-    Dockable, ActiveX, ComObj,
+    Dockable, ActiveX, ComObj, BaseMsgList, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Menus, StdCtrls, ExtCtrls, ComCtrls, ExRichEdit, RichEdit2,
     TntStdCtrls, TntMenus;
@@ -31,9 +31,9 @@ const
     WM_THROB = WM_USER + 5400;
 
 type
+
   TfrmBaseChat = class(TfrmDockable)
-    Panel3: TPanel;
-    MsgList: TExRichEdit;
+    pnlMsgList: TPanel;
     Splitter1: TSplitter;
     pnlInput: TPanel;
     Panel1: TPanel;
@@ -52,14 +52,12 @@ type
     Copy2: TTntMenuItem;
 
     procedure Emoticons1Click(Sender: TObject);
-    procedure MsgListURLClick(Sender: TObject; url: String);
     procedure FormActivate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
     procedure MsgOutKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure MsgListKeyPress(Sender: TObject; var Key: Char);
     procedure Splitter1Moved(Sender: TObject);
     procedure CopyAll1Click(Sender: TObject);
     procedure Clear1Click(Sender: TObject);
@@ -68,13 +66,10 @@ type
     procedure FormResize(Sender: TObject);
     procedure Copy2Click(Sender: TObject);
     procedure Copy3Click(Sender: TObject);
-    procedure MsgListMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
     procedure MsgOutKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure timWinFlashTimer(Sender: TObject);
     procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
-    procedure MsgListEnter(Sender: TObject);
     procedure MsgOutEnter(Sender: TObject);
     procedure MsgOutMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -90,10 +85,12 @@ type
     _esc: boolean;                  // Does ESC close
     _close_key: Word;               // Normal Hot-key to use to close
     _close_shift: TShiftState;
+    _msgframe: TObject;
 
     procedure _scrollBottom();
     procedure WMVScroll(var msg: TMessage); message WM_VSCROLL;
-
+    function getMsgList(): TfBaseMsgList;
+    
   public
     { Public declarations }
     AutoScroll: boolean;
@@ -104,6 +101,8 @@ type
     procedure Flash;
     procedure pluginMenuClick(Sender: TObject); virtual; abstract;
 
+    property MsgList: TfBaseMsgList read getMsgList;
+
   end;
 
 var
@@ -113,7 +112,7 @@ implementation
 
 {$R *.dfm}
 uses
-    ClipBrd, Session, MsgDisplay, ShellAPI, Emoticons, Jabber1;
+    RTFMsgList, ClipBrd, Session, MsgDisplay, ShellAPI, Emoticons, Jabber1;
 
 {---------------------------------------}
 procedure TfrmBaseChat.Emoticons1Click(Sender: TObject);
@@ -185,12 +184,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmBaseChat.MsgListURLClick(Sender: TObject; url: String);
-begin
-    ShellExecute(Application.Handle, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
-end;
-
-{---------------------------------------}
 procedure TfrmBaseChat.FormActivate(Sender: TObject);
 begin
     inherited;
@@ -199,7 +192,8 @@ begin
         timWinFlash.Enabled := false;
 
     frmExodus.ActiveChat := Self;
-    MsgList.Invalidate();
+    if (_msgframe <> nil) then
+        MsgList.invalidate();
 
     if ((frmEmoticons <> nil) and (frmEmoticons.Visible)) then
         frmEmoticons.Hide;
@@ -307,6 +301,19 @@ begin
     _lastMsg := -1;
     _esc := false;
 
+    // XXX: Put IE MsgList frame creation here
+    _msgframe := TfRTFMsgList.Create(Self);
+    
+    with MsgList do begin
+        Name := 'msg_list_frame';
+        Parent := pnlMsgList;
+        Align := alClient;
+        Visible := true;
+        setContextMenu(popMsgList);
+    end;
+
+    inherited;
+
     if (MainSession <> nil) then begin
         ht := MainSession.Prefs.getInt('chat_textbox');
         if (ht <> 0) then
@@ -320,32 +327,15 @@ begin
     end;
 
     _scroll := true;
-
-    inherited;
 end;
 
 {---------------------------------------}
 procedure TfrmBaseChat.FormDestroy(Sender: TObject);
 begin
     frmExodus.ActiveChat := nil;
+    TfBaseMsgList(_msgframe).Free();
     _msgHistory.Free();
-
     inherited;
-end;
-
-{---------------------------------------}
-procedure TfrmBaseChat.MsgListKeyPress(Sender: TObject; var Key: Char);
-begin
-  inherited;
-    // If typing starts on the MsgList, then bump it to the outgoing
-    // text box.
-    if (not Self.Visible) then exit;
-    if (Ord(key) < 32) then exit;
-
-    if (pnlInput.Visible) then begin
-        MsgOut.SetFocus();
-        MsgOut.WideSelText := Key;
-    end;
 end;
 
 {---------------------------------------}
@@ -360,8 +350,7 @@ end;
 procedure TfrmBaseChat.CopyAll1Click(Sender: TObject);
 begin
   inherited;
-  MsgList.SelectAll;
-  MsgList.CopyToClipboard;
+    MsgList.CopyAll();
 end;
 
 {---------------------------------------}
@@ -376,7 +365,7 @@ end;
 procedure TfrmBaseChat.Copy1Click(Sender: TObject);
 begin
     inherited;
-    MsgList.CopyToClipboard();
+    MsgList.Copy();
 end;
 
 {---------------------------------------}
@@ -392,7 +381,9 @@ begin
   inherited;
     if (timWinFlash.Enabled) then
         timWinFlash.Enabled := false;
-    MsgList.Invalidate();
+
+    if (_msgframe <> nil) then
+        MsgList.Invalidate();
 end;
 
 {---------------------------------------}
@@ -418,37 +409,9 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmBaseChat.MsgListMouseUp(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-var
-    cp: TPoint;
-begin
-    if ((Button = mbRight) and (MsgList.PopupMenu <> nil)) then begin
-        GetCursorPos(cp);
-        MsgList.PopupMenu.Popup(cp.x, cp.y);
-    end;
-end;
-
-{---------------------------------------}
 procedure TfrmBaseChat._scrollBottom();
-var
-    vis_l: integer;
-    top_c, bot_c: integer;
-    top_l, bot_l: integer;
-    p: TPoint;
-
 begin
-    with MsgList do begin
-        p := Point(0, 0);
-        top_c := Perform(EM_CHARFROMPOS, 0, Integer(@P));
-        top_l := Perform(EM_LINEFROMCHAR, top_c, 0);
-        p := Point(0, ClientHeight);
-        bot_c := Perform(EM_CHARFROMPOS, 0, Integer(@P));
-        bot_l := Perform(EM_LINEFROMCHAR, bot_c, 0);
-        vis_l := bot_l - top_l;
-        Perform(EM_LINESCROLL, 0, Lines.Count - vis_l + 1);
-        Invalidate();
-    end;
+    MsgList.ScrollToBottom();
 end;
 
 {---------------------------------------}
@@ -489,14 +452,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmBaseChat.MsgListEnter(Sender: TObject);
-begin
-    if (frmExodus.ActiveChat <> Self) then
-        Self.FormActivate(Self);
-  inherited;
-end;
-
-{---------------------------------------}
 procedure TfrmBaseChat.MsgOutEnter(Sender: TObject);
 begin
     if (frmExodus.ActiveChat <> Self) then
@@ -511,6 +466,12 @@ begin
     if (frmExodus.ActiveChat <> Self) then
         Self.FormActivate(Self);
   inherited;
+end;
+
+{---------------------------------------}
+function TfrmBaseChat.getMsgList(): TfBaseMsgList;
+begin
+    Result := TfBaseMsgList(_msgframe);
 end;
 
 end.
