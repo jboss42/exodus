@@ -181,7 +181,8 @@ uses
   EmoteProps in 'EmoteProps.pas' {frmEmoteProps},
   JabberUtils in '..\jopl\JabberUtils.pas',
   DockContainer in 'DockContainer.pas' {frmDockContainer},
-  Random in '..\jopl\Random.pas';
+  Random in '..\jopl\Random.pas',
+  stringprep in '..\jopl\stringprep.pas';
 
 {$R *.TLB}
 

@@ -31,6 +31,7 @@ type
         _user: widestring;
         _domain: widestring;
         _resource: widestring;
+        _valid: boolean;
     public
         constructor Create(jid: widestring);
 
@@ -43,6 +44,8 @@ type
         property user: widestring read _user;
         property domain: widestring read _domain;
         property resource: widestring read _resource;
+
+        property isValid: boolean read _valid;
 end;
 
 
@@ -53,6 +56,8 @@ function isValidJID(jid: Widestring): boolean;
 {---------------------------------------}
 {---------------------------------------}
 implementation
+uses
+    Stringprep;
 
 function isValidJID(jid: Widestring): boolean;
 var
@@ -135,6 +140,7 @@ procedure TJabberID.ParseJID(jid: widestring);
 var
     tmps: WideString;
     p1, p2: integer;
+    pnode, pname, pres: Widestring;
 begin
     _user := '';
     _domain := '';
@@ -157,6 +163,34 @@ begin
     end
     else
         _domain := tmps;
+
+    // prep all parts to normalize
+    if (_user <> '') then begin
+        pnode := xmpp_nodeprep(_user);
+        if (pnode = '') then begin
+            _valid := false;
+            exit;
+        end;
+        _user := pnode;
+    end;
+
+    pname := xmpp_nameprep(_domain);
+    if (pname = '') then begin
+        _valid := false;
+        exit;
+    end;
+    _domain := pname;
+
+    if (_resource <> '') then begin
+        pres := xmpp_nodeprep(_resource);
+        if (pres = '') then begin
+            _valid := false;
+            exit;
+        end;
+        _resource := pres;
+    end;
+
+    _valid := true;
 end;
 
 {---------------------------------------}

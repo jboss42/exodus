@@ -39,21 +39,6 @@ const
     RECONNECT_RETRIES = 3;
 
     // FROM pbt.h in the win32 SDK
-    {
-    #define PBT_APMQUERYSUSPEND 0x0000
-    #define PBT_APMQUERYSTANDBY 0x0001
-    #define PBT_APMQUERYSUSPENDFAILED 0x0002
-    #define PBT_APMQUERYSTANDBYFAILED 0x0003
-    #define PBT_APMSUSPEND 0x0004
-    #define PBT_APMSTANDBY 0x0005
-    #define PBT_APMRESUMECRITICAL 0x0006
-    #define PBT_APMRESUMESUSPEND 0x0007
-    #define PBT_APMRESUMESTANDBY 0x0008
-    #define PBTF_APMRESUMEFROMFAILURE 0x00000001
-    #define PBT_APMBATTERYLOW 0x0009
-    #define PBT_APMPOWERSTATUSCHANGE 0x000A
-    #define PBT_APMOEMEVENT 0x000B
-    }
     PBT_APMQUERYSUSPEND = $0000;
     PBT_APMQUERYSTANDBY = $0001;
     PBT_APMQUERYSUSPENDFAILED = $0002;
@@ -3023,7 +3008,6 @@ procedure TfrmExodus.TrackWindowsMsg(windows_msg: integer);
 var
     idx: integer;
 begin
-
     if (sExodusCWPHook = 0) then begin
         sExodusCWPHook := SetWindowsHookEx(WH_CALLWNDPROC, @ExodusCWPHook,
             0, GetCurrentThreadID);
@@ -3162,16 +3146,19 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.mnuFindClick(Sender: TObject);
 begin
     frmRosterWindow.StartFind();
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.mnuFindAgainClick(Sender: TObject);
 begin
     frmRosterWindow.FindAgain();
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.presDNDClick(Sender: TObject);
 var
     m: TTntMenuItem;
@@ -3191,17 +3178,19 @@ begin
 
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.CMMouseEnter(var msg: TMessage);
 begin
     //
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.CMMouseLeave(var msg: TMessage);
 begin
     //
 end;
 
-
+{---------------------------------------}
 procedure TfrmExodus.ResolverStatus(ASender: TObject;
   const AStatus: TIdStatus; const AStatusText: String);
 begin

@@ -94,6 +94,7 @@ type
     procedure btnCertBrowseClick(Sender: TObject);
     procedure optSSLClick(Sender: TObject);
     procedure chkSRVClick(Sender: TObject);
+    procedure txtUsernameExit(Sender: TObject);
   private
     { Private declarations }
     _profile: TJabberProfile;
@@ -502,6 +503,12 @@ begin
     boxHost.Enabled := not chkSRV.Checked;
     txtHost.Enabled := boxHost.Enabled;
     txtPort.Enabled := boxHost.Enabled;
+end;
+
+{---------------------------------------}
+procedure TfrmConnDetails.txtUsernameExit(Sender: TObject);
+begin
+    // XXX: stringprep txtUsername, cboServer, or cboResource. 
 end;
 
 end.

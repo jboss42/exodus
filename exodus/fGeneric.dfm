@@ -1,8 +1,8 @@
 object frameGeneric: TframeGeneric
   Left = 0
   Top = 0
-  Width = 181
-  Height = 26
+  Width = 160
+  Height = 23
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

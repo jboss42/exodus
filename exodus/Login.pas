@@ -85,6 +85,9 @@ var
     i: integer;
     p: TJabberProfile;
 begin
+    // Make sure we don't try to reconnect
+    frmExodus.timReconnect.Enabled := false;
+
     if (frmLogin <> nil) then begin
         frmLogin.Show();
         exit;
