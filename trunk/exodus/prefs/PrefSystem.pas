@@ -42,6 +42,8 @@ type
     Label7: TTntLabel;
     cboLocale: TTntComboBox;
     lblPluginScan: TTntLabel;
+    Label15: TTntLabel;
+    txtDefaultNick: TTntEdit;
     procedure btnUpdateCheckClick(Sender: TObject);
     procedure btnUpdateCheckMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -145,6 +147,7 @@ begin
         chkToolbox.Checked := getBool('window_toolbox');
         chkCloseMin.Checked := getBool('close_min');
         chkSingleInstance.Checked := getBool('single_instance');
+        txtDefaultNick.Text := getString('default_nick');
 
         // locale info, we should always have at least "default-english"
         // in the drop down box here.
@@ -198,6 +201,7 @@ begin
         setBool('autologin', chkAutoLogin.Checked);
         setBool('close_min', chkCloseMin.Checked);
         setBool('single_instance', chkSingleInstance.Checked);
+        setString('default_nick', txtDefaultNick.Text);
 
         i := cboLocale.ItemIndex;
         if (i < 0) then i := 0;

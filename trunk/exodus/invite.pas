@@ -109,7 +109,7 @@ begin
 
     if (MainSession.prefs.getInt('invite_treatment') = invite_accept) then begin
         // auto-join the room
-        StartRoom(e.data_type, MainSession.Username);
+        StartRoom(e.data_type, '');
         e.Free();
     end
     else
@@ -194,7 +194,7 @@ begin
 
     room_idx := room_list.IndexOf(room);
     if (room_idx < 0) then
-        StartRoom(room, MainSession.Username);
+        StartRoom(room, '');
     frm := FindRoom(room);
 
     // Send out invites.

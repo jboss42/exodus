@@ -262,8 +262,8 @@ const
 
 
 function FindRoom(rjid: Widestring): TfrmRoom;
-function StartRoom(rjid, rnick: Widestring; Password: WideString = '';
-    send_presence: boolean = true): TfrmRoom;
+function StartRoom(rjid: Widestring; rnick: Widestring = '';
+    Password: WideString = ''; send_presence: boolean = true): TfrmRoom;
 function IsRoom(rjid: Widestring): boolean;
 function FindRoomNick(rjid: Widestring): Widestring;
 
@@ -310,14 +310,24 @@ uses
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-function StartRoom(rjid, rnick: Widestring; Password: WideString = '';
-    send_presence: boolean = true): TfrmRoom;
+function StartRoom(rjid: Widestring; rnick: Widestring = '';
+    Password: WideString = ''; send_presence: boolean = true): TfrmRoom;
 var
     f: TfrmRoom;
     p: TJabberPres;
     tmp_jid: TJabberID;
     i : integer;
+    n: Widestring;
 begin
+
+    // Find out nick..
+    if (rnick = '') then begin
+        n := MainSession.Prefs.getString('default_nick');
+        if (n = '') then n := MainSession.Username;
+    end
+    else
+        n := rnick;
+
     // is there already a room window?
     i := room_list.IndexOf(rjid);
     if (i >= 0) then
@@ -326,12 +336,12 @@ begin
         // create a new room
         f := TfrmRoom.Create(Application);
         f.SetJID(rjid);
-        f.MyNick := rnick;
+        f.MyNick := n;
         tmp_jid := TJabberID.Create(rjid);
 
         if (send_presence) then begin
             p := TCapPresence.Create;
-            p.toJID := TJabberID.Create(rjid + '/' + rnick);
+            p.toJID := TJabberID.Create(rjid + '/' + n);
             with p.AddTag('x') do begin
                 setAttribute('xmlns', XMLNS_MUC);
                 if (password <> '') then
