@@ -327,7 +327,7 @@ begin
     o := TObject(_jids.Objects[i]);
     if (o <> nil) and ((p = nil) or (p.PresType = 'unavailable')) then
         incOnline(-1)
-    else if (p <> nil) then
+    else if (o = nil) and (p <> nil) then
         incOnline(+1);
 
     if ((p <> nil) and (p.PresType = 'unavailable')) then
