@@ -83,7 +83,7 @@ var
 {---------------------------------------}
 implementation
 uses
-    StrUtils, IdGlobal,
+    Controls, Dialogs, StrUtils, IdGlobal,
     ShellAPI,
     MsgDisplay,
     Session, IQ, Jabber1,  
@@ -101,6 +101,11 @@ type
 
 var
     presenceToAtom: TStringList;
+
+resourceString
+    sTurnOnBlocking = 'You currently have logging turned off. ' +
+        'Turn Logging On? (Warning: Logs are not encrypted)';
+    sNoHistory = 'There is no history file for this contact.';
 
 {---------------------------------------}
 constructor TAtom.Create(at: ATOM);
@@ -316,9 +321,24 @@ procedure ShowLog(jid: string);
 var
     fn: string;
 begin
+    // Show the log, or ask the user to turn on logging
+    if (not MainSession.Prefs.getBool('log')) then begin
+        if (MessageDlg(sTurnOnBlocking, mtConfirmation, [mbYes, mbNo], 0) = mrNo) then
+            exit
+        else begin
+            MainSession.Prefs.setBool('log', true);
+            exit;
+            end;
+        end;
+
     fn := 'iexplore.exe ';
     fn := MainSession.Prefs.getString('log_path');
     fn := fn + '\' + MungeName(jid) + '.html';
+
+    if (not FileExists(fn)) then begin
+        MessageDlg(sNoHistory, mtError, [mbOK], 0);
+        exit;
+        end;
 
     ShellExecute(0, 'open', PChar(fn), '', '', SW_NORMAL);
 end;
