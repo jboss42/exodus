@@ -38,8 +38,6 @@ type
   end;
 
   TfrmRoom = class(TfrmBaseChat)
-    lblSubject: TLabel;
-    lblSubjectURL: TLabel;
     Panel6: TPanel;
     treeRoster: TTreeView;
     Splitter2: TSplitter;
@@ -54,6 +52,9 @@ type
     popRoomRoster: TPopupMenu;
     popRosterChat: TMenuItem;
     popRosterBlock: TMenuItem;
+    pnlSubj: TPanel;
+    lblSubject: TLabel;
+    lblSubjectURL: TLabel;
     btnClose: TSpeedButton;
 
     procedure FormCreate(Sender: TObject);
@@ -970,6 +971,7 @@ begin
     // the text box for the subject
     btnClose.Left := Panel1.Width - btnClose.Width - 2;
     lblSubject.Width := btnClose.Left - lblSubject.Left - 10;
+    pnlSubj.Width := Panel1.Width - btnClose.Width - 5;
 end;
 
 procedure TfrmRoom.FormEndDock(Sender, Target: TObject; X, Y: Integer);

@@ -1,6 +1,6 @@
 inherited frmRoom: TfrmRoom
-  Left = 179
-  Top = 661
+  Left = 255
+  Top = 250
   Caption = 'Conference Room'
   OldCreateOrder = True
   OnClose = FormClose
@@ -8,20 +8,20 @@ inherited frmRoom: TfrmRoom
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel3: TPanel
-    Top = 20
-    Height = 230
+    Top = 23
+    Height = 227
     object Splitter2: TSplitter [0]
       Left = 270
       Top = 4
       Width = 3
-      Height = 222
+      Height = 219
       Cursor = crHSplit
       Align = alRight
       ResizeStyle = rsUpdate
     end
     inherited MsgList: TExRichEdit
       Width = 266
-      Height = 222
+      Height = 219
       PopupMenu = popRoom
       OnDragDrop = treeRosterDragDrop
       OnDragOver = treeRosterDragOver
@@ -31,7 +31,7 @@ inherited frmRoom: TfrmRoom
       Left = 273
       Top = 4
       Width = 105
-      Height = 222
+      Height = 219
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -41,7 +41,7 @@ inherited frmRoom: TfrmRoom
         Left = 1
         Top = 1
         Width = 103
-        Height = 220
+        Height = 217
         Align = alClient
         Images = frmRosterWindow.ImageList1
         Indent = 19
@@ -61,34 +61,11 @@ inherited frmRoom: TfrmRoom
     end
   end
   inherited Panel1: TPanel
-    Height = 20
-    object lblSubject: TLabel
-      Left = 41
-      Top = 2
-      Width = 3
-      Height = 13
-      ParentShowHint = False
-      ShowHint = True
-    end
-    object lblSubjectURL: TLabel
-      Left = 2
-      Top = 2
-      Width = 39
-      Height = 16
-      Cursor = crHandPoint
-      Align = alLeft
-      Caption = 'Subject:'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlue
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsUnderline]
-      ParentFont = False
-      OnClick = lblSubjectURLClick
-    end
+    Height = 23
+    BorderWidth = 1
     object btnClose: TSpeedButton
-      Left = 354
-      Top = 0
+      Left = 356
+      Top = 2
       Width = 23
       Height = 20
       Caption = 'X'
@@ -100,6 +77,39 @@ inherited frmRoom: TfrmRoom
       Font.Style = [fsBold]
       ParentFont = False
       OnClick = btnCloseClick
+    end
+    object pnlSubj: TPanel
+      Left = 1
+      Top = 1
+      Width = 352
+      Height = 21
+      Align = alLeft
+      BevelOuter = bvNone
+      TabOrder = 0
+      object lblSubject: TLabel
+        Left = 41
+        Top = 2
+        Width = 3
+        Height = 13
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object lblSubjectURL: TLabel
+        Left = 0
+        Top = 0
+        Width = 39
+        Height = 21
+        Cursor = crHandPoint
+        Align = alLeft
+        Caption = 'Subject:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlue
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsUnderline]
+        ParentFont = False
+        OnClick = lblSubjectURLClick
+      end
     end
   end
   object popRoom: TPopupMenu

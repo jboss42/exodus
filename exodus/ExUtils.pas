@@ -460,7 +460,7 @@ begin
         result := '';
         exit;
         end;
-        
+
     // hm.  better data structure needed...
     // Luckily, there shouldn't be more than ~10 of these,
     // so it doesn't matter that much.
@@ -491,6 +491,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 function ColorToHTML( Color: TColor): string;
 var
     rgb: longint;
@@ -500,6 +501,7 @@ begin
                 GetGValue(rgb), GetBValue(rgb)]);
 end;
 
+{---------------------------------------}
 procedure jabberSendCTCP(jid, xmlns: string);
 var
     iq: TJabberIQ;
@@ -512,6 +514,7 @@ begin
     iq.Send;
 end;
 
+{---------------------------------------}
 function getMemoText(memo: TMemo): WideString;
 var
     len: integer;

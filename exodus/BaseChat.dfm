@@ -1,6 +1,6 @@
 object frmBaseChat: TfrmBaseChat
-  Left = 833
-  Top = 178
+  Left = 311
+  Top = 222
   Width = 390
   Height = 315
   Color = clBtnFace

@@ -66,6 +66,18 @@ type
     mTime: TMenuItem;
     mLast: TMenuItem;
     mVCard: TMenuItem;
+    pnlInfo: TPanel;
+    fNS: TframeListbox;
+    fActions: TframeObjectActions;
+    Image1: TImage;
+    Panel1: TPanel;
+    pnlTitle: TPanel;
+    lblTitle: TLabel;
+    Splitter1: TSplitter;
+    imgIcon: TImage;
+    lblHeader: TLabel;
+    pnlTop: TPanel;
+    btnClose: TSpeedButton;
     CoolBar1: TCoolBar;
     tlbToolBar: TToolBar;
     btnBack: TToolButton;
@@ -80,16 +92,6 @@ type
     pnlButtons: TPanel;
     btnGo: TSpeedButton;
     btnRefresh: TSpeedButton;
-    pnlInfo: TPanel;
-    fNS: TframeListbox;
-    fActions: TframeObjectActions;
-    Image1: TImage;
-    Panel1: TPanel;
-    pnlTitle: TPanel;
-    lblTitle: TLabel;
-    Splitter1: TSplitter;
-    imgIcon: TImage;
-    lblHeader: TLabel;
     procedure btnGoClick(Sender: TObject);
     procedure ResizeAddressBar(Sender: TObject);
     procedure cboJIDKeyPress(Sender: TObject; var Key: Char);
@@ -112,6 +114,7 @@ type
     procedure mJoinConfClick(Sender: TObject);
     procedure mSearchClick(Sender: TObject);
     procedure vwBrowseData(Sender: TObject; Item: TListItem);
+    procedure btnCloseClick(Sender: TObject);
   private
     { Private declarations }
     _cur: integer;
@@ -434,6 +437,8 @@ end;
 procedure TfrmBrowse.ResizeAddressBar(Sender: TObject);
 begin
     cboJid.Width := tlbJID.Width - (pnlJID.Width + pnlButtons.Width);
+    btnClose.Left := Self.ClientWidth - btnClose.Width - 2;
+    Coolbar1.Width := Self.ClientWidth - btnClose.Width - 5;
 end;
 
 {---------------------------------------}
@@ -747,6 +752,13 @@ begin
         SubItems.Add(b.jid);
         SubItems.Add(b.stype);
         end;
+end;
+
+{---------------------------------------}
+procedure TfrmBrowse.btnCloseClick(Sender: TObject);
+begin
+  inherited;
+    Self.Close;
 end;
 
 initialization

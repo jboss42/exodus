@@ -443,7 +443,6 @@ begin
     _ssl_int := TIdConnectionInterceptOpenSSL.Create(nil);
     with _ssl_int do begin
         // TODO: get certs from profile
-        // TODO: check to see if jpolld can do client certs...
         // that would be *cool*.
         SSLOptions.CertFile := '';
         SSLOptions.RootCertFile := '';
@@ -456,7 +455,6 @@ begin
 
     // connect to this server
     _socket := TIdTCPClient.Create(nil);
-    _socket.Intercept := _ssl_int;
     _socket.RecvBufferSize := 4096;
     _socket.Port := _profile.port;
     _socket.InterceptEnabled := _profile.ssl;
@@ -467,7 +465,9 @@ begin
     else
         _socket.Host := _profile.Host;
 
-    if (_profile.SocksType <> 0) then begin
+    if (_profile.SocksType = 0) then
+        _socket.Intercept := _ssl_int
+    else begin
         with _socket.SocksInfo do begin
             case _profile.SocksType of
             1: Version := svSocks4;
