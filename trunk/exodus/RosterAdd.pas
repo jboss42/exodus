@@ -161,8 +161,7 @@ procedure TfrmAdd.FormCreate(Sender: TObject);
 begin
     cboGroup.Items.Assign(MainSession.Roster.GrpList);
     removeSpecialGroups(cboGroup.Items);
-    if cboGroup.Items.Count > 0 then
-        cboGroup.ItemIndex := 0;
+    cboGroup.Text := MainSession.Prefs.getString('roster_default');
     cboType.ItemIndex := 0;
     txtGateway.Text := MainSession.Server;
 end;

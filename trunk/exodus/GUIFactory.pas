@@ -128,8 +128,7 @@ begin
             removeSpecialGroups(cboGroup.Items);
             if (tmp_b) then begin
                 txtNickname.Text := tmp_jid.user;
-                if cboGroup.Items.Count > 0 then
-                    cboGroup.ItemIndex := 0;
+                cboGroup.Text := MainSession.Prefs.getString('roster_default');
             end
             else if (ri <> nil) then begin
                 txtNickName.Text := ri.nickname;

@@ -107,4 +107,5 @@
     <toast_duration>5</toast_duration>
     <warn_closebusy>1</warn_closebusy>
     <xa_time>30</xa_time>
+    <roster_default>Friends</roster_default>
 </brand>

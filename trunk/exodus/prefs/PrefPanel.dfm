@@ -1,11 +1,11 @@
 object frmPrefPanel: TfrmPrefPanel
   Left = 383
   Top = 519
+  Width = 292
+  Height = 346
   BorderStyle = bsNone
   BorderWidth = 6
   Caption = 'frmPrefPanel'
-  ClientHeight = 305
-  ClientWidth = 272
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

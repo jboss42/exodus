@@ -39,11 +39,13 @@ type
     chkPresErrors: TCheckBox;
     chkShowPending: TCheckBox;
     chkMessenger: TCheckBox;
-    txtGatewayGrp: TTntEdit;
     cboDblClick: TComboBox;
     chkRosterUnicode: TCheckBox;
     chkCollapsed: TCheckBox;
     chkGroupCounts: TCheckBox;
+    txtGatewayGrp: TTntComboBox;
+    Label1: TLabel;
+    txtDefaultGrp: TTntComboBox;
     procedure chkInlineStatusClick(Sender: TObject);
   private
     { Private declarations }
@@ -60,10 +62,24 @@ implementation
 {$R *.dfm}
 
 uses
-    Session;
+    ExUtils, Unicode, Session;
 
 procedure TfrmPrefRoster.LoadPrefs();
+var
+    gs: TWidestringList;
 begin
+    // populate grp drop-downs.
+    gs := TWidestringList.Create();
+    gs.Assign(MainSession.Roster.GrpList);
+    removeSpecialGroups(gs);
+    gs.Sorted := true;
+    gs.Sort();
+
+    txtDefaultGrp.Items.Assign(gs);
+    txtGatewayGrp.Items.Assign(gs);
+
+    gs.Free();
+
     //
     with MainSession.Prefs do begin
         // Roster Prefs
@@ -81,6 +97,7 @@ begin
         chkCollapsed.Checked := getBool('roster_collapsed');
         chkGroupCounts.Checked := getBool('roster_groupcounts');
         cboDblClick.ItemIndex := getInt('roster_chat');
+        txtDefaultGrp.Text := getString('roster_default'); 
         txtGatewayGrp.Text := getString('roster_transport_grp');
     end;    
 end;
@@ -103,6 +120,7 @@ begin
         setBool('roster_unicode', chkRosterUnicode.Checked);
         setBool('roster_collapsed', chkCollapsed.Checked);
         setBool('roster_groupcounts', chkGroupCounts.Checked);
+        setString('roster_default', txtDefaultGrp.Text);
         setString('roster_transport_grp', txtGatewayGrp.Text);
     end;
 end;
