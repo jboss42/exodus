@@ -1,0 +1,37 @@
+<stream:stream>
+	
+  <message>
+	<x xmlns='jabber:x:data'/>
+  </message>
+
+  <message>
+	<x xmlns='jabber:x:data'/>
+	<x xmlns='jabber:x:data'/>
+  </message>
+  
+  <iq>
+	<query xmlns='jabber:iq:register'>
+	  <x xmlns='jabber:x:data'/>
+	</query>
+  </iq>
+
+  <iq>
+	<x xmlns='jabber:x:data'/>
+	<query xmlns='jabber:iq:register'>
+	  <x xmlns='jabber:x:data'/>
+	</query>
+  </iq>
+  
+  <iq>
+	<x xmlns='jabber:x:data'>
+	  <x xmlns='jabber:x:data'/>
+	</x>
+  </iq>
+  
+  <iq>
+	<query xmlns='jabber:iq:register'/>
+  </iq>
+
+  <x xmlns='jabber:x:data'/>
+  
+</stream:stream>
