@@ -12,16 +12,16 @@ unit ExImportAIM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/4/2003 7:35:46 AM from Type Library described below.
+// File generated on 6/16/2003 12:21:01 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\AIM-Import\ExImportAIM.tlb (1)
-// LIBID: {1DC7B769-E8C0-42B0-BD6A-A89E9000854F}
+// LIBID: {76296895-2056-42BC-8886-4DBFD8D4C1DB}
 // LCID: 0
 // Helpfile: 
-// HelpString: AIM Buddy List File Import Plugin
+// HelpString: ExImportAIM Library
 // DepndLst: 
-//   (1) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
+//   (1) v1.0 ExodusCOM, (C:\Program Files\Exodus\Exodus.exe)
 //   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
@@ -45,26 +45,26 @@ const
   ExImportAIMMajorVersion = 1;
   ExImportAIMMinorVersion = 0;
 
-  LIBID_ExImportAIM: TGUID = '{1DC7B769-E8C0-42B0-BD6A-A89E9000854F}';
+  LIBID_ExImportAIM: TGUID = '{76296895-2056-42BC-8886-4DBFD8D4C1DB}';
 
-  CLASS_AIMImportPlugin: TGUID = '{13E0E3B0-4CFB-4EE0-A508-C3B9EC969BAA}';
+  CLASS_AIMPlugin: TGUID = '{811F504E-B9AA-42E5-A2A4-E49DB64D866A}';
 type
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
 // (NOTE: Here we map each CoClass to its Default Interface)              
 // *********************************************************************//
-  AIMImportPlugin = IExodusPlugin;
+  AIMPlugin = IExodusPlugin;
 
 
 // *********************************************************************//
-// The Class CoAIMImportPlugin provides a Create and CreateRemote method to          
+// The Class CoAIMPlugin provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusPlugin exposed by              
-// the CoClass AIMImportPlugin. The functions are intended to be used by             
+// the CoClass AIMPlugin. The functions are intended to be used by             
 // clients wishing to automate the CoClass objects exposed by the         
 // server of this typelibrary.                                            
 // *********************************************************************//
-  CoAIMImportPlugin = class
+  CoAIMPlugin = class
     class function Create: IExodusPlugin;
     class function CreateRemote(const MachineName: string): IExodusPlugin;
   end;
@@ -73,14 +73,14 @@ implementation
 
 uses ComObj;
 
-class function CoAIMImportPlugin.Create: IExodusPlugin;
+class function CoAIMPlugin.Create: IExodusPlugin;
 begin
-  Result := CreateComObject(CLASS_AIMImportPlugin) as IExodusPlugin;
+  Result := CreateComObject(CLASS_AIMPlugin) as IExodusPlugin;
 end;
 
-class function CoAIMImportPlugin.CreateRemote(const MachineName: string): IExodusPlugin;
+class function CoAIMPlugin.CreateRemote(const MachineName: string): IExodusPlugin;
 begin
-  Result := CreateRemoteComObject(MachineName, CLASS_AIMImportPlugin) as IExodusPlugin;
+  Result := CreateRemoteComObject(MachineName, CLASS_AIMPlugin) as IExodusPlugin;
 end;
 
 end.

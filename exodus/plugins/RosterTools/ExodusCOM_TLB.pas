@@ -12,10 +12,10 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/4/2003 7:17:44 AM from Type Library described below.
+// File generated on 6/16/2003 12:28:25 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\src\exodus\runner\Exodus.exe (1)
+// Type Lib: C:\Program Files\Exodus\Exodus.exe (1)
 // LIBID: {219E0029-5710-4C9B-BE33-4C7F046D7792}
 // LCID: 0
 // Helpfile: 
@@ -48,11 +48,11 @@ const
 
   LIBID_ExodusCOM: TGUID = '{219E0029-5710-4C9B-BE33-4C7F046D7792}';
 
-  IID_IExodusController: TGUID = '{47213401-DAB2-4560-82F7-E5AB15C34397}';
+  IID_IExodusController: TGUID = '{6F5DA7B3-5390-42AE-9B0A-815D32146503}';
   CLASS_ExodusController: TGUID = '{35B80906-4D4D-4A1D-8BB2-1F0029916422}';
   IID_IExodusChat: TGUID = '{27176DA5-4EEB-442F-9B1F-D25EF948B9CB}';
   CLASS_ExodusChat: TGUID = '{DB3F5C90-0575-47E4-8F00-EED79757A97B}';
-  IID_IExodusPlugin: TGUID = '{72470D1C-9A66-4735-A7CF-446F43561C92}';
+  IID_IExodusPlugin: TGUID = '{0176AF16-EA9B-47F1-805A-3EF259940C64}';
   IID_IExodusChatPlugin: TGUID = '{2C576B16-DD6A-4E8C-8DEB-38E255B48A88}';
   IID_IExodusRoster: TGUID = '{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}';
   CLASS_ExodusRoster: TGUID = '{438DF52E-F892-456B-9FB0-3C64DBB85240}';
@@ -129,10 +129,10 @@ type
 // *********************************************************************//
 // Interface: IExodusController
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {47213401-DAB2-4560-82F7-E5AB15C34397}
+// GUID:      {6F5DA7B3-5390-42AE-9B0A-815D32146503}
 // *********************************************************************//
   IExodusController = interface(IDispatch)
-    ['{47213401-DAB2-4560-82F7-E5AB15C34397}']
+    ['{6F5DA7B3-5390-42AE-9B0A-815D32146503}']
     function Get_Connected: WordBool; safecall;
     function Get_Username: WideString; safecall;
     function Get_Server: WideString; safecall;
@@ -199,13 +199,16 @@ type
     procedure removeContactMenu(const ID: WideString); safecall;
     function getActiveContact: WideString; safecall;
     function getActiveGroup: WideString; safecall;
-    function getActiveContacts(Online: WordBool): WideString; safecall;
+    function getActiveContacts(Online: WordBool): PSafeArray; safecall;
     function Get_LocalIP: WideString; safecall;
     procedure setPluginAuth(const AuthAgent: IExodusAuth); safecall;
     procedure setAuthenticated(Authed: WordBool; const xml: WideString); safecall;
     procedure setAuthJID(const Username: WideString; const Host: WideString; 
                          const resource: WideString); safecall;
     function addMessageMenu(const Caption: WideString): WideString; safecall;
+    function addGroupMenu(const Caption: WideString): WideString; safecall;
+    procedure removeGroupMenu(const ID: WideString); safecall;
+    procedure registerWithService(const JabberID: WideString); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -224,10 +227,10 @@ type
 // *********************************************************************//
 // DispIntf:  IExodusControllerDisp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {47213401-DAB2-4560-82F7-E5AB15C34397}
+// GUID:      {6F5DA7B3-5390-42AE-9B0A-815D32146503}
 // *********************************************************************//
   IExodusControllerDisp = dispinterface
-    ['{47213401-DAB2-4560-82F7-E5AB15C34397}']
+    ['{6F5DA7B3-5390-42AE-9B0A-815D32146503}']
     property Connected: WordBool readonly dispid 1;
     property Username: WideString readonly dispid 2;
     property Server: WideString readonly dispid 3;
@@ -294,13 +297,16 @@ type
     procedure removeContactMenu(const ID: WideString); dispid 61;
     function getActiveContact: WideString; dispid 62;
     function getActiveGroup: WideString; dispid 63;
-    function getActiveContacts(Online: WordBool): WideString; dispid 65;
+    function getActiveContacts(Online: WordBool): {??PSafeArray}OleVariant; dispid 65;
     property LocalIP: WideString readonly dispid 64;
     procedure setPluginAuth(const AuthAgent: IExodusAuth); dispid 66;
     procedure setAuthenticated(Authed: WordBool; const xml: WideString); dispid 67;
     procedure setAuthJID(const Username: WideString; const Host: WideString; 
                          const resource: WideString); dispid 68;
     function addMessageMenu(const Caption: WideString): WideString; dispid 201;
+    function addGroupMenu(const Caption: WideString): WideString; dispid 202;
+    procedure removeGroupMenu(const ID: WideString); dispid 203;
+    procedure registerWithService(const JabberID: WideString); dispid 204;
   end;
 
 // *********************************************************************//
@@ -318,6 +324,8 @@ type
     function getMagicInt(Part: ChatParts): Integer; safecall;
     procedure RemoveContextMenu(const ID: WideString); safecall;
     procedure AddMsgOut(const Value: WideString); safecall;
+    function AddMsgOutMenu(const Caption: WideString): WideString; safecall;
+    procedure RemoveMsgOutMenu(const MenuID: WideString); safecall;
     property jid: WideString read Get_jid;
     property MsgOutText: WideString read Get_MsgOutText;
   end;
@@ -337,15 +345,17 @@ type
     function getMagicInt(Part: ChatParts): Integer; dispid 6;
     procedure RemoveContextMenu(const ID: WideString); dispid 7;
     procedure AddMsgOut(const Value: WideString); dispid 201;
+    function AddMsgOutMenu(const Caption: WideString): WideString; dispid 202;
+    procedure RemoveMsgOutMenu(const MenuID: WideString); dispid 203;
   end;
 
 // *********************************************************************//
 // Interface: IExodusPlugin
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {72470D1C-9A66-4735-A7CF-446F43561C92}
+// GUID:      {0176AF16-EA9B-47F1-805A-3EF259940C64}
 // *********************************************************************//
   IExodusPlugin = interface(IDispatch)
-    ['{72470D1C-9A66-4735-A7CF-446F43561C92}']
+    ['{0176AF16-EA9B-47F1-805A-3EF259940C64}']
     procedure Startup(const ExodusController: IExodusController); safecall;
     procedure Shutdown; safecall;
     procedure Process(const xpath: WideString; const event: WideString; const xml: WideString); safecall;
@@ -357,15 +367,16 @@ type
     procedure MenuClick(const ID: WideString); safecall;
     procedure MsgMenuClick(const ID: WideString; const jid: WideString; var Body: WideString; 
                            var Subject: WideString); safecall;
+    procedure NewOutgoingIM(const jid: WideString; const InstantMsg: IExodusChat); safecall;
   end;
 
 // *********************************************************************//
 // DispIntf:  IExodusPluginDisp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {72470D1C-9A66-4735-A7CF-446F43561C92}
+// GUID:      {0176AF16-EA9B-47F1-805A-3EF259940C64}
 // *********************************************************************//
   IExodusPluginDisp = dispinterface
-    ['{72470D1C-9A66-4735-A7CF-446F43561C92}']
+    ['{0176AF16-EA9B-47F1-805A-3EF259940C64}']
     procedure Startup(const ExodusController: IExodusController); dispid 1;
     procedure Shutdown; dispid 2;
     procedure Process(const xpath: WideString; const event: WideString; const xml: WideString); dispid 3;
@@ -377,6 +388,7 @@ type
     procedure MenuClick(const ID: WideString); dispid 201;
     procedure MsgMenuClick(const ID: WideString; const jid: WideString; var Body: WideString; 
                            var Subject: WideString); dispid 202;
+    procedure NewOutgoingIM(const jid: WideString; const InstantMsg: IExodusChat); dispid 203;
   end;
 
 // *********************************************************************//

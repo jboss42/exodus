@@ -169,6 +169,6 @@ begin
 end;
 
 initialization
-  TAutoObjectFactory.Create(ComServer, TAIMImportPlugin, Class_AIMImportPlugin,
+  TAutoObjectFactory.Create(ComServer, TAIMImportPlugin, CLASS_AIMPlugin,
     ciMultiInstance, tmApartment);
 end.

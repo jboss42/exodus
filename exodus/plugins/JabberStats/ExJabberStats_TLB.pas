@@ -12,16 +12,16 @@ unit ExJabberStats_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 6/4/2003 7:11:59 AM from Type Library described below.
+// File generated on 6/16/2003 12:23:32 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\JabberStats\ExJabberStats.tlb (1)
-// LIBID: {402F95BD-62AB-4596-AEB2-79A0E84271AD}
+// LIBID: {B39E3BDE-7316-4019-8F34-0C8DEA778330}
 // LCID: 0
 // Helpfile: 
-// HelpString: Collect statistics about your IM usage
+// HelpString: ExJabberStats Library
 // DepndLst: 
-//   (1) v1.0 ExodusCOM, (D:\src\ex-085\exodus\exodus\Exodus.exe)
+//   (1) v1.0 ExodusCOM, (C:\Program Files\Exodus\Exodus.exe)
 //   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
@@ -45,9 +45,9 @@ const
   ExJabberStatsMajorVersion = 1;
   ExJabberStatsMinorVersion = 0;
 
-  LIBID_ExJabberStats: TGUID = '{402F95BD-62AB-4596-AEB2-79A0E84271AD}';
+  LIBID_ExJabberStats: TGUID = '{B39E3BDE-7316-4019-8F34-0C8DEA778330}';
 
-  CLASS_StatsPlugin: TGUID = '{23480983-E4E0-4C55-B731-4D06557A48B9}';
+  CLASS_StatsPlugin: TGUID = '{AA6AB775-9AF0-49E5-B2DB-7BD5C07F9CD0}';
 type
 
 // *********************************************************************//
