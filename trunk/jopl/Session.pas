@@ -552,12 +552,12 @@ begin
             _cur_server := tag.getAttribute('from');
             _dispatcher.DispatchSignal('/session/connected', nil);
 
-            if (not _xmpp) then begin
-                if ((_register) or (_profile.NewAccount)) then
-                    CreateAccount()
-                else
-                    _auth_agent.StartAuthentication();
-            end;
+            if ((_register) or (_profile.NewAccount)) then begin
+                _xmpp := false;
+                CreateAccount()
+            end
+            else if (not _xmpp) then
+                _auth_agent.StartAuthentication();
         end
         else if (tag.Name = 'stream:error') then begin
             // we got a stream error
@@ -587,10 +587,8 @@ begin
                     end;
                 end;
 
-                // start auth.
-                if ((_register) or (_profile.NewAccount)) then
-                    CreateAccount()
-                else
+                // start auth. if we are not registering..
+                if ((not _register) and (not _profile.NewAccount)) then
                     _auth_agent.StartAuthentication();
             end;
         end
