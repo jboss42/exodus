@@ -44,17 +44,18 @@ type
 
 
 // Forward declares for plugin utils
+procedure InitPlugins();
 procedure LoadPlugin(com_name: string);
 procedure UnloadPlugins();
 
 implementation
 
 uses
-    Jabber1, 
+    Jabber1,
     Session,
-    Roster, 
+    Roster,
     PrefController,
-    Forms, SysUtils, ComServ;
+    Dialogs, Variants, Forms, SysUtils, ComServ;
 
 var
     plugs: TStringList;
@@ -62,6 +63,20 @@ var
 
 {---------------------------------------}
 {---------------------------------------}
+{---------------------------------------}
+procedure InitPlugins();
+var
+    s: TStringlist;
+    i: integer;
+begin
+    // load all of the plugins listed in the prefs
+    s := TStringlist.Create();
+    MainSession.Prefs.fillStringList('plugins', s);
+
+    for i := 0 to s.count - 1 do
+        LoadPlugin(s[i]);
+end;
+
 {---------------------------------------}
 procedure LoadPlugin(com_name: string);
 var
@@ -72,15 +87,29 @@ begin
     // Fire up an instance of the specified COM object
     if (plugs.indexof(com_name) > -1) then exit;
 
-    idisp := CreateOleObject(com_name);
+    //try
+        idisp := CreateOleObject(com_name);
+    {
+    except
+        on EOleSysError do begin
+            MessageDlg('Plugin class could not be initialized.',
+                mtError, [mbOK], 0);
+            exit;
+            end;
+    end;
+    }
 
     plugin := idisp as IExodusPlugin;
     p := TPlugin.Create();
     p.com := plugin;
-
     plugs.Add(com_name);
-
-    p.com.Startup(OleVariant(frmExodus.ComController as IDispatch));
+    try
+        p.com.Startup(frmExodus.ComController as IExodusController);
+    except
+        MessageDlg('Plugin class could not be initialized.',
+            mtError, [mbOK], 0);
+        exit;
+    end;
 end;
 
 {---------------------------------------}
