@@ -409,8 +409,6 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.SessionCallback(event: string; tag: TXMLTag);
 var
-    i: integer;
-    grp_node: TTreeNode;
     ritem: TJabberRosterItem;
     b_jid: Widestring;
 begin
@@ -494,17 +492,7 @@ begin
         lblStatus.Color := pnlConnect.Color;
         aniWait.Color := pnlConnect.Color;
 
-        // Iterate over all grp nodes
         MainSession.Prefs.fillStringlist('col_groups', _collapsed_grps);
-        for i := 0 to MainSession.Roster.GrpList.Count - 1 do begin
-            grp_node := TTreeNode(MainSession.Roster.GrpList.Objects[i]);
-            if (grp_node <> nil) then begin
-                if (_collapsed_grps.IndexOf(grp_node.Text) >= 0) then
-                    grp_node.Collapse(true)
-                else if (not _collapse_all) then
-                    grp_node.Expand(true);
-            end;
-        end;
 
         _show_online := MainSession.Prefs.getBool('roster_only_online');
         _show_filter := MainSession.Prefs.getInt('roster_filter');

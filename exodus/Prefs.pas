@@ -287,13 +287,11 @@ procedure TfrmPrefs.TabSelect(Sender: TObject);
             c := ScrollBox1.Controls[i];
             if (c is TTntLabel) then begin
                 if (c = lbl) then begin
-                    //TTntLabel(c).Color := clHighlight;
                     Shape1.Top := c.Top - 40;
                     TTntLabel(c).Font.Color := clMenuText;
                     _cur_label := TTntLabel(c);
                 end
                 else begin
-                    //TTntLabel(c).Color := clWindow;
                     TTntLabel(c).Font.Color := clWindowText;
                 end;
             end;
@@ -308,7 +306,6 @@ begin
     Shape2.Visible := false;
     f := nil;
     if ((Sender = imgSystem) or (Sender = lblSystem)) then begin
-        // PageControl1.ActivePage := tbsSystem;
         toggleSelector(lblSystem);
         if (_system <> nil) then
             f := _system

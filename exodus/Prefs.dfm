@@ -43,7 +43,7 @@ object frmPrefs: TfrmPrefs
       Left = 0
       Top = 1
       Width = 68
-      Height = 55
+      Height = 54
       Brush.Color = clInactiveCaptionText
       Pen.Color = clActiveCaption
     end
