@@ -34,6 +34,7 @@ procedure InitAutoUpdate();
 const
     JID_AUTOUPDATE  = '1016321811@update.jabber.org';
     XMLNS_AUTOUPDATE = 'jabber:iq:autoupdate';
+    EXODUS_REG = '\Software\Jabber\Exodus';
 
 resourcestring
     sUpdateConfirm = 'A new version of Exodus is available.  Would you like to install it?';
@@ -76,9 +77,20 @@ begin
     // If we have the magic reg key, check at a specific URL
     reg := TRegistry.Create();
     reg.RootKey := HKEY_LOCAL_MACHINE;
-    reg.OpenKey('\Software\Jabber\Exodus', true);
+    reg.OpenKey(EXODUS_REG, true);
     url := reg.ReadString('Update_URL');
-    last := reg.ReadDateTime('Last_Update');
+
+    // if this is the first time we've gotten here, then let's keep track of
+    // the current time, and get all *future* updates.
+    try
+        last := reg.ReadDateTime('Last_Update');
+    except
+        on ERegistryException do begin
+            last := Now();
+            reg.WriteDateTime('Last_Update', last);
+            end;
+        end;
+        
     reg.CloseKey();
     reg.Free();
 
@@ -203,7 +215,7 @@ begin
 
         reg := TRegistry.Create();
         reg.RootKey := HKEY_LOCAL_MACHINE;
-        reg.OpenKey('\Software\Jabber\Exodus', true);
+        reg.OpenKey(EXODUS_REG, true);
         reg.WriteDateTime('Last_Update', http.Response.LastModified);
         reg.CloseKey();
     finally
