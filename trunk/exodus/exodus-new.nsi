@@ -598,6 +598,38 @@ Section Exodus SEC_Exodus
     WriteRegStr HKCR "${XMPP_SHELL_OPEN_DDE_TOPIC_KEY}" "" "${XMPP_ACTION}"
     WriteRegStr HKCR "${XMPP_MIME_KEY}" "${EXTENSION_KEY}" "${XMPP_EXTENSION}"
 
+/* register xmpp:, im:, and pres: */
+WriteRegStr HKEY_CLASSES_ROOT "xmpp" "" "URL:xmpp"
+WriteRegStr HKEY_CLASSES_ROOT "xmpp" "URL Protocol" ""
+WriteRegStr HKEY_CLASSES_ROOT "xmpp\DefaultIcon" "" "c:\Program Files\Exodus\Exodus.exe"
+WriteRegStr HKEY_CLASSES_ROOT "xmpp\shell" "" ""
+WriteRegStr HKEY_CLASSES_ROOT "xmpp\shell\Open" "" ""
+WriteRegStr HKEY_CLASSES_ROOT "xmpp\shell\Open\command" "" "C:\Program Files\Exodus\Exodus.exe -u '%1'"
+WriteRegStr HKEY_CLASSES_ROOT "xmpp\shell\Open\ddeexec" "" "URI '%1'"
+WriteRegStr HKEY_CLASSES_ROOT "xmpp\shell\Open\ddeexec\Application" "" "Exodus"
+WriteRegStr HKEY_CLASSES_ROOT "xmpp\shell\Open\ddeexec\IfExec" "" "ignore"
+WriteRegStr HKEY_CLASSES_ROOT "xmpp\shell\Open\ddeexec\Topic" "" "XMPPAction"
+WriteRegStr HKEY_CLASSES_ROOT "im" "" "URL:im"
+WriteRegStr HKEY_CLASSES_ROOT "im" "URL Protocol" ""
+WriteRegStr HKEY_CLASSES_ROOT "im\DefaultIcon" "" "c:\Program Files\Exodus\Exodus.exe"
+WriteRegStr HKEY_CLASSES_ROOT "im\shell" "" ""
+WriteRegStr HKEY_CLASSES_ROOT "im\shell\Open" "" ""
+WriteRegStr HKEY_CLASSES_ROOT "im\shell\Open\command" "" "C:\Program Files\Exodus\Exodus.exe -u '%1'"
+WriteRegStr HKEY_CLASSES_ROOT "im\shell\Open\ddeexec" "" "URI '%1'"
+WriteRegStr HKEY_CLASSES_ROOT "im\shell\Open\ddeexec\Application" "" "Exodus"
+WriteRegStr HKEY_CLASSES_ROOT "im\shell\Open\ddeexec\IfExec" "" "ignore"
+WriteRegStr HKEY_CLASSES_ROOT "im\shell\Open\ddeexec\Topic" "" "XMPPAction"
+WriteRegStr HKEY_CLASSES_ROOT "pres" "" "URL:pres"
+WriteRegStr HKEY_CLASSES_ROOT "pres" "URL Protocol" ""
+WriteRegStr HKEY_CLASSES_ROOT "pres\DefaultIcon" "" "c:\Program Files\Exodus\Exodus.exe"
+WriteRegStr HKEY_CLASSES_ROOT "pres\shell" "" ""
+WriteRegStr HKEY_CLASSES_ROOT "pres\shell\Open" "" ""
+WriteRegStr HKEY_CLASSES_ROOT "pres\shell\Open\command" "" "C:\Program Files\Exodus\Exodus.exe -u '%1'"
+WriteRegStr HKEY_CLASSES_ROOT "pres\shell\Open\ddeexec" "" "URI '%1'"
+WriteRegStr HKEY_CLASSES_ROOT "pres\shell\Open\ddeexec\Application" "" "Exodus"
+WriteRegStr HKEY_CLASSES_ROOT "pres\shell\Open\ddeexec\IfExec" "" "ignore"
+WriteRegStr HKEY_CLASSES_ROOT "pres\shell\Open\ddeexec\Topic" "" "XMPPAction"
+
 SectionEnd ; end the section
 
 /*
