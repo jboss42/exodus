@@ -5,8 +5,8 @@ unit SpellPlugin;
 interface
 
 uses
-    ExodusCOM_TLB, 
-    ComObj, ActiveX, ExASpell_TLB, StdVcl;
+    ASpellHeadersDyn, ExodusCOM_TLB,
+    Classes, ComObj, ActiveX, ExASpell_TLB, StdVcl;
 
 type
   TSpellPlugin = class(TAutoObject, IExodusPlugin)
@@ -25,11 +25,22 @@ type
     procedure Shutdown; safecall;
     procedure Startup(const ExodusController: IExodusController); safecall;
 
+  private
+    _exodus: IExodusController;
+    _loaded: boolean;
+    _dicts: TStringlist;
+    _config: ASpellConfig;
+    _speller: ASpellSpeller;
   end;
 
-implementation
 
-uses ComServ;
+resourcestring
+    sAspellLoadError = 'Could not load the aspell system. Make sure you have properly installed aspell, and it is registered.';
+    sAspellNoDicts = 'The ASpell plugin was unable to load any dictionaries. Make sure you have at least 1 aspell dictionary installed.';
+
+implementation
+uses
+    Dialogs, ComServ;
 
 function TSpellPlugin.NewIM(const jid: WideString; var Body,
   Subject: WideString; const XTags: WideString): WideString;
@@ -72,12 +83,66 @@ end;
 
 procedure TSpellPlugin.Shutdown;
 begin
-
+    delete_aspell_config(_config);
+    _dicts.Clear();
+    _dicts.Free();
 end;
 
 procedure TSpellPlugin.Startup(const ExodusController: IExodusController);
-begin
 
+    procedure showError(msg: string);
+    begin
+        MessageDlg(msg, mtError, [mbOK], 0);
+        _loaded := false;
+    end;
+
+var
+    res: boolean;
+    di_list: AspellDictInfoList;
+    di_elements: AspellDictInfoEnumeration;
+    di: TAspellDictInfo;
+    poss_error: ASpellCanHaveError;
+begin
+    _exodus := ExodusController;
+    _dicts := TStringlist.Create();
+
+    // try to initialize the aspell system..
+    // passing a blank string asks the registry for the location
+    // of all things aspell'ish
+    res := LoadAspell('');
+    if (not res) then begin
+        ShowError(sAspellLoadError);
+        exit;
+    end;
+
+    // get the dictionaries from the _config..
+    _config := new_aspell_config();
+    di_list := get_aspell_dict_info_list(_config);
+
+    // run through all dicts..
+    di_elements := aspell_dict_info_list_elements(di_list);
+    repeat
+        di := aspell_dict_info_enumeration_next(di_elements)^;
+        _dicts.add(di.name);
+    until (aspell_dict_info_enumeration_at_end(di_elements) <> 0);
+
+    delete_aspell_dict_info_enumeration(di_elements);
+
+    if (_dicts.Count = 0) then begin
+        ShowError(sAspellNoDicts);
+        exit;
+    end;
+
+
+    // Get Config strings for the default dictionary
+    // xxx: do we really need to do what the demo does
+    // in getConfigStrings() ??
+
+    poss_error := new_aspell_speller(_config);
+    if (aspell_error_number(poss_error) <> 0) then exit;
+    _speller := to_aspell_speller(poss_error);
+
+    _loaded := true;
 end;
 
 initialization
