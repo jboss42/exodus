@@ -445,7 +445,7 @@ begin
             end
         else if (tag.Name = 'stream:error') then begin
             // we got a stream error
-            FireEvent('/session/stream:error', tag, 'STREAM ERROR!');
+            FireEvent('/session/stream:error', tag);
             end
         else
             _dispatcher.DispatchSignal('/packet', tag);

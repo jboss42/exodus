@@ -1093,6 +1093,11 @@ begin
         // MessageDlg(sCommError,  mtError, [mbOK], 0);
         end
 
+    else if event = '/session/stream:error' then begin
+        // we got a stream error. This prevents the clients from resource-battling
+        _logoff := true;
+        end
+
     else if event = '/session/prefs' then begin
         // some private vars we want to cache
         with MainSession.prefs do begin
