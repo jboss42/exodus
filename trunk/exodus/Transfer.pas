@@ -73,16 +73,27 @@ type
   private
     { Private declarations }
     fstream: TFileStream;
+
+    procedure doSendIQ();
   public
     { Public declarations }
     Mode: integer;
     url: string;
     filename: string;
     jid: string;
+    send_dav: boolean;
   end;
 
 var
   frmTransfer: TfrmTransfer;
+
+const
+    xfer_invalid = -1;
+    xfer_recv = 0;
+    xfer_send = 1;
+    xfer_recvd = 2;
+    xfer_sending = 3;
+    xfer_davputting = 4;
 
 resourcestring
     sXferRecv = '%s is sending you a file.';
@@ -102,6 +113,7 @@ resourcestring
     sXferDefaultDesc = 'Sending you a file.';
     sXferCreateDir = 'This directory does not exist. Create it?';
     sXferStreamError = 'There was an error trying to create the file.';
+    sXferDavError = 'There was an error trying to upload the file to your web host.';
 
 procedure FileReceive(tag: TXMLTag); overload;
 procedure FileReceive(from, url, desc: string); overload;
@@ -155,7 +167,7 @@ begin
     xfer.url := url;
     with xfer do begin
         jid := from;
-        Mode := 0;
+        Mode := xfer_recv;
 
         tmp_jid := TJabberID.Create(jid);
         ritem := MainSession.Roster.Find(tmp_jid.jid);
@@ -197,17 +209,20 @@ var
     pri: TJabberPres;
     ritem: TJabberRosterItem;
     p: integer;
+    dav_path: Widestring;
 begin
     xfer := TfrmTransfer.Create(Application);
 
     with xfer do begin
-        Mode := 1;
+        Mode := xfer_send;
+
+        // Make sure the contact is online
         tmp_id := TJabberID.Create(tojid);
         if (tmp_id.resource = '') then begin
             pri := MainSession.ppdb.FindPres(tmp_id.jid, '');
             if (pri = nil) then begin
                 MessageDlg(sXferOnline, mtError, [mbOK], 0);
-                Mode := -1;
+                Mode := xfer_invalid;
                 xfer.Close;
                 exit;
             end;
@@ -232,6 +247,7 @@ begin
             tmps := tmp_id.full;
         tmp_id.Free();
 
+        // Setup the GUI
         txtFrom.Caption := tmps;
         txtFrom.Hint := jid;
         lblFrom.Caption := sTo;
@@ -246,12 +262,23 @@ begin
         end;
 
         // get xfer prefs, and spin up URL
-        ip := MainSession.Prefs.getString('xfer_ip');
-        p := MainSession.Prefs.getInt('xfer_port');
+        with MainSession.Prefs do begin
+            if (getBool('xfer_webdav')) then begin
+                send_dav := true;
+                ip := getString('xfer_davhost');
+                dav_path := getString('xfer_davpath');
+                url := ip + dav_path + '/' + ExtractFilename(filename);
+            end
+            else begin
+                send_dav := false;
+                ip := getString('xfer_ip');
+                p := getInt('xfer_port');
 
-        if (ip = '') then ip := MainSession.Stream.LocalIP;
-        url := 'http://' + ip + ':' + IntToStr(p) + '/' + ExtractFileName(filename);
-        
+                if (ip = '') then ip := MainSession.Stream.LocalIP;
+                url := 'http://' + ip + ':' + IntToStr(p) + '/' + ExtractFileName(filename);
+            end;
+        end;
+
         txtMsg.Lines.Clear();
         txtMsg.Lines.Add(sXferDefaultDesc);
         lblFile.Hint := filename;
@@ -263,10 +290,11 @@ end;
 {---------------------------------------}
 procedure TfrmTransfer.frameButtons1btnOKClick(Sender: TObject);
 var
+    u, p: string;
     file_path: String;
-    iq: TXMLTag;
+    dp: integer;
 begin
-    if Self.Mode = 0 then begin
+    if Self.Mode = xfer_recv then begin
         // receive mode
         filename := URLToFilename(Self.url);
 
@@ -305,29 +333,83 @@ begin
         end;
         exit;
     end
-    else if Self.Mode = 1 then begin
+    else if Self.Mode = xfer_send then begin
         // send mode
-        Self.Mode := 3;
-        iq := TXMLTag.Create('iq');
-        with iq do begin
-            setAttribute('to', jid);
-            setAttribute('id', MainSession.generateID());
-            setAttribute('type', 'set');
-            with AddTag('query') do begin
-                setAttribute('xmlns', XMLNS_IQOOB);
-                AddBasicTag('url', url);
-                AddBasicTag('desc', txtMsg.WideText);
+        if (send_dav) then begin
+            // first do the HTTP PUT
+            Self.Mode := xfer_davputting;
+
+            // check to see if we need to auth
+            u := MainSession.Prefs.getString('xfer_davusername');
+            p := MainSession.Prefs.getString('xfer_davpassword');
+            if (u <> '') then with httpClient.Request do begin
+                BasicAuthentication := true;
+                Username := u;
+                Password := p;
             end;
+
+            dp := MainSession.Prefs.getInt('xfer_davport');
+            if (dp > 0) then
+                httpClient.Port := dp;
+
+            // get a handle to the stream
+            try
+                fStream := TFileStream.Create(filename, fmOpenRead);
+            except
+                on EStreamError do begin
+                    MessageDlg(sXferStreamError, mtError, [mbOK], 0);
+                    exit;
+                end;
+            end;
+
+            // Try and do the HTTP PUT
+            try
+                httpClient.Put(Self.url, fStream);
+            finally
+                FreeAndNil(fstream);
+            end;
+
+            Self.Mode := xfer_sending;
+            if ((httpClient.ResponseCode >= 200) and
+                (httpClient.ResponseCode < 300)) then
+                doSendIQ()
+            else
+                MessageDlg(sXferDavError, mtError, [mbOK], 0);
+
+            Self.Close();
+        end
+        else begin
+            Self.Mode := xfer_sending;
+            doSendIQ();
+            ExFileServer.AddFile(filename);
+            Self.Close();
         end;
-        MainSession.SendTag(iq);
-        ExFileServer.AddFile(filename);
-        Self.Close();
     end
-    else if Self.Mode = 2 then begin
+    else if Self.Mode = xfer_recvd then begin
         // Open the file.
         ShellExecute(0, 'open', PChar(filename), '', '', SW_NORMAL);
         Self.Close;
     end;
+end;
+
+procedure TfrmTransfer.doSendIQ();
+var
+    iq: TXMLTag;
+begin
+    // normal p2p... just add it to our server,
+    // and close the form.
+    iq := TXMLTag.Create('iq');
+    with iq do begin
+        setAttribute('to', jid);
+        setAttribute('id', MainSession.generateID());
+        setAttribute('type', 'set');
+        with AddTag('query') do begin
+            setAttribute('xmlns', XMLNS_IQOOB);
+            AddBasicTag('url', url);
+            AddBasicTag('desc', txtMsg.WideText);
+        end;
+    end;
+    MainSession.SendTag(iq);
 end;
 
 {---------------------------------------}
@@ -351,15 +433,15 @@ procedure TfrmTransfer.httpClientWorkEnd(Sender: TObject;
 begin
     frameButtons1.btnOK.Caption := sOpen;
     frameButtons1.btnCancel.Caption := sClose;
-    Self.mode := 2;
+    Self.mode := xfer_recvd;
 end;
 
 {---------------------------------------}
 procedure TfrmTransfer.frameButtons1btnCancelClick(Sender: TObject);
 begin
-    case Self.Mode of
-    0: httpClient.DisconnectSocket();
-    end;
+    if ((Self.Mode = xfer_davputting) or
+        (Self.Mode = xfer_recv)) then
+        httpClient.DisconnectSocket();
     Self.Close;
 end;
 
@@ -374,10 +456,10 @@ end;
 procedure TfrmTransfer.lblFileClick(Sender: TObject);
 begin
     // Browse for a new file..
-    if Mode = 0 then begin
+    if Mode = xfer_recv then begin
         frameButtons1btnOKClick(Sender);
     end
-    else if Mode = 1 then begin
+    else if Mode = xfer_send then begin
         if OpenDialog1.Execute then begin
             // reset the text in the txtMsg richedit..
             filename := OpenDialog1.FileName;
@@ -387,7 +469,7 @@ begin
             txtMsg.Lines.Add(sXferURL + url);
         end;
     end
-    else if Mode = 2 then
+    else if Mode = xfer_send then
         ShellExecute(0, 'open', PChar(filename), '', '', SW_NORMAL);
 end;
 

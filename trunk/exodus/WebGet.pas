@@ -71,7 +71,6 @@ begin
 
     try
         Result := f.IdHTTP1.Get(url);
-
         if (f.IdHTTP1.ResponseCode = 200) then begin
             f.lblStatus.Caption := sDownloadComplete;
             f.lblStatus.Refresh();
