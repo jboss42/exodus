@@ -22,7 +22,7 @@ unit BaseChat;
 interface
 
 uses
-    Dockable, ActiveX, ComObj, BaseMsgList,
+    Emote, Dockable, ActiveX, ComObj, BaseMsgList,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Menus, StdCtrls, ExtCtrls, ComCtrls, ExRichEdit, RichEdit2,
     TntStdCtrls, TntMenus;
@@ -95,7 +95,7 @@ type
     { Public declarations }
     AutoScroll: boolean;
 
-    procedure SetEmoticon(msn: boolean; imgIndex: integer);
+    procedure SetEmoticon(e: TEmoticon);
     procedure SendMsg(); virtual;
     procedure HideEmoticons();
     procedure Flash;
@@ -152,36 +152,19 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmBaseChat.SetEmoticon(msn: boolean; imgIndex: integer);
+procedure TfrmBaseChat.SetEmoticon(e: TEmoticon);
 var
-    l, i, m: integer;
-    eo: TEmoticon;
+    l: integer;
+    etxt: Widestring;
 begin
     // Setup some Emoticon
-    m := -1;
+    etxt := GetEmoticonText(e);
+    if (etxt = '') then exit;
 
-    if (emoticon_list.Count = 0) then
-        ConfigEmoticons();
-
-    // XXX: PGM: TEmoticon needs to go away, when you are done.
-    for i := 0 to emoticon_list.Count - 1 do begin
-        eo := TEmoticon(emoticon_list.Objects[i]);
-        if (((msn) and (eo.il = frmExodus.imgMSNEmoticons)) or
-        ((not msn) and (eo.il = frmExodus.imgYahooEmoticons))) then begin
-            // the image lists match
-            if (eo.idx = imgIndex) then begin
-                m := i;
-                break;
-            end;
-        end;
-    end;
-
-    if (m >= 0) then begin
-        l := length(MsgOut.Text);
-        if ((l > 0) and ((MsgOut.Text[l]) <> ' ')) then
-            MsgOut.SelText := ' ';
-        MsgOut.SelText := emoticon_list[m];
-    end;
+    l := Length(MsgOut.Text);
+    if ((l > 0) and (MsgOut.Text[l] <> ' ')) then
+        MsgOut.SelText := ' ';
+    MsgOut.SelText := etxt;
 end;
 
 {---------------------------------------}
@@ -203,11 +186,6 @@ end;
 {---------------------------------------}
 procedure TfrmBaseChat.MsgOutKeyPress(Sender: TObject; var Key: Char);
 begin
-    // I don't agree with this hotkey... it can be "bad"
-    {
-    if ( Key = #27 ) then
-        Close();
-    }
     if (key <> #0) then
         inherited;
 end;

@@ -22,79 +22,89 @@ unit Emote;
 interface
 
 uses
-  Graphics, GIFImage, Unicode, iniFiles, RegExpr;
+    Graphics, GIFImage, Unicode, iniFiles, RegExpr;
 
 type
-  {---------------------------------------}
-  TEmoticon = class
-  private
-    _resHandle : Cardinal;
-    _file      : WideString;
-    _url       : WideString;
-    _rtf       : string;
+    {---------------------------------------}
+    TEmoticon = class
+    private
+        _resHandle : Cardinal;
+        _file      : WideString;
+        _img_tag   : WideString;
+        _rtf       : string;
 
-  protected
-    function GetRTF(): string; virtual; abstract;
+    protected
+        function getRTF(): string; virtual; abstract;
+        function getBitmap: Graphics.TBitmap; virtual; abstract;
 
-  public
-    //constructor Create(filename: string);
-    constructor Create(resHandle: cardinal; resFile: WideString; resType: string; fileName: WideString);
+    public
+        constructor Create(filename: string); overload;
+        constructor Create(resHandle: cardinal; resFile: WideString; resType: string; fileName: WideString); overload;
 
-    property RTF: string read GetRTF;
-  end;
+        property RTF: string read GetRTF;
+        property Bitmap: Graphics.TBitmap read GetBitmap;
+    end;
 
-  {---------------------------------------}
-  TGifEmoticon = class(TEmoticon)
-  private
-    _gif: TGifImage;
-  protected
-    function GetRTF(): string; override;
-  public
-    //constructor Create(filename: string);
-    constructor Create(resHandle: cardinal; resFile: WideString; resType: string; fileName: WideString);
-  end;
+    {---------------------------------------}
+    TGifEmoticon = class(TEmoticon)
+    private
+        _gif: TGifImage;
+    protected
+        function getRTF(): string; override;
+        function getBitmap(): Graphics.TBitmap; override;
+    public
+        constructor Create(filename: string); overload;
+        constructor Create(resHandle: cardinal; resFile: WideString; resType: string; fileName: WideString); overload;
+    end;
 
-  TBMPEmoticon = class(TEmoticon)
-  private
-    _bmp: TBitmap;
-  protected
-    function GetRTF(): string; override;
-  public
-    //constructor Create(filename: string);
-    constructor Create(resHandle: cardinal; resFile: Widestring; resType: string; filename: Widestring);
-  end;
+    {---------------------------------------}
+    TBMPEmoticon = class(TEmoticon)
+    private
+        _bmp: Graphics.TBitmap;
+    protected
+        function getRTF(): string; override;
+        function getBitmap(): Graphics.TBitmap; override;
+    public
+        constructor Create(filename: string); overload;
+        constructor Create(resHandle: cardinal; resFile: Widestring; resType: string; filename: Widestring); overload;
+    end;
 
-  {---------------------------------------}
-  TEmoticonList = class
-  public
-    constructor Create();
-    destructor Destroy(); override;
+    {---------------------------------------}
+    TEmoticonList = class
+    private
+        _text      : THashedStringList;
+        _objects   : THashedStringList;
 
-    procedure AddResourceFile(resdll: WideString);
-    procedure Clear();
+        function _loadObject(mime: WideString; fileName: WideString; resHandle: cardinal; resFile: WideString): TEmoticon;
+        function _getImageCount(): integer;
+        function _getBitmap(i: integer): Graphics.TBitmap;
+        function _getEmoticon(i: integer): TEmoticon;
 
-  private
-    _text      : THashedStringList;
-    _objects   : THashedStringList;
+    public
+        constructor Create();
+        destructor Destroy(); override;
 
-    function LoadObject(mime: WideString; fileName: WideString; resHandle: cardinal; resFile: WideString): TEmoticon;
+        procedure AddResourceFile(resdll: WideString);
+        procedure Clear();
 
-  end;
+        property ImageCount: integer read _getImageCount;
+        property Bitmaps[index: integer]: Graphics.TBitmap read _getBitmap;
+        property Emoticons[index: integer]: TEmoticon read _getEmoticon;
+    end;
 
-  {---------------------------------------}
-  procedure InitializeEmoticonLists();
-  procedure ClearEmoticonLists();
-  function GetEmoticonURL(candidate: WideString): WideString;
-  function GetEmoticonRTF(candidate: WideString): WideString;
-  function ProcessIEEmoticons(txt: Widestring): WideString;
+{---------------------------------------}
+procedure InitializeEmoticonLists();
+procedure ClearEmoticonLists();
+function GetEmoticonImgTag(candidate: WideString): WideString;
+function GetEmoticonRTF(candidate: WideString): WideString;
+function GetEmoticonText(e: TEmoticon): Widestring;
+function ProcessIEEmoticons(txt: Widestring): WideString;
+function BitmapToRTF(pict: Graphics.TBitmap): string;
 
-  var
+var
     EmoticonList   : TEmoticonList;
     use_emoticons  : boolean;
     emoticon_regex : TRegExpr;
-
-// fwd declare
-function BitmapToRTF(pict: Graphics.TBitmap): string;
 
 
 {---------------------------------------}
@@ -103,8 +113,17 @@ function BitmapToRTF(pict: Graphics.TBitmap): string;
 implementation
 
 uses
-    Windows, SysUtils, Session, XmlUtils,
+    Emoticons, Windows, SysUtils, Session, XmlUtils, Forms, 
     XMLParser, XMLTag, Classes, StrUtils;
+
+{---------------------------------------}
+constructor TEmoticon.Create(filename: string);
+begin
+    _resHandle := 0;
+    _file := filename;
+    _rtf := '';
+    _img_tag := '';
+end;
 
 {---------------------------------------}
 constructor TEmoticon.Create(resHandle: cardinal; resFile: WideString; resType: string; fileName: WideString);
@@ -112,7 +131,18 @@ begin
     _resHandle := resHandle;
     _file := ChangeFileExt(filename, '');
     _rtf := '';
-    _url := '';
+    _img_tag := '';
+end;
+
+{---------------------------------------}
+{------------- TGifEmoticon ------------}
+{---------------------------------------}
+constructor TGifEmoticon.Create(filename: string);
+begin
+    inherited;
+    _img_tag := '<img src="file://' + _file + '" />';
+    _gif := TGifImage.Create();
+    _gif.LoadFromFile(_file);
 end;
 
 {---------------------------------------}
@@ -121,7 +151,7 @@ var
     rs : TResourceStream;
 begin
     inherited;
-    _url := '<img src="res://' + resFile + '/GIF/' + _file + '" />';
+    _img_tag := '<img src="res://' + resFile + '/GIF/' + _file + '" />';
 
     rs := TResourceStream.Create(_resHandle, _file, 'GIF');
     _gif := TGifImage.Create();
@@ -131,9 +161,6 @@ end;
 
 {---------------------------------------}
 function TGifEmoticon.getRTF(): string;
-var
-    rs : TResourceStream;
-    g  : TGifImage;
 begin
     if (_rtf <> '') then begin
         result := _rtf;
@@ -144,26 +171,39 @@ begin
 end;
 
 {---------------------------------------}
+function TGifEmoticon.getBitmap: Graphics.TBitmap;
+begin
+    Result := _gif.Bitmap;
+end;
+
+{---------------------------------------}
+{------------ TBMPEmoticon -------------}
+{---------------------------------------}
+constructor TBMPEmoticon.Create(filename: string);
+begin
+    inherited;
+    _bmp := Graphics.TBitmap.Create();
+    _bmp.LoadFromFile(_file);
+end;
+
+{---------------------------------------}
 constructor TBMPEmoticon.Create(resHandle: cardinal; resFile: WideString; resType: string; fileName: WideString);
 var
     rs : TResourceStream;
 begin
     inherited;
 
-    _url := '<img src="res://' + resFile + '/BMP/' + _file + '" />';
+    _img_tag := '<img src="res://' + resFile + '/BMP/' + _file + '" />';
     rs := TResourceStream.Create(_resHandle, _file, 'BMP');
 
-    //_bmp := TBitmap.Create();
-    //_bmp.LoadFromStream(rs);
+    _bmp := Graphics.TBitmap.Create();
+    _bmp.LoadFromStream(rs);
 
     rs.Free();
 end;
 
 {---------------------------------------}
 function TBMPEmoticon.getRTF(): string;
-var
-    rs : TResourceStream;
-    g  : TGifImage;
 begin
     if (_rtf <> '') then begin
         result := _rtf;
@@ -173,6 +213,14 @@ begin
     result := _rtf;
 end;
 
+{---------------------------------------}
+function TBMPEmoticon.getBitmap: Graphics.TBitmap;
+begin
+    Result := _bmp;
+end;
+
+{---------------------------------------}
+{---------------------------------------}
 {---------------------------------------}
 function BitmapToRTF(pict: Graphics.TBitmap): string;
 var
@@ -210,7 +258,16 @@ begin
 end;
 
 {---------------------------------------}
-function TEmoticonList.LoadObject(mime: WideString; fileName: WideString; resHandle: cardinal; resFile: WideString): TEmoticon;
+{------------ Emoticon List ------------}
+{---------------------------------------}
+constructor TEmoticonList.Create();
+begin
+    _text      := THashedStringList.Create();
+    _objects   := THashedStringList.Create();
+end;
+
+{---------------------------------------}
+function TEmoticonList._loadObject(mime: WideString; fileName: WideString; resHandle: cardinal; resFile: WideString): TEmoticon;
 var
     key : WideString;
     i : integer;
@@ -228,13 +285,6 @@ begin
     end
     else
         result := nil;
-end;
-
-{---------------------------------------}
-constructor TEmoticonList.Create();
-begin
-    _text      := THashedStringList.Create();
-    _objects   := THashedStringList.Create();
 end;
 
 {---------------------------------------}
@@ -272,7 +322,7 @@ begin
         os := icon.QueryTags('object');
         for j := 0 to os.Count - 1 do begin
             obj := os[j];
-            e := LoadObject(obj.GetAttribute('mime'), obj.Data, h, resdll);
+            e := _loadObject(obj.GetAttribute('mime'), obj.Data, h, resdll);
             if (e <> nil) then break;
         end;
         os.Free();
@@ -287,6 +337,37 @@ begin
 
     end;
     icons.Free();
+end;
+
+{---------------------------------------}
+function TEmoticonList._getImageCount(): integer;
+begin
+    Result := _objects.Count;
+end;
+
+{---------------------------------------}
+function TEmoticonList._getBitmap(i: integer): Graphics.TBitmap;
+var
+    e: TEmoticon;
+begin
+    if ((i < 0) or (i >= _objects.Count)) then begin
+        Result := nil;
+        exit;
+    end;
+
+    e := TEmoticon(_objects.Objects[i]);
+    Result := e.getBitmap();
+end;
+
+{---------------------------------------}
+function TEmoticonList._getEmoticon(i: integer): TEmoticon;
+begin
+    if ((i < 0) or (i >= _objects.Count)) then begin
+        Result := nil;
+        exit;
+    end;
+
+    Result := TEmoticon(_objects.Objects[i]);
 end;
 
 {---------------------------------------}
@@ -308,14 +389,14 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-function GetEmoticonURL(candidate: WideString): WideString;
+function GetEmoticonImgTag(candidate: WideString): WideString;
 var
     i: integer;
 begin
     result := '';
     i := EmoticonList._text.IndexOf(candidate);
     if (i >= 0) then
-        result := TEmoticon(EmoticonList._text.Objects[i])._url;
+        result := TEmoticon(EmoticonList._text.Objects[i])._img_tag;
 end;
 
 {---------------------------------------}
@@ -327,6 +408,19 @@ begin
     i := EmoticonList._text.IndexOf(candidate);
     if (i >= 0) then
         result := TEmoticon(EmoticonList._text.Objects[i]).GetRTF();
+end;
+
+{---------------------------------------}
+function GetEmoticonText(e: TEmoticon): Widestring;
+var
+    i: integer;
+begin
+    // just find the first text string in the list that matches
+    i := EmoticonList._text.IndexOfObject(e);
+    if (i = -1) then
+        Result := ''
+    else
+        Result := EmoticonList._text[i];
 end;
 
 {---------------------------------------}
@@ -348,6 +442,11 @@ begin
         EmoticonList.AddResourceFile(dlls[i]);
     end;
     dlls.Free();
+
+    // Make sure the GUI form is updated.
+    if (frmEmoticons = nil) then
+        frmEmoticons := TfrmEmoticons.Create(Application);
+    frmEmoticons.Reset();
 end;
 
 {---------------------------------------}
@@ -378,7 +477,7 @@ begin
         // Grab the match text and look it up in our emoticon list
         ms := emoticon_regex.Match[2];
         if (ms <> '') then begin
-            img := GetEmoticonURL(ms);
+            img := GetEmoticonImgTag(ms);
         end;
 
         // if we have a legal emoticon object, insert it..
@@ -431,9 +530,7 @@ initialization
 finalization
     if (EmoticonList <> nil) then
         FreeAndNil(EmoticonList);
-
-    // XXX: hildjj, this is causing AV's on exit!
-    //if (emoticon_regex <> nil) then
-    //    FreeAndNil(emoticon_regex);
+    if (emoticon_regex <> nil) then
+        FreeAndNil(emoticon_regex);
 
 end.

@@ -24,67 +24,11 @@ interface
 uses
     BaseChat,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, ComCtrls, ToolWin;
+    Dialogs, ComCtrls, ToolWin, Buttons, TntButtons;
 
 type
   TfrmEmoticons = class(TForm)
-    ToolBar1: TToolBar;
-    ToolButton1: TToolButton;
-    ToolButton2: TToolButton;
-    ToolButton3: TToolButton;
-    ToolButton4: TToolButton;
-    ToolButton5: TToolButton;
-    ToolButton6: TToolButton;
-    ToolButton7: TToolButton;
-    ToolButton8: TToolButton;
-    ToolButton9: TToolButton;
-    ToolButton10: TToolButton;
-    ToolButton11: TToolButton;
-    ToolButton12: TToolButton;
-    ToolButton13: TToolButton;
-    ToolButton14: TToolButton;
-    ToolButton15: TToolButton;
-    ToolButton16: TToolButton;
-    ToolButton17: TToolButton;
-    ToolButton18: TToolButton;
-    ToolButton19: TToolButton;
-    ToolButton20: TToolButton;
-    ToolButton21: TToolButton;
-    ToolButton22: TToolButton;
-    ToolButton23: TToolButton;
-    ToolButton24: TToolButton;
-    ToolButton25: TToolButton;
-    ToolButton26: TToolButton;
-    ToolButton28: TToolButton;
-    ToolButton29: TToolButton;
-    ToolButton30: TToolButton;
-    ToolButton31: TToolButton;
-    ToolButton32: TToolButton;
-    ToolButton33: TToolButton;
-    ToolButton34: TToolButton;
-    ToolButton35: TToolButton;
-    ToolButton36: TToolButton;
-    ToolButton37: TToolButton;
-    ToolButton38: TToolButton;
-    ToolButton39: TToolButton;
-    ToolButton40: TToolButton;
-    ToolButton41: TToolButton;
-    ToolButton42: TToolButton;
-    ToolButton43: TToolButton;
-    ToolButton44: TToolButton;
-    ToolButton45: TToolButton;
-    ToolButton46: TToolButton;
-    ToolBar2: TToolBar;
-    ToolButton27: TToolButton;
-    ToolButton47: TToolButton;
-    ToolButton48: TToolButton;
-    ToolButton49: TToolButton;
-    ToolButton50: TToolButton;
-    ToolButton51: TToolButton;
-    ToolButton52: TToolButton;
-    ToolButton53: TToolButton;
-    ToolButton54: TToolButton;
-    ToolButton55: TToolButton;
+    SpeedButton1: TSpeedButton;
     procedure ToolButton1Click(Sender: TObject);
     procedure FormDeactivate(Sender: TObject);
     procedure ToolBar1Click(Sender: TObject);
@@ -98,6 +42,8 @@ type
     ChatWindow: TfrmBaseChat;
     msn: boolean;
     imgIndex: integer;
+
+    procedure Reset();
   end;
 
 var
@@ -110,19 +56,19 @@ implementation
 
 {$R *.dfm}
 uses
-    GnuGetText, Jabber1;
+    Math, Emote, GnuGetText, Jabber1;
 
 {---------------------------------------}
 procedure TfrmEmoticons.ToolButton1Click(Sender: TObject);
 var
-    btn: TToolbutton;
+    i: integer;
+    e: TEmoticon;
 begin
     // a button was clicked.
-    if (Sender is TToolButton) then begin
-        btn := TToolButton(Sender);
-        msn := (Toolbar1.Buttons[btn.Index] = btn);
-        imgIndex := btn.ImageIndex;
-        ChatWindow.SetEmoticon(msn, imgIndex);
+    if (Sender is TSpeedButton) then begin
+        i := TSpeedButton(Sender).Tag;
+        e := EmoticonList.Emoticons[i];
+        ChatWindow.SetEmoticon(e);
         Self.Hide;
     end
     else
@@ -148,12 +94,73 @@ procedure TfrmEmoticons.FormKeyDown(Sender: TObject; var Key: Word;
 begin
     case key of
     VK_ESCAPE: Self.Hide
-end;
+    end;
 end;
 
+{---------------------------------------}
 procedure TfrmEmoticons.FormCreate(Sender: TObject);
 begin
     TranslateComponent(Self);
 end;
+
+{---------------------------------------}
+procedure TfrmEmoticons.Reset();
+var
+    row, col, cols: integer;
+    rt, c, w, h, i: integer;
+    bmp: TBitmap;
+    btn: TSpeedButton;
+begin
+    // Clear the existing stuff out.
+    for i := Self.ControlCount - 1 downto 0 do
+        Self.Controls[i].Free();
+
+    // Scan the whole list looking for the biggest thing, w/in reason
+    if (EmoticonList.ImageCount = 0) then exit;
+    
+    w := 0;
+    h := 0;
+    c := EmoticonList.ImageCount - 1;
+    for i := 0 to c do begin
+        bmp := EmoticonList.Bitmaps[i];
+        w := max(w, bmp.Width);
+        h := max(h, bmp.Height);
+    end;
+
+    // Give us some xtra room
+    w := w + 2;
+    h := h + 2;
+
+    // try to make the thing somewhat square..
+    rt := Trunc(sqrt(c)) + 1;
+    cols := rt;
+    row := 0;
+    col := 0;
+    for i := 0 to c do begin
+        btn := TSpeedButton.Create(Self);
+        btn.Parent := Self;
+        btn.Name := 'btnEmoticon' + IntToStr(i);
+        btn.Top := (row * h);
+        btn.Left := (col * w);
+        btn.Width := w;
+        btn.Height := h;
+        btn.Spacing := 1;
+        btn.Glyph := EmoticonList.Bitmaps[i];
+        btn.Visible := true;
+        btn.Flat := true;
+        btn.Tag := i;
+        btn.OnClick := Self.ToolButton1Click;
+        inc(col);
+        if (col = cols) then begin
+            inc(row);
+            col := 0;
+        end;
+    end;
+
+    // Resize the whole form
+    Self.Width := (cols * w) + 5;
+    Self.Height := ((row + 1) * h) + 5;
+end;
+
 
 end.

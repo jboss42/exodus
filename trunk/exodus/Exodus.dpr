@@ -214,7 +214,6 @@ begin
   Application.CreateForm(TfrmPrefEmote, frmPrefEmote);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
-  frmEmoticons := TfrmEmoticons.Create(Application);
 
   frmRosterWindow.DockRoster;
   frmRosterWindow.Show;
