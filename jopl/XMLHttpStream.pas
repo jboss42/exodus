@@ -114,6 +114,9 @@ uses
     {$ifdef Win32}
     Registry, StrUtils,
     {$endif}
+    {$ifdef INDY9}
+    IdCookie,
+    {$endif}
     Session,
     IdGlobal;
 
@@ -221,8 +224,8 @@ begin
         WM_COMMERROR: begin
             // There was a COMM ERROR
             _active := false;
-            DoCallbacks('disconnected', nil);
             DoCallbacks('commerror', nil);
+            DoCallbacks('disconnected', nil);
         end;
     end;
 end;
@@ -361,6 +364,8 @@ var
 {$ifndef INDY9}
     new_cookie: string;
     i: integer;
+{$else}
+    cookie: TIdCookieRFC2109;
 {$endif}
     r, pid: string;
 begin
@@ -382,7 +387,14 @@ begin
 
     // Get the cookie values + parse them, looking for the ID
     {$ifdef INDY9}
-    pid := _http.CookieManager.CookieCollection.Cookie['ID', _http.URL.Host].Value;
+    cookie := _http.CookieManager.CookieCollection.Cookie['ID', _http.URL.Host];
+    if (cookie = nil) then begin
+        // didn't get a valid cookie
+        doMessage(WM_COMMERROR);
+        Self.Terminate();
+        exit;
+    end;
+    pid := cookie.Value;
     {$else}
     new_cookie := _http.Response.ExtraHeaders.Values['Set-Cookie'];
     _cookie_list.DelimitedText := new_cookie;
