@@ -441,7 +441,7 @@ begin
         iqType := 'get';
         toJid := '';
         Namespace := XMLNS_PRIVATE;
-        with qtag.AddTag('bookmarks') do
+        with qtag.AddTag('storage') do
             setAttribute('xmlns', XMLNS_BM);
         Send();
     end;
