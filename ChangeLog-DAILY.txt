@@ -1,31 +1,47 @@
-2004-07-01 08:23  pgmillard
+2004-07-08 08:31  pgmillard
 
 	* exodus/: default.po, version.h, version.nsi: daily build
 
-2004-06-30 22:51  pgmillard
+2004-07-08 08:20  pgmillard
 
-	* exodus/: Jabber1.dfm, Jabber1.pas, Prefs.pas: Make plugins menu
-	  have ability to go directly to the options dialog.
+	* exodus/: BaseChat.pas, InputPassword.pas, Jabber1.pas, Room.pas,
+	  default.po: Fixup AV's on exit when rooms and/or chats are still
+	  opened.
 
-2004-06-30 21:48  pgmillard
+2004-07-07 22:33  pgmillard
 
-	* exodus/: Jabber1.pas, Login.pas: Bug #3952 - Fix AV on exit when
-	  login window is showing.
+	* exodus/: ExUtils.pas, InputPassword.dfm, InputPassword.pas: Bug
+	  #3432 - Make InputQueryW adjust dialog box to fit prompt. Also
+	  add in additional text for creating a nested group.
 
-2004-06-30 21:35  pgmillard
+2004-07-07 21:23  pgmillard
 
-	* exodus/prefs/PrefNetwork.pas: Bug #3924 - Fixup HTTP proxy
-	  controls for network prefs
+	* exodus/ConnDetails.dfm, exodus/CustomPres.dfm,
+	  exodus/CustomPres.pas, exodus/prefs/PrefPresence.dfm,
+	  jopl/Presence.pas: Bug #3964 - Various fixes for not allowing pri
+	  of > 128 and < -128.
 
-2004-06-30 21:02  pgmillard
+2004-07-07 21:04  pgmillard
 
-	* exodus/: RosterWindow.dfm, RosterWindow.pas: Bug #3894 - Added
-	  auto-scrolling to the roster during drag-n-drop ops
+	* exodus/: COMChatController.pas, COMController.pas: Bug #3613 -
+	  Attempt to fixup control names by using a sequential counter
+	  instead of using the # of items in the list... which apparently
+	  doesn't always work.
 
-2004-06-30 20:14  pgmillard
+2004-07-07 20:34  pgmillard
 
-	* exodus/ChatWin.dfm, exodus/ChatWin.pas, exodus/Jabber1.pas,
-	  exodus/RecvStatus.pas, jopl/NodeItem.pas, jopl/Presence.pas,
-	  jopl/Roster.pas: Bug #3949 - Make sure multiple priority, status,
-	  and show elements don't get inside a presence packet
+	* exodus/plugins/SQLLogger/SQLPlugin.pas: Fixup SQLLogger so it
+	  initializes and CHECKS the DB properly
+
+2004-07-07 20:24  pgmillard
+
+	* exodus/Jabber1.pas: Bug #3967 - Dynamically fetch address for
+	  GetLastInputInfo instead of just calling the it. If we just call
+	  it, the EXE is linked against that function which doesn't exist
+	  on < w2k.
+
+2004-07-05 07:15  rimas
+
+	* exodus/locale/lt/LC_MESSAGES/default.po: latest updates according
+	  to the main default.po
 
