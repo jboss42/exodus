@@ -50,7 +50,7 @@ inherited frmJud: TfrmJud
   end
   inherited Tabs: TPageControl
     Width = 409
-    ActivePage = TabSheet3
+    ActivePage = TabSheet4
     inherited TabSheet1: TTabSheet
       object lblSelect: TTntLabel
         Left = 0
