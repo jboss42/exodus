@@ -1,6 +1,6 @@
 inherited frmRoom: TfrmRoom
-  Left = 260
-  Top = 271
+  Left = 255
+  Top = 317
   Width = 395
   Height = 305
   Caption = 'Conference Room'
@@ -12,27 +12,17 @@ inherited frmRoom: TfrmRoom
     Top = 244
     Width = 387
   end
-  inherited Panel3: TPanel
+  inherited pnlMsgList: TPanel
     Top = 23
     Width = 387
     Height = 221
     TabOrder = 1
-    object Splitter2: TSplitter [0]
+    object Splitter2: TSplitter
       Left = 275
       Top = 4
       Height = 213
       Align = alRight
       ResizeStyle = rsUpdate
-    end
-    inherited MsgList: TExRichEdit
-      Width = 271
-      Height = 213
-      Font.Name = 'Arial'
-      ParentFont = False
-      PopupMenu = popRoom
-      OnDragDrop = lstRosterDragDrop
-      OnDragOver = lstRosterDragOver
-      PlainRTF = True
     end
     object Panel6: TPanel
       Left = 278
@@ -43,7 +33,7 @@ inherited frmRoom: TfrmRoom
       BevelOuter = bvNone
       BorderWidth = 1
       Caption = '`'
-      TabOrder = 1
+      TabOrder = 0
       object lstRoster: TTntListView
         Left = 1
         Top = 1
