@@ -183,7 +183,7 @@ begin
         frmEmoticons.Hide;
 
     if (Self.Visible) and (pnlInput.Visible) then begin
-        MsgList.Repaint();
+        MsgList.Invalidate();
         MsgOut.SetFocus;
     end;
 

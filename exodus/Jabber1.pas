@@ -302,7 +302,6 @@ type
 
     // Some callbacks
     _sessioncb: integer;
-    // _msgcb: integer;
 
     // Reconnect variables
     _reconnect_interval: integer;
@@ -1003,7 +1002,6 @@ begin
 
     // Setup callbacks
     _sessioncb := MainSession.RegisterCallback(SessionCallback, '/session');
-    // _msgcb := MainSession.RegisterCallback(MsgCallback, '/packet/message');
 
     // Initialize the global responders/xpath events
     initResponders();
@@ -1084,8 +1082,6 @@ begin
     sExodusGMHook := SetWindowsHookEx(WH_GETMESSAGE, @ExodusGMHook,
         0, GetCurrentThreadID);
         
-    OutputDebugString(PChar('CWP HOOK: ' + IntToStr(sExodusCWPHook)));
-    OutputDebugString(PChar('GM HOOK: ' + IntToStr(sExodusGMHook)));
 end;
 
 {---------------------------------------}
@@ -1555,113 +1551,6 @@ begin
 end;
 
 {---------------------------------------}
-(*
-procedure TfrmExodus.MsgCallback(event: string; tag: TXMLTag);
-var
-    b, mtype: Widestring;
-    e: TJabberEvent;
-    msg: TJabberMessage;
-    msg_treatment: integer;
-    cc: TChatController;
-    tmp_jid: TJabberID;
-    etag, m, xoob: TXMLTag;
-    ritem: TJabberRosterItem;
-begin
-    // record the event
-    mtype := tag.getAttribute('type');
-    b := Trim(tag.GetBasicText('body'));
-    tmp_jid := TJabberID.Create(tag.getAttribute('from'));
-    try
-        if ((mtype <> 'groupchat') and (mtype <> 'chat')) then begin
-            // Some exclusions...
-            // x-data msgs and invites
-            if (tag.QueryXPTag(XP_MSGXDATA) <> nil) then exit;
-            if (tag.QueryXPTag(XP_MUCINVITE) <> nil) then exit;
-            if (tag.QueryXPTag(XP_CONFINVITE) <> nil) then exit;
-
-            // check for headlines w/ JUST a x-oob.
-            // otherwise, throw out cases where body is empty
-            xoob := tag.QueryXPTag(XP_XOOB);
-            if ((xoob = nil) and (b = '')) then
-                exit
-            else if ((xoob <> nil) and (b = '')) then begin
-                // add in a textual version of the oob:
-                b := 'This msg contains a URL: '#13#10;
-                b := b + xoob.GetBasicText('desc');
-                b := b + xoob.GetBasicText('url');
-            end;
-
-            // if we have a normal msg (not a headline),
-            // check for msg_treatments.
-            msg_treatment := MainSession.Prefs.getInt('msg_treatment');
-            if (mtype <> 'headline') then begin
-                if (msg_treatment = msg_all_chat) then
-                    // forcing all msgs to chat, so bail
-                    exit
-                else if (msg_treatment = msg_existing_chat) then begin
-                    // check for an existing chat window..
-                    // if we have one, then bail.
-                    cc := MainSession.ChatList.FindChat(tmp_jid.jid, '', '');
-                    if (cc = nil) then
-                        cc := MainSession.ChatList.FindChat(tmp_jid.jid,
-                            tmp_jid.resource, '');
-                    if (cc <> nil) then exit;
-                end;
-            end;
-
-            // check for delivered events
-            etag := tag.QueryXPTag(XP_MSGXEVENT);
-            if ((etag <> nil) and (etag.GetFirstTag('id') = nil)) then begin
-                if (etag.GetFirstTag('delivered') <> nil) then begin
-                    // send back a displayed event
-                    m := generateEventMsg(tag, 'delivered');
-                    MainSession.SendTag(m);
-                end;
-            end;
-
-            if MainSession.IsPaused then begin
-                with tag.AddTag('x') do begin
-                    setAttribute('xmlns', XMLNS_DELAY);
-                    setAttribute('stamp', DateTimeToJabber(Now + TimeZoneBias()));
-                end;
-                MainSession.QueueEvent(event, tag, Self.MsgCallback)
-            end
-            else begin
-                e := CreateJabberEvent(tag);
-                RenderEvent(e);
-
-                // check for displayed events
-                etag := tag.QueryXPTag(XP_MSGXEVENT);
-                if ((etag <> nil) and (etag.GetFirstTag('id') = nil)) then begin
-                    if (etag.GetFirstTag('displayed') <> nil) then begin
-                        // send back a displayed event
-                        m := generateEventMsg(tag, 'displayed');
-                        MainSession.SendTag(m);
-                    end;
-                end;
-
-            end;
-
-            // log the msg if we're logging.
-            if (MainSession.Prefs.getBool('log')) then begin
-                msg := TJabberMessage.Create(tag);
-                msg.isMe := false;
-                ritem := MainSession.roster.Find(tmp_jid.jid);
-                if (ritem <> nil) then
-                    msg.Nick := ritem.Nickname
-                else
-                    msg.Nick := msg.FromJID;
-                LogMessage(msg);
-                msg.Free();
-            end;
-        end;
-    finally
-        tmp_jid.Free();
-    end;
-end;
-*)
-
-{---------------------------------------}
 procedure TfrmExodus.CTCPCallback(event: string; tag: TXMLTag);
 var
     e: TJabberEvent;
@@ -1714,7 +1603,6 @@ begin
 
         // Unregister callbacks, etc.
         MainSession.UnRegisterCallback(_sessioncb);
-        // MainSession.UnRegisterCallback(_msgcb);
         MainSession.Prefs.SavePosition(Self);
     end;
 
@@ -2932,15 +2820,10 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.TabsChange(Sender: TObject);
-var
-    msg: string;
 begin
     // Don't show any notification images on the current tab
     if (Tabs.ActivePage.ImageIndex <> -1) then
         Tabs.ActivePage.ImageIndex := -1;
-
-    msg := 'frmExodus.TabsChange, ' + Sender.ClassName + ', ' + Tabs.ActivePage.Caption;
-    OutputDebugString(PChar(msg));
 end;
 
 {---------------------------------------}
@@ -3082,7 +2965,6 @@ var
 begin
     // check to see if this Msg is one we are tracking..
     // and fire the appropriate event if it is.
-    OutputDebugString(PChar('firing windows event msg: ' + IntToHex(msg, 4)));
     etag := TXMLTag.Create('event');
     etag.setAttribute('msg', IntToStr(msg));
     etag.setAttribute('hwnd', IntToStr(Handle));

@@ -114,7 +114,7 @@ AutoIncBuild=1
 MajorVer=0
 MinorVer=8
 Release=0
-Build=65
+Build=66
 Debug=0
 PreRelease=0
 Special=0
@@ -125,4 +125,4 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PeterMillard
 FileDescription=
-FileVersion=0.8.0.65
+FileVersion=0.8.0.66

@@ -53,6 +53,7 @@ type
     procedure CreateNew1Click(Sender: TObject);
     procedure Delete1Click(Sender: TObject);
     procedure Label5Click(Sender: TObject);
+    procedure txtUsernameKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
   public
@@ -71,6 +72,7 @@ resourcestring
     sProfileNew = 'Untitled Profile';
     sProfileCreate = 'New Profile';
     sProfileNamePrompt = 'Enter Profile Name';
+    sProfileInvalidJid = 'The Jabber ID you entered (username@server/resource) is invalid. Please enter a valid username, server, and resource.';
 
     sResourceWork = 'Work';
     sResourceHome = 'Home';
@@ -84,7 +86,7 @@ implementation
 {$R *.DFM}
 
 uses
-    Jabber1,  Unicode, InputPassword, 
+    Jabber1,  JabberID, Unicode, InputPassword, 
     ConnDetails, PrefController;
 
 {---------------------------------------}
@@ -102,7 +104,7 @@ begin
     l.cboProfilesChange(nil);
 
     frmExodus.PreModal(l);
-    
+
     if l.ShowModal = mrOK then begin
         // Save the info on the profile and login
         i := l.cboProfiles.ItemIndex;
@@ -251,6 +253,27 @@ begin
     // show the popup
     GetCursorPos(cp);
     popProfiles.Popup(cp.x, cp.y);
+end;
+
+procedure TfrmLogin.txtUsernameKeyPress(Sender: TObject; var Key: Char);
+var
+    u, h, r, jid: Widestring;
+begin
+    // alway allow people to fix mistakes :)
+    if (Key = #8) then exit;
+
+    // check to make sure JID is valid
+    u := txtUsername.Text;
+    h := cboServer.Text;
+    r := cboResource.Text;
+
+    if (Sender = txtUsername) then u := u + Key
+    else if (Sender = cboServer) then h := h + Key
+    else if (Sender = cboResource) then r := r + Key;
+
+    jid := u + '@' + h + '/' + r;
+    if (not isValidJid(jid)) then
+        Key := #0;
 end;
 
 end.
