@@ -77,7 +77,7 @@ function GetPresenceAtom(status: string): ATOM;
 function GetPresenceString(a: ATOM): string;
 function ColorToHTML(Color: TColor): string;
 function getMemoText(memo: TMemo): WideString;
-function getInputText(InputRichEdit: TExRichEdit): Widestring;
+function getInputText(Input: TExRichEdit): Widestring;
 
 function trimNewLines(value: WideString): WideString;
 
@@ -673,17 +673,17 @@ begin
 end;
 
 {---------------------------------------}
-function getInputText(InputRichEdit: TExRichEdit): Widestring;
+function getInputText(Input: TExRichEdit): Widestring;
 var
     i: integer;
 begin
     // get a single properly formatted widestring from an input
     // RichEdit control
     Result := '';
-    for i := 0 to InputRichEdit.WideLines.Count - 1 do begin
+    for i := 0 to Input.WideLines.Count - 1 do begin
         if (Result <> '') then
             Result := Result + Chr(13);
-        Result := Result + TrimRight(InputRichEdit.WideLines[i]);
+        Result := Result + TrimRight(Input.WideLines[i]);
         end;
 end;
 
