@@ -1813,7 +1813,6 @@ var
     ritem: TJabberRosterItem;
     d_grp: Widestring;
     s_node, d_node: TTreeNode;
-    grp_rect: TRect;
 begin
 
     // Drop the roster items onto the roster
@@ -1843,8 +1842,7 @@ begin
 
         // invalidate the old parent
         if (s_node.Parent <> nil) then begin
-            grp_rect := s_node.Parent.DisplayRect(false);
-            InvalidateRect(treeRoster.Handle, @grp_rect, false);
+            InvalidateGrps(s_node);
         end;
 
         // change the ritem object
@@ -1863,8 +1861,7 @@ begin
         d_node.Expand(true);
 
     // Re-Draw both group nodes
-    grp_rect := d_node.DisplayRect(false);
-    InvalidateRect(treeRoster.Handle, @grp_rect, false);
+    InvalidateGrps(d_node);
 
     treeRoster.Repaint();
 
