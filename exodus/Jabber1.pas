@@ -254,6 +254,7 @@ type
     _Notify: TNotifyController;
     _subcontroller: TSubController;
 
+    // Various state flags
     _windows_ver: integer;
     _is_broadcast: boolean;
     _is_autoaway: boolean;
@@ -261,21 +262,6 @@ type
     _is_min: boolean;
     _last_show: string;
     _last_status: string;
-    _hookLib: THandle;
-    _GetLastTick: TGetLastTick;
-    _InitHooks: TInitHooks;
-    _StopHooks: TStopHooks;
-    _richedit: THandle;
-
-    _version: TVersionResponder;
-    _time: TTimeResponder;
-    _last: TLastResponder;
-    _browse: TBrowseResponder;
-
-    _tray: NOTIFYICONDATA;
-    _tray_tip: string;
-    _tray_icon_idx: integer;
-    _tray_icon: TIcon;
     _hidden: boolean;
     _logoff: boolean;
     _shutdown: boolean;
@@ -283,10 +269,31 @@ type
     _appclosing: boolean;
     _testaa: boolean;
 
+    // Stuff for the Autoaway DLL
+    _hookLib: THandle;
+    _GetLastTick: TGetLastTick;
+    _InitHooks: TInitHooks;
+    _StopHooks: TStopHooks;
+    _richedit: THandle;
+
+    // Some responders for CTCP stuff
+    _version: TVersionResponder;
+    _time: TTimeResponder;
+    _last: TLastResponder;
+    _browse: TBrowseResponder;
+
+    // Tray Icon stuff
+    _tray: NOTIFYICONDATA;
+    _tray_tip: string;
+    _tray_icon_idx: integer;
+    _tray_icon: TIcon;
+
+    // Some callbacks
     _sessioncb: integer;
     _msgcb: integer;
     _iqcb: integer;
 
+    // Reconnect variables
     _reconnect_interval: integer;
     _reconnect_cur: integer;
     _reconnect_tries: integer;
@@ -294,6 +301,7 @@ type
     _auto_away_interval: integer;
     last_tick: dword;
 
+    // Variables to cache Cmd Line parameters passed in
     _cli_priority: integer;
     _cli_show: string;
     _cli_status: string;
@@ -301,17 +309,14 @@ type
     _controller: TExodusController;
 
     procedure presCustomPresClick(Sender: TObject);
-
     procedure restoreToolbar;
     procedure restoreAlpha;
     procedure restoreMenus(enable: boolean);
     procedure restoreEvents(expanded: boolean);
 
     procedure setupTrayIcon();
-
     procedure setTrayInfo(tip: string);
     procedure setTrayIcon(iconNum: integer);
-
     procedure SetAutoAway();
     procedure SetAutoXA();
     procedure SetAutoAvailable();
@@ -343,7 +348,6 @@ type
     procedure ChangePasswordCallback(event: string; tag: TXMLTag);
 
   public
-
     function getLastTick(): dword;
     function getTabForm(tab: TTabSheet): TForm;
     function IsAutoAway(): boolean;
@@ -2540,6 +2544,7 @@ begin
     if (fsel.ShowModal = mrOK) then begin
         jid := fsel.GetSelectedJID();
         if (jid = '') then exit;
+
         // do the send
         if (MainSession.Prefs.getBool(P_CHAT)) then
             StartChat(jid, '', true)
@@ -2596,7 +2601,6 @@ begin
             IntToStr(_reconnect_interval - _reconnect_cur) + ' secs.';
         end;
 end;
-
 
 procedure TfrmExodus.ShowEventsWindow1Click(Sender: TObject);
 begin

@@ -37,13 +37,13 @@ type
     StaticText3: TStaticText;
     txtSubject: TStaticText;
     pnlReply: TPanel;
-    MsgOut: TRichEdit;
     frameButtons2: TframeButtons;
     Splitter1: TSplitter;
     txtMsg: TExRichEdit;
     pnlSendSubject: TPanel;
     Label1: TLabel;
     txtSendSubject: TMemo;
+    MsgOut: TExRichEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

@@ -1,6 +1,6 @@
 object frmMsgRecv: TfrmMsgRecv
-  Left = 229
-  Top = 162
+  Left = 274
+  Top = 180
   Width = 333
   Height = 416
   Caption = 'Message'
@@ -146,16 +146,6 @@ object frmMsgRecv: TfrmMsgRecv
     BorderWidth = 3
     TabOrder = 3
     Visible = False
-    object MsgOut: TRichEdit
-      Left = 3
-      Top = 3
-      Width = 319
-      Height = 152
-      Align = alClient
-      ScrollBars = ssVertical
-      TabOrder = 0
-      OnKeyUp = MsgOutKeyUp
-    end
     inline frameButtons2: TframeButtons
       Left = 3
       Top = 155
@@ -163,7 +153,7 @@ object frmMsgRecv: TfrmMsgRecv
       Height = 34
       Align = alBottom
       AutoScroll = False
-      TabOrder = 1
+      TabOrder = 0
       inherited Bevel1: TBevel
         Width = 319
       end
@@ -179,6 +169,101 @@ object frmMsgRecv: TfrmMsgRecv
         end
       end
     end
+    object MsgOut: TExRichEdit
+      Left = 3
+      Top = 3
+      Width = 319
+      Height = 152
+      Align = alClient
+      AutoURLDetect = adDefault
+      CustomURLs = <
+        item
+          Name = 'e-mail'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'http'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'file'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'mailto'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'ftp'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'https'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'gopher'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'nntp'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'prospero'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'telnet'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'news'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'wais'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end>
+      LangOptions = [loAutoFont]
+      Language = 1033
+      ShowSelectionBar = False
+      TabOrder = 1
+      URLColor = clBlue
+      URLCursor = crHandPoint
+      OnKeyUp = MsgOutKeyUp
+      OnURLClick = txtMsgURLClick
+      InputFormat = ifRTF
+      OutputFormat = ofRTF
+      SelectedInOut = False
+      PlainRTF = False
+      UndoLimit = 0
+      AllowInPlace = False
+    end
   end
   object txtMsg: TExRichEdit
     Left = 0
@@ -186,7 +271,7 @@ object frmMsgRecv: TfrmMsgRecv
     Width = 325
     Height = 85
     Align = alClient
-    AutoURLDetect = adNone
+    AutoURLDetect = adDefault
     CustomURLs = <
       item
         Name = 'e-mail'

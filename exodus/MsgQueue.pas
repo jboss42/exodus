@@ -22,15 +22,16 @@ unit MsgQueue;
 interface
 
 uses
-    Jabber1, ExEvents, Contnrs,  
+    Jabber1, ExEvents, Contnrs,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, Dockable, ComCtrls, StdCtrls, ExtCtrls, ToolWin;
+    Dialogs, Dockable, ComCtrls, StdCtrls, ExtCtrls, ToolWin, RichEdit2,
+    ExRichEdit;
 
 type
   TfrmMsgQueue = class(TfrmDockable)
     lstEvents: TListView;
     Splitter1: TSplitter;
-    txtMsg: TRichEdit;
+    txtMsg: TExRichEdit;
     procedure FormCreate(Sender: TObject);
     procedure lstEventsChange(Sender: TObject; Item: TListItem;
       Change: TItemChange);
@@ -40,6 +41,7 @@ type
       Shift: TShiftState);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure lstEventsData(Sender: TObject; Item: TListItem);
+    procedure txtMsgURLClick(Sender: TObject; URL: String);
   private
     { Private declarations }
     _queue: TObjectList;
@@ -63,6 +65,7 @@ implementation
 {$R *.dfm}
 
 uses
+    ShellAPI, 
     Roster, JabberID, XMLUtils, XMLParser, XMLTag,
     ExUtils, MsgRecv, Session, PrefController;
 
@@ -329,6 +332,12 @@ begin
     item.ImageIndex := e.img_idx;
     item.SubItems.Add(DateTimeToStr(e.edate));
     item.SubItems.Add(e.msg);         // Subject
+end;
+
+procedure TfrmMsgQueue.txtMsgURLClick(Sender: TObject; URL: String);
+begin
+  inherited;
+    ShellExecute(0, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
 end;
 
 end.
