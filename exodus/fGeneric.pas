@@ -41,6 +41,7 @@ type
     c: TControl;
     opts_vals: TStringList;
     dot : TButton;
+    change_width: boolean;
 
     function getValues: TWideStringList;
     procedure JidFieldDotClick(Sender: TObject);
@@ -350,6 +351,8 @@ end;
 {---------------------------------------}
 procedure TframeGeneric.FrameResize(Sender: TObject);
 begin
+    if (change_width) then exit;
+    
     if (c is TTntEdit) then begin
         if (dot <> nil) then
             c.width := Self.ClientWidth - elCaption.Width - dot.Width - 6 - 2
@@ -387,7 +390,9 @@ procedure TframeGeneric.setLabelWidth(val: integer);
 //    txt: Widestring;
 begin
     if ((elCaption.Width <> 0) and (elCaption <> c)) then begin
+        change_width := true;
         elCaption.Width := val;
+        change_width := false;
         (*
         txt := elCaption.Caption;
         r.Top := 0;
