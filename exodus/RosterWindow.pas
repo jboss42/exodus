@@ -822,6 +822,11 @@ begin
         exit;
         end
 
+    else if ((ritem.Groups.IndexOf('Transports') <> -1) and
+        (ritem.Groups.Count = 1) and (p <> nil)) then begin
+        // we have a transport... let them pass
+        end
+
     else if ((ritem.subscription = 'none') or
         (ritem.subscription = '') or
         (ritem.subscription = 'from') or
