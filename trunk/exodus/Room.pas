@@ -204,30 +204,20 @@ begin
         Msg.IsMe := (Msg.Nick = MyNick);
         end;
 
+    if (Msg.Body <> '') then
+        DisplayMsg(Msg, MsgList);
+
     if Msg.Subject <> '' then begin
         lblSubject.Caption := '  ' + Msg.Subject;
         lblSubject.Hint := Msg.Subject;
         end;
 
+    // check for keywords
     if ((not Application.Active) and (not MainSession.IsPaused) and (_keywords <> nil)) then begin
         if (_keywords.Exec(Msg.Body)) then begin
             ShowRiserWindow('Keyword in ' + Self.Caption + ': ' + _keywords.Match[1], 12);
         end;
     end;
-{
-    // check for keywords
-    if ((not Application.Active) and (not MainSession.IsPaused)) then begin
-        for k := 0 to _keywords.Count - 1 do begin
-            if (pos(_keywords[k], Msg.Body) > 0) then begin
-                ShowRiserWindow('Keyword in ' + Self.Caption + ': ' + _keywords[k], 12);
-                break;
-                end;
-            end;
-        end;
-}
-
-    if (Msg.Body <> '') then
-        DisplayMsg(Msg, MsgList);
 end;
 
 {---------------------------------------}
@@ -615,7 +605,10 @@ var
     msg: TJabberMessage;
 begin
     // send the msg out
-    msg := TJabberMessage.Create(jid, 'groupchat', '', subj);
+    msg := TJabberMessage.Create(jid,
+                                 'groupchat',
+                                 '/me changed the subject to: ' + subj,
+                                 subj);
     MainSession.SendTag(msg.Tag);
     msg.Free;
 end;
