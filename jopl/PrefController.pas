@@ -351,6 +351,8 @@ begin
         result := IntToStr(Screen.IconFont.Size)
     else if pkey = 'roster_font_color' then
         result := IntToStr(Integer(Screen.IconFont.Color))
+    else if pkey = 'emoticons' then
+        result := '1'
     else
         result := '';
 end;
