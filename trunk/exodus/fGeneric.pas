@@ -107,6 +107,7 @@ begin
     if ((t = 'text-multi') or (t = 'jid-multi')) then begin
         lblLabel.Layout := tlTop;
         c := TTntMemo.Create(Self);
+        c.Parent := Self;
         opts := tag.QueryTags('value');
         with TTntMemo(c) do begin
             Lines.Clear();

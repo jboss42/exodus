@@ -1,8 +1,8 @@
 object frmXData: TfrmXData
-  Left = 857
-  Top = 529
+  Left = 224
+  Top = 439
   Width = 328
-  Height = 413
+  Height = 289
   BorderWidth = 5
   Caption = 'x:data Form'
   Color = clBtnFace
@@ -37,7 +37,7 @@ object frmXData: TfrmXData
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 342
+    Top = 213
     Width = 310
     Height = 32
     Align = alBottom
@@ -54,6 +54,7 @@ object frmXData: TfrmXData
     end
     inherited Panel1: TPanel
       Left = 150
+      Height = 27
       inherited btnOK: TButton
         OnClick = frameButtons1btnOKClick
       end
@@ -66,7 +67,7 @@ object frmXData: TfrmXData
     Left = 0
     Top = 23
     Width = 310
-    Height = 319
+    Height = 190
     Align = alClient
     BevelEdges = []
     BevelInner = bvNone

@@ -4,7 +4,7 @@ object frmJoinRoom: TfrmJoinRoom
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'Join Room'
-  ClientHeight = 137
+  ClientHeight = 177
   ClientWidth = 241
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -39,6 +39,13 @@ object frmJoinRoom: TfrmJoinRoom
     Height = 13
     Caption = 'Nickname:'
   end
+  object lblPassword: TLabel
+    Left = 8
+    Top = 105
+    Width = 49
+    Height = 13
+    Caption = 'Password:'
+  end
   object txtRoom: TEdit
     Left = 91
     Top = 6
@@ -55,7 +62,7 @@ object frmJoinRoom: TfrmJoinRoom
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 103
+    Top = 143
     Width = 241
     Height = 34
     Align = alBottom
@@ -83,5 +90,13 @@ object frmJoinRoom: TfrmJoinRoom
     ItemHeight = 13
     TabOrder = 1
     Text = 'txtServer'
+  end
+  object Edit1: TEdit
+    Left = 91
+    Top = 102
+    Width = 139
+    Height = 21
+    PasswordChar = '*'
+    TabOrder = 4
   end
 end

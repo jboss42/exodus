@@ -34,6 +34,8 @@ type
     txtNick: TEdit;
     frameButtons1: TframeButtons;
     txtServer: TComboBox;
+    Edit1: TEdit;
+    lblPassword: TLabel;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

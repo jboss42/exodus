@@ -40,6 +40,7 @@ type
     pnl1: TPanel;
     cboRoom: TComboBox;
     Label1: TLabel;
+    btnAdd: TButton;
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -48,6 +49,7 @@ type
     procedure lstJIDSDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure btnRemoveClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnAddClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -68,10 +70,10 @@ procedure ShowInvite(room_jid: WideString; jids: TWideStringList);
 {---------------------------------------}
 implementation
 uses
-    JabberID, 
+    Jabber1, JabberID,
     XMLTag,
     Session,
-    Room, 
+    Room,
     RosterWindow,
     Roster;
 
@@ -214,9 +216,25 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmInvite.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     Action := caFree;
+end;
+
+{---------------------------------------}
+procedure TfrmInvite.btnAddClick(Sender: TObject);
+var
+    jid: String;
+begin
+    // Add a JID
+    if InputQuery(sEnterJID, sJID, jid) then begin
+        if (not IsValidJID(jid)) then begin
+            MessageDlg(sInvalidJID, mtError, [mbOK], 0);
+            exit;
+            end;
+        Self.AddRecip(jid);
+        end;
 end;
 
 end.
