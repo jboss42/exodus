@@ -44,7 +44,7 @@ type
     procedure setDragOver(event: TDragOverEvent); virtual;
     procedure setDragDrop(event: TDragDropEvent); virtual;
     procedure DisplayMsg(Msg: TJabberMessage; AutoScroll: boolean = true); virtual;
-    procedure DisplayPresence(txt: string); virtual;
+    procedure DisplayPresence(txt: string; timestamp: string); virtual;
     function  getHandle(): THandle; virtual;
     function  getObject(): TObject; virtual;
     function  empty(): boolean; virtual;
@@ -118,7 +118,7 @@ begin
     // NOOP
 end;
 
-procedure TfBaseMsgList.DisplayPresence(txt: string);
+procedure TfBaseMsgList.DisplayPresence(txt: string; timestamp: string);
 begin
     // NOOP
 end;

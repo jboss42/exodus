@@ -89,7 +89,7 @@ type
     procedure setDragOver(event: TDragOverEvent); override;
     procedure setDragDrop(event: TDragDropEvent); override;
     procedure DisplayMsg(Msg: TJabberMessage; AutoScroll: boolean = true); override;
-    procedure DisplayPresence(txt: string); override;
+    procedure DisplayPresence(txt: string; timestamp: string); override;
     function  getHandle(): THandle; override;
     function  getObject(): TObject; override;
     function  empty(): boolean; override;
@@ -230,6 +230,7 @@ var
     started: boolean;
     str: WideString;
     tag_name: WideString;
+    aname: WideString;
 begin
     // See JEP-71 (http://www.jabber.org/jeps/jep-0071.html) for details.
 
@@ -253,7 +254,8 @@ begin
         attrs := tag.Attributes;
         for i := 0 to attrs.Count - 1 do begin
             attr := TAttr(attrs[i]);
-            if (attr.Name = 'style') then begin
+            aname := lowercase(attr.Name);
+            if (aname = 'style') then begin
                 // style attribute only allowed on style_tags.
                 if (style_tags.IndexOf(tag_name) >= 0) then begin
                     //  remove any style properties that aren't in the allowed list
@@ -278,18 +280,18 @@ begin
                 end;
             end
             else if (tag_name = 'a') then begin
-                if (attr.Name = 'href') then
+                if (aname = 'href') then
                     result := result + ' ' +
                         attr.Name + '="' + HTML_EscapeChars(attr.Value, false) + '"';
             end
             else if (tag_name = 'img') then begin
-                if ((attr.Name = 'alt') or
-                    (attr.Name = 'height') or
-                    (attr.Name = 'longdesc') or
-                    (attr.Name = 'src') or
-                    (attr.Name = 'width')) then begin
+                if ((aname = 'alt') or
+                    (aname = 'height') or
+                    (aname = 'longdesc') or
+                    (aname = 'src') or
+                    (aname = 'width')) then begin
                     result := result + ' ' +
-                        attr.Name + '="' + HTML_EscapeChars(attr.Value, false) + '"';
+                        aname + '="' + HTML_EscapeChars(attr.Value, false) + '"';
                 end;
             end
         end;
@@ -351,12 +353,12 @@ begin
     dv := '<div class="line">';
     if (MainSession.Prefs.getBool('timestamp')) then begin
         try
-            dv := dv + '<span class="ts" align="right">[' +
+            dv := dv + '<span class="ts">[' +
                 FormatDateTime(MainSession.Prefs.getString('timestamp_format'), Msg.Time) +
                 ']</span>';
         except
             on EConvertError do begin
-                dv := dv + '<span class="ts" align="right">[' +
+                dv := dv + '<span class="ts">[' +
                     FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
                     Now()) + ']</span>';
             end;
@@ -392,18 +394,34 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfIEMsgList.DisplayPresence(txt: string);
+procedure TfIEMsgList.DisplayPresence(txt: string; timestamp: string);
 var
     pt : integer;
+    tags: IHTMLElementCollection;
+    dv : IHTMLElement;
+    sp : IHTMLElement;
+    i : integer;
 begin
     pt := MainSession.Prefs.getInt('pres_tracking');
     if (pt = 2) then exit;
 
     if (pt = 1) then begin
         // if previous is a presence, replace with this one.
+        tags := _content.children as IHTMLElementCollection;
+        if (tags.length > 0) then begin
+            dv := tags.Item(tags.length - 1, 0) as IHTMLElement;
+            tags := dv.children as IHTMLElementCollection;
+            for i := 0 to tags.length - 1 do begin
+                sp := tags.Item(i, 0) as IHTMLElement;
+                if sp.className = 'pres' then begin
+                    dv.outerHTML := '';
+                    break;
+                end;
+            end;
+        end;
     end;
 
-    writeHTML('<span class="pres">' + txt + '</span><br />');
+    writeHTML('<div class="line"><span class="ts">[' + timestamp + ']</span><span class="pres">' + txt + '</span></div>');
 
     if (_bottom) then
         ScrollToBottom();

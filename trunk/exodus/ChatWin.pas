@@ -755,7 +755,7 @@ end;
 procedure TfrmChat.SessionCallback(event: string; tag: TXMLTag);
 begin
     if (event = '/session/disconnected') then begin
-        MsgList.DisplayPresence(_('You have been disconnected.'));
+        MsgList.DisplayPresence(_('You have been disconnected.'), '');
         MainSession.UnRegisterCallback(_pcallback);
         _pcallback := -1;
 
@@ -775,7 +775,7 @@ begin
     else if (event = '/session/block') then begin
         // if this jid just got blocked, just close the window.
         if (_jid.jid = tag.GetAttribute('jid')) then begin
-            MsgList.DisplayPresence(_(sUserBlocked));
+            MsgList.DisplayPresence(_(sUserBlocked), '');
             MainSession.UnRegisterCallback(_pcallback);
             _pcallback := -1;
             freeChatObject();
@@ -827,7 +827,7 @@ end;
 procedure TfrmChat.showPres(tag: TXMLTag);
 var
     txt: WideString;
-    status, show, User  : String;
+    status, show, User, ts  : String;
     p: TJabberPres;
     j: TJabberID;
 begin
@@ -860,12 +860,11 @@ begin
         txt := _(sAvailable);
 
     if (MainSession.Prefs.getBool('timestamp')) then
-        txt := '[' + formatdatetime(MainSession.Prefs.getString('timestamp_format'),now) + '] ' +
-                jid + ' ' + _(sIsNow) + ' ' + txt
+        ts := formatdatetime(MainSession.Prefs.getString('timestamp_format'),now)
     else
-        txt :=  jid + ' ' + _(sIsNow) + ' ' + txt;
+        ts := '';
 
-    MsgList.DisplayPresence(txt);
+    MsgList.DisplayPresence(jid + ' ' + _(sIsNow) + ' ' + txt, ts);
 end;
 
 {---------------------------------------}
