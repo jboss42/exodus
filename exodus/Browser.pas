@@ -21,7 +21,7 @@ unit Browser;
 interface
 
 uses
-    Dockable, IQ, XMLTag, XMLUtils, Contnrs,
+    Dockable, IQ, XMLTag, XMLUtils, Contnrs, Unicode, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     StdCtrls, ImgList, Buttons, ComCtrls, ExtCtrls, Menus, ToolWin, fListbox,
     fService, TntStdCtrls, TntComCtrls, TntExtCtrls;
@@ -31,10 +31,11 @@ type
   TBrowseItem = class
   public
     img_idx: integer;
-    jid: string;
+    jid: Widestring;
     stype: string;
+    category: string;
     name: string;
-    nslist: TStringlist;
+    nslist: TWideStringlist;
 
     constructor create;
     destructor destroy; override;
@@ -197,10 +198,11 @@ constructor TBrowseItem.Create();
 begin
     inherited Create;
 
-    nslist := TStringlist.Create();
+    nslist := TWideStringlist.Create();
     jid := '';
     name := '';
     stype := '';
+    category := '';
     img_idx := -1;
 end;
 
@@ -317,19 +319,16 @@ end;
 procedure TfrmBrowse.ShowBrowse(tag: TXMLTag);
 var
     itm: TBrowseItem;
-    title, stype, jid, name: string;
+    title: string;
     i, idx: integer;
     ns: TXMLTagList;
 begin
     // Show this item.
     itm := TBrowseItem.Create();
-    jid := tag.getAttribute('jid');
-    name := tag.getAttribute('name');
-    stype := tag.GetAttribute('type');
-
-    itm.name := name;
-    itm.jid := jid;
-    itm.stype := stype;
+    itm.jid := tag.getAttribute('jid');
+    itm.name := tag.getAttribute('name');
+    itm.stype := tag.GetAttribute('type');
+    itm.category := tag.GetAttribute('category');
 
     with itm do begin
         // create a list of namespaces linked to the object
@@ -565,6 +564,7 @@ begin
     PushJID(cboJID.Text);
 end;
 
+{---------------------------------------}
 procedure TfrmBrowse.ContextMenu(enabled: boolean);
 begin
     mBrowse.Enabled := enabled;
@@ -607,8 +607,8 @@ begin
         if (IndexOf(XMLNS_CONFERENCE) >= 0) then mJoinConf.Enabled := true
         else if (IndexOf(XMLNS_MUC) >= 0) then mJoinConf.Enabled := true
         else if (IndexOf('gc-1.0') >= 0) then mJoinConf.Enabled := true
+        else if (b.category = 'conference') then mJoinConf.Enabled := true
         else mJoinConf.Enabled := false;
-
     end;
 end;
 
