@@ -201,18 +201,22 @@ end;
 {---------------------------------------}
 procedure TJabberEntityCache.Clear();
 var
+    tmpl: TList;
     i: integer;
     ce: TJabberEntity;
 begin
     // always remove to first entry until they are all gone.
+    tmpl := TList.Create();
     for i := 0 to _cache.Count - 1 do begin
-        if (_cache.Objects[i] <> nil) then begin
-            ce := TJabberEntity(_cache.Objects[i]);
-            _cache.Objects[i] := nil;
-            if (ce.Parent = nil) then ce.Free();
-        end;
+        ce := TJabberEntity(_cache.Objects[i]);
+        if ((ce <> nil) and (ce.Parent = nil)) then
+            tmpl.Add(ce);
     end;
-    _cache.Clear();
+    for i := 0 to tmpl.Count - 1 do begin
+        ce := TJabberEntity(tmpl.Items[i]);
+        ce.Free();
+    end;
+    tmpl.Free();
 end;
 
 {---------------------------------------}
