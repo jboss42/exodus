@@ -86,6 +86,7 @@
     <notify_roomactivity>1</notify_roomactivity>
     <notify_s10n>1</notify_s10n>
     <notify_sounds>1</notify_sounds>
+    <notify_flasher>1</notify_flasher>
     <presence_message_listen>1</presence_message_listen>
     <presence_message_send>1</presence_message_send>
     <profile_active>0</profile_active>
