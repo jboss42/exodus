@@ -185,7 +185,8 @@ uses
   Avatar in '..\jopl\Avatar.pas',
   FloatingImage in 'FloatingImage.pas' {FloatImage},
   xdata in 'xdata.pas' {frmXData},
-  fXData in 'fXData.pas' {frameXData: TFrame};
+  fXData in 'fXData.pas' {frameXData: TFrame},
+  NewUser in 'NewUser.pas' {frmWizard1};
 
 {$R *.TLB}
 
@@ -219,8 +220,6 @@ begin
   if (not continue) then exit;
 
   Application.CreateForm(TfrmExodus, frmExodus);
-  Application.CreateForm(TFloatImage, FloatImage);
-  Application.CreateForm(TfrmXData, frmXData);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
 
   frmRosterWindow.DockRoster;

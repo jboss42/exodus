@@ -489,7 +489,7 @@ const
 {---------------------------------------}
 implementation
 uses
-    CommandWizard, ExodusCOM_TLB, 
+    CommandWizard, ExodusCOM_TLB, Notify,  
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
     ChatController, ChatWin, Debug, Dockable, DNSUtils, Entity,
     EntityCache, ExSession, JabberUtils, ExUtils,
@@ -2951,10 +2951,16 @@ begin
     // Don't show any notification images on the current tab
     if (Tabs.ActivePage = nil) then exit;
 
-    if (Tabs.ActivePage.ImageIndex <> -1) then
+    f := getTabForm(Tabs.ActivePage);
+
+    if (f is TfrmChat) then begin
+        if (Tabs.ActivePage.ImageIndex = tab_notify) then
+            Tabs.ActivePage.ImageIndex := TfrmChat(f).LastImage
+    end
+    else if (Tabs.ActivePage.ImageIndex <> -1) then
         Tabs.ActivePage.ImageIndex := -1;
 
-    f := getTabForm(Tabs.ActivePage);
+
     if (f is TfrmBaseChat) then begin
         if (TfrmBaseChat(f).MsgOut.Visible) then
             TfrmBaseChat(f).MsgOut.SetFocus;

@@ -161,6 +161,20 @@ begin
 
             if (mtype = 'normal') then mtype := '';
 
+            // check for is-composing tags
+            etag := tag.QueryXPTag(XP_MSGXEVENT);
+            if ((etag <> nil) and (b = '') and
+                (etag.GetFirstTag('composing') <> nil) and
+                (etag.GetFirstTag('id') <> nil)) then begin
+                cc := js.ChatList.FindChat(from_jid.jid, '', '');
+                if (cc = nil) then
+                    cc := js.ChatList.FindChat(from_jid.jid,
+                        from_jid.resource, '');
+                if (cc <> nil) then
+                    cc.MsgCallback('xml', tag);
+            end;
+
+
             // check for headlines w/ JUST a x-oob.
             // otherwise, throw out cases where body is empty
             if ((tag.QueryXPTag(XP_XOOB) = nil) and (b = '')) then exit;

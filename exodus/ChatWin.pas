@@ -29,14 +29,12 @@ uses
 type
   TfrmChat = class(TfrmBaseChat)
     popContact: TTntPopupMenu;
-    timFlash: TTimer;
     SaveDialog1: TSaveDialog;
     mnuVersionRequest: TMenuItem;
     mnuTimeRequest: TMenuItem;
     mnuLastActivity: TMenuItem;
     btnClose: TSpeedButton;
     pnlJID: TPanel;
-    imgStatus: TPaintBox;
     lblNick: TTntLabel;
     timBusy: TTimer;
     mnuWordwrap: TTntMenuItem;
@@ -55,9 +53,10 @@ type
     popClearHistory: TTntMenuItem;
     mnuHistory: TTntMenuItem;
     mnuSave: TTntMenuItem;
-    imgAvatar: TPaintBox;
     Panel2: TPanel;
     Panel3: TPanel;
+    imgAvatar: TPaintBox;
+    lblReply: TTntLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -67,8 +66,6 @@ type
     procedure lblJIDClick(Sender: TObject);
     procedure mnuReturnsClick(Sender: TObject);
     procedure mnuSendFileClick(Sender: TObject);
-    procedure imgStatusPaint(Sender: TObject);
-    procedure timFlashTimer(Sender: TObject);
     procedure MsgOutChange(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure CTCPClick(Sender: TObject);
@@ -104,7 +101,9 @@ type
     _flash_ticks: integer;
     _cur_img: integer;
     _old_img: integer;
+    {
     _old_hint: string;
+    }
     _last_id: string;
     _reply_id: string;
     _check_event: boolean;
@@ -126,10 +125,13 @@ type
     // the current contact's avatar
     _avatar: TAvatar;
 
+    // Stash away the status
+    _status: Widestring;
+    _show: Widestring;
+
     procedure SetupPrefs();
     procedure SetupMenus();
     procedure ChangePresImage(show: widestring; status: widestring);
-    procedure ResetPresImage;
     procedure freeChatObject();
     procedure _sendMsg(txt: Widestring);
     procedure _sendComposing(id: Widestring);
@@ -163,6 +165,7 @@ type
 
     property getJid: Widestring read jid;
     property CurrentThread: string read _thread;
+    property LastImage: integer read _old_img;
   end;
 
 var
@@ -372,6 +375,7 @@ begin
         else
             mnuSendFile.Visible := false;
     end;
+
 end;
 
 {---------------------------------------}
@@ -453,7 +457,7 @@ begin
 
     _jid := TJabberID.Create(cjid);
     _avatar := nil;
-    imgAvatar.Visible := false;
+    //imgAvatar.Visible := false;
     Panel1.ClientHeight := 28;
 
     // check for an avatar
@@ -472,7 +476,8 @@ begin
                     imgAvatar.Width := _avatar.Width;
 
                 Panel1.ClientHeight := m + 1;
-                imgAvatar.Visible := true;
+                //imgAvatar.ClientWidth := imgAvatar.Width;
+                //imgAvatar.Visible := true;
             end;
         end
     end;
@@ -610,9 +615,7 @@ begin
 
                 // Setup the cache'd old versions in ChangePresImage
                 _cur_img := _pres_img;
-                imgStatus.Hint := OtherNick + _(sReplying);
-                timFlashTimer(Self);
-                timFlash.Enabled := true;
+                lblReply.Visible := true;
 
                 {
                 should we really bail here??
@@ -625,9 +628,8 @@ begin
                 exit;
             end
             else if ((etag.GetFirstTag('id') <> nil) and
-                (timFlash.Enabled)) then begin
-                Self.ResetPresImage();
-            end;
+                (lblReply.Visible)) then 
+                lblReply.Visible := false;
         end;
     end;
 
@@ -667,9 +669,6 @@ var
     emsg, err: Widestring;
 begin
     // display the body of the msg
-    if (timFlash.Enabled) then
-        Self.ResetPresImage();
-
     if (_warn_busyclose) then begin
         timBusy.Enabled := false;
         timBusy.Enabled := true;
@@ -690,6 +689,7 @@ begin
     end;
 
     _check_event := false;
+    lblReply.Visible := false;
 
     Msg := TJabberMessage.Create(tag);
     Msg.Nick := OtherNick;
@@ -736,6 +736,7 @@ begin
     Msg.Free();
 end;
 
+{---------------------------------------}
 procedure TfrmChat.SendRawMessage(body, subject, xml: Widestring;
     fire_plugins: boolean);
 var
@@ -877,6 +878,9 @@ end;
 procedure TfrmChat.ChangePresImage(show: WideString; status: WideString);
 begin
     // Change the bulb
+    if (_pres_img = tab_notify) then
+        exit;
+        
     if (show = _('offline')) then
         _pres_img := ico_Offline
     else if (show = _('unknown')) then
@@ -892,17 +896,13 @@ begin
     else
         _pres_img := ico_Online;
 
-    if (status = '') then
-        imgStatus.Hint := show
-    else
-        imgStatus.Hint := status;
-
-    _old_img := _pres_img;
-    _old_hint := imgStatus.Hint;
-
+    _show := show;
+    _status := status;
     frmExodus.ImageList2.GetIcon(_pres_img, Self.Icon);
+    if (Docked) then
+        Self.TabSheet.ImageIndex := _pres_img;
+    _old_img := _pres_img;
 
-    Self.imgStatusPaint(Self);
 end;
 
 {---------------------------------------}
@@ -1020,49 +1020,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmChat.imgStatusPaint(Sender: TObject);
-var
-    top_margin: integer;
-begin
-  inherited;
-    // repaint
-    top_margin := (Panel1.Height - frmExodus.ImageList2.Height) div 2;
-    if (top_margin < 0) then top_margin := 0;
-    frmExodus.ImageList2.Draw(imgStatus.Canvas, 1, top_margin, _pres_img);
-end;
-
-{---------------------------------------}
-procedure TfrmChat.ResetPresImage;
-begin
-    // turn off flashing of the presence icon
-    timFlash.Enabled := false;
-    _pres_img := _old_img;
-    imgStatus.Hint := _old_hint;
-    imgStatus.Repaint();
-    imgStatus.Refresh();
-end;
-
-{---------------------------------------}
-procedure TfrmChat.timFlashTimer(Sender: TObject);
-begin
-  inherited;
-    // Flash the presence image for 30 seconds..
-    inc(_flash_ticks);
-    if (_cur_img = _old_img) then begin
-        _cur_img := _old_img + 33;
-        if (_cur_img > 38) then _cur_img := 38;
-    end
-    else
-        _cur_img := _old_img;
-
-    _pres_img := _cur_img;
-    imgStatus.Refresh();
-    imgStatus.Repaint();
-
-    if (_flash_ticks >= 60) then
-        resetPresImage();
-end;
-
 procedure TfrmChat._sendComposing(id: Widestring);
 var
     c: TXMLTag;
@@ -1070,6 +1027,7 @@ begin
     c := TXMLTag.Create('message');
     with c do begin
         setAttribute('to', jid);
+        setAttribute('type', 'chat');
         with AddTag('x') do begin
             setAttribute('xmlns', XMLNS_XEVENT);
             AddTag('composing');
@@ -1234,6 +1192,7 @@ begin
     inherited;
     btnClose.Visible := true;
     DragAcceptFiles( Handle, False );
+    ChangePresImage(_show, _status);
 end;
 
 {---------------------------------------}
@@ -1241,7 +1200,7 @@ procedure TfrmChat.FloatForm;
 begin
     inherited;
     btnClose.Visible := false;
-    DragAcceptFiles( Handle, True );
+    DragAcceptFiles(Handle, True);
 end;
 
 {---------------------------------------}
@@ -1250,13 +1209,19 @@ begin
     if (target = nil) then exit;
 
     inherited;
+    
     btnClose.Visible := Docked;
-    if ((Docked) and (TabSheet <> nil)) then Self.TabSheet.ImageIndex := -1;
+    if ((Docked) and (TabSheet <> nil)) then
+        //Self.TabSheet.ImageIndex := -1;
+        Self.TabSheet.ImageIndex := _old_img;
+    
     DragAcceptFiles(Handle, not Docked);
 
     // scroll the MsgView to the bottom.
     _scrollBottom();
     Self.Refresh();
+
+    ChangePresImage(_show, _status);
 end;
 
 {---------------------------------------}
@@ -1309,7 +1274,7 @@ var
     s: String;
 begin
     if ((_warn_busyclose) and
-        ((timBusy.Enabled) or (timFlash.Enabled))) then begin
+        ((timBusy.Enabled) or (lblReply.Visible))) then begin
         if MessageDlgW(_(sCloseBusy), mtConfirmation, [mbYes, mbNo], 0) = mrNo then begin
             CanClose := false;
             exit;

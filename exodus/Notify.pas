@@ -42,6 +42,10 @@ type
         procedure SetSession(js: TObject);
 end;
 
+const
+    // image index for tab notification.
+    tab_notify = 12;
+
 procedure DoNotify(win: TForm; notify: integer; msg: Widestring; icon: integer;
     sound_name: string); overload;
 procedure DoNotify(win: TForm; pref_name: string; msg: Widestring; icon: integer); overload;
@@ -55,11 +59,7 @@ uses
 const
     sNotifyOnline = ' is now online.';
     sNotifyOffline = ' is now offline.';
-
-const
-    // image index for tab notification.
-    tab_notify = 9;
-
+    
 {---------------------------------------}
 constructor TNotifyController.Create;
 begin

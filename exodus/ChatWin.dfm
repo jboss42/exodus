@@ -13,16 +13,16 @@ inherited frmChat: TfrmChat
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
-    Top = 243
+    Top = 239
     Width = 383
   end
   inherited pnlMsgList: TPanel
     Top = 32
     Width = 383
-    Height = 211
+    Height = 207
   end
   inherited pnlInput: TPanel
-    Top = 247
+    Top = 243
     Width = 383
     inherited MsgOut: TExRichEdit
       Width = 379
@@ -57,20 +57,8 @@ inherited frmChat: TfrmChat
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
-      object imgStatus: TPaintBox
-        Tag = 1
-        Left = 35
-        Top = 0
-        Width = 20
-        Height = 28
-        Align = alLeft
-        ParentShowHint = False
-        ShowHint = True
-        Visible = False
-        OnPaint = imgStatusPaint
-      end
       object lblNick: TTntLabel
-        Left = 63
+        Left = 43
         Top = 0
         Width = 48
         Height = 28
@@ -91,8 +79,22 @@ inherited frmChat: TfrmChat
         OnClick = imgAvatarClick
         OnPaint = imgAvatarPaint
       end
+      object lblReply: TTntLabel
+        Left = 99
+        Top = 0
+        Width = 58
+        Height = 28
+        Cursor = crHandPoint
+        Align = alLeft
+        Caption = '  (is replying)'
+        ParentShowHint = False
+        ShowHint = True
+        Layout = tlCenter
+        Visible = False
+        OnClick = lblJIDClick
+      end
       object Panel2: TPanel
-        Left = 111
+        Left = 91
         Top = 0
         Width = 8
         Height = 28
@@ -101,7 +103,7 @@ inherited frmChat: TfrmChat
         TabOrder = 0
       end
       object Panel3: TPanel
-        Left = 55
+        Left = 35
         Top = 0
         Width = 8
         Height = 28
@@ -187,14 +189,7 @@ inherited frmChat: TfrmChat
       OnClick = mnuWordwrapClick
     end
   end
-  object timFlash: TTimer [6]
-    Enabled = False
-    Interval = 500
-    OnTimer = timFlashTimer
-    Left = 48
-    Top = 152
-  end
-  object SaveDialog1: TSaveDialog [7]
+  object SaveDialog1: TSaveDialog [6]
     DefaultExt = 'html'
     Filter = 'RTF Files|*.rtf|All Files|*.*'
     Left = 48
@@ -204,7 +199,7 @@ inherited frmChat: TfrmChat
     Enabled = False
     Interval = 800
     OnTimer = timBusyTimer
-    Left = 80
+    Left = 48
     Top = 152
   end
 end
