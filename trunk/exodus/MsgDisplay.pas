@@ -138,7 +138,13 @@ begin
 
         RichEdit.SelAttributes.Color := c;
         RichEdit.WideSelText := '<' + Msg.nick + '>';
-        c := TColor(MainSession.Prefs.getInt('font_color'));
+
+        if (Msg.Highlight) then begin
+            c := TColor(MainSession.Prefs.getInt('color_me'));
+        end
+        else begin
+            c := TColor(MainSession.Prefs.getInt('font_color'));
+        end;
         RichEdit.SelAttributes.Color := c;
         RichEdit.WideSelText := ' ';
 
