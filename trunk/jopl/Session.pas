@@ -376,7 +376,7 @@ procedure TJabberSession.CreateAccount;
 begin
     _register := true;
     if (not _auth_agent.StartRegistration()) then begin
-        // xxx: throw some kind of error..
+        // XXX: throw some kind of error..
         // this auth mechanism doesn't support registration
     end;
 end;

@@ -60,6 +60,7 @@ type
         procedure WalkItemsCallback(event: string; tag: TXMLTag);
         
     private
+        _parent: TJabberEntity;
         _jid: TJabberID;
         _node: Widestring;
         _name: Widestring;
@@ -99,11 +100,13 @@ type
         procedure getInfo(js: TJabberSession);
         procedure getItems(js: TJabberSession);
         procedure walk(js: TJabberSession);
+        procedure refresh(js: TJabberSession);
 
         function ItemByJid(jid: Widestring): TJabberEntity;
         function hasFeature(f: Widestring): boolean;
         function getItemByFeature(f: Widestring): TJabberEntity;
 
+        property Parent: TJabberEntity read _parent;
         property Jid: TJabberID read _jid;
         property Node: Widestring read _node;
         property entityType: TJabberEntityType read _type;
@@ -129,6 +132,7 @@ uses
 {---------------------------------------}
 constructor TJabberEntity.Create(jid: TJabberID);
 begin
+    _parent := nil;
     _jid := jid;
     _node := '';
     _name := '';
@@ -145,6 +149,9 @@ end;
 {---------------------------------------}
 destructor TJabberEntity.Destroy;
 begin
+    if (_iq <> nil) then _iq.Free();
+    
+    jEntityCache.Remove(Self);
     ClearStringListObjects(_items);
     _items.Clear();
     _feats.Clear();
@@ -286,6 +293,8 @@ var
     js: TJabberSession;
 begin
     js := _iq.JabberSession;
+    assert(js <> nil);
+    _iq := nil;
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Dispatch a disco#items query
@@ -308,6 +317,8 @@ var
 begin
     // if disco didn't so much workout, try browse next
     js := _iq.JabberSession;
+    assert(js <> nil);
+    _iq := nil;
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Dispatch a disco#items query
@@ -327,6 +338,20 @@ end;
 procedure TJabberEntity.walk(js: TJabberSession);
 begin
     // Get Items, then get info for each one.
+    _discoInfo(js, WalkCallback);
+end;
+
+{---------------------------------------}
+procedure TJabberEntity.refresh(js: TJabberSession);
+begin
+    _has_info := false;
+    _has_items := false;
+    _type := ent_unknown;
+
+    ClearStringListObjects(_items);
+    _items.Clear();
+    _feats.Clear();
+
     _discoInfo(js, WalkCallback);
 end;
 
@@ -447,6 +472,7 @@ begin
             if (idx < 0) then begin
                 cj := TJabberID.Create(tmps);
                 ce := TJabberEntity.Create(cj);
+                ce._parent := Self;
                 _items.AddObject(tmps, ce);
                 ce._name := iset[i].getAttribute('name');
                 ce._node := iset[i].getAttribute('node');
@@ -466,6 +492,8 @@ var
 begin
     // if disco didn't so much workout, try browse next
     js := _iq.JabberSession;
+    assert(js <> nil);
+    _iq := nil;
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Dispatch a disco#items query
@@ -493,6 +521,8 @@ var
     i: integer;
 begin
     js := _iq.JabberSession;
+    assert(js <> nil);
+    _iq := nil;
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Hrmpf.. we got info back, but no items?
@@ -553,6 +583,8 @@ var
 begin
     // if browse didn't work out so well, try agents
     js := _iq.JabberSession;
+    assert(js <> nil);
+    _iq := nil;
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Dispatch a disco#items query
@@ -582,6 +614,10 @@ begin
         _items.Clear();
         _processBrowseItem(q);
 
+        _has_info := true;
+        _has_items := true;
+
+
         // Get our children
         for i := 0 to clist.Count - 1 do begin
             if (clist[i].Name <> 'ns') then begin
@@ -591,6 +627,7 @@ begin
                 if (idx = -1) then begin
                     cj := TJabberID.Create(tmps);
                     ce := TJabberEntity.Create(cj);
+                    ce._parent := Self;
                     ce._processBrowseItem(clist[i]);
                     jEntityCache.Add(tmps, ce);
                     _items.AddObject(tmps, ce);
@@ -615,6 +652,7 @@ begin
 
 end;
 
+{---------------------------------------}
 procedure TJabberEntity._processAgent(item: TXMLTag);
 var
     tmps: Widestring;
@@ -623,7 +661,18 @@ var
 begin
     _name := item.GetBasicText('name');
 
+    {
+    <agent jid='users.jabber.org'>
+        <name>Jabber User Directory</name>
+        <service>jud</service>
+        <search/>
+        <register/>
+    </agent>
+    }
+
     // desc := agent.GetBasicText('description');
+    _has_info := true;
+    
     tmps := item.GetBasicText('service');
     if (tmps <> '') then _feats.Add(tmps);
     _cat_type := tmps;
@@ -645,22 +694,56 @@ end;
 
 {---------------------------------------}
 procedure TJabberEntity.AgentsCallback(event: string; tag: TXMLTag);
+var
+    js: TJabberSession;
+    tmps: Widestring;
+    t: TXMLTag;
+    cj: TJabberID;
+    ce: TJabberEntity;
+    i: integer;
+    agents: TXMLTagList;
 begin
-    // XXX: code entity agents
-    {
-    <agent jid='users.jabber.org'>
-        <name>Jabber User Directory</name>
-        <service>jud</service>
-        <search/>
-        <register/>
-    </agent>
-    }
+    js := _iq.JabberSession;
+    assert(js <> nil);
+    _iq := nil;
 
-    {
-    }
+    if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
+        // BAH! agents didn't work either.. this thing sucks :)
+        exit;
+    end;
+
+    _type := ent_agents;
+    _has_info := true;
+    _has_items := true;
+
+    ClearStringListObjects(_items);
+    _items.Clear();
+
+    agents := tag.QueryXPTags('/iq/query[@xmlns="jabber:iq:agents"/agent');
+    for i := 0 to agents.Count -1 do begin
+        tmps := agents[i].getAttribute('jid');
+        cj := TJabberID.Create(tmps);
+        ce := TJabberEntity.Create(cj);
+        ce._parent := Self;
+        ce._processAgent(agents[i]);
+        jEntityCache.Add(tmps, ce);
+        _items.AddObject(tmps, ce);
+    end;
+    agents.Free();
+
+    // send events for this entity
+    getInfo(js);
+    getItems(js);
+
+    // Send info for each child
+    t := TXMLTag.Create('entity');
+    for i := 0 to _items.Count - 1 do begin
+        ce := TJabberEntity(_items.Objects[i]);
+        t.setAttribute('from', ce.jid.full);
+        js.FireEvent('/session/entity/info', t);
+    end;
+    t.Free();
+
 end;
-
-{---------------------------------------}
-
 
 end.

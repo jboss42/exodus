@@ -221,8 +221,11 @@ begin
                 Application.ProcessMessages();
 
                 // modification date/time on the file??
+                // pgm 11/15/03 - This is _VERY_ hacky... use last modified time
+                // plus 2 hours. This should solve weird problems where folks
+                // always see auto-update notices.
                 MainSession.Prefs.setDateTime('last_update',
-                                              httpClient.Response.LastModified);
+                    (httpClient.Response.LastModified + (2/24)));
 
                 label1.Caption := sInstalling;
                 label1.Refresh();

@@ -31,14 +31,18 @@ type
     private
         _cache: TWidestringlist;
 
+        function _getEntity(i: integer): TJabberEntity;
+
     public
         constructor Create();
         destructor Destroy(); override;
 
         procedure Add(jid: Widestring; e: TJabberEntity);
+        procedure Remove(e: TJabberEntity);
+        procedure Delete(i: integer);
 
         function getByJid(jid: Widestring): TJabberEntity;
-        function walk(jid: Widestring; js: TJabberSession): TJabberEntity;
+        function fetch(jid: Widestring; js: TJabberSession): TJabberEntity;
 
         function getFirstFeature(f: Widestring): TJabberEntity;
         function getFirstSearch(): Widestring;
@@ -50,6 +54,9 @@ type
         {$else}
         procedure getByFeature(f: Widestring; jid_list: TWidestringList);
         {$endif}
+
+        function indexOf(e: TJabberEntity): integer;
+        property Entities[index: integer]: TJabberEntity read _getEntity;
     end;
 
 var
@@ -67,9 +74,16 @@ end;
 
 {---------------------------------------}
 destructor TJabberEntityCache.Destroy();
+var
+    ce: TJabberEntity;
+    i: integer;
 begin
-    // XXX: make an entity walker so that each child isn't in the cache
-    //ClearStringlistObjects(_cache);
+    for i := _cache.Count - 1 downto 0 do begin
+        ce := TJabberEntity(_cache.Objects[i]);
+        if ((ce <> nil) and (ce.Parent = nil)) then
+            ce.Free();
+        _cache.Objects[i] := nil;
+    end;
     _cache.Free();
 end;
 
@@ -77,6 +91,38 @@ end;
 procedure TJabberEntityCache.Add(jid: Widestring; e: TJabberEntity);
 begin
     _cache.AddObject(jid, e);
+end;
+
+{---------------------------------------}
+procedure TJabberEntityCache.Remove(e: TJabberEntity);
+var
+    i: integer;
+begin
+    i := indexOf(e);
+    if (i >= 0) then
+        _cache.Delete(i);
+end;
+
+{---------------------------------------}
+procedure TJabberEntityCache.Delete(i: integer);
+begin
+    if ((i >= 0) and (i < _cache.Count)) then
+        _cache.Delete(i);
+end;
+
+{---------------------------------------}
+function TJabberEntityCache.indexOf(e: TJabberEntity): integer;
+begin
+    Result := _cache.IndexOfObject(e);
+end;
+
+{---------------------------------------}
+function TJabberEntityCache._getEntity(i: integer): TJabberEntity;
+begin
+    if (i < _cache.Count) then
+        Result := TJabberEntity(_cache.Objects[i])
+    else
+        Result := nil;
 end;
 
 {---------------------------------------}
@@ -92,7 +138,7 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberEntityCache.walk(jid: Widestring; js: TJabberSession): TJabberEntity;
+function TJabberEntityCache.fetch(jid: Widestring; js: TJabberSession): TJabberEntity;
 var
     i: integer;
     e: TJabberEntity;
@@ -101,14 +147,20 @@ begin
     if (e <> nil) then begin
         Result := e;
 
-        // This fires all the events..
-        e.getInfo(js);
-        e.getItems(js);
-        for i := 0 to e.ItemCount - 1 do
-            e.Items[i].getInfo(js);
+        if (e.hasItems and e.hasInfo) then begin
+            // This fires all the events..
+            e.getInfo(js);
+            e.getItems(js);
+            for i := 0 to e.ItemCount - 1 do
+                e.Items[i].getInfo(js);
+        end
+        else
+            // Re-walk since we don't have all the info.
+            e.walk(js);
 
         exit;
     end;
+
     e := TJabberEntity.Create(TJabberID.Create(jid));
     e.walk(js);
     _cache.AddObject(jid, e);
