@@ -11,7 +11,7 @@ inherited frmJUD: TfrmJUD
   object pnlLeft: TPanel
     Left = 0
     Top = 0
-    Width = 164
+    Width = 200
     Height = 331
     Align = alLeft
     BevelOuter = bvNone
@@ -19,7 +19,7 @@ inherited frmJUD: TfrmJUD
     object lblInstructions: TLabel
       Left = 0
       Top = 96
-      Width = 164
+      Width = 200
       Height = 26
       Align = alTop
       Caption = 'Fill in the search criteria to find contacts on.'
@@ -29,7 +29,7 @@ inherited frmJUD: TfrmJUD
     object lblSelect: TLabel
       Left = 0
       Top = 0
-      Width = 164
+      Width = 200
       Height = 39
       Align = alTop
       Caption = 
@@ -40,7 +40,7 @@ inherited frmJUD: TfrmJUD
     object lblWait: TLabel
       Left = 0
       Top = 70
-      Width = 164
+      Width = 200
       Height = 26
       Align = alTop
       Caption = 'Please wait. Contacting search agent:'
@@ -50,7 +50,7 @@ inherited frmJUD: TfrmJUD
     object Panel1: TPanel
       Left = 0
       Top = 39
-      Width = 164
+      Width = 200
       Height = 31
       Align = alTop
       BevelOuter = bvNone
@@ -68,7 +68,7 @@ inherited frmJUD: TfrmJUD
     object pnlBottom: TPanel
       Left = 0
       Top = 297
-      Width = 164
+      Width = 200
       Height = 34
       Align = alBottom
       BevelOuter = bvNone
@@ -97,7 +97,7 @@ inherited frmJUD: TfrmJUD
     object pnlFields: TPanel
       Left = 0
       Top = 276
-      Width = 164
+      Width = 200
       Height = 21
       Align = alClient
       BevelOuter = bvNone
@@ -106,7 +106,7 @@ inherited frmJUD: TfrmJUD
     object aniWait: TAnimate
       Left = 0
       Top = 122
-      Width = 164
+      Width = 200
       Height = 50
       Align = alTop
       Active = False
@@ -117,7 +117,7 @@ inherited frmJUD: TfrmJUD
     object pnlResults: TPanel
       Left = 0
       Top = 172
-      Width = 164
+      Width = 200
       Height = 104
       Align = alTop
       BevelOuter = bvNone
@@ -175,9 +175,9 @@ inherited frmJUD: TfrmJUD
     end
   end
   object lstContacts: TListView
-    Left = 164
+    Left = 200
     Top = 0
-    Width = 257
+    Width = 221
     Height = 331
     Align = alClient
     Columns = <

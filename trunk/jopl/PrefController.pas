@@ -78,15 +78,15 @@ const
 type
     TJabberProfile = class
     private
-        _password: string;
+        _password: Widestring;
 
-        function getPassword: string;
-        procedure setPassword(value: string);
+        function getPassword: Widestring;
+        procedure setPassword(value: Widestring);
     public
         Name: string;
-        Username: string;
+        Username: Widestring;
         Server: string;
-        Resource: string;
+        Resource: Widestring;
         Priority: integer;
         SavePasswd: boolean;
 
@@ -119,7 +119,7 @@ type
         procedure Save(node: TXMLTag);
         function IsValid() : boolean;
 
-        property password: string read getPassword write setPassword;
+        property password: Widestring read getPassword write setPassword;
     end;
 
     TPrefController = class
@@ -966,14 +966,14 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberProfile.getPassword: string;
+function TJabberProfile.getPassword: Widestring;
 begin
     // accessor for password
     result := _password;
 end;
 
 {---------------------------------------}
-procedure TJabberProfile.setPassword(value: string);
+procedure TJabberProfile.setPassword(value: Widestring);
 begin
     // accessor for password
     _password := Trim(value);

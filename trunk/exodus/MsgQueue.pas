@@ -50,6 +50,7 @@ type
   public
     { Public declarations }
     procedure LogEvent(e: TJabberEvent; msg: string; img_idx: integer);
+    procedure RemoveItem(i: integer);
   end;
 
 var
@@ -115,7 +116,8 @@ var
     ss: TStringList;
 begin
     // save all of the events in the listview out to a file
-    fn := ExtractFilePath(Application.EXEName) + 'spool.xml';
+    // fn := ExtractFilePath(Application.EXEName) + 'spool.xml';
+    fn := getUserDir() + 'spool.xml';
 
     s := TXMLTag.Create('spool');
     for i := 0 to _queue.Count - 1 do begin
@@ -155,7 +157,8 @@ var
     fn: string;
 begin
     // Load events from the spool file
-    fn := ExtractFilePath(Application.EXEName) + 'spool.xml';
+    // fn := ExtractFilePath(Application.EXEName) + 'spool.xml';
+    fn := getUserDir() + 'spool.xml';
 
     if (not FileExists(fn)) then exit;
 
@@ -250,6 +253,18 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmMsgQueue.RemoveItem(i: integer);
+begin
+    _queue.Delete(i);
+    lstEvents.Items.Count := _queue.Count;
+    if (_queue.Count = 0) then begin
+        lstEvents.Items.Clear();
+        txtMsg.Lines.Clear();
+        end;
+    Self.SaveEvents();
+end;
+
+{---------------------------------------}
 procedure TfrmMsgQueue.lstEventsKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 var
@@ -269,14 +284,7 @@ begin
         else if (lstEvents.SelCount = 1) then begin
             item := lstEvents.Selected;
             i := item.Index;
-            first := i;
-            _queue.Delete(i);
-            lstEvents.Items.Count := _queue.Count;
-            if (_queue.Count = 0) then begin
-                lstEvents.Items.Clear();
-                txtMsg.Lines.Clear();
-                end;
-            Self.SaveEvents();
+            RemoveItem(i);
             end
         else begin
             for i := lstEvents.Items.Count-1 downto 0 do begin
@@ -289,7 +297,7 @@ begin
             Self.SaveEvents();
             end;
 
-        if (first < lstEvents.Items.Count) then begin
+        if ((first <> -1) and (first < lstEvents.Items.Count)) then begin
             lstEvents.Selected := lstEvents.Items[first];
             e := TJabberEvent(_queue[first]);
             if ((e <> nil) and (lstEvents.SelCount = 1)) then
