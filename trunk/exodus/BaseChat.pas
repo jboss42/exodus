@@ -49,6 +49,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure MsgListKeyPress(Sender: TObject; var Key: Char);
+    procedure Splitter1Moved(Sender: TObject);
   private
     { Private declarations }
     _msgHistory : TStringList;
@@ -66,7 +67,7 @@ implementation
 
 {$R *.dfm}
 uses
-    MsgDisplay, ShellAPI, Emoticons, Jabber1;
+    Session, MsgDisplay, ShellAPI, Emoticons, Jabber1;
 
 {---------------------------------------}
 procedure TfrmBaseChat.Emoticons1Click(Sender: TObject);
@@ -134,6 +135,7 @@ begin
     ShellExecute(0, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
 end;
 
+{---------------------------------------}
 procedure TfrmBaseChat.FormActivate(Sender: TObject);
 begin
     inherited;
@@ -154,7 +156,6 @@ begin
         Close()
     else if ( (Key = #127) and (HiWord(GetKeyState(VK_CONTROL)) <> 0)) then begin
         Key := #0;
-
         // delete the last word.
         // JJH: yes, this is at least slight overkill, but it was bothering me.
         cur_buff := MsgOut.Lines.Text;
@@ -233,9 +234,20 @@ end;
 
 {---------------------------------------}
 procedure TfrmBaseChat.FormCreate(Sender: TObject);
+var
+    ht: integer;
 begin
     _msgHistory := TStringList.Create();
     _lastMsg := -1;
+
+    if (MainSession <> nil) then begin
+        ht := MainSession.Prefs.getInt('chat_textbox');
+        if (ht <> 0) then
+            pnlInput.Height := ht
+        else
+            MainSession.prefs.setInt('chat_textbox', pnlInput.Height);
+        end;
+
     inherited;
 end;
 
@@ -257,6 +269,14 @@ begin
 
     MsgOut.SetFocus();
     MsgOut.SelText := Key;
+end;
+
+{---------------------------------------}
+procedure TfrmBaseChat.Splitter1Moved(Sender: TObject);
+begin
+  inherited;
+    // save the new position to use on all new windows
+    MainSession.prefs.setInt('chat_textbox', pnlInput.Height);
 end;
 
 end.

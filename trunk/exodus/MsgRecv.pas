@@ -246,6 +246,7 @@ begin
     for i := 0 to recips.Count - 1 do begin
         m := TJabberMessage.Create(recips[i], '', MsgOut.Lines.Text, s);
         MainSession.SendTag(m.Tag);
+        m.Free();
         end;
 
     Self.Close;
