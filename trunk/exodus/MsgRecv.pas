@@ -72,6 +72,7 @@ type
     pnlError: TPanel;
     Image1: TImage;
     frameButtons1: TframeButtons;
+    N2: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -437,8 +438,9 @@ end;
 procedure TfrmMsgRecv.frameButtons2btnOKClick(Sender: TObject);
 var
     m: TJabberMessage;
-    txt, s: WideString;
+    xml, txt, s: WideString;
     i: integer;
+    mtag: TXMLTag;
 begin
     // Send the outgoing msg
     txt := getInputText(MsgOut);
@@ -451,21 +453,22 @@ begin
 
     // send to ALL recips
     for i := 0 to recips.Count - 1 do begin
-        m := TJabberMessage.Create(recips[i], '', Trim(txt), s);
+        m := TJabberMessage.Create(recips[i], '', txt, s);
 
         // these must be set so that logging works right
         m.ToJID := recips[i];
         m.isMe := true;
         m.Nick := MainSession.Username;
 
+        // more plugin stuff
+        mtag := m.Tag;
+        if (xml <> '') then
+            mtag.addInsertedXML(xml);
+
         // log the msg
         if (MainSession.Prefs.getBool('log')) then
             LogMessage(m);
-
-        if (_xtags <> '') then
-            m.Tag.addInsertedXML(_xtags);
-
-        MainSession.SendTag(m.Tag);
+        jabberSendMsg(recips[i], mtag, _xtags, txt, s);
         m.Free();
     end;
     pnlReply.Visible := false;

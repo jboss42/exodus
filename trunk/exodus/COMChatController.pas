@@ -65,12 +65,21 @@ destructor TExodusChat.Destroy();
 var
     i: integer;
 begin
+    // free all of our plugin menu items
+    for i := 0 to _menu_items.Count - 1 do
+        TMenuItem(_menu_items.Objects[i]).Free();
+
+    _menu_items.Clear();
+    _menu_items.Free();
+
+    // free all of our plugin proxies
     for i := 0 to _plugs.Count - 1 do begin
         TChatPlugin(_plugs[i]).com.onClose();
         TChatPlugin(_plugs[i]).Free();
     end;
     _plugs.Clear();
     _plugs.Free();
+
     inherited Destroy();
 end;
 
@@ -139,12 +148,13 @@ end;
 {---------------------------------------}
 procedure TExodusChat.fireMenuClick(Sender: TObject);
 var
-    i: integer;
+    i, idx: integer;
 begin
- {
-    for i := 0 to _plugs.Count -1 do
-        TChatPlugin(_plugs[i]).com.onMenu(id);
- }
+    idx := _menu_items.IndexOfObject(Sender);
+    if (idx >= 0) then begin
+        for i := 0 to _plugs.Count - 1 do
+            TChatPlugin(_plugs[i]).com.onMenu(_menu_items[idx]);
+    end;
 end;
 
 {---------------------------------------}
@@ -164,14 +174,15 @@ begin
     if (_room <> nil) then begin
         mi := TMenuItem.Create(_room);
         mi.OnClick := _room.pluginMenuClick;
+        mi.Caption := caption;
+        _room.popRoom.Items.Add(mi);
     end
     else begin
         mi := TMenuItem.Create(TfrmChat(_chat.window));
         mi.OnClick := TfrmChat(_chat.window).pluginMenuClick;
+        mi.Caption := caption;
+        TfrmChat(_chat.window).popContact.Items.Add(mi);
     end;
-
-    // xxx: frmExodus.mnuPlugins.Add(mi);
-    mi.Caption := caption;
 
     id := 'plugin_' + IntToStr(_menu_items.Count);
     _menu_items.AddObject(id, mi);

@@ -24,7 +24,7 @@ unit AIMPlugin;
 interface
 
 uses
-    ExodusCOM_TLB, XMLParser, 
+    ExodusCOM_TLB, XMLParser,
     ComObj, ActiveX, AIMImport_TLB, StdVcl;
 
 type
@@ -36,9 +36,11 @@ type
     procedure NewChat(const jid: WideString; const Chat: IExodusChat); safecall;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat); safecall;
     procedure menuClick(const ID: WideString); safecall;
-    function onInstantMsg(const Body: WideString; const Subject: WideString): WideString; safecall;
     procedure Configure; safecall;
-
+    function NewIM(const jid: WideString; var Body, Subject: WideString;
+      const XTags: WideString): WideString; safecall;
+    procedure MsgMenuClick(const ID, jid: WideString; var Body,
+      Subject: WideString); safecall;
     { Protected declarations }
   private
     _controller: IExodusController;
@@ -138,18 +140,24 @@ begin
 end;
 
 {---------------------------------------}
-function TAIMImportPlugin.onInstantMsg(const Body: WideString;
-    const Subject: WideString): WideString;
-begin
-    //
-end;
-
-{---------------------------------------}
 procedure TAIMImportPlugin.Configure;
 begin
     //
 end;
 
+{---------------------------------------}
+function TAIMImportPlugin.NewIM(const jid: WideString; var Body,
+  Subject: WideString; const XTags: WideString): WideString;
+begin
+
+end;
+
+{---------------------------------------}
+procedure TAIMImportPlugin.MsgMenuClick(const ID, jid: WideString;
+  var Body, Subject: WideString);
+begin
+
+end;
 
 initialization
   TAutoObjectFactory.Create(ComServer, TAIMImportPlugin, Class_AIMImportPlugin,

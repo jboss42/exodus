@@ -24,7 +24,7 @@ unit ICQPlugin;
 interface
 
 uses
-    XMLParser, ExodusCOM_TLB, ComObj, ActiveX, StdVcl;
+    XMLParser, ExodusCOM_TLB, ICQImport_TLB, ComObj, ActiveX, StdVcl;
 
 type
   TICQImportPlugin = class(TAutoObject, IExodusPlugin)
@@ -34,9 +34,12 @@ type
     procedure NewChat(const jid: WideString; const Chat: IExodusChat); safecall;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat); safecall;
     procedure menuClick(const ID: WideString); safecall;
-    function onInstantMsg(const Body: WideString; const Subject: WideString): WideString; safecall;
     procedure Configure; safecall;
     procedure Process(const xpath, event, xml: WideString); safecall;
+    function NewIM(const jid: WideString; var Body, Subject: WideString;
+      const XTags: WideString): WideString; safecall;
+    procedure MsgMenuClick(const ID, jid: WideString; var Body,
+      Subject: WideString); safecall;
     { Protected declarations }
 
   private
@@ -135,16 +138,27 @@ begin
 end;
 
 {-----------------------------------------}
-function TICQImportPlugin.onInstantMsg(const Body: WideString;
-    const Subject: WideString): WideString;
+procedure TICQImportPlugin.Configure;
 begin
     //
 end;
 
 {-----------------------------------------}
-procedure TICQImportPlugin.Configure;
+function TICQImportPlugin.NewIM(const jid: WideString; var Body,
+  Subject: WideString; const XTags: WideString): WideString;
 begin
-    //
+
 end;
+
+{-----------------------------------------}
+procedure TICQImportPlugin.MsgMenuClick(const ID, jid: WideString;
+  var Body, Subject: WideString);
+begin
+
+end;
+
+initialization
+  TAutoObjectFactory.Create(ComServer, TICQImportPlugin, CLASS_ICQImportPlugin,
+    ciMultiInstance, tmApartment);
 
 end.

@@ -1,6 +1,6 @@
 object frmMsgRecv: TfrmMsgRecv
-  Left = 240
-  Top = 225
+  Left = 249
+  Top = 170
   Width = 385
   Height = 416
   Caption = 'Message'
@@ -519,7 +519,13 @@ object frmMsgRecv: TfrmMsgRecv
       Caption = '-'
     end
     object mnuResources: TMenuItem
+      AutoHotkeys = maManual
       Caption = 'Resources'
+      object TMenuItem
+      end
+    end
+    object N2: TMenuItem
+      Caption = '-'
     end
   end
 end

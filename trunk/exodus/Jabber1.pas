@@ -2094,6 +2094,7 @@ procedure TfrmExodus.NewGroup2Click(Sender: TObject);
 var
     new_grp: WideString;
     gl: TWideStringList;
+    x: TXMLTag;
 begin
     // Add a roster grp.
     new_grp := sDefaultGroup;
@@ -2112,6 +2113,10 @@ begin
             RenderGroup(gl.Count - 1);
             treeRoster.AlphaSort(true);
         end;
+        x := TXMLTag.Create('group');
+        x.setAttribute('name', new_grp);
+        MainSession.FireEvent('/roster/newgroup', x);
+        x.Free();
     end;
 end;
 
