@@ -13,14 +13,14 @@ inherited frmJUD: TfrmJUD
     Left = 217
     Top = 0
     Width = 3
-    Height = 331
+    Height = 336
     Cursor = crHSplit
   end
   object pnlLeft: TPanel [1]
     Left = 0
     Top = 0
     Width = 217
-    Height = 331
+    Height = 336
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 0
@@ -75,12 +75,12 @@ inherited frmJUD: TfrmJUD
     end
     object pnlBottom: TPanel
       Left = 0
-      Top = 297
+      Top = 302
       Width = 217
       Height = 34
       Align = alBottom
       BevelOuter = bvNone
-      TabOrder = 2
+      TabOrder = 1
       object btnAction: TButton
         Left = 2
         Top = 4
@@ -102,15 +102,6 @@ inherited frmJUD: TfrmJUD
         OnClick = btnCloseClick
       end
     end
-    object pnlFields: TPanel
-      Left = 0
-      Top = 237
-      Width = 217
-      Height = 60
-      Align = alClient
-      BevelOuter = bvNone
-      TabOrder = 1
-    end
     object aniWait: TAnimate
       Left = 0
       Top = 83
@@ -129,7 +120,7 @@ inherited frmJUD: TfrmJUD
       Height = 104
       Align = alTop
       BevelOuter = bvNone
-      TabOrder = 4
+      TabOrder = 3
       Visible = False
       object Label1: TLabel
         Left = 0
@@ -181,12 +172,23 @@ inherited frmJUD: TfrmJUD
         TabOrder = 0
       end
     end
+    object pnlFields: TScrollBox
+      Left = 0
+      Top = 237
+      Width = 217
+      Height = 65
+      Align = alClient
+      BevelInner = bvNone
+      BevelOuter = bvNone
+      BorderStyle = bsNone
+      TabOrder = 4
+    end
   end
   object lstContacts: TListView [2]
     Left = 220
     Top = 0
     Width = 201
-    Height = 331
+    Height = 336
     Align = alClient
     Columns = <
       item
