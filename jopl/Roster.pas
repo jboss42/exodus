@@ -76,6 +76,7 @@ type
     private
         _js: TObject;
         _callbacks: TList;
+        procedure ParseFullRoster(event: string; tag: TXMLTag);
         procedure Callback(event: string; tag: TXMLTag);
         procedure bmCallback(event: string; tag: TXMLTag);
         procedure checkGroups(ri: TJabberRosterItem);
@@ -91,7 +92,6 @@ type
 
         procedure SetSession(js: TObject);
         procedure Fetch;
-        procedure ParseFullRoster(tag: TXMLTag);
         procedure SaveBookmarks;
 
         procedure AddItem(sjid, nickname, group: string; subscribe: boolean);
@@ -299,16 +299,17 @@ end;
 procedure TJabberRoster.Fetch;
 var
     js: TJabberSession;
-    x: TXMLTag;
+    f_iq: TJabberIQ;
     bm_iq: TJabberIQ;
 begin
     js := TJabberSession(_js);
-    x := TXMLTag.Create('iq');
-    x.PutAttribute('id', js.generateID);
-    x.PutAttribute('type', 'get');
-    with x.AddTag('query') do
-        PutAttribute('xmlns', XMLNS_ROSTER);
-    js.SendTag(x);
+    f_iq := TJabberIQ.Create(js, js.generateID(), ParseFullRoster);
+    with f_iq do begin
+        iqType := 'get';
+        toJID := '';
+        Namespace := XMLNS_ROSTER;
+        Send();
+        end;
 
     bm_iq := TJabberIQ.Create(js, js.generateID(), bmCallback);
     with bm_iq do begin
@@ -405,31 +406,27 @@ begin
 
     // this is some kind of roster push
     iq_type := tag.GetAttribute('type');
-    if iq_type = 'set' then begin
-        // a roster push
-        q := tag.GetFirstTag('query');
-        if q = nil then exit;
-        ritems := q.QueryTags('item');
-        for i := 0 to ritems.Count - 1 do begin
-            j := Lowercase(ritems[i].GetAttribute('jid'));
-            ri := Find(j);
-            if ri = nil then begin
-                ri := TJabberRosterItem.Create;
-                Self.AddObject(j, ri);
-                end;
-            ri.parse(ritems[i]);
-            checkGroups(ri);
-            s.FireEvent('/roster/item', tag, ri);
-            if (ri.subscription = 'remove') then begin
-                idx := Self.indexOfObject(ri);
-                ri.Free;
-                Self.Delete(idx);
-                end;
+    if (iq_type <> 'set') then exit;
+
+    // a roster push
+    q := tag.GetFirstTag('query');
+    if q = nil then exit;
+    ritems := q.QueryTags('item');
+    for i := 0 to ritems.Count - 1 do begin
+        j := Lowercase(ritems[i].GetAttribute('jid'));
+        ri := Find(j);
+        if ri = nil then begin
+            ri := TJabberRosterItem.Create;
+            Self.AddObject(j, ri);
             end;
-        end
-    else begin
-        // prolly a full roster
-        ParseFullRoster(tag);
+        ri.parse(ritems[i]);
+        checkGroups(ri);
+        s.FireEvent('/roster/item', tag, ri);
+        if (ri.subscription = 'remove') then begin
+            idx := Self.indexOfObject(ri);
+            ri.Free;
+            Self.Delete(idx);
+            end;
         end;
 end;
 
@@ -473,9 +470,9 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberRoster.ParseFullRoster(tag: TXMLTag);
+procedure TJabberRoster.ParseFullRoster(event: string; tag: TXMLTag);
 var
-    ct, qtag: TXMLTag;
+    ct, etag: TXMLTag;
     ritems: TXMLTagList;
     i: integer;
     ri: TJabberRosterItem;
@@ -484,23 +481,34 @@ begin
     // parse the full roster push
     Self.Clear;
     s := TJabberSession(_js);
-    qtag := tag.GetFirstTag('query');
-    if qtag = nil then exit;
 
-    s.FireEvent('/roster/start', tag);
+    if (event <> 'xml') then begin
+        // timeout!
+        Self.Fetch();
+        end
 
-    ritems := qtag.QueryTags('item');
-    for i := 0 to ritems.Count - 1 do begin
-        ct := ritems.Tags[i];
-        ri := TJabberRosterItem.Create;
-        ri.parse(ct);
-        checkGroups(ri);
-        AddObject(Lowercase(ri.jid.Full), ri);
-        // Fire('item', ri, ct);
-        s.FireEvent('/roster/item', ritems.Tags[i], ri);
+    else if (tag.GetAttribute('type') = 'error') then begin
+        // some kind of roster fetch error
+        etag := tag.QueryXPTag('/iq/error');
+        if (etag <> nil) then begin
+            if (etag.GetAttribute('code') = '404') then
+                Self.Fetch();
+            end;
+        end
+
+    else begin
+        s.FireEvent('/roster/start', tag);
+        ritems := tag.QueryXPTags('/iq/query/item');
+        for i := 0 to ritems.Count - 1 do begin
+            ct := ritems.Tags[i];
+            ri := TJabberRosterItem.Create;
+            ri.parse(ct);
+            checkGroups(ri);
+            AddObject(Lowercase(ri.jid.Full), ri);
+            s.FireEvent('/roster/item', ritems.Tags[i], ri);
+            end;
+        s.FireEvent('/roster/end', nil);
         end;
-
-    s.FireEvent('/roster/end', nil);
 end;
 
 {---------------------------------------}

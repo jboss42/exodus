@@ -28,10 +28,13 @@ uses
 type
     TSubController = class
     private
+        _transports: TStringList;
+        _session: longint;
         _sub: longint;
         _subd: longint;
         _unsub: longint;
         _unsubd: longint;
+        procedure SessionCallback(event: string; tag: TXMLTag);
     public
         Constructor Create;
         Destructor Destroy; override;
@@ -73,6 +76,9 @@ begin
     _subd   := MainSession.RegisterCallback(Subscribed, '/packet/presence[@type="subscribed"]');
     _unsub  := MainSession.RegisterCallback(UnSubscribe, '/packet/presence[@type="unsubscribe"]');
     _unsubd := MainSession.RegisterCallback(UnSubscribed, '/packet/presence[@type="unsubscribed"]');
+    _session := MainSession.RegisterCallback(SessionCallback, '/session');
+
+    _transports := TStringList.Create();
 end;
 
 {---------------------------------------}
@@ -82,15 +88,30 @@ begin
     MainSession.UnRegisterCallback(_subd);
     MainSession.UnRegisterCallback(_unsub);
     MainSession.UnRegisterCallback(_unsubd);
-
+    MainSession.UnRegisterCallback(_session);
+    _transports.Free();
     inherited Destroy;
 end;
 
 {---------------------------------------}
+procedure TSubController.SessionCallback(event: string; tag: TXMLTag);
+begin
+    if (event = '/session/transport') then
+        _transports.Add(TJabberID.Create(tag.getAttribute('jid')).jid);
+end;
+
+{---------------------------------------}
 procedure TSubController.Subscribe(event: string; tag: TXMLTag);
+var
+    j: TJabberID;
 begin
     // getting a s10n request
-    MainSession.FireEvent('/session/gui/subscribe', tag);
+    j := TJabberID.Create(tag.GetAttribute('from'));
+    if (_transports.IndexOf(j.jid) >= 0) then
+        SendSubscribed(j.full, MainSession)
+    else
+        MainSession.FireEvent('/session/gui/subscribe', tag);
+    j.Free;
 end;
 
 {---------------------------------------}

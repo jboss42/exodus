@@ -97,6 +97,8 @@ type
     procedure popSendFileClick(Sender: TObject);
     procedure popAddContactClick(Sender: TObject);
     procedure popAddGroupClick(Sender: TObject);
+    procedure popSendPresClick(Sender: TObject);
+    procedure popSendSubscribeClick(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;
@@ -159,6 +161,7 @@ const
 
 implementation
 uses
+    S10n,
     Transfer, 
     MsgRecv,
     PrefController,
@@ -873,8 +876,6 @@ begin
         p := MainSession.ppdb.FindPres(ritem.jid.jid, '');
 
     popClientInfo.Enabled := (p <> nil);
-    popPresence.Enabled := (p <> nil);
-
 end;
 
 {---------------------------------------}
@@ -979,7 +980,6 @@ begin
 
     popSendFile.Enabled := o;
     popClientInfo.Enabled := e;
-    popPresence.Enabled := e;
     popHistory.Enabled := e;
     popProperties.Enabled := e;
 end;
@@ -1038,14 +1038,53 @@ begin
         FileSend(TJabberRosterItem(node.Data).jid.jid);
 end;
 
+{---------------------------------------}
 procedure TfrmRosterWindow.popAddContactClick(Sender: TObject);
 begin
     frmJabber.btnAddContactClick(Self);
 end;
 
+{---------------------------------------}
 procedure TfrmRosterWindow.popAddGroupClick(Sender: TObject);
 begin
     frmJabber.NewGroup2Click(Self);
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.popSendPresClick(Sender: TObject);
+var
+    node: TTreeNode;
+    ri: TJabberRosterItem;
+    p: TJabberPres;
+begin
+    // Send whatever my presence is right now.
+    node := treeRoster.Selected;
+    if node = nil then exit;
+    if node.Data = nil then exit;
+
+    if (TObject(node.Data) is TJabberRosterItem) then begin
+        ri := TJabberRosterItem(node.Data);
+        p := TJabberPres.Create();
+        p.toJID := ri.jid;
+        p.Show := MainSession.Show;
+        p.Status := MainSession.Status;
+        p.Priority := MainSession.Priority;
+        MainSession.SendTag(p);
+        end;
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.popSendSubscribeClick(Sender: TObject);
+var
+    node: TTreeNode;
+begin
+    // send subscribe to this person
+    node := treeRoster.Selected;
+    if node = nil then exit;
+    if node.Data = nil then exit;
+
+    if (TObject(node.Data) is TJabberRosterItem) then
+        SendSubscribe(TJabberRosterItem(node.Data).jid.jid, MainSession);
 end;
 
 end.

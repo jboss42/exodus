@@ -14,7 +14,7 @@ object frmSubscribe: TfrmSubscribe
   Font.Style = []
   FormStyle = fsStayOnTop
   OldCreateOrder = False
-  Position = poDefaultPosOnly
+  Position = poMainFormCenter
   OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 13

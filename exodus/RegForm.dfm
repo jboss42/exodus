@@ -64,11 +64,11 @@ object frmRegister: TfrmRegister
     Top = 0
     Width = 304
     Height = 258
-    ActivePage = tabResult
+    ActivePage = tabWelcome
     Align = alClient
     MultiLine = True
     Style = tsButtons
-    TabIndex = 3
+    TabIndex = 0
     TabOrder = 1
     object tabWelcome: TTabSheet
       Caption = 'tabWelcome'

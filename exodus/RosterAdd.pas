@@ -192,6 +192,7 @@ begin
                 end;
             sjid := j + '@' + a.jid;
             MainSession.Roster.AddItem(sjid, snick, sgrp, true);
+            Self.Close;
             end
         else begin
             // we don't have this svc..
@@ -209,8 +210,6 @@ begin
     if (tag.GetAttribute('from') = gw) then begin
         MainSession.UnRegisterCallback(cb);
         doAdd();
-        if (not self.visible) then
-            Self.Close();
         end;
 end;
 

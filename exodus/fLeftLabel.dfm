@@ -7,9 +7,15 @@ object frmField: TfrmField
   object lblPrompt: TLabel
     Left = 3
     Top = 5
-    Width = 25
-    Height = 13
+    Width = 29
+    Height = 16
     Caption = 'URL:'
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = []
+    ParentFont = False
   end
   object txtData: TEdit
     Left = 75
