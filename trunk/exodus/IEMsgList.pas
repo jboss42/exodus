@@ -272,7 +272,7 @@ begin
                                 started := true;
                                 result := result + ' style="';
                             end;
-                            result := result + HTML_EscapeChars(chunks[j], false) + ';';
+                            result := result + HTML_EscapeChars(chunks[j], false, true) + ';';
                         end;
                     end;
                     if (started) then
@@ -282,7 +282,7 @@ begin
             else if (tag_name = 'a') then begin
                 if (aname = 'href') then
                     result := result + ' ' +
-                        attr.Name + '="' + HTML_EscapeChars(attr.Value, false) + '"';
+                        attr.Name + '="' + HTML_EscapeChars(attr.Value, false, true) + '"';
             end
             else if (tag_name = 'img') then begin
                 if ((aname = 'alt') or
@@ -291,7 +291,7 @@ begin
                     (aname = 'src') or
                     (aname = 'width')) then begin
                     result := result + ' ' +
-                        aname + '="' + HTML_EscapeChars(attr.Value, false) + '"';
+                        aname + '="' + HTML_EscapeChars(attr.Value, false, true) + '"';
                 end;
             end
         end;
@@ -342,7 +342,8 @@ begin
     end;
 
     if (txt = '') then begin
-        txt := HTML_EscapeChars(Msg.Body, false);
+        txt := HTML_EscapeChars(Msg.Body, false, false);
+        txt := StringReplace(txt, ' ', '&ensp;', [rfReplaceAll]);
         cd := TXMLCData.Create(txt);
         txt := ProcessTag(nil, cd);
         txt := crlf_regex.Replace(txt, '<br />', true);
@@ -460,7 +461,10 @@ end;
 {---------------------------------------}
 function TfIEMsgList.getHistory(): Widestring;
 begin
-    Result := _content.innerHTML;
+    if (_content = nil) then
+        Result := ''
+    else
+        Result := _content.innerHTML;
 end;
 
 
@@ -486,6 +490,9 @@ end;
 {---------------------------------------}
 procedure TfIEMsgList.onScroll(Sender: TObject);
 begin
+    if _content2 = nil then
+        _bottom := true
+    else
     _bottom :=
         ((_content2.scrollTop + _content2.clientHeight) >= _content2.scrollHeight);
 end;
@@ -646,7 +653,7 @@ initialization
     xp_xhtml := TXPLite.Create('/message/html/body');
 
     url_regex := TRegExpr.Create();
-    url_regex.expression := '(https?|ftp|xmpp)://[^ '#$D#$A#$9']+';
+    url_regex.expression := '(https?|ftp|xmpp)://[^ "'''#$D#$A#$9']+';
     url_regex.Compile();
 
     crlf_regex := TRegExpr.Create();
