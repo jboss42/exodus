@@ -12,7 +12,7 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 2/26/2003 11:53:02 PM from Type Library described below.
+// File generated on 2/27/2003 7:28:11 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -391,6 +391,7 @@ type
     procedure onRecvMessage(const Body: WideString; const xml: WideString); safecall;
     procedure onClose; safecall;
     procedure onMenu(const ID: WideString); safecall;
+    procedure onNewWindow(HWND: Integer); safecall;
   end;
 
 // *********************************************************************//
@@ -407,6 +408,7 @@ type
     procedure onRecvMessage(const Body: WideString; const xml: WideString); dispid 5;
     procedure onClose; dispid 6;
     procedure onMenu(const ID: WideString); dispid 201;
+    procedure onNewWindow(HWND: Integer); dispid 202;
   end;
 
 // *********************************************************************//

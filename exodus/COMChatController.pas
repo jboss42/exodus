@@ -5,8 +5,9 @@ unit COMChatController;
 interface
 
 uses
-    Session, ChatController, ChatWin, Chat, Room, Unicode,  
-    Classes, ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
+    ExodusCOM_TLB, 
+    Session, ChatController, ChatWin, Chat, Room, Unicode,
+    Windows, Classes, ComObj, ActiveX, StdVcl;
 
 type
   TExodusChat = class(TAutoObject, IExodusChat)
@@ -33,6 +34,7 @@ type
     function  fireAfterMsg(var body: WideString): Widestring;
     procedure fireRecvMsg(body, xml: Widestring);
     procedure fireMenuClick(Sender: TObject);
+    procedure fireNewWindow(new_hwnd: HWND);
     procedure fireClose();
 
   private
@@ -77,6 +79,7 @@ begin
         TChatPlugin(_plugs[i]).com.onClose();
         TChatPlugin(_plugs[i]).Free();
     end;
+
     _plugs.Clear();
     _plugs.Free();
 
@@ -134,6 +137,15 @@ var
 begin
     for i := 0 to _plugs.Count - 1 do
         TChatPlugin(_plugs[i]).com.onRecvMessage(body, xml);
+end;
+
+{---------------------------------------}
+procedure TExodusChat.fireNewWindow(new_hwnd: HWND);
+var
+    i: integer;
+begin
+    for i := 0 to _plugs.Count - 1 do
+        TChatPlugin(_plugs[i]).com.OnNewWindow(new_hwnd);
 end;
 
 {---------------------------------------}
