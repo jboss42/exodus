@@ -330,6 +330,7 @@ begin
                 changed := true;
             end;
         end;
+        tmp_grplist.Free();
 
         if changed then ritem.update();
         MainSession.FireEvent('/roster/item', nil, ritem);

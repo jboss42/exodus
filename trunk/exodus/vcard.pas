@@ -98,6 +98,7 @@ type
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure TreeView1Click(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
     _vcard: TXMLVCard;
@@ -294,6 +295,11 @@ begin
 
     MainSession.SendTag(iq);
     Self.Close;
+end;
+
+procedure TfrmVCard.FormDestroy(Sender: TObject);
+begin
+    _vcard.Free();
 end;
 
 end.

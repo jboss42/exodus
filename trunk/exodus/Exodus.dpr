@@ -141,6 +141,9 @@ begin
   Application.Title := 'Exodus';
 
   Application.CreateForm(TfrmExodus, frmExodus);
+  if (frmExodus = nil) then
+    Halt;
+
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);

@@ -103,7 +103,7 @@ begin
     if (_cb >= 0) then
         MainSession.UnRegisterCallback(_cb);
     msg_queue.Free();
-    // TExodusChat(ComController).ObjRelease();
+    ComController.Free();
     inherited;
 end;
 

@@ -1,6 +1,7 @@
 object frmPassword: TfrmPassword
   Left = 245
   Top = 196
+  BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsDialog
   Caption = 'Password Dialog'
   ClientHeight = 184

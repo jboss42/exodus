@@ -257,6 +257,7 @@ begin
         if (cur_state = 'xsearch') then begin
             x := cur_iq.qTag.AddTag('x');
             x.setAttribute('xmlns', XMLNS_XDATA);
+            x.setAttribute('type', 'submit');
             cur_state := 'xitems';
         end
         else begin
@@ -446,7 +447,7 @@ begin
             items := tag.QueryXPTags('//x[@xmlns="jabber:x:data"]/item');
 
         if ((items = nil) or (items.Count = 0)) then begin
-            if (items <> nil) then items.Free();
+            items.Free();
             cur_state := 'get_fields';
             lstContacts.Clear();
             self.reset();
@@ -667,7 +668,9 @@ var
         // add the item
         jid := TJabberID.Create(item.caption);
         MainSession.roster.AddItem(item.caption, jid.user, cboGroup.Text, true);
-end;
+        jid.Free();
+        
+    end;
 
 begin
   inherited;

@@ -23,7 +23,7 @@ interface
 
 uses
     BaseChat, GUIFactory, Register, Notify, S10n,
-    COMController, COMRoster, COMPPDB, 
+    COMController, COMRoster, COMPPDB,
     ExResponders, ExEvents, RosterWindow, Presence, XMLTag,
     ShellAPI, Registry,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
@@ -393,10 +393,15 @@ type
     property COMController: TExodusController read _com_controller;
     property COMRoster: TExodusRoster read _com_roster;
     property COMPPDB: TExodusPPDB read _com_ppdb;
-    
-    property RegisterController: TRegController read _regController; 
+
+    property RegisterController: TRegController read _regController;
 
   end;
+
+  ExodusStartException = class(Exception)
+  public
+  end;
+
 
 procedure StartTrayAlert();
 procedure StopTrayAlert();
@@ -444,6 +449,8 @@ resourcestring
     sRegError = 'An Error occurred trying to register your new account. This server may not allow open registration.';
     sAuthNoAccount = 'This account does not exist on this server. Create a new account?';
     sCancelReconnect = 'Click to Cancel Reconnect';
+    sReconnectIn = 'Reconnect in ';
+    sSeconds = 'seconds.';
 
     sSetAutoAvailable = 'Setting Auto Available';
     sSetAutoAway = 'Setting AutoAway';
@@ -796,28 +803,28 @@ begin
                 ReqFlags := '              ';
                 LongOpts := 'debug,minimized,invisible,aatest,help,expanded,jid,password,resource,priority,profile,config,status,show';
                 while GetOpt do begin
-                  case Ord(OptChar) of
-                     0: raise EConfigException.Create('unknown argument');
-                     Ord('d'): debug := true;
-                     Ord('x'): expanded := OptArg;
-                     Ord('m'): minimized := true;
-                     Ord('a'): _testaa := true;
-                     Ord('v'): invisible := true;
-                     Ord('j'): jid := TJabberID.Create(OptArg);
-                     Ord('p'): pass := OptArg;
-                     Ord('r'): resource := OptArg;
-                     Ord('i'): _cli_priority := SafeInt(OptArg);
-                     Ord('f'): profile_name := OptArg;
-                     Ord('c'): config := OptArg;
-                     Ord('?'): show_help := true;
-                     Ord('w'): _cli_show := OptArg;
-                     Ord('s'): _cli_status := OptArg;
-              end;
-            end;
+                    case Ord(OptChar) of
+                        0: raise EConfigException.Create('unknown argument');
+                        Ord('d'): debug := true;
+                        Ord('x'): expanded := OptArg;
+                        Ord('m'): minimized := true;
+                        Ord('a'): _testaa := true;
+                        Ord('v'): invisible := true;
+                        Ord('j'): jid := TJabberID.Create(OptArg);
+                        Ord('p'): pass := OptArg;
+                        Ord('r'): resource := OptArg;
+                        Ord('i'): _cli_priority := SafeInt(OptArg);
+                        Ord('f'): profile_name := OptArg;
+                        Ord('c'): config := OptArg;
+                        Ord('?'): show_help := true;
+                        Ord('w'): _cli_show := OptArg;
+                        Ord('s'): _cli_status := OptArg;
+                    end;
+                end;
             finally
                 Free
+            end;
         end;
-    end;
 
         if (_testaa) then
             _auto_away_interval := 1
@@ -841,6 +848,7 @@ begin
             help_msg := help_msg + sCmdProfile;
             help_msg := help_msg + sCmdConfig;
             MessageDlg(help_msg, mtInformation, [mbOK], 0);
+            // xxx: Fix the Halt commands
             Halt;
         end;
 
@@ -961,8 +969,9 @@ begin
         on E : EConfigException do begin
             MessageDlg(E.Message, mtError, [mbOK], 0);
             Halt;
+            exit;
+        end;
     end;
-end;
 
     // Setup callbacks
     _sessioncb := MainSession.RegisterCallback(SessionCallback, '/session');
@@ -1526,70 +1535,72 @@ begin
     mtype := tag.getAttribute('type');
     b := Trim(tag.GetBasicText('body'));
     tmp_jid := TJabberID.Create(tag.getAttribute('from'));
-    if ((mtype <> 'groupchat') and (mtype <> 'chat')) then begin
+    try
+        if ((mtype <> 'groupchat') and (mtype <> 'chat')) then begin
+            // Some exclusions...
+            // x-data msgs and invites
+            if (tag.QueryXPTag(XP_MSGXDATA) <> nil) then exit;
+            if (tag.QueryXPTag(XP_MUCINVITE) <> nil) then exit;
+            if (tag.QueryXPTag(XP_CONFINVITE) <> nil) then exit;
 
-        // Some exclusions...
-        // x-data msgs and invites
-        if (tag.QueryXPTag(XP_MSGXDATA) <> nil) then exit;
-        if (tag.QueryXPTag(XP_MUCINVITE) <> nil) then exit;
-        if (tag.QueryXPTag(XP_CONFINVITE) <> nil) then exit;
-
-        // check for headlines w/ JUST a x-oob.
-        // otherwise, throw out cases where body is empty
-        xoob := tag.QueryXPTag(XP_XOOB);
-        if ((xoob = nil) and (b = '')) then
-            exit
-        else if ((xoob <> nil) and (b = '')) then begin
-            // add in a textual version of the oob:
-            b := 'This msg contains a URL: '#13#10;
-            b := b + xoob.GetBasicText('desc');
-            b := b + xoob.GetBasicText('url');
-        end;
-
-        // if we have a normal msg (not a headline),
-        // check for msg_treatments.
-        msg_treatment := MainSession.Prefs.getInt('msg_treatment');
-        if (mtype <> 'headline') then begin
-            if (msg_treatment = msg_all_chat) then
-                // forcing all msgs to chat, so bail
+            // check for headlines w/ JUST a x-oob.
+            // otherwise, throw out cases where body is empty
+            xoob := tag.QueryXPTag(XP_XOOB);
+            if ((xoob = nil) and (b = '')) then
                 exit
-            else if (msg_treatment = msg_existing_chat) then begin
-                // check for an existing chat window..
-                // if we have one, then bail.
-                cc := MainSession.ChatList.FindChat(tmp_jid.jid, '', '');
-                if (cc = nil) then
-                    cc := MainSession.ChatList.FindChat(tmp_jid.jid, tmp_jid.resource, '');
-                if (cc <> nil) then exit;
+            else if ((xoob <> nil) and (b = '')) then begin
+                // add in a textual version of the oob:
+                b := 'This msg contains a URL: '#13#10;
+                b := b + xoob.GetBasicText('desc');
+                b := b + xoob.GetBasicText('url');
+            end;
+
+            // if we have a normal msg (not a headline),
+            // check for msg_treatments.
+            msg_treatment := MainSession.Prefs.getInt('msg_treatment');
+            if (mtype <> 'headline') then begin
+                if (msg_treatment = msg_all_chat) then
+                    // forcing all msgs to chat, so bail
+                    exit
+                else if (msg_treatment = msg_existing_chat) then begin
+                    // check for an existing chat window..
+                    // if we have one, then bail.
+                    cc := MainSession.ChatList.FindChat(tmp_jid.jid, '', '');
+                    if (cc = nil) then
+                        cc := MainSession.ChatList.FindChat(tmp_jid.jid,
+                            tmp_jid.resource, '');
+                    if (cc <> nil) then exit;
+                end;
+            end;
+
+            if MainSession.IsPaused then begin
+                with tag.AddTag('x') do begin
+                    setAttribute('xmlns', XMLNS_DELAY);
+                    setAttribute('stamp', DateTimeToJabber(Now + TimeZoneBias()));
+                end;
+                MainSession.QueueEvent(event, tag, Self.MsgCallback)
+            end
+            else begin
+                e := CreateJabberEvent(tag);
+                RenderEvent(e);
+            end;
+
+            // log the msg if we're logging.
+            if (MainSession.Prefs.getBool('log')) then begin
+                msg := TJabberMessage.Create(tag);
+                msg.isMe := false;
+                ritem := MainSession.roster.Find(tmp_jid.jid);
+                if (ritem <> nil) then
+                    msg.Nick := ritem.Nickname
+                else
+                    msg.Nick := msg.FromJID;
+                LogMessage(msg);
+                msg.Free();
             end;
         end;
-
-        if MainSession.IsPaused then begin
-            with tag.AddTag('x') do begin
-                setAttribute('xmlns', XMLNS_DELAY);
-                setAttribute('stamp', DateTimeToJabber(Now + TimeZoneBias()));
-            end;
-            MainSession.QueueEvent(event, tag, Self.MsgCallback)
-        end
-        else begin
-            e := CreateJabberEvent(tag);
-            RenderEvent(e);
-        end;
-
-        // log the msg if we're logging.
-        if (MainSession.Prefs.getBool('log')) then begin
-            msg := TJabberMessage.Create(tag);
-            msg.isMe := false;
-            ritem := MainSession.roster.Find(tmp_jid.jid);
-            if (ritem <> nil) then
-                msg.Nick := ritem.Nickname
-            else
-                msg.Nick := msg.FromJID;
-            LogMessage(msg);
-            msg.Free();
-        end;
+    finally
+        tmp_jid.Free();
     end;
-
-    tmp_jid.Free();
 end;
 
 {---------------------------------------}
@@ -1769,8 +1780,10 @@ begin
     if (_tray_icon <> nil) then
         FreeAndNil(_tray_icon);
 
-    // NB: The _com_controller goes away via RefCounts & COM madness.
-
+    // Free the COM stuff
+    FreeAndNil(_com_roster);
+    FreeAndNil(_com_ppdb);
+    FreeAndNil(_com_controller);
 end;
 
 {---------------------------------------}
@@ -2735,6 +2748,8 @@ procedure TfrmExodus.Test1Click(Sender: TObject);
 var
     i: integer;
 }
+var
+    o: TObject;
 begin
     // Test something..
     // LoadPlugin('RosterClean.ExodusRosterClean');
@@ -2752,8 +2767,13 @@ begin
     }
     //ShowRiserWindow(Self, 'Test Toast ' + IntToStr(i), i);
 
+    {
     TrackWindowsMsg(WM_ACTIVATEAPP);
     TrackWindowsMsg(WM_ACTIVATE);
+    }
+
+    o := nil;
+    o.Free();
 end;
 
 {---------------------------------------}
@@ -2830,8 +2850,8 @@ begin
     end
     else begin
         frmRosterWindow.lblLogin.Caption := sCancelReconnect;
-        frmRosterWindow.lblStatus.Caption := 'Reconnect in: ' +
-            IntToStr(_reconnect_interval - _reconnect_cur) + ' secs.';
+        frmRosterWindow.lblStatus.Caption := sReconnectIn +
+            IntToStr(_reconnect_interval - _reconnect_cur) + ' ' + sSeconds;
     end;
 end;
 

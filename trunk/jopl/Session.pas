@@ -79,6 +79,7 @@ type
         function GetServer(): WideString;
         function GetResource(): WideString;
         function GetPort(): integer;
+        function GetFullJid(): Widestring;
 
         function GetActive(): boolean;
     published
@@ -138,6 +139,7 @@ type
         property Password: WideString read GetPassword write SetPassword;
         property Server: WideString read GetServer write SetServer;
         property Resource: WideString read GetResource write SetResource;
+        property Jid: Widestring read GetFullJid;
         property Port: integer read GetPort write SetPort;
         property Priority: integer read _priority write _priority;
         property Show: WideString read _show;
@@ -241,8 +243,9 @@ begin
     Agents.Free;
 
     if (_stream <> nil) then
-        _stream.Free;
-    _pauseQueue.Free;
+        _stream.Free();
+    _pauseQueue.Free();
+    Presence_XML.Free();
 
     // Free the dispatcher... this should free the signals
     _dispatcher.Free;
@@ -263,6 +266,16 @@ begin
         result := ''
     else
         result := _profile.Username;
+end;
+
+{---------------------------------------}
+function TJabberSession.GetFullJid(): WideString;
+begin
+    if (_profile = nil) then
+        result := ''
+    else
+        result := _profile.Username + '@' + _profile.Server + '/' +
+            _profile.Resource;
 end;
 
 {---------------------------------------}
@@ -403,6 +416,8 @@ procedure TJabberSession.handleDisconnect();
 begin
     // Clear the roster, ppdb and fire the callbacks
     _dispatcher.DispatchSignal('/session/disconnected', nil);
+    if (_paused) then
+        Self.Play();
     ClearStringListObjects(Agents);
     ppdb.Clear;
     Roster.Clear;
@@ -474,7 +489,7 @@ begin
     // playback the stuff in the queue
     _paused := false;
 
-    // XXX: WOAH! Make sure things are played back or cleared when we get disconnected.
+    // WOAH! Make sure things are played back or cleared when we get disconnected.
     while (_pauseQueue.Count > 0) do begin
         q := TQueuedEvent(_pauseQueue.pop);
         sig := TSignalEvent(q.callback);

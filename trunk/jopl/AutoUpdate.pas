@@ -105,6 +105,7 @@ begin
         MainSession.Prefs.setString('auto_update_url', url);
         reg.DeleteValue('Update_URL');
     end;
+    reg.Free();
     {$endif}
 
     // NOTE: if you want to do auto-update, the easiest way to turn it on is
@@ -121,7 +122,7 @@ begin
             last := Now();
             MainSession.Prefs.setString('last_update', DateTimeToStr(last));
         end;
-end;
+    end;
 
     t := TAutoUpdateThread.Create(true);
     t.URL := url;

@@ -110,6 +110,7 @@ type
 
   public
     constructor Create();
+    destructor Destroy(); override;
 
     procedure fireNewChat(jid: WideString; ExodusChat: IExodusChat);
     procedure fireMenuClick(Sender: TObject);
@@ -279,6 +280,15 @@ constructor TExodusController.Create();
 begin
     inherited Create();
     _menu_items := TWidestringList.Create();
+end;
+
+{---------------------------------------}
+destructor TExodusController.Destroy();
+begin
+    _menu_items.Free();
+    OutputDebugString('Destroying TExodusController');
+
+    inherited;
 end;
 
 {---------------------------------------}

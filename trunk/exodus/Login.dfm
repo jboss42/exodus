@@ -3,6 +3,7 @@ object frmLogin: TfrmLogin
   Top = 419
   Width = 246
   Height = 262
+  BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Login'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET

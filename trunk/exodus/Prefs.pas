@@ -322,6 +322,7 @@ begin
     // frmExodus.PreModal(f);
     f.ShowModal;
     //frmExodus.PostModal();
+    f.Free();
 end;
 
 {---------------------------------------}
@@ -970,6 +971,7 @@ begin
     MainSession.Prefs.removePresence(cp);
     lstCustompres.Items.Delete(lstCustomPres.ItemIndex);
     lstCustompresClick(Self);
+    cp.Free();
 end;
 
 {---------------------------------------}

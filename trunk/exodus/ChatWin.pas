@@ -288,6 +288,8 @@ var
     i: integer;
 begin
     jid := cjid;
+    if (_jid <> nil) then _jid.Free();
+    
     _jid := TJabberID.Create(cjid);
 
     // setup the callbacks if we don't have them already
@@ -467,6 +469,7 @@ begin
         subj_msg.Subject := '';
         subj_msg.Nick := '';
         DisplayMsg(subj_msg, MsgList);
+        subj_msg.Free();
     end;
 
     if (Msg.Body <> '') then begin

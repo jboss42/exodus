@@ -49,6 +49,8 @@ end;
         procedure callback(event: string; tag: TXMLTag);
     public
         constructor create();
+        destructor Destroy(); override;
+
         procedure SetSession(s: TObject);
         procedure MonitorJid(jid: WideString; reg_full: boolean = true);
         procedure RemoveProxy(rp: TRegProxy);
@@ -59,9 +61,21 @@ uses
     JabberID, Jabber1, Forms, RegForm, Session;
 
 {---------------------------------------}
-constructor TRegController.create();
+{---------------------------------------}
+{---------------------------------------}
+constructor TRegController.Create();
 begin
+    inherited;
+
     _monitors := TList.Create();
+end;
+
+{---------------------------------------}
+destructor TRegController.Destroy();
+begin
+    _monitors.Free();
+
+    inherited;
 end;
 
 {---------------------------------------}
