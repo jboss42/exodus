@@ -23,6 +23,8 @@ interface
 
 uses
     Session,
+    HttpDetails,
+    SocketDetails,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     StdCtrls, buttonFrame, ComCtrls;
 
@@ -44,16 +46,17 @@ type
     spnPriority: TUpDown;
     lblNewProfile: TLabel;
     lblDelete: TLabel;
-    chkSSL: TCheckBox;
     chkInvisible: TCheckBox;
-    Label7: TLabel;
-    txtPort: TEdit;
+    Label8: TLabel;
+    cboConnection: TComboBox;
+    btnDetails: TButton;
+
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cboProfilesChange(Sender: TObject);
     procedure lblNewProfileClick(Sender: TObject);
     procedure lblDeleteClick(Sender: TObject);
-    procedure chkSSLClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure btnDetailsClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -73,7 +76,7 @@ implementation
 {$R *.DFM}
 
 uses
-    Jabber1, 
+    Jabber1,
     PrefController;
 
 {---------------------------------------}
@@ -83,7 +86,6 @@ var
     i: integer;
     p: TJabberProfile;
 begin
-    //
     l := TfrmLogin.Create(nil);
     l.cboProfiles.Items.Assign(MainSession.Prefs.Profiles);
     l.cboProfiles.ItemIndex := MainSession.Prefs.getInt('profile_active');
@@ -95,15 +97,12 @@ begin
         p := TJabberProfile(MainSession.Prefs.Profiles.Objects[i]);
 
         // Update the profile
-        with l, p do begin
-            Server := cboServer.Text;
-            Username := txtUsername.Text;
-            password := txtPassword.Text;
-            resource := cboResource.Text;
-            Priority := spnPriority.Position;
-            Port     := StrToIntDef(txtPort.Text, 5222);
-            ssl := chkSSL.Checked;
-            end;
+        p.Server := l.cboServer.Text;
+        p.Username := l.txtUsername.Text;
+        p.password := l.txtPassword.Text;
+        p.resource := l.cboResource.Text;
+        p.Priority := l.spnPriority.Position;
+        p.ConnectionType := l.cboConnection.ItemIndex;
 
         MainSession.Prefs.setInt('profile_active', i);
         MainSession.Prefs.SaveProfiles();
@@ -141,9 +140,8 @@ begin
     cboServer.Text := p.Server;
     cboResource.Text := p.Resource;
     spnPriority.Position := p.Priority;
-    txtPort.Text := IntToStr(p.Port);
-    chkSSL.Checked := p.ssl;
     chkInvisible.Checked := false;
+    cboConnection.ItemIndex := p.ConnectionType;
 end;
 
 {---------------------------------------}
@@ -183,28 +181,39 @@ begin
     if (MainSession.Prefs.Profiles.Count) <= 0 then begin
         MainSession.Prefs.CreateProfile('Default Profile')
         end;
-    
+
     cboProfiles.Items.Assign(MainSession.Prefs.Profiles);
     cboProfiles.ItemIndex := MainSession.Prefs.getInt('profile_active');
     cboProfilesChange(nil);
 
 end;
 
-procedure TfrmLogin.chkSSLClick(Sender: TObject);
-begin
-    if (chkSSL.Checked) then begin
-        if (txtPort.Text = '5222') then
-            txtPort.Text := '5223';
-        end
-    else begin
-        if (txtPort.Text = '5223') then
-            txtPort.Text := '5222';
-        end;
-end;
-
 procedure TfrmLogin.FormCreate(Sender: TObject);
 begin
     MainSession.Prefs.RestorePosition(Self);
+end;
+
+procedure TfrmLogin.btnDetailsClick(Sender: TObject);
+var
+    i : integer;
+    p : TJabberProfile;
+begin
+    i := cboProfiles.ItemIndex;
+    p := TJabberProfile(MainSession.Prefs.Profiles.Objects[i]);
+    if (cboConnection.ItemIndex = 0) then begin
+        if (frmSocketDetails = nil) then
+            frmSocketDetails := TfrmSocketDetails.Create(Self);
+        frmSocketDetails.SetDefaults(p);
+        if (frmSocketDetails.ShowModal() = mrOK) then
+            frmSocketDetails.GetValues(p);
+        end
+    else if (cboConnection.ItemIndex = 1) then begin
+        if (frmHttpDetails = nil) then
+            frmHttpDetails := TfrmHttpDetails.Create(Self);
+        frmHttpDetails.SetDefaults(p);
+        if (frmHttpDetails.ShowModal() = mrOK) then
+            frmHttpDetails.GetValues(p);
+        end;
 end;
 
 end.

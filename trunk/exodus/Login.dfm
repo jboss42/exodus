@@ -1,8 +1,8 @@
 object frmLogin: TfrmLogin
-  Left = 251
-  Top = 190
-  Width = 250
-  Height = 300
+  Left = 651
+  Top = 159
+  Width = 246
+  Height = 268
   Caption = 'Jabber Login'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,50 +17,56 @@ object frmLogin: TfrmLogin
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
-    Left = 8
+    Left = 41
     Top = 32
     Width = 51
     Height = 13
+    Alignment = taRightJustify
     Caption = 'Username:'
   end
   object Label2: TLabel
-    Left = 8
+    Left = 43
     Top = 56
     Width = 49
     Height = 13
+    Alignment = taRightJustify
     Caption = 'Password:'
   end
   object Label3: TLabel
-    Left = 8
+    Left = 58
     Top = 80
     Width = 34
     Height = 13
+    Alignment = taRightJustify
     Caption = 'Server:'
   end
   object Label4: TLabel
-    Left = 8
+    Left = 43
     Top = 104
     Width = 49
     Height = 13
+    Alignment = taRightJustify
     Caption = 'Resource:'
   end
   object Label5: TLabel
-    Left = 8
+    Left = 60
     Top = 8
     Width = 32
     Height = 13
+    Alignment = taRightJustify
     Caption = 'Profile:'
   end
   object Label6: TLabel
-    Left = 8
-    Top = 152
+    Left = 58
+    Top = 129
     Width = 34
     Height = 13
+    Alignment = taRightJustify
     Caption = 'Priority:'
   end
   object lblNewProfile: TLabel
     Left = 4
-    Top = 211
+    Top = 176
     Width = 94
     Height = 13
     Cursor = crHandPoint
@@ -75,7 +81,7 @@ object frmLogin: TfrmLogin
   end
   object lblDelete: TLabel
     Left = 147
-    Top = 211
+    Top = 176
     Width = 81
     Height = 13
     Cursor = crHandPoint
@@ -88,12 +94,13 @@ object frmLogin: TfrmLogin
     ParentFont = False
     OnClick = lblDeleteClick
   end
-  object Label7: TLabel
+  object Label8: TLabel
     Left = 8
-    Top = 128
-    Width = 22
+    Top = 153
+    Width = 84
     Height = 13
-    Caption = 'Port:'
+    Alignment = taRightJustify
+    Caption = 'Connection Type:'
   end
   object txtUsername: TEdit
     Left = 98
@@ -137,17 +144,17 @@ object frmLogin: TfrmLogin
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 229
-    Width = 242
+    Top = 202
+    Width = 238
     Height = 37
     Align = alBottom
     AutoScroll = False
-    TabOrder = 9
+    TabOrder = 7
     inherited Bevel1: TBevel
-      Width = 242
+      Width = 238
     end
     inherited Panel1: TPanel
-      Left = 80
+      Left = 76
       Width = 162
       Height = 32
     end
@@ -166,47 +173,54 @@ object frmLogin: TfrmLogin
   end
   object txtPriority: TEdit
     Left = 98
-    Top = 148
-    Width = 39
+    Top = 125
+    Width = 49
     Height = 21
-    TabOrder = 6
+    TabOrder = 5
     Text = '0'
   end
   object spnPriority: TUpDown
-    Left = 137
-    Top = 148
+    Left = 147
+    Top = 125
     Width = 15
     Height = 21
     Associate = txtPriority
     Min = 0
     Max = 1000
     Position = 0
-    TabOrder = 7
+    TabOrder = 6
     Wrap = False
   end
-  object chkSSL: TCheckBox
-    Left = 98
-    Top = 173
-    Width = 127
-    Height = 17
-    Caption = 'Use SSL to connect'
-    TabOrder = 8
-    OnClick = chkSSLClick
-  end
   object chkInvisible: TCheckBox
-    Left = 98
-    Top = 191
-    Width = 103
+    Left = 168
+    Top = 128
+    Width = 58
     Height = 15
-    Caption = 'Invisible Mode'
-    TabOrder = 10
+    Caption = 'Invisible'
+    TabOrder = 8
   end
-  object txtPort: TEdit
+  object cboConnection: TComboBox
     Left = 98
-    Top = 124
-    Width = 39
+    Top = 151
+    Width = 66
     Height = 21
-    TabOrder = 5
-    Text = '5222'
+    Style = csOwnerDrawFixed
+    DropDownCount = 2
+    ItemHeight = 15
+    ItemIndex = 0
+    TabOrder = 9
+    Text = 'Normal'
+    Items.Strings = (
+      'Normal'
+      'HTTP')
+  end
+  object btnDetails: TButton
+    Left = 169
+    Top = 151
+    Width = 58
+    Height = 21
+    Caption = 'Details...'
+    TabOrder = 10
+    OnClick = btnDetailsClick
   end
 end
