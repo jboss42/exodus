@@ -129,36 +129,42 @@ var
     f: TfrmRoom;
     p: TJabberPres;
     tmp_jid: TJabberID;
+    i : integer;
 begin
-    // create a new room
-    f := TfrmRoom.Create(Application);
-    f.SetJID(rjid);
-    f.MyNick := rnick;
-    tmp_jid := TJabberID.Create(rjid);
+    // is there already a room window?
+    i := room_list.IndexOf(rjid);
+    if (i >= 0) then
+        f := TfrmRoom(room_list.Objects[i])
+    else begin
+        // create a new room
+        f := TfrmRoom.Create(Application);
+        f.SetJID(rjid);
+        f.MyNick := rnick;
+        tmp_jid := TJabberID.Create(rjid);
 
-    p := TJabberPres.Create;
-    p.toJID := TJabberID.Create(rjid + '/' + rnick);
-    MainSession.SendTag(p);
-    if MainSession.Prefs.getBool('expanded') then
-        f.DockForm;
+        p := TJabberPres.Create;
+        p.toJID := TJabberID.Create(rjid + '/' + rnick);
+        MainSession.SendTag(p);
+        if MainSession.Prefs.getBool('expanded') then
+            f.DockForm;
 
-    // setup prefs
-    with f do begin
-        AssignDefaultFont(MsgList.Font);
-        MsgList.Color := TColor(MainSession.Prefs.getInt('color_bg'));
-        MsgOut.Color := MsgList.Color;
-        MsgOut.Font.Assign(MsgList.Font);
-        treeRoster.Color := MsgList.Color;
-        //treeRoster.Font.Assign(MsgList.Font);
-        Caption := tmp_jid.user + ' Room';
-        Show;
+        // setup prefs
+        with f do begin
+            AssignDefaultFont(MsgList.Font);
+            MsgList.Color := TColor(MainSession.Prefs.getInt('color_bg'));
+            MsgOut.Color := MsgList.Color;
+            MsgOut.Font.Assign(MsgList.Font);
+            treeRoster.Color := MsgList.Color;
+            //treeRoster.Font.Assign(MsgList.Font);
+            Caption := tmp_jid.user + ' Room';
+            end;
+        tmp_jid.Free();
+        room_list.AddObject(rjid, f);
         end;
 
+    f.Show;
     if f.TabSheet <> nil then
         frmJabber.Tabs.ActivePage := f.TabSheet;
-
-    tmp_jid.Free();
-    room_list.Add(rjid);
     Result := f;
 end;
 
