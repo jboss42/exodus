@@ -2768,6 +2768,12 @@ begin
     // processing of Editing events
     getNodeType();
     ri := _cur_ritem;
+
+    if (ri = nil) then begin
+        MessageDlgW(_(sNoContactsSel), mtError, [mbOK], 0);
+        exit;
+    end;
+
     nick := ri.Nickname;
     if (InputQueryW(_('Rename Roster Item'), _('New Nickname: '), nick)) then begin
         ri.Nickname := nick;
