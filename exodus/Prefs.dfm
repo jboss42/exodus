@@ -1,8 +1,8 @@
 object frmPrefs: TfrmPrefs
-  Left = 274
-  Top = 168
-  Width = 410
-  Height = 427
+  Left = 265
+  Top = 150
+  Width = 407
+  Height = 406
   Caption = 'Exodus Preferences'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,7 +20,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 356
+    Height = 340
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1378,10 +1378,12 @@ object frmPrefs: TfrmPrefs
   object PageControl1: TPageControl
     Left = 89
     Top = 0
-    Width = 313
-    Height = 356
+    Width = 310
+    Height = 340
     ActivePage = tbsRoster
     Align = alClient
+    Constraints.MinHeight = 340
+    Constraints.MinWidth = 310
     Style = tsFlatButtons
     TabIndex = 0
     TabOrder = 1
@@ -1398,7 +1400,7 @@ object frmPrefs: TfrmPrefs
       object StaticText1: TStaticText
         Left = 0
         Top = 0
-        Width = 305
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1469,7 +1471,7 @@ object frmPrefs: TfrmPrefs
       object StaticText2: TStaticText
         Left = 0
         Top = 0
-        Width = 305
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1653,7 +1655,7 @@ object frmPrefs: TfrmPrefs
       object StaticText3: TStaticText
         Left = 0
         Top = 0
-        Width = 305
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1726,7 +1728,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 305
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1836,7 +1838,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 305
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2044,7 +2046,7 @@ object frmPrefs: TfrmPrefs
       object StaticText6: TStaticText
         Left = 0
         Top = 0
-        Width = 305
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2102,7 +2104,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 305
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2180,7 +2182,7 @@ object frmPrefs: TfrmPrefs
       object Label1: TLabel
         Left = 0
         Top = 20
-        Width = 305
+        Width = 302
         Height = 26
         Align = alTop
         Caption = 
@@ -2191,7 +2193,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 305
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2209,8 +2211,8 @@ object frmPrefs: TfrmPrefs
       object memKeywords: TMemo
         Left = 0
         Top = 46
-        Width = 305
-        Height = 279
+        Width = 302
+        Height = 263
         Align = alClient
         TabOrder = 1
       end
@@ -2221,7 +2223,7 @@ object frmPrefs: TfrmPrefs
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 305
+        Width = 292
         Height = 26
         Align = alTop
         Caption = 
@@ -2232,7 +2234,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 305
+        Width = 146
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2262,7 +2264,7 @@ object frmPrefs: TfrmPrefs
       object lstCustomPres: TListBox
         Left = 0
         Top = 20
-        Width = 305
+        Width = 302
         Height = 109
         Align = alTop
         ItemHeight = 13
@@ -2272,7 +2274,7 @@ object frmPrefs: TfrmPrefs
       object StaticText10: TStaticText
         Left = 0
         Top = 0
-        Width = 305
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2290,7 +2292,7 @@ object frmPrefs: TfrmPrefs
       object pnlCustomPresButtons: TPanel
         Left = 0
         Top = 129
-        Width = 305
+        Width = 302
         Height = 34
         Align = alTop
         BevelOuter = bvNone
@@ -2434,8 +2436,8 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 356
-    Width = 402
+    Top = 340
+    Width = 399
     Height = 37
     Align = alBottom
     BevelOuter = bvNone
@@ -2444,14 +2446,14 @@ object frmPrefs: TfrmPrefs
     object Bevel1: TBevel
       Left = 0
       Top = 0
-      Width = 402
+      Width = 399
       Height = 5
       Align = alTop
       Shape = bsTopLine
       Visible = False
     end
     object Panel3: TPanel
-      Left = 161
+      Left = 158
       Top = 5
       Width = 241
       Height = 32

@@ -1,6 +1,6 @@
 object frmRoom: TfrmRoom
-  Left = 282
-  Top = 237
+  Left = 257
+  Top = 217
   Width = 443
   Height = 349
   Caption = 'Conference Room'
