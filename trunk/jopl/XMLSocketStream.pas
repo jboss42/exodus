@@ -227,12 +227,19 @@ begin
     if _Stage = 0 then begin
         // We can't connect
         _socket := nil;
-        if E is EIdSocketError then
-            _Data := 'Could not connect to the server.'
+        if E is EIdSocketError then begin
+            se := E as EIdSocketError;
+            if (se.LastError = 10060) then begin
+                _Data := 'Server not listening on that port.';
+                doMessage(WM_TIMEOUT);
+                exit;
+                end;
+            _Data := 'Could not connect to the server.';
+            end
         else
             _Data := 'Exception: ' + E.Message;
         doMessage(WM_COMMERROR);
-    end
+        end
     else begin
         // Some exception occured during Read ops
         _socket := nil;
@@ -421,6 +428,24 @@ begin
                 end;
             end;
 
+        WM_TIMEOUT: begin
+            // That server isn't listening on that port.
+            KillSocket();
+            if _thread <> nil then
+                tmps := _thread.Data
+            else
+                tmps := '';
+
+            // show the exception
+            DoDataCallbacks(false, tmps);
+
+            _timer.Enabled := false;
+            _active := false;
+            _thread := nil;
+            DoCallbacks('commtimeout', nil);
+            DoCallbacks('disconnected', nil);
+            end;
+            
         WM_COMMERROR: begin
             // There was a COMM ERROR
             KillSocket();
@@ -483,6 +508,7 @@ begin
     _socket := TIdTCPClient.Create(nil);
     _socket.RecvBufferSize := 4096;
     _socket.Port := _profile.port;
+    _socket.UseNagle := false;
     {$ifdef INDY9}
     if (_profile.ssl) then
         _socket.IOHandler := _ssl_int;

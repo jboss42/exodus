@@ -414,6 +414,9 @@ begin
     else if msg = 'disconnected' then
         Self.handleDisconnect()
 
+    else if msg = 'commtimeout' then
+        _dispatcher.DispatchSignal('/session/commtimeout', nil)
+        
     else if msg = 'commerror' then
         _dispatcher.DispatchSignal('/session/commerror', nil)
 
