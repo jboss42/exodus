@@ -1,0 +1,43 @@
+2003-11-24 10:23  hildjj
+
+	* exodus/: default.po, version.h, version.nsi: daily build
+
+2003-11-24 00:06  pgmillard
+
+	* exodus/: default.po, plugins/AIM-Import/ExodusCOM_TLB.pas,
+	  plugins/ASpeller/ExodusCOM_TLB.pas,
+	  plugins/ICQ-Import/ExodusCOM_TLB.pas,
+	  plugins/JabberStats/ExodusCOM_TLB.pas,
+	  plugins/NetMeeting/ExodusCOM_TLB.pas,
+	  plugins/RosterTools/ExodusCOM_TLB.pas, prefs/PrefNotify.pas: More
+	  i18n stuff.. Make sure we translate the notification options.
+
+2003-11-23 23:49  pgmillard
+
+	* exodus/: BaseChat.pas, JoinRoom.dfm, JoinRoom.pas, Profile.dfm,
+	  Profile.pas, prefs/PrefFont.dfm, prefs/PrefFont.pas,
+	  prefs/PrefGroups.dfm, prefs/PrefNotify.dfm, prefs/PrefNotify.pas,
+	  prefs/PrefPlugins.dfm, prefs/PrefPlugins.pas,
+	  prefs/PrefPresence.dfm, prefs/PrefSubscription.dfm,
+	  prefs/PrefSystem.dfm, prefs/PrefSystem.pas,
+	  prefs/PrefTransfer.dfm, prefs/PrefTransfer.pas: More unicode
+	  stuff... URL labels, etc..
+
+2003-11-23 23:07  pgmillard
+
+	* exodus/: BaseChat.pas, COMController.pas, ConnDetails.dfm,
+	  ConnDetails.pas, CustomNotify.dfm, CustomNotify.pas,
+	  ExGettextUtils.pas, Exodus.dpr, ExodusCOM_TLB.pas, Profile.dfm,
+	  Profile.pas, Room.pas, fGeneric.pas, xdata.pas,
+	  prefs/PrefNetwork.dfm, prefs/PrefNetwork.pas,
+	  prefs/PrefNotify.dfm, prefs/PrefNotify.pas,
+	  prefs/PrefPresence.dfm, prefs/PrefPresence.pas,
+	  prefs/PrefSubscription.dfm, prefs/PrefSubscription.pas: More i18n
+	  stuff. Add class specific handlers for combo boxes and RadioGroup
+	  TNT controls since they core gnuGetText
+
+2003-11-22 12:56  llong
+
+	* exodus/locale/pt_PT/LC_MESSAGES/default.po: Translated the new
+	  strings to synchronize with version 1.60 of the main default.po
+
