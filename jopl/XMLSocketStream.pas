@@ -98,7 +98,7 @@ type
         _socket: TidTCPClient;
         _stage: integer;
         _data: WideString;
-
+        _remain_utf: string;
     protected
         procedure Run; override;
         procedure Sock_Connect(Sender: TObject);
@@ -122,7 +122,7 @@ uses
     {$ifdef INDY9}
     HttpProxyIOHandler,
     {$endif}
-    Classes;
+    StrUtils, Classes;
 
 {---------------------------------------}
 {      TSocketThread Class                }
@@ -152,8 +152,8 @@ end;
 {---------------------------------------}
 procedure TSocketThread.Run;
 var
-    bytes: longint;
-    utf: string;
+    l, i, bytes: longint;
+    inp, utf: string;
     buff: WideString;
 begin
     {
@@ -203,7 +203,25 @@ begin
             // utf := _Socket.CurrentReadBuffer;
             _socket.ReadFromStack();
             utf := _socket.InputBuffer.Extract(_socket.InputBuffer.Size);
-            buff := UTF8Decode(utf);
+
+            if ((_remain_utf) <> '') then
+                inp := _remain_utf + utf
+            else
+                inp := utf;
+
+            // look for incomplete UTF chars, anything < $80 is ok
+            // to truncate at.
+            l := Length(inp);
+            i := l;
+            while ((i > 0) and (ord(inp[i]) > $80)) do
+                dec(i);
+
+            if (i < l) then begin
+                _remain_utf := RightStr(inp, l - i);
+                inp := LeftStr(inp, i);
+            end;
+
+            buff := UTF8Decode(inp);
 
             // We are shutting down, or we've got an exception, so just bail
             if ((Self.Stopped) or (Self.Suspended) or (Self.Terminated)) then
