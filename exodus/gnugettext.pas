@@ -15,56 +15,8 @@ unit gnugettext;
 
 interface
 
-{$ifdef VER100}
-  // Delphi 3
-  {$DEFINE DELPHI5OROLDER}
-  {$DEFINE DELPHI6OROLDER}
-{$endif}
-{$ifdef VER110}
-  // C++ Builder 3
-  {$DEFINE DELPHI5OROLDER}
-  {$DEFINE DELPHI6OROLDER}
-{$endif}
-{$ifdef VER120}
-  // Delphi 4
-  {$DEFINE DELPHI5OROLDER}
-  {$DEFINE DELPHI6OROLDER}
-{$endif}
-{$ifdef VER125}
-  // C++ Builder 4
-  {$DEFINE DELPHI5OROLDER}
-  {$DEFINE DELPHI6OROLDER}
-{$endif}
-{$ifdef VER130}
-  // Delphi 5
-  {$DEFINE DELPHI5OROLDER}
-  {$DEFINE DELPHI6OROLDER}
-  {$ifdef WIN32}
-  {$DEFINE MSWINDOWS}
-  {$endif}
-{$endif}
-{$ifdef VER135}
-  // C++ Builder 5
-  {$DEFINE DELPHI5OROLDER}
-  {$DEFINE DELPHI6OROLDER}
-  {$ifdef WIN32}
-  {$DEFINE MSWINDOWS}
-  {$endif}
-{$endif}
-{$ifdef VER140}
-  // Delphi 6
-{$ifdef MSWINDOWS}
-  {$DEFINE DELPHI6OROLDER}
-{$endif}
-{$endif}
-{$ifdef VER150}
-  // Delphi 7
-{$endif}
 
 uses
-{$ifdef DELPHI5OROLDER}
-  gnugettextD5,
-{$endif}
   Classes, SysUtils, TypInfo;
 
 (*****************************************************************************)
@@ -97,6 +49,8 @@ function LoadResString(ResStringRec: PResStringRec): widestring;
 function LoadResStringA(ResStringRec: PResStringRec): ansistring;
 function LoadResStringW(ResStringRec: PResStringRec): widestring;
 
+// This returns an empty string if not translated or translator name is not specified.
+function GetTranslatorNameAndEmail:widestring;
 
 
 (*****************************************************************************)
@@ -154,6 +108,8 @@ function GetCurrentLanguage:string;
 // Only use these, if you need to split up your translation into several
 // .mo files.
 function dgettext(const szDomain: string; const szMsgId: widestring): widestring; 
+function dngettext(const szDomain: string; const singular,plural: widestring; Number:longint): widestring;
+function ngettext(const singular,plural: widestring; Number:longint): widestring;
 procedure textdomain(const szDomain: string);
 function getcurrenttextdomain: string;
 procedure bindtextdomain(const szDomain: string; const szDirectory: string);
@@ -172,8 +128,9 @@ procedure bindtextdomain(const szDomain: string; const szDirectory: string);
 type
   TExecutable=
     class
-      procedure Execute; virtual; abstract; 
+      procedure Execute; virtual; abstract;
     end;
+  TGetPluralForm=function (Number:Longint):Integer;
   TGnuGettextInstance=
     class   // Do not create multiple instances on Linux!
     public
@@ -181,8 +138,11 @@ type
       constructor Create;
       destructor Destroy; override;
       procedure UseLanguage(LanguageCode: string);
-      function gettext(const szMsgId: widestring): widestring; 
+      function gettext(const szMsgId: widestring): widestring;
+      function ngettext(const singular,plural:widestring;Number:longint):widestring;
       function GetCurrentLanguage:string;
+      function GetTranslationProperty (Propertyname:string):WideString;
+      function GetTranslatorNameAndEmail:widestring;
 
       // Form translation tools, these are not threadsafe. All TP_ procs must be called just before TranslateProperites()
       procedure TP_Ignore(AnObject:TObject; const name:string);
@@ -195,14 +155,18 @@ type
 
       // Multi-domain functions
       function dgettext(const szDomain: string; const szMsgId: widestring): widestring;
+      function dngettext(const szDomain,singular,plural:widestring;Number:longint):widestring;
       procedure textdomain(const szDomain: string);
       function getcurrenttextdomain: string;
       procedure bindtextdomain(const szDomain: string; const szDirectory: string);
 
       // Debugging and advanced tools
       procedure SaveUntranslatedMsgids(filename: string);
+    protected
+      procedure TranslateStrings (sl:TStrings;TextDomain:string);
     private
       curlang: string;
+      curGetPluralForm:TGetPluralForm;
       curmsgdomain: string;
       savefileCS: TMultiReadExclusiveWriteSynchronizer;
       savefile: TextFile;
@@ -222,8 +186,16 @@ var
 
 implementation
 
+{$ifndef MSWINDOWS}
+{$ifndef LINUX}
+  'This version of gnugettext.pas is only meant to be compiled with Kylix 3,'
+  'Delphi 6, Delphi 7 and later versions. If you use other versions, please'
+  'get the gnugettext.pas version from the Delphi 5 directory.'
+{$endif}
+{$endif}
+
 {$ifdef MSWINDOWS}
-{$ifndef DELPHI6OROLDER}
+{$ifndef VER140}
 {$WARN UNSAFE_TYPE OFF}
 {$WARN UNSAFE_CODE OFF}
 {$WARN UNSAFE_CAST OFF}
@@ -231,9 +203,6 @@ implementation
 {$endif}
 
 uses
-  {$ifdef DELPHI5OROLDER}
-  FileCtrl,
-  {$endif}
   {$ifdef MSWINDOWS}
   Windows;
   {$endif}
@@ -280,6 +249,7 @@ type
     public
       LastLanguage:string;
       Retranslator:TExecutable;
+      destructor Destroy; override;
     end;
   TDomain =
     class
@@ -359,6 +329,11 @@ begin
     if s[i]=#13 then delete (s,i,1) else inc (i);
   end;
   Result:=s;
+end;
+
+function GGGetEnvironmentVariable (name:string):string;
+begin
+  Result:=SysUtils.GetEnvironmentVariable(name);
 end;
 
 function LF2LineBreakA (s:string):string;
@@ -446,6 +421,16 @@ end;
 function dgettext(const szDomain: string; const szMsgId: widestring): widestring;
 begin
   Result:=DefaultInstance.dgettext(szDomain, szMsgId);
+end;
+
+function dngettext(const szDomain: string; const singular,plural: widestring; Number:longint): widestring;
+begin
+  Result:=DefaultInstance.dngettext(szDomain,singular,plural,Number);
+end;
+
+function ngettext(const singular,plural: widestring; Number:longint): widestring;
+begin
+  Result:=DefaultInstance.ngettext(singular,plural,Number);
 end;
 
 procedure textdomain(const szDomain: string);
@@ -676,6 +661,11 @@ begin
   {$endif}
 end;
 
+function GetTranslatorNameAndEmail:widestring;
+begin
+  Result:=DefaultInstance.GetTranslatorNameAndEmail;
+end;
+
 procedure UseLanguage(LanguageCode: string);
 begin
   DefaultInstance.UseLanguage(LanguageCode);
@@ -819,18 +809,20 @@ end;
 
 function TDomain.gettextbyid(id: cardinal): ansistring;
 var
-  offset: cardinal;
+  offset, size: cardinal;
 begin
-  offset := CardinalInMem (momemory,O+8*id+4);
-  Result := strpas(momemory+offset);
+  offset:=CardinalInMem (momemory,O+8*id+4);
+  size:=CardinalInMem (momemory,O+8*id);
+  SetString (Result,momemory+offset,size);
 end;
 
 function TDomain.getdsttextbyid(id: cardinal): ansistring;
 var
-  offset: cardinal;
+  offset, size: cardinal;
 begin
-  offset := CardinalInMem (momemory,T+8*id+4);
-  Result := strpas(momemory+offset);
+  offset:=CardinalInMem (momemory,T+8*id+4);
+  size:=CardinalInMem (momemory,T+8*id);
+  SetString (Result,momemory+offset,size);
 end;
 
 function TDomain.gettext(msgid: ansistring): ansistring;
@@ -1022,6 +1014,96 @@ begin
   curlang:=langcode;
 end;
 
+function GetPluralForm2EN(Number: Integer): Integer;
+begin
+  Number:=abs(Number);
+  if Number=1 then Result:=0 else Result:=1;
+end;
+
+function GetPluralForm1(Number: Integer): Integer;
+begin
+  Result:=0;
+end;
+
+function GetPluralForm2FR(Number: Integer): Integer;
+begin
+  Number:=abs(Number);
+  if (Number=1) or (Number=0) then Result:=0 else Result:=1;
+end;
+
+function GetPluralForm3LV(Number: Integer): Integer;
+begin
+  Number:=abs(Number);
+  if (Number mod 10=1) and (Number mod 100<>11) then
+    Result:=0
+  else
+    if Number<>0 then Result:=1
+                 else Result:=2;
+end;
+
+function GetPluralForm3GA(Number: Integer): Integer;
+begin
+  Number:=abs(Number);
+  if Number=1 then Result:=0
+  else if Number=2 then Result:=1
+  else Result:=2;
+end;
+
+function GetPluralForm3LT(Number: Integer): Integer;
+var
+  n1,n2:byte;
+begin
+  Number:=abs(Number);
+  n1:=Number mod 10;
+  n2:=Number mod 100;
+  if (n1=1) and (n2<>11) then
+    Result:=0
+  else
+    if (n1>=2) and ((n2<10) or (n2>=20)) then Result:=1
+    else Result:=2;
+end;
+
+function GetPluralForm3PL(Number: Integer): Integer;
+var
+  n1,n2:byte;
+begin
+  Number:=abs(Number);
+  n1:=Number mod 10;
+  n2:=Number mod 100;
+  if n1=1 then Result:=0
+  else if (n1>=2) and (n1<=4) and ((n2<10) or (n2>=20)) then Result:=1
+  else Result:=2;
+end;
+
+function GetPluralForm3RU(Number: Integer): Integer;
+var
+  n1,n2:byte;
+begin
+  Number:=abs(Number);
+  n1:=Number mod 10;
+  n2:=Number mod 100;
+  if (n1=1) and (n2<>11) then
+    Result:=0
+  else
+    if (n1>=2) and (n1<=4) and ((n2<10) or (n2>=20)) then Result:=1
+    else Result:=2;
+end;
+
+function GetPluralForm4SL(Number: Integer): Integer;
+var
+  n2:byte;
+begin
+  Number:=abs(Number);
+  n2:=Number mod 100;
+  if n2=1 then Result:=0
+  else
+  if n2=2 then Result:=1
+  else
+  if (n2=3) or (n2=4) then Result:=2
+  else
+    Result:=3;
+end;
+
 { TGnuGettextInstance }
 
 procedure TGnuGettextInstance.bindtextdomain(const szDomain,
@@ -1045,6 +1127,7 @@ constructor TGnuGettextInstance.Create;
 var
   lang: string;
 begin
+  curGetPluralForm:=GetPluralForm2EN;
   Enabled:=True;
   curmsgdomain:=DefaultTextDomain;
   savefileCS := TMultiReadExclusiveWriteSynchronizer.Create;
@@ -1113,6 +1196,8 @@ begin
   end else begin
     Result:=UTF8Decode(LF2LineBreakA(getdomain(domainlist,szDomain,DefaultDomainDirectory,CurLang).gettext(StripCR(utf8encode(szMsgId)))));
   end;
+  if (szMsgId<>'') and (Result='') then
+    raise Exception.Create (Format('Error: Could not translate %s. Probably because the mo file doesn''t contain utf-8 encoded translations.',[szMsgId]));
   if (Result = szMsgId) and (szDomain = DefaultTextDomain) then
     SaveCheck(szMsgId);
 end;
@@ -1303,17 +1388,11 @@ end;
 
 procedure TGnuGettextInstance.TranslateProperty (AnObject:TObject; PropInfo:PPropInfo; TodoList:TStrings; TextDomain:string);
 var
-  {$ifdef DELPHI5OROLDER}
-  ws: string;
-  old: string;
-  Data: PTypeData;
-  {$endif}
-  {$ifndef DELPHI5OROLDER}
   ppi:PPropInfo;
   ws: WideString;
   old: WideString;
-  {$endif}
-  sl:TObject;
+  obj:TObject;
+  sl:TStrings;
   i, k:integer;
   Propname:string;
 begin
@@ -1323,54 +1402,42 @@ begin
     case PropInfo^.PropType^.Kind of
       tkString, tkLString, tkWString:
         begin
-          {$ifdef DELPHI5OROLDER}
-          old := GetStrProp(AnObject, PropName);
-          {$endif}
-          {$ifndef DELPHI5OROLDER}
           old := GetWideStrProp(AnObject, PropName);
-          {$endif}
           if (old <> '') and (IsWriteProp(PropInfo)) then begin
             if TP_Retranslator<>nil then
               (TP_Retranslator as TTP_Retranslator).Remember(AnObject, PropName, old);
             ws := dgettext(textdomain,old);
             if ws <> old then begin
-              {$ifdef DELPHI5OROLDER}
-              SetStrProp(AnObject, PropName, ws);
-              {$endif}
-              {$ifndef DELPHI5OROLDER}
               ppi:=GetPropInfo(AnObject, Propname);
               if ppi=nil then
                 raise Exception.Create ('Property disappeared...');
               SetWideStrProp(AnObject, ppi, ws);
-              {$endif}
             end;
           end;
         end { case item };
       tkClass:
         begin
-          sl:=GetObjectProp(AnObject, PropName);
-          if sl<>nil then begin
+          obj:=GetObjectProp(AnObject, PropName);
+          if obj<>nil then begin
             // Check the global class ignore list
             for k:=0 to TP_ClassHandling.Count-1 do begin
               if AnObject.InheritsFrom(TClass(TP_ClassHandling.Items[k])) then
                 exit;
             end;
             // Check for TStrings translation
-            if sl is TStrings then begin
-              old := TStrings(sl).Text;
-              if old <> '' then begin
-                if TP_Retranslator<>nil then
-                  (TP_Retranslator as TTP_Retranslator).Remember(sl, 'Text', old);
-                ws := dgettext(textdomain,old);
-                if (old <> ws) then begin
-                  TStrings(sl).Text := ws;
-                end;
-              end
+            if obj is TStrings then begin
+              sl:=obj as TStrings;
+              if (sl.Text<>'') and (TP_Retranslator<>nil) then
+                (TP_Retranslator as TTP_Retranslator).Remember(obj, 'Text', sl.Text);
+              TranslateStrings (sl,TextDomain);
             end else
             // Check for TCollection
-            if sl is TCollection then
-              for i := 0 to TCollection(sl).Count - 1 do
-                TodoList.AddObject('',TCollection(sl).Items[i]);
+            if obj is TCollection then
+              for i := 0 to TCollection(obj).Count - 1 do
+                TodoList.AddObject('',TCollection(obj).Items[i]);
+            // Check for TComponent
+            if obj is TComponent then
+              TodoList.AddObject ('',obj);
           end { if not nil };
         end { case item };
       end { case };
@@ -1407,12 +1474,10 @@ begin
     TodoList.AddObject('', AnObject);
     DoneList.Sorted:=True;
     ObjectPropertyIgnoreList.Sorted:=True;
-    {$ifndef DELPHI5OROLDER}
     ObjectPropertyIgnoreList.Duplicates:=dupIgnore;
     ObjectPropertyIgnoreList.CaseSensitive:=False;
     DoneList.Duplicates:=dupError;
     DoneList.CaseSensitive:=True;
-    {$endif}
 
     while TodoList.Count<>0 do begin
       AnObject:=TodoList.Objects[0];
@@ -1423,7 +1488,7 @@ begin
         Assert (sizeof(integer)=sizeof(TObject));
         objid:=IntToHex(integer(AnObject),8);
         if DoneList.Find(objid,i) then begin
-          exit;
+          continue;
         end else begin
           DoneList.Add(objid);
         end;
@@ -1448,21 +1513,11 @@ begin
           // Ignore or use special handler
           if Assigned(currentcm.SpecialHandler) then
             currentcm.SpecialHandler (AnObject);
-          exit;
+          continue;
         end;
 
-        {$ifdef DELPHI5OROLDER}
-        Data := GetTypeData(AnObject.Classinfo);
-        Count := Data^.PropCount;
-        GetMem(PropList, Count * Sizeof(PPropInfo));
-        {$endif}
         try
-          {$ifdef DELPHI5OROLDER}
-          GetPropInfos(AnObject.ClassInfo, PropList);
-          {$endif}
-          {$ifndef DELPHI5OROLDER}
           Count := GetPropList(AnObject, PropList);
-          {$endif}
           for j := 0 to Count - 1 do begin
             PropInfo := PropList[j];
             UPropName:=uppercase(PropInfo^.Name);
@@ -1474,9 +1529,9 @@ begin
             end;  // if
           end;  // for
         finally
-          {$ifdef DELPHI5OROLDER}
-          FreeMem(PropList, Data^.PropCount * Sizeof(PPropInfo));
-          {$endif}
+        end;
+        if AnObject is TStrings then begin
+          TranslateStrings (AnObject as TStrings,TextDomain);
         end;
         if AnObject is TComponent then
           for i := 0 to TComponent(AnObject).ComponentCount - 1 do begin
@@ -1500,9 +1555,10 @@ procedure TGnuGettextInstance.UseLanguage(LanguageCode: string);
 var
   i,p:integer;
   dom:TDomain;
+  l2:string[2];
 begin
   if LanguageCode='' then begin
-    LanguageCode:=GetEnvironmentVariable('LANG');
+    LanguageCode:=GGGetEnvironmentVariable('LANG');
     {$ifdef MSWINDOWS}
     if LanguageCode='' then
       LanguageCode:=GetWindowsLanguage;
@@ -1521,6 +1577,101 @@ begin
   {$ifdef LINUX}
   setlocale (LC_MESSAGES, PChar(LanguageCode));
   {$endif}
+
+  l2:=lowercase(copy(curlang,1,2));
+  if (l2='en') or (l2='de') then curGetPluralForm:=GetPluralForm2EN else
+  if (l2='hu') or (l2='ko') or (l2='zh') or (l2='ja') or (l2='tr') then curGetPluralForm:=GetPluralForm1 else
+  if (l2='fr') or (l2='fa') or (lowercase(curlang)='pt_br') then curGetPluralForm:=GetPluralForm2FR else
+  if (l2='lv') then curGetPluralForm:=GetPluralForm3LV else
+  if (l2='ga') then curGetPluralForm:=GetPluralForm3GA else
+  if (l2='lt') then curGetPluralForm:=GetPluralForm3LT else
+  if (l2='ru') or (l2='cs') or (l2='sk') or (l2='uk') or (l2='hr') then curGetPluralForm:=GetPluralForm3RU else
+  if (l2='pl') then curGetPluralForm:=GetPluralForm3PL else
+  if (l2='sl') then curGetPluralForm:=GetPluralForm4SL else
+    curGetPluralForm:=GetPluralForm2EN
+end;
+
+procedure TGnuGettextInstance.TranslateStrings(sl: TStrings;TextDomain:string);
+var
+  s:TStringList;
+  line:string;
+  i:integer;
+begin
+  s:=TStringList.Create;
+  try
+    s.AddStrings (sl);
+    for i:=0 to s.Count-1 do begin
+      line:=s.Strings[i];
+      if line<>'' then
+        s.Strings[i]:=dgettext(TextDomain,line);
+    end;
+    sl.Text:=s.Text;
+  finally
+    FreeAndNil (s);
+  end;
+end;
+
+function TGnuGettextInstance.GetTranslatorNameAndEmail: widestring;
+begin
+  Result:=GetTranslationProperty('LAST-TRANSLATOR');
+end;
+
+function TGnuGettextInstance.GetTranslationProperty(
+  Propertyname: string): WideString;
+var
+  sl:TStringList;
+  i:integer;
+  s:string;
+begin
+  Propertyname:=uppercase(Propertyname)+': ';
+  sl:=TStringList.Create;
+  try
+    sl.Text:=utf8encode(gettext(''));
+    for i:=0 to sl.Count-1 do begin
+      s:=sl.Strings[i];
+      if uppercase(copy(s,1,length(Propertyname)))=Propertyname then begin
+        Result:=utf8decode(trim(copy(s,length(PropertyName)+1,maxint)));
+        exit;
+      end;
+    end;
+  finally
+    FreeAndNil (sl);
+  end;
+  Result:='';
+end;
+
+function TGnuGettextInstance.dngettext(const szDomain,singular, plural: widestring;
+  Number: Integer): widestring;
+var
+  org,trans:widestring;
+  idx:integer;
+  p:integer;
+begin
+  org:=singular+#0+plural;
+  trans:=dgettext(szDomain,org);
+  if org=trans then
+    idx:=GetPluralForm2EN(Number)
+  else
+    idx:=curGetPluralForm(Number);
+  while true do begin
+    p:=pos(#0,trans);
+    if p=0 then begin
+      Result:=trans;
+      exit;
+    end;
+    if idx=0 then begin
+      Result:=copy(trans,1,p-1);
+      exit;
+    end;
+    delete (trans,1,p);
+    dec (idx);
+  end;
+end;
+
+function TGnuGettextInstance.ngettext(const singular, plural: widestring;
+  Number: Integer): widestring;
+begin
+  Result := dngettext(curmsgdomain, singular, plural, Number);
 end;
 
 { TClassMode }
@@ -1592,12 +1743,8 @@ begin
   filelist.Duplicates:=dupError;
   filelist.CaseSensitive:=True;
   {$endif}
-  {$ifndef DELPHI5OROLDER}
-  {$ifdef MSWINDOWS}
   filelist.Duplicates:=dupError;
   filelist.CaseSensitive:=False;
-  {$endif}
-  {$endif}
   filelist.Sorted:=True;
 end;
 
@@ -1667,29 +1814,23 @@ end;
 procedure TTP_Retranslator.Execute;
 var
   i:integer;
+  sl:TStrings;
   item:TTP_RetranslatorItem;
   newvalue:WideString;
-  {$ifndef DELPHI5OROLDER}
   ppi:PPropInfo;
-  {$endif}
 begin
   for i:=0 to list.Count-1 do begin
     item:=TObject(list.items[i]) as TTP_RetranslatorItem;
-    newValue:=instance.dgettext(textdomain,item.OldValue);
     if item.obj is TStrings then begin
-      if uppercase(item.Propname)='TEXT' then begin
-        (item.obj as TStrings).Text:=newValue;
-      end;
+      sl:=item.obj as TStrings;
+      sl.Text:=item.OldValue;
+      Instance.TranslateStrings(sl,textdomain);
     end else begin
-      {$ifdef DELPHI5OROLDER}
-      SetStrProp(item.obj, item.PropName, newValue);
-      {$endif}
-      {$ifndef DELPHI5OROLDER}
+      newValue:=instance.dgettext(textdomain,item.OldValue);
       ppi:=GetPropInfo(item.obj, item.Propname);
       if ppi=nil then
         raise Exception.Create ('Property disappeared...');
       SetWideStrProp(item.obj, ppi, newValue);
-      {$endif}
     end;
   end;
 end;
@@ -1704,6 +1845,14 @@ begin
   item.Propname:=Propname;
   item.OldValue:=OldValue;
   list.Add(item);
+end;
+
+{ TGnuGettextComponentMarker }
+
+destructor TGnuGettextComponentMarker.Destroy;
+begin
+  FreeAndNil (Retranslator);
+  inherited;
 end;
 
 initialization

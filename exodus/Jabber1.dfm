@@ -30,14 +30,14 @@ object frmExodus: TfrmExodus
   object SplitterLeft: TSplitter
     Left = 57
     Top = 27
-    Height = 309
+    Height = 311
     OnMoved = SplitterRightMoved
   end
   object Tabs: TPageControl
     Left = 60
     Top = 27
     Width = 153
-    Height = 309
+    Height = 311
     ActivePage = tbsRoster
     Align = alClient
     DockSite = True
@@ -68,7 +68,7 @@ object frmExodus: TfrmExodus
       object SplitterRight: TSplitter
         Left = 105
         Top = 0
-        Height = 280
+        Height = 281
         ResizeStyle = rsUpdate
         OnMoved = SplitterRightMoved
       end
@@ -76,7 +76,7 @@ object frmExodus: TfrmExodus
         Left = 0
         Top = 0
         Width = 105
-        Height = 280
+        Height = 281
         Align = alLeft
         BevelOuter = bvNone
         BorderWidth = 1
@@ -89,7 +89,7 @@ object frmExodus: TfrmExodus
         Left = 108
         Top = 0
         Width = 37
-        Height = 280
+        Height = 281
         Align = alClient
         BevelOuter = bvNone
         Caption = 'THIS IS PNLRIGHT'
@@ -205,25 +205,26 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 27
     Width = 57
-    Height = 309
+    Height = 311
     Align = alLeft
     BevelOuter = bvNone
     BorderWidth = 1
     TabOrder = 2
   end
   object MainMenu1: TMainMenu
+    AutoHotkeys = maManual
     Images = ImageList2
     Left = 52
     Top = 74
     object Exodus1: TMenuItem
-      Caption = 'Exodus'
+      Caption = '&Exodus'
       object Test1: TMenuItem
         Caption = 'Test'
         Visible = False
         OnClick = Test1Click
       end
       object Connect2: TMenuItem
-        Caption = 'Sign On/Off'
+        Caption = 'Sign &On/Off'
         ShortCut = 120
         OnClick = btnConnectClick
       end
@@ -231,7 +232,7 @@ object frmExodus: TfrmExodus
         Caption = '-'
       end
       object View1: TMenuItem
-        Caption = 'View'
+        Caption = '&View'
         object mnuToolbar: TMenuItem
           Caption = 'Show Toolbar'
           OnClick = mnuToolbarClick
@@ -251,7 +252,7 @@ object frmExodus: TfrmExodus
         end
       end
       object ClearMessages1: TMenuItem
-        Caption = 'Clear Events'
+        Caption = 'Clear &Events'
         ShortCut = 16430
         OnClick = ClearMessages1Click
       end
@@ -259,17 +260,17 @@ object frmExodus: TfrmExodus
         Caption = '-'
       end
       object mnuMessage: TMenuItem
-        Caption = 'Send Message'
+        Caption = 'Send &Message'
         ShortCut = 116
         OnClick = mnuMessageClick
       end
       object mnuChat: TMenuItem
-        Caption = 'Start Chat'
+        Caption = 'Start &Chat'
         ShortCut = 117
         OnClick = mnuChatClick
       end
       object mnuConference: TMenuItem
-        Caption = 'Join a Conference'
+        Caption = '&Join a Conference'
         ShortCut = 118
         OnClick = mnuConferenceClick
       end
@@ -277,47 +278,47 @@ object frmExodus: TfrmExodus
         Caption = '-'
       end
       object mnuRegisterService: TMenuItem
-        Caption = 'Register with a Service'
+        Caption = '&Register with a Service'
         OnClick = mnuRegisterServiceClick
       end
       object mnuPassword: TMenuItem
-        Caption = 'Change Jabber Password'
+        Caption = 'Change Jabber &Password'
         OnClick = mnuPasswordClick
       end
       object N9: TMenuItem
         Caption = '-'
       end
       object Exit2: TMenuItem
-        Caption = 'Exit'
+        Caption = 'E&xit'
         ShortCut = 16465
         OnClick = Exit2Click
       end
     end
     object Tools1: TMenuItem
-      Caption = 'Tools'
+      Caption = '&Tools'
       object mnuContacts: TMenuItem
-        Caption = 'Contacts'
+        Caption = '&Contacts'
         object AddPerson1: TMenuItem
-          Caption = 'Add Contact'
+          Caption = '&Add Contact'
           ShortCut = 16462
           OnClick = btnAddContactClick
         end
         object RemovePerson1: TMenuItem
-          Caption = 'Remove a Contact'
+          Caption = '&Remove a Contact'
           OnClick = btnDelPersonClick
         end
         object SearchforPerson1: TMenuItem
-          Caption = 'Search for a Contact'
+          Caption = '&Search for a Contact'
           ShortCut = 16454
           OnClick = SearchforPerson1Click
         end
         object MessageHistory2: TMenuItem
-          Caption = 'Contact'#39's Message History'
+          Caption = 'Contact'#39's Message &History'
           ShortCut = 16456
           OnClick = MessageHistory2Click
         end
         object Properties2: TMenuItem
-          Caption = 'Contact Properties'
+          Caption = 'Contact &Properties'
           ShortCut = 121
           OnClick = Properties2Click
         end
@@ -325,24 +326,24 @@ object frmExodus: TfrmExodus
           Caption = '-'
         end
         object mnuOnline: TMenuItem
-          Caption = 'Show Only Online'
+          Caption = 'Show &Only Online'
           ShortCut = 119
           OnClick = btnOnlineRosterClick
         end
         object NewGroup2: TMenuItem
-          Caption = 'Add Roster Group'
+          Caption = 'Add Roster &Group'
           OnClick = NewGroup2Click
         end
         object N8: TMenuItem
           Caption = '-'
         end
         object SubscribetoPresence2: TMenuItem
-          Caption = 'Subscribe to Presence'
+          Caption = 'Su&bscribe to Presence'
         end
       end
       object mnuPresence: TMenuItem
         AutoHotkeys = maManual
-        Caption = 'Presence'
+        Caption = '&Presence'
         object presOnline: TMenuItem
           AutoHotkeys = maManual
           Caption = 'Online'
@@ -457,26 +458,26 @@ object frmExodus: TfrmExodus
         Caption = '-'
       end
       object mnuRegistration: TMenuItem
-        Caption = 'Edit My Registration'
+        Caption = 'Edit My &Registration'
         OnClick = mnuRegistrationClick
       end
       object mnuMyVCard: TMenuItem
-        Caption = 'Edit My vCard / Profile'
+        Caption = 'Edit My &vCard / Profile'
         OnClick = mnuMyVCardClick
       end
       object N3: TMenuItem
         Caption = '-'
       end
       object mnuVCard: TMenuItem
-        Caption = 'Lookup a vCard'
+        Caption = '&Lookup a vCard'
         OnClick = mnuVCardClick
       end
       object mnuBookmark: TMenuItem
-        Caption = 'Add a Bookmark'
+        Caption = 'Add a Boo&kmark'
         OnClick = mnuBookmarkClick
       end
       object mnuBrowser: TMenuItem
-        Caption = 'Jabber Browser'
+        Caption = 'Jabber &Browser'
         ShortCut = 122
         OnClick = mnuBrowserClick
       end
@@ -501,19 +502,19 @@ object frmExodus: TfrmExodus
         OnClick = ShowXML1Click
       end
       object mnuPlugins: TMenuItem
-        Caption = 'Plugins'
+        Caption = 'Plu&gins'
       end
       object N1: TMenuItem
         Caption = '-'
       end
       object Preferences1: TMenuItem
-        Caption = 'Options...'
+        Caption = '&Options...'
         ShortCut = 115
         OnClick = Preferences1Click
       end
     end
     object Help1: TMenuItem
-      Caption = 'Help'
+      Caption = '&Help'
       object N12: TMenuItem
         Caption = '-'
       end
