@@ -1,21 +1,35 @@
-	Push ${SEC_ExImportAIM}
-	Call TurnOff
+!ifdef LAZARUS
+    !insertmacro SetSectionInInstType "${SEC_ExImportAIM}" "${INSTTYPE_2}"
+!endif
+    !insertmacro UnselectSection "${SEC_ExImportAIM}"
 
-	Push ${SEC_ExAspell}
-	Call TurnOff
+!ifdef LAZARUS
+    !insertmacro SetSectionInInstType "${SEC_ExAspell}" "${INSTTYPE_2}"
+!endif
+    !insertmacro UnselectSection "${SEC_ExAspell}"
 
-	Push ${SEC_ExImportICQ}
-	Call TurnOff
+!ifdef LAZARUS
+    !insertmacro SetSectionInInstType "${SEC_ExImportICQ}" "${INSTTYPE_2}"
+!endif
+    !insertmacro UnselectSection "${SEC_ExImportICQ}"
 
-	Push ${SEC_ExJabberStats}
-	Call TurnOff
+!ifdef LAZARUS
+    !insertmacro SetSectionInInstType "${SEC_ExJabberStats}" "${INSTTYPE_2}"
+!endif
+    !insertmacro UnselectSection "${SEC_ExJabberStats}"
 
-	Push ${SEC_ExWordSpeller}
-	Call TurnOff
+!ifdef LAZARUS
+    !insertmacro SetSectionInInstType "${SEC_ExWordSpeller}" "${INSTTYPE_2}"
+!endif
+    !insertmacro UnselectSection "${SEC_ExWordSpeller}"
 
-	Push ${SEC_ExNetMeeting}
-	Call TurnOff
+!ifdef LAZARUS
+    !insertmacro SetSectionInInstType "${SEC_ExNetMeeting}" "${INSTTYPE_2}"
+!endif
+    !insertmacro UnselectSection "${SEC_ExNetMeeting}"
 
-	Push ${SEC_ExRosterTools}
-	Call TurnOff
+!ifdef LAZARUS
+    !insertmacro SetSectionInInstType "${SEC_ExRosterTools}" "${INSTTYPE_2}"
+!endif
+    !insertmacro UnselectSection "${SEC_ExRosterTools}"
 

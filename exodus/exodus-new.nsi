@@ -21,10 +21,6 @@
 ; BRANDING in this file.
 
 /*
-    2004-02-18 - pgm
-                 Added TurnOff function from old script to resolve dependency
-                 issues. Added {$NSISDIR}\include to include dirs.
-
     2004-02-11 - Lazarus Long <lazarus (dot) long (at) bigfoot (dot) com>
                 (all changes were made implying the usage of a stock 2.0 version
                 of NSIS).
@@ -62,6 +58,24 @@
                - added several functions (didn't keep track of all of them but
                  they all start with "func") and removed one or two (either
                  redundanct or replaced by faster alternatives).
+    2004-02-19 - Lazarus Long <lazarus (dot) long (at) bigfoot (dot) com>
+               - removed the non default naming convention when the LAZARUS
+                 define was set and added version information to the installer
+                 (I just realized that it's better this way, especially for ME,
+                 2K and XP users who see it in the Explorer).
+               - renamed all the scripts that are part of the "new" branch to
+                 avoid naming conflict with the current scripts.
+               - added the ReserveFile for the "ZipDLL.dll" and "System.dll"
+                 plugins.
+               - removed the SubCaption command near the end of the script
+                 (it was redundant and probably remained there from pre-MUI
+                 builds).
+    2004-02-24 - Lazarus Long <lazarus (dot) long (at) bigfoot (dot) com>
+               - implemented the option to remove the user logs when
+                 uninstalling (this implied creating a new "un-notify.ini"
+                 options file).
+               - fixed the warnings about the MSG_NoAdmin string not defined
+                 in functions funcCheckAdmin and un.funcCheckAdmin.
 */
 
 ; exodus.nsi
@@ -71,8 +85,7 @@
 */
 ;!define DEBUG ; yes this is what you are thinking it is...
 ;!define USE_HKLM_KEY ; hookplace in case ever the registry will switch to HKLM
-;!define LAZARUS ; comment out to remove my personal preferences (only affects
-                ; visual changes doesn't touch the funcionality)
+
 !ifdef DEBUG
     !warning "$\r$\nATTENTION:  the DEBUG define is SET, make sure you disable the$\r$\n$\t$\tdefine for production!"
     !define MUI_VERBOSE "4"
@@ -87,12 +100,13 @@
 !addincludedir "."
 !addincludedir ".."
 !addincludedir "plugins"
-!addincludedir "${NSISDIR}\include"
+!addincludedir "${NSISDIR}\Include"
 !addplugindir ".."
 
 !include "MUI.nsh"
 !include "Sections.nsh"
 !include "StrFunc.nsh"
+
 /*
    ZipDLL.nsh was created for Modern UI 1.62 so this workaround is needed for it
    to accept current Modern UI version (the other way is to edit ZipDLL.nsh and
@@ -107,12 +121,359 @@
 !include "version.nsi" ; you might want to edit version.pl to rename this file
                        ; version.nsh since it's a header inclusion (yes I know
                        ; I'm a purist)
-!include "locale.nsh"
+!include "locale-new.nsh"
+
+/*
+    macros
+*/
+; These macros are needed until the NSIS Dev people fix the StrFunc.nsh so it can
+; be included by the uninstaller (this damn stupid hack just doubles the code).
+!define un.StrStrAdv "!insertmacro FUNCTION_STRING_un.StrStrAdv"
+!define un.StrRep "!insertmacro FUNCTION_STRING_un.StrRep"
+
+!macro FUNCTION_STRING_un.StrStrAdv
+
+  !ifndef FUNCTION_STRING_un.StrStrAdv
+
+    !echo "$\r$\n----------------------------------------------------------------------$\r$\nAdvanced Search in String Function - © 2003-2004 Diego Pedroso$\r$\n----------------------------------------------------------------------$\r$\n$\r$\n"
+
+    !define FUNCTION_STRING_un.StrStrAdv
+    !undef un.StrStrAdv
+
+    !define un.StrStrAdv "!insertmacro FUNCTION_STRING_un.StrStrAdv_Call"
+
+    Function un.AdvancedStrStr
+
+     # Preparing Variables
+
+     Exch $R9
+     Exch
+     Exch $R8
+     Exch
+     Exch 2
+     Exch $R7
+     Exch 2
+     Exch 3
+     Exch $R6
+     Exch 3
+     Exch 4
+     Exch $R5
+     Exch 4
+     Exch 5
+     Exch $R4
+     Exch 5
+     Push $R3
+     Push $R2
+     Push $R1
+     Push $R0
+     Push $9
+     Push $8
+     Push $7
+     Push $6
+     StrCpy $R2 $R4
+     StrCpy $R1 $R5
+     StrCpy $R4 ""
+     StrCpy $R5 ""
+     StrCpy $7 $R2
+
+     # Detect Empty Input
+
+     StrCmp $R1 "" 0 +3
+       SetErrors
+       Goto granddone
+
+     StrCmp $R2 "" 0 +3
+       SetErrors
+       Goto granddone
+
+     StrCmp $R6 "" 0 +2
+       StrCpy $R6 >
+
+     StrCmp $R7 "" 0 +2
+       StrCpy $R7 >
+
+     # Preparing StrStr
+
+     StrCpy $R0 0
+
+     IntCmp $R9 1 +2 0 +2
+       StrCpy $R9 0
+
+     IntOp $R9 $R9 + 1
+
+     # Loops and more loops if you want...
+
+       grandloop:
+
+       # Detect if the loops number given by user = code runs...
+
+       StrCpy $R4 0
+       StrLen $R3 $R1
+       StrCpy $6 $R3
+       StrCmp $9 1 0 +4
+         StrCmp $R6 "<" 0 +2
+           IntOp $R3 $R3 + 1
+           IntOp $R4 $R4 + 1
+
+       StrCmp $R6 "<" 0 +5
+         IntOp $R3 $R3 * -1
+         StrCpy $6 $R3
+         IntCmp $R0 0 +2 0 0
+           IntOp $6 $6 + 1
+
+       # Searching the string
+
+         loop:
+
+         # RTL...
+
+         StrCmp $R6 "<" 0 EndBack
+
+           IntOp $9 $R4 * -1
+
+           StrCmp $9 0 0 +3
+             StrCpy $R5 $R2 "" $R3
+             Goto +2
+           StrCpy $R5 $R2 $9 $R3
+           Goto +2
+
+         EndBack:
+
+         # LTR...
+
+         StrCpy $R5 $R2 $R3 $R4
+
+         # Detect if the value returned is the searched...
+
+         StrCmp $R5 $R1 done
+
+         StrCmp $R5 "" granddone
+
+             # If not, make a loop...
+
+             IntOp $R4 $R4 + 1
+             StrCmp $R6 "<" 0 +2
+               IntOp $R3 $R3 - 1
+
+         Goto loop
+
+       done:
+
+       StrCmp $R6 "<" 0 +3
+         IntOp $8 $9 + $8
+           Goto +2
+       IntOp $8 $R4 + $8
+
+       # Looping Calculation...
+
+        IntOp $R0 $R0 + 1
+
+       IntCmp $R0 $R9 0 continueloop 0
+
+       # Customizing the string to fit user conditions (supported by loops)...
+
+       # RTL...
+
+         StrCmp $R6 "<" 0 EndBackward
+           StrCmp $R7 ">" 0 +7
+             StrCmp $8 0 0 +3
+               StrCpy $R2 ""
+               Goto +2
+             StrCpy $R2 $7 "" $8
+             StrCpy $R2 $R1$R2
+             Goto +3
+
+           StrCmp $9 0 +2
+             StrCpy $R2 $R2 $9
+
+           StrCmp $R8 1 EndForward 0
+             StrCmp $R7 ">" 0 End>
+               Push $6
+               IntOp $6 $6 * -1
+               StrCpy $R2 $R2 "" $6
+               Pop $6
+                 Goto +2
+             End>:
+             StrCpy $R2 $R2 $6
+               Goto EndForward
+         EndBackward:
+
+         # LTR...
+
+         StrCmp $R7 "<" 0 +4
+           StrCpy $R2 $7 $8
+           StrCpy $R2 $R2$R1
+           Goto +2
+         StrCpy $R2 $R2 "" $R4
+         StrCmp $R8 1 EndForward 0
+           StrCmp $R7 "<" 0 End<
+             Push $6
+             IntOp $6 $6 * 2
+             StrCpy $R2 $R2 $6
+             Pop $6
+               Goto +2
+           End<:
+           StrCpy $R2 $R2 "" $R3
+         EndForward:
+
+         Goto stoploop
+
+       continueloop:
+
+       # Customizing the string to fits user conditions (not supported by loops)...
+
+       # RTL...
+
+       StrCmp $R6 "<" 0 +4
+         StrCmp $9 0 +4
+         StrCpy $R2 $R2 $9
+           Goto +2
+
+       # LTR...
+
+       StrCpy $R2 $R2 "" $R4
+
+       stoploop:
+
+       # Return to grandloop init...
+
+       StrCpy $9 1
+
+       IntCmp $R0 $R9 0 grandloop 0
+
+     StrCpy $R4 $R2
+
+     Goto +2
+
+     granddone:
+
+     # Return the result to user
+
+     StrCpy $R4 ""
+
+     Pop $6
+     Pop $7
+     Pop $8
+     Pop $9
+     Pop $R0
+     Pop $R1
+     Pop $R2
+     Pop $R3
+     Pop $R9
+     Pop $R8
+     Pop $R7
+     Pop $R6
+     Pop $R5
+     Exch $R4
+
+    FunctionEnd
+
+  !endif
+
+!macroend
+
+!macro FUNCTION_STRING_un.StrStrAdv_Call ResultVar String StrToSearchFor SearchDirection ResultStrDirection DisplayStrToSearch Loops
+
+  !echo `$ {un.StrStrAdv} "${ResultVar}" "${String}" "${StrToSearchFor}" "${SearchDirection}" "${ResultStrDirection}" "${DisplayStrToSearch}" "${Loops}"$\r$\n`
+
+  Push `${String}`
+  Push `${StrToSearchFor}`
+  Push `${SearchDirection}`
+  Push `${ResultStrDirection}`
+  Push `${DisplayStrToSearch}`
+  Push `${Loops}`
+
+  Call un.AdvancedStrStr
+
+  Pop `${ResultVar}`
+
+!macroend
+
+!macro FUNCTION_STRING_un.StrRep
+
+  !ifndef FUNCTION_STRING_un.StrRep
+
+    !echo "$\r$\n----------------------------------------------------------------------$\r$\nReplace String Function - 2002-2004 Hendri Adriaens$\r$\n----------------------------------------------------------------------$\r$\n$\r$\n"
+
+    !define FUNCTION_STRING_un.StrRep
+    !undef un.StrRep
+    !define un.StrRep "!insertmacro FUNCTION_STRING_un.StrRep_Call"
+
+    Function un.StrReplace
+      Exch $0 ;this will replace wrong characters
+      Exch
+      Exch $1 ;needs to be replaced
+      Exch
+      Exch 2
+      Exch $2 ;the orginal string
+      Push $3 ;counter
+      Push $4 ;temp character
+      Push $5 ;temp string
+      Push $6 ;length of string that need to be replaced
+      Push $7 ;length of string that will replace
+      Push $R0 ;tempstring
+      Push $R1 ;tempstring
+      Push $R2 ;tempstring
+      StrCpy $3 "-1"
+      StrCpy $5 ""
+      StrLen $6 $1
+      StrLen $7 $0
+      Loop:
+      IntOp $3 $3 + 1
+      StrCpy $4 $2 $6 $3
+      StrCmp $4 "" ExitLoop
+      StrCmp $4 $1 Replace
+      Goto Loop
+      Replace:
+      StrCpy $R0 $2 $3
+      IntOp $R2 $3 + $6
+      StrCpy $R1 $2 "" $R2
+      StrCpy $2 $R0$0$R1
+      IntOp $3 $3 + $7
+      Goto Loop
+      ExitLoop:
+      StrCpy $0 $2
+      Pop $R2
+      Pop $R1
+      Pop $R0
+      Pop $7
+      Pop $6
+      Pop $5
+      Pop $4
+      Pop $3
+      Pop $2
+      Pop $1
+      Exch $0
+    FunctionEnd
+
+  !endif
+
+!macroend
+
+!macro FUNCTION_STRING_un.StrRep_Call ResultVar String StringToReplace ReplacementString
+
+  !echo `$ {un.StrRep} "${ResultVar}" "${String}" "${StringToReplace}" "${ReplacementString}"$\r$\n`
+
+  Push `${String}`
+  Push `${StringToReplace}`
+  Push `${ReplacementString}`
+
+  Call un.StrReplace
+
+  Pop `${ResultVar}`
+
+!macroend
+
 
 /*
     StrFunc.nsh calls (these functions need to be initialized)
 */
 ${StrStr}
+; And these also until the StrFunc.nsh gets fixed to allow
+; inclusion in the Uninstaller sections.
+${un.StrRep}
+${un.StrStrAdv}
+
 
 /*
     defines
@@ -120,6 +481,9 @@ ${StrStr}
 
 ; basic installer options
 !define PRODUCT "Exodus"
+!define PRODUCT_COPYRIGHT "GNU Public License (GPL)"
+!define PRODUCT_COMMENTS "This is free! Promote Jabber and give it to a friend."
+!define PRODUCT_COMPANY "Jabber.org"
 !define JABBER_REGISTRY_KEY "SOFTWARE\Jabber"
 !define PRODUCT_REGISTRY_KEY "${JABBER_REGISTRY_KEY}\${PRODUCT}"
 !define PRODUCT_INSTALL_PATH_KEY "Install_Dir"
@@ -135,6 +499,10 @@ ${StrStr}
 !define PRODUCT_UNINSTALL_DISPLAY_VAL "${PRODUCT} Jabber Client (remove only)"
 !define PRODUCT_WINDOWCLASS "TfrmExodus"
 !define PRODUCT_UNINSTALLER "Uninstall"
+!define PLUGINS_PATH "${NSISDIR}\Plugins\"
+!define SYSTEMDLL_FILENAME "System"
+!define ZIPDLL_FILENAME "ZipDLL"
+!define ZIPDLL_PATH "..\"
 !define EXEC_EXTENSION ".exe"
 !define DLL_EXTENSION ".dll"
 !define ICON_EXTENSION ".ico"
@@ -145,22 +513,12 @@ ${StrStr}
 !define ZIP_EXTENSION ".zip"
 !define TEXT_EXTENSION ".txt"
 !define XML_EXTENSION ".xml"
-
-; If we want to use the cool NSIS install wizard image, uncomment this
-;!define INSTALLER_WELCOME_BITMAP \
-;        "${NSISDIR}\Contrib\Graphics\Wizard\arrow.bmp" ; not standard
-
-!define INSTALLER_WELCOME_BITMAP "${NSISDIR}\Contrib\Graphics\Wizard\win.bmp"
-
+!define INSTALLER_WELCOME_BITMAP \
+        "${NSISDIR}\Contrib\Graphics\Wizard\arrow.bmp" ; not standard
 !define INSTALLER_LANGUAGE_KEY "Language"
 !define INSTALLER_STARTMENU_KEY "StartMenu"
 !define INSTALLER_SWITCH_SILENT "/S"
-!ifdef DAILY
-    ; Makes life a lot easier for the daily build users if a version goes bad
-    !define INSTALLER_OUTPUT "${PRODUCT}_${EXODUS_VERSION}"
-!else
-    !define INSTALLER_OUTPUT "setup"
-!endif
+!define INSTALLER_OUTPUT "setup"
 !define PLUGINS_DIR "plugins"
 !ifdef DAILY
      ; BRANDING: Change this PATH if different
@@ -169,6 +527,7 @@ ${StrStr}
     !define PLUGINS_DOWNLOAD_PATH "${PLUGINS_DIR}"
 !endif
 !define CUSTOMSHELL "notify"
+!define UNCUSTOMSHELL "un-notify"
 !define CUSTOMSHELL_FIELD1 "Field 1"
 !define CUSTOMSHELL_FIELD2 "Field 2"
 !define CUSTOMSHELL_FIELD3 "Field 3"
@@ -216,11 +575,15 @@ ${StrStr}
 !define EXTENSION_KEY "Extension"
 !define SSLEAY "ssleay32"
 !define LIBEAY "libeay32"
-!define SSL_INSTALLER "indy_openssl096g"
+!define SSL_INSTALLER "indy_openssl096k"
 !define README "readme"
 !define HOMEPAGE "Homepage"
 !define BRANDING_FILE "branding"
 !define LOCALE "locale"
+!define XML_TAG_SEPARATORS "><"
+!define XML_ML_TAG_SEPARATORS ">$\r$\n<"
+!define LOG_PATH_XML_TAG 'log_path value="'
+!define XML_TAG_END '"/'
 
 ; BRANDING: change this URL
 !ifdef STAGE
@@ -290,9 +653,7 @@ CRCCheck on
     Modern UI Pages
 */
 ; Installer pages
-; XXX
-!insertmacro MUI_PAGE_WELCOME
-
+; !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE $(GPL_LICENSE_FILE)
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
@@ -310,6 +671,7 @@ Page custom SetCustomShell ;Custom page
 ;!insertmacro MUI_UNPAGE_LICENSE $(GPL_LICENSE_FILE)
 ;!insertmacro MUI_UNPAGE_COMPONENTS
 ;!insertmacro MUI_UNPAGE_DIRECTORY
+UninstPage custom un.SetCustomShell ;Custom page
 !insertmacro MUI_UNPAGE_INSTFILES
 !insertmacro MUI_UNPAGE_FINISH
 
@@ -334,13 +696,16 @@ Page custom SetCustomShell ;Custom page
 !insertmacro MUI_LANGUAGE "TradChinese"
 
 ReserveFile "${CUSTOMSHELL}${INI_EXTENSION}"
+ReserveFile "${UNCUSTOMSHELL}${INI_EXTENSION}"
 !insertmacro MUI_RESERVEFILE_INSTALLOPTIONS
-
+ReserveFile "${PLUGINS_PATH}${SYSTEMDLL_FILENAME}${DLL_EXTENSION}"
+ReserveFile "${ZIPDLL_PATH}${ZIPDLL_FILENAME}${DLL_EXTENSION}"
 
 /*
    localization
 */
 ; Only Admins allowed to install message (MSG_NoAdmin)
+!ifdef USE_HKLM_KEY
     LangString MSG_NoAdmin ${LANG_ENGLISH} "${i18n_MSG_NoAdmin_EN}"
     LangString MSG_NoAdmin ${LANG_CATALAN} "${i18n_MSG_NoAdmin_CA}"
     LangString MSG_NoAdmin ${LANG_CZECH} "${i18n_MSG_NoAdmin_CZ}"
@@ -359,6 +724,7 @@ ReserveFile "${CUSTOMSHELL}${INI_EXTENSION}"
     LangString MSG_NoAdmin ${LANG_RUSSIAN} "${i18n_MSG_NoAdmin_RU}"
     LangString MSG_NoAdmin ${LANG_SLOVENIAN} "${i18n_MSG_NoAdmin_SL}"
     LangString MSG_NoAdmin ${LANG_TRADCHINESE} "${i18n_MSG_NoAdmin_ZH}"
+!endif
 
 ; BRANDING: YOU MUST NOT REMOVE THE GPL!
 ; License Page Localization
@@ -861,107 +1227,105 @@ LangString MSG_SSLOK ${LANG_RUSSIAN} "${i18n_MSG_SSLOK_RU}"
 LangString MSG_SSLOK ${LANG_SLOVENIAN} "${i18n_MSG_SSLOK_SL}"
 LangString MSG_SSLOK ${LANG_TRADCHINESE} "${i18n_MSG_SSLOK_ZH}"
 
-!ifdef LAZARUS
-    ; Install type description (DESC_InstTypeFull)
-    LangString DESC_InstTypeFull ${LANG_ENGLISH} "${i18n_DESC_InstTypeFull_EN}"
-    LangString DESC_InstTypeFull ${LANG_CATALAN} "${i18n_DESC_InstTypeFull_CA}"
-    LangString DESC_InstTypeFull ${LANG_CZECH} "${i18n_DESC_InstTypeFull_CZ}"
-    LangString DESC_InstTypeFull ${LANG_DANISH} "${i18n_DESC_InstTypeFull_DA}"
-    LangString DESC_InstTypeFull ${LANG_GERMAN} "${i18n_DESC_InstTypeFull_DE}"
-    LangString DESC_InstTypeFull ${LANG_SPANISH} "${i18n_DESC_InstTypeFull_ES}"
-    LangString DESC_InstTypeFull ${LANG_FRENCH} "${i18n_DESC_InstTypeFull_FR}"
-    LangString DESC_InstTypeFull ${LANG_JAPANESE} "${i18n_DESC_InstTypeFull_JA}"
-    LangString DESC_InstTypeFull ${LANG_KOREAN} "${i18n_DESC_InstTypeFull_KO}"
-    LangString DESC_InstTypeFull ${LANG_LITHUANIAN} "${i18n_DESC_InstTypeFull_LT}"
-    LangString DESC_InstTypeFull ${LANG_DUTCH} "${i18n_DESC_InstTypeFull_NL}"
-    LangString DESC_InstTypeFull ${LANG_NORWEGIAN} "${i18n_DESC_InstTypeFull_NO}"
-    LangString DESC_InstTypeFull ${LANG_POLISH} "${i18n_DESC_InstTypeFull_PL}"
-    LangString DESC_InstTypeFull ${LANG_PORTUGUESEBR} "${i18n_DESC_InstTypeFull_PT_BR}"
-    LangString DESC_InstTypeFull ${LANG_PORTUGUESE} "${i18n_DESC_InstTypeFull_PT_PT}"
-    LangString DESC_InstTypeFull ${LANG_RUSSIAN} "${i18n_DESC_InstTypeFull_RU}"
-    LangString DESC_InstTypeFull ${LANG_SLOVENIAN} "${i18n_DESC_InstTypeFull_SL}"
-    LangString DESC_InstTypeFull ${LANG_TRADCHINESE} "${i18n_DESC_InstTypeFull_ZH}"
+; Install type description (DESC_InstTypeFull)
+LangString DESC_InstTypeFull ${LANG_ENGLISH} "${i18n_DESC_InstTypeFull_EN}"
+LangString DESC_InstTypeFull ${LANG_CATALAN} "${i18n_DESC_InstTypeFull_CA}"
+LangString DESC_InstTypeFull ${LANG_CZECH} "${i18n_DESC_InstTypeFull_CZ}"
+LangString DESC_InstTypeFull ${LANG_DANISH} "${i18n_DESC_InstTypeFull_DA}"
+LangString DESC_InstTypeFull ${LANG_GERMAN} "${i18n_DESC_InstTypeFull_DE}"
+LangString DESC_InstTypeFull ${LANG_SPANISH} "${i18n_DESC_InstTypeFull_ES}"
+LangString DESC_InstTypeFull ${LANG_FRENCH} "${i18n_DESC_InstTypeFull_FR}"
+LangString DESC_InstTypeFull ${LANG_JAPANESE} "${i18n_DESC_InstTypeFull_JA}"
+LangString DESC_InstTypeFull ${LANG_KOREAN} "${i18n_DESC_InstTypeFull_KO}"
+LangString DESC_InstTypeFull ${LANG_LITHUANIAN} "${i18n_DESC_InstTypeFull_LT}"
+LangString DESC_InstTypeFull ${LANG_DUTCH} "${i18n_DESC_InstTypeFull_NL}"
+LangString DESC_InstTypeFull ${LANG_NORWEGIAN} "${i18n_DESC_InstTypeFull_NO}"
+LangString DESC_InstTypeFull ${LANG_POLISH} "${i18n_DESC_InstTypeFull_PL}"
+LangString DESC_InstTypeFull ${LANG_PORTUGUESEBR} "${i18n_DESC_InstTypeFull_PT_BR}"
+LangString DESC_InstTypeFull ${LANG_PORTUGUESE} "${i18n_DESC_InstTypeFull_PT_PT}"
+LangString DESC_InstTypeFull ${LANG_RUSSIAN} "${i18n_DESC_InstTypeFull_RU}"
+LangString DESC_InstTypeFull ${LANG_SLOVENIAN} "${i18n_DESC_InstTypeFull_SL}"
+LangString DESC_InstTypeFull ${LANG_TRADCHINESE} "${i18n_DESC_InstTypeFull_ZH}"
 
-    ; Install type description (DESC_InstTypeBare)
-    LangString DESC_InstTypeBare ${LANG_ENGLISH} "${i18n_DESC_InstTypeBare_EN}"
-    LangString DESC_InstTypeBare ${LANG_CATALAN} "${i18n_DESC_InstTypeBare_CA}"
-    LangString DESC_InstTypeBare ${LANG_CZECH} "${i18n_DESC_InstTypeBare_CZ}"
-    LangString DESC_InstTypeBare ${LANG_DANISH} "${i18n_DESC_InstTypeBare_DA}"
-    LangString DESC_InstTypeBare ${LANG_GERMAN} "${i18n_DESC_InstTypeBare_DE}"
-    LangString DESC_InstTypeBare ${LANG_SPANISH} "${i18n_DESC_InstTypeBare_ES}"
-    LangString DESC_InstTypeBare ${LANG_FRENCH} "${i18n_DESC_InstTypeBare_FR}"
-    LangString DESC_InstTypeBare ${LANG_JAPANESE} "${i18n_DESC_InstTypeBare_JA}"
-    LangString DESC_InstTypeBare ${LANG_KOREAN} "${i18n_DESC_InstTypeBare_KO}"
-    LangString DESC_InstTypeBare ${LANG_LITHUANIAN} "${i18n_DESC_InstTypeBare_LT}"
-    LangString DESC_InstTypeBare ${LANG_DUTCH} "${i18n_DESC_InstTypeBare_NL}"
-    LangString DESC_InstTypeBare ${LANG_NORWEGIAN} "${i18n_DESC_InstTypeBare_NO}"
-    LangString DESC_InstTypeBare ${LANG_POLISH} "${i18n_DESC_InstTypeBare_PL}"
-    LangString DESC_InstTypeBare ${LANG_PORTUGUESEBR} "${i18n_DESC_InstTypeBare_PT_BR}"
-    LangString DESC_InstTypeBare ${LANG_PORTUGUESE} "${i18n_DESC_InstTypeBare_PT_PT}"
-    LangString DESC_InstTypeBare ${LANG_RUSSIAN} "${i18n_DESC_InstTypeBare_RU}"
-    LangString DESC_InstTypeBare ${LANG_SLOVENIAN} "${i18n_DESC_InstTypeBare_SL}"
-    LangString DESC_InstTypeBare ${LANG_TRADCHINESE} "${i18n_DESC_InstTypeBare_ZH}"
+; Install type description (DESC_InstTypeBare)
+LangString DESC_InstTypeBare ${LANG_ENGLISH} "${i18n_DESC_InstTypeBare_EN}"
+LangString DESC_InstTypeBare ${LANG_CATALAN} "${i18n_DESC_InstTypeBare_CA}"
+LangString DESC_InstTypeBare ${LANG_CZECH} "${i18n_DESC_InstTypeBare_CZ}"
+LangString DESC_InstTypeBare ${LANG_DANISH} "${i18n_DESC_InstTypeBare_DA}"
+LangString DESC_InstTypeBare ${LANG_GERMAN} "${i18n_DESC_InstTypeBare_DE}"
+LangString DESC_InstTypeBare ${LANG_SPANISH} "${i18n_DESC_InstTypeBare_ES}"
+LangString DESC_InstTypeBare ${LANG_FRENCH} "${i18n_DESC_InstTypeBare_FR}"
+LangString DESC_InstTypeBare ${LANG_JAPANESE} "${i18n_DESC_InstTypeBare_JA}"
+LangString DESC_InstTypeBare ${LANG_KOREAN} "${i18n_DESC_InstTypeBare_KO}"
+LangString DESC_InstTypeBare ${LANG_LITHUANIAN} "${i18n_DESC_InstTypeBare_LT}"
+LangString DESC_InstTypeBare ${LANG_DUTCH} "${i18n_DESC_InstTypeBare_NL}"
+LangString DESC_InstTypeBare ${LANG_NORWEGIAN} "${i18n_DESC_InstTypeBare_NO}"
+LangString DESC_InstTypeBare ${LANG_POLISH} "${i18n_DESC_InstTypeBare_PL}"
+LangString DESC_InstTypeBare ${LANG_PORTUGUESEBR} "${i18n_DESC_InstTypeBare_PT_BR}"
+LangString DESC_InstTypeBare ${LANG_PORTUGUESE} "${i18n_DESC_InstTypeBare_PT_PT}"
+LangString DESC_InstTypeBare ${LANG_RUSSIAN} "${i18n_DESC_InstTypeBare_RU}"
+LangString DESC_InstTypeBare ${LANG_SLOVENIAN} "${i18n_DESC_InstTypeBare_SL}"
+LangString DESC_InstTypeBare ${LANG_TRADCHINESE} "${i18n_DESC_InstTypeBare_ZH}"
 
-    ; Install type description (DESC_InstTypeI18n)
-    LangString DESC_InstTypeI18n ${LANG_ENGLISH} "${i18n_DESC_InstTypeI18n_EN}"
-    LangString DESC_InstTypeI18n ${LANG_CATALAN} "${i18n_DESC_InstTypeI18n_CA}"
-    LangString DESC_InstTypeI18n ${LANG_CZECH} "${i18n_DESC_InstTypeI18n_CZ}"
-    LangString DESC_InstTypeI18n ${LANG_DANISH} "${i18n_DESC_InstTypeI18n_DA}"
-    LangString DESC_InstTypeI18n ${LANG_GERMAN} "${i18n_DESC_InstTypeI18n_DE}"
-    LangString DESC_InstTypeI18n ${LANG_SPANISH} "${i18n_DESC_InstTypeI18n_ES}"
-    LangString DESC_InstTypeI18n ${LANG_FRENCH} "${i18n_DESC_InstTypeI18n_FR}"
-    LangString DESC_InstTypeI18n ${LANG_JAPANESE} "${i18n_DESC_InstTypeI18n_JA}"
-    LangString DESC_InstTypeI18n ${LANG_KOREAN} "${i18n_DESC_InstTypeI18n_KO}"
-    LangString DESC_InstTypeI18n ${LANG_LITHUANIAN} "${i18n_DESC_InstTypeI18n_LT}"
-    LangString DESC_InstTypeI18n ${LANG_DUTCH} "${i18n_DESC_InstTypeI18n_NL}"
-    LangString DESC_InstTypeI18n ${LANG_NORWEGIAN} "${i18n_DESC_InstTypeI18n_NO}"
-    LangString DESC_InstTypeI18n ${LANG_POLISH} "${i18n_DESC_InstTypeI18n_PL}"
-    LangString DESC_InstTypeI18n ${LANG_PORTUGUESEBR} "${i18n_DESC_InstTypeI18n_PT_BR}"
-    LangString DESC_InstTypeI18n ${LANG_PORTUGUESE} "${i18n_DESC_InstTypeI18n_PT_PT}"
-    LangString DESC_InstTypeI18n ${LANG_RUSSIAN} "${i18n_DESC_InstTypeI18n_RU}"
-    LangString DESC_InstTypeI18n ${LANG_SLOVENIAN} "${i18n_DESC_InstTypeI18n_SL}"
-    LangString DESC_InstTypeI18n ${LANG_TRADCHINESE} "${i18n_DESC_InstTypeI18n_ZH}"
+; Install type description (DESC_InstTypeI18n)
+LangString DESC_InstTypeI18n ${LANG_ENGLISH} "${i18n_DESC_InstTypeI18n_EN}"
+LangString DESC_InstTypeI18n ${LANG_CATALAN} "${i18n_DESC_InstTypeI18n_CA}"
+LangString DESC_InstTypeI18n ${LANG_CZECH} "${i18n_DESC_InstTypeI18n_CZ}"
+LangString DESC_InstTypeI18n ${LANG_DANISH} "${i18n_DESC_InstTypeI18n_DA}"
+LangString DESC_InstTypeI18n ${LANG_GERMAN} "${i18n_DESC_InstTypeI18n_DE}"
+LangString DESC_InstTypeI18n ${LANG_SPANISH} "${i18n_DESC_InstTypeI18n_ES}"
+LangString DESC_InstTypeI18n ${LANG_FRENCH} "${i18n_DESC_InstTypeI18n_FR}"
+LangString DESC_InstTypeI18n ${LANG_JAPANESE} "${i18n_DESC_InstTypeI18n_JA}"
+LangString DESC_InstTypeI18n ${LANG_KOREAN} "${i18n_DESC_InstTypeI18n_KO}"
+LangString DESC_InstTypeI18n ${LANG_LITHUANIAN} "${i18n_DESC_InstTypeI18n_LT}"
+LangString DESC_InstTypeI18n ${LANG_DUTCH} "${i18n_DESC_InstTypeI18n_NL}"
+LangString DESC_InstTypeI18n ${LANG_NORWEGIAN} "${i18n_DESC_InstTypeI18n_NO}"
+LangString DESC_InstTypeI18n ${LANG_POLISH} "${i18n_DESC_InstTypeI18n_PL}"
+LangString DESC_InstTypeI18n ${LANG_PORTUGUESEBR} "${i18n_DESC_InstTypeI18n_PT_BR}"
+LangString DESC_InstTypeI18n ${LANG_PORTUGUESE} "${i18n_DESC_InstTypeI18n_PT_PT}"
+LangString DESC_InstTypeI18n ${LANG_RUSSIAN} "${i18n_DESC_InstTypeI18n_RU}"
+LangString DESC_InstTypeI18n ${LANG_SLOVENIAN} "${i18n_DESC_InstTypeI18n_SL}"
+LangString DESC_InstTypeI18n ${LANG_TRADCHINESE} "${i18n_DESC_InstTypeI18n_ZH}"
 
-    ; Install type description (DESC_InstTypeSSL)
-    LangString DESC_InstTypeSSL ${LANG_ENGLISH} "${i18n_DESC_InstTypeSSL_EN}"
-    LangString DESC_InstTypeSSL ${LANG_CATALAN} "${i18n_DESC_InstTypeSSL_CA}"
-    LangString DESC_InstTypeSSL ${LANG_CZECH} "${i18n_DESC_InstTypeSSL_CZ}"
-    LangString DESC_InstTypeSSL ${LANG_DANISH} "${i18n_DESC_InstTypeSSL_DA}"
-    LangString DESC_InstTypeSSL ${LANG_GERMAN} "${i18n_DESC_InstTypeSSL_DE}"
-    LangString DESC_InstTypeSSL ${LANG_SPANISH} "${i18n_DESC_InstTypeSSL_ES}"
-    LangString DESC_InstTypeSSL ${LANG_FRENCH} "${i18n_DESC_InstTypeSSL_FR}"
-    LangString DESC_InstTypeSSL ${LANG_JAPANESE} "${i18n_DESC_InstTypeSSL_JA}"
-    LangString DESC_InstTypeSSL ${LANG_KOREAN} "${i18n_DESC_InstTypeSSL_KO}"
-    LangString DESC_InstTypeSSL ${LANG_LITHUANIAN} "${i18n_DESC_InstTypeSSL_LT}"
-    LangString DESC_InstTypeSSL ${LANG_DUTCH} "${i18n_DESC_InstTypeSSL_NL}"
-    LangString DESC_InstTypeSSL ${LANG_NORWEGIAN} "${i18n_DESC_InstTypeSSL_NO}"
-    LangString DESC_InstTypeSSL ${LANG_POLISH} "${i18n_DESC_InstTypeSSL_PL}"
-    LangString DESC_InstTypeSSL ${LANG_PORTUGUESEBR} "${i18n_DESC_InstTypeSSL_PT_BR}"
-    LangString DESC_InstTypeSSL ${LANG_PORTUGUESE} "${i18n_DESC_InstTypeSSL_PT_PT}"
-    LangString DESC_InstTypeSSL ${LANG_RUSSIAN} "${i18n_DESC_InstTypeSSL_RU}"
-    LangString DESC_InstTypeSSL ${LANG_SLOVENIAN} "${i18n_DESC_InstTypeSSL_SL}"
-    LangString DESC_InstTypeSSL ${LANG_TRADCHINESE} "${i18n_DESC_InstTypeSSL_ZH}"
+; Install type description (DESC_InstTypeSSL)
+LangString DESC_InstTypeSSL ${LANG_ENGLISH} "${i18n_DESC_InstTypeSSL_EN}"
+LangString DESC_InstTypeSSL ${LANG_CATALAN} "${i18n_DESC_InstTypeSSL_CA}"
+LangString DESC_InstTypeSSL ${LANG_CZECH} "${i18n_DESC_InstTypeSSL_CZ}"
+LangString DESC_InstTypeSSL ${LANG_DANISH} "${i18n_DESC_InstTypeSSL_DA}"
+LangString DESC_InstTypeSSL ${LANG_GERMAN} "${i18n_DESC_InstTypeSSL_DE}"
+LangString DESC_InstTypeSSL ${LANG_SPANISH} "${i18n_DESC_InstTypeSSL_ES}"
+LangString DESC_InstTypeSSL ${LANG_FRENCH} "${i18n_DESC_InstTypeSSL_FR}"
+LangString DESC_InstTypeSSL ${LANG_JAPANESE} "${i18n_DESC_InstTypeSSL_JA}"
+LangString DESC_InstTypeSSL ${LANG_KOREAN} "${i18n_DESC_InstTypeSSL_KO}"
+LangString DESC_InstTypeSSL ${LANG_LITHUANIAN} "${i18n_DESC_InstTypeSSL_LT}"
+LangString DESC_InstTypeSSL ${LANG_DUTCH} "${i18n_DESC_InstTypeSSL_NL}"
+LangString DESC_InstTypeSSL ${LANG_NORWEGIAN} "${i18n_DESC_InstTypeSSL_NO}"
+LangString DESC_InstTypeSSL ${LANG_POLISH} "${i18n_DESC_InstTypeSSL_PL}"
+LangString DESC_InstTypeSSL ${LANG_PORTUGUESEBR} "${i18n_DESC_InstTypeSSL_PT_BR}"
+LangString DESC_InstTypeSSL ${LANG_PORTUGUESE} "${i18n_DESC_InstTypeSSL_PT_PT}"
+LangString DESC_InstTypeSSL ${LANG_RUSSIAN} "${i18n_DESC_InstTypeSSL_RU}"
+LangString DESC_InstTypeSSL ${LANG_SLOVENIAN} "${i18n_DESC_InstTypeSSL_SL}"
+LangString DESC_InstTypeSSL ${LANG_TRADCHINESE} "${i18n_DESC_InstTypeSSL_ZH}"
 
-    ; Install type description (DESC_InstTypeBleed)
-    LangString DESC_InstTypeBleed ${LANG_ENGLISH} "${i18n_DESC_InstTypeBleed_EN}"
-    LangString DESC_InstTypeBleed ${LANG_CATALAN} "${i18n_DESC_InstTypeBleed_CA}"
-    LangString DESC_InstTypeBleed ${LANG_CZECH} "${i18n_DESC_InstTypeBleed_CZ}"
-    LangString DESC_InstTypeBleed ${LANG_DANISH} "${i18n_DESC_InstTypeBleed_DA}"
-    LangString DESC_InstTypeBleed ${LANG_GERMAN} "${i18n_DESC_InstTypeBleed_DE}"
-    LangString DESC_InstTypeBleed ${LANG_SPANISH} "${i18n_DESC_InstTypeBleed_ES}"
-    LangString DESC_InstTypeBleed ${LANG_FRENCH} "${i18n_DESC_InstTypeBleed_FR}"
-    LangString DESC_InstTypeBleed ${LANG_JAPANESE} "${i18n_DESC_InstTypeBleed_JA}"
-    LangString DESC_InstTypeBleed ${LANG_KOREAN} "${i18n_DESC_InstTypeBleed_KO}"
-    LangString DESC_InstTypeBleed ${LANG_LITHUANIAN} "${i18n_DESC_InstTypeBleed_LT}"
-    LangString DESC_InstTypeBleed ${LANG_DUTCH} "${i18n_DESC_InstTypeBleed_NL}"
-    LangString DESC_InstTypeBleed ${LANG_NORWEGIAN} "${i18n_DESC_InstTypeBleed_NO}"
-    LangString DESC_InstTypeBleed ${LANG_POLISH} "${i18n_DESC_InstTypeBleed_PL}"
-    LangString DESC_InstTypeBleed ${LANG_PORTUGUESEBR} "${i18n_DESC_InstTypeBleed_PT_BR}"
-    LangString DESC_InstTypeBleed ${LANG_PORTUGUESE} "${i18n_DESC_InstTypeBleed_PT_PT}"
-    LangString DESC_InstTypeBleed ${LANG_RUSSIAN} "${i18n_DESC_InstTypeBleed_RU}"
-    LangString DESC_InstTypeBleed ${LANG_SLOVENIAN} "${i18n_DESC_InstTypeBleed_SL}"
-    LangString DESC_InstTypeBleed ${LANG_TRADCHINESE} "${i18n_DESC_InstTypeBleed_ZH}"
-!endif
+; Install type description (DESC_InstTypeBleed)
+LangString DESC_InstTypeBleed ${LANG_ENGLISH} "${i18n_DESC_InstTypeBleed_EN}"
+LangString DESC_InstTypeBleed ${LANG_CATALAN} "${i18n_DESC_InstTypeBleed_CA}"
+LangString DESC_InstTypeBleed ${LANG_CZECH} "${i18n_DESC_InstTypeBleed_CZ}"
+LangString DESC_InstTypeBleed ${LANG_DANISH} "${i18n_DESC_InstTypeBleed_DA}"
+LangString DESC_InstTypeBleed ${LANG_GERMAN} "${i18n_DESC_InstTypeBleed_DE}"
+LangString DESC_InstTypeBleed ${LANG_SPANISH} "${i18n_DESC_InstTypeBleed_ES}"
+LangString DESC_InstTypeBleed ${LANG_FRENCH} "${i18n_DESC_InstTypeBleed_FR}"
+LangString DESC_InstTypeBleed ${LANG_JAPANESE} "${i18n_DESC_InstTypeBleed_JA}"
+LangString DESC_InstTypeBleed ${LANG_KOREAN} "${i18n_DESC_InstTypeBleed_KO}"
+LangString DESC_InstTypeBleed ${LANG_LITHUANIAN} "${i18n_DESC_InstTypeBleed_LT}"
+LangString DESC_InstTypeBleed ${LANG_DUTCH} "${i18n_DESC_InstTypeBleed_NL}"
+LangString DESC_InstTypeBleed ${LANG_NORWEGIAN} "${i18n_DESC_InstTypeBleed_NO}"
+LangString DESC_InstTypeBleed ${LANG_POLISH} "${i18n_DESC_InstTypeBleed_PL}"
+LangString DESC_InstTypeBleed ${LANG_PORTUGUESEBR} "${i18n_DESC_InstTypeBleed_PT_BR}"
+LangString DESC_InstTypeBleed ${LANG_PORTUGUESE} "${i18n_DESC_InstTypeBleed_PT_PT}"
+LangString DESC_InstTypeBleed ${LANG_RUSSIAN} "${i18n_DESC_InstTypeBleed_RU}"
+LangString DESC_InstTypeBleed ${LANG_SLOVENIAN} "${i18n_DESC_InstTypeBleed_SL}"
+LangString DESC_InstTypeBleed ${LANG_TRADCHINESE} "${i18n_DESC_InstTypeBleed_ZH}"
 
 ; Close running Exodus message (MSG_NotifyInstances)
 LangString MSG_NotifyInstances ${LANG_ENGLISH} "${i18n_MSG_NotifyInstances_EN}"
@@ -1123,19 +1487,283 @@ LangString DESC_CustomShellField5 ${LANG_RUSSIAN} "${i18n_DESC_CustomShellField5
 LangString DESC_CustomShellField5 ${LANG_SLOVENIAN} "${i18n_DESC_CustomShellField5_SL}"
 LangString DESC_CustomShellField5 ${LANG_TRADCHINESE} "${i18n_DESC_CustomShellField5_ZH}"
 
+; User logs removal window caption (UNCUSTOMSHELL_TITLE)
+LangString UNCUSTOMSHELL_TITLE ${LANG_ENGLISH} "${i18n_UNCUSTOMSHELL_TITLE_EN}"
+LangString UNCUSTOMSHELL_TITLE ${LANG_CATALAN} "${i18n_UNCUSTOMSHELL_TITLE_CA}"
+LangString UNCUSTOMSHELL_TITLE ${LANG_CZECH} "${i18n_UNCUSTOMSHELL_TITLE_CZ}"
+LangString UNCUSTOMSHELL_TITLE ${LANG_DANISH} "${i18n_UNCUSTOMSHELL_TITLE_DA}"
+LangString UNCUSTOMSHELL_TITLE ${LANG_GERMAN} "${i18n_UNCUSTOMSHELL_TITLE_DE}"
+LangString UNCUSTOMSHELL_TITLE ${LANG_SPANISH} "${i18n_UNCUSTOMSHELL_TITLE_ES}"
+LangString UNCUSTOMSHELL_TITLE ${LANG_FRENCH} "${i18n_UNCUSTOMSHELL_TITLE_FR}"
+LangString UNCUSTOMSHELL_TITLE ${LANG_JAPANESE} "${i18n_UNCUSTOMSHELL_TITLE_JA}"
+LangString UNCUSTOMSHELL_TITLE ${LANG_KOREAN} "${i18n_UNCUSTOMSHELL_TITLE_KO}"
+LangString UNCUSTOMSHELL_TITLE ${LANG_LITHUANIAN} "${i18n_UNCUSTOMSHELL_TITLE_LT}"
+LangString UNCUSTOMSHELL_TITLE ${LANG_DUTCH} "${i18n_UNCUSTOMSHELL_TITLE_NL}"
+LangString UNCUSTOMSHELL_TITLE ${LANG_NORWEGIAN} "${i18n_UNCUSTOMSHELL_TITLE_NO}"
+LangString UNCUSTOMSHELL_TITLE ${LANG_POLISH} "${i18n_UNCUSTOMSHELL_TITLE_PL}"
+LangString UNCUSTOMSHELL_TITLE ${LANG_PORTUGUESEBR} "${i18n_UNCUSTOMSHELL_TITLE_PT_BR}"
+LangString UNCUSTOMSHELL_TITLE ${LANG_PORTUGUESE} "${i18n_UNCUSTOMSHELL_TITLE_PT_PT}"
+LangString UNCUSTOMSHELL_TITLE ${LANG_RUSSIAN} "${i18n_UNCUSTOMSHELL_TITLE_RU}"
+LangString UNCUSTOMSHELL_TITLE ${LANG_SLOVENIAN} "${i18n_UNCUSTOMSHELL_TITLE_SL}"
+LangString UNCUSTOMSHELL_TITLE ${LANG_TRADCHINESE} "${i18n_UNCUSTOMSHELL_TITLE_ZH}"
+
+; User logs removal window subcaption (UNCUSTOMSHELL_SUBTITLE)
+LangString UNCUSTOMSHELL_SUBTITLE ${LANG_ENGLISH} "${i18n_UNCUSTOMSHELL_SUBTITLE_EN}"
+LangString UNCUSTOMSHELL_SUBTITLE ${LANG_CATALAN} "${i18n_UNCUSTOMSHELL_SUBTITLE_CA}"
+LangString UNCUSTOMSHELL_SUBTITLE ${LANG_CZECH} "${i18n_UNCUSTOMSHELL_SUBTITLE_CZ}"
+LangString UNCUSTOMSHELL_SUBTITLE ${LANG_DANISH} "${i18n_UNCUSTOMSHELL_SUBTITLE_DA}"
+LangString UNCUSTOMSHELL_SUBTITLE ${LANG_GERMAN} "${i18n_UNCUSTOMSHELL_SUBTITLE_DE}"
+LangString UNCUSTOMSHELL_SUBTITLE ${LANG_SPANISH} "${i18n_UNCUSTOMSHELL_SUBTITLE_ES}"
+LangString UNCUSTOMSHELL_SUBTITLE ${LANG_FRENCH} "${i18n_UNCUSTOMSHELL_SUBTITLE_FR}"
+LangString UNCUSTOMSHELL_SUBTITLE ${LANG_JAPANESE} "${i18n_UNCUSTOMSHELL_SUBTITLE_JA}"
+LangString UNCUSTOMSHELL_SUBTITLE ${LANG_KOREAN} "${i18n_UNCUSTOMSHELL_SUBTITLE_KO}"
+LangString UNCUSTOMSHELL_SUBTITLE ${LANG_LITHUANIAN} "${i18n_UNCUSTOMSHELL_SUBTITLE_LT}"
+LangString UNCUSTOMSHELL_SUBTITLE ${LANG_DUTCH} "${i18n_UNCUSTOMSHELL_SUBTITLE_NL}"
+LangString UNCUSTOMSHELL_SUBTITLE ${LANG_NORWEGIAN} "${i18n_UNCUSTOMSHELL_SUBTITLE_NO}"
+LangString UNCUSTOMSHELL_SUBTITLE ${LANG_POLISH} "${i18n_UNCUSTOMSHELL_SUBTITLE_PL}"
+LangString UNCUSTOMSHELL_SUBTITLE ${LANG_PORTUGUESEBR} "${i18n_UNCUSTOMSHELL_SUBTITLE_PT_BR}"
+LangString UNCUSTOMSHELL_SUBTITLE ${LANG_PORTUGUESE} "${i18n_UNCUSTOMSHELL_SUBTITLE_PT_PT}"
+LangString UNCUSTOMSHELL_SUBTITLE ${LANG_RUSSIAN} "${i18n_UNCUSTOMSHELL_SUBTITLE_RU}"
+LangString UNCUSTOMSHELL_SUBTITLE ${LANG_SLOVENIAN} "${i18n_UNCUSTOMSHELL_SUBTITLE_SL}"
+LangString UNCUSTOMSHELL_SUBTITLE ${LANG_TRADCHINESE} "${i18n_UNCUSTOMSHELL_SUBTITLE_ZH}"
+
+; unCustomShell Field1 description (DESC_unCustomShellField1)
+LangString DESC_unCustomShellField1 ${LANG_ENGLISH} "${i18n_DESC_unCustomShellField1_EN}"
+LangString DESC_unCustomShellField1 ${LANG_CATALAN} "${i18n_DESC_unCustomShellField1_CA}"
+LangString DESC_unCustomShellField1 ${LANG_CZECH} "${i18n_DESC_unCustomShellField1_CZ}"
+LangString DESC_unCustomShellField1 ${LANG_DANISH} "${i18n_DESC_unCustomShellField1_DA}"
+LangString DESC_unCustomShellField1 ${LANG_GERMAN} "${i18n_DESC_unCustomShellField1_DE}"
+LangString DESC_unCustomShellField1 ${LANG_SPANISH} "${i18n_DESC_unCustomShellField1_ES}"
+LangString DESC_unCustomShellField1 ${LANG_FRENCH} "${i18n_DESC_unCustomShellField1_FR}"
+LangString DESC_unCustomShellField1 ${LANG_JAPANESE} "${i18n_DESC_unCustomShellField1_JA}"
+LangString DESC_unCustomShellField1 ${LANG_KOREAN} "${i18n_DESC_unCustomShellField1_KO}"
+LangString DESC_unCustomShellField1 ${LANG_LITHUANIAN} "${i18n_DESC_unCustomShellField1_LT}"
+LangString DESC_unCustomShellField1 ${LANG_DUTCH} "${i18n_DESC_unCustomShellField1_NL}"
+LangString DESC_unCustomShellField1 ${LANG_NORWEGIAN} "${i18n_DESC_unCustomShellField1_NO}"
+LangString DESC_unCustomShellField1 ${LANG_POLISH} "${i18n_DESC_unCustomShellField1_PL}"
+LangString DESC_unCustomShellField1 ${LANG_PORTUGUESEBR} "${i18n_DESC_unCustomShellField1_PT_BR}"
+LangString DESC_unCustomShellField1 ${LANG_PORTUGUESE} "${i18n_DESC_unCustomShellField1_PT_PT}"
+LangString DESC_unCustomShellField1 ${LANG_RUSSIAN} "${i18n_DESC_unCustomShellField1_RU}"
+LangString DESC_unCustomShellField1 ${LANG_SLOVENIAN} "${i18n_DESC_unCustomShellField1_SL}"
+LangString DESC_unCustomShellField1 ${LANG_TRADCHINESE} "${i18n_DESC_unCustomShellField1_ZH}"
+
+; unCustomShell Field2 description (DESC_unCustomShellField2)
+LangString DESC_unCustomShellField2 ${LANG_ENGLISH} "${i18n_DESC_unCustomShellField2_EN}"
+LangString DESC_unCustomShellField2 ${LANG_CATALAN} "${i18n_DESC_unCustomShellField2_CA}"
+LangString DESC_unCustomShellField2 ${LANG_CZECH} "${i18n_DESC_unCustomShellField2_CZ}"
+LangString DESC_unCustomShellField2 ${LANG_DANISH} "${i18n_DESC_unCustomShellField2_DA}"
+LangString DESC_unCustomShellField2 ${LANG_GERMAN} "${i18n_DESC_unCustomShellField2_DE}"
+LangString DESC_unCustomShellField2 ${LANG_SPANISH} "${i18n_DESC_unCustomShellField2_ES}"
+LangString DESC_unCustomShellField2 ${LANG_FRENCH} "${i18n_DESC_unCustomShellField2_FR}"
+LangString DESC_unCustomShellField2 ${LANG_JAPANESE} "${i18n_DESC_unCustomShellField2_JA}"
+LangString DESC_unCustomShellField2 ${LANG_KOREAN} "${i18n_DESC_unCustomShellField2_KO}"
+LangString DESC_unCustomShellField2 ${LANG_LITHUANIAN} "${i18n_DESC_unCustomShellField2_LT}"
+LangString DESC_unCustomShellField2 ${LANG_DUTCH} "${i18n_DESC_unCustomShellField2_NL}"
+LangString DESC_unCustomShellField2 ${LANG_NORWEGIAN} "${i18n_DESC_unCustomShellField2_NO}"
+LangString DESC_unCustomShellField2 ${LANG_POLISH} "${i18n_DESC_unCustomShellField2_PL}"
+LangString DESC_unCustomShellField2 ${LANG_PORTUGUESEBR} "${i18n_DESC_unCustomShellField2_PT_BR}"
+LangString DESC_unCustomShellField2 ${LANG_PORTUGUESE} "${i18n_DESC_unCustomShellField2_PT_PT}"
+LangString DESC_unCustomShellField2 ${LANG_RUSSIAN} "${i18n_DESC_unCustomShellField2_RU}"
+LangString DESC_unCustomShellField2 ${LANG_SLOVENIAN} "${i18n_DESC_unCustomShellField2_SL}"
+LangString DESC_unCustomShellField2 ${LANG_TRADCHINESE} "${i18n_DESC_unCustomShellField2_ZH}"
+
+; Version Tab information
+VIProductVersion "${EXODUS_VERSION}"
+; English
+VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "${PRODUCT}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "${PRODUCT_COMPANY}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "${PRODUCT_COPYRIGHT}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "InternalName" "${INSTALLER_OUTPUT}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "OriginalFilename" "${INSTALLER_OUTPUT}${EXEC_EXTENSION}"
+; Catalan
+VIAddVersionKey /LANG=${LANG_CATALAN} "ProductName" "${PRODUCT}"
+VIAddVersionKey /LANG=${LANG_CATALAN} "CompanyName" "${PRODUCT_COMPANY}"
+VIAddVersionKey /LANG=${LANG_CATALAN} "LegalCopyright" "${PRODUCT_COPYRIGHT}"
+VIAddVersionKey /LANG=${LANG_CATALAN} "Comments" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_CATALAN} "FileDescription" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_CATALAN} "FileVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_CATALAN} "ProductVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_CATALAN} "InternalName" "${INSTALLER_OUTPUT}"
+VIAddVersionKey /LANG=${LANG_CATALAN} "OriginalFilename" "${INSTALLER_OUTPUT}${EXEC_EXTENSION}"
+; Czech
+VIAddVersionKey /LANG=${LANG_CZECH} "ProductName" "${PRODUCT}"
+VIAddVersionKey /LANG=${LANG_CZECH} "CompanyName" "${PRODUCT_COMPANY}"
+VIAddVersionKey /LANG=${LANG_CZECH} "LegalCopyright" "${PRODUCT_COPYRIGHT}"
+VIAddVersionKey /LANG=${LANG_CZECH} "Comments" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_CZECH} "FileDescription" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_CZECH} "FileVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_CZECH} "ProductVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_CZECH} "InternalName" "${INSTALLER_OUTPUT}"
+VIAddVersionKey /LANG=${LANG_CZECH} "OriginalFilename" "${INSTALLER_OUTPUT}${EXEC_EXTENSION}"
+; Danish
+VIAddVersionKey /LANG=${LANG_DANISH} "ProductName" "${PRODUCT}"
+VIAddVersionKey /LANG=${LANG_DANISH} "CompanyName" "${PRODUCT_COMPANY}"
+VIAddVersionKey /LANG=${LANG_DANISH} "LegalCopyright" "${PRODUCT_COPYRIGHT}"
+VIAddVersionKey /LANG=${LANG_DANISH} "Comments" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_DANISH} "FileDescription" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_DANISH} "FileVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_DANISH} "ProductVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_DANISH} "InternalName" "${INSTALLER_OUTPUT}"
+VIAddVersionKey /LANG=${LANG_DANISH} "OriginalFilename" "${INSTALLER_OUTPUT}${EXEC_EXTENSION}"
+; German
+VIAddVersionKey /LANG=${LANG_GERMAN} "ProductName" "${PRODUCT}"
+VIAddVersionKey /LANG=${LANG_GERMAN} "CompanyName" "${PRODUCT_COMPANY}"
+VIAddVersionKey /LANG=${LANG_GERMAN} "LegalCopyright" "${PRODUCT_COPYRIGHT}"
+VIAddVersionKey /LANG=${LANG_GERMAN} "Comments" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_GERMAN} "FileDescription" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_GERMAN} "FileVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_GERMAN} "ProductVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_GERMAN} "InternalName" "${INSTALLER_OUTPUT}"
+VIAddVersionKey /LANG=${LANG_GERMAN} "OriginalFilename" "${INSTALLER_OUTPUT}${EXEC_EXTENSION}"
+; Spanish
+VIAddVersionKey /LANG=${LANG_SPANISH} "ProductName" "${PRODUCT}"
+VIAddVersionKey /LANG=${LANG_SPANISH} "CompanyName" "${PRODUCT_COMPANY}"
+VIAddVersionKey /LANG=${LANG_SPANISH} "LegalCopyright" "${PRODUCT_COPYRIGHT}"
+VIAddVersionKey /LANG=${LANG_SPANISH} "Comments" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_SPANISH} "FileDescription" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_SPANISH} "FileVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_SPANISH} "ProductVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_SPANISH} "InternalName" "${INSTALLER_OUTPUT}"
+VIAddVersionKey /LANG=${LANG_SPANISH} "OriginalFilename" "${INSTALLER_OUTPUT}${EXEC_EXTENSION}"
+; French
+VIAddVersionKey /LANG=${LANG_FRENCH} "ProductName" "${PRODUCT}"
+VIAddVersionKey /LANG=${LANG_FRENCH} "CompanyName" "${PRODUCT_COMPANY}"
+VIAddVersionKey /LANG=${LANG_FRENCH} "LegalCopyright" "${PRODUCT_COPYRIGHT}"
+VIAddVersionKey /LANG=${LANG_FRENCH} "Comments" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_FRENCH} "FileDescription" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_FRENCH} "FileVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_FRENCH} "ProductVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_FRENCH} "InternalName" "${INSTALLER_OUTPUT}"
+VIAddVersionKey /LANG=${LANG_FRENCH} "OriginalFilename" "${INSTALLER_OUTPUT}${EXEC_EXTENSION}"
+; Japanese
+VIAddVersionKey /LANG=${LANG_JAPANESE} "ProductName" "${PRODUCT}"
+VIAddVersionKey /LANG=${LANG_JAPANESE} "CompanyName" "${PRODUCT_COMPANY}"
+VIAddVersionKey /LANG=${LANG_JAPANESE} "LegalCopyright" "${PRODUCT_COPYRIGHT}"
+VIAddVersionKey /LANG=${LANG_JAPANESE} "Comments" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_JAPANESE} "FileDescription" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_JAPANESE} "FileVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_JAPANESE} "ProductVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_JAPANESE} "InternalName" "${INSTALLER_OUTPUT}"
+VIAddVersionKey /LANG=${LANG_JAPANESE} "OriginalFilename" "${INSTALLER_OUTPUT}${EXEC_EXTENSION}"
+; Korean
+VIAddVersionKey /LANG=${LANG_KOREAN} "ProductName" "${PRODUCT}"
+VIAddVersionKey /LANG=${LANG_KOREAN} "CompanyName" "${PRODUCT_COMPANY}"
+VIAddVersionKey /LANG=${LANG_KOREAN} "LegalCopyright" "${PRODUCT_COPYRIGHT}"
+VIAddVersionKey /LANG=${LANG_KOREAN} "Comments" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_KOREAN} "FileDescription" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_KOREAN} "FileVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_KOREAN} "ProductVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_KOREAN} "InternalName" "${INSTALLER_OUTPUT}"
+VIAddVersionKey /LANG=${LANG_KOREAN} "OriginalFilename" "${INSTALLER_OUTPUT}${EXEC_EXTENSION}"
+; Lithuanian
+VIAddVersionKey /LANG=${LANG_LITHUANIAN} "ProductName" "${PRODUCT}"
+VIAddVersionKey /LANG=${LANG_LITHUANIAN} "CompanyName" "${PRODUCT_COMPANY}"
+VIAddVersionKey /LANG=${LANG_LITHUANIAN} "LegalCopyright" "${PRODUCT_COPYRIGHT}"
+VIAddVersionKey /LANG=${LANG_LITHUANIAN} "Comments" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_LITHUANIAN} "FileDescription" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_LITHUANIAN} "FileVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_LITHUANIAN} "ProductVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_LITHUANIAN} "InternalName" "${INSTALLER_OUTPUT}"
+VIAddVersionKey /LANG=${LANG_LITHUANIAN} "OriginalFilename" "${INSTALLER_OUTPUT}${EXEC_EXTENSION}"
+; Dutch
+VIAddVersionKey /LANG=${LANG_DUTCH} "ProductName" "${PRODUCT}"
+VIAddVersionKey /LANG=${LANG_DUTCH} "CompanyName" "${PRODUCT_COMPANY}"
+VIAddVersionKey /LANG=${LANG_DUTCH} "LegalCopyright" "${PRODUCT_COPYRIGHT}"
+VIAddVersionKey /LANG=${LANG_DUTCH} "Comments" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_DUTCH} "FileDescription" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_DUTCH} "FileVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_DUTCH} "ProductVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_DUTCH} "InternalName" "${INSTALLER_OUTPUT}"
+VIAddVersionKey /LANG=${LANG_DUTCH} "OriginalFilename" "${INSTALLER_OUTPUT}${EXEC_EXTENSION}"
+; Norwegian
+VIAddVersionKey /LANG=${LANG_NORWEGIAN} "ProductName" "${PRODUCT}"
+VIAddVersionKey /LANG=${LANG_NORWEGIAN} "CompanyName" "${PRODUCT_COMPANY}"
+VIAddVersionKey /LANG=${LANG_NORWEGIAN} "LegalCopyright" "${PRODUCT_COPYRIGHT}"
+VIAddVersionKey /LANG=${LANG_NORWEGIAN} "Comments" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_NORWEGIAN} "FileDescription" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_NORWEGIAN} "FileVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_NORWEGIAN} "ProductVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_NORWEGIAN} "InternalName" "${INSTALLER_OUTPUT}"
+VIAddVersionKey /LANG=${LANG_NORWEGIAN} "OriginalFilename" "${INSTALLER_OUTPUT}${EXEC_EXTENSION}"
+; Polish
+VIAddVersionKey /LANG=${LANG_POLISH} "ProductName" "${PRODUCT}"
+VIAddVersionKey /LANG=${LANG_POLISH} "CompanyName" "${PRODUCT_COMPANY}"
+VIAddVersionKey /LANG=${LANG_POLISH} "LegalCopyright" "${PRODUCT_COPYRIGHT}"
+VIAddVersionKey /LANG=${LANG_POLISH} "Comments" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_POLISH} "FileDescription" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_POLISH} "FileVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_POLISH} "ProductVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_POLISH} "InternalName" "${INSTALLER_OUTPUT}"
+VIAddVersionKey /LANG=${LANG_POLISH} "OriginalFilename" "${INSTALLER_OUTPUT}${EXEC_EXTENSION}"
+; Brazilian Portuguese
+VIAddVersionKey /LANG=${LANG_PORTUGUESEBR} "ProductName" "${PRODUCT}"
+VIAddVersionKey /LANG=${LANG_PORTUGUESEBR} "CompanyName" "${PRODUCT_COMPANY}"
+VIAddVersionKey /LANG=${LANG_PORTUGUESEBR} "LegalCopyright" "${PRODUCT_COPYRIGHT}"
+VIAddVersionKey /LANG=${LANG_PORTUGUESEBR} "Comments" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_PORTUGUESEBR} "FileDescription" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_PORTUGUESEBR} "FileVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_PORTUGUESEBR} "ProductVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_PORTUGUESEBR} "InternalName" "${INSTALLER_OUTPUT}"
+VIAddVersionKey /LANG=${LANG_PORTUGUESEBR} "OriginalFilename" "${INSTALLER_OUTPUT}${EXEC_EXTENSION}"
+; Portuguese
+VIAddVersionKey /LANG=${LANG_PORTUGUESE} "ProductName" "${PRODUCT}"
+VIAddVersionKey /LANG=${LANG_PORTUGUESE} "CompanyName" "${PRODUCT_COMPANY}"
+VIAddVersionKey /LANG=${LANG_PORTUGUESE} "LegalCopyright" "${PRODUCT_COPYRIGHT}"
+VIAddVersionKey /LANG=${LANG_PORTUGUESE} "Comments" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_PORTUGUESE} "FileDescription" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_PORTUGUESE} "FileVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_PORTUGUESE} "ProductVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_PORTUGUESE} "InternalName" "${INSTALLER_OUTPUT}"
+VIAddVersionKey /LANG=${LANG_PORTUGUESE} "OriginalFilename" "${INSTALLER_OUTPUT}${EXEC_EXTENSION}"
+; Russian
+VIAddVersionKey /LANG=${LANG_RUSSIAN} "ProductName" "${PRODUCT}"
+VIAddVersionKey /LANG=${LANG_RUSSIAN} "CompanyName" "${PRODUCT_COMPANY}"
+VIAddVersionKey /LANG=${LANG_RUSSIAN} "LegalCopyright" "${PRODUCT_COPYRIGHT}"
+VIAddVersionKey /LANG=${LANG_RUSSIAN} "Comments" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileDescription" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_RUSSIAN} "FileVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_RUSSIAN} "ProductVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_RUSSIAN} "InternalName" "${INSTALLER_OUTPUT}"
+VIAddVersionKey /LANG=${LANG_RUSSIAN} "OriginalFilename" "${INSTALLER_OUTPUT}${EXEC_EXTENSION}"
+; Slovenian
+VIAddVersionKey /LANG=${LANG_SLOVENIAN} "ProductName" "${PRODUCT}"
+VIAddVersionKey /LANG=${LANG_SLOVENIAN} "CompanyName" "${PRODUCT_COMPANY}"
+VIAddVersionKey /LANG=${LANG_SLOVENIAN} "LegalCopyright" "${PRODUCT_COPYRIGHT}"
+VIAddVersionKey /LANG=${LANG_SLOVENIAN} "Comments" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_SLOVENIAN} "FileDescription" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_SLOVENIAN} "FileVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_SLOVENIAN} "ProductVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_SLOVENIAN} "InternalName" "${INSTALLER_OUTPUT}"
+VIAddVersionKey /LANG=${LANG_SLOVENIAN} "OriginalFilename" "${INSTALLER_OUTPUT}${EXEC_EXTENSION}"
+; Traditional Chinese
+VIAddVersionKey /LANG=${LANG_TRADCHINESE} "ProductName" "${PRODUCT}"
+VIAddVersionKey /LANG=${LANG_TRADCHINESE} "CompanyName" "${PRODUCT_COMPANY}"
+VIAddVersionKey /LANG=${LANG_TRADCHINESE} "LegalCopyright" "${PRODUCT_COPYRIGHT}"
+VIAddVersionKey /LANG=${LANG_TRADCHINESE} "Comments" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_TRADCHINESE} "FileDescription" "${PRODUCT_COMMENTS}"
+VIAddVersionKey /LANG=${LANG_TRADCHINESE} "FileVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_TRADCHINESE} "ProductVersion" "${EXODUS_VERSION}"
+VIAddVersionKey /LANG=${LANG_TRADCHINESE} "InternalName" "${INSTALLER_OUTPUT}"
+VIAddVersionKey /LANG=${LANG_TRADCHINESE} "OriginalFilename" "${INSTALLER_OUTPUT}${EXEC_EXTENSION}"
+
+
 /*
     include the installer plugin sections localization
 
-    BRANDING: Make sure to rename/copy the following files in
-    the plugin directory and modify them to match the set
-    of plugins you wish to distribute:
-        example-plugin-locale.nsh   --> plugin-locale.nsh
-        example-plugin-sections.nsi --> plugin-sections.nsi
-        example-plugin-desc.nsi     --> plugin-desc.nsi
-        example-plugin-i18n.nsi     --> plugin-i18n.nsi
-        example-plugin-off.nsi      --> plugin-off.nsi
+    BRANDING: Make sure to modify the following files in
+    the plugin directory to match the set of plugins you
+    wish to distribute:
+        plugin-locale-new.nsh
+        plugin-sections-new.nsi
+        plugin-desc-new.nsi
+        plugin-i18n-new.nsi
+        plugin-off-new.nsi
 */
-!include "plugin-i18n.nsi"
+!include "plugin-i18n-new.nsi"
 
 
 /*
@@ -1183,16 +1811,16 @@ Section "$(NAME_Exodus)" SEC_Exodus
     ; SetOverwrite off ; only if you don't want to overwrite existing file.
     ; File "${BRANDING_FILE}${XML_EXTENSION}"
     ; SetOverwrite on
-
+    
     ; version(riched20) >= 5.30
     GetDLLVersion "$SYSDIR\${RICHED}${DLL_EXTENSION}" $R0 $R1
     IntOp $R1 $R0 / 65536
     IntOp $R2 $R0 & 0x00FF
     DetailPrint "$(MSG_RichEdVersion): $R1.$R2"
-
+    
     ; if the installed version is >= to 5.30, skip ahead.
     IntCmp 327710 $R0 lbl_reportVer lbl_reportVer
-
+    
     DetailPrint "$(MSG_RichEdUpgrade)"
 !ifndef NO_NETWORK
     ; BRANDING: change this URL
@@ -1204,31 +1832,29 @@ Section "$(NAME_Exodus)" SEC_Exodus
 !else
     File "..\${RICHED_UPDATER}${EXEC_EXTENSION}"
 !endif
-    ;WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Runonce \
-    ;    "Exodus-Setup" "$CMDLINE"
     MessageBox MB_OK "$(MSG_NoReboot)"
 
     ExecWait '"$INSTDIR\${RICHED_UPDATER}${EXEC_EXTENSION} /Q"'
     SetRebootFlag true
-
+    
   lbl_reportVer:
     DetailPrint "$(MSG_RichEdOK)"
-
+    
     ; delete any leftover richupd.exe file.  This should not error
     ; if the file doesn't exist.
     Delete $INSTDIR\${RICHED_UPDATER}${EXEC_EXTENSION}
-
+    
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;; Update common controls, if needed 5.80
     GetDLLVersion "$SYSDIR\${COMCTL}${DLL_EXTENSION}" $R0 $R1
     IntOp $R1 $R0 / 65536
     IntOp $R2 $R0 & 0x00FF
     DetailPrint "$(MSG_COMCtlVersion): $R1.$R2"
-
+    
     ; (5 << 16) + 80 w00t!
     ; if the installed version is >= to 5.80, skip ahead.
     IntCmp 327760 $R0 com_reportVer com_reportVer
-
+    
     DetailPrint "$(MSG_COMCtlUpgrade)"
 !ifndef NO_NETWORK
     ; BRANDING: change this URL
@@ -1240,19 +1866,17 @@ Section "$(NAME_Exodus)" SEC_Exodus
 !else
     File "..\${COMCTL_UPDATER}${EXEC_EXTENSION}"
 !endif
-    ;WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Runonce \
-    ;    "Exodus-Setup" "$CMDLINE"
     MessageBox MB_OK "$(MSG_NoReboot)"
     ExecWait '"$INSTDIR\${COMCTL_UPDATER}${EXEC_EXTENSION}" /Q'
     SetRebootFlag true
 
   com_reportVer:
     DetailPrint "$(MSG_COMCtlOK)"
-
+    
     ; delete any leftover 50comupd.exe file.  This should not error
     ; if the file doesn't exist.
     Delete "$INSTDIR\${COMCTL_UPDATER}${EXEC_EXTENSION}"
-
+    
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ; Check for Win95, and no Winsock2
     Call funcGetWindowsVersion
@@ -1272,17 +1896,15 @@ Section "$(NAME_Exodus)" SEC_Exodus
 !else
     File "..\${WINSOCK_UPDATER}${EXEC_EXTENSION}"
 !endif
-    ;WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Runonce \
-    ;    "Exodus-Setup" "$CMDLINE"
     MessageBox MB_OK "$(MSG_NoReboot)"
     ExecWait '"$INSTDIR\${WINSOCK_UPDATER}${EXEC_EXTENSION}" /Q'
     SetRebootFlag true
-
+        
   winsock_done:
     DetailPrint "$(MSG_WinsockOK)"
     Delete "$INSTDIR\${WINSOCK_UPDATER}${EXEC_EXTENSION}"
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    
     ; Setup stuff based on custom Shell page
     Push "${INSTALLER_SWITCH_SILENT}"
     Call funcGetConfigParam
@@ -1341,7 +1963,7 @@ Section "$(NAME_Exodus)" SEC_Exodus
     WriteRegStr HKCR "${XMPP_SHELL_OPEN_DDE_IF_KEY}" "" "${IGNORE_KEY}"
     WriteRegStr HKCR "${XMPP_SHELL_OPEN_DDE_TOPIC_KEY}" "" "${XMPP_ACTION}"
     WriteRegStr HKCR "${XMPP_MIME_KEY}" "${EXTENSION_KEY}" "${XMPP_EXTENSION}"
-
+    
 SectionEnd ; end the section
 
 Section "$(NAME_SSL)" SEC_SSL
@@ -1374,7 +1996,7 @@ Section "$(NAME_SSL)" SEC_SSL
 SectionEnd
 
 SubSection "$(NAME_Plugins)" SEC_Plugins
-    !include "plugin-sections.nsi"
+    !include "plugin-sections-new.nsi"
 SubSectionEnd
 
 ; Start menu shortcuts
@@ -1423,7 +2045,6 @@ Section "$(NAME_Locale)" SEC_Locale
 SectionEnd
 
 ; special uninstall section.
-;UninstallText "This will uninstall Exodus.  Click Uninstall to continue."
 Section "Uninstall"
     ; remove shortcuts
     !insertmacro MUI_STARTMENU_GETFOLDER Application "$0"
@@ -1479,7 +2100,14 @@ Section "Uninstall"
     Delete /REBOOTOK "$0"
     DeleteRegValue HKCU "${PRODUCT_REGISTRY_KEY}" "${PRODUCT_PREFS_FILE_KEY}"
 
-    ; TODO: Remove logs, if user says so
+    ; Remove the user logs based on user input
+    !insertmacro MUI_INSTALLOPTIONS_READ "$R0" "${UNCUSTOMSHELL}${INI_EXTENSION}" "${CUSTOMSHELL_FIELD2}" "${CUSTOMSHELL_OPTION_STATE}"
+    IntCmpU '$R0' '1' 0 +3
+    ;Checked
+    Push "$0"
+    Call un.funcRemoveUserLogs
+
+    ; TODO: remove keys and files for every user
 
     ; remove registry keys
 !ifdef USE_HKLM_KEY
@@ -1497,11 +2125,6 @@ Section "Uninstall"
     DeleteRegKey HKLM "${PRODUCT_UNINSTALL_KEY}"
 SectionEnd
 
-/*
-    HELP - I can't find out what is this one for.
-*/
-SubCaption 3 ": Exit running Exodus versions!"
-
 
 /*
     Modern install component descriptions
@@ -1512,7 +2135,7 @@ SubCaption 3 ": Exit running Exodus versions!"
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Bleed} $(DESC_Bleed)
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Locale} $(DESC_Locale)
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Plugins} $(DESC_Plugins)
-    !include "plugin-desc.nsi"
+    !include "plugin-desc-new.nsi"
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 
@@ -1523,6 +2146,15 @@ Function .onInit
     Call funcMigrateToHKLM
     Call funcInitCustomShell
     Call funcInstTypeSet
+FunctionEnd
+
+Function TurnOff
+    Exch $0
+    Push $1
+    SectionGetFlags $0 $1
+    IntOp $1 $1 & ${SECTION_OFF}
+    SectionSetFlags $0 $1
+    Pop $1
 FunctionEnd
 
 Function funcMigrateToHKLM
@@ -1602,7 +2234,8 @@ Function funcMigrateToHKLM
         CreateShortcut "$DESKTOP\${PRODUCT}${LINK_EXTENSION}" "$R0\${PRODUCT}${EXEC_EXTENSION}"
     IntCmpU '$5' '1' 0 +2 +2
         CreateShortcut "$QUICKLAUNCH\${PRODUCT}${LINK_EXTENSION}" "$R0\${PRODUCT}${EXEC_EXTENSION}"
-    ; Wrap and remove old empty keys
+    ; Wrap and remove old empty keys (only if the keys are empty,
+    ; so user preferences files won't be moved away)
     DeleteRegKey /ifempty HKCU "${PRODUCT_RESTART_KEY}"
     DeleteRegKey /ifempty HKCU "${PRODUCT_REGISTRY_KEY}"
     ClearErrors
@@ -1624,37 +2257,10 @@ Function funcInitCustomShell ; Init and localize the custom shell dialog
 FunctionEnd
 
 Function funcInstTypeSet ; Instalation type localization
-!ifdef LAZARUS
-    InstTypeSetText 0 "$(DESC_InstTypeBare)"
-    InstTypeSetText 1 "$(DESC_InstTypeFull)"
-    InstTypeSetText 2 "$(DESC_InstTypeI18n)"
-    InstTypeSetText 3 "$(DESC_InstTypeSSL)"
-    InstTypeSetText 4 "$(DESC_InstTypeBleed)"
-!endif
     Call funcSectionSetInInst
 FunctionEnd
 
 Function funcSectionSetInInst ; Section installation type setting
-!ifdef LAZARUS
-    !insertmacro SetSectionInInstType "${SEC_Exodus}" "${INSTTYPE_1}"
-    !insertmacro SetSectionInInstType "${SEC_Exodus}" "${INSTTYPE_2}"
-    !insertmacro SetSectionInInstType "${SEC_Exodus}" "${INSTTYPE_3}"
-    !insertmacro SetSectionInInstType "${SEC_Exodus}" "${INSTTYPE_4}"
-    !insertmacro SetSectionInInstType "${SEC_Exodus}" "${INSTTYPE_5}"
-    !insertmacro SetSectionInInstType "${SEC_SSL}" "${INSTTYPE_2}"
-    !insertmacro SetSectionInInstType "${SEC_SSL}" "${INSTTYPE_3}"
-    !insertmacro SetSectionInInstType "${SEC_SSL}" "${INSTTYPE_4}"
-    !insertmacro SetSectionInInstType "${SEC_Plugins}" "${INSTTYPE_2}"
-    !insertmacro SetSectionInInstType "${SEC_Menu}" "${INSTTYPE_1}"
-    !insertmacro SetSectionInInstType "${SEC_Menu}" "${INSTTYPE_2}"
-    !insertmacro SetSectionInInstType "${SEC_Menu}" "${INSTTYPE_3}"
-    !insertmacro SetSectionInInstType "${SEC_Menu}" "${INSTTYPE_4}"
-    !insertmacro SetSectionInInstType "${SEC_Menu}" "${INSTTYPE_5}"
-    !insertmacro SetSectionInInstType "${SEC_Bleed}" "${INSTTYPE_2}"
-    !insertmacro SetSectionInInstType "${SEC_Bleed}" "${INSTTYPE_5}"
-    !insertmacro SetSectionInInstType "${SEC_Locale}" "${INSTTYPE_2}"
-    !insertmacro SetSectionInInstType "${SEC_Locale}" "${INSTTYPE_3}"
-!endif
     !insertmacro SetSectionFlag "${SEC_Exodus}" "${SF_BOLD}"
     !insertmacro SetSectionFlag "${SEC_Exodus}" "${SF_RO}"
     !insertmacro UnselectSection "${SEC_Plugins}"
@@ -1689,7 +2295,7 @@ Function funcSectionSetInInst ; Section installation type setting
 !ifndef NO_NETWORK
     !insertmacro UnselectSection "${SEC_SSL}"
 !endif
-    !include "plugin-off.nsi"
+    !include "plugin-off-new.nsi"
 FunctionEnd
 
 ; NotifyInstances
@@ -1702,8 +2308,6 @@ Function NotifyInstances ; Closes all running instances of Exodus
     ; if we do, show a warning..
     FindWindow "$0" "${PRODUCT_WINDOWCLASS}" "" '0'
     IntCmpU '$0' '0' done
-    ; cancel
-    ; Quit
   loop:
     FindWindow "$0" "${PRODUCT_WINDOWCLASS}" "" '0'
     IntCmpU '$0' '0' done
@@ -1811,14 +2415,13 @@ Function funcGetVersionExA ; Get Windows version information
 FunctionEnd
 
 Function funcOnGuiInit
-!ifdef USE_HKLM_KEY
-    !ifndef DEBUG
-        Call funcCheckAdmin
-    !endif
+!ifndef DEBUG
+    Call funcCheckAdmin
 !endif
 FunctionEnd
 
 Function funcCheckAdmin ; Installation only allowed for Administrators
+!ifdef USE_HKLM_KEY
     ClearErrors
     UserInfo::GetName
     IfErrors done
@@ -1829,6 +2432,7 @@ Function funcCheckAdmin ; Installation only allowed for Administrators
         MessageBox MB_TOPMOST|MB_ICONEXCLAMATION|MB_OK "$(MSG_NoAdmin)"
         Abort
   done:
+!endif
 FunctionEnd
 
 Function funcGetConfigParam
@@ -1922,15 +2526,6 @@ Function SetCustomShell
 
 FunctionEnd
 
-Function TurnOff
-    Exch $0
-    Push $1
-    SectionGetFlags $0 $1
-    IntOp $1 $1 & ${SECTION_OFF}
-    SectionSetFlags $0 $1
-    Pop $1
-FunctionEnd
-
 Function DownloadPlugin
     Exch $1
 
@@ -1975,9 +2570,6 @@ Function .onInstSuccess
     StrCpy "$2" '"$INSTDIR\${PRODUCT}${EXEC_EXTENSION}" "$2"'
 
   exec:
-    ; For debugging -
-    ;WriteRegStr HKCU "Software\Jabber\Exodus\Start" $1 $2
-
     DetailPrint "$2"
     Exec "$2"
     SetAutoClose true
@@ -1990,19 +2582,26 @@ Function .onInstSuccess
 FunctionEnd
 
 Function un.onInit ; On Uninstall initialization
-  !insertmacro MUI_UNGETLANGUAGE
-;  Call un.funcInstTypeSet
+    !insertmacro MUI_UNGETLANGUAGE
+    Call un.funcInitCustomShell
 FunctionEnd
 
 Function un.funcOnGuiInit
-!ifdef USE_HKLM_KEY
-    !ifndef DEBUG
-        Call un.funcCheckAdmin
-    !endif
+!ifndef DEBUG
+    Call un.funcCheckAdmin
 !endif
 FunctionEnd
 
+Function un.funcInitCustomShell ; Init and localize the custom shell unistall dialog
+    !insertmacro MUI_INSTALLOPTIONS_EXTRACT "${UNCUSTOMSHELL}${INI_EXTENSION}"
+    !insertmacro MUI_INSTALLOPTIONS_WRITE "${UNCUSTOMSHELL}${INI_EXTENSION}" "${CUSTOMSHELL_FIELD1}" \
+        "${CUSTOMSHELL_OPTION_TEXT}" "$(DESC_unCustomShellField1)"
+    !insertmacro MUI_INSTALLOPTIONS_WRITE "${UNCUSTOMSHELL}${INI_EXTENSION}" "${CUSTOMSHELL_FIELD2}" \
+        "${CUSTOMSHELL_OPTION_TEXT}" "$(DESC_unCustomShellField2)"
+FunctionEnd
+
 Function un.funcCheckAdmin ; Uninstallation only allowed for Administrators
+!ifdef USE_HKLM_KEY
     ClearErrors
     UserInfo::GetName
     IfErrors done
@@ -2013,6 +2612,115 @@ Function un.funcCheckAdmin ; Uninstallation only allowed for Administrators
         MessageBox MB_TOPMOST|MB_ICONEXCLAMATION|MB_OK "$(MSG_NoAdmin)"
         Abort
   done:
+!endif
+FunctionEnd
+
+Function un.SetCustomShell
+    !insertmacro MUI_HEADER_TEXT "$(UNCUSTOMSHELL_TITLE)" \
+        "$(UNCUSTOMSHELL_SUBTITLE)"
+
+    Push $R0
+    Push $R1
+    Push $R2
+
+    !insertmacro MUI_INSTALLOPTIONS_INITDIALOG "${UNCUSTOMSHELL}${INI_EXTENSION}"
+    Pop $R0
+
+    GetDlgItem "$R1" "$R0" "${CUSTOMSHELL_FIELD1_HWND}"
+
+    ;$R1 contains the HWND of the first field
+    CreateFont "$R2" "${CUSTOMSHELL_FONT}" "${CUSTOMSHELL_FONT_HEIGHT}" "${CUSTOMSHELL_FONT_WEIGHT}"
+    SendMessage "$R1" "${WM_SETFONT}" "$R2" '0'
+
+    !insertmacro MUI_INSTALLOPTIONS_SHOW
+
+    Pop $R1
+    Pop $R1
+    Pop $R0
+
+FunctionEnd
+
+Function un.funcRemoveUserLogs
+/*
+    Function to remove the user logs if specified by the user
+    Usage:
+        Push <path to the exodus.xml file>
+        Call un.funcRemoveUserLogs
+        (Optional) Pop <error check>
+    The poped value if empty means that the path wasn't set
+    in the exodus.xml file (well not a problem, just go on).
+*/
+    Exch $0
+    Push $0
+    Call un.funcMakeMultiLineXMLFile
+    Pop $0
+    StrCpy $1 "$0"
+    Push $0
+    Call un.funcGetUserLogsPath
+    Pop $0
+    StrCmp "$0" "" notfound
+    RmDir /r "$0"
+  notfound:
+    Delete "$1"
+    Exch $0
+FunctionEnd
+
+Function un.funcMakeMultiLineXMLFile
+/*
+    Function to convert a one line XML file to a multiline one
+    since NSIS functions file functions are string orientated.
+    This function should need the StrFunc.nsh inclusion (if the
+    file would allow to be included in the uninstaller).
+    Usage:
+        Push <name of file to convert>
+        Call un.funcMakeMultiLineXMLFile
+        Pop <name of temporary multiline XML file>
+
+    Don't forget to remove the temporary file when done.
+*/
+    Exch $0
+    FileOpen $R1 "$0" 'r'
+    GetTempFileName $0
+    FileOpen $R0 "$0" 'w'
+  loop:
+    ClearErrors
+    FileRead $R1 $R2
+    IfErrors done
+    ${un.StrRep} $R2 "$R2" "${XML_TAG_SEPARATORS}" "${XML_ML_TAG_SEPARATORS}"
+    FileWrite $R0 $R2
+    Goto loop
+  done:
+    FileClose $R0
+    FileClose $R1
+    Exch $0
+FunctionEnd
+
+Function un.funcGetUserLogsPath
+/*
+    Function to get the path to the user logs.
+    This function should need the StrFunc.nsh inclusion (if the
+    file would allow to be included in the uninstaller).
+        Push <name of file to parse>
+        Call un.funcGetUserLogsPath
+        Pop <path to the user logs>
+*/
+    Exch $0
+    FileOpen $R0 "$0" 'r'
+  loop:
+    ClearErrors
+    FileRead $R0 $0
+    IfErrors notfound
+    ${un.StrStrAdv} $0 "$0" '${LOG_PATH_XML_TAG}' '>' '>' '0' '0'
+    StrCmp "$0" "" 0 found
+    Goto loop
+  found:
+    ${un.StrStrAdv} $0 "$0" '${XML_TAG_END}' '<' '<' '0' '0'
+    Goto done
+  notfound:
+    StrCpy $0 ""
+  done:
+    FileClose $R0
+    Exch $0
 FunctionEnd
 
 ; eof
