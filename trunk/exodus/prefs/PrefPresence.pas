@@ -50,7 +50,6 @@ type
     Label8: TLabel;
     cboPresTracking: TComboBox;
     Label1: TLabel;
-    procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure lstCustomPresClick(Sender: TObject);
     procedure txtCPTitleChange(Sender: TObject);
@@ -114,12 +113,6 @@ begin
 end;
 
 
-procedure TfrmPrefPresence.FormCreate(Sender: TObject);
-begin
-  inherited;
-    _pres_list := TList.Create();
-end;
-
 procedure TfrmPrefPresence.clearPresList();
 var
     i: integer;
@@ -169,7 +162,8 @@ begin
         txtCPPriority.Text := IntToStr(priority);
         txtCPHotkey.HotKey := TextToShortcut(hotkey);
     end;
-    _no_pres_change := false;end;
+    _no_pres_change := false;
+end;
 
 procedure TfrmPrefPresence.txtCPTitleChange(Sender: TObject);
 var
