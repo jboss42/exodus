@@ -946,18 +946,13 @@ begin
     end;
 
     if (ritem <> nil) then begin
-        if (event = '/presence/offline') then begin
-            // remove the node
-            if (ritem.jid.jid <> MainSession.BareJid) then
-                p := MainSession.PPDB.FindPres(jid, '');
-            RenderNode(ritem, p);
-        end
-        else begin
-            // possibly re-render the node based on this pres packet
-            if (ritem.jid.jid <> MainSession.BareJid) then
-                p := MainSession.ppdb.FindPres(tmp_jid.jid, '');
-            RenderNode(ritem, p);
-        end;
+
+        // If this presence is NOT from us, always grab the "primary" for this user instead
+        // If it IS from us, we always want the new presence packet to render
+        if (ritem.jid.jid <> MainSession.BareJid) then
+            p := MainSession.PPDB.FindPres(jid, '');
+
+        RenderNode(ritem, p);
     end;
 
     tmp_jid.Free();
