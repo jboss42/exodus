@@ -28,7 +28,7 @@ e("$dcc $opts -Noutput IdleHooks.dpr");
 e("$rcc version.rc");
 e("$dcc $opts -Noutput -U\"$::TNT\" Exodus.dpr");
 
-e("$::DXGETTEXT --delphi -b . -b prefs -b ..\\jopl");
+e("$::DXGETTEXT *.pas *.inc *.rc *.dpr *.xfm *.dfm prefs\\*.pas prefs\\*.inc prefs\\*.rc prefs\\*.dpr prefs\\*.xfm prefs\\*.dfm ..\\jopl\\*.pas ..\\jopl\\*.inc ..\\jopl\\*.rc ..\\jopl\\*.dpr ..\\jopl\\*.xfm ..\\jopl\\*.dfm");
 
 unlink "locale.zip";
 grep unlink, glob("locale/*/LC_MESSAGES/default.mo");
