@@ -486,13 +486,6 @@ end;
 procedure TfrmBaseChat.WMVScroll(var msg: TMessage);
 begin
     //
-    if (msg.WParamLo = SB_THUMBPOSITION) then begin
-        _scroll := true;
-    end
-    else if (msg.WParamLo = SB_THUMBTRACK) then begin
-        _scroll := false;
-    end;
-    inherited;
 end;
 
 {---------------------------------------}

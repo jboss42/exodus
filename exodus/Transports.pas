@@ -92,7 +92,6 @@ end;
 procedure TTransportProxy.ShowError(msg: Widestring);
 begin
     MessageDlgW(msg, mtError, [mbOK], 0);
-    Self.Free();
 end;
 
 {---------------------------------------}
@@ -102,28 +101,31 @@ var
     iq: TJabberIQ;
     user: WideString;
 begin
-    //
     if (event = 'timeout') then begin
         ShowError(_(sTransportTimeout));
+        Self.Free();
         exit;
-    end;
+    end
 
-    if (tag.GetAttribute('type') = 'error') then begin
+    else if (tag.GetAttribute('type') = 'error') then begin
         ShowError(_(sTransportError));
+        Self.Free();
         exit;
-    end;
+    end
 
-    if (action = 'remove') then begin
+    else if (action = 'remove') then begin
         key_tag := tag.QueryXPTag('/iq/query/key');
         user_tag := tag.QueryXPTag('/iq/query/username');
 
         if (user_tag <> nil) then
             user := user_tag.Data();
+
         if (key_tag <> nil) then
             key := key_tag.Data();
 
         if (user = '') then begin
             ShowError(_(sTransportNotReg));
+            Self.Free();
             exit;
         end;
 
@@ -145,21 +147,16 @@ end;
 {---------------------------------------}
 procedure TTransportProxy.RemoveSetCallback(event: string; tag: TXMLTag);
 begin
-    //
     if (event = 'timeout') then begin
         ShowError(_(sTransportTimeout));
-        exit;
-    end;
-
-    if (tag.GetAttribute('type') = 'error') then begin
+    end
+    else if (tag.GetAttribute('type') = 'error') then begin
         ShowError(_(sTransportError));
-        exit;
     end
     else begin
         MessageDlgW(_(sTransportSuccess), mtInformation, [mbOK], 0);
-        self.free();
-        exit;
     end;
+    Self.Free();
 end;
 
 
