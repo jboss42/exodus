@@ -28,10 +28,10 @@ object frmProfile: TfrmProfile
     Top = 0
     Width = 317
     Height = 211
-    ActivePage = TabSheet1
+    ActivePage = TabSheet3
     Align = alLeft
     Style = tsFlatButtons
-    TabIndex = 0
+    TabIndex = 3
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'General'
@@ -62,6 +62,7 @@ object frmProfile: TfrmProfile
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsUnderline]
         ParentFont = False
+        OnClick = lblEmailClick
       end
       object Label7: TLabel
         Left = 10
@@ -187,22 +188,6 @@ object frmProfile: TfrmProfile
         ItemHeight = 13
         TabOrder = 0
       end
-      object Button2: TButton
-        Left = 168
-        Top = 32
-        Width = 75
-        Height = 25
-        Caption = 'Client Version'
-        TabOrder = 1
-      end
-      object Button3: TButton
-        Left = 168
-        Top = 64
-        Width = 75
-        Height = 25
-        Caption = 'Client Time'
-        TabOrder = 2
-      end
       object Panel1: TPanel
         Left = 0
         Top = 0
@@ -212,15 +197,34 @@ object frmProfile: TfrmProfile
         Alignment = taLeftJustify
         BevelOuter = bvNone
         Caption = 'Online Resources'
-        TabOrder = 3
+        TabOrder = 1
       end
-      object Button4: TButton
+      object btnLast: TButton
         Left = 168
-        Top = 96
+        Top = 88
         Width = 75
         Height = 25
         Caption = 'Last Activity'
+        TabOrder = 2
+        OnClick = btnVersionClick
+      end
+      object btnVersion: TButton
+        Left = 168
+        Top = 24
+        Width = 75
+        Height = 25
+        Caption = 'Client Version'
+        TabOrder = 3
+        OnClick = btnVersionClick
+      end
+      object btnTime: TButton
+        Left = 168
+        Top = 56
+        Width = 75
+        Height = 25
+        Caption = 'Client Time'
         TabOrder = 4
+        OnClick = btnVersionClick
       end
     end
     object TabSheet2: TTabSheet
@@ -272,6 +276,7 @@ object frmProfile: TfrmProfile
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsUnderline]
         ParentFont = False
+        OnClick = lblEmailClick
       end
       object Label12: TLabel
         Left = 10
@@ -1151,7 +1156,9 @@ object frmProfile: TfrmProfile
     Height = 211
     Align = alLeft
     Indent = 19
+    ReadOnly = True
     TabOrder = 2
+    OnChange = TreeView1Change
     OnClick = TreeView1Click
     Items.Data = {
       040000001F0000000000000000000000FFFFFFFFFFFFFFFF0000000001000000
