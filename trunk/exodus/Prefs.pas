@@ -239,6 +239,7 @@ type
     StaticText13: TStaticText;
     Label29: TLabel;
     txtToastDuration: TEdit;
+    chkStartMin: TCheckBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -435,6 +436,7 @@ begin
         chkAutoStart.Checked := getBool('auto_start');
         chkExpanded.Checked := getBool('expanded');
         chkDebug.Checked := getBool('debug');
+        chkStartMin.Checked := getBool('min_start');
         chkAutoLogin.Checked := getBool('autologin');
         chkOnTop.Checked := getBool('window_ontop');
         chkToolbox.Checked := getBool('window_toolbox');
@@ -728,6 +730,7 @@ begin
         setBool('auto_updates', chkAutoUpdate.Checked);
         setBool('auto_start', chkAutoStart.Checked);
         setBool('debug', chkDebug.Checked);
+        setBool('min_start', chkStartMin.Checked);
         setBool('window_ontop', chkOnTop.Checked);
         setBool('window_toolbox', chkToolbox.Checked);
         setBool('autologin', chkAutoLogin.Checked);
