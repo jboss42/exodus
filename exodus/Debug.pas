@@ -210,7 +210,7 @@ begin
   inherited;
     if ((Key = VK_RETURN) and (ssCtrl in Shift)) then begin
         btnSendRawClick(Self);
-        Key = #0;
+        Key := 0;
         end;
 end;
 
