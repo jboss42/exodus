@@ -6,13 +6,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-02-26 09:21\n"
-"PO-Revision-Date: 2004-02-26 09:21\n"
+"POT-Creation-Date: 2004-02-26 20:02\n"
+"PO-Revision-Date: 2004-02-26 20:02\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: dxgettext 1.1.1\n"
+"X-Generator: dxgettext 1.2 beta 2\n"
 
 #. frmAbout..Caption
 #: About.dfm:8
@@ -106,9 +106,9 @@ msgstr ""
 #. frmRiser..Font.Name
 #: RiserWindow.dfm:14
 #. frmRoom..Panel1..pnlSubj..lblSubjectURL..Font.Name
-#: Room.dfm:128
+#: Room.dfm:129
 #. frmRoom..Panel1..pnlSubj..lblSubject..Font.Name
-#: Room.dfm:146
+#: Room.dfm:147
 #. frmRoomAdminList..Font.Name
 #: RoomAdminList.dfm:13
 #. frmAdd..Font.Name
@@ -638,21 +638,21 @@ msgstr ""
 #. frmExodus..popTray..N01..Caption
 #: Jabber1.dfm:2707
 #. frmJud..PopupMenu1..N1..Caption
-#: jud.dfm:220
+#: Jud.dfm:220
 #. frmMsgRecv..popContact..N1..Caption
 #: MsgRecv.dfm:519
 #. frmMsgRecv..popContact..N2..Caption
 #: MsgRecv.dfm:528
 #. frmRoom..popRoom..popAdmin..N4..Caption
-#: Room.dfm:217
+#: Room.dfm:218
 #. frmRoom..popRoom..popAdmin..N5..Caption
-#: Room.dfm:228
+#: Room.dfm:229
 #. frmRoom..popRoom..N1..Caption
-#: Room.dfm:240
+#: Room.dfm:241
 #. frmRoom..popRoom..N6..Caption
-#: Room.dfm:259
+#: Room.dfm:260
 #. frmRoom..popRoomRoster..N3..Caption
-#: Room.dfm:284
+#: Room.dfm:285
 #. frmRosterWindow..popRoster..popPresence..N2..Caption
 #: RosterWindow.dfm:360
 #. frmRosterWindow..popRoster..N1..Caption
@@ -781,7 +781,7 @@ msgstr ""
 #. frmRoom..Panel3..MsgList..Font.Name
 #: Room.dfm:30
 #. frmRoom..Panel1..btnClose..Font.Name
-#: Room.dfm:103
+#: Room.dfm:104
 #. frmRosterWindow..pnlFind..btnFindClose..Font.Name
 #: RosterWindow.dfm:93
 #. frmXferManager..Panel1..btnClose..Font.Name
@@ -803,7 +803,7 @@ msgstr ""
 #. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..Panel1..btnClose..Caption
 #: MsgRecv.dfm:389
 #. frmRoom..Panel1..btnClose..Caption
-#: Room.dfm:98
+#: Room.dfm:99
 #. frmRosterWindow..pnlFind..btnFindClose..Caption
 #: RosterWindow.dfm:88
 #. frmXferManager..Panel1..btnClose..Caption
@@ -1031,7 +1031,7 @@ msgstr ""
 #. frmMsgRecv..popContact..popClearHistory..Caption
 #: MsgRecv.dfm:488
 #. frmRoom..popRoom..popClearHistory..Caption
-#: Room.dfm:174
+#: Room.dfm:175
 msgid "Clear History"
 msgstr ""
 
@@ -1105,14 +1105,14 @@ msgstr ""
 #. frmChat..popContact..NotificationOptions1..Caption
 #: ChatWin.dfm:153
 #. frmRoom..popRoom..NotificationOptions1..Caption
-#: Room.dfm:243
+#: Room.dfm:244
 msgid "Notification Options ..."
 msgstr ""
 
 #. frmChat..popContact..mnuOnTop..Caption
 #: ChatWin.dfm:157
 #. frmRoom..popRoom..mnuOnTop..Caption
-#: Room.dfm:251
+#: Room.dfm:252
 msgid "Always on Top"
 msgstr ""
 
@@ -1124,7 +1124,7 @@ msgstr ""
 #. frmChat..popContact..mnuWordwrap..Caption
 #: ChatWin.dfm:165
 #. frmRoom..popRoom..mnuWordwrap..Caption
-#: Room.dfm:247
+#: Room.dfm:248
 msgid "Word Wrap Input"
 msgstr ""
 
@@ -1460,7 +1460,7 @@ msgstr ""
 #. frmCustomPres..cboType....Items.WideStrings
 #: CustomPres.dfm:75
 #. frmRoom..popRoomRoster..popRosterChat..Caption
-#: Room.dfm:272
+#: Room.dfm:273
 #: ChatWin.pas:457
 #: ChatWin.pas:469
 #: ChatWin.pas:471
@@ -1605,7 +1605,7 @@ msgstr ""
 #. frmMsgRecv..Caption
 #: MsgRecv.dfm:6
 #. frmRoom..popRoomRoster..popRosterMsg..Caption
-#: Room.dfm:268
+#: Room.dfm:269
 msgid "Message"
 msgstr ""
 
@@ -1934,7 +1934,7 @@ msgstr ""
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Hint
 #: Jabber1.dfm:146
 #. frmJud..PopupMenu1..popAdd..Caption
-#: jud.dfm:212
+#: Jud.dfm:212
 #. frmAdd..Caption
 #: RosterAdd.dfm:6
 #. frmRosterWindow..popActions..popAddContact..Caption
@@ -2243,7 +2243,7 @@ msgstr ""
 #. frmExodus..popTray..trayMessage..Caption
 #: Jabber1.dfm:2695
 #. frmJud..PopupMenu1..popMessage..Caption
-#: jud.dfm:227
+#: Jud.dfm:227
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
 #: subscribe.dfm:150
 msgid "Send Message"
@@ -2326,7 +2326,7 @@ msgstr ""
 #. frmJoinRoom..Tabs..TabSheet2..Caption
 #: JoinRoom.dfm:148
 #. frmJud..Tabs..TabSheet2..Caption
-#: jud.dfm:78
+#: Jud.dfm:78
 #. frmRegister..Tabs..TabSheet2..Caption
 #: RegForm.dfm:60
 msgid "TabSheet2"
@@ -2360,79 +2360,79 @@ msgid "Fetch Rooms"
 msgstr ""
 
 #. frmJud..Caption
-#: jud.dfm:5
+#: Jud.dfm:5
 msgid "Jabber Search"
 msgstr ""
 
 #. frmJud..Panel1..lblWizardTitle..Caption
-#: jud.dfm:43
+#: Jud.dfm:43
 msgid "Jabber Search Wizard"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet1..lblSelect....Align
-#: jud.dfm:64
+#: Jud.dfm:64
 msgid "Select the user database or enter in the Jabber ID of the search "
 "agent to use:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet2..lblWait..Caption
-#: jud.dfm:86
+#: Jud.dfm:86
 msgid "Please wait. Contacting search agent:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..Caption
-#: jud.dfm:100
+#: Jud.dfm:100
 #. frmRegister..Tabs..TabSheet3..Caption
 #: RegForm.dfm:95
 msgid "TabSheet3"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..lblInstructions..Caption
-#: jud.dfm:108
+#: Jud.dfm:108
 msgid "Fill in the search criteria to find contacts "
 "on."
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Caption
-#: jud.dfm:124
+#: Jud.dfm:124
 #. frmRegister..Tabs..TabSheet4..Caption
 #: RegForm.dfm:115
 msgid "TabSheet4"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Label3..Caption
-#: jud.dfm:140
+#: Jud.dfm:140
 msgid "Add Contacts to this group:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Caption
-#: jud.dfm:148
+#: Jud.dfm:148
 #. frmAdd..lblAddGrp..Caption
 #: RosterAdd.dfm:49
 msgid "Add a new Group"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblCount..Caption
-#: jud.dfm:159
+#: Jud.dfm:159
 msgid "N items found"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Button1..Caption
-#: jud.dfm:176
+#: Jud.dfm:176
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: RosterRecv.dfm:45
-#: jud.pas:641
-#: jud.pas:643
+#: Jud.pas:641
+#: Jud.pas:643
 msgid "Add Contacts"
 msgstr ""
 
 #. frmJud..PopupMenu1..popProfile..Caption
-#: jud.dfm:216
+#: Jud.dfm:216
 msgid "View Profile"
 msgstr ""
 
 #. frmJud..PopupMenu1..popChat..Caption
-#: jud.dfm:223
+#: Jud.dfm:223
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:146
 #: Jabber1.pas:2288
@@ -2530,7 +2530,7 @@ msgstr ""
 #. frmMsgRecv..pnlTop..pnlHeader..pnlSubject..lblSubject2..Caption
 #: MsgRecv.dfm:335
 #. frmRoom..Panel1..pnlSubj..lblSubjectURL..Caption
-#: Room.dfm:124
+#: Room.dfm:125
 msgid "Subject:"
 msgstr ""
 
@@ -2552,7 +2552,7 @@ msgstr ""
 #. frmMsgRecv..popContact..mnuHistory..Caption
 #: MsgRecv.dfm:484
 #. frmRoom..popRoom..popShowHistory..Caption
-#: Room.dfm:170
+#: Room.dfm:171
 msgid "Show History"
 msgstr ""
 
@@ -5874,105 +5874,105 @@ msgid "foo"
 msgstr ""
 
 #. frmRoom..Panel1..pnlSubj..lblSubject..Caption
-#: Room.dfm:142
+#: Room.dfm:143
 msgid " lblSubject"
 msgstr ""
 
 #. frmRoom..popRoom..popClear..Caption
-#: Room.dfm:166
+#: Room.dfm:167
 msgid "Clear Window"
 msgstr ""
 
 #. frmRoom..popRoom..popBookmark..Caption
-#: Room.dfm:178
+#: Room.dfm:179
 msgid "Bookmark Room..."
 msgstr ""
 
 #. frmRoom..popRoom..popRegister..Caption
-#: Room.dfm:182
+#: Room.dfm:183
 msgid "Register with Room..."
 msgstr ""
 
 #. frmRoom..popRoom..popInvite..Caption
-#: Room.dfm:186
+#: Room.dfm:187
 msgid "Invite Contacts..."
 msgstr ""
 
 #. frmRoom..popRoom..popNick..Caption
-#: Room.dfm:190
+#: Room.dfm:191
 msgid "Change Nickname..."
 msgstr ""
 
 #. frmRoom..popRoom..S1..Caption
-#: Room.dfm:194
+#: Room.dfm:195
 msgid "Save As..."
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..Caption
-#: Room.dfm:198
+#: Room.dfm:199
 msgid "Admin"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popVoiceList..Caption
-#: Room.dfm:201
+#: Room.dfm:202
 #. edit a list
 #: Room.pas:1748
 msgid "Edit Voice List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popBanList..Caption
-#: Room.dfm:205
+#: Room.dfm:206
 #: Room.pas:1750
 msgid "Edit Ban List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popMemberList..Caption
-#: Room.dfm:209
+#: Room.dfm:210
 #: Room.pas:1752
 msgid "Edit Member List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popModeratorList..Caption
-#: Room.dfm:213
+#: Room.dfm:214
 #: Room.pas:1754
 msgid "Edit Moderator List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popAdminList..Caption
-#: Room.dfm:220
+#: Room.dfm:221
 #: Room.pas:1756
 msgid "Edit Admin List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popOwnerList..Caption
-#: Room.dfm:224
+#: Room.dfm:225
 #: Room.pas:1758
 msgid "Edit Owner List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popConfigure..Caption
-#: Room.dfm:231
+#: Room.dfm:232
 msgid "Configure Room"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popDestroy..Caption
-#: Room.dfm:235
+#: Room.dfm:236
 #: Room.pas:1772
 msgid "Destroy Room"
 msgstr ""
 
 #. frmRoom..popRoom..popClose..Caption
-#: Room.dfm:255
+#: Room.dfm:256
 msgid "Close Room"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popRosterSendJID..Caption
-#: Room.dfm:276
+#: Room.dfm:277
 msgid "Send my JID"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popRosterBlock..Caption
-#: Room.dfm:280
+#: Room.dfm:281
 #. frmRosterWindow..popRoster..popBlock..Caption
 #: RosterWindow.dfm:380
 #. frmRosterWindow..popGroup..popGroupBlock..Caption
@@ -5986,42 +5986,42 @@ msgid "Block"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popKick..Caption
-#: Room.dfm:287
+#: Room.dfm:288
 msgid "Kick"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popBan..Caption
-#: Room.dfm:292
+#: Room.dfm:293
 msgid "Ban"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popVoice..Caption
-#: Room.dfm:297
+#: Room.dfm:298
 msgid "Toggle Voice"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popModerator..Caption
-#: Room.dfm:302
+#: Room.dfm:303
 msgid "Make Moderator"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popAdministrator..Caption
-#: Room.dfm:307
+#: Room.dfm:308
 msgid "Make Administrator"
 msgstr ""
 
 #. frmRoom..dlgSave..DefaultExt
-#: Room.dfm:313
+#: Room.dfm:314
 msgid ".rtf"
 msgstr ""
 
 #. frmRoom..dlgSave..Filter
-#: Room.dfm:314
+#: Room.dfm:315
 msgid "RTF (*.rtf)|*.rtf|Text (*.txt)|*.txt"
 msgstr ""
 
 #. frmRoom..dlgSave..Title
-#: Room.dfm:317
+#: Room.dfm:318
 msgid "Save Room Contents"
 msgstr ""
 
@@ -7150,22 +7150,22 @@ msgid "You must enter a nickname"
 msgstr ""
 
 #. timeout
-#: jud.pas:317
+#: Jud.pas:317
 #. we got an iq-error back
-#: jud.pas:323
+#: Jud.pas:323
 msgid "Could not contact the search agent."
 msgstr ""
 
 #. timeout
-#: jud.pas:425
+#: Jud.pas:425
 msgid "The search timed out."
 msgstr ""
 
-#: jud.pas:454
+#: Jud.pas:454
 msgid "No Results were found."
 msgstr ""
 
-#: jud.pas:556
+#: Jud.pas:556
 msgid "%d items found."
 msgstr ""
 
