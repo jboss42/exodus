@@ -290,8 +290,6 @@ begin
                 HomePhone.Parse(tags[i]);
             end;
         end;
-
-
 end;
 
 {---------------------------------------}
@@ -300,7 +298,7 @@ var
     vtag, t1: TXMLTag;
 begin
     //
-    vtag := tag.AddTag('VCARD');
+    vtag := tag.AddTag('vCard');
     vtag.PutAttribute('xmlns', 'vcard-temp');
 
     t1 := vtag.AddTag('N');
