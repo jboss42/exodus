@@ -23,12 +23,12 @@ interface
 
 uses 
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls;
+  StdCtrls, TntStdCtrls;
 
 type
   TfrmField = class(TFrame)
-    lblPrompt: TLabel;
-    txtData: TEdit;
+    lblPrompt: TTntLabel;
+    txtData: TTntEdit;
   private
     { Private declarations }
   public
