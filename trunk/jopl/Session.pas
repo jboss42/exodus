@@ -74,6 +74,8 @@ type
         function GetPort(): integer;
         procedure SetPriority(priority: integer);
         function GetPriority(): integer;
+
+        function GetActive(): boolean;
     published
         procedure AuthGetCallback(event: string; xml: TXMLTag);
         procedure AuthCallback(event: string; tag: TXMLTag);
@@ -131,6 +133,7 @@ type
         property MyAgents: TAgents read getMyAgents;
         property IsPaused: boolean read _paused;
         property Invisible: boolean read _invisible write _invisible;
+        property Active: boolean read GetActive;
     end;
 
 const
@@ -162,8 +165,7 @@ uses
     {$else}
     QForms, QDialogs,
     {$endif}
-    XMLUtils, XMLSocketStream, IdGlobal,
-//    XMLHttpStream, 
+    XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal,
     iq;
 
 {---------------------------------------}
@@ -171,14 +173,12 @@ Constructor TJabberSession.Create(ConfigFile: string);
 begin
     //
     inherited Create();
-    
-    _stream := TXMLSocketStream.Create('stream:stream');
-//    _stream := TXMLHttpStream.Create('stream:stream');
+
     _register := false;
     _id := 1;
     _cb_id := 1;
     _profile := nil;
-    
+
     // Create the event dispatcher mechanism
     _dispatcher := TSignalDispatcher.Create;
     _packetSignal := TPacketSignal.Create();
@@ -192,9 +192,6 @@ begin
     _dispatcher.AddSignal('/presence', _presSignal);
 
     _pauseQueue := TQueue.Create();
-
-    // Register our session to get XML Tags
-    _stream.RegisterStreamCallback(Self.StreamCallback);
 
     // Create all the things which might register w/ the session
     ppdb := TJabberPPDB.Create;
@@ -226,7 +223,8 @@ begin
     ChatList.Free;
     Agents.Free;
 
-    _stream.Free;
+    if (_stream <> nil) then
+        _stream.Free;
     _pauseQueue.Free;
 
     // Free the dispatcher... this should free the signals
@@ -334,24 +332,39 @@ end;
 {---------------------------------------}
 procedure TJabberSession.Connect;
 begin
-    // Switch port for SSL connections
-    { Now done in dialog box
-    if (_port = 5222) and (_use_ssl) then
-        _port := 5223;
-    }
-    if (_profile <> nil) then
-        _stream.Connect(_profile);
+    if (_profile = nil) then
+        raise Exception.Create('Invalid profile')
+    else if (_stream <> nil) then
+        raise Exception.Create('Session is already connected');
+
+    case _profile.ConnectionType of
+    conn_normal:
+        _stream := TXMLSocketStream.Create('stream:stream');
+    conn_http:
+        _stream := TXMLHttpStream.Create('stream:stream');
+    else
+        // don't I18N
+        raise Exception.Create('Invalid connection type');
+    end;
+
+    // Register our session to get XML Tags
+    _stream.RegisterStreamCallback(Self.StreamCallback);
+
+    _stream.Connect(_profile);
 end;
 
 {---------------------------------------}
 procedure TJabberSession.Disconnect;
 begin
     // Save the server side prefs and kill our connection.
-    if (_stream.Active) then begin
-        Prefs.SaveServerPrefs();
-        _stream.Send('<presence type="unavailable"/>');
-        _stream.Disconnect;
-        end;
+    if (_stream = nil) then exit;
+
+    Prefs.SaveServerPrefs();
+    _stream.Send('<presence type="unavailable"/>');
+    _stream.Disconnect;
+
+    _stream.Free();
+    _stream := nil;
     _register := false;
 end;
 
@@ -359,8 +372,14 @@ end;
 procedure TJabberSession.SendTag(tag: TXMLTag);
 begin
     // Send this tag out to the socket
-    _stream.SendTag(tag);
-    tag.Free;
+    if (_stream <> nil) then begin
+        _stream.SendTag(tag);
+        tag.Free;
+        end
+    else begin
+        tag.Free;
+        raise Exception.Create('Invalid stream');
+        end;
 end;
 
 {---------------------------------------}
@@ -768,6 +787,11 @@ begin
     block := TXMLTag.Create('block');
     block.PutAttribute('jid', jid.jid);
     MainSession.FireEvent('/session/block', block);
+end;
+
+function TJabberSession.GetActive(): boolean;
+begin
+    Result := (_stream <> nil);
 end;
 
 end.

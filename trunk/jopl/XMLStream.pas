@@ -117,8 +117,9 @@ type
     protected
         function GetData(): Widestring;
         procedure Push(buff: Widestring);
-        procedure CleanUp(); virtual;
+        procedure CleanUp();
         procedure doMessage(msg: integer);
+        procedure doMessageSync(msg: integer);
 
     public
         constructor Create(strm: TXMLStream; root: Widestring); reintroduce;
@@ -223,6 +224,7 @@ begin
     _domStack.Free();
 end;
 
+
 {---------------------------------------}
 procedure TParseThread.doMessage(msg: integer);
 begin
@@ -232,6 +234,17 @@ begin
     _cur_msg.lparam := msg;
 
     Synchronize(Self.DispatchMsg);
+end;
+
+{---------------------------------------}
+procedure TParseThread.doMessageSync(msg: integer);
+begin
+    if (_stream = nil) then exit;
+
+    _cur_msg.msg := WM_JABBER;
+    _cur_msg.lparam := msg;
+
+    Self.DispatchMsg;
 end;
 
 {---------------------------------------}
