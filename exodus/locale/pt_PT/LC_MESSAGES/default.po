@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exodus 0.8-Daily\n"
 "POT-Creation-Date: 2003-05-08 06:59\n"
-"PO-Revision-Date: 2004-03-22 05:15-0000\n"
+"PO-Revision-Date: 2004-04-02 14:29-0000\n"
 "Last-Translator: Lazarus Long <lazarus.long@bigfoot.com>\n"
 "Language-Team: pt_PT <lazarus.long@bigfoot.com>\n"
 "MIME-Version: 1.0\n"
@@ -940,7 +940,7 @@ msgstr "Lista"
 #. frmPrefTransfer..btnTransferBrowse..Caption
 #: Browser.dfm:3857
 #: ConnDetails.dfm:281
-#: ExResponders.pas:461
+#: ExResponders.pas:480
 #: prefs/PrefMsg.dfm:75
 #: prefs/PrefMsg.dfm:129
 #: prefs/PrefPlugins.dfm:71
@@ -967,7 +967,7 @@ msgstr "Cartão de visita"
 
 #. frmBrowse..popContext..mVersion..Caption
 #: Browser.dfm:3876
-#: ExResponders.pas:323
+#: ExResponders.pas:342
 msgid "Version"
 msgstr "Versão"
 
@@ -975,7 +975,7 @@ msgstr "Versão"
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuTime..Caption
 #: Browser.dfm:3880
 #: Jabber1.dfm:444
-#: ExResponders.pas:375
+#: ExResponders.pas:394
 msgid "Time"
 msgstr "Hora local"
 
@@ -1460,6 +1460,7 @@ msgstr "Prioridade"
 #: ChatWin.pas:458
 #: ChatWin.pas:470
 #: ChatWin.pas:472
+#: ChatWin.pas:474
 msgid "Chat"
 msgstr "Conversa"
 
@@ -1476,7 +1477,7 @@ msgstr "Conversa"
 #: Jabber1.dfm:2656
 #: RosterWindow.dfm:403
 #: ExSession.pas:184
-#: Jabber1.pas:2732
+#: Jabber1.pas:2734
 #: RosterWindow.pas:346
 #: RosterWindow.pas:368
 #: RosterWindow.pas:1652
@@ -1497,7 +1498,7 @@ msgstr "Disponível"
 #: Jabber1.dfm:377
 #: Jabber1.dfm:2668
 #: RosterWindow.dfm:415
-#: Jabber1.pas:2730
+#: Jabber1.pas:2732
 #: RosterWindow.pas:348
 #: RosterWindow.pas:369
 #: RosterWindow.pas:1636
@@ -1795,7 +1796,7 @@ msgstr "Forçar os contactos a removerem-me do seu rol"
 #. frmInputPass..Caption
 #. accordingly.
 #: InputPassword.dfm:8
-#: Jabber1.pas:906
+#: Jabber1.pas:907
 msgid "Exodus Password"
 msgstr "Palavra-passe do Exodus"
 
@@ -1896,9 +1897,9 @@ msgstr "Junte-se a nós nesta sala de conferência."
 #. do this.
 #: Jabber1.dfm:7
 #: ConnDetails.pas:402
-#: ExSession.pas:470
+#: ExSession.pas:473
 #: ExUtils.pas:1225
-#: Jabber1.pas:1220
+#: Jabber1.pas:1222
 #: Login.pas:110
 #: Login.pas:184
 msgid "Exodus"
@@ -2424,7 +2425,7 @@ msgstr "Ver perfil"
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: jud.dfm:223
 #: subscribe.dfm:146
-#: Jabber1.pas:2291
+#: Jabber1.pas:2293
 msgid "Start Chat"
 msgstr "Iniciar conversa"
 
@@ -2447,7 +2448,7 @@ msgstr "&Detalhes..."
 #. otherwise, if we have no profiles yet, use the default profile name.
 #. make sure we have at least a default profile
 #: Login.dfm:99
-#: ExSession.pas:368
+#: ExSession.pas:371
 #: Login.pas:207
 msgid "Default Profile"
 msgstr "Perfil predefinido"
@@ -2671,7 +2672,7 @@ msgstr "Extensões"
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: Prefs.dfm:2639
 #: XferManager.dfm:53
-#: ExSession.pas:480
+#: ExSession.pas:483
 #: prefs/PrefNotify.dfm:43
 #: prefs/PrefNotify.pas:102
 msgid "File Transfers"
@@ -6434,68 +6435,68 @@ msgid "Objects"
 msgstr "Objectos"
 
 #. Setup the cache'd old versions in ChangePresImage
-#: ChatWin.pas:549
+#: ChatWin.pas:552
 msgid " is replying."
 msgstr " está a responder."
 
-#: ChatWin.pas:627
+#: ChatWin.pas:630
 msgid "Chat Activity: "
 msgstr "Conversa: "
 
 #. post a msg to the window and disable the text input box.
-#: ChatWin.pas:744
+#: ChatWin.pas:747
 #: Room.pas:657
 msgid "You have been disconnected."
 msgstr "Você foi desligado."
 
 #. if this jid just got blocked, just close the window.
-#: ChatWin.pas:761
+#: ChatWin.pas:764
 msgid "This user is now blocked."
 msgstr "Este utilizador está agora bloqueado."
 
 #. Change the bulb
 #. make sure the user is still connected
-#: ChatWin.pas:783
-#: ChatWin.pas:828
-#: ChatWin.pas:829
+#: ChatWin.pas:786
+#: ChatWin.pas:831
+#: ChatWin.pas:832
 msgid "offline"
 msgstr "desligado"
 
-#: ChatWin.pas:785
+#: ChatWin.pas:788
 msgid "unknown"
 msgstr "desconhecido"
 
-#: ChatWin.pas:787
+#: ChatWin.pas:790
 msgid "away"
 msgstr "ausente"
 
-#: ChatWin.pas:789
+#: ChatWin.pas:792
 msgid "xa"
 msgstr "ap"
 
-#: ChatWin.pas:791
+#: ChatWin.pas:794
 msgid "dnd"
 msgstr "transf"
 
-#: ChatWin.pas:793
+#: ChatWin.pas:796
 msgid "chat"
 msgstr "conversa"
 
-#: ChatWin.pas:843
+#: ChatWin.pas:846
 msgid "available"
 msgstr "disponível"
 
-#: ChatWin.pas:847
-#: ChatWin.pas:849
+#: ChatWin.pas:850
+#: ChatWin.pas:852
 msgid "is now"
 msgstr "está agora"
 
 #. check to see if we're already subscribed...
-#: ChatWin.pas:878
+#: ChatWin.pas:881
 msgid "You are already subscribed to this contact"
 msgstr "Já subscreveu este contacto"
 
-#: ChatWin.pas:1196
+#: ChatWin.pas:1199
 msgid "This chat window is busy. Close anyways?"
 msgstr "Esta janela de conversa está activa. Fechar na mesma?"
 
@@ -6623,25 +6624,25 @@ msgid "This message contains a URL: "
 msgstr "Esta mensagem contém um URL: "
 
 #. We got an exception during signal dispatching.
-#: ExResponders.pas:210
+#: ExResponders.pas:217
 msgid "An error has occurred. Exodus will automatically save an error log file to your desktop. Use this file to a bug report at the exodus website."
 msgstr "Ocorreu um erro. O Exodus gravará automaticamente um registo de erro no seu ambiente de trabalho. Utilize esse ficheiro para relatar uma falha do programa no site do Exodus."
 
-#: ExResponders.pas:323
-#: ExResponders.pas:375
-#: ExResponders.pas:417
-#: ExResponders.pas:461
-#: ExResponders.pas:577
-#: ExResponders.pas:684
+#: ExResponders.pas:342
+#: ExResponders.pas:394
+#: ExResponders.pas:436
+#: ExResponders.pas:480
+#: ExResponders.pas:596
+#: ExResponders.pas:703
 msgid "%s query from: %s"
 msgstr "Inquérito de %s de: %s"
 
-#: ExResponders.pas:417
+#: ExResponders.pas:436
 msgid "Last"
 msgstr "Último"
 
-#: ExResponders.pas:577
-#: ExResponders.pas:684
+#: ExResponders.pas:596
+#: ExResponders.pas:703
 msgid "Disco"
 msgstr "Descoberta"
 
@@ -6708,56 +6709,56 @@ msgstr " -f [perf] \t : Nome do perfil\n"
 msgid " -c [file] \t : Config path name\n"
 msgstr " -c [file] \t : Caminho para o ficheiro de configuração\n"
 
-#: ExSession.pas:349
+#: ExSession.pas:352
 msgid "Missing file:"
 msgstr "Ficheiro em falta:"
 
-#: ExSession.pas:471
+#: ExSession.pas:474
 #: prefs/PrefNotify.pas:100
 msgid "Activity in a chat window"
 msgstr "Actividade numa janela de conversa"
 
-#: ExSession.pas:472
+#: ExSession.pas:475
 #: prefs/PrefNotify.pas:98
 msgid "Invited to a room"
 msgstr "Convidado para uma sala"
 
-#: ExSession.pas:473
+#: ExSession.pas:476
 #: prefs/PrefNotify.pas:99
 msgid "Keyword in a room"
 msgstr "Palavra-chave numa sala"
 
-#: ExSession.pas:474
+#: ExSession.pas:477
 #: prefs/PrefNotify.pas:95
 msgid "New conversation"
 msgstr "Nova conversa"
 
-#: ExSession.pas:475
+#: ExSession.pas:478
 #: prefs/PrefNotify.pas:96
 msgid "Received a normal message"
 msgstr "Recebida uma mensagem normal"
 
-#: ExSession.pas:476
+#: ExSession.pas:479
 #: prefs/PrefNotify.pas:94
 msgid "Contact went offline"
 msgstr "O contacto desligou"
 
-#: ExSession.pas:477
+#: ExSession.pas:480
 #: prefs/PrefNotify.pas:93
 msgid "Contact came online"
 msgstr "O contactos entrou em linha"
 
-#: ExSession.pas:478
+#: ExSession.pas:481
 #: prefs/PrefNotify.pas:101
 msgid "Activity in a room"
 msgstr "Actividade numa sala"
 
-#: ExSession.pas:479
+#: ExSession.pas:482
 #: prefs/PrefNotify.pas:97
 msgid "Subscription request"
 msgstr "Pedido de subscrição"
 
-#: ExSession.pas:481
+#: ExSession.pas:484
 #: prefs/PrefNotify.pas:103
 msgid "Auto response generated"
 msgstr "Gerada uma resposta automática"
@@ -6946,29 +6947,29 @@ msgstr "Foi convidado a entrar na sala %s."
 msgid "Conference Room:"
 msgstr "Sala de conferência:"
 
-#: Jabber1.pas:906
+#: Jabber1.pas:907
 msgid "Enter Password"
 msgstr "Digite a palavra-passe"
 
 #. For other OS's we need to use the wicked nasty DLL
-#: Jabber1.pas:995
+#: Jabber1.pas:997
 msgid "Trying to setup the Auto Away timer."
 msgstr "A tentar activar o cronómetro para a ausência automática."
 
-#: Jabber1.pas:1017
+#: Jabber1.pas:1019
 msgid "AutoAway Setup FAILED!"
 msgstr "A activação da ausência automática FALHOU!"
 
 #. do nothing here..
-#: Jabber1.pas:1024
+#: Jabber1.pas:1026
 msgid "Using Win32 API for Autoaway checks!!"
 msgstr "A usar o API Win32 para as verificações de ausência automática!!"
 
-#: Jabber1.pas:1028
+#: Jabber1.pas:1030
 msgid "ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!"
 msgstr "ERRO AO OBTER O ENDEREÇO DO API WIN32 PARA GetLastInputInfo!!"
 
-#: Jabber1.pas:1091
+#: Jabber1.pas:1093
 msgid ""
 "There was an error trying to authenticate you.\n"
 "Either you used the wrong password, or this account is already in use by someone else."
@@ -6976,76 +6977,76 @@ msgstr ""
 "Houve um erro ao tentar autenticá-lo.\n"
 "Ou utilizou uma palavra-passe incorrecta, ou esta conta já está a ser usada por outra pessoa."
 
-#: Jabber1.pas:1098
+#: Jabber1.pas:1100
 msgid "There was an error trying to setup SSL."
 msgstr "Houve um erro ao tentar configurar a ligação segura (SSL)."
 
-#: Jabber1.pas:1134
+#: Jabber1.pas:1136
 msgid "An Error occurred trying to register your new account. This server may not allow open registration."
 msgstr "Ocorreu um erro ao tentar registar a sua nova conta. Este servidor pode não permitir registos públicos."
 
-#: Jabber1.pas:1149
+#: Jabber1.pas:1151
 msgid "This account does not exist on this server. Create a new account?"
 msgstr "Esta conta não existe neste servidor. Deseja criar uma conta nova?"
 
 #. if we have a new account, prompt for reg info
-#: Jabber1.pas:1199
+#: Jabber1.pas:1201
 msgid "Your new jabber account is activated. Would you like to fill out additional registration information?"
 msgstr "A sua nova conta jabber foi activada. Deseja preencher dados adicionais de registo?"
 
 #. set us to away
-#: Jabber1.pas:2087
+#: Jabber1.pas:2089
 msgid "Setting AutoAway"
 msgstr "A activar a ausência automática"
 
 #. set us to xa
-#: Jabber1.pas:2123
+#: Jabber1.pas:2125
 msgid "Setting AutoXA"
 msgstr "A activar a ausência prolongada automática"
 
 #. reset our status to available
-#: Jabber1.pas:2140
+#: Jabber1.pas:2142
 msgid "Setting Auto Available"
 msgstr "A activar a disponibilidade automática"
 
 #. lookup some arbitrary vcard..
-#: Jabber1.pas:2175
+#: Jabber1.pas:2177
 msgid "Lookup Profile"
 msgstr "Localizar perfil"
 
-#: Jabber1.pas:2175
-#: Jabber1.pas:2291
-#: Jabber1.pas:2559
+#: Jabber1.pas:2177
+#: Jabber1.pas:2293
+#: Jabber1.pas:2561
 msgid "Enter Jabber ID: "
 msgstr "Introduza o ID de Jabber: "
 
-#: Jabber1.pas:2392
+#: Jabber1.pas:2394
 msgid "Old password is incorrect."
 msgstr "A palavra-passe actual está incorrecta."
 
-#: Jabber1.pas:2396
+#: Jabber1.pas:2398
 msgid "New password does not match."
 msgstr "A nova palavra-passe não é igual."
 
-#: Jabber1.pas:2416
-#: Jabber1.pas:2421
+#: Jabber1.pas:2418
+#: Jabber1.pas:2423
 msgid "Error changing password."
 msgstr "Erro a alterar a palavra-passe."
 
-#: Jabber1.pas:2419
+#: Jabber1.pas:2421
 msgid "Password changed."
 msgstr "Palavra-passe alterada."
 
 #. kick off a service registration..
-#: Jabber1.pas:2506
+#: Jabber1.pas:2508
 msgid "Register with Service"
 msgstr "Registar com um serviço"
 
-#: Jabber1.pas:2506
+#: Jabber1.pas:2508
 msgid "Enter Jabber ID of Service: "
 msgstr "Introduza o ID de Jabber do serviço: "
 
-#: Jabber1.pas:2559
+#: Jabber1.pas:2561
 msgid "Send a Message"
 msgstr "Enviar uma mensagem"
 
@@ -7053,15 +7054,15 @@ msgstr "Enviar uma mensagem"
 #. send roster items to this contact.
 #. Send contacts to this JID..
 #. we got a URL drop
-#: Jabber1.pas:2825
-#: Jabber1.pas:2835
+#: Jabber1.pas:2827
+#: Jabber1.pas:2837
 #: RosterWindow.pas:2561
 #: RosterWindow.pas:2863
 #: RosterWindow.pas:2895
 msgid "You must select one or more contacts."
 msgstr "Tem que seleccionar um ou mais contactos."
 
-#: Jabber1.pas:2963
+#: Jabber1.pas:2965
 msgid "Branding error!"
 msgstr "Erro de personalização!"
 
@@ -7122,6 +7123,14 @@ msgstr "Remover este perfil?"
 #: MsgQueue.pas:166
 msgid "Exodus could not create or write to the spool directory specified in the options."
 msgstr "O Exodus não conseguiu criar ou escrever na pasta de spool especificada nas opções."
+
+#: MsgQueue.pas:202
+msgid "The file you specified to store queued messages is read only. Please specify another file"
+msgstr "O ficheiro que especificou onde guardar mensagens em espera é apenas de leitura. Por favor especifique outro ficheiro"
+
+#: MsgQueue.pas:212
+msgid "There was an error trying to write to the file: %s"
+msgstr "Houve um erro ao tentar escrever no ficheiro: %s"
 
 #: MsgRecv.pas:388
 msgid "Decline"
