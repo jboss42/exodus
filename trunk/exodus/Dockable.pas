@@ -23,15 +23,19 @@ interface
 
 uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    ComCtrls, Dialogs;
+    ComCtrls, Dialogs, ExtCtrls;
 
 type
   TDockNotify = procedure of object;
 
   TfrmDockable = class(TForm)
+    timFlasher: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormResize(Sender: TObject);
+    procedure timFlasherTimer(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
+    procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
   private
     { Private declarations }
     _docked: boolean;
@@ -58,8 +62,8 @@ type
     TabSheet: TTabSheet;
     procedure DockForm; virtual;
     procedure FloatForm; virtual;
-
     procedure ShowDefault;
+    procedure Flash;
 
     property Docked: boolean read _docked write _docked;
   end;
@@ -101,6 +105,7 @@ begin
     Self.Align := alClient;
     _docked := true;
     Self.TabSheet := frmExodus.Tabs.Pages[frmExodus.Tabs.PageCount-1];
+    Self.TabSheet.ImageIndex := -1;
 
     if Assigned(_onDockEndChange) then
         Self.OnDockEndChange();
@@ -285,6 +290,41 @@ procedure TfrmDockable.FormResize(Sender: TObject);
 begin
     if ((MainSession <> nil)) then
         MainSession.Prefs.SavePosition(Self);
+end;
+
+{---------------------------------------}
+procedure TfrmDockable.timFlasherTimer(Sender: TObject);
+begin
+    FlashWindow(Self.Handle, true);
+    FlashWindow(Self.Handle, true);
+end;
+
+{---------------------------------------}
+procedure TfrmDockable.Flash;
+begin
+    if Self.Active then exit;
+
+    if MainSession.Prefs.getBool('notify_flasher') then
+        timFlasher.Enabled := true
+    else begin
+        timFlasher.Enabled := false;
+        timFlasherTimer(Self);
+        end;
+end;
+
+
+{---------------------------------------}
+procedure TfrmDockable.FormActivate(Sender: TObject);
+begin
+    if timFlasher.Enabled then
+        timFlasher.Enabled := false;
+end;
+
+{---------------------------------------}
+procedure TfrmDockable.FormEndDock(Sender, Target: TObject; X, Y: Integer);
+begin
+    if Self.TabSheet <> nil then
+        Self.TabSheet.ImageIndex := -1;
 end;
 
 end.

@@ -1571,12 +1571,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 357
-    ActivePage = tbsMessages
+    ActivePage = tbsNotify
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 5
+    TabIndex = 6
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -2356,7 +2356,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkNotify: TCheckListBox
         Left = 8
-        Top = 72
+        Top = 88
         Width = 257
         Height = 97
         ItemHeight = 13
@@ -2377,7 +2377,7 @@ object frmPrefs: TfrmPrefs
       end
       object optNotify: TGroupBox
         Left = 8
-        Top = 176
+        Top = 192
         Width = 257
         Height = 73
         Caption = 'Notify Options'
@@ -2387,7 +2387,7 @@ object frmPrefs: TfrmPrefs
           Top = 48
           Width = 209
           Height = 17
-          Caption = 'Flash Taskbar button'
+          Caption = 'Flash Taskbar button, or highlight tab'
           TabOrder = 0
           OnClick = chkToastClick
         end
@@ -2440,6 +2440,16 @@ object frmPrefs: TfrmPrefs
         ParentShowHint = False
         ShowHint = True
         TabOrder = 4
+      end
+      object chkFlashInfinite: TCheckBox
+        Left = 8
+        Top = 66
+        Width = 225
+        Height = 17
+        Caption = 'Flash the taskbar until window gets focus.'
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 5
       end
     end
     object tbsAway: TTabSheet
