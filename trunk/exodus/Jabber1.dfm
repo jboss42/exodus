@@ -1,8 +1,8 @@
 object Exodus: TExodus
-  Left = 267
-  Top = 374
-  Width = 527
-  Height = 324
+  Left = 268
+  Top = 375
+  Width = 525
+  Height = 327
   AlphaBlendValue = 240
   Caption = 'Exodus'
   Color = clBtnFace
@@ -27,7 +27,7 @@ object Exodus: TExodus
   object Tabs: TPageControl
     Left = 0
     Top = 30
-    Width = 519
+    Width = 517
     Height = 246
     ActivePage = tbsMsg
     Align = alClient
@@ -69,7 +69,7 @@ object Exodus: TExodus
       object pnlRight: TPanel
         Left = 212
         Top = 0
-        Width = 299
+        Width = 297
         Height = 218
         Align = alClient
         BevelOuter = bvNone
@@ -82,7 +82,7 @@ object Exodus: TExodus
   object ToolBar: TToolBar
     Left = 0
     Top = 0
-    Width = 519
+    Width = 517
     Height = 30
     AutoSize = True
     BorderWidth = 1
