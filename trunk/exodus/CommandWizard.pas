@@ -25,7 +25,7 @@ uses
     XMLTag, IQ, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Wizard, StdCtrls, TntStdCtrls, ComCtrls, ExtCtrls, TntExtCtrls,
-  fXData;
+  fXData, ExodusLabel;
 
 type
 
@@ -46,11 +46,14 @@ type
     tbsWait: TTabSheet;
     lblWait: TTntLabel;
     xDataBox: TframeXData;
+    btnFinish: TTntButton;
+    lblNote: TExodusLabel;
     procedure btnNextClick(Sender: TObject);
     procedure btnBackClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnFinishClick(Sender: TObject);
   private
     { Private declarations }
     _session_id: Widestring;
@@ -58,6 +61,8 @@ type
     _iq: TJabberIQ;
 
     procedure fail(msg: Widestring);
+    procedure Wait();
+    procedure nextBack();
     procedure nextNoBack();
     procedure execCallback(event: string; tag: TXMLTag);
     procedure createIQSet();
@@ -88,6 +93,8 @@ implementation
 uses
     fResults, fGeneric, xdata, JabberUtils,
     GnuGetText, JabberConst, Session, Entity, EntityCache;
+
+const CMD_TIMEOUT = 45;
 
 {---------------------------------------}
 procedure StartCommandWizard(jid: Widestring);
@@ -145,27 +152,72 @@ end;
 {---------------------------------------}
 procedure TfrmCommandWizard.btnBackClick(Sender: TObject);
 begin
-  inherited;
-    // prev
+    case state of
+    cwzJid: begin
+        exit;
+        end;
+    cwzSelect: begin
+        state := cwzJid;
+        RunState();
+        end;
+    cwzExecute: begin
+        state := cwzSelect;
+        RunState();
+        end;
+    cwzSubmit: begin
+        // submit a "prev" action
+        createIQSet();
+        _iq.qTag.setAttribute('action', 'prev');
+        _iq.Send();
+        end;
+    cwzResults: begin
+        exit;
+        end;
+    end;
 end;
 
 {---------------------------------------}
 procedure TfrmCommandWizard.btnCancelClick(Sender: TObject);
+var
+    e: TJabberEntity;
+    ciq, c: TXMLTag;
 begin
-    inherited;
-    if (_iq <> nil) then _iq.Free();
+    if ((state = cwzExecute) or (state = cwzSubmit)) then begin
+        if ((Mainsession <> nil) and (MainSession.Active)) then begin
+            ciq := TXMLTag.Create('iq');
+            ciq.setAttribute('type', 'set');
+            ciq.setAttribute('to', jid);
+            c := ciq.AddTag('command');
+            c.setAttribute('xmlns', XMLNS_COMMANDS);
+            if (_session_id <> '') then
+                c.setAttribute('sessionid', _session_id);
+
+            // the entity stuff is cache'd
+            e := TJabberEntity(txtCommand.Items.Objects[txtCommand.ItemIndex]);
+            if (e.Node <> '') then
+                c.setAttribute('node', e.Node);
+            c.setAttribute('action', 'cancel');
+            MainSession.SendTag(ciq);
+        end;
+    end;
+
+    if (_iq <> nil) then
+        _iq.Free();
     xDataBox.Clear();
+
+    inherited;
+
     Self.Close();
 end;
 
 {---------------------------------------}
 procedure TfrmCommandWizard.createIQSet();
-var                          
-    e: TJabberEntity;      
+var
+    e: TJabberEntity;
 begin
     assert(_iq = nil);
     _iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
-        Self.execCallback, 30);
+        Self.execCallback, CMD_TIMEOUT);
     _iq.qTag.Name := 'command';
     _iq.Namespace := XMLNS_COMMANDS;
 
@@ -180,16 +232,18 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmCommandWizard.RunState();
-    procedure SetGui();
-    begin
-        Tabs.ActivePage := tbsWait;
-        lblWait.Caption := _('Please wait...');
-        btnBack.Enabled := false;
-        btnNext.Enabled := false;
-        btnCancel.Enabled := true;
-    end;
+procedure TfrmCommandWizard.Wait();
+begin
+    Tabs.ActivePage := tbsWait;
+    lblWait.Caption := _('Please wait...');
+    btnBack.Enabled := false;
+    btnNext.Enabled := false;
+    btnCancel.Enabled := true;
+    btnFinish.Enabled := false;
+end;
 
+{---------------------------------------}
+procedure TfrmCommandWizard.RunState();
 var
     x: TXMLTag;
 begin
@@ -200,24 +254,24 @@ begin
     }
     case state of
     cwzJid: begin
-        exit;
+        Tabs.ActivePage := TabSheet1;
+        nextNoBack();
         end;
     cwzSupport: begin
-        SetGUI();
+        wait();
         jEntityCache.discoInfo(jid, MainSession);
         end;
     cwzList: begin
-        SetGUI();
+        wait();
         jEntityCache.discoItems(jid, MainSession, XMLNS_COMMANDS);
         end;
     cwzSelect: begin
         Tabs.ActivePage := tbsSelect;
-        nextNoBack();
-        exit;
+        nextBack();
         end;
     cwzExecute: begin
         createIQSet();
-        SetGUI();
+        wait();
         _iq.Send();
         end;
     cwzSubmit: begin
@@ -233,7 +287,7 @@ begin
                 exit;
             end;
         end;
-        SetGUI();
+        wait();
         _iq.qTag.AddTag(x);
         _iq.Send();
         end;
@@ -243,7 +297,8 @@ end;
 {---------------------------------------}
 procedure TfrmCommandWizard.execCallback(event: string; tag: TXMLTag);
 var
-    x, c: TXMLTag;
+    msg: Widestring;
+    x, c, n: TXMLTag;
 begin
     _iq := nil;
     if (event <> 'xml') then begin
@@ -251,26 +306,47 @@ begin
         exit;
     end;
 
+    msg := '';
+    c := tag.GetFirstTag('command');
+    n := c.GetFirstTag('note');
+    if (n <> nil) then
+        msg := n.Data;
+
     if (tag.getAttribute('type') <> 'result') then begin
-        fail(_('The execute query returned an error.'));
+        msg := _('The execute query returned an error.') + ' ' + msg;
+        fail(msg);
         exit;
     end;
 
-    c := tag.GetFirstTag('command');
     if (c = nil) then begin
-        fail(_('The result of the command execute was mal-formed.'));
+        msg := _('The result of the command execute was mal-formed.') + ' ' + msg;
+        fail(msg);
         exit;
     end;
 
     if (c.GetAttribute('status') = 'completed') then begin
         // we're done..
+        state := cwzResults;
         x := c.QueryXPTag('/command/x[@xmlns="jabber:x:data"][@type="result"]');
-        if (x <> nil) then begin
+
+        if ((n = nil) and (x = nil)) then begin
+            lblNote.Visible := true;
+            lblNote.Caption := _('Your command executed successfully.');
+        end
+        else if (n <> nil) then begin
+            lblNote.Visible := true;
+            lblNote.Caption := Uppercase(n.GetAttribute('type')) + ': ' + n.Data;
+        end
+        else if (x <> nil) then begin
             // process x-data results
             buildXDataResults(x, tbsResults);
-            Tabs.ActivePage := tbsResults;
-            exit;
         end;
+
+        Tabs.ActivePage := tbsResults;
+        btnBack.Enabled := false;
+        btnNext.Enabled := false;
+        btnFinish.Enabled := true;
+        btnCancel.Enabled := false;
     end
     else begin
         // we're not done yet
@@ -286,6 +362,11 @@ begin
         xDataBox.Render(x);
         Tabs.ActivePage := tbsExecute;
         nextNoBack();
+
+        btnNext.Enabled := true;
+        btnCancel.Enabled := true;
+        btnBack.Enabled := (c.QueryXPTag('/command/actions/prev') <> nil);
+        btnFinish.Enabled := (c.QueryXPTag('/command/actions/complete') <> nil);
     end;
 
 end;
@@ -360,11 +441,21 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmCommandWizard.nextBack();
+begin
+    btnBack.Enabled := true;
+    btnNext.Enabled := true;
+    btnCancel.Enabled := true;
+    btnFinish.Enabled := false;
+end;
+
+{---------------------------------------}
 procedure TfrmCommandWizard.nextNoBack();
 begin
     btnBack.Enabled := false;
     btnNext.Enabled := true;
     btnCancel.Enabled := true;
+    btnFInish.Enabled := false;
 end;
 
 {---------------------------------------}
@@ -375,6 +466,37 @@ begin
     if (MainSession <> nil) then
         MainSession.UnRegisterCallback(_entity_cb);
     Action := caFree;
+end;
+
+{---------------------------------------}
+procedure TfrmCommandWizard.btnFinishClick(Sender: TObject);
+var
+    x: TxMLTag;
+begin
+  inherited;
+    // send iq-set action="completed"
+    if (state = cwzResults) then begin
+        Self.Close();
+        exit;
+    end
+    else if (state = cwzSubmit) then begin
+        // like submit, but finish it now
+        try
+            createIQSet();
+            _iq.qTag.setAttribute('action', 'completed');
+            x := xdataBox.submit();
+        except
+            on EXDataValidationError do begin
+                _iq.Free();
+                MessageDlgW(_('All required fields must be filled out.'),
+                    mtError, [mbOK], 0);
+                exit;
+            end;
+        end;
+        wait();
+        _iq.qTag.AddTag(x);
+        _iq.Send();
+    end;
 end;
 
 end.

@@ -217,6 +217,7 @@ begin
             for i := 0 to xl.Count - 1 do
                 Lines.Add(xl[i].Data);
             FreeAndNil(xl);
+            WordWrap := false;
         end;
     end
 
