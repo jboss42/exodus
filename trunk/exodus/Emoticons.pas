@@ -22,7 +22,7 @@ unit Emoticons;
 interface
 
 uses
-    ChatWin, 
+    BaseChat,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, ComCtrls, ToolWin;
 
@@ -94,7 +94,7 @@ type
     { Private declarations }
   public
     { Public declarations }
-    ChatWindow: TfrmChat;
+    ChatWindow: TfrmBaseChat;
     msn: boolean;
     imgIndex: integer;
   end;

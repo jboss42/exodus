@@ -65,7 +65,8 @@ uses
   getopt in 'getOpt.pas',
   GrpRemove in 'GrpRemove.pas' {frmGrpRemove},
   RegExpr in 'RegExpr.pas',
-  Emoticons in 'Emoticons.pas' {frmEmoticons};
+  Emoticons in 'Emoticons.pas' {frmEmoticons},
+  BaseChat in 'BaseChat.pas' {frmBaseChat};
 
 {$R *.RES}
 

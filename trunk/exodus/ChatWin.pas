@@ -136,7 +136,7 @@ implementation
 {$R *.DFM}
 
 uses
-    Emoticons, 
+    BaseChat, Emoticons,
     Presence, PrefController,
     Transfer, RosterAdd, RiserWindow,
     Jabber1, Profile, ExUtils, MsgDisplay,
@@ -731,7 +731,7 @@ begin
         t := Screen.Height - frmEmoticons.Height;
 
     frmEmoticons.Top := t;
-    frmEmoticons.ChatWindow := Self;
+    frmEmoticons.ChatWindow := TfrmBaseChat(Self);
     frmEmoticons.Show;
 end;
 
