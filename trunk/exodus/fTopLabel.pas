@@ -22,13 +22,13 @@ interface
 
 uses 
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls;
+  StdCtrls, ExtCtrls, TntStdCtrls;
 
 type
   TframeTopLabel = class(TFrame)
     Panel1: TPanel;
-    lbl: TLabel;
-    txtData: TEdit;
+    lbl: TTntLabel;
+    txtData: TTntEdit;
     procedure FrameResize(Sender: TObject);
   private
     { Private declarations }

@@ -26,7 +26,7 @@ uses
 const
     cWIN_95 = 1;             { Windows version constants}
     cWIN_98 = 2;
-    cWIN_NT = 3;
+    cWIN_NT = 3;    // NT 4.0
     cWIN_2000 = 4;
     cWIN_ME = 5;
     cWIN_XP = 6;

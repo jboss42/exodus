@@ -14,20 +14,21 @@ object frameTopLabel: TframeTopLabel
     BevelOuter = bvNone
     BorderWidth = 3
     TabOrder = 0
-    object lbl: TLabel
+    object lbl: TTntLabel
       Left = 3
       Top = 3
       Width = 145
       Height = 13
       Align = alTop
-      Caption = 'Some Text label'
+      Caption = 'lbl'
     end
-    object txtData: TEdit
+    object txtData: TTntEdit
       Left = 2
       Top = 18
       Width = 145
       Height = 21
       TabOrder = 0
+      Text = 'txtData'
     end
   end
 end
