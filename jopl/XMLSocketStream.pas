@@ -209,6 +209,8 @@ begin
     Read stuff from the socket and feed it into the
     parser.
     }
+    if (Self.Terminated) then exit;
+
     if _Stage = 0 then begin
         // try to connect
         if (_socket.Connected) then
@@ -799,6 +801,7 @@ begin
     _connectIndy8();
     {$ifend}
 
+    _active := true;
     _thread.Start;
 end;
 
@@ -851,7 +854,7 @@ begin
     end
     else begin
         if (_thread <> nil) then
-            _thread.Terminate();
+            _thread.TerminateAndWaitFor();            
         _timer.Enabled := false;
         _active := false;
         _thread := nil;

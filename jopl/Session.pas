@@ -457,7 +457,7 @@ begin
             _auth_agent.CancelRegistration()
         else
             _auth_agent.CancelAuthentication();
-
+            
         _stream.Disconnect;
     end
     else
