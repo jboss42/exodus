@@ -404,6 +404,11 @@ end;
 
 {---------------------------------------}
 constructor TPrefController.Create(filename: Widestring);
+{$ifdef Win32}
+var
+    reg: TRegistry;
+    f, p: String;
+{$endif}
 begin
     inherited Create();
 
@@ -426,6 +431,32 @@ begin
     _updating := false;
 
     getDefaultPos();
+
+    {$ifdef Win32}
+    // Write out the current prefs file..
+    // this is so the un-installer can remove the prefs
+    // when it does it's thing.
+
+    // If we used -c, we may just be using the current dir,
+    // So get the current dir, and pre-pend it.
+    f := _pref_filename;
+    p := ExtractFilePath(f);
+    if (p = '') then begin
+        p := GetCurrentDir();
+        f := p + '\' + f;
+    end;
+
+    reg := TRegistry.Create();
+    try
+        reg.RootKey := HKEY_CURRENT_USER;
+        reg.OpenKey('\Software\Jabber\Exodus', true);
+        reg.WriteString('prefs_file', f);
+        reg.CloseKey();
+    finally
+        reg.Free();
+    end;
+    {$endif}
+
 end;
 
 {---------------------------------------}

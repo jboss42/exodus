@@ -661,7 +661,7 @@ begin
     // We are getting a Windows Msg from the installer
     if (not _shutdown) then begin
         reg := TRegistry.Create();
-        reg.RootKey := HKEY_LOCAL_MACHINE;
+        reg.RootKey := HKEY_CURRENT_USER;
         reg.OpenKey('\Software\Jabber\Exodus\Restart\' + IntToStr(Application.Handle), true);
 
         for i := 1 to ParamCount do
