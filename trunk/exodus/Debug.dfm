@@ -24,7 +24,7 @@ object frmDebug: TfrmDebug
     Left = 0
     Top = 25
     Width = 400
-    Height = 355
+    Height = 360
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
@@ -32,7 +32,7 @@ object frmDebug: TfrmDebug
     TabOrder = 0
     object Splitter1: TSplitter
       Left = 4
-      Top = 306
+      Top = 311
       Width = 392
       Height = 5
       Cursor = crVSplit
@@ -42,7 +42,7 @@ object frmDebug: TfrmDebug
       Left = 4
       Top = 4
       Width = 392
-      Height = 302
+      Height = 307
       Align = alClient
       AutoURLDetect = adNone
       CustomURLs = <
@@ -118,15 +118,9 @@ object frmDebug: TfrmDebug
           Cursor = crDefault
           Underline = True
         end>
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Arial Unicode MS'
-      Font.Style = []
       ImeMode = imDisable
       LangOptions = [loAutoFont]
       Language = 1033
-      ParentFont = False
       ScrollBars = ssVertical
       ShowSelectionBar = False
       TabOrder = 1
@@ -142,7 +136,7 @@ object frmDebug: TfrmDebug
     end
     object MemoSend: TExRichEdit
       Left = 4
-      Top = 311
+      Top = 316
       Width = 392
       Height = 40
       Align = alBottom
@@ -220,14 +214,8 @@ object frmDebug: TfrmDebug
           Cursor = crDefault
           Underline = True
         end>
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
       LangOptions = [loAutoFont]
       Language = 1033
-      ParentFont = False
       PopupMenu = PopupMenu1
       ScrollBars = ssVertical
       ShowSelectionBar = False
@@ -271,26 +259,20 @@ object frmDebug: TfrmDebug
       OnClick = btnCloseClick
     end
     object lblJID: TLabel
-      Left = 66
+      Left = 71
       Top = 6
       Width = 72
       Height = 13
       Cursor = crHandPoint
       Caption = '(Disconnected)'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlue
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsUnderline]
-      ParentFont = False
       OnClick = lblJIDClick
     end
-    object Label1: TLabel
+    object lblLabel: TLabel
       Left = 6
       Top = 6
-      Width = 56
+      Width = 62
       Height = 13
-      Caption = 'Current JID:'
+      Caption = 'Current JID:  '
     end
   end
   object PopupMenu1: TPopupMenu

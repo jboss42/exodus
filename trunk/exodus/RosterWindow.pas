@@ -184,7 +184,7 @@ type
     _cur_myres: TJabberMyResource;  // current My Resource selected
     _cur_status: integer;           // current status for the current item
 
-    _collapsed_grps: TWideStringList;   // a list of collapsed grps
+    _collapsed_grps: TWideStringList;
     _blockers: TWideStringlist;     // current list of jids being blocked
     _adURL : string;                // the URL for the ad graphic
     _transports: Widestring;        // current group name for special transports grp
@@ -193,10 +193,10 @@ type
     _group_counts: boolean;
 
     _show_pending: boolean;
-    _show_online: boolean;
-    _show_filter: integer;
-    _sort_roster: boolean;
-    _offline_grp: boolean;
+    _show_online: boolean;          // Show only "online" contacts
+    _show_filter: integer;          // A filter for the <show> types to display
+    _sort_roster: boolean;          // Sort roster by <show> types
+    _offline_grp: boolean;          // Use the offline grp
 
     _drop_copy: boolean;            // is the drag operation trying to copy?
 

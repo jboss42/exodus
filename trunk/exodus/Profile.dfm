@@ -54,12 +54,6 @@ object frmProfile: TfrmProfile
         Height = 13
         Cursor = crHandPoint
         Caption = 'Email:'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsUnderline]
-        ParentFont = False
         OnClick = lblEmailClick
       end
       object Label7: TLabel
@@ -68,12 +62,6 @@ object frmProfile: TfrmProfile
         Width = 56
         Height = 13
         Caption = 'First (Given)'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
-        ParentFont = False
       end
       object Label4: TLabel
         Left = 90
@@ -88,12 +76,6 @@ object frmProfile: TfrmProfile
         Width = 58
         Height = 13
         Caption = 'Last (Family)'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
-        ParentFont = False
       end
       object lblUpdateNick: TLabel
         Left = 56
@@ -102,28 +84,7 @@ object frmProfile: TfrmProfile
         Height = 13
         Cursor = crHandPoint
         Caption = 'Update nickname based on names.'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsUnderline]
-        ParentFont = False
         OnClick = btnUpdateNickClick
-      end
-      object txtJID: TEdit
-        Left = 56
-        Top = 53
-        Width = 185
-        Height = 21
-        ReadOnly = True
-        TabOrder = 0
-      end
-      object txtNick: TEdit
-        Left = 56
-        Top = 77
-        Width = 185
-        Height = 21
-        TabOrder = 1
       end
       object optSubscrip: TRadioGroup
         Left = 8
@@ -140,44 +101,6 @@ object frmProfile: TfrmProfile
           'Both')
         TabOrder = 2
       end
-      object txtPriEmail: TEdit
-        Left = 56
-        Top = 124
-        Width = 185
-        Height = 21
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
-        ParentFont = False
-        ReadOnly = True
-        TabOrder = 3
-      end
-      object txtFirst: TEdit
-        Left = 14
-        Top = 22
-        Width = 75
-        Height = 21
-        ReadOnly = True
-        TabOrder = 4
-      end
-      object txtMiddle: TEdit
-        Left = 94
-        Top = 22
-        Width = 51
-        Height = 21
-        ReadOnly = True
-        TabOrder = 5
-      end
-      object txtLast: TEdit
-        Left = 152
-        Top = 22
-        Width = 89
-        Height = 21
-        ReadOnly = True
-        TabOrder = 6
-      end
       object aniProfile: TAnimate
         Left = 248
         Top = 24
@@ -187,19 +110,57 @@ object frmProfile: TfrmProfile
         StopFrame = 8
         Visible = False
       end
+      object txtJID: TTntEdit
+        Left = 56
+        Top = 53
+        Width = 185
+        Height = 21
+        ReadOnly = True
+        TabOrder = 0
+      end
+      object txtNick: TTntEdit
+        Left = 56
+        Top = 77
+        Width = 185
+        Height = 21
+        TabOrder = 1
+      end
+      object txtPriEmail: TTntEdit
+        Left = 56
+        Top = 124
+        Width = 185
+        Height = 21
+        ReadOnly = True
+        TabOrder = 3
+      end
+      object txtFirst: TTntEdit
+        Left = 14
+        Top = 22
+        Width = 75
+        Height = 21
+        ReadOnly = True
+        TabOrder = 4
+      end
+      object txtMiddle: TTntEdit
+        Left = 94
+        Top = 22
+        Width = 51
+        Height = 21
+        ReadOnly = True
+        TabOrder = 5
+      end
+      object txtLast: TTntEdit
+        Left = 152
+        Top = 22
+        Width = 89
+        Height = 21
+        ReadOnly = True
+        TabOrder = 6
+      end
     end
     object TabSheet7: TTabSheet
       Caption = 'Resources'
       ImageIndex = 6
-      object ResListBox: TListBox
-        Left = 0
-        Top = 25
-        Width = 217
-        Height = 237
-        Align = alClient
-        ItemHeight = 13
-        TabOrder = 0
-      end
       object Panel1: TPanel
         Left = 0
         Top = 0
@@ -246,6 +207,15 @@ object frmProfile: TfrmProfile
           TabOrder = 2
           OnClick = btnVersionClick
         end
+      end
+      object ResListBox: TTntListBox
+        Left = 0
+        Top = 25
+        Width = 217
+        Height = 237
+        Align = alClient
+        ItemHeight = 13
+        TabOrder = 0
       end
     end
     object TabSheet2: TTabSheet
@@ -303,12 +273,6 @@ object frmProfile: TfrmProfile
         Height = 13
         Cursor = crHandPoint
         Caption = 'Personal URL:'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsUnderline]
-        ParentFont = False
         OnClick = lblEmailClick
       end
       object Label12: TLabel
@@ -353,7 +317,7 @@ object frmProfile: TfrmProfile
         Height = 13
         Caption = 'Description:'
       end
-      object txtWeb: TEdit
+      object txtWeb: TTntEdit
         Left = 92
         Top = 6
         Width = 150
@@ -361,7 +325,7 @@ object frmProfile: TfrmProfile
         ReadOnly = True
         TabOrder = 0
       end
-      object cboOcc: TComboBox
+      object cboOcc: TTntComboBox
         Left = 92
         Top = 30
         Width = 150
@@ -369,7 +333,7 @@ object frmProfile: TfrmProfile
         Enabled = False
         ItemHeight = 13
         TabOrder = 1
-        Items.Strings = (
+        Items.WideStrings = (
           'Accounting/Finance'
           'Computer related (IS, MIS, DP)'
           'Computer related (WWW)'
@@ -388,7 +352,7 @@ object frmProfile: TfrmProfile
           'Student'
           'Unemployed/Between Jobs')
       end
-      object txtBDay: TEdit
+      object txtBDay: TTntEdit
         Left = 92
         Top = 54
         Width = 150
@@ -396,7 +360,7 @@ object frmProfile: TfrmProfile
         ReadOnly = True
         TabOrder = 2
       end
-      object txtHomeVoice: TEdit
+      object txtHomeVoice: TTntEdit
         Left = 91
         Top = 99
         Width = 150
@@ -404,7 +368,7 @@ object frmProfile: TfrmProfile
         ReadOnly = True
         TabOrder = 3
       end
-      object txtHomeFax: TEdit
+      object txtHomeFax: TTntEdit
         Left = 91
         Top = 123
         Width = 150
@@ -468,7 +432,7 @@ object frmProfile: TfrmProfile
         Height = 13
         Caption = 'Zip / Postal Code:'
       end
-      object txtHomeState: TEdit
+      object txtHomeState: TTntEdit
         Left = 102
         Top = 78
         Width = 150
@@ -476,7 +440,7 @@ object frmProfile: TfrmProfile
         ReadOnly = True
         TabOrder = 0
       end
-      object txtHomeZip: TEdit
+      object txtHomeZip: TTntEdit
         Left = 102
         Top = 102
         Width = 150
@@ -484,7 +448,7 @@ object frmProfile: TfrmProfile
         ReadOnly = True
         TabOrder = 1
       end
-      object txtHomeCity: TEdit
+      object txtHomeCity: TTntEdit
         Left = 102
         Top = 54
         Width = 150
@@ -492,7 +456,7 @@ object frmProfile: TfrmProfile
         ReadOnly = True
         TabOrder = 2
       end
-      object txtHomeStreet2: TEdit
+      object txtHomeStreet2: TTntEdit
         Left = 102
         Top = 30
         Width = 150
@@ -500,7 +464,7 @@ object frmProfile: TfrmProfile
         ReadOnly = True
         TabOrder = 3
       end
-      object txtHomeStreet1: TEdit
+      object txtHomeStreet1: TTntEdit
         Left = 102
         Top = 6
         Width = 150
@@ -508,7 +472,7 @@ object frmProfile: TfrmProfile
         ReadOnly = True
         TabOrder = 4
       end
-      object txtHomeCountry: TComboBox
+      object txtHomeCountry: TTntComboBox
         Left = 102
         Top = 127
         Width = 150
@@ -517,7 +481,7 @@ object frmProfile: TfrmProfile
         ItemHeight = 13
         TabOrder = 5
         Text = 'United States  '
-        Items.Strings = (
+        Items.WideStrings = (
           'Afghanistan  '
           'Albania  '
           'Algeria  '
@@ -563,8 +527,7 @@ object frmProfile: TfrmProfile
           'Chile  '
           'China  '
           'Christmas Island  '
-          'Cocos (Keeling) '
-          'Islands  '
+          'Cocos (Keeling) Islands  '
           'Colubmia  '
           'Comoros  '
           'Congo (Republic of) '
@@ -798,7 +761,7 @@ object frmProfile: TfrmProfile
         Height = 13
         Caption = 'Fax Tel:'
       end
-      object txtOrgName: TEdit
+      object txtOrgName: TTntEdit
         Left = 102
         Top = 6
         Width = 150
@@ -806,7 +769,7 @@ object frmProfile: TfrmProfile
         ReadOnly = True
         TabOrder = 0
       end
-      object txtOrgUnit: TEdit
+      object txtOrgUnit: TTntEdit
         Left = 102
         Top = 30
         Width = 150
@@ -814,7 +777,7 @@ object frmProfile: TfrmProfile
         ReadOnly = True
         TabOrder = 1
       end
-      object txtOrgTitle: TEdit
+      object txtOrgTitle: TTntEdit
         Left = 102
         Top = 54
         Width = 150
@@ -822,7 +785,7 @@ object frmProfile: TfrmProfile
         ReadOnly = True
         TabOrder = 2
       end
-      object txtWorkVoice: TEdit
+      object txtWorkVoice: TTntEdit
         Left = 102
         Top = 84
         Width = 150
@@ -830,7 +793,7 @@ object frmProfile: TfrmProfile
         ReadOnly = True
         TabOrder = 3
       end
-      object txtWorkFax: TEdit
+      object txtWorkFax: TTntEdit
         Left = 102
         Top = 108
         Width = 150
@@ -884,7 +847,7 @@ object frmProfile: TfrmProfile
         Height = 13
         Caption = 'Zip / Postal Code:'
       end
-      object txtWorkState: TEdit
+      object txtWorkState: TTntEdit
         Left = 102
         Top = 76
         Width = 150
@@ -892,7 +855,7 @@ object frmProfile: TfrmProfile
         ReadOnly = True
         TabOrder = 0
       end
-      object txtWorkZip: TEdit
+      object txtWorkZip: TTntEdit
         Left = 102
         Top = 100
         Width = 150
@@ -900,7 +863,7 @@ object frmProfile: TfrmProfile
         ReadOnly = True
         TabOrder = 1
       end
-      object txtWorkCity: TEdit
+      object txtWorkCity: TTntEdit
         Left = 102
         Top = 52
         Width = 150
@@ -908,7 +871,7 @@ object frmProfile: TfrmProfile
         ReadOnly = True
         TabOrder = 2
       end
-      object txtWorkStreet2: TEdit
+      object txtWorkStreet2: TTntEdit
         Left = 102
         Top = 28
         Width = 150
@@ -916,7 +879,7 @@ object frmProfile: TfrmProfile
         ReadOnly = True
         TabOrder = 3
       end
-      object txtWorkStreet1: TEdit
+      object txtWorkStreet1: TTntEdit
         Left = 102
         Top = 4
         Width = 150
@@ -924,7 +887,7 @@ object frmProfile: TfrmProfile
         ReadOnly = True
         TabOrder = 4
       end
-      object txtWorkCountry: TComboBox
+      object txtWorkCountry: TTntComboBox
         Left = 102
         Top = 125
         Width = 150
@@ -933,7 +896,7 @@ object frmProfile: TfrmProfile
         ItemHeight = 13
         TabOrder = 5
         Text = 'United States  '
-        Items.Strings = (
+        Items.WideStrings = (
           'Afghanistan  '
           'Albania  '
           'Algeria  '
@@ -979,8 +942,7 @@ object frmProfile: TfrmProfile
           'Chile  '
           'China  '
           'Christmas Island  '
-          'Cocos (Keeling) '
-          'Islands  '
+          'Cocos (Keeling) Islands  '
           'Colubmia  '
           'Comoros  '
           'Congo (Republic of) '

@@ -28,7 +28,7 @@ uses
 
 type
   TfrmLogin = class(TForm)
-    Label5: TLabel;
+    lblProfile: TLabel;
     cboProfiles: TTntComboBox;
     chkInvisible: TCheckBox;
     btnDetails: TButton;
@@ -44,7 +44,7 @@ type
     procedure btnDetailsClick(Sender: TObject);
     procedure CreateNew1Click(Sender: TObject);
     procedure Delete1Click(Sender: TObject);
-    procedure Label5Click(Sender: TObject);
+    procedure lblProfileClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -135,7 +135,9 @@ end;
 {---------------------------------------}
 procedure TfrmLogin.FormCreate(Sender: TObject);
 begin
+    AssignUnicodeFont(Self, 10);
     TranslateProperties(Self);
+    URLLabel(lblProfile);
     MainSession.Prefs.RestorePosition(Self);
 end;
 
@@ -198,7 +200,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmLogin.Label5Click(Sender: TObject);
+procedure TfrmLogin.lblProfileClick(Sender: TObject);
 var
     cp: TPoint;
 begin

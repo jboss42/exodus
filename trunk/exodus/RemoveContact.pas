@@ -59,7 +59,7 @@ procedure QuietRemoveRosterItem(sjid: Widestring);
 
 implementation
 uses
-    GnuGetText, JabberConst, S10n, Roster, Session, XMLTag;
+    GnuGetText, ExUtils, JabberConst, S10n, Roster, Session, XMLTag;
 {$R *.DFM}
 
 procedure RemoveRosterItem(sjid: Widestring; grp: Widestring);
@@ -162,6 +162,7 @@ end;
 
 procedure TfrmRemove.FormCreate(Sender: TObject);
 begin
+    AssignUnicodeFont(Self);
     TranslateProperties(Self);
 end;
 

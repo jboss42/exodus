@@ -1,6 +1,6 @@
 object frmCustomPres: TfrmCustomPres
-  Left = 240
-  Top = 168
+  Left = 254
+  Top = 169
   BorderStyle = bsDialog
   Caption = 'Custom Presence'
   ClientHeight = 261
@@ -46,17 +46,21 @@ object frmCustomPres: TfrmCustomPres
     Align = alBottom
     AutoScroll = False
     TabOrder = 5
-    inherited Bevel1: TBevel
+    inherited Panel2: TPanel
       Width = 313
-    end
-    inherited Panel1: TPanel
-      Left = 153
-      Height = 29
-      inherited btnOK: TButton
-        OnClick = frameButtons1btnOKClick
+      Height = 34
+      inherited Bevel1: TBevel
+        Width = 313
       end
-      inherited btnCancel: TButton
-        OnClick = frameButtons1btnCancelClick
+      inherited Panel1: TPanel
+        Left = 153
+        Height = 29
+        inherited btnOK: TButton
+          OnClick = frameButtons1btnOKClick
+        end
+        inherited btnCancel: TButton
+          OnClick = frameButtons1btnCancelClick
+        end
       end
     end
   end
@@ -79,11 +83,11 @@ object frmCustomPres: TfrmCustomPres
     Left = 96
     Top = 40
     Width = 209
-    Height = 23
+    Height = 21
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
-    Font.Name = 'Arial Unicode MS'
+    Font.Name = 'MS Sans Serif'
     Font.Style = []
     ImeMode = imHanguel
     ParentFont = False
@@ -143,8 +147,6 @@ object frmCustomPres: TfrmCustomPres
       Height = 19
       Enabled = False
       HotKey = 32833
-      InvalidKeys = [hcNone, hcShift]
-      Modifiers = [hkAlt]
       TabOrder = 1
     end
   end

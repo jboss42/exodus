@@ -27,7 +27,7 @@ object frmVCard: TfrmVCard
     Top = 0
     Width = 318
     Height = 297
-    ActivePage = TabSheet1
+    ActivePage = TabSheet6
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 0
@@ -47,12 +47,6 @@ object frmVCard: TfrmVCard
         Height = 13
         Cursor = crHandPoint
         Caption = 'Email:'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsUnderline]
-        ParentFont = False
       end
       object Label7: TLabel
         Left = 2
@@ -60,12 +54,6 @@ object frmVCard: TfrmVCard
         Width = 56
         Height = 13
         Caption = 'First (Given)'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
-        ParentFont = False
       end
       object Label5: TLabel
         Left = 2
@@ -73,12 +61,6 @@ object frmVCard: TfrmVCard
         Width = 58
         Height = 13
         Caption = 'Last (Family)'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
-        ParentFont = False
       end
       object lblURL: TLabel
         Left = 4
@@ -87,76 +69,40 @@ object frmVCard: TfrmVCard
         Height = 13
         Cursor = crHandPoint
         Caption = 'Web:'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsUnderline]
-        ParentFont = False
       end
       object txtNick: TTntEdit
         Left = 56
         Top = 69
         Width = 187
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 2
       end
       object txtPriEmail: TTntEdit
         Left = 56
         Top = 95
         Width = 187
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 3
       end
       object txtFirst: TTntEdit
         Left = 73
         Top = 6
         Width = 168
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 0
       end
       object txtLast: TTntEdit
         Left = 73
         Top = 33
         Width = 169
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 1
       end
       object txtWeb: TTntEdit
         Left = 56
         Top = 121
         Width = 187
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 4
       end
     end
@@ -209,14 +155,8 @@ object frmVCard: TfrmVCard
         Left = 92
         Top = 6
         Width = 150
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ItemHeight = 15
-        ParentFont = False
+        Height = 21
+        ItemHeight = 13
         TabOrder = 0
         Items.WideStrings = (
           'Accounting/Finance'
@@ -241,39 +181,21 @@ object frmVCard: TfrmVCard
         Left = 92
         Top = 32
         Width = 150
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 1
       end
       object txtHomeVoice: TTntEdit
         Left = 91
         Top = 83
         Width = 150
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 2
       end
       object txtHomeFax: TTntEdit
         Left = 91
         Top = 110
         Width = 150
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 3
       end
       object memDesc: TTntMemo
@@ -334,14 +256,8 @@ object frmVCard: TfrmVCard
         Left = 102
         Top = 137
         Width = 150
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ItemHeight = 15
-        ParentFont = False
+        Height = 21
+        ItemHeight = 13
         TabOrder = 5
         Text = 'United States  '
         Items.WideStrings = (
@@ -590,65 +506,35 @@ object frmVCard: TfrmVCard
         Left = 102
         Top = 84
         Width = 150
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 3
       end
       object txtHomeZip: TTntEdit
         Left = 102
         Top = 110
         Width = 150
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 4
       end
       object txtHomeCity: TTntEdit
         Left = 102
         Top = 58
         Width = 150
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 2
       end
       object txtHomeStreet2: TTntEdit
         Left = 102
         Top = 32
         Width = 150
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 1
       end
       object txtHomeStreet1: TTntEdit
         Left = 102
         Top = 6
         Width = 150
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 0
       end
     end
@@ -694,65 +580,35 @@ object frmVCard: TfrmVCard
         Left = 102
         Top = 6
         Width = 150
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 0
       end
       object txtOrgUnit: TTntEdit
         Left = 102
         Top = 32
         Width = 150
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 1
       end
       object txtOrgTitle: TTntEdit
         Left = 102
         Top = 58
         Width = 150
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 2
       end
       object txtWorkVoice: TTntEdit
         Left = 102
         Top = 88
         Width = 150
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 3
       end
       object txtWorkFax: TTntEdit
         Left = 102
         Top = 114
         Width = 150
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 4
       end
     end
@@ -805,14 +661,8 @@ object frmVCard: TfrmVCard
         Left = 102
         Top = 133
         Width = 150
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ItemHeight = 15
-        ParentFont = False
+        Height = 21
+        ItemHeight = 13
         TabOrder = 5
         Text = 'United States  '
         Items.WideStrings = (
@@ -1061,65 +911,35 @@ object frmVCard: TfrmVCard
         Left = 102
         Top = 82
         Width = 150
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 3
       end
       object txtWorkZip: TTntEdit
         Left = 102
         Top = 107
         Width = 150
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 4
       end
       object txtWorkCity: TTntEdit
         Left = 102
         Top = 56
         Width = 150
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 2
       end
       object txtWorkStreet2: TTntEdit
         Left = 102
         Top = 30
         Width = 150
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 1
       end
       object txtWorkStreet1: TTntEdit
         Left = 102
         Top = 4
         Width = 150
-        Height = 23
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -11
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
+        Height = 21
         TabOrder = 0
       end
     end

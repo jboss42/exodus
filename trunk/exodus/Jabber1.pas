@@ -731,6 +731,7 @@ begin
     _new_tabindex := -1;
 
     // Do translation magic
+    AssignUnicodeFont(Self);
     TranslateProperties(Self);
 
     // setup our tray icon

@@ -267,9 +267,9 @@ var
     sig: TSignal;
 begin
     // find the correct signal to dispatch this event on
-    levt := Lowercase(Trim(event));
+    levt := WideLowerCase(Trim(event));
     for i := Self.Count - 1 downto 0 do begin
-        if (Pos(Lowercase(Strings[i]), levt) = 1) then begin
+        if (Pos(LowerCase(Strings[i]), levt) = 1) then begin
             sig := TSignal(Objects[i]);
             if (sig <> nil) then
                 sig.Invoke(event, tag);

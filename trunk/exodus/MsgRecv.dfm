@@ -376,7 +376,7 @@ object frmMsgRecv: TfrmMsgRecv
         object txtFrom: TTntLabel
           Left = 53
           Top = 2
-          Width = 41
+          Width = 34
           Height = 18
           Cursor = crHandPoint
           Align = alLeft
@@ -385,7 +385,7 @@ object frmMsgRecv: TfrmMsgRecv
           Font.Charset = ANSI_CHARSET
           Font.Color = clBlue
           Font.Height = -12
-          Font.Name = 'Arial Unicode MS'
+          Font.Name = 'MS Sans Serif'
           Font.Style = [fsUnderline]
           ParentColor = False
           ParentFont = False

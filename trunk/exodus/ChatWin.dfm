@@ -1,17 +1,15 @@
 inherited frmChat: TfrmChat
-  Left = 315
-  Top = 397
+  Left = 362
+  Top = 416
   ActiveControl = MsgOut
   Caption = 'Chat Window'
   Font.Charset = ANSI_CHARSET
-  Font.Height = -13
-  Font.Name = 'Arial Unicode MS'
   OldCreateOrder = True
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnShow = FormShow
   PixelsPerInch = 96
-  TextHeight = 18
+  TextHeight = 13
   inherited Panel3: TPanel
     Top = 24
     Height = 229
@@ -67,26 +65,20 @@ inherited frmChat: TfrmChat
       object lblNick: TTntLabel
         Left = 20
         Top = 0
-        Width = 86
+        Width = 39
         Height = 20
         Align = alLeft
         Caption = ' Foo '#32072#32073#32074#32075' '
         Caption_UTF7 = ' Foo +fUh9SX1KfUs '
       end
       object lblJID: TTntLabel
-        Left = 106
+        Left = 59
         Top = 0
-        Width = 35
+        Width = 28
         Height = 20
         Cursor = crHandPoint
         Align = alLeft
         Caption = '<JID>'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = 'Arial Unicode MS'
-        Font.Style = []
-        ParentFont = False
         OnClick = lblJIDClick
       end
     end

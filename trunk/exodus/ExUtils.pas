@@ -67,6 +67,8 @@ procedure LogMessage(Msg: TJabberMessage);
 procedure ShowLog(jid: string);
 procedure DebugMsg(Message : string);
 procedure AssignDefaultFont(font: TFont);
+procedure AssignUnicodeFont(Form: TForm; font_size: short = 0);
+procedure URLLabel(lbl: TLabel);
 
 procedure jabberSendCTCP(jid, xmlns: string; callback: TPacketEvent = nil);
 procedure jabberSendRosterItems(to_jid: WideString; items: TList);
@@ -128,6 +130,7 @@ end;
 
 var
     presenceToAtom: TStringList;
+    unicode_font: TFont;
 
 resourceString
     sTurnOnBlocking = 'You currently have logging turned off. ' +
@@ -455,6 +458,37 @@ end;
 procedure DebugMsg(Message : string);
 begin
     DebugMessage(Message);
+end;
+
+{---------------------------------------}
+procedure URLLabel(lbl: TLabel);
+begin
+    lbl.Font.Color := clBlue;
+    lbl.Font.Style := [fsUnderline];
+end;
+
+{---------------------------------------}
+procedure AssignUnicodeFont(Form: TForm; font_size: short);
+begin
+    // Assign either Arial or Arial Unicode MS to this form.
+    if (unicode_font = nil) then begin
+        unicode_font := TFont.Create();
+        if (Screen.Fonts.IndexOf('Arial Unicode MS') < 0) then begin
+            unicode_font.name := 'Arial';
+            unicode_font.size := 8;
+        end
+        else begin
+            unicode_font.Name := 'Arial Unicode MS';
+            unicode_font.Size := 8;
+        end;
+    end;
+
+    form.Font.Name := unicode_font.name;
+
+    if ((font_size = 0) or (font_size < 5)) then
+        form.font.size := unicode_font.size
+    else
+        form.font.size := font_size;
 end;
 
 {---------------------------------------}
@@ -913,11 +947,15 @@ end;
 initialization
     _GetLastInputInfo := GetProcAddress(GetModuleHandle('user32.dll'), 'GetLastInputInfo');
     presenceToAtom := TStringList.Create();
+    unicode_font := nil;
 
 finalization
     if (presenceToAtom <> nil) then begin
         FreeAtoms(presenceToAtom);
         presenceToAtom.Free();
     end;
+
+    if (unicode_font <> nil) then
+        unicode_font.Free();
 end.
 

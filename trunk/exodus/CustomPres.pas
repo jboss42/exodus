@@ -61,7 +61,7 @@ implementation
 {$R *.dfm}
 
 uses
-    GnuGetText, Jabber1, Session, Presence;
+    ExUtils, GnuGetText, Jabber1, Session, Presence;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -82,6 +82,7 @@ procedure TfrmCustomPres.FormCreate(Sender: TObject);
 var
     i: integer;
 begin
+    AssignUnicodeFont(Self);
     TranslateProperties(Self);
 
     // Default to the current settings
