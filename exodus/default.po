@@ -6,13 +6,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-04-26 14:09\n"
-"PO-Revision-Date: 2004-04-26 14:09\n"
+"POT-Creation-Date: 2004-04-27 21:53\n"
+"PO-Revision-Date: 2004-04-27 21:53\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: dxgettext 1.1.1\n"
+"X-Generator: dxgettext 1.2 beta 2\n"
 
 #. frmAbout..Caption
 #: About.dfm:8
@@ -153,7 +153,7 @@ msgstr ""
 #. frmAbout..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: About.dfm:1424
 #. frmException..frameButtons1..Panel2..Panel1..btnCancel..Caption
-#: ExTracer.dfm:46
+#: ExTracer.dfm:48
 #. frmInvalidRoster..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: InvalidRoster.dfm:42
 #. frmMsgRecv..frameButtons1..Panel2..Panel1..btnCancel..Caption
@@ -614,8 +614,6 @@ msgstr ""
 #: ChatWin.dfm:112
 #. frmChat..popContact..N1..Caption
 #: ChatWin.dfm:146
-#. frmChat..popContact..N3..Caption
-#: ChatWin.dfm:165
 #. frmDebug..PopupMenu1..N1..Caption
 #: Debug.dfm:304
 #. frmExodus..MainMenu1..Exodus1..N7..Caption
@@ -649,7 +647,7 @@ msgstr ""
 #. frmExodus..popTray..N01..Caption
 #: Jabber1.dfm:2707
 #. frmJud..PopupMenu1..N1..Caption
-#: jud.dfm:220
+#: Jud.dfm:220
 #. frmMsgRecv..popContact..N1..Caption
 #: MsgRecv.dfm:519
 #. frmMsgRecv..popContact..N2..Caption
@@ -1150,18 +1148,13 @@ msgstr ""
 msgid "Word Wrap Input"
 msgstr ""
 
-#. frmChat..popContact..refresh1..Caption
-#: ChatWin.dfm:168
-msgid "refresh"
-msgstr ""
-
 #. frmChat..SaveDialog1..DefaultExt
-#: ChatWin.dfm:180
+#: ChatWin.dfm:173
 msgid "html"
 msgstr ""
 
 #. frmChat..SaveDialog1..Filter
-#: ChatWin.dfm:181
+#: ChatWin.dfm:174
 msgid "RTF Files|*.rtf|All Files|*.*"
 msgstr ""
 
@@ -1397,7 +1390,7 @@ msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..Label5..Caption
 #: ConnDetails.dfm:429
-#: ExUtils.pas:613
+#: ExUtils.pas:563
 msgid "seconds"
 msgstr ""
 
@@ -1488,10 +1481,10 @@ msgstr ""
 #: CustomPres.dfm:75
 #. frmRoom..popRoomRoster..popRosterChat..Caption
 #: Room.dfm:265
-#: ChatWin.pas:454
-#: ChatWin.pas:469
-#: ChatWin.pas:471
-#: ChatWin.pas:473
+#: ChatWin.pas:451
+#: ChatWin.pas:466
+#: ChatWin.pas:468
+#: ChatWin.pas:470
 msgid "Chat"
 msgstr ""
 
@@ -1953,7 +1946,7 @@ msgstr ""
 #: ConnDetails.pas:402
 #. do this.
 #: ExSession.pas:473
-#: ExUtils.pas:1233
+#: ExUtils.pas:1183
 #: Jabber1.pas:1227
 #: Login.pas:110
 #: Login.pas:184
@@ -1983,7 +1976,7 @@ msgstr ""
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Hint
 #: Jabber1.dfm:146
 #. frmJud..PopupMenu1..popAdd..Caption
-#: jud.dfm:212
+#: Jud.dfm:212
 #. frmAdd..Caption
 #: RosterAdd.dfm:6
 #. frmRosterWindow..popActions..popAddContact..Caption
@@ -2292,7 +2285,7 @@ msgstr ""
 #. frmExodus..popTray..trayMessage..Caption
 #: Jabber1.dfm:2695
 #. frmJud..PopupMenu1..popMessage..Caption
-#: jud.dfm:227
+#: Jud.dfm:227
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
 #: subscribe.dfm:150
 msgid "Send Message"
@@ -2375,7 +2368,7 @@ msgstr ""
 #. frmJoinRoom..Tabs..TabSheet2..Caption
 #: JoinRoom.dfm:148
 #. frmJud..Tabs..TabSheet2..Caption
-#: jud.dfm:78
+#: Jud.dfm:78
 #. frmRegister..Tabs..TabSheet2..Caption
 #: RegForm.dfm:60
 msgid "TabSheet2"
@@ -2409,79 +2402,79 @@ msgid "Fetch Rooms"
 msgstr ""
 
 #. frmJud..Caption
-#: jud.dfm:5
+#: Jud.dfm:5
 msgid "Jabber Search"
 msgstr ""
 
 #. frmJud..Panel1..lblWizardTitle..Caption
-#: jud.dfm:43
+#: Jud.dfm:43
 msgid "Jabber Search Wizard"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet1..lblSelect....Align
-#: jud.dfm:64
+#: Jud.dfm:64
 msgid "Select the user database or enter in the Jabber ID of the search "
 "agent to use:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet2..lblWait..Caption
-#: jud.dfm:86
+#: Jud.dfm:86
 msgid "Please wait. Contacting search agent:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..Caption
-#: jud.dfm:100
+#: Jud.dfm:100
 #. frmRegister..Tabs..TabSheet3..Caption
 #: RegForm.dfm:95
 msgid "TabSheet3"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..lblInstructions..Caption
-#: jud.dfm:108
+#: Jud.dfm:108
 msgid "Fill in the search criteria to find contacts "
 "on."
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Caption
-#: jud.dfm:124
+#: Jud.dfm:124
 #. frmRegister..Tabs..TabSheet4..Caption
 #: RegForm.dfm:115
 msgid "TabSheet4"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Label3..Caption
-#: jud.dfm:140
+#: Jud.dfm:140
 msgid "Add Contacts to this group:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Caption
-#: jud.dfm:148
+#: Jud.dfm:148
 #. frmAdd..lblAddGrp..Caption
 #: RosterAdd.dfm:49
 msgid "Add a new Group"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblCount..Caption
-#: jud.dfm:159
+#: Jud.dfm:159
 msgid "N items found"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Button1..Caption
-#: jud.dfm:176
+#: Jud.dfm:176
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: RosterRecv.dfm:38
-#: jud.pas:650
-#: jud.pas:652
+#: Jud.pas:650
+#: Jud.pas:652
 msgid "Add Contacts"
 msgstr ""
 
 #. frmJud..PopupMenu1..popProfile..Caption
-#: jud.dfm:216
+#: Jud.dfm:216
 msgid "View Profile"
 msgstr ""
 
 #. frmJud..PopupMenu1..popChat..Caption
-#: jud.dfm:223
+#: Jud.dfm:223
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:146
 #: Jabber1.pas:2298
@@ -6113,7 +6106,7 @@ msgstr ""
 #: RosterAdd.dfm:34
 #. frmSubscribe..boxAdd..lblNickname..Caption
 #: subscribe.dfm:83
-#: ExUtils.pas:498
+#: ExUtils.pas:448
 msgid "Nickname:"
 msgstr ""
 
@@ -6197,9 +6190,9 @@ msgstr ""
 
 #. frmRosterWindow..pnlShow..pnlStatus..lblStatusLink..Caption
 #: RosterWindow.dfm:245
-#: ExUtils.pas:870
-#: ExUtils.pas:888
-#: ExUtils.pas:906
+#: ExUtils.pas:820
+#: ExUtils.pas:838
+#: ExUtils.pas:856
 #: RosterWindow.pas:369
 #. it at all times (if it exists).
 #: RosterWindow.pas:1271
@@ -6556,68 +6549,68 @@ msgid "Objects"
 msgstr ""
 
 #. Setup the cache'd old versions in ChangePresImage
-#: ChatWin.pas:552
+#: ChatWin.pas:549
 msgid " is replying."
 msgstr ""
 
-#: ChatWin.pas:631
+#: ChatWin.pas:628
 msgid "Chat Activity: "
 msgstr ""
 
-#: ChatWin.pas:749
+#: ChatWin.pas:746
 #. post a msg to the window and disable the text input box.
 #: Room.pas:847
 msgid "You have been disconnected."
 msgstr ""
 
 #. if this jid just got blocked, just close the window.
-#: ChatWin.pas:766
+#: ChatWin.pas:763
 msgid "This user is now blocked."
 msgstr ""
 
 #. Change the bulb
-#: ChatWin.pas:788
+#: ChatWin.pas:785
 #. make sure the user is still connected
-#: ChatWin.pas:833
-#: ChatWin.pas:834
+#: ChatWin.pas:830
+#: ChatWin.pas:831
 msgid "offline"
 msgstr ""
 
-#: ChatWin.pas:790
+#: ChatWin.pas:787
 msgid "unknown"
 msgstr ""
 
-#: ChatWin.pas:792
+#: ChatWin.pas:789
 msgid "away"
 msgstr ""
 
-#: ChatWin.pas:794
+#: ChatWin.pas:791
 msgid "xa"
 msgstr ""
 
-#: ChatWin.pas:796
+#: ChatWin.pas:793
 msgid "dnd"
 msgstr ""
 
-#: ChatWin.pas:798
+#: ChatWin.pas:795
 msgid "chat"
 msgstr ""
 
-#: ChatWin.pas:848
+#: ChatWin.pas:845
 msgid "available"
 msgstr ""
 
-#: ChatWin.pas:852
-#: ChatWin.pas:854
+#: ChatWin.pas:849
+#: ChatWin.pas:851
 msgid "is now"
 msgstr ""
 
 #. check to see if we're already subscribed...
-#: ChatWin.pas:883
+#: ChatWin.pas:880
 msgid "You are already subscribed to this contact"
 msgstr ""
 
-#: ChatWin.pas:1219
+#: ChatWin.pas:1216
 msgid "This chat window is busy. Close anyways?"
 msgstr ""
 
@@ -6930,106 +6923,95 @@ msgstr ""
 msgid "%d log files deleted."
 msgstr ""
 
-#. mkdir
-#: ExUtils.pas:446
-msgid "The log directory you specified is invalid. Either turn off logging, "
-"or specify a valid path."
-msgstr ""
-
-#. Make sure to put a new conversation header
-#: ExUtils.pas:475
-msgid "Could not open log file: "
-msgstr ""
-
-#: ExUtils.pas:499
+#: ExUtils.pas:449
 msgid "First Name:"
 msgstr ""
 
-#: ExUtils.pas:500
+#: ExUtils.pas:450
 msgid "Last Name:"
 msgstr ""
 
-#: ExUtils.pas:501
+#: ExUtils.pas:451
 msgid "EMail Address:"
 msgstr ""
 
-#: ExUtils.pas:502
+#: ExUtils.pas:452
 msgid "Password"
 msgstr ""
 
-#: ExUtils.pas:503
+#: ExUtils.pas:453
 msgid "UserName:"
 msgstr ""
 
-#: ExUtils.pas:610
+#: ExUtils.pas:560
 msgid "days"
 msgstr ""
 
-#: ExUtils.pas:611
+#: ExUtils.pas:561
 msgid "hours"
 msgstr ""
 
-#: ExUtils.pas:612
+#: ExUtils.pas:562
 msgid "minutes"
 msgstr ""
 
-#: ExUtils.pas:616
+#: ExUtils.pas:566
 msgid " unknown last result: "
 msgstr ""
 
-#: ExUtils.pas:627
+#: ExUtils.pas:577
 msgid "%d day, "
 msgid_plural ""
 msgstr[0] ""
 
-#: ExUtils.pas:628
+#: ExUtils.pas:578
 msgid "%d hour, "
 msgid_plural ""
 msgstr[0] ""
 
-#: ExUtils.pas:629
+#: ExUtils.pas:579
 msgid "%d minute, "
 msgid_plural ""
 msgstr[0] ""
 
-#: ExUtils.pas:630
+#: ExUtils.pas:580
 msgid "%d second."
 msgid_plural ""
 msgstr[0] ""
 
-#: ExUtils.pas:776
+#: ExUtils.pas:726
 msgid "This message contains %d roster items."
 msgstr ""
 
-#: ExUtils.pas:864
-#: ExUtils.pas:882
-#: ExUtils.pas:900
+#: ExUtils.pas:814
+#: ExUtils.pas:832
+#: ExUtils.pas:850
 #: RosterWindow.pas:375
 #: RosterWindow.pas:669
 msgid "Bookmarks"
 msgstr ""
 
-#: ExUtils.pas:867
-#: ExUtils.pas:885
-#: ExUtils.pas:903
+#: ExUtils.pas:817
+#: ExUtils.pas:835
+#: ExUtils.pas:853
 #: RosterWindow.pas:374
 msgid "Unfiled"
 msgstr ""
 
-#: ExUtils.pas:1254
+#: ExUtils.pas:1204
 msgid "Untitled Group"
 msgstr ""
 
-#: ExUtils.pas:1255
+#: ExUtils.pas:1205
 msgid "New Roster Group"
 msgstr ""
 
-#: ExUtils.pas:1255
+#: ExUtils.pas:1205
 msgid "Enter new group name: "
 msgstr ""
 
 #. add the new grp.
-#: ExUtils.pas:1260
+#: ExUtils.pas:1210
 msgid "This group already exists!"
 msgstr ""
 
@@ -7241,22 +7223,22 @@ msgid "You must enter a nickname"
 msgstr ""
 
 #. timeout
-#: jud.pas:318
+#: Jud.pas:318
 #. we got an iq-error back
-#: jud.pas:324
+#: Jud.pas:324
 msgid "Could not contact the search agent."
 msgstr ""
 
 #. timeout
-#: jud.pas:426
+#: Jud.pas:426
 msgid "The search timed out."
 msgstr ""
 
-#: jud.pas:455
+#: Jud.pas:455
 msgid "No Results were found."
 msgstr ""
 
-#: jud.pas:565
+#: Jud.pas:565
 msgid "%d items found."
 msgstr ""
 
@@ -9026,23 +9008,28 @@ msgstr ""
 msgid "Reset emoticon sets back to defaults?"
 msgstr ""
 
-#: prefs/PrefEmote.pas:227
+#: prefs/PrefEmote.pas:235
+msgid "The text you entered is not a valid emoticon string. Try (foo), or "
+"::foo::"
+msgstr ""
+
+#: prefs/PrefEmote.pas:247
 msgid "The emoticon file specified does not "
 "exist."
 msgstr ""
 
 #. Create the new emoticon.
-#: prefs/PrefEmote.pas:238
+#: prefs/PrefEmote.pas:258
 msgid "The file you specified has an unknown mime "
 "type."
 msgstr ""
 
 #. Edit
-#: prefs/PrefEmote.pas:259
+#: prefs/PrefEmote.pas:279
 msgid "Select a single emoticon to edit."
 msgstr ""
 
-#: prefs/PrefEmote.pas:299
+#: prefs/PrefEmote.pas:319
 msgid "Remove all selected emoticons?"
 msgstr ""
 

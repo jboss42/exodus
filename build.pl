@@ -50,7 +50,7 @@ e("$rcc xml.rc");
 
 if ($::rtype eq "daily") {
     # Generate a detailed MAP file, and build in stack frame tracing
-    e("$dcc $opts -GD -DTRACE_EXCEPTIONS -Noutput -U\"$::JCL\" -U\"$::TNT\" Exodus.dpr");
+    e("$dcc $opts -GD -DTRACE_EXCEPTIONS -Noutput -I\"$::JCL\" -U\"$::JCL\" -U\"$::JCL\\common\" -U\"$::JCL\\vcl\" -U\"$::JCL\\windows\" -U\"$::TNT\" Exodus.dpr");
 } else {
     e("$dcc $opts -D -Noutput -U\"$::TNT\" Exodus.dpr");
 }

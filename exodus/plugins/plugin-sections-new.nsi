@@ -1,5 +1,5 @@
 	Section "ImportAIM" SEC_ExImportAIM
-	  AddSize 638
+	  AddSize 637
 	  Push "ExImportAIM"
 	  Call DownloadPlugin
       RegDll "$INSTDIR\plugins\ExImportAIM.dll"
@@ -12,6 +12,13 @@
       RegDll "$INSTDIR\plugins\ExAspell.dll"
 	SectionEnd
 
+	Section "HTMLLogger" SEC_ExHTMLLogger
+	  AddSize 557
+	  Push "ExHTMLLogger"
+	  Call DownloadPlugin
+      RegDll "$INSTDIR\plugins\ExHTMLLogger.dll"
+	SectionEnd
+
 	Section "ImportICQ" SEC_ExImportICQ
 	  AddSize 691
 	  Push "ExImportICQ"
@@ -20,7 +27,7 @@
 	SectionEnd
 
 	Section "JabberStats" SEC_ExJabberStats
-	  AddSize 702
+	  AddSize 701
 	  Push "ExJabberStats"
 	  Call DownloadPlugin
       RegDll "$INSTDIR\plugins\ExJabberStats.dll"
@@ -34,7 +41,7 @@
 	SectionEnd
 
 	Section "RosterTools" SEC_ExRosterTools
-	  AddSize 758
+	  AddSize 757
 	  Push "ExRosterTools"
 	  Call DownloadPlugin
       RegDll "$INSTDIR\plugins\ExRosterTools.dll"
