@@ -134,7 +134,8 @@ begin
         DoNotify(nil, 'notify_offline', nick + _(sNotifyOffline), ico_Offline)
 
     // don't display normal presence changes
-    else if ((event = '/presence/available') or (event = '/presence/error')) then
+    else if ((event = '/presence/available') or (event = '/presence/error')
+        or (event = '/presence/unavailable') ) then
         // do nothing
 
     // unkown.
