@@ -53,6 +53,7 @@ type
     size: longint;
     packet: TXMLTag;
     stream_host: Widestring;
+    hash: string;
   end;
 
     THostPortPair = class
@@ -360,6 +361,7 @@ begin
     pkg.size := SafeInt(f.GetAttribute('size'));
     pkg.packet := TXMLTag.Create(tag);
     pkg.desc := '';
+    pkg.hash := f.GetAttribute('hash');
     getXferManager().RecvFile(pkg);
     DoNotify(getXferManager(), 'notify_oob', 'File from ' + tmps, ico_service);
 end;
@@ -611,8 +613,7 @@ var
     buff: array[1..2] of char;
     resp_len: Cardinal;
     resp: PChar;
-    ip_len: Byte;
-    myip: string;
+    hash_len: Byte;
 begin
   inherited;
     // we need to do something
@@ -703,23 +704,21 @@ begin
     PostMessage(spkg.frame.Handle, WM_SEND_START, spkg.stream.Size, 0);
 
     // Reply back
-    myip := MainSession.Stream.LocalIP;
-    ip_len := Length(myip);
-    resp_len := 1 + 1 + 1 + 1 + 1 + ip_len;
+    hash_len := Length(hash);
+
+    // Note the 2 end bytes are for a port, which we memset to 0x00.
+    resp_len := 1 + 1 + 1 + 1 + 1 + hash_len + 2;
     resp := StrAlloc(resp_len + 1);
     FillChar(resp^, resp_len + 1, 0);
     resp[0] := Chr($05);
     resp[1] := Chr($00);
     resp[2] := Chr($00);
-    resp[3] := Chr($03);
-    resp[4] := Chr(Length(myip));
-    StrPCopy(@resp[5], PChar(myip));
-    AThread.Connection.WriteBuffer(resp^, resp_len, true);
 
-    // Send 2 NULL bytes to finish the negotiation.
-    resp[0] := Chr($00);
-    resp[1] := Chr($00);
-    AThread.Connection.WriteBuffer(resp^, 2, true);
+    // address information
+    resp[3] := Chr($03);
+    resp[4] := Chr(Length(hash));
+    StrPCopy(@resp[5], PChar(hash));
+    AThread.Connection.WriteBuffer(resp^, resp_len, true);
 
     // Write the file.
     AThread.Connection.WriteStream(spkg.stream, true, false);

@@ -425,6 +425,7 @@ var
     tmps: Widestring;
     spkg: TStreamPkg;
     jl: TWidestringlist;
+    hex: string;
 begin
     // do something based on our current state
     assert(_iq = nil);
@@ -509,6 +510,7 @@ begin
         try
             fs := TFileStream.Create(_pkg.pathname, (fmOpenRead or fmShareDenyNone));
             _size := fs.Size;
+            hex := MD5File(fs);
             fs.Free();
         except
             on EStreamError do begin
@@ -542,6 +544,8 @@ begin
         x := x.AddTagNS('file', XMLNS_FTPROFILE);
         x.setAttribute('name', ExtractFilename(_pkg.pathname));
         x.setAttribute('size', IntToStr(_size));
+        if (hex <> '') then
+            x.setAttribute('hash', hex);
 
         // put in the fneg stuff
         x := _iq.qTag.AddTagNS('feature', XMLNS_FEATNEG);
