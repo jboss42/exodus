@@ -34,7 +34,7 @@ type
         InstanceCount: integer; // How many instances do we have
         KeyHook: HHOOK;	        // Our keyboard hook
         MouseHook: HHOOK;		// Our mouse hook
-        LastTick: longint;		// The last idle tick count
+        LastTick: dword;		// The last idle tick count
         end;
     PSharedArea = ^TSharedArea;
 
@@ -80,7 +80,7 @@ begin
 end;
 
 {---------------------------------------}
-function GetLastTick: longint; stdcall;
+function GetLastTick: dword; stdcall;
 begin
     // return the last Tick count from our shared mem segment
     Result := fShare^.LastTick;
