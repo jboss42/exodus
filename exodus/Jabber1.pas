@@ -994,10 +994,11 @@ begin
         ResolvedIP := ip;
         if (p > 0) then
             ResolvedPort := p
-        else if (ssl = ssl_port) then
-            ResolvedPort := 5223
         else
             ResolvedPort := 5222;
+
+        if ((ResolvedPort = 5222) and (ssl = ssl_port)) then
+            ResolvedPort := 5223;
 
         if (p > 0) then
             DebugMsg('Got SRV: ' + ip + '  ' + IntToStr(p))

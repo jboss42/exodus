@@ -96,7 +96,16 @@ begin
     sjid := txtJID.Text;
     snick := txtNickname.Text;
     sgrp := cboGroup.Text;
-    svc := lowercase(cboType.Text);
+
+    // DO NOT translate these!
+    case (cboType.ItemIndex) of
+    1: svc := 'msn';
+    2: svc := 'yahoo';
+    3: svc := 'aim';
+    4: svc := 'icq';
+    else
+        svc := 'jabber';
+    end;
 
     // check to see if we need an agents list
     if (cboType.ItemIndex > 0) then begin
