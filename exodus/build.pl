@@ -26,14 +26,12 @@ e("$dcc $opts -Noutput IdleHooks.dpr");
 e("$rcc version.rc");
 e("$dcc $opts -Noutput -U\"$::TNT\" Exodus.dpr");
 
+unlink "locale.zip";
+grep unlink, glob("locale/*/LC_MESSAGES/default.mo");
+grep &msgfmt, glob("locale/*/LC_MESSAGES/default.po");
+e('zip locale ' . join(' ', glob("locale/*/LC_MESSAGES/default.mo")));
 
-chdir "locale";
-unlink "mo.zip";
-grep unlink, glob("*/LC_MESSAGES/default.mo");
-grep &msgfmt, glob("*/LC_MESSAGES/default.po");
-e('find . -name default.mo -print | zip mo -@');
-
-chdir "../plugins";
+chdir "plugins";
 grep unlink, glob("*.zip"); # rm *.zip
 grep unlink, glob("*.dll"); # rm *.dll
 
