@@ -21,7 +21,9 @@ uses
   JabberID in '..\jopl\JabberID.pas',
   sechash in '..\jopl\SecHash.pas',
   test_xmlparser in 'test_xmlparser.pas',
-  test_dispatcher in 'test_dispatcher.pas';
+  test_dispatcher in 'test_dispatcher.pas',
+  XMLSocketStream in '..\jopl\XMLSocketStream.pas',
+  test_xmlstream in 'test_xmlstream.pas';
 
 {$R *.res}
 
@@ -35,7 +37,7 @@ begin
 
   Application.Title := 'DUnit';
   // Application.CreateForm(TGUITestRunner, MyForm);
-  Application.CreateForm(TGUITestRunner, MyForm);
+  Application.CreateForm(TMyForm, MyForm);
   with MyForm do begin
         Show();
         suite := registeredTests;
