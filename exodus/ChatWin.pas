@@ -23,7 +23,8 @@ interface
 uses
     Chat, ChatController, JabberID, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2;
+    Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2,
+  TntStdCtrls;
 
 type
   TfrmChat = class(TfrmBaseChat)
@@ -122,16 +123,16 @@ resourcestring
     sIsNow = 'is now';
     sAvailable = 'available';
     sOffline = 'offline';
-    
+
 
 implementation
 
 {$R *.dfm}
 
 uses
-    Presence, PrefController, Room, 
+    ExUtils, Presence, PrefController, Room,
     Transfer, RosterAdd, RiserWindow, Notify,
-    Jabber1, Profile, ExUtils, MsgDisplay, IQ,
+    Jabber1, Profile, MsgDisplay, IQ,
     JabberMsg, Roster, Session, XMLUtils,
     ShellAPI, RosterWindow, Emoticons;
 
@@ -435,18 +436,22 @@ end;
 {---------------------------------------}
 procedure TfrmChat.SendMsg;
 var
+    txt: Widestring;
     msg: TJabberMessage;
     mtag: TXMLTag;
 begin
     // Send the actual message out
-    if (Trim(MsgOut.WideText) = '') then exit;
+    // txt := getMemoText(MsgOut);
+    txt := Trim(MsgOut.Text);
+
+    if (txt = '') then exit;
 
     if _thread = '' then begin   //get thread from message
         _thread := GetThread;
         end;
 
     // send the msg
-    msg := TJabberMessage.Create(jid, 'chat', Trim(MsgOut.WideText), '');
+    msg := TJabberMessage.Create(jid, 'chat', Trim(txt), '');
     msg.thread := _thread;
     msg.nick := MainSession.Username;
     msg.isMe := true;

@@ -13,12 +13,6 @@ inherited frmChat: TfrmChat
       PlainRTF = True
     end
   end
-  inherited pnlInput: TPanel
-    inherited MsgOut: TExRichEdit
-      OnChange = MsgOutChange
-      OnKeyPress = MsgOutKeyPress
-    end
-  end
   inherited Panel1: TPanel
     object imgStatus: TPaintBox
       Tag = 1

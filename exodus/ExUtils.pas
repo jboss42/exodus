@@ -21,7 +21,7 @@ unit ExUtils;
 
 interface
 uses
-    JabberMsg, Graphics, Forms, Classes, SysUtils, Windows;
+    JabberMsg, Graphics, Controls, StdCtrls, Forms, Classes, SysUtils, Windows;
 
 const
     cWIN_95 = 1;             { Windows version constants}
@@ -71,8 +71,7 @@ function secsToDuration(seconds: string): string;
 function GetPresenceAtom(status: string): ATOM;
 function GetPresenceString(a: ATOM): string;
 function ColorToHTML( Color: TColor): string;
-
-
+function getMemoText(memo: TMemo): WideString;
 
 var
     _GetLastInputInfo: Pointer;
@@ -83,10 +82,11 @@ var
 {---------------------------------------}
 implementation
 uses
-    Controls, Dialogs, StrUtils, IdGlobal,
+    Unicode, 
+    Dialogs, StrUtils, IdGlobal,
     ShellAPI,
     MsgDisplay,
-    Session, IQ, Jabber1,  
+    Session, IQ, Jabber1,
     XMLUtils,
     JabberID,
     IniFiles,
@@ -551,6 +551,19 @@ begin
     iq.Namespace := xmlns;
     iq.Send;
 end;
+
+function getMemoText(memo: TMemo): WideString;
+var
+    len: integer;
+    txt: PWideChar;
+begin
+    // Result := memo.Text;
+    len := Length(memo.Text) + 1;
+    txt := StrAllocW(len);
+    GetWindowTextW(memo.Handle, txt, len);
+    Result := WideString(txt);    
+end;
+
 
 {---------------------------------------}
 {---------------------------------------}

@@ -24,7 +24,7 @@ uses
     XMLTag, RegExpr,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, ExRichEdit, ExtCtrls,
-    RichEdit2;
+    RichEdit2, TntStdCtrls;
 
 type
   TRoomMember = class
@@ -230,8 +230,11 @@ begin
         server := false;
         end;
 
-    if (Msg.Body <> '') then
+    if (Msg.Body <> '') then begin
         DisplayMsg(Msg, MsgList);
+        if (GetActiveWindow = Self.Handle) then
+            MsgOut.SetFocus();
+        end;
 
     if Msg.Subject <> '' then begin
         lblSubject.Caption := '  ' + Msg.Subject;
@@ -264,13 +267,16 @@ var
     msg: TJabberMessage;
 begin
     // Send the actual message out
-    txt := MsgOut.WideText;
-    if (Trim(txt) = '') then exit;
+    // txt := MsgOut.WideText;
+    // txt := getMemoText(MsgOut);
+    txt := Trim(MsgOut.Text);
+
+    if (txt = '') then exit;
 
     if (txt[1] = '/') then begin
         if (checkCommand(txt)) then exit;
         end;
-    msg := TJabberMessage.Create(jid, 'groupchat', MsgOut.WideText, '');
+    msg := TJabberMessage.Create(jid, 'groupchat', txt, '');
     msg.nick := MyNick;
     msg.isMe := true;
     MainSession.SendTag(msg.Tag);

@@ -59,12 +59,6 @@ inherited frmRoom: TfrmRoom
       end
     end
   end
-  inherited pnlInput: TPanel
-    inherited MsgOut: TExRichEdit
-      WantTabs = True
-      OnKeyPress = MsgOutKeyPress
-    end
-  end
   inherited Panel1: TPanel
     Height = 20
     object lblSubject: TLabel
