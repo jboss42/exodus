@@ -208,7 +208,8 @@ object frmConnDetails: TfrmConnDetails
         Width = 16
         Height = 21
         Associate = txtPriority
-        Max = 1000
+        Min = -1
+        Max = 128
         TabOrder = 2
       end
       object chkSRV: TTntCheckBox

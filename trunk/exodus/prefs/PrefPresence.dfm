@@ -229,11 +229,12 @@ inherited frmPrefPresence: TfrmPrefPresence
     object spnPriority: TTntUpDown
       Left = 162
       Top = 93
-      Width = 16
+      Width = 12
       Height = 21
       Hint = 'Priority of -1 uses current priority.'
+      Associate = txtCPPriority
       Min = -1
-      Max = 1000
+      Max = 127
       ParentShowHint = False
       ShowHint = True
       TabOrder = 4

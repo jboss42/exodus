@@ -117,6 +117,12 @@ end;
     status := txtStatus.Text;
     pri := StrToInt(txtPriority.Text);
 
+    // make sure we're compliant here.
+    if (pri > 128) then
+        pri := 128
+    else if (pri < -128) then
+        pri := -128;
+
     MainSession.setPresence(show, status, pri);
 
     // save custom presence
