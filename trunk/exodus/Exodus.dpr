@@ -125,9 +125,6 @@ begin
   Application.Title := 'Exodus';
 
   Application.CreateForm(TfrmExodus, frmExodus);
-  Application.CreateForm(TfrmConnDetails, frmConnDetails);
-  Application.CreateForm(TfrmInputPass, frmInputPass);
-  Application.CreateForm(TfrmXData, frmXData);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);
