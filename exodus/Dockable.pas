@@ -64,6 +64,7 @@ type
     procedure DockForm; virtual;
     procedure FloatForm; virtual;
     procedure ShowDefault;
+    procedure gotActivate; virtual;
 
     property Docked: boolean read _docked write _docked;
   end;
@@ -293,10 +294,17 @@ begin
             Self.Width, Self.Height, HWND_TOP);
         StopTrayAlert();
         _top := false;
+        gotActivate();
         inherited;
     end
     else
         inherited;
+end;
+
+{---------------------------------------}
+procedure TfrmDockable.gotActivate();
+begin
+    // implement this in sub-classes.
 end;
 
 {---------------------------------------}

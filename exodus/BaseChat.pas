@@ -102,6 +102,7 @@ type
     procedure HideEmoticons();
     procedure Flash;
     procedure pluginMenuClick(Sender: TObject); virtual; abstract;
+    procedure gotActivate; override;
 
     property MsgList: TfBaseMsgList read getMsgList;
 
@@ -183,6 +184,12 @@ begin
 
     if ((frmEmoticons <> nil) and (frmEmoticons.Visible)) then
         frmEmoticons.Hide;
+end;
+
+{---------------------------------------}
+procedure TfrmBaseChat.gotActivate;
+begin
+    Self.FormActivate(Self);
 end;
 
 {---------------------------------------}
