@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-07-14 08:20\n"
-"PO-Revision-Date: 2003-07-14 08:20\n"
+"POT-Creation-Date: 2003-07-24 11:03\n"
+"PO-Revision-Date: 2003-07-24 11:03\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -73,9 +73,9 @@ msgstr ""
 #. frmExodus..Font.Name
 #: Jabber1.dfm:12
 #. frmExodus..Tabs..Font.Name
-#: Jabber1.dfm:47
+#: Jabber1.dfm:46
 #. frmExodus..Tabs..tbsRoster..Font.Name
-#: Jabber1.dfm:64
+#: Jabber1.dfm:63
 #. frmJoinRoom..Font.Name
 #: JoinRoom.dfm:13
 #. frmJUD..pnlLeft..pnlResults..Label1..Font.Name
@@ -192,7 +192,7 @@ msgstr ""
 #. Programmer's name for it: sBtnClose
 #: MsgRecv.pas:162
 #. our thread completed.
-#: SendStatus.pas:877
+#: SendStatus.pas:880
 #. Programmer's name for it: sClose
 #: xdata.pas:65
 #. Programmer's name for it: sClose
@@ -612,7 +612,7 @@ msgstr ""
 #. frmBaseChat..popOut..emot_sep..Caption
 #: BaseChat.dfm:321
 #. frmBrowse..popContext..N1..Caption
-#: Browser.dfm:4067
+#: Browser.dfm:4068
 #. frmChat..popContact..N5..Caption
 #: ChatWin.dfm:102
 #. frmChat..popContact..N4..Caption
@@ -757,7 +757,7 @@ msgstr ""
 #. frmRosterRecv..lvContacts......Caption
 #: RosterRecv.dfm:204
 #. Programmer's name for it: sJID
-#: Jabber1.pas:470
+#: Jabber1.pas:472
 msgid "Jabber ID"
 msgstr ""
 
@@ -954,7 +954,7 @@ msgid "List"
 msgstr ""
 
 #. frmBrowse..popContext..mBrowse..Caption
-#: Browser.dfm:4055
+#: Browser.dfm:4056
 #. Programmer's name for it: sBrowse
 #: ExResponders.pas:126
 #. frmPrefMsg..btnLogBrowse..Caption
@@ -969,31 +969,31 @@ msgid "Browse"
 msgstr ""
 
 #. frmBrowse..popContext..mBrowseNew..Caption
-#: Browser.dfm:4059
+#: Browser.dfm:4060
 msgid "Browse in New Window"
 msgstr ""
 
 #. frmBrowse..popContext..mBookmark..Caption
-#: Browser.dfm:4063
+#: Browser.dfm:4064
 msgid "Add Bookmark to Roster"
 msgstr ""
 
 #. frmBrowse..popContext..mVCard..Caption
-#: Browser.dfm:4070
+#: Browser.dfm:4071
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuServerVCard..Caption
 #: Jabber1.dfm:498
 msgid "vCard"
 msgstr ""
 
 #. frmBrowse..popContext..mVersion..Caption
-#: Browser.dfm:4074
+#: Browser.dfm:4075
 #. Programmer's name for it: sVersion
 #: ExResponders.pas:123
 msgid "Version"
 msgstr ""
 
 #. frmBrowse..popContext..mTime..Caption
-#: Browser.dfm:4078
+#: Browser.dfm:4079
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuTime..Caption
 #: Jabber1.dfm:494
 #. Programmer's name for it: sTime
@@ -1002,12 +1002,12 @@ msgid "Time"
 msgstr ""
 
 #. frmBrowse..popContext..mLast..Caption
-#: Browser.dfm:4082
+#: Browser.dfm:4083
 msgid "Last Time/Activity"
 msgstr ""
 
 #. frmBrowse..popContext..mSearch..Caption
-#: Browser.dfm:4086
+#: Browser.dfm:4087
 #. frmJUD..pnlLeft..pnlBottom..btnAction..Caption
 #: jud.dfm:87
 #. Programmer's name for it: sJUDSearch
@@ -1016,12 +1016,12 @@ msgid "Search"
 msgstr ""
 
 #. frmBrowse..popContext..mRegister..Caption
-#: Browser.dfm:4090
+#: Browser.dfm:4091
 msgid "Register"
 msgstr ""
 
 #. frmBrowse..popContext..mJoinConf..Caption
-#: Browser.dfm:4094
+#: Browser.dfm:4095
 msgid "Join Conference"
 msgstr ""
 
@@ -1475,7 +1475,7 @@ msgstr ""
 #. frmRoom..popRoomRoster..popRosterChat..Caption
 #: Room.dfm:234
 #. Programmer's name for it: sChat
-#: Jabber1.pas:417
+#: Jabber1.pas:419
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
 #: prefs/PrefPresence.dfm:126
 msgid "Chat"
@@ -1488,9 +1488,9 @@ msgstr ""
 #. frmRosterWindow..popGroup..popGrpPresence..popGrpAvailable..Caption
 #: RosterWindow.dfm:509
 #. Programmer's name for it: sGrpOnline
-#: Jabber1.pas:420
+#: Jabber1.pas:422
 #. Programmer's name for it: sRosterAvail
-#: Jabber1.pas:427
+#: Jabber1.pas:429
 #: RosterWindow.pas:315
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:71
@@ -1512,9 +1512,9 @@ msgstr ""
 #. frmRosterWindow..popStatus..presAway..Caption
 #: RosterWindow.dfm:329
 #. Programmer's name for it: sGrpAway
-#: Jabber1.pas:421
+#: Jabber1.pas:423
 #. Programmer's name for it: sRosterAway
-#: Jabber1.pas:429
+#: Jabber1.pas:431
 #: RosterWindow.pas:316
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:70
@@ -1528,9 +1528,9 @@ msgstr ""
 #. frmRosterWindow..popStatus..presXA..Caption
 #: RosterWindow.dfm:335
 #. Programmer's name for it: sGrpXA
-#: Jabber1.pas:422
+#: Jabber1.pas:424
 #. Programmer's name for it: sRosterXA
-#: Jabber1.pas:430
+#: Jabber1.pas:432
 #: RosterWindow.pas:317
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:69
@@ -1548,9 +1548,9 @@ msgstr ""
 #. frmRosterWindow..popStatus..presDND..Caption
 #: RosterWindow.dfm:341
 #. Programmer's name for it: sGrpDND
-#: Jabber1.pas:423
+#: Jabber1.pas:425
 #. Programmer's name for it: sRosterDND
-#: Jabber1.pas:431
+#: Jabber1.pas:433
 #: RosterWindow.pas:318
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:68
@@ -1760,7 +1760,7 @@ msgstr ""
 #. frmInputPass..Caption
 #: InputPassword.dfm:8
 #. Programmer's name for it: sPasswordCaption
-#: Jabber1.pas:479
+#: Jabber1.pas:481
 msgid "Exodus Password"
 msgstr ""
 
@@ -1860,19 +1860,19 @@ msgstr ""
 #. frmExodus..Caption
 #: Jabber1.dfm:7
 #. Programmer's name for it: sExodus
-#: Jabber1.pas:416
+#: Jabber1.pas:418
 #. Programmer's name for it: sProfileDefaultResource
 #: Login.pas:60
 msgid "Exodus"
 msgstr ""
 
 #. frmExodus..Tabs..tbsRoster..Caption
-#: Jabber1.dfm:60
+#: Jabber1.dfm:59
 msgid "Messenger"
 msgstr ""
 
 #. frmExodus..Tabs..tbsRoster..pnlRight..Caption
-#: Jabber1.dfm:95
+#: Jabber1.dfm:94
 msgid "THIS IS PNLRIGHT"
 msgstr ""
 
@@ -2344,7 +2344,7 @@ msgstr ""
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:142
 #. Programmer's name for it: sStartChat
-#: Jabber1.pas:467
+#: Jabber1.pas:469
 msgid "Start Chat"
 msgstr ""
 
@@ -2366,7 +2366,7 @@ msgstr ""
 #. frmLogin..cboProfiles....Items.WideStrings
 #: Login.dfm:52
 #. Programmer's name for it: sDefaultProfile
-#: Jabber1.pas:434
+#: Jabber1.pas:436
 #. Programmer's name for it: sProfileDefault
 #: Login.pas:62
 msgid "Default Profile"
@@ -6011,9 +6011,9 @@ msgstr ""
 #. frmRosterWindow..pnlShow..pnlStatus..lblStatusLink..Caption
 #: RosterWindow.dfm:163
 #. Programmer's name for it: sGrpOffline
-#: Jabber1.pas:424
+#: Jabber1.pas:426
 #. Programmer's name for it: sRosterOffline
-#: Jabber1.pas:432
+#: Jabber1.pas:434
 #: RosterWindow.pas:314
 msgid "Offline"
 msgstr ""
@@ -6265,52 +6265,52 @@ msgid "File Transfer Manager"
 msgstr ""
 
 #. Programmer's name for it: sService
-#: Browser.pas:171
+#: Browser.pas:173
 msgid "Service"
 msgstr ""
 
 #. Programmer's name for it: sConference
-#: Browser.pas:172
+#: Browser.pas:174
 msgid "Conference"
 msgstr ""
 
 #. Programmer's name for it: sUser
-#: Browser.pas:173
+#: Browser.pas:175
 msgid "Jabber User"
 msgstr ""
 
 #. Programmer's name for it: sApplication
-#: Browser.pas:174
+#: Browser.pas:176
 msgid "Application"
 msgstr ""
 
 #. Programmer's name for it: sHeadline
-#: Browser.pas:175
+#: Browser.pas:177
 msgid "Headline Svc."
 msgstr ""
 
 #. Programmer's name for it: sRender
-#: Browser.pas:176
+#: Browser.pas:178
 msgid "Rendering Svc."
 msgstr ""
 
 #. Programmer's name for it: sKeyword
-#: Browser.pas:177
+#: Browser.pas:179
 msgid "Keyword Lookup"
 msgstr ""
 
 #. Programmer's name for it: sValidate
-#: Browser.pas:178
+#: Browser.pas:180
 msgid "Validator"
 msgstr ""
 
 #. Programmer's name for it: sItem
-#: Browser.pas:179
+#: Browser.pas:181
 msgid "Jabber Object"
 msgstr ""
 
 #. Programmer's name for it: sObjects
-#: Browser.pas:180
+#: Browser.pas:182
 msgid "Objects"
 msgstr ""
 
@@ -6531,84 +6531,84 @@ msgstr ""
 #. Programmer's name for it: sCmdDebug
 #: ExSession.pas:63
 #. Programmer's name for it: sCmdDebug
-#: Jabber1.pas:401
+#: Jabber1.pas:403
 msgid " -d \t\t : Debug mode on\n"
 msgstr ""
 
 #. Programmer's name for it: sCmdMinimized
 #: ExSession.pas:64
 #. Programmer's name for it: sCmdMinimized
-#: Jabber1.pas:402
+#: Jabber1.pas:404
 msgid " -m \t\t : Start minimized\n"
 msgstr ""
 
 #. Programmer's name for it: sCmdInvisible
 #: ExSession.pas:65
 #. Programmer's name for it: sCmdInvisible
-#: Jabber1.pas:403
+#: Jabber1.pas:405
 msgid " -v \t\t : invisible mode\n"
 msgstr ""
 
 #. Programmer's name for it: sCmdHelp
 #: ExSession.pas:66
 #. Programmer's name for it: sCmdHelp
-#: Jabber1.pas:404
+#: Jabber1.pas:406
 msgid " -? \t\t : Show Help\n"
 msgstr ""
 
 #. Programmer's name for it: sCmdExpanded
 #: ExSession.pas:67
 #. Programmer's name for it: sCmdExpanded
-#: Jabber1.pas:405
+#: Jabber1.pas:407
 msgid " -x [yes|no] \t : Expanded Mode\n"
 msgstr ""
 
 #. Programmer's name for it: sCmdJID
 #: ExSession.pas:68
 #. Programmer's name for it: sCmdJID
-#: Jabber1.pas:406
+#: Jabber1.pas:408
 msgid " -j [jid] \t\t : Jid\n"
 msgstr ""
 
 #. Programmer's name for it: sCmdPassword
 #: ExSession.pas:69
 #. Programmer's name for it: sCmdPassword
-#: Jabber1.pas:407
+#: Jabber1.pas:409
 msgid " -p [pass] \t : Password\n"
 msgstr ""
 
 #. Programmer's name for it: sCmdResource
 #: ExSession.pas:70
 #. Programmer's name for it: sCmdResource
-#: Jabber1.pas:408
+#: Jabber1.pas:410
 msgid " -r [res] \t : Resource\n"
 msgstr ""
 
 #. Programmer's name for it: sCmdPriority
 #: ExSession.pas:71
 #. Programmer's name for it: sCmdPriority
-#: Jabber1.pas:409
+#: Jabber1.pas:411
 msgid " -i [pri] \t : Priority\n"
 msgstr ""
 
 #. Programmer's name for it: sCmdProfile
 #: ExSession.pas:72
 #. Programmer's name for it: sCmdProfile
-#: Jabber1.pas:410
+#: Jabber1.pas:412
 msgid " -f [prof] \t : Profile name\n"
 msgstr ""
 
 #. Programmer's name for it: sCmdConfig
 #: ExSession.pas:73
 #. Programmer's name for it: sCmdConfig
-#: Jabber1.pas:411
+#: Jabber1.pas:413
 msgid " -c [file] \t : Config path name\n"
 msgstr ""
 
 #. Programmer's name for it: sUnkArg
 #: ExSession.pas:74
 #. Programmer's name for it: sUnkArg
-#: Jabber1.pas:412
+#: Jabber1.pas:414
 msgid "Invalid command line:%s"
 msgstr ""
 
@@ -6751,225 +6751,225 @@ msgid "You have been invited to the %s room."
 msgstr ""
 
 #. Programmer's name for it: sCommandLine
-#: Jabber1.pas:400
+#: Jabber1.pas:402
 msgid "The following command line parameters are available in Exodus: \n"
 "\n"
 msgstr ""
 
 #. Programmer's name for it: sXMPP_Profile
-#: Jabber1.pas:414
+#: Jabber1.pas:416
 msgid "-*- Temp profile: %s -*-"
 msgstr ""
 
 #. Programmer's name for it: sGrpUnfiled
-#: Jabber1.pas:419
+#: Jabber1.pas:421
 #: RosterWindow.pas:319
 msgid "Unfiled"
 msgstr ""
 
 #. Programmer's name for it: sRosterPending
-#: Jabber1.pas:426
+#: Jabber1.pas:428
 msgid " (Pending)"
 msgstr ""
 
 #. Programmer's name for it: sRosterChat
-#: Jabber1.pas:428
+#: Jabber1.pas:430
 msgid "Wants to chat"
 msgstr ""
 
 #. Programmer's name for it: sDefaultGroup
-#: Jabber1.pas:435
+#: Jabber1.pas:437
 msgid "Untitled Group"
 msgstr ""
 
 #. Programmer's name for it: sCommError
-#: Jabber1.pas:437
+#: Jabber1.pas:439
 msgid "There was an error during communication with the Jabber "
 "Server"
 msgstr ""
 
 #. Programmer's name for it: sDisconnected
-#: Jabber1.pas:438
+#: Jabber1.pas:440
 msgid "You have been disconnected."
 msgstr ""
 
 #. Programmer's name for it: sAuthError
-#: Jabber1.pas:439
+#: Jabber1.pas:441
 msgid "There was an error trying to authenticate you.\n"
 "Either you used the wrong password, or this account is already in use "
 "by someone else."
 msgstr ""
 
 #. Programmer's name for it: sRegError
-#: Jabber1.pas:440
+#: Jabber1.pas:442
 msgid "An Error occurred trying to register your new account. This server "
 "may not allow open registration."
 msgstr ""
 
 #. Programmer's name for it: sAuthNoAccount
-#: Jabber1.pas:441
+#: Jabber1.pas:443
 msgid "This account does not exist on this server. Create a new "
 "account?"
 msgstr ""
 
 #. Programmer's name for it: sNewAccount
-#: Jabber1.pas:442
+#: Jabber1.pas:444
 msgid "Your new jabber account is activated. Would you like to fill out "
 "additional registration information?"
 msgstr ""
 
 #. Programmer's name for it: sCancelReconnect
-#: Jabber1.pas:443
+#: Jabber1.pas:445
 msgid "Click to Cancel Reconnect"
 msgstr ""
 
 #. Programmer's name for it: sReconnectIn
-#: Jabber1.pas:444
+#: Jabber1.pas:446
 msgid "Reconnect in "
 msgstr ""
 
 #. Programmer's name for it: sSeconds
-#: Jabber1.pas:445
+#: Jabber1.pas:447
 msgid "seconds."
 msgstr ""
 
 #. Programmer's name for it: sSetAutoAvailable
-#: Jabber1.pas:447
+#: Jabber1.pas:449
 msgid "Setting Auto Available"
 msgstr ""
 
 #. Programmer's name for it: sSetAutoAway
-#: Jabber1.pas:448
+#: Jabber1.pas:450
 msgid "Setting AutoAway"
 msgstr ""
 
 #. Programmer's name for it: sSetAutoXA
-#: Jabber1.pas:449
+#: Jabber1.pas:451
 msgid "Setting AutoXA"
 msgstr ""
 
 #. Programmer's name for it: sSetupAutoAway
-#: Jabber1.pas:450
+#: Jabber1.pas:452
 msgid "Trying to setup the Auto Away timer."
 msgstr ""
 
 #. Programmer's name for it: sAutoAwayFail
-#: Jabber1.pas:451
+#: Jabber1.pas:453
 msgid "AutoAway Setup FAILED!"
 msgstr ""
 
 #. Programmer's name for it: sAutoAwayWin32
-#: Jabber1.pas:452
+#: Jabber1.pas:454
 msgid "Using Win32 API for Autoaway checks!!"
 msgstr ""
 
 #. Programmer's name for it: sAutoAwayFailWin32
-#: Jabber1.pas:453
+#: Jabber1.pas:455
 msgid "ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!"
 msgstr ""
 
 #. Programmer's name for it: sMsgPing
-#: Jabber1.pas:455
+#: Jabber1.pas:457
 msgid "Ping Time: %s seconds."
 msgstr ""
 
 #. Programmer's name for it: sMsgMessage
-#: Jabber1.pas:456
+#: Jabber1.pas:458
 msgid "Msg from "
 msgstr ""
 
 #. Programmer's name for it: sMsgInvite
-#: Jabber1.pas:457
+#: Jabber1.pas:459
 msgid "Invite from "
 msgstr ""
 
 #. Programmer's name for it: sMsgContacts
-#: Jabber1.pas:458
+#: Jabber1.pas:460
 msgid "Contacts from "
 msgstr ""
 
 #. Programmer's name for it: sMsgRosterItems
-#: Jabber1.pas:459
+#: Jabber1.pas:461
 msgid "This message contains %d roster items."
 msgstr ""
 
 #. Programmer's name for it: sNewGroup
-#: Jabber1.pas:461
+#: Jabber1.pas:463
 msgid "New Roster Group"
 msgstr ""
 
 #. Programmer's name for it: sNewGroupPrompt
-#: Jabber1.pas:462
+#: Jabber1.pas:464
 msgid "Enter new group name: "
 msgstr ""
 
 #. Programmer's name for it: sNewGroupExists
-#: Jabber1.pas:463
+#: Jabber1.pas:465
 msgid "This group already exists!"
 msgstr ""
 
 #. Programmer's name for it: sLookupProfile
-#: Jabber1.pas:465
+#: Jabber1.pas:467
 msgid "Lookup Profile"
 msgstr ""
 
 #. Programmer's name for it: sSendMessage
-#: Jabber1.pas:466
+#: Jabber1.pas:468
 msgid "Send a Message"
 msgstr ""
 
 #. Programmer's name for it: sRegService
-#: Jabber1.pas:468
+#: Jabber1.pas:470
 msgid "Register with Service"
 msgstr ""
 
 #. Programmer's name for it: sEnterJID
-#: Jabber1.pas:471
+#: Jabber1.pas:473
 msgid "Enter Jabber ID: "
 msgstr ""
 
 #. Programmer's name for it: sEnterSvcJID
-#: Jabber1.pas:472
+#: Jabber1.pas:474
 msgid "Enter Jabber ID of Service: "
 msgstr ""
 
 #. Programmer's name for it: sInvalidJID
-#: Jabber1.pas:473
+#: Jabber1.pas:475
 msgid "The Jabber ID you entered is invalid."
 msgstr ""
 
 #. Programmer's name for it: sPasswordError
-#: Jabber1.pas:475
+#: Jabber1.pas:477
 msgid "Error changing password."
 msgstr ""
 
 #. Programmer's name for it: sPasswordChanged
-#: Jabber1.pas:476
+#: Jabber1.pas:478
 msgid "Password changed."
 msgstr ""
 
 #. Programmer's name for it: sPasswordOldError
-#: Jabber1.pas:477
+#: Jabber1.pas:479
 msgid "Old password is incorrect."
 msgstr ""
 
 #. Programmer's name for it: sPasswordNewError
-#: Jabber1.pas:478
+#: Jabber1.pas:480
 msgid "New password does not match."
 msgstr ""
 
 #. Programmer's name for it: sPasswordPrompt
-#: Jabber1.pas:480
+#: Jabber1.pas:482
 msgid "Enter Password"
 msgstr ""
 
 #. Programmer's name for it: sAlreadySubscribed
-#: Jabber1.pas:482
+#: Jabber1.pas:484
 msgid "You are already subscribed to this contact"
 msgstr ""
 
 #. Programmer's name for it: sBrandingError
-#: Jabber1.pas:483
+#: Jabber1.pas:485
 msgid "Branding error!"
 msgstr ""
 
@@ -7080,7 +7080,7 @@ msgstr ""
 msgid "Chat with "
 msgstr ""
 
-#: RecvStatus.pas:567
+#: RecvStatus.pas:578
 msgid "Negotiating with sender..."
 msgstr ""
 
