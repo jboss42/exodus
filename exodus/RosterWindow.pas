@@ -1392,6 +1392,8 @@ end;
 procedure TfrmRosterWindow.treeRosterDblClick(Sender: TObject);
 var
     r: integer;
+    win: TfrmChat;
+    room: TfrmRoom;
 begin
     // Chat with this person
     _change_node := nil;
@@ -1400,9 +1402,10 @@ begin
         // chat or msg this person
         r := MainSession.Prefs.getInt(P_CHAT);
 
-        if ((r = 0) or (r = 2)) then
-            StartChat(_cur_ritem.jid.jid, '', true)
-
+        if ((r = 0) or (r = 2)) then begin
+            win := StartChat(_cur_ritem.jid.jid, '', true);
+            win.Show();
+        end
         else if (r = 1) then
             StartMsg(_cur_ritem.jid.jid);
     end;
@@ -1410,16 +1413,19 @@ begin
         // chat my own resource
         r := MainSession.Prefs.getInt(P_CHAT);
 
-        if ((r = 0) or (r = 2)) then
-            StartChat(_cur_myres.jid.jid, _cur_myres.Resource, true)
-
+        if ((r = 0) or (r = 2)) then begin
+            win := StartChat(_cur_myres.jid.jid, _cur_myres.Resource, true);
+            win.Show();
+        end
         else if (r = 1) then
             StartMsg(_cur_myres.jid.full);
     end;
     node_bm: begin
         // enter this conference
-        if _cur_bm.bmType = 'conference' then
-            StartRoom(_cur_bm.jid.jid, _cur_bm.nick);
+        if _cur_bm.bmType = 'conference' then begin
+            room := StartRoom(_cur_bm.jid.jid, _cur_bm.nick);
+            room.Show();
+        end;
     end;
     end;
 end;
@@ -2054,13 +2060,18 @@ end;
 procedure TfrmRosterWindow.popChatClick(Sender: TObject);
 var
     nt: integer;
+    win: TfrmChat;
 begin
     // chat w/ contact
     nt := getNodeType();
+    win := nil;
     if (nt = node_ritem) then
-        StartChat(_cur_ritem.jid.jid, '', true)
+        win := StartChat(_cur_ritem.jid.jid, '', true)
     else if (nt = node_myres) then
-        StartChat(_cur_myres.jid.jid, _cur_myres.Resource, true);
+        win := StartChat(_cur_myres.jid.jid, _cur_myres.Resource, true);
+
+    if (win <> nil) then
+        win.Show();
 end;
 
 {---------------------------------------}
