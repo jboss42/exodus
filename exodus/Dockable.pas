@@ -39,6 +39,7 @@ type
     _pos: TRect;
     _noMoveCheck: boolean;
     _top: boolean;
+    _unread: integer;
 
     _onDockStartChange: TDockNotify;
     _onDockEndChange: TDockNotify;
@@ -51,9 +52,14 @@ type
     procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
     procedure WMDisplayChange(var msg: TMessage); message WM_DISPLAYCHANGE;
     procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
+    procedure IncrUnread(count: integer = 1);
+    procedure DecrUnread(count: integer = 1);
+    procedure SetUnread(count: integer);
+    function IsActive(): boolean;
   published
     property OnDockStartChange: TDockNotify read _onDockStartChange write _onDockStartChange;
     property OnDockEndChange: TDockNotify read _onDockEndChange write _onDockEndChange;
+    property Unread: integer read _unread write SetUnread;
   public
     { Public declarations }
     TabSheet: TTntTabSheet;
@@ -75,7 +81,7 @@ implementation
 {$R *.dfm}
 
 uses
-    XMLUtils, ChatWin, Debug, JabberUtils, ExUtils,  GnuGetText, Session, Jabber1;
+    XMLUtils, XMLTag, ChatWin, Debug, JabberUtils, ExUtils,  GnuGetText, Session, Jabber1;
 
 {---------------------------------------}
 procedure TfrmDockable.FormCreate(Sender: TObject);
@@ -166,6 +172,7 @@ begin
     else
         frmExodus.CloseDocked(Self);
 
+    SetUnread(-1);
     CanClose := true;
 end;
 
@@ -235,6 +242,7 @@ begin
         gotActivate();
     end;
 
+    SetUnread(0);
     inherited;
 end;
 
@@ -269,6 +277,47 @@ begin
     if Self.TabSheet <> nil then begin
         Self.TabSheet.ImageIndex := ImageIndex;
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmDockable.IncrUnread(count: integer = 1);
+begin
+    SetUnread(_unread + count);
+end;
+
+{---------------------------------------}
+procedure TfrmDockable.DecrUnread(count: integer = 1);
+begin
+    SetUnread(_unread - count);
+end;
+
+{---------------------------------------}
+procedure TfrmDockable.SetUnread(count: integer);
+var
+    tag: TXMLTag;
+begin
+    _unread := count;
+
+    tag := TXMLTag.Create('activity');
+    tag.setAttribute('count', IntToStr(_unread));
+    tag.setAttribute('handle', IntToStr(integer(Pointer(Self))));
+    tag.setAttribute('caption', self.Caption);
+    OutputDebugString(PChar(string(tag.xml)));
+    MainSession.FireEvent('/roster/activity', tag);
+end;
+
+{---------------------------------------}
+function TfrmDockable.IsActive(): boolean;
+var
+    active_win: HWND;
+    inactive: boolean;
+begin
+    active_win := getActiveWindow();
+
+    inactive := (not Application.Active) or
+                ((TabSheet = nil) and (active_win <> self.Handle)) or // undocked
+                ((TabSheet <> nil) and (frmExodus.Tabs.ActivePage <> TabSheet)); // docked
+    result := not inactive;
 end;
 
 end.

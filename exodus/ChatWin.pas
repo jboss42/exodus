@@ -723,6 +723,9 @@ begin
     end;
 
     if (Msg.Body <> '') then begin
+        if not Self.IsActive() then
+            Self.IncrUnread();
+        
         DoNotify(Self, _notify[0], _(sChatActivity) + OtherNick, ico_user, 'notify_chatactivity');
         DisplayMsg(Msg, MsgList);
 
