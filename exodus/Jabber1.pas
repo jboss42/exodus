@@ -326,6 +326,7 @@ type
     _com_roster: TExodusRoster;
     _com_ppdb: TExodusPPDB;
 
+    // Stuff for tracking win32 API events
     _mutex: THandle;
     _win32_tracker: Array of integer;
     _win32_idx: integer;
@@ -872,7 +873,7 @@ begin
                 Free
             end;
         end;
-            
+
         if (_testaa) then
             _auto_away_interval := 1
         else
@@ -912,7 +913,6 @@ begin
         tmp_locale := MainSession.Prefs.getString('locale');
         if (tmp_locale <> '') then begin
             UseLanguage(tmp_locale);
-            // xxx: is it ok to call TranslateProps twice??
             TranslateProperties(Self);
         end;
 
@@ -983,7 +983,8 @@ begin
                 if (parser.Count > 0) then begin
                     xmpp_node := parser.popTag();
                     connect_node := xmpp_node.GetFirstTag('connect');
-                    jid := TJabberID.Create(connect_node.GetBasicText('host'));
+                    if (connect_node <> nil) then
+                        jid := TJabberID.Create(connect_node.GetBasicText('host'));
                 end;
                 parser.Free();
             end;
@@ -991,6 +992,9 @@ begin
             // if a profile name was specified, use it.
             // otherwise, if a jid was specified, use it as the profile name.
             // otherwise, if we have no profiles yet, use the default profile name.
+
+            // TODO: Let's add a profile.temp flag, and not save it
+            // for .xmpp stuff, we'll just spin up a whole new profile then.
             if (connect_node <> nil) then begin
                 profile_name := Format(sXMPP_Profile, [jid.jid]);
             end
@@ -1020,7 +1024,7 @@ begin
                         resource := 'Exodus';
                     if (_cli_priority = -1) then
                         _cli_priority := 0;
-                        }
+                    }
                 end
                 else
                     profile := TJabberProfile(Profiles.Objects[_prof_index]);
@@ -1392,7 +1396,7 @@ begin
     else if event = '/session/authenticated' then with MainSession do begin
         Self.Caption := MainSession.Prefs.getString('brand_caption') + ' - ' + MainSession.Username + '@' + MainSession.Server;
         setTrayInfo(Self.Caption);
-        
+
         // Accept files dragged from Explorer
         // Only do this for normal (non-polling) connections
         if (MainSession.Profile.ConnectionType = conn_normal) then
