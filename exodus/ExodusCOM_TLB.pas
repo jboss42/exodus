@@ -11,8 +11,8 @@ unit ExodusCOM_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.10 $
-// File generated on 1/2/2003 5:01:13 PM from Type Library described below.
+// PASTLWTR : $Revision: 1.11 $
+// File generated on 1/7/2003 7:28:27 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -20,8 +20,8 @@ unit ExodusCOM_TLB;
 // LCID: 0
 // Helpfile: 
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
-//   (2) v4.0 StdVCL, (C:\WINNT\System32\STDVCL40.DLL)
+//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
+//   (2) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -183,8 +183,9 @@ type
     procedure removeBrowseNS(const ID: WideString); safecall;
     procedure removeDiscoItem(const ID: WideString); safecall;
     procedure removeDiscoFeature(const ID: WideString); safecall;
-    function registerPresenceXML(const XML: WideString): WideString; safecall;
+    function registerPresenceXML(const xml: WideString): WideString; safecall;
     procedure removePresenceXML(const ID: WideString); safecall;
+    procedure trackWindowsMsg(Message: Integer); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -265,8 +266,9 @@ type
     procedure removeBrowseNS(const ID: WideString); dispid 52;
     procedure removeDiscoItem(const ID: WideString); dispid 53;
     procedure removeDiscoFeature(const ID: WideString); dispid 56;
-    function registerPresenceXML(const XML: WideString): {??PWideString1}OleVariant; dispid 57;
+    function registerPresenceXML(const xml: WideString): WideString; dispid 57;
     procedure removePresenceXML(const ID: WideString); dispid 58;
+    procedure trackWindowsMsg(Message: Integer); dispid 59;
   end;
 
 // *********************************************************************//

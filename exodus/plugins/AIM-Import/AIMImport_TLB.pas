@@ -11,8 +11,8 @@ unit AIMImport_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.4 $
-// File generated on 1/3/2003 8:37:05 AM from Type Library described below.
+// PASTLWTR : $Revision: 1.5 $
+// File generated on 1/6/2003 9:42:19 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\AIM-Import\AIMImport.tlb (1)
@@ -20,8 +20,9 @@ unit AIMImport_TLB;
 // LCID: 0
 // Helpfile: 
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
-//   (2) v4.0 StdVCL, (C:\WINNT\System32\STDVCL40.DLL)
+//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
+//   (2) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
+//   (3) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -29,7 +30,7 @@ unit AIMImport_TLB;
 
 interface
 
-uses Windows, ActiveX, Classes, Graphics, StdVCL, Variants;
+uses Windows, ActiveX, Classes, ExodusCOM_TLB, Graphics, StdVCL, Variants;
   
 
 // *********************************************************************//
@@ -68,7 +69,7 @@ type
 // Flags:     (4416) Dual OleAutomation Dispatchable
 // GUID:      {78FCA3E3-8744-4A42-BF2D-BEFE03F0C837}
 // *********************************************************************//
-  IAIMImportPlugin = interface(IDispatch)
+  IAIMImportPlugin = interface(IExodusPlugin)
     ['{78FCA3E3-8744-4A42-BF2D-BEFE03F0C837}']
   end;
 
@@ -79,6 +80,14 @@ type
 // *********************************************************************//
   IAIMImportPluginDisp = dispinterface
     ['{78FCA3E3-8744-4A42-BF2D-BEFE03F0C837}']
+    procedure Startup(const ExodusController: IExodusController); dispid 1;
+    procedure Shutdown; dispid 2;
+    procedure Process(const xpath: WideString; const event: WideString; const xml: WideString); dispid 3;
+    procedure NewChat(const jid: WideString; const Chat: IExodusChat); dispid 4;
+    procedure NewRoom(const jid: WideString; const Room: IExodusChat); dispid 5;
+    procedure menuClick(const ID: WideString); dispid 6;
+    function onInstantMsg(const Body: WideString; const Subject: WideString): WideString; dispid 8;
+    procedure Configure; dispid 12;
   end;
 
 // *********************************************************************//

@@ -224,6 +224,7 @@ object frmExodus: TfrmExodus
       Caption = 'Exodus'
       object Test1: TMenuItem
         Caption = 'Test'
+        Visible = False
         OnClick = Test1Click
       end
       object Connect2: TMenuItem
@@ -2844,6 +2845,7 @@ object frmExodus: TfrmExodus
   object ApplicationEvents1: TApplicationEvents
     OnActivate = ApplicationEvents1Activate
     OnDeactivate = ApplicationEvents1Deactivate
+    OnMessage = ApplicationEvents1Message
     Left = 88
     Top = 136
   end
