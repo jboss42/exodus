@@ -1173,7 +1173,6 @@ procedure TfrmRosterWindow.treeRosterMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
     n: TTreeNode;
-    p: TJabberPres;
 begin
     // check to see if we're hitting a button
     n := treeRoster.GetNodeAt(X, Y);
