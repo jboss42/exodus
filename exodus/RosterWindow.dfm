@@ -135,6 +135,8 @@ object frmRosterWindow: TfrmRosterWindow
       Width = 23
       Height = 20
       Align = alLeft
+      ParentShowHint = False
+      ShowHint = True
       OnPaint = imgStatusPaint
     end
     object pnlStatus: TPanel

@@ -452,9 +452,14 @@ begin
     // Clear the roster, ppdb and fire the callbacks
     _first_pres := false;
     _dispatcher.DispatchSignal('/session/disconnected', nil);
+
     if (_paused) then
         Self.Play();
+
     ClearStringListObjects(Agents);
+    ClearListObjects(_features);
+    _features.Clear;
+
     ppdb.Clear;
     Roster.Clear;
     Agents.Clear;
@@ -479,6 +484,7 @@ begin
         tmps := '<stream:stream to="' + Trim(Server) +
             '" xmlns="jabber:client" ' +
             'xmlns:stream="http://etherx.jabber.org/streams" ' +
+            'version="1.0" ' + 
             '>';
         _stream.Send(tmps);
     end
@@ -512,7 +518,8 @@ begin
                     end;
                 end;
             end;
-            // check for XMPP 1.0 stuff..
+
+            // todo: check for XMPP 1.0 stuff..
 
             _dispatcher.DispatchSignal('/session/connected', nil);
 
