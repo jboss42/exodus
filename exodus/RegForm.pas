@@ -253,6 +253,8 @@ begin
         Align := alTop;
         Visible := true;
         field := fld;
+        AssignDefaultFont(txtData.Font);
+        AssignDefaultFont(lblPrompt.Font);
         end;
     Result := frm;
 end;
