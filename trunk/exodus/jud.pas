@@ -543,11 +543,17 @@ begin
         if (clist <> nil) then clist.Free();
         if (items <> nil) then Items.Free();
 
-        // show results panel
+        // hide all of the other stuff
+        lblWait.Visible := false;
+        aniWait.Visible := false;
         lblSelect.Visible := false;
+        lblInstructions.Visible := false;
         cboJID.Visible := false;
+
+        // show results panel
+        pnlResults.Align := alNone;
+        pnlResults.Align := alTop;
         pnlResults.Visible := true;
-        pnlResults.Align := alClient;
         btnAction.Caption := sJUDAdd;
         cur_state := 'add';
     end;
