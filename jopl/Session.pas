@@ -74,6 +74,7 @@ type
 
         procedure handleDisconnect();
         procedure manualBlastPresence(p: TXMLTag);
+        procedure StartSession(tag: TXMLTag);
 
         function GetUsername(): WideString;
         function GetPassword(): WideString;
@@ -545,9 +546,15 @@ begin
                 siq.iqType := 'set';
                 siq.Send();
             end
-            else
+            else begin
+
+                if (_features.GetFirstTag('starttls') <> nil) then begin
+                    // XXX: do startTLS
+                end;
+
                 // start auth.
                 _auth_agent.StartAuthentication();
+            end;
         end
 
         else
@@ -558,23 +565,27 @@ end;
 
 {---------------------------------------}
 procedure TJabberSession.SessionCallback(event: string; tag: TXMLTag);
-var
-    cur_agents: TAgents;
 begin
     if ((event <> 'xml') or (tag.getAttribute('type') <> 'result')) then begin
         _dispatcher.DispatchSignal('/session/autherror', tag);
         exit;
     end
-    else begin
-        _first_pres := true;
-        _dispatcher.DispatchSignal('/session/authenticated', tag);
-        cur_agents := TAgents.Create();
-        Agents.AddObject(Server, cur_agents);
-        cur_agents.Fetch(Server);
-        Prefs.FetchServerPrefs();
-    end;
+    else
+        StartSession(tag);
 end;
 
+{---------------------------------------}
+procedure TJabberSession.StartSession(tag: TXMLTag);
+var
+    cur_agents: TAgents;
+begin
+    _first_pres := true;
+    _dispatcher.DispatchSignal('/session/authenticated', tag);
+    cur_agents := TAgents.Create();
+    Agents.AddObject(Server, cur_agents);
+    cur_agents.Fetch(Server);
+    Prefs.FetchServerPrefs();
+end;
 
 {---------------------------------------}
 procedure TJabberSession.Pause();
@@ -950,7 +961,6 @@ end;
 procedure TJabberSession.setAuthenticated(ok: boolean; tag: TXMLTag);
 var
     tmps: Widestring;
-    cur_agents: TAgents;
 begin
     // our auth-agent is all set
     if (ok) then begin
@@ -968,14 +978,8 @@ begin
                 '>';
             _stream.Send(tmps);
         end
-        else begin
-            _first_pres := true;
-            _dispatcher.DispatchSignal('/session/authenticated', tag);
-            cur_agents := TAgents.Create();
-            Agents.AddObject(Server, cur_agents);
-            cur_agents.Fetch(Server);
-            Prefs.FetchServerPrefs();
-        end;
+        else
+            StartSession(tag);
     end
     else begin
         _dispatcher.DispatchSignal('/session/autherror', tag);

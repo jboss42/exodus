@@ -68,7 +68,9 @@ type
         procedure Connect(profile: TJabberProfile); override;
         procedure Send(xml: Widestring); override;
         procedure Disconnect; override;
-end;
+        function  isSSLCapable(): boolean; override;
+        procedure EnableSSL(); override;
+    end;
 
     THttpThread = class(TParseThread)
     private
@@ -143,6 +145,19 @@ begin
     _thread := THttpThread.Create(Self, profile, _root_tag);
     _thread.doMessageSync(WM_CONNECTED);
     _thread.Start();
+end;
+
+{---------------------------------------}
+function TXMLHttpStream.isSSLCapable(): boolean;
+begin
+    Result := false;
+end;
+
+{---------------------------------------}
+procedure TXMLHttpStream.EnableSSL();
+begin
+    // no-op..
+    assert(false);
 end;
 
 {---------------------------------------}

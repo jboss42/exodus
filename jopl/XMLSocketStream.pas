@@ -98,6 +98,8 @@ type
         procedure Connect(profile: TJabberProfile); override;
         procedure Send(xml: Widestring); override;
         procedure Disconnect; override;
+        function  isSSLCapable(): boolean; override;
+        procedure EnableSSL(); override;
 
     end;
 
@@ -133,8 +135,42 @@ uses
     {$endif}
     Session, StrUtils, Classes;
 
+var
+    _check_ssl: boolean;
+
 {---------------------------------------}
-{      TSocketThread Class                }
+{---------------------------------------}
+{---------------------------------------}
+{$ifdef linux}
+function checkSSL(): boolean;
+begin
+    Result := true;
+end;
+{$else}
+function checkSSL(): boolean;
+var
+    c, s: THandle;
+begin
+    if (not _check_ssl) then begin
+        c := LoadLibrary('libeay32.dll');
+        s := LoadLibrary('ssleay32.dll');
+
+        Result := ((c > 0) and (s > 0));
+
+        FreeLibrary(c);
+        FreeLibrary(s);
+
+        if (Result) then
+            _check_ssl := true;
+    end
+    else
+        Result := _check_ssl;
+end;
+{$endif}
+
+
+{---------------------------------------}
+{      TSocketThread Class              }
 {---------------------------------------}
 constructor TSocketThread.Create(strm: TXMLStream; Socket: TidTCPClient; root: string);
 begin
@@ -602,7 +638,6 @@ end;
 
 {---------------------------------------}
 {$ifdef INDY9}
-
 procedure TXMLSocketStream._connectIndy9();
 var
     hhost: string;
@@ -613,14 +648,17 @@ begin
     _socks_info := TIdSocksInfo.Create(nil);
     _iohandler := nil;
 
-    if (_profile.ssl) then begin
+    // Let's always use SSL if we can, then we can always do TLS
+    if (checkSSL()) then begin
         _ssl_int := TIdSSLIOHandlerSocket.Create(nil);
-        _ssl_int.PassThrough := (_profile.SocksType <> proxy_none);
+        if ((not _profile.ssl) or (_profile.SocksType <> proxy_none)) then
+            _ssl_int.PassThrough := true;
         _ssl_int.UseNagle := false;
         _setupSSL();
         _iohandler := _ssl_int;
         _ssl_int.OnStatusInfo := TSocketThread(_thread).StatusInfo;
     end;
+
     if (_profile.SocksType = proxy_http) then begin
         // no ssl.  we'll have to deal with CONNECT on connect
         if (_iohandler = nil) then
@@ -762,6 +800,29 @@ begin
 end;
 
 {---------------------------------------}
+function TXMLSocketStream.isSSLCapable(): boolean;
+begin
+    if (_ssl_int <> nil) then
+        Result := _ssl_int.PassThrough
+    else
+        Result := false;
+end;
+
+{---------------------------------------}
+procedure TXMLSocketStream.EnableSSL();
+begin
+    if (_ssl_int = nil) then exit;
+
+    if (_ssl_int.PassThrough = false) then
+        exit
+    else begin
+        _ssl_int.PassThrough := true;
+
+        // XXX: Validate here???
+    end;
+end;
+
+{---------------------------------------}
 procedure TXMLSocketStream.Disconnect;
 begin
     // Disconnect the stream and stop the thread
@@ -827,5 +888,8 @@ begin
             _timer.Enabled := false;
     end;
 end;
+
+initialization
+    _check_ssl := false;
 
 end.

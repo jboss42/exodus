@@ -91,6 +91,8 @@ end;
         procedure SendTag(tag: TXMLTag);
         procedure Disconnect; virtual; abstract;
         procedure ResetParser();
+        function  isSSLCapable(): boolean; virtual; abstract;
+        procedure EnableSSL(); virtual; abstract;
 
         procedure RegisterStreamCallback(p: TXMLStreamCallback);
         procedure UnregisterStreamCallback(p: TXMLStreamCallback);
