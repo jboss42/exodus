@@ -88,6 +88,7 @@ procedure jabberSendMsg(to_jid: Widestring; mtag: TXMLTag;
     xtags, body, subject: Widestring); overload;
 
 procedure centerMainForm(f: TForm);
+procedure CenterChildForm(f: TForm; anchor: TForm);
 procedure checkAndCenterForm(f: TForm);
 procedure BuildPresMenus(parent: TObject; clickev: TNotifyEvent);
 function promptNewGroup: TJabberGroup;
@@ -816,14 +817,14 @@ begin
 end;
 
 {---------------------------------------}
-procedure centerMainForm(f: TForm);
+procedure CenterChildForm(f: TForm; anchor: TForm);
 var
     x,y,l,t,h,w: integer;
 begin
     // center the form over frmExodus..
     // but don't overlay edges.
 
-    with frmExodus do begin
+    with anchor do begin
         x := Left + (Width div 2);
         y := Top + (Height div 2);
     end;
@@ -840,16 +841,22 @@ begin
     t := y - (w div 2);
 
     if (t < 10) then
-        t := frmExodus.Top + 10
+        t := anchor.Top + 10
     else if ((t + h) > Screen.Height) then
         t := Screen.Height - h - 10;
 
     if (l < 10) then
-        l := frmExodus.Left + 10
+        l := anchor.Left + 10
     else if ((l + w) > Screen.Width) then
         l := Screen.Width - w - 10;
 
     f.SetBounds(l,t,w,h);
+end;
+
+{---------------------------------------}
+procedure CenterMainForm(f: TForm);
+begin
+    CenterChildForm(f, frmExodus);
 end;
 
 {---------------------------------------}

@@ -105,30 +105,11 @@ inherited frmRoom: TfrmRoom
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
-      object lblSubjectURL: TTntLabel
-        Left = 0
-        Top = 0
-        Width = 39
-        Height = 21
-        Cursor = crHandPoint
-        Align = alLeft
-        Caption = 'Subject:'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsUnderline]
-        ParentFont = False
-        Layout = tlCenter
-        OnClick = lblSubjectURLClick
-      end
       object lblSubject: TTntLabel
-        Left = 39
+        Left = 24
         Top = 0
-        Width = 250
+        Width = 289
         Height = 21
-        Align = alLeft
-        Anchors = [akLeft, akTop, akRight, akBottom]
         AutoSize = False
         Caption = ' lblSubject'
         Font.Charset = ANSI_CHARSET
@@ -140,6 +121,27 @@ inherited frmRoom: TfrmRoom
         ParentShowHint = False
         ShowHint = True
         Layout = tlCenter
+      end
+      object SpeedButton1: TSpeedButton
+        Left = 1
+        Top = 1
+        Width = 20
+        Height = 20
+        Hint = 'Edit Subject'
+        Flat = True
+        Glyph.Data = {
+          F6000000424DF600000000000000760000002800000010000000100000000100
+          04000000000080000000120B0000120B00001000000010000000000000000000
+          8000008000000080800080000000800080008080000080808000C0C0C0000000
+          FF00C0C0C00000FFFF00FF000000C0C0C000FFFF0000FFFFFF00DADADADADADA
+          DADAAD77777777777777D000000000000007A0FBFBFBFB00FB07D0BFBFBFBF08
+          0F07A0F0F0F0FB0B8007D0BFBFB00F000007A0FBFBF0B0FBFB07D0BFBFB0B0BF
+          BF07A0FBFBF0BB0BFB07D0BFBFB0BB0FBF07A00000000BB0000DDADADADA0BB0
+          DADAADADADADA0000DADDADADADAD0110ADAADADADADAD00ADAD}
+        ParentShowHint = False
+        ShowHint = True
+        Transparent = False
+        OnClick = lblSubjectURLClick
       end
     end
   end

@@ -1,5 +1,5 @@
 object frmInvite: TfrmInvite
-  Left = 237
+  Left = 400
   Top = 181
   AutoScroll = False
   Caption = 'Invite to Conference'

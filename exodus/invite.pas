@@ -240,7 +240,6 @@ begin
     Self.ClientWidth := pnlMain.Width + 2;
     AssignTntStrings(room.room_list, cboRoom.Items);
     pnlMain.Align := alClient;
-
     _selector := TfrmSelContact.Create(nil);
 end;
 

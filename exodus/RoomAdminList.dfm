@@ -1,8 +1,8 @@
 object frmRoomAdminList: TfrmRoomAdminList
-  Left = 247
-  Top = 262
-  Width = 323
-  Height = 329
+  Left = 209
+  Top = 156
+  Width = 394
+  Height = 261
   BorderWidth = 3
   Caption = 'Room List Modifier'
   Color = clBtnFace
@@ -13,47 +13,27 @@ object frmRoomAdminList: TfrmRoomAdminList
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
-  Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
-  object Splitter1: TSplitter
-    Left = 0
-    Top = 150
-    Width = 309
-    Height = 7
-    Cursor = crVSplit
-    Align = alTop
-    Beveled = True
-  end
-  object Label1: TTntLabel
-    Left = 0
-    Top = 157
-    Width = 309
-    Height = 25
-    Align = alTop
-    AutoSize = False
-    Caption = 'Enter New Jabber ID'#39's for this list:'
-    Layout = tlBottom
-  end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 263
-    Width = 309
+    Top = 191
+    Width = 380
     Height = 30
     Align = alBottom
     AutoScroll = False
     TabOrder = 0
     inherited Panel2: TPanel
-      Width = 309
+      Width = 380
       Height = 30
       inherited Bevel1: TBevel
-        Width = 309
+        Width = 380
       end
       inherited Panel1: TPanel
-        Left = 149
+        Left = 220
         Height = 25
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
@@ -64,22 +44,12 @@ object frmRoomAdminList: TfrmRoomAdminList
       end
     end
   end
-  object memNew: TTntMemo
-    Left = 0
-    Top = 182
-    Width = 309
-    Height = 81
-    Align = alClient
-    ScrollBars = ssVertical
-    TabOrder = 1
-  end
   object lstItems: TTntListView
     Left = 0
     Top = 0
-    Width = 309
-    Height = 150
-    Align = alTop
-    Checkboxes = True
+    Width = 299
+    Height = 191
+    Align = alClient
     Columns = <
       item
         Caption = 'Nick'
@@ -89,7 +59,41 @@ object frmRoomAdminList: TfrmRoomAdminList
         Caption = 'Jabber ID'
         Width = 180
       end>
-    TabOrder = 2
+    DragMode = dmAutomatic
+    HideSelection = False
+    MultiSelect = True
+    RowSelect = True
+    TabOrder = 1
     ViewStyle = vsReport
+    OnEdited = lstItemsEdited
+    OnDragDrop = lstItemsDragDrop
+    OnDragOver = lstItemsDragOver
+  end
+  object Panel2: TPanel
+    Left = 299
+    Top = 0
+    Width = 81
+    Height = 191
+    Align = alRight
+    BevelOuter = bvNone
+    TabOrder = 2
+    object btnRemove: TTntButton
+      Left = 4
+      Top = 34
+      Width = 75
+      Height = 25
+      Caption = 'Remove'
+      TabOrder = 0
+      OnClick = btnRemoveClick
+    end
+    object TntButton1: TTntButton
+      Left = 4
+      Top = 6
+      Width = 75
+      Height = 25
+      Caption = 'Add'
+      TabOrder = 1
+      OnClick = btnAddClick
+    end
   end
 end
