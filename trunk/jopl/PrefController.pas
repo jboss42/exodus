@@ -198,6 +198,7 @@ function getUserDir: string;
 var
     reg: TRegistry;
     tP   : PChar;
+    f: TFileStream;
 begin
     try //except
         reg := TRegistry.Create;
@@ -208,7 +209,7 @@ begin
                 if ValueExists('AppData') then begin
                     Result := ReadString('AppData') + '\Exodus\';
 
-                    //get userprofile env var and replace in path
+                    // get userprofile env var and replace in path
                     getMem(tP,1024);
                     If (GetEnvironmentVariable('USERPROFILE', tP, 512) <> 0) and
                     (pos('%USERPROFILE%',Result) > 0) then
@@ -217,6 +218,28 @@ begin
                 end
                 else
                     Result := ExtractFilePath(Application.EXEName);
+
+            // Try to create a file here if the prefs don't already exist
+            if not (FileExists(Result + 'exodus.xml')) then begin
+                try
+                    f := TFileStream.Create(Result + 'test.xml', fmOpenWrite);
+                    f.Free();
+                    DeleteFile(Result + 'test.xml');
+                except
+                    on EFOpenError do begin
+                        // If we can't write to AppData, then use Local AppData
+                        if ValueExists('Local AppData') then begin
+                            Result := ReadString('Local AppData') + '\Exodus\';
+                            // get userprofile env var and replace in path
+                            getMem(tP,1024);
+                            If (GetEnvironmentVariable('USERPROFILE', tP, 512) <> 0) and
+                            (pos('%USERPROFILE%',Result) > 0) then
+                               Result := string(tP) + copy(Result, 14,length(Result) - 13);
+                            FreeMem(tP);
+                            end;
+                        end;
+                    end;
+                end;
             end;
         finally
             reg.Free;
