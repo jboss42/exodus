@@ -128,8 +128,8 @@ uses
   PathSelector in 'PathSelector.pas' {frmPathSelector},
   CustomNotify in 'CustomNotify.pas' {frmCustomNotify},
   DropTarget in 'DropTarget.pas' {ExDropTarget: CoClass},
-  JabberAuth in '..\jopl\JabberAuth.pas',
-  IAuth in '..\jopl\IAuth.pas';
+  StandardAuth in '..\jopl\StandardAuth.pas',
+  JabberAuth in '..\jopl\JabberAuth.pas';
 
 {$R *.TLB}
 
