@@ -105,6 +105,7 @@ var
 begin
     // monitor this JID for pres-error type 407
     // when we get one, fire off a register event
+    assert(jid <> '');
     rp := TRegProxy.Create(jid, reg_full);
     _monitors.Add(rp);
 end;
@@ -114,7 +115,7 @@ procedure TRegController.RemoveProxy(rp: TRegProxy);
 var
     i: integer;
 begin
-    i := _monitors.Add(rp);
+    i := _monitors.IndexOf(rp);
     if (i >= 0) then
         _monitors.Delete(i);
     rp.Free();
@@ -137,7 +138,6 @@ var
     tmp_jid: TJabberID;
 begin
     // Create a registration wizard..
-    ExRegController.RemoveProxy(Self);
     if (_full) then
         StartServiceReg(_jid)
     else begin
@@ -145,6 +145,7 @@ begin
         StartServiceReg(tmp_jid.domain);
         tmp_jid.Free();
     end;
+    ExRegController.RemoveProxy(Self);
 end;
 
 {---------------------------------------}

@@ -112,6 +112,12 @@ Section "!${PRODUCT}" SEC_Exodus
     File "Exodus.exe"
     File "IdleHooks.dll"
     
+    ; For daily builds, put in the MAP file so we get detailed 
+    ; stack traces from AV error logs.
+    !ifdef DAILY
+        File "Exodus.map"
+    !endif
+    
     ; Make sure exodus is registered, for Win95 and NT4
     ; We need to do this to ensure that plugins can register properly.
     ExecWait "$INSTDIR\Exodus.exe -0"
