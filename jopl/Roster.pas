@@ -531,6 +531,7 @@ begin
             Self.Delete(idx);
         end;
     end;
+
     ritems.Free();
 end;
 
@@ -748,6 +749,7 @@ var
     idx, i: integer;
     ri: TJabberRosterItem;
     s: TJabberSession;
+    tmp_jid: TJabberID;
 begin
     // parse the full roster push
 
@@ -797,6 +799,23 @@ begin
                 AddObject(Lowercase(ri.jid.Full), ri);
             s.FireEvent('/roster/item', ritems.Tags[i], ri);
         end;
+
+        // I know this is evil... but lets just put in a "fake"
+        // roster item which represents us.
+        // this way, when we receive our own presence, we just
+        // let the normal stuff render it.
+        ct := TXMLTag.Create('item');
+        tmp_jid := TJabberID.Create(s.Jid);
+        ct.setAttribute('jid', tmp_jid.jid);
+        tmp_jid.Free();
+        ct.setAttribute('subscription', 'both');
+        ct.setAttribute('name', s.Username);
+        ri := TJabberRosterItem.Create();
+        ri.parse(ct);
+        Self.AddObject(Lowercase(ri.jid.Full), ri);
+        s.FireEvent('/roster/item', ct, ri);
+        ct.Free();
+
         ritems.Free();
         s.FireEvent('/roster/end', nil);
     end;

@@ -84,6 +84,7 @@ type
         function GetResource(): WideString;
         function GetPort(): integer;
         function GetFullJid(): Widestring;
+        function GetBareJid(): Widestring;
 
         function GetActive(): boolean;
     published
@@ -146,6 +147,7 @@ type
         property Server: WideString read GetServer write SetServer;
         property Resource: WideString read GetResource write SetResource;
         property Jid: Widestring read GetFullJid;
+        property BareJid: Widestring read GetBareJid;
         property Port: integer read GetPort write SetPort;
         property Priority: integer read _priority write _priority;
         property Show: WideString read _show;
@@ -283,6 +285,15 @@ begin
     else
         result := _profile.Username + '@' + _profile.Server + '/' +
             _profile.Resource;
+end;
+
+{---------------------------------------}
+function TJabberSession.GetBareJid(): Widestring;
+begin
+    if (_profile = nil) then
+        Result := ''
+    else
+        Result := _profile.username + '@' + _profile.server;
 end;
 
 {---------------------------------------}
