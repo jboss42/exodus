@@ -1091,7 +1091,7 @@ begin
     node.PutAttribute('name', Name);
     node.AddBasicTag('username', Username);
     node.AddBasicTag('server', Server);
-    node.AddBasicTag('save_passwd', BoolToStr(SavePasswd));
+    node.AddBasicTag('save_passwd', SafeBoolStr(SavePasswd));
 
     // node.AddBasicTag('password', Password);
     ptag := node.AddTag('password');
@@ -1108,11 +1108,11 @@ begin
     // Socket connection
     node.AddBasicTag('host', Host);
     node.AddBasicTag('port', IntToStr(Port));
-    node.AddBasicTag('ssl', BoolToStr(ssl));
+    node.AddBasicTag('ssl', SafeBoolStr(ssl));
     node.AddBasicTag('socks_type', IntToStr(SocksType));
     node.AddBasicTag('socks_host', SocksHost);
     node.AddBasicTag('socks_port', IntToStr(SocksPort));
-    node.AddBasicTag('socks_auth', BoolToStr(SocksAuth));
+    node.AddBasicTag('socks_auth', SafeBoolStr(SocksAuth));
     node.AddBasicTag('socks_username', SocksUsername);
     node.AddBasicTag('socks_password', SocksPassword);
 
@@ -1122,7 +1122,7 @@ begin
     node.AddBasicTag('proxy_approach', IntToStr(ProxyApproach));
     node.AddBasicTag('proxy_host', ProxyHost);
     node.AddBasicTag('proxy_port', IntToStr(ProxyPort));
-    node.AddBasicTag('proxy_auth', BoolToStr(ProxyAuth));
+    node.AddBasicTag('proxy_auth', SafeBoolStr(ProxyAuth));
     node.AddBasicTag('proxy_username', ProxyUsername);
     node.AddBasicTag('proxy_password', ProxyPassword);
 end;
