@@ -10,8 +10,9 @@ unit ExodusCOM_TLB;
 // Type Library, the contents of this file will be regenerated and all        
 // manual modifications will be lost.                                         
 // ************************************************************************ //
-// PASTLWTR : $Revision: 1.3 $
-// File generated on 12/12/2002 12:19:37 PM from Type Library described below.
+
+// PASTLWTR : $Revision: 1.4 $
+// File generated on 12/31/2002 2:44:31 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.exe (1)
@@ -19,7 +20,7 @@ unit ExodusCOM_TLB;
 // LCID: 0
 // Helpfile: 
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
+//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
 // Parent TypeLibrary:
 //   (0) v1.0 ExodusWordSpeller, (D:\src\exodus\exodus\plugins\MSWordSpeller\ExodusWordSpeller.tlb)
 // ************************************************************************ //
@@ -120,6 +121,11 @@ type
                         const nickname: WideString); safecall;
     procedure GetProfile(const jid: WideString); safecall;
     procedure CreateDockableWindow(HWND: Integer; const Caption: WideString); safecall;
+    function addPluginMenu(const Caption: WideString): WideString; safecall;
+    procedure removePluginMenu(const ID: WideString); safecall;
+    procedure monitorImplicitRegJID(const JabberID: WideString; FullJID: WordBool); safecall;
+    procedure getAgentList(const Server: WideString); safecall;
+    function getAgentService(const Server: WideString; const Service: WideString): WideString; safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -148,6 +154,11 @@ type
                         const nickname: WideString); dispid 12;
     procedure GetProfile(const jid: WideString); dispid 13;
     procedure CreateDockableWindow(HWND: Integer; const Caption: WideString); dispid 16;
+    function addPluginMenu(const Caption: WideString): WideString; dispid 14;
+    procedure removePluginMenu(const ID: WideString); dispid 15;
+    procedure monitorImplicitRegJID(const JabberID: WideString; FullJID: WordBool); dispid 17;
+    procedure getAgentList(const Server: WideString); dispid 18;
+    function getAgentService(const Server: WideString; const Service: WideString): WideString; dispid 19;
   end;
 
 // *********************************************************************//
@@ -194,6 +205,8 @@ type
     procedure Process(const xml: WideString); safecall;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat); safecall;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat); safecall;
+    procedure menuClick(const ID: WideString); safecall;
+    procedure onAgentsList(const Server: WideString); safecall;
   end;
 
 // *********************************************************************//
@@ -208,6 +221,8 @@ type
     procedure Process(const xml: WideString); dispid 3;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat); dispid 4;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat); dispid 5;
+    procedure menuClick(const ID: WideString); dispid 6;
+    procedure onAgentsList(const Server: WideString); dispid 7;
   end;
 
 // *********************************************************************//
@@ -222,6 +237,7 @@ type
     procedure onKeyPress(const Key: WideString); safecall;
     procedure onContextMenu(const ID: WideString); safecall;
     procedure onRecvMessage(const Body: WideString; const xml: WideString); safecall;
+    procedure onClose; safecall;
   end;
 
 // *********************************************************************//
@@ -236,6 +252,7 @@ type
     procedure onKeyPress(const Key: WideString); dispid 3;
     procedure onContextMenu(const ID: WideString); dispid 4;
     procedure onRecvMessage(const Body: WideString; const xml: WideString); dispid 5;
+    procedure onClose; dispid 6;
   end;
 
 // *********************************************************************//
