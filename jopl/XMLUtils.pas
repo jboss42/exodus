@@ -42,6 +42,8 @@ function SafeInt(str: Widestring): integer;
 function JabberToDateTime(datestr: Widestring): TDateTime;
 function DateTimeToJabber(dt: TDateTime): Widestring;
 
+function GetAppVersion: string;
+
 procedure ClearStringListObjects(sl: TStringList); overload;
 procedure ClearStringListObjects(sl: TWideStringList); overload;
 
@@ -51,6 +53,11 @@ procedure ClearStringListObjects(sl: TWideStringList); overload;
 {---------------------------------------}
 implementation
 uses
+    {$ifdef Win32}
+    Forms, Windows,
+    {$else}
+    QForms,
+    {$endif}
     IdGlobal, IdCoder3To4, sechash;
 
 
@@ -336,5 +343,61 @@ begin
     Result := Result + 'T';
     Result := Result + FormatDateTime('hh:nn:ss', dt);
 end;
+
+{---------------------------------------}
+{$ifdef Win32}
+function GetAppVersion: string;
+const
+    InfoNum = 10;
+    InfoStr : array [1..InfoNum] of String =
+        ('CompanyName', 'FileDescription', 'FileVersion', 'InternalName',
+        'LegalCopyright', 'LegalTradeMarks', 'OriginalFilename',
+        'ProductName', 'ProductVersion', 'Comments');
+var
+    S: string;
+    n: dword;
+    Len: UINT;
+    i: Integer;
+    Buf: PChar;
+    Value: PChar;
+    keyList: TStringList;
+    valList: TStringList;
+begin
+
+    Result := '';
+
+    KeyList := TStringlist.create;
+    ValList := TStringlist.create;
+
+    S := Application.ExeName;
+    n := GetFileVersionInfoSize(PChar(S),n);
+    if n > 0 then begin
+        Buf := AllocMem(n);
+        GetFileVersionInfo(PChar(S),0,n,Buf);
+        if VerQueryValue(Buf,PChar('StringFileInfo\040904E4\'+ InfoStr[3]),Pointer(Value),Len) then
+            Result := Value;
+        for i:=1 to InfoNum do begin
+            if VerQueryValue(Buf,PChar('StringFileInfo\040904E4\'+ InfoStr[i]),Pointer(Value),Len) then begin
+                KeyList.Add(InfoStr[i]);
+                ValList.Add(Value);
+                end;
+            end;
+        FreeMem(Buf,n);
+        end
+    else
+        Result := '';
+
+    keylist.Free;
+    vallist.Free;
+end;
+{$else}
+function GetAppVersion: string;
+begin
+    result := '1.0';
+end;
+{$endif}
+
+
+
 
 end.

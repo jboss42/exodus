@@ -964,7 +964,7 @@ begin
     // Socket connection
     Host := tag.GetBasicText('host');
     Port := StrToIntDef(tag.GetBasicText('port'), 5222);
-    ssl := (tag.GetBasicText('ssl') = 'yes');
+    ssl := (tag.GetBasicText('ssl') = '-1');
     SocksType := StrToIntDef(tag.GetBasicText('socks_type'), 0);
     SocksHost := tag.GetBasicText('socks_host');
     SocksPort := StrToIntDef(tag.GetBasicText('socks_port'), 0);
