@@ -483,7 +483,9 @@ begin
     else if (_pic is TBitmap) then
         Result := 'image/x-ms-bmp'
     else if (_pic is TPNGObject) then
-        Result := 'image/png';
+        Result := 'image/png'
+    else
+        Result := 'INVALID';
 end;
 
 function TAvatar.isValid(): boolean;

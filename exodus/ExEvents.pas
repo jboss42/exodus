@@ -370,8 +370,8 @@ var
 begin
     if ((eType = evt_Chat) and (from_jid <> nil) and (MainSession <> nil)) then begin
         c := MainSession.ChatList.FindChat(from_jid.jid, from_jid.resource, '');
-        assert(c <> nil);
-        c.Release();
+        if (c <> nil) then
+            c.Release();
     end;
 
     ClearStringListObjects(_data_list);

@@ -56,6 +56,8 @@ type
 implementation
 
 uses
+    ExEvents, MsgQueue, 
+    
     // JOPL stuff
     ChatController, JabberConst, PrefController, Session,
     XMLUtils,
@@ -184,8 +186,10 @@ begin
 
             // check current msg treatment prefs
             msgt := MainSession.Prefs.getInt('msg_treatment');
-            if (tag.QueryXPTag(XP_XROSTER) <> nil) then
-                // allow roster items should FALLTHROUGH
+            if (tag.QueryXPTag(XP_XROSTER) <> nil) then begin
+                // fallthru
+                mtype := XMLNS_XROSTER;
+            end
             else if (msgt = msg_normal) then
                 // normal msg processing should FALLTHROUGH
             else begin
@@ -228,6 +232,8 @@ begin
 
         if (mtype = 'headline') then
             js.FireEvent('/session/gui/headline', tag)
+        else if (mtype = XMLNS_XROSTER) then
+            js.FireEvent('/session/gui/msgevent', tag)
         else begin
             mc := FindJid(from_jid);
             if (mc <> nil) then
