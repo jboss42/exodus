@@ -87,7 +87,6 @@ type
 
     procedure SetJID(sjid: string);
     procedure ShowMsg(tag: TXMLTag);
-    procedure SendMsg;
     procedure RemoveMember(member: TRoomMember);
     procedure RenderMember(member: TRoomMember; tag: TXMLTag);
     procedure changeSubject(subj: string);
@@ -98,7 +97,7 @@ type
   public
     { Public declarations }
     mynick: string;
-
+    procedure SendMsg; override;
     property HintText: string read _hint_text;
   end;
 
@@ -107,6 +106,7 @@ var
   room_list: TStringList;
 
 function StartRoom(rjid, rnick: string): TfrmRoom;
+function IsRoom(rjid: string): boolean;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -191,6 +191,7 @@ var
     Msg: TJabberMessage;
     from: string;
     tmp_jid: TJabberID;
+    server: boolean;
 begin
     // display the body of the msg
     Msg := TJabberMessage.Create(tag);
@@ -206,10 +207,12 @@ begin
             Msg.Nick := '';
         tmp_jid.Free();
         Msg.IsMe := false;
+        server := true;
         end
     else begin
         Msg.Nick := TRoomMember(_roster.Objects[i]).Nick;
         Msg.IsMe := (Msg.Nick = MyNick);
+        server := false;
         end;
 
     if (Msg.Body <> '') then
@@ -221,7 +224,9 @@ begin
         end;
 
     // this check is needed only to prevent extraneous regexing.
-    if ((not Application.Active) and (not MainSession.IsPaused)) then begin
+    if ((not server) and
+        (not Application.Active) and
+        (not MainSession.IsPaused)) then begin
         // check for keywords
         if ((_keywords <> nil) and (_keywords.Exec(Msg.Body))) then
             DoNotify(Self,
@@ -253,8 +258,7 @@ begin
     msg.nick := MyNick;
     msg.isMe := true;
     MainSession.SendTag(msg.Tag);
-    MsgOut.Text := '';
-    MsgOut.SetFocus;
+    inherited;
 end;
 
 {---------------------------------------}
@@ -801,6 +805,11 @@ begin
                 _hint_text := _hint_text + ': ' + m.status;
             end;
         end;
+end;
+
+function IsRoom(rjid: string): boolean;
+begin
+    result := (room_list.IndexOf(rjid) >= 0);
 end;
 
 initialization
