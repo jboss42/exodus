@@ -126,7 +126,7 @@ inherited frmPrefNotify: TfrmPrefNotify
     Hint = 
       'NOTE: Notifications always occur when Exodus is in the backgroun' +
       'd.'
-    Caption = 'Perform notifications when I am using Exodus'
+    Caption = 'Perform notifications when I am using Exodus.'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 1
@@ -146,7 +146,7 @@ inherited frmPrefNotify: TfrmPrefNotify
     Top = 65
     Width = 281
     Height = 17
-    Caption = 'Perform notifications in the window I'#39'm typing in'
+    Caption = 'Perform notifications for the window I'#39'm typing in.'
     TabOrder = 2
   end
 end
