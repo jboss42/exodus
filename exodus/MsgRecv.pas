@@ -340,7 +340,11 @@ var
     i: integer;
 begin
     // Send the outgoing msg
-    txt := Trim(MsgOut.WideText);
+    if (MsgOut.Lines.Count = 0) then
+        txt := ''
+    else
+        txt := Trim(MsgOut.WideText);
+        
     if (txt = '') then exit;
 
     if (pnlSendSubject.Visible) then
