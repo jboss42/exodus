@@ -253,6 +253,10 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.SessionCallback(event: string; tag: TXMLTag);
+var
+    i: integer;
+    grp_node: TTreeNode;
+    grp_idx: integer;
 begin
     // catch session events
     if event = '/session/disconnected' then begin
@@ -281,7 +285,14 @@ begin
     else if event = '/session/server_prefs' then begin
         // we are getting server side prefs
         _collapsed_grps := MainSession.Prefs.getStringlist('col_groups', true);
-        Self.Redraw();
+
+        for i := 0 to _collapsed_grps.Count - 1 do begin
+            grp_idx := MainSession.Roster.GrpList.indexOf(_collapsed_grps[i]);
+            if (grp_idx >= 0) then begin
+                grp_node := TTreeNode(MainSession.Roster.GrpList.Objects[grp_idx]);
+                grp_node.Collapse(true);
+                end;
+            end;
         end;
 end;
 
@@ -584,7 +595,6 @@ begin
 
     for g := 0 to tmp_grps.Count - 1 do begin
         cur_grp := tmp_grps[g];
-
         if (cur_grp = 'Offline') then begin
             if (_offline = nil) then begin
                 _offline := treeRoster.Items.AddChild(nil, 'Offline');
@@ -676,8 +686,8 @@ begin
     cur_grp := MainSession.Roster.GrpList[grp_idx];
     grp_node := treeRoster.Items.AddChild(nil, cur_grp);
     MainSession.Roster.GrpList.Objects[grp_idx] := grp_node;
-    grp_node.ImageIndex := ico_Down;
-    grp_node.SelectedIndex := ico_Down;
+    grp_node.ImageIndex := ico_Right;
+    grp_node.SelectedIndex := ico_Right;
     grp_node.Data := nil;
     result := grp_node;
 end;
@@ -971,7 +981,9 @@ begin
     if ritem <> nil then
         p := MainSession.ppdb.FindPres(ritem.jid.jid, '');
 
-    popClientInfo.Enabled := (p <> nil);
+    // popClientInfo.Enabled := (p <> nil);
+    popVersion.Enabled := (p <> nil);
+    popTime.Enabled := (p <> nil);
 end;
 
 {---------------------------------------}
@@ -1088,7 +1100,10 @@ begin
 
     popSendFile.Enabled := o;
     popPresence.Enabled := e;
-    popClientInfo.Enabled := e;
+    popClientInfo.Enabled := true;
+    popVersion.Enabled := o;
+    popTime.Enabled := o;
+
     popHistory.Enabled := e;
 end;
 
