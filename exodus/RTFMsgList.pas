@@ -314,5 +314,4 @@ begin
     MsgList.onDragDrop := event;
 end;
 
-
 end.

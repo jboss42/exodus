@@ -38,6 +38,9 @@ type
     procedure browserBeforeNavigate2(Sender: TObject;
       const pDisp: IDispatch; var URL, Flags, TargetFrameName, PostData,
       Headers: OleVariant; var Cancel: WordBool);
+    procedure browserDragDrop(Sender, Source: TObject; X, Y: Integer);
+    procedure browserDragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
 
   private
     { Private declarations }
@@ -59,8 +62,14 @@ type
     _title: WideString;
     _ready: Boolean;
 
+    _dragDrop: TDragDropEvent;
+    _dragOver: TDragOverEvent;
+
     procedure onScroll(Sender: TObject);
     procedure onResize(Sender: TObject);
+    
+    function onDrop(Sender: TObject): WordBool;
+    function onDragOver(Sender: TObject): WordBool;
     function onContextMenu(Sender: TObject): WordBool;
 
   protected
@@ -220,6 +229,7 @@ var
     nv : TWideStringList;
     started: boolean;
     str: WideString;
+    tag_name: WideString;
 begin
     // See JEP-71 (http://www.jabber.org/jeps/jep-0071.html) for details.
 
@@ -231,10 +241,12 @@ begin
     // make many passes over the same data.
     if (n.NodeType = xml_Tag) then begin
         tag := TXMLTag(n);
-        if (ok_tags.IndexOf(tag.Name) < 0) then
+        tag_name := lowercase(tag.Name);
+
+        if (ok_tags.IndexOf(tag_name) < 0) then
             exit;
 
-        result := result + '<' + tag.Name;
+        result := result + '<' + tag_name;
 
         nv := TWideStringList.Create();
         chunks := TWideStringList.Create();
@@ -243,7 +255,7 @@ begin
             attr := TAttr(attrs[i]);
             if (attr.Name = 'style') then begin
                 // style attribute only allowed on style_tags.
-                if (style_tags.IndexOf(tag.Name) >= 0) then begin
+                if (style_tags.IndexOf(tag_name) >= 0) then begin
                     //  remove any style properties that aren't in the allowed list
                     chunks.Clear();
                     split(attr.value, chunks, ';');
@@ -265,12 +277,12 @@ begin
                         result := result + '"';
                 end;
             end
-            else if (tag.Name = 'a') then begin
+            else if (tag_name = 'a') then begin
                 if (attr.Name = 'href') then
                     result := result + ' ' +
                         attr.Name + '="' + HTML_EscapeChars(attr.Value, false) + '"';
             end
-            else if (tag.Name = 'img') then begin
+            else if (tag_name = 'img') then begin
                 if ((attr.Name = 'alt') or
                     (attr.Name = 'height') or
                     (attr.Name = 'longdesc') or
@@ -315,6 +327,7 @@ var
     i: integer;
     nodes: TXMLNodeList;
     cd: TXMLCData;
+    dv: WideString;
 begin
     body := Msg.Tag.QueryXPTag(xp_xhtml);
     if (body <> nil) then begin
@@ -325,48 +338,51 @@ begin
 
     if (txt = '') then begin
         txt := HTML_EscapeChars(Msg.Body, false);
-        txt := crlf_regex.Replace(txt, '<br />', true);
         cd := TXMLCData.Create(txt);
         txt := ProcessTag(nil, cd);
+        txt := crlf_regex.Replace(txt, '<br />', true);
     end;
 
-    writeHTML('<div class="line">');
+    // build up a string, THEN call writeHTML, since IE is being "helpful" by
+    // canonicalizing HTML as it gets inserted.
+    dv := '<div class="line">';
     if (MainSession.Prefs.getBool('timestamp')) then begin
         try
-            writeHTML('<span class="ts">[' +
-                FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
-                               Msg.Time) + ']</span>');
+            dv := dv + '<span class="ts">[' +
+                FormatDateTime(MainSession.Prefs.getString('timestamp_format'), Msg.Time) +
+                ']</span>';
         except
             on EConvertError do begin
-                writeHTML('<span class="ts">[' +
+                dv := dv + '<span class="ts">[' +
                     FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
-                    Now()) + ']</span>');
+                    Now()) + ']</span>';
             end;
         end;
     end;
 
     if (Msg.Nick = '') then begin
         // Server generated msgs (mostly in TC Rooms)
-        writeHTML('&nbsp;<span class="svr">' + txt + '</span>');
+        dv := dv + '&nbsp;<span class="svr">' + txt + '</span>';
     end
     else if not Msg.Action then begin
         // This is a normal message
         if Msg.isMe then
             // our own msgs
-            writeHTML('&nbsp;<span class="me">&lt;' + Msg.Nick + '&gt;</span>')
+            dv := dv + '&nbsp;<span class="me">&lt;' + Msg.Nick + '&gt;</span>'
         else
-            writeHTML('&nbsp;<span class="other">&lt;' + Msg.Nick + '&gt;</span>');
+            dv := dv + '&nbsp;<span class="other">&lt;' + Msg.Nick + '&gt;</span>';
 
         if (Msg.Highlight) then
-            writeHTML('&nbsp;<span class="alert"> ' + txt + '</span>')
+            dv := dv + '&nbsp;<span class="alert"> ' + txt + '</span>'
         else
-            writeHTML('&nbsp;<span class="msg">' + txt + '</span>');
+            dv := dv + '&nbsp;<span class="msg">' + txt + '</span>';
     end
     else
         // This is an action
-        writeHTML('<span class="action">&nbsp;*&nbsp;' + Msg.Nick + '&nbsp;' + txt + '</span>');
+        dv := dv + '<span class="action">&nbsp;*&nbsp;' + Msg.Nick + '&nbsp;' + txt + '</span>';
 
-    writeHTML('</div>');
+    dv := dv + '</div>';
+    writeHTML(dv);
 
     if (_bottom) then
         ScrollToBottom();
@@ -427,13 +443,13 @@ end;
 {---------------------------------------}
 procedure TfIEMsgList.setDragOver(event: TDragOverEvent);
 begin
-    // XXX: IEMsgList drag-n-drop
+    _dragOver := event;
 end;
 
 {---------------------------------------}
 procedure TfIEMsgList.setDragDrop(event: TDragDropEvent);
 begin
-    // XXX: IEMsgList drag-n-drop
+    _dragDrop := event;
 end;
 
 {---------------------------------------}
@@ -460,8 +476,26 @@ end;
 {---------------------------------------}
 function TfIEMsgList.onContextMenu(Sender: TObject): WordBool;
 begin
-    Refresh();
     _menu.Popup(_win.event.screenX, _win.event.screeny);
+    result := false;
+end;
+
+{---------------------------------------}
+function TfIEMsgList.onDrop(Sender: TObject): WordBool;
+begin
+//    _dragDrop(sender, browser, _win.event.x, _win.event.y);
+    result := false;
+end;
+
+{---------------------------------------}
+function TfIEMsgList.onDragOver(Sender: TObject): WordBool;
+//var
+//    accept: boolean;
+begin
+//    accept := true;
+//    _dragOver(sender, browser, _win.event.x, _win.event.y, dsDragMove, accept);
+//    DebugMsg('drag event type:' + _win.event.type_);
+//    result := accept;
     result := false;
 end;
 
@@ -492,6 +526,9 @@ begin
     _we.Connect(_content);
     _we.onscroll   := onscroll;
     _we.onresize   := onresize;
+    _we.ondrop     := ondrop;
+    _we.ondragover := ondragover;
+
    // _we.onkeypress := onkeypress;
 
     if (_de <> nil) then
@@ -563,6 +600,20 @@ procedure TfIEMsgList.refresh();
 begin
     _queue.Add(getHistory());
     Clear();
+end;
+
+procedure TfIEMsgList.browserDragDrop(Sender, Source: TObject; X,
+  Y: Integer);
+begin
+//    _dragDrop(sender, source, x, y);
+//  inherited;
+end;
+
+procedure TfIEMsgList.browserDragOver(Sender, Source: TObject; X,
+  Y: Integer; State: TDragState; var Accept: Boolean);
+begin
+//    _dragOver(sender, source, x, y, state, accept);
+ //   inherited;
 end;
 
 initialization

@@ -256,6 +256,11 @@ begin
             Key := 0;
             SendMsg()
         end;
+    end
+
+    // magic debug key sequence Ctrl-Shift-H to dump the HTML or RTF to debug.
+    else if ((chr(Key) = 'H') and  (Shift = [ssCtrl, ssShift])) then begin
+        DebugMsg(getMsgList.getHistory());
     end;
 end;
 
