@@ -143,6 +143,7 @@ var
     i: integer;
     f, ag_tag: TXMLTag;
     flds: TXMLTagList;
+    cur_fld: TfrmField;
 begin
     // we got back a response to the iq-get, on the register namespace
     cur_iq := nil;
@@ -156,6 +157,7 @@ begin
             end
         else begin
             // normal result
+            btnDelete.Enabled := false;
             ag_tag := tag.QueryXPTag('/iq/query');
             flds := ag_tag.ChildTags();
             for i := 0 to flds.count - 1 do begin
@@ -164,8 +166,13 @@ begin
                     lblIns.Caption := f.Data
                 else if (f.Name = 'key') then
                     cur_key := f.Data
-                else
-                    doField(f.Name);
+                else if (f.Name = 'registered') then
+                    btnDelete.Enabled := true
+                else begin
+                    cur_fld := doField(f.Name);
+                    if (f.Data <> '') then
+                        cur_fld.txtData.Text := f.Data;
+                    end;
                 end;
             flds.Free();
 
