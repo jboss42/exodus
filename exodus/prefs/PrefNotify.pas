@@ -90,17 +90,17 @@ begin
     _loading := true;
 
     chkNotify.Items.Clear();
-    chkNotify.Items.Add(sSoundOnline);
-    chkNotify.Items.Add(sSoundOffline);
-    chkNotify.Items.Add(sSoundNewchat);
-    chkNotify.Items.Add(sSoundNormalmsg);
-    chkNotify.Items.Add(sSoundS10n);
-    chkNotify.Items.Add(sSoundInvite);
-    chkNotify.Items.Add(sSoundKeyword);
-    chkNotify.Items.Add(sSoundChatactivity);
-    chkNotify.Items.Add(sSoundRoomactivity);
-    chkNotify.Items.Add(sSoundOOB);
-    chkNotify.Items.Add(sSoundAutoResponse);
+    chkNotify.Items.Add(_(sSoundOnline));
+    chkNotify.Items.Add(_(sSoundOffline));
+    chkNotify.Items.Add(_(sSoundNewchat));
+    chkNotify.Items.Add(_(sSoundNormalmsg));
+    chkNotify.Items.Add(_(sSoundS10n));
+    chkNotify.Items.Add(_(sSoundInvite));
+    chkNotify.Items.Add(_(sSoundKeyword));
+    chkNotify.Items.Add(_(sSoundChatactivity));
+    chkNotify.Items.Add(_(sSoundRoomactivity));
+    chkNotify.Items.Add(_(sSoundOOB));
+    chkNotify.Items.Add(_(sSoundAutoResponse));
 
     with MainSession.Prefs do begin
         // Notify Options

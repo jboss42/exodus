@@ -6,13 +6,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-11-21 10:48\n"
-"PO-Revision-Date: 2003-11-21 10:48\n"
+"POT-Creation-Date: 2003-11-23 23:51\n"
+"PO-Revision-Date: 2003-11-23 23:51\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: dxgettext 1.1.1\n"
+"X-Generator: dxgettext 1.2 beta 2\n"
 
 #. frmAbout..Caption
 #: About.dfm:8
@@ -35,8 +35,6 @@ msgstr ""
 #: ConnDetails.dfm:12
 #. frmCustomNotify..Font.Name
 #: CustomNotify.dfm:12
-#. frmCustomNotify..Label1..Font.Name
-#: CustomNotify.dfm:29
 #. frmCustomPres..Font.Name
 #: CustomPres.dfm:12
 #. frmCustomPres..txtStatus..Font.Name
@@ -85,8 +83,6 @@ msgstr ""
 #: Jabber1.dfm:63
 #. frmJoinRoom..Font.Name
 #: JoinRoom.dfm:14
-#. frmJoinRoom..Panel1..lblFetch..Font.Name
-#: JoinRoom.dfm:116
 #. frmLogin..Font.Name
 #: Login.dfm:12
 #. frmMsgQueue..Font.Name
@@ -114,7 +110,7 @@ msgstr ""
 #. frmRemove..Font.Name
 #: RemoveContact.dfm:14
 #. frmRemove..lblJID..Font.Name
-#: RemoveContact.dfm:107
+#: RemoveContact.dfm:105
 #. frmRiser..Font.Name
 #: RiserWindow.dfm:13
 #. frmRoom..Panel1..pnlSubj..lblSubjectURL..Font.Name
@@ -141,6 +137,8 @@ msgstr ""
 #: subscribe.dfm:14
 #. frmSubscribe..lblJID..Font.Name
 #: subscribe.dfm:54
+#. Form1..Font.Name
+#: Test1.dfm:11
 #. frmVCard..Font.Name
 #: vcard.dfm:11
 #. frmWebDownload..Font.Name
@@ -153,26 +151,10 @@ msgstr ""
 #: xdata.dfm:13
 #. frmXData..frameButtons1..Font.Name
 #: xdata.dfm:49
-#. frmPrefFont..Label22..Font.Name
-#: prefs/PrefFont.dfm:19
-#. frmPrefFont..Label23..Font.Name
-#: prefs/PrefFont.dfm:32
-#. frmPrefFont..lblColor..Font.Name
-#: prefs/PrefFont.dfm:66
 #. frmPrefFont..FontDialog1..Font.Name
-#: prefs/PrefFont.dfm:227
-#. frmPrefNotify..lblConfigSounds..Font.Name
-#: prefs/PrefNotify.dfm:21
+#: prefs/PrefFont.dfm:209
 #. frmPrefPanel..Font.Name
 #: prefs/PrefPanel.dfm:13
-#. frmPrefPlugins..lblPluginScan..Font.Name
-#: prefs/PrefPlugins.dfm:27
-#. frmPrefPresence..Panel1..Label1..Font.Name
-#: prefs/PrefPresence.dfm:205
-#. frmPrefSystem..lblPluginScan..Font.Name
-#: prefs/PrefSystem.dfm:27
-#. frmPrefTransfer..Label2..Font.Name
-#: prefs/PrefTransfer.dfm:27
 msgid "MS Sans Serif"
 msgstr ""
 
@@ -221,7 +203,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:107
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:130
+#: prefs/PrefFont.dfm:112
 msgid "e-mail"
 msgstr ""
 
@@ -244,7 +226,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:113
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:136
+#: prefs/PrefFont.dfm:118
 msgid "http"
 msgstr ""
 
@@ -267,7 +249,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:119
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:142
+#: prefs/PrefFont.dfm:124
 msgid "file"
 msgstr ""
 
@@ -290,7 +272,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:125
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:148
+#: prefs/PrefFont.dfm:130
 msgid "mailto"
 msgstr ""
 
@@ -313,7 +295,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:131
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:154
+#: prefs/PrefFont.dfm:136
 msgid "ftp"
 msgstr ""
 
@@ -336,7 +318,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:137
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:160
+#: prefs/PrefFont.dfm:142
 msgid "https"
 msgstr ""
 
@@ -359,7 +341,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:143
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:166
+#: prefs/PrefFont.dfm:148
 msgid "gopher"
 msgstr ""
 
@@ -382,7 +364,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:149
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:172
+#: prefs/PrefFont.dfm:154
 msgid "nntp"
 msgstr ""
 
@@ -405,7 +387,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:155
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:178
+#: prefs/PrefFont.dfm:160
 msgid "prospero"
 msgstr ""
 
@@ -428,7 +410,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:161
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:184
+#: prefs/PrefFont.dfm:166
 msgid "telnet"
 msgstr ""
 
@@ -451,7 +433,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:167
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:190
+#: prefs/PrefFont.dfm:172
 msgid "news"
 msgstr ""
 
@@ -474,7 +456,7 @@ msgstr ""
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:173
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:196
+#: prefs/PrefFont.dfm:178
 msgid "wais"
 msgstr ""
 
@@ -620,7 +602,7 @@ msgstr ""
 #. frmExodus..popTray..N01..Caption
 #: Jabber1.dfm:2706
 #. frmJud..PopupMenu1..N1..Caption
-#: jud.dfm:211
+#: Jud.dfm:211
 #. frmMsgRecv..popContact..N1..Caption
 #: MsgRecv.dfm:543
 #. frmMsgRecv..popContact..N2..Caption
@@ -672,7 +654,7 @@ msgstr ""
 #. frmBookmark..Label2..Caption
 #: Bookmark.dfm:32
 #. frmPrefPresence..GroupBox1..Label11..Caption
-#: prefs/PrefPresence.dfm:84
+#: prefs/PrefPresence.dfm:139
 msgid "Name:"
 msgstr ""
 
@@ -713,7 +695,7 @@ msgstr ""
 #. frmBrowse..Panel3..vwBrowse......Caption
 #: Browser.dfm:44
 #. frmInvite..pnlMain..lstJIDS......Caption
-#: invite.dfm:77
+#: invite.dfm:75
 #. frmRoomAdminList..lstItems......Caption
 #: RoomAdminList.dfm:86
 #. frmRosterRecv..lvContacts......Caption
@@ -904,9 +886,9 @@ msgstr ""
 #. frmPrefMsg..btnSpoolBrowse..Caption
 #: prefs/PrefMsg.dfm:129
 #. frmPrefPlugins..btnBrowsePluginPath..Caption
-#: prefs/PrefPlugins.dfm:77
+#: prefs/PrefPlugins.dfm:71
 #. frmPrefTransfer..btnTransferBrowse..Caption
-#: prefs/PrefTransfer.dfm:149
+#: prefs/PrefTransfer.dfm:143
 msgid "Browse"
 msgstr ""
 
@@ -1140,9 +1122,9 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksUsername..Caption
 #: ConnDetails.dfm:330
 #. frmPrefNetwork..GroupBox2..lblProxyUsername..Caption
-#: prefs/PrefNetwork.dfm:105
+#: prefs/PrefNetwork.dfm:108
 #. frmPrefTransfer..grpWebDav..Label7..Caption
-#: prefs/PrefTransfer.dfm:84
+#: prefs/PrefTransfer.dfm:78
 msgid "Username:"
 msgstr ""
 
@@ -1153,9 +1135,9 @@ msgstr ""
 #. frmJoinRoom..Panel1..lblPassword..Caption
 #: JoinRoom.dfm:97
 #. frmPrefNetwork..GroupBox2..lblProxyPassword..Caption
-#: prefs/PrefNetwork.dfm:113
+#: prefs/PrefNetwork.dfm:117
 #. frmPrefTransfer..grpWebDav..Label8..Caption
-#: prefs/PrefTransfer.dfm:91
+#: prefs/PrefTransfer.dfm:85
 msgid "Password:"
 msgstr ""
 
@@ -1201,7 +1183,7 @@ msgstr ""
 #. frmInputPass..txtPassword..PasswordChar
 #: InputPassword.dfm:60
 #. frmJoinRoom..Panel1..txtPassword..PasswordChar
-#: JoinRoom.dfm:142
+#: JoinRoom.dfm:136
 #. frmPassword..txtOldPassword..PasswordChar
 #: Password.dfm:42
 #. frmPassword..txtNewPassword..PasswordChar
@@ -1209,9 +1191,9 @@ msgstr ""
 #. frmPassword..txtConfirmPassword..PasswordChar
 #: Password.dfm:78
 #. frmPrefNetwork..GroupBox2..txtProxyPassword..PasswordChar
-#: prefs/PrefNetwork.dfm:163
+#: prefs/PrefNetwork.dfm:169
 #. frmPrefTransfer..grpWebDav..txtDavPassword..PasswordChar
-#: prefs/PrefTransfer.dfm:133
+#: prefs/PrefTransfer.dfm:127
 msgid "*"
 msgstr ""
 
@@ -1230,14 +1212,14 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksType..Caption
 #: ConnDetails.dfm:322
 #. frmPrefPresence..GroupBox1..Label13..Caption
-#: prefs/PrefPresence.dfm:98
+#: prefs/PrefPresence.dfm:155
 msgid "Type:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsConn..Label6..Caption
 #: ConnDetails.dfm:174
 #. frmPrefPresence..GroupBox1..Label14..Caption
-#: prefs/PrefPresence.dfm:105
+#: prefs/PrefPresence.dfm:163
 msgid "Priority:"
 msgstr ""
 
@@ -1265,7 +1247,7 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksHost..Caption
 #: ConnDetails.dfm:304
 #. frmPrefNetwork..GroupBox2..lblProxyHost..Caption
-#: prefs/PrefNetwork.dfm:89
+#: prefs/PrefNetwork.dfm:90
 msgid "Host:"
 msgstr ""
 
@@ -1274,9 +1256,9 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksPort..Caption
 #: ConnDetails.dfm:313
 #. frmPrefNetwork..GroupBox2..lblProxyPort..Caption
-#: prefs/PrefNetwork.dfm:97
+#: prefs/PrefNetwork.dfm:99
 #. frmPrefTransfer..grpWebDav..Label4..Caption
-#: prefs/PrefTransfer.dfm:63
+#: prefs/PrefTransfer.dfm:57
 msgid "Port:"
 msgstr ""
 
@@ -1290,18 +1272,18 @@ msgstr ""
 msgid "SSL Certificate:"
 msgstr ""
 
-#. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.Strings
+#. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.WideStrings
 #: ConnDetails.dfm:290
 msgid "Use StartTLS whenever the server allows "
 "it."
 msgstr ""
 
-#. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.Strings
+#. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.WideStrings
 #: ConnDetails.dfm:291
 msgid "Only allow connections which use StartTLS."
 msgstr ""
 
-#. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.Strings
+#. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.WideStrings
 #: ConnDetails.dfm:292
 msgid "Use SSL immediately when connected."
 msgstr ""
@@ -1314,14 +1296,14 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsSocket..chkSocksAuth..Caption
 #: ConnDetails.dfm:348
 #. frmPrefNetwork..GroupBox2..chkProxyAuth..Caption
-#: prefs/PrefNetwork.dfm:144
+#: prefs/PrefNetwork.dfm:150
 msgid "Authentication Required"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.Strings
 #: ConnDetails.dfm:379
-#. frmProfile..PageControl1..TabSheet1..optSubscrip....Items.Strings
-#: Profile.dfm:98
+#. frmProfile..PageControl1..TabSheet1..optSubscrip....Items.WideStrings
+#: Profile.dfm:154
 msgid "None"
 msgstr ""
 
@@ -1388,36 +1370,36 @@ msgstr ""
 msgid "Custom Notification Options"
 msgstr ""
 
-#. frmCustomNotify..Label1..Caption
+#. frmCustomNotify..lblDefault..Caption
 #: CustomNotify.dfm:25
 msgid "Reset to default preferences ..."
 msgstr ""
 
 #. frmCustomNotify..optNotify..Caption
-#: CustomNotify.dfm:48
+#: CustomNotify.dfm:62
 #. frmPrefNotify..optNotify..Caption
-#: prefs/PrefNotify.dfm:59
+#: prefs/PrefNotify.dfm:93
 msgid "Notify Options"
 msgstr ""
 
 #. frmCustomNotify..optNotify..chkFlash..Caption
-#: CustomNotify.dfm:55
+#: CustomNotify.dfm:69
 #. frmPrefNotify..optNotify..chkFlash..Caption
-#: prefs/PrefNotify.dfm:66
+#: prefs/PrefNotify.dfm:100
 msgid "Flash Taskbar button, or highlight tab"
 msgstr ""
 
 #. frmCustomNotify..optNotify..chkToast..Caption
-#: CustomNotify.dfm:64
+#: CustomNotify.dfm:78
 #. frmPrefNotify..optNotify..chkToast..Caption
-#: prefs/PrefNotify.dfm:75
+#: prefs/PrefNotify.dfm:109
 msgid "Show a \"Toast\" popup"
 msgstr ""
 
 #. frmCustomNotify..optNotify..chkTrayNotify..Caption
-#: CustomNotify.dfm:73
+#: CustomNotify.dfm:87
 #. frmPrefNotify..optNotify..chkTrayNotify..Caption
-#: prefs/PrefNotify.dfm:84
+#: prefs/PrefNotify.dfm:118
 msgid "Flash tray icon"
 msgstr ""
 
@@ -1434,7 +1416,7 @@ msgstr ""
 #. frmCustomPres..Label2..Caption
 #: CustomPres.dfm:32
 #. frmPrefPresence..GroupBox1..Label12..Caption
-#: prefs/PrefPresence.dfm:91
+#: prefs/PrefPresence.dfm:147
 msgid "Status:"
 msgstr ""
 
@@ -1450,8 +1432,6 @@ msgstr ""
 #: ChatWin.pas:456
 #: ChatWin.pas:468
 #: ChatWin.pas:470
-#. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
-#: prefs/PrefPresence.dfm:140
 msgid "Chat"
 msgstr ""
 
@@ -1474,9 +1454,7 @@ msgstr ""
 #. reset status to online;
 #: RosterWindow.pas:1660
 #. frmPrefGroups..cboVisible....Items.WideStrings
-#: prefs/PrefGroups.dfm:71
-#. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
-#: prefs/PrefPresence.dfm:141
+#: prefs/PrefGroups.dfm:70
 msgid "Available"
 msgstr ""
 
@@ -1493,9 +1471,7 @@ msgstr ""
 #: RosterWindow.pas:369
 #: RosterWindow.pas:1601
 #. frmPrefGroups..cboVisible....Items.WideStrings
-#: prefs/PrefGroups.dfm:70
-#. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
-#: prefs/PrefPresence.dfm:142
+#: prefs/PrefGroups.dfm:69
 msgid "Away"
 msgstr ""
 
@@ -1503,9 +1479,7 @@ msgstr ""
 #: CustomPres.dfm:77
 #: RosterWindow.pas:370
 #. frmPrefGroups..cboVisible....Items.WideStrings
-#: prefs/PrefGroups.dfm:69
-#. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
-#: prefs/PrefPresence.dfm:143
+#: prefs/PrefGroups.dfm:68
 msgid "Ext. Away"
 msgstr ""
 
@@ -1521,9 +1495,7 @@ msgstr ""
 #: RosterWindow.pas:371
 #: RosterWindow.pas:1609
 #. frmPrefGroups..cboVisible....Items.WideStrings
-#: prefs/PrefGroups.dfm:68
-#. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
-#: prefs/PrefPresence.dfm:144
+#: prefs/PrefGroups.dfm:67
 msgid "Do Not Disturb"
 msgstr ""
 
@@ -1544,7 +1516,7 @@ msgstr ""
 #. frmCustomPres..boxSave..lblHotkey..Caption
 #: CustomPres.dfm:129
 #. frmPrefPresence..GroupBox1..lblHotkey..Caption
-#: prefs/PrefPresence.dfm:112
+#: prefs/PrefPresence.dfm:171
 msgid "HotKey:"
 msgstr ""
 
@@ -1762,22 +1734,22 @@ msgid "Remove Contacts"
 msgstr ""
 
 #. frmGrpRemove..optMove..Caption
-#: GrpRemove.dfm:50
+#: GrpRemove.dfm:48
 msgid "Move contacts to another group:"
 msgstr ""
 
 #. frmGrpRemove..optNuke..Caption
-#: GrpRemove.dfm:70
+#: GrpRemove.dfm:68
 msgid "Remove all contacts in this group:"
 msgstr ""
 
 #. frmGrpRemove..chkUnsub..Caption
-#: GrpRemove.dfm:78
+#: GrpRemove.dfm:76
 msgid "Remove these contacts from my roster."
 msgstr ""
 
 #. frmGrpRemove..chkUnsubed..Caption
-#: GrpRemove.dfm:88
+#: GrpRemove.dfm:86
 msgid "Force the contacts to remove me from their "
 "roster"
 msgstr ""
@@ -1802,7 +1774,7 @@ msgstr ""
 #. frmInvalidRoster..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: InvalidRoster.dfm:36
 #. frmInvite..pnlMain..Panel1..btnRemove..Caption
-#: invite.dfm:101
+#: invite.dfm:99
 #. frmRosterWindow..popRoster..popRemove..Caption
 #: RosterWindow.dfm:382
 #. frmRosterWindow..popGroup..popGrpRemove..Caption
@@ -1812,7 +1784,7 @@ msgstr ""
 #. frmRosterWindow..popTransport..popTransUnRegister..Caption
 #: RosterWindow.dfm:692
 #. frmPrefPlugins..btnRemovePlugin..Caption
-#: prefs/PrefPlugins.dfm:61
+#: prefs/PrefPlugins.dfm:55
 #. frmPrefPresence..pnlCustomPresButtons..btnCustomPresRemove..Caption
 #: prefs/PrefPresence.dfm:48
 msgid "Remove"
@@ -1848,7 +1820,7 @@ msgid "Invite to Conference"
 msgstr ""
 
 #. frmInvite..pnlMain..lstJIDS......Caption
-#: invite.dfm:73
+#: invite.dfm:71
 #. frmRosterRecv..lvContacts......Caption
 #: RosterRecv.dfm:200
 #. frmRosterWindow..pnlFind..radNick..Caption
@@ -1857,28 +1829,28 @@ msgid "Nickname"
 msgstr ""
 
 #. frmInvite..pnlMain..Panel1..btnAdd..Caption
-#: invite.dfm:110
+#: invite.dfm:108
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Caption
 #: Jabber1.dfm:148
 #. frmPrefPlugins..btnAddPlugin..Caption
-#: prefs/PrefPlugins.dfm:42
+#: prefs/PrefPlugins.dfm:36
 #. frmPrefPresence..pnlCustomPresButtons..btnCustomPresAdd..Caption
 #: prefs/PrefPresence.dfm:39
 msgid "Add"
 msgstr ""
 
 #. frmInvite..pnlMain..Panel2..Label2..Caption
-#: invite.dfm:129
+#: invite.dfm:127
 msgid "Reason:"
 msgstr ""
 
 #. frmInvite..pnlMain..Panel2..Label1..Caption
-#: invite.dfm:137
+#: invite.dfm:135
 msgid "Invite the following contacts to:"
 msgstr ""
 
 #. frmInvite..pnlMain..Panel2..memReason....Lines.WideStrings
-#: invite.dfm:146
+#: invite.dfm:144
 msgid "Please join us in this conference room."
 msgstr ""
 
@@ -1917,7 +1889,7 @@ msgstr ""
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Hint
 #: Jabber1.dfm:145
 #. frmJud..PopupMenu1..popAdd..Caption
-#: jud.dfm:203
+#: Jud.dfm:203
 #. frmAdd..Caption
 #: RosterAdd.dfm:6
 #. frmRosterWindow..popActions..popAddContact..Caption
@@ -2129,8 +2101,6 @@ msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuPresence..Custom3..Caption
 #: Jabber1.dfm:397
-#. frmPrefNetwork..GroupBox2..cboProxyApproach....Items.WideStrings
-#: prefs/PrefNetwork.dfm:180
 msgid "Custom"
 msgstr ""
 
@@ -2224,7 +2194,7 @@ msgstr ""
 #. frmExodus..popTray..trayMessage..Caption
 #: Jabber1.dfm:2694
 #. frmJud..PopupMenu1..popMessage..Caption
-#: jud.dfm:218
+#: Jud.dfm:218
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
 #: subscribe.dfm:146
 msgid "Send Message"
@@ -2270,86 +2240,86 @@ msgid "Get room list from this server..."
 msgstr ""
 
 #. frmJoinRoom..Panel1..txtServer..Text
-#: JoinRoom.dfm:128
+#: JoinRoom.dfm:122
 msgid "txtServer"
 msgstr ""
 
 #. frmJud..Caption
-#: jud.dfm:5
+#: Jud.dfm:5
 msgid "Jabber Search"
 msgstr ""
 
 #. frmJud..Panel1..lblWizardTitle..Caption
-#: jud.dfm:42
+#: Jud.dfm:42
 msgid "Jabber Search Wizard"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet1..lblSelect....Align
-#: jud.dfm:63
+#: Jud.dfm:63
 msgid "Select the user database or enter in the Jabber ID of the search "
 "agent to use:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet2..Caption
-#: jud.dfm:77
+#: Jud.dfm:77
 #. frmRegister..Tabs..TabSheet2..Caption
 #: RegForm.dfm:61
 msgid "TabSheet2"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet2..lblWait..Caption
-#: jud.dfm:85
+#: Jud.dfm:85
 msgid "Please wait. Contacting search agent:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..Caption
-#: jud.dfm:99
+#: Jud.dfm:99
 #. frmRegister..Tabs..TabSheet3..Caption
 #: RegForm.dfm:96
 msgid "TabSheet3"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..lblInstructions..Caption
-#: jud.dfm:107
+#: Jud.dfm:107
 msgid "Fill in the search criteria to find contacts "
 "on."
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Caption
-#: jud.dfm:123
+#: Jud.dfm:123
 #. frmRegister..Tabs..TabSheet4..Caption
 #: RegForm.dfm:116
 msgid "TabSheet4"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Label3..Caption
-#: jud.dfm:139
+#: Jud.dfm:139
 msgid "Add Contacts to this group:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Caption
-#: jud.dfm:147
+#: Jud.dfm:147
 #. frmAdd..lblAddGrp..Caption
 #: RosterAdd.dfm:48
 msgid "Add a new Group"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Button1..Caption
-#: jud.dfm:167
+#: Jud.dfm:167
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: RosterRecv.dfm:44
-#: jud.pas:641
-#: jud.pas:643
+#: Jud.pas:641
+#: Jud.pas:643
 msgid "Add Contacts"
 msgstr ""
 
 #. frmJud..PopupMenu1..popProfile..Caption
-#: jud.dfm:207
+#: Jud.dfm:207
 msgid "View Profile"
 msgstr ""
 
 #. frmJud..PopupMenu1..popChat..Caption
-#: jud.dfm:214
+#: Jud.dfm:214
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:142
 #: Jabber1.pas:2256
@@ -2407,8 +2377,8 @@ msgstr ""
 
 #. frmMsgQueue..lstEvents......Caption
 #: MsgQueue.dfm:36
-#. frmProfile..PageControl1..TabSheet1..optSubscrip....Items.Strings
-#: Profile.dfm:99
+#. frmProfile..PageControl1..TabSheet1..optSubscrip....Items.WideStrings
+#: Profile.dfm:156
 msgid "From"
 msgstr ""
 
@@ -2600,7 +2570,7 @@ msgstr ""
 #: XferManager.dfm:53
 #: ExSession.pas:484
 #. frmPrefNotify..chkNotify....Items.WideStrings
-#: prefs/PrefNotify.dfm:49
+#: prefs/PrefNotify.dfm:43
 msgid "File Transfers"
 msgstr ""
 
@@ -2726,17 +2696,17 @@ msgid "Update nickname based on names."
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet1..optSubscrip..Caption
-#: Profile.dfm:94
+#: Profile.dfm:150
 msgid "Subscription Type"
 msgstr ""
 
-#. frmProfile..PageControl1..TabSheet1..optSubscrip....Items.Strings
-#: Profile.dfm:100
+#. frmProfile..PageControl1..TabSheet1..optSubscrip....Items.WideStrings
+#: Profile.dfm:155
 msgid "To"
 msgstr ""
 
-#. frmProfile..PageControl1..TabSheet1..optSubscrip....Items.Strings
-#: Profile.dfm:101
+#. frmProfile..PageControl1..TabSheet1..optSubscrip....Items.WideStrings
+#: Profile.dfm:157
 msgid "Both"
 msgstr ""
 
@@ -5742,28 +5712,28 @@ msgid "Your Registration to this service has Failed! Press Previous to go "
 msgstr ""
 
 #. frmRemove..optMove..Caption
-#: RemoveContact.dfm:61
+#: RemoveContact.dfm:59
 msgid "Remove this contact from this group"
 msgstr ""
 
 #. frmRemove..optRemove..Caption
-#: RemoveContact.dfm:70
+#: RemoveContact.dfm:68
 msgid "Remove this contact from my roster."
 msgstr ""
 
 #. frmRemove..chkRemove1..Caption
-#: RemoveContact.dfm:81
+#: RemoveContact.dfm:79
 msgid "Remove this person from my roster."
 msgstr ""
 
 #. frmRemove..chkRemove2..Caption
-#: RemoveContact.dfm:91
+#: RemoveContact.dfm:89
 msgid "Force this person to remove me from their "
 "roster"
 msgstr ""
 
 #. frmRemove..lblJID..Caption
-#: RemoveContact.dfm:102
+#: RemoveContact.dfm:100
 #. frmRosterWindow..StatBar......Text
 #: RosterWindow.dfm:182
 msgid "foo@jabber.org"
@@ -5974,27 +5944,27 @@ msgid "Gateway Server:"
 msgstr ""
 
 #. frmAdd..cboType....Items.WideStrings
-#: RosterAdd.dfm:128
+#: RosterAdd.dfm:126
 msgid "Jabber"
 msgstr ""
 
 #. frmAdd..cboType....Items.WideStrings
-#: RosterAdd.dfm:129
+#: RosterAdd.dfm:127
 msgid "MSN"
 msgstr ""
 
 #. frmAdd..cboType....Items.WideStrings
-#: RosterAdd.dfm:130
+#: RosterAdd.dfm:128
 msgid "Yahoo"
 msgstr ""
 
 #. frmAdd..cboType....Items.WideStrings
-#: RosterAdd.dfm:131
+#: RosterAdd.dfm:129
 msgid "AIM"
 msgstr ""
 
 #. frmAdd..cboType....Items.WideStrings
-#: RosterAdd.dfm:132
+#: RosterAdd.dfm:130
 msgid "ICQ"
 msgstr ""
 
@@ -6148,7 +6118,7 @@ msgstr ""
 #. frmRosterWindow..popBookmark..Properties1..Caption
 #: RosterWindow.dfm:668
 #. frmPrefPresence..GroupBox1..Caption
-#: prefs/PrefPresence.dfm:77
+#: prefs/PrefPresence.dfm:132
 msgid "Properties"
 msgstr ""
 
@@ -6240,6 +6210,11 @@ msgstr ""
 #. frmSubscribe..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: subscribe.dfm:128
 msgid "Deny"
+msgstr ""
+
+#. Form1..Caption
+#: Test1.dfm:6
+msgid "Form1"
 msgstr ""
 
 #. frmVCard..Caption
@@ -6438,26 +6413,26 @@ msgid "This chat window is busy. Close anyways?"
 msgstr ""
 
 #. remove from list?
-#: COMController.pas:269
+#: COMController.pas:216
 msgid "Remove this plugin from the list of plugins to be loaded at "
 "startup?"
 msgstr ""
 
-#: COMController.pas:368
+#: COMController.pas:315
 msgid "Plugin could not be created. (%s)"
 msgstr ""
 
-#: COMController.pas:378
+#: COMController.pas:325
 msgid "Plugin class does not support IExodusPlugin. "
 "(%s)"
 msgstr ""
 
-#: COMController.pas:390
+#: COMController.pas:337
 msgid "Plugin class could not be initialized. "
 "(%s)"
 msgstr ""
 
-#: COMController.pas:412
+#: COMController.pas:359
 msgid "Plugin could not be initialized or configured."
 msgstr ""
 
@@ -6960,18 +6935,18 @@ msgid "You must enter a nickname"
 msgstr ""
 
 #. timeout
-#: jud.pas:317
+#: Jud.pas:317
 #. we got an iq-error back
-#: jud.pas:323
+#: Jud.pas:323
 msgid "Could not contact the search agent."
 msgstr ""
 
 #. timeout
-#: jud.pas:426
+#: Jud.pas:426
 msgid "The search timed out."
 msgstr ""
 
-#: jud.pas:455
+#: Jud.pas:455
 msgid "No Results were found."
 msgstr ""
 
@@ -7810,44 +7785,44 @@ msgstr ""
 msgid "frmPrefFont"
 msgstr ""
 
-#. frmPrefFont..Label22..Caption
+#. frmPrefFont..lblRoster..Caption
 #: prefs/PrefFont.dfm:15
 msgid "Roster Window"
 msgstr ""
 
-#. frmPrefFont..Label23..Caption
-#: prefs/PrefFont.dfm:28
+#. frmPrefFont..lblChat..Caption
+#: prefs/PrefFont.dfm:22
 msgid "Chat Windows"
 msgstr ""
 
 #. frmPrefFont..Label24..Caption
-#: prefs/PrefFont.dfm:41
+#: prefs/PrefFont.dfm:29
 msgid "Background Color:"
 msgstr ""
 
 #. frmPrefFont..Label25..Caption
-#: prefs/PrefFont.dfm:48
+#: prefs/PrefFont.dfm:36
 msgid "Font Color:"
 msgstr ""
 
 #. frmPrefFont..Label5..Caption
-#: prefs/PrefFont.dfm:55
+#: prefs/PrefFont.dfm:43
 msgid "Click on the appropriate font or window to change "
 "elements."
 msgstr ""
 
 #. frmPrefFont..lblColor..Caption
-#: prefs/PrefFont.dfm:62
+#: prefs/PrefFont.dfm:50
 msgid "Element Name"
 msgstr ""
 
 #. frmPrefFont..btnFont..Caption
-#: prefs/PrefFont.dfm:118
+#: prefs/PrefFont.dfm:100
 msgid "Change Font"
 msgstr ""
 
 #. frmPrefFont..pnlHeader..Caption
-#: prefs/PrefFont.dfm:220
+#: prefs/PrefFont.dfm:202
 msgid "Fonts and Colors"
 msgstr ""
 
@@ -7866,40 +7841,40 @@ msgstr ""
 msgid "Default Group:"
 msgstr ""
 
-#. frmPrefGroups..lblFilter....AutoSize
-#: prefs/PrefGroups.dfm:32
+#. frmPrefGroups..lblFilter....Height
+#: prefs/PrefGroups.dfm:31
 msgid "When showing only online contacts, visible contacts must be at "
 "least:"
 msgstr ""
 
 #. frmPrefGroups..chkSort..Caption
-#: prefs/PrefGroups.dfm:56
+#: prefs/PrefGroups.dfm:55
 msgid "Sort Contacts by their availability"
 msgstr ""
 
 #. frmPrefGroups..chkCollapsed..Caption
-#: prefs/PrefGroups.dfm:78
+#: prefs/PrefGroups.dfm:77
 msgid "Collapse all roster groups initially."
 msgstr ""
 
 #. frmPrefGroups..chkGroupCounts..Caption
-#: prefs/PrefGroups.dfm:86
+#: prefs/PrefGroups.dfm:85
 msgid "Show group counts in roster (eg, 5/10)"
 msgstr ""
 
 #. frmPrefGroups..chkOfflineGrp..Caption
-#: prefs/PrefGroups.dfm:94
+#: prefs/PrefGroups.dfm:93
 msgid "Show offline contacts in an Offline "
 "group"
 msgstr ""
 
 #. frmPrefGroups..chkOnlineOnly..Caption
-#: prefs/PrefGroups.dfm:103
+#: prefs/PrefGroups.dfm:102
 msgid "Only show online contacts"
 msgstr ""
 
 #. frmPrefGroups..pnlHeader..Caption
-#: prefs/PrefGroups.dfm:108
+#: prefs/PrefGroups.dfm:107
 msgid "Roster Group Options"
 msgstr ""
 
@@ -8095,36 +8070,24 @@ msgid "# of Reconnect attempts:"
 msgstr ""
 
 #. frmPrefNetwork..GroupBox1..Label3..Caption
-#: prefs/PrefNetwork.dfm:34
+#: prefs/PrefNetwork.dfm:35
 msgid "Time lapse between attempts:"
 msgstr ""
 
 #. frmPrefNetwork..GroupBox1..Label4..Caption
-#: prefs/PrefNetwork.dfm:41
+#: prefs/PrefNetwork.dfm:43
 msgid "Time is in seconds. Use 0 for a random time "
 "period."
 msgstr ""
 
 #. frmPrefNetwork..GroupBox2..Caption
-#: prefs/PrefNetwork.dfm:82
+#: prefs/PrefNetwork.dfm:83
 msgid "HTTP Proxy"
 msgstr ""
 
 #. frmPrefNetwork..GroupBox2..Label28..Caption
-#: prefs/PrefNetwork.dfm:121
+#: prefs/PrefNetwork.dfm:126
 msgid "Approach:"
-msgstr ""
-
-#. frmPrefNetwork..GroupBox2..cboProxyApproach..Text
-#: prefs/PrefNetwork.dfm:175
-#. frmPrefNetwork..GroupBox2..cboProxyApproach....Items.WideStrings
-#: prefs/PrefNetwork.dfm:178
-msgid "Use IE settings"
-msgstr ""
-
-#. frmPrefNetwork..GroupBox2..cboProxyApproach....Items.WideStrings
-#: prefs/PrefNetwork.dfm:179
-msgid "Direct Connection"
 msgstr ""
 
 #. frmPrefNotify..Caption
@@ -8143,92 +8106,92 @@ msgid "Configure Sounds..."
 msgstr ""
 
 #. frmPrefNotify..pnlHeader..Caption
-#: prefs/PrefNotify.dfm:30
+#: prefs/PrefNotify.dfm:24
 msgid "Notification Options"
 msgstr ""
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
-#: prefs/PrefNotify.dfm:40
+#: prefs/PrefNotify.dfm:34
 msgid "Contact is online"
 msgstr ""
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
-#: prefs/PrefNotify.dfm:41
+#: prefs/PrefNotify.dfm:35
 msgid "Contact is offline"
 msgstr ""
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
-#: prefs/PrefNotify.dfm:42
+#: prefs/PrefNotify.dfm:36
 msgid "New chat session"
 msgstr ""
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
-#: prefs/PrefNotify.dfm:43
+#: prefs/PrefNotify.dfm:37
 msgid "Normal Messages"
 msgstr ""
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
-#: prefs/PrefNotify.dfm:44
+#: prefs/PrefNotify.dfm:38
 msgid "Subscription Requests"
 msgstr ""
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
-#: prefs/PrefNotify.dfm:45
+#: prefs/PrefNotify.dfm:39
 msgid "Conference Invites"
 msgstr ""
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
-#: prefs/PrefNotify.dfm:46
+#: prefs/PrefNotify.dfm:40
 msgid "Keywords (Conf. Rooms)"
 msgstr ""
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
-#: prefs/PrefNotify.dfm:47
+#: prefs/PrefNotify.dfm:41
 msgid "Chat window activity"
 msgstr ""
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
-#: prefs/PrefNotify.dfm:48
+#: prefs/PrefNotify.dfm:42
 msgid "Conf. Room activity"
 msgstr ""
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
-#: prefs/PrefNotify.dfm:50
+#: prefs/PrefNotify.dfm:44
 msgid "Auto Response generated"
 msgstr ""
 
-#. frmPrefNotify..optNotify..chkFront..Caption
-#: prefs/PrefNotify.dfm:93
-msgid "Bring window to front"
-msgstr ""
-
 #. frmPrefNotify..chkSound..Caption
-#: prefs/PrefNotify.dfm:103
+#: prefs/PrefNotify.dfm:53
 msgid "Use sound notifications"
 msgstr ""
 
 #. frmPrefNotify..chkNotifyActive....Height
-#: prefs/PrefNotify.dfm:114
+#: prefs/PrefNotify.dfm:64
 msgid "NOTE: Notifications always occur when Exodus is in the "
 "background."
 msgstr ""
 
 #. frmPrefNotify..chkNotifyActive..Caption
-#: prefs/PrefNotify.dfm:115
+#: prefs/PrefNotify.dfm:65
 msgid "Perform notifications when I am using "
 "Exodus."
 msgstr ""
 
 #. frmPrefNotify..chkFlashInfinite..Caption
-#: prefs/PrefNotify.dfm:125
+#: prefs/PrefNotify.dfm:75
 msgid "Flash taskbar continuously until Exodus gets "
 "focus."
 msgstr ""
 
 #. frmPrefNotify..chkNotifyActiveWindow..Caption
-#: prefs/PrefNotify.dfm:135
+#: prefs/PrefNotify.dfm:85
 msgid "Perform notifications for the window I'm typing "
 "in."
+msgstr ""
+
+#. frmPrefNotify..optNotify..chkFront..Caption
+#: prefs/PrefNotify.dfm:127
+msgid "Bring window to front"
 msgstr ""
 
 #. frmPrefPanel..Caption
@@ -8257,27 +8220,27 @@ msgid "Re-Scan this directory for plugins"
 msgstr ""
 
 #. frmPrefPlugins..pnlHeader..Caption
-#: prefs/PrefPlugins.dfm:34
+#: prefs/PrefPlugins.dfm:28
 msgid "Application Plugins"
 msgstr ""
 
 #. frmPrefPlugins..btnConfigPlugin..Caption
-#: prefs/PrefPlugins.dfm:51
+#: prefs/PrefPlugins.dfm:45
 msgid "Configure"
 msgstr ""
 
 #. frmPrefPlugins..lstPlugins......Caption
-#: prefs/PrefPlugins.dfm:91
+#: prefs/PrefPlugins.dfm:85
 msgid "Plugin"
 msgstr ""
 
 #. frmPrefPlugins..lstPlugins......Caption
-#: prefs/PrefPlugins.dfm:95
+#: prefs/PrefPlugins.dfm:89
 msgid "Description"
 msgstr ""
 
 #. frmPrefPlugins..lstPlugins......Caption
-#: prefs/PrefPlugins.dfm:99
+#: prefs/PrefPlugins.dfm:93
 msgid "Filename"
 msgstr ""
 
@@ -8296,48 +8259,48 @@ msgstr ""
 msgid "Defaults"
 msgstr ""
 
-#. frmPrefPresence..GroupBox1..txtCPPriority..Hint
-#: prefs/PrefPresence.dfm:151
-#. frmPrefPresence..GroupBox1..spnPriority..Hint
-#: prefs/PrefPresence.dfm:163
-msgid "Priority of -1 uses current priority."
-msgstr ""
-
 #. frmPrefPresence..Panel1..Label8..Caption
-#: prefs/PrefPresence.dfm:194
+#: prefs/PrefPresence.dfm:84
 msgid "Presence tracking in chat windows and "
 "rooms"
 msgstr ""
 
 #. frmPrefPresence..Panel1..Label1..Caption
-#: prefs/PrefPresence.dfm:201
+#: prefs/PrefPresence.dfm:91
 msgid "Custom Presence Entries"
 msgstr ""
 
 #. frmPrefPresence..Panel1..chkPresenceSync..Caption
-#: prefs/PrefPresence.dfm:214
+#: prefs/PrefPresence.dfm:98
 msgid "Synchronize presence of multiple copies of "
 "Exodus"
 msgstr ""
 
 #. frmPrefPresence..Panel1..cboPresTracking....Items.WideStrings
-#: prefs/PrefPresence.dfm:227
+#: prefs/PrefPresence.dfm:111
 msgid "Track all presence changes"
 msgstr ""
 
 #. frmPrefPresence..Panel1..cboPresTracking....Items.WideStrings
-#: prefs/PrefPresence.dfm:228
+#: prefs/PrefPresence.dfm:112
 msgid "Show only last presence change"
 msgstr ""
 
 #. frmPrefPresence..Panel1..cboPresTracking....Items.WideStrings
-#: prefs/PrefPresence.dfm:229
+#: prefs/PrefPresence.dfm:113
 msgid "Don't show any presence changes"
 msgstr ""
 
 #. frmPrefPresence..Panel1..chkClientCaps..Caption
-#: prefs/PrefPresence.dfm:236
+#: prefs/PrefPresence.dfm:120
 msgid "Send client capabilities in presence."
+msgstr ""
+
+#. frmPrefPresence..GroupBox1..txtCPPriority..Hint
+#: prefs/PrefPresence.dfm:205
+#. frmPrefPresence..GroupBox1..spnPriority..Hint
+#: prefs/PrefPresence.dfm:217
+msgid "Priority of -1 uses current priority."
 msgstr ""
 
 #. frmPrefRoster..Caption
@@ -8420,32 +8383,32 @@ msgid "frmPrefSubscription"
 msgstr ""
 
 #. frmPrefSubscription..pnlHeader..Caption
-#: prefs/PrefSubscription.dfm:10
+#: prefs/PrefSubscription.dfm:12
 msgid "Subscription Options"
 msgstr ""
 
 #. frmPrefSubscription..optIncomingS10n..Caption
-#: prefs/PrefSubscription.dfm:18
-msgid "Incoming Behavior "
+#: prefs/PrefSubscription.dfm:19
+msgid "Incoming Behavior"
 msgstr ""
 
-#. frmPrefSubscription..optIncomingS10n....Items.Strings
+#. frmPrefSubscription..optIncomingS10n....Items.WideStrings
 #: prefs/PrefSubscription.dfm:21
 msgid "Ask me for all requests"
 msgstr ""
 
-#. frmPrefSubscription..optIncomingS10n....Items.Strings
+#. frmPrefSubscription..optIncomingS10n....Items.WideStrings
 #: prefs/PrefSubscription.dfm:22
 msgid "Auto-Accept requests from people in my "
 "roster."
 msgstr ""
 
-#. frmPrefSubscription..optIncomingS10n....Items.Strings
+#. frmPrefSubscription..optIncomingS10n....Items.WideStrings
 #: prefs/PrefSubscription.dfm:23
 msgid "Auto-Accept all requests"
 msgstr ""
 
-#. frmPrefSubscription..optIncomingS10n....Items.Strings
+#. frmPrefSubscription..optIncomingS10n....Items.WideStrings
 #: prefs/PrefSubscription.dfm:24
 msgid "Auto-Deny all requests"
 msgstr ""
@@ -8466,67 +8429,67 @@ msgid "Scan for language catalogs"
 msgstr ""
 
 #. frmPrefSystem..Label15..Caption
-#: prefs/PrefSystem.dfm:37
+#: prefs/PrefSystem.dfm:31
 msgid "My default nickname is:"
 msgstr ""
 
 #. frmPrefSystem..pnlHeader..Caption
-#: prefs/PrefSystem.dfm:41
+#: prefs/PrefSystem.dfm:35
 msgid "System Options"
 msgstr ""
 
 #. frmPrefSystem..chkAutoUpdate..Caption
-#: prefs/PrefSystem.dfm:49
+#: prefs/PrefSystem.dfm:43
 msgid "Check for updates automatically"
 msgstr ""
 
 #. frmPrefSystem..chkDebug..Caption
-#: prefs/PrefSystem.dfm:57
+#: prefs/PrefSystem.dfm:51
 msgid "Start with Debug visible"
 msgstr ""
 
 #. frmPrefSystem..chkAutoLogin..Caption
-#: prefs/PrefSystem.dfm:65
+#: prefs/PrefSystem.dfm:59
 msgid "Automatically login with last profile"
 msgstr ""
 
 #. frmPrefSystem..chkCloseMin..Caption
-#: prefs/PrefSystem.dfm:73
+#: prefs/PrefSystem.dfm:67
 msgid "Close button minimizes to the tray"
 msgstr ""
 
 #. frmPrefSystem..chkAutoStart..Caption
-#: prefs/PrefSystem.dfm:81
+#: prefs/PrefSystem.dfm:75
 msgid "Run Exodus when windows starts"
 msgstr ""
 
 #. frmPrefSystem..chkOnTop..Caption
-#: prefs/PrefSystem.dfm:89
+#: prefs/PrefSystem.dfm:83
 msgid "Exodus is always on top"
 msgstr ""
 
 #. frmPrefSystem..chkToolbox..Caption
-#: prefs/PrefSystem.dfm:98
+#: prefs/PrefSystem.dfm:92
 msgid "Small Titlebar for Exodus window"
 msgstr ""
 
 #. frmPrefSystem..btnUpdateCheck..Caption
-#: prefs/PrefSystem.dfm:106
+#: prefs/PrefSystem.dfm:100
 msgid "Check Now"
 msgstr ""
 
 #. frmPrefSystem..chkSingleInstance..Caption
-#: prefs/PrefSystem.dfm:116
+#: prefs/PrefSystem.dfm:110
 msgid "Only allow a single instance of Exodus"
 msgstr ""
 
 #. frmPrefSystem..chkStartMin..Caption
-#: prefs/PrefSystem.dfm:124
+#: prefs/PrefSystem.dfm:118
 msgid "Start minimized to the system tray"
 msgstr ""
 
 #. frmPrefSystem..cboLocale....Items.WideStrings
-#: prefs/PrefSystem.dfm:136
+#: prefs/PrefSystem.dfm:130
 msgid "English (American)"
 msgstr ""
 
@@ -8540,85 +8503,85 @@ msgstr ""
 msgid "File transfer download directory:"
 msgstr ""
 
-#. frmPrefTransfer..Label2..Caption
+#. frmPrefTransfer..lblDefault..Caption
 #: prefs/PrefTransfer.dfm:23
 msgid "Reset all file transfer options to defaults"
 msgstr ""
 
 #. frmPrefTransfer..TntLabel2..Caption
-#: prefs/PrefTransfer.dfm:37
+#: prefs/PrefTransfer.dfm:31
 msgid "Send file using this method:"
 msgstr ""
 
 #. frmPrefTransfer..pnlHeader..Caption
-#: prefs/PrefTransfer.dfm:41
+#: prefs/PrefTransfer.dfm:35
 msgid "File Transfer Options"
 msgstr ""
 
 #. frmPrefTransfer..grpWebDav..Label3..Caption
-#: prefs/PrefTransfer.dfm:56
+#: prefs/PrefTransfer.dfm:50
 msgid "Web Host:"
 msgstr ""
 
 #. frmPrefTransfer..grpWebDav..Label5..Caption
-#: prefs/PrefTransfer.dfm:70
+#: prefs/PrefTransfer.dfm:64
 msgid "Web Path:"
 msgstr ""
 
 #. frmPrefTransfer..grpWebDav..Label6..Caption
-#: prefs/PrefTransfer.dfm:77
+#: prefs/PrefTransfer.dfm:71
 msgid "Example: /~foo/public_html"
 msgstr ""
 
 #. frmPrefTransfer..grpWebDav..Label9..Caption
-#: prefs/PrefTransfer.dfm:98
+#: prefs/PrefTransfer.dfm:92
 msgid "Example: http://dav.server.com"
 msgstr ""
 
 #. frmPrefTransfer..grpPeer..Label1..Caption
-#: prefs/PrefTransfer.dfm:165
+#: prefs/PrefTransfer.dfm:159
 msgid "Port to use for HTTP file transfers:"
 msgstr ""
 
 #. frmPrefTransfer..grpPeer..chkIP..Caption
-#: prefs/PrefTransfer.dfm:179
+#: prefs/PrefTransfer.dfm:173
 msgid "Use a custom IP address for HTTP transfers"
 msgstr ""
 
 #. frmPrefTransfer..cboXferMode....Items.WideStrings
-#: prefs/PrefTransfer.dfm:201
+#: prefs/PrefTransfer.dfm:195
 msgid "Discover a file transfer component using my "
 "server."
 msgstr ""
 
 #. frmPrefTransfer..cboXferMode....Items.WideStrings
-#: prefs/PrefTransfer.dfm:202
+#: prefs/PrefTransfer.dfm:196
 msgid "Always use a specific file transfer "
 "component."
 msgstr ""
 
 #. frmPrefTransfer..cboXferMode....Items.WideStrings
-#: prefs/PrefTransfer.dfm:203
+#: prefs/PrefTransfer.dfm:197
 msgid "Send files directly from my machine to the "
 "recipient."
 msgstr ""
 
 #. frmPrefTransfer..cboXferMode....Items.WideStrings
-#: prefs/PrefTransfer.dfm:204
+#: prefs/PrefTransfer.dfm:198
 msgid "Use a web server to host the files which I "
 "send."
 msgstr ""
 
 #. frmPrefTransfer..grpProxy..TntLabel1..Caption
-#: prefs/PrefTransfer.dfm:217
+#: prefs/PrefTransfer.dfm:211
 msgid "Jabber Address of File Transfer Server:"
 msgstr ""
 
-#: prefs/PrefFont.pas:111
+#: prefs/PrefFont.pas:112
 #. Select the chat window
-#: prefs/PrefFont.pas:200
+#: prefs/PrefFont.pas:201
 #. find the "thing" that we clicked on in the window..
-#: prefs/PrefFont.pas:257
+#: prefs/PrefFont.pas:258
 msgid "Roster Font and Background"
 msgstr ""
 
@@ -8650,14 +8613,14 @@ msgid "Your IE proxy settings won't help, since you use an autoconfiguration "
 "manually."
 msgstr ""
 
-#: prefs/PrefNotify.pas:249
+#: prefs/PrefNotify.pas:250
 msgid "Make sure to configure sounds in your Sounds Control Panel using the "
 "hotlink provided."
 msgstr ""
 
-#: prefs/PrefPlugins.pas:156
-#: prefs/PrefPlugins.pas:164
-#: prefs/PrefPlugins.pas:169
+#: prefs/PrefPlugins.pas:157
+#: prefs/PrefPlugins.pas:165
+#: prefs/PrefPlugins.pas:170
 msgid "The plugin could not be registered with "
 "windows."
 msgstr ""
@@ -8667,17 +8630,17 @@ msgstr ""
 msgid "Clear all custom presence entries?"
 msgstr ""
 
-#: prefs/PrefSystem.pas:174
+#: prefs/PrefSystem.pas:175
 msgid "Exodus is set to use a language which is not available on your "
 "system. Resetting language to default."
 msgstr ""
 
-#: prefs/PrefSystem.pas:224
+#: prefs/PrefSystem.pas:225
 msgid "You must exit exodus, and restart it before your new locale settings "
 "will take affect."
 msgstr ""
 
-#: prefs/PrefSystem.pas:260
+#: prefs/PrefSystem.pas:261
 msgid "No new update available."
 msgstr ""
 
