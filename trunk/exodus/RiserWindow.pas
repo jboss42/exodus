@@ -261,7 +261,8 @@ begin
     Self.Close;
 
     // make sure the window handle is still valid
-    if (not IsWindow(_clickHandle)) then exit;
+    if ((_clickHandle <> 0) and (not IsWindow(_clickHandle))) then
+        exit;
 
     // ok, try and raise the window
     if (_clickForm is TfrmDockable) then with TfrmDockable(_clickForm) do begin
@@ -271,6 +272,8 @@ begin
             exit;
         end;
     end;
+    if (_clickForm.WindowState = wsMinimized) then
+        ShowWindow(_clickForm.Handle, SW_SHOWNORMAL);
     _clickForm.Show();
 end;
 

@@ -379,6 +379,7 @@ type
     function getTabForm(tab: TTabSheet): TForm;
     function IsAutoAway(): boolean;
     function IsAutoXA(): boolean;
+    function isMinimized(): boolean;
 
     procedure Startup();
     procedure DoConnect();
@@ -3075,6 +3076,12 @@ procedure TfrmExodus.FormPaint(Sender: TObject);
 begin
     StopTrayAlert();
 end;
+
+function TfrmExodus.isMinimized(): boolean;
+begin
+    Result := (_hidden) or (Self.Windowstate = wsMinimized);
+end;
+
 
 initialization
     sExodusPresence := RegisterWindowMessage('EXODUS_PRESENCE');

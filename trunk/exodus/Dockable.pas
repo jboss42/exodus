@@ -191,7 +191,7 @@ begin
             frmExodus.Tabs.ActivePage := TabSheet;
     end
     else begin
-        if frmExodus.WindowState = wsMinimized then
+        if (frmExodus.isMinimized()) then
             ShowWindow(Handle, SW_SHOWMINNOACTIVE)
         else
             ShowWindow(Handle, SW_SHOWNOACTIVATE);
