@@ -293,12 +293,12 @@ begin
         Result := nil;
         cur := TJabberEntity(_cache.Objects[i]);
         while ((Result = nil) and (cur <> nil)) do begin
-            if ((node = cur.Node) and (cur.Jid.jid = jid)) then begin
+            if ((node = cur.Node) and (cur.Jid.full = jid)) then begin
                 // we found a match
                 Result := cur;
                 break;
             end
-            else if (cur.jid.jid <> jid) then
+            else if (cur.jid.full <> jid) then
                 // we found the next jid, so no match
                 break;
             inc(i);
