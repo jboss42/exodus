@@ -77,7 +77,7 @@ function checkSASLFeatures(feats: TXMLTag): boolean;
 {---------------------------------------}
 implementation
 uses
-    JabberConst, XMLUtils, IdHash;
+    JabberConst, XMLUtils, IdHash, Random;
 
 var
     _best_mech: Widestring;
@@ -240,10 +240,10 @@ var
     azjid: Widestring;
     resp, pass, serv, uname, uri, az, dig, a1, a2, p1, p2, e, c: string;
     pairs: TStringlist;
-    i, v, rands: integer;
     tmp, ha1, ha2, res: T4x4LongWordRecord;
     r: TXMLTag;
     a1s: TMemoryStream;
+    rand: TRandom;
 begin
     if (event <> 'xml') then begin
         _session.SetAuthenticated(false, nil, false);
@@ -253,13 +253,6 @@ begin
     c := _decoder.DecodeString(xml.Data);
     pairs := TStringlist.Create();
     parseNameValues(pairs, c);
-
-    // We should really use some real entropy here instead of this weak-lame-nasty attempt.
-    Randomize();
-    rands := Random(1024);
-    v := rands;
-    for i := 0 to rands do
-        v := Random(1000000);
 
     inc(_nc);
 
@@ -272,7 +265,8 @@ begin
     serv := UTF8Encode(_session.Server);
 
     // Start the insanity.............
-    e := Format('%d:%s:%s', [v, uname, serv]);
+    rand := TRandom.Create();
+    rand.CreateRand(64, e);
     e := _encoder.Encode(e);
     res := _hasher.HashValue(e);
     _cnonce := Lowercase(_hasher.AsHex(res));
@@ -360,6 +354,7 @@ begin
     r := TXMLTag.Create('response');
     r.setAttribute('xmlns', XMLNS_XMPP_SASL);
     _session.SendTag(r);
+    xml.setAttribute('foo', 'bar');
 end;
 
 {---------------------------------------}
