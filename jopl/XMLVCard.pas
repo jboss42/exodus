@@ -112,7 +112,7 @@ begin
 
     element := tag.GetFirstTag('STREET');
     if element <> nil then Street := element.Data;
-    element := tag.GetFirstTag('EXTADR');
+    element := tag.GetFirstTag('EXTADD');
     if element <> nil then ExtAdr := element.Data;
     element := tag.GetFirstTag('LOCALITY');
     if element <> nil then Locality := element.Data;
@@ -143,7 +143,7 @@ begin
     if Street <> '' then
         tag.AddBasicTag('STREET', Street);
     if ExtAdr <> '' then
-        tag.AddBasictag('EXTADR', ExtAdr);
+        tag.AddBasictag('EXTADD', ExtAdr);
     if Locality <> '' then
         tag.AddBasicTag('LOCALITY', Locality);
     if Region <> '' then
