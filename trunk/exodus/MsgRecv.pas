@@ -190,6 +190,10 @@ begin
     txtMsg.Color := TColor(MainSession.Prefs.getInt('color_bg'));
     AssignDefaultFont(MsgOut.Font);
     MsgOut.Color := TColor(MainSession.Prefs.getInt('color_bg'));
+
+    AssignDefaultFont(txtSubject.Font);
+    AssignDefaultFont(txtSendSubject.Font);
+
     Self.ClientHeight := 200;
     recips := TStringlist.Create();
 end;
