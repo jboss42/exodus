@@ -405,7 +405,7 @@ begin
     pt := MainSession.Prefs.getInt('pres_tracking');
     if (pt = 2) then exit;
 
-    if (pt = 1) then begin
+    if ((pt = 1) and (_content <> nil)) then begin
         // if previous is a presence, replace with this one.
         tags := _content.children as IHTMLElementCollection;
         if (tags.length > 0) then begin
