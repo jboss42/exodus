@@ -66,7 +66,7 @@ object frmLogin: TfrmLogin
     Width = 150
     Height = 21
     ItemHeight = 13
-    TabOrder = 1
+    TabOrder = 3
     Text = 'jabber.org'
     Items.Strings = (
       'jabber.org'
@@ -79,7 +79,7 @@ object frmLogin: TfrmLogin
     Height = 37
     Align = alBottom
     AutoScroll = False
-    TabOrder = 5
+    TabOrder = 8
     inherited Bevel1: TBevel
       Width = 238
     end
@@ -107,7 +107,7 @@ object frmLogin: TfrmLogin
     Width = 97
     Height = 15
     Caption = 'In&visible'
-    TabOrder = 3
+    TabOrder = 6
   end
   object btnDetails: TButton
     Left = 65
@@ -115,7 +115,7 @@ object frmLogin: TfrmLogin
     Width = 75
     Height = 23
     Caption = '&Details...'
-    TabOrder = 4
+    TabOrder = 7
     OnClick = btnDetailsClick
   end
   object chkSavePasswd: TCheckBox
@@ -124,14 +124,14 @@ object frmLogin: TfrmLogin
     Width = 127
     Height = 17
     Caption = 'Save pass&word'
-    TabOrder = 2
+    TabOrder = 5
   end
   object txtUsername: TTntEdit
     Left = 66
     Top = 29
     Width = 151
     Height = 21
-    TabOrder = 6
+    TabOrder = 1
   end
   object txtPassword: TTntEdit
     Left = 66
@@ -139,7 +139,7 @@ object frmLogin: TfrmLogin
     Width = 151
     Height = 21
     PasswordChar = '*'
-    TabOrder = 7
+    TabOrder = 2
   end
   object cboResource: TTntComboBox
     Left = 65
@@ -147,7 +147,7 @@ object frmLogin: TfrmLogin
     Width = 152
     Height = 21
     ItemHeight = 13
-    TabOrder = 8
+    TabOrder = 4
   end
   object popProfiles: TPopupMenu
     Left = 8
