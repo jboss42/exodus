@@ -1,11 +1,13 @@
 inherited fIEMsgList: TfIEMsgList
-  object Browser: TWebBrowser
+  object browser: TWebBrowser
     Left = 0
     Top = 0
     Width = 242
     Height = 143
     Align = alClient
     TabOrder = 0
+    OnEnter = browserEnter
+    OnDocumentComplete = browserDocumentComplete
     ControlData = {
       4C00000003190000C80E00000000000000000000000000000000000000000000
       000000004C000000000000000000000001000000E0D057007335CF11AE690800

@@ -23,6 +23,7 @@ program Exodus;
 {%File 'README.txt'}
 {%File '..\todo.txt'}
 {$R 'version.res' 'version.rc'}
+{$R 'iehtml.res' 'iehtml.rc'}
 {%File 'defaults.xml'}
 
 {$ifdef VER150}
@@ -172,7 +173,9 @@ uses
   NetMeetingFix in 'NetMeetingFix.pas',
   BaseMsgList in 'BaseMsgList.pas' {fBaseMsgList: TFrame},
   RTFMsgList in 'RTFMsgList.pas' {fRTFMsgList: TFrame},
-  IEMsgList in 'IEMsgList.pas' {fBaseMsgList1: TFrame};
+  IEMsgList in 'IEMsgList.pas' {fBaseMsgList1: TFrame},
+  MSHTMLEvents in 'MSHTMLEvents.pas',
+  Emote in 'Emote.pas';
 
 {$R *.TLB}
 

@@ -463,6 +463,7 @@ interface
 
 uses
  Classes, // TStrings in Split method
+ Unicode, // TWideStrings in Split method
  SysUtils; // Exception
 
 type
@@ -814,7 +815,7 @@ endp : array [0 .. NSUBEXP - 1] of PRegExprChar; // founded expr end points
     // Example: 'a$12bc' -> 'a<Match[12]>bc'
     // 'a${1}2bc' -> 'a<Match[1]>2bc'.
 
-    procedure Split (AInputStr : RegExprString; APieces : TStrings);
+    procedure Split (AInputStr : RegExprString; APieces : TWideStrings);
     // Split AInputStr into APieces by r.e. occurencies
     // Internally calls Exec[Next]
 
@@ -926,7 +927,7 @@ function ExecRegExpr (const ARegExpr, AInputStr : RegExprString) : boolean;
 // true if string AInputString match regular expression ARegExpr
 // ! will raise exeption if syntax errors in ARegExpr
 
-procedure SplitRegExpr (const ARegExpr, AInputStr : RegExprString; APieces : TStrings);
+procedure SplitRegExpr (const ARegExpr, AInputStr : RegExprString; APieces : TWideStrings);
 // Split AInputStr into APieces by r.e. ARegExpr occurencies
 
 function ReplaceRegExpr (const ARegExpr, AInputStr, AReplaceStr : RegExprString;
@@ -949,7 +950,7 @@ function QuoteRegExprMetaChars (const AStr : RegExprString) : RegExprString;
 // user input
 
 function RegExprSubExpressions (const ARegExpr : string;
- ASubExprs : TStrings; AExtendedSyntax : boolean{$IFDEF D4_}= False{$ENDIF}) : integer;
+ ASubExprs : TWideStrings; AExtendedSyntax : boolean{$IFDEF D4_}= False{$ENDIF}) : integer;
 // Makes list of subexpressions found in ARegExpr r.e.
 // In ASubExps every item represent subexpression,
 // from first to last, in format:
@@ -1084,7 +1085,7 @@ function ExecRegExpr (const ARegExpr, AInputStr : RegExprString) : boolean;
  end; { of function ExecRegExpr
 --------------------------------------------------------------}
 
-procedure SplitRegExpr (const ARegExpr, AInputStr : RegExprString; APieces : TStrings);
+procedure SplitRegExpr (const ARegExpr, AInputStr : RegExprString; APieces : TWideStrings);
  var r : TRegExpr;
  begin
   APieces.Clear;
@@ -1136,7 +1137,7 @@ function QuoteRegExprMetaChars (const AStr : RegExprString) : RegExprString;
 --------------------------------------------------------------}
 
 function RegExprSubExpressions (const ARegExpr : string;
- ASubExprs : TStrings; AExtendedSyntax : boolean{$IFDEF D4_}= False{$ENDIF}) : integer;
+ ASubExprs : TWideStrings; AExtendedSyntax : boolean{$IFDEF D4_}= False{$ENDIF}) : integer;
  type
   TStackItemRec =  record //###0.945
     SubExprIdx : integer;
@@ -4036,7 +4037,7 @@ function TRegExpr.Substitute (const ATemplate : RegExprString) : RegExprString;
  end; { of function TRegExpr.Substitute
 --------------------------------------------------------------}
 
-procedure TRegExpr.Split (AInputStr : RegExprString; APieces : TStrings);
+procedure TRegExpr.Split (AInputStr : RegExprString; APieces : TWideStrings);
  var PrevPos : integer;
  begin
   PrevPos := 1;
