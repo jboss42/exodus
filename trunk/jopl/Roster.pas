@@ -589,9 +589,11 @@ begin
         // special case for unfiled
         if (ri.Groups.Count = 0) then begin
             idx := _unfiled.IndexOf(ri.jid.full);
-            if ((idx < 0) and (insert)) then
-                _unfiled.AddObject(ri.jid.full, pres)
-            else if (insert) then
+            if (idx < 0) then
+                idx := _unfiled.Add(ri.jid.full);
+
+            assert(idx < _unfiled.Count);
+            if (insert) then
                 _unfiled.Objects[idx] := pres
             else
                 _unfiled.Objects[idx] := nil;
@@ -611,8 +613,10 @@ begin
             idx := grp_list.IndexOf(ri.jid.full);
 
             // this jid isn't in the grp list.. assert here?
-            if ((idx < 0) and (insert)) then idx := grp_list.add(ri.jid.full);
+            if ((idx < 0) and (insert)) then
+                idx := grp_list.add(ri.jid.full);
 
+            assert(idx < grp_list.Count);
             if (insert) then
                 grp_list.Objects[idx] := pres
             else
