@@ -84,7 +84,7 @@ Var STARTMENU_FOLDER
 !insertmacro MUI_PAGE_LICENSE "GPL-LICENSE.TXT"
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
-!insertmacro MUI_PAGE_STARTMENU APPLICATION $STARTMENU_FOLDER 
+!insertmacro MUI_PAGE_STARTMENU Application $STARTMENU_FOLDER 
 Page custom SetCustomShell ;Custom page
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
@@ -325,18 +325,18 @@ Section "" SEC_Menu
     Pop $0
     StrCmp $0 "/S" silent
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
-    CreateDirectory "$SMPROGRAMS\${MUI_STARTMENUPAGE_VARIABLE}"
-    CreateShortCut "$SMPROGRAMS\${MUI_STARTMENUPAGE_VARIABLE}\Uninstall.lnk" \
+    CreateDirectory "$SMPROGRAMS\$STARTMENU_FOLDER"
+    CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Uninstall.lnk" \
         "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
-    CreateShortCut "$SMPROGRAMS\${MUI_STARTMENUPAGE_VARIABLE}\Exodus.lnk" \
+    CreateShortCut "$SMPROGRAMS\$STARTMENU_FOLDER\Exodus.lnk" \
         "$INSTDIR\Exodus.exe" "" "$INSTDIR\Exodus.exe" 0
 
     ; BRANDING: Change this URL
     CreateShortCut \
-        "$SMPROGRAMS\${MUI_STARTMENUPAGE_VARIABLE}\Exodus Homepage.lnk" \
+        "$SMPROGRAMS\$STARTMENU_FOLDER\Exodus Homepage.lnk" \
         "${HOME_URL}"
     WriteRegStr HKCU SOFTWARE\Jabber\Exodus "StartMenu" \
-        "${MUI_STARTMENUPAGE_VARIABLE}"
+        "$STARTMENU_FOLDER"
 
     !insertmacro MUI_STARTMENU_WRITE_END
 
@@ -464,14 +464,14 @@ LangString CUSTOMSHELL_SUBTITLE ${LANG_ENGLISH} \
 ;LicenseData GPL-LICENSE.TXT
 SubCaption 3 ": Exit running Exodus versions!"
 
-!insertmacro MUI_FUNCTIONS_DESCRIPTION_BEGIN
+!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Exodus} $(DESC_Exodus)
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_SSL} $(DESC_SSL)
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Bleed} $(DESC_Bleed)
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Locale} $(DESC_Locale)
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Plugins} $(DESC_Plugins)
     !include plugins\plugin-desc.nsi
-!insertmacro MUI_FUNCTIONS_DESCRIPTION_END
+!insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 ;!insertmacro MUI_SECTIONS_FINISHHEADER
 
