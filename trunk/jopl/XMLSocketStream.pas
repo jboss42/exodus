@@ -41,7 +41,9 @@ type
         _sock_lock: TCriticalSection;
         _ssl_int:   TIdConnectionInterceptOpenSSL;
         _timer:     TTimer;
+        _profile:   TJabberProfile;
 
+        function VerifyPeer(Certificate: TIdX509): Boolean;
         procedure Keepalive(Sender: TObject);
         procedure KillSocket();
 
@@ -231,13 +233,7 @@ begin
     }
     inherited;
 
-    // todo: Create the SSL int. JIT
-    _ssl_int := TIdConnectionInterceptOpenSSL.Create(nil);
-    with _ssl_int do begin
-        SSLOptions.CertFile := '';
-        SSLOptions.RootCertFile := '';
-        end;
-
+    _ssl_int := nil;
     _socket := nil;
     _sock_lock := TCriticalSection.Create();
 
@@ -257,6 +253,11 @@ begin
 
     KillSocket();
     _sock_lock.Free;
+end;
+
+function TXMLSocketStream.VerifyPeer(Certificate: TIdX509): Boolean;
+begin
+    result := true;
 end;
 
 {---------------------------------------}
@@ -331,8 +332,8 @@ begin
             _timer.Enabled := false;
             _active := false;
             _thread := nil;
-            DoCallbacks('disconnected', nil);
             DoCallbacks('commerror', nil);
+            DoCallbacks('disconnected', nil);
             end;
 
         WM_DROPPED: begin
@@ -351,31 +352,43 @@ end;
 {---------------------------------------}
 procedure TXMLSocketStream.Connect(profile: TJabberProfile);
 begin
+    _profile := profile;
+
+    _ssl_int := TIdConnectionInterceptOpenSSL.Create(nil);
+    with _ssl_int do begin
+        // TODO: get certs from profile
+        // TODO: check to see if jpolld can do client certs...
+        // that would be *cool*.
+        SSLOptions.CertFile := '';
+        SSLOptions.RootCertFile := '';
+        OnVerifyPeer := VerifyPeer;
+        end;
+
     // connect to this server
     _socket := TIdTCPClient.Create(nil);
     _socket.Intercept := _ssl_int;
     _socket.RecvBufferSize := 4096;
-    _socket.Port := profile.port;
-    _socket.InterceptEnabled := profile.ssl;
+    _socket.Port := _profile.port;
+    _socket.InterceptEnabled := _profile.ssl;
 
-    _server := profile.Server;
-    if (profile.Host = '') then
-        _socket.Host := profile.Server
+    _server := _profile.Server;
+    if (_profile.Host = '') then
+        _socket.Host := _profile.Server
     else
-        _socket.Host := profile.Host;
+        _socket.Host := _profile.Host;
 
-    if (profile.SocksType <> 0) then begin
+    if (_profile.SocksType <> 0) then begin
         with _socket.SocksInfo do begin
-            case profile.SocksType of
+            case _profile.SocksType of
             1: Version := svSocks4;
             2: Version := svSocks4a;
             3: Version := svSocks5;
             end;
-            Host := profile.Host;
-            Port := profile.Port;
-            if (profile.SocksAuth) then begin
-                UserID := profile.SocksUsername;
-                Password := profile.SocksPassword;
+            Host := _profile.Host;
+            Port := _profile.Port;
+            if (_profile.SocksAuth) then begin
+                UserID := _profile.SocksUsername;
+                Password := _profile.SocksPassword;
                 end;
             end;
         end;
