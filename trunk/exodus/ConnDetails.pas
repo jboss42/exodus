@@ -98,14 +98,14 @@ type
     { Private declarations }
     _profile: TJabberProfile;
 
-    procedure SetSocket(profile: TJabberProfile);
-    procedure GetSocket(profile: TJabberProfile);
-    procedure SetHttp(profile: TJabberProfile);
-    procedure GetHttp(profile: TJabberProfile);
-    procedure SetProfile(profile: TJabberProfile);
-    procedure GetProfile(profile: TJabberProfile);
-    procedure SetConn(profile: TJabberProfile);
-    procedure GetConn(profile: TJabberProfile);
+    procedure RestoreSocket(profile: TJabberProfile);
+    procedure SaveSocket(profile: TJabberProfile);
+    procedure RestoreHttp(profile: TJabberProfile);
+    procedure SaveHttp(profile: TJabberProfile);
+    procedure RestoreProfile(profile: TJabberProfile);
+    procedure SaveProfile(profile: TJabberProfile);
+    procedure RestoreConn(profile: TJabberProfile);
+    procedure SaveConn(profile: TJabberProfile);
 
 
   public
@@ -151,10 +151,10 @@ begin
     with f do begin
         _profile := p;
         f.Caption := WideFormat(_(sConnDetails), [p.Name]);
-        SetProfile(p);
-        SetConn(p);
-        SetHttp(p);
-        SetSocket(p);
+        RestoreProfile(p);
+        RestoreConn(p);
+        RestoreHttp(p);
+        RestoreSocket(p);
         PageControl1.ActivePage := tbsProfile;
     end;
 
@@ -183,14 +183,15 @@ begin
     end;
 
     // save the info...
-    GetProfile(_profile);
-    GetConn(_profile);
+    SaveProfile(_profile);
+    SaveConn(_profile);
 
     if _profile.ConnectionType = conn_normal then
-        GetSocket(_profile)
+        SaveSocket(_profile)
     else
-        GetHttp(_profile);
+        SaveHttp(_profile);
 
+    MainSession.Prefs.SaveProfiles();
     ModalResult := mrOK;
 end;
 
@@ -239,7 +240,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmConnDetails.SetSocket(profile: TJabberProfile);
+procedure TfrmConnDetails.RestoreSocket(profile: TJabberProfile);
 begin
     with profile do begin
         cboSocksType.ItemIndex := SocksType;
@@ -254,7 +255,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmConnDetails.GetSocket(profile: TJabberProfile);
+procedure TfrmConnDetails.SaveSocket(profile: TJabberProfile);
 begin
     with profile do begin
         Host := txtHost.Text;
@@ -271,7 +272,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmConnDetails.SetProfile(profile: TJabberProfile);
+procedure TfrmConnDetails.RestoreProfile(profile: TJabberProfile);
 begin
     with profile do begin
         // populate the fields
@@ -285,7 +286,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmConnDetails.GetProfile(profile: TJabberProfile);
+procedure TfrmConnDetails.SaveProfile(profile: TJabberProfile);
 begin
     with Profile do begin
         // Update the profile
@@ -299,7 +300,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmConnDetails.SetConn(profile: TJabberProfile);
+procedure TfrmConnDetails.RestoreConn(profile: TJabberProfile);
 begin
     with profile do begin
         txtHost.Text := Host;
@@ -317,7 +318,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmConnDetails.GetConn(profile: TJabberProfile);
+procedure TfrmConnDetails.SaveConn(profile: TJabberProfile);
 begin
     with profile do begin
         srv := chkSRV.Checked;
@@ -331,7 +332,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmConnDetails.SetHttp(profile: TJabberProfile);
+procedure TfrmConnDetails.RestoreHttp(profile: TJabberProfile);
 begin
     with profile do begin
         txtURL.Text := URL;
@@ -341,7 +342,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmConnDetails.GetHttp(profile: TJabberProfile);
+procedure TfrmConnDetails.SaveHttp(profile: TJabberProfile);
 begin
     with profile do begin
         URL := txtURL.Text;
