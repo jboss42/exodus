@@ -192,7 +192,7 @@ end;
 procedure TfrmBaseChat.FormActivate(Sender: TObject);
 begin
     inherited;
-    
+
     if (timWinFlash.Enabled) then
         timWinFlash.Enabled := false;
 
@@ -200,7 +200,6 @@ begin
 
     if ((frmEmoticons <> nil) and (frmEmoticons.Visible)) then
         frmEmoticons.Hide;
-
 end;
 
 {---------------------------------------}

@@ -1415,7 +1415,7 @@ function TfrmRosterWindow.RenderGroup(grp: TJabberGroup): TTreeNode;
 var
     n: integer;
     p, grp_node: TTreeNode;
-    path, part, cur_grp: Widestring;
+    sep, path, part, cur_grp: Widestring;
     sub: TJabberGroup;
 begin
     // Show this group node
@@ -1428,8 +1428,8 @@ begin
     path := '';
     repeat
         part := grp.Parts[n];
-        // xxx: grp delimeter
-        if (path <> '') then path := path + '/';
+        sep := MainSession.prefs.getString('group_seperator');
+        if (path <> '') then path := path + sep;
         path := path + part;
         if (n = (grp.NestLevel - 1)) then begin
             // create the final grp
@@ -1868,7 +1868,7 @@ procedure TfrmRosterWindow.treeRosterDragDrop(Sender, Source: TObject; X,
 var
     i,j: integer;
     ritem: TJabberRosterItem;
-    d_grp: Widestring;
+    sep, d_grp: Widestring;
     s_node, d_node: TTreeNode;
     s_grp: TJabberGroup;
     items: TList;
@@ -1907,8 +1907,8 @@ begin
             items := TList.Create();
             TJabberGroup(s_node.Data).getRosterItems(items, false);
 
-            // XXX: grp delimiter
-            d_grp := d_grp + '/' + TJabberGroup(s_node.Data).getText();
+            sep := MainSession.prefs.getString('group_seperator');
+            d_grp := d_grp + sep + TJabberGroup(s_node.Data).getText();
             for j := 0 to items.count - 1 do begin
                 ritem := TJabberRosterItem(items[j]);
                 if (not _drop_copy) then
