@@ -645,16 +645,19 @@ var
     i: integer;
     n: TTreeNode;
     ni: TJabberNodeItem;
-    go: TJabberGroup;
+    cur_grp: Widestring;
 begin
     // expand all nodes except special nodes
     for i := 0 to treeRoster.Items.Count - 1 do begin
         n := treeRoster.Items[i];
         ni := TJabberNodeItem(n.Data);
         assert(ni <> nil);
-        if ((ni is TJabberGroup) and (n <> _offline)) then begin
-            go := TJabberGroup(ni);
-            if (_collapsed_grps.indexOf(go.FullName) = -1) then
+        if ((ni is TJabberGroup) or (ni is TJabberNest) and (n <> _offline)) then begin
+            if (ni is TJabberGroup) then
+                cur_grp := TJabberGroup(ni).Fullname
+            else
+                cur_grp := ni.getText();
+            if (_collapsed_grps.indexOf(cur_grp) = -1) then
                 n.Expand(true);
         end;
     end;
@@ -1313,19 +1316,61 @@ end;
 {---------------------------------------}
 function TfrmRosterWindow.RenderGroup(grp: TJabberGroup): TTreeNode;
 var
-    grp_node: TTreeNode;
-    cur_grp: Widestring;
+    n: integer;
+    p, grp_node: TTreeNode;
+    part, cur_grp: Widestring;
+    nest: TJabberNest;
+    ni: TJabberNodeItem;
 begin
     // Show this group node
     cur_grp := grp.getText();
 
     treeRoster.Items.BeginUpdate();
-    grp_node := treeRoster.Items.AddChild(nil, cur_grp);
-    grp.Data := grp_node;
 
-    grp_node.Data := grp;
-    grp_node.ImageIndex := ico_Right;
-    grp_node.SelectedIndex := ico_Right;
+    n := 0;
+    p := nil;
+    grp_node := nil;
+    nest := nil;
+    repeat
+        part := grp.Parts[n];
+        if (n = (grp.NestLevel - 1)) then begin
+            // create the actual grp
+            grp_node := treeRoster.Items.AddChild(p, part);
+            grp_node.Data := grp;
+        end
+        else if (n = 0) then begin
+            // first nest level
+            nest := MainSession.Roster.addNest(part);
+            if (nest.Data = nil) then begin
+                grp_node := treeRoster.Items.AddChild(nil, part);
+                grp_node.Data := nest;
+                nest.Data := grp_node;
+            end
+            else
+                grp_node := TTreeNode(nest.Data);
+        end
+        else begin
+            // another nest level.
+            ni := TJabberNodeItem(nest.getChild(part));
+            if (ni = nil) then begin
+                ni := TJabberNest.Create(nest, part);
+                nest.AddChild(ni);
+            end;
+            nest := TJabberNest(ni);
+            if (nest.Data = nil) then begin
+                grp_node := treeRoster.Items.AddChild(grp_node, part);
+                grp_node.Data := nest;
+                nest.Data := grp_node;
+            end;
+        end;
+
+        p := grp_node;
+        grp_node.ImageIndex := ico_Right;
+        grp_node.SelectedIndex := ico_Right;
+        inc(n);
+    until (n = grp.NestLevel);
+
+    grp.Data := grp_node;
     treeRoster.AlphaSort(true);
     treeRoster.Items.EndUpdate();
 
@@ -1385,6 +1430,9 @@ begin
     // For groups just display the group name:
     if (Node.Data = nil) then begin
         _hint_text := '';
+    end
+    else if (TObject(Node.Data) is TJabberNest) then begin
+        _hint_text := TJabberNest(Node.Data).getText();
     end
     else if (TObject(Node.Data) is TJabberGroup) then begin
         _hint_text := TJabberGroup(Node.Data).getText();
@@ -1539,10 +1587,11 @@ procedure TfrmRosterWindow.treeRosterCollapsed(Sender: TObject;
 var
     go: TJabberGroup;
 begin
-    if Node.Data = nil then begin
+    if (Node.Data = nil) then exit;
+
+    if (TObject(Node.Data) is TJabberGroup) then begin
         Node.ImageIndex := ico_Right;
         Node.SelectedIndex := ico_Right;
-        if (Node.Data = nil) then exit;
         if (TObject(Node.Data) is TJabberGroup) then
             go := TJabberGroup(Node.Data)
         else
@@ -1552,6 +1601,7 @@ begin
             MainSession.Prefs.setStringlist('col_groups', _collapsed_grps);
         end;
     end;
+
 end;
 
 {---------------------------------------}
@@ -1562,7 +1612,8 @@ var
     dirty: boolean;
     go: TJabberGroup;
 begin
-    if (TObject(Node.Data) is TJabberGroup) then begin
+    if ((TObject(Node.Data) is TJabberGroup) or
+        (TObject(Node.Data) is TJabberNest)) then begin
         go := TJabberGroup(Node.Data);
         Node.ImageIndex := ico_Down;
         Node.SelectedIndex := ico_Down;
@@ -1584,6 +1635,7 @@ end;
 procedure TfrmRosterWindow.treeRosterMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
+    al, ar: integer;
     n: TTreeNode;
 begin
     // check to see if we're hitting a button
@@ -1597,8 +1649,12 @@ begin
     end;
 
     // xxx: indent
-    if ((TObject(n.Data) is TJabberGroup) and
-        (X < (frmExodus.ImageList2.Width + 5))) then begin
+    al := (treeRoster.Indent * (n.Level));
+    ar := (al + frmExodus.ImageList2.Width + 5);
+    if (((TObject(n.Data) is TJabberGroup) or
+         (TObject(n.Data) is TJabberNest)) and
+        (X > al) and (X < ar)) then begin
+        //(X < (frmExodus.ImageList2.Width + 5))) then begin
         // clicking on a grp's widget
         if n.Expanded then
             n.Collapse(false)
@@ -2099,7 +2155,7 @@ procedure TfrmRosterWindow.treeRosterCustomDrawItem(
   Sender: TCustomTreeView; Node: TTreeNode; State: TCustomDrawState;
   var DefaultDraw: Boolean);
 var
-    cur_grp, c1, c2: WideString;
+    c1, c2: WideString;
     p: TJabberPres;
     ntype: integer;
     go: TJabberGroup;
@@ -2122,16 +2178,26 @@ begin
             (Node = _myres) or
             (go.FullName = _transports) or
             (_sort_roster)) then begin
-            c1 := go.getText() + ' ';
+
+            c1 := go.getText();
             c2 := '(' + IntToStr(Node.Count) + ')';
             DrawNodeText(Node, State, c1, c2);
         end
         else begin
-            cur_grp := go.getText();
-            c1 := cur_grp + ' ';
-            c2 := '(' + IntToStr(go.Online) + '/' + IntToStr(go.Total) + ')';
+            c1 := go.Parts[Node.Level] + ' ';
+            if (Node.Level + 1 = go.NestLevel) then
+                c2 := '(' + IntToStr(go.Online) + '/' + IntToStr(Node.Count) + ')'
+            else
+                c2 := '';
             DrawNodeText(Node, State, c1, c2);
         end;
+        DefaultDraw := false;
+    end
+    else if (o is TJabberNest) then begin
+        treeRoster.Canvas.Font.Style := [fsBold];
+        c1 := TJabberNest(o).getText();
+        c2 := '';
+        DrawNodeText(Node, State, c1, c2);
         DefaultDraw := false;
     end
     else begin

@@ -29,6 +29,25 @@ type
         function getText(): Widestring; virtual; abstract;
     end;
 
+    TJabberNest = class(TJabberNodeItem)
+    private
+        _parent: TJabberNest;
+        _name: Widestring;
+        _grps: TWidestringlist;
+    public
+        Data: TObject;
+        
+        constructor Create(parent: TJabberNest; name: Widestring);
+        destructor Destroy(); override;
+
+        function getText(): Widestring; override;
+        function getChild(name: Widestring): TJabberNodeItem;
+
+        procedure AddChild(child: TJabberNodeItem);
+        procedure removeChild(child: TJabberNodeItem);
+    end;
+
+
     TJabberGroup = class(TJabberNodeItem)
     private
         _online: integer;           // # of users online
@@ -36,15 +55,18 @@ type
         _parts: TWidestringlist;    // parts of the group name, parsed on a delim.
         _jids: TWidestringlist;     // jids of the people in this grp.
 
+        function getNestLevel: integer;
         function getTotal: integer;
         function indexOfJid(jid: TJabberID): integer;
+        function getNestIndex(idx: integer): Widestring;
+        
         procedure setPresence(i: integer; p: TJabberPres); overload;
     public
         Data: TObject;              // Linked to a GUI element for this grp.
 
         constructor create(name: Widestring);
         destructor destroy; override;
-        
+
         function getText(): Widestring; override;
 
         procedure AddJid(jid: Widestring); overload;
@@ -60,11 +82,12 @@ type
 
         procedure getRosterItems(l: TList; online: boolean);
 
+        property NestLevel: integer read getNestLevel;
         property Online: integer read _online;
         property Total: integer read getTotal;
 
         property FullName: Widestring read _full;
-        property Parts: TWidestringlist read _parts;
+        property Parts[index: integer]: Widestring read getNestIndex;
     end;
 
     TJabberRosterItem = class(TJabberNodeItem)
@@ -136,7 +159,68 @@ uses
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
+constructor TJabberNest.Create(parent: TJabberNest; name: Widestring);
+begin
+    inherited Create;
+    _parent := parent;
+    _grps := TWidestringlist.Create();
+    _name := name;
+end;
+
+{---------------------------------------}
+destructor TJabberNest.Destroy();
+begin
+    _grps.Clear();
+    inherited;
+end;
+
+{---------------------------------------}
+function TJabberNest.getText(): Widestring;
+begin
+    Result := _name;
+end;
+
+{---------------------------------------}
+procedure TJabberNest.AddChild(child: TJabberNodeItem);
+var
+    i: integer;
+begin
+    i := _grps.indexOf(child.getText());
+    if (i = -1) then
+        _grps.AddObject(child.getText(), child)
+    else
+        _grps.Objects[i] := child;
+end;
+
+{---------------------------------------}
+function TJabberNest.getChild(name: Widestring): TJabberNodeItem;
+var
+    i: integer;
+begin
+    i := _grps.indexOf(name);
+    if (i = -1) then
+        Result := nil
+    else
+        Result := TJabberNodeItem(_grps.Objects[i]);
+end;
+
+{---------------------------------------}
+procedure TJabberNest.removeChild(child: TJabberNodeItem);
+var
+    i: integer;
+begin
+    i := _grps.indexOf(child.getText());
+    if (i >= 0) then
+        _grps.Delete(i);
+end;
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 constructor TJabberGroup.Create(name: Widestring);
+var
+    l, s, i: integer;
+    p: Widestring;
 begin
     //
     _online := 0;
@@ -145,7 +229,23 @@ begin
     _jids := TWidestringlist.Create();
 
     // xxx: actually parse for nested groups
-    _parts.Add(name);
+    l := Length(name);
+    s := 1;
+    for i := 1 to Length(name) do begin
+        if (name[i] = '/') then begin
+            p := Copy(name, s, (i - s));
+            _parts.Add(p);
+            s := i + 1;
+        end;
+    end;
+
+    // This should take care of the remainder.
+    if (s < l) then begin
+        p := Copy(name, s, l - s + 1);
+        _parts.Add(p);
+    end;
+
+    //_parts.Add(name);
 end;
 
 {---------------------------------------}
@@ -159,6 +259,21 @@ end;
 function TJabberGroup.getTotal: integer;
 begin
     Result := _jids.Count;
+end;
+
+{---------------------------------------}
+function TJabberGroup.getNestIndex(idx: integer): Widestring;
+begin
+    if (idx >= _parts.Count) then
+        Result := ''
+    else
+        Result := _parts[idx];
+end;
+
+{---------------------------------------}
+function TJabberGroup.getNestLevel: integer;
+begin
+    Result := _parts.Count;
 end;
 
 {---------------------------------------}
@@ -272,6 +387,7 @@ begin
         _jids.Objects[i] := p;
 end;
 
+{---------------------------------------}
 procedure TJabberGroup.getRosterItems(l: TList; online: boolean);
 var
     ri: TJabberRosterItem;
