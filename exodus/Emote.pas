@@ -923,11 +923,12 @@ begin
         else if (textile_regex.Match[3] = '~') then
             tag := '\sub'
         else if (textile_regex.Match[3] = '-') then
-            tag := '\ul';
+            tag := '\strike';
 
         result := result + tag + ' ' +
                   textile_regex.Match[3] + EscapeRTF(textile_regex.Match[4]) +
-                  textile_regex.Match[3] + tag + '0 ';
+                  textile_regex.Match[3] + tag + '0 ' +
+                  EscapeRTF(textile_regex.Match[5]);
 
         m := textile_regex.ExecNext();
     end;
