@@ -25,6 +25,9 @@ type
     function getXML: TXMLTag;
   end;
 
+resourcestring
+    sRequired = '(Required)';
+
 implementation
 
 {$R *.dfm}
@@ -39,18 +42,26 @@ var
 begin
     // take a x-data field tag and do the right thing
 
-    lblLabel.Caption := tag.GetAttribute('label');
-    if (lblLabel.Caption = '') then
-        lblLabel.Width := 0
-    else
-        lblLabel.Caption := lblLabel.Caption + ':';
-
-
     fld_var := tag.GetAttribute('var');
     t := tag.GetAttribute('type');
     req := tag.TagExists('required');
     value := tag.GetBasicText('value');
     Self.Hint := tag.GetBasicText('desc');
+    if (req) then begin
+       if (Self.Hint = '') then
+          Self.Hint := sRequired
+       else
+          Self.Hint := Self.Hint + ''#13#10 + sRequired;
+       end;
+
+    lblLabel.Caption := tag.GetAttribute('label');
+    if (lblLabel.Caption = '') then
+        lblLabel.Width := 0
+    else begin
+        lblLabel.Caption := lblLabel.Caption + ':';
+        if (req) then
+           lblLabel.Caption := '* ' + lblLabel.Caption;
+        end;
 
     if ((t = 'text-single') or (t = 'text-private')) then begin
         c := TEdit.Create(Self);
@@ -146,6 +157,10 @@ end;
 function TframeGeneric.isValid: boolean;
 begin
     Result := (not req) or (getValues().Count > 0);
+    if (Result) then
+       lblLabel.Font.Color := clWindowText
+    else
+       lblLabel.Font.Color := clRed;
 end;
 
 function TframeGeneric.getXML: TXMLTag;
