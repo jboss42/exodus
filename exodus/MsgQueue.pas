@@ -22,7 +22,7 @@ unit MsgQueue;
 interface
 
 uses
-    Jabber1, ExEvents, Contnrs,
+    Jabber1, ExEvents, Contnrs, Unicode, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Dockable, ComCtrls, StdCtrls, ExtCtrls, ToolWin, RichEdit2,
     ExRichEdit;
@@ -140,7 +140,7 @@ begin
         end;
 
     ss := TStringlist.Create();
-    ss.Add(s.xml);
+    ss.Add(UTF8Encode(s.xml));
     ss.SaveToFile(fn);
     ss.Free();
     s.Free();
@@ -227,7 +227,7 @@ begin
     else begin
         e := TJabberEvent(_queue[lstEvents.Selected.Index]);
         if ((e <> nil) and (lstEvents.SelCount = 1)) then
-            txtMsg.WideLines.Assign(e.Data);
+            txtMsg.WideText := e.Data.Text;
         end;
 end;
 
@@ -303,7 +303,7 @@ begin
             lstEvents.Selected := lstEvents.Items[first];
             e := TJabberEvent(_queue[first]);
             if ((e <> nil) and (lstEvents.SelCount = 1)) then
-                txtMsg.WideLines.Assign(e.Data);
+                txtMsg.WideText := e.Data.Text;
             end
         else if (lstEvents.Items.Count > 0) then
             lstEvents.Selected := lstEvents.Items[lstEvents.Items.Count - 1];

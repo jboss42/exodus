@@ -21,7 +21,7 @@ unit ExEvents;
 
 interface
 uses
-    XMLTag, WStrList,
+    XMLTag, Unicode,
     Types, SysUtils, Classes;
 
 type

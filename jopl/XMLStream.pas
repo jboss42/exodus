@@ -26,6 +26,7 @@ uses
     XMLUtils,
     XMLParser,
     LibXMLParser,
+    Unicode,
     {$ifdef Win32}
     Messages,
     {$endif}
@@ -101,7 +102,7 @@ type
     TParseThread = class(TIdThread)
     private
         _lock:       TCriticalSection;
-        _indata:     TStringlist;
+        _indata:     TWideStringlist;
         _tag_parser: TXMLTagParser;
         _stream:     TXMLStream;
         _domstack:   TList;
@@ -150,7 +151,7 @@ begin
     _stream := strm;
     _root_tag := root;
     _root_len := Length(_root_tag);
-    _indata := TStringList.Create;
+    _indata := TWideStringList.Create;
     _tag_parser := TXMLTagParser.Create;
     _domstack := TList.Create;
     _lock := TCriticalSection.Create;
@@ -210,7 +211,7 @@ begin
     }
     _lock.Acquire;
     if _indata.Count > 0 then begin
-        Result := _indata[0];
+        Result := _indata.Strings[0];
         _indata.Delete(0);
         end
     else
