@@ -581,8 +581,10 @@ begin
             member.Node := AddMember(member);
 
             // show new user message
-            mtag := newRoomMessage(Format(sNewUser, [member.nick]));
-            showMsg(mtag);
+            if (xtag <> nil) then begin
+              mtag := newRoomMessage(Format(sNewUser, [member.nick]));
+              showMsg(mtag);
+              end;
             end
         else begin
             member := TRoomMember(_roster.Objects[i]);
