@@ -300,8 +300,9 @@ begin
     AddEmot('x-(', msn, 39);
     AddEmot('({)', msn, 12);     // hug right
     AddEmot('(})', msn, 13);     // hug left
-    AddEmot(':''(', msn, 11);   // cry
-    AddEmot(';''(', msn, 11);
+    AddEmot(':''(', y, 14);   // cry
+    AddEmot(';''(', y, 14);
+    AddEmot(':cry', y, 14);
     AddEmot('(&)', msn, 7);      // dog
     AddEmot('(~)', msn, 14);     // movie
     AddEmot('(R)', msn, 30);     // Rainbow
