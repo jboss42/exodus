@@ -105,7 +105,8 @@ uses
   Langs in '..\jopl\Langs.pas',
   Unicode in '..\jopl\Unicode.pas',
   InvalidRoster in 'InvalidRoster.pas' {frmInvalidRoster},
-  AutoUpdate in 'AutoUpdate.pas';
+  AutoUpdate in 'AutoUpdate.pas',
+  AutoUpdateStatus in 'AutoUpdateStatus.pas' {frmAutoUpdateStatus};
 
 {$R *.RES}
 
