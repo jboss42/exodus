@@ -1795,6 +1795,7 @@ var
     ritem: TJabberRosterItem;
     d_grp: Widestring;
     s_node, d_node: TTreeNode;
+    s_grp: TJabberGroup;
     items: TList;
 begin
 
@@ -1822,9 +1823,15 @@ begin
     for i := 0 to treeRoster.SelectionCount - 1 do begin
         s_node := treeRoster.Selections[i];
         if (TObject(s_node.Data) is TJabberGroup) then begin
+            s_grp := TJabberGroup(s_node.Data);
+            // Make sure we're not dropping on ourself.
+            if (d_grp = s_grp.FullName) then exit;
+            if (TJabberGroup(d_node.Data) = s_grp.parent) then exit;
+
             // move all the items a new subgrp in this grp.
             items := TList.Create();
             TJabberGroup(s_node.Data).getRosterItems(items, false);
+
             // XXX: grp delimiter
             d_grp := d_grp + '/' + TJabberGroup(s_node.Data).getText();
             for j := 0 to items.count - 1 do begin

@@ -80,6 +80,7 @@ type
 
         property FullName: Widestring read _full;
         property Parts[index: integer]: Widestring read getNestIndex;
+        property Parent: TJabberGroup read _parent;
     end;
 
     TJabberRosterItem = class(TJabberNodeItem)
