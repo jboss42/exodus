@@ -14,6 +14,7 @@ object frmTransfer: TfrmTransfer
   OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object pnlFrom: TPanel
@@ -232,24 +233,35 @@ object frmTransfer: TfrmTransfer
   end
   object httpServer: TIdHTTPServer
     Bindings = <>
+    CommandHandlers = <>
     DefaultPort = 5280
+    Greeting.NumericCode = 0
+    MaxConnectionReply.NumericCode = 0
     OnConnect = httpServerConnect
     OnDisconnect = httpServerDisconnect
-    OnCommandGet = httpServerCommandGet
+    ReplyExceptionCode = 0
+    ReplyTexts = <>
+    ReplyUnknownCommand.NumericCode = 0
     AutoStartSession = True
     Left = 184
     Top = 32
   end
   object httpClient: TIdHTTP
+    MaxLineAction = maException
     OnWork = httpClientWork
     OnWorkBegin = httpClientWorkBegin
     OnWorkEnd = httpClientWorkEnd
-    Request.Accept = 'text/html, */*'
+    AllowCookies = True
+    ProxyParams.BasicAuthentication = False
+    ProxyParams.ProxyPort = 0
     Request.ContentLength = 0
     Request.ContentRangeEnd = 0
     Request.ContentRangeStart = 0
-    Request.ProxyPort = 0
+    Request.ContentType = 'text/html'
+    Request.Accept = 'text/html, */*'
+    Request.BasicAuthentication = False
     Request.UserAgent = 'Mozilla/3.0 (compatible; Indy Library)'
+    HTTPOptions = [hoForceEncodeParams]
     Left = 216
     Top = 32
   end

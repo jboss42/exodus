@@ -27,7 +27,7 @@ uses
     Dialogs, IdTCPConnection, IdTCPClient, IdHTTP, IdBaseComponent,
     IdComponent, IdTCPServer, IdHTTPServer, ComCtrls, StdCtrls, buttonFrame,
     ExRichEdit, ExtCtrls, IdThreadMgr, IdThreadMgrPool, IdAntiFreezeBase,
-    IdAntiFreeze, IdThreadMgrDefault, RichEdit2, Grids;
+    IdAntiFreeze, IdThreadMgrDefault, RichEdit2, Grids, IdCustomHTTPServer;
 
 const
     WM_XFER = WM_USER + 5000;
@@ -57,13 +57,20 @@ type
     procedure httpClientWorkEnd(Sender: TObject; AWorkMode: TWorkMode);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure httpServerCommandGet(AThread: TIdPeerThread;
+    {$ifdef INDY9}
+    procedure httpServerCommandGet9(AThread: TIdPeerThread;
+      ARequestInfo: TIdHTTPRequestInfo;
+      AResponseInfo: TIdHTTPResponseInfo);
+    {$else}
+    procedure httpServerCommandGet8(AThread: TIdPeerThread;
       RequestInfo: TIdHTTPRequestInfo; ResponseInfo: TIdHTTPResponseInfo);
+    {$endif}
     procedure httpServerDisconnect(AThread: TIdPeerThread);
     procedure httpServerConnect(AThread: TIdPeerThread);
     procedure lblFileClick(Sender: TObject);
     procedure txtMsgKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     fstream: TFileStream;
@@ -330,13 +337,24 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmTransfer.httpServerCommandGet(AThread: TIdPeerThread;
+{$ifdef INDY9}
+procedure TfrmTransfer.httpServerCommandGet9(AThread: TIdPeerThread;
+  ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+begin
+    // send the file.
+    txtMsg.Lines.Add(sXferSending);
+    httpServer.ServeFile(AThread, AResponseInfo, filename);
+end;
+
+{$else}
+procedure TfrmTransfer.httpServerCommandGet8(AThread: TIdPeerThread;
   RequestInfo: TIdHTTPRequestInfo; ResponseInfo: TIdHTTPResponseInfo);
 begin
     // send the file
     txtMsg.Lines.Add(sXferSending);
     httpServer.ServeFile(AThread, ResponseInfo, filename);
 end;
+{$endif}
 
 {---------------------------------------}
 procedure TfrmTransfer.httpServerDisconnect(AThread: TIdPeerThread);
@@ -384,6 +402,15 @@ procedure TfrmTransfer.txtMsgKeyDown(Sender: TObject; var Key: Word;
 begin
     if ((Key = 13) and (ssCtrl in Shift)) then
         frameButtons1btnOKClick(Self);
+end;
+
+procedure TfrmTransfer.FormCreate(Sender: TObject);
+begin
+    {$ifdef INDY9}
+    httpServer.onCommandGet := httpServerCommandGet9;
+    {$else}
+    httpServer.onCommandGet := httpServerCommandGet8;
+    {$endif}
 end;
 
 end.
