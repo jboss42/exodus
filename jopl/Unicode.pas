@@ -5087,7 +5087,11 @@ begin
   Changing;
   FList[Index].FString := '';
   Dec(FCount);
-  if Index < FCount then System.Move(FList[Index + 1], FList[Index], (FCount - Index) * SizeOf(TWideStringItem));
+  if Index < FCount then begin
+    System.Move(FList[Index + 1], FList[Index], (FCount - Index) * SizeOf(TWideStringItem));
+    // pgm: change from JclUnicode
+    Pointer(FList[FCount].FString) := nil;
+  end;
   Changed;
 end;
 
@@ -5939,19 +5943,8 @@ function StrAllocW(Size: Cardinal): PWideChar;
 // Allocates a buffer for a null-terminated wide string and returns a pointer
 // to the first character of the string.
 
-// pgm 5/8/02 - Define a new local var, so that are guaranteed to get a new
-// chunk-o-memory.
 begin
   Size := SizeOf(WideChar) * Size + SizeOf(Cardinal);
-  {
-  new_buff := nil;
-  GetMem(new_buff, Size);
-  FillChar(new_buff^, Size, 0);
-  Cardinal(Pointer(new_buff)^) := Size;
-  Inc(new_buff, SizeOf(Cardinal) div SizeOf(WideChar));
-  Result := new_buff;
-  }
-
   GetMem(Result, Size);
   FillChar(Result^, Size, 0);
   Cardinal(Pointer(Result)^) := Size;
