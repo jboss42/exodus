@@ -1,6 +1,6 @@
 object frmJabber: TfrmJabber
-  Left = 276
-  Top = 171
+  Left = 240
+  Top = 135
   Width = 540
   Height = 341
   AlphaBlendValue = 240
