@@ -228,7 +228,7 @@ var
     cur_grp, tmps: string;
     cur_node, grp_node, n: TTreeNode;
     node_list: TList;
-    tmp_grps: TStringlist;
+    tmp_grps: TWidestringlist;
     show_offgrp: boolean;
     exp_grpnode: boolean;
 begin
@@ -280,13 +280,13 @@ begin
 
     // Create a temporary list of grps that this
     // contact should be in.
-    tmp_grps := TStringlist.Create;
+    tmp_grps := TWidestringlist.Create;
     if (((p = nil) or (p.PresType = 'unavailble')) and (show_offgrp)) then
         // they are offline, and we want an offline grp
         tmp_grps.Add('Offline')
     else
         // otherwise, assign the grps from the roster item
-        tmp_grps.Assign(ritem.Groups);
+        ritem.AssignGroups(tmp_grps);
 
     // If they aren't in any grps, put them into the Unfiled grp
     if tmp_grps.Count <= 0 then

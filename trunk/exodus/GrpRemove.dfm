@@ -27,11 +27,13 @@ object frmGrpRemove: TfrmGrpRemove
     TabOrder = 0
     inherited Panel2: TPanel
       Width = 306
+      Height = 34
       inherited Bevel1: TBevel
         Width = 306
       end
       inherited Panel1: TPanel
         Left = 146
+        Height = 29
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end

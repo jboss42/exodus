@@ -78,7 +78,7 @@ begin
         jid := sjid;
         optMove.Caption := WideFormat(_(sRemoveGrpLabel), [grp]);
         ritem := MainSession.Roster.Find(sjid);
-        optMove.Enabled := ((ritem <> nil) and (ritem.Groups.Count > 1));
+        optMove.Enabled := ((ritem <> nil) and (ritem.GroupCount > 1));
         Show;
     end;
 end;
@@ -107,17 +107,14 @@ end;
 {---------------------------------------}
 procedure TfrmRemove.frameButtons1btnOKClick(Sender: TObject);
 var
-    idx: integer;
     iq: TXMLTag;
     ritem: TJabberRosterItem;
 begin
     // Handle removing from a single grp
     if (optMove.Checked) then begin
         ritem := MainSession.roster.Find(jid);
-        if (ritem <> nil) then begin
-            idx := ritem.Groups.IndexOf(sel_grp);
-            if (idx >= 0) then
-                ritem.Groups.Delete(idx);
+        if ((ritem <> nil) and (ritem.IsInGroup(sel_grp))) then begin
+            ritem.DelGroup(sel_grp);
             ritem.update();
         end;
     end

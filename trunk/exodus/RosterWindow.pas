@@ -1163,8 +1163,8 @@ begin
         // allow these items to pass thru
     end
 
-    else if ((ritem.Groups.IndexOf(_transports) <> -1) and
-        (ritem.Groups.Count = 1)) then begin
+    else if ((ritem.IsInGroup(_transports)) and
+        (ritem.GroupCount = 1)) then begin
         // we have a transport... always let them pass
         is_transport := true;
     end
@@ -1253,10 +1253,9 @@ begin
         else tmp_grps.Add(g_online);
     end
 
-    // otherwise... use normal grps
     else
         // otherwise, assign the grps from the roster item
-        tmp_grps.Assign(ritem.Groups);
+        ritem.AssignGroups(tmp_grps);
 
     // If they aren't in any grps, put them into the Unfiled grp
     if ((tmp_grps.Count <= 0) and (not is_me)) then begin
@@ -1987,8 +1986,8 @@ begin
             for j := 0 to items.count - 1 do begin
                 ritem := TJabberRosterItem(items[j]);
                 if (not _drop_copy) then
-                    ritem.Groups.Clear();
-                ritem.Groups.Add(d_grp);
+                    ritem.ClearGroups;
+                ritem.AddGroup(d_grp);
                 ritem.Update();
             end;
         end
@@ -2002,10 +2001,10 @@ begin
 
             // change the ritem object
             if ritem <> nil then begin
-                if (ritem.Groups.IndexOf(d_grp) < 0) then begin
+                if (not ritem.IsInGroup(d_grp)) then begin
                     if (not _drop_copy) then
-                        ritem.Groups.Clear;
-                    ritem.Groups.Add(d_grp);
+                        ritem.ClearGroups;
+                    ritem.AddGroup(d_grp);
                     ritem.update;
                 end;
             end;
@@ -2646,7 +2645,7 @@ procedure TfrmRosterWindow.popGrpRenameClick(Sender: TObject);
 var
     go: TJabberGroup;
     old_grp, new_grp: WideString;
-    gi, i: integer;
+    i: integer;
     ri: TJabberRosterItem;
 begin
     // Rename some grp.
@@ -2660,10 +2659,9 @@ begin
         if (new_grp <> old_grp) then begin
             for i := 0 to MainSession.Roster.Count - 1 do begin
                 ri := MainSession.Roster.Items[i];
-                gi := ri.Groups.IndexOf(old_grp);
-                if (gi >= 0) then begin
-                    ri.Groups.Delete(gi);
-                    ri.Groups.Add(new_grp);
+                if (ri.IsInGroup(old_grp)) then begin
+                    ri.DelGroup(old_grp);
+                    ri.AddGroup(new_grp);
                     ri.update();
                 end;
             end;

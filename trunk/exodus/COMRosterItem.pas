@@ -73,14 +73,11 @@ end;
 
 {---------------------------------------}
 procedure TExodusRosterItem.Set_JabberID(const Value: WideString);
-var
-    tmpjid: TJabberID;
 begin
     if (_ritem.jid <> nil) then
         _ritem.jid.Free();
 
-    tmpjid := TJabberID.Create(value);
-    _ritem.jid := tmpjid;
+    _ritem.setJid(value);
 end;
 
 {---------------------------------------}
@@ -104,14 +101,14 @@ end;
 {---------------------------------------}
 function TExodusRosterItem.Get_GroupCount: Integer;
 begin
-    Result := _ritem.Groups.Count;
+    Result := _ritem.GroupCount;
 end;
 
 {---------------------------------------}
 function TExodusRosterItem.Group(Index: Integer): WideString;
 begin
-    if ((index >= 0) and (Index < _ritem.Groups.Count)) then
-        Result := _ritem.Groups[Index]
+    if ((index >= 0) and (Index < _ritem.GroupCount)) then
+        Result := _ritem.Group[Index]
     else
         Result := '';
 end;

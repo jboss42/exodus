@@ -131,8 +131,8 @@ begin
                 MainSession.Roster.AddItem(jid, nick, cboGroup.Text, true)
             else begin
                 ri.Nickname := nick;
-                ri.Groups.Clear;
-                ri.Groups.Add(cboGroup.Text);
+                ri.ClearGroups();
+                ri.AddGroup(cboGroup.Text);
                 SendSubscribe(jid, MainSession);
             end;
         end;

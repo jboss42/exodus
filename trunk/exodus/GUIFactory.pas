@@ -199,8 +199,8 @@ begin
             end
             else if (ri <> nil) then begin
                 txtNickName.Text := ri.nickname;
-                if (ri.Groups.Count > 0) then
-                    cboGroup.itemIndex := cboGroup.Items.indexof(ri.Groups[0]);
+                if (ri.GroupCount > 0) then
+                    cboGroup.itemIndex := cboGroup.Items.indexof(ri.Group[0]);
             end;
             EnableAdd(tmp_b);
         end;

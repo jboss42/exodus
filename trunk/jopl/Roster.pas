@@ -367,14 +367,14 @@ begin
         if (ri = nil) then exit;
 
         // special case for unfiled
-        if (ri.Groups.Count = 0) then begin
+        if (ri.GroupCount = 0) then begin
             _unfiled.setPresence(ri.jid.jid, pres);
             exit;
         end;
 
         // iterate over all groups for this user.
-        for i := 0 to ri.Groups.Count - 1 do begin
-            cur_grp := ri.Groups[i];
+        for i := 0 to ri.GroupCount - 1 do begin
+            cur_grp := ri.Group[i];
             idx := _groups.IndexOf(cur_grp);
             if (idx >= 0) then begin
                 go := TJabberGroup(_groups.Objects[idx]);
@@ -426,8 +426,8 @@ end;
 {---------------------------------------}
 procedure TJabberRoster.checkGroups(ri: TJabberRosterItem);
 var
-    n, nl, i, gidx: integer;
-    jidx: boolean;
+    n, nl, i: integer;
+    gidx, jidx: boolean;
     go: TJabberGroup;
     path, cur_grp: Widestring;
     p: TJabberPres;
@@ -440,8 +440,8 @@ begin
     p := MainSession.ppdb.FindPres(ri.jid.jid, '');
 
     // Make sure we have all groups that this contact is in.
-    for i := 0 to ri.Groups.Count - 1 do begin
-        cur_grp := ri.Groups[i];
+    for i := 0 to ri.GroupCount - 1 do begin
+        cur_grp := ri.Group[i];
         go := checkGroup(cur_grp);
         nl := go.NestLevel;
         if (nl > 1) then begin
@@ -459,9 +459,9 @@ begin
     // If this ritem is in _unfiled, and they shouldn't be, remove them.
     // If they need to be in _unfiled, but aren't, add them
     jidx := _unfiled.inGroup(ri.jid);
-    if ((ri.Groups.Count > 0) and (jidx)) then
+    if ((ri.GroupCount > 0) and (jidx)) then
         _unfiled.removeJid(ri.jid)
-    else if ((ri.Groups.Count = 0) and (not jidx)) then begin
+    else if ((ri.GroupCount = 0) and (not jidx)) then begin
         _unfiled.addJid(ri.jid);
         _unfiled.setPresence(ri.jid, p);
     end;
@@ -470,19 +470,19 @@ begin
     // Or add it, depending on the ritem.Groups property.
     for i := 0 to _groups.Count - 1 do begin
         go := TJabberGroup(_groups.Objects[i]);
-        gidx := ri.Groups.indexOf(go.Fullname);
+        gidx := ri.IsInGroup(go.FullName);
         jidx := go.inGroup(ri.jid);
 
-        if ((jidx) and (gidx = -1)) then
+        if ((jidx) and (not gidx)) then
             // they are in the TJabberGroup but shouldn't be.
             go.removeJid(ri.jid)
-        else if ((not jidx) and (gidx >= 0)) then begin
+        else if ((not jidx) and (gidx)) then begin
             // they aren't in the TJabberGroup but should be.
             go.AddJid(ri.jid);
         end;
 
         // Make sure this grp has updated presence
-        if (gidx >= 0) then
+        if (gidx) then
             go.setPresence(ri.jid.jid, p);
     end;
 end;
@@ -598,7 +598,7 @@ begin
     ritem := Self.Find(sjid);
     if (ritem <> nil) then begin
         if ((ritem.subscription = 'to') or (ritem.subscription = 'both')) then begin
-            ritem.Groups.Add(group);
+            ritem.AddGroup(group);
             ritem.Update();
             exit;
         end;
