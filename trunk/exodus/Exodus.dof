@@ -132,24 +132,3 @@ OriginalFilename=
 ProductName=
 ProductVersion=1.0.0.0
 Comments=
-[HistoryLists\hlConditionals]
-Count=3
-Item0=Exodus;TRACE_EXCEPTIONS
-Item1=Exodus
-Item2=Exodus; LEAKCHECK
-[HistoryLists\hlUnitAliases]
-Count=1
-Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
-[HistoryLists\hlSearchPath]
-Count=2
-Item0=$(DELPHI)\Lib\Debug;.\components
-Item1=.\components
-[HistoryLists\hlUnitOutputDirectory]
-Count=1
-Item0=.\output
-[HistoryLists\hlOutputDirectorry]
-Count=1
-Item0=..\
-[HistoryLists\hlDCPOutput]
-Count=1
-Item0=.\output

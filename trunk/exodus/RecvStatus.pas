@@ -216,6 +216,8 @@ begin
                 try
                     _client.Connect();
                 except
+                    // If we can't connect.. we don't want to free the stream
+                    // since we will try again. If we succeed then free it.
                     _stream := nil;
                     SendMessage(_form.Handle, WM_RECV_SIDISCONN, 0, 0);
                     exit;

@@ -486,6 +486,7 @@ const
     ico_Unread = 23;
     ico_keyword = 24;
     ico_render = 25;
+    ico_grpfolder = 26;
     ico_down = 27;
     ico_right = 28;
     ico_blocked = 39;
