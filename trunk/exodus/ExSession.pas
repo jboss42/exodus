@@ -468,23 +468,26 @@ begin
     // if we don't have sound registry settings, then add them
     // sigh.  If we had an installer, that would be the place to
     // do this.
-    reg := TRegistry.Create();
-    reg.RootKey := HKEY_CURRENT_USER;
-    reg.OpenKey('\AppEvents\Schemes\Apps\Exodus', true);
-    reg.WriteString('', _('Exodus'));
-    AddSound(reg, 'notify_chatactivity', _(sSoundChatactivity));
-    AddSound(reg, 'notify_invite', _(sSoundInvite));
-    AddSound(reg, 'notify_keyword', _(sSoundKeyword));
-    AddSound(reg, 'notify_newchat', _(sSoundNewchat));
-    AddSound(reg, 'notify_normalmsg', _(sSoundNormalmsg));
-    AddSound(reg, 'notify_offline', _(sSoundOffline));
-    AddSound(reg, 'notify_online', _(sSoundOnline));
-    AddSound(reg, 'notify_roomactivity', _(sSoundRoomactivity));
-    AddSound(reg, 'notify_s10n', _(sSoundS10n));
-    AddSound(reg, 'notify_oob', _(sSoundOOB));
-    AddSound(reg, 'notify_autoresponse', _(sSoundAutoResponse));
-    reg.CloseKey();
-    reg.Free();
+    try
+        reg := TRegistry.Create();
+        reg.RootKey := HKEY_CURRENT_USER;
+        reg.OpenKey('\AppEvents\Schemes\Apps\Exodus', true);
+        reg.WriteString('', _('Exodus'));
+        AddSound(reg, 'notify_chatactivity', _(sSoundChatactivity));
+        AddSound(reg, 'notify_invite', _(sSoundInvite));
+        AddSound(reg, 'notify_keyword', _(sSoundKeyword));
+        AddSound(reg, 'notify_newchat', _(sSoundNewchat));
+        AddSound(reg, 'notify_normalmsg', _(sSoundNormalmsg));
+        AddSound(reg, 'notify_offline', _(sSoundOffline));
+        AddSound(reg, 'notify_online', _(sSoundOnline));
+        AddSound(reg, 'notify_roomactivity', _(sSoundRoomactivity));
+        AddSound(reg, 'notify_s10n', _(sSoundS10n));
+        AddSound(reg, 'notify_oob', _(sSoundOOB));
+        AddSound(reg, 'notify_autoresponse', _(sSoundAutoResponse));
+        reg.CloseKey();
+    except
+        // do nothing... just silently ignore
+    end;
 
     // create COM interfaces for plugins to use
     ExCOMController := TExodusController.Create();

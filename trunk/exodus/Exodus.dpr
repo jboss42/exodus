@@ -180,7 +180,14 @@ var
     continue: boolean;
 
 begin
-  Application.Initialize;
+
+  // Sometimes OLE registration fails if the user don't
+  // have sufficient privs.. Just silently eat these.
+  try
+    Application.Initialize;
+  except
+  end;
+  
   Application.Title := '';
   Application.ShowMainForm := false;
 
