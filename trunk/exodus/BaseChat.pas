@@ -198,8 +198,11 @@ end;
 {---------------------------------------}
 procedure TfrmBaseChat.MsgOutKeyPress(Sender: TObject; var Key: Char);
 begin
+    // I don't agree with this hotkey... it can be "bad"
+    {
     if ( Key = #27 ) then
         Close();
+    }
 
     if (key <> #0) then
         inherited;
