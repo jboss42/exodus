@@ -69,7 +69,7 @@ InstallDirRegKey HKCU "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
 
 !define MUI_FINISHPAGE
 !define MUI_FINISHPAGE_RUN "$INSTDIR\Exodus.exe"
-!define MUI_FINISHPAGE_RUN_NOTCHECKED
+;!define MUI_FINISHPAGE_RUN_NOTCHECKED
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 
 !insertmacro MUI_PAGECOMMAND_LICENSE
@@ -240,8 +240,10 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
     ReadRegStr $2 HKCU "Software\Jabber\Exodus\Restart\$1" "cmdline"
     
     ReadRegDWORD $3 HKCU "Software\Jabber\Exodus\Restart\$1" "priority"
-    StrCmp $3 "" done
+    StrCmp $3 "" profile
+	StrCpy $3 '-i "$3"'
 
+  profile:
     ReadRegStr $4 HKCU "Software\Jabber\Exodus\Restart\$1" "profile"
     StrCmp $4 "" show
     StrCpy $4 '-f "$4"'
@@ -257,8 +259,8 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
     StrCpy $6 '-s "$6"'
 
   exec:
-    DetailPrint '"$INSTDIR\Exodus.exe" $2 -i $3 $4 $5 $6'
-    Exec '"$INSTDIR\Exodus.exe" $2 -i $3 -f "$4" $5 $6'
+    DetailPrint '"$INSTDIR\Exodus.exe" $2 $3 $4 $5 $6'
+    Exec '"$INSTDIR\Exodus.exe" $2 $3 $4 $5 $6'
     SetAutoClose "true"
 
   done:
