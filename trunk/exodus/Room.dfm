@@ -20,7 +20,7 @@ object frmRoom: TfrmRoom
   TextHeight = 13
   object Splitter2: TSplitter
     Left = 0
-    Top = 284
+    Top = 279
     Width = 433
     Height = 3
     Cursor = crVSplit
@@ -31,7 +31,7 @@ object frmRoom: TfrmRoom
     Left = 0
     Top = 18
     Width = 433
-    Height = 266
+    Height = 261
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
@@ -41,7 +41,7 @@ object frmRoom: TfrmRoom
       Left = 321
       Top = 4
       Width = 3
-      Height = 258
+      Height = 253
       Cursor = crHSplit
       Align = alRight
       ResizeStyle = rsUpdate
@@ -50,7 +50,7 @@ object frmRoom: TfrmRoom
       Left = 324
       Top = 4
       Width = 105
-      Height = 258
+      Height = 253
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -60,7 +60,7 @@ object frmRoom: TfrmRoom
         Left = 1
         Top = 1
         Width = 103
-        Height = 256
+        Height = 251
         Align = alClient
         Images = frmRosterWindow.ImageList1
         Indent = 19
@@ -78,7 +78,7 @@ object frmRoom: TfrmRoom
       Left = 4
       Top = 4
       Width = 317
-      Height = 258
+      Height = 253
       Align = alClient
       PopupMenu = popRoom
       ReadOnly = True
@@ -89,7 +89,7 @@ object frmRoom: TfrmRoom
   end
   object pnlInput: TPanel
     Left = 0
-    Top = 287
+    Top = 282
     Width = 433
     Height = 31
     Align = alBottom

@@ -164,6 +164,7 @@ type
     btnOK: TButton;
     btnCancel: TButton;
     Button6: TButton;
+    chkEmoticons: TCheckBox;
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -314,6 +315,7 @@ begin
 
         // System Prefs
         chkTimestamp.Checked := getBool('timestamp');
+        chkEmoticons.Checked := getBool('emoticons');
         chkAutoUpdate.Checked := getBool('auto_updates');
         chkLog.Checked := getBool('log');
         chkExpanded.Checked := getBool('expanded');
@@ -426,6 +428,7 @@ begin
 
         // System Prefs
         setBool('timestamp', chkTimestamp.Checked);
+        setBool('emoticons', chkEmoticons.Checked);
         setBool('auto_updates', chkAutoUpdate.Checked);
         setBool('log', chkLog.Checked);
         setBool('debug', chkDebug.Checked);

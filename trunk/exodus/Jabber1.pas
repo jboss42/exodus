@@ -178,8 +178,9 @@ type
     btnRoom: TToolButton;
     btnDelContact: TToolButton;
     btnExpanded: TToolButton;
-    imgEmoticons: TImageList;
+    imgYahooEmoticons: TImageList;
     btnFind: TToolButton;
+    imgMSNEmoticons: TImageList;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);

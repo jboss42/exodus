@@ -60,6 +60,7 @@ type
     lblNick: TStaticText;
     imgStatus: TPaintBox;
     timFlash: TTimer;
+    Emoticons1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnCloseClick(Sender: TObject);
@@ -77,6 +78,7 @@ type
     procedure imgStatusPaint(Sender: TObject);
     procedure timFlashTimer(Sender: TObject);
     procedure MsgOutChange(Sender: TObject);
+    procedure Emoticons1Click(Sender: TObject);
   private
     { Private declarations }
     jid: string;            // jid of the person we are talking to
@@ -131,6 +133,7 @@ implementation
 {$R *.DFM}
 
 uses
+    Emoticons, 
     Presence, PrefController,
     Transfer, RosterAdd, RiserWindow,
     Jabber1, Profile, ExUtils, MsgDisplay,
@@ -547,6 +550,8 @@ begin
     if Self.Visible then
         MsgOut.SetFocus;
     // FlashWindow(Self.Handle, false);
+    if (frmEmoticons.Visible) then
+        frmEmoticons.Hide;
 end;
 
 {---------------------------------------}
@@ -700,6 +705,48 @@ begin
             end;
         MainSession.SendTag(c);
         end;
+end;
+
+procedure TfrmChat.Emoticons1Click(Sender: TObject);
+var
+    m, i: integer;
+    eo: TEmoticon;
+    cp: TPoint;
+begin
+  inherited;
+    // Show the emoticons form
+    GetCursorPos(cp);
+
+    frmEmoticons.Left := cp.X;
+    if (Self.Docked) then
+        frmEmoticons.Top := frmJabber.Top + frmJabber.ClientHeight - 10
+    else
+        frmEmoticons.Top := Self.Top + Self.ClientHeight - 10;
+
+    frmEmoticons.Show;
+    {
+    if (frmEmoticons.ShowModal = mrOK) then with frmEmoticons do begin
+        m := -1;
+
+        if (emoticon_list.Count = 0) then
+            ConfigEmoticons();
+
+        for i := 0 to emoticon_list.Count - 1 do begin
+            eo := TEmoticon(emoticon_list.Objects[i]);
+            if (((msn) and (eo.il = frmJabber.imgMSNEmoticons)) or
+            ((not msn) and (eo.il = frmJabber.imgYahooEmoticons))) then begin
+                // the image lists match
+                if (eo.idx = imgIndex) then begin
+                    m := i;
+                    break;
+                    end;
+                end;
+            end;
+
+        if (m >= 0) then
+            MsgOut.SelText := emoticon_list[m];
+        end;
+    }
 end;
 
 end.

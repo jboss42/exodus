@@ -25,7 +25,8 @@ uses
     XMLTag,
     Dockable, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    ToolWin, ComCtrls, StdCtrls, Buttons, ExtCtrls, ExRichEdit, Menus;
+    ToolWin, ComCtrls, StdCtrls, Buttons, ExtCtrls, ExRichEdit, Menus,
+  OLERichEdit;
 
 type
   TRoomMember = class
@@ -178,14 +179,21 @@ procedure TfrmRoom.showMsg(tag: TXMLTag);
 var
     k, i: integer;
     Msg: TJabberMessage;
+    from: string;
+    tmp_jid: TJabberID;
 begin
     // display the body of the msg
     Msg := TJabberMessage.Create(tag);
 
-    i := _roster.indexOf(tag.getAttribute('from'));
+    from := tag.GetAttribute('from');
+    i := _roster.indexOf(from);
     if (i < 0) then begin
         // some kind of server msg..
-        Msg.Nick := '';
+        tmp_jid := TJabberID.Create(from);
+        if (tmp_jid.resource <> '') then
+            Msg.Nick := tmp_jid.resource
+        else
+            Msg.Nick := '';
         Msg.IsMe := false;
         end
     else begin

@@ -310,6 +310,7 @@ begin
 end;
 
 
+{$WARNINGS OFF}
 function TOLEEdit.ObjectSelected:Boolean;
 var ReObject:TReObject;
 begin
@@ -317,6 +318,7 @@ begin
   result:=(FRichEditOle.GetObject(REO_IOB_SELECTION, ReObject, REO_GETOBJ_POLEOBJ) = S_OK) and
           Assigned(ReObject.oleobj);
 end;
+{$WARNINGS ON}
 
 procedure TOLEEdit.CreateWnd;
 begin
@@ -353,6 +355,7 @@ begin
   inherited Clear;
 end;
 
+{$WARNINGS OFF}
 function TOLEEdit.GetPopupMenu: TPopupMenu;
 var
   I: Integer;
@@ -395,6 +398,8 @@ begin
       end;
   end;
 end;
+{$WARNINGS ON}
+
 
 {The following four methods lifted more or less intact from TOleContainer}
 procedure TOLEEdit.DestroyVerbs;
