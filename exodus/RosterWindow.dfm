@@ -691,7 +691,7 @@ object frmRosterWindow: TfrmRosterWindow
       OnClick = popRenameClick
     end
     object popTransEdit: TTntMenuItem
-      Caption = 'Edit Registration Information ...'
+      Caption = 'Properties ...'
       OnClick = popTransEditClick
     end
     object popTransUnRegister: TTntMenuItem

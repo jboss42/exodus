@@ -747,6 +747,7 @@ begin
         btnRoom.Visible := getBool('brand_muc');
 
         mnuPlugins.Visible := getBool('brand_plugs');
+        mnuVCard.Visible := getBool('brand_vcard');
         mnuMyVCard.Visible := getBool('brand_vcard');
         mnuRegistration.Visible := getBool('brand_registration');
 
