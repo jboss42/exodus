@@ -463,7 +463,8 @@ begin
     _nick_start := 0;
     _hint_text := '';
 
-    kw_list := MainSession.Prefs.getStringlist('keywords');
+    kw_list := TStringList.Create();
+    MainSession.Prefs.fillStringlist('keywords', kw_list);
     if (kw_list.Count > 0) then begin
         re := MainSession.Prefs.getBool('regex_keywords');
         first := true;
@@ -483,7 +484,8 @@ begin
         _keywords.Expression := e;
         _keywords.Compile();
         end;
-
+    kw_list.Free();
+    
     MyNick := '';
 end;
 

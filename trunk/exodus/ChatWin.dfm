@@ -93,6 +93,7 @@ inherited frmChat: TfrmChat
     end
     object mnuBlock: TMenuItem
       Caption = 'Block Contact'
+      OnClick = mnuBlockClick
     end
     object mnuSendFile: TMenuItem
       Caption = 'Send File'

@@ -88,6 +88,7 @@ begin
         <os>NT 5.0</os>
     </query></iq>
     }
+    if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
 
     win := '';
     WindowsVersion(win);
@@ -133,6 +134,8 @@ begin
         <display>10/25/2001 5:36:58 PM</display>
     </query></iq>
     }
+    if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
+
     r := TXMLTag.Create('iq');
     res := GetTimeZoneInformation(tzi);
     if res = TIME_ZONE_ID_DAYLIGHT then
@@ -166,6 +169,8 @@ var
     idle: dword;
     r: TXMLTag;
 begin
+    if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
+    
     // Respond to time queries
     r := TXMLTag.Create('iq');
     with r do begin
@@ -192,6 +197,8 @@ procedure TBrowseResponder.iqCallback(event: string; tag: TXMLTag);
 var
     r: TXMLTag;
 begin
+    if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
+
     r := TXMLTag.Create('iq');
     with r do begin
         PutAttribute('to', tag.getAttribute('from'));

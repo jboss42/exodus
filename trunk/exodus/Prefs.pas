@@ -399,8 +399,8 @@ begin
         txtXA.Text := getString('xa_status');
 
         // Keywords and Blockers
-        memKeywords.Lines.Assign(getStringList('keywords'));
-        memBlocks.Lines.Assign(getStringList('blockers'));
+        fillStringList('keywords', memKeywords.Lines);
+        fillStringList('blockers', memBlocks.Lines);
 
         // Custom Presence options
         _pres_list := getAllPresence();

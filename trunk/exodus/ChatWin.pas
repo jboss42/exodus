@@ -61,6 +61,7 @@ type
     procedure MsgOutChange(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure CTCPClick(Sender: TObject);
+    procedure mnuBlockClick(Sender: TObject);
   private
     { Private declarations }
     jid: string;            // jid of the person we are talking to
@@ -479,6 +480,11 @@ begin
         end
     else if (event = '/session/connected') then begin
         Self.SetJID(jid);
+        end
+    else if (event = '/session/block') then begin
+        // if this jid just got blocked, just close the window.
+        if (_jid.jid = tag.GetAttribute('to')) then
+            Close();
         end;
 end;
 
@@ -750,6 +756,11 @@ begin
     if ((tag <> nil) and (tag.getAttribute('type') = 'result')) then begin
         //
         end
+end;
+
+procedure TfrmChat.mnuBlockClick(Sender: TObject);
+begin
+    MainSession.Block(_jid);
 end;
 
 end.
