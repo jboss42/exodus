@@ -53,6 +53,8 @@ type
       State: TDragState; var Accept: Boolean);
     procedure lstJIDSDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure btnRemoveClick(Sender: TObject);
+    procedure sgContactsDblClick(Sender: TObject);
+    procedure lstJIDSDblClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -258,6 +260,24 @@ begin
         if lstJIDS.Items[i].Selected then
             lstJIDS.Items.Delete(i);
         end;
+end;
+
+{---------------------------------------}
+procedure TfrmInvite.sgContactsDblClick(Sender: TObject);
+var
+    gsel: TGridRect;
+begin
+    // Move the selected row to the list of recips
+    gsel := sgContacts.Selection;
+    Self.AddRecip(sgContacts.Cells[1, gsel.Top]);
+end;
+
+{---------------------------------------}
+procedure TfrmInvite.lstJIDSDblClick(Sender: TObject);
+begin
+    // remove the person if the grid is visible.
+    if (not pnlRight.Visible) then exit;
+    lstJIDS.Items.Delete(lstJIDS.Selected.Index);
 end;
 
 end.
