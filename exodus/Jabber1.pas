@@ -505,7 +505,7 @@ uses
     Iq, JUD, JabberID, JabberMsg, IdGlobal,
     JoinRoom, Login, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, Profile, RegForm, RemoveContact, RiserWindow, Room,
-    Roster, RosterAdd, Session, Transfer, VCard, xData, XMLUtils;
+    Roster, RosterAdd, Session, Transfer, Unicode, VCard, xData, XMLUtils;
 
 {$R *.DFM}
 
@@ -2050,7 +2050,7 @@ end;
 procedure TfrmExodus.NewGroup2Click(Sender: TObject);
 var
     new_grp: string;
-    gl: TStringList;
+    gl: TWideStringList;
 begin
     // Add a roster grp.
     new_grp := sDefaultGroup;

@@ -93,6 +93,7 @@ type
     recips: TWideStringlist;
 
     procedure SetupSend();
+    procedure setFrom(jid: WideString);
   end;
 
 var
@@ -104,6 +105,8 @@ function BroadcastMsg(jids: TWideStringlist): TfrmMsgRecv;
 procedure ShowEvent(e: TJabberEvent);
 
 resourcestring
+    sMessageFrom = 'Message from ';
+
     sRemove = 'Remove';
     sAccept = 'Accept';
     sDecline = 'Decline';
@@ -117,7 +120,7 @@ implementation
 uses
     ShellAPI, Profile, Transfer,
     ExUtils, JabberMsg, JabberID,
-    RosterWindow, RemoveContact, RosterRecv, Room,
+    RosterWindow, RemoveContact, RosterRecv, Room, Roster, 
     Presence, Session, Jabber1;
 
 {$R *.DFM}
@@ -141,7 +144,7 @@ begin
         with fmsg do begin
             eType := e.eType;
             recips.Add(e.from);
-            txtFrom.Caption := e.from;
+            setFrom(e.from);
             txtSubject.Caption := e.data_type;
             txtMsg.InputFormat := ifUnicode;
             txtMsg.WideText := e.Data.Text;
@@ -213,8 +216,7 @@ begin
         SetupSend();
         recips.Add(jid);
         SetupResources();
-
-        txtFrom.Caption := jid;
+        setFrom(jid);
         ShowDefault;
         btnClose.Visible := Docked;
         FormResize(nil);
@@ -468,7 +470,7 @@ begin
   inherited;
     // set the message to this resource.
     recips[0] := _base_jid + '/' + TMenuItem(Sender).Caption;
-    txtFrom.Caption := recips[0];
+    setFrom(recips[0]);
 end;
 
 {---------------------------------------}
@@ -479,6 +481,25 @@ begin
   inherited;
     GetCursorPos(cp);
     popContact.popup(cp.x, cp.y);
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.setFrom(jid: WideString);
+var
+    tmp_jid: TJabberID;
+    ritem: TJabberRosterItem;
+begin
+    tmp_jid := TJabberID.Create(jid);
+    ritem := MainSession.roster.Find(tmp_jid.jid);
+    if (ritem <> nil) then begin
+        txtFrom.Caption := ritem.Nickname + ' <' + jid + '>';
+        Self.Caption := sMessageFrom + ritem.Nickname;
+        end
+    else begin
+        txtFrom.Caption := jid;
+        Self.Caption := sMessageFrom + jid;
+        end;
+    tmp_jid.Free();
 end;
 
 

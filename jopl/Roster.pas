@@ -24,7 +24,7 @@ interface
 uses
     XMLTag,
     JabberID,
-    Signals,
+    Unicode, Signals,
     SysUtils, Classes;
 
 type
@@ -37,7 +37,7 @@ type
         jid: TJabberID;
         subscription: string;
         ask: string;
-        Groups: TStringList;
+        Groups: TWideStringList;
         Data: TObject;
 
         constructor Create; overload;
@@ -79,19 +79,19 @@ type
         function addListener(callback: TRosterEvent): TRosterListener; overload;
     end;
 
-    TJabberRoster = class(TStringList)
+    TJabberRoster = class(TWideStringList)
     private
         _js: TObject;
         procedure ParseFullRoster(event: string; tag: TXMLTag);
         procedure Callback(event: string; tag: TXMLTag);
         procedure bmCallback(event: string; tag: TXMLTag);
         procedure checkGroups(ri: TJabberRosterItem);
-        procedure checkGroup(grp: string);
+        procedure checkGroup(grp: Widestring);
         procedure fireBookmark(bm: TJabberBookmark);
         function getItem(index: integer): TJabberRosterItem;
     public
-        GrpList: TStringList;
-        Bookmarks: TStringList;
+        GrpList: TWideStringList;
+        Bookmarks: TWideStringList;
 
         constructor Create;
         destructor Destroy; override;
@@ -102,13 +102,13 @@ type
         procedure Fetch;
         procedure SaveBookmarks;
 
-        procedure AddItem(sjid, nickname, group: string; subscribe: boolean);
-        procedure AddBookmark(sjid: string; bm: TJabberBookmark);
-        procedure RemoveBookmark(sjid: string);
+        procedure AddItem(sjid, nickname, group: Widestring; subscribe: boolean);
+        procedure AddBookmark(sjid: Widestring; bm: TJabberBookmark);
+        procedure RemoveBookmark(sjid: Widestring);
         procedure UpdateBookmark(bm: TJabberBookmark);
 
-        function Find(sjid: string): TJabberRosterItem; reintroduce; overload;
-        function GetGroupItems(grp: string; online: boolean): TList;
+        function Find(sjid: Widestring): TJabberRosterItem; reintroduce; overload;
+        function GetGroupItems(grp: Widestring; online: boolean): TList;
 
         property Items[index: integer]: TJabberRosterItem read getItem;
     end;
@@ -184,8 +184,7 @@ end;
 constructor TJabberRosterItem.Create;
 begin
     inherited;
-
-    Groups := TStringList.Create;
+    Groups := TWideStringList.Create;
     jid := TJabberID.Create('');
     subscription := 'none';
     _nickname := '';
@@ -304,9 +303,8 @@ end;
 constructor TJabberRoster.Create;
 begin
     inherited;
-
-    GrpList := TStringList.Create;
-    Bookmarks := TStringList.Create;
+    GrpList := TWideStringList.Create;
+    Bookmarks := TWideStringList.Create;
 end;
 
 {---------------------------------------}
@@ -508,14 +506,14 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberRoster.checkGroup(grp: string);
+procedure TJabberRoster.checkGroup(grp: Widestring);
 begin
     if GrpList.indexOf(grp) < 0 then
         GrpList.Add(grp);
 end;
 
 {---------------------------------------}
-function TJabberRoster.Find(sjid: string): TJabberRosterItem;
+function TJabberRoster.Find(sjid: Widestring): TJabberRosterItem;
 var
     i: integer;
 begin
@@ -527,7 +525,7 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberRoster.GetGroupItems(grp: string; online: boolean): TList;
+function TJabberRoster.GetGroupItems(grp: Widestring; online: boolean): TList;
 var
     i: integer;
     ri: TJabberRosterItem;
@@ -544,7 +542,7 @@ end;
 
 
 {---------------------------------------}
-procedure TJabberRoster.AddItem(sjid, nickname, group: string; subscribe: boolean);
+procedure TJabberRoster.AddItem(sjid, nickname, group: Widestring; subscribe: boolean);
 begin
     // send a iq-set
     TRosterAddItem.Create(sjid, nickname, group, subscribe);
@@ -564,7 +562,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberRoster.AddBookmark(sjid: string; bm: TJabberBookmark);
+procedure TJabberRoster.AddBookmark(sjid: Widestring; bm: TJabberBookmark);
 var
     tbm : TJabberBookmark;
     i : integer;
@@ -585,7 +583,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberRoster.RemoveBookmark(sjid: string);
+procedure TJabberRoster.RemoveBookmark(sjid: Widestring);
 var
     i: integer;
 begin
