@@ -1,11 +1,12 @@
 object frmConnDetails: TfrmConnDetails
   Left = 196
   Top = 230
-  Width = 414
+  Width = 410
   Height = 288
   ActiveControl = cboJabberID
   Caption = 'Connection Details'
   Color = clBtnFace
+  Constraints.MinWidth = 410
   DefaultMonitor = dmDesktop
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -20,19 +21,19 @@ object frmConnDetails: TfrmConnDetails
   inline frameButtons1: TframeButtons
     Left = 0
     Top = 222
-    Width = 406
+    Width = 402
     Height = 32
     Align = alBottom
     AutoScroll = False
     TabOrder = 0
     inherited Panel2: TPanel
-      Width = 406
+      Width = 402
       Height = 32
       inherited Bevel1: TBevel
-        Width = 406
+        Width = 402
       end
       inherited Panel1: TPanel
-        Left = 246
+        Left = 242
         Height = 27
         inherited btnOK: TTntButton
           ModalResult = 0
@@ -44,7 +45,7 @@ object frmConnDetails: TfrmConnDetails
   object PageControl1: TTntPageControl
     Left = 0
     Top = 0
-    Width = 406
+    Width = 402
     Height = 222
     ActivePage = tbsProfile
     Align = alClient
