@@ -12,7 +12,7 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 2/12/2003 9:41:50 AM from Type Library described below.
+// File generated on 2/27/2003 7:14:51 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.exe (1)
@@ -21,7 +21,7 @@ unit ExodusCOM_TLB;
 // Helpfile: 
 // HelpString: Exodus COM Plugin interfaces
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
+//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
 // Parent TypeLibrary:
 //   (0) v1.0 RosterTools, (D:\src\exodus\exodus\plugins\RosterTools\RosterTools.tlb)
 // ************************************************************************ //
@@ -393,6 +393,7 @@ type
     procedure onRecvMessage(const Body: WideString; const xml: WideString); safecall;
     procedure onClose; safecall;
     procedure onMenu(const ID: WideString); safecall;
+    procedure onNewWindow(HWND: Integer); safecall;
   end;
 
 // *********************************************************************//
@@ -409,6 +410,7 @@ type
     procedure onRecvMessage(const Body: WideString; const xml: WideString); dispid 5;
     procedure onClose; dispid 6;
     procedure onMenu(const ID: WideString); dispid 201;
+    procedure onNewWindow(HWND: Integer); dispid 202;
   end;
 
 // *********************************************************************//
