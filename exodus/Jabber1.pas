@@ -342,8 +342,6 @@ type
 
     function WMAppBar(dwMessage: DWORD; var pData: TAppBarData): UINT; stdcall;
 
-    procedure ApplicationException(Sender: TObject; E: Exception);
-
   published
     // Callbacks
     procedure SessionCallback(event: string; tag: TXMLTag);
@@ -488,13 +486,19 @@ const
     ico_blocked = 30;
     ico_error = 32;
 
+{$ifdef TRACE_EXCEPTIONS}
+procedure ExceptionTracker(ExceptObj: TObject; ExceptAddr: Pointer; OSException: Boolean);
+{$endif}
+
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 implementation
 uses
     {$ifdef TRACE_EXCEPTIONS}
-    JclHookExcept, JclDebug, ExceptTracer, 
+    IdException,
+    JclHookExcept, JclDebug, ExceptTracer,
     {$endif}
 
     About, AutoUpdate, Bookmark, Browser, Chat, ChatController, ChatWin,
@@ -655,6 +659,7 @@ begin
 end;
 
 {---------------------------------------}
+{---------------------------------------}
 procedure AddSound(reg: TRegistry; pref_name: string; user_text: string);
 begin
     // Add a new sound entry into the registry
@@ -663,22 +668,25 @@ begin
     reg.WriteString('', user_text);
 end;
 
-
 {---------------------------------------}
 {---------------------------------------}
 {$ifdef TRACE_EXCEPTIONS}
-procedure TfrmExodus.ExceptionTracker(ExceptObj: TObject; ExceptAddr: Pointer; OSException: Boolean);
+procedure ExceptionTracker(ExceptObj: TObject; ExceptAddr: Pointer; OSException: Boolean);
 var
     // trace: TStringList;
     tracer: TfrmTracer;
+    e: Exception;
 begin
     //
     // trace := TStringList.Create();
+    e := Exception(ExceptObj);
+
+    if (e is EConvertError) then exit;
+    if (e is EIdSocketError) then exit;
+    
     tracer := TfrmTracer.Create(Application);
     JclLastExceptStackListToStrings(tracer.Memo1.Lines, true, true, true);
     tracer.ShowModal();
-
-    Application.ShowException(E);
 end;
 {$endif}
 
@@ -710,7 +718,7 @@ begin
     // initialize vars.  wish we were using a 'real' compiler.
 
     {$ifdef TRACE_EXCEPTIONS}
-    Application.OnException := ApplicationException;
+    // Application.OnException := ApplicationException;
     Include(JclStackTrackingOptions, stRawMode);
     {$endif}
 
@@ -991,6 +999,12 @@ begin
     appbar.lParam := 1;
     SHAppBarMessage(ABM_SETAUTOHIDEBAR, appbar);
     *)
+
+    {$ifdef TRACE_EXCEPTIONS}
+    // Start Exception tracking
+    JclStartExceptionTracking;
+    JclAddExceptNotifier(ExceptionTracker);
+    {$endif}
 
 end;
 
@@ -2718,24 +2732,8 @@ begin
         Tabs.ActivePage.ImageIndex := -1;
 end;
 
-procedure AnyExceptionNotify(ExceptObj: TObject; ExceptAddr: Pointer; OSException: Boolean);
-begin
-    with Form1 do begin
-        Memo1.Lines.BeginUpdate;
-        JclLastExceptStackListToStrings(Memo1.Lines, False, True, True);
-        Memo1.Lines.EndUpdate;
-        Memo1.Lines.Add('');
-    end;
-end;
-
 initialization
     sExodusPresence := RegisterWindowMessage('EXODUS_PRESENCE');
-
-{$IFDEF TRACE_EXCEPTIONS}
-  // Start Exception tracking
-  JclStartExceptionTracking;
-  JclAddExceptNotifier(ExceptionTracker);
-{$ENDIF}
 
 end.
 
