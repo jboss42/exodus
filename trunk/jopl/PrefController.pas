@@ -181,7 +181,7 @@ end;
         procedure fillStringlist(pkey: Widestring; sl: TTntStrings; server_side: TPrefKind = pkClient); overload;
         {$endif}
 
-        function getAllPresence(): TList;
+        function getAllPresence(): TWidestringList;
         function getPresence(pkey: Widestring): TJabberCustomPres;
         function getPresIndex(idx: integer): TJabberCustomPres;
         function getDefaultPresence(): TList;
@@ -790,7 +790,7 @@ begin
 end;
 
 {---------------------------------------}
-function TPrefController.getAllPresence(): TList;
+function TPrefController.getAllPresence(): TWidestringlist;
 var
     i: integer;
     ctag: TXMLTag;
@@ -798,27 +798,28 @@ var
     cp: TJabberCustompres;
     dlist: TList;
 begin
-    Result := Tlist.Create();
+    Result := TWidestringlist.Create();
     ptags := _pref_node.QueryTags('presence');
 
     for i := 0 to ptags.Count - 1 do begin
         cp := TJabberCustompres.Create();
         cp.Parse(ptags[i]);
-        Result.Add(cp);
+        Result.AddObject(cp.title, cp);
     end;
 
     ctag := _pref_node.GetFirstTag('custom_pres');
     if ((ctag = nil) or (Result.Count = 0)) then begin
         dlist := getDefaultPresence();
         for i := 0 to dlist.Count - 1 do begin
-            Result.Add(dlist[i]);
-            Self.setPresence(TJabberCustomPres(dlist[i]));
+            cp := TJabberCustomPres(dlist[i]);
+            Result.AddObject(cp.title, cp);
+            Self.setPresence(cp);
         end;
         _pref_node.AddTag('custom_pres');
         Self.Save();
         dlist.Free();
     end;
-
+    Result.Sort();
     ptags.Free();
 end;
 

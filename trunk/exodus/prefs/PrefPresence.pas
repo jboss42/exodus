@@ -85,18 +85,24 @@ resourcestring
 implementation
 {$R *.dfm}
 uses
-    Menus, Presence, Session, XMLUtils;
+    Unicode, Menus, Presence, Session, XMLUtils;
 
 {---------------------------------------}
 procedure TfrmPrefPresence.LoadPrefs();
 var
     i: integer;
+    ws: TWidestringlist;
+    cp: TJabberCustomPres;
 begin
     with MainSession.Prefs do begin
         // Custom Presence options
-        _pres_list := getAllPresence();
-        for i := 0 to _pres_list.Count - 1 do
-            lstCustomPres.Items.Add(TJabberCustomPres(_pres_list[i]).title);
+        ws := getAllPresence();
+        _pres_list := TList.Create();
+        for i := 0 to ws.Count - 1 do begin
+            cp := TJabberCustomPres(ws.Objects[i]);
+            lstCustomPres.Items.Add(cp.title);
+            _pres_list.Add(cp);
+        end;
         cboPresTracking.ItemIndex := getInt('pres_tracking');
         chkPresenceSync.Checked := getBool('presence_message_listen');
         chkClientCaps.Checked := getBool('client_caps');
