@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exodus 0.8.6.43\n"
 "POT-Creation-Date: 2003-08-03 07:30\n"
-"PO-Revision-Date: 2003-12-19 23:47+0100\n"
+"PO-Revision-Date: 2003-12-19 23:57+0100\n"
 "Last-Translator: Mariusz Smykuła <smys@lodz.mm.pl>\n"
 "Language-Team: JabberPL Group <redakcja@jabberpl.org>\n"
 "MIME-Version: 1.0\n"
@@ -6540,7 +6540,7 @@ msgstr "Opis: "
 
 #: ExEvents.pas:288
 msgid "OS: "
-msgstr "System op.: "
+msgstr "Platforma: "
 
 #: ExEvents.pas:302
 msgid "Idle for "
@@ -7721,7 +7721,7 @@ msgstr ""
 #. frmPrefAway..Label2..Caption
 #: prefs/PrefAway.dfm:15
 msgid "Minutes to wait before setting status to Away:"
-msgstr "Czas oczekiwania przed ustawieniem bezczynności (min):"
+msgstr "Czas oczekiwania przed ustawieniem bezczynności (min.):"
 
 #. frmPrefAway..Label3..Caption
 #: prefs/PrefAway.dfm:22
@@ -7796,12 +7796,12 @@ msgstr "Użyj tej kombinacji klawiszy do zamknięcia okna rozmów"
 #. frmPrefDialogs..chkRosterAlpha..Caption
 #: prefs/PrefDialogs.dfm:43
 msgid "Use Alpha Blending for Roster "
-msgstr "Używaj przeźroczystości dla Rostera"
+msgstr "Przeźroczysta lista kontaktów"
 
 #. frmPrefDialogs..chkToastAlpha..Caption
 #: prefs/PrefDialogs.dfm:90
 msgid "Use Alpha Blending for Toast Notifications"
-msgstr "Używaj przeźroczystości dla wyskakujących powiadomień."
+msgstr "Przeźroczyste wyskakujące powiadomienia"
 
 #. frmPrefDialogs..chkSnap..Caption
 #: prefs/PrefDialogs.dfm:137
@@ -8280,7 +8280,7 @@ msgstr "Konfiguracja"
 #. frmPrefPlugins..lstPlugins......Caption
 #: prefs/PrefPlugins.dfm:85
 msgid "Plugin"
-msgstr "Wtyczki"
+msgstr "Wtyczka"
 
 #. frmPrefPlugins..lstPlugins......Caption
 #: prefs/PrefPlugins.dfm:93
@@ -8629,7 +8629,7 @@ msgstr ""
 #: prefs/PrefFont.pas:207
 #: prefs/PrefFont.pas:264
 msgid "Roster Font and Background"
-msgstr "Czcionka i tło listy kontaktów"
+msgstr "Czcionka i tło dla listy kontaktów"
 
 #: prefs/PrefFont.pas:181
 msgid "Some text from me"
