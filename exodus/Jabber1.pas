@@ -460,21 +460,11 @@ const
     ico_blockoffline = 41;
     ico_error = 32;
 
-{$ifdef TRACE_EXCEPTIONS}
-procedure ExceptionTracker(ExceptObj: TObject; ExceptAddr: Pointer; OSException: Boolean);
-{$endif}
-
-
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 implementation
 uses
-    {$ifdef TRACE_EXCEPTIONS}
-    IdException,
-    JclHookExcept, JclDebug, ExceptTracer,
-    {$endif}
-
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
     ChatController, ChatWin, Debug, Dockable, DNSUtils, Entity,
     EntityCache, ExSession, ExUtils,
@@ -691,20 +681,6 @@ end;
 
 {---------------------------------------}
 {---------------------------------------}
-{$ifdef TRACE_EXCEPTIONS}
-procedure ExceptionTracker(ExceptObj: TObject; ExceptAddr: Pointer; OSException: Boolean);
-var
-    e: Exception;
-begin
-    // trace := TStringList.Create();
-    e := Exception(ExceptObj);
-    if (e is EConvertError) then exit;
-    if (e is EIdSocketError) then exit;
-end;
-{$endif}
-
-{---------------------------------------}
-{---------------------------------------}
 procedure TfrmExodus.FormCreate(Sender: TObject);
 var
     win_ver: string;
@@ -713,11 +689,6 @@ var
     mi: TMenuItem;
     s: TXMLTag;
 begin
-    {$ifdef TRACE_EXCEPTIONS}
-    //Application.OnException := ApplicationException;
-    Include(JclStackTrackingOptions, stRawMode);
-    {$endif}
-
     ActiveChat := nil;
     _docked_forms := TList.Create;
     _new_tabindex := -1;

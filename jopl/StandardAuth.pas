@@ -34,6 +34,7 @@ type
         _auth_iq: TJabberIQ;
         _token: TXMLTag;
         _sasl_auth: TJabberAuth;
+        _auto_auth: boolean;
 
         procedure SendAuthGet;
         procedure SendRegistration;
@@ -56,6 +57,7 @@ type
         procedure CancelRegistration(); override;
 
         property TokenAuth: TXMLTag read _token write SetTokenAuth;
+        property AutoAuth: boolean read _auto_auth write _auto_auth;
     end;
 
 
@@ -72,6 +74,7 @@ begin
     _token := nil;
     prompt_password := true;
     _sasl_auth := TSASLAuth.Create(session);
+    _auto_auth := true;
 end;
 
 {---------------------------------------}
@@ -179,7 +182,10 @@ begin
     else begin
         // We got a good registration...
         // Go do the entire Auth sequence now.
-        SendAuthGet();
+        if (_auto_auth) then
+            SendAuthGet()
+        else
+            _session.FireEvent('/session/regok', xml);
     end;
 end;
 

@@ -33,9 +33,9 @@ uses
   Forms,
   Controls,
   Windows,
-{$ifdef TRACE_EXCEPTIONS}
-  ExceptDlg in 'tracer\ExceptDlg.pas' {ExceptionDialog},
-{$endif}
+  {$ifdef TRACE_EXCEPTIONS}
+  ExTracer in 'ExTracer.pas' {frmException},
+  {$endif}
   MemCheck in '..\MemCheck.pas',
   About in 'About.pas' {frmAbout},
   AutoUpdate in '..\jopl\AutoUpdate.pas',

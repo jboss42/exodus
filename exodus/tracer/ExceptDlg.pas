@@ -718,7 +718,8 @@ begin
   if HookTApplicationHandleException then
     JclTrackExceptionsFromLibraries;
   {$ENDIF HOOK_DLL_EXCEPTIONS}
-  Application.OnException := TExceptionDialog.ExceptionHandler;
+  //Application.OnException := TExceptionDialog.ExceptionHandler;
+  JclAddExceptNotifier(TExceptionDialog.ExceptionHandler);
 end;
 
 //--------------------------------------------------------------------------------------------------
