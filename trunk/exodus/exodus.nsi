@@ -221,6 +221,13 @@ Section "SSL Support" SEC_SSL
         ssl_done:
 SectionEnd
 
+; BRANDING: Make sure to rename/copy the following files in
+; the plugin directory and modify them to match the set
+; of plugins you wish to distribute:
+;   example-plugin-sections.nsi --> plugin-sections.nsi
+;   example-plugin-desc.nsi     --> plugin-desc.nsi
+;   example-plugin-en.nsi       --> plugin-en.nsi
+;   example-plugin-off.nsi      --> plugin-off.nsi
 SubSection  "Plugins" SEC_Plugins
 	!include plugins\plugin-sections.nsi
 SubSectionEnd
@@ -357,7 +364,7 @@ LangString DESC_Bleed ${LANG_ENGLISH} \
 "Exodus will check for new versions of the latest development build whenever you login.  These sometimes happen several times a day."
 
 LangString DESC_Plugins ${LANG_ENGLISH} \
-"Download Exodus plugins via the Internet, using your IE proxy settings."
+"Download Exodus plugins via the Internet, using your IE proxy settings. This does not work with auto-configured proxies."
 
 !include plugins\plugin-en.nsi
 
@@ -368,7 +375,7 @@ SubCaption 3 ": Exit running Exodus versions!"
 !insertmacro MUI_FUNCTIONS_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Exodus} $(DESC_Exodus)
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC_SSL} $(DESC_SSL)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Bleed} $(DESC_Bleed)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Bleed} $(DESC_Bleed)  
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Plugins} $(DESC_Plugins)
 !include plugins\plugin-desc.nsi
 !insertmacro MUI_FUNCTIONS_DESCRIPTION_END
@@ -487,11 +494,13 @@ FunctionEnd
 
 
 Function .onInit
-!include plugins\plugin-off.nsi
+
+    !include plugins\plugin-off.nsi
 	Push ${SEC_Plugins}
 	Call TurnOff
 
-	; BRANDING: Comment these 2 lines out, if you turn off bleeding-edge updates
+	; BRANDING: To turn off bleeding edge updates, 
+	; Comment these 2 lines out.
 	Push ${SEC_Bleed}
 	Call TurnOff
 
@@ -499,4 +508,5 @@ Function .onInit
 	Push ${SEC_SSL}
 	Call TurnOff
 !endif
+
 FunctionEnd
