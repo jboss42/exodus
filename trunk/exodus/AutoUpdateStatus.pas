@@ -159,7 +159,7 @@ begin
     tmp := tmp + ExtractFileName(URLToFilename(_url));
 
     ProgressBar1.Visible := true;
-    frameButtons1.btnOK.Enabled := false;
+    btnOK.Enabled := false;
     label1.Caption := _(sInitializing);
     label1.Refresh();
     Image1.Picture.Icon.Handle := LoadIcon(0, IDI_INFORMATION);
