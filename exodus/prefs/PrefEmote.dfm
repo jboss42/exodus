@@ -3,18 +3,18 @@ inherited frmPrefEmote: TfrmPrefEmote
   Top = 185
   Caption = 'frmPrefEmote'
   ClientHeight = 326
-  ClientWidth = 338
+  ClientWidth = 365
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   inherited pnlHeader: TTntPanel
-    Width = 338
+    Width = 365
     Caption = 'Emoticon Options'
   end
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 338
+    Width = 365
     Height = 26
     Align = alTop
     BevelOuter = bvNone
@@ -32,9 +32,9 @@ inherited frmPrefEmote: TfrmPrefEmote
   object pageEmotes: TTntPageControl
     Left = 0
     Top = 52
-    Width = 338
+    Width = 365
     Height = 274
-    ActivePage = TntTabSheet1
+    ActivePage = TntTabSheet2
     Align = alClient
     TabOrder = 2
     object TntTabSheet1: TTntTabSheet
@@ -42,7 +42,7 @@ inherited frmPrefEmote: TfrmPrefEmote
       object pnlCustomPresButtons: TPanel
         Left = 0
         Top = 212
-        Width = 330
+        Width = 357
         Height = 34
         Align = alBottom
         BevelOuter = bvNone
@@ -87,7 +87,7 @@ inherited frmPrefEmote: TfrmPrefEmote
       object lstEmotes: TTntListBox
         Left = 0
         Top = 0
-        Width = 330
+        Width = 357
         Height = 212
         Align = alClient
         ItemHeight = 13
@@ -99,7 +99,7 @@ inherited frmPrefEmote: TfrmPrefEmote
       object Panel2: TPanel
         Left = 0
         Top = 158
-        Width = 330
+        Width = 357
         Height = 34
         Align = alBottom
         BevelOuter = bvNone
@@ -135,7 +135,7 @@ inherited frmPrefEmote: TfrmPrefEmote
       object Panel3: TPanel
         Left = 0
         Top = 192
-        Width = 330
+        Width = 357
         Height = 54
         Align = alBottom
         BevelOuter = bvNone
@@ -157,9 +157,9 @@ inherited frmPrefEmote: TfrmPrefEmote
         object btnCustomEmoteBrowse: TTntButton
           Left = 270
           Top = 20
-          Width = 27
+          Width = 75
           Height = 25
-          Caption = '...'
+          Caption = 'Browse'
           TabOrder = 1
           OnClick = btnCustomEmoteBrowseClick
         end
@@ -167,7 +167,7 @@ inherited frmPrefEmote: TfrmPrefEmote
       object lstCustomEmotes: TTntListView
         Left = 0
         Top = 0
-        Width = 330
+        Width = 357
         Height = 158
         Align = alClient
         Columns = <>
