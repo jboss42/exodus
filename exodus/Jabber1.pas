@@ -691,6 +691,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.WMDisconnect(var msg: TMessage);
 begin
     //
@@ -997,6 +998,7 @@ begin
     else if event = '/session/regerror' then begin
         _logoff := true;
         MessageDlg(sRegError, mtError, [mbOK], 0);
+        PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
         exit;
     end
 
