@@ -1,6 +1,6 @@
 object frmRiser: TfrmRiser
-  Left = 277
-  Top = 125
+  Left = 1024
+  Top = 167
   AlphaBlendValue = 235
   BorderIcons = []
   BorderStyle = bsNone
