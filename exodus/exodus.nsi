@@ -32,7 +32,8 @@
 !define SECTION_OFF   0xFFFFFFFE
 
 ; The name of the installer
-!define MUI_PRODUCT "Exodus" ;Define your own software name here
+!define MUI_PRODUCT "Exodus"
+
 !include version.nsi
 !include "${NSISDIR}\Contrib\Modern UI\System.nsh"
 
@@ -46,7 +47,7 @@ ShowUninstDetails show
 
 ; The default installation directory
 InstallDir "$PROGRAMFILES\${MUI_PRODUCT}"
-; Registry key to check for directory (so if you install again, it will 
+; Registry key to check for directory (so if you install again, it will
 ; overwrite the old one automatically)
 InstallDirRegKey HKLM "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
 
@@ -58,21 +59,21 @@ InstallDirRegKey HKLM "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
 !define MUI_COMPONENTSPAGE
 !define MUI_DIRECTORYPAGE
 !define MUI_STARTMENUPAGE
-  !define MUI_STARTMENU_DEFAULTFOLDER "${MUI_PRODUCT}"
+!define MUI_STARTMENUPAGE_DEFAULTFOLDER "${MUI_PRODUCT}"
 
 !define MUI_FINISHPAGE
-  !define MUI_FINISHPAGE_RUN "$INSTDIR\Exodus.exe"  
+!define MUI_FINISHPAGE_RUN "$INSTDIR\Exodus.exe"
 ;  !define MUI_FINISHPAGE_RUN_NOTCHECKED
-  !define MUI_FINISHPAGE_NOAUTOCLOSE
+!define MUI_FINISHPAGE_NOAUTOCLOSE
 
 ; !define MUI_ABORTWARNING
-  
+
 !define MUI_UNINSTALLER
 !define MUI_UNCONFIRMPAGE
-  
+
 ;Modern UI System
 !define MUI_BRANDINGTEXT " "
-!insertmacro MUI_SYSTEM
+;  !insertmacro MUI_SYSTEM
 !insertmacro MUI_LANGUAGE "English"
 
 
@@ -171,7 +172,7 @@ Section "!${MUI_PRODUCT} (Required)" SEC_Exodus
         StrCpy $5 '-w "$5"'
 
   status:
-    ReadRegStr $6 HKLM "Software\Jabber\Exodus\Restart\$1" "status"    
+    ReadRegStr $6 HKLM "Software\Jabber\Exodus\Restart\$1" "status"
         StrCmp $6 "" exec
         StrCpy $6 '-s "$6"'
 
@@ -209,7 +210,7 @@ Section "SSL Support" SEC_SSL
         Delete $INSTDIR\indy_openssl096.zip
 	Delete $INSTDIR\readme.txt
 !else
-	File libeay32.dll  
+	File libeay32.dll
 	File ssleay32.dll
 !endif
         goto ssl_done
@@ -235,7 +236,7 @@ Section "" SEC_Menu
   	IfErrors regerror findnextdll
   regerror:
     DetailPrint "Error trying to register $INSTDIR\plugins\$1"
-    
+
   findnextdll:
   	ClearErrors
   	FindNext $0 $1
@@ -244,7 +245,7 @@ Section "" SEC_Menu
   dllregdone:
   	FindClose $0
   	goto pluginend
-  
+
   nodlls:
   	DetailPrint "$0 $1 No dlls found in $INSTDIR\plugins"
 
@@ -258,18 +259,18 @@ Section "" SEC_Menu
 
     StrCmp $0 "/S" silent
     !insertmacro MUI_STARTMENU_WRITE_BEGIN
-      CreateDirectory "$SMPROGRAMS\${MUI_STARTMENU_VARIABLE}"
-      CreateShortCut "$SMPROGRAMS\${MUI_STARTMENU_VARIABLE}\Uninstall.lnk" \
+      CreateDirectory "$SMPROGRAMS\${MUI_STARTMENUPAGE_VARIABLE}"
+      CreateShortCut "$SMPROGRAMS\${MUI_STARTMENUPAGE_VARIABLE}\Uninstall.lnk" \
         "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
-      CreateShortCut "$SMPROGRAMS\${MUI_STARTMENU_VARIABLE}\Exodus.lnk" \
+      CreateShortCut "$SMPROGRAMS\${MUI_STARTMENUPAGE_VARIABLE}\Exodus.lnk" \
         "$INSTDIR\Exodus.exe" "" "$INSTDIR\Exodus.exe" 0
 
       ; BRANDING: Change this URL
       CreateShortCut \
-        "$SMPROGRAMS\${MUI_STARTMENU_VARIABLE}\Exodus Homepage.lnk" \
+        "$SMPROGRAMS\${MUI_STARTMENUPAGE_VARIABLE}\Exodus Homepage.lnk" \
         "${HOME_URL}"
       WriteRegStr HKLM SOFTWARE\Jabber\Exodus "StartMenu" \
-        "${MUI_STARTMENU_VARIABLE}"
+        "${MUI_STARTMENUPAGE_VARIABLE}"
 
     !insertmacro MUI_STARTMENU_WRITE_END
 
@@ -280,7 +281,7 @@ SectionEnd
 ; BRANDING: Remove this section
 Section "Daily updates" SEC_Bleed
         SetOverwrite off
-        File "branding.xml"     
+        File "branding.xml"
         SetOverwrite on
 SectionEnd
 
@@ -376,14 +377,14 @@ SubCaption 3 ": Exit running Exodus versions!"
 
 ;------------------------------------------------------------------------------
 ; NotifyInstances
-; 
+;
 ; Closes all running instances of Exodus
 Function NotifyInstances
         Push $0
         Push $1
 
 start:
-        StrCpy $1 0 
+        StrCpy $1 0
 loop:
     FindWindow $0 "TfrmExodus" "" 0
     IntCmp $0 0 done
@@ -460,7 +461,7 @@ Function DownloadPlugin
     Abort "Error downloading $1 plugin"
 
   unzip:
-  	ZipDLL::extractall "$INSTDIR\plugins" "$INSTDIR\plugins\$1.zip" 
+  	ZipDLL::extractall "$INSTDIR\plugins" "$INSTDIR\plugins\$1.zip"
   	Delete "$INSTDIR\plugins\$1.zip"
 FunctionEnd
 

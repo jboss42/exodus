@@ -98,14 +98,13 @@ end;
         property LocalIP: string read _local_ip;
 
         property OnData: TDataEvent read _data_event write _data_event;
-end;
+    end;
 
     TParseThread = class(TIdThread)
     private
         _lock:       TCriticalSection;
         _indata:     TWideStringlist;
         _tag_parser: TXMLTagParser;
-        _stream:     TXMLStream;
         _domstack:   TList;
         _root:       Widestring;
         _root_tag:   Widestring;
@@ -120,6 +119,7 @@ end;
         function getFullTag(buff: Widestring): Widestring;
 
     protected
+        _stream:     TXMLStream;
         function GetData(): Widestring;
         procedure Push(buff: Widestring);
         procedure ThreadCleanUp();

@@ -31,6 +31,9 @@ uses
     QExtCtrls, IdSSLIntercept,
     {$else}
     ExtCtrls, IdSSLOpenSSL,
+    {$ifdef INDY9}
+    IdIOHandlerSocket,
+    {$endif}
     {$endif}
 
     IdTCPConnection, IdTCPClient, IdException, IdThread, IdSocks,
@@ -48,6 +51,7 @@ type
             {$ifdef INDY9}
             _ssl_int: TIdSSLIOHandlerSocket;
             _socks_info: TIdSocksInfo;
+            _iohandler: TIdIOHandlerSocket;
             {$else}
             _ssl_int: TIdConnectionInterceptOpenSSL;
             _socks_info: TObject;
@@ -78,7 +82,8 @@ type
         procedure Connect(profile: TJabberProfile); override;
         procedure Send(xml: Widestring); override;
         procedure Disconnect; override;
-end;
+        
+    end;
 
 
     TSocketThread = class(TParseThread)
@@ -93,8 +98,7 @@ end;
         procedure Sock_Disconnect(Sender: TObject);
     public
         // I don't think this needs reintroduce.
-        // constructor Create(wnd: HWND; Socket: TidTCPClient; root: string); reintroduce;
-        constructor Create(strm: TXMLStream; Socket: TidTCPClient; root: string); //reintroduce;
+        constructor Create(strm: TXMLStream; Socket: TidTCPClient; root: string);
 
         procedure DataTerminate (Sender: TObject);
         {$ifdef INDY9}
@@ -288,6 +292,10 @@ begin
     _socket     := nil;
     _sock_lock  := TCriticalSection.Create();
     _socks_info := nil;
+
+    {$ifdef INDY9}
+    _iohandler := nil;
+    {$endif}
 
     _timer := TTimer.Create(nil);
     _timer.Interval := 60000;
@@ -491,6 +499,7 @@ begin
     {$ifdef INDY9}
     _ssl_int := TIdSSLIOHandlerSocket.Create(nil);
     _socks_info := TIdSocksInfo.Create(nil);
+    _iohandler := TIdIOHandlerSocket.Create(nil);
     {$else}
     _ssl_int := TIdConnectionInterceptOpenSSL.Create(nil);
     {$endif}
@@ -531,6 +540,9 @@ begin
     end
     else begin
         {$ifdef INDY9}
+
+        // setup the socket to point to the handler..
+        // and the handler to point to our SOCKS stuff
         with _socks_info do begin
         {$else}
         with _socket.SocksInfo do begin
@@ -539,9 +551,11 @@ begin
             1: Version := svSocks4;
             2: Version := svSocks4a;
             3: Version := svSocks5;
-        end;
+            end;
+
             Host := _profile.SocksHost;
             Port := _profile.SocksPort;
+            Authentication := saNoAuthentication;
             if (_profile.SocksAuth) then begin
                 {$ifdef INDY9}
                 _socks_info.Username := _profile.SocksUsername;
@@ -552,6 +566,17 @@ begin
                 {$endif}
                 Authentication := saUsernamePassword;
             end;
+
+            {$ifdef INDY9}
+            if (_profile.ssl) then begin
+                _ssl_int.SocksInfo := _socks_info;
+                _socket.IOHandler := _ssl_int;
+            end
+            else begin
+                _iohandler.SocksInfo := _socks_info;
+                _socket.IOHandler := _iohandler;
+            end;
+            {$endif}
         end;
     end;
 
