@@ -7,7 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2003-05-08 06:59\n"
+<<<<<<< default.po
+"PO-Revision-Date: 2003-06-06 17:56-0000\n"
+=======
 "PO-Revision-Date: 2003-06-05 15:59-0000\n"
+>>>>>>> 1.3
 "Last-Translator: Lazarus Long <lazarus.long@bigfoot.com>\n"
 "Language-Team: pt_PT <lazarus.long@bigfoot.com>\n"
 "MIME-Version: 1.0\n"
@@ -200,7 +204,7 @@ msgstr "Fechar"
 #: About.dfm:1436
 #: ExEvents.pas:91
 msgid "Version: "
-msgstr "Versão:"
+msgstr "Versão: "
 
 #. frmAbout..InfoBox......Name
 #. frmBaseChat..Panel3..MsgList......Name
@@ -2279,7 +2283,7 @@ msgstr "Por favor aguarde. A contactar o agente de busca:"
 #. frmJUD..pnlLeft..pnlResults..Label1..Caption
 #: jud.dfm:128
 msgid "Search Again"
-msgstr "Localizar seguinte"
+msgstr "Nova procura"
 
 #. frmJUD..pnlLeft..pnlResults..Label3..Caption
 #: jud.dfm:142
@@ -3534,7 +3538,7 @@ msgstr "Congo (República Democrática do) "
 #: vcard.dfm:399
 #: vcard.dfm:870
 msgid "Cook Islands  "
-msgstr "Cook, Ihas de  "
+msgstr "Cook, Ilhas de  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.Strings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.Strings
@@ -3622,7 +3626,7 @@ msgstr "Dinamarca  "
 #: vcard.dfm:407
 #: vcard.dfm:878
 msgid "Djibouti  "
-msgstr "Djibouti  "
+msgstr "Jibuti  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.Strings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.Strings
@@ -3754,7 +3758,7 @@ msgstr "Falkland (Malvinas), Ilhas  "
 #: vcard.dfm:419
 #: vcard.dfm:890
 msgid "Faroe Islands  "
-msgstr "Faroé, Ihas  "
+msgstr "Faroé, Ilhas  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.Strings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.Strings
@@ -3908,7 +3912,7 @@ msgstr "Grécia  "
 #: vcard.dfm:433
 #: vcard.dfm:904
 msgid "Greenland  "
-msgstr "Groenelândia  "
+msgstr "Gronelândia  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.Strings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.Strings
@@ -4249,7 +4253,7 @@ msgstr "Kuwait  "
 #: vcard.dfm:464
 #: vcard.dfm:935
 msgid "Kyrgyzstan  "
-msgstr "Quirguistão  "
+msgstr "Quirguizistão  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.Strings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.Strings
@@ -4986,7 +4990,7 @@ msgstr "Santa Lucia  "
 #: vcard.dfm:531
 #: vcard.dfm:1002
 msgid "Saint Pierre and Miquelon  "
-msgstr "Saint-Pierre e Miquelon  "
+msgstr "São Pedro e Miquelon  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.Strings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.Strings
@@ -4997,7 +5001,7 @@ msgstr "Saint-Pierre e Miquelon  "
 #: vcard.dfm:532
 #: vcard.dfm:1003
 msgid "Saint Vincent and the Grenadines  "
-msgstr "São Vincente e as Grenadinas  "
+msgstr "São Vicente e Granadinas  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.Strings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.Strings
@@ -5151,7 +5155,7 @@ msgstr "África do Sul  "
 #: vcard.dfm:546
 #: vcard.dfm:1017
 msgid "South Georgia and the South Sandwich Islands  "
-msgstr "Geórgia do Sul e Ihas Sandwich do Sul  "
+msgstr "Geórgia do Sul e Ilhas Sandwich do Sul  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.Strings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.Strings
@@ -5448,7 +5452,7 @@ msgstr "Reino Unido  "
 #: vcard.dfm:574
 #: vcard.dfm:1045
 msgid "United States Minor Outlying Islands  "
-msgstr "Estados Unidos, Pequenas Ilhas ao Largo dos  "
+msgstr "Estados Unidos, Ilhas Menores Distantes dos  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.Strings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.Strings
@@ -5470,7 +5474,7 @@ msgstr "Uruguai  "
 #: vcard.dfm:576
 #: vcard.dfm:1047
 msgid "Uzbekistan  "
-msgstr "Uzbequistão  "
+msgstr "Usbequistão  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.Strings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.Strings
@@ -6380,12 +6384,12 @@ msgstr "Resposta de hora local"
 #. Programmer's name for it: sMsgTimeInfo
 #: ExEvents.pas:86
 msgid "Time, Ping Response: "
-msgstr "Resposta de hora local / ping:"
+msgstr "Resposta de hora local / ping: "
 
 #. Programmer's name for it: sMsgLocalTime
 #: ExEvents.pas:87
 msgid "Local Time: "
-msgstr "Hora local:"
+msgstr "Hora local: "
 
 #. Programmer's name for it: sMsgVersion
 #: ExEvents.pas:89
@@ -6395,22 +6399,22 @@ msgstr "Resposta de versão"
 #. Programmer's name for it: sMsgVerClient
 #: ExEvents.pas:90
 msgid "Description: "
-msgstr "Descrição:"
+msgstr "Descrição: "
 
 #. Programmer's name for it: sMsgVerOS
 #: ExEvents.pas:92
 msgid "OS: "
-msgstr "Sistema operativo:"
+msgstr "Sistema operativo: "
 
 #. Programmer's name for it: sMsgLastInfo
 #: ExEvents.pas:95
 msgid "Idle for "
-msgstr "Inactivo durante"
+msgstr "Inactivo durante "
 
 #. Programmer's name for it: sMsgURL
 #: ExEvents.pas:97
 msgid "This message contains a URL: "
-msgstr "Esta mensagem contém um URL:"
+msgstr "Esta mensagem contém um URL: "
 
 #. Programmer's name for it: sPresError
 #: ExEvents.pas:100
