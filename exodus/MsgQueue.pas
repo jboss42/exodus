@@ -345,6 +345,9 @@ var
     e, edup: TJabberEvent;
 begin
     if (lstEvents.SelCount <= 0) then exit;
+    if (MainSession = nil) then exit;
+    if (not MainSession.Active) then exit;
+    
     e := TJabberEvent(_queue.Items[lstEvents.Selected.Index]);
     edup := CreateJabberEvent(e.Tag);
     StartRecvMsg(edup);
@@ -372,6 +375,7 @@ begin
     Self.SaveEvents();
 end;
 
+{---------------------------------------}
 procedure TfrmMsgQueue.removeItems();
 var
     i: integer;
