@@ -24,7 +24,7 @@ uses
     Chat, ChatController, JabberID, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2,
-    TntStdCtrls, Buttons;
+    RichEdit, TntStdCtrls, Buttons;
 
 type
   TfrmChat = class(TfrmBaseChat)
