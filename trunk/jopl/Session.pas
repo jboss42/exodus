@@ -23,7 +23,7 @@ interface
 
 uses
     PrefController,
-    JabberAuth, Agents, Chat, MsgList, Presence, Roster, NodeItem, 
+    JabberAuth, Agents, Chat, MsgList, Presence, Roster, NodeItem,
     Signals, XMLStream, XMLTag, Unicode,
     Contnrs, Classes, SysUtils, JabberID;
 
@@ -40,7 +40,7 @@ type
         _priority: integer;
         _invisible: boolean;
         _profile: TJabberProfile;
-        _features: TList;
+        _features: TXMLTag;
         _xmpp: boolean;
         _cur_server: Widestring;
 
@@ -86,6 +86,7 @@ type
 
     published
         procedure DataEvent(send: boolean; data: Widestring);
+        procedure SessionCallback(event: string; tag: TXMLTag);
 
     public
         ppdb: TJabberPPDB;
@@ -163,7 +164,7 @@ type
         property Profile: TJabberProfile read _profile;
 
         property isXMPP: boolean read _xmpp;
-        property xmppFeatures: TList read _features;
+        property xmppFeatures: TXMLTag read _features;
     end;
 
 var
@@ -176,8 +177,8 @@ uses
     {$else}
     QForms, QDialogs,
     {$endif}
-    XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal,
-    JabberConst, iq, CapPresence;
+    XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal, IQ, 
+    JabberConst, CapPresence;
 
 {---------------------------------------}
 Constructor TJabberSession.Create(ConfigFile: widestring);
@@ -210,7 +211,7 @@ begin
 
     _pauseQueue := TQueue.Create();
     _avails := TWidestringlist.Create();
-    _features := TList.Create();
+    _features := nil;
     _xmpp := false;
 
     // Create all the things which might register w/ the session
@@ -465,8 +466,7 @@ begin
         Self.Play();
 
     ClearStringListObjects(Agents);
-    ClearListObjects(_features);
-    _features.Clear;
+    FreeAndNil(_features);
 
     ppdb.Clear;
     Roster.Clear;
@@ -480,11 +480,8 @@ end;
 {---------------------------------------}
 procedure TJabberSession.StreamCallback(msg: string; tag: TXMLTag);
 var
+    siq: TJabberIQ;
     tmps: WideString;
-    i: integer;
-    fp: TXMLTag;
-    f: TXMLTagList;
-    fo: TXMLTag;
 begin
     // Process callback info..
     if msg = 'connected' then begin
@@ -518,43 +515,66 @@ begin
             // we got connected
             _stream_id := tag.getAttribute('id');
             _xmpp := (tag.GetAttribute('version') = '1.0');
-            if (_xmpp) then begin
-                // populate stream features..
-                ClearListObjects(_features);
-                _features.Clear();
-                fp := tag.GetFirstTag('stream:features');
-                if (fp <> nil) then begin
-                    f := fp.ChildTags();
-                    for i := 0 to f.Count - 1 do begin
-                        fo := TXMLTag.Create(f.Tags[i]);
-                        _features.Add(fo);
-                    end;
-                end;
-            end;
 
             // Stash away our current server.
             _cur_server := tag.getAttribute('from');
-
-            // todo: check for XMPP 1.0 stuff..
-
             _dispatcher.DispatchSignal('/session/connected', nil);
 
-            if ((_register) or (_profile.NewAccount)) then
-                CreateAccount()
-            else
-                _auth_agent.StartAuthentication();
-
-            //tag.Free();
+            if (not _xmpp) then begin
+                if ((_register) or (_profile.NewAccount)) then
+                    CreateAccount()
+                else
+                    _auth_agent.StartAuthentication();
+            end;
         end
         else if (tag.Name = 'stream:error') then begin
             // we got a stream error
             FireEvent('/session/stream:error', tag);
         end
+
+        else if ((_xmpp) and (tag.Name = 'stream:features')) then begin
+            // cache stream features..
+            FreeAndNil(_features);
+            _features := TXMLTag.Create(tag);
+
+            if (_authd) then begin
+                // send session start
+                siq := TJabberIQ.Create(Self, generateID(), SessionCallback);
+                siq.Namespace := 'urn:ietf:params:xml:ns:xmpp-session';
+                siq.qTag.Name := 'session';
+                siq.iqType := 'set';
+                siq.Send();
+            end
+            else
+                // start auth.
+                _auth_agent.StartAuthentication();
+        end
+
         else
             _dispatcher.DispatchSignal('/packet', tag);
     end;
 
 end;
+
+{---------------------------------------}
+procedure TJabberSession.SessionCallback(event: string; tag: TXMLTag);
+var
+    cur_agents: TAgents;
+begin
+    if ((event <> 'xml') or (tag.getAttribute('type') <> 'result')) then begin
+        _dispatcher.DispatchSignal('/session/autherror', tag);
+        exit;
+    end
+    else begin
+        _first_pres := true;
+        _dispatcher.DispatchSignal('/session/authenticated', tag);
+        cur_agents := TAgents.Create();
+        Agents.AddObject(Server, cur_agents);
+        cur_agents.Fetch(Server);
+        Prefs.FetchServerPrefs();
+    end;
+end;
+
 
 {---------------------------------------}
 procedure TJabberSession.Pause();
@@ -909,7 +929,6 @@ procedure TJabberSession.setAuthAgent(new_auth: TJabberAuth);
 begin
     if (assigned(_auth_agent)) then
         FreeAndNil(_auth_agent);
-
     _auth_agent := new_auth;
 end;
 
@@ -930,24 +949,37 @@ end;
 {---------------------------------------}
 procedure TJabberSession.setAuthenticated(ok: boolean; tag: TXMLTag);
 var
+    tmps: Widestring;
     cur_agents: TAgents;
 begin
     // our auth-agent is all set
     if (ok) then begin
         _authd := true;
-        _first_pres := true;
-        _dispatcher.DispatchSignal('/session/authenticated', tag);
-        cur_agents := TAgents.Create();
-        Agents.AddObject(Server, cur_agents);
-        cur_agents.Fetch(Server);
-        Prefs.FetchServerPrefs();
         _profile.NewAccount := false;
         _register := false;
+
+        if (_xmpp) then begin
+            // send a new stream:stream...
+            _stream.ResetParser();
+            tmps := '<stream:stream to="' + Trim(Server) +
+                '" xmlns="jabber:client" ' +
+                'xmlns:stream="http://etherx.jabber.org/streams" ' +
+                'version="1.0" ' +
+                '>';
+            _stream.Send(tmps);
+        end
+        else begin
+            _first_pres := true;
+            _dispatcher.DispatchSignal('/session/authenticated', tag);
+            cur_agents := TAgents.Create();
+            Agents.AddObject(Server, cur_agents);
+            cur_agents.Fetch(Server);
+            Prefs.FetchServerPrefs();
+        end;
     end
     else begin
         _dispatcher.DispatchSignal('/session/autherror', tag);
     end;
-
 end;
 
 

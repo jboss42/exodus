@@ -160,7 +160,9 @@ uses
   NodeItem in '..\jopl\NodeItem.pas',
   Jud in 'Jud.pas' {frmJud},
   DockWizard in 'DockWizard.pas' {frmDockWizard},
-  SSLWarn in 'SSLWarn.pas' {frmSSLWarn};
+  SSLWarn in 'SSLWarn.pas' {frmSSLWarn},
+  SASLAuth in 'SASLAuth.pas',
+  JSASL in '..\jopl\JSASL.pas';
 
 {$R *.TLB}
 

@@ -33,6 +33,7 @@ type
         _AuthType: TJabberAuthType;
         _auth_iq: TJabberIQ;
         _token: TXMLTag;
+        _sasl_auth: TJabberAuth;
 
         procedure SendAuthGet;
         procedure SendRegistration;
@@ -60,7 +61,7 @@ type
 
 implementation
 uses
-    JabberConst, XMLUtils, JabberID;
+    SASLAuth, JabberConst, XMLUtils, JabberID;
 
 {---------------------------------------}
 constructor TStandardAuth.Create(session: TJabberSession);
@@ -70,6 +71,7 @@ begin
     _auth_iq := nil;
     _token := nil;
     prompt_password := true;
+    _sasl_auth := TSASLAuth.Create(session);
 end;
 
 {---------------------------------------}
@@ -86,24 +88,34 @@ end;
 {---------------------------------------}
 procedure TStandardAuth.StartAuthentication();
 begin
-    SendAuthGet();
+    if (_session.isXMPP) then
+        _sasl_auth.StartAuthentication()
+    else
+        SendAuthGet();
 end;
 
 {---------------------------------------}
 procedure TStandardAuth.CancelAuthentication();
 begin
     // Clean out pending iq's
-    if (_auth_iq <> nil) then
+    if (_session.isXMPP) then
+        _sasl_auth.CancelAuthentication()
+    else if (_auth_iq <> nil) then
         FreeAndNil(_auth_iq);
 end;
 
 {---------------------------------------}
 function TStandardAuth.StartRegistration(): boolean;
 begin
-    Result := true;
-    SendRegistration();
+    if (_session.isXMPP) then
+        Result := false
+    else begin
+        Result := true;
+        SendRegistration();
+    end;
 end;
 
+{---------------------------------------}
 procedure TStandardAuth.CancelRegistration();
 begin
     // Clean out pending iq's
