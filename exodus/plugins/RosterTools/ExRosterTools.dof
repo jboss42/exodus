@@ -95,10 +95,10 @@ UnitOutputDir=.\output
 PackageDLLOutputDir=
 PackageDCPOutputDir=.\output
 SearchPath=
-Packages=vcl;rtl;vclshlctrls;TntUnicodeVcl_R70;TntUnicodeVcl_D70
+Packages=vcl;rtl;vclshlctrls
 Conditionals=
 DebugSourceDirs=
-UsePackages=1
+UsePackages=0
 [Parameters]
 RunParams=
 HostApplication=
