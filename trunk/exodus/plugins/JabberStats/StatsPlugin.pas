@@ -56,6 +56,9 @@ type
     _cb: integer;
   end;
 
+resourcestring
+    sStreamError = 'The JabberStats plugin could not initialize the stats file. You shoud configure it and provide a path which exists and you have write permissions.';
+
 implementation
 
 uses
@@ -104,6 +107,7 @@ begin
     if (_parser.Count = 0) then exit;
 
     tag := _parser.popTag();
+
     // from, packet-type, date/time, size
     from := tag.getAttribute('from');
     if (from = '') then from := '-server-';
@@ -113,7 +117,6 @@ begin
     size := IntToStr(Length(xml));
     dt := FormatDateTime(LongDateFormat, Now());
     op := Format('%s '#9' %s '#9' %s '#9' %s '#9' %s '#13#10, [from, t, ns, dt, size]);
-    // Writeln(_stat_file, op);
     buff := UTF8Encode(op);
     _stream.Write(Pointer(buff)^, Length(buff));
 end;
@@ -140,7 +143,7 @@ begin
 
     // open the stat file
     try
-        if (FileExists(_filename)) then 
+        if (FileExists(_filename)) then
             _stream := TFileStream.Create(_filename, fmOpenReadWrite,
                 fmShareDenyNone)
         else
@@ -149,18 +152,11 @@ begin
         _exodus.setPrefAsString('stats_filename', _filename);
         _cb := _exodus.RegisterCallback('/packet', Self);
     except
+        MessageDlg(sStreamError, mtError, [mbOK], 0);
         _stream := nil;
-        _cb := -1;
+        if (_cb >= 0) then
+            _exodus.UnRegisterCallback(_cb);
     end;
-
-    {
-    AssignFile(_stat_file, _filename);
-    if (FileExists(_filename)) then
-        Append(_stat_file)
-    else
-        Rewrite(_stat_file);
-    }
-
 end;
 
 function TStatsPlugin.NewIM(const jid: WideString; var Body,
