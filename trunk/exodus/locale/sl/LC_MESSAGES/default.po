@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: default\n"
-"POT-Creation-Date: 2003-12-11 08:40\n"
-"PO-Revision-Date: 2003-12-14 00:50+0100\n"
+"POT-Creation-Date: 2003-12-15 11:23\n"
+"PO-Revision-Date: 2003-12-15 21:48+0100\n"
 "Last-Translator: Jure Repinc <jlp@holodeck1.com>\n"
 "Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
@@ -899,7 +899,7 @@ msgstr "Profil"
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksUsername..Caption
 #. frmPrefNetwork..GroupBox2..lblProxyUsername..Caption
 #. frmPrefTransfer..grpWebDav..Label7..Caption
-#: ConnDetails.dfm:60 ConnDetails.dfm:331 prefs/PrefNetwork.dfm:108
+#: ConnDetails.dfm:60 ConnDetails.dfm:331 prefs/PrefNetwork.dfm:110
 #: prefs/PrefTransfer.dfm:78
 msgid "Username:"
 msgstr "Upor. ime:"
@@ -910,7 +910,7 @@ msgstr "Upor. ime:"
 #. frmPrefNetwork..GroupBox2..lblProxyPassword..Caption
 #. frmPrefTransfer..grpWebDav..Label8..Caption
 #: ConnDetails.dfm:68 ConnDetails.dfm:340 JoinRoom.dfm:61
-#: prefs/PrefNetwork.dfm:117 prefs/PrefTransfer.dfm:85
+#: prefs/PrefNetwork.dfm:119 prefs/PrefTransfer.dfm:85
 msgid "Password:"
 msgstr "Geslo:"
 
@@ -960,7 +960,7 @@ msgstr "Shrani &geslo"
 #. frmPrefTransfer..grpWebDav..txtDavPassword..PasswordChar
 #: ConnDetails.dfm:138 ConnDetails.dfm:400 InputPassword.dfm:61
 #: JoinRoom.dfm:108 Password.dfm:43 Password.dfm:71 Password.dfm:79
-#: prefs/PrefNetwork.dfm:169 prefs/PrefTransfer.dfm:127
+#: prefs/PrefNetwork.dfm:171 prefs/PrefTransfer.dfm:127
 msgid "*"
 msgstr "*"
 
@@ -1007,7 +1007,7 @@ msgstr "Samodejno ugotovi gostitelja in vrata"
 #. frmConnDetails..PageControl1..tbsConn..boxHost..Label4..Caption
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksHost..Caption
 #. frmPrefNetwork..GroupBox2..lblProxyHost..Caption
-#: ConnDetails.dfm:231 ConnDetails.dfm:305 prefs/PrefNetwork.dfm:90
+#: ConnDetails.dfm:231 ConnDetails.dfm:305 prefs/PrefNetwork.dfm:92
 msgid "Host:"
 msgstr "Gostitelj:"
 
@@ -1015,7 +1015,7 @@ msgstr "Gostitelj:"
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksPort..Caption
 #. frmPrefNetwork..GroupBox2..lblProxyPort..Caption
 #. frmPrefTransfer..grpWebDav..Label4..Caption
-#: ConnDetails.dfm:239 ConnDetails.dfm:314 prefs/PrefNetwork.dfm:99
+#: ConnDetails.dfm:239 ConnDetails.dfm:314 prefs/PrefNetwork.dfm:101
 #: prefs/PrefTransfer.dfm:57
 msgid "Port:"
 msgstr "Vrata:"
@@ -1052,7 +1052,7 @@ msgstr "Posrednik"
 
 #. frmConnDetails..PageControl1..tbsSocket..chkSocksAuth..Caption
 #. frmPrefNetwork..GroupBox2..chkProxyAuth..Caption
-#: ConnDetails.dfm:349 prefs/PrefNetwork.dfm:150
+#: ConnDetails.dfm:349 prefs/PrefNetwork.dfm:152
 msgid "Authentication Required"
 msgstr "Obvezno overovljanje"
 
@@ -2006,7 +2006,8 @@ msgstr "Čarovnik za Jabber iskanje"
 msgid ""
 "Select the user database or enter in the Jabber ID of the search agent to "
 "use:"
-msgstr "Izberite podatkovno zbirko uporabnikov ali vnesite JID posrednika za iskanje:"
+msgstr ""
+"Izberite podatkovno zbirko uporabnikov ali vnesite JID posrednika za iskanje:"
 
 #. frmJud..Tabs..TabSheet2..lblWait..Caption
 #: jud.dfm:86
@@ -4650,8 +4651,8 @@ msgid ""
 "Your Registration to this service has been completed Successfully. Press the "
 "'Next' button to Finish."
 msgstr ""
-"Vaša registracija pri storitvi usprešno zaključena. Kliknite na gumb »Naprej"
-"« za nadaljevanje."
+"Vaša registracija pri storitvi usprešno zaključena. Kliknite na gumb "
+"»Naprej« za nadaljevanje."
 
 #. frmRegister..Tabs..TabSheet4..lblBad....AutoSize
 #: RegForm.dfm:165
@@ -4661,8 +4662,8 @@ msgid ""
 "Cancel to close this wizard."
 msgstr ""
 "Vaša registracija pri storitvi ni uspela. Kliknite na gumb »Nazaj« in "
-"preverite pravilnost vnešenih parametrov. Kliknite na »Prekliči«, če "
-"želite zapreti čarovnika."
+"preverite pravilnost vnešenih parametrov. Kliknite na »Prekliči«, če želite "
+"zapreti čarovnika."
 
 #. frmRemove..optMove..Caption
 #: RemoveContact.dfm:60
@@ -5724,8 +5725,10 @@ msgstr "(obvezno)"
 
 #. Programmer's name for it: SPropertiesMissing
 #: getOpt.pas:122
-msgid "%s: improper use of TGetOpts, one, some or more properties not initialized."
-msgstr "%s: Nepravilna uporaba TGetOpts. Ena ali več lastnosti ni pripravljenih."
+msgid ""
+"%s: improper use of TGetOpts, one, some or more properties not initialized."
+msgstr ""
+"%s: Nepravilna uporaba TGetOpts. Ena ali več lastnosti ni pripravljenih."
 
 #. Programmer's name for it: SReqOptMissing
 #: getOpt.pas:123
@@ -5980,7 +5983,8 @@ msgstr "Sporočilo od "
 
 #: MsgRecv.pas:768
 msgid "You have unread messages. Read all messages before closing the window."
-msgstr "Čakajo vas neprebrana sporočila. Preberite vsa sporočila preden zaprete okno."
+msgstr ""
+"Čakajo vas neprebrana sporočila. Preberite vsa sporočila preden zaprete okno."
 
 #. someone is coming online for the first time..
 #: Notify.pas:130
@@ -6019,7 +6023,8 @@ msgid "Receive request timed out."
 msgstr "Potekel je čas zahteve za sprejem."
 
 #: RecvStatus.pas:409
-msgid "No acceptable stream hosts were sent. Have the sender check their settings."
+msgid ""
+"No acceptable stream hosts were sent. Have the sender check their settings."
 msgstr ""
 "Ni navedenega ustreznega gostitelja za tok. Pošiljatelj naj preveri svoje "
 "nastavitve."
@@ -6054,7 +6059,8 @@ msgstr "Prišlo je do napake pri sprejemanju datoteke. (%d)"
 
 #. we ran out of streamhosts to try. bummer :(
 #: RecvStatus.pas:689
-msgid "Exodus was unable to connect to any file transfer proxies or the sender."
+msgid ""
+"Exodus was unable to connect to any file transfer proxies or the sender."
 msgstr ""
 "Ne morem se povezati z nobenim posrednikom za prenos datotek ali s "
 "pošiljateljem."
@@ -6136,7 +6142,8 @@ msgstr "Klepetalnica se ustvarja. Prosim, poskusite kasneje."
 
 #: Room.pas:750
 msgid "You are not allowed to enter the room. You must be on the member list."
-msgstr "Ni vam dovoljeno vstopiti v klepetalnico. Morate biti na seznamu članov."
+msgstr ""
+"Ni vam dovoljeno vstopiti v klepetalnico. Morate biti na seznamu članov."
 
 #: Room.pas:755 Room.pas:964
 msgid "You are not on the member list for this room. Try and register?"
@@ -6197,7 +6204,9 @@ msgstr "Ni vam dovoljeno ustvarjati klepetalnic."
 msgid ""
 "There was an error using the default room configuration. Configuring it "
 "manually."
-msgstr "Prišlo je do napake pri uporabi privzetih nastavitev klepetalnice. Nastavite jo ročno."
+msgstr ""
+"Prišlo je do napake pri uporabi privzetih nastavitev klepetalnice. Nastavite "
+"jo ročno."
 
 #: Room.pas:1131
 msgid ""
@@ -6256,7 +6265,8 @@ msgstr "Razlog za izobčenje"
 #. Destroy Room
 #: Room.pas:1762
 msgid "Do you really want to destroy the room? All users will be removed."
-msgstr "Želite resnično uničiti to klepetalnico? Vsi uporabniki bodo odstranjeni."
+msgstr ""
+"Želite resnično uničiti to klepetalnico? Vsi uporabniki bodo odstranjeni."
 
 #: Room.pas:1764
 msgid "The owner has destroyed the room."
@@ -6288,8 +6298,8 @@ msgid ""
 "Jabber Contact IDs do not typically include a resource. Are you sure you "
 "want to add this contact ID?"
 msgstr ""
-"Jabber ID stikov ponavadi ne vključuje vira. Ste prepričani, da želite dodati "
-"ta Jabber ID?"
+"Jabber ID stikov ponavadi ne vključuje vira. Ste prepričani, da želite "
+"dodati ta Jabber ID?"
 
 #. we don't have this svc..
 #: RosterAdd.pas:242
@@ -6415,7 +6425,8 @@ msgstr "Tok ni bil omogočen za datoteko: %s"
 #. our thread completed.
 #: SendStatus.pas:960
 msgid "There was an error trying to upload the file to your web host."
-msgstr "Prišlo je do napake pri prenosu datoteke k vašemu spletnemu gostitelju."
+msgstr ""
+"Prišlo je do napake pri prenosu datoteke k vašemu spletnemu gostitelju."
 
 #: SendStatus.pas:980
 msgid "Send failed."
@@ -7038,14 +7049,29 @@ msgid "Time is in seconds. Use 0 for a random time period."
 msgstr "Čas je v sekundah. Vrednost 0 pomeni naključen čas."
 
 #. frmPrefNetwork..GroupBox2..Caption
-#: prefs/PrefNetwork.dfm:83
+#: prefs/PrefNetwork.dfm:85
 msgid "HTTP Proxy"
 msgstr "Posrednik HTTP"
 
 #. frmPrefNetwork..GroupBox2..Label28..Caption
-#: prefs/PrefNetwork.dfm:126
+#: prefs/PrefNetwork.dfm:128
 msgid "Approach:"
 msgstr "Pristop:"
+
+#. frmPrefNetwork..GroupBox2..cboProxyApproach....Items.WideStrings
+#: prefs/PrefNetwork.dfm:184
+msgid "Use IE Settings"
+msgstr "Sistemske nastavitve"
+
+#. frmPrefNetwork..GroupBox2..cboProxyApproach....Items.WideStrings
+#: prefs/PrefNetwork.dfm:185
+msgid "No HTTP Proxy"
+msgstr "Brez posrednika"
+
+#. frmPrefNetwork..GroupBox2..cboProxyApproach....Items.WideStrings
+#: prefs/PrefNetwork.dfm:186
+msgid "Custom HTTP Proxy"
+msgstr "Posrednik po želji"
 
 #. frmPrefNotify..Caption
 #: prefs/PrefNotify.dfm:4
@@ -7621,7 +7647,8 @@ msgstr ""
 msgid ""
 "You must exit exodus, and restart it before your new locale settings will "
 "take affect."
-msgstr "Nova nastavitev jezika bo pričela veljati po ponovnem zagonu programa Exodus."
+msgstr ""
+"Nova nastavitev jezika bo pričela veljati po ponovnem zagonu programa Exodus."
 
 #: prefs/PrefSystem.pas:268
 msgid "No new update available."
