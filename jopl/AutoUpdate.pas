@@ -194,7 +194,7 @@ begin
         rounded := RoundDateTime(http.Response.LastModified);
         if (rounded <= last) then begin
             if (rounded <> last) then
-                MainSession.Prefs.setDateTime(_pkey, http.Response.LastModified);
+                MainSession.Prefs.setDateTime(_pkey, rounded);
             exit;
         end;
 

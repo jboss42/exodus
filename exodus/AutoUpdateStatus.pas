@@ -185,7 +185,7 @@ begin
                 // plus 2 hours. This should solve weird problems where folks
                 // always see auto-update notices.
                 MainSession.Prefs.setDateTime('last_update',
-                    (httpClient.Response.LastModified + (2/24)));
+                    (httpClient.Response.LastModified + (2.0/24.0)));
 
                 label1.Caption := _(sInstalling);
                 label1.Refresh();
