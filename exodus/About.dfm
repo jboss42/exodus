@@ -1535,8 +1535,21 @@ object frmAbout: TfrmAbout
     UndoLimit = 0
     AllowInPlace = False
     RTF = 
-      '{\rtf1\ansi\ansicpg950\deff0{\fonttbl{\f0\fnil\fcharset0 MS Sans' +
-      ' Serif;}}'#13#10'\viewkind4\uc1\pard\lang1033\f0\fs16 Test text - do n' +
-      'ot translate.\par'#13#10'}'#13#10
+      '{\rtf1\fbidis\ansi\deff0{\fonttbl{\f0\fmodern\fprq1\fcharset136 ' +
+      'Arial Unicode MS;}{\f1\fmodern\fprq1\fcharset129 Arial Unicode M' +
+      'S;}{\f2\fmodern\fprq1\fcharset134 Arial Unicode MS;}{\f3\fmodern' +
+      '\fprq1\fcharset128 Arial Unicode MS;}{\f4\fmodern\fprq1\fcharset' +
+      '0 Arial Unicode MS;}{\f5\fnil\fcharset0 MS Sans Serif;}}'#13#10'\viewk' +
+      'ind4\uc1\pard\ltrpar\lang1033\f0\fs16\'#39'c9\'#39'd8\f1\u29810?\'#39'a4\'#39'd6' +
+      '\f2\'#39'91\'#39'4f\f0\'#39'ed\'#39'64\'#39'ef\'#39'c2\'#39'da\'#39'42\f3\'#39'94\'#39'80\'#39'e0\'#39'73\u14695' +
+      '?\u12341?\f0\'#39'e1\'#39'e8\f3\'#39'fa\'#39'd5\'#39'82\'#39'c4\f2\'#39'8c\'#39'e3\'#39'c1\'#39'ca\'#39'ac\'#39 +
+      '97\'#39'92\'#39'53\'#39'b9\'#39'66\'#39'95\'#39'82\'#39'8c\'#39'bb\'#39'9c\'#39'a4\'#39'e3\'#39'e9\'#39'95\'#39'82\'#39'b5\'#39 +
+      'b5\'#39'c4\'#39'b5\'#39'94\'#39'b2\f3\'#39'82\'#39'd2\f2\u19744?\f4\u8275?\f2\'#39'91\'#39'47\'#39'a' +
+      'a\'#39'9e\'#39'bd\'#39'b3\'#39'a0\'#39'b0\'#39'95\'#39'8a\'#39'bd\'#39'44\u3453?\'#39'd7\'#39'f0\'#39'98\'#39'50\'#39'ee' +
+      '\'#39'a2\'#39'e9\'#39'ae\'#39'93\'#39'b3\'#39'de\'#39'cf\'#39'92\'#39'd7\'#39'be\'#39'cd\'#39'ce\'#39'bf\'#39'93\'#39'b7\'#39'e3' +
+      '\'#39'e1\'#39'9c\'#39'9f\f1\'#39'a4\'#39'd7\f3\u13104?\f0\'#39'dd\'#39'4c\f3\'#39'82\'#39'c4\f1\u262' +
+      '04?\'#39'a4\'#39'e3\f4\u8246?\f2\'#39'94\'#39'a0\'#39'ac\'#39'9b\'#39'ac\'#39'5f\'#39'b3\'#39'89\f4\u830' +
+      '8?\u8237?\f2\'#39'9d\'#39'99\'#39'c7\'#39'fe\'#39'ac\'#39'98\'#39'ac\'#39'5f\'#39'91\'#39'60\'#39'aa\'#39'9e\'#39'91' +
+      '\'#39'5b\'#39'd5\'#39'fb\'#39'8c\'#39'b9\'#39'ce\'#39'bf\u3442?\'#39'ce\'#39'c9\u2573?\f5\par'#13#10'}'#13#10
   end
 end
