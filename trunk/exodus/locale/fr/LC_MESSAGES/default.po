@@ -7642,7 +7642,7 @@ msgstr "Le Contact doit être En Ligne avant de lui envoyer un Fichier."
 #: XferManager.pas:277
 #: XferManager.pas:344
 msgid "%s is sending you a file."
-msgstr "% est en train de vous envoyer un fichier."
+msgstr "%s est en train de vous envoyer un fichier."
 
 #. check to see if we should disconnect current xfers
 #: XferManager.pas:473
