@@ -79,7 +79,6 @@ const
 
     P_EVENT_WIDTH = 'event_width';
 
-
 type
     TJabberProfile = class
     private
@@ -443,6 +442,8 @@ begin
         result := ExtractFilePath(Application.EXEName) + 'logs'
     else if pkey = 'xfer_path' then
         result := ExtractFilePath(Application.EXEName)
+    else if pkey = 'spool_path' then
+        result := getUserDir() + 'spool.xml'
     else if pkey = 'inline_status' then
         result := '0'
     else if pkey = 'roster_bg' then
