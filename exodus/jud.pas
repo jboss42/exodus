@@ -303,7 +303,7 @@ procedure TfrmJUD.FieldsCallback(event: string; tag: TXMLTag);
 var
     fields: TXMLTagList;
     cur_tag, x: TXMLTag;
-    i: integer;
+    ti, i: integer;
     ff, cur_frame: TframeTopLabel;
     cur_gen: TframeGeneric;
     cur_field: string;
@@ -311,9 +311,8 @@ begin
     // callback when we get the fields back
     cur_state := 'search';
     cur_iq := nil;
-    cur_frame := nil;
-    aniWait.Active := false;
     ff := nil;
+    aniWait.Active := false;
 
     if (event <> 'xml') then begin
         // timeout
@@ -329,7 +328,6 @@ begin
     end
     else if (tag <> nil) then begin
         // *whoop*, we got a result tag
-        cur_frame := nil;
         field_set.Clear();
 
         // Check for x-data support
@@ -361,6 +359,7 @@ begin
           fields := tag.QueryXPTag('/iq/query').ChildTags();
           pnlFields.Visible := false;
           //for i := fields.Count - 1 downto 0 do begin
+          ti := 0;
           for i := 0 to fields.Count - 1 do begin
               cur_tag := fields[i];
               if (cur_tag.Name = 'instructions') then
@@ -381,23 +380,24 @@ begin
                       field_name := cur_field;
                       lbl.Caption := getDisplayField(cur_field);
                       Name := 'frame_' + field_name;
-                      TabOrder := 0;
+                      TabOrder := ti;
                       if (cur_field = 'password') then
                           txtData.PasswordChar := '*';
+                      inc(ti);
                   end;
-                  if (ff = nil) then ff := cur_frame;
+                  if (ff = nil) then
+                      ff := cur_frame;
               end;
           end;
           fields.Free();
           pnlFields.Visible := true;
-          if (ff <> nil) then cur_frame := ff;
       end;
     end;
 
     Tabs.ActivePage := TabSheet3;
 
-    if (cur_frame <> nil) then
-        cur_frame.txtData.SetFocus();
+    if (ff <> nil) then
+        ff.txtData.SetFocus();
 
 end;
 

@@ -191,6 +191,7 @@ inherited frmJud: TfrmJud
         OwnerData = True
         ReadOnly = True
         RowSelect = True
+        PopupMenu = PopupMenu1
         TabOrder = 1
         ViewStyle = vsReport
         OnColumnClick = lstContactsColumnClick
