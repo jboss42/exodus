@@ -24,17 +24,20 @@ interface
 
 uses
     GUIFactory,
-    ExResponders, 
+    ExResponders,
     ExEvents,
     RosterWindow,
     Presence,
     XMLTag,
+    ShellAPI,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
     Buttons, OleCtrls, AppEvnts, ToolWin;
 
 const
     UpdateKey = '001';
+
+    WM_TRAY = WM_USER + 5269;
 
 type
     TNextEventType = (next_none, next_Exit, next_Login);
@@ -134,6 +137,12 @@ type
     popTabs: TPopupMenu;
     popCloseTab: TMenuItem;
     popFloatTab: TMenuItem;
+    popTray: TPopupMenu;
+    ShowExodus1: TMenuItem;
+    N4: TMenuItem;
+    LogOff1: TMenuItem;
+    N01: TMenuItem;
+    ExitExodus1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -175,6 +184,8 @@ type
     procedure mnuChatClick(Sender: TObject);
     procedure mnuBookmarkClick(Sender: TObject);
     procedure presCustomClick(Sender: TObject);
+    procedure ShowExodus1Click(Sender: TObject);
+    procedure ExitExodus1Click(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -196,6 +207,11 @@ type
     _last: TLastResponder;
     _browse: TBrowseResponder;
 
+    _tray: NOTIFYICONDATA;
+    _hidden: boolean;
+    _shutdown: boolean;
+    _close_min: boolean;
+
 
     // Callbacks
     procedure SessionCallback(event: string; tag: TXMLTag);
@@ -211,6 +227,9 @@ type
     procedure CreateParams(var Params: TCreateParams); override;
     procedure WMSysCommand(var msg: TWmSysCommand); message WM_SYSCOMMAND;
     procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
+    procedure WMTray(var msg: TMessage); message WM_TRAY;
+    procedure WMQueryEndSession(var msg: TMessage); message WM_QUERYENDSESSION;
+    procedure WMEndSession(var msg: TMessage); message WM_ENDSESSION;
   public
     // other stuff..
     function  getTabForm(tab: TTabSheet): TForm;
@@ -254,7 +273,6 @@ uses
     JUD, Bookmark,
     Transfer, Profile,
     RiserWindow, RemoveContact,
-    ShellAPI,
     MsgRecv, Prefs, Dockable,
     JoinRoom, Login, ChatWin, RosterAdd,
     VCard, PrefController, Roster, S10n,
@@ -278,16 +296,63 @@ procedure TfrmJabber.WMSysCommand(var msg: TWmSysCommand);
 begin
     case (msg.CmdType and $FFF0) of
     SC_MINIMIZE: begin
-        ShowWindow(Handle, SW_MINIMIZE);
+        // ShowWindow(Handle, SW_MINIMIZE);
+        _hidden := true;
+        ShowWindow(Handle, SW_HIDE);
         msg.Result := 0;
         end;
     SC_RESTORE: begin
         ShowWindow(Handle, SW_RESTORE);
         msg.Result := 0;
         end;
+    SC_CLOSE: begin
+        if ((_close_min) and (not _shutdown)) then begin
+            _hidden := true;
+            ShowWindow(Handle, SW_HIDE);
+            end
+        else
+            inherited;
+        msg.Result := 0;
+        end;
     else
         inherited;
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmJabber.WMTray(var msg: TMessage);
+var
+    cp: TPoint;
+begin
+    // this gets fired when the user clicks on the tray icon
+    if ((Msg.LParam = WM_LBUTTONDBLCLK) and (_hidden)) then begin
+        // restore our app
+        _hidden := false;
+        ShowWindow(Handle, SW_RESTORE);
+        msg.Result := 0;
+        end
+    else if (Msg.LParam = WM_RBUTTONDOWN) then begin
+        GetCursorPos(cp);
+        SetForegroundWindow(Self.Handle);
+        Application.ProcessMessages;
+        popTray.Popup(cp.x, cp.y);
+        end;
+end;
+
+{---------------------------------------}
+procedure TfrmJabber.WMQueryEndSession(var msg: TMessage);
+begin
+    //
+    _shutdown := true;
+    msg.Result := 1;
+end;
+
+{---------------------------------------}
+procedure TfrmJabber.WMEndSession(var msg: TMessage);
+begin
+    //
+    _shutdown := true;
+    msg.Result := 0;
 end;
 
 {---------------------------------------}
@@ -362,6 +427,21 @@ begin
     _is_min := false;
     IdleUIInit();
 
+    // Create the tray icon, etc..
+    with _tray do begin
+        Wnd := Self.Handle;
+        uFlags := NIF_ICON + NIF_MESSAGE + NIF_TIP;
+        uCallbackMessage := WM_TRAY;
+        hIcon := Application.Icon.Handle;
+        szTip := 'Exodus';
+        cbSize := SizeOf(_tray);
+        end;
+    Shell_NotifyIcon(NIM_ADD, @_tray);
+
+    _hidden := false;
+    _shutdown := false;
+    _close_min := MainSession.prefs.getBool('close_min')
+
 end;
 
 {---------------------------------------}
@@ -420,6 +500,7 @@ begin
         restoreEvents(MainSession.Prefs.getBool('expanded'));
         if not MainSession.Prefs.getBool('expanded') then
             tbsMsg.TabVisible := false;
+        _close_min := MainSession.prefs.getBool('close_min')
         end;
 end;
 
@@ -624,6 +705,7 @@ end;
 {---------------------------------------}
 procedure TfrmJabber.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+    Shell_NotifyIcon(NIM_DELETE, @_tray);
     Action := caFree;
 end;
 
@@ -915,6 +997,7 @@ end;
 {---------------------------------------}
 procedure TfrmJabber.Exit2Click(Sender: TObject);
 begin
+    _shutdown := true;
     Self.Close;
 end;
 
@@ -1166,7 +1249,19 @@ end;
 procedure TfrmJabber.presCustomClick(Sender: TObject);
 begin
     // Custom presence
+end;
 
+procedure TfrmJabber.ShowExodus1Click(Sender: TObject);
+begin
+    // Show the application from the popup Menu
+    _hidden := false;
+    ShowWindow(Handle, SW_RESTORE);
+end;
+
+procedure TfrmJabber.ExitExodus1Click(Sender: TObject);
+begin
+    // Close the application
+    Self.Close;
 end;
 
 end.

@@ -122,6 +122,8 @@ type
     lblBlockList: TLabel;
     chkSound: TCheckBox;
     chkInlineStatus: TCheckBox;
+    cboInlineStatus: TColorBox;
+    chkCloseMin: TCheckBox;
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -138,6 +140,7 @@ type
     procedure chkToastClick(Sender: TObject);
     procedure chkToastAlphaClick(Sender: TObject);
     procedure trkToastAlphaChange(Sender: TObject);
+    procedure chkInlineStatusClick(Sender: TObject);
   private
     { Private declarations }
     _notify: array of integer;
@@ -205,7 +208,9 @@ begin
         chkShowUnsubs.Checked := getBool('roster_show_unsub');
         chkOfflineGroup.Checked := getBool('roster_offline_group');
         chkInlineStatus.Checked := getBool('inline_status');
-        if (getBool('roster_chat')) then 
+        cboInlineStatus.Selected := TColor(getInt('inline_color'));
+        cboInlineStatus.Enabled := chkInlineStatus.Checked;
+        if (getBool('roster_chat')) then
             optDblClick.ItemIndex := 0
         else
             optDblClick.ItemIndex := 1;
@@ -247,6 +252,7 @@ begin
         chkExpanded.Checked := getBool('expanded');
         chkDebug.Checked := getBool('debug');
         chkAutoLogin.Checked := getBool('autologin');
+        chkCloseMin.Checked := getBool('close_min');
 
         // Dialog Options
         chkRosterAlpha.Checked := getBool('roster_alpha');
@@ -313,6 +319,7 @@ begin
         setBool('roster_show_unsub', chkShowUnsubs.Checked);
         setBool('roster_offline_group', chkOfflineGroup.Checked);
         setBool('inline_status', chkInlineStatus.Checked);
+        setInt('inline_color', integer(cboInlineStatus.Selected));
         setBool('roster_chat', (optDBlClick.ItemIndex = 0));
 
         // S10n prefs
@@ -335,6 +342,7 @@ begin
         setBool('log', chkLog.Checked);
         setBool('debug', chkDebug.Checked);
         setBool('autologin', chkAutoLogin.Checked);
+        setBool('close_min', chkCloseMin.Checked);
 
         // Dialog Prefs
         setBool('roster_alpha', chkRosterAlpha.Checked);
@@ -535,6 +543,12 @@ end;
 procedure TfrmPrefs.trkToastAlphaChange(Sender: TObject);
 begin
     spnToastAlpha.Position := trkToastAlpha.Position;
+end;
+
+procedure TfrmPrefs.chkInlineStatusClick(Sender: TObject);
+begin
+    // toggle the color drop down on/off
+    cboInlineStatus.Enabled := chkInlineStatus.Checked;
 end;
 
 end.

@@ -60,7 +60,8 @@ uses
   XMLTag in '..\jopl\XMLTag.pas',
   XMLUtils in '..\jopl\XMLUtils.pas',
   GUIFactory in 'GUIFactory.pas',
-  Bookmark in 'Bookmark.pas' {frmBookmark};
+  Bookmark in 'Bookmark.pas' {frmBookmark},
+  CustomPres in 'CustomPres.pas' {frmCustomPres};
 
 {$R *.RES}
 
@@ -72,6 +73,7 @@ begin
   Application.CreateForm(TfrmJabber, frmJabber);
   Application.CreateForm(TfrmRosterWindow, frmRosterWindow);
   Application.CreateForm(TfrmDebug, frmDebug);
+  Application.CreateForm(TfrmCustomPres, frmCustomPres);
   Application.ShowMainForm := false;
   frmRosterWindow.DockRoster;
   frmRosterWindow.Show;
