@@ -309,12 +309,10 @@ var
     S: String;
     pos: int64;
 begin
-    // XXX: fix md5 sum stuff
     md := TIdHashMessageDigest5.Create();
     pos := stream.Position;
     stream.Seek(0, soFromBeginning);
     Digest := md.HashValue(stream);
-    //Move(Digest, S[1], 16);
     S := md.AsHex(Digest);
     Result := Lowercase(S);
     stream.Position := pos;
