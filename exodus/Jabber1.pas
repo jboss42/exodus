@@ -2472,6 +2472,7 @@ begin
     Allow := true;
     if (Client is TfrmDockable) then begin
         TfrmDockable(Client).Docked := false;
+        TfrmDockable(Client).TabSheet := nil;
         idx := _docked_forms.IndexOf(TfrmDockable(Client));
         if (idx >= 0) then
             _docked_forms.Delete(idx);
