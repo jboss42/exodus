@@ -41,6 +41,8 @@ const
     FEAT_PROXY          = 'proxy';
     FEAT_BYTESTREAMS    = 'bytestreams';
 
+    WALK_LIMIT          = 20;
+
 type
 
     TJabberEntityType = (ent_unknown, ent_disco, ent_browse, ent_agents);
@@ -84,6 +86,8 @@ type
         procedure _processDiscoInfo(tag: TXMLTag);
         procedure _processDiscoItems(tag: TXMLTag);
         procedure _processLegacyFeatures();
+        procedure _processBrowseItem(item: TXMLTag);
+        procedure _processAgent(item: TXMLTag);
 
     public
         Tag: integer;
@@ -134,6 +138,7 @@ begin
     _has_items := false;
     _items := TWidestringlist.Create();
 
+    Tag := -1;
     Data := nil;
 end;
 
@@ -499,17 +504,49 @@ begin
     // We got items back... process them
     _processDiscoItems(tag);
     getItems(js);
+
+    // Don't fetch info on all items if we have tons
+    if (_items.Count >= WALK_LIMIT) then exit;
+
     for i := 0 to _items.Count - 1 do
         TJabberEntity(_items.Objects[i]).getInfo(js);
 end;
 
 {---------------------------------------}
+procedure TJabberEntity._processBrowseItem(item: TXMLTag);
+var
+    nss: TXMLTagList;
+    n: integer;
+begin
+    _name := item.getAttribute('name');
+    _cat := item.getAttribute('category');
+    _cat_type := item.getAttribute('type');
+    if ((_cat = '') and (item.Name <> 'item')) then
+        _cat := item.Name;
+
+    // this item can have ns elements.. *sigh*
+    _feats.Clear();
+    nss := item.QueryTags('ns');
+    for n := 0 to nss.Count - 1 do
+        _feats.Add(nss[n].Data);
+    nss.Free();
+
+    _processLegacyFeatures();
+
+    // we have the info about this object..
+    _has_info := true;
+
+    // but not it's children
+    _has_items := false;
+end;
+
+{---------------------------------------}
 procedure TJabberEntity.BrowseCallback(event: string; tag: TXMLTag);
 var
-    idx, i, n: integer;
+    idx, i: integer;
     t, q: TXMLTag;
     js: TJabberSession;
-    nss, clist: TXMLTagList;
+    clist: TXMLTagList;
     tmps: Widestring;
     cj: TJabberID;
     ce: TJabberEntity;
@@ -540,56 +577,26 @@ begin
 
         clist := q.ChildTags();
 
-        // clear old junk out..
-        _feats.Clear();
+        // process our own info
         ClearStringListObjects(_items);
         _items.Clear();
+        _processBrowseItem(q);
 
-        // info for us..
-        _name := q.getAttribute('name');
-        _cat := q.getAttribute('category');
-        _cat_type := q.getAttribute('type');
-        
-        if ((_cat = '') and (q.name <> 'item')) then
-            _cat := q.Name;
-
+        // Get our children
         for i := 0 to clist.Count - 1 do begin
-            if (clist[i].Name = 'ns') then begin
-                // this is a feature
-                _feats.Add(clist[i].Data);
-            end
-            else begin
+            if (clist[i].Name <> 'ns') then begin
                 // this is a child
                 tmps := clist[i].GetAttribute('jid');
                 idx := _items.IndexOf(tmps);
                 if (idx = -1) then begin
                     cj := TJabberID.Create(tmps);
                     ce := TJabberEntity.Create(cj);
-
-                    ce._name := clist[i].getAttribute('name');
-                    ce._cat := clist[i].getAttribute('category');
-                    ce._cat_type := clist[i].getAttribute('type');
-                    if ((ce._cat = '') and (clist[i].Name <> 'item')) then
-                        ce._cat := clist[i].Name;
-
-                    // this item can have ns elements.. *sigh*
-                    nss := clist[i].QueryTags('ns');
-                    for n := 0 to nss.Count - 1 do
-                        ce._feats.Add(nss[n].Data);
-                    ce._processLegacyFeatures();
-
-                    // we have the info about this object..
-                    ce._has_info := true;
-
-                    // but not it's children
-                    ce._has_items := false;
+                    ce._processBrowseItem(clist[i]);
                     jEntityCache.Add(tmps, ce);
-
                     _items.AddObject(tmps, ce);
                 end;
             end;
         end;
-        _processLegacyFeatures();
 
     end;
 
@@ -608,10 +615,49 @@ begin
 
 end;
 
+procedure TJabberEntity._processAgent(item: TXMLTag);
+var
+    tmps: Widestring;
+    nss: TXMLTagList;
+    n: integer;
+begin
+    _name := item.GetBasicText('name');
+
+    // desc := agent.GetBasicText('description');
+    tmps := item.GetBasicText('service');
+    if (tmps <> '') then _feats.Add(tmps);
+    _cat_type := tmps;
+
+    if (item.tagExists('register')) then _feats.Add(FEAT_REGISTER);
+    if (item.tagExists('search')) then _feats.Add(FEAT_SEARCH);
+
+    if (item.tagExists('groupchat')) then begin
+        _cat := 'conference';
+        _feats.Add(FEAT_GROUPCHAT);
+    end;
+
+    nss := item.QueryTags('ns');
+    for n := 0 to nss.COunt - 1 do
+        _feats.Add(nss[n].Data);
+
+end;
+
+
 {---------------------------------------}
 procedure TJabberEntity.AgentsCallback(event: string; tag: TXMLTag);
 begin
     // XXX: code entity agents
+    {
+    <agent jid='users.jabber.org'>
+        <name>Jabber User Directory</name>
+        <service>jud</service>
+        <search/>
+        <register/>
+    </agent>
+    }
+
+    {
+    }
 end;
 
 {---------------------------------------}

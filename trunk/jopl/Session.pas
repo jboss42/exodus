@@ -247,7 +247,7 @@ begin
     else
         _lang := '';
 
-    // Create the agents master list, and the Presence_XML list.
+    // Create the Presence_XML list for stashing stuff in every pres packet
     Presence_XML := TWideStringlist.Create();
 end;
 

@@ -34,7 +34,6 @@ uses
   Controls,
   Windows,
   About in 'About.pas' {frmAbout},
-  Agents in '..\jopl\Agents.pas',
   AutoUpdate in '..\jopl\AutoUpdate.pas',
   AutoUpdateStatus in 'AutoUpdateStatus.pas' {frmAutoUpdateStatus},
   BaseChat in 'BaseChat.pas' {frmBaseChat},

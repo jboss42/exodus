@@ -124,7 +124,7 @@ implementation
 uses
     ChatWin, MsgRecv, Entity, EntityCache,
     InputPassword, NodeItem,
-    JabberConst, Profile, Roster, Agents, JabberID, fGeneric,
+    JabberConst, Profile, Roster, JabberID, fGeneric,
     Session, ExUtils, XMLUtils, fTopLabel, Jabber1;
 
 var
@@ -145,7 +145,7 @@ begin
     if MainSession.Prefs.getBool('expanded') then
         f.DockForm;
 
-    // populate the drop down box based on our current agents..
+    // populate the drop down box based on our entity cache
     f.cboJID.Items.Clear();
     jEntityCache.getByFeature(FEAT_SEARCH, f.cboJID.Items);
     f.Show;
@@ -243,7 +243,7 @@ begin
     cur_jid := cboJID.Text;
     valid := true;
 
-    // make sure we wait for a long time for really nasty queries and slow agents :)
+    // make sure we wait for a long time for really nasty queries and slow entities :)
     cur_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), ItemsCallback, 120);
     with cur_iq do begin
         iqType := 'set';
