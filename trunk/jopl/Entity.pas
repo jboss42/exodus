@@ -250,6 +250,8 @@ procedure TJabberEntity.getInfo(js: TJabberSession);
 var
     t: TXMLTag;
 begin
+    if (_iq <> nil) then exit;
+
     if ((_has_info) or (_type = ent_browse) or (_type = ent_agents)) then begin
         t := TXMLTag.Create('entity');
         t.setAttribute('from', _jid.full);
@@ -281,6 +283,8 @@ procedure TJabberEntity.getItems(js: TJabberSession);
 var
     t: TXMLTag;
 begin
+    if (_iq <> nil) then exit;
+    
     if ((_has_items) or (_type = ent_browse) or (_type = ent_agents)) then begin
         // send info for ea. child
         t := TXMLTag.Create('entity');
@@ -347,6 +351,8 @@ procedure TJabberEntity.walk(js: TJabberSession; items_limit: boolean;
     timeout: integer);
 begin
     // Get Items, then get info for each one.
+    if (_iq <> nil) then exit;
+    
     _use_limit := items_limit;
     _timeout := timeout;
     _discoInfo(js, WalkCallback);
@@ -738,7 +744,11 @@ begin
         if ((event = 'timeout') and (_timeout < WALK_MAX_TIMEOUT)) then begin
             _timeout := _timeout * 3;
             _discoInfo(js, WalkCallback);
-        end;
+        end
+        else begin
+            _has_info := true;
+            _has_items := true;
+        end;        
         exit;
     end;
 
