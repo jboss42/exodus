@@ -121,6 +121,8 @@ resourcestring
     sChatActivity = 'Chat Activity: ';
     sUserBlocked = 'This user is now blocked.';
     sIsNow = 'is now';
+    sAvailable = 'available';
+    sOffline = 'offline';
     
 
 implementation
@@ -563,8 +565,8 @@ begin
     p := MainSession.ppdb.FindPres(j.jid, j.resource);
     j.Free();
     if (p = nil) then begin
-        show := 'offline';
-        status := 'offline';
+        show := sOffline;
+        status := sOffline;
         end
     else begin
         show := tag.GetBasicText('show');
@@ -576,6 +578,9 @@ begin
         txt := show
     else
         txt := status;
+
+    if (txt = '') then
+        txt := sAvailable;
 
     if (MainSession.Prefs.getBool('timestamp')) then
         txt := '[' + formatdatetime(MainSession.Prefs.getString('timestamp_format'),now) + '] ' +
