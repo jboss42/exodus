@@ -305,10 +305,6 @@ type
     _win32_idx: integer;
 
     procedure presCustomPresClick(Sender: TObject);
-    procedure restoreToolbar;
-    procedure restoreAlpha;
-    procedure restoreMenus(enable: boolean);
-    procedure restoreRoster();
 
     procedure setupTrayIcon();
     procedure setTrayInfo(tip: string);
@@ -343,6 +339,11 @@ type
     // Callbacks
     procedure SessionCallback(event: string; tag: TXMLTag);
     procedure ChangePasswordCallback(event: string; tag: TXMLTag);
+
+    procedure restoreToolbar;
+    procedure restoreAlpha;
+    procedure restoreMenus(enable: boolean);
+    procedure restoreRoster();
 
   public
     ActiveChat: TfrmBaseChat;
@@ -1189,12 +1190,21 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.restoreToolbar;
+var
+    i: integer;
 begin
     // setup the toolbar based on prefs
     with MainSession.Prefs do begin
         mnuExpanded.Checked := getBool('expanded');
+        {
         mnuOnline.Checked := getBool('roster_only_online');
         btnOnlineRoster.Down := getBool('roster_only_online');
+        }
+
+        i := getInt('roster_visible');
+        mnuOnline.Checked := (i <> show_offline);
+        btnOnlineRoster.Down := (i <> show_offline);
+
         if getBool('expanded') then begin
             btnExpanded.ImageIndex := 9;
         end
@@ -1411,18 +1421,27 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.btnOnlineRosterClick(Sender: TObject);
 var
-    e: boolean;
+    i: integer;
 begin
     // show only online
     with MainSession.Prefs do begin
+        {
         e := getBool('roster_only_online');
         e := not e;
         setBool('roster_only_online', e);
-        btnOnlineRoster.Down := e;
-        mnuOnline.Checked := e;
+        }
+        i := getInt('roster_visible');
+        if (i = show_offline) then
+            i := show_dnd
+        else
+            i := show_offline;
+        setInt('roster_visible', i);
+        btnOnlineRoster.Down := (i <> show_offline);
+        mnuOnline.Checked := (i <> show_offline);
     end;
 
     if MainSession.Active then begin
+        frmRosterWindow.SessionCallback('/session/prefs', nil);
         frmRosterWindow.Redraw;
 
         if ((MainSession.Prefs.getBool('expanded')) and

@@ -436,6 +436,7 @@ var
     grp_node: TTreeNode;
     ritem: TJabberRosterItem;
     b_jid: Widestring;
+    tmpb: boolean;
 begin
     // catch session events
     if event = '/session/disconnected' then begin
@@ -529,6 +530,13 @@ begin
         _sort_roster := MainSession.Prefs.getBool('roster_sort');
         _show_pending := MainSession.Prefs.getBool('roster_show_pending');
         _offline_grp := MainSession.Prefs.getBool('roster_offline_group');
+
+        tmpb := MainSession.Prefs.getBool('roster_only_online');
+        if ((tmpb) and (_show_visible = show_offline)) then begin
+            _show_visible := show_dnd;
+            MainSession.Prefs.setInt('roster_visible', _show_visible);
+            frmExodus.restoreToolbar();
+        end;
 
         frmExodus.pnlRoster.ShowHint := not _show_status;
         Redraw();
