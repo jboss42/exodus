@@ -477,6 +477,8 @@ begin
 
     slist := ExWebDownload(sDownloadCaption, 'http://jabber.org/servers.xml');
 
+    frameButtons1.btnOK.Enabled := true;
+
     if (slist = '') then exit;
 
     parser := TXMLTagParser.Create();
