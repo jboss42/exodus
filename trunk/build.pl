@@ -30,7 +30,7 @@ if ($#ARGV >= 0) {
   } elsif ($ARGV[0] eq "help") {
 	print <<EOF;
 USAGE:
-build.pl [daily]
+build.pl [daily|stage]
    defaults to release.
 EOF
 	exit(64);
@@ -69,11 +69,11 @@ e("$dcc $opts -D msn_emoticons.dpr");
 chdir "../yahoo-emoticons";
 e("$dcc $opts -D yahoo_emoticons.dpr");
 
+# go into our plugins dir and process
 chdir "../plugins";
 grep unlink, glob("*.zip"); # rm *.zip
 grep unlink, glob("*.dll"); # rm *.dll
 
-open OFF,">plugin-off-new.nsi" or die $!;
 open SEC,">plugin-sections-new.nsi" or die $!;
 open DESC,">plugin-desc-new.nsi" or die $!;
 open I18N,">plugin-i18n-new.nsh" or die $!;
@@ -87,7 +87,6 @@ for (glob("*")) {
   plug($_);
 }
 
-close OFF;
 close SEC;
 close DESC;
 close I18N;
@@ -98,6 +97,7 @@ chdir "..";
 unlink "Exodus.zip";
 e('zip Exodus.zip @zipfiles.txt ' . join(' ', glob("plugins/*.dll")));
 
+# Build the installer
 if ($::rtype eq "daily") {
   e("$::NSIS /v1 /DDAILY exodus-new.nsi");
 } elsif ($::rtype eq "stage") {
@@ -109,6 +109,8 @@ if ($::rtype eq "daily") {
 
 print "SUCCESS!!!\n";
 chdir ".." or die;
+
+### DONE
 
 sub e {
   my $cmd = shift;
@@ -135,16 +137,10 @@ sub plug {
 
   e("$dcc $thisopts -U$imports -E.. -N.\\\\output $dpr");
 
-  print OFF <<"EOF";
-	Push \${SEC_$base}
-	Call TurnOff
-
-EOF
-
   my $size = -s("../$base.dll");
   $size = int $size / 1024;
   print SEC <<"EOF";
-	Section "$bare" SEC_$base
+	Section /o "$bare" SEC_$base
 	  AddSize $size
 	  Push "$base"
 	  Call DownloadPlugin
