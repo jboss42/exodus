@@ -148,7 +148,13 @@ begin
         if (_socket.Connected) then
             _Socket.Disconnect();
 
-        _Socket.Connect;
+        try
+            _Socket.Connect;
+        except
+            on EIdOSSLConnectError do begin
+                end;
+        end;
+
         {
         If we successfully connect, change the stage of the
         thread so that we switch to reading the socket
@@ -457,10 +463,11 @@ begin
         // that would be *cool*.
         SSLOptions.CertFile := '';
         SSLOptions.RootCertFile := '';
-        SSLOptions.VerifyMode := [sslvrfPeer, sslvrfFailIfNoPeerCert];
+        // TODO: Indy9 problems... if we try and verify, it disconnects us.
+        // SSLOptions.VerifyMode := [sslvrfPeer, sslvrfFailIfNoPeerCert];
         SSLOptions.VerifyDepth := 2;
         SSLOptions.Method :=  sslvSSLv23;
-        OnVerifyPeer := VerifyPeer;
+        // OnVerifyPeer := VerifyPeer;
         end;
     {$endif}
 
