@@ -74,6 +74,11 @@ close DESC;
 close EN;
 
 chdir "..";
+
+# Create the Exodus.zip file
+unlink "Exodus.zip";
+e('zip Exodus.zip @zipfiles.txt ' . join(' ', glob("plugins/*.dll")));
+
 if ($rtype eq "daily") {
   e("$::NSIS /v1 /DDAILY exodus.nsi");
 } else {

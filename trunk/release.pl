@@ -1,7 +1,8 @@
 #!/bin/perl -w
 
 use strict;
-$::USER = 'hildjj@jabberstudio.org';
+#$::USER = 'hildjj@jabberstudio.org';
+$::USER = 'pgmillard@jabberstudio.org';
 
 do "dopts.pl";
 
