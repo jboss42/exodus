@@ -42,7 +42,7 @@ procedure DisplayPresence(txt: string; Browser: TRichEdit);
 
 function GetMsgHTML(Msg: TJabberMessage): string;
 
-procedure ProcessEmoticons(RichEdit: TOLEEdit; txt: string);
+procedure ProcessEmoticons(RichEdit: TOLEEdit; color: TColor; txt: string);
 procedure ConfigEmoticons();
 
 // procedure AddHTML(html: string; Browser: TRichEdit);
@@ -106,11 +106,12 @@ begin
 
         RichEdit.SelAttributes.Color := c;
         RichEdit.SelText := '<' + Msg.nick + '>';
-        RichEdit.SelAttributes.Color := TColor(MainSession.Prefs.getInt('font_color'));
+        c := TColor(MainSession.Prefs.getInt('font_color'));
+        RichEdit.SelAttributes.Color := c;
         RichEdit.SelText := ' ';
 
         if (use_emoticons) then
-            ProcessEmoticons(TOLEEdit(RichEdit), txt)
+            ProcessEmoticons(TOLEEdit(RichEdit), c, txt)
         else
             RichEdit.SelText := txt;
         end
@@ -118,7 +119,11 @@ begin
     else begin
         // This is an action
         RichEdit.SelAttributes.Color := clPurple;
-        RichEdit.SelText := ' * ' + Msg.Nick + ' ' + Trim(txt);
+        RichEdit.SelText := ' * ' + Msg.Nick + ' ';
+        if (use_emoticons) then
+            ProcessEmoticons(TOLEEdit(RichEdit), clPurple, Trim(txt))
+        else
+            RichEdit.SelText := txt;
         end;
 
     RichEdit.SelAttributes.Color := TColor(MainSession.Prefs.getInt('font_color'));
@@ -133,7 +138,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure ProcessEmoticons(RichEdit: TOLEEdit; txt: string);
+procedure ProcessEmoticons(RichEdit: TOLEEdit; color: TColor; txt: string);
 var
     m: boolean;
     pic: TPicture;
@@ -152,6 +157,7 @@ begin
     while(m) do begin
         // we have a match
         lm := emoticon_regex.MatchPos[0] + emoticon_regex.MatchLen[0];
+        RichEdit.SelAttributes.Color := color;
         RichEdit.SelText := emoticon_regex.Match[1];
 
         if (pic = nil) then
@@ -174,10 +180,13 @@ begin
             eo.il.GetBitmap(eo.idx, pic.Bitmap);
             RichEdit.InsertBitmap(pic.Bitmap);
             end
-        else
+        else begin
+            RichEdit.SelAttributes.Color := color;
             RichEdit.SelText := ms;
+            end;
 
         // Match-6 is any trailing whitespace
+        RichEdit.SelAttributes.Color := color;
         RichEdit.SelText := emoticon_regex.Match[6];
 
         // Search for the next emoticon
@@ -187,6 +196,7 @@ begin
     if (lm <= length(txt)) then begin
         // we have a remainder
         txt := Copy(txt, lm, length(txt) - lm + 1);
+        RichEdit.SelAttributes.Color := color;
         RichEdit.SelText := txt;
         end;
 
