@@ -651,8 +651,8 @@ Extra Shell Shortcuts
 ================================================================================
 */
 SubSection "$(NAME_SHELL)" SEC_Shell
-    Section "Desktop Shortcut" SEC_Desktop
 
+    Section "Desktop Shortcut" SEC_Desktop
         ; if we're in silent mode, don't do any of the shell stuff, ever.
         Push "${INSTALLER_SWITCH_SILENT}"
         Call funcGetConfigParam
@@ -669,7 +669,7 @@ SubSection "$(NAME_SHELL)" SEC_Shell
         silent1:
 	SectionEnd
 
-	Section "Quickluanch Shortcut" SEC_Quicklaunch
+	Section "Quicklaunch Shortcut" SEC_Quicklaunch
         Push "${INSTALLER_SWITCH_SILENT}"
         Call funcGetConfigParam
         Pop $0
