@@ -29,7 +29,7 @@ uses
     ShellAPI, Registry,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
-    Buttons, OleCtrls, AppEvnts, ToolWin;
+    Buttons, OleCtrls, AppEvnts, ToolWin, SelContact;
 
 const
     UpdateKey = '001';
@@ -183,6 +183,7 @@ type
     imgMSNEmoticons: TImageList;
     RegisterwithaService1: TMenuItem;
     btnExpanded: TToolButton;
+    trayMessage: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -234,6 +235,7 @@ type
       Y: Integer);
     procedure mnuMessageClick(Sender: TObject);
     procedure Test1Click(Sender: TObject);
+    procedure trayMessageClick(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -2108,6 +2110,26 @@ begin
         end
     else
         Self.SetAutoAvailable();
+end;
+
+procedure TfrmExodus.trayMessageClick(Sender: TObject);
+var
+    fsel: TfrmSelContact;
+begin
+    //
+    fsel := TfrmSelContact.Create(nil);
+    fsel.frameTreeRoster1.DrawRoster(true);
+    fsel.frameTreeRoster1.treeRoster.MultiSelect := false;
+
+    if (fsel.ShowModal = mrOK) then begin
+        // do the send
+        if (MainSession.Prefs.getBool(P_CHAT)) then
+            StartChat(fsel.GetSelectedJID(), '', true)
+        else
+            StartMsg(fsel.GetSelectedJID());
+
+        end;
+    fSel.Free();
 end;
 
 end.
