@@ -25,7 +25,8 @@ uses
     Dockable, 
     ExEvents,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit;
+    buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit,
+  OLERichEdit;
 
 type
   TfrmMsgRecv = class(TfrmDockable)
@@ -113,6 +114,7 @@ begin
         pnlReply.Visible := true;
         pnlReply.Align := alClient;
         ShowDefault;
+        Result.FocusControl(txtSendSubject);
         end;
 end;
 
