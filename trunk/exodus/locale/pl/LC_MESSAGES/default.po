@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exodus 0.8.6.43\n"
 "POT-Creation-Date: 2003-08-03 07:30\n"
-"PO-Revision-Date: 2003-12-10 21:31+0100\n"
+"PO-Revision-Date: 2003-12-10 21:42+0100\n"
 "Last-Translator: Mariusz Smykuła <smys@lodz.mm.pl>\n"
 "Language-Team: JabberPL Group <redakcja@jabberpl.org>\n"
 "MIME-Version: 1.0\n"
@@ -1046,7 +1046,7 @@ msgstr "ID kontaktu:"
 #: MsgRecv.dfm:497
 #: RosterWindow.dfm:336
 msgid "Version Request"
-msgstr "Pobierz nr wersji"
+msgstr "Zapytaj o wersję"
 
 #. frmChat..popContact..C1..mnuTimeRequest..Caption
 #. frmMsgRecv..popContact..C1..mnuTimeRequest..Caption
@@ -1055,7 +1055,7 @@ msgstr "Pobierz nr wersji"
 #: MsgRecv.dfm:501
 #: RosterWindow.dfm:340
 msgid "Time Request"
-msgstr "Pobierz czas"
+msgstr "Zapytaj o czas"
 
 #. frmChat..popContact..C1..mnuLastActivity..Caption
 #. frmMsgRecv..popContact..C1..mnuLastActivity..Caption
@@ -2787,7 +2787,7 @@ msgstr "Wersja klienta"
 #. frmProfile..PageControl1..TabSheet7..Panel2..btnTime..Caption
 #: Profile.dfm:197
 msgid "Client Time"
-msgstr "Czas klienta"
+msgstr "Czas w kliencie"
 
 #. frmProfile..PageControl1..TabSheet2..Panel3..Caption
 #: Profile.dfm:241
@@ -2811,7 +2811,7 @@ msgstr "Dane osobowe."
 #. frmProfile..PageControl1..TabSheet3..lblURL..Caption
 #: Profile.dfm:275
 msgid "Personal URL:"
-msgstr "Osobisty URL:"
+msgstr "Strona prywatna:"
 
 #. frmProfile..PageControl1..TabSheet3..Label12..Caption
 #. frmVCard..PageControl1..TabSheet3..Label12..Caption
@@ -2991,7 +2991,7 @@ msgstr "Bezrobotny/Poszukujący pracy"
 #: vcard.dfm:218
 #: vcard.dfm:630
 msgid "Country:"
-msgstr "Kraj:"
+msgstr "Państwo:"
 
 #. frmProfile..PageControl1..TabSheet4..Label21..Caption
 #. frmProfile..PageControl1..TabSheet6..Label15..Caption
@@ -5701,7 +5701,7 @@ msgstr "Nazwa firmy:"
 #: Profile.dfm:741
 #: vcard.dfm:556
 msgid "Org. Unit (Dept):"
-msgstr ""
+msgstr "Jedn. organiz."
 
 #. frmProfile..PageControl1..TabSheet6..Caption
 #: Profile.dfm:806
@@ -7077,7 +7077,7 @@ msgstr " jest obecnie niedostępny."
 #: Profile.pas:294
 #: vcard.pas:156
 msgid "Basic"
-msgstr "Łatwy"
+msgstr "Podstawowe"
 
 #: Profile.pas:297
 #: vcard.pas:157
@@ -7467,7 +7467,7 @@ msgstr "Zmiana nazwy"
 
 #: RosterWindow.pas:2733
 msgid "New Nickname: "
-msgstr "Nowy pseudonim: "
+msgstr "Nowa nazwa: "
 
 #: RosterWindow.pas:2967
 msgid "Reconnect in %d seconds."
