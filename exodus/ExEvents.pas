@@ -388,19 +388,22 @@ begin
             _data_list.Add(sMsgVersion);
 
             tmp_tag := qtag.getFirstTag('name');
-            _data_list.Add(sMsgVerClient + tmp_tag.Data);
+            if (tmp_tag <> nil) then
+                _data_list.Add(sMsgVerClient + tmp_tag.Data);
 
             tmp_tag := qtag.getFirstTag('version');
-            _data_list.Add(sMsgVerVersion + tmp_tag.Data);
+            if (tmp_tag <> nil) then
+                _data_list.Add(sMsgVerVersion + tmp_tag.Data);
 
             tmp_tag := qtag.getFirstTag('os');
-            _data_list.Add(sMsgVerOS + tmp_tag.Data);
+            if (tmp_tag <> nil) then
+                _data_list.Add(sMsgVerOS + tmp_tag.Data);
         end
 
         else if ns = XMLNS_LAST then begin
             eType := evt_Last;
             qTag := tag.getFirstTag('query');
-            data_type := sMsgLast;
+            if (qtag = nil) then exit;
             _data_list.Add(sMsgLastInfo + secsToDuration(qTag.getAttribute('seconds')) + '.');
         end;
     end;
