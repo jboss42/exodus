@@ -24,7 +24,7 @@ interface
 uses
     // panels
     PrefPanel, PrefSystem, PrefRoster, PrefSubscription, PrefFont, PrefDialogs,
-    PrefMsg, PrefNotify,   
+    PrefMsg, PrefNotify, PrefAway, PrefPresence, PrefPlugins,      
 
     // other stuff
     Menus, ShellAPI, Unicode,
@@ -51,19 +51,6 @@ type
     lblNotify: TLabel;
     imgAway: TImage;
     lblAway: TLabel;
-    tbsAway: TTabSheet;
-    chkAutoAway: TCheckBox;
-    StaticText7: TStaticText;
-    txtAwayTime: TEdit;
-    spnAway: TUpDown;
-    Label2: TLabel;
-    txtXATime: TEdit;
-    spnXA: TUpDown;
-    Label3: TLabel;
-    Label4: TLabel;
-    txtAway: TEdit;
-    txtXA: TEdit;
-    Label9: TLabel;
     tbsKeywords: TTabSheet;
     StaticText8: TStaticText;
     memKeywords: TTntMemo;
@@ -75,25 +62,6 @@ type
     lblKeywords: TLabel;
     imgBlockList: TImage;
     lblBlockList: TLabel;
-    tbsCustomPres: TTabSheet;
-    lstCustomPres: TListBox;
-    StaticText10: TStaticText;
-    pnlCustomPresButtons: TPanel;
-    btnCustomPresAdd: TButton;
-    btnCustomPresRemove: TButton;
-    btnCustomPresClear: TButton;
-    GroupBox1: TGroupBox;
-    Label11: TLabel;
-    txtCPTitle: TEdit;
-    Label12: TLabel;
-    txtCPStatus: TEdit;
-    Label13: TLabel;
-    cboCPType: TComboBox;
-    txtCPPriority: TEdit;
-    spnPriority: TUpDown;
-    Label14: TLabel;
-    lblHotkey: TLabel;
-    txtCPHotkey: THotKey;
     imgCustompres: TImage;
     lblCustomPres: TLabel;
     Panel1: TPanel;
@@ -107,23 +75,8 @@ type
     chkRegex: TCheckBox;
     imgMessages: TImage;
     lblMessages: TLabel;
-    chkPresenceMessageListen: TCheckBox;
-    chkPresenceMessageSend: TCheckBox;
-    tbsPlugins: TTabSheet;
-    StaticText12: TStaticText;
     imgPlugins: TImage;
     lblPlugins: TLabel;
-    Label8: TLabel;
-    cboPresTracking: TComboBox;
-    chkAAReducePri: TCheckBox;
-    btnAddPlugin: TButton;
-    btnConfigPlugin: TButton;
-    btnRemovePlugin: TButton;
-    Label6: TLabel;
-    txtPluginDir: TEdit;
-    btnBrowsePluginPath: TButton;
-    lstPlugins: TTntListView;
-    lblPluginScan: TLabel;
     imgNetwork: TImage;
     lblNetwork: TLabel;
     tbsNetwork: TTabSheet;
@@ -144,25 +97,11 @@ type
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
-    //procedure chkNotifyClick(Sender: TObject);
-    //procedure chkToastClick(Sender: TObject);
-    //procedure Label20Click(Sender: TObject);
-    procedure lstCustomPresClick(Sender: TObject);
-    procedure txtCPTitleChange(Sender: TObject);
-    procedure btnCustomPresAddClick(Sender: TObject);
-    procedure btnCustomPresRemoveClick(Sender: TObject);
-    procedure btnCustomPresClearClick(Sender: TObject);
-    procedure btnBrowsePluginPathClick(Sender: TObject);
-    procedure lblPluginScanClick(Sender: TObject);
-    procedure btnConfigPluginClick(Sender: TObject);
     procedure cboProxyApproachChange(Sender: TObject);
     procedure chkProxyAuthClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
-    _no_pres_change: boolean;
-    _pres_list: TList;
-
     _cur_panel: TfrmPrefPanel;
     _system: TfrmPrefSystem;
     _roster: TfrmPrefRoster;
@@ -171,15 +110,10 @@ type
     _dialogs: TfrmPrefDialogs;
     _message: TfrmPrefMsg;
     _notify: TfrmPrefNotify;
+    _away: TfrmPrefAway;
+    _pres: TfrmPrefPresence;
+    _plugs: TfrmPrefPlugins;
     
-    // procedure redrawChat();
-    procedure clearPresList();
-
-    procedure loadPlugins();
-    procedure savePlugins();
-    procedure scanPluginDir(selected: TWidestringList);
-    procedure CheckPluginDll(dll : WideString; selected: TWidestringlist);
-
   public
     { Public declarations }
     procedure LoadPrefs;
@@ -188,10 +122,6 @@ type
 
 var
   frmPrefs: TfrmPrefs;
-
-resourcestring
-    sPrefsDfltPres = 'Untitled Presence';
-    sPrefsClearPres = 'Clear all custom presence entries?';
 
 procedure StartPrefs;
 
@@ -204,12 +134,7 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 
 uses
-    ActiveX, ComObj,
-    AutoUpdate,
-    ExUtils, ExodusCOM_TLB, COMController,
-    FileCtrl, XMLUtils, PathSelector,
-    Presence, MsgDisplay, JabberMsg, Jabber1,
-    PrefController, Registry, Session;
+    PrefController, Session;
 
 {---------------------------------------}
 procedure StartPrefs;
@@ -226,52 +151,9 @@ end;
 
 {---------------------------------------}
 procedure TfrmPrefs.LoadPrefs;
-var
-    i: integer;
-    dir: Widestring;
 begin
     // load prefs from the reg.
     with MainSession.Prefs do begin
-
-        // Notify Options
-        {
-        SetLength(_notify, NUM_NOTIFIES);
-
-        chkSound.Checked := getBool('notify_sounds');
-        chkNotifyActive.Checked := getBool('notify_active');
-        chkNotifyActiveWindow.Checked := getBool('notify_active_win');
-        chkFlashInfinite.Checked := getBool('notify_flasher');
-        _notify[0]  := getInt('notify_online');
-        _notify[1]  := getInt('notify_offline');
-        _notify[2]  := getInt('notify_newchat');
-        _notify[3]  := getInt('notify_normalmsg');
-        _notify[4]  := getInt('notify_s10n');
-        _notify[5]  := getInt('notify_invite');
-        _notify[6]  := getInt('notify_keyword');
-        _notify[7]  := getInt('notify_chatactivity');
-        _notify[8]  := getInt('notify_roomactivity');
-        _notify[9]  := getInt('notify_oob');
-        _notify[10] := getInt('notify_autoresponse');
-
-        optNotify.Enabled;
-        chkToast.Checked := false;
-        chkFlash.Checked := false;
-        chkTrayNotify.Checked := false;
-
-        for i := 0 to NUM_NOTIFIES - 1 do
-            chkNotify.Checked[i] := (_notify[i] > 0);
-
-        chkNotify.ItemIndex := 0;
-        chkNotifyClick(Self);
-        }
-
-        // Autoaway options
-        chkAutoAway.Checked := getBool('auto_away');
-        chkAAReducePri.Checked := getBool('aa_reduce_pri');
-        spnAway.Position := getInt('away_time');
-        spnXA.Position := getInt('xa_time');
-        txtAway.Text := getString('away_status');
-        txtXA.Text := getString('xa_status');
 
         // Keywords and Blockers
         fillStringList('keywords', memKeywords.Lines);
@@ -287,159 +169,12 @@ begin
         chkProxyAuthClick(chkProxyAuth);
         txtProxyUsername.Text := getString('http_proxy_user');
         txtProxyPassword.Text := getString('http_proxy_password');
-
-        // plugins
-        dir := getString('plugin_dir');
-        if (dir = '') then
-            dir := ExtractFilePath(Application.ExeName) + 'plugins';
-
-        if (not DirectoryExists(dir)) then
-            dir := ExtractFilePath(Application.ExeName) + 'plugins';
-
-        txtPluginDir.Text := dir;
-        loadPlugins();
-
-        // Custom Presence options
-        _pres_list := getAllPresence();
-        for i := 0 to _pres_list.Count - 1 do
-            lstCustomPres.Items.Add(TJabberCustomPres(_pres_list[i]).title);
-        cboPresTracking.ItemIndex := getInt('pres_tracking');
-        chkPresenceMessageSend.Checked := getBool('presence_message_send');
-        chkPresenceMessageListen.Checked := getBool('presence_message_listen');
-    end;
+   end;
 end;
 
-{---------------------------------------}
-procedure TfrmPrefs.loadPlugins();
-var
-    sl: TWidestringList;
-begin
-    // load the listview
-    lstPlugins.Clear();
-
-    // get the list of selected plugins..
-    sl := TWidestringList.Create();
-    MainSession.Prefs.fillStringlist('plugin_selected', sl);
-
-    // Scan the director
-    scanPluginDir(sl);
-
-    with lstPlugins do begin
-        btnConfigPlugin.Enabled := (Items.Count > 0);
-        btnRemovePlugin.Enabled := (Items.Count > 0);
-    end;
-
-    sl.Free();
-end;
-
-{---------------------------------------}
-procedure TfrmPrefs.savePlugins();
-var
-    i: integer;
-    item: TTntListItem;
-    sl: TWidestringlist;
-begin
-    // save all "checked" captions
-    sl := TWidestringlist.Create();
-
-    for i := 0 to lstPlugins.Items.Count - 1 do begin
-        item := lstPlugins.Items[i];
-        if (item.Checked) then begin
-            // save the Classname
-            sl.Add(item.Caption);
-        end;
-    end;
-
-    MainSession.Prefs.setStringlist('plugin_selected', sl);
-    ReloadPlugins(sl);
-    sl.Free();
-end;
-
-{---------------------------------------}
-procedure TfrmPrefs.scanPluginDir(selected: TWidestringList);
-var
-    dir: Widestring;
-    sr: TSearchRec;
-begin
-    dir := txtPluginDir.Text;
-    if (not DirectoryExists(dir)) then exit;
-    if (FindFirst(dir + '\\*.dll', faAnyFile, sr) = 0) then begin
-        repeat
-            CheckPluginDll(dir + '\' + sr.Name, selected);
-        until FindNext(sr) <> 0;
-        FindClose(sr);
-    end;
-end;
-
-{---------------------------------------}
-procedure TfrmPrefs.CheckPluginDll(dll : WideString; selected: TWidestringList);
-var
-    lib : ITypeLib;
-    idx, i, j : integer;
-    item: TTntListItem;
-    tinfo, iface : ITypeInfo;
-    tattr, iattr: PTypeAttr;
-    r: cardinal;
-    libname, obname, doc: WideString;
-begin
-    // load the .dll.  This SHOULD register the bloody thing if it's not, but that
-    // doesn't seem to work for me.
-    OleCheck(LoadTypeLibEx(pwidechar(dll), REGKIND_REGISTER, lib));
-    // get the project name
-    OleCheck(lib.GetDocumentation(-1, @libname, nil, nil, nil));
-
-    // for each type in the project
-    for i := 0 to lib.GetTypeInfoCount() - 1 do begin
-        // get the info about the type
-        OleCheck(lib.GetTypeInfo(i, tinfo));
-
-        // get attributes of the type
-        OleCheck(tinfo.GetTypeAttr(tattr));
-        // is this a coclass?
-        if (tattr.typekind <> TKIND_COCLASS) then continue;
-
-        // for each interface that the coclass implements
-        for j := 0 to tattr.cImplTypes - 1 do begin
-            // get the type info for the interface
-            OleCheck(tinfo.GetRefTypeOfImplType(j, r));
-            OleCheck(tinfo.GetRefTypeInfo(r, iface));
-
-            // get the attributes of the interface
-            OleCheck(iface.GetTypeAttr(iattr));
-
-            // is this the IExodusPlugin interface?
-            if  (IsEqualGUID(iattr.guid, ExodusCOM_TLB.IID_IExodusPlugin)) then begin
-                // oho!  it IS.  Get the name of this coclass, so we can show
-                // what we did.  Get the doc string, just to show off.
-                OleCheck(tinfo.GetDocumentation(-1, @obname, @doc, nil, nil));
-                // SysFreeString of obname and doc needed?  In C, yes, but here?
-
-                item := lstPlugins.Items.Add();
-                item.Caption := libname + '.' + obname;
-                item.SubItems.Add(doc);
-                item.SubItems.Add(dll);
-
-                // check to see if this is selected
-                idx := selected.IndexOf(item.Caption);
-                item.Checked := (idx >= 0);
-
-                // let her rip!!
-                // OleCheck(tinfo.CreateInstance(nil, ExodusCOM_TLB.IID_IExodusPlugin, ep));
-            end;
-            iface.ReleaseTypeAttr(iattr);
-            //iface._Release(); // crash
-        end;
-        tinfo.ReleaseTypeAttr(tattr);
-        //tinfo._Release();
-    end;
-    // lib._Release(); // crash
-end;
 
 {---------------------------------------}
 procedure TfrmPrefs.SavePrefs;
-var
-    i: integer;
-    cp: TJabberCustomPres;
 begin
     // save prefs to the reg
     with MainSession.Prefs do begin
@@ -467,33 +202,14 @@ begin
         if (_notify <> nil) then
             _notify.SavePrefs();
 
-        // Notify events
-        {
-        setBool('notify_sounds', chkSound.Checked);
-        setBool('notify_active', chkNotifyActive.Checked);
-        setBool('notify_active_win', chkNotifyActiveWindow.Checked);
-        setBool('notify_flasher', chkFlashInfinite.Checked);
+        if (_away <> nil) then
+            _away.SavePrefs();
 
-        setInt('notify_online', _notify[0]);
-        setInt('notify_offline', _notify[1]);
-        setInt('notify_newchat', _notify[2]);
-        setInt('notify_normalmsg', _notify[3]);
-        setInt('notify_s10n', _notify[4]);
-        setInt('notify_invite', _notify[5]);
-        setInt('notify_keyword', _notify[6]);
-        setInt('notify_chatactivity', _notify[7]);
-        setInt('notify_roomactivity', _notify[8]);
-        setInt('notify_oob', _notify[9]);
-        setInt('notify_autoresponse', _notify[10]);
-        }
+        if (_pres <> nil) then
+            _pres.SavePrefs();
 
-        // Autoaway options
-        setBool('auto_away', chkAutoAway.Checked);
-        setBool('aa_reduce_pri', chkAAReducePri.Checked);
-        setInt('away_time', spnAway.Position);
-        setInt('xa_time', spnXA.Position);
-        setString('away_status', txtAway.Text);
-        setString('xa_status', txtXA.Text);
+        if (_plugs <> nil) then
+            _plugs.SavePrefs();
 
         // Keywords
         setStringList('keywords', memKeywords.Lines);
@@ -508,40 +224,14 @@ begin
         setString('http_proxy_user', txtProxyUsername.Text);
         setString('http_proxy_password', txtProxyPassword.Text);
 
-        // Plugins
-        setString('plugin_dir', txtPluginDir.Text);
-        savePlugins();
-
-        // Custom presence list
-        RemoveAllPresence();
-        for i := 0 to _pres_list.Count - 1 do begin
-            cp := TJabberCustomPres(_pres_list.Items[i]);
-            setPresence(cp);
-        end;
-        setInt('pres_tracking', cboPresTracking.ItemIndex);
-        setBool('presence_message_send', chkPresenceMessageSend.Checked);
-        setBool('presence_message_listen', chkPresenceMessageListen.Checked);
-
-    endUpdate();
+        endUpdate();
     end;
     MainSession.FireEvent('/session/prefs', nil);
 end;
 
 {---------------------------------------}
-procedure TfrmPrefs.clearPresList();
-var
-    i: integer;
-begin
-    for i := 0 to _pres_list.Count - 1 do
-        TJabberCustomPres(_pres_list[i]).Free();
-    _pres_list.Clear();
-end;
-
-{---------------------------------------}
 procedure TfrmPrefs.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-    clearPresList();
-    _pres_list.Free();
     MainSession.Prefs.SavePosition(Self);
     Action := caFree;
 end;
@@ -549,48 +239,24 @@ end;
 {---------------------------------------}
 procedure TfrmPrefs.FormCreate(Sender: TObject);
 begin
-    //tbsRoster.TabVisible := false;
-    //tbsSubscriptions.TabVisible := false;
-    //tbsFonts.TabVisible := false;
-    //tbsSystem.TabVisible := false;
-    //tbsDialog.TabVisible := false;
-    //tbsMessages.TabVisible := false;
-    //tbsNotify.TabVisible := false;
-    tbsAway.TabVisible := false;
     tbsKeywords.TabVisible := false;
     tbsBlockList.TabVisible := false;
-    tbsCustomPres.TabVisible := false;
     tbsNetwork.TabVisible := false;
-    tbsPlugins.TabVisible := false;
-
-    // note these are already pre-populated, so no leaks
-    {
-    chkNotify.Items.Strings[0]  := sSoundOnline;
-    chkNotify.Items.Strings[1]  := sSoundOffline;
-    chkNotify.Items.Strings[2]  := sSoundNewchat;
-    chkNotify.Items.Strings[3]  := sSoundNormalmsg;
-    chkNotify.Items.Strings[4]  := sSoundS10n;
-    chkNotify.Items.Strings[5]  := sSoundInvite;
-    chkNotify.Items.Strings[6]  := sSoundKeyword;
-    chkNotify.Items.Strings[7]  := sSoundChatactivity;
-    chkNotify.Items.Strings[8]  := sSoundRoomactivity;
-    chkNotify.Items.Strings[9]  := sSoundOOB;
-    chkNotify.Items.Strings[10] := sSoundAutoResponse;
-    }
-
-    _cur_panel := nil;
-    //_no_notify_update := false;
-    _no_pres_change := false;
 
     // Load the system panel
+    _cur_panel := nil;
     TabSelect(lblSystem);
 
+    // Init all the other panels
     _roster := nil;
     _subscription := nil;
     _font := nil;
     _dialogs := nil;
     _message := nil;
     _notify := nil;
+    _away := nil;
+    _pres := nil;
+    _plugs := nil;
 
     MainSession.Prefs.RestorePosition(Self);
 end;
@@ -695,8 +361,31 @@ begin
         end;
     end
     else if ((Sender = imgAway) or (Sender = lblAway)) then begin
-        PageControl1.ActivePage := tbsAway;
         toggleSelector(lblAway);
+        if (_away <> nil) then
+            f := _away
+        else begin
+            _away := TfrmPrefAway.Create(Self);
+            f := _away;
+        end;
+    end
+    else if ((Sender = imgCustompres) or (Sender = lblCustomPres)) then begin
+        toggleSelector(lblCustompres);
+        if (_pres <> nil) then
+            f := _pres
+        else begin
+            _pres := TfrmPrefPresence.Create(Self);
+            f := _pres;
+        end;
+    end
+    else if ((Sender = imgPlugins) or (Sender = lblPlugins)) then begin
+        toggleSelector(lblPlugins);
+        if (_plugs <> nil) then
+            f := _plugs
+        else begin
+            _plugs := TfrmPrefPlugins.Create(Self);
+            f := _plugs;
+        end;
     end
     else if ((Sender = imgKeywords) or (Sender = lblKeywords)) then begin
         PageControl1.ActivePage := tbsKeywords;
@@ -706,17 +395,9 @@ begin
         PageControl1.ActivePage := tbsBlockList;
         toggleSelector(lblBlocklist);
     end
-    else if ((Sender = imgCustompres) or (Sender = lblCustomPres)) then begin
-        PageControl1.ActivePage := tbsCustomPres;
-        toggleSelector(lblCustompres);
-    end
     else if ((Sender = imgNetwork) or (Sender = lblNetwork)) then begin
         PageControl1.ActivePage := tbsNetwork;
         toggleSelector(lblNetwork);
-    end
-    else if ((Sender = imgPlugins) or (Sender = lblPlugins)) then begin
-        PageControl1.ActivePage := tbsPlugins;
-        toggleSelector(lblPlugins);
     end;
 
     // setup the panel..
@@ -742,223 +423,6 @@ procedure TfrmPrefs.frameButtons1btnOKClick(Sender: TObject);
 begin
     SavePrefs;
     Self.BringToFront();
-end;
-
-{---------------------------------------}
-{
-procedure TfrmPrefs.chkNotifyClick(Sender: TObject);
-var
-    e: boolean;
-    i: integer;
-begin
-    // Show this item's options in the optNotify box.
-    i := chkNotify.ItemIndex;
-
-    _no_notify_update := true;
-
-    e := chkNotify.Checked[i];
-    chkToast.Enabled := e;
-    chkFlash.Enabled := e;
-    chkTrayNotify.Enabled := e;
-
-    if chkToast.Enabled then begin
-        chkToast.Checked := ((_notify[i] and notify_toast) > 0);
-        chkFlash.Checked := ((_notify[i] and notify_flash) > 0);
-        chkTrayNotify.Checked := ((_notify[i] and notify_tray) > 0);
-    end
-    else begin
-        chkToast.Checked := false;
-        chkFlash.Checked := false;
-        chkTrayNotify.Checked := false;
-        _notify[i] := 0;
-    end;
-
-    _no_notify_update := false;
-end;
-}
-
-{---------------------------------------}
-{
-procedure TfrmPrefs.chkToastClick(Sender: TObject);
-var
-    i: integer;
-begin
-    // update the current notify selection
-    if (_no_notify_update) then exit;
-    i := chkNotify.ItemIndex;
-
-    if (i < 0) then exit;
-    if (i > NUM_NOTIFIES) then exit;
-
-    _notify[i] := 0;
-    if (chkToast.Checked) then _notify[i] := _notify[i] + notify_toast;
-    if (chkFlash.Checked) then _notify[i] := _notify[i] + notify_flash;
-    if (chkTrayNotify.Checked) then _notify[i] := _notify[i] + notify_tray;
-end;
-}
-
-{---------------------------------------}
-procedure TfrmPrefs.lstCustomPresClick(Sender: TObject);
-var
-    e: boolean;
-begin
-    // show the props of this presence object
-    _no_pres_change := true;
-
-    e := (lstCustomPres.ItemIndex >= 0);
-    txtCPTitle.Enabled := e;
-    txtCPStatus.Enabled := e;
-    txtCPPriority.Enabled := e;
-    txtCPHotkey.Enabled := e;
-
-    if (not e) then begin
-        txtCPTitle.Text := '';
-        txtCPStatus.Text := '';
-        txtCPPriority.Text := '0';
-    end
-    else with TJabberCustomPres(_pres_list[lstCustomPres.ItemIndex]) do begin
-
-        if (show = 'chat') then cboCPType.ItemIndex := 0
-        else if (show = 'away') then cboCPType.Itemindex := 2
-        else if (show = 'xa') then cboCPType.ItemIndex := 3
-        else if (show = 'dnd') then cboCPType.ItemIndex := 4
-        else
-            cboCPType.ItemIndex := 1;
-
-        txtCPTitle.Text := title;
-        txtCPStatus.Text := status;
-        txtCPPriority.Text := IntToStr(priority);
-        txtCPHotkey.HotKey := TextToShortcut(hotkey);
-    end;
-    _no_pres_change := false;
-end;
-
-{---------------------------------------}
-procedure TfrmPrefs.txtCPTitleChange(Sender: TObject);
-var
-    i: integer;
-begin
-    // something changed on the current custom pres object
-    // automatically update it.
-    if (lstCustomPres.ItemIndex < 0) then exit;
-    if (not tbsCustomPres.Visible) then exit;
-    if (_no_pres_change) then exit;
-
-    i := lstCustomPres.ItemIndex;
-    with  TJabberCustomPres(_pres_list[i]) do begin
-        title := txtCPTitle.Text;
-        status := txtCPStatus.Text;
-        priority := SafeInt(txtCPPriority.Text);
-        hotkey := ShortCutToText(txtCPHotkey.HotKey);
-        case cboCPType.ItemIndex of
-        0: show := 'chat';
-        1: show := '';
-        2: show := 'away';
-        3: show := 'xa';
-        4: show := 'dnd';
-    end;
-        if (title <> lstCustomPres.Items[i]) then
-            lstCustomPres.Items[i] := title;
-    end;
-end;
-
-{---------------------------------------}
-procedure TfrmPrefs.btnCustomPresAddClick(Sender: TObject);
-var
-    cp: TJabberCustomPres;
-begin
-    // add a new custom pres
-    cp := TJabberCustomPres.Create();
-    cp.title := sPrefsDfltPres;
-    cp.show := '';
-    cp.Status := '';
-    cp.priority := 0;
-    cp.hotkey := '';
-    _pres_list.Add(cp);
-    lstCustompres.Items.Add(cp.title);
-    lstCustompres.ItemIndex := lstCustompres.Items.Count - 1;
-    lstCustompresClick(Self);
-end;
-
-{---------------------------------------}
-procedure TfrmPrefs.btnCustomPresRemoveClick(Sender: TObject);
-var
-    cp: TJabberCustomPres;
-begin
-    // delete the current pres
-    cp := TJabberCustomPres(_pres_list[lstCustomPres.ItemIndex]);
-    _pres_list.Remove(cp);
-    MainSession.Prefs.removePresence(cp);
-    lstCustompres.Items.Delete(lstCustomPres.ItemIndex);
-    lstCustompresClick(Self);
-    cp.Free();
-end;
-
-{---------------------------------------}
-procedure TfrmPrefs.btnCustomPresClearClick(Sender: TObject);
-begin
-    // clear all entries
-    if MessageDlg(sPrefsClearPres, mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
-    lstCustomPres.Items.Clear;
-    clearPresList();
-    lstCustompresClick(Self);
-    MainSession.Prefs.removeAllPresence();
-end;
-
-{---------------------------------------}
-{
-procedure TfrmPrefs.Label20Click(Sender: TObject);
-var
-    ver : integer;
-    win : String;
-begin
-    // pop open the proper control panel applet.
-    // It sure was nice of MS to change this for various versions
-    // of the OS. *SIGH*
-    ver := WindowsVersion(win);
-    if (ver = cWIN_XP) then
-        ShellExecute(Self.Handle, nil, 'rundll32.exe',
-          'shell32.dll,Control_RunDLL mmsys.cpl,,1', nil, SW_SHOW)
-    else if ((ver = cWIN_98) or (ver = cWIN_NT)) then
-        ShellExecute(Self.Handle, nil, 'rundll32.exe',
-            'shell32.dll,Control_RunDLL mmsys.cpl,sounds,0', nil, SW_SHOW)
-    else
-        ShellExecute(Self.Handle, nil, 'rundll32.exe',
-          'shell32.dll,Control_RunDLL mmsys.cpl,,0', nil, SW_SHOW);
-end;
-}
-
-{---------------------------------------}
-procedure TfrmPrefs.btnBrowsePluginPathClick(Sender: TObject);
-var
-    p: String;
-begin
-    // Change the plugin dir
-    p := txtPluginDir.Text;
-    if (browsePath(p)) then begin
-        if (p <> txtPluginDir.Text) then begin
-            txtPluginDir.Text := p;
-            loadPlugins();
-        end;
-    end;
-end;
-
-{---------------------------------------}
-procedure TfrmPrefs.lblPluginScanClick(Sender: TObject);
-begin
-    loadPlugins();
-end;
-
-{---------------------------------------}
-procedure TfrmPrefs.btnConfigPluginClick(Sender: TObject);
-var
-    li: TListItem;
-    com_name: string;
-begin
-    li := lstPlugins.Selected;
-    if (li = nil) then exit;
-    com_name := li.Caption;
-    ConfigurePlugin(com_name);
 end;
 
 {---------------------------------------}
@@ -1001,6 +465,8 @@ begin
         txtProxyPassword.Enabled := false;
     end;
 end;
+
+{---------------------------------------}
 procedure TfrmPrefs.FormDestroy(Sender: TObject);
 begin
     // destroy all panels we have..
@@ -1011,6 +477,9 @@ begin
     _dialogs.Free();
     _message.Free();
     _notify.Free();
+    _away.Free();
+    _pres.Free();
+    _plugs.Free();
 end;
 
 end.
