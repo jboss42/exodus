@@ -1,47 +1,37 @@
-2004-02-04 08:08  pgmillard
+2004-02-06 08:11  pgmillard
 
 	* exodus/: default.po, version.h, version.nsi: daily build
 
-2004-02-03 22:55  pgmillard
+2004-02-06 08:09  pgmillard
 
-	* jopl/Entity.pas: Browser tweaks.. Trying to find rogue AV in
-	  entity code
+	* exodus/: GUIFactory.pas, xml.res: Final tweaks to subscription
+	  approval dialog box
 
-2004-02-03 22:37  pgmillard
+2004-02-06 07:19  pgmillard
 
-	* jopl/S10n.pas: Bug #3256 - Fixup auto-accept for folks in my
-	  roster.
+	* exodus/Exodus.dof, exodus/ExodusCOM_TLB.pas,
+	  exodus/GUIFactory.pas, exodus/subscribe.dfm,
+	  exodus/subscribe.pas, jopl/S10n.pas: Bug #3314 - Reviewed and
+	  fixed a lot of whacky auto-accept code. Also fixed up the
+	  subscription request dialog when granting a sub to someone you
+	  are already subscribed to.
 
-2004-02-03 22:27  pgmillard
+2004-02-06 06:45  pgmillard
 
-	* exodus/xdata.dfm: Bug #3222 - Increase default width for x-data
-	  forms.
+	* jopl/Entity.pas: Bug #3264 - Fixup entity code so we can't have
+	  more than one outstanding query at once.
 
-2004-02-03 22:19  pgmillard
+2004-02-05 17:45  llong
 
-	* exodus/ExSession.pas, exodus/NetMeetingFix.pas,
-	  jopl/DNSUtils.pas: Bug #3199 - Add in code to fix co-existance
-	  bug w/ NetMeeting.
+	* exodus/locale/fr/LC_MESSAGES/default.po: Updated from
+	  translator's post to exodus-dev dated 2004/02/05 to synchronize
+	  with version 1.85 of the main default.po (Only changes since last
+	  version, and a little bug corrected - already documented in CVS -
+	  and merged in this version)
 
-2004-02-03 21:27  pgmillard
+2004-02-04 21:16  llong
 
-	* jopl/DNSUtils.pas: Bug #3227, Bug #3221 - Fixup DNS resolver
-	  issues. Put in a 3 second timeout period. Properly handle the
-	  thread.
-
-2004-02-03 20:35  pgmillard
-
-	* exodus/ExEvents.pas, exodus/MsgRecv.pas, jopl/MsgController.pas:
-	  Bug #3295 - Fixup multiple CTCP responses at once bug.
-
-2004-02-03 20:20  pgmillard
-
-	* jopl/Session.pas: Tweaks to signal dispatching.. no code cleanup
-	  though
-
-2004-02-03 07:20  pgmillard
-
-	* exodus/prefs/PrefNetwork.pas, jopl/Session.pas, jopl/Signals.pas:
-	  Add a new packet handler for intercepting all packets before core
-	  client logic. New handler is /pre instead of /packet.
+	* exodus/locale/sl/LC_MESSAGES/default.po: Updated from
+	  translator's post to exodus-dev dated 2004/02/05 to synchronize
+	  with version 1.85 of the main default.po
 
