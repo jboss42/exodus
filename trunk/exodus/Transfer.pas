@@ -61,6 +61,8 @@ type
     procedure httpServerDisconnect(AThread: TIdPeerThread);
     procedure httpServerConnect(AThread: TIdPeerThread);
     procedure lblFileClick(Sender: TObject);
+    procedure txtMsgKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
     fstream: TFileStream;
@@ -71,6 +73,7 @@ type
     Mode: integer;
     url: string;
     filename: string;
+    jid: string;
   end;
 
 var
@@ -123,9 +126,10 @@ begin
     xfer := TfrmTransfer.Create(Application);
     xfer.url := url;
     with xfer do begin
+        jid := from;
         Mode := 0;
 
-        tmp_jid := TJabberID.Create(from);
+        tmp_jid := TJabberID.Create(jid);
         ritem := MainSession.Roster.Find(tmp_jid.jid);
         if (ritem = nil) then
             ritem := MainSession.Roster.Find(tmp_jid.full);
@@ -154,6 +158,7 @@ begin
         end;
     xfer.Show;
     DoNotify(xfer, 'notify_oob', 'File from ' + tmps, ico_service);
+    BringWindowToTop(xfer.Handle);
 end;
 
 {---------------------------------------}
@@ -182,6 +187,8 @@ begin
             end
         else
             tmps := tojid;
+
+        jid := tmps;
         tmp_id.Free();
 
         tmp_id := TJabberID.Create(tmps);
@@ -196,7 +203,7 @@ begin
         else
             tmps := tmp_id.full;
         txtFrom.Caption := tmps;
-        txtFrom.Hint := tmp_id.full;
+        txtFrom.Hint := jid;
         lblFrom.Caption := sTo;
         
         pnlProgress.Visible := false;
@@ -215,6 +222,7 @@ begin
         lblFile.Caption := ExtractFileName(filename);
         end;
     xfer.Show;
+    BringWindowToTop(xfer.Handle);
 end;
 
 {---------------------------------------}
@@ -245,7 +253,7 @@ begin
         Self.Mode := 3;
         iq := TXMLTag.Create('iq');
         with iq do begin
-            PutAttribute('to', txtFrom.Caption);
+            PutAttribute('to', jid);
             PutAttribute('id', MainSession.generateID());
             PutAttribute('type', 'set');
             with AddTag('query') do begin
@@ -353,6 +361,13 @@ begin
         end
     else if Mode = 2 then
         ShellExecute(0, 'open', PChar(filename), '', '', SW_NORMAL);
+end;
+
+procedure TfrmTransfer.txtMsgKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    if ((Key = 13) and (ssCtrl in Shift)) then
+        frameButtons1btnOKClick(Self);
 end;
 
 end.
