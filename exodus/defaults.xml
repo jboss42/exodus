@@ -1,6 +1,6 @@
 <exodus version="0.9">
   <prefs>
-    <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.36 2004/03/01 05:55:52 pgmillard Exp $"/>
+    <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.37 2004/03/17 14:03:34 pgmillard Exp $"/>
     
     <!-- System Options -->
     <auto_update_url value="http://exodus.jabberstudio.org/exodus-released.exe"/>
@@ -27,10 +27,10 @@
     <away_time value="5" control="spnAway"/>
     <xa_time value="30" control="spnXA"/>
     <disconnect_time value="180" control="spnDisconnect"/>        
-    <away_status control="txtAway" state="ro">
+    <away_status control="txtAway">
       <control name="lblAwayStatus"/>
-    </away_status>        
-    <xa_status control="txtXA" state="ro">
+    </away_status>
+    <xa_status control="txtXA">
       <control name="lblXAStatus"/>
     </xa_status>
 
