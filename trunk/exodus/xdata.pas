@@ -318,9 +318,21 @@ end;
 
 {---------------------------------------}
 procedure TfrmXData.FormResize(Sender: TObject);
+var
+    f : TframeGeneric;
+    i: integer;
+    c: TControl;
 begin
     lblIns.AutoSize := false;
     lblIns.AutoSize := true;
+
+    for i := 0 to Self.box.ControlCount - 1 do begin
+        c := Self.box.Controls[i];
+        if (c is TframeGeneric) then begin
+            f := TframeGeneric(c);
+            f.formResize();
+        end;
+    end;
 end;
 
 {---------------------------------------}

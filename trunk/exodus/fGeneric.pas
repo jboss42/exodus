@@ -50,6 +50,7 @@ type
     function getXML: TXMLTag;
     function getLabelWidth: integer;
     procedure setLabelWidth(val: integer);
+    procedure formResize();
     
     property FormType: string read frm_type write frm_type;
   end;
@@ -240,6 +241,7 @@ begin
         c.Left := lblLabel.Width + 5;
         c.Top := 1;
         Self.ClientHeight := c.Height + (2 * Self.BorderWidth);
+        formResize();
     end;
 
     fld_type := t;
@@ -379,5 +381,43 @@ begin
         lblLabel.Width := val;
 end;
 
+
+{---------------------------------------}
+procedure TframeGeneric.formResize();
+var
+    rich: TExRichEdit;
+    rect: TRect;
+    h: integer;
+    errcode: integer;
+    err: string;
+    text: PWideChar;
+begin
+    if (fld_type = 'fixed') then begin
+        rich := TExRichEdit(c);
+
+        DebugMsg('rich width: ' + IntToStr(rich.Width));
+        rect.Left := 0;
+        rect.Right := rich.Width;
+        rect.Top := 0;
+        rect.Bottom := 99999;
+
+        DebugMsg('canvas: ' + IntToStr(TForm(self.Owner).canvas.Handle));
+
+        text := rich.WideLines.GetText;
+        h := DrawTextW(TForm(self.Owner).Canvas.Handle, text, -1, rect, DT_CALCRECT or DT_WORDBREAK);
+        if (h = 0) then begin
+            errcode := GetLastError();
+            if (errcode <> 0) then begin
+                SetLength(err, 2000);
+                Windows.FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,nil,errcode,0,PChar(err),2000,nil);
+                DebugMsg(err);
+            end;
+            exit;
+        end;
+        DebugMsg('rich height: ' + IntToStr(h) + ', ' + IntToStr(rect.Bottom));
+        self.Height := h;
+        rich.Invalidate();
+    end;
+end;
 
 end.
