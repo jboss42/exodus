@@ -1,75 +1,64 @@
-2004-07-22 08:25  pgmillard
+2004-08-05 09:54  pgmillard
 
 	* exodus/: default.po, version.h, version.nsi: daily build
 
-2004-07-22 08:21  pgmillard
+2004-08-04 22:15  pgmillard
 
-	* exodus/: default.po, exodus-new.nsi,
-	  plugins/plugin-sections-new.nsi,
-	  plugins/HTMLLogger/ExodusCOM_TLB.pas: Updated installer script to
-	  use the new redist pkgs
+	* exodus/: BaseChat.dfm, BaseChat.pas, Dockable.pas,
+	  RTFMsgList.dfm, RTFMsgList.pas: More triumphant handling for
+	  turning off flashing. Trap the WMActivate message and pass it
+	  down thru the subclasses.
 
-2004-07-22 08:16  pgmillard
+2004-08-04 21:49  pgmillard
 
-	* redist/: rtl70.bpl, vcl70.bpl: Add the package files to the
-	  redist subdir so branders can get them too.
+	* exodus/: RTFMsgList.dfm, RTFMsgList.pas: Bug #4100 - Intercept
+	  mouse-down events to prevent extra flashing
 
-2004-07-21 22:07  pgmillard
+2004-08-04 21:15  pgmillard
 
-	* 50comupd.exe, ChangeLog-DAILY.txt, ChangeLog-RELEASE.txt,
-	  W95ws2setup.exe, ZipDLL.dll, ZipDLL.nsh, branding_defaults.xml,
-	  build.pl, changelog.html, country-codes.txt, country-codes.xml,
-	  lang-codes.txt, lang-codes.xml, major-release.txt,
-	  notes-0.8.1.0.html, notes-0.8.5.html, notes-0.8.6.html,
-	  redist.txt, release.pl, richupd.exe, exodus/ChangeLog-DAILY.txt,
-	  exodus/ChangeLog-RELEASE.txt, exodus/Exodus.dof,
-	  exodus/ExodusCOM_TLB.pas, exodus/branding_defaults.xml,
-	  exodus/country-codes.xml, exodus/default.po,
-	  exodus/exodus-new.nsi, exodus/lang-codes.xml, exodus/xml.rc,
-	  exodus/locale/it/LC_MESSAGES/default.po,
-	  exodus/plugins/plugin-sections-new.nsi,
-	  exodus/plugins/AIM-Import/ExodusCOM_TLB.pas,
-	  exodus/plugins/ASpeller/ExodusCOM_TLB.pas,
-	  exodus/plugins/ICQ-Import/ExodusCOM_TLB.pas,
-	  exodus/plugins/JabberStats/ExodusCOM_TLB.pas,
-	  exodus/plugins/NetMeeting/ExodusCOM_TLB.pas,
-	  exodus/plugins/RosterTools/ExodusCOM_TLB.pas,
-	  exodus/plugins/SQLLogger/ExodusCOM_TLB.pas, jopl/XMLStream.pas,
-	  redist/50comupd.exe, redist/W95ws2setup.exe, redist/ZipDLL.dll,
-	  redist/ZipDLL.nsh, redist/richupd.exe: Tons more CVS reorg, and
-	  more installer/build script cleanup
+	* exodus/: RecvStatus.pas, SendStatus.pas: Bug #4099 - Stringprep
+	  jids before hashing for file xfers.
 
-2004-07-21 20:48  pgmillard
+2004-07-29 12:09  pgmillard
 
-	* build.pl, exodus/exodus-new.nsi, exodus/exodus.nsi,
-	  exodus/functions.nsh, exodus/iemsglist_style.css,
-	  exodus/locale-new.nsh, exodus/strings.nsh, exodus/un-macros.nsh,
-	  exodus/version-i18n.nsh, exodus/plugins/plugin-desc-new.nsi,
-	  exodus/plugins/plugin-desc.nsi, exodus/plugins/plugin-en-new.nsi,
-	  exodus/plugins/plugin-en.nsi, exodus/plugins/plugin-i18n-new.nsi,
-	  exodus/plugins/plugin-off-new.nsi, exodus/plugins/plugin-off.nsi,
-	  exodus/plugins/plugin-sections-new.nsi,
-	  exodus/plugins/plugin-sections.nsi: Attempt to bring some sanity
-	  to the installer. Removed a bunch of old (pre nsis 2.0) install
-	  files, and cleaned up other stuff.
+	* exodus/Browser.pas, exodus/CommandWizard.pas,
+	  exodus/ExSession.pas, exodus/Exodus.dof,
+	  exodus/ExodusCOM_TLB.pas, exodus/Jabber1.dfm, exodus/Jabber1.pas,
+	  jopl/Presence.pas, jopl/Roster.pas, jopl/Signals.pas: Bug #4079 -
+	  Speculative fix for recursive dispatching bug.
 
-2004-07-16 23:06  llong
+2004-07-28 17:56  pgmillard
 
-	* exodus/locale/pt_PT/LC_MESSAGES/default.po: Translated the new
-	  strings to synchronize with version 1.132 of the main default.po
+	* exodus/: Browser.dfm, Browser.pas, ChatWin.dfm, ChatWin.pas,
+	  CommandWizard.dfm, CommandWizard.pas, RosterAdd.dfm,
+	  RosterAdd.pas, fResults.pas, xdata.pas: Finish up command wizard
+	  stuff, and integrate with the browser
 
-2004-07-14 20:05  pgmillard
+2004-07-28 01:30  pgmillard
 
-	* exodus/Jabber1.dfm: Remove TEST menu item
+	* exodus/: CommandWizard.dfm, CommandWizard.pas, Jabber1.pas,
+	  fResults.dfm, fResults.pas: Finish up -50 command wizard.. still
+	  needs integration
 
-2004-07-14 20:04  pgmillard
+2004-07-27 21:09  pgmillard
 
-	* exodus/SendStatus.pas, jopl/ChatController.pas: Bug #4003 - Make
-	  sure chat controllers don't go away while we are paused if they
-	  have something in the queue.
+	* jopl/DNSUtils.pas: Fixup DNS code so it tries all DNS servers
+	  until we find a result.
 
-2004-07-14 19:43  pgmillard
+2004-07-27 07:55  rimas
 
-	* exodus/Prefs.dfm: Bug #3979 - Turn the cancel bit on for the
-	  Cancel button on the options dialog.
+	* exodus/locale/lt/LC_MESSAGES/default.po: [no log message]
+
+2004-07-27 00:22  pgmillard
+
+	* exodus/BaseChat.dfm, exodus/COMController.pas,
+	  exodus/CommandWizard.dfm, exodus/CommandWizard.pas,
+	  exodus/ExUtils.pas, exodus/Exodus.dpr, exodus/Exodus.tlb,
+	  exodus/ExodusCOM_TLB.pas, exodus/Jabber1.dfm, exodus/Jabber1.pas,
+	  exodus/fGeneric.pas, exodus/fResults.dfm, exodus/fResults.pas,
+	  exodus/jud.dfm, exodus/jud.pas, exodus/xdata.dfm,
+	  exodus/xdata.pas, exodus/prefs/PrefPanel.dfm,
+	  jopl/AutoUpdate.pas, jopl/DNSUtils.pas, jopl/EntityCache.pas,
+	  jopl/JabberConst.pas, jopl/JabberMsg.pas: Most of the -50
+	  jabber-commands wizard
 
