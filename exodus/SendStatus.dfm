@@ -60,7 +60,7 @@ object fSendStatus: TfSendStatus
       Left = 2
       Top = 20
       Width = 398
-      Height = 19
+      Height = 13
       Align = alTop
       Caption = 'lblFile'
       Transparent = False

@@ -16,6 +16,7 @@ inherited frmXferManager: TfrmXferManager
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
+    BorderStyle = bsNone
     TabOrder = 0
   end
   object Panel1: TPanel
