@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exodus 0.8-Daily\n"
 "POT-Creation-Date: 2003-05-08 06:59\n"
-"PO-Revision-Date: 2003-12-30 21:08-0000\n"
+"PO-Revision-Date: 2004-01-03 02:16-0000\n"
 "Last-Translator: Lazarus Long <lazarus.long@bigfoot.com>\n"
 "Language-Team: pt_PT <lazarus.long@bigfoot.com>\n"
 "MIME-Version: 1.0\n"
@@ -834,7 +834,7 @@ msgstr "ToolButton2"
 #: Browser.dfm:205
 #: Profile.dfm:392
 #: vcard.dfm:212
-#: ConnDetails.pas:399
+#: ConnDetails.pas:400
 msgid "Home"
 msgstr "Início"
 
@@ -1454,11 +1454,12 @@ msgstr "Conversa"
 #: RosterWindow.dfm:402
 #: RosterWindow.dfm:605
 #: ExSession.pas:189
-#: Jabber1.pas:2709
+#: Jabber1.pas:2720
 #: RosterWindow.pas:346
 #: RosterWindow.pas:368
 #: RosterWindow.pas:1618
 #: RosterWindow.pas:1661
+#: /src/exodus/jopl/PrefController.pas:1257
 #: prefs/PrefGroups.dfm:70
 #: prefs/PrefPresence.dfm:202
 msgid "Available"
@@ -1474,10 +1475,11 @@ msgstr "Disponível"
 #: Jabber1.dfm:377
 #: Jabber1.dfm:2668
 #: RosterWindow.dfm:414
-#: Jabber1.pas:2707
+#: Jabber1.pas:2718
 #: RosterWindow.pas:348
 #: RosterWindow.pas:369
 #: RosterWindow.pas:1602
+#: /src/exodus/jopl/PrefController.pas:1275
 #: prefs/PrefGroups.dfm:69
 #: prefs/PrefPresence.dfm:203
 msgid "Away"
@@ -1766,7 +1768,7 @@ msgstr "Forçar os contactos a removerem-me do seu rol"
 #. frmInputPass..Caption
 #. accordingly.
 #: InputPassword.dfm:8
-#: Jabber1.pas:901
+#: Jabber1.pas:903
 msgid "Exodus Password"
 msgstr "Palavra-passe do Exodus"
 
@@ -1866,10 +1868,10 @@ msgstr "Junte-se a nós nesta sala de conferência."
 #. frmExodus..Caption
 #. do this.
 #: Jabber1.dfm:7
-#: ConnDetails.pas:401
+#: ConnDetails.pas:402
 #: ExSession.pas:475
 #: ExUtils.pas:1223
-#: Jabber1.pas:1206
+#: Jabber1.pas:1217
 #: Login.pas:104
 #: Login.pas:177
 msgid "Exodus"
@@ -2390,7 +2392,7 @@ msgstr "Ver perfil"
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: jud.dfm:215
 #: subscribe.dfm:143
-#: Jabber1.pas:2280
+#: Jabber1.pas:2291
 msgid "Start Chat"
 msgstr "Iniciar conversa"
 
@@ -5687,7 +5689,7 @@ msgstr "Zimbabué  "
 #. frmVCard..PageControl1..TabSheet5..Caption
 #: Profile.dfm:728
 #: vcard.dfm:543
-#: ConnDetails.pas:400
+#: ConnDetails.pas:401
 msgid "Work"
 msgstr "Emprego"
 
@@ -6405,8 +6407,8 @@ msgstr "Conversa: "
 
 #. post a msg to the window and disable the text input box.
 #: ChatWin.pas:743
-#: Jabber1.pas:2597
-#: Jabber1.pas:2603
+#: Jabber1.pas:2608
+#: Jabber1.pas:2614
 #: Room.pas:656
 msgid "You have been disconnected."
 msgstr "Você foi desligado."
@@ -6487,23 +6489,23 @@ msgstr "Não foi possível ou inicializar ou configurar a extensão."
 msgid "%s Details"
 msgstr "Detalhes de %s"
 
-#: ConnDetails.pas:180
+#: ConnDetails.pas:181
 msgid "The Jabber ID you entered (username@server/resource) is invalid. Please enter a valid username, server, and resource."
 msgstr "O ID de Jabber que introduziu (utilizador@servidor/recurso) é inválido. Por favor introduza um utilizador, servidor e recurso válidos."
 
-#: ConnDetails.pas:308
+#: ConnDetails.pas:309
 msgid "This profile is currently to use SSL, however, your system does not have the required libraries to use SSL. Turning SSL OFF."
 msgstr "Este perfil está configurado para usar uma ligação segura (SSL), no entanto, o seu sistema não tem as bibliotecas necessárias instaladas. A DESLIGAR o suporte ao SSL."
 
-#: ConnDetails.pas:353
+#: ConnDetails.pas:354
 msgid "Must have a larger number of poll keys."
 msgstr "Tem que ter um número maior de chaves de pesquisa."
 
-#: ConnDetails.pas:453
+#: ConnDetails.pas:454
 msgid "Download the public server list from jabber.org? (Requires an internet connection)."
 msgstr "Obter a lista de servidores públicos a partir de jabber.org? (É necessária uma ligação à Internet)."
 
-#: ConnDetails.pas:458
+#: ConnDetails.pas:459
 msgid "Downloading public server list"
 msgstr "A transferir a lista de servidores públicos"
 
@@ -6775,7 +6777,6 @@ msgid "Password"
 msgstr "Palavra-passe"
 
 #: ExUtils.pas:494
-#, fuzzy
 msgid "UserName:"
 msgstr "Nome de utilizador:"
 
@@ -6878,7 +6879,11 @@ msgstr "Remover o grupo %s"
 msgid "Chat with "
 msgstr "Conversa com "
 
-#: GUIFactory.pas:128
+#: GUIFactory.pas:118
+msgid "Your authentication mechanism does not support registration."
+msgstr "O seu mecanismo de autenticação não suporta o registar."
+
+#: GUIFactory.pas:133
 msgid "There was an error attempting to save your options. Another process may be accessing your options file. Some options may be lost. "
 msgstr "Houve um erro ao tentar guardar as suas opções. Um outro processo poderá estar a tentar aceder ao seu  ficheiro de opções. Algumas opções poderão ter ficado perdidas. "
 
@@ -6897,29 +6902,29 @@ msgstr "Foi convidado a entrar na sala %s."
 msgid "Conference Room:"
 msgstr "Sala de conferência:"
 
-#: Jabber1.pas:901
+#: Jabber1.pas:903
 msgid "Enter Password"
 msgstr "Digite a palavra-passe"
 
 #. For other OS's we need to use the wicked nasty DLL
-#: Jabber1.pas:990
+#: Jabber1.pas:992
 msgid "Trying to setup the Auto Away timer."
 msgstr "A tentar activar o cronómetro para a ausência automática."
 
-#: Jabber1.pas:1012
+#: Jabber1.pas:1014
 msgid "AutoAway Setup FAILED!"
 msgstr "A activação da ausência automática FALHOU!"
 
 #. do nothing here..
-#: Jabber1.pas:1019
+#: Jabber1.pas:1021
 msgid "Using Win32 API for Autoaway checks!!"
 msgstr "A usar o API Win32 para as verificações de ausência automática!!"
 
-#: Jabber1.pas:1023
+#: Jabber1.pas:1025
 msgid "ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!"
 msgstr "ERRO AO OBTER O ENDEREÇO DO API WIN32 PARA GetLastInputInfo!!"
 
-#: Jabber1.pas:1085
+#: Jabber1.pas:1088
 msgid ""
 "There was an error trying to authenticate you.\n"
 "Either you used the wrong password, or this account is already in use by someone else."
@@ -6927,72 +6932,76 @@ msgstr ""
 "Houve um erro ao tentar autenticá-lo.\n"
 "Ou utilizou uma palavra-passe incorrecta, ou esta conta já está a ser usada por outra pessoa."
 
-#: Jabber1.pas:1120
+#: Jabber1.pas:1095
+msgid "There was an error trying to setup SSL."
+msgstr "Houve um erro ao tentar configurar a ligação segura (SSL)."
+
+#: Jabber1.pas:1131
 msgid "An Error occurred trying to register your new account. This server may not allow open registration."
 msgstr "Ocorreu um erro ao tentar registar a sua nova conta. Este servidor pode não permitir registos públicos."
 
-#: Jabber1.pas:1135
+#: Jabber1.pas:1146
 msgid "This account does not exist on this server. Create a new account?"
 msgstr "Esta conta não existe neste servidor. Deseja criar uma conta nova?"
 
 #. if we have a new account, prompt for reg info
-#: Jabber1.pas:1185
+#: Jabber1.pas:1196
 msgid "Your new jabber account is activated. Would you like to fill out additional registration information?"
 msgstr "A sua nova conta jabber foi activada. Deseja preencher dados adicionais de registo?"
 
 #. set us to away
-#: Jabber1.pas:2076
+#: Jabber1.pas:2087
 msgid "Setting AutoAway"
 msgstr "A activar a ausência automática"
 
 #. set us to xa
-#: Jabber1.pas:2112
+#: Jabber1.pas:2123
 msgid "Setting AutoXA"
 msgstr "A activar a ausência prolongada automática"
 
 #. reset our status to available
-#: Jabber1.pas:2129
+#: Jabber1.pas:2140
 msgid "Setting Auto Available"
 msgstr "A activar a disponibilidade automática"
 
 #. lookup some arbitrary vcard..
-#: Jabber1.pas:2164
+#: Jabber1.pas:2175
 msgid "Lookup Profile"
 msgstr "Localizar perfil"
 
-#: Jabber1.pas:2164
-#: Jabber1.pas:2280
-#: Jabber1.pas:2537
+#: Jabber1.pas:2175
+#: Jabber1.pas:2291
+#: Jabber1.pas:2548
 msgid "Enter Jabber ID: "
 msgstr "Introduza o ID de Jabber: "
 
-#: Jabber1.pas:2379
+#: Jabber1.pas:2390
 msgid "Old password is incorrect."
 msgstr "A palavra-passe actual está incorrecta."
 
-#: Jabber1.pas:2383
+#: Jabber1.pas:2394
 msgid "New password does not match."
 msgstr "A nova palavra-passe não é igual."
 
-#: Jabber1.pas:2403
-#: Jabber1.pas:2408
+#: Jabber1.pas:2414
+#: Jabber1.pas:2419
 msgid "Error changing password."
 msgstr "Erro a alterar a palavra-passe."
 
-#: Jabber1.pas:2406
+#: Jabber1.pas:2417
 msgid "Password changed."
 msgstr "Palavra-passe alterada."
 
 #. kick off a service registration..
-#: Jabber1.pas:2484
+#: Jabber1.pas:2495
 msgid "Register with Service"
 msgstr "Registar com um serviço"
 
-#: Jabber1.pas:2484
+#: Jabber1.pas:2495
 msgid "Enter Jabber ID of Service: "
 msgstr "Introduza o ID de Jabber do serviço: "
 
-#: Jabber1.pas:2537
+#: Jabber1.pas:2548
 msgid "Send a Message"
 msgstr "Enviar uma mensagem"
 
@@ -7000,15 +7009,15 @@ msgstr "Enviar uma mensagem"
 #. send roster items to this contact.
 #. Send contacts to this JID..
 #. we got a URL drop
-#: Jabber1.pas:2800
-#: Jabber1.pas:2810
+#: Jabber1.pas:2811
+#: Jabber1.pas:2821
 #: RosterWindow.pas:2523
 #: RosterWindow.pas:2825
 #: RosterWindow.pas:2857
 msgid "You must select one or more contacts."
 msgstr "Tem que seleccionar um ou mais contactos."
 
-#: Jabber1.pas:2938
+#: Jabber1.pas:2949
 msgid "Branding error!"
 msgstr "Erro de personalização!"
 
@@ -7626,13 +7635,61 @@ msgid "Your new file transfer port will not take affect until all current trasfe
 msgstr "A sua nova porta de transferência de ficheiros não entrará em efeito até que as transferências em curso terminem. Cancelar as transferências em curso?"
 
 #. set the defaults for the pref controller
-#: /src/exodus/jopl/PrefController.pas:642
+#: /src/exodus/jopl/PrefController.pas:643
 msgid "Away as a result of idle."
 msgstr "Ausência resultante de inactividade."
 
-#: /src/exodus/jopl/PrefController.pas:644
+#: /src/exodus/jopl/PrefController.pas:645
 msgid "XA as a result of idle."
 msgstr "Ausência prolongada resultante de inactividade."
+
+#: /src/exodus/jopl/PrefController.pas:1266
+msgid "Free for Chat"
+msgstr "Livre para conversar"
+
+#: /src/exodus/jopl/PrefController.pas:1284
+msgid "Lunch"
+msgstr "Almoço"
+
+#: /src/exodus/jopl/PrefController.pas:1293
+msgid "Meeting"
+msgstr "Em reunião"
+
+#: /src/exodus/jopl/PrefController.pas:1302
+msgid "Bank"
+msgstr "Foi ao banco"
+
+#: /src/exodus/jopl/PrefController.pas:1311
+msgid "Extended Away"
+msgstr "Ausência prolongada"
+
+#: /src/exodus/jopl/PrefController.pas:1320
+msgid "Gone Home"
+msgstr "Foi para casa"
+
+#: /src/exodus/jopl/PrefController.pas:1329
+msgid "Gone to Work"
+msgstr "Foi trabalhar"
+
+#: /src/exodus/jopl/PrefController.pas:1338
+msgid "Sleeping"
+msgstr "A dormir"
+
+#: /src/exodus/jopl/PrefController.pas:1347
+msgid "Do Not disturb"
+msgstr "Não incomodar"
+
+#: /src/exodus/jopl/PrefController.pas:1356
+msgid "Busy"
+msgstr "Ocupado"
+
+#: /src/exodus/jopl/PrefController.pas:1365
+msgid "Working"
+msgstr "A trabalhar"
+
+#: /src/exodus/jopl/PrefController.pas:1374
+msgid "Mad"
+msgstr "Zangado"
 
 #. Programmer's name for it: SUREBaseString
 #: /src/exodus/jopl/Unicode.pas:822
@@ -8637,7 +8694,7 @@ msgid "The plugin could not be registered with windows."
 msgstr "Não foi possível registar a extensão com o Windows."
 
 #. clear all entries
-#: prefs/PrefPresence.pas:247
+#: prefs/PrefPresence.pas:248
 msgid "Clear all custom presence entries?"
 msgstr "Remover todas as presenças personalizadas?"
 
