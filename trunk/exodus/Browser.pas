@@ -664,9 +664,10 @@ end;
 {---------------------------------------}
 procedure TfrmBrowse.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-    if (_iq <> nil) then
+    if (_iq <> nil) then begin
         _iq.Free();
-
+        _iq := nil;
+    end;
     Action := caFree;
 end;
 
