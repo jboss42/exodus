@@ -158,8 +158,8 @@ uses
 {---------------------------------------}
 constructor TJabberGroup.Create(name: Widestring);
 var
-    l, s, i: integer;
-    p: Widestring;
+    slen, l, s, i: integer;
+    sep, p: Widestring;
 begin
     //
     _online := 0;
@@ -169,23 +169,30 @@ begin
     _grps := TWidestringlist.Create();
 
     // actually parse for nested groups
-    l := Length(name);
-    s := 1;
-    for i := 1 to Length(name) do begin
-        if (name[i] = '/') then begin
-            p := Copy(name, s, (i - s));
-            _parts.Add(p);
-            s := i + 1;
+    if ((MainSession <> nil) and
+        (MainSession.prefs.getBool('nested_groups'))) then begin
+        l := Length(name);
+        s := 1;
+        sep := MainSession.prefs.getString('group_seperator');
+        slen := Length(sep);
+        
+        for i := 1 to Length(name) do begin
+            if (Copy(name, i, slen) = sep) then begin
+                p := Copy(name, s, (i - s));
+                _parts.Add(p);
+                s := i + slen;
+            end;
         end;
-    end;
 
-    // This should take care of the remainder.
-    if (s <= l) then begin
-        p := Copy(name, s, l - s + 1);
-        _parts.Add(p);
-    end;
+        // This should take care of the remainder.
+        if (s <= l) then begin
+            p := Copy(name, s, l - s + slen);
+            _parts.Add(p);
+        end;
+    end
+    else
+        _parts.Add(name);
 
-    //_parts.Add(name);
 end;
 
 {---------------------------------------}
