@@ -181,15 +181,12 @@ type
     _prescb: integer;               // presence callback id
     _sessionCB: integer;            // session callback id
     _FullRoster: boolean;           // is this a full roster paint?
-    _pos: TRect;                    // current position.. CRUFT??
     _task_collapsed: boolean;
     _show_status: boolean;          // show inline status foo (bar) ?
     _status_color: TColor;          // inline status font color
-
     _change_node: TTreeNode;        // the current node being changed
 
-
-    _online: TTreeNode;             // Special groups
+    _online: TTreeNode;             // Special group nodes
     _away: TTreeNode;
     _xa: TTreeNode;
     _dnd: TTreeNode;
@@ -199,10 +196,8 @@ type
 
     _offline_go: TJabberGroup;
     _myres_go: TJabberGroup;
-    //_bookmark_go: TJabberGroup;
 
     _hint_text : WideString;        // the hint text for the current node
-
     _cur_ritem: TJabberRosterItem;  // current roster item selected
     _cur_grp: Widestring;           // current group selected
     _cur_go: TJabberGroup;          // current group object
@@ -279,7 +274,6 @@ type
     procedure ClearNodes;
     procedure Redraw;
     procedure DockRoster;
-    procedure FloatRoster;
     procedure ShowPresence(show: Widestring);
 
     function RenderGroup(grp: TJabberGroup): TTreeNode;
@@ -365,10 +359,6 @@ begin
     _prescb := MainSession.RegisterCallback(PresCallback);
     _sessionCB := MainSession.RegisterCallback(SessionCallback, '/session');
     ChangeStatusImage(0);
-    _pos.Left := (Screen.Width div 2) - 150;
-    _pos.Right := _pos.Left + 200;
-    _pos.Top := (Screen.Height div 3);
-    _pos.Bottom := _pos.Top + 280;
 
     SessionCallback('/session/prefs', nil);
     _task_collapsed := false;
@@ -1183,7 +1173,8 @@ begin
     // If they aren't in any grps, put them into the Unfiled grp
     if ((tmp_grps.Count <= 0) and (not is_me)) then begin
         go := MainSession.Roster.AddGroup(g_unfiled);
-        go.AddJid(ritem.jid);
+        if (not go.inGroup(ritem.jid)) then
+            go.AddJid(ritem.jid);
         go.setPresence(ritem.jid, p);
         tmp_grps.Add(g_unfiled);
     end;
@@ -1561,25 +1552,8 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRosterWindow.FloatRoster;
-begin
-    // float the window
-    Self.Align := alNone;
-    Self.ManualFloat(_pos);
-    StatBar.Visible := true;
-    Docked := false;
-    MainSession.dock_windows := Docked;
-end;
-
-{---------------------------------------}
 procedure TfrmRosterWindow.FormResize(Sender: TObject);
 begin
-    // save the pos info in _pos
-    _pos.left := Self.Left;
-    _pos.Right := Self.Left + Self.Width;
-    _pos.Top := Self.Top;
-    _pos.Bottom := Self.Top + Self.Height;
-
     btnFindClose.Left := pnlFind.Width - btnFindClose.Width - 2;
     txtFind.Width := btnFindClose.Left - 5 - txtFind.Left;
 end;
