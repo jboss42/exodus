@@ -1935,7 +1935,7 @@ begin
   inherited;
     // get the data for this person..
     rm := TRoomMember(_rlist[Item.Index]);
-    Item.Caption := rm.Nick;
+    TTntListItem(Item).Caption := rm.Nick;
     if (rm.show = _(sBlocked)) then item.ImageIndex := ico_blocked
     else if rm.show = 'away' then Item.ImageIndex := 2
     else if rm.show = 'xa' then Item.ImageIndex := 10
