@@ -296,6 +296,7 @@ resourcestring
     sNoBroadcast = 'You must select more than one online contact to broadcast.';
     sSignOn = 'Click to Sign On';
     sCancelLogin = 'Click to Cancel...';
+    sReconnected = 'Reconnected.';
     sDisconnected = 'Disconnected.';
     sConnecting = 'Trying to connect...';
     sAuthenticating = 'Connected. '#13#10'Authenticating...';
