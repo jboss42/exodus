@@ -36,11 +36,14 @@ type
     _pos: TRect;
     _noMoveCheck: boolean;
     _edge_snap: integer;
+    _top: boolean;
     procedure CheckPos();
     procedure SavePos();
   protected
     procedure CreateParams(var Params: TCreateParams); override;
     procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
+    procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
+    procedure WMMouseActivate(var msg: TMessage); message WM_MOUSEACTIVATE;
   public
     { Public declarations }
     TabSheet: TTabSheet;
@@ -68,6 +71,7 @@ procedure TfrmDockable.FormCreate(Sender: TObject);
 begin
     _docked := false;
     _noMoveCheck := true;
+    _top := false;
 
     MainSession.Prefs.RestorePosition(Self);
     _edge_snap := MainSession.Prefs.getInt('edge_snap');
@@ -119,7 +123,7 @@ end;
 procedure TfrmDockable.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
-    if (not _docked) then 
+    if (not _docked) then
         MainSession.Prefs.SavePosition(Self);
 end;
 
@@ -141,6 +145,7 @@ begin
     if MainSession.Prefs.getBool('expanded') then begin
         Self.DockForm;
         Self.Show;
+        Self.Visible := true;
         if ((not Application.Active) or
         (frmJabber.Tabs.ActivePage = frmJabber.tbsMsg)) then
             frmJabber.Tabs.ActivePage := TabSheet;
@@ -161,6 +166,10 @@ var
     r: TRect;
 begin
     if _noMoveCheck then exit;
+
+    if ((not Application.Active) and (not _top)) then
+        // if the application is not active, don't bring the window to the top.
+        msg.WindowPos^.flags := msg.WindowPos^.flags or SWP_NOZORDER;
 
     If ((SWP_NOMOVE or SWP_NOSIZE) and msg.WindowPos^.flags) <>
         (SWP_NOMOVE or SWP_NOSIZE) then begin
@@ -204,10 +213,28 @@ begin
     inherited;
 end;
 
+procedure TfrmDockable.WMActivate(var msg: TMessage);
+begin
+    if (Msg.WParamLo = WA_CLICKACTIVE) then begin
+        // we are getting clicked..
+        _top := true;
+        SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
+            Self.Width, Self.Height, HWND_TOP);
+        _top := false;
+        end;
+end;
+
+procedure TfrmDockable.WMMouseActivate(var msg: TMessage);
+begin
+    _top := true;
+    SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
+        Self.Width, Self.Height, HWND_TOP);
+    _top := false;
+end;
 
 procedure TfrmDockable.FormResize(Sender: TObject);
 begin
-    if (MainSession <> nil) then 
+    if (MainSession <> nil) then
         MainSession.Prefs.SavePosition(Self);
 end;
 
