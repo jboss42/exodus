@@ -1369,6 +1369,7 @@ end;
 {---------------------------------------}
 procedure TJabberProfile.Load(tag: TXMLTag);
 var
+    tmps: Widestring;
     ptag: TXMLTag;
 begin
     // Read this profile from the registry
@@ -1398,7 +1399,16 @@ begin
     Host := tag.GetBasicText('host');
     Port := StrToIntDef(tag.GetBasicText('port'), 5222);
     srv := SafeBool(tag.GetBasicText('srv'));
-    ssl := StrToIntDef(tag.GetBasicText('ssl'), 0);
+
+    // This is for backwards compatibility
+    tmps := Lowercase(tag.GetBasicText('ssl'));
+    if (tmps = 'true') then
+        ssl := ssl_port
+    else if (tmps = 'false') then
+        ssl := ssl_tls
+    else
+        ssl := StrToIntDef(tmps, 0);
+
     ssl_cert := tag.GetBasicText('ssl_cert');
     SocksType := StrToIntDef(tag.GetBasicText('socks_type'), 0);
     SocksHost := tag.GetBasicText('socks_host');

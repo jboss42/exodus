@@ -18,7 +18,7 @@ object frmConnDetails: TfrmConnDetails
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 241
+    Top = 247
     Width = 296
     Height = 32
     Align = alBottom
@@ -44,7 +44,7 @@ object frmConnDetails: TfrmConnDetails
     Left = 0
     Top = 0
     Width = 296
-    Height = 241
+    Height = 247
     ActivePage = tbsProfile
     Align = alClient
     TabOrder = 1
@@ -159,7 +159,6 @@ object frmConnDetails: TfrmConnDetails
         Height = 17
         Caption = 'This is a new account'
         TabOrder = 5
-        WordWrap = True
       end
     end
     object tbsConn: TTntTabSheet
@@ -185,7 +184,7 @@ object frmConnDetails: TfrmConnDetails
         Left = 75
         Top = 7
         Width = 191
-        Height = 21
+        Height = 24
         Style = csOwnerDrawFixed
         DropDownCount = 2
         ItemHeight = 15
@@ -209,7 +208,7 @@ object frmConnDetails: TfrmConnDetails
         Left = 121
         Top = 34
         Width = 16
-        Height = 23
+        Height = 21
         Associate = txtPriority
         Max = 1000
         TabOrder = 2
