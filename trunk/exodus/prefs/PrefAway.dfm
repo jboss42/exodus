@@ -136,6 +136,7 @@ inherited frmPrefAway: TfrmPrefAway
     Height = 17
     Caption = 'Enable Auto Extended Away'
     TabOrder = 9
+    OnClick = chkAutoAwayClick
   end
   object chkAutoDisconnect: TTntCheckBox
     Left = 8
@@ -144,6 +145,7 @@ inherited frmPrefAway: TfrmPrefAway
     Height = 17
     Caption = 'Enable Auto Disconnect'
     TabOrder = 10
+    OnClick = chkAutoAwayClick
   end
   object txtDisconnectTime: TTntEdit
     Left = 232
