@@ -94,6 +94,7 @@ sub plug {
 
   my $dpr = (glob("*.dpr"))[0];
   unless ($dpr) { chdir ".."; return };
+  unless (-e("README.txt")) { chdir ".."; return };
 
   my $thisopts = $plugopts;
   if ($p =~ /ICQ/) { $thisopts .= " -U$::ICQ"; }
