@@ -180,7 +180,7 @@ begin
         sql := sql + 'outbound boolean);';
         _db.ExecSQL(sql);
 
-        tmp := _db.getTable('SELECT name from sqlite_master where name="logs";');
+        tmp := _db.getTable('SELECT name from sqlite_master where name="jlogs";');
         if (tmp.RowCount = 0) then begin
             MessageDlgW('SQL Logging plugin was unable to initialize the database.',
                 mtError, [mbOK], 0);
