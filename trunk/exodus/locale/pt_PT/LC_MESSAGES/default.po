@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2003-05-08 06:59\n"
-"PO-Revision-Date: 2003-06-05 05:52-0000\n"
+"PO-Revision-Date: 2003-06-05 15:59-0000\n"
 "Last-Translator: Lazarus Long <lazarus.long@bigfoot.com>\n"
 "Language-Team: pt_PT <lazarus.long@bigfoot.com>\n"
 "MIME-Version: 1.0\n"
@@ -1326,7 +1326,7 @@ msgstr "Prioridade:"
 #. frmConnDetails..PageControl1..tbsConn..chkSSL..Caption
 #: ConnDetails.dfm:211
 msgid "Use SSL"
-msgstr "Usar SSLF"
+msgstr "Usar SSL"
 
 #. frmConnDetails..PageControl1..tbsConn..cboConnection..Text
 #. frmConnDetails..PageControl1..tbsConn..cboConnection....Items.Strings
