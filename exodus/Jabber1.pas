@@ -35,13 +35,7 @@ const
     UpdateKey = '001';
 
     WM_TRAY = WM_USER + 5269;
-    WM_AUTOAWAY = WM_USER + 5270;
     WM_PREFS = WM_USER + 5272;
-
-    AA_AVAIL = 0;
-    AA_AWAY = 1;
-    AA_XA = 2;
-    AA_CLOSE = 3;
 
 type
     TNextEventType = (next_none, next_Exit, next_Login);
@@ -248,8 +242,6 @@ type
     _hidden: boolean;
     _shutdown: boolean;
     _close_min: boolean;
-    _eHandle: integer;
-
 
     // Callbacks
     procedure SessionCallback(event: string; tag: TXMLTag);
@@ -269,10 +261,11 @@ type
     procedure SetAutoXA();
     procedure SetAutoAvailable();
     procedure SetupAutoAwayTimer();
-
-    procedure sendBroadcast(value: integer);
-
   protected
+    // Hooks for the keyboard and the mouse
+    _hook_keyboard: HHOOK;
+    _hook_mouse: HHOOK;
+
     // Window message handlers
     procedure CreateParams(var Params: TCreateParams); override;
     procedure WMSysCommand(var msg: TWmSysCommand); message WM_SYSCOMMAND;
@@ -280,12 +273,10 @@ type
     procedure WMTray(var msg: TMessage); message WM_TRAY;
     procedure WMQueryEndSession(var msg: TMessage); message WM_QUERYENDSESSION;
     procedure WMEndSession(var msg: TMessage); message WM_ENDSESSION;
-
-    procedure WMAutoAway(var msg: TMessage); message WM_AUTOAWAY;
   public
     // other stuff..
+    last_tick: longword;
     function  getTabForm(tab: TTabSheet): TForm;
-
     procedure RenderEvent(e: TJabberEvent);
     procedure Startup;
     procedure CTCPCallback(event: string; tag: TXMLTag);
@@ -294,13 +285,8 @@ type
 var
     frmJabber: TExodus;
 
-{$Warnings Off}
-function IdleUIInit(): boolean; stdcall; external 'IdleUI.dll' index 2;
-function IdleUIGetLastInputTime(): DWORD; stdcall; external 'IdleUI.dll' index 1;
-procedure IdleUITerm(); stdcall; external 'IdleUI.dll' index 3;
-{$Warnings On}
-
-function EnumWindowsCallback(handle: HWND; lp: integer): boolean; stdcall;
+function KeyboardHook(code: integer; wParam: word; lparam: longword): longword; stdcall;
+function MouseHook(code: integer; wParam: word; lparam: longword): longword; stdcall;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -408,23 +394,6 @@ begin
     //
     _shutdown := true;
     msg.Result := 0;
-end;
-
-{---------------------------------------}
-procedure TExodus.WMAutoAway(var msg: TMessage);
-begin
-    if (_eHandle <> 0) then exit;
-
-    DebugMsg('GOT AUTOAWAY MSG: ' + IntToStr(msg.LParam) + ''#13#10);
-
-    if msg.LParam = 0 then
-        SetAutoAvailable()
-    else if msg.LParam = 1 then
-        SetAutoAway()
-    else if msg.LParam = 2 then
-        SetAutoXA()
-    else if msg.LParam = 3 then
-        SetupAutoAwayTimer();
 end;
 
 {---------------------------------------}
@@ -685,20 +654,53 @@ begin
         end;
 end;
 
+(*
+LRESULT CALLBACK MyKbdHook(int code, WPARAM wParam, LPARAM lParam)
+{
+	if (code==HC_ACTION) {
+		g_dwLastInputTick = GetTickCount();
+	}
+	return ::CallNextHookEx(g_hHookKbd, code, wParam, lParam);
+}
+
+/////////////////
+// Mouse hook: record tick count
+//
+LRESULT CALLBACK MyMouseHook(int code, WPARAM wParam, LPARAM lParam)
+{
+	if (code==HC_ACTION) {
+		g_dwLastInputTick = GetTickCount();
+	}
+	return ::CallNextHookEx(g_hHookMouse, code, wParam, lParam);
+}
+*)
+
+function KeyboardHook(code: integer; wParam: word; lparam: longword): longword; stdcall;
+begin
+    //
+    if (code = HC_ACTION) then
+        frmJabber.last_tick := GetTickCount();
+
+    Result := CallNextHookEx(frmJabber._hook_keyboard, code, wparam, lparam);
+end;
+
+function MouseHook(code: integer; wParam: word; lparam: longword): longword; stdcall;
+begin
+    //
+    if (code = HC_ACTION) then
+        frmJabber.last_tick := GetTickCount();
+
+    Result := CallNextHookEx(frmJabber._hook_mouse, code, wparam, lparam);
+end;
+
+
 {---------------------------------------}
 procedure TExodus.setupAutoAwayTimer();
 begin
     DebugMsg('Trying to setup the Auto Away timer.'#13#10);
-    _eHandle := CreateEvent(nil, false, false, 'Exodus');
-    if (GetLastError = ERROR_ALREADY_EXISTS) then
-        // the handle already exists
-        _eHandle := 0
-    else begin
-        // first instance..
-        IdleUIInit();
-        end;
-    timAutoAway.Enabled := (_eHandle <> 0);
-    DebugMsg('_eHandle = ' + IntToStr(_eHandle) + ''#13#10);
+    _hook_keyboard := SetWindowsHookEx(WH_KEYBOARD, @KeyboardHook, 0, GetCurrentThreadID());
+    _hook_mouse := SetWindowsHookEx(WH_MOUSE, @MouseHook, 0, GetCurrentThreadID());
+    last_tick := GetTickCount();
 end;
 
 {---------------------------------------}
@@ -743,7 +745,7 @@ begin
         SubController := TSubController.Create;
         Tabs.ActivePage := tbsMsg;
         restoreMenus(true);
-        timAutoAway.Enabled := (_eHandle <> 0);
+        timAutoAway.Enabled := true;
         end
 
     else if (event = '/session/disconnected') then begin
@@ -1026,13 +1028,10 @@ end;
 procedure TExodus.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
-
-    if (_eHandle <> 0) then begin
-        IdleUITerm();
-        Application.ProcessMessages();
-        CloseHandle(_eHandle);
-        sendBroadcast(AA_CLOSE);
-        end;
+    if (_hook_keyboard <> 0) then
+        UnhookWindowsHookEx(_hook_keyboard);
+    if (_hook_mouse <> 0) then
+        UnhookWindowsHookEx(_hook_mouse);
 
     MainSession.Prefs.SavePosition(Self);
     lstEvents.Items.Clear;
@@ -1454,8 +1453,8 @@ end;
 procedure TExodus.timAutoAwayTimer(Sender: TObject);
 var
     mins, away, xa: integer;
-    cur_idle: dword;
-    dmsg: string;
+    cur_idle: longword;
+    // dmsg: string;
 begin
     // get the latest idle amount
     if (MainSession = nil) then exit;
@@ -1463,9 +1462,11 @@ begin
 
     with MainSession.Prefs do begin
         if (_auto_away) then begin
-            cur_idle := (GetTickCount() - IdleUIGetLastInputTime()) div 1000;
+            // cur_idle := (GetTickCount() - IdleUIGetLastInputTime()) div 1000;
+            cur_idle := (GetTickCount() - last_tick) div 1000;
             mins := cur_idle div 60;
 
+            {
             if (not _is_autoaway) and (not _is_autoxa) then begin
                 dmsg := 'Idle Check: ' + BoolToStr(_is_autoaway, true) + ', ' +
                     BoolToStr(_is_autoxa, true) + ', ' +
@@ -1474,6 +1475,7 @@ begin
                 end
             else
                 DebugMsg('.');
+            }
 
             away := getInt('away_time');
             xa := getInt('xa_time');
@@ -1488,34 +1490,10 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.sendBroadcast(value: integer);
-begin
-    // send a WM_AUTOAWAY message to all other instances
-    EnumWindows(@EnumWindowsCallback, value);
-end;
-
-{---------------------------------------}
-function EnumWindowsCallback(handle: HWND; lp: integer): boolean; stdcall;
-var
-    cname: pchar;
-begin
-    // we are getting a window.. compare it
-    cname := StrAlloc(256);
-    GetClassName(handle, cname, 255);
-    if ((handle <> frmJabber.Handle) and (Pos('TExodus', String(cname)) > 0)) then begin
-        SendMessage(handle, WM_AUTOAWAY, 0, lp);
-        end;
-    StrDispose(cname);
-    Result := true;
-end;
-
-{---------------------------------------}
 procedure TExodus.SetAutoAway;
 begin
     // set us to away
     DebugMsg('Setting AutoAway '#13#10);
-    if (_eHandle <> 0) then
-        sendBroadcast(AA_AWAY);
     Application.ProcessMessages;
 
     _last_show := MainSession.Show;
@@ -1540,9 +1518,6 @@ begin
 
     MainSession.SetPresence('xa', MainSession.prefs.getString('xa_status'),
         MainSession.Priority);
-
-    if (_eHandle <> 0) then
-        sendBroadcast(AA_XA);
 end;
 
 {---------------------------------------}
@@ -1550,15 +1525,10 @@ procedure TExodus.SetAutoAvailable;
 begin
     // reset our status to available
     DebugMsg('Setting Auto Available'#13#10);
+    MainSession.SetPresence(_last_show, _last_status, MainSession.Priority);
     timAutoAway.Interval := 10000;
     _is_autoaway := false;
     _is_autoxa := false;
-
-    if ((MainSession.show = 'away') or (MainSession.show = 'xa')) then begin
-        MainSession.SetPresence(_last_show, _last_status, MainSession.Priority);
-        if (_eHandle <> 0) then
-            sendBroadcast(AA_AVAIL);
-        end;
 end;
 
 {---------------------------------------}
