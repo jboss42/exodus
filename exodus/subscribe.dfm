@@ -1,7 +1,7 @@
 object frmSubscribe: TfrmSubscribe
   Left = 309
   Top = 495
-  BorderIcons = []
+  BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   BorderWidth = 3
   Caption = 'Subscription Request'
