@@ -25,6 +25,9 @@ uses
     Unicode, JabberUtils, SecHash, Graphics, IdCoderMime, GifImage, Jpeg, XMLTag,
     Types, SysUtils, Classes;
 
+const
+    MAX_AVATAR_SIZE = 15000;
+
 type
 
     TAvatarType = (avOLD, avCard);
@@ -243,6 +246,8 @@ end;
 procedure TAvatar.Draw(c: TCanvas; r: TRect);
 begin
     if (_pic = nil) then exit;
+
+    // XXX: draw while maintaing the aspect ratio
     c.StretchDraw(r, _pic);
 end;
 
@@ -577,7 +582,7 @@ begin
             for i := 0 to items.Count - 1 do begin
                 t := items[i];
                 //name := path + '\' + t.GetAttribute('name');
-                name := t.GetAttribute('name');
+                name := '"' + t.GetAttribute('name') + '"';
                 jid := t.GetAttribute('jid');
                 if ((jid <> '') and (name <> '') and (FileExists(name))) then begin
                     a := TAvatar.Create();

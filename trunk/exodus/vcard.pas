@@ -339,6 +339,8 @@ end;
 procedure TfrmVCard.btnPicBrowseClick(Sender: TObject);
 var
     a: TAvatar;
+    msg: Widestring;
+    d: string;
 begin
     // browse for a new vcard picture
     if (OpenPic.Execute()) then begin
@@ -347,14 +349,24 @@ begin
         if (not a.Valid) then begin
             // a is NOT valid
             a.Free();
-        end
-        else begin
-            // a is valid
-            if (_vcard.Picture <> nil) then
-                _vcard.Picture.Free();
-            _vcard.Picture := a;
-            a.Draw(PaintBox1.Canvas, PaintBox1.ClientRect);
+            exit;
         end;
+
+        // check size of a
+        d := a.Data;
+        if (Length(d) > MAX_AVATAR_SIZE) then begin
+            if (MessageDlgW(_('Your avatar is larger than the recommended size. Continue?'),
+                mtConfirmation, [mbYes, mbNo], 0) = mrNo) then begin
+                a.Free();
+                exit;
+            end;
+        end;
+
+        // a is valid
+        if (_vcard.Picture <> nil) then
+            _vcard.Picture.Free();
+        _vcard.Picture := a;
+        a.Draw(PaintBox1.Canvas, PaintBox1.ClientRect);
     end;
 end;
 
