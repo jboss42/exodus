@@ -19,7 +19,7 @@ object frmConnDetails: TfrmConnDetails
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 241
+    Top = 245
     Width = 296
     Height = 32
     Align = alBottom
@@ -45,7 +45,7 @@ object frmConnDetails: TfrmConnDetails
     Left = 0
     Top = 0
     Width = 296
-    Height = 241
+    Height = 245
     ActivePage = tbsProfile
     Align = alClient
     TabOrder = 1
@@ -109,6 +109,7 @@ object frmConnDetails: TfrmConnDetails
         Height = 21
         ItemHeight = 13
         TabOrder = 1
+        OnExit = txtUsernameExit
         OnKeyPress = txtUsernameKeyPress
         Items.WideStrings = (
           'jabber.org'
@@ -128,6 +129,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 170
         Height = 21
         TabOrder = 0
+        OnExit = txtUsernameExit
         OnKeyPress = txtUsernameKeyPress
       end
       object txtPassword: TTntEdit
@@ -145,6 +147,7 @@ object frmConnDetails: TfrmConnDetails
         Height = 21
         ItemHeight = 13
         TabOrder = 2
+        OnExit = txtUsernameExit
         OnKeyPress = txtUsernameKeyPress
       end
       object chkRegister: TTntCheckBox

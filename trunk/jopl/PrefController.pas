@@ -285,7 +285,7 @@ uses
     {$ifdef Exodus}
     GnuGetText,
     {$endif}
-    JabberConst, StrUtils,
+    JabberConst, StrUtils, Stringprep,
     IdGlobal, IdCoder3To4, Session, IQ, XMLUtils, IdHTTPHeaderInfo, Types;
 
 
@@ -1423,8 +1423,16 @@ var
 begin
     // Read this profile from the registry
     Name := tag.getAttribute('name');
+
+    // Make sure we stringprep the username
     Username := tag.GetBasicText('username');
+    tmps := xmpp_nodeprep(Username);
+    Username := tmps;
+
+    // Make sure we nameprep the server
     Server := tag.GetBasicText('server');
+    tmps := xmpp_nameprep(Server);
+    Server := tmps;
 
     // check for this flag this way, so that if the tag
     // doesn't exist, it'll default to true.
