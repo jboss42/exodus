@@ -1200,7 +1200,8 @@ begin
         for i := 0 to node_list.count - 1 do begin
             n := TTreeNode(node_list[i]);
             if (n.HasAsParent(grp_node)) then begin
-                if (is_me) and (n.Text = tmps) then
+                // if (is_me) and (n.Text = tmps) then
+                if ((is_me) and (Pos(p.fromJid.resource, n.Text) = 1)) then
                     cur_node := n
                 else if (not is_me) then
                     cur_node := n;
@@ -1223,8 +1224,10 @@ begin
                 my_res.item := ritem;
             end;
         end
-        else if ((is_me) and (cur_node.Data <> nil)) then
+        else if ((is_me) and (cur_node.Data <> nil)) then begin
             my_res := TJabberMyResource(cur_node.Data);
+            my_res.Presence := p;
+        end;
 
         cur_node.Text := tmps;
         if (is_me) then
