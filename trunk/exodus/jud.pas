@@ -145,11 +145,6 @@ begin
     // create a new room
     f := TfrmJUD.Create(Application);
 
-    {
-    if MainSession.Prefs.getBool('expanded') then
-        f.DockForm;
-    }
-
     // populate the drop down box based on our entity cache
     f.cboJID.Items.Clear();
     jEntityCache.getByFeature(FEAT_SEARCH, f.cboJID.Items);
