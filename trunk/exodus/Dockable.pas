@@ -157,7 +157,9 @@ begin
             MainSession.Prefs.SavePosition(Self, MungeName(Self.Caption))
         else
             MainSession.Prefs.SavePosition(Self);
-    end;
+    end
+    else
+        frmExodus.CloseDocked(Self);
 
     CanClose := true;
 end;

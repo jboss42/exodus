@@ -387,6 +387,8 @@ type
     procedure PreModal(frm: TForm);
     procedure PostModal();
 
+    procedure CloseDocked(frm: TForm);
+
   end;
 
 
@@ -2619,17 +2621,24 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.TabsUnDock(Sender: TObject; Client: TControl;
   NewTarget: TWinControl; var Allow: Boolean);
-var
-    idx: integer;
 begin
     // check to see if the tab is a frmDockable
     Allow := true;
-    if (Client is TfrmDockable) then begin
-        TfrmDockable(Client).Docked := false;
-        TfrmDockable(Client).TabSheet := nil;
-        idx := _docked_forms.IndexOf(TfrmDockable(Client));
-        assert(idx >= 0);
-        _docked_forms.Delete(idx);
+    if (Client is TForm) then
+        CloseDocked(TForm(Client));
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.CloseDocked(frm: TForm);
+var
+    idx: integer;
+begin
+    if (frm is TfrmDockable) then begin
+        TfrmDockable(frm).Docked := false;
+        TfrmDockable(frm).TabSheet := nil;
+        idx := _docked_forms.IndexOf(TfrmDockable(frm));
+        if (idx >= 0) then
+            _docked_forms.Delete(idx);
     end;
 end;
 
