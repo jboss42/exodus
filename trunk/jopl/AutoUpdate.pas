@@ -1,8 +1,3 @@
-{$A+,B-,C+,D+,E-,F-,G+,H+,I+,J-,K-,L+,M-,N+,O+,P+,Q-,R+,S-,T-,U-,V+,W+,X+,Y+,Z1}
-{$MINSTACKSIZE $00004000}
-{$MAXSTACKSIZE $00100000}
-{$IMAGEBASE $00400000}
-{$APPTYPE GUI}
 unit AutoUpdate;
 {
     Copyright 2002, Peter Millard
@@ -59,22 +54,17 @@ procedure InitUpdateBranding();
 const
     EXODUS_REG = '\Software\Jabber\Exodus';
     
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 
 uses
-    AutoUpdateStatus,
-    Controls,
-    ExUtils,
-    IQ,
-    Dialogs,
-    Forms,
-    Registry,
-    Session,
-    ShellAPI,
-    SysUtils,
-    Windows,
-    XMLUtils, PrefController;
+    AutoUpdateStatus, Controls, ExUtils, IQ, Dialogs,
+    Forms, Registry, Session, ShellAPI, SysUtils,
+    Windows, XMLUtils, PrefController;
 
+{---------------------------------------}
 function RoundDateTime(val: TDateTime) : TDateTime;
 var
     f: TFormatSettings;
@@ -83,6 +73,7 @@ begin
     Result := StrToDateTime(DateTimeToStr(val), f);
 end;
 
+{---------------------------------------}
 function LocaleDateTime(val: string): TDateTime;
 var
     f: TFormatSettings;
@@ -150,6 +141,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure OnNewBrand(url : string);
 var
     bfn : string;
@@ -198,7 +190,7 @@ begin
             last := Now();
             MainSession.Prefs.setString('last_branding_update', DateTimeToStr(last));
         end;
-end;
+    end;
 
     t := TAutoUpdateThread.Create(true);
     t.URL := url;
