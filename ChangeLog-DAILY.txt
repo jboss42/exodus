@@ -1,10 +1,11 @@
-2004-06-24 08:29  pgmillard
+2004-06-28 08:36  pgmillard
 
 	* exodus/: default.po, version.h, version.nsi: daily build
 
-2004-06-24 07:02  pgmillard
+2004-06-28 08:30  pgmillard
 
-	* exodus/: default.po, plugins/plugin-sections-new.nsi,
+	* exodus/: default.po, plugins/plugin-desc-new.nsi,
+	  plugins/plugin-off-new.nsi, plugins/plugin-sections-new.nsi,
 	  plugins/AIM-Import/ExodusCOM_TLB.pas,
 	  plugins/ASpeller/ExodusCOM_TLB.pas,
 	  plugins/HTMLLogger/ExodusCOM_TLB.pas,
@@ -14,45 +15,26 @@
 	  plugins/RosterTools/ExodusCOM_TLB.pas,
 	  plugins/SQLLogger/ExodusCOM_TLB.pas: [no log message]
 
-2004-06-23 22:32  pgmillard
+2004-06-28 08:18  pgmillard
 
-	* exodus/: RecvStatus.pas, SendStatus.pas, XferManager.dfm,
-	  XferManager.pas: Bug #3765 - Fix a bunch more FT bugs.. including
-	  a neat infinite loop related to dupes getting into the shosts
-	  list for sending. FUN!
+	* exodus/Exodus.dpr: Fixup Exodus.dpr to NOT include md5.pas
 
-2004-06-23 21:23  pgmillard
+2004-06-28 07:22  pgmillard
 
-	* exodus/: ExResponders.pas, RecvStatus.pas, SendStatus.pas,
-	  XferManager.pas: Bug #3745 - Lots and lots of file-transfer
-	  issues. DAV didn't appear to be working at all. *sigh*
+	* exodus/Exodus.dpr, exodus/ExodusCOM_TLB.pas, jopl/XMLUtils.pas:
+	  Add in initial md5 stuff for file-xfers
 
-2004-06-23 20:18  pgmillard
+2004-06-27 21:41  pgmillard
 
-	* exodus/Prefs.dfm: Bug #3910 - Rename window title from prefs ->
-	  options
+	* exodus/Jabber1.dfm, exodus/Jabber1.pas, exodus/RecvStatus.pas,
+	  exodus/SendStatus.pas, exodus/XferManager.pas, jopl/XMLUtils.pas:
+	  File transfer appears to now work correctly. Looks like a bug in
+	  indy is repsponsible. SIGH
 
-2004-06-23 20:15  pgmillard
+2004-06-24 14:10  pgmillard
 
-	* exodus/: ExEvents.pas, Exodus.dof, ExodusCOM_TLB.pas: Bug #3902 -
-	  Only insert once since we can't always be ensured that _data_list
-	  has one element in it.
-
-2004-06-23 20:04  pgmillard
-
-	* exodus/: Jabber1.pas, RosterWindow.pas: Bug #3878 - Tweaks to
-	  shutdown logic to make sure things are NULL safe. Not sure what
-	  caused this unusual stack trace tho.
-
-2004-06-19 17:21  pgmillard
-
-	* exodus/: ExUtils.pas, Jabber1.dfm, Jabber1.pas: Bug #3892 - Use
-	  the stock GetLastInputInfo instead of scary home-brew version
-	  which used ASM code.
-
-2004-06-19 16:31  pgmillard
-
-	* exodus/ExResponders.pas, exodus/Exodus.dpr,
-	  exodus/ExodusCOM_TLB.pas, jopl/JabberID.pas: Use resource-prep
-	  for resources. duh.
+	* exodus/: XferManager.pas, fGeneric.dfm,
+	  plugins/plugin-desc-new.nsi, plugins/plugin-off-new.nsi,
+	  plugins/plugin-sections-new.nsi: Yet more file transfer tweaks in
+	  an attempt to fix off-by-one byte error
 
