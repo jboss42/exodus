@@ -40,6 +40,7 @@ type
         procedure Clear();
         procedure Add(jid: Widestring; e: TJabberEntity);
         procedure Remove(e: TJabberEntity);
+        procedure RemoveJid(jid: Widestring; node: Widestring = '');
         procedure Delete(i: integer);
 
         function getByJid(jid: Widestring; node: Widestring = ''): TJabberEntity;
@@ -51,7 +52,6 @@ type
         function getFirstFeature(f: Widestring): TJabberEntity;
         function getFirstSearch(): Widestring;
         function getFirstGroupchat(): Widestring;
-
 
         {$ifdef Exodus}
         procedure getByFeature(f: Widestring; jid_list: TWidestringList); overload;
@@ -226,6 +226,27 @@ begin
     i := indexOf(e);
     if (i >= 0) then
         _cache.Delete(i);
+end;
+
+{---------------------------------------}
+procedure TJabberEntityCache.RemoveJid(jid, node: Widestring);
+var
+    i: integer;
+    cur: TJabberEntity;
+begin
+    i := _cache.indexOf(jid);
+    if ((node <> '') and (i >= 0)) then begin
+        repeat
+            cur := TJabberEntity(_cache.Objects[i]);
+            if (cur.jid.full <> jid) then
+                cur := nil
+            else if (cur.Node = node) then
+                break;
+            inc(i);
+        until ((cur = nil) or (i >= _cache.Count));
+        if (cur = nil) then exit;
+    end;
+    _cache.Delete(i);
 end;
 
 {---------------------------------------}
