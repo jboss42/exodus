@@ -109,8 +109,8 @@ begin
     t.URL := url;
     t.Background := background;
     t.OnNewUrl := @FireAutoUpdate;
+    t.FreeOnTerminate := true;
     if (background) then begin
-        t.FreeOnTerminate := true;
         t.Resume();
     end
     else begin
