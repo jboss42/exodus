@@ -1077,25 +1077,61 @@ var
     {$ifdef Win32}
     reg: TRegistry;
     {$endif}
-    srv: string;
-    colon: integer;
+    sl: TStringList;
+    i: integer;
 begin
+    host := '';
+    port := 0;
+    
     if (getInt('http_proxy_approach') = http_proxy_ie) then begin
         // get IE settings from registry
 
         // todo: figure out some way of doing this XP??
         {$ifdef Win32}
         reg := TRegistry.Create();
+        sl := TStringList.Create();
         try
             reg.OpenKey('Software\Microsoft\Windows\CurrentVersion\Internet Settings', false);
-            if (reg.ValueExists('ProxyEnable') and
-                (reg.ReadInteger('ProxyEnable') <> 0)) then begin
-                srv := reg.ReadString('ProxyServer');
-                colon := pos(':', srv);
-                host := Copy(srv, 1, colon-1);
-                port := StrToInt(Copy(srv, colon+1, length(srv)));
+            if (reg.ValueExists('ProxyEnable') and (reg.ReadInteger('ProxyEnable') <> 0)) then begin
+                // ProxyServer can be server:port or
+                // ftp=host:port;http=host:port;https=host:port
+                sl.Delimiter := ';';
+                sl.DelimitedText := reg.ReadString('ProxyServer');
+                if (sl.Count = 0) then
+                    // uh...
+                    raise Exception.Create('Invalid IE proxy server configuration')
+                else if (sl.Count = 1) then begin
+                    // host:port
+                    sl.Delimiter := ':';
+                    sl.DelimitedText := sl[0];
+                    host := sl[0];
+                    port := SafeInt(sl[1]);
+                end
+                else begin
+                    // ftp=host:port;http=host:port;https=host:port
+                    // where the order is indeterminate,
+                    // and there may be more protocols, like gopher
+
+                    // TODO: use http or https proxy setting correctly, based
+                    // on the URL we're hitting.  I can't imagine an actual
+                    // deployment that would set these differently, but there
+                    // must be a use case, or it wouldn't have been in IE.
+                    // Right?
+                    for i := 0 to sl.Count - 1 do begin
+                        if (pos('http=', sl[i]) = 1) then begin
+                            sl.Delimiter := '=';
+                            sl.DelimitedText := sl[i];
+                            sl.Delimiter := ':';
+                            sl.DelimitedText := sl[1];
+                            host := sl[0];
+                            port := SafeInt(sl[1]);
+                            break;
+                        end;
+                    end;
+                end;
             end;
         finally
+            sl.Free();
             reg.Free();
         end;
         {$endif}
@@ -1114,6 +1150,8 @@ var
 begin
     getHttpProxy(host, port);
 
+    if host = '' then exit;
+    
     {$ifdef INDY9}
     with http.ProxyParams do begin
     {$else}
