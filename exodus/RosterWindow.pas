@@ -233,7 +233,7 @@ resourcestring
 
 implementation
 uses
-    JabberConst, Chat, ChatController, 
+    JabberConst, Chat, ChatController, InputPassword, 
     SelContact, Invite, Bookmark, S10n, Transfer, MsgRecv, PrefController,
     ExEvents, ExUtils, Room, Profile, JabberID, RiserWindow, ShellAPI,
     IQ, RosterAdd, GrpRemove, RemoveContact, ChatWin, Jabber1,
@@ -1816,13 +1816,13 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.popGrpRenameClick(Sender: TObject);
 var
-    old_grp, new_grp: string;
+    old_grp, new_grp: WideString;
     gi, i: integer;
     ri: TJabberRosterItem;
 begin
     // Rename some grp.
     new_grp := treeRoster.Selected.Text;
-    if (InputQuery(sRenameGrp, sRenameGrpPrompt, new_grp)) then begin
+    if (InputQueryW(sRenameGrp, sRenameGrpPrompt, new_grp)) then begin
         old_grp := treeRoster.Selected.Text;
         new_grp := Trim(new_grp);
         if (new_grp <> old_grp) then begin

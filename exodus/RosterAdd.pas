@@ -75,6 +75,7 @@ function ShowAddContact: TfrmAdd;
 {---------------------------------------}
 implementation
 uses
+    InputPassword,
     Jabber1,
     JabberID,
     Presence,
@@ -140,11 +141,11 @@ end;
 {---------------------------------------}
 procedure TfrmAdd.lblAddGrpClick(Sender: TObject);
 var
-    ngrp: String;
+    ngrp: WideString;
 begin
     // Add a new group to the list...
     ngrp := sDefaultGroup;
-    if InputQuery(sNewGroup, sNewGroupPrompt, ngrp) then begin
+    if InputQueryW(sNewGroup, sNewGroupPrompt, ngrp) then begin
         MainSession.Roster.GrpList.Add(ngrp);
         cboGroup.Items.Assign(MainSession.Roster.GrpList);
         end;

@@ -23,7 +23,7 @@ object frmInputPass: TfrmInputPass
     Height = 13
     Caption = 'Enter password:'
   end
-  object txtPassword: TEdit
+  object txtPassword: TTntEdit
     Left = 8
     Top = 27
     Width = 217
@@ -33,7 +33,7 @@ object frmInputPass: TfrmInputPass
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 71
+    Top = 66
     Width = 260
     Height = 32
     Align = alBottom

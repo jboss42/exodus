@@ -462,6 +462,8 @@ resourcestring
     sPasswordChanged = 'Password changed.';
     sPasswordOldError = 'Old password is incorrect.';
     sPasswordNewError = 'New password does not match.';
+    sPasswordCaption = 'Exodus Password';
+    sPasswordPrompt = 'Enter Password';
 
     sAlreadySubscribed = 'You are already subscribed to this contact';
 
@@ -1084,25 +1086,20 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.DoConnect();
 var
-    pf: TfrmInputPass;
+    pw : WideString;
 begin
     // Make sure that the active profile
     // has the password field filled out.
     // If not, pop up the password prompt,
     // otherwise, just call connect
-    with MainSession do begin
-        FireEvent('/session/connecting', nil);
-        if Password = '' then begin
-            pf := TfrmInputPass.Create(Application);
-            if (pf.ShowModal) = mrOK then begin
-                Password := pf.txtPassword.Text;
-                Connect();
-                end;
-            pf.Close();
-            end
-        else
-            Connect();
+    if (MainSession.Password = '') then begin
+        pw := '';
+        if ((not InputQueryW(sPasswordCaption, sPasswordPrompt, pw, True)) or
+            (pw = '')) then exit;
+        MainSession.Password := pw;
         end;
+    MainSession.FireEvent('/session/connecting', nil);
+    MainSession.Connect();
 end;
 
 {---------------------------------------}
@@ -2128,12 +2125,12 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.NewGroup2Click(Sender: TObject);
 var
-    new_grp: string;
+    new_grp: WideString;
     gl: TWideStringList;
 begin
     // Add a roster grp.
     new_grp := sDefaultGroup;
-    if InputQuery(sNewGroup, sNewGroupPrompt, new_grp) = false then exit;
+    if InputQueryW(sNewGroup, sNewGroupPrompt, new_grp) = false then exit;
 
     // add the new grp.
     gl := MainSession.Roster.GrpList;
@@ -2312,10 +2309,10 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.mnuVCardClick(Sender: TObject);
 var
-    jid: string;
+    jid: WideString;
 begin
     // lookup some arbitrary vcard..
-    if InputQuery(sLookupProfile, sEnterJID, jid) then
+    if InputQueryW(sLookupProfile, sEnterJID, jid) then
         ShowProfile(jid);
 end;
 
@@ -2418,7 +2415,7 @@ procedure TfrmExodus.mnuChatClick(Sender: TObject);
 var
     n: TTreeNode;
     ritem: TJabberRosterItem;
-    jid: string;
+    jid: WideString;
 begin
     // Start a chat w/ a specific JID
     jid := '';
@@ -2431,7 +2428,7 @@ begin
             end;
         end;
 
-    if InputQuery(sStartChat, sEnterJID, jid) then
+    if InputQueryW(sStartChat, sEnterJID, jid) then
         StartChat(jid, '', true);
 end;
 
@@ -2643,12 +2640,12 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.mnuRegisterServiceClick(Sender: TObject);
 var
-    tmps: string;
+    tmps: WideString;
     f: TfrmRegister;
 begin
     // kick off a service registration..
     tmps := '';
-    if (InputQuery(sRegService, sEnterSvcJID, tmps) = false) then
+    if (InputQueryW(sRegService, sEnterSvcJID, tmps) = false) then
         exit;
 
     f := TfrmRegister.Create(Application);
@@ -2680,7 +2677,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.mnuMessageClick(Sender: TObject);
 var
-    jid: string;
+    jid: WideString;
     n: TTreeNode;
     ritem: TJabberRosterItem;
 begin
@@ -2695,7 +2692,7 @@ begin
             end;
         end;
 
-    if InputQuery(sSendMessage, sEnterJID, jid) then
+    if InputQueryW(sSendMessage, sEnterJID, jid) then
         StartMsg(jid);
 end;
 
