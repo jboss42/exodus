@@ -908,6 +908,7 @@ end;
 {---------------------------------------}
 function TJabberSession.IsBlocked(jid : TJabberID): boolean;
 var
+    r1, r2: TJabberRosterItem;
     blockers: TWideStringList;
 begin
     blockers := TWideStringList.Create();
@@ -920,7 +921,11 @@ begin
 
     if ((not result) and (Prefs.getBool('block_nonroster'))) then begin
         // block this jid if they are not in my roster
-        Result := (Roster.Find(jid.jid) = nil); 
+        r1 := Roster.Find(jid.jid);
+        r2 := nil;
+        if (r1 = nil) then
+            r2 := Roster.Find(jid.full);
+        Result := ((r1 = nil) and (r2 = nil)); 
     end;
 end;
 
@@ -968,7 +973,6 @@ function TJabberSession.GetActive(): boolean;
 begin
     Result := (_stream <> nil);
 end;
-
 
 end.
 

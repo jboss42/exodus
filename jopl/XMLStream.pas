@@ -446,6 +446,7 @@ begin
     _root_tag := root;
     _callbacks := TObjectList.Create;
     _active := false;
+    _local_ip := '';
 end;
 
 {---------------------------------------}
