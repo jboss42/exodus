@@ -61,6 +61,8 @@ type
     procedure popCloseClick(Sender: TObject);
     procedure popBookmarkClick(Sender: TObject);
     procedure popInviteClick(Sender: TObject);
+    procedure MsgListMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private declarations }
     jid: string;                // jid of the conf. room
@@ -559,20 +561,26 @@ var
     p: TJabberPres;
     i: integer;
 begin
+    // Unregister callbacks and send unavail pres.
     if (_callback >= 0) then begin
-        p := TJabberPres.Create();
-        p.toJID := TJabberID.Create(jid);
-        p.PresType := 'unavailable';
-        MainSession.SendTag(p);
         MainSession.UnRegisterCallback(_callback);
         MainSession.UnRegisterCallback(_pcallback);
         MainSession.UnRegisterCallback(_scallback);
         end;
+
+    if ((MainSession <> nil) and (MainSession.Stream.Active)) then begin
+        p := TJabberPres.Create();
+        p.toJID := TJabberID.Create(jid);
+        p.PresType := 'unavailable';
+        MainSession.SendTag(p);
+        end;
+
     _keywords.Free;
     i := room_list.IndexOf(jid);
     if (i >= 0) then
         room_list.Delete(i);
     Action := caFree;
+
     inherited;
 end;
 
@@ -718,6 +726,19 @@ procedure TfrmRoom.popInviteClick(Sender: TObject);
 begin
   inherited;
     ShowInvite(Self.jid, nil);
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.MsgListMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+var
+    cp: TPoint;
+begin
+  inherited;
+    if Button = mbRight then begin
+        GetCursorPos(cp);
+        popRoom.Popup(cp.x, cp.y);
+        end;
 end;
 
 initialization

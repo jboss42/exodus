@@ -1,6 +1,6 @@
 inherited frmRoom: TfrmRoom
-  Left = 253
-  Top = 180
+  Left = 265
+  Top = 150
   Caption = 'Conference Room'
   OldCreateOrder = True
   OnClose = FormClose
@@ -25,6 +25,7 @@ inherited frmRoom: TfrmRoom
       PopupMenu = popRoom
       OnDragDrop = treeRosterDragDrop
       OnDragOver = treeRosterDragOver
+      OnMouseUp = MsgListMouseUp
     end
     object Panel6: TPanel
       Left = 273
