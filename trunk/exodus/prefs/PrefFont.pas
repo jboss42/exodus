@@ -24,7 +24,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, PrefPanel, StdCtrls, ComCtrls, RichEdit2, ExRichEdit, ExtCtrls,
-  TntStdCtrls, TntExtCtrls;
+  TntStdCtrls, TntExtCtrls, TntComCtrls;
 
 type
   TfrmPrefFont = class(TfrmPrefPanel)
@@ -33,13 +33,13 @@ type
     Label24: TTntLabel;
     Label25: TTntLabel;
     Label5: TTntLabel;
-    colorRoster: TTreeView;
     clrBoxBG: TColorBox;
     clrBoxFont: TColorBox;
     btnFont: TTntButton;
     colorChat: TExRichEdit;
     FontDialog1: TFontDialog;
     lblColor: TTntLabel;
+    colorRoster: TTntTreeView;
     procedure btnFontClick(Sender: TObject);
     procedure colorChatMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -81,8 +81,14 @@ uses
 
 {---------------------------------------}
 procedure TfrmPrefFont.LoadPrefs();
+var
+    n: TTntTreeNode;
 begin
     //
+    n := colorRoster.Items.AddChild(nil, _('Sample Group'));
+    colorRoster.Items.AddChild(n, _('Peter M.'));
+    colorRoster.Items.AddChild(n, _('Cowboy Neal'));
+
     with MainSession.Prefs do begin
         with colorChat do begin
             Font.Name := getString('font_name');
@@ -172,15 +178,15 @@ begin
         Lines.Clear;
         m1 := TJabberMessage.Create();
         with m1 do begin
-            Body := 'Some text from me';
+            Body := _('Some text from me');
             isMe := true;
-            Nick := 'pgm';
+            Nick := _('Your nick');
         end;
         m2 := TJabberMessage.Create();
         with m2 do begin
-            Body := 'Some reply text';
+            Body := _('Some reply text');
             isMe := false;
-            Nick := 'c-neal';
+            Nick := _('Other nick');
         end;
 
         DisplayMsg(m1, colorChat);
@@ -276,6 +282,7 @@ begin
     lblRoster.Font.Style := [fsBold];
     lblChat.Font.Style := [fsBold];
     lblColor.Font.Style := [fsBold];
+
 end;
 
 end.
