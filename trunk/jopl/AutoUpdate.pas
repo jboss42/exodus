@@ -75,6 +75,11 @@ uses
     Windows,
     XMLUtils, PrefController;
 
+function RoundDateTime(val: TDateTime) : TDateTime;
+begin
+    Result := StrToDateTime(DateTimeToStr(val));
+end;
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -210,7 +215,7 @@ begin
             exit;
             end;
 
-        if (http.Response.LastModified <= _last) then
+        if (RoundDateTime(http.Response.LastModified) <= _last) then
             exit;
         if (Assigned(_onNew)) then begin
             if (_background) then
