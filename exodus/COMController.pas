@@ -120,6 +120,8 @@ type
 
     procedure fireNewChat(jid: WideString; ExodusChat: IExodusChat);
     procedure fireMenuClick(Sender: TObject);
+    procedure fireRosterMenuClick(Sender: TObject);
+
   end;
 
   TPlugin = class
@@ -512,6 +514,18 @@ begin
     if (idx >= 0) then begin
         for i := 0 to plugs.count - 1 do
             TPlugin(plugs.Objects[i]).com.menuClick(_menu_items[idx]);
+    end;
+end;
+
+{---------------------------------------}
+procedure TExodusController.fireRosterMenuClick(Sender: TObject);
+var
+    i, idx: integer;
+begin
+    idx := _roster_menus.indexOfObject(Sender);
+    if (idx >= 0) then begin
+        for i := 0 to plugs.count - 1 do
+            TPlugin(plugs.Objects[i]).com.menuClick(_roster_menus[idx]);
     end;
 end;
 

@@ -2232,6 +2232,7 @@ end;
 procedure TfrmRosterWindow.pluginClick(Sender: TObject);
 begin
     // a plugin menu got clicked
+    frmExodus.COMController.fireRosterMenuClick(Sender);
 end;
 
 
