@@ -802,7 +802,7 @@ begin
     if (accept) then
         _state := send_get_hosts
     else begin
-        lblStatus.Caption := Format(_('Your file transfer was refused to %s'),
+        lblStatus.Caption := WideFormat(_('Your file transfer was refused to %s'),
             [_pkg.recip]);
         btnCancel.Caption := _('Close');
         _state := send_cancel;
@@ -881,7 +881,7 @@ begin
     end
     else if ((event = 'xml') and (tag.getAttribute('type') = 'error')) then begin
         // they refused
-        MessageDlg(Format(_('The recipient (%s) refused your file: %s'),
+        MessageDlg(WideFormat(_('The recipient (%s) refused your file: %s'),
             [_pkg.recip, _pkg.pathname]), mtError, [mbOK], 0);
         _state := send_cancel;
         DoState();
@@ -903,7 +903,7 @@ begin
     end;
 
     // error
-    MessageDlg(Format(_('The stream was not actived for file: %s'),
+    MessageDlg(WideFormat(_('The stream was not actived for file: %s'),
         [_pkg.pathname]), mtError, [mbOK], 0);
     _state := send_cancel;
     DoState();

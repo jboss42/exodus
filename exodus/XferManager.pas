@@ -278,7 +278,7 @@ begin
     pkg.desc := desc;
     pkg.mode := recv_oob;
 
-    tmps := Format(sXferRecv, [from]);
+    tmps := WideFormat(sXferRecv, [from]);
 
     tmp_jid.Free();
 
@@ -345,7 +345,7 @@ begin
         exit;
     end;
 
-    tmps := Format(sXferRecv, [from]);
+    tmps := WideFormat(sXferRecv, [from]);
 
     pkg := TFileXferPkg.Create();
     pkg.mode := recv_si;

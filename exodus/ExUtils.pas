@@ -345,8 +345,8 @@ procedure ClearLog(jid: string);
 var
     fn: string;
 begin
-    if (MessageDlg(Format(sConfirmClearLog, [jid]),
-                          mtConfirmation, [mbOK,mbCancel], 0) = mrCancel) then
+    if (MessageDlg(WideFormat(sConfirmClearLog, [jid]),
+        mtConfirmation, [mbOK,mbCancel], 0) = mrCancel) then
         exit;
 
     fn := MainSession.Prefs.getString('log_path');
@@ -393,7 +393,7 @@ begin
         SysUtils.FindClose(sr);
     end;
 
-    MessageDlg(Format(sFilesDeleted, [count]), mtInformation, [mbOK], 0);
+    MessageDlg(WideFormat(sFilesDeleted, [count]), mtInformation, [mbOK], 0);
 end;
 
 {---------------------------------------}
@@ -736,7 +736,7 @@ begin
     msg.setAttribute('id', MainSession.generateID());
     msg.setAttribute('to', to_jid);
 
-    b := Format(sMsgRosterItems, [items.Count]);
+    b := WideFormat(sMsgRosterItems, [items.Count]);
     x := msg.AddTag('x');
     x.setAttribute('xmlns', XMLNS_XROSTER);
     for i := 0 to items.Count - 1 do begin

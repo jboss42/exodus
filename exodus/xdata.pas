@@ -120,7 +120,7 @@ begin
     if (_type = 'cancel') then begin
         // this is a cancel notice
         self.Caption := sCancelled;
-        lblIns.Caption := Format(sCancelMsg, [to_jid]);
+        lblIns.Caption := WideFormat(sCancelMsg, [to_jid]);
         insBevel.Visible := false;
         insBevel.Height := 0;
     end
@@ -132,7 +132,7 @@ begin
           self.Caption := _title;
         end
         else
-        Self.Caption := Format(sFormFrom, [to_jid]);
+        Self.Caption := WideFormat(sFormFrom, [to_jid]);
 
         ins := x.GetFirstTag('instructions');
         if (ins <> nil) then begin

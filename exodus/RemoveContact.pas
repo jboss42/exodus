@@ -57,11 +57,15 @@ resourcestring
 procedure RemoveRosterItem(sjid: Widestring; grp: Widestring = '');
 procedure QuietRemoveRosterItem(sjid: Widestring);
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 uses
     GnuGetText, ExUtils, JabberConst, S10n, NodeItem, Roster, Session, XMLTag;
 {$R *.DFM}
 
+{---------------------------------------}
 procedure RemoveRosterItem(sjid: Widestring; grp: Widestring);
 var
     f: TfrmRemove;
@@ -72,13 +76,14 @@ begin
         lblJID.Caption := sjid;
         sel_grp := grp;
         jid := sjid;
-        optMove.Caption := Format(sRemoveGrpLabel, [grp]);
+        optMove.Caption := WideFormat(sRemoveGrpLabel, [grp]);
         ritem := MainSession.Roster.Find(sjid);
         optMove.Enabled := ((ritem <> nil) and (ritem.Groups.Count > 1));
         Show;
     end;
 end;
 
+{---------------------------------------}
 procedure QuietRemoveRosterItem(sjid: Widestring);
 var
     iq: TXMLTag;
@@ -99,6 +104,7 @@ begin
     MainSession.SendTag(iq);
 end;
 
+{---------------------------------------}
 procedure TfrmRemove.frameButtons1btnOKClick(Sender: TObject);
 var
     idx: integer;
@@ -144,22 +150,26 @@ begin
     Self.Close;
 end;
 
+{---------------------------------------}
 procedure TfrmRemove.frameButtons1btnCancelClick(Sender: TObject);
 begin
     Self.Close;
 end;
 
+{---------------------------------------}
 procedure TfrmRemove.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     Action := caFree;
 end;
 
+{---------------------------------------}
 procedure TfrmRemove.optRemoveClick(Sender: TObject);
 begin
     chkRemove1.Enabled := optRemove.Checked;
     chkRemove2.Enabled := optRemove.Checked;
 end;
 
+{---------------------------------------}
 procedure TfrmRemove.FormCreate(Sender: TObject);
 begin
     AssignUnicodeFont(Self);

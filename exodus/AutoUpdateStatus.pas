@@ -228,14 +228,14 @@ begin
                     SW_SHOWNORMAL);
             end
             else if (_cancel = false) then begin
-                label1.Caption := Format(sError, [httpClient.ResponseText]);
+                label1.Caption := WideFormat(sError, [httpClient.ResponseText]);
                 Application.ProcessMessages();
             end;
         except
             on EIdConnClosedGracefully do
                 Self.Close();
             on E: EIdProtocolReplyError do begin
-                label1.Caption := Format(sError, [E.Message]);
+                label1.Caption := WideFormat(sError, [E.Message]);
             end;
         end;
     finally

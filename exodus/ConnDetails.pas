@@ -146,7 +146,7 @@ begin
 
     with f do begin
         _profile := p;
-        f.Caption := Format(sConnDetails, [p.Name]);
+        f.Caption := WideFormat(sConnDetails, [p.Name]);
         SetProfile(p);
         SetConn(p);
         SetHttp(p);

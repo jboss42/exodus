@@ -613,7 +613,7 @@ begin
             _state := recv_done;
         end
         else begin
-            tmps := Format(sXferRecvError, [msg.LParam]);
+            tmps := WideFormat(sXferRecvError, [msg.LParam]);
             MessageDlg(tmps, mtError, [mbOK], 0);
             DeleteFile(_filename);
         end;
@@ -730,7 +730,7 @@ begin
     if ((pres.PresType = 'unavailable') and (pres.fromJid.full = _pkg.recip)) then begin
         MainSession.UnRegisterCallback(_pres);
         _pres := -1;
-        MessageDlg(Format(_('The sender of a file transfer (%s) went offline.'),
+        MessageDlg(WideFormat(_('The sender of a file transfer (%s) went offline.'),
             [_pkg.recip]), mtError, [mbOK], 0);
         _state := recv_si_cancel;
         getXferManager().killFrame(Self);

@@ -319,7 +319,7 @@ begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
 
     DoNotify(nil, 'notify_autoresponse',
-             Format(sNotifyAutoResponse, [sVersion,
+             WideFormat(sNotifyAutoResponse, [sVersion,
                                           getNick(tag.getAttribute('from'))]),
              ico_info);
 
@@ -371,7 +371,7 @@ begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
 
     DoNotify(nil, 'notify_autoresponse',
-             Format(sNotifyAutoResponse, [sTime,
+             WideFormat(sNotifyAutoResponse, [sTime,
                                           getNick(tag.getAttribute('from'))]),
              ico_info);
 
@@ -413,7 +413,7 @@ begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
 
     DoNotify(nil, 'notify_autoresponse',
-             Format(sNotifyAutoResponse, [sLast,
+             WideFormat(sNotifyAutoResponse, [sLast,
                                           getNick(tag.getAttribute('from'))]),
              ico_info);
 
@@ -457,7 +457,7 @@ begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
 
     DoNotify(nil, 'notify_autoresponse',
-             Format(sNotifyAutoResponse, [sBrowse,
+             WideFormat(sNotifyAutoResponse, [sBrowse,
                                           getNick(tag.getAttribute('from'))]),
              ico_info);
 
@@ -573,7 +573,7 @@ begin
     end;
 
     DoNotify(nil, 'notify_autoresponse',
-        Format(sNotifyAutoResponse, [sDisco, getNick(tag.getAttribute('from'))]),
+        WideFormat(sNotifyAutoResponse, [sDisco, getNick(tag.getAttribute('from'))]),
         ico_info);
 
     _session.SendTag(r);
@@ -679,7 +679,7 @@ begin
     end;
 
     DoNotify(nil, 'notify_autoresponse',
-        Format(sNotifyAutoResponse, [sDisco, getNick(tag.getAttribute('from'))]),
+        WideFormat(sNotifyAutoResponse, [sDisco, getNick(tag.getAttribute('from'))]),
         ico_info);
 
     _session.SendTag(r);

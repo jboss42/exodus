@@ -144,7 +144,7 @@ begin
     evt_Time: begin
         img_idx := 12;
         msg := e.data_type;
-        e.Data.Add(Format(sMsgPing, [IntToStr(e.elapsed_time)]));
+        e.Data.Add(WideFormat(sMsgPing, [IntToStr(e.elapsed_time)]));
     end;
 
     evt_Message: begin

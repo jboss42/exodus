@@ -241,7 +241,7 @@ begin
         idisp := CreateOleObject(com_name);
     except
         on EOleSysError do begin
-            msg := Format(sPluginErrCreate, [com_name]);
+            msg := WideFormat(sPluginErrCreate, [com_name]);
             MessageDlg(msg, mtError, [mbOK], 0);
             exit;
         end;
@@ -251,7 +251,7 @@ begin
         plugin := IUnknown(idisp) as IExodusPlugin;
     except
         on EIntfCastError do begin
-            msg := Format(sPluginErrNoIntf, [com_name]);
+            msg := WideFormat(sPluginErrNoIntf, [com_name]);
             MessageDlg(msg, mtError, [mbOK], 0);
             exit;
         end;
@@ -263,7 +263,7 @@ begin
     try
         p.com.Startup(ExComController);
     except
-        msg := Format(sPluginErrInit, [com_name]);
+        msg := WideFormat(sPluginErrInit, [com_name]);
         MessageDlg(msg, mtError, [mbOK], 0);
         exit;
     end;

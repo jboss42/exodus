@@ -1,12 +1,12 @@
 object frmAutoUpdateStatus: TfrmAutoUpdateStatus
-  Left = 234
-  Top = 563
+  Left = 236
+  Top = 562
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   BorderWidth = 5
   Caption = 'Auto Update'
-  ClientHeight = 88
-  ClientWidth = 218
+  ClientHeight = 89
+  ClientWidth = 216
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -38,20 +38,20 @@ object frmAutoUpdateStatus: TfrmAutoUpdateStatus
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 56
-    Width = 218
+    Top = 57
+    Width = 216
     Height = 32
     Align = alBottom
     AutoScroll = False
     TabOrder = 0
     inherited Panel2: TPanel
-      Width = 218
+      Width = 216
       Height = 32
       inherited Bevel1: TBevel
-        Width = 218
+        Width = 216
       end
       inherited Panel1: TPanel
-        Left = 58
+        Left = 56
         Height = 27
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
@@ -64,8 +64,8 @@ object frmAutoUpdateStatus: TfrmAutoUpdateStatus
   end
   object ProgressBar1: TProgressBar
     Left = 0
-    Top = 39
-    Width = 218
+    Top = 40
+    Width = 216
     Height = 17
     Align = alBottom
     Max = 1
