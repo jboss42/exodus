@@ -94,6 +94,7 @@ type
         _profiles: TStringList;
         _parser: TXMLTagParser;
         _server_dirty: boolean;
+        _updating: boolean;
 
         function getDefault(pkey: string): string;
         function findPresenceTag(pkey: string): TXMLTag;
@@ -132,6 +133,8 @@ type
 
         function CreateProfile(name: string): TJabberProfile;
         procedure RemoveProfile(p: TJabberProfile);
+        procedure BeginUpdate();
+        procedure EndUpdate();
 
         property Profiles: TStringlist read _profiles write _profiles;
     end;
@@ -261,6 +264,8 @@ begin
     _server_node := nil;
     _server_dirty := false;
     _profiles := TStringList.Create;
+    _updating := false;
+
     getDefaultPos();
 end;
 
@@ -286,6 +291,8 @@ procedure TPrefController.Save;
 var
     fs: TStringList;
 begin
+    if (_updating) then exit;
+    
     fs := TStringList.Create;
     fs.Text := _pref_node.xml;
     fs.SaveToFile(_pref_filename);
@@ -809,6 +816,19 @@ begin
     if (tag = nil) then exit;
     _server_node := TXMLTag.Create(tag.QueryXPTag('/iq/query/storage'));
     TJabberSession(_js).FireEvent('/session/server_prefs', _server_node);
+end;
+
+{---------------------------------------}
+procedure TPrefController.BeginUpdate();
+begin
+    _updating := true;
+end;
+
+{---------------------------------------}
+procedure TPrefController.EndUpdate();
+begin
+    _updating := false;
+    Save();
 end;
 
 {---------------------------------------}
