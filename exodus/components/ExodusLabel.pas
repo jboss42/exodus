@@ -45,6 +45,9 @@ implementation
 
 uses Forms, Unicode, Types, Math, Graphics, ShellAPI;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 procedure WordSplit(value: WideString; list: TWideStringList);
 var
     i, l : integer;
@@ -75,6 +78,9 @@ begin
     end;
 end;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 constructor TExodusLabel.Create(AOwner: TComponent);
 begin
     inherited;
@@ -91,12 +97,13 @@ begin
     inherited;
 end;
 
+{---------------------------------------}
 procedure TExodusLabel.SetCaption(cap: WideString);
 begin
     _caption := cap;
-    //Self.Invalidate();
 end;
 
+{---------------------------------------}
 procedure TExodusLabel.MeasureMaybeDraw(doDraw : boolean);
 var
     w: TRect;

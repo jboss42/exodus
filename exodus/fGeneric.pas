@@ -113,6 +113,7 @@ begin
         c.Parent := Self;
         opts := tag.QueryTags('value');
         with TTntMemo(c) do begin
+            TabOrder := 0;
             Align := alClient;
             ScrollBars := ssBoth;
             Lines.Clear();
@@ -128,6 +129,7 @@ begin
         opts_vals := TStringList.Create();
         opts := tag.QueryTags('option');
         with TTntCheckListbox(c) do begin
+            TabOrder := 0;
             Align := alClient;
             for i := 0 to opts.Count - 1 do begin
                 v := opts[i].GetBasicText('value');
@@ -153,6 +155,7 @@ begin
             i := 5;
         Self.Height := (TTntCheckListbox(c).ItemHeight * i) + 5;
         TTntCheckListbox(c).TopIndex := 0;
+        TTntCheckListbox(c).TabOrder := 0;
         TTntCheckListbox(c).Repaint();
     end
     else if (t = 'list-single') then begin
@@ -161,6 +164,7 @@ begin
         opts_vals := TStringList.Create();
         opts := tag.QueryTags('option');
         with TTntCombobox(c) do begin
+            TabOrder := 0;
             Style := csDropDownList;
             Align := alClient;
             for i := 0 to opts.Count - 1 do begin
@@ -178,11 +182,9 @@ begin
     end
 
     else if (t = 'boolean') then begin
-        //Self.AutoSize := true;
-//        elCaption.Layout := tlTop;
         c := TTntCheckbox.Create(Self);
         with TTntCheckbox(c) do begin
-            //Align := alClient;
+            TabOrder := 0;
             Caption := '';
             Checked := (value = '1');
         end;
@@ -191,6 +193,7 @@ begin
         elCaption.Visible := false;
         c := TExodusLabel.Create(Self);
         with TExodusLabel(c) do begin
+            TabOrder := 0;
             Parent := Self;
             Align := alTop;
             Caption := value;
@@ -206,6 +209,7 @@ begin
     else if ((t = 'jid') or (t = 'jid-single')) then begin
         c :=  TTntEdit.Create(Self);
         with TTntEdit(c) do begin
+            TabOrder := 0;
             Text := value;
             // Anchors := [akLeft, akTop, akBottom, akRight];
             Parent := Self;
@@ -215,6 +219,7 @@ begin
 
         dot := TButton.Create(Self);
         with TButton(dot) do begin
+            TabOrder := 1;
             Caption := _('...');
             OnClick := JidFieldDotClick;
             Top := 1;
@@ -229,6 +234,7 @@ begin
     else begin  // 'text-single', 'text-private', or unknown
         c := TTntEdit.Create(Self);
         with TTntEdit(c) do begin
+            TabOrder := 0;
             Text := value;
             Align := alNone;
             if (t = 'text-private') then
@@ -378,31 +384,17 @@ begin
         result := 0
     else begin
         p := TForm(Self.Owner);
-        result := p.Canvas.TextWidth(elCaption.Caption);
+        result := CanvasTextWidthW(p.Canvas, elCaption.Caption);
     end;
 end;
 
 {---------------------------------------}
 procedure TframeGeneric.setLabelWidth(val: integer);
-//var
-//    h: integer;
-//    r: TRect;
-//    txt: Widestring;
 begin
     if ((elCaption.Width <> 0) and (elCaption <> c)) then begin
         change_width := true;
         elCaption.Width := val;
         change_width := false;
-        (*
-        txt := elCaption.Caption;
-        r.Top := 0;
-        r.Left := 0;
-        r.Right := val;
-        r.bottom := 1;
-        h := DrawTextExW(Self.elCaption.Canvas.Handle, PWideChar(txt), Length(txt), r,
-            DT_WORDBREAK or DT_CALCRECT, nil);
-        Self.Height := max(h + 21, self.height);
-*)
         if ((c <> nil) and (not (c is TExodusLabel))) then
             c.Left := val;
     end;

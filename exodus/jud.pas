@@ -126,6 +126,7 @@ function ItemCompare(Item1, Item2: Pointer): integer;
 implementation
 
 uses
+    XData,
     ChatWin, MsgRecv, Entity, EntityCache,
     InputPassword, NodeItem, GnuGetText, 
     JabberConst, Profile, Roster, JabberID, fGeneric,
@@ -195,7 +196,9 @@ begin
     virtlist := TObjectList.Create();
     virtlist.OwnsObjects := true;
 
-    AssignUnicodeFont(Tabs.Font, 8);
+    AssignDefaultFont(Self.Font);
+    AssignDefaultFont(Tabs.Font);
+    AssignDefaultFont(pnlFields.Font);
     AssignUnicodeURL(lblAddGrp.Font, 8);
 
     TabSheet1.TabVisible := false;
@@ -304,7 +307,6 @@ var
     cur_tag, x: TXMLTag;
     tt, ti, i: integer;
     ff, cur_frame: TframeTopLabel;
-    cur_gen: TframeGeneric;
     cur_field: Widestring;
 begin
     // callback when we get the fields back
@@ -333,25 +335,10 @@ begin
         x := tag.QueryXPTag('/iq/query/x[@xmlns="jabber:x:data"]');
         if (x <> nil) then begin
             cur_state := 'xsearch';
-            cur_tag := x.GetFirstTag('instructions');
-            if (cur_tag <> nil) then
-                lblInstructions.Caption := trimNewLines(cur_tag.Data);
-            fields := x.QueryTags('field');
-            pnlFields.Visible := false;
-            for i := fields.Count - 1 downto 0 do begin
-                cur_gen := TframeGeneric.Create(Self);
-                with cur_gen do begin
-                    Name := 'xDataFrame' + IntToStr(i);
-                    Parent := pnlFields;
-                    Visible := true;
-                    render(fields[i]);
-                    Align := alTop;
-                    TabOrder := 0;
-                end;
-                AssignUnicodeFont(cur_gen.Font, 8);
-            end;
+            lblInstructions.Visible := false;
             pnlFields.Visible := true;
-            fields.Free();
+            buildXData(x, pnlFields);
+            pnlFields.Visible := true;
         end
         else begin
           fields := tag.QueryXPTag('/iq/query').ChildTags();
@@ -885,7 +872,7 @@ end;
 
 
 {---------------------------------------}
-procedure TfrmJud.btnCancelClick(Sender: TObject);
+procedure TfrmJUD.btnCancelClick(Sender: TObject);
 begin
   inherited;
     if ((cur_state = 'fields') or
@@ -900,7 +887,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmJud.btnBackClick(Sender: TObject);
+procedure TfrmJUD.btnBackClick(Sender: TObject);
 begin
   inherited;
     {
@@ -925,10 +912,10 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmJud.FormResize(Sender: TObject);
+procedure TfrmJUD.FormResize(Sender: TObject);
 begin
-  inherited;
-    lblCount.Left := Self.ClientWidth - lblCount.Width - 8;
+    if (Tabs.ActivePage = TabSheet4) then
+        lblCount.Left := Self.ClientWidth - lblCount.Width - 8;
 end;
 
 end.
