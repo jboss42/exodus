@@ -56,13 +56,14 @@ object frmMsgQueue: TfrmMsgQueue
     OnChange = lstEventsChange
     OnData = lstEventsData
     OnDblClick = lstEventsDblClick
+    OnEnter = lstEventsEnter
     OnKeyDown = lstEventsKeyDown
   end
   object txtMsg: TExRichEdit
     Left = 0
     Top = 153
     Width = 456
-    Height = 142
+    Height = 137
     Align = alClient
     AutoURLDetect = adDefault
     CustomURLs = <

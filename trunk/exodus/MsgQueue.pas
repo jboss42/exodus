@@ -45,6 +45,7 @@ type
     procedure lstEventsData(Sender: TObject; Item: TListItem);
     procedure txtMsgURLClick(Sender: TObject; URL: String);
     procedure D1Click(Sender: TObject);
+    procedure lstEventsEnter(Sender: TObject);
   private
     { Private declarations }
     _queue: TObjectList;
@@ -491,6 +492,14 @@ procedure TfrmMsgQueue.D1Click(Sender: TObject);
 begin
   inherited;
     removeItems();
+end;
+
+{---------------------------------------}
+procedure TfrmMsgQueue.lstEventsEnter(Sender: TObject);
+begin
+  inherited;
+    if ((lstEvents.ItemIndex = -1) and (lstEvents.Items.Count > 0)) then
+        lstEVents.ItemIndex := 0; 
 end;
 
 end.
