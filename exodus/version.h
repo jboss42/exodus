@@ -1,2 +1,2 @@
-#define EXVERSION        0,8,5,0
-#define EXVERSIONSTR     "0.8.5.0\0"
+#define EXVERSION        0,8,5,1
+#define EXVERSIONSTR     "0.8.5.1\0"
