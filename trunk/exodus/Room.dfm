@@ -9,19 +9,19 @@ inherited frmRoom: TfrmRoom
   TextHeight = 13
   inherited Panel3: TPanel
     Top = 20
-    Height = 235
+    Height = 230
     object Splitter2: TSplitter [0]
       Left = 270
       Top = 4
       Width = 3
-      Height = 227
+      Height = 222
       Cursor = crHSplit
       Align = alRight
       ResizeStyle = rsUpdate
     end
     inherited MsgList: TExRichEdit
       Width = 266
-      Height = 227
+      Height = 222
       PopupMenu = popRoom
       OnDragDrop = treeRosterDragDrop
       OnDragOver = treeRosterDragOver
@@ -31,7 +31,7 @@ inherited frmRoom: TfrmRoom
       Left = 273
       Top = 4
       Width = 105
-      Height = 227
+      Height = 222
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -41,12 +41,14 @@ inherited frmRoom: TfrmRoom
         Left = 1
         Top = 1
         Width = 103
-        Height = 225
+        Height = 220
         Align = alClient
         Images = frmRosterWindow.ImageList1
         Indent = 19
+        ParentShowHint = False
         PopupMenu = popRoom
         ReadOnly = True
+        ShowHint = True
         ShowLines = False
         ShowRoot = False
         SortType = stText
@@ -54,6 +56,7 @@ inherited frmRoom: TfrmRoom
         OnDblClick = treeRosterDblClick
         OnDragDrop = treeRosterDragDrop
         OnDragOver = treeRosterDragOver
+        OnMouseMove = treeRosterMouseMove
       end
     end
   end

@@ -783,7 +783,7 @@ end;
 procedure TfrmExodus.setupAutoAwayTimer();
 begin
     DebugMsg('Trying to setup the Auto Away timer.');
-    if (_windows_ver < cWIN_2000) then begin
+    if ((_windows_ver < cWIN_2000) or (_windows_ver = cWIN_ME)) then begin
         // Use the DLL
         @_GetHookPointer := nil;
         @_InitHooks := nil;

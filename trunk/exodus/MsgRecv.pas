@@ -58,12 +58,16 @@ type
   public
     { Public declarations }
     eType: TJabberEventType;
+
+    procedure SetupSend();
   end;
 
 var
   frmMsgRecv: TfrmMsgRecv;
 
 function StartMsg(jid: string): TfrmMsgRecv;
+function BroadcastMsg(jids: TStringlist): TfrmMsgRecv;
+
 procedure ShowEvent(e: TJabberEvent);
 
 {---------------------------------------}
@@ -116,6 +120,20 @@ begin
 end;
 
 {---------------------------------------}
+function BroadcastMsg(jids: TStringlist): TfrmMsgRecv;
+begin
+    // send a normal msg to this person
+    Result := TfrmMsgRecv.Create(nil);
+    with Result do begin
+        eType := evt_Message;
+
+        // setup the form for sending a msg
+        SetupSend();
+        ShowDefault;
+        end;
+end;
+
+{---------------------------------------}
 function StartMsg(jid: string): TfrmMsgRecv;
 begin
     // send a normal msg to this person
@@ -124,14 +142,8 @@ begin
         eType := evt_Message;
 
         // setup the form for sending a msg
+        SetupSend();
         txtFrom.Caption := jid;
-        pnlSubject.Visible := false;
-        pnlSendSubject.Visible := true;
-        frameButtons1.Visible := false;
-        txtMsg.Visible := false;
-        pnlReply.Visible := true;
-        pnlReply.Align := alClient;
-        ActiveControl := MsgOut;
         ShowDefault;
         end;
 end;
@@ -143,6 +155,18 @@ begin
     AssignDefaultFont(txtMsg.Font);
     txtMsg.Color := TColor(MainSession.Prefs.getInt('color_bg'));
     Self.ClientHeight := 200;
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.SetupSend();
+begin
+    pnlSubject.Visible := false;
+    pnlSendSubject.Visible := true;
+    frameButtons1.Visible := false;
+    txtMsg.Visible := false;
+    pnlReply.Visible := true;
+    pnlReply.Align := alClient;
+    ActiveControl := MsgOut;
 end;
 
 {---------------------------------------}
