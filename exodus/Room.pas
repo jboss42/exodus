@@ -420,11 +420,20 @@ function TfrmRoom.checkCommand(txt: Widestring): boolean;
 var
     l, i: integer;
     c, tmps, tok: Widestring;
+    wsl : TWideStringList;
     p: TJabberPres;
 begin
     // check for various / commands
     result := false;
     tmps := trim(txt);
+
+    if (tmps = '/clear') then begin
+        msgList.Lines.Clear;
+        msgOut.Lines.Clear;
+        Result := true;
+        exit;
+        end;
+
     i := 1;
     l := length(tmps);
     repeat
@@ -447,14 +456,74 @@ begin
             MsgOut.Lines.Clear;
             Result := true;
             end
-        else if (tok = '/clear') then begin
-            msgList.Lines.Clear;
-            Result := true;
-            end
         else if (tok = '/subject') then begin
             // set subject
             tok := Trim(Copy(tmps, 9, length(tmps) - 8));
             changeSubject(tok);
+            MsgOut.Lines.Clear;
+            Result := true;
+            end
+        else if (tok = '/invite') then begin
+            tok := Trim(Copy(tmps, 8, length(tmps) - 7));
+            if (tok = '') then exit;
+
+            wsl := TWideStringList.Create();
+            wsl.Add(tok);
+            ShowInvite(Self.jid, wsl);
+            wsl.Destroy();
+
+            MsgOut.Lines.Clear;
+            Result := true;
+            end
+        else if (tok = '/kick') then begin
+            tok := Trim(Copy(tmps, 6, length(tmps) - 5));
+            if (tok = '') then exit;
+
+            i := _roster.indexOf(Self.jid + '/' + tok);
+            if (i = -1) then exit;
+
+            lstRoster.Items[i].Selected := true;
+            popKickClick(popKick);
+
+            MsgOut.Lines.Clear;
+            Result := true;
+            end
+        else if (tok = '/ban') then begin
+            tok := Trim(Copy(tmps, 5, length(tmps) - 4));
+            if (tok = '') then exit;
+
+            i := _roster.indexOf(Self.jid + '/' + tok);
+            if (i = -1) then exit;
+
+            lstRoster.Items[i].Selected := true;
+            popKickClick(popBan);
+
+            MsgOut.Lines.Clear;
+            Result := true;
+            end
+        else if (tok = '/voice') then begin
+            tok := Trim(Copy(tmps, 7, length(tmps) - 6));
+            if (tok = '') then exit;
+
+            i := _roster.indexOf(Self.jid + '/' + tok);
+            if (i = -1) then exit;
+
+            lstRoster.Items[i].Selected := true;
+            popVoiceClick(nil);
+
+            MsgOut.Lines.Clear;
+            Result := true;
+            end
+        else if (tok = '/block') then begin
+            tok := Trim(Copy(tmps, 7, length(tmps) - 6));
+            if (tok = '') then exit;
+
+            i := _roster.indexOf(Self.jid + '/' + tok);
+            if (i = -1) then exit;
+
+            lstRoster.Items[i].Selected := true;
+            popRosterBlockClick(nil);
+
             MsgOut.Lines.Clear;
             Result := true;
             end;
