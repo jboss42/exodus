@@ -52,12 +52,10 @@ type
         qTag: TXMLTag;
 
         constructor Create(session: TJabberSession;
-            id: Widestring;
-            cb: TPacketEvent;
-            seconds: longint = 15
-            ); reintroduce; overload;
-        destructor Destroy; override;
+            id: Widestring; cb: TPacketEvent;
+            seconds: longint = 15); reintroduce; overload;
 
+        destructor Destroy; override;
         procedure Send;
 
         property ElapsedTime: longint read _ticks;

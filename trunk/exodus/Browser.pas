@@ -208,7 +208,6 @@ end;
 destructor TBrowseItem.destroy();
 begin
     nslist.Free();
-
     inherited Destroy;
 end;
 
@@ -465,7 +464,9 @@ end;
 procedure TfrmBrowse.FormDestroy(Sender: TObject);
 begin
     // Free the History list
-    if (_iq <> nil) then FreeAndNil(_iq);
+    if (_iq <> nil) then
+        FreeAndNil(_iq);
+
     if (MainSession <> nil) then
         MainSession.UnRegisterCallback(_scb);
     
@@ -801,6 +802,8 @@ begin
     end
     else begin
         // probably a timeout
+        Self.ShowError(nil);
+        exit;
     end;
     vwBrowse.Items.Count := _blist.Count;
 end;
