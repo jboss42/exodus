@@ -754,11 +754,13 @@ begin
         tbm.Copy(bm);
         bm.Free();
     end
-    else
+    else begin
         Self.Bookmarks.AddObject(sjid, bm);
+        tbm := bm;
+    end;
 
     Self.SaveBookmarks();
-    fireBookmark(bm);
+    fireBookmark(tbm);
 end;
 
 {---------------------------------------}
