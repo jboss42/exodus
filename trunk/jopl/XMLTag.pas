@@ -268,7 +268,7 @@ begin
     attr := _AttrList.Node(key);
     if attr <> nil then
         Result := attr.Value;
-end;
+    end;
 
 {---------------------------------------}
 procedure TXMLTag.PutAttribute(key, value: string);
