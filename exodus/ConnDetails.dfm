@@ -3,7 +3,7 @@ object frmConnDetails: TfrmConnDetails
   Top = 168
   Width = 304
   Height = 305
-  ActiveControl = txtUsername
+  ActiveControl = cboSocksType
   Caption = 'Connection Details'
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -18,7 +18,7 @@ object frmConnDetails: TfrmConnDetails
   TextHeight = 16
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 244
+    Top = 239
     Width = 296
     Height = 32
     Align = alBottom
@@ -44,8 +44,8 @@ object frmConnDetails: TfrmConnDetails
     Left = 0
     Top = 0
     Width = 296
-    Height = 244
-    ActivePage = tbsProfile
+    Height = 239
+    ActivePage = tbsSocket
     Align = alClient
     TabOrder = 1
     object tbsProfile: TTabSheet
@@ -247,7 +247,7 @@ object frmConnDetails: TfrmConnDetails
       end
     end
     object tbsSocket: TTabSheet
-      Caption = 'SOCKS'
+      Caption = 'Proxy'
       object lblSocksHost: TLabel
         Left = 5
         Top = 38
@@ -320,15 +320,14 @@ object frmConnDetails: TfrmConnDetails
         Height = 22
         Style = csOwnerDrawFixed
         ItemHeight = 16
-        ItemIndex = 0
         TabOrder = 0
-        Text = 'None'
         OnChange = cboSocksTypeChange
         Items.Strings = (
           'None'
           'Version 4'
           'Version 4a'
-          'Version 5')
+          'Version 5'
+          'HTTP')
       end
       object txtSocksUsername: TEdit
         Left = 74

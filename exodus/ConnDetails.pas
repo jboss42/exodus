@@ -124,7 +124,8 @@ implementation
 {$R *.dfm}
 
 uses
-    ExUtils, GnuGetText, JabberID, Unicode, Session, WebGet, XMLTag, XMLParser;
+    ExUtils, GnuGetText, JabberID, Unicode, Session, WebGet, XMLTag, XMLParser,
+    Registry;
 
 {---------------------------------------}
 function ShowConnDetails(p: TJabberProfile): integer;
@@ -181,8 +182,14 @@ end;
 
 {---------------------------------------}
 procedure TfrmConnDetails.cboSocksTypeChange(Sender: TObject);
+var
+    {$ifdef Win32}
+    reg: TRegistry;
+    {$endif}
+    srv: string;
+    colon: integer;
 begin
-    if (cboSocksType.ItemIndex = 0) then begin
+    if (cboSocksType.ItemIndex = proxy_none) then begin
         txtSocksHost.Enabled := false;
         txtSocksPort.Enabled := false;
         txtSocksUsername.Enabled := false;
@@ -201,6 +208,41 @@ begin
             chkSocksAuth.Enabled := true;
             lblSocksHost.Enabled := true;
             lblSocksPort.Enabled := true;
+        end;
+    end;
+
+    // copy over proxy stuff from prefs.
+    if (cboSocksType.ItemIndex = proxy_http) then begin
+        with MainSession.Prefs do begin
+            if (getInt('http_proxy_approach') = http_proxy_ie) then begin
+                // get IE settings from registry
+                chkSocksAuth.Checked := false;
+
+                reg := TRegistry.Create();
+                try
+                    reg.OpenKey('Software\Microsoft\Windows\CurrentVersion\Internet Settings', false);
+                    if (reg.ValueExists('ProxyEnable') and
+                        (reg.ReadInteger('ProxyEnable') <> 0)) then begin
+                        srv := reg.ReadString('ProxyServer');
+                        colon := pos(':', srv);
+                        txtSocksHost.Text := Copy(srv, 1, colon-1);
+                        txtSocksPort.Text := Copy(srv, colon+1, length(srv));
+                    end;
+                finally
+                    reg.Free();
+                end;
+            end
+            else if (getInt('http_proxy_approach') = http_proxy_custom) then begin
+                txtSocksHost.Text := getString('http_proxy_host');
+                txtSocksPort.Text := getString('http_proxy_port');
+                if (getBool('http_proxy_auth')) then begin
+                    chkSocksAuth.Checked := true;
+                    txtSocksUsername.Text := getString('http_proxy_user');
+                    txtSocksPassword.Text := getString('http_proxy_password');
+                end
+                else
+                    chkSocksAuth.Checked := false;
+            end;
         end;
     end;
 end;

@@ -150,7 +150,8 @@ uses
   ExSession in 'ExSession.pas',
   WebGet in 'WebGet.pas' {frmWebDownload},
   PrefNetwork in 'prefs\PrefNetwork.pas' {frmPrefNetwork},
-  PrefGroups in 'prefs\PrefGroups.pas' {frmPrefGroups};
+  PrefGroups in 'prefs\PrefGroups.pas' {frmPrefGroups},
+  HttpProxyIOHandler in '..\jopl\HttpProxyIOHandler.pas';
 
 {$R *.TLB}
 
