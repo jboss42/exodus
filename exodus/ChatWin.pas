@@ -273,6 +273,10 @@ begin
     MsgList.Color := TColor(MainSession.Prefs.getInt('color_bg'));
     MsgOut.Color := MsgList.Color;
     MsgOut.Font.Assign(MsgList.Font);
+
+    _embed_returns := MainSession.Prefs.getBool('embed_returns');
+    mnuReturns.Checked := _embed_returns;
+    MsgOut.WantReturns := _embed_returns;
 end;
 
 
@@ -698,6 +702,7 @@ begin
     mnuReturns.Checked := not mnuReturns.Checked;
     MsgOut.WantReturns := mnuReturns.Checked;
     _embed_returns := mnuReturns.Checked;
+    MainSession.Prefs.setBool('embed_returns', _embed_returns);
 end;
 
 {---------------------------------------}
