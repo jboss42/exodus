@@ -192,6 +192,9 @@ begin
     Groups.Free;
     jid.Free;
 
+    if (Data <> nil) then
+        TObject(Data).Free();
+
     inherited Destroy;
 end;
 
@@ -265,6 +268,7 @@ begin
         if (tmp_grp <> '') then
             Groups.Add(TXMLTag(grps[i]).Data);
         end;
+    grps.Free();
 end;
 
 {---------------------------------------}
@@ -592,6 +596,7 @@ begin
             AddObject(Lowercase(ri.jid.Full), ri);
             s.FireEvent('/roster/item', ritems.Tags[i], ri);
             end;
+        ritems.Free();
         s.FireEvent('/roster/end', nil);
         end;
 end;

@@ -792,6 +792,8 @@ begin
         if (exp_grpnode) then grp_node.Expand(true);
         end;
 
+    tmp_grps.Free();
+
     {
     If this isn't a full roster push,
     Make sure the roster is alpha sorted, and

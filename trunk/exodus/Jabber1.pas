@@ -23,7 +23,7 @@ unit Jabber1;
 interface
 
 uses
-    GUIFactory, Register, Notify,
+    GUIFactory, Register, Notify, S10n, 
     ExResponders, ExEvents,
     RosterWindow, Presence, XMLTag,
     ShellAPI, Registry,
@@ -238,6 +238,7 @@ type
     _guibuilder: TGUIFactory;
     _regController: TRegController;
     _Notify: TNotifyController;
+    _subcontroller: TSubController;
 
     _windows_ver: integer;
     _is_autoaway: boolean;
@@ -360,7 +361,7 @@ uses
     RiserWindow, RemoveContact,
     Session, Debug, About, getOpt, JabberID, XMLUtils, ExUtils,
     Transfer, Profile,
-    VCard, PrefController, Roster, S10n;
+    VCard, PrefController, Roster;
 
 {$R *.DFM}
 
@@ -551,6 +552,8 @@ begin
 
         _Notify := TNotifyController.Create;
         _Notify.SetSession(MainSession);
+
+        _subcontroller := TSubController.Create();
 
         with MainSession.Prefs do begin
             RestorePosition(Self);
@@ -799,7 +802,6 @@ begin
             p.Status := 'available';
 
         SendTag(p);
-        SubController := TSubController.Create;
         Tabs.ActivePage := tbsMsg;
         restoreMenus(true);
         timAutoAway.Enabled := true;
@@ -1160,6 +1162,7 @@ begin
         _notify.Free();
         _guiBuilder.Free();
         _regController.Free();
+        _SubController.Free();
 
         MainSession.Free();
         MainSession := nil;
