@@ -12,16 +12,16 @@ unit ExImportICQ_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/4/2003 7:04:27 AM from Type Library described below.
+// File generated on 6/16/2003 12:14:11 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\ICQ-Import\ExImportICQ.tlb (1)
-// LIBID: {E164BC8D-3C8D-4CB8-832A-F11638E78E69}
+// LIBID: {F02B8DD9-64FB-45ED-B0B4-9B124ED7D4A7}
 // LCID: 0
 // Helpfile: 
-// HelpString: ICQ Buddy List import plugin
+// HelpString: ExImportICQ Library
 // DepndLst: 
-//   (1) v1.0 ExodusCOM, (D:\src\exodus\runner\Exodus.exe)
+//   (1) v1.0 ExodusCOM, (C:\Program Files\Exodus\Exodus.exe)
 //   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
@@ -45,9 +45,9 @@ const
   ExImportICQMajorVersion = 1;
   ExImportICQMinorVersion = 0;
 
-  LIBID_ExImportICQ: TGUID = '{E164BC8D-3C8D-4CB8-832A-F11638E78E69}';
+  LIBID_ExImportICQ: TGUID = '{F02B8DD9-64FB-45ED-B0B4-9B124ED7D4A7}';
 
-  CLASS_ICQImportPlugin: TGUID = '{8F2D42B5-330E-448B-B61F-F767522DD046}';
+  CLASS_ICQImportPlugin: TGUID = '{2D36C7A4-7892-4366-A6D3-3F1565ED1433}';
 type
 
 // *********************************************************************//
