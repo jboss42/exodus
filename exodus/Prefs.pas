@@ -419,6 +419,8 @@ var
 begin
     // save prefs to the reg
     with MainSession.Prefs do begin
+        BeginUpdate();
+
         // Roster prefs
         setBool('roster_only_online', chkOnlineOnly.Checked);
         setBool('roster_show_unsub', chkShowUnsubs.Checked);
@@ -517,6 +519,7 @@ begin
             cp := TJabberCustomPres(_pres_list.Items[i]);
             setPresence(cp);
             end;
+        EndUpdate();
         end;
     MainSession.FireEvent('/session/prefs', nil);
 end;
