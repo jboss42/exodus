@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-06-27 10:16\n"
-"PO-Revision-Date: 2003-06-27 10:16\n"
+"POT-Creation-Date: 2003-06-29 17:17\n"
+"PO-Revision-Date: 2003-06-29 17:17\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -7442,7 +7442,7 @@ msgstr ""
 
 #: RosterWindow.pas:320
 #. Programmer's name for it: sGrpBookmarks
-#: /src/exodus/jopl/Roster.pas:154
+#: /Src/exodus/jopl/Roster.pas:154
 msgid "Bookmarks"
 msgstr ""
 
@@ -7667,64 +7667,74 @@ msgid "Translation"
 msgstr ""
 
 #. Programmer's name: defaults XML
-#: version.rc:36
+#: xml.rc:1
 msgid "defaults.xml"
 msgstr ""
 
+#. Programmer's name: langs XML
+#: xml.rc:2
+msgid "..lang-codes.xml"
+msgstr ""
+
+#. Programmer's name: countries XML
+#: xml.rc:3
+msgid "..country-codes.xml"
+msgstr ""
+
 #. Programmer's name for it: sIdleAway
-#: /src/exodus/jopl/PrefController.pas:233
+#: /Src/exodus/jopl/PrefController.pas:233
 msgid "Away as a result of idle."
 msgstr ""
 
 #. Programmer's name for it: sIdleXA
-#: /src/exodus/jopl/PrefController.pas:234
+#: /Src/exodus/jopl/PrefController.pas:234
 msgid "XA as a result of idle."
 msgstr ""
 
 #. Programmer's name for it: sS10nDeny
-#: /src/exodus/jopl/S10n.pas:53
+#: /Src/exodus/jopl/S10n.pas:53
 msgid "The contact: %s did not grant your subscription request.\n"
 "This user may not exist."
 msgstr ""
 
 #. Programmer's name for it: SUREBaseString
-#: /src/exodus/jopl/Unicode.pas:822
+#: /Src/exodus/jopl/Unicode.pas:822
 msgid "Error in regular expression: %s"
 msgstr ""
 
 #. Programmer's name for it: SUREUnexpectedEOS
-#: /src/exodus/jopl/Unicode.pas:823
+#: /Src/exodus/jopl/Unicode.pas:823
 msgid "Unexpected end of pattern."
 msgstr ""
 
 #. Programmer's name for it: SURECharacterClassOpen
-#: /src/exodus/jopl/Unicode.pas:824
+#: /Src/exodus/jopl/Unicode.pas:824
 msgid "Character class not closed, ']' is missing."
 msgstr ""
 
 #. Programmer's name for it: SUREUnbalancedGroup
-#: /src/exodus/jopl/Unicode.pas:825
+#: /Src/exodus/jopl/Unicode.pas:825
 msgid "Unbalanced group expression, ')' is "
 "missing."
 msgstr ""
 
 #. Programmer's name for it: SUREInvalidCharProperty
-#: /src/exodus/jopl/Unicode.pas:826
+#: /Src/exodus/jopl/Unicode.pas:826
 msgid "A character property is invalid"
 msgstr ""
 
 #. Programmer's name for it: SUREInvalidRepeatRange
-#: /src/exodus/jopl/Unicode.pas:827
+#: /Src/exodus/jopl/Unicode.pas:827
 msgid "Invalid repeation range."
 msgstr ""
 
 #. Programmer's name for it: SURERepeatRangeOpen
-#: /src/exodus/jopl/Unicode.pas:828
+#: /Src/exodus/jopl/Unicode.pas:828
 msgid "Repeation range not closed, '}' is missing."
 msgstr ""
 
 #. Programmer's name for it: SUREExpressionEmpty
-#: /src/exodus/jopl/Unicode.pas:829
+#: /Src/exodus/jopl/Unicode.pas:829
 msgid "Expression is empty."
 msgstr ""
 

@@ -724,7 +724,6 @@ begin
     // Do translation magic
     AssignUnicodeFont(Self);
     TranslateProperties(Self);
-    initLocaleUtils();
 
     // setup our tray icon
     _tray_icon := TIcon.Create();

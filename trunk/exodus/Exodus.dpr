@@ -151,7 +151,6 @@ uses
   PrefNetwork in 'prefs\PrefNetwork.pas' {frmPrefNetwork},
   PrefGroups in 'prefs\PrefGroups.pas' {frmPrefGroups},
   HttpProxyIOHandler in '..\jopl\HttpProxyIOHandler.pas',
-  GTLanguagesEx in 'GTLanguagesEx.pas',
   PrefLayouts in 'prefs\PrefLayouts.pas' {frmPrefLayouts},
   Wizard in 'Wizard.pas' {frmWizard},
   RegForm in 'RegForm.pas' {frmRegister},
@@ -163,6 +162,7 @@ uses
 
 {$R manifest.res}
 {$R xtra.res}
+{$R xml.res}
 
 var
     continue: boolean;
