@@ -47,7 +47,7 @@ const
 type
     TNextEventType = (next_none, next_Exit, next_Login, next_Disconnect);
 
-    TGetLastTick = function: longint; stdcall;
+    TGetLastTick = function: dword; stdcall;
     TInitHooks = procedure; stdcall;
     TStopHooks = procedure; stdcall;
 
