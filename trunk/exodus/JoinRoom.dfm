@@ -1,161 +1,179 @@
-object frmJoinRoom: TfrmJoinRoom
-  Left = 250
-  Top = 168
-  Width = 451
-  Height = 230
-  BorderIcons = [biSystemMenu]
-  BorderWidth = 2
+inherited frmJoinRoom: TfrmJoinRoom
+  Left = 249
+  Top = 151
   Caption = 'Join Room'
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
-  FormStyle = fsStayOnTop
-  OldCreateOrder = False
-  Position = poMainFormCenter
-  ShowHint = True
+  OldCreateOrder = True
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
-  inline frameButtons1: TframeButtons
-    Left = 0
-    Top = 158
-    Width = 439
-    Height = 34
-    Align = alBottom
-    AutoScroll = False
-    TabOrder = 1
-    inherited Panel2: TPanel
-      Width = 439
-      inherited Bevel1: TBevel
-        Width = 439
-      end
-      inherited Panel1: TPanel
-        Left = 279
-        inherited btnOK: TTntButton
-          OnClick = frameButtons1btnOKClick
-        end
-        inherited btnCancel: TTntButton
-          OnClick = frameButtons1btnCancelClick
-        end
-      end
+  inherited TntPanel1: TTntPanel
+    inherited btnBack: TTntButton
+      OnClick = btnBackClick
+    end
+    inherited btnNext: TTntButton
+      OnClick = btnNextClick
+    end
+    inherited btnCancel: TTntButton
+      OnClick = btnCancelClick
     end
   end
-  object Panel1: TPanel
-    Left = 0
-    Top = 0
-    Width = 439
-    Height = 158
-    Align = alClient
-    BevelOuter = bvNone
-    TabOrder = 0
-    object Label2: TTntLabel
-      Left = 6
-      Top = 90
-      Width = 65
-      Height = 13
-      Caption = 'Room Server:'
+  inherited Panel1: TPanel
+    inherited lblWizardTitle: TTntLabel
+      Width = 150
+      Caption = 'Join or Browse for a Room'
     end
-    object Label1: TTntLabel
-      Left = 6
-      Top = 62
-      Width = 62
-      Height = 13
-      Caption = 'Room Name:'
+    inherited lblWizardDetails: TTntLabel
+      Caption = 'Specify or browse for a room to join or create.'
     end
-    object lblPassword: TTntLabel
-      Left = 6
-      Top = 35
-      Width = 49
-      Height = 13
-      Caption = 'Password:'
+  end
+  inherited Tabs: TPageControl
+    inherited TabSheet1: TTabSheet
+      object Label2: TTntLabel
+        Left = 22
+        Top = 74
+        Width = 65
+        Height = 13
+        Caption = 'Room Server:'
+      end
+      object Label1: TTntLabel
+        Left = 22
+        Top = 102
+        Width = 62
+        Height = 13
+        Caption = 'Room Name:'
+      end
+      object lblPassword: TTntLabel
+        Left = 22
+        Top = 131
+        Width = 49
+        Height = 13
+        Caption = 'Password:'
+      end
+      object Label3: TTntLabel
+        Left = 6
+        Top = 8
+        Width = 51
+        Height = 13
+        Caption = 'Nickname:'
+      end
+      object txtServer: TTntComboBox
+        Left = 131
+        Top = 71
+        Width = 190
+        Height = 21
+        Hint = 'Select the room server to use.'
+        ItemHeight = 13
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 0
+        Text = 'txtServer'
+      end
+      object txtRoom: TTntEdit
+        Left = 131
+        Top = 100
+        Width = 190
+        Height = 21
+        TabOrder = 1
+      end
+      object txtPassword: TTntEdit
+        Left = 131
+        Top = 129
+        Width = 190
+        Height = 21
+        PasswordChar = '*'
+        TabOrder = 2
+      end
+      object txtNick: TTntEdit
+        Left = 131
+        Top = 6
+        Width = 190
+        Height = 21
+        TabOrder = 3
+      end
+      object optSpecify: TTntRadioButton
+        Left = 1
+        Top = 52
+        Width = 400
+        Height = 17
+        Caption = 'Join or Create the following room:'
+        Checked = True
+        TabOrder = 4
+        TabStop = True
+        OnClick = optSpecifyClick
+      end
+      object optBrowse: TTntRadioButton
+        Left = 0
+        Top = 160
+        Width = 377
+        Height = 17
+        Caption = 'Browse servers for a room to join'
+        TabOrder = 5
+        OnClick = optSpecifyClick
+      end
     end
-    object Label3: TTntLabel
-      Left = 6
-      Top = 8
-      Width = 51
-      Height = 13
-      Caption = 'Nickname:'
-    end
-    object lblFetch: TTntLabel
-      Left = 114
-      Top = 112
-      Width = 141
-      Height = 13
-      Cursor = crHandPoint
-      Caption = 'Get room list from this server...'
-      OnClick = lblFetchClick
-    end
-    object TntSplitter1: TTntSplitter
-      Left = 269
-      Top = 0
-      Height = 158
-      Align = alRight
-      ResizeStyle = rsUpdate
-    end
-    object txtServer: TTntComboBox
-      Left = 115
-      Top = 87
-      Width = 143
-      Height = 21
-      Hint = 'Select the room server to use.'
-      ItemHeight = 13
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 3
-      Text = 'txtServer'
-    end
-    object txtRoom: TTntEdit
-      Left = 115
-      Top = 60
-      Width = 140
-      Height = 21
-      TabOrder = 2
-    end
-    object txtPassword: TTntEdit
-      Left = 115
-      Top = 33
-      Width = 140
-      Height = 21
-      PasswordChar = '*'
-      TabOrder = 1
-    end
-    object txtNick: TTntEdit
-      Left = 115
-      Top = 6
-      Width = 140
-      Height = 21
-      TabOrder = 0
-    end
-    object lstRooms: TTntListBox
-      Left = 272
-      Top = 0
-      Width = 167
-      Height = 158
-      Hint = 'Join Room'
-      Align = alRight
-      ItemHeight = 13
-      ParentShowHint = False
-      ShowHint = True
-      Sorted = True
-      TabOrder = 4
-      OnClick = lstRoomsClick
-      OnDblClick = lstRoomsDblClick
-      OnMouseMove = lstRoomsMouseMove
-    end
-    object aniSearch: TAnimate
-      Left = 116
-      Top = 128
-      Width = 29
-      Height = 25
-      AutoSize = False
-      CommonAVI = aviFindComputer
-      StopFrame = 8
-      Visible = False
+    object TabSheet2: TTabSheet
+      Caption = 'TabSheet2'
+      ImageIndex = 1
+      object lstRooms: TTntListView
+        Left = 0
+        Top = 49
+        Width = 410
+        Height = 178
+        Align = alClient
+        Columns = <
+          item
+            Caption = 'Room'
+            Width = 150
+          end
+          item
+            Caption = 'Server'
+            Width = 150
+          end>
+        ReadOnly = True
+        SortType = stText
+        TabOrder = 0
+        ViewStyle = vsReport
+      end
+      object Panel2: TPanel
+        Left = 0
+        Top = 0
+        Width = 410
+        Height = 49
+        Align = alTop
+        BevelOuter = bvNone
+        TabOrder = 1
+        object lblFetch: TTntLabel
+          Left = 2
+          Top = 4
+          Width = 154
+          Height = 13
+          Cursor = crHandPoint
+          Caption = 'Show rooms found on this server'
+        end
+        object txtServerFilter: TTntComboBox
+          Left = 19
+          Top = 20
+          Width = 262
+          Height = 21
+          Hint = 'Select the room server to use.'
+          ItemHeight = 13
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 0
+          OnKeyPress = txtServerFilterKeyPress
+        end
+        object btnFetch: TTntButton
+          Left = 296
+          Top = 18
+          Width = 105
+          Height = 25
+          Caption = 'Fetch Rooms'
+          TabOrder = 1
+          OnClick = btnFetchClick
+        end
+      end
     end
   end
 end
