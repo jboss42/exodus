@@ -1111,10 +1111,11 @@ begin
         node_rect := cur_node.DisplayRect(false);
 
         // invalidate just the rect which contains our node
-        InvalidateRect(treeRoster.Handle, @node_rect, false);
+        if (cur_node.IsVisible) then
+            InvalidateRect(treeRoster.Handle, @node_rect, false);
 
         // if we showing grp counts, then invalidate the grp rect as well.
-        if (_group_counts) then begin
+        if ((_group_counts) and (grp_node.isVisible)) then begin
             grp_rect := cur_node.Parent.DisplayRect(false);
             InvalidateRect(treeRoster.Handle, @grp_rect, false);
         end;
@@ -1842,6 +1843,8 @@ begin
     if (Node.Level = 0) then begin
         treeRoster.Canvas.Font.Style := [fsBold];
 
+        if (not Node.isVisible) then exit;
+
         if ((_group_counts) and
             (Node <> _offline) and
             (Node <> _bookmark) and
@@ -1859,6 +1862,8 @@ begin
     else begin
         // we are drawing some kind of node
         treeRoster.Canvas.Font.Style := [];
+        if (not Node.isVisible) then exit;
+
         case getNodeType(Node) of
         node_bm: DefaultDraw := true;
         node_transport: DefaultDraw := true;

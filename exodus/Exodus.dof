@@ -51,7 +51,7 @@ Conditionals=
 DebugSourceDirs=D:\Dev\Delphi6\Source\Indy\;D:\src\exodus\exodus\components\
 UsePackages=0
 [Parameters]
-RunParams=-d -c debug.xml
+RunParams=-d
 HostApplication=
 Launcher=
 UseLauncher=0
