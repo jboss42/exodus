@@ -186,8 +186,10 @@ resourcestring
     sUnblock = 'UnBlock';
     sInvalidRoomJID = 'The Room Address you entered is invalid. It must be valid Jabber ID.';
 
+    sDestroyRoom = 'Destroy Room';
     sKickReason = 'Kick Reason';
     sBanReason = 'Ban Reason';
+    sDestroyReason = 'Destroy Reason';
     sKickDefault = 'You have been kicked.';
     sBanDefault = 'You have been banned.';
     sDestroyDefault = 'The owner has destroyed the room.';
@@ -199,18 +201,27 @@ resourcestring
     sUserLeave = '%s has left the room.';
     sNewRole = '%s has a new role of %s.';
 
-    sDestroyRoom = 'Do you really want to destroy the room? All users will be removed.';
+    sDestroyRoomConfirm = 'Do you really want to destroy the room? All users will be removed.';
 
-    sStatus_100 = 'This room is not anonymous';
-    sStatus_301 = '%s has been banned from this room. %s';
-    sStatus_302 = 'This room has been destroyed.';
-    sStatus_303 = '%s is now known as %s.';
-    sStatus_307 = '%s has been kicked from this room. %s';
+    sStatus_100  = 'This room is not anonymous';
+    sStatus_301  = '%s has been banned from this room. %s';
+    sStatus_302  = 'This room has been destroyed.';
+    sStatus_303  = '%s is now known as %s.';
+    sStatus_307  = '%s has been kicked from this room. %s';
 
-    sStatus_403 = 'You are on the ban list for this room.';
-    sStatus_405 = 'You are not allowed to create rooms.';
-    sStatus_407 = 'You are not on the member list.';
-    sStatus_409 = 'Your nickname is already being used.';
+    sStatus_401  = 'You supplied an invalid password to enter this room.';
+    sStatus_403  = 'You are on the ban list for this room.';
+    sStatus_404  = 'The room is being created. Please try again later.';
+    sStatus_405  = 'You are not allowed to create rooms.';
+    sStatus_405a = 'You are not allowed to enter the room. You must be on the member list.';
+    sStatus_407  = 'You are not on the member list for this room. Try and register?';
+    sStatus_409  = 'Your nickname is already being used. Please select another one.';
+
+    sEditVoice  = 'Edit Voice List';
+    sEditBan    = 'Edit Ban List';
+    sEditMember = 'Edit Member List';
+    sEditAdmin  = 'Edit Admin List';
+    sEditOwner  = 'Edit Owner List';
 
 const
     MUC_OWNER = 'owner';
@@ -397,8 +408,6 @@ var
     msg: TJabberMessage;
 begin
     // Send the actual message out
-    // txt := MsgOut.WideText;
-    // txt := getMemoText(MsgOut);
     txt := getInputText(MsgOut);
 
     if (txt = '') then exit;
@@ -454,7 +463,10 @@ begin
     end
     else if (cmd = '/help') then begin
         m := TJabberMessage.Create(self.jid, 'groupchat',
-        '/ commands: '#13#10'/clear'#13#10'/config'#13#10'/subject <subject>'#13#10'/invite <jid>'#13#10'/block <nick>'#13#10'/kick <nick>'#13#10'/ban <nick>'#13#10'/nick <nick>'#13#10'/voice <nick>', '');
+        '/ commands: '#13#10'/clear'#13#10'/config'#13#10 +
+        '/subject <subject>'#13#10'/invite <jid>'#13#10 +
+        '/block <nick>'#13#10'/kick <nick>'#13#10 +
+        '/ban <nick>'#13#10'/nick <nick>'#13#10'/voice <nick>', '');
         DisplayMsg(m, MsgList);
         m.Destroy();
         Result := true;
@@ -516,7 +528,6 @@ begin
         MainSession.UnRegisterCallback(_mcallback);
         MainSession.UnRegisterCallback(_ecallback);
         MainSession.UnRegisterCallback(_pcallback);
-        // MainSession.UnRegisterCallback(_scallback);
 
         _mcallback := -1;
         _ecallback := -1;
@@ -563,39 +574,34 @@ begin
 
     // if ((ptype = 'error') and (_jid.resource = mynick)) then begin
     if ((ptype = 'error') and ((from = jid) or (from = jid + '/' + MyNick))) then begin
-        // check for 409, conflicts.
+        // check for various presence errors
         etag := tag.GetFirstTag('error');
         if (etag <> nil) then begin
             ecode := etag.GetAttribute('code');
             if (ecode = '409') then begin
-                MessageDlg('Your selected Nickname is already in use. Please select another.',
-                    mtError, [mbOK], 0);
+                MessageDlg(sStatus_409, mtError, [mbOK], 0);
                 if (_old_nick = '') then
                     Self.Close()
                 else
                     myNick := _old_nick;
             end
             else if (ecode = '401') then begin
-                MessageDlg('You supplied an invalid password to enter this room.',
-                    mtError, [mbOK], 0);
+                MessageDlg(sStatus_401, mtError, [mbOK], 0);
                 Self.Close();
                 StartJoinRoom(_jid, MyNick, '');
             end
             else if (ecode = '404') then begin
-                MessageDlg('The room is being created. Please try again later.',
-                    mtError, [mbOK], 0);
+                MessageDlg(sStatus_404, mtError, [mbOK], 0);
                 Self.Close();
                 exit;
             end
             else if (ecode = '405') then begin
-                MessageDlg('You are not allowed to enter the room. You must be on the member list.',
-                    mtError, [mbOK], 0);
+                MessageDlg(sStatus_405a, mtError, [mbOK], 0);
                 Self.Close();
                 exit;
             end
             else if (ecode = '407') then begin
-                if (messageDlg('You are not on the member list for this room. Try and register?',
-                    mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
+                if (messageDlg(sStatus_407, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
                     t := TXMLTag.Create('register');
                     t.setAttribute('jid', Self.jid);
                     MainSession.FireEvent('/session/register', t);
@@ -689,15 +695,16 @@ begin
                 tmp1 := itag.getAttribute('role');
             end;
 
+            mtag := nil;
             if ((tmp1 <> '') and (member.nick = myNick)) then begin
                 // someone maybe changed my role
                 if ((member.role = MUC_VISITOR) and (tmp1 = MUC_PART)) then
                     mtag := newRoomMessage(sGrantVoice)
                 else if ((member.role = MUC_PART) and (tmp1 = MUC_VISITOR)) then
                     mtag := newRoomMessage(sRevokeVoice)
-                else
+                else if (member.role <> tmp1) then
                     mtag := newRoomMessage(Format(sNewRole, [member.nick, tmp1]));
-                showMsg(mtag);
+                if (mtag <> nil) then showMsg(mtag);
             end;
         end;
 
@@ -711,7 +718,6 @@ begin
                 member.affil := t.GetAttribute('affiliation');
             end;
         end;
-
 
         // for all protocols, our nick is our resource
         member.nick := _jid.resource;
@@ -728,7 +734,6 @@ begin
             popVoice.Enabled := popAdmin.Enabled;
             popOwner.Enabled := popConfigure.Enabled;
         end;
-
         RenderMember(member, tag);
     end;
 
@@ -991,10 +996,6 @@ begin
         end;
         Key := Chr(0);
     end
-    {
-    else if (Key = #13) then
-        SendMsg()
-    }
     else begin
         _nick_prefix := '';
         _nick_idx := 0;
@@ -1514,15 +1515,15 @@ begin
   inherited;
     // edit a list
     if (Sender = popVoiceList) then
-        ShowRoomAdminList(self.jid, MUC_PART, '', 'Edit Voice List')
+        ShowRoomAdminList(self.jid, MUC_PART, '', sEditVoice)
     else if (Sender = popBanList) then
-        ShowRoomAdminList(self.jid, '', MUC_OUTCAST, 'Edit Ban List')
+        ShowRoomAdminList(self.jid, '', MUC_OUTCAST, sEditBan)
     else if (Sender = popMemberList) then
-        ShowRoomAdminList(self.jid, '', MUC_MEMBER, 'Edit Member List')
+        ShowRoomAdminList(self.jid, '', MUC_MEMBER, sEditMember)
     else if (Sender = popAdminList) then
-        ShowRoomAdminList(self.jid, '', MUC_ADMIN, 'Edit Admin List')
+        ShowRoomAdminList(self.jid, '', MUC_ADMIN, sEditAdmin)
     else if (Sender = popOwnerList) then
-        ShowRoomAdminList(self.jid, '', MUC_OWNER, 'Edit Owner List');
+        ShowRoomAdminList(self.jid, '', MUC_OWNER, sEditOwner);
 end;
 
 {---------------------------------------}
@@ -1533,10 +1534,10 @@ var
 begin
   inherited;
     // Destroy Room
-    if (MessageDlg(sDestroyRoom, mtConfirmation, [mbYes,mbNo], 0) = mrNo) then
+    if (MessageDlg(sDestroyRoomConfirm, mtConfirmation, [mbYes,mbNo], 0) = mrNo) then
         exit;
     reason := sDestroyDefault;
-    if InputQueryW('Destroy Room', 'Destroy Reason: ', reason) = false then exit;
+    if InputQueryW(sDestroyRoom, sDestroyReason, reason) = false then exit;
 
     iq := TXMLTag.Create('iq');
     iq.setAttribute('type', 'set');
@@ -1548,6 +1549,7 @@ begin
     MainSession.SendTag(iq);
 end;
 
+{---------------------------------------}
 procedure TfrmRoom.selectNicks(wsl: TWideStringList);
 var
     i, c: integer;
