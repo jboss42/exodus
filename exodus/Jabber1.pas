@@ -22,7 +22,7 @@ unit Jabber1;
 interface
 
 uses
-    BaseChat, GUIFactory, Register, Notify, S10n, FileServer, 
+    BaseChat, GUIFactory, Register, Notify, S10n, FileServer,
     COMController, COMRoster, COMPPDB,
     ExResponders, ExEvents, RosterWindow, Presence, XMLTag,
     ShellAPI, Registry,
@@ -442,7 +442,6 @@ resourcestring
     sExodus = 'Exodus';
     sChat = 'Chat';
 
-    sGrpBookmarks = 'Bookmarks';
     sGrpUnfiled = 'Unfiled';
     sGrpOffline = 'Offline';
 
@@ -504,7 +503,7 @@ resourcestring
 
     sAlreadySubscribed = 'You are already subscribed to this contact';
     sBrandingError = 'Branding error!';
-    
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -556,7 +555,7 @@ uses
     JclHookExcept, JclDebug, ExceptTracer,
     {$endif}
 
-    GnuGetText,  
+    GnuGetText,
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat, ChatController, ChatWin,
     JabberConst, CommCtrl, CustomPres,
     Debug, Dockable, ExUtils, GetOpt, InputPassword, Invite,
@@ -1463,7 +1462,7 @@ begin
         restoreToolbar();
         restoreAlpha();
         restoreRoster();
-        
+
         if not MainSession.Prefs.getBool('expanded') then
             tbsRoster.TabVisible := false;
     end
@@ -3071,7 +3070,7 @@ var
 begin
     i := Help1.IndexOf(TMenuItem(Sender));
     if (i < 0) then exit;
-    
+
     url_list := TWideStringList.Create();
     MainSession.Prefs.fillStringlist('brand_help_url_list', url_list);
 
