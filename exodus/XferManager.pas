@@ -26,7 +26,7 @@ unit XferManager;
 interface
 
 uses
-    Unicode, XMLTag, 
+    Unicode, XMLTag, SyncObjs, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Dockable, ExtCtrls, IdCustomHTTPServer, IdHTTPServer, IdSocks,
     IdTCPServer, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
@@ -60,19 +60,30 @@ type
         jid: Widestring;
     end;
 
+    TStreamPkg = class
+        hash: string;
+        stream: TFileStream;
+        sid: Widestring;
+        frame: TFrame;
+        conn: TIdTCPServerConnection;
+        thread: TIdPeerThread;
+    end;
+
 
   TfrmXferManager = class(TfrmDockable)
-    TCPServer: TIdTCPServer;
     httpServer: TIdHTTPServer;
     box: TScrollBox;
     OpenDialog1: TOpenDialog;
-    IdServerIOHandlerSocket1: TIdServerIOHandlerSocket;
+    tcpServer: TIdTCPServer;
     procedure FormCreate(Sender: TObject);
     procedure httpServerCommandGet(AThread: TIdPeerThread;
       ARequestInfo: TIdHTTPRequestInfo;
       AResponseInfo: TIdHTTPResponseInfo);
     procedure httpServerDisconnect(AThread: TIdPeerThread);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure tcpServerConnect(AThread: TIdPeerThread);
+    procedure tcpServerExecute(AThread: TIdPeerThread);
+    procedure tcpServerDisconnect(AThread: TIdPeerThread);
 
   protected
     procedure WMCloseFrame(var msg: TMessage); message WM_CLOSE_FRAME;
@@ -80,11 +91,19 @@ type
   published
     procedure SessionCallback(event: string; tag: TXMLTag);
 
+    procedure ClientWork(Sender: TObject;
+        AWorkMode: TWorkMode; const AWorkCount: Integer);
+    procedure ClientWorkBegin(Sender: TObject;
+        AWorkMode: TWorkMode; const AWorkCountMax: Integer);
+
   private
     { Private declarations }
     _pnl_list: TWidestringList;
     _current: integer;
     _cb: integer;
+    _stream_list: TStringlist;
+    _slock: TCriticalSection;
+
   public
     { Public declarations }
     procedure SendFile(pkg: TFileXferPkg);
@@ -92,6 +111,8 @@ type
 
     function getFrameIndex(frame: TFrame): integer;
     procedure killFrame(frame: TFrame);
+    procedure ServeStream(spkg: TStreamPkg);
+    procedure UnServeStream(hash: string);
   end;
 
 var
@@ -389,6 +410,8 @@ procedure TfrmXferManager.FormCreate(Sender: TObject);
 begin
   inherited;
     _pnl_list := TWidestringList.Create();
+    _stream_list := TStringlist.Create();
+    _slock := TCriticalSection.Create();
 
     // setup http server
     with httpServer do begin
@@ -399,6 +422,7 @@ begin
     end;
 
     _cb := MainSession.RegisterCallback(SessionCallback, '/session');
+
 
 end;
 
@@ -542,6 +566,203 @@ begin
     PostMessage(Self.Handle, WM_CLOSE_FRAME, i, 0);
 end;
 
+
+{---------------------------------------}
+procedure TfrmXferManager.tcpServerConnect(AThread: TIdPeerThread);
+begin
+  inherited;
+    // someone connected to us..
+    AThread.Connection.OnWorkBegin := Self.ClientWork;
+    AThread.Connection.OnWork := Self.ClientWork;
+end;
+
+{---------------------------------------}
+procedure TfrmXferManager.tcpServerExecute(AThread: TIdPeerThread);
+var
+    i, idx: integer;
+    cmd, atype, ver, num_meths: char;
+    meths: array[1..255] of char;
+    auth_ok: boolean;
+    dst_addr: PChar;
+    dst_len: Cardinal;
+    hash: String;
+    spkg: TStreamPkg;
+    buff: array[1..2] of char;
+    resp_len: Cardinal;
+    resp: PChar;
+    ip_len: Byte;
+    myip: string;
+    stat: PChar;
+begin
+  inherited;
+    // we need to do something
+    ver := AThread.Connection.ReadChar;
+    if (Ord(ver) <> $05) then begin
+        // not socks5
+        AThread.Connection.Disconnect();
+        exit;
+    end;
+
+    num_meths := AThread.Connection.ReadChar;
+
+    // check methods
+    auth_ok := false;
+    AThread.Connection.ReadBuffer(meths, Ord(num_meths));
+    for i := 1 to Ord(num_meths) do begin
+        if (Ord(meths[i]) = $00) then begin
+            auth_ok := true;
+            break;
+        end;
+    end;
+
+    buff[1] := Chr($05);
+    if (not auth_ok) then begin
+        buff[2] := Chr($FF);
+        AThread.Connection.WriteBuffer(buff, 2);
+        AThread.Connection.Disconnect();
+        exit;
+    end
+    else begin
+        buff[2] := Chr($00);
+        AThread.Connection.WriteBuffer(buff, 2);
+    end;
+
+    // get the command
+    ver := AThread.Connection.ReadChar();
+    if (Ord(ver) <> $05) then begin
+        AThread.Connection.Disconnect();
+        exit;
+    end;
+
+    cmd := AThread.Connection.ReadChar();
+    if (Ord(cmd) <> $01) then begin
+        AThread.Connection.Disconnect();
+        exit;
+    end;
+
+    // Read the RSV byte
+    AThread.Connection.ReadChar();
+
+    atype := AThread.Connection.ReadChar();
+
+    if (Ord(atype) = $01) then begin
+        // ipv4 addr
+        dst_addr := StrAlloc(4);
+        FillChar(dst_addr^, 4, 0);
+        AThread.Connection.ReadBuffer(dst_addr^, 4);
+    end
+    else if (Ord(atype) = $03) then begin
+        // domain name
+        dst_len := Ord(AThread.Connection.ReadChar());
+        dst_addr := StrAlloc(dst_len + 1);
+        FillChar(dst_addr^, dst_len + 1, 0);
+        AThread.Connection.ReadBuffer(dst_addr^, dst_len);
+    end
+    else begin
+        AThread.Connection.Disconnect();
+        exit;
+    end;
+
+    // We don't care about this value, but we have to read it
+    AThread.Connection.ReadSmallInt();
+
+    hash := String(dst_addr);
+
+    _slock.Acquire();
+    idx := _stream_list.IndexOf(hash);
+    if (idx = -1) then begin
+        AThread.Connection.Disconnect();
+        exit;
+    end;
+    spkg := TStreamPkg(_stream_list.Objects[idx]);
+    AThread.Data := spkg;
+    _stream_list.Delete(idx);
+    _slock.Release();
+    stat := 'Connected...';
+    PostMessage(spkg.frame.Handle, WM_SEND_STATUS, Integer(stat), 0);
+
+    // Reply back
+    myip := MainSession.Stream.LocalIP;
+    ip_len := Length(myip);
+    resp_len := 1 + 1 + 1 + 1 + 1 + ip_len;
+    resp := StrAlloc(resp_len + 1);
+    FillChar(resp^, resp_len + 1, 0);
+    resp[0] := Chr($05);
+    resp[1] := Chr($00);
+    resp[2] := Chr($00);
+    resp[3] := Chr($03);
+    resp[4] := Chr(Length(myip));
+    StrPCopy(@resp[5], PChar(myip));
+    AThread.Connection.WriteBuffer(resp^, resp_len);
+    AThread.Connection.WriteSmallInt(Self.tcpServer.DefaultPort);
+
+    AThread.Connection.WriteStream(spkg.stream);
+
+    killFrame(spkg.frame);
+
+    FreeAndNil(spkg.stream);
+    FreeAndNil(spkg);
+
+    AThread.Connection.Disconnect();
+end;
+
+
+{---------------------------------------}
+procedure TfrmXferManager.ServeStream(spkg: TStreamPkg);
+begin
+    _slock.Acquire();
+    _stream_list.AddObject(spkg.hash, spkg);
+    _slock.Release();
+    if (not tcpServer.Active) then
+        tcpServer.Active := true;
+end;
+
+{---------------------------------------}
+procedure TfrmXferManager.UnServeStream(hash: string);
+var
+    i: integer;
+begin
+    _slock.Acquire();
+    i := _stream_list.IndexOf(hash);
+    if (i >= 0) then begin
+        TStreamPkg(_stream_list.Objects[i]).Free();
+        _stream_list.Delete(i);
+    end;
+    _slock.Release();
+
+    if ((_stream_list.Count = 0) and (tcpServer.Active)) then
+        tcpServer.Active := false;
+end;
+
+{---------------------------------------}
+procedure TfrmXferManager.ClientWork(Sender: TObject;
+  AWorkMode: TWorkMode; const AWorkCount: Integer);
+var
+    s: string;
+begin
+    // Update the progress meter
+    s := 'WORK OBJECT: ' + Sender.Classname;
+    OutputDebugString(PChar(s));
+end;
+
+{---------------------------------------}
+procedure TfrmXferManager.ClientWorkBegin(Sender: TObject;
+  AWorkMode: TWorkMode; const AWorkCountMax: Integer);
+var
+    s: string;
+begin
+    // setup the progress meter
+    s := 'WORK OBJECT: ' + Sender.Classname;
+    OutputDebugString(PChar(s));
+end;
+
+
+{---------------------------------------}
+procedure TfrmXferManager.tcpServerDisconnect(AThread: TIdPeerThread);
+begin
+  inherited;
+    // remove this connection from the list
+end;
 
 initialization
     frmXferManager := nil;

@@ -17,18 +17,6 @@ inherited frmXferManager: TfrmXferManager
     BevelOuter = bvNone
     TabOrder = 0
   end
-  object TCPServer: TIdTCPServer
-    Bindings = <>
-    CommandHandlers = <>
-    DefaultPort = 0
-    Greeting.NumericCode = 0
-    MaxConnectionReply.NumericCode = 0
-    ReplyExceptionCode = 0
-    ReplyTexts = <>
-    ReplyUnknownCommand.NumericCode = 0
-    Left = 40
-    Top = 48
-  end
   object httpServer: TIdHTTPServer
     Bindings = <>
     CommandHandlers = <>
@@ -41,15 +29,26 @@ inherited frmXferManager: TfrmXferManager
     ReplyTexts = <>
     ReplyUnknownCommand.NumericCode = 0
     OnCommandGet = httpServerCommandGet
-    Left = 8
-    Top = 48
+    Left = 40
+    Top = 8
   end
   object OpenDialog1: TOpenDialog
-    Left = 104
-    Top = 48
+    Left = 8
+    Top = 8
   end
-  object IdServerIOHandlerSocket1: TIdServerIOHandlerSocket
-    Left = 72
-    Top = 49
+  object tcpServer: TIdTCPServer
+    Bindings = <>
+    CommandHandlers = <>
+    DefaultPort = 5347
+    Greeting.NumericCode = 0
+    MaxConnectionReply.NumericCode = 0
+    OnConnect = tcpServerConnect
+    OnExecute = tcpServerExecute
+    OnDisconnect = tcpServerDisconnect
+    ReplyExceptionCode = 0
+    ReplyTexts = <>
+    ReplyUnknownCommand.NumericCode = 0
+    Left = 80
+    Top = 8
   end
 end

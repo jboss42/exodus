@@ -346,6 +346,7 @@ var
 begin
     //
     MainSession.UnRegisterCallback(_cur);
+    _cur := -1;
 
     if (event = 'timeout') then begin
         // xxx: codeme
@@ -470,6 +471,11 @@ var
     fStream: TFileStream;
     p, t, x: TXMLTag;
 begin
+    if _state = recv_done then begin
+        // Open the file.
+        ShellExecute(0, 'open', PChar(_filename), '', '', SW_NORMAL);
+    end;
+
     if (_pkg.mode = recv_si) then begin
         if (_state = recv_si_offer) then begin
             // send SI accept
@@ -545,11 +551,6 @@ begin
             _thread.stream := fstream;
             _thread.method := 'get';
             _thread.Resume();
-        end
-
-        else if _state = recv_done then begin
-            // Open the file.
-            ShellExecute(0, 'open', PChar(_filename), '', '', SW_NORMAL);
         end;
     end;
 end;
@@ -647,6 +648,11 @@ var
 begin
     // cancel, or close
     if (_pkg.mode = recv_si) then begin
+
+        if (_cur <> -1) then begin
+            MainSession.UnRegisterCallback(_cur);
+        end;
+
         case _state of
         recv_si_offer: begin
             // just refuse the SI, and close panel
