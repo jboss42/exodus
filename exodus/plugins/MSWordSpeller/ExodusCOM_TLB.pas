@@ -10,8 +10,7 @@ unit ExodusCOM_TLB;
 // Type Library, the contents of this file will be regenerated and all        
 // manual modifications will be lost.                                         
 // ************************************************************************ //
-
-// PASTLWTR : $Revision: 1.2 $
+// PASTLWTR : $Revision: 1.3 $
 // File generated on 12/12/2002 12:19:37 PM from Type Library described below.
 
 // ************************************************************************  //
