@@ -508,9 +508,10 @@ begin
         f.size := font_size;
 end;
 
+{---------------------------------------}
 procedure AssignUnicodeFont(form: TForm; font_size: short);
 begin
-    AssignUnicodeFont(form.font);
+    AssignUnicodeFont(form.font, font_size);
 end;
 
 {---------------------------------------}
