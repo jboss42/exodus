@@ -1,6 +1,6 @@
 inherited frmRoom: TfrmRoom
-  Left = 259
-  Top = 270
+  Left = 260
+  Top = 271
   Width = 395
   Height = 305
   Caption = 'Conference Room'
@@ -9,24 +9,24 @@ inherited frmRoom: TfrmRoom
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
-    Top = 240
+    Top = 244
     Width = 387
   end
   inherited Panel3: TPanel
     Top = 23
     Width = 387
-    Height = 217
+    Height = 221
     TabOrder = 1
     object Splitter2: TSplitter [0]
       Left = 275
       Top = 4
-      Height = 209
+      Height = 213
       Align = alRight
       ResizeStyle = rsUpdate
     end
     inherited MsgList: TExRichEdit
       Width = 271
-      Height = 209
+      Height = 213
       Font.Name = 'Arial'
       ParentFont = False
       PopupMenu = popRoom
@@ -38,7 +38,7 @@ inherited frmRoom: TfrmRoom
       Left = 278
       Top = 4
       Width = 105
-      Height = 209
+      Height = 213
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -48,7 +48,7 @@ inherited frmRoom: TfrmRoom
         Left = 1
         Top = 1
         Width = 103
-        Height = 207
+        Height = 211
         Align = alClient
         Columns = <
           item
@@ -79,7 +79,7 @@ inherited frmRoom: TfrmRoom
     end
   end
   inherited pnlInput: TPanel
-    Top = 243
+    Top = 247
     Width = 387
     AutoSize = True
     TabOrder = 0
@@ -198,41 +198,41 @@ inherited frmRoom: TfrmRoom
     object popAdmin: TTntMenuItem
       Caption = 'Admin'
       Enabled = False
-      object popVoiceList: TMenuItem
+      object popVoiceList: TTntMenuItem
         Caption = 'Edit Voice List'
         OnClick = popVoiceListClick
       end
-      object popBanList: TMenuItem
+      object popBanList: TTntMenuItem
         Caption = 'Edit Ban List'
         OnClick = popVoiceListClick
       end
-      object popMemberList: TMenuItem
+      object popMemberList: TTntMenuItem
         Caption = 'Edit Member List'
         OnClick = popVoiceListClick
       end
-      object popModeratorList: TMenuItem
+      object popModeratorList: TTntMenuItem
         Caption = 'Edit Moderator List'
         OnClick = popVoiceListClick
       end
-      object N4: TMenuItem
+      object N4: TTntMenuItem
         Caption = '-'
       end
-      object popAdminList: TMenuItem
+      object popAdminList: TTntMenuItem
         Caption = 'Edit Admin List'
         OnClick = popVoiceListClick
       end
-      object popOwnerList: TMenuItem
+      object popOwnerList: TTntMenuItem
         Caption = 'Edit Owner List'
         OnClick = popVoiceListClick
       end
-      object N5: TMenuItem
+      object N5: TTntMenuItem
         Caption = '-'
       end
-      object popConfigure: TMenuItem
+      object popConfigure: TTntMenuItem
         Caption = 'Configure Room'
         OnClick = popConfigureClick
       end
-      object popDestroy: TMenuItem
+      object popDestroy: TTntMenuItem
         Caption = 'Destroy Room'
         OnClick = popDestroyClick
       end

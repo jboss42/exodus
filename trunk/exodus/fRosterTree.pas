@@ -142,7 +142,8 @@ begin
     treeRoster.AlphaSort;
     treeRoster.Items.EndUpdate;
     Self.ExpandNodes();
-    treeRoster.TopItem := treeRoster.Items[0];
+    if (treeRoster.Items.Count > 0) then
+        treeRoster.TopItem := treeRoster.Items[0];
 end;
 
 {---------------------------------------}

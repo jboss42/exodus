@@ -1,6 +1,6 @@
 object frmProfile: TfrmProfile
-  Left = 260
-  Top = 185
+  Left = 261
+  Top = 186
   Width = 462
   Height = 356
   BorderIcons = [biSystemMenu, biMinimize]
@@ -177,7 +177,7 @@ object frmProfile: TfrmProfile
         Left = 201
         Top = 25
         Width = 105
-        Height = 232
+        Height = 236
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 2
@@ -213,7 +213,7 @@ object frmProfile: TfrmProfile
         Left = 0
         Top = 25
         Width = 201
-        Height = 232
+        Height = 236
         Align = alClient
         ItemHeight = 13
         TabOrder = 0
