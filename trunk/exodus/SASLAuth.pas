@@ -208,14 +208,14 @@ begin
     a.setAttribute('xmlns', 'urn:ietf:params:xml:ns:xmpp-sasl');
     a.setAttribute('mechanism', 'PLAIN');
 
-    jid := _session.Username + '@' + _session.Server + '/' + _session.Resource;
+    jid := _session.Username + '@' + _session.Server;
     ujid := UTF8Encode(jid);
     uu := UTF8Encode(_session.Username);
     upass := UTF8Encode(_session.Password);
 
     ms := TMemoryStream.Create();
-    len := Length(ujid) + 1 + Length(uu) + 1 + Length(upass) + 1;
-    buff := ujid + ''#0 + uu + ''#0 + upass + ''#0;
+    len := Length(ujid) + 1 + Length(uu) + 1 + Length(upass);
+    buff := ujid + ''#0 + uu + ''#0 + upass;
     ms.Write(Pointer(buff)^, len);
 
     ms.Seek(0, soFromBeginning);
