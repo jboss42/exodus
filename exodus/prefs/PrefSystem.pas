@@ -91,36 +91,36 @@ var
 begin
     // scan .\locale\... for possible lang packs
     dir := ExtractFilePath(Application.EXEName) + '\locale';
-    if (not DirectoryExists(dir)) then exit;
 
     // look for subdirs in locale
     langs := TStringlist.Create();
     _lang_codes.Clear();
     _lang_codes.Add('Default');
     _lang_codes.Add('en');
-    if (FindFirst(dir + '\*.*', faDirectory, sr) = 0) then begin
-        repeat
-            // check for a LM_MESSAGES dir, and default.mo inside of it
-            lang := dir + '\' + sr.Name;
-            lm := lang + '\LC_MESSAGES';
-            if (DirectoryExists(lm)) then begin
-                mo := lm + '\default.mo';
-                if (FileExists(mo)) then begin
-                    _lang_codes.add(sr.Name);
-                    lid := LanguagesEx.GNUGetTextID[sr.Name];
-                    if lid = 0 then
-                        lid := LanguagesEx.IDFromISO3166Name[sr.Name];
-                    lang_name := LanguagesEx.NameFromLocaleID[lid];
-                    if (lang_name <> '') then
-                        langs.add(lang_name)
-                    else
-                        langs.add(sr.Name);
+    if (DirectoryExists(dir)) then begin
+        if (FindFirst(dir + '\*.*', faDirectory, sr) = 0) then begin
+            repeat
+                // check for a LM_MESSAGES dir, and default.mo inside of it
+                lang := dir + '\' + sr.Name;
+                lm := lang + '\LC_MESSAGES';
+                if (DirectoryExists(lm)) then begin
+                    mo := lm + '\default.mo';
+                    if (FileExists(mo)) then begin
+                        _lang_codes.add(sr.Name);
+                        lid := LanguagesEx.GNUGetTextID[sr.Name];
+                        if lid = 0 then
+                            lid := LanguagesEx.IDFromISO3166Name[sr.Name];
+                        lang_name := LanguagesEx.NameFromLocaleID[lid];
+                        if (lang_name <> '') then
+                            langs.add(lang_name)
+                        else
+                            langs.add(sr.Name);
+                    end;
                 end;
-            end;
-        until FindNext(sr) <> 0;
-        FindClose(sr);
+            until FindNext(sr) <> 0;
+            FindClose(sr);
+        end;
     end;
-
     cboLocale.Items.Clear();
     cboLocale.Items.Assign(langs);
     cboLocale.Items.Insert(0, 'Default');
@@ -153,9 +153,13 @@ begin
         // locale info, we should always have at least "default-english"
         // in the drop down box here.
         tmps := getString('locale');
+        // stay compatible with old prefs
+        if (Pos('Default', tmps) = 1) then begin
+            tmps := 'Default';
+        end;
         _old_locale := tmps;
 
-        if ((tmps <> '') and (Pos('Default', tmps) = 1)) then begin
+        if (tmps <> '') then begin
             i := _lang_codes.IndexOf(tmps);
             if (i >= 0) then
                 cboLocale.ItemIndex := i
@@ -200,6 +204,7 @@ begin
         setBool('single_instance', chkSingleInstance.Checked);
 
         i := cboLocale.ItemIndex;
+        if (i < 0) then i := 0;
         tmp := _lang_codes[i];
         if (tmp <> _old_locale) then
             MessageDlg(sNewLocale, mtInformation, [mbOK], 0);
