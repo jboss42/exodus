@@ -623,6 +623,9 @@ begin
     Msg.Nick := OtherNick;
     Msg.IsMe := false;
 
+    if ((Msg.Thread = '') and (_thread <> '')) then
+        Msg.Thread := _thread;
+
     // only display + notify if we have something to display :)
     if (Msg.Subject <> '') then begin
         subj_msg := TJabberMessage.Create(tag);
