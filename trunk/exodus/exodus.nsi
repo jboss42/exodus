@@ -208,25 +208,8 @@ Section "SSL Support" SEC_SSL
         ssl_done:
 SectionEnd
 
-SubSection /e "Plugins" SEC_Plugins
-	Section "AIM Importer" SEC_AIM
-	  AddSize 610
-	  Push "AIMImport"
-	  Call DownloadPlugin
-	SectionEnd
-
-	Section "ICQ Importer" SEC_ICQ
-	  AddSize 670
-	  Push "ICQImport"
-	  Call DownloadPlugin
-	SectionEnd
-
-	Section "MS Word Speller" SEC_Word
-	  AddSize 450
-	  Push "WordSpeller"
-	  Call DownloadPlugin
-	SectionEnd
-
+SubSection  "Plugins" SEC_Plugins
+	!include plugins\plugin-sections.nsi
 SubSectionEnd
 
 ; Start menu shortcuts
@@ -362,14 +345,7 @@ LangString DESC_Bleed ${LANG_ENGLISH} \
 LangString DESC_Plugins ${LANG_ENGLISH} \
 "Download Exodus plugins via the Internet, using your IE proxy settings."
 
-LangString DESC_AIM ${LANG_ENGLISH} \
-"Import contacts from AOL Instant Messenger"
-
-LangString DESC_ICQ ${LANG_ENGLISH} \
-"Import contacts from ICQ"
-
-LangString DESC_Word ${LANG_ENGLISH} \
-"Check spelling using Microsoft Word"
+!include plugins\plugin-en.nsi
 
 ; BRANDING: YOU MUST NOT REMOVE THE GPL!
 LicenseData GPL-LICENSE.TXT
@@ -380,9 +356,7 @@ SubCaption 3 ": Exit running Exodus versions!"
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC_SSL} $(DESC_SSL)
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Bleed} $(DESC_Bleed)
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Plugins} $(DESC_Plugins)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_AIM} $(DESC_AIM)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_ICQ} $(DESC_ICQ)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Word} $(DESC_Word)
+!include plugins\plugin-desc.nsi
 !insertmacro MUI_FUNCTIONS_DESCRIPTION_END
 
 
@@ -491,15 +465,7 @@ FunctionEnd
 
 
 Function .onInit
-	Push ${SEC_AIM}
-	Call TurnOff
-
-	Push ${SEC_ICQ}
-	Call TurnOff
-
-	Push ${SEC_Word}
-	Call TurnOff
-
+!include plugins\plugin-off.nsi
 	Push ${SEC_Plugins}
 	Call TurnOff
 
