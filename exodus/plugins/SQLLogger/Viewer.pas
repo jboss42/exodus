@@ -318,7 +318,7 @@ begin
     end;
 end;
 
-
+{---------------------------------------}
 procedure TfrmView.gridCalSelectCell(Sender: TObject; ACol, ARow: Integer;
   var CanSelect: Boolean);
 var
@@ -335,6 +335,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmView.gridCalDrawCell(Sender: TObject; ACol, ARow: Integer;
   Rect: TRect; State: TGridDrawState);
 var
@@ -380,6 +381,7 @@ begin
     gridCal.Canvas.TextOut(Rect.Left + pw, Rect.Top + ph, txt);
 end;
 
+{---------------------------------------}
 procedure TfrmView.btnNextMonthClick(Sender: TObject);
 var
     i: integer;
@@ -399,6 +401,7 @@ begin
     SelectDay(new);
 end;
 
+{---------------------------------------}
 procedure TfrmView.cboJidChange(Sender: TObject);
 var
     td: TDatetime;
@@ -418,6 +421,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmView.gridConvDrawCell(Sender: TObject; ACol, ARow: Integer;
   Rect: TRect; State: TGridDrawState);
 var
@@ -436,12 +440,14 @@ begin
     gridConv.Canvas.TextOut(Rect.Left, Rect.Top, txt);
 end;
 
+{---------------------------------------}
 procedure TfrmView.FormDestroy(Sender: TObject);
 begin
     if (_convs <> nil) then
         FreeAndNil(_convs);
 end;
 
+{---------------------------------------}
 procedure TfrmView.gridConvSelectCell(Sender: TObject; ACol, ARow: Integer;
   var CanSelect: Boolean);
 var
