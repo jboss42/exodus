@@ -1,6 +1,6 @@
 object frmJabber: TfrmJabber
-  Left = 264
-  Top = 200
+  Left = 245
+  Top = 198
   Width = 539
   Height = 341
   AlphaBlendValue = 240
@@ -28,7 +28,7 @@ object frmJabber: TfrmJabber
     Left = 0
     Top = 30
     Width = 531
-    Height = 262
+    Height = 257
     ActivePage = tbsMsg
     Align = alClient
     DockSite = True
@@ -49,7 +49,7 @@ object frmJabber: TfrmJabber
         Left = 209
         Top = 0
         Width = 3
-        Height = 234
+        Height = 229
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = Splitter1Moved
@@ -58,7 +58,7 @@ object frmJabber: TfrmJabber
         Left = 0
         Top = 0
         Width = 209
-        Height = 234
+        Height = 229
         Align = alLeft
         BevelOuter = bvNone
         UseDockManager = False
@@ -70,7 +70,7 @@ object frmJabber: TfrmJabber
         Left = 212
         Top = 0
         Width = 311
-        Height = 234
+        Height = 229
         Align = alClient
         Columns = <
           item
@@ -2240,6 +2240,7 @@ object frmJabber: TfrmJabber
       000000000000}
   end
   object timAutoAway: TTimer
+    Enabled = False
     Interval = 10000
     OnTimer = timAutoAwayTimer
     Left = 16

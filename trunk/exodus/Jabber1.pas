@@ -221,6 +221,7 @@ type
     _fade_limit: integer;
     _prof_index: integer;
     _auto_login: boolean;
+    _auto_away: boolean;
 
     // Various other key controllers
     _guibuilder: TGUIFactory;
@@ -232,7 +233,6 @@ type
     _is_min: boolean;
     _last_show: string;
     _last_status: string;
-    _first_instance: boolean;
 
     _version: TVersionResponder;
     _time: TTimeResponder;
@@ -316,13 +316,13 @@ const
 {---------------------------------------}
 implementation
 uses
-    JUD, Bookmark, CustomPres,
-    Transfer, Profile,
-    RiserWindow, RemoveContact,
-    MsgRecv, Prefs, Dockable,
     JoinRoom, Login, ChatWin, RosterAdd,
-    VCard, PrefController, Roster, S10n,
-    Session, Debug, About, getOpt, JabberID, XMLUtils, ExUtils;
+    JUD, Bookmark, CustomPres,
+    MsgRecv, Prefs, Dockable,
+    RiserWindow, RemoveContact,
+    Session, Debug, About, getOpt, JabberID, XMLUtils, ExUtils,
+    Transfer, Profile,
+    VCard, PrefController, Roster, S10n;
 
 {$R *.DFM}
 
@@ -404,7 +404,7 @@ end;
 {---------------------------------------}
 procedure TfrmJabber.WMAutoAway(var msg: TMessage);
 begin
-    if (_first_instance) then exit;
+    if (_eHandle <> 0) then exit;
 
     DebugMsg('GOT AUTOAWAY MSG!');
 
@@ -414,7 +414,7 @@ begin
         SetAutoAway()
     else if msg.LParam = 2 then
         SetAutoXA()
-    else if msg.LParam = 10 then
+    else if msg.LParam = 3 then
         SetupAutoAwayTimer();
 end;
 
@@ -425,6 +425,7 @@ var
     profile: TJabberProfile;
     reg: TRegistry;
 
+    show_help: boolean;
     debug: boolean;
     minimized: boolean;
     expanded: string;
@@ -434,10 +435,12 @@ var
     priority: integer;
     profile_name: string;
     config: string;
+    help_msg: string;
 begin
     // initialize vars.  wish we were using a 'real' compiler.
     debug := false;
     minimized := false;
+    show_help := false;
     jid := nil;
     priority := -1;
 
@@ -453,50 +456,65 @@ begin
     _noMoveCheck := true;
     frmDebug := nil;
 
-
     try
-
         with TGetOpts.Create(nil) do begin
-          try
-            // -d          : debug
-            // -m          : minimized
-            // -x [yes|no] : expanded
-            // -j [jid]    : jid
-            // -p [pass]   : password
-            // -r [res]    : resource
-            // -i [pri]    : priority
-            // -f [prof]   : profile name
-            // -c [file]   : config file name
-
-            Options  := 'dmxjprifc';
-            OptFlags := '--:::::::';
-            ReqFlags := '         ';
-            LongOpts := 'debug,minimized,expanded,jid,password,resource,priority,profile,config';
-            while GetOpt do begin
-              case Ord(OptChar) of
-                 0: raise EConfigException.Create('unknown argument');
-                 Ord('d'): debug := true;
-                 Ord('x'): expanded := OptArg;
-                 Ord('m'): minimized := true;
-                 Ord('j'): jid := TJabberID.Create(OptArg);
-                 Ord('p'): pass := OptArg;
-                 Ord('r'): resource := OptArg;
-                 Ord('i'): priority := SafeInt(OptArg);
-                 Ord('f'): profile_name := OptArg;
-                 Ord('c'): config := OptArg;
-              end;
+            try
+                // -d          : debug
+                // -m          : minimized
+                // -?          : help
+                // -x [yes|no] : expanded
+                // -j [jid]    : jid
+                // -p [pass]   : password
+                // -r [res]    : resource
+                // -i [pri]    : priority
+                // -f [prof]   : profile name
+                // -c [file]   : config file name
+                Options  := 'dm?xjprifc';
+                OptFlags := '---:::::::';
+                ReqFlags := '          ';
+                LongOpts := 'debug,minimized,help,expanded,jid,password,resource,priority,profile,config';
+                while GetOpt do begin
+                  case Ord(OptChar) of
+                     0: raise EConfigException.Create('unknown argument');
+                     Ord('d'): debug := true;
+                     Ord('x'): expanded := OptArg;
+                     Ord('m'): minimized := true;
+                     Ord('j'): jid := TJabberID.Create(OptArg);
+                     Ord('p'): pass := OptArg;
+                     Ord('r'): resource := OptArg;
+                     Ord('i'): priority := SafeInt(OptArg);
+                     Ord('f'): profile_name := OptArg;
+                     Ord('c'): config := OptArg;
+                     Ord('?'): show_help := true;
+                  end;
+                end;
+            finally
+                Free
             end;
-          finally
-            Free
-          end;
         end;
+
+        if (show_help) then begin
+            // show the help message
+            help_msg := 'The following command line parameters are available in Exodus: '#13#10#13#10;
+            help_msg := help_msg + ' -d '#9#9' : Debug mode on'#13#10;
+            help_msg := help_msg + ' -m '#9#9' : Start minimized'#13#10;
+            help_msg := help_msg + ' -? '#9#9' : Show Help'#13#10;
+            help_msg := help_msg + ' -x [yes|no] '#9' : Expanded Mode'#13#10;
+            help_msg := help_msg + ' -j [jid] '#9#9' : Jid'#13#10;
+            help_msg := help_msg + ' -p [pass] '#9' : Password'#13#10;
+            help_msg := help_msg + ' -r [res] '#9' : Resource'#13#10;
+            help_msg := help_msg + ' -i [pri] '#9#9' : Priority'#13#10;
+            help_msg := help_msg + ' -f [prof] '#9' : Profile name'#13#10;
+            help_msg := help_msg + ' -c [file] '#9' : Config path name'#13#10;
+            MessageDlg(help_msg, mtInformation, [mbOK], 0);
+            Halt;
+            end;
 
         if (config = '') then
             config := getUserDir() + 'exodus.xml';
 
         // Create our main Session object
         MainSession := TJabberSession.Create(config);
-
 
         _guibuilder := TGUIFactory.Create();
         _guibuilder.SetSession(MainSession);
@@ -573,15 +591,11 @@ begin
 
             if (debug) then begin
                 frmDebug := TfrmDebug.Create(nil);
-
                 if getBool('expanded') then
                     frmDebug.DockForm;
-
                 frmDebug.Show;
                 end;
             end;
-
-
     except
         on E : EConfigException do begin
             MessageDlg(E.Message, mtError, [mbOK], 0);
@@ -605,12 +619,11 @@ begin
 
     exp := MainSession.Prefs.getBool('expanded');
 
-    if exp then begin
+    if exp then
         lstEvents.Width := MainSession.Prefs.getInt('event_width')
-        end
-    else begin
+    else
         lstEvents.Visible := false;
-        end;
+
     restoreEvents(exp);
     _noMoveCheck := false;
     _flash := false;
@@ -649,32 +662,33 @@ begin
     Self.SessionCallback('/session/prefs', nil);
 end;
 
+{---------------------------------------}
 procedure TfrmJabber.Startup;
 begin
-  with MainSession.Prefs do begin
-    if (_auto_login) then begin
-        // snag default profile, etc..
-        MainSession.ActivateProfile(_prof_index);
-        MainSession.Connect;
-        end
-    else
-        ShowLogin();
-    end;
+    with MainSession.Prefs do begin
+        if (_auto_login) then begin
+            // snag default profile, etc..
+            MainSession.ActivateProfile(_prof_index);
+            MainSession.Connect;
+            end
+        else
+            ShowLogin();
+        end;
 end;
 
+{---------------------------------------}
 procedure TfrmJabber.setupAutoAwayTimer();
 begin
+    DebugMsg('Trying to setup the Auto Away timer.'#13#10);
     _eHandle := CreateEvent(nil, false, false, 'Exodus');
     if (GetLastError = ERROR_ALREADY_EXISTS) then
-        _first_instance := false
-    else begin
+        // the handle already exists
+        _eHandle := 0
+    else
         // first instance..
-        _first_instance := true;
         IdleUIInit();
-        end;
-    timAutoAway.Enabled := (_first_instance);
+    timAutoAway.Enabled := (_eHandle <> 0);
 end;
-
 
 {---------------------------------------}
 procedure TfrmJabber.setTrayInfo(tip: string);
@@ -718,11 +732,13 @@ begin
         SubController := TSubController.Create;
         Tabs.ActivePage := tbsMsg;
         restoreMenus(true);
+        timAutoAway.Enabled := true;
         end;
 
     if (event = '/session/disconnected') then begin
         if _event <> next_none then
             nextTimer.Enabled := true;
+        timAutoAway.Enabled := false;
         lstEvents.Items.Clear;
 
         Self.Caption := 'Exodus';
@@ -744,7 +760,8 @@ begin
                 _edge_snap := getInt('edge_snap')
             else
                 _edge_snap := -1;
-            _close_min := getBool('close_min')
+            _close_min := getBool('close_min');
+            _auto_away := getBool('auto_away');
             end;
 
         // do other stuff
@@ -994,13 +1011,14 @@ procedure TfrmJabber.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
     CloseHandle(_eHandle);
-    SendMessage(HWND_BROADCAST, WM_AUTOAWAY, 0, 10);
+    SendMessage(HWND_BROADCAST, WM_AUTOAWAY, 0, 3);
     MainSession.Prefs.SavePosition(Self);
     lstEvents.Items.Clear;
 
     if MainSession <> nil then begin
         _event := next_Exit;
-        frmDebug.Free;
+        if frmDebug <> nil then
+            frmDebug.Free;
         frmRosterWindow.Free;
         ChatWin.CloseAllChats();
 
@@ -1012,7 +1030,7 @@ begin
         MainSession := nil;
         end;
 
-    IdleUITerm();
+    if (_eHandle <> 0) then IdleUITerm();
 end;
 
 {---------------------------------------}
@@ -1104,7 +1122,7 @@ begin
         // make sure we undock all of the tabs..
         while (Tabs.DockClientCount > 0) do begin
             docked := TfrmDockable(Tabs.DockClients[0]);
-            if (docked = frmDebug) then
+            if ((frmDebug <> nil) and (docked = frmDebug)) then
                 frmDebug.Hide;
             docked.FloatForm;
             end;
@@ -1219,7 +1237,7 @@ var
 begin
     if _noMoveCheck then exit;
     if _edge_snap = -1 then exit;
-        
+
     If ((SWP_NOMOVE or SWP_NOSIZE) and msg.WindowPos^.flags) <>
         (SWP_NOMOVE or SWP_NOSIZE) then begin
         {  Window is moved or sized, get usable screen area. }
@@ -1288,7 +1306,11 @@ begin
     // show the debug window if it's hidden
     if (MainSession.Prefs.getBool('expanded')) then
         // do something here
-    else 
+    else if (frmDebug = nil) then begin
+        frmDebug := TfrmDebug.Create(nil);
+        frmDebug.Show;
+        end
+    else
         frmDebug.Show;
 end;
 
@@ -1411,14 +1433,24 @@ procedure TfrmJabber.timAutoAwayTimer(Sender: TObject);
 var
     mins, away, xa: integer;
     cur_idle: dword;
-begin    // get the latest idle amount
+    dmsg: string;
+begin
+    // get the latest idle amount
+    if (MainSession = nil) then exit;
     if (not MainSession.Stream.Active) then exit;
 
     with MainSession.Prefs do begin
-        if getBool('auto_away') then begin
+        if (_auto_away) then begin
             cur_idle := (GetTickCount() - IdleUIGetLastInputTime()) div 1000;
             mins := cur_idle div 60;
-            // frmDebug.debugMsg('Idle time: ' + IntToStr(cur_idle) + ' secs'#13#10);
+
+            if (not _is_autoaway) and (not _is_autoxa) then begin
+                dmsg := 'Idle Check: ' + BoolToStr(_is_autoaway, true) + ', ' +
+                    BoolToStr(_is_autoxa, true) + ', ' +
+                    IntToStr(cur_idle ) + ' secs'#13#10;
+                DebugMsg(dmsg);
+                end;
+
             away := getInt('away_time');
             xa := getInt('xa_time');
 
@@ -1429,7 +1461,14 @@ begin    // get the latest idle amount
 
             end;
         end;
-end;procedure TfrmJabber.SetAutoAway;begin    // set us to away    if (_first_instance) then
+end;
+
+{---------------------------------------}
+procedure TfrmJabber.SetAutoAway;
+begin
+    // set us to away
+    DebugMsg('Setting AutoAway '#13#10);
+    if (_eHandle <> 0) then
         SendMessage(HWND_BROADCAST, WM_AUTOAWAY, 0, 1);
     Application.ProcessMessages;
 
@@ -1443,25 +1482,42 @@ end;procedure TfrmJabber.SetAutoAway;begin    // set us to away    if (_fir
     _is_autoxa := false;
 
     timAutoAway.Interval := 1000;
-end;procedure TfrmJabber.SetAutoXA;begin    // set us to xa    _is_autoaway := false;    _is_autoxa := true;
-
-    MainSession.SetPresence('xa', MainSession.prefs.getString('xa_status'),
-        MainSession.Priority);
-    if (_first_instance) then        SendMessage(HWND_BROADCAST, WM_AUTOAWAY, 0, 2);
-end;
-procedure TfrmJabber.SetAutoAvailable;begin    // reset our status to available    _is_autoaway := false;    _is_autoxa := false;
-
-    if ((MainSession.show = 'away') or (MainSession.show = 'xa')) then begin
-        MainSession.SetPresence(_last_show, _last_status, MainSession.Priority);
-        if (_first_instance) then
-            SendMessage(HWND_BROADCAST, WM_AUTOAWAY, 0, 0);
-        end;
-
-    timAutoAway.Interval := 30000;
 end;
 
 {---------------------------------------}
-procedure TfrmJabber.MessageHistory2Click(Sender: TObject);begin
+procedure TfrmJabber.SetAutoXA;
+begin
+    // set us to xa
+    DebugMsg('Setting AutoXA '#13#10);
+    _is_autoaway := false;
+    _is_autoxa := true;
+
+    MainSession.SetPresence('xa', MainSession.prefs.getString('xa_status'),
+        MainSession.Priority);
+
+    if (_eHandle <> 0) then
+        SendMessage(HWND_BROADCAST, WM_AUTOAWAY, 0, 2);
+end;
+
+{---------------------------------------}
+procedure TfrmJabber.SetAutoAvailable;
+begin
+    // reset our status to available
+    DebugMsg('Setting Auto Available'#13#10);
+    timAutoAway.Interval := 10000;
+    _is_autoaway := false;
+    _is_autoxa := false;
+
+    if ((MainSession.show = 'away') or (MainSession.show = 'xa')) then begin
+        MainSession.SetPresence(_last_show, _last_status, MainSession.Priority);
+        if (_eHandle <> 0) then
+            SendMessage(HWND_BROADCAST, WM_AUTOAWAY, 0, 0);
+        end;
+end;
+
+{---------------------------------------}
+procedure TfrmJabber.MessageHistory2Click(Sender: TObject);
+begin
     frmRosterWindow.popHistoryClick(Sender);
 end;
 
