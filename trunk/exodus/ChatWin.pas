@@ -171,7 +171,7 @@ implementation
 uses
     CustomNotify, COMChatController, Debug, ExEvents,
     JabberConst, ExSession, ExUtils, Presence, PrefController, Room,
-    SendFile, Transfer, RosterAdd, RiserWindow, Notify,
+    XferManager, RosterAdd, RiserWindow, Notify,
     Jabber1, Profile, MsgDisplay, IQ,
     JabberMsg, Roster, Session, Unicode, XMLUtils,
     ShellAPI, RosterWindow, Emoticons;

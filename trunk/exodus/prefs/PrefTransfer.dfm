@@ -29,12 +29,20 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     ParentFont = False
     OnClick = Label2Click
   end
+  object TntLabel2: TTntLabel
+    Left = 0
+    Top = 83
+    Width = 129
+    Height = 13
+    Caption = 'Send file using this method:'
+  end
   object grpWebDav: TGroupBox
-    Left = 16
-    Top = 130
+    Left = 8
+    Top = 128
     Width = 281
     Height = 178
-    TabOrder = 5
+    TabOrder = 3
+    Visible = False
     object Label3: TTntLabel
       Left = 8
       Top = 16
@@ -137,23 +145,13 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     TabOrder = 1
     OnClick = btnTransferBrowseClick
   end
-  object optPeer: TTntRadioButton
-    Left = 0
-    Top = 88
-    Width = 281
-    Height = 17
-    Caption = 'Send files directly from my machine to the recipient'
-    Checked = True
-    TabOrder = 2
-    TabStop = True
-    OnClick = optWebDavClick
-  end
   object grpPeer: TGroupBox
-    Left = 16
-    Top = 130
+    Left = 8
+    Top = 128
     Width = 281
     Height = 113
-    TabOrder = 3
+    TabOrder = 2
+    Visible = False
     object Label1: TTntLabel
       Left = 16
       Top = 19
@@ -185,15 +183,6 @@ inherited frmPrefTransfer: TfrmPrefTransfer
       TabOrder = 2
     end
   end
-  object optWebDav: TTntRadioButton
-    Left = 0
-    Top = 110
-    Width = 281
-    Height = 17
-    Caption = 'Use a Web server to host the files which I send'
-    TabOrder = 4
-    OnClick = optWebDavClick
-  end
   object StaticText4: TTntPanel
     Left = 0
     Top = 0
@@ -210,6 +199,42 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     Font.Style = [fsBold]
     ParentBackground = False
     ParentFont = False
+    TabOrder = 4
+  end
+  object cboXferMode: TTntComboBox
+    Left = 8
+    Top = 99
+    Width = 281
+    Height = 21
+    Style = csDropDownList
+    ItemHeight = 13
+    TabOrder = 5
+    OnChange = cboXferModeChange
+    Items.WideStrings = (
+      'Discover a file transfer component using my server.'
+      'Always use a specific file transfer component.'
+      'Send files directly from my machine to the recipient.'
+      'Use a web server to host the files which I send.')
+  end
+  object grpProxy: TGroupBox
+    Left = 8
+    Top = 128
+    Width = 281
+    Height = 79
     TabOrder = 6
+    object TntLabel1: TTntLabel
+      Left = 8
+      Top = 16
+      Width = 183
+      Height = 13
+      Caption = 'Jabber Address of File Transfer Server:'
+    end
+    object txtS5bProxy: TTntEdit
+      Left = 8
+      Top = 32
+      Width = 257
+      Height = 21
+      TabOrder = 0
+    end
   end
 end

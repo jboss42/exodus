@@ -103,6 +103,9 @@ procedure jabberSendMsg(to_jid: Widestring; mtag, xtags: TXMLTag;
 procedure jabberSendMsg(to_jid: Widestring; mtag: TXMLTag;
     xtags, body, subject: Widestring); overload;
 
+function jabberIQResult(orig: TXMLTag): TXMLTag;
+function jabberIQError(orig: TXMLTag): TXMLTag;
+
 procedure centerMainForm(f: TForm);
 
 resourcestring
@@ -981,6 +984,23 @@ begin
     for i := 0 to sl.Count - 1 do
         tnt.Add(sl[i])
 end;
+
+function jabberIQResult(orig: TXMLTag): TXMLTag;
+begin
+    //
+    Result := TXMLTag.Create('iq');
+    Result.setAttribute('to', orig.getAttribute('from'));
+    Result.setAttribute('id', orig.getAttribute('id'));
+    Result.setAttribute('type', 'result');
+end;
+
+function jabberIQError(orig: TXMLTag): TXMLTag;
+begin
+    //
+    Result := jabberIQResult(orig);
+    Result.setAttribute('type', 'error');
+end;
+
 
 {---------------------------------------}
 {---------------------------------------}

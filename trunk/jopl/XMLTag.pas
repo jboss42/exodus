@@ -65,6 +65,7 @@ end;
 
     function AddTag(tagname: WideString): TXMLTag; overload;
     function AddTag(child_tag: TXMLTag): TXMLTag; overload;
+    function AddTagNS(tagname: Widestring; xmlns: Widestring): TXMLTag;
 
     function AddBasicTag(tagname, cdata: WideString): TXMLTag;
     function AddCData(content: WideString): TXMLCData;
@@ -223,6 +224,13 @@ function TXMLTag.AddTag(child_tag: TXMLTag): TXMLTag;
 begin
     _Children.Add(child_tag);
     Result := child_tag;
+end;
+
+{---------------------------------------}
+function TXMLTag.AddTagNS(tagname: Widestring; xmlns: Widestring): TXMLTag;
+begin
+    Result := AddTag(tagname);
+    Result.setAttribute('xmlns', xmlns);
 end;
 
 {---------------------------------------}

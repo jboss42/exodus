@@ -58,6 +58,10 @@ const
 
     XMLNS_SI         = 'http://jabber.org/protocol/si';
     XMLNS_FTPROFILE  = 'http://jabber.org/protocol/si/profile/file-transfer';
+    XMLNS_BYTESTREAMS= 'http://jabber.org/protocol/bytestreams';
+    XMLNS_FEATNEG    = 'http://jabber.org/protocol/feature-neg';
+
+    XMLNS_STREAMERR  = 'urn:ietf:params:xml:ns:xmpp-stanzas';
 
 var
     XP_MSGXDATA: TXPLite;

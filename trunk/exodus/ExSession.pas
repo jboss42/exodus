@@ -24,7 +24,7 @@ uses
     // Exodus'y stuff
     COMController, COMRoster, COMPPDB, JabberID,
     Unicode, Signals, XMLTag, Session, GUIFactory, Register, Notify,
-    S10n, FileServer,
+    S10n,
 
     // Delphi stuff
     Registry, Classes, Dialogs, Forms, SysUtils, Windows;
@@ -81,7 +81,6 @@ var
     ExCOMRoster: TExodusRoster;
     ExCOMPPDB: TExodusPPDB;
 
-    ExFileServer: TExodusFileServer;
     ExRegController: TRegController;
     ExStartup: TExStartParams;
 
@@ -297,7 +296,6 @@ begin
 
     ExRegController := TRegController.Create();
     ExRegController.SetSession(MainSession);
-    ExFileServer := TExodusFileServer.Create();
 
     _guibuilder := TGUIFactory.Create();
     _guibuilder.SetSession(MainSession);
@@ -555,7 +553,6 @@ begin
     // If we have a session, close it up
     // and all of the associated windows
     if MainSession <> nil then begin
-        ExFileserver.Free();
         _notify.Free();
         _guiBuilder.Free();
         ExRegController.Free();
