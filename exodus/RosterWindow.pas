@@ -738,7 +738,7 @@ procedure TfrmRosterWindow.Panel2DblClick(Sender: TObject);
 begin
     // reset status to online;
     ShowPresence('online');
-    MainSession.SendTag(TJabberPres.Create);
+    MainSession.setPresence('', 'Available', MainSession.Priority);
 end;
 
 {---------------------------------------}

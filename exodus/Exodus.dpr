@@ -53,7 +53,8 @@ uses
   Transfer in 'Transfer.pas' {frmTransfer},
   XMLParser in 'XMLParser.pas',
   jud in 'jud.pas' {frmJUD},
-  fTopLabel in 'fTopLabel.pas' {frameTopLabel: TFrame};
+  fTopLabel in 'fTopLabel.pas' {frameTopLabel: TFrame},
+  Agents in 'Agents.pas';
 
 {$R *.RES}
 

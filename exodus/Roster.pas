@@ -73,10 +73,7 @@ type
     private
         _js: TObject;
         _callbacks: TList;
-        _add_subscribe: boolean;
-        _add_jid: string;
         procedure Callback(event: string; tag: TXMLTag);
-        procedure AddCallback(event: string; tag: TXMLTag);
         procedure checkGroups(ri: TJabberRosterItem);
         procedure checkGroup(grp: string);
     public
@@ -95,6 +92,20 @@ type
         procedure AddItem(sjid, nickname, group: string; subscribe: boolean);
         function Find(sjid: string): TJabberRosterItem; reintroduce; overload;
     end;
+
+    TRosterAddItem = class
+    private
+        jid: string;
+        grp: string;
+        nick: string;
+        do_subscribe: boolean;
+
+        procedure AddCallback(event: string; tag: TXMLTag);
+    public
+        constructor Create(sjid, nickname, group: string; subscribe: boolean);
+    end;
+
+
 
 {---------------------------------------}
 {---------------------------------------}
@@ -366,36 +377,9 @@ end;
 
 {---------------------------------------}
 procedure TJabberRoster.AddItem(sjid, nickname, group: string; subscribe: boolean);
-var
-    iq: TJabberIQ;
 begin
     // send a iq-set
-    iq := TJabberIQ.Create(MainSession, MainSession.generateID, Self.AddCallback);
-    with iq do begin
-        Namespace := XMLNS_ROSTER;
-        iqType := 'set';
-        with qTag.AddTag('item') do begin
-            PutAttribute('jid', sjid);
-            PutAttribute('name', nickname);
-            if group <> '' then
-                AddBasicTag('group', group);
-            end;
-        end;
-    _add_subscribe := subscribe;
-    _add_jid := sjid;
-    iq.Send;
-end;
-
-{---------------------------------------}
-procedure TJabberRoster.AddCallback(event: string; tag: TXMLTag);
-var
-    iq_type: string;
-begin
-    // callback for the roster add.
-    if tag = nil then exit;
-    iq_type := tag.getAttribute('type');
-    if (((iq_type = 'set') or (iq_type = 'result')) and (_add_subscribe)) then
-        SendSubscribe(_add_jid, MainSession);
+    TRosterAddItem.Create(sjid, nickname, group, subscribe);
 end;
 
 {---------------------------------------}
@@ -437,6 +421,51 @@ begin
 
     s.FireEvent('/roster/end', nil);
 end;
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+constructor TRosterAddItem.Create(sjid, nickname, group: string; subscribe: boolean);
+var
+    iq: TJabberIQ;
+begin
+    inherited Create;
+
+    jid := sjid;
+    nick := nickname;
+    grp := group;
+    do_subscribe := subscribe;
+
+    iq := TJabberIQ.Create(MainSession, MainSession.generateID, Self.AddCallback);
+    with iq do begin
+        Namespace := XMLNS_ROSTER;
+        iqType := 'set';
+        with qTag.AddTag('item') do begin
+            PutAttribute('jid', jid);
+            PutAttribute('name', nick);
+            if group <> '' then
+                AddBasicTag('group', grp);
+            end;
+        end;
+    iq.Send;
+end;
+
+{---------------------------------------}
+procedure TRosterAddItem.AddCallback(event: string; tag: TXMLTag);
+var
+    iq_type: string;
+begin
+    // callback for the roster add.
+    if (tag <> nil) then begin
+        iq_type := tag.getAttribute('type');
+        if (((iq_type = 'set') or (iq_type = 'result')) and (do_subscribe)) then
+            SendSubscribe(jid, MainSession);
+        end;
+
+    Self.Free();
+end;
+
+
 
 {---------------------------------------}
 {---------------------------------------}

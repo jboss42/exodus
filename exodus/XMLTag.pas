@@ -71,6 +71,7 @@ type
     function QueryXPData(path: string): string;
     function QueryTags(key: string): TXMLTagList;
     function GetFirstTag(key: string): TXMLTag;
+    function GetBasicText(key: string): string;
 
     function Data: string;
     function Namespace: string;
@@ -360,6 +361,18 @@ begin
             exit;
             end;
         end;
+end;
+
+{---------------------------------------}
+function TXMLTag.GetBasicText(key: string): string;
+var
+    t: TXMLTag;
+begin
+    t := self.GetFirstTag(key);
+    if (t <> nil) then
+        Result := t.Data
+    else
+        Result := '';
 end;
 
 {---------------------------------------}
@@ -663,7 +676,7 @@ begin
 
     // Check all the tags in the taglist
     for i := 0 to tl.Count - 1 do begin
-        t := tl.Tags[0];
+        t := tl.Tags[i];
         add := false;
         if (t.Name = cm.tag_name) then begin
             add := true;

@@ -23,13 +23,9 @@ interface
 
 uses
     Signals,
-    XMLStream,
-    XMLTag,
-    Chat,
-    Presence,
-    Roster,
-    PrefController,
-    Notify,
+    XMLStream, XMLTag,
+    Agents, Chat, Presence, Roster,
+    PrefController, Notify,
     Windows, Forms, Classes, SysUtils, StdVcl;
 
 type
@@ -75,6 +71,7 @@ type
         ChatList: TJabberChatList;
         Prefs: TPrefController;
         Notify: TNotifyController;
+        Agents: TAgents;
 
         dock_windows: boolean;
 
@@ -123,6 +120,8 @@ const
     XMLNS_VERSION   = 'jabber:iq:version';
     XMLNS_IQOOB     = 'jabber:iq:oob';
     XMLNS_BROWSE    = 'jabber:iq:browse';
+    XMLNS_AGENTS    = 'jabber:iq:agents';
+    XMLNS_SEARCH    = 'jabber:iq:search';
     
 
 var
@@ -183,6 +182,7 @@ begin
     Notify := TNotifyController.Create;
     Notify.SetSession(Self);
 
+    Agents := TAgents.Create();
 end;
 
 {---------------------------------------}
@@ -508,6 +508,7 @@ begin
     else begin
         _dispatcher.DispatchSignal('/session/authenticated', tag);
         Self.RegisterCallback(ChatList.MsgCallback, '/packet/message[@type="chat"]');
+        Agents.Fetch(_server);
         end;
 end;
 
@@ -527,6 +528,7 @@ begin
     Priority := p.Priority;
 end;
 
+{---------------------------------------}
 procedure TJabberSession.setPresence(show, status: string; priority: integer);
 var
     p: TJabberPres;

@@ -16,6 +16,7 @@ type
     { Private declarations }
   public
     { Public declarations }
+    field_name: string;
   end;
 
 implementation
