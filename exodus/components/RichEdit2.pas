@@ -3448,6 +3448,7 @@ begin
   inherited Destroy;
 end;
 
+{$WARNINGS OFF}
 function TCustomRichEdit98.ObjectSelected:Boolean;
 var ReObject:TReObject;
 begin
@@ -3455,6 +3456,7 @@ begin
   result:=(RichEditOle.GetObject(REO_IOB_SELECTION, ReObject, REO_GETOBJ_POLEOBJ) = S_OK) and
           Assigned(ReObject.oleobj);
 end;
+{$WARNINGS ON}
 
 procedure TCustomRichEdit98.CreateParams(var Params: TCreateParams);
 const
@@ -3790,20 +3792,18 @@ var
   P: PChar;
   L: ^Word;
 begin
-  if not FWide then
-    begin
+  if not FWide then begin
       P:= PChar(Message.LParam);
       L:= Pointer(P);
       SetLength(W, L^);
       Message.LParam:= Integer(@W[1]);
       W[1]:= WideChar(L^);
-    end;
-  Message.Result:= PrivatePerform(Message.Msg, Message.WParam, Message.LParam);
-  if not FWide then
-    begin
+      Message.Result:= PrivatePerform(Message.Msg, Message.WParam, Message.LParam);
       StrPCopy(P, WideToChar(W, FCP));
       Message.LParam:= Integer(P);
-    end;
+    end
+  else
+    Message.Result:= PrivatePerform(Message.Msg, Message.WParam, Message.LParam);
 end;
 
 procedure TCustomRichEdit98.EMStreamIn(var Message: TMessage);
@@ -3903,6 +3903,7 @@ begin
   EN_LINK:
     with PENLink(Pointer(Message.NMHdr))^ do
       begin
+        URLType := nil;
         FWide:= False;
         URL:= WideText;
         URL:= Copy(URL, chrg.cpMin + 1, chrg.cpMax - chrg.cpMin {+ 1});
@@ -3922,13 +3923,18 @@ begin
             FOnURLClick(Self, URL);
         WM_MOUSEMOVE:
           begin
-            if URLType.Cursor=crDefault then
-              if URLCursor=crDefault then
-                CR:= crHandPoint
-              else
-                CR:= URLCursor
+            if (URLType <> nil) then begin
+                if URLType.Cursor=crDefault then
+                  if URLCursor=crDefault then
+                    CR:= crHandPoint
+                  else
+                    CR:= URLCursor
+                else
+                  Cr:= URLType.Cursor;
+                end
             else
-              Cr:= URLType.Cursor;
+                CR := crHandPoint;
+                
             Windows.SetCursor(Screen.Cursors[Cr]);
             if Assigned(FOnURLMove) and (Length(URL)>1) then
               FOnURLMove(Self, URL);
@@ -4101,6 +4107,9 @@ var
   OSC,
   OC: TNotifyEvent;
 begin
+  MS := nil;
+  OSC := nil;
+  OC := nil;
   try
     OSC:= OnSelectionChange;
     OC:= OnChange;
@@ -4114,9 +4123,10 @@ begin
     MS.Position:= 0;
     Lines.LoadFromStream(MS);
   finally
-    MS.Free;
-    OnSelectionChange:= OSC;
-    OnChange:= OC;
+    if (MS <> nil) then
+        MS.Free;
+    if (Assigned(OSC)) then OnSelectionChange:= OSC;
+    if (Assigned(OC)) then OnChange:= OC;
   end;
 end;
 
@@ -4282,6 +4292,7 @@ end;
 
 function TCustomRichEdit98.PrivatePerform(Msg: Cardinal; WParam, LParam: Longint): Longint;
 begin
+  Result := 0;
   if HandleAllocated then
     if IsWinNT {and FWide }then
       Result:= CallWindowProcW(FDefWndProcW, Handle, Msg, Wparam, Lparam)
@@ -4336,6 +4347,7 @@ begin
  ReCreateWnd;
 end;
 
+{$WARNINGS OFF}
 function TCustomRichEdit98.GetPopupMenu: TPopupMenu;
 var
   I: Integer;
@@ -4379,6 +4391,7 @@ begin
       end;
   end;
 end;
+{$WARNINGS ON}
 
 procedure TCustomRichEdit98.DestroyVerbs;
 begin
@@ -4422,6 +4435,7 @@ var
   PT:Integer;
 begin
   if not Assigned(RichEditOle) or not Assigned(FSelObject) then Exit;
+  pt := 0;
   if Verb > 0 then begin
     if FObjectVerbs = nil then UpdateVerbs;
     if Verb >= FObjectVerbs.Count then

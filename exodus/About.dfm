@@ -1,8 +1,8 @@
 object frmAbout: TfrmAbout
   Left = 284
   Top = 227
-  Width = 340
-  Height = 294
+  Width = 344
+  Height = 301
   BorderWidth = 1
   Caption = 'About Exodus'
   Color = clBtnFace
@@ -20,7 +20,7 @@ object frmAbout: TfrmAbout
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 330
+    Width = 334
     Height = 130
     Align = alTop
     BevelOuter = bvLowered
@@ -29,7 +29,7 @@ object frmAbout: TfrmAbout
     object Image1: TImage
       Left = 1
       Top = 1
-      Width = 328
+      Width = 332
       Height = 128
       Align = alClient
       Picture.Data = {
@@ -1400,17 +1400,17 @@ object frmAbout: TfrmAbout
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 224
-    Width = 330
+    Top = 231
+    Width = 334
     Height = 34
     Align = alBottom
     AutoScroll = False
     TabOrder = 1
     inherited Bevel1: TBevel
-      Width = 330
+      Width = 334
     end
     inherited Panel1: TPanel
-      Left = 170
+      Left = 174
       Height = 29
       inherited btnOK: TButton
         Visible = False
@@ -1424,7 +1424,7 @@ object frmAbout: TfrmAbout
   object pnlVersion: TPanel
     Left = 0
     Top = 130
-    Width = 330
+    Width = 334
     Height = 20
     Align = alTop
     BevelOuter = bvNone
@@ -1434,20 +1434,111 @@ object frmAbout: TfrmAbout
   object InfoBox: TExRichEdit
     Left = 0
     Top = 150
-    Width = 330
-    Height = 67
-    Align = alTop
+    Width = 334
+    Height = 81
+    Align = alClient
+    AutoURLDetect = adDefault
     Color = clBtnFace
-    Lines.Strings = (
-      
-        'Exodus is the creation of Peter Millard  (mailto:me@pgmillard.co' +
-        'm). '
-      
-        'Checkout the website at http://exodus.sf.net for more informatio' +
-        'n.'
-      'It is currently licensed under the GNU Public License (GPL) see '
-      'www.gnu.org for more information on the GPL.')
+    CustomURLs = <
+      item
+        Name = 'e-mail'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'http'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'file'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'mailto'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'ftp'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'https'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'gopher'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'nntp'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'prospero'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'telnet'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'news'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'wais'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end>
+    LangOptions = [loAutoFont]
+    Language = 1033
+    ScrollBars = ssVertical
+    ShowSelectionBar = False
     TabOrder = 3
+    URLColor = clBlue
+    URLCursor = crHandPoint
     OnURLClick = InfoBoxURLClick
+    InputFormat = ifRTF
+    OutputFormat = ofRTF
+    SelectedInOut = False
+    PlainRTF = False
+    UndoLimit = 0
+    AllowInPlace = False
+    RTF = 
+      '{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcha' +
+      'rset0 MS Sans Serif;}}'#13#10'\viewkind4\uc1\pard\f0\fs16 Exodus is th' +
+      'e creation of Peter Millard  (mailto:me@pgmillard.com).  Checkou' +
+      't the website at http://exodus.sf.net for more information. It i' +
+      's currently licensed under the GNU Public License (GPL) see www.' +
+      'gnu.org for more information on the GPL.\par'#13#10'\par'#13#10'SAX XML Pars' +
+      'er by: Stefan Heymann\par'#13#10'Eschenweg 3, 72076 T\'#39'fcbingen, GERMA' +
+      'NY mailto:stefan@destructor.de, http://www.destructor.de\par'#13#10'\p' +
+      'ar'#13#10'Unicode library is Copyright (c) 1999, 2000 Mike Lischke (pu' +
+      'blic@lischke-online.de) and Portions Copyright (c) 1999, 2000 Az' +
+      'ret Botash (az).\par'#13#10'\par'#13#10'RichEdit98 and DBRichEdit98 componen' +
+      'ts for Delphi 3.0-4.0. version 1.40 Author Alexander Obukhov, Mi' +
+      'nsk, Belarus <alex@niiomr.belpak.minsk.by>\par'#13#10'\par'#13#10'\par'#13#10'}'#13#10
   end
 end

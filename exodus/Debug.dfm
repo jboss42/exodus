@@ -182,9 +182,10 @@ object frmDebug: TfrmDebug
         end>
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -13
+      Font.Height = -11
       Font.Name = 'Arial Unicode MS'
       Font.Style = []
+      ImeMode = imDisable
       LangOptions = [loAutoFont]
       Language = 1033
       ParentFont = False

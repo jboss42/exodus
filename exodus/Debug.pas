@@ -161,14 +161,14 @@ begin
         SelStart := GetTextLen;
         SelLength := 0;
         SelAttributes.Color := clBlue;
-        SelText := 'SENT: ' + data + #13#10;
+        WideSelText := 'SENT: ' + data + #13#10;
         SelAttributes.Color := clBlack;
         end
     else with MsgDebug do begin
         SelStart := GetTextLen;
         SelLength := 0;
         SelAttributes.Color := clGreen;
-        SelText := 'RECV: ' + data + #13#10;
+        WideSelText := 'RECV: ' + data + #13#10;
         SelAttributes.Color := clBlack;
         end;
 
