@@ -60,8 +60,9 @@ inherited frmRoom: TfrmRoom
     end
   end
   inherited pnlInput: TPanel
-    inherited MsgOut: TMemo
+    inherited MsgOut: TExRichEdit
       WantTabs = True
+      OnKeyPress = MsgOutKeyPress
     end
   end
   inherited Panel1: TPanel

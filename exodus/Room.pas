@@ -29,11 +29,11 @@ uses
 type
   TRoomMember = class
   public
-    Nick: string;
-    jid: string;
+    Nick: Widestring;
+    jid: Widestring;
     Node: TTreeNode;
-    status: string;
-    show: string;
+    status: Widestring;
+    show: Widestring;
   end;
 
   TfrmRoom = class(TfrmBaseChat)
@@ -71,37 +71,37 @@ type
     procedure mnuOnTopClick(Sender: TObject);
   private
     { Private declarations }
-    jid: string;                // jid of the conf. room
+    jid: Widestring;                // jid of the conf. room
     _roster: TStringlist;       // roster for this room
     _isGC: boolean;
     _callback: integer;         // Message Callback
     _pcallback: integer;        // Presence Callback
     _scallback: integer;        // Session callback
-    _nick_prefix: string;       // stuff for nick completion:
+    _nick_prefix: Widestring;       // stuff for nick completion:
     _nick_idx: integer;
     _nick_len: integer;
     _nick_start: integer;
     _keywords: TRegExpr;     // list of keywords to monitor for
-    _hint_text: string;
+    _hint_text: Widestring;
 
     function  AddMember(member: TRoomMember): TTreeNode;
-    function  checkCommand(txt: string): boolean;
+    function  checkCommand(txt: Widestring): boolean;
 
-    procedure SetJID(sjid: string);
+    procedure SetJID(sjid: Widestring);
     procedure ShowMsg(tag: TXMLTag);
     procedure RemoveMember(member: TRoomMember);
     procedure RenderMember(member: TRoomMember; tag: TXMLTag);
-    procedure changeSubject(subj: string);
+    procedure changeSubject(subj: Widestring);
   published
     procedure MsgCallback(event: string; tag: TXMLTag);
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
   public
     { Public declarations }
-    mynick: string;
+    mynick: Widestring;
     procedure SendMsg; override;
-    function GetNick(rjid: string): string;
-    property HintText: string read _hint_text;
+    function GetNick(rjid: Widestring): Widestring;
+    property HintText: Widestring read _hint_text;
   end;
 
 var
@@ -119,9 +119,9 @@ resourcestring
     sRoomBMPrompt = 'Bookmark Room';
     sRoomNewBookmark = 'Enter bookmark name:';
 
-function StartRoom(rjid, rnick: string): TfrmRoom;
-function IsRoom(rjid: string): boolean;
-function FindRoomNick(rjid: string): string;
+function StartRoom(rjid, rnick: Widestring): TfrmRoom;
+function IsRoom(rjid: Widestring): boolean;
+function FindRoomNick(rjid: Widestring): Widestring;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -147,7 +147,7 @@ uses
 {$R *.DFM}
 
 {---------------------------------------}
-function StartRoom(rjid, rnick: string): TfrmRoom;
+function StartRoom(rjid, rnick: Widestring): TfrmRoom;
 var
     f: TfrmRoom;
     p: TJabberPres;
@@ -204,7 +204,7 @@ procedure TfrmRoom.showMsg(tag: TXMLTag);
 var
     i : integer;
     Msg: TJabberMessage;
-    from: string;
+    from: Widestring;
     tmp_jid: TJabberID;
     server: boolean;
 begin
@@ -260,17 +260,17 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.SendMsg;
 var
-    txt: string;
+    txt: Widestring;
     msg: TJabberMessage;
 begin
     // Send the actual message out
-    txt := MsgOut.Text;
+    txt := MsgOut.WideText;
     if (Trim(txt) = '') then exit;
 
     if (txt[1] = '/') then begin
         if (checkCommand(txt)) then exit;
         end;
-    msg := TJabberMessage.Create(jid, 'groupchat', MsgOut.Text, '');
+    msg := TJabberMessage.Create(jid, 'groupchat', MsgOut.WideText, '');
     msg.nick := MyNick;
     msg.isMe := true;
     MainSession.SendTag(msg.Tag);
@@ -278,10 +278,10 @@ begin
 end;
 
 {---------------------------------------}
-function TfrmRoom.checkCommand(txt: string): boolean;
+function TfrmRoom.checkCommand(txt: Widestring): boolean;
 var
     l, i: integer;
-    c, tmps, tok: string;
+    c, tmps, tok: Widestring;
     p: TJabberPres;
 begin
     // check for various / commands
@@ -355,7 +355,7 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.presCallback(event: string; tag: TXMLTag);
 var
-    ptype, from: string;
+    ptype, from: Widestring;
     _jid: TJabberID;
     i: integer;
     member: TRoomMember;
@@ -436,9 +436,9 @@ end;
 
 {---------------------------------------}
 {
-procedure TfrmRoom.ShowPresence(nick, msg: string);
+procedure TfrmRoom.ShowPresence(nick, msg: Widestring);
 var
-    txt: string;
+    txt: Widestring;
 begin
     txt := '[' + formatdatetime('HH:MM',now) + '] ' + nick + msg;
     DisplayPresence(txt, MsgList);
@@ -458,7 +458,7 @@ procedure TfrmRoom.FormCreate(Sender: TObject);
 var
     kw_list : TStringList;
     i : integer;
-    e : string;
+    e : Widestring;
     first : bool;
     re : bool;
 begin
@@ -504,7 +504,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoom.SetJID(sjid: string);
+procedure TfrmRoom.SetJID(sjid: Widestring);
 begin
     // setup our callbacks
     if (_callback < 0) then begin
@@ -519,11 +519,11 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.MsgOutKeyPress(Sender: TObject; var Key: Char);
 var
-    tmps: string;
-    prefix: string;
+    tmps: Widestring;
+    prefix: Widestring;
     i: integer;
     found, exloop: boolean;
-    nick: string;
+    nick: Widestring;
 begin
     inherited;
     if (Key = #0) then exit;
@@ -650,7 +650,7 @@ var
     rm: TRoomMember;
     node: TTreeNode;
     tmp_jid: TJabberID;
-    sel_nick: string;
+    sel_nick: Widestring;
     chat_win: TfrmChat;
 begin
     // Chat w/ this person..
@@ -671,7 +671,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoom.changeSubject(subj: string);
+procedure TfrmRoom.changeSubject(subj: Widestring);
 var
     msg: TJabberMessage;
 begin
@@ -831,7 +831,7 @@ begin
 end;
 
 {---------------------------------------}
-function TfrmRoom.GetNick(rjid: string): string;
+function TfrmRoom.GetNick(rjid: Widestring): Widestring;
 var
     i: integer;
 begin
@@ -844,13 +844,13 @@ begin
 end;
 
 {---------------------------------------}
-function IsRoom(rjid: string): boolean;
+function IsRoom(rjid: Widestring): boolean;
 begin
     result := (room_list.IndexOf(rjid) >= 0);
 end;
 
 {---------------------------------------}
-function FindRoomNick(rjid: string): string;
+function FindRoomNick(rjid: Widestring): Widestring;
 var
     i: integer;
     room: TfrmRoom;
