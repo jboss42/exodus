@@ -158,7 +158,8 @@ uses
   GrpManagement in 'GrpManagement.pas' {frmGrpManagement},
   CapPresence in '..\jopl\CapPresence.pas',
   NodeItem in '..\jopl\NodeItem.pas',
-  Jud in 'Jud.pas' {frmJud};
+  Jud in 'Jud.pas' {frmJud},
+  DockWizard in 'DockWizard.pas' {frmDockWizard};
 
 {$R *.TLB}
 
@@ -183,6 +184,7 @@ begin
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TfrmGrpManagement, frmGrpManagement);
   Application.CreateForm(TfrmJud, frmJud);
+  Application.CreateForm(TfrmDockWizard, frmDockWizard);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);

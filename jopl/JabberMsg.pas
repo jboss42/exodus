@@ -100,6 +100,7 @@ begin
     _nick := '';
     _isme := false;
     _time := Now();
+    _highlight := false;
 end;
 
 {---------------------------------------}
