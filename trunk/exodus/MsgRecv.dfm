@@ -1,6 +1,6 @@
 object frmMsgRecv: TfrmMsgRecv
-  Left = 250
-  Top = 170
+  Left = 253
+  Top = 174
   Width = 385
   Height = 416
   Caption = 'Message'
