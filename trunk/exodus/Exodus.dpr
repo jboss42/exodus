@@ -182,7 +182,8 @@ uses
   JabberUtils in '..\jopl\JabberUtils.pas',
   DockContainer in 'DockContainer.pas' {frmDockContainer},
   Random in '..\jopl\Random.pas',
-  stringprep in '..\jopl\stringprep.pas';
+  stringprep in '..\jopl\stringprep.pas',
+  md5 in '..\jopl\md5.pas';
 
 {$R *.TLB}
 
