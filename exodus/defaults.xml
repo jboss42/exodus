@@ -1,6 +1,6 @@
 <exodus version="0.9">
   <prefs>
-    <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.42 2004/04/14 13:24:02 pgmillard Exp $"/>
+    <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.43 2004/04/15 13:21:52 pgmillard Exp $"/>
     
     <!-- System Options -->
     <auto_update_url value="http://exodus.jabberstudio.org/exodus-released.exe"/>
@@ -142,6 +142,7 @@
       <s>msn_emoticons.dll</s>
       <s>yahoo_emoticons.dll</s>
     </emoticon_dlls>
+    <custom_icondefs value="custom-icons.xml" control="txtCustomEmoteFilename"/>
 
     <!-- Network Options -->
     <recon_tries value="25" control="spnAttempts">

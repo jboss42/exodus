@@ -159,6 +159,7 @@ begin
     rs := TResourceStream.Create(_resHandle, _file, 'GIF');
     _gif := TGifImage.Create();
     _gif.LoadFromStream(rs);
+
     rs.Free();
 end;
 
