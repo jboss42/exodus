@@ -10,9 +10,9 @@ inherited frmChat: TfrmChat
   TextHeight = 13
   inherited Panel3: TPanel
     Top = 24
-    Height = 226
+    Height = 231
     inherited MsgList: TExRichEdit
-      Height = 218
+      Height = 223
       PlainRTF = True
     end
   end
@@ -58,41 +58,29 @@ inherited frmChat: TfrmChat
         ShowHint = True
         OnPaint = imgStatusPaint
       end
-      object lblJID: TStaticText
-        Left = 48
+      object lblJID: TTntStaticText
+        Left = 42
         Top = 0
-        Width = 38
+        Width = 32
         Height = 20
         Cursor = crHandPoint
         Align = alLeft
         Caption = '<JID>'
         Color = clBtnFace
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
-        Font.Height = -13
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsUnderline]
         ParentColor = False
-        ParentFont = False
         TabOrder = 0
         OnClick = lblJIDClick
       end
-      object lblNick: TStaticText
+      object lblNick: TTntStaticText
         Left = 20
         Top = 0
-        Width = 28
+        Width = 22
         Height = 20
         Cursor = crHandPoint
         Align = alLeft
         Caption = 'Foo'
         Color = clBtnFace
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
-        Font.Height = -13
-        Font.Name = 'MS Sans Serif'
-        Font.Style = []
         ParentColor = False
-        ParentFont = False
         TabOrder = 1
       end
     end

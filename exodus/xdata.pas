@@ -64,7 +64,7 @@ implementation
 
 {$R *.dfm}
 uses
-    Session, ExUtils, StrUtils, fGeneric, IQ;
+    Session, ExUtils, StrUtils, fGeneric, IQ, Math;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -87,10 +87,14 @@ var
     h, i: integer;
     frm: TframeGeneric;
     thread: string;
+    m : integer;
+    c: TControl;
 begin
     //
     packet := tag.Name;
     to_jid := tag.GetAttribute('from');
+    AssignDefaultFont(Self.Font);
+    
 
     if (packet = 'iq') then
         ns := tag.QueryXPData('/iq/query@xmlns')
@@ -108,10 +112,9 @@ begin
         _title := ins.Data;
         self.Caption := _title;
         end;
-        
+
     ins := x.GetFirstTag('instructions');
     if (ins <> nil) then begin
-        AssignDefaultFont(lblIns.Font);
         lblIns.Caption := ins.Data
         end
     else begin
@@ -123,6 +126,7 @@ begin
 
     flds := x.QueryTags('field');
     h := 10;
+    m := 0;
     for i := flds.Count - 1 downto 0 do begin
         frm := TframeGeneric.Create(Self);
         frm.FormType := _type;
@@ -133,6 +137,15 @@ begin
         frm.Align := alTop;
         frm.TabOrder := 0;
         h := h + frm.Height;
+        m :=  max(m, frm.getLabelWidth());
+        end;
+
+    for i := 0 to Self.box.ControlCount - 1 do begin
+        c := Self.box.Controls[i];
+        if (c is TframeGeneric) then begin
+            frm := TframeGeneric(c);
+            frm.setLabelWidth(m + 5);
+            end;
         end;
 
     if (h > Trunc(Screen.Height * 0.667)) then

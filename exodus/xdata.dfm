@@ -42,6 +42,12 @@ object frmXData: TfrmXData
     Height = 32
     Align = alBottom
     AutoScroll = False
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    ParentFont = False
     TabOrder = 0
     inherited Bevel1: TBevel
       Width = 310
