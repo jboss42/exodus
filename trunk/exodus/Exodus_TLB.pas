@@ -11,8 +11,8 @@ unit Exodus_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.2 $
-// File generated on 12/5/2002 7:02:23 AM from Type Library described below.
+// PASTLWTR : $Revision: 1.3 $
+// File generated on 12/6/2002 7:13:50 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -92,13 +92,13 @@ type
     procedure AddRosterItem(const jid: WideString; const nickname: WideString; 
                             const group: WideString); safecall;
     procedure RemoveRosterItem(const jid: WideString); safecall;
-    procedure ChangePresence; safecall;
+    procedure ChangePresence(const Show: WideString; const Status: WideString; Priority: Integer); safecall;
     procedure StartChat(const jid: WideString; const resource: WideString; 
                         const nickname: WideString); safecall;
     procedure GetProfile(const jid: WideString); safecall;
     procedure RegisterChatPlugin(var Plugin: OleVariant); safecall;
     procedure RegisterRoomPlugin(var Plugin: OleVariant); safecall;
-    procedure CreateDockableWindow(HWND: Integer); safecall;
+    procedure CreateDockableWindow(HWND: Integer; const Caption: WideString); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -122,13 +122,13 @@ type
     procedure AddRosterItem(const jid: WideString; const nickname: WideString; 
                             const group: WideString); dispid 9;
     procedure RemoveRosterItem(const jid: WideString); dispid 10;
-    procedure ChangePresence; dispid 11;
+    procedure ChangePresence(const Show: WideString; const Status: WideString; Priority: Integer); dispid 11;
     procedure StartChat(const jid: WideString; const resource: WideString; 
                         const nickname: WideString); dispid 12;
     procedure GetProfile(const jid: WideString); dispid 13;
     procedure RegisterChatPlugin(var Plugin: OleVariant); dispid 14;
     procedure RegisterRoomPlugin(var Plugin: OleVariant); dispid 15;
-    procedure CreateDockableWindow(HWND: Integer); dispid 16;
+    procedure CreateDockableWindow(HWND: Integer; const Caption: WideString); dispid 16;
   end;
 
 // *********************************************************************//

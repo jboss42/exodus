@@ -11,8 +11,8 @@ unit ExodusPlugin_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.2 $
-// File generated on 12/5/2002 7:21:07 AM from Type Library described below.
+// PASTLWTR : $Revision: 1.3 $
+// File generated on 12/6/2002 6:58:53 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\ExodusPlugin.tlb (1)

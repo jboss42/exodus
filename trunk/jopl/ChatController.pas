@@ -44,6 +44,8 @@ type
 
         procedure SetJID(sjid: Widestring);
         procedure MsgCallback(event: string; tag: TXMLTag);
+
+        property JID: WideString read _jid;
         property OnMessage: TChatMessageEvent read _event write _event;
     end;
 

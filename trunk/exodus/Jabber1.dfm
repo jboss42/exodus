@@ -72,7 +72,7 @@ object frmExodus: TfrmExodus
         Left = 105
         Top = 0
         Width = 3
-        Height = 302
+        Height = 301
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = SplitterRightMoved
@@ -81,7 +81,7 @@ object frmExodus: TfrmExodus
         Left = 0
         Top = 0
         Width = 105
-        Height = 302
+        Height = 301
         Align = alLeft
         BevelOuter = bvNone
         BorderWidth = 1
@@ -94,7 +94,7 @@ object frmExodus: TfrmExodus
         Left = 108
         Top = 0
         Width = 21
-        Height = 302
+        Height = 301
         Align = alClient
         BevelOuter = bvNone
         Caption = 'THIS IS PNLRIGHT'
@@ -546,7 +546,7 @@ object frmExodus: TfrmExodus
     Left = 88
     Top = 74
     Bitmap = {
-      494C010129002C00040010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C010129002C00040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000B0000000010020000000000000B0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -2002,7 +2002,8 @@ object frmExodus: TfrmExodus
       E03FE03FE01FE03FE00FE01FE00FE00FE007E00FE007E007E003E007C003E003
       C003C003C003C003C001C003C001C001C001C001C001C001C001C001C001C001
       C001C001C001C001C001C001C003C001E003E003E003E003E007E003F007E003
-      F00FF007F80FF007FC1FF80FFE3FFC1F}
+      F00FF007F80FF007FC1FF80FFE3FFC1F00000000000000000000000000000000
+      000000000000}
   end
   object timFlasher: TTimer
     Enabled = False
