@@ -1,4 +1,4 @@
-<exodus>
+<exodus version="0.9">
     <prefs>
         <!-- AutoAway prefs -->
         <auto_away value="1" control="chkAutoAway"/>
