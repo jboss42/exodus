@@ -208,6 +208,7 @@ begin
 
     if ((notify and notify_front) > 0) then begin
         // pop the window to the front
+        ShowWindow(w.Handle, SW_SHOWNORMAL);
         ForceForegroundWindow(w.Handle);
     end;
 
