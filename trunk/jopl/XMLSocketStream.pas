@@ -217,7 +217,7 @@ begin
             _Socket.Disconnect();
 
         try
-            _Socket.Connect;
+            _Socket.Connect();
         except
             _socket := nil;
             doMessage(WM_DISCONNECTED);
@@ -523,7 +523,6 @@ begin
             // Socket is connected
             {$ifdef INDY9}
             _local_ip := _socket.Socket.Binding.IP;
-
             if ((_profile.ssl = ssl_port) and (_profile.SocksType <> proxy_none) and
                 (_ssl_int.PassThrough)) then begin
                 if (_profile.SocksType = proxy_http) then begin
@@ -797,6 +796,7 @@ begin
 
     // Create our socket
     _socket := TIdTCPClient.Create(nil);
+
     // SUCK, make the recv buffer freaken' gigantic to avoid weird SSL issues
     //_socket.RecvBufferSize := 4096;
     _socket.RecvBufferSize := (1024 * 1024);
@@ -886,6 +886,9 @@ begin
         {$ifndef INDY9}
         _socket.InterceptEnabled := false;
         _socket.Intercept := nil;
+        {$else}
+        _iohandler.SocksInfo := nil;
+        _socket.IOHandler := nil;
         {$endif}
 
         if (_ssl_int <> nil) then
@@ -893,7 +896,7 @@ begin
 
         if (_socks_info <> nil) then
             FreeAndNil(_socks_info);
-
+            
         _socket.Free();
         _socket := nil;
     end;

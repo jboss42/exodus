@@ -100,6 +100,8 @@ const
 
 var
     cur_thd: TDNSResolverThread;
+    dns_servers: string;
+    dns_list: TStringlist;
 
 {---------------------------------------}
 procedure GetSRVAsync(Session: TJabberSession; Resolver: TIdDNSResolver;
@@ -221,37 +223,37 @@ var
     lo_pri, cur_w, cur: integer;
     srv: TSRVRecord;
     ar: TARecord;
-    dns: string;
-    slist: TStringlist;
 begin
     // Make a SRV request first..
     // if that fails, fall back on A Records
 
-    dns := GetNameServers();
-    if (dns = '') then begin
-        ip := a_req;
-        port := 0;
-        Result := false;
-        exit;
+    if (dns_list.Count = 0) then begin
+        dns_servers := GetNameServers();
+        if (dns_servers = '') then begin
+            ip := a_req;
+            port := 0;
+            Result := false;
+            exit;
+        end;
+
+        dns_list.Clear();
+        dns_list.Delimiter := ' ';
+        dns_list.DelimitedText := dns_servers;
+
+        if (dns_list.Count = 0) then begin
+            ip := a_req;
+            port := 0;
+            Result := false;
+            exit;
+        end;
     end;
 
-    slist := TStringlist.Create();
-    slist.Delimiter := ' ';
-    slist.DelimitedText := dns;
-
-    if (slist.Count = 0) then begin
-        ip := a_req;
-        port := 0;
-        Result := false;
-        exit;
-    end;
-
-    // TODO: iterate over all possible DNS servers if something fails
+    // iterate over all possible DNS servers if something fails
     idx := 0;
     ip := '';
     port := 0;
-    while ((ip = '') and (idx < slist.count)) do begin
-        Resolver.Host := slist[idx];
+    while ((ip = '') and (idx < dns_list.count)) do begin
+        Resolver.Host := dns_list[idx];
         idx := idx + 1;
 
         // Use this for testing
@@ -324,8 +326,15 @@ begin
             end;
         end;
     end;
-    slist.Free();
+    
     Result := (ip <> '');
 end;
+
+initialization
+    dns_servers := '';
+    dns_list := TStringlist.Create();
+
+finalization
+    FreeAndNil(dns_list);
 
 end.
