@@ -20,7 +20,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 370
+    Height = 375
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1427,7 +1427,7 @@ object frmPrefs: TfrmPrefs
     Left = 89
     Top = 0
     Width = 310
-    Height = 370
+    Height = 375
     ActivePage = tbsNotify
     Align = alClient
     Constraints.MinHeight = 340
@@ -1776,7 +1776,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 102
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1863,7 +1863,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 97
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2057,7 +2057,7 @@ object frmPrefs: TfrmPrefs
       object StaticText11: TStaticText
         Left = 0
         Top = 0
-        Width = 111
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2118,6 +2118,20 @@ object frmPrefs: TfrmPrefs
         Height = 105
         Caption = 'Notify Options'
         TabOrder = 1
+        object Label20: TLabel
+          Left = 153
+          Top = 74
+          Width = 93
+          Height = 13
+          Caption = 'Configure Sounds...'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlue
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsUnderline]
+          ParentFont = False
+          OnClick = Label20Click
+        end
         object chkFlash: TCheckBox
           Left = 8
           Top = 48
@@ -2207,7 +2221,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 124
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2285,7 +2299,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 112
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2304,7 +2318,7 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 73
         Width = 302
-        Height = 266
+        Height = 271
         Align = alClient
         TabOrder = 1
       end
@@ -2319,7 +2333,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TLabel
           Left = 0
           Top = 0
-          Width = 256
+          Width = 302
           Height = 26
           Align = alTop
           Caption = 
@@ -2576,7 +2590,7 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 370
+    Top = 375
     Width = 399
     Height = 37
     Align = alBottom

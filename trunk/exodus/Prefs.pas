@@ -176,6 +176,7 @@ type
     lblMessages: TLabel;
     chkPresenceMessageListen: TCheckBox;
     chkPresenceMessageSend: TCheckBox;
+    Label20: TLabel;
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -204,6 +205,7 @@ type
     procedure Button5Click(Sender: TObject);
     procedure cboRosterBGChange(Sender: TObject);
     procedure cboRosterFontColorChange(Sender: TObject);
+    procedure Label20Click(Sender: TObject);
   private
     { Private declarations }
     _notify: array of integer;
@@ -932,6 +934,12 @@ procedure TfrmPrefs.cboRosterFontColorChange(Sender: TObject);
 begin
     // Change the roster font color.
     pnlRoster.Font.Color := cboRosterFontColor.Selected;
+end;
+
+procedure TfrmPrefs.Label20Click(Sender: TObject);
+begin
+    ShellExecute(Self.Handle, nil, 'rundll32.exe',
+      'shell32.dll,Control_RunDLL mmsys.cpl,,1', nil, SW_SHOW);
 end;
 
 end.
