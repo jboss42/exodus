@@ -343,7 +343,10 @@ begin
     q := TQueuedEvent.Create();
     q.callback := TMethod(Callback);
     q.event := event;
-    q.tag := tag;
+
+    // make sure we make a dup of tag since it's going to go away after
+    // it makes the rounds thru the dispatcher.
+    q.tag := TXMLTag.Create(tag);
     _pauseQueue.Push(q);
 end;
 
