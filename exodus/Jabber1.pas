@@ -120,7 +120,7 @@ type
     mnuBookmark: TMenuItem;
     ImageList2: TImageList;
     mnuExpanded: TMenuItem;
-    Splitter1: TSplitter;
+    SplitterRight: TSplitter;
     N1: TMenuItem;
     N2: TMenuItem;
     timFlasher: TTimer;
@@ -183,6 +183,8 @@ type
     ShowEventsWindow1: TMenuItem;
     presToggle: TMenuItem;
     ImageList3: TImageList;
+    pnlLeft: TPanel;
+    SplitterLeft: TSplitter;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -197,7 +199,7 @@ type
     procedure FormShow(Sender: TObject);
     procedure btnDelPersonClick(Sender: TObject);
     procedure ShowXML1Click(Sender: TObject);
-    procedure Splitter1Moved(Sender: TObject);
+    procedure SplitterRightMoved(Sender: TObject);
     procedure Exit2Click(Sender: TObject);
     procedure timFlasherTimer(Sender: TObject);
     procedure JabberorgWebsite1Click(Sender: TObject);
@@ -242,6 +244,9 @@ type
     procedure ApplicationEvents1Activate(Sender: TObject);
     procedure ApplicationEvents1Deactivate(Sender: TObject);
     procedure TabsChange(Sender: TObject);
+    procedure TabsDragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
+    procedure TabsDragDrop(Sender, Source: TObject; X, Y: Integer);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -501,7 +506,7 @@ uses
 
     About, AutoUpdate, Bookmark, Browser, Chat, ChatController, ChatWin,
     JabberConst, CommCtrl, CustomPres,
-    Debug, Dockable, ExUtils, GetOpt, InputPassword,
+    Debug, Dockable, ExUtils, GetOpt, InputPassword, Invite, 
     Iq, JUD, JabberID, JabberMsg, IdGlobal,
     JoinRoom, Login, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, Profile, RegForm, RemoveContact, RiserWindow, Room,
@@ -556,6 +561,8 @@ var
     cp: TPoint;
 begin
     // this gets fired when the user clicks on the tray icon
+    // manually handle popping up the tray menu..
+    // since the delphi/vcl impl isn't quite right.
     if (Msg.LParam = WM_LBUTTONDBLCLK) then begin
         if (_hidden) then begin
             // restore our app
@@ -628,6 +635,7 @@ var
     cmd : string;
     i : integer;
 begin
+    // We are getting a Windows Msg from the installer
     if (not _shutdown) then begin
         reg := TRegistry.Create();
         reg.RootKey := HKEY_LOCAL_MACHINE;
@@ -688,7 +696,6 @@ var
     exp: boolean;
     profile: TJabberProfile;
     reg: TRegistry;
-
     show_help: boolean;
     debug: boolean;
     minimized: boolean;
@@ -702,12 +709,8 @@ var
     help_msg: string;
     win_ver: string;
     s : string;
-
-    //appbar: TAppBarData;
-    //res: Cardinal;
-
 begin
-    // initialize vars.  wish we were using a 'real' compiler.
+    // initialize vars
 
     {$ifdef TRACE_EXCEPTIONS}
     // Application.OnException := ApplicationException;
@@ -918,20 +921,23 @@ begin
     _sessioncb := MainSession.RegisterCallback(SessionCallback, '/session');
     _msgcb := MainSession.RegisterCallback(MsgCallback, '/packet/message');
 
+    // Initialize the global responders/xpath events
     initResponders();
 
+    // Setup the GUI
     Tabs.ActivePage := tbsRoster;
     restoreToolbar();
-
     exp := MainSession.Prefs.getBool('expanded');
-
     pnlRight.Visible := exp;
-
     restoreEvents(exp);
+
+    // some gui related flags
     _noMoveCheck := false;
     _flash := false;
     _reconnect_tries := 0;
-
+    _hidden := false;
+    _shutdown := false;
+    _close_min := MainSession.prefs.getBool('close_min');
 
     // Setup the IdleUI stuff..
     _is_autoaway := false;
@@ -940,11 +946,9 @@ begin
     _is_broadcast := false;
     _windows_ver := WindowsVersion(win_ver);
     setupAutoAwayTimer();
-    ConfigEmoticons();
 
-    _hidden := false;
-    _shutdown := false;
-    _close_min := MainSession.prefs.getBool('close_min');
+    // Setup emoticons
+    ConfigEmoticons();
 
     // if we don't have sound registry settings, then add them
     // sigh.  If we had an installer, that would be the place to
@@ -984,6 +988,7 @@ begin
 
 end;
 
+{---------------------------------------}
 function TfrmExodus.WMAppBar(dwMessage: DWORD; var pData: TAppBarData): UINT; stdcall;
 begin
     //
@@ -991,7 +996,6 @@ begin
     MoveWindow(Self.Handle, pData.rc.Left, pData.rc.Top,
         Self.Width, Screen.Height, true);
 end;
-
 
 {---------------------------------------}
 procedure TfrmExodus.setupTrayIcon();
@@ -1021,7 +1025,7 @@ begin
     // load up all the plugins..
     InitPlugins();
 
-    // Setup initial startup stuff
+    // Creat and dock the MsgQueue if we're in expanded mode
     if (MainSession.Prefs.getBool('expanded')) then begin
         getMsgQueue();
         frmMsgQueue.ManualDock(Self.pnlRight, nil, alClient);
@@ -1029,6 +1033,9 @@ begin
         frmMsgQueue.Show;
         end;
 
+    // auto-login if enabled, otherwise, show the login window
+    // Note that we use a Windows Msg to do this to show the login
+    // window async since it's a modal dialog.
     with MainSession.Prefs do begin
         if (_auto_login) then begin
             // snag default profile, etc..
@@ -1048,16 +1055,12 @@ procedure TfrmExodus.DoConnect();
 var
     pf: TfrmInputPass;
 begin
-    {
-    Make sure that the active profile
-    has the password field filled out.
-    If not, pop up the password prompt,
-    otherwise, just call connect
-    }
+    // Make sure that the active profile
+    // has the password field filled out.
+    // If not, pop up the password prompt,
+    // otherwise, just call connect
     with MainSession do begin
-
         FireEvent('/session/connecting', nil);
-
         if Password = '' then begin
             pf := TfrmInputPass.Create(Application);
             if (pf.ShowModal) = mrOK then begin
@@ -1074,13 +1077,10 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.setupAutoAwayTimer();
 begin
-    {
-    Setup the auto-away timer
-    Note that for W2k and XP, we are just going to
-    use the special API calls for getting inactivity.
-
-    For other OS's we need to use the wicked nasty DLL
-    }
+    // Setup the auto-away timer
+    // Note that for W2k and XP, we are just going to
+    // use the special API calls for getting inactivity.
+    // For other OS's we need to use the wicked nasty DLL
     DebugMsg(sSetupAutoAway);
     if ((_windows_ver < cWIN_2000) or (_windows_ver = cWIN_ME)) then begin
         // Use the DLL
@@ -1139,7 +1139,7 @@ procedure TfrmExodus.SessionCallback(event: string; tag: TXMLTag);
 var
     msg : TMessage;
 begin
-    // session events
+    // session related events
     if event = '/session/connected' then begin
         timReconnect.Enabled := false;
         _logoff := false;
@@ -1176,12 +1176,14 @@ begin
 
     else if event = '/session/authenticated' then with MainSession do begin
         // Accept files dragged from Explorer
+        // Only do this for normal (non-polling) connections
         if (MainSession.Profile.ConnectionType = conn_normal) then
             DragAcceptFiles(Handle, True);
 
+        // Fetch the roster
         Roster.Fetch;
 
-        // Don't broadcast
+        // Don't broadcast our initial presence
         _is_broadcast := true;
         if (_last_show <> '') then
             MainSession.setPresence(_last_show, _last_status, _last_priority)
@@ -1189,12 +1191,18 @@ begin
             MainSession.setPresence(MainSession.Show, MainSession.Status, MainSession.Priority);
         _is_broadcast := false;
 
+        // Make the roster the active tab
         Tabs.ActivePage := tbsRoster;
+
+        // Activate the menus
         restoreMenus(true);
+
+        // turn on the auto-away timer
         timAutoAway.Enabled := true;
 
         // check for new brand.
         InitUpdateBranding();
+
         // check for new version
         InitAutoUpdate();
         end
@@ -1220,7 +1228,6 @@ begin
         if (_appclosing) then
             PostMessage(Self.Handle, WM_CLOSEAPP, 0, 0)
         else if (not _logoff) then with timReconnect do begin
-
             _last_show := MainSession.Show;
             _last_status := MainSession.Status;
             _last_priority := MainSession.Priority;
@@ -1251,7 +1258,9 @@ begin
         end
 
     else if event = '/session/stream:error' then begin
-        // we got a stream error. This prevents the clients from resource-battling
+        // we got a stream error.
+        // _logoff is set to tell the client to NOT to auto-reconnect
+        // This prevents the clients from resource-battling
         _logoff := true;
         end
 
@@ -1293,22 +1302,17 @@ begin
         setTrayInfo(_tray_tip);
         setTrayIcon(_tray_icon_idx);
 
-        // do other stuff
+        // do gui stuff
         restoreMenus(MainSession.Active);
         restoreToolbar();
         restoreAlpha();
         restoreEvents(MainSession.Prefs.getBool('expanded'));
         if not MainSession.Prefs.getBool('expanded') then
             tbsRoster.TabVisible := false;
-
-        // Unload all prefs, and reinit them.
-        {
-        UnloadPlugins();
-        InitPlugins();
-        }
         end
 
     else if (event = '/session/presence') then begin
+        // Our presence was changed.. reflect that in the tray icon
         if (MainSession.Show = '') then
             SetTrayIcon(1)
         else if (MainSession.Show = 'away') then
@@ -1323,6 +1327,8 @@ begin
         // don't send message on autoaway or auto-return
         if (_is_autoaway or _is_autoxa or _is_broadcast) then exit;
 
+        // Send a windows msg so other copies of Exodus will change their
+        // status to match ours.
         if (not MainSession.Prefs.getBool('presence_message_send')) then exit;
         msg.LParamHi := GetPresenceAtom(MainSession.Show);
         msg.LParamLo := GetPresenceAtom(MainSession.Status);
@@ -1740,17 +1746,44 @@ begin
     // either expand or compress the whole thing
     newval := not MainSession.Prefs.getBool('expanded');
     mnuExpanded.Checked := newval;
-    delta := Self.ClientWidth - tbsRoster.Width + Splitter1.Width;
+
+    // this is how much we're changing
+    if ((pnlLeft.Visible) and (pnlLeft.Width > 0)) then
+        delta := -SplitterRight.Width
+    else
+        delta := Self.ClientWidth - tbsRoster.Width + SplitterLeft.Width;
 
     if newval then begin
         // we are expanded now
+        Tabs.Visible := true;
         Tabs.DockSite := true;
+
+        // the width of the msg queue
         w := MainSession.Prefs.getInt('event_width');
         Self.ClientWidth := Self.ClientWidth + w - delta;
         pnlRight.Visible := true;
         getMsgQueue().ManualDock(pnlRight, nil, alClient);
-        pnlRoster.Width := Self.ClientWidth - w;
         pnlRight.Width := w;
+
+        if (MainSession.Prefs.getBool('roster_messenger')) then begin
+            // dock inside the tabsheet
+            pnlLeft.Width := 0;
+            pnlLeft.Visible := false;
+            SplitterLeft.Visible := false;
+            SplitterRight.Visible := true;
+            pnlRoster.Visible := true;
+            pnlRoster.Width := Self.ClientWidth - w;
+            end
+        else begin
+            // dock outside the tabsheet
+            pnlRoster.Width := 0;
+            pnlRoster.Visible := false;
+            SplitterLeft.Visible := true;
+            SplitterRight.Visible := false;
+            pnlLeft.Visible := true;
+            pnlLeft.Width := Self.ClientWidth - w;
+            end;
+
         getMsgQueue.Align := alClient;
         end
     else begin
@@ -1776,11 +1809,16 @@ begin
             docked.FloatForm;
             end;
 
+        Tabs.Visible := not pnlLeft.Visible;
+        SplitterLeft.Visible := false;
+        SplitterRight.Visible := false;
+
         Self.ClientWidth := Self.ClientWidth - w;
 
         Tabs.DockSite := false;
         Self.Show;
         end;
+
 
     MainSession.Prefs.setBool('expanded', newval);
     MainSession.Prefs.RestorePosition(Self);
@@ -1795,13 +1833,45 @@ var
 begin
     w := MainSession.Prefs.getInt(P_EVENT_WIDTH);
 
-    pnlRoster.align := alLeft;
-    Splitter1.align := alRight;
-    Splitter1.align := alLeft;
+    if (pnlRoster.Visible) then
+        pnlRoster.align := alLeft
+    else
+        pnlLeft.Align := alLeft;
+
     pnlRight.Width := w;
     ew := Self.ClientWidth - w;
     if (ew < 0) then ew := Self.ClientWidth div 2;
-    pnlRoster.Width := ew;
+
+    if (MainSession.Prefs.getBool('roster_messenger')) then begin
+        pnlRoster.Visible := true;
+        SplitterRight.Visible := true;
+        SplitterLeft.Visible := false;
+        pnlLeft.Visible := false;
+        if ((frmRosterWindow <> nil) and (frmRosterWindow.inMessenger = false)) then
+            frmRosterWindow.DockRoster();
+        pnlLeft.Width := 0;
+        pnlRoster.Width := ew;
+        end
+    else begin
+        pnlLeft.Visible := true;
+        SplitterLeft.Visible := true;
+        SplitterRight.Visible := false;
+        pnlRoster.Visible := false;
+        if ((frmRosterWindow <> nil) and (frmRosterWindow.inMessenger)) then
+            frmRosterWindow.DockRoster();
+        pnlRoster.Width := 0;
+        pnlLeft.Width := ew;
+        end;
+
+    if (pnlRoster.Visible) then begin
+        SplitterRight.align := alRight;
+        SplitterRight.align := alLeft;
+        end
+    else begin
+        SplitterLeft.align := alRight;
+        SplitterLeft.Align := alLeft;
+        end;
+
     pnlRight.Visible := true;
     pnlRight.Width := w;
 
@@ -1820,7 +1890,10 @@ begin
     w := pnlRight.Width;
     MainSession.Prefs.setInt('event_width', w);
     pnlRight.Visible := false;
-    pnlRoster.align := alClient;
+    if (pnlRoster.Visible) then
+        pnlRoster.align := alClient
+    else
+        pnlLeft.Align := alLeft;
 end;
 
 {---------------------------------------}
@@ -1831,16 +1904,13 @@ begin
     // Setup the msg queue window based on the prefs
     with MainSession.Prefs do begin
         setBool('expanded', expanded);
-
         if expanded then begin
             Tabs.Docksite := true;
             DockMsgQueue();
-
             tbsRoster.TabVisible := true;
             // make sure the debug window is docked
             activeTab := Tabs.ActivePage.PageIndex;
             DockDebugForm();
-
             Tabs.ActivePage := Tabs.Pages[activeTab];
             end
         else begin
@@ -1849,6 +1919,11 @@ begin
             FloatMsgQueue();
             Tabs.ActivePage := tbsRoster;
             FloatDebugForm();
+
+            if pnlLeft.Visible then
+                pnlLeft.Align := alClient
+            else
+                pnlRoster.Align := alClient;
             end;
         end;
 end;
@@ -1942,7 +2017,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmExodus.Splitter1Moved(Sender: TObject);
+procedure TfrmExodus.SplitterRightMoved(Sender: TObject);
 begin
     // Save the current width
     MainSession.Prefs.setInt('event_width', pnlRight.Width);
@@ -2081,8 +2156,7 @@ begin
     {
     Auto-away mad-ness......
 
-    Get the current idle time, and based
-    on that, "do the right thing".
+    Get the current idle time, and based on that, "do the right thing".
 
     Note that we don't want to set a-away if we're already
     away, XA, or DND.
@@ -2242,7 +2316,7 @@ begin
 
         BUT, the pageindex we need is the "raw" tabindex. Apparently,
         the pagecontrol just makes tabs invisible when something gets
-        undocked.
+        undocked, or somthing equally insane.
         }
         tab := -1;
         v := 0;
@@ -2568,6 +2642,7 @@ end;
 procedure TfrmExodus.TabsDockDrop(Sender: TObject; Source: TDragDockObject; X,
   Y: Integer);
 begin
+    // We got a new form dropped on us.
     if (Source.Control is TfrmDockable) then begin
         TfrmDockable(Source.Control).Docked := true;
         _new_tabindex := Tabs.PageCount;
@@ -2638,6 +2713,7 @@ var
     status: string;
     show: string;
 begin
+    // Is this a replacement defualt windows msg handler??
     m := TMessage(msg);
     if (m.Msg = sExodusPresence) then begin
         if (HWND(m.WParam) = Self.Handle) then exit;
@@ -2712,7 +2788,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.PostModal();
 begin
-    //
+    // make on top if applicable.
     if (MainSession.Prefs.getBool('window_ontop')) then
         SetWindowPos(frmExodus.Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE + SWP_NOMOVE);
 end;
@@ -2728,8 +2804,62 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.TabsChange(Sender: TObject);
 begin
+    // Don't show any notification images on the current tab
     if (Tabs.ActivePage.ImageIndex <> -1) then
         Tabs.ActivePage.ImageIndex := -1;
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.TabsDragOver(Sender, Source: TObject; X, Y: Integer;
+  State: TDragState; var Accept: Boolean);
+var
+    form: TForm;
+    dest_tab: integer;
+begin
+    // drag if the source is the roster,
+    // and the target is a conf room tab
+    Accept := false;
+    dest_tab := Tabs.IndexOfTabAt(X,Y);
+    if (dest_tab > -1) then begin
+        form := getTabForm(Tabs.Pages[dest_tab]);
+        Accept := ((Source = frmRosterWindow.treeRoster) and
+                   ((form is TfrmRoom) or (form is TfrmChat)));
+        end;
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.TabsDragDrop(Sender, Source: TObject; X, Y: Integer);
+var
+    dest_tab: integer;
+    form: TForm;
+    sel_contacts: TList;
+begin
+    // dropping something on a tab.
+    dest_tab := Tabs.IndexOfTabAt(X,Y);
+    if (dest_tab > -1) then begin
+        form := getTabForm(Tabs.Pages[dest_tab]);
+        if (form <> nil) then begin
+            if ((form is TfrmRoom) and (Source = frmRosterWindow.treeRoster)) then begin
+                // fire up an invite for this room using the selected contacts
+                sel_contacts := frmRosterWindow.getSelectedContacts(true);
+                if (sel_contacts.count > 0) then
+                    ShowInvite(TfrmRoom(form).getJid, sel_contacts)
+                else
+                    MessageDlg(sNoContactsSel, mtError, [mbOK], 0);
+                sel_contacts.Free();
+                end
+
+            else if ((form is TfrmChat) and (Source = frmRosterWindow.treeRoster)) then begin
+                // send roster items to this contact.
+                sel_contacts := frmRosterWindow.getSelectedContacts(false);
+                if (sel_contacts.count > 0) then
+                    jabberSendRosterItems(TfrmChat(form).getJid, sel_contacts)
+                else
+                    MessageDlg(sNoContactsSel, mtError, [mbOK], 0);
+                sel_contacts.Free();
+                end;
+            end;
+        end;
 end;
 
 initialization

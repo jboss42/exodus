@@ -24,29 +24,36 @@ uses
     SysUtils, XMLTag;
 
 const
-    XMLNS_AUTH      = 'jabber:iq:auth';
-    XMLNS_ROSTER    = 'jabber:iq:roster';
-    XMLNS_REGISTER  = 'jabber:iq:register';
-    XMLNS_LAST      = 'jabber:iq:last';
-    XMLNS_TIME      = 'jabber:iq:time';
-    XMLNS_VERSION   = 'jabber:iq:version';
-    XMLNS_IQOOB     = 'jabber:iq:oob';
-    XMLNS_BROWSE    = 'jabber:iq:browse';
-    XMLNS_AGENTS    = 'jabber:iq:agents';
-    XMLNS_SEARCH    = 'jabber:iq:search';
-    XMLNS_PRIVATE   = 'jabber:iq:private';
-    XMLNS_BM        = 'storage:bookmarks';
-    XMLNS_PREFS     = 'storage:imprefs';
-    XMLNS_XEVENT    = 'jabber:x:event';
-    XMLNS_DELAY     = 'jabber:x:delay';
-    XMLNS_XROSTER   = 'jabber:x:roster';
-    XMLNS_XCONFERENCE='jabber:x:conference';
-    XMLNS_CONFERENCE= 'jabber:iq:conference';
-    XMLNS_DATA      = 'jabber:x:data';
-    XMLNS_MUC = 'http://jabber.org/protocol/muc';
-    XMLNS_MUCOWNER = 'http://jabber.org/protocol/muc#owner';
-    XMLNS_MUCADMIN = 'http://jabber.org/protocol/muc#admin';
-    XMLNS_MUCUSER = 'http://jabber.org/protocol/muc#user';
+    XMLNS_AUTH       = 'jabber:iq:auth';
+    XMLNS_ROSTER     = 'jabber:iq:roster';
+    XMLNS_REGISTER   = 'jabber:iq:register';
+    XMLNS_LAST       = 'jabber:iq:last';
+    XMLNS_TIME       = 'jabber:iq:time';
+    XMLNS_VERSION    = 'jabber:iq:version';
+    XMLNS_IQOOB      = 'jabber:iq:oob';
+    XMLNS_BROWSE     = 'jabber:iq:browse';
+    XMLNS_AGENTS     = 'jabber:iq:agents';
+    XMLNS_SEARCH     = 'jabber:iq:search';
+    XMLNS_PRIVATE    = 'jabber:iq:private';
+    XMLNS_CONFERENCE = 'jabber:iq:conference';
+
+    XMLNS_BM         = 'storage:bookmarks';
+    XMLNS_PREFS      = 'storage:imprefs';
+
+    XMLNS_XEVENT     = 'jabber:x:event';
+    XMLNS_DELAY      = 'jabber:x:delay';
+    XMLNS_XROSTER    = 'jabber:x:roster';
+    XMLNS_XCONFERENCE= 'jabber:x:conference';
+    XMLNS_XDATA      = 'jabber:x:data';
+
+    XMLNS_MUC        = 'http://jabber.org/protocol/muc';
+    XMLNS_MUCOWNER   = 'http://jabber.org/protocol/muc#owner';
+    XMLNS_MUCADMIN   = 'http://jabber.org/protocol/muc#admin';
+    XMLNS_MUCUSER    = 'http://jabber.org/protocol/muc#user';
+
+    XMLNS_DISCO      = 'http://jabber.org/protocol/disco';
+    XMLNS_DISCOITEMS = 'http://jabber.org/protocol/disco#items';
+    XMLNS_DISCOINFO  = 'http://jabber.org/protocol/disco#info';
 
 var
     XP_MSGXDATA: TXPLite;
@@ -61,7 +68,7 @@ var
 implementation
 
 initialization
-    XP_MSGXDATA := TXPLite.Create('/message/x[@xmlns="' + XMLNS_DATA + '"]');
+    XP_MSGXDATA := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XDATA + '"]');
     XP_MUCINVITE := TXPLite.Create('/message/x[@xmlns="' + XMLNS_MUCUSER + '"]');
     XP_CONFINVITE := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XCONFERENCE + '"]');
     XP_JCFINVITE := TXPLite.Create('/message/x[@xmlns="jabber:x:invite"]');

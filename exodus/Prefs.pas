@@ -200,6 +200,7 @@ type
     btnUpdateCheck: TButton;
     Label17: TLabel;
     cboInviteOptions: TComboBox;
+    chkMessenger: TCheckBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -329,6 +330,7 @@ begin
         cboInlineStatus.Enabled := chkInlineStatus.Checked;
         chkHideBlocked.Checked := getBool('roster_hide_block');
         chkPresErrors.Checked := getBool('roster_pres_errors');
+        chkMessenger.Checked := getBool('roster_messenger');
 
         if (getBool('roster_chat')) then
             optDblClick.ItemIndex := 0
@@ -505,6 +507,7 @@ begin
         setInt('inline_color', integer(cboInlineStatus.Selected));
         setBool('roster_chat', (optDBlClick.ItemIndex = 0));
         setBool('roster_pres_errors', chkPresErrors.Checked);
+        setBool('roster_messenger', chkMessenger.Checked);
 
         // S10n prefs
         setInt('s10n_auto_accept', optIncomingS10n.ItemIndex);

@@ -76,7 +76,6 @@ var
     dot : TButton;
 begin
     // take a x-data field tag and do the right thing
-    dot := nil;
     Self.BorderWidth := 1;
     AssignDefaultFont(Self.Font);
 
@@ -85,6 +84,7 @@ begin
     req := tag.TagExists('required');
     value := tag.GetBasicText('value');
     Self.Hint := tag.GetBasicText('desc');
+
     if (req) then begin
        if (Self.Hint = '') then
           Self.Hint := sRequired
@@ -155,8 +155,6 @@ begin
         with TTntCombobox(c) do begin
             Style := csDropDownList;
             Align := alClient;
-            //Width := Self.ClientWidth - 0 - lblLabel.Width;
-            //Anchors := [akLeft, akTop, akRight];
             for i := 0 to opts.Count - 1 do begin
                 Items.Add(opts[i].GetAttribute('label'));
                 opts_vals.Add(opts[i].GetBasicText('value'));
@@ -215,12 +213,10 @@ begin
         c.Width := Self.ClientWidth - lblLabel.Width - dot.Width - 10;
         end
     else begin  // 'text-single', 'text-private', or unknown
-        lblLabel.Layout := tlTop;
+        lblLabel.Layout := tlCenter;
         c := TTntEdit.Create(Self);
         with TTntEdit(c) do begin
             Text := value;
-            //Width := Self.ClientWidth - 5 - lblLabel.Width;
-            //Anchors := [akLeft, akTop, akRight];
             Align := alClient;
             if (t = 'text-private') then
                 PasswordChar := '*';
@@ -233,10 +229,6 @@ begin
         c.Left := lblLabel.Width + 5;
         c.Top := 1;
         Self.ClientHeight := c.Height + (2 * Self.BorderWidth);
-        end;
-
-    // This sucks... but its a chicken-egg problem
-    if (dot <> nil) then begin
         end;
 
     fld_type := t;
@@ -339,6 +331,7 @@ begin
     frmExodus.PostModal();
 end;
 
+{---------------------------------------}
 procedure TframeGeneric.FrameResize(Sender: TObject);
 begin
     if (c = lblLabel) then with TTntLabel(c) do begin
@@ -347,6 +340,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 function TframeGeneric.getLabelWidth: integer;
 var
     p : TForm;
@@ -359,6 +353,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TframeGeneric.setLabelWidth(val: integer);
 begin
     if ((lblLabel.Width <> 0) and (lblLabel <> c)) then

@@ -22,10 +22,13 @@ unit RegForm;
 interface
 
 uses
-    XMLTag, IQ, Agents, Presence,
+    XMLTag, IQ, Agents, Presence, fGeneric,
     fLeftLabel,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     StdCtrls, ComCtrls, ExtCtrls;
+
+type
+    RegFormStage = (rsWelcome, rsForm, rsXData, rsRegister, rsFinish, rsDone);
 
 type
   TfrmRegister = class(TForm)
@@ -52,15 +55,16 @@ type
     procedure btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnDeleteClick(Sender: TObject);
+    procedure btnPrevClick(Sender: TObject);
   private
     { Private declarations }
     cur_iq: TJabberIQ;
-    cur_stage: integer;
+    cur_stage: RegFormStage;
     cur_key: string;
     pres_cb: integer;
     function doField(fld: string): TfrmField;
   published
-    procedure AgentCallback(event: string; tag: TXMLTag);
+    procedure GetCallback(event: string; tag: TXMLTag);
     procedure doRegister();
     procedure RegCallback(event: string; tag: TXMLTag);
     procedure PresCallback(event: string; tag: TXMLTag; pres: TJabberPres);
@@ -85,13 +89,6 @@ const
     reg_Misc = 8;
     reg_URL = 9;
 
-    regStage_Welcome = 0;
-    regStage_Form = 1;
-    regStage_Register = 2;
-    regStage_Finish = 3;
-
-    regStage_Done = 100;
-
 resourcestring
     sBtnFinish = 'Finish';
     sBtnCancel = 'Cancel';
@@ -109,7 +106,7 @@ var
 implementation
 {$R *.DFM}
 uses
-    JabberConst, Transports, S10n, Roster, Session;
+    Math, JabberConst, Transports, S10n, Roster, Session, ExUtils;
 
 {---------------------------------------}
 procedure TfrmRegister.FormCreate(Sender: TObject);
@@ -120,7 +117,7 @@ begin
     tabResult.TabVisible := false;
     tabWait.TabVisible := false;
 
-    cur_stage := regStage_Welcome;
+    cur_stage := rsWelcome;
     Tabs.ActivePage := tabWelcome;
     cur_iq := nil;
     cur_key := '';
@@ -136,7 +133,7 @@ begin
     btnNext.Enabled := false;
     btnCancel.Enabled := true;
     Self.Show();
-    cur_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), AgentCallback, 4);
+    cur_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), GetCallback, 4);
     with cur_iq do begin
         toJid := self.jid;
         iqType := 'get';
@@ -146,12 +143,16 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRegister.AgentCallback(event: string; tag: TXMLTag);
+procedure TfrmRegister.GetCallback(event: string; tag: TXMLTag);
 var
     i: integer;
-    f, ag_tag: TXMLTag;
+    m: integer;
+    x, f, ag_tag: TXMLTag;
     flds: TXMLTagList;
     cur_fld: TfrmField;
+    frm: TframeGeneric;
+    c: TControl;
+    ftype: WideString;
 begin
     // we got back a response to the iq-get, on the register namespace
     cur_iq := nil;
@@ -164,28 +165,67 @@ begin
             end
         else begin
             // normal result
+            AssignDefaultFont(tabAgent.Font);
             btnDelete.Enabled := false;
             ag_tag := tag.QueryXPTag('/iq/query');
-            flds := ag_tag.ChildTags();
-            for i := 0 to flds.count - 1 do begin
-                f := flds[i];
-                if (f.Name = 'instructions') then
-                    lblIns.Caption := f.Data
-                else if (f.Name = 'key') then
-                    cur_key := f.Data
-                else if (f.Name = 'registered') then
-                    btnDelete.Enabled := true
-                else if (f.Name = 'x') then
-                     // TODO: jabber:x:data
-                else begin
-                    cur_fld := doField(f.Name);
-                    if (f.Data <> '') then
-                        cur_fld.txtData.Text := f.Data;
-                    end;
-                end;
-            flds.Free();
 
-            cur_stage := regStage_Form;
+            x := tag.QueryXPTag('/iq/query/x[@xmlns="' + XMLNS_XDATA + '"]');
+            if (x <> nil) then begin
+                // XData reg form
+                m := 0;
+
+                f := x.GetFirstTag('instructions');
+                if (f <> nil) then
+                    lblIns.Caption := f.Data();
+
+                ftype := x.GetAttribute('type');
+                flds := x.QueryTags('field');
+                for i := flds.count - 1 downto 0 do begin
+                    frm := TframeGeneric.Create(Self);
+                    frm.FormType := ftype;
+                    frm.Name := 'xDataFrame' + IntToStr(i);
+                    frm.Parent := tabAgent;
+                    frm.Visible := true;
+                    frm.render(flds[i]);
+                    frm.Align := alTop;
+                    frm.TabOrder := 0;
+                    m := max(m, frm.getLabelWidth());
+                    end;
+                flds.Free();
+
+                for i := 0 to Self.tabAgent.ControlCount - 1 do begin
+                    c := Self.tabAgent.Controls[i];
+                    if (c is TframeGeneric) then begin
+                        TframeGeneric(c).setLabelWidth(m + 20);
+                        TframeGeneric(c).Repaint();
+                        end;
+                    end;
+                cur_stage := rsXData;
+                end
+
+            else begin
+                // Normal non-xdata reg form
+                flds := ag_tag.ChildTags();
+                for i := 0 to flds.count - 1 do begin
+                    f := flds[i];
+                    if (f.Name = 'instructions') then
+                        lblIns.Caption := f.Data
+                    else if (f.Name = 'key') then
+                        cur_key := f.Data
+                    else if (f.Name = 'registered') then
+                        btnDelete.Enabled := true
+                    else if ((f.Name = 'x') and (f.GetAttribute('xmlns') = XMLNS_XDATA)) then
+                         // ignore x-data fields here
+                    else begin
+                        cur_fld := doField(f.Name);
+                        if (f.Data <> '') then
+                            cur_fld.txtData.Text := f.Data;
+                        end;
+                    end;
+                flds.Free();
+                cur_stage := rsForm;
+                end;
+
             btnNext.Enabled := true;
             end;
         end
@@ -222,7 +262,8 @@ procedure TfrmRegister.doRegister();
 var
     i: integer;
     frm: TfrmField;
-    t: TXMLTag;
+    frmx: TframeGeneric;
+    fx, xdata, t: TXMLTag;
 begin
     // send the iq-set
     // get pres packets
@@ -232,18 +273,34 @@ begin
     cur_iq.toJID := self.jid;
     cur_iq.Namespace := XMLNS_REGISTER;
 
+    xdata := nil;
+
     for i := 0 to tabAgent.ControlCount - 1 do begin
-        if tabAgent.Controls[i] is TfrmField then begin
+        if (tabAgent.Controls[i] is TfrmField) then begin
+            // non x-data field
             frm := TfrmField(tabAgent.Controls[i]);
             with frm do
                 cur_iq.qTag.AddBasicTag(lblPrompt.Caption, txtData.Text);
+
+            end
+        else if (tabAgent.Controls[i] is TframeGeneric) then begin
+            // this is an x-data field
+            frmx := TframeGeneric(tabAgent.Controls[i]);
+            if (xdata = nil) then begin
+                xdata := cur_iq.qTag.AddTag('x');
+                xdata.PutAttribute('xmns', XMLNS_XDATA);
+                xdata.PutAttribute('type', 'submit');
+                end;
+
+            fx := frmx.getXML();
+            if (fx <> nil) then xdata.AddTag(fx);
             end;
         end;
 
     if (cur_key <> '') then
         cur_iq.qTag.AddBasicTag('key', cur_key);
 
-    cur_stage := regStage_Register;
+    cur_stage := rsRegister;
 
     t := TXMLTag.Create('transport');
     t.PutAttribute('jid', cur_iq.toJid);
@@ -311,6 +368,7 @@ begin
         btnNext.Enabled := true;
         btnCancel.Enabled := false;
         end;
+    cur_stage := rsFinish;
 end;
 
 {---------------------------------------}
@@ -328,9 +386,8 @@ begin
         btnPrev.Enabled := false;
         end
 
-    else if (Tabs.ActivePage = tabResult) then begin
+    else if (tabs.ActivePage = tabResult) then
         Self.Close();
-        end;
 end;
 
 {---------------------------------------}
@@ -376,6 +433,12 @@ procedure TfrmRegister.btnDeleteClick(Sender: TObject);
 begin
     RemoveTransport(jid);
     Self.Close();
+end;
+
+procedure TfrmRegister.btnPrevClick(Sender: TObject);
+begin
+    // previous page
+
 end;
 
 end.

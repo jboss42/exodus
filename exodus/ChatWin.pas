@@ -114,6 +114,8 @@ type
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
     procedure DockForm; override;
     procedure FloatForm; override;
+
+    property getJid: Widestring read jid;
   end;
 
 var
