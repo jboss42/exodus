@@ -1,6 +1,6 @@
 object frmRosterWindow: TfrmRosterWindow
-  Left = 290
-  Top = 261
+  Left = 250
+  Top = 146
   Width = 195
   Height = 446
   AlphaBlendValue = 220
@@ -232,15 +232,15 @@ object frmRosterWindow: TfrmRosterWindow
     Left = 8
     Top = 208
     object popChat: TMenuItem
-      Caption = 'Chat'
+      Caption = 'Chat...'
       OnClick = popChatClick
     end
     object popMsg: TMenuItem
-      Caption = 'Message'
+      Caption = 'Message...'
       OnClick = popMsgClick
     end
     object popSendFile: TMenuItem
-      Caption = 'Send File'
+      Caption = 'Send File...'
       OnClick = popSendFileClick
     end
     object InvitetoConference1: TMenuItem
@@ -250,6 +250,10 @@ object frmRosterWindow: TfrmRosterWindow
     object popSendContacts: TMenuItem
       Caption = 'Send Contact To...'
       OnClick = popSendContactsClick
+    end
+    object NetMeetingCall1: TMenuItem
+      Caption = 'NetMeeting Call'
+      Visible = False
     end
     object popClientInfo: TMenuItem
       Caption = 'Client Info'
@@ -285,7 +289,7 @@ object frmRosterWindow: TfrmRosterWindow
       end
     end
     object popRename: TMenuItem
-      Caption = 'Rename'
+      Caption = 'Rename...'
       OnClick = popRenameClick
     end
     object popHistory: TMenuItem
@@ -305,7 +309,7 @@ object frmRosterWindow: TfrmRosterWindow
       OnClick = popRemoveClick
     end
     object popProperties: TMenuItem
-      Caption = 'Properties'
+      Caption = 'Properties...'
       ShortCut = 121
       OnClick = popPropertiesClick
     end
@@ -585,7 +589,8 @@ object frmRosterWindow: TfrmRosterWindow
       Caption = '-'
     end
     object popTransProperties: TMenuItem
-      Caption = 'Properties'
+      Caption = 'Rename ...'
+      OnClick = popRenameClick
     end
     object popTransUnRegister: TMenuItem
       Caption = 'Remove'

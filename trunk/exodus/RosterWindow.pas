@@ -97,6 +97,7 @@ type
     lblStatusLink: TLabel;
     imgAd: TImage;
     popRename: TMenuItem;
+    NetMeetingCall1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -236,6 +237,8 @@ resourcestring
 
     sBtnBlock = 'Block';
     sBtnUnBlock = 'UnBlock';
+
+    sNetMeetingConnError = 'Your connection type does not support direct connections.';
 
 
 implementation
@@ -1032,7 +1035,9 @@ begin
         cur_node.Data := ritem;
 
         // setup the image
-        if (is_blocked) then
+        if ((is_blocked) and (p = nil))then
+            cur_node.ImageIndex := ico_blockoffline
+        else if (is_blocked) then
             cur_node.ImageIndex := ico_blocked
         else if (ritem.ask = 'subscribe') then
             cur_node.ImageIndex := ico_Unknown
@@ -2197,6 +2202,48 @@ begin
             Compare := +1;
     end;
 end;
+
+{---------------------------------------}
+{
+procedure TfrmRosterWindow.NetMeetingCall1Click(Sender: TObject);
+var
+    node: TTreeNode;
+    my_ip: string;
+    q, iq: TXMLTag;
+    jid: TJabberID;
+begin
+    // launch netmeeting...
+    // and send an iq-oob callto:
+    node := treeRoster.Selected;
+    if node = nil then exit;
+    if node.Data = nil then exit;
+
+    if (TObject(node.Data) is TJabberRosterItem) then begin
+
+        // TODO: make sure netmeeting is running locally.
+
+        jid := TJabberRosterItem(node.Data).jid;
+
+        my_ip := MainSession.Stream.LocalIP;
+        if (my_ip = '') then begin
+            MessageDlg(sNetMeetingConnError, mtError, [mbOK], 0);
+            exit;
+        end;
+
+        iq := TXMLTag.Create('iq');
+        iq.setAttribute('to', jid.full);
+        iq.setAttribute('type', 'set');
+
+        q := iq.AddTag('query');
+        q.setAttribute('xmlns', 'jabber:iq:oob');
+
+        q.AddBasicTag('url', 'callto:' + my_ip + '+type=ip');
+        q.AddBasicTag('desc', 'Netmeeting compatible call');
+
+        MainSession.SendTag(iq);
+    end;
+end;
+}
 
 initialization
     frmRosterWindow := nil;
