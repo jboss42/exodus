@@ -12,7 +12,7 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 6/16/2003 12:28:25 PM from Type Library described below.
+// File generated on 6/16/2003 12:32:55 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\Program Files\Exodus\Exodus.exe (1)
@@ -23,7 +23,7 @@ unit ExodusCOM_TLB;
 // DepndLst: 
 //   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
 // Parent TypeLibrary:
-//   (0) v1.0 ExRosterTools, (D:\src\exodus\exodus\plugins\RosterTools\ExRosterTools.tlb)
+//   (0) v1.0 RosterTools, (D:\src\exodus\exodus\plugins\RosterTools\ExRosterTools.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
