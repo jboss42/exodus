@@ -39,6 +39,7 @@ uses
     RegForm,
     Session;
 
+{---------------------------------------}
 procedure TRegController.SetSession(s: TObject);
 var
     js: TJabberSession;
@@ -49,6 +50,7 @@ begin
     _cb := js.RegisterCallback(Callback, '/session/register');
 end;
 
+{---------------------------------------}
 procedure TRegController.Callback(event: string; tag: TXMLTag);
 var
     f: TfrmRegister;
