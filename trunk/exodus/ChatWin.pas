@@ -49,6 +49,7 @@ type
     lblJID: TStaticText;
     lblNick: TStaticText;
     imgStatus: TPaintBox;
+    popClearHistory: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -69,6 +70,7 @@ type
     procedure mnuOnTopClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
+    procedure popClearHistoryClick(Sender: TObject);
   private
     { Private declarations }
     jid: string;            // jid of the person we are talking to
@@ -835,6 +837,12 @@ procedure TfrmChat.btnCloseClick(Sender: TObject);
 begin
   inherited;
     Self.Close();
+end;
+
+procedure TfrmChat.popClearHistoryClick(Sender: TObject);
+begin
+    inherited;
+    ClearLog(Self._jid.jid)
 end;
 
 end.

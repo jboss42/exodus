@@ -10,9 +10,9 @@ inherited frmChat: TfrmChat
   TextHeight = 13
   inherited Panel3: TPanel
     Top = 24
-    Height = 226
+    Height = 231
     inherited MsgList: TExRichEdit
-      Height = 218
+      Height = 223
       PlainRTF = True
     end
   end
@@ -103,6 +103,10 @@ inherited frmChat: TfrmChat
     object mnuHistory: TMenuItem
       Caption = 'Show History'
       OnClick = doHistory
+    end
+    object popClearHistory: TMenuItem
+      Caption = 'Clear History'
+      OnClick = popClearHistoryClick
     end
     object mnuProfile: TMenuItem
       Caption = 'Show Profile'
