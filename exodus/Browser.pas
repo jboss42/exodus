@@ -119,6 +119,7 @@ end;
     procedure vwBrowseColumnClick(Sender: TObject; Column: TListColumn);
     procedure FormDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
+    procedure popContextPopup(Sender: TObject);
   private
     { Private declarations }
     _cur: integer;
@@ -135,6 +136,7 @@ end;
     procedure PushJID(jid: string);
     procedure StartBar();
     procedure StopBar();
+    procedure ContextMenu(enabled: boolean);
     procedure getBrowseProps(tag: TXMLTag; var title: string; var image_index: integer);
 
     function ShowError(Tag: TXMLTag): boolean;
@@ -582,14 +584,35 @@ begin
     PushJID(cboJID.Text);
 end;
 
+procedure TfrmBrowse.ContextMenu(enabled: boolean);
+begin
+    mBrowse.Enabled := enabled;
+    mBrowseNew.Enabled := enabled;
+    mBookmark.Enabled := enabled;
+
+    mVCard.Enabled := enabled;
+    mVersion.Enabled := enabled;
+    mTime.Enabled := enabled;
+    mLast.Enabled := enabled;
+    mSearch.Enabled := enabled;
+    mRegister.Enabled := enabled;
+    mJoinConf.Enabled := enabled;
+end;
+
 {---------------------------------------}
 procedure TfrmBrowse.vwBrowseChange(Sender: TObject; Item: TListItem;
   Change: TItemChange);
 var
     b: TBrowseItem;
+
 begin
     // The selection has changed from one item to another
-    if Item = nil then exit;
+    if Item = nil then begin
+        ContextMenu(false);
+        exit;
+    end;
+
+    ContextMenu(true);
 
     b := TBrowseItem(_blist[Item.Index]);
     with b.nslist do begin
@@ -918,6 +941,14 @@ procedure TfrmBrowse.FormDragOver(Sender, Source: TObject; X, Y: Integer;
 begin
   inherited;
     btnClose.Visible := Docked;
+end;
+
+procedure TfrmBrowse.popContextPopup(Sender: TObject);
+begin
+  inherited;
+    // Check for valid actions..
+    if (vwBrowse.Selected = nil) then
+        ContextMenu(false);
 end;
 
 initialization
