@@ -6419,7 +6419,7 @@ msgstr "Nov vzdevek: "
 
 #: RosterWindow.pas:2968
 msgid "Reconnect in %d seconds."
-msgstr "Povezava čez %s sekund."
+msgstr "Povezava čez %d sekund."
 
 #: SendStatus.pas:369
 msgid "Waiting for connection..."
