@@ -21,14 +21,13 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 89
     Height = 340
-    VertScrollBar.Position = 300
     Align = alLeft
     Color = clWindow
     ParentColor = False
     TabOrder = 0
     object imgDialog: TImage
       Left = 0
-      Top = -88
+      Top = 212
       Width = 68
       Height = 40
       Align = alTop
@@ -152,7 +151,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblDialog: TLabel
       Left = 0
-      Top = -48
+      Top = 252
       Width = 68
       Height = 13
       Align = alTop
@@ -163,7 +162,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgFonts: TImage
       Left = 0
-      Top = -194
+      Top = 106
       Width = 68
       Height = 40
       Align = alTop
@@ -405,7 +404,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblFonts: TLabel
       Left = 0
-      Top = -154
+      Top = 146
       Width = 68
       Height = 13
       Align = alTop
@@ -416,7 +415,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgS10n: TImage
       Left = 0
-      Top = -247
+      Top = 53
       Width = 68
       Height = 40
       Align = alTop
@@ -659,7 +658,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblS10n: TLabel
       Left = 0
-      Top = -207
+      Top = 93
       Width = 68
       Height = 13
       Align = alTop
@@ -671,7 +670,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgRoster: TImage
       Left = 0
-      Top = -300
+      Top = 0
       Width = 68
       Height = 40
       Align = alTop
@@ -795,7 +794,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblRoster: TLabel
       Left = 0
-      Top = -260
+      Top = 40
       Width = 68
       Height = 13
       Align = alTop
@@ -814,7 +813,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgSystem: TImage
       Left = 0
-      Top = -141
+      Top = 159
       Width = 68
       Height = 40
       Align = alTop
@@ -1056,7 +1055,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblSystem: TLabel
       Left = 0
-      Top = -101
+      Top = 199
       Width = 68
       Height = 13
       Align = alTop
@@ -1067,7 +1066,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgNotify: TImage
       Left = 0
-      Top = -35
+      Top = 265
       Width = 68
       Height = 40
       Align = alTop
@@ -1191,7 +1190,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblNotify: TLabel
       Left = 0
-      Top = 5
+      Top = 305
       Width = 68
       Height = 13
       Align = alTop
@@ -1202,7 +1201,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgAway: TImage
       Left = 0
-      Top = 71
+      Top = 371
       Width = 68
       Height = 40
       Align = alTop
@@ -1237,7 +1236,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblAway: TLabel
       Left = 0
-      Top = 111
+      Top = 411
       Width = 68
       Height = 13
       Align = alTop
@@ -1248,7 +1247,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgKeywords: TImage
       Left = 0
-      Top = 124
+      Top = 424
       Width = 68
       Height = 40
       Align = alTop
@@ -1283,7 +1282,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblKeywords: TLabel
       Left = 0
-      Top = 164
+      Top = 464
       Width = 68
       Height = 13
       Align = alTop
@@ -1294,7 +1293,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgBlockList: TImage
       Left = 0
-      Top = 177
+      Top = 477
       Width = 68
       Height = 40
       Align = alTop
@@ -1329,7 +1328,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblBlockList: TLabel
       Left = 0
-      Top = 217
+      Top = 517
       Width = 68
       Height = 13
       Align = alTop
@@ -1340,7 +1339,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgCustompres: TImage
       Left = 0
-      Top = 230
+      Top = 530
       Width = 68
       Height = 40
       Align = alTop
@@ -1375,7 +1374,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblCustomPres: TLabel
       Left = 0
-      Top = 270
+      Top = 570
       Width = 68
       Height = 13
       Align = alTop
@@ -1386,7 +1385,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgMessages: TImage
       Left = 0
-      Top = 18
+      Top = 318
       Width = 68
       Height = 40
       Align = alTop
@@ -1421,7 +1420,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblMessages: TLabel
       Left = 0
-      Top = 58
+      Top = 358
       Width = 68
       Height = 13
       Align = alTop
@@ -1432,7 +1431,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgPlugins: TImage
       Left = 0
-      Top = 283
+      Top = 583
       Width = 68
       Height = 40
       Align = alTop
@@ -1556,7 +1555,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblPlugins: TLabel
       Left = 0
-      Top = 323
+      Top = 623
       Width = 68
       Height = 13
       Align = alTop
@@ -1571,12 +1570,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 340
-    ActivePage = tbsMessages
+    ActivePage = tbsRoster
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 5
+    TabIndex = 0
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -2583,7 +2582,7 @@ object frmPrefs: TfrmPrefs
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 363
+        Width = 352
         Height = 26
         Align = alTop
         Caption = 
@@ -2594,7 +2593,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 146
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2819,7 +2818,7 @@ object frmPrefs: TfrmPrefs
       object Label6: TLabel
         Left = 0
         Top = 20
-        Width = 363
+        Width = 335
         Height = 26
         Align = alTop
         Caption = 
@@ -2830,7 +2829,7 @@ object frmPrefs: TfrmPrefs
       object StaticText12: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 51
         Height = 20
         Align = alTop
         Alignment = taCenter
