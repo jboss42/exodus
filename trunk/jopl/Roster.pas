@@ -47,6 +47,7 @@ type
         _groups: TWidestringlist;
         _unfiled: TJabberGroup;
         _pres_cb: integer;
+        _xdb_bm: boolean;
 
         procedure ParseFullRoster(event: string; tag: TXMLTag);
         procedure Callback(event: string; tag: TXMLTag);
@@ -134,6 +135,7 @@ begin
     Bookmarks := TWideStringList.Create();
     _groups := TWidestringlist.Create();
     _unfiled := TJabberGroup.Create('Unfiled');
+    _xdb_bm := true;
 end;
 
 {---------------------------------------}
@@ -212,11 +214,12 @@ procedure TJabberRoster.bmCallback(event: string; tag: TXMLTag);
 var
     bms: TXMLTagList;
     i, idx: integer;
-    stag: TXMLTag;
+    p, stag: TXMLTag;
     bm: TJabberBookmark;
     jid: string;
 begin
     // get all of the bm's
+    bms := nil;
     if ((event = 'xml') and (tag.getAttribute('type') = 'result')) then begin
         // we got a response..
         {
@@ -228,28 +231,37 @@ begin
                 </storage>
         </query></iq>
         }
-
         stag := tag.QueryXPTag('/iq/query/storage');
-        if (stag <> nil) then begin
+        if (stag <> nil) then
             bms := stag.ChildTags();
-            for i := 0 to bms.count -1  do begin
-                jid := WideLowerCase(bms[i].GetAttribute('jid'));
-                idx := Bookmarks.IndexOf(jid);
-                if (idx >= 0) then begin
-                    // remove the existing bm
-                    TJabberBookmark(Bookmarks.Objects[idx]).Free;
-                    Bookmarks.Delete(idx);
-                end;
-                bm := TJabberBookmark.Create(bms[i]);
-                Bookmarks.AddObject(jid, bm);
-                checkGroup(sGrpBookmarks);
-            end;
-
-            for i := 0 to Bookmarks.Count - 1 do
-                FireBookmark(TJabberBookmark(Bookmarks.Objects[i]));
-            bms.Free();
-        end;
+    end
+    else if ((event = 'xml') and (tag.getAttribute('type') = 'error')) then begin
+        // XDB prolly doesn't support remote storage. Get bm's from prefs
+        _xdb_bm := false;
+        p := MainSession.Prefs.getXMLTag('local-bookmarks');
+        if (p <> nil) then
+            bms := p.ChildTags();
     end;
+
+    if (bms <> nil) then begin
+        for i := 0 to bms.count -1  do begin
+            jid := WideLowerCase(bms[i].GetAttribute('jid'));
+            idx := Bookmarks.IndexOf(jid);
+            if (idx >= 0) then begin
+                // remove the existing bm
+                TJabberBookmark(Bookmarks.Objects[idx]).Free;
+                Bookmarks.Delete(idx);
+            end;
+            bm := TJabberBookmark.Create(bms[i]);
+            Bookmarks.AddObject(jid, bm);
+            checkGroup(sGrpBookmarks);
+        end;
+
+        for i := 0 to Bookmarks.Count - 1 do
+            FireBookmark(TJabberBookmark(Bookmarks.Objects[i]));
+        bms.Free();
+    end;
+
 end;
 
 {---------------------------------------}
@@ -262,19 +274,34 @@ begin
     // save bookmarks to jabber:iq:private
     s := TJabberSession(_js);
 
-    iq := TXMLTag.Create('iq');
-    with iq do begin
-        setAttribute('type', 'set');
-        setAttribute('id', s.generateID());
-        with AddTag('query') do begin
-            setAttribute('xmlns', XMLNS_PRIVATE);
-            stag := AddTag('storage');
-            stag.setAttribute('xmlns', XMLNS_BM);
-            for i := 0 to Bookmarks.Count - 1 do
-                TJabberBookmark(Bookmarks.Objects[i]).AddToTag(stag);
+    if (_xdb_bm) then begin
+        iq := TXMLTag.Create('iq');
+        with iq do begin
+            setAttribute('type', 'set');
+            setAttribute('id', s.generateID());
+            with AddTag('query') do begin
+                setAttribute('xmlns', XMLNS_PRIVATE);
+                stag := AddTag('storage');
+                stag.setAttribute('xmlns', XMLNS_BM);
+                for i := 0 to Bookmarks.Count - 1 do
+                    TJabberBookmark(Bookmarks.Objects[i]).AddToTag(stag);
+            end;
         end;
+        s.SendTag(iq);
+    end
+    else begin
+        // bookmarks from prefs
+        MainSession.Prefs.BeginUpdate();
+        stag := MainSession.Prefs.getXMLTag('local-bookmarks');
+        if (stag = nil) then begin
+            MainSession.Prefs.setString('local-bookmarks', '');
+            stag := MainSession.Prefs.getXMLTag('local-bookmarks');
+        end;
+        assert(stag <> nil);
+        for i := 0 to Bookmarks.Count - 1 do
+            TJabberBookmark(Bookmarks.Objects[i]).AddToTag(stag);
+        MainSession.Prefs.EndUpdate();
     end;
-    s.SendTag(iq);
 end;
 
 {---------------------------------------}
