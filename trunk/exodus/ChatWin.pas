@@ -50,7 +50,6 @@ type
     imgStatus: TPaintBox;
     popClearHistory: TMenuItem;
     lblNick: TTntLabel;
-    timMemory: TTimer;
     mnuWordwrap: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -74,7 +73,7 @@ type
     procedure btnCloseClick(Sender: TObject);
     procedure popClearHistoryClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
-    procedure timMemoryTimer(Sender: TObject);
+    // procedure timMemoryTimer(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure mnuWordwrapClick(Sender: TObject);
@@ -153,7 +152,7 @@ uses
     JabberConst, ExUtils, Presence, PrefController, Room,
     Transfer, RosterAdd, RiserWindow, Notify,
     Jabber1, Profile, MsgDisplay, IQ,
-    JabberMsg, Roster, Session, XMLUtils,
+    JabberMsg, Roster, Session, Unicode, XMLUtils,
     ShellAPI, RosterWindow, Emoticons;
 
 {---------------------------------------}
@@ -168,6 +167,7 @@ var
     cjid: widestring;
     ritem: TJabberRosterItem;
     new_chat: boolean;
+    hist: string;
 begin
     // either show an existing chat or start one.
     chat := MainSession.ChatList.FindChat(sjid, resource, '');
@@ -205,6 +205,16 @@ begin
         win := TfrmChat.Create(Application);
         chat.window := win;
         win.chat_object := chat;
+        hist := TrimRight(chat.getHistory());
+        if (hist <> '') then with win.MsgList do begin
+            // repopulate history..
+            InputFormat := ifRTF;
+            RTFSelText := hist;
+            InputFormat := ifUnicode;
+
+            // always remove the last line..
+            Lines.Delete(Lines.Count - 1);
+        end;
     end;
 
     // Setup the properties of the window,
@@ -320,7 +330,6 @@ begin
     mnuWordwrap.Checked := _wrap_input;
     MsgOut.WantReturns := _embed_returns;
     MsgOut.WordWrap := _wrap_input;
-    timMemory.Interval := MainSession.Prefs.getInt('chat_memory') * 60 * 1000;
 end;
 
 
@@ -588,6 +597,11 @@ begin
         DisplayPresence(sDisconnected, MsgList);
         MainSession.UnRegisterCallback(_pcallback);
         _pcallback := -1;
+
+        // this should make sure that hidden windows
+        // just go away when we get disconnected.
+        if (not Visible) then
+            Self.Free();
     end
     else if (event = '/session/connected') then begin
         Self.SetJID(jid);
@@ -1040,11 +1054,21 @@ end;
 
 {---------------------------------------}
 procedure TfrmChat.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+var
+    s: String;
 begin
-    if (timMemory.Interval > 0) then begin
+    if ((MainSession.Prefs.getInt('chat_memory') > 0) and
+        (MsgList.Lines.Count > 0)) then begin
+        MsgList.SelectAll();
+        s := MsgList.RTFSelText;
+        chat_object.SetHistory(s);
+        chat_object.unassignEvent();
+        chat_object.startTimer();
+        chat_object.window := nil;
+        chat_object := nil;
+        {
         CanClose := false;
         timMemory.Enabled := true;
-        // Self.Hide();
         Self.Visible := false;
         if (Docked) then begin
             // We must float the form, so when it is free'd
@@ -1052,18 +1076,18 @@ begin
             // the redock flag tells the roster window
             // that this form SHOULD be redocked,
             // instead of a window that is manually undocked
-
-            // LockWindowUpdate(frmExodus.Tabs.Handle);
             Self.FloatForm();
             _redock := true;
-            // LockWindowUpdate(0);
         end;
+        exit;
+        }
     end;
 
     inherited;
 end;
 
 {---------------------------------------}
+{
 procedure TfrmChat.timMemoryTimer(Sender: TObject);
 begin
   inherited;
@@ -1071,12 +1095,12 @@ begin
     _destroying := true;
     Self.Free();
 end;
+}
 
 {---------------------------------------}
 procedure TfrmChat.FormShow(Sender: TObject);
 begin
   inherited;
-    timMemory.Enabled := false;
 end;
 
 {---------------------------------------}
