@@ -77,6 +77,7 @@ type
       const FindString: String; const FindPosition: TPoint;
       FindData: Pointer; StartIndex: Integer; Direction: TSearchDirection;
       Wrap: Boolean; var Index: Integer);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     field_set: TStringList;
@@ -813,5 +814,11 @@ begin
         end;
 end;
 
+
+procedure TfrmJUD.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  inherited;
+    Action := caFree;
+end;
 
 end.

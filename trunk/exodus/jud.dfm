@@ -6,6 +6,7 @@ inherited frmJUD: TfrmJUD
   BorderWidth = 3
   Caption = 'Search for Contacts'
   OldCreateOrder = True
+  OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 13
   object pnlLeft: TPanel
@@ -18,7 +19,7 @@ inherited frmJUD: TfrmJUD
     TabOrder = 0
     object lblInstructions: TLabel
       Left = 0
-      Top = 96
+      Top = 70
       Width = 200
       Height = 26
       Align = alTop
@@ -30,7 +31,7 @@ inherited frmJUD: TfrmJUD
       Left = 0
       Top = 0
       Width = 200
-      Height = 39
+      Height = 26
       Align = alTop
       Caption = 
         'Select the user database or enter in the Jabber ID of the search' +
@@ -39,9 +40,9 @@ inherited frmJUD: TfrmJUD
     end
     object lblWait: TLabel
       Left = 0
-      Top = 70
+      Top = 57
       Width = 200
-      Height = 26
+      Height = 13
       Align = alTop
       Caption = 'Please wait. Contacting search agent:'
       Visible = False
@@ -49,7 +50,7 @@ inherited frmJUD: TfrmJUD
     end
     object Panel1: TPanel
       Left = 0
-      Top = 39
+      Top = 26
       Width = 200
       Height = 31
       Align = alTop
@@ -96,16 +97,16 @@ inherited frmJUD: TfrmJUD
     end
     object pnlFields: TPanel
       Left = 0
-      Top = 276
+      Top = 250
       Width = 200
-      Height = 21
+      Height = 47
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
     end
     object aniWait: TAnimate
       Left = 0
-      Top = 122
+      Top = 96
       Width = 200
       Height = 50
       Align = alTop
@@ -116,7 +117,7 @@ inherited frmJUD: TfrmJUD
     end
     object pnlResults: TPanel
       Left = 0
-      Top = 172
+      Top = 146
       Width = 200
       Height = 104
       Align = alTop

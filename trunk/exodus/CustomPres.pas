@@ -44,6 +44,7 @@ type
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure chkSaveClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
   public
@@ -146,6 +147,13 @@ begin
     txtTitle.Enabled := e;
     lblHotkey.Enabled := e;
     txtHotkey.Enabled := e;
+end;
+
+{---------------------------------------}
+procedure TfrmCustomPres.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+    Action := caFree;
 end;
 
 end.
