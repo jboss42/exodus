@@ -1,1 +1,1 @@
-Create a tab delimited file (in a directory like C:\Documents and Settings\username\Application Data\Exodus) with to, from, type, namespace, date/time, and size for each packet.
+Generate statistics about the jabber traffic you receive.
