@@ -208,6 +208,7 @@ uses
     Transfer,
     MsgRecv,
     PrefController,
+    ExEvents, 
     ExUtils,
     Room,
     Profile,
@@ -649,6 +650,7 @@ var
     ritem: TJabberRosterItem;
     jid, ptype: string;
     tmp_jid: TJabberID;
+    e: TJabberEvent;
 begin
     // callback for the ppdb
     ptype := tag.getAttribute('type');
@@ -657,8 +659,13 @@ begin
     jid := tmp_jid.jid;
     ritem := MainSession.Roster.Find(jid);
 
-    if event = '/presence/error' then
-        // do nothing
+    if event = '/presence/error' then begin
+        // check for 504 errors..
+        if MainSession.Prefs.getBool('roster_pres_errors') then begin
+            e := CreateJabberEvent(tag);
+            frmExodus.RenderEvent(e);
+            end;
+        end
     else if (event = '/presence/unavailable') then begin
         // remove the node
         p := MainSession.PPDB.FindPres(jid, '');

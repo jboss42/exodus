@@ -82,7 +82,7 @@ var
 {---------------------------------------}
 implementation
 uses
-    Unicode, 
+    Unicode,
     Dialogs, StrUtils, IdGlobal,
     ShellAPI,
     MsgDisplay,
@@ -106,6 +106,7 @@ resourceString
     sTurnOnBlocking = 'You currently have logging turned off. ' +
         'Turn Logging On? (Warning: Logs are not encrypted)';
     sNoHistory = 'There is no history file for this contact.';
+    sBadLogDir = 'The log directory you specified is invalid. Either turn off logging, or specify a valid path.';
 
 {---------------------------------------}
 constructor TAtom.Create(at: ATOM);
@@ -125,7 +126,6 @@ begin
 end;
 
 {---------------------------------------}
-
 {---------------------------------------}
 function GetAppVersion: string;
 const
@@ -361,7 +361,10 @@ begin
 
     if (not DirectoryExists(fn)) then begin
         // mkdir
-        CreateDir(fn);
+        if CreateDir(fn) = false then begin
+            MessageDlg(sBadLogDir, mtError, [mbOK], 0);
+            exit;
+            end;
         end;
 
     if (Msg.isMe) then
@@ -369,6 +372,7 @@ begin
     else
         _jid := TJabberID.Create(Msg.FromJID);
 
+    // Munge the filename
     fn := fn + MungeName(_jid.jid) + '.html';
     AssignFile(f, fn);
     if FileExists(fn) then begin

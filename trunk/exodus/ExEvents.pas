@@ -30,11 +30,11 @@ type
         evt_Message,
         evt_Invite,
         evt_RosterItems, 
-        evt_Presence,
         evt_OOB,
         evt_Version,
         evt_Time,
-        evt_Last);
+        evt_Last,
+        evt_PresError);
 
     TJabberEvent = class
     private
@@ -83,7 +83,8 @@ resourcestring
     sMsgLast = 'Last Activity';
     sMsgLastInfo = 'Idle for ';
     
-
+    sPresError = 'The jabber server can not contact the server where this user is hosted.' +
+        'Click "Remove" to remove this contact from your roster.';
 
 
 {---------------------------------------}
@@ -101,6 +102,7 @@ function CreateJabberEvent(tag: TXMLTag): TJabberEvent;
 var
     e: TJabberEvent;
 begin
+    // Create a new event based on this tag.
     e := TJabberEvent.Create;
     e.Parse(tag);
     Result := e;
@@ -111,7 +113,7 @@ function getTaskBarRect: TRect;
 var
     taskbar: HWND;
 begin
-    //
+    // get the taskbar rectangle
     if (_taskbar_rect.left = _taskbar_rect.right) then begin
         taskbar := FindWindow('Shell_TrayWnd', '');
         GetWindowRect(taskbar, _taskbar_rect);
@@ -144,7 +146,7 @@ end;
 procedure TJabberEvent.Parse(tag: TXMLTag);
 var
     tmps, s, ptype, ns, t: string;
-    delay, qtag, tmp_tag: TXMLTag;
+    etag, delay, qtag, tmp_tag: TXMLTag;
     i_tags, c_tags: TXMLTagList;
     i, j: integer;
     ri: TJabberRosterItem;
@@ -213,46 +215,15 @@ begin
         else
             edate := Now();
         end
-    else if (tag.name = 'presence') then begin
-        eType := evt_Presence;
-        from := tag.getAttribute('from');
-        id := tag.GetAttribute('id');
-        ptype := tag.getAttribute('type');
-        data_type := ptype;
 
-        if (ptype = 'unavailable') then
-            tmps := sPresUnavailable
-        else if (ptype = 'subscribe') then
-            tmps := sPresS10n
-        else if (ptype = 'subscribed') then
-            tmps := sPresGrant
-        else if (ptype = 'unsubscribed') then
-            tmps := sPresDeny
-        else if (ptype = 'unsubscribe') then
-            tmps := sPresUnsub
-        else begin
-            tmp_tag := tag.GetFirstTag('show');
-            if (tmp_tag <> nil) then begin
-                data_type := tmp_tag.Data;
-                if data_type = 'xa' then
-                    tmps := sPresXA
-                else if data_type = 'away' then
-                    tmps := sPresAway
-                else if data_type = 'chat' then
-                    tmps := sPresChat
-                else if data_type = 'dnd' then
-                    tmps := sPresDND
-                end
-            else begin
-                data_type := 'available';
-                tmps := sPresAvailable;
-                end;
-            s := tag.getAttribute('status');
-            if s <> '' then
-                tmps := tmps + ', (' + s + ')';
-            end;
-        _data_list.Add(tmps);
+    else if ((tag.name = 'presence') and (tag.getAttribute('type') = 'error')) then begin
+        from := tag.getAttribute('from');
+        eType := evt_PresError;
+        etag := tag.GetFirstTag('error');
+        data_type := etag.Data;
+        _data_list.Add(sPresError);
         end
+
     else if (tag.name = 'iq') then begin
         from := tag.getAttribute('from');
         id := tag.getAttribute('id');
