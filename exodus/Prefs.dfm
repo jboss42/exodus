@@ -1428,12 +1428,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 310
     Height = 370
-    ActivePage = tbsMessages
+    ActivePage = tbsRoster
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 5
+    TabIndex = 0
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1776,7 +1776,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 102
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1863,7 +1863,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 97
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2017,39 +2017,39 @@ object frmPrefs: TfrmPrefs
       Caption = 'Messages'
       ImageIndex = 5
       object Label19: TLabel
-        Left = 20
-        Top = 53
+        Left = 25
+        Top = 69
         Width = 35
         Height = 13
         Caption = 'Format:'
       end
       object chkEmoticons: TCheckBox
-        Left = 0
-        Top = 80
+        Left = 5
+        Top = 24
         Width = 241
         Height = 17
         Caption = 'Auto detect Emoticons in messages'
         TabOrder = 0
       end
       object chkTimestamp: TCheckBox
-        Left = 0
-        Top = 32
-        Width = 241
+        Left = 5
+        Top = 48
+        Width = 156
         Height = 17
-        Caption = 'Timestamp displayed messages'
+        Caption = 'Timestamp messages'
         TabOrder = 1
       end
       object chkLog: TCheckBox
-        Left = 0
-        Top = 103
+        Left = 5
+        Top = 95
         Width = 97
         Height = 17
         Caption = 'Log Messages'
         TabOrder = 2
       end
       object txtLogPath: TEdit
-        Left = 21
-        Top = 121
+        Left = 26
+        Top = 113
         Width = 188
         Height = 21
         TabOrder = 3
@@ -2073,15 +2073,15 @@ object frmPrefs: TfrmPrefs
         TabOrder = 4
       end
       object txtTimestampFmt: TEdit
-        Left = 64
-        Top = 49
+        Left = 69
+        Top = 65
         Width = 145
         Height = 21
         TabOrder = 5
       end
       object btnLogBrowse: TButton
-        Left = 224
-        Top = 119
+        Left = 219
+        Top = 111
         Width = 75
         Height = 25
         Caption = 'Browse'
@@ -2096,7 +2096,7 @@ object frmPrefs: TfrmPrefs
         Left = 8
         Top = 40
         Width = 257
-        Height = 97
+        Height = 121
         ItemHeight = 13
         Items.Strings = (
           'Contact is online'
@@ -2112,7 +2112,7 @@ object frmPrefs: TfrmPrefs
       end
       object optNotify: TGroupBox
         Left = 8
-        Top = 152
+        Top = 168
         Width = 257
         Height = 105
         Caption = 'Notify Options'
@@ -2141,6 +2141,7 @@ object frmPrefs: TfrmPrefs
           Width = 97
           Height = 17
           Caption = 'Play a Sound'
+          Enabled = False
           TabOrder = 2
         end
       end
@@ -2205,7 +2206,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 124
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2283,7 +2284,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 112
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2302,7 +2303,7 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 73
         Width = 302
-        Height = 271
+        Height = 266
         Align = alClient
         TabOrder = 1
       end
@@ -2317,7 +2318,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TLabel
           Left = 0
           Top = 0
-          Width = 256
+          Width = 302
           Height = 26
           Align = alTop
           Caption = 
@@ -2341,7 +2342,7 @@ object frmPrefs: TfrmPrefs
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 292
+        Width = 302
         Height = 26
         Align = alTop
         Caption = 
@@ -2352,7 +2353,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 146
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2371,7 +2372,7 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 46
         Width = 302
-        Height = 298
+        Height = 293
         Align = alClient
         TabOrder = 1
       end
