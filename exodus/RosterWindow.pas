@@ -1276,6 +1276,7 @@ procedure TfrmRosterWindow.treeRosterMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
     n: TTreeNode;
+    i: integer;
 begin
     // check to see if we're hitting a button
     n := treeRoster.GetNodeAt(X, Y);
@@ -1297,6 +1298,13 @@ begin
             n.Expand(false);
         end;
 
+    if ((treeRoster.SelectionCount > 1) and (Button = mbLeft) and
+        (Shift = [ssLeft])) then begin
+        // de-select everything, and select this node
+        for i := 0 to treeRoster.Items.Count - 1 do
+            treeRoster.Items[i].Selected := false;
+        end;
+
     // if we have a legit node.... make sure it's selected..
     if (treeRoster.SelectionCount = 1) then begin
         if (treeRoster.Selected <> n) then
@@ -1311,7 +1319,7 @@ begin
                 end;
             n.EditText();
             end
-        end;
+        end
 end;
 
 {---------------------------------------}
