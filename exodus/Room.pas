@@ -119,6 +119,7 @@ uses
     Session,
     JabberID,
     MsgDisplay,
+    PrefController,
     JabberMsg, Jabber1;
 
 {$R *.DFM}
@@ -183,6 +184,7 @@ var
     Msg: TJabberMessage;
     from: string;
     tmp_jid: TJabberID;
+    cn : integer;
 begin
     // display the body of the msg
     Msg := TJabberMessage.Create(tag);
@@ -210,6 +212,23 @@ begin
     if Msg.Subject <> '' then begin
         lblSubject.Caption := '  ' + Msg.Subject;
         lblSubject.Hint := Msg.Subject;
+        end;
+
+    cn := MainSession.Prefs.getInt('notify_roomactivity');
+
+    if (not Application.Active) then begin
+        // Pop toast
+        if (cn and notify_toast) > 0 then begin
+            ShowRiserWindow('Activity in ' + Self.Caption, 21);
+            end;
+
+        // Flash Window
+        if (cn and notify_flash) > 0 then begin
+            if (Self.Docked) then
+                FlashWindow(frmExodus.Handle, true)
+            else
+                FlashWindow(Self.Handle, true);
+            end;
         end;
 
     // check for keywords

@@ -1,6 +1,6 @@
 object frmPrefs: TfrmPrefs
-  Left = 272
-  Top = 146
+  Left = 828
+  Top = 173
   Width = 407
   Height = 441
   Caption = 'Exodus Preferences'
@@ -20,7 +20,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 370
+    Height = 375
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1427,13 +1427,13 @@ object frmPrefs: TfrmPrefs
     Left = 89
     Top = 0
     Width = 310
-    Height = 370
-    ActivePage = tbsRoster
+    Height = 375
+    ActivePage = tbsNotify
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 0
+    TabIndex = 6
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1776,7 +1776,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 102
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1863,7 +1863,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 97
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2057,7 +2057,7 @@ object frmPrefs: TfrmPrefs
       object StaticText11: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 111
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2106,7 +2106,8 @@ object frmPrefs: TfrmPrefs
           'Subscription Requests'
           'Conference Invites'
           'Keywords (Conf. Rooms)'
-          'Chat window activity')
+          'Chat window activity'
+          'Conf. Room activity')
         TabOrder = 0
         OnClick = chkNotifyClick
       end
@@ -2206,7 +2207,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 124
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2284,7 +2285,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 112
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2318,7 +2319,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TLabel
           Left = 0
           Top = 0
-          Width = 302
+          Width = 256
           Height = 26
           Align = alTop
           Caption = 
@@ -2342,7 +2343,7 @@ object frmPrefs: TfrmPrefs
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 302
+        Width = 292
         Height = 26
         Align = alTop
         Caption = 
@@ -2353,7 +2354,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 146
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2555,7 +2556,7 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 370
+    Top = 375
     Width = 399
     Height = 37
     Align = alBottom

@@ -373,7 +373,7 @@ begin
 
 
         // Notify Options
-        SetLength(_notify, 8);
+        SetLength(_notify, 9);
         _notify[0] := getInt('notify_online');
         _notify[1] := getInt('notify_offline');
         _notify[2] := getInt('notify_newchat');
@@ -382,6 +382,7 @@ begin
         _notify[5] := getInt('notify_invite');
         _notify[6] := getInt('notify_keyword');
         _notify[7] := getInt('notify_chatactivity');
+        _notify[8] := getInt('notify_roomactivity');
 
         for i := 0 to High(_notify) do
             chkNotify.Checked[i] := (_notify[i] > 0);
@@ -496,6 +497,7 @@ begin
         setInt('notify_invite', _notify[5]);
         setInt('notify_keyword', _notify[6]);
         setInt('notify_chatactivity', _notify[7]);
+        setInt('notify_roomactivity', _notify[8]);
 
         // Autoaway options
         setBool('auto_away', chkAutoAway.Checked);
