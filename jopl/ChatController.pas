@@ -50,7 +50,7 @@ type
 {---------------------------------------}
 implementation
 uses
-    XMLUtils, Session, Chat;
+    XMLUtils, Session, Chat, IdGlobal;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -105,7 +105,7 @@ begin
     if (MainSession.IsPaused) then begin
         with tag.AddTag('x') do begin
             PutAttribute('xmlns', 'jabber:x:delay');
-            PutAttribute('stamp', DateTimeToJabber(Now));
+            PutAttribute('stamp', DateTimeToJabber(Now + TimeZoneBias()));
             end;
         end;
 
