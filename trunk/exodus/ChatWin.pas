@@ -69,7 +69,6 @@ type
     { Private declarations }
     jid: string;            // jid of the person we are talking to
     _jid: TJabberID;        // JID object of jid
-    _callback: integer;     // Message Callback
     _pcallback: integer;    // Presence Callback
     _scallback: integer;    // Session callback
     _thread : string;       // thread for conversation
@@ -90,7 +89,6 @@ type
 
     function GetThread: String;
   published
-    // procedure MsgCallback(event: string; tag: TXMLTag);
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
     procedure CTCPCallback(event: string; tag: TXMLTag);
@@ -176,7 +174,7 @@ begin
                     OtherNick := chat_nick;
                 end
             else
-                OtherNick := ritem.nickname;
+                OtherNick := ritem.Nickname;
             end
         else
             OtherNick := chat_nick;
@@ -225,7 +223,6 @@ procedure TfrmChat.FormCreate(Sender: TObject);
 begin
     inherited;
     _thread := '';
-    _callback := -1;
     _pcallback := -1;
     _scallback := -1;
     OtherNick := '';
@@ -253,11 +250,11 @@ begin
     _jid := TJabberID.Create(cjid);
 
     // setup the callbacks if we don't have them already
-    if (_pcallback < 0) then
+    if (_pcallback = -1) then
         _pcallback := MainSession.RegisterCallback(PresCallback,
             '/packet/presence[@from="' + Lowercase(cjid) + '*"]');
 
-    if (_scallback < 0) then
+    if (_scallback = -1) then
         _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
 
     // setup the captions, etc..
@@ -266,8 +263,8 @@ begin
 
     if ritem <> nil then begin
         lblNick.Caption := ' ' + ritem.Nickname;
-        lblJID.Caption := '<' + _jid.full + '>';
         Caption := ritem.Nickname + ' - ' + sChat;
+        lblJID.Caption := '<' + _jid.full + '>';
         end
     else begin
         lblNick.Caption := ' ';
@@ -338,7 +335,6 @@ begin
 end;
 
 {---------------------------------------}
-// procedure TfrmChat.MsgCallback(event: string; tag: TXMLTag);
 procedure TfrmChat.MessageEvent(tag: TXMLTag);
 var
     msg_type, from_jid: string;
@@ -487,9 +483,7 @@ procedure TfrmChat.SessionCallback(event: string; tag: TXMLTag);
 begin
     if (event = '/session/disconnected') then begin
         DisplayPresence(sDisconnected, MsgList);
-        MainSession.UnRegisterCallback(_callback);
         MainSession.UnRegisterCallback(_pcallback);
-        _callback := -1;
         _pcallback := -1;
         end
     else if (event = '/session/connected') then begin
@@ -499,9 +493,7 @@ begin
         // if this jid just got blocked, just close the window.
         if (_jid.jid = tag.GetAttribute('jid')) then begin
             DisplayPresence(sUserBlocked, Self.MsgList);
-            MainSession.UnRegisterCallback(_callback);
             MainSession.UnRegisterCallback(_pcallback);
-            _callback := -1;
             _pcallback := -1;
             end;
         end;

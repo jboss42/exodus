@@ -836,7 +836,7 @@ begin
         end;
 
     // determine the caption for the node
-    if (ritem.Nickname <> '') then
+    if (ritem.RawNickname <> '') then
         tmps := ritem.Nickname
     else
         tmps := ritem.jid.Full;
@@ -1597,7 +1597,7 @@ begin
             if (_show_status) then begin
 
                 // determine the caption
-                if (_cur_ritem.Nickname <> '') then
+                if (_cur_ritem.RawNickname <> '') then
                     c1 := _cur_ritem.Nickname
                 else
                     c1 := _cur_ritem.jid.Full;
@@ -1793,7 +1793,7 @@ begin
             ri := TJabberRosterItem(sel[i]);
             item := x.AddTag('item');
             item.PutAttribute('jid', ri.jid.full);
-            item.PutAttribute('name', ri.nickname);
+            item.PutAttribute('name', ri.RawNickname);
             end;
 
         MainSession.SendTag(msg);

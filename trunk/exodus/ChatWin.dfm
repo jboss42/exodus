@@ -13,6 +13,11 @@ inherited frmChat: TfrmChat
       PlainRTF = True
     end
   end
+  inherited pnlInput: TPanel
+    inherited MsgOut: TTntMemo
+      OnChange = MsgOutChange
+    end
+  end
   inherited Panel1: TPanel
     object imgStatus: TPaintBox
       Tag = 1
