@@ -38,12 +38,6 @@ type
     procedure browserBeforeNavigate2(Sender: TObject;
       const pDisp: IDispatch; var URL, Flags, TargetFrameName, PostData,
       Headers: OleVariant; var Cancel: WordBool);
-    procedure FrameUnDock(Sender: TObject; Client: TControl;
-      NewTarget: TWinControl; var Allow: Boolean);
-    procedure FrameStartDock(Sender: TObject;
-      var DragObject: TDragDockObject);
-    procedure FrameCanResize(Sender: TObject; var NewWidth,
-      NewHeight: Integer; var Resize: Boolean);
 
   private
     { Private declarations }
@@ -566,27 +560,6 @@ procedure TfIEMsgList.refresh();
 begin
     _queue.Add(getHistory());
     Clear();
-end;
-
-procedure TfIEMsgList.FrameUnDock(Sender: TObject; Client: TControl;
-  NewTarget: TWinControl; var Allow: Boolean);
-begin
-  inherited;
-  DebugMsg('undock');
-end;
-
-procedure TfIEMsgList.FrameStartDock(Sender: TObject;
-  var DragObject: TDragDockObject);
-begin
-  inherited;
-  DebugMsg('start dock');
-end;
-
-procedure TfIEMsgList.FrameCanResize(Sender: TObject; var NewWidth,
-  NewHeight: Integer; var Resize: Boolean);
-begin
-  inherited;
-  DebugMsg('can resize');
 end;
 
 initialization
