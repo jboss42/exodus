@@ -650,7 +650,7 @@ procedure TExodusController.StartChat(const jid, resource,
   nickname: WideString);
 begin
     // start chat
-    StartChat(jid, resource, nickname);
+    ChatWin.StartChat(jid, resource, true, nickname);
 end;
 
 {---------------------------------------}
