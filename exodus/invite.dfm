@@ -83,6 +83,7 @@ object frmInvite: TfrmInvite
       SortType = stBoth
       TabOrder = 0
       ViewStyle = vsReport
+      OnDblClick = lstJIDSDblClick
       OnDragDrop = lstJIDSDragDrop
       OnDragOver = lstJIDSDragOver
     end
@@ -203,6 +204,7 @@ object frmInvite: TfrmInvite
       GridLineWidth = 0
       Options = [goFixedVertLine, goFixedHorzLine, goRangeSelect, goRowSelect, goThumbTracking]
       TabOrder = 0
+      OnDblClick = sgContactsDblClick
     end
   end
 end
