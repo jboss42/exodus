@@ -674,7 +674,7 @@ end;
 procedure ExceptionTracker(ExceptObj: TObject; ExceptAddr: Pointer; OSException: Boolean);
 var
     // trace: TStringList;
-    tracer: TfrmTracer;
+    // tracer: TfrmTracer;
     e: Exception;
 begin
     //
@@ -683,10 +683,12 @@ begin
 
     if (e is EConvertError) then exit;
     if (e is EIdSocketError) then exit;
-    
+
+    {
     tracer := TfrmTracer.Create(Application);
     JclLastExceptStackListToStrings(tracer.Memo1.Lines, true, true, true);
     tracer.ShowModal();
+    }
 end;
 {$endif}
 
