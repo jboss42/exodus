@@ -19,6 +19,7 @@ unit Jabber1;
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
 
+{$DEFINE TRACE_EXCEPTIONS}
 
 interface
 
@@ -341,6 +342,8 @@ type
 
     function WMAppBar(dwMessage: DWORD; var pData: TAppBarData): UINT; stdcall;
 
+    procedure ApplicationException(Sender: TObject; E: Exception);
+
   published
     // Callbacks
     procedure SessionCallback(event: string; tag: TXMLTag);
@@ -490,6 +493,10 @@ const
 {---------------------------------------}
 implementation
 uses
+    {$ifdef TRACE_EXCEPTIONS}
+    JclHookExcept, JclDebug, ExceptTracer, 
+    {$endif}
+
     About, AutoUpdate, Bookmark, Browser, Chat, ChatController, ChatWin,
     CommCtrl, CustomPres,
     Debug, Dockable, ExUtils, GetOpt, InputPassword,
@@ -656,6 +663,26 @@ begin
     reg.WriteString('', user_text);
 end;
 
+
+{---------------------------------------}
+{---------------------------------------}
+{$ifdef TRACE_EXCEPTIONS}
+procedure TfrmExodus.ExceptionTracker(ExceptObj: TObject; ExceptAddr: Pointer; OSException: Boolean);
+var
+    // trace: TStringList;
+    tracer: TfrmTracer;
+begin
+    //
+    // trace := TStringList.Create();
+    tracer := TfrmTracer.Create(Application);
+    JclLastExceptStackListToStrings(tracer.Memo1.Lines, true, true, true);
+    tracer.ShowModal();
+
+    Application.ShowException(E);
+end;
+{$endif}
+
+{---------------------------------------}
 {---------------------------------------}
 procedure TfrmExodus.FormCreate(Sender: TObject);
 var
@@ -681,6 +708,12 @@ var
 
 begin
     // initialize vars.  wish we were using a 'real' compiler.
+
+    {$ifdef TRACE_EXCEPTIONS}
+    Application.OnException := ApplicationException;
+    Include(JclStackTrackingOptions, stRawMode);
+    {$endif}
+
     debug := false;
     minimized := false;
     invisible := false;
@@ -2556,7 +2589,8 @@ end;
 procedure TfrmExodus.Test1Click(Sender: TObject);
 begin
     // Test something..
-    LoadPlugin('RosterClean.ExodusRosterClean');
+    // LoadPlugin('RosterClean.ExodusRosterClean');
+    PInteger(nil)^ := 0;
 end;
 
 {---------------------------------------}
@@ -2684,7 +2718,24 @@ begin
         Tabs.ActivePage.ImageIndex := -1;
 end;
 
+procedure AnyExceptionNotify(ExceptObj: TObject; ExceptAddr: Pointer; OSException: Boolean);
+begin
+    with Form1 do begin
+        Memo1.Lines.BeginUpdate;
+        JclLastExceptStackListToStrings(Memo1.Lines, False, True, True);
+        Memo1.Lines.EndUpdate;
+        Memo1.Lines.Add('');
+    end;
+end;
+
 initialization
     sExodusPresence := RegisterWindowMessage('EXODUS_PRESENCE');
+
+{$IFDEF TRACE_EXCEPTIONS}
+  // Start Exception tracking
+  JclStartExceptionTracking;
+  JclAddExceptNotifier(ExceptionTracker);
+{$ENDIF}
+
 end.
 
