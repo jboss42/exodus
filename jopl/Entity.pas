@@ -392,6 +392,9 @@ begin
     assert(js <> nil);
     _iq := nil;
 
+    // if we're not connected anymore, just bail.
+    if (js.Active = false) then exit;
+
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Dispatch a disco#items query
         if (not _fallback) then exit;
@@ -453,6 +456,9 @@ begin
     js := _iq.JabberSession;
     assert(js <> nil);
     _iq := nil;
+
+    // if we're not connected anymore, just bail.
+    if (js.Active = false) then exit;
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Dispatch a browse query
@@ -667,6 +673,9 @@ begin
     assert(js <> nil);
     _iq := nil;
 
+    // if we're not connected anymore, just bail.
+    if (js.Active = false) then exit;
+
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Dispatch a disco#items query
         _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, _timeout);
@@ -696,6 +705,9 @@ begin
     js := _iq.JabberSession;
     assert(js <> nil);
     _iq := nil;
+
+    // if we're not connected anymore, just bail.
+    if (js.Active = false) then exit;
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Hrmpf.. we got info back, but no items?
@@ -770,6 +782,9 @@ begin
     js := _iq.JabberSession;
     assert(js <> nil);
     _iq := nil;
+
+    // if we're not connected anymore, just bail.
+    if (js.Active = false) then exit;
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Dispatch a disco#items query
@@ -917,6 +932,9 @@ begin
     js := _iq.JabberSession;
     assert(js <> nil);
     _iq := nil;
+
+    // if we're not connected anymore, just bail.
+    if (js.Active = false) then exit;
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // BAH! agents didn't work either.. this thing sucks,

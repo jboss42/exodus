@@ -144,6 +144,13 @@ end;
 {---------------------------------------}
 procedure TJabberIQ.Send;
 begin
+    // if we're not connected, just bail
+    if ((_js.Stream = nil) or (_js.Active = false)) then begin
+        _callback('/session/disconnected', nil);
+        Self.Free();
+        exit;
+    end;
+
     if _id <> '' then
         Self.setAttribute('id', _id);
     if iqType <> '' then
