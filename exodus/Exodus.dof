@@ -51,7 +51,7 @@ Conditionals=
 DebugSourceDirs=D:\Dev\Delphi6\Source\Indy\
 UsePackages=0
 [Parameters]
-RunParams=--debug -c foo.xml -a
+RunParams=--debug -c poll.xml -a
 HostApplication=
 Launcher=
 UseLauncher=0
