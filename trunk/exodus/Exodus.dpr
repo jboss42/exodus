@@ -113,7 +113,6 @@ begin
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TfrmConnDetails, frmConnDetails);
   Application.CreateForm(TfrmInputPass, frmInputPass);
-  Application.CreateForm(TfrmBrowse, frmBrowse);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);
