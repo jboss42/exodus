@@ -122,7 +122,8 @@ begin
         SetHttp(p);
         SetSocket(p);
 
-        if (p.ConnectionType = conn_normal) then
+        cboConnection.ItemIndex := p.ConnectionType;
+        if (p.ConnectionType = conn_normal) then 
             PageControl1.ActivePage := tbsSocket
         else if (p.ConnectionType = conn_http) then
             PageControl1.ActivePage := tbsHttp;

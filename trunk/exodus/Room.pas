@@ -625,7 +625,7 @@ begin
         MainSession.UnRegisterCallback(_scallback);
         end;
 
-    if ((MainSession <> nil) and (MainSession.Stream.Active)) then begin
+    if ((MainSession <> nil) and (MainSession.Active)) then begin
         p := TJabberPres.Create();
         p.toJID := TJabberID.Create(jid);
         p.PresType := 'unavailable';
