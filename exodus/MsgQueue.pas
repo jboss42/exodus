@@ -253,6 +253,7 @@ var
     i: integer;
     first : integer;
     item : TListItem;
+    e : TJabberEvent;
 begin
     // pickup hot-keys on the list view..
     case Key of
@@ -285,11 +286,18 @@ begin
             Self.SaveEvents();
             end;
 
-        if (first < lstEvents.Items.Count) then
-            lstEvents.Selected := lstEvents.Items[first]
+        if (first < lstEvents.Items.Count) then begin
+            lstEvents.Selected := lstEvents.Items[first];
+            e := TJabberEvent(_queue[first]);
+            if ((e <> nil) and (lstEvents.SelCount = 1)) then
+                txtMsg.Lines.Assign(e.Data);
+            end
         else if (lstEvents.Items.Count > 0) then
             lstEvents.Selected := lstEvents.Items[lstEvents.Items.Count - 1];
+
+        lstEvents.Refresh;
         end;
+
     end;
 
 end;

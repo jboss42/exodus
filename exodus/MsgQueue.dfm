@@ -1,6 +1,6 @@
 object frmMsgQueue: TfrmMsgQueue
-  Left = 233
-  Top = 238
+  Left = 245
+  Top = 631
   Width = 432
   Height = 324
   Caption = 'Events'
