@@ -178,9 +178,11 @@ begin
         exit;
 
     if ((notify and notify_tray) > 0) then
+        // Flash the tray icon
         StartTrayAlert();
 
     if ((notify and notify_toast) > 0) then
+        // Show toast
         ShowRiserWindow(w, msg, icon);
 
     if ((notify and notify_flash) > 0) then begin
@@ -212,6 +214,20 @@ begin
 
     if ((notify and notify_front) > 0) then begin
         // pop the window to the front
+        if (w is TfrmDockable) then begin
+            d := TfrmDockable(w);
+            if (d.Docked) then begin
+                frmExodus.doRestore();
+                frmExodus.Tabs.ActivePage := d.TabSheet;
+                w := frmExodus;
+            end;
+        end
+        else if (w = frmExodus) then
+            frmExodus.doRestore()
+        else if ((not w.Visible) or (w.WindowState = wsMinimized))then begin
+            w.WindowState := wsNormal;
+            w.Visible := true;
+        end;
         ShowWindow(w.Handle, SW_SHOWNORMAL);
         ForceForegroundWindow(w.Handle);
     end;
