@@ -30,19 +30,21 @@ uses
 type
   TAIMImportPlugin = class(TAutoObject, IAIMImportPlugin, IExodusPlugin)
   protected
-    procedure menuClick(const ID: WideString); safecall;
-    procedure NewChat(const jid: WideString; const Chat: IExodusChat);
-      safecall;
-    procedure NewRoom(const jid: WideString; const Room: IExodusChat);
-      safecall;
-    procedure Process(const xml: WideString); safecall;
-    procedure Shutdown; safecall;
     procedure Startup(const ExodusController: IExodusController); safecall;
-    procedure onAgentsList(const Server: WideString); safecall;
+    procedure Shutdown; safecall;
+    procedure Process(const xpath: WideString; const event: WideString; const xml: WideString); safecall;
+    procedure NewChat(const jid: WideString; const Chat: IExodusChat); safecall;
+    procedure NewRoom(const jid: WideString; const Room: IExodusChat); safecall;
+    procedure menuClick(const ID: WideString); safecall;
+    function onInstantMsg(const Body: WideString; const Subject: WideString): WideString; safecall;
+    procedure Configure; safecall;
+
     { Protected declarations }
   private
     _controller: IExodusController;
     _menu_id: Widestring;
+
+    procedure AgentsList(Server: Widestring);
   end;
 
 {---------------------------------------}
@@ -72,7 +74,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TAIMImportPlugin.onAgentsList(const Server: WideString);
+procedure TAIMImportPlugin.AgentsList(Server: Widestring);
 var
     f: TfrmImport;
 begin
@@ -100,9 +102,12 @@ begin
 end;
 
 {---------------------------------------}
-procedure TAIMImportPlugin.Process(const xml: WideString);
+procedure TAIMImportPlugin.Process(const xpath: WideString;
+    const event: WideString; const xml: WideString);
 begin
-
+    if (xpath = '/session/agents') then begin
+        // we have an agents list
+    end;
 end;
 
 {---------------------------------------}
@@ -117,7 +122,22 @@ procedure TAIMImportPlugin.Startup(
 begin
     _controller := ExodusController;
     _menu_id := _controller.addPluginMenu('Import AIM Buddy List');
+    _controller.RegisterCallback('/session/agents', Self)
 end;
+
+{---------------------------------------}
+function TAIMImportPlugin.onInstantMsg(const Body: WideString;
+    const Subject: WideString): WideString;
+begin
+    //
+end;
+
+{---------------------------------------}
+procedure TAIMImportPlugin.Configure;
+begin
+    //
+end;
+
 
 initialization
   TAutoObjectFactory.Create(ComServer, TAIMImportPlugin, Class_AIMImportPlugin,
