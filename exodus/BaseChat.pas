@@ -126,8 +126,8 @@ begin
     GetCaretPos(cp);
     l := MsgOut.ClientOrigin.x + cp.X;
 
-    if ((l + frmEmoticons.Width) > Screen.Width) then
-        l := Screen.Width - frmEmoticons.Width - 5;
+    if ((l + frmEmoticons.Width) > Screen.DesktopWidth) then
+        l := Screen.DesktopWidth - frmEmoticons.Width - 5;
 
     frmEmoticons.Left := l + 10;
 
@@ -138,8 +138,8 @@ begin
         t := Self.Top + Self.ClientHeight - 10;
     end;
 
-    if ((t + frmEmoticons.Height) > Screen.Height) then
-        t := Screen.Height - frmEmoticons.Height;
+    if ((t + frmEmoticons.Height) > Screen.DesktopHeight) then
+        t := Screen.DesktopHeight - frmEmoticons.Height;
 
     frmEmoticons.Top := t;
     frmEmoticons.ChatWindow := Self;

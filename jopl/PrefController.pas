@@ -26,7 +26,7 @@ unit PrefController;
 interface
 uses
     Unicode, XMLTag, XMLParser, Presence, IdHTTP,
-    
+
     {$ifdef Win32}
     Forms, Windows, Registry,
 
@@ -57,7 +57,7 @@ const
     proxy_socks4a = 2;
     proxy_socks5 = 3;
     proxy_http = 4;
-    
+
     roster_chat = 0;
     roster_msg = 1;
 
@@ -267,7 +267,7 @@ var
 begin
     // Get the path to My Documents
     Result := '';
-    
+
     try
     reg := TRegistry.Create;
     try //finally free
@@ -546,7 +546,7 @@ begin
     except
         MainSession.FireEvent('/session/gui/prefs-write-error', nil);
     end;
-    
+
     fs.Free();
 end;
 
@@ -895,9 +895,8 @@ begin
         exit;
     end;
 
-    if (t < dflt_top) then t := dflt_top;
-    if (l < dflt_left) then l := dflt_left;
-
+    if (t < Screen.DesktopTop) then t := Screen.DesktopTop;
+    if (l < Screen.DesktopLeft) then l := Screen.DesktopLeft;
 
     if (t + h > Screen.DesktopHeight) then begin
         t := Screen.DesktopHeight - h;
@@ -948,9 +947,8 @@ begin
         h := form.Height;
     end;
 
-    if (t < dflt_top) then t := dflt_top;
-    if (l < dflt_left) then l := dflt_left;
-
+    if (t < Screen.DesktopTop) then t := Screen.DesktopTop;
+    if (l < Screen.DesktopLeft) then l := Screen.DesktopLeft;
 
     if (t + h > Screen.DesktopHeight) then begin
         t := Screen.DesktopHeight - h;
@@ -1006,7 +1004,7 @@ begin
             reg.Free();
         end;
         {$endif}
-        
+
     end
     else if (getInt('http_proxy_approach') = http_proxy_custom) then begin
         {$ifdef INDY9}
