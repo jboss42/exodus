@@ -147,8 +147,9 @@ end;
 procedure DoNotify(win: TForm; pref_name: string; msg: string; icon: integer);
 var
     notify : integer;
-    w: TForm;
+    w, tw: TForm;
     d: TfrmDockable;
+    active_win: HWND;
 begin
     if ((Application.Active and (not MainSession.prefs.getBool('notify_active'))) or
         (MainSession.IsPaused)) then exit;
@@ -158,8 +159,24 @@ begin
     else
         w := win;
 
-    notify := MainSession.Prefs.getInt(pref_name);
+    // Get the appropriate active form
+    tw := nil;
+    if (w = frmExodus) then
+        tw := frmExodus.getTabForm(frmExodus.Tabs.ActivePage)
+    else if (w is TfrmDockable) then begin
+        if TfrmDockable(w).Docked then
+            tw := frmExodus.getTabForm(frmExodus.Tabs.ActivePage);
+        end;
+    active_win := getActiveWindow();
+    if (active_win = frmExodus.Handle) and (tw <> nil) then
+        active_win := tw.Handle;
 
+    // if we are not notifying for the active window,
+    // and this is active, bail.
+    if ((not MainSession.prefs.getBool('notify_active_win')) and (w.Handle = active_win)) then
+        exit;
+
+    notify := MainSession.Prefs.getInt(pref_name);
     if ((notify and notify_toast) > 0) then
         ShowRiserWindow(w, msg, icon);
 

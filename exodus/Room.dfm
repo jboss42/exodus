@@ -25,7 +25,6 @@ inherited frmRoom: TfrmRoom
       PopupMenu = popRoom
       OnDragDrop = lstRosterDragDrop
       OnDragOver = lstRosterDragOver
-      OnMouseUp = MsgListMouseUp
     end
     object Panel6: TPanel
       Left = 271
@@ -200,7 +199,7 @@ inherited frmRoom: TfrmRoom
       Caption = 'Block'
       OnClick = popRosterBlockClick
     end
-    object N2: TMenuItem
+    object N3: TMenuItem
       Caption = '-'
     end
     object popKick: TMenuItem
