@@ -24,15 +24,14 @@ interface
 uses
     XMLTag,
     XMLUtils,
-    XMLParser, 
+    XMLParser,
     LibXMLParser,
     {$ifdef linux}
     QForms, QExtCtrls,
     {$else}
     Forms, Messages, Windows, StdVcl, ExtCtrls,
     {$endif}
-    SysUtils, IdThread, IdException, IdSSLOpenSSL, 
-    IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
+    SysUtils, IdThread, IdException, 
     SyncObjs, Classes;
 
 const
@@ -52,8 +51,6 @@ const
     WM_SOCKET = WM_USER + 7010;
 
 type
-    TDataThread = class;
-
     EXMLStream = class(Exception)
     public
     end;
@@ -63,88 +60,76 @@ type
         lparam: integer;
     end;
 
-    TSocketCallback = procedure (send: boolean; data: string) of object;
+    TDataCallback = procedure (send: boolean; data: string) of object;
     TXMLStreamCallback = procedure (msg: string; tag: TXMLTag) of object;
 
+    TParseThread = class;
+    
     TXMLStream = class
     private
-        _root_tag: string;
-        _socket: TidTCPClient;
-        _sock_lock: TCriticalSection;
-        _ssl_int: TIdConnectionInterceptOpenSSL;
-        _thread: TDataThread;
-        _timer: TTimer;
         _callbacks: TObjectList;
-        _sock_callbacks: TObjectList;
-        _Server: string;
-        _port: integer;
-        _active: boolean;
-        _LocalIP: string;
+        _data_callbacks: TObjectList;
+
+    protected
+        _Server:    string;
+        _port:      integer;
+        _local_ip:  string;
+        _active:    boolean;
+        _root_tag:  string;
+        _thread:    TParseThread;
 
         procedure DoCallbacks(msg: string; tag: TXMLTag);
-        procedure DoSocketCallbacks(send: boolean; data: string);
-        procedure Keepalive(Sender: TObject);
-        procedure KillSocket();
-    protected
-        // procedure WndProc(var msg: TMessage);
-        procedure MsgHandler(var msg: TJabberMsg); message WM_JABBER;
-    public
-        constructor Create(root: String);
-        destructor Destroy; override;
+        procedure DoDataCallbacks(send: boolean; data: string);
 
-        procedure Connect(server: string; port: integer; use_ssl: boolean = false);
-        procedure Send(xml: string);
-        procedure SendTag(tag: TXMLTag);
-        procedure Disconnect;
+    public
+        constructor Create(root: String); virtual;
+        destructor Destroy(); override;
+        
+        procedure Connect(server: string; port: integer; use_ssl: boolean = false); virtual; abstract;
+        procedure Send(xml: string); virtual; abstract; // Make sure the imp. does ANSI -> UTF8
+        procedure SendTag(tag: TXMLTag); 
+        procedure Disconnect; virtual; abstract;
 
         procedure RegisterStreamCallback(p: TXMLStreamCallback);
-        procedure RegisterSocketCallback(p: TSocketCallback);
+        procedure RegisterDataCallback(p: TDataCallback);
+        procedure UnregisterStreamCallback(p: TXMLStreamCallback);
+        procedure UnregisterDataCallback(p: TDataCallback);
 
         property Active: boolean read _active;
-        property LocalIP: string read _LocalIP;
+        property LocalIP: string read _local_ip;
     end;
 
-    TDataThread = class(TIdThread)
+    TParseThread = class(TIdThread)
     private
-        _lock: TCriticalSection;
-        _socket: TidTCPClient;
-        _stage: integer;
-        _data: String;
-        _root_tag: string;
-        _root_len: integer;
-        _indata: TStringlist;
-        _stream: TXMLStream;
+        _lock:       TCriticalSection;
+        _indata:     TStringlist;
         _tag_parser: TXMLTagParser;
-        _counter: integer;
-        _rbuff: string;
-        _root: string;
-        _domstack: TList;
+        _stream:     TXMLStream;
+        _domstack:   TList;
+        _root:       string;
+        _root_tag:   string;
+        _root_len:   integer;
+        _cur_msg:    TJabberMsg;
+        _rbuff:      string;
+        _counter:    integer;
 
-        _cur_msg: TJabberMsg;
-
+        procedure DispatchMsg();
         procedure ParseTags(buff: string);
         procedure handleBuffer(buff: string);
-        procedure DispatchMsg;
-
         function getFullTag(buff: string): string;
-        function GetData: string;
 
     protected
-        procedure Run; override;
+        function GetData(): string;
+        procedure Push(buff: string);
+        procedure CleanUp(); virtual;
         procedure doMessage(msg: integer);
-        procedure Sock_Connect(Sender: TObject);
-        procedure Sock_Disconnect(Sender: TObject);
+
     public
-        // constructor Create(wnd: HWND; Socket: TidTCPClient; root: string); reintroduce;
-        constructor Create(strm: TXMLStream; Socket: TidTCPClient; root: string); reintroduce;
-
-        procedure DataTerminate (Sender: TObject);
-        procedure GotException (Sender: TObject; E: Exception);
-
-        function GetTag: TXMLTag;
-
+        constructor Create(strm: TXMLStream; root: string); reintroduce;
         property Data: string read GetData;
+        function GetTag: TXMLTag;
     end;
+
 
 implementation
 uses
@@ -152,147 +137,71 @@ uses
     Math;
 
 {---------------------------------------}
-{      TDataThread Class                }
 {---------------------------------------}
-constructor TDataThread.Create(strm: TXMLStream; Socket: TidTCPClient; root: string);
+{---------------------------------------}
+constructor TParseThread.Create(strm: TXMLStream; root: string);
 begin
-    // Create a new thread and setup the socket events
+    // Create a new thread and setup the events
     inherited  Create(True);
 
-    _Stream := strm;
-    _Socket := Socket;
-    _root_tag := root;
-    _root_len := Length(_root_tag);
-
-    _Socket.OnConnected := Sock_Connect;
-    _Socket.OnDisconnected := Sock_Disconnect;
-
-    FreeOnTerminate := true;
-    StopMode := smSuspend;
-
-    OnException := GotException;
-    OnTerminate := DataTerminate;
-
-    _Stage := 0;
-    _Data := '';
     _rbuff := '';
     _root := '';
     _counter := 0;
+    _stream := strm;
+    _root_tag := root;
+    _root_len := Length(_root_tag);
     _indata := TStringList.Create;
     _tag_parser := TXMLTagParser.Create;
     _domstack := TList.Create;
     _lock := TCriticalSection.Create;
+
+    FreeOnTerminate := true;
+    StopMode := smSuspend;
+
 end;
 
 {---------------------------------------}
-procedure TDataThread.DataTerminate(Sender: TObject);
+procedure TParseThread.Push(buff: string);
 begin
-    // destructor for the thread
-    {
-    // Why is this crap here?? GotException should be sufficient
-    if (_Socket = nil) or (not _Socket.Connected) then begin
-        Self.Terminate;
-        end
-    else if (_Socket <> nil) and (_Socket.Connected) then begin
-        _Data := 'Reader socket terminated.';
-        doMessage(WM_DROPPED);
-        end;
-    }
+    _lock.Acquire;
+    _indata.Add(buff);
+    _lock.Release;
 
-    _indata.Free();
-    _tag_parser.Free();
-    _lock.Free();
-    _domStack.Free();
-end;
+    doMessage(WM_SOCKET);
 
-{---------------------------------------}
-procedure TDataThread.doMessage(msg: integer);
-begin
-    if (_stream = nil) then exit;
-
-    _cur_msg.msg := WM_JABBER;
-    _cur_msg.lparam := msg;
-
-    Synchronize(Self.DispatchMsg);
-end;
-
-{---------------------------------------}
-procedure TDataThread.DispatchMsg;
-begin
-    assert(_stream <> nil, 'Trying to dispatch to a nil stream');
-    _stream.Dispatch(_cur_msg);
-end;
-
-{---------------------------------------}
-procedure TDataThread.Run;
-var
-    bytes: longint;
-    utf, buff: string;
-begin
-    {
-    This procedure gets run continuously, until
-    the the thread is told to stop.
-
-    Read stuff from the socket and feed it into the
-    parser.
-    }
-    if _Stage = 0 then begin
-        // try to connect
-        if (_socket.Connected) then
-            _Socket.Disconnect();
-
-        _Socket.Connect;
-        {
-        If we successfully connect, change the stage of the
-        thread so that we switch to reading the socket
-        instead of trying to connect.
-
-        If we can't connect, an exception will be thrown
-        which will cause the GotException method of the
-        thread to fire, since we don't have to explicitly
-        catch exceptions in this thread.
-        }
-        _Stage := 1;
-        end
+    if (Copy(buff, 1, _root_len + 2) = '</' + _root_tag) then
+        doMessage(WM_DROPPED)
     else begin
-        // Read in the current buffer, yadda.
-        if (_socket = nil) then
-            Self.Terminate
-        else if not _Socket.Connected then begin
-            _socket := nil;
-            doMessage(WM_DISCONNECTED);
-            Self.Terminate;
-            end
-        else begin
-            // Get any pending incoming data
-            utf := _Socket.CurrentReadBuffer;
-            buff := Utf8ToAnsi(utf);
-
-            if ((Self.Stopped) or (Self.Suspended) or (Self.Terminated)) then
-                exit;
-
-            bytes := length(buff);
-            if bytes > 0 then begin
-                // stuff the socket data into the stream
-                // add the raw txt to the indata list
-                _lock.Acquire;
-                _indata.Add(buff);
-                _lock.Release;
-
-                doMessage(WM_SOCKET);
-
-                if (Copy(buff, 1, _root_len + 2) = '</' + _root_tag) then
-                    doMessage(WM_DROPPED)
-                else begin
-                    handleBuffer(buff);
-                    end;
-                end;
-            end;
+        handleBuffer(buff);
         end;
 end;
 
 {---------------------------------------}
-function TDataThread.GetData: string;
+procedure TParseThread.handleBuffer(buff: string);
+var
+    cp_buff: string;
+    fc, frag: string;
+begin
+    // scan the buffer to see if it's complete
+    cp_buff := buff;
+    cp_buff := _rbuff + buff;
+    _rbuff := cp_buff;
+
+    // get all of the complete xml fragments until
+    // we don't have any left in this buffer
+    repeat
+        frag := getFullTag(_rbuff);
+        if (frag <> '') then begin
+            fc := frag[2];
+            if (fc <> '?') and (fc <> '!') then
+                ParseTags(frag);
+            _root := '';
+            end;
+    until ((frag = '') or (_rbuff = ''));
+end;
+
+{---------------------------------------}
+function TParseThread.GetData: string;
 begin
     {
     Suck some data off of the _indata stack and return it.
@@ -310,75 +219,68 @@ begin
 end;
 
 {---------------------------------------}
-function TDataThread.GetTag: TXMLTag;
+procedure TParseThread.CleanUp();
+begin
+    _indata.Free();
+    _tag_parser.Free();
+    _lock.Free();
+    _domStack.Free();
+end;
+
+{---------------------------------------}
+procedure TParseThread.doMessage(msg: integer);
+begin
+    if (_stream = nil) then exit;
+
+    _cur_msg.msg := WM_JABBER;
+    _cur_msg.lparam := msg;
+
+    Synchronize(Self.DispatchMsg);
+end;
+
+{---------------------------------------}
+procedure TParseThread.DispatchMsg;
+begin
+    assert(_stream <> nil, 'Trying to dispatch to a nil stream');
+    _stream.Dispatch(_cur_msg);
+end;
+
+{---------------------------------------}
+function TParseThread.GetTag: TXMLTag;
 begin
     {
     Suck an entire TXMLTag object off of the _domstack list
-    and return it. Make sure we lock around this since TList's
-    are not thread safe.
+    and return it. This method is called by the stream object
+    via the synchronized Dispatch method.
     }
     Result := nil;
     if _domstack.count <= 0 then exit;
 
-    // _lock.Acquire;
     Result := TXMLTag(_domstack[0]);
     _domstack.Delete(0);
-    // _lock.Release;
 end;
 
 {---------------------------------------}
-procedure TDataThread.Sock_Connect(Sender: TObject);
-begin
-    // Socket is connected, signal the main thread
-    doMessage(WM_CONNECTED);
-end;
-
-{---------------------------------------}
-procedure TDataThread.Sock_Disconnect(Sender: TObject);
-begin
-    // Socket is disconnected
-
-end;
-
-{---------------------------------------}
-procedure TDataThread.GotException(Sender: TObject; E: Exception);
+procedure TParseThread.ParseTags(buff: string);
 var
-    se: EIdSocketError;
+    c_tag: TXMLTag;
 begin
-    // Handle gracefull connection closures
-    if _Stage = 0 then begin
-        // We can't connect
-        _socket := nil;
-        if E is EIdSocketError then
-            _Data := 'Could not connect to the server.'
-        else
-            _Data := 'Exception: ' + E.Message;
-        doMessage(WM_COMMERROR);
-    end
-    else begin
-        // Some exception occured during Read ops
-        _socket := nil;
-        if E is EIdConnClosedGracefully then exit;
+    _tag_parser.ParseString(buff, _root_tag);
 
-        if E is EIdSocketError then begin
-            se := E as EIdSocketError;
-            if se.LastError = 10038 then
-                // normal disconnect
-                doMessage(WM_DISCONNECTED)
-            else begin
-                // some other socket exception
-                _Data := E.Message;
-                doMessage(WM_COMMERROR);
-                end;
+    repeat
+        c_tag := _tag_parser.popTag();
+        if (c_tag <> nil) then begin
+            _lock.Acquire;
+            _domStack.Add(c_tag);
+            doMessage(WM_XML);
+            _lock.Release;
             end;
+    until (c_tag = nil);
 
-        // reset the stage
-        _Stage := 0;
-        end;
 end;
 
 {---------------------------------------}
-function TDataThread.getFullTag(buff: string): string;
+function TParseThread.getFullTag(buff: string): string;
 var
     // pbuff: array of char;
     sbuff, r, stag, etag, tmps: String;
@@ -489,261 +391,35 @@ begin
     result := r;
 end;
 
-{---------------------------------------}
-procedure TDataThread.handleBuffer(buff: string);
-var
-    cp_buff: string;
-    fc, frag: string;
-begin
-    // scan the buffer to see if it's complete
-    cp_buff := buff;
-    cp_buff := _rbuff + buff;
-    _rbuff := cp_buff;
-
-    // get all of the complete xml fragments until
-    // we don't have any left in this buffer
-    repeat
-        frag := getFullTag(_rbuff);
-        if (frag <> '') then begin
-            fc := frag[2];
-            if (fc <> '?') and (fc <> '!') then
-                ParseTags(frag);
-            _root := '';
-            end;
-    until ((frag = '') or (_rbuff = ''));
-end;
-
-{---------------------------------------}
-procedure TDataThread.ParseTags(buff: string);
-var
-    c_tag: TXMLTag;
-begin
-    _tag_parser.ParseString(buff, _root_tag);
-
-    repeat
-        c_tag := _tag_parser.popTag();
-        if (c_tag <> nil) then begin
-            _lock.Acquire;
-            _domStack.Add(c_tag);
-            doMessage(WM_XML);
-            _lock.Release;
-            end;
-    until (c_tag = nil);
-    
-end;
 
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 constructor TXMLStream.Create(root: string);
 begin
-    {
-    Create a window handle for sending messages between
-    the thread reader socket and the main object.
-
-    Also create the socket here, and setup the callback lists.
-    }
     inherited Create();
-
-    _ssl_int := TIdConnectionInterceptOpenSSL.Create(nil);
-    with _ssl_int do begin
-        SSLOptions.CertFile := '';
-        SSLOptions.RootCertFile := '';
-        end;
-    _socket := nil;
-    _sock_lock := TCriticalSection.Create();
-    {
-    _socket := TIdTCPClient.Create(nil);
-    _socket.Intercept := _ssl_int;
-    _socket.InterceptEnabled := false;
-    _socket.RecvBufferSize := 4096;
-    }
-
     _root_tag := root;
     _callbacks := TObjectList.Create;
-    _sock_callbacks := TObjectList.Create;
+    _data_callbacks := TObjectList.Create;
     _active := false;
-
-    _timer := TTimer.Create(nil);
-    _timer.Interval := 60000;
-    _timer.Enabled := false;
-    _timer.OnTimer := KeepAlive;
 end;
 
 {---------------------------------------}
-destructor TXMLStream.Destroy;
+destructor TXMLStream.Destroy();
 begin
     // free all our objects and free the window handle
     _callbacks.Clear();
-    _sock_callbacks.Clear();
+    _data_callbacks.Clear();
 
     if _thread <> nil then begin
         _thread._stream := nil;
         _thread.Terminate;
         end;
 
-    _ssl_int.Free();
-    _timer.Free();
-
     _callbacks.Free;
-    _sock_callbacks.Free;
-    KillSocket();
-    _sock_lock.Free;
+    _data_callbacks.Free;
 
-    inherited Destroy;
-end;
-
-{---------------------------------------}
-procedure TXMLStream.Keepalive(Sender: TObject);
-var
-    xml: string;
-begin
-    // send a keep alive
-    if _socket.Connected then begin
-        xml := '    ';
-        DoSocketCallbacks(true, xml);
-        _socket.Write(xml);
-        end;
-end;
-
-{---------------------------------------}
-procedure TXMLStream.MsgHandler(var msg: TJabberMsg);
-var
-    tmps: string;
-    tag: TXMLTag;
-begin
-    {
-    handle all of our funky messages..
-    These are window msgs put in the stack by the thread so that
-    we can get thread -> mainprocess IPC
-    }
-    case msg.lparam of
-        WM_CONNECTED: begin
-            // Socket is connected
-            _LocalIP := _Socket.Binding.IP;
-            _active := true;
-            _timer.Enabled := true;
-            DoCallbacks('connected', nil);
-            end;
-
-        WM_DISCONNECTED: begin
-            // Socket is disconnected
-            KillSocket();
-            if (_thread <> nil) then
-                _thread.Terminate();
-            _timer.Enabled := false;
-            _active := false;
-            _thread := nil;
-            DoCallbacks('disconnected', nil);
-            end;
-
-        WM_SOCKET: begin
-            // We are getting something on the socket
-            tmps := _thread.Data;
-            if tmps <> '' then
-                DoSocketCallbacks(false, tmps);
-            end;
-
-        WM_XML: begin
-            // We are getting XML data from the thread
-            if _thread = nil then exit;
-
-            tag := _thread.GetTag;
-            if tag <> nil then begin
-                DoCallbacks('xml', tag);
-                end;
-            end;
-
-        WM_COMMERROR: begin
-            // There was a COMM ERROR
-            KillSocket();
-            if _thread <> nil then
-                tmps := _thread.Data
-            else
-                tmps := '';
-
-            _timer.Enabled := false;
-            _active := false;
-            _thread := nil;
-            DoCallbacks('disconnected', nil);
-            DoCallbacks('commerror', nil);
-            end;
-
-        WM_DROPPED: begin
-            // something dropped our connection
-            if (_socket.Connected) then
-                _socket.Disconnect();
-            _thread := nil;
-            _timer.Enabled := false;
-            end;
-
-        else
-            inherited;
-    end;
-end;
-
-{---------------------------------------}
-procedure TXMLStream.Connect(server: string; port: integer; use_ssl: boolean = false);
-begin
-    // connect to this server
-    _socket := TIdTCPClient.Create(nil);
-    _socket.Intercept := _ssl_int;
-    _socket.InterceptEnabled := false;
-    _socket.RecvBufferSize := 4096;
-
-    _server := Server;
-    _port := port;
-    _socket.Host := Server;
-    _socket.Port := port;
-    _Socket.InterceptEnabled := use_ssl;
-
-    // Create the socket reader thread and start it.
-    // The thread will open the socket and read all of the data.
-    _thread := TDataThread.Create(Self, _socket, _root_tag);
-    _thread.Start;
-end;
-
-{---------------------------------------}
-procedure TXMLStream.Disconnect;
-begin
-    // Disconnect the stream and stop the thread
-    _timer.Enabled := false;
-    if ((_socket <> nil) and (_socket.Connected)) then begin
-        _socket.Disconnect();
-        end;
-end;
-
-{---------------------------------------}
-procedure TXMLStream.KillSocket();
-begin
-    _sock_lock.Acquire();
-
-    if (_socket <> nil) then begin
-        _socket.Free();
-        _socket := nil;
-        end;
-
-    _sock_lock.Release();
-end;
-
-{---------------------------------------}
-procedure TXMLStream.Send(xml: string);
-var
-    utf: string;
-begin
-    // Send this text out the socket
-    utf := AnsiToUTF8(xml);
-    DoSocketCallbacks(true, utf);
-    _Socket.Write(utf);
-    _timer.Enabled := false;
-    _timer.Enabled := true;
-end;
-
-{---------------------------------------}
-procedure TXMLStream.SendTag(tag: TXMLTag);
-begin
-    // Send this xml tag out the socket
-    Send(tag.xml);
+    inherited;
 end;
 
 {---------------------------------------}
@@ -759,7 +435,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TXMLStream.RegisterSocketCallback(p: TSocketCallback);
+procedure TXMLStream.RegisterDataCallback(p: TDataCallback);
 var
     l: TSignalListener;
 begin
@@ -767,22 +443,56 @@ begin
     // Socket callbacks get raw data read in our sent thru the socket
     l := TSignalListener.Create;
     l.callback := TMethod(p);
-    _sock_callbacks.add(l);
+    _data_callbacks.add(l);
 end;
 
 {---------------------------------------}
-procedure TXMLStream.DoSocketCallbacks(send: boolean; data: string);
+procedure TXMLStream.UnregisterStreamCallback(p: TXMLStreamCallback);
+var
+    i : integer;
+    cb: TXMLStreamCallback;
+    l:  TSignalListener;
+begin
+    for i := 0 to _callbacks.Count -1 do begin
+        l := TSignalListener(_callbacks[i]);
+        cb := TXMLStreamCallback(l.callback);
+        if (@cb = @p) then begin
+            _callbacks.Delete(i);
+            exit;
+            end;
+        end;
+end;
+
+{---------------------------------------}
+procedure TXMLStream.UnregisterDataCallback(p: TDataCallback);
+var
+    i : integer;
+    cb: TDataCallback;
+    l:  TSignalListener;
+begin
+    for i := 0 to _data_callbacks.Count -1 do begin
+        l := TSignalListener(_data_callbacks[i]);
+        cb := TDataCallback(l.callback);
+        if (@cb = @p) then begin
+            _data_callbacks.Delete(i);
+            exit;
+            end;
+        end;
+end;
+
+{---------------------------------------}
+procedure TXMLStream.DoDataCallbacks(send: boolean; data: string);
 var
     i: integer;
-    cb: TSocketCallback;
+    cb: TDataCallback;
     l: TSignalListener;
 begin
     // Dispatch socket data to all of our register'd callbacks
     cb := nil;
 
-    for i := 0 to _sock_callbacks.Count - 1 do begin
-        l := TSignalListener(_sock_callbacks[i]);
-        cb := TSocketCallback(l.callback);
+    for i := 0 to _data_callbacks.Count - 1 do begin
+        l := TSignalListener(_data_callbacks[i]);
+        cb := TDataCallback(l.callback);
         cb(send, data);
         end;
 end;
@@ -803,6 +513,15 @@ begin
         cb(msg, tag);
         end;
 end;
+
+{---------------------------------------}
+procedure TXMLStream.SendTag(tag: TXMLTag);
+begin
+    // Send this xml tag out the socket
+    Send(tag.xml);
+end;
+
+
 
 end.
 

@@ -139,7 +139,7 @@ const
     XMLNS_BM        = 'storage:bookmarks';
     XMLNS_PREFS     = 'storage:imprefs';
     XMLNS_MSGEVENTS = 'jabber:x:event';
-
+    XMLNS_DELAY     = 'jabber:x:delay';
 
 var
     MainSession: TJabberSession;
@@ -152,7 +152,7 @@ uses
     {$else}
     QForms, QDialogs,
     {$endif}
-    XMLUtils, IdGlobal,
+    XMLUtils, XMLSocketStream, IdGlobal,
     iq;
 
 {---------------------------------------}
@@ -161,7 +161,7 @@ begin
     //
     inherited Create();
     
-    _stream := TXMLStream.Create('stream:stream');
+    _stream := TXMLSocketStream.Create('stream:stream');
     _username := '';
     _password := '';
     _resource := '';
