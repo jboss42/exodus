@@ -159,6 +159,7 @@ var
     mt: integer;
     mtype: Widestring;
     m, etag: TXMLTag;
+    is_composing: boolean;
 begin
     // do stuff
     // check for exclusions.. don't show x-data or invites
@@ -166,21 +167,25 @@ begin
     if (tag.QueryXPTag(XP_MUCINVITE) <> nil) then exit;
     if (tag.QueryXPTag(XP_CONFINVITE) <> nil) then exit;
 
+    // if we don't have a window, then ignore composing events
+    etag := tag.QueryXPTag(XP_MSGXEVENT);
+    is_composing := ((etag <> nil) and
+        (etag.GetFirstTag('composing') <> nil) and
+        (etag.GetFirstTag('id') <> nil));
+
+    // if our event isn't hooked up, and this is a composing event,
+    // just bail
+    if ((is_composing) and (not Assigned(_event))) then exit;
+
+    // if we have no body, then bail
+    if ((not is_composing) and (tag.GetFirstTag('body') = nil)) then exit;
+
+    // Check message types
     mt := MainSession.Prefs.getInt('msg_treatment');
     mtype := tag.getAttribute('type');
     if (mtype = 'groupchat') then exit;
-    if ((mtype <> 'chat') and (mt = msg_normal)) then exit;
+    if ((mtype <> 'chat') and (mt = msg_normal) and (not is_composing)) then exit;
 
-    // if we don't have a window, then ignore composing events
-    etag := tag.QueryXPTag(XP_MSGXEVENT);
-    if (not Assigned(_event)) then begin
-        // if we have an event, then just bail
-        if ((etag <> nil) and
-            (etag.GetFirstTag('composing') <> nil) and
-            (etag.GetFirstTag('id') <> nil)) then exit;
-        // if we have no body, then bail
-        if (tag.GetFirstTag('body') = nil) then exit;
-    end;
 
     // check for delivered requests
     if (etag <> nil) then begin
