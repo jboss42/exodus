@@ -71,6 +71,9 @@ resourcestring
     sProfileCreate = 'New Profile';
     sProfileNamePrompt = 'Enter Profile Name';
 
+    sResourceWork = 'Work';
+    sResourceHome = 'Home';
+
 
 {---------------------------------------}
 {---------------------------------------}
@@ -156,8 +159,8 @@ end;
 procedure TfrmLogin.FormCreate(Sender: TObject);
 begin
     MainSession.Prefs.RestorePosition(Self);
-    cboResource.Items.Add('Home');
-    cboResource.Items.Add('Work');
+    cboResource.Items.Add(sResourceHome);
+    cboResource.Items.Add(sResourceWork);
     cboResource.Items.Add('Exodus');
 end;
 

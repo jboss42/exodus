@@ -92,6 +92,10 @@ const
 
     regStage_Done = 100;
 
+resourcestring
+    sBtnFinish = 'Finish';
+    sBtnCancel = 'Cancel';
+
 var
   frmRegister: TfrmRegister;
 
@@ -291,7 +295,7 @@ begin
         lblOK.Visible := true;
         lblBad.Visible := false;
         btnPrev.Enabled := false;
-        btnNext.Caption := 'Finish';
+        btnNext.Caption := sBtnFinish;
         btnNext.Enabled := true;
         btnCancel.Enabled := false;
         end
@@ -300,7 +304,7 @@ begin
         lblOK.Visible := false;
         lblBad.Visible := true;
         btnPrev.Enabled := false;
-        btnNext.Caption := 'Cancel';
+        btnNext.Caption := sBtnCancel;
         btnNext.Enabled := true;
         btnCancel.Enabled := false;
         end;

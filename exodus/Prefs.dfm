@@ -1570,12 +1570,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 357
-    ActivePage = tbsNotify
+    ActivePage = tbsFonts
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 6
+    TabIndex = 2
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'

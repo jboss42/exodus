@@ -181,6 +181,10 @@ type
         property Profiles: TStringlist read _profiles write _profiles;
     end;
 
+resourceString
+    sIdleAway = 'Away as a result of idle.';
+    sIdleXA = 'XA as a result of idle.';
+
 
 {$ifdef Win32}
 function getUserDir: string;
@@ -432,9 +436,9 @@ begin
     else if pkey = 'xa_time' then
         result := '30'
     else if pkey = 'away_status' then
-        result := 'Away as a result of idle'
+        result := sIdleAway
     else if pkey = 'xa_status' then
-        result := 'XA as a result of idle'
+        result := sIdleXA
     else if pkey = 'log_path' then
         result := ExtractFilePath(Application.EXEName) + 'logs'
     else if pkey = 'xfer_path' then
