@@ -229,8 +229,10 @@ begin
         pConf.Visible := false;
     end;
 
-    if (_iq <> nil) then
+    if (_iq <> nil) then begin
         _iq.Free();
+        _iq := nil;
+        end;
 
 end;
 
@@ -707,6 +709,7 @@ begin
     if ((event = 'xml') or (event = 'cache')) then begin
         if (tag.GetAttribute('type') = 'error') then begin
             Self.ShowError(tag);
+            _iq := nil;
             exit;
             end;
 
@@ -714,6 +717,7 @@ begin
         clist := tag.ChildTags();
         if (clist.Count <= 0) then begin
             Self.ShowError(tag);
+            _iq := nil;
             exit;
             end;
 
