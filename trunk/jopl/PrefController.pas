@@ -29,6 +29,11 @@ uses
     
     {$ifdef Win32}
     Forms, Windows, Registry,
+
+    {$ifdef Exodus}
+    TntClasses,
+    {$endif}
+
     {$else}
     // iniFiles,
     Math, QForms,
@@ -170,7 +175,10 @@ end;
         function getString(pkey: Widestring; server_side: TPrefKind = pkClient): Widestring;
         function getInt(pkey: Widestring; server_side: TPrefKind = pkClient): integer;
         function getBool(pkey: Widestring; server_side: TPrefKind = pkClient): boolean;
-        procedure fillStringlist(pkey: Widestring; sl: TWideStrings; server_side: TPrefKind = pkClient);
+        procedure fillStringlist(pkey: Widestring; sl: TWideStrings; server_side: TPrefKind = pkClient); overload;
+        {$ifdef Exodus}
+        procedure fillStringlist(pkey: Widestring; sl: TTntStrings; server_side: TPrefKind = pkClient); overload;
+        {$endif}
 
         function getAllPresence(): TList;
         function getPresence(pkey: Widestring): TJabberCustomPres;
@@ -179,7 +187,11 @@ end;
         procedure setString(pkey, pvalue: Widestring; server_side: TPrefKind = pkClient);
         procedure setInt(pkey: Widestring; pvalue: integer; server_side: TPrefKind = pkClient);
         procedure setBool(pkey: Widestring; pvalue: boolean; server_side: TPrefKind = pkClient);
-        procedure setStringlist(pkey: Widestring; pvalue: TWideStrings; server_side: TPrefKind = pkClient);
+        procedure setStringlist(pkey: Widestring; pvalue: TWideStrings; server_side: TPrefKind = pkClient); overload;
+        {$ifdef Exodus}
+        procedure setStringlist(pkey: Widestring; pvalue: TTntStrings; server_side: TPrefKind = pkClient); overload;
+        {$endif}
+
         procedure setPresence(pvalue: TJabberCustomPres);
         procedure removePresence(pvalue: TJabberCustomPres);
         procedure removeAllPresence();
@@ -207,7 +219,10 @@ end;
         property Profiles: TStringlist read _profiles write _profiles;
 end;
 
-procedure fillDefaultStringlist(pkey: Widestring; sl: TWideStrings);
+procedure fillDefaultStringlist(pkey: Widestring; sl: TWideStrings); overload;
+{$ifdef Exodus}
+procedure fillDefaultStringlist(pkey: Widestring; sl: TTntStrings); overload;
+{$endif}
 function getDefault(pkey: Widestring): Widestring;
 
 var
@@ -586,6 +601,32 @@ end;
 end;
 
 {---------------------------------------}
+{$ifdef Exodus}
+procedure TPrefController.fillStringlist(pkey: Widestring; sl: TTntStrings; server_side: TPrefKind = pkClient);
+var
+    p: TXMLTag;
+    s: TXMLTagList;
+    i: integer;
+begin
+    case server_side of
+    pkClient:   p := _pref_node.GetFirstTag(pkey);
+    pkServer:   p := _server_node.GetFirstTag(pkey);
+    else        p:= nil;
+    end;
+
+    if (p <> nil) then begin
+        sl.Clear();
+        s := p.QueryTags('s');
+        for i := 0 to s.Count - 1 do
+            sl.Add(s.Tags[i].Data);
+        s.Free;
+    end
+    else
+        fillDefaultStringList(pkey, sl);
+end;
+{$endif}
+
+{---------------------------------------}
 procedure TPrefController.setBool(pkey: Widestring; pvalue: boolean; server_side: TPrefKind = pkClient);
 begin
      if (pvalue) then
@@ -658,6 +699,42 @@ begin
     if (server_side = pkClient) then
         Self.Save();
 end;
+
+{---------------------------------------}
+procedure TPrefController.setStringlist(pkey: Widestring; pvalue: TTntStrings; server_side: TPrefKind = pkClient);
+var
+    i: integer;
+    n, p: TXMLTag;
+begin
+    // setup the stringlist in it's own parent..
+    // with multiple <s> tags for each value.
+    if (Server_side = pkServer) then begin
+        n := _server_node;
+        _server_dirty := true;
+    end
+    else
+        n := _pref_node;
+
+    if (n = nil) then
+        p := nil
+    else
+        p := n.GetFirstTag(pkey);
+
+    if (p = nil) then
+        p := n.AddTag(pkey)
+    else
+        p.ClearTags();
+
+    // plug in all the values
+    for i := 0 to pvalue.Count - 1 do begin
+        if (pvalue[i] <> '') then
+            p.AddBasicTag('s', pvalue[i]);
+    end;
+
+    if (server_side = pkClient) then
+        Self.Save();
+end;
+
 
 {---------------------------------------}
 function TPrefController.findPresenceTag(pkey: Widestring): TXMLTag;
@@ -1252,6 +1329,27 @@ begin
         sl.Add(s.Tags[i].Data);
     s.Free;
 end;
+
+{---------------------------------------}
+{$ifdef Exodus}
+procedure fillDefaultStringlist(pkey: Widestring; sl: TTntStrings);
+var
+    t: TXMLTag;
+    s: TXMLTagList;
+    i: integer;
+begin
+    sl.Clear();
+    t := s_brand_node.GetFirstTag(pkey);
+    if (t = nil) then
+        t := s_default_node.GetFirstTag(pkey);
+    if (t = nil) then exit;
+
+    s := t.QueryTags('s');
+    for i := 0 to s.Count - 1 do
+        sl.Add(s.Tags[i].Data);
+    s.Free;
+end;
+{$endif}
 
 {---------------------------------------}
 function getDefault(pkey: Widestring): Widestring;

@@ -81,7 +81,7 @@ begin
         end
         else begin
             Caption := Format(sRemoveGroup, [grp]);
-            cboNewGroup.Items.Assign(MainSession.Roster.GrpList);
+            AssignTntStrings(MainSession.roster.GrpList, cboNewGroup.Items);
             cboNewGroup.Items.Delete(cboNewGroup.Items.IndexOf(grp));
             removeSpecialGroups(cboNewGroup.Items);
             cboNewGroup.ItemIndex := 0;

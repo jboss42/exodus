@@ -215,15 +215,27 @@ inherited frmPrefPresence: TfrmPrefPresence
     Height = 24
     Align = alTop
     BevelOuter = bvLowered
-    BorderWidth = 1
-    Caption = 'Presence Options'
-    Color = clMenuHighlight
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clCaptionText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentFont = False
+    ParentColor = True
     TabOrder = 4
+    object TntLabel1: TTntLabel
+      Left = 1
+      Top = 1
+      Width = 327
+      Height = 22
+      Align = alClient
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'Presence Options'
+      Color = clHighlight
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWhite
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+      Transparent = False
+      Layout = tlCenter
+    end
   end
 end

@@ -38,6 +38,7 @@ type
     chkOfflineGrp: TTntCheckBox;
     chkOnlineOnly: TTntCheckBox;
     StaticText4: TTntPanel;
+    TntLabel1: TTntLabel;
     procedure chkOfflineGrpClick(Sender: TObject);
   private
     { Private declarations }
@@ -70,8 +71,8 @@ begin
     gs.Sorted := true;
     gs.Sort();
 
-    txtDefaultGrp.Items.Assign(gs);
-    txtGatewayGrp.Items.Assign(gs);
+    AssignTntStrings(gs, txtDefaultGrp.Items);
+    AssignTntStrings(gs, txtGatewayGrp.Items);
 
     gs.Free();
 

@@ -141,7 +141,7 @@ implementation
 {$R *.DFM}
 uses
     JabberConst, XMLVCard, ExUtils, GnuGetText,  
-    Presence, Roster, JabberID, Session, Jabber1;
+    Presence, Roster, JabberID, Session, Unicode, Jabber1;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -159,7 +159,7 @@ begin
     f := TfrmProfile.Create(Application);
 
     with f do begin
-        GrpListBox.Items.Assign(MainSession.roster.GrpList);
+        AssignTntStrings(MainSession.Roster.GrpList, GrpListBox.Items);
         removeSpecialGroups(GrpListBox.Items);
         ResListBox.Items.Clear;
         optSubscrip.ItemIndex := 3;
@@ -315,7 +315,7 @@ var
     ritem: TJabberRosterItem;
     changed: boolean;
     i: integer;
-    tmp_grplist: TStringList;
+    tmp_grplist: TWideStringList;
 begin
     // if the nick has changed then change the roster item
     ritem := MainSession.roster.Find(txtJID.Text);
@@ -326,7 +326,7 @@ begin
             changed := true;
         end;
 
-        tmp_grplist := TStringlist.Create;
+        tmp_grplist := TWideStringlist.Create;
         for i := 0 to GrpListBox.Items.Count - 1 do begin
             if GrpListBox.Checked[i] then
                 tmp_grplist.Add(grpListBox.Items[i]);

@@ -30,6 +30,7 @@ type
     txtProxyPassword: TTntEdit;
     cboProxyApproach: TTntComboBox;
     StaticText4: TTntPanel;
+    TntLabel1: TTntLabel;
     procedure cboProxyApproachChange(Sender: TObject);
     procedure chkProxyAuthClick(Sender: TObject);
   private
