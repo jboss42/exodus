@@ -25,6 +25,14 @@ uses
     SysUtils, Classes;
 
 type
+    TRegProxy = class
+    protected
+        cb: integer;
+        reg_controller: TRegController;
+    published
+        procedure Callback(event: string; tag: TXMLTag);
+    end;
+
     TRegController = class
     private
         _s: TObject;
@@ -33,6 +41,7 @@ type
         procedure callback(event: string; tag: TXMLTag);
     public
         procedure SetSession(s: TObject);
+        procedure MonitorJid(jid: WideString);
     end;
 
 implementation
@@ -62,6 +71,24 @@ begin
         f.jid := tag.getAttribute('jid');
         f.Start();
         end;
+end;
+
+{---------------------------------------}
+procedure TRegController.MonitorJid(jid: WideString);
+var
+    rp: TRegProxy;
+begin
+    // monitor this JID for pres-error type 407
+    // when we get one, fire off a register event
+    rp := TRegProxy.Create;
+    rp.reg_controller := Self;
+    rp.cb := js.RegisterCallback(rp.Callback, '/packet/presence[@type="error"]/error[@code="407"]');
+end;
+
+procedure TRegProxy.Callback(event: string; tag:TXMLTag);
+begin
+    //
+
 end;
 
 

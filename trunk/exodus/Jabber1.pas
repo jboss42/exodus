@@ -317,7 +317,6 @@ type
     procedure restoreToolbar;
     procedure restoreAlpha;
     procedure restoreMenus(enable: boolean);
-    // procedure restoreEvents(expanded: boolean);
     procedure restoreRoster();
 
     procedure setupTrayIcon();
@@ -376,6 +375,7 @@ type
     procedure PostModal();
 
     property ComController: TExodusController read _controller;
+    property RegisterController: TRegController read _regController; 
 
   end;
 
@@ -932,7 +932,6 @@ begin
     restoreToolbar();
     exp := MainSession.Prefs.getBool('expanded');
     pnlRight.Visible := exp;
-    // restoreEvents(exp);
     restoreRoster();
 
     // some gui related flags
@@ -1310,7 +1309,6 @@ begin
         restoreMenus(MainSession.Active);
         restoreToolbar();
         restoreAlpha();
-        // restoreEvents(MainSession.Prefs.getBool('expanded'));
         restoreRoster();
         
         if not MainSession.Prefs.getBool('expanded') then
@@ -1778,8 +1776,10 @@ begin
 
     MainSession.Prefs.RestorePosition(Self);
     restoreToolbar();
-    // restoreEvents(newval);
     restoreRoster();
+
+    Self.Width := Self.Width + 1;
+    Self.Width := Self.Width - 1;
 end;
 
 {---------------------------------------}
@@ -1805,7 +1805,7 @@ begin
 
         // setup panels for the roster
         pnlRoster.Visible := true;
-        SplitterRight.Visible := true;
+        SplitterRight.Visible := (expanded);
         SplitterLeft.Visible := false;
         pnlLeft.Visible := false;
         pnlLeft.Width := 0;
@@ -1827,7 +1827,7 @@ begin
 
         // setup panels for the roster
         pnlLeft.Visible := true;
-        SplitterLeft.Visible := true;
+        SplitterLeft.Visible := (expanded);
         SplitterRight.Visible := false;
         pnlRoster.Visible := false;
         if ((frmRosterWindow <> nil) and (frmRosterWindow.inMessenger)) then
@@ -1893,104 +1893,10 @@ begin
         if (frmRosterWindow <> nil) then
             frmRosterWindow.Refresh();
         rpanel.Align := alClient;
-        Self.Invalidate();
+        Self.Width := Self.Width + 1;
         end;
 end;
 
-{---------------------------------------}
-(*
-procedure TfrmExodus.DockMsgQueue();
-var
-    ew, w: integer;
-begin
-    w := MainSession.Prefs.getInt(P_EVENT_WIDTH);
-
-    if (pnlRoster.Visible) then
-        pnlRoster.align := alLeft
-    else
-        pnlLeft.Align := alLeft;
-
-    pnlRight.Width := w;
-    ew := Self.ClientWidth - w;
-    if (ew < 0) then ew := Self.ClientWidth div 2;
-
-    if (MainSession.Prefs.getBool('roster_messenger')) then begin
-        pnlRoster.Visible := true;
-        SplitterRight.Visible := true;
-        SplitterLeft.Visible := false;
-        pnlLeft.Visible := false;
-        if ((frmRosterWindow <> nil) and (frmRosterWindow.inMessenger = false)) then
-            frmRosterWindow.DockRoster();
-        pnlLeft.Width := 0;
-        pnlRoster.Width := ew;
-        end
-    else begin
-        pnlLeft.Visible := true;
-        SplitterLeft.Visible := true;
-        SplitterRight.Visible := false;
-        pnlRoster.Visible := false;
-        if ((frmRosterWindow <> nil) and (frmRosterWindow.inMessenger)) then
-            frmRosterWindow.DockRoster();
-        pnlRoster.Width := 0;
-        pnlLeft.Width := ew;
-        end;
-
-    if (pnlRoster.Visible) then begin
-        end
-    else begin
-        end;
-end;
-*)
-
-{---------------------------------------}
-(*
-procedure TfrmExodus.FloatMsgQueue();
-var
-    w: integer;
-begin
-    w := pnlRight.Width;
-    MainSession.Prefs.setInt('event_width', w);
-    pnlRight.Visible := false;
-    if (pnlRoster.Visible) then
-        pnlRoster.align := alClient
-    else
-        pnlLeft.Align := alLeft;
-end;
-*)
-
-{---------------------------------------}
-(*
-procedure TfrmExodus.restoreEvents(expanded: boolean);
-var
-    activeTab: integer;
-begin
-    // Setup the msg queue window based on the prefs
-    with MainSession.Prefs do begin
-        setBool('expanded', expanded);
-        if expanded then begin
-            Tabs.Docksite := true;
-            DockMsgQueue();
-            tbsRoster.TabVisible := true;
-            // make sure the debug window is docked
-            activeTab := Tabs.ActivePage.PageIndex;
-            DockDebugForm();
-            Tabs.ActivePage := Tabs.Pages[activeTab];
-            end
-        else begin
-            tbsRoster.TabVisible := false;
-            Tabs.Docksite := false;
-            FloatMsgQueue();
-            Tabs.ActivePage := tbsRoster;
-            FloatDebugForm();
-
-            if pnlLeft.Visible then
-                pnlLeft.Align := alClient
-            else
-                pnlRoster.Align := alClient;
-            end;
-        end;
-end;
-*)
 
 {---------------------------------------}
 procedure TfrmExodus.ClearMessages1Click(Sender: TObject);

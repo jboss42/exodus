@@ -106,7 +106,7 @@ type
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
     _roster: TWideStringlist;   // roster for this room
-    _isGC: boolean;
+    _isMUC: boolean;
     _mcallback: integer;        // Message Callback
     _ecallback: integer;        // Error msg callback
     _pcallback: integer;        // Presence Callback
@@ -117,6 +117,8 @@ type
     _nick_start: integer;
     _keywords: TRegExpr;     // list of keywords to monitor for
     _hint_text: Widestring;
+
+    _old_nick: WideString;
 
     function  AddMember(member: TRoomMember): TMemberNode;
     function  checkCommand(txt: Widestring): boolean;
@@ -143,10 +145,11 @@ type
     mynick: Widestring;
     procedure SendMsg; override;
     function GetNick(rjid: Widestring): Widestring;
+    function isMUCRoom(): boolean;
 
     property HintText: Widestring read _hint_text;
     property getJid: WideString read jid;
-    property isGC: boolean read _isGC;
+    // property isMUCRoom: boolean read _isMUC;
 
     procedure DockForm; override;
     procedure FloatForm; override;
@@ -290,6 +293,11 @@ begin
     Result := f;
 end;
 
+function TfrmRoom.isMUCRoom(): boolean;
+begin
+    Result := _isMUC;
+end;
+
 {---------------------------------------}
 procedure TfrmRoom.MsgCallback(event: string; tag: TXMLTag);
 begin
@@ -428,6 +436,7 @@ begin
         tok := Copy(tmps, 1, i - 1);
         if (tok = '/nick') then begin
             // change nickname
+            _old_nick := myNick;
             myNick := Trim(Copy(tmps, 6, length(tmps) - 5));
             p := TJabberPres.Create;
             p.toJID := TJabberID.Create(jid + '/' + myNick);
@@ -497,7 +506,7 @@ var
     i: integer;
     member: TRoomMember;
     mtag, t, itag, xtag, etag: TXMLTag;
-    scode, tmp1, tmp2: Widestring;
+    ecode, scode, tmp1, tmp2: Widestring;
 begin
     // We are getting presence
     from := tag.getAttribute('from');
@@ -507,21 +516,42 @@ begin
     xtag := tag.QueryXPTag(xp_muc_presence);
 
     // if ((ptype = 'error') and (_jid.resource = mynick)) then begin
-    if ((ptype = 'error') and (from = jid)) then begin
+    if ((ptype = 'error') and ((from = jid) or (from = jid + '/' + MyNick))) then begin
         // check for 409, conflicts.
         etag := tag.GetFirstTag('error');
         if (etag <> nil) then begin
-            if (etag.GetAttribute('code') = '409') then begin
+            ecode := etag.GetAttribute('code');
+            if (ecode = '409') then begin
                 MessageDlg('Your selected Nickname is already in use. Please select another.',
                     mtError, [mbOK], 0);
-                Self.Close();
+                if (_old_nick = '') then
+                    Self.Close()
+                else
+                    myNick := _old_nick;
                 end
-            else if (etag.GetAttribute('code') = '401') then begin
+            else if (ecode = '401') then begin
                 MessageDlg('You supplied an invalid password to enter this room.',
                     mtError, [mbOK], 0);
                 Self.Close();
                 StartJoinRoom();
                 end
+            else if (ecode = '404') then begin
+                MessageDlg('The room is being created. Please try again later.',
+                    mtError, [mbOK], 0);
+                Self.Close();
+                exit;
+                end
+            else if (ecode = '405') then begin
+                MessageDlg('You are not allowed to enter the room. You must be on the member list.',
+                    mtError, [mbOK], 0);
+                Self.Close();
+                exit;
+                end
+            else if ((ecode = '407') or (ecode = '403')) then begin
+                MessageDlg(etag.Data(), mtError, [mbOK], 0);
+                Self.Close();
+                exit;
+                end;
             end;
         end
 
@@ -579,7 +609,7 @@ begin
             t := tag.GetFirstTag('created');
             if (t <> nil) then begin
                 // we are the owner... config the room
-                _isGC := false;
+                _isMUC := true;
                 configRoom();
                 end;
 
@@ -588,7 +618,7 @@ begin
 
             // show new user message
             if (xtag <> nil) then begin
-                _isGC := false;
+                _isMUC := true;
                 mtag := newRoomMessage(Format(sNewUser, [member.nick]));
                 showMsg(mtag);
                 end;
@@ -615,7 +645,7 @@ begin
 
         // get extended stuff for MUC, and update the member struct
         if (xtag <> nil) then begin
-            _isGC := false;
+            _isMUC := true;
             t := xtag.GetFirstTag('item');
             if (t <> nil) then begin
                 member.role := t.GetAttribute('role');
@@ -765,11 +795,12 @@ begin
     _pcallback := -1;
     _scallback := -1;
     _roster := TWideStringList.Create;
-    _isGC := true;
+    _isMUC := false;
     _nick_prefix := '';
     _nick_idx := 0;
     _nick_start := 0;
     _hint_text := '';
+    _old_nick := '';
 
     lblSubject.Caption := '';
 

@@ -1,8 +1,8 @@
 object frmExodus: TfrmExodus
   Left = 265
-  Top = 260
-  Width = 450
-  Height = 341
+  Top = 175
+  Width = 205
+  Height = 416
   AlphaBlendValue = 240
   Caption = 'Exodus'
   Color = clBtnFace
@@ -29,15 +29,15 @@ object frmExodus: TfrmExodus
     Left = 57
     Top = 31
     Width = 3
-    Height = 256
+    Height = 331
     Cursor = crHSplit
     OnMoved = SplitterRightMoved
   end
   object Tabs: TTntPageControl
     Left = 60
     Top = 31
-    Width = 382
-    Height = 256
+    Width = 137
+    Height = 331
     ActivePage = tbsRoster
     Align = alClient
     DockSite = True
@@ -67,10 +67,10 @@ object frmExodus: TfrmExodus
       ImageIndex = -1
       ParentFont = False
       object SplitterRight: TSplitter
-        Left = 209
+        Left = 105
         Top = 0
         Width = 3
-        Height = 226
+        Height = 301
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = SplitterRightMoved
@@ -78,20 +78,21 @@ object frmExodus: TfrmExodus
       object pnlRoster: TPanel
         Left = 0
         Top = 0
-        Width = 209
-        Height = 226
+        Width = 105
+        Height = 301
         Align = alLeft
         BevelOuter = bvNone
+        BorderWidth = 1
         UseDockManager = False
         DragCursor = crDefault
         DragKind = dkDock
         TabOrder = 0
       end
       object pnlRight: TPanel
-        Left = 212
+        Left = 108
         Top = 0
-        Width = 162
-        Height = 226
+        Width = 21
+        Height = 301
         Align = alClient
         BevelOuter = bvNone
         Caption = 'THIS IS PNLRIGHT'
@@ -104,7 +105,7 @@ object frmExodus: TfrmExodus
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 442
+    Width = 197
     Height = 31
     AutoSize = True
     Bands = <
@@ -112,7 +113,7 @@ object frmExodus: TfrmExodus
         Control = ToolBar1
         ImageIndex = -1
         MinHeight = 27
-        Width = 438
+        Width = 193
       end>
     object ToolBar1: TToolBar
       Left = 9
@@ -206,7 +207,7 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 31
     Width = 57
-    Height = 256
+    Height = 331
     Align = alLeft
     BevelOuter = bvNone
     BorderWidth = 1
