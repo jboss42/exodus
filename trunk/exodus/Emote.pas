@@ -862,21 +862,42 @@ var
     rtf: string;
     i: integer;
     c: WideChar;
+    state: char;
 begin
     rtf := '';
+    state := 'c';
     for i := 1 to length(plain) do begin
         c := plain[i];
-        // unicode
-        if (c > #127) then
-            //TODO: Mad Unicode foo to pick the "closest" alternate character
-            rtf := rtf + '\u' + IntToStr(ord(c)) + '?'
-        else if (c = '{') or (c = '}') or (c = '\') then
-            rtf := rtf + '\' + plain[i]
-        else if (c = #$D) then
-            //TODO: state machine to handle all possible \r\n combos
-            rtf := rtf + '\par '
-        else
-            rtf := rtf + plain[i];
+
+        // tests:
+        // \r   #$D
+        // \n   #$A
+        // \r\n
+        if state = 'r' then begin
+            if c = #$A then
+                state := 'n'
+            else
+                state := 'c';
+        end
+        else if state = 'n' then
+            state := 'c';
+
+        if state = 'c' then begin
+            // unicode
+            if (c > #127) then
+                //TODO: Mad Unicode foo to pick the "closest" alternate character
+                rtf := rtf + '\u' + IntToStr(ord(c)) + '?'
+            else if (c = '{') or (c = '}') or (c = '\') then
+                rtf := rtf + '\' + plain[i]
+            else if (c = #$D) then begin
+                rtf := rtf + '\par ';
+                state := 'r';
+            end
+            else if (c = #$A) then
+                rtf := rtf + '\par '
+            else
+                rtf := rtf + plain[i];
+        end;
     end;
     result := rtf;
 end;
