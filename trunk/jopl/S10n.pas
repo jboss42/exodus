@@ -22,13 +22,13 @@ unit S10n;
 interface
 
 uses
-    XMLTag, Session,
+    XMLTag, Session, Unicode, 
     SysUtils, Classes;
 
 type
     TSubController = class
     private
-        _transports: TStringList;
+        _transports: TWideStringList;
         _session: longint;
         _sub: longint;
         _subd: longint;
@@ -83,7 +83,7 @@ begin
     _unsubd := MainSession.RegisterCallback(UnSubscribed, '/packet/presence[@type="unsubscribed"]');
     _session := MainSession.RegisterCallback(SessionCallback, '/session');
 
-    _transports := TStringList.Create();
+    _transports := TWideStringList.Create();
 end;
 
 {---------------------------------------}
