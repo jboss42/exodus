@@ -163,6 +163,9 @@ begin
         // otherwise, throw out cases where body is empty
         if ((tag.QueryXPTag(XP_XOOB) = nil) and (b = '')) then exit;
 
+        // check to see if we've blocked them.
+        if (js.IsBlocked(from_jid)) then exit;
+
         // check current msg treatment prefs
         msgt := MainSession.Prefs.getInt('msg_treatment');
         if (msgt = msg_existing_chat) then begin
