@@ -3,7 +3,7 @@ object frmInvalidRoster: TfrmInvalidRoster
   Top = 127
   Width = 322
   Height = 271
-  Caption = 'frmInvalidRoster'
+  Caption = 'Invalid Roster Items'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
