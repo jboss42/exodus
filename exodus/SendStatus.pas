@@ -456,7 +456,6 @@ begin
         end;
         end;
     send_ft_offer: begin
-
         // get the file size
         try
             fs := TFileStream.Create(_pkg.pathname, (fmOpenRead or fmShareDenyNone));
@@ -469,7 +468,7 @@ begin
             end;
         end;
 
-        if ((shosts.Count = 0) and (not MainSession.Prefs.getBool('xfer_proxy'))) then begin
+        if ((shosts.Count = 0) and (MainSession.Prefs.getBool('xfer_proxy'))) then begin
             // We don't have any stream hosts to use.
             // do either webdav or old-school OOB
             _state := send_old_ft;
@@ -1001,8 +1000,9 @@ end;
 {---------------------------------------}
 procedure TfSendStatus.btnCancelClick(Sender: TObject);
 begin
-    // XXX: code cancel on sends.
-    if (_state = send_cancel) then
+    if ((_state = send_cancel) or
+        (_state = send_do_oob) or
+        (_state = send_do_dav)) then
         getXferManager().killFrame(Self);
 end;
 

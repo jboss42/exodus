@@ -213,14 +213,14 @@ begin
         if (getBool('xfer_webdav')) then begin
             ip := getString('xfer_davhost');
             dav_path := getString('xfer_davpath');
-            url := ip + dav_path + '/' + ExtractFilename(filename);
+            url := ip + dav_path + '/' + ExtractFilename(pkg.pathname);
         end
         else begin
             ip := getString('xfer_ip');
             p := getInt('xfer_port');
 
             if (ip = '') then ip := MainSession.Stream.LocalIP;
-            url := 'http://' + ip + ':' + IntToStr(p) + '/' + ExtractFileName(filename);
+            url := 'http://' + ip + ':' + IntToStr(p) + '/' + ExtractFileName(pkg.pathname);
         end;
 
         if (getBool('xfer_proxy')) then begin
