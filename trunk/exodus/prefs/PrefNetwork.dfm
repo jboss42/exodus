@@ -1,38 +1,19 @@
 inherited frmPrefNetwork: TfrmPrefNetwork
-  Left = 193
-  Top = 537
+  Left = 270
+  Top = 426
   Caption = 'frmPrefNetwork'
   ClientHeight = 326
   ClientWidth = 343
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object StaticText13: TStaticText
-    Left = 0
-    Top = 0
-    Width = 343
-    Height = 20
-    Align = alTop
-    Alignment = taCenter
-    Caption = 'Network Options'
-    Color = clHighlight
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clCaptionText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-    TabOrder = 0
-    Transparent = False
-  end
   object GroupBox1: TGroupBox
     Left = 3
-    Top = 24
+    Top = 29
     Width = 294
     Height = 97
     Caption = 'Reconnect Options'
-    TabOrder = 1
+    TabOrder = 0
     object Label2: TTntLabel
       Left = 8
       Top = 20
@@ -100,7 +81,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     Width = 294
     Height = 172
     Caption = 'HTTP Proxy'
-    TabOrder = 2
+    TabOrder = 1
     object lblProxyHost: TTntLabel
       Left = 5
       Top = 53
@@ -199,5 +180,23 @@ inherited frmPrefNetwork: TfrmPrefNetwork
         'Direct Connection'
         'Custom')
     end
+  end
+  object StaticText4: TTntPanel
+    Left = 0
+    Top = 0
+    Width = 343
+    Height = 24
+    Align = alTop
+    BevelOuter = bvLowered
+    BorderWidth = 1
+    Caption = 'Connection Options'
+    Color = clMenuHighlight
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clCaptionText
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 2
   end
 end

@@ -24,12 +24,11 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, PrefPanel, StdCtrls, ComCtrls, ExtCtrls, TntStdCtrls,
-  TntComCtrls;
+  TntComCtrls, TntExtCtrls;
 
 type
   TfrmPrefPresence = class(TfrmPrefPanel)
     lstCustomPres: TTntListBox;
-    StaticText10: TTntStaticText;
     pnlCustomPresButtons: TPanel;
     btnCustomPresAdd: TTntButton;
     btnCustomPresRemove: TTntButton;
@@ -51,6 +50,7 @@ type
     Label8: TTntLabel;
     cboPresTracking: TTntComboBox;
     Label1: TTntLabel;
+    StaticText4: TTntPanel;
     procedure FormDestroy(Sender: TObject);
     procedure lstCustomPresClick(Sender: TObject);
     procedure txtCPTitleChange(Sender: TObject);

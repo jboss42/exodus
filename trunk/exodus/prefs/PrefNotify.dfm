@@ -90,24 +90,6 @@ inherited frmPrefNotify: TfrmPrefNotify
       OnClick = chkToastClick
     end
   end
-  object StaticText6: TTntStaticText
-    Left = 0
-    Top = 0
-    Width = 338
-    Height = 20
-    Align = alTop
-    Alignment = taCenter
-    Caption = 'Notification Options'
-    Color = clHighlight
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clCaptionText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-    TabOrder = 6
-  end
   object chkSound: TTntCheckBox
     Left = 8
     Top = 32
@@ -147,5 +129,23 @@ inherited frmPrefNotify: TfrmPrefNotify
     Height = 17
     Caption = 'Perform notifications for the window I'#39'm typing in.'
     TabOrder = 2
+  end
+  object StaticText4: TTntPanel
+    Left = 0
+    Top = 0
+    Width = 338
+    Height = 24
+    Align = alTop
+    BevelOuter = bvLowered
+    BorderWidth = 1
+    Caption = 'Notification Options'
+    Color = clMenuHighlight
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clCaptionText
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 6
   end
 end

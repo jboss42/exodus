@@ -1155,21 +1155,21 @@ inherited frmPrefLayouts: TfrmPrefLayouts
       'Dock windows. Roster is always visible'
       'Dock windows and use tabs')
   end
-  object StaticText5: TTntStaticText
+  object StaticText4: TTntPanel
     Left = 0
     Top = 0
     Width = 357
-    Height = 20
+    Height = 24
     Align = alTop
-    Alignment = taCenter
-    Caption = 'Window Layouts'
-    Color = clHighlight
+    BevelOuter = bvLowered
+    BorderWidth = 1
+    Caption = 'Window Layout Options'
+    Color = clMenuHighlight
     Font.Charset = ANSI_CHARSET
     Font.Color = clCaptionText
     Font.Height = -13
     Font.Name = 'Arial'
     Font.Style = [fsBold]
-    ParentColor = False
     ParentFont = False
     TabOrder = 1
   end

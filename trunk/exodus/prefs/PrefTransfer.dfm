@@ -34,7 +34,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     Top = 130
     Width = 281
     Height = 178
-    TabOrder = 6
+    TabOrder = 5
     object Label3: TTntLabel
       Left = 8
       Top = 16
@@ -121,30 +121,12 @@ inherited frmPrefTransfer: TfrmPrefTransfer
       TabOrder = 4
     end
   end
-  object StaticText7: TTntStaticText
-    Left = 0
-    Top = 0
-    Width = 318
-    Height = 20
-    Align = alTop
-    Alignment = taCenter
-    Caption = 'File Transfer Options'
-    Color = clHighlight
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clCaptionText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-    TabOrder = 0
-  end
   object txtXFerPath: TTntEdit
     Left = 21
     Top = 51
     Width = 188
     Height = 21
-    TabOrder = 1
+    TabOrder = 0
   end
   object btnTransferBrowse: TTntButton
     Left = 214
@@ -152,7 +134,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     Width = 75
     Height = 25
     Caption = 'Browse'
-    TabOrder = 2
+    TabOrder = 1
     OnClick = btnTransferBrowseClick
   end
   object optPeer: TTntRadioButton
@@ -162,7 +144,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     Height = 17
     Caption = 'Send files directly from my machine to the recipient'
     Checked = True
-    TabOrder = 3
+    TabOrder = 2
     TabStop = True
     OnClick = optWebDavClick
   end
@@ -171,7 +153,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     Top = 130
     Width = 281
     Height = 113
-    TabOrder = 4
+    TabOrder = 3
     object Label1: TTntLabel
       Left = 16
       Top = 19
@@ -209,7 +191,25 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     Width = 281
     Height = 17
     Caption = 'Use a Web server to host the files which I send'
-    TabOrder = 5
+    TabOrder = 4
     OnClick = optWebDavClick
+  end
+  object StaticText4: TTntPanel
+    Left = 0
+    Top = 0
+    Width = 318
+    Height = 24
+    Align = alTop
+    BevelOuter = bvLowered
+    BorderWidth = 1
+    Caption = 'File Transfer Options'
+    Color = clMenuHighlight
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clCaptionText
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 6
   end
 end

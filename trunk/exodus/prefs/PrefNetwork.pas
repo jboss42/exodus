@@ -4,11 +4,11 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, ComCtrls, TntStdCtrls;
+  Dialogs, PrefPanel, StdCtrls, ComCtrls, TntStdCtrls, ExtCtrls,
+  TntExtCtrls;
 
 type
   TfrmPrefNetwork = class(TfrmPrefPanel)
-    StaticText13: TStaticText;
     GroupBox1: TGroupBox;
     Label2: TTntLabel;
     Label3: TTntLabel;
@@ -29,6 +29,7 @@ type
     txtProxyUsername: TTntEdit;
     txtProxyPassword: TTntEdit;
     cboProxyApproach: TTntComboBox;
+    StaticText4: TTntPanel;
     procedure cboProxyApproachChange(Sender: TObject);
     procedure chkProxyAuthClick(Sender: TObject);
   private

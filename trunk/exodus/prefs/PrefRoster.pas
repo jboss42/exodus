@@ -23,12 +23,11 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls;
+  Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls;
 
 type
   TfrmPrefRoster = class(TfrmPrefPanel)
     Label21: TTntLabel;
-    StaticText1: TTntStaticText;
     chkShowUnsubs: TTntCheckBox;
     chkHideBlocked: TTntCheckBox;
     chkPresErrors: TTntCheckBox;
@@ -37,6 +36,7 @@ type
     chkRosterUnicode: TTntCheckBox;
     chkInlineStatus: TTntCheckBox;
     cboInlineStatus: TColorBox;
+    StaticText4: TTntPanel;
     procedure chkInlineStatusClick(Sender: TObject);
   private
     { Private declarations }

@@ -22,7 +22,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, jpeg, ExtCtrls, TntStdCtrls;
+  Dialogs, PrefPanel, StdCtrls, jpeg, ExtCtrls, TntStdCtrls, TntExtCtrls;
 
 type
   TfrmPrefLayouts = class(TfrmPrefPanel)
@@ -32,7 +32,7 @@ type
     imgView3: TImage;
     imgView1: TImage;
     lblViewHelp: TTntLabel;
-    StaticText5: TTntStaticText;
+    StaticText4: TTntPanel;
     procedure cboViewChange(Sender: TObject);
   private
     { Private declarations }

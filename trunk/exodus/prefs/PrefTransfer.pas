@@ -23,11 +23,10 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, TntStdCtrls;
+  Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls;
 
 type
   TfrmPrefTransfer = class(TfrmPrefPanel)
-    StaticText7: TTntStaticText;
     Label15: TTntLabel;
     txtXFerPath: TTntEdit;
     btnTransferBrowse: TTntButton;
@@ -52,6 +51,7 @@ type
     txtDavPassword: TTntEdit;
     Label8: TTntLabel;
     Label9: TTntLabel;
+    StaticText4: TTntPanel;
     procedure btnTransferBrowseClick(Sender: TObject);
     procedure chkIPClick(Sender: TObject);
     procedure Label2Click(Sender: TObject);

@@ -22,7 +22,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 388
+    Height = 393
     VertScrollBar.Tracking = True
     Align = alLeft
     Color = clWindow
@@ -2988,8 +2988,8 @@ object frmPrefs: TfrmPrefs
     Left = 89
     Top = 0
     Width = 369
-    Height = 388
-    ActivePage = tbsBlockList
+    Height = 393
+    ActivePage = tbsKeywords
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
@@ -2998,44 +2998,26 @@ object frmPrefs: TfrmPrefs
     object tbsKeywords: TTntTabSheet
       Caption = 'Keywords'
       ImageIndex = 8
-      object StaticText8: TTntStaticText
-        Left = 0
-        Top = 0
-        Width = 112
-        Height = 20
-        Align = alTop
-        Alignment = taCenter
-        Caption = 'Keyword Options'
-        Color = clHighlight
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clCaptionText
-        Font.Height = -13
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentColor = False
-        ParentFont = False
-        TabOrder = 0
-      end
       object memKeywords: TTntMemo
         Left = 0
-        Top = 73
+        Top = 77
         Width = 361
-        Height = 289
+        Height = 285
         Align = alClient
-        TabOrder = 1
+        TabOrder = 0
       end
       object Panel2: TPanel
         Left = 0
-        Top = 20
+        Top = 24
         Width = 361
         Height = 53
         Align = alTop
         BevelOuter = bvNone
-        TabOrder = 2
+        TabOrder = 1
         object Label1: TTntLabel
           Left = 0
           Top = 0
-          Width = 350
+          Width = 361
           Height = 26
           Align = alTop
           Caption = 
@@ -3052,39 +3034,39 @@ object frmPrefs: TfrmPrefs
           TabOrder = 0
         end
       end
-    end
-    object tbsBlockList: TTntTabSheet
-      Caption = 'BlockList'
-      ImageIndex = 9
-      object StaticText9: TTntStaticText
+      object TntPanel1: TTntPanel
         Left = 0
         Top = 0
         Width = 361
-        Height = 20
+        Height = 24
         Align = alTop
-        Alignment = taCenter
-        Caption = 'Blocked Jabber ID List'
-        Color = clHighlight
+        BevelOuter = bvLowered
+        BorderWidth = 1
+        Caption = 'Keyword Notification'
+        Color = clMenuHighlight
         Font.Charset = ANSI_CHARSET
         Font.Color = clCaptionText
         Font.Height = -13
         Font.Name = 'Arial'
         Font.Style = [fsBold]
-        ParentColor = False
         ParentFont = False
-        TabOrder = 0
+        TabOrder = 2
       end
+    end
+    object tbsBlockList: TTntTabSheet
+      Caption = 'BlockList'
+      ImageIndex = 9
       object memBlocks: TTntMemo
         Left = 0
-        Top = 73
+        Top = 77
         Width = 361
-        Height = 284
+        Height = 285
         Align = alClient
-        TabOrder = 1
+        TabOrder = 0
       end
       object Memo1: TTntMemo
         Left = 0
-        Top = 20
+        Top = 24
         Width = 361
         Height = 53
         Align = alTop
@@ -3096,13 +3078,31 @@ object frmPrefs: TfrmPrefs
           'messages. All messages from these contacts will be blocked.')
         ParentColor = True
         ReadOnly = True
+        TabOrder = 1
+      end
+      object StaticText4: TTntPanel
+        Left = 0
+        Top = 0
+        Width = 361
+        Height = 24
+        Align = alTop
+        BevelOuter = bvLowered
+        BorderWidth = 1
+        Caption = 'Blocked Contacts'
+        Color = clMenuHighlight
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clCaptionText
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
         TabOrder = 2
       end
     end
   end
   object Panel1: TPanel
     Left = 0
-    Top = 388
+    Top = 393
     Width = 458
     Height = 37
     Align = alBottom

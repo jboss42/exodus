@@ -24,11 +24,11 @@ interface
 uses
     PrefPanel, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, StdCtrls, TntStdCtrls;
+    Dialogs, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls;
 
 type
   TfrmPrefSystem = class(TfrmPrefPanel)
-    StaticText4: TTntStaticText;
+    StaticText4: TTntPanel;
     chkAutoUpdate: TTntCheckBox;
     chkDebug: TTntCheckBox;
     chkAutoLogin: TTntCheckBox;
