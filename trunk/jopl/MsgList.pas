@@ -170,19 +170,25 @@ begin
 
             // check current msg treatment prefs
             msgt := MainSession.Prefs.getInt('msg_treatment');
-            if (msgt = msg_existing_chat) then begin
+            if (tag.QueryXPTag(XP_XROSTER) <> nil) then
+                // allow roster items should FALLTHROUGH
+            else if (msgt = msg_normal) then
+                // normal msg processing should FALLTHROUGH
+            else begin
                 // check for an existing chat window..
                 // if we have one, then bail.
                 cc := js.ChatList.FindChat(from_jid.jid, '', '');
                 if (cc = nil) then
                     cc := js.ChatList.FindChat(from_jid.jid,
                         from_jid.resource, '');
-                if (cc <> nil) then exit;
-            end
-            else if ((msgt = msg_all_chat) and (mtype = '') and
-                     (tag.QueryXPTag(XP_XROSTER) = nil)) then begin
-                // do we need to do more here??
-                exit;
+                if (cc <> nil) then begin
+                    cc.MsgCallback('xml', tag);
+                    exit;
+                end
+                else if (msgt = msg_all_chat) then begin
+                    js.ChatList.MsgCallback('xml', tag);
+                    exit;
+                end;
             end;
         end;
 

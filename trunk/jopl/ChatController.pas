@@ -162,7 +162,7 @@ begin
         MainSession.UnRegisterCallback(_cb);
 
     _cb := MainSession.RegisterCallback(MsgCallback,
-            '/packet/message[@from="' + XPLiteEscape(Lowercase(sjid)) + '*"]');
+            '/packet/message[@type="chat"][@from="' + XPLiteEscape(Lowercase(sjid)) + '*"]');
 end;
 
 {---------------------------------------}
@@ -220,16 +220,6 @@ begin
 
     // if we have no body, then bail
     if ((not is_composing) and (tag.GetFirstTag('body') = nil)) then exit;
-
-    // Check message types
-    mt := MainSession.Prefs.getInt('msg_treatment');
-    mtype := tag.getAttribute('type');
-    if (mtype = 'groupchat') then exit;
-    if ((mtype <> 'chat') and
-        (mtype <> 'error') and
-        (mt = msg_normal) and
-        (not is_composing)) then exit;
-
 
     // check for delivered requests
     if (mtype <> 'error') and (etag <> nil) then begin
