@@ -1536,13 +1536,15 @@ object frmAbout: TfrmAbout
       ') see www.gnu.org for more information on the GPL.\par'#13#10'\par'#13#10'Po' +
       'rtions of this software are Copyright (c) 1993 - 2002, Chad Z. H' +
       'ower (Kudzu) and the Indy Pit Crew - http://www.nevrona.com/Indy' +
-      '/\par'#13#10'\par'#13#10'SAX XML Parser by: Stefan Heymann\par'#13#10'Eschenweg 3,' +
-      ' 72076 T\'#39'fcbingen, GERMANY mailto:stefan@destructor.de, http://' +
-      'www.destructor.de\par'#13#10'\par'#13#10'Unicode library is Copyright (c) 19' +
-      '99, 2000 Mike Lischke (public@lischke-online.de) and Portions Co' +
-      'pyright (c) 1999, 2000 Azret Botash (az).\par'#13#10'\par'#13#10'RichEdit98 ' +
-      'and DBRichEdit98 components for Delphi 3.0-4.0. version 1.40 Aut' +
-      'hor Alexander Obukhov, Minsk, Belarus <alex@niiomr.belpak.minsk.' +
-      'by>\par'#13#10'\par'#13#10'\par'#13#10'}'#13#10
+      '/. This application may also be using the IndySSL components fro' +
+      'm Nevrona, and the Open-SSL binaries available from Intellicom.s' +
+      'i.\par'#13#10'\par'#13#10'SAX XML Parser by: Stefan Heymann\par'#13#10'Eschenweg 3' +
+      ', 72076 T\'#39'fcbingen, GERMANY mailto:stefan@destructor.de, http:/' +
+      '/www.destructor.de\par'#13#10'\par'#13#10'Unicode library is Copyright (c) 1' +
+      '999, 2000 Mike Lischke (public@lischke-online.de) and Portions C' +
+      'opyright (c) 1999, 2000 Azret Botash (az).\par'#13#10'\par'#13#10'RichEdit98' +
+      ' and DBRichEdit98 components for Delphi 3.0-4.0. version 1.40 Au' +
+      'thor Alexander Obukhov, Minsk, Belarus <alex@niiomr.belpak.minsk' +
+      '.by>\par'#13#10'\par'#13#10'\par'#13#10'}'#13#10
   end
 end

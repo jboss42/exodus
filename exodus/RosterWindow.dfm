@@ -97,6 +97,7 @@ object frmRosterWindow: TfrmRosterWindow
     OnEditing = treeRosterEditing
     OnExit = treeRosterExit
     OnExpanded = treeRosterExpanded
+    OnKeyPress = treeRosterKeyPress
     OnMouseDown = treeRosterMouseDown
     OnMouseMove = treeRosterMouseMove
   end
