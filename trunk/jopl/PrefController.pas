@@ -1009,8 +1009,10 @@ begin
     i := Screen.MonitorFromPoint(cp, mdNearest).MonitorNum;
     if (i >= dtop_count) then i := 0;
 
-    ok :=  ((PtInRect(dtops[i], tmp.TopLeft)) and
-            (PtInRect(dtops[i], tmp.BottomRight)));
+    ok := (tmp.Left >= dtops[i].Left) and
+        (tmp.Right <= dtops[i].Right) and
+        (tmp.Top >= dtops[i].Top) and
+        (tmp.Bottom <= dtops[i].Bottom);
 
     if (ok = false) then begin
         // center it on the default monitor
