@@ -39,18 +39,19 @@ type
         procedure SetSession(js: TObject);
     end;
 
-const
-    sPrefWriteError = 'There was an error attempting to save your options. Another process may be accessing your options file. Some options may be lost. ';
-
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 implementation
 
 uses
-    Dialogs, GnuGetText, 
+    Dialogs, GnuGetText,
     InvalidRoster, ChatWin, ExEvents, ExUtils, Subscribe, Notify, Jabber1,
     MsgQueue, NodeItem, Roster, JabberID, Session;
+
+const
+    sPrefWriteError = 'There was an error attempting to save your options. Another process may be accessing your options file. Some options may be lost. ';
+    sNotifyChat = 'Chat with ';
 
 {---------------------------------------}
 constructor TGUIFactory.Create();
@@ -96,7 +97,7 @@ begin
         tmp_jid := TJabberID.Create(tag.getAttribute('from'));
         chat := StartChat(tmp_jid.jid, tmp_jid.resource, true);
         tmp_jid.Free;
-        DoNotify(chat, 'notify_newchat', sNotifyChat +
+        DoNotify(chat, 'notify_newchat', _(sNotifyChat) +
                  chat.Othernick, ico_user)
     end
 

@@ -101,7 +101,7 @@ begin
         p := TJabberProfile(MainSession.Prefs.Profiles.Objects[i]);
 
         if (Trim(p.Resource) = '') then
-            p.Resource := sProfileDefaultResource;
+            p.Resource := _(sProfileDefaultResource);
 
         MainSession.Prefs.setInt('profile_active', i);
         MainSession.Prefs.SaveProfiles();
@@ -167,14 +167,14 @@ var
     p : TJabberProfile;
 begin
     // Create a new profile
-    pname := sProfileNew;
-    if InputQueryW(sProfileCreate, sProfileNamePrompt, pname) then begin
+    pname := _(sProfileNew);
+    if InputQueryW(_(sProfileCreate), _(sProfileNamePrompt), pname) then begin
         p := MainSession.Prefs.CreateProfile(pname);
         cboProfiles.Items.Assign(MainSession.Prefs.Profiles);
         i := cboProfiles.Items.Indexof(pname);
         cboProfiles.ItemIndex := i;
         cboProfilesChange(Self);
-        p.Resource := sProfileDefaultResource;
+        p.Resource := _(sProfileDefaultResource);
         p.NewAccount := true;
         ShowConnDetails(p);
         lblJID.Caption := p.Username + '@' + p.Server + '/' + p.Resource;
@@ -197,7 +197,7 @@ begin
 
     // make sure we have at least a default profile
     if (MainSession.Prefs.Profiles.Count) <= 0 then begin
-        MainSession.Prefs.CreateProfile(sProfileDefault)
+        MainSession.Prefs.CreateProfile(_(sProfileDefault))
     end;
 
     cboProfiles.Items.Assign(MainSession.Prefs.Profiles);

@@ -57,6 +57,13 @@ implementation
 uses
     GnuGetText, ExUtils, IdException;
 
+const
+    sDownloading      = 'Downloading...';
+    sDownloadComplete = 'Download Complete';
+    sInitializing     = 'Initializing...';
+    sError            = 'Error: %s';
+
+
 function ExWebDownload(caption, url: string): String;
 var
     f: TfrmWebDownload;

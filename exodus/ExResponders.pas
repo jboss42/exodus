@@ -118,6 +118,15 @@ var
     Exodus_Disco_Info: TDiscoInfoResponder;
     Exodus_Browse: TBrowseResponder;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+implementation
+uses
+    COMController, ExSession, GnuGetText,
+    JabberConst, Invite, Dialogs, PrefController, Registry, Forms,
+    XferManager, xData, XMLUtils, Jabber1, JabberID, Notify, NodeItem, Roster;
+
 const
     sNotifyAutoResponse = '%s query from: %s';
     sVersion = 'Version';
@@ -126,15 +135,6 @@ const
     sBrowse = 'Browse';
     sDisco = 'Disco';
     sExceptionMsg = 'An error has occurred. Exodus will automatically save an error log file to your desktop. Use this file to a bug report at the exodus website.';
-
-{---------------------------------------}
-{---------------------------------------}
-{---------------------------------------}
-implementation
-uses
-    COMController, ExSession, GnuGetText,  
-    JabberConst, Invite, Dialogs, PrefController, Registry, Forms,   
-    XferManager, xData, XMLUtils, Jabber1, JabberID, Notify, NodeItem, Roster;
 
 var
     _version: TVersionResponder;
@@ -319,7 +319,7 @@ begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
 
     DoNotify(nil, 'notify_autoresponse',
-             WideFormat(sNotifyAutoResponse, [sVersion,
+             WideFormat(_(sNotifyAutoResponse), [_(sVersion),
                                           getNick(tag.getAttribute('from'))]),
              ico_info);
 
@@ -371,7 +371,7 @@ begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
 
     DoNotify(nil, 'notify_autoresponse',
-             WideFormat(sNotifyAutoResponse, [sTime,
+             WideFormat(_(sNotifyAutoResponse), [_(sTime),
                                           getNick(tag.getAttribute('from'))]),
              ico_info);
 
@@ -413,7 +413,7 @@ begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
 
     DoNotify(nil, 'notify_autoresponse',
-             WideFormat(sNotifyAutoResponse, [sLast,
+             WideFormat(_(sNotifyAutoResponse), [_(sLast),
                                           getNick(tag.getAttribute('from'))]),
              ico_info);
 
@@ -457,7 +457,7 @@ begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
 
     DoNotify(nil, 'notify_autoresponse',
-             WideFormat(sNotifyAutoResponse, [sBrowse,
+             WideFormat(_(sNotifyAutoResponse), [_(sBrowse),
                                           getNick(tag.getAttribute('from'))]),
              ico_info);
 
@@ -573,7 +573,8 @@ begin
     end;
 
     DoNotify(nil, 'notify_autoresponse',
-        WideFormat(sNotifyAutoResponse, [sDisco, getNick(tag.getAttribute('from'))]),
+        WideFormat(_(sNotifyAutoResponse), [_(sDisco),
+            getNick(tag.getAttribute('from'))]),
         ico_info);
 
     _session.SendTag(r);
@@ -679,7 +680,8 @@ begin
     end;
 
     DoNotify(nil, 'notify_autoresponse',
-        WideFormat(sNotifyAutoResponse, [sDisco, getNick(tag.getAttribute('from'))]),
+        WideFormat(_(sNotifyAutoResponse), [_(sDisco),
+            getNick(tag.getAttribute('from'))]),
         ico_info);
 
     _session.SendTag(r);

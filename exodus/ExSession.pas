@@ -59,23 +59,6 @@ procedure AddSound(reg: TRegistry; pref_name: string; user_text: string);
 function CmdLine(): string;
 function checkSSL(): boolean;
 
-{---------------------------------------}
-const
-    sCommandLine =  'The following command line parameters are available in Exodus: '#13#10#13#10;
-    sCmdDebug =     ' -d '#9#9' : Debug mode on'#13#10;
-    sCmdMinimized = ' -m '#9#9' : Start minimized'#13#10;
-    sCmdInvisible = ' -v '#9#9' : invisible mode'#13#10;
-    sCmdHelp =      ' -? '#9#9' : Show Help'#13#10;
-    sCmdExpanded =  ' -x [yes|no] '#9' : Expanded Mode'#13#10;
-    sCmdJID =       ' -j [jid] '#9#9' : Jid'#13#10;
-    sCmdPassword =  ' -p [pass] '#9' : Password'#13#10;
-    sCmdResource =  ' -r [res] '#9' : Resource'#13#10;
-    sCmdPriority =  ' -i [pri] '#9' : Priority'#13#10;
-    sCmdProfile =   ' -f [prof] '#9' : Profile name'#13#10;
-    sCmdConfig =    ' -c [file] '#9' : Config path name'#13#10;
-    sUnkArg = 'Invalid command line:%s';
-    sWinsock2 = 'Winsock2 is required for this application. Please obtain the winsock2 installer from Microsoft for your operating system.';
-
 var
     sExodusMutex: Cardinal;
 
@@ -101,6 +84,38 @@ uses
     PrefNotify, Room, RosterAdd, MsgRecv, Profile, RegForm,
     ExUtils, ExResponders, MsgDisplay,
     XMLParser, XMLUtils;
+
+const
+    sCommandLine =  'The following command line parameters are available in Exodus: '#13#10#13#10;
+    sCmdDebug =     ' -d '#9#9' : Debug mode on'#13#10;
+    sCmdMinimized = ' -m '#9#9' : Start minimized'#13#10;
+    sCmdInvisible = ' -v '#9#9' : invisible mode'#13#10;
+    sCmdHelp =      ' -? '#9#9' : Show Help'#13#10;
+    sCmdExpanded =  ' -x [yes|no] '#9' : Expanded Mode'#13#10;
+    sCmdJID =       ' -j [jid] '#9#9' : Jid'#13#10;
+    sCmdPassword =  ' -p [pass] '#9' : Password'#13#10;
+    sCmdResource =  ' -r [res] '#9' : Resource'#13#10;
+    sCmdPriority =  ' -i [pri] '#9' : Priority'#13#10;
+    sCmdProfile =   ' -f [prof] '#9' : Profile name'#13#10;
+    sCmdConfig =    ' -c [file] '#9' : Config path name'#13#10;
+    
+    sUnkArg = 'Invalid command line:%s';
+    sWinsock2 = 'Winsock2 is required for this application. Please obtain the winsock2 installer from Microsoft for your operating system.';
+    sDefaultProfile = 'Default Profile';
+
+    sSoundChatactivity = 'Activity in a chat window';
+    sSoundInvite = 'Invited to a room';
+    sSoundKeyword = 'Keyword in a room';
+    sSoundNewchat = 'New conversation';
+    sSoundNormalmsg = 'Received a normal message';
+    sSoundOffline = 'Contact went offline';
+    sSoundOnline = 'Contact came online';
+    sSoundRoomactivity = 'Activity in a room';
+    sSoundS10n = 'Subscription request';
+    sSoundOOB = 'File Transfers';
+    sSoundAutoResponse = 'Auto response generated';
+    sSoundSetup = 'Make sure to configure sounds in your Sounds Control Panel using the hotlink provided.';
+
 
 var
     // Various other key controllers
@@ -170,7 +185,7 @@ begin
 
     // init the cmd line stuff
     cli_priority := -1;
-    cli_status := sAvailable;
+    cli_status := _('Available');
     cli_show := '';
     jid := nil;
     invisible := false;
@@ -212,7 +227,7 @@ begin
             LongOpts := 'debug,minimized,invisible,aatest,help,register,expanded,jid,password,resource,priority,profile,config,status,show,xmpp';
             while GetOpt do begin
                 case Ord(OptChar) of
-                    0: raise EConfigException.Create(format(sUnkArg, [CmdLine()]));
+                    0: raise EConfigException.Create(format(_(sUnkArg), [CmdLine()]));
                     Ord('d'): ExStartup.debug := true;
                     Ord('x'): expanded := OptArg;
                     Ord('m'): ExStartup.minimized := true;
@@ -354,7 +369,7 @@ begin
                 if (jid <> nil) then
                     profile_name := jid.jid
                 else if (Profiles.Count = 0) then
-                    profile_name := sDefaultProfile;
+                    profile_name := _(sDefaultProfile);
             end;
         end;
 
@@ -455,18 +470,18 @@ begin
     reg := TRegistry.Create();
     reg.RootKey := HKEY_CURRENT_USER;
     reg.OpenKey('\AppEvents\Schemes\Apps\Exodus', true);
-    reg.WriteString('', sExodus);
-    AddSound(reg, 'notify_chatactivity', sSoundChatactivity);
-    AddSound(reg, 'notify_invite', sSoundInvite);
-    AddSound(reg, 'notify_keyword', sSoundKeyword);
-    AddSound(reg, 'notify_newchat', sSoundNewchat);
-    AddSound(reg, 'notify_normalmsg', sSoundNormalmsg);
-    AddSound(reg, 'notify_offline', sSoundOffline);
-    AddSound(reg, 'notify_online', sSoundOnline);
-    AddSound(reg, 'notify_roomactivity', sSoundRoomactivity);
-    AddSound(reg, 'notify_s10n', sSoundS10n);
-    AddSound(reg, 'notify_oob', sSoundOOB);
-    AddSound(reg, 'notify_autoresponse', sSoundAutoResponse);
+    reg.WriteString('', _('Exodus'));
+    AddSound(reg, 'notify_chatactivity', _(sSoundChatactivity));
+    AddSound(reg, 'notify_invite', _(sSoundInvite));
+    AddSound(reg, 'notify_keyword', _(sSoundKeyword));
+    AddSound(reg, 'notify_newchat', _(sSoundNewchat));
+    AddSound(reg, 'notify_normalmsg', _(sSoundNormalmsg));
+    AddSound(reg, 'notify_offline', _(sSoundOffline));
+    AddSound(reg, 'notify_online', _(sSoundOnline));
+    AddSound(reg, 'notify_roomactivity', _(sSoundRoomactivity));
+    AddSound(reg, 'notify_s10n', _(sSoundS10n));
+    AddSound(reg, 'notify_oob', _(sSoundOOB));
+    AddSound(reg, 'notify_autoresponse', _(sSoundAutoResponse));
     reg.CloseKey();
     reg.Free();
 

@@ -49,10 +49,6 @@ var
 
 procedure RemoveGroup(grp: string; contacts: TList = nil);
 
-const
-    sRemoveContacts = 'Remove %d contacts';
-    sRemoveGroup = 'Remove the %s group';
-
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -61,6 +57,10 @@ implementation
 {$R *.dfm}
 uses
     ExUtils, GnuGetText, JabberConst, NodeItem, Roster, XMLTag, IQ, Session, S10n;
+
+const
+    sRemoveContacts = 'Remove %d contacts';
+    sRemoveGroup = 'Remove the %s group';
 
 {---------------------------------------}
 procedure RemoveGroup(grp: string; contacts: TList = nil);

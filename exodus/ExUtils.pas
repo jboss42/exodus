@@ -22,7 +22,7 @@ unit ExUtils;
 interface
 uses
     Unicode, ExRichEdit, RichEdit2, Signals, XMLTag, IQ,
-    TntStdCtrls, TntClasses, TntMenus, Menus, Dialogs, 
+    TntStdCtrls, TntClasses, TntMenus, Menus, Dialogs, NodeItem,  
     JabberMsg, Graphics, Controls, StdCtrls, Forms, Classes, SysUtils, Windows;
 
 const
@@ -109,19 +109,12 @@ function jabberIQError(orig: TXMLTag): TXMLTag;
 
 procedure centerMainForm(f: TForm);
 procedure BuildPresMenus(parent: TObject; clickev: TNotifyEvent);
+function promptNewGroup: TJabberGroup;
 
 function UTCNow(): TDateTime;
 
 function MessageDlgW(const Msg: Widestring; DlgType: TMsgDlgType;
     Buttons: TMsgDlgButtons; HelpCtx: Longint): Word;
-
-const
-    sDownloading      = 'Downloading...';
-    sDownloadComplete = 'Download Complete';
-    sInitializing     = 'Initializing...';
-    sInstalling       = 'Installing...';
-    sError            = 'Error: %s';
-
 
 var
     _GetLastInputInfo: Pointer;
@@ -132,9 +125,9 @@ var
 {---------------------------------------}
 implementation
 uses
-    ExSession, GnuGetText, Presence,
+    ExSession, GnuGetText, Presence, InputPassword, 
     IniFiles, StrUtils, IdGlobal, ShellAPI,
-    XMLUtils, Session, JabberID, Jabber1, NodeItem, Roster,
+    XMLUtils, Session, JabberID, Jabber1, Roster,
     JabberConst, MsgDisplay, Debug;
 
 type
@@ -144,13 +137,21 @@ type
         constructor Create(at: ATOM);
     end;
 
-var
-    presenceToAtom: TStringList;
-    unicode_font: TFont;
-
 const
-    sTurnOnBlocking = 'You currently have logging turned off. ' +
-        'Turn Logging On? (Warning: Logs are not encrypted)';
+    sMsgRosterItems = 'This message contains %d roster items.';
+
+    sDownloading      = 'Downloading...';
+    sDownloadComplete = 'Download Complete';
+    sInitializing     = 'Initializing...';
+    sInstalling       = 'Installing...';
+    sError            = 'Error: %s';
+
+    sDefaultGroup = 'Untitled Group';
+    sGrpBookmarks = 'Bookmarks';
+    sGrpOffline = 'Offline';
+    sGrpUnfiled = 'Unfiled';
+
+    sTurnOnBlocking = 'You currently have logging turned off. Turn Logging On? (Warning: Logs are not encrypted)';
     sNoHistory = 'There is no history file for this contact.';
     sBadLogDir = 'The log directory you specified is invalid. Either turn off logging, or specify a valid path.';
     sHistoryDeleted = 'History deleted.';
@@ -159,6 +160,14 @@ const
     sConfirmClearLog = 'Do you really want to clear the log for %s?';
     sConfirmClearAllLogs = 'Are you sure you want to delete all of your message and room logs?';
     sFilesDeleted = '%d log files deleted.';
+
+    sNewGroup = 'New Roster Group';
+    sNewGroupPrompt = 'Enter new group name: ';
+    sNewGroupExists = 'This group already exists!';
+
+var
+    presenceToAtom: TStringList;
+    unicode_font: TFont;
 
 {---------------------------------------}
 constructor TAtom.Create(at: ATOM);
@@ -454,7 +463,7 @@ begin
         end;
     except
         on e: Exception do begin
-            MessageDlgW(_('Could not open log file: ' + fn), mtError, [mbOK], 0);
+            MessageDlgW(_('Could not open log file: ') + fn, mtError, [mbOK], 0);
             exit;
         end;
     end;
@@ -842,13 +851,13 @@ procedure removeSpecialGroups(grps: TStrings);
 var
     i: integer;
 begin
-    i := grps.IndexOf(sGrpBookmarks);
+    i := grps.IndexOf(_(sGrpBookmarks));
     if (i >= 0) then grps.Delete(i);
 
-    i := grps.IndexOf(sGrpUnfiled);
+    i := grps.IndexOf(_(sGrpUnfiled));
     if (i >= 0) then grps.Delete(i);
 
-    i := grps.IndexOf(sGrpOffline);
+    i := grps.IndexOf(_(sGrpOffline));
     if (i >= 0) then grps.Delete(i);
 
     i := grps.IndexOf(MainSession.Prefs.getString('roster_transport_grp'));
@@ -860,13 +869,13 @@ procedure removeSpecialGroups(grps: TWidestrings);
 var
     i: integer;
 begin
-    i := grps.IndexOf(sGrpBookmarks);
+    i := grps.IndexOf(_(sGrpBookmarks));
     if (i >= 0) then grps.Delete(i);
 
-    i := grps.IndexOf(sGrpUnfiled);
+    i := grps.IndexOf(_(sGrpUnfiled));
     if (i >= 0) then grps.Delete(i);
 
-    i := grps.IndexOf(sGrpOffline);
+    i := grps.IndexOf(_(sGrpOffline));
     if (i >= 0) then grps.Delete(i);
 
     i := grps.IndexOf(MainSession.Prefs.getString('roster_transport_grp'));
@@ -878,13 +887,13 @@ procedure removeSpecialGroups(grps: TTntStrings);
 var
     i: integer;
 begin
-    i := grps.IndexOf(sGrpBookmarks);
+    i := grps.IndexOf(_(sGrpBookmarks));
     if (i >= 0) then grps.Delete(i);
 
-    i := grps.IndexOf(sGrpUnfiled);
+    i := grps.IndexOf(_(sGrpUnfiled));
     if (i >= 0) then grps.Delete(i);
 
-    i := grps.IndexOf(sGrpOffline);
+    i := grps.IndexOf(_(sGrpOffline));
     if (i >= 0) then grps.Delete(i);
 
     i := grps.IndexOf(MainSession.Prefs.getString('roster_transport_grp'));
@@ -1084,15 +1093,6 @@ begin
     dnd := nil;
     chat := nil;
 
-    {
-    sRosterAvail = 'Available';
-    sRosterChat = 'Free to Chat';
-    sRosterAway = 'Away';
-    sRosterXA = 'Xtended Away';
-    sRosterDND = 'Do Not Disturb';
-    sRosterOffline = 'Offline';
-    }
-
     if (parent is TTntMenuItem) then begin
         pm := TTntMenuItem(Parent);
         for i := 0 to pm.Count - 1 do begin
@@ -1189,12 +1189,6 @@ var
     flags: Word;
     res: integer;
 begin
-
-    {
-    MessageBoxW(Application.Handle, PWideChar(_(sDisconnected)), 'Foo',
-        MB_OK + MB_ICONINFORMATION);
-    }
-
     flags := 0;
     case DlgType of
     mtWarning:          flags := flags + MB_ICONWARNING;
@@ -1231,6 +1225,28 @@ begin
 
 end;
 
+function promptNewGroup: TJabberGroup;
+var
+    new_grp: WideString;
+    go: TJabberGroup;
+begin
+    // Add a roster grp.
+    Result := nil;
+    
+    new_grp := _(sDefaultGroup);
+    if InputQueryW(_(sNewGroup), _(sNewGroupPrompt), new_grp) = false then exit;
+
+    // add the new grp.
+    go := MainSession.Roster.getGroup(new_grp);
+    if (go <> nil) then begin
+        MessageDlgW(_(sNewGroupExists), mtError, [mbOK], 0);
+        Result := nil;
+    end
+    else begin
+        // add the new grp.
+        Result := MainSession.Roster.addGroup(new_grp);
+    end;
+end;
 
 {---------------------------------------}
 {---------------------------------------}

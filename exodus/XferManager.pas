@@ -127,30 +127,6 @@ type
 var
   frmXferManager: TfrmXferManager;
 
-const
-    sXferNewPort = 'Your new file transfer port will not take affect until all current trasfers are stopped. Stop existing transfers?';
-    sXferRecv = '%s is sending you a file.';
-    sXferURL = 'File transfer URL: ';
-    sXferDesc = 'File Description: ';
-    sXferOnline = 'The Contact must be online before you can send a file.';
-    sSend = 'Send';
-    sOpen = 'Open';
-    sClose = 'Close';
-    sTo = 'To:     ';
-    sXferOverwrite = 'This file already exists. Overwrite?';
-    sXferWaiting = 'Waiting for connection...';
-    sXferSending = 'Sending file...';
-    sXferRecvDisconnected = 'Receiver disconnected.';
-    sXferTryingClose = 'Trying to close.';
-    sXferDone = 'File transfer is done.';
-    sXferConn = 'Got connection.';
-    sXferDefaultDesc = 'Sending you a file.';
-    sXferCreateDir = 'This directory does not exist. Create it?';
-    sXferStreamError = 'There was an error trying to create the file.';
-    sXferDavError = 'There was an error trying to upload the file to your web host.';
-    sXferRecvError = 'There was an error receiving the file. (%d)';
-
-
 function getXferManager(): TfrmXferManager;
 
 procedure FileSend(tojid: string; fn: string = '');
@@ -169,6 +145,21 @@ implementation
 uses
     ExUtils, Jabber1, JabberConst, JabberID, Presence, InputPassword,
     GnuGetText, XMLUtils, Notify, RecvStatus, SendStatus, Session;
+const
+    sXferNewPort = 'Your new file transfer port will not take affect until all current trasfers are stopped. Stop existing transfers?';
+    sXferRecv = '%s is sending you a file.';
+    sXferURL = 'File transfer URL: ';
+    sXferDesc = 'File Description: ';
+    sXferOnline = 'The Contact must be online before you can send a file.';
+    sSend = 'Send';
+    sOpen = 'Open';
+    sClose = 'Close';
+    sTo = 'To:     ';
+
+    sXferSending = 'Sending file...';
+    sXferRecvDisconnected = 'Receiver disconnected.';
+    sXferTryingClose = 'Trying to close.';
+    sXferDefaultDesc = 'Sending you a file.';
 
 {---------------------------------------}
 procedure FileSend(tojid: string; fn: string = '');
@@ -278,7 +269,7 @@ begin
     pkg.desc := desc;
     pkg.mode := recv_oob;
 
-    tmps := WideFormat(sXferRecv, [from]);
+    tmps := WideFormat(_(sXferRecv), [from]);
 
     tmp_jid.Free();
 
@@ -345,7 +336,7 @@ begin
         exit;
     end;
 
-    tmps := WideFormat(sXferRecv, [from]);
+    tmps := WideFormat(_(sXferRecv), [from]);
 
     pkg := TFileXferPkg.Create();
     pkg.mode := recv_si;

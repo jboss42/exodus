@@ -63,12 +63,6 @@ type
 var
   frmAdd: TfrmAdd;
 
-const
-    sNoDomain = 'The contact ID you entered does not follow the standard user@host convention. Do you want to continue?';
-    sResourceSpec = 'Jabber Contact IDs do not typically include a resource. Are you sure you want to add this contact ID?';
-    sNoGatewayFound = 'The gateway server you requested does not have a transport for this contact type.';
-    sNotAddMyself = 'You can not add yourself to your roster.';
-
 function ShowAddContact: TfrmAdd;
 
 {---------------------------------------}
@@ -76,8 +70,14 @@ function ShowAddContact: TfrmAdd;
 {---------------------------------------}
 implementation
 uses
-    InputPassword, ExSession, ExUtils, 
+    InputPassword, ExSession, ExUtils, NodeItem, 
     GnuGetText, Jabber1, JabberID,  Presence, Session;
+
+const
+    sNoDomain = 'The contact ID you entered does not follow the standard user@host convention. Do you want to continue?';
+    sResourceSpec = 'Jabber Contact IDs do not typically include a resource. Are you sure you want to add this contact ID?';
+    sNoGatewayFound = 'The gateway server you requested does not have a transport for this contact type.';
+    sNotAddMyself = 'You can not add yourself to your roster.';
 {$R *.DFM}
 
 {---------------------------------------}
@@ -153,14 +153,12 @@ end;
 {---------------------------------------}
 procedure TfrmAdd.lblAddGrpClick(Sender: TObject);
 var
-    ngrp: WideString;
+    go: TJabberGroup;
 begin
     // Add a new group to the list...
-    ngrp := sDefaultGroup;
-    if InputQueryW(sNewGroup, sNewGroupPrompt, ngrp) then begin
-        MainSession.Roster.AddGroup(ngrp);
+    go := promptNewGroup();
+    if (go <> nil) then
         MainSession.Roster.AssignGroups(cboGroup.Items);
-    end;
 end;
 
 {---------------------------------------}

@@ -59,6 +59,11 @@ type
 var
   frmPrefNotify: TfrmPrefNotify;
 
+implementation
+{$R *.dfm}
+uses
+    GnuGetText, ExUtils, PrefController, Session, ShellAPI;
+
 const
     sSoundChatactivity = 'Activity in a chat window';
     sSoundInvite = 'Invited to a room';
@@ -72,11 +77,6 @@ const
     sSoundOOB = 'File Transfers';
     sSoundAutoResponse = 'Auto response generated';
     sSoundSetup = 'Make sure to configure sounds in your Sounds Control Panel using the hotlink provided.';
-
-implementation
-{$R *.dfm}
-uses
-    GnuGetText, ExUtils, PrefController, Session, ShellAPI;
 
 const
     NUM_NOTIFIES = 11;

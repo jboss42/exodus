@@ -46,16 +46,15 @@ procedure DoNotify(win: TForm; notify: integer; msg: Widestring; icon: integer;
     sound_name: string); overload;
 procedure DoNotify(win: TForm; pref_name: string; msg: Widestring; icon: integer); overload;
 
+implementation
+uses
+    BaseChat, ExUtils, ExEvents, GnuGetText,
+    Jabber1, PrefController, RiserWindow,
+    Room, NodeItem, Roster, MMSystem, Debug, Session;
+
 const
     sNotifyOnline = ' is now online.';
     sNotifyOffline = ' is now offline.';
-    sNotifyChat = 'Chat with ';
-
-implementation
-uses
-    BaseChat, ExUtils, ExEvents,
-    Jabber1, PrefController, RiserWindow,
-    Room, NodeItem, Roster, MMSystem, Debug, Session;
 
 const
     // image index for tab notification.
@@ -128,11 +127,11 @@ begin
 
     // someone is coming online for the first time..
     if (event = '/presence/online') then
-        DoNotify(nil, 'notify_online', nick + sNotifyOnline, ico_Online)
+        DoNotify(nil, 'notify_online', nick + _(sNotifyOnline), ico_Online)
 
     // someone is going offline
     else if (event = '/presence/offline') then
-        DoNotify(nil, 'notify_offline', nick + sNotifyOffline, ico_Offline)
+        DoNotify(nil, 'notify_offline', nick + _(sNotifyOffline), ico_Offline)
 
     // don't display normal presence changes
     else if ((event = '/presence/available') or (event = '/presence/error')) then

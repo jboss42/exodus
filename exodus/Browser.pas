@@ -145,15 +145,20 @@ function ShowBrowser(jid: string = ''): TfrmBrowse;
 {---------------------------------------}
 {---------------------------------------}
 implementation
-{$R *.DFM}
 uses
-    EntityCache, GnuGetText,  
+    EntityCache, GnuGetText,
     JabberConst, JoinRoom, Room, Roster, JabberID, Bookmark,
     ExUtils, Session, JUD, Profile, RegForm, Jabber1;
+
+const
+    sInvalidJID = 'The Jabber ID you entered is invalid.';
+
+{$R *.DFM}
 
 var
     cur_sort: integer;
     cur_dir: boolean;
+
 
 {---------------------------------------}
 function ShowBrowser(jid: string = ''): TfrmBrowse;
