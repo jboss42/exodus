@@ -29,7 +29,6 @@ requires
   rtl,
   vcl,
   designide,
-  dbrtl,
   vcldb;
 
 contains

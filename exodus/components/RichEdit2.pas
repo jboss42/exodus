@@ -31,7 +31,10 @@ interface
 uses
     Langs, WStrList,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    StdCtrls, ComCtrls, ComStrs, RichEdit, DB, DBCtrls,
+    StdCtrls, ComCtrls, ComStrs, RichEdit,
+    {$ifdef BDE_SUPPORT}
+    DB, DBCtrls,
+    {$endif}
     ActiveX,OleCtnrs,olectrls,ComObj,OleDlg,RichOle,Menus, Printers;
 
 const
@@ -640,6 +643,7 @@ type
 {$ENDIF}
   end;
 
+{$ifdef BDE_SUPPORT}
   TDBRichEdit98 = class(TCustomRichEdit98)
   private
     FDataLink: TFieldDataLink;
@@ -760,6 +764,8 @@ type
 {$ENDIF}
   end;
 
+{$endif}
+
 const
   RTFConversionFormat: TConversionFormat = (
     ConversionClass: TConversion;
@@ -825,7 +831,9 @@ end;
 procedure Register;
 begin
   RegisterComponents('Win32', [TRichEdit98]);
+{$ifdef BDE_SUPPORT}
   RegisterComponents('Data Controls', [TDBRichEdit98]);
+{$endif}
 end;
 
 var
@@ -4829,7 +4837,7 @@ begin
 end;
 
 { TDBRichEdit98 }
-
+{$ifdef BDE_SUPPORT}
 constructor TDBRichEdit98.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
@@ -5079,7 +5087,7 @@ end;
 procedure TDBRichEdit98.DefineProperties(Filer: TFiler);
 begin
 end;
-
+{$endif}
 
 
 
