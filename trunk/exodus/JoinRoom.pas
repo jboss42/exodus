@@ -118,11 +118,11 @@ begin
     with jr do begin
         txtRoom.Text := MainSession.Prefs.getString('tc_lastroom');
         txtServer.Text := MainSession.Prefs.getString('tc_lastserver');
-        txtNick.Text := MainSession.Prefs.getString('tc_lastnick');
         if (txtNick.Text = '') then
             txtNick.Text := MainSession.Prefs.getString('default_nick');
         if (txtNick.Text = '') then
             txtNick.Text := MainSession.Username;
+        //txtNick.Text := MainSession.Prefs.getString('tc_lastnick');
         populateServers();
         Show;
     end;
