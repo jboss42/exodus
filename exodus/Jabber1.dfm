@@ -27,7 +27,7 @@ object frmJabber: TfrmJabber
     Left = 0
     Top = 30
     Width = 532
-    Height = 258
+    Height = 257
     ActivePage = tbsMsg
     Align = alClient
     DockSite = True
@@ -48,7 +48,7 @@ object frmJabber: TfrmJabber
         Left = 209
         Top = 0
         Width = 3
-        Height = 230
+        Height = 229
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = Splitter1Moved
@@ -57,7 +57,7 @@ object frmJabber: TfrmJabber
         Left = 0
         Top = 0
         Width = 209
-        Height = 230
+        Height = 229
         Align = alLeft
         BevelOuter = bvNone
         UseDockManager = False
@@ -69,7 +69,7 @@ object frmJabber: TfrmJabber
         Left = 212
         Top = 0
         Width = 312
-        Height = 230
+        Height = 229
         Align = alClient
         Columns = <
           item
@@ -211,6 +211,7 @@ object frmJabber: TfrmJabber
       object mnuChat: TMenuItem
         Caption = 'Start Chat'
         ShortCut = 117
+        OnClick = mnuChatClick
       end
       object mnuConference: TMenuItem
         Caption = 'Join a Group'
