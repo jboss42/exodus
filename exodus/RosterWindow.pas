@@ -156,6 +156,7 @@ type
       Data: Integer; var Compare: Integer);
     procedure pluginClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure treeRosterDeletion(Sender: TObject; Node: TTreeNode);
   private
     { Private declarations }
     _rostercb: integer;             // roster callback id
@@ -2563,6 +2564,38 @@ procedure TfrmRosterWindow.FormDestroy(Sender: TObject);
 begin
     _drop.stop();
     _drop := nil;
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.treeRosterDeletion(Sender: TObject;
+  Node: TTreeNode);
+(*
+var
+    o: TObject;
+    ri: TJabberRosterItem;
+    nl: TList;
+    i: integer;
+*)
+begin
+    // Make sure the node isn't ref'd by a RosterItem's node list
+    // This may be paranoid programming...
+    // but I'm trying to solve those weird AV's when
+    // presence arrives.
+(*
+    if (Node.Data <> nil) then begin
+        o := TObject(Node.Data);
+        if (o is TJabberRosterItem) then begin
+            ri := TJabberRosterItem(o);
+            nl := TList(ri.Data);
+            if (nl <> nil) then begin
+                i := nl.indexOf(Node);
+                if (i >= 0) then
+                    nl.Delete(i);
+            end;
+        end;
+    end;
+*)
+
 end;
 
 initialization
