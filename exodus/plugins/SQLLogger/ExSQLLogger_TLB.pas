@@ -1,4 +1,4 @@
-unit ExHTMLLogger_TLB;
+unit ExSQLLogger_TLB;
 
 // ************************************************************************ //
 // WARNING                                                                    
@@ -12,14 +12,14 @@ unit ExHTMLLogger_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 4/28/2004 11:49:05 PM from Type Library described below.
+// File generated on 4/28/2004 11:50:25 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\src\exodus\exodus\plugins\HTMLLogger\ExHTMLLogger.tlb (1)
-// LIBID: {4F0D5848-3AA1-4BCF-9116-870104CA12DD}
+// Type Lib: D:\src\exodus\exodus\plugins\SQLLogger\ExSQLLogger.tlb (1)
+// LIBID: {8E0171A0-18AB-4B04-B55F-8BBAB8271357}
 // LCID: 0
 // Helpfile: 
-// HelpString: ExHTMLLogger Library
+// HelpString: ExSQLLogger Library
 // DepndLst: 
 //   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
 //   (2) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
@@ -42,54 +42,54 @@ uses Windows, ActiveX, Classes, ExodusCOM_TLB, Graphics, StdVCL, Variants;
 // *********************************************************************//
 const
   // TypeLibrary Major and minor versions
-  ExHTMLLoggerMajorVersion = 1;
-  ExHTMLLoggerMinorVersion = 0;
+  ExSQLLoggerMajorVersion = 1;
+  ExSQLLoggerMinorVersion = 0;
 
-  LIBID_ExHTMLLogger: TGUID = '{4F0D5848-3AA1-4BCF-9116-870104CA12DD}';
+  LIBID_ExSQLLogger: TGUID = '{8E0171A0-18AB-4B04-B55F-8BBAB8271357}';
 
-  IID_IHTMLLogger: TGUID = '{15C111F4-17C7-4681-8C38-21036BD3A482}';
-  CLASS_HTMLLogger: TGUID = '{BA304092-987A-42C3-A4CC-40D196BE1A4F}';
+  IID_ISQLLogger: TGUID = '{5FA146F7-920E-4DEC-A698-5391C4ED996B}';
+  CLASS_SQLLogger: TGUID = '{B1D1A5F9-A60D-4257-AD11-E0F1C2F4759B}';
 type
 
 // *********************************************************************//
 // Forward declaration of types defined in TypeLibrary                    
 // *********************************************************************//
-  IHTMLLogger = interface;
-  IHTMLLoggerDisp = dispinterface;
+  ISQLLogger = interface;
+  ISQLLoggerDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
 // (NOTE: Here we map each CoClass to its Default Interface)              
 // *********************************************************************//
-  HTMLLogger = IExodusPlugin;
+  SQLLogger = IExodusPlugin;
 
 
 // *********************************************************************//
-// Interface: IHTMLLogger
+// Interface: ISQLLogger
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {15C111F4-17C7-4681-8C38-21036BD3A482}
+// GUID:      {5FA146F7-920E-4DEC-A698-5391C4ED996B}
 // *********************************************************************//
-  IHTMLLogger = interface(IDispatch)
-    ['{15C111F4-17C7-4681-8C38-21036BD3A482}']
+  ISQLLogger = interface(IDispatch)
+    ['{5FA146F7-920E-4DEC-A698-5391C4ED996B}']
   end;
 
 // *********************************************************************//
-// DispIntf:  IHTMLLoggerDisp
+// DispIntf:  ISQLLoggerDisp
 // Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {15C111F4-17C7-4681-8C38-21036BD3A482}
+// GUID:      {5FA146F7-920E-4DEC-A698-5391C4ED996B}
 // *********************************************************************//
-  IHTMLLoggerDisp = dispinterface
-    ['{15C111F4-17C7-4681-8C38-21036BD3A482}']
+  ISQLLoggerDisp = dispinterface
+    ['{5FA146F7-920E-4DEC-A698-5391C4ED996B}']
   end;
 
 // *********************************************************************//
-// The Class CoHTMLLogger provides a Create and CreateRemote method to          
+// The Class CoSQLLogger provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusPlugin exposed by              
-// the CoClass HTMLLogger. The functions are intended to be used by             
+// the CoClass SQLLogger. The functions are intended to be used by             
 // clients wishing to automate the CoClass objects exposed by the         
 // server of this typelibrary.                                            
 // *********************************************************************//
-  CoHTMLLogger = class
+  CoSQLLogger = class
     class function Create: IExodusPlugin;
     class function CreateRemote(const MachineName: string): IExodusPlugin;
   end;
@@ -98,14 +98,14 @@ implementation
 
 uses ComObj;
 
-class function CoHTMLLogger.Create: IExodusPlugin;
+class function CoSQLLogger.Create: IExodusPlugin;
 begin
-  Result := CreateComObject(CLASS_HTMLLogger) as IExodusPlugin;
+  Result := CreateComObject(CLASS_SQLLogger) as IExodusPlugin;
 end;
 
-class function CoHTMLLogger.CreateRemote(const MachineName: string): IExodusPlugin;
+class function CoSQLLogger.CreateRemote(const MachineName: string): IExodusPlugin;
 begin
-  Result := CreateRemoteComObject(MachineName, CLASS_HTMLLogger) as IExodusPlugin;
+  Result := CreateRemoteComObject(MachineName, CLASS_SQLLogger) as IExodusPlugin;
 end;
 
 end.
