@@ -51,17 +51,10 @@ type
     popTime: TMenuItem;
     popLast: TMenuItem;
     popHistory: TMenuItem;
-    pnlTasks: TPanel;
-    lstTasks: TListView;
-    splitTask: TSplitter;
     popPresence: TMenuItem;
     popSendPres: TMenuItem;
     popSendSubscribe: TMenuItem;
-    pnlTaskHeader: TPanel;
-    txtFrom: TStaticText;
     ImageList2: TImageList;
-    Panel4: TPanel;
-    btnTasks: TSpeedButton;
     popSendFile: TMenuItem;
     popActions: TPopupMenu;
     popAddContact: TMenuItem;
@@ -104,7 +97,6 @@ type
     procedure treeRosterMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure popVersionClick(Sender: TObject);
-    procedure btnTasksClick(Sender: TObject);
     procedure popRosterPopup(Sender: TObject);
     procedure popPropertiesClick(Sender: TObject);
     procedure popRemoveClick(Sender: TObject);
@@ -140,7 +132,6 @@ type
     _sessionCB: integer;
     _FullRoster: boolean;
     _pos: TRect;
-    _task_height: longint;
     _task_collapsed: boolean;
     _show_status: boolean;
     _status_color: TColor;
@@ -1208,40 +1199,10 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRosterWindow.btnTasksClick(Sender: TObject);
-var
-    bmp: TBitmap;
-begin
-    if (not _task_collapsed) then
-        _task_height := pnlTasks.Height;
-
-    // lstTasks.Visible := not lstTasks.Visible;
-    bmp := TBitmap.Create;
-    _task_collapsed := not _task_collapsed;
-    if (_task_collapsed) then begin
-        // shrink the task list
-        pnlTasks.Height := pnlTaskHeader.Height + splitTask.Height - 1;
-        ImageList2.GetBitmap(1, bmp);
-        btnTasks.Glyph.Assign(bmp);
-        end
-    else begin
-        pnlTasks.Height := _task_height;
-        ImageList2.GetBitmap(0, bmp);
-        btnTasks.Glyph.Assign(bmp);
-        ResetPanels;
-        end;
-end;
-
-{---------------------------------------}
 procedure TfrmRosterWindow.ResetPanels;
 begin
-    pnlTasks.Align := alNone;
-    splitTask.Align := alNone;
-
     // order here is important
     pnlShow.Align := alBottom;
-    pnlTasks.Align := alBottom;
-    splitTask.Align := alBottom;
 end;
 
 {---------------------------------------}

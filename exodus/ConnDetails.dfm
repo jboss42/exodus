@@ -107,7 +107,7 @@ object frmConnDetails: TfrmConnDetails
     Left = 0
     Top = 65
     Width = 252
-    Height = 240
+    Height = 235
     ActivePage = tbsHttp
     Align = alClient
     Style = tsFlatButtons

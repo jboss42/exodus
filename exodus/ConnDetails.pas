@@ -101,6 +101,9 @@ var
 
 function ShowConnDetails(p: TJabberProfile): integer;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 
 {$R *.dfm}
@@ -108,6 +111,7 @@ implementation
 uses
     Session;
 
+{---------------------------------------}
 function ShowConnDetails(p: TJabberProfile): integer;
 var
     f: TfrmConnDetails;
@@ -125,7 +129,7 @@ begin
 
         cboConnection.ItemIndex := p.ConnectionType;
         spnPriority.Position := p.Priority;
-        if (p.ConnectionType = conn_normal) then 
+        if (p.ConnectionType = conn_normal) then
             PageControl1.ActivePage := tbsSocket
         else if (p.ConnectionType = conn_http) then
             PageControl1.ActivePage := tbsHttp;
@@ -134,6 +138,7 @@ begin
     result := f.ShowModal();
 end;
 
+{---------------------------------------}
 procedure TfrmConnDetails.frameButtons1btnOKClick(Sender: TObject);
 begin
     // save the info...
@@ -148,6 +153,7 @@ begin
     ModalResult := mrOK;
 end;
 
+{---------------------------------------}
 procedure TfrmConnDetails.chkSocksAuthClick(Sender: TObject);
 begin
     if (chkSocksAuth.Checked) then begin
@@ -164,6 +170,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmConnDetails.cboSocksTypeChange(Sender: TObject);
 begin
     if (cboSocksType.ItemIndex = 0) then begin
@@ -189,6 +196,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmConnDetails.SetSocket(profile: TJabberProfile);
 begin
     with profile do begin
@@ -206,6 +214,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmConnDetails.GetSocket(var profile: TJabberProfile);
 begin
     with profile do begin
@@ -222,7 +231,7 @@ begin
         end;
 end;
 
-
+{---------------------------------------}
 procedure TfrmConnDetails.cboProxyApproachChange(Sender: TObject);
 begin
     if (cboProxyApproach.ItemIndex = 2) then begin
@@ -247,6 +256,7 @@ begin
 
 end;
 
+{---------------------------------------}
 procedure TfrmConnDetails.chkProxyAuthClick(Sender: TObject);
 begin
     if (chkProxyAuth.Checked) then begin
@@ -263,6 +273,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmConnDetails.SetHttp(profile: TJabberProfile);
 begin
     with profile do begin
@@ -279,6 +290,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmConnDetails.GetHttp(var profile: TJabberProfile);
 begin
     with profile do begin
@@ -293,7 +305,7 @@ begin
         end;
 end;
 
-
+{---------------------------------------}
 procedure TfrmConnDetails.chkSSLClick(Sender: TObject);
 begin
     if (chkSSL.Checked) then begin
@@ -306,6 +318,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmConnDetails.cboConnectionChange(Sender: TObject);
 begin
     // Change the current tab and the profile info.
@@ -317,11 +330,13 @@ begin
     _profile.ConnectionType := cboConnection.ItemIndex;
 end;
 
+{---------------------------------------}
 procedure TfrmConnDetails.FormCreate(Sender: TObject);
 begin
     MainSession.Prefs.RestorePosition(Self);
 end;
 
+{---------------------------------------}
 procedure TfrmConnDetails.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin

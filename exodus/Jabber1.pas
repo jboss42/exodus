@@ -1190,10 +1190,23 @@ begin
         else
             Self.FormStyle := fsNormal;
 
-        if (MainSession.Prefs.getBool('window_toolbox')) then
-            Self.BorderStyle := bsSizeToolWin
-        else
-            Self.BorderStyle := bsSizeable;
+        if (MainSession.Prefs.getBool('window_toolbox')) then begin
+            if (Self.BorderStyle <> bsSizeToolWin) then begin
+                Self.BorderStyle := bsSizeToolWin;
+                end;
+            end
+        else begin
+            if (Self.BorderStyle <> bsSizeable) then begin
+                Self.BorderStyle := bsSizeable;
+                end;
+            end;
+
+        // resetup the tray icon..
+        // Shell_NotifyIcon(NIM_MODIFY, @_tray);
+        {
+        Shell_NotifyIcon(NIM_DELETE, @_tray);
+        Shell_NotifyIcon(NIM_ADD, @_tray);
+        }
 
         // do other stuff
         restoreMenus(MainSession.Active);

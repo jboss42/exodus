@@ -64,6 +64,8 @@ var
   frmAdd: TfrmAdd;
 
 resourcestring
+    sNoDomain = 'The contact ID you entered does not follow the standard user@host convention. Do you want to continue?';
+    sResourceSpec = 'Jabber Contact IDs do not typically include a resource. Are you sure you want to add this contact ID?';
     sNoGatewayFound = 'The gateway server you requested does not have a transport for this contact type.';
 
 function ShowAddContact: TfrmAdd;
@@ -73,7 +75,7 @@ function ShowAddContact: TfrmAdd;
 {---------------------------------------}
 implementation
 uses
-    Jabber1, 
+    Jabber1,
     JabberID,
     Presence,
     Session;
@@ -88,6 +90,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmAdd.frameButtons1btnOKClick(Sender: TObject);
+var
+    tmp_jid: TJabberID;
 begin
     // Add the new roster item..
     sjid := txtJID.Text;
@@ -97,6 +101,7 @@ begin
 
     // check to see if we need an agents list
     if (cboType.ItemIndex > 0) then begin
+        // Adding a gateway'd user
         gw := txtGateway.Text;
         agents := MainSession.GetAgentsList(gw);
         if (agents = nil) then begin
@@ -108,8 +113,16 @@ begin
         else
             doAdd();
         end
-    else
+    else begin
+        // Adding a normal Jabber user
+        // check to see if we have an "@" sign
+        tmp_jid := TJabberID.Create(sjid);
+        if (tmp_jid.user = '') then
+            if MessageDlg(sNoDomain, mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
+        if (tmp_jid.resource <> '') then
+            if MessageDlg(sResourceSpec, mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
         doAdd();
+        end;
 end;
 
 {---------------------------------------}
