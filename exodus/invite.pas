@@ -22,7 +22,7 @@ unit Invite;
 interface
 
 uses
-    Unicode, XMLTag,  
+    Unicode, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, CheckLst, ExtCtrls, buttonFrame, ComCtrls, Grids;
 
@@ -79,6 +79,7 @@ uses
 
 {$R *.dfm}
 
+{---------------------------------------}
 procedure showConfInvite(tag: TXMLTag);
 begin
     // if this also has a muc-invite, then just bail.
@@ -195,7 +196,7 @@ begin
             msg.setAttribute('to', room);
             with msg.AddTag('x') do begin
                 setAttribute('xmlns', xmlns_mucuser);
-                with AddTag('invie') do begin
+                with AddTag('invite') do begin
                     setAttribute('to', lstJIDS.Items[i].SubItems[0]);
                     AddBasicTag('reason', memReason.Lines.Text);
                     end;
