@@ -21,6 +21,7 @@ unit MsgDisplay;
 
 interface
 uses
+    OLERichEdit,
     RegExpr, Classes, JabberMsg,
     Graphics, ComCtrls, Controls,
     Messages, Windows, SysUtils;
@@ -41,7 +42,7 @@ procedure DisplayPresence(txt: string; Browser: TRichEdit);
 
 function GetMsgHTML(Msg: TJabberMessage): string;
 
-procedure ProcessEmoticons(RichEdit: TRichEdit; txt: string);
+procedure ProcessEmoticons(RichEdit: TOLEEdit; txt: string);
 procedure ConfigEmoticons();
 
 function getEmoticonIndex(match: string): integer;
@@ -107,7 +108,7 @@ begin
         RichEdit.SelText := ' ';
 
         if (use_emoticons) then
-            ProcessEmoticons(RichEdit, txt)
+            ProcessEmoticons(TOLEEdit(RichEdit), txt)
         else
             RichEdit.SelText := txt;
         end
@@ -130,7 +131,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure ProcessEmoticons(RichEdit: TRichEdit; txt: string);
+procedure ProcessEmoticons(RichEdit: TOLEEdit; txt: string);
 var
     m: boolean;
     pic: TPicture;
@@ -139,11 +140,8 @@ var
     eo: TEmoticon;
 begin
     // search for various smileys
-    {
-    if (emoticon_regex = nil) then
-        ConfigEmoticons();
-    }
 
+    // Change the control to allow pasting
     RichEdit.ReadOnly := false;
     pic := nil;
     s := txt;
@@ -156,13 +154,11 @@ begin
 
         if (pic = nil) then pic := TPicture.Create();
 
-        // frmJabber.imgEmoticons.GetBitmap(getEmoticonIndex(emoticon_regex.Match[2]), pic.Bitmap);
         im := emoticon_list.IndexOf(emoticon_regex.Match[2]);
         if (im >= 0) then begin
             eo := TEmoticon(emoticon_list.Objects[im]);
             eo.il.GetBitmap(eo.idx, pic.Bitmap);
-            Clipboard.Assign(pic);
-            RichEdit.PasteFromClipboard();
+            RichEdit.InsertBitmap(pic.Bitmap);
             end
         else
             RichEdit.SelText := emoticon_regex.Match[2];

@@ -139,6 +139,7 @@ type
     destructor Destroy; override;
     function Objectselected:Boolean;
     procedure Clear; override;                          {!!0.01 -- overriden to close objects}
+    procedure InsertBitmap(bmp: TBitmap);
   published
     property AutoVerbMenu: boolean read FAutoVerbMenu write FAutoVerbMenu default true;
   end;
@@ -159,8 +160,9 @@ type
   end;
 *)
 
+function BitmapToRTF(pict: TBitmap): string;
 
- procedure Register;
+procedure Register;
 
 implementation
 (*
@@ -456,8 +458,55 @@ begin
   OleCheck(FSelObject.DoVerb(Verb, nil, ClientSite, 0, H, R));
 end;
 
+{
+pgm 3/3/02 - Adding stuff to the rich edit control
+so that we can directly insert bitmaps
+}
+procedure TOLEEdit.InsertBitmap(bmp: TBitmap);
+var
+    s : TStringStream;
+begin
+    // Insert a bitmap into the control
+    s := TStringStream.Create(BitmapToRTF(bmp));
+    PlainText := False;
+    SelText := s.DataString;
+    s.Free;
+end;
 
-
+function BitmapToRTF(pict: TBitmap): string;
+var
+    bi,bb,rtf: string;
+    bis,bbs: Cardinal;
+    achar: ShortString;
+    hexpict: string;
+    I: Integer;
+begin
+    GetDIBSizes(pict.Handle,bis,bbs);
+    SetLength(bi,bis);
+    SetLength(bb,bbs);
+    GetDIB(pict.Handle,pict.Palette,PChar(bi)^,PChar(bb)^);
+    rtf := '{\rtf1 {\pict\dibitmap ';
+    SetLength(hexpict,(Length(bb) + Length(bi)) * 2);
+    i := 2;
+    for bis := 1 to Length(bi) do begin
+        achar := Format('%x',[Integer(bi[bis])]);
+        if Length(achar) = 1 then
+            achar := '0' + achar;
+        hexpict[i-1] := achar[1];
+        hexpict[i] := achar[2];
+        inc(i,2);
+        end;
+    for bbs := 1 to Length(bb) do begin
+        achar := Format('%x',[Integer(bb[bbs])]);
+        if Length(achar) = 1 then
+            achar := '0' + achar;
+        hexpict[i-1] := achar[1];
+        hexpict[i] := achar[2];
+        inc(i,2);
+        end;
+    rtf := rtf + hexpict + ' }}';
+    Result := rtf;
+end;
 
 //TProtRec++++++++++++++++++++++++++++
 
