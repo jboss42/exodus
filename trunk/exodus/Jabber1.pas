@@ -440,6 +440,8 @@ resourcestring
     sCmdConfig =    ' -c [file] '#9' : Config path name'#13#10;
     sUnkArg = 'Invalid command line:%s';
 
+    sXMPP_Profile = '-*- Temp profile: %s -*-';
+    
     sExodus = 'Exodus';
     sChat = 'Chat';
 
@@ -564,7 +566,7 @@ uses
     JoinRoom, Login, MsgController, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow, Room,
     Roster, RosterAdd, Session, StandardAuth, Transfer, Unicode, VCard, xData,
-    XMLUtils;
+    XMLUtils, XMLParser;
 
 {$R *.DFM}
 
@@ -779,6 +781,12 @@ var
     i : integer;
     mi: TMenuItem;
     tmp_locale: Widestring;
+    xmpp_file: string;
+    parser: TXMLTagParser;
+    xmpp_node: TXMLTag;
+    connect_node: TXMLTag;
+    auth_node: TXMLTag;
+    node: TXMLTag;
 begin
     // initialize vars
 
@@ -836,10 +844,10 @@ begin
                 // -c [file]   : config file name
                 // -s [status] : presence status
                 // -w [show]   : presence show
-                Options  := 'dmva?xjprifcsw';
-                OptFlags := '-----:::::::::';
-                ReqFlags := '              ';
-                LongOpts := 'debug,minimized,invisible,aatest,help,expanded,jid,password,resource,priority,profile,config,status,show';
+                Options  := 'dmva?xjprifcswo';
+                OptFlags := '-----::::::::::';
+                ReqFlags := '               ';
+                LongOpts := 'debug,minimized,invisible,aatest,help,expanded,jid,password,resource,priority,profile,config,status,show,xmpp';
                 while GetOpt do begin
                     case Ord(OptChar) of
                         0: raise EConfigException.Create(format(sUnkArg, [CmdLine()]));
@@ -857,13 +865,14 @@ begin
                         Ord('?'): show_help := true;
                         Ord('w'): _cli_show := OptArg;
                         Ord('s'): _cli_status := OptArg;
+                        Ord('o'): xmpp_file := OptArg;
                     end;
                 end;
             finally
                 Free
             end;
         end;
-
+            
         if (_testaa) then
             _auto_away_interval := 1
         else
@@ -895,7 +904,6 @@ begin
 
         // Create our main Session object
         MainSession := TJabberSession.Create(config);
-        auth := TStandardAuth.Create(MainSession);
 
         // Get our over-riding locale..
         // Normally, the GNUGetText stuff will try to find
@@ -909,6 +917,7 @@ begin
         end;
 
         // Set our session to use the normal auth agent
+        auth := TStandardAuth.Create(MainSession);
         MainSession.setAuthAgent(auth);
 
         // Check for a single instance
@@ -967,14 +976,31 @@ begin
             if (expanded <> '') then
                 SetBool('expanded', (expanded = 'yes'));
 
+            connect_node := nil;
+            if (xmpp_file <> '') then begin
+                parser := TXMLTagParser.Create;
+                parser.ParseFile(xmpp_file);
+                if (parser.Count > 0) then begin
+                    xmpp_node := parser.popTag();
+                    connect_node := xmpp_node.GetFirstTag('connect');
+                    jid := TJabberID.Create(connect_node.GetBasicText('host'));
+                end;
+                parser.Free();
+            end;
+
             // if a profile name was specified, use it.
             // otherwise, if a jid was specified, use it as the profile name.
             // otherwise, if we have no profiles yet, use the default profile name.
-            if (profile_name = '') then begin
-                if (jid <> nil) then
-                    profile_name := jid.jid
-                else if (Profiles.Count = 0) then
-                    profile_name := sDefaultProfile;
+            if (connect_node <> nil) then begin
+                profile_name := Format(sXMPP_Profile, [jid.jid]);
+            end
+            else begin
+                if (profile_name = '') then begin
+                    if (jid <> nil) then
+                        profile_name := jid.jid
+                    else if (Profiles.Count = 0) then
+                        profile_name := sDefaultProfile;
+                end;
             end;
 
             // if a profile was specified, use it, or create it if it doesn't exist.
@@ -1011,16 +1037,59 @@ begin
                 if (pass <> '') then
                     profile.password := pass;
 
-                SaveProfiles();
-                _prof_index := Profiles.IndexOfObject(profile);
+                if (connect_node <> nil) then begin
+                    s := connect_node.GetBasicText('ip');
+                    if (s <> '') then
+                        profile.Host := s;
+                    if (connect_node.GetFirstTag('ssl') <> nil) then
+                        profile.ssl := true;
+                    s := connect_node.GetBasicText('port');
+                    if (s <> '') then
+                        profile.Port := SafeInt(s);
 
-                if (profile.IsValid()) then begin
+                    auth_node := connect_node.GetFirstTag('authenticate');
+                    if (auth_node <> nil) then begin
+                        node := auth_node.GetFirstTag('username');
+                        if (node <> nil) then begin
+                            profile.Username := node.Data;
+                            auth_node.RemoveTag(node);
+                        end;
+
+                        node := auth_node.GetFirstTag('password');
+                        if (node <> nil) then begin
+                            profile.password := node.Data;
+                            auth_node.RemoveTag(node);
+                        end;
+
+                        node := auth_node.GetFirstTag('resource');
+                        if (node <> nil) then begin
+                            profile.Resource := node.Data;
+                            auth_node.RemoveTag(node);
+                        end;
+
+                        node := auth_node.GetFirstTag('tokenauth');
+                        if (node <> nil) then
+                            MainSession.TokenAuth := node;
+                    end;
+
+                    _prof_index := Profiles.IndexOfObject(profile);
                     setInt('profile_active', _prof_index);
                     _auto_login := true;
+                end
+                else begin
+                    SaveProfiles();
+                    _prof_index := Profiles.IndexOfObject(profile);
+
+                    if (profile.IsValid()) then begin
+                        setInt('profile_active', _prof_index);
+                        _auto_login := true;
+                    end;
                 end;
             end
             else begin
                 _prof_index := getInt('profile_active');
+                if ((_prof_index < 0) or (_prof_index >= Profiles.Count)) then
+                    _prof_index := 0;
                 _auto_login := getBool('autologin');
             end;
 

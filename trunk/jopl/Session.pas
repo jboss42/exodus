@@ -61,6 +61,7 @@ type
         _avails: TWidestringlist;
 
         _auth_agent: TJabberAuth;
+        _token_auth: TXMLTag;
 
         procedure StreamCallback(msg: string; tag: TXMLTag);
 
@@ -144,6 +145,7 @@ type
 
         property Username: WideString read GetUsername write SetUsername;
         property Password: WideString read GetPassword write SetPassword;
+        property TokenAuth: TXMLTag read _token_auth write _token_auth;
         property Server: WideString read GetServer write SetServer;
         property Resource: WideString read GetResource write SetResource;
         property Jid: Widestring read GetFullJid;
@@ -206,6 +208,8 @@ begin
 
     _pauseQueue := TQueue.Create();
     _avails := TWidestringlist.Create();
+    
+    _token_auth := nil;
 
     // Create all the things which might register w/ the session
 

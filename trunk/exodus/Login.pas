@@ -86,6 +86,7 @@ begin
     l.cboProfiles.Items.Assign(MainSession.Prefs.Profiles);
     i := MainSession.Prefs.getInt('profile_active');
     if (i < 0) then i := 0;
+    if (i >= l.cboProfiles.Items.Count) then i := l.cboProfiles.Items.Count - 1;
     l.cboProfiles.ItemIndex := i;
     l.cboProfilesChange(nil);
 

@@ -112,8 +112,9 @@ begin
     with _auth_iq do begin
         Namespace := XMLNS_AUTH;
         iqType := 'get';
-        with qTag do
-            AddBasicTag('username', _session.Username);
+        // might not have username if tokenauth.
+        if (_session.Username <> '') then
+            qTag.AddBasicTag('username', _session.Username);
     end;
     _auth_iq.Send;
 end;
@@ -188,11 +189,17 @@ begin
     with _auth_iq do begin
         Namespace := XMLNS_AUTH;
         iqType := 'set';
-        qTag.AddBasicTag('username', _session.Username);
+        if (_session.Username <> '') then
+            qTag.AddBasicTag('username', _session.Username);
         qTag.AddBasicTag('resource', _session.Resource);
     end;
 
-    if seq <> nil then begin
+    if (_session.TokenAuth <> nil) then begin
+        // token auth
+        _auth_iq.qTag.AddTag(_session.TokenAuth);
+        end
+
+    else if seq <> nil then begin
         if tok = nil then exit;
         // Zero-k auth
         _AuthType := jatZeroK;
@@ -223,6 +230,8 @@ end;
 
 {---------------------------------------}
 procedure TStandardAuth.AuthCallback(event: string; tag: TXMLTag);
+var
+    val: TXMLTag;
 begin
     // check the result of the authentication
     _auth_iq := nil;
@@ -232,6 +241,12 @@ begin
     end
     else begin
         _session.setAuthenticated(true, tag);
+        // look for tokenauth username, put in session.
+        if (_session.Username = '') then begin
+            val := tag.QueryXPTag('/iq/query[@xmlns="jabber:iq:auth"]/tokenauth[@xmlns="http://www.jabber.com/schemas/tokenauth.xsd"/x[@xmlns="jabber:x:data"]/field[@var="jid"]/value');
+            if (val = nil) then exit;
+            _session.Username := val.Data;
+        end;
     end;
 end;
 
