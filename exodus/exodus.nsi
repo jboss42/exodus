@@ -19,21 +19,24 @@ InstallDir $PROGRAMFILES\Exodus
 InstallDirRegKey HKLM SOFTWARE\Jabber\Exodus "Install_Dir"
 
 Icon "exodus.ico"
+UnInstallIcon "exodus.ico"
 WindowIcon on
 CRCCheck on
+XPStyle on
+InstProgressFlags smooth colored
 
 ComponentText "This will install Exodus."
 LicenseData GPL-LICENSE.TXT
 LicenseText "Exodus is licensed under the GPL" "Groovy"
-EnabledBitmap online.bmp
-DisabledBitmap offline.bmp
+CheckBitmap checks.bmp
 SubCaption 3 ": Exit running Exodus versions!"
 
 ; The text to prompt the user to enter a directory
 DirText "Which directory should Exodus be installed in?"
 
 ; The stuff to install
-Section "Exodus (Required)"
+Section "!Exodus (Required)"
+	SectionIn 1 RO
 	call NotifyInstances
 
 	; Set output path to the installation directory.
@@ -116,6 +119,12 @@ silent:
 
 SectionEnd
 
+Section "Bleeding-edge updates"
+	SetOverwrite off
+  	File "branding.xml"	
+	SetOverwrite on
+SectionEnd
+
 ; special uninstall section.
 UninstallText "This will uninstall Exodus.  Click Uninstall to continue."
 Section "Uninstall"
@@ -125,6 +134,7 @@ Section "Uninstall"
   ; remove files
   Delete $INSTDIR\Exodus.exe
   Delete $INSTDIR\IdleHooks.dll
+  Delete $INSTDIR\branding.xml
   ; remove shortcuts, if any.
   Delete "$SMPROGRAMS\Exodus\*.*"
   RMDir "$SMPROGRAMS\Exodus"
@@ -272,4 +282,9 @@ Function StrStr
   Pop $3
   Pop $2
   Exch $1
+FunctionEnd
+
+Function .onInit
+	SectionSetFlags 1 0
+	SectionSetFlags 2 0
 FunctionEnd
