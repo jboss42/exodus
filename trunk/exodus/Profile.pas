@@ -22,7 +22,7 @@ unit Profile;
 interface
 
 uses
-    XMLTag,
+    XMLTag, IQ, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, CheckLst, ExtCtrls, ComCtrls;
 
@@ -113,6 +113,7 @@ type
     procedure frameButtons1btnOKClick(Sender: TObject);
   private
     { Private declarations }
+    iq: TJabberIQ;
   public
     { Public declarations }
     procedure vcard(event: string; tag: TXMLTag);
@@ -128,7 +129,6 @@ implementation
 {$R *.DFM}
 uses
     XMLVCard,
-    iq,
     Presence,
     Roster,
     JabberID,
@@ -143,7 +143,6 @@ var
     ritem: TJabberRosterItem;
     f: TfrmProfile;
     p: TJabberPres;
-    iq: TJabberIQ;
     tmps: string;
     i, gi: integer;
 begin
@@ -202,6 +201,7 @@ var
     vcard: TXMLVCard;
 begin
     // callback for vcard info
+    iq := nil;
     aniProfile.Visible := false;
     aniProfile.Active := false;
 
@@ -257,6 +257,7 @@ begin
     tabSheet5.TabVisible := false;
     tabSheet6.TabVisible := false;
     tabSheet7.TabVisible := false;
+    iq := nil;
 end;
 
 {---------------------------------------}
@@ -272,6 +273,8 @@ end;
 {---------------------------------------}
 procedure TfrmProfile.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+    if (iq <> nil) then
+        iq.Free;
     Action := caFree;
 end;
 

@@ -1,6 +1,6 @@
 object frmProfile: TfrmProfile
-  Left = 275
-  Top = 204
+  Left = 259
+  Top = 184
   Width = 459
   Height = 279
   Caption = 'Contact Properties'
@@ -1136,11 +1136,9 @@ object frmProfile: TfrmProfile
     inherited Panel1: TPanel
       Left = 291
       inherited btnOK: TButton
-        Top = 1
         OnClick = frameButtons1btnOKClick
       end
       inherited btnCancel: TButton
-        Top = 1
         OnClick = frameButtons1btnCancelClick
       end
     end

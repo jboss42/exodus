@@ -72,7 +72,6 @@ begin
   Application.CreateForm(TfrmJabber, frmJabber);
   Application.CreateForm(TfrmRosterWindow, frmRosterWindow);
   Application.CreateForm(TfrmDebug, frmDebug);
-  Application.CreateForm(TfrmBookmark, frmBookmark);
   Application.ShowMainForm := false;
   frmRosterWindow.DockRoster;
   frmRosterWindow.Show;
