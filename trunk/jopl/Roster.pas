@@ -516,9 +516,11 @@ begin
             for g := 0 to ri.Groups.Count - 1 do begin
                 cur_grp := ri.Groups[g];
                 grp_list := getGroupList(cur_grp);
-                idx := grp_list.IndexOf(ri.jid.full);
-                if (idx >= 0) then
-                    grp_list.Delete(idx);
+                if (grp_list <> nil) then begin
+                    idx := grp_list.IndexOf(ri.jid.full);
+                    if (idx >= 0) then
+                        grp_list.Delete(idx);
+                end;
             end;
         end;
 
