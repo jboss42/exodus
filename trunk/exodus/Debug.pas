@@ -187,14 +187,18 @@ end;
 
 {---------------------------------------}
 procedure TfrmDebug.AddWideText(txt: WideString; txt_color: TColor);
+var
+    at_bottom, is_scrolling: boolean;
 begin
+    at_bottom := MsgDebug.atBottom;
+    is_scrolling := MsgDebug.isScrolling;
     with MsgDebug do begin
         SelStart := GetTextLen;
         SelLength := 0;
         SelAttributes.Color := txt_Color;
         WideSelText := txt + ''#13#10;
-        if ((atBottom) and (not isScrolling)) then
-            MsgDebug.ScrollToBottom();
+        if ((at_bottom) and (not is_scrolling)) then
+            ScrollToBottom();
     end;
 end;
 
