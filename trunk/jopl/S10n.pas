@@ -129,7 +129,11 @@ begin
         if (incoming = 0) then // auto-accept from none
             prompt := true
         else if (incoming = 1) then // auto-accept from roster
-            prompt := (ritem = nil);
+            prompt := (ritem = nil)
+        else if (incoming = 3) then begin // auto-deny all
+            SendUnsubscribed(j.jid, MainSession);
+            exit;
+        end;
 
         if (prompt) then
             MainSession.FireEvent('/session/gui/subscribe', tag)
