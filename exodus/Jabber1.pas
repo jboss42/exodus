@@ -2038,7 +2038,10 @@ begin
     pri := MainSession.Priority;
     if (mi.Tag >= 0) then begin
         cp := MainSession.Prefs.getPresIndex(mi.Tag);
-        if ((cp <> nil) and (cp.Priority <> -1)) then pri := cp.Priority;
+        if (cp <> nil) then begin
+            if (cp.Priority <> -1) then pri := cp.Priority;
+            stat := cp.Status;
+        end;
     end;
     MainSession.setPresence(show, stat, pri);
 end;
