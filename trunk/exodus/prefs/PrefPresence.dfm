@@ -10,9 +10,9 @@ inherited frmPrefPresence: TfrmPrefPresence
   TextHeight = 13
   object lstCustomPres: TListBox
     Left = 0
-    Top = 137
+    Top = 113
     Width = 329
-    Height = 77
+    Height = 102
     Align = alTop
     ItemHeight = 13
     TabOrder = 0
@@ -39,7 +39,7 @@ inherited frmPrefPresence: TfrmPrefPresence
   end
   object pnlCustomPresButtons: TPanel
     Left = 0
-    Top = 214
+    Top = 215
     Width = 329
     Height = 34
     Align = alTop
@@ -75,7 +75,7 @@ inherited frmPrefPresence: TfrmPrefPresence
   end
   object GroupBox1: TGroupBox
     Left = 0
-    Top = 248
+    Top = 249
     Width = 329
     Height = 119
     Align = alTop
@@ -180,20 +180,20 @@ inherited frmPrefPresence: TfrmPrefPresence
     Left = 0
     Top = 20
     Width = 329
-    Height = 117
+    Height = 93
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 4
     object Label8: TLabel
       Left = 5
-      Top = 44
+      Top = 28
       Width = 126
       Height = 13
       Caption = 'Presence tracking in chats'
     end
     object Label1: TLabel
       Left = 0
-      Top = 99
+      Top = 75
       Width = 118
       Height = 13
       Caption = 'Custom Presence Entries'
@@ -204,33 +204,23 @@ inherited frmPrefPresence: TfrmPrefPresence
       Font.Style = []
       ParentFont = False
     end
-    object chkPresenceMessageSend: TCheckBox
-      Left = 4
-      Top = 20
-      Width = 281
-      Height = 17
-      Caption = 'When presence changes, send Windows message'
-      Checked = True
-      State = cbChecked
-      TabOrder = 0
-    end
-    object chkPresenceMessageListen: TCheckBox
+    object chkPresenceSync: TCheckBox
       Left = 4
       Top = 4
       Width = 273
       Height = 17
-      Caption = 'When Windows message received, change presence'
+      Caption = 'Synchronize presence of multiple copies of Exodus'
       Checked = True
       State = cbChecked
-      TabOrder = 1
+      TabOrder = 0
     end
     object cboPresTracking: TComboBox
       Left = 15
-      Top = 60
+      Top = 44
       Width = 207
       Height = 21
       ItemHeight = 13
-      TabOrder = 2
+      TabOrder = 1
       Items.Strings = (
         'Track all presence changes'
         'Show only last presence change'

@@ -86,20 +86,13 @@ inherited frmPrefMsg: TfrmPrefMsg
     TabOrder = 4
     Transparent = False
   end
-  object txtTimestampFmt: TEdit
-    Left = 69
-    Top = 106
-    Width = 164
-    Height = 21
-    TabOrder = 5
-  end
   object btnLogBrowse: TButton
     Left = 243
     Top = 146
     Width = 75
     Height = 25
     Caption = 'Browse'
-    TabOrder = 6
+    TabOrder = 5
     OnClick = btnLogBrowseClick
   end
   object chkMsgQueue: TCheckBox
@@ -108,7 +101,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 284
     Height = 17
     Caption = 'Messages, Events always goto the Events Window'
-    TabOrder = 7
+    TabOrder = 6
   end
   object chkLogRooms: TCheckBox
     Left = 26
@@ -116,7 +109,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 151
     Height = 17
     Caption = 'Log conference rooms'
-    TabOrder = 8
+    TabOrder = 7
   end
   object cboMsgOptions: TComboBox
     Left = 26
@@ -125,7 +118,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 9
+    TabOrder = 8
     Items.Strings = (
       'Use default message handling'
       'Treat all messages as chats'
@@ -137,7 +130,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 75
     Height = 25
     Caption = 'Clear All Logs'
-    TabOrder = 10
+    TabOrder = 9
     OnClick = btnLogClearAllClick
   end
   object chkCloseQueue: TCheckBox
@@ -146,14 +139,14 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 276
     Height = 17
     Caption = 'Close the Event window going to Compressed Mode'
-    TabOrder = 11
+    TabOrder = 10
   end
   object txtSpoolPath: TEdit
     Left = 26
     Top = 299
     Width = 207
     Height = 21
-    TabOrder = 12
+    TabOrder = 11
   end
   object btnSpoolBrowse: TButton
     Left = 243
@@ -161,7 +154,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 75
     Height = 25
     Caption = 'Browse'
-    TabOrder = 13
+    TabOrder = 12
     OnClick = btnSpoolBrowseClick
   end
   object cboInviteOptions: TComboBox
@@ -171,7 +164,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 14
+    TabOrder = 13
     Items.Strings = (
       'Treat as a normal event'
       'Always popup window'
@@ -183,7 +176,21 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 252
     Height = 17
     Caption = 'Block messages from people not on my roster'
+    TabOrder = 14
+  end
+  object txtTimestampFmt: TComboBox
+    Left = 72
+    Top = 106
+    Width = 161
+    Height = 21
+    ItemHeight = 13
     TabOrder = 15
+    Text = 'h:mm am/pm'
+    Items.Strings = (
+      'h:mm am/pm'
+      'hh:mm'
+      't'
+      'tt')
   end
   object OpenDialog1: TOpenDialog
     Filter = 'XML|*.xml'

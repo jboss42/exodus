@@ -179,9 +179,12 @@ end;
 {---------------------------------------}
 procedure TfrmBaseChat.FormActivate(Sender: TObject);
 begin
-    inherited;
+    if (timWinFlash.Enabled) then
+        timWinFlash.Enabled := false;
+
     frmExodus.ActiveChat := Self;
-    if (frmEmoticons.Visible) then
+
+    if ((frmEmoticons <> nil) and (frmEmoticons.Visible)) then
         frmEmoticons.Hide;
 
     if (Self.Visible) and (pnlInput.Visible) then begin
@@ -189,8 +192,7 @@ begin
         MsgOut.SetFocus;
     end;
 
-    if (timWinFlash.Enabled) then
-        timWinFlash.Enabled := false;
+    inherited;
 end;
 
 {---------------------------------------}

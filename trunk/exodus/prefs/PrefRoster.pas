@@ -33,8 +33,6 @@ type
     StaticText1: TStaticText;
     chkShowUnsubs: TCheckBox;
     chkOfflineGroup: TCheckBox;
-    chkInlineStatus: TCheckBox;
-    cboInlineStatus: TColorBox;
     chkHideBlocked: TCheckBox;
     chkPresErrors: TCheckBox;
     chkShowPending: TCheckBox;
@@ -46,7 +44,6 @@ type
     txtGatewayGrp: TTntComboBox;
     Label1: TLabel;
     txtDefaultGrp: TTntComboBox;
-    procedure chkInlineStatusClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -87,9 +84,6 @@ begin
         chkShowUnsubs.Checked := getBool('roster_show_unsub');
         chkShowPending.Checked := getBool('roster_show_pending');
         chkOfflineGroup.Checked := getBool('roster_offline_group');
-        chkInlineStatus.Checked := getBool('inline_status');
-        cboInlineStatus.Selected := TColor(getInt('inline_color'));
-        cboInlineStatus.Enabled := chkInlineStatus.Checked;
         chkHideBlocked.Checked := getBool('roster_hide_block');
         chkPresErrors.Checked := getBool('roster_pres_errors');
         chkMessenger.Checked := getBool('roster_messenger');
@@ -112,8 +106,6 @@ begin
         setBool('roster_show_pending', chkShowPending.Checked);
         setBool('roster_offline_group', chkOfflineGroup.Checked);
         setBool('roster_hide_block', chkHideBlocked.Checked);
-        setBool('inline_status', chkInlineStatus.Checked);
-        setInt('inline_color', integer(cboInlineStatus.Selected));
         setInt('roster_chat', cboDblClick.ItemIndex);
         setBool('roster_pres_errors', chkPresErrors.Checked);
         setBool('roster_messenger', chkMessenger.Checked);
@@ -123,13 +115,6 @@ begin
         setString('roster_default', txtDefaultGrp.Text);
         setString('roster_transport_grp', txtGatewayGrp.Text);
     end;
-end;
-
-procedure TfrmPrefRoster.chkInlineStatusClick(Sender: TObject);
-begin
-  inherited;
-    // toggle the color drop down on/off
-    cboInlineStatus.Enabled := chkInlineStatus.Checked;
 end;
 
 end.

@@ -1,8 +1,8 @@
 inherited frmPrefFont: TfrmPrefFont
-  Left = 352
-  Top = 598
+  Left = 248
+  Top = 329
   Caption = 'frmPrefFont'
-  ClientHeight = 276
+  ClientHeight = 349
   ClientWidth = 403
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -35,30 +35,17 @@ inherited frmPrefFont: TfrmPrefFont
   end
   object Label24: TLabel
     Left = 8
-    Top = 194
+    Top = 186
     Width = 88
     Height = 13
     Caption = 'Background Color:'
   end
   object Label25: TLabel
     Left = 8
-    Top = 218
+    Top = 210
     Width = 51
     Height = 13
     Caption = 'Font Color:'
-  end
-  object lblColor: TLabel
-    Left = 8
-    Top = 168
-    Width = 87
-    Height = 13
-    Caption = 'Roster Window'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'MS Sans Serif'
-    Font.Style = [fsBold]
-    ParentFont = False
   end
   object Label5: TLabel
     Left = 8
@@ -66,6 +53,26 @@ inherited frmPrefFont: TfrmPrefFont
     Width = 283
     Height = 13
     Caption = 'Click on the appropriate font or window to change elements.'
+  end
+  object Bevel2: TBevel
+    Left = 0
+    Top = 264
+    Width = 401
+    Height = 4
+    Anchors = [akLeft, akTop, akRight]
+  end
+  object lblColor: TLabel
+    Left = 8
+    Top = 168
+    Width = 82
+    Height = 13
+    Caption = 'Element Name'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
   end
   object StaticText3: TStaticText
     Left = 0
@@ -104,8 +111,8 @@ inherited frmPrefFont: TfrmPrefFont
       FF00000000000000000B436F77626F79204E65616C}
   end
   object clrBoxBG: TColorBox
-    Left = 111
-    Top = 191
+    Left = 135
+    Top = 183
     Width = 170
     Height = 22
     DefaultColorColor = clBlue
@@ -117,8 +124,8 @@ inherited frmPrefFont: TfrmPrefFont
     OnChange = clrBoxBGChange
   end
   object clrBoxFont: TColorBox
-    Left = 111
-    Top = 215
+    Left = 135
+    Top = 207
     Width = 170
     Height = 22
     DefaultColorColor = clBlue
@@ -130,8 +137,8 @@ inherited frmPrefFont: TfrmPrefFont
     OnChange = clrBoxFontChange
   end
   object btnFont: TButton
-    Left = 111
-    Top = 242
+    Left = 135
+    Top = 234
     Width = 90
     Height = 25
     Caption = 'Change Font'
@@ -233,6 +240,27 @@ inherited frmPrefFont: TfrmPrefFont
     PlainRTF = False
     UndoLimit = 0
     AllowInPlace = False
+  end
+  object chkInlineStatus: TCheckBox
+    Left = 8
+    Top = 275
+    Width = 241
+    Height = 17
+    Caption = 'Show status in the roster: Joe <Meeting>'
+    TabOrder = 6
+    OnClick = chkInlineStatusClick
+  end
+  object cboInlineStatus: TColorBox
+    Left = 32
+    Top = 294
+    Width = 201
+    Height = 22
+    DefaultColorColor = clBlue
+    Selected = clBlue
+    Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
+    DropDownCount = 12
+    ItemHeight = 16
+    TabOrder = 7
   end
   object FontDialog1: TFontDialog
     Font.Charset = DEFAULT_CHARSET

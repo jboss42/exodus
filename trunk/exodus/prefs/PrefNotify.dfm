@@ -3,13 +3,13 @@ inherited frmPrefNotify: TfrmPrefNotify
   Top = 154
   Caption = 'frmPrefNotify'
   ClientHeight = 346
-  ClientWidth = 283
+  ClientWidth = 338
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   object lblConfigSounds: TLabel
     Left = 169
-    Top = 34
+    Top = 32
     Width = 93
     Height = 13
     Cursor = crHandPoint
@@ -93,7 +93,7 @@ inherited frmPrefNotify: TfrmPrefNotify
   object StaticText6: TStaticText
     Left = 0
     Top = 0
-    Width = 283
+    Width = 338
     Height = 20
     Align = alTop
     Alignment = taCenter
@@ -116,16 +116,17 @@ inherited frmPrefNotify: TfrmPrefNotify
     Height = 17
     Caption = 'Use sound notifications'
     TabOrder = 0
+    OnClick = chkSoundClick
   end
   object chkNotifyActive: TCheckBox
     Left = 8
     Top = 48
-    Width = 169
+    Width = 249
     Height = 17
     Hint = 
       'NOTE: Notifications always occur when Exodus is in the backgroun' +
       'd.'
-    Caption = 'Do notifications when active'
+    Caption = 'Perform notifications when Exodus has focus'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 1
@@ -133,9 +134,9 @@ inherited frmPrefNotify: TfrmPrefNotify
   object chkFlashInfinite: TCheckBox
     Left = 8
     Top = 82
-    Width = 225
+    Width = 289
     Height = 17
-    Caption = 'Flash the taskbar until window gets focus.'
+    Caption = 'Flash taskbar continuously until the window gets focus.'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 3
@@ -145,7 +146,7 @@ inherited frmPrefNotify: TfrmPrefNotify
     Top = 65
     Width = 209
     Height = 17
-    Caption = 'Do notifications for active window'
+    Caption = 'Perform notifications for current window'
     TabOrder = 2
   end
 end

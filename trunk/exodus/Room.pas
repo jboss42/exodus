@@ -233,6 +233,7 @@ resourcestring
     sStatus_405a = 'You are not allowed to enter the room. You must be on the member list.';
     sStatus_407  = 'You are not on the member list for this room. Try and register?';
     sStatus_409  = 'Your nickname is already being used. Please select another one.';
+    sStatus_Unknown = 'The room has been destroyed for an unknown reason.';
 
     sEditVoice  = 'Edit Voice List';
     sEditBan    = 'Edit Ban List';
@@ -615,7 +616,7 @@ end;
 procedure TfrmRoom.presCallback(event: string; tag: TXMLTag);
 var
     ptype, from: Widestring;
-    _jid: TJabberID;
+    tmp_jid: TJabberID;
     i: integer;
     member: TRoomMember;
     mtag, t, itag, xtag, etag: TXMLTag;
@@ -624,14 +625,14 @@ begin
     // We are getting presence
     from := tag.getAttribute('from');
     ptype := tag.getAttribute('type');
-    _jid := TJabberID.Create(from);
     i := _roster.indexOf(from);
 
-    xtag := tag.QueryXPTag(xp_muc_presence);
-    if (xtag <> nil) then
-        _isMUC := true;
+    // check for MUC presence
+    if (not _isMUC) then begin
+        xtag := tag.QueryXPTag(xp_muc_presence);
+        if (xtag <> nil) then _isMUC := true;
+    end;
 
-    // if ((ptype = 'error') and (_jid.resource = mynick)) then begin
     if ((ptype = 'error') and ((from = jid) or (from = jid + '/' + MyNick))) then begin
         // check for various presence errors
         etag := tag.GetFirstTag('error');
@@ -647,7 +648,10 @@ begin
             else if (ecode = '401') then begin
                 MessageDlg(sStatus_401, mtError, [mbOK], 0);
                 Self.Close();
-                StartJoinRoom(_jid, MyNick, '');
+                tmp_jid := TJabberID.Create(from);
+                StartJoinRoom(tmp_jid, MyNick, '');
+                tmp_jid.Free();
+                exit;
             end
             else if (ecode = '404') then begin
                 MessageDlg(sStatus_404, mtError, [mbOK], 0);
@@ -673,20 +677,23 @@ begin
                 MessageDlg(etag.Data(), mtError, [mbOK], 0);
                 Self.Close();
                 exit;
-            end;
+            end
         end;
+
+        MessageDlg(sStatus_Unknown, mtError, [mbOK], 0);
+        Self.Close();
+        exit;
     end
 
     else if ptype = 'unavailable' then begin
         t := tag.QueryXPTag(xp_muc_status);
         if ((from = jid) or (from = jid + '/' + MyNick)) then begin
-            if (t <> nil) then
-                ShowStatusCode(t);
+            if (t <> nil) then ShowStatusCode(t);
             Self.Close();
+            exit;
         end
         else if (i >= 0) then begin
             member := TRoomMember(_roster.Objects[i]);
-
             if (t <> nil) then begin
                 scode := t.GetAttribute('code');
                 if (scode = '303') then begin
@@ -723,9 +730,10 @@ begin
         // SOME KIND OF AVAIL
         if i < 0 then begin
             // this is a new member
+            tmp_jid := TJabberID.Create(from);
             member := TRoomMember.Create;
             member.JID := from;
-            member.Nick := _jid.resource;
+            member.Nick := tmp_jid.resource;
 
             _roster.AddObject(from, member);
             member.Node := AddMember(member);
@@ -742,8 +750,10 @@ begin
                     _isMUC := true;
                     configRoom();
                 end;
-
             end;
+
+            tmp_jid.Free();
+
         end
         else begin
             member := TRoomMember(_roster.Objects[i]);
@@ -780,7 +790,9 @@ begin
         end;
 
         // for all protocols, our nick is our resource
-        member.nick := _jid.resource;
+        tmp_jid := TJabberID.Create(from);
+        member.nick := tmp_jid.resource;
+        tmp_jid.Free();
 
         if (member.Nick = myNick) then begin
             // check to see what my role is
@@ -797,7 +809,6 @@ begin
         RenderMember(member, tag);
     end;
 
-    _jid.Free();
 end;
 
 {---------------------------------------}
