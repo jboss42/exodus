@@ -89,9 +89,9 @@ var
 begin
     for i := _cache.Count - 1 downto 0 do begin
         ce := TJabberEntity(_cache.Objects[i]);
+        _cache.Objects[i] := nil;
         if ((ce <> nil) and (ce.Parent = nil)) then
             ce.Free();
-        _cache.Objects[i] := nil;
     end;
     _cache.Clear();
 end;
