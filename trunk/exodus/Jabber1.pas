@@ -125,7 +125,6 @@ type
     N1: TMenuItem;
     N2: TMenuItem;
     timFlasher: TTimer;
-    N3: TMenuItem;
     mnuOnline: TMenuItem;
     mnuToolbar: TMenuItem;
     mnuStatBar: TMenuItem;
@@ -182,7 +181,6 @@ type
     btnExpanded: TToolButton;
     trayMessage: TMenuItem;
     timReconnect: TTimer;
-    mnuNewVersion: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -237,7 +235,6 @@ type
     procedure trayMessageClick(Sender: TObject);
     procedure mnuBrowserClick(Sender: TObject);
     procedure timReconnectTimer(Sender: TObject);
-    procedure mnuNewVersionClick(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -441,11 +438,6 @@ resourcestring
     sSoundS10n = 'Subscription request';
     sSoundOOB = 'File Transfers';
 
-    sUpdateConfirm = 'A new version of Exodus is available.  Would you like to install it?';
-    sUpdateNone = 'No new update.';
-    sUpdateHTTPError = 'HTTP error: %s';
-    sUpdateRegError = 'No URL in registry';
-
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -486,14 +478,11 @@ const
 {---------------------------------------}
 implementation
 uses
-    InputPassword, Browser,  
-    RegForm, MsgDisplay, MsgQueue, JoinRoom, Login, ChatWin, RosterAdd,
-    iq, JUD, Bookmark, CustomPres,
-    MsgRecv, Prefs, Dockable,
-    RiserWindow, RemoveContact,
-    Session, Debug, About, getOpt, JabberID, XMLUtils, ExUtils,
-    Transfer, Profile, CommCtrl, 
-    VCard, PrefController, Roster, Password;
+    About, AutoUpdate, Bookmark, Browser, ChatWin, CommCtrl, CustomPres,
+    Debug, Dockable, ExUtils, GetOpt, InputPassword, Iq, JUD, JabberID,
+    JoinRoom, Login, MsgDisplay, MsgQueue, MsgRecv, Password,
+    PrefController, Prefs, Profile, RegForm, RemoveContact, RiserWindow,
+    Roster, RosterAdd, Session, Transfer, VCard, XMLUtils;
 
 {$R *.DFM}
 
@@ -984,8 +973,7 @@ begin
         end;
 
     // check for new version
-    if (MainSession.Prefs.getBool('auto_updates')) then
-        mnuNewVersionClick(nil);
+    InitAutoUpdate();
 end;
 
 {---------------------------------------}
@@ -2529,68 +2517,6 @@ begin
         end;
 end;
 
-{---------------------------------------}
-procedure TfrmExodus.mnuNewVersionClick(Sender: TObject);
-var
-    http : TIdHTTP;
-    reg : TRegistry;
-    url: string;
-    last: TDateTime;
-    tmp: string;
-    fstream: TFileStream;
-begin
-    reg := nil;
-    http := nil;
-    try
-        reg := TRegistry.Create();
-        reg.RootKey := HKEY_LOCAL_MACHINE;
-        reg.OpenKey('\Software\Jabber\Exodus', true);
-        url := reg.ReadString('Update_URL');
-
-        if (url = '') then begin
-            if (Sender <> nil) then ShowMessage(sUpdateRegError);
-            exit;
-            end;
-
-        http := TIdHTTP.Create(Self);
-        http.Head(url);
-        if (http.ResponseCode <> 200) then begin
-            if (Sender <> nil) then ShowMessage(Format(sUpdateHTTPError, [http.ResponseText]));
-            exit;
-            end;
-
-
-        last := FileDateToDateTime(FileAge(Application.EXEName));
-
-        if (http.Response.LastModified <= last) then begin
-            if (Sender <> nil) then ShowMessage(sUpdateNone);
-            exit;
-            end;
-
-        if MessageDlg(sUpdateConfirm,
-                      mtConfirmation, [mbOK,mbCancel], 0) = mrCancel then
-            exit;
-
-        // ok, there's a new one.
-        SetLength(tmp, 256);
-        SetLength(tmp, GetTempPath(255, PChar(tmp)));
-
-        tmp := tmp + ExtractFileName(URLToFilename(url));
-        fstream := TFileStream.Create(tmp, fmCreate);
-        http.Get(url, fstream);
-        fstream.Free();
-
-        _updating := true;
-        ShellExecute(0, 'open', PChar(tmp), '/S', nil, SW_SHOWNORMAL);
-
-    finally
-        if (reg <> nil) then begin
-            reg.CloseKey();
-            reg.Free();
-            end;
-        if (http <> nil) then http.Free();
-        end;
-end;
 
 initialization
     sExodusPresence := RegisterWindowMessage('EXODUS_PRESENCE');
