@@ -274,10 +274,12 @@ uses
     QGraphics,
     {$endif}
     JabberConst, StrUtils,
-    IdGlobal, IdCoder3To4, Session, IQ, XMLUtils, IdHTTPHeaderInfo;
+    IdGlobal, IdCoder3To4, Session, IQ, XMLUtils, IdHTTPHeaderInfo, Types;
 
 
 var
+    dtops: array of TRect;
+    dtop_count: integer;
     task_rect: TRect;
     task_dir: integer;
 
@@ -416,7 +418,7 @@ end;
 procedure getDefaultPos;
 var
     taskbar: HWND;
-    mh, mw: integer;
+    i, mh, mw: integer;
 begin
     //
     taskbar := FindWindow('Shell_TrayWnd', '');
@@ -432,6 +434,12 @@ begin
         task_dir := 2
     else
         task_dir := 3;
+
+    // Create an array for all of the monitors
+    dtop_count := Screen.MonitorCount;
+    setLength(dtops, dtop_count);
+    for i := 0 to Screen.MonitorCount - 1 do
+        dtops[i] := Screen.Monitors[i].WorkareaRect;
 
     {
     case _taskdir of
@@ -989,47 +997,33 @@ end;
 {---------------------------------------}
 procedure TPrefController.CheckPositions(form: TForm; t, l, w, h: integer);
 var
-    tbh: integer;
+    ok: boolean;
+    tmp: TRect;
+    i: integer;
+    cp: TPoint;
 begin
-    if (t < Screen.DesktopTop) then t := Screen.DesktopTop;
-    if (l < Screen.DesktopLeft) then l := Screen.DesktopLeft;
+    tmp := Bounds(l, t, w, h);
 
-    if (t + h > Screen.DesktopHeight) then begin
-        t := Screen.DesktopHeight - h;
+    // Get the nearest monitor to the form
+    cp := CenterPoint(tmp);
+    i := Screen.MonitorFromPoint(cp, mdNearest).MonitorNum;
+    if (i >= dtop_count) then i := 0;
+
+    ok :=  ((PtInRect(dtops[i], tmp.TopLeft)) and
+            (PtInRect(dtops[i], tmp.BottomRight)));
+
+    if (ok = false) then begin
+        // center it on the default monitor
+        cp := CenterPoint(dtops[i]);
+        l := cp.x - (w div 2);
+        t := cp.y - (h div 2);
+        tmp := Bounds(l, t, w, h);
     end;
 
-    if (l + w > Screen.DesktopWidth) then begin
-        l := Screen.DesktopWidth - w;
-    end;
-
-    // Make sure it's not "maximized"
-    if ((h >= (Screen.DesktopHeight - 50)) and
-        (w >= (Screen.DesktopWidth - 50))) then begin
-        h := form.Height;
-        w := form.Width;
-    end;
-
-    // Make sure it's not under the taskbar
-    tbh := task_rect.bottom - task_rect.top;
-    case task_dir of
-    0: begin
-        // left
-        end;
-    1: begin
-        // right
-        end;
-    2: begin
-        // top
-        if ((t < task_rect.bottom) and (t >= task_rect.top)) then
-            t := task_rect.bottom + 2;
-        end;
-    3: begin
-        // bottom;
-        if (((t+h) > task_rect.top) and ((t+h) <= task_rect.bottom)) then
-            t := t - tbh;
-        end;
-    end;
-
+    l := tmp.left;
+    t := tmp.top;
+    w := Abs(tmp.Right - tmp.Left);
+    h := Abs(tmp.Bottom - tmp.Top);
     Form.SetBounds(l, t, w, h);
 end;
 
@@ -1636,3 +1630,4 @@ finalization
     s_default_node.Free();
     s_brand_node.Free();
 end.
+
