@@ -368,9 +368,16 @@ begin
         MainSession.UnRegisterCallback(pres_cb);
         pres_cb := -1;
 
-        if (pres.isSubscription) then begin
+        if (pres.PresType = 'error') then begin
+            // some kind of error
+        end
+        else if (pres.PresType = 'unavailable') then begin
+            // bad registration
+        end
+        else if (pres.isSubscription) then begin
             // this is the service subscribing to us..
-            // The s10n.pas handler will catch this.
+            // The s10n.pas handler will catch this, but we want to put a
+            // better name on the roster item, and add it to the Transports grp.
             if (entity <> nil) then
                 tmps := entity.name;
             if (tmps = '') then
@@ -379,15 +386,6 @@ begin
             MainSession.roster.AddItem(pres.fromJID.full, tmps,
                 MainSession.Prefs.getString('roster_transport_grp'), false);
         end
-
-        else if (pres.PresType = 'error') then begin
-            // some kind of error
-        end
-
-        else if (pres.PresType = 'unavailable') then begin
-            // bad registration
-        end
-
         else begin
             // ok registration, check all pendings and re-subscribe to them
             with MainSession do begin
