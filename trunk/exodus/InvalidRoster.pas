@@ -46,13 +46,16 @@ var
 
 function getInvalidRoster: TfrmInvalidRoster;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 
 {$R *.dfm}
 uses
     Session, Roster;
 
-
+{---------------------------------------}
 function getInvalidRoster: TfrmInvalidRoster;
 begin
     //
@@ -63,6 +66,7 @@ begin
     Result.ShowDefault();
 end;
 
+{---------------------------------------}
 procedure TfrmInvalidRoster.AddPacket(tag: TXMLTag);
 var
     j: string;
@@ -87,12 +91,13 @@ begin
         end;
 end;
 
-
+{---------------------------------------}
 procedure TfrmInvalidRoster.frameButtons1btnCancelClick(Sender: TObject);
 begin
     Self.Close();
 end;
 
+{---------------------------------------}
 procedure TfrmInvalidRoster.FormCreate(Sender: TObject);
 begin
     _jids := TStringlist.Create;
@@ -100,6 +105,7 @@ begin
     inherited;
 end;
 
+{---------------------------------------}
 procedure TfrmInvalidRoster.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
@@ -107,6 +113,7 @@ begin
     Action := caFree;
 end;
 
+{---------------------------------------}
 procedure TfrmInvalidRoster.frameButtons1btnOKClick(Sender: TObject);
 var
     li: TListItem;
