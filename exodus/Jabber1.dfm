@@ -7603,4 +7603,10 @@ object frmExodus: TfrmExodus
     Left = 16
     Top = 75
   end
+  object Resolver: TIdDNSResolver
+    Port = 53
+    QueryRecords = []
+    Left = 120
+    Top = 168
+  end
 end

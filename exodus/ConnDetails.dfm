@@ -18,7 +18,7 @@ object frmConnDetails: TfrmConnDetails
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 247
+    Top = 241
     Width = 296
     Height = 32
     Align = alBottom
@@ -44,7 +44,7 @@ object frmConnDetails: TfrmConnDetails
     Left = 0
     Top = 0
     Width = 296
-    Height = 247
+    Height = 241
     ActivePage = tbsProfile
     Align = alClient
     TabOrder = 1
@@ -184,7 +184,7 @@ object frmConnDetails: TfrmConnDetails
         Left = 75
         Top = 7
         Width = 191
-        Height = 24
+        Height = 21
         Style = csOwnerDrawFixed
         DropDownCount = 2
         ItemHeight = 15
@@ -295,7 +295,7 @@ object frmConnDetails: TfrmConnDetails
         Items.Strings = (
           'Use StartTLS whenever the server allows it.'
           'Only allow connections which use StartTLS.'
-          'The specified port is SSL only.')
+          'Use SSL immediately when connected.')
         TabOrder = 2
         OnClick = optSSLClick
       end

@@ -30,7 +30,8 @@ uses
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
     Buttons, OleCtrls, AppEvnts, ToolWin,
-    IdHttp, TntComCtrls, DdeMan;
+    IdHttp, TntComCtrls, DdeMan, IdBaseComponent, IdComponent, IdUDPBase,
+  IdUDPClient, IdDNSResolver;
 
 const
     UpdateKey = '001';
@@ -160,6 +161,7 @@ type
     presChat: TMenuItem;
     trayPresChat: TMenuItem;
     N10: TMenuItem;
+    Resolver: TIdDNSResolver;
 
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
@@ -504,7 +506,7 @@ uses
     {$endif}
 
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
-    ChatController, ChatWin, Debug, Dockable, ExSession, ExUtils,
+    ChatController, ChatWin, Debug, Dockable, DNSUtils, ExSession, ExUtils,
     InputPassword, Invite, GnuGetText,
     Iq, JUD, JabberID, JabberMsg, IdGlobal, LocalUtils,
     JabberConst, ComController, CommCtrl, CustomPres,
@@ -913,6 +915,9 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.DoConnect();
 var
+    rip: string;
+    rport: Word;
+    req_srv, req_a: string;
     pw : WideString;
 begin
     // Make sure that the active profile
@@ -929,7 +934,43 @@ begin
             (pw = '')) then exit;
         MainSession.Password := pw;
     end;
+
     MainSession.FireEvent('/session/connecting', nil);
+
+    // TODO: Make DNS lookups Async??
+    // Lookup the current SRV etc..
+    with MainSession.Profile do begin
+        if (srv) then begin
+            req_srv := '_xmpp-client._tcp.' + Server;
+            req_a := Server;
+            rip := '';
+
+            if (GetSRVRecord(Resolver, req_srv, req_a, rip, rport)) then begin
+                ResolvedIP := rip;
+                if (rport > 0) then
+                    ResolvedPort := rport
+                else if (ssl = ssl_port) then
+                    ResolvedPort := 5223
+                else
+                    ResolvedPort := 5222;
+            end
+            else begin
+                ResolvedIP := Server;
+                if (ssl = ssl_port) then
+                    ResolvedPort := 5223
+                else
+                    ResolvedPort := 5222;
+            end;
+        end
+        else begin
+            if (Host <> '') then
+                ResolvedIP := Host
+            else
+                ResolvedIP := Server;
+            ResolvedPort := Port;
+        end;
+    end;
+
     MainSession.Connect(ExStartup.xmllang);
 end;
 

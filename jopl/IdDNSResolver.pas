@@ -764,7 +764,10 @@ begin
   // Set the "general purprose" options
   if assigned(result) then
   begin
-    result.FRecType := QueryRecordTypes[Ord(RR_Type) - 1];
+    if (RR_Type = 33) then
+        result.FRecType := qtSRV
+    else
+        result.FRecType := QueryRecordTypes[Ord(RR_Type) - 1];
     result.FRecClass := RR_Class;
     result.FName := RRName;
     result.FTTL := RR_TTL;

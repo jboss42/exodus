@@ -136,6 +136,11 @@ type
         // Socket connection
         Host: Widestring;
         Port: integer;
+
+        // Places for SRV lookup results.
+        ResolvedIP: Widestring;
+        ResolvedPort: integer;
+
         srv: boolean;
         ssl: integer;
         SSL_Cert: string;
@@ -1408,6 +1413,14 @@ begin
         ssl := ssl_tls
     else
         ssl := StrToIntDef(tmps, 0);
+
+    // backwards compat check for SRV...
+    // if they have 5222 and no host, then turn on SRV
+    if ((not srv) and (Port = 5222) and (host = '')) then
+        srv := true;
+
+    if ((not srv) and (Port = 5223) and (ssl = ssl_port) and (host = '')) then
+        srv := true;
 
     ssl_cert := tag.GetBasicText('ssl_cert');
     SocksType := StrToIntDef(tag.GetBasicText('socks_type'), 0);

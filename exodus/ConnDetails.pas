@@ -312,7 +312,7 @@ begin
         cboConnection.ItemIndex := ConnectionType;
         spnPriority.Position := Priority;
         txtSSLCert.Text := SSL_Cert;
-        boxHost.Enabled := srv;
+        chkSRV.Checked := srv;
     end;
 end;
 
@@ -498,7 +498,9 @@ end;
 {---------------------------------------}
 procedure TfrmConnDetails.chkSRVClick(Sender: TObject);
 begin
-    boxHost.Enabled := chkSRV.Checked;
+    boxHost.Enabled := not chkSRV.Checked;
+    txtHost.Enabled := boxHost.Enabled;
+    txtPort.Enabled := boxHost.Enabled;
 end;
 
 end.
