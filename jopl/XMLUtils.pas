@@ -423,10 +423,10 @@ begin
     if n > 0 then begin
         Buf := AllocMem(n);
         GetFileVersionInfo(PChar(S),0,n,Buf);
-        if VerQueryValue(Buf,PChar('StringFileInfo\040904E4\'+ InfoStr[3]),Pointer(Value),Len) then
+        if VerQueryValue(Buf,PChar('StringFileInfo\040904B0\'+ InfoStr[3]),Pointer(Value),Len) then
             Result := Value;
         for i:=1 to InfoNum do begin
-            if VerQueryValue(Buf,PChar('StringFileInfo\040904E4\'+ InfoStr[i]),Pointer(Value),Len) then begin
+            if VerQueryValue(Buf,PChar('StringFileInfo\040904B0\'+ InfoStr[i]),Pointer(Value),Len) then begin
                 KeyList.Add(InfoStr[i]);
                 ValList.Add(Value);
                 end;
