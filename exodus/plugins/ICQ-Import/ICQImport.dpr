@@ -16,7 +16,8 @@ uses
   XMLParser in '..\..\..\jopl\XMLParser.pas',
   XMLTag in '..\..\..\jopl\XMLTag.pas',
   XMLUtils in '..\..\..\jopl\XMLUtils.pas',
-  LibXmlComps in '..\..\..\jopl\LibXmlComps.pas';
+  LibXmlComps in '..\..\..\jopl\LibXmlComps.pas',
+  SecHash in '..\..\..\jopl\SecHash.pas';
 
 exports
   DllGetClassObject,

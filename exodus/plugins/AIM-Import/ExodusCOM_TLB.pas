@@ -11,11 +11,11 @@ unit ExodusCOM_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.4 $
-// File generated on 1/6/2003 9:42:19 PM from Type Library described below.
+// PASTLWTR : $Revision: 1.5 $
+// File generated on 1/8/2003 7:37:53 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\src\exodus\exodus\Exodus.exe (1)
+// Type Lib: D:\src\exodus\runner\exodus.exe (1)
 // LIBID: {219E0029-5710-4C9B-BE33-4C7F046D7792}
 // LCID: 0
 // Helpfile: 
@@ -186,6 +186,7 @@ type
     procedure removeDiscoFeature(const ID: WideString); safecall;
     function registerPresenceXML(const xml: WideString): WideString; safecall;
     procedure removePresenceXML(const ID: WideString); safecall;
+    procedure trackWindowsMsg(Message: Integer); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -268,6 +269,7 @@ type
     procedure removeDiscoFeature(const ID: WideString); dispid 56;
     function registerPresenceXML(const xml: WideString): WideString; dispid 57;
     procedure removePresenceXML(const ID: WideString); dispid 58;
+    procedure trackWindowsMsg(Message: Integer); dispid 59;
   end;
 
 // *********************************************************************//
