@@ -156,7 +156,8 @@ uses
   SendStatus in 'SendStatus.pas' {fSendStatus: TFrame},
   XferManager in 'XferManager.pas' {frmXferManager},
   RecvStatus in 'RecvStatus.pas' {fRecvStatus: TFrame},
-  GrpManagement in 'GrpManagement.pas' {frmGrpManagement};
+  GrpManagement in 'GrpManagement.pas' {frmGrpManagement},
+  CapPresence in '..\jopl\CapPresence.pas';
 
 {$R *.TLB}
 

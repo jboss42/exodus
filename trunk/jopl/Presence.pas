@@ -111,7 +111,6 @@ uses
     Dialogs,
     {$endif}
     Session,
-    PrefController,
     XMLStream,
     XMLUtils;
 

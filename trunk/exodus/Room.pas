@@ -291,6 +291,7 @@ uses
     Notify,
     PrefController,
     Presence,
+    CapPresence,
     RichEdit,
     RiserWindow,
     RoomAdminList,
@@ -328,7 +329,7 @@ begin
         tmp_jid := TJabberID.Create(rjid);
 
         if (send_presence) then begin
-            p := TJabberPres.Create;
+            p := TCapPresence.Create;
             p.toJID := TJabberID.Create(rjid + '/' + rnick);
             with p.AddTag('x') do begin
                 setAttribute('xmlns', XMLNS_MUC);
@@ -631,7 +632,7 @@ begin
     else if (event = '/session/presence') then begin
         // We changed our own presence, send it to the room
         if (MainSession.Invisible) then exit;
-        p := TJabberPres.Create();
+        p := TCapPresence.Create();
         p.toJID := TJabberID.Create(self.jid);
         p.Show := MainSession.Show;
         p.Status := MainSession.Status;
@@ -1225,7 +1226,7 @@ begin
 
     // go ahead and change it
     myNick := new_nick;
-    p := TJabberPres.Create;
+    p := TCapPresence.Create;
     p.toJID := TJabberID.Create(jid + '/' + myNick);
     MainSession.SendTag(p);
 end;
