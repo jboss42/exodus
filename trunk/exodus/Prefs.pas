@@ -395,7 +395,7 @@ begin
         end;
     end
     else if ((Sender = imgNetwork) or (Sender = imgNetwork)) then begin
-        toggleSelector(lblTransfer);
+        toggleSelector(lblNetwork);
         if (_network <> nil) then
             f := _network
         else begin
