@@ -28,7 +28,6 @@ uses
 
 type
   TfrmLogin = class(TForm)
-    frameButtons1: TframeButtons;
     Label5: TLabel;
     cboProfiles: TTntComboBox;
     chkInvisible: TCheckBox;
@@ -37,7 +36,7 @@ type
     CreateNew1: TMenuItem;
     Delete1: TMenuItem;
     lblJID: TTntLabel;
-    Bevel1: TBevel;
+    frameButtons1: TframeButtons;
 
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cboProfilesChange(Sender: TObject);
@@ -148,6 +147,7 @@ begin
     i := cboProfiles.ItemIndex;
     p := TJabberProfile(MainSession.Prefs.Profiles.Objects[i]);
     ShowConnDetails(p);
+    lblJID.Caption := p.Username + '@' + p.Server + '/' + p.Resource;
 end;
 
 {---------------------------------------}

@@ -1,8 +1,8 @@
 object frmExodus: TfrmExodus
-  Left = 282
-  Top = 189
-  Width = 225
-  Height = 393
+  Left = 284
+  Top = 191
+  Width = 221
+  Height = 387
   AlphaBlendValue = 240
   Caption = 'Exodus'
   Color = clBtnFace
@@ -30,14 +30,14 @@ object frmExodus: TfrmExodus
   object SplitterLeft: TSplitter
     Left = 57
     Top = 27
-    Height = 317
+    Height = 311
     OnMoved = SplitterRightMoved
   end
   object Tabs: TPageControl
     Left = 60
     Top = 27
-    Width = 157
-    Height = 317
+    Width = 153
+    Height = 311
     ActivePage = tbsRoster
     Align = alClient
     DockSite = True
@@ -68,7 +68,7 @@ object frmExodus: TfrmExodus
       object SplitterRight: TSplitter
         Left = 105
         Top = 0
-        Height = 287
+        Height = 281
         ResizeStyle = rsUpdate
         OnMoved = SplitterRightMoved
       end
@@ -76,7 +76,7 @@ object frmExodus: TfrmExodus
         Left = 0
         Top = 0
         Width = 105
-        Height = 287
+        Height = 281
         Align = alLeft
         BevelOuter = bvNone
         BorderWidth = 1
@@ -88,8 +88,8 @@ object frmExodus: TfrmExodus
       object pnlRight: TPanel
         Left = 108
         Top = 0
-        Width = 41
-        Height = 287
+        Width = 37
+        Height = 281
         Align = alClient
         BevelOuter = bvNone
         Caption = 'THIS IS PNLRIGHT'
@@ -102,7 +102,7 @@ object frmExodus: TfrmExodus
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 217
+    Width = 213
     Height = 27
     AutoSize = True
     Bands = <
@@ -110,7 +110,7 @@ object frmExodus: TfrmExodus
         Control = ToolBar1
         ImageIndex = -1
         MinHeight = 23
-        Width = 213
+        Width = 209
       end>
     object ToolBar1: TToolBar
       Left = 9
@@ -205,7 +205,7 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 27
     Width = 57
-    Height = 317
+    Height = 311
     Align = alLeft
     BevelOuter = bvNone
     BorderWidth = 1

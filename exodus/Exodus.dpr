@@ -40,7 +40,6 @@ uses
   BaseChat in 'BaseChat.pas' {frmBaseChat},
   Bookmark in 'Bookmark.pas' {frmBookmark},
   Browser in 'Browser.pas' {frmBrowse},
-  buttonFrame in 'buttonFrame.pas' {frameButtons: TFrame},
   chat in '..\jopl\Chat.pas',
   ChatController in '..\jopl\ChatController.pas',
   ChatWin in 'ChatWin.pas' {frmChat},
@@ -146,7 +145,8 @@ uses
   XMLVCard in '..\jopl\XMLVCard.pas',
   FileServer in 'FileServer.pas',
   gnugettext in 'gnugettext.pas',
-  PrefTransfer in 'prefs\PrefTransfer.pas' {frmPrefTransfer};
+  PrefTransfer in 'prefs\PrefTransfer.pas' {frmPrefTransfer},
+  buttonFrame in 'buttonFrame.pas' {frameButtons: TFrame};
 
 {$R *.TLB}
 
@@ -157,11 +157,10 @@ uses
 
 begin
   Application.Initialize;
-  Application.Title := '';
+  //Application.Title := '';
 
   Application.ShowMainForm := false;
   Application.CreateForm(TfrmExodus, frmExodus);
-  Application.CreateForm(TfrmPrefTransfer, frmPrefTransfer);
   if (frmExodus = nil) then
     Halt;
 
