@@ -22,7 +22,7 @@ unit RegForm;
 interface
 
 uses
-    XMLTag, IQ, Presence, fGeneric, fLeftLabel,
+    XMLTag, IQ, Presence, fGeneric, fLeftLabel, Entity, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Wizard, ComCtrls, ExtCtrls, StdCtrls, TntStdCtrls, TntExtCtrls;
 
@@ -65,7 +65,7 @@ type
   public
     { Public declarations }
     jid: Widestring;
-    // XXX: entity: TJabberEntity;
+    entity: TJabberEntity;
     procedure Start();
   end;
 
@@ -103,7 +103,7 @@ procedure StartServiceReg(jid: Widestring);
 implementation
 {$R *.DFM}
 uses
-    NodeItem,
+    NodeItem, EntityCache, 
     GnuGetText, Math, JabberConst, Transports, S10n, Roster, Session, ExUtils;
 
 {---------------------------------------}
@@ -135,7 +135,7 @@ begin
     cur_iq := nil;
     cur_key := '';
     pres_cb := -1;
-    // XXX: entity := nil;
+    entity := nil;
 end;
 
 {---------------------------------------}
@@ -145,6 +145,7 @@ begin
     btnBack.Enabled := false;
     btnNext.Enabled := false;
     btnCancel.Enabled := true;
+    entity := jEntityCache.getByJid(Self.jid);    
     Self.Show();
     cur_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), GetCallback, 30);
     with cur_iq do begin
@@ -345,7 +346,8 @@ begin
 
     t := TXMLTag.Create('transport');
     t.setAttribute('jid', cur_iq.toJid);
-    // XXX: t.setAttribute('name', entity.name);
+    if (entity <> nil) then
+        t.setAttribute('name', entity.name);
     MainSession.FireEvent('/session/transport', t);
     t.Free;
 
@@ -367,7 +369,8 @@ begin
         if (pres.isSubscription) then begin
             // this is the service subscribing to us..
             // The s10n.pas handler will catch this.
-            // XXX: tmps := entity.name;
+            if (entity <> nil) then
+                tmps := entity.name;
             if (tmps = '') then
                 tmps := pres.fromJid.domain;
 

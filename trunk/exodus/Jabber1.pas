@@ -1181,7 +1181,7 @@ begin
         Roster.Fetch;
 
         // Discover our server stuff..
-        jEntityCache.walk(MainSession.Server, MainSession);
+        jEntityCache.fetch(MainSession.Server, MainSession);
 
         // Don't broadcast our initial presence
         _is_broadcast := true;
@@ -1592,8 +1592,10 @@ end;
 procedure TfrmExodus.FormResize(Sender: TObject);
 begin
     // When we are resized, save the new position
+    {
     if MainSession <> nil then
         MainSession.Prefs.SavePosition(Self);
+    }
 end;
 
 {---------------------------------------}

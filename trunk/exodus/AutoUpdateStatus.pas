@@ -220,7 +220,6 @@ begin
                 label1.Refresh();
                 Application.ProcessMessages();
 
-                // XXX: should this just use NOW() instead of the
                 // modification date/time on the file??
                 MainSession.Prefs.setDateTime('last_update',
                                               httpClient.Response.LastModified);

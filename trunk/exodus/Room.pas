@@ -1738,7 +1738,7 @@ begin
     q := iq.AddTag('query');
     q.setAttribute('xmlns', XMLNS_MUCOWNER);
     d := q.AddTag('destroy');
-    // xxx: alt-jid goes onto <destroy jid="newroom@server">
+    // TODO: alt-jid goes onto <destroy jid="newroom@server">
     d.AddBasicTag('reason', reason);
     MainSession.SendTag(iq);
 end;
