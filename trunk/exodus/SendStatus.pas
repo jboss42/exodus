@@ -38,6 +38,8 @@ const
     WM_SEND_DONE = WM_USER + 6002;
     WM_SEND_OK = WM_USER + 6021;
     WM_SEND_BAD = WM_USER + 6022;
+    WM_SEND_UPDATE = WM_USER + 6023;
+    WM_SEND_STATUS = WM_USER + 6024;
 
 type
 
@@ -69,6 +71,8 @@ type
         _sid: Widestring;
         _shost: Widestring;
         _disco_count: integer;
+        _stream: TFileStream;
+        _hash: Widestring;
 
         procedure DoState();
         procedure BuildStreamHosts(ptag: TXMLTag);
@@ -79,6 +83,8 @@ type
         procedure WMSendDone(var msg: TMessage); message WM_SEND_DONE;
         procedure WMSendOK(var msg: TMessage); message WM_SEND_OK;
         procedure WMSendBad(var msg: TMessage); message WM_SEND_BAD;
+        procedure WMSendUpdate(var msg: TMessage); message WM_SEND_UPDATE;
+        procedure WMSendStatus(var msg: TMessage); message WM_SEND_STATUS;
 
     published
         procedure RecipDiscoCallback(event: string; tag: TXMLTag);
@@ -246,6 +252,7 @@ begin
             _new_txt.Clear();
         end;
     end;
+
     _lock.Release();
 end;
 
@@ -362,9 +369,9 @@ var
     size: longint;
     p: THostPortPair;
     i: integer;
-    fStream: TFileStream;
     tmp_jid: TJabberID;
-    tmps, hash_key: Widestring;
+    tmps: Widestring;
+    spkg: TStreamPkg;
 begin
     // do something based on our current state
     case _state of
@@ -453,16 +460,16 @@ begin
         _iq.iqType := 'set';
         _iq.toJid := _pkg.recip;
         _iq.Namespace := XMLNS_BYTESTREAMS;
-        BuildStreamHosts(_iq.qTag);
-        _iq.qTag.setAttribute('sid', _sid);
-        _iq.Send();
-        end;
-    send_try_connect: begin
-        // try to connect to the host they connected to.
+
+        // add in myself here..
+        x := _iq.qTag.AddTag('streamhost');
+        x.setAttribute('jid', MainSession.jid);
+        x.setAttribute('host', MainSession.Stream.LocalIP);
+        x.setAttribute('port', IntToStr(getXferManager().tcpServer.DefaultPort));
 
         // get a handle to the stream
         try
-            fStream := TFileStream.Create(_pkg.pathname, fmOpenRead);
+            _stream := TFileStream.Create(_pkg.pathname, fmOpenRead);
         except
             on EStreamError do begin
                 MessageDlg(sXferStreamError, mtError, [mbOK], 0);
@@ -470,27 +477,48 @@ begin
             end;
         end;
 
-        i := shosts.indexOf(_shost);
-        p := THostPortPair(shosts.Objects[i]);
+        tmps := _sid + MainSession.Jid + _pkg.recip;
+        _hash:= Sha1Hash(tmps);
+        spkg := TStreamPkg.Create();
+        spkg.hash := _hash;
+        spkg.stream := _stream;
+        spkg.sid := _sid;
+        spkg.frame := Self;
+        getXferManager().ServeStream(spkg);
 
-        SocksHandler.SocksInfo.Authentication := saNoAuthentication;
-        SocksHandler.SocksInfo.Version := svSocks5;
-        SocksHandler.SocksInfo.Host := p.host;
-        SocksHandler.SocksInfo.Port := p.Port;
+        // add in my other stream hosts that I know about
+        BuildStreamHosts(_iq.qTag);
+        _iq.qTag.setAttribute('sid', _sid);
+        _iq.Send();
+        end;
+    send_try_connect: begin
+        // try to connect to the host they connected to.
 
-        hash_key := _sid + MainSession.Jid + _pkg.recip;
-        tmps := Sha1Hash(hash_key);
-        tcpClient.IOHandler := SocksHandler;
-        tcpClient.Host := tmps;
-        tcpClient.Port := 0;
+        if (_shost = MainSession.Jid) then begin
+            // user connected directly to me!
+        end
+        else begin
+            getXferManager().UnServeStream(_hash);
+            i := shosts.indexOf(_shost);
+            p := THostPortPair(shosts.Objects[i]);
 
-        _thread := TFileSendThread.Create();
-        _thread.url := '';
-        _thread.form := Self;
-        _thread.client := tcpClient;
-        _thread.stream := fstream;
-        _thread.method := 'si';
-        _thread.Resume();
+            SocksHandler.SocksInfo.Authentication := saNoAuthentication;
+            SocksHandler.SocksInfo.Version := svSocks5;
+            SocksHandler.SocksInfo.Host := p.host;
+            SocksHandler.SocksInfo.Port := p.Port;
+
+            tcpClient.IOHandler := SocksHandler;
+            tcpClient.Host := tmps;
+            tcpClient.Port := 0;
+
+            _thread := TFileSendThread.Create();
+            _thread.url := '';
+            _thread.form := Self;
+            _thread.client := tcpClient;
+            _thread.stream := _stream;
+            _thread.method := 'si';
+            _thread.Resume();
+        end;
 
         end;
     send_activate: begin
@@ -627,6 +655,7 @@ var
     x, x2, x3: TXMLTag;
 begin
     // determine what mode to use based on disco results
+    _iq := nil;
     ft_support := false;
     if (event = 'xml') then begin
         // check for SI, and FTPROFILE
@@ -667,8 +696,8 @@ var
     p: THostPortPair;
 begin
     //
+    _iq := nil;
     if ((event = 'xml') and (tag.GetAttribute('type') = 'result')) then begin
-
         // Clear the shosts Queue..
         while (shosts.Count > 0) do begin
             p := THostPortPair(shosts.Objects[0]);
@@ -689,6 +718,16 @@ begin
             iq.Namespace := XMLNS_DISCOINFO;
             iq.Send();
             _disco_count := _disco_count + 1;
+        end;
+    end
+    else begin
+        if (shosts.Count > 0) then begin
+            _state := send_get_addr;
+            DoState();
+        end
+        else begin
+            _state := send_offer_hosts;
+            DoState();
         end;
     end;
 end;
@@ -723,6 +762,7 @@ var
     accept: boolean;
 begin
     // They either accept, or deny our ft offering
+    _iq := nil;
     accept := false;
     if (event = 'xml') then begin
         if (tag.GetAttribute('type') = 'result') then begin
@@ -748,6 +788,7 @@ var
     sh: TXMLTagList;
 begin
     // We are getting the address of a streamhost back
+    _iq := nil;
     if ((event = 'xml') and (tag.getAttribute('type') = 'result')) then begin
         sh := tag.QUeryXPTags('/iq/query/streamhost');
         for j := 0 to sh.Count - 1 do begin
@@ -790,6 +831,7 @@ end;
 procedure TfSendStatus.SelectHostCallback(event: string; tag: TXMLTag);
 begin
     // The recip has selected a host
+    _iq := nil;
     if ((event = 'xml') and (tag.GetAttribute('type') = 'result')) then begin
         // they have accepted a specific streamhost
         _shost := tag.QueryXPData('/iq/query/streamhost-used@jid');
@@ -806,6 +848,7 @@ end;
 procedure TfSendStatus.ActiveCallback(event: string; tag: TXMLTag);
 begin
     // The stream host has told us that the channel is active.
+    _iq := nil;
     if (event = 'xml') then begin
         if (tag.GetAttribute('type') = 'result') then begin
             _state := send_sending;
@@ -841,6 +884,8 @@ begin
     DoState();
 end;
 
+
+
 {---------------------------------------}
 procedure TfSendStatus.WMSendBad(var msg: TMessage);
 begin
@@ -849,6 +894,25 @@ begin
     DoState();
 end;
 
+{---------------------------------------}
+procedure TfSendStatus.WMSendUpdate(var msg: TMessage);
+begin
+    // Setup the progress bar
+    if (msg.LParam > 0) then
+        bar1.Max := msg.LParam;
+    bar1.Position := msg.WParam;
+end;
+
+{---------------------------------------}
+procedure TfSendStatus.WMSendStatus(var msg: TMessage);
+var
+    n: PChar;
+begin
+    // Setup the progress bar
+    // PChar is in lparam
+    n := Pointer(msg.LParam);
+    lblStatus.Caption := String(n);
+end;
 
 initialization
     shosts := TWidestringlist.Create;
