@@ -176,7 +176,7 @@ begin
     // Make sure we are actually in this room...
     room := cboRoom.Text;
 
-    if (not isValidJID(room)) then begin
+    if ((room = '') or (not isValidJID(room))) then begin
         MessageDlg(sInvalidRoomJID, mtError, [mbOK], 0);
         exit;
     end;
