@@ -362,26 +362,31 @@ object frmExodus: TfrmExodus
         object presOnline: TTntMenuItem
           Caption = 'Available'
           ImageIndex = 1
+          OnClick = presDNDClick
         end
         object presChat: TTntMenuItem
           Tag = 1
           Caption = 'Free to Chat'
           ImageIndex = 4
+          OnClick = presDNDClick
         end
         object presAway: TTntMenuItem
           Tag = 2
           Caption = 'Away'
           ImageIndex = 2
+          OnClick = presDNDClick
         end
         object presXA: TTntMenuItem
           Tag = 3
           Caption = 'Xtended Away'
           ImageIndex = 10
+          OnClick = presDNDClick
         end
         object presDND: TTntMenuItem
           Tag = 4
           Caption = 'Do Not Disturb'
           ImageIndex = 3
+          OnClick = presDNDClick
         end
         object N11: TTntMenuItem
           Caption = '-'
@@ -2646,26 +2651,31 @@ object frmExodus: TfrmExodus
       object trayPresOnline: TTntMenuItem
         Caption = 'Available'
         ImageIndex = 1
+        OnClick = presDNDClick
       end
       object trayPresChat: TTntMenuItem
         Tag = 1
         Caption = 'Free to Chat'
         ImageIndex = 4
+        OnClick = presDNDClick
       end
       object trayPresAway: TTntMenuItem
         Tag = 2
         Caption = 'Away'
         ImageIndex = 2
+        OnClick = presDNDClick
       end
       object trayPresXA: TTntMenuItem
         Tag = 3
         Caption = 'Xtended Away'
         ImageIndex = 10
+        OnClick = presDNDClick
       end
       object trayPresDND: TTntMenuItem
         Tag = 4
         Caption = 'Do Not Disturb'
         ImageIndex = 3
+        OnClick = presDNDClick
       end
       object N5: TTntMenuItem
         Caption = '-'
