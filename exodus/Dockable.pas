@@ -139,9 +139,7 @@ begin
     if Assigned(_onDockStartChange) then
         Self.OnDockStartChange();
     Self.CheckPos();
-    // LockWindowUpdate(frmExodus.Tabs.Handle);
     Self.ManualFloat(_pos);
-    // LockWindowUpdate(0);
     _docked := false;
     Self.TabSheet := nil;
     if Assigned(_onDockEndChange) then

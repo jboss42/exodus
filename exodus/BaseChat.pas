@@ -74,6 +74,7 @@ type
 
   protected
     _embed_returns: boolean;
+    _wrap_input: boolean;
     procedure _scrollBottom();
 
   public
@@ -84,6 +85,9 @@ type
     procedure SendMsg(); virtual;
     procedure HideEmoticons();
   end;
+
+resourcestring
+    sWordWrapWarning = 'Word wrapping the input may cause unsual hard-returns to be embedded into your messages. Recipients of the messages will see this hard returns.';
 
 var
   frmBaseChat: TfrmBaseChat;

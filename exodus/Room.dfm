@@ -197,6 +197,10 @@ inherited frmRoom: TfrmRoom
     object N1: TMenuItem
       Caption = '-'
     end
+    object mnuWordwrap: TMenuItem
+      Caption = 'Word Wrap Input'
+      OnClick = mnuWordwrapClick
+    end
     object mnuOnTop: TMenuItem
       Caption = 'Always on Top'
       OnClick = mnuOnTopClick

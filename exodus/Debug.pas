@@ -85,6 +85,8 @@ procedure FloatDebugForm();
 procedure CloseDebugForm();
 procedure DebugMessage(txt: Widestring);
 
+function isDebugShowing(): boolean;
+
 const
     DEBUG_LIMIT = 500;
 
@@ -115,6 +117,12 @@ begin
         frmExodus.Tabs.ActivePage := frmDebug.TabSheet
     else
         frmDebug.Show();
+end;
+
+{---------------------------------------}
+function isDebugShowing(): boolean;
+begin
+    Result := (frmDebug <> nil);
 end;
 
 {---------------------------------------}
@@ -447,10 +455,7 @@ begin
   inherited;
     if (not Docked) then exit;
 
-    if (frmExodus.ChatHiding) then begin
-        frmExodus.Tabs.ActivePageIndex := 0;
-        frmExodus.ChatHiding := false;
-    end;
+    // do something here to activate the appropriate tab
 end;
 
 end.

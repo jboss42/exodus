@@ -14,9 +14,9 @@ inherited frmChat: TfrmChat
   TextHeight = 18
   inherited Panel3: TPanel
     Top = 24
-    Height = 224
+    Height = 229
     inherited MsgList: TExRichEdit
-      Height = 216
+      Height = 221
       PlainRTF = True
     end
   end
@@ -141,6 +141,10 @@ inherited frmChat: TfrmChat
     object mnuReturns: TMenuItem
       Caption = 'Embed Returns'
       OnClick = mnuReturnsClick
+    end
+    object mnuWordwrap: TMenuItem
+      Caption = 'Word Wrap Input'
+      OnClick = mnuWordwrapClick
     end
     object mnuEncrypt: TMenuItem
       Caption = 'Encrypt Conversation'

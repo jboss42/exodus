@@ -35,7 +35,7 @@ object frmExodus: TfrmExodus
     Cursor = crHSplit
     OnMoved = SplitterRightMoved
   end
-  object Tabs: TTntPageControl
+  object Tabs: TPageControl
     Left = 60
     Top = 27
     Width = 157
