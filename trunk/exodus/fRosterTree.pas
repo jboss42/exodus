@@ -117,6 +117,15 @@ begin
 
     _FullRoster := true;
     Self.ClearNodes();
+
+    treeRoster.Font.Name := MainSession.Prefs.getString('roster_font_name');
+    treeRoster.Font.Size := MainSession.Prefs.getInt('roster_font_size');
+    treeRoster.Font.Color := TColor(MainSession.Prefs.getInt('roster_font_color'));
+    treeRoster.Font.Charset := MainSession.Prefs.getInt('roster_font_charset');
+
+    if (treeRoster.Font.Charset = 0) then
+        treeRoster.Font.Charset := 1;
+
     treeRoster.Color := TColor(MainSession.prefs.getInt('roster_bg'));
     treeRoster.Items.BeginUpdate;
 

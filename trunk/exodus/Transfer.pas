@@ -337,6 +337,7 @@ begin
 
 end;
 
+{---------------------------------------}
 procedure TTransferThread.setHttp(value: TIdHttp);
 begin
     _http := Value;
