@@ -911,6 +911,7 @@ BEGIN
         if (hib = 0) then
             cont := not (loc in Terminators);
 
+        if (Final^ = #0) then cont := false;
         if (cont) then inc(Final);
         end;
     dec(Final);
@@ -1111,52 +1112,24 @@ FUNCTION  TXmlParser.LoadFromFile (Filename : WideString; FileMode : INTEGER = f
           // Loads Document from given file
           // Returns TRUE if successful
 VAR
-  f           : FILE;
-  ReadIn      : INTEGER;
-  OldFileMode : INTEGER;
+
+  wsl : TWideStringList;
+
 BEGIN
   Result := FALSE;
   Clear;
 
-  // --- Open File
-  OldFileMode := SYSTEM.FileMode;
-  TRY
-    SYSTEM.FileMode := FileMode;
-    TRY
-      AssignFile (f, Filename);
-      Reset (f, 1);
-    EXCEPT
-      EXIT;
-      END;
+  // pgm May 29, 2002 - TODO: use a better way of doing this
+  // We can't use a TextFile here since it could be unicode..
+  // Just use an encapsulation around a WideStringList
 
-    TRY
-      // --- Allocate Memory
-      TRY
-        FBufferSize := Filesize (f) + 1;
-        GetMem (FBuffer, FBufferSize);
-      EXCEPT
-        Clear;
-        EXIT;
-        END;
+  wsl := TWideStringList.Create();
+  wsl.LoadFromFile(Filename);
 
-      // --- Read File
-      TRY
-        BlockRead (f, FBuffer^, FBufferSize, ReadIn);
-        (FBuffer+ReadIn)^ := #0;  // NULL termination
-      EXCEPT
-        Clear;
-        EXIT;
-        END;
-    FINALLY
-      CloseFile (f);
-      END;
+  Self.LoadFromBuffer(PWideChar(wsl.Text));
 
-    FSource := Filename;
-    Result  := TRUE;
+  wsl.Free();
 
-  FINALLY
-    SYSTEM.FileMode := OldFileMode;
-    END;
 END;
 
 

@@ -1,6 +1,6 @@
 object frmLogin: TfrmLogin
-  Left = 255
-  Top = 142
+  Left = 262
+  Top = 419
   Width = 246
   Height = 262
   Caption = 'Jabber Login'

@@ -474,11 +474,12 @@ begin
             2: Version := svSocks4a;
             3: Version := svSocks5;
             end;
-            Host := _profile.Host;
-            Port := _profile.Port;
+            Host := _profile.SocksHost;
+            Port := _profile.SocksPort;
             if (_profile.SocksAuth) then begin
                 UserID := _profile.SocksUsername;
                 Password := _profile.SocksPassword;
+                Authentication := saUsernamePassword;
                 end;
             end;
         end;
