@@ -21,7 +21,8 @@
 
 ; exodus.nsi
 ;
-!verbose 1
+!define MUI_MANUALVERBOSE
+
 !define SF_SELECTED   1
 !define SF_SUBSEC     2
 !define SF_SUBSECEND  4
@@ -74,34 +75,6 @@ InstallDirRegKey HKLM "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
 !insertmacro MUI_SYSTEM
 !insertmacro MUI_LANGUAGE "English"
 
-;--------------------------------
-;Language Strings
-
-;Description
-LangString DESC_Exodus ${LANG_ENGLISH} \
-"The main exodus program."
-
-LangString DESC_SSL ${LANG_ENGLISH} \
-"You will need these libraries to use SSL connections.  These will be retrieved via the Internet, using your IE proxy settings."
-
-LangString DESC_Bleed ${LANG_ENGLISH} \
-"Exodus will check for new versions of the latest development build whenever you login.  These sometimes happen several times a day."
-
-LangString DESC_Plugins ${LANG_ENGLISH} \
-"Download Exodus plugins via the Internet, using your IE proxy settings."
-
-LangString DESC_AIM ${LANG_ENGLISH} \
-"Import contacts from AOL Instant Messenger"
-
-LangString DESC_ICQ ${LANG_ENGLISH} \
-"Import contacts from ICQ"
-
-LangString DESC_Word ${LANG_ENGLISH} \
-"Check spelling using Microsoft Word"
-
-; BRANDING: YOU MUST NOT REMOVE THE GPL!
-LicenseData GPL-LICENSE.TXT
-SubCaption 3 ": Exit running Exodus versions!"
 
 ; The stuff to install
 Section "!${MUI_PRODUCT} (Required)" SEC_Exodus
@@ -319,20 +292,6 @@ Section "Daily updates" SEC_Bleed
         SetOverwrite on
 SectionEnd
 
-;--------------------------------
-;Descriptions
-
-!insertmacro MUI_FUNCTIONS_DESCRIPTION_BEGIN
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Exodus} $(DESC_Exodus)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_SSL} $(DESC_SSL)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Bleed} $(DESC_Bleed)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Plugins} $(DESC_Plugins)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_AIM} $(DESC_AIM)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_ICQ} $(DESC_ICQ)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Word} $(DESC_Word)
-!insertmacro MUI_FUNCTIONS_DESCRIPTION_END
-
-!insertmacro MUI_SECTIONS_FINISHHEADER
 
 ; special uninstall section.
 ;UninstallText "This will uninstall Exodus.  Click Uninstall to continue."
@@ -384,6 +343,51 @@ Section "Uninstall"
   DeleteRegKey HKLM SOFTWARE\Jabber\Exodus
 
 SectionEnd
+
+;--------------------------------
+;Descriptions
+
+;--------------------------------
+;Language Strings
+
+;Description
+LangString DESC_Exodus ${LANG_ENGLISH} \
+"The main exodus program."
+
+LangString DESC_SSL ${LANG_ENGLISH} \
+"You will need these libraries to use SSL connections.  These will be retrieved via the Internet, using your IE proxy settings."
+
+LangString DESC_Bleed ${LANG_ENGLISH} \
+"Exodus will check for new versions of the latest development build whenever you login.  These sometimes happen several times a day."
+
+LangString DESC_Plugins ${LANG_ENGLISH} \
+"Download Exodus plugins via the Internet, using your IE proxy settings."
+
+LangString DESC_AIM ${LANG_ENGLISH} \
+"Import contacts from AOL Instant Messenger"
+
+LangString DESC_ICQ ${LANG_ENGLISH} \
+"Import contacts from ICQ"
+
+LangString DESC_Word ${LANG_ENGLISH} \
+"Check spelling using Microsoft Word"
+
+; BRANDING: YOU MUST NOT REMOVE THE GPL!
+LicenseData GPL-LICENSE.TXT
+SubCaption 3 ": Exit running Exodus versions!"
+
+!insertmacro MUI_FUNCTIONS_DESCRIPTION_BEGIN
+  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Exodus} $(DESC_Exodus)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_SSL} $(DESC_SSL)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Bleed} $(DESC_Bleed)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Plugins} $(DESC_Plugins)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_AIM} $(DESC_AIM)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_ICQ} $(DESC_ICQ)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Word} $(DESC_Word)
+!insertmacro MUI_FUNCTIONS_DESCRIPTION_END
+
+
+!insertmacro MUI_SECTIONS_FINISHHEADER
 
 ; eof
 
