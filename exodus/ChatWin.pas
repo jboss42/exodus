@@ -21,7 +21,7 @@ unit ChatWin;
 interface
 
 uses
-    Chat, JabberID, XMLTag,
+    Chat, ChatController, JabberID, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, OLERichEdit,
     ExRichEdit;
@@ -88,15 +88,17 @@ type
 
     function GetThread: String;
   published
-    procedure MsgCallback(event: string; tag: TXMLTag);
+    // procedure MsgCallback(event: string; tag: TXMLTag);
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
     procedure CTCPCallback(event: string; tag: TXMLTag);
   public
     { Public declarations }
     OtherNick: string;
-    chat_object: TJabberChat;
+    chat_object: TChatController;
 
+    procedure PlayQueue();
+    procedure MessageEvent(tag: TXMLTag);
     procedure showMsg(tag: TXMLTag);
     procedure showPres(tag: TXMLTag);
     procedure sendMsg; override;
@@ -135,20 +137,21 @@ uses
 {---------------------------------------}
 function StartChat(sjid, resource: string; show_window: boolean; chat_nick: string=''): TfrmChat;
 var
-    chat: TJabberChat;
+    chat: TChatController;
     win: TfrmChat;
     tmp_jid: TJabberID;
     cjid: string;
-    lt: longword;
     ritem: TJabberRosterItem;
 begin
     // either show an existing chat or start one.
-    lt := frmExodus.getLastTick();
-
     chat := MainSession.ChatList.FindChat(sjid, resource, '');
-    if chat = nil then begin
+
+    if chat = nil then
         // Create one
         chat := MainSession.ChatList.AddChat(sjid, resource);
+
+    if (chat.window = nil) then begin
+        // if we don't have a window, then create one.
         win := TfrmChat.Create(nil);
         chat.window := win;
         win.chat_object := chat;
@@ -162,7 +165,7 @@ begin
                 // If not in our roster, check for a TC room
                 if (IsRoom(sjid)) then
                     chat_nick := FindRoomNick(sjid + '/' + resource);
-                
+
                 if (chat_nick = '') then
                     OtherNick := tmp_jid.user
                 else
@@ -181,33 +184,31 @@ begin
         tmp_jid.Free;
         SetJID(cjid);
 
-        // setup prefs
-        AssignDefaultFont(MsgList.Font);
-        MsgList.Color := TColor(MainSession.Prefs.getInt('color_bg'));
-        MsgOut.Color := MsgList.Color;
-        MsgOut.Font.Assign(MsgList.Font);
-
+        chat.OnMessage := MessageEvent;
+        
         ShowDefault();
         if (show_window) then
             Show();
+
+        PlayQueue();
         end;
+
     Result := TfrmChat(chat.window);
-    frmExodus.ResetLastTick(lt + 1000);
 end;
 
 {---------------------------------------}
 procedure CloseAllChats;
 var
     i: integer;
-    c: TJabberChat;
+    c: TChatController;
 begin
     with MainSession.ChatList do begin
         for i := Count - 1 downto 0 do begin
-            c := TJabberChat(Objects[i]);
+            c := TChatController(Objects[i]);
             if c <> nil then begin
                 if c.window <> nil then
                     TfrmChat(c.window).chat_object := nil;
-                    c.window.Close;
+                    TfrmChat(c.window).Close();
                 end;
             c.Free;
             Delete(i);
@@ -229,6 +230,12 @@ begin
     _last_id := '';
     _reply_id := '';
     DragAcceptFiles( Handle, True );
+
+    // setup prefs
+    AssignDefaultFont(MsgList.Font);
+    MsgList.Color := TColor(MainSession.Prefs.getInt('color_bg'));
+    MsgOut.Color := MsgList.Color;
+    MsgOut.Font.Assign(MsgList.Font);
 end;
 
 {---------------------------------------}
@@ -242,12 +249,16 @@ begin
     _jid := TJabberID.Create(cjid);
 
     // setup the callbacks if we don't have them already
+    {
     if (_callback < 0) then begin
         _callback := MainSession.RegisterCallback(MsgCallback,
             '/packet/message[@from="' + Lowercase(cjid) + '*"]');
+        end;
+    }
+
+    if (_pcallback < 0) then
         _pcallback := MainSession.RegisterCallback(PresCallback,
             '/packet/presence[@from="' + Lowercase(cjid) + '*"]');
-        end;
 
     if (_scallback < 0) then
         _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
@@ -303,7 +314,6 @@ var
 begin
     // Unregister the callbacks + stuff
     MainSession.UnRegisterCallback(_pcallback);
-    MainSession.UnRegisterCallback(_callback);
     MainSession.UnRegisterCallback(_scallback);
 
     if chat_object <> nil then begin
@@ -314,73 +324,81 @@ begin
         end;
 
     Action := caFree;
-
     inherited;
 end;
 
 {---------------------------------------}
-procedure TfrmChat.MsgCallback(event: string; tag: TXMLTag);
+procedure TfrmChat.PlayQueue();
+var
+    t: TXMLTag;
+begin
+    // pull all of the msgs from the controller queue,
+    // and feed them into this window
+    while (chat_object.msg_queue.AtLeast(1)) do begin
+        t := TXMLTag(chat_object.msg_queue.Pop());
+        Self.MessageEvent(t);
+        end;
+end;
+
+{---------------------------------------}
+// procedure TfrmChat.MsgCallback(event: string; tag: TXMLTag);
+procedure TfrmChat.MessageEvent(tag: TXMLTag);
 var
     msg_type, from_jid: string;
     etag, tagThread : TXMLTag;
 begin
     // callback for messages
-    if MainSession.IsPaused then begin
-        MainSession.QueueEvent(event, tag, Self.MsgCallback);
-        exit;
+
+    // check for a jabber:x:event tag
+    msg_type := tag.GetAttribute('type');
+    from_jid := tag.getAttribute('from');
+
+    if from_jid <> jid then begin
+        chat_object.SetJID(from_jid);
+        SetJID(from_jid);
         end;
 
-    if Event = 'xml' then begin
-        // check for a jabber:x:event tag
-        msg_type := tag.GetAttribute('type');
-        from_jid := tag.getAttribute('from');
-        if from_jid <> jid then
-            SetJID(from_jid);
+    if (_check_event) then begin
+        // check for composing events
+        etag := tag.QueryXPTag('/message/*[@xmlns="jabber:x:event"]');
+        if ((etag <> nil) and (etag.GetFirstTag('composing') <> nil))then begin
+            // we are composing a message
+            if (etag.GetBasicText('id') = _last_id) then begin
+                _flash_ticks := 0;
 
+                // Setup the cache'd old versions in ChangePresImage
+                _cur_img := _pres_img;
+                imgStatus.Hint := OtherNick + sReplying;
+                timFlashTimer(Self);
+                timFlash.Enabled := true;
 
-        if (_check_event) then begin
-            // check for composing events
-            etag := tag.QueryXPTag('/message/*[@xmlns="jabber:x:event"]');
-            if ((etag <> nil) and (etag.GetFirstTag('composing') <> nil))then begin
-                // we are composing a message
-                if (etag.GetBasicText('id') = _last_id) then begin
-                    _flash_ticks := 0;
+                {
+                should we really bail here??
+                Gabber sends type=chat for msg events so it'll get into the
+                next block of code anyways. If we don't bail,
+                then we'll have to check to see if we have a body in the
+                next block of code. ICK
+                }
 
-                    // Setup the cache'd old versions in ChangePresImage
-                    _cur_img := _pres_img;
-                    imgStatus.Hint := OtherNick + sReplying;
-                    timFlashTimer(Self);
-                    timFlash.Enabled := true;
-
-                    {
-                    should we really bail here??
-                    Gabber sends type=chat for msg events so it'll get into the
-                    next block of code anyways. If we don't bail,
-                    then we'll have to check to see if we have a body in the
-                    next block of code. ICK
-                    }
-
-                    exit;
-                    end;
+                exit;
                 end;
             end;
+        end;
 
-        if (msg_type = 'chat') then begin
-            // normal chat message
-            etag := tag.QueryXPTag('/message/*[@xmlns="jabber:x:event"]/composing');
-            _send_composing := (etag <> nil);
-            if (_send_composing) then
-                _reply_id := tag.GetAttribute('id');
+    if (msg_type = 'chat') then begin
+        // normal chat message
+        etag := tag.QueryXPTag('/message/*[@xmlns="jabber:x:event"]/composing');
+        _send_composing := (etag <> nil);
+        if (_send_composing) then
+            _reply_id := tag.GetAttribute('id');
 
-            showMsg(tag);
-            if _thread = '' then begin
-                //get thread from message
-                tagThread := tag.GetFirstTag('thread');
-                if tagThread <> nil then
-                    _thread := tagThread.Data;
-               end;
-            end;
-
+        showMsg(tag);
+        if _thread = '' then begin
+            //get thread from message
+            tagThread := tag.GetFirstTag('thread');
+            if tagThread <> nil then
+                _thread := tagThread.Data;
+           end;
         end;
 end;
 

@@ -68,8 +68,7 @@ begin
     if (event = '/session/gui/chat') then begin
         // New Chat Window
         tmp_jid := TJabberID.Create(tag.getAttribute('from'));
-        chat := StartChat(tmp_jid.jid, tmp_jid.resource, false);
-        chat.MsgCallback('xml', tag);
+        chat := StartChat(tmp_jid.jid, tmp_jid.resource, true);
         tmp_jid.Free;
         DoNotify(chat, 'notify_newchat', sNotifyChat + ''#10#13 +
                  chat.Othernick, ico_user)

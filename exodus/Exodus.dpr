@@ -99,7 +99,8 @@ uses
   InputPassword in 'InputPassword.pas' {frmInputPass},
   Browser in 'Browser.pas' {frmBrowse},
   fListbox in 'fListbox.pas' {frameListbox: TFrame},
-  fService in 'fService.pas' {frameObjectActions: TFrame};
+  fService in 'fService.pas' {frameObjectActions: TFrame},
+  ChatController in '..\jopl\ChatController.pas';
 
 {$R *.RES}
 
