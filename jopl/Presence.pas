@@ -307,10 +307,12 @@ begin
             end
 
         else if ((curp.error_code = '502') or
+        (curp.error_code = '500') or
         (curp.error_code = '504')) then begin
             // we are getting a pres. packet for some kind of
             // invalid roster item
             s.FireEvent('/session/gui/pres-error', tag);
+            s.FireEvent('/presence/error', tag, curp);
             end
 
         else
