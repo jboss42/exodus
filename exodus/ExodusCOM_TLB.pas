@@ -11,8 +11,8 @@ unit ExodusCOM_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.20 $
-// File generated on 1/27/2003 6:56:15 AM from Type Library described below.
+// PASTLWTR : $Revision: 1.21 $
+// File generated on 1/30/2003 6:51:00 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)

@@ -22,27 +22,13 @@ unit BaseChat;
 interface
 
 uses
-    Dockable, ActiveX, ComObj, 
+    Dockable, ActiveX, ComObj,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Menus, StdCtrls, ExtCtrls, ComCtrls, ExRichEdit, RichEdit2,
     TntStdCtrls;
 
 const
     WM_THROB = WM_USER + 5400;
-
-type
-    TChatDropTarget = class(TAutoObject, IDropTarget)
-    public
-        {IDropTarget}
-        function DragEnter(const dataObj: IDataObject; grfKeyState: Longint;
-          pt: TPoint; var dwEffect: Longint): HResult; stdcall;
-        function DragOver(grfKeyState: Longint; pt: TPoint;
-          var dwEffect: Longint): HResult; stdcall;
-        function DragLeave: HResult; stdcall;
-        function Drop(const dataObj: IDataObject; grfKeyState: Longint; pt: TPoint;
-          var dwEffect: Longint): HResult; stdcall;
-    end;
-
 
 type
   TfrmBaseChat = class(TfrmDockable)
@@ -316,6 +302,7 @@ procedure TfrmBaseChat.FormDestroy(Sender: TObject);
 begin
     frmExodus.ActiveChat := nil;
     _msgHistory.Free();
+
     inherited;
 end;
 
@@ -482,39 +469,6 @@ procedure TfrmBaseChat.WMThrob(var msg: TMessage);
 begin
     // Enable the flash timer
     timWinFlash.Enabled := true;
-end;
-
-{---------------------------------------}
-{---------------------------------------}
-{---------------------------------------}
-function TChatDropTarget.DragEnter(const dataObj: IDataObject; grfKeyState: Longint;
-  pt: TPoint; var dwEffect: Longint): HResult;
-begin
-    //
-    Result := S_OK;
-end;
-
-{---------------------------------------}
-function TChatDropTarget.DragOver(grfKeyState: Longint; pt: TPoint;
-  var dwEffect: Longint): HResult;
-begin
-    //
-    Result := S_OK;
-end;
-
-{---------------------------------------}
-function TChatDropTarget.DragLeave: HResult;
-begin
-    //
-    Result := S_OK;
-end;
-
-{---------------------------------------}
-function TChatDropTarget.Drop(const dataObj: IDataObject; grfKeyState: Longint; pt: TPoint;
-  var dwEffect: Longint): HResult;
-begin
-    //
-    Result := S_OK;
 end;
 
 end.

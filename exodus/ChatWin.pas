@@ -114,6 +114,7 @@ type
     procedure ChangePresImage(show: widestring; status: widestring);
     procedure ResetPresImage;
     procedure freeChatObject();
+    procedure _sendMsg(txt: Widestring);
 
     function GetThread: String;
   published
@@ -588,16 +589,12 @@ begin
     Msg.Free();
 end;
 
-{---------------------------------------}
-procedure TfrmChat.SendMsg;
+procedure TfrmChat._sendMsg(txt: Widestring);
 var
-    xml, txt: WideString;
+    xml: WideString;
     msg: TJabberMessage;
     mtag: TXMLTag;
 begin
-    // Send the actual message out
-    txt := getInputText(MsgOut);
-
     // plugin madness
     if (chat_object <> nil) then
         TExodusChat(chat_object.ComController).fireBeforeMsg(txt);
@@ -637,6 +634,16 @@ begin
         LogMessage(Msg);
 
     Msg.Free();
+end;
+
+{---------------------------------------}
+procedure TfrmChat.SendMsg;
+var
+    txt: Widestring;
+begin
+    // Send the actual message out
+    txt := getInputText(MsgOut);
+    _sendMsg(txt);
 
     inherited;
 end;

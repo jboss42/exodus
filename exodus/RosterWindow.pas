@@ -22,8 +22,7 @@ unit RosterWindow;
 interface
 
 uses
-    Unicode, XMLTag,
-    Presence, Roster,
+    DropTarget, Unicode, XMLTag, Presence, Roster,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ComCtrls, ExtCtrls, Buttons, ImgList, Menus, StdCtrls;
 
@@ -156,6 +155,7 @@ type
     procedure treeRosterCompare(Sender: TObject; Node1, Node2: TTreeNode;
       Data: Integer; var Compare: Integer);
     procedure pluginClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;         // roster callback id
@@ -186,6 +186,8 @@ type
     _collapse_all: boolean;     // Collapse all groups by default?
     _group_counts: boolean;
 
+    _drop: TExDropTarget;
+
     procedure popUnBlockClick(Sender: TObject);
     procedure ExpandNodes();
     procedure RenderNode(ritem: TJabberRosterItem; p: TJabberPres);
@@ -207,6 +209,8 @@ type
     procedure RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
     procedure PresCallback(event: string; tag: TXMLTag; p: TJabberPres);
     procedure SessionCallback(event: string; tag: TXMLTag);
+
+    procedure onURLDrop(p: TPoint; url: Widestring);
   public
     { Public declarations }
     DockOffset: longint;
@@ -302,6 +306,8 @@ begin
     _roster_unicode := MainSession.Prefs.getBool('roster_unicode');
     _collapse_all := MainSession.Prefs.getBool('roster_collapsed');
     _group_counts := MainSession.Prefs.getBool('roster_groupcounts');
+
+    _drop := TExDropTarget.Create();
 
     frmExodus.pnlRoster.ShowHint := not _show_status;
 
@@ -1239,6 +1245,9 @@ begin
     Self.Align := alClient;
     Docked := true;
     MainSession.dock_windows := Docked;
+
+    _drop.DropEvent := onURLDrop;
+    _drop.start(treeRoster);
 end;
 
 {---------------------------------------}
@@ -2313,6 +2322,60 @@ begin
     frmExodus.COMController.fireRosterMenuClick(Sender);
 end;
 
+{---------------------------------------}
+procedure TfrmRosterWindow.onURLDrop(p: TPoint; url: Widestring);
+var
+    tp: TPoint;
+    n: TTreeNode;
+    i, nt: integer;
+    r: TList;
+    jl: TWidestringlist;
+    f: TfrmMsgRecv;
+    xtag: Widestring;
+begin
+    // we got a URL drop
+    tp := treeRoster.ScreenToClient(p);
+    n := treeRoster.GetNodeAt(tp.X, tp.Y);
+    if (n = nil) then begin
+        MessageDlg(sNoContactsSel, mtWarning, [mbOK], 0);
+        exit;
+    end;
+
+    xtag := '<x xmlns="jabber:x:oob"><url>' + url + '</url></x>';
+
+    nt := getNodeType(n);
+    case nt of
+    node_ritem: begin
+        // send a msg to this user, with the URL in the body.
+        f := StartMsg(TJabberRosterItem(n.Data).jid.jid);
+        f.AddOutgoing(url);
+        f.AddXTagXML(xtag);
+        f.txtSendSubject.Text := 'URL';
+        end;
+    node_grp: begin
+        // we have to rpretend to select the group..
+        treeRoster.Selected := n;
+        r := getSelectedContacts(true);
+        jl := TWideStringlist.Create();
+        for i := 0 to r.Count - 1 do
+            jl.Add(TJabberRosterItem(r[i]).jid.full);
+
+        f := BroadcastMsg(jl);
+        f.AddOutgoing(url);
+        f.AddXTagXML(xtag);
+        f.txtSendSubject.Text := 'URL';
+
+        jl.Free();
+        r.Free();
+        end
+    else begin
+        MessageDlg(sNoContactsSel, mtWarning, [mbOK], 0);
+        exit;
+        end;
+    end;
+    
+end;
+
 
 {---------------------------------------}
 {
@@ -2355,6 +2418,12 @@ begin
     end;
 end;
 }
+
+procedure TfrmRosterWindow.FormDestroy(Sender: TObject);
+begin
+    _drop.stop();
+    _drop := nil;
+end;
 
 initialization
     frmRosterWindow := nil;
