@@ -66,11 +66,11 @@ type
     popBanList: TMenuItem;
     popMemberList: TMenuItem;
     popVoiceList: TMenuItem;
-    N2: TMenuItem;
     popKick: TMenuItem;
     popBan: TMenuItem;
     popVoice: TMenuItem;
     popConfigure: TMenuItem;
+    N3: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);

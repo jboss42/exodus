@@ -2394,7 +2394,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkNotify: TCheckListBox
         Left = 8
-        Top = 88
+        Top = 112
         Width = 257
         Height = 97
         ItemHeight = 13
@@ -2415,7 +2415,7 @@ object frmPrefs: TfrmPrefs
       end
       object optNotify: TGroupBox
         Left = 8
-        Top = 192
+        Top = 216
         Width = 257
         Height = 73
         Caption = 'Notify Options'
@@ -2481,13 +2481,21 @@ object frmPrefs: TfrmPrefs
       end
       object chkFlashInfinite: TCheckBox
         Left = 8
-        Top = 66
+        Top = 82
         Width = 225
         Height = 17
         Caption = 'Flash the taskbar until window gets focus.'
         ParentShowHint = False
         ShowHint = True
         TabOrder = 5
+      end
+      object chkNotifyActiveWindow: TCheckBox
+        Left = 8
+        Top = 65
+        Width = 209
+        Height = 17
+        Caption = 'Do notifications for active window'
+        TabOrder = 6
       end
     end
     object tbsAway: TTabSheet
