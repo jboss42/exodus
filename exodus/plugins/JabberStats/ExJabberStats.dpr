@@ -2,7 +2,6 @@ library ExJabberStats;
 
 uses
   ComServ,
-  E_TLB in 'E_TLB.pas',
   StatsPlugin in 'StatsPlugin.pas' {StatsPlugin: CoClass},
   XMLUtils in '..\..\..\jopl\XMLUtils.pas',
   JabberID in '..\..\..\jopl\JabberID.pas',
@@ -16,7 +15,8 @@ uses
   XMLParser in '..\..\..\jopl\XMLParser.pas',
   XMLTag in '..\..\..\jopl\XMLTag.pas',
   Config in 'Config.pas' {frmConfig},
-  buttonFrame in '..\..\buttonFrame.pas' {frameButtons: TFrame};
+  buttonFrame in '..\..\buttonFrame.pas' {frameButtons: TFrame},
+  ExJabberStats_TLB in 'ExJabberStats_TLB.pas';
 
 exports
   DllGetClassObject,
