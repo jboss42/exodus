@@ -1,8 +1,8 @@
 object frmConnDetails: TfrmConnDetails
   Left = 253
   Top = 168
-  Width = 286
-  Height = 260
+  Width = 304
+  Height = 305
   ActiveControl = txtUsername
   Caption = 'Connection Details'
   Color = clBtnFace
@@ -18,29 +18,33 @@ object frmConnDetails: TfrmConnDetails
   TextHeight = 16
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 199
-    Width = 278
+    Top = 244
+    Width = 296
     Height = 32
     Align = alBottom
     AutoScroll = False
     TabOrder = 0
-    inherited Bevel1: TBevel
-      Width = 278
-    end
-    inherited Panel1: TPanel
-      Left = 118
-      Height = 27
-      inherited btnOK: TButton
-        ModalResult = 0
-        OnClick = frameButtons1btnOKClick
+    inherited Panel2: TPanel
+      Width = 296
+      Height = 32
+      inherited Bevel1: TBevel
+        Width = 296
+      end
+      inherited Panel1: TPanel
+        Left = 136
+        Height = 27
+        inherited btnOK: TButton
+          ModalResult = 0
+          OnClick = frameButtons1btnOKClick
+        end
       end
     end
   end
   object PageControl1: TPageControl
     Left = 0
     Top = 0
-    Width = 278
-    Height = 199
+    Width = 296
+    Height = 244
     ActivePage = tbsProfile
     Align = alClient
     TabOrder = 1
@@ -56,28 +60,58 @@ object frmConnDetails: TfrmConnDetails
       end
       object Label10: TLabel
         Left = 8
-        Top = 103
+        Top = 151
         Width = 57
         Height = 16
         Caption = '&Password:'
       end
       object Label11: TLabel
         Left = 9
-        Top = 40
+        Top = 71
         Width = 39
         Height = 16
         Caption = '&Server:'
       end
       object Label12: TLabel
         Left = 9
-        Top = 72
+        Top = 120
         Width = 56
         Height = 16
         Caption = '&Resource:'
       end
+      object lblServerList: TLabel
+        Left = 82
+        Top = 93
+        Width = 126
+        Height = 15
+        Cursor = crHandPoint
+        Caption = 'Download a list of servers'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlue
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = [fsUnderline]
+        ParentFont = False
+        OnClick = lblServerListClick
+      end
+      object Label13: TLabel
+        Left = 83
+        Top = 32
+        Width = 160
+        Height = 29
+        AutoSize = False
+        Caption = 'Enter desired username for new accounts'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
+        WordWrap = True
+      end
       object cboServer: TTntComboBox
         Left = 82
-        Top = 36
+        Top = 67
         Width = 152
         Height = 24
         ItemHeight = 16
@@ -89,7 +123,7 @@ object frmConnDetails: TfrmConnDetails
       end
       object chkSavePasswd: TCheckBox
         Left = 82
-        Top = 125
+        Top = 173
         Width = 127
         Height = 17
         Caption = 'Save pass&word'
@@ -105,7 +139,7 @@ object frmConnDetails: TfrmConnDetails
       end
       object txtPassword: TTntEdit
         Left = 82
-        Top = 100
+        Top = 148
         Width = 152
         Height = 24
         PasswordChar = '*'
@@ -113,7 +147,7 @@ object frmConnDetails: TfrmConnDetails
       end
       object cboResource: TTntComboBox
         Left = 82
-        Top = 69
+        Top = 117
         Width = 152
         Height = 24
         ItemHeight = 16
@@ -346,6 +380,25 @@ object frmConnDetails: TfrmConnDetails
         Width = 53
         Height = 16
         Caption = '# of Keys:'
+      end
+      object Label14: TLabel
+        Left = 4
+        Top = 104
+        Width = 249
+        Height = 89
+        AutoSize = False
+        Caption = 
+          'NOTE: You must use the URL of your jabber server'#39's HTTP tunnelli' +
+          'ng proxy. You can not use some "standard" HTTP proxy for this to' +
+          ' work. Contact your server administrator for additional informat' +
+          'ion.'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = [fsItalic]
+        ParentFont = False
+        WordWrap = True
       end
       object txtURL: TEdit
         Left = 68

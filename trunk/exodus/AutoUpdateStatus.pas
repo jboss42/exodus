@@ -55,13 +55,6 @@ type
 
 procedure ShowAutoUpdateStatus(URL : string); overload;
 
-resourcestring
-    sDownloading      = 'Downloading...';
-    sDownloadComplete = 'Download Complete';
-    sInitializing     = 'Initializing...';
-    sInstalling       = 'Installing...';
-    sError            = 'Error: %s';
-
 var
   frmAutoUpdateStatus: TfrmAutoUpdateStatus;
 

@@ -71,6 +71,9 @@ type
     Label6: TLabel;
     txtPriority: TEdit;
     spnPriority: TUpDown;
+    lblServerList: TLabel;
+    Label13: TLabel;
+    Label14: TLabel;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure chkSocksAuthClick(Sender: TObject);
     procedure cboSocksTypeChange(Sender: TObject);
@@ -79,6 +82,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure txtUsernameKeyPress(Sender: TObject; var Key: Char);
+    procedure lblServerListClick(Sender: TObject);
   private
     { Private declarations }
     _profile: TJabberProfile;
@@ -108,6 +112,9 @@ resourcestring
     sProfileInvalidJid = 'The Jabber ID you entered (username@server/resource) is invalid. Please enter a valid username, server, and resource.';
     sResourceWork = 'Work';
     sResourceHome = 'Home';
+    sDownloadServers = 'Download the public server list from jabber.org? (Requires an internet connection).';
+    sDownloadCaption = 'Downloading public server list';
+
 
 {---------------------------------------}
 {---------------------------------------}
@@ -117,7 +124,7 @@ implementation
 {$R *.dfm}
 
 uses
-    ExUtils, GnuGetText, JabberID, Unicode, Session;
+    ExUtils, GnuGetText, JabberID, Unicode, Session, WebGet, XMLTag, XMLParser;
 
 {---------------------------------------}
 function ShowConnDetails(p: TJabberProfile): integer;
@@ -391,6 +398,38 @@ begin
     jid := u + '@' + h + '/' + r;
     if (not isValidJid(jid)) then
         Key := #0;
+end;
+
+{---------------------------------------}
+procedure TfrmConnDetails.lblServerListClick(Sender: TObject);
+var
+    slist: string;
+    parser: TXMLTagParser;
+    q: TXMLTag;
+    items: TXMLTagList;
+    i: integer;
+begin
+    if (MessageDlg(sDownloadServers, mtConfirmation, [mbYes, mbNo], 0) = mrNo) then
+        exit;
+
+    frameButtons1.btnOK.Enabled := false;
+
+    slist := ExWebDownload(sDownloadCaption, 'http://jabber.org/servers.xml');
+
+    if (slist = '') then exit;
+
+    parser := TXMLTagParser.Create();
+    parser.ParseString(slist, '');
+    if (parser.Count > 0) then begin
+        q := parser.popTag();
+        items := q.QueryTags('item');
+        if (items.Count > 0) then cboServer.Items.Clear();
+        for i := 0 to items.Count - 1 do
+            cboServer.Items.Add(items[i].getAttribute('jid'));
+        items.Free();
+        q.Free();
+    end;
+    parser.Free();
 end;
 
 end.
