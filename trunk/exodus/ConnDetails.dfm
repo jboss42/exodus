@@ -1,8 +1,8 @@
 object frmConnDetails: TfrmConnDetails
-  Left = 209
-  Top = 154
-  Width = 304
-  Height = 307
+  Left = 196
+  Top = 230
+  Width = 414
+  Height = 288
   Caption = 'Connection Details'
   Color = clBtnFace
   DefaultMonitor = dmDesktop
@@ -18,20 +18,20 @@ object frmConnDetails: TfrmConnDetails
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 241
-    Width = 296
+    Top = 222
+    Width = 406
     Height = 32
     Align = alBottom
     AutoScroll = False
     TabOrder = 0
     inherited Panel2: TPanel
-      Width = 296
+      Width = 406
       Height = 32
       inherited Bevel1: TBevel
-        Width = 296
+        Width = 406
       end
       inherited Panel1: TPanel
-        Left = 136
+        Left = 246
         Height = 27
         inherited btnOK: TTntButton
           ModalResult = 0
@@ -43,41 +43,33 @@ object frmConnDetails: TfrmConnDetails
   object PageControl1: TTntPageControl
     Left = 0
     Top = 0
-    Width = 296
-    Height = 241
+    Width = 406
+    Height = 222
     ActivePage = tbsProfile
     Align = alClient
     TabOrder = 1
     object tbsProfile: TTntTabSheet
-      Caption = 'Profile'
+      Caption = 'Account Details'
       ImageIndex = -1
       object lblUsername: TTntLabel
         Left = 2
         Top = 8
-        Width = 51
+        Width = 49
         Height = 13
-        Caption = 'Username:'
+        Caption = 'Jabber ID:'
         Transparent = True
       end
       object Label10: TTntLabel
         Left = 2
-        Top = 151
+        Top = 71
         Width = 49
         Height = 13
         Caption = 'Password:'
         Transparent = True
       end
-      object Label11: TTntLabel
-        Left = 2
-        Top = 71
-        Width = 34
-        Height = 13
-        Caption = 'Server:'
-        Transparent = True
-      end
       object Label12: TTntLabel
         Left = 2
-        Top = 120
+        Top = 95
         Width = 49
         Height = 13
         Caption = 'Resource:'
@@ -85,29 +77,37 @@ object frmConnDetails: TfrmConnDetails
       end
       object lblServerList: TTntLabel
         Left = 100
-        Top = 93
-        Width = 121
+        Top = 49
+        Width = 152
         Height = 13
         Cursor = crHandPoint
-        Caption = 'Download a list of servers'
+        Caption = 'Download a list of public servers'
         OnClick = lblServerListClick
       end
       object Label13: TTntLabel
         Left = 100
         Top = 32
-        Width = 170
-        Height = 29
+        Width = 285
+        Height = 17
         AutoSize = False
-        Caption = 'Enter desired username for new accounts.'
+        Caption = 'Enter desired Jabber ID for new accounts.'
         WordWrap = True
       end
-      object cboServer: TTntComboBox
+      object Label6: TTntLabel
+        Left = 3
+        Top = 120
+        Width = 34
+        Height = 13
+        Caption = 'Priority:'
+        Transparent = True
+      end
+      object cboJabberID: TTntComboBox
         Left = 100
-        Top = 67
-        Width = 170
+        Top = 3
+        Width = 285
         Height = 21
         ItemHeight = 13
-        TabOrder = 1
+        TabOrder = 0
         OnExit = txtUsernameExit
         OnKeyPress = txtUsernameKeyPress
         Items.WideStrings = (
@@ -116,32 +116,23 @@ object frmConnDetails: TfrmConnDetails
       end
       object chkSavePasswd: TTntCheckBox
         Left = 100
-        Top = 173
+        Top = 145
         Width = 170
         Height = 17
         Caption = 'Save pass&word'
-        TabOrder = 4
-      end
-      object txtUsername: TTntEdit
-        Left = 100
-        Top = 5
-        Width = 170
-        Height = 21
-        TabOrder = 0
-        OnExit = txtUsernameExit
-        OnKeyPress = txtUsernameKeyPress
+        TabOrder = 5
       end
       object txtPassword: TTntEdit
         Left = 100
-        Top = 148
+        Top = 68
         Width = 170
         Height = 21
         PasswordChar = '*'
-        TabOrder = 3
+        TabOrder = 1
       end
       object cboResource: TTntComboBox
         Left = 100
-        Top = 117
+        Top = 92
         Width = 170
         Height = 21
         ItemHeight = 13
@@ -151,81 +142,49 @@ object frmConnDetails: TfrmConnDetails
       end
       object chkRegister: TTntCheckBox
         Left = 100
-        Top = 190
+        Top = 162
         Width = 181
         Height = 17
         Caption = 'This is a new account'
-        TabOrder = 5
-      end
-    end
-    object tbsConn: TTntTabSheet
-      Caption = 'Connection'
-      ImageIndex = -1
-      object Label8: TTntLabel
-        Left = 2
-        Top = 9
-        Width = 27
-        Height = 13
-        Caption = 'Type:'
-        Transparent = True
-      end
-      object Label6: TTntLabel
-        Left = 2
-        Top = 38
-        Width = 34
-        Height = 13
-        Caption = 'Priority:'
-        Transparent = True
-      end
-      object cboConnection: TTntComboBox
-        Left = 75
-        Top = 7
-        Width = 191
-        Height = 21
-        Style = csDropDownList
-        DropDownCount = 2
-        ItemHeight = 13
-        ItemIndex = 0
-        TabOrder = 0
-        Text = 'Normal'
-        OnChange = cboConnectionChange
-        Items.WideStrings = (
-          'Normal'
-          'HTTP')
+        TabOrder = 6
       end
       object txtPriority: TTntEdit
-        Left = 75
-        Top = 34
+        Left = 100
+        Top = 116
         Width = 46
         Height = 21
-        TabOrder = 1
+        TabOrder = 3
         Text = '0'
       end
       object spnPriority: TUpDown
-        Left = 121
-        Top = 34
+        Left = 149
+        Top = 116
         Width = 16
         Height = 21
         Associate = txtPriority
         Min = -1
         Max = 128
-        TabOrder = 2
+        TabOrder = 4
       end
+    end
+    object tbsConn: TTntTabSheet
+      Caption = 'Connection'
+      ImageIndex = -1
       object chkSRV: TTntCheckBox
         Left = 4
-        Top = 74
+        Top = 2
         Width = 269
         Height = 17
         Caption = 'Automatically discover host and port'
-        TabOrder = 3
+        TabOrder = 0
         OnClick = chkSRVClick
       end
       object boxHost: TTntGroupBox
-        Left = 7
-        Top = 92
-        Width = 225
-        Height = 81
-        TabOrder = 4
+        Left = 12
+        Top = 23
+        Width = 306
+        Height = 73
+        TabOrder = 1
         object Label4: TTntLabel
           Left = 6
           Top = 17
@@ -245,7 +204,7 @@ object frmConnDetails: TfrmConnDetails
         object txtHost: TTntEdit
           Left = 55
           Top = 13
-          Width = 158
+          Width = 234
           Height = 21
           TabOrder = 0
         end
@@ -272,12 +231,12 @@ object frmConnDetails: TfrmConnDetails
       object txtSSLCert: TTntEdit
         Left = 18
         Top = 29
-        Width = 190
+        Width = 263
         Height = 21
         TabOrder = 0
       end
       object btnCertBrowse: TTntButton
-        Left = 213
+        Left = 285
         Top = 28
         Width = 72
         Height = 25
@@ -288,7 +247,7 @@ object frmConnDetails: TfrmConnDetails
       object optSSL: TTntRadioGroup
         Left = 8
         Top = 64
-        Width = 265
+        Width = 345
         Height = 105
         Caption = 'SSL Modes'
         Items.WideStrings = (
@@ -358,7 +317,7 @@ object frmConnDetails: TfrmConnDetails
       object txtSocksHost: TTntEdit
         Left = 91
         Top = 34
-        Width = 130
+        Width = 190
         Height = 21
         Enabled = False
         TabOrder = 0
@@ -374,7 +333,7 @@ object frmConnDetails: TfrmConnDetails
       object txtSocksUsername: TTntEdit
         Left = 90
         Top = 108
-        Width = 130
+        Width = 190
         Height = 21
         Enabled = False
         TabOrder = 3
@@ -382,7 +341,7 @@ object frmConnDetails: TfrmConnDetails
       object txtSocksPassword: TTntEdit
         Left = 90
         Top = 136
-        Width = 130
+        Width = 190
         Height = 21
         Enabled = False
         PasswordChar = '*'
@@ -391,7 +350,7 @@ object frmConnDetails: TfrmConnDetails
       object cboSocksType: TTntComboBox
         Left = 91
         Top = 8
-        Width = 132
+        Width = 190
         Height = 21
         Style = csDropDownList
         ItemHeight = 13
@@ -410,7 +369,7 @@ object frmConnDetails: TfrmConnDetails
       ImageIndex = -1
       object Label1: TTntLabel
         Left = 1
-        Top = 5
+        Top = 27
         Width = 25
         Height = 13
         Caption = 'URL:'
@@ -418,22 +377,22 @@ object frmConnDetails: TfrmConnDetails
       end
       object Label2: TTntLabel
         Left = 1
-        Top = 38
+        Top = 60
         Width = 46
         Height = 13
         Caption = 'Poll Time:'
         Transparent = True
       end
       object Label5: TTntLabel
-        Left = 140
-        Top = 39
+        Left = 164
+        Top = 61
         Width = 40
         Height = 13
         Caption = 'seconds'
       end
       object Label9: TTntLabel
         Left = 1
-        Top = 73
+        Top = 95
         Width = 48
         Height = 13
         Caption = '# of Keys:'
@@ -441,9 +400,9 @@ object frmConnDetails: TfrmConnDetails
       end
       object lblNote: TTntLabel
         Left = 0
-        Top = 97
-        Width = 284
-        Height = 112
+        Top = 130
+        Width = 394
+        Height = 60
         Align = alBottom
         AutoSize = False
         Caption = 
@@ -454,25 +413,33 @@ object frmConnDetails: TfrmConnDetails
         WordWrap = True
       end
       object txtURL: TTntEdit
-        Left = 76
-        Top = 2
+        Left = 100
+        Top = 24
         Width = 197
         Height = 21
         TabOrder = 0
       end
       object txtTime: TTntEdit
-        Left = 76
-        Top = 35
+        Left = 100
+        Top = 57
         Width = 53
         Height = 21
         TabOrder = 1
       end
       object txtKeys: TTntEdit
-        Left = 76
-        Top = 68
+        Left = 100
+        Top = 90
         Width = 53
         Height = 21
         TabOrder = 2
+      end
+      object chkPolling: TTntCheckBox
+        Left = 2
+        Top = 3
+        Width = 263
+        Height = 17
+        Caption = 'Use HTTP Polling'
+        TabOrder = 3
       end
     end
   end
@@ -480,6 +447,6 @@ object frmConnDetails: TfrmConnDetails
     DefaultExt = 'pem'
     Filter = 'SSL Key Files|*.pem|All Files|*.*'
     Left = 8
-    Top = 288
+    Top = 176
   end
 end
