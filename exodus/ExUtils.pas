@@ -69,6 +69,7 @@ procedure AssignDefaultFont(font: TFont);
 
 procedure jabberSendCTCP(jid, xmlns: string);
 procedure jabberSendRosterItems(to_jid: WideString; items: TList);
+procedure split(value: WideString; list: TWideStringList; seps : WideString = ' '#9#10#13);
 
 function getDisplayField(fld: string): string;
 function secsToDuration(seconds: string): string;
@@ -643,6 +644,30 @@ begin
     MainSession.SendTag(msg);
 end;
 
+procedure split(value: WideString; list: TWideStringList; seps : WideString = ' '#9#10#13);
+var
+    i, l : integer;
+    tmps : WideString;
+begin
+    tmps := Trim(value);
+    l := 1;
+    while l <= length(tmps) do begin
+        // search for the first non-space
+        while ((l <= length(tmps)) and (pos(tmps[l], seps) > 0)) do
+            inc(l);
+
+        if l > length(tmps) then exit;
+        i := l;
+
+        // search for the first space
+        while (i <= length(tmps)) and (pos(tmps[i], seps) <=0) do
+            inc(i);
+
+        list.Add(Copy(tmps, l, i - l));
+        l := i + 1;
+
+        end;
+end;
 
 {---------------------------------------}
 {---------------------------------------}
