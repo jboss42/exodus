@@ -314,8 +314,10 @@ begin
     AddEmot('(6)', msn, 4);      // devil
     AddEmot(':eek2', msn, 4);
     AddEmot(':jester', y, 0);    // clown
-
+    AddEmot(':breath', msn, 46); // hold my breath
+    AddEmot('(o)', msn, 46);
     AddEmot('(B)', msn, 16);
+    
     (*
     Emoticon map:
 
