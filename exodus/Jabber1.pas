@@ -283,7 +283,8 @@ type
     _msgcb: integer;
     _iqcb: integer;
 
-    last_tick: dword;
+    _auto_away_interval: integer;
+    last_tick: dword;             
 
     procedure presCustomPresClick(Sender: TObject);
 
@@ -641,16 +642,17 @@ begin
                 // -i [pri]    : priority
                 // -f [prof]   : profile name
                 // -c [file]   : config file name
-                Options  := 'dmv?xjprifc';
-                OptFlags := '----:::::::';
-                ReqFlags := '           ';
-                LongOpts := 'debug,minimized,invisible,help,expanded,jid,password,resource,priority,profile,config';
+                Options  := 'dmva?xjprifc';
+                OptFlags := '-----:::::::';
+                ReqFlags := '            ';
+                LongOpts := 'debug,minimized,invisible,aatest,help,expanded,jid,password,resource,priority,profile,config';
                 while GetOpt do begin
                   case Ord(OptChar) of
                      0: raise EConfigException.Create('unknown argument');
                      Ord('d'): debug := true;
                      Ord('x'): expanded := OptArg;
                      Ord('m'): minimized := true;
+                     Ord('a'): _testaa := true;
                      Ord('v'): invisible := true;
                      Ord('j'): jid := TJabberID.Create(OptArg);
                      Ord('p'): pass := OptArg;
@@ -665,6 +667,13 @@ begin
                 Free
             end;
         end;
+
+        if (_testaa) then
+            _auto_away_interval := 1
+        else
+            _auto_away_interval := 10;
+
+        timAutoAway.Interval := _auto_away_interval * 1000;
 
         if (show_help) then begin
             // show the help message
@@ -1028,6 +1037,7 @@ begin
         end
 
     else if event = '/session/commerror' then begin
+        timAutoAway.Enabled := false;
         MessageDlg(sCommError,  mtError, [mbOK], 0);
         end
 
@@ -1770,13 +1780,14 @@ begin
     with MainSession.Prefs do begin
         if ((_auto_away)) then begin
 
-            if (not _testaa) then begin
-                last_tick := getLastTick();
-                if (last_tick = 0) then exit;
-                end;
+            last_tick := getLastTick();
+            if (last_tick = 0) then exit;
 
             cur_idle := (GetTickCount() - last_tick) div 1000;
-            mins := cur_idle div 60;
+            if (not _testaa) then
+                mins := cur_idle div 60
+            else
+                mins := cur_idle;
 
             {
             if (not _is_autoaway) and (not _is_autoxa) then begin
@@ -1846,7 +1857,7 @@ begin
     // reset our status to available
     DebugMsg(sSetAutoAvailable);
     timAutoAway.Enabled := false;
-    timAutoAway.Interval := 10000;
+    timAutoAway.Interval := _auto_away_interval * 1000;
     MainSession.SetPresence(_last_show, _last_status, MainSession.Priority);
 
     // must be *after* SetPresence
