@@ -424,6 +424,13 @@ begin
     if (_feats.IndexOf('gc-1.0') >= 0) then _feats.Add(FEAT_GROUPCHAT);
     if (_cat = 'conference') then
         _feats.Add(FEAT_GROUPCHAT);
+
+    // this is for transports.
+    if (_cat_type = FEAT_AIM) then _feats.Add(FEAT_AIM)
+    else if (_cat_type = FEAT_MSN) then _feats.Add(FEAT_MSN)
+    else if (_cat_type = FEAT_ICQ) then _feats.Add(FEAT_ICQ)
+    else if (_cat_type = FEAT_YAHOO) then _feats.Add(FEAT_YAHOO)
+    else if (_feats.IndexOf('jabber:iq:gateway') >= 0) then _feats.Add(_cat_type);
 end;
 
 {---------------------------------------}

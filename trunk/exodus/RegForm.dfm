@@ -50,8 +50,8 @@ inherited frmRegister: TfrmRegister
       ImageIndex = 1
       object Panel2: TPanel
         Left = 0
-        Top = 195
-        Width = 410
+        Top = 194
+        Width = 402
         Height = 32
         Align = alBottom
         BevelOuter = bvNone
@@ -69,8 +69,8 @@ inherited frmRegister: TfrmRegister
       object formBox: TScrollBox
         Left = 0
         Top = 0
-        Width = 410
-        Height = 195
+        Width = 402
+        Height = 194
         Align = alClient
         BevelInner = bvNone
         BevelOuter = bvNone
@@ -86,7 +86,7 @@ inherited frmRegister: TfrmRegister
       object Label2: TTntLabel
         Left = 0
         Top = 0
-        Width = 410
+        Width = 402
         Height = 90
         Align = alTop
         AutoSize = False
@@ -106,7 +106,7 @@ inherited frmRegister: TfrmRegister
       object lblOK: TTntLabel
         Left = 0
         Top = 0
-        Width = 410
+        Width = 402
         Height = 90
         Align = alTop
         AutoSize = False
@@ -125,7 +125,7 @@ inherited frmRegister: TfrmRegister
       object lblBad: TTntLabel
         Left = 0
         Top = 90
-        Width = 410
+        Width = 402
         Height = 90
         Align = alTop
         AutoSize = False
