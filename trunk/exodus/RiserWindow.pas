@@ -66,6 +66,10 @@ var
     bmp: TBitmap;
     animate: boolean;
 begin
+
+    // Don't show toast while auto away
+    if ((frmJabber.IsAutoAway) or (frmJabber.IsAutoXA)) then exit;
+
     bmp := TBitmap.Create;
     frmJabber.ImageList2.GetBitmap(imgIndex, bmp);
 

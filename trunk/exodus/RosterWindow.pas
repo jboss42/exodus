@@ -177,14 +177,14 @@ implementation
 uses
     Bookmark,
     S10n,
-    Transfer, 
+    Transfer,
     MsgRecv,
     PrefController,
-    ExUtils, 
-    Room, 
-    Profile, 
-    JabberID, 
-    RiserWindow, 
+    ExUtils,
+    Room,
+    Profile,
+    JabberID,
+    RiserWindow,
     IQ,
     RosterAdd,
     RemoveContact,
@@ -400,7 +400,7 @@ begin
         n := treeRoster.Selected
     else
         n := Node;
-        
+
     Result := node_none;
     _cur_ritem := nil;
     _cur_bm := nil;
@@ -1223,6 +1223,7 @@ begin
                         nRect.Top, Node.ImageIndex);
 
                     // draw the text
+                    // todo: change the text color for selected items!!
                     SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(treeRoster.Font.Color));
                     TextOut(xRect.Left + 1, xRect.Top + 1, c1);
                     SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(_status_color));
