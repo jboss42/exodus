@@ -498,11 +498,9 @@ begin
             if ((_profile.ssl) and (_ssl_int <> nil)) then begin
                 if (VerifyPeer(_ssl_int.SSLSocket.PeerCert) <> SVE_NONE) then begin
                     // KILL SOCKET
-                    // xxx: bubble up _ssl_err
                     tag := TXMLTag.Create('ssl');
                     tag.AddCData(_ssl_err);
                     DoCallbacks('ssl-error', tag);
-                    Disconnect();
                 end;
             end;
 
