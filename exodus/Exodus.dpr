@@ -171,7 +171,8 @@ uses
   ExTracer in 'ExTracer.pas' {frmException},
   NetMeetingFix in 'NetMeetingFix.pas',
   BaseMsgList in 'BaseMsgList.pas' {fBaseMsgList: TFrame},
-  RTFMsgList in 'RTFMsgList.pas' {fRTFMsgList: TFrame};
+  RTFMsgList in 'RTFMsgList.pas' {fRTFMsgList: TFrame},
+  IEMsgList in 'IEMsgList.pas' {fBaseMsgList1: TFrame};
 
 {$R *.TLB}
 
