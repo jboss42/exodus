@@ -80,7 +80,7 @@ Section "!Exodus (Required)"
 
   lbl_noIdle:
 	; version(riched20) >= 5.30
-    GetDLLVersion "$SYSDIR\riched20.dll" $R0 $R1
+        GetDLLVersion "$SYSDIR\riched20.dll" $R0 $R1
 	IntOp $R1 $R0 / 65536
 	IntOp $R2 $R0 & 0x00FF
 	DetailPrint "Richedit version: $R1.$R2"
@@ -93,8 +93,9 @@ Section "!Exodus (Required)"
 	StrCmp $0 "success" lbl_execrich
 	    Abort "Error downloading richtext library"
   lbl_execrich:
-	ExecWait $INSTDIR\richupd.exe
-	IfErrors lbl_badrichupd lbl_HiVersion
+	WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Runonce "Exodus-Setup" "$CMDLINE"
+	Exec $INSTDIR\richupd.exe
+	Quit
   lbl_badrichupd:
 	Abort "Error installing richtext update"
   lbl_reportVer:
