@@ -29,12 +29,14 @@ object frmInvite: TfrmInvite
     TabOrder = 0
     inherited Panel2: TPanel
       Width = 323
+      Height = 34
       inherited Bevel1: TBevel
         Width = 323
       end
       inherited Panel1: TPanel
         Left = 159
         Width = 164
+        Height = 29
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end

@@ -207,6 +207,7 @@ begin
         if ((frm <> nil) and (frm.isMUCRoom)) then begin
             // this is MUC.. use muc#user
             msg.setAttribute('to', room);
+            b := '';
             x := msg.AddTag('x');
             with x do begin
                 setAttribute('xmlns', xmlns_mucuser);
