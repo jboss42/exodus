@@ -187,10 +187,4 @@ begin
     Result := S_OK;
 end;
 
-{
-initialization
-  TAutoObjectFactory.Create(ComServer, TExDropTarget, Class_ExDropTarget,
-    ciMultiInstance, tmApartment);
-}
-
 end.
