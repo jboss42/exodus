@@ -21,7 +21,7 @@ unit Room;
 interface
 
 uses
-    XMLTag, RegExpr,
+    Unicode, XMLTag, RegExpr,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, ExRichEdit, ExtCtrls,
     RichEdit2, TntStdCtrls, Buttons, TntComCtrls;
@@ -104,9 +104,10 @@ type
   private
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
-    _roster: TStringlist;       // roster for this room
+    _roster: TWideStringlist;   // roster for this room
     _isGC: boolean;
-    _callback: integer;         // Message Callback
+    _mcallback: integer;        // Message Callback
+    _ecallback: integer;        // Error msg callback
     _pcallback: integer;        // Presence Callback
     _scallback: integer;        // Session callback
     _nick_prefix: Widestring;   // stuff for nick completion:
@@ -151,7 +152,7 @@ type
 var
   frmRoom: TfrmRoom;
 
-  room_list: TStringList;
+  room_list: TWideStringList;
 
   xp_muc_presence: TXPLite;
   xp_muc_status: TXPLite;
@@ -222,8 +223,8 @@ function FindRoomNick(rjid: Widestring): Widestring;
 {---------------------------------------}
 implementation
 uses
-    IQ, xData, JoinRoom, RoomAdminList, 
-    Unicode, ExUtils, RiserWindow, ShellAPI, RichEdit,
+    IQ, xData, JoinRoom, RoomAdminList,
+    ExUtils, RiserWindow, ShellAPI, RichEdit,
     Invite, ChatWin, RosterWindow, Presence, Roster,
     Session, StrUtils, JabberID, MsgDisplay, Notify,
     PrefController, JabberMsg, Jabber1, XMLNode;
@@ -457,11 +458,13 @@ begin
         pnlInput.Visible := false;
         DisplayPresence(sDisconnected, MsgList);
 
-        MainSession.UnRegisterCallback(_callback);
+        MainSession.UnRegisterCallback(_mcallback);
+        MainSession.UnRegisterCallback(_ecallback);
         MainSession.UnRegisterCallback(_pcallback);
         // MainSession.UnRegisterCallback(_scallback);
 
-        _callback := -1;
+        _mcallback := -1;
+        _ecallback := -1;
         _pcallback := -1;
         end
     else if (event = '/session/presence') then begin
@@ -746,11 +749,11 @@ begin
     inherited;
 
     // Create
-    _callback := -1;
+    _mcallback := -1;
+    _ecallback := -1;
     _pcallback := -1;
     _scallback := -1;
-    _roster := TStringList.Create;
-    _roster.CaseSensitive := true;
+    _roster := TWideStringList.Create;
     _isGC := true;
     _nick_prefix := '';
     _nick_idx := 0;
@@ -791,9 +794,9 @@ end;
 procedure TfrmRoom.SetJID(sjid: Widestring);
 begin
     // setup our callbacks
-    if (_callback = -1) then begin
-        _callback := MainSession.RegisterCallback(MsgCallback, '/packet/message[@type="groupchat"][@from="' + sjid + '*"]');
-        _callback := MainSession.RegisterCallback(MsgCallback, '/packet/message[@type="errror"][@from="' + sjid + '"]');
+    if (_mcallback = -1) then begin
+        _mcallback := MainSession.RegisterCallback(MsgCallback, '/packet/message[@type="groupchat"][@from="' + sjid + '*"]');
+        _ecallback := MainSession.RegisterCallback(MsgCallback, '/packet/message[@type="errror"][@from="' + sjid + '"]');
         _pcallback := MainSession.RegisterCallback(PresCallback, '/packet/presence[@from="' + sjid + '*"]');
         if (_scallback = -1) then
             _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
@@ -905,7 +908,8 @@ var
     i: integer;
 begin
     // Unregister callbacks and send unavail pres.
-    MainSession.UnRegisterCallback(_callback);
+    MainSession.UnRegisterCallback(_mcallback);
+    MainSession.UnRegisterCallback(_ecallback);
     MainSession.UnRegisterCallback(_pcallback);
     MainSession.UnRegisterCallback(_scallback);
 
@@ -920,9 +924,10 @@ begin
     i := room_list.IndexOf(jid);
     if (i >= 0) then
         room_list.Delete(i);
-    Action := caFree;
 
     inherited;
+
+    Action := caFree;
 end;
 
 {---------------------------------------}
@@ -1150,7 +1155,9 @@ end;
 procedure TfrmRoom.FormEndDock(Sender, Target: TObject; X, Y: Integer);
 begin
   inherited;
-    if (Docked and (Self.TabSheet <> nil)) then Self.TabSheet.ImageIndex := -1;
+    if (Docked and (Self.TabSheet <> nil)) then
+        Self.TabSheet.ImageIndex := -1;
+
     btnClose.Visible := Docked;
 end;
 
@@ -1403,7 +1410,7 @@ end;
 
 initialization
     // list for all of the current rooms
-    room_list := TStringlist.Create();
+    room_list := TWideStringlist.Create();
 
     // pre-compile some xpath's
     xp_muc_presence := TXPLite.Create('/presence/x[@xmlns="' + NS_MUCUSER + '"]');

@@ -29,7 +29,7 @@ uses
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
     Buttons, OleCtrls, AppEvnts, ToolWin, SelContact,
-    IdHttp, TntComCtrls;
+    IdHttp, TntComCtrls, ExPageControl;
 
 const
     UpdateKey = '001';
