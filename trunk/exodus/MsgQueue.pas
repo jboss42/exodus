@@ -81,6 +81,7 @@ implementation
 {$R *.dfm}
 
 uses
+    MsgList, MsgController,  
     ShellAPI, CommCtrl, GnuGetText,   
     NodeItem, Roster, JabberID, XMLUtils, XMLParser, XMLTag,
     ExUtils, MsgRecv, Session, PrefController;
@@ -362,7 +363,7 @@ begin
     if (lstEvents.SelCount <= 0) then exit;
     if (MainSession = nil) then exit;
     if (not MainSession.Active) then exit;
-    
+
     e := TJabberEvent(_queue.Items[lstEvents.Selected.Index]);
     edup := TJabberEvent.Create(e);
     StartRecvMsg(edup);
