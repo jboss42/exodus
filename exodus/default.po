@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-02-11 07:05\n"
-"PO-Revision-Date: 2004-02-11 07:05\n"
+"POT-Creation-Date: 2004-02-15 20:58\n"
+"PO-Revision-Date: 2004-02-15 20:58\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -159,12 +159,12 @@ msgstr ""
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: RosterRecv.dfm:49
 #. show the next event
-#: MsgRecv.pas:442
+#: MsgRecv.pas:450
 #: RecvStatus.pas:383
 #: RecvStatus.pas:610
 #: RecvStatus.pas:621
-#: SendStatus.pas:844
-#: SendStatus.pas:964
+#: SendStatus.pas:842
+#: SendStatus.pas:962
 #: xdata.pas:188
 msgid "Close"
 msgstr ""
@@ -596,7 +596,7 @@ msgstr ""
 #. frmBaseChat..popOut..emot_sep..Caption
 #: BaseChat.dfm:321
 #. frmBrowse..popContext..N1..Caption
-#: Browser.dfm:3828
+#: Browser.dfm:3867
 #. frmChat..popContact..N5..Caption
 #: ChatWin.dfm:109
 #. frmChat..popContact..N4..Caption
@@ -744,15 +744,20 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
+#. frmBrowse..Panel3..vwBrowse......Caption
+#: Browser.dfm:53
+msgid "Node ID"
+msgstr ""
+
 #. frmBrowse..Panel3..pnlInfo..lblError..Caption
-#: Browser.dfm:85
+#: Browser.dfm:89
 msgid "Error: "
 msgstr ""
 
 #. frmBrowse..Panel3..pnlInfo..lblError..Font.Name
-#: Browser.dfm:89
+#: Browser.dfm:93
 #. frmBrowse..pnlTop..btnClose..Font.Name
-#: Browser.dfm:132
+#: Browser.dfm:136
 #. frmChat..Panel1..btnClose..Font.Name
 #: ChatWin.dfm:44
 #. frmDebug..pnlTop..btnClose..Font.Name
@@ -785,12 +790,12 @@ msgid "Arial"
 msgstr ""
 
 #. frmBrowse..StatBar......Text
-#: Browser.dfm:104
+#: Browser.dfm:108
 msgid "0 Objects"
 msgstr ""
 
 #. frmBrowse..pnlTop..btnClose..Caption
-#: Browser.dfm:127
+#: Browser.dfm:131
 #. frmChat..Panel1..btnClose..Caption
 #: ChatWin.dfm:39
 #. frmDebug..pnlTop..btnClose..Caption
@@ -807,32 +812,32 @@ msgid "X"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnBack..Hint
-#: Browser.dfm:178
+#: Browser.dfm:179
 msgid "Previous JID"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnBack..Caption
-#: Browser.dfm:180
+#: Browser.dfm:182
 msgid "Back"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnFwd..Hint
-#: Browser.dfm:189
+#: Browser.dfm:191
 msgid "Next JID"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnFwd..Caption
-#: Browser.dfm:190
+#: Browser.dfm:193
 msgid "btnFwd"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..ToolButton2..Caption
-#: Browser.dfm:198
+#: Browser.dfm:202
 msgid "ToolButton2"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnHome..Hint
-#: Browser.dfm:205
+#: Browser.dfm:209
 #. frmProfile..PageControl1..TabSheet4..Caption
 #: Profile.dfm:392
 #. frmVCard..PageControl1..TabSheet4..Caption
@@ -842,78 +847,93 @@ msgid "Home"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnHome..Caption
-#: Browser.dfm:206
+#: Browser.dfm:211
 msgid "btnHome"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..ToolButton1..Hint
-#: Browser.dfm:213
+#: Browser.dfm:218
 msgid "Change Views"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..ToolButton1..Caption
-#: Browser.dfm:214
+#: Browser.dfm:220
 msgid "ToolButton1"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnBookmark..Hint
-#: Browser.dfm:222
+#: Browser.dfm:228
 msgid "Add a Bookmark"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnBookmark..Caption
-#: Browser.dfm:223
+#: Browser.dfm:230
 msgid "btnBookmark"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..ToolButton3..Hint
-#: Browser.dfm:230
+#: Browser.dfm:237
 msgid "Get properties for all items in this "
 "window"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..ToolButton3..Caption
-#: Browser.dfm:231
+#: Browser.dfm:239
 msgid "btnProps"
 msgstr ""
 
-#. frmBrowse..pnlTop..CoolBar1..tlbJID..pnlJID..Caption
-#: Browser.dfm:258
-msgid "Jabber Address:   "
+#. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnNode..Hint
+#: Browser.dfm:246
+msgid "Show Node Identifier"
 msgstr ""
 
-#. frmBrowse..pnlTop..CoolBar1..tlbJID..pnlButtons..btnGo..Caption
-#: Browser.dfm:283
+#. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnNode..Caption
+#: Browser.dfm:249
+msgid "btnNode"
+msgstr ""
+
+#. frmBrowse..pnlJid..btnGo..Caption
+#: Browser.dfm:272
 msgid "GO"
 msgstr ""
 
-#. frmBrowse..pnlTop..CoolBar1..tlbJID..pnlButtons..btnRefresh..Hint
-#: Browser.dfm:292
+#. frmBrowse..pnlJid..btnRefresh..Hint
+#: Browser.dfm:281
 msgid "Re-Browse this object"
 msgstr ""
 
+#. frmBrowse..pnlJid..pnlJidID..Caption
+#: Browser.dfm:301
+msgid "Jabber Address:   "
+msgstr ""
+
+#. frmBrowse..pnlNode..pnlNodeID..Caption
+#: Browser.dfm:334
+msgid "Node Identifier:"
+msgstr ""
+
 #. frmBrowse..popViewStyle..Details1..Caption
-#: Browser.dfm:3795
+#: Browser.dfm:3834
 msgid "Details"
 msgstr ""
 
 #. frmBrowse..popViewStyle..LargeIcons1..Caption
-#: Browser.dfm:3799
+#: Browser.dfm:3838
 msgid "Large Icons"
 msgstr ""
 
 #. frmBrowse..popViewStyle..SmallIcons1..Caption
-#: Browser.dfm:3803
+#: Browser.dfm:3842
 msgid "Small Icons"
 msgstr ""
 
 #. frmBrowse..popViewStyle..List1..Caption
-#: Browser.dfm:3807
+#: Browser.dfm:3846
 msgid "List"
 msgstr ""
 
 #. frmBrowse..popContext..mBrowse..Caption
-#: Browser.dfm:3816
+#: Browser.dfm:3855
 #. frmConnDetails..PageControl1..tbsSSL..btnCertBrowse..Caption
 #: ConnDetails.dfm:281
 #: ExResponders.pas:461
@@ -929,30 +949,30 @@ msgid "Browse"
 msgstr ""
 
 #. frmBrowse..popContext..mBrowseNew..Caption
-#: Browser.dfm:3820
+#: Browser.dfm:3859
 msgid "Browse in New Window"
 msgstr ""
 
 #. frmBrowse..popContext..mBookmark..Caption
-#: Browser.dfm:3824
+#: Browser.dfm:3863
 msgid "Add Bookmark to Roster"
 msgstr ""
 
 #. frmBrowse..popContext..mVCard..Caption
-#: Browser.dfm:3831
+#: Browser.dfm:3870
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuServerVCard..Caption
 #: Jabber1.dfm:448
 msgid "vCard"
 msgstr ""
 
 #. frmBrowse..popContext..mVersion..Caption
-#: Browser.dfm:3835
+#: Browser.dfm:3874
 #: ExResponders.pas:323
 msgid "Version"
 msgstr ""
 
 #. frmBrowse..popContext..mTime..Caption
-#: Browser.dfm:3839
+#: Browser.dfm:3878
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuTime..Caption
 #: Jabber1.dfm:444
 #: ExResponders.pas:375
@@ -960,22 +980,22 @@ msgid "Time"
 msgstr ""
 
 #. frmBrowse..popContext..mLast..Caption
-#: Browser.dfm:3843
+#: Browser.dfm:3882
 msgid "Last Time/Activity"
 msgstr ""
 
 #. frmBrowse..popContext..mSearch..Caption
-#: Browser.dfm:3847
+#: Browser.dfm:3886
 msgid "Search"
 msgstr ""
 
 #. frmBrowse..popContext..mRegister..Caption
-#: Browser.dfm:3851
+#: Browser.dfm:3890
 msgid "Register"
 msgstr ""
 
 #. frmBrowse..popContext..mJoinConf..Caption
-#: Browser.dfm:3855
+#: Browser.dfm:3894
 msgid "Join Conference"
 msgstr ""
 
@@ -2485,7 +2505,7 @@ msgstr ""
 #. frmMsgQueue..lstEvents......Caption
 #: MsgQueue.dfm:45
 #. ugh.. some translations use the old caption w/ trailing spaces
-#: MsgRecv.pas:293
+#: MsgRecv.pas:301
 msgid "Subject"
 msgstr ""
 
@@ -5898,37 +5918,37 @@ msgstr ""
 #. frmRoom..popRoom..popAdmin..popVoiceList..Caption
 #: Room.dfm:201
 #. edit a list
-#: Room.pas:1747
+#: Room.pas:1748
 msgid "Edit Voice List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popBanList..Caption
 #: Room.dfm:205
-#: Room.pas:1749
+#: Room.pas:1750
 msgid "Edit Ban List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popMemberList..Caption
 #: Room.dfm:209
-#: Room.pas:1751
+#: Room.pas:1752
 msgid "Edit Member List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popModeratorList..Caption
 #: Room.dfm:213
-#: Room.pas:1753
+#: Room.pas:1754
 msgid "Edit Moderator List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popAdminList..Caption
 #: Room.dfm:220
-#: Room.pas:1755
+#: Room.pas:1756
 msgid "Edit Admin List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popOwnerList..Caption
 #: Room.dfm:224
-#: Room.pas:1757
+#: Room.pas:1758
 msgid "Edit Owner List"
 msgstr ""
 
@@ -5939,7 +5959,7 @@ msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popDestroy..Caption
 #: Room.dfm:235
-#: Room.pas:1771
+#: Room.pas:1772
 msgid "Destroy Room"
 msgstr ""
 
@@ -5959,7 +5979,7 @@ msgstr ""
 #: RosterWindow.dfm:380
 #. frmRosterWindow..popGroup..popGroupBlock..Caption
 #: RosterWindow.dfm:634
-#: Room.pas:1490
+#: Room.pas:1491
 #: RosterWindow.pas:2054
 #. do blocking madness
 #: RosterWindow.pas:2091
@@ -6317,7 +6337,7 @@ msgstr ""
 #. frmSubscribe..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: subscribe.dfm:128
 #. Change button captions for TC Invites
-#: MsgRecv.pas:379
+#: MsgRecv.pas:387
 msgid "Accept"
 msgstr ""
 
@@ -6445,11 +6465,11 @@ msgid "Error: %s"
 msgstr ""
 
 #. Actually Browse to the JID entered in the address box
-#: Browser.pas:204
+#: Browser.pas:210
 msgid "The Jabber ID you entered is invalid."
 msgstr ""
 
-#: Browser.pas:604
+#: Browser.pas:636
 msgid "Objects"
 msgstr ""
 
@@ -7118,7 +7138,7 @@ msgstr ""
 #: JoinRoom.pas:237
 #: JoinRoom.pas:393
 #. normal result
-#: RegForm.pas:417
+#: RegForm.pas:415
 msgid "Finish"
 msgstr ""
 
@@ -7164,40 +7184,41 @@ msgstr ""
 msgid "Remove this profile?"
 msgstr ""
 
-#: MsgQueue.pas:148
+#: MsgQueue.pas:149
 msgid "Exodus could not create or write to the spool directory specified in "
 "the options."
 msgstr ""
 
-#: MsgRecv.pas:380
+#: MsgRecv.pas:388
 msgid "Decline"
 msgstr ""
 
 #. This is an error.. show the error panel
-#: MsgRecv.pas:387
+#: MsgRecv.pas:395
 msgid "Error:"
 msgstr ""
 
-#: MsgRecv.pas:410
+#: MsgRecv.pas:418
 msgid "To:"
 msgstr ""
 
-#: MsgRecv.pas:444
-#: MsgRecv.pas:757
+#: MsgRecv.pas:452
+#. Make sure we don't get dups
+#: MsgRecv.pas:764
 msgid "Next"
 msgstr ""
 
-#: MsgRecv.pas:690
-#: MsgRecv.pas:697
+#: MsgRecv.pas:696
+#: MsgRecv.pas:703
 msgid "Message to "
 msgstr ""
 
-#: MsgRecv.pas:692
-#: MsgRecv.pas:699
+#: MsgRecv.pas:698
+#: MsgRecv.pas:705
 msgid "Message from "
 msgstr ""
 
-#: MsgRecv.pas:769
+#: MsgRecv.pas:776
 msgid "You have unread messages. Read all messages before closing the "
 "window."
 msgstr ""
@@ -7317,17 +7338,17 @@ msgstr ""
 
 #. timeout on entity query
 #: RegForm.pas:266
-#: RegForm.pas:477
+#: RegForm.pas:475
 msgid "The agent you are trying to register with can not be "
 "reached."
 msgstr ""
 
-#: RegForm.pas:481
+#: RegForm.pas:479
 msgid "There was an error trying to remove your "
 "registration."
 msgstr ""
 
-#: RegForm.pas:485
+#: RegForm.pas:483
 msgid "Your registration has been removed."
 msgstr ""
 
@@ -7342,12 +7363,12 @@ msgstr ""
 #. if blocked ignore anything they say, even subject changes.
 #: Room.pas:461
 #: Room.pas:1039
-#: Room.pas:1447
+#: Room.pas:1448
 #. block
-#: Room.pas:1455
-#: Room.pas:1487
+#: Room.pas:1456
+#: Room.pas:1488
 #. get the data for this person..
-#: Room.pas:1941
+#: Room.pas:1942
 msgid "Blocked"
 msgstr ""
 
@@ -7364,7 +7385,7 @@ msgstr ""
 #: Room.pas:730
 #: Room.pas:967
 #. they match
-#: Room.pas:1314
+#: Room.pas:1315
 msgid "Your nickname is already being used. Please select another "
 "one."
 msgstr ""
@@ -7450,73 +7471,73 @@ msgid "There was an error using the default room configuration. Configuring "
 "it manually."
 msgstr ""
 
-#: Room.pas:1134
+#: Room.pas:1135
 msgid "Your room keyword regular expressions are invalid. Keyword matching "
 "will be turned off for this room."
 msgstr ""
 
 #. send the msg out
-#: Room.pas:1275
+#: Room.pas:1276
 msgid "/me has changed the subject to: "
 msgstr ""
 
 #. Change the subject
-#: Room.pas:1289
+#: Room.pas:1290
 msgid "Change room subject"
 msgstr ""
 
-#: Room.pas:1289
+#: Room.pas:1290
 msgid "New subject"
 msgstr ""
 
-#: Room.pas:1333
-#: Room.pas:1333
+#: Room.pas:1334
+#: Room.pas:1334
 msgid "New nickname"
 msgstr ""
 
-#: Room.pas:1356
+#: Room.pas:1357
 msgid "Bookmark Room"
 msgstr ""
 
-#: Room.pas:1356
+#: Room.pas:1357
 msgid "Enter bookmark name:"
 msgstr ""
 
-#: Room.pas:1488
+#: Room.pas:1489
 #: RosterWindow.pas:2050
 #: RosterWindow.pas:2101
 msgid "UnBlock"
 msgstr ""
 
-#: Room.pas:1649
+#: Room.pas:1650
 msgid "You have been kicked."
 msgstr ""
 
-#: Room.pas:1650
-#: Room.pas:1650
+#: Room.pas:1651
+#: Room.pas:1651
 msgid "Kick Reason"
 msgstr ""
 
-#: Room.pas:1653
+#: Room.pas:1654
 msgid "You have been banned."
 msgstr ""
 
-#: Room.pas:1654
-#: Room.pas:1654
+#: Room.pas:1655
+#: Room.pas:1655
 msgid "Ban Reason"
 msgstr ""
 
 #. Destroy Room
-#: Room.pas:1768
+#: Room.pas:1769
 msgid "Do you really want to destroy the room? All users will be "
 "removed."
 msgstr ""
 
-#: Room.pas:1770
+#: Room.pas:1771
 msgid "The owner has destroyed the room."
 msgstr ""
 
-#: Room.pas:1771
+#: Room.pas:1772
 msgid "Destroy Reason"
 msgstr ""
 
@@ -7639,43 +7660,43 @@ msgid "Waiting for connection..."
 msgstr ""
 
 #. get the file size
-#: SendStatus.pas:473
+#: SendStatus.pas:471
 #. get a handle to the stream
-#: SendStatus.pas:537
+#: SendStatus.pas:535
 #. get a handle to the stream
-#: SendStatus.pas:686
+#: SendStatus.pas:684
 msgid "There was an error trying to read the "
 "file."
 msgstr ""
 
-#: SendStatus.pas:842
+#: SendStatus.pas:840
 msgid "Your file transfer was refused to %s"
 msgstr ""
 
 #. they refused
-#: SendStatus.pas:922
+#: SendStatus.pas:919
 msgid "The recipient (%s) refused your file: "
 "%s"
 msgstr ""
 
 #. error
-#: SendStatus.pas:944
+#: SendStatus.pas:941
 msgid "The stream was not activated for file: "
 "%s"
 msgstr ""
 
 #. our thread completed.
-#: SendStatus.pas:960
+#: SendStatus.pas:957
 msgid "There was an error trying to upload the file to your web "
 "host."
 msgstr ""
 
-#: SendStatus.pas:980
+#: SendStatus.pas:978
 msgid "Send failed."
 msgstr ""
 
 #. PChar is in lparam
-#: SendStatus.pas:1004
+#: SendStatus.pas:1002
 msgid "Connected."
 msgstr ""
 
