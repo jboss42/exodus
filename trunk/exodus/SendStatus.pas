@@ -59,7 +59,7 @@ type
         lblTo: TTntLabel;
         tcpClient: TIdTCPClient;
         SocksHandler: TIdIOHandlerSocket;
-    IdSocksInfo1: TIdSocksInfo;
+        IdSocksInfo1: TIdSocksInfo;
     private
         { Private declarations }
         _thread: TFileSendThread;
@@ -68,10 +68,11 @@ type
         _iq: TJabberIQ;
         _sid: Widestring;
         _shost: Widestring;
+        _disco_count: integer;
 
         procedure DoState();
         procedure BuildStreamHosts(ptag: TXMLTag);
-                                      
+
         function getNextHostAddr(): boolean;
 
     protected
@@ -81,6 +82,8 @@ type
 
     published
         procedure RecipDiscoCallback(event: string; tag: TXMLTag);
+        procedure DiscoItemsCallback(event: string; tag: TXMLTag);
+        procedure DiscoInfoCallback(event: string; tag: TXMLTag);
         procedure FTCallback(event: string; tag: TXMLTag);
         procedure AddrCallback(event: string; tag: TXMLTag);
         procedure SelectHostCallback(event: string; tag: TXMLTag);
@@ -144,7 +147,7 @@ implementation
 {$R *.dfm}
 
 uses
-    XMLUtils, JabberConst, Session;
+    GnuGetText, JabberID, XMLUtils, JabberConst, Session;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -204,7 +207,7 @@ begin
                     SendMessage(_form.Handle, WM_SEND_BAD, 0, 0);
                     exit;
                 end;
-                _client.ReadStream(_stream, -1, true);
+                _client.WriteStream(_stream, true, false, 0);
             end
             else if (_method = 'get') then
                 _http.Get(_url, _stream)
@@ -235,10 +238,13 @@ begin
     end;
 
     with _form do begin
-        bar1.Max := _pos_max;
+        if (_pos_max > 0) then
+            bar1.Max := _pos_max;
         bar1.Position := _pos;
-        lblStatus.Caption := _new_txt[_new_txt.Count - 1];
-        _new_txt.Clear();
+        if (_new_txt.Count > 0) then begin
+            lblStatus.Caption := _new_txt[_new_txt.Count - 1];
+            _new_txt.Clear();
+        end;
     end;
     _lock.Release();
 end;
@@ -357,6 +363,8 @@ var
     p: THostPortPair;
     i: integer;
     fStream: TFileStream;
+    tmp_jid: TJabberID;
+    tmps, hash_key: Widestring;
 begin
     // do something based on our current state
     case _state of
@@ -421,8 +429,13 @@ begin
             DoState();
         end
         else begin
-            // xxx: get stream hosts from our server
-            assert(false);
+            _iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
+                Self.DiscoItemsCallback, 20);
+            _iq.iqType := 'get';
+            tmp_jid := TJabberID.Create(MainSession.jid);
+            _iq.toJid := tmp_jid.domain;
+            _iq.Namespace := XMLNS_DISCOITEMS;
+            _iq.Send();
         end;
 
         end;
@@ -440,8 +453,9 @@ begin
         _iq.iqType := 'set';
         _iq.toJid := _pkg.recip;
         _iq.Namespace := XMLNS_BYTESTREAMS;
-        _iq.qTag.setAttribute('id', _sid);
         BuildStreamHosts(_iq.qTag);
+        _iq.qTag.setAttribute('sid', _sid);
+        _iq.Send();
         end;
     send_try_connect: begin
         // try to connect to the host they connected to.
@@ -455,6 +469,20 @@ begin
                 exit;
             end;
         end;
+
+        i := shosts.indexOf(_shost);
+        p := THostPortPair(shosts.Objects[i]);
+
+        SocksHandler.SocksInfo.Authentication := saNoAuthentication;
+        SocksHandler.SocksInfo.Version := svSocks5;
+        SocksHandler.SocksInfo.Host := p.host;
+        SocksHandler.SocksInfo.Port := p.Port;
+
+        hash_key := _sid + MainSession.Jid + _pkg.recip;
+        tmps := Sha1Hash(hash_key);
+        tcpClient.IOHandler := SocksHandler;
+        tcpClient.Host := tmps;
+        tcpClient.Port := 0;
 
         _thread := TFileSendThread.Create();
         _thread.url := '';
@@ -472,7 +500,7 @@ begin
         _iq.iqType := 'set';
         _iq.toJid := _shost;
         _iq.Namespace := XMLNS_BYTESTREAMS;
-        _iq.qTag.setAttribute('id', _sid);
+        _iq.qTag.setAttribute('sid', _sid);
         x := _iq.qTag.AddTag('activate');
         x.AddCData(_pkg.recip);
         _iq.Send();
@@ -627,6 +655,65 @@ begin
     // they do support FT, and Bytestreams, so lets forge ahead
     _state := send_ft_offer;
     DoState();
+end;
+
+{---------------------------------------}
+procedure TfSendStatus.DiscoItemsCallback(event: string; tag: TXMLTag);
+var
+    i: integer;
+    iq: TJabberIQ;
+    items: TXMLTagList;
+    tmps: Widestring;
+    p: THostPortPair;
+begin
+    //
+    if ((event = 'xml') and (tag.GetAttribute('type') = 'result')) then begin
+
+        // Clear the shosts Queue..
+        while (shosts.Count > 0) do begin
+            p := THostPortPair(shosts.Objects[0]);
+            p.Free();
+            shosts.Delete(0);
+        end;
+
+        _disco_count := 0;
+        items := tag.QueryXPTags('/iq/query/item');
+        for i := 0 to items.count - 1 do begin
+            iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
+                Self.DiscoInfoCallback, 10);
+            iq.iqType := 'get';
+            iq.toJid := items[i].getAttribute('jid');
+            tmps := items[i].GetAttribute('node');
+            if (tmps <> '') then
+                iq.qTag.setAttribute('node', tmps);
+            iq.Namespace := XMLNS_DISCOINFO;
+            iq.Send();
+            _disco_count := _disco_count + 1;
+        end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfSendStatus.DiscoInfoCallback(event: string; tag: TXMLTag);
+var
+    x: TXMLTag;
+    p: THostPortPair;
+begin
+    // look at the features.. if it's category=proxy, type=bytestreams
+    if ((event = 'xml') and (tag.getAttribute('type') = 'result')) then begin
+        x := tag.QueryXPTag('/iq/query/identity[@category="proxy"][@type="bytestreams"]');
+        if (x <> nil) then begin
+            p := THostPortPair.Create();
+            p.jid := tag.GetAttribute('from');
+            shosts.AddObject(p.jid, p);
+        end;
+    end;
+
+    _disco_count := _disco_count - 1;
+    if (_disco_count = 0) then begin
+        _state := send_get_addr;
+        DoState();
+    end;
 
 end;
 
@@ -685,7 +772,7 @@ begin
         else
             i := shosts.indexOf(_iq.toJid);
 
-        if (i = -1) then begin
+        if (i >= 0) then begin
             p := THostPortPair(shosts.objects[i]);
             shosts.Delete(i);
             p.Free();
@@ -722,7 +809,7 @@ begin
     if (event = 'xml') then begin
         if (tag.GetAttribute('type') = 'result') then begin
             _state := send_sending;
-            DoState();            
+            DoState();
             exit;
         end;
 
@@ -740,6 +827,9 @@ begin
         else
             MessageDlg(sXferDavError, mtError, [mbOK], 0);
         Self.Free();
+    end
+    else begin
+        btnCancel.Caption := _('Close');
     end;
 end;
 

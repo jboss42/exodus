@@ -80,9 +80,11 @@ type
         _js: TObject;
         _last_pres: TJabberPres;
 
+        function FindPresSpec(sjid, resource: Widestring): TJabberPres;
         procedure DeletePres(p: TJabberPres);
         procedure AddPres(p: TJabberPres);
         function  GetPresList(sjid: WideString): TWideStringList;
+        
     published
         procedure Callback(event: string; tag: TXMLTag);
     public
@@ -121,7 +123,7 @@ begin
     PresType := '';
     Status := '';
     Show := '';
-    Priority := -1;
+    Priority := 0;
     Self.name := 'presence';
     error_code := '';
 end;
@@ -336,7 +338,8 @@ begin
     end
     else begin
         // some kind of available pres
-        p := FindPres(curp.fromJID.jid, curp.fromJID.resource);
+        //p := FindPres(curp.fromJID.jid, curp.fromJID.resource);
+        p := FindPresSpec(curp.fromJID.jid, curp.fromJID.resource);
         if p <> nil then begin
             // this already exists, nuke it and put it back in
             Deletepres(p);
@@ -368,8 +371,10 @@ begin
         // scan for the correct insertion point
         for i := 0 to pl.Count - 1 do begin
             cp := TJabberPres(pl.Objects[i]);
-            if (cp.priority <= p.priority) then
+            if (cp.priority <= p.priority) then begin
                 insert := i;
+                break;
+            end;
         end;
 
         if (insert = -1) then
@@ -419,6 +424,22 @@ begin
         Result := TWideStringList(Objects[pi])
     else
         Result := nil;
+end;
+
+{---------------------------------------}
+function TJabberPPDB.FindPresSpec(sjid, resource: Widestring): TJabberPres;
+var
+    pl: TWideStringList;
+    pi: integer;
+begin
+    // find the next or pri presence packet
+    Result := nil;
+    pl := GetPresList(sjid);
+    if pl <> nil then begin
+        pi := pl.indexOf(resource);
+        if pi >= 0 then
+            Result := TJabberPres(pl.Objects[pi]);
+    end;
 end;
 
 {---------------------------------------}

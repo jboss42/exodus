@@ -377,6 +377,7 @@ begin
     fSend.Parent := Self.box;
     fSend.Align := alTop;
     fSend.Visible := true;
+    fSend.Name := 'send_' + IntToStr(box.ControlCount);
 
     fSend.Setup(pkg);
     pkg.Frame := fSend;
