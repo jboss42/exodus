@@ -1,8 +1,8 @@
-library AIMImport;
+library ExImportAIM;
 
 uses
   ComServ,
-  AIMImport_TLB in 'AIMImport_TLB.pas',
+  E_TLB in 'E_TLB.pas',
   AIMPlugin in 'AIMPlugin.pas' {AIMImportPlugin: CoClass},
   Importer in 'Importer.pas' {frmImport},
   Unicode in '..\..\..\jopl\Unicode.pas',

@@ -25,7 +25,7 @@ interface
 
 uses
     ExodusCOM_TLB, XMLParser,
-    ComObj, ActiveX, AIMImport_TLB, StdVcl;
+    ComObj, ActiveX, ExImportAIM_TLB, StdVcl;
 
 type
   TAIMImportPlugin = class(TAutoObject, IExodusPlugin)
