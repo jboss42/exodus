@@ -226,6 +226,10 @@ type
     procedure mnuVersionClick(Sender: TObject);
     procedure mnuPasswordClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure TabsUnDock(Sender: TObject; Client: TControl;
+      NewTarget: TWinControl; var Allow: Boolean);
+    procedure TabsDockDrop(Sender: TObject; Source: TDragDockObject; X,
+      Y: Integer);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -501,7 +505,7 @@ begin
     _appclosing := false;
     _event := next_none;
     _noMoveCheck := true;
-    frmDebug := nil;
+    //frmDebug := nil;
 
     try
         with TGetOpts.Create(nil) do begin
@@ -648,10 +652,13 @@ begin
             MainSession.Invisible := invisible;
 
             if (debug) then begin
+                ShowDebugForm();
+            {
                 frmDebug := TfrmDebug.Create(nil);
                 if getBool('expanded') then
                     frmDebug.DockForm;
                 frmDebug.Show;
+                }
                 end;
             end;
     except
@@ -1203,8 +1210,11 @@ begin
 
     if MainSession <> nil then begin
         _event := next_Exit;
+        {
         if frmDebug <> nil then
             frmDebug.Close;
+            }
+        CloseDebugForm();
         frmRosterWindow.ClearNodes();
         frmRosterWindow.Close;
         ChatWin.CloseAllChats();
@@ -1357,10 +1367,7 @@ begin
 
             // make sure the debug window is docked
             activeTab := Tabs.ActivePage.PageIndex;
-            if ((frmDebug <> nil) and (not frmDebug.Docked)) then begin
-                frmDebug.DockForm;
-                frmDebug.Show;
-                end;
+            DockDebugForm();
 
             Tabs.ActivePage := Tabs.Pages[activeTab];
             end
@@ -1373,11 +1380,7 @@ begin
             Tabs.ActivePage := tbsMsg;
             pnlRoster.align := alClient;
 
-            // make sure debug window is hidden and undocked
-            if ((frmDebug <> nil) and (frmDebug.Docked)) then begin
-                frmDebug.Hide;
-                frmDebug.FloatForm;
-                end;
+            FloatDebugForm();
             end;
         end;
 end;
@@ -1464,9 +1467,12 @@ end;
 procedure TExodus.ShowXML1Click(Sender: TObject);
 begin
     // show the debug window if it's hidden
+    {
     if (frmDebug = nil) then
         frmDebug := TfrmDebug.Create(nil);
     frmDebug.ShowDefault();
+    }
+    ShowDebugForm();
 end;
 
 {---------------------------------------}
@@ -2007,6 +2013,22 @@ end;
 procedure TExodus.FormDestroy(Sender: TObject);
 begin
     DragAcceptFiles(Handle, False);
+end;
+
+procedure TExodus.TabsUnDock(Sender: TObject; Client: TControl;
+  NewTarget: TWinControl; var Allow: Boolean);
+begin
+    // check to see if the tab is a frmDockable
+    Allow := true;
+    if (Client is TfrmDockable) then
+        TfrmDockable(Client).Docked := false;
+end;
+
+procedure TExodus.TabsDockDrop(Sender: TObject; Source: TDragDockObject; X,
+  Y: Integer);
+begin
+    if (Source.Control is TfrmDockable) then
+        TfrmDockable(Source.Control).Docked := true;
 end;
 
 end.

@@ -52,7 +52,7 @@ type
 
     procedure ShowDefault;
 
-    property Docked: boolean read _docked;
+    property Docked: boolean read _docked write _docked;
   end;
 
 var
