@@ -1,4 +1,23 @@
 unit COMController;
+{
+    Copyright 2003, Peter Millard
+
+    This file is part of Exodus.
+
+    Exodus is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Exodus is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Exodus; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
 
 {$WARN SYMBOL_PLATFORM OFF}
 
@@ -73,34 +92,42 @@ type
       safecall;
     function Get_Roster: IExodusRoster; safecall;
     function Get_PPDB: IExodusPPDB; safecall;
+    function registerBrowseNS(const Namespace: WideString): WideString;
+      safecall;
+    function registerDiscoFeature(const Feature: WideString): WideString;
+      safecall;
+    function registerDiscoItem(const JabberID, Name: WideString): WideString;
+      safecall;
+    procedure removeBrowseNS(const ID: WideString); safecall;
+    procedure removeDiscoFeature(const ID: WideString); safecall;
+    procedure removeDiscoItem(const ID: WideString); safecall;
+    function registerPresenceXML(const XML: WideString): WideString; safecall;
+    procedure removePresenceXML(const ID: WideString); safecall;
     { Protected declarations }
   private
     _menu_items: TWideStringList;
-    _agents_cb: integer;
-
-  protected
-    procedure agentsCallback(event: string; tag: TXMLTag);
 
   public
     constructor Create();
 
     procedure fireNewChat(jid: WideString; ExodusChat: IExodusChat);
     procedure fireMenuClick(Sender: TObject);
-    procedure fireAgentsList(server: Widestring);
   end;
 
   TPlugin = class
     com: IExodusPlugin;
-end;
+  end;
 
   TPluginProxy = class
-    id: integer;
-    com: OleVariant;
-    constructor Create(xpath: string; obj: OleVariant);
-    destructor Destroy; override;
-
-    procedure Callback(event: string; tag: TXMLTag);
-end;
+    private
+        _xpath: Widestring;
+    public
+        id: integer;
+        com: OleVariant;
+        constructor Create(xpath: Widestring; obj: OleVariant);
+        destructor Destroy; override;
+        procedure Callback(event: string; tag: TXMLTag);
+    end;
 
 
 // Forward declares for plugin utils
@@ -111,6 +138,7 @@ procedure UnloadPlugins();
 implementation
 
 uses
+    ExResponders, 
     Chat, ChatController, JabberID, MsgRecv, Room, Browser, Jud,
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug, 
     COMChatController, Dockable, Agents,
@@ -205,9 +233,11 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-constructor TPluginProxy.Create(xpath: string; obj: OleVariant);
+constructor TPluginProxy.Create(xpath: Widestring; obj: OleVariant);
 begin
     inherited Create;
+
+    _xpath := xpath;
 
     id := MainSession.RegisterCallback(Self.Callback, xpath);
     com := obj;
@@ -237,7 +267,7 @@ var
 begin
     // call the plugin back
     plugin := IUnknown(com) as IExodusPlugin;
-    plugin.Process(tag.xml);
+    plugin.Process(_xpath, event, tag.xml);
 end;
 
 
@@ -248,7 +278,6 @@ constructor TExodusController.Create();
 begin
     inherited Create();
     _menu_items := TWidestringList.Create();
-    _agents_cb := MainSession.RegisterCallback(agentsCallback, '/session/agents');
 end;
 
 {---------------------------------------}
@@ -258,15 +287,6 @@ var
 begin
     for i := 0 to plugs.count - 1 do
         TPlugin(plugs.Objects[i]).com.NewChat(jid, ExodusChat);
-end;
-
-{---------------------------------------}
-procedure TExodusController.fireAgentsList(server: Widestring);
-var
-    i: integer;
-begin
-    for i := 0 to plugs.count - 1 do
-        TPlugin(plugs.Objects[i]).com.onAgentsList(Server);
 end;
 
 {---------------------------------------}
@@ -456,16 +476,11 @@ begin
     end
     else begin
         // we already have it, fire now.
-        fireAgentsList(Server);
+        // fireAgentsList(Server);
     end;
 end;
 
 {---------------------------------------}
-procedure TExodusController.agentsCallback(event: string; tag: TXMLTag);
-begin
-    fireAgentsList(tag.GetAttribute('from'));
-end;
-
 function TExodusController.generateID: WideString;
 begin
     Result := MainSession.generateID();
@@ -511,6 +526,7 @@ begin
     Result := MainSession.IsBlocked(JabberID);
 end;
 
+{---------------------------------------}
 procedure TExodusController.Block(const JabberID: WideString);
 var
     tmpjid: TJabberID;
@@ -520,18 +536,21 @@ begin
     tmpjid.Free();
 end;
 
+{---------------------------------------}
 procedure TExodusController.Connect;
 begin
     if not MainSession.Active then
         MainSession.Connect();
 end;
 
+{---------------------------------------}
 procedure TExodusController.Disconnect;
 begin
     if MainSession.Active then
         MainSession.Disconnect();
 end;
 
+{---------------------------------------}
 procedure TExodusController.UnBlock(const JabberID: WideString);
 var
     tmpjid: TJabberID;
@@ -541,39 +560,46 @@ begin
     tmpjid.Free();
 end;
 
+{---------------------------------------}
 function TExodusController.getPrefAsBool(const Key: WideString): WordBool;
 begin
     Result := MainSession.Prefs.getBool(key);
 end;
 
+{---------------------------------------}
 function TExodusController.getPrefAsInt(const Key: WideString): Integer;
 begin
     Result := MainSession.Prefs.getInt(key);
 end;
 
+{---------------------------------------}
 function TExodusController.getPrefAsString(
   const Key: WideString): WideString;
 begin
     Result := MainSession.Prefs.getString(key);
 end;
 
+{---------------------------------------}
 procedure TExodusController.setPrefAsBool(const Key: WideString;
   Value: WordBool);
 begin
     MainSession.Prefs.setBool(key, value);
 end;
 
+{---------------------------------------}
 procedure TExodusController.setPrefAsInt(const Key: WideString;
   Value: Integer);
 begin
     MainSession.Prefs.setInt(key, value);
 end;
 
+{---------------------------------------}
 procedure TExodusController.setPrefAsString(const Key_, Value: WideString);
 begin
-    MainSession.Prefs.setString(Key_, value);    
+    MainSession.Prefs.setString(Key_, value);
 end;
 
+{---------------------------------------}
 function TExodusController.findChat(const JabberID,
   Resource: WideString): Integer;
 var
@@ -586,22 +612,26 @@ begin
         Result := TForm(c.window).Handle;
 end;
 
+{---------------------------------------}
 procedure TExodusController.startInstantMsg(const JabberID: WideString);
 begin
     startMsg(JabberID);
 end;
 
+{---------------------------------------}
 procedure TExodusController.startRoom(const RoomJID, Nickname,
   Password: WideString);
 begin
     startRoom(RoomJID, Nickname, Password);
 end;
 
+{---------------------------------------}
 procedure TExodusController.startSearch(const SearchJID: WideString);
 begin
     startSearch(SearchJID);
 end;
 
+{---------------------------------------}
 procedure TExodusController.showJoinRoom(const RoomJID, Nickname,
   Password: WideString);
 var
@@ -612,51 +642,124 @@ begin
     tmpjid.free();
 end;
 
+{---------------------------------------}
 procedure TExodusController.startBrowser(const BrowseJID: WideString);
 begin
     showBrowser(BrowseJID);
 end;
 
+{---------------------------------------}
 procedure TExodusController.showCustomPresDialog;
 begin
     ShowCustomPresence();
 end;
 
+{---------------------------------------}
 procedure TExodusController.showDebug;
 begin
     ShowDebugForm();
 end;
 
+{---------------------------------------}
 procedure TExodusController.showLogin;
 begin
     PostMessage(frmExodus.Handle, WM_SHOWLOGIN, 0, 0);
 end;
 
+{---------------------------------------}
 procedure TExodusController.showPrefs;
 begin
     startPrefs();
 end;
 
+{---------------------------------------}
 procedure TExodusController.showToast(const Message: WideString; wndHandle,
   imageIndex: Integer);
 begin
     showRiserWindow(wndHandle, Message, imageIndex);
 end;
 
+{---------------------------------------}
 procedure TExodusController.setPresence(const Show, Status: WideString;
   Priority: Integer);
 begin
     MainSession.setPresence(Show, Status, Priority);
 end;
 
+{---------------------------------------}
 function TExodusController.Get_Roster: IExodusRoster;
 begin
-    // xxx: finish COMRoster
+    Result := frmExodus.COMRoster;
 end;
 
+{---------------------------------------}
 function TExodusController.Get_PPDB: IExodusPPDB;
 begin
-    // xxx: finish COMPPDB
+    Result := frmExodus.COMPPDB;
+end;
+
+{---------------------------------------}
+function TExodusController.registerBrowseNS(
+  const Namespace: WideString): WideString;
+begin
+    Result := IntToStr(Exodus_Browse.Namespaces.Add(namespace));
+end;
+
+{---------------------------------------}
+function TExodusController.registerDiscoFeature(
+  const Feature: WideString): WideString;
+begin
+    Result := IntToStr(Exodus_Disco_Info.Features.Add(Feature));
+end;
+
+{---------------------------------------}
+function TExodusController.registerDiscoItem(const JabberID,
+  Name: WideString): WideString;
+begin
+    Result := Exodus_Disco_Items.addItem(Name, JabberID);
+end;
+
+{---------------------------------------}
+procedure TExodusController.removeBrowseNS(const ID: WideString);
+var
+    idx: integer;
+begin
+    idx := StrToIntDef(ID, -1);
+    if ((idx >= 0) and (idx < Exodus_Browse.Namespaces.Count)) then
+        Exodus_Browse.Namespaces.Delete(idx);
+end;
+
+{---------------------------------------}
+procedure TExodusController.removeDiscoFeature(const ID: WideString);
+var
+    idx: integer;
+begin
+    idx := StrToIntDef(ID, -1);
+    if ((idx >= 0) and (idx < Exodus_Disco_Info.Features.Count)) then
+        Exodus_Disco_Info.Features.Delete(idx);
+end;
+
+{---------------------------------------}
+procedure TExodusController.removeDiscoItem(const ID: WideString);
+begin
+    Exodus_Disco_Items.removeItem(ID);
+end;
+
+{---------------------------------------}
+function TExodusController.registerPresenceXML(
+  const XML: WideString): WideString;
+begin
+    Result := IntToStr(MainSession.Presence_XML.Add(XML));
+end;
+
+{---------------------------------------}
+procedure TExodusController.removePresenceXML(const ID: WideString);
+var
+    idx: integer;
+begin
+    idx := StrToIntDef(ID, -1);
+    if ((idx >= 0) and (idx < MainSession.Presence_XML.Count)) then
+        MainSession.Presence_XML.Delete(idx);
 end;
 
 initialization

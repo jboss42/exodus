@@ -234,7 +234,7 @@ var
     exe_path: string;
     reg: TRegistry;
 
-    function testDir(dir: string): boolean;
+    function testDir(dir: string; create: boolean): boolean;
     var
         dir_ok: boolean;
         f: TFileStream;
@@ -247,6 +247,8 @@ var
             Result := true;
             exit;
         end;
+
+        if (not Create) then exit;
 
         // check the directory
         dir_ok := DirectoryExists(dir);
@@ -296,9 +298,20 @@ begin
     // first try appdata,
     // then try local_appdata,
     // then use exe_path as a last resort
-    if (testDir(appdata)) then Result := appdata
-    else if (testDir(local_appdata)) then Result := local_appdata
-    else Result := exe_path;
+    Result := '';
+
+    // these check for existing files
+    if (testDir(appdata, false)) then Result := appdata
+    else if (testDir(local_appdata, false)) then Result := local_appdata
+    else if (testDir(exe_path, false)) then Result := exe_path;
+
+    if (Result = '') then begin
+        // these try to create a new file
+        if (testDir(appData, true)) then Result := appData
+        else if (testDir(local_appdata, true)) then Result := local_appdata
+        else Result := exe_path;
+    end;
+
 end;
 
 {---------------------------------------}

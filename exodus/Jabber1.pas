@@ -23,7 +23,8 @@ interface
 
 uses
     BaseChat, GUIFactory, Register, Notify, S10n,
-    COMController, ExResponders, ExEvents, RosterWindow, Presence, XMLTag,
+    COMController, COMRoster, COMPPDB, 
+    ExResponders, ExEvents, RosterWindow, Presence, XMLTag,
     ShellAPI, Registry,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
@@ -318,7 +319,11 @@ type
     _cli_show: string;
     _cli_status: string;
 
-    _controller: TExodusController;
+    // COM Interfaces for plugins
+    _com_controller: TExodusController;
+    _com_roster: TExodusRoster;
+    _com_ppdb: TExodusPPDB;
+
     _mutex: THandle;
 
     procedure presCustomPresClick(Sender: TObject);
@@ -382,7 +387,10 @@ type
     procedure PreModal(frm: TForm);
     procedure PostModal();
 
-    property ComController: TExodusController read _controller;
+    property COMController: TExodusController read _com_controller;
+    property COMRoster: TExodusRoster read _com_roster;
+    property COMPPDB: TExodusPPDB read _com_ppdb;
+    
     property RegisterController: TRegController read _regController; 
 
   end;
@@ -1014,7 +1022,11 @@ end;
     // setup the tray icon
     Self.setupTrayIcon();
     MainSession.setPresence(_cli_show, _cli_status, _cli_priority);
-    _controller := TExodusController.Create();
+
+    // create COM interfaces for plugins to use
+    _com_controller := TExodusController.Create();
+    _com_roster := TExodusRoster.Create();
+    _com_ppdb := TExodusPPDB.Create();
 
     {$ifdef TRACE_EXCEPTIONS}
     // Start Exception tracking
@@ -1750,7 +1762,7 @@ begin
     if (_tray_icon <> nil) then
         FreeAndNil(_tray_icon);
 
-    // NB: The _controller goes away via RefCounts & COM madness.
+    // NB: The _com_controller goes away via RefCounts & COM madness.
 
 end;
 
@@ -2956,7 +2968,7 @@ end;
 procedure TfrmExodus.mnuPluginDummyClick(Sender: TObject);
 begin
     // call the COM Controller
-    _controller.fireMenuClick(Sender);
+    _com_controller.fireMenuClick(Sender);
 end;
 
 initialization
