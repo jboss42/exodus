@@ -91,7 +91,6 @@ Page custom SetCustomShell ;Custom page
 !insertmacro MUI_LANGUAGE "English"
 
 ReserveFile "notify.ini"
-;ReserveFile "finish.ini"
 !insertmacro MUI_RESERVEFILE_INSTALLOPTIONS
 
 ; The stuff to install
@@ -132,10 +131,11 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
 !else
     File ..\richupd.exe
 !endif
-    WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Runonce \
-        "Exodus-Setup" "$CMDLINE"
-    Exec $INSTDIR\richupd.exe
-    Quit
+    ;WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Runonce \
+    ;    "Exodus-Setup" "$CMDLINE"
+    ExecWait "$INSTDIR\richupd.exe /Q"
+    SetRebootFlag true
+    
   lbl_reportVer:
     DetailPrint "Richedit version ok."
     
@@ -165,17 +165,46 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
 !else
     File ..\50comupd.exe
 !endif
-    WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Runonce \
-        "Exodus-Setup" "$CMDLINE"
-    Exec $INSTDIR\50comupd.exe
-    Quit
+    ;WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Runonce \
+    ;    "Exodus-Setup" "$CMDLINE"
+    ExecWait "$INSTDIR\50comupd.exe /Q"
+    SetRebootFlag true
+
   com_reportVer:
     DetailPrint "COM control version ok."
     
     ; delete any leftover 50comupd.exe file.  This should not error
     ; if the file doesn't exist.
     Delete $INSTDIR\50comupd.exe
-
+    
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ; Check for Win95, and no Winsock2
+    Call GetWindowsVersion
+    Pop $R0
+    ; at this point $R0 is "95" or "NT 4.0"
+    StrCmp $R0 "95" win95 winsock_done
+  win95:
+    IfFileExists $SYSDIR\WS2_32.DLL winsock_done 
+    DetailPrint "Running Windows 95 without Winsock2.  Upgrading."
+!ifndef NO_NETWORK
+    ; BRANDING: change this URL
+    NSISdl::download "${HOME_URL}/W95ws2setup.exe" $INSTDIR\W95ws2setup.exe
+    Pop $R0
+    StrCmp $R0 "success" lbl_exec_winsock2
+    Abort "Error downloading com control library"
+  lbl_exec_winsock2:
+!else
+    File ..\W95ws2setup.exe
+!endif
+    ;WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Runonce \
+    ;    "Exodus-Setup" "$CMDLINE"
+    ExecWait "$INSTDIR\W95ws2setup.exe /Q"
+    SetRebootFlag true
+        
+  winsock_done:
+    DetailPrint "Winsock version ok."
+    Delete $INSTDIR\W95ws2setup.exe
+    
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    
     ; Setup stuff based on custom Shell page
     Push $CMDLINE
@@ -573,6 +602,84 @@ Function StrStr
     Exch $1
 FunctionEnd
 
+; GetWindowsVersion
+ ;
+ ; Based on Yazno's function, http://yazno.tripod.com/powerpimpit/
+ ; Returns on top of stack
+ ;
+ ; Windows Version (95, 98, ME, NT x.x, 2000, XP, .NET Server)
+ ; or
+ ; '' (Unknown Windows Version)
+ ;
+ ; Usage:
+ ;   Call GetWindowsVersion
+ ;   Pop $R0
+ ;   ; at this point $R0 is "NT 4.0" or whatnot
+
+ Function GetWindowsVersion
+   Push $R0
+   Push $R1
+   ReadRegStr $R0 HKLM "SOFTWARE\Microsoft\Windows NT\CurrentVersion" CurrentVersion
+   StrCmp $R0 "" 0 lbl_winnt
+   ; we are not NT.
+   ReadRegStr $R0 HKLM SOFTWARE\Microsoft\Windows\CurrentVersion VersionNumber
+
+   StrCpy $R1 $R0 1
+   StrCmp $R1 '4' 0 lbl_error
+
+   StrCpy $R1 $R0 3
+
+   StrCmp $R1 '4.0' lbl_win32_95
+   StrCmp $R1 '4.9' lbl_win32_ME lbl_win32_98
+
+   lbl_win32_95:
+     StrCpy $R0 '95'
+   Goto lbl_done
+
+   lbl_win32_98:
+     StrCpy $R0 '98'
+   Goto lbl_done
+
+   lbl_win32_ME:
+     StrCpy $R0 'ME'
+   Goto lbl_done
+
+   lbl_winnt:
+
+     StrCpy $R1 $R0 1
+
+     StrCmp $R1 '3' lbl_winnt_x
+     StrCmp $R1 '4' lbl_winnt_x
+
+     StrCpy $R1 $R0 3
+
+     StrCmp $R1 '5.0' lbl_winnt_2000
+     StrCmp $R1 '5.1' lbl_winnt_XP
+     StrCmp $R1 '5.2' lbl_winnt_dotNET lbl_error
+
+     lbl_winnt_x:
+       StrCpy $R0 "NT $R0" 6
+     Goto lbl_done
+
+     lbl_winnt_2000:
+       Strcpy $R0 '2000'
+     Goto lbl_done
+
+     lbl_winnt_XP:
+       Strcpy $R0 'XP'
+     Goto lbl_done
+
+     lbl_winnt_dotNET:
+       Strcpy $R0 '.NET Server'
+     Goto lbl_done
+
+   lbl_error:
+     Strcpy $R0 ''
+   lbl_done:
+   Pop $R1
+   Exch $R0
+ FunctionEnd
+
 Function DownloadPlugin
     Exch $1
 
@@ -647,3 +754,4 @@ Function SetCustomShell
     Pop $R0
 
 FunctionEnd
+
