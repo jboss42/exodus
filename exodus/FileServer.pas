@@ -98,6 +98,8 @@ end;
 destructor TExodusFileServer.Destroy();
 begin
     //
+    if (MainSession <> nil) then
+        MainSession.UnRegisterCallback(_cb);
     _server.Free();
     _filelist.Free();
 end;

@@ -218,7 +218,8 @@ begin
     bring this window to the top of the z-order
     }
 
-    if ((not Application.Active) and (not _top)) then
+    // if ((not Application.Active) and (not _top)) then
+    if (not _top) then
         // if the application is not active, don't bring the window to the top.
         msg.WindowPos^.flags := msg.WindowPos^.flags or SWP_NOZORDER;
 

@@ -200,7 +200,7 @@ type
     procedure RemoveGroupNode(node: TTreeNode);
     procedure RemoveEmptyGroups();
     procedure ResetPanels;
-    procedure DoShowHint(var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
+    // procedure DoShowHint(var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
     procedure ChangeStatusImage(idx: integer);
     procedure showAniStatus();
     procedure DrawNodeText(Node: TTreeNode; State: TCustomDrawState; c1, c2: Widestring);
@@ -334,8 +334,8 @@ begin
     if (_adURL <> '') then
         imgAd.Cursor := crHandPoint;
 
-    Application.ShowHint := true;
-    Application.OnShowHint := DoShowHint;
+    //Application.ShowHint := true;
+    //Application.OnShowHint := DoShowHint;
 end;
 
 {---------------------------------------}
@@ -363,17 +363,21 @@ begin
 end;
 
 {---------------------------------------}
+(*
 procedure TfrmRosterWindow.DoShowHint(var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
 var
     c: TControl;
     f: TForm;
 begin
     // show a hint..
+    CanShow := false;
     c := HintInfo.HintControl;
     if (c.Owner is TForm) then
         f := TForm(c.Owner)
     else
         exit;
+
+    exit;
 
     {
     This is kind of hackish because the application can only
@@ -386,16 +390,18 @@ begin
         // Tweak the hint properties for the roster,
         // this allows us to display custom hint text
         // which is set in the MouseMove event.
+        CanShow := true;
         HintInfo.ReshowTimeout := 500;
-        HintInfo.
-        HintStr := _hint_text;
+        HintInfo.HintStr := _hint_text;
     end
     else if ((f is TfrmRoom) and (c is TTreeView)) then begin
         // this is a TC room
+        CanShow := true;
         HintInfo.ReshowTimeout := 500;
         HintStr := TfrmRoom(f).HintText;
     end;
 end;
+*)
 
 {---------------------------------------}
 procedure TfrmRosterWindow.showAniStatus();
@@ -1277,8 +1283,10 @@ begin
         _hint_text := ri.jid.full + ': ' + sGrpOffline
     else
         _hint_text := ri.jid.full + ': ' + p.Status;
-    if _hint_text = TreeRoster.Hint then exit;
-    TreeRoster.Hint := _hint_text;
+
+    if _hint_text = treeRoster.Hint then exit;
+    treeRoster.Hint := _hint_text;
+    Application.CancelHint;
 end;
 
 {---------------------------------------}

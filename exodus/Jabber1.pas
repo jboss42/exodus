@@ -2061,7 +2061,7 @@ begin
     ShellExecute(0, 'open', 'http://www.jabberstudio.org', '', '', SW_SHOW);
 end;
 
-
+{---------------------------------------}
 procedure TfrmExodus.SubmitExodusFeatureRequest1Click(Sender: TObject);
 begin
     // goto http://www.jabberstudio.org/projects/exodus/features/add.php
@@ -2093,7 +2093,7 @@ begin
     2: Show := 'away';
     3: Show := 'xa';
     4: Show := 'dnd';
-end;
+    end;
 
     Status := m.Caption;
     MainSession.setPresence(show, status, MainSession.Priority);
@@ -3093,17 +3093,19 @@ begin
     Result := CallNextHookEx(sExodusCWPHook, Code, wParam, lParam);
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.FormPaint(Sender: TObject);
 begin
     StopTrayAlert();
 end;
 
+{---------------------------------------}
 function TfrmExodus.isMinimized(): boolean;
 begin
     Result := (_hidden) or (Self.Windowstate = wsMinimized);
 end;
 
-
+{---------------------------------------}
 procedure TfrmExodus.mnuRegistrationClick(Sender: TObject);
 var
     f: TfrmRegister;
