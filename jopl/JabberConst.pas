@@ -21,7 +21,7 @@ unit JabberConst;
 
 interface
 uses
-    SysUtils, XMLTag;
+    SysUtils, XMLTag, RegExpr;
 
 const
     XMLNS_AUTH       = 'jabber:iq:auth';
@@ -80,6 +80,9 @@ var
     XP_XDISPLAY: TXPLite;
     XP_XROSTER: TXPLite;
 
+    REGEX_URL: TRegExpr;
+    REGEX_CRLF: TRegExpr;
+
 implementation
 
 initialization
@@ -96,6 +99,16 @@ initialization
     XP_XDISPLAY := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XEVENT + '"]/displayed');
     XP_XROSTER := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XROSTER + '"]');
 
+    REGEX_URL := TRegExpr.Create();
+    // http://foo, you see
+    // http://bar. this is some text
+    REGEX_URL.expression := '(https?|ftp|xmpp)://[^ "'''#$D#$A#$9']+';
+    REGEX_URL.Compile();
+
+    REGEX_CRLF := TRegExpr.Create();
+    REGEX_CRLF.expression := '('#$D'?'#$A'|'#$D')';
+    REGEX_CRLF.Compile();
+
 finalization
     XP_XOOB.Free();
     XP_MSGDELAY.Free();
@@ -106,7 +119,7 @@ finalization
     XP_CONFINVITE.Free();
     XP_MUCINVITE.Free();
     XP_MSGXDATA.Free();
-    
 
+    REGEX_URL.Free();
+    REGEX_CRLF.Free();    
 end.
- 
