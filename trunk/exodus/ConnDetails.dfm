@@ -108,10 +108,10 @@ object frmConnDetails: TfrmConnDetails
     Top = 65
     Width = 252
     Height = 240
-    ActivePage = tbsSocket
+    ActivePage = tbsHttp
     Align = alClient
     Style = tsFlatButtons
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 2
     object tbsSocket: TTabSheet
       Caption = 'tbsSocket'
@@ -279,6 +279,13 @@ object frmConnDetails: TfrmConnDetails
         Height = 13
         Alignment = taRightJustify
         Caption = 'Poll Time:'
+      end
+      object Label5: TLabel
+        Left = 122
+        Top = 31
+        Width = 40
+        Height = 13
+        Caption = 'seconds'
       end
       object txtURL: TEdit
         Left = 68

@@ -72,6 +72,7 @@ type
     txtSocksUsername: TEdit;
     txtSocksPassword: TEdit;
     Bevel1: TBevel;
+    Label5: TLabel;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure chkSocksAuthClick(Sender: TObject);
     procedure cboSocksTypeChange(Sender: TObject);
@@ -265,7 +266,7 @@ procedure TfrmConnDetails.SetHttp(profile: TJabberProfile);
 begin
     with profile do begin
         txtURL.Text := URL;
-        txtTime.Text := IntToStr(Poll);
+        txtTime.Text := FloatToStr(Poll / 1000.0);
         cboProxyApproach.ItemIndex := ProxyApproach;
         cboProxyApproachChange(cboProxyApproach);
         txtProxyHost.Text := ProxyHost;
@@ -281,7 +282,7 @@ procedure TfrmConnDetails.GetHttp(var profile: TJabberProfile);
 begin
     with profile do begin
         URL := txtURL.Text;
-        Poll := strToIntDef(txtTime.Text, 30);
+        Poll := Trunc(strToFloatDef(txtTime.Text, 30) * 1000);
         ProxyApproach := cboProxyApproach.ItemIndex ;
         ProxyHost := txtProxyHost.Text;
         ProxyPort := StrToIntDef(txtProxyPort.Text, 0);
