@@ -1,6 +1,6 @@
 object frmBaseChat: TfrmBaseChat
-  Left = 331
-  Top = 167
+  Left = 356
+  Top = 293
   Width = 388
   Height = 313
   Color = clBtnFace
@@ -129,7 +129,6 @@ object frmBaseChat: TfrmBaseChat
       OnKeyPress = MsgListKeyPress
       OnMouseUp = MsgListMouseUp
       OnURLClick = MsgListURLClick
-      AutoVerbMenu = False
       InputFormat = ifUnicode
       OutputFormat = ofRTF
       SelectedInOut = False
@@ -230,6 +229,7 @@ object frmBaseChat: TfrmBaseChat
         end>
       LangOptions = [loAutoFont]
       Language = 1033
+      PopupMenu = popOut
       ScrollBars = ssVertical
       ShowSelectionBar = False
       TabOrder = 0
@@ -238,6 +238,7 @@ object frmBaseChat: TfrmBaseChat
       OnKeyDown = MsgOutKeyDown
       OnKeyPress = MsgOutKeyPress
       OnKeyUp = MsgOutKeyUp
+      AutoVerbMenu = False
       InputFormat = ifUnicode
       OutputFormat = ofUnicode
       SelectedInOut = False
