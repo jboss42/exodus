@@ -1,6 +1,6 @@
 inherited frmPrefPresence: TfrmPrefPresence
-  Left = 448
-  Top = 149
+  Left = 266
+  Top = 169
   Caption = 'frmPrefPresence'
   ClientHeight = 433
   ClientWidth = 349
@@ -196,6 +196,12 @@ inherited frmPrefPresence: TfrmPrefPresence
       ItemHeight = 13
       TabOrder = 2
       OnChange = txtCPTitleChange
+      Items.WideStrings = (
+        'Free to Chat'
+        'Available'
+        'Away'
+        'Xtended Away'
+        'Do Not Disturb')
     end
     object txtCPPriority: TTntEdit
       Left = 88
