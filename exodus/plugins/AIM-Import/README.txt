@@ -1,1 +1,0 @@
-Import contacts from AOL Instant Messenger.
