@@ -3,7 +3,6 @@ inherited frmJud: TfrmJud
   BorderIcons = [biSystemMenu, biMaximize]
   BorderStyle = bsSizeable
   Caption = 'Jabber Search'
-  DefaultMonitor = dmDesktop
   OldCreateOrder = True
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
@@ -51,7 +50,7 @@ inherited frmJud: TfrmJud
   end
   inherited Tabs: TPageControl
     Width = 409
-    ActivePage = TabSheet4
+    ActivePage = TabSheet3
     inherited TabSheet1: TTabSheet
       object lblSelect: TTntLabel
         Left = 0
@@ -80,7 +79,7 @@ inherited frmJud: TfrmJud
       object lblWait: TTntLabel
         Left = 0
         Top = 0
-        Width = 179
+        Width = 401
         Height = 13
         Align = alTop
         Caption = 'Please wait. Contacting search agent:'
@@ -102,7 +101,7 @@ inherited frmJud: TfrmJud
       object lblInstructions: TTntLabel
         Left = 0
         Top = 0
-        Width = 204
+        Width = 401
         Height = 13
         Align = alTop
         Caption = 'Fill in the search criteria to find contacts on.'
@@ -112,7 +111,7 @@ inherited frmJud: TfrmJud
         Left = 0
         Top = 13
         Width = 401
-        Height = 214
+        Height = 212
         Align = alClient
         BevelInner = bvNone
         BevelOuter = bvNone
