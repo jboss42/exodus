@@ -13,9 +13,9 @@ inherited frmChat: TfrmChat
   TextHeight = 18
   inherited Panel3: TPanel
     Top = 24
-    Height = 229
+    Height = 224
     inherited MsgList: TExRichEdit
-      Height = 221
+      Height = 216
       PlainRTF = True
     end
   end
@@ -70,21 +70,22 @@ inherited frmChat: TfrmChat
         Height = 20
         Align = alLeft
         Caption = ' Foo '#32072#32073#32074#32075' '
-        Color = clBtnFace
-        ParentColor = False
         Caption_UTF7 = ' Foo +fUh9SX1KfUs '
       end
-      object lblJID: TTntStaticText
+      object lblJID: TTntLabel
         Left = 106
         Top = 0
-        Width = 39
+        Width = 35
         Height = 20
         Cursor = crHandPoint
         Align = alLeft
         Caption = '<JID>'
-        Color = clBtnFace
-        ParentColor = False
-        TabOrder = 0
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
         OnClick = lblJIDClick
       end
     end

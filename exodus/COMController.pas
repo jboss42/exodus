@@ -124,6 +124,7 @@ type
     destructor Destroy(); override;
 
     procedure fireNewChat(jid: WideString; ExodusChat: IExodusChat);
+    procedure fireNewRoom(jid: Widestring; ExodusChat: IExodusChat);
     procedure fireMenuClick(Sender: TObject);
     procedure fireRosterMenuClick(Sender: TObject);
   end;
@@ -367,6 +368,15 @@ var
 begin
     for i := 0 to plugs.count - 1 do
         TPlugin(plugs.Objects[i]).com.NewChat(jid, ExodusChat);
+end;
+
+{---------------------------------------}
+procedure TExodusController.fireNewRoom(jid: Widestring; ExodusChat: IExodusChat);
+var
+    i: integer;
+begin
+    for i := 0 to plugs.Count - 1 do
+        TPlugin(plugs.Objects[i]).com.NewRoom(jid, ExodusChat);
 end;
 
 {---------------------------------------}

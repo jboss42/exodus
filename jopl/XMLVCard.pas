@@ -179,11 +179,16 @@ begin
     else
         fax := true;
 
-    n := tag.GetFirstTag('NUM');
-    if (n <> nil) then
-        number := n.Data
+    n := tag.GetFirstTag('NUMBER');
+    if (n = nil) then begin
+        n := tag.GetFirstTag('NUM');
+        if (n = nil) then
+            number := tag.Data
+        else
+            number := n.Data
+    end
     else
-        number := tag.Data;
+        number := n.Data;
 end;
 
 {---------------------------------------}
@@ -197,7 +202,7 @@ begin
     else
         tag.AddTag('FAX');
 
-    tag.AddBasicTag('NUM', number);
+    tag.AddBasicTag('NUMBER', number);
 end;
 
 {---------------------------------------}

@@ -5,7 +5,7 @@ unit COMChatController;
 interface
 
 uses
-    Session, ChatController, ChatWin, Chat,
+    Session, ChatController, ChatWin, Chat, Room, Unicode,  
     Classes, ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
 
 type
@@ -19,22 +19,27 @@ type
       safecall;
     function getMagicInt(Part: ChatParts): Integer; safecall;
     procedure RemoveContextMenu(const ID: WideString); safecall;
+    procedure AddMsgOut(const Value: WideString); safecall;
     { Protected declarations }
 
   public
     constructor Create();
     destructor Destroy(); override;
 
+    procedure setRoom(room: TfrmRoom);
     procedure setChatSession(chat_session: TChatController);
     procedure fireMsgKeyPress(Key: Char);
     procedure fireBeforeMsg(var body: Widestring);
     function  fireAfterMsg(var body: WideString): Widestring;
     procedure fireRecvMsg(body, xml: Widestring);
+    procedure fireMenuClick(Sender: TObject);
     procedure fireClose();
 
   private
+    _room: TfrmRoom;
     _chat: TChatController;
     _plugs: TList;
+    _menu_items: TWidestringlist;
 
   end;
 
@@ -45,13 +50,14 @@ end;
 
 implementation
 
-uses ComServ;
+uses ComServ, Menus, SysUtils;
 
 {---------------------------------------}
 constructor TExodusChat.Create();
 begin
     inherited Create();
     _plugs := TList.Create();
+    _menu_items := TWidestringlist.Create();
 end;
 
 {---------------------------------------}
@@ -60,19 +66,26 @@ var
     i: integer;
 begin
     for i := 0 to _plugs.Count - 1 do begin
-        // todo: send chat plugins a shutdown signal
+        TChatPlugin(_plugs[i]).com.onClose();
         TChatPlugin(_plugs[i]).Free();
     end;
     _plugs.Clear();
     _plugs.Free();
-
     inherited Destroy();
 end;
 
 {---------------------------------------}
 procedure TExodusChat.setChatSession(chat_session: TChatController);
 begin
+    _room := nil;
     _chat := chat_session;
+end;
+
+{---------------------------------------}
+procedure TExodusChat.setRoom(room: TfrmRoom);
+begin
+  _chat := nil;
+  _room := room;
 end;
 
 {---------------------------------------}
@@ -124,23 +137,54 @@ begin
 end;
 
 {---------------------------------------}
+procedure TExodusChat.fireMenuClick(Sender: TObject);
+var
+    i: integer;
+begin
+ {
+    for i := 0 to _plugs.Count -1 do
+        TChatPlugin(_plugs[i]).com.onMenu(id);
+ }
+end;
+
+{---------------------------------------}
 function TExodusChat.Get_jid: WideString;
 begin
-    Result := _chat.JID;
+    if (_chat <> nil) then Result := _chat.JID
+    else Result := _room.getJid;
 end;
 
 {---------------------------------------}
 function TExodusChat.AddContextMenu(const Caption: WideString): WideString;
+var
+    id: Widestring;
+    mi: TMenuItem;
 begin
-    // todo: plugins
-    // add a menu to the window
-    // return an "ID" for this menu/window combo
+    // add a new TMenuItem to the Plugins menu
+    if (_room <> nil) then begin
+        mi := TMenuItem.Create(_room);
+        mi.OnClick := _room.pluginMenuClick;
+    end
+    else begin
+        mi := TMenuItem.Create(TfrmChat(_chat.window));
+        mi.OnClick := TfrmChat(_chat.window).pluginMenuClick;
+    end;
+
+    // xxx: frmExodus.mnuPlugins.Add(mi);
+    mi.Caption := caption;
+
+    id := 'plugin_' + IntToStr(_menu_items.Count);
+    _menu_items.AddObject(id, mi);
+    Result := id;
 end;
 
 {---------------------------------------}
 function TExodusChat.Get_MsgOutText: WideString;
 begin
-    Result := TfrmChat(_chat.window).MsgOut.Text;
+    if (_chat <> nil) then
+        Result := TfrmChat(_chat.window).MsgOut.Text
+    else
+        Result := _room.MsgOut.Text;
 end;
 
 {---------------------------------------}
@@ -177,17 +221,29 @@ var
 begin
     case Part of
     HWND_MsgInput: begin
-        Result := TfrmChat(_chat.window).MsgOut.Handle;
+        if (_chat <> nil) then
+            Result := TfrmChat(_chat.window).MsgOut.Handle
+        else
+            Result := _room.MsgOut.Handle;
     end;
     HWND_MsgOutput: begin
-        Result := TfrmChat(_chat.window).MsgList.Handle;
+        if (_chat <> nil) then
+            Result := TfrmChat(_chat.window).MsgList.Handle
+        else
+            Result := _room.MsgOut.Handle;
     end;
     Ptr_MsgInput: begin
-        p := @(TfrmChat(_chat.window).MsgOut);
+        if (_chat <> nil) then
+            p := @(TfrmChat(_chat.window).MsgOut)
+        else
+            p := @(_room.MsgOut);
         Result := integer(p);
     end;
     Ptr_MsgOutput: begin
-        p := @(TfrmChat(_chat.window).MsgList);
+        if (_chat <> nil) then
+            p := @(TfrmChat(_chat.window).MsgList)
+        else
+            p := @(_room.MsgList);
         Result := integer(p);
     end
     else
@@ -199,6 +255,16 @@ end;
 procedure TExodusChat.RemoveContextMenu(const ID: WideString);
 begin
     // remove this menu item.
+end;
+
+{---------------------------------------}
+procedure TExodusChat.AddMsgOut(const Value: WideString);
+begin
+    // add something to the RichEdit control
+    if (_chat <> nil) then
+        TfrmChat(_chat.window).MsgList.WideLines.Add(Value)
+    else
+        _room.MsgList.WideLines.Add(Value);
 end;
 
 initialization

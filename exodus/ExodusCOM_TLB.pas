@@ -12,7 +12,7 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 2/11/2003 7:23:08 AM from Type Library described below.
+// File generated on 2/11/2003 5:04:23 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -21,7 +21,7 @@ unit ExodusCOM_TLB;
 // Helpfile: 
 // HelpString: Exodus Library
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
+//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -313,6 +313,7 @@ type
     function UnRegister(ID: Integer): WordBool; safecall;
     function getMagicInt(Part: ChatParts): Integer; safecall;
     procedure RemoveContextMenu(const ID: WideString); safecall;
+    procedure AddMsgOut(const Value: WideString); safecall;
     property jid: WideString read Get_jid;
     property MsgOutText: WideString read Get_MsgOutText;
   end;
@@ -331,6 +332,7 @@ type
     function UnRegister(ID: Integer): WordBool; dispid 5;
     function getMagicInt(Part: ChatParts): Integer; dispid 6;
     procedure RemoveContextMenu(const ID: WideString); dispid 7;
+    procedure AddMsgOut(const Value: WideString); dispid 201;
   end;
 
 // *********************************************************************//
@@ -380,6 +382,7 @@ type
     procedure onContextMenu(const ID: WideString); safecall;
     procedure onRecvMessage(const Body: WideString; const xml: WideString); safecall;
     procedure onClose; safecall;
+    procedure onMenu(const ID: WideString); safecall;
   end;
 
 // *********************************************************************//
@@ -395,6 +398,7 @@ type
     procedure onContextMenu(const ID: WideString); dispid 4;
     procedure onRecvMessage(const Body: WideString; const xml: WideString); dispid 5;
     procedure onClose; dispid 6;
+    procedure onMenu(const ID: WideString); dispid 201;
   end;
 
 // *********************************************************************//
