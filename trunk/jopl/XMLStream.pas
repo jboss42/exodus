@@ -221,16 +221,25 @@ end;
 {---------------------------------------}
 procedure TParseThread.CleanUp();
 begin
+    {
+    NOTE: This method is called from descendant classes..
+    so it can't be removed despite that it's never
+    called in the parent class
+    }
     _indata.Free();
     _tag_parser.Free();
     _lock.Free();
     _domStack.Free();
 end;
 
-
 {---------------------------------------}
 procedure TParseThread.doMessage(msg: integer);
 begin
+    {
+    Send a message out to the main thread.
+    Calls DispatchMsg synchronized, so it'll
+    execute in the main VCL thread
+    }
     if (_stream = nil) then exit;
 
     _cur_msg.msg := WM_JABBER;
@@ -242,6 +251,8 @@ end;
 {---------------------------------------}
 procedure TParseThread.doMessageSync(msg: integer);
 begin
+    // Directly calls the DispatchMsg method w/out
+    // Synchronized, so it's executed in this thread.
     if (_stream = nil) then exit;
 
     _cur_msg.msg := WM_JABBER;
@@ -253,6 +264,7 @@ end;
 {---------------------------------------}
 procedure TParseThread.DispatchMsg;
 begin
+    // Send this message to the stream object
     assert(_stream <> nil, 'Trying to dispatch to a nil stream');
     _stream.Dispatch(_cur_msg);
 end;
@@ -277,8 +289,14 @@ procedure TParseThread.ParseTags(buff: Widestring);
 var
     c_tag: TXMLTag;
 begin
+    {
+    Called by handleBuffer. This sends the buffer, which
+    should contain a single XML fragement, into the parser
+    object and stores the XMLTag objects in the _domStack.
+    Tags are popped off this stack by the GetTag method
+    when the stream object asks for them.
+    }
     _tag_parser.ParseString(buff, _root_tag);
-
     repeat
         c_tag := _tag_parser.popTag();
         if (c_tag <> nil) then begin
@@ -294,7 +312,6 @@ end;
 {---------------------------------------}
 function TParseThread.getFullTag(buff: Widestring): Widestring;
 var
-    // pbuff: array of char;
     sbuff, r, stag, etag, tmps: Widestring;
     p, ls, le, e, l, ps, pe, ws, sp, tb, cr, nl, i: longint;
 begin
@@ -463,6 +480,7 @@ var
     cb: TXMLStreamCallback;
     l:  TSignalListener;
 begin
+    // Unregister a normal stream callback.
     for i := 0 to _callbacks.Count -1 do begin
         l := TSignalListener(_callbacks[i]);
         cb := TXMLStreamCallback(l.callback);
@@ -476,6 +494,7 @@ end;
 {---------------------------------------}
 procedure TXMLStream.DoDataCallbacks(send: boolean; data: Widestring);
 begin
+    // Call the "debug" event handler if it's been assigned
     if (Assigned(_data_event)) then
         _data_event(send, data);
 end;

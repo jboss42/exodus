@@ -70,6 +70,8 @@ type
         procedure SetResource(resource: string);
         procedure SetPort(port: integer);
 
+        procedure handleDisconnect();
+
         function GetUsername(): string;
         function GetPassword(): string;
         function GetServer(): string;
@@ -358,9 +360,13 @@ begin
     // Save the server side prefs and kill our connection.
     if (_stream = nil) then exit;
 
-    Prefs.SaveServerPrefs();
-    _stream.Send('<presence type="unavailable"/>');
-    _stream.Disconnect;
+    if (Self.Stream.Active) then begin
+        Prefs.SaveServerPrefs();
+        _stream.Send('<presence type="unavailable"/>');
+        _stream.Disconnect;
+        end
+    else
+        Self.handleDisconnect();
 
     _register := false;
 end;
@@ -390,6 +396,21 @@ begin
 end;
 
 {---------------------------------------}
+procedure TJabberSession.handleDisconnect();
+begin
+    // Clear the roster, ppdb and fire the callbacks
+    _dispatcher.DispatchSignal('/session/disconnected', nil);
+    ClearStringListObjects(Agents);
+    ppdb.Clear;
+    Roster.Clear;
+    Agents.Clear;
+    ppdb.Clear;
+
+    _stream.Free();
+    _stream := nil;
+end;
+
+{---------------------------------------}
 procedure TJabberSession.StreamCallback(msg: string; tag: TXMLTag);
 var
     tmps: string;
@@ -400,20 +421,13 @@ begin
         tmps := '<stream:stream to="' + Trim(Server) + '" xmlns="jabber:client" xmlns:stream="http://etherx.jabber.org/streams">';
         _stream.Send(tmps);
         end
-    else if msg = 'disconnected' then begin
-        // Clear the roster, ppdb and fire the callbacks
-        _dispatcher.DispatchSignal('/session/disconnected', nil);
-        ClearStringListObjects(Agents);
-        ppdb.Clear;
-        Roster.Clear;
-        Agents.Clear;
-        ppdb.Clear;
 
-        _stream.Free();
-        _stream := nil;
-        end
+    else if msg = 'disconnected' then
+        Self.handleDisconnect()
+
     else if msg = 'commerror' then
         _dispatcher.DispatchSignal('/session/commerror', nil)
+
     else if msg = 'xml' then begin
         // process XML
         // always fire debug
