@@ -27,7 +27,7 @@ uses
 
 //const EM_AUTOURLDETECT = WM_USER + 91;
 
-procedure DisplayMsg(Msg: TJabberMessage; Browser: TRichEdit);
+procedure DisplayMsg(Msg: TJabberMessage; RichEdit: TRichEdit);
 procedure DisplayPresence(txt: string; Browser: TRichEdit);
 
 function GetMsgHTML(Msg: TJabberMessage): string;
@@ -43,56 +43,67 @@ uses
     Session;
 
 {---------------------------------------}
-procedure DisplayMsg(Msg: TJabberMessage; Browser: TRichEdit);
+procedure DisplayMsg(Msg: TJabberMessage; RichEdit: TRichEdit);
 var
     txt: string;
     c: TColor;
     min, max, thumb: integer;
+    at_bottom: boolean;
 begin
     // add the message to the richedit control
+    with RichEdit do begin
+        GetScrollRange(Handle, SB_VERT, min, max);
+        thumb := GetScrollPos(Handle, SB_VERT);
+        // if the thumb is at the bottom, or we don't have a scrollbar yet,
+        // assume we're at the bottom
+        at_bottom := ((thumb >= max) or (max = 0));
+        end;
+
     txt := Msg.Body;
 
-    Browser.SelStart := Length(Browser.Lines.Text);
-    Browser.SelLength := 0;
+    RichEdit.SelStart := Length(RichEdit.Lines.Text);
+    RichEdit.SelLength := 0;
 
-    Browser.SelAttributes.Color := clGray;
-    Browser.SelText := '[' + formatdatetime('HH:MM',now) + ']';
+    RichEdit.SelAttributes.Color := clGray;
+    RichEdit.SelText := '[' + formatdatetime('HH:MM',now) + ']';
 
     if (Msg.Nick = '') then begin
         // Server generated msgs (mostly in TC Rooms)
         c := clGreen;
-        Browser.SelAttributes.Color := c;
-        Browser.SelText := ' ' + txt;
+        RichEdit.SelAttributes.Color := c;
+        RichEdit.SelText := ' ' + txt;
         end
 
     else if not Msg.Action then begin
+        // This is a normal message
         if Msg.isMe then
             // our own msgs
             c := TColor(MainSession.Prefs.getInt('color_me'))
         else
             // other person's msgs
             c := TColor(MainSession.Prefs.getInt('color_other'));
-        Browser.SelAttributes.Color := c;
-        Browser.SelText := '<' + Msg.nick + '> ';
-        Browser.SelAttributes.Color := TColor(MainSession.Prefs.getInt('font_color'));
-        Browser.SelText := txt;
-        end
-        
-    else begin
-        Browser.SelAttributes.Color := clPurple;
-        Browser.SelText := ' * ' + Msg.Nick + ' ' + Trim(txt);
-        end;
-    Browser.SelAttributes.Color := TColor(MainSession.Prefs.getInt('font_color'));
-    Browser.SelText := #13#10;
 
-    with Browser do begin
-        GetScrollRange(Handle, SB_VERT, min, max);
-        thumb := GetScrollPos(Handle, SB_VERT);
-        if ((thumb >= max) or ((thumb = 0) and ((max - Height) < 20))) then begin
-            SelStart := GetTextLen;
-            Perform(EM_SCROLLCARET, 0, 0);
-            end;
+        RichEdit.SelAttributes.Color := c;
+        RichEdit.SelText := '<' + Msg.nick + '> ';
+        RichEdit.SelAttributes.Color := TColor(MainSession.Prefs.getInt('font_color'));
+        RichEdit.SelText := txt;
+        end
+
+    else begin
+        // This is an action
+        RichEdit.SelAttributes.Color := clPurple;
+        RichEdit.SelText := ' * ' + Msg.Nick + ' ' + Trim(txt);
         end;
+
+    RichEdit.SelAttributes.Color := TColor(MainSession.Prefs.getInt('font_color'));
+    RichEdit.SelText := #13#10;
+
+    // AutoScroll the window
+    if (at_bottom) then with RichEdit do begin
+        SelStart := GetTextLen;
+        Perform(EM_SCROLLCARET, 0, 0);
+        end;
+
 end;
 
 {---------------------------------------}

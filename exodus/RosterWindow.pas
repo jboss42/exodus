@@ -78,6 +78,8 @@ type
     popGrpRename: TMenuItem;
     popGrpRemove: TMenuItem;
     popSendContacts: TMenuItem;
+    N4: TMenuItem;
+    NewGroup1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -620,6 +622,7 @@ var
     tmp_grps: TStringlist;
     show_online: boolean;
     show_offgrp: boolean;
+    exp_grpnode: boolean;
 begin
     // Render a specific roster item, with the given presence info.
 
@@ -627,6 +630,7 @@ begin
     show_online := MainSession.Prefs.getBool('roster_only_online');
     show_offgrp := MainSession.Prefs.getBool('roster_offline_group');
 
+    exp_grpnode := false;
 
     {
     OK, here we want to bail on some circumstances
@@ -735,9 +739,17 @@ begin
             // Make sure we have a node for this grp and keep
             // a pointer to the node in the Roster's grp list
             grp_node := TTreeNode(MainSession.Roster.GrpList.Objects[grp_idx]);
-            if (grp_node = nil) then
+            if (grp_node = nil) then begin
                 grp_node := RenderGroup(grp_idx);
+                end;
             end;
+
+        // Expand any grps that are not supposed to be collapsed
+        if ((not _FullRoster) and
+            (grp_node <> _offline) and
+            (_collapsed_grps.IndexOf(grp_node.Text) < 0)) then
+            exp_grpnode := true;
+
 
         // Now that we are sure we have a grp_node,
         // check to see if this node exists under it
@@ -774,10 +786,7 @@ begin
             end;
 
         cur_node.SelectedIndex := cur_node.ImageIndex;
-        {
-        if ((not _FullRoster) and (grp_node <> _offline)) then
-            grp_node.Expand(true);
-        }
+        if (exp_grpnode) then grp_node.Expand(true);
         end;
 
     {
@@ -1159,6 +1168,11 @@ var
     s_node: TTreeNode;
 begin
     // Drop the roster items onto the roster
+
+    // d_node   : the new group node
+    // d_grp    : the new group name
+    // s_node   : selected node we are changing (the thing that was dropped)
+
     d_node := treeRoster.GetNodeAt(X, Y);
     if d_node = nil then exit;
     if d_node.Data <> nil then begin
@@ -1180,6 +1194,10 @@ begin
                 end;
             end;
         end;
+
+    // Make sure d_grp is expanded if it's not in _collapsed_grps
+    if ((not d_node.expanded) and (_collapsed_grps.IndexOf(d_grp) < 0)) then
+        d_node.Expand(true);
 
 end;
 

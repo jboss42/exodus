@@ -12,7 +12,7 @@ inherited frmJUD: TfrmJUD
     Left = 0
     Top = 0
     Width = 164
-    Height = 405
+    Height = 400
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 0
@@ -66,7 +66,7 @@ inherited frmJUD: TfrmJUD
     end
     object pnlBottom: TPanel
       Left = 0
-      Top = 371
+      Top = 366
       Width = 164
       Height = 34
       Align = alBottom
@@ -95,7 +95,7 @@ inherited frmJUD: TfrmJUD
       Left = 0
       Top = 276
       Width = 164
-      Height = 95
+      Height = 90
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
@@ -174,7 +174,7 @@ inherited frmJUD: TfrmJUD
     Left = 164
     Top = 0
     Width = 257
-    Height = 405
+    Height = 400
     Align = alClient
     Columns = <>
     MultiSelect = True
@@ -192,15 +192,18 @@ inherited frmJUD: TfrmJUD
     end
     object popProfile: TMenuItem
       Caption = 'View Profile'
+      OnClick = popProfileClick
     end
     object N1: TMenuItem
       Caption = '-'
     end
     object popChat: TMenuItem
       Caption = 'Start Chat'
+      OnClick = popChatClick
     end
     object popMessage: TMenuItem
       Caption = 'Send Message'
+      OnClick = popMessageClick
     end
   end
 end

@@ -1706,5 +1706,12 @@ object frmRosterWindow: TfrmRosterWindow
       Caption = 'Remove'
       OnClick = popGrpRemoveClick
     end
+    object N4: TMenuItem
+      Caption = '-'
+    end
+    object NewGroup1: TMenuItem
+      Caption = 'New Group'
+      OnClick = popAddGroupClick
+    end
   end
 end
