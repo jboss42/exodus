@@ -353,7 +353,7 @@ end;
 {---------------------------------------}
 procedure TJabberSession.FireEvent(event: string; tag: TXMLTag; const p: TJabberPres);
 begin
-    // dispatch a presence signal
+    // dispatch a presence signal directly
     _presSignal.Invoke(event, tag, p);
 end;
 
