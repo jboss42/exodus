@@ -141,7 +141,6 @@ type
 
     function getNodeType(node: TTreeNode = nil): integer;
     function getSelectedContacts(online: boolean = true): TList;
-    procedure ClearNodes;
     procedure ExpandNodes;
     procedure RenderNode(ritem: TJabberRosterItem; p: TJabberPres);
     procedure RenderBookmark(bm: TJabberBookmark);
@@ -162,6 +161,7 @@ type
     DockOffset: longint;
     Docked: boolean;
 
+    procedure ClearNodes;
     procedure Redraw;
     procedure DockRoster;
     procedure FloatRoster;
@@ -235,8 +235,10 @@ begin
     if MainSession <> nil then with MainSession do begin
         UnRegisterCallback(_rostercb);
         UnRegisterCallback(_prescb);
-        // UnRegisterCallback(_sessionCB);
         end;
+
+    _collapsed_grps.Free();
+
     Action := caFree;
 end;
 
@@ -281,11 +283,10 @@ begin
     if event = '/session/disconnected' then begin
         ClearNodes();
         ShowPresence('offline');
-        //pnlTasks.Visible := false;
+        MainSession.Roster.GrpList.Clear();
         end
     else if event = '/session/connected' then begin
         ShowPresence('online');
-        //pnlTasks.Visible := true;
         ResetPanels;
         end
     else if event = '/session/presence' then begin
@@ -421,7 +422,6 @@ begin
         // remove all item pointers to tree nodes
         for i := 0 to Count - 1 do begin
             ri := TJabberRosterItem(Objects[i]);
-
             node_list := TList(ri.Data);
             if (node_list <> nil) then node_list.Clear;
             end;
@@ -564,6 +564,8 @@ begin
         if ritem <> nil then
             RenderNode(ritem, p);
         end;
+
+    tmp_jid.Free();
 end;
 
 {---------------------------------------}

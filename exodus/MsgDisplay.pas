@@ -56,7 +56,7 @@ uses
     Clipbrd,
     Jabber1,
     ExtCtrls, Dialogs,
-    Session;
+    XMLUtils, Session;
 
 {---------------------------------------}
 procedure DisplayMsg(Msg: TJabberMessage; RichEdit: TRichEdit);
@@ -524,6 +524,9 @@ initialization
     emoticon_list := THashedStringList.Create();
 
 finalization
+    if (emoticon_regex <> nil) then
+        emoticon_regex.Free();
+    ClearStringListObjects(emoticon_list);
     emoticon_list.Free();
 
 end.

@@ -98,7 +98,7 @@ type
     // This should never be implemented.
     TSignal = class(TStringList)
     private
-        _change_list: TQueue;
+        _change_list: TObjectQueue;
     protected
         invoking: boolean;
         Dispatcher: TSignalDispatcher;      // pointer to the disp that owns us
@@ -111,7 +111,7 @@ type
         constructor Create();
         destructor Destroy; override;
 
-        property change_list: TQueue read _change_list;
+        property change_list: TObjectQueue read _change_list;
     end;
 
     {---------------------------------------}
@@ -155,14 +155,18 @@ var
 {------------------------------------------------------------------------------}
 constructor TSignalDispatcher.Create();
 begin
-    inherited Create();
+    inherited;
     _lid_info := TStringList.Create();
 end;
 
 {---------------------------------------}
 destructor TSignalDispatcher.Destroy();
 begin
+    ClearStringListObjects(_lid_info);
+    ClearStringListObjects(Self);
+
     _lid_info.Free();
+
     inherited Destroy;
 end;
 
@@ -257,21 +261,24 @@ end;
 {------------------------------------------------------------------------------}
 constructor TSignalListener.Create;
 begin
+    inherited;
+
     cb_id := _lid;
     inc(_lid);
 end;
 
 constructor TSignal.Create();
 begin
-    inherited Create;
+    inherited;
 
-    _change_list := TQueue.Create();
+    _change_list := TObjectQueue.Create();
     Dispatcher := nil;
 end;
 
 {---------------------------------------}
 destructor TSignal.Destroy;
 begin
+    ClearStringListObjects(Self);
     Dispatcher := nil;
     _change_list.Free();
 
@@ -400,7 +407,8 @@ end;
 {------------------------------------------------------------------------------}
 constructor TPacketListener.Create;
 begin
-    inherited Create;
+    inherited;
+
     xp := TXPLite.Create;
 end;
 

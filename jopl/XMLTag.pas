@@ -54,8 +54,8 @@ type
     pTag: TXMLTag;
 
     constructor Create; overload; override;
-    constructor Create(tagname: string); reintroduce; overload;
-    constructor Create(tag: TXMLTag); reintroduce; overload;
+    constructor Create(tagname: string); reintroduce; overload; virtual;
+    constructor Create(tag: TXMLTag); reintroduce; overload; virtual;
     destructor Destroy; override;
 
     function AddTag(tagname: string): TXMLTag;
@@ -72,6 +72,7 @@ type
     function QueryTags(key: string): TXMLTagList;
     function GetFirstTag(key: string): TXMLTag;
     function GetBasicText(key: string): string;
+    function TagExists(key: string): boolean;
 
     function Data: string;
     function Namespace: string;
@@ -106,8 +107,6 @@ type
   TXPLite = class
   private
     Matches: TStringList;
-
-    Tags: TStringList;
     attr: string;
     value: string;
     function GetString: string;
@@ -150,7 +149,7 @@ end;
 constructor TXMLTag.Create;
 begin
     // Create the object
-    inherited Create;
+    inherited;
 
     NodeType := xml_tag;
     _AttrList := TAttrList.Create();
@@ -163,23 +162,14 @@ end;
 constructor TXMLTag.Create(tagname: string);
 begin
     //
-    inherited Create;
-
-    _AttrList := TAttrList.Create();
-    _Children := TXMLNodeList.Create(true);
-    ptag := nil;
+    Create();
     Name := tagname;
 end;
 
 constructor TXMLTag.Create(tag: TXMLTag);
 begin
     //
-    inherited Create();
-
-    _AttrList := TAttrList.Create();
-    _Children := TXMLNodeList.Create(true);
-
-    ptag := nil;
+    Create();
     Self.AssignTag(tag);
 end;
 
@@ -190,6 +180,7 @@ begin
     _AttrList.Free;
     _Children.Clear;
     _Children.Free;
+
     inherited Destroy;
 end;
 
@@ -398,6 +389,12 @@ begin
 end;
 
 {---------------------------------------}
+function TXMLTag.TagExists(key: string): boolean;
+begin
+    Result := (GetFirstTag(key) <> nil);
+end;
+
+{---------------------------------------}
 function TXMLTag.GetFirstTag(key: string): TXMLTag;
 var
     sname: string;
@@ -432,19 +429,17 @@ function TXMLTag.Data: string;
 var
     i: integer;
     n: TXMLNode;
-    r: string;
 begin
     // add all CData together
-    r := '';
+    Result := '';
     for i := 0 to _Children.Count - 1 do begin
         n := TXMLNode(_Children[i]);
         if (n.NodeType = xml_CDATA) then begin
-            r := r + TXMLCData(n).Data + ' ';
+            Result := Result + TXMLCData(n).Data + ' ';
             break;
             end;
         end;
-    if r <> '' then r := Trim(r);
-    Result := r;
+    if Result <> '' then Result := Trim(Result);
 end;
 
 {---------------------------------------}
@@ -511,6 +506,8 @@ begin
         c.AssignTag(tags[i]);
         end;
 
+    tags.Free();
+
     Self.AddCData(xml.Data);
 
     for i := 0 to xml._AttrList.Count - 1 do
@@ -522,7 +519,8 @@ end;
 {------------------------------------------------------------------------------}
 constructor TXPMatch.Create;
 begin
-    inherited Create;
+    inherited;
+    
     _AttrList := TAttrList.Create();
     tag_name := '';
     get_cdata := false;
@@ -533,6 +531,7 @@ destructor TXPMatch.Destroy;
 begin
     //
     _AttrList.Free;
+
     inherited Destroy;
 end;
 
@@ -627,8 +626,8 @@ end;
 {---------------------------------------}
 constructor TXPLite.Create;
 begin
-    inherited Create;
-    tags := TStringList.Create;
+    inherited;
+
     attr := '';
     value := '';
 
@@ -638,7 +637,8 @@ end;
 {---------------------------------------}
 destructor TXPLite.Destroy;
 begin
-    tags.Free;
+    ClearStringListObjects(Matches);
+    Matches.Free;
 
     inherited Destroy;
 end;
@@ -761,6 +761,8 @@ begin
         if (add) then
             r.Add(t);
         end;
+    tl.Free();
+    
     Result := r;
 end;
 
@@ -853,15 +855,25 @@ end;
 {---------------------------------------}
 function TXPLite.GetString: string;
 var
-    i: integer;
+    m: TXPMatch;
+    ca: TAttr;
+    a, i: integer;
 begin
     // get the xplite string representation
     Result := '';
-    for i := 0 to tags.Count - 1 do
-        Result := Result + '/' + tags[i];
 
-    if ((attr <> '') and (value <> '')) then
-        Result := Result + '@' + attr + '="' + value + '"';
+    for i := 0 to Matches.Count - 1 do begin
+        m := TXPMatch(Matches.Objects[i]);
+        Result := Result + '/' + m.tag_name;
+
+        for a := 0 to m.AttrCount - 1 do begin
+            ca := m.getAttribute(a);
+            if (ca.Value = '') then
+                Result := Result + '@' + ca.Name
+            else
+                Result := Result + '[@' + ca.Name + '="' + ca.Value + '"]';
+            end;
+        end;
 end;
 
 end.

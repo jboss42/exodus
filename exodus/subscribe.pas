@@ -61,16 +61,14 @@ procedure TfrmSubscribe.frameButtons1btnOKClick(Sender: TObject);
 var
     sjid, snick, sgrp: string;
     p1: TJabberPres;
-    tmp_jid: TJabberID;
 begin
     // send a subscribed and possible add..
     sjid := lblJID.Caption;
     snick := txtNickname.Text;
     sgrp := cboGroup.Text;
 
-    tmp_jid := TJabberID.Create(sjid);
     p1 := TJabberPres.Create;
-    p1.toJID := tmp_jid;
+    p1.toJID := TJabberID.Create(sjid);
     p1.PresType := 'subscribed';
     MainSession.SendTag(p1);
 
@@ -82,14 +80,12 @@ end;
 
 procedure TfrmSubscribe.frameButtons1btnCancelClick(Sender: TObject);
 var
-    tmp_jid: TJabberID;
     p: TJabberPres;
     sjid: string;
 begin
     sjid := lblJID.Caption;
-    tmp_jid := TJabberID.Create(sjid);
     p := TJabberPres.Create;
-    p.toJID := tmp_jid;
+    p.toJID := TJabberID.Create(sjid);
     p.PresType := 'unsubscribed';
 
     MainSession.SendTag(p);

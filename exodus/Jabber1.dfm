@@ -1,6 +1,6 @@
 object Exodus: TExodus
-  Left = 230
-  Top = 212
+  Left = 293
+  Top = 199
   Width = 461
   Height = 282
   AlphaBlendValue = 240
@@ -479,7 +479,7 @@ object Exodus: TExodus
   end
   object nextTimer: TTimer
     Enabled = False
-    Interval = 500
+    Interval = 50
     OnTimer = nextTimerTimer
     Left = 19
     Top = 74

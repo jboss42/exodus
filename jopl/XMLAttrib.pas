@@ -50,8 +50,8 @@ uses
 {---------------------------------------}
 constructor TXMLAttrib.Create;
 begin
-    inherited Create;
-
+    inherited;
+    
     Name := '';
     NodeType := xml_Attribute;
     fData := '';

@@ -87,6 +87,7 @@ type
         destructor Destroy; override;
 
         procedure SetSession(js: TObject);
+        procedure Clear; override;
 
         function FindPres(sjid, resource: string): TJabberPres;
         function NextPres(last: TJabberPres): TJabberPres;
@@ -111,7 +112,7 @@ uses
 {---------------------------------------}
 constructor TJabberPres.Create;
 begin
-    inherited Create;
+    inherited;
 
     toJID := TJabberID.Create('');
     fromJID := TJabberID.Create('');
@@ -128,6 +129,7 @@ destructor TJabberPres.Destroy;
 begin
     toJID.Free;
     fromJID.Free;
+
     inherited Destroy;
 end;
 
@@ -205,7 +207,6 @@ end;
 procedure TJabberCustomPres.Parse(tag: TXMLTag);
 begin
     // parse the tag
-
     title := tag.getAttribute('name');
     show := tag.getBasicText('show');
     status := tag.GetBasicText('status');
@@ -230,13 +231,30 @@ end;
 {---------------------------------------}
 constructor TJabberPPDB.Create;
 begin
-    inherited Create;
+    //
+    inherited;
 end;
 
 {---------------------------------------}
 destructor TJabberPPDB.Destroy;
 begin
+    Self.Clear();
     inherited Destroy;
+end;
+
+{---------------------------------------}
+procedure TJabberPPDB.Clear;
+var
+    i: integer;
+begin
+    // Clear ea. string list which is contained in our list
+    for i := 0 to Count - 1 do begin
+        if (Objects[i] is TStringList) then
+            ClearStringListObjects(TStringList(Objects[i]));
+        TObject(Objects[i]).Free();
+        end;
+
+    inherited Clear();
 end;
 
 {---------------------------------------}
@@ -269,6 +287,7 @@ begin
             DeletePres(p);
             s.FireEvent('/presence/unavailable', tag, curp);
             end;
+        curp.Free();
         end
     else if curp.PresType = 'error' then begin
         // some kind of error presence
@@ -287,6 +306,7 @@ begin
             end
         else
             s.FireEvent('/presence/error', tag, curp);
+        curp.Free();
         end
     else if (curp.PresType = 'subscribe') or
         (curp.PresType = 'subscribed') or
@@ -294,6 +314,7 @@ begin
         (curp.PresType = 'unsubscribed') then begin
         // do nothing... some kind of s10n request
         s.FireEvent('/presence/subscription', tag, curp);
+        curp.Free();
         end
     else begin
         // some kind of available pres

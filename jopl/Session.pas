@@ -159,8 +159,8 @@ uses
 Constructor TJabberSession.Create(ConfigFile: string);
 begin
     //
-    inherited Create;
-
+    inherited Create();
+    
     _stream := TXMLStream.Create('stream:stream');
     _username := '';
     _password := '';
@@ -210,16 +210,20 @@ Destructor TJabberSession.Destroy;
 begin
     // Clean up everything
 
+    ClearStringListObjects(ppdb);
+    ClearStringListObjects(Agents);
+
+    Prefs.Free;
     ppdb.Free;
     roster.Free;
     ChatList.Free;
+    Agents.Free;
 
     _stream.Free;
+    _pauseQueue.Free;
 
-    _packetSignal.Free;
-    _sessionSignal.Free;
+    // Free the dispatcher... this should free the signals
     _dispatcher.Free;
-
 
     inherited Destroy;
 end;
@@ -228,7 +232,6 @@ end;
 procedure TJabberSession.CreateAccount;
 begin
     _register := true;
-    // Connect();
     SendRegistration();
 end;
 
@@ -275,9 +278,12 @@ begin
         end
     else if msg = 'disconnected' then begin
         // Clear the roster, ppdb and fire the callbacks
-        Roster.Clear;
-        ppdb.Clear;
         _dispatcher.DispatchSignal('/session/disconnected', nil);
+        ClearStringListObjects(Agents);
+        ppdb.Clear;
+        Roster.Clear;
+        Agents.Clear;
+        ppdb.Clear;
         end
     else if msg = 'commerror' then
         _dispatcher.DispatchSignal('/session/commerror', nil)

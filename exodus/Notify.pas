@@ -56,7 +56,8 @@ uses
 {---------------------------------------}
 constructor TNotifyController.Create;
 begin
-    inherited Create;
+    //
+    inherited;
 end;
 
 {---------------------------------------}
@@ -107,6 +108,8 @@ begin
     n := 0;
     ritem := sess.roster.Find(j);
     if ritem <> nil then nick := ritem.nickname else nick := tmp_jid.user;
+
+    tmp_jid.Free();
 
     // someone is coming online for the first time..
     if (event = '/presence/online') then begin

@@ -71,7 +71,7 @@ implementation
 {---------------------------------------}
 constructor TJabberIQ.Create(session: TJabberSession; id: string; cb: TPacketEvent; seconds: longint);
 begin
-    inherited Create;
+    inherited Create();
 
     _js := session;
     _id := id;

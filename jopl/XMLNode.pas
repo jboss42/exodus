@@ -58,7 +58,7 @@ uses
 {---------------------------------------}
 constructor TXMLNode.Create;
 begin
-    inherited Create;
+    inherited;
 
     fName := '';
     ftype := xml_node;

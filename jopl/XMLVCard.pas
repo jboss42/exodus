@@ -180,7 +180,7 @@ end;
 {---------------------------------------}
 constructor TXMLVCard.Create;
 begin
-    inherited Create;
+    inherited;
 
     GivenName := '';
     FamilyName := '';

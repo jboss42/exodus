@@ -189,6 +189,8 @@ begin
         PageControl1.ActivePageIndex := 0;
         end;
 
+    tmp_jid.Free();
+
     f.Show;
     f.aniProfile.Visible := true;
     f.aniProfile.Active := true;

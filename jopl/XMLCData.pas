@@ -57,7 +57,7 @@ uses
 {---------------------------------------}
 constructor TXMLCData.Create;
 begin
-    inherited Create;
+    inherited;
 
     Name := '#TEXT';
     NodeType := xml_CDATA;
@@ -67,12 +67,7 @@ end;
 {---------------------------------------}
 constructor TXMLCData.Create(content: string);
 begin
-    inherited Create;
-
-    Name := '#TEXT';
-    NodeType := xml_CDATA;
-    fData := '';
-
+    Create();
     Set_Text(content);
 end;
 

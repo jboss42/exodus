@@ -56,13 +56,14 @@ constructor TJabberID.Create(jid: string);
 begin
     // parse the jid
     // user@domain/resource
+    inherited Create();
+    
     _raw := jid;
     _user := '';
     _domain := '';
     _resource := '';
 
     if (_raw <> '') then ParseJID(_raw);
-
 end;
 
 {---------------------------------------}

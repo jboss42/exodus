@@ -47,6 +47,8 @@ type
         jid: string;
         procedure FetchCallback(event: string; tag: TXMLTag);
     public
+        destructor Destroy; override;
+
         procedure Fetch(from: string);
         procedure ParseList(iq: TXMLTag);
         procedure Clear; override;
@@ -63,10 +65,12 @@ type
 implementation
 uses
     Session,
-    IQ;
+    XMLUtils, IQ;
 
 constructor TAgentItem.Create;
 begin
+    inherited;
+
     name := '';
     jid := '';
     desc := '';
@@ -94,10 +98,16 @@ begin
     desc := agent.GetBasicText('description');
     service := agent.GetBasicText('service');
 
-    reg := (agent.GetFirstTag('register') <> nil);
+    reg := agent.TagExists('register');
     groupchat := (agent.GetFirstTag('groupchat') <> nil);
     transport := (agent.GetFirstTag('transport') <> nil);
     search := (agent.GetFirstTag('search') <> nil);
+end;
+
+{---------------------------------------}
+destructor TAgents.Destroy;
+begin
+    Self.Clear();
 end;
 
 {---------------------------------------}

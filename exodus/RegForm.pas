@@ -141,6 +141,7 @@ begin
                 else
                     doField(f.Name);
                 end;
+            flds.Free();
 
             cur_stage := regStage_Form;
             btnNext.Enabled := true;

@@ -48,7 +48,7 @@ implementation
 
 constructor TXMLTagParser.Create();
 begin
-    inherited Create;
+    inherited;
 
     _parser := TXMLParser.Create;
     _parser.Normalize := false;
@@ -92,6 +92,7 @@ begin
 
     s := f.Text;
     Self.ParseString(s, '');
+    f.Free();
 end;
 
 procedure TXMLTagParser.ParseString(buff, stream_tag: string);
