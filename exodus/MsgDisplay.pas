@@ -59,17 +59,13 @@ uses
     XMLUtils, Session;
 
 {---------------------------------------}
-procedure DisplayMsg(Msg: TJabberMessage; RichEdit: TExRichEdit; AutoScroll: boolean = true);
+function atBottom(RichEdit: TExRichEdit): boolean;
 var
-    txt: WideString;
-    c: TColor;
     r: integer;
     ts: longword;
     bot_thumb: integer;
-    at_bottom: boolean;
     ScrollInfo: TSCROLLINFO;
 begin
-    // add the message to the richedit control
     with RichEdit do begin
         ScrollInfo.cbSize := SizeOf(TScrollInfo);
         ScrollInfo.fMask := SIF_PAGE + SIF_POS + SIF_RANGE;
@@ -77,10 +73,28 @@ begin
         ts := ScrollInfo.nPage;
         r := ScrollInfo.nMax - Scrollinfo.nMin;
         bot_thumb := ScrollInfo.nPos + Integer(ScrollInfo.nPage) + 2;
-        at_bottom := (bot_thumb >= ScrollInfo.nMax) or (ScrollInfo.nMax = 0) or
+        Result := (bot_thumb >= ScrollInfo.nMax) or (ScrollInfo.nMax = 0) or
             (ts >= Trunc(0.8 * r));
         end;
+end;
 
+{---------------------------------------}
+procedure scrollRichEdit(RichEdit: TExRichEdit);
+begin
+    // Send a "page down" scroll message
+    with RichEdit do
+        Perform(EM_SCROLL, SB_PAGEDOWN, 0);
+end;
+
+{---------------------------------------}
+procedure DisplayMsg(Msg: TJabberMessage; RichEdit: TExRichEdit; AutoScroll: boolean = true);
+var
+    txt: WideString;
+    c: TColor;
+    at_bottom: boolean;
+begin
+    // add the message to the richedit control
+    at_bottom := atBottom(RichEdit);
     txt := Msg.Body;
 
     // Make sure we're inputting text in Unicode format.
@@ -137,11 +151,7 @@ begin
     RichEdit.WideSelText := #13#10;
 
     // AutoScroll the window
-    if (at_bottom) then with RichEdit do begin
-        // Send a "page down" scroll message
-        Perform(EM_SCROLL, SB_PAGEDOWN, 0);
-        end;
-
+    if ((at_bottom) and (AutoScroll)) then scrollRichEdit(RichEdit);
 end;
 
 {---------------------------------------}
@@ -465,7 +475,9 @@ end;
 procedure DisplayPresence(txt: string; Browser: TExRichEdit);
 var
     pt : integer;
+    at_bottom: boolean;
 begin
+    at_bottom := atBottom(Browser);
     pt := MainSession.Prefs.getInt('pres_tracking');
     if (pt = 2) then exit;
     with Browser do begin
@@ -482,6 +494,8 @@ begin
         SelAttributes.Color := clGray;
         WideSelText := txt + #13#10;
         end;
+
+    if (at_bottom) then scrollRichEdit(Browser);
 end;
 
 {---------------------------------------}
