@@ -615,16 +615,12 @@ end;
 {---------------------------------------}
 procedure TfrmBrowse.mRegisterClick(Sender: TObject);
 var
-    j: string;
-    regform: TfrmRegister;
+    j: Widestring;
 begin
     // Register to this Service
     if vwBrowse.Selected = nil then exit;
     j := vwBrowse.Selected.SubItems[0];
-
-    regform := TfrmRegister.Create(Application);
-    regform.jid := j;
-    regform.Start();
+    StartServiceReg(j);
 end;
 
 {---------------------------------------}

@@ -75,7 +75,6 @@ type
     popDestroy: TMenuItem;
     popAdminList: TMenuItem;
     N5: TMenuItem;
-    popOwner: TMenuItem;
     popOwnerList: TMenuItem;
     mnuWordwrap: TMenuItem;
     NotificationOptions1: TMenuItem;
@@ -84,6 +83,10 @@ type
     N6: TMenuItem;
     popRosterMsg: TMenuItem;
     popRosterSendJID: TMenuItem;
+    popModeratorList: TMenuItem;
+    popModerator: TMenuItem;
+    popAdministrator: TMenuItem;
+    popRegister: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -120,6 +123,7 @@ type
     procedure popRosterMsgClick(Sender: TObject);
     procedure popRosterSendJIDClick(Sender: TObject);
     procedure lstRosterData(Sender: TObject; Item: TListItem);
+    procedure popRegisterClick(Sender: TObject);
   private
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
@@ -243,11 +247,12 @@ resourcestring
     sStatus_409  = 'Your nickname is already being used. Please select another one.';
     sStatus_Unknown = 'The room has been destroyed for an unknown reason.';
 
-    sEditVoice  = 'Edit Voice List';
-    sEditBan    = 'Edit Ban List';
-    sEditMember = 'Edit Member List';
-    sEditAdmin  = 'Edit Admin List';
-    sEditOwner  = 'Edit Owner List';
+    sEditVoice     = 'Edit Voice List';
+    sEditBan       = 'Edit Ban List';
+    sEditMember    = 'Edit Member List';
+    sEditAdmin     = 'Edit Admin List';
+    sEditOwner     = 'Edit Owner List';
+    sEditModerator = 'Edit Moderator List';
 
 const
     MUC_OWNER = 'owner';
@@ -275,9 +280,10 @@ function ItemCompare(Item1, Item2: Pointer): integer;
 {---------------------------------------}
 implementation
 uses
+    CapPresence,
     ChatWin, COMChatController, CustomNotify,
     ExSession, ExUtils,
-    GnuGetText, 
+    GnuGetText,
     InputPassword,
     Invite,
     IQ,
@@ -288,14 +294,14 @@ uses
     JoinRoom,
     MsgDisplay,
     MsgRecv,
+    NodeItem,
     Notify,
     PrefController,
     Presence,
-    CapPresence,
+    RegForm,
     RichEdit,
     RiserWindow,
     RoomAdminList,
-    NodeItem, 
     Roster,
     RosterWindow,
     Session,
@@ -856,15 +862,23 @@ begin
 
         if (member.Nick = myNick) then begin
             // check to see what my role is
+
+            // These are owner-only things..
             popConfigure.Enabled := (member.Affil = MUC_OWNER);
             popDestroy.Enabled := popConfigure.Enabled;
             popAdminList.Enabled := popConfigure.Enabled;
+            popAdministrator.Enabled := popConfigure.Enabled;
+            popOwnerList.Enabled := popConfigure.Enabled;
 
+            // Moderator stuff
             popAdmin.Enabled := (member.Role = MUC_MOD) or popConfigure.Enabled;
             popKick.Enabled := popAdmin.Enabled;
             popBan.Enabled := popAdmin.Enabled;
             popVoice.Enabled := popAdmin.Enabled;
-            popOwner.Enabled := popConfigure.Enabled;
+
+            // Admin stuff
+            popModerator.Enabled := (member.affil = MUC_ADMIN) or popConfigure.Enabled;
+
         end;
         RenderMember(member, tag);
     end;
@@ -1593,8 +1607,10 @@ begin
         AddMemberItems(q, reason, MUC_NONE)
     else if (Sender = popBan) then
         AddMemberItems(q, reason, '', MUC_OUTCAST)
-    else if (Sender = popOwner) then
-        AddMemberItems(q, '', '', MUC_OWNER);
+    else if (Sender = popModerator) then
+        AddMemberItems(q, '', MUC_MOD, '')
+    else if (Sender = popAdministrator) then
+        AddMemberItems(q, '', '', MUC_ADMIN);
 
     MainSession.SendTag(iq);
 end;
@@ -1651,6 +1667,7 @@ begin
                 new_role := MUC_VISITOR
             else if (cur_member.role = MUC_VISITOR) then
                 new_role := MUC_PART;
+
             if (new_role <> '') then begin
                 with q.AddTag('item') do begin
                     setAttribute('nick', cur_member.Nick);
@@ -1674,6 +1691,8 @@ begin
         ShowRoomAdminList(self.jid, '', MUC_OUTCAST, sEditBan)
     else if (Sender = popMemberList) then
         ShowRoomAdminList(self.jid, '', MUC_MEMBER, sEditMember)
+    else if (Sender = popModeratorList) then
+        ShowRoomAdminList(self.jid, MUC_MOD, '', sEditModerator)
     else if (Sender = popAdminList) then
         ShowRoomAdminList(self.jid, '', MUC_ADMIN, sEditAdmin)
     else if (Sender = popOwnerList) then
@@ -1886,6 +1905,12 @@ begin
     Result := AnsiCompareText(s1, s2);
 end;
 
+
+procedure TfrmRoom.popRegisterClick(Sender: TObject);
+begin
+  inherited;
+    StartServiceReg(jid);
+end;
 
 initialization
     // list for all of the current rooms

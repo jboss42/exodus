@@ -167,15 +167,19 @@ inherited frmRoom: TfrmRoom
       OnClick = popClearHistoryClick
     end
     object popBookmark: TMenuItem
-      Caption = 'Bookmark Room'
+      Caption = 'Bookmark Room...'
       OnClick = popBookmarkClick
     end
+    object popRegister: TMenuItem
+      Caption = 'Register with Room...'
+      OnClick = popRegisterClick
+    end
     object popInvite: TMenuItem
-      Caption = 'Invite Contacts'
+      Caption = 'Invite Contacts...'
       OnClick = popInviteClick
     end
     object popNick: TMenuItem
-      Caption = 'Change Nickname'
+      Caption = 'Change Nickname...'
       OnClick = popNickClick
     end
     object S1: TMenuItem
@@ -195,6 +199,10 @@ inherited frmRoom: TfrmRoom
       end
       object popMemberList: TMenuItem
         Caption = 'Edit Member List'
+        OnClick = popVoiceListClick
+      end
+      object popModeratorList: TMenuItem
+        Caption = 'Edit Moderator List'
         OnClick = popVoiceListClick
       end
       object N4: TMenuItem
@@ -282,8 +290,13 @@ inherited frmRoom: TfrmRoom
       Enabled = False
       OnClick = popVoiceClick
     end
-    object popOwner: TMenuItem
-      Caption = 'Make Owner'
+    object popModerator: TMenuItem
+      Caption = 'Make Moderator'
+      Enabled = False
+      OnClick = popKickClick
+    end
+    object popAdministrator: TMenuItem
+      Caption = 'Make Administrator'
       Enabled = False
       OnClick = popKickClick
     end
