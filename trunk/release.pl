@@ -3,7 +3,7 @@
 use strict;
 # publish server
 $::USER = 'hildjj';
-$::SERVER = 'jabberstudio.org';
+$::SERVER = 'svn.jabberstudio.org';
 $::ROOT = '/var/projects/exodus';
 
 $::SCP = 'scp -C';

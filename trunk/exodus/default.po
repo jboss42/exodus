@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2005-03-08 09:22\n"
-"PO-Revision-Date: 2005-03-08 09:22\n"
+"POT-Creation-Date: 2005-03-09 08:54\n"
+"PO-Revision-Date: 2005-03-09 08:54\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -706,6 +706,8 @@ msgstr ""
 #: Bookmark.dfm:40
 #. frmCommandWizard..Tabs..TabSheet1..TntLabel2..Caption
 #: CommandWizard.dfm:52
+#. frmConnDetails..PageControl1..tbsProfile..lblUsername..Caption
+#: ConnDetails.dfm:59
 #. frmSelContact..Panel1..Label1..Caption
 #: SelContact.dfm:71
 msgid "Jabber ID:"
@@ -850,7 +852,7 @@ msgstr ""
 #: Profile.dfm:408
 #. frmVCard..PageControl1..TabSheet4..Caption
 #: vcard.dfm:236
-#: ConnDetails.pas:401
+#: ConnDetails.pas:384
 msgid "Home"
 msgstr ""
 
@@ -943,7 +945,7 @@ msgstr ""
 #. frmBrowse..popContext..mBrowse..Caption
 #: Browser.dfm:3874
 #. frmConnDetails..PageControl1..tbsSSL..btnCertBrowse..Caption
-#: ConnDetails.dfm:284
+#: ConnDetails.dfm:243
 #. frmEmoteProps..btnBrowse..Caption
 #: EmoteProps.dfm:46
 #. frmVCard..PageControl1..TabSheet1..btnPicBrowse..Caption
@@ -1215,24 +1217,13 @@ msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..Caption
 #: ConnDetails.dfm:52
-msgid "Profile"
-msgstr ""
-
-#. frmConnDetails..PageControl1..tbsProfile..lblUsername..Caption
-#: ConnDetails.dfm:59
-#. frmConnDetails..PageControl1..tbsSocket..lblSocksUsername..Caption
-#: ConnDetails.dfm:335
-#. frmPrefNetwork..GroupBox2..lblProxyUsername..Caption
-#: prefs/PrefNetwork.dfm:110
-#. frmPrefTransfer..grpWebDav..lblDavUsername..Caption
-#: prefs/PrefTransfer.dfm:78
-msgid "Username:"
+msgid "Account Details"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..Label10..Caption
 #: ConnDetails.dfm:67
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksPassword..Caption
-#: ConnDetails.dfm:344
+#: ConnDetails.dfm:303
 #. frmJoinRoom..Tabs..TabSheet1..lblPassword..Caption
 #: JoinRoom.dfm:60
 #. frmPrefNetwork..GroupBox2..lblProxyPassword..Caption
@@ -1242,32 +1233,34 @@ msgstr ""
 msgid "Password:"
 msgstr ""
 
-#. frmConnDetails..PageControl1..tbsProfile..Label11..Caption
-#: ConnDetails.dfm:75
-msgid "Server:"
-msgstr ""
-
 #. frmConnDetails..PageControl1..tbsProfile..Label12..Caption
-#: ConnDetails.dfm:83
+#: ConnDetails.dfm:75
 msgid "Resource:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..lblServerList..Caption
-#: ConnDetails.dfm:92
-msgid "Download a list of servers"
+#: ConnDetails.dfm:84
+msgid "Download a list of public servers"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..Label13..Caption
-#: ConnDetails.dfm:101
-msgid "Enter desired username for new accounts."
+#: ConnDetails.dfm:93
+msgid "Enter desired Jabber ID for new accounts."
 msgstr ""
 
-#. frmConnDetails..PageControl1..tbsProfile..cboServer....Items.WideStrings
+#. frmConnDetails..PageControl1..tbsProfile..Label6..Caption
+#: ConnDetails.dfm:101
+#. frmPrefPresence..GroupBox1..Label14..Caption
+#: prefs/PrefPresence.dfm:174
+msgid "Priority:"
+msgstr ""
+
+#. frmConnDetails..PageControl1..tbsProfile..cboJabberID....Items.WideStrings
 #: ConnDetails.dfm:114
 msgid "jabber.org"
 msgstr ""
 
-#. frmConnDetails..PageControl1..tbsProfile..cboServer....Items.WideStrings
+#. frmConnDetails..PageControl1..tbsProfile..cboJabberID....Items.WideStrings
 #: ConnDetails.dfm:115
 msgid "jabber.com"
 msgstr ""
@@ -1278,9 +1271,9 @@ msgid "Save pass&word"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..txtPassword..PasswordChar
-#: ConnDetails.dfm:139
+#: ConnDetails.dfm:130
 #. frmConnDetails..PageControl1..tbsSocket..txtSocksPassword..PasswordChar
-#: ConnDetails.dfm:388
+#: ConnDetails.dfm:347
 #. frmInputPass..txtPassword..PasswordChar
 #: InputPassword.dfm:59
 #. frmJoinRoom..Tabs..TabSheet1..txtPassword..PasswordChar
@@ -1299,63 +1292,33 @@ msgid "*"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..chkRegister..Caption
-#: ConnDetails.dfm:157
+#: ConnDetails.dfm:148
 msgid "This is a new account"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsConn..Caption
-#: ConnDetails.dfm:162
+#: ConnDetails.dfm:171
 msgid "Connection"
 msgstr ""
 
-#. frmConnDetails..PageControl1..tbsConn..Label8..Caption
-#: ConnDetails.dfm:169
-#. frmConnDetails..PageControl1..tbsSocket..lblSocksType..Caption
-#: ConnDetails.dfm:327
-#. frmPrefPresence..GroupBox1..Label13..Caption
-#: prefs/PrefPresence.dfm:166
-msgid "Type:"
-msgstr ""
-
-#. frmConnDetails..PageControl1..tbsConn..Label6..Caption
-#: ConnDetails.dfm:177
-#. frmPrefPresence..GroupBox1..Label14..Caption
-#: prefs/PrefPresence.dfm:174
-msgid "Priority:"
-msgstr ""
-
-#. frmConnDetails..PageControl1..tbsConn..cboConnection..Text
-#: ConnDetails.dfm:190
-#. frmConnDetails..PageControl1..tbsConn..cboConnection....Items.WideStrings
-#: ConnDetails.dfm:193
-msgid "Normal"
-msgstr ""
-
-#. frmConnDetails..PageControl1..tbsConn..cboConnection....Items.WideStrings
-#: ConnDetails.dfm:194
-#. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.WideStrings
-#: ConnDetails.dfm:404
-msgid "HTTP"
-msgstr ""
-
 #. frmConnDetails..PageControl1..tbsConn..chkSRV..Caption
-#: ConnDetails.dfm:219
+#: ConnDetails.dfm:178
 msgid "Automatically discover host and port"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsConn..boxHost..Label4..Caption
-#: ConnDetails.dfm:234
+#: ConnDetails.dfm:193
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksHost..Caption
-#: ConnDetails.dfm:309
+#: ConnDetails.dfm:268
 #. frmPrefNetwork..GroupBox2..lblProxyHost..Caption
 #: prefs/PrefNetwork.dfm:92
 msgid "Host:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsConn..boxHost..Label7..Caption
-#: ConnDetails.dfm:242
+#: ConnDetails.dfm:201
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksPort..Caption
-#: ConnDetails.dfm:318
+#: ConnDetails.dfm:277
 #. frmPrefNetwork..GroupBox2..lblProxyPort..Caption
 #: prefs/PrefNetwork.dfm:101
 #. frmPrefTransfer..grpWebDav..lblDavPort..Caption
@@ -1364,110 +1327,136 @@ msgid "Port:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSSL..Caption
-#: ConnDetails.dfm:263
+#: ConnDetails.dfm:222
 msgid "Encryption"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSSL..TntLabel1..Caption
-#: ConnDetails.dfm:269
+#: ConnDetails.dfm:228
 msgid "SSL Certificate:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSSL..optSSL..Caption
-#: ConnDetails.dfm:293
+#: ConnDetails.dfm:252
 msgid "SSL Modes"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.WideStrings
-#: ConnDetails.dfm:295
+#: ConnDetails.dfm:254
 msgid "Encrypt the connection whenever possible."
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.WideStrings
-#: ConnDetails.dfm:296
+#: ConnDetails.dfm:255
 msgid "All connections must be encrypted."
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.WideStrings
-#: ConnDetails.dfm:297
+#: ConnDetails.dfm:256
 msgid "Use old SSL port method."
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSocket..Caption
-#: ConnDetails.dfm:302
+#: ConnDetails.dfm:261
 msgid "Proxy"
 msgstr ""
 
+#. frmConnDetails..PageControl1..tbsSocket..lblSocksType..Caption
+#: ConnDetails.dfm:286
+#. frmPrefPresence..GroupBox1..Label13..Caption
+#: prefs/PrefPresence.dfm:166
+msgid "Type:"
+msgstr ""
+
+#. frmConnDetails..PageControl1..tbsSocket..lblSocksUsername..Caption
+#: ConnDetails.dfm:294
+#. frmPrefNetwork..GroupBox2..lblProxyUsername..Caption
+#: prefs/PrefNetwork.dfm:110
+#. frmPrefTransfer..grpWebDav..lblDavUsername..Caption
+#: prefs/PrefTransfer.dfm:78
+msgid "Username:"
+msgstr ""
+
 #. frmConnDetails..PageControl1..tbsSocket..chkSocksAuth..Caption
-#: ConnDetails.dfm:353
+#: ConnDetails.dfm:312
 #. frmPrefNetwork..GroupBox2..chkProxyAuth..Caption
 #: prefs/PrefNetwork.dfm:152
 msgid "Authentication Required"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.WideStrings
-#: ConnDetails.dfm:400
+#: ConnDetails.dfm:359
 #. frmProfile..PageControl1..TabSheet1..optSubscrip....Items.WideStrings
 #: Profile.dfm:171
 msgid "None"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.WideStrings
-#: ConnDetails.dfm:401
+#: ConnDetails.dfm:360
 msgid "Version 4"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.WideStrings
-#: ConnDetails.dfm:402
+#: ConnDetails.dfm:361
 msgid "Version 4a"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.WideStrings
-#: ConnDetails.dfm:403
+#: ConnDetails.dfm:362
 msgid "Version 5"
 msgstr ""
 
+#. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.WideStrings
+#: ConnDetails.dfm:363
+msgid "HTTP"
+msgstr ""
+
 #. frmConnDetails..PageControl1..tbsHttp..Caption
-#: ConnDetails.dfm:409
+#: ConnDetails.dfm:368
 msgid "HTTP Polling"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..Label1..Caption
-#: ConnDetails.dfm:416
+#: ConnDetails.dfm:375
 msgid "URL:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..Label2..Caption
-#: ConnDetails.dfm:424
+#: ConnDetails.dfm:383
 msgid "Poll Time:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..Label5..Caption
-#: ConnDetails.dfm:432
+#: ConnDetails.dfm:391
 #: ExUtils.pas:433
 msgid "seconds"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..Label9..Caption
-#: ConnDetails.dfm:439
+#: ConnDetails.dfm:398
 msgid "# of Keys:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..lblNote....AutoSize
-#: ConnDetails.dfm:453
+#: ConnDetails.dfm:412
 msgid "NOTE: You must use the URL of your jabber server's HTTP tunnelling "
 "proxy. You can not use some \"standard\" HTTP proxy for this to work. "
 "Contact your server administrator for additional "
 "information."
 msgstr ""
 
+#. frmConnDetails..PageControl1..tbsHttp..chkPolling..Caption
+#: ConnDetails.dfm:441
+msgid "Use HTTP Polling"
+msgstr ""
+
 #. frmConnDetails..OpenDialog1..DefaultExt
-#: ConnDetails.dfm:480
+#: ConnDetails.dfm:447
 msgid "pem"
 msgstr ""
 
 #. frmConnDetails..OpenDialog1..Filter
-#: ConnDetails.dfm:481
+#: ConnDetails.dfm:448
 msgid "SSL Key Files|*.pem|All Files|*.*"
 msgstr ""
 
@@ -2009,7 +1998,7 @@ msgstr ""
 
 #. frmExodus..Caption
 #: Jabber1.dfm:7
-#: ConnDetails.pas:403
+#: ConnDetails.pas:386
 #. do this.
 #: ExSession.pas:477
 #: Jabber1.pas:1303
@@ -5854,7 +5843,7 @@ msgstr ""
 #: Profile.dfm:744
 #. frmVCard..PageControl1..TabSheet5..Caption
 #: vcard.dfm:567
-#: ConnDetails.pas:402
+#: ConnDetails.pas:385
 msgid "Work"
 msgstr ""
 
@@ -6033,37 +6022,37 @@ msgstr ""
 #. frmRoom..popRoom..popAdmin..popVoiceList..Caption
 #: Room.dfm:192
 #. edit a list
-#: Room.pas:2061
+#: Room.pas:2074
 msgid "Edit Voice List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popBanList..Caption
 #: Room.dfm:196
-#: Room.pas:2063
+#: Room.pas:2076
 msgid "Edit Ban List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popMemberList..Caption
 #: Room.dfm:200
-#: Room.pas:2065
+#: Room.pas:2078
 msgid "Edit Member List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popModeratorList..Caption
 #: Room.dfm:204
-#: Room.pas:2067
+#: Room.pas:2080
 msgid "Edit Moderator List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popAdminList..Caption
 #: Room.dfm:211
-#: Room.pas:2069
+#: Room.pas:2082
 msgid "Edit Admin List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popOwnerList..Caption
 #: Room.dfm:215
-#: Room.pas:2071
+#: Room.pas:2084
 msgid "Edit Owner List"
 msgstr ""
 
@@ -6074,7 +6063,7 @@ msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popDestroy..Caption
 #: Room.dfm:226
-#: Room.pas:2085
+#: Room.pas:2098
 msgid "Destroy Room"
 msgstr ""
 
@@ -6094,7 +6083,7 @@ msgstr ""
 #: RosterWindow.dfm:380
 #. frmRosterWindow..popGroup..popGroupBlock..Caption
 #: RosterWindow.dfm:634
-#: Room.pas:1779
+#: Room.pas:1792
 #: RosterWindow.pas:2137
 #. do blocking madness
 #: RosterWindow.pas:2174
@@ -6763,45 +6752,41 @@ msgid "This jabber entity does not support remote "
 "commands."
 msgstr ""
 
-#: ConnDetails.pas:153
+#: ConnDetails.pas:149
 msgid "%s Details"
 msgstr ""
 
-#: ConnDetails.pas:182
+#: ConnDetails.pas:174
 msgid "The Jabber ID you entered (username@server/resource) is invalid. "
 "Please enter a valid username, server, and "
 "resource."
 msgstr ""
 
-#: ConnDetails.pas:310
+#: ConnDetails.pas:304
 msgid "This profile is currently to use SSL, however, your system does not "
 "have the required libraries to use SSL. Turning SSL "
 "OFF."
 msgstr ""
 
-#: ConnDetails.pas:355
+#: ConnDetails.pas:352
 msgid "Must have a larger number of poll keys."
 msgstr ""
 
-#: ConnDetails.pas:455
+#: ConnDetails.pas:436
 msgid "Download the public server list from jabber.org? (Requires an "
 "internet connection)."
 msgstr ""
 
-#: ConnDetails.pas:460
+#: ConnDetails.pas:441
 msgid "Downloading public server list"
 msgstr ""
 
 #. stringprep txtUsername, cboServer, or cboResource.
-#: ConnDetails.pas:518
-msgid "The username you entered is not allowed."
+#: ConnDetails.pas:500
+msgid "The Jabber ID you entered is not allowed."
 msgstr ""
 
-#: ConnDetails.pas:526
-msgid "The hostname you entered is invald."
-msgstr ""
-
-#: ConnDetails.pas:534
+#: ConnDetails.pas:509
 msgid "The resource you entered is not allowed."
 msgstr ""
 
@@ -7588,13 +7573,13 @@ msgstr ""
 
 #. if blocked ignore anything they say, even subject changes.
 #: Room.pas:491
-#: Room.pas:1297
-#: Room.pas:1731
+#: Room.pas:1310
+#: Room.pas:1744
 #. block
-#: Room.pas:1739
-#: Room.pas:1776
+#: Room.pas:1752
+#: Room.pas:1789
 #. get the data for this person..
-#: Room.pas:2246
+#: Room.pas:2259
 msgid "Blocked"
 msgstr ""
 
@@ -7609,7 +7594,7 @@ msgstr ""
 
 #: Room.pas:517
 #. send the msg out
-#: Room.pas:1548
+#: Room.pas:1561
 msgid "/me has changed the subject to: "
 msgstr ""
 
@@ -7619,9 +7604,9 @@ msgstr ""
 
 #. check for various presence errors
 #: Room.pas:947
-#: Room.pas:1211
+#: Room.pas:1224
 #. they match
-#: Room.pas:1585
+#: Room.pas:1598
 msgid "Your nickname is already being used. Please select another "
 "one."
 msgstr ""
@@ -7641,7 +7626,7 @@ msgid "You are not allowed to enter the room."
 msgstr ""
 
 #: Room.pas:974
-#: Room.pas:1210
+#: Room.pas:1223
 msgid "You are not on the member list for this room. Try and "
 "register?"
 msgstr ""
@@ -7659,17 +7644,17 @@ msgstr ""
 
 #. this user has changed their nick..
 #: Room.pas:1018
-#: Room.pas:1206
+#: Room.pas:1219
 msgid "%s is now known as %s."
 msgstr ""
 
 #: Room.pas:1026
-#: Room.pas:1204
+#: Room.pas:1217
 msgid "%s has been banned from this room. %s"
 msgstr ""
 
 #: Room.pas:1027
-#: Room.pas:1207
+#: Room.pas:1220
 msgid "%s has been kicked from this room. %s"
 msgstr ""
 
@@ -7695,112 +7680,112 @@ msgid "%s has a new role of %s."
 msgstr ""
 
 #. this is the first time I've joined the room
-#: Room.pas:1118
+#: Room.pas:1131
 msgid "You are not allowed to speak in this "
 "room."
 msgstr ""
 
-#: Room.pas:1120
+#: Room.pas:1133
 msgid "You are currently a moderator of this "
 "room."
 msgstr ""
 
-#: Room.pas:1205
+#: Room.pas:1218
 msgid "This room has been destroyed."
 msgstr ""
 
-#: Room.pas:1208
+#: Room.pas:1221
 msgid "You are on the ban list for this room."
 msgstr ""
 
-#: Room.pas:1209
+#: Room.pas:1222
 msgid "You are not allowed to create rooms."
 msgstr ""
 
-#: Room.pas:1253
+#: Room.pas:1266
 msgid "There was an error using the default room configuration. Configuring "
 "it manually."
 msgstr ""
 
-#: Room.pas:1401
+#: Room.pas:1414
 msgid "Your room keyword regular expressions are invalid. Keyword matching "
 "will be turned off for this room."
 msgstr ""
 
 #. Change the subject
-#: Room.pas:1561
+#: Room.pas:1574
 msgid "Change room subject"
 msgstr ""
 
-#: Room.pas:1561
+#: Room.pas:1574
 msgid "New subject"
 msgstr ""
 
-#: Room.pas:1604
-#: Room.pas:1604
+#: Room.pas:1617
+#: Room.pas:1617
 msgid "New nickname"
 msgstr ""
 
-#: Room.pas:1627
+#: Room.pas:1640
 msgid "Bookmark Room"
 msgstr ""
 
-#: Room.pas:1627
+#: Room.pas:1640
 msgid "Enter bookmark name:"
 msgstr ""
 
-#: Room.pas:1777
+#: Room.pas:1790
 #: RosterWindow.pas:2133
 #: RosterWindow.pas:2184
 msgid "UnBlock"
 msgstr ""
 
-#: Room.pas:1935
+#: Room.pas:1948
 msgid "Role: "
 msgstr ""
 
-#: Room.pas:1936
+#: Room.pas:1949
 msgid "Affiliation: "
 msgstr ""
 
-#: Room.pas:1963
+#: Room.pas:1976
 msgid "You have been kicked."
 msgstr ""
 
-#: Room.pas:1964
-#: Room.pas:1964
+#: Room.pas:1977
+#: Room.pas:1977
 msgid "Kick Reason"
 msgstr ""
 
-#: Room.pas:1967
+#: Room.pas:1980
 msgid "You have been banned."
 msgstr ""
 
-#: Room.pas:1968
-#: Room.pas:1968
+#: Room.pas:1981
+#: Room.pas:1981
 msgid "Ban Reason"
 msgstr ""
 
 #. Destroy Room
-#: Room.pas:2082
+#: Room.pas:2095
 msgid "Do you really want to destroy the room? All users will be "
 "removed."
 msgstr ""
 
-#: Room.pas:2084
+#: Room.pas:2097
 msgid "The owner has destroyed the room."
 msgstr ""
 
-#: Room.pas:2085
+#: Room.pas:2098
 msgid "Destroy Reason"
 msgstr ""
 
 #. this room needs a passwd, and they didn't give us one..
-#: Room.pas:2308
+#: Room.pas:2321
 msgid "Password Prompt"
 msgstr ""
 
-#: Room.pas:2308
+#: Room.pas:2321
 msgid "Room Password"
 msgstr ""
 
@@ -8001,7 +7986,7 @@ msgid "No vCard response was ever returned."
 msgstr ""
 
 #. check size of a
-#: vcard.pas:358
+#: vcard.pas:357
 msgid "Your avatar is larger than the recommended size. "
 "Continue?"
 msgstr ""
