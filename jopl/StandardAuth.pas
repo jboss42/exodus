@@ -96,29 +96,7 @@ var
 begin
     if (_session.isXMPP) then begin
         feats := _session.xmppFeatures;
-        m := feats.GetFirstTag('mechanisms');
-        dm := false;
-        pm := false;
-
-        // check for digest or plain
-        if (m <> nil) then begin
-            mechs := m.ChildTags();
-            for i := 0 to mechs.Count - 1 do begin
-                mstr := Uppercase(mechs[i].Data);
-                if (mstr = 'DIGEST-MD5') then begin
-                    dm := true;
-                    break;
-                end
-                else if (mstr = 'PLAIN') then begin
-                    pm := true;
-                    break;
-                end;
-            end;
-            mechs.Free();
-        end;
-
-        // either start SASL, or normal auth
-        if ((dm) or (pm)) then
+        if (checkSASLFeatures(feats)) then
             _sasl_auth.StartAuthentication()
         else
             SendAuthGet();
