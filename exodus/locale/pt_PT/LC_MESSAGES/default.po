@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2003-05-08 06:59\n"
-"PO-Revision-Date: 2003-06-05 03:41-0000\n"
+"PO-Revision-Date: 2003-06-05 05:52-0000\n"
 "Last-Translator: Lazarus Long <lazarus.long@bigfoot.com>\n"
 "Language-Team: pt_PT <lazarus.long@bigfoot.com>\n"
 "MIME-Version: 1.0\n"
@@ -1326,7 +1326,7 @@ msgstr "Prioridade:"
 #. frmConnDetails..PageControl1..tbsConn..chkSSL..Caption
 #: ConnDetails.dfm:211
 msgid "Use SSL"
-msgstr "Usar SSL"
+msgstr "Usar SSLF"
 
 #. frmConnDetails..PageControl1..tbsConn..cboConnection..Text
 #. frmConnDetails..PageControl1..tbsConn..cboConnection....Items.Strings
@@ -5206,7 +5206,7 @@ msgstr "Suriname  "
 #: vcard.dfm:551
 #: vcard.dfm:1022
 msgid "Svalbard and Jan Mayen Islands  "
-msgstr "Svalbard e Jan Mayen, Ilhas  "
+msgstr "Svålbard e Jan Mayen, Ilhas  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.Strings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.Strings
@@ -6767,7 +6767,7 @@ msgstr "ERRO AO OBTER O ENDEREÇO DO API WIN32 PARA GetLastInputInfo!!"
 #. Programmer's name for it: sMsgPing
 #: Jabber1.pas:450
 msgid "Ping Time: %s seconds."
-msgstr "Tempo de resposta ao ping: %s segundos."
+msgstr "Tempo de resposta: %s segundos."
 
 #. Programmer's name for it: sMsgMessage
 #: Jabber1.pas:451
