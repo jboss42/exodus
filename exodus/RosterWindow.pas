@@ -971,11 +971,13 @@ begin
     end;
 
     if (ritem <> nil) then begin
-
         // If this presence is NOT from us, always grab the "primary" for this user instead
         // If it IS from us, we always want the new presence packet to render
+
+        // Reparse the jid, since we could have modified it for transports.
+        tmp_jid.ParseJid(jid);
         if (ritem.jid.jid <> MainSession.BareJid) then
-            p := MainSession.PPDB.FindPres(jid, '');
+            p := MainSession.PPDB.FindPres(tmp_jid.jid, tmp_jid.resource);
 
         RenderNode(ritem, p);
     end;

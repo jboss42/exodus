@@ -514,7 +514,7 @@ ${un.StrStrAdv}
 !define TEXT_EXTENSION ".txt"
 !define XML_EXTENSION ".xml"
 !define INSTALLER_WELCOME_BITMAP \
-        "${NSISDIR}\Contrib\Graphics\Wizard\arrow.bmp" ; not standard
+        "${NSISDIR}\Contrib\Graphics\Wizard\nsis.bmp" ; not standard
 !define INSTALLER_LANGUAGE_KEY "Language"
 !define INSTALLER_STARTMENU_KEY "StartMenu"
 !define INSTALLER_SWITCH_SILENT "/S"
@@ -600,7 +600,7 @@ ${un.StrStrAdv}
 
 ; Modern UI Settings
 !define MUI_CUSTOMFUNCTION_GUIINIT funcOnGuiInit
-!define MUI_CUSTOMFUNCTION_UNGUIINIT un.funcOnGuiInit
+;!define MUI_CUSTOMFUNCTION_UNGUIINIT un.funcOnGuiInit
 !ifndef DEBUG
     !define MUI_ABORTWARNING
     !define MUI_UNABORTWARNING
@@ -677,7 +677,7 @@ Page custom SetCustomShell ;Custom page
 ;!insertmacro MUI_UNPAGE_LICENSE $(GPL_LICENSE_FILE)
 ;!insertmacro MUI_UNPAGE_COMPONENTS
 ;!insertmacro MUI_UNPAGE_DIRECTORY
-UninstPage custom un.SetCustomShell ;Custom page
+;UninstPage custom un.SetCustomShell ;Custom page
 !insertmacro MUI_UNPAGE_INSTFILES
 !insertmacro MUI_UNPAGE_FINISH
 
@@ -2107,11 +2107,11 @@ Section "Uninstall"
     DeleteRegValue HKCU "${PRODUCT_REGISTRY_KEY}" "${PRODUCT_PREFS_FILE_KEY}"
 
     ; Remove the user logs based on user input
-    !insertmacro MUI_INSTALLOPTIONS_READ "$R0" "${UNCUSTOMSHELL}${INI_EXTENSION}" "${CUSTOMSHELL_FIELD2}" "${CUSTOMSHELL_OPTION_STATE}"
-    IntCmpU '$R0' '1' 0 +3
+    ;!insertmacro MUI_INSTALLOPTIONS_READ "$R0" "${UNCUSTOMSHELL}${INI_EXTENSION}" "${CUSTOMSHELL_FIELD2}" "${CUSTOMSHELL_OPTION_STATE}"
+    ;IntCmpU '$R0' '1' 0 +3
     ;Checked
-    Push "$0"
-    Call un.funcRemoveUserLogs
+    ;Push "$0"
+    ;Call un.funcRemoveUserLogs
 
     ; TODO: remove keys and files for every user
 
@@ -2532,13 +2532,27 @@ Function SetCustomShell
 
 FunctionEnd
 
+Var "PluginFilename"
+
+Function InstallPlugin
+    Exch $1	
+    
+	;CreateDirectory "$INSTDIR\${PLUGINS_DIR}"
+	;File "/oname=$INSTDIR\${PLUGINS_DIR}\$R0" "${PLUGINS_DIR}\$R0"
+	
+    ;File /nonfatal "/oname=$NSISPATH\${DIR}\CVS\Entries.log" "..\${DIR}\CVS\Entries.log"	
+    ;SetOutPath "$INSTDIR\${PLUGINS_DIR}"
+    ;File ${PLUGINS_DIR}\$1${DLL_EXTENSION}
+    ;SetOutPath $INSTDIR
+    Pop $R0
+FunctionEnd
+
 Function DownloadPlugin
     Exch $1
 
     CreateDirectory "$INSTDIR\${PLUGINS_DIR}"
     NSISdl::download "${HOME_URL}/${PLUGINS_DOWNLOAD_PATH}/$1${ZIP_EXTENSION}" \
         "$INSTDIR\${PLUGINS_DIR}\$1${ZIP_EXTENSION}"
-
     Pop $R0
     StrCmp $R0 "${NSISDL_SUCCESSFUL}" unzip
     Abort "$(MSG_PluginAbort)"
@@ -2588,7 +2602,7 @@ Function .onInstSuccess
 FunctionEnd
 
 Function un.onInit ; On Uninstall initialization
-    !insertmacro MUI_UNGETLANGUAGE
+    ;!insertmacro MUI_UNGETLANGUAGE
     Call un.funcInitCustomShell
 FunctionEnd
 
