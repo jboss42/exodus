@@ -114,7 +114,7 @@ begin
         gw_ent := jEntityCache.getByJid(gw);
         if (gw_ent = nil) then begin
             cb := MainSession.RegisterCallback(EntityCallback, '/session/entity/items');
-            gw_ent := jEntityCache.walk(gw, MainSession);
+            gw_ent := jEntityCache.fetch(gw, MainSession);
             self.Hide();
         end
         else

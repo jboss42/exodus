@@ -160,11 +160,11 @@ uses
   Jud in 'Jud.pas' {frmJud},
   DockWizard in 'DockWizard.pas' {frmDockWizard},
   SSLWarn in 'SSLWarn.pas' {frmSSLWarn},
-  SASLAuth in 'SASLAuth.pas',
   DNSUtils in '..\jopl\DNSUtils.pas',
   IdDNSResolver in '..\jopl\IdDNSResolver.pas',
   Entity in '..\jopl\Entity.pas',
-  EntityCache in '..\jopl\EntityCache.pas';
+  EntityCache in '..\jopl\EntityCache.pas',
+  SASLAuth in '..\jopl\SASLAuth.pas';
 
 {$R *.TLB}
 

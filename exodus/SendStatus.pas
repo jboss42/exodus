@@ -823,7 +823,7 @@ begin
     accept := false;
     if (event = 'xml') then begin
         if (tag.GetAttribute('type') = 'result') then begin
-            // xxx: eventually, grovel, and get the selected stream-method
+            // TODO: eventually, grovel, and get the selected stream-method
             // right now, we're only offering -65, so assume it.
             accept := true;
         end;
@@ -905,7 +905,7 @@ begin
         // they have accepted a specific streamhost
         _shost := tag.QueryXPData('/iq/query/streamhost-used@jid');
 
-        // xxx: take into account shost being MYSELF
+        // TODO: take into account shost being MYSELF
 
         _state := send_try_connect;
         DoState();

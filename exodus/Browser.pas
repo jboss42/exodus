@@ -211,17 +211,14 @@ begin
     StartList;
     StartBar;
 
-    if (not refresh) then begin
-        // check the browse cache
-        // XXX: entity cache
-    end;
-
     // do the browse query
     _ent := jEntityCache.getByJid(jid);
     if (_ent = nil) then
-        _ent := jEntityCache.walk(jid, MainSession)
+        _ent := jEntityCache.fetch(jid, MainSession)
+    else if (refresh = false) then
+        _ent := jEntityCache.fetch(jid, MainSession)
     else
-        _ent := jEntityCache.walk(jid, MainSession);
+        _ent.Refresh(MainSession);
 end;
 
 {---------------------------------------}
@@ -441,11 +438,12 @@ begin
     mVersion.Enabled := b.hasFeature(XMLNS_VERSION);
     mTime.Enabled := b.hasFeature(XMLNS_TIME);
     mLast.Enabled := b.hasFeature(XMLNS_LAST);
-    mSearch.Enabled := b.hasFeature(XMLNS_SEARCH);
-    mRegister.Enabled := b.hasFeature(XMLNS_REGISTER);
+    mSearch.Enabled := b.hasFeature(FEAT_SEARCH);
+    mRegister.Enabled := b.hasFeature(FEAT_REGISTER);
 
     // various conference namespaces
     if (b.hasFeature(XMLNS_CONFERENCE)) then mJoinConf.Enabled := true
+    else if (b.hasFeature(FEAT_GROUPCHAT)) then mJoinConf.Enabled := true
     else if (b.hasFeature(XMLNS_MUC)) then mJoinConf.Enabled := true
     else if (b.hasFeature('gc-1.0')) then mJoinConf.Enabled := true
     else if (b.category = 'conference') then mJoinConf.Enabled := true
@@ -594,8 +592,6 @@ var
     tmps: Widestring;
     ce: TJabberEntity;
 begin
-    // XXX: entity
-
     if (_ent = nil) then exit;
     if (tag = nil) then exit;
 
