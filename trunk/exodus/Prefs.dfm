@@ -1571,12 +1571,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 357
-    ActivePage = tbsRoster
+    ActivePage = tbsFonts
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 0
+    TabIndex = 2
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1846,7 +1846,7 @@ object frmPrefs: TfrmPrefs
       object clrBoxBG: TColorBox
         Left = 111
         Top = 191
-        Width = 90
+        Width = 170
         Height = 22
         DefaultColorColor = clBlue
         Selected = clBlue
@@ -1859,7 +1859,7 @@ object frmPrefs: TfrmPrefs
       object clrBoxFont: TColorBox
         Left = 111
         Top = 215
-        Width = 90
+        Width = 170
         Height = 22
         DefaultColorColor = clBlue
         Selected = clBlue

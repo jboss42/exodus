@@ -186,6 +186,7 @@ type
     pnlLeft: TPanel;
     SplitterLeft: TSplitter;
     timTrayAlert: TTimer;
+    JabberUserGuide1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -249,6 +250,7 @@ type
       State: TDragState; var Accept: Boolean);
     procedure TabsDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure timTrayAlertTimer(Sender: TObject);
+    procedure JabberUserGuide1Click(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -2922,6 +2924,11 @@ begin
          frmExodus._tray_notify := false;
          frmExodus.setTrayIcon(frmExodus._tray_icon_idx);
          end;
+end;
+
+procedure TfrmExodus.JabberUserGuide1Click(Sender: TObject);
+begin
+    ShellExecute(0, 'open', 'http://www.jabber.org/user/userguide/', '', '', SW_SHOW);
 end;
 
 initialization

@@ -515,6 +515,10 @@ object frmExodus: TfrmExodus
     end
     object Help1: TMenuItem
       Caption = 'Help'
+      object JabberUserGuide1: TMenuItem
+        Caption = 'Jabber User Guide'
+        OnClick = JabberUserGuide1Click
+      end
       object WinJabWebsite1: TMenuItem
         Caption = 'Exodus Website'
         OnClick = WinJabWebsite1Click
