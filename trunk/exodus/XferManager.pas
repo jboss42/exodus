@@ -31,7 +31,7 @@ uses
     Dialogs, Dockable, ExtCtrls, IdCustomHTTPServer, IdHTTPServer, IdSocks,
     IdTCPServer, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
     IdHTTP, IdServerIOHandler, IdServerIOHandlerSocket, StdCtrls,
-  TntStdCtrls, Buttons, TntExtCtrls;
+    TntStdCtrls, Buttons, TntExtCtrls;
 
 const
     WM_CLOSE_FRAME = WM_USER + 6005;
