@@ -23,7 +23,7 @@ interface
 uses
     XMLTag,
     Session,
-    SysUtils, Classes, Windows;
+    SysUtils, Classes;
 
 type
     TJabberResponder = class

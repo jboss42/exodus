@@ -76,8 +76,8 @@ type
 implementation
 
 uses
-    ExUtils;
-    
+    XMLUtils;
+
 { TJabberMessage }
 
 constructor TJabberMessage.Create;

@@ -25,11 +25,11 @@ uses
     XMLStream,
     PrefController,
     {$ifdef linux}
-    QExtCtrls,
+    QExtCtrls, IdSSLIntercept, 
     {$else}
-    ExtCtrls,
+    ExtCtrls, IdSSLOpenSSL,
     {$endif}
-    SysUtils, IdException, IdSSLOpenSSL,
+    SysUtils, IdException,
     IdTCPConnection, IdTCPClient,
     SyncObjs;
 
@@ -39,13 +39,19 @@ type
     private
         _socket:    TidTCPClient;
         _sock_lock: TCriticalSection;
+        {$ifdef Linux}
+        _ssl_int:   TIdSSLConnectionIntercept;
+        {$else}
         _ssl_int:   TIdConnectionInterceptOpenSSL;
+        {$endif}
         _ssl_check: boolean;
         _ssl_ok:    boolean;
         _timer:     TTimer;
         _profile:   TJabberProfile;
 
+        {$ifdef Windows}
         function VerifyPeer(Certificate: TIdX509): Boolean;
+        {$endif}
         procedure Keepalive(Sender: TObject);
         procedure KillSocket();
 
@@ -87,9 +93,9 @@ implementation
 
 uses
     Classes,
-    Controls,
+    // Controls,
     // TODO: remove!
-    Dialogs,
+    // Dialogs,
     IdSocks;
 
 {---------------------------------------}
@@ -263,6 +269,7 @@ begin
     _sock_lock.Free;
 end;
 
+{$ifdef Windows}
 function TXMLSocketStream.VerifyPeer(Certificate: TIdX509): Boolean;
 var
     sl : TStringList;
@@ -322,6 +329,7 @@ begin
 
     result := true;
 end;
+{$endif}
 
 {---------------------------------------}
 procedure TXMLSocketStream.Keepalive(Sender: TObject);
@@ -417,6 +425,9 @@ procedure TXMLSocketStream.Connect(profile: TJabberProfile);
 begin
     _profile := profile;
 
+    {$ifdef Linux}
+    _ssl_int := TIdSSLConnectionIntercept.Create(nil);
+    {$else}
     _ssl_int := TIdConnectionInterceptOpenSSL.Create(nil);
     with _ssl_int do begin
         // TODO: get certs from profile
@@ -426,6 +437,7 @@ begin
         SSLOptions.RootCertFile := '';
         OnVerifyPeer := VerifyPeer;
         end;
+    {$endif}
 
     // connect to this server
     _socket := TIdTCPClient.Create(nil);

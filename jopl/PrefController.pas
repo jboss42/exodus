@@ -25,7 +25,8 @@ uses
     {$ifdef Win32}
     Forms, Windows, Registry,
     {$else}
-    iniFiles, QForms,
+    // iniFiles,
+    Math, QForms,
     {$endif}
     Classes, SysUtils;
 
@@ -179,9 +180,9 @@ function getUserDir: string;
 {---------------------------------------}
 implementation
 uses
-    IdGlobal, IdCoder3To4, Session, IQ, XMLUtils, StrUtils,
+    IdGlobal, IdCoder3To4, Session, IQ, XMLUtils,
     {$ifdef Win32}
-    Graphics;
+    Graphics; StrUtils,
     {$else}
     QGraphics;
     {$endif}
@@ -272,6 +273,14 @@ begin
         dflt_left := 0;
         end;
     end;
+end;
+
+{$else}
+
+procedure getDefaultPos;
+begin
+    dflt_top := 10;
+    dflt_left := 10;
 end;
 
 {$endif}
@@ -399,12 +408,23 @@ begin
         result := '0'
     else if pkey = 'roster_bg' then
         result := IntToStr(Integer(clWindow))
+    {$ifdef Windows}
     else if pkey = 'roster_font_name' then
         result := Screen.IconFont.Name
     else if pkey = 'roster_font_size' then
         result := IntToStr(Screen.IconFont.Size)
     else if pkey = 'roster_font_color' then
         result := IntToStr(Integer(Screen.IconFont.Color))
+
+    {$else}
+    else if pkey = 'roster_font_name' then
+        result := Application.Font.Name
+    else if pkey = 'roster_font_size' then
+        result := IntToStr(Application.Font.Size)
+    else if pkey = 'roster_font_color' then
+        result := IntToStr(Integer(Application.Font.Color))
+    {$endif}
+
     else if pkey = 'emoticons' then
         result := '1'
     else if pkey = 'timestamp_format' then
@@ -973,7 +993,7 @@ begin
     node.PutAttribute('name', Name);
     node.AddBasicTag('username', Username);
     node.AddBasicTag('server', Server);
-    node.AddBasicTag('save_passwd', IfThen(SavePasswd, 'yes', 'no'));
+    node.AddBasicTag('save_passwd', BoolToStr(SavePasswd));
 
     // node.AddBasicTag('password', Password);
     ptag := node.AddTag('password');
@@ -990,11 +1010,11 @@ begin
     // Socket connection
     node.AddBasicTag('host', Host);
     node.AddBasicTag('port', IntToStr(Port));
-    node.AddBasicTag('ssl', IfThen(ssl, 'yes', 'no'));
+    node.AddBasicTag('ssl', BoolToStr(ssl));
     node.AddBasicTag('socks_type', IntToStr(SocksType));
     node.AddBasicTag('socks_host', SocksHost);
     node.AddBasicTag('socks_port', IntToStr(SocksPort));
-    node.AddBasicTag('socks_auth', IfThen(SocksAuth, 'yes', 'no'));
+    node.AddBasicTag('socks_auth', BoolToStr(SocksAuth));
     node.AddBasicTag('socks_username', SocksUsername);
     node.AddBasicTag('socks_password', SocksPassword);
 
@@ -1004,7 +1024,7 @@ begin
     node.AddBasicTag('proxy_approach', IntToStr(ProxyApproach));
     node.AddBasicTag('proxy_host', ProxyHost);
     node.AddBasicTag('proxy_port', IntToStr(ProxyPort));
-    node.AddBasicTag('proxy_auth', IfThen(ProxyAuth, 'yes', 'no'));
+    node.AddBasicTag('proxy_auth', BoolToStr(ProxyAuth));
     node.AddBasicTag('proxy_username', ProxyUsername);
     node.AddBasicTag('proxy_password', ProxyPassword);
 end;
@@ -1020,5 +1040,16 @@ begin
     else if (Port = 0) then result := false
     else result := true;
 end;
+
+initialization
+    SetLength(TrueBoolStrs, 3);
+    TrueBoolStrs[0] := 'TRUE';
+    TrueBoolStrs[1] := 'YES';
+    TrueBoolStrs[2] := 'OK';
+
+    SetLength(FalseBoolStrs, 3);
+    FalseBoolStrs[0] := 'FALSE';
+    FalseBoolStrs[1] := 'NO';
+    FalseBoolStrs[2] := 'CANCEL';
 
 end.
