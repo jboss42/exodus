@@ -22,9 +22,10 @@ unit PrefEmote;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls,
-  ComCtrls, TntComCtrls, ImgList;
+    Emote, 
+    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+    Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls,
+    ComCtrls, TntComCtrls, ImgList;
 
 type
   TfrmPrefEmote = class(TfrmPrefPanel)
@@ -43,24 +44,31 @@ type
     Panel2: TPanel;
     btnCustomEmoteAdd: TTntButton;
     btnCustomEmoteRemove: TTntButton;
-    btnCustomEmoteClear: TTntButton;
     Panel3: TPanel;
-    TntLabel1: TTntLabel;
-    txtEmoteFilename: TTntEdit;
-    TntLabel2: TTntLabel;
-    txtEmoteText: TTntEdit;
     TntLabel3: TTntLabel;
     txtCustomEmoteFilename: TTntEdit;
     btnCustomEmoteBrowse: TTntButton;
     XMLDialog1: TOpenDialog;
     lstCustomEmotes: TTntListView;
     imagesCustom: TImageList;
+    btnCustomEmoteEdit: TTntButton;
     procedure btnEmoteAddClick(Sender: TObject);
     procedure btnEmoteRemoveClick(Sender: TObject);
     procedure btnEmoteClearClick(Sender: TObject);
     procedure btnEmoteDefaultClick(Sender: TObject);
+    procedure btnCustomEmoteBrowseClick(Sender: TObject);
+    procedure btnCustomEmoteAddClick(Sender: TObject);
+    procedure btnCustomEmoteEditClick(Sender: TObject);
+    procedure btnCustomEmoteRemoveClick(Sender: TObject);
+    procedure lstCustomEmotesAdvancedCustomDrawItem(
+      Sender: TCustomListView; Item: TListItem; State: TCustomDrawState;
+      Stage: TCustomDrawStage; var DefaultDraw: Boolean);
   private
     { Private declarations }
+    el: TEmoticonList;
+
+    procedure _addListItem(e: TEmoticon);
+
   public
     { Public declarations }
     procedure LoadPrefs(); override;
@@ -76,18 +84,19 @@ var
 implementation
 {$R *.dfm}
 uses
-    XMLTag, XMLParser, Emote, GnuGetText, ExUtils, Session, PrefController;
+    EmoteProps, 
+    XMLTag, XMLParser, GnuGetText, ExUtils, Session, PrefController;
 
 {---------------------------------------}
 procedure TfrmPrefEmote.LoadPrefs();
 var
     path, fn: Widestring;
-    el: TEmoticonList;
-    idx, i: integer;
+    i: integer;
     e: TEmoticon;
-    li: TListItem;
 begin
     inherited;
+    el := TEmoticonList.Create();
+
     MainSession.Prefs.fillStringlist('emoticon_dlls', lstEmotes.Items);
 
     // load custom emoticons
@@ -101,15 +110,10 @@ begin
     end;
 
     if (FileExists(fn)) then begin
-        el := TEmoticonList.Create();
         el.AddIconDefsFile(fn);
         for i := 0 to el.ImageCount - 1 do begin
             e := el.Emoticons[i];
-            li := lstCustomEmotes.Items.Add();
-            // XXX: put correct caption in for custom emoticons
-            li.Caption := 'xxx-need-text';
-            idx := imagesCustom.Add(e.Bitmap, nil);
-            li.imageIndex := idx;
+            _addListItem(e);
         end;
     end;
 
@@ -118,14 +122,18 @@ end;
 
 {---------------------------------------}
 procedure TfrmPrefEmote.SavePrefs();
+var
+    fn: Widestring;
 begin
     inherited;
     MainSession.Prefs.setStringlist('emoticon_dlls', lstEmotes.Items);
 
+    // Save our custom list.
+    fn := txtCustomEmoteFilename.Text;
+    el.SaveIconDefsFile(fn);
+
     // Reload our lists.
     InitializeEmoticonLists();
-
-    // XXX: save custom emoticons
 end;
 
 {---------------------------------------}
@@ -172,6 +180,172 @@ begin
     lstEmotes.Items.Clear();
     lstEmotes.Items.Add('msn_emoticons.dll');
     lstEmotes.Items.Add('yahoo_emoticons.dll');
+end;
+
+{---------------------------------------}
+procedure TfrmPrefEmote.btnCustomEmoteBrowseClick(Sender: TObject);
+begin
+    if (XMLDialog1.Execute) then
+        txtCustomEmoteFilename.Text := XMLDialog1.FileName;
+end;
+
+{---------------------------------------}
+procedure TfrmPrefEmote._addListItem(e: TEmoticon);
+var
+    bmp: TBitmap;
+    li: TListItem;
+    idx: integer;
+begin
+    li := lstCustomEmotes.Items.Add();
+    // TODO: put correct caption in for custom emoticons
+    li.Caption := el.getText(e);
+
+    bmp := e.Bitmap;
+    if (bmp.Height > imagesCustom.Height) then
+        imagesCustom.Height := bmp.Height;
+    if (bmp.Width > imagesCustom.Width) then
+        imagesCustom.Width := bmp.Width;
+
+    idx := imagesCustom.Add(e.Bitmap, nil);
+    li.imageIndex := idx;
+    li.Data := e;
+end;
+
+{---------------------------------------}
+procedure TfrmPrefEmote.btnCustomEmoteAddClick(Sender: TObject);
+var
+    f: TfrmEmoteProps;
+    e: TEmoticon;
+    txt, ffn, fn, key: Widestring;
+begin
+  inherited;
+    // make sure they don't add dupes.
+    f := TfrmEmoteProps.Create(Self);
+    if (f.ShowModal = mrCancel) then begin
+        f.Free();
+        exit;
+    end;
+
+    fn := f.txtFilename.Text;
+    txt := f.txtText.Text;
+    ffn := txtCustomEmoteFilename.Text;
+
+    f.Free();
+
+    // XXX: validate the text matches our regex.
+
+    if (not FileExists(fn)) then begin
+        MessageDlgW(_('The emoticon file specified does not exist.'),
+            mtError, [mbOK], 0);
+        exit;
+    end;
+
+    key := ffn + '/' + fn;
+    e := el.getKey(key);
+    if (e = nil) then begin
+        // Create the new emoticon.
+        e := el.loadObject(txt, ffn, fn);
+        if (e = nil) then begin
+            MessageDlgW(_('The file you specified has an unknown mime type.'),
+                mtError, [mbOK], 0);
+            exit;
+        end;
+        _addListItem(e);
+    end;
+
+end;
+
+{---------------------------------------}
+procedure TfrmPrefEmote.btnCustomEmoteEditClick(Sender: TObject);
+var
+    li: TListItem;
+    e: TEmoticon;
+    f: TfrmEmoteProps;
+    fn, txt: Widestring;
+    i: integer;
+begin
+  inherited;
+    // Edit
+    if (lstCustomEmotes.SelCount > 1) then begin
+        MessageDlgW(_('Select a single emoticon to edit.'),
+            mtError, [mbOK], 0);
+        exit;
+    end;
+
+    li := lstCustomEmotes.Selected;
+    if (li = nil) then exit;
+
+    e := TEmoticon(li.Data);
+    assert(e <> nil);
+    fn := e.Filename;
+    txt := el.getText(e);
+
+    // Setup the props form
+    f := TfrmEmoteProps.Create(Self);
+    f.txtFilename.Enabled := false;
+    f.btnBrowse.Enabled := false;
+    f.txtFilename.Text := fn;
+    f.txtText.Text := txt;
+
+    if (f.ShowModal = mrOK) then begin
+        // replace text for this emoticon
+        i := el.indexOfText(txt);
+        if (i >= 0) then begin
+            el.setText(i, f.txtText.Text);
+            li.Caption := f.txtText.Text;
+        end;
+    end;
+    f.Free();
+
+end;
+
+{---------------------------------------}
+procedure TfrmPrefEmote.btnCustomEmoteRemoveClick(Sender: TObject);
+var
+    e: TEmoticon;
+    li: TListItem;
+    i: integer;
+begin
+  inherited;
+    if (MessageDlgW(_('Remove all selected emoticons?'), mtConfirmation,
+        [mbYes, mbNo], 0) = mrNo) then exit;
+
+    // Remove all selected entries
+    for i := lstCustomEmotes.Items.Count - 1 downto 0 do begin
+        li := lstCustomEmotes.Items[i];
+        if (li.Selected) then begin
+            e := TEmoticon(li.Data);
+            li.Free();
+            el.Remove(e);
+        end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmPrefEmote.lstCustomEmotesAdvancedCustomDrawItem(
+  Sender: TCustomListView; Item: TListItem; State: TCustomDrawState;
+  Stage: TCustomDrawStage; var DefaultDraw: Boolean);
+var
+    icon_r: TRect;
+    lbl_r: TRect;
+    e: TEmoticon;
+begin
+  inherited;
+    // draw this item
+    if (Item.Data = nil) then exit;
+
+    e := TEmoticon(Item.Data);
+    icon_r := Item.DisplayRect(drIcon);
+    lbl_r := Item.DisplayRect(drLabel);
+
+    with lstCustomEmotes do begin
+        // draw the bmp
+        canvas.Draw(icon_r.left, icon_r.Top, e.Bitmap);
+        canvas.TextOut(lbl_r.left, lbl_r.Top, el.getText(e));
+    end;
+
+    DefaultDraw := false;
+
 end;
 
 end.

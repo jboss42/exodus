@@ -44,6 +44,7 @@ type
 
         property RTF: string read GetRTF;
         property Bitmap: Graphics.TBitmap read GetBitmap;
+        property Filename: Widestring read _file;
     end;
 
     {---------------------------------------}
@@ -87,12 +88,17 @@ type
 
         procedure AddResourceFile(resdll: WideString);
         procedure AddIconDefsFile(filename: string);
+        procedure SaveIconDefsFile(filename: string);
         procedure Clear();
+        procedure setText(index: integer; txt: Widestring);
+        procedure Remove(e: TEmoticon);
 
+        function loadObject(txt, filename, object_fn: Widestring): TEmoticon;
         function getImageTag(candidate: WideString): WideString;
         function getRTF(candidate: WideString): WideString;
         function getText(e: TEmoticon): Widestring;
-
+        function getKey(key: Widestring): TEmoticon;
+        function indexOfText(txt: Widestring): integer;
 
         property ImageCount: integer read _getImageCount;
         property Bitmaps[index: integer]: Graphics.TBitmap read _getBitmap;
@@ -272,6 +278,35 @@ begin
 end;
 
 {---------------------------------------}
+function TEmoticonList.getKey(key: Widestring): TEmoticon;
+var
+    i: integer;
+begin
+    i := _objects.indexOf(key);
+    if (i >= 0) then
+        Result := TEmoticon(_objects.Objects[i])
+    else
+        Result := nil;
+end;
+
+{---------------------------------------}
+function TEmoticonList.loadObject(txt, filename, object_fn: Widestring): TEmoticon;
+var
+    ext: Widestring;
+begin
+    ext := Lowercase(ExtractFileExt(object_fn));
+    if (ext = '.bmp') then
+        Result := _loadObject('image/x-ms-bmp', object_fn, 0, filename)
+    else if (ext = '.gif') then
+        Result := _loadObject('image/gif', object_fn, 0, filename)
+    else
+        Result := nil;
+
+    if (Result <> nil) then
+        _text.addObject(txt, Result);
+end;
+
+{---------------------------------------}
 function TEmoticonList._loadObject(mime: WideString; fileName: WideString; resHandle: cardinal; resFile: WideString): TEmoticon;
 var
     key : WideString;
@@ -284,6 +319,10 @@ begin
         exit;
     end;
 
+    // image/gif
+    // image/x-ms-bmp
+    // image/jpeg
+    // image/png
     if (mime = 'image/gif') then begin
         if (resHandle <> 0) then
             result := TGifEmoticon.Create(resHandle, resFile, 'GIF', fileName)
@@ -329,25 +368,62 @@ begin
             t := icon.GetFirstTag('text');
             if ((o <> nil) and (t <> nil)) then begin
                 mt := o.getAttribute('mime');
-                // image/gif
-                // image/x-ms-bmp
-                // image/jpeg
-                // image/png
-                if ((mt = 'image/gif') or (mt = 'image/x-ms-bmp')) then begin
-                    e := _loadObject(mt, o.Data(), 0, filename);
-                end;
+                e := _loadObject(mt, o.Data(), 0, filename);
             end;
 
             // add the text into the list.
             if (e <> nil) then
                 _text.AddObject(t.Data, e);
-                
         end;
 
     finally
         if (doc <> nil) then doc.Free();
         if (parser <> nil) then parser.Free();
     end;
+end;
+
+{---------------------------------------}
+procedure TEmoticonList.SaveIconDefsFile(filename: string);
+var
+    idx, i: integer;
+    e: TEmoticon;
+    d, m, icon, o: TXMLTag;
+    txt: Widestring;
+    sl: TStringlist;
+begin
+    d := TXMLTag.Create('icondef');
+
+    // Create some meta-info
+    m := d.AddTag('meta');
+    m.AddBasicTag('name', ExtractFileName(filename));
+    m.AddBasicTag('description', 'Custom emotion list for Exodus client');
+
+    // walk the list.
+    for i := 0 to _objects.Count - 1 do begin
+        e := TEmoticon(_objects.Objects[i]);
+
+        // find the txt for this
+        idx := _text.IndexOfObject(e);
+        if (idx >= 0) then begin
+            txt := _text[idx];
+            icon := d.AddTag('icon');
+            icon.AddBasicTag('text', txt);
+            o := icon.AddBasicTag('object', e._file);
+            if (e is TBMPEmoticon) then
+                o.setAttribute('mime', 'image/x-ms-bmp')
+            else if (e is TGifEmoticon) then
+                o.SetAttribute('mime', 'image/gif');
+        end;
+    end;
+
+    sl := TStringlist.Create();
+    try
+        sl.Add(UTF8Encode(d.xml));
+        sl.SaveToFile(filename);
+    except
+        // XXX: catch this someplace??
+    end;
+    sl.Free();
 end;
 
 {---------------------------------------}
@@ -472,6 +548,12 @@ begin
 end;
 
 {---------------------------------------}
+function TEmoticonList.indexOfText(txt: Widestring): integer;
+begin
+    Result := _text.indexOf(txt);
+end;
+
+{---------------------------------------}
 function TEmoticonList.getText(e: TEmoticon): Widestring;
 var
     i: integer;
@@ -484,7 +566,27 @@ begin
         Result := _text[i];
 end;
 
+{---------------------------------------}
+procedure TEmoticonList.setText(index: integer; txt: Widestring);
+begin
+    if ((index < 0) or (index >= _text.Count)) then exit;
 
+    _text.Strings[index] := txt;
+end;
+
+{---------------------------------------}
+procedure TEmoticonList.Remove(e: TEmoticon);
+var
+    i, i2: integer;
+begin
+    i := _objects.IndexOfObject(e);
+    if (i >= 0) then _objects.Delete(i);
+    repeat
+        i2 := _text.IndexOfObject(e);
+        if (i2 >= 0) then _text.Delete(i2);
+    until (i2 = -1);
+    e.Free();
+end;
 
 {---------------------------------------}
 {---------------------------------------}
