@@ -145,7 +145,7 @@ type
 
 implementation
 uses
-    XMLUtils, StrUtils,
+    XMLUtils, StrUtils, JabberID, 
     IQ, GnuGetText, Session, JabberConst, JabberUtils, ExUtils;
 
 const
@@ -474,6 +474,7 @@ procedure TfRecvStatus.attemptSIConnection();
 var
     tmps, hash_key: Widestring;
     p: THostPortPair;
+    j1, j2: TJabberID;
 begin
     // ok, try and connect to the first host/port
     p := THostPortPair(_hosts.Peek());
@@ -482,8 +483,13 @@ begin
     SocksHandler.SocksInfo.Host := p.host;
     SocksHandler.SocksInfo.Port := p.Port;
 
-    hash_key := _sid + _pkg.recip + MainSession.Jid;
+    j1 := TJabberID.Create(_pkg.recip);
+    j2 := TJabberID.Create(MainSession.Jid);
+    hash_key := _sid + j1.full + j2.full;
     tmps := Sha1Hash(hash_key);
+    j1.Free();
+    j2.Free();
+    
     tcpClient.IOHandler := SocksHandler;
     tcpClient.Host := tmps;
     tcpClient.Port := 0;

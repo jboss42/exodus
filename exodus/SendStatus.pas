@@ -429,6 +429,7 @@ var
     spkg: TStreamPkg;
     jl: TWidestringlist;
     hex: string;
+    j1, j2: TJabberID;
 begin
     // do something based on our current state
     assert(_iq = nil);
@@ -594,7 +595,11 @@ begin
         assert(sh > 0);
 
         // Build the pkg object
-        tmps := _sid + MainSession.Jid + _pkg.recip;
+        j1 := TJabberID.Create(MainSession.Jid);
+        j2 := TJabberID.Create(_pkg.recip);
+        tmps := _sid + j1.full + j2.full;
+        j1.Free();
+        j2.Free();
         _hash:= Sha1Hash(tmps);
         spkg := TStreamPkg.Create();
         spkg.hash := _hash;
@@ -624,8 +629,12 @@ begin
             SocksHandler.SocksInfo.Host := p.host;
             SocksHandler.SocksInfo.Port := p.Port;
 
-            tmps := _sid + MainSession.Jid + _pkg.recip;
+            j1 := TJabberID.Create(MainSession.Jid);
+            j2 := TJabberID.Create(_pkg.recip);
+            tmps := _sid + j1.full + j2.full;
             tmps := Sha1Hash(tmps);
+            j1.Free();
+            j2.Free();
 
             tcpClient.IOHandler := SocksHandler;
             tcpClient.Host := tmps;
