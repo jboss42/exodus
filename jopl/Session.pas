@@ -415,6 +415,7 @@ end;
 {---------------------------------------}
 procedure TJabberSession.DoConnect;
 begin
+    assert(_stream = nil);
     _sent_stream := false;
     if (_profile = nil) then
         raise Exception.Create('Invalid profile')
