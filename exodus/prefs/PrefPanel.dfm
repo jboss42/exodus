@@ -1,6 +1,6 @@
 object frmPrefPanel: TfrmPrefPanel
-  Left = 322
-  Top = 497
+  Left = 323
+  Top = 432
   BorderStyle = bsNone
   BorderWidth = 6
   Caption = 'frmPrefPanel'
