@@ -1,6 +1,6 @@
 object frmRoom: TfrmRoom
-  Left = 253
-  Top = 149
+  Left = 310
+  Top = 326
   Width = 443
   Height = 349
   Caption = 'Conference Room'
@@ -13,6 +13,7 @@ object frmRoom: TfrmRoom
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  PopupMenu = popRoom
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
@@ -28,9 +29,9 @@ object frmRoom: TfrmRoom
   end
   object Panel3: TPanel
     Left = 0
-    Top = 26
+    Top = 18
     Width = 435
-    Height = 255
+    Height = 263
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
@@ -40,7 +41,7 @@ object frmRoom: TfrmRoom
       Left = 323
       Top = 4
       Width = 3
-      Height = 247
+      Height = 255
       Cursor = crHSplit
       Align = alRight
       ResizeStyle = rsUpdate
@@ -49,7 +50,7 @@ object frmRoom: TfrmRoom
       Left = 326
       Top = 4
       Width = 105
-      Height = 247
+      Height = 255
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -59,7 +60,7 @@ object frmRoom: TfrmRoom
         Left = 1
         Top = 1
         Width = 103
-        Height = 245
+        Height = 253
         Align = alClient
         Images = frmRosterWindow.ImageList1
         Indent = 19
@@ -76,8 +77,9 @@ object frmRoom: TfrmRoom
       Left = 4
       Top = 4
       Width = 319
-      Height = 247
+      Height = 255
       Align = alClient
+      PopupMenu = popRoom
       ScrollBars = ssBoth
       TabOrder = 1
       OnURLClick = MsgListURLClick
@@ -115,58 +117,33 @@ object frmRoom: TfrmRoom
     Left = 0
     Top = 0
     Width = 435
-    Height = 26
+    Height = 18
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 2
     TabOrder = 2
-    object Panel1: TPanel
-      Left = 402
-      Top = 2
-      Width = 31
-      Height = 22
-      Align = alRight
-      BevelOuter = bvNone
-      TabOrder = 0
-      object btnClose: TSpeedButton
-        Left = 2
-        Top = 1
-        Width = 23
-        Height = 21
-        Hint = 'Close this chat window'
-        Flat = True
-        Glyph.Data = {
-          F6000000424DF600000000000000760000002800000010000000100000000100
-          04000000000080000000CE0E0000C40E00001000000000000000000000000000
-          8000008000000080800080000000800080008080000080808000C0C0C0000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
-          8888888888888888898888898888888888888899988888889888889998888889
-          8888888999888899888888889998899888888888899999888888888888999888
-          8888888889999988888888889998898888888899998888998888899998888889
-          9888899888888888998888888888888888888888888888888888}
-        OnClick = btnCloseClick
-      end
-    end
     object Panel2: TPanel
       Left = 2
       Top = 2
-      Width = 400
-      Height = 22
+      Width = 431
+      Height = 14
       Align = alClient
       BevelOuter = bvNone
-      TabOrder = 1
+      TabOrder = 0
       object lblSubject: TLabel
         Left = 39
         Top = 0
-        Width = 361
-        Height = 22
+        Width = 392
+        Height = 14
         Align = alClient
+        ParentShowHint = False
+        ShowHint = True
       end
       object lblSubjectURL: TLabel
         Left = 0
         Top = 0
         Width = 39
-        Height = 22
+        Height = 14
         Cursor = crHandPoint
         Align = alLeft
         Caption = 'Subject:'
@@ -178,6 +155,32 @@ object frmRoom: TfrmRoom
         ParentFont = False
         OnClick = lblSubjectURLClick
       end
+    end
+  end
+  object popRoom: TPopupMenu
+    Left = 24
+    Top = 40
+    object popClear: TMenuItem
+      Caption = 'Clear Window'
+      OnClick = popClearClick
+    end
+    object popBookmark: TMenuItem
+      Caption = 'Bookmark Room'
+      OnClick = popBookmarkClick
+    end
+    object popInvite: TMenuItem
+      Caption = 'Invite Contacts'
+    end
+    object popNick: TMenuItem
+      Caption = 'Change Nickname'
+      OnClick = popNickClick
+    end
+    object N1: TMenuItem
+      Caption = '-'
+    end
+    object popClose: TMenuItem
+      Caption = 'Close Room'
+      OnClick = popCloseClick
     end
   end
 end

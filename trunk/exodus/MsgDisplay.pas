@@ -58,22 +58,33 @@ begin
     Browser.SelAttributes.Color := clGray;
     Browser.SelText := '[' + formatdatetime('HH:MM',now) + ']';
 
-    if not Msg.Action then begin
+    if (Msg.Nick = '') then begin
+        // Server generated msgs (mostly in TC Rooms)
+        c := clGreen;
+        Browser.SelAttributes.Color := c;
+        Browser.SelText := ' ' + txt;
+        end
+
+    else if not Msg.Action then begin
         if Msg.isMe then
+            // our own msgs
             c := TColor(MainSession.Prefs.getInt('color_me'))
         else
+            // other person's msgs
             c := TColor(MainSession.Prefs.getInt('color_other'));
         Browser.SelAttributes.Color := c;
         Browser.SelText := '<' + Msg.nick + '> ';
         Browser.SelAttributes.Color := TColor(MainSession.Prefs.getInt('font_color'));
         Browser.SelText := txt;
         end
+        
     else begin
         Browser.SelAttributes.Color := clPurple;
         Browser.SelText := ' * ' + Msg.Nick + ' ' + txt;
         end;
     Browser.SelAttributes.Color := TColor(MainSession.Prefs.getInt('font_color'));
     Browser.SelText := #13#10;
+
     with Browser do begin
         GetScrollRange(Handle, SB_VERT, min, max);
         thumb := GetScrollPos(Handle, SB_VERT);

@@ -31,8 +31,10 @@ object frmJabber: TfrmJabber
     ActivePage = tbsMsg
     Align = alClient
     DockSite = True
+    PopupMenu = popTabs
     TabIndex = 0
     TabOrder = 0
+    OnMouseDown = TabsMouseDown
     object tbsMsg: TTabSheet
       Caption = 'Messenger'
       Font.Charset = DEFAULT_CHARSET
@@ -2214,5 +2216,17 @@ object frmJabber: TfrmJabber
     OnTimer = timAutoAwayTimer
     Left = 16
     Top = 136
+  end
+  object popTabs: TPopupMenu
+    Left = 48
+    Top = 136
+    object popCloseTab: TMenuItem
+      Caption = 'Close Window'
+      OnClick = popCloseTabClick
+    end
+    object popFloatTab: TMenuItem
+      Caption = 'Float Window'
+      OnClick = popFloatTabClick
+    end
   end
 end

@@ -48,8 +48,6 @@ type
     Copy1: TMenuItem;
     MsgOut: TMemo;
     Panel7: TPanel;
-    pnlClose: TPanel;
-    btnClose: TSpeedButton;
     MsgList: TExRichEdit;
     pnlFrom: TPanel;
     StaticText1: TStaticText;

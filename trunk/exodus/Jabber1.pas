@@ -130,6 +130,9 @@ type
     btnExpanded: TToolButton;
     timAutoAway: TTimer;
     Meeting1: TMenuItem;
+    popTabs: TPopupMenu;
+    popCloseTab: TMenuItem;
+    popFloatTab: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -164,6 +167,10 @@ type
     procedure Properties2Click(Sender: TObject);
     procedure mnuVCardClick(Sender: TObject);
     procedure SearchforPerson1Click(Sender: TObject);
+    procedure TabsMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure popCloseTabClick(Sender: TObject);
+    procedure popFloatTabClick(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -201,6 +208,8 @@ type
     procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
   public
     // other stuff..
+    function  getTabForm(tab: TTabSheet): TForm;
+    
     procedure RenderEvent(e: TJabberEvent);
     procedure CTCPCallback(event: string; tag: TXMLTag);
   end;
@@ -1072,6 +1081,60 @@ procedure TfrmJabber.SearchforPerson1Click(Sender: TObject);
 begin
     // Start a default search
     StartSearch(MainSession.Agents.getFirstSearch);
+end;
+
+{---------------------------------------}
+procedure TfrmJabber.TabsMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+var
+    tab: integer;
+begin
+    // select a tab automatically if we have a right click.
+    if Button = mbRight then begin
+        tab := Tabs.IndexOfTabAt(X,Y);
+        if (tab <> Tabs.ActivePageIndex) then
+            Tabs.ActivePageIndex := tab;
+        end;
+end;
+
+{---------------------------------------}
+function TfrmJabber.getTabForm(tab: TTabSheet): TForm;
+begin
+    Result := nil;
+    if (tab.ControlCount = 1) then begin
+        if (tab.Controls[0] is TForm) then begin
+            Result := TForm(tab.Controls[0]);
+            exit;
+        end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmJabber.popCloseTabClick(Sender: TObject);
+var
+    t: TTabSheet;
+    f: TForm;
+begin
+    // Close the window docked to this tab..
+    if Tabs.ActivePageIndex = 0 then exit;
+    t := Tabs.ActivePage;
+    f := getTabForm(t);
+    if (f <> nil) then
+        f.Close();
+end;
+
+procedure TfrmJabber.popFloatTabClick(Sender: TObject);
+var
+    t: TTabSheet;
+    f: TForm;
+begin
+    // Undock this window
+    if Tabs.ActivePageIndex = 0 then exit;
+
+    t := Tabs.ActivePage;
+    f := getTabForm(t);
+    if ((f <> nil) and (f is TfrmDockable)) then
+        TfrmDockable(f).FloatForm();
 end;
 
 end.

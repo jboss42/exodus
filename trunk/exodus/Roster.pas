@@ -53,9 +53,12 @@ type
         jid: TJabberID;
         bmType: string;
         name: string;
+        nick: string;
 
         constructor Create(tag: TXMLTag);
         destructor Destroy; override;
+
+        procedure AddToTag(parent: TXMLTag);
     end;
 
     TRosterEvent = procedure(event: string; tag: TXMLTag; ritem: TJabberRosterItem) of object;
@@ -74,6 +77,7 @@ type
         _js: TObject;
         _callbacks: TList;
         procedure Callback(event: string; tag: TXMLTag);
+        procedure bmCallback(event: string; tag: TXMLTag);
         procedure checkGroups(ri: TJabberRosterItem);
         procedure checkGroup(grp: string);
     public
@@ -88,6 +92,7 @@ type
         procedure SetSession(js: TObject);
         procedure Fetch;
         procedure ParseFullRoster(tag: TXMLTag);
+        procedure SaveBookmarks;
 
         procedure AddItem(sjid, nickname, group: string; subscribe: boolean);
         function Find(sjid: string): TJabberRosterItem; reintroduce; overload;
@@ -123,9 +128,17 @@ constructor TJabberBookmark.Create(tag: TXMLTag);
 begin
     //
     inherited Create;
-    jid := TJabberID.Create(tag.GetAttribute('jid'));
-    name := tag.getAttribute('name');
-    bmType := tag.name;
+    jid := nil;
+    name := '';
+    bmType := 'conference';
+    nick := '';
+
+    if (tag <> nil) then begin
+        jid := TJabberID.Create(tag.GetAttribute('jid'));
+        name := tag.getAttribute('name');
+        bmType := tag.name;
+        nick := tag.GetBasicText('nick');
+        end;
 end;
 
 {---------------------------------------}
@@ -133,6 +146,18 @@ destructor TJabberBookmark.Destroy;
 begin
     jid.Free;
     inherited Destroy;
+end;
+
+{---------------------------------------}
+procedure TJabberBookmark.AddToTag(parent: TXMLTag);
+begin
+    // add this bookmark as another tag onto the parent
+    with parent.AddTag(bmType) do begin
+        putAttribute('jid', jid.full);
+        putAttribute('name', name);
+        if (nick <> '') then
+            AddBasicTag('nick', nick);
+        end;
 end;
 
 {---------------------------------------}
@@ -275,6 +300,7 @@ procedure TJabberRoster.Fetch;
 var
     js: TJabberSession;
     x: TXMLTag;
+    bm_iq: TJabberIQ;
 begin
     js := TJabberSession(_js);
     x := TXMLTag.Create('iq');
@@ -283,15 +309,93 @@ begin
     with x.AddTag('query') do
         PutAttribute('xmlns', XMLNS_ROSTER);
     js.SendTag(x);
+
+    bm_iq := TJabberIQ.Create(js, js.generateID(), bmCallback);
+    with bm_iq do begin
+        iqType := 'get';
+        toJid := '';
+        Namespace := 'jabber:iq:private';
+        with qtag.AddTag('bookmarks') do
+            putAttribute('xmlns', 'storage:bookmarks');
+        Send();
+        end;
+end;
+
+{---------------------------------------}
+procedure TJabberRoster.bmCallback(event: string; tag: TXMLTag);
+var
+    s: TJabberSession;
+    bms: TXMLTagList;
+    i, idx: integer;
+    stag: TXMLTag;
+    bm: TJabberBookmark;
+    jid: string;
+begin
+    // get all of the bm's
+    if (event = 'xml') then begin
+        // we got a response..
+        {
+        <iq type="set" id="jcl_4">
+            <query xmlns="jabber:iq:private">
+                <storage xmlns="storage:bookmarks">
+                    <conference jid="jdev@conference.jabber.org"><nick>pgmillard</nick>
+                    </conference>
+                </storage>
+        </query></iq>
+        }
+
+        s := TJabberSession(_js);
+        stag := tag.QueryXPTag('/iq/query/storage');
+        if (stag <> nil) then begin
+            bms := stag.ChildTags();
+            for i := 0 to bms.count -1  do begin
+                jid := Lowercase(bms[i].GetAttribute('jid'));
+                idx := Bookmarks.IndexOf(jid);
+                if (idx >= 0) then begin
+                    // remove the existing bm
+                    TJabberBookmark(Bookmarks.Objects[idx]).Free;
+                    Bookmarks.Delete(idx);
+                    end;
+                bm := TJabberBookmark.Create(bms[i]);
+                Bookmarks.AddObject(jid, bm);
+                checkGroup('Bookmarks');
+                s.FireEvent('/roster/bookmark', bms[i], TJabberRosterItem(nil));
+                end;
+            end;
+        end;
+end;
+
+{---------------------------------------}
+procedure TJabberRoster.SaveBookmarks;
+var
+    s: TJabberSession;
+    stag, iq: TXMLTag;
+    i: integer;
+begin
+    // save bookmarks to jabber:iq:private
+    s := TJabberSession(_js);
+
+    iq := TXMLTag.Create('iq');
+    with iq do begin
+        putAttribute('type', 'set');
+        putAttribute('id', s.generateID());
+        with AddTag('query') do begin
+            putAttribute('xmlns', XMLNS_PRIVATE);
+            stag := AddTag('storage');
+            stag.PutAttribute('xmlns', XMLNS_BM);
+            for i := 0 to Bookmarks.Count - 1 do
+                TJabberBookmark(Bookmarks.Objects[i]).AddToTag(stag);
+            end;
+        end;
+    s.SendTag(iq);
 end;
 
 {---------------------------------------}
 procedure TJabberRoster.Callback(event: string; tag: TXMLTag);
 var
     q: TXMLTag;
-    bmtags, ritems: TXMLTagList;
+    ritems: TXMLTagList;
     ri: TJabberRosterItem;
-    bm: TJabberBookmark;
     idx, i: integer;
     iq_type, j: string;
     s: TJabberSession;
@@ -321,20 +425,6 @@ begin
                 ri.Free;
                 Self.Delete(idx);
                 end;
-            end;
-
-        bmtags := q.QueryTags('conference');
-        for i := 0 to bmtags.count - 1 do begin
-            j := Lowercase(bmtags[i].GetAttribute('jid'));
-            idx := Bookmarks.indexOf(j);
-            if idx >= 0 then begin
-                TJabberBookmark(Bookmarks.Objects[idx]).Free;
-                Bookmarks.Delete(idx);
-                end;
-            bm := TJabberBookmark.Create(bmtags[i]);
-            Bookmarks.AddObject(j, bm);
-            checkGroup('Bookmarks');
-            s.FireEvent('/roster/conference', bmtags[i], TJabberRosterItem(nil));
             end;
         end
     else begin
@@ -386,11 +476,10 @@ end;
 procedure TJabberRoster.ParseFullRoster(tag: TXMLTag);
 var
     ct, qtag: TXMLTag;
-    bms, ritems: TXMLTagList;
+    ritems: TXMLTagList;
     i: integer;
     ri: TJabberRosterItem;
     s: TJabberSession;
-    bm: TJabberBookmark;
 begin
     // parse the full roster push
     Self.Clear;
@@ -409,14 +498,6 @@ begin
         AddObject(Lowercase(ri.jid.Full), ri);
         // Fire('item', ri, ct);
         s.FireEvent('/roster/item', ritems.Tags[i], ri);
-        end;
-
-    bms := qtag.QueryTags('conference');
-    for i := 0 to bms.Count - 1 do begin
-        ct := bms.Tags[i];
-        bm := TJabberBookmark.Create(ct);
-        Bookmarks.AddObject(bm.jid.jid, bm);
-        s.FireEvent('/roster/conference', ct, TJabberRosterItem(nil));
         end;
 
     s.FireEvent('/roster/end', nil);

@@ -1,6 +1,6 @@
 object frmChat: TfrmChat
-  Left = 243
-  Top = 150
+  Left = 289
+  Top = 187
   ActiveControl = MsgOut
   AutoScroll = False
   Caption = 'Chat Window'
@@ -46,7 +46,7 @@ object frmChat: TfrmChat
     object Panel7: TPanel
       Left = 0
       Top = 0
-      Width = 295
+      Width = 326
       Height = 43
       Align = alClient
       BevelOuter = bvNone
@@ -61,7 +61,7 @@ object frmChat: TfrmChat
       object pnlFrom: TPanel
         Left = 2
         Top = 2
-        Width = 291
+        Width = 322
         Height = 22
         Align = alTop
         BevelOuter = bvNone
@@ -87,10 +87,10 @@ object frmChat: TfrmChat
         object lblJID: TStaticText
           Left = 89
           Top = 2
-          Width = 200
+          Width = 38
           Height = 18
           Cursor = crHandPoint
-          Align = alClient
+          Align = alLeft
           Caption = '<JID>'
           Color = clBtnFace
           Font.Charset = DEFAULT_CHARSET
@@ -126,7 +126,7 @@ object frmChat: TfrmChat
       object pnlSubject: TPanel
         Left = 2
         Top = 24
-        Width = 291
+        Width = 322
         Height = 22
         Align = alTop
         BevelOuter = bvNone
@@ -152,7 +152,7 @@ object frmChat: TfrmChat
         object lblSubject: TStaticText
           Left = 62
           Top = 2
-          Width = 227
+          Width = 258
           Height = 18
           Align = alClient
           Color = clBtnFace
@@ -165,33 +165,6 @@ object frmChat: TfrmChat
           ParentFont = False
           TabOrder = 1
         end
-      end
-    end
-    object pnlClose: TPanel
-      Left = 295
-      Top = 0
-      Width = 31
-      Height = 43
-      Align = alRight
-      BevelOuter = bvNone
-      TabOrder = 1
-      object btnClose: TSpeedButton
-        Left = 2
-        Top = 1
-        Width = 23
-        Height = 21
-        Hint = 'Close this chat window'
-        Flat = True
-        Glyph.Data = {
-          F6000000424DF600000000000000760000002800000010000000100000000100
-          04000000000080000000CE0E0000C40E00001000000000000000000000000000
-          8000008000000080800080000000800080008080000080808000C0C0C0000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00888888888888
-          8888888888888888898888898888888888888899988888889888889998888889
-          8888888999888899888888889998899888888888899999888888888888999888
-          8888888889999988888888889998898888888899998888998888899998888889
-          9888899888888888998888888888888888888888888888888888}
-        OnClick = btnCloseClick
       end
     end
   end
