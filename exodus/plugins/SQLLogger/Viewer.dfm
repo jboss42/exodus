@@ -1,8 +1,8 @@
 object frmView: TfrmView
   Left = 247
   Top = 149
-  Width = 499
-  Height = 580
+  Width = 574
+  Height = 369
   BorderWidth = 5
   Caption = 'frmView'
   Color = clBtnFace
@@ -19,8 +19,8 @@ object frmView: TfrmView
   object MsgList: TExRichEdit
     Left = 197
     Top = 41
-    Width = 284
-    Height = 499
+    Width = 359
+    Height = 288
     Align = alClient
     AutoURLDetect = adNone
     CustomURLs = <
@@ -120,7 +120,7 @@ object frmView: TfrmView
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 481
+    Width = 556
     Height = 41
     Align = alTop
     BevelOuter = bvNone
@@ -131,7 +131,7 @@ object frmView: TfrmView
     Left = 0
     Top = 41
     Width = 197
-    Height = 499
+    Height = 288
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 2
@@ -231,7 +231,7 @@ object frmView: TfrmView
         DefaultDrawing = False
         FixedCols = 0
         RowCount = 7
-        Options = [goFixedHorzLine]
+        Options = [goFixedHorzLine, goVertLine, goHorzLine]
         ScrollBars = ssNone
         TabOrder = 2
         OnDrawCell = gridCalDrawCell
