@@ -1577,12 +1577,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 389
-    ActivePage = tbsNotify
+    ActivePage = tbsDialog
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 6
+    TabIndex = 4
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -2121,14 +2121,14 @@ object frmPrefs: TfrmPrefs
       ImageIndex = 4
       object Label26: TLabel
         Left = 8
-        Top = 175
+        Top = 207
         Width = 197
         Height = 13
         Caption = 'Minutes to keep chat windows in memory:'
       end
       object Label27: TLabel
         Left = 8
-        Top = 189
+        Top = 221
         Width = 244
         Height = 13
         Caption = 'Use 0 minutes to destroy chat windows immediately.'
@@ -2136,7 +2136,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 97
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2287,7 +2287,7 @@ object frmPrefs: TfrmPrefs
       end
       object txtChatMemory: TEdit
         Left = 32
-        Top = 205
+        Top = 237
         Width = 49
         Height = 21
         TabOrder = 12
@@ -2296,7 +2296,7 @@ object frmPrefs: TfrmPrefs
       end
       object spnChatMemory: TUpDown
         Left = 81
-        Top = 205
+        Top = 237
         Width = 16
         Height = 21
         Associate = txtChatMemory
@@ -2306,6 +2306,14 @@ object frmPrefs: TfrmPrefs
         Position = 60
         TabOrder = 13
         Wrap = False
+      end
+      object chkBusy: TCheckBox
+        Left = 8
+        Top = 184
+        Width = 265
+        Height = 17
+        Caption = 'Warn when trying to close busy chat windows.'
+        TabOrder = 14
       end
     end
     object tbsMessages: TTabSheet
@@ -3088,7 +3096,7 @@ object frmPrefs: TfrmPrefs
       object StaticText12: TStaticText
         Left = 0
         Top = 0
-        Width = 51
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter

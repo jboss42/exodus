@@ -167,4 +167,11 @@ inherited frmChat: TfrmChat
     Left = 48
     Top = 184
   end
+  object timBusy: TTimer
+    Enabled = False
+    Interval = 800
+    OnTimer = timBusyTimer
+    Left = 80
+    Top = 152
+  end
 end

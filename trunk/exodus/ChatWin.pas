@@ -52,6 +52,7 @@ type
     lblNick: TTntLabel;
     mnuWordwrap: TMenuItem;
     NotificationOptions1: TMenuItem;
+    timBusy: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -81,6 +82,7 @@ type
     procedure btnCloseMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure NotificationOptions1Click(Sender: TObject);
+    procedure timBusyTimer(Sender: TObject);
   private
     { Private declarations }
     jid: widestring;        // jid of the person we are talking to
@@ -100,6 +102,7 @@ type
     _reply_id: string;
     _check_event: boolean;
     _send_composing: boolean;
+    _warn_busyclose: boolean;
 
     _destroying: boolean;
     _redock: boolean;
@@ -149,7 +152,7 @@ resourcestring
     sIsNow = 'is now';
     sAvailable = 'available';
     sOffline = 'offline';
-
+    sCloseBusy = 'This chat window is busy. Close anyways?';
 
 implementation
 
@@ -360,6 +363,7 @@ begin
 
     _embed_returns := MainSession.Prefs.getBool('embed_returns');
     _wrap_input := MainSession.Prefs.getBool('wrap_input');
+    _warn_busyclose := MainSession.Prefs.getBool('warn_closebusy');
     mnuReturns.Checked := _embed_returns;
     mnuWordwrap.Checked := _wrap_input;
     MsgOut.WantReturns := _embed_returns;
@@ -479,7 +483,7 @@ begin
         // check for composing events
         etag := tag.QueryXPTag(XP_MSGXEVENT);
         if ((etag <> nil) and (etag.GetFirstTag('composing') <> nil))then begin
-            // we are composing a message
+            // we got a composing a message
             if (etag.GetBasicText('id') = _last_id) then begin
                 _flash_ticks := 0;
 
@@ -498,6 +502,10 @@ begin
                 }
 
                 exit;
+            end
+            else if ((etag.GetFirstTag('id') <> nil) and
+                (timFlash.Enabled)) then begin
+                Self.ResetPresImage();
             end;
         end;
     end;
@@ -535,6 +543,12 @@ begin
     // display the body of the msg
     if (timFlash.Enabled) then
         Self.ResetPresImage();
+        
+    if (_warn_busyclose) then begin
+        timBusy.Enabled := false;
+        timBusy.Enabled := true;
+    end;
+    
     _check_event := false;
 
     Msg := TJabberMessage.Create(tag);
@@ -1101,6 +1115,14 @@ procedure TfrmChat.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 var
     s: String;
 begin
+    if ((_warn_busyclose) and
+        ((timBusy.Enabled) or (timFlash.Enabled))) then begin
+        if MessageDlg(sCloseBusy, mtConfirmation, [mbYes, mbNo], 0) = mrNo then begin
+            CanClose := false;
+            exit;
+        end;
+    end;
+
     if ((MainSession.Prefs.getInt('chat_memory') > 0) and
         (MsgList.Lines.Count > 0) and
         (chat_object <> nil) and
@@ -1152,6 +1174,12 @@ begin
     end;
 
     f.Free();
+end;
+
+procedure TfrmChat.timBusyTimer(Sender: TObject);
+begin
+  inherited;
+    timBusy.Enabled := false;
 end;
 
 end.
