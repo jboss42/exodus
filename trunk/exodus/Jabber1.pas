@@ -83,7 +83,7 @@ type
     N11: TMenuItem;
     N12: TMenuItem;
     ShowXML1: TMenuItem;
-    SearchforPerson1: TMenuItem;
+    mnuSearch: TMenuItem;
     mnuPassword: TMenuItem;
     N6: TMenuItem;
     N14: TMenuItem;
@@ -154,11 +154,12 @@ type
     N3: TMenuItem;
     XMPPAction: TDdeServerConv;
     presOnline: TMenuItem;
-    FindContactinRoster1: TMenuItem;
-    FindContactAgain1: TMenuItem;
+    mnuFind: TMenuItem;
+    mnuFindAgain: TMenuItem;
     trayPresOnline: TMenuItem;
     presChat: TMenuItem;
     trayPresChat: TMenuItem;
+    N10: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
@@ -188,7 +189,7 @@ type
     procedure MessageHistory2Click(Sender: TObject);
     procedure Properties2Click(Sender: TObject);
     procedure mnuVCardClick(Sender: TObject);
-    procedure SearchforPerson1Click(Sender: TObject);
+    procedure mnuSearchClick(Sender: TObject);
     procedure TabsMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure popCloseTabClick(Sender: TObject);
@@ -230,8 +231,8 @@ type
     procedure FormPaint(Sender: TObject);
     procedure mnuRegistrationClick(Sender: TObject);
     procedure XMPPActionExecuteMacro(Sender: TObject; Msg: TStrings);
-    procedure FindContactinRoster1Click(Sender: TObject);
-    procedure FindContactAgain1Click(Sender: TObject);
+    procedure mnuFindClick(Sender: TObject);
+    procedure mnuFindAgainClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -2071,7 +2072,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmExodus.SearchforPerson1Click(Sender: TObject);
+procedure TfrmExodus.mnuSearchClick(Sender: TObject);
 begin
     // Start a default search
     StartSearch(MainSession.MyAgents.getFirstSearch);
@@ -2909,12 +2910,12 @@ begin
     end;
 end;
 
-procedure TfrmExodus.FindContactinRoster1Click(Sender: TObject);
+procedure TfrmExodus.mnuFindClick(Sender: TObject);
 begin
     frmRosterWindow.StartFind();
 end;
 
-procedure TfrmExodus.FindContactAgain1Click(Sender: TObject);
+procedure TfrmExodus.mnuFindAgainClick(Sender: TObject);
 begin
     frmRosterWindow.FindAgain();
 end;

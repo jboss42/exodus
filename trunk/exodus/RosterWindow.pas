@@ -107,6 +107,7 @@ type
     radNick: TTntRadioButton;
     presOnline: TMenuItem;
     presChat: TMenuItem;
+    btnFindClose: TSpeedButton;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -173,6 +174,7 @@ type
     procedure txtFindKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure txtFindChange(Sender: TObject);
+    procedure btnFindCloseClick(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;             // roster callback id
@@ -330,6 +332,7 @@ var
 begin
     // Deal with fonts & stuff
     AssignUnicodeFont(Self, 9);
+
 
     lblLogin.Font.Color := clBlue;
     lblLogin.Font.Style := [fsUnderline];
@@ -530,6 +533,9 @@ begin
         treeRoster.Font.Color := TColor(MainSession.Prefs.getInt('roster_font_color'));
         treeRoster.Font.Charset := MainSession.Prefs.getInt('roster_font_charset');
 
+        pnlFind.Font.Name := treeRoster.Font.Name;
+        pnlFind.Font.Size := treeRoster.Font.Size;
+
         if (treeRoster.Font.Charset = 0) then
             treeRoster.Font.Charset := 1;
 
@@ -694,6 +700,7 @@ procedure TfrmRosterWindow.StartFind;
 begin
     _last_search := 0;
     pnlFind.Visible := true;
+    FormResize(Self);
     txtFind.SetFocus();
 end;
 
@@ -1568,6 +1575,9 @@ begin
     _pos.Right := Self.Left + Self.Width;
     _pos.Top := Self.Top;
     _pos.Bottom := Self.Top + Self.Height;
+
+    btnFindClose.Left := pnlFind.Width - btnFindClose.Width - 2;
+    txtFind.Width := btnFindClose.Left - 5 - txtFind.Left;
 end;
 
 {---------------------------------------}
@@ -2861,10 +2871,14 @@ procedure TfrmRosterWindow.txtFindKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
     case key of
-        VK_ESCAPE: pnlFind.Visible := false;
+        VK_ESCAPE: begin
+            pnlFind.Visible := false;
+            Key := 0;
+        end;
         VK_RETURN: begin
             Self.treeRosterDblClick(Self);
             pnlFind.Visible := false;
+            Key := 0;
         end
         else
             _last_search := 0;
@@ -2899,6 +2913,11 @@ begin
         end;
     end;
     _last_search := 0;
+end;
+
+procedure TfrmRosterWindow.btnFindCloseClick(Sender: TObject);
+begin
+    pnlFind.Visible := false;
 end;
 
 initialization
