@@ -61,7 +61,7 @@ type
         SaveDialog1: TSaveDialog;
         btnCancel: TButton;
         SocksHandler: TIdIOHandlerSocket;
-    IdSocksInfo1: TIdSocksInfo;
+        IdSocksInfo1: TIdSocksInfo;
         procedure btnRecvClick(Sender: TObject);
         procedure btnCancelClick(Sender: TObject);
     private
@@ -579,6 +579,7 @@ begin
             btnCancel.Caption := sClose;
             _state := recv_done;
             _thread := nil;
+            bar1.Position := bar1.Max;
         end;
     end
     else if (_state = recv_recv) then begin
