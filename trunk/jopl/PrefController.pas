@@ -86,6 +86,8 @@ const
     P_EVENT_WIDTH = 'event_width';
 
 type
+    TPrefController = class;
+    
     TJabberProfile = class
     private
         _password: Widestring;
@@ -125,7 +127,7 @@ type
         ProxyUsername: Widestring;
         ProxyPassword: Widestring;
 
-        constructor Create();
+        constructor Create(prof_name: string; brand: TXMLTag);
 
         procedure Load(tag: TXMLTag);
         procedure Save(node: TXMLTag);
@@ -859,10 +861,7 @@ end;
 {---------------------------------------}
 function TPrefController.CreateProfile(name: Widestring): TJabberProfile;
 begin
-    Result := TJabberProfile.Create();
-    Result.Name := name;
-    Result.Port := 5222;
-    Result.NumPollKeys := 256;
+    Result := TJabberProfile.Create(name, _brand_node);
     _profiles.AddObject(name, Result);
 end;
 
@@ -890,7 +889,7 @@ begin
     pcount := ptags.Count;
 
     for i := 0 to pcount - 1 do begin
-        cur_profile := TJabberProfile.Create;
+        cur_profile := TJabberProfile.Create('', nil);
         cur_profile.Load(ptags[i]);
         _profiles.AddObject(cur_profile.name, cur_profile);
         end;
@@ -1001,41 +1000,79 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-constructor TJabberProfile.Create();
+function getDefaultString(key: string; node: TXMLTag; defaultstr: string): string;
+var
+    t: TXMLTag;
+begin
+    if (node = nil) then
+        result := defaultstr
+    else begin
+        t := node.GetFirstTag(key);
+        if (t = nil) then
+            result := defaultstr
+        else
+            result := t.Data;
+        end;
+end;
+
+function getDefaultInt(key: string; brand: TXMLTag; defint: integer) : integer;
+var
+    t: string;
+begin
+    t := getDefaultString(key, brand, '');
+    if (t = '') then
+        result := defint
+    else
+        result := SafeInt(t);
+end;
+
+function getDefaultBoolean(key: string; brand: TXMLTag; defbool: boolean) : boolean;
+var
+    t: string;
+begin
+    t := getDefaultString(key, brand, '');
+    if (t = '') then
+        result := defbool
+    else
+        result := SafeBool(t);
+end;
+
+constructor TJabberProfile.Create(prof_name : string; brand: TXMLTag);
 begin
     inherited Create;
 
-    Name := '';
-    Username := '';
-    password := '';
-    Server := '';
-    Resource := '';
-    Priority := 0;
-    SavePasswd := true;
+    Name       := prof_name;
 
-    ConnectionType := conn_normal;
+    Username   := getDefaultString('brand_profile_username', brand, '');
+    password   := getDefaultString('brand_profile_password', brand, '');
+    Server     := getDefaultString('brand_profile_server', brand, 'jabber.org');
+    Resource   := getDefaultString('brand_profile_resource', brand, 'Exodus');
+    Priority   := getDefaultInt('brand_profile_priority', brand, 1);
+    SavePasswd := getDefaultBoolean('brand_profile_save_password', brand, true);
+
+    ConnectionType := getDefaultInt('brand_profile_conn_type', brand, conn_normal);
 
     // Socket connection
-    Host := '';
-    Port := 0;
-    ssl := false;
-    SocksType := 0;
-    SocksHost := '';
-    SocksPort := 0;
-    SocksAuth := false;
-    SocksUsername := '';
-    SocksPassword := '';
+    Host          := getDefaultString('brand_profile_host', brand, '');
+    Port          := getDefaultInt('brand_profile_port', brand, 5222);
+    ssl           := getDefaultBoolean('brand_profile_ssl', brand, false);
+    SocksType     := getDefaultInt('brand_profile_socks_type', brand, 0);
+    SocksHost     := getDefaultString('brand_profile_socks_host', brand, '');
+    SocksPort     := getDefaultInt('brand_profile_socks_port', brand, 1);
+    SocksAuth     := getDefaultBoolean('brand_profile_socks_auth', brand, false);
+    SocksUsername := getDefaultString('brand_profile_socks_user', brand, '');
+    SocksPassword := getDefaultString('brand_profile_socks_password', brand, '');
 
     // HTTP Connection
-    URL := '';
-    Poll := 0;
-    NumPollKeys := 256;
-    ProxyApproach := 0;
-    ProxyHost := '';
-    ProxyPort := 0;
-    ProxyAuth := false;
-    ProxyUsername := '';
-    ProxyPassword := '';
+    URL           := getDefaultString('brand_profile_http_url', brand, '');
+    Poll          := getDefaultInt('brand_profile_http_poll', brand, 1000);
+    NumPollKeys   := getDefaultInt('brand_profile_num_poll_keys', brand, 256);
+    ProxyApproach := getDefaultInt('brand_profile_http_proxy_approach', brand, 0);
+    ProxyHost     := getDefaultString('brand_profile_http_proxy_host', brand, '');
+    ProxyPort     := getDefaultInt('brand_profile_http_proxy_port', brand, 0);
+    ProxyAuth     := getDefaultBoolean('brand_profile_http_proxy_auth', brand, false);
+    ProxyUsername := getDefaultString('brand_profile_http_proxy_user', brand, '');
+    ProxyPassword := getDefaultString('brand_profile_http_proxy_password', brand, '');
 end;
 
 {---------------------------------------}

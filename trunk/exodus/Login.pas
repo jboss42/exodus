@@ -84,7 +84,7 @@ implementation
 {$R *.DFM}
 
 uses
-    Jabber1,
+    Jabber1,  Unicode, 
     ConnDetails, PrefController;
 
 {---------------------------------------}
@@ -161,11 +161,30 @@ end;
 
 {---------------------------------------}
 procedure TfrmLogin.FormCreate(Sender: TObject);
+var
+    list : TWideStrings;
+    i : integer;
 begin
     MainSession.Prefs.RestorePosition(Self);
-    cboResource.Items.Add(sResourceHome);
-    cboResource.Items.Add(sResourceWork);
-    cboResource.Items.Add('Exodus');
+
+    list := TWideStringList.Create();
+    MainSession.Prefs.fillStringlist('brand_profile_server_list', list, pkBrand);
+    if (list.Count > 0) then begin
+        cboServer.Clear();
+        for i := 0 to list.Count - 1 do
+            cboServer.Items.Add(list[i]);
+        end;
+    MainSession.Prefs.fillStringlist('brand_profile_resource_list', list, pkBrand);
+    if (list.Count > 0) then begin
+        cboResource.Clear();
+        for i := 0 to list.Count - 1 do
+            cboResource.Items.Add(list[i]);
+        end
+    else begin
+        cboResource.Items.Add(sResourceHome);
+        cboResource.Items.Add(sResourceWork);
+        cboResource.Items.Add('Exodus');
+        end;
 end;
 
 {---------------------------------------}
