@@ -590,10 +590,10 @@ var
     i: integer;
 begin
     case server_side of
-        pkClient:   p := _pref_node.GetFirstTag(pkey);
-        pkServer:   p := _server_node.GetFirstTag(pkey);
-        else p:= nil;
-end;
+    pkClient:   p := _pref_node.GetFirstTag(pkey);
+    pkServer:   p := _server_node.GetFirstTag(pkey);
+    else p:= nil;
+    end;
 
     if (p <> nil) then begin
         sl.Clear();

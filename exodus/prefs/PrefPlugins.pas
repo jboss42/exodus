@@ -210,45 +210,61 @@ var
 begin
     // load the .dll.  This SHOULD register the bloody thing if it's not, but that
     // doesn't seem to work for me.
-    OleCheck(LoadTypeLibEx(PWideChar(dll), REGKIND_REGISTER, lib));
-
-    // get the project name
-    OleCheck(lib.GetDocumentation(-1, @libname, nil, nil, nil));
+    try
+        OleCheck(LoadTypeLibEx(PWideChar(dll), REGKIND_REGISTER, lib));
+        // get the project name
+        OleCheck(lib.GetDocumentation(-1, @libname, nil, nil, nil));
+    except
+        on EOleSysError do exit;
+    end;
 
     // for each type in the project
     for i := 0 to lib.GetTypeInfoCount() - 1 do begin
         // get the info about the type
-        OleCheck(lib.GetTypeInfo(i, tinfo));
+        try
+            OleCheck(lib.GetTypeInfo(i, tinfo));
 
-        // get attributes of the type
-        OleCheck(tinfo.GetTypeAttr(tattr));
+            // get attributes of the type
+            OleCheck(tinfo.GetTypeAttr(tattr));
+        except
+            on EOleSysError do exit;
+        end;
         // is this a coclass?
         if (tattr.typekind <> TKIND_COCLASS) then continue;
 
         // for each interface that the coclass implements
         for j := 0 to tattr.cImplTypes - 1 do begin
             // get the type info for the interface
-            OleCheck(tinfo.GetRefTypeOfImplType(j, r));
-            OleCheck(tinfo.GetRefTypeInfo(r, iface));
+            try
+                OleCheck(tinfo.GetRefTypeOfImplType(j, r));
+                OleCheck(tinfo.GetRefTypeInfo(r, iface));
 
-            // get the attributes of the interface
-            OleCheck(iface.GetTypeAttr(iattr));
+                // get the attributes of the interface
+                OleCheck(iface.GetTypeAttr(iattr));
+            except
+                on EOleSysError do continue;
+            end;
 
             // is this the IExodusPlugin interface?
             if  (IsEqualGUID(iattr.guid, ExodusCOM_TLB.IID_IExodusPlugin)) then begin
                 // oho!  it IS.  Get the name of this coclass, so we can show
                 // what we did.  Get the doc string, just to show off.
-                OleCheck(tinfo.GetDocumentation(-1, @obname, @doc, nil, nil));
-                // SysFreeString of obname and doc needed?  In C, yes, but here?
+                try
+                    OleCheck(tinfo.GetDocumentation(-1, @obname, @doc, nil, nil));
+                    // SysFreeString of obname and doc needed?  In C, yes, but here?
 
-                item := lstPlugins.Items.Add();
-                item.Caption := libname + '.' + obname;
-                item.SubItems.Add(doc);
-                item.SubItems.Add(dll);
+                    item := lstPlugins.Items.Add();
+                    item.Caption := libname + '.' + obname;
+                    item.SubItems.Add(doc);
+                    item.SubItems.Add(dll);
 
-                // check to see if this is selected
-                idx := selected.IndexOf(item.Caption);
-                item.Checked := (idx >= 0);
+                    // check to see if this is selected
+                    idx := selected.IndexOf(item.Caption);
+                    item.Checked := (idx >= 0);
+                except
+                    on EOleSysError do exit;
+                end;
+
             end;
             iface.ReleaseTypeAttr(iattr);
         end;
