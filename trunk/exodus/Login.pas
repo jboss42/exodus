@@ -67,6 +67,7 @@ implementation
 {$R *.DFM}
 
 uses
+    Jabber1, 
     PrefController;
 
 {---------------------------------------}
@@ -101,6 +102,8 @@ begin
 
         MainSession.ActivateProfile(i);
         MainSession.Connect;
+
+        frmJabber.Tabs.ActivePageIndex := 1;
         end;
 
     l.Free;
