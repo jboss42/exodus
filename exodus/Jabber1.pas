@@ -1615,6 +1615,7 @@ begin
     // Kill the application
     Shell_NotifyIcon(NIM_DELETE, @_tray);
     Action := caFree;
+    frmExodus := nil;
 end;
 
 {---------------------------------------}

@@ -124,13 +124,15 @@ begin
     else
         l.Close();
 
-    frmExodus.PostModal();
+    if (frmExodus <> nil) then
+        frmExodus.PostModal();
 end;
 
 {---------------------------------------}
 procedure TfrmLogin.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-    MainSession.Prefs.SavePosition(Self);
+    if (MainSession <> nil) then
+        MainSession.Prefs.SavePosition(Self);
     frmLogin := nil;
     Action := caFree;
 end;
