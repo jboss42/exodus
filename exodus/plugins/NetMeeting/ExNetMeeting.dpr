@@ -14,7 +14,6 @@ uses
   LibXmlComps in '..\..\..\jopl\LibXmlComps.pas',
   LibXmlParser in '..\..\..\jopl\LibXmlParser.pas',
   SecHash in '..\..\..\jopl\SecHash.pas',
-  NetMeetingLib_TLB in 'NetMeetingLib_TLB.pas',
   XMLParser in '..\..\..\jopl\XMLParser.pas';
 
 exports

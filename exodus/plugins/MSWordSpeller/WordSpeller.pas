@@ -19,6 +19,10 @@ type
     procedure menuClick(const ID: WideString); safecall;
     function onInstantMsg(const Body: WideString; const Subject: WideString): WideString; safecall;
     procedure Configure; safecall;
+    function NewIM(const jid: WideString; var Body, Subject: WideString;
+      const XTags: WideString): WideString; safecall;
+    procedure MsgMenuClick(const ID, jid: WideString; var Body,
+      Subject: WideString); safecall;
     { Protected declarations }
   private
     _exodus: IExodusController;
@@ -99,6 +103,18 @@ begin
     //
 end;
 
+
+function TWordSpeller.NewIM(const jid: WideString; var Body,
+  Subject: WideString; const XTags: WideString): WideString;
+begin
+
+end;
+
+procedure TWordSpeller.MsgMenuClick(const ID, jid: WideString; var Body,
+  Subject: WideString);
+begin
+
+end;
 
 initialization
   TAutoObjectFactory.Create(ComServer, TWordSpeller, Class_WordSpeller,

@@ -11,23 +11,24 @@ unit ExodusCOM_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.7 $
-// File generated on 1/8/2003 9:58:27 PM from Type Library described below.
+// PASTLWTR : 1.2
+// File generated on 2/12/2003 9:33:52 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\src\exodus\runner\exodus.exe (1)
+// Type Lib: D:\src\exodus\exodus\Exodus.exe (1)
 // LIBID: {219E0029-5710-4C9B-BE33-4C7F046D7792}
 // LCID: 0
 // Helpfile: 
+// HelpString: Exodus COM Plugin interfaces
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
+//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
 // Parent TypeLibrary:
 //   (0) v1.0 ExodusWordSpeller, (D:\src\exodus\exodus\plugins\MSWordSpeller\ExodusWordSpeller.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
 {$WRITEABLECONST ON}
-
+{$VARPROPSETTER ON}
 interface
 
 uses Windows, ActiveX, Classes, Graphics, StdVCL, Variants;
@@ -52,9 +53,7 @@ const
   IID_IExodusChat: TGUID = '{27176DA5-4EEB-442F-9B1F-D25EF948B9CB}';
   CLASS_ExodusChat: TGUID = '{DB3F5C90-0575-47E4-8F00-EED79757A97B}';
   IID_IExodusPlugin: TGUID = '{72470D1C-9A66-4735-A7CF-446F43561C92}';
-  CLASS_ExodusPlugin: TGUID = '{B4CEBD09-6E5E-4A42-8CEA-219989832597}';
   IID_IExodusChatPlugin: TGUID = '{2C576B16-DD6A-4E8C-8DEB-38E255B48A88}';
-  CLASS_ExodusChatPlugin: TGUID = '{4B956942-1A82-4AE9-804F-68E1B6CA4AB4}';
   IID_IExodusRoster: TGUID = '{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}';
   CLASS_ExodusRoster: TGUID = '{438DF52E-F892-456B-9FB0-3C64DBB85240}';
   IID_IExodusPPDB: TGUID = '{284E49F2-2006-4E48-B0E0-233867A78E54}';
@@ -63,6 +62,7 @@ const
   CLASS_ExodusRosterItem: TGUID = '{9C6A0965-39B0-4D72-A143-D210FB1BA988}';
   IID_IExodusPresence: TGUID = '{D2FD3425-40CE-469F-A95C-1C80B7FF3119}';
   CLASS_ExodusPresence: TGUID = '{B9EED6FA-AB95-48CA-B485-1AF7E3CC0D0B}';
+  IID_IExodusAuth: TGUID = '{D33EA5B9-23FD-4E43-B5B7-3CCFD0F5CDD0}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -75,6 +75,14 @@ const
   Ptr_MsgInput = $00000001;
   HWND_MsgOutput = $00000002;
   Ptr_MsgOutput = $00000003;
+
+// Constants for enum ActiveItem
+type
+  ActiveItem = TOleEnum;
+const
+  RosterItem = $00000000;
+  Bookmark = $00000001;
+  Group = $00000002;
 
 type
 
@@ -97,6 +105,8 @@ type
   IExodusRosterItemDisp = dispinterface;
   IExodusPresence = interface;
   IExodusPresenceDisp = dispinterface;
+  IExodusAuth = interface;
+  IExodusAuthDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -104,8 +114,6 @@ type
 // *********************************************************************//
   ExodusController = IExodusController;
   ExodusChat = IExodusChat;
-  ExodusPlugin = IExodusPlugin;
-  ExodusChatPlugin = IExodusChatPlugin;
   ExodusRoster = IExodusRoster;
   ExodusPPDB = IExodusPPDB;
   ExodusRosterItem = IExodusRosterItem;
@@ -187,6 +195,17 @@ type
     function registerPresenceXML(const xml: WideString): WideString; safecall;
     procedure removePresenceXML(const ID: WideString); safecall;
     procedure trackWindowsMsg(Message: Integer); safecall;
+    function addContactMenu(const Caption: WideString): WideString; safecall;
+    procedure removeContactMenu(const ID: WideString); safecall;
+    function getActiveContact: WideString; safecall;
+    function getActiveGroup: WideString; safecall;
+    function getActiveContacts(Online: WordBool): WideString; safecall;
+    function Get_LocalIP: WideString; safecall;
+    procedure setPluginAuth(const AuthAgent: IExodusAuth); safecall;
+    procedure setAuthenticated(Authed: WordBool; const xml: WideString); safecall;
+    procedure setAuthJID(const Username: WideString; const Host: WideString; 
+                         const resource: WideString); safecall;
+    function addMessageMenu(const Caption: WideString): WideString; safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -199,6 +218,7 @@ type
     property IsInvisible: WordBool read Get_IsInvisible;
     property Roster: IExodusRoster read Get_Roster;
     property PPDB: IExodusPPDB read Get_PPDB;
+    property LocalIP: WideString read Get_LocalIP;
   end;
 
 // *********************************************************************//
@@ -270,6 +290,17 @@ type
     function registerPresenceXML(const xml: WideString): WideString; dispid 57;
     procedure removePresenceXML(const ID: WideString); dispid 58;
     procedure trackWindowsMsg(Message: Integer); dispid 59;
+    function addContactMenu(const Caption: WideString): WideString; dispid 60;
+    procedure removeContactMenu(const ID: WideString); dispid 61;
+    function getActiveContact: WideString; dispid 62;
+    function getActiveGroup: WideString; dispid 63;
+    function getActiveContacts(Online: WordBool): WideString; dispid 65;
+    property LocalIP: WideString readonly dispid 64;
+    procedure setPluginAuth(const AuthAgent: IExodusAuth); dispid 66;
+    procedure setAuthenticated(Authed: WordBool; const xml: WideString); dispid 67;
+    procedure setAuthJID(const Username: WideString; const Host: WideString; 
+                         const resource: WideString); dispid 68;
+    function addMessageMenu(const Caption: WideString): WideString; dispid 201;
   end;
 
 // *********************************************************************//
@@ -285,6 +316,8 @@ type
     function RegisterPlugin(const Plugin: IExodusChatPlugin): Integer; safecall;
     function UnRegister(ID: Integer): WordBool; safecall;
     function getMagicInt(Part: ChatParts): Integer; safecall;
+    procedure RemoveContextMenu(const ID: WideString); safecall;
+    procedure AddMsgOut(const Value: WideString); safecall;
     property jid: WideString read Get_jid;
     property MsgOutText: WideString read Get_MsgOutText;
   end;
@@ -302,6 +335,8 @@ type
     function RegisterPlugin(const Plugin: IExodusChatPlugin): Integer; dispid 3;
     function UnRegister(ID: Integer): WordBool; dispid 5;
     function getMagicInt(Part: ChatParts): Integer; dispid 6;
+    procedure RemoveContextMenu(const ID: WideString); dispid 7;
+    procedure AddMsgOut(const Value: WideString); dispid 201;
   end;
 
 // *********************************************************************//
@@ -316,9 +351,12 @@ type
     procedure Process(const xpath: WideString; const event: WideString; const xml: WideString); safecall;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat); safecall;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat); safecall;
-    procedure menuClick(const ID: WideString); safecall;
-    function onInstantMsg(const Body: WideString; const Subject: WideString): WideString; safecall;
+    function NewIM(const jid: WideString; var Body: WideString; var Subject: WideString; 
+                   const XTags: WideString): WideString; safecall;
     procedure Configure; safecall;
+    procedure MenuClick(const ID: WideString); safecall;
+    procedure MsgMenuClick(const ID: WideString; const jid: WideString; var Body: WideString; 
+                           var Subject: WideString); safecall;
   end;
 
 // *********************************************************************//
@@ -333,9 +371,12 @@ type
     procedure Process(const xpath: WideString; const event: WideString; const xml: WideString); dispid 3;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat); dispid 4;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat); dispid 5;
-    procedure menuClick(const ID: WideString); dispid 6;
-    function onInstantMsg(const Body: WideString; const Subject: WideString): WideString; dispid 8;
+    function NewIM(const jid: WideString; var Body: WideString; var Subject: WideString; 
+                   const XTags: WideString): WideString; dispid 8;
     procedure Configure; dispid 12;
+    procedure MenuClick(const ID: WideString); dispid 201;
+    procedure MsgMenuClick(const ID: WideString; const jid: WideString; var Body: WideString; 
+                           var Subject: WideString); dispid 202;
   end;
 
 // *********************************************************************//
@@ -351,6 +392,7 @@ type
     procedure onContextMenu(const ID: WideString); safecall;
     procedure onRecvMessage(const Body: WideString; const xml: WideString); safecall;
     procedure onClose; safecall;
+    procedure onMenu(const ID: WideString); safecall;
   end;
 
 // *********************************************************************//
@@ -366,6 +408,7 @@ type
     procedure onContextMenu(const ID: WideString); dispid 4;
     procedure onRecvMessage(const Body: WideString; const xml: WideString); dispid 5;
     procedure onClose; dispid 6;
+    procedure onMenu(const ID: WideString); dispid 201;
   end;
 
 // *********************************************************************//
@@ -384,6 +427,7 @@ type
     procedure RemoveBookmark(const JabberID: WideString); safecall;
     function Find(const JabberID: WideString): IExodusRosterItem; safecall;
     function Item(Index: Integer): IExodusRosterItem; safecall;
+    function Count: Integer; safecall;
   end;
 
 // *********************************************************************//
@@ -402,6 +446,7 @@ type
     procedure RemoveBookmark(const JabberID: WideString); dispid 5;
     function Find(const JabberID: WideString): IExodusRosterItem; dispid 6;
     function Item(Index: Integer): IExodusRosterItem; dispid 7;
+    function Count: Integer; dispid 8;
   end;
 
 // *********************************************************************//
@@ -530,6 +575,32 @@ type
   end;
 
 // *********************************************************************//
+// Interface: IExodusAuth
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {D33EA5B9-23FD-4E43-B5B7-3CCFD0F5CDD0}
+// *********************************************************************//
+  IExodusAuth = interface(IDispatch)
+    ['{D33EA5B9-23FD-4E43-B5B7-3CCFD0F5CDD0}']
+    procedure StartAuth; safecall;
+    procedure CancelAuth; safecall;
+    function StartRegistration: WordBool; safecall;
+    procedure CancelRegistration; safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusAuthDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {D33EA5B9-23FD-4E43-B5B7-3CCFD0F5CDD0}
+// *********************************************************************//
+  IExodusAuthDisp = dispinterface
+    ['{D33EA5B9-23FD-4E43-B5B7-3CCFD0F5CDD0}']
+    procedure StartAuth; dispid 1;
+    procedure CancelAuth; dispid 2;
+    function StartRegistration: WordBool; dispid 3;
+    procedure CancelRegistration; dispid 4;
+  end;
+
+// *********************************************************************//
 // The Class CoExodusController provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusController exposed by              
 // the CoClass ExodusController. The functions are intended to be used by             
@@ -551,30 +622,6 @@ type
   CoExodusChat = class
     class function Create: IExodusChat;
     class function CreateRemote(const MachineName: string): IExodusChat;
-  end;
-
-// *********************************************************************//
-// The Class CoExodusPlugin provides a Create and CreateRemote method to          
-// create instances of the default interface IExodusPlugin exposed by              
-// the CoClass ExodusPlugin. The functions are intended to be used by             
-// clients wishing to automate the CoClass objects exposed by the         
-// server of this typelibrary.                                            
-// *********************************************************************//
-  CoExodusPlugin = class
-    class function Create: IExodusPlugin;
-    class function CreateRemote(const MachineName: string): IExodusPlugin;
-  end;
-
-// *********************************************************************//
-// The Class CoExodusChatPlugin provides a Create and CreateRemote method to          
-// create instances of the default interface IExodusChatPlugin exposed by              
-// the CoClass ExodusChatPlugin. The functions are intended to be used by             
-// clients wishing to automate the CoClass objects exposed by the         
-// server of this typelibrary.                                            
-// *********************************************************************//
-  CoExodusChatPlugin = class
-    class function Create: IExodusChatPlugin;
-    class function CreateRemote(const MachineName: string): IExodusChatPlugin;
   end;
 
 // *********************************************************************//
@@ -647,26 +694,6 @@ end;
 class function CoExodusChat.CreateRemote(const MachineName: string): IExodusChat;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusChat) as IExodusChat;
-end;
-
-class function CoExodusPlugin.Create: IExodusPlugin;
-begin
-  Result := CreateComObject(CLASS_ExodusPlugin) as IExodusPlugin;
-end;
-
-class function CoExodusPlugin.CreateRemote(const MachineName: string): IExodusPlugin;
-begin
-  Result := CreateRemoteComObject(MachineName, CLASS_ExodusPlugin) as IExodusPlugin;
-end;
-
-class function CoExodusChatPlugin.Create: IExodusChatPlugin;
-begin
-  Result := CreateComObject(CLASS_ExodusChatPlugin) as IExodusChatPlugin;
-end;
-
-class function CoExodusChatPlugin.CreateRemote(const MachineName: string): IExodusChatPlugin;
-begin
-  Result := CreateRemoteComObject(MachineName, CLASS_ExodusChatPlugin) as IExodusChatPlugin;
 end;
 
 class function CoExodusRoster.Create: IExodusRoster;

@@ -41,6 +41,10 @@ type
     procedure Process(const xpath, event, xml: WideString); safecall;
     procedure Shutdown; safecall;
     procedure Startup(const ExodusController: IExodusController); safecall;
+    function NewIM(const jid: WideString; var Body, Subject: WideString;
+      const XTags: WideString): WideString; safecall;
+    procedure MsgMenuClick(const ID, jid: WideString; var Body,
+      Subject: WideString); safecall;
     { Protected declarations }
   private
     _exodus: IExodusController;
@@ -137,6 +141,18 @@ begin
     _exodus := ExodusController;
     _export := _exodus.addPluginMenu('Export Jabber Roster...');
     _import := _exodus.addPluginMenu('Import Jabber Roster...');
+end;
+
+function TRosterPlugin.NewIM(const jid: WideString; var Body,
+  Subject: WideString; const XTags: WideString): WideString;
+begin
+
+end;
+
+procedure TRosterPlugin.MsgMenuClick(const ID, jid: WideString; var Body,
+  Subject: WideString);
+begin
+
 end;
 
 initialization

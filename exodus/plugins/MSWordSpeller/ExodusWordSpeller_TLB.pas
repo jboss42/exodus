@@ -11,23 +11,23 @@ unit ExodusWordSpeller_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.6 $
-// File generated on 1/8/2003 9:58:27 PM from Type Library described below.
+// PASTLWTR : 1.2
+// File generated on 2/12/2003 9:33:52 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\MSWordSpeller\ExodusWordSpeller.tlb (1)
 // LIBID: {ADD14710-280B-4B21-8AA5-DC33EC6B1C4B}
 // LCID: 0
 // Helpfile: 
+// HelpString: ExodusWordSpeller Library
 // DepndLst: 
-//   (1) v1.0 ExodusCOM, (D:\src\exodus\runner\exodus.exe)
-//   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
-//   (3) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
+//   (1) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
+//   (2) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
 {$WRITEABLECONST ON}
-
+{$VARPROPSETTER ON}
 interface
 
 uses Windows, ActiveX, Classes, ExodusCOM_TLB, Graphics, StdVCL, Variants;

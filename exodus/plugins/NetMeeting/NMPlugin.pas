@@ -22,6 +22,10 @@ type
     procedure Process(const xpath, event, xml: WideString); safecall;
     procedure Shutdown; safecall;
     procedure Startup(const ExodusController: IExodusController); safecall;
+    function NewIM(const jid: WideString; var Body, Subject: WideString;
+      const XTags: WideString): WideString; safecall;
+    procedure MsgMenuClick(const ID, jid: WideString; var Body,
+      Subject: WideString); safecall;
     { Protected declarations }
   private
     _menu_id: Widestring;
@@ -147,6 +151,18 @@ begin
     _menu_id := _exodus.addContactMenu('Start NetMeeting Call... ');
     _xpath := '/packet/iq[@type="set"]/query[@xmlns="jabber:iq:oob"]';
     _cb := _exodus.RegisterCallback(_xpath, Self);
+end;
+
+function TExNetmeetingPlugin.NewIM(const jid: WideString; var Body,
+  Subject: WideString; const XTags: WideString): WideString;
+begin
+
+end;
+
+procedure TExNetmeetingPlugin.MsgMenuClick(const ID, jid: WideString;
+  var Body, Subject: WideString);
+begin
+
 end;
 
 initialization

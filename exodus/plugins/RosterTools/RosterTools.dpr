@@ -15,7 +15,8 @@ uses
   XMLConstants in '..\..\..\jopl\XMLConstants.pas',
   XMLNode in '..\..\..\jopl\XMLNode.pas',
   XMLParser in '..\..\..\jopl\XMLParser.pas',
-  XMLTag in '..\..\..\jopl\XMLTag.pas';
+  XMLTag in '..\..\..\jopl\XMLTag.pas',
+  RosterTools_TLB in 'RosterTools_TLB.pas';
 
 exports
   DllGetClassObject,
