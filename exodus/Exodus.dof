@@ -114,7 +114,7 @@ AutoIncBuild=1
 MajorVer=0
 MinorVer=8
 Release=0
-Build=40
+Build=41
 Debug=0
 PreRelease=0
 Special=0
@@ -125,7 +125,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PeterMillard
 FileDescription=
-FileVersion=0.8.0.40
+FileVersion=0.8.0.41
 InternalName=
 LegalCopyright=Peter Millard, 2002
 LegalTrademarks=
@@ -133,18 +133,3 @@ OriginalFilename=
 ProductName=Exodus
 ProductVersion=1.0.0.0
 Comments=This is free! Promote jabber and give it to a friend.
-[HistoryLists\hlDebugSourcePath]
-Count=1
-Item0=D:\Dev\Delphi6\Source\Indy\;D:\src\exodus\exodus\components\
-[HistoryLists\hlConditionals]
-Count=1
-Item0=TRACE_EXCEPTIONS
-[HistoryLists\hlUnitAliases]
-Count=1
-Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
-[HistoryLists\hlSearchPath]
-Count=1
-Item0=.\components;D:\lang\delphi\jcl\source
-[HistoryLists\hlUnitOutputDirectory]
-Count=1
-Item0=.\output
