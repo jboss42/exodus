@@ -382,7 +382,7 @@ begin
         x.setAttribute('mime-type', 'binary/octet-stream');
         x.setAttribute('profile', XMLNS_FTPROFILE);
 
-        x := x.AddTagNS('profile', XMLNS_FTPROFILE);
+        x := x.AddTagNS('file', XMLNS_FTPROFILE);
         x.setAttribute('name', ExtractFilename(_pkg.pathname));
 
         // get the file size
@@ -393,7 +393,7 @@ begin
         x.setAttribute('size', IntToStr(size));
 
         // put in the fneg stuff
-        x := x.AddTagNS('feature', XMLNS_FEATNEG);
+        x := _iq.qTag.AddTagNS('feature', XMLNS_FEATNEG);
         x := x.AddTagNS('x', XMLNS_XDATA);
         fld := x.AddTag('field');
         fld.setAttribute('var', 'stream-method');
@@ -417,6 +417,8 @@ begin
             p := THostPortPair.Create();
             p.jid := MainSession.Prefs.getString('xfer_prefproxy');
             shosts.AddObject(p.jid, p);
+            _state := send_get_addr;
+            DoState();
         end
         else begin
             // xxx: get stream hosts from our server
