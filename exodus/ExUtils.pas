@@ -399,7 +399,8 @@ end;
 {---------------------------------------}
 procedure LogMessage(Msg: TJabberMessage);
 var
-    buff, fn: Widestring;
+    buff: string;
+    fn: Widestring;
     header: boolean;
     _jid: TJabberID;
     ndate: TDateTime;
