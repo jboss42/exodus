@@ -88,21 +88,32 @@ type
 
     TJabberRosterItem = class(TJabberNodeItem)
     private
+        _jid: TJabberID;
+        _data: TObject;
         _nickname: WideString;
+        _ask: Widestring;
+        _sub: Widestring;
+        _grps: TWidestringlist;
+
+        _dirty_grps: TWidestringlist;
+
         function getNick(): Widestring;
+        function getGroupIndex(idx: integer): Widestring;
         procedure fillTag(tag: TXMLTag);
+        procedure setupDirty();
+
     public
-        jid: TJabberID;
-        subscription: string;
-        ask: string;
-        Groups: TWideStringList;
-        Data: TObject;
-        Action: TRosterItemAction;
+        //Data: TObject;
+        //Action: TRosterItemAction;
+        //jid: TJabberID;
+        //subscription: string;
+        //ask: string;
+        //Groups: TWideStringList;
 
         constructor Create; overload;
         destructor Destroy; override;
 
-        function xml: string;
+        function xml: Widestring;
         function IsOnline: boolean;
         function getText(): Widestring; override;
 
@@ -110,6 +121,22 @@ type
         procedure remove;
         procedure update;
 
+        function IsInGroup(grp: Widestring): boolean;
+        function GroupCount: integer;
+        function AreGroupsDirty: boolean;
+
+        procedure ClearGroups;
+        procedure AddGroup(new_grp: Widestring);
+        procedure DelGroup(old_grp: Widestring);
+
+        procedure setJid(new_jid: Widestring);
+        procedure AssignGroups(new_list: TWidestringlist);
+
+        property Group[index: integer]: Widestring read getGroupIndex;
+        property Jid: TJabberID read _jid;
+        property Data: TObject read _data write _data;
+        property Ask: Widestring read _ask;
+        property Subscription: Widestring read _sub write _sub;
         property RawNickname: Widestring read _nickname write _nickname;
         property Nickname: Widestring read getNick write _nickname;
     end;
@@ -507,25 +534,28 @@ end;
 constructor TJabberRosterItem.Create;
 begin
     inherited;
-    Groups := TWideStringList.Create;
-    Groups.CaseSensitive := true;
-    
-    jid := TJabberID.Create('');
-    subscription := 'none';
+    _grps := TWideStringList.Create;
+    _grps.CaseSensitive := true;
+
+    _jid := TJabberID.Create('');
+    _sub := '';
     _nickname := '';
-    ask := '';
-    Data := nil;
-    Action := RIA_NONE;
+    _ask := '';
+    _data := nil;
+    _dirty_grps := nil;
 end;
 
 {---------------------------------------}
 destructor TJabberRosterItem.Destroy;
 begin
-    Groups.Free;
-    jid.Free;
+    if (_dirty_grps <> nil) then
+        FreeAndNil(_dirty_grps);
 
-    if (Data <> nil) then
-        TObject(Data).Free();
+    if (_data <> nil) then
+        TObject(_data).Free();
+
+    FreeAndNil(_grps);
+    FreeAndNil(_jid);
 
     inherited Destroy;
 end;
@@ -539,17 +569,23 @@ end;
 {---------------------------------------}
 procedure TJabberRosterItem.fillTag(tag: TXMLTag);
 var
+    gl: TWidestringlist;
     i: integer;
 begin
     tag.name := 'item';
-    tag.setAttribute('jid', jid.Full);
+    tag.setAttribute('jid', _jid.Full);
     tag.setAttribute('name', _nickname);
 
-    for i := 0 to Groups.Count - 1 do
-        tag.AddBasicTag('group', Groups[i]);
+    if (_dirty_grps <> nil) then
+        gl := _dirty_grps
+    else
+        gl := _grps;
 
-    if (subscription = 'remove') then
-        tag.setAttribute('subscription', subscription);
+    for i := 0 to gl.Count - 1 do
+        tag.AddBasicTag('group', gl[i]);
+
+    if (_sub = 'remove') then
+        tag.setAttribute('subscription', _sub);
 end;
 
 {---------------------------------------}
@@ -572,12 +608,12 @@ end;
 procedure TJabberRosterItem.remove;
 begin
     // remove this roster item from my roster;
-    subscription := 'remove';
+    _sub := 'remove';
     update();
 end;
 
 {---------------------------------------}
-function TJabberRosterItem.xml: string;
+function TJabberRosterItem.xml: Widestring;
 var
     x: TXMLTag;
 begin
@@ -595,18 +631,21 @@ var
     i: integer;
 begin
     // fill the object based on the tag
-    jid.ParseJID(tag.GetAttribute('jid'));
-    subscription := tag.GetAttribute('subscription');
-    ask := tag.GetAttribute('ask');
-    if subscription = 'none' then subscription := '';
+    _jid.ParseJID(tag.GetAttribute('jid'));
+    _ask := tag.GetAttribute('ask');
     _nickname := tag.GetAttribute('name');
 
-    Groups.Clear;
+    _sub := tag.GetAttribute('subscription');
+    if (_sub = 'none') then _sub := '';
+
+    // process groups
+    _grps.clear();
+    if (_dirty_grps <> nil) then FreeAndNil(_dirty_grps);
     grps := tag.QueryXPTags('/item/group');
     for i := 0 to grps.Count - 1 do begin
         tmp_grp := Trim(TXMLTag(grps[i]).Data);
         if (tmp_grp <> '') then
-            Groups.Add(TXMLTag(grps[i]).Data);
+            _grps.Add(TXMLTag(grps[i]).Data);
     end;
     grps.Free();
 end;
@@ -624,9 +663,114 @@ begin
     if (Trim(_nickname)) <> '' then
         result := _nickname
     else
-        result := jid.user;
+        result := _jid.user;
 end;
 
+{---------------------------------------}
+procedure TJabberRosterItem.setupDirty();
+var
+    i: integer;
+begin
+    if (_dirty_grps <> nil) then exit;
+
+    _dirty_grps := TWidestringlist.Create();
+    for i := 0 to _grps.count - 1 do
+        _dirty_grps.Add(_grps[i]);
+end;
+
+{---------------------------------------}
+function TJabberRosterItem.IsInGroup(grp: Widestring): boolean;
+begin
+    Result := (_grps.IndexOf(grp) >= 0);
+end;
+
+{---------------------------------------}
+function TJabberRosterItem.GroupCount: integer;
+begin
+    Result := _grps.Count;
+end;
+
+{---------------------------------------}
+procedure TJabberRosterItem.ClearGroups;
+begin
+    setupDirty();
+    _dirty_grps.Clear();
+end;
+
+{---------------------------------------}
+procedure TJabberRosterItem.AddGroup(new_grp: Widestring);
+begin
+    setupDirty();
+    _dirty_grps.Add(new_grp);
+end;
+
+{---------------------------------------}
+procedure TJabberRosterItem.DelGroup(old_grp: Widestring);
+var
+    idx: integer;
+begin
+    setupDirty();
+    idx := _dirty_grps.IndexOf(old_grp);
+    if (idx >= 0) then
+        _dirty_grps.Delete(idx);
+end;
+
+{---------------------------------------}
+function TJabberRosterItem.getGroupIndex(idx: integer): Widestring;
+begin
+    if ((idx >= 0) and (idx < _grps.Count)) then
+        Result := _grps[idx]
+    else
+        Result := '';
+end;
+
+{---------------------------------------}
+procedure TJabberRosterItem.setJid(new_jid: Widestring);
+begin
+    _jid.ParseJID(new_jid);
+end;
+
+
+{---------------------------------------}
+function TJabberRosterItem.AreGroupsDirty: boolean;
+var
+    i: integer;
+begin
+    if (_dirty_grps = nil) then begin
+        Result := false;
+        exit;
+    end;
+
+    if (_dirty_grps.Count <> _grps.Count) then begin
+        Result := true;
+        exit;
+    end;
+
+    // if we get this far, then the 2 lists have the same # of items
+    // make sure all items are in both lists
+    for i := 0 to _grps.Count - 1 do begin
+        if (_dirty_grps.IndexOf(_grps[i]) = -1) then begin
+            Result := true;
+            exit;
+        end;
+    end;
+
+
+    // if they are the same, kill _dirty_grps
+    FreeAndNil(_dirty_grps);
+
+    Result := false;
+end;
+
+{---------------------------------------}
+procedure TJabberRosterItem.AssignGroups(new_list: TWidestringlist);
+var
+    i: integer;
+begin
+    new_list.Clear();
+    for i := 0 to _grps.Count - 1 do
+        new_list.Add(_grps[i]);
+end;
 
 {---------------------------------------}
 function NodeTypeLevel(node: TObject): integer;

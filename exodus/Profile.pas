@@ -178,10 +178,10 @@ begin
             else if ritem.subscription = 'both' then
                 optSubscrip.ItemIndex := 3;
 
-            for i := 0 to ritem.Groups.Count - 1 do begin
-                gi := GrpListBox.Items.IndexOf(ritem.Groups[i]);
+            for i := 0 to ritem.GroupCount - 1 do begin
+                gi := GrpListBox.Items.IndexOf(ritem.Group[i]);
                 if (gi = -1) then
-                    gi := GrpListBox.Items.Add(ritem.Groups[i]);
+                    gi := GrpListBox.Items.Add(ritem.Group[i]);
                 GrpListBox.Checked[gi] := true;
             end;
         end;
@@ -344,41 +344,27 @@ var
     ritem: TJabberRosterItem;
     changed: boolean;
     i: integer;
-    tmp_grplist: TWideStringList;
 begin
     // if the nick has changed then change the roster item
     ritem := MainSession.roster.Find(txtJID.Text);
     changed := false;
-    if ritem <> nil then begin
-        if ritem.RawNickname <> txtNick.Text then begin
+
+    if (ritem <> nil) then begin
+
+        if (ritem.RawNickname <> txtNick.Text) then begin
             ritem.RawNickname := txtNick.Text;
             changed := true;
         end;
 
-        tmp_grplist := TWideStringlist.Create;
-        tmp_grplist.CaseSensitive := true;
+        // just clear the grps, and add all the selected ones
+        ritem.ClearGroups();
         for i := 0 to GrpListBox.Items.Count - 1 do begin
             if GrpListBox.Checked[i] then
-                tmp_grplist.Add(grpListBox.Items[i]);
+                ritem.AddGroup(grpListBox.Items[i]);
         end;
 
-        for i := 0 to tmp_grplist.Count - 1 do begin
-            if ritem.Groups.indexOf(tmp_grplist[i]) < 0 then begin
-                ritem.Groups.Add(tmp_grplist[i]);
-                changed := true;
-            end;
-        end;
-
-        for i := ritem.Groups.Count - 1 downto 0 do begin
-            if tmp_grpList.indexOf(ritem.Groups[i]) < 0 then begin
-                ritem.Groups.Delete(i);
-                changed := true;
-            end;
-        end;
-        tmp_grplist.Free();
-
-        if changed then ritem.update();
-        MainSession.FireEvent('/roster/item', nil, ritem);
+        if ((changed) or (ritem.AreGroupsDirty())) then
+            ritem.update();
     end;
     Self.Close;
 end;

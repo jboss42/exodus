@@ -79,13 +79,13 @@ begin
     for i := 0 to _items.Count - 1 do begin
         ritem := TJabberRosterItem(_items[i]);
         if (optMove.Checked) then begin
-            ritem.Groups.Clear();
-            ritem.Groups.Add(new_grp);
+            ritem.ClearGroups();
+            ritem.AddGroup(new_grp);
             ritem.Update();
         end
         else begin
-            if (ritem.Groups.IndexOf(new_grp) = -1) then begin
-                ritem.Groups.Add(new_grp);
+            if (not ritem.IsInGroup(new_grp)) then begin
+                ritem.AddGroup(new_grp);
                 ritem.Update();
             end;
         end;

@@ -94,7 +94,7 @@ end;
 procedure TfrmGrpRemove.frameButtons1btnOKClick(Sender: TObject);
 var
     iq: TXMLTag;
-    gi, i, act: integer;
+    i, act: integer;
     cur_jid: string;
     ri: TJabberRosterItem;
 begin
@@ -140,9 +140,9 @@ begin
         // Move all contacts in this group to the new group
         for i := 0 to ct_list.Count - 1 do begin
             ri := TJabberRosterItem(ct_list[i]);
-            gi := ri.Groups.IndexOf(cur_grp);
-            if (gi >= 0) then ri.Groups.Delete(gi);
-            ri.Groups.Add(cboNewGroup.Text);
+            if (ri.IsInGroup(cur_grp)) then
+                ri.DelGroup(cur_grp);
+            ri.AddGroup(cboNewGroup.Text);
             ri.update();
         end;
     end;
