@@ -37,6 +37,7 @@ type
     status: Widestring;
     show: Widestring;
     blockShow: Widestring;
+    role: WideString;
   end;
 
   TfrmRoom = class(TfrmBaseChat)
@@ -88,13 +89,13 @@ type
       var InfoTip: String);
   private
     { Private declarations }
-    jid: Widestring;                // jid of the conf. room
+    jid: Widestring;            // jid of the conf. room
     _roster: TStringlist;       // roster for this room
     _isGC: boolean;
     _callback: integer;         // Message Callback
     _pcallback: integer;        // Presence Callback
     _scallback: integer;        // Session callback
-    _nick_prefix: Widestring;       // stuff for nick completion:
+    _nick_prefix: Widestring;   // stuff for nick completion:
     _nick_idx: integer;
     _nick_len: integer;
     _nick_start: integer;
@@ -159,6 +160,18 @@ uses
     Session, StrUtils, JabberID, MsgDisplay, Notify,
     PrefController, JabberMsg, Jabber1;
 
+const
+    NS_MUC = 'http://jabber.org/protocol/muc';
+    NS_OWNER = 'http://jabber.org/protocol/muc#owner';
+    NS_ADMIN = 'http://jabber.org/protocol/muc#admin';
+    NS_USER = 'http://jabber.org/protocol/muc#user';
+
+    MUC_OWNER = 'owner';
+    MUC_ADMIN = 'admin';
+    MUC_MOD = 'moderator';
+    MUC_MEMBER = 'member';
+    MUC_USER = 'user';
+
 {$R *.DFM}
 
 {---------------------------------------}
@@ -182,6 +195,9 @@ begin
 
         p := TJabberPres.Create;
         p.toJID := TJabberID.Create(rjid + '/' + rnick);
+        with p.AddTag('x') do
+            PutAttribute('xmlns', NS_MUC);
+
         MainSession.SendTag(p);
         if MainSession.Prefs.getBool('expanded') then
             f.DockForm;
@@ -404,13 +420,14 @@ var
     _jid: TJabberID;
     i: integer;
     member: TRoomMember;
-    etag: TXMLTag;
+    t, xtag, etag: TXMLTag;
 begin
     // We are getting presence
     from := tag.getAttribute('from');
     ptype := tag.getAttribute('type');
     _jid := TJabberID.Create(from);
     i := _roster.indexOf(from);
+    xtag := tag.QueryXPTag('/x[@xmlns="' + NS_USER + '"]');
 
     if ((ptype = 'error') and (_jid.resource = mynick)) then begin
         // check for 409, conflicts.
@@ -436,9 +453,16 @@ begin
             member := TRoomMember.Create;
             member.JID := from;
             member.Nick := _jid.resource;
+
+            // get extended stuff for MUC
+            if (xtag <> nil) then begin
+                t := xtag.GetFirstTag('profile');
+                if (t <> nil) then
+                    member.role := t.GetAttribute('level');
+                end;
+
             _roster.AddObject(from, member);
             member.Node := AddMember(member);
-            // ShowPresence(member.Nick, ' has joined the room.');
             end
         else
             member := TRoomMember(_roster.Objects[i]);
@@ -872,15 +896,12 @@ begin
           else if rm.Show = 'dnd' then rm.Node.ImageIndex := 3
           else if rm.Show = 'chat' then rm.Node.ImageIndex := 4
           else rm.Node.ImageIndex := 1;
-
-          //rm.Node.SelectedIndex := rm.Node.ImageIndex;
           end
        else begin
           //block
           rm.blockShow := rm.show;
           rm.show := sBlocked;
           rm.Node.ImageIndex := 25;
-          //rm.Node.SelectedIndex := rm.Node.ImageIndex;
           end;
        end;
 end;

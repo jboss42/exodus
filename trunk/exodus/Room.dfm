@@ -1,6 +1,6 @@
 inherited frmRoom: TfrmRoom
-  Left = 325
-  Top = 179
+  Left = 248
+  Top = 170
   Caption = 'Conference Room'
   OldCreateOrder = True
   OnClose = FormClose
@@ -9,19 +9,19 @@ inherited frmRoom: TfrmRoom
   TextHeight = 13
   inherited Panel3: TPanel
     Top = 23
-    Height = 230
+    Height = 225
     object Splitter2: TSplitter [0]
       Left = 268
       Top = 4
       Width = 3
-      Height = 222
+      Height = 217
       Cursor = crHSplit
       Align = alRight
       ResizeStyle = rsUpdate
     end
     inherited MsgList: TExRichEdit
       Width = 264
-      Height = 222
+      Height = 217
       PopupMenu = popRoom
       OnDragDrop = lstRosterDragDrop
       OnDragOver = lstRosterDragOver
@@ -31,7 +31,7 @@ inherited frmRoom: TfrmRoom
       Left = 271
       Top = 4
       Width = 105
-      Height = 222
+      Height = 217
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -41,7 +41,7 @@ inherited frmRoom: TfrmRoom
         Left = 1
         Top = 1
         Width = 103
-        Height = 220
+        Height = 215
         Align = alClient
         Columns = <
           item

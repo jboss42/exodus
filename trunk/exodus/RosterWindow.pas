@@ -732,8 +732,10 @@ begin
         // NB: this should catch most of the transport madness.
         if ritem = nil then
             ritem := MainSession.Roster.Find(tmp_jid.full);
-        if ritem <> nil then
+        if ritem <> nil then begin
+            p := MainSession.ppdb.FindPres(tmp_jid.jid, '');
             RenderNode(ritem, p);
+            end;
         end;
 
     tmp_jid.Free();
