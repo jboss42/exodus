@@ -64,6 +64,7 @@ const
 
 type
     TGetLastTick = function: dword; stdcall;
+    TGetLastInputFunc = function(var lii: tagLASTINPUTINFO): Bool; stdcall;
     TInitHooks = procedure; stdcall;
     TStopHooks = procedure; stdcall;
 
@@ -290,6 +291,7 @@ type
     _InitHooks: TInitHooks;
     _StopHooks: TStopHooks;
     _valid_aa: boolean;                 // do we have a valid auto-away setup?
+    _GetLastInput: TGetLastInputFunc;
 
     // Tray Icon stuff
     _tray: NOTIFYICONDATA;
@@ -1078,13 +1080,19 @@ begin
     end
     else begin
         // Use the GetLastInputInfo API call
-        // do nothing here..
-        lii.cbSize := sizeof(tagLASTINPUTINFO);
-        if (Windows.GetLastInputInfo(lii)) then begin
-            DebugMsg(_(sAutoAwayWin32));
-            _valid_aa := true;
-        end
-        else
+        // Use GetProcAddress so we can still run on Win95/98/ME/NT which
+        // don't have this function. If we just make the call, we end up
+        // depending on that API call.
+        @_GetLastInput := nil;
+        @_GetLastInput := GetProcAddress(GetModuleHandle('user32'), 'GetLastInputInfo');
+        if (@_GetLastInput <> nil) then begin
+            lii.cbSize := sizeof(tagLASTINPUTINFO);
+            if (_GetLastInput(lii)) then begin
+                DebugMsg(_(sAutoAwayWin32));
+                _valid_aa := true;
+            end;
+        end;
+        if (not _valid_aa) then
             DebugMsg(_(sAutoAwayFailWin32));
     end;
 end;
@@ -2068,7 +2076,7 @@ begin
     else begin
         // use GetLastInputInfo
         lii.cbSize := sizeof(tagLASTINPUTINFO);
-        if (GetLastInputInfo(lii)) then
+        if (_GetLastInput(lii)) then
             Result := lii.dwTime;
     end;
 end;
