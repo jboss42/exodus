@@ -22,11 +22,14 @@ unit Jabber1;
 interface
 
 uses
+    // Exodus stuff
     BaseChat, ExResponders, ExEvents, RosterWindow, Presence, XMLTag,
-    ShellAPI, Registry,
+    ShellAPI, Registry, SelContact,
+
+    // Delphi stuff
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
-    Buttons, OleCtrls, AppEvnts, ToolWin, SelContact,
+    Buttons, OleCtrls, AppEvnts, ToolWin,
     IdHttp, TntComCtrls;
 
 const
@@ -43,8 +46,6 @@ const
     WM_MUTEX = WM_USER + 5351;
 
 type
-    TNextEventType = (next_none, next_Exit, next_Login, next_Disconnect);
-
     TGetLastTick = function: dword; stdcall;
     TInitHooks = procedure; stdcall;
     TStopHooks = procedure; stdcall;
@@ -254,12 +255,12 @@ type
 
   private
     { Private declarations }
-    _event: TNextEventType;
-    _noMoveCheck: boolean;
-    _flash: boolean;
-    _tray_notify: boolean;
-    _edge_snap: integer;
-    _auto_away: boolean;
+    _noMoveCheck: boolean;              // don't check form moves
+    _tray_notify: boolean;              // boolean for flashing tray icon
+    _edge_snap: integer;                // edge snap fuzziness
+    _auto_away: boolean;                // are we auto away
+    _auto_away_interval: integer;
+    _last_tick: dword;                  // last tick when something happened
 
     // Various state flags
     _windows_ver: integer;
@@ -267,23 +268,23 @@ type
     _is_autoaway: boolean;
     _is_autoxa: boolean;
     _is_min: boolean;
-    _last_show: Widestring;
-    _last_status: Widestring;
-    _last_priority: integer;
-    _hidden: boolean;
-    _logoff: boolean;
-    _shutdown: boolean;
-    _close_min: boolean;
-    _appclosing: boolean;
-    _new_tabindex: integer;
-    _new_account: boolean;
+    _last_show: Widestring;             // last show for restoring after auto-away
+    _last_status: Widestring;           // last status    (ditto)
+    _last_priority: integer;            // last priority  (ditto)
+    _hidden: boolean;                   // are we minimized to the tray
+    _logoff: boolean;                   // are we logging off on purpose
+    _shutdown: boolean;                 // are we being shutdown
+    _close_min: boolean;                // should the close btn minimize, not close
+    _appclosing: boolean;               // is the entire app closing
+    _new_tabindex: integer;             // new tab which was just docked
+    _new_account: boolean;              // is this a new account
 
     // Stuff for the Autoaway DLL
-    _hookLib: THandle;
-    _GetLastTick: TGetLastTick;
+    _idle_hooks: THandle;               // handle the lib
+    _GetLastTick: TGetLastTick;         // function ptrs inside the lib
     _InitHooks: TInitHooks;
     _StopHooks: TStopHooks;
-    _valid_aa: boolean;
+    _valid_aa: boolean;                 // do we have a valid auto-away setup?
 
     // Tray Icon stuff
     _tray: NOTIFYICONDATA;
@@ -298,9 +299,6 @@ type
     _reconnect_interval: integer;
     _reconnect_cur: integer;
     _reconnect_tries: integer;
-
-    _auto_away_interval: integer;
-    _last_tick: dword;
 
     // Stuff for tracking win32 API events
     _win32_tracker: Array of integer;
@@ -518,11 +516,11 @@ uses
     JclHookExcept, JclDebug, ExceptTracer,
     {$endif}
 
-    GnuGetText,
-    About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat, ChatController, ChatWin,
-    JabberConst, ComController, CommCtrl, CustomPres,
-    Debug, Dockable, ExSession, ExUtils, GetOpt, InputPassword, Invite,
+    About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
+    ChatController, ChatWin, Debug, Dockable, ExSession, ExUtils,
+    GetOpt, InputPassword, Invite, GnuGetText,
     Iq, JUD, JabberID, JabberMsg, IdGlobal,
+    JabberConst, ComController, CommCtrl, CustomPres,
     JoinRoom, Login, MsgController, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow, Room,
     Roster, RosterAdd, Session, StandardAuth, Transfer, Unicode, VCard, xData,
@@ -548,7 +546,6 @@ begin
     // so that we can handle minimizing & stuff properly
     case (msg.CmdType and $FFF0) of
     SC_MINIMIZE: begin
-        // ShowWindow(Handle, SW_MINIMIZE);
         _hidden := true;
         ShowWindow(Handle, SW_HIDE);
         msg.Result := 0;
@@ -588,6 +585,7 @@ begin
             msg.Result := 0;
         end
         else begin
+            // minimize our app
             _hidden := true;
             self.WindowState := wsMinimized;
             ShowWindow(Handle, SW_HIDE);
@@ -705,8 +703,6 @@ var
     i : integer;
     mi: TMenuItem;
 begin
-    // initialize vars
-
     {$ifdef TRACE_EXCEPTIONS}
     // Application.OnException := ApplicationException;
     Include(JclStackTrackingOptions, stRawMode);
@@ -718,10 +714,8 @@ begin
     // Do translation magic
     TranslateProperties(Self);
 
+    // setup our tray icon
     _tray_icon := TIcon.Create();
-    _appclosing := false;
-    _event := next_none;
-    _noMoveCheck := true;
 
     // if we are testing auto-away, then fire the
     // timer every 1 second, instead of every 10 secs.
@@ -768,8 +762,9 @@ begin
     restoreRoster();
 
     // some gui related flags
+    _appclosing := false;
+    _noMoveCheck := true;
     _noMoveCheck := false;
-    _flash := false;
     _tray_notify := false;
     _reconnect_tries := 0;
     _hidden := false;
@@ -899,19 +894,18 @@ begin
         @_InitHooks := nil;
         @_StopHooks := nil;
 
-        _hookLib := LoadLibrary('IdleHooks.dll');
-        if (_hookLib <> 0) then begin
+        _idle_hooks := LoadLibrary('IdleHooks.dll');
+        if (_idle_hooks <> 0) then begin
             // start the hooks
-            @_GetLastTick := GetProcAddress(_hookLib, 'GetLastTick');
-            @_InitHooks := GetProcAddress(_hookLib, 'InitHooks');
-            @_StopHooks := GetProcAddress(_hookLib, 'StopHooks');
+            @_GetLastTick := GetProcAddress(_idle_hooks, 'GetLastTick');
+            @_InitHooks := GetProcAddress(_idle_hooks, 'InitHooks');
+            @_StopHooks := GetProcAddress(_idle_hooks, 'StopHooks');
 
             DebugMsg('_GetHookPointer = ' + IntToStr(integer(@_GetLastTick)));
             DebugMsg('_InitHooks = ' + IntToStr(integer(@_InitHooks)));
             DebugMsg('_StopHooks = ' + IntToStr(integer(@_StopHooks)));
 
             _InitHooks();
-
             _valid_aa := true;
         end
         else
@@ -1349,9 +1343,9 @@ begin
     end;
 
     // Unhook the auto-away DLL
-    if (_hookLib <> 0) then begin
+    if (_idle_hooks <> 0) then begin
         _StopHooks();
-        _hookLib := 0;
+        _idle_hooks := 0;
     end;
 
     // Unhook the other Win32 hooks.
@@ -1373,7 +1367,6 @@ begin
     // If we have a session, close it up
     // and all of the associated windows
     if MainSession <> nil then begin
-        _event := next_Exit;
         CloseDebugForm();
         frmRosterWindow.ClearNodes();
         frmRosterWindow.Close;
@@ -1724,8 +1717,7 @@ end;
 procedure TfrmExodus.timFlasherTimer(Sender: TObject);
 begin
     // Flash the window
-    _flash := not _flash;
-    FlashWindow(Application.Handle, _flash);
+    FlashWindow(Application.Handle, true);
 end;
 
 {---------------------------------------}
@@ -1834,7 +1826,7 @@ begin
     // Return the last tick count of activity
     Result := 0;
     if ((_windows_ver < cWIN_2000) or (_windows_ver = cWIN_ME)) then begin
-        if ((_hookLib <> 0) and (@_GetLastTick <> nil)) then
+        if ((_idle_hooks <> 0) and (@_GetLastTick <> nil)) then
             Result := _GetLastTick();
     end
     else begin
