@@ -44,12 +44,18 @@ Section "!Exodus (Required)"
   	; Put file there
   	File "Exodus.exe"
   	
+	IfFileExists IdleHooks.dll lbl_noIdle
+
 	; install idlehooks on non-nt
 	Call GetWindowsVersion
   	Pop $0
 	StrCmp $0 "2000" lbl_noIdle
-  	File "IdleHooks.dll"
-lbl_noIdle:
+
+	NSISdl::download http://exodus.jabberstudio.org/daily/extras/IdleHooks.dll $INSTDIR\IdleHooks.dll
+	StrCmp $0 "success" lbl_noIdle
+	    Abort "Error downloading IdleHooks library"
+
+  lbl_noIdle:
 
 	; Write the installation path into the registry
   	WriteRegStr HKLM SOFTWARE\Jabber\Exodus "Install_Dir" "$INSTDIR"
@@ -61,7 +67,7 @@ lbl_noIdle:
 
 	StrCpy $0 0
 
-outer_loop:
+  outer_loop:
 
     EnumRegKey $1 HKLM "Software\Jabber\Exodus\Restart" $0
     StrCmp $1 "" abort
@@ -79,29 +85,47 @@ outer_loop:
     StrCmp $4 "" show
 	StrCpy $4 '-f "$4"'
 
-show:
+  show:
     ReadRegStr $5 HKLM "Software\Jabber\Exodus\Restart\$1" "show"
 	StrCmp $5 "" status
 	StrCpy $5 '-w "$5"'
 
-status:
+  status:
     ReadRegStr $6 HKLM "Software\Jabber\Exodus\Restart\$1" "status"    
 	StrCmp $6 "" exec
 	StrCpy $6 '-s "$6"'
 
-exec:
+  exec:
 	DetailPrint '"$INSTDIR\Exodus.exe" $2 -i $3 $4 $5 $6'
 	Exec '"$INSTDIR\Exodus.exe" $2 -i $3 -f "$4" $5 $6'
 	SetAutoClose "true"
 
-done:
+  done:
 	DeleteRegKey HKLM "Software\Jabber\Exodus\Restart\$1"
 
 ;    IntOp $0 $0 + 1
   	Goto outer_loop
-abort:
+  abort:
 
 SectionEnd ; end the section
+
+Section "SSL Support (web connection needed)"
+	AddSize 824
+	IfFileExists $INSTDIR\ssleay32.dll libea need_ssl
+  libea:
+	IfFileExists $INSTDIR\libeay32.dll no_ssl
+  need_ssl:
+	NSISdl::download http://download.sourceforge.net/jabbercom/jabbercom_openssl096.zip $INSTDIR\jabbercom_openssl096.zip
+	StrCmp $0 "success" ssl
+	    Abort "Error downloading ssl libraries"
+  ssl:
+	ZipDLL::extractall $INSTDIR $INSTDIR\jabbercom_openssl096.zip
+	Delete $INSTDIR\jabbercom_openssl096.zip
+	goto ssl_done
+  no_ssl:
+	DetailPrint "SSL libraries already installed."
+	ssl_done:
+SectionEnd
 
 ; optional section
 Section "Start Menu Shortcuts"
@@ -115,7 +139,7 @@ Section "Start Menu Shortcuts"
   	CreateDirectory "$SMPROGRAMS\Exodus"
   	CreateShortCut "$SMPROGRAMS\Exodus\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
   	CreateShortCut "$SMPROGRAMS\Exodus\Exodus.lnk" "$INSTDIR\Exodus.exe" "" "$INSTDIR\Exodus.exe" 0
-silent:
+  silent:
 
 SectionEnd
 
@@ -135,6 +159,8 @@ Section "Uninstall"
   Delete $INSTDIR\Exodus.exe
   Delete $INSTDIR\IdleHooks.dll
   Delete $INSTDIR\branding.xml
+  Delete $INSTDIR\libeay32.dll
+  Delete $INSTDIR\ssleay32.dll
   ; remove shortcuts, if any.
   Delete "$SMPROGRAMS\Exodus\*.*"
   RMDir "$SMPROGRAMS\Exodus"
@@ -285,6 +311,6 @@ Function StrStr
 FunctionEnd
 
 Function .onInit
-	SectionSetFlags 1 0
 	SectionSetFlags 2 0
+	SectionSetFlags 3 0
 FunctionEnd
