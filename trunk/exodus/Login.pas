@@ -175,7 +175,7 @@ begin
         cboProfiles.ItemIndex := i;
         cboProfilesChange(Self);
         p.Resource := _(sProfileDefaultResource);
-        p.NewAccount := true;
+        p.NewAccount := MainSession.Prefs.getBool('brand_profile_new_account_default');
         ShowConnDetails(p);
         lblJID.Caption := p.Username + '@' + p.Server + '/' + p.Resource;
     end;
