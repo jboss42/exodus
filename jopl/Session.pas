@@ -719,7 +719,8 @@ begin
         end
     else begin
         _dispatcher.DispatchSignal('/session/authenticated', tag);
-        Self.RegisterCallback(ChatList.MsgCallback, '/packet/message[@type="chat"]');
+        // Self.RegisterCallback(ChatList.MsgCallback, '/packet/message[@type="chat"]');
+        Self.RegisterCallback(ChatList.MsgCallback, '/packet/message');
         cur_agents := TAgents.Create();
         Agents.AddObject(Server, cur_agents);
         cur_agents.Fetch(Server);

@@ -496,7 +496,7 @@ object frmExodus: TfrmExodus
         OnClick = JabberorgWebsite1Click
       end
       object JabberCentralWebsite1: TMenuItem
-        Caption = 'JabberCentral Website'
+        Caption = 'JabberStudio Website'
         OnClick = JabberCentralWebsite1Click
       end
       object N12: TMenuItem

@@ -51,6 +51,11 @@ const
     notify_flash = 4;
     notify_sound = 8;
 
+    // normal msg options
+    msg_normal = 0;
+    msg_all_chat = 1;
+    msg_existing_chat = 2;
+
     P_EXPANDED = 'expanded';
     P_SHOWONLINE = 'roster_only_online';
     P_SHOWUNSUB = 'roster_show_unsub';
@@ -361,7 +366,7 @@ var
     fs: TStringList;
 begin
     if (_updating) then exit;
-    
+
     fs := TStringList.Create;
     fs.Text := UTF8Encode(_pref_node.xml);
     fs.SaveToFile(_pref_filename);
@@ -529,7 +534,7 @@ var
     i: integer;
 begin
     sl.Clear();
-    
+
     if (server_side) then
         p := _server_node.getFirstTag(pkey)
     else

@@ -193,7 +193,7 @@ begin
         SetJID(cjid);
 
         chat.OnMessage := MessageEvent;
-        
+
         ShowDefault();
         if (show_window) then
             Show();
@@ -351,7 +351,6 @@ var
     etag, tagThread : TXMLTag;
 begin
     // callback for messages
-
     // check for a jabber:x:event tag
     msg_type := tag.GetAttribute('type');
     from_jid := tag.getAttribute('from');
@@ -388,21 +387,21 @@ begin
             end;
         end;
 
-    if (msg_type = 'chat') then begin
-        // normal chat message
-        etag := tag.QueryXPTag('/message/*[@xmlns="jabber:x:event"]/composing');
-        _send_composing := (etag <> nil);
-        if (_send_composing) then
-            _reply_id := tag.GetAttribute('id');
+    // if (msg_type = 'chat') then begin
+    // normal chat message
+    etag := tag.QueryXPTag('/message/*[@xmlns="jabber:x:event"]/composing');
+    _send_composing := (etag <> nil);
+    if (_send_composing) then
+        _reply_id := tag.GetAttribute('id');
 
-        showMsg(tag);
-        if _thread = '' then begin
-            //get thread from message
-            tagThread := tag.GetFirstTag('thread');
-            if tagThread <> nil then
-                _thread := tagThread.Data;
-           end;
-        end;
+    showMsg(tag);
+    if _thread = '' then begin
+        //get thread from message
+        tagThread := tag.GetFirstTag('thread');
+        if tagThread <> nil then
+            _thread := tagThread.Data;
+       end;
+    // end;
 end;
 
 {---------------------------------------}
@@ -586,7 +585,7 @@ begin
                 jid + ' ' + sIsNow + ' ' + txt
     else
         txt :=  jid + ' ' + sIsNow + ' ' + txt;
-        
+
     DisplayPresence(txt, MsgList);
 end;
 
