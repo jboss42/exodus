@@ -216,6 +216,7 @@ begin
                 try
                     _client.Connect();
                 except
+                    _stream := nil;
                     SendMessage(_form.Handle, WM_RECV_SIDISCONN, 0, 0);
                     exit;
                 end;
