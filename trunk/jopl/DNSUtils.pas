@@ -104,8 +104,6 @@ var
 {---------------------------------------}
 procedure GetSRVAsync(Session: TJabberSession; Resolver: TIdDNSResolver;
     srv_req, a_req: Widestring);
-var
-    tmpw: Widestring;
 begin
     cur_thd := TDNSResolverThread.Create(true);
     cur_thd._session := Session;

@@ -229,6 +229,8 @@ begin
             Result := win;
             exit;
         end;
+
+        DebugMsg('Existing chat refcount: ' + IntToStr(chat.RefCount));
     end;
 
     // Create a new chat controller if we don't have one
@@ -249,6 +251,7 @@ begin
             win.MsgList.populate(hist);
             do_scroll := true;
         end;
+        DebugMsg('new window chat refcount: ' + IntToStr(chat.RefCount));
     end;
 
     // Setup the properties of the window,
@@ -1250,9 +1253,10 @@ begin
         (not _destroying)) then begin
         s := MsgList.getHistory();
         chat_object.SetHistory(s);
-        chat_object.unassignEvent();
-        chat_object.window := nil;
+        chat_object.UnassignEvent();
+        chat_object.Window := nil;
         chat_object.TimedRelease();
+        DebugMsg('(close) chat refcount: ' + IntToStr(chat_object.RefCount));
         chat_object := nil;
     end;
 
