@@ -1,8 +1,8 @@
 object frmRosterWindow: TfrmRosterWindow
-  Left = 241
-  Top = 165
-  Width = 197
-  Height = 448
+  Left = 242
+  Top = 166
+  Width = 195
+  Height = 446
   AlphaBlendValue = 220
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Roster - Exodus'
@@ -51,8 +51,8 @@ object frmRosterWindow: TfrmRosterWindow
   object treeRoster: TTreeView
     Left = 0
     Top = 161
-    Width = 189
-    Height = 208
+    Width = 187
+    Height = 206
     Cursor = crArrow
     Hint = 'Roster Hint'
     Align = alClient
@@ -88,8 +88,8 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object StatBar: TStatusBar
     Left = 0
-    Top = 393
-    Width = 189
+    Top = 391
+    Width = 187
     Height = 21
     Panels = <
       item
@@ -101,8 +101,8 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object pnlShow: TPanel
     Left = 0
-    Top = 369
-    Width = 189
+    Top = 367
+    Width = 187
     Height = 24
     Align = alBottom
     BevelOuter = bvNone
@@ -119,7 +119,7 @@ object frmRosterWindow: TfrmRosterWindow
     object pnlStatus: TPanel
       Left = 25
       Top = 2
-      Width = 162
+      Width = 160
       Height = 20
       Cursor = crArrow
       Align = alClient
@@ -149,7 +149,7 @@ object frmRosterWindow: TfrmRosterWindow
   object pnlConnect: TPanel
     Left = 0
     Top = 0
-    Width = 189
+    Width = 187
     Height = 161
     Align = alTop
     BevelOuter = bvLowered
@@ -159,7 +159,7 @@ object frmRosterWindow: TfrmRosterWindow
     object lblStatus: TLabel
       Left = 5
       Top = 62
-      Width = 179
+      Width = 177
       Height = 60
       Align = alTop
       Alignment = taCenter
@@ -175,7 +175,7 @@ object frmRosterWindow: TfrmRosterWindow
     object lblLogin: TLabel
       Left = 5
       Top = 122
-      Width = 179
+      Width = 177
       Height = 15
       Cursor = crHandPoint
       Align = alTop
@@ -192,7 +192,7 @@ object frmRosterWindow: TfrmRosterWindow
     object pnlAnimation: TPanel
       Left = 5
       Top = 5
-      Width = 179
+      Width = 177
       Height = 57
       Align = alTop
       BevelOuter = bvNone

@@ -22,8 +22,9 @@ unit Invite;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, CheckLst, ExtCtrls, buttonFrame, ComCtrls, Grids;
+    Unicode, 
+    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+    Dialogs, StdCtrls, CheckLst, ExtCtrls, buttonFrame, ComCtrls, Grids;
 
 type
   TfrmInvite = class(TForm)
@@ -51,7 +52,7 @@ type
     { Private declarations }
   public
     { Public declarations }
-    procedure AddRecip(jid: string);
+    procedure AddRecip(jid: WideString);
   end;
 
 var
@@ -60,7 +61,7 @@ var
 resourcestring
     sConfRoom = 'Conference Room:';
 
-procedure ShowInvite(room_jid: string; jids: TStringList);
+procedure ShowInvite(room_jid: WideString; jids: TWideStringList);
 
 {---------------------------------------}
 {---------------------------------------}
@@ -77,7 +78,7 @@ uses
 {$R *.dfm}
 
 {---------------------------------------}
-procedure ShowInvite(room_jid: string; jids: TStringList);
+procedure ShowInvite(room_jid: WideString; jids: TWideStringList);
 var
     i: integer;
     f: TfrmInvite;
@@ -94,10 +95,10 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmInvite.AddRecip(jid: string);
+procedure TfrmInvite.AddRecip(jid: WideString);
 var
     i: integer;
-    cap: string;
+    cap: WideString;
     ritem: TJabberRosterItem;
     n: TListItem;
 begin
@@ -127,7 +128,7 @@ procedure TfrmInvite.frameButtons1btnOKClick(Sender: TObject);
 var
     i: integer;
     msg: TXMLTag;
-    room: string;
+    room: WideString;
     room_idx: integer;
 begin
     // Make sure we are actually in this room...

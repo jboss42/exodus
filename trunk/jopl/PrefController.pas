@@ -21,7 +21,7 @@ unit PrefController;
 
 interface
 uses
-    XMLTag, XMLParser, Presence,
+    Unicode, XMLTag, XMLParser, Presence,
     {$ifdef Win32}
     Forms, Windows, Registry,
     {$else}
@@ -88,9 +88,9 @@ type
         function getPassword: Widestring;
         procedure setPassword(value: Widestring);
     public
-        Name: string;
+        Name: Widestring;
         Username: Widestring;
-        Server: string;
+        Server: Widestring;
         Resource: Widestring;
         Priority: integer;
         SavePasswd: boolean;
@@ -98,25 +98,25 @@ type
         ConnectionType: integer;
 
         // Socket connection
-        Host: string;
+        Host: Widestring;
         Port: integer;
         ssl: boolean;
         SocksType: integer;
-        SocksHost: string;
+        SocksHost: Widestring;
         SocksPort: integer;
         SocksAuth: boolean;
         SocksUsername: string;
         SocksPassword: string;
 
         // HTTP Connection
-        URL: string;
+        URL: Widestring;
         Poll: integer;
         ProxyApproach: integer;
-        ProxyHost: string;
+        ProxyHost: Widestring;
         ProxyPort: integer;
         ProxyAuth: boolean;
-        ProxyUsername: string;
-        ProxyPassword: string;
+        ProxyUsername: Widestring;
+        ProxyPassword: Widestring;
 
         constructor Create();
 
@@ -130,7 +130,7 @@ type
     TPrefController = class
     private
         _js: TObject;
-        _pref_filename: string;
+        _pref_filename: Widestring;
         _pref_node: TXMLTag;
         _server_node: TXMLTag;
         _profiles: TStringList;
@@ -138,27 +138,27 @@ type
         _server_dirty: boolean;
         _updating: boolean;
 
-        function getDefault(pkey: string): string;
-        function findPresenceTag(pkey: string): TXMLTag;
+        function getDefault(pkey: Widestring): Widestring;
+        function findPresenceTag(pkey: Widestring): TXMLTag;
         procedure Save;
         procedure ServerPrefsCallback(event: string; tag: TXMLTag);
     public
-        constructor Create(filename: string);
+        constructor Create(filename: Widestring);
         Destructor Destroy; override;
 
-        function getString(pkey: string; server_side: boolean = false): string;
-        function getInt(pkey: string; server_side: boolean = false): integer;
-        function getBool(pkey: string; server_side: boolean = false): boolean;
-        procedure fillStringlist(pkey: string; sl: TStrings; server_side: boolean = false);
+        function getString(pkey: Widestring; server_side: boolean = false): Widestring;
+        function getInt(pkey: Widestring; server_side: boolean = false): integer;
+        function getBool(pkey: Widestring; server_side: boolean = false): boolean;
+        procedure fillStringlist(pkey: Widestring; sl: TWideStrings; server_side: boolean = false);
 
         function getAllPresence(): TList;
-        function getPresence(pkey: string): TJabberCustomPres;
+        function getPresence(pkey: Widestring): TJabberCustomPres;
         function getPresIndex(idx: integer): TJabberCustomPres;
 
-        procedure setString(pkey, pvalue: string; server_side: boolean = false);
-        procedure setInt(pkey: string; pvalue: integer; server_side: boolean = false);
-        procedure setBool(pkey: string; pvalue: boolean; server_side: boolean = false);
-        procedure setStringlist(pkey: string; pvalue: TStrings; server_side: boolean = false);
+        procedure setString(pkey, pvalue: Widestring; server_side: boolean = false);
+        procedure setInt(pkey: Widestring; pvalue: integer; server_side: boolean = false);
+        procedure setBool(pkey: Widestring; pvalue: boolean; server_side: boolean = false);
+        procedure setStringlist(pkey: Widestring; pvalue: TWideStrings; server_side: boolean = false);
         procedure setPresence(pvalue: TJabberCustomPres);
         procedure removePresence(pvalue: TJabberCustomPres);
         procedure removeAllPresence();
@@ -173,7 +173,7 @@ type
         procedure FetchServerPrefs();
         procedure SaveServerPrefs();
 
-        function CreateProfile(name: string): TJabberProfile;
+        function CreateProfile(name: Widestring): TJabberProfile;
         procedure RemoveProfile(p: TJabberProfile);
         procedure BeginUpdate();
         procedure EndUpdate();
@@ -321,7 +321,7 @@ end;
 {$endif}
 
 {---------------------------------------}
-constructor TPrefController.Create(filename: string);
+constructor TPrefController.Create(filename: Widestring);
 begin
     inherited Create();
 
@@ -374,7 +374,7 @@ begin
 end;
 
 {---------------------------------------}
-function TPrefController.getDefault(pkey: string): string;
+function TPrefController.getDefault(pkey: Widestring): Widestring;
 begin
     // set the defaults for the pref controller
     if pkey = P_EXPANDED then
@@ -493,7 +493,7 @@ begin
 end;
 
 {---------------------------------------}
-function TPrefController.getString(pkey: string; server_side: boolean = false): string;
+function TPrefController.getString(pkey: Widestring; server_side: boolean = false): Widestring;
 var
     t: TXMLTag;
 begin
@@ -510,14 +510,14 @@ begin
 end;
 
 {---------------------------------------}
-function TPrefController.getInt(pkey: string; server_side: boolean = false): integer;
+function TPrefController.getInt(pkey: Widestring; server_side: boolean = false): integer;
 begin
     // find int value
     Result := SafeInt(getString(pkey, server_side));
 end;
 
 {---------------------------------------}
-function TPrefController.getBool(pkey: string; server_side: boolean = false): boolean;
+function TPrefController.getBool(pkey: Widestring; server_side: boolean = false): boolean;
 begin
     if ((lowercase(getString(pkey, server_side)) = 'true') or
     (getString(pkey, server_side) = '1')) then
@@ -527,7 +527,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TPrefController.fillStringlist(pkey: string; sl: TStrings; server_side: boolean = false);
+procedure TPrefController.fillStringlist(pkey: Widestring; sl: TWideStrings; server_side: boolean = false);
 var
     p: TXMLTag;
     s: TXMLTagList;
@@ -549,7 +549,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TPrefController.setBool(pkey: string; pvalue: boolean; server_side: boolean = false);
+procedure TPrefController.setBool(pkey: Widestring; pvalue: boolean; server_side: boolean = false);
 begin
      if (pvalue) then
         setString(pkey, 'true', server_side)
@@ -558,7 +558,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TPrefController.setString(pkey, pvalue: string; server_side: boolean = false);
+procedure TPrefController.setString(pkey, pvalue: Widestring; server_side: boolean = false);
 var
     n, t: TXMLTag;
 begin
@@ -582,13 +582,13 @@ begin
 end;
 
 {---------------------------------------}
-procedure TPrefController.setInt(pkey: string; pvalue: integer; server_side: boolean = false);
+procedure TPrefController.setInt(pkey: Widestring; pvalue: integer; server_side: boolean = false);
 begin
     setString(pkey, IntToStr(pvalue), server_side);
 end;
 
 {---------------------------------------}
-procedure TPrefController.setStringlist(pkey: string; pvalue: TStrings; server_side: boolean = false);
+procedure TPrefController.setStringlist(pkey: Widestring; pvalue: TWideStrings; server_side: boolean = false);
 var
     i: integer;
     n, p: TXMLTag;
@@ -620,7 +620,7 @@ begin
 end;
 
 {---------------------------------------}
-function TPrefController.findPresenceTag(pkey: string): TXMLTag;
+function TPrefController.findPresenceTag(pkey: Widestring): TXMLTag;
 var
     i: integer;
     ptags: TXMLTagList;
@@ -683,7 +683,7 @@ begin
 end;
 
 {---------------------------------------}
-function TPrefController.getPresence(pkey: string): TJabberCustomPres;
+function TPrefController.getPresence(pkey: Widestring): TJabberCustomPres;
 var
     p: TXMLTag;
 begin
@@ -725,7 +725,7 @@ end;
 {---------------------------------------}
 procedure TPrefController.SavePosition(form: TForm);
 var
-    fkey: string;
+    fkey: Widestring;
     p, f: TXMLTag;
 begin
     // save the positions for this form
@@ -750,7 +750,7 @@ end;
 procedure TPrefController.RestorePosition(form: TForm);
 var
     f: TXMLTag;
-    fkey: string;
+    fkey: Widestring;
     t,l,w,h: integer;
 begin
     // set the bounds based on the position info
@@ -791,7 +791,7 @@ begin
 end;
 
 {---------------------------------------}
-function TPrefController.CreateProfile(name: string): TJabberProfile;
+function TPrefController.CreateProfile(name: Widestring): TJabberProfile;
 begin
     Result := TJabberProfile.Create();
     Result.Name := name;

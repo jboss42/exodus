@@ -23,7 +23,7 @@ interface
 uses
     Menus, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, buttonFrame, StdCtrls, ComCtrls;
+    Dialogs, buttonFrame, StdCtrls, ComCtrls, TntStdCtrls;
 
 type
   TfrmCustomPres = class(TForm)
@@ -31,7 +31,7 @@ type
     Label1: TLabel;
     cboType: TComboBox;
     Label2: TLabel;
-    txtStatus: TEdit;
+    txtStatus: TTntEdit;
     Label3: TLabel;
     txtPriority: TEdit;
     chkSave: TCheckBox;
@@ -98,7 +98,7 @@ end;
 {---------------------------------------}
 procedure TfrmCustomPres.frameButtons1btnOKClick(Sender: TObject);
 var
-    show, status: string;
+    show, status: WideString;
     pri: integer;
     cp: TJabberCustomPres;
 begin

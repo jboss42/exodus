@@ -34,9 +34,9 @@ type
     private
         _stream: TXMLStream;
         _register: boolean;
-        _stream_id: string;
-        _show: string;
-        _status: string;
+        _stream_id: WideString;
+        _show: WideString;
+        _status: WideString;
         _priority: integer;
         _AuthType: TJabberAuthType;
         _invisible: boolean;
@@ -64,18 +64,18 @@ type
 
         function getMyAgents(): TAgents;
 
-        procedure SetUsername(username: string);
-        procedure SetPassword(password: string);
-        procedure SetServer(server: string);
-        procedure SetResource(resource: string);
+        procedure SetUsername(username: WideString);
+        procedure SetPassword(password: WideString);
+        procedure SetServer(server: WideString);
+        procedure SetResource(resource: WideString);
         procedure SetPort(port: integer);
 
         procedure handleDisconnect();
 
-        function GetUsername(): string;
-        function GetPassword(): string;
-        function GetServer(): string;
-        function GetResource(): string;
+        function GetUsername(): WideString;
+        function GetPassword(): WideString;
+        function GetServer(): WideString;
+        function GetResource(): WideString;
         function GetPort(): integer;
 
         function GetActive(): boolean;
@@ -101,7 +101,7 @@ type
         procedure Connect;
         procedure Disconnect;
 
-        procedure setPresence(show, status: string; priority: integer);
+        procedure setPresence(show, status: WideString; priority: integer);
 
         function RegisterCallback(callback: TPacketEvent; xplite: string; pausable: boolean = false): integer; overload;
         function RegisterCallback(callback: TRosterEvent): integer; overload;
@@ -112,7 +112,7 @@ type
         procedure FireEvent(event: string; tag: TXMLTag); overload;
         procedure FireEvent(event: string; tag: TXMLTag; const p: TJabberPres); overload;
         procedure FireEvent(event: string; tag: TXMLTag; const ritem: TJabberRosterItem); overload;
-        procedure FireEvent(event: string; tag: TXMLTag; const data: string); overload;
+        procedure FireEvent(event: string; tag: TXMLTag; const data: WideString); overload;
 
         procedure SendTag(tag: TXMLTag);
         procedure ActivateProfile(i: integer);
@@ -121,24 +121,24 @@ type
         procedure Play;
         procedure QueueEvent(event: string; tag: TXMLTag; Callback: TPacketEvent);
 
-        function NewAgentsList(srv: string): TAgents;
-        function GetAgentsList(srv: string): TAgents;
-        function generateID: string;
-        function IsBlocked(jid : string): boolean;  overload;
+        function NewAgentsList(srv: WideString): TAgents;
+        function GetAgentsList(srv: WideString): TAgents;
+        function generateID: WideString;
+        function IsBlocked(jid : WideString): boolean;  overload;
         function IsBlocked(jid : TJabberID): boolean; overload;
 
         procedure Block(jid : TJabberID);
         procedure UnBlock(jid : TJabberID);
 
 
-        property Username: string read GetUsername write SetUsername;
-        property Password: string read GetPassword write SetPassword;
-        property Server: string read GetServer write SetServer;
-        property Resource: string read GetResource write SetResource;
+        property Username: WideString read GetUsername write SetUsername;
+        property Password: WideString read GetPassword write SetPassword;
+        property Server: WideString read GetServer write SetServer;
+        property Resource: WideString read GetResource write SetResource;
         property Port: integer read GetPort write SetPort;
         property Priority: integer read _priority write _priority;
-        property Show: string read _show;
-        property Status: string read _status;
+        property Show: WideString read _show;
+        property Status: WideString read _status;
         property Stream: TXMLStream read _stream;
         property Dispatcher: TSignalDispatcher read _dispatcher;
         property MyAgents: TAgents read getMyAgents;
@@ -179,7 +179,7 @@ uses
     {$else}
     QForms, QDialogs,
     {$endif}
-    XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal,
+    Unicode, XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal,
     iq;
 
 {---------------------------------------}
@@ -250,13 +250,13 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberSession.SetUsername(username: string);
+procedure TJabberSession.SetUsername(username: WideString);
 begin
     _profile.Username := username;
 end;
 
 {---------------------------------------}
-function TJabberSession.GetUsername(): string;
+function TJabberSession.GetUsername(): WideString;
 begin
     if (_profile = nil) then
         result := ''
@@ -265,13 +265,13 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberSession.SetPassword(password: string);
+procedure TJabberSession.SetPassword(password: WideString);
 begin
     _profile.Password := Trim(password);
 end;
 
 {---------------------------------------}
-function TJabberSession.GetPassword(): string;
+function TJabberSession.GetPassword(): WideString;
 begin
     if (_profile = nil) then
         result := ''
@@ -280,13 +280,13 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberSession.SetServer(server: string);
+procedure TJabberSession.SetServer(server: WideString);
 begin
     _profile.Server := server;
 end;
 
 {---------------------------------------}
-function TJabberSession.GetServer(): string;
+function TJabberSession.GetServer(): WideString;
 begin
     if (_profile = nil) then
         result := ''
@@ -295,13 +295,13 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberSession.SetResource(resource: string);
+procedure TJabberSession.SetResource(resource: WideString);
 begin
     _profile.Resource := resource;
 end;
 
 {---------------------------------------}
-function TJabberSession.GetResource(): string;
+function TJabberSession.GetResource(): WideString;
 begin
     if (_profile = nil) then
         result := ''
@@ -415,7 +415,7 @@ end;
 {---------------------------------------}
 procedure TJabberSession.StreamCallback(msg: string; tag: TXMLTag);
 var
-    tmps: string;
+    tmps: WideString;
 begin
     // Process callback info..
     if msg = 'connected' then begin
@@ -577,7 +577,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberSession.FireEvent(event: string; tag: TXMLTag; const data: string);
+procedure TJabberSession.FireEvent(event: string; tag: TXMLTag; const data: WideString);
 begin
     // dispatch a data event directly
     _dataSignal.Invoke(event, tag, data);
@@ -592,7 +592,7 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberSession.generateID: string;
+function TJabberSession.generateID: WideString;
 begin
     Result := 'jcl_' + IntToStr(_id);
     _id := _id + 1;
@@ -652,7 +652,7 @@ end;
 procedure TJabberSession.AuthGetCallback(event: string; xml: TXMLTag);
 var
     etag, tok, seq, dig, qtag: TXMLTag;
-    authDigest, authHash, authToken, hashA, key: string;
+    authDigest, authHash, authToken, hashA, key: WideString;
     i, authSeq: integer;
     auth: TJabberIQ;
 begin
@@ -750,7 +750,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberSession.setPresence(show, status: string; priority: integer);
+procedure TJabberSession.setPresence(show, status: WideString; priority: integer);
 var
     p: TJabberPres;
 begin
@@ -795,7 +795,7 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberSession.NewAgentsList(srv: string): TAgents;
+function TJabberSession.NewAgentsList(srv: WideString): TAgents;
 begin
     // create some new agents list object and return it
     Result := TAgents.Create();
@@ -803,7 +803,7 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberSession.GetAgentsList(srv: string): TAgents;
+function TJabberSession.GetAgentsList(srv: WideString): TAgents;
 var
     idx: integer;
 begin
@@ -815,7 +815,7 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberSession.IsBlocked(jid : string): boolean;
+function TJabberSession.IsBlocked(jid : WideString): boolean;
 var
     tmp_jid:  TJabberID;
 begin
@@ -827,9 +827,9 @@ end;
 {---------------------------------------}
 function TJabberSession.IsBlocked(jid : TJabberID): boolean;
 var
-    blockers: TStringList;
+    blockers: TWideStringList;
 begin
-    blockers := TStringList.Create();
+    blockers := TWideStringList.Create();
     Prefs.fillStringlist('blockers', blockers);
     if (blockers.IndexOf(jid.jid) < 0) then
         result := false
@@ -842,10 +842,10 @@ end;
 procedure TJabberSession.UnBlock(jid : TJabberID);
 var
     i: integer;
-    blockers: TStringList;
+    blockers: TWideStringList;
     block : TXMLTag;
 begin
-    blockers := TStringList.Create();
+    blockers := TWideStringList.Create();
     Prefs.fillStringlist('blockers', blockers);
     i := blockers.IndexOf(jid.jid);
     if (i >= 0) then begin
@@ -861,10 +861,10 @@ end;
 {---------------------------------------}
 procedure TJabberSession.Block(jid : TJabberID);
 var
-    blockers: TStringList;
+    blockers: TWideStringList;
     block: TXMLTag;
 begin
-    blockers := TStringList.Create();
+    blockers := TWideStringList.Create();
     Prefs.fillStringlist('blockers', blockers);
     if (blockers.IndexOf(jid.jid) < 0) then begin
         blockers.Add(jid.jid);

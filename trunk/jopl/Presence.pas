@@ -22,19 +22,17 @@ unit Presence;
 interface
 
 uses
-    XMLTag,
-    JabberID,
-    Signals,
+    XMLTag, JabberID, Signals, Unicode,
     Contnrs, SysUtils, classes;
 
 type
     TJabberCustomPres = class
     public
-        Status: string;
-        Show: string;
+        Status: WideString;
+        Show: WideString;
         Priority: integer;
-        title: string;
-        hotkey: string;
+        title: WideString;
+        hotkey: WideString;
 
         procedure Parse(tag: TXMLTag);
         procedure FillTag(tag: TXMLTag);
@@ -45,11 +43,11 @@ type
     public
         toJID: TJabberID;
         fromJID: TJabberID;
-        PresType: string;
-        Status: string;
-        Show: string;
+        PresType: WideString;
+        Status: WideString;
+        Show: WideString;
         Priority: integer;
-        error_code: string;
+        error_code: WideString;
 
         constructor Create; override;
         destructor Destroy; override;
@@ -72,14 +70,14 @@ type
         function addListener(callback: TPresenceEvent): TPresenceListener; overload;
     end;
 
-    TJabberPPDB = class(TStringList)
+    TJabberPPDB = class(TWideStringList)
     private
         _js: TObject;
         _last_pres: TJabberPres;
 
         procedure DeletePres(p: TJabberPres);
         procedure AddPres(p: TJabberPres);
-        function  GetPresList(sjid: string): TStringList;
+        function  GetPresList(sjid: WideString): TWideStringList;
     published
         procedure Callback(event: string; tag: TXMLTag);
     public
@@ -89,7 +87,7 @@ type
         procedure SetSession(js: TObject);
         procedure Clear; override;
 
-        function FindPres(sjid, resource: string): TJabberPres;
+        function FindPres(sjid, resource: WideString): TJabberPres;
         function NextPres(last: TJabberPres): TJabberPres;
 
         property LastPres: TJabberPres read _last_pres;
@@ -113,7 +111,6 @@ uses
 constructor TJabberPres.Create;
 begin
     inherited;
-
     toJID := TJabberID.Create('');
     fromJID := TJabberID.Create('');
     PresType := '';
@@ -171,7 +168,7 @@ end;
 procedure TJabberPres.parse(tag: TXMLTag);
 var
     err_tag, pri_tag, stat_tag, show_tag: TXMLTag;
-    f,t: string;
+    f,t: WideString;
 begin
     // parse the tag into the proper elements
     stat_tag := tag.GetFirstTag('status');
@@ -249,8 +246,8 @@ var
 begin
     // Clear ea. string list which is contained in our list
     for i := 0 to Count - 1 do begin
-        if (Objects[i] is TStringList) then
-            ClearStringListObjects(TStringList(Objects[i]));
+        if (Objects[i] is TWideStringList) then
+            ClearStringListObjects(TWideStringList(Objects[i]));
         TObject(Objects[i]).Free();
         end;
 
@@ -348,7 +345,7 @@ end;
 {---------------------------------------}
 procedure TJabberPPDB.AddPres(p: TJabberPres);
 var
-    pl: TStringList;
+    pl: TWideStringList;
     insert, i: integer;
     cp: TJabberPres;
 begin
@@ -373,7 +370,7 @@ begin
     else begin
         // Create a string list for this JID..
         // and add it to our own list
-        pl := TStringList.Create;
+        pl := TWideStringList.Create;
         pl.AddObject(p.fromJID.Resource, p);
 
         Self.AddObject(Lowercase(p.fromJID.jid), pl);
@@ -384,7 +381,7 @@ end;
 procedure TJabberPPDB.DeletePres(p: TJabberPres);
 var
     i: integer;
-    pl: TStringList;
+    pl: TWideStringList;
 begin
     // delete this presence packet
     pl := GetPresList(p.fromJID.jid);
@@ -403,21 +400,21 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberPPDB.GetPresList(sjid: string): TStringList;
+function TJabberPPDB.GetPresList(sjid: WideString): TWideStringList;
 var
     pi: integer;
 begin
     pi := indexOf(Lowercase(sjid));
     if pi >= 0 then
-        Result := TStringList(Objects[pi])
+        Result := TWideStringList(Objects[pi])
     else
         Result := nil;
 end;
 
 {---------------------------------------}
-function TJabberPPDB.FindPres(sjid, resource: string): TJabberPres;
+function TJabberPPDB.FindPres(sjid, resource: WideString): TJabberPres;
 var
-    pl: TStringList;
+    pl: TWideStringList;
     pi: integer;
 begin
     // find the next or pri presence packet
@@ -440,7 +437,7 @@ end;
 {---------------------------------------}
 function TJabberPPDB.NextPres(last: TJabberPres): TJabberPres;
 var
-    pl: TStringList;
+    pl: TWideStringList;
     i: integer;
 begin
     // find the next pres for this person
