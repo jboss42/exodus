@@ -11,8 +11,8 @@ unit ExodusCOM_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.4 $
-// File generated on 12/31/2002 1:44:31 PM from Type Library described below.
+// PASTLWTR : $Revision: 1.5 $
+// File generated on 12/31/2002 2:08:24 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -123,6 +123,8 @@ type
     function addPluginMenu(const Caption: WideString): WideString; safecall;
     procedure removePluginMenu(const ID: WideString); safecall;
     procedure monitorImplicitRegJID(const JabberID: WideString; FullJID: WordBool); safecall;
+    procedure getAgentList(const Server: WideString); safecall;
+    function getAgentService(const Server: WideString; const Service: WideString): WideString; safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -154,6 +156,8 @@ type
     function addPluginMenu(const Caption: WideString): WideString; dispid 14;
     procedure removePluginMenu(const ID: WideString); dispid 15;
     procedure monitorImplicitRegJID(const JabberID: WideString; FullJID: WordBool); dispid 17;
+    procedure getAgentList(const Server: WideString); dispid 18;
+    function getAgentService(const Server: WideString; const Service: WideString): WideString; dispid 19;
   end;
 
 // *********************************************************************//
@@ -201,6 +205,7 @@ type
     procedure NewChat(const jid: WideString; const Chat: IExodusChat); safecall;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat); safecall;
     procedure menuClick(const ID: WideString); safecall;
+    procedure onAgentsList(const Server: WideString); safecall;
   end;
 
 // *********************************************************************//
@@ -216,6 +221,7 @@ type
     procedure NewChat(const jid: WideString; const Chat: IExodusChat); dispid 4;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat); dispid 5;
     procedure menuClick(const ID: WideString); dispid 6;
+    procedure onAgentsList(const Server: WideString); dispid 7;
   end;
 
 // *********************************************************************//

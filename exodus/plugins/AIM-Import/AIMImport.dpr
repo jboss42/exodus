@@ -5,8 +5,7 @@ uses
   AIMImport_TLB in 'AIMImport_TLB.pas',
   AIMPlugin in 'AIMPlugin.pas' {AIMImportPlugin: CoClass},
   ExodusCOM_TLB in 'ExodusCOM_TLB.pas',
-  Importer in 'Importer.pas' {frmImport},
-  Selector in 'Selector.pas' {frmGateways};
+  Importer in 'Importer.pas' {frmImport};
 
 exports
   DllGetClassObject,
