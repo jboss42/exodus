@@ -475,7 +475,7 @@ end;
 function TPrefFile.findPresenceTag(pkey: Widestring): TXMLTag;
 begin
     // get some custom pres from the list
-    Result := _pres.QueryXPTag('/presence@name="' + pkey + '"');
+    Result := _pres.QueryXPTag('/presii/presence@name="' + pkey + '"');
 end;
 
 {---------------------------------------}
@@ -486,7 +486,7 @@ begin
     _dirty := true;
 
     // remove this specific presence
-    tag := _pres.QueryXPTag('/presence@name="' + pkey + '"');
+    tag := _pres.QueryXPTag('/presii/presence@name="' + pkey + '"');
 
     if (tag <> nil) then
         _pres.RemoveTag(tag);
