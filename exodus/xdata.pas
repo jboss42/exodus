@@ -201,6 +201,7 @@ begin
     Self.ClientHeight := h;
 
     CenterMainForm(Self);
+    _valid := true;
 end;
 
 {---------------------------------------}
