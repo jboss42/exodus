@@ -2,6 +2,7 @@ inherited frmRoom: TfrmRoom
   Left = 253
   Top = 180
   Caption = 'Conference Room'
+  OldCreateOrder = True
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
@@ -57,6 +58,7 @@ inherited frmRoom: TfrmRoom
   end
   inherited pnlInput: TPanel
     inherited MsgOut: TMemo
+      WantTabs = True
       OnKeyPress = MsgOutKeyPress
     end
   end
