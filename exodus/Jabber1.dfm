@@ -236,6 +236,11 @@ object frmExodus: TfrmExodus
       end
       object View1: TTntMenuItem
         Caption = '&View'
+        object mnuOnline: TTntMenuItem
+          Caption = 'Show &Only Online'
+          ShortCut = 119
+          OnClick = btnOnlineRosterClick
+        end
         object mnuToolbar: TTntMenuItem
           Caption = 'Show Toolbar'
           OnClick = mnuToolbarClick
@@ -253,6 +258,11 @@ object frmExodus: TfrmExodus
         object ShowEventsWindow1: TTntMenuItem
           Caption = 'Instant Messages'
           OnClick = ShowEventsWindow1Click
+        end
+        object ShowXML1: TTntMenuItem
+          Caption = 'Show Debug XML'
+          ShortCut = 123
+          OnClick = ShowXML1Click
         end
       end
       object ClearMessages1: TTntMenuItem
@@ -278,16 +288,9 @@ object frmExodus: TfrmExodus
         ShortCut = 118
         OnClick = mnuConferenceClick
       end
-      object N6: TTntMenuItem
-        Caption = '-'
-      end
       object mnuRegisterService: TTntMenuItem
         Caption = '&Register with a Service'
         OnClick = mnuRegisterServiceClick
-      end
-      object mnuPassword: TTntMenuItem
-        Caption = 'Change &Password'
-        OnClick = mnuPasswordClick
       end
       object N9: TTntMenuItem
         Caption = '-'
@@ -338,14 +341,6 @@ object frmExodus: TfrmExodus
           Caption = '&Search for a Contact'
           ShortCut = 16467
           OnClick = mnuSearchClick
-        end
-        object N13: TTntMenuItem
-          Caption = '-'
-        end
-        object mnuOnline: TTntMenuItem
-          Caption = 'Show &Only Online'
-          ShortCut = 119
-          OnClick = btnOnlineRosterClick
         end
         object NewGroup2: TTntMenuItem
           Caption = 'Add Roster &Group'
@@ -418,6 +413,10 @@ object frmExodus: TfrmExodus
         Caption = 'Edit My Profile, Avatar'
         OnClick = mnuMyVCardClick
       end
+      object mnuPassword: TTntMenuItem
+        Caption = 'Change My &Password'
+        OnClick = mnuPasswordClick
+      end
       object N3: TTntMenuItem
         Caption = '-'
       end
@@ -448,11 +447,6 @@ object frmExodus: TfrmExodus
           Caption = 'vCard'
           Visible = False
         end
-      end
-      object ShowXML1: TTntMenuItem
-        Caption = 'Show Debug XML'
-        ShortCut = 123
-        OnClick = ShowXML1Click
       end
       object mnuPlugins: TTntMenuItem
         Caption = 'Plu&gins'

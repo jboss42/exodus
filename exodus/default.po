@@ -6,13 +6,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-11-13 17:42\n"
-"PO-Revision-Date: 2004-11-13 17:42\n"
+"POT-Creation-Date: 2004-11-16 07:47\n"
+"PO-Revision-Date: 2004-11-16 07:47\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: dxgettext 1.2 beta 2\n"
+"X-Generator: dxgettext 1.1.1\n"
 
 #. frmAbout..Caption
 #: About.dfm:8
@@ -644,7 +644,7 @@ msgstr ""
 #. frmExodus..popTray..N01..Caption
 #: Jabber1.dfm:2714
 #. frmJud..PopupMenu1..N1..Caption
-#: jud.dfm:220
+#: Jud.dfm:220
 #. frmMsgRecv..popContact..N1..Caption
 #: MsgRecv.dfm:519
 #. frmMsgRecv..popContact..N2..Caption
@@ -2033,7 +2033,7 @@ msgstr ""
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Hint
 #: Jabber1.dfm:146
 #. frmJud..PopupMenu1..popAdd..Caption
-#: jud.dfm:212
+#: Jud.dfm:212
 #. frmAdd..Caption
 #: RosterAdd.dfm:6
 #. frmRosterWindow..popActions..popAddContact..Caption
@@ -2353,7 +2353,7 @@ msgstr ""
 #. frmExodus..popTray..trayMessage..Caption
 #: Jabber1.dfm:2702
 #. frmJud..PopupMenu1..popMessage..Caption
-#: jud.dfm:227
+#: Jud.dfm:227
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
 #: subscribe.dfm:150
 msgid "Send Message"
@@ -2436,7 +2436,7 @@ msgstr ""
 #. frmJoinRoom..Tabs..TabSheet2..Caption
 #: JoinRoom.dfm:148
 #. frmJud..Tabs..TabSheet2..Caption
-#: jud.dfm:78
+#: Jud.dfm:78
 #. frmRegister..Tabs..TabSheet2..Caption
 #: RegForm.dfm:60
 msgid "TabSheet2"
@@ -2470,79 +2470,79 @@ msgid "Fetch Rooms"
 msgstr ""
 
 #. frmJud..Caption
-#: jud.dfm:5
+#: Jud.dfm:5
 msgid "Jabber Search"
 msgstr ""
 
 #. frmJud..Panel1..lblWizardTitle..Caption
-#: jud.dfm:43
+#: Jud.dfm:43
 msgid "Jabber Search Wizard"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet1..lblSelect....Align
-#: jud.dfm:64
+#: Jud.dfm:64
 msgid "Select the user database or enter in the Jabber ID of the search "
 "agent to use:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet2..lblWait..Caption
-#: jud.dfm:86
+#: Jud.dfm:86
 msgid "Please wait. Contacting search agent:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..Caption
-#: jud.dfm:100
+#: Jud.dfm:100
 #. frmRegister..Tabs..TabSheet3..Caption
 #: RegForm.dfm:95
 msgid "TabSheet3"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..lblInstructions..Caption
-#: jud.dfm:108
+#: Jud.dfm:108
 msgid "Fill in the search criteria to find contacts "
 "on."
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Caption
-#: jud.dfm:124
+#: Jud.dfm:124
 #. frmRegister..Tabs..TabSheet4..Caption
 #: RegForm.dfm:115
 msgid "TabSheet4"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Label3..Caption
-#: jud.dfm:140
+#: Jud.dfm:140
 msgid "Add Contacts to this group:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Caption
-#: jud.dfm:148
+#: Jud.dfm:148
 #. frmAdd..lblAddGrp..Caption
 #: RosterAdd.dfm:49
 msgid "Add a new Group"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblCount..Caption
-#: jud.dfm:159
+#: Jud.dfm:159
 msgid "N items found"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Button1..Caption
-#: jud.dfm:176
+#: Jud.dfm:176
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: RosterRecv.dfm:38
-#: jud.pas:652
-#: jud.pas:654
+#: Jud.pas:652
+#: Jud.pas:654
 msgid "Add Contacts"
 msgstr ""
 
 #. frmJud..PopupMenu1..popProfile..Caption
-#: jud.dfm:216
+#: Jud.dfm:216
 msgid "View Profile"
 msgstr ""
 
 #. frmJud..PopupMenu1..popChat..Caption
-#: jud.dfm:223
+#: Jud.dfm:223
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:146
 #: Jabber1.pas:2392
@@ -6622,67 +6622,76 @@ msgid " Objects"
 msgstr ""
 
 #. Setup the cache'd old versions in ChangePresImage
-#: ChatWin.pas:585
+#: ChatWin.pas:590
 msgid " is replying."
 msgstr ""
 
-#: ChatWin.pas:667
+#. Display the error info..
+#: ChatWin.pas:655
+msgid "The last message bounced!. "
+msgstr ""
+
+#: ChatWin.pas:659
+msgid "Error Code: "
+msgstr ""
+
+#: ChatWin.pas:691
 msgid "Chat Activity: "
 msgstr ""
 
-#: ChatWin.pas:787
+#: ChatWin.pas:811
 #. post a msg to the window and disable the text input box.
 #: Room.pas:860
 msgid "You have been disconnected."
 msgstr ""
 
 #. if this jid just got blocked, just close the window.
-#: ChatWin.pas:807
+#: ChatWin.pas:831
 msgid "This user is now blocked."
 msgstr ""
 
 #. Change the bulb
-#: ChatWin.pas:829
+#: ChatWin.pas:853
 #. make sure the user is still connected
-#: ChatWin.pas:874
-#: ChatWin.pas:875
+#: ChatWin.pas:898
+#: ChatWin.pas:899
 msgid "offline"
 msgstr ""
 
-#: ChatWin.pas:831
+#: ChatWin.pas:855
 msgid "unknown"
 msgstr ""
 
-#: ChatWin.pas:833
+#: ChatWin.pas:857
 msgid "away"
 msgstr ""
 
-#: ChatWin.pas:835
+#: ChatWin.pas:859
 msgid "xa"
 msgstr ""
 
-#: ChatWin.pas:837
+#: ChatWin.pas:861
 msgid "dnd"
 msgstr ""
 
-#: ChatWin.pas:839
+#: ChatWin.pas:863
 msgid "chat"
 msgstr ""
 
-#: ChatWin.pas:889
+#: ChatWin.pas:913
 msgid "available"
 msgstr ""
 
-#: ChatWin.pas:896
+#: ChatWin.pas:920
 msgid "is now"
 msgstr ""
 
 #. check to see if we're already subscribed...
-#: ChatWin.pas:922
+#: ChatWin.pas:946
 msgid "You are already subscribed to this contact"
 msgstr ""
 
-#: ChatWin.pas:1260
+#: ChatWin.pas:1284
 msgid "This chat window is busy. Close anyways?"
 msgstr ""
 
@@ -7324,22 +7333,22 @@ msgid "You must enter a nickname"
 msgstr ""
 
 #. timeout
-#: jud.pas:320
+#: Jud.pas:320
 #. we got an iq-error back
-#: jud.pas:326
+#: Jud.pas:326
 msgid "Could not contact the search agent."
 msgstr ""
 
 #. timeout
-#: jud.pas:428
+#: Jud.pas:428
 msgid "The search timed out."
 msgstr ""
 
-#: jud.pas:457
+#: Jud.pas:457
 msgid "No Results were found."
 msgstr ""
 
-#: jud.pas:567
+#: Jud.pas:567
 msgid "%d items found."
 msgstr ""
 

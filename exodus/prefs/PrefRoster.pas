@@ -69,6 +69,8 @@ end;
 procedure TfrmPrefRoster.SavePrefs();
 begin
     inherited;
+
+    // XXX: save nested group seperator per JEP-48
 end;
 
 procedure TfrmPrefRoster.chkInlineStatusClick(Sender: TObject);

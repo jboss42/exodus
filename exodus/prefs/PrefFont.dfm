@@ -2,7 +2,7 @@ inherited frmPrefFont: TfrmPrefFont
   Left = 320
   Top = 256
   Caption = 'frmPrefFont'
-  ClientHeight = 366
+  ClientHeight = 283
   ClientWidth = 421
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -49,21 +49,7 @@ inherited frmPrefFont: TfrmPrefFont
     Height = 13
     Caption = 'Element Name'
   end
-  object TntLabel1: TTntLabel [6]
-    Left = 8
-    Top = 315
-    Width = 63
-    Height = 13
-    Caption = 'Display Style:'
-  end
-  object TntLabel2: TTntLabel [7]
-    Left = 8
-    Top = 270
-    Width = 245
-    Height = 13
-    Caption = 'Chat windows and TC rooms will be displayed using:'
-  end
-  object clrBoxBG: TColorBox [8]
+  object clrBoxBG: TColorBox [6]
     Left = 135
     Top = 183
     Width = 170
@@ -76,7 +62,7 @@ inherited frmPrefFont: TfrmPrefFont
     TabOrder = 2
     OnChange = clrBoxBGChange
   end
-  object clrBoxFont: TColorBox [9]
+  object clrBoxFont: TColorBox [7]
     Left = 135
     Top = 207
     Width = 170
@@ -89,7 +75,7 @@ inherited frmPrefFont: TfrmPrefFont
     TabOrder = 3
     OnChange = clrBoxFontChange
   end
-  object btnFont: TTntButton [10]
+  object btnFont: TTntButton [8]
     Left = 135
     Top = 234
     Width = 90
@@ -98,7 +84,7 @@ inherited frmPrefFont: TfrmPrefFont
     TabOrder = 4
     OnClick = btnFontClick
   end
-  object colorChat: TExRichEdit [11]
+  object colorChat: TExRichEdit [9]
     Left = 136
     Top = 72
     Width = 225
@@ -211,45 +197,6 @@ inherited frmPrefFont: TfrmPrefFont
     ShowLines = False
     TabOrder = 0
     OnMouseDown = colorRosterMouseDown
-  end
-  object cboIEStylesheet: TTntComboBox
-    Left = 32
-    Top = 332
-    Width = 249
-    Height = 21
-    ItemHeight = 13
-    TabOrder = 6
-  end
-  object btnCSSBrowse: TTntButton
-    Left = 285
-    Top = 330
-    Width = 60
-    Height = 25
-    Caption = 'Browse'
-    TabOrder = 7
-    OnClick = btnCSSBrowseClick
-  end
-  object cboMsgList: TTntComboBox
-    Left = 32
-    Top = 287
-    Width = 249
-    Height = 21
-    Style = csDropDownList
-    ItemHeight = 13
-    TabOrder = 8
-    OnChange = cboMsgListChange
-    Items.WideStrings = (
-      'Richedit control (Default)'
-      'Internet Explorer')
-  end
-  object btnCSSEdit: TTntButton
-    Left = 349
-    Top = 330
-    Width = 60
-    Height = 25
-    Caption = 'Edit'
-    TabOrder = 9
-    OnClick = btnCSSEditClick
   end
   object FontDialog1: TFontDialog
     Font.Charset = DEFAULT_CHARSET

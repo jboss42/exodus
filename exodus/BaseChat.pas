@@ -107,7 +107,7 @@ implementation
 
 {$R *.dfm}
 uses
-    RTFMsgList, IEMsgList, ClipBrd, Session, MsgDisplay, ShellAPI, Emoticons, Jabber1, ExUtils;
+    RTFMsgList, ClipBrd, Session, MsgDisplay, ShellAPI, Emoticons, Jabber1, ExUtils;
 
 {---------------------------------------}
 procedure TfrmBaseChat.Emoticons1Click(Sender: TObject);
@@ -272,7 +272,7 @@ end;
 {---------------------------------------}
 procedure TfrmBaseChat.FormCreate(Sender: TObject);
 var
-    ms, ht: integer;
+    ht: integer;
     sc: TShortcut;
 begin
     AutoScroll := true;
@@ -283,13 +283,9 @@ begin
     _esc := false;
 
     // Pick which frame to build
-    ms := MainSession.prefs.getInt('msglist_type');
-    if (ms = 0) then
-        _msgframe := TfRTFMsgList.Create(Self)
-    else if (ms = 1) then
-        _msgframe := TfIEMsgList.Create(Self)
-    else
-        assert(false);
+    //ms := MainSession.prefs.getInt('msglist_type');
+    //if (ms = 0) then
+    _msgframe := TfRTFMsgList.Create(Self);
 
     with MsgList do begin
         Name := 'msg_list_frame';

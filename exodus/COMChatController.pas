@@ -377,20 +377,20 @@ begin
         if (_chat <> nil) then begin
 
             // If we have an RTF msg list, use that
-            p := nil;
-            if (TfrmChat(_chat.window).MsgList is TfRTFMsgList) then
+            if (TfrmChat(_chat.window).MsgList is TfRTFMsgList) then begin
                 p := @(TfRTFMsgList(TfrmChat(_chat.window).MsgList).MsgList);
-
-            // XXX: put IE MsgList stuff here
-            Result := integer(p);
+                Result := integer(p);
+            end
+            else
+                Result := -1;
         end
         else if (_room <> nil) then begin
-            p := nil;
-            if (_room.MsgList is TfRTFMsgList) then
+            if (_room.MsgList is TfRTFMsgList) then begin
                 p := @(TfRTFMsgList(_room.MsgList).MsgList);
-
-            // XXX: put IE MsgList stuff here
-            Result := integer(p);
+                Result := integer(p);
+            end
+            else
+                Result := -1;
         end
         else if (_im <> nil) then begin
             p := @(_im.txtMsg);

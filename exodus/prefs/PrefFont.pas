@@ -40,13 +40,7 @@ type
     FontDialog1: TFontDialog;
     lblColor: TTntLabel;
     colorRoster: TTntTreeView;
-    TntLabel1: TTntLabel;
-    cboIEStylesheet: TTntComboBox;
-    btnCSSBrowse: TTntButton;
-    TntLabel2: TTntLabel;
-    cboMsgList: TTntComboBox;
     OpenDialog1: TOpenDialog;
-    btnCSSEdit: TTntButton;
     procedure btnFontClick(Sender: TObject);
     procedure clrBoxBGChange(Sender: TObject);
     procedure clrBoxFontChange(Sender: TObject);
@@ -54,8 +48,6 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure FormCreate(Sender: TObject);
     procedure cboMsgListChange(Sender: TObject);
-    procedure btnCSSBrowseClick(Sender: TObject);
-    procedure btnCSSEditClick(Sender: TObject);
     procedure colorChatSelectionChange(Sender: TObject);
   private
     { Private declarations }
@@ -135,7 +127,6 @@ begin
         btnFont.Enabled := true;
         clrBoxBG.Selected := TColor(MainSession.Prefs.getInt(_clr_bg));
         clrBoxFont.Selected := TColor(Mainsession.Prefs.getInt(_clr_font_color));
-
     end;
 end;
 
@@ -309,7 +300,8 @@ var
 begin
   inherited;
     // When we use IE, disable the color & font stuff
-    idx := cboMsgList.ItemIndex;
+    // idx := cboMsgList.ItemIndex;
+    idx := 0;
 
     // Richedit stuff
     colorChat.Enabled := (idx = 0);
@@ -318,29 +310,14 @@ begin
     btnFont.Enabled := (idx = 0);
 
     // IE stuff
+    {
     cboIEStylesheet.Enabled := (idx = 1);
     btnCSSBrowse.Enabled := (idx = 1);
     btnCSSEdit.Enabled := (idx = 1);
+    }
 end;
 
 {---------------------------------------}
-procedure TfrmPrefFont.btnCSSBrowseClick(Sender: TObject);
-begin
-  inherited;
-    if (OpenDialog1.Execute) then
-        cboIEStylesheet.Text := OpenDialog1.Filename;
-end;
-
-{---------------------------------------}
-procedure TfrmPrefFont.btnCSSEditClick(Sender: TObject);
-begin
-  inherited;
-    // Edit the CSS
-    // XXX: if the stylesheet is empty, dupe the default, and create a new css file
-    ShellExecute(Application.Handle, 'edit', PChar(String(cboIEStylesheet.text)), nil, nil,
-        SW_SHOWNORMAL);
-end;
-
 procedure TfrmPrefFont.colorChatSelectionChange(Sender: TObject);
 var
     start: integer;
