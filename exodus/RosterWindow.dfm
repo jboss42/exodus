@@ -699,4 +699,11 @@ object frmRosterWindow: TfrmRosterWindow
       OnClick = popTransUnRegisterClick
     end
   end
+  object autoScroll: TTimer
+    Enabled = False
+    Interval = 100
+    OnTimer = autoScrollTimer
+    Left = 72
+    Top = 272
+  end
 end
