@@ -31,7 +31,7 @@ uses
     {$else}
     Forms, Messages, Windows, StdVcl, ExtCtrls,
     {$endif}
-    SysUtils, IdThread, IdException,
+    SysUtils, IdThread, IdException, IdSSLOpenSSL, 
     IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
     SyncObjs, Classes;
 
@@ -70,6 +70,7 @@ type
     private
         _root_tag: string;
         _socket: TidTCPClient;
+        _ssl_int: TIdConnectionInterceptOpenSSL;
         _thread: TDataThread;
         _timer: TTimer;
         _callbacks: TList;
@@ -89,7 +90,7 @@ type
         constructor Create(root: String);
         destructor Destroy; override;
 
-        procedure Connect(server: string; port: integer); virtual;
+        procedure Connect(server: string; port: integer; use_ssl: boolean = false);
         procedure Send(xml: string);
         procedure SendTag(tag: TXMLTag);
         procedure Disconnect;
@@ -523,7 +524,15 @@ begin
 
     Also create the socket here, and setup the callback lists.
     }
+    _ssl_int := TIdConnectionInterceptOpenSSL.Create(nil);
+    with _ssl_int do begin
+        SSLOptions.CertFile := '';
+        SSLOptions.RootCertFile := '';
+        end;
     _Socket := TIdTCPClient.Create(nil);
+    _Socket.Intercept := _ssl_int;
+    _Socket.InterceptEnabled := false;
+
     _root_tag := root;
     _callbacks := TList.Create;
     _sock_callbacks := TList.Create;
@@ -644,13 +653,14 @@ begin
 end;
 
 {---------------------------------------}
-procedure TXMLStream.Connect(server: string; port: integer);
+procedure TXMLStream.Connect(server: string; port: integer; use_ssl: boolean = false);
 begin
     // connect to this server
     _server := Server;
     _port := port;
     _socket.Host := Server;
     _socket.Port := port;
+    _Socket.InterceptEnabled := use_ssl;
 
     // Create the socket reader thread and start it.
     // The thread will open the socket and read all of the data.
