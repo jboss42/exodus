@@ -244,6 +244,7 @@ begin
         exit;
     end;
 
+    // XXX: iterate over all possible DNS servers if something fails
     Resolver.Host := slist[0];
 
     // Use this for testing
