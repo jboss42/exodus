@@ -26,7 +26,7 @@ uses
 function XML_EscapeChars(txt: Widestring): Widestring;
 function XML_UnEscapeChars(txt: Widestring): Widestring;
 
-function HTML_EscapeChars(txt: Widestring; DoAPOS: boolean): Widestring;
+function HTML_EscapeChars(txt: Widestring; DoAPOS: boolean; DoQUOT: boolean): Widestring;
 function URL_EscapeChars(txt: Widestring): Widestring;
 
 function TrimQuotes(instring: Widestring): Widestring;
@@ -127,7 +127,7 @@ begin
 end;
 
 {---------------------------------------}
-function HTML_EscapeChars(txt: Widestring; DoAPOS: boolean): Widestring;
+function HTML_EscapeChars(txt: Widestring; DoAPOS: boolean; DoQUOT: boolean): Widestring;
 var
     tmps: Widestring;
     i: integer;
@@ -141,7 +141,7 @@ begin
     for i := 1 to length(txt) do begin
         if txt[i] = '&' then tmps := tmps + '&amp;'
         else if (txt[i] = Chr(39)) and (DoAPOS) then tmps := tmps + '&apos;'
-        else if txt[i] = '"' then tmps := tmps + '&quot;'
+        else if (txt[i] = '"') and (doQUOT) then tmps := tmps + '&quot;'
         else if txt[i] = '<' then tmps := tmps + '&lt;'
         else if txt[i] = '>' then tmps := tmps + '&gt;'
         else tmps := tmps + txt[i];
@@ -172,7 +172,7 @@ end;
 function XML_EscapeChars(txt: Widestring): Widestring;
 begin
     // escape the special chars.
-    Result := HTML_EscapeChars(txt, true);
+    Result := HTML_EscapeChars(txt, true, true);
 end;
 
 {---------------------------------------}
