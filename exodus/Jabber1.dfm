@@ -1,6 +1,6 @@
 object Exodus: TExodus
-  Left = 275
-  Top = 202
+  Left = 267
+  Top = 374
   Width = 527
   Height = 324
   AlphaBlendValue = 240
@@ -79,87 +79,71 @@ object Exodus: TExodus
       end
     end
   end
-  object Toolbar: TCoolBar
+  object ToolBar: TToolBar
     Left = 0
     Top = 0
     Width = 519
     Height = 30
-    BandBorderStyle = bsNone
-    Bands = <
-      item
-        Control = ToolBar1
-        ImageIndex = -1
-        MinHeight = 22
-        Width = 511
-      end>
+    AutoSize = True
     BorderWidth = 1
-    DockSite = True
+    ButtonWidth = 24
+    DragKind = dkDock
     DragMode = dmAutomatic
-    object ToolBar1: TToolBar
-      Left = 9
+    EdgeBorders = [ebLeft, ebTop, ebRight, ebBottom]
+    Flat = True
+    Images = ImageList1
+    Indent = 2
+    TabOrder = 1
+    object btnConnect: TToolButton
+      Left = 2
       Top = 0
-      Width = 498
-      Height = 22
+      Hint = 'Connect/Disconnect'
+      AllowAllUp = True
       AutoSize = True
-      ButtonWidth = 24
-      Caption = 'ToolBar1'
-      DragKind = dkDock
-      DragMode = dmAutomatic
-      EdgeBorders = []
-      Flat = True
-      Images = ImageList1
-      TabOrder = 0
-      object btnConnect: TToolButton
-        Left = 0
-        Top = 0
-        Hint = 'Connect/Disconnect'
-        AllowAllUp = True
-        AutoSize = True
-        Caption = 'btnConnect'
-        ImageIndex = 0
-        OnClick = btnConnectClick
-      end
-      object btnOnlineRoster: TToolButton
-        Left = 23
-        Top = 0
-        Hint = 'View Online/All'
-        AllowAllUp = True
-        Caption = 'btnOnlineRoster'
-        ImageIndex = 6
-        OnClick = btnOnlineRosterClick
-      end
-      object btnAddContact: TToolButton
-        Left = 47
-        Top = 0
-        Hint = 'Add Contact'
-        Caption = 'btnAddContact'
-        ImageIndex = 2
-        OnClick = btnAddContactClick
-      end
-      object btnRoom: TToolButton
-        Left = 71
-        Top = 0
-        Caption = 'btnRoom'
-        ImageIndex = 10
-        OnClick = mnuConferenceClick
-      end
-      object btnDelContact: TToolButton
-        Left = 95
-        Top = 0
-        Hint = 'Remove Contact'
-        Caption = 'btnDelContact'
-        ImageIndex = 4
-        Visible = False
-        OnClick = btnDelPersonClick
-      end
-      object btnExpanded: TToolButton
-        Left = 119
-        Top = 0
-        Hint = 'Collapse/Expand'
-        Caption = 'btnExpanded'
-        ImageIndex = 9
-        OnClick = btnExpandedClick
-      end
+      Caption = 'btnConnect'
+      ImageIndex = 0
+      OnClick = btnConnectClick
+    end
+    object btnOnlineRoster: TToolButton
+      Left = 25
+      Top = 0
+      Hint = 'View Online/All'
+      AllowAllUp = True
+      Caption = 'btnOnlineRoster'
+      ImageIndex = 6
+      OnClick = btnOnlineRosterClick
+    end
+    object btnAddContact: TToolButton
+      Left = 49
+      Top = 0
+      Hint = 'Add Contact'
+      Caption = 'btnAddContact'
+      ImageIndex = 2
+      OnClick = btnAddContactClick
+    end
+    object btnRoom: TToolButton
+      Left = 73
+      Top = 0
+      Caption = 'btnRoom'
+      ImageIndex = 10
+      OnClick = mnuConferenceClick
+    end
+    object btnDelContact: TToolButton
+      Left = 97
+      Top = 0
+      Hint = 'Remove Contact'
+      Caption = 'btnDelContact'
+      ImageIndex = 4
+      Visible = False
+      OnClick = btnDelPersonClick
+    end
+    object btnExpanded: TToolButton
+      Left = 121
+      Top = 0
+      Hint = 'Collapse/Expand'
+      Caption = 'btnExpanded'
+      ImageIndex = 9
+      OnClick = btnExpandedClick
     end
   end
   object MainMenu1: TMainMenu

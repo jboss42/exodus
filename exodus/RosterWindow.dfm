@@ -72,7 +72,6 @@ object frmRosterWindow: TfrmRosterWindow
     MultiSelectStyle = [msControlSelect, msShiftSelect, msVisibleOnly]
     PopupMenu = popRoster
     ReadOnly = True
-    RightClickSelect = True
     ShowButtons = False
     ShowLines = False
     ShowRoot = False
@@ -225,7 +224,7 @@ object frmRosterWindow: TfrmRosterWindow
     Left = 24
     Top = 66
     Bitmap = {
-      494C01011E002200040010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C01011E002200040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000009000000001002000000000000090
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1417,7 +1416,8 @@ object frmRosterWindow: TfrmRosterWindow
       E03FE03FE01FE03FE00FE01FE00FE00FE007E00FE007E007E003E007C003E003
       C003C003C003C003C001C003C001C001C001C001C001C001C001C001C001C001
       C001C001C001C001C001C001C003C001E003E003E003E003E007E003F007E003
-      F00FF007F80FF007FC1FF80FFE3FFC1F}
+      F00FF007F80FF007FC1FF80FFE3FFC1F00000000000000000000000000000000
+      000000000000}
   end
   object popRoster: TPopupMenu
     OnPopup = popRosterPopup
@@ -1434,6 +1434,9 @@ object frmRosterWindow: TfrmRosterWindow
     object popSendFile: TMenuItem
       Caption = 'Send File'
       OnClick = popSendFileClick
+    end
+    object popSendContacts: TMenuItem
+      Caption = 'Send Contacts'
     end
     object popClientInfo: TMenuItem
       Caption = 'Client Info'
@@ -1673,6 +1676,35 @@ object frmRosterWindow: TfrmRosterWindow
     object popAddGroup: TMenuItem
       Caption = 'Add Group'
       OnClick = popAddGroupClick
+    end
+  end
+  object popGroup: TPopupMenu
+    Left = 56
+    Top = 128
+    object popGrpPresence: TMenuItem
+      Caption = 'Send Presence'
+      object popGrpAvailable: TMenuItem
+        Caption = 'Available'
+        OnClick = popSendPresClick
+      end
+      object popGrpInvisible: TMenuItem
+        Caption = 'Invisible'
+        OnClick = popSendPresClick
+      end
+    end
+    object popGrpInvite: TMenuItem
+      Caption = 'Invite to Room'
+    end
+    object N3: TMenuItem
+      Caption = '-'
+    end
+    object popGrpRename: TMenuItem
+      Caption = 'Rename'
+      OnClick = popGrpRenameClick
+    end
+    object popGrpRemove: TMenuItem
+      Caption = 'Remove'
+      OnClick = popGrpRemoveClick
     end
   end
 end

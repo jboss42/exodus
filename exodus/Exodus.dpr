@@ -62,7 +62,8 @@ uses
   CustomPres in 'CustomPres.pas' {frmCustomPres},
   Register in 'Register.pas',
   Notify in 'Notify.pas',
-  getopt in 'getOpt.pas';
+  getopt in 'getOpt.pas',
+  GrpRemove in 'GrpRemove.pas' {frmGrpRemove};
 
 {$R *.RES}
 
