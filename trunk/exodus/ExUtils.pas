@@ -21,7 +21,7 @@ unit ExUtils;
 
 interface
 uses
-    Unicode, ExRichEdit, RichEdit2, Signals,
+    Unicode, ExRichEdit, RichEdit2, Signals,  
     JabberMsg, Graphics, Controls, StdCtrls, Forms, Classes, SysUtils, Windows;
 
 const
@@ -97,7 +97,7 @@ var
 implementation
 uses
     IniFiles, Dialogs, StrUtils, IdGlobal, ShellAPI,
-    XMLTag, XMLUtils, Session, IQ, JabberID, Jabber1, Roster, 
+    XMLTag, XMLUtils, Session, IQ, JabberID, Jabber1, Roster,
     JabberConst, MsgDisplay, Debug;
 
 type
@@ -755,7 +755,6 @@ begin
     i := grps.IndexOf(MainSession.Prefs.getString('roster_transport_grp'));
     if (i >= 0) then grps.Delete(i);
 end;
-
 
 {---------------------------------------}
 {---------------------------------------}
