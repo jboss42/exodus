@@ -47,6 +47,7 @@ type
     txtChatMemory: TTntEdit;
     spnChatMemory: TTntUpDown;
     StaticText4: TTntPanel;
+    chkEscClose: TTntCheckBox;
     procedure chkRosterAlphaClick(Sender: TObject);
     procedure chkToastAlphaClick(Sender: TObject);
     procedure trkRosterAlphaChange(Sender: TObject);
@@ -110,6 +111,7 @@ begin
             spnSnap.Position := 10;
 
         spnChatMemory.Position := getInt('chat_memory');
+        chkEscClose.Checked := getBool('esc_close');
     end;
 end;
 
@@ -128,6 +130,7 @@ begin
         setBool('warn_closebusy', chkBusy.Checked);
         setInt('edge_snap', spnSnap.Position);
         setInt('chat_memory', spnChatMemory.Position);
+        setBool('esc_close', chkEscClose.Checked);
     end;
 end;
     
