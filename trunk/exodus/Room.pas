@@ -407,6 +407,7 @@ begin
     msg := TJabberMessage.Create(jid, 'groupchat', txt, '');
     msg.nick := MyNick;
     msg.isMe := true;
+    msg.ID := MainSession.generateID();
     MainSession.SendTag(msg.Tag);
     inherited;
 end;

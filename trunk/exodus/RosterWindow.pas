@@ -94,7 +94,6 @@ type
     N6: TMenuItem;
     popTransUnRegister: TMenuItem;
     popTransProperties: TMenuItem;
-    popTransRemove: TMenuItem;
     lblStatusLink: TLabel;
     imgAd: TImage;
     procedure FormCreate(Sender: TObject);
@@ -148,34 +147,33 @@ type
     procedure FormActivate(Sender: TObject);
     procedure popTransLogoffClick(Sender: TObject);
     procedure popTransUnRegisterClick(Sender: TObject);
-    procedure popTransRemoveClick(Sender: TObject);
     procedure imgAdClick(Sender: TObject);
     procedure treeRosterKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
-    _rostercb: integer;
-    _prescb: integer;
-    _sessionCB: integer;
-    _FullRoster: boolean;
-    _pos: TRect;
+    _rostercb: integer;         // roster callback id
+    _prescb: integer;           // presence callback id
+    _sessionCB: integer;        // session callback id
+    _FullRoster: boolean;       // is this a full roster paint?
+    _pos: TRect;                // current position.. CRUFT??
     _task_collapsed: boolean;
-    _show_status: boolean;
-    _status_color: TColor;
+    _show_status: boolean;      // show inline status foo (bar) ?
+    _status_color: TColor;      // inline status font color
 
-    _change_node: TTreeNode;
-    _bookmark: TTreeNode;
-    _offline: TTreeNode;
-    _hint_text : WideString;
+    _change_node: TTreeNode;    // the current node being changed
+    _bookmark: TTreeNode;       // the Bookmarks container node
+    _offline: TTreeNode;        // the Offline container node
+    _hint_text : WideString;    // the hint text for the current node
 
-    _cur_ritem: TJabberRosterItem;
-    _cur_grp: Widestring;
-    _cur_bm: TJabberBookmark;
-    _cur_status: integer;
+    _cur_ritem: TJabberRosterItem;  // current roster item selected
+    _cur_grp: Widestring;       // current group selected
+    _cur_bm: TJabberBookmark;   // current bookmark selected
+    _cur_status: integer;       // current status for the current item
 
-    _collapsed_grps: TWideStringList;
-    _blockers: TWideStringlist;
-    _adURL : string;
-    _transports: Widestring;
+    _collapsed_grps: TWideStringList;   // a list of collapsed grps
+    _blockers: TWideStringlist; // current list of jids being blocked
+    _adURL : string;            // the URL for the ad graphic
+    _transports: Widestring;    // current group name for special transports grp
 
     function getNodeType(node: TTreeNode = nil): integer;
     procedure popUnBlockClick(Sender: TObject);
@@ -817,6 +815,7 @@ var
     node_list: TList;
     tmp_grps: TWideStringlist;
     is_blocked: boolean;
+    is_transport: boolean;
     show_online: boolean;
     show_offgrp: boolean;
     show_pending: boolean;
@@ -834,16 +833,23 @@ begin
     show_pending := MainSession.Prefs.getBool('roster_show_pending');
 
     exp_grpnode := false;
+    is_transport := false;
 
     {
     OK, here we want to bail on some circumstances
     if the roster item is NOT supposed to be shown
     based on preferences, and the state of the roster
-    item, and the current presence info.
+    item, and the current presence info, etc..
     }
 
     if (ritem.ask = 'subscribe') and (show_pending) then begin
         // allow these items to pass thru
+        end
+
+    else if ((ritem.Groups.IndexOf(_transports) <> -1) and
+        (ritem.Groups.Count = 1)) then begin
+        // we have a transport... always let them pass
+        is_transport := true;
         end
 
     else if (((show_online) and (not show_offgrp)) and
@@ -852,11 +858,6 @@ begin
         // This person is not online, remove all nodes and bail
         RemoveItemNodes(ritem);
         exit;
-        end
-
-    else if ((ritem.Groups.IndexOf(_transports) <> -1) and
-        (ritem.Groups.Count = 1)) then begin
-        // we have a transport... always let them pass
         end
 
     else if (ritem.jid.user = '') then begin
@@ -873,9 +874,12 @@ begin
         exit;
         end;
 
-    // Create a list to contain all nodes for this
-    // roster item, and assign it to the .Data property
-    // of the roster item object
+    {
+    OK, now deal with groups and existing roster nodes.
+    Create a list to contain all nodes for this
+    roster item, and assign it to the .Data property
+    of the roster item object
+    }
     node_list := TList(ritem.Data);
     if node_list = nil then begin
         node_list := TList.Create;
@@ -885,7 +889,8 @@ begin
     // Create a temporary list of grps that this
     // contact should be in.
     tmp_grps := TWideStringlist.Create;
-    if (((p = nil) or (p.PresType = 'unavailble')) and (show_offgrp)) then
+    if (((p = nil) or (p.PresType = 'unavailble')) and (show_offgrp)
+        and (is_transport = false)) then
         // they are offline, and we want an offline grp
         tmp_grps.Add(sGrpOffline)
     else
@@ -915,10 +920,7 @@ begin
     else
         tmps := ritem.jid.Full;
 
-
-    //if (ritem.ask = 'subscribe') then
-    //    tmps := tmps + sRosterPending;
-
+    // show status if pref is set
     if (_show_status) then begin
         if (p <> nil) then begin
             if (p.Status <> '') then
@@ -926,9 +928,8 @@ begin
             end;
         end;
 
-
     // For each grp in the temp. grp list,
-    // Make sure a node already exists, or create one.
+    // make sure a node already exists, or create one.
     for g := 0 to tmp_grps.Count - 1 do begin
         cur_grp := tmp_grps[g];
 
@@ -942,6 +943,7 @@ begin
                 end;
             grp_node := _offline;
             end
+
         else begin
             // Make sure the grp exists in the GrpList
             grp_idx := MainSession.Roster.GrpList.indexOf(cur_grp);
@@ -962,9 +964,8 @@ begin
             (_collapsed_grps.IndexOf(grp_node.Text) < 0)) then
             exp_grpnode := true;
 
-
         // Now that we are sure we have a grp_node,
-        // check to see if this node exists under it
+        // check to see if this jid node exists under it
         cur_node := nil;
         for i := 0 to node_list.count - 1 do begin
             n := TTreeNode(node_list[i]);
@@ -1008,7 +1009,7 @@ begin
     tmp_grps.Free();
 
     {
-    If this isn't a full roster push,
+    Finally, If this isn't a full roster push,
     Make sure the roster is alpha sorted, and
     check for any empty groups
     }
@@ -2050,21 +2051,18 @@ end;
 procedure TfrmRosterWindow.popTransUnRegisterClick(Sender: TObject);
 begin
     // unregister from the transport.
-    RemoveTransport(_cur_ritem.jid.jid);
+    RemoveTransport(_cur_ritem.jid.jid, true);
+    QuietRemoveRosterItem(_cur_ritem.jid.full);
 end;
 
 {---------------------------------------}
-procedure TfrmRosterWindow.popTransRemoveClick(Sender: TObject);
-begin
-    RemoveRosterItem(_cur_ritem.jid.full);
-end;
-
 procedure TfrmRosterWindow.imgAdClick(Sender: TObject);
 begin
     if (_adURL <> '') then
         ShellExecute(0, 'open', PChar(_adURL), nil, nil, SW_SHOWNORMAL);
 end;
 
+{---------------------------------------}
 procedure TfrmRosterWindow.treeRosterKeyPress(Sender: TObject;
   var Key: Char);
 begin

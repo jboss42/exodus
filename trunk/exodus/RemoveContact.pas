@@ -47,6 +47,7 @@ var
   frmRemove: TfrmRemove;
 
 procedure RemoveRosterItem(sjid: string);
+procedure QuietRemoveRosterItem(sjid: string);
 
 implementation
 uses
@@ -66,6 +67,25 @@ begin
         end;
 end;
 
+procedure QuietRemoveRosterItem(sjid: string);
+var
+    iq: TXMLTag;
+begin
+    // just send an iq-remove
+    iq := TXMLTag.Create('iq');
+    with iq do begin
+        setAttribute('type', 'set');
+        setAttribute('id', MainSession.generateID);
+        with AddTag('query') do begin
+            setAttribute('xmlns', XMLNS_ROSTER);
+            with AddTag('item') do begin
+                setAttribute('jid', sjid);
+                setAttribute('subscription', 'remove');
+                end;
+            end;
+        end;
+    MainSession.SendTag(iq);
+end;
 
 procedure TfrmRemove.frameButtons1btnOKClick(Sender: TObject);
 var
