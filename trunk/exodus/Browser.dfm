@@ -1,6 +1,6 @@
 object frmBrowse: TfrmBrowse
-  Left = 264
-  Top = 213
+  Left = 277
+  Top = 432
   Width = 430
   Height = 425
   Caption = 'Jabber Browser'
@@ -26,7 +26,7 @@ object frmBrowse: TfrmBrowse
     Left = 0
     Top = 84
     Width = 422
-    Height = 291
+    Height = 287
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 3
@@ -35,7 +35,7 @@ object frmBrowse: TfrmBrowse
       Left = 73
       Top = 3
       Width = 346
-      Height = 285
+      Height = 281
       Align = alClient
       Columns = <
         item
@@ -73,7 +73,7 @@ object frmBrowse: TfrmBrowse
       Left = 3
       Top = 3
       Width = 70
-      Height = 285
+      Height = 281
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 4
@@ -100,7 +100,7 @@ object frmBrowse: TfrmBrowse
   end
   object StatBar: TStatusBar
     Left = 0
-    Top = 375
+    Top = 371
     Width = 422
     Height = 20
     Panels = <
