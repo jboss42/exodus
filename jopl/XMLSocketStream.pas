@@ -457,6 +457,7 @@ begin
     _socket := TIdTCPClient.Create(nil);
     _socket.RecvBufferSize := 4096;
     _socket.Port := _profile.port;
+    _socket.Intercept := _ssl_int;
     _socket.InterceptEnabled := _profile.ssl;
 
     _server := _profile.Server;
