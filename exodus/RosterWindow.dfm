@@ -263,22 +263,24 @@ object frmRosterWindow: TfrmRosterWindow
       ParentFont = False
       OnClick = lblLoginClick
     end
-    object Panel1: TPanel
+    object pnlAnimation: TPanel
       Left = 5
       Top = 5
       Width = 179
       Height = 57
       Align = alTop
       BevelOuter = bvNone
-      Color = clWindow
+      Color = clScrollBar
       TabOrder = 0
       object aniWait: TAnimate
         Left = 48
         Top = 3
-        Width = 32
-        Height = 32
+        Width = 30
+        Height = 30
         Active = False
-        StopFrame = 8
+        Color = clWhite
+        ParentColor = False
+        StopFrame = 12
         Visible = False
       end
     end
