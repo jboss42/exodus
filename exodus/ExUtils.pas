@@ -500,9 +500,13 @@ end;
 procedure FreeAtoms(pta: TStringList);
 var
     i : integer;
+    a : TAtom;
 begin
-    for i:=0 to pta.Count-1 do
-        GlobalDeleteAtom(TAtom(pta.Objects[i]).a);
+    for i:=0 to pta.Count-1 do begin
+        a := TAtom(pta.Objects[i]);
+        GlobalDeleteAtom(a.a);
+        a.Free();
+        end;
 end;
 
 {---------------------------------------}
