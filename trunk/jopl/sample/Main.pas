@@ -46,7 +46,6 @@ uses
 procedure TForm1.FormCreate(Sender: TObject);
 var
     config_file: string;
-    cur_profile: TJabberProfile;
 begin
     // Create some the main session and associated objects
 
