@@ -5,7 +5,7 @@ object frmAutoUpdateStatus: TfrmAutoUpdateStatus
   BorderStyle = bsDialog
   BorderWidth = 5
   Caption = 'Auto Update'
-  ClientHeight = 92
+  ClientHeight = 108
   ClientWidth = 217
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -38,7 +38,7 @@ object frmAutoUpdateStatus: TfrmAutoUpdateStatus
   end
   object TntLabel1: TTntLabel
     Left = 40
-    Top = 26
+    Top = 37
     Width = 64
     Height = 13
     Cursor = crHandPoint
@@ -53,7 +53,7 @@ object frmAutoUpdateStatus: TfrmAutoUpdateStatus
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 60
+    Top = 76
     Width = 217
     Height = 32
     Align = alBottom
@@ -79,7 +79,7 @@ object frmAutoUpdateStatus: TfrmAutoUpdateStatus
   end
   object ProgressBar1: TProgressBar
     Left = 0
-    Top = 43
+    Top = 59
     Width = 217
     Height = 17
     Align = alBottom
