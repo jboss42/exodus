@@ -261,6 +261,7 @@ begin
     // Setup the properties of the window,
     // and hook it up to the chat controller.
     with TfrmChat(chat.window) do begin
+        _thread := chat.getThreadID();
         tmp_jid := TJabberID.Create(sjid);
         if (chat_nick = '') then begin
             ritem := MainSession.roster.Find(sjid);
@@ -535,6 +536,7 @@ begin
 
     // hash the seed to get the thread
     _thread := Sha1Hash(seed);
+    chat_object.setThreadID(_thread);
     Result := _thread;
 end;
 
@@ -634,8 +636,10 @@ begin
     if _thread = '' then begin
         // cache thread from message
         tagThread := tag.GetFirstTag('thread');
-        if tagThread <> nil then
+        if tagThread <> nil then begin
             _thread := tagThread.Data;
+            chat_object.setThreadID(_thread);
+        end;
    end;
 end;
 

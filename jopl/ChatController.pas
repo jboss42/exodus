@@ -45,6 +45,7 @@ type
         _window: TObject;
         _refs: integer;
         _queued: boolean;
+        _threadid: Widestring;
 
         procedure SetWindow(new_window: TObject);
     protected
@@ -59,6 +60,7 @@ type
         procedure SetJID(sjid: Widestring);
         procedure MsgCallback(event: string; tag: TXMLTag);
         procedure SetHistory(s: Widestring);
+        procedure setThreadID(id: Widestring);
         procedure startTimer();
         procedure stopTimer();
         procedure unassignEvent();
@@ -66,6 +68,7 @@ type
         procedure PushMessage(tag: TXMLTag);
 
         function getHistory: Widestring;
+        function getThreadID: Widestring;
         function getTags: TXMLTagList;
 
         procedure addRef();
@@ -112,6 +115,7 @@ begin
     _memory.OnTimer := timMemoryTimer;
     _memory.Enabled := false;
     _queued := false;
+    _threadid := '';
 
     if (_resource <> '') then
         self.SetJID(_jid + '/' + _resource)
@@ -282,6 +286,18 @@ end;
 procedure TChatController.SetHistory(s: Widestring);
 begin
     _history := s;
+end;
+
+{---------------------------------------}
+procedure TChatController.setThreadID(id: Widestring);
+begin
+    _threadid := id;
+end;
+
+{---------------------------------------}
+function TChatController.getThreadID: Widestring;
+begin
+    Result := _threadid;
 end;
 
 {---------------------------------------}
