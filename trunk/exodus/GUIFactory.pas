@@ -42,7 +42,7 @@ implementation
 
 uses
     InvalidRoster, ChatWin, ExEvents, ExUtils, Subscribe, Notify, Jabber1,
-    Roster, JabberID, Session;
+    MsgQueue, Roster, JabberID, Session;
 
 {---------------------------------------}
 procedure TGUIFactory.setSession(js: TObject);
@@ -65,6 +65,7 @@ var
     ri: TJabberRosterItem;
     ir: TfrmInvalidRoster;
     e: TJabberEvent;
+    q: TfrmMsgQueue;
 begin
     // check for various events to start GUIS
     if (event = '/session/gui/chat') then begin
@@ -74,6 +75,13 @@ begin
         tmp_jid.Free;
         DoNotify(chat, 'notify_newchat', sNotifyChat +
                  chat.Othernick, ico_user)
+    end
+
+    else if (event = '/session/gui/headline') then begin
+        e := CreateJabberEvent(tag);
+        q := getMsgQueue();
+        q.LogEvent(e, e.caption, ico_headline);
+        if (not q.visible) then q.ShowDefault();
     end
 
     else if (event = '/session/gui/msgevent') then begin
