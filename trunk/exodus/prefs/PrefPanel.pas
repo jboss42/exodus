@@ -137,7 +137,8 @@ begin
             continue;
         end;
 
-        if (c.name <> MainSession.Prefs.getControl(p)) then continue;
+        if (AnsiCompareText(c.name, MainSession.Prefs.getControl(p)) <> 0) then
+            continue;
 
         // don't bother w/ RO or INV prefs
         s := getPrefState(p);
