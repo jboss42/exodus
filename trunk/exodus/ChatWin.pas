@@ -313,12 +313,39 @@ begin
         if from_jid <> jid then
             SetJID(from_jid);
 
+
+        if (_check_event) then begin
+            // check for composing events
+            etag := tag.QueryXPTag('/message/*[@xmlns="jabber:x:event"]');
+            if ((etag <> nil) and (etag.GetFirstTag('composing') <> nil))then begin
+                // we are composing a message
+                if (etag.GetBasicText('id') = _last_id) then begin
+                    _flash_ticks := 0;
+
+                    // Setup the cache'd old versions in ChangePresImage
+                    // _old_img := _pres_img;
+                    // _old_hint := imgStatus.Hint;
+
+                    _cur_img := _pres_img;
+                    imgStatus.Hint := OtherNick + ' is typing';
+                    timFlashTimer(Self);
+                    timFlash.Enabled := true;
+
+                    {
+                    should we really bail here??
+                    Gabber sends type=chat for msg events so it'll get into the
+                    next block of code anyways. If we don't bail,
+                    then we'll have to check to see if we have a body in the
+                    next block of code. ICK
+                    }
+
+                    exit;
+                    end;
+                end;
+            end;
+
         if (msg_type = 'chat') then begin
             // normal chat message
-            if (timFlash.Enabled) then
-                Self.ResetPresImage();
-            _check_event := false;
-
             etag := tag.QueryXPTag('/message/*[@xmlns="jabber:x:event"]/composing');
             _send_composing := (etag <> nil);
             if (_send_composing) then
@@ -331,22 +358,6 @@ begin
                 if tagThread <> nil then
                     _thread := tagThread.Data;
                end;
-            end
-        else if (_check_event) then begin
-            // check for composing events
-            etag := tag.QueryXPTag('/message/*[@xmlns="jabber:x:event"]');
-            if ((etag <> nil) and (etag.GetFirstTag('composing') <> nil))then begin
-                // they are composing a message
-                if (etag.GetBasicText('id') = _last_id) then begin
-                    _flash_ticks := 0;
-                    _old_img := _pres_img;
-                    _cur_img := _pres_img;
-                    _old_hint := imgStatus.Hint;
-                    imgStatus.Hint := OtherNick + ' is typing';
-                    timFlashTimer(Self);
-                    timFlash.Enabled := true;
-                    end;
-                end;
             end;
 
         end;
@@ -361,10 +372,14 @@ var
 begin
     // display the body of the msg
     btag := tag.QueryXPTag('/message/body');
-    etag := tag.QueryXPTag('/message/*@xmlns="jabber:iq:event"');
+    etag := tag.QueryXPTag('/message/*[@xmlns="jabber:iq:event"]');
     if ((etag <> nil) and (btag = nil)) then begin
         // display the event type..
         end;
+
+    if (timFlash.Enabled) then
+        Self.ResetPresImage();
+    _check_event := false;
 
     cn := MainSession.Prefs.getInt('notify_chatactivity');
 
@@ -491,6 +506,9 @@ begin
         imgStatus.Hint := show
     else
         imgStatus.Hint := status;
+
+    _old_img := _pres_img;
+    _old_hint := imgStatus.Hint;
 
     Self.imgStatusPaint(Self);
 end;
@@ -630,9 +648,11 @@ begin
         _cur_img := _old_img;
 
     _pres_img := _cur_img;
+    imgStatus.Refresh();
     imgStatus.Repaint();
 
-    if (_flash_ticks >= 60) then resetPresImage();
+    if (_flash_ticks >= 60) then
+        resetPresImage();
 end;
 
 {---------------------------------------}
