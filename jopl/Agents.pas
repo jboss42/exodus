@@ -124,6 +124,7 @@ begin
         cur.parse(ag_list[i]);
         self.AddObject(cur.jid, cur);
         end;
+    ag_list.Free();
     MainSession.FireEvent('/session/agents', iq);
 end;
 
