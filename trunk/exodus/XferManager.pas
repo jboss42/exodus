@@ -505,9 +505,11 @@ begin
     p.Free();
     _pnl_list.Delete(idx);
 
-    if (box.ControlCount <= 0) then
+    if (box.ControlCount <= 0) then begin
+        httpServer.Active := false;
+        tcpServer.Active := false;
         Self.Close();
-
+    end;
 end;
 
 
@@ -667,6 +669,7 @@ begin
     _slock.Acquire();
     idx := _stream_list.IndexOf(hash);
     if (idx = -1) then begin
+        _slock.Release();
         AThread.Connection.Disconnect();
         exit;
     end;
@@ -689,16 +692,18 @@ begin
     resp[3] := Chr($03);
     resp[4] := Chr(Length(myip));
     StrPCopy(@resp[5], PChar(myip));
-    AThread.Connection.WriteBuffer(resp^, resp_len);
-    AThread.Connection.WriteSmallInt(Self.tcpServer.DefaultPort);
+    AThread.Connection.WriteBuffer(resp^, resp_len, true);
 
-    AThread.Connection.WriteStream(spkg.stream);
+    // PGM, don't actually write 2 bytes for some reason..
+    // just 1, since otherwise, it just doesn't work. *sigh*
+    buff[1] := Chr($00);
+    AThread.Connection.WriteBuffer(buff, 1, true);
 
-    killFrame(spkg.frame);
-
+    // Write the file.
+    AThread.Connection.WriteStream(spkg.stream, true, false);
     FreeAndNil(spkg.stream);
-    //FreeAndNil(spkg);
-
+    killFrame(spkg.frame);
+                                
     AThread.Connection.Disconnect();
 end;
 
