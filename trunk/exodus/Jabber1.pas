@@ -553,7 +553,7 @@ uses
     Debug, Dockable, ExUtils, GetOpt, InputPassword, Invite,
     Iq, JUD, JabberID, JabberMsg, IdGlobal,
     JoinRoom, Login, MsgController, MsgDisplay, MsgQueue, MsgRecv, Password,
-    PrefController, Prefs, Profile, RegForm, RemoveContact, RiserWindow, Room,
+    PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow, Room,
     Roster, RosterAdd, Session, StandardAuth, Transfer, Unicode, VCard, xData,
     XMLUtils;
 
