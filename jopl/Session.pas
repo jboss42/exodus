@@ -166,6 +166,7 @@ const
     XMLNS_DELAY     = 'jabber:x:delay';
     XMLNS_XROSTER   = 'jabber:x:roster';
     XMLNS_CONFERENCE= 'jabber:iq:conference';
+    XMLNS_DATA      = 'jabber:x:data';
 
 var
     MainSession: TJabberSession;
