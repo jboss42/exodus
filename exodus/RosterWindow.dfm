@@ -306,6 +306,7 @@ object frmRosterWindow: TfrmRosterWindow
     end
   end
   object popStatus: TPopupMenu
+    Images = frmExodus.ImageList2
     Left = 8
     Top = 240
     object presChat: TMenuItem

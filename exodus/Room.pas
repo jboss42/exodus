@@ -140,6 +140,8 @@ type
     procedure selectNicks(wsl: TWideStringList);
 
     function newRoomMessage(body: Widestring): TXMLTag;
+    procedure changeNick(new_nick: WideString);
+
   published
     procedure MsgCallback(event: string; tag: TXMLTag);
     procedure PresCallback(event: string; tag: TXMLTag);
@@ -402,7 +404,8 @@ begin
     if (txt = '') then exit;
 
     if (txt[1] = '/') then begin
-        if (checkCommand(txt)) then exit;
+        if (checkCommand(txt)) then
+            exit;
         end;
     msg := TJabberMessage.Create(jid, 'groupchat', txt, '');
     msg.nick := MyNick;
@@ -418,7 +421,6 @@ var
     cmd: Widestring;
     rest: Widestring;
     wsl: TWideStringList;
-    p: TJabberPres;
     m: TJabberMessage;
     c: integer;
 begin
@@ -458,12 +460,8 @@ begin
         end
     else if (cmd = '/nick') then begin
         // change nickname
-        _old_nick := myNick;
         if (rest = '') then exit;
-        myNick := rest;
-        p := TJabberPres.Create;
-        p.toJID := TJabberID.Create(jid + '/' + myNick);
-        MainSession.SendTag(p);
+        changeNick(rest);
         Result := true;
         end
     else if (cmd = '/subject') then begin
@@ -992,8 +990,10 @@ begin
             end;
         Key := Chr(0);
         end
+    {
     else if (Key = #13) then
         SendMsg()
+    }
     else begin
         _nick_prefix := '';
         _nick_idx := 0;
@@ -1069,19 +1069,39 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmRoom.changeNick(new_nick: WideString);
+var
+    p: TJabberPres;
+    i: integer;
+    rm: TRoomMember;
+begin
+    // check room roster for this nick already
+    for i := 0 to _roster.Count - 1 do begin
+        rm := TRoomMember(_roster.Objects[i]);
+        if (AnsiCompareText(rm.Nick, new_nick) = 0) then begin
+            // they match
+            MessageDlg(sStatus_409, mtError, [mbOK], 0);
+            exit;
+            end;
+        end;
+
+    // go ahead and change it
+    myNick := new_nick;
+    p := TJabberPres.Create;
+    p.toJID := TJabberID.Create(jid + '/' + myNick);
+    MainSession.SendTag(p);
+end;
+
+{---------------------------------------}
 procedure TfrmRoom.popNickClick(Sender: TObject);
 var
     new_nick: WideString;
-    p: TJabberPres;
 begin
   inherited;
     new_nick := myNick;
     if (InputQueryW(sRoomNewNick, sRoomNewNick, new_nick)) then begin
         if (new_nick = myNick) then exit;
-        myNick := new_nick;
-        p := TJabberPres.Create;
-        p.toJID := TJabberID.Create(jid + '/' + myNick);
-        MainSession.SendTag(p);
+        changeNick(new_nick);
         end;
 end;
 

@@ -2692,12 +2692,18 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.Test1Click(Sender: TObject);
+var
+    i: integer;
 begin
     // Test something..
     // LoadPlugin('RosterClean.ExodusRosterClean');
 
     // Cause an AV
-    PInteger(nil)^ := 0;
+    // PInteger(nil)^ := 0;
+
+    // Show a toast window
+    i := Random(40);
+    ShowRiserWindow(Self, 'Test Toast ' + IntToStr(i), i);
 end;
 
 {---------------------------------------}
