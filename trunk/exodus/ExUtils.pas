@@ -60,6 +60,7 @@ function DateTimeToJabber(dt: TDateTime): string;
 function URLToFilename(url: string): string;
 
 procedure ClearLog(jid: string);
+procedure ClearAllLogs();
 procedure LogMessage(Msg: TJabberMessage);
 procedure ShowLog(jid: string);
 procedure DebugMsg(Message : string);
@@ -113,7 +114,9 @@ resourceString
     sHistoryDeleted = 'History deleted.';
     sHistoryError = 'Could not delete history file.';
     sHistoryNone = 'No history file for this user.';
-
+    sConfirmClearLog = 'Do you really want to clear the log for %s?';
+    sConfirmClearAllLogs = 'Are you sure you want to delete all of your message and room logs?';
+    sFilesDeleted = '%d log files deleted.';
 {---------------------------------------}
 constructor TAtom.Create(at: ATOM);
 begin
@@ -307,6 +310,10 @@ procedure ClearLog(jid: string);
 var
     fn: string;
 begin
+    if (MessageDlg(Format(sConfirmClearLog, [jid]),
+                          mtConfirmation, [mbOK,mbCancel], 0) = mrCancel) then
+        exit;
+
     fn := MainSession.Prefs.getString('log_path');
 
     if (Copy(fn, length(fn), 1) <> '\') then
@@ -322,6 +329,35 @@ begin
         end
     else
         MessageDlg(sHistoryNone, mtWarning, [mbOK,mbCancel], 0);
+end;
+
+procedure ClearAllLogs();
+var
+    fn: string;
+    sr: TSearchRec;
+    count: integer;
+begin
+    if (MessageDlg(sConfirmClearAllLogs,
+                   mtConfirmation, [mbOK,mbCancel], 0) = mrCancel) then
+        exit;
+
+    fn := MainSession.Prefs.getString('log_path');
+
+    if (Copy(fn, length(fn), 1) <> '\') then
+        fn := fn + '\';
+
+    count := 0;
+
+    // bleh.  FindClose is both a SysUtils thing and a Win32 thing.
+    if SysUtils.FindFirst(fn + '*.html', 0, sr) = 0 then begin
+        repeat
+            SysUtils.DeleteFile(PChar(fn + sr.Name));
+            count := count + 1;
+        until SysUtils.FindNext(sr) <> 0;
+        SysUtils.FindClose(sr);
+        end;
+
+    MessageDlg(Format(sFilesDeleted, [count]), mtInformation, [mbOK], 0);
 end;
 
 {---------------------------------------}
