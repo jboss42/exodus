@@ -2845,8 +2845,10 @@ var
     iconNum : integer;
 begin
      _tray_notify := not _tray_notify;
-     if (_tray_notify) then
-        iconNum := 33
+     if (_tray_notify) then begin
+        iconNum := _tray_icon_idx + 33;
+        if (iconNum > 38) then iconNum := 38;
+        end
      else
          iconNum := _tray_icon_idx;
 
