@@ -34,6 +34,8 @@ uses
 const
     UpdateKey = '001';
 
+    RECONNECT_RETRIES = 3;
+
     WM_TRAY = WM_USER + 5269;
     WM_PREFS = WM_USER + 5272;
     WM_SHOWLOGIN = WM_USER + 5273;
@@ -279,6 +281,10 @@ type
     _msgcb: integer;
     _iqcb: integer;
 
+    _reconnect_interval: integer;
+    _reconnect_cur: integer;
+    _reconnect_tries: integer;
+
     _auto_away_interval: integer;
     last_tick: dword;             
 
@@ -374,7 +380,7 @@ resourcestring
     sAuthError = 'There was an error trying to authenticate you. Please try again, or create a new account';
     sRegError = 'An Error occurred trying to register your new account. This server may not allow open registration.';
     sAuthNoAccount = 'This account does not exist on this server. Create a new account?';
-
+    sCancelReconnect = 'Click to Cancel Reconnect';
 
     sSetAutoAvailable = 'Setting Auto Available';
     sSetAutoAway = 'Setting AutoAway';
@@ -565,6 +571,7 @@ end;
 procedure TfrmExodus.WMShowLogin(var msg: TMessage);
 begin
     // Show the login window
+    _reconnect_tries := 0;
     ShowLogin();
 end;
 
@@ -820,6 +827,8 @@ begin
     restoreEvents(exp);
     _noMoveCheck := false;
     _flash := false;
+    _reconnect_tries := 0;
+
 
     // Setup the IdleUI stuff..
     _is_autoaway := false;
@@ -998,6 +1007,7 @@ begin
     if event = '/session/connected' then begin
         timReconnect.Enabled := false;
         _logoff := false;
+        _reconnect_tries := 0;
         btnConnect.Down := true;
         Self.Caption := 'Exodus - ' + MainSession.Username + '@' + MainSession.Server;
         setTrayInfo(Self.Caption);
@@ -1061,16 +1071,26 @@ begin
         if (_appclosing) then
             PostMessage(Self.Handle, WM_CLOSEAPP, 0, 0)
         else if (not _logoff) then with timReconnect do begin
-            Randomize();
-            Interval := Trunc(Random(10)) * 1000;
-            DebugMsg('Setting reconnect timer to: ' + IntToStr(Interval));
-            PostMessage(Self.Handle, WM_RECONNECT, 0, 0);
+            inc(_reconnect_tries);
+
+            if (_reconnect_tries < RECONNECT_RETRIES) then begin
+                Randomize();
+                _reconnect_interval := Trunc(Random(20)) + 2;
+                Interval := 1000;
+                DebugMsg('Setting reconnect timer to: ' + IntToStr(_reconnect_interval));
+
+                _reconnect_cur := 0;
+                frmRosterWindow.aniWait.Visible := false;
+                PostMessage(Self.Handle, WM_RECONNECT, 0, 0);
+                end
+            else
+                DebugMsg('Attempted to reconnect too many times.');
             end;
         end
 
     else if event = '/session/commerror' then begin
         timAutoAway.Enabled := false;
-        MessageDlg(sCommError,  mtError, [mbOK], 0);
+        // MessageDlg(sCommError,  mtError, [mbOK], 0);
         end
 
     else if event = '/session/prefs' then begin
@@ -1386,8 +1406,10 @@ begin
         _logoff := true;
         MainSession.Disconnect();
         end
-    else
+    else begin
+        _reconnect_tries := 0;
         ShowLogin;
+        end;
 end;
 
 {---------------------------------------}
@@ -2414,8 +2436,16 @@ end;
 procedure TfrmExodus.timReconnectTimer(Sender: TObject);
 begin
     // try to reconnect...
-    timReconnect.Enabled := false;
-    DoConnect();
+    inc(_reconnect_cur);
+    if (_reconnect_cur >= _reconnect_interval) then begin
+        timReconnect.Enabled := false;
+        DoConnect();
+        end
+    else begin
+        frmRosterWindow.lblLogin.Caption := sCancelReconnect;
+        frmRosterWindow.lblStatus.Caption := 'Reconnect in: ' +
+            IntToStr(_reconnect_interval - _reconnect_cur) + ' secs.';
+        end;
 end;
 
 initialization

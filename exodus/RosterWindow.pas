@@ -1902,6 +1902,11 @@ begin
         // Cancel the connection
         MainSession.Disconnect();
         end
+    else if (lblLogin.Caption = sCancelReconnect) then begin
+        // cancel reconnect
+        frmExodus.timReconnect.Enabled := false;
+        Self.SessionCallback('/session/disconnected', nil);
+        end
     else
         // Normal, show the login window
         PostMessage(frmExodus.Handle, WM_SHOWLOGIN, 0, 0);

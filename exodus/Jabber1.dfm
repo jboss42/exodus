@@ -150,18 +150,8 @@ object frmExodus: TfrmExodus
         ImageIndex = 16
         OnClick = SearchforPerson1Click
       end
-      object btnConnect: TToolButton
-        Left = 94
-        Top = 0
-        Hint = 'Connect/Disconnect'
-        AllowAllUp = True
-        AutoSize = True
-        Caption = 'Log On'
-        ImageIndex = 0
-        OnClick = btnConnectClick
-      end
       object btnExpanded: TToolButton
-        Left = 117
+        Left = 94
         Top = 0
         Hint = 'Toggle Expanded Mode'
         AllowAllUp = True
@@ -169,6 +159,17 @@ object frmExodus: TfrmExodus
         Caption = 'Expanded'
         ImageIndex = 9
         OnClick = btnExpandedClick
+      end
+      object btnConnect: TToolButton
+        Left = 117
+        Top = 0
+        Hint = 'Connect/Disconnect'
+        AllowAllUp = True
+        AutoSize = True
+        Caption = 'Log On'
+        ImageIndex = 0
+        Visible = False
+        OnClick = btnConnectClick
       end
       object btnDelContact: TToolButton
         Left = 140
