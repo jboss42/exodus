@@ -369,15 +369,11 @@ var
     idx, i: integer;
     tmp: TJabberID;
     c, ce: TJabberEntity;
-    msg: string;
 begin
     tmp := TJabberID.Create(tag.getAttribute('from'));
 
     idx := _wait.IndexOf(tmp.full);
     if (idx < 0) then exit;
-
-    msg := 'XXX: EntityCallback ' + event + ' ' + tmp.full;
-    OutputDebugString(PChar(msg));
 
     // if this is /session/entity/items, AND, this jid supports MUC,
     // assume it's children are rooms.
