@@ -55,7 +55,7 @@ inherited frmRoom: TfrmRoom
         ShowColumnHeaders = False
         ShowWorkAreas = True
         ShowHint = True
-        SmallImages = frmRosterWindow.ImageList1
+        SmallImages = frmExodus.ImageList2
         SortType = stText
         TabOrder = 0
         ViewStyle = vsReport

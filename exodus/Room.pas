@@ -1191,17 +1191,17 @@ begin
           //unblock
           rm.show := rm.blockShow;
 
-          if rm.Show = 'away' then rm.Node.ImageIndex := 2
-          else if rm.Show = 'xa' then rm.Node.ImageIndex := 10
-          else if rm.Show = 'dnd' then rm.Node.ImageIndex := 3
-          else if rm.Show = 'chat' then rm.Node.ImageIndex := 4
-          else rm.Node.ImageIndex := 1;
+          if rm.Show = 'away' then rm.Node.ImageIndex := ico_Away
+          else if rm.Show = 'xa' then rm.Node.ImageIndex := ico_XA
+          else if rm.Show = 'dnd' then rm.Node.ImageIndex := ico_DND
+          else if rm.Show = 'chat' then rm.Node.ImageIndex := ico_Chat
+          else rm.Node.ImageIndex := ico_Online;
           end
        else begin
           //block
           rm.blockShow := rm.show;
           rm.show := sBlocked;
-          rm.Node.ImageIndex := 25;
+          rm.Node.ImageIndex := ico_blocked;
           end;
        end;
 end;
