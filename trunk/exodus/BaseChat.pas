@@ -25,7 +25,7 @@ uses
     Dockable, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Menus, StdCtrls, ExtCtrls, ComCtrls, ExRichEdit, RichEdit2,
-  TntStdCtrls;
+    TntStdCtrls;
 
 type
   TfrmBaseChat = class(TfrmDockable)
@@ -151,7 +151,7 @@ begin
     inherited;
     if (frmEmoticons.Visible) then
         frmEmoticons.Hide;
-    if Self.Visible then
+    if (Self.Visible) and (MsgOut.Visible) then
         MsgOut.SetFocus;
 end;
 
@@ -281,8 +281,10 @@ begin
     if (not Self.Visible) then exit;
     if (Ord(key) < 32) then exit;
 
-    MsgOut.SetFocus();
-    MsgOut.SelText := Key;
+    if (MsgOut.Visible) then begin
+        MsgOut.SetFocus();
+        MsgOut.SelText := Key;
+        end;
 end;
 
 {---------------------------------------}

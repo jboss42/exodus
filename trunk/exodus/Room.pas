@@ -232,7 +232,7 @@ begin
 
     if (Msg.Body <> '') then begin
         DisplayMsg(Msg, MsgList);
-        if (GetActiveWindow = Self.Handle) then
+        if (GetActiveWindow = Self.Handle) and (MsgOut.Visible) then
             MsgOut.SetFocus();
         end;
 
