@@ -102,7 +102,7 @@ var
 {---------------------------------------}
 implementation
 
-uses Jabber1, BaseChat, ExUtils, ShellAPI;
+uses Jabber1, BaseChat, ExUtils, ShellAPI, Emote;
 
 {$R *.dfm}
 
@@ -199,6 +199,7 @@ var
     chunks: TWideStringList;
     nv : TWideStringList;
     started: boolean;
+    str: WideString;
 begin
 
     // See JEP-71 (http://www.jabber.org/jeps/jep-0071.html) for details.
@@ -276,14 +277,13 @@ begin
     end
     else if (n.NodeType = xml_CDATA) then begin
         // Check for URLs
-        if ((parent = nil) or (parent.Name <> 'a')) then
-            result := result +
-                url_regex.Replace(TXMLCData(n).Data,
-                                  '<a href="$0">$0</a>', true)
+        if ((parent = nil) or (parent.Name <> 'a')) then begin
+            str := url_regex.Replace(TXMLCData(n).Data,
+                                  '<a href="$0">$0</a>', true);
+            result := result + ProcessIEEmoticons(str);
+        end
         else
             result := result + TXMLCData(n).Data;
-
-        // TODO: process emoticons
     end;
 end;
 

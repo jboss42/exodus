@@ -24,7 +24,7 @@ interface
 uses
     // Exodus stuff
     BaseChat, ExResponders, ExEvents, RosterWindow, Presence, XMLTag,
-    ShellAPI, Registry, SelContact,
+    ShellAPI, Registry, SelContact, Emote,
 
     // Delphi stuff
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
@@ -720,6 +720,8 @@ begin
         _auto_away_interval := 10;
     timAutoAway.Interval := _auto_away_interval * 1000;
 
+    InitializeEmoticonLists();
+
     with MainSession.Prefs do begin
         // Setup our caption and the help menus.
         self.Caption := GetString('brand_caption');
@@ -792,7 +794,6 @@ begin
     s.Free();
 
     Self.setupTrayIcon();
-    ConfigEmoticons();
 
     // If we are supposed to be hidden, make it so.
     if (ExStartup.minimized) then begin

@@ -31,22 +31,31 @@ type
         _parser: TXMLParser;
         _dom_list: TList;
         function processTag(curtag: TXMLTag): TXMLTag;
+
     public
         constructor Create();
         destructor Destroy; override;
 
         procedure ParseString(buff, stream_tag: WideString);
         procedure ParseFile(filename: String);
+
+        // from the current exe
+        procedure ParseResource(const resName: string); overload;
+        // from the given exe/dll
+        procedure ParseResource(const resFile: string; const resName: string); overload;
+        procedure ParseResource(const instance: cardinal; const resName: string); overload;
+
         procedure Clear();
         function Count: integer;
         function popTag: TXMLTag;
 end;
 
-
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 implementation
+
+uses Windows;
 
 {---------------------------------------}
 constructor TXMLTagParser.Create();
@@ -99,6 +108,35 @@ begin
     s := UTF8Decode(f.Text);
     Self.ParseString(s, '');
     f.Free();
+end;
+
+{---------------------------------------}
+procedure TXMLTagParser.ParseResource(const instance: cardinal; const resName: string);
+var
+    res: TResourceStream;
+    sl: TStringList;
+begin
+    res := TResourceStream.Create(instance, ResName, 'XML');
+    sl := TStringList.Create();
+    sl.LoadFromStream(res);
+    res.Free();
+    ParseString(sl.Text, '');
+    sl.Free();
+end;
+
+{---------------------------------------}
+procedure TXMLTagParser.ParseResource(const resName: string);
+begin
+    ParseResource(HInstance, resName);
+end;
+
+{---------------------------------------}
+procedure TXMLTagParser.ParseResource(const resFile: string; const resName: string);
+var
+    handle: cardinal;
+begin
+    handle := LoadLibrary(pchar(resFile));
+    ParseResource(handle, resName);
 end;
 
 {---------------------------------------}

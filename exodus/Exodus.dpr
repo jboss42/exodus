@@ -175,7 +175,8 @@ uses
   RTFMsgList in 'RTFMsgList.pas' {fRTFMsgList: TFrame},
   IEMsgList in 'IEMsgList.pas' {fBaseMsgList1: TFrame},
   MSHTMLEvents in 'MSHTMLEvents.pas',
-  Emote in 'Emote.pas';
+  Emote in 'Emote.pas',
+  GIFImage in 'GIFImage.pas';
 
 {$R *.TLB}
 

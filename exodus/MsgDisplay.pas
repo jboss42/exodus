@@ -22,7 +22,7 @@ unit MsgDisplay;
 interface
 uses
     iniFiles,
-    BaseMsgList, 
+    BaseMsgList,
     ExRichEdit, RichEdit2, RegExpr, Classes, JabberMsg,
     Graphics, ComCtrls, Controls,
     Messages, Windows, SysUtils;
@@ -34,9 +34,8 @@ type
 end;
 
 var
-    use_emoticons: boolean;
     emoticon_list: THashedStringList;
-
+  
 procedure DisplayMsg(Msg: TJabberMessage; msglist: TfBaseMsgList; AutoScroll: boolean = true);
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true);
 
@@ -54,13 +53,9 @@ implementation
 uses
 
     Clipbrd,
-    Jabber1, ExUtils,
+    Jabber1, ExUtils, Emote,
     ExtCtrls, Dialogs,
     XMLUtils, Session;
-
-var
-    _pic: TPicture;
-    emoticon_regex: TRegExpr;
 
 {---------------------------------------}
 procedure DisplayMsg(Msg: TJabberMessage; msglist: TfBaseMsgList; AutoScroll: boolean = true);
@@ -161,8 +156,8 @@ procedure ProcessEmoticons(RichEdit: TExRichEdit; color: TColor; txt: Widestring
 var
     m: boolean;
     ms, s: Widestring;
-    im, lm: integer;
-    eo: TEmoticon;
+    lm: integer;
+    rtf: WideString;
 begin
     // search for various smileys
 
@@ -177,26 +172,17 @@ begin
         RichEdit.SelAttributes.Color := color;
         RichEdit.WideSelText := emoticon_regex.Match[1];
 
-        if (_pic = nil) then
-            _pic := TPicture.Create()
-        else
-            _pic.Graphic := nil;
-
-        eo := nil;
+        rtf := '';
         // Grab the match text and look it up in our emoticon list
         ms := emoticon_regex.Match[2];
         if (ms <> '') then begin
-            im := emoticon_list.IndexOf(ms);
-            if (im >= 0) then
-                eo := TEmoticon(emoticon_list.Objects[im]);
+            rtf := GetEmoticonRTF(ms);
         end;
 
         // if we have a legal emoticon object, insert it..
         // otherwise insert the matched text
-        if (eo <> nil) then begin
-            eo.il.GetBitmap(eo.idx, _pic.Bitmap);
-            _pic.Bitmap.Transparent := true;
-            RichEdit.InsertBitmap(_pic.Bitmap);
+        if (rtf <> '') then begin
+            RichEdit.InsertRTF(rtf);
         end
         else begin
             RichEdit.SelAttributes.Color := color;
@@ -229,7 +215,6 @@ begin
     RichEdit.ReadOnly := true;
 end;
 
-
 {---------------------------------------}
 procedure ConfigEmoticons();
 
@@ -244,7 +229,6 @@ procedure ConfigEmoticons();
 end;
 
 var
-    e: string;
     y, msn: TImageList;
 begin
     // Build the regex expression and
@@ -252,8 +236,6 @@ begin
     y := frmExodus.imgYahooEmoticons;
     msn := frmExodus.imgMSNEmoticons;
 
-    // This is a "meta-regex" that should match everything
-    e := '(.*)((\([a-zA-Z0-9@{}%&~?/^]+\))|([:;BoOxX][^\t ]+)|(=[;)]))(\s|$)';
 
     // Normal smileys
     AddEmot(':)', msn, 0);       // normal
@@ -368,7 +350,7 @@ begin
     AddEmot(':kissmyass', msn, 47);
     AddEmot('(H)', msn, 22);
 
-    (*
+(*
     Emoticon map:
 
     GO Client
@@ -463,17 +445,8 @@ begin
     130     (R)
     128     (O)
     104     (6)
-
     *)
 
-
-    // Create the static regex object and compile it.
-    emoticon_regex := TRegExpr.Create();
-    emoticon_regex.ModifierG := false;
-    emoticon_regex.Expression := e;
-    emoticon_regex.Compile();
-
-    _pic := nil;
 end;
 
 {---------------------------------------}
@@ -587,15 +560,12 @@ begin
 end;
 
 *)
-
 initialization
     emoticon_list := THashedStringList.Create();
 
 finalization
     if (emoticon_regex <> nil) then
         emoticon_regex.Free();
-    if (_pic <> nil) then
-        _pic.Free();
     ClearStringListObjects(emoticon_list);
     emoticon_list.Free();
 
