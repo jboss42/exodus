@@ -2,42 +2,49 @@ inherited frmPrefAway: TfrmPrefAway
   Left = 252
   Top = 255
   Caption = 'frmPrefAway'
-  ClientHeight = 212
+  ClientHeight = 281
   ClientWidth = 300
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   object Label2: TTntLabel
     Left = 8
-    Top = 72
+    Top = 106
     Width = 213
     Height = 13
     Caption = 'Minutes to wait before setting status to Away:'
   end
   object Label3: TTntLabel
     Left = 8
-    Top = 96
+    Top = 130
     Width = 201
     Height = 13
     Caption = 'Minutes to wait before setting status to XA:'
   end
   object Label4: TTntLabel
     Left = 8
-    Top = 128
+    Top = 186
     Width = 62
     Height = 13
     Caption = 'Away Status:'
   end
   object Label9: TTntLabel
     Left = 8
-    Top = 152
+    Top = 210
     Width = 50
     Height = 13
     Caption = 'XA Status:'
   end
+  object TntLabel1: TTntLabel
+    Left = 8
+    Top = 154
+    Width = 178
+    Height = 13
+    Caption = 'Minutes to wait before Disconnecting:'
+  end
   object txtAwayTime: TTntEdit
     Left = 232
-    Top = 70
+    Top = 104
     Width = 33
     Height = 21
     TabOrder = 0
@@ -45,7 +52,7 @@ inherited frmPrefAway: TfrmPrefAway
   end
   object spnAway: TUpDown
     Left = 265
-    Top = 70
+    Top = 104
     Width = 16
     Height = 21
     Associate = txtAwayTime
@@ -56,7 +63,7 @@ inherited frmPrefAway: TfrmPrefAway
   end
   object txtXATime: TTntEdit
     Left = 232
-    Top = 94
+    Top = 128
     Width = 33
     Height = 21
     TabOrder = 2
@@ -64,7 +71,7 @@ inherited frmPrefAway: TfrmPrefAway
   end
   object spnXA: TUpDown
     Left = 265
-    Top = 94
+    Top = 128
     Width = 16
     Height = 21
     Associate = txtXATime
@@ -76,28 +83,29 @@ inherited frmPrefAway: TfrmPrefAway
   object chkAutoAway: TTntCheckBox
     Left = 8
     Top = 32
-    Width = 177
+    Width = 270
     Height = 17
     Caption = 'Enable Auto Away'
     TabOrder = 4
+    OnClick = chkAutoAwayClick
   end
   object txtAway: TTntEdit
     Left = 80
-    Top = 126
+    Top = 184
     Width = 201
     Height = 21
     TabOrder = 5
   end
   object txtXA: TTntEdit
     Left = 80
-    Top = 150
+    Top = 208
     Width = 201
     Height = 21
     TabOrder = 6
   end
   object chkAAReducePri: TTntCheckBox
     Left = 8
-    Top = 48
+    Top = 82
     Width = 273
     Height = 17
     Caption = 'Reduce priority to 0 during auto-away.'
@@ -120,5 +128,40 @@ inherited frmPrefAway: TfrmPrefAway
     ParentBackground = False
     ParentFont = False
     TabOrder = 8
+  end
+  object chkAutoXA: TTntCheckBox
+    Left = 8
+    Top = 48
+    Width = 270
+    Height = 17
+    Caption = 'Enable Auto Extended Away'
+    TabOrder = 9
+  end
+  object chkAutoDisconnect: TTntCheckBox
+    Left = 8
+    Top = 64
+    Width = 270
+    Height = 17
+    Caption = 'Enable Auto Disconnect'
+    TabOrder = 10
+  end
+  object txtDisconnectTime: TTntEdit
+    Left = 232
+    Top = 152
+    Width = 33
+    Height = 21
+    TabOrder = 11
+    Text = '60'
+  end
+  object spnDisconnect: TUpDown
+    Left = 265
+    Top = 152
+    Width = 16
+    Height = 21
+    Associate = txtDisconnectTime
+    Min = 1
+    Max = 600
+    Position = 60
+    TabOrder = 12
   end
 end

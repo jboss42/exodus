@@ -1940,11 +1940,12 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.timAutoAwayTimer(Sender: TObject);
 var
-    mins, away, xa: integer;
+    mins, away, xa, dis: integer;
     cur_idle: longword;
     {$ifdef TEST_AUTOAWAY}
     dmsg: string;
     {$endif}
+    do_xa, do_dis: boolean;
     avail: boolean;
 begin
     {
@@ -1986,14 +1987,30 @@ begin
 
             away := getInt('away_time');
             xa := getInt('xa_time');
+            dis := getInt('disconnect_time');
+            do_xa := getBool('auto_xa');
+            do_dis := getBool('auto_disconnect');
 
             avail := (MainSession.Show <> 'dnd') and (MainSession.Show <> 'xa') and
                 (MainSession.Show <> 'away');
 
-            if ((mins = 0) and ((_is_autoaway) or (_is_autoxa))) then SetAutoAvailable()
-            else if (_is_autoxa) then exit
-            else if ((mins >= xa) and (_is_autoaway)) then SetAutoXA()
-            else if ((mins >= away) and (not _is_autoaway) and (avail)) then SetAutoAway();
+            if ((mins = 0) and ((_is_autoaway) or (_is_autoxa))) then
+                // we are available again
+                SetAutoAvailable()
+            else if ((do_dis) and (mins >= dis) and (_is_autoxa)) then begin
+                // Disconnect us
+                _logoff := true;
+                PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
+            end
+            else if (_is_autoxa) then
+                // We are XA, but not ready to disconnect
+                exit
+            else if ((do_xa) and (mins >= xa) and (_is_autoaway)) then
+                // We are away, need to be xa
+                SetAutoXA()
+            else if ((mins >= away) and (not _is_autoaway) and (avail)) then
+                // We are avail, need to be away
+                SetAutoAway();
         end;
     end;
 end;
