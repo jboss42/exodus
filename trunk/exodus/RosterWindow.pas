@@ -96,6 +96,7 @@ type
     popTransProperties: TMenuItem;
     popTransRemove: TMenuItem;
     lblStatusLink: TLabel;
+    imgAd: TImage;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -148,6 +149,7 @@ type
     procedure popTransLogoffClick(Sender: TObject);
     procedure popTransUnRegisterClick(Sender: TObject);
     procedure popTransRemoveClick(Sender: TObject);
+    procedure imgAdClick(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;
@@ -171,6 +173,7 @@ type
 
     _collapsed_grps: TWideStringList;
     _blockers: TWideStringlist;
+    _adURL : string;
 
     function getNodeType(node: TTreeNode = nil): integer;
     function getSelectedContacts(online: boolean = true): TList;
@@ -242,6 +245,7 @@ uses
     Profile,
     JabberID,
     RiserWindow,
+    ShellAPI,
     IQ,
     RosterAdd,
     GrpRemove, RemoveContact,
@@ -254,6 +258,8 @@ uses
 
 {---------------------------------------}
 procedure TfrmRosterWindow.FormCreate(Sender: TObject);
+var
+    s : widestring;
 begin
     // register the callback
     _FullRoster := false;
@@ -287,6 +293,15 @@ begin
     pnlStatus.Visible := true;
 
     treeRoster.Canvas.Pen.Width := 1;
+
+    s := MainSession.Prefs.getString('brand_ad');
+    if (s <> '') then begin
+        imgAd.Picture.LoadFromFile(s);
+        imgAd.Visible := true;
+        end;
+    _adURL := MainSession.Prefs.getString('brand_ad_url');
+    if (_adURL <> '') then
+        imgAd.Cursor := crHandPoint;
 
     Application.ShowHint := true;
     Application.OnShowHint := DoShowHint;
@@ -2041,6 +2056,12 @@ end;
 procedure TfrmRosterWindow.popTransRemoveClick(Sender: TObject);
 begin
     RemoveRosterItem(_cur_ritem.jid.full);
+end;
+
+procedure TfrmRosterWindow.imgAdClick(Sender: TObject);
+begin
+    if (_adURL <> '') then
+        ShellExecute(0, 'open', PChar(_adURL), nil, nil, SW_SHOWNORMAL);
 end;
 
 end.
