@@ -727,7 +727,7 @@ begin
     iq := TJabberIQ.Create(js, js.generateID(), ServerprefsCallback, 60);
     with iq do begin
         iqType := 'get';
-        toJID := js.Server;
+        toJID := '';
         Namespace := XMLNS_PRIVATE;
         with qtag.AddTag('storage') do
             putAttribute('xmlns', XMLNS_PREFS);
