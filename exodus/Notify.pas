@@ -112,6 +112,8 @@ begin
     from := tag.GetAttribute('from');
     tmp_jid := TJabberID.Create(from);
     j := tmp_jid.jid;
+    if (sess.IsBlocked(j)) then exit;
+    
     ritem := sess.roster.Find(j);
     if ritem <> nil then nick := ritem.nickname else nick := tmp_jid.user;
 
