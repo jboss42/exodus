@@ -279,7 +279,6 @@ begin
     dlls.Free();
 end;
 
-
 function ProcessIEEmoticons(txt: Widestring): WideString;
 var
     m: boolean;
@@ -337,16 +336,22 @@ end;
 
 initialization
     EmoticonList := TEmoticonList.Create();
+
+    // This is a "meta-regex" that should match everything
     // Create the static regex object and compile it.
     emoticon_regex := TRegExpr.Create();
-    emoticon_regex.ModifierG := false;
-    // This is a "meta-regex" that should match everything
-    emoticon_regex.Expression := '(.*)((\([a-zA-Z0-9@{}%&~?/^]+\))|([:;BoOxX][^\t ]+)|(=[;)]))(\s|$)';
-    emoticon_regex.Compile();
+    with emoticon_regex do begin
+        ModifierG := false;
+        Expression := '(.*)((\([a-zA-Z0-9@{}%&~?/^]+\))|([:;BoOxX][^\t ]+)|(=[;)]))(\s|$)';
+        Compile();
+    end;
 
 finalization
-    EmoticonList.Free();
-    if (emoticon_regex <> nil) then
-        emoticon_regex.Free();
+    if (EmoticonList <> nil) then
+        FreeAndNil(EmoticonList);
+
+    // XXX: hildjj, this is causing AV's on exit!
+    //if (emoticon_regex <> nil) then
+    //    FreeAndNil(emoticon_regex);
 
 end.

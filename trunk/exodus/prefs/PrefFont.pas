@@ -40,6 +40,13 @@ type
     FontDialog1: TFontDialog;
     lblColor: TTntLabel;
     colorRoster: TTntTreeView;
+    TntLabel1: TTntLabel;
+    cboIEStylesheet: TTntComboBox;
+    btnCSSBrowse: TTntButton;
+    TntLabel2: TTntLabel;
+    cboMsgList: TTntComboBox;
+    OpenDialog1: TOpenDialog;
+    btnCSSEdit: TTntButton;
     procedure btnFontClick(Sender: TObject);
     procedure colorChatMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -48,6 +55,9 @@ type
     procedure colorRosterMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure FormCreate(Sender: TObject);
+    procedure cboMsgListChange(Sender: TObject);
+    procedure btnCSSBrowseClick(Sender: TObject);
+    procedure btnCSSEditClick(Sender: TObject);
   private
     { Private declarations }
     _clr_control: TControl;
@@ -77,14 +87,15 @@ const
 implementation
 {$R *.dfm}
 uses
-    ExUtils, GnuGetText, JabberMsg, MsgDisplay, Session;
+    ShellAPI, ExUtils, GnuGetText, JabberMsg, MsgDisplay, Session;
 
 {---------------------------------------}
 procedure TfrmPrefFont.LoadPrefs();
 var
     n: TTntTreeNode;
 begin
-    //
+    inherited;
+
     n := colorRoster.Items.AddChild(nil, _('Sample Group'));
     colorRoster.Items.AddChild(n, _('Peter M.'));
     colorRoster.Items.AddChild(n, _('Cowboy Neal'));
@@ -131,10 +142,9 @@ end;
 {---------------------------------------}
 procedure TfrmPrefFont.SavePrefs();
 begin
-    //
-    with MainSession.Prefs do begin
-        // this already happens
-    end;
+    inherited;
+    
+    // All other saves happen as folks change settings in this dialog.
 end;
 
 
@@ -272,7 +282,7 @@ begin
     clrBoxFont.Selected := TColor(Mainsession.Prefs.getInt(_clr_font_color));
 end;
 
-
+{---------------------------------------}
 procedure TfrmPrefFont.FormCreate(Sender: TObject);
 begin
   inherited;
@@ -283,6 +293,45 @@ begin
     lblChat.Font.Style := [fsBold];
     lblColor.Font.Style := [fsBold];
 
+end;
+
+{---------------------------------------}
+procedure TfrmPrefFont.cboMsgListChange(Sender: TObject);
+var
+    idx: integer;
+begin
+  inherited;
+    // When we use IE, disable the color & font stuff
+    idx := cboMsgList.ItemIndex;
+
+    // Richedit stuff
+    colorChat.Enabled := (idx = 0);
+    clrBoxBG.Enabled := (idx = 0);
+    clrBoxFont.Enabled := (idx = 0);
+    btnFont.Enabled := (idx = 0);
+
+    // IE stuff
+    cboIEStylesheet.Enabled := (idx = 1);
+    btnCSSBrowse.Enabled := (idx = 1);
+    btnCSSEdit.Enabled := (idx = 1);
+end;
+
+{---------------------------------------}
+procedure TfrmPrefFont.btnCSSBrowseClick(Sender: TObject);
+begin
+  inherited;
+    if (OpenDialog1.Execute) then
+        cboIEStylesheet.Text := OpenDialog1.Filename;
+end;
+
+{---------------------------------------}
+procedure TfrmPrefFont.btnCSSEditClick(Sender: TObject);
+begin
+  inherited;
+    // Edit the CSS
+    // XXX: if the stylesheet is empty, dupe the default, and create a new css file
+    ShellExecute(Application.Handle, 'edit', PChar(String(cboIEStylesheet.text)), nil, nil,
+        SW_SHOWNORMAL);
 end;
 
 end.

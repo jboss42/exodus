@@ -176,7 +176,8 @@ uses
   IEMsgList in 'IEMsgList.pas' {fBaseMsgList1: TFrame},
   MSHTMLEvents in 'MSHTMLEvents.pas',
   Emote in 'Emote.pas',
-  GIFImage in 'GIFImage.pas';
+  GIFImage in 'GIFImage.pas',
+  PrefEmote in 'prefs\PrefEmote.pas' {frmPrefEmote};
 
 {$R *.TLB}
 
@@ -210,6 +211,7 @@ begin
   if (not continue) then exit;
 
   Application.CreateForm(TfrmExodus, frmExodus);
+  Application.CreateForm(TfrmPrefEmote, frmPrefEmote);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);

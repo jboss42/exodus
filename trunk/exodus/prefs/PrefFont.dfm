@@ -2,8 +2,8 @@ inherited frmPrefFont: TfrmPrefFont
   Left = 256
   Top = 192
   Caption = 'frmPrefFont'
-  ClientHeight = 349
-  ClientWidth = 403
+  ClientHeight = 366
+  ClientWidth = 421
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
@@ -49,7 +49,21 @@ inherited frmPrefFont: TfrmPrefFont
     Height = 13
     Caption = 'Element Name'
   end
-  object clrBoxBG: TColorBox [6]
+  object TntLabel1: TTntLabel [6]
+    Left = 8
+    Top = 315
+    Width = 63
+    Height = 13
+    Caption = 'Display Style:'
+  end
+  object TntLabel2: TTntLabel [7]
+    Left = 8
+    Top = 270
+    Width = 245
+    Height = 13
+    Caption = 'Chat windows and TC rooms will be displayed using:'
+  end
+  object clrBoxBG: TColorBox [8]
     Left = 135
     Top = 183
     Width = 170
@@ -62,7 +76,7 @@ inherited frmPrefFont: TfrmPrefFont
     TabOrder = 2
     OnChange = clrBoxBGChange
   end
-  object clrBoxFont: TColorBox [7]
+  object clrBoxFont: TColorBox [9]
     Left = 135
     Top = 207
     Width = 170
@@ -75,7 +89,7 @@ inherited frmPrefFont: TfrmPrefFont
     TabOrder = 3
     OnChange = clrBoxFontChange
   end
-  object btnFont: TTntButton [8]
+  object btnFont: TTntButton [10]
     Left = 135
     Top = 234
     Width = 90
@@ -84,11 +98,11 @@ inherited frmPrefFont: TfrmPrefFont
     TabOrder = 4
     OnClick = btnFontClick
   end
-  object colorChat: TExRichEdit [9]
+  object colorChat: TExRichEdit [11]
     Left = 136
     Top = 72
     Width = 225
-    Height = 89
+    Height = 91
     AutoURLDetect = adNone
     CustomURLs = <
       item
@@ -181,7 +195,7 @@ inherited frmPrefFont: TfrmPrefFont
     AllowInPlace = False
   end
   inherited pnlHeader: TTntPanel
-    Width = 403
+    Width = 421
     Caption = 'Fonts and Colors'
     TabOrder = 5
   end
@@ -198,6 +212,45 @@ inherited frmPrefFont: TfrmPrefFont
     TabOrder = 0
     OnMouseDown = colorRosterMouseDown
   end
+  object cboIEStylesheet: TTntComboBox
+    Left = 32
+    Top = 332
+    Width = 249
+    Height = 21
+    ItemHeight = 13
+    TabOrder = 6
+  end
+  object btnCSSBrowse: TTntButton
+    Left = 285
+    Top = 330
+    Width = 60
+    Height = 25
+    Caption = 'Browse'
+    TabOrder = 7
+    OnClick = btnCSSBrowseClick
+  end
+  object cboMsgList: TTntComboBox
+    Left = 32
+    Top = 287
+    Width = 249
+    Height = 21
+    Style = csDropDownList
+    ItemHeight = 13
+    TabOrder = 8
+    OnChange = cboMsgListChange
+    Items.WideStrings = (
+      'Richedit control (Default)'
+      'Internet Explorer')
+  end
+  object btnCSSEdit: TTntButton
+    Left = 349
+    Top = 330
+    Width = 60
+    Height = 25
+    Caption = 'Edit'
+    TabOrder = 9
+    OnClick = btnCSSEditClick
+  end
   object FontDialog1: TFontDialog
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -207,5 +260,10 @@ inherited frmPrefFont: TfrmPrefFont
     Options = []
     Left = 301
     Top = 27
+  end
+  object OpenDialog1: TOpenDialog
+    Filter = 'CSS Stylesheets|*.css|All Files|*.*'
+    Left = 336
+    Top = 24
   end
 end
