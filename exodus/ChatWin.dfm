@@ -5,8 +5,6 @@ inherited frmChat: TfrmChat
   OldCreateOrder = True
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
-  OnCreate = FormCreate
-  OnDestroy = FormDestroy
   OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13

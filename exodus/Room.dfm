@@ -1,10 +1,9 @@
 inherited frmRoom: TfrmRoom
-  Left = 265
-  Top = 150
+  Left = 873
+  Top = 516
   Caption = 'Conference Room'
   OldCreateOrder = True
   OnClose = FormClose
-  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel3: TPanel

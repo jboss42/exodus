@@ -48,7 +48,6 @@ type
     mnuLastActivity: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure FormActivate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
     procedure doHistory(Sender: TObject);
     procedure doProfile(Sender: TObject);
@@ -98,7 +97,7 @@ type
 
     procedure showMsg(tag: TXMLTag);
     procedure showPres(tag: TXMLTag);
-    procedure sendMsg;
+    procedure sendMsg; override;
     procedure SetJID(cjid: string);
     procedure AcceptFiles( var msg : TMessage ); message WM_DROPFILES;
   end;
@@ -443,9 +442,7 @@ begin
     if (MainSession.Prefs.getBool('log')) then
         LogMessage(Msg);
 
-    // Send cursor back to the txt entry box
-    MsgOut.Text := '';
-    MsgOut.SetFocus;
+    inherited;
 end;
 
 {---------------------------------------}
@@ -560,13 +557,6 @@ begin
         txt :=  jid + ' ' + sIsNow + ' ' + txt;
         
     DisplayPresence(txt, MsgList);
-end;
-
-{---------------------------------------}
-procedure TfrmChat.FormActivate(Sender: TObject);
-begin
-    if Self.Visible then
-        MsgOut.SetFocus;
 end;
 
 {---------------------------------------}
