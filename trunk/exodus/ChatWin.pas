@@ -996,7 +996,9 @@ begin
                 AddTag('id');
         end;
     end;
-    MainSession.SendTag(c);
+
+    if (MainSession.Active) then
+        MainSession.SendTag(c);
 end;
 
 {---------------------------------------}
