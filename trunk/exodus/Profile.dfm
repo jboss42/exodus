@@ -1,6 +1,6 @@
 object frmProfile: TfrmProfile
-  Left = 261
-  Top = 186
+  Left = 184
+  Top = 135
   Width = 462
   Height = 398
   BorderIcons = [biSystemMenu, biMinimize]
@@ -28,7 +28,7 @@ object frmProfile: TfrmProfile
     Top = 0
     Width = 314
     Height = 330
-    ActivePage = TabSheet1
+    ActivePage = TabSheet6
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 0

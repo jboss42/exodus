@@ -26,7 +26,7 @@ uses
     ShellAPI, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, CheckLst, ExtCtrls, ComCtrls, TntStdCtrls,
-    TntComCtrls, TntCheckLst, TntExtCtrls;
+    TntComCtrls, TntCheckLst, TntExtCtrls, ExtDlgs;
 
 type
   TfrmProfile = class(TForm)

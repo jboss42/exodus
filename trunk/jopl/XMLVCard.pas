@@ -405,6 +405,11 @@ begin
     t1 := vtag.AddTag('TEL');
     WorkFax.fillTag(t1);
 
+    // Serialize the photo
+    if ((Picture <> nil) and (Picture.Valid)) then begin
+        t1 := vtag.AddTag('PHOTO');
+        t1.AddCData(Picture.Data);
+    end;
 
 end;
 

@@ -41,6 +41,8 @@ type
         _iq: TJabberIQ;
 
         procedure _genData();
+        function getMimeType(): string;
+
     protected
         procedure fetchCallback(event: string; tag: TXMLTag);
 
@@ -59,6 +61,7 @@ type
 
         function  getHash(): string;
         property  Data: string read _data;
+        property  MimeType: string read getMimeType;
     end;
 
     TAvatarCache = class
@@ -380,6 +383,19 @@ begin
     end;
 end;
 
+function TAvatar.getMimeType: string;
+begin
+    if (_pic = nil) then
+        Result := 'INVALID'
+    else if (Valid = false) then
+        Result := 'INVALID'
+    else if (_pic is TGifImage) then
+        Result := 'image/gif'
+    else if (_pic is TJPEGImage) then
+        Result := 'image/jpeg'
+    else if (_pic is TBitmap) then
+        Result := 'image/x-ms-bmp';
+end;
 
 {---------------------------------------}
 {---------------------------------------}

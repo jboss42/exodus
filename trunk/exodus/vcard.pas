@@ -26,7 +26,7 @@ uses
     XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, ComCtrls, buttonFrame, StdCtrls, ExtCtrls, TntStdCtrls,
-    TntComCtrls;
+    TntComCtrls, ExtDlgs;
 
 type
   TfrmVCard = class(TForm)
@@ -84,7 +84,10 @@ type
     memDesc: TTntMemo;
     Label1: TTntLabel;
     TreeView1: TTntTreeView;
-    Panel1: TPanel;
+    OpenPic: TOpenPictureDialog;
+    TntLabel1: TTntLabel;
+    PaintBox1: TPaintBox;
+    btnPicBrowse: TTntButton;
     Label2: TTntLabel;
     lblEmail: TTntLabel;
     Label7: TTntLabel;
@@ -95,13 +98,13 @@ type
     txtFirst: TTntEdit;
     txtLast: TTntEdit;
     txtWeb: TTntEdit;
-    PaintBox1: TPaintBox;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure TreeView1Click(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure btnPicBrowseClick(Sender: TObject);
   private
     { Private declarations }
     _vcard: TXMLVCard;
@@ -122,7 +125,7 @@ implementation
 
 {$R *.dfm}
 uses
-    JabberUtils, ExUtils,  GnuGetText, IQ, Session;
+    Avatar, JabberUtils, ExUtils,  GnuGetText, IQ, Session;
 const
     sVCardError = 'No vCard response was ever returned.';
 
@@ -163,7 +166,6 @@ begin
 
     for i := 0 to TreeView1.Items.Count - 1 do
         TreeView1.Items[i].Expand(true);
-
 
     PageControl1.ActivePageIndex := 0;
     TreeView1.FullExpand();
@@ -234,6 +236,9 @@ begin
         txtOrgUnit.Text := OrgUnit;
         txtOrgTitle.Text := OrgTitle;
         memDesc.Lines.Text := Desc;
+
+        if (Picture <> nil) then
+            Picture.Draw(PaintBox1.Canvas);
     end;
 end;
 
@@ -309,13 +314,46 @@ begin
     iq.setAttribute('type', 'set');
     _vcard.fillTag(iq);
 
+    // save this hash to the profile..
+    if (_vcard.Picture <> nil) then begin
+        MainSession.Profile.Avatar := _vcard.Picture.Data;
+        MainSession.Profile.AvatarHash := _vcard.Picture.getHash();
+        MainSession.Profile.AvatarMime := _vcard.Picture.MimeType;
+        MainSession.Prefs.SaveProfiles();
+        MainSession.setPresence(MainSession.Show, MainSession.Status,
+            MainSession.Priority);
+    end;
+
     MainSession.SendTag(iq);
     Self.Close;
 end;
 
+{---------------------------------------}
 procedure TfrmVCard.FormDestroy(Sender: TObject);
 begin
     _vcard.Free();
+end;
+
+{---------------------------------------}
+procedure TfrmVCard.btnPicBrowseClick(Sender: TObject);
+var
+    a: TAvatar;
+begin
+    // browse for a new vcard picture
+    if (OpenPic.Execute()) then begin
+        a := TAvatar.Create();
+        a.LoadFromFile(OpenPic.FileName);
+        if (not a.Valid) then begin
+            a.Free();
+        end
+        else begin
+            // a is valid
+            if (_vcard.Picture <> nil) then
+                _vcard.Picture.Free();
+            _vcard.Picture := a;
+            _vcard.Picture.Draw(PaintBox1.Canvas);
+        end;
+    end;
 end;
 
 end.

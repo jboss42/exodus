@@ -1,6 +1,6 @@
 object frmVCard: TfrmVCard
-  Left = 280
-  Top = 410
+  Left = 192
+  Top = 287
   Width = 450
   Height = 360
   Caption = 'My Profile'
@@ -34,93 +34,100 @@ object frmVCard: TfrmVCard
     TabOrder = 0
     object TabSheet1: TTntTabSheet
       Caption = 'General'
-      object PaintBox1: TPaintBox
-        Left = 0
-        Top = 169
-        Width = 278
-        Height = 92
-        Align = alClient
+      object TntLabel1: TTntLabel
+        Left = 4
+        Top = 124
+        Width = 26
+        Height = 13
+        Cursor = crHandPoint
+        Caption = 'Web:'
       end
-      object Panel1: TPanel
-        Left = 0
-        Top = 0
-        Width = 278
-        Height = 169
-        Align = alTop
-        BevelOuter = bvNone
+      object PaintBox1: TPaintBox
+        Left = 56
+        Top = 161
+        Width = 105
+        Height = 92
+      end
+      object Label2: TTntLabel
+        Left = 4
+        Top = 72
+        Width = 25
+        Height = 13
+        Caption = 'Nick:'
+      end
+      object lblEmail: TTntLabel
+        Left = 4
+        Top = 95
+        Width = 28
+        Height = 13
+        Cursor = crHandPoint
+        Caption = 'Email:'
+      end
+      object Label7: TTntLabel
+        Left = 2
+        Top = 6
+        Width = 56
+        Height = 13
+        Caption = 'First (Given)'
+      end
+      object Label5: TTntLabel
+        Left = 2
+        Top = 38
+        Width = 58
+        Height = 13
+        Caption = 'Last (Family)'
+      end
+      object lblURL: TTntLabel
+        Left = 3
+        Top = 158
+        Width = 36
+        Height = 13
+        Cursor = crHandPoint
+        Caption = 'Picture:'
+      end
+      object btnPicBrowse: TTntButton
+        Left = 171
+        Top = 156
+        Width = 75
+        Height = 25
+        Caption = 'Browse'
         TabOrder = 0
-        object Label2: TTntLabel
-          Left = 4
-          Top = 72
-          Width = 25
-          Height = 13
-          Caption = 'Nick:'
-        end
-        object lblEmail: TTntLabel
-          Left = 4
-          Top = 95
-          Width = 28
-          Height = 13
-          Cursor = crHandPoint
-          Caption = 'Email:'
-        end
-        object Label7: TTntLabel
-          Left = 2
-          Top = 6
-          Width = 56
-          Height = 13
-          Caption = 'First (Given)'
-        end
-        object Label5: TTntLabel
-          Left = 2
-          Top = 38
-          Width = 58
-          Height = 13
-          Caption = 'Last (Family)'
-        end
-        object lblURL: TTntLabel
-          Left = 4
-          Top = 124
-          Width = 26
-          Height = 13
-          Cursor = crHandPoint
-          Caption = 'Web:'
-        end
-        object txtNick: TTntEdit
-          Left = 56
-          Top = 69
-          Width = 187
-          Height = 21
-          TabOrder = 0
-        end
-        object txtPriEmail: TTntEdit
-          Left = 56
-          Top = 95
-          Width = 187
-          Height = 21
-          TabOrder = 1
-        end
-        object txtFirst: TTntEdit
-          Left = 73
-          Top = 6
-          Width = 168
-          Height = 21
-          TabOrder = 2
-        end
-        object txtLast: TTntEdit
-          Left = 73
-          Top = 33
-          Width = 169
-          Height = 21
-          TabOrder = 3
-        end
-        object txtWeb: TTntEdit
-          Left = 56
-          Top = 121
-          Width = 187
-          Height = 21
-          TabOrder = 4
-        end
+        OnClick = btnPicBrowseClick
+      end
+      object txtNick: TTntEdit
+        Left = 56
+        Top = 69
+        Width = 187
+        Height = 21
+        TabOrder = 1
+      end
+      object txtPriEmail: TTntEdit
+        Left = 56
+        Top = 95
+        Width = 187
+        Height = 21
+        TabOrder = 2
+      end
+      object txtFirst: TTntEdit
+        Left = 73
+        Top = 6
+        Width = 168
+        Height = 21
+        TabOrder = 3
+      end
+      object txtLast: TTntEdit
+        Left = 73
+        Top = 33
+        Width = 169
+        Height = 21
+        TabOrder = 4
+      end
+      object txtWeb: TTntEdit
+        Left = 56
+        Top = 121
+        Width = 187
+        Height = 21
+        TabOrder = 5
       end
     end
     object TabSheet3: TTntTabSheet
@@ -997,5 +1004,13 @@ object frmVCard: TfrmVCard
     Indent = 19
     TabOrder = 2
     OnClick = TreeView1Click
+  end
+  object OpenPic: TOpenPictureDialog
+    Filter = 
+      'All (*.jpg;*.jpeg;*.jpg;*.jpeg;*.gif, *.bmp)|*.jpg;*.jpeg;*.jpg;' +
+      '*.jpeg;*.bmp;*.gif|JPEG Image File (*.jpg)|*.jpg;*jpeg;|GIF Imag' +
+      'e (*.gif)|*.gif|Bitmaps (*.bmp)|*.bmp|Icons (*.ico)|*.ico'
+    Left = 328
+    Top = 211
   end
 end
