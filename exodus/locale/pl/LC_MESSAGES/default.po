@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: exodus 0.1\n"
 "POT-Creation-Date: 2003-08-03 07:30\n"
-"PO-Revision-Date: 2003-12-05 17:10+0100\n"
+"PO-Revision-Date: 2003-12-05 23:34+0100\n"
 "Last-Translator: Mariusz Smykuła <smys@lodz.mm.pl>\n"
 "Language-Team: Mariusz Smykuła <redakcja@jabberpl.org>\n"
 "MIME-Version: 1.0\n"
@@ -1091,7 +1091,7 @@ msgstr ""
 #. frmChat..SaveDialog1..Filter
 #: ChatWin.dfm:181
 msgid "RTF Files|*.rtf|All Files|*.*"
-msgstr ""
+msgstr "Pliki RTF|*.rtf|Wszystkie pliki|*.*"
 
 #. frmConnDetails..Caption
 #: ConnDetails.dfm:7
@@ -1511,7 +1511,7 @@ msgstr "Skrót klawiszowy:"
 #. frmDebug..Caption
 #: Debug.dfm:6
 msgid "Debug"
-msgstr ""
+msgstr "Monitor"
 
 #. frmDebug..Panel2..Caption
 #: Debug.dfm:31
@@ -1805,7 +1805,7 @@ msgstr "Przełącz opcje"
 #: RosterWindow.dfm:613
 #: invite.dfm:5
 msgid "Invite to Conference"
-msgstr "Zaproś do konferencji"
+msgstr "Zaproś na konferencję"
 
 #. frmInvite..pnlMain..lstJIDS......Caption
 #. frmRosterRecv..lvContacts......Caption
@@ -1835,7 +1835,7 @@ msgstr "Powód:"
 #. frmInvite..pnlMain..Panel2..Label1..Caption
 #: invite.dfm:137
 msgid "Invite the following contacts to:"
-msgstr "Zaproś następujące kontakty do:"
+msgstr "Zaproś następujące kontakty do pokoju:"
 
 #. frmInvite..pnlMain..Panel2..memReason....Lines.WideStrings
 #: invite.dfm:146
@@ -1857,7 +1857,7 @@ msgstr ""
 #. frmExodus..Tabs..tbsRoster..Caption
 #: Jabber1.dfm:59
 msgid "Messenger"
-msgstr "Komunikator"
+msgstr "Wiadomości"
 
 #. frmExodus..Tabs..tbsRoster..pnlRight..Caption
 #: Jabber1.dfm:94
@@ -2094,7 +2094,7 @@ msgstr "Odszedłem na dłużej"
 #. frmExodus..MainMenu1..Tools1..mnuPresence..Custom3..Caption
 #: Jabber1.dfm:398
 msgid "Custom"
-msgstr "Inny"
+msgstr "Inna"
 
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presToggle..Caption
 #: Jabber1.dfm:404
@@ -2104,17 +2104,17 @@ msgstr "Przełącz"
 #. frmExodus..MainMenu1..Tools1..mnuRegistration..Caption
 #: Jabber1.dfm:413
 msgid "Edit My &Registration"
-msgstr "Edytuj moją &rejestrację"
+msgstr "Zmień moją &rejestrację"
 
 #. frmExodus..MainMenu1..Tools1..mnuMyVCard..Caption
 #: Jabber1.dfm:417
 msgid "Edit My &vCard / Profile"
-msgstr "Edytuj moją wizytówkę / P&rofil"
+msgstr "Dane osobowe / P&rofil"
 
 #. frmExodus..MainMenu1..Tools1..mnuVCard..Caption
 #: Jabber1.dfm:424
 msgid "&Lookup a vCard"
-msgstr "&Sprawdź wizytówkę"
+msgstr "&Pokaż wizytówkę"
 
 #. frmExodus..MainMenu1..Tools1..mnuBookmark..Caption
 #: Jabber1.dfm:428
@@ -2612,7 +2612,7 @@ msgstr "Wtyczki"
 #: prefs/PrefNotify.dfm:43
 #: prefs/PrefNotify.pas:102
 msgid "File Transfers"
-msgstr "Przesyłanie plików"
+msgstr "Przesyłane pliki"
 
 #. frmPrefs..Scroller..lblGroups..Caption
 #. frmProfile..PageControl1..TabSheet2..Caption
@@ -2861,7 +2861,7 @@ msgstr "Związane z komputerami (WWW)"
 #: Profile.dfm:340
 #: vcard.dfm:165
 msgid "Consulting"
-msgstr ""
+msgstr "Doradzctwo"
 
 #. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
@@ -2875,7 +2875,7 @@ msgstr "Edukacja/szkolenia"
 #: Profile.dfm:342
 #: vcard.dfm:167
 msgid "Engineering"
-msgstr ""
+msgstr "Technika"
 
 #. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
@@ -2896,7 +2896,7 @@ msgstr ""
 #: Profile.dfm:345
 #: vcard.dfm:170
 msgid "Government/Military"
-msgstr ""
+msgstr "Rządowy/Wojskowy"
 
 #. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
@@ -2931,7 +2931,7 @@ msgstr ""
 #: Profile.dfm:350
 #: vcard.dfm:175
 msgid "Sales/marketing/advertising"
-msgstr ""
+msgstr "Sprzedaż/marketing/reklama"
 
 #. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
@@ -3400,7 +3400,7 @@ msgstr ""
 #: vcard.dfm:296
 #: vcard.dfm:701
 msgid "Bulgaria  "
-msgstr ""
+msgstr "Bułgaria"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3521,7 +3521,7 @@ msgstr ""
 #: vcard.dfm:307
 #: vcard.dfm:712
 msgid "China  "
-msgstr ""
+msgstr "Chiny"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3737,7 +3737,7 @@ msgstr ""
 #: vcard.dfm:328
 #: vcard.dfm:733
 msgid "Egypt  "
-msgstr ""
+msgstr "Egipt"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3792,7 +3792,7 @@ msgstr ""
 #: vcard.dfm:333
 #: vcard.dfm:738
 msgid "Ethiopia  "
-msgstr ""
+msgstr "Etiopia"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4298,7 +4298,7 @@ msgstr ""
 #: vcard.dfm:379
 #: vcard.dfm:784
 msgid "Kuwait  "
-msgstr ""
+msgstr "Kuwejt"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4408,7 +4408,7 @@ msgstr ""
 #: vcard.dfm:389
 #: vcard.dfm:794
 msgid "Luxembourg  "
-msgstr ""
+msgstr "Luksemburg"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -5288,7 +5288,7 @@ msgstr ""
 #: vcard.dfm:469
 #: vcard.dfm:874
 msgid "Sweden  "
-msgstr ""
+msgstr "Szwecja"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -5926,7 +5926,7 @@ msgstr ""
 #. frmRoom..dlgSave..Filter
 #: Room.dfm:312
 msgid "RTF (*.rtf)|*.rtf|Text (*.txt)|*.txt"
-msgstr ""
+msgstr "RTF (*.rtf)|*.rtf|Tekst (*.txt)|*.txt"
 
 #. frmRoom..dlgSave..Title
 #: Room.dfm:315
@@ -6292,7 +6292,7 @@ msgstr ""
 #. frmXferManager..Caption
 #: XferManager.dfm:5
 msgid "File Transfer Manager"
-msgstr "Zarządca transferu plików"
+msgstr "Menadżer przesyłanych plików"
 
 #: About.pas:83
 msgid "Exodus is the creation of Peter Millard  (mailto:me@pgmillard.com).  Checkout the website at http://exodus.jabberstudio.org for more information. It is currently licensed under the GNU Public License (GPL) see www.gnu.org for more information on the GPL."
@@ -7092,7 +7092,7 @@ msgstr ""
 #. immediately turn around and refuse.
 #: RecvStatus.pas:720
 msgid "Waiting to cancel transfer..."
-msgstr "Czekamy na anulowanie transferu...."
+msgstr "Czekamy na przerwanie transferu...."
 
 #. the sender went offline
 #: RecvStatus.pas:742
@@ -7346,7 +7346,7 @@ msgstr "Próbuję się połączyć..."
 #: RosterWindow.pas:517
 #: RosterWindow.pas:2624
 msgid "Click to Cancel..."
-msgstr "Kliknij aby anulować..."
+msgstr "Kliknij aby przerwać..."
 
 #: RosterWindow.pas:509
 msgid ""
@@ -7609,7 +7609,7 @@ msgstr ""
 #. Programmer's name for it: SUREBaseString
 #: /src/exodus/jopl/Unicode.pas:822
 msgid "Error in regular expression: %s"
-msgstr ""
+msgstr "Błąd w wyrażeniu regularnym: %s"
 
 #. Programmer's name for it: SUREUnexpectedEOS
 #: /src/exodus/jopl/Unicode.pas:823
@@ -7865,7 +7865,7 @@ msgstr "Podgląd"
 #. frmPrefLayouts..lblViewHelp....AutoSize
 #: prefs/PrefLayouts.dfm:1141
 msgid "Main window shows only the roster. Other windows are opened seperatly and are never docked."
-msgstr ""
+msgstr "Główne okno zawiera listę kontaktów. Inne okienka są otwierane osobno i nigdy nie są dokowane."
 
 #. frmPrefLayouts..cboView....Items.WideStrings
 #: prefs/PrefLayouts.dfm:1154
@@ -8457,7 +8457,7 @@ msgstr "Transfer plików"
 #. frmPrefTransfer..Label15..Caption
 #: prefs/PrefTransfer.dfm:15
 msgid "File transfer download directory:"
-msgstr "Katalog docelowy dla transferu plików:"
+msgstr "Katalog docelowy dla pobieranych plików:"
 
 #. frmPrefTransfer..lblDefault..Caption
 #: prefs/PrefTransfer.dfm:23
