@@ -27,9 +27,9 @@ object frmExodus: TfrmExodus
   TextHeight = 13
   object Tabs: TPageControl
     Left = 0
-    Top = 30
+    Top = 31
     Width = 449
-    Height = 194
+    Height = 193
     ActivePage = tbsRoster
     Align = alClient
     DockSite = True
@@ -52,7 +52,7 @@ object frmExodus: TfrmExodus
         Left = 209
         Top = 0
         Width = 3
-        Height = 166
+        Height = 165
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = Splitter1Moved
@@ -61,7 +61,7 @@ object frmExodus: TfrmExodus
         Left = 0
         Top = 0
         Width = 209
-        Height = 166
+        Height = 165
         Align = alLeft
         BevelOuter = bvNone
         UseDockManager = False
@@ -73,7 +73,7 @@ object frmExodus: TfrmExodus
         Left = 212
         Top = 0
         Width = 229
-        Height = 166
+        Height = 165
         Align = alClient
         BevelOuter = bvNone
         DragCursor = crDefault
@@ -86,69 +86,79 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 0
     Width = 449
-    Height = 30
+    Height = 31
     AutoSize = True
     Bands = <
       item
         Control = ToolBar1
         ImageIndex = -1
-        MinHeight = 26
+        MinHeight = 27
         Width = 445
       end>
     object ToolBar1: TToolBar
       Left = 9
       Top = 0
       Width = 167
-      Height = 26
+      Height = 27
       Align = alNone
       AutoSize = True
       BorderWidth = 1
+      ButtonHeight = 23
       DragKind = dkDock
       EdgeBorders = []
       Flat = True
       Images = ImageList1
       Indent = 2
       TabOrder = 0
-      object btnConnect: TToolButton
-        Left = 2
-        Top = 0
-        Hint = 'Connect/Disconnect'
-        AllowAllUp = True
-        AutoSize = True
-        ImageIndex = 0
-        OnClick = btnConnectClick
-      end
       object btnOnlineRoster: TToolButton
-        Left = 25
+        Left = 2
         Top = 0
         Hint = 'View Online/All'
         AllowAllUp = True
+        AutoSize = True
+        Caption = 'View'
         ImageIndex = 6
         OnClick = btnOnlineRosterClick
       end
       object btnAddContact: TToolButton
-        Left = 48
+        Left = 25
         Top = 0
         Hint = 'Add Contact'
         AllowAllUp = True
+        AutoSize = True
+        Caption = 'Add'
         ImageIndex = 2
         OnClick = btnAddContactClick
       end
       object btnRoom: TToolButton
-        Left = 71
+        Left = 48
         Top = 0
         Hint = 'Join a conference'
         AllowAllUp = True
+        AutoSize = True
+        Caption = 'Rooms'
         ImageIndex = 10
         OnClick = mnuConferenceClick
       end
       object btnFind: TToolButton
-        Left = 94
+        Left = 71
         Top = 0
         Hint = 'Search for Contacts'
         AllowAllUp = True
+        AutoSize = True
+        Caption = 'Find'
         ImageIndex = 16
         OnClick = SearchforPerson1Click
+      end
+      object btnConnect: TToolButton
+        Left = 94
+        Top = 0
+        Hint = 'Connect/Disconnect'
+        AllowAllUp = True
+        AutoSize = True
+        Caption = 'Log On'
+        ImageIndex = 0
+        OnClick = btnConnectClick
       end
       object btnExpanded: TToolButton
         Left = 117
@@ -156,6 +166,7 @@ object frmExodus: TfrmExodus
         Hint = 'Toggle Expanded Mode'
         AllowAllUp = True
         AutoSize = True
+        Caption = 'Expanded'
         ImageIndex = 9
         OnClick = btnExpandedClick
       end
@@ -164,6 +175,7 @@ object frmExodus: TfrmExodus
         Top = 0
         Hint = 'Remove Contact'
         AllowAllUp = True
+        AutoSize = True
         ImageIndex = 4
         Visible = False
         OnClick = btnDelPersonClick

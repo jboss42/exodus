@@ -47,6 +47,7 @@ type
         _sessionSignal: TBasicSignal;
         _rosterSignal: TRosterSignal;
         _presSignal: TPresenceSignal;
+        _dataSignal: TStringSignal;
 
         _paused: boolean;
         _pauseQueue: TQueue;
@@ -63,16 +64,17 @@ type
         function getMyAgents(): TAgents;
 
         procedure SetUsername(username: string);
-        function GetUsername(): string;
         procedure SetPassword(password: string);
-        function GetPassword(): string;
         procedure SetServer(server: string);
-        function GetServer(): string;
         procedure SetResource(resource: string);
-        function GetResource(): string;
         procedure SetPort(port: integer);
-        function GetPort(): integer;
         procedure SetPriority(priority: integer);
+
+        function GetUsername(): string;
+        function GetPassword(): string;
+        function GetServer(): string;
+        function GetResource(): string;
+        function GetPort(): integer;
         function GetPriority(): integer;
 
         function GetActive(): boolean;
@@ -80,6 +82,8 @@ type
         procedure AuthGetCallback(event: string; xml: TXMLTag);
         procedure AuthCallback(event: string; tag: TXMLTag);
         procedure RegistrationCallback(event: string; xml: TXMLTag);
+
+        procedure DataEvent(send: boolean; data: string);
     public
         ppdb: TJabberPPDB;
         roster: TJabberRoster;
@@ -100,11 +104,13 @@ type
         function RegisterCallback(callback: TPacketEvent; xplite: string; pausable: boolean = false): integer; overload;
         function RegisterCallback(callback: TRosterEvent): integer; overload;
         function RegisterCallback(callback: TPresenceEvent): integer; overload;
+        function RegisterCallback(callback: TDataStringEvent): integer; overload;
         procedure UnRegisterCallback(index: integer);
 
         procedure FireEvent(event: string; tag: TXMLTag); overload;
         procedure FireEvent(event: string; tag: TXMLTag; const p: TJabberPres); overload;
         procedure FireEvent(event: string; tag: TXMLTag; const ritem: TJabberRosterItem); overload;
+        procedure FireEvent(event: string; tag: TXMLTag; const data: string); overload;
 
         procedure SendTag(tag: TXMLTag);
         procedure ActivateProfile(i: integer);
@@ -186,11 +192,13 @@ begin
     _sessionSignal := TBasicSignal.Create();
     _rosterSignal := TRosterSignal.Create();
     _presSignal := TPresenceSignal.Create();
+    _dataSignal := TStringSignal.Create();
 
     _dispatcher.AddSignal('/packet', _packetSignal);
     _dispatcher.AddSignal('/session', _sessionSignal);
     _dispatcher.AddSignal('/roster', _rosterSignal);
     _dispatcher.AddSignal('/presence', _presSignal);
+    _dispatcher.AddSignal('/data', _dataSignal);
 
     _pauseQueue := TQueue.Create();
 
@@ -350,6 +358,7 @@ begin
 
     // Register our session to get XML Tags
     _stream.RegisterStreamCallback(Self.StreamCallback);
+    _stream.OnData := DataEvent;
 
     _stream.Connect(_profile);
 end;
@@ -379,6 +388,16 @@ begin
         tag.Free;
         raise Exception.Create('Invalid stream');
         end;
+end;
+
+{---------------------------------------}
+procedure TJabberSession.DataEvent(send: boolean; data: string);
+begin
+    // we are getting data from the socket
+    if (send) then
+        _dataSignal.Invoke('/data/send', nil, data)
+    else
+        _dataSignal.Invoke('/data/recv', nil, data);
 end;
 
 {---------------------------------------}
@@ -423,8 +442,6 @@ begin
             _dispatcher.DispatchSignal('/packet', tag);
         end;
 
-    if (tag <> nil) then
-        tag.Free();
 end;
 
 {---------------------------------------}
@@ -517,6 +534,16 @@ begin
 end;
 
 {---------------------------------------}
+function TJabberSession.RegisterCallback(callback: TDataStringEvent): integer;
+var
+    sl: TStringListener;
+begin
+    // add a callback to the data signal
+    sl := _dataSignal.addListener(callback);
+    Result := sl.cb_id;
+end;
+
+{---------------------------------------}
 procedure TJabberSession.FireEvent(event: string; tag: TXMLTag);
 begin
     // dispatch some basic signal
@@ -535,6 +562,13 @@ procedure TJabberSession.FireEvent(event: string; tag: TXMLTag; const ritem: TJa
 begin
     // dispatch a roster event directly
     _rosterSignal.Invoke(event, tag, ritem);
+end;
+
+{---------------------------------------}
+procedure TJabberSession.FireEvent(event: string; tag: TXMLTag; const data: string);
+begin
+    // dispatch a data event directly
+    _dataSignal.Invoke(event, tag, data);
 end;
 
 {---------------------------------------}

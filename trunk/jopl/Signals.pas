@@ -32,7 +32,6 @@ type
     {---------------------------------------}
     // Base callback method for TSignal listeners
     TSignalEvent = procedure (event: string; tag: TXMLTag) of object;
-
     TSignal = class;
     TSignalListener = class;
 
@@ -88,6 +87,7 @@ type
     end;
 
     {---------------------------------------}
+    // classes for change list stuff.
     TChangeListOps = (cl_add, cl_delete);
     TChangeListEvent = class
     public
@@ -106,7 +106,6 @@ type
     protected
         invoking: boolean;
         Dispatcher: TSignalDispatcher;      // pointer to the disp that owns us
-
         function addListener(event: string; l: TSignalListener): boolean; overload; virtual;
         function delListener(l: TSignalListener): boolean;
         procedure Invoke(event: string; tag: TXMLTag); overload; virtual;
@@ -145,6 +144,18 @@ type
         function addListener(xplite: string; callback: TPacketEvent): TPacketListener; overload;
         procedure Invoke(event: string; tag: TXMLTag); override;
     end;
+
+    {---------------------------------------}
+    // Signal that handles an additional string at the end
+    TDataStringEvent = procedure(event: string; tag: TXMLTag; data: string) of object;
+    TStringListener = class(TSignalListener);
+
+    TStringSignal = class(TSignal)
+    public
+        function addListener(callback: TDataStringEvent): TStringListener; overload;
+        procedure Invoke(event: string; tag: TXMLTag; data: string); overload;
+    end;
+
 
     {M-}
 
@@ -492,6 +503,40 @@ begin
         Self.processChangeList();
 
 end;
+
+{------------------------------------------------------------------------------}
+{------------------------------------------------------------------------------}
+function TStringSignal.addListener(callback: TDataStringEvent): TStringListener;
+var
+    sl: TStringListener;
+begin
+    // create a new StringListener for this signal
+    sl := TStringListener.Create;
+    sl.callback := TMethod(callback);
+    inherited addListener('', sl);
+    Result := sl;
+end;
+
+{---------------------------------------}
+procedure TStringSignal.Invoke(event: string; tag: TXMLTag; data: string);
+var
+    sl: TStringListener;
+    se: TDataStringEvent;
+    i: integer;
+begin
+    //
+    invoking := true;
+    for i := 0 to Self.Count - 1 do begin
+        sl := TStringListener(Self.Objects[i]);
+        se := TDataStringEvent(sl.Callback);
+        se('data', tag, data);
+        end;
+    invoking := false;
+
+    if change_list.Count > 0 then
+        Self.processChangeList();
+end;
+
 
 
 
