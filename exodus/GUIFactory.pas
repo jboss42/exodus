@@ -77,7 +77,9 @@ begin
 
     else if (event = '/session/gui/pres-error') then begin
         // Presence errors
-        if MainSession.Prefs.getBool('roster_pres_errors') then begin
+        ri := MainSession.Roster.Find(tag.GetAttribute('from'));
+        if ((ri <> nil) and
+        MainSession.Prefs.getBool('roster_pres_errors')) then begin
             ir := getInvalidRoster();
             ir.AddPacket(tag);
             end;

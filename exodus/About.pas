@@ -51,7 +51,7 @@ implementation
 {$R *.dfm}
 
 uses
-    ShellAPI, ExUtils;
+    ShellAPI, XMLUtils;
 
 procedure TfrmAbout.frameButtons1btnCancelClick(Sender: TObject);
 begin

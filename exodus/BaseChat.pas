@@ -295,6 +295,7 @@ begin
     MainSession.prefs.setInt('chat_textbox', pnlInput.Height);
 end;
 
+{---------------------------------------}
 procedure TfrmBaseChat.CopyAll1Click(Sender: TObject);
 begin
   inherited;
@@ -302,24 +303,28 @@ begin
   MsgList.CopyToClipboard;
 end;
 
+{---------------------------------------}
 procedure TfrmBaseChat.Clear1Click(Sender: TObject);
 begin
     inherited;
     MsgList.Clear();
 end;
 
+{---------------------------------------}
 procedure TfrmBaseChat.Copy1Click(Sender: TObject);
 begin
     inherited;
     MsgList.CopyToClipboard();
 end;
 
+{---------------------------------------}
 procedure TfrmBaseChat.Paste1Click(Sender: TObject);
 begin
     inherited;
     MsgOut.PasteFromClipboard();
 end;
 
+{---------------------------------------}
 procedure TfrmBaseChat.FormResize(Sender: TObject);
 begin
   inherited;

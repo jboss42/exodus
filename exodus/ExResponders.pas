@@ -63,7 +63,7 @@ type
 {---------------------------------------}
 implementation
 uses
-    Jabber1;
+    XMLUtils, Jabber1;
 
 {---------------------------------------}
 constructor TVersionResponder.Create(Session: TJabberSession);
@@ -92,7 +92,7 @@ begin
 
     win := '';
     WindowsVersion(win);
-    app := GetAppVersion;
+    app := GetAppVersion();
 
     r := TXMLTag.Create('iq');
     with r do begin

@@ -318,9 +318,10 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmRosterWindow.showAniStatus();
 begin
-    //
+    // show the status animation
     aniWait.Left := (pnlConnect.Width - aniWait.Width) div 2;
     aniWait.Visible := true;
     aniWait.Active := true;
@@ -345,6 +346,8 @@ begin
         lblStatus.Caption := sDisconnected;
         lblLogin.Caption := sSignOn;
         end
+
+    // We are in the process of connecting
     else if event = '/session/connecting' then begin
         pnlConnect.Visible := true;
         pnlConnect.Align := alClient;
@@ -353,6 +356,8 @@ begin
         lblLogin.Caption := sCancelLogin;
         Self.showAniStatus();
         end
+
+    // we've got a socket connection
     else if event = '/session/connected' then begin
         lblLogin.Caption := sCancelLogin;
         lblStatus.Caption := sAuthenticating;
@@ -360,11 +365,15 @@ begin
         ShowPresence('online');
         ResetPanels;
         end
+
+    // we've been authenticated
     else if event = '/session/authenticated' then begin
         lblLogin.Caption := sCancelLogin;
         lblStatus.Caption := sAuthenticated;
         Self.showAniStatus();
         end
+
+    // it's the end of the roster, update the GUI
     else if event = '/roster/end' then begin
         if (not treeRoster.Visible) then begin
             aniWait.Active := false;
@@ -373,9 +382,13 @@ begin
             treeRoster.Visible := true;
             end;
         end
+
+    // our own presence has changed
     else if event = '/session/presence' then begin
         ShowPresence(MainSession.show);
         end
+
+    // preferences have been changed, refresh the roster
     else if event = '/session/prefs' then begin
         MainSession.Prefs.fillStringlist('blockers', _blockers);
         _show_status := MainSession.Prefs.getBool('inline_status');
@@ -391,11 +404,14 @@ begin
         frmExodus.pnlRoster.ShowHint := not _show_status;
         Redraw();
         end
+
+    // someone has been blocked
     else if ((event = '/session/block') or (event = '/session/unblock')) then begin
         MainSession.Prefs.fillStringlist('col_groups', _collapsed_grps, true);
         end
+
+    // we are getting server side prefs
     else if event = '/session/server_prefs' then begin
-        // we are getting server side prefs
         MainSession.Prefs.fillStringlist('col_groups', _collapsed_grps, true);
 
         // Iterate over all grp nodes

@@ -51,7 +51,6 @@ type
 function GetLastInputInfo(var plii: LASTINPUTINFO): BOOL; stdcall;
 {$EXTERNALSYM GetLastInputInfo}
 
-function GetAppVersion: string;
 function WindowsVersion(var verinfo: string): integer;
 
 function JabberToDateTime(datestr: string): TDateTime;
@@ -123,53 +122,6 @@ begin
         pop ebp
         jmp [_GetLastInputInfo]
     end;
-end;
-
-{---------------------------------------}
-{---------------------------------------}
-function GetAppVersion: string;
-const
-    InfoNum = 10;
-    InfoStr : array [1..InfoNum] of String =
-        ('CompanyName', 'FileDescription', 'FileVersion', 'InternalName',
-        'LegalCopyright', 'LegalTradeMarks', 'OriginalFilename',
-        'ProductName', 'ProductVersion', 'Comments');
-var
-    S: String;
-    n: DWORD;
-    Len: UINT;
-    i: Integer;
-    Buf: PChar;
-    Value: PChar;
-    keyList: TStringList;
-    valList: TStringList;
-begin
-
-    Result := '';
-
-    KeyList := TStringlist.create;
-    ValList := TStringlist.create;
-
-    S := Application.ExeName;
-    n := GetFileVersionInfoSize(PChar(S),n);
-    if n > 0 then begin
-        Buf := AllocMem(n);
-        GetFileVersionInfo(PChar(S),0,n,Buf);
-        if VerQueryValue(Buf,PChar('StringFileInfo\040904E4\'+ InfoStr[3]),Pointer(Value),Len) then
-            Result := Value;
-        for i:=1 to InfoNum do begin
-            if VerQueryValue(Buf,PChar('StringFileInfo\040904E4\'+ InfoStr[i]),Pointer(Value),Len) then begin
-                KeyList.Add(InfoStr[i]);
-                ValList.Add(Value);
-                end;
-            end;
-        FreeMem(Buf,n);
-        end
-    else
-        Result := '';
-
-    keylist.Free;
-    vallist.Free;
 end;
 
 {---------------------------------------}
