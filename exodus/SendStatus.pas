@@ -567,7 +567,6 @@ begin
         s.setAttribute('host', p.host);
         s.setAttribute('port', IntToStr(p.Port));
     end;
-
 end;
 
 {---------------------------------------}
@@ -799,8 +798,10 @@ begin
         for j := 0 to sh.Count - 1 do begin
             i := shosts.indexOf(sh[j].GetAttribute('jid'));
             if (i = -1) then begin
+                // xxx: we got a response back from something
+                // we didn't ask for!
                 p := THostPortPair.Create();
-                p.jid := sh[i].GetAttribute('jid');
+                p.jid := sh[j].GetAttribute('jid');
                 shosts.AddObject(p.jid, p);
             end
             else

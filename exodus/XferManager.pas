@@ -84,6 +84,7 @@ type
     procedure tcpServerConnect(AThread: TIdPeerThread);
     procedure tcpServerExecute(AThread: TIdPeerThread);
     procedure tcpServerDisconnect(AThread: TIdPeerThread);
+    procedure FormDestroy(Sender: TObject);
 
   protected
     procedure WMCloseFrame(var msg: TMessage); message WM_CLOSE_FRAME;
@@ -418,10 +419,7 @@ begin
         DefaultPort := MainSession.Prefs.getInt('xfer_port');
         _current := 0;
     end;
-
     _cb := MainSession.RegisterCallback(SessionCallback, '/session');
-
-
 end;
 
 {---------------------------------------}
@@ -749,6 +747,16 @@ procedure TfrmXferManager.tcpServerDisconnect(AThread: TIdPeerThread);
 begin
   inherited;
     // remove this connection from the list
+end;
+
+procedure TfrmXferManager.FormDestroy(Sender: TObject);
+begin
+  inherited;
+    // unreg callback
+    if ((_cb <> -1) and (MainSession <> nil)) then begin
+        MainSession.UnRegisterCallback(_cb);
+        _cb := -1;
+    end;
 end;
 
 initialization
