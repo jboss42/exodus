@@ -3044,7 +3044,7 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 369
     Height = 388
-    ActivePage = tbsKeywords
+    ActivePage = tbsBlockList
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310

@@ -68,7 +68,8 @@ procedure LogMessage(Msg: TJabberMessage);
 procedure ShowLog(jid: string);
 procedure DebugMsg(Message : string);
 procedure AssignDefaultFont(font: TFont);
-procedure AssignUnicodeFont(Form: TForm; font_size: short = 0);
+procedure AssignUnicodeFont(f: TFont; font_size: short = 0); overload
+procedure AssignUnicodeFont(Form: TForm; font_size: short = 0); overload;
 procedure URLLabel(lbl: TLabel); overload;
 procedure URLLabel(lbl: TTntLabel); overload;
 
@@ -484,7 +485,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure AssignUnicodeFont(Form: TForm; font_size: short);
+procedure AssignUnicodeFont(f: TFont; font_size: short);
 begin
     // Assign either Arial or Arial Unicode MS to this form.
     if (unicode_font = nil) then begin
@@ -499,12 +500,17 @@ begin
         end;
     end;
 
-    form.Font.Name := unicode_font.name;
+    f.Name := unicode_font.name;
 
     if ((font_size = 0) or (font_size < 5)) then
-        form.font.size := unicode_font.size
+        f.size := unicode_font.size
     else
-        form.font.size := font_size;
+        f.size := font_size;
+end;
+
+procedure AssignUnicodeFont(form: TForm; font_size: short);
+begin
+    AssignUnicodeFont(form.font);
 end;
 
 {---------------------------------------}

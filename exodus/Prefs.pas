@@ -136,7 +136,7 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 
 uses
-    GnuGetText, PrefController, Session;
+    GnuGetText, PrefController, Session, ExUtils;
 
 {---------------------------------------}
 procedure StartPrefs;
@@ -269,6 +269,8 @@ begin
     _xfer := nil;
     _network := nil;
 
+    AssignUnicodeFont(memKeywords.Font);
+    AssignUnicodeFont(memBlocks.Font);
     MainSession.Prefs.RestorePosition(Self);
 
     with Shape1 do begin
