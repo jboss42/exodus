@@ -55,8 +55,9 @@ e("perl build.pl $::RTYPE");
 e("$::CVS ci -m \"$::RTYPE build\" exodus/version.h exodus/version.nsi exodus/default.po") if $::CVS;
 
 e("perl cvs2cl.pl --delta $urtype:HEAD -f $cl");
+e("$::CVS ci -m \"$::RTYPE build\" $cl");
 e("$::CVS tag -F $urtype") if $::CVS;
-
+  
 chdir "exodus" or die;
 if ($::RTYPE eq "daily") {
   e("$::SCP ../$cl setup.exe Exodus.zip plugins/*.zip $userhost:$::ROOT/www/daily/stage");
