@@ -20,9 +20,10 @@ unit fTopLabel;
 }
 interface
 
-uses 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls, TntStdCtrls;
+uses
+    XMLTag, Unicode,  
+    Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+    StdCtrls, ExtCtrls, TntStdCtrls;
 
 type
   TframeTopLabel = class(TFrame)
@@ -36,10 +37,60 @@ type
     { Public declarations }
     field_name: string;
   end;
+  
+procedure RenderTopFields(ParentControl: TWinControl; fields: TXMLTagList;
+    var key: Widestring);
 
 implementation
 
 {$R *.dfm}
+uses
+    ExUtils;
+
+procedure RenderTopFields(ParentControl: TWinControl; fields: TXMLTagList;
+    var key: Widestring);
+var
+    cur_field, field_name: Widestring;
+    ti, tt, i: integer;
+    cur_tag: TXMLTag;
+    ff, cur_frame: TframeTopLabel;
+begin
+    ti := 0;
+    tt := 0;
+    for i := 0 to fields.Count -1 do begin
+        cur_tag := fields[i];
+        if (cur_tag.Name = 'instructions') then
+          // do nothing
+        else if (cur_tag.Namespace <> '') then
+          // ignore stuff in other namesapces
+        else if (cur_tag.Name = 'key') then begin
+          key := cur_tag.Data;
+        end
+        else begin
+            cur_field := cur_tag.Name;
+            cur_frame := TframeTopLabel.Create(ParentControl);
+            with cur_frame do begin
+                Parent := ParentControl;
+                Top := tt;
+                Visible := true;
+                field_name := cur_field;
+                lbl.Caption := getDisplayField(cur_field);
+                Name := 'frame_' + field_name;
+                TabOrder := ti;
+                if (cur_field = 'password') then
+                    txtData.PasswordChar := '*';
+                inc(ti);
+            end;
+            AssignUnicodeFont(cur_frame.Font, 8);
+            tt := tt + cur_frame.height + 1;
+            cur_frame.Align := alTop;
+
+            if (ff = nil) then
+              ff := cur_frame;
+        end;
+    end;
+end;
+
 
 procedure TframeTopLabel.FrameResize(Sender: TObject);
 begin

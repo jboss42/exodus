@@ -3,6 +3,7 @@ inherited frmNewUser: TfrmNewUser
   Top = 120
   Caption = 'New User Registration Wizard'
   OldCreateOrder = True
+  OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
@@ -29,6 +30,7 @@ inherited frmNewUser: TfrmNewUser
     end
   end
   inherited Tabs: TPageControl
+    ActivePage = tbsUser
     inherited TabSheet1: TTabSheet
       object TntLabel1: TTntLabel
         Left = 0
@@ -108,7 +110,7 @@ inherited frmNewUser: TfrmNewUser
       object lblWait: TTntLabel
         Left = 0
         Top = 0
-        Width = 63
+        Width = 402
         Height = 13
         Align = alTop
         Caption = 'Please wait...'

@@ -22,7 +22,7 @@ unit NewUser;
 interface
 
 uses
-    IQ, XMLTag, 
+    IQ, XMLTag, Unicode,  
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Wizard, ComCtrls, ExtCtrls, StdCtrls, TntStdCtrls, TntExtCtrls,
     fXData;
@@ -54,6 +54,7 @@ type
     procedure btnNextClick(Sender: TObject);
     procedure btnBackClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     _state: TNewUserState;
@@ -63,6 +64,10 @@ type
     _iq: TJabberIQ;
     _have_public_servers: boolean;
     _session_cb: integer;
+
+    _fields: boolean;
+    _xdata: boolean;
+    _key: Widestring;
 
     procedure _runState();
     procedure _fetchServers();
@@ -84,8 +89,8 @@ procedure ShowNewUserWizard();
 implementation
 {$R *.dfm}
 uses
-    GnuGetText, 
-    WebGet, XMLParser, Unicode, PrefController, Session, ExUtils;
+    GnuGetText, fTopLabel, JabberConst,  
+    WebGet, XMLParser, PrefController, Session, ExUtils;
 
 {---------------------------------------}
 procedure ShowNewUserWizard();
@@ -107,6 +112,9 @@ begin
     _state := nus_init;
     _have_public_servers := false;
     _iq := nil;
+    _fields := false;
+    _xdata := false;
+    _key := '';
 
     TabSheet1.TabVisible := false;
     tbsUser.TabVisible := false;
@@ -151,8 +159,18 @@ begin
         _runState();
     end;
     nus_user: begin
-        _state := nus_get;
-        _runState();
+        if (_xdata) then begin
+            _state := nus_xdata;
+            Tabs.ActivePage := tbsXData
+        end
+        else if (_fields) then begin
+            _state := nus_reg;
+            Tabs.ActivePage := tbsReg;
+        end
+        else begin
+            _state := nus_set;
+            _runState();
+        end;
     end;
     nus_xdata: begin
         _state := nus_set;
@@ -225,10 +243,29 @@ end;
 
 {---------------------------------------}
 procedure TfrmNewUser.RegGetCallback(event: string; tag: TXMLTag);
+var
+    q, x: TXMLTag;
+    f: TXMLTagList;
 begin
     //
     assert(_state = nus_get);
-    
+    _iq := nil;
+    _state := nus_user;
+
+    // build up the fields or x-data form
+    q := tag.QueryXPTag('/iq/query[@xmlns"jabber:iq:register"]');
+    x := q.QueryXPTag('/query/x[@xmlns="jabber:x:data"]');
+    if (x <> nil) then begin
+        _xdata := true;
+        xData.Render(x);
+    end
+    else begin
+        f := q.ChildTags();
+        if (f.Count > 0) then begin
+            _fields := true;
+            RenderTopFields(tbsReg, f, _key);
+        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -252,8 +289,6 @@ end;
 
 {---------------------------------------}
 procedure TfrmNewUser._runState();
-var
-    x: TXMLTag;
 begin
     // XXX: run each state
     {
@@ -272,7 +307,7 @@ begin
         optServer.Checked := true;
     end;
     nus_connect: begin
-        // XXX: try and connect to this server
+        // try and connect to this server
         // XXX: DO SRV lookups here??
         _server := cboServer.Text;
         MainSession.NoAuth := true;
@@ -295,24 +330,60 @@ begin
     nus_get: begin
         // send the iq-reg-get
         _state := nus_get;
+        
+        _iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
+            RegGetCallback, 30);
+        _iq.Namespace := XMLNS_REGISTER;
+        _iq.iqType := 'get';
+        _iq.Send();
+    end;
+    nus_set: begin
+        // send the iq-set request
+        _username := txtUsername.Text;
+        _password := txtPassword.Text;
+
         with MainSession.Profile do begin
-            Username := txtUsername.Text;
-            password := txtPassword.Text;
+            Username := _username;
+            password := _password;
             Resource := 'Exodus';
             SavePasswd := true;
             NewAccount := true;
         end;
 
         _iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
-            RegGetCallback, 30);
-        _iq.Namespace := 'jabber:iq:register';
-        _iq.iqType := 'get';
-        x := _iq.qTag.AddTag('username');
-        x.AddCData(txtUsername.Text);
+            RegSetCallback, 30);
+        _iq.Namespace := XMLNS_REGISTER;
+        _iq.iqType := 'set';
+        _iq.qTag.AddBasicTag('username', _username);
+        _iq.qTag.AddBasicTag('password', _password);
+
+        // XXX: iq-set
+        if (_xdata) then begin
+            // get the xdata fields
+        end
+        else begin
+            // get the tbsReg fields
+        end;
+
         _iq.Send();
     end;
 
     end;
+end;
+
+procedure TfrmNewUser.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  inherited;
+    // make sure we cancel any outstanding queries..
+    if (_iq <> nil) then
+        FreeAndNil(_iq);
+
+    {
+    if (_fields <> nil) then
+        FreeAndNil(_fields);
+    if (_xdata <> nil) then
+        FreeAndNil(_xdata);
+    }
 end;
 
 end.

@@ -90,7 +90,7 @@ type
     virtlist: TObjectList;
 
     cur_jid: string;
-    cur_key: string;
+    cur_key: Widestring;
     cur_state: string;
     cur_iq: TJabberIQ;
 
@@ -298,15 +298,11 @@ end;
 procedure TfrmJUD.FieldsCallback(event: string; tag: TXMLTag);
 var
     fields: TXMLTagList;
-    cur_tag, x: TXMLTag;
-    tt, ti, i: integer;
-    ff, cur_frame: TframeTopLabel;
-    cur_field: Widestring;
+    x: TXMLTag;
 begin
     // callback when we get the fields back
     cur_state := 'search';
     cur_iq := nil;
-    ff := nil;
     aniWait.Active := false;
     btnBack.Enabled := true;
     btnNext.Enabled := true;
@@ -335,48 +331,12 @@ begin
         end
         else begin
             fields := tag.QueryXPTag('/iq/query').ChildTags();
-            ti := 0;
-            tt := 0;
-            for i := 0 to fields.Count -1 do begin
-              cur_tag := fields[i];
-              if (cur_tag.Name = 'instructions') then
-                  // do nothing
-              else if (cur_tag.Namespace <> '') then
-                  // ignore stuff in other namesapces
-              else if (cur_tag.Name = 'key') then begin
-                  cur_key := cur_tag.Data;
-              end
-              else begin
-                  cur_field := cur_tag.Name;
-                  cur_frame := TframeTopLabel.Create(Self);
-                  with cur_frame do begin
-                      Parent := TabFields;
-                      Top := tt;
-                      Visible := true;
-                      field_name := cur_field;
-                      lbl.Caption := getDisplayField(cur_field);
-                      Name := 'frame_' + field_name;
-                      TabOrder := ti;
-                      if (cur_field = 'password') then
-                          txtData.PasswordChar := '*';
-                      inc(ti);
-                  end;
-                  AssignUnicodeFont(cur_frame.Font, 8);
-                  tt := tt + cur_frame.height + 1;
-                  cur_frame.Align := alTop;
-
-                  if (ff = nil) then
-                      ff := cur_frame;
-              end;
-            end;
+            RenderTopFields(TabFields, fields, cur_key);
             fields.Free();
             Tabs.ActivePage := TabFields;
         end;
     end;
-
-    if (ff <> nil) then
-        ff.txtData.SetFocus();
-
+    
 end;
 
 {---------------------------------------}
