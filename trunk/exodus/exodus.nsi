@@ -27,6 +27,7 @@ LicenseData GPL-LICENSE.TXT
 LicenseText "Exodus is licensed under the GPL" "Groovy"
 EnabledBitmap online.bmp
 DisabledBitmap offline.bmp
+SubCaption 3 ": Exit running Exodus versions!"
 
 ; The text to prompt the user to enter a directory
 DirText "Which directory should Exodus be installed in?"
@@ -38,13 +39,13 @@ Section "Exodus (Required)"
 	; Set output path to the installation directory.
   	SetOutPath $INSTDIR
   	; Put file there
-  	File "C:\src\exodus\Exodus.exe"
+  	File "Exodus.exe"
   	
 	; install idlehooks on non-nt
 	Call GetWindowsVersion
   	Pop $0
 	StrCmp $0 "2000" lbl_noIdle
-  	File "C:\src\exodus\IdleHooks.dll"
+  	File "IdleHooks.dll"
 lbl_noIdle:
 
 	; Write the installation path into the registry
@@ -58,21 +59,27 @@ lbl_noIdle:
 	StrCpy $0 0
 
 outer_loop:
+
     EnumRegKey $1 HKLM "Software\Jabber\Exodus\Restart" $0
     StrCmp $1 "" abort
 
-    ReadRegStr $2 HKLM "Software\Jabber\Exodus\Restart\$1" "cmdline"    
+    ReadRegStr $2 HKLM "Software\Jabber\Exodus\Restart\$1" "cwd"
     StrCmp $2 "" done
+	SetOutPath $2
 
-    ReadRegDWORD $3 HKLM "Software\Jabber\Exodus\Restart\$1" "priority"    
+    ReadRegStr $2 HKLM "Software\Jabber\Exodus\Restart\$1" "cmdline"
+
+    ReadRegDWORD $3 HKLM "Software\Jabber\Exodus\Restart\$1" "priority"
     StrCmp $3 "" done
 
-    ReadRegStr $4 HKLM "Software\Jabber\Exodus\Restart\$1" "profile"    
-    StrCmp $4 "" done
+    ReadRegStr $4 HKLM "Software\Jabber\Exodus\Restart\$1" "profile"
+    StrCmp $4 "" show
+	StrCpy $4 '-f "$4"'
 
-    ReadRegStr $5 HKLM "Software\Jabber\Exodus\Restart\$1" "show"    
+show:
+    ReadRegStr $5 HKLM "Software\Jabber\Exodus\Restart\$1" "show"
 	StrCmp $5 "" status
-	StrCpy $5 "-w $5"
+	StrCpy $5 '-w "$5"'
 
 status:
     ReadRegStr $6 HKLM "Software\Jabber\Exodus\Restart\$1" "status"    
@@ -80,8 +87,8 @@ status:
 	StrCpy $6 '-s "$6"'
 
 exec:
-	MessageBox MB_OK "$2 -i $3 -f $4 $5 $6"
-	Exec "$2 -i $3 -f $4 $5 $6"
+	;MessageBox MB_OK '"$INSTDIR\Exodus.exe" -t $2 -i $3 $4 $5 $6'
+	Exec '"$INSTDIR\Exodus.exe" -t $2 -i $3 -f "$4" $5 $6'
 	SetAutoClose "true"
 
 done:
@@ -189,14 +196,27 @@ FunctionEnd
 ; 
 ; Closes all running instances of Exodus
 Function NotifyInstances
-  Push $0
-  loop:
+  	Push $0
+	Push $1
+
+start:
+	StrCpy $1 0 
+loop:
     FindWindow $0 "TfrmExodus" "" 0
     IntCmp $0 0 done
-     SendMessage $0 6374 0 0
-     Sleep 100
-     Goto loop
-  done:
-  Pop $0
+	SendMessage $0 6374 0 0
+	Sleep 100
+    IntOp $1 $1 + 1
+    IntCmp $1 30 prompt
+	Goto loop
+
+prompt:
+	MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "You must exit all running copies of Exodus to continue!" IDRETRY start
+	; cancel
+	Quit
+
+done:
+	Pop $1
+	Pop $0
 FunctionEnd
 

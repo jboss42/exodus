@@ -29,7 +29,8 @@ uses
     ShellAPI, Registry,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
-    Buttons, OleCtrls, AppEvnts, ToolWin, SelContact;
+    Buttons, OleCtrls, AppEvnts, ToolWin, SelContact,
+    IdHttp;
 
 const
     UpdateKey = '001';
@@ -181,6 +182,7 @@ type
     btnExpanded: TToolButton;
     trayMessage: TMenuItem;
     timReconnect: TTimer;
+    mnuNewVersion: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -235,6 +237,7 @@ type
     procedure trayMessageClick(Sender: TObject);
     procedure mnuBrowserClick(Sender: TObject);
     procedure timReconnectTimer(Sender: TObject);
+    procedure mnuNewVersionClick(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -244,6 +247,7 @@ type
     _prof_index: integer;
     _auto_login: boolean;
     _auto_away: boolean;
+    _updating: boolean;
 
     // Various other key controllers
     _guibuilder: TGUIFactory;
@@ -433,6 +437,11 @@ resourcestring
     sSoundS10n = 'Subscription request';
     sSoundOOB = 'File Transfers';
 
+    sUpdateConfirm = 'A new version of Exodus is available.  Would you like to install it?';
+    sUpdateNone = 'No new update.';
+    sUpdateHTTPError = 'HTTP error: %s';
+    sUpdateRegError = 'No URL in registry';
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -606,17 +615,25 @@ begin
         reg := TRegistry.Create();
         reg.RootKey := HKEY_LOCAL_MACHINE;
         reg.OpenKey('\Software\Jabber\Exodus\Restart\' + IntToStr(Application.Handle), true);
-        
-        cmd := '"' + ParamStr(0) + '"';
+
         for i := 1 to ParamCount do
             cmd := cmd + ' ' + ParamStr(i);
         reg.WriteString('cmdline', cmd);
+        GetDir(0, cmd);
+        reg.WriteString('cwd', cmd);
         reg.WriteString('show', MainSession.Show);
         reg.WriteString('status', MainSession.Status);
-        reg.WriteInteger('priority', MainSession.Priority);
-        reg.WriteString('profile', MainSession.Profile.Name);
+        if (MainSession.Priority = -1) then
+            reg.WriteInteger('priority', 0)
+        else
+            reg.WriteInteger('priority', MainSession.Priority);
+
+        if (MainSession.Profile <> nil) then
+            reg.WriteString('profile', MainSession.Profile.Name);
 
         reg.CloseKey();
+        reg.Free();
+        
         _shutdown := true;
         Self.Close;
         end;
@@ -651,17 +668,20 @@ var
     help_msg: string;
     win_ver: string;
     picon: TIcon;
+    timestamp : boolean;
 begin
     // initialize vars.  wish we were using a 'real' compiler.
     debug := false;
     minimized := false;
     invisible := false;
     show_help := false;
+    timestamp := false;
     _testaa := false;
     jid := nil;
     _cli_priority := -1;
     _cli_status := sAvailable;
     _cli_show := '';
+    _updating := false;
 
     // Hide the application's window, and set our own
     // window to the proper parameters..
@@ -687,6 +707,7 @@ begin
                 // -m          : minimized
                 // -v          : invisible
                 // -?          : help
+                // -t          : write last time to registry
                 // -x [yes|no] : expanded
                 // -j [jid]    : jid
                 // -p [pass]   : password
@@ -696,10 +717,10 @@ begin
                 // -c [file]   : config file name
                 // -s [status] : presence status
                 // -w [show]   : presence show
-                Options  := 'dmva?xjprifcsw';
-                OptFlags := '-----:::::::::';
-                ReqFlags := '              ';
-                LongOpts := 'debug,minimized,invisible,aatest,help,expanded,jid,password,resource,priority,profile,config,status,show';
+                Options  := 'dmvat?xjprifcsw';
+                OptFlags := '------:::::::::';
+                ReqFlags := '               ';
+                LongOpts := 'debug,minimized,invisible,aatest,timestamp,help,expanded,jid,password,resource,priority,profile,config,status,show';
                 while GetOpt do begin
                   case Ord(OptChar) of
                      0: raise EConfigException.Create('unknown argument');
@@ -717,6 +738,7 @@ begin
                      Ord('?'): show_help := true;
                      Ord('w'): _cli_show := OptArg;
                      Ord('s'): _cli_status := OptArg;
+                     Ord('t'): timestamp := true;
                   end;
                 end;
             finally
@@ -915,6 +937,15 @@ begin
     AddSound(reg, 'notify_roomactivity', sSoundRoomactivity);
     AddSound(reg, 'notify_s10n', sSoundS10n);
     AddSound(reg, 'notify_oob', sSoundOOB);
+
+    if (timestamp) then begin
+        reg.CloseKey();
+        reg.RootKey :=  HKEY_LOCAL_MACHINE;
+        reg.OpenKey('\Software\Jabber\Exodus', true);
+        reg.WriteDateTime('Last_Update', Now());
+        end;
+
+    reg.CloseKey();
     reg.Free();
 
     // Make sure we read in and setup the prefs..
@@ -923,11 +954,17 @@ begin
     // Accept files dragged from Explorer
     DragAcceptFiles(Handle, True);
     MainSession.setPresence(_cli_show, _cli_status, _cli_priority);
+    
+    // check for new version
+    if (MainSession.Prefs.getBool('auto_updates')) then
+        mnuNewVersionClick(nil);
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.Startup;
 begin
+    if (_updating) then exit;
+
     // Setup initial startup stuff
     if (MainSession.Prefs.getBool('expanded')) then begin
         getMsgQueue();
@@ -942,6 +979,7 @@ begin
             MainSession.ActivateProfile(_prof_index);
             if (_cli_priority <> -1) then
                 MainSession.Priority := _cli_priority;
+
             Self.DoConnect();
             end
         else
@@ -961,6 +999,7 @@ begin
     otherwise, just call connect
     }
     with MainSession do begin
+
         FireEvent('/session/connecting', nil);
 
         if Password = '' then begin
@@ -2488,6 +2527,68 @@ begin
         frmRosterWindow.lblLogin.Caption := sCancelReconnect;
         frmRosterWindow.lblStatus.Caption := 'Reconnect in: ' +
             IntToStr(_reconnect_interval - _reconnect_cur) + ' secs.';
+        end;
+end;
+
+procedure TfrmExodus.mnuNewVersionClick(Sender: TObject);
+var
+    http : TIdHTTP;
+    reg : TRegistry;
+    url: string;
+    last: TDateTime;
+    tmp: string;
+    fstream: TFileStream;
+begin
+    reg := nil;
+    http := nil;
+    try
+        reg := TRegistry.Create();
+        reg.RootKey := HKEY_LOCAL_MACHINE;
+        reg.OpenKey('\Software\Jabber\Exodus', true);
+        url := reg.ReadString('Update_URL');
+
+        if (url = '') then begin
+            if (Sender <> nil) then ShowMessage(sUpdateRegError);
+            exit;
+            end;
+
+        http := TIdHTTP.Create(Self);
+        http.Head(url);
+        if (http.ResponseCode <> 200) then begin
+            if (Sender <> nil) then ShowMessage(Format(sUpdateHTTPError, [http.ResponseText]));
+            exit;
+            end;
+
+
+        last := reg.ReadDateTime('Last_Update');
+        if (http.Response.LastModified <= last) then begin
+            if (Sender <> nil) then ShowMessage(sUpdateNone);
+            exit;
+            end;
+
+        if MessageDlg(sUpdateConfirm,
+                      mtConfirmation, [mbOK,mbCancel], 0) = mrCancel then
+            exit;
+
+        //ok, there's a new one.
+        SetLength(tmp, 256);
+        SetLength(tmp, GetTempPath(255, PChar(tmp)));
+
+        //FIXME: blah.
+        tmp := tmp + ExtractFileName(URLToFilename(url));
+        fstream := TFileStream.Create(tmp, fmCreate);
+        http.Get(url, fstream);
+        fstream.Free();
+
+        _updating := true;
+        ShellExecute(0, 'open', PChar(tmp), '/S', nil, SW_SHOWNORMAL);
+
+    finally
+        if (reg <> nil) then begin
+            reg.CloseKey();
+            reg.Free();
+            end;
+        if (http <> nil) then http.Free();
         end;
 end;
 
