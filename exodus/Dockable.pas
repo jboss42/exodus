@@ -213,25 +213,34 @@ begin
     inherited;
 end;
 
+{---------------------------------------}
 procedure TfrmDockable.WMActivate(var msg: TMessage);
 begin
-    if (Msg.WParamLo = WA_CLICKACTIVE) then begin
+    if ((not _top) and (Msg.WParamLo = WA_CLICKACTIVE)) then begin
         // we are getting clicked..
         _top := true;
         SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
             Self.Width, Self.Height, HWND_TOP);
         _top := false;
-        end;
+        end
+    else
+        inherited;
 end;
 
+{---------------------------------------}
 procedure TfrmDockable.WMMouseActivate(var msg: TMessage);
 begin
-    _top := true;
-    SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
-        Self.Width, Self.Height, HWND_TOP);
-    _top := false;
+    if (not _top) then begin
+        _top := true;
+        SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
+            Self.Width, Self.Height, HWND_TOP);
+        _top := false;
+        end
+    else
+        inherited;
 end;
 
+{---------------------------------------}
 procedure TfrmDockable.FormResize(Sender: TObject);
 begin
     if (MainSession <> nil) then
