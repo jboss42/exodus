@@ -23,6 +23,7 @@ program Exodus;
 {%File 'README.txt'}
 {%File '..\todo.txt'}
 {$R 'version.res' 'version.rc'}
+{%File 'defaults.xml'}
 
 {$ifdef VER150}
     {$define INDY9}
@@ -121,9 +122,9 @@ uses
   JabberConst in '..\jopl\JabberConst.pas',
   AutoUpdate in '..\jopl\AutoUpdate.pas',
   COMController in 'COMController.pas' {ExodusController: CoClass},
-  COMChatController in 'COMChatController.pas' {ExodusChatController: CoClass},
-  COMPluginShell in 'COMPluginShell.pas' {ExodusPlugin: CoClass},
-  COMChatPluginShell in 'COMChatPluginShell.pas' {ExodusChatPlugin: CoClass};
+  COMChatController in 'COMChatController.pas' {ExodusChatController: CoClass};
+//  COMPluginShell in 'COMPluginShell.pas' {ExodusPlugin: CoClass},
+//  COMChatPluginShell in 'COMChatPluginShell.pas' {ExodusChatPlugin: CoClass};
 
 {$R *.TLB}
 

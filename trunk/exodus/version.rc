@@ -32,3 +32,5 @@ BEGIN
         VALUE "Translation", 0x409, 1200
     END
 END
+
+defaults XML "defaults.xml"
