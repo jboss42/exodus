@@ -3083,7 +3083,7 @@ var
 begin
     // Explorer is giving is something about a XMPP file..
     if (Msg.Count = 0) then exit;
-    m := Msg[0];
+    m := Lowercase(Msg[0]);
     if (m = 'ignore') then exit;
     if (Pos('open', m) = 1) then begin
         Delete(m, 1, 6);
