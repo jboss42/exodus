@@ -3,6 +3,7 @@ object frmConnDetails: TfrmConnDetails
   Top = 230
   Width = 414
   Height = 288
+  ActiveControl = cboJabberID
   Caption = 'Connection Details'
   Color = clBtnFace
   DefaultMonitor = dmDesktop
@@ -157,7 +158,7 @@ object frmConnDetails: TfrmConnDetails
         Text = '0'
       end
       object spnPriority: TUpDown
-        Left = 149
+        Left = 146
         Top = 116
         Width = 16
         Height = 21

@@ -1,7 +1,7 @@
 inherited frmCommandWizard: TfrmCommandWizard
-  Left = 500
-  Top = 195
-  Height = 312
+  Left = 294
+  Top = 190
+  Height = 294
   BorderStyle = bsSizeable
   Caption = 'frmCommandWizard'
   OldCreateOrder = True
@@ -10,7 +10,7 @@ inherited frmCommandWizard: TfrmCommandWizard
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
-    Top = 237
+    Top = 219
     inherited Panel3: TPanel
       inherited btnBack: TTntButton
         OnClick = btnBackClick
@@ -33,7 +33,7 @@ inherited frmCommandWizard: TfrmCommandWizard
     end
   end
   inherited Tabs: TPageControl
-    Height = 177
+    Height = 159
     ActivePage = tbsExecute
     inherited TabSheet1: TTabSheet
       object TntLabel1: TTntLabel
@@ -91,16 +91,24 @@ inherited frmCommandWizard: TfrmCommandWizard
     object tbsExecute: TTabSheet
       Caption = 'tbsExecute'
       ImageIndex = 2
-      object xdataBox: TScrollBox
+      inline xDataBox: TframeXData
         Left = 0
         Top = 0
         Width = 402
-        Height = 146
+        Height = 128
         Align = alClient
-        BevelInner = bvNone
-        BevelOuter = bvNone
-        BorderStyle = bsNone
         TabOrder = 0
+        inherited Panel1: TPanel
+          Width = 402
+          Height = 128
+          inherited ScrollBox1: TScrollBox
+            Width = 392
+            Height = 118
+            inherited xGrid: TTntStringGrid
+              Width = 392
+            end
+          end
+        end
       end
     end
     object tbsResults: TTabSheet

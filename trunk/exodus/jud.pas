@@ -24,7 +24,7 @@ uses
     IQ, XMLTag, Contnrs, Unicode, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, DockWizard, ComCtrls, TntComCtrls, StdCtrls, TntStdCtrls, ExtCtrls,
-    TntExtCtrls, Menus, Wizard, TntMenus;
+    TntExtCtrls, Menus, Wizard, TntMenus, fXData;
 
 type
 
@@ -45,9 +45,8 @@ type
     TabSheet2: TTabSheet;
     lblWait: TTntLabel;
     aniWait: TAnimate;
-    TabSheet3: TTabSheet;
+    TabFields: TTabSheet;
     lblInstructions: TTntLabel;
-    pnlFields: TScrollBox;
     TabSheet4: TTabSheet;
     Panel2: TPanel;
     Label3: TTntLabel;
@@ -62,6 +61,7 @@ type
     popProfile: TTntMenuItem;
     popAdd: TTntMenuItem;
     lblCount: TTntLabel;
+    xDataBox: TframeXData;
     procedure btnCloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnNextClick(Sender: TObject);
@@ -198,12 +198,12 @@ begin
 
     AssignDefaultFont(Self.Font);
     AssignDefaultFont(Tabs.Font);
-    AssignDefaultFont(pnlFields.Font);
+    AssignDefaultFont(TabFields.Font);
     AssignUnicodeURL(lblAddGrp.Font, 8);
 
     TabSheet1.TabVisible := false;
     TabSheet2.TabVisible := false;
-    TabSheet3.TabVisible := false;
+    TabFields.TabVisible := false;
     TabSheet4.TabVisible := false;
     Tabs.ActivePage := TabSheet1;
 end;
@@ -244,7 +244,7 @@ procedure TfrmJUD.sendRequest();
 var
     i: integer;
     valid: boolean;
-    x, fx: TXMLTag;
+    x: TXMLTag;
 begin
     // send the iq-set to the agent
     cur_jid := cboJID.Text;
@@ -258,33 +258,25 @@ begin
         toJid := cur_jid;
 
         if (cur_state = 'xsearch') then begin
-            x := cur_iq.qTag.AddTag('x');
-            x.setAttribute('xmlns', XMLNS_XDATA);
-            x.setAttribute('type', 'submit');
-            cur_state := 'xitems';
+            try
+                x := xDataBox.Submit();
+                cur_iq.qTag.AddTag(x);
+                x.setAttribute('type', 'submit');
+                cur_state := 'xitems';
+            except
+                on EXDataValidationError do begin
+                    // XXX
+                end;
+            end;
         end
         else begin
             cur_state := 'items';
-            x := nil;
-        end;
-
-        // go thru all the frames and add tags for each field
-        for i := 0 to pnlFields.ControlCount - 1 do begin
-            if (pnlFields.Controls[i] is TframeTopLabel) then begin
-                with TframeTopLabel(pnlFields.Controls[i]) do begin
-                    if (txtData.Text <> '') then
-                        cur_iq.qTag.AddBasicTag(field_name, txtData.Text);
-                end;
-            end
-            else if (pnlFields.Controls[i] is TframeGeneric) then begin
-                with TframeGeneric(pnlFields.Controls[i]) do begin
-                    if (not isValid()) then
-                        valid := false;
-
-                    if (valid and (x <> nil)) then begin
-                        fx := getXML();
-                        if (fx <> nil) then
-                            x.AddTag(fx);
+            // go thru all the frames and add tags for each field
+            for i := 0 to TabFields.ControlCount - 1 do begin
+                if (TabFields.Controls[i] is TframeTopLabel) then begin
+                    with TframeTopLabel(TabFields.Controls[i]) do begin
+                        if (txtData.Text <> '') then
+                            cur_iq.qTag.AddBasicTag(field_name, txtData.Text);
                     end;
                 end;
             end;
@@ -336,13 +328,11 @@ begin
         if (x <> nil) then begin
             cur_state := 'xsearch';
             lblInstructions.Visible := false;
-            pnlFields.Visible := true;
-            buildXData(x, pnlFields);
-            pnlFields.Visible := true;
+            xDataBox.Visible := true;
+            xDataBox.Render(x);
         end
         else begin
           fields := tag.QueryXPTag('/iq/query').ChildTags();
-          pnlFields.Visible := false;
           ti := 0;
           tt := 0;
           for i := 0 to fields.Count -1 do begin
@@ -358,7 +348,7 @@ begin
                   cur_field := cur_tag.Name;
                   cur_frame := TframeTopLabel.Create(Self);
                   with cur_frame do begin
-                      Parent := pnlFields;
+                      Parent := TabFields;
                       Top := tt;
                       Visible := true;
                       field_name := cur_field;
@@ -378,11 +368,10 @@ begin
               end;
           end;
           fields.Free();
-          pnlFields.Visible := true;
       end;
     end;
 
-    Tabs.ActivePage := TabSheet3;
+    Tabs.ActivePage := TabFields;
 
     if (ff <> nil) then
         ff.txtData.SetFocus();
@@ -575,12 +564,10 @@ var
     c: TControl;
 begin
     // clear all frames from the pnlFields panel
-    pnlFields.Visible := false;
-    while (pnlFields.ControlCount > 0) do begin
-        c := pnlFields.Controls[0];
+    while (TabFields.ControlCount > 0) do begin
+        c := TabFields.Controls[0];
         c.Free();
     end;
-    pnlFields.Visible := true;
 end;
 
 {---------------------------------------}
@@ -903,11 +890,11 @@ begin
     end
     else if (cur_state = 'add') then begin
         cur_state := 'search';
-        Tabs.ActivePage := TabSheet3;
+        Tabs.ActivePage := TabFields;
     end
     else if (cur_state = 'xadd') then begin
         cur_state := 'xsearch';
-        Tabs.ActivePage := TabSheet3;
+        Tabs.ActivePage := TabFields;
     end;
 end;
 

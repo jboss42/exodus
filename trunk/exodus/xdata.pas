@@ -1,74 +1,91 @@
 unit xdata;
-{
-    Copyright 2002, Peter Millard
-
-    This file is part of Exodus.
-
-    Exodus is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Exodus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Exodus; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-}
 
 interface
 
 uses
-    XMLTag,
+    Unicode, XMLTag,
+    TntCheckLst, TntStdCtrls, StdCtrls, ExodusLabel,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, buttonFrame, StdCtrls, ComCtrls, ExtCtrls, TntStdCtrls,
-  ExodusLabel;
+    Dialogs, Dockable, buttonFrame, Grids, TntGrids, ExtCtrls, fXData;
 
 type
-  TfrmXData = class(TForm)
+
+  EXDataValidationError = class(Exception);
+
+  TXDataRow = class
+  private
+    _grid: TTntStringGrid;
+    _hint: Widestring;
+    _opts: TWidestringlist;
+    _visible: boolean;
+    
+    procedure buildLabel(l: Widestring);
+    procedure setVisible(val: Boolean);
+
+  public
+    t: Widestring;
+    v: Widestring;
+    d: Widestring;
+    lbl: TExodusLabel;
+    con: TControl;
+    btn: TTntButton;
+    req: boolean;
+    fixed: boolean;
+    hidden: boolean;
+    valid: boolean;
+    r: TRect;
+
+    constructor Create(grid: TTntStringGrid; x: TXMLTag);
+    destructor Destroy(); override;
+
+    procedure DrawLabel(r: TRect);
+    procedure DrawControl(r: TRect);
+    procedure DrawButton(r: TRect);
+    
+    function  GetXML(): TXMLTag;
+
+    property Visible: boolean read _visible write setVisible;
+  end;
+
+  TfrmXData = class(TfrmDockable)
     frameButtons1: TframeButtons;
-    box: TScrollBox;
-    insBevel: TBevel;
-    lblIns: TExodusLabel;
+    frameXData: TframeXData;
+    procedure FormCreate(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
-    procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure Cancel();
-    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
-    packet: string;
-    ns: string;
-    to_jid: string;
-    _type: string;
-    _thread: WideString;
-    _title: WideString;
+    _packet: Widestring;
+    _ns: Widestring;
+    _thread: Widestring;
+    _to_jid: Widestring;
+    _type: Widestring;
     _responded: boolean;
-    _valid: boolean;
 
-    procedure getResponseTag(var m, x: TXMLTag);
+    function getResponseTag(): TXMLTag;
   public
     { Public declarations }
-    procedure render(tag: TXMLTag);
-
-    property isValid: boolean read _valid;
+    procedure Cancel();
+    procedure Render(tag: TXMLTag);
   end;
 
 var
   frmXData: TfrmXData;
 
+const V_WS = 5;
+const H_WS = 5;
+const BTN_W = 30;
+
 function  showXDataEx(tag: TXMLTag): boolean;
 procedure showXData(tag: TXMLTag);
-function buildXData(x: TXMLTag; box: TWinControl): integer;
+function  buildXData(x: TXMLTag; grid: TTntStringGrid; Rows: TList): integer; overload;
 
 implementation
-
 {$R *.dfm}
 uses
-    GnuGetText, JabberConst, Session, JabberUtils, ExUtils,  StrUtils, fGeneric, IQ, Math;
+    GnuGetText, JabberUtils, Session, Math, XMLUtils;
+
 const
     sAllRequired = 'All required fields must be filled out.';
     sFormFrom = 'Form from %s';
@@ -79,22 +96,21 @@ const
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-
 function _showXData(tag: TXMLTag): boolean;
 var
     f: TfrmXData;
 begin
     f := TfrmXData.Create(nil);
-    f.render(tag);
-    if (f.isValid) then begin
-        f.Show();
-        f.BringToFront();
-        Result := true;
-    end
-    else begin
-        f.Close();
-        Result := false;
-    end;
+    f.Render(tag);
+    f.ShowDefault();
+    f.BringToFront();
+    Result := true;
+end;
+
+{---------------------------------------}
+function  showXDataEx(tag: TXMLTag): boolean;
+begin
+    Result := _showXData(tag);
 end;
 
 {---------------------------------------}
@@ -104,121 +120,409 @@ begin
 end;
 
 {---------------------------------------}
-function showXDataEx(tag: TXMLTag): boolean;
+function  buildXData(x: TXMLTag; grid: TTntStringGrid; Rows: TList): integer;
+var
+    tpe: Widestring;
+    fields: TXMLTagList;
+    ins: TXMLTag;
+    t, i, idx, rh: integer;
+    ro: TXDataRow;
 begin
-    Result := _showXData(tag);
+    //
+    grid.Visible := false;
+
+    tpe := x.GetAttribute('type');
+    fields := x.QueryTags('field');
+    ins := x.GetFirstTag('instructions');
+    idx := 0;
+
+    // size the grid correctly.
+    assert((Rows.Count = 0));
+    if (ins <> nil) then begin
+        grid.RowCount := fields.Count + 1;
+        ro := TXDataRow.Create(grid, ins);
+        Rows.Add(ro);
+        inc(idx);
+    end
+    else
+        grid.RowCount := fields.Count;
+
+    // generate rows
+    t := 0;
+    for i := 0 to fields.Count - 1 do begin
+        ro := TXDataRow.Create(grid, fields[i]);
+        if (ro.lbl <> nil) then
+            rh := ro.lbl.Height
+        else
+            rh := 0;
+
+        if (ro.con <> nil) then
+            rh := max(rh, ro.con.Height);
+        if (rh <> grid.RowHeights[idx]) then
+            grid.RowHeights[idx] := rh;
+        t := t + grid.RowHeights[idx];
+        Rows.Add(ro);
+        inc(idx);
+    end;
+
+    fields.Free();
+    grid.Visible := true;
+    Result := t;
 end;
 
 {---------------------------------------}
-function buildXData(x: TXMLTag; box: TWinControl): integer;
+{---------------------------------------}
+{---------------------------------------}
+const MULTI_HEIGHT = 65;
+
+constructor TXDataRow.Create(grid: TTntStringGrid; x: TXMLTag);
 var
-    fake, ins: TXMLTag;
-    tpe: Widestring;
-    i, h, m: integer;
-    flds: TXMLTagList;
-    frm: TframeGeneric;
-    c: TControl;
-    bv: TBevel;
-    tabs: TList;
+    i, idx: integer;
+    o, ol, l: Widestring;
+    xl: TXMLTagList;
 begin
-    tpe := x.GetAttribute('type');
-    flds := x.QueryTags('field');
-    h := 1;
-    m := 0;
+    _grid := grid;
+    _opts := nil;
+    _visible := false;
+    lbl := nil;
+    con := nil;
+    btn := nil;
+    fixed := false;
+    hidden := false;
+    valid := true;
 
-    // build all of the fields.
-    tabs := TList.Create;
-    
-    for i := flds.Count - 1 downto 0 do begin
-        frm := TframeGeneric.Create(box.owner);
-        frm.FormType := tpe;
-        frm.Name := 'xDataFrame' + IntToStr(i);
-        frm.Parent := box;
-        frm.Visible := true;
-        frm.Align := alTop;
-        frm.Top := 0;
-        frm.render(flds[i]);
-        m := max(m, frm.getLabelWidth());
-        tabs.Insert(0, frm);
+    if (x.Name = 'instructions') then begin
+        t := 'instructions';
+        lbl := TExodusLabel.Create(grid);
+        lbl.Caption := x.Data;
+        lbl.Parent := grid;
+        fixed := true;
+        req := false;
+        exit;
     end;
 
-    // build something to contain instructions if we have it.
-    ins := x.GetFirstTag('instructions');
-    if (ins <> nil) then begin
-        // a bevel
-        bv := TBevel.Create(box.owner);
-        bv.Parent := box;
-        bv.Shape := bsBottomLine;
-        bv.Height := 8;
-        bv.Name := 'xDataInsBevel';
-        bv.Style := bsLowered;
-        bv.Align := alTop;
-        bv.Top := 0;
-        bv.Visible := true;
+    v := x.GetAttribute('var');
+    d := x.GetBasicText('value');
+    l := x.GetAttribute('label');
+    t := x.GetAttribute('type');
+    _hint := x.GetBasicText('desc');
+    req := (x.GetFirstTag('required') <> nil);
 
-        frm := TframeGeneric.Create(box.owner);
-        frm.FormType := tpe;
-        frm.Name := 'xDataIns';
-        frm.Parent := box;
-        frm.Visible := true;
+    // Create our controls
+    if (t = 'fixed') then begin
+        fixed := true;
+        buildLabel(d);
+        exit;
+    end
 
-        // gin up a fixed field that contains the instructions
-        fake := TXMLTag.Create('field');
-        fake.setAttribute('type', 'fixed');
-        fake.AddBasicTag('value', ins.Data());
-        frm.Align := alTop;
-        frm.Top := 0;
-        frm.render(fake);
-        fake.Free();
-        m := max(m, frm.getLabelWidth());
+    else if (t = 'hidden') then begin
+        hidden := true;
+        exit;
+    end
 
-        // force a repaint of the bevel
-        bv.Refresh();
-    end;
+    else if (t = 'boolean') then begin
+        //con := TTntCheckBox.Create(grid);
+        con := TCheckBox.Create(grid);
+        con.Parent := grid;
+        con.Visible := false;
 
-    for i := 0 to tabs.Count - 1 do begin
-        frm := TframeGeneric(tabs[i]);
-        frm.TabOrder := i;
-    end;
+        //with TTntCheckBox(con) do begin
+        with TCheckBox(con) do begin
+            Caption := x.GetAttribute('label');
+            d := Lowercase(d);
+            Checked := ((d = 'true') or (d = '1') or (d = 'yes') or (d = 'assent'));
+            Hint := _hint;
+            WordWrap := true;
+        end;
+    end
 
-    tabs.Clear();
-    tabs.Free();
+    else if ((t = 'text-multi') or (t = 'jid-multi')) then begin
+        buildLabel(l);
+        con := TTntMemo.Create(grid);
+        con.Parent := grid;
+        con.Visible := false;
 
-    // make it no bigger than this..
-    m := min(m, 350);
+        with TTntMemo(con) do begin
+            Height := MULTI_HEIGHT;
+            ScrollBars := ssBoth;
+            Lines.Clear();
+            xl := x.QueryTags('value');
+            for i := 0 to xl.Count - 1 do
+                Lines.Add(xl[i].Data);
+            FreeAndNil(xl);
+        end;
+    end
 
-    for i := 0 to box.ControlCount - 1 do begin
-        c := box.Controls[i];
-        if (c is TframeGeneric) then begin
-           frm := TframeGeneric(c);
-           frm.setLabelWidth(m + 5);
-           h := h + frm.Height;
+    else if (t = 'list-single') then begin
+        buildLabel(l);
+        con := TTntComboBox.Create(grid);
+        con.Parent := grid;
+        con.Visible := false;
+        _opts := TWidestringlist.Create();
+
+        with TTntComboBox(con) do begin
+            Style := csDropDownList;
+            Items.Clear();
+            xl := x.QueryTags('option');
+            for i := 0 to xl.Count - 1 do begin
+                o := xl[i].GetBasicText('value');
+                ol := xl[i].GetAttribute('label');
+                _opts.Add(o);
+                if (ol = '') then
+                    Items.Add(o)
+                else
+                    Items.Add(ol);
+            end;
+            FreeAndNil(xl);
+            ItemIndex := _opts.IndexOf(d);
+        end;
+    end
+
+    else if (t = 'list-multi') then begin
+        buildLabel(l);
+        con := TTntCheckListbox.Create(grid);
+        con.Parent := grid;
+        con.Visible := false;
+        _opts := TWidestringlist.Create();
+
+        with TTntCheckListbox(con) do begin
+            Height := MULTI_HEIGHT;
+            Items.Clear();
+            xl := x.QueryTags('option');
+            for i := 0 to xl.Count - 1 do begin
+                o := xl[i].GetBasicText('value');
+                ol := xl[i].GetAttribute('label');
+                _opts.Add(o);
+                if (ol = '') then
+                    Items.Add(o)
+                else
+                    Items.Add(ol);
+            end;
+            FreeAndNil(xl);
+
+            // select all <value> elements
+            xl := x.QueryTags('value');
+            for i := 0 to xl.Count - 1 do begin
+                idx := _opts.IndexOf(xl[i].Data);
+                if (idx >= 0) then
+                    Checked[idx] := true;
+            end;
+        end;
+    end
+
+    else begin
+        // text-single, text-private or unknown
+        buildLabel(l);
+        con := TTntEdit.Create(grid);
+        con.Parent := grid;
+        con.Visible := false;
+        with TTntEdit(con) do begin
+            Text := d;
+            if (t = 'text-private') then
+                PasswordChar := '*';
         end;
     end;
-
-    Result := h;
 end;
 
 {---------------------------------------}
-procedure TfrmXData.render(tag: TXMLTag);
-var
-    ins, x: TXMLTag;
-    xtra, h: integer;
-    thread: string;
+destructor TXDataRow.Destroy();
 begin
-    // Build the dialog based on the tag.
-    _valid := false;
-    AssignDefaultFont(Self.Canvas.Font);
-    packet := tag.Name;
-    to_jid := tag.GetAttribute('from');
-    AssignDefaultFont(Self.Font);
+    if (lbl <> nil) then
+        FreeAndNil(lbl);
+    if (con <> nil) then
+        FreeAndNil(con);
+    if (btn <> nil) then
+        FreeAndNil(btn);
+    if (_opts <> nil) then
+        FreeAndNil(_opts);
+end;
 
+{---------------------------------------}
+procedure TXDataRow.buildLabel(l: Widestring);
+begin
+    lbl := TExodusLabel.Create(_grid);
+    lbl.Parent := _grid;
+
+    // put stars on required fields
+    if (req) then
+        lbl.Caption := l + '*'
+    else
+        lbl.Caption := l;
+        
+    lbl.Hint := _hint;
+    lbl.Visible := false;
+    if (fixed) then
+        lbl.Width := _grid.ColWidths[0] * 2
+    else
+        lbl.Width := _grid.ColWidths[0];
+end;
+
+{---------------------------------------}
+function TXDataRow.GetXML(): TXMLTag;
+var
+    f: TXMLTag;
+    i, j: integer;
+begin
+    // fetch data from controls into d params
+    // and send back the <field/> element
+    valid := true;
+    if (t = 'fixed') then begin
+        Result := nil;
+        exit;
+    end;
+
+    f := TXMLTag.Create('field');
+    f.setAttribute('var', v);
+
+    if (t = 'hidden') then begin
+        f.AddBasicTag('value', d);
+    end
+
+    else if (t = 'boolean') then begin
+        if (TTntCheckBox(con).Checked) then
+            d := 'true'
+        else
+            d := 'false';
+        f.AddBasicTag('value', d);
+    end
+
+    else if ((t = 'text-multi') or (t = 'jid-multi')) then begin
+        with TTntMemo(con) do begin
+            if ((req) and (Lines.Count = 0)) then
+                valid := false
+            else begin
+                for i := 0 to Lines.Count - 1 do
+                    f.AddBasicTag('value', Lines[i]);
+            end;
+        end;
+    end
+
+    else if (t = 'list-single') then begin
+        i := TTntComboBox(con).ItemIndex;
+        f.AddBasicTag('value', _opts[i]);
+    end
+
+    else if (t = 'list-multi') then begin
+        with TTntCheckListbox(con) do begin
+            j := 0;
+            for i := 0 to Items.Count - 1 do begin
+                if (Checked[i]) then begin
+                    inc(j);
+                    f.AddBasicTag('value', _opts[i]);
+                end;
+            end;
+            if ((req) and (j = 0)) then
+                valid := false;
+        end;
+    end
+
+    else begin
+        // text-single, text-private or unknown
+        d := TTntEdit(con).Text;
+        if ((req) and (d = '')) then
+            valid := false;
+        f.AddBasicTag('value', d);
+    end;
+
+    Result := f;
+
+end;
+
+{---------------------------------------}
+procedure TXDataRow.setVisible(val: Boolean);
+begin
+    if (val = _visible) then exit;
+
+    if (lbl <> nil) then lbl.Visible := val;
+    if (con <> nil) then con.Visible := val;
+    if (btn <> nil) then btn.Visible := val;
+
+    _visible := val;
+end;
+
+{---------------------------------------}
+procedure TXDataRow.DrawLabel(r: TRect);
+begin
+    if (lbl = nil) then exit;
+    if (r.Top < 0) then exit;
+
+    lbl.Top := r.Top;
+    lbl.Width := r.Right - r.Left;
+
+    if (not lbl.Visible) then begin
+        lbl.Visible := true;
+        lbl.Refresh();
+        _visible := true;
+    end;
+end;
+
+{---------------------------------------}
+procedure TXDataRow.DrawControl(r: TRect);
+var
+    move: boolean;
+begin
+    if (con = nil) then exit;
+    if (r.Top < 0) then exit;
+
+    move := (r.Top <> con.Top) or (r.Left <> con.Left);
+
+    con.Top := r.Top;
+    con.Left := r.Left;
+    con.Width := r.Right - r.Left;
+
+    if (not con.visible) or (move) then begin
+        con.Visible := true;
+        con.Refresh();
+        _visible := true;
+    end;
+
+end;
+
+{---------------------------------------}
+procedure TXDataRow.DrawButton(r: TRect);
+begin
+    if (btn = nil) then exit;
+    if (r.Top < 0) then exit;
+
+    btn.SetBounds(r.Left, r.Top, (r.Right - r.Left), (r.Bottom - r.Top));
+    if (not btn.Visible) then begin
+        btn.Visible := true;
+        btn.Invalidate();
+        _visible := true;
+    end;
+end;
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+procedure TfrmXData.FormCreate(Sender: TObject);
+begin
+  inherited;
+end;
+
+{---------------------------------------}
+procedure TfrmXData.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+    if (not _responded) then Cancel();
+    Action := caFree;
+    if (MainSession <> nil) then
+        MainSession.Prefs.SavePosition(Self);
+end;
+
+{---------------------------------------}
+procedure TfrmXData.Render(tag: TXMLTag);
+var
+    x: TXMLTag;
+begin
     // Get our context/xmlns
-    if (packet = 'iq') then
-        ns := tag.QueryXPData('/iq/query@xmlns')
-    else if (packet = 'message') then begin
-        thread := tag.GetBasicText('thread');
-        if (thread <> '') then _thread := thread;
+    _to_jid := tag.getAttribute('from');
+    if (tag.Name = 'iq') then begin
+        _packet := 'iq';
+        _ns := tag.QueryXPData('/iq/query@xmlns')
+    end
+    else if (tag.Name = 'message') then begin
+        _packet := 'message';
+        _thread := tag.GetBasicText('thread');
     end;
 
     // Get the x-data container.
@@ -228,63 +532,42 @@ begin
     _type := x.GetAttribute('type');
     _responded := false;
 
-    if (_type = 'cancel') then begin
-        // this is a cancel notice
-        self.Caption := _(sCancelled);
-        lblIns.Caption := WideFormat(_(sCancelMsg), [to_jid]);
-        insBevel.Visible := false;
-        insBevel.Height := 0;
+    frameXData.Render(x);
+end;
+
+{---------------------------------------}
+function TfrmXData.getResponseTag(): TXMLTag;
+var
+    r, q: TXMLTag;
+begin
+    // Get a properly formatted result or cancel packet
+    r := TXMLTag.Create(_packet);
+    r.setAttribute('to', _to_jid);
+
+    if (_packet = 'message') then begin
+        if (_thread <> '') then
+            r.AddBasicTag('thread', _thread);
+        r.AddTag('body');
     end
-    else begin
-        // Get instructions and title
-        ins := x.GetFirstTag('title');
-        if (ins <> nil) then begin
-          _title := ins.Data;
-          self.Caption := _title;
-        end
-        else
-        Self.Caption := WideFormat(_(sFormFrom), [to_jid]);
+    else if (_packet = 'iq') then begin
+        r.setAttribute('type', 'set');
+        r.setAttribute('id', MainSession.generateID());
 
-        lblIns.Visible := false;
-        lblIns.Height := 0;
-        insBevel.Visible := false;
-        insBevel.Height := 0;
+        q := r.AddTag('query');
+        q.setAttribute('xmlns', _ns);
     end;
 
-    // Get all of our fields.
-    xtra := lblIns.Height + 5 + frameButtons1.Height;
-    h := buildXData(x, box) + xtra;
-    if (h > Trunc(Screen.Height * 0.750)) then
-        h := Trunc(Screen.Height * 0.750);
-
-    insBevel.Visible := lblIns.Visible;
-    if (lblIns.Visible) then begin
-        insBevel.Align := alTop;
-        lblIns.Align := alTop;
-    end;
-
-    if (_type <> 'form') then begin
-        frameButtons1.btnOK.Visible := false;
-        frameButtons1.btnCancel.Caption := _(sClose);
-    end;
-
-    MainSession.Prefs.RestorePosition(Self);
-    Self.ClientHeight := h;
-
-    CenterMainForm(Self);
-    _valid := true;
+    Result := r;
 end;
 
 {---------------------------------------}
 procedure TfrmXData.frameButtons1btnOKClick(Sender: TObject);
 var
-    i: integer;
-    c: TControl;
-    f: TframeGeneric;
-    fx, m, x: TXMLTag;
-    valid: boolean;
+    r,x: TXMLTag;
 begin
+  inherited;
 
+    // submit the form
     if (_type = 'form') then begin
         // do something
         if (not MainSession.Active) then begin
@@ -293,34 +576,19 @@ begin
             exit;
         end;
 
-        getResponseTag(m, x);
-
-        x.setAttribute('xmlns', XMLNS_XDATA);
-        x.setAttribute('type', 'submit');
-        if (_title <> '') then
-          x.AddBasicTag('title', _title);
-
-        valid := true;
-        for i := 0 to Self.box.ControlCount - 1 do begin
-            c := Self.box.Controls[i];
-            if (c is TframeGeneric) then begin
-                f := TframeGeneric(c);
-
-                if (not f.isValid()) then
-                    valid := false;
-                if (x <> nil) then begin
-                    fx := f.getXML();
-                    if (fx <> nil) then x.AddTag(fx);
-                end;
+        try
+            r := getResponseTag();
+            x := frameXData.submit();
+            r.AddTag(x);
+            x.setAttribute('type', 'submit');
+        except
+            on EXDataValidationError do begin
+                MessageDlgW(_(sAllRequired), mtError, [mbOK], 0);
+                exit;
             end;
         end;
 
-        if (not valid) then begin
-            if (m <> nil) then m.Free();
-            MessageDlgW(_(sAllRequired), mtError, [mbOK], 0);
-            exit;
-        end;
-        MainSession.SendTag(m);
+        MainSession.SendTag(r);
         _responded := true;
     end;
 
@@ -328,54 +596,16 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmXData.getResponseTag(var m, x: TXMLTag);
-var
-    q: TXMLTag;
-begin
-    // Get a properly formatted result or cancel packet
-    m := TXMLTag.Create(packet);
-    m.setAttribute('to', to_jid);
-
-    if (packet = 'message') then begin
-        if (_thread <> '') then
-            m.AddBasicTag('thread', _thread);
-        m.AddTag('body');
-        x := m.AddTag('x');
-    end
-    else if (packet = 'iq') then begin
-        m.setAttribute('type', 'set');
-        m.setAttribute('id', MainSession.generateID());
-
-        q := m.AddTag('query');
-        q.setAttribute('xmlns', ns);
-        x := q.AddTag('x');
-    end;
-
-    x.setAttribute('xmlns', XMLNS_XDATA);
-end;
-
-{---------------------------------------}
 procedure TfrmXData.frameButtons1btnCancelClick(Sender: TObject);
 begin
-    Cancel();
-    Self.Close;
-end;
-
-{---------------------------------------}
-procedure TfrmXData.FormClose(Sender: TObject; var Action: TCloseAction);
-begin
-    if (not _responded) then Cancel();
-
-    Action := caFree;
-    if (MainSession <> nil) then
-        MainSession.Prefs.SavePosition(Self);
-    inherited;
+  inherited;
+    frameXData.Cancel();
 end;
 
 {---------------------------------------}
 procedure TfrmXData.Cancel();
 var
-    m, x: TXMLTag;
+    r, x: TXMLTag;
 begin
     if (_type = 'form') then begin
         if (not MainSession.Active) then begin
@@ -383,18 +613,12 @@ begin
                 mtError, [mbOK], 0);
             exit;
         end;
-        getResponseTag(m, x);
-        x.setAttribute('type', 'cancel');
-        MainSession.SendTag(m);
+        r := getResponseTag();
+        x := frameXData.cancel();
+        r.AddTag(x);
+        MainSession.SendTag(r);
         _responded := true;
     end;
-end;
-
-{---------------------------------------}
-procedure TfrmXData.FormCreate(Sender: TObject);
-begin
-    AssignUnicodeFont(Self);
-    TranslateComponent(Self);
 end;
 
 end.

@@ -226,8 +226,10 @@ begin
 
     if (w.Bottom > Self.Parent.Height) and Self.Parent.InheritsFrom(TFrame) then
         Self.Parent.Height := w.Bottom + 2;
-    if (w.Bottom > Self.Height) then
+    if (w.Bottom > Self.Height) then begin
+        //OutputDebugString('TExodusLabel, increasing height');
         Self.Height := w.Bottom;
+    end;
 end;
 
 procedure TExodusLabel.Paint;

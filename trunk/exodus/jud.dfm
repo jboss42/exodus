@@ -51,7 +51,7 @@ inherited frmJud: TfrmJud
   end
   inherited Tabs: TPageControl
     Width = 409
-    ActivePage = TabSheet3
+    ActivePage = TabFields
     inherited TabSheet1: TTabSheet
       object lblSelect: TTntLabel
         Left = 0
@@ -96,8 +96,8 @@ inherited frmJud: TfrmJud
         StopFrame = 29
       end
     end
-    object TabSheet3: TTabSheet
-      Caption = 'TabSheet3'
+    object TabFields: TTabSheet
+      Caption = 'TabFields'
       ImageIndex = 2
       object lblInstructions: TTntLabel
         Left = 0
@@ -108,16 +108,25 @@ inherited frmJud: TfrmJud
         Caption = 'Fill in the search criteria to find contacts on.'
         WordWrap = True
       end
-      object pnlFields: TScrollBox
+      inline xDataBox: TframeXData
         Left = 0
         Top = 13
         Width = 401
         Height = 212
         Align = alClient
-        BevelInner = bvNone
-        BevelOuter = bvNone
-        BorderStyle = bsNone
         TabOrder = 0
+        Visible = False
+        inherited Panel1: TPanel
+          Width = 401
+          Height = 212
+          inherited ScrollBox1: TScrollBox
+            Width = 391
+            Height = 202
+            inherited xGrid: TTntStringGrid
+              Width = 391
+            end
+          end
+        end
       end
     end
     object TabSheet4: TTabSheet

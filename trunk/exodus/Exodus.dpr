@@ -128,7 +128,6 @@ uses
   Transports in 'Transports.pas',
   Unicode in '..\jopl\Unicode.pas',
   vcard in 'vcard.pas' {frmVCard},
-  xdata in 'xdata.pas' {frmXData},
   XMLAttrib in '..\jopl\XMLAttrib.pas',
   XMLCData in '..\jopl\XMLCData.pas',
   XMLConstants in '..\jopl\XMLConstants.pas',
@@ -184,7 +183,9 @@ uses
   CommandWizard in 'CommandWizard.pas' {frmCommandWizard},
   fResults in 'fResults.pas' {frameResults: TFrame},
   Avatar in '..\jopl\Avatar.pas',
-  FloatingImage in 'FloatingImage.pas' {FloatImage};
+  FloatingImage in 'FloatingImage.pas' {FloatImage},
+  xdata in 'xdata.pas' {frmXData},
+  fXData in 'fXData.pas' {frameXData: TFrame};
 
 {$R *.TLB}
 
@@ -219,6 +220,7 @@ begin
 
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TFloatImage, FloatImage);
+  Application.CreateForm(TfrmXData, frmXData);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
 
   frmRosterWindow.DockRoster;

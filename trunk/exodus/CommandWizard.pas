@@ -24,7 +24,8 @@ interface
 uses
     XMLTag, IQ, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, Wizard, StdCtrls, TntStdCtrls, ComCtrls, ExtCtrls, TntExtCtrls;
+    Dialogs, Wizard, StdCtrls, TntStdCtrls, ComCtrls, ExtCtrls, TntExtCtrls,
+  fXData;
 
 type
 
@@ -44,7 +45,7 @@ type
     tbsResults: TTabSheet;
     tbsWait: TTabSheet;
     lblWait: TTntLabel;
-    xdataBox: TScrollBox;
+    xDataBox: TframeXData;
     procedure btnNextClick(Sender: TObject);
     procedure btnBackClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
@@ -153,6 +154,7 @@ procedure TfrmCommandWizard.btnCancelClick(Sender: TObject);
 begin
     inherited;
     if (_iq <> nil) then _iq.Free();
+    xDataBox.Clear();
     Self.Close();
 end;
 
@@ -180,11 +182,7 @@ end;
 {---------------------------------------}
 procedure TfrmCommandWizard.RunState();
 var
-    fx, x: TXMLTag;
-    valid: boolean;
-    i: integer;
-    c: TControl;
-    f: TframeGeneric;
+    x: TXMLTag;
 begin
     // run this state
     {
@@ -212,31 +210,18 @@ begin
         end;
     cwzSubmit: begin
         // submit this x-data form.
-        createIQSet();
-        x := _iq.qTag.AddTag('x');
-        x.setAttribute('xmlns', XMLNS_XDATA);
-        x.setAttribute('type', 'submit');
-        valid := true;
-        for i := 0 to xdataBox.ControlCount - 1 do begin
-            c := xdataBox.Controls[i];
-            if (c is TframeGeneric) then begin
-                f := TframeGeneric(c);
-                if (not f.isValid()) then
-                    valid := false;
-                if (x <> nil) then begin
-                    fx := f.getXML();
-                    if (fx <> nil) then x.AddTag(fx);
-                end;
+        try
+            createIQSet();
+            x := xdataBox.submit();
+        except
+            on EXDataValidationError do begin
+                _iq.Free();
+                MessageDlgW(_('All required fields must be filled out.'),
+                    mtError, [mbOK], 0);
+                exit;
             end;
         end;
-
-        if (not valid) then begin
-            _iq.Free();
-            MessageDlgW(_('All required fields must be filled out.'),
-                mtError, [mbOK], 0);
-            exit;
-        end;
-
+        _iq.qTag.AddTag(x);
         _iq.Send();
         end;
     end;
@@ -251,8 +236,6 @@ end;
 procedure TfrmCommandWizard.execCallback(event: string; tag: TXMLTag);
 var
     x, c: TXMLTag;
-    i: integer;
-    a: TControl;
 begin
     _iq := nil;
     if (event <> 'xml') then begin
@@ -284,10 +267,7 @@ begin
     else begin
         // we're not done yet
         // Make sure xdataBox is empty.
-        for i := xDataBox.ControlCount - 1 downto 0 do begin
-            a := xDataBox.Controls[i];
-            a.Free();
-        end;
+        xDataBox.Clear();
         state := cwzSubmit;
         _session_id := c.GetAttribute('sessionid');
         x := c.QueryXPTag('/command/x[@xmlns="jabber:x:data"]');
@@ -295,7 +275,7 @@ begin
             fail(_('This command returned an unknown form type.'));
             exit;
         end;
-        buildXData(x, xdataBox);
+        xDataBox.Render(x);
         Tabs.ActivePage := tbsExecute;
         nextNoBack();
     end;
