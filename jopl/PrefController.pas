@@ -135,7 +135,10 @@ type
         ConnectionType: integer;
         temp: boolean;
         NewAccount: boolean;
-
+        Avatar: Widestring;
+        AvatarHash: Widestring;
+        AvatarMime: Widestring;
+        
         // Socket connection
         Host: Widestring;
         Port: integer;
@@ -144,6 +147,7 @@ type
         ResolvedIP: Widestring;
         ResolvedPort: integer;
 
+        // Connection info
         srv: boolean;
         ssl: integer;
         SSL_Cert: string;
@@ -1451,6 +1455,13 @@ begin
     else
         Password := ptag.Data;
 
+    ptag := tag.GetFirstTag('avatar');
+    if (ptag <> nil) then begin
+        AvatarHash := ptag.GetAttribute('hash');
+        AvatarMime := ptag.getAttribute('mime-type');
+        Avatar := ptag.Data;
+    end;
+
     Resource := tag.GetBasicText('resource');
     Priority := SafeInt(tag.GetBasicText('priority'));
     ConnectionType := SafeInt(tag.GetBasicText('connection_type'));
@@ -1498,7 +1509,7 @@ end;
 {---------------------------------------}
 procedure TJabberProfile.Save(node: TXMLTag);
 var
-    ptag: TXMLTag;
+    x, ptag: TXMLTag;
 begin
     if (temp) then exit;
 
@@ -1535,6 +1546,13 @@ begin
     node.AddBasicTag('url', URL);
     node.AddBasicTag('poll', FloatToStr(Poll));
     node.AddBasicTag('num_poll_keys', IntToStr(NumPollKeys));
+
+    if (Avatar <> '') then begin
+        x := node.AddBasicTag('avatar', Avatar);
+        x.setAttribute('hash', AvatarHash);
+        x.setAttribute('mime-type', AvatarMime);
+    end;
+    
 end;
 
 {---------------------------------------}

@@ -868,6 +868,7 @@ procedure TJabberSession.setPresence(show, status: WideString; priority: integer
 var
     p: TJabberPres;
     i: integer;
+    x: TXMLTag;
 begin
     _show := show;
     _status := status;
@@ -879,6 +880,16 @@ begin
         p.Status := status;
         if (priority = -1) then priority := 0;
         p.Priority := priority;
+
+        if (Self.Profile.AvatarHash <> '') then begin
+            x := p.AddTag('x');
+            x.setAttribute('xmlns', 'vcard-temp:x:update');
+            x.AddBasicTag('photo', Self.Profile.AvatarHash);
+            x := p.AddTag('x');
+            x.setAttribute('xmlns', 'jabber:x:avatar');
+            x.AddBasicTag('hash', Self.Profile.AvatarHash);
+        end;
+
 
         // allow plugins to add stuff, by trapping this event
         MainSession.FireEvent('/session/before_presence', p);

@@ -107,6 +107,13 @@ type
         constructor Create(Session: TJabberSession); overload;
     end;
 
+    TAvatarResponder = class(TJabberResponder)
+    published
+        procedure iqCallback(event: string; tag: TXMLTag); override;
+    public
+        constructor Create(Session: TJabberSession); overload;
+    end;
+
 
 procedure initResponders();
 procedure cleanupResponders();
@@ -150,6 +157,7 @@ var
     _conf_invite: TFactoryResponder;
     _unhandled: TUnhandledResponder;
     _sistart: TFactoryResponder;
+    _avatar: TAvatarResponder;
 
 {---------------------------------------}
 function getNick(j: Widestring): Widestring;
@@ -190,7 +198,7 @@ begin
     _sistart := TFactoryResponder.Create(MainSession,
         '/packet/iq[@type="set"]/si[@xmlns="' + XMLNS_SI + '"]',
         SIStart);
-
+    _avatar := TAvatarResponder.Create(MainSession);
 
     // Create some globally accessable responders.
     Exodus_Browse := TBrowseResponder.Create(MainSession);
@@ -452,6 +460,54 @@ begin
     end;
 
     _session.sendTag(r);
+end;
+
+{---------------------------------------}
+constructor TAvatarResponder.Create(Session: TJabberSession);
+begin
+    inherited Create(Session, 'jabber:iq:avatar');
+end;
+
+{---------------------------------------}
+procedure TAvatarResponder.iqCallback(event: string; tag: TXMLTag);
+var
+    x, r: TXMLTag;
+begin
+    if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
+
+    if (_session.Profile.Avatar = '') then begin
+        r := TXMLTag.Create('iq');
+        r.setAttribute('to', tag.getAttribute('from'));
+        r.setAttribute('id', tag.getAttribute('id'));
+        r.setAttribute('type', 'error');
+        x := r.AddTag('error');
+        x.setAttribute('code', '404');
+        x.setAttribute('type', 'cancel');
+        x.AddTag('item-not-found');
+        _session.SendTag(r);
+    end
+    else begin
+        DoNotify(nil, 'notify_autoresponse',
+             WideFormat(_(sNotifyAutoResponse), [_(sLast),
+                getNick(tag.getAttribute('from'))]),
+             ico_info);
+
+        // Respond to last queries
+        r := TXMLTag.Create('iq');
+        with r do begin
+            setAttribute('to', tag.getAttribute('from'));
+            setAttribute('id', tag.getAttribute('id'));
+            setAttribute('type', 'result');
+
+            with AddTag('query') do begin
+                setAttribute('xmlns', 'jabber:iq:avatar');
+                x := AddTag('data');
+                x.setAttribute('mimetype', _session.Profile.AvatarMime);
+                x.AddCData(_session.Profile.Avatar);
+            end;
+        end;
+        _session.sendTag(r);
+    end;
 end;
 
 {---------------------------------------}
