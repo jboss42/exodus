@@ -121,12 +121,12 @@ object frmRosterWindow: TfrmRosterWindow
       Top = 2
       Width = 162
       Height = 20
-      Cursor = crHandPoint
+      Cursor = crArrow
       Align = alClient
       Alignment = taLeftJustify
+      AutoSize = True
       BevelOuter = bvNone
       BorderWidth = 2
-      Caption = 'Offline'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlue
       Font.Height = -11
@@ -134,7 +134,16 @@ object frmRosterWindow: TfrmRosterWindow
       Font.Style = [fsUnderline]
       ParentFont = False
       TabOrder = 0
-      OnClick = pnlStatusClick
+      object lblStatusLink: TLabel
+        Left = 2
+        Top = 2
+        Width = 30
+        Height = 16
+        Cursor = crHandPoint
+        Align = alLeft
+        Caption = 'Offline'
+        OnClick = pnlStatusClick
+      end
     end
   end
   object pnlConnect: TPanel

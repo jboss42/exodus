@@ -95,6 +95,7 @@ type
     popTransUnRegister: TMenuItem;
     popTransProperties: TMenuItem;
     popTransRemove: TMenuItem;
+    lblStatusLink: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -1102,27 +1103,27 @@ procedure TfrmRosterWindow.ShowPresence(show: string);
 begin
     // display this show type
     if show = 'chat' then begin
-        pnlStatus.Caption := sRosterChat;
+        lblStatusLink.Caption := sRosterChat;
         ChangeStatusImage(ico_Chat);
         end
     else if show = 'away' then begin
-        pnlStatus.Caption := sRosterAway;
+        lblStatusLink.Caption := sRosterAway;
         ChangeStatusImage(ico_Away);
         end
     else if show = 'xa' then begin
-        pnlStatus.Caption := sRosterXA;
+        lblStatusLink.Caption := sRosterXA;
         ChangeStatusImage(ico_XA);
         end
     else if show = 'dnd' then begin
-        pnlStatus.Caption := sRosterDND;
+        lblStatusLink.Caption := sRosterDND;
         ChangeStatusImage(ico_DND);
         end
     else if show = 'offline' then begin
-        pnlStatus.Caption := sRosterOffline;
+        lblStatusLink.Caption := sRosterOffline;
         ChangeStatusImage(ico_Offline);
         end
     else begin
-        pnlStatus.Caption := sRosterAvail;
+        lblStatusLink.Caption := sRosterAvail;
         ChangeStatusImage(ico_Online);
         end;
 end;
