@@ -697,6 +697,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmPrefs.txtCPTitleChange(Sender: TObject);
+var
+    i: integer;
 begin
     // something changed on the current custom pres object
     // automatically update it.
@@ -704,7 +706,8 @@ begin
     if (not tbsCustomPres.Visible) then exit;
     if (_no_pres_change) then exit;
 
-    with  TJabberCustomPres(_pres_list[lstCustomPres.ItemIndex]) do begin
+    i := lstCustomPres.ItemIndex;
+    with  TJabberCustomPres(_pres_list[i]) do begin
         title := txtCPTitle.Text;
         status := txtCPStatus.Text;
         priority := SafeInt(txtCPPriority.Text);
@@ -716,6 +719,8 @@ begin
         3: show := 'xa';
         4: show := 'dnd';
         end;
+        if (title <> lstCustomPres.Items[i]) then
+            lstCustomPres.Items[i] := title;
         end;
 end;
 
@@ -734,6 +739,7 @@ begin
     _pres_list.Add(cp);
     lstCustompres.Items.Add(cp.title);
     lstCustompres.ItemIndex := lstCustompres.Items.Count - 1;
+    lstCustompresClick(Self);
 end;
 
 {---------------------------------------}
@@ -743,8 +749,10 @@ var
 begin
     // delete the current pres
     cp := TJabberCustomPres(_pres_list[lstCustomPres.ItemIndex]);
+    _pres_list.Remove(cp);
     MainSession.Prefs.removePresence(cp);
     lstCustompres.Items.Delete(lstCustomPres.ItemIndex);
+    lstCustompresClick(Self);
 end;
 
 {---------------------------------------}
@@ -753,7 +761,9 @@ begin
     // clear all entries
     if MessageDlg('Clear all custom presence entries',
         mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
-
+    lstCustomPres.Items.Clear;
+    _pres_list.Clear;
+    lstCustompresClick(Self);
     MainSession.Prefs.removeAllPresence();
 end;
 

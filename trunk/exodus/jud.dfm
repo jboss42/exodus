@@ -12,7 +12,7 @@ inherited frmJUD: TfrmJUD
     Left = 0
     Top = 0
     Width = 164
-    Height = 402
+    Height = 407
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 0
@@ -66,7 +66,7 @@ inherited frmJUD: TfrmJUD
     end
     object pnlBottom: TPanel
       Left = 0
-      Top = 368
+      Top = 373
       Width = 164
       Height = 34
       Align = alBottom
@@ -95,7 +95,7 @@ inherited frmJUD: TfrmJUD
       Left = 0
       Top = 276
       Width = 164
-      Height = 92
+      Height = 97
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
@@ -174,7 +174,7 @@ inherited frmJUD: TfrmJUD
     Left = 164
     Top = 0
     Width = 259
-    Height = 402
+    Height = 407
     Align = alClient
     Columns = <>
     MultiSelect = True

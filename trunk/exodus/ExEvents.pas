@@ -46,6 +46,7 @@ type
         edate: TDateTime;
         data_type: string;
         delayed: boolean;
+        elapsed_time: longint;
 
         constructor create;
         destructor destroy; override;
