@@ -117,7 +117,7 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
     IntOp $R2 $R0 & 0x00FF
     DetailPrint "Richedit version: $R1.$R2"
     
-	; if the installed version is >= to 5.30, skip ahead.
+    ; if the installed version is >= to 5.30, skip ahead.
     IntCmp 327710 $R0 lbl_reportVer lbl_reportVer
     
     DetailPrint "Old version of richedit controls.  Upgrading."
@@ -153,7 +153,7 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
     DetailPrint "Comctl version: $R1.$R2"
     
     ; (5 << 16) + 80 w00t!
-	; if the installed version is >= to 5.80, skip ahead.
+    ; if the installed version is >= to 5.80, skip ahead.
     IntCmp 327760 $R0 com_reportVer com_reportVer
     
     DetailPrint "Old version of COM controls.  Upgrading."
@@ -258,10 +258,10 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
     WriteRegStr HKCR "XMPPfile\shell" "" "Open"
     WriteRegStr HKCR "XMPPfile\shell\Open\command" "" \
         '"$INSTDIR\Exodus.exe" -o "%1"'
-	WriteRegStr HKCR "XMPPfile\shell\Open\ddeexec" "" 'open "%1"'
-	WriteRegStr HKCR "XMPPfile\shell\Open\ddeexec\Application" "" "Exodus"
-	WriteRegStr HKCR "XMPPfile\shell\Open\ddeexec\IfExec" "" "ignore"
-	WriteRegStr HKCR "XMPPfile\shell\Open\ddeexec\Topic" "" "XMPPAction"
+    WriteRegStr HKCR "XMPPfile\shell\Open\ddeexec" "" 'open "%1"'
+    WriteRegStr HKCR "XMPPfile\shell\Open\ddeexec\Application" "" "Exodus"
+    WriteRegStr HKCR "XMPPfile\shell\Open\ddeexec\IfExec" "" "ignore"
+    WriteRegStr HKCR "XMPPfile\shell\Open\ddeexec\Topic" "" "XMPPAction"
 
     WriteRegStr HKCR "MIME\Database\Content Type\application/xmpp" \
         "Extension" ".xmpp"
@@ -370,9 +370,9 @@ Section "Daily updates" SEC_Bleed
 SectionEnd
 
 Section "Laguage packs" SEC_Locale
-	File "locale.zip"
+    File "locale.zip"
     ZipDLL::extractall "$INSTDIR\locale.zip" "$INSTDIR"
-	Delete "$INSTDIR\locale.zip"
+    Delete "$INSTDIR\locale.zip"
     WriteRegStr HKCU SOFTWARE\Jabber\Exodus "InstallLocales" "1"
 SectionEnd
 
@@ -414,17 +414,17 @@ Section "Uninstall"
     Delete $INSTDIR\libeay32.dll
     Delete $INSTDIR\ssleay32.dll
     
-	; remove shell hooks
-	Delete "$DESKTOP\Exodus.lnk"
-	Delete "$QUICKLAUNCH\Exodus.lnk"
+    ; remove shell hooks
+    Delete "$DESKTOP\Exodus.lnk"
+    Delete "$QUICKLAUNCH\Exodus.lnk"
 
     ; MUST REMOVE UNINSTALLER, too
     Delete $INSTDIR\uninstall.exe
     RMDir "$INSTDIR"
 
-	ReadRegStr $0 HKCU "Software\Jabber\Exodus" "prefs_file"
-	Delete $0
-	DeleteRegValue HKCU "Software\Jabber\Exodus" "prefs_file"
+    ReadRegStr $0 HKCU "Software\Jabber\Exodus" "prefs_file"
+    Delete $0
+    DeleteRegValue HKCU "Software\Jabber\Exodus" "prefs_file"
 
     ; TODO: Remove logs, if user says so
 
@@ -700,17 +700,17 @@ Function .onInit
     Pop $0
     StrCmp $0 "/S" silent
 
-	; turn off locales by default
+    ; turn off locales by default
     DeleteRegValue HKCU SOFTWARE\Jabber\Exodus "InstallLocales"
-	Push ${SEC_Locale}
-	Call TurnOff
-	goto locale_done
+    Push ${SEC_Locale}
+    Call TurnOff
+    goto locale_done
 silent:
     ReadRegStr $0 HKCU "SOFTWARE\Jabber\Exodus" "InstallLocales"
     StrCmp $0 "1" locale_done
-	Push ${SEC_Locale}
-	Call TurnOff
-	goto locale_done
+    Push ${SEC_Locale}
+    Call TurnOff
+    goto locale_done
 
 locale_done:
     
@@ -728,35 +728,32 @@ Function .onInstSuccess
 
     EnumRegKey $1 HKCU "Software\Jabber\Exodus\Restart" $0
     StrCmp $1 "" abort
-    
+
+    ; set the PWD to the last PWD, so that the command line args
+    ; have the same context    
     ReadRegStr $2 HKCU "Software\Jabber\Exodus\Restart\$1" "cwd"
     StrCmp $2 "" done
     SetOutPath $2
     
     ReadRegStr $2 HKCU "Software\Jabber\Exodus\Restart\$1" "cmdline"
+    StrCmp $2 "" done
     
-    ReadRegDWORD $3 HKCU "Software\Jabber\Exodus\Restart\$1" "priority"
-    StrCmp $3 "" profile
-	StrCpy $3 '-i "$3"'
+    ; if it doesn't have .exe, add the Exodus.exe to the front of
+    ; the command line.  This is so that the first time an "old"
+    ; install upgrades, it will still work, since the "old" versions
+    ; didn't store the executable name in cmdline.
+    push $2
+    push ".exe"
+    call StrStr
+    pop $3
+    strcmp $3 "" insert exec 
 
-  profile:
-    ReadRegStr $4 HKCU "Software\Jabber\Exodus\Restart\$1" "profile"
-    StrCmp $4 "" show
-    StrCpy $4 '-f "$4"'
-
-  show:
-    ReadRegStr $5 HKCU "Software\Jabber\Exodus\Restart\$1" "show"
-    StrCmp $5 "" status
-    StrCpy $5 '-w "$5"'
-    
-  status:
-    ReadRegStr $6 HKCU "Software\Jabber\Exodus\Restart\$1" "status"
-    StrCmp $6 "" exec
-    StrCpy $6 '-s "$6"'
+  insert:       
+    strcpy $2 '"$INSTDIR\Exodus.exe" $2'
 
   exec:
-    DetailPrint '"$INSTDIR\Exodus.exe" $2 $3 $4 $5 $6'
-    Exec '"$INSTDIR\Exodus.exe" $2 $3 $4 $5 $6'
+    DetailPrint $2
+    Exec $2
     SetAutoClose "true"
 
   done:
