@@ -436,8 +436,7 @@ begin
     _stream.OnData := DataEvent;
     _stream.Connect(_profile);
 
-    if (_profile.ssl = ssl_port) then
-        _ssl_on := true;
+    _ssl_on := (_profile.ssl = ssl_port);
 end;
 
 {---------------------------------------}
@@ -502,6 +501,7 @@ begin
     _first_pres := false;
     _authd := false;
     _cur_server := '';
+    _ssl_on := false;
     _dispatcher.DispatchSignal('/session/disconnected', nil);
 
     if (_paused) then

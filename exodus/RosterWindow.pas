@@ -491,6 +491,7 @@ begin
         pnlConnect.Align := alClient;
         lblStatus.Caption := _(sDisconnected);
         lblLogin.Caption := _(sSignOn);
+        imgSSL.Visible := false;
     end
 
     // We are in the process of connecting
@@ -509,7 +510,7 @@ begin
         lblStatus.Caption := _(sAuthenticating);
         Self.showAniStatus();
         ShowPresence('online');
-        ResetPanels;
+        ResetPanels();
     end
 
     // we've been authenticated
@@ -1804,7 +1805,7 @@ procedure TfrmRosterWindow.ResetPanels;
 begin
     // order here is important
     pnlShow.Align := alBottom;
-    imgSSL.Visible := MainSession.SSLEnabled;
+    imgSSL.Visible := (MainSession.SSLEnabled) and (MainSession.Active);
 end;
 
 {---------------------------------------}
