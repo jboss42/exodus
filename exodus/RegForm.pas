@@ -341,7 +341,13 @@ begin
     if (pres.fromJID.jid = self.jid) then begin
         MainSession.UnRegisterCallback(pres_cb);
         pres_cb := -1;
-        if (pres.PresType = 'error') then begin
+
+        if (pres.isSubscription) then begin
+            // this is the service subscribing to us..
+            // The s10n.pas handler will catch this.
+        end
+
+        else if (pres.PresType = 'error') then begin
             // some kind of error
         end
 
