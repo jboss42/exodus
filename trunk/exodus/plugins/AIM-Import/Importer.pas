@@ -49,6 +49,7 @@ type
     procedure validateGateway();
     procedure importFile();
     procedure addItems();
+    function processName(name: string): string;
   public
     { Public declarations }
     _gjid: Widestring;
@@ -69,7 +70,7 @@ implementation
 {$R *.dfm}
 
 uses
-    StrUtils;
+    XMLUtils, StrUtils;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -143,6 +144,7 @@ end;
 {---------------------------------------}
 procedure TfrmImport.importFile();
 var
+    curi: string;
     jid, cur_grp, tmps, fn: String;
     itms, sl: TStringList;
     i, j, n: integer;
@@ -186,8 +188,9 @@ begin
                                 if (tmps <> '}') then begin
                                     li := ListView1.Items.Add();
                                     li.Caption := cur_grp;
-                                    li.SubItems.Add(tmps);
-                                    jid := tmps + '@' + _gjid;
+                                    curi := processName(tmps);
+                                    li.SubItems.Add(curi);
+                                    jid := processName(curi) + '@' + _gjid;
                                     li.SubItems.Add(jid);
                                     li.Checked := true;
                                 end;
@@ -197,8 +200,6 @@ begin
                     end
                     else if (tmps <> '}') then begin
                         // this is a valid entry.
-
-                        // xxx: take into account "screen name foo" here
                         itms.Delimiter := ' ';
                         itms.DelimitedText := tmps;
                         if (itms.Count > 1) then begin
@@ -206,8 +207,9 @@ begin
                             for n := 1 to itms.Count - 1 do begin
                                 li := ListView1.Items.Add();
                                 li.Caption := cur_grp;
-                                li.SubItems.Add(itms[n]);
-                                jid := itms[n] + '@' + _gjid;
+                                curi := processName(itms[n]);
+                                li.SubItems.Add(curi);
+                                jid := processName(curi) + '@' + _gjid;
                                 li.SubItems.Add(jid);
                                 li.Checked := true;
                             end;
@@ -221,6 +223,23 @@ begin
     end;
     sl.Free();
     btnNext.Caption := 'Finish';
+end;
+
+{---------------------------------------}
+function TfrmImport.processName(name: String): String;
+var
+    tmps: String;
+    i: integer;
+begin
+    // xxx: do other validation here?
+    tmps := TrimQuotes(name);
+    i := Pos(' ', tmps);
+    while (i > 0) do begin
+        Delete(tmps, i, 1);
+        i := Pos(' ', tmps);
+    end;
+
+    Result := tmps;
 end;
 
 {---------------------------------------}
