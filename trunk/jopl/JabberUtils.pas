@@ -33,6 +33,7 @@ function MessageDlgW(const Msg: Widestring; DlgType: TMsgDlgType;
 
 
 procedure split(value: WideString; list: TWideStringList; seps : WideString = ' '#9#10#13);
+procedure WordSplit(value: WideString; list: TWideStringList);
 
 implementation
 uses
@@ -131,6 +132,33 @@ begin
 
     end;
 end;
+
+{---------------------------------------}
+procedure WordSplit(value: WideString; list: TWideStringList);
+var
+    i, l : integer;
+    tmps : WideString;
+begin
+    tmps := Trim(value);
+    l := 1;
+    while l <= length(tmps) do begin
+        // search for the first non-space
+        while ((l <= length(tmps)) and (UnicodeIsWhiteSpace(Cardinal(tmps[l])))) do
+            inc(l);
+
+        if l > length(tmps) then exit;
+        i := l;
+
+        // search for the first space
+        while (i <= length(tmps)) and (not UnicodeIsWhiteSpace(Cardinal(tmps[i]))) do
+            inc(i);
+
+        list.Add(Copy(tmps, l, i - l));
+        l := i + 1;
+
+    end;
+end;
+
 
 {---------------------------------------}
 function UTCNow(): TDateTime;
