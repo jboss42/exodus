@@ -24,7 +24,7 @@ object frmInvite: TfrmInvite
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 237
+    Top = 234
     Width = 274
     Height = 34
     Align = alBottom
@@ -91,7 +91,7 @@ object frmInvite: TfrmInvite
     Left = 0
     Top = 101
     Width = 274
-    Height = 136
+    Height = 133
     Align = alClient
     Checkboxes = True
     Columns = <

@@ -1465,9 +1465,11 @@ object frmRosterWindow: TfrmRosterWindow
       Caption = 'Presence'
       object popSendPres: TMenuItem
         Caption = 'Send Presence'
+        OnClick = popSendPresClick
       end
       object popSendSubscribe: TMenuItem
         Caption = 'Subscribe'
+        OnClick = popSendSubscribeClick
       end
     end
     object popHistory: TMenuItem

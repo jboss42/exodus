@@ -88,11 +88,17 @@ begin
             chkSubscribe.Checked := tmp_b;
             chkSubscribe.Enabled := tmp_b;
             boxAdd.Enabled := tmp_b;
+            cboGroup.Items.Assign(MainSession.Roster.GrpList);
             if (tmp_b) then begin
                 txtNickname.Text := tmp_jid.user;
                 cboGroup.Items.Assign(MainSession.Roster.GrpList);
                 if cboGroup.Items.Count > 0 then
                     cboGroup.ItemIndex := 0;
+                end
+            else if (ri <> nil) then begin
+                txtNickName.Text := ri.nickname;
+                if (ri.Groups.Count > 0) then
+                    cboGroup.ItemIndex := cboGroup.Items.IndexOf(ri.Groups[0]);
                 end;
             end;
         sub.Show;
