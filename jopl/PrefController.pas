@@ -21,11 +21,11 @@ unit PrefController;
 
 interface
 uses
-    XMLTag, XMLParser, Presence, 
+    XMLTag, XMLParser, Presence,
     {$ifdef Win32}
     Forms, Windows, Registry,
     {$else}
-    iniFiles, QForms,  
+    iniFiles, QForms,
     {$endif}
     Classes, SysUtils;
 
@@ -68,7 +68,6 @@ const
 
 
 type
-
     TJabberProfile = class
     public
         Name: string;
@@ -77,8 +76,29 @@ type
         Server: string;
         Resource: string;
         Priority: integer;
+
+        ConnectionType: integer;
+
+        // Socket connection
+        Host: string;
         Port: integer;
         ssl: boolean;
+        SocksType: integer;
+        SocksHost: string;
+        SocksPort: integer;
+        SocksAuth: boolean;
+        SocksUsername: string;
+        SocksPassword: string;
+
+        // HTTP Connection
+        URL: string;
+        Poll: integer;
+        ProxyApproach: integer;
+        ProxyHost: string;
+        ProxyPort: integer;
+        ProxyAuth: boolean;
+        ProxyUsername: string;
+        ProxyPassword: string;
 
         procedure Load(tag: TXMLTag);
         procedure Save(node: TXMLTag);
@@ -149,7 +169,7 @@ function getUserDir: string;
 {---------------------------------------}
 implementation
 uses
-    Session, IQ, XMLUtils,
+    Session, IQ, XMLUtils, StrUtils,
     {$ifdef Win32}
     Graphics;
     {$else}
@@ -661,11 +681,12 @@ var
     t,l,w,h: integer;
 begin
     // set the bounds based on the position info
+    {
     t := dflt_top;
     l := dflt_left;
     w := 300;
     h := 300;
-
+    }
     fkey := MungeName(form.Classname);
 
     f := _pref_node.QueryXPTag('/exodus/positions/' + fkey);
@@ -674,6 +695,12 @@ begin
         l := SafeInt(f.getAttribute('left'));
         w := SafeInt(f.getAttribute('width'));
         h := SafeInt(f.getAttribute('height'));
+        end
+    else begin
+        t := form.Top;
+        l := form.Left;
+        w := form.Width;
+        h := form.Height;
         end;
 
     if (t < dflt_top) then t := dflt_top;
@@ -843,8 +870,29 @@ begin
     Password := tag.GetBasicText('password');
     Resource := tag.GetBasicText('resource');
     Priority := SafeInt(tag.GetBasicText('priority'));
+
+    ConnectionType := SafeInt(tag.GetBasicText('connection_type'));
+
+    // Socket connection
+    Host := tag.GetBasicText('host');
     Port := StrToIntDef(tag.GetBasicText('port'), 5222);
     ssl := (tag.GetBasicText('ssl') = 'yes');
+    SocksType := StrToIntDef(tag.GetBasicText('socks_type'), 0);
+    SocksHost := tag.GetBasicText('socks_host');
+    SocksPort := StrToIntDef(tag.GetBasicText('socks_port'), 0);
+    SocksAuth := (tag.GetBasicText('socks_auth') = 'yes');
+    SocksUsername := tag.GetBasicText('socks_username');
+    SocksPassword := tag.GetBasicText('socks_password');
+
+    // HTTP Connection
+    URL := tag.GetBasicText('url');
+    Poll := StrToIntDef(tag.GetBasicText('poll'), 10);;
+    ProxyApproach := StrToIntDef(tag.GetBasicText('proxy_approach'), 0);;
+    ProxyHost := tag.GetBasicText('proxy_host');
+    ProxyPort := StrToIntDef(tag.GetBasicText('proxy_port'), 0);
+    ProxyAuth := (tag.GetBasicText('proxy_auth') = 'yes');
+    ProxyUsername := tag.GetBasicText('proxy_username');
+    ProxyPassword := tag.GetBasicText('proxy_password');
 
     if (Name = '') then Name := 'Untitled Profile';
     if (Server = '') then Server := 'jabber.org';
@@ -861,11 +909,29 @@ begin
     node.AddBasicTag('password', Password);
     node.AddBasicTag('resource', Resource);
     node.AddBasicTag('priority', IntToStr(Priority));
+
+    node.AddBasicTag('connection_type', IntToStr(ConnectionType));
+
+    // Socket connection
+    node.AddBasicTag('host', Host);
     node.AddBasicTag('port', IntToStr(Port));
-    if (ssl) then
-        node.AddBasicTag('ssl', 'yes')
-    else
-        node.AddBasicTag('ssl', 'no');
+    node.AddBasicTag('ssl', IfThen(ssl, 'yes', 'no'));
+    node.AddBasicTag('socks_type', IntToStr(SocksType));
+    node.AddBasicTag('socks_host', SocksHost);
+    node.AddBasicTag('socks_port', IntToStr(SocksPort));
+    node.AddBasicTag('socks_auth', IfThen(SocksAuth, 'yes', 'no'));
+    node.AddBasicTag('socks_username', SocksUsername);
+    node.AddBasicTag('socks_password', SocksPassword);
+
+    // HTTP Connection
+    node.AddBasicTag('url', URL);
+    node.AddBasicTag('poll', IntToStr(Poll));
+    node.AddBasicTag('proxy_approach', IntToStr(ProxyApproach));
+    node.AddBasicTag('proxy_host', ProxyHost);
+    node.AddBasicTag('proxy_port', IntToStr(ProxyPort));
+    node.AddBasicTag('proxy_auth', IfThen(ProxyAuth, 'yes', 'no'));
+    node.AddBasicTag('proxy_username', ProxyUsername);
+    node.AddBasicTag('proxy_password', ProxyPassword);
 end;
 
 {---------------------------------------}

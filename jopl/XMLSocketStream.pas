@@ -22,18 +22,15 @@ unit XMLSocketStream;
 interface
 uses
     XMLTag,
-    XMLUtils,
-    XMLParser,
     XMLStream,
-    LibXMLParser,
     {$ifdef linux}
     QExtCtrls,
     {$else}
     ExtCtrls,
     {$endif}
-    SysUtils, IdThread, IdException, IdSSLOpenSSL,
-    IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
-    SyncObjs, Classes;
+    SysUtils, IdException, IdSSLOpenSSL,
+    IdTCPConnection, IdTCPClient,
+    SyncObjs;
 
 type
     TSocketThread = class;
