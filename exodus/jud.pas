@@ -49,7 +49,6 @@ type
     pnlBottom: TPanel;
     btnAction: TButton;
     btnClose: TButton;
-    pnlFields: TPanel;
     aniWait: TAnimate;
     lblWait: TLabel;
     PopupMenu1: TPopupMenu;
@@ -64,6 +63,7 @@ type
     cboGroup: TComboBox;
     lblAddGrp: TLabel;
     Splitter1: TSplitter;
+    pnlFields: TScrollBox;
     procedure btnCloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnActionClick(Sender: TObject);
