@@ -279,6 +279,7 @@ type
 
     // Some callbacks
     _sessioncb: integer;
+    _dns_cb: integer;
 
     // Reconnect variables
     _reconnect_interval: integer;
@@ -324,6 +325,7 @@ type
 
   published
     // Callbacks
+    procedure DNSCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
     procedure ChangePasswordCallback(event: string; tag: TXMLTag);
 
@@ -916,7 +918,6 @@ end;
 procedure TfrmExodus.DoConnect();
 var
     rip: string;
-    rport: Word;
     req_srv, req_a: string;
     pw : WideString;
 begin
@@ -937,40 +938,72 @@ begin
 
     MainSession.FireEvent('/session/connecting', nil);
 
-    // TODO: Make DNS lookups Async??
-    // Lookup the current SRV etc..
     with MainSession.Profile do begin
+        // These are fall-thru defaults..
+        if (Host <> '') then
+            ResolvedIP := Host
+        else
+            ResolvedIP := Server;
+        ResolvedPort := Port;
+
+        // If we should, do SRV lookups
         if (srv) then begin
+            _dns_cb := MainSession.RegisterCallback(DNSCallback, '/session/dns');
             req_srv := '_xmpp-client._tcp.' + Server;
             req_a := Server;
             rip := '';
 
-            if (GetSRVRecord(Resolver, req_srv, req_a, rip, rport)) then begin
-                ResolvedIP := rip;
-                if (rport > 0) then
-                    ResolvedPort := rport
-                else if (ssl = ssl_port) then
-                    ResolvedPort := 5223
-                else
-                    ResolvedPort := 5222;
-            end
-            else begin
-                ResolvedIP := Server;
-                if (ssl = ssl_port) then
-                    ResolvedPort := 5223
-                else
-                    ResolvedPort := 5222;
-            end;
+            DebugMsg('Looking up SRV: ' + req_srv);
+            GetSRVAsync(MainSession, Resolver, req_srv, req_a);
         end
         else begin
-            if (Host <> '') then
-                ResolvedIP := Host
-            else
-                ResolvedIP := Server;
-            ResolvedPort := Port;
+            DebugMsg('Using specified Host/Port: ' + Host + '  ' + IntToStr(Port));
+            MainSession.Connect(ExStartup.xmllang);
         end;
     end;
 
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.DNSCallback(event: string; tag: TXMLTag);
+var
+    t, ip: string;
+    p: Word;
+begin
+    // process the async DNS request
+    MainSession.UnRegisterCallback(_dns_cb);
+    _dns_cb := -1;
+    t := tag.getAttribute('type');
+    if (t = 'failed') then with MainSession.Profile do begin
+        ResolvedIP := Server;
+        if (ssl = ssl_port) then
+            ResolvedPort := 5223
+        else
+            ResolvedPort := 5222;
+
+        DebugMsg('Direct DNS failed.. Using server: ' + Server);
+        MainSession.Connect(ExStartup.xmllang);
+        exit;
+    end;
+
+    // get the bits off the packet
+    ip := tag.getAttribute('ip');
+    p := StrToIntDef(tag.getAttribute('port'), 0);
+
+    with MainSession.Profile do begin
+        ResolvedIP := ip;
+        if (p > 0) then
+            ResolvedPort := p
+        else if (ssl = ssl_port) then
+            ResolvedPort := 5223
+        else
+            ResolvedPort := 5222;
+
+        if (p > 0) then
+            DebugMsg('Got SRV: ' + ip + '  ' + IntToStr(p))
+        else
+            DebugMsg('Got A: ' + ip + '  ' + IntToStr(ResolvedPort));
+    end;
     MainSession.Connect(ExStartup.xmllang);
 end;
 
