@@ -76,7 +76,7 @@ InstallDirRegKey HKLM "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
 !insertmacro MUI_PAGECOMMAND_COMPONENTS
 !insertmacro MUI_PAGECOMMAND_DIRECTORY
 !insertmacro MUI_PAGECOMMAND_STARTMENU
-Page custom SetCustomNotify ;Custom page
+Page custom SetCustomShell ;Custom page
 !insertmacro MUI_PAGECOMMAND_INSTFILES
 !insertmacro MUI_PAGECOMMAND_FINISH
 ;Page custom SetCustomFinish ;Custom page
@@ -107,6 +107,23 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
         SetOutPath $INSTDIR
         File "Exodus.exe"
 	    File "IdleHooks.dll"
+
+        ; Setup stuff based on custom Shell page
+        !insertmacro MUI_INSTALLOPTIONS_READ ${DesktopSC} "notify.ini" "Field 2" "State"
+        StrCmp ${DesktopSC} "1" "" +2
+            ;Checked
+            CreateShortcut "$DESKTOP\Exodus.lnk" "$INSTDIR\Exodus.exe"
+    
+        !insertmacro MUI_INSTALLOPTIONS_READ ${QuickLaunchSC} "notify.ini" "Field 3" "State"
+        StrCmp ${QuickLaunchSC} "1" "" +2
+            ;Checked
+            CreateShortcut "$QUICKLAUNCH\Exodus.lnk" "$INSTDIR\Exodus.exe"
+        !insertmacro MUI_INSTALLOPTIONS_READ ${StartupSC} "notify.ini" "Field 4" "State"
+        StrCmp ${StartupSC} "1" "" +2
+            ;Checked
+            CreateShortcut "$SMSTARTUP\Exodus.lnk" "$INSTDIR\Exodus.exe"
+
+
 
         ; BRANDING: Uncomment if you are doing a branded setup.
         ; SetOverwrite off ; only if you don't want to overwrite existing file.
@@ -295,19 +312,11 @@ Section "" SEC_Menu
         "${HOME_URL}"
       WriteRegStr HKLM SOFTWARE\Jabber\Exodus "StartMenu" \
         "${MUI_STARTMENUPAGE_VARIABLE}"
-
+        
     !insertmacro MUI_STARTMENU_WRITE_END
 
   silent:
 
-SectionEnd
-
-Section "Desktop Icon" SEC_Desktop
-    CreateShortcut "$DESKTOP\Exodus.lnk" "$INSTDIR\Exodus.exe"
-SectionEnd
-
-Section "Quick Launch Icon" SEC_QuickLaunch
-    CreateShortcut "$QUICKLAUNCH\Exodus.lnk" "$INSTDIR\Exodus.exe"
 SectionEnd
 
 ; BRANDING: Remove this section
@@ -396,8 +405,8 @@ LangString DESC_Desktop ${LANG_ENGLISH} \
 LangString DESC_QuickLaunch ${LANG_ENGLISH} \
 "Put a shortcut to Exodus in the Quick-Launch bar."
 
-LangString NOTIFY_TITLE ${LANG_ENGLISH} "Notify running copies"
-LangString NOTIFY_SUBTITLE ${LANG_ENGLISH} "Exodus needs to be shut down to install a new version"
+LangString NOTIFY_TITLE ${LANG_ENGLISH} "Windows Dekstop and Shell Options"
+LangString NOTIFY_SUBTITLE ${LANG_ENGLISH} "Select options to install other shortcuts for Exodus."
 
 ;LangString FINISH_TITLE ${LANG_ENGLISH} "Finished Installing Exodus"
 ;LangString FINISH_SUBTITLE ${LANG_ENGLISH} "Final options"
@@ -414,8 +423,6 @@ SubCaption 3 ": Exit running Exodus versions!"
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Bleed} $(DESC_Bleed)  
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Plugins} $(DESC_Plugins)
     !include plugins\plugin-desc.nsi
-    !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Desktop} $(DESC_Desktop)
-    !insertmacro MUI_DESCRIPTION_TEXT ${SEC_QuickLaunch} $(DESC_QuickLaunch)
 !insertmacro MUI_FUNCTIONS_DESCRIPTION_END
 
 
@@ -549,8 +556,8 @@ Function .onInit
 
 FunctionEnd
 
-Function SetCustomNotify
-  !insertmacro MUI_HEADER_TEXT "$(NOTIFY_TITLE)" "$(NOTIFY_SUBTITLE)"
+Function SetCustomShell
+  !insertmacro MUI_HEADER_TEXT "$(CUSTOMSHELL_TITLE)" "$(CUSTOMSHELL_SUBTITLE)"
   !insertmacro MUI_INSTALLOPTIONS_DISPLAY "notify.ini"
 FunctionEnd
 
