@@ -33,7 +33,7 @@ object frmInputPass: TfrmInputPass
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 66
+    Top = 71
     Width = 260
     Height = 32
     Align = alBottom
@@ -44,6 +44,7 @@ object frmInputPass: TfrmInputPass
     end
     inherited Panel1: TPanel
       Left = 100
+      Height = 27
     end
   end
 end

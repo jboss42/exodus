@@ -316,6 +316,7 @@ procedure TfrmDockable.FormActivate(Sender: TObject);
 begin
     if timFlasher.Enabled then
         timFlasher.Enabled := false;
+    StopTrayAlert();
 end;
 
 {---------------------------------------}
