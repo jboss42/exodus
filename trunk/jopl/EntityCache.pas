@@ -246,7 +246,8 @@ begin
         until ((cur = nil) or (i >= _cache.Count));
         if (cur = nil) then exit;
     end;
-    _cache.Delete(i);
+    if (i >= 0) then
+        _cache.Delete(i);
 end;
 
 {---------------------------------------}

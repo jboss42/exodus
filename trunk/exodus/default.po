@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-04-30 08:40\n"
-"PO-Revision-Date: 2004-04-30 08:40\n"
+"POT-Creation-Date: 2004-05-06 08:10\n"
+"PO-Revision-Date: 2004-05-06 08:10\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -174,7 +174,7 @@ msgstr ""
 #. frmAbout..pnlVersion..Caption
 #: About.dfm:1437
 #: About.pas:81
-#: ExEvents.pas:294
+#: ExEvents.pas:305
 msgid "Version: "
 msgstr ""
 
@@ -1109,7 +1109,7 @@ msgstr ""
 #: Profile.dfm:207
 #. frmRosterWindow..popRoster..popClientInfo..popLast..Caption
 #: RosterWindow.dfm:349
-#: ExEvents.pas:520
+#: ExEvents.pas:531
 msgid "Last Activity"
 msgstr ""
 
@@ -6556,88 +6556,88 @@ msgstr ""
 msgid " is replying."
 msgstr ""
 
-#: ChatWin.pas:637
+#: ChatWin.pas:640
 msgid "Chat Activity: "
 msgstr ""
 
-#: ChatWin.pas:755
+#: ChatWin.pas:758
 #. post a msg to the window and disable the text input box.
 #: Room.pas:847
 msgid "You have been disconnected."
 msgstr ""
 
 #. if this jid just got blocked, just close the window.
-#: ChatWin.pas:775
+#: ChatWin.pas:778
 msgid "This user is now blocked."
 msgstr ""
 
 #. Change the bulb
-#: ChatWin.pas:797
+#: ChatWin.pas:800
 #. make sure the user is still connected
-#: ChatWin.pas:842
-#: ChatWin.pas:843
+#: ChatWin.pas:845
+#: ChatWin.pas:846
 msgid "offline"
 msgstr ""
 
-#: ChatWin.pas:799
+#: ChatWin.pas:802
 msgid "unknown"
 msgstr ""
 
-#: ChatWin.pas:801
+#: ChatWin.pas:804
 msgid "away"
 msgstr ""
 
-#: ChatWin.pas:803
+#: ChatWin.pas:806
 msgid "xa"
 msgstr ""
 
-#: ChatWin.pas:805
+#: ChatWin.pas:808
 msgid "dnd"
 msgstr ""
 
-#: ChatWin.pas:807
+#: ChatWin.pas:810
 msgid "chat"
 msgstr ""
 
-#: ChatWin.pas:857
+#: ChatWin.pas:860
 msgid "available"
 msgstr ""
 
-#: ChatWin.pas:861
-#: ChatWin.pas:863
+#: ChatWin.pas:864
+#: ChatWin.pas:866
 msgid "is now"
 msgstr ""
 
 #. check to see if we're already subscribed...
-#: ChatWin.pas:892
+#: ChatWin.pas:895
 msgid "You are already subscribed to this contact"
 msgstr ""
 
-#: ChatWin.pas:1228
+#: ChatWin.pas:1231
 msgid "This chat window is busy. Close anyways?"
 msgstr ""
 
 #. remove from list?
-#: COMController.pas:217
+#: COMController.pas:220
 msgid "Remove this plugin from the list of plugins to be loaded at "
 "startup?"
 msgstr ""
 
-#: COMController.pas:316
+#: COMController.pas:319
 msgid "Plugin could not be created. (%s)"
 msgstr ""
 
-#: COMController.pas:326
+#: COMController.pas:329
 msgid "Plugin class does not support IExodusPlugin. "
 "(%s)"
 msgstr ""
 
-#: COMController.pas:338
+#: COMController.pas:341
 msgid "Plugin class could not be initialized. "
 "(%s)"
 msgstr ""
 
-#: COMController.pas:360
+#: COMController.pas:363
 msgid "Plugin could not be initialized or configured."
 msgstr ""
 
@@ -6671,80 +6671,80 @@ msgid "Downloading public server list"
 msgstr ""
 
 #: Debug.pas:184
-#: Debug.pas:371
+#: Debug.pas:375
 msgid "Disconnected"
 msgstr ""
 
-#: ExEvents.pas:147
+#: ExEvents.pas:146
 #. New Chat Window
 #: GUIFactory.pas:111
 msgid "Chat with "
 msgstr ""
 
-#: ExEvents.pas:154
+#: ExEvents.pas:153
 msgid "Msg from "
 msgstr ""
 
-#: ExEvents.pas:187
+#: ExEvents.pas:176
 msgid "Invite from "
 msgstr ""
 
-#: ExEvents.pas:268
-#: ExEvents.pas:508
+#: ExEvents.pas:279
+#: ExEvents.pas:519
 msgid "Time Response"
 msgstr ""
 
-#: ExEvents.pas:271
+#: ExEvents.pas:282
 msgid "Local Time: "
 msgstr ""
 
-#: ExEvents.pas:274
+#: ExEvents.pas:285
 msgid "Ping Time: %s seconds."
 msgstr ""
 
-#: ExEvents.pas:290
-#: ExEvents.pas:514
+#: ExEvents.pas:301
+#: ExEvents.pas:525
 msgid "Version Response"
 msgstr ""
 
-#: ExEvents.pas:290
+#: ExEvents.pas:301
 msgid "Description: "
 msgstr ""
 
-#: ExEvents.pas:298
+#: ExEvents.pas:309
 msgid "OS: "
 msgstr ""
 
-#: ExEvents.pas:312
+#: ExEvents.pas:323
 msgid "Idle for "
 msgstr ""
 
-#: ExEvents.pas:402
-#: ExEvents.pas:403
+#: ExEvents.pas:413
+#: ExEvents.pas:414
 #: Room.pas:470
 #: Room.pas:472
 msgid "ERROR: "
 msgstr ""
 
-#: ExEvents.pas:403
+#: ExEvents.pas:414
 msgid ", Code="
 msgstr ""
 
-#: ExEvents.pas:407
+#: ExEvents.pas:418
 msgid "Unknown Error"
 msgstr ""
 
-#: ExEvents.pas:409
+#: ExEvents.pas:420
 msgid "Original Message was:"
 msgstr ""
 
 #. this is a queue'd chat msg
-#: ExEvents.pas:468
+#: ExEvents.pas:479
 msgid "New chat conversation"
 msgstr ""
 
 #. check for x:oob URL's
-#: ExEvents.pas:491
+#: ExEvents.pas:502
 msgid "This message contains a URL: "
 msgstr ""
 
@@ -7256,7 +7256,7 @@ msgstr ""
 
 #: MsgRecv.pas:452
 #. Make sure we don't get dups
-#: MsgRecv.pas:764
+#: MsgRecv.pas:766
 msgid "Next"
 msgstr ""
 
@@ -7270,7 +7270,7 @@ msgstr ""
 msgid "Message from "
 msgstr ""
 
-#: MsgRecv.pas:776
+#: MsgRecv.pas:778
 msgid "You have unread messages. Read all messages before closing the "
 "window."
 msgstr ""
