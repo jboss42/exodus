@@ -636,8 +636,9 @@ Function DownloadPlugin
 
     CreateDirectory "$INSTDIR\plugins"
     ; BRANDING: Change this URL
-    NSISdl::download "${HOME_URL}/plugins/$1.zip" \
-        "$INSTDIR\plugins\$1.zip"
+    !include plugins\plugin-download.nsi
+    ;NSISdl::download "${HOME_URL}/plugins/$1.zip" \
+    ;    "$INSTDIR\plugins\$1.zip"
     Pop $R0  
     StrCmp $R0 "success" unzip
     Abort "Error downloading $1 plugin"
