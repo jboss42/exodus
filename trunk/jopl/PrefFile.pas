@@ -212,7 +212,7 @@ begin
         // old-style prefs.  convert to new style, so that save() will
         // do the right thing.
         s := _root.ChildTags();
-        for i := s.count - 1 downto 0 do begin
+        for i := 0 to s.count - 1 do begin
             t := s.Tags[i];
             if (t.Name = 'presence') then begin
                 _pres.AddTag(TXMLTag.Create(t));
@@ -485,7 +485,7 @@ end;
 function TPrefFile.findPresenceTag(pkey: Widestring): TXMLTag;
 begin
     // get some custom pres from the list
-    Result := _pres.QueryXPTag('/presii/presence@name="' + pkey + '"');
+    Result := _pres.QueryXPTag('/presii/presence[@name="' + pkey + '"]');
 end;
 
 {---------------------------------------}
@@ -496,7 +496,7 @@ begin
     _dirty := true;
 
     // remove this specific presence
-    tag := _pres.QueryXPTag('/presii/presence@name="' + pkey + '"');
+    tag := _pres.QueryXPTag('/presii/presence[@name="' + pkey + '"]');
 
     if (tag <> nil) then
         _pres.RemoveTag(tag);

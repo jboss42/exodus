@@ -113,8 +113,6 @@ var
     i: integer;
     cp: TJabberCustomPres;
 begin
-    inherited;
-
     with MainSession.Prefs do begin
         // Custom presence list
         RemoveAllPresence();
@@ -123,6 +121,8 @@ begin
             setPresence(cp);
         end;
     end;
+
+    inherited;
 end;
 
 {---------------------------------------}
