@@ -159,6 +159,8 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 procedure TXMLVCardTel.Parse(tag: TXMLTag);
+var
+    n: TXMLTag;
 begin
     // parse a <TEL> tag
     work := false;
@@ -166,7 +168,7 @@ begin
     fax := false;
     voice := false;
     number := '';
-    
+
     if tag.GetFirstTag('WORK') <> nil then
         work := true
     else
@@ -176,8 +178,12 @@ begin
         voice := true
     else
         fax := true;
-        
-    number := tag.Data;
+
+    n := tag.GetFirstTag('NUM');
+    if (n <> nil) then
+        number := n.Data
+    else
+        number := tag.Data;
 end;
 
 {---------------------------------------}
@@ -191,7 +197,7 @@ begin
     else
         tag.AddTag('FAX');
 
-    tag.AddCData(number)
+    tag.AddBasicTag('NUM', number);
 end;
 
 {---------------------------------------}
