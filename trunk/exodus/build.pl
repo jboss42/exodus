@@ -117,7 +117,7 @@ EOF
 	  AddSize $size
 	  Push "$base"
 	  Call DownloadPlugin
-          RegDll "\$INSTDIR\\plugins\\$base.dll"
+      RegDll "\$INSTDIR\\plugins\\$base.dll"
 	SectionEnd
 	
 EOF
