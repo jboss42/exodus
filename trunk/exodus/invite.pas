@@ -82,6 +82,9 @@ var
     e: TJabberEvent;
 begin
     // factory for GUI
+    // kick and ban get here.. because of status codes
+
+
     e := CreateJabberEvent(tag);
 
     if (MainSession.prefs.getInt('invite_treatment') = invite_accept) then begin

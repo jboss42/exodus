@@ -131,7 +131,7 @@ begin
         '/packet/iq[@type="set"]/query[@xmlns="' + XMLNS_IQOOB + '"]',
         FileReceive);
     _muc_invite := TFactoryResponder.Create(MainSession,
-        '/packet/message/x[@xmlns="' + XMLNS_MUCUSER + '"]',
+        '/packet/message/x[@xmlns="' + XMLNS_MUCUSER + '"]/invite',
         showRecvInvite);
     _conf_invite := TFactoryResponder.Create(MainSession,
         '/packet/message/x[@xmlns="' + XMLNS_XCONFERENCE + '"]',
