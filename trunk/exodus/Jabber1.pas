@@ -182,6 +182,7 @@ type
     trayMessage: TMenuItem;
     timReconnect: TTimer;
     ShowEventsWindow1: TMenuItem;
+    presToggle: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -237,6 +238,7 @@ type
     procedure mnuBrowserClick(Sender: TObject);
     procedure timReconnectTimer(Sender: TObject);
     procedure ShowEventsWindow1Click(Sender: TObject);
+    procedure presToggleClick(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -2619,6 +2621,15 @@ end;
 procedure TfrmExodus.xDataCallback(event: string; tag: TXMLTag);
 begin
     showXData(tag);
+end;
+
+procedure TfrmExodus.presToggleClick(Sender: TObject);
+begin
+    if (MainSession.Show = '') then
+        MainSession.setPresence('away', sRosterAway, MainSession.Priority)
+    else
+        MainSession.setPresence('', sRosterAvail, MainSession.Priority)
+
 end;
 
 initialization
