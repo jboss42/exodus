@@ -313,6 +313,9 @@ object frmRosterWindow: TfrmRosterWindow
       ShortCut = 121
       OnClick = popPropertiesClick
     end
+    object N7: TMenuItem
+      Caption = '-'
+    end
   end
   object popStatus: TPopupMenu
     Images = frmExodus.ImageList2

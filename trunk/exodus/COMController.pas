@@ -104,10 +104,13 @@ type
     function registerPresenceXML(const XML: WideString): WideString; safecall;
     procedure removePresenceXML(const ID: WideString); safecall;
     procedure trackWindowsMsg(Message: Integer); safecall;
+    function addContactMenu(const Caption: WideString): WideString; safecall;
+    procedure removeContactMenu(const ID: WideString); safecall;
     { Protected declarations }
   private
     _menu_items: TWideStringList;
-
+    _roster_menus: TWidestringlist;
+    
   public
     constructor Create();
     destructor Destroy(); override;
@@ -142,11 +145,11 @@ procedure ReloadPlugins(sl: TWidestringlist);
 implementation
 
 uses
-    ExResponders, 
+    ExResponders,
     Chat, ChatController, JabberID, MsgRecv, Room, Browser, Jud,
-    ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug, 
+    ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
     COMChatController, Dockable, Agents,
-    Jabber1, Session, Roster, PrefController, 
+    Jabber1, Session, Roster, RosterWindow, PrefController, 
     Menus, Dialogs, Variants, Forms, SysUtils, ComServ;
 
 var
@@ -334,12 +337,15 @@ constructor TExodusController.Create();
 begin
     inherited Create();
     _menu_items := TWidestringList.Create();
+    _roster_menus := Twidestringlist.Create();
+    
 end;
 
 {---------------------------------------}
 destructor TExodusController.Destroy();
 begin
     _menu_items.Free();
+    _roster_menus.Free();
     OutputDebugString('Destroying TExodusController');
 
     inherited;
@@ -835,6 +841,35 @@ end;
 procedure TExodusController.trackWindowsMsg(Message: Integer);
 begin
     frmExodus.TrackWindowsMsg(Message);
+end;
+
+{---------------------------------------}
+function TExodusController.addContactMenu(
+  const Caption: WideString): WideString;
+var
+    id: Widestring;
+    mi: TMenuItem;
+begin
+    // add a new TMenuItem to the Plugins menu
+    mi := TMenuItem.Create(frmRosterWindow);
+    frmRosterWindow.popRoster.Items.Add(mi);
+    mi.Caption := caption;
+    mi.OnClick := frmRosterWindow.pluginClick;
+    id := 'plugin_' + IntToStr(_roster_menus.Count);
+    _roster_menus.AddObject(id, mi);
+    Result := id;
+end;
+
+{---------------------------------------}
+procedure TExodusController.removeContactMenu(const ID: WideString);
+var
+    idx: integer;
+begin
+    idx := _roster_menus.IndexOf(ID);
+    if (idx >= 0) then begin
+        TMenuItem(_roster_menus.Objects[idx]).Free();
+        _roster_menus.Delete(idx);
+    end;
 end;
 
 initialization

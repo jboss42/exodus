@@ -11,8 +11,8 @@ unit ExodusCOM_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.16 $
-// File generated on 1/15/2003 6:42:51 AM from Type Library described below.
+// PASTLWTR : $Revision: 1.17 $
+// File generated on 1/25/2003 8:49:02 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -186,6 +186,8 @@ type
     function registerPresenceXML(const xml: WideString): WideString; safecall;
     procedure removePresenceXML(const ID: WideString); safecall;
     procedure trackWindowsMsg(Message: Integer); safecall;
+    function addContactMenu(const Caption: WideString): WideString; safecall;
+    procedure removeContactMenu(const ID: WideString); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -269,6 +271,8 @@ type
     function registerPresenceXML(const xml: WideString): WideString; dispid 57;
     procedure removePresenceXML(const ID: WideString); dispid 58;
     procedure trackWindowsMsg(Message: Integer); dispid 59;
+    function addContactMenu(const Caption: WideString): WideString; dispid 60;
+    procedure removeContactMenu(const ID: WideString); dispid 61;
   end;
 
 // *********************************************************************//
@@ -284,6 +288,7 @@ type
     function RegisterPlugin(const Plugin: IExodusChatPlugin): Integer; safecall;
     function UnRegister(ID: Integer): WordBool; safecall;
     function getMagicInt(Part: ChatParts): Integer; safecall;
+    procedure RemoveContextMenu(const ID: WideString); safecall;
     property jid: WideString read Get_jid;
     property MsgOutText: WideString read Get_MsgOutText;
   end;
@@ -301,6 +306,7 @@ type
     function RegisterPlugin(const Plugin: IExodusChatPlugin): Integer; dispid 3;
     function UnRegister(ID: Integer): WordBool; dispid 5;
     function getMagicInt(Part: ChatParts): Integer; dispid 6;
+    procedure RemoveContextMenu(const ID: WideString); dispid 7;
   end;
 
 // *********************************************************************//
