@@ -694,11 +694,12 @@ var
 begin
     // get a single properly formatted widestring from an input
     // RichEdit control
-    Result := '';
-    for i := 0 to Input.WideLines.Count - 1 do begin
-        if (Result <> '') then
-            Result := Result + Chr(13);
-        Result := Result + TrimRight(Input.WideLines[i]);
+    Result := Input.WideText;
+    for i := Length(Result) downto 1 do begin
+        if (Result[i] = Chr(10)) then
+            Delete(Result, i, 1)
+        else if (Result[i] = Chr(11)) then
+            Result[i] := Chr(13);
     end;
 end;
 
