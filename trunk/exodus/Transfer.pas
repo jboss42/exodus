@@ -89,7 +89,6 @@ type
         _http: TIdHTTP;
         _stream: TFileStream;
         _form: TfrmTransfer;
-        _done: boolean;
         _pos_max: longint;
         _pos: longint;
         _new_txt: TWidestringlist;
@@ -144,11 +143,13 @@ resourcestring
     sXferSending = 'Sending file...';
     sXferRecvDisconnected = 'Receiver disconnected.';
     sXferTryingClose = 'Trying to close.';
+    sXferDone = 'File transfer is done.';
     sXferConn = 'Got connection.';
     sXferDefaultDesc = 'Sending you a file.';
     sXferCreateDir = 'This directory does not exist. Create it?';
     sXferStreamError = 'There was an error trying to create the file.';
     sXferDavError = 'There was an error trying to upload the file to your web host.';
+    sXferRecvError = 'There was an error receiving the file.';
 
 procedure FileReceive(tag: TXMLTag); overload;
 procedure FileReceive(from, url, desc: string); overload;
@@ -356,14 +357,18 @@ end;
 procedure TTransferThread.Run();
 begin
     try
-        if (_method = 'get') then
-            _http.Get(_url, _stream)
-        else
-            _http.Put(Self.url, _stream);
-    finally
-        FreeAndNil(_stream);
+        try
+            if (_method = 'get') then
+                _http.Get(_url, _stream)
+            else
+                _http.Put(Self.url, _stream);
+        finally
+            FreeAndNil(_stream);
+        end;
+    except
     end;
-    PostMessage(_form.Handle, WM_THREAD_DONE, 0, _http.ResponseCode);
+    
+    SendMessage(_form.Handle, WM_THREAD_DONE, 0, _http.ResponseCode);
     Self.Terminate();
 end;
 
@@ -381,12 +386,7 @@ begin
         Self.Terminate();
     end;
 
-    if (_done) then with _form do begin
-        frameButtons1.btnOK.Caption := sOpen;
-        frameButtons1.btnCancel.Caption := sClose;
-        mode := xfer_recvd;
-    end
-    else with _form do begin
+    with _form do begin
         bar1.Max := _pos_max;
         bar1.Position := _pos;
         for i := 0 to _new_txt.Count - 1 do
@@ -432,7 +432,9 @@ end;
 procedure TTransferThread.httpClientWorkEnd(Sender: TObject;
   AWorkMode: TWorkMode);
 begin
-    _done := true;
+    _lock.Acquire();
+    _new_txt.Add(sXferDone);
+    _lock.Release();
     Synchronize(Update);
 end;
 
@@ -573,13 +575,26 @@ begin
     // our thread completed.
     if (Self.Mode = xfer_davputting) then begin
         Self.Mode := xfer_sending;
-        if ((httpClient.ResponseCode >= 200) and
-            (httpClient.ResponseCode < 300)) then
+        if ((msg.LParam >= 200) and
+            (msg.LParam < 300)) then
             doSendIQ()
         else
             MessageDlg(sXferDavError, mtError, [mbOK], 0);
-            
+
         Self.Close();
+    end
+    else if (Self.Mode = xfer_recv) then begin
+        if ((msg.LParam >= 200) and
+            (msg.LParam < 300)) then begin
+            frameButtons1.btnOK.Caption := sOpen;
+            frameButtons1.btnCancel.Caption := sClose;
+            mode := xfer_recvd;
+        end
+        else begin
+            MessageDlg(sXferRecvError, mtError, [mbOK], 0);
+            DeleteFile(filename);
+            Self.Close();
+        end;
     end;
 end;
 
