@@ -1749,7 +1749,8 @@ begin
 
         // Undock the MsgQueue... if it's empty, close it.
         if (frmMsgQueue <> nil) then begin
-            if (frmMsgQueue.lstEvents.Items.Count > 0) then begin
+            if ((frmMsgQueue.lstEvents.Items.Count > 0) and
+                (not MainSession.Prefs.getBool('close_queue'))) then begin
                 frmMsgQueue.Align := alNone;
                 frmMsgQueue.FloatForm;
                 end
@@ -1794,6 +1795,7 @@ begin
     if (frmMsgQueue <> nil) then begin
         frmMsgQueue.ManualDock(pnlRight, nil, alClient);
         frmMsgQueue.Show;
+        frmMsgQueue.Align := alClient;
         end;
 end;
 

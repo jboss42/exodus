@@ -840,12 +840,14 @@ begin
     pnlJID.Width := Panel1.Width - btnClose.Width - 5;
 end;
 
+{---------------------------------------}
 procedure TfrmChat.btnCloseClick(Sender: TObject);
 begin
   inherited;
     Self.Close();
 end;
 
+{---------------------------------------}
 procedure TfrmChat.popClearHistoryClick(Sender: TObject);
 begin
     inherited;

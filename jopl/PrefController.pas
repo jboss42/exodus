@@ -192,7 +192,7 @@ function getUserDir: string;
 implementation
 uses
     {$ifdef Win32}
-    Graphics,
+    Graphics, ShellAPI, 
     {$else}
     QGraphics,
     {$endif}
@@ -1019,7 +1019,7 @@ begin
     SocksType := StrToIntDef(tag.GetBasicText('socks_type'), 0);
     SocksHost := tag.GetBasicText('socks_host');
     SocksPort := StrToIntDef(tag.GetBasicText('socks_port'), 0);
-    SocksAuth := (tag.GetBasicText('socks_auth') = 'yes');
+    SocksAuth := (tag.GetBasicText('socks_auth') = '-1');
     SocksUsername := tag.GetBasicText('socks_username');
     SocksPassword := tag.GetBasicText('socks_password');
 
@@ -1029,7 +1029,7 @@ begin
     ProxyApproach := StrToIntDef(tag.GetBasicText('proxy_approach'), 0);;
     ProxyHost := tag.GetBasicText('proxy_host');
     ProxyPort := StrToIntDef(tag.GetBasicText('proxy_port'), 0);
-    ProxyAuth := (tag.GetBasicText('proxy_auth') = 'yes');
+    ProxyAuth := (tag.GetBasicText('proxy_auth') = '-1');
     ProxyUsername := tag.GetBasicText('proxy_username');
     ProxyPassword := tag.GetBasicText('proxy_password');
 

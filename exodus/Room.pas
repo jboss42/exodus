@@ -118,6 +118,9 @@ type
     procedure SendMsg; override;
     function GetNick(rjid: Widestring): Widestring;
     property HintText: Widestring read _hint_text;
+
+    procedure DockForm; override;
+    procedure FloatForm; override;
   end;
 
 var
@@ -1016,17 +1019,34 @@ begin
     btnClose.Visible := Docked;
 end;
 
+{---------------------------------------}
 procedure TfrmRoom.popShowHistoryClick(Sender: TObject);
 begin
     inherited;
     ShowLog(Self.jid);
 end;
 
+{---------------------------------------}
 procedure TfrmRoom.popClearHistoryClick(Sender: TObject);
 begin
     inherited;
     ClearLog(Self.jid);
 end;
+
+{---------------------------------------}
+procedure TfrmRoom.DockForm;
+begin
+    inherited;
+    btnClose.Visible := true;
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.FloatForm;
+begin
+    inherited;
+    btnClose.Visible := false;
+end;
+
 
 initialization
     room_list := TStringlist.Create();

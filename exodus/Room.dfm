@@ -76,6 +76,7 @@ inherited frmRoom: TfrmRoom
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
+      Visible = False
       OnClick = btnCloseClick
     end
     object pnlSubj: TPanel
@@ -89,7 +90,7 @@ inherited frmRoom: TfrmRoom
       object lblSubjectURL: TLabel
         Left = 0
         Top = 0
-        Width = 41
+        Width = 39
         Height = 21
         Cursor = crHandPoint
         Align = alLeft
