@@ -108,6 +108,7 @@ begin
         fmsg := TfrmMsgRecv.Create(nil);
         with fmsg do begin
             eType := e.eType;
+            recips.Add(e.from);
             txtFrom.Caption := e.from;
             txtSubject.Caption := e.data_type;
             txtMsg.Lines.Assign(e.Data);
