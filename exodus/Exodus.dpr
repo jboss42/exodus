@@ -155,7 +155,7 @@ uses
 
 begin
   Application.Initialize;
-  Application.Title := 'Exodus';
+  Application.Title := '';
 
   Application.ShowMainForm := false;
   Application.CreateForm(TfrmExodus, frmExodus);

@@ -100,9 +100,6 @@ type
 
   end;
 
-resourcestring
-    sWordWrapWarning = 'Word wrapping the input may cause unsual hard-returns to be embedded into your messages. Recipients of the messages will see this hard returns.';
-
 var
   frmBaseChat: TfrmBaseChat;
 
