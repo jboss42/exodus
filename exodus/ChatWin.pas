@@ -58,6 +58,7 @@ type
     procedure imgStatusPaint(Sender: TObject);
     procedure timFlashTimer(Sender: TObject);
     procedure MsgOutChange(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
     jid: string;            // jid of the person we are talking to
@@ -690,6 +691,12 @@ begin
 
   // let Windows know that you're done
   DragFinish( msg.WParam );
+end;
+
+procedure TfrmChat.FormDestroy(Sender: TObject);
+begin
+    inherited;
+    DragAcceptFiles( Handle, false );
 end;
 
 end.
