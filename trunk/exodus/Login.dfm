@@ -1,8 +1,8 @@
 object frmLogin: TfrmLogin
-  Left = 289
-  Top = 210
+  Left = 1006
+  Top = 181
   Width = 250
-  Height = 278
+  Height = 297
   Caption = 'Jabber Login'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -52,14 +52,14 @@ object frmLogin: TfrmLogin
   end
   object Label6: TLabel
     Left = 8
-    Top = 128
+    Top = 152
     Width = 34
     Height = 13
     Caption = 'Priority:'
   end
   object lblNewProfile: TLabel
     Left = 4
-    Top = 187
+    Top = 211
     Width = 94
     Height = 13
     Cursor = crHandPoint
@@ -74,7 +74,7 @@ object frmLogin: TfrmLogin
   end
   object lblDelete: TLabel
     Left = 147
-    Top = 187
+    Top = 211
     Width = 81
     Height = 13
     Cursor = crHandPoint
@@ -86,6 +86,13 @@ object frmLogin: TfrmLogin
     Font.Style = [fsUnderline]
     ParentFont = False
     OnClick = lblDeleteClick
+  end
+  object Label7: TLabel
+    Left = 8
+    Top = 128
+    Width = 22
+    Height = 13
+    Caption = 'Port:'
   end
   object txtUsername: TEdit
     Left = 98
@@ -129,7 +136,7 @@ object frmLogin: TfrmLogin
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 212
+    Top = 231
     Width = 242
     Height = 37
     Align = alBottom
@@ -164,7 +171,7 @@ object frmLogin: TfrmLogin
   end
   object txtPriority: TEdit
     Left = 98
-    Top = 124
+    Top = 148
     Width = 39
     Height = 21
     TabOrder = 5
@@ -172,7 +179,7 @@ object frmLogin: TfrmLogin
   end
   object spnPriority: TUpDown
     Left = 137
-    Top = 124
+    Top = 148
     Width = 15
     Height = 21
     Associate = txtPriority
@@ -184,18 +191,27 @@ object frmLogin: TfrmLogin
   end
   object chkSSL: TCheckBox
     Left = 98
-    Top = 149
+    Top = 173
     Width = 127
     Height = 17
     Caption = 'Use SSL to connect'
     TabOrder = 7
+    OnClick = chkSSLClick
   end
   object chkInvisible: TCheckBox
     Left = 98
-    Top = 167
+    Top = 191
     Width = 103
     Height = 15
     Caption = 'Invisible Mode'
     TabOrder = 9
+  end
+  object txtPort: TEdit
+    Left = 98
+    Top = 124
+    Width = 130
+    Height = 21
+    TabOrder = 10
+    Text = '5222'
   end
 end

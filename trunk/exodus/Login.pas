@@ -46,10 +46,13 @@ type
     lblDelete: TLabel;
     chkSSL: TCheckBox;
     chkInvisible: TCheckBox;
+    Label7: TLabel;
+    txtPort: TEdit;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cboProfilesChange(Sender: TObject);
     procedure lblNewProfileClick(Sender: TObject);
     procedure lblDeleteClick(Sender: TObject);
+    procedure chkSSLClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -97,6 +100,7 @@ begin
             password := txtPassword.Text;
             resource := cboResource.Text;
             Priority := spnPriority.Position;
+            Port     := StrToIntDef(txtPort.Text, 5222);
             ssl := chkSSL.Checked;
             end;
 
@@ -135,6 +139,7 @@ begin
     cboServer.Text := p.Server;
     cboResource.Text := p.Resource;
     spnPriority.Position := p.Priority;
+    txtPort.Text := IntToStr(p.Port);
     chkSSL.Checked := p.ssl;
     chkInvisible.Checked := false;
 end;
@@ -181,6 +186,18 @@ begin
     cboProfiles.ItemIndex := MainSession.Prefs.getInt('profile_active');
     cboProfilesChange(nil);
 
+end;
+
+procedure TfrmLogin.chkSSLClick(Sender: TObject);
+begin
+    if (chkSSL.Checked) then begin
+        if (txtPort.Text = '5222') then
+            txtPort.Text := '5223';
+        end
+    else begin
+        if (txtPort.Text = '5223') then
+            txtPort.Text := '5222';
+        end;
 end;
 
 end.

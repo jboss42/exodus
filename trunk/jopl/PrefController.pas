@@ -77,6 +77,7 @@ type
         Server: string;
         Resource: string;
         Priority: integer;
+        Port: integer;
         ssl: boolean;
 
         procedure Load(tag: TXMLTag);
@@ -669,6 +670,7 @@ function TPrefController.CreateProfile(name: string): TJabberProfile;
 begin
     Result := TJabberProfile.Create();
     Result.Name := name;
+    Result.Port := 5222;
     _profiles.AddObject(name, Result);
 end;
 
@@ -803,6 +805,7 @@ begin
     Password := tag.GetBasicText('password');
     Resource := tag.GetBasicText('resource');
     Priority := SafeInt(tag.GetBasicText('priority'));
+    Port := StrToIntDef(tag.GetBasicText('port'), 5222);
     ssl := (tag.GetBasicText('ssl') = 'yes');
 
     if (Name = '') then Name := 'Untitled Profile';
@@ -820,6 +823,7 @@ begin
     node.AddBasicTag('password', Password);
     node.AddBasicTag('resource', Resource);
     node.AddBasicTag('priority', IntToStr(Priority));
+    node.AddBasicTag('port', IntToStr(Port));
     if (ssl) then
         node.AddBasicTag('ssl', 'yes')
     else
@@ -834,6 +838,7 @@ begin
     else if (Server = '') then result := false
     else if (Password = '') then result := false
     else if (Resource = '') then result := false
+    else if (Port = 0) then result := false
     else result := true;
 end;
 
