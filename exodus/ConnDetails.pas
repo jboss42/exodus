@@ -115,6 +115,7 @@ resourcestring
     sResourceHome = 'Home';
     sDownloadServers = 'Download the public server list from jabber.org? (Requires an internet connection).';
     sDownloadCaption = 'Downloading public server list';
+    sNoSSL = 'This profile is currently to use SSL, however, your system does not have the required libraries to use SSL. Turning SSL OFF.';
 
 
 {---------------------------------------}
@@ -125,6 +126,7 @@ implementation
 {$R *.dfm}
 
 uses
+    ExSession,
     ExUtils, GnuGetText, JabberID, Unicode, Session, WebGet, XMLTag, XMLParser,
     Registry;
 
@@ -331,7 +333,12 @@ begin
     with profile do begin
         txtHost.Text := Host;
         txtPort.Text := IntToStr(Port);
-        chkSSL.Checked := ssl;
+        if ((ExStartup.ssl_ok = false) and (ssl)) then begin
+            MessageDlg(sNoSSL, mtError, [mbOK], 0);
+            ssl := false;
+        end
+        else
+            chkSSL.Checked := ssl;
         cboConnection.ItemIndex := ConnectionType;
         spnPriority.Position := Priority;
     end;
@@ -433,6 +440,8 @@ begin
         cboResource.Items.Add('Exodus');
     end;
     list.Free();
+
+    chkSSL.Visible := ExStartup.ssl_ok;
 end;
 
 {---------------------------------------}

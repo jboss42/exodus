@@ -57,6 +57,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 51
         Height = 13
         Caption = 'Username:'
+        Transparent = True
       end
       object Label10: TTntLabel
         Left = 2
@@ -64,6 +65,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 49
         Height = 13
         Caption = 'Password:'
+        Transparent = True
       end
       object Label11: TTntLabel
         Left = 2
@@ -71,6 +73,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 34
         Height = 13
         Caption = 'Server:'
+        Transparent = True
       end
       object Label12: TTntLabel
         Left = 2
@@ -78,6 +81,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 49
         Height = 13
         Caption = 'Resource:'
+        Transparent = True
       end
       object lblServerList: TTntLabel
         Left = 100
@@ -158,7 +162,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 25
         Height = 13
         Caption = 'Host:'
-        Transparent = False
+        Transparent = True
       end
       object Label7: TTntLabel
         Left = 2
@@ -166,7 +170,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 22
         Height = 13
         Caption = 'Port:'
-        Transparent = False
+        Transparent = True
       end
       object Label8: TTntLabel
         Left = 2
@@ -174,7 +178,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 27
         Height = 13
         Caption = 'Type:'
-        Transparent = False
+        Transparent = True
       end
       object Label6: TTntLabel
         Left = 2
@@ -182,7 +186,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 34
         Height = 13
         Caption = 'Priority:'
-        Transparent = False
+        Transparent = True
       end
       object txtHost: TTntEdit
         Left = 75
@@ -212,7 +216,7 @@ object frmConnDetails: TfrmConnDetails
         Left = 75
         Top = 7
         Width = 191
-        Height = 24
+        Height = 21
         Style = csOwnerDrawFixed
         DropDownCount = 2
         ItemHeight = 15
@@ -252,6 +256,7 @@ object frmConnDetails: TfrmConnDetails
         Height = 13
         Caption = 'Host:'
         Enabled = False
+        Transparent = True
       end
       object lblSocksPort: TTntLabel
         Left = 5
@@ -260,6 +265,7 @@ object frmConnDetails: TfrmConnDetails
         Height = 13
         Caption = 'Port:'
         Enabled = False
+        Transparent = True
       end
       object lblSocksType: TTntLabel
         Left = 5
@@ -267,6 +273,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 27
         Height = 13
         Caption = 'Type:'
+        Transparent = True
       end
       object lblSocksUsername: TTntLabel
         Left = 5
@@ -275,6 +282,7 @@ object frmConnDetails: TfrmConnDetails
         Height = 13
         Caption = 'Username:'
         Enabled = False
+        Transparent = True
       end
       object lblSocksPassword: TTntLabel
         Left = 5
@@ -283,6 +291,7 @@ object frmConnDetails: TfrmConnDetails
         Height = 13
         Caption = 'Password:'
         Enabled = False
+        Transparent = True
       end
       object chkSocksAuth: TTntCheckBox
         Left = 91
@@ -354,6 +363,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 25
         Height = 13
         Caption = 'URL:'
+        Transparent = True
       end
       object Label2: TTntLabel
         Left = 1
@@ -361,6 +371,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 46
         Height = 13
         Caption = 'Poll Time:'
+        Transparent = True
       end
       object Label5: TTntLabel
         Left = 140
@@ -375,6 +386,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 48
         Height = 13
         Caption = '# of Keys:'
+        Transparent = True
       end
       object lblNote: TTntLabel
         Left = 0
