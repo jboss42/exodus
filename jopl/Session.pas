@@ -414,8 +414,11 @@ begin
     // we are getting data from the socket
     if (send) then
         _dataSignal.Invoke('/data/send', nil, data)
-    else
+    else begin
+        if (Pos('<stream:error>', data) > 0) then
+            _dispatcher.DispatchSignal('/session/stream:error', nil);
         _dataSignal.Invoke('/data/recv', nil, data);
+    end;
 end;
 
 {---------------------------------------}
