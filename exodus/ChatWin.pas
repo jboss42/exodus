@@ -46,6 +46,7 @@ type
     mnuVersionRequest: TMenuItem;
     mnuTimeRequest: TMenuItem;
     mnuLastActivity: TMenuItem;
+    mnuOnTop: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -63,6 +64,7 @@ type
     procedure mnuBlockClick(Sender: TObject);
     procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
     procedure mnuSaveClick(Sender: TObject);
+    procedure mnuOnTopClick(Sender: TObject);
   private
     { Private declarations }
     jid: string;            // jid of the person we are talking to
@@ -806,6 +808,18 @@ begin
         MsgList.PlainText := false;
         MsgList.Lines.SaveToFile(SaveDialog1.Filename);
         end;
+end;
+
+{---------------------------------------}
+procedure TfrmChat.mnuOnTopClick(Sender: TObject);
+begin
+  inherited;
+    mnuOnTop.Checked := not mnuOnTop.Checked;
+
+    if (mnuOnTop.Checked) then
+        Self.FormStyle := fsStayOnTop
+    else
+        Self.FormStyle := fsNormal;
 end;
 
 end.

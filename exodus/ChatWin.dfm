@@ -105,6 +105,10 @@ inherited frmChat: TfrmChat
     object N1: TMenuItem
       Caption = '-'
     end
+    object mnuOnTop: TMenuItem
+      Caption = 'Always on Top'
+      OnClick = mnuOnTopClick
+    end
     object mnuReturns: TMenuItem
       Caption = 'Embed Returns'
       OnClick = mnuReturnsClick

@@ -49,6 +49,7 @@ type
     popNick: TMenuItem;
     N1: TMenuItem;
     popClose: TMenuItem;
+    mnuOnTop: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
     procedure btnCloseClick(Sender: TObject);
@@ -67,6 +68,7 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure treeRosterMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
+    procedure mnuOnTopClick(Sender: TObject);
   private
     { Private declarations }
     jid: string;                // jid of the conf. room
@@ -864,6 +866,17 @@ begin
 
     room := TfrmRoom(room_list.Objects[i]);
     Result := room.GetNick(rjid);
+end;
+
+procedure TfrmRoom.mnuOnTopClick(Sender: TObject);
+begin
+  inherited;
+    mnuOnTop.Checked := not mnuOnTop.Checked;
+
+    if (mnuOnTop.Checked) then
+        Self.FormStyle := fsStayOnTop
+    else
+        Self.FormStyle := fsNormal;
 end;
 
 initialization
