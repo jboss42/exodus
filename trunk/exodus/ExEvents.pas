@@ -69,6 +69,7 @@ type
 
 function CreateJabberEvent(tag: TXMLTag): TJabberEvent;
 procedure RenderEvent(e: TJabberEvent);
+procedure LogMsgEvent(e: TJabberEvent);
 function getTaskBarRect(): TRect;
 
 function ParseTimeEvent(iq: TXMLTag): Widestring;
@@ -128,8 +129,6 @@ var
     mqueue: TfrmMsgQueue;
     tmp_jid: TJabberID;
     m, xml, etag: TXMLTag;
-    ritem: TJabberRosterItem;
-    msgo: TJabberMessage;
     mc: TMsgController;
 begin
     // create a listview item for this event
@@ -166,17 +165,7 @@ begin
             end;
 
             // log the msg if we're logging.
-            if (MainSession.Prefs.getBool('log')) then begin
-                msgo := TJabberMessage.Create(xml);
-                msgo.isMe := false;
-                ritem := MainSession.roster.Find(tmp_jid.jid);
-                if (ritem <> nil) then
-                    msgo.Nick := ritem.Nickname
-                else
-                    msgo.Nick := msgo.FromJID;
-                LogMessage(msgo);
-                msgo.Free();
-            end;
+            LogMsgEvent(e);
         end;
     end;
 
@@ -237,6 +226,28 @@ begin
         else
             StartRecvMsg(e);
     end;
+end;
+
+{---------------------------------------}
+procedure LogMsgEvent(e: TJabberEvent);
+var
+    m: TJabberMessage;
+    ritem: TJabberRosterItem;
+    tmp_jid: TJabberID;
+begin
+    if (not MainSession.Prefs.getBool('log')) then exit;
+
+    tmp_jid := TJabberID.Create(e.from);
+
+    m := TJabberMessage.Create(e.tag);
+    m.isMe := false;
+    ritem := MainSession.roster.Find(tmp_jid.jid);
+    if (ritem <> nil) then
+        m.Nick := ritem.Nickname
+    else
+        m.Nick := m.FromJID;
+    LogMessage(m);
+    m.Free();
 end;
 
 

@@ -750,6 +750,8 @@ begin
     e := CreateJabberEvent(tag);
     PushEvent(e);
 
+    LogMsgEvent(e);
+
     // plugin
     xml := tag.xml();
     body := tag.GetBasicText('body');
