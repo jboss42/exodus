@@ -970,7 +970,7 @@ var
 begin
     Result := false;
     l := length(charset);
-    for i := 0 to l do begin
+    for i := 1 to l do begin
         if ((c^ = #0) or (c^ = charset[i])) then begin
             Result := true;
             exit;

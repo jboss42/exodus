@@ -63,29 +63,27 @@ procedure DisplayMsg(Msg: TJabberMessage; RichEdit: TExRichEdit; AutoScroll: boo
 var
     txt: WideString;
     c: TColor;
+    r: integer;
+    ts: longword;
     bot_thumb: integer;
     at_bottom: boolean;
     ScrollInfo: TSCROLLINFO;
 begin
     // add the message to the richedit control
-
     with RichEdit do begin
         ScrollInfo.cbSize := SizeOf(TScrollInfo);
         ScrollInfo.fMask := SIF_PAGE + SIF_POS + SIF_RANGE;
         GetScrollInfo(Handle, SB_VERT, ScrollInfo);
+        ts := ScrollInfo.nPage;
+        r := ScrollInfo.nMax - Scrollinfo.nMin;
         bot_thumb := ScrollInfo.nPos + Integer(ScrollInfo.nPage) + 2;
-        at_bottom := (bot_thumb >= ScrollInfo.nMax) or (ScrollInfo.nMax = 0);
-        {
-        GetScrollRange(Handle, SB_VERT, min, max);
-        thumb := GetScrollPos(Handle, SB_VERT);
-        // if the thumb is at the bottom, or we don't have a scrollbar yet,
-        // assume we're at the bottom
-        at_bottom := ((thumb >= max) or (max = 0));
-        }
+        at_bottom := (bot_thumb >= ScrollInfo.nMax) or (ScrollInfo.nMax = 0) or
+            (ts >= Trunc(0.8 * r));
         end;
 
     txt := Msg.Body;
 
+    // Make sure we're inputting text in Unicode format.
     RichEdit.InputFormat := ifUnicode;
     RichEdit.SelStart := Length(RichEdit.WideLines.Text);
     RichEdit.SelLength := 0;
@@ -140,10 +138,8 @@ begin
 
     // AutoScroll the window
     if (at_bottom) then with RichEdit do begin
-        SetFocus();
-        SelStart := GetTextLen;
-        SelLength := 0;
-        Perform(EM_SCROLLCARET, 0, 0);
+        // Send a "page down" scroll message
+        Perform(EM_SCROLL, SB_PAGEDOWN, 0);
         end;
 
 end;

@@ -240,7 +240,6 @@ begin
     _msgHistory.Add(MsgOut.Text);
     _lastMsg := _msgHistory.Count;
 
-    // MsgOut.WideText := '';
     MsgOut.Lines.Clear();
     MsgOut.SetFocus;
 end;
