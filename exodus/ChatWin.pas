@@ -483,8 +483,13 @@ begin
         end
     else if (event = '/session/block') then begin
         // if this jid just got blocked, just close the window.
-        if (_jid.jid = tag.GetAttribute('to')) then
-            Close();
+        if (_jid.jid = tag.GetAttribute('jid')) then begin
+            DisplayPresence('This user is now blocked.', Self.MsgList);
+            MainSession.UnRegisterCallback(_callback);
+            MainSession.UnRegisterCallback(_pcallback);
+            _callback := -1;
+            _pcallback := -1;
+            end;
         end;
 end;
 
