@@ -357,6 +357,7 @@ begin
     getXferManager().killFrame(Self);
 end;
 
+{---------------------------------------}
 procedure TfRecvStatus.BytestreamCallback(event: string; tag: TXMLTag);
 var
     i: integer;
@@ -397,7 +398,7 @@ begin
 
     hosts := tag.QueryXPTags('/iq/query/streamhost');
 
-    if (_hosts.Count = 0) then begin
+    if (hosts.Count = 0) then begin
         MessageDlg(_('No acceptable stream hosts were sent. Have the sender check their settings.'),
             mtError, [mbOK], 0);
         SendError('406', 'not-acceptable');
@@ -407,7 +408,7 @@ begin
 
     for i := 0 to hosts.Count - 1 do begin
         pi := SafeInt(hosts[i].getAttribute('port'));
-        // xxx: support zero-conf ID's
+        // todo: support zero-conf ID's
         if (pi > 0) then begin
             p := THostPortPair.Create();
             p.host := hosts[i].GetAttribute('host');
