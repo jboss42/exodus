@@ -25,7 +25,7 @@ uses
     PrefController,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, ComCtrls, StdCtrls, ExtCtrls, TntStdCtrls,
-    TntComCtrls;
+    TntComCtrls, TntExtCtrls;
 
 type
   TfrmConnDetails = class(TForm)
@@ -58,11 +58,6 @@ type
     txtPassword: TTntEdit;
     cboResource: TTntComboBox;
     tbsConn: TTntTabSheet;
-    Label4: TTntLabel;
-    Label7: TTntLabel;
-    txtHost: TTntEdit;
-    txtPort: TTntEdit;
-    chkSSL: TTntCheckBox;
     Label8: TTntLabel;
     cboConnection: TTntComboBox;
     Label6: TTntLabel;
@@ -76,20 +71,29 @@ type
     lblServerList: TTntLabel;
     Label13: TTntLabel;
     chkRegister: TTntCheckBox;
+    OpenDialog1: TOpenDialog;
+    tbsSSL: TTntTabSheet;
     TntLabel1: TTntLabel;
     txtSSLCert: TTntEdit;
     btnCertBrowse: TTntButton;
-    OpenDialog1: TOpenDialog;
+    chkSRV: TTntCheckBox;
+    boxHost: TTntGroupBox;
+    Label4: TTntLabel;
+    txtHost: TTntEdit;
+    txtPort: TTntEdit;
+    Label7: TTntLabel;
+    optSSL: TRadioGroup;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure chkSocksAuthClick(Sender: TObject);
     procedure cboSocksTypeChange(Sender: TObject);
-    procedure chkSSLClick(Sender: TObject);
     procedure cboConnectionChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure txtUsernameKeyPress(Sender: TObject; var Key: Char);
     procedure lblServerListClick(Sender: TObject);
     procedure btnCertBrowseClick(Sender: TObject);
+    procedure optSSLClick(Sender: TObject);
+    procedure chkSRVClick(Sender: TObject);
   private
     { Private declarations }
     _profile: TJabberProfile;
@@ -178,7 +182,6 @@ begin
         exit;
     end;
 
-
     // save the info...
     GetProfile(_profile);
     GetConn(_profile);
@@ -256,7 +259,7 @@ begin
     with profile do begin
         Host := txtHost.Text;
         Port := StrToIntDef(txtPort.Text, 5222);
-        ssl := chkSSL.Checked;
+        ssl := optSSL.ItemIndex;
 
         SocksType := cboSocksType.ItemIndex;
         SocksHost := txtSocksHost.Text;
@@ -301,15 +304,15 @@ begin
     with profile do begin
         txtHost.Text := Host;
         txtPort.Text := IntToStr(Port);
-        if ((ExStartup.ssl_ok = false) and (ssl)) then begin
+        if ((ExStartup.ssl_ok = false) and (ssl = ssl_port)) then begin
             MessageDlg(sNoSSL, mtError, [mbOK], 0);
-            ssl := false;
-        end
-        else
-            chkSSL.Checked := ssl;
+            ssl := ssl_tls;
+        end;
+        optSSL.ItemIndex := ssl;
         cboConnection.ItemIndex := ConnectionType;
         spnPriority.Position := Priority;
         txtSSLCert.Text := SSL_Cert;
+        boxHost.Enabled := srv;
     end;
 end;
 
@@ -317,9 +320,10 @@ end;
 procedure TfrmConnDetails.GetConn(profile: TJabberProfile);
 begin
     with profile do begin
+        srv := chkSRV.Checked;
         Host := txtHost.Text;
         Port := StrToIntDef(txtPort.Text, 5222);
-        ssl := chkSSL.Checked;
+        ssl := optSSL.ItemIndex;
         ConnectionType := cboConnection.ItemIndex;
         Priority := spnPriority.Position;
         SSL_Cert := txtSSLCert.Text;
@@ -353,19 +357,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmConnDetails.chkSSLClick(Sender: TObject);
-begin
-    if (chkSSL.Checked) then begin
-        if (txtPort.Text = '5222') then
-            txtPort.Text := '5223';
-    end
-    else begin
-        if (txtPort.Text = '5223') then
-            txtPort.Text := '5222';
-    end;
-end;
-
-{---------------------------------------}
 procedure TfrmConnDetails.cboConnectionChange(Sender: TObject);
 begin
     // Change the current tab and the profile info.
@@ -383,7 +374,7 @@ var
     list : TWideStrings;
     i : integer;
 begin
-    AssignUnicodeFont(Self, 9);
+    AssignUnicodeFont(Self, 8);
     TranslateComponent(Self);
 
     URLLabel(lblServerList);
@@ -414,7 +405,10 @@ begin
     if (not ExStartup.ssl_ok) then
         ExStartup.ssl_ok := checkSSL();
 
-    chkSSL.Visible := ExStartup.ssl_ok;
+    tbsSSL.Visible := ExStartup.ssl_ok;
+    if (not tbsSSL.Visible) then
+        optSSL.ItemIndex := ssl_tls;
+
 end;
 
 {---------------------------------------}
@@ -487,6 +481,25 @@ procedure TfrmConnDetails.btnCertBrowseClick(Sender: TObject);
 begin
     if (OpenDialog1.Execute()) then
         txtSSLCert.Text := OpenDialog1.FileName;
+end;
+
+{---------------------------------------}
+procedure TfrmConnDetails.optSSLClick(Sender: TObject);
+begin
+    if (optSSL.ItemIndex = ssl_port) then begin
+        if (txtPort.Text = '5222') then
+            txtPort.Text := '5223';
+    end
+    else begin
+        if (txtPort.Text = '5223') then
+            txtPort.Text := '5222';
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmConnDetails.chkSRVClick(Sender: TObject);
+begin
+    boxHost.Enabled := chkSRV.Checked;
 end;
 
 end.

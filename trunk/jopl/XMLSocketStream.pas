@@ -504,7 +504,7 @@ begin
             {$ifdef INDY9}
             _local_ip := _socket.Socket.Binding.IP;
 
-            if ((_profile.ssl) and (_profile.SocksType <> proxy_none) and
+            if ((_profile.ssl = ssl_port) and (_profile.SocksType <> proxy_none) and
                 (_ssl_int.PassThrough)) then begin
                 if (_profile.SocksType = proxy_http) then begin
                     if (_profile.Host <> '') then
@@ -517,7 +517,7 @@ begin
             end;
 
             // Validate here, not in onVerifyPeer
-            if ((_profile.ssl) and (_ssl_int <> nil)) then begin
+            if ((_profile.ssl = ssl_port) and (_ssl_int <> nil)) then begin
                 FixIndy9SSL();
                 cert := _ssl_int.SSLSocket.PeerCert;
                 if (VerifyPeer(cert) <> SVE_NONE) then begin
@@ -651,7 +651,7 @@ begin
     // Let's always use SSL if we can, then we can always do TLS
     if (checkSSL()) then begin
         _ssl_int := TIdSSLIOHandlerSocket.Create(nil);
-        if ((not _profile.ssl) or (_profile.SocksType <> proxy_none)) then
+        if ((_profile.ssl <> ssl_port) or (_profile.SocksType <> proxy_none)) then
             _ssl_int.PassThrough := true;
         _ssl_int.UseNagle := false;
         _setupSSL();
@@ -689,7 +689,7 @@ begin
                 // socket connect to the proxy, and don't actually do ssl for now.
                 // once the proxy connects us, (manually: see WM_CONNECT),
                 // we'll turn on SSL.
-                if (_profile.ssl) then begin
+                if (_profile.ssl = ssl_port) then begin
                     _socket.Host := hhost;
                     _socket.Port := hport;
                 end else begin
@@ -725,14 +725,14 @@ end;
 procedure TXMLSocketStream._connectIndy8();
 begin
     // Setup everything for Indy8
-    if (_profile.ssl) then begin
+    if (_profile.ssl = ssl_port) then begin
         _ssl_int := TIdConnectionInterceptOpenSSL.Create(nil);
         _setupSSL();
     end;
 
     _socket.UseNagle := false;
     _socket.Intercept := _ssl_int;
-    _socket.InterceptEnabled := _profile.ssl;
+    _socket.InterceptEnabled := (_profile.ssl = ssl_port);
 
     if (_profile.SocksType <> proxy_none) then begin
         with _socket.SocksInfo do begin

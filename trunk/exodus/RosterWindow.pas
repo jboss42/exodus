@@ -1772,7 +1772,7 @@ procedure TfrmRosterWindow.ResetPanels;
 begin
     // order here is important
     pnlShow.Align := alBottom;
-    imgSSL.Visible := MainSession.Profile.ssl;
+    imgSSL.Visible := MainSession.SSLEnabled;
 end;
 
 {---------------------------------------}
