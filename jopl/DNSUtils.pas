@@ -102,9 +102,6 @@ var
 begin
 
     // Look in different places depending on OS.
-    r := TRegistry.Create();
-    r.RootKey := HKEY_LOCAL_MACHINE;
-
     OSVersionInfo32.dwOSVersionInfoSize := SizeOf(OSVersionInfo32);
     GetVersionEx(OSVersionInfo32);
     case OSVersionInfo32.dwPlatformId of
@@ -145,13 +142,19 @@ begin
     end;
     end;
 
-    r.OpenKeyReadOnly(key);
-    vals := r.ReadString('Nameserver');
-    if (vals = '') then
-        vals := r.ReadString('DhcpNameServer');
+    try
+        r := TRegistry.Create();
+        r.RootKey := HKEY_LOCAL_MACHINE;
+        r.OpenKeyReadOnly(key);
+        vals := r.ReadString('Nameserver');
+        if (vals = '') then
+            vals := r.ReadString('DhcpNameServer');
 
-    Result := vals;
-    r.Free();
+        Result := vals;
+        r.Free();
+    except
+        Result := '';
+    end;
 
 end;
 
