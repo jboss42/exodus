@@ -24,7 +24,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls,
-  ComCtrls, TntComCtrls;
+  ComCtrls, TntComCtrls, ImgList;
 
 type
   TfrmPrefEmote = class(TfrmPrefPanel)
@@ -40,7 +40,6 @@ type
     btnEmoteClear: TTntButton;
     btnEmoteDefault: TTntButton;
     lstEmotes: TTntListBox;
-    lstCustomEmote: TTntListBox;
     Panel2: TPanel;
     btnCustomEmoteAdd: TTntButton;
     btnCustomEmoteRemove: TTntButton;
@@ -54,6 +53,8 @@ type
     txtCustomEmoteFilename: TTntEdit;
     btnCustomEmoteBrowse: TTntButton;
     XMLDialog1: TOpenDialog;
+    lstCustomEmotes: TTntListView;
+    imagesCustom: TImageList;
     procedure btnEmoteAddClick(Sender: TObject);
     procedure btnEmoteRemoveClick(Sender: TObject);
     procedure btnEmoteClearClick(Sender: TObject);
@@ -80,17 +81,18 @@ uses
 {---------------------------------------}
 procedure TfrmPrefEmote.LoadPrefs();
 var
-    i: integer;
-    mt, path, fn: Widestring;
-    parser: TXMLTagParser;
-    o, t, icon, doc: TXMLTag;
-    icons: TXMLTagList;
+    path, fn: Widestring;
+    el: TEmoticonList;
+    idx, i: integer;
+    e: TEmoticon;
+    li: TListItem;
 begin
     inherited;
     MainSession.Prefs.fillStringlist('emoticon_dlls', lstEmotes.Items);
 
-    // XXX: load custom emoticons
-    fn := txtCustomEmoteFilename.Text;
+    // load custom emoticons
+    fn := MainSession.Prefs.getString('custom_icondefs');
+    if (fn = '') then fn := 'custom-icons.xml';
     path := ExtractFilePath(fn);
     if (path = '') then begin
         path := PrefController.getUserDir();
@@ -98,42 +100,20 @@ begin
         txtCustomEmoteFilename.Text := fn;
     end;
 
-    pageEmotes.TabIndex := 0;
-
-    {
-    /// XXX: finish custom emotes
-    try
-        parser := TXMLTagParser.Create();
-        parser.ParseFile(fn);
-        doc := parser.popTag();
-        if (doc = nil) then exit;
-
-        icons := doc.QueryTags('icon');
-        for i = 0 to icons.Count - 1 do begin
-            icon := icons[i];
-            o := icon.GetFirstTag('object');
-            t := icon.GetFirstTag('text');
-            if ((o <> nil) and (t <> nil)) then begin
-                mt := o.getAttribute('mime');
-
-                // image/gif
-                // image/x-ms-bmp
-                // image/jpeg
-                // image/png
-                if ((mt = 'image/gif') or (mt = 'image/x-ms-bmp')) then begin
-                    // these are ok.
-
-                end;
-
-            end;
+    if (FileExists(fn)) then begin
+        el := TEmoticonList.Create();
+        el.AddIconDefsFile(fn);
+        for i := 0 to el.ImageCount - 1 do begin
+            e := el.Emoticons[i];
+            li := lstCustomEmotes.Items.Add();
+            // XXX: put correct caption in for custom emoticons
+            li.Caption := 'xxx-need-text';
+            idx := imagesCustom.Add(e.Bitmap, nil);
+            li.imageIndex := idx;
         end;
-
-    finally
-        if (doc <> nil) then doc.Free();
-        parser.Free();
     end;
-    }
 
+    pageEmotes.TabIndex := 0;
 end;
 
 {---------------------------------------}

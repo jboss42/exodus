@@ -86,6 +86,7 @@ type
         destructor Destroy(); override;
 
         procedure AddResourceFile(resdll: WideString);
+        procedure AddIconDefsFile(filename: string);
         procedure Clear();
 
         function getImageTag(candidate: WideString): WideString;
@@ -284,11 +285,69 @@ begin
     end;
 
     if (mime = 'image/gif') then begin
-        result := TGifEmoticon.Create(resHandle, resFile, 'GIF', fileName);
+        if (resHandle <> 0) then
+            result := TGifEmoticon.Create(resHandle, resFile, 'GIF', fileName)
+        else
+            result := TGifEmoticon.Create(fileName);
+
+        _objects.AddObject(key, result);
+    end
+    else if (mime = 'image/x-ms-bmp') then begin
+        if (resHandle > 0) then
+            result := TBMPEmoticon.Create(resHandle, resFile, 'BMP', fileName)
+        else
+            result := TBMPEmoticon.Create(fileName);
+
         _objects.AddObject(key, result);
     end
     else
         result := nil;
+end;
+
+{---------------------------------------}
+procedure TEmoticonList.addIconDefsFile(filename: string);
+var
+    i: integer;
+    mt: Widestring;
+    parser: TXMLTagParser;
+    o, t, icon, doc: TXMLTag;
+    icons: TXMLTagList;
+    e: TEmoticon;
+begin
+    doc := nil;
+    parser := nil;
+    try
+        parser := TXMLTagParser.Create();
+        parser.ParseFile(filename);
+        doc := parser.popTag();
+        if (doc = nil) then exit;
+        icons := doc.QueryTags('icon');
+        for i := 0 to icons.Count - 1 do begin
+            e := nil;
+            icon := icons[i];
+            o := icon.GetFirstTag('object');
+            t := icon.GetFirstTag('text');
+            if ((o <> nil) and (t <> nil)) then begin
+                mt := o.getAttribute('mime');
+                // image/gif
+                // image/x-ms-bmp
+                // image/jpeg
+                // image/png
+                if ((mt = 'image/gif') or (mt = 'image/x-ms-bmp')) then begin
+                    e := _loadObject(mt, o.Data(), 0, filename);
+                end;
+            end;
+
+            // add the text into the list.
+            if (e <> nil) then
+                _text.AddObject(t.Data, e);
+                
+        end;
+
+    finally
+        if (doc <> nil) then doc.Free();
+        if (parser <> nil) then parser.Free();
+    end;
 end;
 
 {---------------------------------------}
