@@ -43,11 +43,14 @@ type
 var
   frmPrefNetwork: TfrmPrefNetwork;
 
+resourcestring
+    sBadProxy = 'Your IE proxy settings won''t help, since you use an autoconfiguration script.  Please configure your proxy manually.';
+
 implementation
 
 {$R *.dfm}
 uses
-    PrefController, Session;
+    PrefController, Session, Registry;
 
 procedure TfrmPrefNetwork.LoadPrefs();
 var
@@ -73,6 +76,8 @@ begin
 end;
 
 procedure TfrmPrefNetwork.SavePrefs();
+var
+    reg: TRegistry;
 begin
     with MainSession.Prefs do begin
         // reconnect config
@@ -81,6 +86,22 @@ begin
 
         // Network
         setInt('http_proxy_approach', cboProxyApproach.ItemIndex);
+        if (cboProxyApproach.ItemIndex = http_proxy_ie) then begin
+            reg := TRegistry.Create();
+            try
+                reg.OpenKey('Software\Microsoft\Windows\CurrentVersion\Internet Settings', false);
+                if (reg.ValueExists('AutoConfigURL')) then begin
+                    setInt('http_proxy_approach', http_proxy_custom);
+                    cboProxyApproach.ItemIndex := http_proxy_custom;
+                    cboProxyApproachChange(Self);
+                    txtProxyHost.SetFocus();
+                    MessageDlg(sBadProxy, mtWarning, [mbOK], 0);
+                end;
+            finally
+                reg.Free();
+            end;
+        end;
+
         setString('http_proxy_host', txtProxyHost.Text);
         setInt('http_proxy_port', StrToIntDef(txtProxyPort.Text, 0));
         setBool('http_proxy_auth', chkProxyAuth.Checked);
