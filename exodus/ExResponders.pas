@@ -729,6 +729,10 @@ begin
         e := b.AddBasicTag('error', 'Not Implemented');
         e.setAttribute('code', '501');
         _session.SendTag(b);
+    end
+    else if ((tag.Name = 'message') and (t = 'error')) then begin
+        // display this error using the msg queue
+        MainSession.MsgList.MsgCallback('/unhandled', tag);
     end;
 end;
 

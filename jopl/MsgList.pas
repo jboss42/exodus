@@ -30,18 +30,18 @@ type
     TJabberMsgList = class(TWidestringList)
     private
         _s: TObject;
-        _cb: integer;
+        _cb1: integer;
+        _cb2: integer;
+        _cb3: integer;
 
         function getController(jid: Widestring): TMsgController;
-
-    published
-        procedure MsgCallback(event: String; tag: TXMLTag);
 
     public
         constructor Create();
         destructor Destroy(); Override;
 
         procedure SetSession(s: TObject);
+        procedure MsgCallback(event: String; tag: TXMLTag);
 
         function AddController(jid: Widestring; c: TMsgController): integer;
 
@@ -67,7 +67,9 @@ uses
 constructor TJabberMsgList.Create();
 begin
     //
-    _cb := -1;
+    _cb1 := -1;
+    _cb2 := -1;
+    _cb3 := -1;
     _s := nil;
 end;
 
@@ -77,9 +79,11 @@ var
     s: TJabberSession;
 begin
     //
-    if ((_s <> nil) and (_cb <> -1)) then begin
+    if ((_s <> nil) and (_cb1 <> -1)) then begin
         s := TJabberSession(_s);
-        s.UnRegisterCallback(_cb);
+        s.UnRegisterCallback(_cb1);
+        s.UnRegisterCallback(_cb2);
+        s.UnRegisterCallback(_cb3);
     end;
 end;
 
@@ -90,7 +94,9 @@ var
 begin
     _s := s;
     ss := TJabberSession(s);
-    _cb := ss.RegisterCallback(MsgCallback, '/packet/message');
+    _cb1 := ss.RegisterCallback(MsgCallback, '/packet/message[@type="headline"]');
+    _cb2 := ss.RegisterCallback(MsgCallback, '/packet/message[@type="normal"]');
+    _cb3 := ss.RegisterCallback(MsgCallback, '/packet/message[@type=""]');
 end;
 
 {---------------------------------------}
@@ -138,9 +144,9 @@ var
     b, mtype: Widestring;
     from_jid: TJabberID;
     msgt: integer;
-    mc: TMsgController;
     cc: TChatController;
     js: TJabberSession;
+    mc: TMsgController;
     m, etag: TXMLTag;
 begin
     js := TJabberSession(_s);
@@ -151,36 +157,41 @@ begin
     // check for a handler for this JID already
     try
         // check for messages we don't care about
-        if ((mtype = 'groupchat') or (mtype = 'chat')) then exit;
-        if (mtype = 'normal') then mtype := '';
 
-        // if (mtype = 'headline') then exit;
-        if (tag.QueryXPTag(XP_MSGXDATA) <> nil) then exit;
-        if (tag.QueryXPTag(XP_MUCINVITE) <> nil) then exit;
-        if (tag.QueryXPTag(XP_CONFINVITE) <> nil) then exit;
+        if (event <> '/unhandled') then begin
+            if ((mtype = 'groupchat') or (mtype = 'chat')) then exit;
+            if (mtype = 'normal') then mtype := '';
 
-        // check for headlines w/ JUST a x-oob.
-        // otherwise, throw out cases where body is empty
-        if ((tag.QueryXPTag(XP_XOOB) = nil) and (b = '')) then exit;
+            // We'll handle message-errors in our unhandled handler
+            if (mtype = 'error') then exit;
 
-        // check to see if we've blocked them.
-        if (js.IsBlocked(from_jid)) then exit;
+            if (tag.QueryXPTag(XP_MSGXDATA) <> nil) then exit;
+            if (tag.QueryXPTag(XP_MUCINVITE) <> nil) then exit;
+            if (tag.QueryXPTag(XP_CONFINVITE) <> nil) then exit;
 
-        // check current msg treatment prefs
-        msgt := MainSession.Prefs.getInt('msg_treatment');
-        if (msgt = msg_existing_chat) then begin
-            // check for an existing chat window..
-            // if we have one, then bail.
-            cc := js.ChatList.FindChat(from_jid.jid, '', '');
-            if (cc = nil) then
-                cc := js.ChatList.FindChat(from_jid.jid,
-                    from_jid.resource, '');
-            if (cc <> nil) then exit;
-        end
-        else if ((msgt = msg_all_chat) and (mtype = '') and
-                 (tag.QueryXPTag(XP_XROSTER) = nil)) then begin
-            // do we need to do more here??
-            exit;
+            // check for headlines w/ JUST a x-oob.
+            // otherwise, throw out cases where body is empty
+            if ((tag.QueryXPTag(XP_XOOB) = nil) and (b = '')) then exit;
+
+            // check to see if we've blocked them.
+            if (js.IsBlocked(from_jid)) then exit;
+
+            // check current msg treatment prefs
+            msgt := MainSession.Prefs.getInt('msg_treatment');
+            if (msgt = msg_existing_chat) then begin
+                // check for an existing chat window..
+                // if we have one, then bail.
+                cc := js.ChatList.FindChat(from_jid.jid, '', '');
+                if (cc = nil) then
+                    cc := js.ChatList.FindChat(from_jid.jid,
+                        from_jid.resource, '');
+                if (cc <> nil) then exit;
+            end
+            else if ((msgt = msg_all_chat) and (mtype = '') and
+                     (tag.QueryXPTag(XP_XROSTER) = nil)) then begin
+                // do we need to do more here??
+                exit;
+            end;
         end;
 
         // if we're paused, queue the event

@@ -407,6 +407,7 @@ var
     server: boolean;
     rm: TRoomMember;
     tmps: string;
+    etag: TXMLTag;
 begin
     // display the body of the msg
     Msg := TJabberMessage.Create(tag);
@@ -425,6 +426,14 @@ begin
         tmp_jid.Free();
         Msg.IsMe := false;
         server := true;
+
+        if (tag.getAttribute('type') = 'error') then begin
+            etag := tag.GetFirstTag('error');
+            if (etag <> nil) then
+                Msg.Body := _('ERROR: ') + etag.Data
+            else
+                Msg.Body := _('ERROR: ') + Msg.Body;
+        end;
     end
     else begin
         rm := TRoomMember(_roster.Objects[i]);
@@ -1064,7 +1073,7 @@ begin
     // setup our callbacks
     if (_mcallback = -1) then begin
         _mcallback := MainSession.RegisterCallback(MsgCallback, '/packet/message[@type="groupchat"][@from="' + sjid + '*"]');
-        _ecallback := MainSession.RegisterCallback(MsgCallback, '/packet/message[@type="errror"][@from="' + sjid + '"]');
+        _ecallback := MainSession.RegisterCallback(MsgCallback, '/packet/message[@type="error"][@from="' + sjid + '"]');
         _pcallback := MainSession.RegisterCallback(PresCallback, '/packet/presence[@from="' + sjid + '*"]');
         if (_scallback = -1) then
             _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
