@@ -168,7 +168,7 @@ var
     tmp_id: TJabberID;
     filename, url, ip, tmps: string;
     pri: TJabberPres;
-    p: integer;
+    dp, p: integer;
     jid, desc, dav_path: Widestring;
     pkg: TFileXferPkg;
 begin
@@ -208,9 +208,13 @@ begin
     // get xfer prefs, and spin up URL
     with MainSession.Prefs do begin
         if (getBool('xfer_webdav')) then begin
+            dp := MainSession.Prefs.getInt('xfer_davport');
             ip := getString('xfer_davhost');
             dav_path := getString('xfer_davpath');
-            url := ip + dav_path + '/' + ExtractFilename(pkg.pathname);
+            if (dp > 0) then
+                url := ip + ':' + IntToStr(dp) + dav_path + '/' + ExtractFilename(pkg.pathname)
+            else
+                url := ip + dav_path + '/' + ExtractFilename(pkg.pathname);
         end
         else begin
             ip := getString('xfer_ip');
@@ -537,7 +541,7 @@ begin
     for i := 0 to _pnl_list.Count - 1  do begin
         p := TFileXferPkg(_pnl_list.Objects[i]);
         if (p.oob_thread = AThread) then begin
-            SendMessage(Self.Handle, WM_CLOSE_FRAME, i, 0);
+            PostMessage(Self.Handle, WM_CLOSE_FRAME, i, 0);
             exit;
         end;
     end;

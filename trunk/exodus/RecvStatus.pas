@@ -589,7 +589,10 @@ end;
 procedure TfRecvStatus.setup(pkg: TFileXferPkg);
 begin
     _pkg := pkg;
-    _state := recv_si_offer;
+    if (_pkg.mode = recv_oob) then
+        _state := recv_recv
+    else
+        _state := recv_si_offer;
     _hosts := TQueue.Create();
     _cur := -1;
     _pres := -1;

@@ -372,9 +372,16 @@ end;
 {---------------------------------------}
 procedure TfSendStatus.SendStart();
 begin
-    //
-    _state := send_disco;
-    DoState();
+    // if we are doing DAV, go directly to that stage..
+    if (MainSession.Prefs.getBool('xfer_webdav')) then begin
+        _state := send_do_dav;
+        _pkg.mode := send_dav; 
+        SendDav();
+    end
+    else begin
+        _state := send_disco;
+        DoState();
+    end;
 end;
 
 {---------------------------------------}
@@ -431,7 +438,7 @@ begin
         jEntityCache.discoInfo(_pkg.recip, MainSession);
         end;
     send_old_ft: begin
-        if MainSession.Prefs.getBool('xfer_webdav') then begin
+        if (MainSession.Prefs.getBool('xfer_webdav')) then begin
             _state := send_do_dav;
             SendDav()
         end
@@ -899,7 +906,7 @@ begin
             sendIQ()
         else
             MessageDlgW(_(sXferDavError), mtError, [mbOK], 0);
-        Self.Free();
+        kill();
     end
     else begin
         _state := send_done;

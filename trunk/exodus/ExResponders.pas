@@ -178,7 +178,7 @@ begin
         '/pre/message/x[@xmlns="' + XMLNS_XDATA +'"]',
         showXData);
     _iqoob := TFactoryResponder.Create(MainSession,
-        '/pack/iq[@type="set"]/query[@xmlns="' + XMLNS_IQOOB + '"]',
+        '/packet/iq[@type="set"]/query[@xmlns="' + XMLNS_IQOOB + '"]',
         FileReceive);
     _muc_invite := TFactoryResponder.Create(MainSession,
         '/pre/message/x[@xmlns="' + XMLNS_MUCUSER + '"]/invite',
