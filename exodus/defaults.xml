@@ -88,6 +88,7 @@
     <timestamp>1</timestamp>
     <timestamp_format>H:MM AM/PM</timestamp_format>
     <toolbar>1</toolbar>
+    <toast_duration>5</toast_duration>
     <warn_closebusy>1</warn_closebusy>
     <xa_time>30</xa_time>
 </brand>

@@ -237,6 +237,8 @@ type
     txtProxyPassword: TEdit;
     cboProxyApproach: TComboBox;
     StaticText13: TStaticText;
+    Label29: TLabel;
+    txtToastDuration: TEdit;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -480,6 +482,8 @@ begin
             trkToastAlpha.Position := 255;
             spnToastAlpha.Position := 255;
         end;
+
+        txtToastDuration.Text := IntToStr(getInt('toast_duration'));
 
         chkSnapClick(Self);
         if (chkSnap.Checked) then
@@ -771,6 +775,8 @@ begin
         setInt('roster_alpha_val', trkRosterAlpha.Position);
         setBool('toast_alpha', chkToastAlpha.Checked);
         setInt('toast_alpha_val', trkToastAlpha.Position);
+        setInt('toast_duration', SafeInt(txtToastDuration.Text));
+
         setBool('snap_on', chkSnap.Checked);
         setBool('warn_closebusy', chkBusy.Checked);
         setInt('edge_snap', spnSnap.Position);

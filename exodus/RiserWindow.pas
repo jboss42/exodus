@@ -164,7 +164,7 @@ end;
 {---------------------------------------}
 procedure TfrmRiser.FormCreate(Sender: TObject);
 begin
-    //
+    Timer2.Interval := MainSession.Prefs.getInt('toast_duration') * 1000;
 end;
 
 {---------------------------------------}
