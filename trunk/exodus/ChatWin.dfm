@@ -1,6 +1,6 @@
 inherited frmChat: TfrmChat
-  Left = 354
-  Top = 411
+  Left = 115
+  Top = 598
   Caption = 'Chat Window'
   OldCreateOrder = True
   OnClose = FormClose
