@@ -17,6 +17,7 @@ type
     function Get_MsgOutText: WideString; safecall;
     function UnRegister(ID: Integer): WordBool; safecall;
     function RegisterPlugin(var Plugin: OleVariant): Integer; safecall;
+    function getMagicInt(Part: ChatParts): Integer; safecall;
     { Protected declarations }
 
   public
@@ -26,7 +27,7 @@ type
     procedure setChatSession(chat_session: TChatController);
     procedure fireMsgKeyPress(Key: Char);
     procedure fireBeforeMsg(var body: Widestring);
-    procedure fireAfterMsg(var body: WideString; var xml: Widestring);
+    function  fireAfterMsg(var body: WideString): Widestring;
 
   private
     _chat: TChatController;
@@ -43,12 +44,14 @@ implementation
 
 uses ComServ;
 
+{---------------------------------------}
 constructor TExodusChat.Create();
 begin
     inherited Create();
     _plugs := TList.Create();
 end;
 
+{---------------------------------------}
 destructor TExodusChat.Destroy();
 var
     i: integer;
@@ -63,12 +66,13 @@ begin
     inherited Destroy();
 end;
 
-
+{---------------------------------------}
 procedure TExodusChat.setChatSession(chat_session: TChatController);
 begin
     _chat := chat_session;
 end;
 
+{---------------------------------------}
 procedure TExodusChat.fireMsgKeyPress(Key: Char);
 var
     i: integer;
@@ -77,6 +81,7 @@ begin
         TChatPlugin(_plugs[i]).com.onKeyPress(Key);
 end;
 
+{---------------------------------------}
 procedure TExodusChat.fireBeforeMsg(var body: Widestring);
 var
     i: integer;
@@ -85,19 +90,25 @@ begin
         TChatPlugin(_plugs[i]).com.onBeforeMessage(body);
 end;
 
-procedure TExodusChat.fireAfterMsg(var body: WideString; var xml: Widestring);
+{---------------------------------------}
+function TExodusChat.fireAfterMsg(var body: WideString): Widestring;
 var
     i: integer;
+    buff: Widestring;
 begin
+    buff := '';
     for i := 0 to _plugs.Count - 1 do
-        TChatPlugin(_plugs[i]).com.onAfterMessage(body, xml);
+        buff := buff + TChatPlugin(_plugs[i]).com.onAfterMessage(body);
+    Result := buff;
 end;
 
+{---------------------------------------}
 function TExodusChat.Get_jid: WideString;
 begin
     Result := _chat.JID;
 end;
 
+{---------------------------------------}
 function TExodusChat.AddContextMenu(const Caption: WideString): WideString;
 begin
     // todo: plugins
@@ -105,11 +116,13 @@ begin
     // return an "ID" for this menu/window combo
 end;
 
+{---------------------------------------}
 function TExodusChat.Get_MsgOutText: WideString;
 begin
     Result := TfrmChat(_chat.window).MsgOut.Text;
 end;
 
+{---------------------------------------}
 function TExodusChat.UnRegister(ID: Integer): WordBool;
 var
     cp: TChatPlugin;
@@ -124,6 +137,7 @@ begin
         Result := false;
 end;
 
+{---------------------------------------}
 function TExodusChat.RegisterPlugin(var Plugin: OleVariant): Integer;
 var
     p: IExodusChatPlugin;
@@ -133,6 +147,27 @@ begin
     p := IUnknown(Plugin) as IExodusChatPlugin;
     cp.com := p;
     Result := _plugs.Add(cp);
+end;
+
+{---------------------------------------}
+function TExodusChat.getMagicInt(Part: ChatParts): Integer;
+begin
+    case Part of
+    HWND_MsgInput: begin
+        Result := TfrmChat(_chat.window).MsgOut.Handle;
+        end;
+    HWND_MsgOutput: begin
+        Result := TfrmChat(_chat.window).MsgList.Handle;
+        end;
+    Ptr_MsgInput: begin
+        Result := integer(TfrmChat(_chat.window).MsgOut);
+        end;
+    Ptr_MsgOutput: begin
+        Result := integer(TfrmChat(_chat.window).MsgList);
+        end
+    else
+        Result := -1;
+    end;
 end;
 
 initialization
