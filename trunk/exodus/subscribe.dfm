@@ -1,6 +1,6 @@
 object frmSubscribe: TfrmSubscribe
-  Left = 289
-  Top = 161
+  Left = 915
+  Top = 575
   BorderIcons = []
   BorderStyle = bsDialog
   Caption = 'Subscription Request'
@@ -41,17 +41,20 @@ object frmSubscribe: TfrmSubscribe
     Top = 0
     Width = 258
     Height = 20
+    Cursor = crHandPoint
+    Hint = 'Show contact profile'
     Align = alTop
     Caption = ' foo@jabber.org'
     Color = clBtnFace
     Font.Charset = ANSI_CHARSET
-    Font.Color = clCaptionText
+    Font.Color = clBlue
     Font.Height = -13
     Font.Name = 'Arial'
-    Font.Style = [fsBold]
+    Font.Style = [fsBold, fsUnderline]
     ParentColor = False
     ParentFont = False
     TabOrder = 0
+    OnClick = lblJIDClick
   end
   object chkSubscribe: TCheckBox
     Left = 8

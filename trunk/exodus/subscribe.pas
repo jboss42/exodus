@@ -40,6 +40,7 @@ type
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure lblJIDClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -52,7 +53,8 @@ var
 implementation
 uses
     JabberID, 
-    Session, 
+    Session,
+    Profile, 
     Presence;
 
 {$R *.DFM}
@@ -96,6 +98,12 @@ procedure TfrmSubscribe.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
     Action := caFree;
+end;
+
+procedure TfrmSubscribe.lblJIDClick(Sender: TObject);
+begin
+    // muh.  not exactly right, but at least it isn't *wrong*.
+    ShowProfile(lblJID.Caption).FormStyle := fsStayOnTop;
 end;
 
 end.
