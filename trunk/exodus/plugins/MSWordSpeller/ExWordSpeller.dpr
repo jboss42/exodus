@@ -1,8 +1,8 @@
-library ExodusWordSpeller;
+library ExWordSpeller;
 
 uses
   ComServ,
-  ExodusWordSpeller_TLB in 'ExodusWordSpeller_TLB.pas',
+  ExWordSpeller_TLB in 'ExWordSpeller_TLB.pas',
   WordSpeller in 'WordSpeller.pas' {WordSpeller: CoClass},
   ChatSpeller in 'ChatSpeller.pas' {ChatSpeller: CoClass};
 

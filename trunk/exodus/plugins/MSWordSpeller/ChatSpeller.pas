@@ -7,7 +7,7 @@ interface
 uses
     Word2000, ExodusCOM_TLB,
     ComCtrls, RichEdit2, ExRichEdit, SysUtils, Graphics,
-    ComObj, ActiveX, ExodusWordSpeller_TLB, StdVcl;
+    ComObj, ActiveX, ExWordSpeller_TLB, StdVcl;
 
 type
   TChatSpeller = class(TAutoObject, IExodusChatPlugin)

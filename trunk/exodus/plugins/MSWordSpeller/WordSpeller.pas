@@ -6,7 +6,7 @@ interface
 
 uses
     Windows, ExodusCOM_TLB, Word2000, ChatSpeller,
-    Classes, ComObj, ActiveX, ExodusWordSpeller_TLB, StdVcl;
+    Classes, ComObj, ActiveX, ExWordSpeller_TLB, StdVcl;
 
 type
   TWordSpeller = class(TAutoObject, IExodusPlugin)

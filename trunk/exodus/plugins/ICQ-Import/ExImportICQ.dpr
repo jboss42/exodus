@@ -1,13 +1,12 @@
-library JabberStats;
+library ExImportICQ;
 
 uses
   ComServ,
-  JabberStats_TLB in 'JabberStats_TLB.pas',
-  StatsPlugin in 'StatsPlugin.pas' {StatsPlugin: CoClass},
-  XMLUtils in '..\..\..\jopl\XMLUtils.pas',
-  JabberID in '..\..\..\jopl\JabberID.pas',
+  ICQPlugin in 'ICQPlugin.pas' {ICQImportPlugin: CoClass},
+  Importer in 'Importer.pas' {frmImport},
+  icqUtils in 'icqUtils.pas',
+  ExodusCOM_TLB in 'ExodusCOM_TLB.pas',
   LibXmlParser in '..\..\..\jopl\LibXmlParser.pas',
-  SecHash in '..\..\..\jopl\SecHash.pas',
   Unicode in '..\..\..\jopl\Unicode.pas',
   XMLAttrib in '..\..\..\jopl\XMLAttrib.pas',
   XMLCData in '..\..\..\jopl\XMLCData.pas',
@@ -15,8 +14,10 @@ uses
   XMLNode in '..\..\..\jopl\XMLNode.pas',
   XMLParser in '..\..\..\jopl\XMLParser.pas',
   XMLTag in '..\..\..\jopl\XMLTag.pas',
-  Config in 'Config.pas' {frmConfig},
-  buttonFrame in '..\..\buttonFrame.pas' {frameButtons: TFrame};
+  XMLUtils in '..\..\..\jopl\XMLUtils.pas',
+  LibXmlComps in '..\..\..\jopl\LibXmlComps.pas',
+  SecHash in '..\..\..\jopl\SecHash.pas',
+  ExImportICQ_TLB in 'ExImportICQ_TLB.pas';
 
 exports
   DllGetClassObject,

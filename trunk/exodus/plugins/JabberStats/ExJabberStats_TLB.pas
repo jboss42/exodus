@@ -1,4 +1,4 @@
-unit ICQImport_TLB;
+unit ExJabberStats_TLB;
 
 // ************************************************************************ //
 // WARNING                                                                    
@@ -12,16 +12,16 @@ unit ICQImport_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/1/2003 3:32:05 PM from Type Library described below.
+// File generated on 3/4/2003 7:07:40 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\src\exodus\exodus\plugins\ICQ-Import\ICQImport.tlb (1)
-// LIBID: {E164BC8D-3C8D-4CB8-832A-F11638E78E69}
+// Type Lib: D:\src\exodus\exodus\plugins\JabberStats\ExJabberStats.tlb (1)
+// LIBID: {402F95BD-62AB-4596-AEB2-79A0E84271AD}
 // LCID: 0
 // Helpfile: 
-// HelpString: ICQImport Library
+// HelpString: Collect statistics about your IM usage
 // DepndLst: 
-//   (1) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
+//   (1) v1.0 ExodusCOM, (D:\src\exodus\runner\Exodus.exe)
 //   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
@@ -42,29 +42,29 @@ uses Windows, ActiveX, Classes, ExodusCOM_TLB, Graphics, StdVCL, Variants;
 // *********************************************************************//
 const
   // TypeLibrary Major and minor versions
-  ICQImportMajorVersion = 1;
-  ICQImportMinorVersion = 0;
+  ExJabberStatsMajorVersion = 1;
+  ExJabberStatsMinorVersion = 0;
 
-  LIBID_ICQImport: TGUID = '{E164BC8D-3C8D-4CB8-832A-F11638E78E69}';
+  LIBID_ExJabberStats: TGUID = '{402F95BD-62AB-4596-AEB2-79A0E84271AD}';
 
-  CLASS_ICQImportPlugin: TGUID = '{8F2D42B5-330E-448B-B61F-F767522DD046}';
+  CLASS_StatsPlugin: TGUID = '{23480983-E4E0-4C55-B731-4D06557A48B9}';
 type
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
 // (NOTE: Here we map each CoClass to its Default Interface)              
 // *********************************************************************//
-  ICQImportPlugin = IExodusPlugin;
+  StatsPlugin = IExodusPlugin;
 
 
 // *********************************************************************//
-// The Class CoICQImportPlugin provides a Create and CreateRemote method to          
+// The Class CoStatsPlugin provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusPlugin exposed by              
-// the CoClass ICQImportPlugin. The functions are intended to be used by             
+// the CoClass StatsPlugin. The functions are intended to be used by             
 // clients wishing to automate the CoClass objects exposed by the         
 // server of this typelibrary.                                            
 // *********************************************************************//
-  CoICQImportPlugin = class
+  CoStatsPlugin = class
     class function Create: IExodusPlugin;
     class function CreateRemote(const MachineName: string): IExodusPlugin;
   end;
@@ -73,14 +73,14 @@ implementation
 
 uses ComObj;
 
-class function CoICQImportPlugin.Create: IExodusPlugin;
+class function CoStatsPlugin.Create: IExodusPlugin;
 begin
-  Result := CreateComObject(CLASS_ICQImportPlugin) as IExodusPlugin;
+  Result := CreateComObject(CLASS_StatsPlugin) as IExodusPlugin;
 end;
 
-class function CoICQImportPlugin.CreateRemote(const MachineName: string): IExodusPlugin;
+class function CoStatsPlugin.CreateRemote(const MachineName: string): IExodusPlugin;
 begin
-  Result := CreateRemoteComObject(MachineName, CLASS_ICQImportPlugin) as IExodusPlugin;
+  Result := CreateRemoteComObject(MachineName, CLASS_StatsPlugin) as IExodusPlugin;
 end;
 
 end.
