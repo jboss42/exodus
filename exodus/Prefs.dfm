@@ -1,6 +1,6 @@
 object frmPrefs: TfrmPrefs
-  Left = 270
-  Top = 126
+  Left = 247
+  Top = 162
   Width = 410
   Height = 407
   Caption = 'Exodus Preferences'
@@ -1408,10 +1408,17 @@ object frmPrefs: TfrmPrefs
       Caption = 'Roster'
       object Label16: TLabel
         Left = 8
-        Top = 248
+        Top = 146
         Width = 95
         Height = 13
         Caption = 'Roster Background:'
+      end
+      object Label17: TLabel
+        Left = 8
+        Top = 190
+        Width = 58
+        Height = 13
+        Caption = 'Roster Font:'
       end
       object chkOnlineOnly: TCheckBox
         Left = 8
@@ -1457,9 +1464,9 @@ object frmPrefs: TfrmPrefs
       end
       object optDblClick: TRadioGroup
         Left = 8
-        Top = 160
+        Top = 240
         Width = 161
-        Height = 73
+        Height = 55
         Caption = 'Double Click Action '
         ItemIndex = 0
         Items.Strings = (
@@ -1490,7 +1497,7 @@ object frmPrefs: TfrmPrefs
       end
       object cboRosterBG: TColorBox
         Left = 31
-        Top = 264
+        Top = 162
         Width = 146
         Height = 22
         DefaultColorColor = clBlue
@@ -1499,6 +1506,25 @@ object frmPrefs: TfrmPrefs
         DropDownCount = 12
         ItemHeight = 16
         TabOrder = 7
+        OnChange = cboRosterBGChange
+      end
+      object pnlRoster: TPanel
+        Left = 32
+        Top = 208
+        Width = 145
+        Height = 21
+        BevelOuter = bvLowered
+        Caption = 'Cowboy Neal (foo)'
+        TabOrder = 8
+      end
+      object Button5: TButton
+        Left = 184
+        Top = 206
+        Width = 75
+        Height = 25
+        Caption = 'Chamge'
+        TabOrder = 9
+        OnClick = Button5Click
       end
     end
     object tbsSubscriptions: TTabSheet
@@ -2083,7 +2109,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 305
+        Width = 124
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2161,7 +2187,7 @@ object frmPrefs: TfrmPrefs
       object Label1: TLabel
         Left = 0
         Top = 20
-        Width = 305
+        Width = 256
         Height = 26
         Align = alTop
         Caption = 
@@ -2172,7 +2198,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 305
+        Width = 112
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2421,12 +2447,12 @@ object frmPrefs: TfrmPrefs
     Font.Style = []
     MinFontSize = 0
     MaxFontSize = 0
-    Left = 333
-    Top = 371
+    Left = 85
+    Top = 339
   end
   object ColorDialog1: TColorDialog
     Ctl3D = True
-    Left = 301
-    Top = 372
+    Left = 117
+    Top = 340
   end
 end

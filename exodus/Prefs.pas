@@ -155,6 +155,9 @@ type
     spnSnap: TUpDown;
     Label16: TLabel;
     cboRosterBG: TColorBox;
+    Label17: TLabel;
+    pnlRoster: TPanel;
+    Button5: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -180,6 +183,8 @@ type
     procedure btnLogBrowseClick(Sender: TObject);
     procedure btnTransferBrowseClick(Sender: TObject);
     procedure chkSnapClick(Sender: TObject);
+    procedure Button5Click(Sender: TObject);
+    procedure cboRosterBGChange(Sender: TObject);
   private
     { Private declarations }
     _notify: array of integer;
@@ -260,6 +265,11 @@ begin
         else
             optDblClick.ItemIndex := 1;
         cboRosterBG.Selected := TColor(getInt('roster_bg'));
+        pnlRoster.Color := cboRosterBG.Selected;
+        pnlRoster.Font.Name := getString('roster_font_name');
+        pnlRoster.Font.Size := getInt('roster_font_size');
+        pnlRoster.Font.Color := TColor(getInt('roster_font_color'));
+        pnlRoster.Font.Style := [];
 
         // s10n prefs
         optIncomingS10n.ItemIndex := getInt('s10n_auto_accept');
@@ -386,6 +396,9 @@ begin
         setInt('inline_color', integer(cboInlineStatus.Selected));
         setBool('roster_chat', (optDBlClick.ItemIndex = 0));
         setInt('roster_bg', integer(cboRosterBG.Selected));
+        setString('roster_font_name', pnlRoster.Font.Name);
+        setInt('roster_font_size', pnlRoster.Font.Size);
+        setInt('roster_font_color', Integer(pnlRoster.Font.Color));
 
         // S10n prefs
         setInt('s10n_auto_accept', optIncomingS10n.ItemIndex);
@@ -752,6 +765,24 @@ procedure TfrmPrefs.chkSnapClick(Sender: TObject);
 begin
     spnSnap.Enabled := chkSnap.Checked;
     txtSnap.Enabled := chkSnap.Checked;
+end;
+
+{---------------------------------------}
+procedure TfrmPrefs.Button5Click(Sender: TObject);
+begin
+    // Change the roster font
+    with FontDialog1 do begin
+        Font.Assign(pnlRoster.Font);
+        if Execute then
+            pnlRoster.Font.Assign(Font);
+        end;
+end;
+
+{---------------------------------------}
+procedure TfrmPrefs.cboRosterBGChange(Sender: TObject);
+begin
+    // Change the roster BG color
+    pnlRoster.Color := cboRosterBG.Selected;
 end;
 
 end.
