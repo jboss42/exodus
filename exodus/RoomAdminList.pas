@@ -179,7 +179,10 @@ begin
     iq.setAttribute('id', MainSession.generateID());
     iq.setAttribute('type', 'set');
     q := iq.AddTag('query');
-    q.setAttribute('xmlns', XMLNS_MUCADMIN);
+    if ((onList = MUC_ADMIN) or (onList = MUC_OWNER)) then
+        q.setAttribute('xmlns', XMLNS_MUCOWNER)
+    else
+        q.setAttribute('xmlns', XMLNS_MUCADMIN);
 
     // Take the unchecked items off the list
     for i := 0 to lstItems.Items.Count - 1 do begin
