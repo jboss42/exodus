@@ -75,7 +75,7 @@ var
   frmTransfer: TfrmTransfer;
 
 procedure FileReceive(from, url, desc: string);
-procedure FileSend(tojid: string);
+procedure FileSend(tojid: string; fn: string = '');
 
 implementation
 
@@ -108,7 +108,7 @@ begin
     xfer.Show;
 end;
 
-procedure FileSend(tojid: string);
+procedure FileSend(tojid: string; fn: string = '');
 var
     xfer: TFrmTransfer;
     tmp_id: TJabberID;
@@ -138,10 +138,14 @@ begin
         txtFrom.Caption := s_jid;
         pnlProgress.Visible := false;
         frameButtons1.btnOK.Caption := 'Send';
-        if not OpenDialog1.Execute then exit;
-        filename := OpenDialog1.Filename;
+        if (fn <> '') then
+            filename := fn
+        else begin
+            if not OpenDialog1.Execute then exit;
+            filename := OpenDialog1.Filename;
+            end;
         url := 'http://' + MainSession.Stream.LocalIP + ':5280/' +
-            ExtractFileName(filename);
+               ExtractFileName(filename);
         txtMsg.Lines.Add('File Transfer URL: ' + url);
         end;
     xfer.Show;
