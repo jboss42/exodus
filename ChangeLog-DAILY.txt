@@ -1,79 +1,14 @@
-2004-01-26 08:38  pgmillard
+2004-01-27 08:22  pgmillard
 
 	* exodus/: default.po, version.h, version.nsi: daily build
 
-2004-01-26 06:54  pgmillard
+2004-01-27 07:01  pgmillard
 
-	* exodus/Browser.pas, exodus/Debug.dfm, exodus/Debug.pas,
-	  exodus/Room.pas, exodus/default.po, exodus/xml.res,
-	  exodus/plugins/AIM-Import/ExodusCOM_TLB.pas,
-	  exodus/plugins/ASpeller/ExodusCOM_TLB.pas,
-	  exodus/plugins/ICQ-Import/ExodusCOM_TLB.pas,
-	  exodus/plugins/JabberStats/ExodusCOM_TLB.pas,
-	  exodus/plugins/NetMeeting/ExodusCOM_TLB.pas,
-	  exodus/plugins/RosterTools/ExodusCOM_TLB.pas,
-	  jopl/AutoUpdate.pas: Attempts to fix weird auto-update madness.
-	  Other small bug fixes
+	* exodus/: defaults.xml, prefs/PrefPanel.pas: Bug #3251 - Fixup
+	  auto-saving prefs to make sure we recurse inside of TWinControls
 
-2004-01-14 13:45  hildjj
+2004-01-26 11:18  hildjj
 
-	* exodus/AutoUpdateStatus.pas, jopl/AutoUpdate.pas: Try for
-	  double-math when adding 2 hours in autoUpdate
-
-2004-01-13 17:34  hildjj
-
-	* exodus/Login.pas: Ensure that defaults.xml is actually
-	  well-formed, add brand_profile_new_account_default
-
-2004-01-13 17:18  hildjj
-
-	* exodus/: defaults.xml, xml.res: Ensure that defaults.xml is
-	  actually well-formed, add brand_profile_new_account_default
-
-2004-01-13 07:07  pgmillard
-
-	* exodus/exodus.nsi: Fixup installer to work with the latest NSIS
-	  release. Removed final warnings
-
-2004-01-12 19:16  hildjj
-
-	* exodus/exodus.nsi: Finished moving to NSIS2 RC2
-
-2004-01-12 09:07  hildjj
-
-	* ChangeLog-DAILY.txt: Hm.  I thought I had checked this in
-	  already.
-
-2004-01-12 07:18  pgmillard
-
-	* exodus/: Exodus.dof, ExodusCOM_TLB.pas, exodus.nsi, version.nsi,
-	  version.pl: Some work on moving to the latest NSIS
-
-2004-01-10 13:43  marian
-
-	* exodus/locale/pl/LC_MESSAGES/default.po: [no log message]
-
-2004-01-09 02:25  rimas
-
-	* exodus/locale/lt/LC_MESSAGES/default.po: minor updates
-
-2004-01-09 02:19  rimas
-
-	* exodus/locale/lt/LC_MESSAGES/default.po: The translation is
-	  synchronized to v1.81 of the main default.po
-
-2004-01-08 15:32  hildjj
-
-	* exodus/RosterWindow.pas: When in one chat, and double-clicking on
-	  a different roster item, the new chat window was coming up
-	  behind, rather than on top.
-
-2004-01-08 10:19  llong
-
-	* exodus/locale/pt_PT/LC_MESSAGES/default.po: Translated the new
-	  strings to synchronize with version 1.81 of the main default.po
-
-2004-01-08 10:11  hildjj
-
-	* release.pl: check in ChangeLog file on release
+	* exodus/: Room.dfm, Room.pas: More properly escape & and | in room
+	  subjects
 
