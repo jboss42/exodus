@@ -168,7 +168,8 @@ uses
   JoinRoom in 'JoinRoom.pas',
   PrefFile in '..\jopl\PrefFile.pas',
   RegForm in 'RegForm.pas' {frmRegister},
-  ExTracer in 'ExTracer.pas' {frmException};
+  ExTracer in 'ExTracer.pas' {frmException},
+  NetMeetingFix in 'NetMeetingFix.pas';
 
 {$R *.TLB}
 

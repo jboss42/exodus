@@ -46,6 +46,7 @@ type
         _tls_cb: integer;
         _ssl_on: boolean;
         _lang: WideString;
+        _sent_stream: boolean;
 
         // Dispatcher
         _dispatcher: TSignalDispatcher;
@@ -414,6 +415,7 @@ end;
 {---------------------------------------}
 procedure TJabberSession.DoConnect;
 begin
+    _sent_stream := false;
     if (_profile = nil) then
         raise Exception.Create('Invalid profile')
     else if (_stream <> nil) then
@@ -524,8 +526,7 @@ var
     l, lang, tmps: WideString;
 begin
     // Something is happening... our stream says so.
-
-    if msg = 'connected' then begin
+    if ((msg = 'connected') and (_sent_stream = false)) then begin
         // we are connected... send auth stuff.
         lang := Prefs.getString('locale');
         if (lang <> '') then l := ' xml:lang="' + lang + '" ' else l := '';
@@ -535,6 +536,7 @@ begin
             'version="1.0" ' +
             '>';
         _stream.Send(tmps);
+        _sent_stream := true;
     end
 
     else if msg = 'ssl-error' then

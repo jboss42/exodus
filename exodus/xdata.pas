@@ -47,11 +47,14 @@ type
     _thread: WideString;
     _title: WideString;
     _responded: boolean;
+    _valid: boolean;
 
     procedure getResponseTag(var m, x: TXMLTag);
   public
     { Public declarations }
     procedure render(tag: TXMLTag);
+
+    property isValid: boolean read _valid;
   end;
 
 var
@@ -82,8 +85,12 @@ var
 begin
     f := TfrmXData.Create(nil);
     f.render(tag);
-    f.Show();
-    f.BringToFront();
+    if (f.isValid) then begin
+        f.Show();
+        f.BringToFront();
+    end
+    else
+        f.Close();
 end;
 
 {---------------------------------------}
@@ -98,6 +105,7 @@ var
     c: TControl;
 begin
     // Build the dialog based on the tag.
+    _valid := false;
     AssignDefaultFont(Self.Canvas.Font);
     packet := tag.Name;
     to_jid := tag.GetAttribute('from');
@@ -113,6 +121,7 @@ begin
 
     // Get the x-data container.
     x := tag.QueryXPTag('//x[@xmlns="jabber:x:data"]');
+    if (x = nil) then exit;
 
     _type := x.GetAttribute('type');
     _responded := false;
