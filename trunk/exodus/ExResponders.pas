@@ -555,10 +555,6 @@ var
 begin
     // return an empty result set.
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
-    DoNotify(nil, 'notify_autoresponse',
-             Format(sNotifyAutoResponse, [sDisco,
-                                          getNick(tag.getAttribute('from'))]),
-             ico_info);
 
     r := TXMLTag.Create('iq');
     with r do begin
@@ -575,6 +571,11 @@ begin
             n.setAttribute('jid', di.JID);
         end;
     end;
+
+    DoNotify(nil, 'notify_autoresponse',
+        Format(sNotifyAutoResponse, [sDisco, getNick(tag.getAttribute('from'))]),
+        ico_info);
+
     _session.SendTag(r);
 end;
 
@@ -609,12 +610,10 @@ var
 begin
     // return info results
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
-    DoNotify(nil, 'notify_autoresponse',
-             Format(sNotifyAutoResponse, [sDisco,
-                                          getNick(tag.getAttribute('from'))]),
-             ico_info);
 
     q := tag.GetFirstTag('query');
+    if (q = nil) then exit;
+
     node := q.GetAttribute('node');
     vsharp := _session.Prefs.getString('client_caps_uri') + '#' + GetAppVersion();
 
@@ -668,7 +667,7 @@ begin
             addFeature(q, XMLNS_BYTESTREAMS);
         end;
 
-        if node <> vsharp then begin
+        if (node <> vsharp) then begin
             with q.AddTag('identity') do begin
                 setAttribute('category', 'user');
                 setAttribute('type', 'client');
@@ -678,6 +677,10 @@ begin
                 addFeature(q, Features[i]);
         end;
     end;
+
+    DoNotify(nil, 'notify_autoresponse',
+        Format(sNotifyAutoResponse, [sDisco, getNick(tag.getAttribute('from'))]),
+        ico_info);
 
     _session.SendTag(r);
 end;

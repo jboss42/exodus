@@ -79,7 +79,6 @@ uses
   JabberID in '..\jopl\JabberID.pas',
   JabberMsg in '..\jopl\JabberMsg.pas',
   JoinRoom in 'JoinRoom.pas' {frmJoinRoom},
-  jud in 'jud.pas' {frmJUD},
   Langs in '..\jopl\Langs.pas',
   LibXmlComps in '..\jopl\LibXmlComps.pas',
   LibXmlParser in '..\jopl\LibXmlParser.pas',
@@ -158,7 +157,8 @@ uses
   RecvStatus in 'RecvStatus.pas' {fRecvStatus: TFrame},
   GrpManagement in 'GrpManagement.pas' {frmGrpManagement},
   CapPresence in '..\jopl\CapPresence.pas',
-  NodeItem in '..\jopl\NodeItem.pas';
+  NodeItem in '..\jopl\NodeItem.pas',
+  Jud in 'Jud.pas' {frmJud};
 
 {$R *.TLB}
 
@@ -182,6 +182,7 @@ begin
 
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TfrmGrpManagement, frmGrpManagement);
+  Application.CreateForm(TfrmJud, frmJud);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);
