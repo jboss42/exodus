@@ -1263,7 +1263,7 @@ begin
     // has the password field filled out.
     // If not, pop up the password prompt,
     // otherwise, just call connect
-    if (MainSession.Password = '') then begin
+    if ((MainSession.TokenAuth = nil) and (MainSession.Password = '')) then begin
         pw := '';
         if ((not InputQueryW(sPasswordCaption, sPasswordPrompt, pw, True)) or
             (pw = '')) then exit;
@@ -1360,8 +1360,6 @@ begin
         _logoff := false;
         _reconnect_tries := 0;
         btnConnect.Down := true;
-        Self.Caption := MainSession.Prefs.getString('brand_caption') + ' - ' + MainSession.Username + '@' + MainSession.Server;
-        setTrayInfo(Self.Caption);
         setTrayIcon(1);
     end
 
@@ -1392,6 +1390,9 @@ begin
     end
 
     else if event = '/session/authenticated' then with MainSession do begin
+        Self.Caption := MainSession.Prefs.getString('brand_caption') + ' - ' + MainSession.Username + '@' + MainSession.Server;
+        setTrayInfo(Self.Caption);
+        
         // Accept files dragged from Explorer
         // Only do this for normal (non-polling) connections
         if (MainSession.Profile.ConnectionType = conn_normal) then

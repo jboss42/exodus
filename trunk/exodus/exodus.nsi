@@ -141,7 +141,7 @@ Section "!${MUI_PRODUCT} (Required)" SEC_Exodus
 	WriteRegStr HKCR .xmpp "ContentType" "application/xmpp"
 	WriteRegStr HKCR XMPPfile "" "eXtensible Messaging and Presence Protocol"
 	WriteRegDword HKCR XMPPfile "EditFlags" 00000000
-	WriteRegDword HKCR XMPPfile "BrowserFlags" 00000008
+	WriteRegDword HKCR XMPPfile "BrowserFlags" 8
 	WriteRegStr HKCR "XMPPfile\shell" "" "Open"
 	WriteRegStr HKCR "XMPPfile\shell\Open\command" "" '"$INSTDIR\Exodus.exe" -o "%1"'
 
