@@ -116,6 +116,10 @@ type
     procedure mnuResourceClick(Sender: TObject);
 
     procedure NextOrClose();
+
+  protected
+      procedure sizeHeaders();
+
   public
     { Public declarations }
     cid: integer;
@@ -195,6 +199,7 @@ begin
         fmsg := TfrmMsgRecv.Create(Application);
         fmsg.cid := MainSession.MsgList.AddController(e.from, fmsg.Controller);
         fmsg.DisplayEvent(e);
+        fmsg.sizeHeaders();
         fmsg.ShowDefault();
         e.Free();
     end;
@@ -222,6 +227,7 @@ begin
                 txtFrom.Caption := txtFrom.Caption + ', ';
         end;
 
+        sizeHeaders();
         ShowDefault;
         btnClose.Visible := Docked;
         FormResize(nil);
@@ -241,6 +247,7 @@ begin
         recips.Add(msg_jid);
         SetupResources();
         setFrom(msg_jid);
+        sizeHeaders();
         ShowDefault;
         btnClose.Visible := Docked;
         FormResize(nil);
@@ -273,17 +280,20 @@ var
     echat: TExodusChat;
 begin
     // pre-fill parts of the header grid
+    AssignUnicodeFont(Self);
+    AssignUnicodeURL(txtFrom.Font, 8);
+
+    lblFrom.Font.Style := [fsBold];
+    lblSubject1.Font.Style := [fsBold];
+    lblSubject2.Font.Style := [fsBold];
+
     AssignDefaultFont(txtMsg.Font);
     txtMsg.Color := TColor(MainSession.Prefs.getInt('color_bg'));
     AssignDefaultFont(MsgOut.Font);
     MsgOut.Color := TColor(MainSession.Prefs.getInt('color_bg'));
 
-    AssignDefaultFont(txtSubject.Font);
-    AssignDefaultFont(txtSendSubject.Font);
-
     Self.ClientHeight := 200;
     recips := TWideStringlist.Create();
-
     pnlTop.Height := pnlSubject.Top + pnlSubject.Height + 3;
 
     //branding
@@ -300,6 +310,20 @@ begin
     echat.setIM(Self);
     echat.ObjAddRef();
     ComController := echat;
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.sizeHeaders();
+var
+    w: integer;
+begin
+    // Ensure all headers are the same width
+    w := lblFrom.Width;
+    if (lblSubject1.Width > w) then w := lblSubject1.Width;
+    if (lblSubject2.Width > w) then w := lblSubject2.Width;
+    lblFrom.Width := w;
+    lblSubject1.Width := w;
+    lblSubject2.Width := w;
 end;
 
 {---------------------------------------}

@@ -289,24 +289,18 @@ object frmMsgRecv: TfrmMsgRecv
         object lblSubject1: TTntLabel
           Left = 2
           Top = 2
-          Width = 64
+          Width = 42
           Height = 20
           Align = alLeft
-          Caption = 'Subject:    '
+          Caption = 'Subject: '
           Color = clBtnFace
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = [fsBold]
           ParentColor = False
-          ParentFont = False
           Layout = tlCenter
         end
         object txtSendSubject: TTntMemo
-          Left = 66
+          Left = 44
           Top = 2
-          Width = 268
+          Width = 290
           Height = 20
           Align = alClient
           TabOrder = 0
@@ -324,9 +318,9 @@ object frmMsgRecv: TfrmMsgRecv
         BorderWidth = 2
         TabOrder = 1
         object txtSubject: TTntLabel
-          Left = 53
+          Left = 45
           Top = 2
-          Width = 281
+          Width = 289
           Height = 18
           Align = alClient
           Caption = 'txtSubject'
@@ -334,18 +328,12 @@ object frmMsgRecv: TfrmMsgRecv
         object lblSubject2: TTntStaticText
           Left = 2
           Top = 2
-          Width = 51
+          Width = 43
           Height = 18
           Align = alLeft
           Caption = 'Subject:'
           Color = clBtnFace
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = [fsBold]
           ParentColor = False
-          ParentFont = False
           TabOrder = 0
         end
       end
@@ -360,21 +348,15 @@ object frmMsgRecv: TfrmMsgRecv
         BorderWidth = 1
         TabOrder = 2
         object txtFrom: TTntLabel
-          Left = 52
+          Left = 30
           Top = 1
-          Width = 256
+          Width = 278
           Height = 23
           Cursor = crHandPoint
           Align = alClient
           Caption = 'txtFrom'
           Color = clBtnFace
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clBlue
-          Font.Height = -12
-          Font.Name = 'MS Sans Serif'
-          Font.Style = [fsUnderline]
           ParentColor = False
-          ParentFont = False
           Transparent = True
           WordWrap = True
           OnClick = txtFromClick
@@ -382,19 +364,12 @@ object frmMsgRecv: TfrmMsgRecv
         object lblFrom: TTntLabel
           Left = 1
           Top = 1
-          Width = 51
+          Width = 29
           Height = 23
           Align = alLeft
-          AutoSize = False
-          Caption = 'From:    '
+          Caption = 'From: '
           Color = clBtnFace
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = [fsBold]
           ParentColor = False
-          ParentFont = False
           Transparent = True
         end
         object Panel1: TPanel
