@@ -94,7 +94,7 @@ uses
     fResults, fGeneric, xdata, JabberUtils,
     GnuGetText, JabberConst, Session, Entity, EntityCache;
 
-const CMD_TIMEOUT = 45;
+const CMD_TIMEOUT = 90;
 
 {---------------------------------------}
 procedure StartCommandWizard(jid: Widestring);
@@ -144,7 +144,7 @@ begin
         RunState();
         end;
     cwzResults: begin
-        // XXX
+        // do nothing
         end;
     end;
 end;

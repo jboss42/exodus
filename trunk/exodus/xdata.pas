@@ -98,6 +98,7 @@ const V_WS = 5;
 const H_WS = 5;
 const BTN_W = 30;
 const XDATA_FONT_SIZE = 9;
+const CHECKBOX_WIDTH = 20;
 
 function  showXDataEx(tag: TXMLTag): boolean;
 procedure showXData(tag: TXMLTag);
@@ -190,17 +191,17 @@ begin
     end
 
     else if (t = 'boolean') then begin
+        buildLabel(l);
         con := TTntCheckBox.Create(_owner);
         con.Parent := _owner;
         con.Visible := false;
         with TTntCheckBox(con) do begin
-            Caption := x.GetAttribute('label');
+            Caption := '';
+            Width := CHECKBOX_WIDTH; 
             d := Lowercase(d);
             Checked := ((d = 'true') or (d = '1') or (d = 'yes') or (d = 'assent'));
             Hint := _hint;
-            WordWrap := true;
         end;
-        con.BringToFront();
     end
 
     else if ((t = 'text-multi') or (t = 'jid-multi')) then begin
@@ -298,7 +299,7 @@ begin
         btn.Parent := _owner;
         btn.Visible := false;
         btn.OnClick := JidSelect;
-        btn.Width := 20;
+        btn.Width := CHECKBOX_WIDTH;
     end;
 
 end;
@@ -449,7 +450,9 @@ begin
 
     // check the label height
     if (lbl <> nil) then begin
-        if (fixed) then
+        if (t = 'boolean') then
+            lbl.Width := col_width * 2 - con.Width
+        else if (fixed) then
             lbl.Width := col_width * 2
         else
             lbl.Width := col_width;
@@ -485,7 +488,14 @@ begin
     r3.Left := r2.Right;
     r3.Right := r2.Right + BTN_W;
 
-    if (fixed) then
+    if (t = 'boolean') then begin
+        // draw the control left, then the label directly next to it
+        r2.Left := r1.Left + con.Width + H_WS;
+        r1.Right := r2.Left - H_WS;
+        DrawControl(r1);
+        DrawLabel(r2);
+    end
+    else if (fixed) then
         DrawLabel(rj)
     else if ((lbl = nil) and (con <> nil)) then
         DrawControl(rj)
@@ -500,7 +510,6 @@ begin
         DrawButton(r3);
 
     Result := rh;
-
 end;
 
 {---------------------------------------}
@@ -509,6 +518,7 @@ begin
     if (lbl = nil) then exit;
     if (r.Top < 0) then exit;
 
+    lbl.Left := r.Left;
     lbl.Top := r.Top;
     lbl.Width := r.Right - r.Left;
 

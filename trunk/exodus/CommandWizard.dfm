@@ -10,7 +10,7 @@ inherited frmCommandWizard: TfrmCommandWizard
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
-    Top = 223
+    Top = 219
     inherited Panel3: TPanel
       Left = 72
       Width = 338
@@ -46,7 +46,7 @@ inherited frmCommandWizard: TfrmCommandWizard
     end
   end
   inherited Tabs: TPageControl
-    Height = 163
+    Height = 159
     ActivePage = tbsResults
     inherited TabSheet1: TTabSheet
       object TntLabel1: TTntLabel
@@ -79,7 +79,7 @@ inherited frmCommandWizard: TfrmCommandWizard
       object TntLabel3: TTntLabel
         Left = 0
         Top = 0
-        Width = 402
+        Width = 192
         Height = 13
         Align = alTop
         Caption = 'Select the specific command to execute.'
@@ -97,7 +97,7 @@ inherited frmCommandWizard: TfrmCommandWizard
         Width = 233
         Height = 21
         Style = csDropDownList
-        ItemHeight = 13
+        ItemHeight = 0
         TabOrder = 0
       end
     end
@@ -137,7 +137,7 @@ inherited frmCommandWizard: TfrmCommandWizard
       object lblWait: TTntLabel
         Left = 0
         Top = 0
-        Width = 402
+        Width = 63
         Height = 13
         Align = alTop
         Caption = 'Please wait...'
