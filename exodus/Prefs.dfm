@@ -20,7 +20,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 340
+    Height = 345
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1434,7 +1434,7 @@ object frmPrefs: TfrmPrefs
     Left = 89
     Top = 0
     Width = 371
-    Height = 340
+    Height = 345
     ActivePage = tbsNotify
     Align = alClient
     Constraints.MinHeight = 340
@@ -1815,7 +1815,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 102
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2671,7 +2671,7 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 340
+    Top = 345
     Width = 460
     Height = 37
     Align = alBottom
