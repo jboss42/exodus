@@ -185,9 +185,10 @@ begin
             MsgDebug.Lines.Delete(0);
         end;
 
-    if (event = '/data/send') then
+    if (event = '/data/send') then begin
         if (data <> ' ') then
-            AddWideText('SENT: ' + data, clBlue)
+            AddWideText('SENT: ' + data, clBlue);
+        end
     else
         AddWideText('RECV: ' + data, clGreen);
 end;
