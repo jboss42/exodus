@@ -1,9 +1,74 @@
-2004-04-01 11:23  pgmillard
+2004-04-05 15:39  pgmillard
 
-	* exodus/: version.h, version.nsi, default.po: daily build
+	* exodus/: default.po, version.h, version.nsi: daily build
 
-2004-04-01 11:23  pgmillard
+2004-04-05 08:59  pgmillard
 
-	* build.pl: Created a detailed MAP file, not just publics for stack
-	  traces.
+	* exodus/: Room.pas, tracer/ExceptDlg.dfm: Small tweak to colors to
+	  take into account color prefs.
+
+2004-04-04 17:37  pgmillard
+
+	* exodus/: Room.dfm, Room.pas, branding.xml: Feature Request #2655
+	  - Enhanced MUC display of room roster and additional information
+	  show.
+
+2004-04-04 07:50  llong
+
+	* exodus/locale/fr/LC_MESSAGES/default.po: Updated from
+	  translator's post to exodus-dev dated 2004/04/03 to synchronize
+	  with version 1.108 of the main default.po (Just updates from last
+	  PO file)
+
+2004-04-03 12:37  pgmillard
+
+	* exodus/: Jabber1.pas, RosterWindow.dfm, branding.xml: Feature
+	  Request #3289 - Hide the Lookup vCard menu item via brand_vcard.
+
+2004-04-03 12:33  pgmillard
+
+	* exodus/: RosterWindow.dfm, RosterWindow.pas: Feature Request
+	  #2404 - Edit transport properties from the right-click menu
+
+2004-04-03 12:27  pgmillard
+
+	* exodus/jud.pas: Feature Request #2402 - Autodetect the nick field
+	  when adding JUD users, and use that nickname.
+
+2004-04-03 12:03  pgmillard
+
+	* exodus/Room.pas: Feature Request #3543 - Lots of new / commands
+	  in TC rooms.
+
+2004-04-03 10:38  pgmillard
+
+	* exodus/ChatWin.pas: Feature Request #2241 - Properly cancel
+	  'composing' events for chat windows when the input box is empty
+	  and when the window is closed.
+
+2004-04-03 10:23  pgmillard
+
+	* exodus/Jabber1.pas, jopl/DNSUtils.pas, jopl/XMLSocketStream.pas:
+	  Bug #3579 - Make sure to use lcase hostnames
+
+2004-04-03 10:13  pgmillard
+
+	* jopl/XMLSocketStream.pas: Bug #3547 - Catch exceptions when the
+	  SSL libs can't be loaded. Somehow this is happening. Weird.
+
+2004-04-03 10:02  pgmillard
+
+	* exodus/ExTracer.pas, exodus/branding.xml, jopl/AutoUpdate.pas:
+	  Fixup exception tracking so we only get error logs when the
+	  exception is uncaught.
+
+2004-04-03 06:53  pgmillard
+
+	* exodus/RosterWindow.pas: Bug #3583 - Don't AV when F2 is used and
+	  no contacts are selected.
+
+2004-04-02 06:35  llong
+
+	* exodus/locale/pt_PT/LC_MESSAGES/default.po: Translated the new
+	  strings to synchronize with version 1.108 of the main default.po
 
