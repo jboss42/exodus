@@ -127,6 +127,7 @@ var
     i: integer;
     item: TTntListItem;
     sl: TWidestringlist;
+    fl: TWidestringlist;
 
     // stuff for reg
     LibHandle: THandle;
@@ -134,9 +135,12 @@ var
 begin
     // save all "checked" captions
     sl := TWidestringlist.Create();
+    fl := TWidestringlist.Create();
 
     for i := 0 to lstPlugins.Items.Count - 1 do begin
         item := lstPlugins.Items[i];
+        fl.Add(item.SubItems[1]);
+
         if (item.Checked) then begin
             // save the Classname
             sl.Add(item.Caption);
@@ -170,8 +174,10 @@ begin
     end;
 
     MainSession.Prefs.setStringlist('plugin_selected', sl);
+    MainSession.Prefs.setStringlist('plugin_files', fl);
     ReloadPlugins(sl);
     sl.Free();
+    fl.Free();
 end;
 
 {---------------------------------------}

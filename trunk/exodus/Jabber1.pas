@@ -1437,7 +1437,7 @@ begin
 
         if (MainSession.Prefs.getBool('window_toolbox')) then begin
             if (Self.BorderStyle <> bsSizeToolWin) then begin
-                // todo: requires a restart of the application
+                // requires a restart of the application
                 Self.BorderStyle := bsSizeToolWin;
             end;
         end

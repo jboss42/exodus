@@ -118,7 +118,7 @@ end;
 
     MainSession.setPresence(show, status, pri);
 
-    // todo: save custom presence
+    // save custom presence
     if (chkSave.Checked) then begin
         cp := TJabberCustomPres.Create();
         cp.title := txtTitle.Text;

@@ -1490,8 +1490,6 @@ begin
         if ((n = _change_node) and (Button = mbLeft)) then begin
             if ((getNodeType(n) = node_ritem) and
                 MainSession.Prefs.getBool('inline_status')) then begin
-                // TODO: re-render to get rid of inline status before editing
-                // Hey PGM!
                 n.Text := _cur_ritem.Nickname;
             end;
             n.EditText();

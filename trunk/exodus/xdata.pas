@@ -264,50 +264,8 @@ end;
 procedure TfrmXData.frameButtons1btnCancelClick(Sender: TObject);
 begin
     Cancel();
-
     Self.Close;
 end;
-
-(*
-{---------------------------------------}
-procedure TfrmXData.ResultsCB(event: string; tag: TXMLTag);
-var
-    item, field: TXMLTag;
-    items, fields : TXMLTagList;
-    i, j: integer;
-    it: TListItem;
-begin
-{
-<iq from='users.jabber.org' id='jcl_8' to='hildjj-foo@jabber.org/Exodus' type='result'>
-  <query xmlns='jabber:iq:search'>
-    <item jid='JoshHi@jabber.org'>
-      <x xmlns='jabber:x:data'>
-        <field var='first'><value>Josh</value></field>
-        <field var='last'><value>Hildebrand</value></field>
-        <field var='nick'><value>JoshHi</value></field>
-        <field var='email'><value>josh@jedi.net</value></field>
-      </x>
-    </item>
-  </query>
-</iq>
-}
-
-    // timeout
-    if (event <> 'xml') then exit;
-
-    items := tag.QueryXPTags('/iq/query/item');
-    for i := 0 to items.Count - 1 do begin
-        item := items[i];
-        it := lstReport.Items.Add();
-        fields := item.QueryXPTags('/item/x/field');
-        for j := 0 to fields.Count - 1 do begin
-            field := fields[j];
-            // TODO: look up the right column, based on the var of the field.
-            it.SubItems.Add(field.GetBasicText('value'));
-        end;
-    end;
-end;
-*)
 
 {---------------------------------------}
 procedure TfrmXData.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -320,12 +278,14 @@ begin
     inherited;
 end;
 
+{---------------------------------------}
 procedure TfrmXData.FormResize(Sender: TObject);
 begin
     lblIns.AutoSize := false;
     lblIns.AutoSize := true;
 end;
 
+{---------------------------------------}
 procedure TfrmXData.Cancel();
 var
     m, x: TXMLTag;
@@ -338,6 +298,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmXData.FormCreate(Sender: TObject);
 begin
     TranslateProperties(Self);
