@@ -95,7 +95,7 @@ resourcestring
 {---------------------------------------}
 implementation
 uses
-    Roster, Messages, Windows, ExUtils, Session;
+    JabberConst, Roster, Messages, Windows, ExUtils, Session;
 
 var
     _taskbar_rect: TRect;
@@ -162,45 +162,55 @@ begin
         if (t = 'groupchat') then exit;
         if (t = 'chat') then exit;
 
+        // normal default event type
         eType := evt_Message;
-
-        // Look at all of the child tags of <message>
-        c_tags := tag.ChildTags();
-        for i := 0 to c_tags.Count - 1 do begin
-            tmp_tag := c_tags[i];
-            ns := tmp_tag.Namespace;
-            if ((ns = 'jabber:x:invite') or (ns = 'jabber:x:conference')) then begin
-                // we are getting an invite
-                eType := evt_Invite;
-                if (ns = 'jabber:x:invite') then
-                    data_type := tag.GetAttribute('from')
-                else
-                    data_type := tmp_tag.GetAttribute('jid');
-                end
-            else if (ns = 'jabber:x:roster') then begin
-                // we are getting roster items
-                eType := evt_RosterItems;
-                data_type := tag.GetBasicText('body');
-                i_tags := tmp_tag.QueryTags('item');
-                for j := 0 to i_tags.Count - 1 do begin
-                    ri := TJabberRosterItem.Create();
-                    ri.parse(i_tags[j]);
-                    _data_list.AddObject(ri.jid.jid, ri);
-                    end;
-                i_tags.Free();
-                end;
-            end;
-        c_tags.Free();
+        _data_list.Clear();
 
         // pull out from & ID for all types of events
         from := tag.getAttribute('from');
         id := tag.getAttribute('id');
 
+        // Look for various x-tags
+        if (tag.QueryXPTag(XP_MUCINVITE) <> nil) then begin
+            // This is a MUC invite
+            eType := evt_Invite;
+            tmp_tag := tag.QueryXPTag(XP_MUCINVITE);
+            from := tmp_tag.QueryXPData('/x/invite@from');
+            data_type := tag.getAttribute('from');
+            _data_list.Add(tmp_tag.QueryXPData('/x/invite/reason'));
+            end
+
+        else if (tag.QueryXPTag(XP_CONFINVITE) <> nil) then begin
+            // conference invite
+            eType := evt_Invite;
+            tmp_tag := tag.QueryXPTag(XP_CONFINVITE);
+            data_type := tmp_tag.getAttribute('jid');
+            end
+
+        else if (tag.QueryXPTag(XP_JCFINVITE) <> nil) then begin
+            // GC Invite
+            eType := evt_Invite;
+            data_type := tag.GetAttribute('from')
+            end
+
+        else if (tag.QueryXPTag(XP_MSGXROSTER) <> nil) then begin
+            // we are getting roster items
+            eType := evt_RosterItems;
+            data_type := tag.GetBasicText('body');
+            i_tags := tmp_tag.QueryTags('item');
+            for j := 0 to i_tags.Count - 1 do begin
+                ri := TJabberRosterItem.Create();
+                ri.parse(i_tags[j]);
+                _data_list.AddObject(ri.jid.jid, ri);
+                end;
+            i_tags.Free();
+            end;
+
         // When we are doing roster items, the _data_list contains the items.
         if (eType <> evt_RosterItems) then begin
             tmp_tag := tag.GetFirstTag('body');
             if (tmp_tag <> nil) then
-                _data_list.Text := tmp_tag.Data;
+                _data_list.Add(tmp_tag.Data);
             end;
 
         // For messages, pull out the subject

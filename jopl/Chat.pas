@@ -50,7 +50,7 @@ type
 {---------------------------------------}
 implementation
 uses
-    PrefController, Session;
+    JabberConst, PrefController, Session;
 
 {---------------------------------------}
 constructor TJabberChatList.Create;
@@ -84,9 +84,11 @@ begin
 
     mt := MainSession.Prefs.getInt('msg_treatment');
 
+    // throw out any x-data msgs we get.. the xdata handler will pick them up.
+    if (tag.QueryXPTag(XP_MSGXDATA) <> nil) then exit;
+
     // we are only interested in packets w/ a body tag
     if (tag.QueryXPTag('/message/body') = nil) then exit;
-    if (tag.QueryXPTag('/message/x[@xmlns="jabber:x:data"]') <> nil) then exit;
 
     tmp_jid := TJabberID.Create(fjid);
 

@@ -500,7 +500,7 @@ uses
     {$endif}
 
     About, AutoUpdate, Bookmark, Browser, Chat, ChatController, ChatWin,
-    CommCtrl, CustomPres,
+    JabberConst, CommCtrl, CustomPres,
     Debug, Dockable, ExUtils, GetOpt, InputPassword,
     Iq, JUD, JabberID, JabberMsg, IdGlobal,
     JoinRoom, Login, MsgDisplay, MsgQueue, MsgRecv, Password,
@@ -1490,6 +1490,12 @@ begin
     b := Trim(tag.GetBasicText('body'));
     if ((mtype <> 'groupchat') and (mtype <> 'chat') and (b <> '')) then begin
 
+        // Some exclusions...
+        // x-data msgs and invites
+        if (tag.QueryXPTag(XP_MSGXDATA) <> nil) then exit;
+        if (tag.QueryXPTag(XP_MUCINVITE) <> nil) then exit;
+        if (tag.QueryXPTag(XP_CONFINVITE) <> nil) then exit;
+
         // if we have a normal msg (not a headline),
         // check for msg_treatments.
 
@@ -1577,10 +1583,6 @@ begin
         msg := e.data_type;
         DoNotify(nil, 'notify_invite',
                  sMsgInvite + TJabberID.Create(e.from).jid, img_idx);
-        if (MainSession.Prefs.getBool('auto_accept_invites')) then begin
-            StartRoom(msg, MainSession.Username);
-            exit;
-            end;
         end;
 
     evt_RosterItems: begin
@@ -1596,6 +1598,8 @@ begin
 
     if MainSession.Prefs.getBool('expanded') then begin
         getMsgQueue().LogEvent(e, msg, img_idx);
+        if ((MainSession.Prefs.getInt('invite_treatment') = invite_popup) and
+            (e.eType = evt_Invite)) then ShowEvent(e)
         end
 
     else if (e.delayed) or (MainSession.Prefs.getBool('msg_queue')) then begin

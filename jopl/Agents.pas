@@ -64,7 +64,7 @@ type
 {---------------------------------------}
 implementation
 uses
-    Session,
+    JabberConst, Session,
     XMLUtils, IQ;
 
 constructor TAgentItem.Create;

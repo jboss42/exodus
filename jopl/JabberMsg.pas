@@ -72,13 +72,14 @@ type
         property isXdata: boolean read _isxdata;
   end;
 
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 implementation
 
 uses
-    XMLUtils;
+    JabberConst, XMLUtils;
 
 { TJabberMessage }
 
@@ -123,7 +124,7 @@ begin
                 end;
             end;
 
-        _isxdata := (mTag.QueryXPTag('//x[@xmlns="jabber:x:data"]') <> nil);
+        _isxdata := (mtag.QueryXPTag(XP_MSGXDATA) <> nil);
 
         t := GetFirstTag('subject');
         if t <> nil then _subject := t.Data;

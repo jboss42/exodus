@@ -198,11 +198,6 @@ resourcestring
     sStatus_409 = 'Your nickname is already being used.';
 
 const
-    NS_MUC = 'http://jabber.org/protocol/muc';
-    NS_MUCOWNER = 'http://jabber.org/protocol/muc#owner';
-    NS_MUCADMIN = 'http://jabber.org/protocol/muc#admin';
-    NS_MUCUSER = 'http://jabber.org/protocol/muc#user';
-
     MUC_OWNER = 'owner';
     MUC_ADMIN = 'admin';
     MUC_MEMBER = 'member';
@@ -223,6 +218,7 @@ function FindRoomNick(rjid: Widestring): Widestring;
 {---------------------------------------}
 implementation
 uses
+    JabberConst,
     IQ, xData, JoinRoom, RoomAdminList,
     ExUtils, RiserWindow, ShellAPI, RichEdit,
     Invite, ChatWin, RosterWindow, Presence, Roster,
@@ -252,7 +248,7 @@ begin
         p := TJabberPres.Create;
         p.toJID := TJabberID.Create(rjid + '/' + rnick);
         with p.AddTag('x') do begin
-            PutAttribute('xmlns', NS_MUC);
+            PutAttribute('xmlns', XMLNS_MUC);
             if (password <> '') then
                 AddBasicTag('password', password);
             end;
@@ -666,7 +662,7 @@ begin
         configCallback, 10);
     with iq do begin
         toJid := Self.jid;
-        Namespace := NS_MUCOWNER;
+        Namespace := XMLNS_MUCOWNER;
         iqType := 'get';
         end;
     iq.Send();
@@ -1300,7 +1296,7 @@ begin
     iq.PutAttribute('id', MainSession.generateID());
     iq.PutAttribute('to', jid);
     q := iq.AddTag('query');
-    q.PutAttribute('xmlns', NS_MUCADMIN);
+    q.PutAttribute('xmlns', XMLNS_MUCADMIN);
 
     if (Sender = popKick) then
         AddMemberItems(q, reason, MUC_NONE)
@@ -1348,7 +1344,7 @@ begin
     iq.PutAttribute('id', MainSession.generateID());
     iq.PutAttribute('to', jid);
     q := iq.AddTag('query');
-    q.PutAttribute('xmlns', NS_MUCADMIN);
+    q.PutAttribute('xmlns', XMLNS_MUCADMIN);
 
     // Iterate over all selected items, and toggle
     // voice by changing roles
@@ -1384,7 +1380,7 @@ begin
         listAdminCallback, 30);
     with iq do begin
         toJid := Self.jid;
-        Namespace := NS_MUCADMIN;
+        Namespace := XMLNS_MUCADMIN;
         iqType := 'get';
         end;
 
@@ -1413,10 +1409,10 @@ initialization
     room_list := TWideStringlist.Create();
 
     // pre-compile some xpath's
-    xp_muc_presence := TXPLite.Create('/presence/x[@xmlns="' + NS_MUCUSER + '"]');
-    xp_muc_status := TXPLite.Create('//x[@xmlns="' + NS_MUCUSER + '"]/status');
-    xp_muc_item := TXPLite.Create('//x[@xmlns="' + NS_MUCUSER + '"]/item');
-    xp_muc_reason := TXPLite.Create('//x[@xmlns="' + NS_MUCUSER + '"]/reason');
+    xp_muc_presence := TXPLite.Create('/presence/x[@xmlns="' + XMLNS_MUCUSER + '"]');
+    xp_muc_status := TXPLite.Create('//x[@xmlns="' + XMLNS_MUCUSER + '"]/status');
+    xp_muc_item := TXPLite.Create('//x[@xmlns="' + XMLNS_MUCUSER + '"]/item');
+    xp_muc_reason := TXPLite.Create('//x[@xmlns="' + XMLNS_MUCUSER + '"]/reason');
 
 finalization
     xp_muc_reason.Free();

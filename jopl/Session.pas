@@ -148,29 +148,8 @@ type
         property Profile: TJabberProfile read _profile;
     end;
 
-const
-    XMLNS_AUTH      = 'jabber:iq:auth';
-    XMLNS_ROSTER    = 'jabber:iq:roster';
-    XMLNS_REGISTER  = 'jabber:iq:register';
-    XMLNS_LAST      = 'jabber:iq:last';
-    XMLNS_TIME      = 'jabber:iq:time';
-    XMLNS_VERSION   = 'jabber:iq:version';
-    XMLNS_IQOOB     = 'jabber:iq:oob';
-    XMLNS_BROWSE    = 'jabber:iq:browse';
-    XMLNS_AGENTS    = 'jabber:iq:agents';
-    XMLNS_SEARCH    = 'jabber:iq:search';
-    XMLNS_PRIVATE   = 'jabber:iq:private';
-    XMLNS_BM        = 'storage:bookmarks';
-    XMLNS_PREFS     = 'storage:imprefs';
-    XMLNS_MSGEVENTS = 'jabber:x:event';
-    XMLNS_DELAY     = 'jabber:x:delay';
-    XMLNS_XROSTER   = 'jabber:x:roster';
-    XMLNS_CONFERENCE= 'jabber:iq:conference';
-    XMLNS_DATA      = 'jabber:x:data';
-
 var
     MainSession: TJabberSession;
-
 
 implementation
 uses
@@ -180,7 +159,7 @@ uses
     QForms, QDialogs,
     {$endif}
     Unicode, XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal,
-    iq;
+    JabberConst, iq;
 
 var
     _auth_iq: TJabberIQ;
@@ -890,6 +869,7 @@ function TJabberSession.GetActive(): boolean;
 begin
     Result := (_stream <> nil);
 end;
+
 
 end.
 

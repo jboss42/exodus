@@ -22,7 +22,7 @@ unit Invite;
 interface
 
 uses
-    Unicode, 
+    Unicode, XMLTag,  
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, CheckLst, ExtCtrls, buttonFrame, ComCtrls, Grids;
 
@@ -63,6 +63,7 @@ var
 resourcestring
     sConfRoom = 'Conference Room:';
 
+procedure showRecvInvite(tag: TXMLTag);
 procedure ShowInvite(room_jid: WideString; jids: TWideStringList);
 
 {---------------------------------------}
@@ -70,14 +71,27 @@ procedure ShowInvite(room_jid: WideString; jids: TWideStringList);
 {---------------------------------------}
 implementation
 uses
-    Jabber1, JabberID,
-    XMLTag,
-    Session,
-    Room,
-    RosterWindow,
-    Roster;
+    ExEvents, Jabber1, JabberID, PrefController, 
+    Session, Room, RosterWindow, Roster;
 
 {$R *.dfm}
+
+{---------------------------------------}
+procedure showRecvInvite(tag: TXMLTag);
+var
+    e: TJabberEvent;
+begin
+    // factory for GUI
+    e := CreateJabberEvent(tag);
+
+    if (MainSession.prefs.getInt('invite_treatment') = invite_accept) then begin
+        // auto-join the room
+        StartRoom(e.data_type, MainSession.Username);
+        e.Free();
+        end
+    else
+        frmExodus.RenderEvent(e);
+end;
 
 {---------------------------------------}
 procedure ShowInvite(room_jid: WideString; jids: TWideStringList);

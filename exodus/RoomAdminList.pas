@@ -56,7 +56,7 @@ procedure ShowRoomAdminList(tag: TXMLTag);
 implementation
 
 uses
-    JabberID, Session, Room;
+    JabberConst, JabberID, Session, Room;
 
 {$R *.dfm}
 
@@ -70,7 +70,7 @@ var
     rjid, r,a: WideString;
 begin
     //
-    if ((tag.Name <> 'iq') or (tag.Namespace <> NS_MUCADMIN)) then
+    if ((tag.Name <> 'iq') or (tag.Namespace <> XMLNS_MUCADMIN)) then
         exit;
 
     f := TfrmRoomAdminList.Create(Application);
@@ -126,7 +126,7 @@ begin
     iq.PutAttribute('id', MainSession.generateID());
     iq.PutAttribute('type', 'set');
     q := iq.AddTag('query');
-    q.PutAttribute('xmlns', NS_MUCADMIN);
+    q.PutAttribute('xmlns', XMLNS_MUCADMIN);
 
     for i := 0 to lstItems.Items.Count - 1 do begin
         li := lstItems.Items[i];

@@ -60,7 +60,7 @@ implementation
 
 {$R *.dfm}
 uses
-    Roster, XMLTag, IQ, Session, S10n;
+    JabberConst, Roster, XMLTag, IQ, Session, S10n;
 
 {---------------------------------------}
 procedure RemoveGroup(grp: string; contacts: TList = nil);

@@ -112,11 +112,10 @@ uses
   xdata in 'xdata.pas' {frmXData},
   fGeneric in 'fGeneric.pas' {frameGeneric: TFrame},
   Transports in 'Transports.pas',
-  {$ifndef NOTRACE_EXCEPTIONS}
   ExceptDlg in 'tracer\ExceptDlg.pas' {ExceptionDialog},
   ExceptTracer in 'ExceptTracer.pas' {frmTracer},
-  {$endif}
-  RoomAdminList in 'RoomAdminList.pas' {frmRoomAdminList};
+  RoomAdminList in 'RoomAdminList.pas' {frmRoomAdminList},
+  JabberConst in '..\jopl\JabberConst.pas';
 
 {$R *.TLB}
 
