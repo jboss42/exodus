@@ -150,7 +150,27 @@ end;
 
 {---------------------------------------}
 procedure TfrmConnDetails.frameButtons1btnOKClick(Sender: TObject);
+var
+    valid: boolean;
+    jid, u, h, r: Widestring;
 begin
+    // Validate the JID..
+    valid := true;
+    u := txtUsername.Text;
+    h := cboServer.Text;
+    r := cboResource.Text;
+
+    jid := u + '@' + h + '/' + r;
+    valid := (Pos('@', u) = 0);
+    if (valid) then
+        valid := isValidJid(jid);
+
+    if (valid = false) then begin
+        MessageDlg(sProfileInvalidJid, mtError, [mbOK], 0);
+        exit;
+    end;
+
+
     // save the info...
     GetProfile(_profile);
     GetConn(_profile);
