@@ -24,24 +24,29 @@ interface
 uses
     Dockable, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, StdCtrls, ExtCtrls, ComCtrls, Menus, RichEdit2, ExRichEdit;
+    Dialogs, StdCtrls, ExtCtrls, ComCtrls, Menus, RichEdit2, ExRichEdit,
+  Buttons;
 
 type
   TfrmDebug = class(TfrmDockable)
-    Panel1: TPanel;
-    chkDebugWrap: TCheckBox;
     Panel2: TPanel;
     MemoSend: TMemo;
     Splitter1: TSplitter;
-    Panel3: TPanel;
-    btnSendRaw: TButton;
-    btnClearDebug: TButton;
     PopupMenu1: TPopupMenu;
     popMsg: TMenuItem;
     popIQGet: TMenuItem;
     popIQSet: TMenuItem;
     popPres: TMenuItem;
     MsgDebug: TExRichEdit;
+    pnlTop: TPanel;
+    btnClose: TSpeedButton;
+    lblJID: TLabel;
+    N1: TMenuItem;
+    Clear1: TMenuItem;
+    SendXML1: TMenuItem;
+    Find1: TMenuItem;
+    WordWrap1: TMenuItem;
+    FindDialog1: TFindDialog;
     procedure FormCreate(Sender: TObject);
     procedure chkDebugWrapClick(Sender: TObject);
     procedure btnClearDebugClick(Sender: TObject);
@@ -49,12 +54,27 @@ type
     procedure popMsgClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MemoSendKeyPress(Sender: TObject; var Key: Char);
+    procedure btnCloseClick(Sender: TObject);
+    procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
+    procedure WordWrap1Click(Sender: TObject);
+    procedure Clear1Click(Sender: TObject);
+    procedure lblJIDClick(Sender: TObject);
+    procedure Find1Click(Sender: TObject);
+    procedure FindDialog1Find(Sender: TObject);
+    procedure MsgDebugKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
     _cb: integer;
     procedure DataCallback(event: string; tag: TXMLTag; data: Widestring);
+  protected
+    procedure SessionCallback(event: string; tag: TXMLTag);
   public
     procedure AddWideText(txt: WideString; txt_color: TColor);
+
+    procedure DockForm; override;
+    procedure FloatForm; override;
+
   end;
 
 procedure ShowDebugForm();
@@ -137,8 +157,16 @@ procedure TfrmDebug.FormCreate(Sender: TObject);
 begin
     // make sure the output is showing..
     inherited;
-
     _cb := MainSession.RegisterCallback(DataCallback);
+    MainSession.RegisterCallback(SessionCallback, '/session');
+
+    if MainSession.Active then begin
+        lblJID.Caption := MainSession.Username + '@' + MainSession.Server +
+            '/' + MainSession.Resource;
+        end
+    else
+        lblJID.Caption := 'Debug Window (Disconnected)';
+
 end;
 
 {---------------------------------------}
@@ -196,13 +224,11 @@ end;
 {---------------------------------------}
 procedure TfrmDebug.chkDebugWrapClick(Sender: TObject);
 begin
-    MsgDebug.WordWrap := chkDebugWrap.Checked;
 end;
 
 {---------------------------------------}
 procedure TfrmDebug.btnClearDebugClick(Sender: TObject);
 begin
-    MsgDebug.Lines.Clear;
 end;
 
 {---------------------------------------}
@@ -288,6 +314,114 @@ begin
     else
         inherited;
 
+end;
+
+procedure TfrmDebug.btnCloseClick(Sender: TObject);
+begin
+  inherited;
+    Self.Close;
+end;
+
+{---------------------------------------}
+procedure TfrmDebug.DockForm;
+begin
+    inherited;
+    btnClose.Visible := true;
+end;
+
+{---------------------------------------}
+procedure TfrmDebug.FloatForm;
+begin
+    inherited;
+    btnClose.Visible := false;
+end;
+
+{---------------------------------------}
+procedure TfrmDebug.FormEndDock(Sender, Target: TObject; X, Y: Integer);
+begin
+    inherited;
+    btnClose.Visible := Docked;
+end;
+
+
+procedure TfrmDebug.WordWrap1Click(Sender: TObject);
+begin
+  inherited;
+    WordWrap1.Checked := not WordWrap1.Checked;
+    MsgDebug.WordWrap := WordWrap1.Checked;
+end;
+
+procedure TfrmDebug.Clear1Click(Sender: TObject);
+begin
+  inherited;
+    MsgDebug.Lines.Clear;
+end;
+
+procedure TfrmDebug.SessionCallback(event: string; tag: TXMLTag);
+begin
+    if (event = '/session/authenticated') then begin
+        lblJID.Caption := MainSession.Username + '@' + MainSession.Server +
+            '/' + MainSession.Resource;
+        end
+    else if (event = '/session/disconnected') then
+        lblJID.Caption := 'Debug Window (Disconnected)';
+end;
+
+procedure TfrmDebug.lblJIDClick(Sender: TObject);
+var
+    cp: TPoint;
+begin
+  inherited;
+    GetCursorPos(cp);
+    popupMenu1.popup(cp.x, cp.y);
+end;
+
+procedure TfrmDebug.Find1Click(Sender: TObject);
+begin
+  inherited;
+    FindDialog1.Execute();
+end;
+
+procedure TfrmDebug.FindDialog1Find(Sender: TObject);
+var
+    FoundAt: LongInt;
+    StartPos, ToEnd: Integer;
+begin
+  inherited;
+    { begin the search after the current selection if there is one }
+    { otherwise, begin at the start of the text }
+    with MsgDebug do begin
+        if SelLength <> 0 then
+          StartPos := SelStart + SelLength
+        else
+          StartPos := 0;
+
+        { ToEnd is the length from StartPos to the end of the text
+          in the rich edit control }
+        ToEnd := Length(Text) - StartPos;
+        FoundAt := FindText(FindDialog1.FindText, StartPos, -1, [stMatchCase]);
+        if FoundAt <> -1 then begin
+            SetFocus;
+            SelStart := FoundAt;
+            SelLength := Length(FindDialog1.FindText);
+            end
+        else if (StartPos > 0) then begin
+            Beep();
+            SelLength := 0;
+            FindDialog1Find(Self);
+            end
+        else
+            Beep();
+        end;
+end;
+
+procedure TfrmDebug.MsgDebugKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  inherited;
+    memoSend.SetFocus();
+    Beep();
+    Key := 0;
 end;
 
 end.

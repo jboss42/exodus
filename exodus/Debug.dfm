@@ -1,8 +1,8 @@
 object frmDebug: TfrmDebug
   Left = 263
   Top = 202
-  Width = 351
-  Height = 320
+  Width = 408
+  Height = 414
   Caption = 'Debug'
   Color = clBtnFace
   DragKind = dkDock
@@ -16,77 +16,31 @@ object frmDebug: TfrmDebug
   Position = poDefaultPosOnly
   OnClose = FormClose
   OnCreate = FormCreate
+  OnEndDock = FormEndDock
   PixelsPerInch = 96
   TextHeight = 13
-  object Panel1: TPanel
-    Left = 0
-    Top = 255
-    Width = 343
-    Height = 31
-    Align = alBottom
-    BevelOuter = bvNone
-    TabOrder = 0
-    object chkDebugWrap: TCheckBox
-      Left = 8
-      Top = 8
-      Width = 97
-      Height = 17
-      Caption = 'Word Wrap'
-      Checked = True
-      State = cbChecked
-      TabOrder = 0
-      OnClick = chkDebugWrapClick
-    end
-    object Panel3: TPanel
-      Left = 158
-      Top = 0
-      Width = 185
-      Height = 31
-      Align = alRight
-      BevelOuter = bvNone
-      TabOrder = 1
-      object btnSendRaw: TButton
-        Left = 90
-        Top = 2
-        Width = 89
-        Height = 25
-        Caption = 'Send Server'
-        TabOrder = 0
-        OnClick = btnSendRawClick
-      end
-      object btnClearDebug: TButton
-        Left = 8
-        Top = 2
-        Width = 75
-        Height = 25
-        Caption = 'Clear Debug'
-        TabOrder = 1
-        OnClick = btnClearDebugClick
-      end
-    end
-  end
   object Panel2: TPanel
     Left = 0
-    Top = 0
-    Width = 343
-    Height = 255
+    Top = 25
+    Width = 400
+    Height = 355
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
     Caption = 'Panel2'
-    TabOrder = 1
+    TabOrder = 0
     object Splitter1: TSplitter
       Left = 4
-      Top = 206
-      Width = 335
+      Top = 306
+      Width = 392
       Height = 5
       Cursor = crVSplit
       Align = alBottom
     end
     object MemoSend: TMemo
       Left = 4
-      Top = 211
-      Width = 335
+      Top = 311
+      Width = 392
       Height = 40
       Align = alBottom
       Font.Charset = ANSI_CHARSET
@@ -103,8 +57,8 @@ object frmDebug: TfrmDebug
     object MsgDebug: TExRichEdit
       Left = 4
       Top = 4
-      Width = 335
-      Height = 202
+      Width = 392
+      Height = 302
       Align = alClient
       AutoURLDetect = adNone
       CustomURLs = <
@@ -189,11 +143,13 @@ object frmDebug: TfrmDebug
       LangOptions = [loAutoFont]
       Language = 1033
       ParentFont = False
+      ReadOnly = True
       ScrollBars = ssVertical
       ShowSelectionBar = False
       TabOrder = 1
       URLColor = clBlue
       URLCursor = crHandPoint
+      OnKeyDown = MsgDebugKeyDown
       InputFormat = ifUnicode
       OutputFormat = ofUnicode
       SelectedInOut = False
@@ -202,9 +158,76 @@ object frmDebug: TfrmDebug
       AllowInPlace = False
     end
   end
+  object pnlTop: TPanel
+    Left = 0
+    Top = 0
+    Width = 400
+    Height = 25
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 1
+    DesignSize = (
+      400
+      25)
+    object btnClose: TSpeedButton
+      Left = 375
+      Top = 2
+      Width = 23
+      Height = 20
+      Anchors = [akTop, akRight]
+      Caption = 'X'
+      Flat = True
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+      OnClick = btnCloseClick
+    end
+    object lblJID: TLabel
+      Left = 10
+      Top = 6
+      Width = 74
+      Height = 13
+      Cursor = crHandPoint
+      Caption = 'Debug Window'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlue
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsUnderline]
+      ParentFont = False
+      OnClick = lblJIDClick
+    end
+  end
   object PopupMenu1: TPopupMenu
-    Left = 16
-    Top = 16
+    AutoHotkeys = maManual
+    Left = 40
+    Top = 136
+    object Clear1: TMenuItem
+      Caption = 'Clear '
+      ShortCut = 16430
+      OnClick = Clear1Click
+    end
+    object SendXML1: TMenuItem
+      Caption = 'Send XML'
+      OnClick = btnSendRawClick
+    end
+    object Find1: TMenuItem
+      Caption = 'Find'
+      ShortCut = 49222
+      OnClick = Find1Click
+    end
+    object WordWrap1: TMenuItem
+      Caption = 'Word Wrap'
+      Checked = True
+      ShortCut = 49239
+      OnClick = WordWrap1Click
+    end
+    object N1: TMenuItem
+      Caption = '-'
+    end
     object popMsg: TMenuItem
       Caption = 'Message'
       OnClick = popMsgClick
@@ -221,5 +244,11 @@ object frmDebug: TfrmDebug
       Caption = 'Presence'
       OnClick = popMsgClick
     end
+  end
+  object FindDialog1: TFindDialog
+    Options = [frDown, frHideUpDown]
+    OnFind = FindDialog1Find
+    Left = 80
+    Top = 136
   end
 end
