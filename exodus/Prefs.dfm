@@ -1435,12 +1435,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 340
-    ActivePage = tbsNotify
+    ActivePage = tbsRoster
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 6
+    TabIndex = 0
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1657,9 +1657,9 @@ object frmPrefs: TfrmPrefs
         TabOrder = 1
         OnMouseDown = colorRosterMouseDown
         Items.Data = {
-          01000000200000001B00000000000000FFFFFFFFFFFFFFFF0000000002000000
-          0747726F75702031210000000100000000000000FFFFFFFFFFFFFFFF00000000
-          00000000085065746572204D2E240000000000000000000000FFFFFFFFFFFFFF
+          01000000200000001B0000001B00000000000000FFFFFFFF0000000002000000
+          0747726F7570203121000000010000000100000000000000FFFFFFFF00000000
+          00000000085065746572204D2E24000000000000000000000000000000FFFFFF
           FF00000000000000000B436F77626F79204E65616C}
       end
       object clrBoxBG: TColorBox
@@ -1705,6 +1705,7 @@ object frmPrefs: TfrmPrefs
         ReadOnly = True
         ScrollBars = ssBoth
         TabOrder = 5
+        WordWrap = False
         OnMouseUp = colorChatMouseUp
       end
     end
@@ -2018,7 +2019,7 @@ object frmPrefs: TfrmPrefs
       object StaticText11: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 111
         Height = 20
         Align = alTop
         Alignment = taCenter
