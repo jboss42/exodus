@@ -16,6 +16,7 @@ object frmBrowse: TfrmBrowse
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnDragOver = FormDragOver
   OnResize = ResizeAddressBar
   PixelsPerInch = 96
   TextHeight = 13
@@ -23,7 +24,7 @@ object frmBrowse: TfrmBrowse
     Left = 0
     Top = 46
     Width = 419
-    Height = 333
+    Height = 328
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 3
@@ -31,13 +32,13 @@ object frmBrowse: TfrmBrowse
     object Splitter1: TSplitter
       Left = 199
       Top = 3
-      Height = 327
+      Height = 322
     end
     object vwBrowse: TTntListView
       Left = 202
       Top = 3
       Width = 214
-      Height = 327
+      Height = 322
       Align = alClient
       Columns = <
         item
@@ -71,7 +72,7 @@ object frmBrowse: TfrmBrowse
       Left = 3
       Top = 3
       Width = 196
-      Height = 327
+      Height = 322
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 4
@@ -894,6 +895,7 @@ object frmBrowse: TfrmBrowse
         Width = 79
         Height = 22
         Caption = 'Browser'
+        Color = clWindow
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -19
@@ -907,12 +909,12 @@ object frmBrowse: TfrmBrowse
         Left = 4
         Top = 173
         Width = 184
-        Height = 146
+        Height = 141
         Align = alClient
         TabOrder = 0
         inherited List1: TTntListBox
           Width = 184
-          Height = 129
+          Height = 124
           BorderStyle = bsNone
         end
         inherited lblCaption: TTntStaticText
@@ -1001,7 +1003,7 @@ object frmBrowse: TfrmBrowse
   end
   object StatBar: TStatusBar
     Left = 0
-    Top = 379
+    Top = 374
     Width = 419
     Height = 20
     Panels = <
@@ -1038,6 +1040,7 @@ object frmBrowse: TfrmBrowse
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
+      Visible = False
       OnClick = btnCloseClick
     end
     object CoolBar1: TCoolBar

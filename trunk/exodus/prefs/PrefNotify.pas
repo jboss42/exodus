@@ -132,11 +132,8 @@ begin
         for i := 0 to NUM_NOTIFIES - 1 do
             chkNotify.Checked[i] := (_notify[i] > 0);
 
-        {
-        chkNotify.Invalidate();
         chkNotify.ItemIndex := 0;
         chkNotifyClick(Self);
-        }
     end;
 
     _loading := false;

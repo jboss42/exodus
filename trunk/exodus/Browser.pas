@@ -117,6 +117,8 @@ end;
     procedure btnCloseClick(Sender: TObject);
     procedure vwBrowseResize(Sender: TObject);
     procedure vwBrowseColumnClick(Sender: TObject; Column: TListColumn);
+    procedure FormDragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
   private
     { Private declarations }
     _cur: integer;
@@ -140,6 +142,10 @@ end;
   public
     { Public declarations }
     procedure GoJID(jid: string; refresh: boolean);
+
+    procedure DockForm; override;
+    procedure FloatForm; override;
+
   end;
 
 var
@@ -890,6 +896,28 @@ begin
 
   _blist.Sort(ItemCompare);
   vwBrowse.Refresh;
+end;
+
+{---------------------------------------}
+procedure TfrmBrowse.DockForm;
+begin
+    inherited;
+    btnClose.Visible := true;
+end;
+
+{---------------------------------------}
+procedure TfrmBrowse.FloatForm;
+begin
+    inherited;
+    btnClose.Visible := false;
+end;
+
+
+procedure TfrmBrowse.FormDragOver(Sender, Source: TObject; X, Y: Integer;
+  State: TDragState; var Accept: Boolean);
+begin
+  inherited;
+    btnClose.Visible := Docked;
 end;
 
 initialization
