@@ -47,21 +47,13 @@ type
     _url: string;
     _downloading : boolean;
     _fstream: TFileStream;
-    _tag: TXMLTag;
     procedure getFile();
   public
     { Public declarations }
-    procedure setTag(tag: TXMLTag);
     property URL : string read _url write _url;
   end;
 
 procedure ShowAutoUpdateStatus(URL : string); overload;
-procedure ShowAutoUpdateStatus(tag : TXMLTag); overload;
-
-const
-    EXODUS_REG = '\Software\Jabber\Exodus';
-    JID_AUTOUPDATE  = '1016321811@update.jabber.org';
-    XMLNS_AUTOUPDATE = 'jabber:iq:autoupdate';
 
 resourcestring
     sDownloading      = 'Downloading...';
@@ -89,15 +81,6 @@ var
   frmAutoUpdateStatus: TfrmAutoUpdateStatus;
 
 {---------------------------------------}
-procedure ShowAutoUpdateStatus(tag : TXMLTag);
-begin
-     if (frmAutoUpdateStatus = nil) then
-        frmAutoUpdateStatus := TfrmAutoUpdateStatus.Create(Application);
-    frmAutoUpdateStatus.setTag(tag);
-    frmAutoUpdateStatus.Show();
-end;
-
-{---------------------------------------}
 procedure ShowAutoUpdateStatus(URL : string);
 begin
      if (frmAutoUpdateStatus = nil) then
@@ -111,7 +94,6 @@ procedure TfrmAutoUpdateStatus.FormCreate(Sender: TObject);
 begin
     Image1.Picture.Icon.Handle := LoadIcon(0, IDI_QUESTION);
     _downloading := false;
-    _tag := nil;
     _url := '';
 end;
 
@@ -138,6 +120,7 @@ procedure TfrmAutoUpdateStatus.HttpClientWork(Sender: TObject;
   AWorkMode: TWorkMode; const AWorkCount: Integer);
 begin
     ProgressBar1.Position := AWorkCount;
+    Application.ProcessMessages();
 end;
 
 {---------------------------------------}
@@ -147,6 +130,7 @@ begin
     ProgressBar1.Max := AWorkCountMax;
     label1.Caption := sDownloading;
     label1.Refresh();
+    Application.ProcessMessages();
 end;
 
 {---------------------------------------}
@@ -159,7 +143,6 @@ end;
 procedure TfrmAutoUpdateStatus.getFile();
 var
     tmp : string;
-    reg : TRegistry;
 begin
     SetLength(tmp, 256);
     SetLength(tmp, GetTempPath(255, PChar(tmp)));
@@ -172,6 +155,7 @@ begin
     Image1.Picture.Icon.Handle := LoadIcon(0, IDI_INFORMATION);
     Image1.Refresh();
     _downloading := true;
+    Application.ProcessMessages();
 
     _fstream := nil;
     try
@@ -184,20 +168,20 @@ begin
             if (httpClient.ResponseCode = 200) then begin
                 label1.Caption := sDownloadComplete;
                 label1.Refresh();
+                Application.ProcessMessages();
 
-                reg := TRegistry.Create();
-                reg.RootKey := HKEY_LOCAL_MACHINE;
-                reg.OpenKey(EXODUS_REG, true);
-                reg.WriteDateTime('Last_Update', httpClient.Response.LastModified);
-                reg.CloseKey();
+                MainSession.Prefs.setString('last_update',
+                    DateTimeToStr(httpClient.Response.LastModified));
 
                 label1.Caption := sInstalling;
                 label1.Refresh();
+                Application.ProcessMessages();
 
                 ShellExecute(0, 'open', PChar(tmp), '/S', nil, SW_SHOWNORMAL);
                 end
             else begin
                 label1.Caption := Format(sError, [httpClient.ResponseText]);
+                Application.ProcessMessages();
                 end;
         except
             on EIdConnClosedGracefully do
@@ -211,19 +195,5 @@ begin
         _downloading := false;
         end;
 end;
-
-{---------------------------------------}
-procedure TfrmAutoUpdateStatus.setTag(tag: TXMLTag);
-var
-    c: TXMLTagList;
-begin
-    // deal with the iq-result tag.
-    _tag := TXMLTag.Create(tag);
-
-    c := tag.GetFirstTag('query').ChildTags;
-    _url := c[0].GetFirstTag('url').Data;
-end;
-
-
 
 end.
