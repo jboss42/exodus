@@ -251,6 +251,7 @@ type
     procedure mnuPluginDummyClick(Sender: TObject);
     procedure SubmitExodusFeatureRequest1Click(Sender: TObject);
     procedure ShowBrandURL(Sender: TObject);
+    procedure FormPaint(Sender: TObject);
 
   private
     { Private declarations }
@@ -2454,6 +2455,8 @@ end;
 procedure TfrmExodus.FormActivate(Sender: TObject);
 begin
     // FlashWindow(Self.Handle, false);
+    if (frmRosterWindow <> nil) then
+        frmRosterWindow.treeRoster.Invalidate();
     StopTrayAlert();
 end;
 
@@ -3066,6 +3069,11 @@ begin
     end;
 
     Result := CallNextHookEx(sExodusCWPHook, Code, wParam, lParam);
+end;
+
+procedure TfrmExodus.FormPaint(Sender: TObject);
+begin
+    StopTrayAlert();
 end;
 
 initialization

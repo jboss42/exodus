@@ -1041,6 +1041,10 @@ begin
     else
         tmps := ritem.jid.Full;
 
+    // This is for Joe :) So the auto-tool tips work correctly.
+    if ((_show_status) and (p <> nil)) then
+        tmps := tmps + ' (' + p.Status + ')';
+
     // ---------------------- Stage #3 -------------------------
     // For each grp in the temp. grp list,
     // make sure a node already exists, or create one.
@@ -2043,7 +2047,8 @@ begin
             // 27 = grp_expanded
             // 28 = grp_collapsed
             if (Node.Expanded) then ico := 27 else ico := 28;
-            frmExodus.ImageList2.Draw(treeRoster.Canvas, 1, nRect.Top, ico);
+            frmExodus.ImageList2.Draw(treeRoster.Canvas, nRect.Left + treeRoster.Indent,
+                nRect.Top, ico);
         end;
 
         // draw the text
