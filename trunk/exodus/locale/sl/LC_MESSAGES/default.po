@@ -1,20 +1,19 @@
 # Translation of default.po to Slovenian
 # This file is distributed under the same license as the Exodus package.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
-# Jure Repinc <jlp@holodeck1.com>, 2003.
+# Jure Repinc <jlp@holodeck1.com>, 2003, 2004.
 msgid ""
 msgstr ""
 "Project-Id-Version: default\n"
-"POT-Creation-Date: 2003-12-23 08:26\n"
-"PO-Revision-Date: 2003-12-28 17:37+0100\n"
+"POT-Creation-Date: 2004-02-04 08:07\n"
+"PO-Revision-Date: 2004-02-05 00:00+0100\n"
 "Last-Translator: Jure Repinc <jlp@holodeck1.com>\n"
-"Language-Team: Slovenian <lugos-slo@lugos.si>\n"
+"Language-Team: Slovenian <translation-team-sl@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: KBabel 1.3\n"
 "Plural-Forms:  nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
-"n%100==4 ? 2 : 3);\n"
 
 #. frmAbout..Caption
 #: About.dfm:8
@@ -37,6 +36,7 @@ msgstr "O Exodusu"
 #. frmDockWizard..Panel1..lblWizardTitle..Font.Name
 #. frmEmoticons..Font.Name
 #. frmTracer..Font.Name
+#. frmException..Font.Name
 #. frameGeneric..Font.Name
 #. frmField..lblPrompt..Font.Name
 #. frameListbox..lblCaption..Font.Name
@@ -87,14 +87,14 @@ msgstr "O Exodusu"
 #: BaseChat.dfm:11 Bookmark.dfm:13 Browser.dfm:14 ConnDetails.dfm:13
 #: CustomNotify.dfm:13 CustomPres.dfm:13 CustomPres.dfm:89 Debug.dfm:14
 #: Dockable.dfm:14 DockWizard.dfm:13 DockWizard.dfm:89 Emoticons.dfm:14
-#: ExceptTracer.dfm:13 fGeneric.dfm:9 fLeftLabel.dfm:16 fListbox.dfm:26
-#: fService.dfm:32 fService.dfm:59 fService.dfm:86 fService.dfm:113
-#: GrpManagement.dfm:12 GrpRemove.dfm:12 InputPassword.dfm:14
+#: ExceptTracer.dfm:13 ExTracer.dfm:11 fGeneric.dfm:9 fLeftLabel.dfm:16
+#: fListbox.dfm:26 fService.dfm:32 fService.dfm:59 fService.dfm:86
+#: fService.dfm:113 GrpManagement.dfm:12 GrpRemove.dfm:12 InputPassword.dfm:14
 #: InvalidRoster.dfm:12 invite.dfm:13 Jabber1.dfm:13 Jabber1.dfm:47
 #: Jabber1.dfm:64 Login.dfm:13 MsgQueue.dfm:12 MsgRecv.dfm:12 MsgRecv.dfm:413
 #: PathSelector.dfm:14 PathSelector.dfm:32 Prefs.dfm:3125 Profile.dfm:13
-#: RemoveContact.dfm:15 RemoveContact.dfm:106 RiserWindow.dfm:14 Room.dfm:129
-#: Room.dfm:147 RoomAdminList.dfm:13 RosterAdd.dfm:14 RosterRecv.dfm:12
+#: RemoveContact.dfm:15 RemoveContact.dfm:106 RiserWindow.dfm:14 Room.dfm:128
+#: Room.dfm:146 RoomAdminList.dfm:13 RosterAdd.dfm:14 RosterRecv.dfm:12
 #: RosterRecv.dfm:75 RosterRecv.dfm:92 RosterWindow.dfm:16 SelContact.dfm:12
 #: SSLWarn.dfm:12 subscribe.dfm:15 subscribe.dfm:55 vcard.dfm:12 WebGet.dfm:11
 #: Wizard.dfm:13 Wizard.dfm:98 xdata.dfm:13 xdata.dfm:49
@@ -103,13 +103,14 @@ msgid "MS Sans Serif"
 msgstr "MS Sans Serif"
 
 #. frmAbout..frameButtons1..Panel2..Panel1..btnCancel..Caption
+#. frmException..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #. frmInvalidRoster..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #. frmMsgRecv..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #. show the next event
-#: About.dfm:1424 InvalidRoster.dfm:42 MsgRecv.dfm:474 RosterRecv.dfm:49
-#: MsgRecv.pas:441 RecvStatus.pas:383 RecvStatus.pas:610 RecvStatus.pas:621
-#: SendStatus.pas:844 SendStatus.pas:964 xdata.pas:188
+#: About.dfm:1424 ExTracer.dfm:46 InvalidRoster.dfm:42 MsgRecv.dfm:474
+#: RosterRecv.dfm:49 MsgRecv.pas:442 RecvStatus.pas:383 RecvStatus.pas:610
+#: RecvStatus.pas:621 SendStatus.pas:844 SendStatus.pas:964 xdata.pas:188
 msgid "Close"
 msgstr "Zapri"
 
@@ -481,9 +482,9 @@ msgstr "Prilepi "
 #: Jabber1.dfm:235 Jabber1.dfm:264 Jabber1.dfm:282 Jabber1.dfm:293
 #: Jabber1.dfm:325 Jabber1.dfm:343 Jabber1.dfm:355 Jabber1.dfm:395
 #: Jabber1.dfm:411 Jabber1.dfm:422 Jabber1.dfm:461 Jabber1.dfm:472
-#: Jabber1.dfm:2686 Jabber1.dfm:2700 Jabber1.dfm:2707 jud.dfm:212
-#: MsgRecv.dfm:519 MsgRecv.dfm:528 Room.dfm:216 Room.dfm:227 Room.dfm:239
-#: Room.dfm:258 Room.dfm:283 RosterWindow.dfm:360 RosterWindow.dfm:376
+#: Jabber1.dfm:2686 Jabber1.dfm:2700 Jabber1.dfm:2707 jud.dfm:220
+#: MsgRecv.dfm:519 MsgRecv.dfm:528 Room.dfm:217 Room.dfm:228 Room.dfm:240
+#: Room.dfm:259 Room.dfm:284 RosterWindow.dfm:360 RosterWindow.dfm:376
 #: RosterWindow.dfm:393 RosterWindow.dfm:432 RosterWindow.dfm:630
 #: RosterWindow.dfm:645 RosterWindow.dfm:661 RosterWindow.dfm:686
 msgid "-"
@@ -577,9 +578,9 @@ msgstr "Napaka: "
 #. frmRosterWindow..pnlFind..btnFindClose..Font.Name
 #. frmXferManager..Panel1..btnClose..Font.Name
 #: Browser.dfm:89 Browser.dfm:132 ChatWin.dfm:44 Debug.dfm:257
-#: ExceptTracer.dfm:53 MsgRecv.dfm:394 Prefs.dfm:13 RegForm.dfm:56
-#: RegForm.dfm:72 RegForm.dfm:127 RegForm.dfm:149 RegForm.dfm:169 Room.dfm:31
-#: Room.dfm:104 RosterWindow.dfm:93 XferManager.dfm:42
+#: ExceptTracer.dfm:53 MsgRecv.dfm:394 Prefs.dfm:13 RegForm.dfm:37
+#: RegForm.dfm:53 RegForm.dfm:108 RegForm.dfm:130 RegForm.dfm:150 Room.dfm:30
+#: Room.dfm:103 RosterWindow.dfm:93 XferManager.dfm:42
 msgid "Arial"
 msgstr "Arial"
 
@@ -595,7 +596,7 @@ msgstr "0 predmetov"
 #. frmRoom..Panel1..btnClose..Caption
 #. frmRosterWindow..pnlFind..btnFindClose..Caption
 #. frmXferManager..Panel1..btnClose..Caption
-#: Browser.dfm:127 ChatWin.dfm:39 Debug.dfm:252 MsgRecv.dfm:389 Room.dfm:99
+#: Browser.dfm:127 ChatWin.dfm:39 Debug.dfm:252 MsgRecv.dfm:389 Room.dfm:98
 #: RosterWindow.dfm:88 XferManager.dfm:37
 msgid "X"
 msgstr "X"
@@ -628,7 +629,7 @@ msgstr "ToolButton2"
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnHome..Hint
 #. frmProfile..PageControl1..TabSheet4..Caption
 #. frmVCard..PageControl1..TabSheet4..Caption
-#: Browser.dfm:205 Profile.dfm:392 vcard.dfm:212 ConnDetails.pas:399
+#: Browser.dfm:205 Profile.dfm:392 vcard.dfm:212 ConnDetails.pas:400
 msgid "Home"
 msgstr "Domov"
 
@@ -792,7 +793,7 @@ msgstr "Pokaži zgodovino..."
 #. frmChat..popContact..popClearHistory..Caption
 #. frmMsgRecv..popContact..popClearHistory..Caption
 #. frmRoom..popRoom..popClearHistory..Caption
-#: ChatWin.dfm:105 MsgRecv.dfm:488 Room.dfm:173
+#: ChatWin.dfm:105 MsgRecv.dfm:488 Room.dfm:174
 msgid "Clear History"
 msgstr "Počisti zgodovino"
 
@@ -854,13 +855,13 @@ msgstr "Blokiraj stik"
 
 #. frmChat..popContact..NotificationOptions1..Caption
 #. frmRoom..popRoom..NotificationOptions1..Caption
-#: ChatWin.dfm:153 Room.dfm:242
+#: ChatWin.dfm:153 Room.dfm:243
 msgid "Notification Options ..."
 msgstr "Možnosti obveščanja"
 
 #. frmChat..popContact..mnuOnTop..Caption
 #. frmRoom..popRoom..mnuOnTop..Caption
-#: ChatWin.dfm:157 Room.dfm:250
+#: ChatWin.dfm:157 Room.dfm:251
 msgid "Always on Top"
 msgstr "Vedno na vrhu"
 
@@ -871,7 +872,7 @@ msgstr "Več kot ena vrstica"
 
 #. frmChat..popContact..mnuWordwrap..Caption
 #. frmRoom..popRoom..mnuWordwrap..Caption
-#: ChatWin.dfm:165 Room.dfm:246
+#: ChatWin.dfm:165 Room.dfm:247
 msgid "Word Wrap Input"
 msgstr "Prelom vnešenih vrstic"
 
@@ -1180,7 +1181,7 @@ msgstr "Prednost"
 
 #. frmCustomPres..cboType....Items.WideStrings
 #. frmRoom..popRoomRoster..popRosterChat..Caption
-#: CustomPres.dfm:75 Room.dfm:271 ChatWin.pas:457 ChatWin.pas:469
+#: CustomPres.dfm:75 Room.dfm:272 ChatWin.pas:457 ChatWin.pas:469
 #: ChatWin.pas:471
 msgid "Chat"
 msgstr "Klepet"
@@ -1195,9 +1196,10 @@ msgstr "Klepet"
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
 #: CustomPres.dfm:76 Jabber1.dfm:365 Jabber1.dfm:2656 RosterWindow.dfm:402
-#: RosterWindow.dfm:605 ExSession.pas:189 Jabber1.pas:2709
-#: RosterWindow.pas:346 RosterWindow.pas:368 RosterWindow.pas:1618
-#: RosterWindow.pas:1661 prefs/PrefGroups.dfm:70 prefs/PrefPresence.dfm:202
+#: RosterWindow.dfm:605 ExSession.pas:184 Jabber1.pas:2710
+#: RosterWindow.pas:346 RosterWindow.pas:368 RosterWindow.pas:1623
+#: RosterWindow.pas:1666 /src/exodus/jopl/PrefController.pas:1257
+#: prefs/PrefGroups.dfm:70 prefs/PrefPresence.dfm:202
 msgid "Available"
 msgstr "Na voljo"
 
@@ -1208,8 +1210,9 @@ msgstr "Na voljo"
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
 #: CustomPres.dfm:77 Jabber1.dfm:377 Jabber1.dfm:2668 RosterWindow.dfm:414
-#: Jabber1.pas:2707 RosterWindow.pas:348 RosterWindow.pas:369
-#: RosterWindow.pas:1602 prefs/PrefGroups.dfm:69 prefs/PrefPresence.dfm:203
+#: Jabber1.pas:2708 RosterWindow.pas:348 RosterWindow.pas:369
+#: RosterWindow.pas:1607 /src/exodus/jopl/PrefController.pas:1275
+#: prefs/PrefGroups.dfm:69 prefs/PrefPresence.dfm:203
 msgid "Away"
 msgstr "Odsoten"
 
@@ -1226,7 +1229,7 @@ msgstr "Ni me"
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
 #: CustomPres.dfm:79 Jabber1.dfm:389 Jabber1.dfm:2680 RosterWindow.dfm:426
-#: RosterWindow.pas:350 RosterWindow.pas:371 RosterWindow.pas:1610
+#: RosterWindow.pas:350 RosterWindow.pas:371 RosterWindow.pas:1615
 #: prefs/PrefGroups.dfm:67 prefs/PrefPresence.dfm:205
 msgid "Do Not Disturb"
 msgstr "Ne moti"
@@ -1296,7 +1299,7 @@ msgstr "Prelom vrstic"
 #. frmDebug..PopupMenu1..popMsg..Caption
 #. frmMsgRecv..Caption
 #. frmRoom..popRoomRoster..popRosterMsg..Caption
-#: Debug.dfm:307 MsgRecv.dfm:6 Room.dfm:267
+#: Debug.dfm:307 MsgRecv.dfm:6 Room.dfm:268
 msgid "Message"
 msgstr "Sporočilo"
 
@@ -1382,6 +1385,11 @@ msgstr "Sledilec"
 #: ExceptTracer.dfm:49
 msgid "Exception Tracer"
 msgstr "Sledilec prekinitev"
+
+#. frmException..Caption
+#: ExTracer.dfm:6
+msgid "frmException"
+msgstr "frmException"
 
 #. frameGeneric..lblLabel..Caption
 #: fGeneric.dfm:23
@@ -1472,7 +1480,7 @@ msgstr "Prisili stike, da me odstranijo s svojega seznama"
 
 #. frmInputPass..Caption
 #. accordingly.
-#: InputPassword.dfm:8 Jabber1.pas:901
+#: InputPassword.dfm:8 Jabber1.pas:894
 msgid "Exodus Password"
 msgstr "Geslo za Exodus"
 
@@ -1560,8 +1568,8 @@ msgstr "Prosim, pridružite se nam v klepetalnici."
 
 #. frmExodus..Caption
 #. do this.
-#: Jabber1.dfm:7 ConnDetails.pas:401 ExSession.pas:475 ExUtils.pas:1223
-#: Jabber1.pas:1206 Login.pas:104 Login.pas:177
+#: Jabber1.dfm:7 ConnDetails.pas:402 ExSession.pas:470 ExUtils.pas:1223
+#: Jabber1.pas:1208 Login.pas:104 Login.pas:177
 msgid "Exodus"
 msgstr "Exodus"
 
@@ -1589,7 +1597,7 @@ msgstr "Pogled"
 #. frmJud..PopupMenu1..popAdd..Caption
 #. frmAdd..Caption
 #. frmRosterWindow..popActions..popAddContact..Caption
-#: Jabber1.dfm:146 jud.dfm:204 RosterAdd.dfm:6 RosterWindow.dfm:590
+#: Jabber1.dfm:146 jud.dfm:212 RosterAdd.dfm:6 RosterWindow.dfm:590
 msgid "Add Contact"
 msgstr "Dodaj stik"
 
@@ -1776,7 +1784,7 @@ msgstr "&Prisotnost"
 #. display this show type
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
 #: Jabber1.dfm:371 Jabber1.dfm:2662 RosterWindow.dfm:408 RosterWindow.pas:347
-#: RosterWindow.pas:1598 prefs/PrefPresence.dfm:201
+#: RosterWindow.pas:1603 prefs/PrefPresence.dfm:201
 msgid "Free to Chat"
 msgstr "Prost za klepet"
 
@@ -1785,7 +1793,7 @@ msgstr "Prost za klepet"
 #. frmRosterWindow..popStatus..presXA..Caption
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
 #: Jabber1.dfm:383 Jabber1.dfm:2674 RosterWindow.dfm:420 RosterWindow.pas:349
-#: RosterWindow.pas:1606 prefs/PrefPresence.dfm:204
+#: RosterWindow.pas:1611 prefs/PrefPresence.dfm:204
 msgid "Xtended Away"
 msgstr "Ni me"
 
@@ -1883,7 +1891,7 @@ msgstr "Po meri..."
 #. frmExodus..popTray..trayMessage..Caption
 #. frmJud..PopupMenu1..popMessage..Caption
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
-#: Jabber1.dfm:2695 jud.dfm:219 subscribe.dfm:147
+#: Jabber1.dfm:2695 jud.dfm:227 subscribe.dfm:147
 msgid "Send Message"
 msgstr "Pošlji sporočilo"
 
@@ -1961,7 +1969,7 @@ msgstr "Vedno sprejmi privzete nastavitve klepetalnice."
 #. frmJoinRoom..Tabs..TabSheet2..Caption
 #. frmJud..Tabs..TabSheet2..Caption
 #. frmRegister..Tabs..TabSheet2..Caption
-#: JoinRoom.dfm:148 jud.dfm:78 RegForm.dfm:79
+#: JoinRoom.dfm:148 jud.dfm:78 RegForm.dfm:60
 msgid "TabSheet2"
 msgstr "TabSheet2"
 
@@ -2015,7 +2023,7 @@ msgstr "Prosim, počakajte. Povezujem se s posrednikom za iskanje:"
 
 #. frmJud..Tabs..TabSheet3..Caption
 #. frmRegister..Tabs..TabSheet3..Caption
-#: jud.dfm:100 RegForm.dfm:114
+#: jud.dfm:100 RegForm.dfm:95
 msgid "TabSheet3"
 msgstr "TabSheet3"
 
@@ -2026,7 +2034,7 @@ msgstr "Vnesite podatke, po katerih želite iskati stike."
 
 #. frmJud..Tabs..TabSheet4..Caption
 #. frmRegister..Tabs..TabSheet4..Caption
-#: jud.dfm:124 RegForm.dfm:134
+#: jud.dfm:124 RegForm.dfm:115
 msgid "TabSheet4"
 msgstr "TabSheet4"
 
@@ -2041,20 +2049,25 @@ msgstr "Dodaj stike v to skupino:"
 msgid "Add a new Group"
 msgstr "Dodaj novo skupino"
 
+#. frmJud..Tabs..TabSheet4..Panel2..lblCount..Caption
+#: jud.dfm:159
+msgid "N items found"
+msgstr "Ne najdem nobenega objekta"
+
 #. frmJud..Tabs..TabSheet4..Panel2..Button1..Caption
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
-#: jud.dfm:168 RosterRecv.dfm:45 jud.pas:641 jud.pas:643
+#: jud.dfm:176 RosterRecv.dfm:45 jud.pas:641 jud.pas:643
 msgid "Add Contacts"
 msgstr "Dodaj stike"
 
 #. frmJud..PopupMenu1..popProfile..Caption
-#: jud.dfm:208
+#: jud.dfm:216
 msgid "View Profile"
 msgstr "Pokaži profil"
 
 #. frmJud..PopupMenu1..popChat..Caption
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
-#: jud.dfm:215 subscribe.dfm:143 Jabber1.pas:2280
+#: jud.dfm:223 subscribe.dfm:143 Jabber1.pas:2279
 msgid "Start Chat"
 msgstr "Prični klepet"
 
@@ -2076,7 +2089,7 @@ msgstr "&Podrobno..."
 #. frmLogin..Panel1..cboProfiles....Items.WideStrings
 #. otherwise, if we have no profiles yet, use the default profile name.
 #. make sure we have at least a default profile
-#: Login.dfm:99 ExSession.pas:373 Login.pas:200
+#: Login.dfm:99 ExSession.pas:368 Login.pas:200
 msgid "Default Profile"
 msgstr "Privzet profil"
 
@@ -2144,7 +2157,7 @@ msgstr "txtSubject"
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlSubject..lblSubject2..Caption
 #. frmRoom..Panel1..pnlSubj..lblSubjectURL..Caption
-#: MsgRecv.dfm:335 Room.dfm:125
+#: MsgRecv.dfm:335 Room.dfm:124
 msgid "Subject:"
 msgstr "Tema:"
 
@@ -2166,7 +2179,7 @@ msgstr "Odgovori"
 
 #. frmMsgRecv..popContact..mnuHistory..Caption
 #. frmRoom..popRoom..popShowHistory..Caption
-#: MsgRecv.dfm:484 Room.dfm:169
+#: MsgRecv.dfm:484 Room.dfm:170
 msgid "Show History"
 msgstr "Pokaži zgodovino"
 
@@ -2292,7 +2305,7 @@ msgstr "Dodatki"
 #. frmPrefs..Scroller..lblTransfer..Caption
 #. frmXferManager..Panel1..pnlCaption..Caption
 #. frmPrefNotify..chkNotify....Items.WideStrings
-#: Prefs.dfm:2639 XferManager.dfm:54 ExSession.pas:485 prefs/PrefNotify.dfm:43
+#: Prefs.dfm:2639 XferManager.dfm:54 ExSession.pas:480 prefs/PrefNotify.dfm:43
 #: prefs/PrefNotify.pas:102
 msgid "File Transfers"
 msgstr "Prenosi datotek"
@@ -4571,7 +4584,7 @@ msgstr "Zimbabve"
 
 #. frmProfile..PageControl1..TabSheet5..Caption
 #. frmVCard..PageControl1..TabSheet5..Caption
-#: Profile.dfm:728 vcard.dfm:543 ConnDetails.pas:400
+#: Profile.dfm:728 vcard.dfm:543 ConnDetails.pas:401
 msgid "Work"
 msgstr "Delo"
 
@@ -4616,11 +4629,11 @@ msgstr "Sprejmi"
 
 #. frmRegister..Caption
 #: RegForm.dfm:4
-msgid "Registration"
-msgstr "Registracija"
+msgid "Service Registration"
+msgstr "Registracija storitve"
 
 #. frmRegister..Tabs..TabSheet1..Label1....AutoSize
-#: RegForm.dfm:52
+#: RegForm.dfm:33
 msgid ""
 "This wizard will register you with a service or Agent. Use the Next button "
 "to advance through the steps. Use Cancel anytime to cancel this registration."
@@ -4630,22 +4643,22 @@ msgstr ""
 "registracije."
 
 #. frmRegister..Tabs..TabSheet1..lblIns..Caption
-#: RegForm.dfm:68
+#: RegForm.dfm:49
 msgid "Waiting for agent instructions....."
 msgstr "Čakam na navodila posrednika..."
 
 #. frmRegister..Tabs..TabSheet2..Panel2..btnDelete..Caption
-#: RegForm.dfm:94
+#: RegForm.dfm:88
 msgid "Delete My Registration"
 msgstr "Pobriši mojo registracijo"
 
 #. frmRegister..Tabs..TabSheet3..Label2..Caption
-#: RegForm.dfm:123
+#: RegForm.dfm:104
 msgid "Please wait, Sending your registration to the service...."
 msgstr "Pošiljam vašo registracijo storitvi..."
 
 #. frmRegister..Tabs..TabSheet4..lblOK....AutoSize
-#: RegForm.dfm:145
+#: RegForm.dfm:126
 msgid ""
 "Your Registration to this service has been completed Successfully. Press the "
 "'Next' button to Finish."
@@ -4654,7 +4667,7 @@ msgstr ""
 "»Naprej« za nadaljevanje."
 
 #. frmRegister..Tabs..TabSheet4..lblBad....AutoSize
-#: RegForm.dfm:165
+#: RegForm.dfm:146
 msgid ""
 "Your Registration to this service has Failed! Press Previous to go back and "
 "verify that all of the parameters have been filled in correctly. Press "
@@ -4696,103 +4709,103 @@ msgid "something really long"
 msgstr "nekaj zelo dolgega"
 
 #. frmRoom..Panel3..Panel6..Caption
-#: Room.dfm:46
+#: Room.dfm:45
 msgid "`"
 msgstr "`"
 
 #. frmRoom..Panel3..Panel6..lstRoster......Caption
-#: Room.dfm:57
+#: Room.dfm:56
 msgid "foo"
 msgstr "foo"
 
 #. frmRoom..Panel1..pnlSubj..lblSubject..Caption
-#: Room.dfm:143
+#: Room.dfm:142
 msgid " lblSubject"
 msgstr " lblSubject"
 
 #. frmRoom..popRoom..popClear..Caption
-#: Room.dfm:165
+#: Room.dfm:166
 msgid "Clear Window"
 msgstr "Počisti okno"
 
 #. frmRoom..popRoom..popBookmark..Caption
-#: Room.dfm:177
+#: Room.dfm:178
 msgid "Bookmark Room..."
 msgstr "Zaznamek klepetalnice..."
 
 #. frmRoom..popRoom..popRegister..Caption
-#: Room.dfm:181
+#: Room.dfm:182
 msgid "Register with Room..."
 msgstr "Registriraj se v klepetalnici..."
 
 #. frmRoom..popRoom..popInvite..Caption
-#: Room.dfm:185
+#: Room.dfm:186
 msgid "Invite Contacts..."
 msgstr "Povabi stike..."
 
 #. frmRoom..popRoom..popNick..Caption
-#: Room.dfm:189
+#: Room.dfm:190
 msgid "Change Nickname..."
 msgstr "Spremeni vzdevek..."
 
 #. frmRoom..popRoom..S1..Caption
-#: Room.dfm:193
+#: Room.dfm:194
 msgid "Save As..."
 msgstr "Shrani kot..."
 
 #. frmRoom..popRoom..popAdmin..Caption
-#: Room.dfm:197
+#: Room.dfm:198
 msgid "Admin"
 msgstr "Nadzornik"
 
 #. frmRoom..popRoom..popAdmin..popVoiceList..Caption
 #. edit a list
-#: Room.dfm:200 Room.pas:1745
+#: Room.dfm:201 Room.pas:1747
 msgid "Edit Voice List"
 msgstr "Uredi seznam stikov z besedo"
 
 #. frmRoom..popRoom..popAdmin..popBanList..Caption
-#: Room.dfm:204 Room.pas:1747
+#: Room.dfm:205 Room.pas:1749
 msgid "Edit Ban List"
 msgstr "Uredi seznam izobčenih"
 
 #. frmRoom..popRoom..popAdmin..popMemberList..Caption
-#: Room.dfm:208 Room.pas:1749
+#: Room.dfm:209 Room.pas:1751
 msgid "Edit Member List"
 msgstr "Uredi seznam članov"
 
 #. frmRoom..popRoom..popAdmin..popModeratorList..Caption
-#: Room.dfm:212 Room.pas:1751
+#: Room.dfm:213 Room.pas:1753
 msgid "Edit Moderator List"
 msgstr "Uredi seznam moderatorjev"
 
 #. frmRoom..popRoom..popAdmin..popAdminList..Caption
-#: Room.dfm:219 Room.pas:1753
+#: Room.dfm:220 Room.pas:1755
 msgid "Edit Admin List"
 msgstr "Uredi seznam nadzornikov"
 
 #. frmRoom..popRoom..popAdmin..popOwnerList..Caption
-#: Room.dfm:223 Room.pas:1755
+#: Room.dfm:224 Room.pas:1757
 msgid "Edit Owner List"
 msgstr "Uredi seznam lastnikov"
 
 #. frmRoom..popRoom..popAdmin..popConfigure..Caption
-#: Room.dfm:230
+#: Room.dfm:231
 msgid "Configure Room"
 msgstr "Nastavi klepetalnico"
 
 #. frmRoom..popRoom..popAdmin..popDestroy..Caption
-#: Room.dfm:234 Room.pas:1769
+#: Room.dfm:235 Room.pas:1771
 msgid "Destroy Room"
 msgstr "Uniči klepetalnico"
 
 #. frmRoom..popRoom..popClose..Caption
-#: Room.dfm:254
+#: Room.dfm:255
 msgid "Close Room"
 msgstr "Zapri klepetalnico"
 
 #. frmRoom..popRoomRoster..popRosterSendJID..Caption
-#: Room.dfm:275
+#: Room.dfm:276
 msgid "Send my JID"
 msgstr "Pošlji moj JID"
 
@@ -4800,48 +4813,48 @@ msgstr "Pošlji moj JID"
 #. frmRosterWindow..popRoster..popBlock..Caption
 #. frmRosterWindow..popGroup..popGroupBlock..Caption
 #. do blocking madness
-#: Room.dfm:279 RosterWindow.dfm:379 RosterWindow.dfm:633 Room.pas:1491
-#: RosterWindow.pas:2049 RosterWindow.pas:2086 RosterWindow.pas:2091
+#: Room.dfm:280 RosterWindow.dfm:379 RosterWindow.dfm:633 Room.pas:1490
+#: RosterWindow.pas:2054 RosterWindow.pas:2091 RosterWindow.pas:2096
 msgid "Block"
 msgstr "Blokiraj"
 
 #. frmRoom..popRoomRoster..popKick..Caption
-#: Room.dfm:286
+#: Room.dfm:287
 msgid "Kick"
 msgstr "Brcni"
 
 #. frmRoom..popRoomRoster..popBan..Caption
-#: Room.dfm:291
+#: Room.dfm:292
 msgid "Ban"
 msgstr "Izobči"
 
 #. frmRoom..popRoomRoster..popVoice..Caption
-#: Room.dfm:296
+#: Room.dfm:297
 msgid "Toggle Voice"
 msgstr "Daj/odvzemi besedo"
 
 #. frmRoom..popRoomRoster..popModerator..Caption
-#: Room.dfm:301
+#: Room.dfm:302
 msgid "Make Moderator"
 msgstr "Spremeni v moderatorja"
 
 #. frmRoom..popRoomRoster..popAdministrator..Caption
-#: Room.dfm:306
+#: Room.dfm:307
 msgid "Make Administrator"
 msgstr "Spremeni v lastnika"
 
 #. frmRoom..dlgSave..DefaultExt
-#: Room.dfm:312
+#: Room.dfm:313
 msgid ".rtf"
 msgstr ".rtf"
 
 #. frmRoom..dlgSave..Filter
-#: Room.dfm:313
+#: Room.dfm:314
 msgid "RTF (*.rtf)|*.rtf|Text (*.txt)|*.txt"
 msgstr "RTF (*.rtf)|*.rtf|Besedilo (*.txt)|*.txt"
 
 #. frmRoom..dlgSave..Title
-#: Room.dfm:316
+#: Room.dfm:317
 msgid "Save Room Contents"
 msgstr "Shrani vsebino klepetalnice"
 
@@ -4950,8 +4963,8 @@ msgstr "JID"
 #. frmRosterWindow..pnlShow..pnlStatus..lblStatusLink..Caption
 #. it at all times (if it exists).
 #: RosterWindow.dfm:245 ExUtils.pas:861 ExUtils.pas:879 ExUtils.pas:897
-#: RosterWindow.pas:367 RosterWindow.pas:1246 RosterWindow.pas:1250
-#: RosterWindow.pas:1614
+#: RosterWindow.pas:367 RosterWindow.pas:1247 RosterWindow.pas:1251
+#: RosterWindow.pas:1619
 msgid "Offline"
 msgstr "Nepovezan"
 
@@ -5143,7 +5156,7 @@ msgstr "Dodaj to osebo na moj seznam"
 
 #. frmSubscribe..frameButtons1..Panel2..Panel1..btnOK..Caption
 #. Change button captions for TC Invites
-#: subscribe.dfm:125 MsgRecv.pas:378
+#: subscribe.dfm:125 MsgRecv.pas:379
 msgid "Accept"
 msgstr "Sprejmi"
 
@@ -5281,11 +5294,11 @@ msgid "Error: %s"
 msgstr "Napaka: %s"
 
 #. Actually Browse to the JID entered in the address box
-#: Browser.pas:201
+#: Browser.pas:204
 msgid "The Jabber ID you entered is invalid."
 msgstr "Jabber ID, ki ste ga vnesli, je neveljaven."
 
-#: Browser.pas:602
+#: Browser.pas:604
 msgid "Objects"
 msgstr "Predmeti"
 
@@ -5299,7 +5312,7 @@ msgid "Chat Activity: "
 msgstr "Dejavnost pri klepetu:"
 
 #. post a msg to the window and disable the text input box.
-#: ChatWin.pas:743 Jabber1.pas:2597 Jabber1.pas:2603 Room.pas:656
+#: ChatWin.pas:743 Room.pas:654
 msgid "You have been disconnected."
 msgstr "Povezava prekinjena."
 
@@ -5376,7 +5389,7 @@ msgstr "Ne morem pripraviti ali nastaviti dodatka."
 msgid "%s Details"
 msgstr "Podrobnosti o %s"
 
-#: ConnDetails.pas:180
+#: ConnDetails.pas:181
 msgid ""
 "The Jabber ID you entered (username@server/resource) is invalid. Please "
 "enter a valid username, server, and resource."
@@ -5384,7 +5397,7 @@ msgstr ""
 "Vnešeni Jabber ID (uporabnik@strežnik/vir) je neveljaven. Prosim, vnesite "
 "veljavno uporabniško ime, strežnik in vir."
 
-#: ConnDetails.pas:308
+#: ConnDetails.pas:309
 msgid ""
 "This profile is currently to use SSL, however, your system does not have the "
 "required libraries to use SSL. Turning SSL OFF."
@@ -5392,21 +5405,21 @@ msgstr ""
 "Ta profil ima nastavljeno uporabo SSL-ja. Nameščenih nimate potrebnih "
 "knjižnic za SSL. SSL je zato izklopljen."
 
-#: ConnDetails.pas:353
+#: ConnDetails.pas:354
 msgid "Must have a larger number of poll keys."
 msgstr "Število poizvedovalnih ključev mora biti večje."
 
-#: ConnDetails.pas:453
+#: ConnDetails.pas:454
 msgid ""
 "Download the public server list from jabber.org? (Requires an internet "
 "connection)."
 msgstr "Prenesem seznam javnih strežnikov s strežnika jabber.org?"
 
-#: ConnDetails.pas:458
+#: ConnDetails.pas:459
 msgid "Downloading public server list"
 msgstr "Prenašam seznam javnih strežnikov..."
 
-#: Debug.pas:184 Debug.pas:383
+#: Debug.pas:184 Debug.pas:388
 msgid "Disconnected"
 msgstr "Nepovezan"
 
@@ -5491,7 +5504,7 @@ msgid "Disco"
 msgstr "Disko"
 
 #. Make sure winsock2 is available..
-#: ExSession.pas:172
+#: ExSession.pas:167
 msgid ""
 "Winsock2 is required for this application. Please obtain the winsock2 "
 "installer from Microsoft for your operating system."
@@ -5500,12 +5513,12 @@ msgstr ""
 "spletni strani podjetja Microsoft."
 
 #. -w [show]   : presence show
-#: ExSession.pas:231
+#: ExSession.pas:226
 msgid "Invalid command line:%s"
 msgstr "Neveljavna ukazna vrstica: %s"
 
 #. show the help message
-#: ExSession.pas:262
+#: ExSession.pas:257
 msgid ""
 "The following command line parameters are available in Exodus: \n"
 "\n"
@@ -5513,91 +5526,91 @@ msgstr ""
 "V Exodusu so na voljo naslednji parametri ukazne vrstice:\n"
 "\n"
 
-#: ExSession.pas:263
+#: ExSession.pas:258
 msgid " -d \t\t : Debug mode on\n"
 msgstr " -d \t\t : Razhroščevanje vključeno\n"
 
-#: ExSession.pas:264
+#: ExSession.pas:259
 msgid " -m \t\t : Start minimized\n"
 msgstr " -m \t\t : Zaženi pomanjšano\n"
 
-#: ExSession.pas:265
+#: ExSession.pas:260
 msgid " -v \t\t : invisible mode\n"
 msgstr " -v \t\t : Neviden\n"
 
-#: ExSession.pas:266
+#: ExSession.pas:261
 msgid " -? \t\t : Show Help\n"
 msgstr " -? \t\t : Pokaži pomoč\n"
 
-#: ExSession.pas:267
+#: ExSession.pas:262
 msgid " -x [yes|no] \t : Expanded Mode\n"
 msgstr " -x [yes|no] \t : Razširjen način\n"
 
-#: ExSession.pas:268
+#: ExSession.pas:263
 msgid " -j [jid] \t\t : Jid\n"
 msgstr " -j [jid] \t\t : JID\n"
 
-#: ExSession.pas:269
+#: ExSession.pas:264
 msgid " -p [pass] \t : Password\n"
 msgstr " -p [pass] \t : Geslo\n"
 
-#: ExSession.pas:270
+#: ExSession.pas:265
 msgid " -r [res] \t : Resource\n"
 msgstr " -r [res] \t : Vir\n"
 
-#: ExSession.pas:271
+#: ExSession.pas:266
 msgid " -i [pri] \t : Priority\n"
 msgstr " -i [pri] \t : Prednost\n"
 
-#: ExSession.pas:272
+#: ExSession.pas:267
 msgid " -f [prof] \t : Profile name\n"
 msgstr " -f [prof] \t : Ime profila\n"
 
-#: ExSession.pas:273
+#: ExSession.pas:268
 msgid " -c [file] \t : Config path name\n"
 msgstr " -c [file] \t : Pot do nastavitev\n"
 
-#: ExSession.pas:354
+#: ExSession.pas:349
 msgid "Missing file:"
 msgstr "Manjka datoteka: "
 
-#: ExSession.pas:476 prefs/PrefNotify.pas:100
+#: ExSession.pas:471 prefs/PrefNotify.pas:100
 msgid "Activity in a chat window"
 msgstr "Dejavnost v oknu za klepet"
 
-#: ExSession.pas:477 prefs/PrefNotify.pas:98
+#: ExSession.pas:472 prefs/PrefNotify.pas:98
 msgid "Invited to a room"
 msgstr "Povabilo v klepetalnico"
 
-#: ExSession.pas:478 prefs/PrefNotify.pas:99
+#: ExSession.pas:473 prefs/PrefNotify.pas:99
 msgid "Keyword in a room"
 msgstr "Ključna beseda v klepetalnici"
 
-#: ExSession.pas:479 prefs/PrefNotify.pas:95
+#: ExSession.pas:474 prefs/PrefNotify.pas:95
 msgid "New conversation"
 msgstr "Nov pogovor"
 
-#: ExSession.pas:480 prefs/PrefNotify.pas:96
+#: ExSession.pas:475 prefs/PrefNotify.pas:96
 msgid "Received a normal message"
 msgstr "Prejetje običajnega sporočila"
 
-#: ExSession.pas:481 prefs/PrefNotify.pas:94
+#: ExSession.pas:476 prefs/PrefNotify.pas:94
 msgid "Contact went offline"
 msgstr "Stika ni več na zvezi"
 
-#: ExSession.pas:482 prefs/PrefNotify.pas:93
+#: ExSession.pas:477 prefs/PrefNotify.pas:93
 msgid "Contact came online"
 msgstr "Stik je sedaj na zvezi"
 
-#: ExSession.pas:483 prefs/PrefNotify.pas:101
+#: ExSession.pas:478 prefs/PrefNotify.pas:101
 msgid "Activity in a room"
 msgstr "Dejavnost v klepetalnici"
 
-#: ExSession.pas:484 prefs/PrefNotify.pas:97
+#: ExSession.pas:479 prefs/PrefNotify.pas:97
 msgid "Subscription request"
 msgstr "Zahtevek za naročnino"
 
-#: ExSession.pas:486 prefs/PrefNotify.pas:103
+#: ExSession.pas:481 prefs/PrefNotify.pas:103
 msgid "Auto response generated"
 msgstr "Samodejen odgovor"
 
@@ -5792,7 +5805,11 @@ msgstr "Odstrani skupino %s"
 msgid "Chat with "
 msgstr "Klepet z "
 
-#: GUIFactory.pas:128
+#: GUIFactory.pas:118
+msgid "Your authentication mechanism does not support registration."
+msgstr "Vaš način overovljanja ne podpira registracije."
+
+#: GUIFactory.pas:133
 msgid ""
 "There was an error attempting to save your options. Another process may be "
 "accessing your options file. Some options may be lost. "
@@ -5814,29 +5831,29 @@ msgstr "Povabljeni ste v klepetalnico %s."
 msgid "Conference Room:"
 msgstr "Klepetalnica:"
 
-#: Jabber1.pas:901
+#: Jabber1.pas:894
 msgid "Enter Password"
 msgstr "Vnesite geslo"
 
 #. For other OS's we need to use the wicked nasty DLL
-#: Jabber1.pas:990
+#: Jabber1.pas:983
 msgid "Trying to setup the Auto Away timer."
 msgstr "Poskušam nastaviti števec za samo-odsotnost"
 
-#: Jabber1.pas:1012
+#: Jabber1.pas:1005
 msgid "AutoAway Setup FAILED!"
 msgstr "Nisem uspel nastaviti samo-odsotnosti!"
 
 #. do nothing here..
-#: Jabber1.pas:1019
+#: Jabber1.pas:1012
 msgid "Using Win32 API for Autoaway checks!!"
 msgstr "Za preverjanje samo-odsotnosti uporabljam Win32 API!"
 
-#: Jabber1.pas:1023
+#: Jabber1.pas:1016
 msgid "ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!"
 msgstr "Napaka pri ugotavljanju naslova Win32 API za GetLastInputInfo!"
 
-#: Jabber1.pas:1085
+#: Jabber1.pas:1079
 msgid ""
 "There was an error trying to authenticate you.\n"
 "Either you used the wrong password, or this account is already in use by "
@@ -5845,7 +5862,11 @@ msgstr ""
 "Prišlo je do napake pri overovljanju.\n"
 "Vnesli ste napačno geslo, ali pa ta račun že uporablja nekdo drug."
 
-#: Jabber1.pas:1120
+#: Jabber1.pas:1086
+msgid "There was an error trying to setup SSL."
+msgstr "Prišlo je do napake pri nastavljanju SSL."
+
+#: Jabber1.pas:1122
 msgid ""
 "An Error occurred trying to register your new account. This server may not "
 "allow open registration."
@@ -5853,12 +5874,12 @@ msgstr ""
 "Prišlo je do napake pri registraciji vašega novega računa. Strežnik morda ne "
 "dovoljuje proste registracije."
 
-#: Jabber1.pas:1135
+#: Jabber1.pas:1137
 msgid "This account does not exist on this server. Create a new account?"
 msgstr "Ta račun na tem strežniku še ne obstaja. Ustvarim nov račun?"
 
 #. if we have a new account, prompt for reg info
-#: Jabber1.pas:1185
+#: Jabber1.pas:1187
 msgid ""
 "Your new jabber account is activated. Would you like to fill out additional "
 "registration information?"
@@ -5867,55 +5888,55 @@ msgstr ""
 "registraciji?"
 
 #. set us to away
-#: Jabber1.pas:2076
+#: Jabber1.pas:2075
 msgid "Setting AutoAway"
 msgstr "Nastavljam Samo-Odsoten"
 
 #. set us to xa
-#: Jabber1.pas:2112
+#: Jabber1.pas:2111
 msgid "Setting AutoXA"
 msgstr "Nastavljam Samo-Ni me"
 
 #. reset our status to available
-#: Jabber1.pas:2129
+#: Jabber1.pas:2128
 msgid "Setting Auto Available"
 msgstr "Nastavljam samodejno prisotnost"
 
 #. lookup some arbitrary vcard..
-#: Jabber1.pas:2164
+#: Jabber1.pas:2163
 msgid "Lookup Profile"
 msgstr "Preveri profil"
 
-#: Jabber1.pas:2164 Jabber1.pas:2280 Jabber1.pas:2537
+#: Jabber1.pas:2163 Jabber1.pas:2279 Jabber1.pas:2538
 msgid "Enter Jabber ID: "
 msgstr "Vnesite Jabber ID: "
 
-#: Jabber1.pas:2379
+#: Jabber1.pas:2380
 msgid "Old password is incorrect."
 msgstr "Staro geslo je nepravilno."
 
-#: Jabber1.pas:2383
+#: Jabber1.pas:2384
 msgid "New password does not match."
 msgstr "Novo geslo se ne ujema."
 
-#: Jabber1.pas:2403 Jabber1.pas:2408
+#: Jabber1.pas:2404 Jabber1.pas:2409
 msgid "Error changing password."
 msgstr "Napaka pri spreminjanju gesla."
 
-#: Jabber1.pas:2406
+#: Jabber1.pas:2407
 msgid "Password changed."
 msgstr "Geslo je spremenjeno."
 
 #. kick off a service registration..
-#: Jabber1.pas:2484
+#: Jabber1.pas:2485
 msgid "Register with Service"
 msgstr "Registracija pri storitvi"
 
-#: Jabber1.pas:2484
+#: Jabber1.pas:2485
 msgid "Enter Jabber ID of Service: "
 msgstr "Vnesite Jabber ID storitve: "
 
-#: Jabber1.pas:2537
+#: Jabber1.pas:2538
 msgid "Send a Message"
 msgstr "Pošlji sporočilo"
 
@@ -5923,12 +5944,12 @@ msgstr "Pošlji sporočilo"
 #. send roster items to this contact.
 #. Send contacts to this JID..
 #. we got a URL drop
-#: Jabber1.pas:2800 Jabber1.pas:2810 RosterWindow.pas:2523
-#: RosterWindow.pas:2825 RosterWindow.pas:2857
+#: Jabber1.pas:2803 Jabber1.pas:2813 RosterWindow.pas:2528
+#: RosterWindow.pas:2830 RosterWindow.pas:2862
 msgid "You must select one or more contacts."
 msgstr "Izbrati morate vsaj en stik."
 
-#: Jabber1.pas:2938
+#: Jabber1.pas:2941
 msgid "Branding error!"
 msgstr "Napaka glede znamke!"
 
@@ -5938,7 +5959,7 @@ msgstr "- Vsi strežniki -"
 
 #. change tabs if they selected browse
 #. normal result
-#: JoinRoom.pas:237 JoinRoom.pas:393 RegForm.pas:415
+#: JoinRoom.pas:237 JoinRoom.pas:393 RegForm.pas:417
 msgid "Finish"
 msgstr "Zaključi"
 
@@ -5953,13 +5974,17 @@ msgid "Could not contact the search agent."
 msgstr "Ne morem se povezati s posrednikom za iskanje."
 
 #. timeout
-#: jud.pas:426
+#: jud.pas:425
 msgid "The search timed out."
 msgstr "Čas za iskanje je potekel."
 
-#: jud.pas:455
+#: jud.pas:454
 msgid "No Results were found."
 msgstr "Ni rezultatov iskanja."
+
+#: jud.pas:556
+msgid "%d items found."
+msgstr "Našel sem %d objektov."
 
 #. Create a new profile
 #: Login.pas:170
@@ -5985,32 +6010,32 @@ msgid ""
 "options."
 msgstr "Ne morem pisati v navedeno mapo za zazačasno hranjenje sporočil."
 
-#: MsgRecv.pas:379
+#: MsgRecv.pas:380
 msgid "Decline"
 msgstr "Zavrni"
 
 #. This is an error.. show the error panel
-#: MsgRecv.pas:386
+#: MsgRecv.pas:387
 msgid "Error:"
 msgstr "Napaka:"
 
-#: MsgRecv.pas:409
+#: MsgRecv.pas:410
 msgid "To:"
 msgstr "Za:"
 
-#: MsgRecv.pas:443 MsgRecv.pas:756
+#: MsgRecv.pas:444 MsgRecv.pas:757
 msgid "Next"
 msgstr "Naprej"
 
-#: MsgRecv.pas:689 MsgRecv.pas:696
+#: MsgRecv.pas:690 MsgRecv.pas:697
 msgid "Message to "
 msgstr "Sporočilo za "
 
-#: MsgRecv.pas:691 MsgRecv.pas:698
+#: MsgRecv.pas:692 MsgRecv.pas:699
 msgid "Message from "
 msgstr "Sporočilo od "
 
-#: MsgRecv.pas:768
+#: MsgRecv.pas:769
 msgid "You have unread messages. Read all messages before closing the window."
 msgstr "Čakajo vas neprebrana sporočila. Preberite vsa sporočila preden zaprete okno."
 
@@ -6101,29 +6126,29 @@ msgstr "Čakam na preklic prenosa..."
 msgid "The sender of a file transfer (%s) went offline."
 msgstr "Pošiljatelj datoteke (%s) je prekinil povezavo."
 
-#: RegForm.pas:130
+#: RegForm.pas:132
 msgid "Jabber Service Registration"
 msgstr "Registracija Jabber storitve"
 
-#: RegForm.pas:131
+#: RegForm.pas:133
 msgid "This wizard will guide you through registration with a jabber service."
 msgstr "Ta čarovnik vas bo vodil skozi registracijo pri Jabber storitvi."
 
 #. error packet
-#: RegForm.pas:176
+#: RegForm.pas:178
 msgid "The agent you are trying to register with returned an error."
 msgstr "Posrednik, pri katerem se želite registrirati, je vrnil napako."
 
 #. timeout on entity query
-#: RegForm.pas:264 RegForm.pas:475
+#: RegForm.pas:266 RegForm.pas:477
 msgid "The agent you are trying to register with can not be reached."
 msgstr "Posrednik, pri katerem se želite registrirati, ni dosegljiv."
 
-#: RegForm.pas:479
+#: RegForm.pas:481
 msgid "There was an error trying to remove your registration."
 msgstr "Prišlo je do napake pri odstranitvi vaše registracije."
 
-#: RegForm.pas:483
+#: RegForm.pas:485
 msgid "Your registration has been removed."
 msgstr "Vaša registracija je bila odstranjena."
 
@@ -6131,15 +6156,15 @@ msgstr "Vaša registracija je bila odstranjena."
 msgid "Remove this contact from the %s group."
 msgstr "Odstrani ta stik iz skupine %s."
 
-#: Room.pas:369
+#: Room.pas:370
 msgid "%s Room"
 msgstr "Soba %s"
 
 #. if blocked ignore anything they say, even subject changes.
 #. block
 #. get the data for this person..
-#: Room.pas:461 Room.pas:1041 Room.pas:1448 Room.pas:1456 Room.pas:1488
-#: Room.pas:1939
+#: Room.pas:461 Room.pas:1039 Room.pas:1447 Room.pas:1455 Room.pas:1487
+#: Room.pas:1941
 msgid "Blocked"
 msgstr "Blokiran"
 
@@ -6154,78 +6179,78 @@ msgstr "Dejavnost v "
 
 #. check for various presence errors
 #. they match
-#: Room.pas:732 Room.pas:969 Room.pas:1315
+#: Room.pas:730 Room.pas:967 Room.pas:1314
 msgid "Your nickname is already being used. Please select another one."
 msgstr "Vaš vzdevek je že v uporabi. Prosim, izberite drugega."
 
-#: Room.pas:741
+#: Room.pas:739
 msgid "You supplied an invalid password to enter this room."
 msgstr "Podali ste napačno geslo za vstop v to klepetalnico."
 
-#: Room.pas:749
+#: Room.pas:747
 msgid "The room is being created. Please try again later."
 msgstr "Klepetalnica se ustvarja. Prosim, poskusite kasneje."
 
-#: Room.pas:754
+#: Room.pas:752
 msgid "You are not allowed to enter the room. You must be on the member list."
 msgstr "Ni vam dovoljeno vstopiti v klepetalnico. Morate biti na seznamu članov."
 
-#: Room.pas:759 Room.pas:968
+#: Room.pas:757 Room.pas:966
 msgid "You are not on the member list for this room. Try and register?"
 msgstr "Niste na seznamu članov te klepetalnice. Poskusim z registracijo?"
 
-#: Room.pas:775
+#: Room.pas:773
 msgid "The room has been destroyed for an unknown reason."
 msgstr "Klepetalnica je bila uničena iz neznanega razloga."
 
 #. this user has changed their nick..
-#: Room.pas:798 Room.pas:964
+#: Room.pas:796 Room.pas:962
 msgid "%s is now known as %s."
 msgstr "%s je sedaj znan kot %s."
 
-#: Room.pas:806 Room.pas:962
+#: Room.pas:804 Room.pas:960
 msgid "%s has been banned from this room. %s"
 msgstr "%s je izobčen iz te klepetalnice. %s"
 
-#: Room.pas:807 Room.pas:965
+#: Room.pas:805 Room.pas:963
 msgid "%s has been kicked from this room. %s"
 msgstr "%s je brcnjen iz te klepetalnice. %s"
 
-#: Room.pas:813
+#: Room.pas:811
 msgid "%s has left the room."
 msgstr "%s je zapustil klepetalnico."
 
 #. show new user message
-#: Room.pas:838
+#: Room.pas:836
 msgid "%s has entered the room."
 msgstr "%s je vstopil v klepetalnico."
 
 #. someone maybe changed my role
-#: Room.pas:863
+#: Room.pas:861
 msgid "You have been granted voice."
 msgstr "Dana vam je beseda."
 
-#: Room.pas:865
+#: Room.pas:863
 msgid "Your voice has been revoked."
 msgstr "Beseda vam je odvzeta."
 
-#: Room.pas:867
+#: Room.pas:865
 msgid "%s has a new role of %s."
 msgstr "%s ima novo vlogo: %s."
 
-#: Room.pas:963
+#: Room.pas:961
 msgid "This room has been destroyed."
 msgstr "Soba je uničena."
 
-#: Room.pas:966
+#: Room.pas:964
 msgid "You are on the ban list for this room."
 msgstr "Izobčeni ste iz te klepetalnice."
 
-#: Room.pas:967
+#: Room.pas:965
 msgid "You are not allowed to create rooms."
 msgstr "Ni vam dovoljeno ustvarjati klepetalnic."
 
-#: Room.pas:1011
+#: Room.pas:1009
 msgid ""
 "There was an error using the default room configuration. Configuring it "
 "manually."
@@ -6233,7 +6258,7 @@ msgstr ""
 "Prišlo je do napake pri uporabi privzetih nastavitev klepetalnice. Nastavite "
 "jo ročno."
 
-#: Room.pas:1135
+#: Room.pas:1134
 msgid ""
 "Your room keyword regular expressions are invalid. Keyword matching will be "
 "turned off for this room."
@@ -6242,61 +6267,61 @@ msgstr ""
 "ključnih besed bo izklopljeno."
 
 #. send the msg out
-#: Room.pas:1276
+#: Room.pas:1275
 msgid "/me has changed the subject to: "
 msgstr "/me je spremenil temo v: "
 
 #. Change the subject
-#: Room.pas:1290
+#: Room.pas:1289
 msgid "Change room subject"
 msgstr "Spremeni temo"
 
-#: Room.pas:1290
+#: Room.pas:1289
 msgid "New subject"
 msgstr "Nova tema"
 
-#: Room.pas:1334
+#: Room.pas:1333
 msgid "New nickname"
 msgstr "Nov vzdevek"
 
-#: Room.pas:1357
+#: Room.pas:1356
 msgid "Bookmark Room"
 msgstr "Zaznamek klepetalnice"
 
-#: Room.pas:1357
+#: Room.pas:1356
 msgid "Enter bookmark name:"
 msgstr "Ime zaznamka:"
 
-#: Room.pas:1489 RosterWindow.pas:2045 RosterWindow.pas:2096
+#: Room.pas:1488 RosterWindow.pas:2050 RosterWindow.pas:2101
 msgid "UnBlock"
 msgstr "Odblokiraj"
 
-#: Room.pas:1647
+#: Room.pas:1649
 msgid "You have been kicked."
 msgstr "Brcnili so vas."
 
-#: Room.pas:1648
+#: Room.pas:1650
 msgid "Kick Reason"
 msgstr "Razlog za brco"
 
-#: Room.pas:1651
+#: Room.pas:1653
 msgid "You have been banned."
 msgstr "Izobčili so vas."
 
-#: Room.pas:1652
+#: Room.pas:1654
 msgid "Ban Reason"
 msgstr "Razlog za izobčenje"
 
 #. Destroy Room
-#: Room.pas:1766
+#: Room.pas:1768
 msgid "Do you really want to destroy the room? All users will be removed."
 msgstr "Želite resnično uničiti to klepetalnico? Vsi uporabniki bodo odstranjeni."
 
-#: Room.pas:1768
+#: Room.pas:1770
 msgid "The owner has destroyed the room."
 msgstr "Lastnik je uničil klepetalnico."
 
-#: Room.pas:1769
+#: Room.pas:1771
 msgid "Destroy Reason"
 msgstr "Razlog za uničenje"
 
@@ -6333,7 +6358,7 @@ msgid ""
 msgstr "Zahtevani prehodni strežnik nima prenašalca za to vrsto stikov."
 
 #. The My resources grp is also special.. same as offline
-#: RosterWindow.pas:374 RosterWindow.pas:1262 RosterWindow.pas:1266
+#: RosterWindow.pas:374 RosterWindow.pas:1263 RosterWindow.pas:1267
 msgid "My Resources"
 msgstr "Moji viri"
 
@@ -6352,7 +6377,7 @@ msgstr ""
 #. we've been authenticated
 #. Login to the client..
 #: RosterWindow.pas:502 RosterWindow.pas:508 RosterWindow.pas:517
-#: RosterWindow.pas:2625
+#: RosterWindow.pas:2630
 msgid "Click to Cancel..."
 msgstr "Prekliči"
 
@@ -6373,51 +6398,51 @@ msgstr ""
 "Prenašam seznam..."
 
 #. remove a bookmark
-#: RosterWindow.pas:1847
+#: RosterWindow.pas:1852
 msgid "Remove this bookmark?"
 msgstr "Odstranim ta zaznamek?"
 
-#: RosterWindow.pas:2324
+#: RosterWindow.pas:2329
 msgid " (Pending)"
 msgstr " (čakam)"
 
-#: RosterWindow.pas:2436
+#: RosterWindow.pas:2441
 msgid "Rename group"
 msgstr "Preimenuj skupino"
 
-#: RosterWindow.pas:2436
+#: RosterWindow.pas:2441
 msgid "New group name:"
 msgstr "Novo ime skupine:"
 
 #. Block or Unblock this user
-#: RosterWindow.pas:2551
+#: RosterWindow.pas:2556
 msgid "Block %d contacts?"
 msgstr "Blokiram %d stikov?"
 
 #. Block or Unblock this user
-#: RosterWindow.pas:2580
+#: RosterWindow.pas:2585
 msgid "Unblock %d contacts?"
 msgstr "Odblokiram %d stikov?"
 
-#: RosterWindow.pas:2608
+#: RosterWindow.pas:2613
 msgid "You must select more than one online contact to broadcast."
 msgstr "Za pošiljanje morate izbrati več kot en stik, ki je na zvezi."
 
 #. Cancel the connection
-#: RosterWindow.pas:2629 RosterWindow.pas:2967
+#: RosterWindow.pas:2634 RosterWindow.pas:2972
 msgid "Click to Cancel Reconnect"
 msgstr "Preklic povezovanja"
 
 #. processing of Editing events
-#: RosterWindow.pas:2734
+#: RosterWindow.pas:2739
 msgid "Rename Roster Item"
 msgstr "Preimenuj stvar s seznama"
 
-#: RosterWindow.pas:2734
+#: RosterWindow.pas:2739
 msgid "New Nickname: "
 msgstr "Nov vzdevek: "
 
-#: RosterWindow.pas:2968
+#: RosterWindow.pas:2973
 msgid "Reconnect in %d seconds."
 msgstr "Povezava čez %d sekund."
 
@@ -6540,51 +6565,99 @@ msgstr ""
 "prenosov datotek. Jih ustavim?"
 
 #. set the defaults for the pref controller
-#: /src/exodus/jopl/PrefController.pas:642
+#: /src/exodus/jopl/PrefController.pas:643
 msgid "Away as a result of idle."
 msgstr "Odsoten zaradi nedejavnosti."
 
-#: /src/exodus/jopl/PrefController.pas:644
+#: /src/exodus/jopl/PrefController.pas:645
 msgid "XA as a result of idle."
 msgstr "Ni me zaradi nedejavnosti."
 
+#: /src/exodus/jopl/PrefController.pas:1266
+msgid "Free for Chat"
+msgstr "Prost za klepet"
+
+#: /src/exodus/jopl/PrefController.pas:1284
+msgid "Lunch"
+msgstr "Kosilo"
+
+#: /src/exodus/jopl/PrefController.pas:1293
+msgid "Meeting"
+msgstr "Sestanek"
+
+#: /src/exodus/jopl/PrefController.pas:1302
+msgid "Bank"
+msgstr "Banka"
+
+#: /src/exodus/jopl/PrefController.pas:1311
+msgid "Extended Away"
+msgstr "Ni me"
+
+#: /src/exodus/jopl/PrefController.pas:1320
+msgid "Gone Home"
+msgstr "Odšel domov"
+
+#: /src/exodus/jopl/PrefController.pas:1329
+msgid "Gone to Work"
+msgstr "Odšel v službo"
+
+#: /src/exodus/jopl/PrefController.pas:1338
+msgid "Sleeping"
+msgstr "Spim"
+
+#: /src/exodus/jopl/PrefController.pas:1347
+msgid "Do Not disturb"
+msgstr "Ne moti"
+
+#: /src/exodus/jopl/PrefController.pas:1356
+msgid "Busy"
+msgstr "Zaposlen"
+
+#: /src/exodus/jopl/PrefController.pas:1365
+msgid "Working"
+msgstr "Delam"
+
+#: /src/exodus/jopl/PrefController.pas:1374
+msgid "Mad"
+msgstr "Jezen"
+
 #. Programmer's name for it: SUREBaseString
-#: /src/exodus/jopl/Unicode.pas:822
+#: /src/exodus/jopl/Unicode.pas:824
 msgid "Error in regular expression: %s"
 msgstr "Napaka v regularnem izrazu: %s"
 
 #. Programmer's name for it: SUREUnexpectedEOS
-#: /src/exodus/jopl/Unicode.pas:823
+#: /src/exodus/jopl/Unicode.pas:825
 msgid "Unexpected end of pattern."
 msgstr "Nepričakovan konec vzorca."
 
 #. Programmer's name for it: SURECharacterClassOpen
-#: /src/exodus/jopl/Unicode.pas:824
+#: /src/exodus/jopl/Unicode.pas:826
 msgid "Character class not closed, ']' is missing."
 msgstr "Znakovni razred ni zaprt. Manjka »]«."
 
 #. Programmer's name for it: SUREUnbalancedGroup
-#: /src/exodus/jopl/Unicode.pas:825
+#: /src/exodus/jopl/Unicode.pas:827
 msgid "Unbalanced group expression, ')' is missing."
 msgstr "Neuravnotežen skupinski izraz. Manjka »)«."
 
 #. Programmer's name for it: SUREInvalidCharProperty
-#: /src/exodus/jopl/Unicode.pas:826
+#: /src/exodus/jopl/Unicode.pas:828
 msgid "A character property is invalid"
 msgstr "Lastnost znaka je neveljavna."
 
 #. Programmer's name for it: SUREInvalidRepeatRange
-#: /src/exodus/jopl/Unicode.pas:827
+#: /src/exodus/jopl/Unicode.pas:829
 msgid "Invalid repeation range."
 msgstr "Neveljaven obseg ponavljanj."
 
 #. Programmer's name for it: SURERepeatRangeOpen
-#: /src/exodus/jopl/Unicode.pas:828
+#: /src/exodus/jopl/Unicode.pas:830
 msgid "Repeation range not closed, '}' is missing."
 msgstr "Obseg ponavljanj ni zaključen. Manjka »}«."
 
 #. Programmer's name for it: SUREExpressionEmpty
-#: /src/exodus/jopl/Unicode.pas:829
+#: /src/exodus/jopl/Unicode.pas:831
 msgid "Expression is empty."
 msgstr "Izraz je prazen."
 
@@ -7555,7 +7628,7 @@ msgstr ""
 "Glavno okno vsebuje seznam. Ostala okna so sklopljena z glavnim oknom in "
 "uporabljajo zavihke."
 
-#: prefs/PrefNetwork.pas:94
+#: prefs/PrefNetwork.pas:96
 msgid ""
 "Your IE proxy settings won't help, since you use an autoconfiguration "
 "script.  Please configure your proxy manually."
@@ -7577,7 +7650,7 @@ msgid "The plugin could not be registered with windows."
 msgstr "Dodatka ne morem registrirati."
 
 #. clear all entries
-#: prefs/PrefPresence.pas:247
+#: prefs/PrefPresence.pas:248
 msgid "Clear all custom presence entries?"
 msgstr "Počistim vse vnose prisotnosti po meri?"
 
