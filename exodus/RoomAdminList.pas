@@ -95,7 +95,10 @@ begin
         listAdminCallback, 30);
     with iq do begin
         toJid := room_jid;
-        Namespace := XMLNS_MUCADMIN;
+        if ((onList = MUC_ADMIN) or (onList = MUC_OWNER)) then
+            Namespace := XMLNS_MUCOWNER
+        else
+            Namespace := XMLNS_MUCADMIN;
         iqType := 'get';
         end;
 

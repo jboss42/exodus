@@ -28,7 +28,6 @@ object frameTopLabel: TframeTopLabel
       Width = 145
       Height = 21
       TabOrder = 0
-      Text = 'txtData'
     end
   end
 end

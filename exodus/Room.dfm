@@ -174,6 +174,13 @@ inherited frmRoom: TfrmRoom
       object N4: TMenuItem
         Caption = '-'
       end
+      object popAdminList: TMenuItem
+        Caption = 'Edit Admin List'
+        OnClick = popVoiceListClick
+      end
+      object N5: TMenuItem
+        Caption = '-'
+      end
       object popConfigure: TMenuItem
         Caption = 'Configure Room'
         OnClick = popConfigureClick
@@ -224,6 +231,11 @@ inherited frmRoom: TfrmRoom
       Caption = 'Toggle Voice'
       Enabled = False
       OnClick = popVoiceClick
+    end
+    object popOwner: TMenuItem
+      Caption = 'Make Owner'
+      Enabled = False
+      OnClick = popKickClick
     end
   end
 end
