@@ -161,7 +161,7 @@ begin
             _stream := TFileStream.Create(_filename, fmCreate, fmShareDenyNone);
 
         _exodus.setPrefAsString('stats_filename', _filename);
-        _cb := _exodus.RegisterCallback('/packet', Self);
+        _cb := _exodus.RegisterCallback('/log', Self);
     except
         MessageDlg(sStreamError, mtError, [mbOK], 0);
         _stream := nil;
