@@ -412,7 +412,12 @@ begin
         if (_authd) then begin
             Prefs.SaveServerPrefs();
             _stream.Send('<presence type="unavailable"/>');
-        end;
+        end
+        else if (_register) then
+            _auth_agent.CancelRegistration()
+        else
+            _auth_agent.CancelAuthentication();
+
         _stream.Disconnect;
     end
     else
