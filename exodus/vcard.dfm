@@ -27,7 +27,7 @@ object frmVCard: TfrmVCard
     Top = 0
     Width = 318
     Height = 297
-    ActivePage = TabSheet3
+    ActivePage = TabSheet1
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 0
@@ -383,7 +383,7 @@ object frmVCard: TfrmVCard
           'Cambodia  '
           'Cameroon  '
           'Canada  '
-          'Care Verde  '
+          'Cape Verde  '
           'Cayman Islands  '
           'Central African Republic  '
           'Chad  '
@@ -392,7 +392,7 @@ object frmVCard: TfrmVCard
           'Christmas Island  '
           'Cocos (Keeling) '
           'Islands  '
-          'Colobmia  '
+          'Colubmia  '
           'Comoros  '
           'Congo (Republic of) '
           'Congo (Democratic Republic of) '
@@ -854,7 +854,7 @@ object frmVCard: TfrmVCard
           'Cambodia  '
           'Cameroon  '
           'Canada  '
-          'Care Verde  '
+          'Cape Verde  '
           'Cayman Islands  '
           'Central African Republic  '
           'Chad  '
@@ -863,7 +863,7 @@ object frmVCard: TfrmVCard
           'Christmas Island  '
           'Cocos (Keeling) '
           'Islands  '
-          'Colobmia  '
+          'Colubmia  '
           'Comoros  '
           'Congo (Republic of) '
           'Congo (Democratic Republic of) '

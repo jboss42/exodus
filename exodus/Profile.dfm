@@ -27,7 +27,7 @@ object frmProfile: TfrmProfile
     Top = 0
     Width = 330
     Height = 293
-    ActivePage = TabSheet7
+    ActivePage = TabSheet1
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 0
@@ -531,7 +531,7 @@ object frmProfile: TfrmProfile
           'Armenia  '
           'Aruba  '
           'Australia  '
-          'Austia  '
+          'Austria  '
           'Azerbaijan  '
           'Bahamas  '
           'Bahrain  '
@@ -556,7 +556,7 @@ object frmProfile: TfrmProfile
           'Cambodia  '
           'Cameroon  '
           'Canada  '
-          'Care Verde  '
+          'Cape Verde  '
           'Cayman Islands  '
           'Central African Republic  '
           'Chad  '
@@ -565,7 +565,7 @@ object frmProfile: TfrmProfile
           'Christmas Island  '
           'Cocos (Keeling) '
           'Islands  '
-          'Colobmia  '
+          'Colubmia  '
           'Comoros  '
           'Congo (Republic of) '
           'Congo (Democratic Republic of) '
@@ -947,7 +947,7 @@ object frmProfile: TfrmProfile
           'Armenia  '
           'Aruba  '
           'Australia  '
-          'Austia  '
+          'Austria  '
           'Azerbaijan  '
           'Bahamas  '
           'Bahrain  '
@@ -972,7 +972,7 @@ object frmProfile: TfrmProfile
           'Cambodia  '
           'Cameroon  '
           'Canada  '
-          'Care Verde  '
+          'Cape Verde  '
           'Cayman Islands  '
           'Central African Republic  '
           'Chad  '
@@ -981,7 +981,7 @@ object frmProfile: TfrmProfile
           'Christmas Island  '
           'Cocos (Keeling) '
           'Islands  '
-          'Colobmia  '
+          'Colubmia  '
           'Comoros  '
           'Congo (Republic of) '
           'Congo (Democratic Republic of) '
