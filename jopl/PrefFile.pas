@@ -30,6 +30,7 @@ uses
     Classes;
 
 type
+    TWritableState = (pwsUnknown, pwsWritable, pwsNotWritable);
     TPrefState = (psReadOnly, psReadWrite, psInvisible, psUnknown);
 
     TPrefFile = class
@@ -44,6 +45,7 @@ type
         _ctrlHash : TWideStringList;
         _dirty    : boolean;
         _need_default_pres : boolean;
+        _writable : TWritableState;
 
         procedure init();
 
@@ -96,7 +98,7 @@ end;
 implementation
 
 uses
-    SysUtils, XMLParser, Session;
+    Windows, SysUtils, XMLParser, Session;
 
 const
     PRES    = 'presii';           // DO NOT LOCALIZE
@@ -304,8 +306,28 @@ end;
 procedure TPrefFile.save();
 var
     fs: TStringList;
+    fh: THandle;
+    fns: String;
 begin
     if ((_filename = '') or (not _dirty)) then exit;
+
+    if (_writable = pwsUnknown) then begin
+        // Open the file using CreateFile, and check
+        fns := _filename;
+        fh := CreateFile(PChar(fns), GENERIC_WRITE, FILE_SHARE_READ, nil,
+            OPEN_ALWAYS, 0, 0);
+        if (fh <> INVALID_HANDLE_VALUE) then begin
+            _writable := pwsWritable;
+            CloseHandle(fh);
+        end
+        else
+            _writable := pwsNotWritable;
+    end;
+
+    if (_writable = pwsNotWritable) then begin
+        MainSession.FireEvent('/session/gui/prefs-write-error', nil);
+        exit;
+    end;
 
     fs := TStringList.Create;
     fs.Text := UTF8Encode(_root.xml);
