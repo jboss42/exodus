@@ -26,7 +26,7 @@ uses
     GUIFactory, Register, Notify,
     ExResponders, ExEvents,
     RosterWindow, Presence, XMLTag,
-    ShellAPI, Registry, 
+    ShellAPI, Registry,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
     Buttons, OleCtrls, AppEvnts, ToolWin;
@@ -261,6 +261,7 @@ type
     procedure SetAutoAway();
     procedure SetAutoXA();
     procedure SetAutoAvailable();
+    procedure SetupAutoAwayTimer();
 
   protected
     // Window message handlers
@@ -409,7 +410,9 @@ begin
     else if msg.LParam = 1 then
         SetAutoAway()
     else if msg.LParam = 2 then
-        SetAutoXA();
+        SetAutoXA()
+    else if msg.LParam = 10 then
+        SetupAutoAwayTimer();
 end;
 
 {---------------------------------------}
@@ -488,16 +491,7 @@ begin
     _is_autoxa := false;
     _is_min := false;
 
-    _eHandle := CreateEvent(nil, false, false, 'Exodus');
-    if (GetLastError = ERROR_ALREADY_EXISTS) then
-        _first_instance := false
-    else begin
-        // first instance..
-        _first_instance := true;
-        IdleUIInit();
-        end;
-
-    timAutoAway.Enabled := (_first_instance);
+    setupAutoAwayTimer();
 
     // Create the tray icon, etc..
     with _tray do begin
@@ -525,6 +519,20 @@ begin
     // Make sure we read in and setup the prefs..
     Self.SessionCallback('/session/prefs', nil);
 end;
+
+procedure TfrmJabber.setupAutoAwayTimer();
+begin
+    _eHandle := CreateEvent(nil, false, false, 'Exodus');
+    if (GetLastError = ERROR_ALREADY_EXISTS) then
+        _first_instance := false
+    else begin
+        // first instance..
+        _first_instance := true;
+        IdleUIInit();
+        end;
+    timAutoAway.Enabled := (_first_instance);
+end;
+
 
 {---------------------------------------}
 procedure TfrmJabber.setTrayInfo(tip: string);
@@ -843,6 +851,8 @@ end;
 procedure TfrmJabber.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
+    CloseHandle(_eHandle);
+    SendMessage(HWND_BROADCAST, WM_AUTOAWAY, 0, 10);
     MainSession.Prefs.SavePosition(Self);
     lstEvents.Items.Clear;
 
@@ -861,7 +871,6 @@ begin
         end;
 
     IdleUITerm();
-    CloseHandle(_eHandle);
 end;
 
 {---------------------------------------}
@@ -1267,18 +1276,15 @@ begin    // get the latest idle amount
         if getBool('auto_away') then begin
             cur_idle := (GetTickCount() - IdleUIGetLastInputTime()) div 1000;
             mins := cur_idle div 60;
-            frmDebug.debugMsg('Idle time: ' + IntToStr(cur_idle) + ' secs'#13#10);
+            // frmDebug.debugMsg('Idle time: ' + IntToStr(cur_idle) + ' secs'#13#10);
             away := getInt('away_time');
             xa := getInt('xa_time');
 
-            Self.SetAutoAway();
-            {
-            if ((mins = 0) and ((_is_autoaway) or (_is_autoxa))) then
-                SetAutoAvailable()
+            if ((mins = 0) and ((_is_autoaway) or (_is_autoxa))) then SetAutoAvailable()
             else if (_is_autoxa) then exit
             else if ((mins >= xa) and (_is_autoaway)) then SetAutoXA()
             else if ((mins >= away) and (not _is_autoaway)) then SetAutoAway();
-            }
+
             end;
         end;
 end;procedure TfrmJabber.SetAutoAway;begin    // set us to away    if (_first_instance) then
@@ -1296,13 +1302,18 @@ end;procedure TfrmJabber.SetAutoAway;begin    // set us to away    if (_fir
 
     timAutoAway.Interval := 1000;
 end;procedure TfrmJabber.SetAutoXA;begin    // set us to xa    _is_autoaway := false;    _is_autoxa := true;
-    MainSession.SetPresence('xa', MainSession.prefs.getString('xa_status'),        MainSession.Priority);
-    if (_first_instance) then        SendMessage(HWND_BROADCAST, WM_AUTOAWAY, 0, 2);
-end;procedure TfrmJabber.SetAutoAvailable;begin    // reset our status to available    _is_autoaway := false;    _is_autoxa := false;
-    MainSession.SetPresence(_last_show, _last_status, MainSession.Priority);
 
-    if (_first_instance) then
-        SendMessage(HWND_BROADCAST, WM_AUTOAWAY, 0, 0);
+    MainSession.SetPresence('xa', MainSession.prefs.getString('xa_status'),
+        MainSession.Priority);
+    if (_first_instance) then        SendMessage(HWND_BROADCAST, WM_AUTOAWAY, 0, 2);
+end;
+procedure TfrmJabber.SetAutoAvailable;begin    // reset our status to available    _is_autoaway := false;    _is_autoxa := false;
+
+    if ((MainSession.show = 'away') or (MainSession.show = 'xa')) then begin
+        MainSession.SetPresence(_last_show, _last_status, MainSession.Priority);
+        if (_first_instance) then
+            SendMessage(HWND_BROADCAST, WM_AUTOAWAY, 0, 0);
+        end;
 
     timAutoAway.Interval := 30000;
 end;
