@@ -391,7 +391,7 @@ begin
         url := txtWeb.Text
     else
         url := 'mailto:' + txtPriEmail.Text;
-    ShellExecute(0, 'open', PChar(url), '', '', SW_SHOW);
+    ShellExecute(Application.Handle, 'open', PChar(url), '', '', SW_SHOW);
 end;
 
 {---------------------------------------}
