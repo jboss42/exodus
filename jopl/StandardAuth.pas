@@ -22,7 +22,7 @@ unit StandardAuth;
 interface
 
 uses
-    JabberAuth, IQ, Session, XMLTag, 
+    JabberAuth, IQ, Session, XMLTag,
     Classes, SysUtils;
 
 type
@@ -268,7 +268,7 @@ begin
     _auth_iq := nil;
     if ((tag = nil) or (tag.getAttribute('type') = 'error')) then begin
         // timeout
-        _session.setAuthenticated(false, tag);
+        _session.setAuthenticated(false, tag, false);
     end
     else begin
         // look for tokenauth username, put in session.
@@ -280,7 +280,7 @@ begin
               jid.Free();
             end;
         end;
-        _session.setAuthenticated(true, tag);
+        _session.setAuthenticated(true, tag, false);
     end;
 end;
 
