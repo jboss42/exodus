@@ -34,34 +34,34 @@ inherited frmPrefPresence: TfrmPrefPresence
     object btnCustomPresAdd: TTntButton
       Left = 4
       Top = 4
-      Width = 60
+      Width = 75
       Height = 25
       Caption = 'Add'
       TabOrder = 0
       OnClick = btnCustomPresAddClick
     end
     object btnCustomPresRemove: TTntButton
-      Left = 68
+      Left = 84
       Top = 4
-      Width = 60
+      Width = 75
       Height = 25
       Caption = 'Remove'
       TabOrder = 1
       OnClick = btnCustomPresRemoveClick
     end
     object btnCustomPresClear: TTntButton
-      Left = 132
+      Left = 164
       Top = 4
-      Width = 60
+      Width = 75
       Height = 25
       Caption = 'Clear'
       TabOrder = 2
       OnClick = btnCustomPresClearClick
     end
     object btnDefaults: TTntButton
-      Left = 196
+      Left = 244
       Top = 4
-      Width = 60
+      Width = 75
       Height = 25
       Caption = 'Defaults'
       TabOrder = 3
