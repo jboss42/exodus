@@ -1168,6 +1168,8 @@ begin
         // Now that we are sure we have a grp_node,
         // check to see if this jid node exists under it
         cur_node := nil;
+
+        // XXX: this is all horked for my resources. :(
         i := node_list.indexOf(cur_grp);
         if (i >= 0) then begin
             n := TTreeNode(node_list.Objects[i]);
