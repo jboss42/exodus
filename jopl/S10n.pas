@@ -115,8 +115,12 @@ var
 begin
     // getting a s10n request
     j := TJabberID.Create(tag.GetAttribute('from'));
+
+    // deal w/ transports
     if (_transports.IndexOf(j.jid) >= 0) then
         SendSubscribed(j.full, MainSession)
+
+    // deal w/ normal subscription requests
     else begin
         incoming := MainSession.Prefs.getInt('s10n_auto_accept');
         ritem := MainSession.roster.Find(j.jid);

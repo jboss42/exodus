@@ -32,10 +32,11 @@ type
     private
         _jid: Widestring;
         _cb: integer;
+        _full: boolean;
     published
         procedure Callback(event: string; tag: TXMLTag);
     public
-        constructor Create(jid: WideString);
+        constructor Create(jid: WideString; reg_full: boolean);
         destructor Destroy; override;
     end;
 
@@ -49,13 +50,13 @@ type
     public
         constructor create();
         procedure SetSession(s: TObject);
-        procedure MonitorJid(jid: WideString);
+        procedure MonitorJid(jid: WideString; reg_full: boolean = true);
+        procedure RemoveProxy(rp: TRegProxy);
     end;
 
 implementation
 uses
-    Forms, RegForm,
-    Session;
+    JabberID, Jabber1, Forms, RegForm, Session;
 
 {---------------------------------------}
 constructor TRegController.create();
@@ -88,22 +89,34 @@ begin
 end;
 
 {---------------------------------------}
-procedure TRegController.MonitorJid(jid: WideString);
+procedure TRegController.MonitorJid(jid: WideString; reg_full: boolean = true);
 var
     rp: TRegProxy;
 begin
     // monitor this JID for pres-error type 407
     // when we get one, fire off a register event
-    rp := TRegProxy.Create(jid);
+    rp := TRegProxy.Create(jid, reg_full);
     _monitors.Add(rp);
+end;
+
+{---------------------------------------}
+procedure TRegController.RemoveProxy(rp: TRegProxy);
+var
+    i: integer;
+begin
+    i := _monitors.Add(rp);
+    if (i >= 0) then
+        _monitors.Delete(i);
+    rp.Free();
 end;
 
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-constructor TRegProxy.Create(jid: WideString);
+constructor TRegProxy.Create(jid: WideString; reg_full: boolean);
 begin
     _jid := jid;
+    _full := reg_full;
     _cb := MainSession.RegisterCallback(Self.Callback,
         '/packet/presence[@type="error"][@from="' + jid + '"/error[@code="407"]');
 end;
@@ -112,10 +125,19 @@ end;
 procedure TRegProxy.Callback(event: string; tag:TXMLTag);
 var
     f: TfrmRegister;
+    tmp_jid: TJabberID;
 begin
     // Create a registration wizard..
     f := TfrmRegister.Create(Application);
-    f.jid := tag.getAttribute(_jid);
+    if (_full) then
+        f.jid := _jid
+    else begin
+        tmp_jid := TJabberID.Create(_jid);
+        f.jid := tmp_jid.domain;
+        tmp_jid.Free();
+        end;
+    f.Start();
+    frmExodus.RegisterController.RemoveProxy(Self);
 end;
 
 {---------------------------------------}
@@ -126,7 +148,5 @@ begin
         _cb := -1;
         end;
 end;
-
-
 
 end.

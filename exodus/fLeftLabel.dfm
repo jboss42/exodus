@@ -1,12 +1,12 @@
 object frmField: TfrmField
   Left = 0
   Top = 0
-  Width = 285
-  Height = 24
+  Width = 252
+  Height = 26
   TabOrder = 0
   object lblPrompt: TTntLabel
-    Left = 3
-    Top = 5
+    Left = 0
+    Top = 6
     Width = 43
     Height = 13
     Caption = 'lblPrompt'
@@ -18,8 +18,8 @@ object frmField: TfrmField
     ParentFont = False
   end
   object txtData: TTntEdit
-    Left = 75
-    Top = 1
+    Left = 72
+    Top = 2
     Width = 160
     Height = 21
     TabOrder = 0

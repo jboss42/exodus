@@ -540,6 +540,8 @@ begin
         result := '1'
     else if pkey = 'single_instance' then
         result := '1'
+    else if pkey = 'roster_transport_grp' then
+        result := 'Transports'
     else
         result := '';
 end;

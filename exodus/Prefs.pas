@@ -203,6 +203,8 @@ type
     chkMessenger: TCheckBox;
     chkTrayNotify: TCheckBox;
     chkSingleInstance: TCheckBox;
+    Label18: TLabel;
+    txtGatewayGrp: TTntEdit;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -338,6 +340,7 @@ begin
             optDblClick.ItemIndex := 0
         else
             optDblClick.ItemIndex := 1;
+        txtGatewayGrp.Text := getString('roster_transport_grp');
 
         // s10n prefs
         optIncomingS10n.ItemIndex := getInt('s10n_auto_accept');
@@ -512,6 +515,7 @@ begin
         setBool('roster_chat', (optDBlClick.ItemIndex = 0));
         setBool('roster_pres_errors', chkPresErrors.Checked);
         setBool('roster_messenger', chkMessenger.Checked);
+        setString('roster_transport_grp', txtGatewayGrp.Text);
 
         // S10n prefs
         setInt('s10n_auto_accept', optIncomingS10n.ItemIndex);
@@ -649,7 +653,7 @@ begin
     chkNotify.Items.Strings[9]  := sSoundOOB;
     chkNotify.Items.Strings[10] := sSoundAutoResponse;
 
-    PageControl1.ActivePage := tbsRoster;
+    PageControl1.ActivePage := tbsSystem;
 
     _no_notify_update := false;
     _no_pres_change := false;

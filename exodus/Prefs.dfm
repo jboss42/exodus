@@ -20,7 +20,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 360
+    Height = 357
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -162,7 +162,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgFonts: TImage
       Left = 0
-      Top = 106
+      Top = 159
       Width = 68
       Height = 40
       Align = alTop
@@ -404,7 +404,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblFonts: TLabel
       Left = 0
-      Top = 146
+      Top = 199
       Width = 68
       Height = 13
       Align = alTop
@@ -415,7 +415,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgS10n: TImage
       Left = 0
-      Top = 53
+      Top = 106
       Width = 68
       Height = 40
       Align = alTop
@@ -658,7 +658,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblS10n: TLabel
       Left = 0
-      Top = 93
+      Top = 146
       Width = 68
       Height = 13
       Align = alTop
@@ -670,7 +670,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgRoster: TImage
       Left = 0
-      Top = 0
+      Top = 53
       Width = 68
       Height = 40
       Align = alTop
@@ -794,13 +794,12 @@ object frmPrefs: TfrmPrefs
     end
     object lblRoster: TLabel
       Left = 0
-      Top = 40
+      Top = 93
       Width = 68
       Height = 13
       Align = alTop
       Alignment = taCenter
       Caption = 'Roster'
-      Color = clHighlight
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clHighlightText
       Font.Height = -11
@@ -813,7 +812,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgSystem: TImage
       Left = 0
-      Top = 159
+      Top = 0
       Width = 68
       Height = 40
       Align = alTop
@@ -1055,12 +1054,14 @@ object frmPrefs: TfrmPrefs
     end
     object lblSystem: TLabel
       Left = 0
-      Top = 199
+      Top = 40
       Width = 68
       Height = 13
       Align = alTop
       Alignment = taCenter
       Caption = 'System'
+      Color = clHighlight
+      ParentColor = False
       WordWrap = True
       OnClick = TabSelect
     end
@@ -1569,16 +1570,23 @@ object frmPrefs: TfrmPrefs
     Left = 89
     Top = 0
     Width = 371
-    Height = 360
-    ActivePage = tbsSystem
+    Height = 357
+    ActivePage = tbsRoster
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 3
+    TabIndex = 0
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
+      object Label18: TLabel
+        Left = 8
+        Top = 258
+        Width = 150
+        Height = 13
+        Caption = 'Group to be used for Gateways:'
+      end
       object chkOnlineOnly: TCheckBox
         Left = 8
         Top = 24
@@ -1645,7 +1653,7 @@ object frmPrefs: TfrmPrefs
       object cboInlineStatus: TColorBox
         Left = 32
         Top = 158
-        Width = 145
+        Width = 161
         Height = 22
         DefaultColorColor = clBlue
         Selected = clBlue
@@ -1685,6 +1693,13 @@ object frmPrefs: TfrmPrefs
         Height = 17
         Caption = 'Roster && Msg Queue share a tab when expanded'
         TabOrder = 10
+      end
+      object txtGatewayGrp: TTntEdit
+        Left = 32
+        Top = 272
+        Width = 153
+        Height = 21
+        TabOrder = 11
       end
     end
     object tbsSubscriptions: TTabSheet
@@ -1808,7 +1823,6 @@ object frmPrefs: TfrmPrefs
         Top = 72
         Width = 121
         Height = 90
-        Images = frmRosterWindow.ImageList1
         Indent = 19
         ReadOnly = True
         ShowButtons = False
@@ -3023,7 +3037,7 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 360
+    Top = 357
     Width = 460
     Height = 37
     Align = alBottom
