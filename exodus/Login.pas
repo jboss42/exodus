@@ -28,15 +28,17 @@ uses
 
 type
   TfrmLogin = class(TForm)
-    lblProfile: TTntLabel;
-    cboProfiles: TTntComboBox;
-    chkInvisible: TTntCheckBox;
-    btnDetails: TTntButton;
     popProfiles: TPopupMenu;
     CreateNew1: TMenuItem;
     Delete1: TMenuItem;
-    lblJID: TTntLabel;
     frameButtons1: TframeButtons;
+    Panel1: TPanel;
+    Panel2: TPanel;
+    btnDetails: TTntButton;
+    lblProfile: TTntLabel;
+    cboProfiles: TTntComboBox;
+    lblJID: TTntLabel;
+    chkInvisible: TTntCheckBox;
 
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cboProfilesChange(Sender: TObject);
@@ -45,6 +47,7 @@ type
     procedure CreateNew1Click(Sender: TObject);
     procedure Delete1Click(Sender: TObject);
     procedure lblProfileClick(Sender: TObject);
+    procedure FormResize(Sender: TObject);
   private
     { Private declarations }
   public
@@ -207,6 +210,11 @@ begin
     // show the popup
     GetCursorPos(cp);
     popProfiles.Popup(cp.x, cp.y);
+end;
+
+procedure TfrmLogin.FormResize(Sender: TObject);
+begin
+    cboProfiles.Width := Self.ClientWidth - cboProfiles.Left - Panel2.Width - 15;
 end;
 
 end.
