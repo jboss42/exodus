@@ -34,7 +34,8 @@ uses
   IQ in '..\jopl\IQ.pas',
   XMLHttpStream in '..\jopl\XMLHttpStream.pas',
   S10n in '..\jopl\S10n.pas',
-  Unicode in '..\jopl\Unicode.pas';
+  Unicode in '..\jopl\Unicode.pas',
+  test_widestringlist in 'test_widestringlist.pas';
 
 {$R *.res}
 
@@ -47,7 +48,7 @@ begin
   // Hack DUnit so that it automatically runs the tests
 
   Application.Title := 'DUnit';
-  // Application.CreateForm(TGUITestRunner, MyForm);
+  //Application.CreateForm(TGUITestRunner, MyForm);
   Application.CreateForm(TGUITestRunner, MyForm);
   with MyForm do begin
         Show();
