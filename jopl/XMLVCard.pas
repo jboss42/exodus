@@ -263,7 +263,7 @@ begin
         end;
 
     // Get Nick
-    t1 := vtag.GetFirstTag('NICK');
+    t1 := vtag.GetFirstTag('NICKNAME');
     if t1 <> nil then nick := t1.Data;
 
     // get primary email addy
@@ -332,7 +332,7 @@ begin
     t1.AddBasicTag('GIVEN', GivenName);
     t1.AddBasicTag('FAMILY', FamilyName);
 
-    vtag.AddBasicTag('NICK', nick);
+    vtag.AddBasicTag('NICKNAME', nick);
     vtag.AddBasicTag('EMAIL', email);
     vtag.AddBasicTag('URL', url);
     vtag.AddBasicTag('ROLE', role);

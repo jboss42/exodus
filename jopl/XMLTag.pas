@@ -529,7 +529,8 @@ begin
     // representation of this tag
     x := '<' + Self.Name;
     for i := 0 to _AttrList.Count - 1 do
-        x := x + ' ' + _AttrList.Name(i) + '="' + _AttrList.Value(i) + '"';
+        x := x + ' ' + _AttrList.Name(i) + '="' +
+            XML_EscapeChars(_AttrList.Value(i)) + '"';
 
     if _Children.Count <= 0 then
         x := x + '/>'
