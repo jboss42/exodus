@@ -190,8 +190,8 @@ begin
     3 = bottom
     }
 
-    mh := Screen.Height div 2;
-    mw := Screen.Width div 2;
+    mh := Screen.DesktopHeight div 2;
+    mw := Screen.DesktopWidth div 2;
     if ((_taskrect.Left < mw) and (_taskrect.Top < mh) and (_taskrect.Right < mw)) then
         _taskdir := 0
     else if ((_taskrect.left > mw) and (_taskrect.Top < mh)) then
@@ -205,22 +205,22 @@ begin
     0: begin
         // taskbar on left side
         Self.Left := -Self.Width - 2;
-        Self.Top := Screen.Height - Self.Height - 2;
+        Self.Top := Screen.DesktopHeight - Self.Height - 2;
     end;
     1: begin
         // taskbar on right side
-        Self.Left := Screen.Width + Self.Width + 2;
-        Self.Top := Screen.Height - Self.Height - 2;
+        Self.Left := Screen.DesktopWidth + Self.Width + 2;
+        Self.Top := Screen.DesktopHeight - Self.Height - 2;
     end;
     2: begin
         // taskbar on top
-        Self.Left := Screen.Width - Self.Width - 2;
+        Self.Left := Screen.DesktopWidth - Self.Width - 2;
         Self.Top := -Self.Height - 2;
     end;
     3: begin
         // taskbar on bottom
-        Self.Left := Screen.Width - Self.Width - 2;
-        Self.Top := Screen.Height;
+        Self.Left := Screen.DesktopWidth - Self.Width - 2;
+        Self.Top := Screen.DesktopHeight;
     end;
 end;
 end;
