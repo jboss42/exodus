@@ -275,7 +275,8 @@ begin
         ShowDefault();
         if ((show_window) and (Application.Active)) then begin
             Show();
-            TfrmChat(chat.window).SetFocus();
+            if (TfrmChat(chat.window).Visible) then
+                TfrmChat(chat.window).SetFocus();
         end;
 
         PlayQueue();
