@@ -111,9 +111,9 @@ type
     PGPTools1: TMenuItem;
     mnuBrowser: TMenuItem;
     mnuServer: TMenuItem;
-    Version1: TMenuItem;
-    Time1: TMenuItem;
-    vCard1: TMenuItem;
+    mnuVersion: TMenuItem;
+    mnuTime: TMenuItem;
+    mnuServerVCard: TMenuItem;
     mnuVCard: TMenuItem;
     N13: TMenuItem;
     JabberCentralWebsite1: TMenuItem;
@@ -222,6 +222,7 @@ type
     procedure FormActivate(Sender: TObject);
     procedure WinJabWebsite1Click(Sender: TObject);
     procedure JabberBugzilla1Click(Sender: TObject);
+    procedure mnuVersionClick(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -328,7 +329,7 @@ const
 implementation
 uses
     MsgQueue, JoinRoom, Login, ChatWin, RosterAdd,
-    JUD, Bookmark, CustomPres,
+    iq, JUD, Bookmark, CustomPres,
     MsgRecv, Prefs, Dockable,
     RiserWindow, RemoveContact,
     Session, Debug, About, getOpt, JabberID, XMLUtils, ExUtils,
@@ -816,6 +817,7 @@ begin
             end;
 
         // do other stuff
+        restoreMenus(MainSession.Stream.Active);
         restoreToolbar();
         restoreAlpha();
         restoreEvents(MainSession.Prefs.getBool('expanded'));
@@ -972,6 +974,7 @@ begin
             MainSession.QueueEvent(event, tag, Self.CTCPCallback)
         else begin
             e := CreateJabberEvent(tag);
+            e.elapsed_time := SafeInt(tag.GetAttribute('iq_elapsed_time')); 
             RenderEvent(e);
             end;
         end
@@ -1016,16 +1019,22 @@ begin
         msg := e.Data[0];
         end;
 
+    evt_Time: begin
+        img_idx := 12;
+        msg := e.data_type;
+        e.Data.Add('Ping Time: ' + IntToStr(e.elapsed_time) + ' seconds.');
+        end;
+
     evt_Message: begin
         img_idx := 18;
         msg := e.data_type;
-        toast := 'Msg from ' + e.from;
+        toast := 'Msg from ' + TJabberID.Create(e.from).jid;
         end;
 
     evt_Invite: begin
         img_idx := 21;
         msg := e.data_type;
-        toast := 'Invite from ' + e.from;
+        toast := 'Invite from ' + TJabberID.Create(e.from).jid;
         end
 
     else begin
@@ -1691,9 +1700,7 @@ var
     cp: TJabberCustomPres;
 begin
     // Our own Custom presence
-    with TMenuItem(Sender) do
-        i := Tag;
-
+    i := TMenuItem(Sender).Tag;
     cp := MainSession.prefs.getPresIndex(i);
     if (cp <> nil) then
         MainSession.setPresence(cp.show, cp.status, cp.priority);
@@ -1751,6 +1758,21 @@ procedure TExodus.JabberBugzilla1Click(Sender: TObject);
 begin
     // submit a bug on SF.
     ShellExecute(0, 'open', 'http://sourceforge.net/tracker/?func=add&group_id=2049&atid=202049', '', '', SW_SHOW);
+end;
+
+{---------------------------------------}
+procedure TExodus.mnuVersionClick(Sender: TObject);
+var
+    iq: TJabberIQ;
+begin
+    iq := TJabberIQ.Create(MainSession, MainSession.generateID, Self.CTCPCallback);
+    iq.iqType := 'get';
+    iq.toJID := MainSession.Server;
+    if Sender = mnuVersion then
+        iq.Namespace := XMLNS_VERSION
+    else if Sender = mnuTime then
+        iq.Namespace := XMLNS_TIME;
+    iq.Send;
 end;
 
 end.

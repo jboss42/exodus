@@ -28,7 +28,7 @@ object frmPrefs: TfrmPrefs
     object imgDialog: TImage
       Left = 0
       Top = 212
-      Width = 68
+      Width = 70
       Height = 40
       Align = alTop
       Center = True
@@ -152,7 +152,7 @@ object frmPrefs: TfrmPrefs
     object lblDialog: TLabel
       Left = 0
       Top = 252
-      Width = 68
+      Width = 70
       Height = 13
       Align = alTop
       Alignment = taCenter
@@ -163,7 +163,7 @@ object frmPrefs: TfrmPrefs
     object imgFonts: TImage
       Left = 0
       Top = 106
-      Width = 68
+      Width = 70
       Height = 40
       Align = alTop
       Center = True
@@ -405,7 +405,7 @@ object frmPrefs: TfrmPrefs
     object lblFonts: TLabel
       Left = 0
       Top = 146
-      Width = 68
+      Width = 70
       Height = 13
       Align = alTop
       Alignment = taCenter
@@ -416,7 +416,7 @@ object frmPrefs: TfrmPrefs
     object imgS10n: TImage
       Left = 0
       Top = 53
-      Width = 68
+      Width = 70
       Height = 40
       Align = alTop
       Center = True
@@ -658,7 +658,7 @@ object frmPrefs: TfrmPrefs
     object lblS10n: TLabel
       Left = 0
       Top = 93
-      Width = 68
+      Width = 70
       Height = 13
       Align = alTop
       Alignment = taCenter
@@ -669,7 +669,7 @@ object frmPrefs: TfrmPrefs
     object imgRoster: TImage
       Left = 0
       Top = 0
-      Width = 68
+      Width = 70
       Height = 40
       Align = alTop
       Center = True
@@ -793,7 +793,7 @@ object frmPrefs: TfrmPrefs
     object lblRoster: TLabel
       Left = 0
       Top = 40
-      Width = 68
+      Width = 70
       Height = 13
       Align = alTop
       Alignment = taCenter
@@ -805,7 +805,7 @@ object frmPrefs: TfrmPrefs
     object imgSystem: TImage
       Left = 0
       Top = 159
-      Width = 68
+      Width = 70
       Height = 40
       Align = alTop
       Center = True
@@ -1047,7 +1047,7 @@ object frmPrefs: TfrmPrefs
     object lblSystem: TLabel
       Left = 0
       Top = 199
-      Width = 68
+      Width = 70
       Height = 13
       Align = alTop
       Alignment = taCenter
@@ -1058,7 +1058,7 @@ object frmPrefs: TfrmPrefs
     object imgNotify: TImage
       Left = 0
       Top = 265
-      Width = 68
+      Width = 70
       Height = 40
       Align = alTop
       Center = True
@@ -1182,7 +1182,7 @@ object frmPrefs: TfrmPrefs
     object lblNotify: TLabel
       Left = 0
       Top = 305
-      Width = 68
+      Width = 70
       Height = 13
       Align = alTop
       Alignment = taCenter
@@ -1193,7 +1193,7 @@ object frmPrefs: TfrmPrefs
     object imgAway: TImage
       Left = 0
       Top = 318
-      Width = 68
+      Width = 70
       Height = 40
       Align = alTop
       Center = True
@@ -1228,7 +1228,7 @@ object frmPrefs: TfrmPrefs
     object lblAway: TLabel
       Left = 0
       Top = 358
-      Width = 68
+      Width = 70
       Height = 13
       Align = alTop
       Alignment = taCenter
@@ -1239,7 +1239,7 @@ object frmPrefs: TfrmPrefs
     object imgKeywords: TImage
       Left = 0
       Top = 371
-      Width = 68
+      Width = 70
       Height = 40
       Align = alTop
       Center = True
@@ -1274,7 +1274,7 @@ object frmPrefs: TfrmPrefs
     object lblKeywords: TLabel
       Left = 0
       Top = 411
-      Width = 68
+      Width = 70
       Height = 13
       Align = alTop
       Alignment = taCenter
@@ -1285,7 +1285,7 @@ object frmPrefs: TfrmPrefs
     object imgBlockList: TImage
       Left = 0
       Top = 424
-      Width = 68
+      Width = 70
       Height = 40
       Align = alTop
       Center = True
@@ -1320,7 +1320,7 @@ object frmPrefs: TfrmPrefs
     object lblBlockList: TLabel
       Left = 0
       Top = 464
-      Width = 68
+      Width = 70
       Height = 13
       Align = alTop
       Alignment = taCenter
@@ -1331,7 +1331,7 @@ object frmPrefs: TfrmPrefs
     object imgCustomPres: TImage
       Left = 0
       Top = 477
-      Width = 68
+      Width = 70
       Height = 40
       Align = alTop
       Center = True
@@ -1366,7 +1366,7 @@ object frmPrefs: TfrmPrefs
     object lblCustomPres: TLabel
       Left = 0
       Top = 517
-      Width = 68
+      Width = 70
       Height = 13
       Align = alTop
       Alignment = taCenter
@@ -1728,7 +1728,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 102
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1838,7 +1838,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 97
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2104,7 +2104,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 124
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2182,7 +2182,7 @@ object frmPrefs: TfrmPrefs
       object Label1: TLabel
         Left = 0
         Top = 20
-        Width = 302
+        Width = 256
         Height = 26
         Align = alTop
         Caption = 
@@ -2193,7 +2193,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 112
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2441,7 +2441,6 @@ object frmPrefs: TfrmPrefs
     Height = 37
     Align = alBottom
     BevelOuter = bvNone
-    Caption = 'Panel1'
     TabOrder = 2
     object Bevel1: TBevel
       Left = 0

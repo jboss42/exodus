@@ -175,7 +175,7 @@ begin
     cur_jid := cboJID.Text;
 
     // make sure we wait for a long time for really nasty queries and slow agents :)
-    cur_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), ItemsCallback, 120000);
+    cur_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), ItemsCallback, 120);
     with cur_iq do begin
         iqType := 'set';
         Namespace := XMLNS_SEARCH;

@@ -628,6 +628,7 @@ begin
     Accept := false;
 end;
 
+{---------------------------------------}
 procedure TfrmRoom.MsgListURLClick(Sender: TObject; url: String);
 begin
     ShellExecute(0, 'open', pchar(url), '', '', SW_NORMAL);
@@ -639,6 +640,7 @@ begin
     MsgList.Lines.Clear;
 end;
 
+{---------------------------------------}
 procedure TfrmRoom.popNickClick(Sender: TObject);
 var
     new_nick: string;
@@ -649,17 +651,19 @@ begin
     if (InputQuery('Nickname', 'New Nickname', new_nick)) then begin
         if (new_nick = myNick) then exit;
         p := TJabberPres.Create;
-        p.toJID := TJabberID.Create(jid + '/' + myNick);
+        p.toJID := TJabberID.Create(jid + '/' + new_nick);
         MainSession.SendTag(p);
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmRoom.popCloseClick(Sender: TObject);
 begin
   inherited;
     Self.Close();
 end;
 
+{---------------------------------------}
 procedure TfrmRoom.popBookmarkClick(Sender: TObject);
 var
     bm: TJabberBookmark;
