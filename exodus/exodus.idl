@@ -1,0 +1,966 @@
+[
+  uuid(219E0029-5710-4C9B-BE33-4C7F046D7792),
+  version(1.0),
+  helpstring("Exodus COM Plugin interfaces")
+
+]
+library ExodusCOM
+{
+
+  importlib("stdole2.tlb");
+
+  [
+    uuid(35B80906-4D4D-4A1D-8BB2-1F0029916422),
+    version(1.0),
+    helpstring("ExodusController Object")
+  ]
+  coclass ExodusController
+  {
+    [default] interface IExodusController;
+  };
+
+  [
+    uuid(DB3F5C90-0575-47E4-8F00-EED79757A97B),
+    version(1.0),
+    helpstring("ExodusChat Object")
+  ]
+  coclass ExodusChat
+  {
+    [default] interface IExodusChat;
+  };
+
+  [
+    uuid(9AE59046-2197-429A-A62D-8EE61122B04E),
+    version(1.0)
+  ]
+  /**
+    Enumeration
+  */
+  typedef enum tagChatParts
+  {
+    HWND_MsgInput = 0,
+    Ptr_MsgInput = 1,
+    HWND_MsgOutput = 2,
+    Ptr_MsgOutput = 3
+  } ChatParts;
+
+  [
+    uuid(2C576B16-DD6A-4E8C-8DEB-38E255B48A88),
+    version(1.0),
+    helpstring("Dispatch interface for ExodusChatPlugin Object"),
+    dual,
+    oleautomation
+  ]
+  /**
+  */
+   interface IExodusChatPlugin: IDispatch
+  {
+    [
+    id(0x00000001)
+    ]
+    HRESULT _stdcall onBeforeMessage([in] BSTR * Body );
+    [
+    id(0x00000002)
+    ]
+    HRESULT _stdcall onAfterMessage([in] BSTR * Body, [out, retval] BSTR * Additional_XML );
+    [
+    id(0x00000003)
+    ]
+    HRESULT _stdcall onKeyPress([in] BSTR Key );
+    [
+    id(0x00000004)
+    ]
+    HRESULT _stdcall onContextMenu([in] BSTR ID );
+    [
+    id(0x00000005)
+    ]
+    HRESULT _stdcall onRecvMessage([in] BSTR Body, [in] BSTR xml );
+    [
+    id(0x00000006)
+    ]
+    HRESULT _stdcall onClose( void );
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall onMenu([in] BSTR ID );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall onNewWindow([in] long HWND );
+  };
+
+  [
+    uuid(438DF52E-F892-456B-9FB0-3C64DBB85240),
+    version(1.0),
+    helpstring("ExodusRoster Object")
+  ]
+  coclass ExodusRoster
+  {
+    [default] interface IExodusRoster;
+  };
+
+  [
+    uuid(41BB1EC9-3299-45C3-BBA9-7DD897F29826),
+    version(1.0),
+    helpstring("ExodusPPDB Object")
+  ]
+  coclass ExodusPPDB
+  {
+    [default] interface IExodusPPDB;
+  };
+
+  [
+    uuid(F710F80C-C74A-4A69-8D2B-023504125B96),
+    version(1.0),
+    helpstring("Dispatch interface for ExodusRosterItem Object"),
+    dual,
+    oleautomation
+  ]
+  /**
+  */
+   interface IExodusRosterItem: IDispatch
+  {
+    [
+    propget,
+    id(0x00000001)
+    ]
+    HRESULT _stdcall JabberID([out, retval] BSTR * Value );
+    [
+    propput,
+    id(0x00000001)
+    ]
+    HRESULT _stdcall JabberID([in] BSTR Value );
+    [
+    propget,
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Subscription([out, retval] BSTR * Value );
+    [
+    propput,
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Subscription([in] BSTR Value );
+    [
+    propget,
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Ask([out, retval] BSTR * Value );
+    [
+    propget,
+    id(0x00000005)
+    ]
+    HRESULT _stdcall GroupCount([out, retval] long * Value );
+    [
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Group([in] long Index, [out, retval] BSTR * Value );
+    [
+    id(0x00000007)
+    ]
+    HRESULT _stdcall xml([out, retval] BSTR * xml );
+    [
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Remove( void );
+    [
+    id(0x00000009)
+    ]
+    HRESULT _stdcall Update( void );
+    [
+    propget,
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall nickname([out, retval] BSTR * Value );
+    [
+    propput,
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall nickname([in] BSTR Value );
+    [
+    propget,
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall RawNickname([out, retval] BSTR * Value );
+  };
+
+  [
+    uuid(9C6A0965-39B0-4D72-A143-D210FB1BA988),
+    version(1.0),
+    helpstring("ExodusRosterItem Object")
+  ]
+  coclass ExodusRosterItem
+  {
+    [default] interface IExodusRosterItem;
+  };
+
+  [
+    uuid(D2FD3425-40CE-469F-A95C-1C80B7FF3119),
+    version(1.0),
+    helpstring("Dispatch interface for ExodusPresence Object"),
+    dual,
+    oleautomation
+  ]
+  /**
+  */
+   interface IExodusPresence: IDispatch
+  {
+    [
+    propget,
+    id(0x00000001)
+    ]
+    HRESULT _stdcall PresType([out, retval] BSTR * Value );
+    [
+    propput,
+    id(0x00000001)
+    ]
+    HRESULT _stdcall PresType([in] BSTR Value );
+    [
+    propget,
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Status([out, retval] BSTR * Value );
+    [
+    propput,
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Status([in] BSTR Value );
+    [
+    propget,
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Show([out, retval] BSTR * Value );
+    [
+    propput,
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Show([in] BSTR Value );
+    [
+    propget,
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Priority([out, retval] long * Value );
+    [
+    propput,
+    id(0x00000004)
+    ]
+    HRESULT _stdcall Priority([in] long Value );
+    [
+    propget,
+    id(0x00000005)
+    ]
+    HRESULT _stdcall ErrorString([out, retval] BSTR * Value );
+    [
+    propput,
+    id(0x00000005)
+    ]
+    HRESULT _stdcall ErrorString([in] BSTR Value );
+    [
+    id(0x00000006)
+    ]
+    HRESULT _stdcall xml([out, retval] BSTR * xml );
+    [
+    id(0x00000007)
+    ]
+    HRESULT _stdcall isSubscription([out, retval] VARIANT_BOOL * Subscription );
+    [
+    propget,
+    id(0x00000008)
+    ]
+    HRESULT _stdcall toJid([out, retval] BSTR * Value );
+    [
+    propput,
+    id(0x00000008)
+    ]
+    HRESULT _stdcall toJid([in] BSTR Value );
+    [
+    propget,
+    id(0x00000009)
+    ]
+    HRESULT _stdcall fromJid([out, retval] BSTR * Value );
+    [
+    propput,
+    id(0x00000009)
+    ]
+    HRESULT _stdcall fromJid([in] BSTR Value );
+  };
+
+  [
+    uuid(B9EED6FA-AB95-48CA-B485-1AF7E3CC0D0B),
+    version(1.0),
+    helpstring("ExodusPresence Object")
+  ]
+  coclass ExodusPresence
+  {
+    [default] interface IExodusPresence;
+  };
+
+  [
+    uuid(1E010B88-4A61-4185-A243-A6283A26C80E),
+    version(1.0)
+  ]
+  /**
+  */
+  typedef enum tagActiveItem
+  {
+    RosterItem = 0,
+    Bookmark = 1,
+    Group = 2
+  } ActiveItem;
+
+  [
+    uuid(D33EA5B9-23FD-4E43-B5B7-3CCFD0F5CDD0),
+    version(1.0),
+    dual,
+    oleautomation
+  ]
+  /**
+  */
+   interface IExodusAuth: IDispatch
+  {
+    [
+    id(0x00000001)
+    ]
+    HRESULT _stdcall StartAuth( void );
+    [
+    id(0x00000002)
+    ]
+    HRESULT _stdcall CancelAuth( void );
+    [
+    id(0x00000003)
+    ]
+    HRESULT _stdcall StartRegistration([out, retval] VARIANT_BOOL * RegSupported );
+    [
+    id(0x00000004)
+    ]
+    HRESULT _stdcall CancelRegistration( void );
+  };
+
+  [
+    uuid(47213401-DAB2-4560-82F7-E5AB15C34397),
+    version(1.0),
+    helpstring("Dispatch interface for ExodusController Object"),
+    dual,
+    oleautomation
+  ]
+  /**
+  */
+   interface IExodusController: IDispatch
+  {
+    [
+    propget,
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Connected([out, retval] VARIANT_BOOL * Value );
+    [
+    propget,
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Username([out, retval] BSTR * Value );
+    [
+    propget,
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Server([out, retval] BSTR * Value );
+    [
+    id(0x00000004)
+    ]
+    HRESULT _stdcall RegisterCallback([in] BSTR xpath, [in] IExodusPlugin * callback /*Warning: unable to validate structure name: */, [out, retval] long * ID );
+    [
+    id(0x00000005)
+    ]
+    HRESULT _stdcall UnRegisterCallback([in] long ID );
+    [
+    id(0x00000006)
+    ]
+    HRESULT _stdcall Send([in] BSTR xml );
+    [
+    id(0x00000007)
+    ]
+    HRESULT _stdcall isRosterJID([in] BSTR jid, [out, retval] VARIANT_BOOL * Value );
+    [
+    id(0x00000008)
+    ]
+    HRESULT _stdcall isSubscribed([in] BSTR jid, [out, retval] VARIANT_BOOL * Value );
+    [
+    id(0x0000000B)
+    ]
+    HRESULT _stdcall ChangePresence([in] BSTR Show, [in] BSTR Status, [in] long Priority );
+    [
+    id(0x0000000C)
+    ]
+    HRESULT _stdcall StartChat([in] BSTR jid, [in] BSTR resource, [in] BSTR nickname );
+    [
+    id(0x0000000D)
+    ]
+    HRESULT _stdcall GetProfile([in] BSTR jid );
+    [
+    id(0x00000010)
+    ]
+    HRESULT _stdcall CreateDockableWindow([in] long HWND, [in] BSTR Caption );
+    [
+    id(0x0000000E)
+    ]
+    HRESULT _stdcall addPluginMenu([in] BSTR Caption, [out, retval] BSTR * ID );
+    [
+    id(0x0000000F)
+    ]
+    HRESULT _stdcall removePluginMenu([in] BSTR ID );
+    [
+    id(0x00000011)
+    ]
+    HRESULT _stdcall monitorImplicitRegJID([in] BSTR JabberID, [in] VARIANT_BOOL FullJID );
+    [
+    id(0x00000012)
+    ]
+    HRESULT _stdcall getAgentList([in] BSTR Server );
+    [
+    id(0x00000013)
+    ]
+    HRESULT _stdcall getAgentService([in] BSTR Server, [in] BSTR Service, [out, retval] BSTR * JabberID );
+    [
+    id(0x00000014)
+    ]
+    HRESULT _stdcall generateID([out, retval] BSTR * ID );
+    [
+    id(0x00000015)
+    ]
+    HRESULT _stdcall isBlocked([in] BSTR JabberID, [out, retval] VARIANT_BOOL * Blocked );
+    [
+    id(0x00000016)
+    ]
+    HRESULT _stdcall Block([in] BSTR JabberID );
+    [
+    id(0x00000017)
+    ]
+    HRESULT _stdcall UnBlock([in] BSTR JabberID );
+    [
+    propget,
+    id(0x00000018)
+    ]
+    HRESULT _stdcall resource([out, retval] BSTR * Value );
+    [
+    propget,
+    id(0x00000019)
+    ]
+    HRESULT _stdcall Port([out, retval] long * Value );
+    [
+    propget,
+    id(0x0000001A)
+    ]
+    HRESULT _stdcall Priority([out, retval] long * Value );
+    [
+    propget,
+    id(0x0000001C)
+    ]
+    HRESULT _stdcall PresenceStatus([out, retval] BSTR * Value );
+    [
+    propget,
+    id(0x0000001D)
+    ]
+    HRESULT _stdcall PresenceShow([out, retval] BSTR * Value );
+    [
+    propget,
+    id(0x0000001E)
+    ]
+    HRESULT _stdcall IsPaused([out, retval] VARIANT_BOOL * Value );
+    [
+    propget,
+    id(0x0000001F)
+    ]
+    HRESULT _stdcall IsInvisible([out, retval] VARIANT_BOOL * Value );
+    [
+    id(0x00000020)
+    ]
+    HRESULT _stdcall Connect( void );
+    [
+    id(0x00000021)
+    ]
+    HRESULT _stdcall Disconnect( void );
+    [
+    id(0x00000022)
+    ]
+    HRESULT _stdcall getPrefAsString([in] BSTR Key, [out, retval] BSTR * Value );
+    [
+    id(0x00000023)
+    ]
+    HRESULT _stdcall getPrefAsInt([in] BSTR Key, [out, retval] long * Value );
+    [
+    id(0x00000024)
+    ]
+    HRESULT _stdcall getPrefAsBool([in] BSTR Key, [out, retval] VARIANT_BOOL * Value );
+    [
+    id(0x00000025)
+    ]
+    HRESULT _stdcall setPrefAsString([in] BSTR Key, [in] BSTR Value );
+    [
+    id(0x00000026)
+    ]
+    HRESULT _stdcall setPrefAsInt([in] BSTR Key, [in] long Value );
+    [
+    id(0x00000027)
+    ]
+    HRESULT _stdcall setPrefAsBool([in] BSTR Key, [in] VARIANT_BOOL Value );
+    [
+    id(0x00000028)
+    ]
+    HRESULT _stdcall findChat([in] BSTR JabberID, [in] BSTR resource, [out, retval] long * Handle );
+    [
+    id(0x00000029)
+    ]
+    HRESULT _stdcall startSearch([in] BSTR SearchJID );
+    [
+    id(0x0000002A)
+    ]
+    HRESULT _stdcall startRoom([in] BSTR RoomJID, [in] BSTR nickname, [in] BSTR Password );
+    [
+    id(0x0000002B)
+    ]
+    HRESULT _stdcall startInstantMsg([in] BSTR JabberID );
+    [
+    id(0x0000002C)
+    ]
+    HRESULT _stdcall startBrowser([in] BSTR BrowseJID );
+    [
+    id(0x0000002D)
+    ]
+    HRESULT _stdcall showJoinRoom([in] BSTR RoomJID, [in] BSTR nickname, [in] BSTR Password );
+    [
+    id(0x0000002E)
+    ]
+    HRESULT _stdcall showPrefs( void );
+    [
+    id(0x0000002F)
+    ]
+    HRESULT _stdcall showCustomPresDialog( void );
+    [
+    id(0x00000030)
+    ]
+    HRESULT _stdcall showDebug( void );
+    [
+    id(0x00000031)
+    ]
+    HRESULT _stdcall showLogin( void );
+    [
+    id(0x00000032)
+    ]
+    HRESULT _stdcall showToast([in] BSTR Message, [in] long wndHandle, [in] long imageIndex );
+    [
+    id(0x00000033)
+    ]
+    HRESULT _stdcall setPresence([in] BSTR Show, [in] BSTR Status, [in] long Priority );
+    [
+    propget,
+    id(0x00000036)
+    ]
+    HRESULT _stdcall Roster([out, retval] IExodusRoster ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget,
+    id(0x00000037)
+    ]
+    HRESULT _stdcall PPDB([out, retval] IExodusPPDB ** Value /*Warning: unable to validate structure name: */ );
+    [
+    id(0x00000009)
+    ]
+    HRESULT _stdcall registerBrowseNS([in] BSTR Namespace, [out, retval] BSTR * ID );
+    [
+    id(0x0000000A)
+    ]
+    HRESULT _stdcall registerDiscoItem([in] BSTR JabberID, [in] BSTR Name, [out, retval] BSTR * ID );
+    [
+    id(0x0000001B)
+    ]
+    HRESULT _stdcall registerDiscoFeature([in] BSTR Feature, [out, retval] BSTR * ID );
+    [
+    id(0x00000034)
+    ]
+    HRESULT _stdcall removeBrowseNS([in] BSTR ID );
+    [
+    id(0x00000035)
+    ]
+    HRESULT _stdcall removeDiscoItem([in] BSTR ID );
+    [
+    id(0x00000038)
+    ]
+    HRESULT _stdcall removeDiscoFeature([in] BSTR ID );
+    [
+    id(0x00000039)
+    ]
+    HRESULT _stdcall registerPresenceXML([in] BSTR xml, [out, retval] BSTR * ID );
+    [
+    id(0x0000003A)
+    ]
+    HRESULT _stdcall removePresenceXML([in] BSTR ID );
+    [
+    id(0x0000003B)
+    ]
+    HRESULT _stdcall trackWindowsMsg([in] long Message );
+    [
+    id(0x0000003C)
+    ]
+    HRESULT _stdcall addContactMenu([in] BSTR Caption, [out, retval] BSTR * ID );
+    [
+    id(0x0000003D)
+    ]
+    HRESULT _stdcall removeContactMenu([in] BSTR ID );
+    [
+    id(0x0000003E)
+    ]
+    HRESULT _stdcall getActiveContact([out, retval] BSTR * jid );
+    [
+    id(0x0000003F)
+    ]
+    HRESULT _stdcall getActiveGroup([out, retval] BSTR * Name );
+    [
+    id(0x00000041)
+    ]
+    HRESULT _stdcall getActiveContacts([in] VARIANT_BOOL Online, [out, retval] BSTR * JIDS );
+    [
+    propget,
+    id(0x00000040)
+    ]
+    HRESULT _stdcall LocalIP([out, retval] BSTR * Value );
+    [
+    id(0x00000042)
+    ]
+    HRESULT _stdcall setPluginAuth([in] IExodusAuth * AuthAgent /*Warning: unable to validate structure name: */ );
+    [
+    id(0x00000043)
+    ]
+    HRESULT _stdcall setAuthenticated([in] VARIANT_BOOL Authed, [in] BSTR xml );
+    [
+    id(0x00000044)
+    ]
+    HRESULT _stdcall setAuthJID([in] BSTR Username, [in] BSTR Host, [in] BSTR resource );
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall addMessageMenu([in] BSTR Caption, [out, retval] BSTR * ID );
+  };
+
+  [
+    uuid(27176DA5-4EEB-442F-9B1F-D25EF948B9CB),
+    version(1.0),
+    helpstring("Dispatch interface for ExodusChat Object"),
+    dual,
+    oleautomation
+  ]
+  /**
+A COM object which is used to manipulate chats, rooms, and IM windows. A reference to this object will be passed into the IExodusPlugin interface on the various New* events.
+  */
+   interface IExodusChat: IDispatch
+  {
+    [
+    propget,
+    id(0x00000001)
+    ]
+    /**
+    Get the jabber id of the room or user which is represented by this window.
+    **/
+    HRESULT _stdcall jid([out, retval] BSTR * Value );
+    [
+    id(0x00000002)
+    ]
+    /**
+    Add a menu item to the context popup for this window.
+
+    @param Caption The caption of the menu item.
+    @return The ID of the menu item. The plugin should cache this value and compare it when the click event fires.
+    **/
+    HRESULT _stdcall AddContextMenu([in] BSTR Caption, [out, retval] BSTR * ID );
+    [
+    propget,
+    id(0x00000004)
+    ]
+    /**
+    The outgoing message has changed to this text.
+    **/
+    HRESULT _stdcall MsgOutText([out, retval] BSTR * Value );
+    [
+    id(0x00000003)
+    ]
+    /**
+    Register a plugin with this window.
+    @param Plugin The plugin to register with this window. It must implement the IExodusChatPlugin interface.
+    **/
+    HRESULT _stdcall RegisterPlugin([in] IExodusChatPlugin * Plugin /*Warning: unable to validate structure name: */, [out, retval] long * ID );
+    [
+    id(0x00000005)
+    ]
+    /**
+    Unregister a plugin from the window.
+    @param ID The plugin ID received during registration.
+    @return Whether or not the unregister call was successful.
+    **/
+    HRESULT _stdcall UnRegister([in] long ID, [out, retval] VARIANT_BOOL * Success );
+    [
+    id(0x00000006)
+    ]
+    /**
+    Use at your own peril.
+    @return Some magic integer representing something.
+    **/
+    HRESULT _stdcall getMagicInt([in] ChatParts Part /*Warning: unable to validate structure name: */, [out, retval] long * Value );
+    [
+    id(0x00000007)
+    ]
+    /**
+    Remove a previously registered context menu.
+    @param ID The menu id received when the menu item was added
+    **/
+    HRESULT _stdcall RemoveContextMenu([in] BSTR ID );
+    [
+    id(0x000000C9)
+    ]
+    /**
+    Add Msg out
+    **/
+    HRESULT _stdcall AddMsgOut([in] BSTR Value );
+    [
+    id(0x000000CA)
+    ]
+    /**
+    Add a popup menu to the right-click popup for the outgoing message section
+    of the window.
+    @param Caption The caption of the menu item.
+    @return The menu id to catch.
+    **/
+    HRESULT _stdcall AddMsgOutMenu([in] BSTR Caption, [out, retval] BSTR * MenuID );
+    [
+    id(0x000000CB)
+    ]
+    /**
+    Remove a previously registered menu item.
+    @param ID The menu id.
+    **/
+    HRESULT _stdcall RemoveMsgOutMenu([in] BSTR MenuID );
+  };
+
+  [
+    uuid(72470D1C-9A66-4735-A7CF-446F43561C92),
+    version(1.0),
+    helpstring("Dispatch interface for ExodusPlugin Object"),
+    dual,
+    oleautomation
+  ]
+  /**
+    IExodusPlugin is the core interface that is used by exodus, and MUST be implemented by all plugins.
+  */
+   interface IExodusPlugin: IDispatch
+  {
+    [
+    id(0x00000001),
+    helpstring("Exodus is starting the plugin")
+    ]
+    /**
+    This method is called by exodus after it has instantiated an instance of the plugin.
+
+    @param ExodusController The COM Object which represents the Exodus application.
+    Plugins will most likely want to cache this object in order to make other calls back to the exodus application itself.
+    **/
+    HRESULT _stdcall Startup([in] IExodusController * ExodusController /*Warning: unable to validate structure name: */ );
+    [
+    id(0x00000002),
+    helpstring("Exodus is shutting down the plugin")
+    ]
+    /**
+This method is called whenever the plugin is being shutdown. Possible reasons for this may be that the application is shutting down (very common) or the user has selected to disable this particular plugin. You should make sure that all refcounts are decremented such that the exodus process can be completely freed if the application is exiting.
+    **/
+    HRESULT _stdcall Shutdown( void );
+    [
+    id(0x00000003),
+    helpstring("Plugin is receiving a packet")
+    ]
+    /**
+When a plugin registers to receive packets (by calling RegisterCallback), exodus will call this method for every packet which matches the provided xpath statement.
+
+    @param xpath This parameter allows a plugin to register for multiple callbacks, and be notified which one has matched.
+    @param event Event will almost always be the string "xml" or possibly "timeout".
+    @param xml A BSTR containing the raw serialized XML. Plugins are responsible for re-parsing the serialized XML if a DOM object is required.
+    **/
+    HRESULT _stdcall Process([in] BSTR xpath, [in] BSTR event, [in] BSTR xml );
+    [
+    id(0x00000004),
+    helpstring("A new chat window is starting")
+    ]
+    /**
+When a new chat window is started by either the user, or an incoming message element, this method is called. If a plugin wishes to add functionality to this chat window, it should register with the IExodusChat object passed as the second parameter. Typically, plugins which are interested in chat windows will wish to instantiate some other COM object for each window. The main plugin should use this event to do this, and register the new object instance with the chat object passed in.
+
+    @param jid The JID of the party sending messages into this chat window.
+    @param Chat The COM object which can be used to manipulate the window or this specific chat controller.
+    **/
+    HRESULT _stdcall NewChat([in] BSTR jid, [in] IExodusChat * Chat /*Warning: unable to validate structure name: */ );
+    [
+    id(0x00000005),
+    helpstring("A new room is starting")
+    ]
+    /**
+Almost identical to the NewChat event, but fired when new conference rooms are started. The same IExodusChat controller is used to manipulate the room object.
+
+    @param jid The JID of the room.
+    @param Room The COM object which can be used to manipulate the window or this specific room controller.
+    **/
+    HRESULT _stdcall NewRoom([in] BSTR jid, [in] IExodusChat * Room /*Warning: unable to validate structure name: */ );
+    [
+    id(0x00000008),
+    helpstring("A New IM is about to go out.")
+    ]
+    /**
+This event is fired whenever an IM message (not a chat or groupchat) is being sent from the system. This includes messages like room invites, and roster items being sent. Plugins are allowed to change the value of the Body and Subject paramaters if necessary.
+
+    @param jid The jabber ID of where the message is being sent to.
+    @param Body The current body of the message. Plugins may modify this parameter.
+    @param Subject The current subject of the message. Plugins may modify this parameter.
+    @param XTags The current string representing all xtags being appending to the outgoing message.
+    @return Plugins should return WELL-FORMED XML as a return value if that plugin needs to append additional elements into the message stanza. For example, a plugin could return: <x xmlns="foo"> Some CDATA</x> and have that <x> tag be inserted into the outgoing message.
+    **/
+    HRESULT _stdcall NewIM([in] BSTR jid, [in] BSTR * Body, [in] BSTR * Subject, [in] BSTR XTags, [out, retval] BSTR * AddXML );
+    [
+    id(0x0000000C),
+    helpstring("The plugin should configure itself")
+    ]
+    /**
+Exodus calls this method from the plugin options window where the user can configure a specific plugin. Plugins should display some kind of configuration dialog and allow the user to specific options. In order to persist options (preferences), plugins can use the appropriate <a href="controller.html">IExodusController</a> methods (such as getPrefAsString and setPrefAsString) to persist options directly to the exodus.xml file in the user's profile.
+    **/
+    HRESULT _stdcall Configure( void );
+    [
+    id(0x000000C9)
+    ]
+    /**
+Plugins are allowed to add menu items into the main menu under the Tools | Plugins selection. When a menu item is clicked which belongs to <em>any</em> plugin, this method is fired for all plugins. Plugins MUST cache the ID's which are returned from the AddPluginMenu method or from the AddContactMenu method.
+
+    @param ID The ID of the menu item being clicked. When this method is called, compare the ID passed to the cached id's of the menu items that your plugin added, and act accordingly.
+    **/
+    HRESULT _stdcall MenuClick([in] BSTR ID );
+    [
+    id(0x000000CA)
+    ]
+    /**
+Plugins are also allowed to add menu items to the context menu for Instant Message (IM) windows. This event is fired whenever one of these menu items is clicked which belongs to <em>any</em> plugin. Similar to the MenuClick event, plugins should cache the ID which they receive from addMessageMenu method.
+
+    @param ID The idenitifer of the menu clicked.
+    @param jid The jabber id of the recipient of the mesage.
+    @param Body The current body of the message. The plugin may modify this parameter.
+    @param Subject The current subject of the message. The plugin may modify this parameter.
+    **/
+    HRESULT _stdcall MsgMenuClick([in] BSTR ID, [in] BSTR jid, [in] BSTR * Body, [in] BSTR * Subject );
+    [
+    id(0x000000CB)
+    ]
+    /**
+Almost identical to the NewChat event, but fired when a new instant message window is opened. The same IExodusChat controller is used to get events and manipulate the IM window.
+
+    @param jid The jabber ID of the recipient.
+    @param InstantMsg The COM object which can be used to manipulate the message window.
+    **/
+    HRESULT _stdcall NewOutgoingIM([in] BSTR jid, [in] IExodusChat * InstantMsg /*Warning: unable to validate structure name: */ );
+  };
+
+  [
+    uuid(29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9),
+    version(1.0),
+    helpstring("Dispatch interface for ExodusRoster Object"),
+    dual,
+    oleautomation
+  ]
+  /**
+    The COM interface which can be used to manipulate the roster.
+  */
+   interface IExodusRoster: IDispatch
+  {
+    [
+    id(0x00000001)
+    ]
+    /**
+    Fetch the roster from the server.
+    **/
+    HRESULT _stdcall Fetch( void );
+    [
+    id(0x00000002)
+    ]
+    /**
+    Force a save of the bookmarks to the private storage on the server.
+    **/
+    HRESULT _stdcall SaveBookmarks( void );
+    [
+    id(0x00000003)
+    ]
+    /**
+    Add a new roster item to the roster.
+
+    @param JabberID The jabber id of the entity to add to the roster.
+    @param nickname The name to use for this roster item.
+    @param Group The initial group to use for this roster item.
+    @param Subscribe Set to true to also send a susbcription request to this jabber entity. Setting to false just adds the item to the roster.
+    **/
+    HRESULT _stdcall AddItem([in] BSTR JabberID, [in] BSTR nickname, [in] BSTR Group, [in] VARIANT_BOOL Subscribe );
+    [
+    id(0x00000004)
+    ]
+    /**
+    Add a new bookmark to the collection of bookmarks.
+
+    @param JabberID The jabber id of the room to store. Should be in the form room@server.
+    @param bmType Should always be "conference" for now.
+    @param bmName The name of the bookmark. This will display in the roster.
+    @param nickname The nickname to use when joining the room.
+    @param AutoJoin Set to true to force exodus to join the room whenever the user logs in.
+    **/
+    HRESULT _stdcall AddBookmark([in] BSTR JabberID, [in] BSTR bmType, [in] BSTR bmName, [in] BSTR nickname, [in] VARIANT_BOOL AutoJoin );
+    [
+    id(0x00000005)
+    ]
+    /**
+    Remove a bookmark from the roster.
+    @param JabberID The room@server of jabbber id of the bookmark to remove.
+    **/
+    HRESULT _stdcall RemoveBookmark([in] BSTR JabberID );
+    [
+    id(0x00000006)
+    ]
+    /**
+    Find a roster item in the roster and obtain a COM object pointer to it.
+    **/
+    HRESULT _stdcall Find([in] BSTR JabberID, [out, retval] IExodusRosterItem ** Item /*Warning: unable to validate structure name: */ );
+    [
+    id(0x00000007)
+    ]
+    HRESULT _stdcall Item([in] long Index, [out, retval] IExodusRosterItem ** Item /*Warning: unable to validate structure name: */ );
+    [
+    id(0x00000008)
+    ]
+    HRESULT _stdcall Count([out, retval] long * ItemCount );
+  };
+
+  [
+    uuid(284E49F2-2006-4E48-B0E0-233867A78E54),
+    version(1.0),
+    helpstring("Dispatch interface for ExodusPPDB Object"),
+    dual,
+    oleautomation
+  ]
+  /**
+    IExodusChatPlugin
+  */
+   interface IExodusPPDB: IDispatch
+  {
+    [
+    id(0x00000001)
+    ]
+    HRESULT _stdcall Find([in] BSTR JabberID, [in] BSTR resource, [out, retval] IExodusPresence ** Presence /*Warning: unable to validate structure name: */ );
+    [
+    id(0x00000002)
+    ]
+    HRESULT _stdcall Next([in] BSTR JabberID, [in] BSTR resource, [out, retval] IExodusPresence ** Value /*Warning: unable to validate structure name: */ );
+    [
+    propget,
+    id(0x00000003)
+    ]
+    HRESULT _stdcall Count([out, retval] long * Value );
+    [
+    propget,
+    id(0x00000004)
+    ]
+    HRESULT _stdcall LastPresence([out, retval] IExodusPresence ** Value /*Warning: unable to validate structure name: */ );
+  };
+
+}; 
