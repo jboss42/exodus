@@ -124,6 +124,7 @@ type
     procedure popRosterSendJIDClick(Sender: TObject);
     procedure lstRosterData(Sender: TObject; Item: TListItem);
     procedure popRegisterClick(Sender: TObject);
+    procedure sendStartPresence();
   private
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
@@ -137,6 +138,8 @@ type
     _keywords: TRegExpr;        // list of keywords to monitor for
     _hint_text: Widestring;     // Current hint for nickname
     _old_nick: WideString;      // Our own last nickname
+    _passwd: WideString;        // Room password
+    _disconTime: TDateTime;     // Date/Time that we last got disconnected, local TZ
 
     // Stuff for nick completions
     _nick_prefix: Widestring;
@@ -149,6 +152,7 @@ type
     function  checkCommand(txt: Widestring): boolean;
 
     procedure SetJID(sjid: Widestring);
+    procedure SetPassword(pass: WideString);
     procedure RenderMember(member: TRoomMember; tag: TXMLTag);
     procedure changeSubject(subj: Widestring);
     procedure configRoom();
@@ -321,7 +325,6 @@ function StartRoom(rjid: Widestring; rnick: Widestring = '';
     Password: WideString = ''; send_presence: boolean = true): TfrmRoom;
 var
     f: TfrmRoom;
-    p: TJabberPres;
     tmp_jid: TJabberID;
     i : integer;
     n: Widestring;
@@ -345,23 +348,10 @@ begin
         f.SetJID(rjid);
         f.MyNick := n;
         tmp_jid := TJabberID.Create(rjid);
+        f.SetPassword(Password);
 
         if (send_presence) then begin
-            p := TCapPresence.Create;
-            p.toJID := TJabberID.Create(rjid + '/' + n);
-            with p.AddTag('x') do begin
-                setAttribute('xmlns', XMLNS_MUC);
-                if (password <> '') then
-                    AddBasicTag('password', password);
-            end;
-
-            if (MainSession.Invisible) then
-                MainSession.addAvailJid(rjid);
-
-            p.Show := MainSession.Show;
-            p.Status := MainSession.Status;
-
-            MainSession.SendTag(p);
+            f.sendStartPresence();
         end;
 
         f.Caption := WideFormat(sRoom, [tmp_jid.user]);
@@ -430,6 +420,7 @@ begin
     Msg := TJabberMessage.Create(tag);
 
     if (Msg.isXdata) then exit;
+    if (Msg.Time < _disconTime) then exit;
 
     from := tag.GetAttribute('from');
     i := _roster.indexOf(from);
@@ -659,15 +650,35 @@ begin
         _mcallback := -1;
         _ecallback := -1;
         _pcallback := -1;
+
+        _roster.Clear();
+        ClearListObjects(_rlist);
+        _rlist.Clear();
+        lstRoster.Items.Count := 0;
+        lstRoster.Invalidate();
+
+        _disconTime := Now();
     end
     else if (event = '/session/presence') then begin
         // We changed our own presence, send it to the room
         if (MainSession.Invisible) then exit;
-        p := TCapPresence.Create();
-        p.toJID := TJabberID.Create(self.jid);
-        p.Show := MainSession.Show;
-        p.Status := MainSession.Status;
-        MainSession.SendTag(p);
+
+        // previously disconnected
+        if (_mcallback = -1) then begin
+            pnlInput.Visible := true;
+            DisplayPresence(sReconnected, MsgList);
+
+            // re-register callbacks
+            SetJID(Self.jid);
+
+            self.sendStartPresence();
+        end else begin
+            p := TCapPresence.Create();
+            p.toJID := TJabberID.Create(self.jid);
+            p.Show := MainSession.Show;
+            p.Status := MainSession.Status;
+            MainSession.SendTag(p);
+        end;
     end;
 end;
 
@@ -1030,6 +1041,7 @@ begin
     _nick_start := 0;
     _hint_text := '';
     _old_nick := '';
+    _disconTime := 0;
 
     _keywords := nil;
 
@@ -1104,6 +1116,12 @@ begin
             _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
     end;
     Self.jid := sjid;
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.SetPassword(pass: Widestring);
+begin
+    _passwd := pass;
 end;
 
 {---------------------------------------}
@@ -1911,6 +1929,27 @@ procedure TfrmRoom.popRegisterClick(Sender: TObject);
 begin
   inherited;
     StartServiceReg(jid);
+end;
+
+procedure TfrmRoom.sendStartPresence();
+var
+    p : TJabberPres;
+begin
+    p := TCapPresence.Create;
+    p.toJID := TJabberID.Create(self.jid + '/' + self.mynick);
+    with p.AddTag('x') do begin
+        setAttribute('xmlns', XMLNS_MUC);
+        if (self._passwd <> '') then
+            AddBasicTag('password', _passwd);
+    end;
+
+    if (MainSession.Invisible) then
+        MainSession.addAvailJid(self.jid);
+
+    p.Show := MainSession.Show;
+    p.Status := MainSession.Status;
+
+    MainSession.SendTag(p);
 end;
 
 initialization
