@@ -347,15 +347,15 @@ begin
         if ((i > 0) and (i < ws)) then
             // we have an end marker /> before whitespace
             // this is something like <foo/>
-            _root := Trim(Copy(sbuff, p + 1, i - p))
+            _root := Trim(Copy(sbuff, p + 1, i - 2))
         else if (e < ws) then
             // we have an end begin tag > before whitespace
             // this is something like <foo>cdata goes here</foo>
-            _root := Trim(Copy(sbuff, p + 1, e - p - 1))
+            _root := Trim(Copy(sbuff, p + 1, e - 2))
         else
             // Normal <foo bar="baz">...</foo> or
             // <foo bar="baz"/>
-            _root := Trim(Copy(sbuff, p + 1, ws - p));
+            _root := Trim(Copy(sbuff, p + 1, ws - 2));
 
         // return special entity tags and bail
         if  (_root = '?xml') or
@@ -363,9 +363,9 @@ begin
             (_root = '!--') or
             (_root = '!ATTLIST') or
             (_root = _root_tag) then begin
-            r := Copy(sbuff, 1, e);
+            r := Copy(sbuff, p, e);
             _root := '';
-            _rbuff := Copy(sbuff, e + 1, l - e + 1);
+            _rbuff := Copy(sbuff, p + e , l - e - p + 1);
             Result := r;
             exit;
             end;
@@ -374,14 +374,14 @@ begin
     if (e = (i + 1)) then begin
         // basic tag.. <foo/>
         // position the stream at the next char and pull off the tag
-        r := Copy(sbuff, 1, e);
+        r := Copy(sbuff, p, e);
         _root := '';
-        _rbuff := Copy(sbuff, e + 1, l - e + 1);
+        _rbuff := Copy(sbuff, p + e, l - e - p + 1);
         end
     else begin
         // some other "normal" xml'ish thing..
         // count start/end tags of _root
-        i := 1;
+        i := p;
         stag := '<' + _root;
         etag := '</' + _root + '>';
         ls := length(stag);
@@ -406,7 +406,7 @@ begin
                 i := i + pe + le - 1;
                 if (_counter <= 0) then begin
                     // we have a full tag..
-                    r := Copy(sbuff, 1, i - 1);
+                    r := Copy(sbuff, p, i - p);
                     _root := '';
                     _rbuff := Copy(sbuff, i, l - i + 1);
                     break;

@@ -82,6 +82,7 @@ type
         procedure AuthCallback(event: string; tag: TXMLTag);
         procedure RegistrationCallback(event: string; xml: TXMLTag);
 
+
         procedure DataEvent(send: boolean; data: Widestring);
     public
         ppdb: TJabberPPDB;
@@ -570,7 +571,8 @@ end;
 procedure TJabberSession.UnRegisterCallback(index: integer);
 begin
     // Unregister a callback
-    _dispatcher.DeleteListener(index);
+    if (index >= 0) then
+        _dispatcher.DeleteListener(index);
 end;
 
 {---------------------------------------}

@@ -30,12 +30,13 @@ uses
 type
     TJabberRosterItem = class
     private
+        _nickname: string;
+        function getNick(): string;
         procedure fillTag(tag: TXMLTag);
     public
         jid: TJabberID;
         subscription: string;
         ask: string;
-        nickname: string;
         Groups: TStringList;
         Data: TObject;
 
@@ -48,6 +49,9 @@ type
         procedure parse(tag: TXMLTag);
         procedure remove;
         procedure update;
+
+        property RawNickname: string read _nickname write _nickname;
+        property Nickname: string read getNick write _nickname;
     end;
 
     TJabberBookmark = class
@@ -184,7 +188,7 @@ begin
     Groups := TStringList.Create;
     jid := TJabberID.Create('');
     subscription := 'none';
-    nickname := '';
+    _nickname := '';
     ask := '';
 end;
 
@@ -207,7 +211,7 @@ var
 begin
     tag.name := 'item';
     tag.PutAttribute('jid', jid.Full);
-    tag.PutAttribute('name', nickname);
+    tag.PutAttribute('name', _nickname);
 
     for i := 0 to Groups.Count - 1 do
         tag.AddBasicTag('group', Groups[i]);
@@ -261,7 +265,7 @@ begin
     subscription := tag.GetAttribute('subscription');
     ask := tag.GetAttribute('ask');
     if subscription = 'none' then subscription := '';
-    nickname := tag.GetAttribute('name');
+    _nickname := tag.GetAttribute('name');
 
     Groups.Clear;
     grps := tag.QueryXPTags('/item/group');
@@ -278,6 +282,17 @@ function TJabberRosterItem.IsOnline: boolean;
 begin
     Result := (MainSession.ppdb.FindPres(Self.jid.jid, '') <> nil);
 end;
+
+{---------------------------------------}
+function TJabberRosterItem.getNick(): string;
+begin
+    // either return the nickname, or the <user> part of the jid
+    if (Trim(_nickname)) <> '' then
+        result := _nickname
+    else
+        result := jid.user;
+end;
+
 
 {---------------------------------------}
 {---------------------------------------}
@@ -359,7 +374,7 @@ begin
     with bm_iq do begin
         iqType := 'get';
         toJid := '';
-        Namespace := 'jabber:iq:private';
+        Namespace := XMLNS_PRIVATE;
         with qtag.AddTag('bookmarks') do
             putAttribute('xmlns', XMLNS_BM);
         Send();
