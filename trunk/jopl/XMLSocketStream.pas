@@ -34,7 +34,7 @@ uses
     {$ifdef INDY9}
     IdIOHandlerSocket,
     {$endif}
-    ExtCtrls, IdSSLOpenSSL,
+    Windows, ExtCtrls, IdSSLOpenSSL,
 
     {$endif}
 
@@ -129,7 +129,7 @@ implementation
 
 uses
     {$ifdef INDY9}
-    HttpProxyIOHandler,
+    HttpProxyIOHandler, IdSSLOpenSSLHeaders, 
     {$endif}
     Session, StrUtils, Classes;
 
@@ -326,6 +326,32 @@ begin
 end;
 
 {---------------------------------------}
+function LoadCryptoFunc(fceName: string; libhandle: integer): pointer;
+begin
+    fceName := fceName + #0;
+    Result := GetProcAddress(libhandle, @FceName[1]);
+end;
+
+{---------------------------------------}
+procedure FixIndy9SSL();
+var
+    libeay: integer;
+begin
+    // Hack around bugs in Indy9..
+    if (@IdSslX509NameHash = nil) then begin
+        {$ifdef linux}
+        {$else}
+        libeay := LoadLibrary('libeay32.dll');
+        @IdSslX509NameHash := LoadCryptoFunc('X509_NAME_hash', libeay);
+        @IdSslX509Digest := LoadCryptoFunc('X509_digest', libeay);
+        @IdSslEvpMd5 := LoadCryptoFunc('EVP_md5', libeay);
+        FreeLibrary(libeay);
+        {$endif}
+    end;
+end;
+
+
+{---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 constructor TXMLSocketStream.Create(root: string);
@@ -361,53 +387,6 @@ begin
     KillSocket();
     _sock_lock.Free;
 end;
-
-{$ifdef Win32}
-{
-procedure TXMLSocketStream.VerifyUI();
-var
-    sl : TStringList;
-    i  : integer;
-    n  : TDateTime;
-begin
-    sl := TStringList.Create();
-    sl.Delimiter := '/';
-    sl.QuoteChar := #0;
-    sl.DelimitedText := _cert.Subject.OneLine;
-
-    _ssl_ok := false;
-    for i := 0 to sl.Count - 1 do begin
-        if (sl[i] = ('CN=' + _profile.Server)) then begin
-            _ssl_ok := true;
-            break;
-        end;
-    end;
-    sl.Free();
-
-    // TODO: timing.  really shouldn't have graphics here, also.
-    if (not _ssl_ok) then begin
-        _ssl_ok := false;
-        MessageDlg('Certificate does not match host: ' +
-                   _cert.Subject.OneLine,
-                   mtWarning, [mbOK], 0);
-    end;
-
-    // TODO: check issuer.
-    n := Now();
-    if (n < _cert.NotBefore) then begin
-        _ssl_ok := false;
-        MessageDlg('Certificate not valid until ' + DateTimeToStr(_cert.NotBefore),
-                               mtWarning, [mbOK], 0);
-    end;
-
-    if (n > _cert.NotAfter) then begin
-        _ssl_ok := false;
-        MessageDlg('Certificate expired on ' + DateTimeToStr(_cert.NotAfter),
-                               mtWarning, [mbOK], 0);
-    end;
-end;
-}
-{$endif}
 
 {$ifdef INDY9}
 function TXMLSocketStream.VerifyPeer(Certificate: TIdX509): TSSLVerifyError;
@@ -474,8 +453,9 @@ end;
 {---------------------------------------}
 procedure TXMLSocketStream.MsgHandler(var msg: TJabberMsg);
 var
-    tmps: WideString;
+    fp, tmps: WideString;
     tag: TXMLTag;
+    cert: TIdX509;
 begin
     {
     handle all of our funky messages..
@@ -502,10 +482,13 @@ begin
 
             // Validate here, not in onVerifyPeer
             if ((_profile.ssl) and (_ssl_int <> nil)) then begin
-                if (VerifyPeer(_ssl_int.SSLSocket.PeerCert) <> SVE_NONE) then begin
-                    // KILL SOCKET
+                FixIndy9SSL();
+                cert := _ssl_int.SSLSocket.PeerCert;
+                if (VerifyPeer(cert) <> SVE_NONE) then begin
                     tag := TXMLTag.Create('ssl');
                     tag.AddCData(_ssl_err);
+                    fp := cert.FingerprintAsString;
+                    tag.setAttribute('fingerprint', fp);
                     DoCallbacks('ssl-error', tag);
                 end;
             end;
@@ -598,7 +581,6 @@ end;
 {---------------------------------------}
 procedure TXMLSocketStream._setupSSL();
 begin
-    //
     with _ssl_int do begin
         SSLOptions.Mode := sslmClient;
         SSLOptions.Method :=  sslvTLSv1;
