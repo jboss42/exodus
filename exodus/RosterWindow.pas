@@ -1811,7 +1811,10 @@ begin
     if (Node.Level = 0) then begin
         treeRoster.Canvas.Font.Style := [fsBold];
 
-        if (_group_counts) then begin
+        if ((_group_counts) and
+            (Node <> _offline) and
+            (Node <> _bookmark) and
+            (Node.Text <> _transports)) then begin
             total := MainSession.roster.getGroupCount(Node.Text, false);
             online := MainSession.roster.getGroupCount(Node.Text, true);
             c1 := Node.Text + ' ';
@@ -1916,9 +1919,17 @@ begin
         CanvasTextOutW(treeRoster.Canvas, xRect.Left + 1,
             xRect.Top + 1, c1);
         if (c2 <> '') then begin
+            if (Node.Level = 0) then begin
+                Font.Style := [];
+                Font.Size := Font.Size - 1;
+                SelectObject(treeRoster.Canvas.Handle, Font.Handle);
+            end;
             SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(stat_color));
             CanvasTextOutW(treeRoster.Canvas, xRect.Left + tw + 5,
                 xRect.Top + 1, c2);
+
+            if (Node.Level = 0) then
+                Font.Size := Font.Size + 1;
         end;
 
         if (cdsSelected in State) then
