@@ -1,10 +1,30 @@
 program Exodus;
 
+{
+    Copyright 2002, Peter Millard
+
+    This file is part of Exodus.
+
+    Exodus is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Exodus is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Exodus; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
+
 uses
   Forms,
   Controls,
   Windows,
-  Jabber1 in 'Jabber1.pas' {frmJabber},
+  Jabber1 in 'Jabber1.pas' {frmExodus},
   Login in 'Login.pas' {frmLogin},
   RosterWindow in 'RosterWindow.pas' {frmRosterWindow},
   buttonFrame in 'buttonFrame.pas' {frameButtons: TFrame},
@@ -24,7 +44,7 @@ uses
   Dockable in 'Dockable.pas' {frmDockable},
   MsgQueue in 'MsgQueue.pas' {frmMsgQueue},
   vcard in 'vcard.pas' {frmVCard},
-  Invite in 'Invite.pas' {frmInvite},
+  Invite in 'invite.pas' {frmInvite},
   About in 'About.pas' {frmAbout},
   Transfer in 'Transfer.pas' {frmTransfer},
   jud in 'jud.pas' {frmJUD},
@@ -68,7 +88,9 @@ uses
   ChatWin in 'ChatWin.pas' {frmChat},
   Room in 'Room.pas' {frmRoom},
   Password in 'Password.pas' {frmPassword},
-  XMLSocketStream in '..\jopl\XMLSocketStream.pas';
+  XMLSocketStream in '..\jopl\XMLSocketStream.pas',
+  RosterRecv in 'RosterRecv.pas' {frmRosterRecv},
+  RosterSend in 'RosterSend.pas' {frmRosterSend};
 
 {$R *.RES}
 
@@ -77,14 +99,17 @@ uses
 begin
   Application.Initialize;
   Application.Title := 'Exodus';
-  Application.CreateForm(TExodus, frmJabber);
-  Application.CreateForm(TfrmRosterWindow, frmRosterWindow);
-  Application.CreateForm(TfrmCustomPres, frmCustomPres);
-  Application.CreateForm(TfrmEmoticons, frmEmoticons);
+
+  Application.CreateForm(TfrmExodus, frmExodus);
+  frmRosterWindow := TfrmRosterWindow.Create(Application);
+  frmCustomPres := TfrmCustomPres.Create(Application);
+  frmEmoticons := TfrmEmoticons.Create(Application);
+
   Application.ShowMainForm := false;
+
   frmRosterWindow.DockRoster;
   frmRosterWindow.Show;
-  frmJabber.Startup();
+  frmExodus.Startup();
   Application.Run;
 end.
 

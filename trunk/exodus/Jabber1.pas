@@ -55,7 +55,7 @@ type
     TStopHooks = procedure; stdcall;
 
 type
-  TExodus = class(TForm)
+  TfrmExodus = class(TForm)
     Tabs: TPageControl;
     tbsMsg: TTabSheet;
     pnlRoster: TPanel;
@@ -232,6 +232,7 @@ type
       NewTarget: TWinControl; var Allow: Boolean);
     procedure TabsDockDrop(Sender: TObject; Source: TDragDockObject; X,
       Y: Integer);
+    procedure mnuMessageClick(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -327,7 +328,7 @@ type
   end;
 
 var
-    frmJabber: TExodus;
+    frmExodus: TfrmExodus;
 
 
 {---------------------------------------}
@@ -381,7 +382,7 @@ uses
 {$R *.DFM}
 
 {---------------------------------------}
-procedure TExodus.CreateParams(var Params: TCreateParams);
+procedure TfrmExodus.CreateParams(var Params: TCreateParams);
 begin
     // Make each window appear on the task bar.
     inherited CreateParams(Params);
@@ -392,7 +393,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.WMSysCommand(var msg: TWmSysCommand);
+procedure TfrmExodus.WMSysCommand(var msg: TWmSysCommand);
 begin
     case (msg.CmdType and $FFF0) of
     SC_MINIMIZE: begin
@@ -420,7 +421,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.WMTray(var msg: TMessage);
+procedure TfrmExodus.WMTray(var msg: TMessage);
 var
     cp: TPoint;
 begin
@@ -440,7 +441,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.WMQueryEndSession(var msg: TMessage);
+procedure TfrmExodus.WMQueryEndSession(var msg: TMessage);
 begin
     //
     _shutdown := true;
@@ -448,25 +449,25 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.WMEndSession(var msg: TMessage);
+procedure TfrmExodus.WMEndSession(var msg: TMessage);
 begin
     //
     _shutdown := true;
     msg.Result := 0;
 end;
 
-procedure TExodus.WMShowLogin(var msg: TMessage);
+procedure TfrmExodus.WMShowLogin(var msg: TMessage);
 begin
     ShowLogin();
 end;
 
-procedure TExodus.WMCloseApp(var msg: TMessage);
+procedure TfrmExodus.WMCloseApp(var msg: TMessage);
 begin
     Self.Close();
 end;
 
 {---------------------------------------}
-procedure TExodus.FormCreate(Sender: TObject);
+procedure TfrmExodus.FormCreate(Sender: TObject);
 var
     exp: boolean;
     profile: TJabberProfile;
@@ -736,7 +737,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.Startup;
+procedure TfrmExodus.Startup;
 begin
     if (MainSession.Prefs.getBool('expanded')) then begin
         getMsgQueue();
@@ -757,7 +758,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.setupAutoAwayTimer();
+procedure TfrmExodus.setupAutoAwayTimer();
 begin
     DebugMsg('Trying to setup the Auto Away timer.');
     if (_windows_ver < cWIN_2000) then begin
@@ -793,14 +794,14 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.setTrayInfo(tip: string);
+procedure TfrmExodus.setTrayInfo(tip: string);
 begin
     StrPCopy(@_tray.szTip, tip);
     Shell_NotifyIcon(NIM_MODIFY, @_tray);
 end;
 
 {---------------------------------------}
-procedure TExodus.setTrayIcon(iconNum: integer);
+procedure TfrmExodus.setTrayIcon(iconNum: integer);
 begin
     ImageList2.GetIcon(iconNum, _tray_icon);
     _tray.hIcon := _tray_icon.Handle;
@@ -808,7 +809,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.SessionCallback(event: string; tag: TXMLTag);
+procedure TfrmExodus.SessionCallback(event: string; tag: TXMLTag);
 var
     p: TJabberPres;
 begin
@@ -920,7 +921,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.restoreToolbar;
+procedure TfrmExodus.restoreToolbar;
 begin
     with MainSession.Prefs do begin
         mnuExpanded.Checked := getBool('expanded');
@@ -938,7 +939,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.restoreAlpha;
+procedure TfrmExodus.restoreAlpha;
 var
     alpha: boolean;
 begin
@@ -958,7 +959,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.restoreMenus(enable: boolean);
+procedure TfrmExodus.restoreMenus(enable: boolean);
 var
     plist: TList;
     imidx, i: integer;
@@ -1029,7 +1030,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.iqCallback(event: string; tag: TXMLTag);
+procedure TfrmExodus.iqCallback(event: string; tag: TXMLTag);
 var
     qTag, tmp_tag: TXMLTag;
     from, url, desc: string;
@@ -1048,7 +1049,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.MsgCallback(event: string; tag: TXMLTag);
+procedure TfrmExodus.MsgCallback(event: string; tag: TXMLTag);
 var
     b, mtype: string;
     e: TJabberEvent;
@@ -1067,7 +1068,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.CTCPCallback(event: string; tag: TXMLTag);
+procedure TfrmExodus.CTCPCallback(event: string; tag: TXMLTag);
 var
     e: TJabberEvent;
 begin
@@ -1084,7 +1085,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.RenderEvent(e: TJabberEvent);
+procedure TfrmExodus.RenderEvent(e: TJabberEvent);
 var
     toast, msg: string;
     img_idx, n_flag: integer;
@@ -1137,6 +1138,12 @@ begin
         img_idx := 21;
         msg := e.data_type;
         toast := 'Invite from ' + TJabberID.Create(e.from).jid;
+        end;
+
+    evt_RosterItems: begin
+        img_idx := 26;
+        msg := e.data_type;
+        toast := 'Contacts from ' + TJabberID.Create(e.from).jid;
         end
 
     else begin
@@ -1157,17 +1164,19 @@ begin
         getMsgQueue().LogEvent(e, msg, img_idx);
         end
     else if (e.delayed) then begin
-        // we are collapsed, just display in regular windows
+        // we are collapsed, but this event was delayed (offline'd)
+        // so display it in the msg queue, not live
         mqueue := getMsgQueue();
         mqueue.Show;
         mqueue.LogEvent(e, msg, img_idx);
         end
     else
+        // we are collapsed, just display in regular windows
         ShowEvent(e);
 end;
 
 {---------------------------------------}
-procedure TExodus.btnConnectClick(Sender: TObject);
+procedure TfrmExodus.btnConnectClick(Sender: TObject);
 begin
     // connect to the server
     if MainSession.Stream.Active then
@@ -1177,7 +1186,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.FormCloseQuery(Sender: TObject;
+procedure TfrmExodus.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
     // Unregister callbacks, etc.
@@ -1234,14 +1243,14 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.FormClose(Sender: TObject; var Action: TCloseAction);
+procedure TfrmExodus.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     Shell_NotifyIcon(NIM_DELETE, @_tray);
     Action := caFree;
 end;
 
 {---------------------------------------}
-procedure TExodus.btnOnlineRosterClick(Sender: TObject);
+procedure TfrmExodus.btnOnlineRosterClick(Sender: TObject);
 var
     e: boolean;
 begin
@@ -1258,35 +1267,35 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.btnAddContactClick(Sender: TObject);
+procedure TfrmExodus.btnAddContactClick(Sender: TObject);
 begin
     // add a contact
     ShowAddContact;
 end;
 
 {---------------------------------------}
-procedure TExodus.mnuConferenceClick(Sender: TObject);
+procedure TfrmExodus.mnuConferenceClick(Sender: TObject);
 begin
     // Join a TC Room
     StartJoinRoom;
 end;
 
 {---------------------------------------}
-procedure TExodus.FormResize(Sender: TObject);
+procedure TfrmExodus.FormResize(Sender: TObject);
 begin
     if MainSession <> nil then
         MainSession.Prefs.SavePosition(Self);
 end;
 
 {---------------------------------------}
-procedure TExodus.Preferences1Click(Sender: TObject);
+procedure TfrmExodus.Preferences1Click(Sender: TObject);
 begin
     // Show the prefs
     StartPrefs;
 end;
 
 {---------------------------------------}
-procedure TExodus.btnExpandedClick(Sender: TObject);
+procedure TfrmExodus.btnExpandedClick(Sender: TObject);
 var
     delta, w: longint;
     newval: boolean;
@@ -1339,7 +1348,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.restoreEvents(expanded: boolean);
+procedure TfrmExodus.restoreEvents(expanded: boolean);
 var
     ew, w: longint;
     activeTab: integer;
@@ -1388,7 +1397,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.ClearMessages1Click(Sender: TObject);
+procedure TfrmExodus.ClearMessages1Click(Sender: TObject);
 begin
     // Clear events from the list view.
     if (frmMsgQueue <> nil) then
@@ -1396,7 +1405,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.WMWindowPosChanging(var msg: TWMWindowPosChanging);
+procedure TfrmExodus.WMWindowPosChanging(var msg: TWMWindowPosChanging);
 var
     r: TRect;
 begin
@@ -1447,13 +1456,13 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.FormShow(Sender: TObject);
+procedure TfrmExodus.FormShow(Sender: TObject);
 begin
     _noMoveCheck := false;
 end;
 
 {---------------------------------------}
-procedure TExodus.btnDelPersonClick(Sender: TObject);
+procedure TfrmExodus.btnDelPersonClick(Sender: TObject);
 var
     n: TTreeNode;
     ritem: TJabberRosterItem;
@@ -1466,7 +1475,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.ShowXML1Click(Sender: TObject);
+procedure TfrmExodus.ShowXML1Click(Sender: TObject);
 begin
     // show the debug window if it's hidden
     {
@@ -1478,42 +1487,42 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.Splitter1Moved(Sender: TObject);
+procedure TfrmExodus.Splitter1Moved(Sender: TObject);
 begin
     // Save the current width
     MainSession.Prefs.setInt('event_width', pnlRight.Width);
 end;
 
 {---------------------------------------}
-procedure TExodus.Exit2Click(Sender: TObject);
+procedure TfrmExodus.Exit2Click(Sender: TObject);
 begin
     _shutdown := true;
     Self.Close;
 end;
 
 {---------------------------------------}
-procedure TExodus.timFlasherTimer(Sender: TObject);
+procedure TfrmExodus.timFlasherTimer(Sender: TObject);
 begin
     _flash := not _flash;
     FlashWindow(Application.Handle, _flash);
 end;
 
 {---------------------------------------}
-procedure TExodus.JabberorgWebsite1Click(Sender: TObject);
+procedure TfrmExodus.JabberorgWebsite1Click(Sender: TObject);
 begin
     // goto www.jabber.org
     ShellExecute(0, 'open', 'http://www.jabber.org', '', '', SW_SHOW);
 end;
 
 {---------------------------------------}
-procedure TExodus.JabberCentralWebsite1Click(Sender: TObject);
+procedure TfrmExodus.JabberCentralWebsite1Click(Sender: TObject);
 begin
     // goto www.jabbecentral.org
     ShellExecute(0, 'open', 'http://www.jabbercentral.org', '', '', SW_SHOW);
 end;
 
 {---------------------------------------}
-procedure TExodus.About1Click(Sender: TObject);
+procedure TfrmExodus.About1Click(Sender: TObject);
 begin
     // Show some about dialog box
     frmAbout := TfrmAbout.Create(nil);
@@ -1521,7 +1530,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.presOnlineClick(Sender: TObject);
+procedure TfrmExodus.presOnlineClick(Sender: TObject);
 var
     m: TMenuItem;
     show, status: string;
@@ -1543,13 +1552,13 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.mnuMyVCardClick(Sender: TObject);
+procedure TfrmExodus.mnuMyVCardClick(Sender: TObject);
 begin
     ShowMyProfile();
 end;
 
 {---------------------------------------}
-procedure TExodus.mnuToolbarClick(Sender: TObject);
+procedure TfrmExodus.mnuToolbarClick(Sender: TObject);
 begin
     // toggle toolbar on/off
     Toolbar.Visible := not Toolbar.Visible;
@@ -1558,7 +1567,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.NewGroup2Click(Sender: TObject);
+procedure TfrmExodus.NewGroup2Click(Sender: TObject);
 var
     new_grp: string;
     gl: TStringList;
@@ -1586,11 +1595,11 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.timAutoAwayTimer(Sender: TObject);
+procedure TfrmExodus.timAutoAwayTimer(Sender: TObject);
 var
     mins, away, xa: integer;
     cur_idle: longword;
-    dmsg: string;
+    // dmsg: string;
     last_info: TLastInputInfo;
 begin
     // get the latest idle amount
@@ -1616,12 +1625,14 @@ begin
             cur_idle := (GetTickCount() - last_tick) div 1000;
             mins := cur_idle div 60;
 
+            {
             if (not _is_autoaway) and (not _is_autoxa) then begin
                 dmsg := 'Idle Check: ' + BoolToStr(_is_autoaway, true) + ', ' +
                     BoolToStr(_is_autoxa, true) + ', ' +
                     IntToStr(cur_idle ) + ' secs'#13#10;
                 DebugMsg(dmsg);
                 end;
+            }
 
             away := getInt('away_time');
             xa := getInt('xa_time');
@@ -1635,7 +1646,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.SetAutoAway;
+procedure TfrmExodus.SetAutoAway;
 begin
     // set us to away
     DebugMsg('Setting AutoAway');
@@ -1659,7 +1670,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.SetAutoXA;
+procedure TfrmExodus.SetAutoXA;
 begin
     // set us to xa
     DebugMsg('Setting AutoXA');
@@ -1671,7 +1682,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.SetAutoAvailable;
+procedure TfrmExodus.SetAutoAvailable;
 begin
     // reset our status to available
     DebugMsg('Setting Auto Available');
@@ -1686,19 +1697,19 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.MessageHistory2Click(Sender: TObject);
+procedure TfrmExodus.MessageHistory2Click(Sender: TObject);
 begin
     frmRosterWindow.popHistoryClick(Sender);
 end;
 
 {---------------------------------------}
-procedure TExodus.Properties2Click(Sender: TObject);
+procedure TfrmExodus.Properties2Click(Sender: TObject);
 begin
     frmRosterWindow.popPropertiesClick(Sender);
 end;
 
 {---------------------------------------}
-procedure TExodus.mnuVCardClick(Sender: TObject);
+procedure TfrmExodus.mnuVCardClick(Sender: TObject);
 var
     jid: string;
 begin
@@ -1708,14 +1719,14 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.SearchforPerson1Click(Sender: TObject);
+procedure TfrmExodus.SearchforPerson1Click(Sender: TObject);
 begin
     // Start a default search
     StartSearch(MainSession.MyAgents.getFirstSearch);
 end;
 
 {---------------------------------------}
-procedure TExodus.TabsMouseDown(Sender: TObject; Button: TMouseButton;
+procedure TfrmExodus.TabsMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 var
     v, i, tab: integer;
@@ -1755,7 +1766,7 @@ begin
 end;
 
 {---------------------------------------}
-function TExodus.getTabForm(tab: TTabSheet): TForm;
+function TfrmExodus.getTabForm(tab: TTabSheet): TForm;
 begin
     Result := nil;
     if (tab.ControlCount = 1) then begin
@@ -1767,7 +1778,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.popCloseTabClick(Sender: TObject);
+procedure TfrmExodus.popCloseTabClick(Sender: TObject);
 var
     t: TTabSheet;
     f: TForm;
@@ -1781,7 +1792,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.popFloatTabClick(Sender: TObject);
+procedure TfrmExodus.popFloatTabClick(Sender: TObject);
 var
     t: TTabSheet;
     f: TForm;
@@ -1796,7 +1807,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.mnuChatClick(Sender: TObject);
+procedure TfrmExodus.mnuChatClick(Sender: TObject);
 var
     n: TTreeNode;
     ritem: TJabberRosterItem;
@@ -1816,21 +1827,21 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.mnuBookmarkClick(Sender: TObject);
+procedure TfrmExodus.mnuBookmarkClick(Sender: TObject);
 begin
     // Add a new bookmark to our list..
     ShowBookmark('');
 end;
 
 {---------------------------------------}
-procedure TExodus.presCustomClick(Sender: TObject);
+procedure TfrmExodus.presCustomClick(Sender: TObject);
 begin
     // Custom presence
     ShowCustomPresence();
 end;
 
 {---------------------------------------}
-procedure TExodus.presCustomPresClick(Sender: TObject);
+procedure TfrmExodus.presCustomPresClick(Sender: TObject);
 var
     i: integer;
     cp: TJabberCustomPres;
@@ -1843,7 +1854,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.trayShowClick(Sender: TObject);
+procedure TfrmExodus.trayShowClick(Sender: TObject);
 begin
     // Show the application from the popup Menu
     _hidden := false;
@@ -1851,32 +1862,32 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.trayExitClick(Sender: TObject);
+procedure TfrmExodus.trayExitClick(Sender: TObject);
 begin
     // Close the application
     Self.Close;
 end;
 
 {---------------------------------------}
-procedure TExodus.FormActivate(Sender: TObject);
+procedure TfrmExodus.FormActivate(Sender: TObject);
 begin
     // FlashWindow(Self.Handle, false);
 end;
 
 {---------------------------------------}
-function TExodus.IsAutoAway(): boolean;
+function TfrmExodus.IsAutoAway(): boolean;
 begin
     Result := _is_autoaway;
 end;
 
 {---------------------------------------}
-function TExodus.IsAutoXA(): boolean;
+function TfrmExodus.IsAutoXA(): boolean;
 begin
     Result := _is_autoxa;
 end;
 
 {---------------------------------------}
-procedure TExodus.ResetLastTick(value: longint);
+procedure TfrmExodus.ResetLastTick(value: longint);
 begin
     if (_windows_ver >= cWIN_2000) then exit;
 
@@ -1885,21 +1896,21 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.WinJabWebsite1Click(Sender: TObject);
+procedure TfrmExodus.WinJabWebsite1Click(Sender: TObject);
 begin
     // goto exodus.sf.net
     ShellExecute(0, 'open', 'http://exodus.sf.net', '', '', SW_SHOW);
 end;
 
 {---------------------------------------}
-procedure TExodus.JabberBugzilla1Click(Sender: TObject);
+procedure TfrmExodus.JabberBugzilla1Click(Sender: TObject);
 begin
     // submit a bug on SF.
     ShellExecute(0, 'open', 'http://sourceforge.net/tracker/?func=add&group_id=2049&atid=202049', '', '', SW_SHOW);
 end;
 
 {---------------------------------------}
-procedure TExodus.mnuVersionClick(Sender: TObject);
+procedure TfrmExodus.mnuVersionClick(Sender: TObject);
 var
     iq: TJabberIQ;
 begin
@@ -1914,7 +1925,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.mnuPasswordClick(Sender: TObject);
+procedure TfrmExodus.mnuPasswordClick(Sender: TObject);
 var
     iq: TJabberIQ;
     f : TfrmPassword;
@@ -1954,7 +1965,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.ChangePasswordCallback(event: string; tag: TXMLTag);
+procedure TfrmExodus.ChangePasswordCallback(event: string; tag: TXMLTag);
 begin
     if (event <> 'xml') then
         MessageDlg('Error changing password.', mtError, [mbOK], 0)
@@ -1967,7 +1978,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.AcceptFiles( var msg : TWMDropFiles );
+procedure TfrmExodus.AcceptFiles( var msg : TWMDropFiles );
 const
   cnMaxFileNameLen = 255;
 var
@@ -2012,13 +2023,13 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.FormDestroy(Sender: TObject);
+procedure TfrmExodus.FormDestroy(Sender: TObject);
 begin
     DragAcceptFiles(Handle, False);
 end;
 
 {---------------------------------------}
-procedure TExodus.RegisterwithaService1Click(Sender: TObject);
+procedure TfrmExodus.RegisterwithaService1Click(Sender: TObject);
 var
     tmps: string;
     f: TfrmRegister;
@@ -2034,7 +2045,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.TabsUnDock(Sender: TObject; Client: TControl;
+procedure TfrmExodus.TabsUnDock(Sender: TObject; Client: TControl;
   NewTarget: TWinControl; var Allow: Boolean);
 begin
     // check to see if the tab is a frmDockable
@@ -2044,11 +2055,30 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodus.TabsDockDrop(Sender: TObject; Source: TDragDockObject; X,
+procedure TfrmExodus.TabsDockDrop(Sender: TObject; Source: TDragDockObject; X,
   Y: Integer);
 begin
     if (Source.Control is TfrmDockable) then
         TfrmDockable(Source.Control).Docked := true;
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.mnuMessageClick(Sender: TObject);
+var
+    jid: string;
+    n: TTreeNode;
+    ritem: TJabberRosterItem;
+begin
+    jid := '';
+    if (frmRosterWindow.treeRoster.SelectionCount > 0) then begin
+        n := frmRosterWindow.treeRoster.Selected;
+        ritem := TJabberRosterItem(n.Data);
+        if ritem <> nil then
+            jid := ritem.jid.jid
+        end;
+
+    if InputQuery('Send a Message', 'Enter Jabber ID:', jid) then
+        StartMsg(jid);
 end;
 
 end.

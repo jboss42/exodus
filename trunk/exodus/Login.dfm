@@ -1,8 +1,8 @@
 object frmLogin: TfrmLogin
-  Left = 902
-  Top = 181
+  Left = 251
+  Top = 190
   Width = 250
-  Height = 297
+  Height = 300
   Caption = 'Jabber Login'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -136,7 +136,7 @@ object frmLogin: TfrmLogin
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 226
+    Top = 229
     Width = 242
     Height = 37
     Align = alBottom
@@ -149,12 +149,6 @@ object frmLogin: TfrmLogin
       Left = 80
       Width = 162
       Height = 32
-      inherited btnOK: TButton
-        Default = True
-      end
-      inherited btnCancel: TButton
-        Cancel = True
-      end
     end
   end
   object cboProfiles: TComboBox
@@ -209,7 +203,7 @@ object frmLogin: TfrmLogin
   object txtPort: TEdit
     Left = 98
     Top = 124
-    Width = 130
+    Width = 39
     Height = 21
     TabOrder = 5
     Text = '5222'

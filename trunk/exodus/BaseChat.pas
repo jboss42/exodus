@@ -71,7 +71,7 @@ begin
     l := MsgOut.ClientOrigin.x + cp.X;
 
     if (Self.Docked) then begin
-        t := frmJabber.Top + frmJabber.ClientHeight - 10;
+        t := frmExodus.Top + frmExodus.ClientHeight - 10;
         frmEmoticons.Left := l + 10;
         end
     else begin
@@ -101,8 +101,8 @@ begin
 
     for i := 0 to emoticon_list.Count - 1 do begin
         eo := TEmoticon(emoticon_list.Objects[i]);
-        if (((msn) and (eo.il = frmJabber.imgMSNEmoticons)) or
-        ((not msn) and (eo.il = frmJabber.imgYahooEmoticons))) then begin
+        if (((msn) and (eo.il = frmExodus.imgMSNEmoticons)) or
+        ((not msn) and (eo.il = frmExodus.imgYahooEmoticons))) then begin
             // the image lists match
             if (eo.idx = imgIndex) then begin
                 m := i;

@@ -85,10 +85,10 @@ procedure TfrmDockable.DockForm;
 begin
     // dock the window to the main form
     Self.SavePos();
-    Self.ManualDock(frmJabber.Tabs);
+    Self.ManualDock(frmExodus.Tabs);
     Self.Align := alClient;
     _docked := true;
-    Self.TabSheet := frmJabber.Tabs.Pages[frmJabber.Tabs.PageCount-1];
+    Self.TabSheet := frmExodus.Tabs.Pages[frmExodus.Tabs.PageCount-1];
 end;
 
 {---------------------------------------}
@@ -148,11 +148,11 @@ begin
         Self.Show;
         Self.Visible := true;
         if ((not Application.Active) or
-        (frmJabber.Tabs.ActivePage = frmJabber.tbsMsg)) then
-            frmJabber.Tabs.ActivePage := TabSheet;
+        (frmExodus.Tabs.ActivePage = frmExodus.tbsMsg)) then
+            frmExodus.Tabs.ActivePage := TabSheet;
         end
     else begin
-        if frmJabber.WindowState = wsMinimized then
+        if frmExodus.WindowState = wsMinimized then
             ShowWindow(Handle, SW_SHOWMINNOACTIVE)
         else
             ShowWindow(Handle, SW_SHOWNOACTIVATE);

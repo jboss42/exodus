@@ -65,7 +65,7 @@ begin
         // New Chat Window
         tmp_jid := TJabberID.Create(tag.getAttribute('from'));
         chat := StartChat(tmp_jid.jid, tmp_jid.resource, false);
-        chat.showMsg(tag);
+        chat.MsgCallback('xml', tag);
         tmp_jid.Free;
         end
 

@@ -120,6 +120,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure InvitetoConference1Click(Sender: TObject);
     procedure popGrpInviteClick(Sender: TObject);
+    procedure popSendContactsClick(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;
@@ -185,6 +186,7 @@ const
 
 implementation
 uses
+    RosterSend, 
     Invite, 
     Bookmark,
     S10n,
@@ -227,7 +229,7 @@ begin
     _show_status := MainSession.Prefs.getBool('inline_status');
     _status_color := TColor(MainSession.Prefs.getInt('inline_color'));
 
-    frmJabber.pnlRoster.ShowHint := not _show_status;
+    frmExodus.pnlRoster.ShowHint := not _show_status;
 
     Application.ShowHint := true;
     Application.OnShowHint := DoShowHint;
@@ -297,7 +299,7 @@ begin
         treeRoster.Font.Size := MainSession.Prefs.getInt('roster_font_size');
         treeRoster.Font.Color := TColor(MainSession.Prefs.getInt('roster_font_color'));
 
-        frmJabber.pnlRoster.ShowHint := not _show_status;
+        frmExodus.pnlRoster.ShowHint := not _show_status;
         Redraw();
         end
     else if event = '/session/server_prefs' then begin
@@ -326,7 +328,7 @@ var
 begin
     // callback from the session
     if event = '/roster/start' then begin
-        frmJabber.tabs.ActivePage := frmJabber.tbsMsg;
+        frmExodus.tabs.ActivePage := frmExodus.tbsMsg;
         _FullRoster := true;
         treeRoster.Items.BeginUpdate;
         ClearNodes();
@@ -901,7 +903,7 @@ procedure TfrmRosterWindow.DockRoster;
 begin
     // dock the window to the main form
     StatBar.Visible := false;
-    Self.ManualDock(frmJabber.pnlRoster, nil, alClient);
+    Self.ManualDock(frmExodus.pnlRoster, nil, alClient);
     Self.Align := alClient;
     Docked := true;
     MainSession.dock_windows := Docked;
@@ -1062,7 +1064,7 @@ begin
     if (getNodeType() <> node_ritem) then exit;
     if (_cur_ritem = nil) then exit;
 
-    iq := TJabberIQ.Create(MainSession, MainSession.generateID, frmJabber.CTCPCallback);
+    iq := TJabberIQ.Create(MainSession, MainSession.generateID, frmExodus.CTCPCallback);
     iq.iqType := 'get';
 
     p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
@@ -1345,13 +1347,13 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.popAddContactClick(Sender: TObject);
 begin
-    frmJabber.btnAddContactClick(Self);
+    frmExodus.btnAddContactClick(Self);
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popAddGroupClick(Sender: TObject);
 begin
-    frmJabber.NewGroup2Click(Self);
+    frmExodus.NewGroup2Click(Self);
 end;
 
 {---------------------------------------}
@@ -1530,6 +1532,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmRosterWindow.popGrpRemoveClick(Sender: TObject);
 var
     recips: TList;
@@ -1543,6 +1546,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmRosterWindow.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
@@ -1553,6 +1557,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmRosterWindow.InvitetoConference1Click(Sender: TObject);
 var
     jids: TStringList;
@@ -1566,6 +1571,7 @@ begin
     ShowInvite('', jids);
 end;
 
+{---------------------------------------}
 procedure TfrmRosterWindow.popGrpInviteClick(Sender: TObject);
 var
     i: integer;
@@ -1582,6 +1588,15 @@ begin
         end;
 
     ShowInvite('', jids);
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.popSendContactsClick(Sender: TObject);
+begin
+    // Send contacts to this JID..
+    if (_cur_ritem = nil) then exit;
+
+    SendRoster(_cur_ritem.jid.jid);
 end;
 
 end.

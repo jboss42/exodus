@@ -107,7 +107,7 @@ begin
     f.Show;
 
     if f.TabSheet <> nil then
-        frmJabber.Tabs.ActivePage := f.TabSheet;
+        frmExodus.Tabs.ActivePage := f.TabSheet;
 
     // either get the fields right away,
     // or pre-select the first item
