@@ -104,6 +104,7 @@ end;
 constructor TJabberMessage.Create(mTag: TXMLTag);
 var
     t: TXMLTag;
+    tmps: Widestring;
 begin
     // create a msg object based on the msg tag
     Create();
@@ -137,8 +138,12 @@ begin
             _time := Now()
         else begin
             // we have a delay tag
-            _time := JabberToDateTime(t.getAttribute('stamp'));
-        end
+            tmps := t.getAttribute('stamp');
+            if (tmps <> '') then
+                _time := JabberToDateTime(t.getAttribute('stamp'))
+            else
+                _time := Now();
+        end;
     end;
 end;
 
