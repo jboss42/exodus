@@ -131,11 +131,8 @@ var
 function getXferManager(): TfrmXferManager;
 
 procedure FileSend(tojid: string; fn: string = '');
-procedure FileReceive(tag: TXMLTag); overload;
-procedure FileReceive(from, url, desc: string); overload;
-
+procedure FileReceive(tag: TXMLTag);
 procedure SIStart(tag: TXMLTag);
-
 
 {---------------------------------------}
 {---------------------------------------}
@@ -162,17 +159,19 @@ const
     sXferTryingClose = 'Trying to close.';
     sXferDefaultDesc = 'Sending you a file.';
 
+// privates
+procedure StartFileSend(jid: Widestring; filename: Widestring); forward;
+procedure StartFileReceive(from, url, desc: string); forward;
+
 {---------------------------------------}
 procedure FileSend(tojid: string; fn: string = '');
 var
     tmp_id: TJabberID;
-    filename, url, ip, tmps: string;
+    tmps: string;
     pri: TJabberPres;
-    dp, p: integer;
-    jid, desc, dav_path: Widestring;
-    pkg: TFileXferPkg;
+    f: integer;
+    jid: Widestring;
 begin
-
     // Make sure the contact is online
     tmp_id := TJabberID.Create(tojid);
     if (tmp_id.resource = '') then begin
@@ -188,17 +187,27 @@ begin
     jid := tmps;
 
     if (fn <> '') then
-        filename := fn
+        StartFileSend(jid, fn)
     else begin
         if not getXferManager().OpenDialog1.Execute then begin
             if (getXferManager().box.ControlCount = 0) then
                 getXferManager().Close();
             exit;
         end;
-        
-        filename := getXferManager().OpenDialog1.Filename;
+        //filename := getXferManager().OpenDialog1.Filename;
+        for f := 0 to getXferManager().OpenDialog1.Files.Count - 1 do
+            StartFileSend(jid, getXferManager().OpenDialog1.Files[f]);
     end;
+end;
 
+{---------------------------------------}
+procedure StartFileSend(jid: Widestring; filename: Widestring);
+var
+    url, ip: string;
+    dp, p: integer;
+    desc, dav_path: Widestring;
+    pkg: TFileXferPkg;
+begin
     // Create a wrapper and call sendFile();
     pkg := TFileXferPkg.Create();
     pkg.recip := jid;
@@ -240,7 +249,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure FileReceive(tag: TXMLTag); overload;
+procedure FileReceive(tag: TXMLTag);
 var
     qTag, tmp_tag: TXMLTag;
     from, url, desc: string;
@@ -259,11 +268,11 @@ begin
         desc := tmp_tag.Data
     else
         desc := '';
-    FileReceive(from, url, desc);
+    StartFileReceive(from, url, desc);
 end;
 
 {---------------------------------------}
-procedure FileReceive(from, url, desc: string); overload;
+procedure StartFileReceive(from, url, desc: string);
 var
     pkg: TFileXferPkg;
     tmps: Widestring;
@@ -278,13 +287,9 @@ begin
     pkg.pathname := ExtractFilename(URLToFileName(url));
     pkg.desc := desc;
     pkg.mode := recv_oob;
-
     tmps := WideFormat(_(sXferRecv), [from]);
-
     tmp_jid.Free();
-
     getXferManager().RecvFile(pkg);
-
     DoNotify(getXferManager(), 'notify_oob', 'File from ' + tmps, ico_service);
 end;
 
@@ -355,11 +360,8 @@ begin
     pkg.size := SafeInt(f.GetAttribute('size'));
     pkg.packet := TXMLTag.Create(tag);
     pkg.desc := '';
-
     getXferManager().RecvFile(pkg);
-
     DoNotify(getXferManager(), 'notify_oob', 'File from ' + tmps, ico_service);
-
 end;
 
 {---------------------------------------}
@@ -815,9 +817,17 @@ end;
 
 {---------------------------------------}
 procedure TfrmXferManager.btnCloseClick(Sender: TObject);
+var
+    i: integer;
+    o: TObject;
 begin
-  inherited;
-    Self.Close();
+    for i := 0 to box.ControlCount - 1 do begin
+        o := TObject(box.Controls[i]);
+        if (o is TfSendStatus) then
+            TfSendStatus(o).kill()
+        else if (o is TfRecvStatus) then
+            TfRecvStatus(o).kill();
+    end;
 end;
 
 {---------------------------------------}
@@ -833,7 +843,7 @@ begin
         if (o is TfSendStatus) then
             TfSendStatus(o).kill()
         else if (o is TfRecvStatus) then
-            TfSendStatus(o).kill();
+            TfRecvStatus(o).kill();
     end;
 
     // only close if there are no frames left.

@@ -72,6 +72,7 @@ inherited frmXferManager: TfrmXferManager
     Top = 40
   end
   object OpenDialog1: TOpenDialog
+    Options = [ofHideReadOnly, ofAllowMultiSelect, ofEnableSizing]
     Left = 8
     Top = 40
   end

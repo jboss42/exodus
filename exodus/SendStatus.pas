@@ -387,21 +387,18 @@ end;
 {---------------------------------------}
 procedure TfSendStatus.EntityCallback(event: string; tag: TXMLTag);
 var
-    x, x2, x3: TXMLTag;
+    e: TJabberEntity;
 begin
     if (tag.getAttribute('from') <> _pkg.recip) then exit;
 
-    MainSession.UnRegisterCallback(_ent_cb);
-
     _iq := nil;
+    MainSession.UnRegisterCallback(_ent_cb);
     _recip_si := false;
 
     if ((event = '/session/entity/info') and (tag <> nil)) then begin
         // check for SI, and FTPROFILE
-        x := tag.QueryXPTag('/iq/query/feature[@var="' + XMLNS_SI + '"]');
-        x2 := tag.QueryXPTag('/iq/query/feature[@var="' + XMLNS_FTPROFILE + '"]');
-        x3 := tag.QueryXPTag('/iq/query/feature[@var="' + XMLNS_BYTESTREAMS + '"]');
-        if ((x <> nil) and (x2 <> nil) and (x3 <> nil)) then
+        e := jEntityCache.getByJid(_pkg.recip);
+        if (e.hasFeature(XMLNS_SI) and e.hasFeature(XMLNS_FTPROFILE) and e.hasFeature(XMLNS_BYTESTREAMS)) then
             _recip_si := true;
     end;
 
@@ -488,9 +485,11 @@ begin
             jl := TWidestringlist.Create();
             jEntityCache.getByIdentity('proxy', 'bytestreams', jl);
             for i := 0 to jl.Count - 1 do begin
-                p := THostPortPair.Create();
-                p.jid := jl[i];
-                shosts.AddObject(p.jid, p);
+                if (shosts.IndexOf(jl[i]) = -1) then begin
+                    p := THostPortPair.Create();
+                    p.jid := jl[i];
+                    shosts.AddObject(p.jid, p);
+                end;
             end;
             jl.Free();
 
@@ -800,10 +799,10 @@ var
     sh: TXMLTagList;
 begin
     // We are getting the address of a streamhost back
+    assert(_iq <> nil);
+    _iq := nil;
 
     if ((event = 'xml') and (tag.getAttribute('type') = 'result')) then begin
-        assert(_iq <> nil);
-        _iq := nil;
         sh := tag.QueryXPTags('/iq/query/streamhost');
         for j := 0 to sh.Count - 1 do begin
             i := shosts.indexOf(sh[j].GetAttribute('jid'));
@@ -880,6 +879,7 @@ begin
     // The stream host has told us that the channel is active.
     assert(_iq <> nil);
     _iq := nil;
+
     if (event = 'xml') then begin
         if (tag.GetAttribute('type') = 'result') then begin
             _state := send_sending;
@@ -975,6 +975,6 @@ end;
 
 initialization
     shosts := TWidestringlist.Create;
-
+    shosts.Duplicates := dupError;
 
 end.
