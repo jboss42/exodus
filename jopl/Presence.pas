@@ -28,7 +28,15 @@ uses
     Contnrs, SysUtils, classes;
 
 type
-    // <presence type="subscribe"
+    TJabberCustomPres = class
+    public
+        Status: string;
+        Show: string;
+        Priority: integer;
+        title: string;
+        hotkey: string;
+    end;
+
     TJabberPres = class(TXMLTag)
     private
     public
