@@ -1,43 +1,72 @@
-2004-02-27 08:14  pgmillard
+2004-03-02 08:14  pgmillard
 
 	* exodus/: default.po, version.h, version.nsi: daily build
 
-2004-02-27 01:23  llong
+2004-03-01 23:32  pgmillard
 
-	* exodus/locale/pt_PT/LC_MESSAGES/default.po: Translated the new
-	  strings to synchronize with version 1.97 of the main default.po
+	* exodus/Dockable.dfm, exodus/ExEvents.pas, exodus/Exodus.dof,
+	  exodus/ExodusCOM_TLB.pas, exodus/Jabber1.dfm,
+	  exodus/MsgQueue.dfm, exodus/MsgQueue.pas, exodus/buttonFrame.dfm,
+	  exodus/xdata.dfm, jopl/ChatController.pas: Queue'd chats are now
+	  saving to the spool properly.
 
-2004-02-26 23:00  pgmillard
+2004-03-01 17:37  pgmillard
 
-	* ChangeLog-RELEASE.txt: release build
+	* exodus/: ExEvents.pas, Exodus.dof, ExodusCOM_TLB.pas,
+	  MsgQueue.dfm, MsgQueue.pas, exodus-new.nsi: Fixup bugs found
+	  during use today with queue'd chats
 
-2004-02-26 22:56  pgmillard
+2004-03-01 08:56  rimas
 
-	* exodus/: default.po, version.h, version.nsi: release build
+	* exodus/locale/lt/LC_MESSAGES/default.po: Node ID related strings
+	  translated.
 
-2004-02-26 21:59  pgmillard
+2004-03-01 07:12  pgmillard
 
-	* build.pl, release.pl, exodus/exodus-new.nsi, jopl/Entity.pas:
-	  Modify the build script and installer to auto-build standalone
-	  installers when we are doing a release. Also fixup some entity
-	  stuff.
+	* exodus/: BaseChat.dfm, Dockable.dfm, ExodusCOM_TLB.pas,
+	  Jabber1.dfm, MsgQueue.dfm, xdata.dfm, prefs/PrefPanel.dfm: Queued
+	  chat windows.
 
-2004-02-26 21:42  pgmillard
+2004-02-29 22:55  pgmillard
 
-	* release.pl, exodus/JoinRoom.dfm, exodus/RosterWindow.pas: Try to
-	  reconcile collapsed grp memory & nested grps.
+	* exodus/ChatWin.pas, exodus/ExEvents.pas, exodus/GUIFactory.pas,
+	  exodus/MsgQueue.pas, exodus/MsgRecv.pas, exodus/RosterRecv.dfm,
+	  exodus/RosterRecv.pas, exodus/defaults.xml, exodus/invite.pas,
+	  exodus/xml.res, exodus/prefs/PrefMsg.dfm,
+	  exodus/prefs/PrefMsg.pas, jopl/Chat.pas, jopl/ChatController.pas,
+	  jopl/MsgList.pas, jopl/Session.pas, jopl/Signals.pas: Allow chats
+	  to be queued if they are offline or the user is DND
 
-2004-02-26 20:04  pgmillard
+2004-02-29 19:35  pgmillard
 
-	* exodus/default.po: stage build
+	* exodus/: About.dfm, About.pas: Bug #3413 - Fixup link to
+	  foood.net icons in About dialog.
 
-2004-02-26 19:50  pgmillard
+2004-02-29 19:20  pgmillard
 
-	* exodus/Dockable.pas: Bug #3407 - Fixup dockable form activation
-	  bug introduced last night.
+	* exodus/: RosterWindow.pas, exodus-new.nsi: Bug #3409 - Transports
+	  were not showing as available.
 
-2004-02-26 19:37  pgmillard
+2004-02-29 19:07  llong
 
-	* exodus/: Room.dfm, Room.pas: Don't try to setfocus on rooms after
-	  disconnecting.
+	* exodus/locale/fr/LC_MESSAGES/default.po: Updated from
+	  translator's post to exodus-dev dated 2004/02/29 to synchronize
+	  with version 1.98 of the main default.po (Just updates from last
+	  PO file)
+
+2004-02-28 16:12  rimas
+
+	* exodus/locale/lt/LC_MESSAGES/default.po: Translation update. A
+	  few strings (Those regarding Node ID) are left untranslated until
+	  someone explains me what they mean. :)
+
+2004-02-28 08:21  marian
+
+	* exodus/locale/pl/LC_MESSAGES/default.po: [no log message]
+
+2004-02-27 13:56  llong
+
+	* exodus/locale/sl/LC_MESSAGES/default.po: Updated from
+	  translator's post to exodus-dev dated 2004/02/05 to synchronize
+	  with version 1.97 of the main default.po
 
