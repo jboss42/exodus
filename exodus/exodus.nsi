@@ -1,3 +1,4 @@
+;; -*- tab-width: 4; -*-
 ;    Copyright 2003, Joe Hildebrand
 ;
 ;    This file is part of Exodus.
@@ -51,8 +52,9 @@ InstallDir "$PROGRAMFILES\${MUI_PRODUCT}"
 ; overwrite the old one automatically)
 InstallDirRegKey HKLM "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
 
-!define MUI_INNERTEXT_LICENSE_TOP "Exodus is licensed under the GPL.  Press Page Down to see the rest of the agreement."
-;!define MUI_CHECKBITMAP "checks.bmp"
+!define MUI_INNERTEXT_LICENSE_TOP \
+    "Exodus is licensed under the GPL.  Press Page Down to see the rest of the agreement."
+
 !define MUI_ICON "exodus.ico"
 !define MUI_UNICON "exodus.ico"
 
@@ -94,167 +96,208 @@ ReserveFile "notify.ini"
 
 ; The stuff to install
 Section "!${MUI_PRODUCT}" SEC_Exodus
-        ; this one is required
-        SectionIn 1 RO
+    ; this one is required
+    SectionIn 1 RO
 
-        ; shut down running instances
-        call NotifyInstances
+    ; shut down running instances
+    call NotifyInstances
 
-        ; Set output path to the installation directory.
-        SetOutPath $INSTDIR
-        File "Exodus.exe"
-	    File "IdleHooks.dll"
+    ; Set output path to the installation directory.
+    SetOutPath $INSTDIR
+    File "Exodus.exe"
+    File "IdleHooks.dll"
 
-        ; Setup stuff based on custom Shell page
-        Push $CMDLINE
-        Push "/S"
-        Call StrStr
-        Pop $0
-        StrCmp $0 "/S" noshell
+    ; Setup stuff based on custom Shell page
+    Push $CMDLINE
+    Push "/S"
+    Call StrStr
+    Pop $0
+    StrCmp $0 "/S" noshell
 
-        !insertmacro MUI_INSTALLOPTIONS_READ $R0 "notify.ini" "Field 2" "State"
-        StrCmp $R0 "1" "" +2
-            ;Checked
-            CreateShortcut "$DESKTOP\Exodus.lnk" "$INSTDIR\Exodus.exe"
+    !insertmacro MUI_INSTALLOPTIONS_READ $R0 "notify.ini" "Field 2" "State"
+    StrCmp $R0 "1" "" +2
+    ;Checked
+    CreateShortcut "$DESKTOP\Exodus.lnk" "$INSTDIR\Exodus.exe"
 
-        !insertmacro MUI_INSTALLOPTIONS_READ $R0 "notify.ini" "Field 3" "State"
-        StrCmp $R0 "1" "" +2
-            ;Checked
-            CreateShortcut "$QUICKLAUNCH\Exodus.lnk" "$INSTDIR\Exodus.exe"
-        !insertmacro MUI_INSTALLOPTIONS_READ $R0 "notify.ini" "Field 4" "State"
-        StrCmp $R0 "1" "" +2
-            ;Checked
-            CreateShortcut "$SMSTARTUP\Exodus.lnk" "$INSTDIR\Exodus.exe"
+    !insertmacro MUI_INSTALLOPTIONS_READ $R0 "notify.ini" "Field 3" "State"
+    StrCmp $R0 "1" "" +2
+    ;Checked
+    CreateShortcut "$QUICKLAUNCH\Exodus.lnk" "$INSTDIR\Exodus.exe"
+    !insertmacro MUI_INSTALLOPTIONS_READ $R0 "notify.ini" "Field 4" "State"
+    StrCmp $R0 "1" "" noshell
+    ;Checked
+;    CreateShortcut "$SMSTARTUP\Exodus.lnk" "$INSTDIR\Exodus.exe"
+    WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Run \
+        "Exodus" "$INSTDIR\Exodus.exe"  
 
-    noshell:
+  noshell:
 
-        ; BRANDING: Uncomment if you are doing a branded setup.
-        ; SetOverwrite off ; only if you don't want to overwrite existing file.
-        ; File "branding.xml"
-        ; SetOverwrite on
-
-        ; version(riched20) >= 5.30
-        GetDLLVersion "$SYSDIR\riched20.dll" $R0 $R1
-        IntOp $R1 $R0 / 65536
-        IntOp $R2 $R0 & 0x00FF
-        DetailPrint "Richedit version: $R1.$R2"
-
-        IntCmp 327710 $R0 lbl_reportVer lbl_reportVer
-
-        DetailPrint "Old version of richedit controls.  Upgrading."
+    ; BRANDING: Uncomment if you are doing a branded setup.
+    ; SetOverwrite off ; only if you don't want to overwrite existing file.
+    ; File "branding.xml"
+    ; SetOverwrite on
+    
+    ; version(riched20) >= 5.30
+    GetDLLVersion "$SYSDIR\riched20.dll" $R0 $R1
+    IntOp $R1 $R0 / 65536
+    IntOp $R2 $R0 & 0x00FF
+    DetailPrint "Richedit version: $R1.$R2"
+    
+	; if the installed version is >= to 5.30, skip ahead.
+    IntCmp 327710 $R0 lbl_reportVer lbl_reportVer
+    
+    DetailPrint "Old version of richedit controls.  Upgrading."
 !ifndef NO_NETWORK
-        ; BRANDING: change this URL
-        NSISdl::download "${HOME_URL}/richupd.exe" $INSTDIR\richupd.exe
-        StrCmp $0 "success" lbl_execrich
-            Abort "Error downloading richtext library"
+    ; BRANDING: change this URL
+    NSISdl::download "${HOME_URL}/richupd.exe" $INSTDIR\richupd.exe
+    Pop $R0
+    StrCmp $R0 "success" lbl_execrich
+    Abort "Error downloading richtext library"
   lbl_execrich:
 !else
-	    File richupd.exe
+    File ..\richupd.exe
 !endif
-        WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Runonce \
-          "Exodus-Setup" "$CMDLINE"
-        Exec $INSTDIR\richupd.exe
-        Quit
+    WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Runonce \
+        "Exodus-Setup" "$CMDLINE"
+    Exec $INSTDIR\richupd.exe
+    Quit
   lbl_reportVer:
-        DetailPrint "Richedit version ok."
+    DetailPrint "Richedit version ok."
+    
+    ; delete any leftover richupd.exe file.  This should not error
+    ; if the file doesn't exist.
+    Delete $INSTDIR\richupd.exe
+    
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ;; Update common controls, if needed 5.80
+    GetDLLVersion "$SYSDIR\comctl32.dll" $R0 $R1
+    IntOp $R1 $R0 / 65536
+    IntOp $R2 $R0 & 0x00FF
+    DetailPrint "Comctl version: $R1.$R2"
+    
+    ; (5 << 16) + 80 w00t!
+	; if the installed version is >= to 5.80, skip ahead.
+    IntCmp 327760 $R0 com_reportVer com_reportVer
+    
+    DetailPrint "Old version of COM controls.  Upgrading."
+!ifndef NO_NETWORK
+    ; BRANDING: change this URL
+    NSISdl::download "${HOME_URL}/50comupd.exe" $INSTDIR\50comupd.exe
+    Pop $R0
+    StrCmp $R0 "success" lbl_exec_com
+    Abort "Error downloading com control library"
+  lbl_exec_com:
+!else
+    File ..\50comupd.exe
+!endif
+    WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Runonce \
+        "Exodus-Setup" "$CMDLINE"
+    Exec $INSTDIR\50comupd.exe
+    Quit
+  com_reportVer:
+    DetailPrint "COM control version ok."
+    
+    ; delete any leftover 50comupd.exe file.  This should not error
+    ; if the file doesn't exist.
+    Delete $INSTDIR\50comupd.exe
 
-        ; delete any leftover richupd.exe file.  This should not error
-        ; if the file doesn't exist.
-        Delete $INSTDIR\richupd.exe
-
-        ; Write the installation path into the registry
-        WriteRegStr HKLM SOFTWARE\Jabber\Exodus "Install_Dir" "$INSTDIR"
-
-        ; Write the uninstall keys for Windows
-        WriteRegStr HKLM \
-          "Software\Microsoft\Windows\CurrentVersion\Uninstall\Exodus" \
-          "DisplayName" "Exodus Jabber Client (remove only)"
-        WriteRegStr HKLM \
-          "Software\Microsoft\Windows\CurrentVersion\Uninstall\Exodus" \
-          "UninstallString" '"$INSTDIR\uninstall.exe"'
-        WriteUninstaller "uninstall.exe"
-
-    	; register file associations.  TODO: figure this out for real, and
-    	; remove these semi-bogus ones.
-    	WriteRegStr HKCR .xmpp "" XMPPfile
-    	WriteRegStr HKCR .xmpp "Content Type" "application/xmpp"
-    	WriteRegStr HKCR XMPPfile "" "eXtensible Messaging and Presence Protocol"
-    	WriteRegDword HKCR XMPPfile "EditFlags" 0x10000
-    	WriteRegDword HKCR XMPPfile "BrowserFlags" 0x8
-    	WriteRegStr HKCR "XMPPfile\shell" "" "Open"
-    	WriteRegStr HKCR "XMPPfile\shell\Open\command" "" '"$INSTDIR\Exodus.exe" -o "%1"'
-    	WriteRegStr HKCR "MIME\Database\Content Type\application/xmpp" "Extension" ".xmpp"
-
-        StrCpy $0 0
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+    ; Write the installation path into the registry
+    WriteRegStr HKLM SOFTWARE\Jabber\Exodus "Install_Dir" "$INSTDIR"
+    
+    ; Write the uninstall keys for Windows
+    WriteRegStr HKLM \
+        "Software\Microsoft\Windows\CurrentVersion\Uninstall\Exodus" \
+        "DisplayName" "Exodus Jabber Client (remove only)"
+    WriteRegStr HKLM \
+        "Software\Microsoft\Windows\CurrentVersion\Uninstall\Exodus" \
+        "UninstallString" '"$INSTDIR\uninstall.exe"'
+    WriteUninstaller "uninstall.exe"
+    
+    ; register file associations.  TODO: figure this out for real, and
+    ; remove these semi-bogus ones.
+    WriteRegStr HKCR .xmpp "" XMPPfile
+    WriteRegStr HKCR .xmpp "Content Type" "application/xmpp"
+    WriteRegStr HKCR XMPPfile "" "eXtensible Messaging and Presence Protocol"
+    WriteRegDword HKCR XMPPfile "EditFlags" 0x10000
+    WriteRegDword HKCR XMPPfile "BrowserFlags" 0x8
+    WriteRegStr HKCR "XMPPfile\shell" "" "Open"
+    WriteRegStr HKCR "XMPPfile\shell\Open\command" "" \
+        '"$INSTDIR\Exodus.exe" -o "%1"'
+    WriteRegStr HKCR "MIME\Database\Content Type\application/xmpp" \
+        "Extension" ".xmpp"
+    
+    StrCpy $0 0
   outer_loop:
 
     EnumRegKey $1 HKLM "Software\Jabber\Exodus\Restart" $0
     StrCmp $1 "" abort
-
+    
     ReadRegStr $2 HKLM "Software\Jabber\Exodus\Restart\$1" "cwd"
     StrCmp $2 "" done
-        SetOutPath $2
-
+    SetOutPath $2
+    
     ReadRegStr $2 HKLM "Software\Jabber\Exodus\Restart\$1" "cmdline"
-
+    
     ReadRegDWORD $3 HKLM "Software\Jabber\Exodus\Restart\$1" "priority"
     StrCmp $3 "" done
 
     ReadRegStr $4 HKLM "Software\Jabber\Exodus\Restart\$1" "profile"
     StrCmp $4 "" show
-        StrCpy $4 '-f "$4"'
+    StrCpy $4 '-f "$4"'
 
   show:
     ReadRegStr $5 HKLM "Software\Jabber\Exodus\Restart\$1" "show"
-        StrCmp $5 "" status
-        StrCpy $5 '-w "$5"'
-
+    StrCmp $5 "" status
+    StrCpy $5 '-w "$5"'
+    
   status:
     ReadRegStr $6 HKLM "Software\Jabber\Exodus\Restart\$1" "status"
-        StrCmp $6 "" exec
-        StrCpy $6 '-s "$6"'
+    StrCmp $6 "" exec
+    StrCpy $6 '-s "$6"'
 
   exec:
-        DetailPrint '"$INSTDIR\Exodus.exe" $2 -i $3 $4 $5 $6'
-        Exec '"$INSTDIR\Exodus.exe" $2 -i $3 -f "$4" $5 $6'
-        SetAutoClose "true"
+    DetailPrint '"$INSTDIR\Exodus.exe" $2 -i $3 $4 $5 $6'
+    Exec '"$INSTDIR\Exodus.exe" $2 -i $3 -f "$4" $5 $6'
+    SetAutoClose "true"
 
   done:
-        DeleteRegKey HKLM "Software\Jabber\Exodus\Restart\$1"
+    DeleteRegKey HKLM "Software\Jabber\Exodus\Restart\$1"
 
 ;    IntOp $0 $0 + 1
-        Goto outer_loop
+    Goto outer_loop
   abort:
 
 SectionEnd ; end the section
 
 Section "SSL Support" SEC_SSL
 !ifndef NO_NETWORK
-        AddSize 824
+    AddSize 824
 !endif
-        IfFileExists $INSTDIR\ssleay32.dll libea need_ssl
+    IfFileExists $INSTDIR\ssleay32.dll libea need_ssl
   libea:
-        IfFileExists $INSTDIR\libeay32.dll no_ssl
+    IfFileExists $INSTDIR\libeay32.dll no_ssl
   need_ssl:
 
 !ifndef NO_NETWORK
-        ; BRANDING: Change this URL
-        NSISdl::download "${HOME_URL}/indy_openssl096g.zip" \
-                         $INSTDIR\indy_openssl096.zip
-        StrCmp $0 "success" ssl
-            Abort "Error downloading ssl libraries"
+    ; BRANDING: Change this URL
+    NSISdl::download "${HOME_URL}/indy_openssl096g.zip" \
+      $INSTDIR\indy_openssl096.zip
+    Pop $R0
+    StrCmp $R0 "success" ssl
+    Abort "Error downloading ssl libraries"
   ssl:
-        ZipDLL::extractall $INSTDIR $INSTDIR\indy_openssl096.zip
-        Delete $INSTDIR\indy_openssl096.zip
-	    Delete $INSTDIR\readme.txt
+    ZipDLL::extractall "$INSTDIR\indy_openssl096.zip" "$INSTDIR"
+    Delete $INSTDIR\indy_openssl096.zip
+    Delete $INSTDIR\readme.txt
 !else
-	File libeay32.dll
-	File ssleay32.dll
+    File libeay32.dll
+    File ssleay32.dll
 !endif
-        goto ssl_done
+    goto ssl_done
   no_ssl:
-        DetailPrint "SSL libraries already installed."
-        ssl_done:
+    DetailPrint "SSL libraries already installed."
+    ssl_done:
 SectionEnd
 
 ; BRANDING: Make sure to rename/copy the following files in
@@ -265,7 +308,7 @@ SectionEnd
 ;   example-plugin-en.nsi       --> plugin-en.nsi
 ;   example-plugin-off.nsi      --> plugin-off.nsi
 SubSection  "Plugins" SEC_Plugins
-	!include plugins\plugin-sections.nsi
+    !include plugins\plugin-sections.nsi
 SubSectionEnd
 
 ; Start menu shortcuts
@@ -287,11 +330,11 @@ Section "" SEC_Menu
     IfErrors dllregdone nextdll
 
   dllregdone:
-  	FindClose $0
-  	goto pluginend
+    FindClose $0
+    goto pluginend
 
   nodlls:
-  	DetailPrint "$0 $1 No dlls found in $INSTDIR\plugins"
+    DetailPrint "$0 $1 No dlls found in $INSTDIR\plugins"
 
   pluginend:
 
@@ -302,17 +345,17 @@ Section "" SEC_Menu
     Pop $0
     StrCmp $0 "/S" silent
     !insertmacro MUI_STARTMENU_WRITE_BEGIN
-      CreateDirectory "$SMPROGRAMS\${MUI_STARTMENUPAGE_VARIABLE}"
-      CreateShortCut "$SMPROGRAMS\${MUI_STARTMENUPAGE_VARIABLE}\Uninstall.lnk" \
+    CreateDirectory "$SMPROGRAMS\${MUI_STARTMENUPAGE_VARIABLE}"
+    CreateShortCut "$SMPROGRAMS\${MUI_STARTMENUPAGE_VARIABLE}\Uninstall.lnk" \
         "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
-      CreateShortCut "$SMPROGRAMS\${MUI_STARTMENUPAGE_VARIABLE}\Exodus.lnk" \
+    CreateShortCut "$SMPROGRAMS\${MUI_STARTMENUPAGE_VARIABLE}\Exodus.lnk" \
         "$INSTDIR\Exodus.exe" "" "$INSTDIR\Exodus.exe" 0
 
-      ; BRANDING: Change this URL
-      CreateShortCut \
+    ; BRANDING: Change this URL
+    CreateShortCut \
         "$SMPROGRAMS\${MUI_STARTMENUPAGE_VARIABLE}\Exodus Homepage.lnk" \
         "${HOME_URL}"
-      WriteRegStr HKLM SOFTWARE\Jabber\Exodus "StartMenu" \
+    WriteRegStr HKLM SOFTWARE\Jabber\Exodus "StartMenu" \
         "${MUI_STARTMENUPAGE_VARIABLE}"
 
     !insertmacro MUI_STARTMENU_WRITE_END
@@ -323,62 +366,62 @@ SectionEnd
 
 ; BRANDING: Remove this section
 Section "Daily updates" SEC_Bleed
-        SetOverwrite off
-        File "branding.xml"
-        SetOverwrite on
+    SetOverwrite off
+    File "branding.xml"
+    SetOverwrite on
 SectionEnd
 
 
 ; special uninstall section.
 ;UninstallText "This will uninstall Exodus.  Click Uninstall to continue."
 Section "Uninstall"
-  ; remove shortcuts
-  ReadRegStr $0 HKLM "SOFTWARE\Jabber\Exodus" "StartMenu"
-  StrCmp $0 "" noshortcuts
+    ; remove shortcuts
+    ReadRegStr $0 HKLM "SOFTWARE\Jabber\Exodus" "StartMenu"
+    StrCmp $0 "" noshortcuts
     Delete "$SMPROGRAMS\$0\Uninstall.lnk"
     Delete "$SMPROGRAMS\$0\Exodus.lnk"
     Delete "$SMPROGRAMS\$0\Exodus Homepage.lnk"
     RMDir "$SMPROGRAMS\$0"
   noshortcuts:
 
-  ; unregister all of the plugin .dll's
-  ClearErrors
-  FindFirst $0 $1 "$INSTDIR\plugins\*.dll"
-  IfErrors dllregdone
+    ; unregister all of the plugin .dll's
+    ClearErrors
+    FindFirst $0 $1 "$INSTDIR\plugins\*.dll"
+    IfErrors dllregdone
 
   nextdll:
-  UnRegDll "$INSTDIR\plugins\$1"
+    UnRegDll "$INSTDIR\plugins\$1"
 
-  ClearErrors
-  FindNext $0 $1
-  IfErrors dllregdone nextdll
+    ClearErrors
+    FindNext $0 $1
+    IfErrors dllregdone nextdll
 
   dllregdone:
-  FindClose $0
+    FindClose $0
 
-  ; remove plugins
-  Delete "$INSTDIR\plugins\*.dll"
-  RMDir "$INSTDIR\plugins"
+    ; remove plugins
+    Delete "$INSTDIR\plugins\*.dll"
+    RMDir "$INSTDIR\plugins"
+    
+    ; remove files
+    Delete $INSTDIR\Exodus.exe
+    Delete $INSTDIR\IdleHooks.dll
+    Delete $INSTDIR\branding.xml
+    Delete $INSTDIR\libeay32.dll
+    Delete $INSTDIR\ssleay32.dll
+    
+    ; MUST REMOVE UNINSTALLER, too
+    Delete $INSTDIR\uninstall.exe
+    RMDir "$INSTDIR"
 
-  ; remove files
-  Delete $INSTDIR\Exodus.exe
-  Delete $INSTDIR\IdleHooks.dll
-  Delete $INSTDIR\branding.xml
-  Delete $INSTDIR\libeay32.dll
-  Delete $INSTDIR\ssleay32.dll
+    ; xxx Remove prefs??
 
-  ; MUST REMOVE UNINSTALLER, too
-  Delete $INSTDIR\uninstall.exe
-  RMDir "$INSTDIR"
+    ; remove registry keys
+    DeleteRegKey HKLM \
+        "Software\Microsoft\Windows\CurrentVersion\Uninstall\Exodus"
 
-  ; xxx Remove prefs??
-
-  ; remove registry keys
-  DeleteRegKey HKLM \
-    "Software\Microsoft\Windows\CurrentVersion\Uninstall\Exodus"
-
-  DeleteRegKey HKLM SOFTWARE\Jabber\Exodus\Restart
-  DeleteRegKey HKLM SOFTWARE\Jabber\Exodus
+    DeleteRegKey HKLM SOFTWARE\Jabber\Exodus\Restart
+    DeleteRegKey HKLM SOFTWARE\Jabber\Exodus
 
 SectionEnd
 
@@ -390,25 +433,27 @@ SectionEnd
 
 ;Description
 LangString DESC_Exodus ${LANG_ENGLISH} \
-"The main exodus program."
+    "The main exodus program."
 
 LangString DESC_SSL ${LANG_ENGLISH} \
-"Download libraries for SSL connections via the Internet. Some proxies may not work correctly."
+    "Download libraries for SSL connections via the Internet. Some proxies may not work correctly."
 
 LangString DESC_Bleed ${LANG_ENGLISH} \
-"Check for the latest development build whenever you login. This can happen more than once a day."
+    "Check for the latest development build whenever you login. This can happen more than once a day."
 
 LangString DESC_Plugins ${LANG_ENGLISH} \
-"Download plugins via the Internet using your IE proxy settings. Will not work with auto-configured proxies."
+    "Download plugins via the Internet using your IE proxy settings. Will not work with auto-configured proxies."
 
 LangString DESC_Desktop ${LANG_ENGLISH} \
-"Put a shortcut to Exodus on your desktop."
+    "Put a shortcut to Exodus on your desktop."
 
 LangString DESC_QuickLaunch ${LANG_ENGLISH} \
-"Put a shortcut to Exodus in the Quick-Launch bar."
+    "Put a shortcut to Exodus in the Quick-Launch bar."
 
-LangString CUSTOMSHELL_TITLE ${LANG_ENGLISH} "Windows Dekstop and Shell Options"
-LangString CUSTOMSHELL_SUBTITLE ${LANG_ENGLISH} "Select options to install other shortcuts for Exodus."
+LangString CUSTOMSHELL_TITLE ${LANG_ENGLISH} \
+    "Windows Dekstop and Shell Options"
+LangString CUSTOMSHELL_SUBTITLE ${LANG_ENGLISH} \
+    "Select options to install other shortcuts for Exodus."
 
 ;LangString FINISH_TITLE ${LANG_ENGLISH} "Finished Installing Exodus"
 ;LangString FINISH_SUBTITLE ${LANG_ENGLISH} "Final options"
@@ -427,7 +472,6 @@ SubCaption 3 ": Exit running Exodus versions!"
     !include plugins\plugin-desc.nsi
 !insertmacro MUI_FUNCTIONS_DESCRIPTION_END
 
-
 !insertmacro MUI_SECTIONS_FINISHHEADER
 
 ; eof
@@ -437,37 +481,39 @@ SubCaption 3 ": Exit running Exodus versions!"
 ;
 ; Closes all running instances of Exodus
 Function NotifyInstances
-        Push $0
-        Push $1
+    Push $0
+    Push $1
 
-start:
-        StrCpy $1 0
+  start:
+    StrCpy $1 0
 
-        ; check to see if we have any instances
-        ; if we do, show a warning..
-        FindWindow $0 "TfrmExodus" "" 0
-        IntCmp $0 0 done
-        ; cancel
-;        Quit
-loop:
+    ; check to see if we have any instances
+    ; if we do, show a warning..
     FindWindow $0 "TfrmExodus" "" 0
     IntCmp $0 0 done
-        SendMessage $0 6374 0 0
-        Sleep 100
+    ; cancel
+    ; Quit
+  loop:
+    FindWindow $0 "TfrmExodus" "" 0
+    IntCmp $0 0 done
+    SendMessage $0 6374 0 0
+    Sleep 100
     IntOp $1 $1 + 1
     IntCmp $1 30 prompt
-        Goto loop
+    Goto loop
 
-prompt:
-        MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "You must exit all running copies of Exodus to continue!" IDRETRY start
-        ; cancel
-        Quit
+  prompt:
+    MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION \
+        "You must exit all running copies of Exodus to continue!" \
+        IDRETRY start
+    ; cancel
+    Quit
 
-done:
-        ; wait for shutdowns to complete
-        Sleep 1000
-        Pop $1
-        Pop $0
+  done:
+    ; wait for shutdowns to complete
+    Sleep 1000
+    Pop $1
+    Pop $0
 FunctionEnd
 
 ;------------------------------------------------------------------------------
@@ -485,19 +531,19 @@ FunctionEnd
 ;  ($0 at this point is "ass string")
 
 Function StrStr
-  Exch $1 ; st=haystack,old$1, $1=needle
-  Exch    ; st=old$1,haystack
-  Exch $2 ; st=old$1,old$2, $2=haystack
-  Push $3
-  Push $4
-  Push $5
-  StrLen $3 $1
-  StrCpy $4 0
-  ; $1=needle
-  ; $2=haystack
-  ; $3=len(needle)
-  ; $4=cnt
-  ; $5=tmp
+    Exch $1 ; st=haystack,old$1, $1=needle
+    Exch    ; st=old$1,haystack
+    Exch $2 ; st=old$1,old$2, $2=haystack
+    Push $3
+    Push $4
+    Push $5
+    StrLen $3 $1
+    StrCpy $4 0
+    ; $1=needle
+    ; $2=haystack
+    ; $3=len(needle)
+    ; $4=cnt
+    ; $5=tmp
   loop:
     StrCpy $5 $2 $3 $4
     StrCmp $5 $1 done
@@ -505,61 +551,61 @@ Function StrStr
     IntOp $4 $4 + 1
     Goto loop
   done:
-  StrCpy $1 $2 "" $4
-  Pop $5
-  Pop $4
-  Pop $3
-  Pop $2
-  Exch $1
+    StrCpy $1 $2 "" $4
+    Pop $5
+    Pop $4
+    Pop $3
+    Pop $2
+    Exch $1
 FunctionEnd
 
 Function DownloadPlugin
-	Exch $1
+    Exch $1
 
-  	CreateDirectory "$INSTDIR\plugins"
-  	; BRANDING: Change this URL
-  	NSISdl::download "${HOME_URL}/plugins/$1.zip" \
-                     "$INSTDIR\plugins\$1.zip"
-
-	StrCmp $0 "success" unzip
+    CreateDirectory "$INSTDIR\plugins"
+    ; BRANDING: Change this URL
+    NSISdl::download "${HOME_URL}/plugins/$1.zip" \
+        "$INSTDIR\plugins\$1.zip"
+    Pop $R0  
+    StrCmp $R0 "success" unzip
     Abort "Error downloading $1 plugin"
 
   unzip:
-  	ZipDLL::extractall "$INSTDIR\plugins" "$INSTDIR\plugins\$1.zip"
-  	Delete "$INSTDIR\plugins\$1.zip"
+    ZipDLL::extractall "$INSTDIR\plugins\$1.zip" "$INSTDIR\plugins"
+    Delete "$INSTDIR\plugins\$1.zip"
 FunctionEnd
 
 Function TurnOff
-	Exch $0
-	Push $1
-	SectionGetFlags $0 $1
-	IntOp $1 $1 & ${SECTION_OFF}
-	SectionSetFlags $0 $1
-	Pop $1
+    Exch $0
+    Push $1
+    SectionGetFlags $0 $1
+    IntOp $1 $1 & ${SECTION_OFF}
+    SectionSetFlags $0 $1
+    Pop $1
 FunctionEnd
 
 
 Function .onInit
-	!insertmacro MUI_INSTALLOPTIONS_EXTRACT "notify.ini"
-;	!insertmacro MUI_INSTALLOPTIONS_EXTRACT "finish.ini"
-	!include plugins\plugin-off.nsi
-	Push ${SEC_Plugins}
-	Call TurnOff
+    !insertmacro MUI_INSTALLOPTIONS_EXTRACT "notify.ini"
+    !include plugins\plugin-off.nsi
+    Push ${SEC_Plugins}
+    Call TurnOff
 
-	; BRANDING: To turn off bleeding edge updates,
-	; Comment these 2 lines out.
-	Push ${SEC_Bleed}
-	Call TurnOff
-
+    ; BRANDING: To turn off bleeding edge updates,
+    ; Comment these 2 lines out.
+    Push ${SEC_Bleed}
+    Call TurnOff
+    
 !ifndef NO_NETWORK
-	Push ${SEC_SSL}
-	Call TurnOff
+    Push ${SEC_SSL}
+    Call TurnOff
 !endif
 
 FunctionEnd
 
 Function SetCustomShell
-    !insertmacro MUI_HEADER_TEXT "$(CUSTOMSHELL_TITLE)" "$(CUSTOMSHELL_SUBTITLE)"
+    !insertmacro MUI_HEADER_TEXT "$(CUSTOMSHELL_TITLE)" \
+        "$(CUSTOMSHELL_SUBTITLE)"
 
     Push $R0
     Push $R1
