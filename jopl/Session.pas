@@ -363,8 +363,6 @@ begin
     _stream.Send('<presence type="unavailable"/>');
     _stream.Disconnect;
 
-    _stream.Free();
-    _stream := nil;
     _register := false;
 end;
 
@@ -401,6 +399,9 @@ begin
         Roster.Clear;
         Agents.Clear;
         ppdb.Clear;
+
+        _stream.Free();
+        _stream := nil;
         end
     else if msg = 'commerror' then
         _dispatcher.DispatchSignal('/session/commerror', nil)
