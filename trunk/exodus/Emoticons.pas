@@ -132,7 +132,7 @@ end;
 procedure TfrmEmoticons.FormDeactivate(Sender: TObject);
 begin
     if Self.Visible then
-        ModalResult := mrCancel;
+        Self.Hide();
 end;
 
 {---------------------------------------}
