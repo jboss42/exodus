@@ -59,10 +59,10 @@ chdir "plugins";
 grep unlink, glob("*.zip"); # rm *.zip
 grep unlink, glob("*.dll"); # rm *.dll
   
-open OFF,">plugin-off.nsi" or die $!;
-open SEC,">plugin-sections.nsi" or die $!;
-open DESC,">plugin-desc.nsi" or die $!;
-open EN,">plugin-en.nsi" or die $!;
+open OFF,">plugin-off-new.nsi" or die $!;
+open SEC,">plugin-sections-new.nsi" or die $!;
+open DESC,">plugin-desc-new.nsi" or die $!;
+open EN,">plugin-en-new.nsi" or die $!;
 
 # for each non-CVS directory
 my $f;
@@ -85,11 +85,11 @@ unlink "Exodus.zip";
 e('zip Exodus.zip @zipfiles.txt ' . join(' ', glob("plugins/*.dll")));
 
 if ($rtype eq "daily") {
-  e("$::NSIS /v1 /DDAILY exodus.nsi");
+  e("$::NSIS /v1 /DDAILY exodus-new.nsi");
 } elsif ($rtype eq "stage") {
-  e("$::NSIS /v1 /DSTAGE exodus.nsi");  
+  e("$::NSIS /v1 /DSTAGE exodus-new.nsi");  
 } else {
-  e("$::NSIS /v1 exodus.nsi");
+  e("$::NSIS /v1 exodus-new.nsi");
 }
   
 print "SUCCESS!!!\n";

@@ -34,9 +34,10 @@
 /*
     include the installer plugin localization strings
 */
-!include "plugin-locale.nsh"
+!include "plugin-locale-new.nsh"
 
 ; Only Admins allowed to install message (MSG_NoAdmin)
+!ifdef USE_HKLM_KEY
     !define i18n_MSG_NoAdmin_EN "Only members of the Administrators group may run this application."
     !define i18n_MSG_NoAdmin_CA "${i18n_MSG_NoAdmin_EN}"
     !define i18n_MSG_NoAdmin_CZ "${i18n_MSG_NoAdmin_EN}"
@@ -55,6 +56,7 @@
     !define i18n_MSG_NoAdmin_RU "${i18n_MSG_NoAdmin_EN}"
     !define i18n_MSG_NoAdmin_SL "${i18n_MSG_NoAdmin_EN}"
     !define i18n_MSG_NoAdmin_ZH "${i18n_MSG_NoAdmin_EN}"
+!endif
 
 ; GPL License text file
 !define i18n_GPL_License_EN "GPL-LICENSE.TXT"
@@ -817,6 +819,86 @@
 !define i18n_DESC_CustomShellField5_RU "${i18n_DESC_CustomShellField5_EN}"
 !define i18n_DESC_CustomShellField5_SL "${i18n_DESC_CustomShellField5_EN}"
 !define i18n_DESC_CustomShellField5_ZH "${i18n_DESC_CustomShellField5_EN}"
+
+; User logs removal window caption (UNCUSTOMSHELL_TITLE)
+!define i18n_UNCUSTOMSHELL_TITLE_EN "Uninstaller Extra Options"
+!define i18n_UNCUSTOMSHELL_TITLE_CA "${i18n_UNCUSTOMSHELL_TITLE_EN}"
+!define i18n_UNCUSTOMSHELL_TITLE_CZ "${i18n_UNCUSTOMSHELL_TITLE_EN}"
+!define i18n_UNCUSTOMSHELL_TITLE_DA "${i18n_UNCUSTOMSHELL_TITLE_EN}"
+!define i18n_UNCUSTOMSHELL_TITLE_DE "${i18n_UNCUSTOMSHELL_TITLE_EN}"
+!define i18n_UNCUSTOMSHELL_TITLE_ES "${i18n_UNCUSTOMSHELL_TITLE_EN}"
+!define i18n_UNCUSTOMSHELL_TITLE_FR "${i18n_UNCUSTOMSHELL_TITLE_EN}"
+!define i18n_UNCUSTOMSHELL_TITLE_JA "${i18n_UNCUSTOMSHELL_TITLE_EN}"
+!define i18n_UNCUSTOMSHELL_TITLE_KO "${i18n_UNCUSTOMSHELL_TITLE_EN}"
+!define i18n_UNCUSTOMSHELL_TITLE_LT "${i18n_UNCUSTOMSHELL_TITLE_EN}"
+!define i18n_UNCUSTOMSHELL_TITLE_NL "${i18n_UNCUSTOMSHELL_TITLE_EN}"
+!define i18n_UNCUSTOMSHELL_TITLE_NO "${i18n_UNCUSTOMSHELL_TITLE_EN}"
+!define i18n_UNCUSTOMSHELL_TITLE_PL "${i18n_UNCUSTOMSHELL_TITLE_EN}"
+!define i18n_UNCUSTOMSHELL_TITLE_PT_BR "${i18n_UNCUSTOMSHELL_TITLE_EN}"
+!define i18n_UNCUSTOMSHELL_TITLE_PT_PT "Opções extra do desinstalador"
+!define i18n_UNCUSTOMSHELL_TITLE_RU "${i18n_UNCUSTOMSHELL_TITLE_EN}"
+!define i18n_UNCUSTOMSHELL_TITLE_SL "${i18n_UNCUSTOMSHELL_TITLE_EN}"
+!define i18n_UNCUSTOMSHELL_TITLE_ZH "${i18n_UNCUSTOMSHELL_TITLE_EN}"
+
+; User logs removal window subcaption (UNCUSTOMSHELL_SUBTITLE)
+!define i18n_UNCUSTOMSHELL_SUBTITLE_EN "Select extra uninstall cleanup actions to perform."
+!define i18n_UNCUSTOMSHELL_SUBTITLE_CA "${i18n_UNCUSTOMSHELL_SUBTITLE_EN}"
+!define i18n_UNCUSTOMSHELL_SUBTITLE_CZ "${i18n_UNCUSTOMSHELL_SUBTITLE_EN}"
+!define i18n_UNCUSTOMSHELL_SUBTITLE_DA "${i18n_UNCUSTOMSHELL_SUBTITLE_EN}"
+!define i18n_UNCUSTOMSHELL_SUBTITLE_DE "${i18n_UNCUSTOMSHELL_SUBTITLE_EN}"
+!define i18n_UNCUSTOMSHELL_SUBTITLE_ES "${i18n_UNCUSTOMSHELL_SUBTITLE_EN}"
+!define i18n_UNCUSTOMSHELL_SUBTITLE_FR "${i18n_UNCUSTOMSHELL_SUBTITLE_EN}"
+!define i18n_UNCUSTOMSHELL_SUBTITLE_JA "${i18n_UNCUSTOMSHELL_SUBTITLE_EN}"
+!define i18n_UNCUSTOMSHELL_SUBTITLE_KO "${i18n_UNCUSTOMSHELL_SUBTITLE_EN}"
+!define i18n_UNCUSTOMSHELL_SUBTITLE_LT "${i18n_UNCUSTOMSHELL_SUBTITLE_EN}"
+!define i18n_UNCUSTOMSHELL_SUBTITLE_NL "${i18n_UNCUSTOMSHELL_SUBTITLE_EN}"
+!define i18n_UNCUSTOMSHELL_SUBTITLE_NO "${i18n_UNCUSTOMSHELL_SUBTITLE_EN}"
+!define i18n_UNCUSTOMSHELL_SUBTITLE_PL "${i18n_UNCUSTOMSHELL_SUBTITLE_EN}"
+!define i18n_UNCUSTOMSHELL_SUBTITLE_PT_BR "${i18n_UNCUSTOMSHELL_SUBTITLE_EN}"
+!define i18n_UNCUSTOMSHELL_SUBTITLE_PT_PT "Acções extra a executar durante a desinstalação."
+!define i18n_UNCUSTOMSHELL_SUBTITLE_RU "${i18n_UNCUSTOMSHELL_SUBTITLE_EN}"
+!define i18n_UNCUSTOMSHELL_SUBTITLE_SL "${i18n_UNCUSTOMSHELL_SUBTITLE_EN}"
+!define i18n_UNCUSTOMSHELL_SUBTITLE_ZH "${i18n_UNCUSTOMSHELL_SUBTITLE_EN}"
+
+; unCustomShell Field1 description (DESC_unCustomShellField1)
+!define i18n_DESC_unCustomShellField1_EN "Select Uninstall Extra Actions"
+!define i18n_DESC_unCustomShellField1_CA "${i18n_DESC_unCustomShellField1_EN}"
+!define i18n_DESC_unCustomShellField1_CZ "${i18n_DESC_unCustomShellField1_EN}"
+!define i18n_DESC_unCustomShellField1_DA "${i18n_DESC_unCustomShellField1_EN}"
+!define i18n_DESC_unCustomShellField1_DE "${i18n_DESC_unCustomShellField1_EN}"
+!define i18n_DESC_unCustomShellField1_ES "${i18n_DESC_unCustomShellField1_EN}"
+!define i18n_DESC_unCustomShellField1_FR "${i18n_DESC_unCustomShellField1_EN}"
+!define i18n_DESC_unCustomShellField1_JA "${i18n_DESC_unCustomShellField1_EN}"
+!define i18n_DESC_unCustomShellField1_KO "${i18n_DESC_unCustomShellField1_EN}"
+!define i18n_DESC_unCustomShellField1_LT "${i18n_DESC_unCustomShellField1_EN}"
+!define i18n_DESC_unCustomShellField1_NL "${i18n_DESC_unCustomShellField1_EN}"
+!define i18n_DESC_unCustomShellField1_NO "${i18n_DESC_unCustomShellField1_EN}"
+!define i18n_DESC_unCustomShellField1_PL "${i18n_DESC_unCustomShellField1_EN}"
+!define i18n_DESC_unCustomShellField1_PT_BR "${i18n_DESC_unCustomShellField1_EN}"
+!define i18n_DESC_unCustomShellField1_PT_PT "Seleccione as Acções Extra do Desinstalador"
+!define i18n_DESC_unCustomShellField1_RU "${i18n_DESC_unCustomShellField1_EN}"
+!define i18n_DESC_unCustomShellField1_SL "${i18n_DESC_unCustomShellField1_EN}"
+!define i18n_DESC_unCustomShellField1_ZH "${i18n_DESC_unCustomShellField1_EN}"
+
+; unCustomShell Field2 description (DESC_unCustomShellField2)
+!define i18n_DESC_unCustomShellField2_EN "Remove Exodus Log Files"
+!define i18n_DESC_unCustomShellField2_CA "${i18n_DESC_unCustomShellField2_EN}"
+!define i18n_DESC_unCustomShellField2_CZ "${i18n_DESC_unCustomShellField2_EN}"
+!define i18n_DESC_unCustomShellField2_DA "${i18n_DESC_unCustomShellField2_EN}"
+!define i18n_DESC_unCustomShellField2_DE "${i18n_DESC_unCustomShellField2_EN}"
+!define i18n_DESC_unCustomShellField2_ES "${i18n_DESC_unCustomShellField2_EN}"
+!define i18n_DESC_unCustomShellField2_FR "${i18n_DESC_unCustomShellField2_EN}"
+!define i18n_DESC_unCustomShellField2_JA "${i18n_DESC_unCustomShellField2_EN}"
+!define i18n_DESC_unCustomShellField2_KO "${i18n_DESC_unCustomShellField2_EN}"
+!define i18n_DESC_unCustomShellField2_LT "${i18n_DESC_unCustomShellField2_EN}"
+!define i18n_DESC_unCustomShellField2_NL "${i18n_DESC_unCustomShellField2_EN}"
+!define i18n_DESC_unCustomShellField2_NO "${i18n_DESC_unCustomShellField2_EN}"
+!define i18n_DESC_unCustomShellField2_PL "${i18n_DESC_unCustomShellField2_EN}"
+!define i18n_DESC_unCustomShellField2_PT_BR "${i18n_DESC_unCustomShellField2_EN}"
+!define i18n_DESC_unCustomShellField2_PT_PT "Remover os ficheiros de registo de actividade"
+!define i18n_DESC_unCustomShellField2_RU "${i18n_DESC_unCustomShellField2_EN}"
+!define i18n_DESC_unCustomShellField2_SL "${i18n_DESC_unCustomShellField2_EN}"
+!define i18n_DESC_unCustomShellField2_ZH "${i18n_DESC_unCustomShellField2_EN}"
 
 /*
 ; #Subject#
