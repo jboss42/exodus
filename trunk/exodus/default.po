@@ -6,13 +6,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-12-10 06:53\n"
-"PO-Revision-Date: 2003-12-10 06:53\n"
+"POT-Creation-Date: 2003-12-10 08:40\n"
+"PO-Revision-Date: 2003-12-10 08:40\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: dxgettext 1.2 beta 2\n"
+"X-Generator: dxgettext 1.1.1\n"
 
 #. frmAbout..Caption
 #: About.dfm:8
@@ -100,7 +100,7 @@ msgstr ""
 #. frmRemove..Font.Name
 #: RemoveContact.dfm:14
 #. frmRemove..lblJID..Font.Name
-#: RemoveContact.dfm:105
+#: RemoveContact.dfm:107
 #. frmRiser..Font.Name
 #: RiserWindow.dfm:13
 #. frmRoom..Panel1..pnlSubj..lblSubjectURL..Font.Name
@@ -473,8 +473,43 @@ msgstr ""
 msgid "What's New?"
 msgstr ""
 
+#. frmAutoUpdateStatus..Panel1..Panel2..btnOK..Caption
+#: AutoUpdateStatus.dfm:94
+#. frameButtons..Panel2..Panel1..btnOK..Caption
+#: buttonFrame.dfm:37
+#. frmTracer..frameButtons1..Panel1..btnCancel..Caption
+#: ExceptTracer.dfm:36
+#. frmPrefs..Panel1..Panel3..btnOK..Caption
+#: Prefs.dfm:3162
+#. frmSSLWarn..frameButtons1..Panel2..Panel1..btnCancel..Caption
+#: SSLWarn.dfm:182
+msgid "OK"
+msgstr ""
+
+#. frmAutoUpdateStatus..Panel1..Panel2..btnSkip..Caption
+#: AutoUpdateStatus.dfm:104
+msgid "Skip"
+msgstr ""
+
+#. frmAutoUpdateStatus..Panel1..Panel2..btnCancel..Caption
+#: AutoUpdateStatus.dfm:114
+#. frameButtons..Panel2..Panel1..btnCancel..Caption
+#: buttonFrame.dfm:48
+#. frmDockWizard..TntPanel1..btnCancel..Caption
+#: DockWizard.dfm:55
+#. frmPrefs..Panel1..Panel3..btnCancel..Caption
+#: Prefs.dfm:3172
+#. fRecvStatus..Panel1..btnCancel..Caption
+#: RecvStatus.dfm:100
+#. fSendStatus..Panel1..btnCancel..Caption
+#: SendStatus.dfm:20
+#. frmWizard..TntPanel1..Panel3..btnCancel..Caption
+#: Wizard.dfm:63
+msgid "Cancel"
+msgstr ""
+
 #. frmAutoUpdateStatus..HttpClient..Request.ContentType
-#: AutoUpdateStatus.dfm:101
+#: AutoUpdateStatus.dfm:131
 #. fRecvStatus..httpClient..Request.ContentType
 #: RecvStatus.dfm:114
 #. fSendStatus..httpClient..Request.ContentType
@@ -485,7 +520,7 @@ msgid "text/html"
 msgstr ""
 
 #. frmAutoUpdateStatus..HttpClient..Request.Accept
-#: AutoUpdateStatus.dfm:102
+#: AutoUpdateStatus.dfm:132
 #. fRecvStatus..httpClient..Request.Accept
 #: RecvStatus.dfm:115
 #. fSendStatus..httpClient..Request.Accept
@@ -496,7 +531,7 @@ msgid "text/html, */*"
 msgstr ""
 
 #. frmAutoUpdateStatus..HttpClient..Request.UserAgent
-#: AutoUpdateStatus.dfm:104
+#: AutoUpdateStatus.dfm:134
 #. fRecvStatus..httpClient..Request.UserAgent
 #: RecvStatus.dfm:117
 #. fSendStatus..httpClient..Request.UserAgent
@@ -599,7 +634,7 @@ msgstr ""
 #. frmExodus..popTray..N01..Caption
 #: Jabber1.dfm:2707
 #. frmJud..PopupMenu1..N1..Caption
-#: Jud.dfm:211
+#: jud.dfm:211
 #. frmMsgRecv..popContact..N1..Caption
 #: MsgRecv.dfm:518
 #. frmMsgRecv..popContact..N2..Caption
@@ -692,7 +727,7 @@ msgstr ""
 #. frmBrowse..Panel3..vwBrowse......Caption
 #: Browser.dfm:44
 #. frmInvite..pnlMain..lstJIDS......Caption
-#: invite.dfm:75
+#: invite.dfm:77
 #. frmRoomAdminList..lstItems......Caption
 #: RoomAdminList.dfm:88
 #. frmRosterRecv..lvContacts......Caption
@@ -938,32 +973,6 @@ msgstr ""
 #. frmBrowse..popContext..mJoinConf..Caption
 #: Browser.dfm:3854
 msgid "Join Conference"
-msgstr ""
-
-#. frameButtons..Panel2..Panel1..btnOK..Caption
-#: buttonFrame.dfm:37
-#. frmTracer..frameButtons1..Panel1..btnCancel..Caption
-#: ExceptTracer.dfm:36
-#. frmPrefs..Panel1..Panel3..btnOK..Caption
-#: Prefs.dfm:3162
-#. frmSSLWarn..frameButtons1..Panel2..Panel1..btnCancel..Caption
-#: SSLWarn.dfm:182
-msgid "OK"
-msgstr ""
-
-#. frameButtons..Panel2..Panel1..btnCancel..Caption
-#: buttonFrame.dfm:48
-#. frmDockWizard..TntPanel1..btnCancel..Caption
-#: DockWizard.dfm:55
-#. frmPrefs..Panel1..Panel3..btnCancel..Caption
-#: Prefs.dfm:3172
-#. fRecvStatus..Panel1..btnCancel..Caption
-#: RecvStatus.dfm:100
-#. fSendStatus..Panel1..btnCancel..Caption
-#: SendStatus.dfm:20
-#. frmWizard..TntPanel1..Panel3..btnCancel..Caption
-#: Wizard.dfm:63
-msgid "Cancel"
 msgstr ""
 
 #. frmChat..Caption
@@ -1740,22 +1749,22 @@ msgid "Remove Contacts"
 msgstr ""
 
 #. frmGrpRemove..optMove..Caption
-#: GrpRemove.dfm:48
+#: GrpRemove.dfm:50
 msgid "Move contacts to another group:"
 msgstr ""
 
 #. frmGrpRemove..optNuke..Caption
-#: GrpRemove.dfm:68
+#: GrpRemove.dfm:70
 msgid "Remove all contacts in this group:"
 msgstr ""
 
 #. frmGrpRemove..chkUnsub..Caption
-#: GrpRemove.dfm:76
+#: GrpRemove.dfm:78
 msgid "Remove these contacts from my roster."
 msgstr ""
 
 #. frmGrpRemove..chkUnsubed..Caption
-#: GrpRemove.dfm:86
+#: GrpRemove.dfm:88
 msgid "Force the contacts to remove me from their "
 "roster"
 msgstr ""
@@ -1780,7 +1789,7 @@ msgstr ""
 #. frmInvalidRoster..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: InvalidRoster.dfm:36
 #. frmInvite..pnlMain..Panel1..btnRemove..Caption
-#: invite.dfm:99
+#: invite.dfm:101
 #. frmRosterWindow..popRoster..popRemove..Caption
 #: RosterWindow.dfm:382
 #. frmRosterWindow..popGroup..popGrpRemove..Caption
@@ -1826,7 +1835,7 @@ msgid "Invite to Conference"
 msgstr ""
 
 #. frmInvite..pnlMain..lstJIDS......Caption
-#: invite.dfm:71
+#: invite.dfm:73
 #. frmRosterRecv..lvContacts......Caption
 #: RosterRecv.dfm:200
 #. frmRosterWindow..pnlFind..radNick..Caption
@@ -1835,7 +1844,7 @@ msgid "Nickname"
 msgstr ""
 
 #. frmInvite..pnlMain..Panel1..btnAdd..Caption
-#: invite.dfm:108
+#: invite.dfm:110
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Caption
 #: Jabber1.dfm:148
 #. frmPrefPlugins..btnAddPlugin..Caption
@@ -1846,17 +1855,17 @@ msgid "Add"
 msgstr ""
 
 #. frmInvite..pnlMain..Panel2..Label2..Caption
-#: invite.dfm:127
+#: invite.dfm:129
 msgid "Reason:"
 msgstr ""
 
 #. frmInvite..pnlMain..Panel2..Label1..Caption
-#: invite.dfm:135
+#: invite.dfm:137
 msgid "Invite the following contacts to:"
 msgstr ""
 
 #. frmInvite..pnlMain..Panel2..memReason....Lines.WideStrings
-#: invite.dfm:144
+#: invite.dfm:146
 msgid "Please join us in this conference room."
 msgstr ""
 
@@ -1895,7 +1904,7 @@ msgstr ""
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Hint
 #: Jabber1.dfm:145
 #. frmJud..PopupMenu1..popAdd..Caption
-#: Jud.dfm:203
+#: jud.dfm:203
 #. frmAdd..Caption
 #: RosterAdd.dfm:6
 #. frmRosterWindow..popActions..popAddContact..Caption
@@ -2204,7 +2213,7 @@ msgstr ""
 #. frmExodus..popTray..trayMessage..Caption
 #: Jabber1.dfm:2695
 #. frmJud..PopupMenu1..popMessage..Caption
-#: Jud.dfm:218
+#: jud.dfm:218
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
 #: subscribe.dfm:146
 msgid "Send Message"
@@ -2287,7 +2296,7 @@ msgstr ""
 #. frmJoinRoom..Tabs..TabSheet2..Caption
 #: JoinRoom.dfm:148
 #. frmJud..Tabs..TabSheet2..Caption
-#: Jud.dfm:77
+#: jud.dfm:77
 #. frmRegister..Tabs..TabSheet2..Caption
 #: RegForm.dfm:78
 msgid "TabSheet2"
@@ -2321,74 +2330,74 @@ msgid "Fetch Rooms"
 msgstr ""
 
 #. frmJud..Caption
-#: Jud.dfm:5
+#: jud.dfm:5
 msgid "Jabber Search"
 msgstr ""
 
 #. frmJud..Panel1..lblWizardTitle..Caption
-#: Jud.dfm:42
+#: jud.dfm:42
 msgid "Jabber Search Wizard"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet1..lblSelect....Align
-#: Jud.dfm:63
+#: jud.dfm:63
 msgid "Select the user database or enter in the Jabber ID of the search "
 "agent to use:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet2..lblWait..Caption
-#: Jud.dfm:85
+#: jud.dfm:85
 msgid "Please wait. Contacting search agent:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..Caption
-#: Jud.dfm:99
+#: jud.dfm:99
 #. frmRegister..Tabs..TabSheet3..Caption
 #: RegForm.dfm:113
 msgid "TabSheet3"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..lblInstructions..Caption
-#: Jud.dfm:107
+#: jud.dfm:107
 msgid "Fill in the search criteria to find contacts "
 "on."
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Caption
-#: Jud.dfm:123
+#: jud.dfm:123
 #. frmRegister..Tabs..TabSheet4..Caption
 #: RegForm.dfm:133
 msgid "TabSheet4"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Label3..Caption
-#: Jud.dfm:139
+#: jud.dfm:139
 msgid "Add Contacts to this group:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Caption
-#: Jud.dfm:147
+#: jud.dfm:147
 #. frmAdd..lblAddGrp..Caption
 #: RosterAdd.dfm:48
 msgid "Add a new Group"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Button1..Caption
-#: Jud.dfm:167
+#: jud.dfm:167
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: RosterRecv.dfm:44
-#: Jud.pas:641
-#: Jud.pas:643
+#: jud.pas:641
+#: jud.pas:643
 msgid "Add Contacts"
 msgstr ""
 
 #. frmJud..PopupMenu1..popProfile..Caption
-#: Jud.dfm:207
+#: jud.dfm:207
 msgid "View Profile"
 msgstr ""
 
 #. frmJud..PopupMenu1..popChat..Caption
-#: Jud.dfm:214
+#: jud.dfm:214
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:142
 #: Jabber1.pas:2271
@@ -5787,28 +5796,28 @@ msgid "Your Registration to this service has Failed! Press Previous to go "
 msgstr ""
 
 #. frmRemove..optMove..Caption
-#: RemoveContact.dfm:59
+#: RemoveContact.dfm:61
 msgid "Remove this contact from this group"
 msgstr ""
 
 #. frmRemove..optRemove..Caption
-#: RemoveContact.dfm:68
+#: RemoveContact.dfm:70
 msgid "Remove this contact from my roster."
 msgstr ""
 
 #. frmRemove..chkRemove1..Caption
-#: RemoveContact.dfm:79
+#: RemoveContact.dfm:81
 msgid "Remove this person from my roster."
 msgstr ""
 
 #. frmRemove..chkRemove2..Caption
-#: RemoveContact.dfm:89
+#: RemoveContact.dfm:91
 msgid "Force this person to remove me from their "
 "roster"
 msgstr ""
 
 #. frmRemove..lblJID..Caption
-#: RemoveContact.dfm:100
+#: RemoveContact.dfm:102
 #. frmRosterWindow..StatBar......Text
 #: RosterWindow.dfm:182
 msgid "foo@jabber.org"
@@ -6026,27 +6035,27 @@ msgid "Gateway Server:"
 msgstr ""
 
 #. frmAdd..cboType....Items.WideStrings
-#: RosterAdd.dfm:126
+#: RosterAdd.dfm:128
 msgid "Jabber"
 msgstr ""
 
 #. frmAdd..cboType....Items.WideStrings
-#: RosterAdd.dfm:127
+#: RosterAdd.dfm:129
 msgid "MSN"
 msgstr ""
 
 #. frmAdd..cboType....Items.WideStrings
-#: RosterAdd.dfm:128
+#: RosterAdd.dfm:130
 msgid "Yahoo"
 msgstr ""
 
 #. frmAdd..cboType....Items.WideStrings
-#: RosterAdd.dfm:129
+#: RosterAdd.dfm:131
 msgid "AIM"
 msgstr ""
 
 #. frmAdd..cboType....Items.WideStrings
-#: RosterAdd.dfm:130
+#: RosterAdd.dfm:132
 msgid "ICQ"
 msgstr ""
 
@@ -6392,27 +6401,27 @@ msgid "RichEdit98 and DBRichEdit98 components for Delphi 3.0-4.0. version "
 "<alex@niiomr.belpak.minsk.by>"
 msgstr ""
 
-#: AutoUpdateStatus.pas:134
+#: AutoUpdateStatus.pas:140
 #: WebGet.pas:120
 msgid "Downloading..."
 msgstr ""
 
-#: AutoUpdateStatus.pas:157
+#: AutoUpdateStatus.pas:163
 #: WebGet.pas:74
 msgid "Initializing..."
 msgstr ""
 
-#: AutoUpdateStatus.pas:173
+#: AutoUpdateStatus.pas:179
 #: WebGet.pas:82
 msgid "Download Complete"
 msgstr ""
 
-#: AutoUpdateStatus.pas:184
+#: AutoUpdateStatus.pas:190
 msgid "Installing..."
 msgstr ""
 
-#: AutoUpdateStatus.pas:192
-#: AutoUpdateStatus.pas:199
+#: AutoUpdateStatus.pas:198
+#: AutoUpdateStatus.pas:205
 #: WebGet.pas:94
 msgid "Error: %s"
 msgstr ""
@@ -7061,18 +7070,18 @@ msgid "You must enter a nickname"
 msgstr ""
 
 #. timeout
-#: Jud.pas:317
+#: jud.pas:317
 #. we got an iq-error back
-#: Jud.pas:323
+#: jud.pas:323
 msgid "Could not contact the search agent."
 msgstr ""
 
 #. timeout
-#: Jud.pas:426
+#: jud.pas:426
 msgid "The search timed out."
 msgstr ""
 
-#: Jud.pas:455
+#: jud.pas:455
 msgid "No Results were found."
 msgstr ""
 
