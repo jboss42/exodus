@@ -44,6 +44,7 @@ type
     spnPriority: TUpDown;
     lblNewProfile: TLabel;
     lblDelete: TLabel;
+    chkSSL: TCheckBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cboProfilesChange(Sender: TObject);
     procedure lblNewProfileClick(Sender: TObject);
@@ -95,6 +96,7 @@ begin
             password := txtPassword.Text;
             resource := cboResource.Text;
             Priority := spnPriority.Position;
+            ssl := chkSSL.Checked;
             end;
 
         MainSession.Prefs.setInt('profile_active', i);
@@ -131,6 +133,7 @@ begin
     cboServer.Text := p.Server;
     cboResource.Text := p.Resource;
     spnPriority.Position := p.Priority;
+    chkSSL.Checked := p.ssl;
 end;
 
 {---------------------------------------}

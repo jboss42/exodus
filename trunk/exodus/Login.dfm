@@ -2,7 +2,7 @@ object frmLogin: TfrmLogin
   Left = 239
   Top = 211
   Width = 250
-  Height = 247
+  Height = 265
   Caption = 'Jabber Login'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -59,7 +59,7 @@ object frmLogin: TfrmLogin
   end
   object lblNewProfile: TLabel
     Left = 4
-    Top = 155
+    Top = 171
     Width = 94
     Height = 13
     Cursor = crHandPoint
@@ -74,7 +74,7 @@ object frmLogin: TfrmLogin
   end
   object lblDelete: TLabel
     Left = 147
-    Top = 155
+    Top = 171
     Width = 81
     Height = 13
     Cursor = crHandPoint
@@ -129,7 +129,7 @@ object frmLogin: TfrmLogin
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 181
+    Top = 194
     Width = 242
     Height = 37
     Align = alBottom
@@ -181,5 +181,13 @@ object frmLogin: TfrmLogin
     Position = 0
     TabOrder = 7
     Wrap = False
+  end
+  object chkSSL: TCheckBox
+    Left = 98
+    Top = 149
+    Width = 127
+    Height = 17
+    Caption = 'Use SSL to connect'
+    TabOrder = 8
   end
 end
