@@ -47,9 +47,8 @@ type
     procedure btnClearDebugClick(Sender: TObject);
     procedure btnSendRawClick(Sender: TObject);
     procedure popMsgClick(Sender: TObject);
-    procedure MemoSendKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure MemoSendKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     procedure DebugCallback(send: boolean; data: string);
@@ -258,17 +257,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmDebug.MemoSendKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-    inherited;
-    if ((Key = VK_RETURN) and (ssCtrl in Shift)) then begin
-        btnSendRawClick(Self);
-        Key := 0;
-        end;
-end;
-
-{---------------------------------------}
 procedure TfrmDebug.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     Action := caFree;
@@ -276,6 +264,17 @@ begin
     MainSession.Stream.UnregisterDataCallback(DebugCallback);
     inherited;
     frmDebug := nil;
+end;
+
+procedure TfrmDebug.MemoSendKeyPress(Sender: TObject; var Key: Char);
+begin
+      if ( (Key = #10) and (HiWord(GetKeyState(VK_CONTROL)) <> 0)) then begin
+        btnSendRawClick(Self);
+        Key := #0;
+        end
+    else
+        inherited;
+
 end;
 
 end.
