@@ -63,6 +63,9 @@ type
     procedure popChatClick(Sender: TObject);
     procedure popMessageClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure lstContactsColumnClick(Sender: TObject; Column: TListColumn);
+    procedure lstContactsCompare(Sender: TObject; Item1, Item2: TListItem;
+      Data: Integer; var Compare: Integer);
   private
     { Private declarations }
     field_set: TStringList;
@@ -71,6 +74,8 @@ type
     cur_state: string;
 
     cur_iq: TJabberIQ;
+    cur_sort: integer;
+    cur_dir: boolean;
 
     procedure getFields;
     procedure sendRequest();
@@ -159,6 +164,8 @@ begin
     cur_jid := '';
     cur_key := '';
     cur_state := 'get_fields';
+    cur_sort := -1;
+    cur_dir := true;
     field_set := TStringList.Create();
     cboGroup.Items.Assign(MainSession.Roster.GrpList);
     if cboGroup.Items.Count > 0 then
@@ -457,6 +464,8 @@ begin
 
     btnAction.Caption := sJUDStart;
     cur_state := 'get_fields';
+    cur_sort := -1;
+    cur_dir := true;
     cboJID.Enabled := true;
     self.ClearFields();
 end;
@@ -571,6 +580,56 @@ begin
   inherited;
     if (cur_iq <> nil) then
         cur_iq.Free();
+end;
+
+procedure TfrmJUD.lstContactsColumnClick(Sender: TObject;
+  Column: TListColumn);
+begin
+  inherited;
+  if (Column.Index = cur_sort) then
+    cur_dir := not cur_dir
+  else
+    cur_dir := true;
+
+  cur_sort := Column.Index;
+  lstContacts.SortType := stText;
+  lstContacts.AlphaSort();
+end;
+
+procedure TfrmJUD.lstContactsCompare(Sender: TObject; Item1,
+  Item2: TListItem; Data: Integer; var Compare: Integer);
+var
+    s1, s2: string;
+begin
+  inherited;
+  if (cur_sort = -1) then begin
+    Compare := 0;
+    exit;
+    end;
+
+  if (cur_sort = 0) then begin
+    if (cur_dir) then begin
+        s1 := Item1.Caption;
+        s2 := Item2.Caption;
+        end
+    else begin
+        s1 := Item2.Caption;
+        s2 := Item1.Caption;
+        end;
+    end
+  else begin
+    if (cur_dir) then begin
+        s1 := Item1.SubItems[cur_sort - 1];
+        s2 := Item2.SubItems[cur_sort - 1];
+        end
+    else begin
+        s1 := Item2.SubItems[cur_sort - 1];
+        s2 := Item1.SubItems[cur_sort - 1];
+        end;
+    end;
+
+  Compare := StrComp(pchar(LowerCase(s1)),
+                     pchar(LowerCase(s2)));
 end;
 
 end.

@@ -1,6 +1,6 @@
 inherited frmJUD: TfrmJUD
-  Left = 272
-  Top = 167
+  Left = 680
+  Top = 107
   Width = 435
   Height = 440
   BorderWidth = 3
@@ -78,6 +78,7 @@ inherited frmJUD: TfrmJUD
         Width = 75
         Height = 25
         Caption = 'Search'
+        Default = True
         TabOrder = 0
         OnClick = btnActionClick
       end
@@ -86,6 +87,7 @@ inherited frmJUD: TfrmJUD
         Top = 4
         Width = 75
         Height = 25
+        Cancel = True
         Caption = 'Close'
         TabOrder = 1
         OnClick = btnCloseClick
@@ -181,6 +183,8 @@ inherited frmJUD: TfrmJUD
     PopupMenu = PopupMenu1
     TabOrder = 1
     ViewStyle = vsReport
+    OnColumnClick = lstContactsColumnClick
+    OnCompare = lstContactsCompare
     OnContextPopup = lstContactsContextPopup
   end
   object PopupMenu1: TPopupMenu
