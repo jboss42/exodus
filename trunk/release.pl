@@ -58,6 +58,9 @@ if ($::RTYPE eq "daily") {
   e("$::SCP setup.exe Exodus.zip plugins/*.zip $userhost:$::ROOT/www/daily/stage");
   e("$::SSH $userhost \"cd $::ROOT/www/daily/stage; chmod 644 *; mv setup.exe ..; mv Exodus.zip ..; mv *.zip ../plugins\"");
 } else {
+  my $uver;
+  ($uver = $version) =~ s/\./_/g;
+  e("$::CVS tag -F v_$uver") if $::CVS;
   e("$::SCP setup.exe $userhost:$::ROOT/files/exodus_$version.exe");
   e("$::SCP plugins/*.zip $userhost:$::ROOT/www/plugins");
   e("$::SSH $userhost \"chmod 644 $::ROOT/files/exodus_$version.exe $::ROOT/www/plugins/*.zip\"");
