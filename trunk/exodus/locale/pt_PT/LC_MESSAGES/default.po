@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exodus 0.8-Daily\n"
 "POT-Creation-Date: 2003-05-08 06:59\n"
-"PO-Revision-Date: 2004-03-04 18:17-0000\n"
+"PO-Revision-Date: 2004-03-22 05:15-0000\n"
 "Last-Translator: Lazarus Long <lazarus.long@bigfoot.com>\n"
 "Language-Team: pt_PT <lazarus.long@bigfoot.com>\n"
 "MIME-Version: 1.0\n"
@@ -163,9 +163,9 @@ msgstr "MS Sans Serif"
 #: RecvStatus.pas:383
 #: RecvStatus.pas:610
 #: RecvStatus.pas:621
-#: SendStatus.pas:842
-#: SendStatus.pas:962
-#: xdata.pas:197
+#: SendStatus.pas:780
+#: SendStatus.pas:904
+#: xdata.pas:212
 msgid "Close"
 msgstr "Fechar"
 
@@ -786,7 +786,7 @@ msgstr "Erro: "
 #: Room.dfm:30
 #: Room.dfm:104
 #: RosterWindow.dfm:93
-#: XferManager.dfm:42
+#: XferManager.dfm:41
 msgid "Arial"
 msgstr "Arial"
 
@@ -808,7 +808,7 @@ msgstr "0 Objectos"
 #: MsgRecv.dfm:389
 #: Room.dfm:99
 #: RosterWindow.dfm:88
-#: XferManager.dfm:37
+#: XferManager.dfm:36
 msgid "X"
 msgstr "X"
 
@@ -1476,12 +1476,12 @@ msgstr "Conversa"
 #: Jabber1.dfm:2656
 #: RosterWindow.dfm:403
 #: ExSession.pas:184
-#: Jabber1.pas:2720
+#: Jabber1.pas:2732
 #: RosterWindow.pas:346
 #: RosterWindow.pas:368
-#: RosterWindow.pas:1644
-#: RosterWindow.pas:1687
-#: /src/exodus/jopl/PrefController.pas:1257
+#: RosterWindow.pas:1652
+#: RosterWindow.pas:1695
+#: /src/exodus/jopl/PrefController.pas:1227
 #: prefs/PrefGroups.dfm:70
 #: prefs/PrefPresence.dfm:202
 msgid "Available"
@@ -1497,11 +1497,11 @@ msgstr "Disponível"
 #: Jabber1.dfm:377
 #: Jabber1.dfm:2668
 #: RosterWindow.dfm:415
-#: Jabber1.pas:2718
+#: Jabber1.pas:2730
 #: RosterWindow.pas:348
 #: RosterWindow.pas:369
-#: RosterWindow.pas:1628
-#: /src/exodus/jopl/PrefController.pas:1275
+#: RosterWindow.pas:1636
+#: /src/exodus/jopl/PrefController.pas:1245
 #: prefs/PrefGroups.dfm:69
 #: prefs/PrefPresence.dfm:203
 msgid "Away"
@@ -1527,7 +1527,7 @@ msgstr "Ausência prolongada"
 #: RosterWindow.dfm:427
 #: RosterWindow.pas:350
 #: RosterWindow.pas:371
-#: RosterWindow.pas:1636
+#: RosterWindow.pas:1644
 #: prefs/PrefGroups.dfm:67
 #: prefs/PrefPresence.dfm:205
 msgid "Do Not Disturb"
@@ -1795,7 +1795,7 @@ msgstr "Forçar os contactos a removerem-me do seu rol"
 #. frmInputPass..Caption
 #. accordingly.
 #: InputPassword.dfm:8
-#: Jabber1.pas:903
+#: Jabber1.pas:906
 msgid "Exodus Password"
 msgstr "Palavra-passe do Exodus"
 
@@ -1897,8 +1897,8 @@ msgstr "Junte-se a nós nesta sala de conferência."
 #: Jabber1.dfm:7
 #: ConnDetails.pas:402
 #: ExSession.pas:470
-#: ExUtils.pas:1224
-#: Jabber1.pas:1217
+#: ExUtils.pas:1225
+#: Jabber1.pas:1220
 #: Login.pas:110
 #: Login.pas:184
 msgid "Exodus"
@@ -2123,7 +2123,7 @@ msgstr "&Presença"
 #: Jabber1.dfm:2662
 #: RosterWindow.dfm:409
 #: RosterWindow.pas:347
-#: RosterWindow.pas:1624
+#: RosterWindow.pas:1632
 #: prefs/PrefPresence.dfm:201
 msgid "Free to Chat"
 msgstr "Livre para conversar"
@@ -2136,7 +2136,7 @@ msgstr "Livre para conversar"
 #: Jabber1.dfm:2674
 #: RosterWindow.dfm:421
 #: RosterWindow.pas:349
-#: RosterWindow.pas:1632
+#: RosterWindow.pas:1640
 #: prefs/PrefPresence.dfm:204
 msgid "Xtended Away"
 msgstr "Ausência prolongada"
@@ -2424,7 +2424,7 @@ msgstr "Ver perfil"
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: jud.dfm:223
 #: subscribe.dfm:146
-#: Jabber1.pas:2288
+#: Jabber1.pas:2291
 msgid "Start Chat"
 msgstr "Iniciar conversa"
 
@@ -2670,7 +2670,7 @@ msgstr "Extensões"
 #. frmXferManager..Panel1..pnlCaption..Caption
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: Prefs.dfm:2639
-#: XferManager.dfm:54
+#: XferManager.dfm:53
 #: ExSession.pas:480
 #: prefs/PrefNotify.dfm:43
 #: prefs/PrefNotify.pas:102
@@ -5892,37 +5892,37 @@ msgstr "Administrar"
 #. frmRoom..popRoom..popAdmin..popVoiceList..Caption
 #. edit a list
 #: Room.dfm:202
-#: Room.pas:1750
+#: Room.pas:1759
 msgid "Edit Voice List"
 msgstr "Editar a lista de vozes activas"
 
 #. frmRoom..popRoom..popAdmin..popBanList..Caption
 #: Room.dfm:206
-#: Room.pas:1752
+#: Room.pas:1761
 msgid "Edit Ban List"
 msgstr "Editar a lista de banimentos"
 
 #. frmRoom..popRoom..popAdmin..popMemberList..Caption
 #: Room.dfm:210
-#: Room.pas:1754
+#: Room.pas:1763
 msgid "Edit Member List"
 msgstr "Editar a lista de membros"
 
 #. frmRoom..popRoom..popAdmin..popModeratorList..Caption
 #: Room.dfm:214
-#: Room.pas:1756
+#: Room.pas:1765
 msgid "Edit Moderator List"
 msgstr "Editar a lista de moderadores"
 
 #. frmRoom..popRoom..popAdmin..popAdminList..Caption
 #: Room.dfm:221
-#: Room.pas:1758
+#: Room.pas:1767
 msgid "Edit Admin List"
 msgstr "Editar a lista de administradores"
 
 #. frmRoom..popRoom..popAdmin..popOwnerList..Caption
 #: Room.dfm:225
-#: Room.pas:1760
+#: Room.pas:1769
 msgid "Edit Owner List"
 msgstr "Editar a lista de proprietários"
 
@@ -5933,7 +5933,7 @@ msgstr "Configurar a sala"
 
 #. frmRoom..popRoom..popAdmin..popDestroy..Caption
 #: Room.dfm:236
-#: Room.pas:1774
+#: Room.pas:1783
 msgid "Destroy Room"
 msgstr "Eliminar a sala"
 
@@ -5954,10 +5954,10 @@ msgstr "Enviar o meu JID"
 #: Room.dfm:281
 #: RosterWindow.dfm:380
 #: RosterWindow.dfm:634
-#: Room.pas:1493
-#: RosterWindow.pas:2076
-#: RosterWindow.pas:2113
-#: RosterWindow.pas:2118
+#: Room.pas:1502
+#: RosterWindow.pas:2085
+#: RosterWindow.pas:2122
+#: RosterWindow.pas:2127
 msgid "Block"
 msgstr "Bloquear"
 
@@ -6115,7 +6115,7 @@ msgstr "JID"
 #: RosterWindow.pas:367
 #: RosterWindow.pas:1269
 #: RosterWindow.pas:1273
-#: RosterWindow.pas:1640
+#: RosterWindow.pas:1648
 msgid "Offline"
 msgstr "Desligado"
 
@@ -6545,7 +6545,7 @@ msgid "Downloading public server list"
 msgstr "A transferir a lista de servidores públicos"
 
 #: Debug.pas:184
-#: Debug.pas:379
+#: Debug.pas:371
 msgid "Disconnected"
 msgstr "Desligado"
 
@@ -6864,20 +6864,20 @@ msgstr "Favoritos"
 msgid "Unfiled"
 msgstr "Não preenchido"
 
-#: ExUtils.pas:1245
+#: ExUtils.pas:1246
 msgid "Untitled Group"
 msgstr "Novo Grupo"
 
-#: ExUtils.pas:1246
+#: ExUtils.pas:1247
 msgid "New Roster Group"
 msgstr "Novo grupo de rol"
 
-#: ExUtils.pas:1246
+#: ExUtils.pas:1247
 msgid "Enter new group name: "
 msgstr "Nome a dar ao grupo: "
 
 #. add the new grp.
-#: ExUtils.pas:1251
+#: ExUtils.pas:1252
 msgid "This group already exists!"
 msgstr "Este grupo já existe!"
 
@@ -6920,10 +6920,14 @@ msgid "Remove the %s group"
 msgstr "Remover o grupo %s"
 
 #: GUIFactory.pas:130
+msgid "This server does not advertise support for in-band registration. Try to register a new account anyway?"
+msgstr "Este servidor não anuncia suporte para registo em linha. Tentar na mesma registar uma conta nova?"
+
+#: GUIFactory.pas:138
 msgid "Your authentication mechanism does not support registration."
 msgstr "O seu mecanismo de autenticação não suporta o registar."
 
-#: GUIFactory.pas:145
+#: GUIFactory.pas:153
 msgid "There was an error attempting to save your options. Another process may be accessing your options file. Some options may be lost. "
 msgstr "Houve um erro ao tentar guardar as suas opções. Um outro processo poderá estar a tentar aceder ao seu  ficheiro de opções. Algumas opções poderão ter ficado perdidas. "
 
@@ -6942,29 +6946,29 @@ msgstr "Foi convidado a entrar na sala %s."
 msgid "Conference Room:"
 msgstr "Sala de conferência:"
 
-#: Jabber1.pas:903
+#: Jabber1.pas:906
 msgid "Enter Password"
 msgstr "Digite a palavra-passe"
 
 #. For other OS's we need to use the wicked nasty DLL
-#: Jabber1.pas:992
+#: Jabber1.pas:995
 msgid "Trying to setup the Auto Away timer."
 msgstr "A tentar activar o cronómetro para a ausência automática."
 
-#: Jabber1.pas:1014
+#: Jabber1.pas:1017
 msgid "AutoAway Setup FAILED!"
 msgstr "A activação da ausência automática FALHOU!"
 
 #. do nothing here..
-#: Jabber1.pas:1021
+#: Jabber1.pas:1024
 msgid "Using Win32 API for Autoaway checks!!"
 msgstr "A usar o API Win32 para as verificações de ausência automática!!"
 
-#: Jabber1.pas:1025
+#: Jabber1.pas:1028
 msgid "ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!"
 msgstr "ERRO AO OBTER O ENDEREÇO DO API WIN32 PARA GetLastInputInfo!!"
 
-#: Jabber1.pas:1088
+#: Jabber1.pas:1091
 msgid ""
 "There was an error trying to authenticate you.\n"
 "Either you used the wrong password, or this account is already in use by someone else."
@@ -6972,76 +6976,76 @@ msgstr ""
 "Houve um erro ao tentar autenticá-lo.\n"
 "Ou utilizou uma palavra-passe incorrecta, ou esta conta já está a ser usada por outra pessoa."
 
-#: Jabber1.pas:1095
+#: Jabber1.pas:1098
 msgid "There was an error trying to setup SSL."
 msgstr "Houve um erro ao tentar configurar a ligação segura (SSL)."
 
-#: Jabber1.pas:1131
+#: Jabber1.pas:1134
 msgid "An Error occurred trying to register your new account. This server may not allow open registration."
 msgstr "Ocorreu um erro ao tentar registar a sua nova conta. Este servidor pode não permitir registos públicos."
 
-#: Jabber1.pas:1146
+#: Jabber1.pas:1149
 msgid "This account does not exist on this server. Create a new account?"
 msgstr "Esta conta não existe neste servidor. Deseja criar uma conta nova?"
 
 #. if we have a new account, prompt for reg info
-#: Jabber1.pas:1196
+#: Jabber1.pas:1199
 msgid "Your new jabber account is activated. Would you like to fill out additional registration information?"
 msgstr "A sua nova conta jabber foi activada. Deseja preencher dados adicionais de registo?"
 
 #. set us to away
-#: Jabber1.pas:2084
+#: Jabber1.pas:2087
 msgid "Setting AutoAway"
 msgstr "A activar a ausência automática"
 
 #. set us to xa
-#: Jabber1.pas:2120
+#: Jabber1.pas:2123
 msgid "Setting AutoXA"
 msgstr "A activar a ausência prolongada automática"
 
 #. reset our status to available
-#: Jabber1.pas:2137
+#: Jabber1.pas:2140
 msgid "Setting Auto Available"
 msgstr "A activar a disponibilidade automática"
 
 #. lookup some arbitrary vcard..
-#: Jabber1.pas:2172
+#: Jabber1.pas:2175
 msgid "Lookup Profile"
 msgstr "Localizar perfil"
 
-#: Jabber1.pas:2172
-#: Jabber1.pas:2288
-#: Jabber1.pas:2547
+#: Jabber1.pas:2175
+#: Jabber1.pas:2291
+#: Jabber1.pas:2559
 msgid "Enter Jabber ID: "
 msgstr "Introduza o ID de Jabber: "
 
-#: Jabber1.pas:2389
+#: Jabber1.pas:2392
 msgid "Old password is incorrect."
 msgstr "A palavra-passe actual está incorrecta."
 
-#: Jabber1.pas:2393
+#: Jabber1.pas:2396
 msgid "New password does not match."
 msgstr "A nova palavra-passe não é igual."
 
-#: Jabber1.pas:2413
-#: Jabber1.pas:2418
+#: Jabber1.pas:2416
+#: Jabber1.pas:2421
 msgid "Error changing password."
 msgstr "Erro a alterar a palavra-passe."
 
-#: Jabber1.pas:2416
+#: Jabber1.pas:2419
 msgid "Password changed."
 msgstr "Palavra-passe alterada."
 
 #. kick off a service registration..
-#: Jabber1.pas:2494
+#: Jabber1.pas:2506
 msgid "Register with Service"
 msgstr "Registar com um serviço"
 
-#: Jabber1.pas:2494
+#: Jabber1.pas:2506
 msgid "Enter Jabber ID of Service: "
 msgstr "Introduza o ID de Jabber do serviço: "
 
-#: Jabber1.pas:2547
+#: Jabber1.pas:2559
 msgid "Send a Message"
 msgstr "Enviar uma mensagem"
 
@@ -7049,15 +7053,15 @@ msgstr "Enviar uma mensagem"
 #. send roster items to this contact.
 #. Send contacts to this JID..
 #. we got a URL drop
-#: Jabber1.pas:2813
-#: Jabber1.pas:2823
-#: RosterWindow.pas:2550
-#: RosterWindow.pas:2852
-#: RosterWindow.pas:2884
+#: Jabber1.pas:2825
+#: Jabber1.pas:2835
+#: RosterWindow.pas:2561
+#: RosterWindow.pas:2863
+#: RosterWindow.pas:2895
 msgid "You must select one or more contacts."
 msgstr "Tem que seleccionar um ou mais contactos."
 
-#: Jabber1.pas:2951
+#: Jabber1.pas:2963
 msgid "Branding error!"
 msgstr "Erro de personalização!"
 
@@ -7283,11 +7287,11 @@ msgstr "Sala %s"
 #. block
 #. get the data for this person..
 #: Room.pas:464
-#: Room.pas:1044
-#: Room.pas:1450
-#: Room.pas:1458
-#: Room.pas:1490
-#: Room.pas:1944
+#: Room.pas:1053
+#: Room.pas:1459
+#: Room.pas:1467
+#: Room.pas:1499
+#: Room.pas:1953
 msgid "Blocked"
 msgstr "Bloqueado"
 
@@ -7304,7 +7308,7 @@ msgstr "Actividade na "
 #. they match
 #: Room.pas:730
 #: Room.pas:967
-#: Room.pas:1317
+#: Room.pas:1326
 msgid "Your nickname is already being used. Please select another one."
 msgstr "A sua alcunha já está a ser usada. Por favor escolha outra."
 
@@ -7383,68 +7387,68 @@ msgstr "Não tem permissão para criar salas."
 msgid "There was an error using the default room configuration. Configuring it manually."
 msgstr "Houve um erro ao tentar usar a configuração predefinida para a sala. A configurar manualmente."
 
-#: Room.pas:1140
+#: Room.pas:1149
 msgid "Your room keyword regular expressions are invalid. Keyword matching will be turned off for this room."
 msgstr "As suas expressões regulares para a pesquisa de palavras-chave nesta sala de conferência são inválidas. A detecção de palavras-chave será desactivada para esta sala de conferência."
 
 #. send the msg out
-#: Room.pas:1280
+#: Room.pas:1289
 msgid "/me has changed the subject to: "
 msgstr "/me mudou o assunto para: "
 
 #. Change the subject
-#: Room.pas:1293
+#: Room.pas:1302
 msgid "Change room subject"
 msgstr "Alterar o assunto da sala"
 
-#: Room.pas:1293
+#: Room.pas:1302
 msgid "New subject"
 msgstr "Novo assunto"
 
-#: Room.pas:1336
+#: Room.pas:1345
 msgid "New nickname"
 msgstr "Nova alcunha"
 
-#: Room.pas:1359
+#: Room.pas:1368
 msgid "Bookmark Room"
 msgstr "Adicionar sala aos 'Favoritos'"
 
-#: Room.pas:1359
+#: Room.pas:1368
 msgid "Enter bookmark name:"
 msgstr "Indique o nome do favorito:"
 
-#: Room.pas:1491
-#: RosterWindow.pas:2072
-#: RosterWindow.pas:2123
+#: Room.pas:1500
+#: RosterWindow.pas:2081
+#: RosterWindow.pas:2132
 msgid "UnBlock"
 msgstr "Desbloquear"
 
-#: Room.pas:1652
+#: Room.pas:1661
 msgid "You have been kicked."
 msgstr "Você foi expulso."
 
-#: Room.pas:1653
+#: Room.pas:1662
 msgid "Kick Reason"
 msgstr "Razão da expulsão"
 
-#: Room.pas:1656
+#: Room.pas:1665
 msgid "You have been banned."
 msgstr "Você foi banido."
 
-#: Room.pas:1657
+#: Room.pas:1666
 msgid "Ban Reason"
 msgstr "Razão do banimento"
 
 #. Destroy Room
-#: Room.pas:1771
+#: Room.pas:1780
 msgid "Do you really want to destroy the room? All users will be removed."
 msgstr "Quer realmente eliminar a sala? Todos os utilizadores serão removidos."
 
-#: Room.pas:1773
+#: Room.pas:1782
 msgid "The owner has destroyed the room."
 msgstr "O proprietário eliminou a sala."
 
-#: Room.pas:1774
+#: Room.pas:1783
 msgid "Destroy Reason"
 msgstr "Razão da eliminação"
 
@@ -7493,7 +7497,7 @@ msgstr "A estabelecer ligação..."
 #: RosterWindow.pas:503
 #: RosterWindow.pas:509
 #: RosterWindow.pas:518
-#: RosterWindow.pas:2652
+#: RosterWindow.pas:2663
 msgid "Click to Cancel..."
 msgstr "Clique para cancelar..."
 
@@ -7514,52 +7518,52 @@ msgstr ""
 "A obter contactos..."
 
 #. remove a bookmark
-#: RosterWindow.pas:1874
+#: RosterWindow.pas:1882
 msgid "Remove this bookmark?"
 msgstr "Remover este 'Favorito'?"
 
-#: RosterWindow.pas:2351
+#: RosterWindow.pas:2362
 msgid " (Pending)"
 msgstr " (Pendente)"
 
-#: RosterWindow.pas:2463
+#: RosterWindow.pas:2474
 msgid "Rename group"
 msgstr "Renomear o grupo"
 
-#: RosterWindow.pas:2463
+#: RosterWindow.pas:2474
 msgid "New group name:"
 msgstr "Nome a dar ao grupo:"
 
 #. Block or Unblock this user
-#: RosterWindow.pas:2578
+#: RosterWindow.pas:2589
 msgid "Block %d contacts?"
 msgstr "Bloquear %d contactos?"
 
 #. Block or Unblock this user
-#: RosterWindow.pas:2607
+#: RosterWindow.pas:2618
 msgid "Unblock %d contacts?"
 msgstr "Desbloquear %d contactos?"
 
-#: RosterWindow.pas:2635
+#: RosterWindow.pas:2646
 msgid "You must select more than one online contact to broadcast."
 msgstr "Tem que seleccionar mais do que um contacto para poder difundir."
 
 #. Cancel the connection
-#: RosterWindow.pas:2656
-#: RosterWindow.pas:2994
+#: RosterWindow.pas:2667
+#: RosterWindow.pas:3005
 msgid "Click to Cancel Reconnect"
 msgstr "Clique para cancelar o reestabelecimento da ligação"
 
 #. processing of Editing events
-#: RosterWindow.pas:2761
+#: RosterWindow.pas:2772
 msgid "Rename Roster Item"
 msgstr "Renomear ítem do rol"
 
-#: RosterWindow.pas:2761
+#: RosterWindow.pas:2772
 msgid "New Nickname: "
 msgstr "Nova alcunha: "
 
-#: RosterWindow.pas:2995
+#: RosterWindow.pas:3006
 msgid "Reconnect in %d seconds."
 msgstr "Restabelecimento da ligação em %d segundos."
 
@@ -7570,37 +7574,37 @@ msgstr "A aguardar ligação..."
 #. get the file size
 #. get a handle to the stream
 #. get a handle to the stream
-#: SendStatus.pas:471
-#: SendStatus.pas:535
-#: SendStatus.pas:684
+#: SendStatus.pas:509
+#: SendStatus.pas:573
+#: SendStatus.pas:722
 msgid "There was an error trying to read the file."
 msgstr "Houve um erro ao tentar ler o ficheiro."
 
-#: SendStatus.pas:840
+#: SendStatus.pas:778
 msgid "Your file transfer was refused to %s"
 msgstr "O seu envio de ficheiro para %s foi recusado"
 
 #. they refused
-#: SendStatus.pas:919
+#: SendStatus.pas:860
 msgid "The recipient (%s) refused your file: %s"
 msgstr "O destinatário (%s) recusou o seu fcheiro: %s"
 
 #. error
-#: SendStatus.pas:941
+#: SendStatus.pas:883
 msgid "The stream was not activated for file: %s"
 msgstr "O fluxo de transferência não foi activado para o ficheiro: %s"
 
 #. our thread completed.
-#: SendStatus.pas:957
+#: SendStatus.pas:899
 msgid "There was an error trying to upload the file to your web host."
 msgstr "Houve um erro ao enviar o ficheiro para o seu servidor web."
 
-#: SendStatus.pas:978
+#: SendStatus.pas:920
 msgid "Send failed."
 msgstr "O envio falhou."
 
 #. PChar is in lparam
-#: SendStatus.pas:1002
+#: SendStatus.pas:944
 msgid "Connected."
 msgstr "Ligado."
 
@@ -7617,21 +7621,21 @@ msgstr "Impressão do certificado:"
 msgid "Remove Registration?"
 msgstr "Remover registo?"
 
-#: Transports.pas:107
-#: Transports.pas:150
+#: Transports.pas:105
+#: Transports.pas:151
 msgid "The transport could not be reached. Your request timed out."
 msgstr "Não foi possível contactar o transporte. O seu pedido excedeu o tempo."
 
-#: Transports.pas:112
-#: Transports.pas:155
+#: Transports.pas:111
+#: Transports.pas:154
 msgid "There was an error processing your request."
 msgstr "Houve um erro ao processar o seu pedido."
 
-#: Transports.pas:126
+#: Transports.pas:127
 msgid "You are not registered with this transport."
 msgstr "Não se encontra registado com este transporte."
 
-#: Transports.pas:159
+#: Transports.pas:157
 msgid "Your request was successful."
 msgstr "O seu pedido fom concluído com êxito."
 
@@ -7641,98 +7645,98 @@ msgid "No vCard response was ever returned."
 msgstr "Nunca foi devolvido um cartão de visita como resposta."
 
 #. this is a cancel notice
-#: xdata.pas:131
+#: xdata.pas:146
 msgid "Cancelled"
 msgstr "Cancelado"
 
-#: xdata.pas:132
+#: xdata.pas:147
 msgid "%s cancelled your form."
 msgstr "%s cancelou o seu formulário."
 
 #. Get instructions and title
-#: xdata.pas:144
+#: xdata.pas:159
 msgid "Form from %s"
 msgstr "Formulário de %s"
 
 #. do something
-#: xdata.pas:220
-#: xdata.pas:318
+#: xdata.pas:235
+#: xdata.pas:333
 msgid "You are currently disconnected. Please reconnect before responding to this form."
 msgstr "Encontra-se actualmente desligado. Por favor ligue-se de novo antes de responder a este formulário."
 
-#: xdata.pas:249
+#: xdata.pas:264
 msgid "All required fields must be filled out"
 msgstr "Todos os campos obrigatórios têm que ser preenchidos"
 
 #. Make sure the contact is online
-#: XferManager.pas:180
+#: XferManager.pas:181
 msgid "The Contact must be online before you can send a file."
 msgstr "O contacto tem que estar em linha antes que lhe possa enviar ficheiros."
 
-#: XferManager.pas:277
-#: XferManager.pas:344
+#: XferManager.pas:278
+#: XferManager.pas:345
 msgid "%s is sending you a file."
 msgstr "%s está a enviar-lhe um ficheiro."
 
 #. check to see if we should disconnect current xfers
-#: XferManager.pas:473
+#: XferManager.pas:474
 msgid "Your new file transfer port will not take affect until all current trasfers are stopped. Stop existing transfers?"
 msgstr "A sua nova porta de transferência de ficheiros não entrará em efeito até que as transferências em curso terminem. Cancelar as transferências em curso?"
 
 #. set the defaults for the pref controller
-#: /src/exodus/jopl/PrefController.pas:643
+#: /src/exodus/jopl/PrefController.pas:607
 msgid "Away as a result of idle."
 msgstr "Ausência resultante de inactividade."
 
-#: /src/exodus/jopl/PrefController.pas:645
+#: /src/exodus/jopl/PrefController.pas:609
 msgid "XA as a result of idle."
 msgstr "Ausência prolongada resultante de inactividade."
 
-#: /src/exodus/jopl/PrefController.pas:1266
+#: /src/exodus/jopl/PrefController.pas:1236
 msgid "Free for Chat"
 msgstr "Livre para conversar"
 
-#: /src/exodus/jopl/PrefController.pas:1284
+#: /src/exodus/jopl/PrefController.pas:1254
 msgid "Lunch"
 msgstr "Almoço"
 
-#: /src/exodus/jopl/PrefController.pas:1293
+#: /src/exodus/jopl/PrefController.pas:1263
 msgid "Meeting"
 msgstr "Em reunião"
 
-#: /src/exodus/jopl/PrefController.pas:1302
+#: /src/exodus/jopl/PrefController.pas:1272
 msgid "Bank"
 msgstr "Foi ao banco"
 
-#: /src/exodus/jopl/PrefController.pas:1311
+#: /src/exodus/jopl/PrefController.pas:1281
 msgid "Extended Away"
 msgstr "Ausência prolongada"
 
-#: /src/exodus/jopl/PrefController.pas:1320
+#: /src/exodus/jopl/PrefController.pas:1290
 msgid "Gone Home"
 msgstr "Foi para casa"
 
-#: /src/exodus/jopl/PrefController.pas:1329
+#: /src/exodus/jopl/PrefController.pas:1299
 msgid "Gone to Work"
 msgstr "Foi trabalhar"
 
-#: /src/exodus/jopl/PrefController.pas:1338
+#: /src/exodus/jopl/PrefController.pas:1308
 msgid "Sleeping"
 msgstr "A dormir"
 
-#: /src/exodus/jopl/PrefController.pas:1347
+#: /src/exodus/jopl/PrefController.pas:1317
 msgid "Do Not disturb"
 msgstr "Não incomodar"
 
-#: /src/exodus/jopl/PrefController.pas:1356
+#: /src/exodus/jopl/PrefController.pas:1326
 msgid "Busy"
 msgstr "Ocupado"
 
-#: /src/exodus/jopl/PrefController.pas:1365
+#: /src/exodus/jopl/PrefController.pas:1335
 msgid "Working"
 msgstr "A trabalhar"
 
-#: /src/exodus/jopl/PrefController.pas:1374
+#: /src/exodus/jopl/PrefController.pas:1344
 msgid "Mad"
 msgstr "Zangado"
 
