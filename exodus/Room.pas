@@ -336,6 +336,7 @@ var
     i : integer;
     n: Widestring;
 begin
+    Result := nil;
 
     // Make sure we have TC..
     if (not MainSession.Prefs.getBool('brand_muc')) then exit;
