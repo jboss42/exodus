@@ -23,16 +23,19 @@ interface
 uses
     Dockable, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, buttonFrame, ComCtrls;
+    Dialogs, buttonFrame, ComCtrls, ExtCtrls, Menus;
 
 type
   TfrmInvalidRoster = class(TfrmDockable)
     frameButtons1: TframeButtons;
     ListView1: TListView;
+    popItems: TPopupMenu;
+    oggleCheckboxes1: TMenuItem;
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure frameButtons1btnOKClick(Sender: TObject);
+    procedure oggleCheckboxes1Click(Sender: TObject);
   private
     { Private declarations }
     _jids: TStringList;
@@ -136,6 +139,17 @@ begin
         if (li.Checked) then
             ListView1.Items.Delete(i);
         end;
+end;
+
+{---------------------------------------}
+procedure TfrmInvalidRoster.oggleCheckboxes1Click(Sender: TObject);
+var
+    i: integer;
+begin
+  inherited;
+    // switch the state of all of the check boxes.
+    for i := 0 to Listview1.Items.count - 1 do
+        Listview1.Items[i].Checked := not Listview1.Items[i].Checked;
 end;
 
 end.

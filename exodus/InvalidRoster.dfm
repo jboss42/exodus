@@ -58,7 +58,16 @@ object frmInvalidRoster: TfrmInvalidRoster
         Caption = 'Pres. Error'
         Width = 200
       end>
+    PopupMenu = popItems
     TabOrder = 1
     ViewStyle = vsReport
+  end
+  object popItems: TPopupMenu
+    Left = 24
+    Top = 40
+    object oggleCheckboxes1: TMenuItem
+      Caption = 'Toggle Checkboxes'
+      OnClick = oggleCheckboxes1Click
+    end
   end
 end

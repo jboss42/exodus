@@ -116,8 +116,7 @@ begin
         t.Resume();
         end
     else begin
-        // j := JID_AUTOUPDATE + '/' + Trim(GetAppVersion());
-        j := JID_AUTOUPDATE + '/0.1.0.0';
+        j := JID_AUTOUPDATE + '/' + Trim(GetAppVersion());
         x := TXMLTag.Create('presence');
         x.PutAttribute('to', j);
         MainSession.SendTag(x);

@@ -366,15 +366,15 @@ begin
             end;
 
         if (insert = -1) then
-            pl.AddObject(Lowercase(p.fromJID.resource), p)
+            pl.AddObject(p.fromJID.resource, p)
         else
-            pl.InsertObject(insert, Lowercase(p.fromJID.resource), p);
+            pl.InsertObject(insert, p.fromJID.resource, p);
         end
     else begin
         // Create a string list for this JID..
         // and add it to our own list
         pl := TStringList.Create;
-        pl.AddObject(Lowercase(p.fromJID.Resource), p);
+        pl.AddObject(p.fromJID.Resource, p);
 
         Self.AddObject(Lowercase(p.fromJID.jid), pl);
         end;
@@ -426,7 +426,7 @@ begin
     pl := GetPresList(sjid);
     if pl <> nil then begin
         if resource <> '' then begin
-            pi := pl.indexOf(Lowercase(resource));
+            pi := pl.indexOf(resource);
             if pi >= 0 then
                 Result := TJabberPres(pl.Objects[pi]);
             end
