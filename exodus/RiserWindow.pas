@@ -42,6 +42,7 @@ type
     { Private declarations }
     _taskrect: TRect;
     _taskdir: integer;
+    _clickForm: TForm;
   protected
     procedure CreateParams(var Params: TCreateParams); override;
   public
@@ -53,7 +54,7 @@ var
     singleToast: TfrmRiser;
     frmRiser: TfrmRiser;
 
-procedure ShowRiserWindow(msg: string; imgIndex: integer);
+procedure ShowRiserWindow(clickForm: TForm; msg: string; imgIndex: integer);
 
 implementation
 
@@ -62,7 +63,7 @@ uses
     Session,
     Jabber1;
 
-procedure ShowRiserWindow(msg: string; imgIndex: integer);
+procedure ShowRiserWindow(clickForm: TForm; msg: string; imgIndex: integer);
 var
     bmp: TBitmap;
     animate: boolean;
@@ -95,6 +96,7 @@ begin
         animate := false;
         end;
 
+    singleToast._clickForm := clickForm;
     singleToast.Image1.Picture.Assign(bmp);
     singleToast.Label1.Caption := msg;
 
@@ -206,6 +208,8 @@ end;
 procedure TfrmRiser.Panel2Click(Sender: TObject);
 begin
     Self.Close;
+    // Hey PGM: does this need to set _hidden on TfrmExodus?
+    ShowWindow(_clickForm.Handle, SW_SHOWNOACTIVATE);
 end;
 
 procedure TfrmRiser.FormClose(Sender: TObject; var Action: TCloseAction);

@@ -138,22 +138,26 @@ end;
 procedure DoNotify(win: TfrmDockable; pref_name: string; msg: string; icon: integer);
 var
     notify : integer;
+    w : TForm;
 begin
     if (Application.Active or MainSession.IsPaused) then exit;
 
+    if ((win = nil) or win.Docked) then
+        w := frmExodus
+    else
+        w := win;
+
     notify := MainSession.Prefs.getInt(pref_name);
+    
     if ((notify and notify_toast) > 0) then
-        ShowRiserWindow(msg, icon);
-    if ((notify and notify_flash) > 0) then begin
-        if ((win = nil) or win.Docked) then
-            FlashWindow(frmExodus.Handle, true)
-        else
-            FlashWindow(win.Handle, true);
-        end;
+        ShowRiserWindow(w, msg, icon);
+
+    if ((notify and notify_flash) > 0) then
+        FlashWindow(w.Handle, true);
+
     if ((notify and notify_sound) > 0) then
         PlaySound(pchar('EXODUS_' + pref_name), 0,
                   SND_APPLICATION or SND_ASYNC or SND_NOWAIT or SND_NODEFAULT);
-
 end;
 
 end.
