@@ -57,6 +57,7 @@ type
     mnuSave: TTntMenuItem;
     imgAvatar: TPaintBox;
     Panel2: TPanel;
+    Panel3: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -384,7 +385,7 @@ end;
 procedure TfrmChat.SetupPrefs();
 begin
     AssignDefaultFont(Self.Font);
-    AssignUnicodeURL(lblNick.Font, 9);
+    AssignUnicodeURL(lblNick.Font, 14);
 
     // setup prefs
     MsgList.setupPrefs();
@@ -898,6 +899,8 @@ begin
 
     _old_img := _pres_img;
     _old_hint := imgStatus.Hint;
+
+    frmExodus.ImageList2.GetIcon(_pres_img, Self.Icon);
 
     Self.imgStatusPaint(Self);
 end;
