@@ -832,6 +832,9 @@ begin
         end;
         Result := true;
     end
+    else if (cmd = '/me') then begin
+        Result := false;
+    end
     else begin
         m := TJabberMessage.Create(self.jid, 'groupchat', 'Unknown / command: "' +
                     cmd +'"'#13#10 + 'Try /help', '');
