@@ -11,8 +11,8 @@ unit ExodusCOM_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.19 $
-// File generated on 1/26/2003 9:19:39 PM from Type Library described below.
+// PASTLWTR : $Revision: 1.20 $
+// File generated on 1/27/2003 6:56:15 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -199,6 +199,7 @@ type
     function getActiveContact: WideString; safecall;
     function getActiveGroup: WideString; safecall;
     function getActiveContacts(Online: WordBool): WideString; safecall;
+    function Get_LocalIP: WideString; safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -211,6 +212,7 @@ type
     property IsInvisible: WordBool read Get_IsInvisible;
     property Roster: IExodusRoster read Get_Roster;
     property PPDB: IExodusPPDB read Get_PPDB;
+    property LocalIP: WideString read Get_LocalIP;
   end;
 
 // *********************************************************************//
@@ -287,6 +289,7 @@ type
     function getActiveContact: WideString; dispid 62;
     function getActiveGroup: WideString; dispid 63;
     function getActiveContacts(Online: WordBool): WideString; dispid 65;
+    property LocalIP: WideString readonly dispid 64;
   end;
 
 // *********************************************************************//

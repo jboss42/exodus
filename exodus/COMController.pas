@@ -109,6 +109,7 @@ type
     function getActiveContact: WideString; safecall;
     function getActiveGroup: WideString; safecall;
     function getActiveContacts(Online: WordBool): WideString; safecall;
+    function Get_LocalIP: WideString; safecall;
     { Protected declarations }
   private
     _menu_items: TWideStringList;
@@ -929,6 +930,12 @@ begin
     end;
     clist.Clear();
     clist.Free();
+end;
+
+{---------------------------------------}
+function TExodusController.Get_LocalIP: WideString;
+begin
+    Result := MainSession.Stream.LocalIP;
 end;
 
 initialization
