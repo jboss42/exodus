@@ -1,10 +1,10 @@
 object frmDockWizard: TfrmDockWizard
-  Left = 248
-  Top = 139
+  Left = 249
+  Top = 140
   BorderStyle = bsDialog
   Caption = 'Dockable Wizard'
-  ClientHeight = 359
-  ClientWidth = 418
+  ClientHeight = 357
+  ClientWidth = 416
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,8 +16,8 @@ object frmDockWizard: TfrmDockWizard
   TextHeight = 13
   object TntPanel1: TTntPanel
     Left = 0
-    Top = 318
-    Width = 418
+    Top = 316
+    Width = 416
     Height = 41
     Align = alBottom
     BevelOuter = bvNone
@@ -25,7 +25,7 @@ object frmDockWizard: TfrmDockWizard
     object Bevel1: TBevel
       Left = 0
       Top = 0
-      Width = 418
+      Width = 416
       Height = 5
       Align = alTop
       Shape = bsTopLine
@@ -59,7 +59,7 @@ object frmDockWizard: TfrmDockWizard
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 418
+    Width = 416
     Height = 60
     Align = alTop
     BevelOuter = bvNone
@@ -71,7 +71,7 @@ object frmDockWizard: TfrmDockWizard
     object Bevel2: TBevel
       Left = 0
       Top = 51
-      Width = 418
+      Width = 416
       Height = 9
       Align = alBottom
       Shape = bsBottomLine
@@ -100,7 +100,7 @@ object frmDockWizard: TfrmDockWizard
       Transparent = True
     end
     object Image1: TImage
-      Left = 377
+      Left = 375
       Top = 0
       Width = 41
       Height = 51
@@ -1049,8 +1049,8 @@ object frmDockWizard: TfrmDockWizard
   object Tabs: TPageControl
     Left = 0
     Top = 60
-    Width = 418
-    Height = 258
+    Width = 416
+    Height = 256
     ActivePage = TabSheet1
     Align = alClient
     Style = tsFlatButtons

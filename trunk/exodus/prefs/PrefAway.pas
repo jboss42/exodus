@@ -40,7 +40,6 @@ type
     txtAway: TTntEdit;
     txtXA: TTntEdit;
     chkAAReducePri: TTntCheckBox;
-    StaticText4: TTntPanel;
     chkAutoXA: TTntCheckBox;
     chkAutoDisconnect: TTntCheckBox;
     TntLabel1: TTntLabel;

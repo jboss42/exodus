@@ -37,7 +37,6 @@ type
     txtPluginDir: TTntEdit;
     btnBrowsePluginPath: TTntButton;
     lstPlugins: TTntListView;
-    StaticText4: TTntPanel;
     procedure btnBrowsePluginPathClick(Sender: TObject);
     procedure lblPluginScanClick(Sender: TObject);
     procedure btnConfigPluginClick(Sender: TObject);
@@ -58,7 +57,7 @@ type
 type
     TRegProc = function: HResult; stdcall;
 
-resourcestring
+const
     sRegPluginError = 'The plugin could not be registered with windows.';
 
 var
@@ -67,8 +66,8 @@ var
 implementation
 {$R *.dfm}
 uses
-    ActiveX, COMController, ComObj, ExodusCOM_TLB,
-    PathSelector, Session;
+    ActiveX, COMController, ComObj, ExodusCOM_TLB, ExUtils, 
+    GnuGetText, PathSelector, Session;
 
 {---------------------------------------}
 procedure TfrmPrefPlugins.LoadPrefs();
@@ -155,7 +154,7 @@ begin
             end;
             
             if LibHandle = 0 then begin
-                MessageDlg(sRegPluginError, mtError, [mbOK], 0);
+                MessageDlgW(_(sRegPluginError), mtError, [mbOK], 0);
                 continue;
             end;
 
@@ -163,12 +162,12 @@ begin
             try
                 @RegProc := GetProcAddress(LibHandle, 'DllRegisterServer');
                 if @RegProc = Nil then begin
-                    MessageDlg(sRegPluginError, mtError, [mbOK], 0);
+                    MessageDlgW(_(sRegPluginError), mtError, [mbOK], 0);
                     continue;
                 end;
 
                 if RegProc <> 0 then begin
-                    MessageDlg(sRegPluginError, mtError, [mbOK], 0);
+                    MessageDlgW(_(sRegPluginError), mtError, [mbOK], 0);
                     continue;
                 end;
 

@@ -28,7 +28,6 @@ uses
 type
   TfrmPrefSubscription = class(TfrmPrefPanel)
     optIncomingS10n: TRadioGroup;
-    StaticText4: TTntPanel;
   private
     { Private declarations }
   public

@@ -1,8 +1,8 @@
 object frmPrefs: TfrmPrefs
-  Left = 271
-  Top = 237
-  Width = 468
-  Height = 461
+  Left = 272
+  Top = 238
+  Width = 466
+  Height = 462
   BorderWidth = 1
   Caption = 'Exodus Preferences'
   Color = clBtnFace
@@ -22,7 +22,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 96
-    Height = 388
+    Height = 389
     VertScrollBar.Tracking = True
     Align = alLeft
     Color = clWindow
@@ -3039,8 +3039,8 @@ object frmPrefs: TfrmPrefs
   object PageControl1: TTntPageControl
     Left = 96
     Top = 0
-    Width = 362
-    Height = 388
+    Width = 360
+    Height = 389
     ActivePage = tbsKeywords
     Align = alClient
     Constraints.MinHeight = 340
@@ -3054,24 +3054,24 @@ object frmPrefs: TfrmPrefs
       OnMouseMove = OffBoxMouseMove
       object memKeywords: TTntMemo
         Left = 0
-        Top = 77
-        Width = 354
-        Height = 280
+        Top = 114
+        Width = 352
+        Height = 244
         Align = alClient
         TabOrder = 0
       end
       object Panel2: TPanel
         Left = 0
         Top = 24
-        Width = 354
-        Height = 53
+        Width = 352
+        Height = 90
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
         object Label1: TTntLabel
           Left = 0
           Top = 0
-          Width = 354
+          Width = 352
           Height = 26
           Align = alTop
           Caption = 
@@ -3081,29 +3081,23 @@ object frmPrefs: TfrmPrefs
         end
         object chkRegex: TTntCheckBox
           Left = 5
-          Top = 34
+          Top = 66
           Width = 260
           Height = 14
           Caption = 'Use Regular Expressions for Keyword matches'
           TabOrder = 0
         end
       end
-      object TntPanel1: TTntPanel
+      object pnlKeyword: TTntPanel
         Left = 0
         Top = 0
-        Width = 354
+        Width = 352
         Height = 24
         Align = alTop
         BevelOuter = bvLowered
         Caption = 'Notification Keywords'
         Color = clHighlight
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clHighlightText
-        Font.Height = -13
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
         ParentBackground = False
-        ParentFont = False
         TabOrder = 2
       end
     end
@@ -3112,43 +3106,42 @@ object frmPrefs: TfrmPrefs
       ImageIndex = 9
       object memBlocks: TTntMemo
         Left = 0
-        Top = 77
-        Width = 354
-        Height = 280
+        Top = 108
+        Width = 352
+        Height = 250
         Align = alClient
         TabOrder = 0
       end
       object Memo1: TTntMemo
         Left = 0
         Top = 24
-        Width = 354
-        Height = 53
+        Width = 352
+        Height = 84
         Align = alTop
         BorderStyle = bsNone
         Lines.WideStrings = (
           
             'Enter in the Jabber Addresses (JIDs) of the people to block from' +
             ' sending '
-          'you '
-          'messages. All messages from these contacts will be blocked.')
+          'you messages. All messages from these contacts will be blocked.')
         ParentColor = True
         ReadOnly = True
         TabOrder = 1
       end
-      object StaticText4: TTntPanel
+      object pnlBlocked: TTntPanel
         Left = 0
         Top = 0
-        Width = 354
+        Width = 352
         Height = 24
         Align = alTop
         BevelOuter = bvLowered
         Caption = 'Blocked Contacts'
         Color = clHighlight
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clHighlightText
-        Font.Height = -13
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
         ParentBackground = False
         ParentFont = False
         TabOrder = 2
@@ -3157,8 +3150,8 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 388
-    Width = 458
+    Top = 389
+    Width = 456
     Height = 37
     Align = alBottom
     BevelOuter = bvNone
@@ -3167,13 +3160,13 @@ object frmPrefs: TfrmPrefs
     object Bevel1: TBevel
       Left = 1
       Top = 1
-      Width = 456
+      Width = 454
       Height = 5
       Align = alTop
       Shape = bsTopLine
     end
     object Panel3: TPanel
-      Left = 216
+      Left = 214
       Top = 6
       Width = 241
       Height = 30

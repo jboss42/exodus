@@ -1,28 +1,20 @@
-object frmPrefSystem: TfrmPrefSystem
+inherited frmPrefSystem: TfrmPrefSystem
   Left = 259
   Top = 156
-  Width = 327
-  Height = 430
-  BorderWidth = 6
   Caption = 'frmPrefSystem'
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
-  OldCreateOrder = False
-  OnCreate = FormCreate
+  ClientHeight = 384
+  ClientWidth = 307
+  OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object Label7: TTntLabel
+  object Label7: TTntLabel [0]
     Left = 8
     Top = 186
     Width = 133
     Height = 13
     Caption = 'Exodus language file to use:'
   end
-  object lblPluginScan: TTntLabel
+  object lblPluginScan: TTntLabel [1]
     Left = 30
     Top = 226
     Width = 130
@@ -37,30 +29,17 @@ object frmPrefSystem: TfrmPrefSystem
     ParentFont = False
     OnClick = lblPluginScanClick
   end
-  object Label15: TTntLabel
+  object Label15: TTntLabel [2]
     Left = 8
     Top = 251
     Width = 111
     Height = 13
     Caption = 'My default nickname is:'
   end
-  object StaticText4: TTntPanel
-    Left = 0
-    Top = 0
+  inherited pnlHeader: TTntPanel
     Width = 307
-    Height = 24
-    Align = alTop
-    BevelOuter = bvLowered
     Caption = 'System Options'
-    Color = clHighlight
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clHighlightText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentBackground = False
-    ParentFont = False
-    TabOrder = 11
+    TabOrder = 12
   end
   object chkAutoUpdate: TTntCheckBox
     Left = 8
@@ -108,7 +87,7 @@ object frmPrefSystem: TfrmPrefSystem
     Width = 169
     Height = 17
     Caption = 'Exodus is always on top'
-    TabOrder = 12
+    TabOrder = 11
     Visible = False
   end
   object chkToolbox: TTntCheckBox

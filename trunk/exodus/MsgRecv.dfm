@@ -47,13 +47,11 @@ object frmMsgRecv: TfrmMsgRecv
       TabOrder = 1
       inherited Panel2: TPanel
         Width = 371
-        Height = 34
         inherited Bevel1: TBevel
           Width = 371
         end
         inherited Panel1: TPanel
           Left = 211
-          Height = 29
           inherited btnCancel: TTntButton [0]
             OnClick = frameButtons2btnCancelClick
           end
@@ -503,22 +501,22 @@ object frmMsgRecv: TfrmMsgRecv
       end
     end
   end
-  object popContact: TPopupMenu
+  object popContact: TTntPopupMenu
     Left = 32
     Top = 192
-    object mnuHistory: TMenuItem
+    object mnuHistory: TTntMenuItem
       Caption = 'Show History'
       OnClick = mnuHistoryClick
     end
-    object popClearHistory: TMenuItem
+    object popClearHistory: TTntMenuItem
       Caption = 'Clear History'
       OnClick = popClearHistoryClick
     end
-    object mnuProfile: TMenuItem
+    object mnuProfile: TTntMenuItem
       Caption = 'Show Profile'
       OnClick = mnuProfileClick
     end
-    object C1: TMenuItem
+    object C1: TTntMenuItem
       Caption = 'Client Info'
       object mnuVersionRequest: TMenuItem
         Caption = 'Version Request'
@@ -533,36 +531,36 @@ object frmMsgRecv: TfrmMsgRecv
         OnClick = mnuVersionRequestClick
       end
     end
-    object mnuBlock: TMenuItem
+    object mnuBlock: TTntMenuItem
       Caption = 'Block Contact'
       OnClick = mnuBlockClick
     end
-    object mnuSendFile: TMenuItem
+    object mnuSendFile: TTntMenuItem
       Caption = 'Send File'
       OnClick = mnuSendFileClick
     end
-    object N1: TMenuItem
+    object N1: TTntMenuItem
       Caption = '-'
     end
-    object mnuResources: TMenuItem
+    object mnuResources: TTntMenuItem
       AutoHotkeys = maManual
       Caption = 'Resources'
       object TMenuItem
       end
     end
-    object N2: TMenuItem
+    object N2: TTntMenuItem
       Caption = '-'
     end
   end
-  object popClipboard: TPopupMenu
+  object popClipboard: TTntPopupMenu
     OnPopup = popClipboardPopup
     Left = 72
     Top = 192
-    object popCopy: TMenuItem
+    object popCopy: TTntMenuItem
       Caption = 'Copy'
       OnClick = popCopyClick
     end
-    object popPaste: TMenuItem
+    object popPaste: TTntMenuItem
       Caption = 'Paste'
       OnClick = popPasteClick
     end

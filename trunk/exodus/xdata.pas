@@ -59,7 +59,7 @@ var
 
 procedure showXData(tag: TXMLTag);
 
-resourcestring
+const
     sAllRequired = 'All required fields must be filled out';
     sFormFrom = 'Form from %s';
     sClose = 'Close';
@@ -119,8 +119,8 @@ begin
 
     if (_type = 'cancel') then begin
         // this is a cancel notice
-        self.Caption := sCancelled;
-        lblIns.Caption := WideFormat(sCancelMsg, [to_jid]);
+        self.Caption := _(sCancelled);
+        lblIns.Caption := WideFormat(_(sCancelMsg), [to_jid]);
         insBevel.Visible := false;
         insBevel.Height := 0;
     end
@@ -132,7 +132,7 @@ begin
           self.Caption := _title;
         end
         else
-        Self.Caption := WideFormat(sFormFrom, [to_jid]);
+        Self.Caption := WideFormat(_(sFormFrom), [to_jid]);
 
         ins := x.GetFirstTag('instructions');
         if (ins <> nil) then begin
@@ -185,7 +185,7 @@ begin
 
     if (_type <> 'form') then begin
         frameButtons1.btnOK.Visible := false;
-        frameButtons1.btnCancel.Caption := sClose;
+        frameButtons1.btnCancel.Caption := _(sClose);
     end;
 
     MainSession.Prefs.RestorePosition(Self);
@@ -207,7 +207,7 @@ begin
     if (_type = 'form') then begin
         // do something
         if (not MainSession.Active) then begin
-            MessageDlg(_('You are currently disconnected. Please reconnect before responding to this form.'),
+            MessageDlgW(_('You are currently disconnected. Please reconnect before responding to this form.'),
                 mtError, [mbOK], 0);
             exit;
         end;
@@ -236,7 +236,7 @@ begin
 
         if (not valid) then begin
             if (m <> nil) then m.Free();
-            MessageDlg(sAllRequired, mtError, [mbOK], 0);
+            MessageDlgW(_(sAllRequired), mtError, [mbOK], 0);
             exit;
         end;
         MainSession.SendTag(m);
@@ -305,7 +305,7 @@ var
 begin
     if (_type = 'form') then begin
         if (not MainSession.Active) then begin
-            MessageDlg(_('You are currently disconnected. Please reconnect before responding to this form.'),
+            MessageDlgW(_('You are currently disconnected. Please reconnect before responding to this form.'),
                 mtError, [mbOK], 0);
             exit;
         end;

@@ -50,7 +50,6 @@ type
     Label8: TTntLabel;
     cboPresTracking: TTntComboBox;
     Label1: TTntLabel;
-    StaticText4: TTntPanel;
     chkClientCaps: TTntCheckBox;
     btnDefaults: TTntButton;
     procedure FormDestroy(Sender: TObject);
@@ -75,7 +74,7 @@ type
 var
   frmPrefPresence: TfrmPrefPresence;
 
-resourcestring
+const
     sPrefsDfltPres = 'Untitled Presence';
     sPrefsClearPres = 'Clear all custom presence entries?';
 
@@ -85,7 +84,7 @@ resourcestring
 implementation
 {$R *.dfm}
 uses
-    Unicode, Menus, Presence, Session, XMLUtils;
+    GnuGetText, Unicode, Menus, Presence, Session, XMLUtils, ExUtils;
 
 {---------------------------------------}
 procedure TfrmPrefPresence.LoadPrefs();
@@ -248,7 +247,7 @@ end;
 procedure TfrmPrefPresence.btnCustomPresClearClick(Sender: TObject);
 begin
     // clear all entries
-    if MessageDlg(sPrefsClearPres, mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
+    if MessageDlgW(_(sPrefsClearPres), mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
 
     lstCustomPres.Items.Clear;
     clearPresList();

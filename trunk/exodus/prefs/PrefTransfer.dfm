@@ -7,14 +7,14 @@ inherited frmPrefTransfer: TfrmPrefTransfer
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object Label15: TTntLabel
+  object Label15: TTntLabel [0]
     Left = 0
     Top = 35
     Width = 149
     Height = 13
     Caption = 'File transfer download directory:'
   end
-  object Label2: TTntLabel
+  object Label2: TTntLabel [1]
     Left = 0
     Top = 320
     Width = 184
@@ -29,12 +29,17 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     ParentFont = False
     OnClick = Label2Click
   end
-  object TntLabel2: TTntLabel
+  object TntLabel2: TTntLabel [2]
     Left = 0
     Top = 83
     Width = 129
     Height = 13
     Caption = 'Send file using this method:'
+  end
+  inherited pnlHeader: TTntPanel
+    Width = 318
+    Caption = 'File Transfer Options'
+    TabOrder = 6
   end
   object grpWebDav: TGroupBox
     Left = 8
@@ -183,24 +188,6 @@ inherited frmPrefTransfer: TfrmPrefTransfer
       TabOrder = 2
     end
   end
-  object StaticText4: TTntPanel
-    Left = 0
-    Top = 0
-    Width = 318
-    Height = 24
-    Align = alTop
-    BevelOuter = bvLowered
-    Caption = 'File Transfer Options'
-    Color = clHighlight
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clHighlightText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentBackground = False
-    ParentFont = False
-    TabOrder = 5
-  end
   object cboXferMode: TTntComboBox
     Left = 8
     Top = 99
@@ -221,7 +208,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     Top = 128
     Width = 281
     Height = 79
-    TabOrder = 6
+    TabOrder = 5
     object TntLabel1: TTntLabel
       Left = 8
       Top = 16

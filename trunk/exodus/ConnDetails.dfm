@@ -90,12 +90,6 @@ object frmConnDetails: TfrmConnDetails
         Height = 13
         Cursor = crHandPoint
         Caption = 'Download a list of servers'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clBlue
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsUnderline]
-        ParentFont = False
         OnClick = lblServerListClick
       end
       object Label13: TTntLabel
@@ -185,9 +179,9 @@ object frmConnDetails: TfrmConnDetails
         Top = 7
         Width = 191
         Height = 21
-        Style = csOwnerDrawFixed
+        Style = csDropDownList
         DropDownCount = 2
-        ItemHeight = 15
+        ItemHeight = 13
         ItemIndex = 0
         TabOrder = 0
         Text = 'Normal'

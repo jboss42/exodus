@@ -399,7 +399,7 @@ begin
     hosts := tag.QueryXPTags('/iq/query/streamhost');
 
     if (hosts.Count = 0) then begin
-        MessageDlg(_('No acceptable stream hosts were sent. Have the sender check their settings.'),
+        MessageDlgW(_('No acceptable stream hosts were sent. Have the sender check their settings.'),
             mtError, [mbOK], 0);
         SendError('406', 'not-acceptable');
         kill();
@@ -428,14 +428,14 @@ begin
     _filename := SaveDialog1.filename;
 
     if FileExists(_filename) then begin
-        if MessageDlg(sXferOverwrite,
+        if MessageDlgW(_(sXferOverwrite),
             mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
         DeleteFile(_filename);
     end;
 
     file_path := ExtractFilePath(_filename);
     if (not DirectoryExists(file_path)) then begin
-        if MessageDlg(sXferCreateDir, mtConfirmation,
+        if MessageDlgW(_(sXferCreateDir), mtConfirmation,
             [mbYes, mbNo], 0) = mrNo then exit;
         CreateDir(file_path);
     end;
@@ -445,7 +445,7 @@ begin
         fstream := TFileStream.Create(_filename, fmCreate);
     except
         on EStreamError do begin
-            MessageDlg(sXferStreamError, mtError, [mbOK], 0);
+            MessageDlgW(_(sXferStreamError), mtError, [mbOK], 0);
             exit;
         end;
     end;
@@ -542,14 +542,14 @@ begin
             _filename := SaveDialog1.filename;
 
             if FileExists(_filename) then begin
-                if MessageDlg(sXferOverwrite,
+                if MessageDlgW(_(sXferOverwrite),
                     mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
                 DeleteFile(_filename);
             end;
 
             file_path := ExtractFilePath(_filename);
             if (not DirectoryExists(file_path)) then begin
-                if MessageDlg(sXferCreateDir, mtConfirmation,
+                if MessageDlgW(_(sXferCreateDir), mtConfirmation,
                     [mbYes, mbNo], 0) = mrNo then exit;
                 CreateDir(file_path);
             end;
@@ -559,7 +559,7 @@ begin
                 fstream := TFileStream.Create(_filename, fmCreate);
             except
                 on EStreamError do begin
-                    MessageDlg(sXferStreamError, mtError, [mbOK], 0);
+                    MessageDlgW(_(sXferStreamError), mtError, [mbOK], 0);
                     exit;
                 end;
             end;
@@ -599,8 +599,8 @@ begin
     if (_pkg.Mode = recv_si) then begin
         if (_state = recv_si_stream) then begin
             btnRecv.Enabled := true;
-            btnRecv.Caption := sOpen;
-            btnCancel.Caption := sClose;
+            btnRecv.Caption := _(sOpen);
+            btnCancel.Caption := _(sClose);
             _state := recv_done;
             _thread := nil;
             bar1.Position := bar1.Max;
@@ -610,13 +610,13 @@ begin
         if ((msg.LParam >= 200) and
             (msg.LParam < 300)) then begin
             btnRecv.Enabled := true;
-            btnRecv.Caption := sOpen;
-            btnCancel.Caption := sClose;
+            btnRecv.Caption := _(sOpen);
+            btnCancel.Caption := _(sClose);
             _state := recv_done;
         end
         else begin
-            tmps := WideFormat(sXferRecvError, [msg.LParam]);
-            MessageDlg(tmps, mtError, [mbOK], 0);
+            tmps := WideFormat(_(sXferRecvError), [msg.LParam]);
+            MessageDlgW(tmps, mtError, [mbOK], 0);
             DeleteFile(_filename);
         end;
     end;
@@ -679,7 +679,7 @@ begin
 
     if (_hosts.Count = 0) then begin
         // we ran out of streamhosts to try. bummer :(
-        MessageDlg(_('Exodus was unable to connect to any file transfer proxies or the sender.'),
+        MessageDlgW(_('Exodus was unable to connect to any file transfer proxies or the sender.'),
             mtError, [mbOK], 0);
 
         // send error back to sender.
@@ -732,7 +732,7 @@ begin
     if ((pres.PresType = 'unavailable') and (pres.fromJid.full = _pkg.recip)) then begin
         MainSession.UnRegisterCallback(_pres);
         _pres := -1;
-        MessageDlg(WideFormat(_('The sender of a file transfer (%s) went offline.'),
+        MessageDlgW(WideFormat(_('The sender of a file transfer (%s) went offline.'),
             [_pkg.recip]), mtError, [mbOK], 0);
         _state := recv_si_cancel;
         getXferManager().killFrame(Self);

@@ -117,7 +117,7 @@ var
 
 function ShowConnDetails(p: TJabberProfile): integer;
 
-resourcestring
+const
     sSmallKeys = 'Must have a larger number of poll keys.';
     sConnDetails = '%s Details';
     sProfileInvalidJid = 'The Jabber ID you entered (username@server/resource) is invalid. Please enter a valid username, server, and resource.';
@@ -150,7 +150,7 @@ begin
 
     with f do begin
         _profile := p;
-        f.Caption := WideFormat(sConnDetails, [p.Name]);
+        f.Caption := WideFormat(_(sConnDetails), [p.Name]);
         SetProfile(p);
         SetConn(p);
         SetHttp(p);
@@ -178,7 +178,7 @@ begin
         valid := isValidJid(jid);
 
     if (valid = false) then begin
-        MessageDlg(sProfileInvalidJid, mtError, [mbOK], 0);
+        MessageDlgW(_(sProfileInvalidJid), mtError, [mbOK], 0);
         exit;
     end;
 
@@ -305,7 +305,7 @@ begin
         txtHost.Text := Host;
         txtPort.Text := IntToStr(Port);
         if ((ExStartup.ssl_ok = false) and (ssl = ssl_port)) then begin
-            MessageDlg(sNoSSL, mtError, [mbOK], 0);
+            MessageDlgW(_(sNoSSL), mtError, [mbOK], 0);
             ssl := ssl_tls;
         end;
         optSSL.ItemIndex := ssl;
@@ -350,7 +350,7 @@ begin
         if (NumPollKeys < 2) then begin
             NumPollKeys := 256;
             txtKeys.Text := '256';
-            MessageDlg(sSmallKeys, mtWarning, [mbOK], 0);
+            MessageDlgW(_(sSmallKeys), mtWarning, [mbOK], 0);
         end;
         
     end;
@@ -450,7 +450,7 @@ var
     items: TXMLTagList;
     i: integer;
 begin
-    if (MessageDlg(sDownloadServers, mtConfirmation, [mbYes, mbNo], 0) = mrNo) then
+    if (MessageDlgW(_(sDownloadServers), mtConfirmation, [mbYes, mbNo], 0) = mrNo) then
         exit;
 
     frameButtons1.btnOK.Enabled := false;

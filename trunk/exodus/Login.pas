@@ -24,13 +24,11 @@ interface
 uses
     Session,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    StdCtrls, buttonFrame, ComCtrls, Menus, TntStdCtrls, ExtCtrls;
+    StdCtrls, buttonFrame, ComCtrls, Menus, TntStdCtrls, ExtCtrls, TntMenus;
 
 type
   TfrmLogin = class(TForm)
-    popProfiles: TPopupMenu;
-    CreateNew1: TMenuItem;
-    Delete1: TMenuItem;
+    popProfiles: TTntPopupMenu;
     frameButtons1: TframeButtons;
     Panel1: TPanel;
     Panel2: TPanel;
@@ -39,6 +37,8 @@ type
     cboProfiles: TTntComboBox;
     chkInvisible: TTntCheckBox;
     lblJid: TTntStaticText;
+    Delete1: TTntMenuItem;
+    CreateNew1: TTntMenuItem;
 
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cboProfilesChange(Sender: TObject);
@@ -59,7 +59,7 @@ var
 
 procedure ShowLogin;
 
-resourcestring
+const
     sProfileDefaultResource = 'Exodus';
     sProfileRemove = 'Remove this profile?';
     sProfileDefault = 'Default Profile';
@@ -188,7 +188,7 @@ var
     p: TJabberProfile;
 begin
     // Delete this profile
-    if (MessageDlg(sProfileRemove, mtConfirmation, [mbYes, mbNo], 0) = mrNo) then exit;
+    if (MessageDlgW(_(sProfileRemove), mtConfirmation, [mbYes, mbNo], 0) = mrNo) then exit;
 
     i := cboProfiles.ItemIndex;
     p := TJabberProfile(MainSession.Prefs.Profiles.Objects[i]);

@@ -24,39 +24,39 @@ uses
     Chat, ChatController, JabberID, XMLTag, IQ, Unicode, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2,
-    RichEdit, TntStdCtrls, Buttons;
+    RichEdit, TntStdCtrls, Buttons, TntMenus;
 
 type
   TfrmChat = class(TfrmBaseChat)
-    popContact: TPopupMenu;
-    mnuHistory: TMenuItem;
-    mnuProfile: TMenuItem;
-    mnuBlock: TMenuItem;
-    mnuSendFile: TMenuItem;
-    mnuSave: TMenuItem;
-    N1: TMenuItem;
-    mnuReturns: TMenuItem;
+    popContact: TTntPopupMenu;
     timFlash: TTimer;
     SaveDialog1: TSaveDialog;
-    C1: TMenuItem;
     mnuVersionRequest: TMenuItem;
     mnuTimeRequest: TMenuItem;
     mnuLastActivity: TMenuItem;
-    mnuOnTop: TMenuItem;
     btnClose: TSpeedButton;
     pnlJID: TPanel;
     imgStatus: TPaintBox;
-    popClearHistory: TMenuItem;
     lblNick: TTntLabel;
-    mnuWordwrap: TMenuItem;
-    NotificationOptions1: TMenuItem;
     timBusy: TTimer;
-    popAddContact: TMenuItem;
     lblJID: TTntLabel;
-    N3: TMenuItem;
-    N4: TMenuItem;
-    popResources: TMenuItem;
-    N5: TMenuItem;
+    N3: TTntMenuItem;
+    mnuWordwrap: TTntMenuItem;
+    mnuReturns: TTntMenuItem;
+    mnuOnTop: TTntMenuItem;
+    NotificationOptions1: TTntMenuItem;
+    N1: TTntMenuItem;
+    mnuBlock: TTntMenuItem;
+    C1: TTntMenuItem;
+    mnuProfile: TTntMenuItem;
+    popAddContact: TTntMenuItem;
+    mnuSendFile: TTntMenuItem;
+    N4: TTntMenuItem;
+    popResources: TTntMenuItem;
+    N5: TTntMenuItem;
+    popClearHistory: TTntMenuItem;
+    mnuHistory: TTntMenuItem;
+    mnuSave: TTntMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -164,7 +164,7 @@ var
 function StartChat(sjid, resource: widestring; show_window: boolean; chat_nick: widestring=''): TfrmChat;
 procedure CloseAllChats;
 
-resourcestring
+const
     sReplying = ' is replying.';
     sChatActivity = 'Chat Activity: ';
     sUserBlocked = 'This user is now blocked.';
@@ -181,7 +181,7 @@ uses
     CustomNotify, COMChatController, Debug, ExEvents,
     JabberConst, ExSession, ExUtils, Presence, PrefController, Room,
     XferManager, RosterAdd, RiserWindow, Notify,
-    Jabber1, Profile, MsgDisplay,
+    Jabber1, Profile, MsgDisplay, GnuGetText, 
     JabberMsg, NodeItem, Roster, Session, XMLUtils,
     ShellAPI, RosterWindow, Emoticons;
 
@@ -451,7 +451,7 @@ begin
 
     if ritem <> nil then begin
         lblNick.Caption := ' ' + ritem.Nickname + ' ';
-        Caption := ritem.Nickname + ' - ' + sChat;
+        Caption := ritem.Nickname + ' - ' + _(sChat);
         lblJID.Caption := '<' + _jid.full + '>';
         if (p = nil) then
             ChangePresImage('offline', 'offline')
@@ -463,9 +463,9 @@ begin
         lblNick.Caption := ' ';
         lblJID.Caption := cjid;
         if OtherNick <> '' then
-            Caption := OtherNick + ' - ' + sChat
+            Caption := OtherNick + ' - ' + _(sChat)
         else
-            Caption := _jid.user + ' - ' + sChat;
+            Caption := _jid.user + ' - ' + _(sChat);
         if (p = nil) then
             ChangePresImage('unknown', 'Unknown Presence')
         else
@@ -793,7 +793,7 @@ begin
         _pres_img := ico_Online;
 
     if (status = '') then
-        imgStatus.Hint := show
+        imgStatus.Hint := _(show)
     else
         imgStatus.Hint := status;
 
@@ -822,8 +822,8 @@ begin
     p := MainSession.ppdb.FindPres(j.jid, j.resource);
     j.Free();
     if (p = nil) then begin
-        show := sOffline;
-        status := sOffline;
+        show := _(sOffline);
+        status := _(sOffline);
     end
     else begin
         show := tag.GetBasicText('show');
@@ -832,12 +832,12 @@ begin
 
     ChangePresImage(show, status);
     if (status = '') then
-        txt := show
+        txt := _(show)
     else
         txt := status;
 
     if (txt = '') then
-        txt := sAvailable;
+        txt := _(sAvailable);
 
     if (MainSession.Prefs.getBool('timestamp')) then
         txt := '[' + formatdatetime(MainSession.Prefs.getString('timestamp_format'),now) + '] ' +
@@ -872,7 +872,7 @@ begin
     // check to see if we're already subscribed...
     ritem := MainSession.roster.find(_jid.jid);
     if ((ritem <> nil) and ((ritem.subscription = 'both') or (ritem.subscription = 'to'))) then begin
-        MessageDlg(sAlreadySubscribed, mtInformation,
+        MessageDlgW(_(sAlreadySubscribed), mtInformation,
             [mbOK], 0);
         exit;
     end
@@ -1091,14 +1091,14 @@ begin
         if ns = XMLNS_TIME then begin
             _cur_time := nil;
             qTag := tag.getFirstTag('query');
-            msg := sMsgTime;
+            msg := _(sMsgTime);
 
             tmp_tag := qtag.getFirstTag('display');
             if (tmp_tag <> nil) then
-                msg := msg + #13 + sMsgLocalTime + tmp_tag.Data;
+                msg := msg + #13 + _(sMsgLocalTime) + tmp_tag.Data;
             s := tag.GetAttribute('iq_elapsed_time');
             if (s <> '') then
-                msg := msg + #13 + WideFormat(sMsgPing, [s]);
+                msg := msg + #13 + WideFormat(_(sMsgPing), [s]);
             DispString(msg);
         end
 
@@ -1106,19 +1106,19 @@ begin
             _cur_ver := nil;
             qTag := tag.getFirstTag('query');
             tmp_tag := qtag.getFirstTag('name');
-            msg := sMsgVersion + #13 + sMsgVerClient + tmp_tag.Data + #13;
+            msg := _(sMsgVersion) + #13 + _(sMsgVerClient) + tmp_tag.Data + #13;
 
             tmp_tag := qtag.getFirstTag('version');
-            msg := msg + sMsgVerVersion + tmp_tag.Data + #13;
+            msg := msg + _(sMsgVerVersion) + tmp_tag.Data + #13;
 
             tmp_tag := qtag.getFirstTag('os');
-            DispString(msg + sMsgVerOS + tmp_tag.Data);
+            DispString(msg + _(sMsgVerOS) + tmp_tag.Data);
         end
 
         else if ns = XMLNS_LAST then begin
             _cur_last := nil;
             qTag := tag.getFirstTag('query');
-            DispString(sMsgLastInfo + secsToDuration(qTag.getAttribute('seconds')) + '.');
+            DispString(_(sMsgLastInfo) + secsToDuration(qTag.getAttribute('seconds')) + '.');
         end;
 
     end;
@@ -1212,7 +1212,7 @@ var
 begin
     if ((_warn_busyclose) and
         ((timBusy.Enabled) or (timFlash.Enabled))) then begin
-        if MessageDlg(sCloseBusy, mtConfirmation, [mbYes, mbNo], 0) = mrNo then begin
+        if MessageDlgW(_(sCloseBusy), mtConfirmation, [mbYes, mbNo], 0) = mrNo then begin
             CanClose := false;
             exit;
         end;

@@ -37,7 +37,6 @@ type
     chkGroupCounts: TTntCheckBox;
     chkOfflineGrp: TTntCheckBox;
     chkOnlineOnly: TTntCheckBox;
-    StaticText4: TTntPanel;
     procedure chkOfflineGrpClick(Sender: TObject);
   private
     { Private declarations }
@@ -50,14 +49,14 @@ type
 var
   frmPrefGroups: TfrmPrefGroups;
 
-resourcestring
+const
     sOfflineGrpWarn = 'The offline group will only show up if you have show only online contacts turned off.';
 
 implementation
 
 {$R *.dfm}
 uses
-    ExUtils, Session, PrefController, Unicode;
+    GnuGetText, ExUtils, Session, PrefController, Unicode;
 
 procedure TfrmPrefGroups.LoadPrefs();
 var
@@ -111,7 +110,7 @@ begin
     if (not Self.Visible) then exit;
 
     if ((chkOfflineGrp.Checked) and (chkOnlineOnly.Checked)) then begin
-        MessageDlg(sOfflineGrpWarn, mtInformation, [mbOK], 0);
+        MessageDlgW(_(sOfflineGrpWarn), mtInformation, [mbOK], 0);
         chkOnlineOnly.Checked := false;
     end;
 end;

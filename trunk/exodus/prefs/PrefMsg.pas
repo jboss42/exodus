@@ -46,7 +46,6 @@ type
     chkBlockNonRoster: TTntCheckBox;
     OpenDialog1: TOpenDialog;
     txtTimestampFmt: TTntComboBox;
-    StaticText4: TTntPanel;
     chkLogRoster: TTntCheckBox;
     procedure btnLogBrowseClick(Sender: TObject);
     procedure btnLogClearAllClick(Sender: TObject);
@@ -63,7 +62,7 @@ type
 var
   frmPrefMsg: TfrmPrefMsg;
 
-resourcestring
+const
     sPrefsLogDir = 'Select log directory';
 
 implementation

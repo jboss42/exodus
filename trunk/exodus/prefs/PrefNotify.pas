@@ -39,7 +39,6 @@ type
     chkFlashInfinite: TTntCheckBox;
     chkNotifyActiveWindow: TTntCheckBox;
     chkFront: TTntCheckBox;
-    StaticText4: TTntPanel;
     procedure lblConfigSoundsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure chkNotifyClick(Sender: TObject);
@@ -60,7 +59,7 @@ type
 var
   frmPrefNotify: TfrmPrefNotify;
 
-resourcestring
+const
     sSoundChatactivity = 'Activity in a chat window';
     sSoundInvite = 'Invited to a room';
     sSoundKeyword = 'Keyword in a room';
@@ -77,7 +76,7 @@ resourcestring
 implementation
 {$R *.dfm}
 uses
-    ExUtils, PrefController, Session, ShellAPI;
+    GnuGetText, ExUtils, PrefController, Session, ShellAPI;
 
 const
     NUM_NOTIFIES = 11;
@@ -247,7 +246,7 @@ begin
     if (_loading) then exit;
 
     if (chkSound.Checked) then
-        MessageDlg(sSoundSetup, mtInformation, [mbOK], 0);
+        MessageDlgW(_(sSoundSetup), mtInformation, [mbOK], 0);
 end;
 
 end.

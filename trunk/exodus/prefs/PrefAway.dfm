@@ -7,42 +7,42 @@ inherited frmPrefAway: TfrmPrefAway
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object Label2: TTntLabel
+  object Label2: TTntLabel [0]
     Left = 8
     Top = 106
     Width = 213
     Height = 13
     Caption = 'Minutes to wait before setting status to Away:'
   end
-  object Label3: TTntLabel
+  object Label3: TTntLabel [1]
     Left = 8
     Top = 130
     Width = 201
     Height = 13
     Caption = 'Minutes to wait before setting status to XA:'
   end
-  object Label4: TTntLabel
+  object Label4: TTntLabel [2]
     Left = 8
     Top = 186
     Width = 62
     Height = 13
     Caption = 'Away Status:'
   end
-  object Label9: TTntLabel
+  object Label9: TTntLabel [3]
     Left = 8
     Top = 210
     Width = 50
     Height = 13
     Caption = 'XA Status:'
   end
-  object TntLabel1: TTntLabel
+  object TntLabel1: TTntLabel [4]
     Left = 8
     Top = 154
     Width = 178
     Height = 13
     Caption = 'Minutes to wait before Disconnecting:'
   end
-  object txtAwayTime: TTntEdit
+  object txtAwayTime: TTntEdit [5]
     Left = 232
     Top = 104
     Width = 33
@@ -50,7 +50,7 @@ inherited frmPrefAway: TfrmPrefAway
     TabOrder = 4
     Text = '5'
   end
-  object spnAway: TUpDown
+  object spnAway: TUpDown [6]
     Left = 265
     Top = 104
     Width = 16
@@ -61,7 +61,7 @@ inherited frmPrefAway: TfrmPrefAway
     Position = 5
     TabOrder = 5
   end
-  object txtXATime: TTntEdit
+  object txtXATime: TTntEdit [7]
     Left = 232
     Top = 128
     Width = 33
@@ -69,7 +69,7 @@ inherited frmPrefAway: TfrmPrefAway
     TabOrder = 6
     Text = '30'
   end
-  object spnXA: TUpDown
+  object spnXA: TUpDown [8]
     Left = 265
     Top = 128
     Width = 16
@@ -80,7 +80,7 @@ inherited frmPrefAway: TfrmPrefAway
     Position = 30
     TabOrder = 7
   end
-  object chkAutoAway: TTntCheckBox
+  object chkAutoAway: TTntCheckBox [9]
     Left = 8
     Top = 32
     Width = 270
@@ -89,21 +89,21 @@ inherited frmPrefAway: TfrmPrefAway
     TabOrder = 0
     OnClick = chkAutoAwayClick
   end
-  object txtAway: TTntEdit
+  object txtAway: TTntEdit [10]
     Left = 80
     Top = 184
     Width = 201
     Height = 21
     TabOrder = 10
   end
-  object txtXA: TTntEdit
+  object txtXA: TTntEdit [11]
     Left = 80
     Top = 208
     Width = 201
     Height = 21
     TabOrder = 11
   end
-  object chkAAReducePri: TTntCheckBox
+  object chkAAReducePri: TTntCheckBox [12]
     Left = 8
     Top = 82
     Width = 273
@@ -111,25 +111,7 @@ inherited frmPrefAway: TfrmPrefAway
     Caption = 'Reduce priority to 0 during auto-away.'
     TabOrder = 3
   end
-  object StaticText4: TTntPanel
-    Left = 0
-    Top = 0
-    Width = 300
-    Height = 24
-    Align = alTop
-    BevelOuter = bvLowered
-    Caption = 'Auto Away Options'
-    Color = clHighlight
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clHighlightText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentBackground = False
-    ParentFont = False
-    TabOrder = 12
-  end
-  object chkAutoXA: TTntCheckBox
+  object chkAutoXA: TTntCheckBox [13]
     Left = 8
     Top = 48
     Width = 270
@@ -138,7 +120,7 @@ inherited frmPrefAway: TfrmPrefAway
     TabOrder = 1
     OnClick = chkAutoAwayClick
   end
-  object chkAutoDisconnect: TTntCheckBox
+  object chkAutoDisconnect: TTntCheckBox [14]
     Left = 8
     Top = 64
     Width = 270
@@ -147,7 +129,7 @@ inherited frmPrefAway: TfrmPrefAway
     TabOrder = 2
     OnClick = chkAutoAwayClick
   end
-  object txtDisconnectTime: TTntEdit
+  object txtDisconnectTime: TTntEdit [15]
     Left = 232
     Top = 152
     Width = 33
@@ -155,7 +137,7 @@ inherited frmPrefAway: TfrmPrefAway
     TabOrder = 8
     Text = '60'
   end
-  object spnDisconnect: TUpDown
+  object spnDisconnect: TUpDown [16]
     Left = 265
     Top = 152
     Width = 16
@@ -165,5 +147,10 @@ inherited frmPrefAway: TfrmPrefAway
     Max = 600
     Position = 60
     TabOrder = 9
+  end
+  inherited pnlHeader: TTntPanel
+    Width = 300
+    Caption = 'Auto Away Options'
+    TabOrder = 12
   end
 end

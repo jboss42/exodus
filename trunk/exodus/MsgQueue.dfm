@@ -154,10 +154,10 @@ object frmMsgQueue: TfrmMsgQueue
     UndoLimit = 0
     AllowInPlace = False
   end
-  object PopupMenu1: TPopupMenu
+  object PopupMenu1: TTntPopupMenu
     Left = 64
     Top = 80
-    object D1: TMenuItem
+    object D1: TTntMenuItem
       Caption = 'Delete'
       OnClick = D1Click
     end

@@ -7,6 +7,11 @@ inherited frmPrefNetwork: TfrmPrefNetwork
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
+  inherited pnlHeader: TTntPanel
+    Width = 343
+    Caption = 'Connection Options'
+    TabOrder = 2
+  end
   object GroupBox1: TGroupBox
     Left = 3
     Top = 29
@@ -34,15 +39,9 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Width = 240
       Height = 13
       Caption = 'Time is in seconds. Use 0 for a random time period.'
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
-      ParentFont = False
     end
     object txtReconnectTries: TTntEdit
-      Left = 168
+      Left = 200
       Top = 16
       Width = 33
       Height = 21
@@ -50,7 +49,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Text = '0'
     end
     object spnAttempts: TUpDown
-      Left = 201
+      Left = 233
       Top = 16
       Width = 16
       Height = 21
@@ -58,7 +57,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       TabOrder = 1
     end
     object txtReconnectTime: TTntEdit
-      Left = 168
+      Left = 200
       Top = 48
       Width = 33
       Height = 21
@@ -66,7 +65,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Text = '0'
     end
     object spnTime: TUpDown
-      Left = 201
+      Left = 233
       Top = 48
       Width = 16
       Height = 21
@@ -79,12 +78,12 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     Left = 3
     Top = 135
     Width = 294
-    Height = 172
+    Height = 186
     Caption = 'HTTP Proxy'
     TabOrder = 1
     object lblProxyHost: TTntLabel
       Left = 5
-      Top = 53
+      Top = 55
       Width = 25
       Height = 13
       Caption = 'Host:'
@@ -92,7 +91,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     end
     object lblProxyPort: TTntLabel
       Left = 5
-      Top = 76
+      Top = 81
       Width = 22
       Height = 13
       Caption = 'Port:'
@@ -100,7 +99,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     end
     object lblProxyUsername: TTntLabel
       Left = 5
-      Top = 121
+      Top = 129
       Width = 51
       Height = 13
       Caption = 'Username:'
@@ -108,7 +107,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     end
     object lblProxyPassword: TTntLabel
       Left = 5
-      Top = 144
+      Top = 152
       Width = 49
       Height = 13
       Caption = 'Password:'
@@ -122,24 +121,24 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Caption = 'Approach:'
     end
     object txtProxyHost: TTntEdit
-      Left = 59
-      Top = 49
+      Left = 107
+      Top = 51
       Width = 130
       Height = 21
       Enabled = False
       TabOrder = 1
     end
     object txtProxyPort: TTntEdit
-      Left = 59
-      Top = 72
+      Left = 107
+      Top = 77
       Width = 39
       Height = 21
       Enabled = False
       TabOrder = 2
     end
     object chkProxyAuth: TTntCheckBox
-      Left = 59
-      Top = 94
+      Left = 107
+      Top = 102
       Width = 135
       Height = 17
       Caption = 'Authentication Required'
@@ -148,16 +147,16 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       OnClick = chkProxyAuthClick
     end
     object txtProxyUsername: TTntEdit
-      Left = 59
-      Top = 116
+      Left = 107
+      Top = 124
       Width = 130
       Height = 21
       Enabled = False
       TabOrder = 4
     end
     object txtProxyPassword: TTntEdit
-      Left = 59
-      Top = 142
+      Left = 107
+      Top = 150
       Width = 130
       Height = 21
       Enabled = False
@@ -165,7 +164,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       TabOrder = 5
     end
     object cboProxyApproach: TTntComboBox
-      Left = 59
+      Left = 107
       Top = 24
       Width = 130
       Height = 22
@@ -180,23 +179,5 @@ inherited frmPrefNetwork: TfrmPrefNetwork
         'Direct Connection'
         'Custom')
     end
-  end
-  object StaticText4: TTntPanel
-    Left = 0
-    Top = 0
-    Width = 343
-    Height = 24
-    Align = alTop
-    BevelOuter = bvLowered
-    Caption = 'Connection Options'
-    Color = clHighlight
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clHighlightText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentBackground = False
-    ParentFont = False
-    TabOrder = 2
   end
 end

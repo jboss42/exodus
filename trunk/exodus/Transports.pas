@@ -42,7 +42,7 @@ end;
 
 procedure RemoveTransport(jid: WideString; Quiet: boolean = false);
 
-resourceString
+const
     sTransportRemove = 'Remove Registration?';
     sTransportTimeout = 'The transport could not be reached. Your request timed out.';
     sTransportError = 'There was an error processing your request.';
@@ -55,7 +55,7 @@ resourceString
 {---------------------------------------}
 implementation
 uses
-    JabberConst, Controls, Dialogs;
+    GnuGetText, ExUtils, JabberConst, Controls, Dialogs;
 
 {---------------------------------------}
 procedure RemoveTransport(jid: Widestring; Quiet: boolean = false);
@@ -64,7 +64,7 @@ var
 begin
     // Delete the registration
     if (Quiet = false) then begin
-        if MessageDlg(sTransportRemove, mtConfirmation, [mbYes, mbNo], 0) = mrNo then
+        if MessageDlgW(_(sTransportRemove), mtConfirmation, [mbYes, mbNo], 0) = mrNo then
             exit;
     end;
 
@@ -92,7 +92,7 @@ end;
 {---------------------------------------}
 procedure TTransportProxy.ShowError(msg: Widestring);
 begin
-    MessageDlg(msg, mtError, [mbOK], 0);
+    MessageDlgW(msg, mtError, [mbOK], 0);
     Self.Free();
 end;
 
@@ -105,12 +105,12 @@ var
 begin
     //
     if (event = 'timeout') then begin
-        ShowError(sTransportTimeout);
+        ShowError(_(sTransportTimeout));
         exit;
     end;
 
     if (tag.GetAttribute('type') = 'error') then begin
-        ShowError(sTransportError);
+        ShowError(_(sTransportError));
         exit;
     end;
 
@@ -124,7 +124,7 @@ begin
             key := key_tag.Data();
 
         if (user = '') then begin
-            ShowError(sTransportNotReg);
+            ShowError(_(sTransportNotReg));
             exit;
         end;
 
@@ -148,16 +148,16 @@ procedure TTransportProxy.RemoveSetCallback(event: string; tag: TXMLTag);
 begin
     //
     if (event = 'timeout') then begin
-        ShowError(sTransportTimeout);
+        ShowError(_(sTransportTimeout));
         exit;
     end;
 
     if (tag.GetAttribute('type') = 'error') then begin
-        ShowError(sTransportError);
+        ShowError(_(sTransportError));
         exit;
     end
     else begin
-        MessageDlg(sTransportSuccess, mtInformation, [mbOK], 0);
+        MessageDlgW(_(sTransportSuccess), mtInformation, [mbOK], 0);
         self.free();
         exit;
     end;

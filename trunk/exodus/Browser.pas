@@ -24,7 +24,7 @@ uses
     Dockable, Entity, IQ, XMLTag, XMLUtils, Contnrs, Unicode,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     StdCtrls, ImgList, Buttons, ComCtrls, ExtCtrls, Menus, ToolWin, fListbox,
-    fService, TntStdCtrls, TntComCtrls, TntExtCtrls;
+    fService, TntStdCtrls, TntComCtrls, TntExtCtrls, TntMenus;
 
 type
 
@@ -34,26 +34,11 @@ type
     ImageList2: TImageList;
     Toolbar: TImageList;
     DisToolbar: TImageList;
-    popHistory: TPopupMenu;
-    popViewStyle: TPopupMenu;
-    Details1: TMenuItem;
-    LargeIcons1: TMenuItem;
-    SmallIcons1: TMenuItem;
-    List1: TMenuItem;
+    popHistory: TTntPopupMenu;
+    popViewStyle: TTntPopupMenu;
     StatBar: TStatusBar;
     vwBrowse: TTntListView;
-    popContext: TPopupMenu;
-    mBrowse: TMenuItem;
-    mBrowseNew: TMenuItem;
-    mBookmark: TMenuItem;
-    N1: TMenuItem;
-    mSearch: TMenuItem;
-    mRegister: TMenuItem;
-    mJoinConf: TMenuItem;
-    mVersion: TMenuItem;
-    mTime: TMenuItem;
-    mLast: TMenuItem;
-    mVCard: TMenuItem;
+    popContext: TTntPopupMenu;
     pnlInfo: TTntPanel;
     pnlTop: TTntPanel;
     btnClose: TSpeedButton;
@@ -73,6 +58,21 @@ type
     btnRefresh: TSpeedButton;
     lblError: TTntLabel;
     ToolButton3: TToolButton;
+    List1: TTntMenuItem;
+    SmallIcons1: TTntMenuItem;
+    LargeIcons1: TTntMenuItem;
+    Details1: TTntMenuItem;
+    mJoinConf: TTntMenuItem;
+    mRegister: TTntMenuItem;
+    mSearch: TTntMenuItem;
+    mLast: TTntMenuItem;
+    mTime: TTntMenuItem;
+    mVersion: TTntMenuItem;
+    mVCard: TTntMenuItem;
+    N1: TTntMenuItem;
+    mBookmark: TTntMenuItem;
+    mBrowseNew: TTntMenuItem;
+    mBrowse: TTntMenuItem;
     procedure btnGoClick(Sender: TObject);
     procedure ResizeAddressBar(Sender: TObject);
     procedure cboJIDKeyPress(Sender: TObject; var Key: Char);
@@ -147,26 +147,13 @@ function ShowBrowser(jid: string = ''): TfrmBrowse;
 implementation
 {$R *.DFM}
 uses
-    EntityCache, 
+    EntityCache, GnuGetText,  
     JabberConst, JoinRoom, Room, Roster, JabberID, Bookmark,
     ExUtils, Session, JUD, Profile, RegForm, Jabber1;
 
 var
     cur_sort: integer;
     cur_dir: boolean;
-
-resourceString
-    sService = 'Service';
-    sConference = 'Conference';
-    sUser = 'Jabber User';
-    sApplication = 'Application';
-    sHeadline = 'Headline Svc.';
-    sRender = 'Rendering Svc.';
-    sKeyword = 'Keyword Lookup';
-    sValidate = 'Validator';
-    sItem = 'Jabber Object';
-    sObjects = 'Objects';
-
 
 {---------------------------------------}
 function ShowBrowser(jid: string = ''): TfrmBrowse;
@@ -206,7 +193,7 @@ procedure TfrmBrowse.DoBrowse(jid: Widestring; refresh: boolean);
 begin
     // Actually Browse to the JID entered in the address box
     if (not isValidJID(jid)) then begin
-        MessageDlg(sInvalidJID, mtError, [mbOK], 0);
+        MessageDlgW(_(sInvalidJID), mtError, [mbOK], 0);
         exit;
     end;
 
@@ -606,7 +593,7 @@ begin
             ShowInfo(_ent);
 
             setupTitle(_ent.Name, _ent.Jid.full);
-            StatBar.Panels[0].Text := IntToStr(_blist.Count) + ' ' + sObjects;
+            StatBar.Panels[0].Text := IntToStr(_blist.Count) + ' ' + _('Objects');
             pnlInfo.Visible := false;
             vwBrowse.Visible := true;
 

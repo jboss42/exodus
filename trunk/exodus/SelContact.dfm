@@ -18,7 +18,7 @@ object frmSelContact: TfrmSelContact
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 254
+    Top = 257
     Width = 219
     Height = 33
     Align = alBottom
@@ -40,12 +40,12 @@ object frmSelContact: TfrmSelContact
     Left = 0
     Top = 0
     Width = 219
-    Height = 223
+    Height = 226
     Align = alClient
     TabOrder = 1
     inherited treeRoster: TTreeView
       Width = 219
-      Height = 223
+      Height = 226
       PopupMenu = PopupMenu1
       OnChange = frameTreeRoster1treeRosterChange
       OnDblClick = frameTreeRoster1treeRosterDblClick
@@ -53,7 +53,7 @@ object frmSelContact: TfrmSelContact
   end
   object Panel1: TPanel
     Left = 0
-    Top = 223
+    Top = 226
     Width = 219
     Height = 31
     Align = alBottom
@@ -78,10 +78,10 @@ object frmSelContact: TfrmSelContact
       TabOrder = 0
     end
   end
-  object PopupMenu1: TPopupMenu
+  object PopupMenu1: TTntPopupMenu
     Left = 16
     Top = 56
-    object ShowOnlineOnly1: TMenuItem
+    object ShowOnlineOnly1: TTntMenuItem
       Caption = 'Show Online Only'
       OnClick = ShowOnlineOnly1Click
     end

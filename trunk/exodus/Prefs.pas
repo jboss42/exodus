@@ -84,8 +84,8 @@ type
     imgLayouts: TImage;
     lblLayouts: TTntLabel;
     Memo1: TTntMemo;
-    StaticText4: TTntPanel;
-    TntPanel1: TTntPanel;
+    pnlBlocked: TTntPanel;
+    pnlKeyword: TTntPanel;
     Shape1: TShape;
     Shape2: TShape;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -238,6 +238,18 @@ var
     i: integer;
     c: TControl;
 begin
+    // Setup some fonts
+    AssignUnicodeFont(memKeywords.Font, 10);
+    AssignUnicodeFont(memBlocks.Font, 10);
+    AssignUnicodeFont(Scroller.Font, 8);
+    AssignUnicodeFont(Panel1.Font, 8);
+    AssignUnicodeFont(PageControl1.Font, 8);
+
+    // Our panels..
+    AssignUnicodeHighlight(pnlKeyword.Font, 10);
+    AssignUnicodeHighlight(pnlBlocked.Font, 10);
+
+
     TranslateComponent(Self);
 
     tbsKeywords.TabVisible := false;
@@ -271,12 +283,6 @@ begin
     _plugs := nil;
     _xfer := nil;
     _network := nil;
-
-
-    // Setup some fonts
-    AssignUnicodeFont(memKeywords.Font, 10);
-    AssignUnicodeFont(memBlocks.Font, 10);
-    AssignUnicodeFont(Scroller.Font, 8);
 
     for i := 0 to Scroller.ControlCount - 1 do begin
         c := Scroller.Controls[i];

@@ -17,7 +17,7 @@ object frmInvalidRoster: TfrmInvalidRoster
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 210
+    Top = 208
     Width = 314
     Height = 32
     Align = alBottom
@@ -49,7 +49,7 @@ object frmInvalidRoster: TfrmInvalidRoster
     Left = 0
     Top = 0
     Width = 314
-    Height = 210
+    Height = 208
     Align = alClient
     Checkboxes = True
     Columns = <
@@ -69,10 +69,10 @@ object frmInvalidRoster: TfrmInvalidRoster
     TabOrder = 1
     ViewStyle = vsReport
   end
-  object popItems: TPopupMenu
+  object popItems: TTntPopupMenu
     Left = 24
     Top = 40
-    object oggleCheckboxes1: TMenuItem
+    object oggleCheckboxes1: TTntMenuItem
       Caption = 'Toggle Checkboxes'
       OnClick = oggleCheckboxes1Click
     end

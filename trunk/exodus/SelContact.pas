@@ -23,17 +23,18 @@ interface
 uses
   ComCtrls, 
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, fRosterTree, buttonFrame, Menus, StdCtrls, TntStdCtrls, ExtCtrls;
+  Dialogs, fRosterTree, buttonFrame, Menus, StdCtrls, TntStdCtrls, ExtCtrls,
+  TntMenus;
 
 type
   TfrmSelContact = class(TForm)
     frameButtons1: TframeButtons;
     frameTreeRoster1: TframeTreeRoster;
-    PopupMenu1: TPopupMenu;
-    ShowOnlineOnly1: TMenuItem;
+    PopupMenu1: TTntPopupMenu;
     Panel1: TPanel;
     Label1: TTntLabel;
     txtJID: TTntEdit;
+    ShowOnlineOnly1: TTntMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure frameTreeRoster1treeRosterDblClick(Sender: TObject);

@@ -49,7 +49,7 @@ end;
 var
     SubController: TSubController;
 
-resourcestring
+const
     sS10nDeny = 'The contact: %s did not grant your subscription request.'#13#10'This user may not exist.';
 
 

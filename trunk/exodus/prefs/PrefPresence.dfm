@@ -8,9 +8,14 @@ inherited frmPrefPresence: TfrmPrefPresence
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
+  inherited pnlHeader: TTntPanel
+    Width = 349
+    Caption = 'Presence Options'
+    TabOrder = 4
+  end
   object lstCustomPres: TTntListBox
     Left = 0
-    Top = 145
+    Top = 147
     Width = 349
     Height = 102
     Align = alTop
@@ -20,7 +25,7 @@ inherited frmPrefPresence: TfrmPrefPresence
   end
   object pnlCustomPresButtons: TPanel
     Left = 0
-    Top = 247
+    Top = 249
     Width = 349
     Height = 34
     Align = alTop
@@ -65,7 +70,7 @@ inherited frmPrefPresence: TfrmPrefPresence
   end
   object GroupBox1: TGroupBox
     Left = 0
-    Top = 281
+    Top = 283
     Width = 349
     Height = 119
     Align = alTop
@@ -93,7 +98,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       Caption = 'Type:'
     end
     object Label14: TTntLabel
-      Left = 177
+      Left = 217
       Top = 73
       Width = 34
       Height = 13
@@ -107,7 +112,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       Caption = 'HotKey:'
     end
     object txtCPTitle: TTntEdit
-      Left = 48
+      Left = 88
       Top = 20
       Width = 225
       Height = 21
@@ -115,7 +120,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       OnChange = txtCPTitleChange
     end
     object txtCPStatus: TTntEdit
-      Left = 48
+      Left = 88
       Top = 44
       Width = 225
       Height = 21
@@ -123,7 +128,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       OnChange = txtCPTitleChange
     end
     object cboCPType: TTntComboBox
-      Left = 48
+      Left = 88
       Top = 68
       Width = 97
       Height = 21
@@ -139,7 +144,7 @@ inherited frmPrefPresence: TfrmPrefPresence
         'Do Not Disturb')
     end
     object txtCPPriority: TTntEdit
-      Left = 218
+      Left = 258
       Top = 69
       Width = 39
       Height = 21
@@ -151,7 +156,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       OnChange = txtCPTitleChange
     end
     object spnPriority: TTntUpDown
-      Left = 257
+      Left = 297
       Top = 69
       Width = 16
       Height = 21
@@ -164,7 +169,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       TabOrder = 4
     end
     object txtCPHotkey: THotKey
-      Left = 48
+      Left = 88
       Top = 92
       Width = 97
       Height = 19
@@ -175,7 +180,7 @@ inherited frmPrefPresence: TfrmPrefPresence
   end
   object Panel1: TPanel
     Left = 0
-    Top = 24
+    Top = 26
     Width = 349
     Height = 121
     Align = alTop
@@ -233,23 +238,5 @@ inherited frmPrefPresence: TfrmPrefPresence
       State = cbChecked
       TabOrder = 1
     end
-  end
-  object StaticText4: TTntPanel
-    Left = 0
-    Top = 0
-    Width = 349
-    Height = 24
-    Align = alTop
-    BevelOuter = bvLowered
-    Caption = 'Presence Options'
-    Color = clHighlight
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clHighlightText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentBackground = False
-    ParentFont = False
-    TabOrder = 4
   end
 end

@@ -7,7 +7,7 @@ inherited frmPrefNotify: TfrmPrefNotify
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object lblConfigSounds: TTntLabel
+  object lblConfigSounds: TTntLabel [0]
     Left = 169
     Top = 32
     Width = 93
@@ -24,6 +24,11 @@ inherited frmPrefNotify: TfrmPrefNotify
     ParentShowHint = False
     ShowHint = True
     OnClick = lblConfigSoundsClick
+  end
+  inherited pnlHeader: TTntPanel
+    Width = 338
+    Caption = 'Notification Options'
+    TabOrder = 6
   end
   object chkNotify: TTntCheckListBox
     Left = 8
@@ -129,23 +134,5 @@ inherited frmPrefNotify: TfrmPrefNotify
     Height = 17
     Caption = 'Perform notifications for the window I'#39'm typing in.'
     TabOrder = 2
-  end
-  object StaticText4: TTntPanel
-    Left = 0
-    Top = 0
-    Width = 338
-    Height = 24
-    Align = alTop
-    BevelOuter = bvLowered
-    Caption = 'Notification Options'
-    Color = clHighlight
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clHighlightText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentBackground = False
-    ParentFont = False
-    TabOrder = 6
   end
 end

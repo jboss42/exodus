@@ -6,6 +6,10 @@ inherited frmPrefSubscription: TfrmPrefSubscription
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
+  inherited pnlHeader: TTntPanel
+    Caption = 'Subscription Options'
+    TabOrder = 1
+  end
   object optIncomingS10n: TRadioGroup
     Left = 8
     Top = 32
@@ -19,23 +23,5 @@ inherited frmPrefSubscription: TfrmPrefSubscription
       'Auto-Accept all requests'
       'Auto-Deny all requests')
     TabOrder = 0
-  end
-  object StaticText4: TTntPanel
-    Left = 0
-    Top = 0
-    Width = 272
-    Height = 24
-    Align = alTop
-    BevelOuter = bvLowered
-    Caption = 'Subscription Options'
-    Color = clHighlight
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clHighlightText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentBackground = False
-    ParentFont = False
-    TabOrder = 1
   end
 end

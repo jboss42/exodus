@@ -63,7 +63,7 @@ type
 var
   frmAdd: TfrmAdd;
 
-resourcestring
+const
     sNoDomain = 'The contact ID you entered does not follow the standard user@host convention. Do you want to continue?';
     sResourceSpec = 'Jabber Contact IDs do not typically include a resource. Are you sure you want to add this contact ID?';
     sNoGatewayFound = 'The gateway server you requested does not have a transport for this contact type.';
@@ -124,15 +124,15 @@ begin
         // Adding a normal Jabber user
         // check to see if we have an "@" sign
         if (Lowercase(sjid) = Lowercase(MainSession.Username + '@' + MainSession.Server)) then begin
-            MessageDlg(sNotAddMyself, mtError, [mbOK], 0);
+            MessageDlgW(_(sNotAddMyself), mtError, [mbOK], 0);
             exit;
         end;
 
         tmp_jid := TJabberID.Create(sjid);
         if (tmp_jid.user = '') then
-            if MessageDlg(sNoDomain, mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
+            if MessageDlgW(_(sNoDomain), mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
         if (tmp_jid.resource <> '') then
-            if MessageDlg(sResourceSpec, mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
+            if MessageDlgW(_(sResourceSpec), mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
         doAdd();
         tmp_jid.Free();
     end;
@@ -241,7 +241,7 @@ begin
         end
         else begin
             // we don't have this svc..
-            MessageDlg(sNoGatewayFound, mtError, [mbOK], 0);
+            MessageDlgW(_(sNoGatewayFound), mtError, [mbOK], 0);
             Self.Show();
         end;
     end;

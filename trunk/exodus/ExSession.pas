@@ -60,7 +60,8 @@ function CmdLine(): string;
 function checkSSL(): boolean;
 
 {---------------------------------------}
-resourcestring
+const
+    sCommandLine =  'The following command line parameters are available in Exodus: '#13#10#13#10;
     sCmdDebug =     ' -d '#9#9' : Debug mode on'#13#10;
     sCmdMinimized = ' -m '#9#9' : Start minimized'#13#10;
     sCmdInvisible = ' -v '#9#9' : invisible mode'#13#10;
@@ -152,7 +153,7 @@ begin
     // Make sure winsock2 is available..
     ws2 := LoadLibrary('WS2_32.DLL');
     if (ws2 = 0) then begin
-        MessageDlg(sWinsock2, mtError, [mbOK], 0);
+        MessageDlgW(_(sWinsock2), mtError, [mbOK], 0);
         Result := false;
         exit;
     end;
@@ -242,19 +243,19 @@ begin
 
     if (show_help) then begin
         // show the help message
-        help_msg := sCommandLine;
-        help_msg := help_msg + sCmdDebug;
-        help_msg := help_msg + sCmdMinimized;
-        help_msg := help_msg + sCmdInvisible;
-        help_msg := help_msg + sCmdHelp;
-        help_msg := help_msg + sCmdExpanded;
-        help_msg := help_msg + sCmdJID;
-        help_msg := help_msg + sCmdPassword;
-        help_msg := help_msg + sCmdResource;
-        help_msg := help_msg + sCmdPriority;
-        help_msg := help_msg + sCmdProfile;
-        help_msg := help_msg + sCmdConfig;
-        MessageDlg(help_msg, mtInformation, [mbOK], 0);
+        help_msg := _(sCommandLine);
+        help_msg := help_msg + _(sCmdDebug);
+        help_msg := help_msg + _(sCmdMinimized);
+        help_msg := help_msg + _(sCmdInvisible);
+        help_msg := help_msg + _(sCmdHelp);
+        help_msg := help_msg + _(sCmdExpanded);
+        help_msg := help_msg + _(sCmdJID);
+        help_msg := help_msg + _(sCmdPassword);
+        help_msg := help_msg + _(sCmdResource);
+        help_msg := help_msg + _(sCmdPriority);
+        help_msg := help_msg + _(sCmdProfile);
+        help_msg := help_msg + _(sCmdConfig);
+        MessageDlgW(help_msg, mtInformation, [mbOK], 0);
         Result := false;
         exit;
     end;
@@ -334,7 +335,7 @@ begin
         connect_node := nil;
         if (xmpp_file <> '') then begin
             if (not FileExists(xmpp_file)) then
-                MessageDlg('NO file:' + xmpp_file, mtWarning, [mbOK], 0);
+                MessageDlgW(_('Missing file:') + xmpp_file, mtWarning, [mbOK], 0);
             connect_node := nil;
             jid := nil;
             ParseXMPPFile(xmpp_file, connect_node, jid);

@@ -82,7 +82,7 @@ const
     reg_Misc = 8;
     reg_URL = 9;
 
-resourcestring
+const
     sBtnFinish = 'Finish';
     sBtnCancel = 'Cancel';
     sServiceRegTitle = 'Jabber Service Registration';
@@ -127,8 +127,8 @@ begin
     TabSheet3.TabVisible := false;
     TabSheet4.TabVisible := false;
 
-    lblWizardTitle.Caption := sServiceRegTitle;
-    lblWizardDetails.Caption := sServiceRegDetails;
+    lblWizardTitle.Caption := _(sServiceRegTitle);
+    lblWizardDetails.Caption := _(sServiceRegDetails);
 
     cur_stage := rsWelcome;
     Tabs.ActivePage := TabSheet1;
@@ -173,7 +173,7 @@ begin
     if (event = 'xml') then begin
         if (tag.GetAttribute('type') = 'error') then begin
             // error packet
-            MessageDlg(sServiceRegError, mtError, [mbOK], 0);
+            MessageDlgW(_(sServiceRegError), mtError, [mbOK], 0);
             Self.Close();
             exit;
         end
@@ -261,7 +261,7 @@ begin
     end
     else begin
         // timeout on entity query
-        MessageDlg(sServiceRegTimeout, mtError, [mbOK], 0);
+        MessageDlgW(_(sServiceRegTimeout), mtError, [mbOK], 0);
         Self.Close();
         exit;
     end;
@@ -412,7 +412,7 @@ begin
         lblOK.Visible := true;
         lblBad.Visible := false;
         btnBack.Enabled := false;
-        btnNext.Caption := sBtnFinish;
+        btnNext.Caption := _(sBtnFinish);
         btnNext.Enabled := true;
         btnNext.Default := true;
         btnCancel.Enabled := false;
@@ -472,15 +472,15 @@ end;
 procedure TfrmRegister.RemoveCallback(event: string; tag: TXMLTag);
 begin
     if (event = 'timeout') then begin
-        MessageDlg(sServiceRegTimeout, mtError, [mbOK], 0);
+        MessageDlgW(_(sServiceRegTimeout), mtError, [mbOK], 0);
     end
     else begin
         if (tag.getAttribute('type') = 'error') then begin
-            MessageDlg(sServiceRegRemoveError, mtError,
+            MessageDlgW(_(sServiceRegRemoveError), mtError,
                 [mbOK], 0);
         end
         else begin
-            MessageDlg(sServiceRegRemoveOK, mtInformation, [mbOK], 0);
+            MessageDlgW(_(sServiceRegRemoveOK), mtInformation, [mbOK], 0);
         end;
     end;
     self.close();

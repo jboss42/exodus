@@ -2,7 +2,7 @@ object frmBaseChat: TfrmBaseChat
   Left = 278
   Top = 157
   Width = 388
-  Height = 313
+  Height = 310
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -277,46 +277,46 @@ object frmBaseChat: TfrmBaseChat
     BorderWidth = 2
     TabOrder = 2
   end
-  object popMsgList: TPopupMenu
+  object popMsgList: TTntPopupMenu
     Left = 16
     Top = 120
-    object Copy1: TMenuItem
+    object Copy1: TTntMenuItem
       Caption = 'Copy'
       OnClick = Copy1Click
     end
-    object CopyAll1: TMenuItem
+    object CopyAll1: TTntMenuItem
       Caption = 'Copy All'
       OnClick = CopyAll1Click
     end
-    object Clear1: TMenuItem
+    object Clear1: TTntMenuItem
       Caption = 'Clear'
       OnClick = Clear1Click
     end
   end
-  object popOut: TPopupMenu
+  object popOut: TTntPopupMenu
     Left = 48
     Top = 120
-    object Copy2: TMenuItem
+    object Copy2: TTntMenuItem
       Caption = 'Cut'
       OnClick = Copy2Click
     end
-    object Copy3: TMenuItem
+    object Copy3: TTntMenuItem
       Caption = 'Copy'
       OnClick = Copy3Click
     end
-    object Paste2: TMenuItem
+    object Paste2: TTntMenuItem
       Caption = 'Paste '
       OnClick = Paste1Click
     end
-    object N2: TMenuItem
+    object N2: TTntMenuItem
       Caption = '-'
     end
-    object Emoticons2: TMenuItem
+    object Emoticons2: TTntMenuItem
       Caption = 'Emoticons'
       ShortCut = 16453
       OnClick = Emoticons1Click
     end
-    object emot_sep: TMenuItem
+    object emot_sep: TTntMenuItem
       Caption = '-'
     end
   end

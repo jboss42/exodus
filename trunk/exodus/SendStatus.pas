@@ -162,7 +162,7 @@ implementation
 {$R *.dfm}
 
 uses
-    GnuGetText, JabberID, XMLUtils, JabberConst, Session;
+    ExUtils, GnuGetText, JabberID, XMLUtils, JabberConst, Session;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -359,7 +359,7 @@ begin
     _pkg := pkg;
     lblTo.Caption := pkg.recip;
     lblFile.Caption := ExtractFilename(pkg.pathname);
-    lblStatus.Caption := sXferWaiting;
+    lblStatus.Caption := _(sXferWaiting);
 end;
 
 {---------------------------------------}
@@ -463,7 +463,7 @@ begin
             fs.Free();
         except
             on EStreamError do begin
-                MessageDlg(sXferStreamError, mtError, [mbOK], 0);
+                MessageDlgW(_(sXferStreamError), mtError, [mbOK], 0);
                 exit;
             end;
         end;
@@ -527,7 +527,7 @@ begin
             _stream := TFileStream.Create(_pkg.pathname, (fmOpenRead or fmShareDenyNone));
         except
             on EStreamError do begin
-                MessageDlg(sXferStreamError, mtError, [mbOK], 0);
+                MessageDlgW(_(sXferStreamError), mtError, [mbOK], 0);
                 exit;
             end;
         end;
@@ -676,7 +676,7 @@ begin
         fStream := TFileStream.Create(_pkg.pathname, fmOpenRead);
     except
         on EStreamError do begin
-            MessageDlg(sXferStreamError, mtError, [mbOK], 0);
+            MessageDlgW(_(sXferStreamError), mtError, [mbOK], 0);
             exit;
         end;
     end;
@@ -912,7 +912,7 @@ begin
     end
     else if ((event = 'xml') and (tag.getAttribute('type') = 'error')) then begin
         // they refused
-        MessageDlg(WideFormat(_('The recipient (%s) refused your file: %s'),
+        MessageDlgW(WideFormat(_('The recipient (%s) refused your file: %s'),
             [_pkg.recip, _pkg.pathname]), mtError, [mbOK], 0);
         _state := send_cancel;
         DoState();
@@ -934,7 +934,7 @@ begin
     end;
 
     // error
-    MessageDlg(WideFormat(_('The stream was not actived for file: %s'),
+    MessageDlgW(WideFormat(_('The stream was not actived for file: %s'),
         [_pkg.pathname]), mtError, [mbOK], 0);
     _state := send_cancel;
     DoState();
@@ -950,7 +950,7 @@ begin
             (msg.LParam < 300)) then
             sendIQ()
         else
-            MessageDlg(sXferDavError, mtError, [mbOK], 0);
+            MessageDlgW(_(sXferDavError), mtError, [mbOK], 0);
         Self.Free();
     end
     else begin

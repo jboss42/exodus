@@ -25,7 +25,7 @@ uses
     Unicode, Dockable, ExEvents, MsgController, XMLTag, Contnrs,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2,
-    Buttons, TntStdCtrls, Menus;
+    Buttons, TntStdCtrls, Menus, TntMenus;
 
 type
 
@@ -45,18 +45,10 @@ type
     Splitter1: TSplitter;
     txtMsg: TExRichEdit;
     MsgOut: TExRichEdit;
-    popContact: TPopupMenu;
-    mnuHistory: TMenuItem;
-    popClearHistory: TMenuItem;
-    mnuProfile: TMenuItem;
-    C1: TMenuItem;
+    popContact: TTntPopupMenu;
     mnuVersionRequest: TMenuItem;
     mnuTimeRequest: TMenuItem;
     mnuLastActivity: TMenuItem;
-    mnuBlock: TMenuItem;
-    mnuSendFile: TMenuItem;
-    N1: TMenuItem;
-    mnuResources: TMenuItem;
     pnlTop: TPanel;
     pnlHeader: TPanel;
     pnlSendSubject: TPanel;
@@ -69,14 +61,22 @@ type
     pnlError: TPanel;
     Image1: TImage;
     frameButtons1: TframeButtons;
-    N2: TMenuItem;
-    popClipboard: TPopupMenu;
-    popCopy: TMenuItem;
-    popPaste: TMenuItem;
+    popClipboard: TTntPopupMenu;
     txtFrom: TTntLabel;
     lblFrom: TTntLabel;
     Panel1: TPanel;
     btnClose: TSpeedButton;
+    N2: TTntMenuItem;
+    mnuResources: TTntMenuItem;
+    N1: TTntMenuItem;
+    mnuSendFile: TTntMenuItem;
+    mnuBlock: TTntMenuItem;
+    C1: TTntMenuItem;
+    mnuProfile: TTntMenuItem;
+    popClearHistory: TTntMenuItem;
+    mnuHistory: TTntMenuItem;
+    popPaste: TTntMenuItem;
+    popCopy: TTntMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -151,7 +151,7 @@ procedure StartRecvMsg(e: TJabberEvent);
 function StartMsg(msg_jid: WideString): TfrmMsgRecv;
 function BroadcastMsg(jids: TWideStringlist): TfrmMsgRecv;
 
-resourcestring
+const
     sMessageFrom = 'Message from ';
     sMessageTo = 'Message to ';
 
@@ -170,7 +170,7 @@ resourcestring
 implementation
 uses
     Clipbrd, COMChatController, JabberConst, ShellAPI, Profile,
-    XferManager,
+    XferManager, GnuGetText, 
     ExSession, ExUtils, JabberMsg, JabberID,
     RosterWindow, RemoveContact, RosterRecv, Room, NodeItem, Roster,
     Presence, Session, Jabber1;
@@ -344,15 +344,15 @@ begin
 
     if eType = evt_Invite then begin
         // Change button captions for TC Invites
-        frameButtons1.btnOK.Caption := sAccept;
-        frameButtons1.btnCancel.Caption := sDecline;
+        frameButtons1.btnOK.Caption := _(sAccept);
+        frameButtons1.btnCancel.Caption := _(sDecline);
     end
 
     else if e.error then begin
         // This is an error.. show the error panel
         frameButtons1.btnOK.Visible := false;
         pnlError.Visible := true;
-        lblSubject2.Caption := sError;
+        lblSubject2.Caption := _(sError);
     end
 
     else
@@ -375,7 +375,7 @@ begin
     pnlReply.Visible := true;
     pnlReply.Align := alClient;
     ActiveControl := MsgOut;
-    lblFrom.Caption := sTo;
+    lblFrom.Caption := _(sTo);
     btnClose.Visible := Docked;
 
     pnlTop.Height := pnlSendSubject.Top + pnlSendSubject.Height + 3;
@@ -407,9 +407,9 @@ begin
         e := _events.Pop;
         DisplayEvent(e);
         if (_events.Count = 0) then
-            frameButtons1.btnCancel.Caption := sBtnClose
+            frameButtons1.btnCancel.Caption := _(sBtnClose)
         else
-            frameButtons1.btnCancel.Caption := sBtnNext;
+            frameButtons1.btnCancel.Caption := _(sBtnNext);
         e.Free();
     end;
 end;
@@ -654,16 +654,16 @@ begin
     if (ritem <> nil) then begin
         txtFrom.Caption := ritem.Nickname + ' <' + jid + '>';
         if (pnlSendSubject.Visible) then
-            Self.Caption := sMessageTo + ritem.Nickname
+            Self.Caption := _(sMessageTo) + ritem.Nickname
         else
-            Self.Caption := sMessageFrom + ritem.Nickname;
+            Self.Caption := _(sMessageFrom) + ritem.Nickname;
     end
     else begin
         txtFrom.Caption := jid;
         if (pnlSendSubject.Visible) then
-            Self.Caption := sMessageTo + jid
+            Self.Caption := _(sMessageTo) + jid
         else
-            Self.Caption := sMessageFrom + jid;
+            Self.Caption := _(sMessageFrom) + jid;
     end;
     tmp_jid.Free();
 end;
@@ -721,7 +721,7 @@ end;
 procedure TfrmMsgRecv.PushEvent(e: TJabberEvent);
 begin
     _events.Push(e);
-    frameButtons1.btnCancel.Caption := sBtnNext
+    frameButtons1.btnCancel.Caption := _(sBtnNext)
 end;
 
 {---------------------------------------}
@@ -733,7 +733,7 @@ begin
         CanClose := true
     else begin
         CanClose := false;
-        MessageDlg(sMsgsPending, mtError, [mbOK], 0);
+        MessageDlgW(_(sMsgsPending), mtError, [mbOK], 0);
     end;
 end;
 

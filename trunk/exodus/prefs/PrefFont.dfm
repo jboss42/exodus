@@ -7,7 +7,7 @@ inherited frmPrefFont: TfrmPrefFont
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object Label22: TTntLabel
+  object Label22: TTntLabel [0]
     Left = 8
     Top = 56
     Width = 87
@@ -20,7 +20,7 @@ inherited frmPrefFont: TfrmPrefFont
     Font.Style = [fsBold]
     ParentFont = False
   end
-  object Label23: TTntLabel
+  object Label23: TTntLabel [1]
     Left = 136
     Top = 56
     Width = 82
@@ -33,28 +33,28 @@ inherited frmPrefFont: TfrmPrefFont
     Font.Style = [fsBold]
     ParentFont = False
   end
-  object Label24: TTntLabel
+  object Label24: TTntLabel [2]
     Left = 8
     Top = 186
     Width = 88
     Height = 13
     Caption = 'Background Color:'
   end
-  object Label25: TTntLabel
+  object Label25: TTntLabel [3]
     Left = 8
     Top = 210
     Width = 51
     Height = 13
     Caption = 'Font Color:'
   end
-  object Label5: TTntLabel
+  object Label5: TTntLabel [4]
     Left = 8
     Top = 32
     Width = 283
     Height = 13
     Caption = 'Click on the appropriate font or window to change elements.'
   end
-  object lblColor: TTntLabel
+  object lblColor: TTntLabel [5]
     Left = 8
     Top = 168
     Width = 82
@@ -67,7 +67,7 @@ inherited frmPrefFont: TfrmPrefFont
     Font.Style = [fsBold]
     ParentFont = False
   end
-  object colorRoster: TTreeView
+  object colorRoster: TTreeView [6]
     Left = 8
     Top = 72
     Width = 121
@@ -84,7 +84,7 @@ inherited frmPrefFont: TfrmPrefFont
       00000000085065746572204D2E24000000000000000000000000000000FFFFFF
       FF00000000000000000B436F77626F79204E65616C}
   end
-  object clrBoxBG: TColorBox
+  object clrBoxBG: TColorBox [7]
     Left = 135
     Top = 183
     Width = 170
@@ -97,7 +97,7 @@ inherited frmPrefFont: TfrmPrefFont
     TabOrder = 2
     OnChange = clrBoxBGChange
   end
-  object clrBoxFont: TColorBox
+  object clrBoxFont: TColorBox [8]
     Left = 135
     Top = 207
     Width = 170
@@ -110,7 +110,7 @@ inherited frmPrefFont: TfrmPrefFont
     TabOrder = 3
     OnChange = clrBoxFontChange
   end
-  object btnFont: TTntButton
+  object btnFont: TTntButton [9]
     Left = 135
     Top = 234
     Width = 90
@@ -119,7 +119,7 @@ inherited frmPrefFont: TfrmPrefFont
     TabOrder = 4
     OnClick = btnFontClick
   end
-  object colorChat: TExRichEdit
+  object colorChat: TExRichEdit [10]
     Left = 136
     Top = 72
     Width = 225
@@ -215,22 +215,9 @@ inherited frmPrefFont: TfrmPrefFont
     UndoLimit = 0
     AllowInPlace = False
   end
-  object StaticText4: TTntPanel
-    Left = 0
-    Top = 0
+  inherited pnlHeader: TTntPanel
     Width = 403
-    Height = 24
-    Align = alTop
-    BevelOuter = bvLowered
     Caption = 'Fonts and Colors'
-    Color = clHighlight
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clHighlightText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentBackground = False
-    ParentFont = False
     TabOrder = 5
   end
   object FontDialog1: TFontDialog

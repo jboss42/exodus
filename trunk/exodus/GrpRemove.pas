@@ -49,7 +49,7 @@ var
 
 procedure RemoveGroup(grp: string; contacts: TList = nil);
 
-resourcestring
+const
     sRemoveContacts = 'Remove %d contacts';
     sRemoveGroup = 'Remove the %s group';
 
@@ -73,14 +73,14 @@ begin
 
     with f do begin
         if (contacts <> nil) then begin
-            Caption := WideFormat(sRemoveContacts, [contacts.Count]);
+            Caption := WideFormat(_(sRemoveContacts), [contacts.Count]);
             optMove.Enabled := false;
             cboNewGroup.Enabled := false;
             optNuke.Checked := true;
             ct_list.Assign(contacts);
         end
         else begin
-            Caption := WideFormat(sRemoveGroup, [grp]);
+            Caption := WideFormat(_(sRemoveGroup), [grp]);
             MainSession.Roster.AssignGroups(cboNewGroup.Items);
             cboNewGroup.Items.Delete(cboNewGroup.Items.IndexOf(grp));
             cboNewGroup.ItemIndex := 0;

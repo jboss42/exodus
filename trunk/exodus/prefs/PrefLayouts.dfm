@@ -1,22 +1,22 @@
 inherited frmPrefLayouts: TfrmPrefLayouts
-  Left = 255
-  Top = 151
+  Left = 256
+  Top = 152
   Caption = 'PrefLayouts'
-  ClientHeight = 426
-  ClientWidth = 357
+  ClientHeight = 424
+  ClientWidth = 355
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object lblPreview: TTntLabel
+  object lblPreview: TTntLabel [0]
     Left = 8
-    Top = 108
+    Top = 123
     Width = 38
     Height = 13
     Caption = 'Preview'
   end
-  object imgView2: TImage
+  object imgView2: TImage [1]
     Left = 8
-    Top = 128
+    Top = 143
     Width = 270
     Height = 221
     AutoSize = True
@@ -441,9 +441,9 @@ inherited frmPrefLayouts: TfrmPrefLayouts
       801B6E0C296A5BBAE7FFD9}
     Stretch = True
   end
-  object imgView3: TImage
+  object imgView3: TImage [2]
     Left = 47
-    Top = 128
+    Top = 143
     Width = 270
     Height = 233
     AutoSize = True
@@ -876,9 +876,9 @@ inherited frmPrefLayouts: TfrmPrefLayouts
       73FA7F23FECCFFD9}
     Stretch = True
   end
-  object imgView1: TImage
+  object imgView1: TImage [3]
     Left = 239
-    Top = 128
+    Top = 143
     Width = 128
     Height = 210
     AutoSize = True
@@ -1130,10 +1130,10 @@ inherited frmPrefLayouts: TfrmPrefLayouts
       E7CF7F79F3DFDE7CF7F79F3DFDE24D8A010251669073FFD9}
     Stretch = True
   end
-  object lblViewHelp: TTntLabel
+  object lblViewHelp: TTntLabel [4]
     Left = 8
     Top = 64
-    Width = 273
+    Width = 345
     Height = 41
     AutoSize = False
     Caption = 
@@ -1141,7 +1141,7 @@ inherited frmPrefLayouts: TfrmPrefLayouts
       'ratly and are never docked.'
     WordWrap = True
   end
-  object cboView: TTntComboBox
+  object cboView: TTntComboBox [5]
     Left = 4
     Top = 36
     Width = 277
@@ -1155,22 +1155,9 @@ inherited frmPrefLayouts: TfrmPrefLayouts
       'Dock windows. Roster is always visible'
       'Dock windows and use tabs')
   end
-  object StaticText4: TTntPanel
-    Left = 0
-    Top = 0
-    Width = 357
-    Height = 24
-    Align = alTop
-    BevelOuter = bvLowered
+  inherited pnlHeader: TTntPanel
+    Width = 355
     Caption = 'Window Layouts'
-    Color = clHighlight
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clHighlightText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentBackground = False
-    ParentFont = False
     TabOrder = 1
   end
 end

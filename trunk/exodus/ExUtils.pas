@@ -22,7 +22,7 @@ unit ExUtils;
 interface
 uses
     Unicode, ExRichEdit, RichEdit2, Signals, XMLTag, IQ,
-    TntStdCtrls, TntClasses, Menus,
+    TntStdCtrls, TntClasses, TntMenus, Menus, Dialogs, 
     JabberMsg, Graphics, Controls, StdCtrls, Forms, Classes, SysUtils, Windows;
 
 const
@@ -70,6 +70,8 @@ procedure DebugMsg(Message : string);
 procedure AssignDefaultFont(font: TFont);
 procedure AssignUnicodeFont(f: TFont; font_size: short = 0); overload
 procedure AssignUnicodeFont(Form: TForm; font_size: short = 0); overload;
+procedure AssignUnicodeHighlight(f: TFont; font_size: short);
+procedure AssignUnicodeURL(f: TFont; font_size: short);
 procedure URLLabel(lbl: TLabel); overload;
 procedure URLLabel(lbl: TTntLabel); overload;
 
@@ -110,7 +112,10 @@ procedure BuildPresMenus(parent: TObject; clickev: TNotifyEvent);
 
 function UTCNow(): TDateTime;
 
-resourcestring
+function MessageDlgW(const Msg: Widestring; DlgType: TMsgDlgType;
+    Buttons: TMsgDlgButtons; HelpCtx: Longint): Word;
+
+const
     sDownloading      = 'Downloading...';
     sDownloadComplete = 'Download Complete';
     sInitializing     = 'Initializing...';
@@ -128,7 +133,7 @@ var
 implementation
 uses
     ExSession, GnuGetText, Presence,
-    IniFiles, Dialogs, StrUtils, IdGlobal, ShellAPI,
+    IniFiles, StrUtils, IdGlobal, ShellAPI,
     XMLUtils, Session, JabberID, Jabber1, NodeItem, Roster,
     JabberConst, MsgDisplay, Debug;
 
@@ -143,7 +148,7 @@ var
     presenceToAtom: TStringList;
     unicode_font: TFont;
 
-resourceString
+const
     sTurnOnBlocking = 'You currently have logging turned off. ' +
         'Turn Logging On? (Warning: Logs are not encrypted)';
     sNoHistory = 'There is no history file for this contact.';
@@ -319,7 +324,7 @@ var
 begin
     // Show the log, or ask the user to turn on logging
     if (not MainSession.Prefs.getBool('log')) then begin
-        if (MessageDlg(sTurnOnBlocking, mtConfirmation, [mbYes, mbNo], 0) = mrNo) then
+        if (MessageDlgW(_(sTurnOnBlocking), mtConfirmation, [mbYes, mbNo], 0) = mrNo) then
             exit
         else begin
             MainSession.Prefs.setBool('log', true);
@@ -332,7 +337,7 @@ begin
     fn := fn + '\' + MungeName(jid) + '.html';
 
     if (not FileExists(fn)) then begin
-        MessageDlg(sNoHistory, mtError, [mbOK], 0);
+        MessageDlgW(_(sNoHistory), mtError, [mbOK], 0);
         exit;
     end;
 
@@ -344,7 +349,7 @@ procedure ClearLog(jid: string);
 var
     fn: string;
 begin
-    if (MessageDlg(WideFormat(sConfirmClearLog, [jid]),
+    if (MessageDlgW(WideFormat(_(sConfirmClearLog), [jid]),
         mtConfirmation, [mbOK,mbCancel], 0) = mrCancel) then
         exit;
 
@@ -357,12 +362,12 @@ begin
     fn := fn + MungeName(jid) + '.html';
     if FileExists(fn) then begin
         if (DeleteFile(PChar(fn))) then
-            MessageDlg(sHistoryDeleted, mtInformation, [mbOK], 0)
+            MessageDlgW(_(sHistoryDeleted), mtInformation, [mbOK], 0)
         else
-            MessageDlg(sHistoryError, mtError, [mbCancel], 0);
+            MessageDlgW(_(sHistoryError), mtError, [mbCancel], 0);
     end
     else
-        MessageDlg(sHistoryNone, mtWarning, [mbOK,mbCancel], 0);
+        MessageDlgW(_(sHistoryNone), mtWarning, [mbOK,mbCancel], 0);
 end;
 
 {---------------------------------------}
@@ -372,7 +377,7 @@ var
     sr: TSearchRec;
     count: integer;
 begin
-    if (MessageDlg(sConfirmClearAllLogs,
+    if (MessageDlgW(_(sConfirmClearAllLogs),
                    mtConfirmation, [mbOK,mbCancel], 0) = mrCancel) then
         exit;
 
@@ -392,7 +397,7 @@ begin
         SysUtils.FindClose(sr);
     end;
 
-    MessageDlg(WideFormat(sFilesDeleted, [count]), mtInformation, [mbOK], 0);
+    MessageDlgW(WideFormat(_(sFilesDeleted), [count]), mtInformation, [mbOK], 0);
 end;
 
 {---------------------------------------}
@@ -428,7 +433,7 @@ begin
     if (not DirectoryExists(fn)) then begin
         // mkdir
         if CreateDir(fn) = false then begin
-            MessageDlg(sBadLogDir, mtError, [mbOK], 0);
+            MessageDlgW(_(sBadLogDir), mtError, [mbOK], 0);
             exit;
         end;
     end;
@@ -449,7 +454,7 @@ begin
         end;
     except
         on e: Exception do begin
-            MessageDlg(_('Could not open log file: ' + fn), mtError, [mbOK], 0);
+            MessageDlgW(_('Could not open log file: ' + fn), mtError, [mbOK], 0);
             exit;
         end;
     end;
@@ -491,15 +496,13 @@ end;
 {---------------------------------------}
 procedure URLLabel(lbl: TLabel);
 begin
-    lbl.Font.Color := clBlue;
-    lbl.Font.Style := [fsUnderline];
+    AssignUnicodeURL(lbl.Font, 8);
 end;
 
 {---------------------------------------}
 procedure URLLabel(lbl: TTntLabel);
 begin
-    lbl.Font.Color := clBlue;
-    lbl.Font.Style := [fsUnderline];
+    AssignUnicodeURL(lbl.Font, 8);
 end;
 
 {---------------------------------------}
@@ -524,6 +527,22 @@ begin
         f.size := unicode_font.size
     else
         f.size := font_size;
+end;
+
+{---------------------------------------}
+procedure AssignUnicodeHighlight(f: TFont; font_size: short);
+begin
+    AssignUnicodeFont(f, font_size);
+    f.Color := clHighlightText;
+    f.Style := [fsBold];
+end;
+
+{---------------------------------------}
+procedure AssignUnicodeURL(f: TFont; font_size: short);
+begin
+    AssignUnicodeFont(f, font_size);
+    f.Color := clBlue;
+    f.Style := [fsUnderline];
 end;
 
 {---------------------------------------}
@@ -735,7 +754,7 @@ begin
     msg.setAttribute('id', MainSession.generateID());
     msg.setAttribute('to', to_jid);
 
-    b := WideFormat(sMsgRosterItems, [items.Count]);
+    b := WideFormat(_(sMsgRosterItems), [items.Count]);
     x := msg.AddTag('x');
     x.setAttribute('xmlns', XMLNS_XROSTER);
     for i := 0 to items.Count - 1 do begin
@@ -1049,11 +1068,11 @@ procedure BuildPresMenus(parent: TObject; clickev: TNotifyEvent);
 var
     plist: TWidestringList;
     grp, i: integer;
-    mnu: TMenuItem;
+    mnu: TTntMenuItem;
     cp: TJabberCustompres;
     c, avail, chat, away, xa, dnd: TMenuItem;
-    pm: TMenuItem;
-    pp: TPopupMenu;
+    pm: TTntMenuItem;
+    pp: TTntPopupMenu;
 begin
     // Build the custom presence menus.
     // make sure to leave the main "Custom" entry and the divider
@@ -1074,29 +1093,29 @@ begin
     sRosterOffline = 'Offline';
     }
 
-    if (parent is TMenuItem) then begin
-        pm := TMenuItem(Parent);
+    if (parent is TTntMenuItem) then begin
+        pm := TTntMenuItem(Parent);
         for i := 0 to pm.Count - 1 do begin
             c := pm.Items[i];
-            if (c.Caption = sRosterAvail) then avail := c
-            else if (c.Caption = sRosterChat) then chat := c
-            else if (c.Caption = sRosterAway) then away := c
-            else if (c.Caption = sRosterXA) then xa := c
-            else if (c.Caption = sRosterDND) then dnd := c
+            if (c.Caption = _(sRosterAvail)) then avail := c
+            else if (c.Caption = _(sRosterChat)) then chat := c
+            else if (c.Caption = _(sRosterAway)) then away := c
+            else if (c.Caption = _(sRosterXA)) then xa := c
+            else if (c.Caption = _(sRosterDND)) then dnd := c
             else
                 continue;
             ClearCustoms(c);
         end;
     end
-    else if (parent is TPopupMenu) then begin
-        pp := TPopupMenu(parent);
+    else if (parent is TTntPopupMenu) then begin
+        pp := TTntPopupMenu(parent);
         for i := 0 to pp.Items.Count - 1 do begin
-            c := pp.Items[i];
-            if (c.Caption = sRosterAvail) then avail := c
-            else if (c.Caption = sRosterChat) then chat := c
-            else if (c.Caption = sRosterAway) then away := c
-            else if (c.Caption = sRosterXA) then xa := c
-            else if (c.Caption = sRosterDND) then dnd := c
+            c := TTntMenuItem(pp.Items[i]);
+            if (c.Caption = _(sRosterAvail)) then avail := c
+            else if (c.Caption = _(sRosterChat)) then chat := c
+            else if (c.Caption = _(sRosterAway)) then away := c
+            else if (c.Caption = _(sRosterXA)) then xa := c
+            else if (c.Caption = _(sRosterDND)) then dnd := c
             else
                 continue;
             ClearCustoms(c);
@@ -1131,13 +1150,12 @@ begin
             c := avail;
         end;
 
-        mnu := TMenuItem.Create(c);
+        mnu := TTntMenuItem.Create(c);
         mnu.Caption := cp.title;
         mnu.tag := i;
         mnu.OnClick := clickev;
         mnu.ShortCut := TextToShortcut(cp.hotkey);
         mnu.GroupIndex := grp;
-        //mnu.ImageIndex := imidx;
         c.Add(mnu);
         cp.Free();
     end;
@@ -1160,6 +1178,55 @@ begin
     else
         result := Now + (tzi.Bias / 1440.0);;
 end;
+
+function MessageDlgW(const Msg: Widestring; DlgType: TMsgDlgType;
+    Buttons: TMsgDlgButtons; HelpCtx: Longint): Word;
+var
+    flags: Word;
+    res: integer;
+begin
+
+    {
+    MessageBoxW(Application.Handle, PWideChar(_(sDisconnected)), 'Foo',
+        MB_OK + MB_ICONINFORMATION);
+    }
+
+    flags := 0;
+    case DlgType of
+    mtWarning:          flags := flags + MB_ICONWARNING;
+    mtError:            flags := flags + MB_ICONERROR;
+    mtInformation:      flags := flags + MB_ICONINFORMATION;
+    mtConfirmation:     flags := flags + MB_ICONQUESTION;
+    end;
+
+    {
+    TMsgDlgBtn = (mbYes, mbNo, mbOK, mbCancel, mbAbort, mbRetry, mbIgnore,
+        mbAll, mbNoToAll, mbYesToAll, mbHelp);
+    }
+    if (Buttons = [mbYes, mbNo, mbCancel]) then
+        flags := flags or MB_YESNOCANCEL
+    else if (Buttons = [mbYes, mbNo]) then
+        flags := flags or MB_YESNO
+    else if (Buttons = [mbOK]) then
+        flags := flags or MB_OK
+    else if (Buttons = [mbOK, mbCancel]) then
+        flags := flags or MB_OKCANCEL
+    else
+        flags := flags or MB_OK;
+        
+    res := MessageBoxW(Application.Handle, PWideChar(Msg), PWideChar(_('Exodus')),
+        flags);
+
+    case res of
+    IDCANCEL: Result := mrCancel;
+    IDNO: Result := mrNo;
+    IDYES: Result := mrYes;
+    else
+        Result := mrOK;
+    end;
+
+end;
+
 
 {---------------------------------------}
 {---------------------------------------}

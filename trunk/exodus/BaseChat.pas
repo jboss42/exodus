@@ -25,7 +25,7 @@ uses
     Dockable, ActiveX, ComObj,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Menus, StdCtrls, ExtCtrls, ComCtrls, ExRichEdit, RichEdit2,
-    TntStdCtrls;
+    TntStdCtrls, TntMenus;
 
 const
     WM_THROB = WM_USER + 5400;
@@ -37,19 +37,19 @@ type
     Splitter1: TSplitter;
     pnlInput: TPanel;
     Panel1: TPanel;
-    popMsgList: TPopupMenu;
-    Copy1: TMenuItem;
-    CopyAll1: TMenuItem;
-    Clear1: TMenuItem;
-    popOut: TPopupMenu;
-    Copy2: TMenuItem;
-    Copy3: TMenuItem;
-    Paste2: TMenuItem;
-    N2: TMenuItem;
-    Emoticons2: TMenuItem;
+    popMsgList: TTntPopupMenu;
+    popOut: TTntPopupMenu;
     MsgOut: TExRichEdit;
     timWinFlash: TTimer;
-    emot_sep: TMenuItem;
+    Clear1: TTntMenuItem;
+    CopyAll1: TTntMenuItem;
+    Copy1: TTntMenuItem;
+    emot_sep: TTntMenuItem;
+    Emoticons2: TTntMenuItem;
+    N2: TTntMenuItem;
+    Paste2: TTntMenuItem;
+    Copy3: TTntMenuItem;
+    Copy2: TTntMenuItem;
 
     procedure Emoticons1Click(Sender: TObject);
     procedure MsgListURLClick(Sender: TObject; url: String);

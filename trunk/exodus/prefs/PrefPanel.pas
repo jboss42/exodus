@@ -23,10 +23,11 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs;
+  Dialogs, ExtCtrls, TntExtCtrls;
 
 type
   TfrmPrefPanel = class(TForm)
+    pnlHeader: TTntPanel;
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
@@ -44,7 +45,7 @@ implementation
 {$R *.dfm}
 
 uses
-    GnuGetText;
+    GnuGetText, ExUtils;
 
 procedure TfrmPrefPanel.LoadPrefs();
 begin
@@ -58,6 +59,8 @@ end;
 
 procedure TfrmPrefPanel.FormCreate(Sender: TObject);
 begin
+    AssignUnicodeFont(Self, 8);
+    AssignUnicodeHighlight(pnlHeader.Font, 10);
     TranslateComponent(Self);
     LoadPrefs();
 end;

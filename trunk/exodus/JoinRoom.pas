@@ -70,7 +70,7 @@ var
 procedure StartJoinRoom; overload;
 procedure StartJoinRoom(room_jid: TJabberID; nick, password: WideString); overload; 
 
-resourcestring
+const
     sInvalidNick = 'You must enter a nickname';
 
 {---------------------------------------}
@@ -203,12 +203,12 @@ begin
     // join this room
     rjid := txtRoom.Text + '@' + txtServer.Text;
     if (not isValidJid(rjid)) then begin
-        MessageDlg(sInvalidRoomJID, mtError, [mbOK], 0);
+        MessageDlgW(_(sInvalidRoomJID), mtError, [mbOK], 0);
         exit;
     end;
 
     if (txtNick.Text = '') then begin
-        MessageDlg(sInvalidNick, mtError, [mbOK], 0);
+        MessageDlgW(_(sInvalidNick), mtError, [mbOK], 0);
         exit;
     end;
 

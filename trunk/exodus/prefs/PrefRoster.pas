@@ -36,7 +36,6 @@ type
     chkRosterUnicode: TTntCheckBox;
     chkInlineStatus: TTntCheckBox;
     cboInlineStatus: TColorBox;
-    StaticText4: TTntPanel;
     procedure chkInlineStatusClick(Sender: TObject);
   private
     { Private declarations }
