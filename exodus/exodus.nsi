@@ -1,10 +1,6 @@
 ; exodus.nsi
 ;
-; This script is perhaps one of the simplest NSIs you can make. All of the
-; optional settings are left to their default settings. The instalelr simply 
-; prompts the user asking them where to install, and drops of notepad.exe
-; there. If your Windows directory is not C:\windows, change it below.
-;
+!verbose 2
 
 ; The name of the installer
 Name "Exodus"
@@ -34,6 +30,7 @@ SubCaption 3 ": Exit running Exodus versions!"
 ; The text to prompt the user to enter a directory
 DirText "Which directory should Exodus be installed in?"
 
+
 ; The stuff to install
 Section "!Exodus (Required)"
 	SectionIn 1 RO
@@ -44,18 +41,39 @@ Section "!Exodus (Required)"
   	; Put file there
   	File "Exodus.exe"
   	
-	IfFileExists IdleHooks.dll lbl_noIdle
-
 	; install idlehooks on non-nt
 	Call GetWindowsVersion
   	Pop $0
 	StrCmp $0 "2000" lbl_noIdle
+
+	IfFileExists IdleHooks.dll lbl_noIdle
 
 	NSISdl::download http://exodus.jabberstudio.org/daily/extras/IdleHooks.dll $INSTDIR\IdleHooks.dll
 	StrCmp $0 "success" lbl_noIdle
 	    Abort "Error downloading IdleHooks library"
 
   lbl_noIdle:
+	; version(riched20) >= 5.30
+    GetDLLVersion "$SYSDIR\riched20.dll" $R0 $R1
+	IntOp $R1 $R0 / 65536
+	IntOp $R2 $R0 & 0x00FF
+	DetailPrint "Richedit version: $R1.$R2"
+
+	IntCmp 327710 $R0 lbl_reportVer lbl_reportVer
+
+	DetailPrint "Old version of richedit controls.  Upgrading."
+	NSISdl::download http://exodus.jabberstudio.org/richupd.exe $INSTDIR\richupd.exe
+	StrCmp $0 "success" lbl_execrich
+	    Abort "Error downloading richtext library"
+  lbl_execrich:
+	ExecWait $INSTDIR\richupd.exe
+	IfErrors lbl_badrichupd lbl_HiVersion
+  lbl_badrichupd:
+	Abort "Error installing richtext update"
+  lbl_reportVer:
+	DetailPrint "Richedit verion ok."
+
+  lbl_HiVersion:
 
 	; Write the installation path into the registry
   	WriteRegStr HKLM SOFTWARE\Jabber\Exodus "Install_Dir" "$INSTDIR"
