@@ -52,6 +52,7 @@ type
     txtCPPriority: TTntEdit;
     spnPriority: TTntUpDown;
     txtCPHotkey: THotKey;
+    chkRoomJoins: TTntCheckBox;
     procedure FormDestroy(Sender: TObject);
     procedure lstCustomPresClick(Sender: TObject);
     procedure txtCPTitleChange(Sender: TObject);

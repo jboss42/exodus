@@ -1,6 +1,6 @@
 inherited frmPrefPresence: TfrmPrefPresence
-  Left = 249
-  Top = 149
+  Left = 280
+  Top = 148
   Caption = 'frmPrefPresence'
   ClientHeight = 433
   ClientWidth = 349
@@ -15,7 +15,7 @@ inherited frmPrefPresence: TfrmPrefPresence
   end
   object lstCustomPres: TTntListBox
     Left = 0
-    Top = 147
+    Top = 145
     Width = 349
     Height = 102
     Align = alTop
@@ -25,7 +25,7 @@ inherited frmPrefPresence: TfrmPrefPresence
   end
   object pnlCustomPresButtons: TPanel
     Left = 0
-    Top = 249
+    Top = 247
     Width = 349
     Height = 34
     Align = alTop
@@ -72,20 +72,20 @@ inherited frmPrefPresence: TfrmPrefPresence
     Left = 0
     Top = 26
     Width = 349
-    Height = 121
+    Height = 119
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
     object lblPresTracking: TTntLabel
       Left = 5
-      Top = 52
-      Width = 217
+      Top = 59
+      Width = 165
       Height = 13
-      Caption = 'Presence tracking in chat windows and rooms'
+      Caption = 'Presence tracking in chat windows'
     end
     object Label1: TTntLabel
       Left = 0
-      Top = 99
+      Top = 102
       Width = 118
       Height = 13
       Caption = 'Custom Presence Entries'
@@ -102,7 +102,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     end
     object cboPresTracking: TTntComboBox
       Left = 15
-      Top = 68
+      Top = 75
       Width = 306
       Height = 21
       Style = csDropDownList
@@ -115,7 +115,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     end
     object chkClientCaps: TTntCheckBox
       Left = 4
-      Top = 24
+      Top = 21
       Width = 273
       Height = 17
       Caption = 'Send client capabilities in presence.'
@@ -123,10 +123,20 @@ inherited frmPrefPresence: TfrmPrefPresence
       State = cbChecked
       TabOrder = 1
     end
+    object chkRoomJoins: TTntCheckBox
+      Left = 4
+      Top = 39
+      Width = 273
+      Height = 17
+      Caption = 'Show enter and leave messages in room windows.'
+      Checked = True
+      State = cbChecked
+      TabOrder = 3
+    end
   end
   object GroupBox1: TTntGroupBox
     Left = 0
-    Top = 283
+    Top = 281
     Width = 349
     Height = 147
     Align = alTop

@@ -1,6 +1,6 @@
 <exodus version="0.9">
   <prefs>
-    <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.38 2004/03/17 14:22:55 pgmillard Exp $"/>
+    <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.39 2004/04/06 13:19:29 pgmillard Exp $"/>
     
     <!-- System Options -->
     <auto_update_url value="http://exodus.jabberstudio.org/exodus-released.exe"/>
@@ -186,7 +186,8 @@
     <presence_message_listen value="1" control="chkPresenceSync"/>
     <presence_message_send value="1" control="chkPresenceSync"/>
     <client_caps value="1" control="chkClientCaps"/>
-    <client_caps_uri value="http://exodus.jabberstudio.org/caps"/>        
+    <client_caps_uri value="http://exodus.jabberstudio.org/caps"/>
+    <room_joins value="1" control="chkRoomJoins"/>        
     
     <!-- Subscription Options -->
     <s10n_auto_accept value="0" control="optIncomingS10n"/>
