@@ -29,6 +29,8 @@ type
     txtProxyUsername: TEdit;
     txtProxyPassword: TEdit;
     cboProxyApproach: TComboBox;
+    procedure cboProxyApproachChange(Sender: TObject);
+    procedure chkProxyAuthClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -43,6 +45,8 @@ var
 implementation
 
 {$R *.dfm}
+uses
+    PrefController, Session;
 
 procedure TfrmPrefNetwork.LoadPrefs();
 var
@@ -81,6 +85,48 @@ begin
         setBool('http_proxy_auth', chkProxyAuth.Checked);
         setString('http_proxy_user', txtProxyUsername.Text);
         setString('http_proxy_password', txtProxyPassword.Text);
+    end;
+end;
+
+
+{---------------------------------------}
+procedure TfrmPrefNetwork.cboProxyApproachChange(Sender: TObject);
+begin
+    if (cboProxyApproach.ItemIndex = http_proxy_custom) then begin
+        txtProxyHost.Enabled := true;
+        txtProxyPort.Enabled := true;
+        chkProxyAuth.Enabled := true;
+        lblProxyHost.Enabled := true;
+        lblProxyPort.Enabled := true;
+    end
+    else begin
+        txtProxyHost.Enabled := false;
+        txtProxyPort.Enabled := false;
+        chkProxyAuth.Enabled := false;
+        chkProxyAuth.Checked := false;
+        txtProxyUsername.Enabled := false;
+        txtProxyPassword.Enabled := false;
+        lblProxyHost.Enabled := false;
+        lblProxyPort.Enabled := false;
+        lblProxyUsername.Enabled := false;
+        lblProxyPassword.Enabled := false;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmPrefNetwork.chkProxyAuthClick(Sender: TObject);
+begin
+    if (chkProxyAuth.Checked) then begin
+        lblProxyUsername.Enabled := true;
+        lblProxyPassword.Enabled := true;
+        txtProxyUsername.Enabled := true;
+        txtProxyPassword.Enabled := true;
+    end
+    else begin
+        lblProxyUsername.Enabled := false;
+        lblProxyPassword.Enabled := false;
+        txtProxyUsername.Enabled := false;
+        txtProxyPassword.Enabled := false;
     end;
 end;
 
