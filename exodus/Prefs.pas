@@ -201,6 +201,7 @@ type
     Label17: TLabel;
     cboInviteOptions: TComboBox;
     chkMessenger: TCheckBox;
+    chkTrayNotify: TCheckBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -455,6 +456,7 @@ begin
         optNotify.Enabled;
         chkToast.Checked := false;
         chkFlash.Checked := false;
+        chkTrayNotify.Checked := false;
 
         for i := 0 to NUM_NOTIFIES - 1 do
             chkNotify.Checked[i] := (_notify[i] > 0);
@@ -790,14 +792,17 @@ begin
     e := chkNotify.Checked[i];
     chkToast.Enabled := e;
     chkFlash.Enabled := e;
+    chkTrayNotify.Enabled := e;
 
     if chkToast.Enabled then begin
         chkToast.Checked := ((_notify[i] and notify_toast) > 0);
         chkFlash.Checked := ((_notify[i] and notify_flash) > 0);
+        chkTrayNotify.Checked := ((_notify[i] and notify_tray) > 0);
         end
     else begin
         chkToast.Checked := false;
         chkFlash.Checked := false;
+        chkTrayNotify.Checked := false;
         _notify[i] := 0;
         end;
 
@@ -819,6 +824,7 @@ begin
     _notify[i] := 0;
     if (chkToast.Checked) then _notify[i] := _notify[i] + notify_toast;
     if (chkFlash.Checked) then _notify[i] := _notify[i] + notify_flash;
+    if (chkTrayNotify.Checked) then _notify[i] := _notify[i] + notify_tray;
 end;
 
 {---------------------------------------}

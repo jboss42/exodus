@@ -50,6 +50,7 @@ const
     notify_event = 2;
     notify_flash = 4;
     notify_sound = 8;
+    notify_tray  = 16;
 
     // normal msg options
     msg_normal = 0;

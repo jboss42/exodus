@@ -177,6 +177,9 @@ begin
         exit;
 
     notify := MainSession.Prefs.getInt(pref_name);
+    if ((notify and notify_tray) > 0) then
+        StartTrayAlert();
+        
     if ((notify and notify_toast) > 0) then
         ShowRiserWindow(w, msg, icon);
 

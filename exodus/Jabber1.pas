@@ -185,6 +185,7 @@ type
     ImageList3: TImageList;
     pnlLeft: TPanel;
     SplitterLeft: TSplitter;
+    timTrayAlert: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -247,11 +248,13 @@ type
     procedure TabsDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
     procedure TabsDragDrop(Sender, Source: TObject; X, Y: Integer);
+    procedure timTrayAlertTimer(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
     _noMoveCheck: boolean;
     _flash: boolean;
+    _tray_notify: boolean;
     _edge_snap: integer;
     _prof_index: integer;
     _auto_login: boolean;
@@ -378,6 +381,9 @@ type
     property RegisterController: TRegController read _regController; 
 
   end;
+
+procedure StartTrayAlert();
+procedure StopTrayAlert();
 
 var
     frmExodus: TfrmExodus;
@@ -937,6 +943,7 @@ begin
     // some gui related flags
     _noMoveCheck := false;
     _flash := false;
+    _tray_notify := false;
     _reconnect_tries := 0;
     _hidden := false;
     _shutdown := false;
@@ -2424,6 +2431,7 @@ end;
 procedure TfrmExodus.FormActivate(Sender: TObject);
 begin
     // FlashWindow(Self.Handle, false);
+    StopTrayAlert();
 end;
 
 {---------------------------------------}
@@ -2830,6 +2838,35 @@ begin
                 end;
             end;
         end;
+end;
+
+procedure TfrmExodus.timTrayAlertTimer(Sender: TObject);
+var
+    iconNum : integer;
+begin
+     _tray_notify := not _tray_notify;
+     if (_tray_notify) then
+        iconNum := 33
+     else
+         iconNum := _tray_icon_idx;
+
+    ImageList2.GetIcon(iconNum, _tray_icon);
+    _tray.hIcon := _tray_icon.Handle;
+    Shell_NotifyIcon(NIM_MODIFY, @_tray);
+end;
+
+procedure StartTrayAlert();
+begin
+     frmExodus.timTrayAlert.Enabled := true;
+end;
+
+procedure StopTrayAlert();
+begin
+     if (frmExodus.timTrayAlert.Enabled) then begin
+         frmExodus.timTrayAlert.Enabled := false;
+         frmExodus._tray_notify := false;
+         frmExodus.setTrayIcon(frmExodus._tray_icon_idx);
+         end;
 end;
 
 initialization

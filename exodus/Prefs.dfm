@@ -1570,12 +1570,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 357
-    ActivePage = tbsRoster
+    ActivePage = tbsNotify
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 0
+    TabIndex = 6
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -2446,7 +2446,7 @@ object frmPrefs: TfrmPrefs
         Left = 8
         Top = 216
         Width = 257
-        Height = 73
+        Height = 97
         Caption = 'Notify Options'
         TabOrder = 1
         object chkFlash: TCheckBox
@@ -2465,6 +2465,15 @@ object frmPrefs: TfrmPrefs
           Height = 17
           Caption = 'Show a "Toast" popup'
           TabOrder = 1
+          OnClick = chkToastClick
+        end
+        object chkTrayNotify: TCheckBox
+          Left = 8
+          Top = 71
+          Width = 209
+          Height = 17
+          Caption = 'Flash tray icon'
+          TabOrder = 2
           OnClick = chkToastClick
         end
       end
