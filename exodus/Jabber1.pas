@@ -1582,12 +1582,16 @@ begin
         frmMsgQueue.Close;
     end;
 
+    // Close the roster window
+    if (frmRosterWindow <> nil) then begin
+        frmRosterWindow.ClearNodes();
+        frmRosterWindow.Close;
+    end;
+
     // If we have a session, close it up
     // and all of the associated windows
     if MainSession <> nil then begin
         CloseDebugForm();
-        frmRosterWindow.ClearNodes();
-        frmRosterWindow.Close;
         CloseAllChats();
 
         // Unload all of the remaining plugins
@@ -1597,8 +1601,10 @@ begin
         MainSession.UnRegisterCallback(_sessioncb);
         MainSession.Prefs.SavePosition(Self);
 
+        // Free everything else
         TeardownSession();
     end;
+
 
     // Kill the tray icon stuff
     if (_tray_icon <> nil) then

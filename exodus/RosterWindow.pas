@@ -447,6 +447,7 @@ procedure TfrmRosterWindow.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
     Action := caFree;
+    frmRosterWindow := nil;
 end;
 
 {---------------------------------------}
@@ -2515,7 +2516,7 @@ begin
     // Kill the blockers list and collapsed grps
     _blockers.Free();
     _collapsed_grps.Free();
-    if MainSession <> nil then with MainSession do begin
+    if (MainSession <> nil) then with MainSession do begin
         UnRegisterCallback(_rostercb);
         UnRegisterCallback(_prescb);
     end;
