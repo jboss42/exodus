@@ -60,7 +60,7 @@ function getInvalidRoster: TfrmInvalidRoster;
 begin
     //
     if (frmInvalidRoster = nil) then begin
-        frmInvalidRoster := TfrmInvalidRoster.Create(nil);
+        frmInvalidRoster := TfrmInvalidRoster.Create(Application);
         end;
     Result := frmInvalidRoster;
     Result.ShowDefault();

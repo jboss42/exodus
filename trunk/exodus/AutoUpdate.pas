@@ -42,6 +42,7 @@ type
   TAutoUpdate = class
   private
     procedure MsgCallback(event: string; tag: TXMLTag);
+    procedure IQCallback(event: string; tag: TXMLTag);
   public
     initialized: boolean;
   end;
@@ -115,7 +116,8 @@ begin
         t.Resume();
         end
     else begin
-        j := JID_AUTOUPDATE + '/' + Trim(GetAppVersion());
+        // j := JID_AUTOUPDATE + '/' + Trim(GetAppVersion());
+        j := JID_AUTOUPDATE + '/0.1.0.0';
         x := TXMLTag.Create('presence');
         x.PutAttribute('to', j);
         MainSession.SendTag(x);
@@ -137,7 +139,6 @@ begin
         http := TIdHTTP.Create(nil);
         http.Head(_url);
         if (http.ResponseCode <> 200) then begin
-            //if (Sender <> nil) then ShowMessage(Format(sUpdateHTTPError, [http.ResponseText]));
             exit;
             end;
 
@@ -158,10 +159,45 @@ end;
 
 {---------------------------------------}
 procedure TAutoUpdate.MsgCallback(event: string; tag: TXMLTag);
+var
+    iq: TJabberIQ;
 begin
     // we are getting a message tag telling us we have an update available
-    ShowAutoUpdateStatus(tag);
+    // do the iq to get more info.
+    if (tag <> nil) then begin
+        iq := TJabberIQ.Create(MainSession, MainSession.generateID(), Self.IQCallback);
+        iq.toJID := tag.QueryXPData('/message/x');
+        iq.iqType := 'get';
+        iq.Namespace := XMLNS_AUTOUPDATE;
+        iq.Send();
+        end;
 end;
+
+{---------------------------------------}
+procedure TAutoUpdate.IQCallback(event: string; tag: TXMLTag);
+begin
+    // parse this mess.. NB: We don't care if we have <beta> or <release>
+    {
+        <iq type="result" from="winjab@update.denmark" id="1001">
+          <query xmlns="jabber:iq:autoupdate">
+            <release priority="optional">
+              <ver>0.9.1.1</ver>
+              <desc/>
+              <url>http://update.denmark/winjab/winjab_setup.exe</url>
+            </release>
+            <beta priority="optional">
+              <ver>0.9.2.16</ver>
+              <desc/>
+              <url>http://update.denmark/winjab/winjab_beta.exe</url>
+            </beta>
+          </query>
+        </iq>
+    }
+    if (event = 'xml') then begin
+        ShowAutoUpdateStatus(tag);
+        end;
+end;
+
 
 
 {---------------------------------------}

@@ -1,7 +1,7 @@
 object frmExodus: TfrmExodus
   Left = 567
   Top = 357
-  Width = 457
+  Width = 456
   Height = 348
   AlphaBlendValue = 240
   Caption = 'Exodus'
@@ -28,7 +28,7 @@ object frmExodus: TfrmExodus
   object Tabs: TPageControl
     Left = 0
     Top = 31
-    Width = 449
+    Width = 448
     Height = 263
     ActivePage = tbsRoster
     Align = alClient
@@ -72,7 +72,7 @@ object frmExodus: TfrmExodus
       object pnlRight: TPanel
         Left = 212
         Top = 0
-        Width = 229
+        Width = 228
         Height = 235
         Align = alClient
         BevelOuter = bvNone
@@ -85,7 +85,7 @@ object frmExodus: TfrmExodus
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 449
+    Width = 448
     Height = 31
     AutoSize = True
     Bands = <
@@ -93,7 +93,7 @@ object frmExodus: TfrmExodus
         Control = ToolBar1
         ImageIndex = -1
         MinHeight = 27
-        Width = 445
+        Width = 444
       end>
     object ToolBar1: TToolBar
       Left = 9
@@ -196,7 +196,7 @@ object frmExodus: TfrmExodus
       end
       object Connect2: TMenuItem
         Caption = 'Sign On/Off'
-        ShortCut = 113
+        ShortCut = 120
         OnClick = btnConnectClick
       end
       object N7: TMenuItem
@@ -257,7 +257,7 @@ object frmExodus: TfrmExodus
       end
       object Exit2: TMenuItem
         Caption = 'Exit'
-        ShortCut = 49240
+        ShortCut = 16465
         OnClick = Exit2Click
       end
     end

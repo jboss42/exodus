@@ -100,12 +100,12 @@ begin
     case e.eType of
     evt_RosterItems: begin
         // roster items
-        fcts := TfrmRosterRecv.Create(nil);
+        fcts := TfrmRosterRecv.Create(Application);
         fcts.Restore(e);
         end
     else begin
         // other things
-        fmsg := TfrmMsgRecv.Create(nil);
+        fmsg := TfrmMsgRecv.Create(Application);
         with fmsg do begin
             eType := e.eType;
             recips.Add(e.from);
@@ -135,7 +135,7 @@ var
     i: integer;
 begin
     // send a normal msg to this person
-    Result := TfrmMsgRecv.Create(nil);
+    Result := TfrmMsgRecv.Create(Application);
     with Result do begin
         eType := evt_Message;
         recips.Assign(jids);
@@ -157,7 +157,7 @@ end;
 function StartMsg(jid: string): TfrmMsgRecv;
 begin
     // send a normal msg to this person
-    Result := TfrmMsgRecv.Create(nil);
+    Result := TfrmMsgRecv.Create(Application);
     with Result do begin
         eType := evt_Message;
 

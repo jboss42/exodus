@@ -72,7 +72,7 @@ begin
     else
         i := -1;
 
-    Result := TfrmBookmark.Create(nil);
+    Result := TfrmBookmark.Create(Application);
 
     with Result do begin
         cboType.ItemIndex := 0;

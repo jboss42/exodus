@@ -37,7 +37,7 @@ type
 
 implementation
 uses
-    RegForm,
+    Forms, RegForm,
     Session;
 
 {---------------------------------------}
@@ -58,7 +58,7 @@ var
 begin
     // Create a new registration form and kick the process off
     if ((event = '/session/register') and (tag <> nil)) then begin
-        f := TfrmRegister.Create(nil);
+        f := TfrmRegister.Create(Application);
         f.jid := tag.getAttribute('jid');
         f.Start();
         end;

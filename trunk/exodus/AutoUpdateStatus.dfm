@@ -1,6 +1,6 @@
 object frmAutoUpdateStatus: TfrmAutoUpdateStatus
-  Left = 1003
-  Top = 223
+  Left = 234
+  Top = 563
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   BorderWidth = 5

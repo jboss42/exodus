@@ -116,7 +116,7 @@ var
     xfer: TfrmTransfer;
     ritem: TJabberRosterItem;
 begin
-    xfer := TfrmTransfer.Create(nil);
+    xfer := TfrmTransfer.Create(Application);
     xfer.url := url;
     with xfer do begin
         Mode := 0;
@@ -150,7 +150,7 @@ var
     s_jid: string;
     pri: TJabberPres;
 begin
-    xfer := TfrmTransfer.Create(nil);
+    xfer := TfrmTransfer.Create(Application);
 
     with xfer do begin
         Mode := 1;

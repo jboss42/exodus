@@ -976,7 +976,7 @@ begin
         FireEvent('/session/connecting', nil);
 
         if Password = '' then begin
-            pf := TfrmInputPass.Create(nil);
+            pf := TfrmInputPass.Create(Application);
             if (pf.ShowModal) = mrOK then begin
                 Password := pf.txtPassword.Text;
                 Connect();
@@ -1833,7 +1833,7 @@ end;
 procedure TfrmExodus.About1Click(Sender: TObject);
 begin
     // Show some about dialog box
-    frmAbout := TfrmAbout.Create(nil);
+    frmAbout := TfrmAbout.Create(Application);
     frmAbout.ShowModal;
 end;
 
@@ -2447,7 +2447,7 @@ var
     jid : string;
 begin
     // Send a msg via the tray menu popup
-    fsel := TfrmSelContact.Create(nil);
+    fsel := TfrmSelContact.Create(Application);
     fsel.frameTreeRoster1.DrawRoster(true);
     fsel.frameTreeRoster1.treeRoster.MultiSelect := false;
 

@@ -41,6 +41,7 @@ object frmRosterWindow: TfrmRosterWindow
     000000000000000000000000000000000000000000000000000000000000}
   OldCreateOrder = False
   Position = poDefaultPosOnly
+  OnActivate = FormActivate
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
@@ -57,6 +58,7 @@ object frmRosterWindow: TfrmRosterWindow
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
+    ChangeDelay = 50
     DragMode = dmAutomatic
     HideSelection = False
     Images = ImageList1
@@ -64,19 +66,22 @@ object frmRosterWindow: TfrmRosterWindow
     MultiSelect = True
     MultiSelectStyle = [msControlSelect, msShiftSelect, msVisibleOnly]
     PopupMenu = popRoster
-    ReadOnly = True
     ShowButtons = False
     ShowLines = False
     ShowRoot = False
     SortType = stText
     TabOrder = 0
     Visible = False
+    OnChange = treeRosterChange
     OnCollapsed = treeRosterCollapsed
     OnContextPopup = treeRosterContextPopup
     OnCustomDrawItem = treeRosterCustomDrawItem
     OnDblClick = treeRosterDblClick
     OnDragDrop = treeRosterDragDrop
     OnDragOver = treeRosterDragOver
+    OnEdited = treeRosterEdited
+    OnEditing = treeRosterEditing
+    OnExit = treeRosterExit
     OnExpanded = treeRosterExpanded
     OnMouseDown = treeRosterMouseDown
     OnMouseMove = treeRosterMouseMove
@@ -1468,6 +1473,7 @@ object frmRosterWindow: TfrmRosterWindow
     end
     object popRemove: TMenuItem
       Caption = 'Remove'
+      ShortCut = 46
       OnClick = popRemoveClick
     end
     object popProperties: TMenuItem

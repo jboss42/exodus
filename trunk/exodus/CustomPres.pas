@@ -67,7 +67,7 @@ var
     f: TfrmCustomPres;
 begin
     // show a new custom presence dialog box
-    f := TfrmCustomPres.Create(nil);
+    f := TfrmCustomPres.Create(Application);
     f.ShowModal;
 end;
 

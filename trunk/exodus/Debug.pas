@@ -85,7 +85,7 @@ procedure ShowDebugForm();
 begin
     // Singleton factory
     if ( frmDebug = nil ) then
-        frmDebug := TfrmDebug.Create(nil);
+        frmDebug := TfrmDebug.Create(Application);
     if (not frmDebug.Visible) then
         frmDebug.ShowDefault();
 

@@ -49,7 +49,6 @@ type
     _fstream: TFileStream;
     _tag: TXMLTag;
     procedure getFile();
-    procedure IQCallback(event: string; tag: TXMLTag);
   public
     { Public declarations }
     procedure setTag(tag: TXMLTag);
@@ -61,7 +60,8 @@ procedure ShowAutoUpdateStatus(tag : TXMLTag); overload;
 
 const
     EXODUS_REG = '\Software\Jabber\Exodus';
-    JID_AUTOUPDATE  = '1016321811@update.jabber.org';
+    //JID_AUTOUPDATE  = '1016321811@update.jabber.org';
+    JID_AUTOUPDATE = 'update.pgmillard.dyndns.org';
     XMLNS_AUTOUPDATE = 'jabber:iq:autoupdate';
 
 resourcestring
@@ -70,7 +70,7 @@ resourcestring
     sInitializing     = 'Initializing...';
     sInstalling       = 'Installing...';
     sError            = 'Error: %s';
-    
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -93,7 +93,8 @@ var
 procedure ShowAutoUpdateStatus(tag : TXMLTag);
 begin
      if (frmAutoUpdateStatus = nil) then
-        frmAutoUpdateStatus := TfrmAutoUpdateStatus.Create(nil);
+        frmAutoUpdateStatus := TfrmAutoUpdateStatus.Create(Application);
+    frmAutoUpdateStatus.setTag(tag);
     frmAutoUpdateStatus.Show();
 end;
 
@@ -101,7 +102,7 @@ end;
 procedure ShowAutoUpdateStatus(URL : string);
 begin
      if (frmAutoUpdateStatus = nil) then
-        frmAutoUpdateStatus := TfrmAutoUpdateStatus.Create(nil);
+        frmAutoUpdateStatus := TfrmAutoUpdateStatus.Create(Application);
     frmAutoUpdateStatus.URL := URL;
     frmAutoUpdateStatus.Show();
 end;
@@ -151,20 +152,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmAutoUpdateStatus.frameButtons1btnOKClick(Sender: TObject);
-var
-    iq: TJabberIQ;
 begin
-    // ok, there's a new one.
-    if (_tag <> nil) then begin
-        iq := TJabberIQ.Create(MainSession, MainSession.generateID(), Self.IQCallback);
-        iq.toJid := JID_AUTOUPDATE;
-        iq.iqType := 'get';
-        iq.Namespace := XMLNS_AUTOUPDATE;
-        iq.Send();
-        end
-    else begin
-        Self.getFile();
-        end;
+    Self.getFile();
 end;
 
 {---------------------------------------}
@@ -226,39 +215,16 @@ end;
 
 {---------------------------------------}
 procedure TfrmAutoUpdateStatus.setTag(tag: TXMLTag);
-begin
-    //
-    _tag := TXMLTag.Create(tag);
-end;
-
-{---------------------------------------}
-procedure TfrmAutoUpdateStatus.IQCallback(event: string; tag: TXMLTag);
 var
     c: TXMLTagList;
 begin
-    // parse this mess.. NB: We don't care if we have <beta> or <release>
-    {
-        <iq type="result" from="winjab@update.denmark" id="1001">
-          <query xmlns="jabber:iq:autoupdate">
-            <release priority="optional">
-              <ver>0.9.1.1</ver>
-              <desc/>
-              <url>http://update.denmark/winjab/winjab_setup.exe</url>
-            </release>
-            <beta priority="optional">
-              <ver>0.9.2.16</ver>
-              <desc/>
-              <url>http://update.denmark/winjab/winjab_beta.exe</url>
-            </beta>
-          </query>
-        </iq>
-    }
-    if (event = 'xml') then begin
-        c := tag.GetFirstTag('query').ChildTags;
-        _url := c[0].GetFirstTag('url').Data;
-        Self.getFile();
-        end;
+    // deal with the iq-result tag.
+    _tag := TXMLTag.Create(tag);
+
+    c := tag.GetFirstTag('query').ChildTags;
+    _url := c[0].GetFirstTag('url').Data;
 end;
+
 
 
 end.

@@ -80,7 +80,7 @@ var
     i: integer;
     f: TfrmInvite;
 begin
-    f := TfrmInvite.Create(nil);
+    f := TfrmInvite.Create(Application);
     f.cboRoom.Text := room_jid;
 
     // Only add the jids selected

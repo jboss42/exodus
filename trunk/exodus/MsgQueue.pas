@@ -68,7 +68,7 @@ uses
 function getMsgQueue: TfrmMsgQueue;
 begin
     if frmMsgQueue = nil then begin
-        frmMsgQueue := TfrmMsgQueue.Create(nil);
+        frmMsgQueue := TfrmMsgQueue.Create(Application);
         end;
 
     Result := frmMsgQueue;

@@ -69,7 +69,7 @@ var
 begin
     // Either remove a grp, or a bunch of contacts
 
-    f := TfrmGrpRemove.Create(nil);
+    f := TfrmGrpRemove.Create(Application);
 
     with f do begin
         if (contacts <> nil) then begin
