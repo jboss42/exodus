@@ -17,7 +17,6 @@ type
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     packet: string;
@@ -60,7 +59,7 @@ procedure TfrmXData.render(tag: TXMLTag);
 var
     report, ins, x: TXMLTag;
     rflds, flds: TXMLTagList;
-    i: integer;
+    h, i: integer;
     c: TListColumn;
     frm: TframeGeneric;
     subj: string;
@@ -98,6 +97,7 @@ begin
             end;
         end;
 
+    h := 10;
     for i := flds.Count - 1 downto 0 do begin
         frm := TframeGeneric.Create(Self);
         frm.Name := 'xDataFrame' + IntToStr(i);
@@ -106,15 +106,27 @@ begin
         frm.render(flds[i]);
         frm.Align := alTop;
         frm.TabOrder := 0;
+        h := h + frm.Height;
         end;
 
-    Self.Caption := Format(sFormFrom, [to_jid]);
+    if (h > Trunc(Screen.Height * 0.667)) then
+        h := Trunc(Screen.Height * 0.667);
+
+    report := x.GetFirstTag('title');
+    if (report <> nil) then
+        Self.Caption := report.Data
+    else
+        Self.Caption := Format(sFormFrom, [to_jid]);
 
     insBevel.Visible := lblIns.Visible;
     if (lblIns.Visible) then begin
         insBevel.Align := alTop;
         lblIns.Align := alTop;
         end;
+
+    MainSession.Prefs.RestorePosition(Self);
+    Self.ClientHeight := h + lblIns.Height + 10 + frameButtons1.Height;
+
 end;
 
 procedure TfrmXData.frameButtons1btnOKClick(Sender: TObject);
@@ -233,12 +245,6 @@ procedure TfrmXData.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     Action := caFree;
     MainSession.Prefs.SavePosition(Self);
-    inherited;
-end;
-
-procedure TfrmXData.FormCreate(Sender: TObject);
-begin
-    MainSession.Prefs.RestorePosition(Self);
     inherited;
 end;
 

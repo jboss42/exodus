@@ -14,6 +14,7 @@ type
     { Private declarations }
     opts_vals: TStringList;
     function getValues: TWideStringList;
+    procedure JidFieldDotClick(Sender: TObject);
   public
     { Public declarations }
     value: Widestring;
@@ -32,6 +33,7 @@ implementation
 
 {$R *.dfm}
 uses
+    SelContact,
     ExUtils;
 
 procedure TframeGeneric.render(tag: TXMLTag);
@@ -39,6 +41,7 @@ var
     t: Widestring;
     opts: TXMLTagList;
     idx, i: integer;
+    dot : TButton;
 begin
     // take a x-data field tag and do the right thing
 
@@ -137,6 +140,26 @@ begin
         Self.Height := 0;
         c := nil;
         end
+    else if (t = 'jid') then begin
+        dot := TButton.Create(Self);
+        with TButton(dot) do begin
+            Caption := '...';
+            OnClick := JidFieldDotClick;
+            Top := 5;
+            Left := Self.ClientWidth - 20;
+            Width := 20;
+            Height := 20;
+            Anchors := [akTop, akRight];
+            Parent := Self;
+            Visible := true;
+            end;
+        c :=  TEdit.Create(Self);
+        with TEdit(c) do begin
+            Text := value;
+            Width := Self.ClientWidth - lblLabel.Width - dot.Width - 10;
+            Anchors := [akLeft, akTop, akRight];
+            end;
+        end
     else begin  // 'text-single', 'text-private', or unknown
         c := TEdit.Create(Self);
         with TEdit(c) do begin
@@ -220,6 +243,19 @@ begin
         end
     else if (c = nil) then
         Result.Add(value);
+end;
+
+procedure TframeGeneric.JidFieldDotClick(Sender: TObject);
+var
+    fsel: TfrmSelContact;
+begin
+    fsel := TfrmSelContact.Create(Application);
+    fsel.frameTreeRoster1.DrawRoster(false);
+    fsel.frameTreeRoster1.treeRoster.MultiSelect := false;
+
+    if (fsel.ShowModal = mrOK) then begin
+        TEdit(c).Text := fsel.GetSelectedJID();
+        end;
 end;
 
 end.
