@@ -328,6 +328,8 @@ Section "Uninstall"
   ; MUST REMOVE UNINSTALLER, too
   Delete $INSTDIR\uninstall.exe
   RMDir "$INSTDIR"
+  
+  ; xxx Remove prefs??
 
   ; remove registry keys
   DeleteRegKey HKLM \
