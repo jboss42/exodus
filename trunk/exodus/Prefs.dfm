@@ -1,8 +1,8 @@
 object frmPrefs: TfrmPrefs
-  Left = 262
-  Top = 120
+  Left = 701
+  Top = 141
   Width = 407
-  Height = 442
+  Height = 441
   Caption = 'Exodus Preferences'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,7 +20,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 376
+    Height = 375
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1192,7 +1192,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgAway: TImage
       Left = 0
-      Top = 318
+      Top = 371
       Width = 68
       Height = 40
       Align = alTop
@@ -1227,7 +1227,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblAway: TLabel
       Left = 0
-      Top = 358
+      Top = 411
       Width = 68
       Height = 13
       Align = alTop
@@ -1238,7 +1238,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgKeywords: TImage
       Left = 0
-      Top = 371
+      Top = 424
       Width = 68
       Height = 40
       Align = alTop
@@ -1273,7 +1273,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblKeywords: TLabel
       Left = 0
-      Top = 411
+      Top = 464
       Width = 68
       Height = 13
       Align = alTop
@@ -1284,7 +1284,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgBlockList: TImage
       Left = 0
-      Top = 424
+      Top = 477
       Width = 68
       Height = 40
       Align = alTop
@@ -1319,7 +1319,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblBlockList: TLabel
       Left = 0
-      Top = 464
+      Top = 517
       Width = 68
       Height = 13
       Align = alTop
@@ -1328,9 +1328,9 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
     end
-    object imgCustomPres: TImage
+    object imgCustompres: TImage
       Left = 0
-      Top = 477
+      Top = 530
       Width = 68
       Height = 40
       Align = alTop
@@ -1365,7 +1365,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblCustomPres: TLabel
       Left = 0
-      Top = 517
+      Top = 570
       Width = 68
       Height = 13
       Align = alTop
@@ -1374,18 +1374,64 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
     end
+    object imgMessages: TImage
+      Left = 0
+      Top = 318
+      Width = 68
+      Height = 40
+      Align = alTop
+      Center = True
+      Picture.Data = {
+        055449636F6E0000010001002020100000000000E80200001600000028000000
+        2000000040000000010004000000000080020000000000000000000000000000
+        0000000000000000000080000080000000808000800000008000800080800000
+        C0C0C000808080000000FF0000FF000000FFFF00FF000000FF00FF00FFFF0000
+        FFFFFF0000000000000000000000000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000088888888888888888
+        8000000000000008FFFFFFFFFFFFFFFF8000000000000008FFFFFFFFFFFFFFFF
+        8000000000000008FFFFFFFFFFFFFFFF8000000000000008F0000000000000FF
+        8000000000000008FFFFFFFFFFFFFFFF8000000000000008FFFFFFFFFFFFFFFF
+        8000000000000008F0000000000000FF8000000000000008FFFFFFFFFFFFFFFF
+        8000000000000008FFFFFFFFFFFFFFFF8000000000000008F0000000000000FF
+        8000000000000008FFFFFFFFFFFFFFFF8000000000000008FFFFFFFFFFFFFFFF
+        8000000000000008F0000000000000FF8000000000000008FFFFFFFFFFFFFFFF
+        8000000000000008FFFFFFFFFFFFFFFF8000000000000008F0000000000000FF
+        8000000000000008FFFFFFFFFFFFFFFF8000000000000008FFFFFFFFFFFFFFFF
+        8000000000000008F0000000000000FF8000000000000008FFFFFFFFFFFFFFFF
+        8000000000000008FFFFFFFFFFFFFFFF8000000000000008FF44EFFFFFFF8888
+        8000000000000008F44E4F4444448FFF8000000000000008FF44FFFFFFFF8FF8
+        0000000000000008FFFFFFFFFFFF8F8000000000000000088888888888888800
+        0000000000000000000000000000000000000000000000000000000000000000
+        00000000FFFFFFFFFFFFFFFFFF00003FFE00003FFE00003FFE00003FFE00003F
+        FE00003FFE00003FFE00003FFE00003FFE00003FFE00003FFE00003FFE00003F
+        FE00003FFE00003FFE00003FFE00003FFE00003FFE00003FFE00003FFE00003F
+        FE00003FFE00003FFE00003FFE00007FFE0000FFFE0001FFFE0003FFFFFFFFFF
+        FFFFFFFF}
+      OnClick = TabSelect
+    end
+    object lblMessages: TLabel
+      Left = 0
+      Top = 358
+      Width = 68
+      Height = 13
+      Align = alTop
+      Alignment = taCenter
+      Caption = 'Messages'
+      WordWrap = True
+      OnClick = TabSelect
+    end
   end
   object PageControl1: TPageControl
     Left = 89
     Top = 0
     Width = 310
-    Height = 376
-    ActivePage = tbsSystem
+    Height = 375
+    ActivePage = tbsMessages
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 3
+    TabIndex = 5
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1720,7 +1766,7 @@ object frmPrefs: TfrmPrefs
       ImageIndex = 3
       object Label15: TLabel
         Left = 8
-        Top = 271
+        Top = 175
         Width = 149
         Height = 13
         Caption = 'File transfer download directory:'
@@ -1728,7 +1774,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 102
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1743,30 +1789,14 @@ object frmPrefs: TfrmPrefs
         ParentFont = False
         TabOrder = 0
       end
-      object chkTimestamp: TCheckBox
-        Left = 8
-        Top = 152
-        Width = 241
-        Height = 17
-        Caption = 'Timestamp displayed messages'
-        TabOrder = 6
-      end
       object chkAutoUpdate: TCheckBox
         Left = 8
-        Top = 200
+        Top = 152
         Width = 233
         Height = 17
         Caption = 'Check for updates automatically'
         Enabled = False
-        TabOrder = 8
-      end
-      object chkLog: TCheckBox
-        Left = 8
-        Top = 223
-        Width = 97
-        Height = 17
-        Caption = 'Log Messages'
-        TabOrder = 9
+        TabOrder = 6
       end
       object chkExpanded: TCheckBox
         Left = 8
@@ -1800,45 +1830,21 @@ object frmPrefs: TfrmPrefs
         Caption = 'Close button minimizes to the tray'
         TabOrder = 5
       end
-      object txtLogPath: TEdit
-        Left = 29
-        Top = 241
-        Width = 188
-        Height = 21
-        TabOrder = 10
-      end
-      object btnLogBrowse: TButton
-        Left = 224
-        Top = 239
-        Width = 75
-        Height = 25
-        Caption = 'Browse'
-        TabOrder = 11
-        OnClick = btnLogBrowseClick
-      end
       object txtXFerPath: TEdit
         Left = 29
-        Top = 289
+        Top = 193
         Width = 188
         Height = 21
-        TabOrder = 12
+        TabOrder = 7
       end
       object btnTransferBrowse: TButton
         Left = 222
-        Top = 287
+        Top = 191
         Width = 75
         Height = 25
         Caption = 'Browse'
-        TabOrder = 13
+        TabOrder = 8
         OnClick = btnTransferBrowseClick
-      end
-      object chkEmoticons: TCheckBox
-        Left = 8
-        Top = 176
-        Width = 241
-        Height = 17
-        Caption = 'Auto detect Emoticons in messages'
-        TabOrder = 7
       end
       object chkAutoStart: TCheckBox
         Left = 8
@@ -1855,7 +1861,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 97
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2005,9 +2011,85 @@ object frmPrefs: TfrmPrefs
         Wrap = False
       end
     end
+    object tbsMessages: TTabSheet
+      Caption = 'Messages'
+      ImageIndex = 5
+      object Label19: TLabel
+        Left = 20
+        Top = 53
+        Width = 35
+        Height = 13
+        Caption = 'Format:'
+      end
+      object chkEmoticons: TCheckBox
+        Left = 0
+        Top = 80
+        Width = 241
+        Height = 17
+        Caption = 'Auto detect Emoticons in messages'
+        TabOrder = 0
+      end
+      object chkTimestamp: TCheckBox
+        Left = 0
+        Top = 32
+        Width = 241
+        Height = 17
+        Caption = 'Timestamp displayed messages'
+        TabOrder = 1
+      end
+      object chkLog: TCheckBox
+        Left = 0
+        Top = 103
+        Width = 97
+        Height = 17
+        Caption = 'Log Messages'
+        TabOrder = 2
+      end
+      object txtLogPath: TEdit
+        Left = 21
+        Top = 121
+        Width = 188
+        Height = 21
+        TabOrder = 3
+      end
+      object StaticText11: TStaticText
+        Left = 0
+        Top = 0
+        Width = 302
+        Height = 20
+        Align = alTop
+        Alignment = taCenter
+        Caption = 'Message Options'
+        Color = clHighlight
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clCaptionText
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+        TabOrder = 4
+      end
+      object txtTimestampFmt: TEdit
+        Left = 64
+        Top = 49
+        Width = 145
+        Height = 21
+        TabOrder = 5
+      end
+      object btnLogBrowse: TButton
+        Left = 224
+        Top = 119
+        Width = 75
+        Height = 25
+        Caption = 'Browse'
+        TabOrder = 6
+        OnClick = btnLogBrowseClick
+      end
+    end
     object tbsNotify: TTabSheet
       Caption = 'Notifications'
-      ImageIndex = 5
+      ImageIndex = 6
       object chkNotify: TCheckListBox
         Left = 8
         Top = 40
@@ -2081,7 +2163,7 @@ object frmPrefs: TfrmPrefs
     end
     object tbsAway: TTabSheet
       Caption = 'AutoAway'
-      ImageIndex = 6
+      ImageIndex = 7
       object Label2: TLabel
         Left = 8
         Top = 56
@@ -2121,7 +2203,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 124
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2195,11 +2277,11 @@ object frmPrefs: TfrmPrefs
     end
     object tbsKeywords: TTabSheet
       Caption = 'Keywords'
-      ImageIndex = 7
+      ImageIndex = 8
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 112
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2218,7 +2300,7 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 73
         Width = 302
-        Height = 236
+        Height = 271
         Align = alClient
         TabOrder = 1
       end
@@ -2233,7 +2315,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TLabel
           Left = 0
           Top = 0
-          Width = 256
+          Width = 302
           Height = 26
           Align = alTop
           Caption = 
@@ -2253,11 +2335,11 @@ object frmPrefs: TfrmPrefs
     end
     object tbsBlockList: TTabSheet
       Caption = 'BlockList'
-      ImageIndex = 8
+      ImageIndex = 9
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 292
+        Width = 302
         Height = 26
         Align = alTop
         Caption = 
@@ -2268,7 +2350,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 146
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2287,14 +2369,14 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 46
         Width = 302
-        Height = 268
+        Height = 298
         Align = alClient
         TabOrder = 1
       end
     end
     object tbsCustomPres: TTabSheet
       Caption = 'CustPres'
-      ImageIndex = 9
+      ImageIndex = 10
       object lstCustomPres: TListBox
         Left = 0
         Top = 20
@@ -2470,7 +2552,7 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 376
+    Top = 375
     Width = 399
     Height = 37
     Align = alBottom

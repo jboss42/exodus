@@ -370,6 +370,8 @@ begin
         result := IntToStr(Integer(Screen.IconFont.Color))
     else if pkey = 'emoticons' then
         result := '1'
+    else if pkey = 'timestamp_format' then
+        result := 'HH:MM'
     else
         result := '';
 end;
