@@ -444,6 +444,7 @@ begin
         // join this grp... grp is in the subject
         jid := txtSubject.Caption;
         StartRoom(jid, MainSession.Username);
+        Self.Close();
     end
 
     else begin
