@@ -22,11 +22,24 @@ unit DNSUtils;
 interface
 
 uses
-  SysUtils, Classes, Windows, 
+  SysUtils, Classes, Windows, Session,  
   IdBaseComponent, IdComponent, IdUDPBase, IdUDPClient,
   IdDNSResolver;
 
+type
 
+    TDNSResolverThread = class(TThread)
+    protected
+        _resolver: TIdDNSResolver;
+        _srv: string;
+        _a: string;
+        _session: TJabberSession;
+    public
+        procedure Execute(); override;
+    end;
+
+procedure GetSRVAsync(Session: TJabberSession; Resolver: TIdDNSResolver;
+    srv_req, a_req: string);
 function GetSRVRecord(Resolver: TIdDNSResolver; srv_req, a_req: string;
     var ip: string; var port: Word): boolean;
 function GetNameServers(): string;
@@ -37,7 +50,46 @@ function GetNameServers(): string;
 implementation
 
 uses
-    Registry, IdException;
+    XMLTag, Registry, IdException;
+
+{---------------------------------------}
+procedure GetSRVAsync(Session: TJabberSession; Resolver: TIdDNSResolver;
+    srv_req, a_req: string);
+var
+    thd: TDNSResolverThread;
+begin
+    thd := TDNSResolverThread.Create(true);
+    thd._session := Session;
+    thd._a := a_req;
+    thd._srv := srv_req;
+    thd._resolver := Resolver;
+    thd.FreeOnTerminate := true;
+    thd.Execute();
+end;
+
+{---------------------------------------}
+procedure TDNSResolverThread.Execute();
+var
+    ip: string;
+    p: Word;
+    t: TXMLTag;
+begin
+    t := TXMLTag.Create('dns');
+    if (GetSRVRecord(_resolver, _srv, _a, ip, p)) then begin
+        // it worked..
+        if (p > 0) then
+            t.setAttribute('type', 'srv')
+        else
+            t.setAttribute('type', 'a');
+        t.setAttribute('ip', ip);
+        t.setAttribute('port', IntToStr(p));
+    end
+    else begin
+        // failed.
+        t.setAttribute('type', 'failed');
+    end;
+    _session.FireEvent('/session/dns', t);
+end;
 
 {---------------------------------------}
 function GetNameServers(): string;
