@@ -36,7 +36,6 @@ type
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure FormResize(Sender: TObject);
     procedure Cancel();
     procedure FormCreate(Sender: TObject);
   private
@@ -120,6 +119,7 @@ var
     frm: TframeGeneric;
     c: TControl;
     bv: TBevel;
+    tabs: TList;
 begin
     tpe := x.GetAttribute('type');
     flds := x.QueryTags('field');
@@ -127,16 +127,19 @@ begin
     m := 0;
 
     // build all of the fields.
+    tabs := TList.Create;
+    
     for i := flds.Count - 1 downto 0 do begin
         frm := TframeGeneric.Create(box.owner);
         frm.FormType := tpe;
         frm.Name := 'xDataFrame' + IntToStr(i);
         frm.Parent := box;
         frm.Visible := true;
-        frm.render(flds[i]);
         frm.Align := alTop;
-        frm.TabOrder := i;
+        frm.Top := 0;
+        frm.render(flds[i]);
         m := max(m, frm.getLabelWidth());
+        tabs.Insert(0, frm);
     end;
 
     // build something to contain instructions if we have it.
@@ -150,6 +153,7 @@ begin
         bv.Name := 'xDataInsBevel';
         bv.Style := bsLowered;
         bv.Align := alTop;
+        bv.Top := 0;
         bv.Visible := true;
 
         frm := TframeGeneric.Create(box.owner);
@@ -162,16 +166,23 @@ begin
         fake := TXMLTag.Create('field');
         fake.setAttribute('type', 'fixed');
         fake.AddBasicTag('value', ins.Data());
+        frm.Align := alTop;
+        frm.Top := 0;
         frm.render(fake);
         fake.Free();
-
-        frm.Align := alTop;
         m := max(m, frm.getLabelWidth());
 
         // force a repaint of the bevel
         bv.Refresh();
     end;
 
+    for i := 0 to tabs.Count - 1 do begin
+        frm := TframeGeneric(tabs[i]);
+        frm.TabOrder := i;
+    end;
+
+    tabs.Clear();
+    tabs.Free();
 
     // make it no bigger than this..
     m := min(m, 350);
@@ -359,12 +370,6 @@ begin
     if (MainSession <> nil) then
         MainSession.Prefs.SavePosition(Self);
     inherited;
-end;
-
-{---------------------------------------}
-procedure TfrmXData.FormResize(Sender: TObject);
-begin
-    //
 end;
 
 {---------------------------------------}

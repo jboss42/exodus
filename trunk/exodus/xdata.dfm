@@ -16,7 +16,6 @@ object frmXData: TfrmXData
   Position = poDefaultPosOnly
   OnClose = FormClose
   OnCreate = FormCreate
-  OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
   object insBevel: TBevel
