@@ -304,14 +304,16 @@ var
     fields: TXMLTagList;
     cur_tag, x: TXMLTag;
     i: integer;
-    cur_frame: TframeTopLabel;
+    ff, cur_frame: TframeTopLabel;
     cur_gen: TframeGeneric;
     cur_field: string;
 begin
     // callback when we get the fields back
     cur_state := 'search';
     cur_iq := nil;
+    cur_frame := nil;
     aniWait.Active := false;
+    ff := nil;
 
     if (event <> 'xml') then begin
         // timeout
@@ -357,7 +359,9 @@ begin
         end
         else begin
           fields := tag.QueryXPTag('/iq/query').ChildTags();
-          for i := fields.Count - 1 downto 0 do begin
+          pnlFields.Visible := false;
+          //for i := fields.Count - 1 downto 0 do begin
+          for i := 0 to fields.Count - 1 do begin
               cur_tag := fields[i];
               if (cur_tag.Name = 'instructions') then
                   // do nothing
@@ -373,6 +377,7 @@ begin
                   with cur_frame do begin
                       Parent := pnlFields;
                       Align := alTop;
+                      Visible := true;
                       field_name := cur_field;
                       lbl.Caption := getDisplayField(cur_field);
                       Name := 'frame_' + field_name;
@@ -380,15 +385,20 @@ begin
                       if (cur_field = 'password') then
                           txtData.PasswordChar := '*';
                   end;
+                  if (ff = nil) then ff := cur_frame;
               end;
           end;
           fields.Free();
+          pnlFields.Visible := true;
+          if (ff <> nil) then cur_frame := ff;
       end;
-
-        if (cur_frame <> nil) then
-            cur_frame.txtData.SetFocus();
     end;
+
     Tabs.ActivePage := TabSheet3;
+
+    if (cur_frame <> nil) then
+        cur_frame.txtData.SetFocus();
+
 end;
 
 {---------------------------------------}
