@@ -63,6 +63,7 @@ type
 
         function inGroup(jid: Widestring): boolean; overload;
         function inGroup(jid: TJabberID): boolean; overload;
+        function isEmpty(): boolean;
 
         // nested grp stuff
         function getGroup(name: Widestring): TJabberGroup;
@@ -214,6 +215,12 @@ begin
     for i := 0 to _grps.Count - 1 do
         ret := ret + TJabberGroup(_grps.Objects[i]).Total;
     Result := ret;
+end;
+
+{---------------------------------------}
+function TJabberGroup.isEmpty(): boolean;
+begin
+    Result := ((_jids.Count = 0) and (_grps.Count = 0));
 end;
 
 {---------------------------------------}

@@ -429,7 +429,7 @@ var
     n, nl, i, gidx: integer;
     jidx: boolean;
     go: TJabberGroup;
-    cur_grp: Widestring;
+    path, cur_grp: Widestring;
     p: TJabberPres;
 begin
     if ((ri.Subscription <> 'to') and
@@ -445,8 +445,13 @@ begin
         go := checkGroup(cur_grp);
         nl := go.NestLevel;
         if (nl > 1) then begin
+            path := '';
             for n := 0 to nl-1 do begin
-                checkGroup(go.Parts[n]);
+                if (path <> '') then
+                    path := path +
+                        MainSession.prefs.getString('group_seperator');
+                path := path + go.Parts[n];
+                checkGroup(path);
             end;
         end;
     end;
@@ -493,24 +498,22 @@ begin
     if (i = -1) then begin
         go := TJabberGroup.Create(grp);
         _groups.AddObject(grp, go);
+
+        // if this new grp should be nested, do the right thing..
+        if (go.NestLevel > 1) then begin
+            path := '';
+            for i := 0 to go.NestLevel - 2 do begin
+                if (path <> '') then path := path + '/';
+                path := path + go.Parts[i];
+            end;
+            p := getGroup(path);
+            if (p = nil) then p := addGroup(path);
+            if (p.getGroup(go.FullName) = nil) then p.addGroup(go);
+        end;
+
     end
     else
         go := TJabberGroup(_groups.Objects[i]);
-
-    // if this new grp should be nested, do the right thing..
-    if (go.NestLevel > 1) then begin
-        path := '';
-        for i := 0 to go.NestLevel - 2 do begin
-            if (path <> '') then path := path + '/';
-            path := path + go.Parts[i];
-        end;
-        p := getGroup(path);
-        if (p = nil) then
-            p := addGroup(path);
-        if (p.getGroup(go.FullName) = nil) then
-            p.addGroup(go);
-    end;
-
 
     Result := go;
 end;
