@@ -63,6 +63,7 @@ implementation
 {$R *.dfm}
 
 uses
+    ExUtils, 
     Session,
     Jabber1;
 
@@ -93,7 +94,6 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.CheckPos();
 begin
-    //
     if (_pos.Right - _pos.Left) <= 100 then
         _pos.Right := _pos.Left + 150;
 

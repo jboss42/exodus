@@ -84,6 +84,8 @@ end;
 
 procedure TfrmMsgQueue.FormCreate(Sender: TObject);
 begin
+    inherited;
+
     MainSession.Prefs.RestorePosition(Self);
 
     lstEvents.Color := TColor(MainSession.Prefs.getInt('roster_bg'));
@@ -95,6 +97,8 @@ end;
 
 procedure TfrmMsgQueue.FormResize(Sender: TObject);
 begin
+    inherited;
+
     MainSession.prefs.SavePosition(Self);
 end;
 
@@ -125,6 +129,8 @@ procedure TfrmMsgQueue.FormClose(Sender: TObject;
 begin
     Action := caFree;
     frmMsgQueue := nil;
+
+    inherited;
 end;
 
 procedure TfrmMsgQueue.lstEventsKeyDown(Sender: TObject; var Key: Word;
@@ -153,6 +159,8 @@ end;
 procedure TfrmMsgQueue.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
+    inherited;
+    
     lstEvents.Items.Clear;
 end;
 
