@@ -99,6 +99,12 @@ begin
     // kick and ban get here.. because of status codes
     e := CreateJabberEvent(tag);
 
+    // check to see if we're already in the room.
+    if (room_list.IndexOf(e.data_type) >= 0) then begin
+        e.Free();
+        exit;
+    end;
+
     if (MainSession.prefs.getInt('invite_treatment') = invite_accept) then begin
         // auto-join the room
         StartRoom(e.data_type, MainSession.Username);
