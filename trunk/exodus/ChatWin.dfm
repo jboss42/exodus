@@ -161,13 +161,6 @@ inherited frmChat: TfrmChat
       Caption = 'Word Wrap Input'
       OnClick = mnuWordwrapClick
     end
-    object N3: TTntMenuItem
-      Caption = '-'
-    end
-    object refresh1: TTntMenuItem
-      Caption = 'refresh'
-      OnClick = refresh1Click
-    end
   end
   object timFlash: TTimer [6]
     Enabled = False

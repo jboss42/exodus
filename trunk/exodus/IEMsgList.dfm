@@ -6,6 +6,8 @@ inherited fIEMsgList: TfIEMsgList
     Height = 143
     Align = alClient
     TabOrder = 0
+    OnDragDrop = browserDragDrop
+    OnDragOver = browserDragOver
     OnEnter = browserEnter
     OnBeforeNavigate2 = browserBeforeNavigate2
     OnDocumentComplete = browserDocumentComplete
