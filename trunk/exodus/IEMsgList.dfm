@@ -7,6 +7,7 @@ inherited fIEMsgList: TfIEMsgList
     Align = alClient
     TabOrder = 0
     OnEnter = browserEnter
+    OnBeforeNavigate2 = browserBeforeNavigate2
     OnDocumentComplete = browserDocumentComplete
     ControlData = {
       4C00000003190000C80E00000000000000000000000000000000000000000000
