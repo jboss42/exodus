@@ -25,7 +25,8 @@ uses
   Langs in '..\..\components\Langs.pas',
   WStrList in '..\..\components\WStrList.pas',
   RichOLE in '..\..\components\richole.pas',
-  ExRichEdit in '..\..\components\ExRichEdit.pas';
+  ExRichEdit in '..\..\components\ExRichEdit.pas',
+  RegExpr in '..\..\..\jopl\RegExpr.pas';
 
 exports
   DllGetClassObject,

@@ -12,7 +12,7 @@ unit ExSQLLogger_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 4/30/2004 7:18:37 AM from Type Library described below.
+// File generated on 6/14/2004 8:34:25 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\SQLLogger\ExSQLLogger.tlb (1)
@@ -21,7 +21,7 @@ unit ExSQLLogger_TLB;
 // Helpfile: 
 // HelpString: ExSQLLogger Library
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
+//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
 //   (2) v1.0 ExodusCOM, (D:\src\exodus\runner\Exodus.exe)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 

@@ -145,7 +145,7 @@ var
     cr_pos: integer;
 begin
     // replace CR's w/ <br> tags
-    txt := HTML_EscapeChars(Msg.Body, false);
+    txt := HTML_EscapeChars(Msg.Body, false, true);
     repeat
         cr_pos := Pos(#13#10, txt);
         if cr_pos > 0 then begin

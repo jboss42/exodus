@@ -51,6 +51,7 @@ type
     c: TControl;
     opts_vals: TStringList;
     urls: TObjectList;
+    dot : TButton;
 
     function getValues: TWideStringList;
     procedure JidFieldDotClick(Sender: TObject);
@@ -86,11 +87,11 @@ var
     v, l, t: Widestring;
     opts: TXMLTagList;
     idx, i: integer;
-    dot : TButton;
 begin
     // take a x-data field tag and do the right thing
     Self.BorderWidth := 1;
     AssignDefaultFont(Self.Font);
+    dot := nil;
 
     // XXX: PGM: where does this get freed?
     urls := TObjectList.Create();
@@ -193,11 +194,11 @@ begin
     end
 
     else if (t = 'boolean') then begin
-        Self.AutoSize := true;
+        //Self.AutoSize := true;
         lblLabel.Layout := tlTop;
         c := TTntCheckbox.Create(Self);
         with TTntCheckbox(c) do begin
-            Align := alClient;
+            //Align := alClient;
             Caption := '';
             Checked := (value = '1');
         end;
@@ -225,7 +226,7 @@ begin
             Text := value;
             // Anchors := [akLeft, akTop, akBottom, akRight];
             Parent := Self;
-            Align := alClient;
+            //Align := alClient;
         end;
 
         dot := TButton.Create(Self);
@@ -246,7 +247,7 @@ begin
         c := TTntEdit.Create(Self);
         with TTntEdit(c) do begin
             Text := value;
-            Align := alClient;
+            //Align := alClient;
             if (t = 'text-private') then
                 PasswordChar := '*';
         end;
@@ -257,7 +258,7 @@ begin
         c.Visible := true;
         c.Left := lblLabel.Width + 5;
         c.Top := 1;
-        Self.ClientHeight := c.Height + (2 * Self.BorderWidth);
+        //Self.ClientHeight := c.Height + (2 * Self.BorderWidth);
     end;
 
     fld_type := t;
@@ -366,9 +367,11 @@ end;
 {---------------------------------------}
 procedure TframeGeneric.FrameResize(Sender: TObject);
 begin
-    if (c = lblLabel) then with TTntLabel(c) do begin
-        AutoSize := false;
-        AutoSize := true;
+    if (c is TTntEdit) then begin
+        if (dot <> nil) then
+            c.width := Self.ClientWidth - lblLabel.Width - dot.Width - 6 - 2
+        else
+            c.Width := Self.ClientWidth - lblLabel.Width - 6;
     end;
 end;
 
@@ -387,9 +390,25 @@ end;
 
 {---------------------------------------}
 procedure TframeGeneric.setLabelWidth(val: integer);
+var
+    h: integer;
+    r: TRect;
+    txt: Widestring;
 begin
-    if ((lblLabel.Width <> 0) and (lblLabel <> c)) then
+    if ((lblLabel.Width <> 0) and (lblLabel <> c)) then begin
+        txt := lblLabel.Caption;
         lblLabel.Width := val;
+        r.Top := 0;
+        r.Left := 0;
+        r.Right := val;
+        r.bottom := 1;
+        h := DrawTextExW(Self.lblLabel.Canvas.Handle, PWideChar(txt), Length(txt), r,
+            DT_WORDBREAK or DT_CALCRECT, nil);
+        Self.Height := max(h + 21, self.height);
+
+        if ((c <> nil) and (not (c is TPaintbox))) then
+            c.Left := val;
+    end;
 end;
 
 

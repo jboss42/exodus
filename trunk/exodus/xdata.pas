@@ -185,15 +185,18 @@ begin
         frm.render(flds[i]);
         frm.Align := alTop;
         frm.TabOrder := 0;
-        h := h + frm.Height;
         m := max(m, frm.getLabelWidth());
     end;
+
+    // make it no bigger than this..
+    m := min(m, 350);
 
     for i := 0 to Self.box.ControlCount - 1 do begin
         c := Self.box.Controls[i];
         if (c is TframeGeneric) then begin
-            frm := TframeGeneric(c);
-            frm.setLabelWidth(m + 5);
+           frm := TframeGeneric(c);
+           frm.setLabelWidth(m + 5);
+           h := h + frm.Height;
         end;
     end;
 

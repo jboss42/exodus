@@ -18,7 +18,8 @@ uses
   XMLParser in '..\..\..\jopl\XMLParser.pas',
   XMLTag in '..\..\..\jopl\XMLTag.pas',
   JabberUtils in '..\..\..\jopl\JabberUtils.pas',
-  Prefs in 'Prefs.pas' {frmPrefs};
+  Prefs in 'Prefs.pas' {frmPrefs},
+  RegExpr in '..\..\..\jopl\RegExpr.pas';
 
 exports
   DllGetClassObject,
