@@ -81,5 +81,7 @@ this much help.
   <brand_ad></brand_ad>
   <!-- A URL that gets fired when the user clicks on the ad -->
   <brand_ad_url></brand_ad_url>
+  <!-- The URL to check for auto-update of branding.xml file. -->
+  <branding_url></branding_url>
 
 </brand>
