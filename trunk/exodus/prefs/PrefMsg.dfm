@@ -9,35 +9,35 @@ inherited frmPrefMsg: TfrmPrefMsg
   TextHeight = 13
   object lblTimestampFmt: TTntLabel [0]
     Left = 26
-    Top = 121
+    Top = 137
     Width = 35
     Height = 13
     Caption = 'Format:'
   end
   object lblMsgOptions: TTntLabel [1]
     Left = 5
-    Top = 145
+    Top = 161
     Width = 170
     Height = 13
     Caption = 'Simple message (non-chat) handling'
   end
   object lblSpoolPath: TTntLabel [2]
     Left = 5
-    Top = 231
+    Top = 247
     Width = 128
     Height = 13
     Caption = 'Store Unread messages to:'
   end
   object lblInviteOptions: TTntLabel [3]
     Left = 5
-    Top = 185
+    Top = 201
     Width = 198
     Height = 13
     Caption = 'When I get invited to a chat room, do this:'
   end
   object chkTimestamp: TTntCheckBox [4]
     Left = 5
-    Top = 101
+    Top = 117
     Width = 300
     Height = 17
     Caption = 'Timestamp messages'
@@ -53,7 +53,7 @@ inherited frmPrefMsg: TfrmPrefMsg
   end
   object cboMsgOptions: TTntComboBox [6]
     Left = 26
-    Top = 161
+    Top = 177
     Width = 207
     Height = 21
     Style = csDropDownList
@@ -66,14 +66,14 @@ inherited frmPrefMsg: TfrmPrefMsg
   end
   object txtSpoolPath: TTntEdit [7]
     Left = 26
-    Top = 247
+    Top = 263
     Width = 207
     Height = 21
     TabOrder = 6
   end
   object btnSpoolBrowse: TTntButton [8]
     Left = 243
-    Top = 245
+    Top = 261
     Width = 75
     Height = 25
     Caption = 'Browse'
@@ -82,7 +82,7 @@ inherited frmPrefMsg: TfrmPrefMsg
   end
   object cboInviteOptions: TTntComboBox [9]
     Left = 26
-    Top = 201
+    Top = 217
     Width = 207
     Height = 21
     Style = csDropDownList
@@ -103,7 +103,7 @@ inherited frmPrefMsg: TfrmPrefMsg
   end
   object txtTimestampFmt: TTntComboBox [11]
     Left = 72
-    Top = 118
+    Top = 134
     Width = 161
     Height = 21
     ItemHeight = 13
@@ -135,6 +135,14 @@ inherited frmPrefMsg: TfrmPrefMsg
     Height = 17
     Caption = 'Queue all offline messages (even chats)'
     TabOrder = 10
+  end
+  object chkChatAvatars: TTntCheckBox
+    Left = 5
+    Top = 92
+    Width = 300
+    Height = 17
+    Caption = 'Display avatars in chat windows'
+    TabOrder = 11
   end
   object OpenDialog1: TOpenDialog
     Filter = 'XML|*.xml'

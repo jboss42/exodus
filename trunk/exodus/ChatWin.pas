@@ -449,27 +449,31 @@ begin
     if (_jid <> nil) then _jid.Free();
 
     _jid := TJabberID.Create(cjid);
+    _avatar := nil;
+    imgAvatar.Visible := false;
+    Panel1.ClientHeight := 28;
 
     // check for an avatar
-    a := Avatars.Find(_jid.jid);
-    if (a <> nil) then begin
-        _avatar := a;
-        // Put some upper bounds on avatars in chat windows
-        m := _avatar.Height;
-        if (m > 32) then begin
-            m := 32;
-            imgAvatar.Width := Trunc((32 / _avatar.Height) * (_avatar.Width))
+    if (MainSession.Prefs.getBool('chat_avatars')) then begin
+        a := Avatars.Find(_jid.jid);
+        if ((a <> nil) and (a.isValid())) then begin
+            // Put some upper bounds on avatars in chat windows
+            m := a.Height;
+            if (m >= 0) then begin
+                _avatar := a;
+                if (m > 32) then begin
+                    m := 32;
+                    imgAvatar.Width := Trunc((32 / _avatar.Height) * (_avatar.Width))
+                end
+                else
+                    imgAvatar.Width := _avatar.Width;
+
+                Panel1.ClientHeight := m + 1;
+                imgAvatar.Visible := true;
+            end;
         end
-        else
-            imgAvatar.Width := _avatar.Width;
-        Panel1.ClientHeight := m + 1;
-        imgAvatar.Visible := true;
-    end
-    else begin
-        _avatar := nil;
-        imgAvatar.Visible := false;
-        Panel1.ClientHeight := 28;
     end;
+
 
     // setup the callbacks if we don't have them already
     if (_pcallback = -1) then

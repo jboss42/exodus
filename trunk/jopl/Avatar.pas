@@ -61,6 +61,8 @@ type
         procedure fetch(session: TJabberSession);
 
         function  getHash(): string;
+        function  isValid(): boolean;
+
         property  Data: string read _data;
         property  MimeType: string read getMimeType;
         property  Height: integer read _height;
@@ -128,6 +130,7 @@ var
     base: string;
 begin
     if (_pic = nil) then exit;
+    
     base := ChangeFileExt(filename, '');
     if (_pic is TGifImage) then begin
         filename := base + '.gif';
@@ -320,11 +323,13 @@ begin
                         _pic.LoadFromStream(m);
                         _genData();
                     except
+                        FreeAndNil(_pic);
                     end;
                 end;
             end;
         end;
     except
+        if (_pic <> nil) then FreeAndNil(_pic);
     end;
 
     m.Free();
@@ -409,6 +414,11 @@ begin
         Result := 'image/jpeg'
     else if (_pic is TBitmap) then
         Result := 'image/x-ms-bmp';
+end;
+
+function TAvatar.isValid(): boolean;
+begin
+    Result := (_pic <> nil);
 end;
 
 {---------------------------------------}
