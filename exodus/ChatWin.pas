@@ -24,7 +24,7 @@ uses
     Chat, ChatController, JabberID, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2,
-  TntStdCtrls;
+    TntStdCtrls;
 
 type
   TfrmChat = class(TfrmBaseChat)
@@ -230,13 +230,17 @@ begin
     _check_event := false;
     _last_id := '';
     _reply_id := '';
-    DragAcceptFiles( Handle, True );
+
+    if (MainSession.Profile.ConnectionType = conn_normal) then
+        DragAcceptFiles( Handle, True );
 
     // setup prefs
     AssignDefaultFont(MsgList.Font);
     MsgList.Color := TColor(MainSession.Prefs.getInt('color_bg'));
     MsgOut.Color := MsgList.Color;
     MsgOut.Font.Assign(MsgList.Font);
+
+    mnuSendFile.Enabled := (MainSession.Profile.ConnectionType = conn_normal);
 end;
 
 {---------------------------------------}

@@ -910,10 +910,7 @@ begin
 
     Self.setupTrayIcon();
 
-    // Accept files dragged from Explorer
-    DragAcceptFiles(Handle, True);
     MainSession.setPresence(_cli_show, _cli_status, _cli_priority);
-
 end;
 
 {---------------------------------------}
@@ -1095,6 +1092,10 @@ begin
         end
 
     else if event = '/session/authenticated' then with MainSession do begin
+        // Accept files dragged from Explorer
+        if (MainSession.Profile.ConnectionType = conn_normal) then
+            DragAcceptFiles(Handle, True);
+
         Roster.Fetch;
 
         // Don't broadcast
@@ -1111,6 +1112,11 @@ begin
         end
 
     else if (event = '/session/disconnected') then begin
+        // Make sure windows knows we don't want files
+        // dropped on us anymore.
+        if (MainSession.Profile.ConnectionType = conn_normal) then
+            DragAcceptFiles(Handle, False);
+
         timAutoAway.Enabled := false;
 
         if (frmMsgQueue <> nil) then
@@ -2364,9 +2370,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.FormDestroy(Sender: TObject);
 begin
-    // Make sure windows knows we don't want files
-    // dropped on us anymore.
-    DragAcceptFiles(Handle, False);
+    //
 end;
 
 {---------------------------------------}
