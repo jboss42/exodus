@@ -139,6 +139,7 @@ object frmMsgQueue: TfrmMsgQueue
       end>
     LangOptions = [loAutoFont]
     Language = 1033
+    ScrollBars = ssVertical
     ShowSelectionBar = False
     TabOrder = 1
     URLColor = clBlue
