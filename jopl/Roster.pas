@@ -466,7 +466,8 @@ begin
             end;
         ri.parse(ritems[i]);
         checkGroups(ri);
-        s.FireEvent('/roster/item', tag, ri);
+        if (not s.IsBlocked(ri.jid)) then
+            s.FireEvent('/roster/item', tag, ri);
         if (ri.subscription = 'remove') then begin
             idx := Self.indexOfObject(ri);
             ri.Free;
@@ -595,6 +596,7 @@ var
     idx, i: integer;
     ri: TJabberRosterItem;
     s: TJabberSession;
+    j: string;
 begin
     // parse the full roster push
 
@@ -624,7 +626,9 @@ begin
         ritems := tag.QueryXPTags('/iq/query/item');
         for i := 0 to ritems.Count - 1 do begin
             ct := ritems.Tags[i];
-            idx := Self.IndexOf(ct.GetAttribute('jid'));
+            j := ct.GetAttribute('jid');
+            if (s.IsBlocked(j)) then continue;
+            idx := Self.IndexOf(j);
             if (idx = -1) then
                 ri := TJabberRosterItem.Create
             else
