@@ -1,6 +1,6 @@
 object frmPrefs: TfrmPrefs
-  Left = 763
-  Top = 205
+  Left = 264
+  Top = 181
   Width = 407
   Height = 441
   Caption = 'Exodus Preferences'
@@ -1435,12 +1435,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 310
     Height = 370
-    ActivePage = tbsNotify
+    ActivePage = tbsFonts
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 6
+    TabIndex = 2
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1567,42 +1567,49 @@ object frmPrefs: TfrmPrefs
       end
       object Label6: TLabel
         Left = 8
-        Top = 120
+        Top = 152
         Width = 108
         Height = 13
         Caption = 'Color for my messages:'
       end
       object Label7: TLabel
         Left = 8
-        Top = 168
+        Top = 200
         Width = 119
         Height = 13
         Caption = 'Color for other messages:'
       end
       object Label8: TLabel
         Left = 8
-        Top = 72
+        Top = 104
         Width = 131
         Height = 13
         Caption = 'Background color for chats:'
       end
       object Label17: TLabel
         Left = 8
-        Top = 214
+        Top = 246
         Width = 58
         Height = 13
         Caption = 'Roster Font:'
       end
       object Label16: TLabel
         Left = 136
-        Top = 258
+        Top = 290
         Width = 61
         Height = 13
         Caption = 'Background:'
       end
       object Label18: TLabel
         Left = 32
-        Top = 258
+        Top = 290
+        Width = 51
+        Height = 13
+        Caption = 'Font Color:'
+      end
+      object Label21: TLabel
+        Left = 32
+        Top = 74
         Width = 51
         Height = 13
         Caption = 'Font Color:'
@@ -1610,7 +1617,7 @@ object frmPrefs: TfrmPrefs
       object pnlFont: TPanel
         Left = 32
         Top = 40
-        Width = 137
+        Width = 150
         Height = 27
         BevelOuter = bvLowered
         Caption = 'Verdona, 8 pt'
@@ -1624,7 +1631,7 @@ object frmPrefs: TfrmPrefs
         TabOrder = 0
       end
       object Button1: TButton
-        Left = 176
+        Left = 191
         Top = 40
         Width = 75
         Height = 25
@@ -1634,8 +1641,8 @@ object frmPrefs: TfrmPrefs
       end
       object pnlMyColor: TPanel
         Left = 32
-        Top = 136
-        Width = 137
+        Top = 168
+        Width = 150
         Height = 27
         BevelOuter = bvLowered
         Caption = '<me>'
@@ -1649,8 +1656,8 @@ object frmPrefs: TfrmPrefs
         TabOrder = 2
       end
       object Button2: TButton
-        Left = 176
-        Top = 136
+        Left = 191
+        Top = 168
         Width = 75
         Height = 25
         Caption = 'Change'
@@ -1659,8 +1666,8 @@ object frmPrefs: TfrmPrefs
       end
       object pnlOtherColor: TPanel
         Left = 32
-        Top = 184
-        Width = 137
+        Top = 216
+        Width = 150
         Height = 27
         BevelOuter = bvLowered
         Caption = '<someone>'
@@ -1674,8 +1681,8 @@ object frmPrefs: TfrmPrefs
         TabOrder = 4
       end
       object Button3: TButton
-        Left = 176
-        Top = 184
+        Left = 191
+        Top = 216
         Width = 75
         Height = 25
         Caption = 'Change'
@@ -1684,8 +1691,8 @@ object frmPrefs: TfrmPrefs
       end
       object pnlBGColor: TPanel
         Left = 32
-        Top = 88
-        Width = 137
+        Top = 120
+        Width = 150
         Height = 27
         BevelOuter = bvLowered
         Caption = 'Some Message'
@@ -1699,8 +1706,8 @@ object frmPrefs: TfrmPrefs
         TabOrder = 6
       end
       object Button4: TButton
-        Left = 176
-        Top = 88
+        Left = 191
+        Top = 120
         Width = 75
         Height = 25
         Caption = 'Change'
@@ -1727,16 +1734,16 @@ object frmPrefs: TfrmPrefs
       end
       object pnlRoster: TPanel
         Left = 32
-        Top = 232
-        Width = 137
+        Top = 264
+        Width = 150
         Height = 21
         BevelOuter = bvLowered
         Caption = 'Cowboy Neal'
         TabOrder = 9
       end
       object Button5: TButton
-        Left = 176
-        Top = 230
+        Left = 191
+        Top = 262
         Width = 75
         Height = 25
         Caption = 'Change'
@@ -1745,7 +1752,7 @@ object frmPrefs: TfrmPrefs
       end
       object cboRosterBG: TColorBox
         Left = 135
-        Top = 274
+        Top = 306
         Width = 90
         Height = 22
         DefaultColorColor = clBlue
@@ -1758,7 +1765,7 @@ object frmPrefs: TfrmPrefs
       end
       object cboRosterFontColor: TColorBox
         Left = 31
-        Top = 274
+        Top = 306
         Width = 90
         Height = 22
         DefaultColorColor = clBlue
@@ -1768,6 +1775,19 @@ object frmPrefs: TfrmPrefs
         ItemHeight = 16
         TabOrder = 12
         OnChange = cboRosterFontColorChange
+      end
+      object cboChatFontColor: TColorBox
+        Left = 95
+        Top = 71
+        Width = 90
+        Height = 22
+        DefaultColorColor = clBlue
+        Selected = clBlue
+        Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
+        DropDownCount = 12
+        ItemHeight = 16
+        TabOrder = 13
+        OnChange = cboChatFontColorChange
       end
     end
     object tbsSystem: TTabSheet
