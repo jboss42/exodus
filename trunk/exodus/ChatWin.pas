@@ -246,7 +246,7 @@ begin
     _pcallback := -1;
     _scallback := -1;
     OtherNick := '';
-    _pres_img := -1;
+    _pres_img := ico_Unknown;
     _check_event := false;
     _last_id := '';
     _reply_id := '';
@@ -302,7 +302,12 @@ begin
         lblNick.Caption := ' ' + ritem.Nickname;
         Caption := ritem.Nickname + ' - ' + sChat;
         lblJID.Caption := '<' + _jid.full + '>';
+        if (p = nil) then
+            ChangePresImage('offline', 'offline')
+        else
+            ChangePresImage(p.show, p.status);
         end
+
     else begin
         lblNick.Caption := ' ';
         lblJID.Caption := cjid;
@@ -310,12 +315,11 @@ begin
             Caption := OtherNick + ' - ' + sChat
         else
             Caption := _jid.user + ' - ' + sChat;
+        if (p = nil) then
+            ChangePresImage('unknown', 'Unknown Presence')
+        else
+            ChangePresImage(p.show, p.status);
         end;
-
-    if (p = nil) then
-        ChangePresImage('offline', 'offline')
-    else
-        ChangePresImage(p.show, p.status);
 
     // synchronize the session chat list with this JID
     i := MainSession.ChatList.indexOfObject(chat_object);
@@ -570,6 +574,8 @@ begin
     // Change the bulb
     if (show = 'offline') then
         _pres_img := ico_Offline
+    else if (show = 'unknown') then
+        _pres_img := ico_Unknown
     else if (show = 'away') then
         _pres_img := ico_Away
     else if (show = 'xa') then
