@@ -572,6 +572,11 @@ begin
         SetJID(from_jid);
     end;
 
+    if (msg_type = 'error') then begin
+        showMsg(tag);
+        exit;
+    end;
+
     if (_check_event) then begin
         // check for composing events
         etag := tag.QueryXPTag(XP_MSGXEVENT);
@@ -634,6 +639,7 @@ procedure TfrmChat.showMsg(tag: TXMLTag);
 var
     m, etag: TXMLTag;
     subj_msg, msg: TJabberMessage;
+    err: Widestring;
 begin
     // display the body of the msg
     if (timFlash.Enabled) then
@@ -643,15 +649,33 @@ begin
         timBusy.Enabled := false;
         timBusy.Enabled := true;
     end;
-    
+
+    if (tag.GetAttribute('type') = 'error') then begin
+        // Display the error info..
+        err := _('The last message bounced!. ');
+        etag := tag.GetFirstTag('error');
+        if (etag <> nil) then begin
+            err := err + etag.Data;
+            err := err + '(' + _('Error Code: ') + etag.GetAttribute('code') + ')';
+        end;
+        MessageDlgW(err, mtError, [mbOK], 0);
+        exit;
+    end;
+
     _check_event := false;
 
     Msg := TJabberMessage.Create(tag);
     Msg.Nick := OtherNick;
     Msg.IsMe := false;
 
-    if ((Msg.Thread = '') and (_thread <> '')) then
-        Msg.Thread := _thread;
+    if (Msg.Thread = '') then begin
+        if (_thread <> '') then
+            Msg.Thread := _thread
+        else begin
+            _thread := GetThread();
+            Msg.Thread := _thread;
+        end;
+    end;
 
     // only display + notify if we have something to display :)
     if (Msg.Subject <> '') then begin
