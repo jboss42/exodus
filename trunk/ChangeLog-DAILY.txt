@@ -1,37 +1,10 @@
-2004-02-06 08:11  pgmillard
+2004-02-09 08:18  pgmillard
 
 	* exodus/: default.po, version.h, version.nsi: daily build
 
-2004-02-06 08:09  pgmillard
+2004-02-09 07:01  pgmillard
 
-	* exodus/: GUIFactory.pas, xml.res: Final tweaks to subscription
-	  approval dialog box
-
-2004-02-06 07:19  pgmillard
-
-	* exodus/Exodus.dof, exodus/ExodusCOM_TLB.pas,
-	  exodus/GUIFactory.pas, exodus/subscribe.dfm,
-	  exodus/subscribe.pas, jopl/S10n.pas: Bug #3314 - Reviewed and
-	  fixed a lot of whacky auto-accept code. Also fixed up the
-	  subscription request dialog when granting a sub to someone you
-	  are already subscribed to.
-
-2004-02-06 06:45  pgmillard
-
-	* jopl/Entity.pas: Bug #3264 - Fixup entity code so we can't have
-	  more than one outstanding query at once.
-
-2004-02-05 17:45  llong
-
-	* exodus/locale/fr/LC_MESSAGES/default.po: Updated from
-	  translator's post to exodus-dev dated 2004/02/05 to synchronize
-	  with version 1.85 of the main default.po (Only changes since last
-	  version, and a little bug corrected - already documented in CVS -
-	  and merged in this version)
-
-2004-02-04 21:16  llong
-
-	* exodus/locale/sl/LC_MESSAGES/default.po: Updated from
-	  translator's post to exodus-dev dated 2004/02/05 to synchronize
-	  with version 1.85 of the main default.po
+	* exodus/: Exodus.dof, ExodusCOM_TLB.pas, prefs/PrefPanel.pas: Bug
+	  #3322 - Make prefs code case insensitive when looking at control
+	  names
 
