@@ -651,6 +651,13 @@ Extra Shell Shortcuts
 ================================================================================
 */
 SubSection "$(NAME_SHELL)" SEC_Shell
+
+    ; if we're in silent mode, don't do any of the shell stuff, ever.    
+    Push "${INSTALLER_SWITCH_SILENT}"
+    Call funcGetConfigParam
+    Pop $0
+    IntCmpU '$0' '1' shellsilent
+    
     Section "Desktop Shortcut" SEC_Desktop
         !ifdef USE_HKLM_KEY
             SetShellVarContext all
@@ -678,7 +685,8 @@ SubSection "$(NAME_SHELL)" SEC_Shell
             WriteRegStr HKCU "${PRODUCT_RUN_KEY}" "${PRODUCT}" "$INSTDIR\${PRODUCT}${EXEC_EXTENSION}"
         !endif
     SectionEnd
-
+    
+  shellsilent:
 SubSectionEnd
 
 /*
