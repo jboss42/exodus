@@ -22,7 +22,7 @@ unit RosterWindow;
 interface
 
 uses
-    XMLTag,
+    Unicode, XMLTag,
     Presence, Roster,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ComCtrls, ExtCtrls, Buttons, ImgList, Menus, StdCtrls;
@@ -162,15 +162,15 @@ type
     _change_node: TTreeNode;
     _bookmark: TTreeNode;
     _offline: TTreeNode;
-    _hint_text : String;
+    _hint_text : WideString;
 
     _cur_ritem: TJabberRosterItem;
-    _cur_grp: string;
+    _cur_grp: Widestring;
     _cur_bm: TJabberBookmark;
     _cur_status: integer;
 
-    _collapsed_grps: TStringList;
-    _blockers: TStringlist;
+    _collapsed_grps: TWideStringList;
+    _blockers: TWideStringlist;
 
     function getNodeType(node: TTreeNode = nil): integer;
     function getSelectedContacts(online: boolean = true): TList;
@@ -253,8 +253,8 @@ procedure TfrmRosterWindow.FormCreate(Sender: TObject);
 begin
     // register the callback
     _FullRoster := false;
-    _collapsed_grps := TStringList.Create();
-    _blockers := TStringlist.Create();
+    _collapsed_grps := TWideStringList.Create();
+    _blockers := TWideStringlist.Create();
     _rostercb := MainSession.RegisterCallback(RosterCallback);
     _prescb := MainSession.RegisterCallback(PresCallback);
     _sessionCB := MainSession.RegisterCallback(SessionCallback, '/session');
@@ -337,6 +337,7 @@ begin
         // this allows us to display custom hint text
         // which is set in the MouseMove event.
         HintInfo.ReshowTimeout := 500;
+        HintInfo.
         HintStr := _hint_text;
         end
     else if ((f is TfrmRoom) and (c is TTreeView)) then begin
@@ -786,7 +787,7 @@ var
     cur_grp, tmps: string;
     cur_node, grp_node, n: TTreeNode;
     node_list: TList;
-    tmp_grps: TStringlist;
+    tmp_grps: TWideStringlist;
     is_blocked: boolean;
     show_online: boolean;
     show_offgrp: boolean;
@@ -849,7 +850,7 @@ begin
 
     // Create a temporary list of grps that this
     // contact should be in.
-    tmp_grps := TStringlist.Create;
+    tmp_grps := TWideStringlist.Create;
     if (((p = nil) or (p.PresType = 'unavailble')) and (show_offgrp)) then
         // they are offline, and we want an offline grp
         tmp_grps.Add(sGrpOffline)
@@ -1785,12 +1786,12 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.InvitetoConference1Click(Sender: TObject);
 var
-    jids: TStringList;
+    jids: TWideStringList;
 begin
     //Show the invite window w/ this JID
     if (_cur_ritem = nil) then exit;
 
-    jids := TStringlist.Create();
+    jids := TWideStringlist.Create();
     jids.Add(_cur_ritem.jid.jid);
 
     ShowInvite('', jids);
@@ -1801,11 +1802,11 @@ procedure TfrmRosterWindow.popGrpInviteClick(Sender: TObject);
 var
     i: integer;
     sel: TList;
-    jids: TStringlist;
+    jids: TWideStringlist;
 begin
     // Invite the whole group to the conference.
     sel := Self.getSelectedContacts(true);
-    jids := TStringlist.Create();
+    jids := TWideStringlist.Create();
     for i := 0 to sel.Count - 1 do
         jids.Add(TJabberRosterItem(sel[i]).jid.full);
 
@@ -1922,7 +1923,7 @@ end;
 procedure TfrmRosterWindow.BroadcastMessage1Click(Sender: TObject);
 var
     r: TList;
-    jl: TStringList;
+    jl: TWideStringList;
     i: integer;
 begin
     // Broadcast a message to the grp
@@ -1930,7 +1931,7 @@ begin
     if (r.Count <= 1) then
         MessageDlg(sNoBroadcast, mtError, [mbOK], 0)
     else begin
-        jl := TStringlist.Create();
+        jl := TWideStringlist.Create();
         for i := 0 to r.Count - 1 do
             jl.Add(TJabberRosterItem(r[i]).jid.full);
         BroadcastMsg(jl);

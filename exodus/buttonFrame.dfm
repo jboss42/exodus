@@ -1,23 +1,23 @@
 object frameButtons: TframeButtons
   Left = 0
   Top = 0
-  Width = 341
-  Height = 32
+  Width = 339
+  Height = 30
   AutoScroll = False
   TabOrder = 0
   object Bevel1: TBevel
     Left = 0
     Top = 0
-    Width = 341
+    Width = 339
     Height = 5
     Align = alTop
     Shape = bsTopLine
   end
   object Panel1: TPanel
-    Left = 181
+    Left = 179
     Top = 5
     Width = 160
-    Height = 27
+    Height = 25
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 0

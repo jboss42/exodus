@@ -30,12 +30,12 @@ type
         work: boolean;
         home: boolean;
 
-        Street: string;
-        ExtAdr: string;
-        Locality: string;
-        Region: string;
-        PCode: string;
-        Country: string;
+        Street: WideString;
+        ExtAdr: WideString;
+        Locality: WideString;
+        Region: WideString;
+        PCode: WideString;
+        Country: WideString;
 
         procedure Parse(tag: TXMLTag);
         procedure fillTag(tag: TXMLTag);
@@ -47,7 +47,7 @@ type
         home: boolean;
         voice: boolean;
         fax: boolean;
-        number: string;
+        number: WideString;
 
         procedure Parse(tag: TXMLTag);
         procedure fillTag(tag: TXMLTag);
@@ -55,17 +55,17 @@ type
 
     TXMLVCard = class
     public
-        GivenName: string;
-        FamilyName: string;
-        nick: string;
-        email: string;
-        bday: string;
-        url: string;
-        role: string;
+        GivenName: WideString;
+        FamilyName: WideString;
+        nick: WideString;
+        email: WideString;
+        bday: WideString;
+        url: WideString;
+        role: WideString;
 
-        OrgName: string;
-        OrgUnit: string;
-        OrgTitle: string;
+        OrgName: WideString;
+        OrgUnit: WideString;
+        OrgTitle: WideString;
 
         Home: TXMLVCardAddress;
         Work: TXMLVCardAddress;

@@ -22,8 +22,7 @@ unit MsgRecv;
 interface
 
 uses
-    Dockable, 
-    ExEvents,
+    Unicode, Dockable, ExEvents,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2,
     Buttons, TntStdCtrls;
@@ -71,8 +70,8 @@ type
 var
   frmMsgRecv: TfrmMsgRecv;
 
-function StartMsg(jid: string): TfrmMsgRecv;
-function BroadcastMsg(jids: TStringlist): TfrmMsgRecv;
+function StartMsg(jid: WideString): TfrmMsgRecv;
+function BroadcastMsg(jids: TWideStringlist): TfrmMsgRecv;
 
 procedure ShowEvent(e: TJabberEvent);
 
@@ -137,7 +136,7 @@ begin
 end;
 
 {---------------------------------------}
-function BroadcastMsg(jids: TStringlist): TfrmMsgRecv;
+function BroadcastMsg(jids: TWideStringlist): TfrmMsgRecv;
 var
     i: integer;
 begin
@@ -163,7 +162,7 @@ begin
 end;
 
 {---------------------------------------}
-function StartMsg(jid: string): TfrmMsgRecv;
+function StartMsg(jid: WideString): TfrmMsgRecv;
 begin
     // send a normal msg to this person
     Result := TfrmMsgRecv.Create(Application);
@@ -238,7 +237,7 @@ end;
 {---------------------------------------}
 procedure TfrmMsgRecv.frameButtons1btnOKClick(Sender: TObject);
 var
-    jid: string;
+    jid: WideString;
 begin
     // Do something...
     if eType = evt_Invite then begin
@@ -247,7 +246,7 @@ begin
         StartRoom(jid, MainSession.Username);
         Self.Close();
         end
-        
+
     else begin
         Self.ClientHeight := Self.ClientHeight + pnlReply.Height - frameButtons1.Height - 3;
         frameButtons1.Visible := false;

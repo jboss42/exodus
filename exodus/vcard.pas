@@ -25,7 +25,7 @@ uses
     XMLVCard,
     XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, ComCtrls, buttonFrame, StdCtrls, ExtCtrls;
+    Dialogs, ComCtrls, buttonFrame, StdCtrls, ExtCtrls, TntStdCtrls;
 
 type
   TfrmVCard = class(TForm)
@@ -36,20 +36,13 @@ type
     lblEmail: TLabel;
     Label7: TLabel;
     Label5: TLabel;
-    txtNick: TEdit;
-    txtPriEmail: TEdit;
-    txtFirst: TEdit;
-    txtLast: TEdit;
     TabSheet3: TTabSheet;
     Label12: TLabel;
     Label6: TLabel;
     Label28: TLabel;
     Label8: TLabel;
     Label9: TLabel;
-    cboOcc: TComboBox;
-    txtBDay: TEdit;
-    txtHomeVoice: TEdit;
-    txtHomeFax: TEdit;
+    cboOcc: TTntComboBox;
     TabSheet4: TTabSheet;
     Label13: TLabel;
     Label21: TLabel;
@@ -57,23 +50,13 @@ type
     Label30: TLabel;
     Label31: TLabel;
     Label32: TLabel;
-    txtHomeState: TEdit;
-    txtHomeZip: TEdit;
-    txtHomeCity: TEdit;
-    txtHomeStreet2: TEdit;
-    txtHomeStreet1: TEdit;
-    txtHomeCountry: TComboBox;
+    txtHomeCountry: TTntComboBox;
     TabSheet5: TTabSheet;
     Label22: TLabel;
     Label23: TLabel;
     Label24: TLabel;
     Label19: TLabel;
     Label20: TLabel;
-    txtOrgName: TEdit;
-    txtOrgUnit: TEdit;
-    txtOrgTitle: TEdit;
-    txtWorkVoice: TEdit;
-    txtWorkFax: TEdit;
     TabSheet6: TTabSheet;
     Label15: TLabel;
     Label16: TLabel;
@@ -81,16 +64,33 @@ type
     Label18: TLabel;
     Label26: TLabel;
     Label14: TLabel;
-    txtWorkState: TEdit;
-    txtWorkZip: TEdit;
-    txtWorkCity: TEdit;
-    txtWorkStreet2: TEdit;
-    txtWorkStreet1: TEdit;
-    txtWorkCountry: TComboBox;
+    txtWorkCountry: TTntComboBox;
     frameButtons1: TframeButtons;
     TreeView1: TTreeView;
     lblURL: TLabel;
-    txtWeb: TEdit;
+    txtNick: TTntEdit;
+    txtPriEmail: TTntEdit;
+    txtFirst: TTntEdit;
+    txtLast: TTntEdit;
+    txtWeb: TTntEdit;
+    txtBDay: TTntEdit;
+    txtHomeVoice: TTntEdit;
+    txtHomeFax: TTntEdit;
+    txtHomeState: TTntEdit;
+    txtHomeZip: TTntEdit;
+    txtHomeCity: TTntEdit;
+    txtHomeStreet2: TTntEdit;
+    txtHomeStreet1: TTntEdit;
+    txtOrgName: TTntEdit;
+    txtOrgUnit: TTntEdit;
+    txtOrgTitle: TTntEdit;
+    txtWorkVoice: TTntEdit;
+    txtWorkFax: TTntEdit;
+    txtWorkState: TTntEdit;
+    txtWorkZip: TTntEdit;
+    txtWorkCity: TTntEdit;
+    txtWorkStreet2: TTntEdit;
+    txtWorkStreet1: TTntEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure frameButtons1btnCancelClick(Sender: TObject);
@@ -135,7 +135,7 @@ end;
 {---------------------------------------}
 procedure TfrmVCard.FormCreate(Sender: TObject);
 var
-    tmps: string;
+    tmps: Widestring;
     iq: TJabberIQ;
 begin
     // Hide all the tabs

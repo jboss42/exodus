@@ -1,8 +1,8 @@
 object frmVCard: TfrmVCard
-  Left = 277
-  Top = 215
-  Width = 424
-  Height = 283
+  Left = 333
+  Top = 241
+  Width = 422
+  Height = 281
   Caption = 'My Profile'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,14 +19,14 @@ object frmVCard: TfrmVCard
     Left = 121
     Top = 0
     Width = 3
-    Height = 215
+    Height = 213
     Cursor = crHSplit
   end
   object PageControl1: TPageControl
     Left = 124
     Top = 0
-    Width = 292
-    Height = 215
+    Width = 290
+    Height = 213
     ActivePage = TabSheet1
     Align = alClient
     Style = tsFlatButtons
@@ -36,14 +36,14 @@ object frmVCard: TfrmVCard
       Caption = 'General'
       object Label2: TLabel
         Left = 4
-        Top = 56
+        Top = 72
         Width = 25
         Height = 13
         Caption = 'Nick:'
       end
       object lblEmail: TLabel
         Left = 4
-        Top = 79
+        Top = 95
         Width = 28
         Height = 13
         Cursor = crHandPoint
@@ -56,7 +56,7 @@ object frmVCard: TfrmVCard
         ParentFont = False
       end
       object Label7: TLabel
-        Left = 10
+        Left = 2
         Top = 6
         Width = 56
         Height = 13
@@ -69,8 +69,8 @@ object frmVCard: TfrmVCard
         ParentFont = False
       end
       object Label5: TLabel
-        Left = 98
-        Top = 6
+        Left = 2
+        Top = 38
         Width = 58
         Height = 13
         Caption = 'Last (Family)'
@@ -83,11 +83,11 @@ object frmVCard: TfrmVCard
       end
       object lblURL: TLabel
         Left = 4
-        Top = 105
-        Width = 36
+        Top = 124
+        Width = 26
         Height = 13
         Cursor = crHandPoint
-        Caption = 'WWW:'
+        Caption = 'Web:'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clBlue
         Font.Height = -11
@@ -95,45 +95,69 @@ object frmVCard: TfrmVCard
         Font.Style = [fsUnderline]
         ParentFont = False
       end
-      object txtNick: TEdit
+      object txtNick: TTntEdit
         Left = 56
-        Top = 53
-        Width = 185
-        Height = 21
+        Top = 69
+        Width = 187
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 2
       end
-      object txtPriEmail: TEdit
+      object txtPriEmail: TTntEdit
         Left = 56
-        Top = 76
-        Width = 185
-        Height = 21
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlack
+        Top = 95
+        Width = 187
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
         Font.Height = -11
-        Font.Name = 'MS Sans Serif'
+        Font.Name = 'Arial Unicode MS'
         Font.Style = []
         ParentFont = False
         TabOrder = 3
       end
-      object txtFirst: TEdit
-        Left = 14
-        Top = 22
-        Width = 75
-        Height = 21
+      object txtFirst: TTntEdit
+        Left = 73
+        Top = 6
+        Width = 168
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 0
       end
-      object txtLast: TEdit
-        Left = 96
-        Top = 22
-        Width = 89
-        Height = 21
+      object txtLast: TTntEdit
+        Left = 73
+        Top = 33
+        Width = 169
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 1
       end
-      object txtWeb: TEdit
-        Left = 57
-        Top = 102
-        Width = 184
-        Height = 21
+      object txtWeb: TTntEdit
+        Left = 56
+        Top = 121
+        Width = 187
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 4
       end
     end
@@ -141,48 +165,54 @@ object frmVCard: TfrmVCard
       Caption = 'Personal Info.'
       ImageIndex = 2
       object Label12: TLabel
-        Left = 10
+        Left = 4
         Top = 9
         Width = 58
         Height = 13
         Caption = 'Occupation:'
       end
       object Label6: TLabel
-        Left = 10
-        Top = 33
+        Left = 4
+        Top = 35
         Width = 41
         Height = 13
         Caption = 'Birthday:'
       end
       object Label28: TLabel
         Left = 92
-        Top = 54
+        Top = 56
         Width = 96
         Height = 13
         Caption = 'Format: mm/dd/yyyy'
       end
       object Label8: TLabel
-        Left = 7
-        Top = 78
+        Left = 1
+        Top = 86
         Width = 48
         Height = 13
         Caption = 'Voice Tel:'
       end
       object Label9: TLabel
-        Left = 7
-        Top = 102
+        Left = 1
+        Top = 113
         Width = 38
         Height = 13
         Caption = 'Fax Tel:'
       end
-      object cboOcc: TComboBox
+      object cboOcc: TTntComboBox
         Left = 92
         Top = 6
         Width = 150
-        Height = 21
-        ItemHeight = 13
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ItemHeight = 15
+        ParentFont = False
         TabOrder = 0
-        Items.Strings = (
+        Items.WideStrings = (
           'Accounting/Finance'
           'Computer related (IS, MIS, DP)'
           'Computer related (WWW)'
@@ -201,25 +231,43 @@ object frmVCard: TfrmVCard
           'Student'
           'Unemployed/Between Jobs')
       end
-      object txtBDay: TEdit
+      object txtBDay: TTntEdit
         Left = 92
-        Top = 30
+        Top = 32
         Width = 150
-        Height = 21
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 1
       end
-      object txtHomeVoice: TEdit
+      object txtHomeVoice: TTntEdit
         Left = 91
-        Top = 75
+        Top = 83
         Width = 150
-        Height = 21
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 2
       end
-      object txtHomeFax: TEdit
+      object txtHomeFax: TTntEdit
         Left = 91
-        Top = 99
+        Top = 110
         Width = 150
-        Height = 21
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 3
       end
     end
@@ -228,21 +276,21 @@ object frmVCard: TfrmVCard
       ImageIndex = 3
       object Label13: TLabel
         Left = 10
-        Top = 129
+        Top = 139
         Width = 39
         Height = 13
         Caption = 'Country:'
       end
       object Label21: TLabel
         Left = 10
-        Top = 79
+        Top = 85
         Width = 73
         Height = 13
         Caption = 'State / Region:'
       end
       object Label29: TLabel
         Left = 10
-        Top = 36
+        Top = 38
         Width = 50
         Height = 13
         Caption = 'Address 2:'
@@ -256,62 +304,33 @@ object frmVCard: TfrmVCard
       end
       object Label31: TLabel
         Left = 10
-        Top = 57
+        Top = 61
         Width = 67
         Height = 13
         Caption = 'City / Locality:'
       end
       object Label32: TLabel
         Left = 10
-        Top = 103
+        Top = 111
         Width = 86
         Height = 13
         Caption = 'Zip / Postal Code:'
       end
-      object txtHomeState: TEdit
+      object txtHomeCountry: TTntComboBox
         Left = 102
-        Top = 78
+        Top = 137
         Width = 150
-        Height = 21
-        TabOrder = 3
-      end
-      object txtHomeZip: TEdit
-        Left = 102
-        Top = 102
-        Width = 150
-        Height = 21
-        TabOrder = 4
-      end
-      object txtHomeCity: TEdit
-        Left = 102
-        Top = 54
-        Width = 150
-        Height = 21
-        TabOrder = 2
-      end
-      object txtHomeStreet2: TEdit
-        Left = 102
-        Top = 30
-        Width = 150
-        Height = 21
-        TabOrder = 1
-      end
-      object txtHomeStreet1: TEdit
-        Left = 102
-        Top = 6
-        Width = 150
-        Height = 21
-        TabOrder = 0
-      end
-      object txtHomeCountry: TComboBox
-        Left = 102
-        Top = 127
-        Width = 150
-        Height = 21
-        ItemHeight = 13
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ItemHeight = 15
+        ParentFont = False
         TabOrder = 5
         Text = 'United States  '
-        Items.Strings = (
+        Items.WideStrings = (
           'Afghanistan  '
           'Albania  '
           'Algeria  '
@@ -552,6 +571,71 @@ object frmVCard: TfrmVCard
           'Yugoslavia  '
           'Zambia  '
           'Zimbabwe  ')
+      end
+      object txtHomeState: TTntEdit
+        Left = 102
+        Top = 84
+        Width = 150
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 3
+      end
+      object txtHomeZip: TTntEdit
+        Left = 102
+        Top = 110
+        Width = 150
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 4
+      end
+      object txtHomeCity: TTntEdit
+        Left = 102
+        Top = 58
+        Width = 150
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 2
+      end
+      object txtHomeStreet2: TTntEdit
+        Left = 102
+        Top = 32
+        Width = 150
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 1
+      end
+      object txtHomeStreet1: TTntEdit
+        Left = 102
+        Top = 6
+        Width = 150
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
       end
     end
     object TabSheet5: TTabSheet
@@ -566,65 +650,95 @@ object frmVCard: TfrmVCard
       end
       object Label23: TLabel
         Left = 10
-        Top = 33
+        Top = 35
         Width = 77
         Height = 13
         Caption = 'Org. Unit (Dept):'
       end
       object Label24: TLabel
         Left = 10
-        Top = 57
+        Top = 61
         Width = 23
         Height = 13
         Caption = 'Title:'
       end
       object Label19: TLabel
         Left = 10
-        Top = 87
+        Top = 91
         Width = 48
         Height = 13
         Caption = 'Voice Tel:'
       end
       object Label20: TLabel
         Left = 10
-        Top = 111
+        Top = 117
         Width = 38
         Height = 13
         Caption = 'Fax Tel:'
       end
-      object txtOrgName: TEdit
+      object txtOrgName: TTntEdit
         Left = 102
         Top = 6
         Width = 150
-        Height = 21
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 0
       end
-      object txtOrgUnit: TEdit
+      object txtOrgUnit: TTntEdit
         Left = 102
-        Top = 30
+        Top = 32
         Width = 150
-        Height = 21
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 1
       end
-      object txtOrgTitle: TEdit
+      object txtOrgTitle: TTntEdit
         Left = 102
-        Top = 54
+        Top = 58
         Width = 150
-        Height = 21
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 2
       end
-      object txtWorkVoice: TEdit
+      object txtWorkVoice: TTntEdit
         Left = 102
-        Top = 84
+        Top = 88
         Width = 150
-        Height = 21
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 3
       end
-      object txtWorkFax: TEdit
+      object txtWorkFax: TTntEdit
         Left = 102
-        Top = 108
+        Top = 114
         Width = 150
-        Height = 21
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
         TabOrder = 4
       end
     end
@@ -633,21 +747,21 @@ object frmVCard: TfrmVCard
       ImageIndex = 5
       object Label15: TLabel
         Left = 10
-        Top = 77
+        Top = 83
         Width = 73
         Height = 13
         Caption = 'State / Region:'
       end
       object Label16: TLabel
         Left = 10
-        Top = 127
+        Top = 135
         Width = 39
         Height = 13
         Caption = 'Country:'
       end
       object Label17: TLabel
         Left = 10
-        Top = 34
+        Top = 36
         Width = 50
         Height = 13
         Caption = 'Address 2:'
@@ -661,62 +775,33 @@ object frmVCard: TfrmVCard
       end
       object Label26: TLabel
         Left = 10
-        Top = 55
+        Top = 59
         Width = 67
         Height = 13
         Caption = 'City / Locality:'
       end
       object Label14: TLabel
         Left = 10
-        Top = 101
+        Top = 108
         Width = 86
         Height = 13
         Caption = 'Zip / Postal Code:'
       end
-      object txtWorkState: TEdit
+      object txtWorkCountry: TTntComboBox
         Left = 102
-        Top = 76
+        Top = 133
         Width = 150
-        Height = 21
-        TabOrder = 3
-      end
-      object txtWorkZip: TEdit
-        Left = 102
-        Top = 100
-        Width = 150
-        Height = 21
-        TabOrder = 4
-      end
-      object txtWorkCity: TEdit
-        Left = 102
-        Top = 52
-        Width = 150
-        Height = 21
-        TabOrder = 2
-      end
-      object txtWorkStreet2: TEdit
-        Left = 102
-        Top = 28
-        Width = 150
-        Height = 21
-        TabOrder = 1
-      end
-      object txtWorkStreet1: TEdit
-        Left = 102
-        Top = 4
-        Width = 150
-        Height = 21
-        TabOrder = 0
-      end
-      object txtWorkCountry: TComboBox
-        Left = 102
-        Top = 125
-        Width = 150
-        Height = 21
-        ItemHeight = 13
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ItemHeight = 15
+        ParentFont = False
         TabOrder = 5
         Text = 'United States  '
-        Items.Strings = (
+        Items.WideStrings = (
           'Afghanistan  '
           'Albania  '
           'Algeria  '
@@ -958,21 +1043,86 @@ object frmVCard: TfrmVCard
           'Zambia  '
           'Zimbabwe  ')
       end
+      object txtWorkState: TTntEdit
+        Left = 102
+        Top = 82
+        Width = 150
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 3
+      end
+      object txtWorkZip: TTntEdit
+        Left = 102
+        Top = 107
+        Width = 150
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 4
+      end
+      object txtWorkCity: TTntEdit
+        Left = 102
+        Top = 56
+        Width = 150
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 2
+      end
+      object txtWorkStreet2: TTntEdit
+        Left = 102
+        Top = 30
+        Width = 150
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 1
+      end
+      object txtWorkStreet1: TTntEdit
+        Left = 102
+        Top = 4
+        Width = 150
+        Height = 23
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Arial Unicode MS'
+        Font.Style = []
+        ParentFont = False
+        TabOrder = 0
+      end
     end
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 215
-    Width = 416
+    Top = 213
+    Width = 414
     Height = 34
     Align = alBottom
     AutoScroll = False
     TabOrder = 1
     inherited Bevel1: TBevel
-      Width = 416
+      Width = 414
     end
     inherited Panel1: TPanel
-      Left = 256
+      Left = 254
       Height = 29
       inherited btnOK: TButton
         OnClick = frameButtons1btnOKClick
@@ -986,7 +1136,7 @@ object frmVCard: TfrmVCard
     Left = 0
     Top = 0
     Width = 121
-    Height = 215
+    Height = 213
     Align = alLeft
     Indent = 19
     TabOrder = 2

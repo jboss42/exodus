@@ -1,8 +1,8 @@
 object frmBaseChat: TfrmBaseChat
-  Left = 311
-  Top = 222
-  Width = 390
-  Height = 315
+  Left = 312
+  Top = 223
+  Width = 388
+  Height = 313
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,8 +18,8 @@ object frmBaseChat: TfrmBaseChat
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 250
-    Width = 382
+    Top = 248
+    Width = 380
     Height = 3
     Cursor = crVSplit
     Align = alBottom
@@ -30,8 +30,8 @@ object frmBaseChat: TfrmBaseChat
   object Panel3: TPanel
     Left = 0
     Top = 22
-    Width = 382
-    Height = 228
+    Width = 380
+    Height = 226
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
@@ -40,8 +40,8 @@ object frmBaseChat: TfrmBaseChat
     object MsgList: TExRichEdit
       Left = 4
       Top = 4
-      Width = 374
-      Height = 220
+      Width = 372
+      Height = 218
       Align = alClient
       AutoURLDetect = adDefault
       CustomURLs = <
@@ -140,8 +140,8 @@ object frmBaseChat: TfrmBaseChat
   end
   object pnlInput: TPanel
     Left = 0
-    Top = 253
-    Width = 382
+    Top = 251
+    Width = 380
     Height = 28
     Align = alBottom
     BevelOuter = bvNone
@@ -150,7 +150,7 @@ object frmBaseChat: TfrmBaseChat
     object MsgOut: TTntMemo
       Left = 2
       Top = 2
-      Width = 378
+      Width = 376
       Height = 24
       Align = alClient
       PopupMenu = popOut
@@ -164,7 +164,7 @@ object frmBaseChat: TfrmBaseChat
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 382
+    Width = 380
     Height = 22
     Align = alTop
     BevelOuter = bvNone

@@ -1,6 +1,6 @@
 object frmPrefs: TfrmPrefs
-  Left = 264
-  Top = 181
+  Left = 241
+  Top = 172
   Width = 468
   Height = 428
   Caption = 'Exodus Preferences'
@@ -2586,7 +2586,7 @@ object frmPrefs: TfrmPrefs
         ParentFont = False
         TabOrder = 0
       end
-      object memKeywords: TMemo
+      object memKeywords: TTntMemo
         Left = 0
         Top = 73
         Width = 363
@@ -2655,7 +2655,7 @@ object frmPrefs: TfrmPrefs
         ParentFont = False
         TabOrder = 0
       end
-      object memBlocks: TMemo
+      object memBlocks: TTntMemo
         Left = 0
         Top = 46
         Width = 363
@@ -2910,7 +2910,7 @@ object frmPrefs: TfrmPrefs
         ParentFont = False
         TabOrder = 0
       end
-      object memPlugins: TMemo
+      object memPlugins: TTntMemo
         Left = 0
         Top = 46
         Width = 363

@@ -51,10 +51,7 @@ procedure UnloadPlugins();
 implementation
 
 uses
-    Jabber1,
-    Session,
-    Roster,
-    PrefController,
+    Jabber1, Session, Roster, PrefController, Unicode, 
     Dialogs, Variants, Forms, SysUtils, ComServ;
 
 var
@@ -66,11 +63,11 @@ var
 {---------------------------------------}
 procedure InitPlugins();
 var
-    s: TStringlist;
+    s: TWideStringlist;
     i: integer;
 begin
     // load all of the plugins listed in the prefs
-    s := TStringlist.Create();
+    s := TWideStringlist.Create();
     MainSession.Prefs.fillStringList('plugins', s);
 
     for i := 0 to s.count - 1 do

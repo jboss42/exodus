@@ -22,8 +22,9 @@ unit RemoveContact;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  buttonFrame, StdCtrls, ExtCtrls;
+    Unicode, 
+    Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+    buttonFrame, StdCtrls, ExtCtrls;
 
 type
   TfrmRemove = class(TForm)

@@ -1,10 +1,10 @@
 object frmCustomPres: TfrmCustomPres
-  Left = 251
-  Top = 129
+  Left = 240
+  Top = 168
   BorderStyle = bsDialog
   Caption = 'Custom Presence'
-  ClientHeight = 263
-  ClientWidth = 315
+  ClientHeight = 261
+  ClientWidth = 313
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -40,17 +40,17 @@ object frmCustomPres: TfrmCustomPres
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 229
-    Width = 315
+    Top = 227
+    Width = 313
     Height = 34
     Align = alBottom
     AutoScroll = False
     TabOrder = 5
     inherited Bevel1: TBevel
-      Width = 315
+      Width = 313
     end
     inherited Panel1: TPanel
-      Left = 155
+      Left = 153
       Height = 29
       inherited btnOK: TButton
         OnClick = frameButtons1btnOKClick
@@ -75,11 +75,18 @@ object frmCustomPres: TfrmCustomPres
       'Ext. Away'
       'Do Not Disturb')
   end
-  object txtStatus: TEdit
+  object txtStatus: TTntEdit
     Left = 96
     Top = 40
     Width = 209
-    Height = 21
+    Height = 23
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Arial Unicode MS'
+    Font.Style = []
+    ImeMode = imHanguel
+    ParentFont = False
     TabOrder = 1
   end
   object txtPriority: TEdit

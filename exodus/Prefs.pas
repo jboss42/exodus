@@ -25,7 +25,7 @@ uses
     Menus, ShellAPI, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, 
     ComCtrls, StdCtrls, ExtCtrls, buttonFrame, CheckLst,
-    ExRichEdit, Dialogs, RichEdit2;
+    ExRichEdit, Dialogs, RichEdit2, TntStdCtrls;
 
 type
   TfrmPrefs = class(TForm)
@@ -95,11 +95,11 @@ type
     Label9: TLabel;
     tbsKeywords: TTabSheet;
     StaticText8: TStaticText;
-    memKeywords: TMemo;
+    memKeywords: TTntMemo;
     tbsBlockList: TTabSheet;
     StaticText9: TStaticText;
     Label10: TLabel;
-    memBlocks: TMemo;
+    memBlocks: TTntMemo;
     imgKeywords: TImage;
     lblKeywords: TLabel;
     imgBlockList: TImage;
@@ -179,7 +179,7 @@ type
     tbsPlugins: TTabSheet;
     StaticText12: TStaticText;
     Label6: TLabel;
-    memPlugins: TMemo;
+    memPlugins: TTntMemo;
     imgPlugins: TImage;
     lblPlugins: TLabel;
     chkLogRooms: TCheckBox;

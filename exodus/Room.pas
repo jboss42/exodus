@@ -24,14 +24,16 @@ uses
     XMLTag, RegExpr,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, ExRichEdit, ExtCtrls,
-    RichEdit2, TntStdCtrls, Buttons;
+    RichEdit2, TntStdCtrls, Buttons, TntComCtrls;
 
 type
+  TMemberNode = TTntListItem;
+  
   TRoomMember = class
   public
     Nick: Widestring;
     jid: Widestring;
-    Node: TTreeNode;
+    Node: TMemberNode;
     status: Widestring;
     show: Widestring;
     blockShow: Widestring;
@@ -39,7 +41,6 @@ type
 
   TfrmRoom = class(TfrmBaseChat)
     Panel6: TPanel;
-    treeRoster: TTreeView;
     Splitter2: TSplitter;
     popRoom: TPopupMenu;
     popClear: TMenuItem;
@@ -57,17 +58,14 @@ type
     btnClose: TSpeedButton;
     popClearHistory: TMenuItem;
     popShowHistory: TMenuItem;
-    lblSubject: TTntEdit;
+    lstRoster: TTntListView;
+    lblSubject: TTntLabel;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
     procedure btnCloseClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure treeRosterDblClick(Sender: TObject);
     procedure lblSubjectURLClick(Sender: TObject);
-    procedure treeRosterDragOver(Sender, Source: TObject; X, Y: Integer;
-      State: TDragState; var Accept: Boolean);
-    procedure treeRosterDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure popClearClick(Sender: TObject);
     procedure popNickClick(Sender: TObject);
     procedure popCloseClick(Sender: TObject);
@@ -75,8 +73,6 @@ type
     procedure popInviteClick(Sender: TObject);
     procedure MsgListMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure treeRosterMouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
     procedure mnuOnTopClick(Sender: TObject);
     procedure popRosterBlockClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -84,6 +80,12 @@ type
     procedure popRoomRosterPopup(Sender: TObject);
     procedure popShowHistoryClick(Sender: TObject);
     procedure popClearHistoryClick(Sender: TObject);
+    procedure lstRosterDblClick(Sender: TObject);
+    procedure lstRosterDragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
+    procedure lstRosterDragDrop(Sender, Source: TObject; X, Y: Integer);
+    procedure lstRosterInfoTip(Sender: TObject; Item: TListItem;
+      var InfoTip: String);
   private
     { Private declarations }
     jid: Widestring;                // jid of the conf. room
@@ -99,7 +101,7 @@ type
     _keywords: TRegExpr;     // list of keywords to monitor for
     _hint_text: Widestring;
 
-    function  AddMember(member: TRoomMember): TTreeNode;
+    function  AddMember(member: TRoomMember): TMemberNode;
     function  checkCommand(txt: Widestring): boolean;
     function  GetCurrentMember(): TRoomMember;
 
@@ -152,22 +154,10 @@ function FindRoomNick(rjid: Widestring): Widestring;
 {---------------------------------------}
 implementation
 uses
-    ExUtils,
-    RiserWindow,
-    ShellAPI,
-    RichEdit,
-    Invite,
-    ChatWin,
-    RosterWindow,
-    Presence,
-    Roster,
-    Session,
-    StrUtils,
-    JabberID,
-    MsgDisplay,
-    Notify,
-    PrefController,
-    JabberMsg, Jabber1;
+    Unicode, ExUtils, RiserWindow, ShellAPI, RichEdit,
+    Invite, ChatWin, RosterWindow, Presence, Roster,
+    Session, StrUtils, JabberID, MsgDisplay, Notify,
+    PrefController, JabberMsg, Jabber1;
 
 {$R *.DFM}
 
@@ -202,8 +192,10 @@ begin
             MsgList.Color := TColor(MainSession.Prefs.getInt('color_bg'));
             MsgOut.Color := MsgList.Color;
             MsgOut.Font.Assign(MsgList.Font);
-            treeRoster.Color := MsgList.Color;
-            treeRoster.Font.Color := TColor(MainSession.Prefs.getInt('font_color'));
+            lstRoster.Color := MsgList.Color;
+            lstRoster.Font.Name := MainSession.Prefs.getString('roster_font_name');
+            lstRoster.Font.Color := TColor(MainSession.Prefs.getInt('font_color'));
+            lstRoster.Font.Size := MainSession.Prefs.getInt('roster_font_size');
             Caption := tmp_jid.user + ' ' + sRoom;
             end;
         tmp_jid.Free();
@@ -276,7 +268,7 @@ begin
         end;
 
     if Msg.Subject <> '' then begin
-        lblSubject.Text := Msg.Subject;
+        lblSubject.Caption := Msg.Subject;
         tmps := Msg.Subject;
         tmps := AnsiReplaceText(tmps, '|', Chr(13));
         tmps := AnsiReplaceText(tmps, '&', '&&');
@@ -453,12 +445,13 @@ begin
 end;
 
 {---------------------------------------}
-function TfrmRoom.AddMember(member: TRoomMember): TTreeNode;
+function TfrmRoom.AddMember(member: TRoomMember): TMemberNode;
 begin
     // add a node
-    Result := treeRoster.Items.AddChild(nil, member.Nick);
+    Result := lstRoster.Items.Add();
+    Result.Caption := member.Nick;
     RenderMember(member, nil);
-    treeRoster.AlphaSort(false);
+    lstRoster.AlphaSort();
 end;
 
 {---------------------------------------}
@@ -494,7 +487,7 @@ begin
     if (member.show = '') then
         member.show := 'Available';
 
-    member.Node.SelectedIndex := member.Node.ImageIndex;
+    // member.Node.SelectedIndex := member.Node.ImageIndex;
     member.Node.Data := member;
 end;
 
@@ -520,7 +513,7 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.FormCreate(Sender: TObject);
 var
-    kw_list : TStringList;
+    kw_list : TWideStringList;
     i : integer;
     e : Widestring;
     first : bool;
@@ -541,7 +534,7 @@ begin
     _hint_text := '';
 
     if (MainSession.Prefs.getInt('notify_keyword') <> 0) then begin
-        kw_list := TStringList.Create();
+        kw_list := TWideStringList.Create();
         MainSession.Prefs.fillStringlist('keywords', kw_list);
         if (kw_list.Count > 0) then begin
             re := MainSession.Prefs.getBool('regex_keywords');
@@ -631,8 +624,8 @@ begin
         found := false;
         exloop := false;
         repeat
-            for i := _nick_idx to treeRoster.Items.Count - 1 do begin
-                nick := treeRoster.Items[i].Text;
+            for i := _nick_idx to lstRoster.Items.Count - 1 do begin
+                nick := lstRoster.Items[i].Caption;
                 if nick[1] = '@' then nick := Copy(nick, 2, length(nick) - 1);
                 if nick[1] = '+' then nick := Copy(nick, 2, length(nick) - 1);
 
@@ -707,24 +700,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoom.treeRosterDblClick(Sender: TObject);
-var
-    rm: TRoomMember;
-    tmp_jid: TJabberID;
-    chat_win: TfrmChat;
-begin
-    // Chat w/ this person..
-    rm := GetCurrentMember();
-    if (rm <> nil) then begin
-        tmp_jid := TJabberID.Create(rm.jid);
-        chat_win := StartChat(tmp_jid.jid, tmp_jid.resource, true, rm.Nick);
-        if (chat_win.TabSheet <> nil) then
-            frmExodus.Tabs.ActivePage := chat_win.TabSheet;
-        tmp_jid.Free();
-        end;
-end;
-
-{---------------------------------------}
 procedure TfrmRoom.changeSubject(subj: Widestring);
 var
     msg: TJabberMessage;
@@ -741,51 +716,12 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.lblSubjectURLClick(Sender: TObject);
 var
-    s: string;
+    s: String;
 begin
     // Change the subject
-    s := lblSubject.Text;
+    s := lblSubject.Caption;
     if InputQuery(sRoomSubjPrompt, sRoomNewSubj, s) then begin
         changeSubject(s);
-        end;
-end;
-
-{---------------------------------------}
-procedure TfrmRoom.treeRosterDragOver(Sender, Source: TObject; X,
-  Y: Integer; State: TDragState; var Accept: Boolean);
-begin
-    Accept := (Source = frmRosterWindow.treeRoster);
-end;
-
-{---------------------------------------}
-procedure TfrmRoom.treeRosterDragDrop(Sender, Source: TObject; X,
-  Y: Integer);
-var
-    r, n: TTreeNode;
-    ritem: TJabberRosterItem;
-    i,j: integer;
-    jids: TStringList;
-begin
-    if (Source = frmRosterWindow.treeRoster) then begin
-        // We want to invite someone into this TC room
-        jids := TStringList.Create;
-        with frmRosterWindow.treeRoster do begin
-            for i := 0 to SelectionCount - 1 do begin
-                n := Selections[i];
-                if ((n.Data <> nil) and (TObject(n.Data) is TJabberRosterItem)) then begin
-                    ritem := TJabberRosterItem(n.Data);
-                    jids.Add(ritem.jid.jid);
-                    end
-                else if (n.Level = 0) then begin
-                    for j := 0 to n.Count - 1 do begin
-                        r := n.Item[j];
-                        if ((r.Data <> nil) and (TObject(r.Data) is TJabberRosterItem)) then
-                            jids.Add(TJabberRosterItem(r.Data).jid.jid);
-                        end;
-                    end;
-                end;
-            end;
-        ShowInvite(Self.jid, jids);
         end;
 end;
 
@@ -860,31 +796,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoom.treeRosterMouseMove(Sender: TObject; Shift: TShiftState;
-  X, Y: Integer);
-var
-    n: TTreeNode;
-    m: TRoomMember;
-begin
-  inherited;
-    // setup _hint_text
-
-    n := treeRoster.GetNodeAt(x,y);
-    if (n = nil) then
-        _hint_text := ''
-    else begin
-        m := TRoomMember(n.Data);
-        if (m = nil) then
-            _hint_text := ''
-        else begin
-            _hint_text := m.show;
-            if (m.status <> '') then
-                _hint_text := _hint_text + ': ' + m.status;
-            end;
-        end;
-end;
-
-{---------------------------------------}
 function TfrmRoom.GetNick(rjid: Widestring): Widestring;
 var
     i: integer;
@@ -952,14 +863,14 @@ begin
           else if rm.Show = 'chat' then rm.Node.ImageIndex := 4
           else rm.Node.ImageIndex := 1;
 
-          rm.Node.SelectedIndex := rm.Node.ImageIndex;
+          //rm.Node.SelectedIndex := rm.Node.ImageIndex;
           end
        else begin
           //block
           rm.blockShow := rm.show;
           rm.show := sBlocked;
           rm.Node.ImageIndex := 25;
-          rm.Node.SelectedIndex := rm.Node.ImageIndex;
+          //rm.Node.SelectedIndex := rm.Node.ImageIndex;
           end;
        end;
 end;
@@ -984,14 +895,14 @@ function TfrmRoom.GetCurrentMember(): TRoomMember;
 var
     i: integer;
     rm: TRoomMember;
-    node: TTreeNode;
+    node: TMemberNode;
     sel_nick: Widestring;
 begin
     result := nil;
-    node := treeRoster.Selected;
+    node := lstRoster.Items[lstRoster.ItemIndex];
     if node = nil then exit;
 
-    sel_nick := node.Text;
+    sel_nick := node.Caption;
     for i := 0 to _roster.Count - 1 do begin
         rm := TRoomMember(_roster.Objects[i]);
         if (rm.Nick = sel_nick) then begin
@@ -1048,6 +959,85 @@ begin
     btnClose.Visible := false;
 end;
 
+{---------------------------------------}
+procedure TfrmRoom.lstRosterDblClick(Sender: TObject);
+var
+    rm: TRoomMember;
+    tmp_jid: TJabberID;
+    chat_win: TfrmChat;
+begin
+  inherited;
+    // start chat w/ room participant
+    // Chat w/ this person..
+    rm := GetCurrentMember();
+    if (rm <> nil) then begin
+        tmp_jid := TJabberID.Create(rm.jid);
+        chat_win := StartChat(tmp_jid.jid, tmp_jid.resource, true, rm.Nick);
+        if (chat_win.TabSheet <> nil) then
+            frmExodus.Tabs.ActivePage := chat_win.TabSheet;
+        tmp_jid.Free();
+        end;
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.lstRosterDragOver(Sender, Source: TObject; X,
+  Y: Integer; State: TDragState; var Accept: Boolean);
+begin
+  inherited;
+    // drag over
+    Accept := (Source = frmRosterWindow.treeRoster);
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.lstRosterDragDrop(Sender, Source: TObject; X,
+  Y: Integer);
+var
+    r, n: TTreeNode;
+    ritem: TJabberRosterItem;
+    i,j: integer;
+    jids: TWideStringList;
+begin
+  inherited;
+    // drag drop
+    if (Source = frmRosterWindow.treeRoster) then begin
+        // We want to invite someone into this TC room
+        jids := TWideStringList.Create;
+        with frmRosterWindow.treeRoster do begin
+            for i := 0 to SelectionCount - 1 do begin
+                n := Selections[i];
+                if ((n.Data <> nil) and (TObject(n.Data) is TJabberRosterItem)) then begin
+                    ritem := TJabberRosterItem(n.Data);
+                    jids.Add(ritem.jid.jid);
+                    end
+                else if (n.Level = 0) then begin
+                    for j := 0 to n.Count - 1 do begin
+                        r := n.Item[j];
+                        if ((r.Data <> nil) and (TObject(r.Data) is TJabberRosterItem)) then
+                            jids.Add(TJabberRosterItem(r.Data).jid.jid);
+                        end;
+                    end;
+                end;
+            end;
+        ShowInvite(Self.jid, jids);
+        end;
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.lstRosterInfoTip(Sender: TObject; Item: TListItem;
+  var InfoTip: String);
+var
+    m: TRoomMember;
+begin
+  inherited;
+    m := TRoomMember(Item.Data);
+    if (m = nil) then
+        InfoTip := ''
+    else begin
+        InfoTip := m.show;
+        if (m.status <> '') then
+            InfoTip := InfoTip + ': ' + m.status;
+        end;
+end;
 
 initialization
     room_list := TStringlist.Create();

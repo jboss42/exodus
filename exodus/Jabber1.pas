@@ -30,7 +30,7 @@ uses
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
     Buttons, OleCtrls, AppEvnts, ToolWin, SelContact,
-    IdHttp;
+    IdHttp, TntComCtrls;
 
 const
     UpdateKey = '001';
@@ -53,7 +53,7 @@ type
 
 type
   TfrmExodus = class(TForm)
-    Tabs: TPageControl;
+    Tabs: TTntPageControl;
     tbsRoster: TTabSheet;
     pnlRoster: TPanel;
     MainMenu1: TMainMenu;

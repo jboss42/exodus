@@ -1,11 +1,11 @@
 object frmRemove: TfrmRemove
-  Left = 275
-  Top = 146
+  Left = 276
+  Top = 147
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'Remove Contact'
-  ClientHeight = 149
-  ClientWidth = 299
+  ClientHeight = 147
+  ClientWidth = 297
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object frmRemove: TfrmRemove
   object Label1: TLabel
     Left = 0
     Top = 22
-    Width = 299
+    Width = 297
     Height = 13
     Align = alTop
     Caption = 'You are about to remove this person from your Roster. '
@@ -30,14 +30,14 @@ object frmRemove: TfrmRemove
   object Bevel1: TBevel
     Left = 0
     Top = 20
-    Width = 299
+    Width = 297
     Height = 2
     Align = alTop
   end
   object lblJID: TStaticText
     Left = 0
     Top = 0
-    Width = 299
+    Width = 297
     Height = 20
     Align = alTop
     Caption = ' foo@jabber.org'
@@ -63,17 +63,17 @@ object frmRemove: TfrmRemove
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 115
-    Width = 299
+    Top = 113
+    Width = 297
     Height = 34
     Align = alBottom
     AutoScroll = False
     TabOrder = 2
     inherited Bevel1: TBevel
-      Width = 299
+      Width = 297
     end
     inherited Panel1: TPanel
-      Left = 139
+      Left = 137
       Height = 29
       inherited btnOK: TButton
         OnClick = frameButtons1btnOKClick

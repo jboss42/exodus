@@ -1,6 +1,6 @@
 inherited frmRoom: TfrmRoom
-  Left = 255
-  Top = 250
+  Left = 325
+  Top = 179
   Caption = 'Conference Room'
   OldCreateOrder = True
   OnClose = FormClose
@@ -9,54 +9,54 @@ inherited frmRoom: TfrmRoom
   TextHeight = 13
   inherited Panel3: TPanel
     Top = 23
-    Height = 227
+    Height = 225
     object Splitter2: TSplitter [0]
-      Left = 270
+      Left = 268
       Top = 4
       Width = 3
-      Height = 219
+      Height = 217
       Cursor = crHSplit
       Align = alRight
       ResizeStyle = rsUpdate
     end
     inherited MsgList: TExRichEdit
-      Width = 266
-      Height = 219
+      Width = 264
+      Height = 217
       PopupMenu = popRoom
-      OnDragDrop = treeRosterDragDrop
-      OnDragOver = treeRosterDragOver
+      OnDragDrop = lstRosterDragDrop
+      OnDragOver = lstRosterDragOver
       OnMouseUp = MsgListMouseUp
     end
     object Panel6: TPanel
-      Left = 273
+      Left = 271
       Top = 4
       Width = 105
-      Height = 219
+      Height = 217
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
       Caption = '`'
       TabOrder = 1
-      object treeRoster: TTreeView
+      object lstRoster: TTntListView
         Left = 1
         Top = 1
         Width = 103
-        Height = 217
+        Height = 215
         Align = alClient
-        Images = frmRosterWindow.ImageList1
-        Indent = 19
+        Columns = <>
+        IconOptions.Arrangement = iaLeft
+        IconOptions.WrapText = False
         ParentShowHint = False
         PopupMenu = popRoomRoster
-        ReadOnly = True
         ShowHint = True
-        ShowLines = False
-        ShowRoot = False
+        SmallImages = frmRosterWindow.ImageList1
         SortType = stText
         TabOrder = 0
-        OnDblClick = treeRosterDblClick
-        OnDragDrop = treeRosterDragDrop
-        OnDragOver = treeRosterDragOver
-        OnMouseMove = treeRosterMouseMove
+        ViewStyle = vsSmallIcon
+        OnDblClick = lstRosterDblClick
+        OnDragDrop = lstRosterDragDrop
+        OnDragOver = lstRosterDragOver
+        OnInfoTip = lstRosterInfoTip
       end
     end
   end
@@ -101,24 +101,25 @@ inherited frmRoom: TfrmRoom
         Font.Name = 'MS Sans Serif'
         Font.Style = [fsUnderline]
         ParentFont = False
+        Layout = tlCenter
         OnClick = lblSubjectURLClick
       end
-      object lblSubject: TTntEdit
-        Left = 42
+      object lblSubject: TTntLabel
+        Left = 39
         Top = 0
-        Width = 47
-        Height = 17
-        AutoSelect = False
-        BorderStyle = bsNone
-        Color = clBtnFace
+        Width = 314
+        Height = 21
+        Align = alLeft
+        Anchors = [akLeft, akTop, akRight, akBottom]
+        AutoSize = False
+        Caption = 'lblSubject'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -12
-        Font.Name = 'Arial'
+        Font.Name = 'Arial Unicode MS'
         Font.Style = []
         ParentFont = False
-        ReadOnly = True
-        TabOrder = 0
+        Layout = tlCenter
       end
     end
   end
@@ -167,7 +168,7 @@ inherited frmRoom: TfrmRoom
     Top = 184
     object popRosterChat: TMenuItem
       Caption = 'Chat'
-      OnClick = treeRosterDblClick
+      OnClick = lstRosterDblClick
     end
     object popRosterBlock: TMenuItem
       Caption = 'Block'
