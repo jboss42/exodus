@@ -834,7 +834,7 @@ begin
     if (_server_node = nil) then exit;
     if (_js = nil) then exit;
     js := TJabberSession(_js);
-    if (not js.Stream.Active) then exit;
+    if (not js.Active) then exit;
     if (not _server_dirty) then exit;
 
     iq := TXMLTag.Create('iq');
