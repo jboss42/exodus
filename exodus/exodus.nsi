@@ -503,6 +503,7 @@ Function .onInit
 	Push ${SEC_Plugins}
 	Call TurnOff
 
+	; BRANDING: Comment these 2 lines out, if you turn off bleeding-edge updates
 	Push ${SEC_Bleed}
 	Call TurnOff
 
