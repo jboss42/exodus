@@ -113,17 +113,18 @@ begin
     if (sess.IsBlocked(j)) then exit;
     
     ritem := sess.roster.Find(j);
-    if ritem <> nil then
+    if ((ritem <> nil) and (ritem.nickname <> '')) then
         nick := ritem.nickname
     else if (tmp_jid.user <> '') then
         nick := tmp_jid.user
     else
-        nick := tmp_jid.jid;
+        nick := '';
 
     tmp_jid.Free();
 
     // don't display notifications for rooms, here.
     if (IsRoom(j)) then exit;
+    if (nick = '') then exit;
 
     // someone is coming online for the first time..
     if (event = '/presence/online') then
