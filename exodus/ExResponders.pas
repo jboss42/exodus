@@ -598,11 +598,12 @@ end;
 {---------------------------------------}
 procedure TUnhandledResponder.callback(event: string; tag: TXMLTag);
 var
-    f: Widestring;
+    t, f: Widestring;
     b, e: TXMLTag;
 begin
     //
-    if ((tag.Name = 'iq') and (tag.GetAttribute('type') <> 'error')) then begin
+    t := tag.GetAttribute('type');
+    if ((tag.Name = 'iq') and ((t = 'get') or (t = 'set'))) then begin
         b := TXMLTag.Create(tag);
         f := b.GetAttribute('from');
         b.setAttribute('from', b.getAttribute('to'));
