@@ -993,10 +993,11 @@ begin
     end;
 
     // Make sure it's not "maximized"
-    if (h >= (Screen.DesktopHeight - 50)) then
+    if ((h >= (Screen.DesktopHeight - 50)) and
+        (w >= (Screen.DesktopWidth - 50))) then begin
         h := form.Height;
-    if (w >= (Screen.DesktopWidth - 50)) then
         w := form.Width;
+    end;
 
     // Make sure it's not under the taskbar
     tbh := task_rect.bottom - task_rect.top;
