@@ -82,8 +82,6 @@ type
     procedure popCloseClick(Sender: TObject);
     procedure popBookmarkClick(Sender: TObject);
     procedure popInviteClick(Sender: TObject);
-    procedure MsgListMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
     procedure mnuOnTopClick(Sender: TObject);
     procedure popRosterBlockClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
@@ -782,7 +780,6 @@ begin
             end;
         kw_list.Free();
         end;
-
     MyNick := '';
 end;
 
@@ -1007,19 +1004,6 @@ procedure TfrmRoom.popInviteClick(Sender: TObject);
 begin
   inherited;
     ShowInvite(Self.jid, nil);
-end;
-
-{---------------------------------------}
-procedure TfrmRoom.MsgListMouseUp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-var
-    cp: TPoint;
-begin
-  inherited;
-    if Button = mbRight then begin
-        GetCursorPos(cp);
-        popRoom.Popup(cp.x, cp.y);
-        end;
 end;
 
 {---------------------------------------}
