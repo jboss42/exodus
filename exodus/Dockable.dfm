@@ -18,6 +18,7 @@ object frmDockable: TfrmDockable
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnEndDock = FormEndDock
+  OnPaint = FormPaint
   OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13

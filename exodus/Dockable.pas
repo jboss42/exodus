@@ -36,6 +36,7 @@ type
     procedure timFlasherTimer(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
+    procedure FormPaint(Sender: TObject);
   private
     { Private declarations }
     _docked: boolean;
@@ -326,6 +327,12 @@ begin
         Self.TabSheet.ImageIndex := -1;
         frmExodus.Tabs.ActivePage.ImageIndex := -1;
         end;
+end;
+
+procedure TfrmDockable.FormPaint(Sender: TObject);
+begin
+    inherited;
+    StopTrayAlert();
 end;
 
 end.
