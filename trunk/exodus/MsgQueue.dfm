@@ -1,6 +1,6 @@
 object frmMsgQueue: TfrmMsgQueue
-  Left = 245
-  Top = 631
+  Left = 255
+  Top = 250
   Width = 432
   Height = 324
   Caption = 'Events'
@@ -57,14 +57,98 @@ object frmMsgQueue: TfrmMsgQueue
     OnDblClick = lstEventsDblClick
     OnKeyDown = lstEventsKeyDown
   end
-  object txtMsg: TRichEdit
+  object txtMsg: TExRichEdit
     Left = 0
     Top = 153
     Width = 424
     Height = 137
     Align = alClient
-    ReadOnly = True
-    ScrollBars = ssBoth
+    AutoURLDetect = adDefault
+    CustomURLs = <
+      item
+        Name = 'e-mail'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'http'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'file'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'mailto'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'ftp'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'https'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'gopher'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'nntp'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'prospero'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'telnet'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'news'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end
+      item
+        Name = 'wais'
+        Color = clWindowText
+        Cursor = crDefault
+        Underline = True
+      end>
+    LangOptions = [loAutoFont]
+    Language = 1033
+    ShowSelectionBar = False
     TabOrder = 1
+    URLColor = clBlue
+    URLCursor = crHandPoint
+    OnURLClick = txtMsgURLClick
+    InputFormat = ifRTF
+    OutputFormat = ofRTF
+    SelectedInOut = False
+    PlainRTF = False
+    UndoLimit = 0
+    AllowInPlace = False
   end
 end
