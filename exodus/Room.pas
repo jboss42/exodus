@@ -87,6 +87,9 @@ type
     popMemberList: TTntMenuItem;
     popBanList: TTntMenuItem;
     popVoiceList: TTntMenuItem;
+    popRosterSubscribe: TTntMenuItem;
+    popRosterVCard: TTntMenuItem;
+    N7: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -126,6 +129,10 @@ type
     procedure popRegisterClick(Sender: TObject);
     procedure sendStartPresence();
     procedure lstRosterKeyPress(Sender: TObject; var Key: Char);
+    procedure lstRosterCustomDrawItem(Sender: TCustomListView;
+      Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
+    procedure popRosterSubscribeClick(Sender: TObject);
+    procedure popRosterVCardClick(Sender: TObject);
   private
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
@@ -316,6 +323,7 @@ uses
     Notify,
     PrefController,
     Presence,
+    Profile, 
     RegForm,
     RichEdit,
     RiserWindow,
@@ -323,7 +331,7 @@ uses
     Roster,
     RosterWindow,
     Session,
-    Signals, 
+    Signals,
     ShellAPI,
     StrUtils,
     xData,
@@ -1672,10 +1680,14 @@ var
     rm: TRoomMember;
 begin
     e := (lstRoster.Selected <> nil);
+
     popRosterMsg.Enabled := e;
     popRosterChat.Enabled := e;
     popRosterSendJID.Enabled := e;
     popRosterblock.Enabled := e;
+
+    popRosterSubscribe.Enabled := false;
+    popRosterVCard.Enabled := false;
 
     if (not e) then exit;
 
@@ -1685,6 +1697,13 @@ begin
             popRosterBlock.Caption := _(sUnblock)
         else
             popRosterBlock.Caption := _(sBlock);
+
+
+        if (rm.real_jid <> '') then begin
+            popRosterSubscribe.Enabled := true;
+            popRosterVCard.Enabled := true;
+        end;
+
     end;
     inherited;
 end;
@@ -1812,6 +1831,7 @@ end;
 procedure TfrmRoom.lstRosterInfoTip(Sender: TObject; Item: TListItem;
   var InfoTip: String);
 var
+    tmps: string;
     m: TRoomMember;
 begin
   inherited;
@@ -1819,9 +1839,21 @@ begin
     if (m = nil) then
         InfoTip := ''
     else begin
-        InfoTip := m.show;
-        if (m.status <> '') then
-            InfoTip := InfoTip + ': ' + m.status;
+        // pgm: Away (At lunch)
+        tmps := m.Nick + ': ';
+        tmps := tmps + m.show;
+        if ((m.status <> '') and (m.status <> m.show)) then
+            tmps := tmps + ' (' + m.status + ')';
+
+        if (_isMUC) then begin
+            if ((m.role <> '') or (m.affil <> '')) then begin
+                tmps := tmps + ''#13#10 + _('Role: ') + m.role;
+                tmps := tmps + ''#13#10 + _('Affiliation: ') + m.affil;
+            end;
+            if (m.real_jid <> '') then
+                tmps := tmps + ''#13#10 + '<' + m.real_jid + '>';
+        end;
+        InfoTip := tmps;
     end;
 end;
 
@@ -2197,6 +2229,120 @@ begin
     if (MsgOut.Visible) then begin
         MsgOut.SetFocus();
         MsgOut.WideSelText := Key;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.lstRosterCustomDrawItem(Sender: TCustomListView;
+  Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
+var
+    rm: TRoomMember;
+    xRect: TRect;
+    nRect: TRect;
+    main_color: TColor;
+    moderator, visitor: boolean;
+    c1: Widestring;
+begin
+  inherited;
+    // Bold if they are a moderator.. gray if no voice
+    DefaultDraw := true;
+    if (not _isMUC) then exit;
+
+    rm := TRoomMember(_rlist[Item.Index]);
+    moderator := (rm.role = 'moderator');
+    visitor := (rm.role = 'visitor');
+
+    with lstRoster.Canvas do begin
+        TextFlags := ETO_OPAQUE;
+        xRect := Item.DisplayRect(drLabel);
+        nRect := Item.DisplayRect(drBounds);
+
+        // draw the selection box, or just the bg color
+        if (cdsSelected in State) then begin
+            Font.Color := clHighlightText;
+            Brush.Color := clHighlight;
+            FillRect(xRect);
+        end
+        else begin
+            if (visitor) then
+                Font.Color := clGrayText
+            else
+                Font.Color := clWindowText;
+            Brush.Color := clWindow;
+            Brush.Style := bsSolid;
+            FillRect(xRect);
+        end;
+
+        // Bold moderators
+        if (moderator) then
+            Font.Style := [fsBold]
+        else
+            Font.Style := [];
+
+        // draw the image
+        frmExodus.Imagelist2.Draw(lstRoster.Canvas,
+            nRect.Left, nRect.Top, Item.ImageIndex);
+
+        // draw the text
+        if (cdsSelected in State) then begin
+            main_color := clHighlightText;
+            //stat_color := main_color;
+        end
+        else begin
+            main_color := lstRoster.Canvas.Font.Color;
+            //stat_color := clGrayText;
+        end;
+
+        c1 := rm.Nick;
+        if (CanvasTextWidthW(lstRoster.Canvas, c1) > (xRect.Right - xRect.Left)) then begin
+            // XXX: somehow truncate the nick
+        end;
+
+        SetTextColor(lstRoster.Canvas.Handle, ColorToRGB(main_color));
+        CanvasTextOutW(lstRoster.Canvas, xRect.Left + 1,
+            xRect.Top + 1, rm.Nick);
+
+        if (cdsSelected in State) then
+            // Draw the focus box.
+            lstRoster.Canvas.DrawFocusRect(xRect);
+
+        // make sure the control doesn't redraw this.
+        DefaultDraw := false;
+    end;
+
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.popRosterSubscribeClick(Sender: TObject);
+var
+    j: TJabberID;
+    rm: TRoomMember;
+    dgrp: Widestring;
+begin
+  inherited;
+    // subscribe to this person
+    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
+    if ((rm <> nil) and (rm.real_jid <> '')) then begin
+        j := TJabberID.Create(rm.real_jid);
+        dgrp := MainSession.Prefs.getString('roster_default');
+        MainSession.Roster.AddItem(j.jid, rm.nick, dgrp, true);
+        j.Free();
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.popRosterVCardClick(Sender: TObject);
+var
+    j: TJabberID;
+    rm: TRoomMember;
+begin
+  inherited;
+    // lookup the vcard.
+    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
+    if ((rm <> nil) and (rm.real_jid <> '')) then begin
+        j := TJabberID.Create(rm.real_jid);
+        ShowProfile(j.jid);
+        j.Free();
     end;
 end;
 
