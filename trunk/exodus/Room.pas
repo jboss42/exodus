@@ -202,7 +202,7 @@ begin
     if ((not Application.Active) and (not MainSession.IsPaused)) then begin
         for k := 0 to _keywords.Count - 1 do begin
             if (pos(_keywords[k], Msg.Body) > 0) then begin
-                ShowRiserWindow('Keyword in ' + Self.Caption, 12);
+                ShowRiserWindow('Keyword in ' + Self.Caption + ': ' + _keywords[k], 12);
                 break;
                 end;
             end;
