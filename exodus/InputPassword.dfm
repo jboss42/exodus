@@ -19,22 +19,20 @@ object frmInputPass: TfrmInputPass
   OnCreate = FormCreate
   DesignSize = (
     267
-    96)
+    95)
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TTntLabel
     Left = 0
     Top = 0
-    Width = 267
-    Height = 25
-    Align = alTop
-    AutoSize = False
+    Width = 76
+    Height = 13
     Caption = 'Enter password:'
     Layout = tlCenter
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 64
+    Top = 63
     Width = 267
     Height = 32
     Align = alBottom

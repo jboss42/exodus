@@ -47,13 +47,36 @@ uses
 
 function InputQueryW(const ACaption, APrompt: WideString; var Value: WideString; password:boolean = False): Boolean;
 var
+    w, h: integer;
+    r: TRect;
     pf: TfrmInputPass;
 begin
     result := false;
     pf := TfrmInputPass.Create(Application);
-    pf.Caption := ACaption;
-    pf.Label1.Caption := APrompt;
-    pf.txtPassword.Text := Value;
+    with pf do begin
+        Caption := ACaption;
+
+        r.top := Label1.Top;
+        r.Left := Label1.Left;
+        r.right := r.left + 1;
+        r.Bottom := r.top + 1;
+
+        DrawTextExW(pf.Canvas.Handle, PWideChar(APrompt), Length(APrompt), r,
+            DT_CALCRECT, nil);
+
+        w := r.Right - r.Left + 10;
+        h := r.Bottom - r.Top + 10;
+
+        Label1.SetBounds(r.Left, r.Top, w, h);
+        txtPassword.Top := r.Bottom + 15;
+
+        pf.ClientHeight := txtPassword.Top + txtPassword.Height + 60;
+        pf.ClientWidth := w + 40;
+
+        Label1.Caption := APrompt;
+        txtPassword.Text := Value;
+    end;
+
     AssignUnicodeFont(pf, 9);
     if (not password) then
         pf.txtPassword.PasswordChar := #0;
