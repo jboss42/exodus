@@ -41,6 +41,8 @@ type
         testaa: boolean;
     end;
 
+procedure PlayXMPPActions();
+procedure ClearXMPPActions();
 
 // forward declares
 {---------------------------------------}
@@ -100,6 +102,8 @@ var
     _subcontroller: TSubController;
     _richedit: THandle;
     _mutex: THandle;
+    _xmpp_action_list: TList;
+
 
 {---------------------------------------}
 {---------------------------------------}
@@ -128,6 +132,8 @@ var
     connect_node: TXMLTag;
     auth_node: TXMLTag;
     node: TXMLTag;
+    xmpp_children: TXMLTagList;
+    i: integer;
 
 begin
     // setup all the session stuff, parse cmd line params, etc..
@@ -290,13 +296,22 @@ begin
 
             if (parser.Count > 0) then begin
                 xmpp_node := parser.popTag();
-                if (xmpp_node.GetFirstTag('delete') <> nil) then
-                    SysUtils.DeleteFile(xmpp_file);  // ignore return, on purpose.
 
-                connect_node := xmpp_node.GetFirstTag('connect');
-                if (connect_node <> nil) then
-                    jid := TJabberID.Create(connect_node.GetBasicText('host'));
-
+                ClearXMPPActions();
+                xmpp_children := xmpp_node.ChildTags;
+                for i := 0 to xmpp_children.Count - 1 do begin
+                    node := xmpp_children.Tags[i];
+                    if (node.Name = 'delete') then
+                        SysUtils.DeleteFile(xmpp_file)  // ignore return, on purpose.
+                    else if (node.Name = 'connect') then begin
+                        connect_node := TXMLTag.Create(node);
+                        jid := TJabberID.Create(connect_node.GetBasicText('host'));
+                    end
+                    else
+                        _xmpp_action_list.Add(TXMLTag.Create(node));
+                end;
+                xmpp_children.Free();
+                xmpp_node.Free();
             end
             else
               MessageDlg('Bad file:' + xmpp_file, mtWarning, [mbOK], 0);
@@ -509,7 +524,38 @@ begin
     FreeAndNil(ExCOMController);
 end;
 
+procedure PlayXMPPActions();
+var
+    i : integer;
+    node: TXMLTag;
+begin
+    for i := 0 to _xmpp_action_list.Count - 1 do begin
+        node := TXMLTag(_xmpp_action_list[i]);
+        if (node.Name = 'chat') then begin
+            StartChat(node.GetAttribute('jid'), '', true);
+        end;
+        node.Free();
+    end;
+    _xmpp_action_list.Clear();
+end;
+
+procedure ClearXMPPActions();
+var
+    i : integer;
+    node: TXMLTag;
+begin
+    for i := 0 to _xmpp_action_list.Count - 1 do begin
+        node := TXMLTag(_xmpp_action_list[i]);
+        node.Free();
+    end;
+    _xmpp_action_list.Clear();
+end;
+
 initialization
     sExodusMutex := RegisterWindowMessage('EXODUS_MESSAGE');
+    _xmpp_action_list := TList.Create();
 
+finalization
+    ClearXMPPActions();
+    _xmpp_action_list.Free();
 end.
