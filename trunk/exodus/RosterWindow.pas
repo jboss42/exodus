@@ -1227,6 +1227,10 @@ begin
                     TextOut(xRect.Left + 1, xRect.Top + 1, c1);
                     SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(_status_color));
                     TextOut(xRect.Left + tw + 5, xRect.Top + 1, c2);
+
+                    if (cdsSelected in State) then
+                        // Draw the focus box.
+                        treeRoster.Canvas.DrawFocusRect(xRect);
                     end;
 
                 DefaultDraw := false;
