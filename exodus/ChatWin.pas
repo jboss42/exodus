@@ -77,6 +77,8 @@ type
     procedure FormShow(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure mnuWordwrapClick(Sender: TObject);
+    procedure btnCloseMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private declarations }
     jid: widestring;        // jid of the person we are talking to
@@ -262,15 +264,15 @@ begin
             Show();
 
         PlayQueue();
+
+        // scroll to the bottom..
+        if (do_scroll) then
+            _scrollBottom();
     end;
 
     if (new_chat) then
         frmExodus.ComController.fireNewChat(sjid, TExodusChat(chat.ComController));
 
-    if (do_scroll) then begin
-        // scroll to the bottom..
-        win._scrollBottom();
-    end;
 
 
     Result := TfrmChat(chat.window);
@@ -415,7 +417,6 @@ end;
 {---------------------------------------}
 procedure TfrmChat.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-    _destroying := true;
     Action := caFree;
     inherited;
 end;
@@ -1051,7 +1052,6 @@ end;
 {---------------------------------------}
 procedure TfrmChat.btnCloseClick(Sender: TObject);
 begin
-  inherited;
     Self.Close();
 end;
 
@@ -1068,7 +1068,8 @@ var
     s: String;
 begin
     if ((MainSession.Prefs.getInt('chat_memory') > 0) and
-        (MsgList.Lines.Count > 0)) then begin
+        (MsgList.Lines.Count > 0) and
+        (not _destroying)) then begin
         MsgList.SelectAll();
         s := MsgList.RTFSelText;
         chat_object.SetHistory(s);
@@ -1092,6 +1093,13 @@ procedure TfrmChat.FormActivate(Sender: TObject);
 begin
   inherited;
     if (_redock) then _redock := false;
+end;
+
+{---------------------------------------}
+procedure TfrmChat.btnCloseMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+    _destroying := (ssCtrl in Shift);
 end;
 
 end.
