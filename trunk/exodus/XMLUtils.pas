@@ -167,10 +167,7 @@ function SToInt(inp: string): integer;
 var
 	tmpi: integer;
 begin
-	{
-    protected function to convert ints..
-    See SToReal for more info.
-    }
+    // exception safe version of StrToInt
 	try
     	tmpi := StrToInt(Trim(inp));
     except on EConvertError do

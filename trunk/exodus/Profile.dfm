@@ -1,6 +1,6 @@
 object frmProfile: TfrmProfile
-  Left = 296
-  Top = 391
+  Left = 243
+  Top = 253
   Width = 438
   Height = 279
   Caption = 'Contact Properties'
@@ -19,14 +19,14 @@ object frmProfile: TfrmProfile
     Left = 121
     Top = 0
     Width = 3
-    Height = 214
+    Height = 211
     Cursor = crHSplit
   end
   object PageControl1: TPageControl
     Left = 124
     Top = 0
     Width = 296
-    Height = 214
+    Height = 211
     ActivePage = TabSheet1
     Align = alLeft
     Style = tsFlatButtons
@@ -219,7 +219,7 @@ object frmProfile: TfrmProfile
       ImageIndex = 1
       DesignSize = (
         288
-        183)
+        180)
       object GrpListBox: TCheckListBox
         Left = 8
         Top = 8
@@ -1115,7 +1115,7 @@ object frmProfile: TfrmProfile
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 214
+    Top = 211
     Width = 430
     Height = 34
     Align = alBottom
@@ -1140,7 +1140,7 @@ object frmProfile: TfrmProfile
     Left = 0
     Top = 0
     Width = 121
-    Height = 214
+    Height = 211
     Align = alLeft
     Indent = 19
     TabOrder = 2

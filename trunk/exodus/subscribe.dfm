@@ -20,7 +20,7 @@ object frmSubscribe: TfrmSubscribe
   TextHeight = 13
   object Label1: TLabel
     Left = 0
-    Top = 20
+    Top = 22
     Width = 258
     Height = 26
     Align = alTop
@@ -29,6 +29,13 @@ object frmSubscribe: TfrmSubscribe
       'add you to their roster.'
     WordWrap = True
   end
+  object Bevel1: TBevel
+    Left = 0
+    Top = 20
+    Width = 258
+    Height = 2
+    Align = alTop
+  end
   object lblJID: TStaticText
     Left = 0
     Top = 0
@@ -36,7 +43,7 @@ object frmSubscribe: TfrmSubscribe
     Height = 20
     Align = alTop
     Caption = ' foo@jabber.org'
-    Color = clHighlight
+    Color = clBtnFace
     Font.Charset = ANSI_CHARSET
     Font.Color = clCaptionText
     Font.Height = -13

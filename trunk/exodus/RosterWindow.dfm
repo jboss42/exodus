@@ -1665,4 +1665,16 @@ object frmRosterWindow: TfrmRosterWindow
       FFFFFFFF00000000FFFFFFFF0000000000000000000000000000000000000000
       000000000000}
   end
+  object popActions: TPopupMenu
+    Left = 56
+    Top = 96
+    object popAddContact: TMenuItem
+      Caption = 'Add Contact'
+      OnClick = popAddContactClick
+    end
+    object popAddGroup: TMenuItem
+      Caption = 'Add Group'
+      OnClick = popAddGroupClick
+    end
+  end
 end

@@ -68,7 +68,7 @@ uses
 {---------------------------------------}
 constructor TVersionResponder.Create(Session: TJabberSession);
 begin
-    inherited Create(Session, 'jabber:iq:version');
+    inherited Create(Session, XMLNS_VERSION);
 end;
 
 {---------------------------------------}
@@ -99,7 +99,7 @@ begin
         PutAttribute('type', 'result');
         PutAttribute('to', tag.getAttribute('from'));
         with AddTag('query') do begin
-            PutAttribute('xmlns', 'jabber:iq:version');
+            PutAttribute('xmlns', XMLNS_VERSION);
             AddBasicTag('name', 'Exodus');
             AddBasicTag('version', app);
             AddBasicTag('os', win);
@@ -111,7 +111,7 @@ end;
 {---------------------------------------}
 constructor TTimeResponder.Create(Session: TJabberSession);
 begin
-    inherited Create(Session, 'jabber:iq:time');
+    inherited Create(Session, XMLNS_TIME);
 end;
 
 {---------------------------------------}
@@ -146,7 +146,7 @@ begin
         PutAttribute('type', 'result');
 
         with AddTag('query') do begin
-            PutAttribute('xmlns', 'jabber:iq:time');
+            PutAttribute('xmlns', XMLNS_TIME);
             AddBasicTag('utc', DateTimeToJabber(utc));
             AddBasicTag('tz', tzi.StandardName);
             AddBasicTag('display', DateTimeToStr(Now));
@@ -158,7 +158,7 @@ end;
 
 constructor TLastResponder.Create(Session: TJabberSession);
 begin
-    inherited Create(Session, 'jabber:iq:last');
+    inherited Create(Session, XMLNS_LAST);
 end;
 
 procedure TLastResponder.iqCallback(event: string; tag: TXMLTag);
@@ -174,7 +174,7 @@ begin
         PutAttribute('type', 'result');
 
         with AddTag('query') do begin
-            PutAttribute('xmlns', 'jabber:iq:last');
+            PutAttribute('xmlns', XMLNS_LAST);
             idle := (GetTickCount() - IdleUIGetLastInputTime()) div 1000;
             PutAttribute('seconds', IntToStr(idle));
             end;
@@ -185,7 +185,7 @@ end;
 
 constructor TBrowseResponder.Create(Session: TJabberSession);
 begin
-    inherited Create(Session, 'jabber:iq:browse');
+    inherited Create(Session, XMLNS_BROWSE);
 end;
 
 procedure TBrowseResponder.iqCallback(event: string; tag: TXMLTag);
@@ -199,19 +199,19 @@ begin
         PutAttribute('type', 'result');
 
         with AddTag('user') do begin
-            PutAttribute('xmlns', 'jabber:iq:browse');
+            PutAttribute('xmlns', XMLNS_BROWSE);
             PutAttribute('type', 'client');
             PutAttribute('jid', _session.Username + '@' + _session.Server +
                 '/' + _session.Resource);
             PutAttribute('name', _session.Username);
 
             AddBasicTag('ns', 'jabber:x:conference');
-            AddBasicTag('ns', 'jabber:x:oob');
-            AddBasicTag('ns', 'jabber:iq:oob');
-            AddBasicTag('ns', 'jabber:iq:browse');
-            AddBasicTag('ns', 'jabber:iq:time');
-            AddBasicTag('ns', 'jabber:iq:version');
-            AddBasicTag('ns', 'jabber:iq:last');
+            // AddBasicTag('ns', 'jabber:x:oob');
+            AddBasicTag('ns', XMLNS_IQOOB);
+            AddBasicTag('ns', XMLNS_BROWSE);
+            AddBasicTag('ns', XMLNS_TIME);
+            AddBasicTag('ns', XMLNS_VERSION);
+            AddBasicTag('ns', XMLNS_LAST);
 
             end;
         end;

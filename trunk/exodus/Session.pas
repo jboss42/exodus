@@ -118,6 +118,12 @@ const
     XMLNS_AUTH      = 'jabber:iq:auth';
     XMLNS_ROSTER    = 'jabber:iq:roster';
     XMLNS_REGISTER  = 'jabber:iq:register';
+    XMLNS_LAST      = 'jabber:iq:last';
+    XMLNS_TIME      = 'jabber:iq:time';
+    XMLNS_VERSION   = 'jabber:iq:version';
+    XMLNS_IQOOB     = 'jabber:iq:oob';
+    XMLNS_BROWSE    = 'jabber:iq:browse';
+    
 
 var
     MainSession: TJabberSession;

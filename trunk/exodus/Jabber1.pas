@@ -970,8 +970,27 @@ end;
 
 {---------------------------------------}
 procedure TfrmJabber.NewGroup2Click(Sender: TObject);
+var
+    new_grp: string;
+    gl: TStringList;
 begin
     // Add a roster grp.
+    new_grp := 'Untitled Group';
+    if InputQuery('New Roster Group',
+        'Enter new group name: ', new_grp) = false then exit;
+
+    // add the new grp.
+    gl := MainSession.Roster.GrpList;
+    if (gl.IndexOf(new_grp) >= 0) then begin
+        // this grp already exists
+        MessageDlg('This group already exists!',
+            mtError, [mbOK], 0);
+        end
+    else begin
+        // add the new grp.
+        gl.Add(new_grp);
+        frmRosterWindow.RenderGroup(gl.Count - 1);
+        end;
 end;
 
 {---------------------------------------}

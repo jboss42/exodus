@@ -47,8 +47,6 @@ type
     SaveDialog1: TSaveDialog;
     Copy1: TMenuItem;
     MsgOut: TMemo;
-    Panel5: TPanel;
-    btnSend: TSpeedButton;
     Panel7: TPanel;
     pnlClose: TPanel;
     btnClose: TSpeedButton;
@@ -74,7 +72,6 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnCloseClick(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
-    procedure btnSendClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure MsgOutKeyDown(Sender: TObject; var Key: Word;
@@ -129,6 +126,7 @@ uses
     RosterAdd,
     Profile,
     ExUtils,
+    XMLUtils, 
     ShellAPI,
     Roster,
     Session,
@@ -242,22 +240,15 @@ end;
 {---------------------------------------}
 function TfrmChat.GetThread: String;
 Var
-    i : integer;
-    count : integer;  //restrict the length to 10
+    seed: string;
 begin
     if _thread <> '' then exit;
 
-    _thread := FormatDateTime('MMDDYYYYHHMM',now);
+    seed := FormatDateTime('MMDDYYYYHHMM',now);
+    seed := seed + jid + MainSession.Username + MainSession.Server;
 
-    //add the user's JID name now for added
-    if length(jid) < 10 then
-        count := length(JID)
-    else
-        count := 10;
-
-    for i := 1 to count do
-        _thread := _thread + IntTohex(Ord(jid[i]), 2);
-
+    // hash the seed to get the thread
+    _thread := Sha1Hash(seed);
     Result := _thread;
 end;
 
@@ -313,9 +304,19 @@ end;
 {---------------------------------------}
 procedure TfrmChat.showMsg(tag: TXMLTag);
 var
+    etag, btag: TXMLTag;
     Msg: TJabberMessage;
 begin
     // display the body of the msg
+    btag := tag.QueryXPTag('/message/body');
+    
+    etag := tag.QueryXPTag('/message/*@xmlns="jabber:iq:event"');
+    if ((etag <> nil) and (btag = nil)) then begin
+        // display the event type..
+        end;
+        
+    if ((btag = nil) or (btag.Data = '')) then exit;
+    
     Msg := TJabberMessage.Create(tag);
     Msg.Nick := OtherNick;
     Msg.IsMe := false;
@@ -341,6 +342,7 @@ begin
     msg.thread := _thread;
     msg.nick := MainSession.Username;
     msg.isMe := true;
+    msg.id := MainSession.generateID();
     MainSession.SendTag(msg.Tag);
     DisplayMsg(Msg, MsgList);
 
@@ -410,12 +412,6 @@ begin
 
     txt := '[' + formatdatetime('HH:MM',now) + '] ' + jid + ' is now ' + txt;
     DisplayPresence(txt, MsgList);
-end;
-
-{---------------------------------------}
-procedure TfrmChat.btnSendClick(Sender: TObject);
-begin
-    SendMsg();
 end;
 
 {---------------------------------------}
