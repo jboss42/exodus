@@ -399,7 +399,7 @@ begin
     // Send the actual message out
     // txt := MsgOut.WideText;
     // txt := getMemoText(MsgOut);
-    txt := Trim(MsgOut.Text);
+    txt := getInputText(MsgOut);
 
     if (txt = '') then exit;
 
