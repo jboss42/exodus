@@ -57,7 +57,7 @@ implementation
 {$R *.dfm}
 
 uses
-    JabberID, Session;
+    JabberID, Session, RosterWindow;
 
 function ShowBookmark(jid: string): TfrmBookmark;
 var
@@ -111,7 +111,7 @@ begin
         bmName := txtName.Text;
         jid.ParseJID(txtJID.Text);
         nick := txtNick.Text;
-        MainSession.Roster.SaveBookmarks();
+        MainSession.Roster.UpdateBookmark(bm);
         end;
     Self.Close;
 end;

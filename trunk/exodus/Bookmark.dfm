@@ -1,6 +1,6 @@
 object frmBookmark: TfrmBookmark
-  Left = 270
-  Top = 133
+  Left = 927
+  Top = 177
   Width = 288
   Height = 192
   Caption = 'Bookmark Properties'
@@ -45,7 +45,7 @@ object frmBookmark: TfrmBookmark
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 124
+    Top = 129
     Width = 280
     Height = 34
     Align = alBottom
