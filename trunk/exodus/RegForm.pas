@@ -95,6 +95,8 @@ resourcestring
 var
   frmRegister: TfrmRegister;
 
+procedure StartServiceReg(jid: Widestring);
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -103,6 +105,16 @@ implementation
 uses
     NodeItem,
     GnuGetText, Math, JabberConst, Transports, S10n, Roster, Session, ExUtils;
+
+{---------------------------------------}
+procedure StartServiceReg(jid: Widestring);
+var
+    regform: TfrmRegister;
+begin
+    regform := TfrmRegister.Create(Application);
+    regform.jid := jid;
+    regform.Start();
+end;
 
 {---------------------------------------}
 procedure TfrmRegister.FormCreate(Sender: TObject);

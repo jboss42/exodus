@@ -91,14 +91,10 @@ end;
 
 {---------------------------------------}
 procedure TRegController.Callback(event: string; tag: TXMLTag);
-var
-    f: TfrmRegister;
 begin
     // Create a new registration form and kick the process off
     if ((event = '/session/register') and (tag <> nil)) then begin
-        f := TfrmRegister.Create(Application);
-        f.jid := tag.getAttribute('jid');
-        f.Start();
+        StartServiceReg(tag.getAttribute('jid'));
     end;
 end;
 
@@ -138,20 +134,17 @@ end;
 {---------------------------------------}
 procedure TRegProxy.Callback(event: string; tag:TXMLTag);
 var
-    f: TfrmRegister;
     tmp_jid: TJabberID;
 begin
     // Create a registration wizard..
-    f := TfrmRegister.Create(Application);
+    ExRegController.RemoveProxy(Self);
     if (_full) then
-        f.jid := _jid
+        StartServiceReg(_jid)
     else begin
         tmp_jid := TJabberID.Create(_jid);
-        f.jid := tmp_jid.domain;
+        StartServiceReg(tmp_jid.domain);
         tmp_jid.Free();
     end;
-    f.Start();
-    ExRegController.RemoveProxy(Self);
 end;
 
 {---------------------------------------}

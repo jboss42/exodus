@@ -1138,12 +1138,8 @@ end;
 
 procedure TExodusController.registerWithService(
   const JabberID: WideString);
-var
-    regform: TfrmRegister;
 begin
-    regform := TfrmRegister.Create(Application);
-    regform.jid := JabberID;
-    regform.Start();
+    StartServiceReg(JabberID);
 end;
 
 initialization

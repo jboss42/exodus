@@ -599,7 +599,6 @@ var
     node: TXMLTag;
     jid: WideString;
     add: TfrmAdd;
-    reg: TfrmRegister;
 begin
     for i := 0 to _xmpp_action_list.Count - 1 do begin
         node := TXMLTag(_xmpp_action_list[i]);
@@ -634,9 +633,7 @@ begin
         end
         else if (node.Name = 'register') then begin
             if (jid <> '') then begin
-                reg := TfrmRegister.Create(Application);
-                reg.jid := jid;
-                reg.Start();
+                StartServiceReg(jid);
             end;
         end;
 

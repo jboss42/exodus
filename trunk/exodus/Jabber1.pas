@@ -2401,16 +2401,12 @@ end;
 procedure TfrmExodus.mnuRegisterServiceClick(Sender: TObject);
 var
     tmps: WideString;
-    f: TfrmRegister;
 begin
     // kick off a service registration..
     tmps := '';
     if (InputQueryW(sRegService, sEnterSvcJID, tmps) = false) then
         exit;
-
-    f := TfrmRegister.Create(Application);
-    f.jid := tmps;
-    f.Start();
+    StartServiceReg(tmps);
 end;
 
 {---------------------------------------}
@@ -2891,13 +2887,9 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.mnuRegistrationClick(Sender: TObject);
-var
-    f: TfrmRegister;
 begin
     // register with the server..
-    f := TfrmRegister.Create(Application);
-    f.jid := MainSession.Server;
-    f.Start();
+    StartServiceReg(MainSession.Server);
 end;
 
 {---------------------------------------}
