@@ -533,7 +533,7 @@ uses
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
     ChatController, ChatWin, Debug, Dockable, ExSession, ExUtils,
     GetOpt, InputPassword, Invite, GnuGetText,
-    Iq, JUD, JabberID, JabberMsg, IdGlobal,
+    Iq, JUD, JabberID, JabberMsg, IdGlobal, LocalUtils, 
     JabberConst, ComController, CommCtrl, CustomPres,
     JoinRoom, Login, MsgController, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow, Room,
@@ -736,6 +736,7 @@ begin
     // Do translation magic
     AssignUnicodeFont(Self);
     TranslateProperties(Self);
+    initLocaleUtils();
 
     // setup our tray icon
     _tray_icon := TIcon.Create();

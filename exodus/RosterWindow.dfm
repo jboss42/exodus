@@ -51,7 +51,7 @@ object frmRosterWindow: TfrmRosterWindow
   TextHeight = 13
   object imgAd: TImage
     Left = 0
-    Top = 381
+    Top = 384
     Width = 187
     Height = 10
     Align = alBottom
@@ -67,7 +67,7 @@ object frmRosterWindow: TfrmRosterWindow
     Left = 0
     Top = 161
     Width = 187
-    Height = 196
+    Height = 199
     Cursor = crArrow
     Hint = 'Roster Hint'
     Align = alClient
@@ -112,7 +112,7 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object StatBar: TStatusBar
     Left = 0
-    Top = 391
+    Top = 394
     Width = 187
     Height = 21
     Panels = <
@@ -124,7 +124,7 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object pnlShow: TPanel
     Left = 0
-    Top = 357
+    Top = 360
     Width = 187
     Height = 24
     Align = alBottom
