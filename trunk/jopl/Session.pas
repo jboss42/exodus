@@ -74,7 +74,7 @@ type
         Agents: TStringList;
         dock_windows: boolean;
 
-        Constructor Create;
+        Constructor Create(ConfigFile: string);
         Destructor Destroy; override;
 
         procedure CreateAccount;
@@ -143,7 +143,7 @@ uses
     iq;
 
 {---------------------------------------}
-Constructor TJabberSession.Create;
+Constructor TJabberSession.Create(ConfigFile: string);
 begin
     //
     inherited Create;
@@ -184,13 +184,9 @@ begin
 
     ChatList := TJabberChatList.Create;
 
-    {$ifdef linux}
-    Prefs := TPrefController.Create('~/.killer');
-    {$else}
-    Prefs := TPrefController.Create('\Software\Jabber\Exodus');
-    {$endif}
-
+    Prefs := TPrefController.Create(ConfigFile);
     Prefs.LoadProfiles;
+
     Agents := TStringList.Create();
 end;
 
@@ -528,6 +524,8 @@ procedure TJabberSession.ActivateProfile(i: integer);
 var
     p: TJabberProfile;
 begin
+    Assert((i >= 0) and (i < Prefs.Profiles.Count));
+
     // make this profile the active one..
     p := TJabberProfile(Prefs.Profiles.Objects[i]);
 

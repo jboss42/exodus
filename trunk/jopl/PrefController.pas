@@ -93,7 +93,7 @@ type
         function findPresenceTag(pkey: string): TXMLTag;
         procedure Save;
     public
-        constructor Create(RegKey: string);
+        constructor Create(FileName: string);
 
         function getString(pkey: string): string;
         function getInt(pkey: string): integer;
@@ -179,16 +179,11 @@ end; //getProfilePath
 {$endif}
 
 {---------------------------------------}
-constructor TPrefController.Create(RegKey: string);
+constructor TPrefController.Create(FileName: string);
 begin
     inherited Create;
 
-    {$ifdef linux}
-    _pref_filename := '~/.exodus.xml';
-    {$else}
-    _pref_filename := getUserDir() + 'exodus.xml';
-    {$endif}
-
+    _pref_filename := FileName;
     _parser := TXMLTagParser.Create;
     _parser.ParseFile(_pref_filename);
 
