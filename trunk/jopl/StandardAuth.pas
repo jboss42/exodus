@@ -150,7 +150,9 @@ begin
     // callback from our registration request
     _auth_iq := nil;
     if ((xml = nil) or (xml.getAttribute('type') = 'error')) then begin
-        _session.Disconnect();
+        // NB: Don't call Disconnect from within a callback
+        // rely on the application to catch this event and post
+        // a message to disconnect
         _session.FireEvent('/session/regerror', xml);
     end
     else begin
