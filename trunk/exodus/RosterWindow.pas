@@ -201,6 +201,12 @@ resourcestring
     sUnblockContacts = 'Unblock %d contacts?';
     sBlockContacts = 'Block %d contacts?';
     sNoBroadcast = 'You must select more than one online contact to broadcast.';
+    sSignOn = 'Click to Sign On';
+    sCancelLogin = 'Click to Cancel...';
+    sDisconnected = 'Disconnected.';
+    sConnecting = 'Trying to connect...';
+    sAuthenticating = 'Connected. '#13#10 + 'Authenticating...';
+    sAuthenticated = 'Authenticated.'#13#10 + 'Getting Settings...';
 
 implementation
 uses
@@ -344,24 +350,27 @@ begin
         aniWait.Visible := false;
         pnlConnect.Visible := true;
         pnlConnect.Align := alClient;
-        lblStatus.Caption := 'Disconnected.';
+        lblStatus.Caption := sDisconnected;
+        lblLogin.Caption := sSignOn;
         end
     else if event = '/session/connecting' then begin
         pnlConnect.Visible := true;
         pnlConnect.Align := alClient;
         lblStatus.Visible := true;
-        lblStatus.Caption := 'Trying to connect...';
+        lblStatus.Caption := sConnecting;
+        lblLogin.Caption := sCancelLogin;
         Self.showAniStatus();
         end
     else if event = '/session/connected' then begin
-        lblStatus.Caption := 'Connected. '#13#10 + 'Authenticating...';
+        lblLogin.Caption := sCancelLogin;
+        lblStatus.Caption := sAuthenticating;
         Self.showAniStatus();
         ShowPresence('online');
         ResetPanels;
         end
     else if event = '/session/authenticated' then begin
-        lblStatus.Caption := 'Connected, Authenticated.'#13#10 +
-            'Fetching Roster and Preferences...';
+        lblLogin.Caption := sCancelLogin;
+        lblStatus.Caption := sAuthenticated;
         Self.showAniStatus();
         end
     else if event = '/roster/end' then begin
@@ -1889,7 +1898,13 @@ end;
 procedure TfrmRosterWindow.lblLoginClick(Sender: TObject);
 begin
     // Login to the client..
-    PostMessage(frmExodus.Handle, WM_SHOWLOGIN, 0, 0);
+    if (lblLogin.Caption = sCancelLogin) then begin
+        // Cancel the connection
+        MainSession.Disconnect();
+        end
+    else
+        // Normal, show the login window
+        PostMessage(frmExodus.Handle, WM_SHOWLOGIN, 0, 0);
 end;
 
 end.

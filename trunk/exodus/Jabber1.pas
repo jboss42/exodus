@@ -996,6 +996,7 @@ var
 begin
     // session events
     if event = '/session/connected' then begin
+        timReconnect.Enabled := false;
         _logoff := false;
         btnConnect.Down := true;
         Self.Caption := 'Exodus - ' + MainSession.Username + '@' + MainSession.Server;
