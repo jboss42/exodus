@@ -48,6 +48,7 @@ type
     procedure mnuChatClick(Sender: TObject);
     procedure mnuProfileClick(Sender: TObject);
     procedure lblJIDClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -62,12 +63,7 @@ var
 {---------------------------------------}
 implementation
 uses
-    ChatWin,
-    JabberID,
-    MsgRecv,
-    Session,
-    Profile,
-    Presence;
+    ChatWin, GnuGetText, JabberID, MsgRecv, Session, Profile, Presence;
 
 {$R *.DFM}
 
@@ -138,6 +134,11 @@ var
 begin
     GetCursorPos(cp);
     PopupMenu1.popup(cp.x, cp.y);
+end;
+
+procedure TfrmSubscribe.FormCreate(Sender: TObject);
+begin
+    TranslateProperties(Self);
 end;
 
 end.

@@ -30,6 +30,7 @@ type
     frameButtons1: TframeButtons;
     txtPassword: TTntEdit;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -41,7 +42,7 @@ function InputQueryW(const ACaption, APrompt: WideString; var Value: WideString;
 implementation
 
 uses
-    ExUtils;
+    ExUtils, GnuGetText;
 {$R *.dfm}
 
 function InputQueryW(const ACaption, APrompt: WideString; var Value: WideString; password:boolean = False): Boolean;
@@ -56,7 +57,7 @@ begin
     AssignDefaultFont(pf.Font);
     if (not password) then
         pf.txtPassword.PasswordChar := #0;
-        
+
     if (pf.ShowModal) = mrOK then begin
         Value := pf.txtPassword.Text;
         result := true;
@@ -68,6 +69,11 @@ procedure TfrmInputPass.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
     Action := caFree;
+end;
+
+procedure TfrmInputPass.FormCreate(Sender: TObject);
+begin
+    TranslateProperties(Self);
 end;
 
 end.

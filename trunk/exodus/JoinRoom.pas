@@ -40,6 +40,7 @@ type
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -57,10 +58,7 @@ resourcestring
 
 implementation
 uses
-    Jabber1, 
-    Agents,
-    Session,
-    Room;
+    GnuGetText, Jabber1, Agents, Session, Room;
 {$R *.DFM}
 
 procedure StartJoinRoom;
@@ -158,6 +156,11 @@ procedure TfrmJoinRoom.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
     Action := caFree;
+end;
+
+procedure TfrmJoinRoom.FormCreate(Sender: TObject);
+begin
+    TranslateProperties(Self);
 end;
 
 end.

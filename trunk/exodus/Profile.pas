@@ -139,7 +139,7 @@ implementation
 
 {$R *.DFM}
 uses
-    JabberConst, XMLVCard, ExUtils, 
+    JabberConst, XMLVCard, ExUtils, GnuGetText,  
     Presence, Roster, JabberID, Session, Jabber1;
 
 {---------------------------------------}
@@ -264,6 +264,8 @@ end;
 {---------------------------------------}
 procedure TfrmProfile.FormCreate(Sender: TObject);
 begin
+    TranslateProperties(Self);
+
     // make all the tabs invisible
     tabSheet1.TabVisible := false;
     tabSheet2.TabVisible := false;

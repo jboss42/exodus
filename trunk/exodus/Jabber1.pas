@@ -896,7 +896,10 @@ begin
         MainSession := TJabberSession.Create(config);
         auth := TStandardAuth.Create(MainSession);
 
-        // Get our locale...
+        // Get our over-riding locale..
+        // Normally, the GNUGetText stuff will try to find
+        // a subdir which matches our Win32 specified locale.
+        // This is used if someone wants to over-ride that.
         tmp_locale := MainSession.Prefs.getString('locale');
         if (tmp_locale <> '') then begin
             UseLanguage(tmp_locale);

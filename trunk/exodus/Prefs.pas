@@ -137,7 +137,7 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 
 uses
-    PrefController, Session;
+    GnuGetText, PrefController, Session;
 
 {---------------------------------------}
 procedure StartPrefs;
@@ -245,6 +245,8 @@ end;
 {---------------------------------------}
 procedure TfrmPrefs.FormCreate(Sender: TObject);
 begin
+    TranslateProperties(Self);
+    
     tbsKeywords.TabVisible := false;
     tbsBlockList.TabVisible := false;
     tbsNetwork.TabVisible := false;

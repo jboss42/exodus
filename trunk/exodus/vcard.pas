@@ -123,8 +123,7 @@ implementation
 
 {$R *.dfm}
 uses
-    Session, 
-    iq;
+    GnuGetText, IQ, Session;
 
 {---------------------------------------}
 procedure ShowMyProfile;
@@ -141,6 +140,8 @@ var
     tmps: Widestring;
     iq: TJabberIQ;
 begin
+    TranslateProperties(Self);
+
     // Hide all the tabs
     TabSheet1.TabVisible := false;
     TabSheet3.TabVisible := false;

@@ -16,6 +16,7 @@ object frmJoinRoom: TfrmJoinRoom
   OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -73,7 +74,6 @@ object frmJoinRoom: TfrmJoinRoom
     end
     inherited Panel1: TPanel
       Left = 81
-      Height = 29
       inherited btnOK: TButton
         OnClick = frameButtons1btnOKClick
       end

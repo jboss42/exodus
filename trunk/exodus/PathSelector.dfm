@@ -13,6 +13,7 @@ object frmPathSelector: TfrmPathSelector
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -35,7 +36,7 @@ object frmPathSelector: TfrmPathSelector
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 228
+    Top = 233
     Width = 281
     Height = 30
     Align = alBottom
@@ -46,13 +47,14 @@ object frmPathSelector: TfrmPathSelector
     end
     inherited Panel1: TPanel
       Left = 121
+      Height = 25
     end
   end
   object Folders: TShellTreeView
     Left = 0
     Top = 33
     Width = 281
-    Height = 195
+    Height = 200
     ObjectTypes = [otFolders]
     Root = 'rfDesktop'
     UseShellImages = True

@@ -51,7 +51,7 @@ implementation
 {$R *.dfm}
 
 uses
-    ShellAPI, XMLUtils, Session;
+    GnuGetText, ShellAPI, XMLUtils, Session;
 
 procedure TfrmAbout.frameButtons1btnCancelClick(Sender: TObject);
 begin
@@ -66,6 +66,7 @@ end;
 
 procedure TfrmAbout.FormCreate(Sender: TObject);
 begin
+    TranslateProperties(Self);
     pnlVersion.Caption := 'Version: ' + GetAppVersion();
     MainSession.Prefs.RestorePosition(Self);
 end;

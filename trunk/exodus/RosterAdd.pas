@@ -77,7 +77,7 @@ function ShowAddContact: TfrmAdd;
 implementation
 uses
     InputPassword, ExUtils, 
-    Jabber1, JabberID,  Presence, Session;
+    GnuGetText, Jabber1, JabberID,  Presence, Session;
 {$R *.DFM}
 
 {---------------------------------------}
@@ -159,6 +159,7 @@ end;
 {---------------------------------------}
 procedure TfrmAdd.FormCreate(Sender: TObject);
 begin
+    TranslateProperties(Self);
     cboGroup.Items.Assign(MainSession.Roster.GrpList);
     removeSpecialGroups(cboGroup.Items);
     cboGroup.Text := MainSession.Prefs.getString('roster_default');

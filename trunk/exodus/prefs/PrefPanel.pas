@@ -43,6 +43,9 @@ implementation
 
 {$R *.dfm}
 
+uses
+    GnuGetText;
+
 procedure TfrmPrefPanel.LoadPrefs();
 begin
     //
@@ -55,6 +58,7 @@ end;
 
 procedure TfrmPrefPanel.FormCreate(Sender: TObject);
 begin
+    TranslateProperties(Self);
     LoadPrefs();
 end;
 

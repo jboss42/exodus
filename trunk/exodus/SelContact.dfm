@@ -18,7 +18,7 @@ object frmSelContact: TfrmSelContact
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 254
+    Top = 259
     Width = 219
     Height = 33
     Align = alBottom
@@ -36,12 +36,12 @@ object frmSelContact: TfrmSelContact
     Left = 0
     Top = 0
     Width = 219
-    Height = 254
+    Height = 259
     Align = alClient
     TabOrder = 1
     inherited treeRoster: TTreeView
       Width = 219
-      Height = 254
+      Height = 259
       PopupMenu = PopupMenu1
       OnDblClick = frameTreeRoster1treeRosterDblClick
     end

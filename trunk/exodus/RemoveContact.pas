@@ -39,6 +39,7 @@ type
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure optRemoveClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     jid: Widestring;
@@ -58,9 +59,7 @@ procedure QuietRemoveRosterItem(sjid: Widestring);
 
 implementation
 uses
-    JabberConst, S10n, Roster, 
-    Session,
-    XMLTag;
+    GnuGetText, JabberConst, S10n, Roster, Session, XMLTag;
 {$R *.DFM}
 
 procedure RemoveRosterItem(sjid: Widestring; grp: Widestring);
@@ -160,6 +159,11 @@ procedure TfrmRemove.optRemoveClick(Sender: TObject);
 begin
     chkRemove1.Enabled := optRemove.Checked;
     chkRemove2.Enabled := optRemove.Checked;
+end;
+
+procedure TfrmRemove.FormCreate(Sender: TObject);
+begin
+    TranslateProperties(Self);
 end;
 
 end.

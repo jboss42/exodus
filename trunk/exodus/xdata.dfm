@@ -15,6 +15,7 @@ object frmXData: TfrmXData
   OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
+  OnCreate = FormCreate
   OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
@@ -37,7 +38,7 @@ object frmXData: TfrmXData
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 213
+    Top = 218
     Width = 310
     Height = 32
     Align = alBottom
@@ -67,7 +68,7 @@ object frmXData: TfrmXData
     Left = 0
     Top = 23
     Width = 310
-    Height = 190
+    Height = 195
     Align = alClient
     BevelEdges = []
     BevelInner = bvNone

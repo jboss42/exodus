@@ -51,11 +51,12 @@ implementation
 
 {$R *.dfm}
 uses
-    Session, Roster, ComCtrls;
+    GnuGetText, Session, Roster, ComCtrls;
 
 {---------------------------------------}
 procedure TfrmSelContact.FormCreate(Sender: TObject);
 begin
+    TranslateProperties(Self);
     frameTreeRoster1.Initialize();
     ShowOnlineOnly1.Checked := MainSession.Prefs.getBool('roster_only_online');
     frameTreeRoster1.DrawRoster(ShowOnlineOnly1.Checked);

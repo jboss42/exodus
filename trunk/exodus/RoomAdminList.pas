@@ -60,7 +60,7 @@ procedure ShowRoomAdminList(room_jid, role, affiliation: WideString;
 implementation
 
 uses
-    IQ, JabberConst, JabberID, Session, Room;
+    GnuGetText, IQ, JabberConst, JabberID, Session, Room;
 
 {$R *.dfm}
 
@@ -212,6 +212,7 @@ end;
 procedure TfrmRoomAdminList.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
+    TranslateProperties(Self);
     Action := caFree;
 end;
 

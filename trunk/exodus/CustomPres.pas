@@ -61,7 +61,7 @@ implementation
 {$R *.dfm}
 
 uses
-    Jabber1, Session, Presence;
+    GnuGetText, Jabber1, Session, Presence;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -82,6 +82,8 @@ procedure TfrmCustomPres.FormCreate(Sender: TObject);
 var
     i: integer;
 begin
+    TranslateProperties(Self);
+
     // Default to the current settings
     if (MainSession.Show = 'chat') then i := 0
     else if (MainSession.Show = 'away') then i := 2

@@ -15,6 +15,7 @@ object frmInputPass: TfrmInputPass
   OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
+  OnCreate = FormCreate
   DesignSize = (
     267
     96)

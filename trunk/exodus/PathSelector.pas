@@ -13,6 +13,7 @@ type
     frameButtons1: TframeButtons;
     Label1: TLabel;
     Folders: TShellTreeView;
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -25,8 +26,9 @@ var
 function browsePath(var SelectedPath: string): boolean;
 
 implementation
-
 {$R *.dfm}
+uses
+    GnuGetText;
 
 function browsePath(var SelectedPath: string): boolean;
 var
@@ -45,5 +47,10 @@ begin
     f.Free();
 end;
 
+
+procedure TfrmPathSelector.FormCreate(Sender: TObject);
+begin
+    TranslateProperties(Self);
+end;
 
 end.

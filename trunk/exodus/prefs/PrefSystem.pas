@@ -42,11 +42,16 @@ type
     chkStartMin: TCheckBox;
     Label7: TLabel;
     cboLocale: TComboBox;
+    lblPluginScan: TLabel;
     procedure btnUpdateCheckClick(Sender: TObject);
     procedure btnUpdateCheckMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure lblPluginScanClick(Sender: TObject);
   private
     { Private declarations }
+    _old_locale: Widestring;
+
+    procedure ScanLocales();
   public
     { Public declarations }
     procedure LoadPrefs(); override;
@@ -58,6 +63,8 @@ var
 
 resourcestring
     sNoUpdate = 'No new update available.';
+    sBadLocale = 'Your profile is set to use a language which is not available on your system.';
+    sNewLocale = 'You must exit exodus, and restart it before your new locale settings will take affect.';
 
 implementation
 {$WARN UNIT_PLATFORM OFF}
@@ -69,10 +76,45 @@ uses
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
 
+procedure TfrmPrefSystem.ScanLocales();
+var
+    langs: TStringlist;
+    mo, lm, lang, dir: Widestring;
+    sr: TSearchRec;
+begin
+    // scan .\locale\... for possible lang packs
+    dir := ExtractFilePath(Application.EXEName) + '\locale';
+    if (not DirectoryExists(dir)) then exit;
+
+    // look for subdirs in locale
+    langs := TStringlist.Create();
+    if (FindFirst(dir + '\*.*', faDirectory, sr) = 0) then begin
+        repeat
+            // check for a LM_MESSAGES dir, and default.mo inside of it
+            lang := dir + '\' + sr.Name;
+            lm := lang + '\LC_MESSAGES';
+            if (DirectoryExists(lm)) then begin
+                mo := lm + '\default.mo';
+                if (FileExists(mo)) then
+                    langs.add(sr.Name);
+            end;
+        until FindNext(sr) <> 0;
+        FindClose(sr);
+    end;
+
+    cboLocale.Items.Clear();
+    cboLocale.Items.Assign(langs);
+    cboLocale.Items.Insert(0, 'Default - English');
+
+end;
 
 procedure TfrmPrefSystem.LoadPrefs();
+var
+    i: integer;
+    tmps: Widestring;
 begin
     // System Prefs
+    ScanLocales();
     with MainSession.Prefs do begin
         chkAutoUpdate.Checked := getBool('auto_updates');
         chkAutoStart.Checked := getBool('auto_start');
@@ -84,14 +126,28 @@ begin
         chkToolbox.Checked := getBool('window_toolbox');
         chkCloseMin.Checked := getBool('close_min');
         chkSingleInstance.Checked := getBool('single_instance');
-        cboLocale.Text := getString('locale');
+
+        // locale info, we should always have at least "default-english"
+        // in the drop down box here.
+        tmps := getString('locale');
+        if (tmps <> '') then begin
+            i := cboLocale.Items.IndexOf(tmps);
+            if (i >= 0) then
+                cboLocale.ItemIndex := i
+            else
+                MessageDlg(sBadLocale, mtError, [mbOK], 0);
+        end
+        else
+            cboLocale.ItemIndex := 0;
+
+        _old_locale := cboLocale.Text;
     end;
 end;
 
 procedure TfrmPrefSystem.SavePrefs();
 var
     reg: TRegistry;
-    cmd: Widestring;
+    tmp, cmd: Widestring;
     i: integer;
 begin
     // System Prefs
@@ -105,7 +161,12 @@ begin
         setBool('autologin', chkAutoLogin.Checked);
         setBool('close_min', chkCloseMin.Checked);
         setBool('single_instance', chkSingleInstance.Checked);
-        setString('locale', cboLocale.Text);
+
+        tmp := cboLocale.Text;
+        if (tmp <> _old_locale) then
+            MessageDlg(sNewLocale, mtInformation, [mbOK], 0);
+
+        setString('locale', tmp);
 
         reg := TRegistry.Create();
         try
@@ -148,6 +209,12 @@ begin
     if (ssShift in Shift) or (ssCtrl in Shift) then begin
         MainSession.Prefs.setString('last_update', DateTimeToStr(Now()));
     end;
+end;
+
+procedure TfrmPrefSystem.lblPluginScanClick(Sender: TObject);
+begin
+  inherited;
+    ScanLocales();
 end;
 
 end.

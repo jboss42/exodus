@@ -40,6 +40,7 @@ type
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     new: boolean;
@@ -58,7 +59,7 @@ implementation
 {$R *.dfm}
 
 uses
-    JabberID, Session, RosterWindow;
+    GnuGetText, JabberID, Session, RosterWindow;
 
 function ShowBookmark(jid: string): TfrmBookmark;
 var
@@ -126,6 +127,11 @@ procedure TfrmBookmark.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
     Action := caFree;
+end;
+
+procedure TfrmBookmark.FormCreate(Sender: TObject);
+begin
+    TranslateProperties(Self);
 end;
 
 end.

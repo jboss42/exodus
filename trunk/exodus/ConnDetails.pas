@@ -117,7 +117,7 @@ implementation
 {$R *.dfm}
 
 uses
-    ExUtils, JabberID, Unicode, Session;
+    ExUtils, GnuGetText, JabberID, Unicode, Session;
 
 {---------------------------------------}
 function ShowConnDetails(p: TJabberProfile): integer;
@@ -337,6 +337,8 @@ var
     list : TWideStrings;
     i : integer;
 begin
+    TranslateProperties(Self);
+
     MainSession.Prefs.RestorePosition(Self);
 
     list := TWideStringList.Create();

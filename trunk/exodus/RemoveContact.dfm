@@ -17,6 +17,7 @@ object frmRemove: TfrmRemove
   OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Bevel1: TBevel
@@ -39,7 +40,6 @@ object frmRemove: TfrmRemove
     end
     inherited Panel1: TPanel
       Left = 168
-      Height = 29
       inherited btnOK: TButton
         OnClick = frameButtons1btnOKClick
       end
