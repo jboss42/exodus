@@ -126,6 +126,11 @@ begin
         RenderEvent(e);
     end
 
+    else if (event = '/session/gui/server-no-reg') then begin
+        MessageDlgW(_('This server does not support in-band registration.'),
+            mtError, [mbOK], 0);
+    end
+
     else if (event = '/session/gui/reg-not-supported') then begin
         MessageDlgW(_('Your authentication mechanism does not support registration.'),
             mtError, [mbOK], 0);

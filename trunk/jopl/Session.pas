@@ -568,7 +568,7 @@ begin
             _cur_server := tag.getAttribute('from');
             _dispatcher.DispatchSignal('/session/connected', nil);
 
-            if ((_register) or (_profile.NewAccount)) then begin
+            if (((_register) or (_profile.NewAccount)) and (_xmpp = false)) then begin
                 _xmpp := false;
                 CreateAccount()
             end
@@ -603,8 +603,21 @@ begin
                     end;
                 end;
 
-                // otherwise, start auth if we are not registering..
-                if ((not _register) and (not _profile.NewAccount)) then
+                // Otherwise, either try to register, or auth
+                if ((_register) or (_profile.NewAccount)) then begin
+
+                    if (_features.QueryXPTag('/stream:features/register[@xmlns="http://jabber.org/features/iq-register"]') = nil) then begin
+                        // this server doesn't support inband reg.
+                        FireEvent('/session/gui/no-inband-reg', nil);
+                        FireEvent('/session/regerror', nil);
+                        _profile.NewAccount := false;
+                        _register := false;
+                        exit;
+                    end;
+
+                    CreateAccount();
+                end
+                else
                     _auth_agent.StartAuthentication();
             end;
         end
