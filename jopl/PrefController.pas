@@ -224,6 +224,8 @@ end;
         procedure BeginUpdate();
         procedure EndUpdate();
 
+        function getXMLTag(name: Widestring): TXMLTag;
+
         property Profiles: TStringlist read _profiles write _profiles;
         property Filename: WideString read _pref_filename;
 end;
@@ -934,6 +936,13 @@ begin
         
     Self.Save();
 
+end;
+
+{---------------------------------------}
+function TPrefController.getXMLTag(name: Widestring): TXMLTag;
+begin
+    // find a specific tag in _pref_node and return
+    Result := _pref_node.GetFirstTag(name);
 end;
 
 {---------------------------------------}
