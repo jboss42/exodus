@@ -20,9 +20,36 @@ unit XMLUtils;
 }
 
 interface
-
 uses
-    XMLTag, Classes, SysUtils;
+    WStrList, XMLTag, Classes, SysUtils;
+
+type
+  // Unicode transformation formats (UTF) data types
+  UTF7 = Char;
+  UTF8 = Char;
+  UTF16 = WideChar;
+  UTF32 = Cardinal;
+
+  // UTF conversion schemes (UCS) data types
+  PUCS4 = ^UCS4;
+  UCS4 = Cardinal;
+  PUCS2 = PWideChar;
+  UCS2 = WideChar;
+
+const
+  ReplacementCharacter: UCS4 = $0000FFFD;
+  MaximumUCS2: UCS4 = $0000FFFF;
+  MaximumUTF16: UCS4 = $0010FFFF;
+  MaximumUCS4: UCS4 = $7FFFFFFF;
+
+  SurrogateHighStart: UCS4 = $D800;
+  SurrogateHighEnd: UCS4 = $DBFF;
+  SurrogateLowStart: UCS4 = $DC00;
+  SurrogateLowEnd: UCS4 = $DFFF;
+
+
+function UTF8ToWideString(S: AnsiString): WideString;
+function WideStringToUTF8(S: WideString): AnsiString;
 
 function XML_EscapeChars(txt: string): string;
 function XML_UnEscapeChars(txt: string): string;
@@ -42,7 +69,9 @@ function SafeInt(str: string): integer;
 function JabberToDateTime(datestr: string): TDateTime;
 function DateTimeToJabber(dt: TDateTime): string;
 
-procedure ClearStringListObjects(sl: TStringList);
+procedure ClearStringListObjects(sl: TStringList); overload;
+procedure ClearStringListObjects(sl: TWideStringList); overload;
+
 
 {---------------------------------------}
 {---------------------------------------}
@@ -267,7 +296,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure ClearStringListObjects(sl: TStringList);
+procedure ClearStringListObjects(sl: TStringList); overload;
 var
     i: integer;
     o: TObject;
@@ -279,6 +308,21 @@ begin
             o.Free();
         end;
 end;
+
+{---------------------------------------}
+procedure ClearStringListObjects(sl: TWideStringList); overload;
+var
+    i: integer;
+    o: TObject;
+begin
+    //
+    for i := 0 to sl.Count - 1 do begin
+        o := TObject(sl.Objects[i]);
+        if (o <> nil) then
+            o.Free();
+        end;
+end;
+
 
 {---------------------------------------}
 function JabberToDateTime(datestr: string): TDateTime;
@@ -316,6 +360,145 @@ begin
     Result := Result + FormatDateTime('hh:nn:ss', dt);
 end;
 
+
+//----------------- Conversion routines --------------------------------------------------------------------------------
+
+const
+  halfShift: Integer = 10;
+
+  halfBase: UCS4 = $0010000;
+  halfMask: UCS4 = $3FF;
+
+  offsetsFromUTF8: array[0..5] of UCS4 = ($00000000, $00003080, $000E2080, $03C82080, $FA082080, $82082080);
+
+  bytesFromUTF8: array[0..255] of Byte = (
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+	1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+	2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2, 3,3,3,3,3,3,3,3,4,4,4,4,5,5,5,5);
+
+  firstByteMark: array[0..6] of Byte = ($00, $00, $C0, $E0, $F0, $F8, $FC);
+
+//----------------------------------------------------------------------------------------------------------------------
+// From efg's Unicode Library..
+function WideStringToUTF8(S: WideString): AnsiString;
+var
+  ch: UCS4;
+  L, J, T,
+  bytesToWrite: Word;
+  byteMask: UCS4;
+  byteMark: UCS4;
+
+begin
+  if Length(S) = 0 then
+  begin
+    Result := '';
+    Exit;
+  end;
+
+  SetLength(Result, Length(S) * 6); // assume worst case
+  T := 1;
+  for J := 1 to Length(S) do
+  begin
+    byteMask := $BF;
+    byteMark := $80;
+
+    ch := UCS4(S[J]);
+
+    if ch < $80 then
+      bytesToWrite := 1
+    else
+    if ch < $800 then
+      bytesToWrite := 2
+    else
+    if ch < $10000 then
+      bytesToWrite := 3
+    else
+    if ch < $200000 then
+      bytesToWrite := 4
+    else
+    if ch < $4000000 then
+      bytesToWrite := 5
+    else
+    if ch <= MaximumUCS4 then
+      bytesToWrite := 6
+    else
+    begin
+      bytesToWrite := 2;
+      ch := ReplacementCharacter;
+    end;
+
+    for L := bytesToWrite downto 2 do
+    begin
+      Result[T + L - 1] := Char((ch or byteMark) and byteMask);
+      ch := ch shr 6;
+    end;
+    Result[T] := Char(ch or firstByteMark[bytesToWrite]);
+    Inc(T, bytesToWrite);
+  end;
+  SetLength(Result, T - 1); // assume worst case
+end;
+
+//----------------------------------------------------------------------------------------------------------------------
+
+function UTF8ToWideString(S: AnsiString): WideString;
+var
+  L, J, T: Cardinal;
+  ch: UCS4;
+  extraBytesToWrite: Word;
+
+begin
+  if Length(S) = 0 then
+  begin
+    Result := '';
+    Exit;
+  end;
+
+  SetLength(Result, Length(S)); // create enough room
+
+  L := 1;
+  T := 1;
+  while L <= Cardinal(Length(S)) do
+  begin
+    ch := 0;
+    extraBytesToWrite := bytesFromUTF8[Ord(S[L])];
+
+    for J := extraBytesToWrite downto 1 do
+    begin
+      ch := ch + Ord(S[L]);
+      Inc(L);
+      ch := ch shl 6;
+    end;
+    ch := ch + Ord(S[L]);
+    Inc(L);
+    ch := ch - offsetsFromUTF8[extraBytesToWrite];
+
+    if ch <= MaximumUCS2 then
+    begin
+      Result[T] := WideChar(ch);
+      Inc(T);
+    end
+    else
+    if ch > MaximumUCS4 then
+    begin
+      Result[T] := WideChar(ReplacementCharacter);
+      Inc(T);
+    end
+    else
+    begin
+      ch := ch - halfBase;
+      Result[T] := WideChar((ch shr halfShift) + SurrogateHighStart);
+      Inc(T);
+      Result[T] := WideChar((ch and halfMask) + SurrogateLowStart);
+      Inc(T);
+    end;
+  end;
+  SetLength(Result, T - 1); // now fix up length
+end;
 
 
 

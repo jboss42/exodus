@@ -27,19 +27,19 @@ uses
 type
   TXMLCData = class(TXMLNode)
   private
-    fData: string;
+    fData: WideString;
   protected
     { Protected declarations }
-    function Get_Text: string;
-    procedure Set_Text(const Value: string);
+    function Get_Text: WideString;
+    procedure Set_Text(const Value: WideString);
   public
     constructor Create; overload; override;
-    constructor Create(content: string); reintroduce; overload; 
+    constructor Create(content: WideString); reintroduce; overload; 
     destructor Destroy; override;
 
     // pgm_virt
-    function XML: string; override;
-    property Data: string read Get_Text write Set_Text;
+    function XML: WideString; override;
+    property Data: WideString read Get_Text write Set_Text;
   end;
 
   TXML_CData = TXMLCData;
@@ -65,7 +65,7 @@ begin
 end;
 
 {---------------------------------------}
-constructor TXMLCData.Create(content: string);
+constructor TXMLCData.Create(content: WideString);
 begin
     Create();
     Set_Text(content);
@@ -80,17 +80,17 @@ begin
 end;
 
 {---------------------------------------}
-function TXMLCData.Get_Text: string;
+function TXMLCData.Get_Text: WideString;
 begin
     //Result := XML_UnescapeChars(fData);
     Result := fData;
 end;
 
 {---------------------------------------}
-procedure TXMLCData.Set_Text(const Value: string);
+procedure TXMLCData.Set_Text(const Value: WideString);
 var
     p1: integer;
-    tmps: string;
+    tmps: WideString;
 begin
     // set text into the data prop..
     // deal w/ <![CDATA[   ---   ]]> here
@@ -113,11 +113,11 @@ begin
 end;
 
 {---------------------------------------}
-function TXMLCData.XML: string;
+function TXMLCData.XML: WideString;
 var
-    tmps: string;
+    tmps: WideString;
 begin
-    // Return the XML string
+    // Return the XML WideString
     // Build and return the element xml text..
     if Name = '#CDATA' then
         tmps := '<![CDATA[ ' + fData + ' ]]>'

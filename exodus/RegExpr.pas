@@ -437,7 +437,7 @@ interface
 {$DEFINE ComplexBraces} // define for beta-version of braces
 // (in stable version it works only for simple cases)
 
-{.$DEFINE UniCode} // define for Unicode support
+{$DEFINE UniCode} // define for Unicode support
 
 {$IFNDEF UniCode} // optionts applicable only for non-UniCode
  {$DEFINE UseSetOfChar} // Significant optimization by using set of char
@@ -3127,7 +3127,7 @@ function TRegExpr.MatchPrim (prog : PRegExprChar) : boolean;
                then EXIT;
          EOL: if reginput^ <> #0
                then EXIT;
-         BOLML: if reginput > fInputStart then begin
+         BOLML: if reginput> fInputStart then begin
             nextch := (reginput - 1)^;
             if (nextch <> fLinePairedSeparatorTail)
                or ((reginput - 1) <= fInputStart)

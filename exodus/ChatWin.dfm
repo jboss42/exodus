@@ -1,6 +1,6 @@
 inherited frmChat: TfrmChat
-  Left = 839
-  Top = 454
+  Left = 833
+  Top = 477
   Caption = 'Chat Window'
   OldCreateOrder = True
   OnClose = FormClose
@@ -8,9 +8,15 @@ inherited frmChat: TfrmChat
   OnEndDock = FormEndDock
   PixelsPerInch = 96
   TextHeight = 13
+  inherited Panel3: TPanel
+    inherited MsgList: TExRichEdit
+      PlainRTF = True
+    end
+  end
   inherited pnlInput: TPanel
-    inherited MsgOut: TMemo
+    inherited MsgOut: TExRichEdit
       OnChange = MsgOutChange
+      OnKeyPress = MsgOutKeyPress
     end
   end
   inherited Panel1: TPanel

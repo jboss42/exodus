@@ -1702,11 +1702,96 @@ object frmPrefs: TfrmPrefs
         Top = 72
         Width = 225
         Height = 89
+        AutoURLDetect = adNone
+        CustomURLs = <
+          item
+            Name = 'e-mail'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'http'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'file'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'mailto'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'ftp'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'https'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'gopher'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'nntp'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'prospero'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'telnet'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'news'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end
+          item
+            Name = 'wais'
+            Color = clWindowText
+            Cursor = crDefault
+            Underline = True
+          end>
+        LangOptions = [loAutoFont]
+        Language = 1033
         ReadOnly = True
         ScrollBars = ssBoth
+        ShowSelectionBar = False
         TabOrder = 5
+        URLColor = clBlue
+        URLCursor = crHandPoint
         WordWrap = False
         OnMouseUp = colorChatMouseUp
+        InputFormat = ifRTF
+        OutputFormat = ofRTF
+        SelectedInOut = False
+        PlainRTF = False
+        UndoLimit = 0
+        AllowInPlace = False
       end
     end
     object tbsSystem: TTabSheet

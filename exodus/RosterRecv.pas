@@ -24,8 +24,7 @@ interface
 uses
     Dockable, ExEvents,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit,
-    OLERichEdit;
+    buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2;
 
 type
   TfrmRosterRecv = class(TfrmDockable)

@@ -28,22 +28,22 @@ type
 
     TJabberMessage = class
     private
-        _toJID    : string;
-        _fromJID  : string;
-        _subject  : string;
-        _thread   : string;
-        _body     : string;
-        _msg_type : string;
-        _id       : string;
+        _toJID    : WideString;
+        _fromJID  : WideString;
+        _subject  : WideString;
+        _thread   : WideString;
+        _body     : WideString;
+        _msg_type : WideString;
+        _id       : WideString;
         _action   : boolean;
-        _nick     : string;
+        _nick     : WideString;
         _isme     : boolean;
         _time     : TDateTime;
 
-        procedure SetSubject(const Value: string);
-        procedure SetBody(const Value: string);
-        procedure SetThread(const Value: string);
-        procedure SetMsgType(const Value: string);
+        procedure SetSubject(const Value: WideString);
+        procedure SetBody(const Value: WideString);
+        procedure SetThread(const Value: WideString);
+        procedure SetMsgType(const Value: WideString);
 
         function GetTag: TXMLTag;
     protected
@@ -51,21 +51,21 @@ type
         // I use cBody to distinguish between the create's body varialbe and the classes.
         constructor Create; overload;
         constructor Create(mTag: TXMLTag); overload;
-        constructor Create(cToJID,cMsgType,cBody,cSubject : string); overload;
+        constructor Create(cToJID,cMsgType,cBody,cSubject : WideString); overload;
         destructor Destroy; override;
 
         property Tag: TXMLTag read GetTag;
 
-        property ToJID : string read _toJID write _toJID;
-        property FromJID: string read _fromJID write _fromJID;
+        property ToJID : WideString read _toJID write _toJID;
+        property FromJID: WideString read _fromJID write _fromJID;
 
-        property Subject : string read _subject write SetSubject;
-        property Thread : string read _thread write SetThread;
-        property Body : string read _body write SetBody;
-        property MsgType : string read _msg_type write SetMsgType;
-        property ID : string  read _id write _id;
+        property Subject : WideString read _subject write SetSubject;
+        property Thread : WideString read _thread write SetThread;
+        property Body : WideString read _body write SetBody;
+        property MsgType : WideString read _msg_type write SetMsgType;
+        property ID : WideString  read _id write _id;
         property Action: boolean read _action;
-        property Nick: string read _nick write _nick;
+        property Nick: WideString read _nick write _nick;
         property isMe: boolean read _isme write _isme;
         property Time: TDateTime read _time;
   end;
@@ -138,7 +138,7 @@ begin
 end;
 
 {---------------------------------------}
-constructor TJabberMessage.Create(cToJID, cMsgType, cBody, cSubject : string);
+constructor TJabberMessage.Create(cToJID, cMsgType, cBody, cSubject : WideString);
 begin
     //initialize variables for now
     Create();
@@ -162,7 +162,7 @@ end;
 {---------------------------------------}
 function TJabberMessage.GetTag: TXMLTag;
 var
-    raw_body: string;
+    raw_body: WideString;
 begin
     // build a tag based on this
     Result := TXMLTag.Create;
@@ -187,7 +187,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberMessage.SetBody(const Value: string);
+procedure TJabberMessage.SetBody(const Value: WideString);
 begin
     if _body <> Value then
         _body := Value;
@@ -203,7 +203,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberMessage.SetMsgType(const Value: string);
+procedure TJabberMessage.SetMsgType(const Value: WideString);
 begin
     if _msg_type <> Value then
         _msg_type := Value;
@@ -213,14 +213,14 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberMessage.SetSubject(const Value: string);
+procedure TJabberMessage.SetSubject(const Value: WideString);
 begin
     if _subject <> Value then
         _subject := Value;
 end;
 
 {---------------------------------------}
-procedure TJabberMessage.SetThread(const Value: string);
+procedure TJabberMessage.SetThread(const Value: WideString);
 begin
     if _thread <> Value then
         _thread := Value;

@@ -23,8 +23,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, jpeg, ExtCtrls, StdCtrls, buttonFrame, ComCtrls, OLERichEdit,
-  ExRichEdit;
+  Dialogs, jpeg, ExtCtrls, StdCtrls, buttonFrame, ComCtrls, ExRichEdit,
+  RichEdit2;
 
 type
   TfrmAbout = class(TForm)

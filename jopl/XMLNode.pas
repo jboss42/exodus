@@ -27,23 +27,23 @@ uses
 type
   TXMLNode = class
   private
-    fName: string;
+    fName: WideString;
     ftype: XMLNodeType;
 
-    function Get_Name: string;
+    function Get_Name: WideString;
     function Get_NodeType: XMLNodeType;
 
-    procedure Set_Name(const Value: string);
+    procedure Set_Name(const Value: WideString);
     procedure Set_NodeType(Value: XMLNodeType);
   protected
     { Protected declarations }
   public
     constructor Create; virtual;
 
-    property Name: string read Get_Name write Set_Name;
+    property Name: WideString read Get_Name write Set_Name;
     property NodeType: XMLNodeType read Get_NodeType write Set_NodeType;
     function IsTag: boolean;
-    function XML: string; virtual;
+    function XML: WideString; virtual;
   end;
 
 
@@ -65,13 +65,13 @@ begin
 end;
 
 {---------------------------------------}
-function TXMLNode.Get_Name: string;
+function TXMLNode.Get_Name: WideString;
 begin
     Result := fName;
 end;
 
 {---------------------------------------}
-procedure TXMLNode.Set_Name(const Value: string);
+procedure TXMLNode.Set_Name(const Value: WideString);
 begin
     fName := Value;
 end;
@@ -87,7 +87,7 @@ begin
 end;
 
 {---------------------------------------}
-function TXMLNode.XML: string;
+function TXMLNode.XML: WideString;
 begin
     // Abstract method, should be overridden in
     // descendant classes.

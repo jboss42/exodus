@@ -23,8 +23,8 @@ interface
 uses
     XMLTag, RegExpr,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, OLERichEdit, ExRichEdit,
-    ExtCtrls;
+    Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, ExRichEdit, ExtCtrls,
+    RichEdit2;
 
 type
   TRoomMember = class

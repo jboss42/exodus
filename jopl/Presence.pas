@@ -24,7 +24,7 @@ interface
 uses
     XMLTag,
     JabberID,
-    Signals, 
+    Signals,
     Contnrs, SysUtils, classes;
 
 type
@@ -54,7 +54,7 @@ type
         constructor Create; override;
         destructor Destroy; override;
 
-        function xml: string; override;
+        function xml: Widestring; override;
         function isSubscription: boolean;
         procedure parse(tag: TXMLTag);
     end;
@@ -134,7 +134,7 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberPres.xml: string;
+function TJabberPres.xml: Widestring;
 begin
     if toJID.jid <> '' then
         PutAttribute('to', toJID.full);

@@ -3,13 +3,13 @@ unit ExRichEdit;
 interface
 
 uses
-    OLERichEdit, RichEdit,
+    Graphics, RichEdit2, RichEdit,
     Windows, Messages, SysUtils, Classes, Controls, StdCtrls, ComCtrls;
 
 type
   TRichEditURLClick = procedure (Sender: TObject; url: string) of object;
 
-  TExRichEdit = class(TOLEEdit)
+  TExRichEdit = class(TRichEdit98)
   private
     { Private declarations }
     FOnURLClick: TRichEditURLClick;
@@ -20,6 +20,7 @@ type
     procedure CN_NOTIFY(var Msg: TWMNotify); message CN_NOTIFY;
   public
     { Public declarations }
+    procedure InsertBitmap(bmp: Graphics.TBitmap);
   published
     { Published declarations }
     property OnURLClick: TRichEditURLClick read FOnURLClick write FOnURLClick;
@@ -28,6 +29,7 @@ type
 const
     EN_LINK = $070b;
 
+function BitmapToRTF(pict: Graphics.TBitmap): string;
 procedure Register;
 
 implementation
@@ -95,9 +97,60 @@ begin
         end;
 end;
 
+{
+pgm 3/3/02 - Adding stuff to the rich edit control
+so that we can directly insert bitmaps
+}
+procedure TExRichEdit.InsertBitmap(bmp: Graphics.TBitmap);
+var
+    s : TStringStream;
+begin
+    // Insert a bitmap into the control
+    s := TStringStream.Create(BitmapToRTF(bmp));
+    RTFSelText := s.DataString;
+    s.Free;
+end;
+
+
 procedure Register;
 begin
   RegisterComponents('Win32', [TExRichEdit]);
 end;
+
+function BitmapToRTF(pict: Graphics.TBitmap): string;
+var
+    bi,bb,rtf: string;
+    bis,bbs: Cardinal;
+    achar: ShortString;
+    hexpict: string;
+    I: Integer;
+begin
+    GetDIBSizes(pict.Handle,bis,bbs);
+    SetLength(bi,bis);
+    SetLength(bb,bbs);
+    GetDIB(pict.Handle,pict.Palette,PChar(bi)^,PChar(bb)^);
+    rtf := '{\rtf1 {\pict\dibitmap ';
+    SetLength(hexpict,(Length(bb) + Length(bi)) * 2);
+    i := 2;
+    for bis := 1 to Length(bi) do begin
+        achar := Format('%x',[Integer(bi[bis])]);
+        if Length(achar) = 1 then
+            achar := '0' + achar;
+        hexpict[i-1] := achar[1];
+        hexpict[i] := achar[2];
+        inc(i,2);
+        end;
+    for bbs := 1 to Length(bb) do begin
+        achar := Format('%x',[Integer(bb[bbs])]);
+        if Length(achar) = 1 then
+            achar := '0' + achar;
+        hexpict[i-1] := achar[1];
+        hexpict[i] := achar[2];
+        inc(i,2);
+        end;
+    rtf := rtf + hexpict + ' }}';
+    Result := rtf;
+end;
+
 
 end.

@@ -23,8 +23,7 @@ interface
 uses
     Chat, ChatController, JabberID, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, OLERichEdit,
-    ExRichEdit;
+    Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2;
 
 type
   TfrmChat = class(TfrmBaseChat)
@@ -440,14 +439,14 @@ var
     mtag: TXMLTag;
 begin
     // Send the actual message out
-    if (Trim(MsgOut.Text) = '') then exit;
+    if (Trim(MsgOut.WideText) = '') then exit;
 
     if _thread = '' then begin   //get thread from message
         _thread := GetThread;
         end;
 
     // send the msg
-    msg := TJabberMessage.Create(jid, 'chat', MsgOut.Text, '');
+    msg := TJabberMessage.Create(jid, 'chat', Trim(MsgOut.WideText), '');
     msg.thread := _thread;
     msg.nick := MainSession.Username;
     msg.isMe := true;
@@ -805,8 +804,8 @@ begin
   inherited;
     // save the conversation as RTF
     if SaveDialog1.Execute then begin
-        MsgList.PlainText := false;
-        MsgList.Lines.SaveToFile(SaveDialog1.Filename);
+        MsgList.PlainRTF := false;
+        MsgList.WideLines.SaveToFile(SaveDialog1.Filename);
         end;
 end;
 

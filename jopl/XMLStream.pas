@@ -85,7 +85,7 @@ type
         destructor Destroy(); override;
 
         procedure Connect(profile : TJabberProfile); virtual; abstract;
-        procedure Send(xml: string); virtual; abstract; // Make sure the imp. does ANSI -> UTF8
+        procedure Send(xml: Widestring); virtual; abstract; // Make sure the imp. does ANSI -> UTF8
         procedure SendTag(tag: TXMLTag);
         procedure Disconnect; virtual; abstract;
 

@@ -26,7 +26,7 @@ uses
     Dialogs, IdTCPConnection, IdTCPClient, IdHTTP, IdBaseComponent,
     IdComponent, IdTCPServer, IdHTTPServer, ComCtrls, StdCtrls, buttonFrame,
     ExRichEdit, ExtCtrls, IdThreadMgr, IdThreadMgrPool, IdAntiFreezeBase,
-  IdAntiFreeze, IdThreadMgrDefault, OLERichEdit;
+    IdAntiFreeze, IdThreadMgrDefault, RichEdit2;
 
 const
     WM_XFER = WM_USER + 5000;
