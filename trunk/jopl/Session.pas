@@ -42,6 +42,7 @@ type
         _profile: TJabberProfile;
         _features: TList;
         _xmpp: boolean;
+        _cur_server: Widestring;
 
         // Dispatcher
         _dispatcher: TSignalDispatcher;
@@ -331,6 +332,8 @@ function TJabberSession.GetServer(): WideString;
 begin
     if (_profile = nil) then
         result := ''
+    else if (_cur_server <> '') then
+        result := _cur_server
     else
         result := _profile.Server;
 end;
@@ -460,6 +463,7 @@ begin
     // Clear the roster, ppdb and fire the callbacks
     _first_pres := false;
     _authd := false;
+    _cur_server := '';
     _dispatcher.DispatchSignal('/session/disconnected', nil);
 
     if (_paused) then
@@ -511,7 +515,8 @@ begin
         // process XML
         // always fire debug
         if (tag.Name = 'stream:stream') then begin
-            // we got dropped
+
+            // we got connected
             _stream_id := tag.getAttribute('id');
             _xmpp := (tag.GetAttribute('version') = '1.0');
             if (_xmpp) then begin
@@ -527,6 +532,9 @@ begin
                     end;
                 end;
             end;
+
+            // Stash away our current server.
+            _cur_server := tag.getAttribute('from');
 
             // todo: check for XMPP 1.0 stuff..
 
