@@ -143,6 +143,8 @@ type
     _disconTime: TDateTime;     // Date/Time that we last got disconnected, local TZ
     _default_config: boolean;   // auto-accept the default room configuration.
     _subject: WideString;
+    _send_unavailable: boolean;
+    _custom_pres: boolean;
 
     // Stuff for nick completions
     _nick_prefix: Widestring;
@@ -153,6 +155,10 @@ type
     _notify: array[0..2] of integer;
 
     function  checkCommand(txt: Widestring): boolean;
+    function _countPossibleNicks(tmps: Widestring): integer;
+    function _selectNick(wsl: TWidestringlist): Widestring;
+    
+    procedure _sendPresence(ptype, msg: Widestring);
 
     procedure SetJID(sjid: Widestring);
     procedure SetPassword(pass: WideString);
@@ -559,13 +565,83 @@ begin
 end;
 
 {---------------------------------------}
+function TfrmRoom._countPossibleNicks(tmps: Widestring): integer;
+var
+    m: TRoomMember;
+    r, i: integer;
+begin
+    r := 0;
+    for i := 0 to _rlist.Count - 1 do begin
+        m := TRoomMember(_rlist[i]);
+        if (Pos(tmps, m.Nick) = 0) then inc(r);
+    end;
+    Result := r;
+end;
+
+{---------------------------------------}
+function TfrmRoom._selectNick(wsl: TWidestringlist): Widestring;
+var
+    nick, tmps, last: Widestring;
+    r: integer;
+begin
+    // icky, since nicks can have spaces... just look until we find one.
+    nick := '';
+    tmps := '';
+    last := '';
+    repeat
+        if (tmps <> '') then tmps := tmps + ' ';
+        tmps := tmps + wsl[0];
+        wsl.Delete(0);
+        r := _countPossibleNicks(tmps);
+        if (r = 1) then
+            // we have just a single match
+            nick := tmps
+        else if (r > 1) then
+            // we have more than one possible
+            last := tmps
+        else if (last <> '') and (r = 0) then
+            // the last one matched many, but this one matches none...
+            // just use the last
+            nick := tmps;
+    until (nick <> '') or (wsl.Count = 0);
+
+    Result := nick;
+end;
+
+{---------------------------------------}
+procedure TfrmRoom._sendPresence(ptype, msg: Widestring);
+var
+    p: TJabberPres;
+begin
+    p := TCapPresence.Create();
+    p.toJID := TJabberID.Create(jid + '/' + mynick);
+
+    if (ptype = 'unavailable') then
+        p.PresType := ptype
+    else
+        p.Show := ptype;
+
+    p.Status := msg;
+
+    MainSession.SendTag(p);
+
+    if (ptype = 'unavailable') then begin
+        _send_unavailable := false;
+        Self.Close();
+    end;
+end;
+
+{---------------------------------------}
 function TfrmRoom.checkCommand(txt: Widestring): boolean;
 var
-    cmd: Widestring;
+    tmps, nick, cmd: Widestring;
     rest: Widestring;
     wsl: TWideStringList;
     m: TJabberMessage;
-    c: integer;
+    i, c: integer;
+    j: TJabberID;
+    s: TXMLTag;
+    chat_win: TfrmChat;
 begin
     // check for various / commands
     result := false;
@@ -596,10 +672,27 @@ begin
     end
     else if (cmd = '/help') then begin
         m := TJabberMessage.Create(self.jid, 'groupchat',
-        '/ commands: '#13#10'/clear'#13#10'/config'#13#10 +
-        '/subject <subject>'#13#10'/invite <jid>'#13#10 +
-        '/block <nick>'#13#10'/kick <nick>'#13#10 +
-        '/ban <nick>'#13#10'/nick <nick>'#13#10'/voice <nick>', '');
+        '/ commands: '#13#10 +
+        '/clear'#13#10 +
+        '/config'#13#10 +
+        '/subject <subject>'#13#10 +
+        '/invite <jid>'#13#10 +
+        '/block <nick>'#13#10 +
+        '/ignore <nick>'#13#10 +
+        '/kick <nick>'#13#10 +
+        '/ban <nick>'#13#10 +
+        '/nick <nick>'#13#10 +
+        '/chat <nick>'#13#10 +
+        '/query <nick>'#13#10 +
+        '/msg <nick>'#13#10 +
+        '/join <room@server/nick>'#13#10 +
+        '/leave <msg>'#13#10 +
+        '/part <msg>'#13#10 +
+        '/partall <msg>'#13#10 +
+        '/voice <nick>'#13#10 +
+        '/away <msg>'#13#10 +
+        '/xa <msg>'#13#10 +
+        '/dnd <msg>'#13#10, '');
         DisplayMsg(m, MsgList);
         m.Destroy();
         Result := true;
@@ -608,6 +701,35 @@ begin
         // change nickname
         if (rest = '') then exit;
         changeNick(rest);
+        Result := true;
+    end
+    else if ((cmd = '/chat') or (cmd = '/query')) then begin
+        // chat with this user
+        nick := _selectNick(wsl);
+        if (nick = '') then exit;
+        chat_win := StartChat(self.jid, nick, true, nick);
+        if (chat_win.TabSheet <> nil) then
+            frmExodus.Tabs.ActivePage := chat_win.TabSheet
+        else
+            chat_win.Show();
+        Result := true;
+    end
+    else if (cmd = '/msg') then begin
+        // send a msg to this person:
+        // /msg foo this is the actual msg to send.
+        nick := _selectNick(wsl);
+        if ((nick = '') or (wsl.Count = 0)) then exit;
+
+        tmps := '';
+        for i := 0 to wsl.count - 1 do
+            tmps := tmps + wsl[i] + ' ';
+
+        nick := self.jid + '/' + nick;
+        m := TJabberMessage.Create(nick, 'normal', tmps,
+            _('Groupchat private message'));
+        // XXX: do we want to do plugin stuff for priv msgs?
+        MainSession.SendTag(m.Tag);
+        m.Free();
         Result := true;
     end
     else if (cmd = '/subject') then begin
@@ -634,9 +756,67 @@ begin
         popVoiceClick(nil);
         Result := true;
     end
-    else if (cmd = '/block') then begin
+    else if ((cmd = '/block') or (cmd = '/ignore')) then begin
         selectNicks(wsl);
         popRosterBlockClick(nil);
+        Result := true;
+    end
+    else if ((cmd = '/part') or (cmd = '/leave')) then begin
+        tmps := '';
+        for i := 0 to wsl.count - 1 do
+            tmps := tmps + wsl[i] + ' ';
+        _sendPresence('unavailable', tmps);
+        Result := true;
+    end
+    else if (cmd = '/join') then begin
+        // join a new room
+        tmps := wsl[0];
+        j := TJabberID.Create(tmps);
+        if (j.resource = '') then
+            nick := mynick
+        else
+            nick := j.Resource;
+
+        // If they specified no room, show the GUI, otherwise, just join
+        if (j.user = '') then
+            StartJoinRoom(j, nick, '')
+        else
+            StartRoom(j.jid, j.resource);
+        j.Free();
+        Result := true;
+    end
+    else if (cmd = '/partall') then begin
+        // close all rooms??
+        tmps := '';
+        for i := 0 to wsl.count - 1 do
+            tmps := tmps + wsl[i] + ' ';
+        s := TXMLTag.Create('partall');
+        s.AddCData(tmps);
+        MainSession.FireEvent('/session/close-rooms', s);
+        s.Free();
+        Result := true;
+    end
+    else if ((cmd = '/away') or (cmd = '/xa') or (cmd = '/dnd')) then begin
+        tmps := '';
+        for i := 0 to wsl.count - 1 do
+            tmps := tmps + wsl[i] + ' ';
+
+        tmps := Trim(tmps);
+        if (tmps = '') then begin
+            // we are no longer custom away
+            _custom_pres := false;
+            _sendPresence(MainSession.Show, MainSession.Status);
+        end
+        else begin
+            // set a custom away msg
+            _custom_pres := true;
+            if (cmd = '/away') then
+                _sendPresence('away', tmps)
+            else if (cmd = '/xa') then
+                _sendPresence('xa', tmps)
+            else if (cmd = '/dnd') then
+                _sendPresence('dnd', tmps);
+        end;
         Result := true;
     end;
 
@@ -648,7 +828,7 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.SessionCallback(event: string; tag: TXMLTag);
 var
-    p: TJabberPres;
+    tmps: Widestring;
 begin
     // session callback...look for our own presence changes
     if (event = '/session/disconnected') then begin
@@ -675,6 +855,7 @@ begin
     else if (event = '/session/presence') then begin
         // We changed our own presence, send it to the room
         if (MainSession.Invisible) then exit;
+        if (_custom_pres) then exit;
 
         // previously disconnected
         if (_mcallback = -1) then begin
@@ -683,12 +864,13 @@ begin
             SetJID(Self.jid);             // re-register callbacks
             sendStartPresence();
         end else begin
-            p := TCapPresence.Create();
-            p.toJID := TJabberID.Create(Self.jid + '/' + Self.myNick);
-            p.Show := MainSession.Show;
-            p.Status := MainSession.Status;
-            MainSession.SendTag(p);
+            _sendPresence(MainSession.Show, MainSession.Status);
         end;
+    end
+    else if (event = '/session/close-rooms') then begin
+        // close this room.
+        if (tag <> nil) then tmps := tag.Data() else tmps := '';
+        _sendPresence('unavailable', tmps);
     end;
 end;
 
@@ -826,7 +1008,8 @@ begin
     else begin
         // SOME KIND OF AVAIL
         tmp_jid := TJabberID.Create(from);
-        if i < 0 then begin
+
+        if (i < 0) then begin
             // this is a new member
             member := AddRoomUser(from, tmp_jid.resource);
 
@@ -884,6 +1067,7 @@ begin
 
         if (member.Nick = myNick) then begin
             // check to see what my role is
+            _send_unavailable := true;
 
             // These are owner-only things..
             popConfigure.Enabled := (member.Affil = MUC_OWNER);
@@ -1090,15 +1274,16 @@ begin
     _hint_text := '';
     _old_nick := '';
     _disconTime := 0;
-
     _keywords := nil;
+    _send_unavailable := false;
+    _custom_pres := false;
 
     _notify[0] := MainSession.Prefs.getInt('notify_roomactivity');
     _notify[1] := MainSession.Prefs.getInt('notify_keyword');
 
     lblSubject.Caption := '';
     _subject := '';
-    
+
     if (_notify[1] <> 0) then
         setupKeywords();
 
@@ -1809,7 +1994,6 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.FormDestroy(Sender: TObject);
 var
-    p: TJabberPres;
     i: integer;
 begin
     // Unregister callbacks and send unavail pres.
@@ -1823,11 +2007,8 @@ begin
             MainSession.removeAvailJid(jid);
     end;
 
-    if ((MainSession <> nil) and (MainSession.Active)) then begin
-        p := TJabberPres.Create();
-        p.toJID := TJabberID.Create(jid + '/' + mynick);
-        p.PresType := 'unavailable';
-        MainSession.SendTag(p);
+    if ((MainSession <> nil) and (MainSession.Active) and (_send_unavailable)) then begin
+        _sendPresence('unavailable', '');
     end;
 
     _keywords.Free;
