@@ -24,7 +24,7 @@ interface
 uses
     PrefController,
     JabberAuth, Agents, Chat, MsgList, Presence, Roster,
-    Signals, XMLStream, XMLTag, Unicode, 
+    Signals, XMLStream, XMLTag, Unicode,
     Contnrs, Classes, SysUtils, JabberID;
 
 type
@@ -497,7 +497,7 @@ begin
         tmps := '<stream:stream to="' + Trim(Server) +
             '" xmlns="jabber:client" ' +
             'xmlns:stream="http://etherx.jabber.org/streams" ' +
-            'version="1.0" ' + 
+            'version="1.0" ' +
             '>';
         _stream.Send(tmps);
     end
@@ -544,7 +544,7 @@ begin
                 CreateAccount()
             else
                 _auth_agent.StartAuthentication();
-                
+
             //tag.Free();
         end
         else if (tag.Name = 'stream:error') then begin
@@ -731,8 +731,6 @@ begin
         if (priority = -1) then priority := 0;
         p.Priority := priority;
 
-
-
         // allow plugins to add stuff, by trapping this event
         MainSession.FireEvent('/session/before_presence', p);
 
@@ -857,7 +855,7 @@ begin
         r2 := nil;
         if (r1 = nil) then
             r2 := Roster.Find(jid.full);
-        Result := ((r1 = nil) and (r2 = nil)); 
+        Result := ((r1 = nil) and (r2 = nil));
     end;
 end;
 
