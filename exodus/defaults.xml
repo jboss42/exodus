@@ -1,6 +1,7 @@
 <brand>
 	<aa_reduce_pri>1</aa_reduce_pri>
     <auto_away>1</auto_away>
+    <auto_xa>1</auto_xa>
     <auto_update_url>http://exodus.jabberstudio.org/exodus-released.exe</auto_update_url>
     <auto_updates>1</auto_updates>
     <autologin>0</autologin>
