@@ -45,6 +45,7 @@ type
         _port: integer;
         _priority: integer;
         _AuthType: TJabberAuthType;
+        _invisible: boolean;
 
         // Dispatcher
         _dispatcher: TSignalDispatcher;
@@ -120,6 +121,7 @@ type
         property Dispatcher: TSignalDispatcher read _dispatcher;
         property MyAgents: TAgents read getMyAgents;
         property IsPaused: boolean read _paused;
+        property Invisible: boolean read _invisible write _invisible;
     end;
 
 const
@@ -136,6 +138,7 @@ const
     XMLNS_PRIVATE   = 'jabber:iq:private';
     XMLNS_BM        = 'storage:bookmarks';
     XMLNS_PREFS     = 'storage:imprefs';
+    XMLNS_MSGEVENTS = 'jabber:x:event';
 
 
 var
@@ -225,7 +228,8 @@ end;
 procedure TJabberSession.CreateAccount;
 begin
     _register := true;
-    Connect();
+    // Connect();
+    SendRegistration();
 end;
 
 {---------------------------------------}
@@ -242,9 +246,11 @@ end;
 procedure TJabberSession.Disconnect;
 begin
     // Save the server side prefs and kill our connection.
-    Prefs.SaveServerPrefs();
-    _stream.Send('<presence type="unavailable"/>');
-    _stream.Disconnect;
+    if (_stream.Active) then begin
+        Prefs.SaveServerPrefs();
+        _stream.Send('<presence type="unavailable"/>');
+        _stream.Disconnect;
+        end;
     _register := false;
 end;
 
@@ -504,7 +510,6 @@ var
 begin
     // auth get result or error
     if ((xml = nil) or (xml.getAttribute('type') = 'error')) then begin
-        Disconnect();
         _dispatcher.DispatchSignal('/session/noaccount', xml);
         exit;
         end;

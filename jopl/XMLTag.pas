@@ -717,7 +717,8 @@ begin
     for i := 0 to tl.Count - 1 do begin
         t := tl.Tags[i];
         add := false;
-        if (t.Name = cm.tag_name) then begin
+
+        if ((cm.tag_name = '*') or (t.Name = cm.tag_name)) then begin
             add := true;
             for a := 0 to cm.AttrCount - 1 do begin
                 ca := cm.getAttribute(a);

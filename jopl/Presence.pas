@@ -277,6 +277,13 @@ begin
             s.FireEvent('/session/register', t);
             t.Free;
             end
+        else if ((MainSession.Invisible) and
+        (curp.error_code = '400') and
+        (tag.GetAttribute('from') = '') ) then begin
+            // could be some kind of invisible packet bouncing..
+            MainSession.Invisible := false;
+            MainSession.setPresence('', 'Available', MainSession.Priority);
+            end
         else
             s.FireEvent('/presence/error', tag, curp);
         end

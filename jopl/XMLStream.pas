@@ -244,7 +244,7 @@ begin
     else begin
         // Read in the current buffer, yadda.
         if not _Socket.Connected then begin
-            doMessage(WM_COMMERROR);
+            doMessage(WM_DISCONNECTED);
             Self.Terminate;
             end
         else begin
@@ -572,7 +572,6 @@ begin
 end;
 
 {---------------------------------------}
-// procedure TXMLStream.WndProc(var msg: TMessage);
 procedure TXMLStream.MsgHandler(var msg: TJabberMsg);
 var
     tmps: string;
@@ -594,12 +593,6 @@ begin
 
         WM_DISCONNECTED: begin
             // Socket is disconnected
-            {
-            if ((_thread <> nil) and (not _thread.Stopped)) then
-                _thread.TerminateAndWaitFor
-            else if (_thread.Stopped) then
-                _thread.Terminate();
-            }
             if (_thread <> nil) then
                 _thread.Terminate();
             _timer.Enabled := false;
