@@ -172,6 +172,7 @@ procedure CloseAllChats;
 
 implementation
 uses
+    CapPresence, 
     CustomNotify, COMChatController, Debug, ExEvents,
     JabberConst, ExSession, JabberUtils, ExUtils,  Presence, PrefController, Room,
     XferManager, RosterAdd, RiserWindow, Notify,
@@ -444,6 +445,8 @@ var
     p: TJabberPres;
     m, i: integer;
     a: TAvatar;
+    do_pres: boolean;
+    dp: TCapPresence;
 begin
     jid := cjid;
     if (_jid <> nil) then _jid.Free();
@@ -488,6 +491,9 @@ begin
     ritem := MainSession.Roster.Find(_jid.jid);
     p := MainSession.ppdb.FindPres(_jid.jid, _jid.resource);
 
+    // whether or not to send directed presence to this person
+    do_pres := true;
+
     if ritem <> nil then begin
         lblNick.Caption := ' ' + ritem.Nickname + ' ';
         Caption := ritem.Nickname + ' - ' + _(sChat);
@@ -497,26 +503,36 @@ begin
             ChangePresImage('offline', 'offline')
         else
             ChangePresImage(p.show, p.status);
+        if ((ritem.Subscription = 'to') or (ritem.Subscription = 'both')) then
+            do_pres := false;
     end
 
     else begin
         lblNick.Caption := ' ';
         lblJID.Caption := cjid;
         MsgList.setTitle(cjid);
-        
+
         if OtherNick <> '' then
             Caption := OtherNick + ' - ' + _(sChat)
         else if (_jid.user <> '') then
             Caption := _jid.user + ' - ' + _(sChat)
         else
             Caption := _jid.full + ' - ' + _(sChat);
-            
+
         if (p = nil) then
             ChangePresImage('unknown', 'Unknown Presence')
         else
             ChangePresImage(p.show, p.status);
     end;
 
+    if (do_pres) then begin
+        dp := TCapPresence.Create();
+        dp.Status := MainSession.Status;
+        dp.Show := MainSession.Show;
+        dp.Priority := MainSession.Priority;
+        dp.setAttribute('to', _jid.full);
+        MainSession.SendTag(dp);
+    end;
 
     // synchronize the session chat list with this JID
     i := MainSession.ChatList.indexOfObject(chat_object);
