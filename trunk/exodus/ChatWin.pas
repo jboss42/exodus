@@ -28,9 +28,6 @@ uses
 
 type
   TfrmChat = class(TfrmBaseChat)
-    lblJID: TStaticText;
-    lblNick: TStaticText;
-    imgStatus: TPaintBox;
     popContact: TPopupMenu;
     mnuHistory: TMenuItem;
     mnuProfile: TMenuItem;
@@ -48,6 +45,10 @@ type
     mnuLastActivity: TMenuItem;
     mnuOnTop: TMenuItem;
     btnClose: TSpeedButton;
+    pnlJID: TPanel;
+    lblJID: TStaticText;
+    lblNick: TStaticText;
+    imgStatus: TPaintBox;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -821,11 +822,13 @@ begin
         Self.FormStyle := fsNormal;
 end;
 
+{---------------------------------------}
 procedure TfrmChat.FormResize(Sender: TObject);
 begin
   inherited;
     // make the close btn be right justified..
     btnClose.Left := Panel1.Width - btnClose.Width - 2;
+    pnlJID.Width := Panel1.Width - btnClose.Width - 5;
 end;
 
 procedure TfrmChat.btnCloseClick(Sender: TObject);

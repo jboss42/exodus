@@ -25,7 +25,8 @@ uses
     Dockable, 
     ExEvents,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2;
+    buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2,
+  Buttons;
 
 type
   TfrmMsgRecv = class(TfrmDockable)
@@ -44,6 +45,7 @@ type
     Label1: TLabel;
     txtSendSubject: TMemo;
     MsgOut: TExRichEdit;
+    btnClose: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -54,6 +56,8 @@ type
     procedure txtMsgURLClick(Sender: TObject; url: String);
     procedure MsgOutKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure btnCloseClick(Sender: TObject);
+    procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
   private
     { Private declarations }
   public
@@ -124,6 +128,8 @@ begin
                 frameButtons1.btnOK.Visible := (eType = evt_Message);
 
             ShowDefault;
+            btnClose.Visible := Docked;
+            FormResize(nil);
             end;
         end;
     end;
@@ -150,6 +156,8 @@ begin
             end;
 
         ShowDefault;
+        btnClose.Visible := Docked;
+        FormResize(nil);
         end;
 end;
 
@@ -167,6 +175,8 @@ begin
 
         txtFrom.Caption := jid;
         ShowDefault;
+        btnClose.Visible := Docked;
+        FormResize(nil);
         end;
 end;
 
@@ -193,12 +203,15 @@ begin
     pnlReply.Align := alClient;
     ActiveControl := MsgOut;
     StaticText1.Caption := sTo;
+    btnClose.Visible := Docked;
 end;
 
 {---------------------------------------}
 procedure TfrmMsgRecv.FormResize(Sender: TObject);
 begin
     // Resize some of the form element
+    btnClose.Left := Self.ClientWidth - btnClose.Width - 2;
+    txtFrom.Width := pnlFrom.Width - btnClose.Width - StaticText1.Width - 5;
     txtMsg.Repaint();
 end;
 
@@ -279,6 +292,20 @@ begin
   inherited;
     if ((Key = 13) and (Shift = [ssCtrl])) then
         frameButtons2btnOKClick(self);
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.btnCloseClick(Sender: TObject);
+begin
+  inherited;
+    Self.Close;
+end;
+
+
+procedure TfrmMsgRecv.FormEndDock(Sender, Target: TObject; X, Y: Integer);
+begin
+  inherited;
+    btnClose.Visible := Docked;
 end;
 
 end.

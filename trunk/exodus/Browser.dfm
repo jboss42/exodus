@@ -1,8 +1,8 @@
 object frmBrowse: TfrmBrowse
-  Left = 121
-  Top = 206
-  Width = 685
-  Height = 455
+  Left = 232
+  Top = 286
+  Width = 427
+  Height = 428
   Caption = 'Jabber Browser'
   Color = clBtnFace
   DragKind = dkDock
@@ -21,9 +21,9 @@ object frmBrowse: TfrmBrowse
   TextHeight = 13
   object Panel3: TPanel
     Left = 0
-    Top = 47
-    Width = 677
-    Height = 354
+    Top = 46
+    Width = 419
+    Height = 328
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 3
@@ -32,14 +32,14 @@ object frmBrowse: TfrmBrowse
       Left = 199
       Top = 3
       Width = 3
-      Height = 348
+      Height = 322
       Cursor = crHSplit
     end
     object vwBrowse: TListView
       Left = 202
       Top = 3
-      Width = 472
-      Height = 348
+      Width = 214
+      Height = 322
       Align = alClient
       Columns = <
         item
@@ -71,7 +71,7 @@ object frmBrowse: TfrmBrowse
       Left = 3
       Top = 3
       Width = 196
-      Height = 348
+      Height = 322
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 4
@@ -907,12 +907,12 @@ object frmBrowse: TfrmBrowse
         Left = 4
         Top = 173
         Width = 184
-        Height = 167
+        Height = 141
         Align = alClient
         TabOrder = 0
         inherited List1: TListBox
           Width = 184
-          Height = 150
+          Height = 124
           BorderStyle = bsNone
         end
         inherited lblCaption: TStaticText
@@ -1001,8 +1001,8 @@ object frmBrowse: TfrmBrowse
   end
   object StatBar: TStatusBar
     Left = 0
-    Top = 401
-    Width = 677
+    Top = 374
+    Width = 419
     Height = 20
     Panels = <
       item
@@ -1018,162 +1018,188 @@ object frmBrowse: TfrmBrowse
       end>
     SimplePanel = False
   end
-  object CoolBar1: TCoolBar
+  object pnlTop: TPanel
     Left = 0
     Top = 0
-    Width = 677
-    Height = 47
-    AutoSize = True
-    Bands = <
-      item
-        Control = tlbToolBar
-        ImageIndex = -1
-        MinHeight = 22
-        Width = 677
-      end
-      item
-        Control = tlbJID
-        ImageIndex = -1
-        MinHeight = 23
-        Width = 677
-      end>
-    EdgeBorders = [ebBottom]
-    EdgeInner = esNone
-    EdgeOuter = esNone
-    object tlbToolBar: TToolBar
-      Left = 9
-      Top = 0
-      Width = 664
-      Height = 22
-      AutoSize = True
-      DisabledImages = DisToolbar
-      EdgeBorders = []
-      EdgeInner = esNone
-      EdgeOuter = esNone
+    Width = 419
+    Height = 46
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 2
+    object btnClose: TSpeedButton
+      Left = 394
+      Top = 2
+      Width = 23
+      Height = 20
+      Caption = 'X'
       Flat = True
-      Images = Toolbar
-      TabOrder = 0
-      object btnBack: TToolButton
-        Left = 0
-        Top = 0
-        Hint = 'Previous JID'
-        AutoSize = True
-        Caption = 'Back'
-        DropdownMenu = popHistory
-        ImageIndex = 2
-        Style = tbsDropDown
-        OnClick = btnBackClick
-      end
-      object btnFwd: TToolButton
-        Left = 36
-        Top = 0
-        Hint = 'Next JID'
-        Caption = 'btnFwd'
-        ImageIndex = 3
-        OnClick = btnFwdClick
-      end
-      object ToolButton2: TToolButton
-        Left = 59
-        Top = 0
-        Width = 20
-        Caption = 'ToolButton2'
-        ImageIndex = 3
-        Style = tbsSeparator
-      end
-      object btnHome: TToolButton
-        Left = 79
-        Top = 0
-        Hint = 'Home'
-        Caption = 'btnHome'
-        ImageIndex = 1
-        OnClick = btnHomeClick
-      end
-      object ToolButton1: TToolButton
-        Left = 102
-        Top = 0
-        Hint = 'Change Views'
-        Caption = 'ToolButton1'
-        DropdownMenu = popViewStyle
-        ImageIndex = 0
-        Style = tbsDropDown
-      end
-      object btnBookmark: TToolButton
-        Left = 138
-        Top = 0
-        Hint = 'Add a Bookmark'
-        Caption = 'btnBookmark'
-        ImageIndex = 4
-        OnClick = mBookmarkClick
-      end
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+      OnClick = btnCloseClick
     end
-    object tlbJID: TToolBar
-      Left = 9
-      Top = 24
-      Width = 664
-      Height = 23
-      AutoSize = True
-      ButtonHeight = 21
-      EdgeBorders = []
+    object CoolBar1: TCoolBar
+      Left = 0
+      Top = 0
+      Width = 392
+      Height = 46
+      Align = alLeft
+      Bands = <
+        item
+          Control = tlbToolBar
+          HorizontalOnly = True
+          ImageIndex = -1
+          MinHeight = 22
+          Width = 392
+        end
+        item
+          Control = tlbJID
+          HorizontalOnly = True
+          ImageIndex = -1
+          MinHeight = 22
+          Width = 392
+        end>
+      EdgeBorders = [ebBottom]
       EdgeInner = esNone
       EdgeOuter = esNone
-      TabOrder = 1
-      OnResize = ResizeAddressBar
-      DesignSize = (
-        664
-        23)
-      object pnlJID: TPanel
-        Left = 0
-        Top = 2
-        Width = 88
-        Height = 21
-        Align = alLeft
-        BevelOuter = bvNone
-        Caption = 'Jabber Address:   '
-        TabOrder = 1
-      end
-      object cboJID: TComboBox
-        Left = 88
-        Top = 2
-        Width = 500
-        Height = 21
-        Anchors = [akLeft, akTop, akBottom]
-        ItemHeight = 13
+      object tlbToolBar: TToolBar
+        Left = 9
+        Top = 0
+        Width = 379
+        Height = 22
+        AutoSize = True
+        DisabledImages = DisToolbar
+        EdgeBorders = []
+        EdgeInner = esNone
+        EdgeOuter = esNone
+        Flat = True
+        Images = Toolbar
         TabOrder = 0
-        OnKeyPress = cboJIDKeyPress
-      end
-      object pnlButtons: TPanel
-        Left = 588
-        Top = 2
-        Width = 52
-        Height = 21
-        BevelOuter = bvNone
-        TabOrder = 2
-        object btnGo: TSpeedButton
-          Left = 6
+        object btnBack: TToolButton
+          Left = 0
           Top = 0
-          Width = 23
-          Height = 21
-          Caption = 'GO'
-          Flat = True
-          OnClick = btnGoClick
+          Hint = 'Previous JID'
+          AutoSize = True
+          Caption = 'Back'
+          DropdownMenu = popHistory
+          ImageIndex = 2
+          Style = tbsDropDown
+          OnClick = btnBackClick
         end
-        object btnRefresh: TSpeedButton
-          Left = 29
+        object btnFwd: TToolButton
+          Left = 38
           Top = 0
-          Width = 23
+          Hint = 'Next JID'
+          Caption = 'btnFwd'
+          ImageIndex = 3
+          OnClick = btnFwdClick
+        end
+        object ToolButton2: TToolButton
+          Left = 61
+          Top = 0
+          Width = 20
+          Caption = 'ToolButton2'
+          ImageIndex = 3
+          Style = tbsSeparator
+        end
+        object btnHome: TToolButton
+          Left = 81
+          Top = 0
+          Hint = 'Home'
+          Caption = 'btnHome'
+          ImageIndex = 1
+          OnClick = btnHomeClick
+        end
+        object ToolButton1: TToolButton
+          Left = 104
+          Top = 0
+          Hint = 'Change Views'
+          Caption = 'ToolButton1'
+          DropdownMenu = popViewStyle
+          ImageIndex = 0
+          Style = tbsDropDown
+        end
+        object btnBookmark: TToolButton
+          Left = 142
+          Top = 0
+          Hint = 'Add a Bookmark'
+          Caption = 'btnBookmark'
+          ImageIndex = 4
+          OnClick = mBookmarkClick
+        end
+      end
+      object tlbJID: TToolBar
+        Left = 9
+        Top = 24
+        Width = 379
+        Height = 22
+        ButtonHeight = 21
+        EdgeBorders = []
+        EdgeInner = esNone
+        EdgeOuter = esNone
+        Flat = True
+        TabOrder = 1
+        OnResize = ResizeAddressBar
+        DesignSize = (
+          379
+          22)
+        object pnlJID: TPanel
+          Left = 0
+          Top = 0
+          Width = 88
           Height = 21
-          Hint = 'Re-Browse this object'
-          Flat = True
-          Glyph.Data = {
-            F6000000424DF600000000000000760000002800000010000000100000000100
-            04000000000080000000120B0000120B00001000000010000000000000000000
-            8000008000000080800080000000800080008080000080808000C0C0C0000000
-            FF00C0C0C00000FFFF00FF000000C0C0C000FFFF0000FFFFFF00DADADADADADA
-            DADAADAD7444447DADADDAD444444444DADAAD444DADAD444DADD744DADADAD4
-            47DAA44DADA22DA744ADD44ADA2222DA44DAA44DAD2222AD44ADD44ADAD22ADA
-            DADAA447ADADADAD44ADD744DA4ADADADADAAD444D44ADA47DADDAD444444ADA
-            DADAADAD74444DADADADDADADA44DADADADAADADAD4DADADADAD}
-          OnClick = btnRefreshClick
+          Align = alLeft
+          BevelOuter = bvNone
+          Caption = 'Jabber Address:   '
+          TabOrder = 1
+        end
+        object cboJID: TComboBox
+          Left = 88
+          Top = 0
+          Width = 225
+          Height = 21
+          Anchors = [akLeft, akTop, akBottom]
+          ItemHeight = 13
+          TabOrder = 0
+          OnKeyPress = cboJIDKeyPress
+        end
+        object pnlButtons: TPanel
+          Left = 313
+          Top = 0
+          Width = 52
+          Height = 21
+          BevelOuter = bvNone
+          TabOrder = 2
+          object btnGo: TSpeedButton
+            Left = 6
+            Top = 0
+            Width = 23
+            Height = 21
+            Caption = 'GO'
+            Flat = True
+            OnClick = btnGoClick
+          end
+          object btnRefresh: TSpeedButton
+            Left = 29
+            Top = 0
+            Width = 23
+            Height = 21
+            Hint = 'Re-Browse this object'
+            Flat = True
+            Glyph.Data = {
+              F6000000424DF600000000000000760000002800000010000000100000000100
+              04000000000080000000120B0000120B00001000000010000000000000000000
+              8000008000000080800080000000800080008080000080808000C0C0C0000000
+              FF00C0C0C00000FFFF00FF000000C0C0C000FFFF0000FFFFFF00DADADADADADA
+              DADAADAD7444447DADADDAD444444444DADAAD444DADAD444DADD744DADADAD4
+              47DAA44DADA22DA744ADD44ADA2222DA44DAA44DAD2222AD44ADD44ADAD22ADA
+              DADAA447ADADADAD44ADD744DA4ADADADADAAD444D44ADA47DADDAD444444ADA
+              DADAADAD74444DADADADDADADA44DADADADAADADAD4DADADADAD}
+            OnClick = btnRefreshClick
+          end
         end
       end
     end

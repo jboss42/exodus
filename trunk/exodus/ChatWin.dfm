@@ -1,6 +1,6 @@
 inherited frmChat: TfrmChat
-  Left = 231
-  Top = 313
+  Left = 254
+  Top = 233
   Caption = 'Chat Window'
   OldCreateOrder = True
   OnClose = FormClose
@@ -9,7 +9,10 @@ inherited frmChat: TfrmChat
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel3: TPanel
+    Top = 24
+    Height = 226
     inherited MsgList: TExRichEdit
+      Height = 218
       PlainRTF = True
     end
   end
@@ -19,17 +22,7 @@ inherited frmChat: TfrmChat
     end
   end
   inherited Panel1: TPanel
-    object imgStatus: TPaintBox
-      Tag = 1
-      Left = 2
-      Top = 2
-      Width = 20
-      Height = 18
-      Align = alLeft
-      ParentShowHint = False
-      ShowHint = True
-      OnPaint = imgStatusPaint
-    end
+    Height = 24
     object btnClose: TSpeedButton
       Left = 354
       Top = 2
@@ -45,42 +38,62 @@ inherited frmChat: TfrmChat
       ParentFont = False
       OnClick = btnCloseClick
     end
-    object lblJID: TStaticText
-      Left = 50
+    object pnlJID: TPanel
+      Left = 2
       Top = 2
-      Width = 38
-      Height = 18
-      Cursor = crHandPoint
+      Width = 351
+      Height = 20
       Align = alLeft
-      Caption = '<JID>'
-      Color = clBtnFace
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlue
-      Font.Height = -13
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsUnderline]
-      ParentColor = False
-      ParentFont = False
+      BevelOuter = bvNone
       TabOrder = 0
-      OnClick = lblJIDClick
-    end
-    object lblNick: TStaticText
-      Left = 22
-      Top = 2
-      Width = 28
-      Height = 18
-      Cursor = crHandPoint
-      Align = alLeft
-      Caption = 'Foo'
-      Color = clBtnFace
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlack
-      Font.Height = -13
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
-      TabOrder = 1
+      object imgStatus: TPaintBox
+        Tag = 1
+        Left = 0
+        Top = 0
+        Width = 20
+        Height = 20
+        Align = alLeft
+        ParentShowHint = False
+        ShowHint = True
+        OnPaint = imgStatusPaint
+      end
+      object lblJID: TStaticText
+        Left = 48
+        Top = 0
+        Width = 38
+        Height = 20
+        Cursor = crHandPoint
+        Align = alLeft
+        Caption = '<JID>'
+        Color = clBtnFace
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlue
+        Font.Height = -13
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsUnderline]
+        ParentColor = False
+        ParentFont = False
+        TabOrder = 0
+        OnClick = lblJIDClick
+      end
+      object lblNick: TStaticText
+        Left = 20
+        Top = 0
+        Width = 28
+        Height = 20
+        Cursor = crHandPoint
+        Align = alLeft
+        Caption = 'Foo'
+        Color = clBtnFace
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'MS Sans Serif'
+        Font.Style = []
+        ParentColor = False
+        ParentFont = False
+        TabOrder = 1
+      end
     end
   end
   object popContact: TPopupMenu

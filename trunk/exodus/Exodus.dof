@@ -51,7 +51,7 @@ Conditionals=.\output
 DebugSourceDirs=D:\Dev\Delphi6\Source\Indy\;D:\src\exodus\components\
 UsePackages=0
 [Parameters]
-RunParams=-c mike-owens.xml
+RunParams=-c poll.xml
 HostApplication=
 Launcher=
 UseLauncher=0

@@ -1,6 +1,6 @@
 object frmMsgRecv: TfrmMsgRecv
-  Left = 274
-  Top = 180
+  Left = 246
+  Top = 179
   Width = 333
   Height = 416
   Caption = 'Message'
@@ -13,6 +13,7 @@ object frmMsgRecv: TfrmMsgRecv
   OldCreateOrder = False
   OnClose = FormClose
   OnCreate = FormCreate
+  OnEndDock = FormEndDock
   OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
@@ -39,10 +40,13 @@ object frmMsgRecv: TfrmMsgRecv
       Left = 165
       Height = 29
       inherited btnOK: TButton
+        Left = 82
+        Top = 1
         Caption = 'Reply'
         OnClick = frameButtons1btnOKClick
       end
       inherited btnCancel: TButton
+        Top = -152
         Caption = 'Close'
         OnClick = frameButtons1btnCancelClick
       end
@@ -57,6 +61,21 @@ object frmMsgRecv: TfrmMsgRecv
     BevelOuter = bvNone
     BorderWidth = 2
     TabOrder = 1
+    object btnClose: TSpeedButton
+      Left = 302
+      Top = 2
+      Width = 23
+      Height = 20
+      Caption = 'X'
+      Flat = True
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+      OnClick = btnCloseClick
+    end
     object StaticText1: TStaticText
       Left = 2
       Top = 2
@@ -77,9 +96,9 @@ object frmMsgRecv: TfrmMsgRecv
     object txtFrom: TStaticText
       Left = 53
       Top = 2
-      Width = 270
+      Width = 244
       Height = 18
-      Align = alClient
+      Align = alLeft
       Caption = '<JID>'
       Color = clBtnFace
       Font.Charset = DEFAULT_CHARSET
@@ -160,12 +179,14 @@ object frmMsgRecv: TfrmMsgRecv
       inherited Panel1: TPanel
         Left = 159
         Height = 29
-        inherited btnOK: TButton
+        inherited btnCancel: TButton [0]
+          Visible = False
+          OnClick = frameButtons2btnCancelClick
+        end
+        inherited btnOK: TButton [1]
+          Left = 84
           Caption = '&Send'
           OnClick = frameButtons2btnOKClick
-        end
-        inherited btnCancel: TButton
-          OnClick = frameButtons2btnCancelClick
         end
       end
     end
