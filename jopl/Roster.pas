@@ -30,8 +30,8 @@ uses
 type
     TJabberRosterItem = class
     private
-        _nickname: string;
-        function getNick(): string;
+        _nickname: WideString;
+        function getNick(): Widestring;
         procedure fillTag(tag: TXMLTag);
     public
         jid: TJabberID;
@@ -50,8 +50,8 @@ type
         procedure remove;
         procedure update;
 
-        property RawNickname: string read _nickname write _nickname;
-        property Nickname: string read getNick write _nickname;
+        property RawNickname: Widestring read _nickname write _nickname;
+        property Nickname: Widestring read getNick write _nickname;
     end;
 
     TJabberBookmark = class
@@ -300,7 +300,7 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberRosterItem.getNick(): string;
+function TJabberRosterItem.getNick(): Widestring;
 begin
     // either return the nickname, or the <user> part of the jid
     if (Trim(_nickname)) <> '' then

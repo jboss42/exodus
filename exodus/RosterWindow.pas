@@ -233,7 +233,7 @@ resourcestring
 
 implementation
 uses
-    JabberConst, Chat, ChatController, InputPassword, 
+    JabberConst, Chat, ChatController, InputPassword,
     SelContact, Invite, Bookmark, S10n, Transfer, MsgRecv, PrefController,
     ExEvents, ExUtils, Room, Profile, JabberID, RiserWindow, ShellAPI,
     IQ, RosterAdd, GrpRemove, RemoveContact, ChatWin, Jabber1,
@@ -1718,7 +1718,7 @@ procedure TfrmRosterWindow.treeRosterCustomDrawItem(
   var DefaultDraw: Boolean);
 var
     tw: integer;
-    c1, c2: string;
+    c1, c2: WideString;
     xRect: TRect;
     nRect: TRect;
     p: TJabberPres;
@@ -1735,72 +1735,73 @@ begin
         node_bm: DefaultDraw := true;
         node_transport: DefaultDraw := true;
         node_ritem: begin
-            // draw a roster item
-            if (_show_status) then begin
-
-                // determine the caption
-                if (_cur_ritem.RawNickname <> '') then
-                    c1 := _cur_ritem.Nickname
-                else
-                    c1 := _cur_ritem.jid.Full;
-
-                if (_cur_ritem.ask = 'subscribe') then
-                    c1 := c1 + sRosterPending;
-
-                p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
-                if (p <> nil) then begin
-                    if (p.Status <> '') then
-                        c2 := '(' + p.Status + ')';
-                    end;
-
-                with treeRoster.Canvas do begin
-                    TextFlags := ETO_OPAQUE;
-                    tw := TextWidth(c1);
-                    xRect := Node.DisplayRect(true);
-                    xRect.Right := xRect.Left + tw + 8 + TextWidth(c2);
-                    nRect := xRect;
-                    nRect.Left := nRect.Left - (2*treeRoster.Indent);
-
-                    if (cdsSelected in State) then begin
-                        Font.Color := clHighlightText;
-                        Brush.Color := clHighlight;
-                        FillRect(xRect);
-                        end
-                    else begin
-                        Font.Color := clWindowText;
-                        Brush.Color := treeRoster.Color;
-                        Brush.Style := bsSolid;
-                        FillRect(xRect);
-                        end;
-
-                    // draw the image
-                    frmExodus.ImageList2.Draw(treeRoster.Canvas, nRect.Left + treeRoster.Indent,
-                        nRect.Top, Node.ImageIndex);
-
-                    // draw the text
-                    if (cdsSelected in State) then begin
-                        main_color := clHighlightText;
-                        stat_color := main_color;
-                        end
-                    else begin
-                        main_color := treeRoster.Font.Color;
-                        stat_color := _status_color;
-                    end;
-
-                    SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(main_color));
-                    TextOut(xRect.Left + 1, xRect.Top + 1, c1);
-                    SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(stat_color));
-                    TextOut(xRect.Left + tw + 5, xRect.Top + 1, c2);
-
-                    if (cdsSelected in State) then
-                        // Draw the focus box.
-                        treeRoster.Canvas.DrawFocusRect(xRect);
-                    end;
-
-                DefaultDraw := false;
-                end
+            // always custom draw roster items to get unicode goodness
+            // determine the captions (c1 is nick, c2 is status)
+            c2 := '';
+            if (_cur_ritem.RawNickname <> '') then
+                c1 := _cur_ritem.Nickname
             else
-                DefaultDraw := true;
+                c1 := _cur_ritem.jid.Full;
+
+            if (_cur_ritem.ask = 'subscribe') then
+                c1 := c1 + sRosterPending;
+
+            p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
+            if ((p <> nil) and (_show_status)) then begin
+                if (p.Status <> '') then
+                    c2 := '(' + p.Status + ')';
+                end;
+
+            with treeRoster.Canvas do begin
+                TextFlags := ETO_OPAQUE;
+                tw := CanvasTextWidthW(treeRoster.Canvas, c1);
+                xRect := Node.DisplayRect(true);
+                xRect.Right := xRect.Left + tw + 2 +
+                    CanvasTextWidthW(treeRoster.Canvas, c2);
+                nRect := xRect;
+                nRect.Left := nRect.Left - (2 * treeRoster.Indent);
+
+                if (cdsSelected in State) then begin
+                    Font.Color := clHighlightText;
+                    Brush.Color := clHighlight;
+                    FillRect(xRect);
+                    end
+                else begin
+                    Font.Color := clWindowText;
+                    Brush.Color := treeRoster.Color;
+                    Brush.Style := bsSolid;
+                    FillRect(xRect);
+                    end;
+
+                // draw the image
+                frmExodus.ImageList2.Draw(treeRoster.Canvas, nRect.Left + treeRoster.Indent,
+                    nRect.Top, Node.ImageIndex);
+
+                // draw the text
+                if (cdsSelected in State) then begin
+                    main_color := clHighlightText;
+                    stat_color := main_color;
+                    end
+                else begin
+                    main_color := treeRoster.Font.Color;
+                    stat_color := _status_color;
+                end;
+
+                SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(main_color));
+                CanvasTextOutW(treeRoster.Canvas, xRect.Left + 1,
+                    xRect.Top + 1, c1);
+                if (c2 <> '') then begin
+                    SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(stat_color));
+                    CanvasTextOutW(treeRoster.Canvas, xRect.Left + tw + 5,
+                        xRect.Top + 1, c2);
+                    end;
+
+                if (cdsSelected in State) then
+                    // Draw the focus box.
+                    treeRoster.Canvas.DrawFocusRect(xRect);
+                end;
+
+            DefaultDraw := false;
             end;
         end;
 
@@ -2026,10 +2027,24 @@ procedure TfrmRosterWindow.treeRosterEditing(Sender: TObject;
   Node: TTreeNode; var AllowEdit: Boolean);
 var
     ntype: integer;
+    nick: Widestring;
 begin
     // user is trying to change a node caption
     ntype := getNodeType(Node);
-    AllowEdit := not (ntype = node_grp);
+    if (ntype = node_ritem) then begin
+        // Do this since the treeview doesn't use WideStrings for
+        // processing of Editing events
+        AllowEdit := false;
+        nick := _cur_ritem.Nickname;
+        if (InputQueryW('Rename Roster Item', 'New Nickname: ', nick)) then begin
+            _cur_ritem.Nickname := nick;
+            _cur_ritem.update();
+            end;
+        end
+    else if (ntype = node_bm) then
+        AllowEdit := true
+    else
+        AllowEdit := false;
 end;
 
 {---------------------------------------}
@@ -2038,11 +2053,7 @@ procedure TfrmRosterWindow.treeRosterEdited(Sender: TObject;
 begin
     // user is done editing a node
     getNodeType(Node);
-    if (_cur_ritem <> nil) then begin
-        _cur_ritem.Nickname := S;
-        _cur_ritem.update();
-        end
-    else if (_cur_bm <> nil) then begin
+    if (_cur_bm <> nil) then begin
         _cur_bm.bmName := S;
         MainSession.Roster.UpdateBookmark(_cur_bm);
         end;

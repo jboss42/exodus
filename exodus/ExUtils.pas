@@ -81,6 +81,9 @@ function getInputText(Input: TExRichEdit): Widestring;
 
 function trimNewLines(value: WideString): WideString;
 
+procedure CanvasTextOutW(Canvas: TCanvas; X, Y: Integer; const Text: WideString);
+function CanvasTextWidthW(Canvas: TCanvas; const Text: WideString): integer;
+
 var
     _GetLastInputInfo: Pointer;
 
@@ -685,6 +688,30 @@ begin
             Result := Result + Chr(13);
         Result := Result + TrimRight(Input.WideLines[i]);
         end;
+end;
+
+{---------------------------------------}
+procedure CanvasTextOutW(Canvas: TCanvas; X, Y: Integer; const Text: WideString);
+begin
+    // Use ExtTextOutW:
+    // function ExtTextOutW(DC: HDC; X, Y: Integer; Options: Longint;
+    //   Rect: PRect; Str: PWideChar; Count: Longint; Dx: PInteger): BOOL; stdcall;
+    if (Canvas.CanvasOrientation = coRightToLeft) then
+        Inc(X, CanvasTextWidthW(Canvas, Text) + 1);
+    Windows.ExtTextOutW(Canvas.Handle, X, Y, Canvas.TextFlags, nil,
+        PWideChar(Text), Length(Text), nil);
+    Canvas.MoveTo(X + CanvasTextWidthW(Canvas, Text), Y);
+end;
+
+{---------------------------------------}
+function CanvasTextWidthW(Canvas: TCanvas; const Text: WideString): integer;
+var
+    s: TSize;
+begin
+  s.cX := 0;
+  s.cY := 0;
+  Windows.GetTextExtentPoint32W(Canvas.Handle, PWideChar(Text), Length(Text), s);
+  Result := s.cx;
 end;
 
 {---------------------------------------}

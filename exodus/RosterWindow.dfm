@@ -1,6 +1,6 @@
 object frmRosterWindow: TfrmRosterWindow
-  Left = 241
-  Top = 240
+  Left = 401
+  Top = 243
   Width = 195
   Height = 446
   AlphaBlendValue = 220
