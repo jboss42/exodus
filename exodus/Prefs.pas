@@ -267,8 +267,6 @@ begin
         lblPlugins.Visible := getBool('brand_plugs');
     end;
 
-    TabSelect(lblSystem);
-
     // Init all the other panels
     _roster := nil;
     _groups := nil;
@@ -302,7 +300,10 @@ begin
         Width := Shape1.Width;
         Visible := false;
     end;
+
+    TabSelect(lblSystem);
     _cur_label := lblSystem;
+
 end;
 
 {---------------------------------------}
@@ -320,7 +321,7 @@ procedure TfrmPrefs.TabSelect(Sender: TObject);
                     // left, top, width, height
                     Shape1.SetBounds(1, c.Top - imgSystem.Height - 2,
                         Scroller.ClientWidth - 2,
-                        c.Height + imgSystem.Height);
+                        c.Height + imgSystem.Height - 1);
                     TTntLabel(c).Font.Color := clMenuText;
                     _cur_label := TTntLabel(c);
                 end
