@@ -16,7 +16,9 @@ uses
   XMLConstants in '..\..\..\jopl\XMLConstants.pas',
   XMLNode in '..\..\..\jopl\XMLNode.pas',
   XMLParser in '..\..\..\jopl\XMLParser.pas',
-  XMLTag in '..\..\..\jopl\XMLTag.pas';
+  XMLTag in '..\..\..\jopl\XMLTag.pas',
+  JabberUtils in '..\..\..\jopl\JabberUtils.pas',
+  Prefs in 'Prefs.pas' {frmPrefs};
 
 exports
   DllGetClassObject,

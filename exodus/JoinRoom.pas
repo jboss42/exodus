@@ -100,7 +100,7 @@ procedure StartJoinRoom(room_jid: TJabberID; nick, password: WideString); overlo
 implementation
 {$R *.DFM}
 uses
-    Entity, EntityCache, ExUtils, GnuGetText, Jabber1, Session, Room;
+    Entity, EntityCache, JabberUtils, ExUtils,  GnuGetText, Jabber1, Session, Room;
 
 const
     sInvalidNick = 'You must enter a nickname';

@@ -62,7 +62,7 @@ procedure QuietRemoveRosterItem(sjid: Widestring);
 {---------------------------------------}
 implementation
 uses
-    GnuGetText, ExUtils, JabberConst, S10n, NodeItem, Roster, Session, XMLTag;
+    GnuGetText, JabberUtils, ExUtils,  JabberConst, S10n, NodeItem, Roster, Session, XMLTag;
 {$R *.DFM}
 
 {---------------------------------------}

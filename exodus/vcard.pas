@@ -120,7 +120,7 @@ implementation
 
 {$R *.dfm}
 uses
-    ExUtils, GnuGetText, IQ, Session;
+    JabberUtils, ExUtils,  GnuGetText, IQ, Session;
 const
     sVCardError = 'No vCard response was ever returned.';
 

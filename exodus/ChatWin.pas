@@ -123,6 +123,7 @@ type
     _notify: array[0..3] of integer;
 
     procedure SetupPrefs();
+    procedure SetupMenus();
     procedure ChangePresImage(show: widestring; status: widestring);
     procedure ResetPresImage;
     procedure freeChatObject();
@@ -168,7 +169,7 @@ procedure CloseAllChats;
 implementation
 uses
     CustomNotify, COMChatController, Debug, ExEvents,
-    JabberConst, ExSession, ExUtils, Presence, PrefController, Room,
+    JabberConst, ExSession, JabberUtils, ExUtils,  Presence, PrefController, Room,
     XferManager, RosterAdd, RiserWindow, Notify,
     Jabber1, Profile, MsgDisplay, GnuGetText,
     JabberMsg, NodeItem, Roster, Session, XMLUtils,
@@ -350,6 +351,7 @@ begin
     _notify[0] := MainSession.Prefs.getInt('notify_chatactivity');
 
     SetupPrefs();
+    SetupMenus();
 
     // branding/menus
     with MainSession.Prefs do begin
@@ -361,6 +363,13 @@ begin
         else
             mnuSendFile.Visible := false;
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmChat.setupMenus();
+begin
+    mnuHistory.Enabled := MainSession.LoggingEnabled;
+    popClearHistory.Enabled := MainSession.LoggingEnabled;
 end;
 
 {---------------------------------------}
@@ -756,6 +765,9 @@ begin
     end
     else if (event = '/session/prefs') then
         SetupPrefs()
+
+    else if (event = '/session/logger') then
+        SetupMenus()
 
     else if (event = '/session/block') then begin
         // if this jid just got blocked, just close the window.

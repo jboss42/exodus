@@ -85,7 +85,7 @@ const
 implementation
 {$R *.dfm}
 uses
-    GnuGetText, Unicode, Menus, Presence, Session, XMLUtils, ExUtils;
+    GnuGetText, Unicode, Menus, Presence, Session, XMLUtils, JabberUtils, ExUtils;
 
 {---------------------------------------}
 procedure TfrmPrefPresence.LoadPrefs();

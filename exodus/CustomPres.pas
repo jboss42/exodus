@@ -61,7 +61,7 @@ implementation
 {$R *.dfm}
 
 uses
-    ExUtils, GnuGetText, Jabber1, Session, Presence;
+    JabberUtils, ExUtils,  GnuGetText, Jabber1, Session, Presence;
 
 {---------------------------------------}
 {---------------------------------------}

@@ -56,7 +56,7 @@ implementation
 {$R *.dfm}
 
 uses
-    ExUtils, Unicode, Session;
+    JabberUtils, ExUtils,  Unicode, Session;
 
 procedure TfrmPrefRoster.LoadPrefs();
 begin

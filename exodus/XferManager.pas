@@ -144,7 +144,7 @@ implementation
 
 {$R *.dfm}
 uses
-    ExUtils, Jabber1, JabberConst, JabberID, Presence, InputPassword,
+    JabberUtils, ExUtils,  Jabber1, JabberConst, JabberID, Presence, InputPassword,
     GnuGetText, XMLUtils, Notify, RecvStatus, SendStatus, Session;
 const
     sXferNewPort = 'Your new file transfer port will not take affect until all current trasfers are stopped. Stop existing transfers?';

@@ -12,14 +12,14 @@ inherited frmChat: TfrmChat
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
-    Top = 240
+    Top = 244
   end
   inherited pnlMsgList: TPanel
     Top = 24
-    Height = 216
+    Height = 220
   end
   inherited pnlInput: TPanel
-    Top = 243
+    Top = 247
     inherited MsgOut: TExRichEdit
       WantReturns = False
       OnChange = MsgOutChange

@@ -103,7 +103,7 @@ implementation
 {$R *.DFM}
 uses
     NodeItem, EntityCache, fGeneric, 
-    GnuGetText, Math, JabberConst, Transports, S10n, Roster, Session, ExUtils,
+    GnuGetText, Math, JabberConst, Transports, S10n, Roster, Session, JabberUtils, ExUtils, 
     Jabber1;
 
 {---------------------------------------}

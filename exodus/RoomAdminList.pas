@@ -65,7 +65,7 @@ procedure ShowRoomAdminList(room_jid, role, affiliation: WideString;
 implementation
 
 uses
-    ExUtils, GnuGetText, JabberConst, JabberID, Session, Room;
+    JabberUtils, ExUtils,  GnuGetText, JabberConst, JabberID, Session, Room;
 
 {$R *.dfm}
 

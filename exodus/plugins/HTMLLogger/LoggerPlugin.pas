@@ -50,8 +50,16 @@ type
   private
     _exodus: IExodusController;
     _parser: TXMLTagParser;
-    _cb: integer;
+
+    // callbacks
+    _logger: integer;
+    _show: integer;
+    _purge: integer;
+    _clear: integer;
+
     _path: Widestring;
+    _roster: boolean;
+    _rooms: boolean;
     _timestamp: boolean;
     _format: Widestring;
     _bg: TColor;
@@ -60,9 +68,14 @@ type
     _font_name: Widestring;
     _font_size: Widestring;
 
-    function GetMsgHTML(Msg: TJabberMessage): string;
-    function ColorToHTML(Color: TColor): string;
+    function _getMsgHTML(Msg: TJabberMessage): string;
+    procedure _logMessage(log: TXMLTag);
+    procedure _showLog(jid: Widestring);
+    procedure _clearLog(jid: Widestring);
 
+  public
+    procedure purgeLogs();
+    property ExodusController: IExodusController read _exodus;
 
   end;
 
@@ -71,32 +84,19 @@ type
 {---------------------------------------}
 implementation
 uses
-    XMLUtils, Windows, IdGlobal,
-    Dialogs, SysUtils, Classes, JabberID, ComServ;
-{---------------------------------------}
-function JabberToDateTime(datestr: string): TDateTime;
-var
-    rdate: TDateTime;
-    ys, ms, ds, ts: string;
-    yw, mw, dw: Word;
-begin
-    // translate date from 20000110T19:54:00 to proper format..
-    ys := Copy(Datestr, 1, 4);
-    ms := Copy(Datestr, 5, 2);
-    ds := Copy(Datestr, 7, 2);
-    ts := Copy(Datestr, 10, 8);
+    Prefs, 
+    JabberUtils, XMLUtils, Windows, IdGlobal,
+    Controls, ShellAPI, Dialogs, SysUtils, Classes, JabberID, ComServ;
 
-    yw := StrToInt(ys);
-    mw := StrToInt(ms);
-    dw := StrToInt(ds);
-
-    if (TryEncodeDate(yw, mw, dw, rdate)) then begin
-        rdate := rdate + StrToTime(ts);
-        Result := rdate - TimeZoneBias();
-    end
-    else
-        Result := Now;
-end;
+const
+    sNoHistory = 'There is no history file for this contact.';
+    sBadLogDir = 'The log directory you specified is invalid. Configure the HTML Logging plugin correctly.';
+    sHistoryDeleted = 'History deleted.';
+    sHistoryError = 'Could not delete history file.';
+    sHistoryNone = 'No history file for this user.';
+    sConfirmClearLog = 'Do you really want to clear the log for %s?';
+    sConfirmClearAllLogs = 'Are you sure you want to delete all of your message and room logs?';
+    sFilesDeleted = '%d log files deleted.';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -108,6 +108,9 @@ begin
 
     // get some configs
     _path := _exodus.getPrefAsString('log_path');
+    _roster := _exodus.getPrefAsBool('log_roster');
+    _rooms := _exodus.getPrefAsBool('log_rooms');
+
     _timestamp := _exodus.getPrefAsBool('timestamp');
     _format := _exodus.getPrefAsString('timestamp_format');
     _bg := TColor(_exodus.getPrefAsInt('color_bg'));
@@ -117,28 +120,25 @@ begin
     _font_size := _exodus.getPrefAsString('font_size');
 
     // Register for packets
-    _cb := _exodus.RegisterCallback('/log/logger', Self);
+    _logger := _exodus.RegisterCallback('/log/logger', Self);
+    _show := _exodus.RegisterCallback('/log/show', Self);
+    _clear := _exodus.RegisterCallback('/log/clear', Self);
+    _purge := _exodus.RegisterCallback('/log/purge', Self);
 end;
 
 {---------------------------------------}
 procedure THTMLLogger.Shutdown;
 begin
-    _exodus.UnRegisterCallback(_cb);
+    _exodus.UnRegisterCallback(_logger);
+    _exodus.UnRegisterCallback(_show);
+    _exodus.UnRegisterCallback(_clear);
+    _exodus.UnRegisterCallback(_purge);
+
     _parser.Free();
 end;
 
 {---------------------------------------}
-function THTMLLogger.ColorToHTML(Color: TColor): string;
-var
-    rgb: longint;
-begin
-    rgb := ColorToRGB(Color);
-    result := Format( '#%.2x%.2x%.2x', [ GetRValue(rgb),
-                GetGValue(rgb), GetBValue(rgb)]);
-end;
-
-{---------------------------------------}
-function THTMLLogger.GetMsgHTML(Msg: TJabberMessage): string;
+function THTMLLogger._getMsgHTML(Msg: TJabberMessage): string;
 var
     html, txt: Widestring;
     ret, color, time, bg, font: string;
@@ -198,8 +198,25 @@ end;
 
 {---------------------------------------}
 procedure THTMLLogger.Configure;
+var
+    p: TfrmPrefs;
 begin
+    p := TfrmPrefs.Create(nil);
+    p.txtLogPath.Text := _path;
+    p.chkLogRooms.Checked := _rooms;
+    p.chkLogRoster.Checked := _roster;
 
+    if (p.ShowModal() = mrOK) then begin
+        _path := p.txtLogPath.Text;
+        _rooms := p.chkLogRooms.Checked;
+        _roster := p.chkLogRoster.Checked;
+
+        _exodus.setPrefAsString('log_path', _path);
+        _exodus.setPrefAsBool('log_rooms', _rooms);
+        _exodus.setPrefAsBool('log_roster', _roster);
+    end;
+
+    p.Free();    
 end;
 
 {---------------------------------------}
@@ -239,27 +256,59 @@ end;
 {---------------------------------------}
 procedure THTMLLogger.Process(const xpath, event, xml: WideString);
 var
-    d, log: TXMLTag;
+    x: TXMLTag;
+begin
+    _parser.ParseString(xml, '');
+    if (_parser.Count = 0) then exit;
+
+    x := _parser.popTag();
+
+    if (x.Name = 'logger') then
+        _logMessage(x)
+    else if (x.Name = 'show') then
+        _showLog(x.getAttribute('jid'))
+    else if (x.Name = 'clear') then
+        _clearLog(x.getAttribute('jid'))
+    else if (x.Name = 'purge') then
+        purgeLogs();
+
+end;
+
+{---------------------------------------}
+procedure THTMLLogger._logMessage(log: TXMLTag);
+var
+    d: TXMLTag;
     buff: string;
-    fn: Widestring;
+    rjid, fn: Widestring;
     header: boolean;
     j: TJabberID;
     ndate: TDateTime;
     fs: TFileStream;
     msg: TJabberMessage;
+    ritem: IExodusRosterItem;
 begin
-    // parse the log msg
-    _parser.ParseString(xml, '');
-    if (_parser.Count = 0) then exit;
-    log := _parser.popTag();
-
     msg := TJabberMessage.Create();
     msg.ToJID := log.getAttribute('to');
     msg.FromJid := log.getAttribute('from');
-    if (log.getAttribute('dir') = 'out') then
-        msg.isMe := true
-    else
+
+    if (log.getAttribute('dir') = 'out') then begin
+        msg.isMe := true;
+        rjid := Msg.ToJid;
+    end
+    else begin
         msg.isMe := false;
+        rjid := Msg.FromJid;
+    end;
+
+    // check the roster for the rjid, and bail if we aren't logging non-roster folk
+    if (_roster) then begin
+        ritem := _exodus.Roster.find(rjid);
+        if (ritem = nil) then begin
+            msg.Free();
+            exit;
+        end;
+    end;
+
     msg.Nick := log.getAttribute('nick');
     msg.id := log.getAttribute('id');
     msg.MsgType := log.getAttribute('type');
@@ -288,9 +337,8 @@ begin
     if (not DirectoryExists(fn)) then begin
         // mkdir
         if CreateDir(fn) = false then begin
-            // XXX:
-            MessageDlg('Bad logging directory specified. Reconfigure plugin.',
-                mtError, [mbOK], 0);
+            msg.Free();
+            MessageDlg(sBadLogDir, mtError, [mbOK], 0);
             exit;
         end;
     end;
@@ -320,6 +368,7 @@ begin
     except
         on e: Exception do begin
             MessageDlg('Could not open log file: ' + fn, mtError, [mbOK], 0);
+            msg.Free();
             exit;
         end;
     end;
@@ -330,11 +379,80 @@ begin
         fs.Write(Pointer(buff)^, Length(buff));
     end;
 
-    buff := GetMsgHTML(Msg);
+    buff := _getMsgHTML(Msg);
     fs.Write(Pointer(buff)^, Length(buff));
     fs.Free();
-
     j.Free();
+    Msg.Free();
+end;
+
+{---------------------------------------}
+procedure THTMLLogger._showLog(jid: Widestring);
+var
+    fn: string;
+begin
+    // Show the log, or ask the user to turn on logging
+    fn := _path + '\' + MungeName(jid) + '.html';
+    if (not FileExists(fn)) then begin
+        MessageDlgW('There is no history for this contact.', mtError, [mbOK], 0, 'HTML Logger Plugin');
+        exit;
+    end;
+
+    ShellExecute(0, 'open', PChar(fn), '', '', SW_NORMAL);
+end;
+
+{---------------------------------------}
+procedure THTMLLogger._clearLog(jid: Widestring);
+var
+    fn: string;
+begin
+    if (MessageDlgW(WideFormat(sConfirmClearLog, [jid]),
+        mtConfirmation, [mbOK,mbCancel], 0) = mrCancel) then
+        exit;
+
+    fn := _path;
+    if (Copy(fn, length(fn), 1) <> '\') then
+        fn := fn + '\';
+
+    // Munge the filename
+    fn := fn + MungeName(jid) + '.html';
+    if FileExists(fn) then begin
+        if (DeleteFile(PChar(fn))) then
+            MessageDlgW(sHistoryDeleted, mtInformation, [mbOK], 0)
+        else
+            MessageDlgW(sHistoryError, mtError, [mbCancel], 0);
+    end
+    else
+        MessageDlgW(sHistoryNone, mtWarning, [mbOK,mbCancel], 0);
+end;
+
+{---------------------------------------}
+procedure THTMLLogger.purgeLogs();
+var
+    fn: string;
+    sr: TSearchRec;
+    count: integer;
+begin
+    if (MessageDlgW(sConfirmClearAllLogs,
+                   mtConfirmation, [mbOK,mbCancel], 0) = mrCancel) then
+        exit;
+
+    fn := _path;
+    if (Copy(fn, length(fn), 1) <> '\') then
+        fn := fn + '\';
+
+    count := 0;
+
+    // bleh.  FindClose is both a SysUtils thing and a Win32 thing.
+    if SysUtils.FindFirst(fn + '*.html', 0, sr) = 0 then begin
+        repeat
+            SysUtils.DeleteFile(PChar(fn + sr.Name));
+            count := count + 1;
+        until SysUtils.FindNext(sr) <> 0;
+        SysUtils.FindClose(sr);
+    end;
+
+    MessageDlgW(WideFormat(sFilesDeleted, [count]), mtInformation, [mbOK], 0);
 end;
 
 initialization

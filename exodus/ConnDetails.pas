@@ -126,7 +126,7 @@ implementation
 
 uses
     ExSession,
-    ExUtils, GnuGetText, JabberID, Unicode, Session, WebGet, XMLTag, XMLParser,
+    JabberUtils, ExUtils,  GnuGetText, JabberID, Unicode, Session, WebGet, XMLTag, XMLParser,
     Registry;
 
 const

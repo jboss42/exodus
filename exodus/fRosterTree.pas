@@ -77,7 +77,7 @@ implementation
 
 {$R *.dfm}
 uses
-    XMLUtils, ExUtils, Jabber1, Session;
+    XMLUtils, JabberUtils, ExUtils,  Jabber1, Session;
 
 {---------------------------------------}
 procedure TframeTreeRoster.Initialize();

@@ -46,7 +46,7 @@ implementation
 
 {$R *.dfm}
 uses
-    ExUtils, GnuGetText;
+    JabberUtils, ExUtils,  GnuGetText;
 
 procedure TfrmPassword.FormCreate(Sender: TObject);
 begin

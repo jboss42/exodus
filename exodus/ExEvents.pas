@@ -82,7 +82,7 @@ implementation
 uses
     // Exodus/JOPL stuff
     GnuGetText,
-    ExUtils, JabberConst, Jabber1, JabberMsg, MsgController, MsgRecv,
+    JabberUtils, ExUtils,  JabberConst, Jabber1, JabberMsg, MsgController, MsgRecv,
     MsgQueue, Notify, PrefController, NodeItem, Roster, Session, XMLUtils,
 
     // delphi stuff

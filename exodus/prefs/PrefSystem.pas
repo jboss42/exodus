@@ -76,7 +76,7 @@ implementation
 {$WARNINGS OFF}
 {$R *.dfm}
 uses
-    LocalUtils, ExUtils, GnuGetText,   
+    LocalUtils, JabberUtils, ExUtils,  GnuGetText,   
     AutoUpdate, FileCtrl,
     PathSelector, PrefController, Registry, Session, StrUtils;
 

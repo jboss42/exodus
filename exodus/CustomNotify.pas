@@ -59,7 +59,7 @@ var
 implementation
 
 uses
-    ExUtils, GnuGetText, PrefController;
+    JabberUtils, ExUtils,  GnuGetText, PrefController;
 
 {
 0 Contact is online

@@ -76,7 +76,7 @@ implementation
 {$R *.dfm}
 
 uses
-    XMLUtils, ChatWin, Debug, ExUtils, GnuGetText, Session, Jabber1;
+    XMLUtils, ChatWin, Debug, JabberUtils, ExUtils,  GnuGetText, Session, Jabber1;
 
 {---------------------------------------}
 procedure TfrmDockable.FormCreate(Sender: TObject);

@@ -87,7 +87,7 @@ const
 implementation
 {$R *.dfm}
 uses
-    ShellAPI, ExUtils, GnuGetText, JabberMsg, MsgDisplay, Session;
+    ShellAPI, JabberUtils, ExUtils,  GnuGetText, JabberMsg, MsgDisplay, Session;
 
 {---------------------------------------}
 procedure TfrmPrefFont.LoadPrefs();

@@ -66,7 +66,7 @@ var
 implementation
 {$R *.dfm}
 uses
-    ActiveX, COMController, ComObj, ExodusCOM_TLB, ExUtils, 
+    ActiveX, COMController, ComObj, ExodusCOM_TLB, JabberUtils, ExUtils,  
     GnuGetText, PathSelector, Session;
 
 {---------------------------------------}

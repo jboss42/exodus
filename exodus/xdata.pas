@@ -67,7 +67,7 @@ implementation
 
 {$R *.dfm}
 uses
-    GnuGetText, JabberConst, Session, ExUtils, StrUtils, fGeneric, IQ, Math;
+    GnuGetText, JabberConst, Session, JabberUtils, ExUtils,  StrUtils, fGeneric, IQ, Math;
 const
     sAllRequired = 'All required fields must be filled out';
     sFormFrom = 'Form from %s';

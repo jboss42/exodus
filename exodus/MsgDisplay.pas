@@ -28,17 +28,13 @@ uses
 procedure DisplayMsg(Msg: TJabberMessage; msglist: TfBaseMsgList; AutoScroll: boolean = true);
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true);
 
-function GetMsgHTML(Msg: TJabberMessage): string;
-
-// procedure AddHTML(html: string; Browser: TRichEdit);
-
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 implementation
 uses
 
-    Clipbrd, Jabber1, ExUtils, Emote,
+    Clipbrd, Jabber1, JabberUtils, ExUtils,  Emote,
     ExtCtrls, Dialogs, XMLUtils, Session;
 
 {---------------------------------------}
@@ -136,117 +132,6 @@ begin
         RichEdit.ScrollToBottom();
 end;
 
-{---------------------------------------}
-function GetMsgHTML(Msg: TJabberMessage): string;
-var
-    html, txt: Widestring;
-    ret, color, time, bg, font: string;
-    cr_pos: integer;
-begin
-    // XXX: Joe, optimize with regex PLEASE!
-    // replace CR's w/ <br> tags
-    txt := HTML_EscapeChars(Msg.Body, false);
-    repeat
-        cr_pos := Pos(#13#10, txt);
-        if cr_pos > 0 then begin
-            Delete(txt, cr_pos, 2);
-            Insert('<br />', txt, cr_pos);
-        end;
-    until (cr_pos <= 0);
-
-    with MainSession.Prefs do begin
-        if (getBool('timestamp')) then
-            time := '<span style="color: gray;">[' +
-                    FormatDateTime(getString('timestamp_format'), Msg.Time) +
-                    ']</span>'
-        else
-            time := '';
-        bg := 'background-color: ' + ColorToHTML(TColor(getInt('color_bg'))) + ';';
-
-        //font-family: Arial Black; font-size: 10pt
-        font := 'font-family: ' + getString('font_name') + '; ' +
-                'font-size: ' + getString('font_size') + 'pt;';
-        if Msg.Action then
-            html := '<div style="' + bg + font + '">' + time +
-                    '<span style="color: purple;">* ' + Msg.Nick + ' ' + txt + '</span></div>'
-        else begin
-            if Msg.isMe then
-                color := ColorToHTML(TColor(MainSession.Prefs.getInt('color_me')))
-            else
-                color := ColorToHTML(TColor(MainSession.Prefs.getInt('color_other')));
-
-            if (Msg.Nick <> '') then
-                html := '<div style="' + bg + font + '">' +
-                    time + '<span style="color: ' + color + ';">&lt;' +
-                    Msg.Nick + '&gt;</span> ' + txt + '</div>'
-            else
-                html := '<div style="' + bg + font + '">' +
-                    time + '<span style="color: green;">' +
-                    txt + '</span></div>';
-        end;
-    end;
-    ret := UTF8Encode(html);
-    Result := ret;
-end;
-
-
-(*
-procedure DisplayMsg(Msg: TJabberMessage; Browser: TRichEdit);
-var
-    color, html, txt: string;
-    cr_pos: integer;
-begin
-
-    {
-    if FileExists(ExtractFilePath(Application.ExeName)+'smiley.gif') then
-    while pos(smile,txt)> 0 do begin
-         nPos := pos(smile,txt);
-         delete(txt,nPos,3);
-         insert('<img src='+ExtractFilePath(Application.ExeName)+'smiley.gif height='+inttostr(hw)+' width='+inttostr(hw)+'>',txt,nPos);
-   end;
-    }
-
-    // replace CR's w/ <br> tags
-    txt := Msg.Body;
-    repeat
-        cr_pos := Pos(#13#10, txt);
-        if cr_pos > 0 then begin
-            Delete(txt, cr_pos, 2);
-            Insert('<br />', txt, cr_pos);
-        end;
-    until (cr_pos <= 0);
-
-    if Msg.Action then
-        html := '<div><span style="color: purple;">* ' + txt + '</span></div>'
-    else begin
-        if Msg.isMe then color := 'red' else color := 'blue';
-        html := '<div><span style="color: ' + color + ';">&lt;' + Msg.Nick + '&gt;</span> ' + txt + '</div>';
-    end;
-    AddHTML(html, Browser);
-end;
-
-procedure DisplayPresence(txt: string; Browser: TDHTMLEdit);
-var
-    html: string;
-begin
-    // add "foo is now away (status) to the browser window
-    html := '<div><span style="color: grey;">' + txt + '</span></div>';
-    AddHTML(html, Browser);
-end;
-
-procedure AddHTML(html: string; Browser: TDHTMLEdit);
-var
-    tags, last: OleVariant;
-begin
-    Browser.DOM.body.insertAdjacentHTML('beforeEnd', html);
-
-    // fetch the last tag from the body children
-    tags := Browser.DOM.body.children;
-    last := tags.Item(tags.length - 1);
-    last.ScrollIntoView;
-end;
-
-*)
 
 end.
 

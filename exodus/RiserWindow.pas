@@ -73,7 +73,7 @@ implementation
 
 {$R *.dfm}
 uses
-    Types, ExUtils, GnuGetText, Session, Dockable, Jabber1;
+    Types, JabberUtils, ExUtils,  GnuGetText, Session, Dockable, Jabber1;
 
 {---------------------------------------}
 procedure ShowRiserWindow(clickForm: TForm; msg: Widestring; imgIndex: integer);

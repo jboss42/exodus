@@ -22,7 +22,7 @@ unit ExResponders;
 interface
 uses
     Responder, Session, Signals, 
-    XMLTag, Unicode, ExUtils,
+    XMLTag, Unicode, JabberUtils, ExUtils, 
     Windows, Classes, SysUtils;
 
 type

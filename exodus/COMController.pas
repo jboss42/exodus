@@ -180,7 +180,7 @@ var
 implementation
 
 uses
-    ExResponders, ExSession, GnuGetText, ExUtils, EntityCache, Entity,
+    ExResponders, ExSession, GnuGetText, JabberUtils, ExUtils,  EntityCache, Entity,
     Chat, ChatController, JabberID, MsgRecv, Room, Browser, Jud,
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
     COMChatController, Dockable, RegForm,
@@ -387,8 +387,8 @@ begin
         if (idx < 0) then begin
             // unload the plugin
             p := TPlugin(plugs.Objects[i]);
-            p.com.Shutdown();
             plugs.Delete(i);
+            p.com.Shutdown;
         end;
     end;
     loaded.Free();
@@ -410,7 +410,7 @@ begin
     for i := plugs.Count - 1 downto 0 do begin
         pp := TPlugin(plugs.Objects[i]);
         plugs.Delete(i);
-        pp.com.Shutdown();
+        pp.com.Shutdown;
     end;
 
     plugs.Clear();
@@ -600,8 +600,11 @@ end;
 {---------------------------------------}
 function TExodusController.RegisterCallback(const xpath: WideString;
   const callback: IExodusPlugin): Integer;
+var
+    pp: TPluginProxy;
 begin
-    TPluginProxy.Create(xpath, callback);
+    pp := TPluginProxy.Create(xpath, callback);
+    Result := pp.id;
 end;
 
 {---------------------------------------}

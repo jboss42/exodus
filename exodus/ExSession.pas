@@ -82,7 +82,7 @@ uses
     Controls, GnuGetText, ConnDetails, IdWinsock2,
     ChatWin, GetOpt, Jabber1, PrefController, StandardAuth,
     PrefNotify, Room, RosterAdd, MsgRecv, NetMeetingFix, Profile, RegForm,
-    ExUtils, ExResponders, MsgDisplay,
+    JabberUtils, ExUtils,  ExResponders, MsgDisplay,
     XMLParser, XMLUtils;
 
 const

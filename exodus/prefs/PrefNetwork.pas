@@ -67,7 +67,7 @@ implementation
 
 {$R *.dfm}
 uses
-    GnuGetText, ExUtils, PrefController, Session, Registry;
+    GnuGetText, JabberUtils, ExUtils,  PrefController, Session, Registry;
 
 {---------------------------------------}
 procedure TfrmPrefNetwork.LoadPrefs();

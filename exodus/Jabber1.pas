@@ -469,7 +469,7 @@ implementation
 uses
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
     ChatController, ChatWin, Debug, Dockable, DNSUtils, Entity,
-    EntityCache, ExSession, ExUtils,
+    EntityCache, ExSession, JabberUtils, ExUtils, 
     InputPassword, Invite, GnuGetText,
     Iq, JUD, JabberID, JabberMsg, IdGlobal, LocalUtils,
     JabberConst, ComController, CommCtrl, CustomPres,

@@ -69,7 +69,7 @@ var
 implementation
 
 uses
-    ExUtils, Session, MsgDisplay, ShellAPI, BaseChat, Jabber1;
+    JabberUtils, ExUtils,  Session, MsgDisplay, ShellAPI, BaseChat, Jabber1;
 
 {$R *.dfm}
 

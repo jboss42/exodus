@@ -99,7 +99,7 @@ implementation
 
 {$R *.dfm}
 uses
-    MsgDisplay, GnuGetText, Signals, Session, ExUtils, Jabber1;
+    MsgDisplay, GnuGetText, Signals, Session, JabberUtils, ExUtils,  Jabber1;
 
 var
     frmDebug: TfrmDebug;

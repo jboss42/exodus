@@ -53,7 +53,7 @@ implementation
 {$R *.dfm}
 
 uses
-    ExUtils, GnuGetText, ShellAPI, XMLUtils, Session;
+    JabberUtils, ExUtils,  GnuGetText, ShellAPI, XMLUtils, Session;
 
 const
     sAbout1 = 'Exodus is the creation of Peter Millard  (mailto:me@pgmillard.com).  Checkout the website at http://exodus.jabberstudio.org for more information. It is currently licensed under the GNU Public License (GPL) see www.gnu.org for more information on the GPL.';
