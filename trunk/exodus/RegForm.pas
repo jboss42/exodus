@@ -95,6 +95,10 @@ const
 resourcestring
     sBtnFinish = 'Finish';
     sBtnCancel = 'Cancel';
+    sServiceRegError = 'The agent you are trying to register with returned an error.';
+    sServiceRegTimeout = 'The agent you are trying to register with can not be reached.';
+    sServiceRegRemoveError = 'There was an error trying to remove your registration.';
+    sServiceRegRemoveOK = 'Your registration has been removed.';
 
 var
   frmRegister: TfrmRegister;
@@ -154,8 +158,7 @@ begin
     if (event = 'xml') then begin
         if (tag.GetAttribute('type') = 'error') then begin
             // error packet
-            MessageDlg('The agent you are trying to register with returned an error.',
-                mtError, [mbOK], 0);
+            MessageDlg(sServiceRegError, mtError, [mbOK], 0);
             Self.Close();
             exit;
             end
@@ -188,7 +191,7 @@ begin
         end
     else begin
         // timeout on agent query
-        MessageDlg('The agent you are trying to register with can not be reached.', mtError, [mbOK], 0);
+        MessageDlg(sServiceRegTimeout, mtError, [mbOK], 0);
         Self.Close();
         exit;
         end;
@@ -353,15 +356,15 @@ end;
 procedure TfrmRegister.RemoveCallback(event: string; tag: TXMLTag);
 begin
     if (event = 'timeout') then begin
-        MessageDlg('The agent you are trying to register with can not be reached.', mtError, [mbOK], 0);
+        MessageDlg(sServiceRegTimeout, mtError, [mbOK], 0);
         end
     else begin
         if (tag.getAttribute('type') = 'error') then begin
-            MessageDlg('There was an error trying to remove your registration.', mtError,
+            MessageDlg(sServiceRegRemoveError, mtError,
                 [mbOK], 0);
             end
         else begin
-            MessageDlg('Your registration has been removed.', mtInformation, [mbOK], 0);
+            MessageDlg(sServiceRegRemoveOK, mtInformation, [mbOK], 0);
             end;
         end;
     self.close();
