@@ -252,6 +252,7 @@ procedure ShowLog(jid: string);
 var
     fn: string;
 begin
+    fn := 'iexplore.exe ';
     fn := MainSession.Prefs.getString('log_path');
     fn := fn + '\' + MungeName(jid) + '.html';
 
