@@ -54,6 +54,7 @@ type
     procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
     procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
     procedure WMMouseActivate(var msg: TMessage); message WM_MOUSEACTIVATE;
+    procedure WMDisplayChange(var msg: TMessage); message WM_DISPLAYCHANGE;
   published
     property OnDockStartChange: TDockNotify read _onDockStartChange write _onDockStartChange;
     property OnDockEndChange: TDockNotify read _onDockEndChange write _onDockEndChange;
@@ -204,6 +205,12 @@ begin
         Self.Visible := true;
     end;
 
+end;
+
+{---------------------------------------}
+procedure TfrmDockable.WMDisplayChange(var msg: TMessage);
+begin
+    checkAndCenterForm(Self);
 end;
 
 {---------------------------------------}
