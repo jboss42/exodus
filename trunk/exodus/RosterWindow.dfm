@@ -82,8 +82,10 @@ object frmRosterWindow: TfrmRosterWindow
     MultiSelect = True
     MultiSelectStyle = [msControlSelect, msShiftSelect, msVisibleOnly]
     ParentCtl3D = False
+    ParentShowHint = False
     PopupMenu = popRoster
     ShowButtons = False
+    ShowHint = True
     ShowLines = False
     ShowRoot = False
     SortType = stData
