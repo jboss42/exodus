@@ -786,6 +786,7 @@ begin
 
     // Setup the Tabs, toolbar, panel, and roster madness
     Tabs.ActivePage := tbsRoster;
+    restoreMenus(false);
     restoreToolbar();
     pnlRight.Visible := MainSession.Prefs.getBool('expanded');
     restoreRoster();
@@ -1319,7 +1320,6 @@ begin
     // (dis)enable the tray menus
     trayPresence.Enabled := enable;
     trayMessage.Enabled := enable;
-
 
     // Enable toolbar btns
     btnOnlineRoster.Enabled := enable;
