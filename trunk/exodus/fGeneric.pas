@@ -54,17 +54,17 @@ type
     property FormType: string read frm_type write frm_type;
   end;
 
-const 
-    sRequired = '(Required)';
-
 implementation
 
 {$R *.dfm}
 uses
-    Jabber1,
+    Jabber1, GnuGetText,
     JabberID, ShellAPI,
     SelContact, ExRichEdit,
     ExUtils, CheckLst, RichEdit2;
+
+const
+    sRequired = '(Required)';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -88,9 +88,9 @@ begin
 
     if (req) then begin
        if (Self.Hint = '') then
-          Self.Hint := sRequired
+          Self.Hint := _(sRequired)
        else
-          Self.Hint := Self.Hint + ''#13#10 + sRequired;
+          Self.Hint := Self.Hint + ''#13#10 + _(sRequired);
    end;
 
     lblLabel.Caption := tag.GetAttribute('label');

@@ -278,6 +278,8 @@ type
     procedure DockRoster;
     procedure ShowPresence(show: Widestring);
 
+    procedure updateReconnect(secs: integer);
+
     function RenderGroup(grp: TJabberGroup): TTreeNode;
     function getSelectedContacts(online: boolean = true): TList;
 
@@ -288,7 +290,19 @@ type
 var
   frmRosterWindow: TfrmRosterWindow;
 
-const 
+// Some util functions
+procedure setRosterMenuCaptions(online, chat, away, xa, dnd: TTntMenuItem);
+
+implementation
+uses
+    ExSession, XferManager, CustomPres,
+    JabberConst, Chat, ChatController, GrpManagement, GnuGetText, InputPassword,
+    SelContact, Invite, Bookmark, S10n, MsgRecv, PrefController,
+    ExEvents, ExUtils, Room, Profile, JabberID, RiserWindow, ShellAPI,
+    IQ, RosterAdd, GrpRemove, RemoveContact, ChatWin, Jabber1,
+    Transports, Session, StrUtils;
+
+const
     sRemoveBookmark = 'Remove this bookmark?';
     sRenameGrp = 'Rename group';
     sRenameGrpPrompt = 'New group name:';
@@ -298,11 +312,12 @@ const
     sNoBroadcast = 'You must select more than one online contact to broadcast.';
     sSignOn = 'Click to Sign On';
     sCancelLogin = 'Click to Cancel...';
-    sReconnected = 'Reconnected.';
     sDisconnected = 'Disconnected.';
     sConnecting = 'Trying to connect...';
     sAuthenticating = 'Connected. '#13#10'Authenticating...';
     sAuthenticated = 'Authenticated.'#13#10'Getting Contacts...';
+    sCancelReconnect = 'Click to Cancel Reconnect';
+    sReconnectIn = 'Reconnect in %d seconds.';
 
     sBtnBlock = 'Block';
     sBtnUnBlock = 'UnBlock';
@@ -310,18 +325,33 @@ const
 
     sNetMeetingConnError = 'Your connection type does not support direct connections.';
 
+    sRosterAvail = 'Available';
+    sRosterChat = 'Free to Chat';
+    sRosterAway = 'Away';
+    sRosterXA = 'Xtended Away';
+    sRosterDND = 'Do Not Disturb';
+    sRosterOffline = 'Offline';
+    sRosterPending = ' (Pending)';
 
-implementation
-uses
-    ExSession, XferManager, CustomPres,  
-    JabberConst, Chat, ChatController, GrpManagement, GnuGetText, InputPassword,
-    SelContact, Invite, Bookmark, S10n, MsgRecv, PrefController,
-    ExEvents, ExUtils, Room, Profile, JabberID, RiserWindow, ShellAPI,
-    IQ, RosterAdd, GrpRemove, RemoveContact, ChatWin, Jabber1,
-    Transports, Session, StrUtils;
+    sGrpBookmarks = 'Bookmarks';
+    sGrpOffline = 'Offline';
 
 {$R *.DFM}
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+procedure setRosterMenuCaptions(online, chat, away, xa, dnd: TTntMenuItem);
+begin
+    online.Caption := _(sRosterAvail);
+    chat.Caption := _(sRosterChat);
+    away.Caption := _(sRosterAway);
+    xa.Caption := _(sRosterXA);
+    dnd.Caption := _(sRosterDND);
+end;
+
+{---------------------------------------}
+{---------------------------------------}
 {---------------------------------------}
 procedure TfrmRosterWindow.FormCreate(Sender: TObject);
 var
@@ -347,11 +377,7 @@ begin
     lblLogin.Caption := _(sSignOn);
 
     // Make sure presence menus have unified captions
-    presOnline.Caption := _(sRosterAvail);
-    presChat.Caption := _(sRosterChat);
-    presAway.Caption := _(sRosterAway);
-    presXA.Caption := _(sRosterXA);
-    presDND.Caption := _(sRosterDND);
+    setRosterMenuCaptions(presOnline, presChat, presAway, presXA, presDND);
 
     // register the callback
     _FullRoster := false;
@@ -637,7 +663,7 @@ begin
         bgrp := MainSession.Roster.AddGroup(g_bookmarks);
 
         if (bgrp.Data = nil) then begin
-            _bookmark := treeRoster.Items.AddChild(nil, sGrpBookmarks);
+            _bookmark := treeRoster.Items.AddChild(nil, _('Bookmarks'));
             _bookmark.ImageIndex := ico_down;
             _bookmark.SelectedIndex := ico_down;
             _bookmark.Data := bgrp;
@@ -1216,11 +1242,11 @@ begin
         // it at all times (if it exists).
         if (cur_grp = g_offline) then begin
             if (_offline = nil) then begin
-                _offline := treeRoster.Items.AddChild(nil, sGrpOffline);
+                _offline := treeRoster.Items.AddChild(nil, _(sGrpOffline));
                 _offline.ImageIndex := ico_right;
                 _offline.SelectedIndex := ico_right;
 
-                _offline_go := TJabberGroup.Create(sGrpOffline);
+                _offline_go := TJabberGroup.Create(_(sGrpOffline));
                 _offline_go.Data := _offline;
                 _offline.Data := _offline_go;
                 
@@ -1232,11 +1258,11 @@ begin
         // The My resources grp is also special.. same as offline
         else if (cur_grp = g_myres) then begin
             if (_myres = nil) then begin
-                _myres := treeRoster.Items.AddChild(nil, sMyResources);
+                _myres := treeRoster.Items.AddChild(nil, _(sMyResources));
                 _myres.ImageIndex := ico_right;
                 _myres.SelectedIndex := ico_right;
 
-                _myres_go := TJabberGroup.Create(sMyResources);
+                _myres_go := TJabberGroup.Create(_(sMyResources));
                 _myres_go.Data := _myres;
                 _myres.Data := _myres_go;
 
@@ -1631,7 +1657,7 @@ procedure TfrmRosterWindow.Panel2DblClick(Sender: TObject);
 begin
     // reset status to online;
     ShowPresence('online');
-    MainSession.setPresence('', sRosterAvail, MainSession.Priority);
+    MainSession.setPresence('', _(sRosterAvail), MainSession.Priority);
 end;
 
 {---------------------------------------}
@@ -2294,7 +2320,7 @@ begin
                     c1 := _cur_ritem.jid.Full;
 
                 if (_cur_ritem.ask = 'subscribe') then
-                    c1 := c1 + sRosterPending;
+                    c1 := c1 + _(sRosterPending);
 
                 p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
                 if ((p <> nil) and (_show_status)) then begin
@@ -2406,7 +2432,7 @@ begin
     if (go = nil) then exit;
     
     new_grp := go.FullName;
-    if (InputQueryW(sRenameGrp, sRenameGrpPrompt, new_grp)) then begin
+    if (InputQueryW(_(sRenameGrp), _(sRenameGrpPrompt), new_grp)) then begin
         old_grp := go.FullName;
         new_grp := Trim(new_grp);
         if (new_grp <> old_grp) then begin
@@ -2595,11 +2621,11 @@ end;
 procedure TfrmRosterWindow.lblLoginClick(Sender: TObject);
 begin
     // Login to the client..
-    if (lblLogin.Caption = sCancelLogin) then begin
+    if (lblLogin.Caption = _(sCancelLogin)) then begin
         // Cancel the connection
         frmExodus.CancelConnect();
     end
-    else if (lblLogin.Caption = sCancelReconnect) then begin
+    else if (lblLogin.Caption = _(sCancelReconnect)) then begin
         // cancel reconnect
         frmExodus.timReconnect.Enabled := false;
         Self.SessionCallback('/session/disconnected', nil);
@@ -2933,8 +2959,14 @@ begin
     4: show := 'dnd';
     end;
     MainSession.setPresence(show, '', MainSession.Priority);
-
 end;
+
+procedure TfrmRosterWindow.updateReconnect(secs: integer);
+begin
+    lblLogin.Caption := _(sCancelReconnect);
+    lblStatus.Caption := WideFormat(_(sReconnectIn), [secs]);
+end;
+
 
 initialization
     frmRosterWindow := nil;

@@ -381,20 +381,9 @@ var
 
 const
     sXMPP_Profile = '-*- Temp profile: %s -*-';
-
     sExodus = 'Exodus';
-    sChat = 'Chat';
 
-    sRosterPending = ' (Pending)';
-    sRosterAvail = 'Available';
-    sRosterChat = 'Free to Chat';
-    sRosterAway = 'Away';
-    sRosterXA = 'Xtended Away';
-    sRosterDND = 'Do Not Disturb';
-    sRosterOffline = 'Offline';
-
-    sDefaultProfile = 'Default Profile';
-    sDefaultGroup = 'Untitled Group';
+    //sChat = 'Chat';
 
     sCommError = 'There was an error during communication with the Jabber Server';
     sDisconnected = 'You have been disconnected.';
@@ -402,9 +391,7 @@ const
     sRegError = 'An Error occurred trying to register your new account. This server may not allow open registration.';
     sAuthNoAccount = 'This account does not exist on this server. Create a new account?';
     sNewAccount = 'Your new jabber account is activated. Would you like to fill out additional registration information?';
-    sCancelReconnect = 'Click to Cancel Reconnect';
-    sReconnectIn = 'Reconnect in ';
-    sSeconds = 'seconds.';
+    sNoContactsSel = 'You must select one or more contacts.';
 
     sSetAutoAvailable = 'Setting Auto Available';
     sSetAutoAway = 'Setting AutoAway';
@@ -414,15 +401,7 @@ const
     sAutoAwayWin32 = 'Using Win32 API for Autoaway checks!!';
     sAutoAwayFailWin32 = 'ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!';
 
-    sMsgPing = 'Ping Time: %s seconds.';
-    sMsgMessage = 'Msg from ';
-    sMsgInvite = 'Invite from ';
     sMsgContacts = 'Contacts from ';
-    sMsgRosterItems = 'This message contains %d roster items.';
-
-    sNewGroup = 'New Roster Group';
-    sNewGroupPrompt = 'Enter new group name: ';
-    sNewGroupExists = 'This group already exists!';
 
     sLookupProfile = 'Lookup Profile';
     sSendMessage = 'Send a Message';
@@ -432,7 +411,6 @@ const
     sJID = 'Jabber ID';
     sEnterJID = 'Enter Jabber ID: ';
     sEnterSvcJID = 'Enter Jabber ID of Service: ';
-    sInvalidJID = 'The Jabber ID you entered is invalid.';
 
     sPasswordError = 'Error changing password.';
     sPasswordChanged = 'Password changed.';
@@ -441,7 +419,6 @@ const
     sPasswordCaption = 'Exodus Password';
     sPasswordPrompt = 'Enter Password';
 
-    sAlreadySubscribed = 'You are already subscribed to this contact';
     sBrandingError = 'Branding error!';
 
 {---------------------------------------}
@@ -766,16 +743,9 @@ begin
     end;
 
     // Make sure presence menus have unified captions
-    presOnline.Caption := _(sRosterAvail);
-    presChat.Caption := _(sRosterChat);
-    presAway.Caption := _(sRosterAway);
-    presXA.Caption := _(sRosterXA);
-    presDND.Caption := _(sRosterDND);
-    trayPresOnline.Caption := _(sRosterAvail);
-    trayPresChat.Caption := _(sRosterChat);
-    trayPresAway.Caption := _(sRosterAway);
-    trayPresXA.Caption := _(sRosterXA);
-    trayPresDND.Caption := _(sRosterDND);
+    setRosterMenuCaptions(presOnline, presChat, presAway, presXA, presDND);
+    setRosterMenuCaptions(trayPresOnline, trayPresChat, trayPresAway,
+        trayPresXA, trayPresDND);
 
     // Setup the Tabs, toolbar, panel, and roster madness
     Tabs.ActivePage := tbsRoster;
@@ -919,7 +889,7 @@ begin
     if ((MainSession.password = '') and
         (MainSession.getAuthAgent().prompt_password)) then begin
         pw := '';
-        if ((not InputQueryW(sPasswordCaption, sPasswordPrompt, pw, True)) or
+        if ((not InputQueryW(_(sPasswordCaption), _(sPasswordPrompt), pw, True)) or
             (pw = '')) then exit;
         MainSession.Password := pw;
     end;
@@ -1004,7 +974,7 @@ begin
     // use the special API calls for getting inactivity.
     // For other OS's we need to use the wicked nasty DLL
     _valid_aa := false;
-    DebugMsg(sSetupAutoAway);
+    DebugMsg(_(sSetupAutoAway));
     if ((_windows_ver < cWIN_2000) or (_windows_ver = cWIN_ME)) then begin
         // Use the DLL
         @_GetLastTick := nil;
@@ -1026,18 +996,18 @@ begin
             _valid_aa := true;
         end
         else
-            DebugMsg(sAutoAwayFail);
+            DebugMsg(_(sAutoAwayFail));
         _last_tick := GetTickCount();
     end
     else begin
         // Use the GetLastInputInfo API call
         // do nothing here..
         if (_GetLastInputInfo <> nil) then begin
-            DebugMsg(sAutoAwayWin32);
+            DebugMsg(_(sAutoAwayWin32));
             _valid_aa := true;
             end
         else
-            DebugMsg(sAutoAwayFailWin32);
+            DebugMsg(_(sAutoAwayFailWin32));
     end;
 end;
 
@@ -1960,31 +1930,21 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.NewGroup2Click(Sender: TObject);
 var
-    new_grp: WideString;
     go: TJabberGroup;
     x: TXMLTag;
 begin
     // Add a roster grp.
-    new_grp := sDefaultGroup;
-    if InputQueryW(sNewGroup, sNewGroupPrompt, new_grp) = false then exit;
+    go := promptNewGroup();
+    if (go = nil) then exit;
 
-    // add the new grp.
-    go := MainSession.Roster.getGroup(new_grp);
-    if (go <> nil) then begin
-        MessageDlgW(_(sNewGroupExists), mtError, [mbOK], 0);
-    end
-    else begin
-        // add the new grp.
-        go := MainSession.Roster.addGroup(new_grp);
-        with frmRosterWindow do begin
-            RenderGroup(go);
-            treeRoster.AlphaSort(true);
-        end;
-        x := TXMLTag.Create('group');
-        x.setAttribute('name', new_grp);
-        MainSession.FireEvent('/roster/newgroup', x);
-        x.Free();
+    with frmRosterWindow do begin
+        RenderGroup(go);
+        treeRoster.AlphaSort(true);
     end;
+    x := TXMLTag.Create('group');
+    x.setAttribute('name', go.FullName);
+    MainSession.FireEvent('/roster/newgroup', x);
+    x.Free();
 end;
 
 {---------------------------------------}
@@ -2090,7 +2050,7 @@ var
     new_pri: integer;
 begin
     // set us to away
-    DebugMsg(sSetAutoAway);
+    DebugMsg(_(sSetAutoAway));
     Application.ProcessMessages;
 
     MainSession.Pause();
@@ -2126,7 +2086,7 @@ end;
 procedure TfrmExodus.SetAutoXA;
 begin
     // set us to xa
-    DebugMsg(sSetAutoXA);
+    DebugMsg(_(sSetAutoXA));
 
     // must be before SetPresence
     _is_autoaway := false;
@@ -2140,7 +2100,7 @@ end;
 procedure TfrmExodus.SetAutoAvailable;
 begin
     // reset our status to available
-    DebugMsg(sSetAutoAvailable);
+    DebugMsg(_(sSetAutoAvailable));
     timAutoAway.Enabled := false;
     timAutoAway.Interval := _auto_away_interval * 1000;
     MainSession.SetPresence(_last_show, _last_status, _last_priority);
@@ -2175,7 +2135,7 @@ var
     jid: WideString;
 begin
     // lookup some arbitrary vcard..
-    if InputQueryW(sLookupProfile, sEnterJID, jid) then
+    if InputQueryW(_(sLookupProfile), _(sEnterJID), jid) then
         ShowProfile(jid);
 end;
 
@@ -2291,7 +2251,7 @@ begin
         end;
     end;
 
-    if InputQueryW(sStartChat, sEnterJID, jid) then
+    if InputQueryW(_(sStartChat), _(sEnterJID), jid) then
         StartChat(jid, '', true);
 end;
 
@@ -2495,7 +2455,7 @@ var
 begin
     // kick off a service registration..
     tmps := '';
-    if (InputQueryW(sRegService, sEnterSvcJID, tmps) = false) then
+    if (InputQueryW(_(sRegService), _(sEnterSvcJID), tmps) = false) then
         exit;
     StartServiceReg(tmps);
 end;
@@ -2547,7 +2507,7 @@ begin
         end;
     end;
 
-    if InputQueryW(sSendMessage, sEnterJID, jid) then
+    if InputQueryW(_(sSendMessage), _(sEnterJID), jid) then
         StartMsg(jid);
 end;
 
@@ -2703,9 +2663,7 @@ begin
         DoConnect();
     end
     else begin
-        frmRosterWindow.lblLogin.Caption := _(sCancelReconnect);
-        frmRosterWindow.lblStatus.Caption := _(sReconnectIn) +
-            IntToStr(_reconnect_interval - _reconnect_cur) + ' ' + _(sSeconds);
+        frmRosterWindow.updateReconnect(_reconnect_interval - _reconnect_cur);
     end;
 end;
 
@@ -2719,9 +2677,9 @@ end;
 procedure TfrmExodus.presToggleClick(Sender: TObject);
 begin
     if (MainSession.Show = '') then
-        MainSession.setPresence('away', sRosterAway, MainSession.Priority)
+        MainSession.setPresence('away', _('Away'), MainSession.Priority)
     else
-        MainSession.setPresence('', sRosterAvail, MainSession.Priority)
+        MainSession.setPresence('', _('Available'), MainSession.Priority)
 end;
 
 {---------------------------------------}

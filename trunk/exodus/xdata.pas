@@ -59,18 +59,18 @@ var
 
 procedure showXData(tag: TXMLTag);
 
-const
-    sAllRequired = 'All required fields must be filled out';
-    sFormFrom = 'Form from %s';
-    sClose = 'Close';
-    sCancelled = 'Cancelled';
-    sCancelMsg = '%s cancelled your form.';
 
 implementation
 
 {$R *.dfm}
 uses
     GnuGetText, JabberConst, Session, ExUtils, StrUtils, fGeneric, IQ, Math;
+const
+    sAllRequired = 'All required fields must be filled out';
+    sFormFrom = 'Form from %s';
+    sClose = 'Close';
+    sCancelled = 'Cancelled';
+    sCancelMsg = '%s cancelled your form.';
 
 {---------------------------------------}
 {---------------------------------------}

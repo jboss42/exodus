@@ -118,11 +118,17 @@ var
 {---------------------------------------}
 {---------------------------------------}
 implementation
-
-{$R *.dfm}
-
 uses
     ExUtils, GnuGetText, IdException, IQ, Registry, Session, ShellAPI;
+
+const
+    sDownloading      = 'Downloading...';
+    sDownloadComplete = 'Download Complete';
+    sInitializing     = 'Initializing...';
+    sInstalling       = 'Installing...';
+    sError            = 'Error: %s';
+
+{$R *.dfm}
 
 {---------------------------------------}
 procedure ShowAutoUpdateStatus(URL : string);

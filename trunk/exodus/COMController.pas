@@ -171,13 +171,6 @@ procedure UnloadPlugins();
 procedure ConfigurePlugin(com_name: string);
 procedure ReloadPlugins(sl: TWidestringlist);
 
-
-resourcestring
-    sPluginErrCreate = 'Plugin could not be created. (%s)';
-    sPluginErrNoIntf = 'Plugin class does not support IExodusPlugin. (%s)';
-    sPluginErrInit   = 'Plugin class could not be initialized. (%s)';
-    sPluginRemove    = 'Remove this plugin from the list of plugins to be loaded at startup?';
-
 var
     plugs: TStringList;
 
@@ -190,6 +183,13 @@ uses
     COMChatController, Dockable, RegForm,
     Jabber1, Session, NodeItem, Roster, RosterWindow, PluginAuth, PrefController,
     Controls, Dialogs, Variants, Forms, SysUtils, ComServ;
+
+const
+    sPluginErrCreate = 'Plugin could not be created. (%s)';
+    sPluginErrNoIntf = 'Plugin class does not support IExodusPlugin. (%s)';
+    sPluginErrInit   = 'Plugin class could not be initialized. (%s)';
+    sPluginRemove    = 'Remove this plugin from the list of plugins to be loaded at startup?';
+
 
 var
     proxies: TStringList;

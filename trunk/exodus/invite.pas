@@ -64,10 +64,6 @@ type
 var
   frmInvite: TfrmInvite;
 
-const
-    sConfRoom = 'Conference Room:';
-    sInviteBody = 'You have been invited to the %s room.';
-
 procedure showConfInvite(tag: TXMLTag);
 procedure showRecvInvite(tag: TXMLTag);
 procedure ShowInvite(room_jid: WideString; items: TList); overload;
@@ -81,6 +77,11 @@ uses
     ExEvents, ExUtils, GnuGetText, Jabber1, JabberID, PrefController,
     JabberConst, InputPassword,
     Session, Room, RosterWindow, NodeItem, Roster;
+
+const
+    sConfRoom = 'Conference Room:';
+    sInviteBody = 'You have been invited to the %s room.';
+    sInvalidRoomJID = 'The Room Address you entered is invalid. It must be valid Jabber ID.';
 
 {$R *.dfm}
 
@@ -198,8 +199,8 @@ begin
     frm := FindRoom(room);
 
     // Send out invites.
-    b := WideFormat(sInviteBody, [room]);
-    memReason.Lines.Add(sConfRoom + ' ' + room);
+    b := WideFormat(_(sInviteBody), [room]);
+    memReason.Lines.Add(_(sConfRoom) + ' ' + room);
 
     for i := 0 to lstJIDS.Items.Count - 1 do begin
         msg := TXMLTag.Create('message');

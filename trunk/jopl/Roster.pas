@@ -110,21 +110,20 @@ type
         constructor Create(sjid, nickname, group: string; subscribe: boolean);
     end;
 
-const
-    sGrpBookmarks = 'Bookmarks';
-    sGrpUnfiled = 'Unfiled';
-    sGrpOnline = 'Available';
-    sGrpAway = 'Away';
-    sGrpXA = 'Ext. Away';
-    sGrpDND = 'Do Not Disturb';
-    sGrpOffline = 'Offline';
-
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 implementation
 uses
     JabberConst, iq, s10n, XMLUtils, Session;
+const
+    sGrpBookmarks = 'Bookmarks';
+    sGrpOffline = 'Offline';
+    sGrpUnfiled = 'Unfiled';
+    sGrpOnline = 'Available';
+    sGrpAway = 'Away';
+    sGrpXA = 'Ext. Away';
+    sGrpDND = 'Do Not Disturb';
 
 {---------------------------------------}
 {---------------------------------------}

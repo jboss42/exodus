@@ -70,15 +70,17 @@ var
 procedure StartJoinRoom; overload;
 procedure StartJoinRoom(room_jid: TJabberID; nick, password: WideString); overload; 
 
-const
-    sInvalidNick = 'You must enter a nickname';
-
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 implementation
 uses
     Entity, EntityCache, ExUtils, GnuGetText, Jabber1, Session, Room;
+
+const
+    sInvalidNick = 'You must enter a nickname';
+    sInvalidRoomJID = 'The Room Address you entered is invalid. It must be valid Jabber ID.';
+
 {$R *.DFM}
 
 {---------------------------------------}

@@ -66,13 +66,32 @@ end;
 
 function CreateJabberEvent(tag: TXMLTag): TJabberEvent;
 procedure RenderEvent(e: TJabberEvent);
-
 function getTaskBarRect(): TRect;
 
+function ParseTimeEvent(iq: TXMLTag): Widestring;
+function ParseVersionEvent(iq: TXMLTag): Widestring;
+function ParseLastEvent(iq: TXMLTag): Widestring;
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+implementation
+uses
+    // Exodus/JOPL stuff
+    GnuGetText,
+    ExUtils, JabberConst, Jabber1, JabberID, JabberMsg, MsgController, MsgRecv,
+    MsgQueue, Notify, PrefController, NodeItem, Roster, Session, XMLUtils,
+
+    // delphi stuff
+    Messages, Windows;
+
 const
+    sMsgMessage = 'Msg from ';
+    sMsgInvite = 'Invite from ';
     sMsgTime = 'Time Response';
     sMsgTimeInfo = 'Time, Ping Response: ';
     sMsgLocalTime = 'Local Time: ';
+    sMsgPing = 'Ping Time: %s seconds.';
 
     sMsgVersion = 'Version Response';
     sMsgVerClient = 'Description: ';
@@ -83,19 +102,6 @@ const
     sMsgLastInfo = 'Idle for ';
 
     sMsgURL = 'This message contains a URL: ';
-
-
-{---------------------------------------}
-{---------------------------------------}
-{---------------------------------------}
-implementation
-uses
-    // Exodus/JOPL stuff
-    ExUtils, JabberConst, Jabber1, JabberID, JabberMsg, MsgController, MsgRecv,
-    MsgQueue, Notify, PrefController, NodeItem, Roster, Session, XMLUtils,
-
-    // delphi stuff
-    Messages, Windows;
 
 var
     _taskbar_rect: TRect;
@@ -129,14 +135,14 @@ begin
     evt_Time: begin
         img_idx := 12;
         msg := e.data_type;
-        e.Data.Add(WideFormat(sMsgPing, [IntToStr(e.elapsed_time)]));
+        e.Data.Add(WideFormat(_(sMsgPing), [IntToStr(e.elapsed_time)]));
     end;
 
     evt_Message: begin
         img_idx := 18;
         msg := e.data_type;
         DoNotify(nil, 'notify_normalmsg',
-                 sMsgMessage + tmp_jid.jid, img_idx);
+                 _(sMsgMessage) + tmp_jid.jid, img_idx);
         if (e.error) then img_idx := ico_error;
 
         xml := e.tag;
@@ -171,7 +177,7 @@ begin
         img_idx := 21;
         msg := e.data_type;
         DoNotify(nil, 'notify_invite',
-                 sMsgInvite + tmp_jid.jid, img_idx);
+                 _(sMsgInvite) + tmp_jid.jid, img_idx);
     end;
 
     evt_RosterItems: begin
@@ -241,6 +247,67 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
+function ParseTimeEvent(iq: TXMLTag): Widestring;
+var
+    tmp_tag, qTag: TXMLTag;
+    s, msg: Widestring;
+begin
+    Result := '';
+    qTag := iq.getFirstTag('query');
+    if (qTag = nil) then exit;
+    
+    msg := _(sMsgTime);
+    tmp_tag := qtag.getFirstTag('display');
+    if (tmp_tag <> nil) then
+        msg := msg + #13 + _(sMsgLocalTime) + tmp_tag.Data;
+    s := iq.GetAttribute('iq_elapsed_time');
+    if (s <> '') then
+        msg := msg + #13 + WideFormat(_(sMsgPing), [s]);
+    Result := msg;
+end;
+
+{---------------------------------------}
+function ParseVersionEvent(iq: TXMLTag): Widestring;
+var
+    tmp_tag, qTag: TXMLTag;
+    msg: Widestring;
+begin
+    Result := '';
+    qTag := iq.getFirstTag('query');
+    if (qTag = nil) then exit;
+
+    tmp_tag := qtag.getFirstTag('name');
+    if (tmp_tag <> nil) then
+        msg := _(sMsgVersion) + #13 + _(sMsgVerClient) + tmp_tag.Data + #13;
+
+    tmp_tag := qtag.getFirstTag('version');
+    if (tmp_tag <> nil) then
+        msg := msg + _(sMsgVerVersion) + tmp_tag.Data + #13;
+
+    tmp_tag := qtag.getFirstTag('os');
+    if (tmp_tag <> nil) then
+        msg := msg + _(sMsgVerOS) + tmp_tag.Data;
+
+    Result := msg;
+end;
+
+{---------------------------------------}
+function ParseLastEvent(iq: TXMLTag): Widestring;
+var
+    qTag: TXMLTag;
+begin
+    Result := '';
+    qTag := iq.getFirstTag('query');
+    if (qTag = nil) then exit;
+
+    Result := _(sMsgLastInfo) + secsToDuration(qTag.getAttribute('seconds') + '.');
+end;
+
+
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 constructor TJabberEvent.create;
 begin
     inherited;
@@ -289,7 +356,7 @@ end;
 procedure TJabberEvent.Parse(tag: TXMLTag);
 var
     tmps, ns, t: Widestring;
-    delay, qtag, tmp_tag: TXMLTag;
+    delay, tmp_tag: TXMLTag;
     i_tags: TXMLTagList;
     j: integer;
     ri: TJabberRosterItem;
@@ -297,7 +364,7 @@ var
 begin
     // create the event from a xml tag
     _tag := TXMLTag.Create(tag);
-    
+
     data_type := '';
     if (tag.name = 'message') then begin
         t := tag.getAttribute('type');
@@ -359,7 +426,7 @@ begin
             url_tags := tag.QUeryXPTags(XP_XOOB);
             for j := 0 to url_tags.Count - 1 do begin
                 tmp_tag := url_tags[j];
-                _data_list.Add(sMsgURL);
+                _data_list.Add(_(sMsgURL));
                 _data_list.Add(tmp_tag.GetBasicText('url'));
                 tmps := tmp_tag.GetBasicText('desc');
                 if (tmps <> '') then _data_list.Add(tmps);
@@ -377,14 +444,14 @@ begin
             if (tag.getAttribute('type') = 'error') then begin
                 tmp_tag := tag.GetFirstTag('error');
                 if (tmp_tag <> nil) then begin
-                    data_type := 'ERROR: ' + tmp_tag.Data();
-                    _data_list.Insert(0, 'ERROR: ' + tmp_tag.Data() + ', Code=' +
+                    data_type := _('ERROR: ') + tmp_tag.Data();
+                    _data_list.Insert(0, _('ERROR: ') + tmp_tag.Data() + _(', Code=') +
                         tmp_tag.getAttribute('code'));
                 end
                 else
-                    data_type := 'Unknown Error';
+                    data_type := _('Unknown Error');
                 error := true;
-                _data_list.Insert(1, 'Original Message was:');
+                _data_list.Insert(1, _('Original Message was:'));
             end;
         end;
 
@@ -405,38 +472,20 @@ begin
         ns := tag.Namespace(true);
         if ns = XMLNS_TIME then begin
             eType := evt_Time;
-            data_type := sMsgTime;
-            qTag := tag.getFirstTag('query');
-            tmp_tag := qtag.getFirstTag('display');
-            _data_list.Add(sMsgTimeInfo);
-            if (tmp_tag <> nil) then
-                _data_list.Add(sMsgLocalTime + tmp_tag.Data);
+            data_type := _(sMsgTime);
+            _data_list.Add(ParseTimeEvent(tag));
         end
 
         else if ns = XMLNS_VERSION then begin
             eType := evt_Version;
-            data_type := sMsgVersion;
-            qTag := tag.getFirstTag('query');
-            _data_list.Add(sMsgVersion);
-
-            tmp_tag := qtag.getFirstTag('name');
-            if (tmp_tag <> nil) then
-                _data_list.Add(sMsgVerClient + tmp_tag.Data);
-
-            tmp_tag := qtag.getFirstTag('version');
-            if (tmp_tag <> nil) then
-                _data_list.Add(sMsgVerVersion + tmp_tag.Data);
-
-            tmp_tag := qtag.getFirstTag('os');
-            if (tmp_tag <> nil) then
-                _data_list.Add(sMsgVerOS + tmp_tag.Data);
+            data_type := _(sMsgVersion);
+            _data_list.Add(ParseVersionEvent(tag));
         end
 
         else if ns = XMLNS_LAST then begin
             eType := evt_Last;
-            qTag := tag.getFirstTag('query');
-            if (qtag = nil) then exit;
-            _data_list.Add(sMsgLastInfo + secsToDuration(qTag.getAttribute('seconds')) + '.');
+            data_type := _(sMsgLast);
+            _data_list.Add(ParseLastEvent(tag));
         end;
     end;
 

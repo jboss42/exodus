@@ -68,6 +68,7 @@ end;
 
 procedure TfrmAbout.FormCreate(Sender: TObject);
 begin
+    AssignUnicodeFont(Self);
     TranslateComponent(Self);
     pnlVersion.Caption := 'Version: ' + GetAppVersion();
     MainSession.Prefs.RestorePosition(Self);

@@ -117,17 +117,6 @@ var
 
 function ShowConnDetails(p: TJabberProfile): integer;
 
-const
-    sSmallKeys = 'Must have a larger number of poll keys.';
-    sConnDetails = '%s Details';
-    sProfileInvalidJid = 'The Jabber ID you entered (username@server/resource) is invalid. Please enter a valid username, server, and resource.';
-    sResourceWork = 'Work';
-    sResourceHome = 'Home';
-    sDownloadServers = 'Download the public server list from jabber.org? (Requires an internet connection).';
-    sDownloadCaption = 'Downloading public server list';
-    sNoSSL = 'This profile is currently to use SSL, however, your system does not have the required libraries to use SSL. Turning SSL OFF.';
-
-
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -139,6 +128,16 @@ uses
     ExSession,
     ExUtils, GnuGetText, JabberID, Unicode, Session, WebGet, XMLTag, XMLParser,
     Registry;
+
+const
+    sSmallKeys = 'Must have a larger number of poll keys.';
+    sConnDetails = '%s Details';
+    sProfileInvalidJid = 'The Jabber ID you entered (username@server/resource) is invalid. Please enter a valid username, server, and resource.';
+    sResourceWork = 'Work';
+    sResourceHome = 'Home';
+    sDownloadServers = 'Download the public server list from jabber.org? (Requires an internet connection).';
+    sDownloadCaption = 'Downloading public server list';
+    sNoSSL = 'This profile is currently to use SSL, however, your system does not have the required libraries to use SSL. Turning SSL OFF.';
 
 {---------------------------------------}
 function ShowConnDetails(p: TJabberProfile): integer;
@@ -397,9 +396,9 @@ begin
             cboResource.Items.Add(list[i]);
     end
     else begin
-        cboResource.Items.Add(sResourceHome);
-        cboResource.Items.Add(sResourceWork);
-        cboResource.Items.Add('Exodus');
+        cboResource.Items.Add(_(sResourceHome));
+        cboResource.Items.Add(_(sResourceWork));
+        cboResource.Items.Add(_('Exodus'));
     end;
     list.Free();
 
@@ -456,7 +455,7 @@ begin
 
     frameButtons1.btnOK.Enabled := false;
 
-    slist := ExWebDownload(sDownloadCaption, 'http://jabber.org/servers.xml');
+    slist := ExWebDownload(_(sDownloadCaption), 'http://jabber.org/servers.xml');
 
     frameButtons1.btnOK.Enabled := true;
 

@@ -42,6 +42,12 @@ end;
 
 procedure RemoveTransport(jid: WideString; Quiet: boolean = false);
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+implementation
+uses
+    GnuGetText, ExUtils, JabberConst, Controls, Dialogs;
 const
     sTransportRemove = 'Remove Registration?';
     sTransportTimeout = 'The transport could not be reached. Your request timed out.';
@@ -49,13 +55,6 @@ const
     sTransportNotReg = 'You are not registered with this transport.';
     sTransportSuccess = 'Your request was successful.';
 
-
-{---------------------------------------}
-{---------------------------------------}
-{---------------------------------------}
-implementation
-uses
-    GnuGetText, ExUtils, JabberConst, Controls, Dialogs;
 
 {---------------------------------------}
 procedure RemoveTransport(jid: Widestring; Quiet: boolean = false);

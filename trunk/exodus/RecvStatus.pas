@@ -144,12 +144,19 @@ type
     end;
 
 implementation
-
-{$R *.dfm}
-
 uses
     XMLUtils, StrUtils,
     IQ, GnuGetText, Session, JabberConst, ExUtils;
+
+const
+    sXferOverwrite = 'This file already exists. Overwrite?';
+    sXferCreateDir = 'This directory does not exist. Create it?';
+    sXferStreamError = 'There was an error trying to create the file.';
+    sXferRecvError = 'There was an error receiving the file. (%d)';
+    sXferDone = 'File transfer is done.';
+    sXferConn = 'Got connection.';
+
+{$R *.dfm}
 
 {---------------------------------------}
 {---------------------------------------}
@@ -274,7 +281,7 @@ end;
 procedure TFileRecvThread.httpClientConnected(Sender: TObject);
 begin
     _lock.Acquire();
-    _new_txt.Add(sXferConn);
+    _new_txt.Add(_(sXferConn));
     _lock.Release();
     Synchronize(Update);
 end;
@@ -297,7 +304,7 @@ procedure TFileRecvThread.httpClientWorkEnd(Sender: TObject;
   AWorkMode: TWorkMode);
 begin
     _lock.Acquire();
-    _new_txt.Add(sXferDone);
+    _new_txt.Add(_(sXferDone));
     _lock.Release();
     Synchronize(Update);
 end;
@@ -599,8 +606,8 @@ begin
     if (_pkg.Mode = recv_si) then begin
         if (_state = recv_si_stream) then begin
             btnRecv.Enabled := true;
-            btnRecv.Caption := _(sOpen);
-            btnCancel.Caption := _(sClose);
+            btnRecv.Caption := _('Open');
+            btnCancel.Caption := _('Close');
             _state := recv_done;
             _thread := nil;
             bar1.Position := bar1.Max;
@@ -610,8 +617,8 @@ begin
         if ((msg.LParam >= 200) and
             (msg.LParam < 300)) then begin
             btnRecv.Enabled := true;
-            btnRecv.Caption := _(sOpen);
-            btnCancel.Caption := _(sClose);
+            btnRecv.Caption := _('Open');
+            btnCancel.Caption := _('Close');
             _state := recv_done;
         end
         else begin

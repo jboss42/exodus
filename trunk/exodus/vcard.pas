@@ -113,10 +113,6 @@ var
 
 procedure ShowMyProfile;
 
-const
-    sVCardError = 'No vCard response was ever returned.';
-
-
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -125,6 +121,8 @@ implementation
 {$R *.dfm}
 uses
     ExUtils, GnuGetText, IQ, Session;
+const
+    sVCardError = 'No vCard response was ever returned.';
 
 {---------------------------------------}
 procedure ShowMyProfile;

@@ -164,6 +164,15 @@ var
 function StartChat(sjid, resource: widestring; show_window: boolean; chat_nick: widestring=''): TfrmChat;
 procedure CloseAllChats;
 
+implementation
+uses
+    CustomNotify, COMChatController, Debug, ExEvents,
+    JabberConst, ExSession, ExUtils, Presence, PrefController, Room,
+    XferManager, RosterAdd, RiserWindow, Notify,
+    Jabber1, Profile, MsgDisplay, GnuGetText,
+    JabberMsg, NodeItem, Roster, Session, XMLUtils,
+    ShellAPI, RosterWindow, Emoticons;
+
 const
     sReplying = ' is replying.';
     sChatActivity = 'Chat Activity: ';
@@ -172,18 +181,11 @@ const
     sAvailable = 'available';
     sOffline = 'offline';
     sCloseBusy = 'This chat window is busy. Close anyways?';
+    sChat = 'Chat';
+    sAlreadySubscribed = 'You are already subscribed to this contact';
+    sMsgLocalTime = 'Local Time: ';
 
-implementation
-
-{$R *.dfm}
-
-uses
-    CustomNotify, COMChatController, Debug, ExEvents,
-    JabberConst, ExSession, ExUtils, Presence, PrefController, Room,
-    XferManager, RosterAdd, RiserWindow, Notify,
-    Jabber1, Profile, MsgDisplay, GnuGetText, 
-    JabberMsg, NodeItem, Roster, Session, XMLUtils,
-    ShellAPI, RosterWindow, Emoticons;
+{$R *.dfm}   
 
 {---------------------------------------}
 {---------------------------------------}
@@ -542,7 +544,7 @@ begin
 
                 // Setup the cache'd old versions in ChangePresImage
                 _cur_img := _pres_img;
-                imgStatus.Hint := OtherNick + sReplying;
+                imgStatus.Hint := OtherNick + _(sReplying);
                 timFlashTimer(Self);
                 timFlash.Enabled := true;
 
@@ -620,7 +622,7 @@ begin
     end;
 
     if (Msg.Body <> '') then begin
-        DoNotify(Self, _notify[0], sChatActivity + OtherNick, ico_user, 'notify_chatactivity');
+        DoNotify(Self, _notify[0], _(sChatActivity) + OtherNick, ico_user, 'notify_chatactivity');
         DisplayMsg(Msg, MsgList);
 
         // log if we want..
@@ -737,7 +739,7 @@ end;
 procedure TfrmChat.SessionCallback(event: string; tag: TXMLTag);
 begin
     if (event = '/session/disconnected') then begin
-        DisplayPresence(sDisconnected, MsgList);
+        DisplayPresence(_('You have been disconnected.'), MsgList);
         MainSession.UnRegisterCallback(_pcallback);
         _pcallback := -1;
 
@@ -755,7 +757,7 @@ begin
     else if (event = '/session/block') then begin
         // if this jid just got blocked, just close the window.
         if (_jid.jid = tag.GetAttribute('jid')) then begin
-            DisplayPresence(sUserBlocked, Self.MsgList);
+            DisplayPresence(_(sUserBlocked), Self.MsgList);
             MainSession.UnRegisterCallback(_pcallback);
             _pcallback := -1;
             freeChatObject();
@@ -777,23 +779,23 @@ end;
 procedure TfrmChat.ChangePresImage(show: WideString; status: WideString);
 begin
     // Change the bulb
-    if (show = 'offline') then
+    if (show = _('offline')) then
         _pres_img := ico_Offline
-    else if (show = 'unknown') then
+    else if (show = _('unknown')) then
         _pres_img := ico_Unknown
-    else if (show = 'away') then
+    else if (show = _('away')) then
         _pres_img := ico_Away
-    else if (show = 'xa') then
+    else if (show = _('xa')) then
         _pres_img := ico_XA
-    else if (show = 'dnd') then
+    else if (show = _('dnd')) then
         _pres_img := ico_DND
-    else if (show = 'chat') then
+    else if (show = _('chat')) then
         _pres_img := ico_Chat
     else
         _pres_img := ico_Online;
 
     if (status = '') then
-        imgStatus.Hint := _(show)
+        imgStatus.Hint := show
     else
         imgStatus.Hint := status;
 
@@ -832,7 +834,7 @@ begin
 
     ChangePresImage(show, status);
     if (status = '') then
-        txt := _(show)
+        txt := show
     else
         txt := status;
 
@@ -841,9 +843,9 @@ begin
 
     if (MainSession.Prefs.getBool('timestamp')) then
         txt := '[' + formatdatetime(MainSession.Prefs.getString('timestamp_format'),now) + '] ' +
-                jid + ' ' + sIsNow + ' ' + txt
+                jid + ' ' + _(sIsNow) + ' ' + txt
     else
-        txt :=  jid + ' ' + sIsNow + ' ' + txt;
+        txt :=  jid + ' ' + _(sIsNow) + ' ' + txt;
 
     DisplayPresence(txt, MsgList);
 end;
@@ -1066,11 +1068,7 @@ end;
 procedure TfrmChat.CTCPCallback(event: string; tag: TXMLTag);
 var
     from: WideString;
-    s: WideString;
     ns: WideString;
-    qtag: TXMLTag;
-    tmp_tag: TXMLTag;
-    msg: WideString;
     procedure DispString(str: WideString);
     var
         subj_msg: TJabberMessage;
@@ -1090,35 +1088,17 @@ begin
         ns := tag.Namespace(true);
         if ns = XMLNS_TIME then begin
             _cur_time := nil;
-            qTag := tag.getFirstTag('query');
-            msg := _(sMsgTime);
-
-            tmp_tag := qtag.getFirstTag('display');
-            if (tmp_tag <> nil) then
-                msg := msg + #13 + _(sMsgLocalTime) + tmp_tag.Data;
-            s := tag.GetAttribute('iq_elapsed_time');
-            if (s <> '') then
-                msg := msg + #13 + WideFormat(_(sMsgPing), [s]);
-            DispString(msg);
+            DispString(ParseTimeEvent(tag));
         end
 
         else if ns = XMLNS_VERSION then begin
             _cur_ver := nil;
-            qTag := tag.getFirstTag('query');
-            tmp_tag := qtag.getFirstTag('name');
-            msg := _(sMsgVersion) + #13 + _(sMsgVerClient) + tmp_tag.Data + #13;
-
-            tmp_tag := qtag.getFirstTag('version');
-            msg := msg + _(sMsgVerVersion) + tmp_tag.Data + #13;
-
-            tmp_tag := qtag.getFirstTag('os');
-            DispString(msg + _(sMsgVerOS) + tmp_tag.Data);
+            DispString(ParseVersionEvent(tag)); 
         end
 
         else if ns = XMLNS_LAST then begin
             _cur_last := nil;
-            qTag := tag.getFirstTag('query');
-            DispString(_(sMsgLastInfo) + secsToDuration(qTag.getAttribute('seconds')) + '.');
+            DispString(ParseLastEvent(tag));
         end;
 
     end;

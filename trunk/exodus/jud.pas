@@ -193,6 +193,7 @@ begin
     virtlist.OwnsObjects := true;
 
     AssignUnicodeFont(Tabs.Font, 8);
+    AssignUnicodeURL(lblAddGrp.Font, 8);
 
     TabSheet1.TabVisible := false;
     TabSheet2.TabVisible := false;
@@ -701,15 +702,13 @@ end;
 {---------------------------------------}
 procedure TfrmJUD.lblAddGrpClick(Sender: TObject);
 var
-    ngrp: WideString;
+    go: TJabberGroup;
 begin
   inherited;
     // Add a new group to the list...
-    ngrp := sDefaultGroup;
-    if InputQueryW(sNewGroup, sNewGroupPrompt, ngrp) then begin
-        MainSession.Roster.AddGroup(ngrp);
+    go := promptNewGroup();
+    if (go <> nil) then
         MainSession.Roster.AssignGroups(cboGroup.Items);
-    end;
 end;
 
 {---------------------------------------}

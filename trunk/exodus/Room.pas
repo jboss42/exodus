@@ -219,7 +219,8 @@ const
     sBlock = 'Block';
     sUnblock = 'UnBlock';
     sUnknownFileType = 'Unknown file type';
-    sInvalidRoomJID = 'The Room Address you entered is invalid. It must be valid Jabber ID.';
+    sReconnected = 'Reconnected.';
+
 
     sDestroyRoom = 'Destroy Room';
     sKickReason = 'Kick Reason';
@@ -447,7 +448,7 @@ begin
     else begin
         rm := TRoomMember(_roster.Objects[i]);
         // if blocked ignore anything they say, even subject changes.
-        if (rm.Show = sBlocked) then
+        if (rm.Show = _(sBlocked)) then
            exit;
         Msg.Nick := rm.Nick;
         Msg.IsMe := (Msg.Nick = MyNick);
@@ -459,13 +460,13 @@ begin
         // check for keywords
         if ((_keywords <> nil) and (_keywords.Exec(Msg.Body))) then begin
             DoNotify(Self, _notify[1],
-                     sNotifyKeyword + Self.Caption + ': ' + _keywords.Match[1],
+                     _(sNotifyKeyword) + Self.Caption + ': ' + _keywords.Match[1],
                      ico_conf, 'notify_keyword');
             Msg.highlight := true;
         end
         else if (not Msg.IsMe) then
             DoNotify(Self, _notify[0],
-                     sNotifyActivity + Self.Caption,
+                     _(sNotifyActivity) + Self.Caption,
                      ico_conf, 'notify_roomactivity');
     end;
 
@@ -642,7 +643,7 @@ begin
     if (event = '/session/disconnected') then begin
         // post a msg to the window and disable the text input box.
         pnlInput.Visible := false;
-        DisplayPresence(sDisconnected, MsgList);
+        DisplayPresence(_('You have been disconnected.'), MsgList);
 
         MainSession.UnRegisterCallback(_mcallback);
         MainSession.UnRegisterCallback(_ecallback);
@@ -784,7 +785,7 @@ begin
                     if (itag <> nil) then begin
                         tmp1 := member.Nick;
                         tmp2 := itag.GetAttribute('nick');
-                        mtag := newRoomMessage(WideFormat(sStatus_303,
+                        mtag := newRoomMessage(WideFormat(_(sStatus_303),
                             [tmp1, tmp2]));
                         ShowMsg(mtag);
                     end;
@@ -792,14 +793,14 @@ begin
                 else if ((scode = '301') or (scode = '307')) then begin
                     itag := tag.QueryXPTag(xp_muc_reason);
                     if (itag <> nil) then tmp1 := itag.Data else tmp1 := '';
-                    if (scode = '301') then tmp2 := sStatus_301
-                    else if (scode = '307') then tmp2 := sStatus_307;
+                    if (scode = '301') then tmp2 := _(sStatus_301)
+                    else if (scode = '307') then tmp2 := _(sStatus_307);
                     mtag := newRoomMessage(WideFormat(tmp2, [member.Nick, tmp1]));
                     ShowMsg(mtag);
                 end;
             end
             else if (member.role <> '') then begin
-                mtag := newRoomMessage(WideFormat(sUserLeave, [member.Nick]));
+                mtag := newRoomMessage(WideFormat(_(sUserLeave), [member.Nick]));
                 ShowMsg(mtag);
             end;
 
@@ -824,7 +825,7 @@ begin
             // show new user message
             if (xtag <> nil) then begin
                 _isMUC := true;
-                mtag := newRoomMessage(WideFormat(sNewUser, [member.nick]));
+                mtag := newRoomMessage(WideFormat(_(sNewUser), [member.nick]));
                 showMsg(mtag);
 
                 t := xtag.GetFirstTag('status');
@@ -849,11 +850,11 @@ begin
             if ((tmp1 <> '') and (member.nick = myNick)) then begin
                 // someone maybe changed my role
                 if ((member.role = MUC_VISITOR) and (tmp1 = MUC_PART)) then
-                    mtag := newRoomMessage(sGrantVoice)
+                    mtag := newRoomMessage(_(sGrantVoice))
                 else if ((member.role = MUC_PART) and (tmp1 = MUC_VISITOR)) then
-                    mtag := newRoomMessage(sRevokeVoice)
+                    mtag := newRoomMessage(_(sRevokeVoice))
                 else if (member.role <> tmp1) then
-                    mtag := newRoomMessage(WideFormat(sNewRole, [member.nick, tmp1]));
+                    mtag := newRoomMessage(WideFormat(_(sNewRole), [member.nick, tmp1]));
                 if (mtag <> nil) then showMsg(mtag);
             end;
         end;
@@ -948,17 +949,17 @@ begin
 
     fmt := '';
 
-    if (scode = '301') then fmt := sStatus_301
-    else if (scode = '302') then fmt := sStatus_302
-    else if (scode = '303') then fmt := sStatus_303
-    else if (scode = '307') then fmt := sStatus_307
-    else if (scode = '403') then msg := sStatus_403
-    else if (scode = '405') then msg := sStatus_405
-    else if (scode = '407') then msg := sStatus_407
-    else if (scode = '409') then msg := sStatus_409;
+    if (scode = '301') then fmt := _(sStatus_301)
+    else if (scode = '302') then fmt := _(sStatus_302)
+    else if (scode = '303') then fmt := _(sStatus_303)
+    else if (scode = '307') then fmt := _(sStatus_307)
+    else if (scode = '403') then msg := _(sStatus_403)
+    else if (scode = '405') then msg := _(sStatus_405)
+    else if (scode = '407') then msg := _(sStatus_407)
+    else if (scode = '409') then msg := _(sStatus_409);
 
     if (fmt <> '') then
-        msg := WideFormat(_(fmt), [MyNick, '']);
+        msg := WideFormat(fmt, [MyNick, '']);
 
     if (msg <> '') then
         MessageDlgW(msg, mtInformation, [mbOK], 0);
@@ -1004,7 +1005,7 @@ begin
         p := TJabberPres.Create;
         p.parse(tag);
 
-        if (member.show = sBlocked) then
+        if (member.show = _(sBlocked)) then
            member.blockShow := p.Show
         else begin
             member.show := p.Show;
@@ -1239,7 +1240,7 @@ begin
     // send the msg out
     msg := TJabberMessage.Create(jid,
                                  'groupchat',
-                                 sRoomSubjChange + subj,
+                                 _(sRoomSubjChange) + subj,
                                  subj);
     MainSession.SendTag(msg.Tag);
     msg.Free;
@@ -1253,7 +1254,7 @@ begin
     // Change the subject
     s := lblSubject.Caption;
     o := s;
-    if InputQueryW(sRoomSubjPrompt, sRoomNewSubj, s) then begin
+    if InputQueryW(_(sRoomSubjPrompt), _(sRoomNewSubj), s) then begin
         if (o <> s) then
             changeSubject(s);
     end;
@@ -1297,7 +1298,7 @@ var
 begin
   inherited;
     new_nick := myNick;
-    if (InputQueryW(sRoomNewNick, sRoomNewNick, new_nick)) then begin
+    if (InputQueryW(_(sRoomNewNick), _(sRoomNewNick), new_nick)) then begin
         if (new_nick = myNick) then exit;
         changeNick(new_nick);
     end;
@@ -1320,7 +1321,7 @@ begin
     // bookmark this room..
     bm_name := Self.jid;
 
-    if (inputQueryW(sRoomBMPrompt, sRoomNewBookmark, bm_name)) then begin
+    if (inputQueryW(_(sRoomBMPrompt), _(sRoomNewBookmark), bm_name)) then begin
         bm := TJabberBookmark.Create(nil);
         bm.jid := TJabberID.Create(Self.jid);
         bm.bmType := 'conference';
@@ -1411,7 +1412,7 @@ begin
     else begin
         rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
         if (rm <> nil) then begin
-           if (rm.show = sBlocked) then begin
+           if (rm.show = _(sBlocked)) then begin
               //unblock
               rm.show := rm.blockShow;
               rm.blockShow := '';
@@ -1419,7 +1420,7 @@ begin
            else begin
               //block
               rm.blockShow := rm.show;
-              rm.show := sBlocked;
+              rm.show := _(sBlocked);
           end;
           lstRoster.Invalidate();
        end;
@@ -1451,7 +1452,7 @@ begin
 
     rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
     if (rm <> nil) then begin
-        if (rm.show = sBlocked) then
+        if (rm.show = _(sBlocked)) then
             popRosterBlock.Caption := _(sUnblock)
         else
             popRosterBlock.Caption := _(sBlock);
@@ -1610,12 +1611,12 @@ begin
     if (lstRoster.SelCount = 0) then exit;
 
     if (Sender = popKick) then begin
-        reason := sKickDefault;
-        if (not InputQueryW(sKickReason, sKickReason, reason)) then exit;
+        reason := _(sKickDefault);
+        if (not InputQueryW(_(sKickReason), _(sKickReason), reason)) then exit;
     end
     else if (Sender = popBan) then begin
-        reason := sBanDefault;
-        if (not InputQueryW(sBanReason, sBanReason, reason)) then exit;
+        reason := _(sBanDefault);
+        if (not InputQueryW(_(sBanReason), _(sBanReason), reason)) then exit;
     end;
 
     iq := TXMLTag.Create('iq');
@@ -1708,17 +1709,17 @@ begin
   inherited;
     // edit a list
     if (Sender = popVoiceList) then
-        ShowRoomAdminList(self.jid, MUC_PART, '', sEditVoice)
+        ShowRoomAdminList(self.jid, MUC_PART, '', _(sEditVoice))
     else if (Sender = popBanList) then
-        ShowRoomAdminList(self.jid, '', MUC_OUTCAST, sEditBan)
+        ShowRoomAdminList(self.jid, '', MUC_OUTCAST, _(sEditBan))
     else if (Sender = popMemberList) then
-        ShowRoomAdminList(self.jid, '', MUC_MEMBER, sEditMember)
+        ShowRoomAdminList(self.jid, '', MUC_MEMBER, _(sEditMember))
     else if (Sender = popModeratorList) then
-        ShowRoomAdminList(self.jid, MUC_MOD, '', sEditModerator)
+        ShowRoomAdminList(self.jid, MUC_MOD, '', _(sEditModerator))
     else if (Sender = popAdminList) then
-        ShowRoomAdminList(self.jid, '', MUC_ADMIN, sEditAdmin)
+        ShowRoomAdminList(self.jid, '', MUC_ADMIN, _(sEditAdmin))
     else if (Sender = popOwnerList) then
-        ShowRoomAdminList(self.jid, '', MUC_OWNER, sEditOwner);
+        ShowRoomAdminList(self.jid, '', MUC_OWNER, _(sEditOwner));
 end;
 
 {---------------------------------------}
@@ -1731,8 +1732,8 @@ begin
     // Destroy Room
     if (MessageDlgW(_(sDestroyRoomConfirm), mtConfirmation, [mbYes,mbNo], 0) = mrNo) then
         exit;
-    reason := sDestroyDefault;
-    if InputQueryW(sDestroyRoom, sDestroyReason, reason) = false then exit;
+    reason := _(sDestroyDefault);
+    if InputQueryW(_(sDestroyRoom), _(sDestroyReason), reason) = false then exit;
 
     iq := TXMLTag.Create('iq');
     iq.setAttribute('type', 'set');
@@ -1902,7 +1903,7 @@ begin
     // get the data for this person..
     rm := TRoomMember(_rlist[Item.Index]);
     Item.Caption := rm.Nick;
-    if (rm.show = sBlocked) then item.ImageIndex := ico_blocked
+    if (rm.show = _(sBlocked)) then item.ImageIndex := ico_blocked
     else if rm.show = 'away' then Item.ImageIndex := 2
     else if rm.show = 'xa' then Item.ImageIndex := 10
     else if rm.show = 'dnd' then Item.ImageIndex := 3

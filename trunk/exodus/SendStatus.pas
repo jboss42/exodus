@@ -164,6 +164,13 @@ implementation
 uses
     ExUtils, GnuGetText, JabberID, XMLUtils, JabberConst, Session;
 
+const
+    sXferStreamError = 'There was an error trying to read the file.';
+    sXferWaiting = 'Waiting for connection...';
+    sXferDavError = 'There was an error trying to upload the file to your web host.';
+    sXferDone = 'File transfer is done.';
+    sXferConn = 'Got connection.';
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -279,7 +286,7 @@ end;
 procedure TFileSendThread.httpClientConnected(Sender: TObject);
 begin
     _lock.Acquire();
-    _new_txt.Add(sXferConn);
+    _new_txt.Add(_(sXferConn));
     _lock.Release();
     Synchronize(Update);
 end;
@@ -302,7 +309,7 @@ procedure TFileSendThread.httpClientWorkEnd(Sender: TObject;
   AWorkMode: TWorkMode);
 begin
     _lock.Acquire();
-    _new_txt.Add(sXferDone);
+    _new_txt.Add(_(sXferDone));
     _lock.Release();
     Synchronize(Update);
 end;
