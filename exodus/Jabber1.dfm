@@ -257,9 +257,9 @@ object frmExodus: TfrmExodus
       object N6: TMenuItem
         Caption = '-'
       end
-      object RegisterwithaService1: TMenuItem
+      object mnuRegisterService: TMenuItem
         Caption = 'Register with a Service'
-        OnClick = RegisterwithaService1Click
+        OnClick = mnuRegisterServiceClick
       end
       object mnuPassword: TMenuItem
         Caption = 'Change Jabber Password'
