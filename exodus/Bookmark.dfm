@@ -1,8 +1,8 @@
 object frmBookmark: TfrmBookmark
-  Left = 927
-  Top = 177
+  Left = 514
+  Top = 169
   Width = 288
-  Height = 192
+  Height = 216
   Caption = 'Bookmark Properties'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -31,21 +31,21 @@ object frmBookmark: TfrmBookmark
   end
   object Label3: TLabel
     Left = 8
-    Top = 61
+    Top = 66
     Width = 49
     Height = 13
     Caption = 'Jabber ID:'
   end
   object Label4: TLabel
     Left = 8
-    Top = 93
+    Top = 95
     Width = 82
     Height = 13
     Caption = 'Room Nickname:'
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 124
+    Top = 148
     Width = 280
     Height = 34
     Align = alBottom
@@ -77,24 +77,32 @@ object frmBookmark: TfrmBookmark
       'Conference Room')
   end
   object txtName: TEdit
-    Left = 104
-    Top = 32
+    Left = 105
+    Top = 33
     Width = 145
     Height = 21
     TabOrder = 2
   end
   object txtJID: TEdit
-    Left = 104
-    Top = 56
+    Left = 105
+    Top = 62
     Width = 145
     Height = 21
     TabOrder = 3
   end
   object txtNick: TEdit
-    Left = 104
-    Top = 88
+    Left = 105
+    Top = 91
     Width = 145
     Height = 21
     TabOrder = 4
+  end
+  object chkAutoJoin: TCheckBox
+    Left = 105
+    Top = 120
+    Width = 97
+    Height = 17
+    Caption = 'Join on login'
+    TabOrder = 5
   end
 end

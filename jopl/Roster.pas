@@ -60,12 +60,14 @@ type
         bmType: string;
         bmName: string;
         nick: string;
+        autoJoin: boolean;
         Data: TObject;
 
         constructor Create(tag: TXMLTag);
         destructor Destroy; override;
 
         function AddToTag(parent: TXMLTag): TXMLTag;
+        procedure Copy(bm: TJabberBookmark);
     end;
 
     TRosterEvent = procedure(event: string; tag: TXMLTag; ritem: TJabberRosterItem) of object;
@@ -148,10 +150,12 @@ begin
     bmName := '';
     bmType := 'conference';
     nick := '';
+    autoJoin := false;
 
     if (tag <> nil) then begin
         jid := TJabberID.Create(tag.GetAttribute('jid'));
         bmName := tag.getAttribute('name');
+        autoJoin := SafeBool(tag.GetAttribute('autojoin'));
         bmType := tag.name;
         nick := tag.GetBasicText('nick');
         end;
@@ -165,6 +169,14 @@ begin
     inherited Destroy;
 end;
 
+procedure TJabberBookmark.Copy(bm: TJabberBookmark);
+begin
+    bmType := bm.bmType;
+    bmName := bm.bmName;
+    nick := bm.nick;
+    autoJoin := bm.autoJoin;
+end;
+
 {---------------------------------------}
 function TJabberBookmark.AddToTag(parent: TXMLTag): TXMLTag;
 begin
@@ -173,6 +185,7 @@ begin
     with Result do begin
         setAttribute('jid', jid.full);
         setAttribute('name', bmName);
+        setAttribute('autojoin', BoolToStr(autoJoin));
         if (nick <> '') then
             AddBasicTag('nick', nick);
         end;
@@ -572,8 +585,7 @@ begin
     i := Bookmarks.IndexOf(sjid);
     if (i >= 0) then begin
         tbm := TJabberBookmark(Bookmarks.Objects[i]);
-        tbm.bmName := bm.bmName;
-        tbm.nick := bm.nick;
+        tbm.Copy(bm);
         end
     else
         Self.Bookmarks.AddObject(sjid, bm);

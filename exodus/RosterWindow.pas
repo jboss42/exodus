@@ -540,6 +540,8 @@ begin
         bm_node.ImageIndex := 21;
         bm_node.SelectedIndex := bm_node.ImageIndex;
         bm_node.Data := bm;
+        if (bm.autoJoin and (bm.bmType = 'conference')) then
+            StartRoom(bm.jid.jid, bm.nick);
         end;
 
 
