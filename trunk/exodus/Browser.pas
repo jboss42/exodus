@@ -603,9 +603,11 @@ begin
         mRegister.Enabled := IndexOf(XMLNS_REGISTER) >= 0;
 
         // various conference namespaces
-        if (IndexOf(XMLNS_CONFERENCE) >= 0) then mJoinConf.Enabled := true;
-        if (IndexOf(XMLNS_MUC) >= 0) then mJoinConf.Enabled := true;
-        if (IndexOf('gc-1.0') >= 0) then mJoinConf.Enabled := true;
+        if (IndexOf(XMLNS_CONFERENCE) >= 0) then mJoinConf.Enabled := true
+        else if (IndexOf(XMLNS_MUC) >= 0) then mJoinConf.Enabled := true
+        else if (IndexOf('gc-1.0') >= 0) then mJoinConf.Enabled := true
+        else mJoinConf.Enabled := false;
+
     end;
 end;
 
