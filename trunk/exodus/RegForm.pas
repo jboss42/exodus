@@ -169,14 +169,21 @@ begin
             btnDelete.Enabled := false;
             ag_tag := tag.QueryXPTag('/iq/query');
 
+            // always check for registered
+            if (ag_tag.GetFirstTag('registered') <> nil) then
+                btnDelete.Enabled := true;
+
+            // check for x-data form
             x := tag.QueryXPTag('/iq/query/x[@xmlns="' + XMLNS_XDATA + '"]');
             if (x <> nil) then begin
-                // XData reg form
                 m := 0;
-
                 f := x.GetFirstTag('instructions');
                 if (f <> nil) then
                     lblIns.Caption := f.Data();
+
+                f := x.GetFirstTag('title');
+                if (f <> nil) then
+                    Self.Caption := f.Data();
 
                 ftype := x.GetAttribute('type');
                 flds := x.QueryTags('field');
@@ -212,8 +219,6 @@ begin
                         lblIns.Caption := f.Data
                     else if (f.Name = 'key') then
                         cur_key := f.Data
-                    else if (f.Name = 'registered') then
-                        btnDelete.Enabled := true
                     else if ((f.Name = 'x') and (f.GetAttribute('xmlns') = XMLNS_XDATA)) then
                          // ignore x-data fields here
                     else begin
@@ -226,7 +231,9 @@ begin
                 cur_stage := rsForm;
             end;
 
+            btnCancel.Default := false;
             btnNext.Enabled := true;
+            btnNext.Default := true;
         end;
     end
     else begin
@@ -362,6 +369,7 @@ begin
         btnPrev.Enabled := false;
         btnNext.Caption := sBtnFinish;
         btnNext.Enabled := true;
+        btnNext.Default := true;
         btnCancel.Enabled := false;
     end
     else begin
@@ -380,8 +388,10 @@ end;
 procedure TfrmRegister.btnNextClick(Sender: TObject);
 begin
     // goto the next tab
-    if (Tabs.ActivePage = tabWelcome) then
-        Tabs.ActivePage := tabAgent
+    if (Tabs.ActivePage = tabWelcome) then begin
+        Tabs.ActivePage := tabAgent;
+        btnPrev.Enabled := true;
+        end
 
     else if (Tabs.ActivePage = tabAgent) then begin
         // do the actual registration
@@ -445,7 +455,9 @@ procedure TfrmRegister.btnPrevClick(Sender: TObject);
 begin
     // previous page
     if (Tabs.ActivePage = tabResult) then
-        Tabs.ActivePage := tabAgent;
+        Tabs.ActivePage := tabAgent
+    else if (Tabs.ActivePage = tabAgent) then
+        Tabs.ActivePage := tabWelcome;
 end;
 
 end.

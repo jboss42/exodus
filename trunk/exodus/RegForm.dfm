@@ -17,7 +17,7 @@ object frmRegister: TfrmRegister
   TextHeight = 13
   object pnlBottom: TPanel
     Left = 0
-    Top = 258
+    Top = 263
     Width = 304
     Height = 35
     Align = alBottom
@@ -39,7 +39,6 @@ object frmRegister: TfrmRegister
         Caption = '< Previous'
         Enabled = False
         TabOrder = 0
-        Visible = False
         OnClick = btnPrevClick
       end
       object btnNext: TButton
@@ -69,7 +68,7 @@ object frmRegister: TfrmRegister
     Left = 0
     Top = 0
     Width = 304
-    Height = 258
+    Height = 263
     ActivePage = tabAgent
     Align = alClient
     MultiLine = True
@@ -119,7 +118,7 @@ object frmRegister: TfrmRegister
       ImageIndex = 1
       object Panel2: TPanel
         Left = 0
-        Top = 194
+        Top = 199
         Width = 296
         Height = 33
         Align = alBottom
