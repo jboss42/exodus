@@ -1,0 +1,12 @@
+@echo off
+rem CHANGE user to YOUR js account
+cd exodus
+dcc32 -B -Q -Noutput IdleHooks.dpr
+dcc32 -B -Q -Noutput -UC:\src\delphi\jcl\dcu -IC:\src\delphi\jcl\source Exodus.dpr
+@echo compiling installer
+"C:\Program Files\NSIS\makensis.exe" /v1 exodus.nsi
+@echo copying to jabberstudio
+scp -C setup.exe Exodus.exe user@jabberstudio.org:/var/projects/exodus/www/daily/stage
+ssh user@jabberstudio.org "cd /var/projects/exodus/www/daily/stage; mv *.exe .."
+cd ..
+@echo done
