@@ -79,6 +79,7 @@ type
         Server: string;
         Resource: string;
         Priority: integer;
+        SavePasswd: boolean;
 
         ConnectionType: integer;
 
@@ -102,6 +103,8 @@ type
         ProxyAuth: boolean;
         ProxyUsername: string;
         ProxyPassword: string;
+
+        constructor Create();
 
         procedure Load(tag: TXMLTag);
         procedure Save(node: TXMLTag);
@@ -868,20 +871,59 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
+constructor TJabberProfile.Create();
+begin
+    inherited Create;
+
+    Name := '';
+    Username := '';
+    password := '';
+    Server := '';
+    Resource := '';
+    Priority := 0;
+    SavePasswd := true;
+
+    ConnectionType := conn_normal;
+
+    // Socket connection
+    Host := '';
+    Port := 0;
+    ssl := false;
+    SocksType := 0;
+    SocksHost := '';
+    SocksPort := 0;
+    SocksAuth := false;
+    SocksUsername := '';
+    SocksPassword := '';
+
+    // HTTP Connection
+    URL := '';
+    Poll := 0;
+    ProxyApproach := 0;
+    ProxyHost := '';
+    ProxyPort := 0;
+    ProxyAuth := false;
+    ProxyUsername := '';
+    ProxyPassword := '';
+end;
+
+{---------------------------------------}
 procedure TJabberProfile.Load(tag: TXMLTag);
 var
     ptag: TXMLTag;
-    decoder: TIdBase64Decoder;
-    tmps: string;
 begin
     // Read this profile from the registry
     Name := tag.getAttribute('name');
     Username := tag.GetBasicText('username');
     Server := tag.GetBasicText('server');
 
+    // check for this flag this way, so that if the tag
+    // doesn't exist, it'll default to true.
+    SavePasswd := not (tag.GetBasicText('save_passwd') = 'no');
+
     // Password := tag.GetBasicText('password');
     ptag := tag.GetFirstTag('password');
-    if (ptag.GetAttribute('encoded') = 'true') then
+    if (ptag.GetAttribute('encoded') = 'yes') then
         Password := DecodeString(ptag.Data)
     else
         Password := ptag.Data;
@@ -920,18 +962,19 @@ end;
 procedure TJabberProfile.Save(node: TXMLTag);
 var
     ptag: TXMLTag;
-    code: TIdBase64Encoder;
-    tmps: String;
 begin
     node.ClearTags();
     node.PutAttribute('name', Name);
     node.AddBasicTag('username', Username);
     node.AddBasicTag('server', Server);
+    node.AddBasicTag('save_passwd', IfThen(SavePasswd, 'yes', 'no'));
 
     // node.AddBasicTag('password', Password);
     ptag := node.AddTag('password');
-    ptag.PutAttribute('encoded', 'true');
-    ptag.AddCData(EncodeString(Password));
+    if (SavePasswd) then begin
+        ptag.PutAttribute('encoded', 'yes');
+        ptag.AddCData(EncodeString(Password));
+        end;
 
     node.AddBasicTag('resource', Resource);
     node.AddBasicTag('priority', IntToStr(Priority));

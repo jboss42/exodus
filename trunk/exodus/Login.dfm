@@ -2,7 +2,7 @@ object frmLogin: TfrmLogin
   Left = 255
   Top = 142
   Width = 246
-  Height = 246
+  Height = 262
   Caption = 'Jabber Login'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -101,7 +101,7 @@ object frmLogin: TfrmLogin
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 175
+    Top = 191
     Width = 238
     Height = 37
     Align = alBottom
@@ -129,8 +129,8 @@ object frmLogin: TfrmLogin
       'Default Profile')
   end
   object chkInvisible: TCheckBox
-    Left = 67
-    Top = 125
+    Left = 66
+    Top = 144
     Width = 97
     Height = 15
     Caption = 'Invisible'
@@ -138,16 +138,24 @@ object frmLogin: TfrmLogin
   end
   object btnDetails: TButton
     Left = 65
-    Top = 143
+    Top = 162
     Width = 75
     Height = 23
     Caption = 'Details...'
     TabOrder = 7
     OnClick = btnDetailsClick
   end
+  object chkSavePasswd: TCheckBox
+    Left = 66
+    Top = 125
+    Width = 127
+    Height = 17
+    Caption = 'Save password'
+    TabOrder = 8
+  end
   object popProfiles: TPopupMenu
-    Left = 16
-    Top = 136
+    Left = 8
+    Top = 160
     object CreateNew1: TMenuItem
       Caption = 'Create New Profile...'
       OnClick = CreateNew1Click

@@ -44,6 +44,7 @@ type
     popProfiles: TPopupMenu;
     CreateNew1: TMenuItem;
     Delete1: TMenuItem;
+    chkSavePasswd: TCheckBox;
 
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cboProfilesChange(Sender: TObject);
@@ -79,7 +80,7 @@ implementation
 {$R *.DFM}
 
 uses
-    Jabber1,
+    Jabber1,  
     ConnDetails, PrefController;
 
 {---------------------------------------}
@@ -102,6 +103,7 @@ begin
         // Update the profile
         p.Server := l.cboServer.Text;
         p.Username := l.txtUsername.Text;
+        p.SavePasswd := l.chkSavePasswd.Checked;
         p.password := l.txtPassword.Text;
         p.resource := l.cboResource.Text;
 
@@ -110,12 +112,15 @@ begin
 
         MainSession.ActivateProfile(i);
         MainSession.Invisible := l.chkInvisible.Checked;
-        MainSession.Connect;
+
+        l.Free;
+        frmExodus.DoConnect();
 
         // frmExodus.Tabs.ActivePage := frmExodus.Tabs.Pages[0];
-        end;
+        end
+    else
+        l.Free;
 
-    l.Free;
 end;
 
 {---------------------------------------}
@@ -141,6 +146,7 @@ begin
     cboServer.Text := p.Server;
     cboResource.Text := p.Resource;
     // spnPriority.Position := p.Priority;
+    chkSavePasswd.Checked := p.SavePasswd;
     chkInvisible.Checked := false;
     // cboConnection.ItemIndex := p.ConnectionType;
 end;
