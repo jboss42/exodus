@@ -1227,7 +1227,7 @@ begin
             inc(_reconnect_tries);
 
             rtries := MainSession.Prefs.getInt('recon_tries');
-            if (rtries <= 0) then rtries := 3;
+            if (rtries < 0) then rtries := 3;
             rint := MainSession.Prefs.getInt('recon_time');
 
             if (_reconnect_tries < rtries) then begin
@@ -2559,7 +2559,7 @@ begin
     // LoadPlugin('RosterClean.ExodusRosterClean');
 
     // Cause an AV
-    PInteger(nil)^ := 0;
+    //PInteger(nil)^ := 0;
 
     // Show a toast window
     {
@@ -2570,6 +2570,7 @@ begin
         ShowRiserWindow(Self, 'Test Toast ' + IntToStr(i) + ' cvs commit from cvsnotify@jabberstudio.org', i);
     }
     //ShowRiserWindow(Self, 'Test Toast ' + IntToStr(i), i);
+    ShowRiserWindow(Self.Handle, 'Test Toast', 1);
 
     //TrackWindowsMsg(WM_ACTIVATEAPP);
     //TrackWindowsMsg(WM_ACTIVATE);
