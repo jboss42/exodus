@@ -302,7 +302,13 @@ begin
         p := FindPres(curp.fromJID.jid, curp.fromJID.resource);
         if p <> nil then begin
             DeletePres(p);
-            s.FireEvent('/presence/offline', tag, curp);
+            p := FindPres(curp.fromJid.jid, '');
+
+            // if there are no more presence packets, they are offline.
+            if (p = nil) then
+                s.FireEvent('/presence/offline', tag, curp)
+            else
+                s.FireEvent('/presence/unavailable', tag, curp);
         end;
         curp.Free();
     end
