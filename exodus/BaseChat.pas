@@ -151,7 +151,7 @@ begin
     inherited;
     if (frmEmoticons.Visible) then
         frmEmoticons.Hide;
-    if (Self.Visible) and (MsgOut.Visible) then
+    if (Self.Visible) and (pnlInput.Visible) then
         MsgOut.SetFocus;
 end;
 
@@ -281,7 +281,7 @@ begin
     if (not Self.Visible) then exit;
     if (Ord(key) < 32) then exit;
 
-    if (MsgOut.Visible) then begin
+    if (pnlInput.Visible) then begin
         MsgOut.SetFocus();
         MsgOut.SelText := Key;
         end;
