@@ -233,7 +233,7 @@ resourcestring
 
 implementation
 uses
-    JabberConst,
+    JabberConst, Chat, ChatController, 
     SelContact, Invite, Bookmark, S10n, Transfer, MsgRecv, PrefController,
     ExEvents, ExUtils, Room, Profile, JabberID, RiserWindow, ShellAPI,
     IQ, RosterAdd, GrpRemove, RemoveContact, ChatWin, Jabber1,
@@ -1046,16 +1046,36 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterDblClick(Sender: TObject);
+var
+    r: integer;
+    chatc: TChatController;
+    cw: TfrmChat;
 begin
     // Chat with this person
     _change_node := nil;
     case getNodeType() of
     node_ritem: begin
         // chat w/ this person
-        if (MainSession.Prefs.getBool(P_CHAT)) then
+        r := MainSession.Prefs.getInt(P_CHAT);
+        if (r = 0) then
+            // always start chat window
             StartChat(_cur_ritem.jid.jid, '', true)
-        else
-            StartMsg(_cur_ritem.jid.jid);
+        else if (r = 1) then
+            // instant message
+            StartMsg(_cur_ritem.jid.jid)
+        else if (r = 2) then begin
+            // either raise, or start chat
+            chatc := MainSession.ChatList.FindChat(_cur_ritem.jid.jid, '', '');
+            if (chatc <> nil) then begin
+                cw := TfrmChat(chatc.window);
+                if (cw.Docked) then
+                    frmExodus.Tabs.ActivePage := cw.TabSheet
+                else
+                    cw.Show();
+                end
+            else
+                StartChat(_cur_ritem.jid.jid, '', true);
+            end;
         end;
     node_bm: begin
         // enter this conference
