@@ -64,6 +64,7 @@ type
     procedure MsgDebugKeyPress(Sender: TObject; var Key: Char);
     procedure MemoSendKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
     _cb: integer;
@@ -431,6 +432,17 @@ begin
         btnSendRawClick(Self);
     end;
 
+end;
+
+procedure TfrmDebug.FormActivate(Sender: TObject);
+begin
+  inherited;
+    if (not Docked) then exit;
+
+    if (frmExodus.ChatHiding) then begin
+        frmExodus.Tabs.ActivePageIndex := 0;
+        frmExodus.ChatHiding := false;
+    end;
 end;
 
 end.

@@ -8,6 +8,7 @@ inherited frmChat: TfrmChat
   OldCreateOrder = True
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
+  OnDeactivate = FormDeactivate
   OnEndDock = FormEndDock
   OnShow = FormShow
   PixelsPerInch = 96
