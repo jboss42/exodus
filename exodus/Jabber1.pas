@@ -177,6 +177,7 @@ type
     N18: TMenuItem;
     btnRoom: TToolButton;
     pnlRight: TPanel;
+    ApplicationEvents1: TApplicationEvents;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -803,9 +804,15 @@ begin
             tbsMsg.TabVisible := false;
         end
 
-    else if ((event = '/session/presence') and (_is_autoaway or _is_autoxa)) then
-        // If we are away, and our presence got changed, reset our presence
-        // setAutoAvailable();
+    else if ((event = '/session/presence') and (MainSession.IsPaused)) then begin
+        // If the session is paused, and we're changing back
+        // to available, or chat, then make sure we play the session
+        if (MainSession.Show = 'xa') or (MainSession.show = 'xa') or
+        (MainSession.Show = 'dnd') then
+            // do nothing
+        else
+            MainSession.Play();
+        end;
 
 end;
 
@@ -1728,6 +1735,7 @@ begin
         iq.Namespace := XMLNS_TIME;
     iq.Send;
 end;
+
 
 end.
 
