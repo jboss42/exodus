@@ -518,7 +518,13 @@ ${un.StrStrAdv}
 !define INSTALLER_LANGUAGE_KEY "Language"
 !define INSTALLER_STARTMENU_KEY "StartMenu"
 !define INSTALLER_SWITCH_SILENT "/S"
-!define INSTALLER_OUTPUT "setup"
+
+!ifdef NO_NETWORK
+    !define INSTALLER_OUTPUT "setup-standalone"
+!else    
+    !define INSTALLER_OUTPUT "setup"
+!endif
+ 
 !define PLUGINS_DIR "plugins"
 !ifdef DAILY
      ; BRANDING: Change this PATH if different

@@ -362,6 +362,8 @@ end;
 {---------------------------------------}
 procedure TJabberEntity.refresh(js: TJabberSession);
 begin
+    if (_iq <> nil) then exit;
+
     _has_info := false;
     _has_items := false;
     _type := ent_unknown;
