@@ -698,6 +698,7 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.StartFind;
 begin
+    txtFind.Color := clWindow;
     _last_search := 0;
     pnlFind.Visible := true;
     FormResize(Self);
@@ -707,6 +708,8 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.FindAgain;
 begin
+    if (_last_search <> 0) then
+        _last_search := _last_search + 1;
     pnlFind.Visible := true;
     txtFind.SetFocus();
     txtFindChange(self);
@@ -2880,8 +2883,10 @@ begin
             pnlFind.Visible := false;
             Key := 0;
         end
-        else
-            _last_search := 0;
+        else begin
+            //_last_search := 0;
+            txtFind.Color := clWindow;
+        end;
     end;
 end;
 
@@ -2892,27 +2897,34 @@ var
     node_list: TWidestringlist;
     node:      TTreeNode;
     comp:      WideString;
+    search:    WideString;
 begin
+    search := Lowercase(txtFind.Text);
+    if (search = '') then begin
+        _last_search := 0;
+        txtFind.Color := clWindow;
+        exit;
+    end;
+
     for i := _last_search to MainSession.roster.Count - 1 do begin
         ri := MainSession.roster.Items[i];
         if radNick.Checked then
-            comp := ri.Nickname
+            comp := Lowercase(ri.Nickname)
         else
-            comp := ri.jid.jid;
+            comp := Lowercase(ri.jid.jid);
 
-        if Pos(txtFind.Text, comp) <> 0 then begin
+        if Pos(search, comp) > 0 then begin
             if (ri.Data = nil) then continue;
             node_list := TWideStringList(ri.Data);
             if (node_list.Count = 0) then continue;
             node := TTreeNode(node_list.Objects[0]);
-            if (treeRoster.Selected <> node) then begin
-                treeRoster.Selected := node;
-                _last_search := i + 1;
-                exit;
-            end;
+            treeRoster.Select(node, []);
+            _last_search := i;
+            exit;
         end;
     end;
     _last_search := 0;
+    txtFind.Color := clRed;
 end;
 
 procedure TfrmRosterWindow.btnFindCloseClick(Sender: TObject);
