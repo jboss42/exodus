@@ -27,18 +27,18 @@ uses
 
 type
   TfrmPrefTransfer = class(TfrmPrefPanel)
-    StaticText7: TStaticText;
+    StaticText7: TTntStaticText;
     Label15: TTntLabel;
     txtXFerPath: TTntEdit;
-    btnTransferBrowse: TButton;
+    btnTransferBrowse: TTntButton;
     Label2: TTntLabel;
-    optPeer: TRadioButton;
+    optPeer: TTntRadioButton;
     grpPeer: TGroupBox;
     Label1: TTntLabel;
     txtPort: TTntEdit;
-    chkIP: TCheckBox;
+    chkIP: TTntCheckBox;
     txtIP: TTntEdit;
-    optWebDav: TRadioButton;
+    optWebDav: TTntRadioButton;
     grpWebDav: TGroupBox;
     Label3: TTntLabel;
     txtDavHost: TTntEdit;

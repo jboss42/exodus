@@ -64,10 +64,10 @@ type
     txtSendSubject: TTntMemo;
     pnlSubject: TPanel;
     txtSubject: TTntLabel;
-    lblSubject2: TStaticText;
+    lblSubject2: TTntStaticText;
     pnlFrom: TPanel;
     btnClose: TSpeedButton;
-    lblFrom: TStaticText;
+    lblFrom: TTntStaticText;
     pnlError: TPanel;
     Image1: TImage;
     frameButtons1: TframeButtons;

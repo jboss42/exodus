@@ -33,21 +33,21 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     Height = 97
     Caption = 'Reconnect Options'
     TabOrder = 1
-    object Label2: TLabel
+    object Label2: TTntLabel
       Left = 8
       Top = 20
       Width = 121
       Height = 13
       Caption = '# of Reconnect attempts:'
     end
-    object Label3: TLabel
+    object Label3: TTntLabel
       Left = 8
       Top = 52
       Width = 141
       Height = 13
       Caption = 'Time lapse between attempts:'
     end
-    object Label4: TLabel
+    object Label4: TTntLabel
       Left = 9
       Top = 71
       Width = 240
@@ -101,7 +101,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     Height = 172
     Caption = 'HTTP Proxy'
     TabOrder = 2
-    object lblProxyHost: TLabel
+    object lblProxyHost: TTntLabel
       Left = 5
       Top = 53
       Width = 25
@@ -109,7 +109,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Caption = 'Host:'
       Enabled = False
     end
-    object lblProxyPort: TLabel
+    object lblProxyPort: TTntLabel
       Left = 5
       Top = 76
       Width = 22
@@ -117,7 +117,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Caption = 'Port:'
       Enabled = False
     end
-    object lblProxyUsername: TLabel
+    object lblProxyUsername: TTntLabel
       Left = 5
       Top = 121
       Width = 51
@@ -125,7 +125,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Caption = 'Username:'
       Enabled = False
     end
-    object lblProxyPassword: TLabel
+    object lblProxyPassword: TTntLabel
       Left = 5
       Top = 144
       Width = 49
@@ -156,7 +156,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Enabled = False
       TabOrder = 1
     end
-    object chkProxyAuth: TCheckBox
+    object chkProxyAuth: TTntCheckBox
       Left = 59
       Top = 94
       Width = 135
@@ -183,18 +183,18 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       PasswordChar = '*'
       TabOrder = 4
     end
-    object cboProxyApproach: TComboBox
+    object cboProxyApproach: TTntComboBox
       Left = 59
       Top = 24
       Width = 130
-      Height = 22
+      Height = 24
       Style = csOwnerDrawFixed
       ItemHeight = 16
       ItemIndex = 0
       TabOrder = 5
       Text = 'Use IE settings'
       OnChange = cboProxyApproachChange
-      Items.Strings = (
+      Items.WideStrings = (
         'Use IE settings'
         'Direct Connection'
         'Custom')

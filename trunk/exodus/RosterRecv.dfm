@@ -25,7 +25,7 @@ object frmRosterRecv: TfrmRosterRecv
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 253
+    Top = 258
     Width = 374
     Height = 34
     Align = alBottom
@@ -51,7 +51,7 @@ object frmRosterRecv: TfrmRosterRecv
       end
     end
   end
-  object pnlFrom: TPanel
+  object pnlFrom: TTntPanel
     Left = 0
     Top = 0
     Width = 374
@@ -192,7 +192,7 @@ object frmRosterRecv: TfrmRosterRecv
     Left = 0
     Top = 115
     Width = 374
-    Height = 138
+    Height = 143
     Align = alClient
     Checkboxes = True
     Columns = <
@@ -207,7 +207,7 @@ object frmRosterRecv: TfrmRosterRecv
     TabOrder = 3
     ViewStyle = vsReport
   end
-  object Panel1: TPanel
+  object Panel1: TTntPanel
     Left = 0
     Top = 86
     Width = 374

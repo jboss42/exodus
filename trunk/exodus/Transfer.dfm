@@ -55,12 +55,6 @@ object frmTransfer: TfrmTransfer
       Width = 32
       Height = 13
       Caption = 'Label3'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlue
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsUnderline]
-      ParentFont = False
       ParentShowHint = False
       ShowHint = True
       OnClick = lblFileClick
@@ -207,7 +201,7 @@ object frmTransfer: TfrmTransfer
       end
     end
   end
-  object pnlProgress: TPanel
+  object pnlProgress: TTntPanel
     Left = 0
     Top = 114
     Width = 259

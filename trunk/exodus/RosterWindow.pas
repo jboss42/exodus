@@ -25,7 +25,7 @@ uses
     DropTarget, Unicode, XMLTag, Presence, Roster,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ComCtrls, ExtCtrls, Buttons, ImgList, Menus, StdCtrls, TntStdCtrls,
-  TntExtCtrls;
+    TntExtCtrls;
 
 type
 

@@ -1401,7 +1401,7 @@ object frmAbout: TfrmAbout
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 231
+    Top = 236
     Width = 334
     Height = 34
     Align = alBottom
@@ -1416,10 +1416,10 @@ object frmAbout: TfrmAbout
       inherited Panel1: TPanel
         Left = 174
         Height = 29
-        inherited btnOK: TButton
+        inherited btnOK: TTntButton
           Visible = False
         end
-        inherited btnCancel: TButton
+        inherited btnCancel: TTntButton
           Caption = 'Close'
           OnClick = frameButtons1btnCancelClick
         end
@@ -1441,7 +1441,7 @@ object frmAbout: TfrmAbout
     Left = 0
     Top = 150
     Width = 334
-    Height = 81
+    Height = 86
     Align = alClient
     AutoURLDetect = adDefault
     Color = clBtnFace

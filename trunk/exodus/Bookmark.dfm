@@ -1,6 +1,6 @@
 object frmBookmark: TfrmBookmark
-  Left = 514
-  Top = 169
+  Left = 275
+  Top = 185
   Width = 346
   Height = 216
   BorderIcons = [biSystemMenu, biMinimize]
@@ -47,7 +47,7 @@ object frmBookmark: TfrmBookmark
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 148
+    Top = 153
     Width = 338
     Height = 34
     Align = alBottom

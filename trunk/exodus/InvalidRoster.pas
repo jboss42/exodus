@@ -23,12 +23,12 @@ interface
 uses
     Dockable, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, buttonFrame, ComCtrls, ExtCtrls, Menus;
+    Dialogs, buttonFrame, ComCtrls, ExtCtrls, Menus, TntComCtrls;
 
 type
   TfrmInvalidRoster = class(TfrmDockable)
     frameButtons1: TframeButtons;
-    ListView1: TListView;
+    ListView1: TTntListView;
     popItems: TPopupMenu;
     oggleCheckboxes1: TMenuItem;
     procedure frameButtons1btnCancelClick(Sender: TObject);

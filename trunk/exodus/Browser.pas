@@ -24,7 +24,7 @@ uses
     Dockable, IQ, XMLTag, XMLUtils, Contnrs,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     StdCtrls, ImgList, Buttons, ComCtrls, ExtCtrls, Menus, ToolWin, fListbox,
-    fService;
+    fService, TntStdCtrls, TntComCtrls, TntExtCtrls;
 
 type
 
@@ -41,7 +41,7 @@ type
 end;
 
   TfrmBrowse = class(TfrmDockable)
-    Panel3: TPanel;
+    Panel3: TTntPanel;
     ImageList1: TImageList;
     ImageList2: TImageList;
     Toolbar: TImageList;
@@ -53,7 +53,7 @@ end;
     SmallIcons1: TMenuItem;
     List1: TMenuItem;
     StatBar: TStatusBar;
-    vwBrowse: TListView;
+    vwBrowse: TTntListView;
     popContext: TPopupMenu;
     mBrowse: TMenuItem;
     mBrowseNew: TMenuItem;
@@ -66,17 +66,17 @@ end;
     mTime: TMenuItem;
     mLast: TMenuItem;
     mVCard: TMenuItem;
-    pnlInfo: TPanel;
+    pnlInfo: TTntPanel;
     fNS: TframeListbox;
     fActions: TframeObjectActions;
     Image1: TImage;
-    Panel1: TPanel;
-    pnlTitle: TPanel;
-    lblTitle: TLabel;
+    Panel1: TTntPanel;
+    pnlTitle: TTntPanel;
+    lblTitle: TTntLabel;
     Splitter1: TSplitter;
     imgIcon: TImage;
-    lblHeader: TLabel;
-    pnlTop: TPanel;
+    lblHeader: TTntLabel;
+    pnlTop: TTntPanel;
     btnClose: TSpeedButton;
     CoolBar1: TCoolBar;
     tlbToolBar: TToolBar;
@@ -87,9 +87,9 @@ end;
     ToolButton1: TToolButton;
     btnBookmark: TToolButton;
     tlbJID: TToolBar;
-    pnlJID: TPanel;
-    cboJID: TComboBox;
-    pnlButtons: TPanel;
+    pnlJID: TTntPanel;
+    cboJID: TTntComboBox;
+    pnlButtons: TTntPanel;
     btnGo: TSpeedButton;
     btnRefresh: TSpeedButton;
     procedure btnGoClick(Sender: TObject);
@@ -469,6 +469,7 @@ end;
 procedure TfrmBrowse.FormCreate(Sender: TObject);
 begin
     // Create the History list
+    AssignUnicodeFont(Self);
     _History := TStringList.Create;
     _blist := TObjectList.Create();
     _iq := nil;

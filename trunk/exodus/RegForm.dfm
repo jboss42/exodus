@@ -15,7 +15,7 @@ object frmRegister: TfrmRegister
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object pnlBottom: TPanel
+  object pnlBottom: TTntPanel
     Left = 0
     Top = 258
     Width = 304
@@ -23,7 +23,7 @@ object frmRegister: TfrmRegister
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 0
-    object pnlBtns: TPanel
+    object pnlBtns: TTntPanel
       Left = 55
       Top = 0
       Width = 249
@@ -99,7 +99,7 @@ object frmRegister: TfrmRegister
         Left = 0
         Top = 90
         Width = 296
-        Height = 137
+        Height = 142
         Align = alClient
         AutoSize = False
         Caption = 'Waiting for agent instructions.....'
@@ -123,7 +123,7 @@ object frmRegister: TfrmRegister
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 0
-        object Panel3: TPanel
+        object Panel3: TTntPanel
           Left = 128
           Top = 0
           Width = 168

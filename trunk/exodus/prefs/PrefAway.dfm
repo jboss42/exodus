@@ -2,8 +2,8 @@ inherited frmPrefAway: TfrmPrefAway
   Left = 254
   Top = 167
   Caption = 'frmPrefAway'
-  ClientHeight = 306
-  ClientWidth = 396
+  ClientHeight = 212
+  ClientWidth = 300
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
@@ -106,7 +106,7 @@ inherited frmPrefAway: TfrmPrefAway
   object StaticText7: TTntStaticText
     Left = 0
     Top = 0
-    Width = 396
+    Width = 300
     Height = 20
     Align = alTop
     Alignment = taCenter

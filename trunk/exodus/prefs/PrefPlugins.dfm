@@ -56,7 +56,7 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     Enabled = False
     TabOrder = 1
   end
-  object btnConfigPlugin: TButton
+  object btnConfigPlugin: TTntButton
     Left = 90
     Top = 200
     Width = 75

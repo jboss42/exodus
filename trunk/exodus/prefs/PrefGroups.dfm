@@ -3,25 +3,25 @@ inherited frmPrefGroups: TfrmPrefGroups
   Top = 196
   Caption = 'frmPrefGroups'
   ClientHeight = 301
-  ClientWidth = 400
+  ClientWidth = 274
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object Label18: TLabel
+  object Label18: TTntLabel
     Left = 0
     Top = 172
     Width = 150
     Height = 13
     Caption = 'Group to be used for Gateways:'
   end
-  object Label1: TLabel
+  object Label1: TTntLabel
     Left = 0
     Top = 220
     Width = 69
     Height = 13
     Caption = 'Default Group:'
   end
-  object lblFilter: TLabel
+  object lblFilter: TTntLabel
     Left = 2
     Top = 113
     Width = 183
@@ -32,10 +32,10 @@ inherited frmPrefGroups: TfrmPrefGroups
       'east:'
     WordWrap = True
   end
-  object StaticText1: TStaticText
+  object StaticText1: TTntStaticText
     Left = 0
     Top = 0
-    Width = 400
+    Width = 274
     Height = 20
     Align = alTop
     Alignment = taCenter
@@ -49,7 +49,6 @@ inherited frmPrefGroups: TfrmPrefGroups
     ParentColor = False
     ParentFont = False
     TabOrder = 0
-    Transparent = False
   end
   object txtGatewayGrp: TTntComboBox
     Left = 20
@@ -67,7 +66,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     ItemHeight = 13
     TabOrder = 2
   end
-  object chkSort: TCheckBox
+  object chkSort: TTntCheckBox
     Left = 0
     Top = 24
     Width = 193
@@ -89,7 +88,7 @@ inherited frmPrefGroups: TfrmPrefGroups
       'Away'
       'Available')
   end
-  object chkCollapsed: TCheckBox
+  object chkCollapsed: TTntCheckBox
     Left = 0
     Top = 40
     Width = 200
@@ -97,7 +96,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     Caption = 'Collapse all roster groups initially.'
     TabOrder = 5
   end
-  object chkGroupCounts: TCheckBox
+  object chkGroupCounts: TTntCheckBox
     Left = 0
     Top = 56
     Width = 217
@@ -105,7 +104,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     Caption = 'Show group counts in roster (eg, 5/10)'
     TabOrder = 6
   end
-  object chkOfflineGrp: TCheckBox
+  object chkOfflineGrp: TTntCheckBox
     Left = 0
     Top = 72
     Width = 217
@@ -114,7 +113,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     TabOrder = 7
     OnClick = chkOfflineGrpClick
   end
-  object chkOnlineOnly: TCheckBox
+  object chkOnlineOnly: TTntCheckBox
     Left = 0
     Top = 88
     Width = 217

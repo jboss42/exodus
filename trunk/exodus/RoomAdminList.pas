@@ -24,7 +24,7 @@ uses
     XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, StdCtrls, ExtCtrls, CheckLst, ComCtrls,
-  TntComCtrls, TntStdCtrls;
+    TntComCtrls, TntStdCtrls;
 
 type
   TfrmRoomAdminList = class(TForm)

@@ -22,17 +22,17 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, jpeg, ExtCtrls;
+  Dialogs, PrefPanel, StdCtrls, jpeg, ExtCtrls, TntStdCtrls;
 
 type
   TfrmPrefLayouts = class(TfrmPrefPanel)
-    lblPreview: TLabel;
-    cboView: TComboBox;
+    lblPreview: TTntLabel;
+    cboView: TTntComboBox;
     imgView2: TImage;
     imgView3: TImage;
     imgView1: TImage;
-    lblViewHelp: TLabel;
-    StaticText5: TStaticText;
+    lblViewHelp: TTntLabel;
+    StaticText5: TTntStaticText;
     procedure cboViewChange(Sender: TObject);
   private
     { Private declarations }

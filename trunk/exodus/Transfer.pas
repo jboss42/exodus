@@ -35,14 +35,14 @@ uses
 
     // Normal Delphi things
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, ComCtrls, StdCtrls, ExtCtrls, TntStdCtrls;
+    Dialogs, ComCtrls, StdCtrls, ExtCtrls, TntExtCtrls, TntStdCtrls;
 
 type
   TfrmTransfer = class(TfrmDockable)
     pnlFrom: TPanel;
     txtMsg: TExRichEdit;
     frameButtons1: TframeButtons;
-    pnlProgress: TPanel;
+    pnlProgress: TTntPanel;
     Label1: TTntLabel;
     bar1: TProgressBar;
     httpClient: TIdHTTP;
@@ -485,6 +485,8 @@ end;
 procedure TfrmTransfer.FormCreate(Sender: TObject);
 begin
     //
+    AssignUnicodeFont(Self);
+    URLLabel(lblFile);
 end;
 
 {---------------------------------------}

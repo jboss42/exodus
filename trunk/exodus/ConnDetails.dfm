@@ -3,7 +3,7 @@ object frmConnDetails: TfrmConnDetails
   Top = 169
   Width = 304
   Height = 305
-  ActiveControl = cboConnection
+  ActiveControl = txtUsername
   Caption = 'Connection Details'
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -18,7 +18,7 @@ object frmConnDetails: TfrmConnDetails
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 239
+    Top = 244
     Width = 296
     Height = 32
     Align = alBottom
@@ -44,8 +44,8 @@ object frmConnDetails: TfrmConnDetails
     Left = 0
     Top = 0
     Width = 296
-    Height = 239
-    ActivePage = tbsConn
+    Height = 244
+    ActivePage = tbsProfile
     Align = alClient
     TabOrder = 1
     object tbsProfile: TTntTabSheet
@@ -158,6 +158,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 25
         Height = 13
         Caption = 'Host:'
+        Transparent = False
       end
       object Label7: TTntLabel
         Left = 2
@@ -165,6 +166,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 22
         Height = 13
         Caption = 'Port:'
+        Transparent = False
       end
       object Label8: TTntLabel
         Left = 2
@@ -172,6 +174,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 27
         Height = 13
         Caption = 'Type:'
+        Transparent = False
       end
       object Label6: TTntLabel
         Left = 2
@@ -179,6 +182,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 34
         Height = 13
         Caption = 'Priority:'
+        Transparent = False
       end
       object txtHost: TTntEdit
         Left = 75
@@ -380,7 +384,7 @@ object frmConnDetails: TfrmConnDetails
         Align = alBottom
         AutoSize = False
         Caption = 
-          'NOTE: You must use the URL of your jabber server''s HTTP tunnelli' +
+          'NOTE: You must use the URL of your jabber server'#39's HTTP tunnelli' +
           'ng proxy. You can not use some "standard" HTTP proxy for this to' +
           ' work. Contact your server administrator for additional informat' +
           'ion.'

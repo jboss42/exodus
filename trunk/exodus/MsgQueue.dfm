@@ -25,7 +25,7 @@ object frmMsgQueue: TfrmMsgQueue
     Cursor = crVSplit
     Align = alTop
   end
-  object lstEvents: TListView
+  object lstEvents: TTntListView
     Left = 0
     Top = 0
     Width = 456

@@ -22,16 +22,16 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, buttonFrame, StdCtrls;
+  Dialogs, buttonFrame, StdCtrls, TntStdCtrls;
 
 type
   TfrmGrpRemove = class(TForm)
     frameButtons1: TframeButtons;
-    optMove: TRadioButton;
-    cboNewGroup: TComboBox;
-    optNuke: TRadioButton;
-    chkUnsub: TCheckBox;
-    chkUnsubed: TCheckBox;
+    optMove: TTntRadioButton;
+    cboNewGroup: TTntComboBox;
+    optNuke: TTntRadioButton;
+    chkUnsub: TTntCheckBox;
+    chkUnsubed: TTntCheckBox;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);

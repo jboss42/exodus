@@ -27,7 +27,7 @@ uses
 
 type
   TfrmPrefMsg = class(TfrmPrefPanel)
-    Label19: TLabel;
+    Label19: TTntLabel;
     Label7: TTntLabel;
     Label16: TTntLabel;
     Label17: TTntLabel;

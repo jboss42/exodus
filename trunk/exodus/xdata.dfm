@@ -38,7 +38,7 @@ object frmXData: TfrmXData
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 170
+    Top = 172
     Width = 310
     Height = 32
     Align = alBottom
@@ -59,10 +59,10 @@ object frmXData: TfrmXData
       inherited Panel1: TPanel
         Left = 150
         Height = 27
-        inherited btnOK: TButton
+        inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end
-        inherited btnCancel: TButton
+        inherited btnCancel: TTntButton
           OnClick = frameButtons1btnCancelClick
         end
       end
@@ -72,7 +72,7 @@ object frmXData: TfrmXData
     Left = 0
     Top = 21
     Width = 310
-    Height = 149
+    Height = 151
     Align = alClient
     BevelEdges = []
     BevelInner = bvNone

@@ -161,6 +161,7 @@ procedure TfrmAdd.FormCreate(Sender: TObject);
 begin
     AssignUnicodeFont(Self);
     TranslateProperties(Self);
+    URLLabel(lblAddGrp);
     cboGroup.Items.Assign(MainSession.Roster.GrpList);
     removeSpecialGroups(cboGroup.Items);
     cboGroup.Text := MainSession.Prefs.getString('roster_default');

@@ -47,13 +47,7 @@ object frmAdd: TfrmAdd
     Cursor = crHandPoint
     Caption = 'Add a new Group'
     Color = clBtnFace
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clBlue
-    Font.Height = -11
-    Font.Name = 'MS Sans Serif'
-    Font.Style = [fsUnderline]
     ParentColor = False
-    ParentFont = False
     OnClick = lblAddGrpClick
   end
   object Label4: TTntLabel

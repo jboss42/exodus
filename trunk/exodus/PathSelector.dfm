@@ -16,7 +16,7 @@ object frmPathSelector: TfrmPathSelector
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
+  object Label1: TTntLabel
     Left = 0
     Top = 0
     Width = 281
@@ -42,12 +42,16 @@ object frmPathSelector: TfrmPathSelector
     Align = alBottom
     AutoScroll = False
     TabOrder = 0
-    inherited Bevel1: TBevel
+    inherited Panel2: TPanel
       Width = 281
-    end
-    inherited Panel1: TPanel
-      Left = 121
-      Height = 25
+      Height = 30
+      inherited Bevel1: TBevel
+        Width = 281
+      end
+      inherited Panel1: TPanel
+        Left = 121
+        Height = 25
+      end
     end
   end
   object Folders: TShellTreeView

@@ -17,7 +17,7 @@ object frmInvalidRoster: TfrmInvalidRoster
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 205
+    Top = 210
     Width = 314
     Height = 32
     Align = alBottom
@@ -45,11 +45,11 @@ object frmInvalidRoster: TfrmInvalidRoster
       end
     end
   end
-  object ListView1: TListView
+  object ListView1: TTntListView
     Left = 0
     Top = 0
     Width = 314
-    Height = 205
+    Height = 210
     Align = alClient
     Checkboxes = True
     Columns = <
