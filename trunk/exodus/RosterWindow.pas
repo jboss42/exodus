@@ -662,6 +662,7 @@ begin
     end;
 
     _bookmark.Expand(true);
+    treeRoster.AlphaSort(true);
 end;
 
 {---------------------------------------}
