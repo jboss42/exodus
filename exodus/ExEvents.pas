@@ -300,7 +300,7 @@ begin
     qTag := iq.getFirstTag('query');
     if (qTag = nil) then exit;
 
-    Result := _(sMsgLastInfo) + secsToDuration(qTag.getAttribute('seconds') + '.');
+    Result := _(sMsgLastInfo) + secsToDuration(qTag.getAttribute('seconds')) + '.';
 end;
 
 

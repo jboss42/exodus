@@ -80,7 +80,7 @@ procedure split(value: WideString; list: TWideStringList; seps : WideString = ' 
 
 function jabberSendCTCP(jid, xmlns: string; callback: TPacketEvent = nil): TJabberIQ;
 function getDisplayField(fld: string): string;
-function secsToDuration(seconds: string): string;
+function secsToDuration(seconds: string): Widestring;
 function GetPresenceAtom(status: string): ATOM;
 function GetPresenceString(a: ATOM): string;
 function ColorToHTML(Color: TColor): string;
@@ -585,28 +585,17 @@ begin
 end;
 
 {---------------------------------------}
-function secsToDuration(seconds: string): string;
+function secsToDuration(seconds: string): Widestring;
 var
     d : integer;
     h : integer;
     m : integer;
     s : integer;
-
-    function toText(i: integer; modifier: string) : string;
-    begin
-        if (i = 0) then
-            result := ''
-        else if (i = 1) then
-            result := ' ' + IntToStr(i) + ' ' + modifier
-        else
-            result := ' ' + IntToStr(i) + ' ' + modifier + 's';
-    end;
-
 begin
     s := StrToIntDef(seconds, -1);
 
     if (s < 0) then begin
-        result := ' unknown last result: ' + seconds
+        result := _(' unknown last result: ') + seconds
     end
     else if (s = 0) then begin
         result := ' 0 seconds';
@@ -616,8 +605,11 @@ begin
         h := (s mod 86400) div 3600;
         m := ((s mod 86400) mod 3600) div 60;
         s := s mod 60;
-        result := toText(d, 'day') + toText(h, 'hour') +
-                  toText(m, 'minute') + toText(s, 'second');
+        Result :=
+            WideFormat(ngettext('%d day, ', '%d days, ', d), [d]) +
+            WideFormat(ngettext('%d hour, ', '%d hours, ', h), [h]) +
+            WideFormat(ngettext('%d minute, ', '%d minutes, ', m), [m]) +
+            WideFormat(ngettext('%d second.', '%d seconds.', s), [s]);
     end;
 end;
 
