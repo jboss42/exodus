@@ -178,6 +178,10 @@ inherited frmRoom: TfrmRoom
         Caption = 'Edit Admin List'
         OnClick = popVoiceListClick
       end
+      object popOwnerList: TMenuItem
+        Caption = 'Edit Owner List'
+        OnClick = popVoiceListClick
+      end
       object N5: TMenuItem
         Caption = '-'
       end

@@ -51,7 +51,8 @@ type
 var
   frmRoomAdminList: TfrmRoomAdminList;
 
-procedure ShowRoomAdminList(room_jid, role, affiliation: WideString);
+procedure ShowRoomAdminList(room_jid, role, affiliation: WideString;
+    caption: WideString = '');
 
 {---------------------------------------}
 {---------------------------------------}
@@ -64,7 +65,8 @@ uses
 {$R *.dfm}
 
 {---------------------------------------}
-procedure ShowRoomAdminList(room_jid, role, affiliation: WideString);
+procedure ShowRoomAdminList(room_jid, role, affiliation: WideString;
+    caption: Widestring = '' );
 var
     f: TfrmRoomAdminList;
 begin
@@ -81,6 +83,10 @@ begin
         f.onList := affiliation;
         f.offList := MUC_NONE;
         end;
+
+    if (caption <> '') then
+        f.Caption := caption;
+
     f.Start();
 end;
 
@@ -124,8 +130,13 @@ begin
     if event <> 'xml' then exit;
     if tag = nil then exit;
 
-    if ((tag.Name <> 'iq') or (tag.Namespace <> XMLNS_MUCADMIN)) then
+    if ((tag.Name <> 'iq') or
+        (tag.getAttribute('type') = 'error')) then begin
+        MessageDlg('There was an error fetching this room list.',
+            mtError, [mbOK], 0);
+        Self.Close;
         exit;
+        end;
 
     rjid := tag.GetAttribute('from');
     items := tag.QueryXPTags('/iq/query/item');
