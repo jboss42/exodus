@@ -779,6 +779,8 @@ end;
 procedure TXMLSocketStream.Connect(profile: TJabberProfile);
 begin
     _profile := profile;
+
+    // Not sure we even need this, since we're using ResolvedPort, ResolvedIP
     _server := _profile.Server;
 
     // Create our socket

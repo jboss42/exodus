@@ -948,7 +948,8 @@ begin
     _dns_cb := -1;
     t := tag.getAttribute('type');
     if (t = 'failed') then with MainSession.Profile do begin
-        ResolvedIP := Server;
+        // XXX: stringprep here for idn's
+        ResolvedIP := Lowercase(Server);
         if (ssl = ssl_port) then
             ResolvedPort := 5223
         else
