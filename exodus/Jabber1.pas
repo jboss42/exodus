@@ -779,10 +779,11 @@ begin
     // show the test menu if cmd line args say so.
     Test1.Visible := ExStartup.test_menu;
 
+    // Init our emoticons
     InitializeEmoticonLists();
 
+    // Setup our caption and the help menus.
     with MainSession.Prefs do begin
-        // Setup our caption and the help menus.
         self.Caption := GetString('brand_caption');
         RestorePosition(Self);
 
@@ -797,7 +798,7 @@ begin
         menu_list.Free();
     end;
 
-    // Setup callbacks
+    // Setup our session callback
     _sessioncb := MainSession.RegisterCallback(SessionCallback, '/session');
 
     // setup some branding stuff
@@ -867,18 +868,16 @@ begin
     // Show the debug form, if they've asked for it.
     if (ExStartup.debug) then ShowDebugForm();
 
+    // If we are in expanded mode, make sure the roster is the active page.
     if Tabs.Visible then
         Tabs.ActivePage := tbsRoster;
 
+    // Set our default presence info.
     MainSession.setPresence(ExStartup.show, ExStartup.Status, ExStartup.Priority);
 
+    // Init our win32 msg tracker.
     SetLength(_win32_tracker, 20);
     _win32_idx := 0;
-
-    {$ifdef TRACE_EXCEPTIONS}
-    //Test1.Visible := true;
-    {$endif}
-
     sExodusCWPHook := 0;
     sExodusGMHook := 0;
 
@@ -919,6 +918,14 @@ begin
     // load up all the plugins..
     if (MainSession.Prefs.getBool('brand_plugs')) then
         InitPlugins();
+
+    // If they had logging turned on, warn them that they need to
+    // enable a logging plugin now.
+    if (MainSession.Prefs.getBool('log') and (MainSession.LoggingEnabled = false)) then begin
+        MainSession.Prefs.setBool('log', false);
+        MessageDlgW(_('Message logging is now performed by plugins. Please enable a logging plugin to regain this functionality.'),
+            mtWarning, [mbOK], 0);
+    end;
 
     // Creat and dock the MsgQueue if we're in expanded mode
     if (MainSession.Prefs.getBool('expanded')) then begin
@@ -2650,151 +2657,14 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.Test1Click(Sender: TObject);
-{
-var
-    i: integer;
-}
-{
-var
-    i: integer;
-    c: TChatController;
-}
-{
-var
-    e: TJabberEntity;
-}
-{
-var
-    f, m, x: TXMLTag;
-}
-{
-var
-    hex: string;
-}
-{
-var
-    r: TXMLTag;
-    x: Widestring;
-    p: TXMLTagParser;
-}
 begin
-    // Test something..
-    // LoadPlugin('RosterClean.ExodusRosterClean');
-
-    // Do some xdata tests
-    {
-    m := TXMLTag.Create('message');
-    x := m.AddTag('x');
-    x.setAttribute('xmlns', 'jabber:x:data');
-    x.setAttribute('type', 'form');
-    f := x.addTag('field');
-    f.setAttribute('type', 'text');
-    f.setAttribute('label', 'field 1');
-
-    f := x.AddTag('field');
-    f.setAttribute('type', 'fixed');
-    f.AddBasicTag('value', 'This is some longish fixed label. Blah, blah, blah, blah, blah, blah.');
-
-    f := x.AddTag('field');
-    f.setAttribute('type', 'fixed');
-    f.addBasicTag('value', 'A label with a url like http://www.yahoo.com voo blah.');
-
-    f := x.AddTag('field');
-    f.setAttribute('type', 'fixed');
-    f.addBasicTag('value', 'A label with a url like http://www.yahoo.com blahlkjad;lasdlkasdlkasd;lksa;dlkasd;lkas;as;asa;ldakdalkda;ldka;kdasdla;kk.');
-
-    f := x.AddTag('field');
-    f.setAttribute('type', 'fixed');
-    f.addBasicTag('value', '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789.');
-
-    f := x.AddTag('field');
-    f.setAttribute('type', 'fixed');
-    f.addBasicTag('value', 'foo bar 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789.');
-
-    f := x.AddTag('field');
-    f.setAttribute('type', 'fixed');
-    f.addBasicTag('value', 'foo bar'#13#10' sdkfjls'#13#10'kjdflksjdf;ljsf;'#13#10'klsjf;lkjsafkjsaldfj;lasjfd;klsajd;kljasdjf;ajdf;ljsfd;kjasdf;jas;fkja;df;ljaslfkj;asdf;klasdfklasdfj;ajdf;ljsf;ksafd;kjadsf;jkasdjfs;lf;lsdf');
-
-    ShowXData(m);
-    }
-
-    //hex := MD5File('d:\temp\64ptn_en.pdf');
-    //ShowMessage(hex);
-
-    {
-    x := '<iq type="result" from="responder@domain" to="requester@domain" id="exec1" xml:lang="en-us">';
-    x := x + '<command xmlns="http://jabber.org/protocol/commands" sessionid="list:20020923T213616Z-700" node="list" status="completed">';
-    x := x + '<x xmlns="jabber:x:data" type="result"> <title>Available Services</title> <reported> <field var="service" label="Service"/> <field var="runlevel-1" label="Single-User mode"/> ';
-    x := x + '<field var="runlevel-2" label="Non-Networked Multi-User mode"/> <field var="runlevel-3" label="Full Mult-User mode"/> <field var="runlevel-5" label="X-Windows mode"/> </reported>';
-    x := x + '<item> <field var="service"><value>httpd</value></field> <field var="runlevel-1"><value>off</value></field> <field var="runlevel-2"><value>off</value></field> ';
-    x := x + '<field var="runlevel-3"><value>on</value></field> <field var="runlevel-5"><value>on</value></field> </item>';
-    x := x + '<item> <field var="service"><value>postgresql</value></field> <field var="runlevel-1"><value>off</value></field> <field var="runlevel-2"><value>off</value></field>';
-    x := x + '<field var="runlevel-3"><value>on</value></field> <field var="runlevel-5"><value>on</value></field> </item>';
-    x := x + '<item> <field var="service"><value>jabberd</value></field> <field var="runlevel-1"><value>off</value></field> <field var="runlevel-2"><value>off</value></field>';
-    x := x + '<field var="runlevel-3"><value>on</value></field> <field var="runlevel-5"><value>on</value></field> </item>';
-    x := x + '</x>';
-    x := x + '</command></iq>';
-
-    p := TXMLTagParser.Create();
-    p.ParseString(x, '');
-    r := p.popTag();
-
-    StartCommandWizard('', r);
-    }
-
-    StartCommandWizard('');
-
-    // Cause an AV
-    // PInteger(nil)^ := 0;
-
-    // Show a toast window
-    {
-    i := Random(2);
-    if (i = 0) then
-        ShowRiserWindow(Self, 'Test Toast ' + IntToStr(i) + ' Some more text to Some more text to Some more text to Some more text to make toast really long.', i)
-    else
-        ShowRiserWindow(Self, 'Test Toast ' + IntToStr(i) + ' cvs commit from cvsnotify@jabberstudio.org', i);
-    }
-    //ShowRiserWindow(Self, 'Test Toast ' + IntToStr(i), i);
-    //ShowRiserWindow(Self.Handle, 'Test Toast', 1);
-
-    //TrackWindowsMsg(WM_ACTIVATEAPP);
-    //TrackWindowsMsg(WM_ACTIVATE);
-    {
-    TrackWindowsMsg(WM_LBUTTONDOWN);
-    TrackWindowsMsg(BM_CLICK);
-    TrackWindowsMsg(WM_SETTEXT);
-    TrackWindowsMsg(WM_COMMAND);
-    }
-
-    {
-    for i := MainSession.ChatList.Count - 1 downto 0 do begin
-        c := TChatController(MainSession.ChatList.Objects[i]);
-        if ((c <> nil) and (c.window is TfrmChat)) then
-            c.window.Free();
-    end;
-    }
-
-    //FileReceive('pgmillard@jabber.org', 'http://exodus.jabberstudio.org/indy_openssl096g.zip', 'SSL Zip Files');
-    //MainSession.RegisterCallback(BadCallback, '/packet/message/x[@xmlns="exodus:puke"]');
-
-    //e := TJabberEntity.Create(TJabberID.Create('jabberd.jabberstudio.org'));
-    //e := TJabberEntity.Create(TJabberID.Create('jabber.org'));
-    //e.walk(MainSession);
-
-    //MessageDlg(_(sDisconnected), mtInformation, [mbOK], 0);
-
-    {
-    MessageBoxW(Application.Handle, PWideChar(_(sDisconnected)), 'Foo',
-        MB_OK + MB_ICONINFORMATION);
-    }
-    //MessageDlgW(_(sDisconnected), mtInformation, [mbOK], 0);
+    //
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.BadCallback(event: string; tag: TXMLTag);
 begin
-    // Cause an AV
+    // Cause an AV for testing
     PInteger(nil)^ := 0;
 end;
 
