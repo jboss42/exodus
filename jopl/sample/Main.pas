@@ -63,7 +63,7 @@ begin
         txtUsername.Text := Username;
         txtPassword.Text := password;
         txtResource.Text := Resource;
-        end;
+    end;
 
     MainSession.RegisterCallback(DebugCallback);
     MainSession.RegisterCallback(SessionCallback, '/session');
@@ -79,7 +79,7 @@ begin
         Username := txtUsername.Text;
         password := txtPassword.Text;
         Resource := txtResource.Text;
-        end;
+    end;
     MainSession.Prefs.SaveProfiles();
 
     Memo1.Lines.Clear();
@@ -106,7 +106,7 @@ begin
 
         // make ourself available..
         MainSession.setPresence('', 'online', 0);
-        end;
+    end;
 end;
 
 procedure TForm1.RosterCallback(event: string; tag: TXMLTag; roster_item: TJabberRosterItem);
@@ -118,7 +118,7 @@ begin
     // store a reference to the roster item in the listbox's item
     // this way, we can find them.
     itm_index := Listbox1.Items.IndexOfObject(roster_item);
-    if (itm_index = -1) then 
+    if (itm_index = -1) then
         itm_index := Listbox1.Items.AddObject('', roster_item);
 
     if (roster_item.Nickname <> '') then

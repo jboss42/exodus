@@ -53,7 +53,7 @@ type
 {---------------------------------------}
 implementation
 uses
-    COMChatController, Presence,
+    Presence,
     JabberConst, PrefController, Session;
 
 {---------------------------------------}

@@ -73,7 +73,10 @@ end;
 {---------------------------------------}
 implementation
 uses
-    COMChatController, PrefController, 
+    {$ifdef Exodus}
+    COMChatController,
+    {$endif}
+    PrefController,
     JabberConst, XMLUtils, Session, Chat,
     Forms, IdGlobal;
 
@@ -81,8 +84,10 @@ uses
 {---------------------------------------}
 {---------------------------------------}
 constructor TChatController.Create(sjid, sresource: Widestring);
+{$ifdef Exodus}
 var
     echat: TExodusChat;
+{$endif}
 begin
     // Create a new chat controller..
     // Setup msg callbacks, and either queue them,
@@ -103,10 +108,12 @@ begin
     else
         self.SetJID(_jid);
 
+    {$ifdef Exodus}
     echat := TExodusChat.Create();
     echat.setChatSession(Self);
     echat.ObjAddRef();
     ComController := echat;
+    {$endif}
 end;
 
 {---------------------------------------}
@@ -127,8 +134,11 @@ begin
     // this controller has a new window.
     // make sure to let the plugins know about it
     _window := new_window;
+
+    {$ifdef Exodus}
     if ((COMController <> nil) and (new_window <> nil)) then
         TExodusChat(COMController).fireNewWindow(TForm(new_window).Handle);
+    {$endif}
 end;
 
 {---------------------------------------}
