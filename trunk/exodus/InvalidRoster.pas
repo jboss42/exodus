@@ -111,6 +111,7 @@ procedure TfrmInvalidRoster.FormClose(Sender: TObject;
 begin
     _jids.Free();
     Action := caFree;
+    frmInvalidRoster := nil;
 end;
 
 {---------------------------------------}

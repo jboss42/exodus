@@ -119,11 +119,6 @@ begin
                 frameButtons1.btnCancel.Caption := sDecline;
                 end
 
-            else if eType = evt_PresError then begin
-                // show a "Remove" button
-                frameButtons1.btnOK.Caption := sRemove;
-                end
-
             else
                 // normally, we don't want a REPLY button
                 frameButtons1.btnOK.Visible := (eType = evt_Message);
@@ -234,12 +229,6 @@ begin
         Self.Close();
         end
         
-    else if eType = evt_PresError then begin
-        // remove this roster item from our roster
-        RemoveRosterItem(recips[0]);
-        Self.Close();
-        end
-
     else begin
         Self.ClientHeight := Self.ClientHeight + pnlReply.Height - frameButtons1.Height - 3;
         frameButtons1.Visible := false;

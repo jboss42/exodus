@@ -1394,7 +1394,7 @@ begin
     if ((mtype <> 'groupchat') and (mtype <> 'chat') and (b <> '')) then begin
         if MainSession.IsPaused then begin
             with tag.AddTag('x') do begin
-                PutAttribute('xmlns', 'jabber:x:delay');
+                PutAttribute('xmlns', XMLNS_DELAY);
                 PutAttribute('stamp', DateTimeToJabber(Now));
                 end;
             MainSession.QueueEvent(event, tag, Self.MsgCallback)
@@ -1456,11 +1456,6 @@ begin
         img_idx := 26;
         msg := e.data_type;
         end;
-
-    evt_PresError: begin
-        img_idx := ico_userbook;
-        msg := e.data_type;
-        end
 
     else begin
         img_idx := 12;
