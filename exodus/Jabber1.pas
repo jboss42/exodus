@@ -222,6 +222,8 @@ type
     procedure trayShowClick(Sender: TObject);
     procedure trayExitClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
+    procedure WinJabWebsite1Click(Sender: TObject);
+    procedure JabberBugzilla1Click(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -300,22 +302,17 @@ type
     procedure RenderEvent(e: TJabberEvent);
     procedure Startup;
     procedure CTCPCallback(event: string; tag: TXMLTag);
+    procedure ResetLastTick(value: longint);
   end;
 
 var
     frmJabber: TExodus;
-
-{
-function KeyboardHook(code: integer; wParam: word; lparam: longword): longword; stdcall;
-function MouseHook(code: integer; wParam: word; lparam: longword): longword; stdcall;
-}
 
 
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 const
-    PosKey = '\Software\Jabber\Exodus\Positions';
     MaxIcons = 64;      // How many icons are in icons.res ??
 
     ico_Error = 21;
@@ -745,7 +742,7 @@ begin
         end
     else
         DebugMsg('AutoAway Setup FAILED!');
-    //last_tick := GetTickCount();
+    last_tick := GetTickCount();
 end;
 
 {---------------------------------------}
@@ -832,7 +829,7 @@ begin
 
     else if ((event = '/session/presence') and (_is_autoaway or _is_autoxa)) then
         // If we are away, and our presence got changed, reset our presence
-        setAutoAvailable();
+        // setAutoAvailable();
 
 end;
 
@@ -965,8 +962,12 @@ begin
     // record the event
     mtype := tag.getAttribute('type');
     if ((mtype <> 'groupchat') and (mtype <> 'chat')) then begin
-        e := CreateJabberEvent(tag);
-        RenderEvent(e);
+        if MainSession.IsPaused then
+            MainSession.QueueEvent(event, tag, Self.MsgCallback)
+        else begin
+            e := CreateJabberEvent(tag);
+            RenderEvent(e);
+            end;
         end;
 end;
 
@@ -977,8 +978,12 @@ var
 begin
     // record some kind of CTCP result
     if ((tag <> nil) and (tag.getAttribute('type') = 'result')) then begin
-        e := CreateJabberEvent(tag);
-        RenderEvent(e);
+        if MainSession.IsPaused then
+            MainSession.QueueEvent(event, tag, Self.CTCPCallback)
+        else begin
+            e := CreateJabberEvent(tag);
+            RenderEvent(e);
+            end;
         end
 end;
 
@@ -1513,15 +1518,9 @@ begin
 
     with MainSession.Prefs do begin
         if ((_auto_away) and (_lpHookRec <> nil)) then begin
-            // cur_idle := (GetTickCount() - IdleUIGetLastInputTime()) div 1000;
-            // cur_idle := (GetTickCount() - last_tick) div 1000;
-            cur_idle := _lpHookRec^.LastTick;
-            if (cur_idle = 0) then
-                mins := 0
-            else begin
-                cur_idle := (GetTickCount() - cur_idle) div 1000;
-                mins := cur_idle div 60;
-                end;
+            last_tick := _lpHookRec^.LastTick;
+            cur_idle := (GetTickCount() - last_tick) div 1000;
+            mins := cur_idle div 60;
 
             if (not _is_autoaway) and (not _is_autoxa) then begin
                 dmsg := 'Idle Check: ' + BoolToStr(_is_autoaway, true) + ', ' +
@@ -1548,6 +1547,7 @@ begin
     DebugMsg('Setting AutoAway '#13#10);
     Application.ProcessMessages;
 
+    MainSession.Pause();
     if ((MainSession.Show = 'away') or
         (MainSession.Show = 'xa') or
         (MainSession.Show = 'dnd')) then exit;
@@ -1587,6 +1587,8 @@ begin
     _is_autoxa := false;
     MainSession.SetPresence(_last_show, _last_status, MainSession.Priority);
     timAutoAway.Enabled := true;
+
+    MainSession.Play();
 end;
 
 {---------------------------------------}
@@ -1742,16 +1744,38 @@ begin
     // FlashWindow(Self.Handle, false);
 end;
 
+{---------------------------------------}
 function TExodus.IsAutoAway(): boolean;
 begin
     Result := _is_autoaway;
 end;
 
+{---------------------------------------}
 function TExodus.IsAutoXA(): boolean;
 begin
     Result := _is_autoxa;
 end;
 
+{---------------------------------------}
+procedure TExodus.ResetLastTick(value: longint);
+begin
+    DebugMsg('Setting LastTick to ' + IntToStr(value) + ', Current=' + IntToStr(GetTickCount()) + ''#13#10);
+    _lpHookRec^.LastTick := value;
+end;
+
+{---------------------------------------}
+procedure TExodus.WinJabWebsite1Click(Sender: TObject);
+begin
+    // goto exodus.sf.net
+    ShellExecute(0, 'open', 'http://exodus.sf.net', '', '', SW_SHOW);
+end;
+
+{---------------------------------------}
+procedure TExodus.JabberBugzilla1Click(Sender: TObject);
+begin
+    // submit a bug on SF.
+    ShellExecute(0, 'open', 'http://sourceforge.net/tracker/?func=add&group_id=2049&atid=202049', '', '', SW_SHOW);
+end;
 
 end.
 

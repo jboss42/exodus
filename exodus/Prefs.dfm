@@ -1522,7 +1522,7 @@ object frmPrefs: TfrmPrefs
         Top = 206
         Width = 75
         Height = 25
-        Caption = 'Chamge'
+        Caption = 'Change'
         TabOrder = 9
         OnClick = Button5Click
       end
@@ -1696,7 +1696,7 @@ object frmPrefs: TfrmPrefs
       object StaticText3: TStaticText
         Left = 0
         Top = 0
-        Width = 305
+        Width = 142
         Height = 20
         Align = alTop
         Alignment = taCenter

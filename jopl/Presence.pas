@@ -300,6 +300,7 @@ begin
             // this person was offline
             MainSession.FireEvent('/presence/online', tag, curp);
             end;
+
         s.FireEvent('/presence/available', tag, curp);
         end;
 end;

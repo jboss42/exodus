@@ -100,7 +100,7 @@ type
       property OptArg:    string    read FOptArg;
       // call GetOpt repeatedly until it returns False
       function  GetOpt: Boolean;
-    published 
+    published
       // set these before you call Getopt
       property Options:   string    read FOptions     write SetOptions;
       property LongOpts:  string    read GetLongOpts  write SetLongOpts;

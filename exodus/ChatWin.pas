@@ -122,7 +122,7 @@ implementation
 
 uses
     PrefController,
-    Transfer, RosterAdd, RiserWindow, 
+    Transfer, RosterAdd, RiserWindow,
     Jabber1, Profile, ExUtils, MsgDisplay,
     JabberMsg, Roster, Session, XMLUtils,
     ShellAPI;
@@ -137,8 +137,11 @@ var
     win: TfrmChat;
     tmp_jid: TJabberID;
     cjid: string;
+    lt: longword;
 begin
     // either show an existing chat or start one.
+    lt := frmJabber.last_tick;
+
     chat := MainSession.ChatList.FindChat(sjid, resource, '');
     if chat = nil then begin
         // Create one
@@ -180,8 +183,8 @@ begin
         if (show_window) then
             Show();
         end;
-
     Result := TfrmChat(chat.window);
+    frmJabber.ResetLastTick(lt + 1000);
 end;
 
 {---------------------------------------}
@@ -300,6 +303,11 @@ var
     tagThread : TXMLTag;
 begin
     // callback
+    if MainSession.IsPaused then begin
+        MainSession.QueueEvent(event, tag, Self.MsgCallback);
+        exit;
+        end;
+
     if Event = 'xml' then begin
         from_jid := tag.getAttribute('from');
         if from_jid <> jid then
@@ -347,7 +355,7 @@ begin
         end;
 
     if ((btag = nil) or (btag.Data = '')) then exit;
-    
+
     Msg := TJabberMessage.Create(tag);
     Msg.Nick := OtherNick;
     Msg.IsMe := false;
@@ -466,7 +474,12 @@ end;
 
 {---------------------------------------}
 procedure TfrmChat.MsgOutKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);var    cur_buff: string;    s,e, i: integer;begin  inherited;
+  Shift: TShiftState);
+var
+    cur_buff: string;
+    s,e, i: integer;
+begin
+  inherited;
     if ((Key = VK_BACK) and (ssCtrl in Shift)) then begin
         // delete the last word
         cur_buff := MsgOut.Lines.Text;

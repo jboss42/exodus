@@ -37,6 +37,7 @@ object frmMsgRecv: TfrmMsgRecv
     end
     inherited Panel1: TPanel
       Left = 146
+      Height = 29
       inherited btnOK: TButton
         Top = 0
         Caption = 'Reply'
@@ -67,7 +68,7 @@ object frmMsgRecv: TfrmMsgRecv
       Caption = 'From:    '
       Color = clBtnFace
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clHighlightText
+      Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = [fsBold]
@@ -111,7 +112,7 @@ object frmMsgRecv: TfrmMsgRecv
       Caption = 'Subject:'
       Color = clBtnFace
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clHighlightText
+      Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = [fsBold]
@@ -170,6 +171,7 @@ object frmMsgRecv: TfrmMsgRecv
       end
       inherited Panel1: TPanel
         Left = 140
+        Height = 29
         inherited btnOK: TButton
           Caption = 'Send'
           OnClick = frameButtons2btnOKClick

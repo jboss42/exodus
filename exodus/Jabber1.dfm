@@ -456,9 +456,11 @@ object Exodus: TExodus
       Caption = 'Help'
       object WinJabWebsite1: TMenuItem
         Caption = 'Exodus Website'
+        OnClick = WinJabWebsite1Click
       end
       object JabberBugzilla1: TMenuItem
         Caption = 'Submit Exodus Bug'
+        OnClick = JabberBugzilla1Click
       end
       object JabberorgWebsite1: TMenuItem
         Caption = 'Jabber.org Website'

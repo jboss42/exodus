@@ -113,8 +113,11 @@ begin
         // Create a new session
         tmp_jid := TJabberID.Create(fjid);
         if (Self.indexOf(tmp_jid.jid) >= 0) then exit;
-        MainSession.FireEvent('/session/gui/chat', tag);
-        MainSession.FireEvent('/chat/new', tag);
+
+        if MainSession.IsPaused then
+            MainSession.QueueEvent(event, tag, Self.MsgCallback)
+        else
+            MainSession.FireEvent('/session/gui/chat', tag);
         end;
 end;
 
