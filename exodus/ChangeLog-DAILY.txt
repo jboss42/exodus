@@ -1,8 +1,75 @@
-2004-07-09 08:09  pgmillard
+2004-07-22 08:25  pgmillard
 
 	* exodus/: default.po, version.h, version.nsi: daily build
 
-2004-07-08 12:56  pgmillard
+2004-07-22 08:21  pgmillard
 
-	* exodus/SendStatus.pas: Fix Craig's file-send a/v.
+	* exodus/: default.po, exodus-new.nsi,
+	  plugins/plugin-sections-new.nsi,
+	  plugins/HTMLLogger/ExodusCOM_TLB.pas: Updated installer script to
+	  use the new redist pkgs
+
+2004-07-22 08:16  pgmillard
+
+	* redist/: rtl70.bpl, vcl70.bpl: Add the package files to the
+	  redist subdir so branders can get them too.
+
+2004-07-21 22:07  pgmillard
+
+	* 50comupd.exe, ChangeLog-DAILY.txt, ChangeLog-RELEASE.txt,
+	  W95ws2setup.exe, ZipDLL.dll, ZipDLL.nsh, branding_defaults.xml,
+	  build.pl, changelog.html, country-codes.txt, country-codes.xml,
+	  lang-codes.txt, lang-codes.xml, major-release.txt,
+	  notes-0.8.1.0.html, notes-0.8.5.html, notes-0.8.6.html,
+	  redist.txt, release.pl, richupd.exe, exodus/ChangeLog-DAILY.txt,
+	  exodus/ChangeLog-RELEASE.txt, exodus/Exodus.dof,
+	  exodus/ExodusCOM_TLB.pas, exodus/branding_defaults.xml,
+	  exodus/country-codes.xml, exodus/default.po,
+	  exodus/exodus-new.nsi, exodus/lang-codes.xml, exodus/xml.rc,
+	  exodus/locale/it/LC_MESSAGES/default.po,
+	  exodus/plugins/plugin-sections-new.nsi,
+	  exodus/plugins/AIM-Import/ExodusCOM_TLB.pas,
+	  exodus/plugins/ASpeller/ExodusCOM_TLB.pas,
+	  exodus/plugins/ICQ-Import/ExodusCOM_TLB.pas,
+	  exodus/plugins/JabberStats/ExodusCOM_TLB.pas,
+	  exodus/plugins/NetMeeting/ExodusCOM_TLB.pas,
+	  exodus/plugins/RosterTools/ExodusCOM_TLB.pas,
+	  exodus/plugins/SQLLogger/ExodusCOM_TLB.pas, jopl/XMLStream.pas,
+	  redist/50comupd.exe, redist/W95ws2setup.exe, redist/ZipDLL.dll,
+	  redist/ZipDLL.nsh, redist/richupd.exe: Tons more CVS reorg, and
+	  more installer/build script cleanup
+
+2004-07-21 20:48  pgmillard
+
+	* build.pl, exodus/exodus-new.nsi, exodus/exodus.nsi,
+	  exodus/functions.nsh, exodus/iemsglist_style.css,
+	  exodus/locale-new.nsh, exodus/strings.nsh, exodus/un-macros.nsh,
+	  exodus/version-i18n.nsh, exodus/plugins/plugin-desc-new.nsi,
+	  exodus/plugins/plugin-desc.nsi, exodus/plugins/plugin-en-new.nsi,
+	  exodus/plugins/plugin-en.nsi, exodus/plugins/plugin-i18n-new.nsi,
+	  exodus/plugins/plugin-off-new.nsi, exodus/plugins/plugin-off.nsi,
+	  exodus/plugins/plugin-sections-new.nsi,
+	  exodus/plugins/plugin-sections.nsi: Attempt to bring some sanity
+	  to the installer. Removed a bunch of old (pre nsis 2.0) install
+	  files, and cleaned up other stuff.
+
+2004-07-16 23:06  llong
+
+	* exodus/locale/pt_PT/LC_MESSAGES/default.po: Translated the new
+	  strings to synchronize with version 1.132 of the main default.po
+
+2004-07-14 20:05  pgmillard
+
+	* exodus/Jabber1.dfm: Remove TEST menu item
+
+2004-07-14 20:04  pgmillard
+
+	* exodus/SendStatus.pas, jopl/ChatController.pas: Bug #4003 - Make
+	  sure chat controllers don't go away while we are paused if they
+	  have something in the queue.
+
+2004-07-14 19:43  pgmillard
+
+	* exodus/Prefs.dfm: Bug #3979 - Turn the cancel bit on for the
+	  Cancel button on the options dialog.
 
