@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-10-19 20:00\n"
-"PO-Revision-Date: 2003-10-19 20:00\n"
+"POT-Creation-Date: 2003-10-21 10:51\n"
+"PO-Revision-Date: 2003-10-21 10:51\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,11 +86,7 @@ msgstr ""
 #. frmJoinRoom..Font.Name
 #: JoinRoom.dfm:13
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Font.Name
-#: Jud.dfm:150
-#. frmJUD..pnlLeft..pnlResults..Label1..Font.Name
-#: jud-old.dfm:132
-#. frmJUD..pnlLeft..pnlResults..lblAddGrp..Font.Name
-#: jud-old.dfm:155
+#: jud.dfm:150
 #. frmLogin..Font.Name
 #: Login.dfm:12
 #. frmMsgQueue..Font.Name
@@ -145,8 +141,6 @@ msgstr ""
 #: subscribe.dfm:14
 #. frmSubscribe..lblJID..Font.Name
 #: subscribe.dfm:54
-#. Form1..Font.Name
-#: Test1.dfm:11
 #. frmVCard..Font.Name
 #: vcard.dfm:11
 #. frmWebDownload..Font.Name
@@ -190,8 +184,6 @@ msgstr ""
 #: About.dfm:1423
 #. frmInvalidRoster..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: InvalidRoster.dfm:41
-#. frmJUD..pnlLeft..pnlBottom..btnClose..Caption
-#: jud-old.dfm:98
 #. frmMsgRecv..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: MsgRecv.dfm:500
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnCancel..Caption
@@ -663,9 +655,7 @@ msgstr ""
 #. frmExodus..popTray..N01..Caption
 #: Jabber1.dfm:2690
 #. frmJud..PopupMenu1..N1..Caption
-#: Jud.dfm:215
-#. frmJUD..PopupMenu1..N1..Caption
-#: jud-old.dfm:221
+#: jud.dfm:215
 #. frmMsgRecv..popContact..N1..Caption
 #: MsgRecv.dfm:545
 #. frmMsgRecv..popContact..N2..Caption
@@ -1018,12 +1008,8 @@ msgstr ""
 
 #. frmBrowse..popContext..mSearch..Caption
 #: Browser.dfm:3178
-#. frmJUD..pnlLeft..pnlBottom..btnAction..Caption
-#: jud-old.dfm:87
 #. Programmer's name for it: sJUDSearch
-#: Jud.pas:111
-#. Programmer's name for it: sJUDSearch
-#: jud-old.pas:113
+#: jud.pas:111
 msgid "Search"
 msgstr ""
 
@@ -1975,9 +1961,7 @@ msgstr ""
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Hint
 #: Jabber1.dfm:145
 #. frmJud..PopupMenu1..popAdd..Caption
-#: Jud.dfm:207
-#. frmJUD..PopupMenu1..popAdd..Caption
-#: jud-old.dfm:213
+#: jud.dfm:207
 #. frmAdd..Caption
 #: RosterAdd.dfm:6
 #. frmRosterWindow..popActions..popAddContact..Caption
@@ -1992,8 +1976,6 @@ msgstr ""
 
 #. frmExodus..Toolbar..ToolBar1..btnFind..Hint
 #: Jabber1.dfm:165
-#. frmJUD..Caption
-#: jud-old.dfm:7
 msgid "Search for Contacts"
 msgstr ""
 
@@ -2285,9 +2267,7 @@ msgstr ""
 #. frmExodus..popTray..trayMessage..Caption
 #: Jabber1.dfm:2678
 #. frmJud..PopupMenu1..popMessage..Caption
-#: Jud.dfm:222
-#. frmJUD..PopupMenu1..popMessage..Caption
-#: jud-old.dfm:228
+#: jud.dfm:222
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
 #: subscribe.dfm:146
 msgid "Send Message"
@@ -2333,107 +2313,86 @@ msgid "txtServer"
 msgstr ""
 
 #. frmJud..Caption
-#: Jud.dfm:5
+#: jud.dfm:5
 msgid "Jabber Search"
 msgstr ""
 
 #. frmJud..Panel1..lblWizardTitle..Caption
-#: Jud.dfm:40
+#: jud.dfm:40
 msgid "Jabber Search Wizard"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet1..lblSelect....Align
-#: Jud.dfm:61
-#. frmJUD..pnlLeft..lblSelect....Align
-#: jud-old.dfm:43
+#: jud.dfm:61
 msgid "Select the user database or enter in the Jabber ID of the search "
 "agent to use:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet2..Caption
-#: Jud.dfm:75
+#: jud.dfm:75
 #. frmRegister..Tabs..TabSheet2..Caption
 #: RegForm.dfm:61
 msgid "TabSheet2"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet2..lblWait..Caption
-#: Jud.dfm:83
-#. frmJUD..pnlLeft..lblWait..Caption
-#: jud-old.dfm:52
+#: jud.dfm:83
 msgid "Please wait. Contacting search agent:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..Caption
-#: Jud.dfm:97
+#: jud.dfm:97
 #. frmRegister..Tabs..TabSheet3..Caption
 #: RegForm.dfm:96
 msgid "TabSheet3"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..lblInstructions..Caption
-#: Jud.dfm:105
-#. frmJUD..pnlLeft..lblInstructions..Caption
-#: jud-old.dfm:31
+#: jud.dfm:105
 msgid "Fill in the search criteria to find contacts "
 "on."
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Caption
-#: Jud.dfm:121
+#: jud.dfm:121
 #. frmRegister..Tabs..TabSheet4..Caption
 #: RegForm.dfm:116
 msgid "TabSheet4"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Label3..Caption
-#: Jud.dfm:137
-#. frmJUD..pnlLeft..pnlResults..Label3..Caption
-#: jud-old.dfm:142
+#: jud.dfm:137
 msgid "Add Contacts to this group:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Caption
-#: Jud.dfm:145
-#. frmJUD..pnlLeft..pnlResults..lblAddGrp..Caption
-#: jud-old.dfm:150
+#: jud.dfm:145
 #. frmAdd..lblAddGrp..Caption
 #: RosterAdd.dfm:48
 msgid "Add a new Group"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Button1..Caption
-#: Jud.dfm:171
+#: jud.dfm:171
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: RosterRecv.dfm:44
 #. Programmer's name for it: sJUDAdd
-#: Jud.pas:117
-#. Programmer's name for it: sJUDAdd
-#: jud-old.pas:119
+#: jud.pas:117
 msgid "Add Contacts"
 msgstr ""
 
 #. frmJud..PopupMenu1..popProfile..Caption
-#: Jud.dfm:211
-#. frmJUD..PopupMenu1..popProfile..Caption
-#: jud-old.dfm:217
+#: jud.dfm:211
 msgid "View Profile"
 msgstr ""
 
 #. frmJud..PopupMenu1..popChat..Caption
-#: Jud.dfm:218
-#. frmJUD..PopupMenu1..popChat..Caption
-#: jud-old.dfm:224
+#: jud.dfm:218
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:142
 #. Programmer's name for it: sStartChat
 #: Jabber1.pas:439
 msgid "Start Chat"
-msgstr ""
-
-#. frmJUD..pnlLeft..pnlResults..Label1..Caption
-#: jud-old.dfm:128
-msgid "Search Again"
 msgstr ""
 
 #. frmLogin..Caption
@@ -6318,11 +6277,6 @@ msgstr ""
 msgid "Deny"
 msgstr ""
 
-#. Form1..Caption
-#: Test1.dfm:6
-msgid "Form1"
-msgstr ""
-
 #. frmVCard..Caption
 #: vcard.dfm:6
 msgid "My Profile"
@@ -7085,37 +7039,27 @@ msgid "You must enter a nickname"
 msgstr ""
 
 #. Programmer's name for it: sJUDStart
-#: Jud.pas:112
-#. Programmer's name for it: sJUDStart
-#: jud-old.pas:114
+#: jud.pas:112
 msgid "Start"
 msgstr ""
 
 #. Programmer's name for it: sJUDStop
-#: Jud.pas:113
-#. Programmer's name for it: sJUDStop
-#: jud-old.pas:115
+#: jud.pas:113
 msgid "Stop"
 msgstr ""
 
 #. Programmer's name for it: sJUDErrorContacting
-#: Jud.pas:114
-#. Programmer's name for it: sJUDErrorContacting
-#: jud-old.pas:116
+#: jud.pas:114
 msgid "Could not contact the search agent."
 msgstr ""
 
 #. Programmer's name for it: sJUDTimeout
-#: Jud.pas:115
-#. Programmer's name for it: sJUDTimeout
-#: jud-old.pas:117
+#: jud.pas:115
 msgid "The search timed out."
 msgstr ""
 
 #. Programmer's name for it: sJUDEmpty
-#: Jud.pas:116
-#. Programmer's name for it: sJUDEmpty
-#: jud-old.pas:118
+#: jud.pas:116
 msgid "No Results were found."
 msgstr ""
 
