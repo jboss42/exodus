@@ -21,7 +21,7 @@ unit MsgDisplay;
 
 interface
 uses
-    OLERichEdit,
+    OLERichEdit, iniFiles, 
     RegExpr, Classes, JabberMsg,
     Graphics, ComCtrls, Controls,
     Messages, Windows, SysUtils;
@@ -35,8 +35,7 @@ type
 var
     use_emoticons: boolean;
     emoticon_regex: TRegExpr;
-    paren_emoticon_list: TStringList;
-    emoticon_list: TStringList;
+    emoticon_list: THashedStringList;
 
 procedure DisplayMsg(Msg: TJabberMessage; RichEdit: TRichEdit);
 procedure DisplayPresence(txt: string; Browser: TRichEdit);
@@ -158,14 +157,9 @@ begin
         eo := nil;
         ms := emoticon_regex.Match[2];
         if (ms <> '') then begin
-            im := paren_emoticon_list.indexOf(ms);
+            im := emoticon_list.IndexOf(ms);
             if (im >= 0) then
-                eo := TEmoticon(paren_emoticon_list.Objects[im])
-            else begin
-                im := emoticon_list.IndexOf(ms);
-                if (im >= 0) then
-                    eo := TEmoticon(emoticon_list.Objects[im]);
-                end;
+                eo := TEmoticon(emoticon_list.Objects[im]);
             end;
 
         if (eo <> nil) then begin
@@ -176,6 +170,7 @@ begin
             RichEdit.SelText := ms;
 
         // RichEdit.SelText := ' ';
+        RichEdit.SelText := emoticon_regex.Match[6];
         m := emoticon_regex.ExecNext();
         end;
 
@@ -198,10 +193,7 @@ procedure ConfigEmoticons();
         eo := TEmoticon.Create();
         eo.il := il;
         eo.idx := idx;
-        if (val[1] = '(') then
-            paren_emoticon_list.AddObject(val, eo)
-        else
-            emoticon_list.AddObject(val, eo);
+        emoticon_list.AddObject(val, eo);
     end;
 
 var
@@ -215,8 +207,8 @@ begin
 
     // build up the regex expression as we go..
     // AddEmot returns the proper string
-    //e := '(.*)(\([a-zA-Z0-9@{}%&~?^]+\))|([:;BoOxX][a-zA-Z=@"''\[\])-:(>/|\\]+)|(=;)\b';
-    e := '(.*)((\([a-zA-Z0-9@{}%&~?^]+\))|([:;BoOxX][^\t ]+)|(=;))';
+    //e := '(.*)((\([a-zA-Z0-9@{}%&~?^]+\))|([:;BoOxX][^\t ]+)|(=;))([ \t\r\n]|$)';
+    e := '(.*)((\([a-zA-Z0-9@{}%&~?^]+\))|([:;BoOxX][^\t ]+)|(=;))(\s|$)';
 
     // Normal smileys
     AddEmot(':)', msn, 0);       // normal
@@ -531,11 +523,9 @@ end;
 *)
 
 initialization
-    paren_emoticon_list := TStringList.Create();
-    emoticon_list := TStringList.Create();
+    emoticon_list := THashedStringList.Create();
 
 finalization
-    paren_emoticon_list.Free();
     emoticon_list.Free();
 
 end.
