@@ -564,6 +564,7 @@ procedure TfrmExodus.doRestore();
 begin
     if (_hidden) then begin
         _hidden := false;
+        Self.Visible := true;
         if (_was_max) then
             ShowWindow(Handle, SW_MAXIMIZE)
         else
@@ -812,9 +813,11 @@ begin
     if (ExStartup.minimized) then begin
         _hidden := true;
         Self.WindowState := wsMinimized;
-        ShowWindow(Handle, SW_HIDE);
-        SendMessage(Self.handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
-    end;
+        ShowWindow(Self.Handle, SW_HIDE);
+        SendMessage(Self.Handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
+    end
+    else
+        Self.Visible := true;
 
     // Show the debug form, if they've asked for it.
     if (ExStartup.debug) then ShowDebugForm();
@@ -2738,11 +2741,13 @@ end;
 {---------------------------------------}
 procedure StopTrayAlert();
 begin
-     if (frmExodus.timTrayAlert.Enabled) then begin
-         frmExodus.timTrayAlert.Enabled := false;
-         frmExodus._tray_notify := false;
-         frmExodus.setTrayIcon(frmExodus._tray_icon_idx);
-     end;
+    if (frmExodus = nil) then exit;
+    
+    if (frmExodus.timTrayAlert.Enabled) then begin
+        frmExodus.timTrayAlert.Enabled := false;
+        frmExodus._tray_notify := false;
+        frmExodus.setTrayIcon(frmExodus._tray_icon_idx);
+    end;
 end;
 
 {---------------------------------------}
