@@ -110,9 +110,7 @@ uses
     {$else}
     Dialogs,
     {$endif}
-    Session,
-    XMLStream,
-    XMLUtils;
+    Entity, EntityCache, Session, XMLStream, XMLUtils;
 
 {---------------------------------------}
 constructor TJabberPres.Create;
@@ -297,12 +295,18 @@ begin
     _last_pres := curp;
     pi := Self.IndexOf(curp.fromJID.jid);
     s := TJabberSession(_js);
+
+    // Process the pres packet
     if curp.PresType = 'unavailable' then begin
         // remove this resource from the PPDB
         p := FindPres(curp.fromJID.jid, curp.fromJID.resource);
         if p <> nil then begin
             DeletePres(p);
             p := FindPres(curp.fromJid.jid, '');
+
+            // Update the EntityCache if necessary
+            jEntityCache.RemoveJid(curp.fromJid.jid);
+            jEntityCache.RemoveJid(curp.fromJid.full);
 
             // if there are no more presence packets, they are offline.
             if (p = nil) then
@@ -312,6 +316,7 @@ begin
         end;
         curp.Free();
     end
+
     else if curp.PresType = 'error' then begin
         // some kind of error presence
         if ((MainSession.Invisible) and (curp.error_code = '400') and
@@ -334,6 +339,7 @@ begin
 
         curp.Free();
     end
+
     else if (curp.PresType = 'subscribe') or
         (curp.PresType = 'subscribed') or
         (curp.PresType = 'unsubscribe') or
@@ -342,6 +348,7 @@ begin
         s.FireEvent('/presence/subscription', tag, curp);
         curp.Free();
     end
+
     else begin
         // some kind of available pres
         //p := FindPres(curp.fromJID.jid, curp.fromJID.resource);

@@ -141,11 +141,14 @@ type
 
   end;
 
-  TPlugin = class
-    com: IExodusPlugin;
-  end;
+    TPlugin = class
+        com: IExodusPlugin;
+    end;
 
-  TPluginProxy = class
+    // This class is a local object which receives events which a plugin has
+    // registered for, and sends them thru the COM interface to the actual
+    // plugin. Using this method, the dispatcher never needs to understand COM.
+    TPluginProxy = class
     private
         _xpath: Widestring;
     public
@@ -156,7 +159,7 @@ type
         procedure Callback(event: string; tag: TXMLTag);
     end;
 
-  TMenuContainer = class
+    TMenuContainer = class
     public
         idx: integer;
         id: Widestring;
@@ -180,7 +183,7 @@ var
 implementation
 
 uses
-    DockContainer, 
+    DockContainer, Profile,  
     ExResponders, ExSession, GnuGetText, JabberUtils, ExUtils,  EntityCache, Entity,
     Chat, ChatController, JabberID, MsgRecv, Room, Browser, Jud,
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
@@ -635,7 +638,8 @@ end;
 {---------------------------------------}
 procedure TExodusController.GetProfile(const jid: WideString);
 begin
-    // todo: fetch profile for COM
+    // Fetch and display a profile
+    ShowProfile(jid);
 end;
 
 {---------------------------------------}
@@ -1129,7 +1133,7 @@ end;
 procedure TExodusController.setAuthenticated(Authed: WordBool;
   const XML: WideString);
 begin
-    // xxx: parse & pass along the XML Tag.
+    // todo: parse & pass along the XML Tag for auth plugins
     MainSession.setAuthenticated(authed, nil, false);
 end;
 
@@ -1174,7 +1178,7 @@ begin
     end;
 end;
 
-
+{---------------------------------------}
 function TExodusController.addGroupMenu(
   const Caption: WideString): WideString;
 var
@@ -1192,6 +1196,7 @@ begin
     Result := id;
 end;
 
+{---------------------------------------}
 procedure TExodusController.removeGroupMenu(const ID: WideString);
 var
     idx: integer;
@@ -1203,6 +1208,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TExodusController.registerWithService(
   const JabberID: WideString);
 begin
