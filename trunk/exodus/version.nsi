@@ -1,1 +1,1 @@
-!define EXODUS_VERSION "0.8.6.59"
+!define EXODUS_VERSION "0.8.6.60"
