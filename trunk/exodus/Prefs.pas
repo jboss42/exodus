@@ -196,6 +196,7 @@ type
     Label16: TLabel;
     btnSpoolBrowse: TButton;
     OpenDialog1: TOpenDialog;
+    chkShowPending: TCheckBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -315,6 +316,7 @@ begin
         // Roster Prefs
         chkOnlineOnly.Checked := getBool('roster_only_online');
         chkShowUnsubs.Checked := getBool('roster_show_unsub');
+        chkShowPending.Checked := getBool('roster_show_pending');
         chkOfflineGroup.Checked := getBool('roster_offline_group');
         chkInlineStatus.Checked := getBool('inline_status');
         cboInlineStatus.Selected := TColor(getInt('inline_color'));
@@ -489,6 +491,7 @@ begin
         // Roster prefs
         setBool('roster_only_online', chkOnlineOnly.Checked);
         setBool('roster_show_unsub', chkShowUnsubs.Checked);
+        setBool('roster_show_pending', chkShowPending.Checked);
         setBool('roster_offline_group', chkOfflineGroup.Checked);
         setBool('roster_hide_block', chkHideBlocked.Checked);
         setBool('inline_status', chkInlineStatus.Checked);

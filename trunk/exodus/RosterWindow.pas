@@ -815,6 +815,7 @@ var
     is_blocked: boolean;
     show_online: boolean;
     show_offgrp: boolean;
+    show_pending: boolean;
     exp_grpnode: boolean;
 begin
     // Render a specific roster item, with the given presence info.
@@ -826,6 +827,7 @@ begin
     // First Cache some prefs
     show_online := MainSession.Prefs.getBool('roster_only_online');
     show_offgrp := MainSession.Prefs.getBool('roster_offline_group');
+    show_pending := MainSession.Prefs.getBool('roster_show_pending');
 
     exp_grpnode := false;
 
@@ -836,7 +838,7 @@ begin
     item, and the current presence info.
     }
 
-    if (ritem.ask = 'subscribe') then begin
+    if (ritem.ask = 'subscribe') and (show_pending) then begin
         // allow these items to pass thru
         end
 
