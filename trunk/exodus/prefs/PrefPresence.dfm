@@ -72,7 +72,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     Left = 0
     Top = 283
     Width = 349
-    Height = 119
+    Height = 147
     Align = alTop
     Caption = 'Properties'
     TabOrder = 3
@@ -98,15 +98,15 @@ inherited frmPrefPresence: TfrmPrefPresence
       Caption = 'Type:'
     end
     object Label14: TTntLabel
-      Left = 217
-      Top = 73
+      Left = 6
+      Top = 97
       Width = 34
       Height = 13
       Caption = 'Priority:'
     end
     object lblHotkey: TTntLabel
       Left = 5
-      Top = 94
+      Top = 120
       Width = 38
       Height = 13
       Caption = 'HotKey:'
@@ -130,7 +130,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     object cboCPType: TTntComboBox
       Left = 88
       Top = 68
-      Width = 97
+      Width = 227
       Height = 21
       Style = csDropDownList
       ItemHeight = 13
@@ -144,9 +144,9 @@ inherited frmPrefPresence: TfrmPrefPresence
         'Do Not Disturb')
     end
     object txtCPPriority: TTntEdit
-      Left = 258
-      Top = 69
-      Width = 39
+      Left = 88
+      Top = 93
+      Width = 74
       Height = 21
       Hint = 'Priority of -1 uses current priority.'
       ParentShowHint = False
@@ -156,8 +156,8 @@ inherited frmPrefPresence: TfrmPrefPresence
       OnChange = txtCPTitleChange
     end
     object spnPriority: TTntUpDown
-      Left = 297
-      Top = 69
+      Left = 166
+      Top = 93
       Width = 16
       Height = 21
       Hint = 'Priority of -1 uses current priority.'
@@ -170,7 +170,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     end
     object txtCPHotkey: THotKey
       Left = 88
-      Top = 92
+      Top = 118
       Width = 97
       Height = 19
       HotKey = 32833
@@ -219,7 +219,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     object cboPresTracking: TTntComboBox
       Left = 15
       Top = 68
-      Width = 258
+      Width = 306
       Height = 21
       ItemHeight = 13
       TabOrder = 2

@@ -65,11 +65,6 @@ type
     timAutoAway: TTimer;
     popTabs: TTntPopupMenu;
     popTray: TTntPopupMenu;
-    N5: TMenuItem;
-    trayPresDND: TMenuItem;
-    trayPresXA: TMenuItem;
-    trayPresAway: TMenuItem;
-    Custom2: TMenuItem;
     pnlRight: TPanel;
     ApplicationEvents1: TApplicationEvents;
     Toolbar: TCoolBar;
@@ -89,8 +84,6 @@ type
     SplitterLeft: TSplitter;
     timTrayAlert: TTimer;
     XMPPAction: TDdeServerConv;
-    trayPresOnline: TMenuItem;
-    trayPresChat: TMenuItem;
     Resolver: TIdDNSResolver;
     Exit2: TTntMenuItem;
     N9: TTntMenuItem;
@@ -162,6 +155,13 @@ type
     presAway: TTntMenuItem;
     presChat: TTntMenuItem;
     presOnline: TTntMenuItem;
+    Custom2: TTntMenuItem;
+    N5: TTntMenuItem;
+    trayPresDND: TTntMenuItem;
+    trayPresXA: TTntMenuItem;
+    trayPresAway: TTntMenuItem;
+    trayPresChat: TTntMenuItem;
+    trayPresOnline: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
@@ -763,6 +763,18 @@ begin
         mnuMyVCard.Visible := getBool('brand_vcard');
     end;
 
+    // Make sure presence menus have unified captions
+    presOnline.Caption := _(sRosterAvail);
+    presChat.Caption := _(sRosterChat);
+    presAway.Caption := _(sRosterAway);
+    presXA.Caption := _(sRosterXA);
+    presDND.Caption := _(sRosterDND);
+    trayPresOnline.Caption := _(sRosterAvail);
+    trayPresChat.Caption := _(sRosterChat);
+    trayPresAway.Caption := _(sRosterAway);
+    trayPresXA.Caption := _(sRosterXA);
+    trayPresDND.Caption := _(sRosterDND);
+
     // Setup the Tabs, toolbar, panel, and roster madness
     Tabs.ActivePage := tbsRoster;
     restoreMenus(false);
@@ -823,19 +835,6 @@ begin
 
     sExodusCWPHook := 0;
     sExodusGMHook := 0;
-
-    // Make sure presence menus have unified captions
-    presOnline.Caption := _(sRosterAvail);
-    presChat.Caption := _(sRosterChat);
-    presAway.Caption := _(sRosterAway);
-    presXA.Caption := _(sRosterXA);
-    presDND.Caption := _(sRosterDND);
-    trayPresOnline.Caption := _(sRosterAvail);
-    trayPresChat.Caption := _(sRosterChat);
-    trayPresAway.Caption := _(sRosterAway);
-    trayPresXA.Caption := _(sRosterXA);
-    trayPresDND.Caption := _(sRosterDND);
-
 
 end;
 

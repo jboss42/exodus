@@ -364,6 +364,7 @@ object frmExodus: TfrmExodus
           ImageIndex = 1
         end
         object presChat: TTntMenuItem
+          Tag = 1
           Caption = 'Free to Chat'
           ImageIndex = 4
         end
@@ -2642,33 +2643,34 @@ object frmExodus: TfrmExodus
     object trayPresence: TTntMenuItem
       Caption = 'Presence'
       Enabled = False
-      object trayPresOnline: TMenuItem
+      object trayPresOnline: TTntMenuItem
         Caption = 'Available'
         ImageIndex = 1
       end
-      object trayPresChat: TMenuItem
+      object trayPresChat: TTntMenuItem
+        Tag = 1
         Caption = 'Free to Chat'
         ImageIndex = 4
       end
-      object trayPresAway: TMenuItem
+      object trayPresAway: TTntMenuItem
         Tag = 2
         Caption = 'Away'
         ImageIndex = 2
       end
-      object trayPresXA: TMenuItem
+      object trayPresXA: TTntMenuItem
         Tag = 3
         Caption = 'Xtended Away'
         ImageIndex = 10
       end
-      object trayPresDND: TMenuItem
+      object trayPresDND: TTntMenuItem
         Tag = 4
         Caption = 'Do Not Disturb'
         ImageIndex = 3
       end
-      object N5: TMenuItem
+      object N5: TTntMenuItem
         Caption = '-'
       end
-      object Custom2: TMenuItem
+      object Custom2: TTntMenuItem
         Caption = 'Custom ...'
         OnClick = presCustomClick
       end

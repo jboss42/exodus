@@ -1097,6 +1097,18 @@ begin
         pm := TTntMenuItem(Parent);
         for i := 0 to pm.Count - 1 do begin
             c := pm.Items[i];
+            case c.tag of
+            0: avail := c;
+            1: chat := c;
+            2: away := c;
+            3: xa := c;
+            4: dnd := c;
+            else
+                continue;
+            end;
+
+            (*
+            c := pm.Items[i];
             if (c.Caption = _(sRosterAvail)) then avail := c
             else if (c.Caption = _(sRosterChat)) then chat := c
             else if (c.Caption = _(sRosterAway)) then away := c
@@ -1104,13 +1116,25 @@ begin
             else if (c.Caption = _(sRosterDND)) then dnd := c
             else
                 continue;
+            *)
             ClearCustoms(c);
         end;
     end
     else if (parent is TTntPopupMenu) then begin
         pp := TTntPopupMenu(parent);
         for i := 0 to pp.Items.Count - 1 do begin
-            c := TTntMenuItem(pp.Items[i]);
+            c := pp.Items[i];
+            case c.tag of
+            0: avail := c;
+            1: chat := c;
+            2: away := c;
+            3: xa := c;
+            4: dnd := c;
+            else
+                continue;
+            end;
+
+            (*
             if (c.Caption = _(sRosterAvail)) then avail := c
             else if (c.Caption = _(sRosterChat)) then chat := c
             else if (c.Caption = _(sRosterAway)) then away := c
@@ -1118,6 +1142,7 @@ begin
             else if (c.Caption = _(sRosterDND)) then dnd := c
             else
                 continue;
+            *)
             ClearCustoms(c);
         end;
     end;

@@ -48,13 +48,11 @@ object frmCustomPres: TfrmCustomPres
     TabOrder = 5
     inherited Panel2: TPanel
       Width = 313
-      Height = 34
       inherited Bevel1: TBevel
         Width = 313
       end
       inherited Panel1: TPanel
         Left = 153
-        Height = 29
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end
@@ -67,7 +65,7 @@ object frmCustomPres: TfrmCustomPres
   object cboType: TTntComboBox
     Left = 96
     Top = 8
-    Width = 129
+    Width = 201
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
@@ -82,14 +80,13 @@ object frmCustomPres: TfrmCustomPres
   object txtStatus: TTntEdit
     Left = 96
     Top = 40
-    Width = 209
+    Width = 201
     Height = 21
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
     Font.Name = 'MS Sans Serif'
     Font.Style = []
-    ImeMode = imHanguel
     ParentFont = False
     TabOrder = 1
   end
