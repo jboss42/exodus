@@ -151,8 +151,8 @@ procedure TJabberEvent.Parse(tag: TXMLTag);
 var
     ns, t: Widestring;
     delay, qtag, tmp_tag: TXMLTag;
-    i_tags, c_tags: TXMLTagList;
-    i, j: integer;
+    i_tags: TXMLTagList;
+    j: integer;
     ri: TJabberRosterItem;
 begin
     // create the event from a xml tag
@@ -196,6 +196,7 @@ begin
         else if (tag.QueryXPTag(XP_MSGXROSTER) <> nil) then begin
             // we are getting roster items
             eType := evt_RosterItems;
+            tmp_tag := tag.QueryXPTag(XP_MSGXROSTER);
             data_type := tag.GetBasicText('body');
             i_tags := tmp_tag.QueryTags('item');
             for j := 0 to i_tags.Count - 1 do begin

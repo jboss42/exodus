@@ -53,11 +53,12 @@ type
         _ssl_ok:    boolean;
         _timer:     TTimer;
         _profile:   TJabberProfile;
-        _cert:      TIdX509;
 
         {$ifdef Win32}
-        procedure VerifyUI();
-        function VerifyPeer(Certificate: TIdX509): Boolean;
+        // _cert:      TIdX509;
+
+        // procedure VerifyUI();
+        // function VerifyPeer(Certificate: TIdX509): Boolean;
         {$endif}
         procedure Keepalive(Sender: TObject);
         procedure KillSocket();
@@ -93,7 +94,11 @@ type
         constructor Create(strm: TXMLStream; Socket: TidTCPClient; root: string); //reintroduce;
 
         procedure DataTerminate (Sender: TObject);
+        {$ifdef INDY9}
         procedure GotException (Sender: TIdThread; E: Exception);
+        {$else}
+        procedure GotException (Sender: TObject; E: Exception);
+        {$endif}
 
     end;
 implementation
@@ -148,12 +153,7 @@ begin
         if (_socket.Connected) then
             _Socket.Disconnect();
 
-        try
-            _Socket.Connect;
-        except
-            on EIdOSSLConnectError do begin
-                end;
-        end;
+        _Socket.Connect;
 
         {
         If we successfully connect, change the stage of the
@@ -215,7 +215,11 @@ begin
 end;
 
 {---------------------------------------}
+{$ifdef INDY9}
 procedure TSocketThread.GotException(Sender: TIdThread; E: Exception);
+{$else}
+procedure TSocketThread.GotException (Sender: TObject; E: Exception);
+{$endif}
 var
     se: EIdSocketError;
 begin
@@ -293,6 +297,7 @@ begin
 end;
 
 {$ifdef Win32}
+{
 procedure TXMLSocketStream.VerifyUI();
 var
     sl : TStringList;
@@ -335,7 +340,9 @@ begin
                                mtWarning, [mbOK], 0);
         end;
 end;
+}
 
+{
 function TXMLSocketStream.VerifyPeer(Certificate: TIdX509): Boolean;
 begin
     if (not _ssl_check) then begin
@@ -346,6 +353,7 @@ begin
 
     result := _ssl_ok;
 end;
+}
 {$endif}
 
 {---------------------------------------}

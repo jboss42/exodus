@@ -22,12 +22,16 @@ unit Transfer;
 interface
 
 uses
+    {$ifdef INDY9}
+    IdCustomHTTPServer,
+    {$endif}
+
     XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, IdTCPConnection, IdTCPClient, IdHTTP, IdBaseComponent,
     IdComponent, IdTCPServer, IdHTTPServer, ComCtrls, StdCtrls, buttonFrame,
     ExRichEdit, ExtCtrls, IdThreadMgr, IdThreadMgrPool, IdAntiFreezeBase,
-    IdAntiFreeze, IdThreadMgrDefault, RichEdit2, Grids, IdCustomHTTPServer;
+    IdAntiFreeze, IdThreadMgrDefault, RichEdit2, Grids;
 
 const
     WM_XFER = WM_USER + 5000;
