@@ -457,7 +457,7 @@ var
     jid: string;
 begin
     // get all of the bm's
-    if (event = 'xml') then begin
+    if ((event = 'xml') and (tag.getAttribute('type') = 'result')) then begin
         // we got a response..
         {
         <iq type="set" id="jcl_4">
