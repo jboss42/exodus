@@ -178,11 +178,11 @@ type
     btnAddContact: TToolButton;
     btnRoom: TToolButton;
     btnDelContact: TToolButton;
-    btnExpanded: TToolButton;
     imgYahooEmoticons: TImageList;
     btnFind: TToolButton;
     imgMSNEmoticons: TImageList;
     RegisterwithaService1: TMenuItem;
+    btnExpanded: TToolButton;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);

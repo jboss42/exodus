@@ -872,11 +872,11 @@ begin
 
     p := MainSession.ppdb.FindPres(ri.JID.jid, '');
     if MainSession.Prefs.getBool('inline_status') then
-        _hint_text := Node.Text
+        _hint_text := ri.jid.full
     else if P = nil then
-        _hint_text := Node.Text + ': Offline'
+        _hint_text := ri.jid.full + ': Offline'
     else
-        _hint_text := Node.Text + ': ' + p.Status;
+        _hint_text := ri.jid.full + ': ' + p.Status;
     if _hint_text = TreeRoster.Hint then exit;
     TreeRoster.Hint := _hint_text;
 end;

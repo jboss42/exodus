@@ -372,6 +372,20 @@ begin
         result := '1'
     else if pkey = 'timestamp_format' then
         result := 'HH:MM'
+    else if pkey = 'notify_online' then
+        result := IntToStr(notify_toast)
+    else if pkey = 'notify_normalmsg' then
+        result := IntToStr(notify_toast)
+    else if pkey = 'notify_newchat' then
+        result := IntToStr(notify_toast)
+    else if pkey = 'notify_chatactivity' then
+        result := IntToStr(notify_flash)
+    else if pkey = 'notify_s10n' then
+        result := IntToStr(notify_toast)
+    else if pkey = 'notify_keyword' then
+        result := IntToStr(notify_toast)
+    else if pkey = 'notify_invite' then
+        result := IntToStr(notify_toast)
     else
         result := '';
 end;
