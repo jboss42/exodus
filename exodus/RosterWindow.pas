@@ -22,7 +22,7 @@ unit RosterWindow;
 interface
 
 uses
-    JabberID,
+    JabberID, GraphUtil, 
     DropTarget, Unicode, XMLTag, Presence, Roster, NodeItem, Avatar,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ComCtrls, ExtCtrls, Buttons, ImgList, Menus, StdCtrls, TntStdCtrls,
@@ -309,7 +309,7 @@ procedure setRosterMenuCaptions(online, chat, away, xa, dnd: TTntMenuItem);
 
 implementation
 uses
-    ExSession, XferManager, CustomPres, RegForm,   
+    ExSession, XferManager, CustomPres, RegForm, Math,    
     JabberConst, Chat, ChatController, GrpManagement, GnuGetText, InputPassword,
     SelContact, Invite, Bookmark, S10n, MsgRecv, PrefController,
     ExEvents, JabberUtils, ExUtils,  Room, Profile, RiserWindow, ShellAPI,
@@ -602,7 +602,7 @@ begin
 
         if (_avatars) then begin
             treeRoster.Perform(TVM_SETITEMHEIGHT, _item_height, 0);
-            _item_height := (2*(treeRoster.Canvas.TextHeight('Ag'))) + 2;
+            _item_height := Round(1.7*(treeRoster.Canvas.TextHeight('Ag'))) + 2;
         end
         else begin
             _item_height := treeRoster.Canvas.TextHeight('Ag') + 2;
@@ -2385,55 +2385,62 @@ begin
         if (not Node.isVisible) then exit;
 
         ntype := getNodeType(Node);
-        case ntype of
-        node_bm: DefaultDraw := true;
-        node_transport: DefaultDraw := true;
-        node_ritem, node_myres: begin
-            // if we aren't showing status, or don't want unicode,
-            // then bail right now.
-            if ((_roster_unicode = false) and (_show_status = false)) then begin
-                DefaultDraw := true;
-                exit;
-            end;
-
-            // always custom draw roster items to get unicode goodness
-            // determine the captions (c1 is nick, c2 is status)
-            c2 := '';
-            if (ntype = node_myres) then begin
-                c1 := _cur_myres.jid.resource;
-                if (_cur_myres.Presence.Status <> '') then
-                    c2 := '(' + _cur_myres.Presence.Status + ')';
-                DrawNodeText(Node, State, c1, c2);
-            end
-            else begin
-                if (_cur_ritem.RawNickname <> '') then
-                    c1 := _cur_ritem.Nickname
-                else
-                    c1 := _cur_ritem.jid.Full;
-
-                if (_cur_ritem.ask = 'subscribe') then
-                    c1 := c1 + _(sRosterPending);
-
-                p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
-                if ((p <> nil) and (_show_status)) then begin
-                    if (p.Status <> '') then
-                        c2 := '(' + p.Status + ')';
-                end;
-                DrawNodeText(Node, State, c1, c2);
-                if (_avatars) then begin
-                    a := Avatars.Find(_cur_ritem.jid.jid);
-                    if (a <> nil) then
-                        // draw the avatar
-                        DrawAvatar(Node, a)
-                    else begin
-                        // draw the client img
-                        DrawClientImage(Node, _cur_ritem.jid);
-                    end;
-                end;
-            end;
+        if (_avatars) then
+            DefaultDraw := false
+        else if ((ntype = node_bm) or (ntype = node_transport)) then begin
+            DefaultDraw := true;
+            exit;
+        end
+        else if ((_roster_unicode = false) and (_show_status = false)) then begin
+            DefaultDraw := true;
+            exit;
+        end
+        else
             DefaultDraw := false;
+
+        // always custom draw roster items to get unicode goodness
+        // determine the captions (c1 is nick, c2 is status)
+        c2 := '';
+        if (ntype = node_bm) then begin
+            c1 := _cur_bm.bmName;
+            DrawNodeText(Node, State, c1, c2);
+        end
+        else if (ntype = node_transport) then begin
+            c1 := _cur_ritem.Nickname;
+            DrawNodeText(Node, State, c1, c2);
+        end
+        else if (ntype = node_myres) then begin
+            c1 := _cur_myres.jid.resource;
+            if (_cur_myres.Presence.Status <> '') then
+                c2 := '(' + _cur_myres.Presence.Status + ')';
+            DrawNodeText(Node, State, c1, c2);
+        end
+        else begin
+            if (_cur_ritem.RawNickname <> '') then
+                c1 := _cur_ritem.Nickname
+            else
+                c1 := _cur_ritem.jid.Full;
+
+            if (_cur_ritem.ask = 'subscribe') then
+                c1 := c1 + _(sRosterPending);
+
+            p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
+            if ((p <> nil) and (_show_status)) then begin
+                if (p.Status <> '') then
+                    c2 := '(' + p.Status + ')';
+            end;
+            DrawNodeText(Node, State, c1, c2);
+            if (_avatars) then begin
+                a := Avatars.Find(_cur_ritem.jid.jid);
+                if (a <> nil) then
+                    // draw the avatar
+                    DrawAvatar(Node, a)
+                else begin
+                    // draw the client img
+                    DrawClientImage(Node, _cur_ritem.jid);
+                end;
+            end;
         end;
-    end;
     end;
 end;
 
@@ -2445,8 +2452,8 @@ begin
     //
     r := Node.DisplayRect(false);
     r.Right := r.Right - 2;
-    r.Left := r.Right - 32;
-    r.Bottom := r.Top + 32;
+    r.Left := r.Right - _item_height;
+    r.Bottom := r.Top + _item_height;
     if ((a.valid) and (not a.pending)) then
         a.Draw(treeRoster.Canvas, r);
 end;
@@ -2490,8 +2497,8 @@ begin
 
     r := Node.DisplayRect(false);
     r.Right := r.Right - 2;
-    r.Left := r.Right - 32;
-    r.Bottom := r.Top + 32;
+    r.Left := r.Right - _item_height;
+    r.Bottom := r.Top + _item_height;
 
     if (t <> nil) then begin
         n := t.GetAttribute('node');
@@ -2519,53 +2526,67 @@ end;
 procedure TfrmRosterWindow.DrawNodeText(Node: TTreeNode; State: TCustomDrawState;
     c1, c2: Widestring);
 var
-    maxr, ico, tw, th: integer;
-    mRect, nRect, xRect: TRect;
+    top_margin, lines, rr, maxr, ico, tw, th: integer;
+    nRect, xRect: TRect;
     main_color, stat_color: TColor;
+    is_grp: boolean;
+    tmps: Widestring;
 begin
     with treeRoster.Canvas do begin
-        TextFlags := ETO_OPAQUE;
-        tw := CanvasTextWidthW(treeRoster.Canvas, c1);
-        th := treeRoster.Canvas.TextHeight(c1);
-        Font.Color := clWindowText;
-        Brush.Color := treeRoster.Color;
-        Brush.Style := bsSolid;
-        mRect := Node.DisplayRect(false);
-        FillRect(mRect);
-        
+        //tmps := IntToStr(Node.AbsoluteIndex) + ': ' + c1;
+        tmps := c1;
+        tw := CanvasTextWidthW(treeRoster.Canvas, tmps);
+        th := treeRoster.Canvas.TextHeight(tmps);
+        is_grp := (TObject(Node.Data) is TJabberGroup);
+
+        // this is madness to determine the text rectangle,
+        // based on our mode, text widths, etc..
         xRect := Node.DisplayRect(true);
-        xRect.Right := xRect.Left + tw + 2 +
-            CanvasTextWidthW(treeRoster.Canvas, (c2 + ' '));
+        xRect.Left := xRect.Left - 1;
+        lines := 1;
+        if ((_avatars) and (not is_grp)) then begin
+            // normal, c1 (c2)
+            if (c2 <> '') then lines := 2;
+            rr := Max(xRect.Left + tw + 3,
+                xRect.Left + CanvasTextWidthW(treeRoster.Canvas, c2) + 5);
+            maxr := treeRoster.ClientWidth - _item_height - 2;
+        end
+        else begin
+            // avatar mode, c2 under c1
+            rr := xRect.Left + tw + 2 +
+                CanvasTextWidthW(treeRoster.Canvas, (c2 + ' '));
+            maxr := treeRoster.ClientWidth - 2;
+        end;
 
-        if (_avatars) then
-            maxr := mRect.Right - 32 - 2
+        // make sure our rect isn't bigger than the treeview
+        if (rr >= maxr) then
+            xRect.Right := maxr
         else
-            maxr := mRect.Right - 2;
-
-        if (xRect.Right >= maxr) then
-            xRect.Right := maxr;
-
+            xRect.Right := rr;
         nRect := xRect;
         nRect.Left := nRect.Left - (2 * treeRoster.Indent);
 
+        // if selected, draw a solid rect
         if (cdsSelected in State) then begin
             Font.Color := clHighlightText;
             Brush.Color := clHighlight;
             FillRect(xRect);
         end;
 
-        // draw the image
+        // draw the left hand image
+        top_margin := (_item_height - frmExodus.ImageList2.Height) div 2;
+        if (top_margin < 0) then top_margin := 0;
         if (Node.Level > 0) then begin
             frmExodus.ImageList2.Draw(treeRoster.Canvas,
                 nRect.Left + treeRoster.Indent,
-                nRect.Top, Node.ImageIndex);
+                nRect.Top + top_margin, Node.ImageIndex);
         end
         else begin
             // 27 = grp_expanded
             // 28 = grp_collapsed
             if (Node.Expanded) then ico := 27 else ico := 28;
             frmExodus.ImageList2.Draw(treeRoster.Canvas, nRect.Left + treeRoster.Indent,
-                nRect.Top, ico);
+                nRect.Top + top_margin, ico);
         end;
 
         // draw the text
@@ -2577,27 +2598,33 @@ begin
             main_color := treeRoster.Font.Color;
             stat_color := _status_color;
         end;
+        if ((_avatars) and (lines = 1)) then begin
+            top_margin := (_item_height - th) div 2;
+            if (top_margin < 0) then top_margin := 0;
+        end
+        else
+            top_margin := 1;
 
         SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(main_color));
         CanvasTextOutW(treeRoster.Canvas, xRect.Left + 1,
-            xRect.Top + 1, c1, maxr);
+            xRect.Top + top_margin, tmps, maxr);
 
         if (c2 <> '') then begin
-            if (TObject(Node.Data) is TJabberGroup) then begin
+            SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(stat_color));
+            if ((not _avatars) or (is_grp)) then begin
                 Font.Style := [];
                 SelectObject(treeRoster.Canvas.Handle, Font.Handle);
-            end;
-            SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(stat_color));
-
-            if ((_avatars = false) or (TObject(Node.Data) is TJabberGroup)) then
-                CanvasTextOutW(treeRoster.Canvas, xRect.Left + tw + 5,
-                    xRect.Top + 1, c2, maxr)
-            else
+                CanvasTextOutW(treeRoster.Canvas, xRect.Left + tw + 4,
+                    xRect.Top + top_margin, c2, maxr)
+            end
+            else begin
+                Font.Size := Font.Size - 3;
+                SelectObject(treeRoster.Canvas.Handle, Font.Handle);
                 CanvasTextOutW(treeRoster.Canvas, xRect.Left + 2,
                     xRect.Top + 1 + th, c2, maxr);
-
-            if (TObject(Node.Data) is TJabberGroup) then
-                Font.Size := Font.Size + 1;
+                Font.Size := Font.Size + 3;
+                SelectObject(treeRoster.Canvas.Handle, Font.Handle);
+            end;
         end;
 
         if (cdsSelected in State) then

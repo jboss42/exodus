@@ -34,8 +34,6 @@ uses
     IdUDPClient, IdDNSResolver, TntMenus, IdAntiFreezeBase, IdAntiFreeze;
 
 const
-    UpdateKey = '001';
-
     RECONNECT_RETRIES = 3;
 
     // FROM pbt.h in the win32 SDK
