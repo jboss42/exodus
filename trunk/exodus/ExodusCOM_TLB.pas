@@ -11,8 +11,8 @@ unit ExodusCOM_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.23 $
-// File generated on 2/2/2003 8:05:40 PM from Type Library described below.
+// PASTLWTR : $Revision: 1.24 $
+// File generated on 2/9/2003 7:40:45 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -200,9 +200,9 @@ type
     function getActiveContacts(Online: WordBool): WideString; safecall;
     function Get_LocalIP: WideString; safecall;
     procedure setPluginAuth(const AuthAgent: IExodusAuth); safecall;
-    procedure setAuthenticated(Authed: WordBool; const XML: WideString); safecall;
+    procedure setAuthenticated(Authed: WordBool; const xml: WideString); safecall;
     procedure setAuthJID(const Username: WideString; const Host: WideString; 
-                         const Resource: WideString); safecall;
+                         const resource: WideString); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -294,9 +294,9 @@ type
     function getActiveContacts(Online: WordBool): WideString; dispid 65;
     property LocalIP: WideString readonly dispid 64;
     procedure setPluginAuth(const AuthAgent: IExodusAuth); dispid 66;
-    procedure setAuthenticated(Authed: WordBool; const XML: WideString); dispid 67;
+    procedure setAuthenticated(Authed: WordBool; const xml: WideString); dispid 67;
     procedure setAuthJID(const Username: WideString; const Host: WideString; 
-                         const Resource: WideString); dispid 68;
+                         const resource: WideString); dispid 68;
   end;
 
 // *********************************************************************//
@@ -413,6 +413,7 @@ type
     procedure RemoveBookmark(const JabberID: WideString); safecall;
     function Find(const JabberID: WideString): IExodusRosterItem; safecall;
     function Item(Index: Integer): IExodusRosterItem; safecall;
+    function Count: Integer; safecall;
   end;
 
 // *********************************************************************//
@@ -431,6 +432,7 @@ type
     procedure RemoveBookmark(const JabberID: WideString); dispid 5;
     function Find(const JabberID: WideString): IExodusRosterItem; dispid 6;
     function Item(Index: Integer): IExodusRosterItem; dispid 7;
+    function Count: Integer; dispid 8;
   end;
 
 // *********************************************************************//

@@ -38,6 +38,7 @@ type
     procedure RemoveBookmark(const JabberID: WideString); safecall;
     procedure SaveBookmarks; safecall;
     function Item(Index: Integer): IExodusRosterItem; safecall;
+    function Count: Integer; safecall;
     { Protected declarations }
   end;
 
@@ -119,6 +120,11 @@ begin
         Result := TExodusRosterItem.Create(ri)
     else
         Result := nil;
+end;
+
+function TExodusRoster.Count: Integer;
+begin
+    Result := MainSession.roster.Count;
 end;
 
 initialization

@@ -157,18 +157,6 @@ begin
   Application.Title := 'Exodus';
 
   Application.CreateForm(TfrmExodus, frmExodus);
-  Application.CreateForm(TfrmPathSelector, frmPathSelector);
-  Application.CreateForm(TfrmCustomNotify, frmCustomNotify);
-  Application.CreateForm(TfrmPrefSystem, frmPrefSystem);
-  Application.CreateForm(TfrmPrefPanel, frmPrefPanel);
-  Application.CreateForm(TfrmPrefRoster, frmPrefRoster);
-  Application.CreateForm(TfrmPrefSubscription, frmPrefSubscription);
-  Application.CreateForm(TfrmPrefFont, frmPrefFont);
-  Application.CreateForm(TfrmPrefDialogs, frmPrefDialogs);
-  Application.CreateForm(TfrmPrefMsg, frmPrefMsg);
-  Application.CreateForm(TfrmPrefAway, frmPrefAway);
-  Application.CreateForm(TfrmPrefPresence, frmPrefPresence);
-  Application.CreateForm(TfrmPrefPlugins, frmPrefPlugins);
   if (frmExodus = nil) then
     Halt;
 

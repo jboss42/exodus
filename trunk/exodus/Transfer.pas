@@ -145,6 +145,10 @@ begin
     qTag := tag.getFirstTag('query');
     tmp_tag := qtag.GetFirstTag('url');
     url := tmp_tag.Data;
+
+    // if this isn't an http:// url, then ignore.
+    if (Pos('http:', url) <> 1) then exit;
+
     tmp_tag := qTag.GetFirstTag('desc');
     if (tmp_tag <> nil) then
         desc := tmp_tag.Data

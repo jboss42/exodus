@@ -46,10 +46,10 @@ UnitOutputDir=
 PackageDLLOutputDir=
 PackageDCPOutputDir=
 SearchPath=..\..\output
-Packages=vcl;rtl;dbrtl;adortl;vcldb;vclx;bdertl;vcldbx;ibxpress;dsnap;cds;bdecds;qrpt;teeui;teedb;tee;dss;teeqr;visualclx;visualdbclx;dsnapcrba;dsnapcon;VclSmp;vclshlctrls;vclie;xmlrtl;inet;inetdbbde;inetdbxpress;inetdb;nmfast;webdsnap;websnap;dbexpress;dbxcds;indy;dclOffice2k;ExComponents;Sha1Hasher
+Packages=vcl;rtl;vclshlctrls
 Conditionals=
 DebugSourceDirs=
-UsePackages=0
+UsePackages=1
 [Parameters]
 RunParams=-d -c plugin.xml
 HostApplication=D:\src\exodus\exodus\exodus.exe
@@ -85,8 +85,6 @@ OriginalFilename=
 ProductName=
 ProductVersion=1.0.0.0
 Comments=
-[Excluded Packages]
-c:\lang\borland\delphi6\Projects\Bpl\VirtualTreesD6D.bpl=Virtual Treeview
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
