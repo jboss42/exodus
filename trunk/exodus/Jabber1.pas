@@ -1695,11 +1695,14 @@ begin
     // Unhook the auto-away DLL
     if (_hookLib <> 0) then begin
         _StopHooks();
+        _hookLib := 0;
         end;
 
     // Free the Richedit library
-    if (_richedit <> 0) then
+    if (_richedit <> 0) then begin
         FreeLibrary(_richedit);
+        _richedit := 0;
+        end;
 
     // Close up the msg queue
     if (frmMsgQueue <> nil) then begin
@@ -1725,14 +1728,16 @@ begin
         MainSession := nil;
         end;
 
-    if (_mutex <> 0) then
+    if (_mutex <> 0) then begin
         CloseHandle(_mutex);
+        _mutex := 0;
+        end;
 
     // Kill the tray icon stuff
-    _tray_icon.Free();
+    if (_tray_icon <> nil) then
+        FreeAndNil(_tray_icon);
 
-    // remove the COM Plugin _controller
-    _controller.Free();
+    // NB: The _controller goes away via RefCounts & COM madness.
 
 end;
 
@@ -2705,6 +2710,7 @@ begin
 
     // Show a toast window
     i := Random(40);
+    // ShowRiserWindow(Self, 'Test Toast ' + IntToStr(i) + ' Some more text to make toast really long.', i);
     ShowRiserWindow(Self, 'Test Toast ' + IntToStr(i), i);
 end;
 
