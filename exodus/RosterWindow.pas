@@ -130,6 +130,7 @@ type
     procedure RemoveGroupNode(node: TTreeNode);
     procedure ResetPanels;
     procedure DoShowHint(var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
+    procedure ChangeStatusImage(idx: integer);
   protected
     procedure CreateParams(var Params: TCreateParams); override;
   public
@@ -199,7 +200,7 @@ begin
     _rostercb := MainSession.RegisterCallback(RosterCallback);
     _prescb := MainSession.RegisterCallback(PresCallback);
     _sessionCB := MainSession.RegisterCallback(SessionCallback, '/session');
-    ImageList1.Draw(imgStatus.Canvas, 0, 0, 0);
+    ChangeStatusImage(0);
     _pos.Left := (Screen.Width div 2) - 150;
     _pos.Right := _pos.Left + 200;
     _pos.Top := (Screen.Height div 3);
@@ -237,7 +238,20 @@ begin
     with Params do begin
         ExStyle := ExStyle or WS_EX_APPWINDOW;
         end;
+end;
 
+{---------------------------------------}
+procedure TfrmRosterWindow.ChangeStatusImage(idx: integer);
+var
+    bmp: TBitmap;
+begin
+    bmp := TBitmap.Create();
+    ImageList1.BkColor := clWhite;
+    ImageList1.GetBitmap(idx, bmp);
+    imgStatus.Picture.Assign(bmp);
+    ImageList1.BkColor := clNone;
+    imgStatus.Refresh;
+    bmp.Free;
 end;
 
 {---------------------------------------}
@@ -744,27 +758,27 @@ begin
     // display this show type
     if show = 'chat' then begin
         pnlStatus.Caption := 'Want to Chat';
-        ImageList1.Draw(imgStatus.Canvas, 1, 1, ico_Chat);
+        ChangeStatusImage(ico_Chat);
         end
     else if show = 'away' then begin
         pnlStatus.Caption := 'Away';
-        ImageList1.Draw(imgStatus.Canvas, 1, 1, ico_Away);
+        ChangeStatusImage(ico_Away);
         end
     else if show = 'xa' then begin
         pnlStatus.Caption := 'Ext. Away';
-        ImageList1.Draw(imgStatus.Canvas, 1, 1, ico_XA);
+        ChangeStatusImage(ico_XA);
         end
     else if show = 'dnd' then begin
         pnlStatus.Caption := 'Do Not Disturb';
-        ImageList1.Draw(imgStatus.Canvas, 1, 1, ico_DND);
+        ChangeStatusImage(ico_DND);
         end
     else if show = 'offline' then begin
         pnlStatus.Caption := 'Offline';
-        ImageList1.Draw(imgStatus.Canvas, 0, 0, ico_Offline);
+        ChangeStatusImage(ico_Offline);
         end
     else begin
         pnlStatus.Caption := 'Available';
-        ImageList1.Draw(imgStatus.Canvas, 0, 0, ico_Online);
+        ChangeStatusImage(ico_Online);
         end;
 end;
 
