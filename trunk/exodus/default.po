@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-01-02 08:15\n"
-"PO-Revision-Date: 2004-01-02 08:15\n"
+"POT-Creation-Date: 2004-01-05 08:33\n"
+"PO-Revision-Date: 2004-01-05 08:33\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1455,7 +1455,7 @@ msgstr ""
 #: RosterWindow.dfm:605
 #. init the cmd line stuff
 #: ExSession.pas:189
-#: Jabber1.pas:2720
+#: Jabber1.pas:2739
 #: RosterWindow.pas:346
 #: RosterWindow.pas:368
 #: RosterWindow.pas:1618
@@ -1477,7 +1477,7 @@ msgstr ""
 #: Jabber1.dfm:2668
 #. frmRosterWindow..popStatus..presAway..Caption
 #: RosterWindow.dfm:414
-#: Jabber1.pas:2718
+#: Jabber1.pas:2737
 #: RosterWindow.pas:348
 #: RosterWindow.pas:369
 #: RosterWindow.pas:1602
@@ -1775,7 +1775,7 @@ msgstr ""
 #. frmInputPass..Caption
 #: InputPassword.dfm:8
 #. accordingly.
-#: Jabber1.pas:903
+#: Jabber1.pas:923
 msgid "Exodus Password"
 msgstr ""
 
@@ -1878,7 +1878,7 @@ msgstr ""
 #. do this.
 #: ExSession.pas:475
 #: ExUtils.pas:1223
-#: Jabber1.pas:1217
+#: Jabber1.pas:1237
 #: Login.pas:104
 #: Login.pas:177
 msgid "Exodus"
@@ -2403,7 +2403,7 @@ msgstr ""
 #: jud.dfm:215
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:143
-#: Jabber1.pas:2291
+#: Jabber1.pas:2308
 msgid "Start Chat"
 msgstr ""
 
@@ -6449,8 +6449,8 @@ msgid "Chat Activity: "
 msgstr ""
 
 #: ChatWin.pas:743
-#: Jabber1.pas:2608
-#: Jabber1.pas:2614
+#: Jabber1.pas:2627
+#: Jabber1.pas:2633
 #. post a msg to the window and disable the text input box.
 #: Room.pas:656
 msgid "You have been disconnected."
@@ -6978,114 +6978,114 @@ msgstr ""
 msgid "Conference Room:"
 msgstr ""
 
-#: Jabber1.pas:903
+#: Jabber1.pas:923
 msgid "Enter Password"
 msgstr ""
 
 #. For other OS's we need to use the wicked nasty DLL
-#: Jabber1.pas:992
+#: Jabber1.pas:1012
 msgid "Trying to setup the Auto Away timer."
 msgstr ""
 
-#: Jabber1.pas:1014
+#: Jabber1.pas:1034
 msgid "AutoAway Setup FAILED!"
 msgstr ""
 
 #. do nothing here..
-#: Jabber1.pas:1021
+#: Jabber1.pas:1041
 msgid "Using Win32 API for Autoaway checks!!"
 msgstr ""
 
-#: Jabber1.pas:1025
+#: Jabber1.pas:1045
 msgid "ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!"
 msgstr ""
 
-#: Jabber1.pas:1088
+#: Jabber1.pas:1108
 msgid "There was an error trying to authenticate you.\n"
 "Either you used the wrong password, or this account is already in use "
 "by someone else."
 msgstr ""
 
-#: Jabber1.pas:1095
+#: Jabber1.pas:1115
 msgid "There was an error trying to setup SSL."
 msgstr ""
 
-#: Jabber1.pas:1131
+#: Jabber1.pas:1151
 msgid "An Error occurred trying to register your new account. This server "
 "may not allow open registration."
 msgstr ""
 
-#: Jabber1.pas:1146
+#: Jabber1.pas:1166
 msgid "This account does not exist on this server. Create a new "
 "account?"
 msgstr ""
 
 #. if we have a new account, prompt for reg info
-#: Jabber1.pas:1196
+#: Jabber1.pas:1216
 msgid "Your new jabber account is activated. Would you like to fill out "
 "additional registration information?"
 msgstr ""
 
 #. set us to away
-#: Jabber1.pas:2087
+#: Jabber1.pas:2104
 msgid "Setting AutoAway"
 msgstr ""
 
 #. set us to xa
-#: Jabber1.pas:2123
+#: Jabber1.pas:2140
 msgid "Setting AutoXA"
 msgstr ""
 
 #. reset our status to available
-#: Jabber1.pas:2140
+#: Jabber1.pas:2157
 msgid "Setting Auto Available"
 msgstr ""
 
 #. lookup some arbitrary vcard..
-#: Jabber1.pas:2175
+#: Jabber1.pas:2192
 msgid "Lookup Profile"
 msgstr ""
 
-#: Jabber1.pas:2175
-#: Jabber1.pas:2291
-#: Jabber1.pas:2548
+#: Jabber1.pas:2192
+#: Jabber1.pas:2308
+#: Jabber1.pas:2567
 msgid "Enter Jabber ID: "
 msgstr ""
 
-#: Jabber1.pas:2390
+#: Jabber1.pas:2409
 msgid "Old password is incorrect."
 msgstr ""
 
-#: Jabber1.pas:2394
+#: Jabber1.pas:2413
 msgid "New password does not match."
 msgstr ""
 
-#: Jabber1.pas:2414
-#: Jabber1.pas:2419
+#: Jabber1.pas:2433
+#: Jabber1.pas:2438
 msgid "Error changing password."
 msgstr ""
 
-#: Jabber1.pas:2417
+#: Jabber1.pas:2436
 msgid "Password changed."
 msgstr ""
 
 #. kick off a service registration..
-#: Jabber1.pas:2495
+#: Jabber1.pas:2514
 msgid "Register with Service"
 msgstr ""
 
-#: Jabber1.pas:2495
+#: Jabber1.pas:2514
 msgid "Enter Jabber ID of Service: "
 msgstr ""
 
-#: Jabber1.pas:2548
+#: Jabber1.pas:2567
 msgid "Send a Message"
 msgstr ""
 
 #. fire up an invite for this room using the selected contacts
-#: Jabber1.pas:2811
+#: Jabber1.pas:2832
 #. send roster items to this contact.
-#: Jabber1.pas:2821
+#: Jabber1.pas:2842
 #. Send contacts to this JID..
 #: RosterWindow.pas:2523
 #. we got a URL drop
@@ -7094,7 +7094,7 @@ msgstr ""
 msgid "You must select one or more contacts."
 msgstr ""
 
-#: Jabber1.pas:2949
+#: Jabber1.pas:2970
 msgid "Branding error!"
 msgstr ""
 
