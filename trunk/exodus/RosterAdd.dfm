@@ -92,6 +92,7 @@ object frmAdd: TfrmAdd
     Width = 142
     Height = 21
     ItemHeight = 13
+    Sorted = True
     TabOrder = 2
   end
   inline frameButtons1: TframeButtons
