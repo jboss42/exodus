@@ -41,6 +41,7 @@ object frmAutoUpdateStatus: TfrmAutoUpdateStatus
     Top = 26
     Width = 64
     Height = 13
+    Cursor = crHandPoint
     Caption = 'What'#39's New?'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBlue
