@@ -238,7 +238,6 @@ begin
 
     // this check is needed only to prevent extraneous regexing.
     if ((not server) and
-        (not Application.Active) and
         (not MainSession.IsPaused)) then begin
         // check for keywords
         if ((_keywords <> nil) and (_keywords.Exec(Msg.Body))) then

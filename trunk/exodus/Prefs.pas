@@ -743,7 +743,7 @@ begin
     chkToast.Enabled := e;
     chkFlash.Enabled := e;
 
-    if optNotify.Enabled then begin
+    if chkToast.Enabled then begin
         chkToast.Checked := ((_notify[i] and notify_toast) > 0);
         chkFlash.Checked := ((_notify[i] and notify_flash) > 0);
         end

@@ -156,8 +156,10 @@ begin
     if ((notify and notify_toast) > 0) then
         ShowRiserWindow(w, msg, icon);
 
-    if ((notify and notify_flash) > 0) then
+    if ((notify and notify_flash) > 0) then begin
         FlashWindow(w.Handle, true);
+        FlashWindow(w.Handle, true);
+        end;
 
     if (MainSession.prefs.getBool('notify_sounds')) then
         PlaySound(pchar('EXODUS_' + pref_name), 0,

@@ -189,8 +189,7 @@ resourcestring
     sRenameGrpPrompt = 'New group name:';
     sNoContactsSel = 'You must select one or more contacts.';
     sBlockContacts = 'Block %d contacts?';
-    
-    
+    sNoBroadcast = 'You must select more than one online contact to broadcast.';
 
 implementation
 uses
@@ -1702,7 +1701,9 @@ var
 begin
     // Broadcast a message to the grp
     r := getSelectedContacts(true);
-    if (r.Count > 1) then begin
+    if (r.Count <= 1) then
+        MessageDlg(sNoBroadcast, mtError, [mbOK], 0)
+    else begin
         jl := TStringlist.Create();
         for i := 0 to r.Count - 1 do
             jl.Add(TJabberRosterItem(r[i]).jid.full);
