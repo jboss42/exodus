@@ -71,12 +71,13 @@ type
     _flash_ticks: integer;
     _cur_img: integer;
     _old_img: integer;
+    _old_hint: string;
     _last_id: string;
     _reply_id: string;
     _check_event: boolean;
     _send_composing: boolean;
 
-    procedure ChangePresImage(show: string);
+    procedure ChangePresImage(show: string; status: string);
     procedure ResetPresImage;
 
     function GetThread: String;
@@ -246,9 +247,9 @@ begin
         end;
 
     if (p = nil) then
-        ChangePresImage('offline')
+        ChangePresImage('offline', 'offline')
     else
-        ChangePresImage(p.show);
+        ChangePresImage(p.show, p.status);
 
     // synchronize the session chat list with this JID
     i := MainSession.ChatList.indexOfObject(chat_object);
@@ -340,6 +341,8 @@ begin
                     _flash_ticks := 0;
                     _old_img := _pres_img;
                     _cur_img := _pres_img;
+                    _old_hint := imgStatus.Hint;
+                    imgStatus.Hint := OtherNick + ' is typing';
                     timFlashTimer(Self);
                     timFlash.Enabled := true;
                     end;
@@ -468,7 +471,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmChat.ChangePresImage(show: string);
+procedure TfrmChat.ChangePresImage(show: string; status: string);
 begin
     // Change the bulb
     if (show = 'offline') then
@@ -484,6 +487,11 @@ begin
     else
         _pres_img := ico_Online;
 
+    if (status = '') then
+        imgStatus.Hint := show
+    else
+        imgStatus.Hint := status;
+
     Self.imgStatusPaint(Self);
 end;
 
@@ -491,7 +499,7 @@ end;
 procedure TfrmChat.showPres(tag: TXMLTag);
 var
     txt: string;
-    s, User  : String;
+    status, show, User  : String;
     p: TJabberPres;
     j: TJabberID;
 begin
@@ -500,25 +508,28 @@ begin
 
     //check to see if this is the person you are chatting with...
     if pos(jid, user) = 0 then Exit;
-    txt := '';
 
     // make sure the user is still connected
     j := TJabberID.Create(jid);
     p := MainSession.ppdb.FindPres(j.jid, j.resource);
     j.Free();
-    if (p = nil) then
-        ChangePresImage('offline')
+    if (p = nil) then begin
+        show := 'offline';
+        status := 'offline';
+        end
     else begin
-        s := tag.GetBasicText('show');
-        ChangePresImage(s);
+        show := tag.GetBasicText('show');
+        status := tag.GetBasicText('status');
         end;
 
-    txt := tag.GetBasicText('status');
-
-    if (txt = '') then txt := s;
-    if txt = '' then exit;
-
-    txt := '[' + formatdatetime('HH:MM',now) + '] ' + jid + ' is now ' + txt;
+    ChangePresImage(show, status);
+    if (status = '') then
+        txt := show
+    else
+        txt := status;
+        
+    txt := '[' + formatdatetime(MainSession.Prefs.getString('timestamp_format'),now) + '] ' +
+            jid + ' is now ' + txt;
     DisplayPresence(txt, MsgList);
 end;
 
@@ -602,6 +613,7 @@ procedure TfrmChat.ResetPresImage;
 begin
     timFlash.Enabled := false;
     _pres_img := _old_img;
+    imgStatus.Hint := _old_hint;
     imgStatus.Repaint();
     imgStatus.Refresh();
 end;
