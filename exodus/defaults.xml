@@ -139,6 +139,7 @@
     </msg_treatment>
     <queue_offline value="1" control="chkQueueOffline"/>
     <queue_dnd_chats value="0" control="chkQueueDNDChats"/>
+    <chat_avatars value="1" control="chkChatAvatars"/>
 
     <!-- Emoticon Options -->
     <emoticons value="1" control="chkEmoticons"/>

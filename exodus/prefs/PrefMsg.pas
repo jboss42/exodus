@@ -42,6 +42,7 @@ type
     txtTimestampFmt: TTntComboBox;
     chkQueueDNDChats: TTntCheckBox;
     chkQueueOffline: TTntCheckBox;
+    chkChatAvatars: TTntCheckBox;
     procedure btnSpoolBrowseClick(Sender: TObject);
   private
     { Private declarations }
