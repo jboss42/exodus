@@ -11,6 +11,7 @@ object frmVCard: TfrmVCard
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  Position = poDefaultPosOnly
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96

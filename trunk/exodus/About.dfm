@@ -12,7 +12,7 @@ object frmAbout: TfrmAbout
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
-  Position = poMainFormCenter
+  Position = poDefaultPosOnly
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
@@ -1531,15 +1531,16 @@ object frmAbout: TfrmAbout
       '{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcha' +
       'rset0 MS Sans Serif;}}'#13#10'\viewkind4\uc1\pard\f0\fs16 Exodus is th' +
       'e creation of Peter Millard  (mailto:me@pgmillard.com).  Checkou' +
-      't the website at http://exodus.sf.net for more information. It i' +
-      's currently licensed under the GNU Public License (GPL) see www.' +
-      'gnu.org for more information on the GPL.\par'#13#10'\par'#13#10'SAX XML Pars' +
-      'er by: Stefan Heymann\par'#13#10'Eschenweg 3, 72076 T\'#39'fcbingen, GERMA' +
-      'NY mailto:stefan@destructor.de, http://www.destructor.de\par'#13#10'\p' +
-      'ar'#13#10'Unicode library is Copyright (c) 1999, 2000 Mike Lischke (pu' +
-      'blic@lischke-online.de) and Portions Copyright (c) 1999, 2000 Az' +
-      'ret Botash (az).\par'#13#10'\par'#13#10'RichEdit98 and DBRichEdit98 componen' +
-      'ts for Delphi 3.0-4.0. version 1.40 Author Alexander Obukhov, Mi' +
-      'nsk, Belarus <alex@niiomr.belpak.minsk.by>\par'#13#10'\par'#13#10'\par'#13#10'}'#13#10
+      't the website at http://exodus.jabberstudio.org for more informa' +
+      'tion. It is currently licensed under the GNU Public License (GPL' +
+      ') see www.gnu.org for more information on the GPL.\par'#13#10'\par'#13#10'SA' +
+      'X XML Parser by: Stefan Heymann\par'#13#10'Eschenweg 3, 72076 T\'#39'fcbin' +
+      'gen, GERMANY mailto:stefan@destructor.de, http://www.destructor.' +
+      'de\par'#13#10'\par'#13#10'Unicode library is Copyright (c) 1999, 2000 Mike L' +
+      'ischke (public@lischke-online.de) and Portions Copyright (c) 199' +
+      '9, 2000 Azret Botash (az).\par'#13#10'\par'#13#10'RichEdit98 and DBRichEdit9' +
+      '8 components for Delphi 3.0-4.0. version 1.40 Author Alexander O' +
+      'bukhov, Minsk, Belarus <alex@niiomr.belpak.minsk.by>\par'#13#10'\par'#13#10 +
+      '\par'#13#10'}'#13#10
   end
 end

@@ -149,6 +149,8 @@ begin
 
     PageControl1.ActivePageIndex := 0;
     TreeView1.FullExpand();
+    MainSession.Prefs.RestorePosition(Self);
+
     _vcard := TXMLVCard.Create();
 
     tmps := MainSession.generateID();
@@ -163,6 +165,7 @@ end;
 {---------------------------------------}
 procedure TfrmVCard.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+    MainSession.Prefs.SavePosition(Self);
     Action := caFree;
 end;
 

@@ -51,7 +51,7 @@ implementation
 {$R *.dfm}
 
 uses
-    ShellAPI, XMLUtils;
+    ShellAPI, XMLUtils, Session;
 
 procedure TfrmAbout.frameButtons1btnCancelClick(Sender: TObject);
 begin
@@ -60,12 +60,14 @@ end;
 
 procedure TfrmAbout.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+    MainSession.Prefs.SavePosition(Self);
     Action := caFree;
 end;
 
 procedure TfrmAbout.FormCreate(Sender: TObject);
 begin
     pnlVersion.Caption := 'Version: ' + GetAppVersion();
+    MainSession.Prefs.RestorePosition(Self);
 end;
 
 procedure TfrmAbout.InfoBoxURLClick(Sender: TObject; url: String);

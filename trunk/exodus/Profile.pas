@@ -267,6 +267,7 @@ begin
     tabSheet6.TabVisible := false;
     tabSheet7.TabVisible := false;
     iq := nil;
+    MainSession.Prefs.RestorePosition(Self);
 end;
 
 {---------------------------------------}
@@ -282,6 +283,7 @@ end;
 {---------------------------------------}
 procedure TfrmProfile.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+    MainSession.Prefs.SavePosition(Self);
     if (iq <> nil) then
         iq.Free;
     Action := caFree;
