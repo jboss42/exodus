@@ -47,6 +47,7 @@ type
         _groups: TWidestringlist;
         _unfiled: TJabberGroup;
         _pres_cb: integer;
+        _nests: TWidestringlist;
 
         procedure ParseFullRoster(event: string; tag: TXMLTag);
         procedure Callback(event: string; tag: TXMLTag);
@@ -82,6 +83,9 @@ type
         function addGroup(grp: Widestring): TJabberGroup;
         function getGroup(grp: Widestring): TJabberGroup;
         procedure removeGroup(grp: TJabberGroup);
+
+        function getNest(name: Widestring): TJabberNest;
+        function addNest(name: Widestring): TJabberNest;
 
         function getGroupItems(grp: Widestring; online: boolean): TList;
 
@@ -132,6 +136,7 @@ begin
     Bookmarks := TWideStringList.Create();
     _groups := TWidestringlist.Create();
     _unfiled := TJabberGroup.Create('Unfiled');
+    _nests := TWidestringlist.Create();
 end;
 
 {---------------------------------------}
@@ -139,6 +144,7 @@ destructor TJabberRoster.Destroy;
 begin
     ClearStringListObjects(_groups);
     _groups.Free();
+    _nests.Free();
     Bookmarks.Free;
 
     inherited Destroy;
@@ -151,9 +157,11 @@ begin
     ClearStringListObjects(Bookmarks);
     ClearStringListObjects(Self);
     ClearStringListObjects(_groups);
+    ClearStringListObjects(_nests);
 
     Bookmarks.Clear;
     _groups.Clear();
+    _nests.Clear();
 
     inherited Clear();
 end;
@@ -349,7 +357,7 @@ begin
             cur_grp := ri.Groups[i];
             idx := _groups.IndexOf(cur_grp);
             if (idx >= 0) then begin
-                go := TJabberGroup(_groups.Objects[i]);
+                go := TJabberGroup(_groups.Objects[idx]);
                 go.setPresence(ri.jid, pres);
             end;
         end;
@@ -398,7 +406,7 @@ end;
 {---------------------------------------}
 procedure TJabberRoster.checkGroups(ri: TJabberRosterItem);
 var
-    i, gidx: integer;
+    n, nl, i, gidx: integer;
     jidx: boolean;
     go: TJabberGroup;
     cur_grp: Widestring;
@@ -412,7 +420,13 @@ begin
     // Make sure we have all groups that this contact is in.
     for i := 0 to ri.Groups.Count - 1 do begin
         cur_grp := ri.Groups[i];
-        checkGroup(cur_grp);
+        go := checkGroup(cur_grp);
+        nl := go.NestLevel;
+        if (nl > 1) then begin
+            for n := 0 to nl-1 do begin
+                checkGroup(go.Parts[n]);
+            end;
+        end;
     end;
 
     // If this ritem is in _unfiled, and they shouldn't be, remove them.
@@ -506,6 +520,28 @@ end;
 function TJabberRoster.addGroup(grp: Widestring): TJabberGroup;
 begin
     Result := checkGroup(grp);
+end;
+
+{---------------------------------------}
+function TJabberRoster.getNest(name: Widestring): TJabberNest;
+var
+    i: integer;
+begin
+    i := _nests.indexOf(name);
+    if (i >= 0) then
+        Result := TJabberNest(_nests.Objects[i])
+    else
+        Result := nil;
+end;
+
+{---------------------------------------}
+function TJabberRoster.addNest(name: Widestring): TJabberNest;
+begin
+    Result := getNest(name);
+    if (Result = nil) then begin
+        Result := TJabberNest.Create(nil, name);
+        _nests.AddObject(name, Result);
+    end;
 end;
 
 {---------------------------------------}
