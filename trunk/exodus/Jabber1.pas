@@ -42,6 +42,7 @@ const
     WM_CLOSEAPP = WM_USER + 5274;
     WM_RECONNECT = WM_USER + 5300;
     WM_INSTALLER = WM_USER + 5350;
+    WM_MUTEX = WM_USER + 5351;
 
 type
     TNextEventType = (next_none, next_Exit, next_Login, next_Disconnect);
@@ -315,6 +316,7 @@ type
     _cli_status: string;
 
     _controller: TExodusController;
+    _mutex: THandle;
 
     procedure presCustomPresClick(Sender: TObject);
     procedure restoreToolbar;
@@ -388,6 +390,7 @@ procedure StopTrayAlert();
 var
     frmExodus: TfrmExodus;
     sExodusPresence: Cardinal;
+    sExodusMutex: Cardinal;
 
 resourcestring
     sCommandLine =  'The following command line parameters are available in Exodus: '#13#10#13#10;
@@ -673,6 +676,7 @@ begin
         end;
 end;
 
+
 {---------------------------------------}
 {---------------------------------------}
 procedure AddSound(reg: TRegistry; pref_name: string; user_text: string);
@@ -828,7 +832,24 @@ begin
             config := getUserDir() + 'exodus.xml';
 
         // Create our main Session object
-        MainSession := TJabberSession.Create(config, ExtractFilePath(Application.EXEName) + 'branding.xml');
+        MainSession := TJabberSession.Create(config,
+            ExtractFilePath(Application.EXEName) + 'branding.xml');
+
+        // Check for a single instance
+        if (MainSession.Prefs.getBool('single_instance')) then begin
+            _mutex := CreateMutex(nil, true, PChar('Exodus' +
+                ExtractFileName(config)));
+            if (_mutex <> 0) and (GetLastError = 0) then begin
+                // we are good to go..
+                end
+            else begin
+                // We are not good to go..
+                // Send the Windows Msg, and bail.
+                PostMessage(HWND_BROADCAST, sExodusMutex, 0, 0);
+                Halt;
+                end;
+            end;
+
         _guibuilder := TGUIFactory.Create();
         _guibuilder.SetSession(MainSession);
 
@@ -1681,6 +1702,9 @@ begin
         MainSession.Free();
         MainSession := nil;
         end;
+
+    if (_mutex <> 0) then
+        CloseHandle(_mutex);
 
     // Kill the tray icon stuff
     _tray_icon.Free();
@@ -2695,8 +2719,8 @@ begin
     m := TMessage(msg);
     if (m.Msg = sExodusPresence) then begin
         if (HWND(m.WParam) = Self.Handle) then exit;
-        if (not MainSession.Prefs.getBool('presence_message_listen')) then exit;
-
+        if (not MainSession.Prefs.getBool('presence_message_listen')) then
+            exit;
         show := GetPresenceString(m.LParamHi);
         status := GetPresenceString(m.LParamLo);
         // already there.
@@ -2704,6 +2728,12 @@ begin
         _is_broadcast := true;
         MainSession.setPresence(show, status, MainSession.Priority);
         _is_broadcast := false;
+        end
+    else if (m.Msg = sExodusMutex) then begin
+        // show the form
+        Self.Show;
+        ShowWindow(Handle, SW_RESTORE);
+        SetForegroundWindow(Self.Handle);
         end
     else
         inherited;
@@ -2873,6 +2903,6 @@ end;
 
 initialization
     sExodusPresence := RegisterWindowMessage('EXODUS_PRESENCE');
-
+    sExodusMutex := RegisterWindowMessage('EXODUS_MESSAGE');
 end.
 

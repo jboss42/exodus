@@ -538,6 +538,8 @@ begin
         result := 'http://exodus.jabberstudio.org/exodus-released.exe'
     else if pkey = 'roster_messenger' then
         result := '1'
+    else if pkey = 'single_instance' then
+        result := '1'
     else
         result := '';
 end;

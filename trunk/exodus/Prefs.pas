@@ -202,6 +202,7 @@ type
     cboInviteOptions: TComboBox;
     chkMessenger: TCheckBox;
     chkTrayNotify: TCheckBox;
+    chkSingleInstance: TCheckBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -387,6 +388,7 @@ begin
         chkToolbox.Checked := getBool('window_toolbox');
         chkCloseMin.Checked := getBool('close_min');
         txtXFerPath.Text := getString('xfer_path');
+        chkSingleInstance.Checked := getBool('single_instance');
 
         // Message Options
         chkTimestamp.Checked := getBool('timestamp');
@@ -522,6 +524,7 @@ begin
         setBool('window_toolbox', chkToolbox.Checked);
         setBool('autologin', chkAutoLogin.Checked);
         setBool('close_min', chkCloseMin.Checked);
+        setBool('single_instance', chkSingleInstance.Checked);
         setString('xfer_path', txtXFerPath.Text);
 
         // Message Prefs
