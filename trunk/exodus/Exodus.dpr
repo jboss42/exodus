@@ -180,7 +180,8 @@ uses
   PrefEmote in 'prefs\PrefEmote.pas' {frmPrefEmote},
   EmoteProps in 'EmoteProps.pas' {frmEmoteProps},
   JabberUtils in '..\jopl\JabberUtils.pas',
-  DockContainer in 'DockContainer.pas' {frmDockContainer};
+  DockContainer in 'DockContainer.pas' {frmDockContainer},
+  Random in '..\jopl\Random.pas';
 
 {$R *.TLB}
 
