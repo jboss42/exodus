@@ -61,6 +61,7 @@ inherited frmJUD: TfrmJUD
         Width = 145
         Height = 21
         ItemHeight = 13
+        Sorted = True
         TabOrder = 0
       end
     end
@@ -168,6 +169,7 @@ inherited frmJUD: TfrmJUD
         Height = 21
         Style = csDropDownList
         ItemHeight = 13
+        Sorted = True
         TabOrder = 0
       end
     end
