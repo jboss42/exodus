@@ -21,8 +21,8 @@ unit ExUtils;
 
 interface
 uses
-    Unicode, ExRichEdit, RichEdit2, Signals, XMLTag,
-    TntStdCtrls, TntClasses, 
+    Unicode, ExRichEdit, RichEdit2, Signals, XMLTag, IQ,
+    TntStdCtrls, TntClasses,
     JabberMsg, Graphics, Controls, StdCtrls, Forms, Classes, SysUtils, Windows;
 
 const
@@ -73,10 +73,10 @@ procedure AssignUnicodeFont(Form: TForm; font_size: short = 0); overload;
 procedure URLLabel(lbl: TLabel); overload;
 procedure URLLabel(lbl: TTntLabel); overload;
 
-procedure jabberSendCTCP(jid, xmlns: string; callback: TPacketEvent = nil);
 procedure jabberSendRosterItems(to_jid: WideString; items: TList);
 procedure split(value: WideString; list: TWideStringList; seps : WideString = ' '#9#10#13);
 
+function jabberSendCTCP(jid, xmlns: string; callback: TPacketEvent = nil): TJabberIQ;
 function getDisplayField(fld: string): string;
 function secsToDuration(seconds: string): string;
 function GetPresenceAtom(status: string): ATOM;
@@ -128,7 +128,7 @@ implementation
 uses
     ExSession,
     IniFiles, Dialogs, StrUtils, IdGlobal, ShellAPI,
-    XMLUtils, Session, IQ, JabberID, Jabber1, NodeItem, Roster,
+    XMLUtils, Session, JabberID, Jabber1, NodeItem, Roster,
     JabberConst, MsgDisplay, Debug;
 
 type
@@ -652,18 +652,19 @@ begin
 end;
 
 {---------------------------------------}
-procedure jabberSendCTCP(jid, xmlns: string; callback: TPacketEvent);
+function jabberSendCTCP(jid, xmlns: string; callback: TPacketEvent): TJabberIQ;
 var
     iq: TJabberIQ;
 begin
     // Send an iq-get to some jid, with this namespace
     if (@callback = nil) then
-        callback := frmExodus.CTCPCallback; 
+        callback := frmExodus.CTCPCallback;
     iq := TJabberIQ.Create(MainSession, MainSession.generateID, callback);
     iq.iqType := 'get';
     iq.toJID := jid;
     iq.Namespace := xmlns;
-    iq.Send;
+    Result := iq;
+    iq.Send();
 end;
 
 {---------------------------------------}

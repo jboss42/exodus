@@ -675,7 +675,6 @@ var
     ri:         TJabberRosterItem;
     node_list:  TWideStringlist;
     go:         TJabberGroup;
-    n:          TJabberNest;
 begin
     treeRoster.Items.BeginUpdate;
     treeRoster.Items.Clear;

@@ -21,7 +21,7 @@ unit ChatWin;
 interface
 
 uses
-    Chat, ChatController, JabberID, XMLTag,
+    Chat, ChatController, JabberID, XMLTag, IQ,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2,
     RichEdit, TntStdCtrls, Buttons;
@@ -112,6 +112,10 @@ type
     _destroying: boolean;
     _redock: boolean;
 
+    _cur_ver: TJabberIQ;    // pending events
+    _cur_time: TJabberIQ;  
+    _cur_last: TJabberIQ;
+
     // custom notification options to use..
     _notify: array[0..3] of integer;
 
@@ -174,7 +178,7 @@ uses
     CustomNotify, COMChatController, Debug, ExEvents,
     JabberConst, ExSession, ExUtils, Presence, PrefController, Room,
     XferManager, RosterAdd, RiserWindow, Notify,
-    Jabber1, Profile, MsgDisplay, IQ,
+    Jabber1, Profile, MsgDisplay,
     JabberMsg, NodeItem, Roster, Session, Unicode, XMLUtils,
     ShellAPI, RosterWindow, Emoticons;
 
@@ -1022,11 +1026,11 @@ begin
         jid := p.fromJID.full;
 
     if Sender = mnuVersionRequest then
-        jabberSendCTCP(jid, XMLNS_VERSION, CTCPCallback)
+        _cur_ver := jabberSendCTCP(jid, XMLNS_VERSION, CTCPCallback)
     else if Sender = mnuTimeRequest then
-        jabberSendCTCP(jid, XMLNS_TIME, CTCPCallback)
+        _cur_time := jabberSendCTCP(jid, XMLNS_TIME, CTCPCallback)
     else if Sender = mnuLastActivity then
-        jabberSendCTCP(jid, XMLNS_LAST, CTCPCallback);
+        _cur_last := jabberSendCTCP(jid, XMLNS_LAST, CTCPCallback);
 end;
 
 {---------------------------------------}
@@ -1056,6 +1060,7 @@ begin
 
         ns := tag.Namespace(true);
         if ns = XMLNS_TIME then begin
+            _cur_time := nil;
             qTag := tag.getFirstTag('query');
             msg := sMsgTime;
 
@@ -1069,6 +1074,7 @@ begin
         end
 
         else if ns = XMLNS_VERSION then begin
+            _cur_ver := nil;
             qTag := tag.getFirstTag('query');
             tmp_tag := qtag.getFirstTag('name');
             msg := sMsgVersion + #13 + sMsgVerClient + tmp_tag.Data + #13;
@@ -1081,6 +1087,7 @@ begin
         end
 
         else if ns = XMLNS_LAST then begin
+            _cur_last := nil;
             qTag := tag.getFirstTag('query');
             DispString(sMsgLastInfo + secsToDuration(qTag.getAttribute('seconds')) + '.');
         end;
@@ -1181,6 +1188,10 @@ begin
             exit;
         end;
     end;
+
+    if (_cur_ver <> nil) then FreeAndNil(_cur_ver);
+    if (_cur_time <> nil) then FreeAndNil(_cur_time);
+    if (_cur_last <> nil) then FreeAndNil(_cur_last);
 
     if ((MainSession.Prefs.getInt('chat_memory') > 0) and
         (MainSession.Prefs.getInt(P_CHAT) = msg_existing_chat) and
