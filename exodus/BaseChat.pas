@@ -453,8 +453,10 @@ end;
 procedure TfrmBaseChat.FormPaint(Sender: TObject);
 begin
   inherited;
-    if timWinFlash.Enabled then
+    if timWinFlash.Enabled then begin
         timWinFlash.Enabled := false;
+        FlashWindow(Self.Handle, false);
+    end;
 end;
 
 {---------------------------------------}

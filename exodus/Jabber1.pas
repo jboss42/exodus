@@ -1412,6 +1412,10 @@ begin
             end;
         end;
 
+        // Setup the background colors for emoticons
+        imgMSNEmoticons.BkColor := TColor(MainSession.Prefs.getInt('color_bg'));
+        imgYahooEmoticons.BkColor := TColor(MainSession.Prefs.getInt('color_bg'));
+
         // reset the tray icon stuff
         Shell_NotifyIcon(NIM_DELETE, @_tray);
         Self.setupTrayIcon();
