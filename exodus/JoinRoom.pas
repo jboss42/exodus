@@ -42,6 +42,7 @@ type
     lblFetch: TTntLabel;
     lstRooms: TTntListBox;
     TntSplitter1: TTntSplitter;
+    aniSearch: TAnimate;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -140,8 +141,11 @@ begin
             _addRoomJid(tmp)
         else begin
             ce := jEntityCache.getByJid(l[i]);
-            if (not ce.hasItems) then
+            if (not ce.hasItems) then begin
                 ce.walk(MainSession);
+                aniSearch.Visible := true;
+                aniSearch.Active := true;
+            end;
         end;
     end;
     l.Free();
@@ -178,6 +182,8 @@ var
     tmp: TJabberID;
     ce: TJabberEntity;
 begin
+    aniSearch.Visible := false;
+    aniSearch.Active := false;
     tmp := TJabberID.Create(tag.getAttribute('from'));
     if (tmp.user = '') then begin
         tmp.Free();
@@ -262,6 +268,8 @@ end;
 procedure TfrmJoinRoom.lblFetchClick(Sender: TObject);
 begin
     // Walk this server.
+    aniSearch.Visible := true;
+    aniSearch.Active := true;
     jEntityCache.fetch(txtServer.Text, MainSession, false);
 end;
 
