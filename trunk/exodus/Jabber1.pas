@@ -1018,7 +1018,7 @@ begin    // get the latest idle amount
         if getBool('auto_away') then begin
             cur_idle := (GetTickCount() - IdleUIGetLastInputTime()) div 1000;
             mins := cur_idle div 60;
-            frmDebug.debugMsg('Idle time: ' + IntToStr(cur_idle) + ' secs'#13#10);
+            // frmDebug.debugMsg('Idle time: ' + IntToStr(cur_idle) + ' secs'#13#10);
             away := getInt('away_time');
             xa := getInt('xa_time');
 

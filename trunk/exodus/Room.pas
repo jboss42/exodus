@@ -329,7 +329,7 @@ begin
     if ptype = 'unavailable' then begin
         if (i >= 0) then begin
             member := TRoomMember(_roster.Objects[i]);
-            ShowPresence(member.Nick, ' has left the room.');
+            // ShowPresence(member.Nick, ' has left the room.');
             RemoveMember(member);
             member.Free;
             _roster.Delete(i);
@@ -342,7 +342,7 @@ begin
             member.Nick := _jid.resource;
             _roster.AddObject(from, member);
             member.Node := AddMember(member);
-            ShowPresence(member.Nick, ' has joined the room.');
+            // ShowPresence(member.Nick, ' has joined the room.');
             end
         else
             member := TRoomMember(_roster.Objects[i]);

@@ -93,7 +93,7 @@ end;
 {---------------------------------------}
 procedure TfrmDebug.DebugCallback(send: boolean; data: string);
 var
-    l, d, min, max, thumb: integer;
+    l, d: integer;
 begin
 
     if (MsgDebug.Lines.Count >= DEBUG_LIMIT) then begin
@@ -118,12 +118,16 @@ begin
         end;
 
     with MsgDebug do begin
+        {
         GetScrollRange(Handle, SB_VERT, min, max);
         thumb := GetScrollPos(Handle, SB_VERT);
         if ((thumb >= max) or ((thumb = 0) and ((max - Height) < 20))) then begin
             SelStart := GetTextLen;
             Perform(EM_SCROLLCARET, 0, 0);
             end;
+        }
+        SelStart := GetTextLen;
+        Perform(EM_SCROLLCARET, 0, 0);
         end;
 end;
 
