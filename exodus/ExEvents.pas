@@ -401,6 +401,8 @@ begin
 
     str_content := '';
     if (tag.name = 'message') then begin
+
+        // throw out groupchat messages
         t := tag.getAttribute('type');
         if (t = 'groupchat') then exit;
 

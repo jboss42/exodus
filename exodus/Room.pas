@@ -1789,6 +1789,8 @@ begin
   inherited;
     // start chat w/ room participant
     // Chat w/ this person..
+    if (lstRoster.Selected = nil) then exit;
+     
     rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
     if (rm = nil) then exit;
 
