@@ -69,8 +69,6 @@ InstallDirRegKey HKLM "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
 !define MUI_FINISHPAGE_RUN "$INSTDIR\Exodus.exe"
 !define MUI_FINISHPAGE_RUN_NOTCHECKED
 !define MUI_FINISHPAGE_NOAUTOCLOSE
-!define MUI_CUSTOMFUNCTION_FINISH_PRE FinishCustomPre
-!define MUI_CUSTOMFUNCTION_FINISH FinishCustom
 
 !insertmacro MUI_PAGECOMMAND_LICENSE
 !insertmacro MUI_PAGECOMMAND_COMPONENTS
@@ -79,7 +77,6 @@ InstallDirRegKey HKLM "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
 Page custom SetCustomShell ;Custom page
 !insertmacro MUI_PAGECOMMAND_INSTFILES
 !insertmacro MUI_PAGECOMMAND_FINISH
-;Page custom SetCustomFinish ;Custom page
 
 !define MUI_ABORTWARNING
 !define MUI_UNINSTALLER
@@ -109,17 +106,17 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
 	    File "IdleHooks.dll"
 
         ; Setup stuff based on custom Shell page
-        !insertmacro MUI_INSTALLOPTIONS_READ ${DesktopSC} "notify.ini" "Field 2" "State"
-        StrCmp ${DesktopSC} "1" "" +2
+        !insertmacro MUI_INSTALLOPTIONS_READ $R0 "notify.ini" "Field 2" "State"
+        StrCmp $R0 "1" "" +2
             ;Checked
             CreateShortcut "$DESKTOP\Exodus.lnk" "$INSTDIR\Exodus.exe"
     
-        !insertmacro MUI_INSTALLOPTIONS_READ ${QuickLaunchSC} "notify.ini" "Field 3" "State"
-        StrCmp ${QuickLaunchSC} "1" "" +2
+        !insertmacro MUI_INSTALLOPTIONS_READ $R0 "notify.ini" "Field 3" "State"
+        StrCmp $R0 "1" "" +2
             ;Checked
             CreateShortcut "$QUICKLAUNCH\Exodus.lnk" "$INSTDIR\Exodus.exe"
-        !insertmacro MUI_INSTALLOPTIONS_READ ${StartupSC} "notify.ini" "Field 4" "State"
-        StrCmp ${StartupSC} "1" "" +2
+        !insertmacro MUI_INSTALLOPTIONS_READ $R0 "notify.ini" "Field 4" "State"
+        StrCmp $R0 "1" "" +2
             ;Checked
             CreateShortcut "$SMSTARTUP\Exodus.lnk" "$INSTDIR\Exodus.exe"
 
@@ -405,8 +402,8 @@ LangString DESC_Desktop ${LANG_ENGLISH} \
 LangString DESC_QuickLaunch ${LANG_ENGLISH} \
 "Put a shortcut to Exodus in the Quick-Launch bar."
 
-LangString NOTIFY_TITLE ${LANG_ENGLISH} "Windows Dekstop and Shell Options"
-LangString NOTIFY_SUBTITLE ${LANG_ENGLISH} "Select options to install other shortcuts for Exodus."
+LangString CUSTOMSHELL_TITLE ${LANG_ENGLISH} "Windows Dekstop and Shell Options"
+LangString CUSTOMSHELL_SUBTITLE ${LANG_ENGLISH} "Select options to install other shortcuts for Exodus."
 
 ;LangString FINISH_TITLE ${LANG_ENGLISH} "Finished Installing Exodus"
 ;LangString FINISH_SUBTITLE ${LANG_ENGLISH} "Final options"
@@ -558,24 +555,30 @@ FunctionEnd
 
 Function SetCustomShell
   !insertmacro MUI_HEADER_TEXT "$(CUSTOMSHELL_TITLE)" "$(CUSTOMSHELL_SUBTITLE)"
-  !insertmacro MUI_INSTALLOPTIONS_DISPLAY "notify.ini"
-FunctionEnd
 
-;Function SetCustomFinish
-;  !insertmacro MUI_HEADER_TEXT "$(FINISH_TITLE)" "$(FINISH_SUBTITLE)"
-;  !insertmacro MUI_INSTALLOPTIONS_DISPLAY "finish.ini"
-;FunctionEnd
+  Push $R0
+  Push $R1
+  Push $R2
 
-Function FinishCustomPre
-  !insertmacro MUI_INSTALLOPTIONS_WRITE "ioSpecial.ini" "Settings" "Numfields" "5"
-  !insertmacro MUI_INSTALLOPTIONS_WRITE "ioSpecial.ini" "Field 5" "Type" "CheckBox"
-  !insertmacro MUI_INSTALLOPTIONS_WRITE "ioSpecial.ini" "Field 5" "Text" "Foo: Start Exodus when Windows starts"
-  !insertmacro MUI_INSTALLOPTIONS_WRITE "ioSpecial.ini" "Field 5" "Left" "120"
-  !insertmacro MUI_INSTALLOPTIONS_WRITE "ioSpecial.ini" "Field 5" "Right" "315"
-  !insertmacro MUI_INSTALLOPTIONS_WRITE "ioSpecial.ini" "Field 5" "Top" "100"
-  !insertmacro MUI_INSTALLOPTIONS_WRITE "ioSpecial.ini" "Field 5" "Bottom" "110"
-FunctionEnd
+    !insertmacro MUI_INSTALLOPTIONS_INITDIALOG "notify.ini"
+    Pop $R0
+    
+    GetDlgItem $R1 $R0 1200
+    
+    ;$R1 contains the HWND of the first field
+    CreateFont $R2 "Tahoma" 10 700 
+    SendMessage $R1 ${WM_SETFONT} $R2 0
 
-Function FinishCustom
-  !insertmacro MUI_INSTALLOPTIONS_WRITE "ioSpecial.ini" "Settings" "Numfields" "5"
+    GetDlgItem $R1 $R0 1204
+    
+    ;$R1 contains the HWND of the first field
+    CreateFont $R2 "Tahoma" 10 700 /ITALIC
+    SendMessage $R1 ${WM_SETFONT} $R2 0
+	
+    !insertmacro MUI_INSTALLOPTIONS_SHOW
+	
+  Pop $R1
+  Pop $R1
+  Pop $R0
+
 FunctionEnd
