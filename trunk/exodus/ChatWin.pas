@@ -46,8 +46,8 @@ type
     mnuOnTop: TMenuItem;
     btnClose: TSpeedButton;
     pnlJID: TPanel;
-    lblJID: TStaticText;
-    lblNick: TStaticText;
+    lblJID: TTntStaticText;
+    lblNick: TTntStaticText;
     imgStatus: TPaintBox;
     popClearHistory: TMenuItem;
     procedure FormCreate(Sender: TObject);
@@ -73,7 +73,7 @@ type
     procedure popClearHistoryClick(Sender: TObject);
   private
     { Private declarations }
-    jid: string;            // jid of the person we are talking to
+    jid: widestring;        // jid of the person we are talking to
     _jid: TJabberID;        // JID object of jid
     _pcallback: integer;    // Presence Callback
     _scallback: integer;    // Session callback
@@ -90,7 +90,7 @@ type
     _check_event: boolean;
     _send_composing: boolean;
 
-    procedure ChangePresImage(show: string; status: string);
+    procedure ChangePresImage(show: widestring; status: widestring);
     procedure ResetPresImage;
 
     function GetThread: String;
@@ -100,7 +100,7 @@ type
     procedure CTCPCallback(event: string; tag: TXMLTag);
   public
     { Public declarations }
-    OtherNick: string;
+    OtherNick: widestring;
     chat_object: TChatController;
 
     procedure PlayQueue();
@@ -108,7 +108,7 @@ type
     procedure showMsg(tag: TXMLTag);
     procedure showPres(tag: TXMLTag);
     procedure sendMsg; override;
-    procedure SetJID(cjid: string);
+    procedure SetJID(cjid: widestring);
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
     procedure DockForm; override;
     procedure FloatForm; override;
@@ -117,7 +117,7 @@ type
 var
   frmChat: TfrmChat;
 
-function StartChat(sjid, resource: string; show_window: boolean; chat_nick: string=''): TfrmChat;
+function StartChat(sjid, resource: widestring; show_window: boolean; chat_nick: widestring=''): TfrmChat;
 procedure CloseAllChats;
 
 resourcestring
@@ -143,12 +143,12 @@ uses
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-function StartChat(sjid, resource: string; show_window: boolean; chat_nick: string=''): TfrmChat;
+function StartChat(sjid, resource: widestring; show_window: boolean; chat_nick: widestring=''): TfrmChat;
 var
     chat: TChatController;
     win: TfrmChat;
     tmp_jid: TJabberID;
-    cjid: string;
+    cjid: widestring;
     ritem: TJabberRosterItem;
 begin
     // either show an existing chat or start one.
@@ -240,8 +240,12 @@ begin
     if (MainSession.Profile.ConnectionType = conn_normal) then
         DragAcceptFiles( Handle, True );
 
+    AssignDefaultFont(Self.Font);
+    lblJID.Font.Color := clBlue;
+    lblJID.Font.Style := [fsUnderline];
+    
     // setup prefs
-    AssignDefaultFont(MsgList.Font);
+//    AssignDefaultFont(MsgList.Font);
     MsgList.Color := TColor(MainSession.Prefs.getInt('color_bg'));
     MsgOut.Color := MsgList.Color;
     MsgOut.Font.Assign(MsgList.Font);
@@ -250,7 +254,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmChat.SetJID(cjid: string);
+procedure TfrmChat.SetJID(cjid: widestring);
 var
     ritem: TJabberRosterItem;
     p: TJabberPres;
@@ -347,7 +351,7 @@ end;
 {---------------------------------------}
 procedure TfrmChat.MessageEvent(tag: TXMLTag);
 var
-    msg_type, from_jid: string;
+    msg_type, from_jid: WideString;
     etag, tagThread : TXMLTag;
 begin
     // callback for messages
@@ -442,7 +446,7 @@ end;
 {---------------------------------------}
 procedure TfrmChat.SendMsg;
 var
-    txt: Widestring;
+    txt: WideString;
     msg: TJabberMessage;
     mtag: TXMLTag;
 begin
@@ -525,7 +529,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmChat.ChangePresImage(show: string; status: string);
+procedure TfrmChat.ChangePresImage(show: WideString; status: WideString);
 begin
     // Change the bulb
     if (show = 'offline') then
@@ -555,7 +559,7 @@ end;
 {---------------------------------------}
 procedure TfrmChat.showPres(tag: TXMLTag);
 var
-    txt: string;
+    txt: WideString;
     status, show, User  : String;
     p: TJabberPres;
     j: TJabberID;
@@ -750,7 +754,7 @@ end;
 {---------------------------------------}
 procedure TfrmChat.CTCPClick(Sender: TObject);
 var
-    jid: string;
+    jid: WideString;
     p: TJabberPres;
 begin
     // get some CTCP query sent out

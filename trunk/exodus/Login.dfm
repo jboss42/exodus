@@ -60,7 +60,7 @@ object frmLogin: TfrmLogin
     ParentFont = False
     OnClick = Label5Click
   end
-  object cboServer: TComboBox
+  object cboServer: TTntComboBox
     Left = 66
     Top = 76
     Width = 150
@@ -68,13 +68,13 @@ object frmLogin: TfrmLogin
     ItemHeight = 13
     TabOrder = 3
     Text = 'jabber.org'
-    Items.Strings = (
+    Items.WideStrings = (
       'jabber.org'
       'jabber.com')
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 191
+    Top = 196
     Width = 238
     Height = 37
     Align = alBottom
@@ -89,7 +89,7 @@ object frmLogin: TfrmLogin
       Height = 32
     end
   end
-  object cboProfiles: TComboBox
+  object cboProfiles: TTntComboBox
     Left = 66
     Top = 4
     Width = 150
@@ -98,7 +98,7 @@ object frmLogin: TfrmLogin
     ItemHeight = 13
     TabOrder = 0
     OnChange = cboProfilesChange
-    Items.Strings = (
+    Items.WideStrings = (
       'Default Profile')
   end
   object chkInvisible: TCheckBox

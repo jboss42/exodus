@@ -25,12 +25,12 @@ uses
     Dockable, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, ExtCtrls, ComCtrls, Menus, RichEdit2, ExRichEdit,
-  Buttons;
+  Buttons, TntStdCtrls;
 
 type
   TfrmDebug = class(TfrmDockable)
     Panel2: TPanel;
-    MemoSend: TMemo;
+    MemoSend: TTntMemo;
     Splitter1: TSplitter;
     PopupMenu1: TPopupMenu;
     popMsg: TMenuItem;
@@ -234,10 +234,10 @@ end;
 {---------------------------------------}
 procedure TfrmDebug.btnSendRawClick(Sender: TObject);
 var
-    cmd: string;
+    cmd: WideString;
     sig: TSignal;
     i, s: integer;
-    msg: string;
+    msg: WideString;
     l: TSignalListener;
 begin
     // Send the text in the MsgSend memo box

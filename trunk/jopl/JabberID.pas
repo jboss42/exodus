@@ -27,22 +27,22 @@ uses
 type
     TJabberID = class
     private
-        _raw: string;
-        _user: string;
-        _domain: string;
-        _resource: string;
+        _raw: widestring;
+        _user: widestring;
+        _domain: widestring;
+        _resource: widestring;
     public
-        constructor Create(jid: string);
+        constructor Create(jid: widestring);
 
-        function jid: string;
-        function full: string;
-        function compare(sjid: string; resource: boolean): boolean;
+        function jid: widestring;
+        function full: widestring;
+        function compare(sjid: widestring; resource: boolean): boolean;
 
-        procedure ParseJID(jid: string);
+        procedure ParseJID(jid: widestring);
 
-        property user: string read _user;
-        property domain: string read _domain;
-        property resource: string read _resource;
+        property user: widestring read _user;
+        property domain: widestring read _domain;
+        property resource: widestring read _resource;
     end;
 
 
@@ -116,7 +116,7 @@ begin
 end;
 
 {---------------------------------------}
-constructor TJabberID.Create(jid: string);
+constructor TJabberID.Create(jid: widestring);
 begin
     // parse the jid
     // user@domain/resource
@@ -131,9 +131,9 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberID.ParseJID(jid: string);
+procedure TJabberID.ParseJID(jid: widestring);
 var
-    tmps: string;
+    tmps: WideString;
     p1, p2: integer;
 begin
     _raw := jid;
@@ -157,7 +157,7 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberID.jid: string;
+function TJabberID.jid: widestring;
 begin
     // return the _user@_domain
     if _user <> '' then
@@ -167,7 +167,7 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberID.Full: string;
+function TJabberID.Full: widestring;
 begin
     if _resource <> '' then
         Result := jid + '/' + _resource
@@ -176,7 +176,7 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberID.compare(sjid: string; resource: boolean): boolean;
+function TJabberID.compare(sjid: widestring; resource: boolean): boolean;
 begin
     // compare the 2 jids for equality
     Result := false;

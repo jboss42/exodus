@@ -47,6 +47,9 @@ type
     procedure render(tag: TXMLTag);
     function isValid: boolean;
     function getXML: TXMLTag;
+    function getLabelWidth: integer;
+    procedure setLabelWidth(val: integer);
+    
     property FormType: string read frm_type write frm_type;
   end;
 
@@ -102,7 +105,6 @@ begin
         end;
 
     if (t = 'text-multi') then begin
-        lblLabel.Width := lblLabel.Width + 5;
         lblLabel.Layout := tlTop;
         c := TTntMemo.Create(Self);
         with TTntMemo(c) do begin
@@ -113,7 +115,6 @@ begin
         end
 
     else if (t = 'list-multi') then begin
-        lblLabel.Width := lblLabel.Width + 5;
         lblLabel.Layout := tlTop;
         c := TTntCheckListbox.Create(self);
         c.Parent := Self;
@@ -143,7 +144,6 @@ begin
         TTntCheckListbox(c).Repaint();
         end
     else if (t = 'list-single') then begin
-        lblLabel.Width := lblLabel.Width + 5;
         lblLabel.Layout := tlTop;
         c := TTntCombobox.Create(self);
         c.Parent := Self;
@@ -164,7 +164,6 @@ begin
 
     else if (t = 'boolean') then begin
         Self.AutoSize := true;
-        lblLabel.Width := lblLabel.Width + 5;
         lblLabel.Layout := tlTop;
         c := TTntCheckbox.Create(Self);
         with TTntCheckbox(c) do begin
@@ -213,7 +212,6 @@ begin
         c.Width := Self.ClientWidth - lblLabel.Width - dot.Width - 10;
         end
     else begin  // 'text-single', 'text-private', or unknown
-        lblLabel.Width := lblLabel.Width + 5;
         lblLabel.Layout := tlTop;
         c := TTntEdit.Create(Self);
         with TTntEdit(c) do begin
@@ -343,5 +341,24 @@ begin
         AutoSize := true;
         end;
 end;
+
+function TframeGeneric.getLabelWidth: integer;
+var
+    p : TForm;
+begin
+    if ((lblLabel = nil) or (lblLabel.Width = 0) or (lblLabel = c)) then
+        result := 0
+    else begin
+        p := TForm(Self.Owner);
+        result := p.Canvas.TextWidth(lblLabel.Caption);
+        end;
+end;
+
+procedure TframeGeneric.setLabelWidth(val: integer);
+begin
+    if ((lblLabel.Width <> 0) and (lblLabel <> c)) then
+        lblLabel.Width := val;
+end;
+
 
 end.

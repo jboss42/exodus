@@ -32,10 +32,10 @@ type
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
-    cboServer: TComboBox;
+    cboServer: TTntComboBox;
     frameButtons1: TframeButtons;
     Label5: TLabel;
-    cboProfiles: TComboBox;
+    cboProfiles: TTntComboBox;
     chkInvisible: TCheckBox;
     btnDetails: TButton;
     popProfiles: TPopupMenu;
