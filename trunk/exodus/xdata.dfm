@@ -1,6 +1,6 @@
 object frmXData: TfrmXData
-  Left = 211
-  Top = 383
+  Left = 514
+  Top = 642
   Width = 527
   Height = 229
   BorderWidth = 5
@@ -21,24 +21,23 @@ object frmXData: TfrmXData
   TextHeight = 13
   object insBevel: TBevel
     Left = 0
-    Top = 13
+    Top = 23
     Width = 509
     Height = 8
     Align = alTop
     Shape = bsTopLine
   end
-  object lblIns: TTntLabel
+  object lblIns: TExodusLabel
     Left = 0
     Top = 0
     Width = 509
-    Height = 13
+    Height = 23
     Align = alTop
     Caption = 'lblIns'
-    WordWrap = True
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 156
+    Top = 153
     Width = 509
     Height = 32
     Align = alBottom
@@ -70,9 +69,9 @@ object frmXData: TfrmXData
   end
   object box: TScrollBox
     Left = 0
-    Top = 21
+    Top = 31
     Width = 509
-    Height = 135
+    Height = 122
     Align = alClient
     BevelEdges = []
     BevelInner = bvNone

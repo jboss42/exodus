@@ -164,7 +164,6 @@ begin
                 colorRoster.Font.Assign(Font)
             else begin
                 colorChat.Font.Assign(Font);
-                redrawChat();
             end;
 
             with MainSession.prefs do begin
@@ -175,6 +174,9 @@ begin
                 setBool(_clr_font + '_italic', (fsItalic in Font.Style));
                 setBool(_clr_font + '_underline', (fsUnderline in Font.Style));
             end;
+
+            if (_clr_control <> colorRoster) then
+                redrawChat();
         end;
     end;
 end;

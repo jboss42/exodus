@@ -24,14 +24,15 @@ interface
 uses
     XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, buttonFrame, StdCtrls, ComCtrls, ExtCtrls, TntStdCtrls;
+    Dialogs, buttonFrame, StdCtrls, ComCtrls, ExtCtrls, TntStdCtrls,
+  ExodusLabel;
 
 type
   TfrmXData = class(TForm)
     frameButtons1: TframeButtons;
     box: TScrollBox;
     insBevel: TBevel;
-    lblIns: TTntLabel;
+    lblIns: TExodusLabel;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -332,8 +333,8 @@ end;
 {---------------------------------------}
 procedure TfrmXData.FormResize(Sender: TObject);
 begin
-    lblIns.AutoSize := false;
-    lblIns.AutoSize := true;
+//    lblIns.AutoSize := false;
+//    lblIns.AutoSize := true;
 end;
 
 {---------------------------------------}
