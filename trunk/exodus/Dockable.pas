@@ -63,7 +63,7 @@ implementation
 {$R *.dfm}
 
 uses
-    ExUtils, 
+    ExUtils,
     Session,
     Jabber1;
 
@@ -144,12 +144,17 @@ procedure TfrmDockable.ShowDefault;
 begin
     // show this form using the default behavior
     if MainSession.Prefs.getBool('expanded') then begin
-        Self.DockForm;
-        Self.Show;
-        Self.Visible := true;
-        if ((not Application.Active) or
-        (frmExodus.Tabs.ActivePage = frmExodus.tbsRoster)) then
+    	if (TabSheet <> nil) then begin
             frmExodus.Tabs.ActivePage := TabSheet;
+            end
+        else begin
+            Self.DockForm;
+            Self.Show;
+            Self.Visible := true;
+            if ((not Application.Active) or
+            (frmExodus.Tabs.ActivePage = frmExodus.tbsRoster)) then
+                frmExodus.Tabs.ActivePage := TabSheet;
+            end;
         end
     else begin
         if frmExodus.WindowState = wsMinimized then
