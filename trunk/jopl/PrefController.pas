@@ -199,7 +199,7 @@ function getUserDir: string;
 implementation
 uses
     {$ifdef Win32}
-    Graphics, ShellAPI, 
+    Graphics, ShellAPI,
     {$else}
     QGraphics,
     {$endif}
@@ -558,11 +558,7 @@ end;
 {---------------------------------------}
 function TPrefController.getBool(pkey: Widestring; server_side: TPrefKind = pkClient): boolean;
 begin
-    if ((lowercase(getString(pkey, server_side)) = 'true') or
-    (getString(pkey, server_side) = '1')) then
-        Result := true
-    else
-        Result := false;
+    Result := SafeBool(getString(pkey, server_side));
 end;
 
 {---------------------------------------}
@@ -575,7 +571,7 @@ begin
     sl.Clear();
 
     p := nil;
-    
+
     case server_side of
         pkClient: p := _pref_node.GetFirstTag(pkey);
         pkServer: p := _server_node.GetFirstTag(pkey);
@@ -1061,11 +1057,11 @@ begin
     // Socket connection
     Host := tag.GetBasicText('host');
     Port := StrToIntDef(tag.GetBasicText('port'), 5222);
-    ssl := (tag.GetBasicText('ssl') = '-1');
+    ssl := SafeBool(tag.GetBasicText('ssl'));
     SocksType := StrToIntDef(tag.GetBasicText('socks_type'), 0);
     SocksHost := tag.GetBasicText('socks_host');
     SocksPort := StrToIntDef(tag.GetBasicText('socks_port'), 0);
-    SocksAuth := (tag.GetBasicText('socks_auth') = '-1');
+    SocksAuth := SafeBool(tag.GetBasicText('socks_auth'));
     SocksUsername := tag.GetBasicText('socks_username');
     SocksPassword := tag.GetBasicText('socks_password');
 
@@ -1075,7 +1071,7 @@ begin
     ProxyApproach := StrToIntDef(tag.GetBasicText('proxy_approach'), 0);;
     ProxyHost := tag.GetBasicText('proxy_host');
     ProxyPort := StrToIntDef(tag.GetBasicText('proxy_port'), 0);
-    ProxyAuth := (tag.GetBasicText('proxy_auth') = '-1');
+    ProxyAuth := SafeBool(tag.GetBasicText('proxy_auth'));
     ProxyUsername := tag.GetBasicText('proxy_username');
     ProxyPassword := tag.GetBasicText('proxy_password');
 
