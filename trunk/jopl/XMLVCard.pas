@@ -39,7 +39,7 @@ type
 
         procedure Parse(tag: TXMLTag);
         procedure fillTag(tag: TXMLTag);
-    end;
+end;
 
     TXMLVCardTel = class
     public
@@ -51,7 +51,7 @@ type
 
         procedure Parse(tag: TXMLTag);
         procedure fillTag(tag: TXMLTag);
-    end;
+end;
 
     TXMLVCard = class
     public
@@ -81,7 +81,7 @@ type
 
         procedure Parse(tag: TXMLTag);
         procedure fillTag(tag: TXMLTag);
-    end;
+end;
 
 
 implementation
@@ -128,8 +128,8 @@ begin
         else begin
             element := tag.GetFirstTag('CTRY');
             if (element <> nil) then Country := element.Data;
-            end;
         end;
+    end;
 
 end;
 
@@ -225,19 +225,19 @@ begin
     HomePhone := TXMLVCardTel.Create();
     with HomePhone do begin
         home := true; work := false; voice := true; fax := false;
-        end;
+    end;
     HomeFax := TXMLVCardTel.Create();
     with HomeFax do begin
         home := true; work := false; voice := false; fax := true;
-        end;
+    end;
     WorkPhone := TXMLVCardTel.Create();
     with WorkPhone do begin
         home := false; work := true; voice := true; fax := false;
-        end;
+    end;
     WorkFax := TXMLVCardTel.Create();
     with WorkFax do begin
         home := false; work := true; voice := false; fax := true;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -278,7 +278,7 @@ begin
         if t2 <> nil then GivenName := t2.Data;
         t2 := t1.GetFirstTag('FAMILY');
         if t2 <> nil then FamilyName := t2.Data;
-        end;
+    end;
 
     // Get Nick
     t1 := vtag.GetFirstTag('NICKNAME');
@@ -306,7 +306,7 @@ begin
         if t2 <> nil then OrgUnit := t2.Data;
         t2 := t1.GetFirstTag('DESC');
         if (t2 <> nil) then Desc := t2.Data;
-        end;
+    end;
 
     tags := vtag.QueryTags('ADR');
     for i := 0 to tags.Count - 1 do begin
@@ -317,7 +317,7 @@ begin
             work.parse(tags[i])
         else
             home.parse(tags[i]);
-        end;
+    end;
     tags.Free();
 
     tags := vtag.QueryTags('TEL');
@@ -330,14 +330,14 @@ begin
                 WorkFax.parse(tags[i])
             else
                 WorkPhone.Parse(tags[i]);
-            end
+        end
         else begin
             if t.fax then
                 HomeFax.Parse(tags[i])
             else
                 HomePhone.Parse(tags[i]);
-            end;
         end;
+    end;
     tags.Free();
 end;
 

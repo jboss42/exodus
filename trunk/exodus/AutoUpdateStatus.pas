@@ -178,22 +178,22 @@ begin
                 Application.ProcessMessages();
 
                 ShellExecute(0, 'open', PChar(tmp), '/S', nil, SW_SHOWNORMAL);
-                end
+            end
             else begin
                 label1.Caption := Format(sError, [httpClient.ResponseText]);
                 Application.ProcessMessages();
-                end;
+            end;
         except
             on EIdConnClosedGracefully do
                 Self.Close();
             on E: EIdProtocolReplyError do begin
                 label1.Caption := Format(sError, [E.Message]);
-                end;
             end;
+        end;
     finally
         if (_fstream <> nil) then _fstream.Free();
         _downloading := false;
-        end;
+    end;
 end;
 
 end.

@@ -64,7 +64,7 @@ begin
     //
     if (frmInvalidRoster = nil) then begin
         frmInvalidRoster := TfrmInvalidRoster.Create(Application);
-        end;
+    end;
     Result := frmInvalidRoster;
     Result.ShowDefault();
 end;
@@ -92,7 +92,7 @@ begin
             li.SubItems.Add(e.Data);
         li.Checked := true;
         li.Data := ritem;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -132,14 +132,14 @@ begin
             ritem := TJabberRosterItem(li.Data);
             if (ritem <> nil) then
                 ritem.remove();
-            end;
         end;
+    end;
 
     for i := ListView1.Items.Count - 1 downto 0 do begin
         li := ListView1.Items[i];
         if (li.Checked) then
             ListView1.Items.Delete(i);
-        end;
+    end;
 end;
 
 {---------------------------------------}

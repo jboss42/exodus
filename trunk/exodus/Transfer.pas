@@ -168,7 +168,7 @@ begin
         if (ritem <> nil) then begin
             tmps := ritem.Nickname;
             txtFrom.Hint := from;
-            end
+        end
         else
             tmps := tmp_jid.full;
         txtFrom.Caption := tmps;
@@ -186,7 +186,7 @@ begin
         lblDesc.Visible := false;
         tmp_jid.Free();
 
-        end;
+    end;
     xfer.Show;
     DoNotify(xfer, 'notify_oob', 'File from ' + tmps, ico_service);
     BringWindowToTop(xfer.Handle);
@@ -213,9 +213,9 @@ begin
                 Mode := -1;
                 xfer.Close;
                 exit;
-                end;
+            end;
             tmps := pri.fromJID.full;
-            end
+        end
         else
             tmps := tojid;
 
@@ -230,9 +230,11 @@ begin
         if (ritem <> nil) then begin
             tmps := ritem.Nickname;
             txtFrom.Hint := tmps;
-            end
+        end
         else
             tmps := tmp_id.full;
+        tmp_id.Free();
+
         txtFrom.Caption := tmps;
         txtFrom.Hint := jid;
         lblFrom.Caption := sTo;
@@ -244,14 +246,14 @@ begin
         else begin
             if not OpenDialog1.Execute then exit;
             filename := OpenDialog1.Filename;
-            end;
+        end;
         url := 'http://' + MainSession.Stream.LocalIP + ':5280/' +
                ExtractFileName(filename);
         txtMsg.Lines.Clear();
         txtMsg.Lines.Add(sXferDefaultDesc);
         lblFile.Hint := filename;
         lblFile.Caption := ExtractFileName(filename);
-        end;
+    end;
     xfer.Show;
     BringWindowToTop(xfer.Handle);
 end;
@@ -274,11 +276,11 @@ begin
             if MessageDlg(sXferOverwrite,
                 mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
             DeleteFile(filename);
-            end;
+        end;
         fstream := TFileStream.Create(filename, fmCreate);
         httpClient.Get(Self.url, fstream);
         fstream.Free;
-        end
+    end
     else if Self.Mode = 1 then begin
         // send mode
         Self.Mode := 3;
@@ -291,17 +293,17 @@ begin
                 setAttribute('xmlns', XMLNS_IQOOB);
                 AddBasicTag('url', url);
                 AddBasicTag('desc', txtMsg.WideText);
-                end;
             end;
+        end;
         MainSession.SendTag(iq);
         txtMsg.Lines.Add(sXferWaiting);
         httpServer.Active := true;
-        end
+    end
     else if Self.Mode = 2 then begin
         // Open the file.
         ShellExecute(0, 'open', PChar(filename), '', '', SW_NORMAL);
         Self.Close;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -333,7 +335,7 @@ procedure TfrmTransfer.frameButtons1btnCancelClick(Sender: TObject);
 begin
     case Self.Mode of
     0: httpClient.DisconnectSocket();
-    end;
+end;
     Self.Close;
 end;
 
@@ -390,7 +392,7 @@ begin
     // Browse for a new file..
     if Mode = 0 then begin
         frameButtons1btnOKClick(Sender);
-        end
+    end
     else if Mode = 1 then begin
         if OpenDialog1.Execute then begin
             // reset the text in the txtMsg richedit..
@@ -399,8 +401,8 @@ begin
                    ExtractFileName(filename);
             txtMsg.Lines.Clear();
             txtMsg.Lines.Add(sXferURL + url);
-            end;
-        end
+        end;
+    end
     else if Mode = 2 then
         ShellExecute(0, 'open', PChar(filename), '', '', SW_NORMAL);
 end;

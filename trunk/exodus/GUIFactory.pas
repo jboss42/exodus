@@ -33,7 +33,7 @@ type
         procedure SessionCallback(event: string; tag: TXMLTag);
     public
         procedure SetSession(js: TObject);
-    end;
+end;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -73,7 +73,7 @@ begin
         tmp_jid.Free;
         DoNotify(chat, 'notify_newchat', sNotifyChat +
                  chat.Othernick, ico_user)
-        end
+    end
 
     else if (event = '/session/gui/pres-error') then begin
         // Presence errors
@@ -82,8 +82,8 @@ begin
         MainSession.Prefs.getBool('roster_pres_errors')) then begin
             ir := getInvalidRoster();
             ir.AddPacket(tag);
-            end;
-        end
+        end;
+    end
 
     else if (event = '/session/gui/subscribe') then begin
         // Subscription window
@@ -98,7 +98,7 @@ begin
                 exit;
             if ((ri.subscription = 'to')) then
                 tmp_b := false;
-            end;
+        end;
 
         // block list?
         if (MainSession.IsBlocked(tmp_jid)) then exit;
@@ -115,18 +115,18 @@ begin
                 cboGroup.Items.Assign(MainSession.Roster.GrpList);
                 if cboGroup.Items.Count > 0 then
                     cboGroup.ItemIndex := 0;
-                end
+            end
             else if (ri <> nil) then begin
                 txtNickName.Text := ri.nickname;
                 if (ri.Groups.Count > 0) then
                     cboGroup.ItemIndex := cboGroup.Items.IndexOf(ri.Groups[0]);
-                end;
             end;
+        end;
         DoNotify(nil, 'notify_s10n',
                  'Subscription from ' + sjid, ico_key);
         tmp_jid.Free();
         sub.Show;
-        end;
+    end;
 end;
 
 

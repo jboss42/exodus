@@ -35,7 +35,7 @@ begin
     begin
       Inc(Result);
       P:= CharNextEx(CP, P, 0);
-    end;
+end;
 end;
 
 function LanguageName(Language: TLanguage): String;
@@ -97,7 +97,7 @@ begin
       L:= WideCharToMultiByte(CodePage, 0, @WS[1], -1, nil, 0, nil, nil);
       SetLength(Result, L-1);
       WideCharToMultiByte(CodePage, 0, @WS[1], -1, @Result[1], L-1, nil, nil);
-    end;
+end;
 end;
 
 function CharToChar(const S: String; CP1, CP2: Word): String;
@@ -114,7 +114,7 @@ begin
     begin
       GetLocaleInfo(Language, LOCALE_SLANGUAGE, Buf, 255);
       SetString(Ident, Buf, StrLen(Buf));
-    end;
+end;
 end;
 
 end.

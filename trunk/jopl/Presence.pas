@@ -40,9 +40,11 @@ type
 
     TJabberPres = class(TXMLTag)
     private
+        _toJID: TJabberID;
+        _fromJID: TJabberID;
+        procedure setToJid(value: TJabberID);
+        procedure setFromJid(value: TJabberID);
     public
-        toJID: TJabberID;
-        fromJID: TJabberID;
         PresType: WideString;
         Status: WideString;
         Show: WideString;
@@ -55,6 +57,9 @@ type
         function xml: Widestring; override;
         function isSubscription: boolean;
         procedure parse(tag: TXMLTag);
+
+        property toJid: TJabberID read _toJID write setToJid;
+        property fromJid: TJabberID read _fromJID write setFromJid;
     end;
 
     TJabberPPDB = class;
@@ -111,8 +116,8 @@ uses
 constructor TJabberPres.Create;
 begin
     inherited;
-    toJID := TJabberID.Create('');
-    fromJID := TJabberID.Create('');
+    _toJID := TJabberID.Create('');
+    _fromJID := TJabberID.Create('');
     PresType := '';
     Status := '';
     Show := '';
@@ -124,10 +129,24 @@ end;
 {---------------------------------------}
 destructor TJabberPres.Destroy;
 begin
-    toJID.Free;
-    fromJID.Free;
+    _toJID.Free;
+    _fromJID.Free;
 
     inherited Destroy;
+end;
+
+{---------------------------------------}
+procedure TJabberPres.setToJid(value: TJabberID);
+begin
+    _toJid.Free();
+    _toJid := value;
+end;
+
+{---------------------------------------}
+procedure TJabberPres.setFromJid(value: TJabberID);
+begin
+    _fromJid.Free();
+    _fromJid := value;
 end;
 
 {---------------------------------------}
@@ -195,7 +214,7 @@ begin
         err_tag := tag.GetFirstTag('error');
         if (err_tag <> nil) then
             error_code := err_tag.getAttribute('code');
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -249,7 +268,7 @@ begin
         if (Objects[i] is TWideStringList) then
             ClearStringListObjects(TWideStringList(Objects[i]));
         TObject(Objects[i]).Free();
-        end;
+    end;
 
     inherited Clear();
 end;
@@ -260,7 +279,7 @@ begin
     _js := js;
     with TJabberSession(_js) do begin
         RegisterCallback(Callback, '/packet/presence');
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -282,9 +301,9 @@ begin
         if p <> nil then begin
             DeletePres(p);
             s.FireEvent('/presence/unavailable', tag, curp);
-            end;
+        end;
         curp.Free();
-        end
+    end
     else if curp.PresType = 'error' then begin
         // some kind of error presence
         if ((MainSession.Invisible) and (curp.error_code = '400') and
@@ -292,7 +311,7 @@ begin
             // could be some kind of invisible packet bouncing..
             MainSession.Invisible := false;
             MainSession.setPresence('', 'Available', MainSession.Priority);
-            end
+        end
 
         else if ((curp.error_code = '502') or
         (curp.error_code = '500') or
@@ -301,12 +320,12 @@ begin
             // invalid roster item
             s.FireEvent('/session/gui/pres-error', tag);
             s.FireEvent('/presence/error', tag, curp);
-            end
+        end
         else
             s.FireEvent('/presence/error', tag, curp);
 
         curp.Free();
-        end
+    end
     else if (curp.PresType = 'subscribe') or
         (curp.PresType = 'subscribed') or
         (curp.PresType = 'unsubscribe') or
@@ -314,23 +333,23 @@ begin
         // do nothing... some kind of s10n request
         s.FireEvent('/presence/subscription', tag, curp);
         curp.Free();
-        end
+    end
     else begin
         // some kind of available pres
         p := FindPres(curp.fromJID.jid, curp.fromJID.resource);
         if p <> nil then begin
             // this already exists, nuke it and put it back in
             Deletepres(p);
-            end;
+        end;
         AddPres(curp);
 
         if pi < 0 then begin
             // this person was offline
             MainSession.FireEvent('/presence/online', tag, curp);
-            end;
+        end;
 
         s.FireEvent('/presence/available', tag, curp);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -351,13 +370,13 @@ begin
             cp := TJabberPres(pl.Objects[i]);
             if (cp.priority <= p.priority) then
                 insert := i;
-            end;
+        end;
 
         if (insert = -1) then
             pl.AddObject(p.fromJID.resource, p)
         else
             pl.InsertObject(insert, p.fromJID.resource, p);
-        end
+    end
     else begin
         // Create a string list for this JID..
         // and add it to our own list
@@ -365,7 +384,7 @@ begin
         pl.AddObject(p.fromJID.Resource, p);
 
         Self.AddObject(Lowercase(p.fromJID.jid), pl);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -386,8 +405,8 @@ begin
             i := self.indexOfObject(pl);
             pl.Free;
             if i >= 0 then Delete(i);
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -417,12 +436,12 @@ begin
             pi := pl.indexOf(resource);
             if pi >= 0 then
                 Result := TJabberPres(pl.Objects[pi]);
-            end
+        end
         else begin
             if pl.Count > 0 then
                 Result := TJabberPres(pl.Objects[0]);
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -440,8 +459,8 @@ begin
             i := i + 1;
             if i < pl.Count then
                 Result := TJabberPres(pl.Objects[i]);
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -475,10 +494,10 @@ begin
             // check to see if the listener's string is a substring of the event
             if (Pos(e, cmp) >= 1) then
                 sig(event, tag, p);
-            end
+        end
         else
             sig(event, tag, p);
-        end;
+    end;
     invoking := false;
 
     if change_list.Count > 0 then

@@ -109,7 +109,7 @@ begin
     2: show := 'away';
     3: show := 'xa';
     4: show := 'dnd';
-    end;
+end;
 
     status := txtStatus.Text;
     pri := StrToInt(txtPriority.Text);
@@ -126,7 +126,7 @@ begin
         cp.hotkey := ShortCutToText(txtHotkey.HotKey);
         MainSession.Prefs.setPresence(cp);
         MainSession.FireEvent('/session/prefs', nil);
-        end;
+    end;
 
     Self.Close;
 end;

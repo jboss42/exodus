@@ -123,7 +123,7 @@ begin
         imgIndex := btn.ImageIndex;
         ChatWindow.SetEmoticon(msn, imgIndex);
         Self.Hide;
-        end
+    end
     else
         Self.Hide;
 end;
@@ -147,7 +147,7 @@ procedure TfrmEmoticons.FormKeyDown(Sender: TObject; var Key: Word;
 begin
     case key of
     VK_ESCAPE: Self.Hide
-    end;
+end;
 end;
 
 end.

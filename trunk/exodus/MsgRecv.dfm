@@ -266,6 +266,7 @@ object frmMsgRecv: TfrmMsgRecv
       end>
     LangOptions = [loAutoFont]
     Language = 1033
+    ReadOnly = True
     ScrollBars = ssVertical
     ShowSelectionBar = False
     TabOrder = 1

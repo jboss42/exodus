@@ -43,7 +43,7 @@ type
         function AddChat(sjid, sresource: string): TChatController; overload;
 
         procedure MsgCallback(event: string; tag: TXMLTag);
-    end;
+end;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -71,7 +71,6 @@ var
     fjid: string;
     tmp_jid: TJabberID;
     c: TChatController;
-    // c: TfrmChat;
     idx1, idx2, mt: integer;
     mtype: string;
 begin
@@ -93,35 +92,34 @@ begin
 
     tmp_jid := TJabberID.Create(fjid);
 
-    idx1 := Self.indexOf(fjid);
-    idx2 := Self.indexOf(tmp_jid.jid);
+    try
+        idx1 := Self.indexOf(fjid);
+        idx2 := Self.indexOf(tmp_jid.jid);
 
-    if (mtype <> 'chat') then begin
-        if ((mt = msg_existing_chat) and (idx1 = -1) and (idx2 = -1)) then
-            exit
-        else if (mt = msg_normal) then
-            exit;
+        if (mtype <> 'chat') then begin
+            if ((mt = msg_existing_chat) and (idx1 = -1) and (idx2 = -1)) then
+                exit
+            else if (mt = msg_normal) then
+                exit;
         end;
 
-    if (Self.indexOf(fjid) < 0) then begin
-        // Create a new session
-        if (Self.indexOf(tmp_jid.jid) >= 0) then begin
-            tmp_jid.Free();
-            exit;
-            end;
+        if (Self.indexOf(fjid) < 0) then begin
+            // Create a new session
+            if (Self.indexOf(tmp_jid.jid) >= 0) then
+                exit;
 
-        // in the blocker list?
-        if (MainSession.IsBlocked(tmp_jid)) then  begin
-            tmp_jid.Free();
-            exit;
-            end;
+            // in the blocker list?
+            if (MainSession.IsBlocked(tmp_jid)) then
+                exit;
 
-        // Create a new chat controller
-        c := Self.AddChat(tmp_jid.jid, tmp_jid.resource);
-        c.MsgCallback(event, tag);
+            // Create a new chat controller
+            c := Self.AddChat(tmp_jid.jid, tmp_jid.resource);
+            c.MsgCallback(event, tag);
 
         end;
-    tmp_jid.Free();
+    finally
+        tmp_jid.Free();
+    end;
 end;
 
 {---------------------------------------}

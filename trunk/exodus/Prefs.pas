@@ -363,7 +363,7 @@ begin
             if (getBool('font_underline')) then Font.Style := Font.Style + [fsUnderline];
             Color := TColor(getInt('color_bg'));
             Self.redrawChat();
-            end;
+        end;
 
         with colorRoster do begin
             Items[0].Expand(true);
@@ -374,7 +374,7 @@ begin
             Font.Charset := getInt('roster_font_charset');
             if (Font.Charset = 0) then Font.Charset := 1;
             Font.Style := [];
-            end;
+        end;
         lblColor.Caption := sRosterFontLabel;
         _clr_font := 'roster_font';
         _clr_font_color := 'roster_font_color';
@@ -420,21 +420,21 @@ begin
         if chkRosterAlpha.Checked then begin
             trkRosterAlpha.Position := getInt('roster_alpha_val');
             spnRosterAlpha.Position := trkRosterAlpha.Position;
-            end
+        end
         else begin
             trkRosterAlpha.Position := 255;
             spnRosterAlpha.Position := 255;
-            end;
+        end;
 
         chkToastAlphaClick(Self);
         if chkToastAlpha.Checked then begin
             trkToastAlpha.Position := getInt('toast_alpha_val');
             spnToastAlpha.Position := trkToastAlpha.Position;
-            end
+        end
         else begin
             trkToastAlpha.Position := 255;
             spnToastAlpha.Position := 255;
-            end;
+        end;
 
         chkSnapClick(Self);
         if (chkSnap.Checked) then
@@ -493,7 +493,7 @@ begin
             lstCustomPres.Items.Add(TJabberCustomPres(_pres_list[i]).title);
         chkPresenceMessageSend.Checked := getBool('presence_message_send');
         chkPresenceMessageListen.Checked := getBool('presence_message_listen');
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -558,17 +558,17 @@ begin
             if (not chkAutoStart.Checked) then begin
                 if (reg.ValueExists('Exodus')) then
                     reg.DeleteValue('Exodus');
-                end
+            end
             else begin
                 cmd := '"' + ParamStr(0) + '"';
                 for i := 1 to ParamCount do
                     cmd := cmd + ' ' + ParamStr(i);
                 reg.WriteString('Exodus',  cmd);
-                end;
+            end;
             reg.CloseKey();
         finally
             reg.Free();
-        end;
+    end;
 
         // Dialog Prefs
         setBool('roster_alpha', chkRosterAlpha.Checked);
@@ -615,11 +615,11 @@ begin
         for i := 0 to _pres_list.Count - 1 do begin
             cp := TJabberCustomPres(_pres_list.Items[i]);
             setPresence(cp);
-            end;
+        end;
         setBool('presence_message_send', chkPresenceMessageSend.Checked);
         setBool('presence_message_listen', chkPresenceMessageListen.Checked);
-        EndUpdate();
-        end;
+    endUpdate();
+    end;
     MainSession.FireEvent('/session/prefs', nil);
 end;
 
@@ -692,62 +692,62 @@ begin
         PageControl1.ActivePage := tbsRoster;
         // img := imgRoster;
         lbl := lblRoster;
-        end
+    end
     else if ((Sender = imgS10n) or (Sender = lblS10n)) then begin
         PageControl1.ActivePage := tbsSubscriptions;
         // img := imgS10n;
         lbl := lblS10n;
-        end
+    end
     else if ((Sender = imgFonts) or (Sender = lblFonts)) then begin
         PageControl1.ActivePage := tbsFonts;
         // img := imgFonts;
         lbl := lblFonts;
-        end
+    end
     else if ((Sender = imgSystem) or (Sender = lblSystem)) then begin
         PageControl1.ActivePage := tbsSystem;
         // img := imgSystem;
         lbl := lblSystem;
-        end
+    end
     else if ((Sender = imgDialog) or (Sender = lblDialog)) then begin
         PageControl1.ActivePage := tbsDialog;
         // img := imgDialog;
         lbl := lblDialog;
-        end
+    end
     else if ((Sender = imgNotify) or (Sender = lblNotify)) then begin
         PageControl1.ActivePage := tbsNotify;
         // img := imgNotify;
         lbl := lblNotify;
-        end
+    end
     else if ((Sender = imgAway) or (Sender = lblAway)) then begin
         PageControl1.ActivePage := tbsAway;
         // img := imgAway;
         lbl := lblAway;
-        end
+    end
     else if ((Sender = imgKeywords) or (Sender = lblKeywords)) then begin
         PageControl1.ActivePage := tbsKeywords;
         // img := imgKeywords;
         lbl := lblKeywords;
-        end
+    end
     else if ((Sender = imgBlockList) or (Sender = lblBlockList)) then begin
         PageControl1.ActivePage := tbsBlockList;
         // img := imgBlocklist;
         lbl := lblBlocklist;
-        end
+    end
     else if ((Sender = imgCustompres) or (Sender = lblCustomPres)) then begin
         PageControl1.ActivePage := tbsCustomPres;
         // img := imgCustompres;
         lbl := lblCustompres;
-        end
+    end
     else if ((Sender = imgMessages) or (Sender = lblMessages)) then begin
         PageControl1.ActivePage := tbsMessages;
         // img := imgMessages;
         lbl := lblMessages;
-        end
+    end
     else if ((Sender = imgPlugins) or (Sender = lblPlugins)) then begin
         PageControl1.ActivePage := tbsPlugins;
         // img := imgPlugins;
         lbl := lblPlugins;
-        end;
+    end;
 
     for i := 0 to ScrollBox1.ControlCount - 1 do begin
         c := ScrollBox1.Controls[i];
@@ -755,13 +755,13 @@ begin
             if (c = lbl) then begin
                 TLabel(c).Color := clHighlight;
                 TLabel(c).Font.Color := clHighlightText;
-                end
+            end
             else begin
                 TLabel(c).Color := clWindow;
                 TLabel(c).Font.Color := clWindowText;
-                end;
             end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -791,7 +791,7 @@ begin
     try
         trkToastAlpha.Position := StrToInt(txtToastAlpha.Text);
     except
-    end;
+end;
 end;
 
 {---------------------------------------}
@@ -800,7 +800,7 @@ begin
     try
         trkRosterAlpha.Position := StrToInt(txtRosterAlpha.Text);
     except
-    end;
+end;
 end;
 
 {---------------------------------------}
@@ -823,13 +823,13 @@ begin
         chkToast.Checked := ((_notify[i] and notify_toast) > 0);
         chkFlash.Checked := ((_notify[i] and notify_flash) > 0);
         chkTrayNotify.Checked := ((_notify[i] and notify_tray) > 0);
-        end
+    end
     else begin
         chkToast.Checked := false;
         chkFlash.Checked := false;
         chkTrayNotify.Checked := false;
         _notify[i] := 0;
-        end;
+    end;
 
     _no_notify_update := false;
 end;
@@ -891,7 +891,7 @@ begin
         txtCPTitle.Text := '';
         txtCPStatus.Text := '';
         txtCPPriority.Text := '0';
-        end
+    end
     else with TJabberCustomPres(_pres_list[lstCustomPres.ItemIndex]) do begin
 
         if (show = 'chat') then cboCPType.ItemIndex := 0
@@ -905,7 +905,7 @@ begin
         txtCPStatus.Text := status;
         txtCPPriority.Text := IntToStr(priority);
         txtCPHotkey.HotKey := TextToShortcut(hotkey);
-        end;
+    end;
     _no_pres_change := false;
 end;
 
@@ -932,10 +932,10 @@ begin
         2: show := 'away';
         3: show := 'xa';
         4: show := 'dnd';
-        end;
+    end;
         if (title <> lstCustomPres.Items[i]) then
             lstCustomPres.Items[i] := title;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1078,20 +1078,20 @@ begin
             Body := 'Some text from me';
             isMe := true;
             Nick := 'pgm';
-            end;
+        end;
         m2 := TJabberMessage.Create();
         with m2 do begin
             Body := 'Some reply text';
             isMe := false;
             Nick := 'c-neal';
-            end;
+        end;
 
         DisplayMsg(m1, colorChat);
         DisplayMsg(m2, colorChat);
 
         m1.Free();
         m2.Free();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1110,7 +1110,7 @@ begin
             else begin
                 colorChat.Font.Assign(Font);
                 redrawChat();
-                end;
+            end;
 
             with MainSession.prefs do begin
                 setString(_clr_font + '_name', Font.Name);
@@ -1119,9 +1119,9 @@ begin
                 setBool(_clr_font + '_bold', (fsBold in Font.Style));
                 setBool(_clr_font + '_italic', (fsItalic in Font.Style));
                 setBool(_clr_font + '_underline', (fsUnderline in Font.Style));
-                end;
             end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -1142,17 +1142,17 @@ begin
         // on <pgm>, color-me
         _clr_font_color := 'color_me';
         _clr_font := '';
-        end
+    end
     else if ((start >= 41) and (start <= 48)) then begin
         // on <c-neal>, color-other
         _clr_font_color := 'color_other';
         _clr_font := '';
-        end
+    end
     else begin
         // normal window, font_color
         _clr_font_color := 'font_color';
         _clr_font := 'font';
-        end;
+    end;
 
     btnFont.Enabled := (_clr_font <> '');
     clrBoxFont.Selected := TColor(Mainsession.Prefs.getInt(_clr_font_color));
@@ -1195,7 +1195,7 @@ procedure TfrmPrefs.btnUpdateCheckMouseUp(Sender: TObject;
 begin
     if (ssShift in Shift) or (ssCtrl in Shift) then begin
         MainSession.Prefs.setString('last_update', DateTimeToStr(Now()));
-        end;
+    end;
 end;
 
 end.

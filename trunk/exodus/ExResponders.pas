@@ -36,42 +36,42 @@ type
         procedure iqCallback(event: string; tag: TXMLTag); override;
     public
         constructor Create(Session: TJabberSession); overload;
-    end;
+end;
 
     TTimeResponder = class(TJabberResponder)
     published
         procedure iqCallback(event: string; tag: TXMLTag); override;
     public
         constructor Create(Session: TJabberSession); overload;
-    end;
+end;
 
     TLastResponder = class(TJabberResponder)
     published
         procedure iqCallback(event: string; tag: TXMLTag); override;
     public
         constructor Create(Session: TJabberSession); overload;
-    end;
+end;
 
     TBrowseResponder = class(TJabberResponder)
     published
         procedure iqCallback(event: string; tag: TXMLTag); override;
     public
         constructor Create(Session: TJabberSession); overload;
-    end;
+end;
 
     TDiscoItemsResponder = class(TJabberResponder)
     published
         procedure iqCallback(event: string; tag:TXMLTag); override;
     public
         constructor Create(Session: TJabberSession); overload;
-    end;
+end;
 
     TDiscoInfoResponder = class(TJabberResponder)
     published
         procedure iqCallback(event: string; tag:TXMLTag); override;
     public
         constructor Create(Session: TJabberSession); overload;
-    end;
+end;
 
     TFactoryResponder = class
     private
@@ -83,7 +83,7 @@ type
     public
         constructor Create(Session: TJabberSession; xpath: string; factory: TResponderFactory);
         destructor Destroy; override;
-    end;
+end;
 
 procedure initResponders();
 procedure cleanupResponders();
@@ -224,8 +224,8 @@ begin
             AddBasicTag('name', 'Exodus');
             AddBasicTag('version', app);
             AddBasicTag('os', win);
-            end;
         end;
+    end;
     _session.sendTag(r);
 
 end;
@@ -279,8 +279,8 @@ begin
             AddBasicTag('utc', DateTimeToJabber(utc));
             AddBasicTag('tz', tzi.StandardName);
             AddBasicTag('display', DateTimeToStr(Now));
-            end;
         end;
+    end;
 
     _session.sendTag(r);
 end;
@@ -315,8 +315,8 @@ begin
             setAttribute('xmlns', XMLNS_LAST);
             idle := (GetTickCount() - frmExodus.getLastTick()) div 1000;
             setAttribute('seconds', IntToStr(idle));
-            end;
         end;
+    end;
 
     _session.sendTag(r);
 end;
@@ -371,8 +371,8 @@ begin
             AddBasicTag('ns', XMLNS_MUC);
             AddBasicTag('ns', XMLNS_MUCUSER);
             AddBasicTag('ns', XMLNS_MUCOWNER);
-            end;
         end;
+    end;
     _session.SendTag(r);
 end;
 
@@ -401,7 +401,7 @@ begin
         setAttribute('type', 'result');
         q := AddTag('query');
         q.setAttribute('xmlns', XMLNS_DISCOITEMS);
-        end;
+    end;
     _session.SendTag(r);
 end;
 
@@ -418,7 +418,7 @@ procedure TDiscoInfoResponder.iqCallback(event: string; tag:TXMLTag);
     begin
         with qtag.AddTag('feature') do
             setAttribute('type', stype);
-    end;
+end;
 
 var
     r, q: TXMLTag;
@@ -442,8 +442,8 @@ begin
                 setAttribute('category', 'user');
                 setAttribute('type', 'client');
                 setAttribute('name', _session.Username);
-                end;
             end;
+        end;
 
         addFeature(q, XMLNS_SEARCH);
         addFeature(q, XMLNS_AGENTS);
@@ -464,7 +464,7 @@ begin
         addFeature(q, XMLNS_MUC);
         addFeature(q, XMLNS_MUCUSER);
         addFeature(q, XMLNS_MUCOWNER);
-        end;
+    end;
 
     _session.SendTag(r);
 end;

@@ -138,7 +138,7 @@ begin
             PageControl1.ActivePage := tbsSocket
         else if (p.ConnectionType = conn_http) then
             PageControl1.ActivePage := tbsHttp;
-        end;
+    end;
 
     result := f.ShowModal();
 end;
@@ -166,13 +166,13 @@ begin
         lblSocksPassword.Enabled := true;
         txtSocksUsername.Enabled := true;
         txtSocksPassword.Enabled := true;
-        end
+    end
     else begin
         lblSocksUsername.Enabled := false;
         lblSocksPassword.Enabled := false;
         txtSocksUsername.Enabled := false;
         txtSocksPassword.Enabled := false;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -189,7 +189,7 @@ begin
         lblSocksPort.Enabled := false;
         lblSocksUsername.Enabled := false;
         lblSocksPassword.Enabled := false;
-        end
+    end
     else begin
         if (not txtSocksHost.Enabled) then begin
             txtSocksHost.Enabled := true;
@@ -197,8 +197,8 @@ begin
             chkSocksAuth.Enabled := true;
             lblSocksHost.Enabled := true;
             lblSocksPort.Enabled := true;
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -216,7 +216,7 @@ begin
         chkSocksAuthClick(chkSocksAuth);
         txtSocksUsername.Text := SocksUsername;
         txtSocksPassword.Text := SocksPassword;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -233,7 +233,7 @@ begin
         SocksAuth := chkSocksAuth.Checked;
         SocksUsername := txtSocksUsername.Text;
         SocksPassword := txtSocksPassword.Text;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -245,7 +245,7 @@ begin
         chkProxyAuth.Enabled := true;
         lblProxyHost.Enabled := true;
         lblProxyPort.Enabled := true;
-        end
+    end
     else begin
         txtProxyHost.Enabled := false;
         txtProxyPort.Enabled := false;
@@ -257,7 +257,7 @@ begin
         lblProxyPort.Enabled := false;
         lblProxyUsername.Enabled := false;
         lblProxyPassword.Enabled := false;
-        end;
+    end;
 
 end;
 
@@ -269,13 +269,13 @@ begin
         lblProxyPassword.Enabled := true;
         txtProxyUsername.Enabled := true;
         txtProxyPassword.Enabled := true;
-        end
+    end
     else begin
         lblProxyUsername.Enabled := false;
         lblProxyPassword.Enabled := false;
         txtProxyUsername.Enabled := false;
         txtProxyPassword.Enabled := false;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -293,7 +293,7 @@ begin
         chkProxyAuthClick(chkProxyAuth);
         txtProxyUsername.Text := ProxyUsername;
         txtProxyPassword.Text := ProxyPassword;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -307,14 +307,14 @@ begin
             NumPollKeys := 256;
             txtKeys.Text := '256';
             MessageDlg(sSmallKeys, mtWarning, [mbOK], 0);
-            end;
+        end;
         ProxyApproach := cboProxyApproach.ItemIndex ;
         ProxyHost := txtProxyHost.Text;
         ProxyPort := StrToIntDef(txtProxyPort.Text, 0);
         ProxyAuth := chkProxyAuth.Checked;
         ProxyUsername := txtProxyUsername.Text;
         ProxyPassword := txtProxyPassword.Text;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -323,11 +323,11 @@ begin
     if (chkSSL.Checked) then begin
         if (txtPort.Text = '5222') then
             txtPort.Text := '5223';
-        end
+    end
     else begin
         if (txtPort.Text = '5223') then
             txtPort.Text := '5222';
-        end;
+    end;
 end;
 
 {---------------------------------------}

@@ -100,7 +100,7 @@ begin
         // auto-join the room
         StartRoom(e.data_type, MainSession.Username);
         e.Free();
-        end
+    end
     else
         frmExodus.RenderEvent(e);
 end;
@@ -131,7 +131,7 @@ begin
     if (jids <> nil) then begin
         for i := 0 to jids.Count - 1 do
             f.AddRecip(jids[i]);
-        end;
+    end;
     f.Show;
 end;
 
@@ -179,7 +179,7 @@ begin
     if (not isValidJID(room)) then begin
         MessageDlg(sInvalidRoomJID, mtError, [mbOK], 0);
         exit;
-        end;
+    end;
 
     room_idx := room_list.IndexOf(room);
     if (room_idx < 0) then
@@ -199,9 +199,9 @@ begin
                 with AddTag('invite') do begin
                     setAttribute('to', lstJIDS.Items[i].SubItems[0]);
                     AddBasicTag('reason', memReason.Lines.Text);
-                    end;
                 end;
-            end
+            end;
+        end
         else begin
             // this is GC 1.0, or we aren't in the room yet..
             // Use jabber;x:conference
@@ -209,11 +209,11 @@ begin
             with msg.AddTag('x') do begin
                 setAttribute('xmlns', 'jabber:x:conference');
                 setAttribute('jid', room);
-                end;
-            msg.AddBasicTag('body', memReason.Lines.Text);
             end;
-        MainSession.SendTag(msg);
+            msg.AddBasicTag('body', memReason.Lines.Text);
         end;
+        MainSession.SendTag(msg);
+    end;
     Self.Close;
 end;
 
@@ -255,10 +255,10 @@ begin
                     r := n.Item[j];
                     if ((r.Data <> nil) and (TObject(r.Data) is TJabberRosterItem)) then
                         Self.AddRecip(TJabberRosterItem(r.Data).jid.jid);
-                    end;
                 end;
             end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -270,7 +270,7 @@ begin
     for i := lstJIDS.Items.Count - 1 downto 0 do begin
         if lstJIDS.Items[i].Selected then
             lstJIDS.Items.Delete(i);
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -289,9 +289,9 @@ begin
         if (not IsValidJID(jid)) then begin
             MessageDlg(sInvalidJID, mtError, [mbOK], 0);
             exit;
-            end;
-        Self.AddRecip(jid);
         end;
+        Self.AddRecip(jid);
+    end;
 end;
 
 end.

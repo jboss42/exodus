@@ -47,7 +47,7 @@ type
 
         property JID: WideString read _jid;
         property OnMessage: TChatMessageEvent read _event write _event;
-    end;
+end;
 
 {---------------------------------------}
 implementation
@@ -122,23 +122,23 @@ begin
         with tag.AddTag('x') do begin
             setAttribute('xmlns', 'jabber:x:delay');
             setAttribute('stamp', DateTimeToJabber(Now + TimeZoneBias()));
-            end;
         end;
+    end;
 
     if Assigned(_event) then begin
         if MainSession.IsPaused then
             MainSession.QueueEvent(event, tag, Self.MsgCallback)
         else
             _event(tag);
-        end
+    end
     else begin
         if MainSession.IsPaused then
             MainSession.QueueEvent(event, tag, Self.MsgCallback)
         else begin
             msg_queue.Push(tag);
             MainSession.FireEvent('/session/gui/chat', tag);
-            end;
         end;
+    end;
 end;
 
 

@@ -896,7 +896,7 @@ begin
     begin
       Header.Count := Swap(Header.Count);
       Header.Bytes := SwapCardinal(Header.Bytes);
-    end;
+end;
 
     // Calculate the offset into the storage for the ranges.  The offsets
     // array is on a 4-byte boundary and one larger than the value provided in
@@ -914,7 +914,7 @@ begin
     begin
       for I := 0 to Header.Count do
           PropertyOffsets[I] := Swap(PropertyOffsets[I]);
-    end;
+end;
 
     // Load the ranges.  The number of elements is in the last array position of the offsets.
     SetLength(PropertyRanges, PropertyOffsets[Header.Count]);
@@ -925,7 +925,7 @@ begin
     begin
       for I := 0 to PropertyOffsets[Header.Count] - 1 do
         PropertyRanges[I] := SwapCardinal(PropertyRanges[I]);
-    end;
+end;
     Stream.Free;
   end;
   LoadInProgress.Leave;
@@ -969,8 +969,8 @@ begin
           begin
             Result := True;
             Break;
-          end;
-    end;
+      end;
+end;
   end;
 end;
 
@@ -993,9 +993,9 @@ begin
       begin
         Result := True;
         Exit;
-      end;
+  end;
       Mask := Mask shl 1;
-    end;
+end;
   end;
 
   if Mask2 <> 0 then
@@ -1008,10 +1008,10 @@ begin
       begin
         Result := True;
         Exit;
-      end;
+  end;
       Inc(I);
       Mask := Mask shl 1;
-    end;
+end;
   end;
 end;
 
@@ -1043,7 +1043,7 @@ begin
       Header.Count := Swap(Header.Count);
       Header.Len[0] := Swap(Header.Len[0]);
       Header.Len[1] := Swap(Header.Len[1]);
-    end;
+end;
 
     // Set the node count and lengths of the upper and lower case mapping tables.
     CaseMapSize := Header.Count * 3;
@@ -1089,7 +1089,7 @@ begin
         begin
           Result := CaseMap[M + Field];
           Exit;
-        end;
+    end;
   end;
 
   Result := Code;
@@ -1115,13 +1115,13 @@ begin
       Field := 2;
       L := CaseLengths[0];
       R := (L + CaseLengths[1]) - 3;
-    end
+end
     else
     begin
       Field := 1;
       L := CaseLengths[0] + CaseLengths[1];
       R := CaseMapSize - 3;
-    end;
+end;
     Result := CaseLookup(Code, L, R, Field);
   end;
 end;
@@ -1146,13 +1146,13 @@ begin
       Field := 1;
       L := 0;
       R := CaseLengths[0] - 3;
-    end
+end
     else
     begin
       Field := 2;
       L := CaseLengths[0] + CaseLengths[1];
       R := CaseMapSize - 3;
-    end;
+end;
     Result := CaseLookup(Code, L, R, Field);
   end;
 end;
@@ -1179,12 +1179,12 @@ begin
     begin
       L := 0;
       R := CaseLengths[0] - 3;
-    end
+end
     else
     begin
       L := CaseLengths[0];
       R := (L + CaseLengths[1]) - 3;
-    end;
+end;
     Result := CaseLookup(Code, L, R, Field);
   end;
 end;
@@ -1231,7 +1231,7 @@ begin
     begin
       Header.Count := Swap(Header.Count);
       Header.Bytes := SwapCardinal(Header.Bytes);
-    end;
+end;
 
     DecompositionSize := Header.Count shl 1; // two values per node
     SetLength(DecompositionNodes, DecompositionSize + 1); // one entry more (the sentinel)
@@ -1246,7 +1246,7 @@ begin
           DecompositionNodes[I] := SwapCardinal(DecompositionNodes[I]);
       for I := 0 to High(Decompositions) do
           Decompositions[I] := SwapCardinal(Decompositions[I]);
-    end;
+end;
     Stream.Free;
   end;
 
@@ -1318,9 +1318,9 @@ begin
               SetLength(Result, DecompositionNodes[M + 3] - DecompositionNodes[M + 1] - 1);
               Move(Decompositions[DecompositionNodes[M + 1]], Result[0], Length(Result) * SizeOf(Cardinal));
               Break;
-            end;
-      end;
-    end;
+        end;
+  end;
+end;
   end;
 end;
 
@@ -1353,7 +1353,7 @@ begin
     begin
       Header.Count := Swap(Header.Count);
       Header.Bytes := SwapCardinal(Header.Bytes);
-    end;
+end;
 
     CCLSize := Header.Count * 3;
     SetLength(CCLNodes, CCLSize);
@@ -1395,7 +1395,7 @@ begin
         begin
           Result := CCLNodes[M + 2];
           Break;
-        end;
+    end;
   end;
 end;
 
@@ -1429,7 +1429,7 @@ begin
     begin
       Header.Count := Swap(Header.Count);
       Header.Bytes := SwapCardinal(Header.Bytes);     
-    end;
+end;
 
     NumberSize := Header.Count;
     SetLength(NumberNodes, NumberSize);
@@ -1443,7 +1443,7 @@ begin
         NumberNodes[I] := SwapCardinal(NumberNodes[I]);
       for I := 0 to High(NumberValues) do
         NumberValues[I] := Swap(NumberValues[I]);
-    end;
+end;
     Stream.Free;
   end;
   LoadInProgress.Leave;
@@ -1481,7 +1481,7 @@ begin
         num.denominator := VP^;
         Result := True;
         Break;
-      end;
+  end;
   end;
 end;
 
@@ -1518,9 +1518,9 @@ begin
         begin
           Digit := M;
           Result := True;
-        end;
+    end;
         Break;
-      end;
+  end;
   end;
 end;
 
@@ -1699,9 +1699,9 @@ begin
         if (TextEnd - TextStart) < Sp.SkipValues then Result := TextEnd - TextStart
                                                  else Result := Sp.SkipValues;
         Exit;
-      end;
+  end;
       Inc(Sp);
-    end;
+end;
     Result := FPatternLength;
   end;
 end;
@@ -1787,10 +1787,10 @@ begin
         begin
           C1 := $10000 + (((C1 and $03FF) shl 10) or (C2 and $03FF));
           Dec(Start);
-        end
+    end
         else C1 := C2;
-      end;
-    end;
+  end;
+end;
 
     // handle space compression if indicated
     if sfSpaceCompress in FFlags then
@@ -1809,9 +1809,9 @@ begin
         begin
           C1 := $10000 + (((C1 and $03FF) shl 10) or (C2 and $03FF));
           Dec(Start);
-        end
+    end
         else C1 := C2;
-      end;
+  end;
       // Handle things if space compression was indicated and one or
       // more member characters were found.
       if CheckSpace then
@@ -1822,8 +1822,8 @@ begin
         // If Count is 0 at this place then the space character(s) was the first
         // in the pattern and we need to correct the start position.
         if Count = 0 then Inc(Start);
-      end;
-    end;
+  end;
+end;
 
     // handle the normal comparison cases
     if (Count > 0) and
@@ -1848,10 +1848,10 @@ begin
         begin
           C1 := $10000 + (((C1 and $03FF) shl 10) or (C2 and $03FF));
           Dec(Start);
-        end
+    end
         else C1 := C2;
-      end;
-    end;
+  end;
+end;
   end;
 
   // So far the string matched. Now check its left border for a space character if
@@ -1914,7 +1914,7 @@ begin
       begin
         Inc(I);
         Continue;
-      end;
+  end;
 
       // check if spaces and controls need to be compressed
       if sfSpaceCompress in Flags then
@@ -1933,18 +1933,18 @@ begin
             Inc(FPatternLength);
             Sentinel := $20;
             HaveSpace := True;
-          end;
+      end;
           Inc(I);
           Continue;
-        end;
+    end;
 
         // ignore all control characters
         if UnicodeIsControl(C1) then
         begin
           Inc(I);
           Continue;
-        end;
-      end;
+    end;
+  end;
 
       // add the character
       if not (sfCaseSensitive in Flags) then
@@ -1952,13 +1952,13 @@ begin
         Cp.UpCase := UnicodeToUpper(C1);
         Cp.LoCase := UnicodeToLower(C1);
         Cp.TitleCase := UnicodeToTitle(C1);
-      end
+  end
       else
       begin
         Cp.UpCase := C1;
         Cp.LoCase := C1;
         Cp.TitleCase := C1;
-      end;
+  end;
 
       Sentinel := Cp.UpCase;
 
@@ -1972,7 +1972,7 @@ begin
       // increment the loop index for UTF-16 characters
       if C1 > $10000 then Inc(I, 2)
                      else Inc(I);
-    end;
+end;
 
     // set the number of characters actually used
     FPatternUsed := (PChar(Cp) - PChar(FPattern)) div SizeOf(TUTBMChar);
@@ -1991,7 +1991,7 @@ begin
       begin
         Inc(J);
         Inc(Sp);
-      end;
+  end;
 
       // If the character is not found, set the new FSkipValues element and
       // increase the number of FSkipValues elements.
@@ -1999,7 +1999,7 @@ begin
       begin
         Sp.BMChar := Cp;
         Inc(FSkipsUsed);
-      end;
+  end;
 
       // Set the updated FSkipValues value.  If the character is UTF-16 and is
       // not the last one in the pattern, add one to its FSkipValues value.
@@ -2015,7 +2015,7 @@ begin
       if Cp.UpCase >= $10000 then Inc(K, 2)
                              else Inc(K, 1);
       Inc(Cp);
-    end;
+end;
   end;
 end;
 
@@ -2064,14 +2064,14 @@ begin
       begin
         Result := True;
         Break;
-      end;
+  end;
       Inc(Start, FMD4);
       if (Start < Stop) and
          (SurrogateLowStart <= UCS4(Start^)) and
          (UCS4(Start^) <= SurrogateLowEnd) and
          (SurrogateHighStart <= UCS4((Start - 1)^)) and
          (UCS4((Start - 1)^) <= SurrogateHighEnd) then Dec(Start);
-    end;
+end;
   end;
 end;
 
@@ -2373,13 +2373,13 @@ begin
       // Encountered a comma, so select the next character property flag and reset the number.
       M := M or CClassFlags[N];
       N := 0;
-    end
+end
     else
       if (Run^ >= '0') and (Run^ <= '9') then
       begin
         // Encountered a digit, so start or Continue building the cardinal that represents the character property flag.
         N := (N * 10) + Cardinal(Word(Run^) - Ord('0'));
-      end
+  end
       else
         // Encountered something that is not part of the property list. Indicate that we are done.
         Break;
@@ -2652,43 +2652,43 @@ begin
       begin
         Inc(TP);
         Dec(N);
-      end;
+  end;
 
       if N = 0 then
       begin
         Result := 0;
         Exit;
-      end;
+  end;
 
       if (Run^ = ':') and ((I = 6) or (I = 7)) then
       begin
         Inc(Run);
         Break;
-      end;
+  end;
       if (Run + 1) < ListEnd then TP := @CClassTrie[TP.Next];
       Inc(I);
       Inc(Run);
-    end;
+end;
 
     case TP.Setup of
       1:
         begin
           CCLSetup(Symbol, TP.Mask);
           Result := Run - CP;
-        end;
+    end;
       2:
         begin
           SpaceSetup(Symbol, TP.Mask);
           Result := Run - CP;
-        end;
+    end;
       3:
         begin
           HexDigitSetup(Symbol, TP.Mask);
           Result := Run - CP;
-        end;
+    end;
     else
       Result := 0;
-    end;
+end;
   end;
 end;
 
@@ -2739,7 +2739,7 @@ begin
         FUREBuffer.Error := _URE_UNEXPECTED_EOS;
         Result := Run - CP;
         Exit;
-      end;
+  end;
 
       C := UCS4(Run^);
       Inc(Run);
@@ -2766,7 +2766,7 @@ begin
             // a list of character properties that should *not* match in a character class.
             if C = Ord('P') then Symbol.Props := not Symbol.Props;
             Continue;
-          end;
+      end;
         'x',
         'X',
         'u',
@@ -2777,9 +2777,9 @@ begin
                 (Run^ >= 'A') and (Run^ <= 'F') or
                 (Run^ >= 'a') and (Run^ <= 'f')) then
               Inc(Run, MakeHexNumber(Run, ListEnd - Run, C));
-          end;
       end;
-    end
+  end;
+end
     else
       if C = Ord(':') then
       begin
@@ -2791,8 +2791,8 @@ begin
         begin
           Inc(Run, N);
           Continue;
-        end;
-      end;
+    end;
+  end;
 
       // Check to see if the current character is a low surrogate that needs
       // to be combined with a preceding high surrogate.
@@ -2802,7 +2802,7 @@ begin
         begin
           // Construct the UTF16 character code.
           C := $10000 + (((Last and $03FF) shl 10) or (C and $03FF))
-        end
+    end
         else
         begin
           // Add the isolated high surrogate to the range.
@@ -2811,12 +2811,12 @@ begin
           begin
             Range.MinCode := Last and $FFFF;
             Range.MaxCode := Last and $FFFF;
-          end;
+      end;
 
           AddRange(Symbol.Symbol.CCL, Range);
           RangeEnd := 0;
-        end;
-      end;
+    end;
+  end;
 
       // Clear the Last character code.
       Last := 0;
@@ -2831,16 +2831,16 @@ begin
           Inc(Run);
           Range.MinCode := C;
           RangeEnd := 1;
-        end
+    end
         else Last := C;
-      end
+  end
       else
         if RangeEnd = 1 then
         begin
           Range.MaxCode := C;
           AddRange(Symbol.Symbol.CCL, Range);
           RangeEnd := 0;
-        end
+    end
         else
         begin
           Range.MinCode := C;
@@ -2849,9 +2849,9 @@ begin
           begin
             Inc(Run);
             RangeEnd := 1;
-          end
+      end
           else AddRange(Symbol.Symbol.CCL, Range);
-      end;
+  end;
   end;
 
   if (Run < ListEnd) and (Run^ = ']') then Inc(Run)
@@ -2923,7 +2923,7 @@ begin
       FUREBuffer.Error := _URE_UNEXPECTED_EOS;
       Result := Run - S;
       Exit;
-    end;
+end;
 
       C := Word(Run^);
       Inc(Run);
@@ -2934,42 +2934,42 @@ begin
             if UCS2(C) = 'p' then Symbol.AType :=_URE_CCLASS
                              else Symbol.AType :=_URE_NCCLASS;
             Inc(Run, ParsePropertyList(Run, ListEnd - Run, Symbol.Props));
-          end;
+      end;
         'a':
           begin
             Symbol.AType := _URE_CHAR;
             Symbol.Symbol.Chr := $07;
-          end;
+      end;
         'b':
           begin
             Symbol.AType := _URE_CHAR;
             Symbol.Symbol.Chr := $08;
-          end;
+      end;
         'f':
           begin
             Symbol.AType := _URE_CHAR;
             Symbol.Symbol.Chr := $0C;
-          end;
+      end;
         'n':
           begin
             Symbol.AType := _URE_CHAR;
             Symbol.Symbol.Chr := $0A;
-          end;
+      end;
         'r':
           begin
             Symbol.AType := _URE_CHAR;
             Symbol.Symbol.Chr := $0D;
-          end;
+      end;
         't':
           begin
             Symbol.AType := _URE_CHAR;
             Symbol.Symbol.Chr := $09;
-          end;
+      end;
         'v':
           begin
             Symbol.AType := _URE_CHAR;
             Symbol.Symbol.Chr := $0B;
-          end;
+      end;
       else
         case UCS2(C) of
           'x',
@@ -2983,13 +2983,13 @@ begin
                  (Run^ >= 'A') and (Run^ <= 'F') or
                  (Run^ >= 'a') and (Run^ <= 'f')) then
                 Inc(Run, MakeHexNumber(Run, ListEnd - Run, C));
-            end;
         end;
+    end;
 
         // Simply add an escaped character here.
         Symbol.AType := _URE_CHAR;
         Symbol.Symbol.Chr := C;
-      end;
+  end;
   end
   else
     if (UCS2(C) = '^') or (UCS2(C) = '$') then
@@ -2999,20 +2999,20 @@ begin
       // separators because beginning-of-text and end-of-text tests are needed as well.
       if UCS2(C) = '^' then Symbol.AType := _URE_BOL_ANCHOR
                        else Symbol.AType := _URE_EOL_ANCHOR;
-    end
+end
     else
       if UCS2(C) = '[' then
       begin
         // construct a character class
         Inc(Run, BuildCharacterClass(Run, ListEnd - Run, Symbol));
-      end
+  end
       else
         if UCS2(C) = '.' then Symbol.AType := _URE_ANY_CHAR
                          else
         begin
           Symbol.AType := _URE_CHAR;
           Symbol.Symbol.Chr := C;
-        end;
+    end;
 
   // If the symbol type happens to be a character and is a high surrogate, then probe forward to see if it is followed
   // by a low surrogate that needs to be added.
@@ -3026,7 +3026,7 @@ begin
     begin
       Symbol.Symbol.Chr := $10000 + (((Symbol.Symbol.Chr and $03FF) shl 10) or (Word(Run^) and $03FF));
       Inc(Run);
-    end
+end
     else
       if (Run^ = '\') and
          (((Run + 1)^ = 'x') or
@@ -3040,8 +3040,8 @@ begin
           // Take into account the \[xu] in front of the hex code.
           Inc(Run, 2);
           Symbol.Symbol.Chr := $10000 + (((Symbol.Symbol.Chr and $03FF) shl 10) or (C and $03FF));
-        end;
-      end;
+    end;
+  end;
   end;
 
   // Last, make sure any _URE_CHAR type symbols are changed to lower if the 'Casefold' flag is set.
@@ -3078,9 +3078,9 @@ begin
                            SizeOf(TRange) * A.Symbol.CCL.RangesUsed) then
         begin
           Result := True;;
-        end
-      end;
     end
+  end;
+end
     else
       if (A.AType = _URE_CHAR) and
          (A.Symbol.Chr <> B.Symbol.Chr) then Result := True;
@@ -3150,7 +3150,7 @@ begin
       begin
         Result := I;
         Exit;
-      end;
+  end;
 
     // Need to add a new expression.
     if ExpressionsUsed = Length(Expressions) then
@@ -3229,11 +3229,11 @@ begin
           begin
             FUREBuffer.Error := _URE_UNBALANCED_GROUP;
             Break;
-          end;
+      end;
           CollectPendingOperations(State);
           // remove the _URE_PAREN off the stack
           Pop;
-        end;
+    end;
       '*':
         State := MakeExpression(_URE_STAR, State, _URE_NOOP);
       '+':
@@ -3245,7 +3245,7 @@ begin
           CollectPendingOperations(State);
           Push(State);
           Push(_URE_OR);
-        end;
+    end;
       '{': // expressions of the form {m, n}
         begin
           C := #0;
@@ -3258,7 +3258,7 @@ begin
           begin
             S := S + Head^;
             Inc(Head);
-          end;
+      end;
           if S <> '' then M := StrToInt(S);
 
           while UnicodeIsWhiteSpace(Word(Head^)) do Inc(Head);
@@ -3266,7 +3266,7 @@ begin
           begin
             FUREBuffer.Error := _URE_INVALID_RANGE;
             Break;
-          end;
+      end;
 
           // check for an upper limit
           if Head^ <> '}' then
@@ -3279,16 +3279,16 @@ begin
             begin
               S := S + Head^;
               Inc(Head);
-            end;
+        end;
             if S <> '' then N := StrToInt(S);
-          end
+      end
           else N := M;
 
           if Head^ <> '}' then
           begin
             FUREBuffer.Error := _URE_RANGE_OPEN;
             Break;
-          end
+      end
           else Inc(Head);
 
           // N = 0 means unlimited number of occurences
@@ -3310,14 +3310,14 @@ begin
                 begin
                   Push(State);
                   Push(_URE_AND);
-                end;
+            end;
                 // ...and repeat the last symbol one or more times
                 State := MakeExpression(_URE_PLUS, State, _URE_NOOP);
                 CollectPendingOperations(State);
                 Pop;
-              end;
-            end;
-          end
+          end;
+        end;
+      end
           else
           begin
             // check proper range limits
@@ -3325,7 +3325,7 @@ begin
             begin
               FUREBuffer.Error := _URE_INVALID_RANGE;
               Break;
-            end;
+        end;
 
             // check special case {0, 1} (which corresponds to the ? operator)
             if (M = 0) and (N = 1) then State := MakeExpression(_URE_QUEST, State, _URE_NOOP)
@@ -3351,7 +3351,7 @@ begin
                 // alternative because the special case {0, 1} has already been handled).
                 Push(State);
                 Push(_URE_OR);
-              end;
+          end;
 
               while M <= N do
               begin
@@ -3361,27 +3361,27 @@ begin
                 begin
                   Push(State);
                   Push(_URE_AND);
-                end;
+            end;
                 // finish the branch and mark it as pending OR operation if it isn't the last one
                 CollectPendingOperations(State);
                 if M < N then
                 begin
                   Push(State);
                   Push(_URE_OR);
-                end;
+            end;
                 Inc(M);
-              end;
+          end;
               // remove the _URE_PAREN off the stack
               Pop;
-            end;
-          end;
         end;
+      end;
+    end;
     else
       Dec(Head);
       Symbol := MakeSymbol(Head, Tail - Head, Used);
       Inc(Head, Used);
       State := MakeExpression(_URE_SYMBOL, Symbol, _URE_NOOP);
-    end;
+end;
 
     if (C <> '(') and
        (C <> '|') and
@@ -3391,7 +3391,7 @@ begin
     begin
       Push(State);
       Push(_URE_AND);
-    end;
+end;
   end;
 
   CollectPendingOperations(State);
@@ -3424,7 +3424,7 @@ begin
       begin
         Found := True;
         Break;
-      end;
+  end;
 
     if not Found then J := ListUsed;
     if not Found or (State < List[J]) then
@@ -3434,7 +3434,7 @@ begin
       if J < ListUsed then Move(List[J], List[J + 1], SizeOf(Cardinal) * (ListUsed - J));
       List[J] := State;
       Inc(ListUsed);
-    end;
+end;
   end;
 end;
 
@@ -3455,7 +3455,7 @@ begin
     begin
       Found := True;
       Break;
-    end;
+end;
   end;
 
   if not Found then
@@ -3471,7 +3471,7 @@ begin
         SetLength(StateList.List, Length(StateList.List) + Length(NewStates) + 8);
       Move(NewStates[0], StateList.List[StateList.ListUsed], SizeOf(Cardinal) * Length(NewStates));
       Inc(StateList.ListUsed, Length(NewStates));
-    end;
+end;
     Inc(FUREBuffer.States.StatesUsed);
   end;
 
@@ -3531,31 +3531,31 @@ begin
                 AddSymbolState(Expressions[State].LHS, ns1);
                 Inc(Symbols);
                 Evaluating := False;
-              end;
+          end;
             _URE_ONE:
               begin
                 Accepting := True;
                 Evaluating := False;
-              end;
+          end;
             _URE_QUEST:
               begin
                 s1 := Expressions[State].LHS;
                 ns1 := MakeExpression(_URE_ONE, _URE_NOOP, _URE_NOOP);
                 State := MakeExpression(_URE_OR, ns1, s1);
-              end;
+          end;
             _URE_PLUS:
               begin
                 s1 := Expressions[State].LHS;
                 ns1 := MakeExpression(_URE_STAR, s1, _URE_NOOP);
                 State := MakeExpression(_URE_AND, s1, ns1);
-              end;
+          end;
             _URE_STAR:
               begin
                 s1 := Expressions[State].LHS;
                 ns1 := MakeExpression(_URE_ONE, _URE_NOOP, _URE_NOOP);
                 ns2 := MakeExpression(_URE_PLUS, s1, _URE_NOOP);
                 State := MakeExpression(_URE_OR, ns1, ns2);
-              end;
+          end;
             _URE_OR:
               begin
                 s1 := Expressions[State].LHS;
@@ -3563,7 +3563,7 @@ begin
                 Push(s1);
                 Push(s2);
                 Evaluating := False;
-              end;
+          end;
             _URE_AND:
               begin
                 s1 := Expressions[State].LHS;
@@ -3574,7 +3574,7 @@ begin
                       AddSymbolState(Expressions[s1].LHS, s2);
                       Inc(Symbols);
                       Evaluating := False;
-                    end;
+                end;
                   _URE_ONE:
                     State := s2;
                   _URE_QUEST:
@@ -3582,19 +3582,19 @@ begin
                       ns1 := Expressions[s1].LHS;
                       ns2 := MakeExpression(_URE_AND, ns1, s2);
                       State := MakeExpression(_URE_OR, s2, ns2);
-                    end;
+                end;
                   _URE_PLUS:
                     begin
                       ns1 := Expressions[s1].LHS;
                       ns2 := MakeExpression(_URE_OR, s2, State);
                       State := MakeExpression(_URE_AND, ns1, ns2);
-                    end;
+                end;
                   _URE_STAR:
                     begin
                       ns1 := Expressions[s1].LHS;
                       ns2 := MakeExpression(_URE_AND, ns1, State);
                       State := MakeExpression(_URE_OR, s2, ns2);
-                    end;
+                end;
                   _URE_OR:
                     begin
                       ns1 := Expressions[s1].LHS;
@@ -3602,20 +3602,20 @@ begin
                       ns1 := MakeExpression(_URE_AND, ns1, s2);
                       ns2 := MakeExpression(_URE_AND, ns2, s2);
                       State := MakeExpression(_URE_OR, ns1, ns2);
-                    end;
+                end;
                   _URE_AND:
                     begin
                       ns1 := Expressions[s1].LHS;
                       ns2 := Expressions[s1].RHS;
                       ns2 := MakeExpression(_URE_AND, ns2, s2);
                       State := MakeExpression(_URE_AND, ns1, ns2);
-                    end;
                 end;
-              end;
+            end;
           end;
-        end;
-        Inc(J);
       end;
+    end;
+        Inc(J);
+  end;
 
       // clear the state stack
       while Pop <> _URE_NOOP do ;
@@ -3638,20 +3638,20 @@ begin
             begin
               RHS := AddState(Copy(States.List, 0, States.ListUsed));
               States.ListUsed := 0;
-            end;
+        end;
             Transitions[Symbols].RHS := RHS;
             Inc(Symbols);
-          end;
-        end;
-        Inc(J);
       end;
+    end;
+        Inc(J);
+  end;
 
       // set the number of transitions actually used
       // Note: we need again to qualify a part of the TransistionsUsed path since the
       //       state array could be reallocated in the AddState call above and the with ... do
       //       will then be invalid.
       States.States[I].TransitionsUsed := Symbols;
-    end;
+end;
     Inc(I);
   end;
   FUREBuffer.Reducing := False;
@@ -3675,7 +3675,7 @@ begin
       I := L;
       L := R;
       R := I;
-    end;
+end;
 
     // Check to see if the equivalence pair already exists.
     I := 0;
@@ -3692,8 +3692,8 @@ begin
         Equivalents[EquivalentsUsed].Left := L;
         Equivalents[EquivalentsUsed].Right := R;
         Inc(EquivalentsUsed);
-      end;
-    end;
+  end;
+end;
   end;
 end;
 
@@ -3737,7 +3737,7 @@ begin
             begin
               Done := True;
               Break;
-            end;
+        end;
 
             K := 0;
             while (K < LeftState.TransitionsUsed) and
@@ -3747,24 +3747,24 @@ begin
             begin
               Done := True;
               Break;
-            end;
+        end;
 
             for K := 0 to LeftState.TransitionsUsed - 1 do
               AddEquivalentPair(LeftState.Transitions[K].RHS, RightState.Transitions[K].RHS);
 
             Inc(Equal);
-          end;
+      end;
 
           if not Done then Break;
-        end;
+    end;
         Inc(J);
-      end;
+  end;
 
       if J < I then
         with FUREBuffer do
           for Equal := 0 to EquivalentList.EquivalentsUsed - 1 do
             States.States[EquivalentList.Equivalents[Equal].Right].ID := States.States[EquivalentList.Equivalents[Equal].Left].ID;
-    end;
+end;
   end;
 
   // Renumber the states appropriately
@@ -3776,7 +3776,7 @@ begin
     begin
       State1.ID := Equal;
       Inc(Equal);
-    end
+end
     else State1.ID := FUREBuffer.States.States[State1.ID].ID;
     Inc(State1);
   end;
@@ -3806,7 +3806,7 @@ begin
       States.States[I].StateList.List := nil;
       States.States[I].StateList.ListUsed := 0;
       States.States[I].TransitionsUsed := 0;
-    end;
+end;
 
     States.StatesUsed := 0;
     States.States := nil;
@@ -3866,8 +3866,8 @@ begin
           Inc(FDFA.StateList.StatesUsed);
           Inc(FDFA.TransitionList.TransitionsUsed, FUREBuffer.States.States[I].TransitionsUsed);
           Inc(State);
-        end;
-      end;
+    end;
+  end;
 
       // Allocate enough space for the states and transitions.
       SetLength(FDFA.StateList.States, FDFA.StateList.StatesUsed);
@@ -3891,13 +3891,13 @@ begin
             FDFA.TransitionList.Transitions[TP].Symbol := Run.Transitions[J].LHS;
             FDFA.TransitionList.Transitions[TP].NextState := FUREBuffer.States.States[Run.Transitions[J].RHS].ID;
             Inc(TP);
-          end;
+      end;
 
           Inc(State);
-        end;
+    end;
         Inc(Run);
-      end;
-    end
+  end;
+end
     else
     begin
       // there might be an error while parsing the pattern, show it if so
@@ -3917,8 +3917,8 @@ begin
       else
         // expression was empty
         raise Exception.Create(SUREExpressionEmpty);
-      end;
-    end;
+  end;
+end;
   end;
 end;
 
@@ -3936,13 +3936,13 @@ begin
     begin
       if (SymbolTable.Symbols[I].AType = _URE_CCLASS) or
          (SymbolTable.Symbols[I].AType = _URE_NCCLASS) then SymbolTable.Symbols[I].Symbol.CCL.Ranges  := nil;
-    end;
+end;
 
     for I := 0 to SymbolTable.SymbolsUsed - 1 do
     begin
       FDFA.SymbolTable.Symbols[I].States.List := nil;
       FDFA.SymbolTable.Symbols[I].States.ListUsed := 0;
-    end;
+end;
     SymbolTable.SymbolsUsed := 0;
 
     SymbolTable.Symbols := nil;
@@ -4018,7 +4018,7 @@ begin
     begin
       Result := True;
       Exit;
-    end;
+end;
     Mask := Mask shl 1;
   end;
 end;
@@ -4050,7 +4050,7 @@ begin
       MatchEnd := 0;
       Result := True;
       Exit;
-    end;
+end;
 
     Run := Text;
     Tail := Run + TextLen;
@@ -4074,14 +4074,14 @@ begin
       begin
         C := $10000 + (((C and $03FF) shl 10) or (UCS4(Run^) and $03FF));
         Inc(Run);
-      end;
+  end;
 
         // Determine if the character is non-spacing and should be skipped.
         if ((Flags and URE_IGNORE_NONSPACING) <> 0) and UnicodeIsNonSpacingMark(C) then
         begin
           Inc(Run);
           Continue;
-        end;
+    end;
 
         if (FDFA.Flags and _URE_DFA_CASEFOLD) <> 0 then C := UnicodeToLower(C);
 
@@ -4101,14 +4101,14 @@ begin
               begin
                 Run := lp;
                 Matched := True;
-              end
+          end
               else
                 if IsSeparator(C) then
                 begin
                   if (C = $D) and (Run < Tail) and (Run^ = #$A) then Inc(Run);
                   Lp := Run;
                   Matched := True;
-                end;
+            end;
             _URE_EOL_ANCHOR:
               if IsSeparator(C) then
               begin
@@ -4117,7 +4117,7 @@ begin
                 // end point has been recorded.
                 Run := Lp;
                 Matched := True;
-              end;
+          end;
             _URE_CCLASS,
             _URE_NCCLASS:
               with Symbol^ do
@@ -4132,14 +4132,14 @@ begin
                     begin
                       Matched := True;
                       Break;
-                    end;
-                    Inc(Rp);
-                  end;
                 end;
+                    Inc(Rp);
+              end;
+            end;
                 
                 if AType = _URE_NCCLASS then Matched := not Matched;
-              end;
           end;
+      end;
 
           if Matched then
           begin
@@ -4156,10 +4156,10 @@ begin
               Inc(Run);
               // Handle the infamous CRLF situation.
               if (Run < Tail) and (C = $D) and (Run^ = #$A) then Inc(Run);
-            end;
-          end;
-          Dec(I);
         end;
+      end;
+          Dec(I);
+    end;
 
         if not Matched then
         begin
@@ -4170,7 +4170,7 @@ begin
             LastState := @FDFA.StateList.States[0];
             Start := -1;
             Stop := -1;
-          end
+      end
           else
           begin
             // set start and stop pointer if not yet done
@@ -4178,11 +4178,11 @@ begin
             begin
               Start := Lp - Text;
               Stop := Run - Text;
-            end
+        end
             else
               if Stop = -1 then Stop := Lp - Text;
-          end;
-        end
+      end;
+    end
         else
           if Run = Tail then
           begin
@@ -4201,25 +4201,25 @@ begin
                   begin
                     Stop := Run - Text;
                     Found := True;
-                  end
+              end
                   else Break;
-                end;
-              end;
-            end
+            end;
+          end;
+        end
             else
             begin
               // Make sure any conditions that match all the way to the end of the string match.
               Found := True;
               Stop := Run - Text;
-            end;
         end;
     end;
+end;
 
     if Found then
     begin
       MatchStart := Start;
       MatchEnd := Stop;
-    end;
+end;
     Result := Found;
   end;
 end;
@@ -4361,7 +4361,7 @@ begin
   try
     for I := 0 to Strings.Count - 1 do AddObject(Strings[I], Strings.Objects[I]);
   finally
-    EndUpdate;
+endUpdate;
   end;
 end;
 
@@ -4377,7 +4377,7 @@ begin
   try
     for I := 0 to Strings.Count - 1 do AddObject(Strings[I], Strings.Objects[I]);
   finally
-    EndUpdate;
+endUpdate;
   end;
 end;
 
@@ -4398,8 +4398,8 @@ begin
       Clear;
       AddStrings(TWideStrings(Source));
     finally
-      EndUpdate;
-    end;
+  endUpdate;
+end;
   end
   else
     if Source is TStrings then
@@ -4409,9 +4409,9 @@ begin
         Clear;
         for I := 0 to TStrings(Source).Count - 1 do AddObject(TStrings(Source)[I], TStrings(Source).Objects[I]);
       finally
-        EndUpdate;
-      end;
-    end
+    endUpdate;
+  end;
+end
     else inherited Assign(Source);
 end;
 
@@ -4434,9 +4434,9 @@ begin
         Clear;
         for I := 0 to Self.Count - 1 do AddObject(Self[I], Self.Objects[I]);
       finally
-        EndUpdate;
-      end;
-    end
+    endUpdate;
+  end;
+end
     else
       if Dest is TWideStrings then
         with Dest as TWideStrings do
@@ -4446,9 +4446,9 @@ begin
             Clear;
             AddStrings(Self);
           finally
-            EndUpdate;
-          end;
-        end
+        endUpdate;
+      end;
+    end
         else inherited;
 end;
 
@@ -4472,7 +4472,7 @@ procedure TWideStrings.DefineProperties(Filer: TFiler);
     begin
       Result := True;
       if Filer.Ancestor is TWideStrings then Result := not Equals(TWideStrings(Filer.Ancestor))
-    end
+end
     else Result := Count > 0;
   end;
 
@@ -4537,7 +4537,7 @@ begin
     Strings[Index2] := TempString;
     Objects[Index2] := TempObject;
   finally
-    EndUpdate;
+endUpdate;
   end;
 end;
 
@@ -4572,7 +4572,7 @@ begin
       while not (P^ in [WideNull..Space, WideChar('"'), WideChar(',')]) do Inc(P);
       if (P^ <> WideNull) then S := WideQuotedStr(S, '"');
       Result := Result + S + ', ';
-    end;
+end;
     System.Delete(Result, Length(Result), 1);
   end;
 end;
@@ -4632,7 +4632,7 @@ begin
     begin
       System.Move(Pointer(S)^, P^, 2 * L);
       Inc(P, L);
-    end;
+end;
     P^ := CarriageReturn;
     Inc(P);
     P^ := LineFeed;
@@ -4714,7 +4714,7 @@ begin
       LoadFromStream(Stream);
     finally
       Stream.Free;
-    end;
+end;
   except
     RaiseLastOSError;
   end;
@@ -4745,7 +4745,7 @@ begin
       Stream.Read(PWideChar(SW)^, Size - 2);
       if Order = BOM_MSB_FIRST then StrSwapByteOrder(PWideChar(SW));
       SetTextStr(SW);
-    end
+end
     else
     begin
       // without byte order mark it is assumed that we are loading ANSI text
@@ -4754,9 +4754,9 @@ begin
       SetLength(SA, Size);
       Stream.Read(PChar(SA)^, Size);
       SetTextStr(SA);
-    end;
+end;
   finally
-    EndUpdate;
+endUpdate;
   end;
 end;
 
@@ -4778,8 +4778,8 @@ begin
       Delete(CurIndex);
       InsertObject(NewIndex, TempString, TempObject);
     finally
-      EndUpdate;
-    end;
+  endUpdate;
+end;
   end;
 end;
 
@@ -4815,7 +4815,7 @@ begin
     while not Reader.EndOfList do
     Add(Reader.ReadWideString);
   finally
-    EndUpdate;
+endUpdate;
   end;
   Reader.ReadListEnd;
 end;
@@ -4878,7 +4878,7 @@ begin
       Stream.WriteBuffer(PWideChar(BOM)^, 2);
       // SW has already been filled
       Stream.WriteBuffer(PWideChar(SW)^, 2 * Length(SW));
-    end
+end
     else
     begin
       // implicit conversion to ANSI
@@ -4886,7 +4886,7 @@ begin
       {$WARNINGS OFF}
       if Allowed then Stream.WriteBuffer(PWideChar(SA)^, Length(SA));
       {$WARNINGS ON}
-    end;
+end;
     FSaved := True;
   end;
 end;
@@ -4921,7 +4921,7 @@ begin
         P1 := P;
         while (P^ > Space) and (P^ <> ', ') do Inc(P);
         SetString(S, P1, P - P1);
-      end;
+  end;
       Add(S);
 
       while P^ in [WideChar(#1)..Space] do Inc(P);
@@ -4929,9 +4929,9 @@ begin
         repeat
           Inc(P);
         until not (P^ in [WideChar(#1)..Space]);
-    end;
+end;
   finally
-    EndUpdate;
+endUpdate;
   end;
 end;
 
@@ -4971,10 +4971,10 @@ begin
         Inc(Head);
         if (Tail^ = CarriageReturn) and
            (Head^ = LineFeed) then Inc(Head);
-      end;
-    end;
+  end;
+end;
   finally
-    EndUpdate;
+endUpdate;
   end;
 end;
 
@@ -5042,7 +5042,7 @@ begin
           Exit;
         dupError:
           Error(SDuplicateString, 0);
-      end;
+  end;
   InsertItem(Result, S);
 end;
 
@@ -5143,8 +5143,8 @@ begin
       begin
         Result := True;
         if Duplicates <> dupAccept then L := I;
-      end;
-    end;
+  end;
+end;
   end;
   Index := L;
 end;
@@ -5283,7 +5283,7 @@ begin
         ExchangeItems(I, J);
         Inc(I);
         Dec(J);
-      end;
+  end;
     until I > J;
     if L < J then QuickSort(L, J);
     L := I;
@@ -5734,7 +5734,7 @@ begin
     begin
       if StrScanW(S2, Run^) <> nil then Break;
       Inc(Run);
-    end;
+end;
     Result := Run - S1;
   end;
 end;
@@ -5759,7 +5759,7 @@ begin
     begin
       if StrScanW(S2, Run^) <> nil then Break;
       Dec(Run);
-    end;
+end;
     Result := S1 - Run;
   end;
 end;
@@ -6042,7 +6042,7 @@ begin
       CR:
         if Source[1] = LineFeed then Inc(Source)
                                 else Inc(Extra);
-    end;
+end;
     Inc(Source);
   end;
 
@@ -6056,19 +6056,19 @@ begin
           Dest^ := LineSeparator;
           Inc(Dest);
           Inc(Source);
-        end;
+    end;
       CarriageReturn:
         begin
           Dest^ := LineSeparator;
           Inc(Dest);
           Inc(Source);
           if Source^ = LineFeed then Inc(Source);
-        end;
+    end;
     else
       Dest^ := Source^;
       Inc(Dest);
       Inc(Source);
-    end;
+end;
 end;
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -6163,7 +6163,7 @@ begin
       Inc(Src);
       P := Src;
       Src := StrScanW(Src, Quote);
-    end;
+end;
     if Src = nil then Src := StrEndW(P);
     Move(P^, Dest^, Src - P - 1);
   end;
@@ -6333,8 +6333,8 @@ begin
           Last := WideChar((SBase + (LIndex * VCount + VIndex) * TCount));
           Result[J] := Last; // reset last
           Continue; // discard Ch
-        end;
-      end;
+    end;
+  end;
 
       // 2. check to see if two current characters are LV and T
       SIndex := Word(Last) - SBase;
@@ -6348,14 +6348,14 @@ begin
           Inc(Word(Last), TIndex);
           Result[J] := Last; // reset last
           Continue; // discard ch
-        end;
-      end;
+    end;
+  end;
 
       // if neither case was true, just add the character
       Last := Ch;
       Inc(J);
       Result[J] := Ch;
-    end;
+end;
     // shorten the result to real length
     SetLength(Result, J);
   end
@@ -6394,10 +6394,10 @@ begin
         begin
           if UnicodeCanonicalClass(Word(Result[K])) <= CClass then Break;
           Dec(K);
-        end;
-        Insert(WideChar(Decomp[J]), Result, K + 1);
-      end;
     end;
+        Insert(WideChar(Decomp[J]), Result, K + 1);
+  end;
+end;
   end;
 end;
 
@@ -6901,13 +6901,13 @@ begin
     begin
       bytesToWrite := 2;
       ch := ReplacementCharacter;
-    end;
+end;
 
     for L := bytesToWrite downto 2 do
     begin
       Result[T + L - 1] := Char((ch or byteMark) and byteMask);
       ch := ch shr 6;
-    end;
+end;
     Result[T] := Char(ch or firstByteMark[bytesToWrite]);
     Inc(T, bytesToWrite);
   end;
@@ -6944,7 +6944,7 @@ begin
       ch := ch + Ord(S[L]);
       Inc(L);
       ch := ch shl 6;
-    end;
+end;
     ch := ch + Ord(S[L]);
     Inc(L);
     ch := ch - offsetsFromUTF8[extraBytesToWrite];
@@ -6953,13 +6953,13 @@ begin
     begin
       Result[T] := WideChar(ch);
       Inc(T);
-    end
+end
     else
     if ch > MaximumUCS4 then
     begin
       Result[T] := WideChar(ReplacementCharacter);
       Inc(T);
-    end
+end
     else
     begin
       ch := ch - halfBase;
@@ -6967,7 +6967,7 @@ begin
       Inc(T);
       Result[T] := WideChar((ch and halfMask) + SurrogateLowStart);
       Inc(T);
-    end;
+end;
   end;
   SetLength(Result, T - 1); // now fix up length
 end;

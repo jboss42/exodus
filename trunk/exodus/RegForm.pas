@@ -139,7 +139,7 @@ begin
         iqType := 'get';
         Namespace := XMLNS_REGISTER;
         Send();
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -162,7 +162,7 @@ begin
             MessageDlg(sServiceRegError, mtError, [mbOK], 0);
             Self.Close();
             exit;
-            end
+        end
         else begin
             // normal result
             AssignDefaultFont(tabAgent.Font);
@@ -190,7 +190,7 @@ begin
                     frm.Align := alTop;
                     frm.TabOrder := 0;
                     m := max(m, frm.getLabelWidth());
-                    end;
+                end;
                 flds.Free();
 
                 for i := 0 to Self.tabAgent.ControlCount - 1 do begin
@@ -198,10 +198,10 @@ begin
                     if (c is TframeGeneric) then begin
                         TframeGeneric(c).setLabelWidth(m + 20);
                         TframeGeneric(c).Repaint();
-                        end;
                     end;
+                end;
                 cur_stage := rsXData;
-                end
+            end
 
             else begin
                 // Normal non-xdata reg form
@@ -220,21 +220,21 @@ begin
                         cur_fld := doField(f.Name);
                         if (f.Data <> '') then
                             cur_fld.txtData.Text := f.Data;
-                        end;
                     end;
+                end;
                 flds.Free();
                 cur_stage := rsForm;
-                end;
+            end;
 
             btnNext.Enabled := true;
-            end;
-        end
+        end;
+    end
     else begin
         // timeout on agent query
         MessageDlg(sServiceRegTimeout, mtError, [mbOK], 0);
         Self.Close();
         exit;
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -255,7 +255,7 @@ begin
         field := fld;
         AssignDefaultFont(txtData.Font);
         AssignDefaultFont(lblPrompt.Font);
-        end;
+    end;
     Result := frm;
 end;
 
@@ -284,7 +284,7 @@ begin
             with frm do
                 cur_iq.qTag.AddBasicTag(lblPrompt.Caption, txtData.Text);
 
-            end
+        end
         else if (tabAgent.Controls[i] is TframeGeneric) then begin
             // this is an x-data field
             frmx := TframeGeneric(tabAgent.Controls[i]);
@@ -292,12 +292,12 @@ begin
                 xdata := cur_iq.qTag.AddTag('x');
                 xdata.setAttribute('xmlns', XMLNS_XDATA);
                 xdata.setAttribute('type', 'submit');
-                end;
+            end;
 
             fx := frmx.getXML();
             if (fx <> nil) then xdata.AddTag(fx);
-            end;
         end;
+    end;
 
     if (cur_key <> '') then
         cur_iq.qTag.AddBasicTag('key', cur_key);
@@ -325,11 +325,11 @@ begin
         pres_cb := -1;
         if (pres.PresType = 'error') then begin
             // some kind of error
-            end
+        end
 
         else if (pres.PresType = 'unavailable') then begin
             // bad registration
-            end
+        end
 
         else begin
             // ok registration, check all pendings and re-subscribe to them
@@ -342,11 +342,11 @@ begin
                     if ((ritem.ask = 'subscribe') and
                         (ritem.jid.domain = self.jid)) then begin
                         SendSubscribe(ritem.jid.jid, MainSession);
-                        end;
                     end;
                 end;
             end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -363,7 +363,7 @@ begin
         btnNext.Caption := sBtnFinish;
         btnNext.Enabled := true;
         btnCancel.Enabled := false;
-        end
+    end
     else begin
         // some kind of error
         lblOK.Visible := false;
@@ -372,7 +372,7 @@ begin
         btnNext.Caption := sBtnCancel;
         btnNext.Enabled := true;
         btnCancel.Enabled := false;
-        end;
+    end;
     cur_stage := rsFinish;
 end;
 
@@ -389,7 +389,7 @@ begin
         doRegister();
         btnNext.Enabled := false;
         btnPrev.Enabled := false;
-        end
+    end
 
     else if (tabs.ActivePage = tabResult) then
         Self.Close();
@@ -419,16 +419,16 @@ procedure TfrmRegister.RemoveCallback(event: string; tag: TXMLTag);
 begin
     if (event = 'timeout') then begin
         MessageDlg(sServiceRegTimeout, mtError, [mbOK], 0);
-        end
+    end
     else begin
         if (tag.getAttribute('type') = 'error') then begin
             MessageDlg(sServiceRegRemoveError, mtError,
                 [mbOK], 0);
-            end
+        end
         else begin
             MessageDlg(sServiceRegRemoveOK, mtInformation, [mbOK], 0);
-            end;
         end;
+    end;
     self.close();
     exit;
 end;

@@ -102,14 +102,14 @@ begin
                 tmps := tmps + '&'
             else
                 tmps := tmps + '&amp;'
-            end
+        end
         else if (txt[i] = Chr(39)) and (DoAPOS) then tmps := tmps + '&apos;'
         else if txt[i] = '"' then tmps := tmps + '&quot;'
         else if txt[i] = '<' then tmps := tmps + '&lt;'
         else if txt[i] = '>' then tmps := tmps + '&gt;'
         else tmps := tmps + txt[i];
         inc(i);
-    end;
+end;
     Result := tmps;
 end;
 
@@ -143,13 +143,13 @@ begin
             if tok = 'lt' then tmps := tmps + '<';
             if tok = 'gt' then tmps := tmps + '>';
             inc(i);
-            end
+        end
         else begin
             // normal char
             tmps := tmps + txt[i];
             inc(i);
-            end;
         end;
+    end;
     Result := tmps;
 end;
 
@@ -202,7 +202,7 @@ begin
     	tmpi := StrToInt(Trim(inp));
     except on EConvertError do
     	tmpi := 0;
-    end;
+end;
     Result := tmpi;
 end;
 
@@ -295,7 +295,7 @@ begin
             fn := fn + '_'
         else
             fn := fn + c;
-        end;
+    end;
     Result := fn;
 end;
 
@@ -303,11 +303,7 @@ end;
 function SafeInt(str: Widestring): integer;
 begin
     // Null safe string to int function
-    try
-        Result := StrToInt(str);
-    except
-        Result := 0;
-    end;
+    Result := StrToIntDef(str, 0);
 end;
 
 {---------------------------------------}
@@ -340,8 +336,8 @@ begin
             o := TObject(sl.Objects[i]);
             o.Free();
             sl.Objects[i] := nil;
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -356,8 +352,8 @@ begin
             o := TObject(sl.Objects[i]);
             o.Free();
             sl.Objects[i] := nil;
-            end;
         end;
+    end;
 end;
 
 
@@ -385,7 +381,7 @@ begin
         Result := rdate - TimeZoneBias();
     except
         Result := Now;
-    end;
+end;
 end;
 
 {---------------------------------------}
@@ -433,10 +429,10 @@ begin
             if VerQueryValue(Buf,PChar('StringFileInfo\040904B0\'+ InfoStr[i]),Pointer(Value),Len) then begin
                 KeyList.Add(InfoStr[i]);
                 ValList.Add(Value);
-                end;
             end;
+        end;
         FreeMem(Buf,n);
-        end
+    end
     else
         Result := '';
 

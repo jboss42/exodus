@@ -68,7 +68,7 @@ type
         procedure Connect(profile: TJabberProfile); override;
         procedure Send(xml: Widestring); override;
         procedure Disconnect; override;
-    end;
+end;
 
     THttpThread = class(TParseThread)
     private
@@ -101,7 +101,7 @@ type
 
         procedure Send(xml: WideString);
         procedure Disconnect(end_tag: string);
-    end;
+end;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -150,15 +150,15 @@ begin
     if (_thread <> nil) then begin
         DoDataCallbacks(true, xml);
         _thread.Send(xml);
-        end;
+    end;
 end;
 
 {---------------------------------------}
 procedure TXMLHttpStream.Disconnect;
 var
-    end_tag: string;
+end_tag: string;
 begin
-    end_tag := '</' + Self._root_tag + '>';
+end_tag := '</' + Self._root_tag + '>';
     DoDataCallbacks(true, end_tag);
     _thread.Disconnect(end_tag);
     _thread.doMessageSync(WM_DISCONNECTED);
@@ -182,33 +182,33 @@ begin
             tag := _thread.GetTag;
             if tag <> nil then begin
                 DoCallbacks('xml', tag);
-                end;
             end;
+        end;
 
         WM_SOCKET: begin
             // We are getting something on the socket
             tmps := _thread.Data;
             if tmps <> '' then
                 DoDataCallbacks(false, tmps);
-            end;
+        end;
         WM_CONNECTED: begin
             // Socket is connected
             _active := true;
             DoCallbacks('connected', nil);
-            end;
+        end;
 
         WM_DISCONNECTED: begin
             // Socket is disconnected
             _active := false;
             DoCallbacks('disconnected', nil);
-            end;
+        end;
         WM_COMMERROR: begin
             // There was a COMM ERROR
             _active := false;
             DoCallbacks('disconnected', nil);
             DoCallbacks('commerror', nil);
-            end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -264,20 +264,20 @@ begin
                 with _http.ProxyParams do begin
                     ProxyServer := Copy(srv, 1, colon-1);
                     ProxyPort := StrToInt(Copy(srv, colon+1, length(srv)));
-                    end;
+                end;
                 {$else}
                 with _http.Request do begin
                     ProxyServer := Copy(srv, 1, colon-1);
                     ProxyPort := StrToInt(Copy(srv, colon+1, length(srv)));
-                    end;
-                {$endif}
                 end;
+                {$endif}
+            end;
         finally
             reg.Free();
-            end;
+        end;
         {$endif}
         
-        end
+    end
     else if (_profile.ProxyApproach = http_proxy_custom) then begin
         {$ifdef INDY9}
         with _http.ProxyParams do begin
@@ -289,9 +289,9 @@ begin
             if (_profile.ProxyAuth) then begin
                 ProxyUsername := _profile.ProxyUsername;
                 ProxyPassword := _profile.ProxyPassword;
-                end;
             end;
         end;
+    end;
 end;
 
 {---------------------------------------}
@@ -332,7 +332,7 @@ begin
         Fetch(seed, ';');
         _keys[i] := seed;
         {$endif}
-        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -359,7 +359,7 @@ begin
         key := key + ';' + _keys[_kcount];
         dec(_kcount);
         Assert(_kcount <> 0);
-        end;
+    end;
 
     _request.Insert(0, key + ',');
     try
@@ -372,10 +372,10 @@ begin
             if (not Self.Stopped) then begin
                 doMessage(WM_COMMERROR);
                 Self.Terminate();
-                end;
+            end;
             exit;
-        end;
     end;
+end;
 end;
 
 {---------------------------------------}
@@ -396,7 +396,7 @@ begin
         doMessage(WM_COMMERROR);
         Self.Terminate();
         exit;
-        end;
+    end;
 
     pid := '';
 
@@ -411,13 +411,13 @@ begin
         if (Pos('ID=', _cookie_list[i]) = 1) then begin
             pid := Copy(_cookie_list[i], 4, length(_cookie_list[i]));
             break;
-            end;
         end;
+    end;
     {$endif}
 
     if (_poll_id = '0') then begin
         _poll_id := pid;
-        end;
+    end;
 
     // compare the most recent pid with our stored poll_id
     // if ((pid = '') or AnsiEndsStr(':0', pid) or (pid <> _poll_id)) then begin
@@ -426,18 +426,18 @@ begin
         doMessage(WM_COMMERROR);
         Self.Terminate();
         exit;
-        end;
+    end;
 
     r := UTF8Decode(_response.DataString);
     if (r <> '') then begin
         Push(r);
         _poll_time := MIN_TIME;
-        end
+    end
     else if (_poll_time <> _profile.Poll) then begin
         _poll_time := Trunc(_poll_time * INCREASE_FACTOR);
         if (_poll_time >= _profile.Poll) then
             _poll_time := _profile.Poll;
-        end;
+    end;
 
     _event.WaitFor(_poll_time);
 end;
@@ -452,7 +452,7 @@ begin
     if (end_tag <> '') then begin
         Send(end_tag);
         DoPost();
-        end;
+    end;
 
     // Free me.  Touch me.  Feel me.
     Terminate();

@@ -231,8 +231,8 @@ begin
             begin
                FillChar(M,sizeof(M),0);
                M[0]:=$80;
-            end;
-         end else
+        end;
+     end else
          begin // ToCompute<64
             FillChar(M,SizeOf(M),0);
             for i:=0 to ToCompute-1 do begin M[i]:=ord(Mem^); inc(Mem); end;
@@ -241,9 +241,9 @@ begin
             begin
                SHA;
                FillChar(M,SizeOf(M),0);
-            end;
+        end;
             ToCompute:=0;
-         end; //End else ToCompute>=64
+     end; //End else ToCompute>=64
          If ToCompute=0 then
          begin
             M[63]:=BitsLow and $000000FF;
@@ -252,8 +252,8 @@ begin
             M[60]:=(BitsLow and $FF000000) shr 24;
             M[59]:=(BitsHigh and $000000FF);
             SHA;
-         end;
-      end; //End While ToCompute>0
+     end;
+  end; //End While ToCompute>0
       Result:=grVar;
    finally
    end;
@@ -278,7 +278,7 @@ begin
       except
          on exception do
            Raise ESecHashException.Create('File not found !');
-      end;
+  end;
       Try
          ToCompute:=FileSize(f);
          BitsHigh:=(ToCompute and $FF000000) shr 29;
@@ -294,8 +294,8 @@ begin
                begin
                   FillChar(M,sizeof(M),0);
                   M[0]:=$80;
-               end;
-            end else
+           end;
+        end else
             begin // ToCompute<64
                FillChar(M,SizeOf(M),0);
                BlockRead(F,M,ToCompute);
@@ -304,9 +304,9 @@ begin
                begin
                   SHA;
                   FillChar(M,SizeOf(M),0);
-               end;
+           end;
                ToCompute:=0;
-            end; //End else ToCompute>=64
+        end; //End else ToCompute>=64
             If ToCompute=0 then
             begin
                M[63]:=BitsLow and $000000FF;
@@ -315,11 +315,11 @@ begin
                M[60]:=(BitsLow and $FF000000) shr 24;
                M[59]:=(BitsHigh and $000000FF);
                SHA;
-            end;
-         end; //End While ToCompute>0
+        end;
+     end; //End While ToCompute>0
       finally
          CloseFile(f);
-      end;
+  end;
       Result:=grVar;
    finally
    end;

@@ -79,8 +79,8 @@ begin
             n.Caption := ri.nickname;
             n.SubItems.Add(ri.jid.full);
             n.Checked := true;
-            end;
         end;
+    end;
 
     ShowDefault();
 end;
@@ -117,8 +117,8 @@ begin
                 if (ri.Subscription = 'to') or (ri.Subscription = 'both') then begin
                     DebugMsg('Roster item already in roster: ' + jid);
                     break;
-                    end;
                 end;
+            end;
 
             {
             If we don't have a roster item, then create one,
@@ -132,9 +132,9 @@ begin
                 ri.Groups.Clear;
                 ri.Groups.Add(cboGroup.Text);
                 SendSubscribe(jid, MainSession);
-                end;
             end;
         end;
+    end;
     Self.Close();
 end;
 
