@@ -26,7 +26,7 @@ uses
     Dockable, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ToolWin, ComCtrls, StdCtrls, Buttons, ExtCtrls, ExRichEdit, Menus,
-  OLERichEdit;
+  OLERichEdit, RegExpr;
 
 type
   TRoomMember = class
@@ -84,7 +84,7 @@ type
     _nick_idx: integer;
     _nick_len: integer;
     _nick_start: integer;
-    _keywords: TStringList;     // list of keywords to monitor for
+    _keywords: TRegExpr;     // list of keywords to monitor for
 
     procedure MsgCallback(event: string; tag: TXMLTag);
     procedure PresCallback(event: string; tag: TXMLTag);
@@ -177,7 +177,7 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.showMsg(tag: TXMLTag);
 var
-    k, i: integer;
+    i : integer;
     Msg: TJabberMessage;
     from: string;
     tmp_jid: TJabberID;
@@ -206,6 +206,12 @@ begin
         lblSubject.Hint := Msg.Subject;
         end;
 
+    if ((not Application.Active) and (not MainSession.IsPaused) and (_keywords <> nil)) then begin
+        if (_keywords.Exec(Msg.Body)) then begin
+            ShowRiserWindow('Keyword in ' + Self.Caption + ': ' + _keywords.Match[1], 12);
+        end;
+    end;
+{
     // check for keywords
     if ((not Application.Active) and (not MainSession.IsPaused)) then begin
         for k := 0 to _keywords.Count - 1 do begin
@@ -215,6 +221,7 @@ begin
                 end;
             end;
         end;
+}
 
     if (Msg.Body <> '') then
         DisplayMsg(Msg, MsgList);
@@ -407,6 +414,12 @@ end;
 
 {---------------------------------------}
 procedure TfrmRoom.FormCreate(Sender: TObject);
+var
+    kw_list : TStringList;
+    i : integer;
+    e : string;
+    first : bool;
+    re : bool;
 begin
     // Create
     _callback := -1;
@@ -417,7 +430,28 @@ begin
     _nick_prefix := '';
     _nick_idx := 0;
     _nick_start := 0;
-    _keywords := MainSession.Prefs.getStringlist('keywords');
+
+    kw_list := MainSession.Prefs.getStringlist('keywords');
+    if (kw_list.Count > 0) then begin
+        re := MainSession.Prefs.getBool('regex_keywords');
+        first := true;
+        e :=  '(';
+        for i := 0 to kw_list.Count-1 do begin
+            if (first) then
+                first := false
+            else
+                e := e + '|';
+            if (re) then
+                e := e + kw_list[i]
+            else
+                e := e + QuoteRegExprMetaChars(kw_list[i]);
+            end;
+            e := e + ')';
+        _keywords := TRegExpr.Create();
+        _keywords.Expression := e;
+        _keywords.Compile();
+        end;
+
     MyNick := '';
 end;
 

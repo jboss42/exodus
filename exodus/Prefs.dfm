@@ -1,6 +1,6 @@
 object frmPrefs: TfrmPrefs
-  Left = 266
-  Top = 151
+  Left = 116
+  Top = 171
   Width = 407
   Height = 411
   Caption = 'Exodus Preferences'
@@ -20,7 +20,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 340
+    Height = 345
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1379,13 +1379,13 @@ object frmPrefs: TfrmPrefs
     Left = 89
     Top = 0
     Width = 310
-    Height = 340
-    ActivePage = tbsSystem
+    Height = 345
+    ActivePage = tbsKeywords
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 3
+    TabIndex = 7
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -2112,7 +2112,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 124
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2190,7 +2190,7 @@ object frmPrefs: TfrmPrefs
       object Label1: TLabel
         Left = 0
         Top = 20
-        Width = 256
+        Width = 302
         Height = 26
         Align = alTop
         Caption = 
@@ -2201,7 +2201,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 112
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2220,9 +2220,17 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 46
         Width = 302
-        Height = 263
+        Height = 268
         Align = alClient
         TabOrder = 1
+      end
+      object chkRegex: TCheckBox
+        Left = 179
+        Top = 32
+        Width = 123
+        Height = 14
+        Caption = 'Regular Expressions?'
+        TabOrder = 2
       end
     end
     object tbsBlockList: TTabSheet
@@ -2231,7 +2239,7 @@ object frmPrefs: TfrmPrefs
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 292
+        Width = 302
         Height = 26
         Align = alTop
         Caption = 
@@ -2242,7 +2250,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 146
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2260,8 +2268,8 @@ object frmPrefs: TfrmPrefs
       object memBlocks: TMemo
         Left = 0
         Top = 46
-        Width = 305
-        Height = 279
+        Width = 302
+        Height = 268
         Align = alClient
         TabOrder = 1
       end
@@ -2444,7 +2452,7 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 340
+    Top = 345
     Width = 399
     Height = 37
     Align = alBottom

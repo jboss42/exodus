@@ -165,6 +165,7 @@ type
     btnCancel: TButton;
     Button6: TButton;
     chkEmoticons: TCheckBox;
+    chkRegex: TCheckBox;
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -464,6 +465,7 @@ begin
 
         // Keywords
         setStringList('keywords', memKeywords.Lines);
+        setBool('regex_keywords', chkRegex.Checked);
         setStringList('blockers', memBlocks.Lines);
 
         // Custom presence list
