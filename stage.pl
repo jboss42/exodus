@@ -26,7 +26,7 @@ print "$version\n";
 chdir ".." or die;
 
 my $urtype = uc($::RTYPE);
-e("perl build.pl daily");
+e("perl build.pl $::RTYPE");
 e("$::CVS ci -m \"$::RTYPE build\" exodus/version.h exodus/version.nsi exodus/default.po") if $::CVS;
 
 chdir "exodus" or die;

@@ -21,9 +21,12 @@ my $comp = "..\\..\\Components";
 my $plugopts = "$opts -U\"$comp\" -U\"$::TNT\"";
 
 my $rtype = "release";
+
 if ($#ARGV >= 0) {
   if ($ARGV[0] eq "daily") {
 	$rtype = "daily";
+  } elsif ($ARGV[0] eq "stage") {
+    $rtype = "stage";
   } elsif ($ARGV[0] eq "help") {
 	print <<EOF;
 USAGE:
@@ -83,6 +86,8 @@ e('zip Exodus.zip @zipfiles.txt ' . join(' ', glob("plugins/*.dll")));
 
 if ($rtype eq "daily") {
   e("$::NSIS /v1 /DDAILY exodus.nsi");
+} elsif ($rtype eq "stage") {
+  e("$::NSIS /v1 /DSTAGE exodus.nsi");  
 } else {
   e("$::NSIS /v1 exodus.nsi");
 }
