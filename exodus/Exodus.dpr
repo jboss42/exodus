@@ -164,7 +164,8 @@ uses
   IdDNSResolver in '..\jopl\IdDNSResolver.pas',
   Entity in '..\jopl\Entity.pas',
   EntityCache in '..\jopl\EntityCache.pas',
-  SASLAuth in '..\jopl\SASLAuth.pas';
+  SASLAuth in '..\jopl\SASLAuth.pas',
+  MemCheck in '..\MemCheck.pas';
 
 {$R *.TLB}
 
@@ -181,6 +182,10 @@ begin
   Application.Initialize;
   Application.Title := '';
   Application.ShowMainForm := false;
+
+  {$ifdef LEAKCHECK}
+  MemChk();
+  {$endif}
 
   // Main startup stuff
   continue := SetupSession();

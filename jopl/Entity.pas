@@ -483,6 +483,7 @@ begin
             end;
         end;
     end;
+    iset.Free();
 
 end;
 
@@ -637,6 +638,7 @@ begin
                 end;
             end;
         end;
+        clist.Free();
 
     end;
 

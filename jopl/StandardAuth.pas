@@ -78,6 +78,7 @@ end;
 destructor TStandardAuth.Destroy();
 begin
     //
+    FreeAndNil(_sasl_auth);
     FreeAndNil(_auth_iq);
     FreeAndNil(_token);
 end;

@@ -291,6 +291,7 @@ begin
     FreeAndNil(_last);
     FreeAndNil(_time);
     FreeAndNil(_version);
+    FreeAndNil(_sistart);
 end;
 
 {---------------------------------------}
