@@ -50,6 +50,7 @@ type
 {---------------------------------------}
 implementation
 uses
+    COMChatController,
     JabberConst, PrefController, Session;
 
 {---------------------------------------}

@@ -32,7 +32,6 @@ type
     private
         _jid: Widestring;
         _resource: Widestring;
-
         _cb: integer;
         _event: TChatMessageEvent;
     public
