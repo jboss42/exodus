@@ -4,8 +4,8 @@ use strict;
 
 $::D = 'f:/lang/Delphi7';
 $::TNT = "D:\\src\\exodus\\exodus\\components\\tntUnicode";
-$::ICQ = "\"D:\\src\\exodus\\exodus\\plugins\\ICQ-Import\\ICQ\\Component\"";
-$::JCL = "\"D:\\src\\jcl\"";
+$::ICQ = "D:\\src\\exodus\\exodus\\plugins\\ICQ-Import\\ICQ\\Component";
+$::JCL = "D:\\src\\jcl";
 $::NSIS = "\"D:\\Program Files\\NSIS\\makensis.exe\"";
 $::DXGETDIR = "F:\\lang\\dxgettext";
 do "dopts.pl";
@@ -50,7 +50,7 @@ e("$rcc xml.rc");
 
 if ($rtype eq "daily") {
     # Generate a detailed MAP file, and build in stack frame tracing
-    e("$dcc $opts -GP -DTRACE_EXCEPTIONS -Noutput -U\"$::JCL\" -U\"$::TNT\" Exodus.dpr");
+    e("$dcc $opts -GD -DTRACE_EXCEPTIONS -Noutput -U\"$::JCL\" -U\"$::TNT\" Exodus.dpr");
 } else {
     e("$dcc $opts -D -Noutput -U\"$::TNT\" Exodus.dpr");
 }
