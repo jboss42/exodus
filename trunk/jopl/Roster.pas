@@ -47,7 +47,6 @@ type
         _groups: TWidestringlist;
         _unfiled: TJabberGroup;
         _pres_cb: integer;
-        _nests: TWidestringlist;
 
         procedure ParseFullRoster(event: string; tag: TXMLTag);
         procedure Callback(event: string; tag: TXMLTag);
@@ -57,10 +56,7 @@ type
 
         function  checkGroup(grp: Widestring): TJabberGroup;
         function  getNumGroups: integer;
-        function  getNumNests: integer;
-
         function  getGroupIndex(idx: integer): TJabberGroup;
-        function  getNestIndex(idx: integer): TJabberNest;
 
         procedure fireBookmark(bm: TJabberBookmark);
 
@@ -89,10 +85,6 @@ type
         function getGroup(grp: Widestring): TJabberGroup;
         procedure removeGroup(grp: TJabberGroup);
 
-        function getNest(name: Widestring): TJabberNest;
-        function addNest(name: Widestring): TJabberNest;
-        procedure removeNest(idx: integer);
-
         function getGroupItems(grp: Widestring; online: boolean): TList;
 
         procedure AssignGroups(l: TWidestringlist); overload;
@@ -100,11 +92,9 @@ type
         procedure AssignGroups(tnt: TTntStrings); overload;
         {$endif}
 
-        property NestCount: integer read getNumNests;
         property GroupsCount: integer read getNumGroups;
         property Groups[index: integer]: TJabberGroup read getGroupIndex;
         property Items[index: integer]: TJabberRosterItem read getItem;
-        property Nests[index: integer]: TJabberNest read getNestIndex;
     end;
 
     TRosterAddItem = class
@@ -144,7 +134,6 @@ begin
     Bookmarks := TWideStringList.Create();
     _groups := TWidestringlist.Create();
     _unfiled := TJabberGroup.Create('Unfiled');
-    _nests := TWidestringlist.Create();
 end;
 
 {---------------------------------------}
@@ -152,7 +141,6 @@ destructor TJabberRoster.Destroy;
 begin
     ClearStringListObjects(_groups);
     _groups.Free();
-    _nests.Free();
     Bookmarks.Free;
 
     inherited Destroy;
@@ -165,11 +153,9 @@ begin
     ClearStringListObjects(Bookmarks);
     ClearStringListObjects(Self);
     ClearStringListObjects(_groups);
-    ClearStringListObjects(_nests);
 
     Bookmarks.Clear;
     _groups.Clear();
-    _nests.Clear();
 
     inherited Clear();
 end;
@@ -472,7 +458,8 @@ end;
 function TJabberRoster.checkGroup(grp: Widestring): TJabberGroup;
 var
     i: integer;
-    go: TJabberGroup;
+    p, go: TJabberGroup;
+    path: Widestring;
 begin
     i := _groups.IndexOf(grp);
     if (i = -1) then begin
@@ -482,6 +469,21 @@ begin
     else
         go := TJabberGroup(_groups.Objects[i]);
 
+    // if this new grp should be nested, do the right thing..
+    if (go.NestLevel > 1) then begin
+        path := '';
+        for i := 0 to go.NestLevel - 2 do begin
+            if (path <> '') then path := path + '/';
+            path := path + go.Parts[i];
+        end;
+        p := getGroup(path);
+        if (p = nil) then
+            p := addGroup(path);
+        if (p.getGroup(go.FullName) = nil) then
+            p.addGroup(go);
+    end;
+
+
     Result := go;
 end;
 
@@ -489,21 +491,6 @@ end;
 function TJabberRoster.getNumGroups: integer;
 begin
     Result := _groups.Count;
-end;
-
-{---------------------------------------}
-function TJabberRoster.getNumNests: integer;
-begin
-    Result := _nests.Count;
-end;
-
-{---------------------------------------}
-function TJabberRoster.getNestIndex(idx: integer): TJabberNest;
-begin
-    if (idx >= _nests.Count) then
-        Result := nil
-    else
-        Result := TJabberNest(_nests.Objects[idx]);
 end;
 
 {---------------------------------------}
@@ -543,37 +530,6 @@ end;
 function TJabberRoster.addGroup(grp: Widestring): TJabberGroup;
 begin
     Result := checkGroup(grp);
-end;
-
-{---------------------------------------}
-function TJabberRoster.getNest(name: Widestring): TJabberNest;
-var
-    i: integer;
-begin
-    i := _nests.indexOf(name);
-    if (i >= 0) then
-        Result := TJabberNest(_nests.Objects[i])
-    else
-        Result := nil;
-end;
-
-{---------------------------------------}
-function TJabberRoster.addNest(name: Widestring): TJabberNest;
-begin
-    Result := getNest(name);
-    if (Result = nil) then begin
-        Result := TJabberNest.Create(nil, name);
-        _nests.AddObject(name, Result);
-    end;
-end;
-
-{---------------------------------------}
-procedure TJabberRoster.removeNest(idx: integer);
-begin
-    if (idx >= _nests.Count) then exit;
-
-    TJabberNest(_nests.Objects[idx]).Free();
-    _nests.Delete(idx);
 end;
 
 {---------------------------------------}

@@ -240,6 +240,7 @@ type
     procedure ChangeStatusImage(idx: integer);
     procedure showAniStatus();
     procedure DrawNodeText(Node: TTreeNode; State: TCustomDrawState; c1, c2: Widestring);
+    procedure InvalidateGrps(node: TTreeNode);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -657,11 +658,8 @@ begin
         n := treeRoster.Items[i];
         ni := TJabberNodeItem(n.Data);
         assert(ni <> nil);
-        if ((ni is TJabberGroup) or (ni is TJabberNest) and (n <> _offline)) then begin
-            if (ni is TJabberGroup) then
-                cur_grp := TJabberGroup(ni).Fullname
-            else
-                cur_grp := ni.getText();
+        if ((ni is TJabberGroup) and (n <> _offline)) then begin
+            cur_grp := TJabberGroup(ni).Fullname;
             if (_collapsed_grps.indexOf(cur_grp) = -1) then
                 n.Expand(true);
         end;
@@ -685,9 +683,6 @@ begin
             go := Groups[i];
             go.Data := nil;
         end;
-        
-        for i := NestCount -1 downto 0 do
-            removeNest(i);
 
         // remove all item pointers to tree nodes
         for i := 0 to Count - 1 do begin
@@ -1004,7 +999,7 @@ var
     is_me: boolean;
     exp_grpnode: boolean;
     resort: boolean;
-    grp_rect, node_rect: TRect;
+    node_rect: TRect;
     my_res: TJabberMyResource;
     plevel: integer;
     go: TJabberGroup;
@@ -1308,10 +1303,8 @@ begin
                 InvalidateRect(treeRoster.Handle, @node_rect, false);
 
             // if we showing grp counts, then invalidate the grp rect as well.
-            if ((_group_counts) and (grp_node.isVisible)) then begin
-                grp_rect := cur_node.Parent.DisplayRect(false);
-                InvalidateRect(treeRoster.Handle, @grp_rect, false);
-            end;
+            if ((_group_counts) and (grp_node.isVisible)) then
+                InvalidateGrps(cur_node);
         end;
     end;
 
@@ -1332,13 +1325,27 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmRosterWindow.InvalidateGrps(node: TTreeNode);
+var
+    n: TTreeNode;
+    grp_rect: TRect;
+begin
+    // invalidate all grp nodes above this roster item
+    n := node.Parent;
+    while (n <> nil) do begin
+        grp_rect := n.DisplayRect(false);
+        InvalidateRect(treeRoster.Handle, @grp_rect, false);
+        n := n.Parent;
+    end;
+end;
+
+{---------------------------------------}
 function TfrmRosterWindow.RenderGroup(grp: TJabberGroup): TTreeNode;
 var
     n: integer;
     p, grp_node: TTreeNode;
-    part, cur_grp: Widestring;
-    nest: TJabberNest;
-    ni: TJabberNodeItem;
+    path, part, cur_grp: Widestring;
+    sub: TJabberGroup;
 begin
     // Show this group node
     cur_grp := grp.getText();
@@ -1347,41 +1354,25 @@ begin
 
     n := 0;
     p := nil;
-    grp_node := nil;
-    nest := nil;
+    path := '';
     repeat
         part := grp.Parts[n];
+        // xxx: grp delimeter
+        if (path <> '') then path := path + '/';
+        path := path + part;
         if (n = (grp.NestLevel - 1)) then begin
-            // create the actual grp
+            // create the final grp
             grp_node := treeRoster.Items.AddChild(p, part);
             grp_node.Data := grp;
         end
-        else if (n = 0) then begin
-            // first nest level
-            nest := MainSession.Roster.addNest(part);
-            if (nest.Data = nil) then begin
-                grp_node := treeRoster.Items.AddChild(nil, part);
-                grp_node.Data := nest;
-                nest.Data := grp_node;
-            end
-            else
-                grp_node := TTreeNode(nest.Data);
-        end
         else begin
-            // another nest level.
-            ni := TJabberNodeItem(nest.getChild(part));
-            if (ni = nil) then begin
-                ni := TJabberNest.Create(nest, part);
-                nest.AddChild(ni);
+            sub := MainSession.Roster.addGroup(path);
+            grp_node := TTreeNode(sub.Data);
+            if (grp_node = nil) then begin
+                grp_node := treeRoster.Items.AddChild(p, part);
+                grp_node.Data := sub;
+                sub.Data := grp_node;
             end;
-            nest := TJabberNest(ni);
-            if (nest.Data = nil) then begin
-                grp_node := treeRoster.Items.AddChild(grp_node, part);
-                grp_node.Data := nest;
-                nest.Data := grp_node;
-            end
-            else
-                grp_node := TTreeNode(nest.Data);
         end;
 
         p := grp_node;
@@ -1450,9 +1441,6 @@ begin
     // For groups just display the group name:
     if (Node.Data = nil) then begin
         _hint_text := '';
-    end
-    else if (TObject(Node.Data) is TJabberNest) then begin
-        _hint_text := TJabberNest(Node.Data).getText();
     end
     else if (TObject(Node.Data) is TJabberGroup) then begin
         _hint_text := TJabberGroup(Node.Data).getText();
@@ -1632,8 +1620,7 @@ var
     dirty: boolean;
     go: TJabberGroup;
 begin
-    if ((TObject(Node.Data) is TJabberGroup) or
-        (TObject(Node.Data) is TJabberNest)) then begin
+    if (TObject(Node.Data) is TJabberGroup) then begin
         go := TJabberGroup(Node.Data);
         Node.ImageIndex := ico_Down;
         Node.SelectedIndex := ico_Down;
@@ -1671,8 +1658,7 @@ begin
     // xxx: indent
     al := (treeRoster.Indent * (n.Level));
     ar := (al + frmExodus.ImageList2.Width + 5);
-    if (((TObject(n.Data) is TJabberGroup) or
-         (TObject(n.Data) is TJabberNest)) and
+    if ((TObject(n.Data) is TJabberGroup) and
         (X > al) and (X < ar)) then begin
         //(X < (frmExodus.ImageList2.Width + 5))) then begin
         // clicking on a grp's widget
@@ -2211,13 +2197,6 @@ begin
                 c2 := '';
             DrawNodeText(Node, State, c1, c2);
         end;
-        DefaultDraw := false;
-    end
-    else if (o is TJabberNest) then begin
-        treeRoster.Canvas.Font.Style := [fsBold];
-        c1 := TJabberNest(o).getText();
-        c2 := '';
-        DrawNodeText(Node, State, c1, c2);
         DefaultDraw := false;
     end
     else begin

@@ -29,25 +29,6 @@ type
         function getText(): Widestring; virtual; abstract;
     end;
 
-    TJabberNest = class(TJabberNodeItem)
-    private
-        _parent: TJabberNest;
-        _name: Widestring;
-        _grps: TWidestringlist;
-    public
-        Data: TObject;
-        
-        constructor Create(parent: TJabberNest; name: Widestring);
-        destructor Destroy(); override;
-
-        function getText(): Widestring; override;
-        function getChild(name: Widestring): TJabberNodeItem;
-
-        procedure AddChild(child: TJabberNodeItem);
-        procedure removeChild(child: TJabberNodeItem);
-    end;
-
-
     TJabberGroup = class(TJabberNodeItem)
     private
         _online: integer;           // # of users online
@@ -55,11 +36,16 @@ type
         _parts: TWidestringlist;    // parts of the group name, parsed on a delim.
         _jids: TWidestringlist;     // jids of the people in this grp.
 
+        _grps: TWidestringlist;     // nested grps inside this one
+        _parent: TJabberGroup;      // our parent grp
+
         function getNestLevel: integer;
         function getTotal: integer;
         function indexOfJid(jid: TJabberID): integer;
         function getNestIndex(idx: integer): Widestring;
-        
+
+        procedure incOnline(val: integer);
+
         procedure setPresence(i: integer; p: TJabberPres); overload;
     public
         Data: TObject;              // Linked to a GUI element for this grp.
@@ -69,6 +55,7 @@ type
 
         function getText(): Widestring; override;
 
+        // Normal group stuff
         procedure AddJid(jid: Widestring); overload;
         procedure AddJid(jid: TJabberID); overload;
         procedure removeJid(jid: Widestring); overload;
@@ -76,6 +63,11 @@ type
 
         function inGroup(jid: Widestring): boolean; overload;
         function inGroup(jid: TJabberID): boolean; overload;
+
+        // nested grp stuff
+        function getGroup(name: Widestring): TJabberGroup;
+        procedure addGroup(child: TJabberGroup);
+        procedure removeGroup(child: TJabberGroup);
 
         procedure setPresence(jid: TJabberID; p: TJabberPres); overload;
         procedure setPresence(jid: Widestring; p: TJabberPres); overload;
@@ -159,64 +151,6 @@ uses
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-constructor TJabberNest.Create(parent: TJabberNest; name: Widestring);
-begin
-    inherited Create;
-    _parent := parent;
-    _grps := TWidestringlist.Create();
-    _name := name;
-end;
-
-{---------------------------------------}
-destructor TJabberNest.Destroy();
-begin
-    _grps.Clear();
-    inherited;
-end;
-
-{---------------------------------------}
-function TJabberNest.getText(): Widestring;
-begin
-    Result := _name;
-end;
-
-{---------------------------------------}
-procedure TJabberNest.AddChild(child: TJabberNodeItem);
-var
-    i: integer;
-begin
-    i := _grps.indexOf(child.getText());
-    if (i = -1) then
-        _grps.AddObject(child.getText(), child)
-    else
-        _grps.Objects[i] := child;
-end;
-
-{---------------------------------------}
-function TJabberNest.getChild(name: Widestring): TJabberNodeItem;
-var
-    i: integer;
-begin
-    i := _grps.indexOf(name);
-    if (i = -1) then
-        Result := nil
-    else
-        Result := TJabberNodeItem(_grps.Objects[i]);
-end;
-
-{---------------------------------------}
-procedure TJabberNest.removeChild(child: TJabberNodeItem);
-var
-    i: integer;
-begin
-    i := _grps.indexOf(child.getText());
-    if (i >= 0) then
-        _grps.Delete(i);
-end;
-
-{---------------------------------------}
-{---------------------------------------}
-{---------------------------------------}
 constructor TJabberGroup.Create(name: Widestring);
 var
     l, s, i: integer;
@@ -227,8 +161,9 @@ begin
     _full := name;
     _parts := TWidestringlist.Create();
     _jids := TWidestringlist.Create();
+    _grps := TWidestringlist.Create();
 
-    // xxx: actually parse for nested groups
+    // actually parse for nested groups
     l := Length(name);
     s := 1;
     for i := 1 to Length(name) do begin
@@ -240,7 +175,7 @@ begin
     end;
 
     // This should take care of the remainder.
-    if (s < l) then begin
+    if (s <= l) then begin
         p := Copy(name, s, l - s + 1);
         _parts.Add(p);
     end;
@@ -253,12 +188,26 @@ destructor TJabberGroup.Destroy();
 begin
     FreeAndNil(_parts);
     FreeAndNil(_jids);
+    FreeAndNil(_grps);
 end;
 
 {---------------------------------------}
 function TJabberGroup.getTotal: integer;
+var
+    i, ret: integer;
 begin
-    Result := _jids.Count;
+    ret := _jids.Count;
+    for i := 0 to _grps.Count - 1 do
+        ret := ret + TJabberGroup(_grps.Objects[i]).Total;
+    Result := ret;
+end;
+
+{---------------------------------------}
+procedure TJabberGroup.incOnline(val: integer);
+begin
+    _online := _online + val;
+    if (_parent <> nil) then
+        _parent.incOnline(val);
 end;
 
 {---------------------------------------}
@@ -311,9 +260,7 @@ var
 begin
     i := _jids.IndexOf(jid);
     if (i >= 0) then begin
-        if (_jids.Objects[i] <> nil) then begin
-            dec(_online);
-        end;
+        if (_jids.Objects[i] <> nil) then incOnline(-1);
         _jids.Delete(i);
     end;
 end;
@@ -325,9 +272,7 @@ var
 begin
     i := indexOfJid(jid);
     if (i >= 0) then begin
-        if (_jids.Objects[i] <> nil) then begin
-            dec(_online);
-        end;
+        if (_jids.Objects[i] <> nil) then incOnline(-1);
         _jids.Delete(i);
     end;
 end;
@@ -374,12 +319,10 @@ begin
     // if o == NULL, and p != NULL, then the user came online.
 
     o := TObject(_jids.Objects[i]);
-    if (o <> nil) then begin
-        if ((p = nil) or (p.PresType = 'unavailable')) then
-            dec(_online);
-    end
+    if (o <> nil) and ((p = nil) or (p.PresType = 'unavailable')) then
+        incOnline(-1)
     else if (p <> nil) then
-        inc(_online);
+        incOnline(+1);
 
     if ((p <> nil) and (p.PresType = 'unavailable')) then
         _jids.Objects[i] := nil
@@ -398,7 +341,49 @@ begin
         if ((online = false) or (_jids.Objects[i] <> nil)) then
             l.Add(ri);
     end;
+
+    // add all contacts in my sub-grps
+    for i := 0 to _grps.Count - 1 do
+        TJabberGroup(_grps.Objects[i]).getRosterItems(l, online);
+    
 end;
+
+{---------------------------------------}
+procedure TJabberGroup.AddGroup(child: TJabberGroup);
+var
+    i: integer;
+begin
+    i := _grps.indexOf(child.getText());
+    if (i = -1) then
+        _grps.AddObject(child.fullname, child)
+    else
+        _grps.Objects[i] := child;
+
+    child._parent := Self;
+end;
+
+{---------------------------------------}
+function TJabberGroup.getGroup(name: Widestring): TJabberGroup;
+var
+    i: integer;
+begin
+    i := _grps.indexOf(name);
+    if (i = -1) then
+        Result := nil
+    else
+        Result := TJabberGroup(_grps.Objects[i]);
+end;
+
+{---------------------------------------}
+procedure TJabberGroup.removeGroup(child: TJabberGroup);
+var
+    i: integer;
+begin
+    i := _grps.indexOf(child.getText());
+    if (i >= 0) then
+        _grps.Delete(i);
+end;
+
 
 {---------------------------------------}
 {---------------------------------------}
