@@ -636,10 +636,9 @@ begin
 
     // check for MUC presence
     xtag := nil;
-    if (not _isMUC) then begin
-        xtag := tag.QueryXPTag(xp_muc_presence);
-        if (xtag <> nil) then _isMUC := true;
-    end;
+    xtag := tag.QueryXPTag(xp_muc_presence);
+    if ((xtag <> nil) and (not _isMUC)) then
+        _isMUC := true;
 
     if ((ptype = 'error') and ((from = jid) or (from = jid + '/' + MyNick))) then begin
         // check for various presence errors
