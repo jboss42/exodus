@@ -81,6 +81,7 @@ inherited fRTFMsgList: TfRTFMsgList
       end>
     LangOptions = [loAutoFont]
     Language = 1033
+    ReadOnly = True
     ScrollBars = ssVertical
     ShowSelectionBar = False
     TabOrder = 0

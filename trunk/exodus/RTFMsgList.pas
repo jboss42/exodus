@@ -84,15 +84,12 @@ end;
 procedure TfRTFMsgList.Invalidate();
 begin
     inherited;
-    //MsgList.invalidate();
-    //MsgList.Repaint();
 end;
 
 {---------------------------------------}
 procedure TfRTFMsgList.CopyAll();
 begin
     inherited;
-
     MsgList.SelectAll;
     MsgList.CopyToClipboard;
 end;
@@ -143,7 +140,6 @@ procedure TfRTFMsgList.MsgListKeyPress(Sender: TObject; var Key: Char);
 var
     bc: TfrmBaseChat;
 begin
-  inherited;
     // If typing starts on the MsgList, then bump it to the outgoing
     // text box.
     bc := TfrmBaseChat(_base);
