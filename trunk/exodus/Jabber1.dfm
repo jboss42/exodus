@@ -456,24 +456,24 @@ object frmExodus: TfrmExodus
       object N2: TMenuItem
         Caption = '-'
       end
+      object mnuRegistration: TMenuItem
+        Caption = 'Edit My Registration'
+        OnClick = mnuRegistrationClick
+      end
       object mnuMyVCard: TMenuItem
-        Caption = 'Edit My vCard'
+        Caption = 'Edit My vCard / Profile'
         OnClick = mnuMyVCardClick
+      end
+      object N3: TMenuItem
+        Caption = '-'
       end
       object mnuVCard: TMenuItem
         Caption = 'Lookup a vCard'
         OnClick = mnuVCardClick
       end
-      object N17: TMenuItem
-        Caption = '-'
-      end
       object mnuBookmark: TMenuItem
         Caption = 'Add a Bookmark'
         OnClick = mnuBookmarkClick
-      end
-      object mnuFilters: TMenuItem
-        Caption = 'Filter Rules'
-        Visible = False
       end
       object mnuBrowser: TMenuItem
         Caption = 'Jabber Browser'

@@ -3,7 +3,7 @@ inherited frmPrefMsg: TfrmPrefMsg
   Top = 151
   Caption = 'frmPrefMsg'
   ClientHeight = 399
-  ClientWidth = 406
+  ClientWidth = 348
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
@@ -70,7 +70,7 @@ inherited frmPrefMsg: TfrmPrefMsg
   object StaticText11: TStaticText
     Left = 0
     Top = 0
-    Width = 406
+    Width = 348
     Height = 20
     Align = alTop
     Alignment = taCenter

@@ -206,6 +206,13 @@ begin
         end;
     end;
 
+    if ((notify and notify_front) > 0) then begin
+        // pop the window to the front
+        BringWindowToTop(w.Handle);
+        SetActiveWindow(w.Handle);
+        SetForegroundWindow(w.handle);
+    end;
+
     if (MainSession.prefs.getBool('notify_sounds')) then
         PlaySound(pchar('EXODUS_' + sound_name), 0,
                   SND_APPLICATION or SND_ASYNC or SND_NOWAIT or SND_NODEFAULT);

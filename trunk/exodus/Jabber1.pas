@@ -102,7 +102,6 @@ type
     N6: TMenuItem;
     N14: TMenuItem;
     NewGroup2: TMenuItem;
-    mnuFilters: TMenuItem;
     Test1: TMenuItem;
     PGPTools1: TMenuItem;
     mnuBrowser: TMenuItem;
@@ -113,7 +112,6 @@ type
     mnuVCard: TMenuItem;
     N13: TMenuItem;
     mnuMyVCard: TMenuItem;
-    N17: TMenuItem;
     mnuBookmark: TMenuItem;
     ImageList2: TImageList;
     mnuExpanded: TMenuItem;
@@ -184,6 +182,8 @@ type
     SplitterLeft: TSplitter;
     timTrayAlert: TTimer;
     mnuPlugins: TMenuItem;
+    mnuRegistration: TMenuItem;
+    N3: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -252,6 +252,7 @@ type
     procedure SubmitExodusFeatureRequest1Click(Sender: TObject);
     procedure ShowBrandURL(Sender: TObject);
     procedure FormPaint(Sender: TObject);
+    procedure mnuRegistrationClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -287,6 +288,7 @@ type
     _appclosing: boolean;
     _testaa: boolean;
     _new_tabindex: integer;
+    _new_account: boolean;
 
     // Stuff for the Autoaway DLL
     _hookLib: THandle;
@@ -457,6 +459,7 @@ resourcestring
     sAuthError = 'There was an error trying to authenticate you.'#13#10'Either you used the wrong password, or this account is already in use by someone else.';
     sRegError = 'An Error occurred trying to register your new account. This server may not allow open registration.';
     sAuthNoAccount = 'This account does not exist on this server. Create a new account?';
+    sNewAccount = 'Your new jabber account is activated. Would you like to fill out additional registration information?';
     sCancelReconnect = 'Click to Cancel Reconnect';
     sReconnectIn = 'Reconnect in ';
     sSeconds = 'seconds.';
@@ -658,6 +661,7 @@ procedure TfrmExodus.WMShowLogin(var msg: TMessage);
 begin
     // Show the login window
     _reconnect_tries := 0;
+    _new_account := false;
     ShowLogin();
 end;
 
@@ -1279,9 +1283,11 @@ begin
             _logoff := true;
             MainSession.Disconnect()
         end
-        else
+        else begin
             // create the new account
+            _new_account := true;
             MainSession.CreateAccount();
+        end;
     end
 
     else if event = '/session/authenticated' then with MainSession do begin
@@ -1315,6 +1321,14 @@ begin
 
         // check for new version
         InitAutoUpdate();
+
+        // if we have a new account, prompt for reg info
+        if (_new_account) then begin
+            if (MessageDlg(sNewAccount, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
+                mnuRegistrationClick(Self);
+            end;
+            _new_account := false;
+        end;
     end
 
     else if (event = '/session/disconnected') then begin
@@ -1521,7 +1535,6 @@ begin
     mnuVCard.Enabled := enable;
 
     mnuBookmark.Enabled := enable;
-    mnuFilters.Enabled := enable;
     mnuBrowser.Enabled := enable;
     mnuServer.Enabled := enable;
 
@@ -3086,6 +3099,16 @@ begin
     Result := (_hidden) or (Self.Windowstate = wsMinimized);
 end;
 
+
+procedure TfrmExodus.mnuRegistrationClick(Sender: TObject);
+var
+    f: TfrmRegister;
+begin
+    // register with the server..
+    f := TfrmRegister.Create(Application);
+    f.jid := MainSession.Server;
+    f.Start();
+end;
 
 initialization
     sExodusPresence := RegisterWindowMessage('EXODUS_PRESENCE');
