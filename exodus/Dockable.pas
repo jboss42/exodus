@@ -29,11 +29,9 @@ type
   TDockNotify = procedure of object;
 
   TfrmDockable = class(TForm)
-    timFlasher: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormResize(Sender: TObject);
-    procedure timFlasherTimer(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
     procedure FormPaint(Sender: TObject);
@@ -50,6 +48,7 @@ type
 
     procedure CheckPos();
     procedure SavePos();
+
   protected
     procedure CreateParams(var Params: TCreateParams); override;
     procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
@@ -64,7 +63,6 @@ type
     procedure DockForm; virtual;
     procedure FloatForm; virtual;
     procedure ShowDefault;
-    procedure Flash;
 
     property Docked: boolean read _docked write _docked;
   end;
@@ -301,31 +299,8 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmDockable.timFlasherTimer(Sender: TObject);
-begin
-    FlashWindow(Self.Handle, true);
-    FlashWindow(Self.Handle, true);
-end;
-
-{---------------------------------------}
-procedure TfrmDockable.Flash;
-begin
-    if Self.Active then exit;
-
-    if MainSession.Prefs.getBool('notify_flasher') then
-        timFlasher.Enabled := true
-    else begin
-        timFlasher.Enabled := false;
-        timFlasherTimer(Self);
-    end;
-end;
-
-
-{---------------------------------------}
 procedure TfrmDockable.FormActivate(Sender: TObject);
 begin
-    if timFlasher.Enabled then
-        timFlasher.Enabled := false;
     StopTrayAlert();
 
     if Self.TabSheet <> nil then begin
@@ -349,8 +324,6 @@ end;
 procedure TfrmDockable.FormPaint(Sender: TObject);
 begin
     inherited;
-    if timFlasher.Enabled then
-        timFlasher.Enabled := false;
     StopTrayAlert();
 end;
 

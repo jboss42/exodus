@@ -1,9 +1,9 @@
 object frmInputPass: TfrmInputPass
   Left = 234
   Top = 143
-  Width = 268
-  Height = 132
-  ActiveControl = txtPassword
+  Width = 281
+  Height = 131
+  BorderWidth = 3
   Caption = 'Exodus Password'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -14,37 +14,44 @@ object frmInputPass: TfrmInputPass
   OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
+  DesignSize = (
+    267
+    96)
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
-    Left = 8
-    Top = 9
-    Width = 76
-    Height = 13
+    Left = 0
+    Top = 0
+    Width = 267
+    Height = 25
+    Align = alTop
+    AutoSize = False
     Caption = 'Enter password:'
-  end
-  object txtPassword: TTntEdit
-    Left = 8
-    Top = 27
-    Width = 217
-    Height = 21
-    PasswordChar = '*'
-    TabOrder = 0
+    Layout = tlCenter
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 66
-    Width = 260
+    Top = 64
+    Width = 267
     Height = 32
     Align = alBottom
     AutoScroll = False
-    TabOrder = 1
+    TabOrder = 0
     inherited Bevel1: TBevel
-      Width = 260
+      Width = 267
     end
     inherited Panel1: TPanel
-      Left = 100
+      Left = 107
       Height = 27
     end
+  end
+  object txtPassword: TTntEdit
+    Left = 12
+    Top = 29
+    Width = 246
+    Height = 25
+    Anchors = [akLeft, akTop, akRight]
+    PasswordChar = '*'
+    TabOrder = 1
   end
 end

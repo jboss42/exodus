@@ -1067,36 +1067,10 @@ begin
         chat_object.startTimer();
         chat_object.window := nil;
         chat_object := nil;
-        {
-        CanClose := false;
-        timMemory.Enabled := true;
-        Self.Visible := false;
-        if (Docked) then begin
-            // We must float the form, so when it is free'd
-            // there is no tab flashing madness.
-            // the redock flag tells the roster window
-            // that this form SHOULD be redocked,
-            // instead of a window that is manually undocked
-            Self.FloatForm();
-            _redock := true;
-        end;
-        exit;
-        }
     end;
 
     inherited;
 end;
-
-{---------------------------------------}
-{
-procedure TfrmChat.timMemoryTimer(Sender: TObject);
-begin
-  inherited;
-    // time to free the window..
-    _destroying := true;
-    Self.Free();
-end;
-}
 
 {---------------------------------------}
 procedure TfrmChat.FormShow(Sender: TObject);
