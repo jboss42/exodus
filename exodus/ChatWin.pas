@@ -72,6 +72,8 @@ type
     procedure btnCloseClick(Sender: TObject);
     procedure popClearHistoryClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure MsgOutKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
     jid: widestring;        // jid of the person we are talking to
@@ -472,12 +474,19 @@ end;
 {---------------------------------------}
 procedure TfrmChat.SendMsg;
 var
+    i: integer;
     xml, txt: WideString;
     msg: TJabberMessage;
     mtag: TXMLTag;
 begin
     // Send the actual message out
-    txt := Trim(MsgOut.Text);
+    // txt := Trim(MsgOut.WideText);
+    txt := '';
+    for i := 0 to MsgOut.WideLines.Count - 1 do begin
+        if (txt <> '') then
+            txt := txt + Chr(13);
+        txt := txt + MsgOut.WideLines[i];
+        end;
 
     // plugin madness
     TExodusChat(chat_object.ComController).fireBeforeMsg(txt);
@@ -524,12 +533,16 @@ begin
     if (Key = #0) then exit;
 
     // Send the msg if they hit return
-    if ((Key = #13) and (not mnuReturns.Checked)) then
-        SendMsg()
+    {
+    if ((Key = #13) and (not mnuReturns.Checked)) then begin
+        Key := #0;
+        SendMsg();
+        end
     else begin
-        TExodusChat(chat_object.ComController).fireMsgKeyPress(Key);
-        inherited;
-        end;
+    }
+    TExodusChat(chat_object.ComController).fireMsgKeyPress(Key);
+    inherited;
+    //     end;
 
 end;
 
@@ -905,6 +918,19 @@ begin
     if (chat_object <> nil) then
         TExodusChat(chat_object.ComController).fireClose();
   }
+end;
+
+procedure TfrmChat.MsgOutKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  inherited;
+    if (Key = 0) then exit;
+
+    // Send the msg if they hit return
+    if ((Key = VK_RETURN) and (not mnuReturns.Checked)) then begin
+        Key := 0;
+        SendMsg();
+        end;
 end;
 
 end.
