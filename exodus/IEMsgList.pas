@@ -323,7 +323,7 @@ begin
     end;
 
     if (txt = '') then begin
-        cd := TXMLCData.Create(Msg.Body);
+        cd := TXMLCData.Create(XML_EscapeChars(Msg.Body));
         txt := ProcessTag(nil, cd);
     end;
 
