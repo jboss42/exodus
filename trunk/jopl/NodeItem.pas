@@ -143,6 +143,7 @@ type
         function getText(): Widestring; override;
     end;
 
+    function NodeTypeLevel(node: TObject): integer;
 
 implementation
 uses
@@ -602,5 +603,26 @@ begin
         result := jid.user;
 end;
 
+
+{---------------------------------------}
+function NodeTypeLevel(node: TObject): integer;
+var
+    ret : integer;
+begin
+    ret := 0;
+    if (node is TJabberNodeItem) then begin
+        if (node is TJabberRosterItem) then
+            ret := 1
+        else if (node is TJabberGroup) then
+            ret := 2
+        else if (node is TJabberMyResource) then
+            ret := 3
+        else if (node is TJabberBookmark) then
+            ret := 4
+        else // in case of future expansion
+            ret := 5;
+    end;
+    NodeTypeLevel := ret;
+end;
 
 end.

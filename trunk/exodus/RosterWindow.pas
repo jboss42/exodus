@@ -2654,7 +2654,14 @@ var
     trans1: boolean;
     trans2: boolean;
     t1, t2: Widestring;
+    o1, o2: TObject;
+    lev1, lev2: integer;
 begin
+    Assert(Node1 <> nil);
+    Assert(Node2 <> nil);
+    Assert(Node1.Data <> nil);
+    Assert(Node2.Data <> nil);
+
     // define a custom sort routine for two roster nodes
 
     trans1 := (node1.Text = _transports);
@@ -2672,15 +2679,28 @@ begin
 
     // handle normal cases.
     else if (Node1.Level = Node2.Level) then begin
-        if (TObject(Node1.Data) is TJabberNodeItem) then
-            t1 := TJabberNodeItem(Node1.Data).GetText()
-        else
-            t1 := Node1.Text;
-        if (TObject(Node2.Data) is TJabberNodeItem) then
-            t2 := TJabberNodeItem(Node2.Data).GetText()
-        else
-            t2 := Node2.Text;
-        Compare := AnsiCompareText(t1, t2);
+        o1 := TObject(Node1.Data);
+        o2 := TObject(Node2.Data);
+        lev1 := NodeTypeLevel(o1);
+        lev2 := NodeTypeLevel(o2);
+
+        if (lev1 <> lev2) then begin
+            if (lev1 < lev2) then
+                Compare := -1
+            else
+                Compare := +1;
+        end
+        else begin
+            if (o1 is TJabberNodeItem) then
+                t1 := TJabberNodeItem(o1).GetText()
+            else
+                t1 := Node1.Text;
+            if (o2 is TJabberNodeItem) then
+                t2 := TJabberNodeItem(o2).GetText()
+            else
+                t2 := Node2.Text;
+            Compare := AnsiCompareText(t1, t2);
+        end;
     end
     else begin
         if (Node1.Level < Node2.Level) then
