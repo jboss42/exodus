@@ -79,6 +79,8 @@ type
     popOwnerList: TMenuItem;
     mnuWordwrap: TMenuItem;
     NotificationOptions1: TMenuItem;
+    S1: TMenuItem;
+    dlgSave: TSaveDialog;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -111,6 +113,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure mnuWordwrapClick(Sender: TObject);
     procedure NotificationOptions1Click(Sender: TObject);
+    procedure S1Click(Sender: TObject);
   private
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
@@ -192,6 +195,7 @@ resourcestring
     sBlocked = 'Blocked';
     sBlock = 'Block';
     sUnblock = 'UnBlock';
+    sUnknownFileType = 'Unknown file type';
     sInvalidRoomJID = 'The Room Address you entered is invalid. It must be valid Jabber ID.';
 
     sDestroyRoom = 'Destroy Room';
@@ -1633,6 +1637,26 @@ begin
     end;
 
     f.Free();
+end;
+
+procedure TfrmRoom.S1Click(Sender: TObject);
+var
+    fn     : widestring;
+    ext    : widestring;
+    fmt : TOutputFormat;
+begin
+    dlgSave.FileName := MungeName(self.jid);
+    if (not dlgSave.Execute()) then exit;
+    fn := dlgSave.FileName;
+    ext := copy(fn, length(fn) - 2, 3);
+
+    fmt := MsgList.OutputFormat;
+    if (ext = 'rtf') then
+        MsgList.OutputFormat := ofRTF
+    else if (ext = 'txt') then
+        MsgList.OutputFormat := ofUnicode;
+    MsgList.WideLines.SaveToFile(fn);
+    MsgList.OutputFormat := fmt;
 end;
 
 initialization

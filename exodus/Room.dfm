@@ -155,6 +155,10 @@ inherited frmRoom: TfrmRoom
       Caption = 'Change Nickname'
       OnClick = popNickClick
     end
+    object S1: TMenuItem
+      Caption = 'Save As...'
+      OnClick = S1Click
+    end
     object popAdmin: TMenuItem
       Caption = 'Admin'
       Enabled = False
@@ -248,5 +252,14 @@ inherited frmRoom: TfrmRoom
       Enabled = False
       OnClick = popKickClick
     end
+  end
+  object dlgSave: TSaveDialog
+    DefaultExt = '.rtf'
+    Filter = 'RTF (*.rtf)|*.rtf|Text (*.txt)|*.txt'
+    FilterIndex = 0
+    Options = [ofOverwritePrompt, ofHideReadOnly, ofEnableSizing]
+    Title = 'Save Room Contents'
+    Left = 49
+    Top = 89
   end
 end
