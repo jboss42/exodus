@@ -39,7 +39,6 @@ EOF
 
 
 print "$::RTYPE build (version $::VTYPE)...\n";
-
 chdir "exodus" or die;
 
 my $version = `perl version.pl $::VTYPE`;
@@ -57,7 +56,7 @@ e("$::CVS ci -m \"$::RTYPE build\" exodus/version.h exodus/version.nsi exodus/de
 e("perl cvs2cl.pl --delta $urtype:HEAD -f exodus/$cl");
 e("$::CVS ci -m \"$::RTYPE build\" exodus/$cl");
 e("$::CVS tag -F $urtype") if $::CVS;
-  
+
 chdir "exodus" or die;
 if ($::RTYPE eq "daily") {
   e("$::SCP $cl setup.exe Exodus.zip plugins/*.zip $userhost:$::ROOT/www/daily/stage");

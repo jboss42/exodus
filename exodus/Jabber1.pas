@@ -489,17 +489,16 @@ const
 {---------------------------------------}
 implementation
 uses
-    test1, 
-    CommandWizard, 
+    CommandWizard,
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
     ChatController, ChatWin, Debug, Dockable, DNSUtils, Entity,
-    EntityCache, ExSession, JabberUtils, ExUtils, 
+    EntityCache, ExSession, JabberUtils, ExUtils,
     InputPassword, Invite, GnuGetText,
     Iq, JUD, JabberID, JabberMsg, IdGlobal, LocalUtils,
     JabberConst, ComController, CommCtrl, CustomPres,
     JoinRoom, Login, MsgController, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow, Room,
-    XferManager, NodeItem, Stringprep, SSLWarn, 
+    XferManager, NodeItem, Stringprep, SSLWarn,
     Roster, RosterAdd, Session, StandardAuth, Subscribe, Unicode, VCard, xData,
     XMLUtils, XMLParser;
 
@@ -1036,7 +1035,7 @@ begin
             ResolvedIP := ip
         else
             ResolvedIP := Server;
-            
+
         if (p > 0) then
             ResolvedPort := p
         else
@@ -1148,7 +1147,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.SessionCallback(event: string; tag: TXMLTag);
 var
-    ssl, rtries: integer; 
+    ssl, rtries: integer;
     msg : TMessage;
     exp: boolean;
     tmp: TXMLTag;
@@ -1218,7 +1217,7 @@ begin
                 m := m + ''#13#10' ERROR: ' + tmp.Data;
             end;
         end;
-        
+
         MessageDlgW(m, mtError, [mbOK], 0);
         PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
         exit;
@@ -2660,8 +2659,10 @@ end;
 procedure TfrmExodus.Test1Click(Sender: TObject);
 begin
     //
+    {
     Application.CreateForm(TfrmTest1, frmTest1);
     frmTest1.ShowDefault();
+    }
 end;
 
 {---------------------------------------}
@@ -2905,7 +2906,7 @@ end;
 procedure StopTrayAlert();
 begin
     if (frmExodus = nil) then exit;
-    
+
     if (frmExodus.timTrayAlert.Enabled) then begin
         frmExodus.timTrayAlert.Enabled := false;
         frmExodus._tray_notify := false;
