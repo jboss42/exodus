@@ -83,6 +83,11 @@ type
     lblLogin: TLabel;
     pnlAnimation: TPanel;
     aniWait: TAnimate;
+    popBookmark: TPopupMenu;
+    Join1: TMenuItem;
+    Properties1: TMenuItem;
+    Delete1: TMenuItem;
+    N5: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -1168,6 +1173,7 @@ procedure TfrmRosterWindow.treeRosterMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
     n: TTreeNode;
+    p: TJabberPres;
 begin
     // check to see if we're hitting a button
     n := treeRoster.GetNodeAt(X, Y);
@@ -1194,8 +1200,15 @@ begin
         if (treeRoster.Selected <> n) then
             treeRoster.Selected := n;
 
-        if ((n = _change_node) and (Button = mbLeft)) then
+        if ((n = _change_node) and (Button = mbLeft)) then begin
+            if ((getNodeType(n) = node_ritem) and
+                MainSession.Prefs.getBool('inline_status')) then begin
+                // TODO: re-render to get rid of inline status before editing
+                // Hey PGM!
+                n.Text := _cur_ritem.Nickname;
+                end;
             n.EditText();
+            end
         end;
 end;
 
@@ -1241,13 +1254,16 @@ begin
     // Check to see if this person is online or not
     p := nil;
     n := treeRoster.Selected;
-    ritem := TJabberRosterItem(n.Data);
-    if ritem <> nil then
-        p := MainSession.ppdb.FindPres(ritem.jid.jid, '');
 
-    // popClientInfo.Enabled := (p <> nil);
-    popVersion.Enabled := (p <> nil);
-    popTime.Enabled := (p <> nil);
+    if (getNodeType(n) = node_ritem) then begin
+        ritem := TJabberRosterItem(n.Data);
+        if ritem <> nil then
+            p := MainSession.ppdb.FindPres(ritem.jid.jid, '');
+
+        // popClientInfo.Enabled := (p <> nil);
+        popVersion.Enabled := (p <> nil);
+        popTime.Enabled := (p <> nil);
+        end;
 end;
 
 {---------------------------------------}
@@ -1373,7 +1389,8 @@ begin
         popProperties.Enabled := false;
         end;
     node_bm: begin
-        // bookmark
+        treeRoster.PopupMenu := popBookmark;
+        treeRoster.Selected := n;
         end;
     node_ritem: begin
         // show the roster menu when a node is hit
