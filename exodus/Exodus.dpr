@@ -20,6 +20,8 @@ program Exodus;
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
 
+{%File 'README.txt'}
+
 uses
   Forms,
   Controls,
@@ -91,7 +93,10 @@ uses
   XMLSocketStream in '..\jopl\XMLSocketStream.pas',
   RosterRecv in 'RosterRecv.pas' {frmRosterRecv},
   fRosterTree in 'fRosterTree.pas' {frameTreeRoster: TFrame},
-  SelContact in 'SelContact.pas' {frmSelContact};
+  SelContact in 'SelContact.pas' {frmSelContact},
+  XMLHttpStream in '..\jopl\XMLHttpStream.pas',
+  HttpDetails in 'HttpDetails.pas' {frmHttpDetails},
+  SocketDetails in 'SocketDetails.pas' {frmSocketDetails};
 
 {$R *.RES}
 
