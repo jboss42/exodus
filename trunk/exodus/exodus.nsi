@@ -33,7 +33,7 @@
 !define SECTION_OFF   0xFFFFFFFE
 
 ; The name of the installer
-;!define MUI_PRODUCT "Exodus"
+!define PRODUCT "Exodus"
 
 !include version.nsi
 !include "${NSISDIR}\Contrib\Modern UI\System.nsh"
@@ -42,16 +42,16 @@
 !define HOME_URL "http://exodus.jabberstudio.org"
 
 ; The file to write
-Name "Exodus ${EXODUS_VERSION}"
+Name "${PRODUCT} ${EXODUS_VERSION}"
 OutFile "setup.exe"
 ShowInstDetails show
 ShowUninstDetails show
 
 ; The default installation directory
-InstallDir "$PROGRAMFILES\${MUI_PRODUCT}"
+InstallDir "$PROGRAMFILES\${PRODUCT}"
 ; Registry key to check for directory (so if you install again, it will
 ; overwrite the old one automatically)
-InstallDirRegKey HKCU "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
+InstallDirRegKey HKCU "SOFTWARE\Jabber\${PRODUCT}" "Install_Dir"
 
 ; Modern UI Settings
 !define MUI_ICON "exodus.ico"
@@ -75,7 +75,7 @@ Var STARTMENU_FOLDER
 
 !define MUI_LICENSEPAGE_TEXT_TOP  \
     "Exodus is licensed under the GPL.  Press Page Down to see the rest of the agreement."   
-!define MUI_STARTMENUPAGE_DEFAULTFOLDER "${MUI_PRODUCT}"
+!define MUI_STARTMENUPAGE_DEFAULTFOLDER "${PRODUCT}"
 !define MUI_FINISHPAGE_RUN "$INSTDIR\Exodus.exe"
 !define MUI_FINISHPAGE_RUN_NOTCHECKED
 !define MUI_FINISHPAGE_NOAUTOCLOSE
@@ -96,7 +96,7 @@ ReserveFile "notify.ini"
 !insertmacro MUI_RESERVEFILE_INSTALLOPTIONS
 
 ; The stuff to install
-Section "!${MUI_PRODUCT}" SEC_Exodus
+Section "!${PRODUCT}" SEC_Exodus
     ; this one is required
     SectionIn 1 RO
 
@@ -473,7 +473,7 @@ SubCaption 3 ": Exit running Exodus versions!"
     !include plugins\plugin-desc.nsi
 !insertmacro MUI_FUNCTIONS_DESCRIPTION_END
 
-!insertmacro MUI_SECTIONS_FINISHHEADER
+;!insertmacro MUI_SECTIONS_FINISHHEADER
 
 ; eof
 
@@ -497,6 +497,7 @@ Function NotifyInstances
   loop:
     FindWindow $0 "TfrmExodus" "" 0
     IntCmp $0 0 done
+    !define MUI_FINISHPAGE_RUN ""
     SendMessage $0 6374 0 0
     Sleep 100
     IntOp $1 $1 + 1
