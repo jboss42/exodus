@@ -402,8 +402,8 @@ begin
     taskbar := FindWindow('Shell_TrayWnd', '');
     GetWindowRect(taskbar, _taskrect);
 
-    mh := Screen.Height div 2;
-    mw := Screen.Width div 2;
+    mh := Screen.DesktopHeight div 2;
+    mw := Screen.DesktopWidth div 2;
     if ((_taskrect.Left < mw) and (_taskrect.Top < mh) and (_taskrect.Right < mw)) then
         _taskdir := 0
     else if ((_taskrect.left > mw) and (_taskrect.Top < mh)) then
@@ -899,18 +899,18 @@ begin
     if (l < dflt_left) then l := dflt_left;
 
 
-    if (t + h > Screen.Height) then begin
-        t := Screen.Height - h;
+    if (t + h > Screen.DesktopHeight) then begin
+        t := Screen.DesktopHeight - h;
     end;
 
-    if (l + w > Screen.Width) then begin
-        l := Screen.Width - w;
+    if (l + w > Screen.DesktopWidth) then begin
+        l := Screen.DesktopWidth - w;
     end;
 
     // Make sure it's not "maximized"
-    if (h >= (Screen.Height - 50)) then
+    if (h >= (Screen.DesktopHeight - 50)) then
         h := form.Height;
-    if (w >= (Screen.Width - 50)) then
+    if (w >= (Screen.DesktopWidth - 50)) then
         w := form.Width;
 
 
@@ -952,19 +952,19 @@ begin
     if (l < dflt_left) then l := dflt_left;
 
 
-    if (t + h > Screen.Height) then begin
-        t := Screen.Height - h;
+    if (t + h > Screen.DesktopHeight) then begin
+        t := Screen.DesktopHeight - h;
     end;
 
-    if (l + w > Screen.Width) then begin
-        l := Screen.Width - w;
+    if (l + w > Screen.DesktopWidth) then begin
+        l := Screen.DesktopWidth - w;
     end;
 
     // Make sure it's not "maximized"
-    if (h >= (Screen.Height - 50)) then
-        h := Screen.Height - 100;
-    if (w >= (Screen.Width - 50)) then
-        w := Screen.Width - 100;
+    if (h >= (Screen.DesktopHeight - 50)) then
+        h := Screen.DesktopHeight - 100;
+    if (w >= (Screen.DesktopWidth - 50)) then
+        w := Screen.DesktopWidth - 100;
 
     Form.SetBounds(l, t, w, h);
 end;
