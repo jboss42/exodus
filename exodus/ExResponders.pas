@@ -61,6 +61,7 @@ resourcestring
     sVersion = 'Version';
     sTime = 'Time';
     sLast = 'Last';
+    sBrowse = 'Browse';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -236,6 +237,11 @@ var
     r: TXMLTag;
 begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
+
+    DoNotify(nil, 'notify_autoresponse',
+             Format(sNotifyAutoResponse, [sBrowse,
+                                          getNick(tag.getAttribute('from'))]),
+             ico_info);
 
     r := TXMLTag.Create('iq');
     with r do begin
