@@ -183,7 +183,7 @@ begin
 
     for i := 0 to lstJIDS.Items.Count - 1 do begin
         msg := TXMLTag.Create('message');
-        if ((frm <> nil) and (not frm.isGC)) then begin
+        if ((frm <> nil) and (frm.isMUCRoom())) then begin
             // this is MUC.. use muc#user
             msg.PutAttribute('to', room);
             with msg.AddTag('x') do begin

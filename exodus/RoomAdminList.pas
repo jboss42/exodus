@@ -68,7 +68,7 @@ procedure ShowRoomAdminList(room_jid, role, affiliation: WideString);
 var
     f: TfrmRoomAdminList;
 begin
-    //
+    // Fire up a new form, and dispatch call Start()
     f := TfrmRoomAdminList.Create(Application);
     f.room_jid := room_jid;
     if (role <> '') then begin
@@ -90,7 +90,7 @@ var
     iq: TJabberIQ;
     item: TXMLTag;
 begin
-    //
+    // Get the list to be edited
     iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
         listAdminCallback, 30);
     with iq do begin
@@ -134,6 +134,7 @@ begin
             li := lstItems.Items.Add();
             li.Caption := items[i].GetAttribute('nick');
             li.SubItems.Add(items[i].GetAttribute('jid'));
+            li.Checked := true;
             end;
         end;
 
@@ -145,7 +146,7 @@ end;
 procedure TfrmRoomAdminList.frameButtons1btnOKClick(Sender: TObject);
 var
     i: integer;
-    tmps, v: Widestring;
+    tmps: Widestring;
     item, q, iq: TXMLTag;
     li: TListItem;
 begin
@@ -157,17 +158,20 @@ begin
     q := iq.AddTag('query');
     q.PutAttribute('xmlns', XMLNS_MUCADMIN);
 
+    // Take the unchecked items off the list
     for i := 0 to lstItems.Items.Count - 1 do begin
         li := lstItems.Items[i];
         item := q.AddTag('item');
         item.PutAttribute('jid', li.SubItems[0]);
-        if (li.Checked) then v := onList else v := offList;
-        if (role) then
-            item.PutAttribute('role', v)
-        else
-            item.PutAttribute('affiliation', v);
+        if (not li.Checked) then begin
+            if (role) then
+                item.PutAttribute('role', offList)
+            else
+                item.PutAttribute('affiliation', offList);
+            end;
         end;
 
+    // Add the following jids to the list.
     for i := 0 to memNew.Lines.Count - 1 do begin
         tmps := Trim(memNew.Lines[i]);
         if ((tmps <> '') and (isValidJID(tmps))) then begin

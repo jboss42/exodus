@@ -289,10 +289,13 @@ begin
     else if curp.PresType = 'error' then begin
         // some kind of error presence
         if (curp.error_code = '407') then begin
+            {
             t := TXMLTag.Create('register');
             t.PutAttribute('jid', curp.fromJID.domain);
             s.FireEvent('/session/register', t);
             t.Free;
+            }
+            exit;
             end
 
         else if ((MainSession.Invisible) and
