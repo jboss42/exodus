@@ -182,9 +182,6 @@ begin
   if (not continue) then exit;
 
   Application.CreateForm(TfrmExodus, frmExodus);
-  Application.CreateForm(TfrmGrpManagement, frmGrpManagement);
-  Application.CreateForm(TfrmJud, frmJud);
-  Application.CreateForm(TfrmDockWizard, frmDockWizard);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);

@@ -205,6 +205,7 @@ end;
         procedure SavePosition(form: TForm); overload;
         procedure SavePosition(form: TForm; key: Widestring); overload;
 
+        procedure CheckPositions(form: TForm; t, l, w, h: integer);
         procedure RestorePosition(form: TForm); overload;
         function RestorePosition(form: TForm; key: Widestring): boolean; overload;
 
@@ -264,8 +265,8 @@ uses
 
 
 var
-    dflt_top: integer;
-    dflt_left: integer;
+    task_rect: TRect;
+    task_dir: integer;
 
 {$ifdef Win32}
 {---------------------------------------}
@@ -402,25 +403,24 @@ end;
 procedure getDefaultPos;
 var
     taskbar: HWND;
-    _taskrect: TRect;
-    _taskdir: word;
-    mh, mw: longint;
+    mh, mw: integer;
 begin
     //
     taskbar := FindWindow('Shell_TrayWnd', '');
-    GetWindowRect(taskbar, _taskrect);
+    GetWindowRect(taskbar, task_rect);
 
     mh := Screen.DesktopHeight div 2;
     mw := Screen.DesktopWidth div 2;
-    if ((_taskrect.Left < mw) and (_taskrect.Top < mh) and (_taskrect.Right < mw)) then
-        _taskdir := 0
-    else if ((_taskrect.left > mw) and (_taskrect.Top < mh)) then
-        _taskdir := 1
-    else if (_taskrect.top < mh) then
-        _taskdir := 2
+    if ((task_rect.Left < mw) and (task_rect.Top < mh) and (task_rect.Right < mw)) then
+        task_dir := 0
+    else if ((task_rect.left > mw) and (task_rect.Top < mh)) then
+        task_dir := 1
+    else if (task_rect.top < mh) then
+        task_dir := 2
     else
-        _taskdir := 3;
+        task_dir := 3;
 
+    {
     case _taskdir of
     0: begin
         // left
@@ -442,7 +442,8 @@ begin
         dflt_top := 0;
         dflt_left := 0;
     end;
-end;
+    end;
+    }
 end;
 
 {$else}
@@ -459,8 +460,10 @@ end;
 
 procedure getDefaultPos;
 begin
+    {
     dflt_top := 10;
     dflt_left := 10;
+    }
 end;
 
 {$endif}
@@ -964,6 +967,51 @@ begin
     Self.Save();
 end;
 
+{---------------------------------------}
+procedure TPrefController.CheckPositions(form: TForm; t, l, w, h: integer);
+var
+    tbh: integer;
+begin
+    if (t < Screen.DesktopTop) then t := Screen.DesktopTop;
+    if (l < Screen.DesktopLeft) then l := Screen.DesktopLeft;
+
+    if (t + h > Screen.DesktopHeight) then begin
+        t := Screen.DesktopHeight - h;
+    end;
+
+    if (l + w > Screen.DesktopWidth) then begin
+        l := Screen.DesktopWidth - w;
+    end;
+
+    // Make sure it's not "maximized"
+    if (h >= (Screen.DesktopHeight - 50)) then
+        h := form.Height;
+    if (w >= (Screen.DesktopWidth - 50)) then
+        w := form.Width;
+
+    // Make sure it's not under the taskbar
+    tbh := task_rect.bottom - task_rect.top;
+    case task_dir of
+    0: begin
+        // left
+        end;
+    1: begin
+        // right
+        end;
+    2: begin
+        // top
+        if ((t <= task_rect.bottom) and (t >= task_rect.top)) then
+            t := task_rect.bottom + 2;
+        end;
+    3: begin
+        // bottom;
+        if (((t+h) >= task_rect.top) and ((t+h) <= task_rect.bottom)) then
+            t := t - tbh;
+        end;
+    end;
+
+    Form.SetBounds(l, t, w, h);
+end;
 
 {---------------------------------------}
 function TPrefController.RestorePosition(form: TForm; key: Widestring): boolean;
@@ -983,25 +1031,7 @@ begin
         exit;
     end;
 
-    if (t < Screen.DesktopTop) then t := Screen.DesktopTop;
-    if (l < Screen.DesktopLeft) then l := Screen.DesktopLeft;
-
-    if (t + h > Screen.DesktopHeight) then begin
-        t := Screen.DesktopHeight - h;
-    end;
-
-    if (l + w > Screen.DesktopWidth) then begin
-        l := Screen.DesktopWidth - w;
-    end;
-
-    // Make sure it's not "maximized"
-    if (h >= (Screen.DesktopHeight - 50)) then
-        h := form.Height;
-    if (w >= (Screen.DesktopWidth - 50)) then
-        w := form.Width;
-
-
-    Form.SetBounds(l, t, w, h);
+    checkPositions(form, t,l,w,h);
     Result := true;
 end;
 
@@ -1013,12 +1043,6 @@ var
     t,l,w,h: integer;
 begin
     // set the bounds based on the position info
-    {
-    t := dflt_top;
-    l := dflt_left;
-    w := 300;
-    h := 300;
-    }
     fkey := MungeName(form.Classname);
 
     f := _pref_node.QueryXPTag('/exodus/positions/' + fkey);
@@ -1035,24 +1059,7 @@ begin
         h := form.Height;
     end;
 
-    if (t < Screen.DesktopTop) then t := Screen.DesktopTop;
-    if (l < Screen.DesktopLeft) then l := Screen.DesktopLeft;
-
-    if (t + h > Screen.DesktopHeight) then begin
-        t := Screen.DesktopHeight - h;
-    end;
-
-    if (l + w > Screen.DesktopWidth) then begin
-        l := Screen.DesktopWidth - w;
-    end;
-
-    // Make sure it's not "maximized"
-    if (h >= (Screen.DesktopHeight - 50)) then
-        h := Screen.DesktopHeight - 100;
-    if (w >= (Screen.DesktopWidth - 50)) then
-        w := Screen.DesktopWidth - 100;
-
-    Form.SetBounds(l, t, w, h);
+    checkPositions(form, t, l, w, h);
 end;
 
 {---------------------------------------}
