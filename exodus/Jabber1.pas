@@ -934,12 +934,13 @@ end;
 {---------------------------------------}
 procedure TExodus.MsgCallback(event: string; tag: TXMLTag);
 var
-    mtype: string;
+    b, mtype: string;
     e: TJabberEvent;
 begin
     // record the event
     mtype := tag.getAttribute('type');
-    if ((mtype <> 'groupchat') and (mtype <> 'chat')) then begin
+    b := Trim(tag.GetBasicText('body'));
+    if ((mtype <> 'groupchat') and (mtype <> 'chat') and (b <> '')) then begin
         if MainSession.IsPaused then
             MainSession.QueueEvent(event, tag, Self.MsgCallback)
         else begin

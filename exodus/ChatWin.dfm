@@ -1,5 +1,5 @@
 object frmChat: TfrmChat
-  Left = 257
+  Left = 278
   Top = 214
   ActiveControl = MsgOut
   AutoScroll = False
@@ -163,6 +163,7 @@ object frmChat: TfrmChat
       ParentFont = False
       TabOrder = 0
       WantReturns = False
+      OnChange = MsgOutChange
       OnKeyDown = MsgOutKeyDown
       OnKeyPress = MsgOutKeyPress
     end
@@ -221,5 +222,12 @@ object frmChat: TfrmChat
     object mnuEncrypt: TMenuItem
       Caption = 'Encrypt Conversation'
     end
+  end
+  object timFlash: TTimer
+    Enabled = False
+    Interval = 500
+    OnTimer = timFlashTimer
+    Left = 48
+    Top = 120
   end
 end
