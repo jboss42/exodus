@@ -132,7 +132,14 @@ uses
   JabberAuth in '..\jopl\JabberAuth.pas',
   PluginAuth in 'PluginAuth.pas',
   MsgList in '..\jopl\MsgList.pas',
-  MsgController in '..\jopl\MsgController.pas';
+  MsgController in '..\jopl\MsgController.pas',
+  PrefSystem in 'prefs\PrefSystem.pas' {frmPrefSystem},
+  PrefPanel in 'prefs\PrefPanel.pas' {frmPrefPanel},
+  PrefRoster in 'prefs\PrefRoster.pas' {frmPrefRoster},
+  PrefSubscription in 'prefs\PrefSubscription.pas' {frmPrefSubscription},
+  PrefFont in 'prefs\PrefFont.pas' {frmPrefFont},
+  PrefDialogs in 'prefs\PrefDialogs.pas' {frmPrefDialogs},
+  PrefMsg in 'prefs\PrefMsg.pas' {frmPrefMsg};
 
 {$R *.TLB}
 
@@ -148,6 +155,13 @@ begin
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TfrmPathSelector, frmPathSelector);
   Application.CreateForm(TfrmCustomNotify, frmCustomNotify);
+  Application.CreateForm(TfrmPrefSystem, frmPrefSystem);
+  Application.CreateForm(TfrmPrefPanel, frmPrefPanel);
+  Application.CreateForm(TfrmPrefRoster, frmPrefRoster);
+  Application.CreateForm(TfrmPrefSubscription, frmPrefSubscription);
+  Application.CreateForm(TfrmPrefFont, frmPrefFont);
+  Application.CreateForm(TfrmPrefDialogs, frmPrefDialogs);
+  Application.CreateForm(TfrmPrefMsg, frmPrefMsg);
   if (frmExodus = nil) then
     Halt;
 
