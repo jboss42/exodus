@@ -56,14 +56,28 @@ type
         constructor Create(Session: TJabberSession); overload;
     end;
 
-
+resourcestring
+    sNotifyAutoResponse = '%s query from:'#10#13' %s';
+    sVersion = 'Version';
+    sTime = 'Time';
+    sLast = 'Last';
 
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 implementation
 uses
-    XMLUtils, Jabber1;
+    XMLUtils, Jabber1, JabberID, Notify;
+
+function getNick(j: string): string;
+var
+    jid: TJabberID;
+begin
+//todo: look up nick in roster, or return bare jid if not found.
+    jid := TJabberID.Create(j);
+    result := jid.jid;
+    jid.Free();
+end;
 
 {---------------------------------------}
 constructor TVersionResponder.Create(Session: TJabberSession);
@@ -90,6 +104,11 @@ begin
     }
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
 
+    DoNotify(nil, 'notify_autoresponse',
+             Format(sNotifyAutoResponse, [sVersion,
+                                          getNick(tag.getAttribute('from'))]),
+             ico_info);
+
     win := '';
     WindowsVersion(win);
     app := GetAppVersion();
@@ -107,6 +126,7 @@ begin
             end;
         end;
     _session.sendTag(r);
+
 end;
 
 {---------------------------------------}
@@ -135,6 +155,11 @@ begin
     </query></iq>
     }
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
+
+    DoNotify(nil, 'notify_autoresponse',
+             Format(sNotifyAutoResponse, [sTime,
+                                          getNick(tag.getAttribute('from'))]),
+             ico_info);
 
     r := TXMLTag.Create('iq');
     res := GetTimeZoneInformation(tzi);
@@ -172,6 +197,11 @@ var
     r: TXMLTag;
 begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
+
+    DoNotify(nil, 'notify_autoresponse',
+             Format(sNotifyAutoResponse, [sLast,
+                                          getNick(tag.getAttribute('from'))]),
+             ico_info);
 
     // Respond to last queries
     r := TXMLTag.Create('iq');

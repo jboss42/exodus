@@ -427,17 +427,6 @@ resourcestring
 
     sAlreadySubscribed = 'You are already subscribed to this contact';
 
-    sSoundChatactivity = 'Activity in a chat window';
-    sSoundInvite = 'Invited to a room';
-    sSoundKeyword = 'Keyword in a room';
-    sSoundNewchat = 'New conversation';
-    sSoundNormalmsg = 'Received a normal message';
-    sSoundOffline = 'Contact went offline';
-    sSoundOnline = 'Contact came online';
-    sSoundRoomactivity = 'Activity in a room';
-    sSoundS10n = 'Subscription request';
-    sSoundOOB = 'File Transfers';
-
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -911,6 +900,7 @@ begin
     AddSound(reg, 'notify_roomactivity', sSoundRoomactivity);
     AddSound(reg, 'notify_s10n', sSoundS10n);
     AddSound(reg, 'notify_oob', sSoundOOB);
+    AddSound(reg, 'notify_autoresponse', sSoundAutoResponse);
 
     reg.CloseKey();
     reg.Free();

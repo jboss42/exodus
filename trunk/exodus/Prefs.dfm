@@ -20,7 +20,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 340
+    Height = 345
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1434,13 +1434,13 @@ object frmPrefs: TfrmPrefs
     Left = 89
     Top = 0
     Width = 371
-    Height = 340
-    ActivePage = tbsRoster
+    Height = 345
+    ActivePage = tbsNotify
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 0
+    TabIndex = 6
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1917,7 +1917,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 97
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2111,7 +2111,7 @@ object frmPrefs: TfrmPrefs
       object StaticText11: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 111
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2188,7 +2188,8 @@ object frmPrefs: TfrmPrefs
           'Keywords (Conf. Rooms)'
           'Chat window activity'
           'Conf. Room activity'
-          'File Transfers')
+          'File Transfers'
+          'Auto Response generated')
         TabOrder = 0
         OnClick = chkNotifyClick
       end
@@ -2670,7 +2671,7 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 340
+    Top = 345
     Width = 460
     Height = 37
     Align = alBottom
@@ -2708,6 +2709,7 @@ object frmPrefs: TfrmPrefs
         Top = 1
         Width = 75
         Height = 25
+        Cancel = True
         Caption = 'Cancel'
         ModalResult = 2
         TabOrder = 1
