@@ -155,7 +155,6 @@ var
     jid, u, h, r: Widestring;
 begin
     // Validate the JID..
-    valid := true;
     u := txtUsername.Text;
     h := cboServer.Text;
     r := cboResource.Text;

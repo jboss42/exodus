@@ -583,7 +583,7 @@ procedure TDiscoInfoResponder.iqCallback(event: string; tag:TXMLTag);
     procedure addFeature(qtag: TXMLTag; stype: WideString);
     begin
         with qtag.AddTag('feature') do
-            setAttribute('type', stype);
+            setAttribute('var', stype);
     end;
 
 var
