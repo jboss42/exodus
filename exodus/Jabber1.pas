@@ -1298,7 +1298,6 @@ begin
         setTrayInfo(Self.Caption);
         setTrayIcon(0);
 
-        CloseAllChats();
         btnConnect.Down := false;
         restoreMenus(false);
 

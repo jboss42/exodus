@@ -21,7 +21,13 @@ unit ChatController;
 
 interface
 uses
-    XMLTag, JabberID, Contnrs,
+    {$ifdef Linux}
+    QExtCtrls,
+    {$else}
+    ExtCtrls,
+    {$endif}
+
+    Unicode, XMLTag, JabberID, Contnrs,
     SysUtils, Classes;
 
 type
@@ -34,6 +40,10 @@ type
         _resource: Widestring;
         _cb: integer;
         _event: TChatMessageEvent;
+        _history: Widestring;
+        _memory: TTimer;
+    protected
+        procedure timMemoryTimer(Sender: TObject);
     public
         msg_queue: TQueue;
         window: TObject;
@@ -44,9 +54,15 @@ type
 
         procedure SetJID(sjid: Widestring);
         procedure MsgCallback(event: string; tag: TXMLTag);
+        procedure SetHistory(s: Widestring);
+        procedure startTimer();
+        procedure stopTimer();
+        procedure unassignEvent();
+        function getHistory: Widestring;
 
         property JID: WideString read _jid;
         property OnMessage: TChatMessageEvent read _event write _event;
+
 end;
 
 {---------------------------------------}
@@ -71,6 +87,10 @@ begin
     _jid := sjid;
     _resource := sresource;
     msg_queue := TQueue.Create();
+    _history := '';
+    _memory := TTimer.Create(nil);
+    _memory.OnTimer := timMemoryTimer;
+    _memory.Enabled := false;
 
     if (_resource <> '') then
         self.SetJID(_jid + '/' + _resource)
@@ -81,7 +101,6 @@ begin
     echat.setChatSession(Self);
     echat.ObjAddRef();
     ComController := echat;
-
 end;
 
 {---------------------------------------}
@@ -116,7 +135,7 @@ begin
     if (tag.QueryXPTag(XP_MUCINVITE) <> nil) then exit;
     if (tag.QueryXPTag(XP_CONFINVITE) <> nil) then exit;
     if (tag.GetAttribute('type') = 'groupchat') then exit;
-    
+
     // if we are paused, put on a delay tag.
     if (MainSession.IsPaused) then begin
         with tag.AddTag('x') do begin
@@ -139,6 +158,44 @@ begin
             MainSession.FireEvent('/session/gui/chat', tag);
         end;
     end;
+end;
+
+{---------------------------------------}
+procedure TChatController.SetHistory(s: Widestring);
+begin
+    _history := s;
+end;
+
+{---------------------------------------}
+function TChatController.getHistory: Widestring;
+begin
+    Result := _history;
+    _history := '';
+end;
+
+{---------------------------------------}
+procedure TChatController.timMemoryTimer(Sender: TObject);
+begin
+    // time to free the window..
+    Self.Free();
+end;
+
+{---------------------------------------}
+procedure TChatController.startTimer();
+begin
+    _memory.Interval := MainSession.Prefs.getInt('chat_memory') * 60 * 1000;
+    _memory.Enabled := true;
+end;
+
+{---------------------------------------}
+procedure TChatController.stopTimer();
+begin
+    _memory.Enabled := false;
+end;
+
+procedure TChatController.unassignEvent();
+begin
+    _event := nil;
 end;
 
 

@@ -163,11 +163,4 @@ inherited frmChat: TfrmChat
     Left = 48
     Top = 184
   end
-  object timMemory: TTimer
-    Enabled = False
-    Interval = 3600000
-    OnTimer = timMemoryTimer
-    Left = 80
-    Top = 152
-  end
 end
