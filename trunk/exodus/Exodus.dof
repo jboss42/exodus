@@ -96,7 +96,7 @@ PackageDLLOutputDir=
 PackageDCPOutputDir=.\output
 SearchPath=.\components
 Packages=vcl;rtl;vclshlctrls;TntUnicodeVcl_R70;TntUnicodeVcl_D70
-Conditionals=Exodus;TRACE_EXCEPTIONS
+Conditionals=Exodus
 DebugSourceDirs=
 UsePackages=0
 [Parameters]
@@ -135,8 +135,9 @@ ProductName=
 ProductVersion=1.0.0.0
 Comments=
 [HistoryLists\hlConditionals]
-Count=1
-Item0=Exodus;TRACE_EXCEPTIONS
+Count=2
+Item0=Exodus
+Item1=Exodus;TRACE_EXCEPTIONS
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
