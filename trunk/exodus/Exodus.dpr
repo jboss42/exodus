@@ -96,7 +96,8 @@ uses
   SelContact in 'SelContact.pas' {frmSelContact},
   XMLHttpStream in '..\jopl\XMLHttpStream.pas',
   HttpDetails in 'HttpDetails.pas' {frmHttpDetails},
-  SocketDetails in 'SocketDetails.pas' {frmSocketDetails};
+  SocketDetails in 'SocketDetails.pas' {frmSocketDetails},
+  ConnDetails in 'ConnDetails.pas' {frmConnDetails};
 
 {$R *.RES}
 
@@ -107,6 +108,7 @@ begin
   Application.Title := 'Exodus';
 
   Application.CreateForm(TfrmExodus, frmExodus);
+  Application.CreateForm(TfrmConnDetails, frmConnDetails);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);

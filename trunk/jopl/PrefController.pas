@@ -34,6 +34,9 @@ const
     s10n_auto_roster = 1;
     s10n_auto_all = 2;
 
+    conn_normal = 0;
+    conn_http = 1;
+
     roster_chat = 0;
     roster_msg = 1;
 
