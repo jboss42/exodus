@@ -188,7 +188,7 @@ begin
     Application.Initialize;
   except
   end;
-  
+
   Application.Title := '';
   Application.ShowMainForm := false;
 
@@ -210,5 +210,6 @@ begin
 
   frmExodus.Startup();
   Application.Run;
+
 end.
 
