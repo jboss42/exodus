@@ -87,8 +87,8 @@ status:
 	StrCpy $6 '-s "$6"'
 
 exec:
-	DetailPrint '"$INSTDIR\Exodus.exe" -t $2 -i $3 $4 $5 $6'
-	Exec '"$INSTDIR\Exodus.exe" -t $2 -i $3 -f "$4" $5 $6'
+	DetailPrint '"$INSTDIR\Exodus.exe" $2 -i $3 $4 $5 $6'
+	Exec '"$INSTDIR\Exodus.exe" $2 -i $3 -f "$4" $5 $6'
 	SetAutoClose "true"
 
 done:
@@ -102,9 +102,18 @@ SectionEnd ; end the section
 
 ; optional section
 Section "Start Menu Shortcuts"
-  CreateDirectory "$SMPROGRAMS\Exodus"
-  CreateShortCut "$SMPROGRAMS\Exodus\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
-  CreateShortCut "$SMPROGRAMS\Exodus\Exodus.lnk" "$INSTDIR\Exodus.exe" "" "$INSTDIR\Exodus.exe" 0
+	; if in silent mode, don't do any of this, ever
+    Push $CMDLINE
+    Push "/S"
+    Call StrStr
+    Pop $0
+
+	StrCmp $0 "/S" silent
+  	CreateDirectory "$SMPROGRAMS\Exodus"
+  	CreateShortCut "$SMPROGRAMS\Exodus\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
+  	CreateShortCut "$SMPROGRAMS\Exodus\Exodus.lnk" "$INSTDIR\Exodus.exe" "" "$INSTDIR\Exodus.exe" 0
+silent:
+
 SectionEnd
 
 ; special uninstall section.
@@ -222,3 +231,45 @@ done:
 	Pop $0
 FunctionEnd
 
+;------------------------------------------------------------------------------
+; StrStr
+; input, top of stack = string to search for
+;        top of stack-1 = string to search in
+; output, top of stack (replaces with the portion of the string remaining)
+; modifies no other variables.
+;
+; Usage:
+;   Push "this is a long ass string"
+;   Push "ass"
+;   Call StrStr
+;   Pop $0
+;  ($0 at this point is "ass string")
+
+Function StrStr
+  Exch $1 ; st=haystack,old$1, $1=needle
+  Exch    ; st=old$1,haystack
+  Exch $2 ; st=old$1,old$2, $2=haystack
+  Push $3
+  Push $4
+  Push $5
+  StrLen $3 $1
+  StrCpy $4 0
+  ; $1=needle
+  ; $2=haystack
+  ; $3=len(needle)
+  ; $4=cnt
+  ; $5=tmp
+  loop:
+    StrCpy $5 $2 $3 $4
+    StrCmp $5 $1 done
+    StrCmp $5 "" done
+    IntOp $4 $4 + 1
+    Goto loop
+  done:
+  StrCpy $1 $2 "" $4
+  Pop $5
+  Pop $4
+  Pop $3
+  Pop $2
+  Exch $1
+FunctionEnd
