@@ -714,7 +714,7 @@ var
     s: TXMLTag;
 begin
     {$ifdef TRACE_EXCEPTIONS}
-    // Application.OnException := ApplicationException;
+    //Application.OnException := ApplicationException;
     Include(JclStackTrackingOptions, stRawMode);
     {$endif}
 
@@ -2588,7 +2588,7 @@ begin
     // LoadPlugin('RosterClean.ExodusRosterClean');
 
     // Cause an AV
-    // PInteger(nil)^ := 0;
+    PInteger(nil)^ := 0;
 
     // Show a toast window
     {
@@ -2624,13 +2624,13 @@ begin
     //e := TJabberEntity.Create(TJabberID.Create('jabber.org'));
     //e.walk(MainSession);
 
-    MessageDlg(_(sDisconnected), mtInformation, [mbOK], 0);
+    //MessageDlg(_(sDisconnected), mtInformation, [mbOK], 0);
 
     {
     MessageBoxW(Application.Handle, PWideChar(_(sDisconnected)), 'Foo',
         MB_OK + MB_ICONINFORMATION);
     }
-    MessageDlgW(_(sDisconnected), mtInformation, [mbOK], 0);
+    //MessageDlgW(_(sDisconnected), mtInformation, [mbOK], 0);
 end;
 
 {---------------------------------------}

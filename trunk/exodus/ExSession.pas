@@ -158,11 +158,6 @@ var
 
 begin
     // setup all the session stuff, parse cmd line params, etc..
-    {$ifdef TRACE_EXCEPTIONS}
-    // Application.OnException := ApplicationException;
-    Include(JclStackTrackingOptions, stRawMode);
-    {$endif}
-
     // Initialize random # generator
     Randomize();
 
@@ -493,12 +488,6 @@ begin
     ExCOMController := TExodusController.Create();
     ExCOMRoster := TExodusRoster.Create();
     ExCOMPPDB := TExodusPPDB.Create();
-
-    {$ifdef TRACE_EXCEPTIONS}
-    // Start Exception tracking
-    JclStartExceptionTracking;
-    JclAddExceptNotifier(ExceptionTracker);
-    {$endif}
 
     ExStartup.priority := cli_priority;
     ExStartup.show := cli_show;
