@@ -377,12 +377,18 @@ end;
 procedure TPluginProxy.Callback(event: string; tag: TXMLTag);
 var
     plugin: IExodusPlugin;
+    xml: WideString;
 begin
     // call the plugin back
     // Lets just wholesale catch exceptions here. This will prevent
     // Exodus show catastrophic errors when plugins are bad
     try
         plugin := IUnknown(com) as IExodusPlugin;
+        if (tag = nil) then
+            xml = ''
+        else
+            xml = tag.xml;
+            
         plugin.Process(_xpath, event, tag.xml);
     except
     end;
