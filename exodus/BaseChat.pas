@@ -91,7 +91,6 @@ type
     _esc: boolean;
 
     procedure _scrollBottom();
-    procedure WMThrob(var msg: TMessage); message WM_THROB;
     procedure WMVScroll(var msg: TMessage); message WM_VSCROLL;
 
   public
@@ -473,10 +472,6 @@ end;
 procedure TfrmBaseChat.FormPaint(Sender: TObject);
 begin
   inherited;
-    if timWinFlash.Enabled then begin
-        timWinFlash.Enabled := false;
-        FlashWindow(Self.Handle, false);
-    end;
 end;
 
 {---------------------------------------}
@@ -485,15 +480,6 @@ begin
   inherited;
     if timWinFlash.Enabled then
         timWinFlash.Enabled := false;
-end;
-
-{---------------------------------------}
-procedure TfrmBaseChat.WMThrob(var msg: TMessage);
-begin
-    // Enable the flash timer
-    OutputDebugString('WMThrob');
-    timWinFlash.Enabled := false;
-    timWinFlash.Enabled := true;
 end;
 
 {---------------------------------------}
