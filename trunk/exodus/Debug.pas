@@ -24,14 +24,13 @@ interface
 uses
     Dockable, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, StdCtrls, ExtCtrls, ComCtrls, Menus;
+    Dialogs, StdCtrls, ExtCtrls, ComCtrls, Menus, RichEdit2, ExRichEdit;
 
 type
   TfrmDebug = class(TfrmDockable)
     Panel1: TPanel;
     chkDebugWrap: TCheckBox;
     Panel2: TPanel;
-    MsgDebug: TRichEdit;
     MemoSend: TMemo;
     Splitter1: TSplitter;
     Panel3: TPanel;
@@ -42,6 +41,7 @@ type
     popIQGet: TMenuItem;
     popIQSet: TMenuItem;
     popPres: TMenuItem;
+    MsgDebug: TExRichEdit;
     procedure FormCreate(Sender: TObject);
     procedure chkDebugWrapClick(Sender: TObject);
     procedure btnClearDebugClick(Sender: TObject);
@@ -52,7 +52,7 @@ type
   private
     { Private declarations }
     _cb: integer;
-    procedure DataCallback(event: string; tag: TXMLTag; data: string);
+    procedure DataCallback(event: string; tag: TXMLTag; data: Widestring);
   end;
 
     procedure ShowDebugForm();
@@ -144,7 +144,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmDebug.DataCallback(event: string; tag: TXMLTag; data: string);
+procedure TfrmDebug.DataCallback(event: string; tag: TXMLTag; data: Widestring);
 var
     l, d: integer;
 begin
