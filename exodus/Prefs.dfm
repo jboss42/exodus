@@ -1571,12 +1571,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 384
-    ActivePage = tbsMessages
+    ActivePage = tbsDialog
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 5
+    TabIndex = 4
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -2113,10 +2113,24 @@ object frmPrefs: TfrmPrefs
     object tbsDialog: TTabSheet
       Caption = 'Dialogs'
       ImageIndex = 4
+      object Label26: TLabel
+        Left = 8
+        Top = 175
+        Width = 197
+        Height = 13
+        Caption = 'Minutes to keep chat windows in memory:'
+      end
+      object Label27: TLabel
+        Left = 8
+        Top = 189
+        Width = 244
+        Height = 13
+        Caption = 'Use 0 minutes to destroy chat windows immediately.'
+      end
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 97
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2263,6 +2277,28 @@ object frmPrefs: TfrmPrefs
         Max = 255
         Position = 255
         TabOrder = 11
+        Wrap = False
+      end
+      object txtChatMemory: TEdit
+        Left = 32
+        Top = 205
+        Width = 49
+        Height = 21
+        TabOrder = 12
+        Text = '60'
+        OnChange = txtToastAlphaChange
+      end
+      object spnChatMemory: TUpDown
+        Left = 81
+        Top = 205
+        Width = 16
+        Height = 21
+        Associate = txtChatMemory
+        Min = 0
+        Max = 360
+        Increment = 5
+        Position = 60
+        TabOrder = 13
         Wrap = False
       end
     end

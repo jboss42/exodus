@@ -50,6 +50,7 @@ type
     imgStatus: TPaintBox;
     popClearHistory: TMenuItem;
     lblNick: TTntLabel;
+    timMemory: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -72,6 +73,8 @@ type
     procedure btnCloseClick(Sender: TObject);
     procedure popClearHistoryClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure timMemoryTimer(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     jid: widestring;        // jid of the person we are talking to
@@ -277,6 +280,7 @@ begin
     _embed_returns := MainSession.Prefs.getBool('embed_returns');
     mnuReturns.Checked := _embed_returns;
     MsgOut.WantReturns := _embed_returns;
+    timMemory.Interval := MainSession.Prefs.getInt('chat_memory') * 60 * 1000;
 end;
 
 
@@ -350,24 +354,14 @@ end;
 
 {---------------------------------------}
 procedure TfrmChat.FormClose(Sender: TObject; var Action: TCloseAction);
-var
-    i: integer;
 begin
-    // Unregister the callbacks + stuff
-    MainSession.UnRegisterCallback(_pcallback);
-    MainSession.UnRegisterCallback(_scallback);
+    if (timMemory.Interval > 0) then begin
+        timMemory.Enabled := true;
+        Action := caHide;
+    end
+    else
+        Action := caFree;
 
-    if chat_object <> nil then begin
-        i := MainSession.ChatList.IndexOfObject(chat_object);
-        if i >= 0 then
-            MainSession.ChatList.Delete(i);
-        chat_object.Free;
-    end;
-
-    if (_jid <> nil) then
-        _jid.Free();
-
-    Action := caFree;
     inherited;
 end;
 
@@ -801,9 +795,25 @@ end;
 
 {---------------------------------------}
 procedure TfrmChat.FormDestroy(Sender: TObject);
+var
+    i: integer;
 begin
-    inherited;
+    // Unregister the callbacks + stuff
+    MainSession.UnRegisterCallback(_pcallback);
+    MainSession.UnRegisterCallback(_scallback);
+
+    if chat_object <> nil then begin
+        i := MainSession.ChatList.IndexOfObject(chat_object);
+        if i >= 0 then
+            MainSession.ChatList.Delete(i);
+        chat_object.Free;
+    end;
+
+    if (_jid <> nil) then
+        _jid.Free();
+
     DragAcceptFiles( Handle, false );
+    inherited;
 end;
 
 {---------------------------------------}
@@ -926,6 +936,21 @@ begin
     if (chat_object <> nil) then
         TExodusChat(chat_object.ComController).fireClose();
   }
+end;
+
+{---------------------------------------}
+procedure TfrmChat.timMemoryTimer(Sender: TObject);
+begin
+  inherited;
+    // time to free the window..
+    Self.Free();
+end;
+
+{---------------------------------------}
+procedure TfrmChat.FormShow(Sender: TObject);
+begin
+  inherited;
+    timMemory.Enabled := false;
 end;
 
 end.
