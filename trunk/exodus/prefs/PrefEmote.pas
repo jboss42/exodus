@@ -23,20 +23,37 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls;
+  Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls,
+  ComCtrls, TntComCtrls;
 
 type
   TfrmPrefEmote = class(TfrmPrefPanel)
+    Panel1: TPanel;
+    chkEmoticons: TTntCheckBox;
+    EmoteOpen: TOpenDialog;
+    pageEmotes: TTntPageControl;
+    TntTabSheet1: TTntTabSheet;
+    TntTabSheet2: TTntTabSheet;
     pnlCustomPresButtons: TPanel;
     btnEmoteAdd: TTntButton;
     btnEmoteRemove: TTntButton;
     btnEmoteClear: TTntButton;
     btnEmoteDefault: TTntButton;
     lstEmotes: TTntListBox;
-    Panel1: TPanel;
-    chkEmoticons: TTntCheckBox;
-    Label1: TTntLabel;
-    EmoteOpen: TOpenDialog;
+    lstCustomEmote: TTntListBox;
+    Panel2: TPanel;
+    btnCustomEmoteAdd: TTntButton;
+    btnCustomEmoteRemove: TTntButton;
+    btnCustomEmoteClear: TTntButton;
+    Panel3: TPanel;
+    TntLabel1: TTntLabel;
+    txtEmoteFilename: TTntEdit;
+    TntLabel2: TTntLabel;
+    txtEmoteText: TTntEdit;
+    TntLabel3: TTntLabel;
+    txtCustomEmoteFilename: TTntEdit;
+    btnCustomEmoteBrowse: TTntButton;
+    XMLDialog1: TOpenDialog;
     procedure btnEmoteAddClick(Sender: TObject);
     procedure btnEmoteRemoveClick(Sender: TObject);
     procedure btnEmoteClearClick(Sender: TObject);
@@ -58,13 +75,65 @@ var
 implementation
 {$R *.dfm}
 uses
-    Emote, GnuGetText, ExUtils, Session, PrefController;
+    XMLTag, XMLParser, Emote, GnuGetText, ExUtils, Session, PrefController;
 
 {---------------------------------------}
 procedure TfrmPrefEmote.LoadPrefs();
+var
+    i: integer;
+    mt, path, fn: Widestring;
+    parser: TXMLTagParser;
+    o, t, icon, doc: TXMLTag;
+    icons: TXMLTagList;
 begin
     inherited;
     MainSession.Prefs.fillStringlist('emoticon_dlls', lstEmotes.Items);
+
+    // XXX: load custom emoticons
+    fn := txtCustomEmoteFilename.Text;
+    path := ExtractFilePath(fn);
+    if (path = '') then begin
+        path := PrefController.getUserDir();
+        fn := path + ExtractFileName(fn);
+        txtCustomEmoteFilename.Text := fn;
+    end;
+
+    pageEmotes.TabIndex := 0;
+
+    {
+    /// XXX: finish custom emotes
+    try
+        parser := TXMLTagParser.Create();
+        parser.ParseFile(fn);
+        doc := parser.popTag();
+        if (doc = nil) then exit;
+
+        icons := doc.QueryTags('icon');
+        for i = 0 to icons.Count - 1 do begin
+            icon := icons[i];
+            o := icon.GetFirstTag('object');
+            t := icon.GetFirstTag('text');
+            if ((o <> nil) and (t <> nil)) then begin
+                mt := o.getAttribute('mime');
+
+                // image/gif
+                // image/x-ms-bmp
+                // image/jpeg
+                // image/png
+                if ((mt = 'image/gif') or (mt = 'image/x-ms-bmp')) then begin
+                    // these are ok.
+
+                end;
+
+            end;
+        end;
+
+    finally
+        if (doc <> nil) then doc.Free();
+        parser.Free();
+    end;
+    }
+
 end;
 
 {---------------------------------------}
@@ -75,6 +144,8 @@ begin
 
     // Reload our lists.
     InitializeEmoticonLists();
+
+    // XXX: save custom emoticons
 end;
 
 {---------------------------------------}
