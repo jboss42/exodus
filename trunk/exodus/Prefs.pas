@@ -648,6 +648,7 @@ end;
 procedure TfrmPrefs.frameButtons1btnOKClick(Sender: TObject);
 begin
     SavePrefs;
+    Self.BringToFront();
 end;
 
 {---------------------------------------}

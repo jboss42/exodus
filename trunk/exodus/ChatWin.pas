@@ -253,13 +253,6 @@ begin
     _jid := TJabberID.Create(cjid);
 
     // setup the callbacks if we don't have them already
-    {
-    if (_callback < 0) then begin
-        _callback := MainSession.RegisterCallback(MsgCallback,
-            '/packet/message[@from="' + Lowercase(cjid) + '*"]');
-        end;
-    }
-
     if (_pcallback < 0) then
         _pcallback := MainSession.RegisterCallback(PresCallback,
             '/packet/presence[@from="' + Lowercase(cjid) + '*"]');
@@ -269,7 +262,7 @@ begin
 
     // setup the captions, etc..
     ritem := MainSession.Roster.Find(_jid.jid);
-    p := MainSession.ppdb.FindPres(_jid.jid, '');
+    p := MainSession.ppdb.FindPres(_jid.jid, _jid.resource);
 
     if ritem <> nil then begin
         lblNick.Caption := ' ' + ritem.Nickname;
