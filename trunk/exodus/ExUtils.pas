@@ -897,7 +897,7 @@ end;
 procedure jabberSendMsg(to_jid: Widestring; mtag: TXMLTag;
     xtags, body, subject: Widestring);
 var
-    btag: TXMLTag;
+    stag, btag: TXMLTag;
     xml, s, b: Widestring;
 begin
     // handle allowing the plugins to get a pass at all
@@ -915,8 +915,15 @@ begin
         btag.AddCData(body);
     end;
 
-    if (s <> '') then
-        mtag.AddBasicTag('subject', s);
+    if (s <> '') then begin
+        stag := (mtag.GetFirstTag('subject'));
+        if (stag = nil) then
+            mtag.AddBasicTag('subject', s)
+        else begin
+            stag.ClearCData();
+            stag.AddCData(subject);
+        end;
+    end;
 
     if (xml <> '') then
         mtag.addInsertedXML(xml);
