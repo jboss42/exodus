@@ -11,8 +11,8 @@ unit ExodusPlugins_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.1 $
-// File generated on 12/11/2002 7:19:31 AM from Type Library described below.
+// PASTLWTR : $Revision: 1.2 $
+// File generated on 12/11/2002 5:29:17 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\ExodusPlugin.tlb (1)
@@ -20,8 +20,8 @@ unit ExodusPlugins_TLB;
 // LCID: 0
 // Helpfile: 
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
-//   (2) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
+//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
+//   (2) v4.0 StdVCL, (C:\WINNT\System32\STDVCL40.DLL)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -47,7 +47,7 @@ const
   LIBID_ExodusPlugins: TGUID = '{053C946B-D466-4686-BC8F-CB5B5D7C9C2A}';
 
   IID_IExodusPlugin: TGUID = '{ACC22059-DC3D-4C6E-B1B1-A6DB095A983E}';
-  DIID_ExodusPlugin_: TGUID = '{7A44F5FC-3C6D-4982-B375-1E04E899F49C}';
+  DIID_ExodusPlugin: TGUID = '{7A44F5FC-3C6D-4982-B375-1E04E899F49C}';
   IID_IExodusChatPlugin: TGUID = '{46DA66FE-CDA8-469F-A632-E9EBFB7E85FE}';
   DIID_ExodusChatPlugin: TGUID = '{39EA70E1-35B8-43DD-83EC-D2B8ED5D3481}';
 type
@@ -57,7 +57,7 @@ type
 // *********************************************************************//
   IExodusPlugin = interface;
   IExodusPluginDisp = dispinterface;
-  ExodusPlugin_ = dispinterface;
+  ExodusPlugin = dispinterface;
   IExodusChatPlugin = interface;
   IExodusChatPluginDisp = dispinterface;
   ExodusChatPlugin = dispinterface;
@@ -97,11 +97,11 @@ type
   end;
 
 // *********************************************************************//
-// DispIntf:  ExodusPlugin_
+// DispIntf:  ExodusPlugin
 // Flags:     (4096) Dispatchable
 // GUID:      {7A44F5FC-3C6D-4982-B375-1E04E899F49C}
 // *********************************************************************//
-  ExodusPlugin_ = dispinterface
+  ExodusPlugin = dispinterface
     ['{7A44F5FC-3C6D-4982-B375-1E04E899F49C}']
   end;
 
@@ -113,7 +113,7 @@ type
   IExodusChatPlugin = interface(IDispatch)
     ['{46DA66FE-CDA8-469F-A632-E9EBFB7E85FE}']
     procedure onBeforeMessage(var Body: WideString); safecall;
-    procedure onAfterMessage(var Body: WideString; var xml: WideString); safecall;
+    function onAfterMessage(var Body: WideString): WideString; safecall;
     procedure onKeyPress(const Key: WideString); safecall;
     procedure onContextMenu(const ID: WideString); safecall;
     procedure onMsg(var xml: WideString); safecall;
@@ -127,7 +127,7 @@ type
   IExodusChatPluginDisp = dispinterface
     ['{46DA66FE-CDA8-469F-A632-E9EBFB7E85FE}']
     procedure onBeforeMessage(var Body: WideString); dispid 1;
-    procedure onAfterMessage(var Body: WideString; var xml: WideString); dispid 2;
+    function onAfterMessage(var Body: WideString): WideString; dispid 2;
     procedure onKeyPress(const Key: WideString); dispid 3;
     procedure onContextMenu(const ID: WideString); dispid 4;
     procedure onMsg(var xml: WideString); dispid 5;

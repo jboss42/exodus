@@ -11,8 +11,8 @@ unit Register_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.1 $
-// File generated on 12/11/2002 7:03:07 AM from Type Library described below.
+// PASTLWTR : $Revision: 1.2 $
+// File generated on 12/11/2002 5:20:22 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -20,8 +20,8 @@ unit Register_TLB;
 // LCID: 0
 // Helpfile: 
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
-//   (2) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
+//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
+//   (2) v4.0 StdVCL, (C:\WINNT\System32\STDVCL40.DLL)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -50,6 +50,19 @@ const
   CLASS_ExodusController: TGUID = '{35B80906-4D4D-4A1D-8BB2-1F0029916422}';
   IID_IExodusChat: TGUID = '{27176DA5-4EEB-442F-9B1F-D25EF948B9CB}';
   CLASS_ExodusChat: TGUID = '{DB3F5C90-0575-47E4-8F00-EED79757A97B}';
+
+// *********************************************************************//
+// Declaration of Enumerations defined in Type Library                    
+// *********************************************************************//
+// Constants for enum ChatParts
+type
+  ChatParts = TOleEnum;
+const
+  HWND_MsgInput = $00000000;
+  Ptr_MsgInput = $00000001;
+  HWND_MsgOutput = $00000002;
+  Ptr_MsgOutput = $00000003;
+
 type
 
 // *********************************************************************//
@@ -139,6 +152,7 @@ type
     function Get_MsgOutText: WideString; safecall;
     function RegisterPlugin(var Plugin: OleVariant): Integer; safecall;
     function UnRegister(ID: Integer): WordBool; safecall;
+    function getMagicInt(Part: ChatParts): Integer; safecall;
     property jid: WideString read Get_jid;
     property MsgOutText: WideString read Get_MsgOutText;
   end;
@@ -155,6 +169,7 @@ type
     property MsgOutText: WideString readonly dispid 4;
     function RegisterPlugin(var Plugin: OleVariant): Integer; dispid 3;
     function UnRegister(ID: Integer): WordBool; dispid 5;
+    function getMagicInt(Part: ChatParts): Integer; dispid 6;
   end;
 
 // *********************************************************************//

@@ -52,6 +52,8 @@ type
     _AttrList: TAttrList;       // list of attributes
     _Children: TXMLNodeList; // list of nodes
     _ns: WideString;
+    _xml_buff: WideString;
+
   public
     pTag: TXMLTag;
 
@@ -90,6 +92,8 @@ type
     procedure ClearCData;
     procedure RemoveTag(node: TXMLTag);
     procedure AssignTag(const xml: TXMLTag);
+
+    procedure addInsertedXML(inserted_xml: Widestring);
 
     property Attributes: TAttrList read _AttrList;
     property Nodes: TXMLNodeList read _Children;
@@ -163,6 +167,7 @@ begin
     NodeType := xml_tag;
     _AttrList := TAttrList.Create();
     _Children := TXMLNodeList.Create(true);
+    _xml_buff := '';
 
     pTag := nil;
 end;
@@ -533,6 +538,13 @@ begin
 end;
 
 {---------------------------------------}
+procedure TXMLTag.addInsertedXML(inserted_xml: Widestring);
+begin
+    // append xtra stuff into the _xml_buff
+    _xml_buff := _xml_buff + inserted_xml;
+end;
+
+{---------------------------------------}
 function TXMLTag.xml: WideString;
 var
     i: integer;
@@ -545,13 +557,14 @@ begin
         x := x + ' ' + _AttrList.Name(i) + '="' +
             XML_EscapeChars(_AttrList.Value(i)) + '"';
 
-    if _Children.Count <= 0 then
+    if ((_Children.Count = 0) and (_xml_buff = '')) then
         x := x + '/>'
     else begin
         // iterate over all the children
         x := x + '>';
         for i := 0 to _Children.Count - 1 do
             x := x + TXMLNode(_Children[i]).xml;
+        x := x + _xml_buff;
         x := x + '</' + Self.name + '>';
         end;
     Result := x;

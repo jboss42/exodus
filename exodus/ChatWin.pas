@@ -347,6 +347,7 @@ begin
         i := MainSession.ChatList.IndexOfObject(chat_object);
         if i >= 0 then
             MainSession.ChatList.Delete(i);
+        TExodusChat(chat_object.ComController).ObjRelease();
         chat_object.Free;
         end;
 
@@ -470,9 +471,9 @@ var
     mtag: TXMLTag;
 begin
     // Send the actual message out
-    // txt := getMemoText(MsgOut);
     txt := Trim(MsgOut.Text);
 
+    // plugin madness
     TExodusChat(chat_object.ComController).fireBeforeMsg(txt);
 
     if (txt = '') then exit;
@@ -497,12 +498,11 @@ begin
         AddTag('composing');
         end;
 
-
-    // MainSession.SendTag(mtag);
-
-    xml := mtag.xml();
-    TExodusChat(chat_object.ComController).fireAfterMsg(txt, xml);
-    MainSession.Stream.Send(xml);
+    // additional plugin madness
+    xml := TExodusChat(chat_object.ComController).fireAfterMsg(txt);
+    if (xml <> '') then
+        mtag.addInsertedXML(xml);
+    MainSession.SendTag(mtag);
     DisplayMsg(Msg, MsgList);
 
     // log the msg
