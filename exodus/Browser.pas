@@ -141,7 +141,7 @@ function ShowBrowser(jid: string = ''): TfrmBrowse;
 implementation
 {$R *.DFM}
 uses
-    Room, 
+    Room, Roster, JabberID, Bookmark,
     ExUtils, Session, JUD, Profile, RegForm, Jabber1;
 
 var
@@ -583,8 +583,17 @@ end;
 
 {---------------------------------------}
 procedure TfrmBrowse.mBookmarkClick(Sender: TObject);
+var
+    itm: TListItem;
+    bm:  TJabberBookmark;
+    fbm: TfrmBookmark;
 begin
-    // todo: add bookmark
+    itm := vwBrowse.Selected;
+    if itm = nil then exit;
+
+    fbm := ShowBookmark('');
+    fbm.txtJID.Text := itm.SubItems[0];
+    fbm.txtName.Text := itm.Caption;
 end;
 
 {---------------------------------------}
