@@ -73,6 +73,9 @@ type
     N3: TMenuItem;
     N4: TMenuItem;
     popDestroy: TMenuItem;
+    popAdminList: TMenuItem;
+    N5: TMenuItem;
+    popOwner: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -149,7 +152,6 @@ type
 
     property HintText: Widestring read _hint_text;
     property getJid: WideString read jid;
-    // property isMUCRoom: boolean read _isMUC;
 
     procedure DockForm; override;
     procedure FloatForm; override;
@@ -293,6 +295,7 @@ begin
     Result := f;
 end;
 
+{---------------------------------------}
 function TfrmRoom.isMUCRoom(): boolean;
 begin
     Result := _isMUC;
@@ -513,7 +516,9 @@ begin
     ptype := tag.getAttribute('type');
     _jid := TJabberID.Create(from);
     i := _roster.indexOf(from);
+
     xtag := tag.QueryXPTag(xp_muc_presence);
+    if (xtag <> nil) then _isMUC := true;
 
     // if ((ptype = 'error') and (_jid.resource = mynick)) then begin
     if ((ptype = 'error') and ((from = jid) or (from = jid + '/' + MyNick))) then begin
@@ -610,7 +615,6 @@ begin
         end
     else begin
         // SOME KIND OF AVAIL
-
         if i < 0 then begin
             // this is a new member
             member := TRoomMember.Create;
@@ -639,8 +643,10 @@ begin
 
             tmp1 := '';
             itag := tag.QueryXPTag(xp_muc_item);
-            if (itag <> nil) then
+            if (itag <> nil) then begin
+                _isMUC := true;
                 tmp1 := itag.getAttribute('role');
+                end;
 
             if ((tmp1 <> '') and (member.nick = myNick)) then begin
                 // someone maybe changed my role
@@ -673,10 +679,13 @@ begin
             // check to see what my role is
             popConfigure.Enabled := (member.Affil = MUC_OWNER);
             popDestroy.Enabled := popConfigure.Enabled;
+            popAdminList.Enabled := popConfigure.Enabled;
+
             popAdmin.Enabled := (member.Role = MUC_MOD) or popConfigure.Enabled;
             popKick.Enabled := popAdmin.Enabled;
             popBan.Enabled := popAdmin.Enabled;
             popVoice.Enabled := popAdmin.Enabled;
+            popOwner.Enabled := popConfigure.Enabled;
             end;
 
         RenderMember(member, tag);
@@ -1357,7 +1366,9 @@ begin
     if (Sender = popKick) then
         AddMemberItems(q, reason, MUC_NONE)
     else if (Sender = popBan) then
-        AddMemberItems(q, reason, '', MUC_OUTCAST);
+        AddMemberItems(q, reason, '', MUC_OUTCAST)
+    else if (Sender = popOwner) then
+        AddMemberItems(q, '', '', MUC_OWNER);
 
     MainSession.SendTag(iq);
 end;
@@ -1434,7 +1445,9 @@ begin
     else if (Sender = popBanList) then
         ShowRoomAdminList(self.jid, '', MUC_OUTCAST)
     else if (Sender = popMemberList) then
-        ShowRoomAdminList(self.jid, '', MUC_MEMBER);
+        ShowRoomAdminList(self.jid, '', MUC_MEMBER)
+    else if (Sender = popAdminList) then
+        ShowRoomAdminList(self.jid, '', MUC_ADMIN);
 end;
 
 {---------------------------------------}

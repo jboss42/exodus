@@ -7,8 +7,8 @@ object frmField: TfrmField
   object lblPrompt: TTntLabel
     Left = 3
     Top = 5
-    Width = 29
-    Height = 16
+    Width = 43
+    Height = 13
     Caption = 'lblPrompt'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -23,6 +23,5 @@ object frmField: TfrmField
     Width = 160
     Height = 21
     TabOrder = 0
-    Text = 'txtData'
   end
 end
