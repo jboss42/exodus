@@ -151,6 +151,9 @@ Item1=.\components
 [HistoryLists\hlUnitOutputDirectory]
 Count=1
 Item0=.\output
+[HistoryLists\hlOutputDirectorry]
+Count=1
+Item0=..\
 [HistoryLists\hlDCPOutput]
 Count=1
 Item0=.\output
