@@ -58,7 +58,6 @@ InstallDirRegKey HKLM "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
 
 !define MUI_CUSTOMPAGECOMMANDS
 
-
 !define MUI_LICENSEPAGE
 !define MUI_COMPONENTSPAGE
 !define MUI_COMPONENTSPAGE_SMALLDESC
@@ -68,7 +67,7 @@ InstallDirRegKey HKLM "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
 
 !define MUI_FINISHPAGE
 !define MUI_FINISHPAGE_RUN "$INSTDIR\Exodus.exe"
-  !define MUI_FINISHPAGE_RUN_NOTCHECKED
+!define MUI_FINISHPAGE_RUN_NOTCHECKED
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_CUSTOMFUNCTION_FINISH_PRE FinishCustomPre
 !define MUI_CUSTOMFUNCTION_FINISH FinishCustom
@@ -82,14 +81,13 @@ Page custom SetCustomNotify ;Custom page
 !insertmacro MUI_PAGECOMMAND_FINISH
 ;Page custom SetCustomFinish ;Custom page
 
-; !define MUI_ABORTWARNING
-
+!define MUI_ABORTWARNING
 !define MUI_UNINSTALLER
 !define MUI_UNCONFIRMPAGE
 
 ;Modern UI System
 !define MUI_BRANDINGTEXT " "
-;  !insertmacro MUI_SYSTEM
+;!insertmacro MUI_SYSTEM
 !define MUI_HEADERBITMAP "exodus-installer.bmp"
 !insertmacro MUI_LANGUAGE "English"
 
@@ -304,6 +302,14 @@ Section "" SEC_Menu
 
 SectionEnd
 
+Section "Desktop Icon" SEC_Desktop
+    CreateShortcut "$DESKTOP\Exodus.lnk" "$INSTDIR\Exodus.exe"
+SectionEnd
+
+Section "Quick Launch Icon" SEC_QuickLaunch
+    CreateShortcut "$QUICKLAUNCH\Exodus.lnk" "$INSTDIR\Exodus.exe"
+SectionEnd
+
 ; BRANDING: Remove this section
 Section "Daily updates" SEC_Bleed
         SetOverwrite off
@@ -376,13 +382,19 @@ LangString DESC_Exodus ${LANG_ENGLISH} \
 "The main exodus program."
 
 LangString DESC_SSL ${LANG_ENGLISH} \
-"You will need these libraries to use SSL connections.  These will be retrieved via the Internet, using your IE proxy settings. This does not work with auto-configured proxies."
+"Download libraries for SSL connections via the Internet. Some proxies may not work correctly."
 
 LangString DESC_Bleed ${LANG_ENGLISH} \
-"Exodus will check for new versions of the latest development build whenever you login.  These sometimes happen several times a day."
+"Check for the latest development build whenever you login. This can happen more than once a day."
 
 LangString DESC_Plugins ${LANG_ENGLISH} \
-"Download Exodus plugins via the Internet, using your IE proxy settings. This does not work with auto-configured proxies."
+"Download plugins via the Internet using your IE proxy settings. Will not work with auto-configured proxies."
+
+LangString DESC_Desktop ${LANG_ENGLISH} \
+"Put a shortcut to Exodus on your desktop."
+
+LangString DESC_QuickLaunch ${LANG_ENGLISH} \
+"Put a shortcut to Exodus in the Quick-Launch bar."
 
 LangString NOTIFY_TITLE ${LANG_ENGLISH} "Notify running copies"
 LangString NOTIFY_SUBTITLE ${LANG_ENGLISH} "Exodus needs to be shut down to install a new version"
@@ -397,11 +409,13 @@ LicenseData GPL-LICENSE.TXT
 SubCaption 3 ": Exit running Exodus versions!"
 
 !insertmacro MUI_FUNCTIONS_DESCRIPTION_BEGIN
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Exodus} $(DESC_Exodus)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_SSL} $(DESC_SSL)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Bleed} $(DESC_Bleed)  
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Plugins} $(DESC_Plugins)
-!include plugins\plugin-desc.nsi
+    !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Exodus} $(DESC_Exodus)
+    !insertmacro MUI_DESCRIPTION_TEXT ${SEC_SSL} $(DESC_SSL)
+    !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Bleed} $(DESC_Bleed)  
+    !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Plugins} $(DESC_Plugins)
+    !include plugins\plugin-desc.nsi
+    !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Desktop} $(DESC_Desktop)
+    !insertmacro MUI_DESCRIPTION_TEXT ${SEC_QuickLaunch} $(DESC_QuickLaunch)
 !insertmacro MUI_FUNCTIONS_DESCRIPTION_END
 
 
@@ -424,7 +438,6 @@ start:
         ; if we do, show a warning..
         FindWindow $0 "TfrmExodus" "" 0
         IntCmp $0 0 done
-;        MessageBox MB_OKCANCEL|MB_ICONQUESTION "Click OK, to close all running copies of Exodus, and install the new version. Cancel will abort the installation." IDOK loop
         ; cancel
 ;        Quit
 loop:
@@ -554,7 +567,6 @@ Function FinishCustomPre
   !insertmacro MUI_INSTALLOPTIONS_WRITE "ioSpecial.ini" "Field 5" "Right" "315"
   !insertmacro MUI_INSTALLOPTIONS_WRITE "ioSpecial.ini" "Field 5" "Top" "100"
   !insertmacro MUI_INSTALLOPTIONS_WRITE "ioSpecial.ini" "Field 5" "Bottom" "110"
-
 FunctionEnd
 
 Function FinishCustom
