@@ -77,10 +77,14 @@ const
 
 type
     TJabberProfile = class
+    private
+        _password: string;
+
+        function getPassword: string;
+        procedure setPassword(value: string);
     public
         Name: string;
         Username: string;
-        password: string;
         Server: string;
         Resource: string;
         Priority: integer;
@@ -114,6 +118,8 @@ type
         procedure Load(tag: TXMLTag);
         procedure Save(node: TXMLTag);
         function IsValid() : boolean;
+
+        property password: string read getPassword write setPassword;
     end;
 
     TPrefController = class
@@ -957,6 +963,20 @@ begin
     ProxyAuth := false;
     ProxyUsername := '';
     ProxyPassword := '';
+end;
+
+{---------------------------------------}
+function TJabberProfile.getPassword: string;
+begin
+    // accessor for password
+    result := _password;
+end;
+
+{---------------------------------------}
+procedure TJabberProfile.setPassword(value: string);
+begin
+    // accessor for password
+    _password := Trim(value);
 end;
 
 {---------------------------------------}

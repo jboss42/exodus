@@ -266,7 +266,7 @@ end;
 {---------------------------------------}
 procedure TJabberSession.SetPassword(password: string);
 begin
-    _profile.Password := password;
+    _profile.Password := Trim(password);
 end;
 
 {---------------------------------------}
@@ -281,7 +281,7 @@ end;
 {---------------------------------------}
 procedure TJabberSession.SetServer(server: string);
 begin
-    _profile.Password := server;
+    _profile.Server := server;
 end;
 
 {---------------------------------------}
