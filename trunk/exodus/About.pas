@@ -37,6 +37,8 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure InfoBoxURLClick(Sender: TObject; url: String);
+    procedure pnlVersionMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private declarations }
   public
@@ -74,6 +76,20 @@ end;
 procedure TfrmAbout.InfoBoxURLClick(Sender: TObject; url: String);
 begin
     ShellExecute(0, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
+end;
+
+procedure TfrmAbout.pnlVersionMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var
+    i: integer;
+    str: string;
+begin
+    if (not (ssCtrl in Shift)) then exit;
+
+    str := Application.ExeName;
+    for i := 1 to ParamCount do
+        str := str + ' ' + ParamStr(i);
+    MessageDlg(str, mtInformation, [mbOK], 0);
 end;
 
 end.
