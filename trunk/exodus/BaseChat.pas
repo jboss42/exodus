@@ -34,7 +34,6 @@ type
 
   TfrmBaseChat = class(TfrmDockable)
     pnlMsgList: TPanel;
-    Splitter1: TSplitter;
     pnlInput: TPanel;
     Panel1: TPanel;
     popMsgList: TTntPopupMenu;
@@ -50,6 +49,7 @@ type
     Paste2: TTntMenuItem;
     Copy3: TTntMenuItem;
     Copy2: TTntMenuItem;
+    Splitter1: TSplitter;
 
     procedure Emoticons1Click(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);

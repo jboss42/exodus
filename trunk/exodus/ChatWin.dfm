@@ -1,6 +1,7 @@
 inherited frmChat: TfrmChat
-  Left = 251
+  Left = 306
   Top = 168
+  Width = 391
   Height = 305
   ActiveControl = MsgOut
   Caption = 'Chat Window'
@@ -12,20 +13,25 @@ inherited frmChat: TfrmChat
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
-    Top = 240
+    Top = 239
+    Width = 383
   end
   inherited pnlMsgList: TPanel
     Top = 32
-    Height = 208
+    Width = 383
+    Height = 207
   end
   inherited pnlInput: TPanel
     Top = 243
+    Width = 383
     inherited MsgOut: TExRichEdit
+      Width = 379
       WantReturns = False
       OnChange = MsgOutChange
     end
   end
   inherited Panel1: TPanel
+    Width = 383
     Height = 32
     object btnClose: TSpeedButton
       Left = 354
@@ -33,7 +39,6 @@ inherited frmChat: TfrmChat
       Width = 23
       Height = 21
       Caption = 'X'
-      Flat = True
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
       Font.Height = -13
