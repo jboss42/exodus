@@ -106,7 +106,7 @@ type
         function getString(pkey: string; server_side: boolean = false): string;
         function getInt(pkey: string; server_side: boolean = false): integer;
         function getBool(pkey: string; server_side: boolean = false): boolean;
-        function getStringlist(pkey: string; server_side: boolean = false): TStringList;
+        procedure fillStringlist(pkey: string; sl: TStrings; server_side: boolean = false);
 
         function getAllPresence(): TList;
         function getPresence(pkey: string): TJabberCustomPres;
@@ -427,15 +427,14 @@ begin
 end;
 
 {---------------------------------------}
-function TPrefController.getStringlist(pkey: string; server_side: boolean = false): TStringList;
+procedure TPrefController.fillStringlist(pkey: string; sl: TStrings; server_side: boolean = false);
 var
-    sl: TStringList;
     p: TXMLTag;
     s: TXMLTagList;
     i: integer;
 begin
-    sl := TStringList.Create;
-
+    sl.Clear();
+    
     if (server_side) then
         p := _server_node.getFirstTag(pkey)
     else
@@ -447,7 +446,6 @@ begin
             sl.Add(s.Tags[i].Data);
         s.Free;
         end;
-    Result := sl;
 end;
 
 {---------------------------------------}
@@ -512,8 +510,10 @@ begin
         p.ClearTags();
 
     // plug in all the values
-    for i := 0 to pvalue.Count - 1 do
-        p.AddBasicTag('s', pvalue[i]);
+    for i := 0 to pvalue.Count - 1 do begin
+        if (pvalue[i] <> '') then
+            p.AddBasicTag('s', pvalue[i]);
+        end;
 
     if (not server_side) then
         Self.Save();

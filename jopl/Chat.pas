@@ -111,9 +111,16 @@ begin
     if (tag.QueryXPTag('/message/body') = nil) then exit;
 
     if (Self.indexOf(fjid) < 0) then begin
+
         // Create a new session
         tmp_jid := TJabberID.Create(fjid);
         if (Self.indexOf(tmp_jid.jid) >= 0) then begin
+            tmp_jid.Free();
+            exit;
+            end;
+            
+        // in the blocker list?
+        if (MainSession.IsBlocked(tmp_jid)) then  begin
             tmp_jid.Free();
             exit;
             end;

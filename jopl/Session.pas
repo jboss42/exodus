@@ -25,7 +25,7 @@ uses
     PrefController,
     Agents, Chat, Presence, Roster,
     Signals, XMLStream, XMLTag,
-    Contnrs, Classes, SysUtils;
+    Contnrs, Classes, SysUtils, JabberID;
 
 type
     TJabberAuthType = (jatZeroK, jatDigest, jatPlainText, jatNoAuth);
@@ -108,6 +108,9 @@ type
         function NewAgentsList(srv: string): TAgents;
         function GetAgentsList(srv: string): TAgents;
         function generateID: string;
+        function IsBlocked(jid : string): boolean;  overload;
+        function IsBlocked(jid : TJabberID): boolean; overload;
+        procedure Block(jid : TJabberID);
 
         property Username: string read _username write _username;
         property Password: string read _password write _password;
@@ -154,6 +157,7 @@ uses
     QForms, QDialogs,
     {$endif}
     XMLUtils, XMLSocketStream, IdGlobal,
+//    XMLHttpStream, 
     iq;
 
 {---------------------------------------}
@@ -163,6 +167,7 @@ begin
     inherited Create();
     
     _stream := TXMLSocketStream.Create('stream:stream');
+//    _stream := TXMLHttpStream.Create('stream:stream');
     _username := '';
     _password := '';
     _resource := '';
@@ -647,6 +652,46 @@ begin
         Result := nil;
 end;
 
+{---------------------------------------}
+function TJabberSession.IsBlocked(jid : string): boolean;
+var
+    tmp_jid:  TJabberID;
+begin
+    tmp_jid := TJabberID.Create(jid);
+    result := IsBlocked(tmp_jid);
+    tmp_jid.Free();
+end;
+
+{---------------------------------------}
+function TJabberSession.IsBlocked(jid : TJabberID): boolean;
+var
+    blockers: TStringList;
+begin
+    blockers := TStringList.Create();
+    Prefs.fillStringlist('blockers', blockers);
+    if (blockers.IndexOf(jid.jid) < 0) then
+        result := false
+    else
+        result := true;
+    blockers.Free();
+end;
+
+procedure TJabberSession.Block(jid : TJabberID);
+var
+    blockers: TStringList;
+    block: TXMLTag;
+begin
+    blockers := TStringList.Create();
+    Prefs.fillStringlist('blockers', blockers);
+    if (blockers.IndexOf(jid.jid) < 0) then begin
+        blockers.Add(jid.jid);
+        Prefs.setStringlist('blockers', blockers);
+        end;
+    blockers.Free();
+    block := TXMLTag.Create('block');
+    block.PutAttribute('to', jid.jid);
+    MainSession.FireEvent('/session/block', block);
+end;
 
 end.
 
