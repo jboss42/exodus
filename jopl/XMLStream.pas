@@ -279,7 +279,7 @@ end;
 function TParseThread.getFullTag(buff: Widestring): Widestring;
 var
     // pbuff: array of char;
-    sbuff, r, stag, etag, tmps: String;
+    sbuff, r, stag, etag, tmps: Widestring;
     p, ls, le, e, l, ps, pe, ws, sp, tb, cr, nl, i: longint;
 begin
     // init some counters, flags
@@ -292,15 +292,17 @@ begin
     <!--  foo bar -->
 
     }
-    //e := 0;
-    //i := 0;
+
     _counter := 0;
     Result := '';
     sbuff := buff;
     l := Length(sbuff);
 
+    // find the first tag
     p := Pos('<', sbuff);
     if p <= 0 then raise EXMLStream.Create('');
+
+    // trim off the first < char.
     tmps := Copy(sbuff, p, l - p + 1);
     e := Pos('>', tmps);
     i := Pos('/>', tmps);
@@ -345,10 +347,6 @@ begin
             Result := r;
             exit;
             end;
-        end
-    else begin
-        // we already have a root element..
-        // look for <foo bar="baz"/>
         end;
 
     if (e = (i + 1)) then begin
