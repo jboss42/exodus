@@ -256,7 +256,6 @@ type
     procedure RemoveItemNodes(ritem: TJabberRosterItem);
     procedure RemoveItemNode(ritem: TJabberRosterItem; p: TJabberPres);
     procedure RemoveGroupNode(node: TTreeNode);
-    procedure RemoveEmptyGroups();
     procedure ResetPanels;
     procedure ChangeStatusImage(idx: integer);
     procedure showAniStatus();
@@ -941,6 +940,7 @@ var
     ri: TJabberRosterItem;
     bm: TJabberBookmark;
     p: TJabberPres;
+    go: TJabberGroup;
 begin
     // Make sure we have current settings
     // SessionCallback('/session/prefs', nil);
@@ -951,8 +951,9 @@ begin
     ClearNodes;
     treeRoster.Items.BeginUpdate;
 
-    // re-render each item
     with MainSession.Roster do begin
+
+        // If we are doing muc stuff, show bookmarks
         if (_brand_muc) then begin
             for i := 0 to Bookmarks.Count - 1 do begin
                 bm := TJabberBookmark(Bookmarks.Objects[i]);
@@ -960,10 +961,21 @@ begin
             end;
         end;
 
+        // iterate across all items and render them
         for i := 0 to Count - 1 do begin
             ri := TJabberRosterItem(Objects[i]);
             p := MainSession.ppdb.FindPres(ri.JID.jid, '');
             RenderNode(ri, p);
+        end;
+
+        // iterate across the grps, render any empty ones
+        for i := 0 to GroupsCount - 1 do begin
+            go := Groups[i];
+            if ((go.Data <> _bookmark) and
+                (go <> _offline_go) and
+                (go <> _myres_go) and
+                (go.isEmpty()) and (go.Parent = nil)) then
+                RenderGroup(go);
         end;
     end;
 
@@ -1079,22 +1091,6 @@ begin
             Self.RemoveGroupNode(_myres);
             _myres := nil;
         end;
-    end;
-end;
-
-{---------------------------------------}
-procedure TfrmRosterWindow.RemoveEmptyGroups();
-var
-    i: integer;
-    node: TTreeNode;
-    go: TJabberGroup;
-begin
-    // scan for any empty grps
-    for i := MainSession.Roster.GroupsCount - 1 downto 0 do begin
-        go := MainSession.Roster.Groups[i];
-        node := TTreeNode(go.Data);
-        if ((node <> nil) and (node.Count = 0)) then
-            RemoveGroupNode(node);
     end;
 end;
 
@@ -1453,7 +1449,6 @@ begin
     if not _FullRoster then begin
         if (resort) then
             treeRoster.AlphaSort;
-        RemoveEmptyGroups();
         if ((treeRoster.Items.Count > 0) and (top_item <> nil)) then
             treeRoster.TopItem := top_item;
     end;
@@ -2679,11 +2674,20 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.popGrpRemoveClick(Sender: TObject);
 var
+    go: TJabberGroup;
     recips: TList;
 begin
     // Remove the grp..
-    if (treeRoster.SelectionCount = 1) then
-        RemoveGroup(_cur_grp)
+    if (treeRoster.SelectionCount = 1) then begin
+        go := _cur_go;
+        if (go.isEmpty()) then begin
+            // just remove the node, and remove it from the roster
+            TTreeNode(go.Data).Free();
+            MainSession.roster.removeGroup(go);
+        end
+        else
+            RemoveGroup(_cur_grp)
+    end
     else begin
         recips := getSelectedContacts(false);
         RemoveGroup('', recips);
