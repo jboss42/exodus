@@ -44,6 +44,7 @@ type
 
     TAgents = class(TStringList)
     private
+        jid: string;
         procedure FetchCallback(event: string; tag: TXMLTag);
     public
         procedure Fetch(from: string);
@@ -53,6 +54,7 @@ type
         function getAgent(i: integer): TAgentItem;
         function getFirstSearch: string;
         function getFirstGroupChat: string;
+        function findService(svc: string): TAgentItem;
     end;
 
 {---------------------------------------}
@@ -112,6 +114,7 @@ begin
         cur.parse(ag_list[i]);
         self.AddObject(cur.jid, cur);
         end;
+    MainSession.FireEvent('/session/agents', iq);
 end;
 
 {---------------------------------------}
@@ -120,9 +123,11 @@ var
     iq: TJabberIQ;
 begin
     // fetch the agents list from this specific jid
+    self.jid := from;
     iq := TJabberIQ.Create(MainSession, MainSession.generateID(), FetchCallback);
     iq.iqType := 'get';
     iq.Namespace := XMLNS_AGENTS;
+    iq.toJid := from;
     iq.Send;
 end;
 
@@ -180,6 +185,22 @@ begin
         end;
 
     Result := '';
+end;
+
+{---------------------------------------}
+function TAgents.findService(svc: string): TAgentItem;
+var
+    i: integer;
+    a: TAgentItem;
+begin
+    Result := nil;
+    for i := 0 to Self.Count - 1 do begin
+        a := TAgentItem(Self.Objects[i]);
+        if (a.service = svc) then begin
+            Result := a;
+            exit;
+            end;
+        end;
 end;
 
 {---------------------------------------}

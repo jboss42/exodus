@@ -1,10 +1,10 @@
 object frmAdd: TfrmAdd
-  Left = 275
-  Top = 493
+  Left = 233
+  Top = 117
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'Add Contact'
-  ClientHeight = 155
+  ClientHeight = 214
   ClientWidth = 251
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,28 +20,28 @@ object frmAdd: TfrmAdd
   TextHeight = 13
   object Label1: TLabel
     Left = 8
-    Top = 9
-    Width = 76
+    Top = 41
+    Width = 54
     Height = 13
-    Caption = 'Jabber Address:'
+    Caption = 'Contact ID:'
   end
   object Label2: TLabel
     Left = 8
-    Top = 41
+    Top = 73
     Width = 51
     Height = 13
     Caption = 'Nickname:'
   end
   object Label3: TLabel
     Left = 8
-    Top = 73
+    Top = 102
     Width = 32
     Height = 13
     Caption = 'Group:'
   end
   object lblAddGrp: TLabel
     Left = 94
-    Top = 96
+    Top = 125
     Width = 83
     Height = 13
     Cursor = crHandPoint
@@ -56,9 +56,24 @@ object frmAdd: TfrmAdd
     ParentFont = False
     OnClick = lblAddGrpClick
   end
+  object Label4: TLabel
+    Left = 8
+    Top = 9
+    Width = 67
+    Height = 13
+    Caption = 'Contact Type:'
+  end
+  object lblGateway: TLabel
+    Left = 8
+    Top = 153
+    Width = 79
+    Height = 13
+    Caption = 'Gateway Server:'
+    Enabled = False
+  end
   object txtJID: TEdit
     Left = 94
-    Top = 6
+    Top = 38
     Width = 139
     Height = 21
     TabOrder = 0
@@ -66,14 +81,14 @@ object frmAdd: TfrmAdd
   end
   object txtNickname: TEdit
     Left = 94
-    Top = 38
+    Top = 70
     Width = 139
     Height = 21
     TabOrder = 1
   end
   object cboGroup: TComboBox
     Left = 94
-    Top = 72
+    Top = 101
     Width = 142
     Height = 21
     ItemHeight = 13
@@ -81,7 +96,7 @@ object frmAdd: TfrmAdd
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 121
+    Top = 180
     Width = 251
     Height = 34
     Align = alBottom
@@ -99,5 +114,30 @@ object frmAdd: TfrmAdd
         OnClick = frameButtons1btnCancelClick
       end
     end
+  end
+  object cboType: TComboBox
+    Left = 94
+    Top = 8
+    Width = 142
+    Height = 21
+    Style = csDropDownList
+    ItemHeight = 13
+    TabOrder = 4
+    OnChange = cboTypeChange
+    Items.Strings = (
+      'Jabber'
+      'MSN'
+      'Yahoo'
+      'AIM'
+      'ICQ')
+  end
+  object txtGateway: TEdit
+    Left = 94
+    Top = 150
+    Width = 139
+    Height = 21
+    Enabled = False
+    TabOrder = 5
+    OnExit = txtJIDExit
   end
 end

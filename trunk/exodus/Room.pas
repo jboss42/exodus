@@ -219,7 +219,8 @@ begin
             end;
         end;
 
-    DisplayMsg(Msg, MsgList);
+    if (Msg.Body <> '') then
+        DisplayMsg(Msg, MsgList);
 end;
 
 {---------------------------------------}

@@ -54,7 +54,9 @@ uses
   XMLParser in 'XMLParser.pas',
   jud in 'jud.pas' {frmJUD},
   fTopLabel in 'fTopLabel.pas' {frameTopLabel: TFrame},
-  Agents in 'Agents.pas';
+  Agents in 'Agents.pas',
+  Register in 'Register.pas',
+  RegForm in 'RegForm.pas' {frmRegister};
 
 {$R *.RES}
 
@@ -66,6 +68,7 @@ begin
   Application.CreateForm(TfrmJabber, frmJabber);
   Application.CreateForm(TfrmRosterWindow, frmRosterWindow);
   Application.CreateForm(TfrmDebug, frmDebug);
+  Application.CreateForm(TfrmRegister, frmRegister);
   Application.ShowMainForm := false;
   frmRosterWindow.DockRoster;
   frmRosterWindow.Show;
