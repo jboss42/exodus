@@ -21,6 +21,7 @@ unit ExUtils;
 
 interface
 uses
+    Unicode, 
     JabberMsg, Graphics, Controls, StdCtrls, Forms, Classes, SysUtils, Windows;
 
 const
@@ -67,6 +68,7 @@ procedure DebugMsg(Message : string);
 procedure AssignDefaultFont(font: TFont);
 
 procedure jabberSendCTCP(jid, xmlns: string);
+procedure jabberSendRosterItems(to_jid: WideString; items: TList);
 
 function getDisplayField(fld: string): string;
 function secsToDuration(seconds: string): string;
@@ -86,15 +88,9 @@ var
 {---------------------------------------}
 implementation
 uses
-    Unicode,
-    Dialogs, StrUtils, IdGlobal,
-    ShellAPI,
-    MsgDisplay,
-    Session, IQ, Jabber1,
-    XMLUtils,
-    JabberID,
-    IniFiles,
-    Debug;
+    IniFiles, Dialogs, StrUtils, IdGlobal, ShellAPI,
+    XMLTag, XMLUtils, Session, IQ, JabberID, Roster, 
+    JabberConst, Jabber1, MsgDisplay, Debug;
 
 type
     TAtom = class
@@ -329,6 +325,7 @@ begin
         MessageDlg(sHistoryNone, mtWarning, [mbOK,mbCancel], 0);
 end;
 
+{---------------------------------------}
 procedure ClearAllLogs();
 var
     fn: string;
@@ -618,6 +615,32 @@ begin
             tmps := tmps + Trim(ins_list[i]) + ' ';
         Result := tmps;
         end;
+end;
+
+{---------------------------------------}
+procedure jabberSendRosterItems(to_jid: WideString; items: TList);
+var
+    i: integer;
+    b: WideString;
+    msg, x, item: TXMLTag;
+    ri: TJabberRosterItem;
+begin
+    msg := TXMLTag.Create('message');
+    msg.PutAttribute('id', MainSession.generateID());
+    msg.PutAttribute('to', to_jid);
+
+    b := Format(sMsgRosterItems, [items.Count]);
+    x := msg.AddTag('x');
+    x.PutAttribute('xmlns', XMLNS_XROSTER);
+    for i := 0 to items.Count - 1 do begin
+        ri := TJabberRosterItem(items[i]);
+        item := x.AddTag('item');
+        item.PutAttribute('jid', ri.jid.full);
+        item.PutAttribute('name', ri.RawNickname);
+        b := b + Chr(13) + Chr(10) + ri.RawNickname + ': ' + ri.jid.full;
+        end;
+    msg.AddBasicTag('body', b);
+    MainSession.SendTag(msg);
 end;
 
 

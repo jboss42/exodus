@@ -59,6 +59,20 @@ type
         constructor Create(Session: TJabberSession); overload;
     end;
 
+    TDiscoItemsResponder = class(TJabberResponder)
+    published
+        procedure iqCallback(event: string; tag:TXMLTag); override;
+    public
+        constructor Create(Session: TJabberSession); overload;
+    end;
+
+    TDiscoInfoResponder = class(TJabberResponder)
+    published
+        procedure iqCallback(event: string; tag:TXMLTag); override;
+    public
+        constructor Create(Session: TJabberSession); overload;
+    end;
+
     TFactoryResponder = class
     private
         _session: TJabberSession;
@@ -80,6 +94,7 @@ resourcestring
     sTime = 'Time';
     sLast = 'Last';
     sBrowse = 'Browse';
+    sDisco = 'Disco';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -98,7 +113,8 @@ var
     _iqoob: TFactoryResponder;
     _muc_invite: TFactoryResponder;
     _conf_invite: TFactoryResponder;
-
+    _disco_items: TDiscoItemsResponder;
+    _disco_info: TDiscoInfoResponder;
 
 {---------------------------------------}
 function getNick(j: string): string;
@@ -125,7 +141,7 @@ begin
     _last := TLastResponder.Create(MainSession);
     _browse := TBrowseResponder.Create(MainSession);
     _xdata := TFactoryResponder.Create(MainSession,
-        '/packet/message/x[@xmlns="' + XMLNS_DATA +'"]',
+        '/packet/message/x[@xmlns="' + XMLNS_XDATA +'"]',
         showXData);
     _iqoob := TFactoryResponder.Create(MainSession,
         '/packet/iq[@type="set"]/query[@xmlns="' + XMLNS_IQOOB + '"]',
@@ -141,6 +157,8 @@ end;
 {---------------------------------------}
 procedure cleanupResponders();
 begin
+    _disco_info.Free();
+    _disco_items.Free();
     _conf_invite.Free();
     _muc_invite.Free();
     _iqoob.Free();
@@ -150,6 +168,10 @@ begin
     _time.Free();
     _version.Free();
 
+    _disco_info := nil;
+    _disco_items := nil;
+    _conf_invite := nil;
+    _muc_invite := nil;
     _iqoob := nil;
     _xdata := nil;
     _browse := nil;
@@ -330,16 +352,120 @@ begin
                 '/' + _session.Resource);
             PutAttribute('name', _session.Username);
 
-            AddBasicTag('ns', 'jabber:x:conference');
-            // AddBasicTag('ns', 'jabber:x:oob');
+            AddBasicTag('ns', XMLNS_SEARCH);
+            AddBasicTag('ns', XMLNS_AGENTS);
+
             AddBasicTag('ns', XMLNS_IQOOB);
             AddBasicTag('ns', XMLNS_BROWSE);
             AddBasicTag('ns', XMLNS_TIME);
             AddBasicTag('ns', XMLNS_VERSION);
             AddBasicTag('ns', XMLNS_LAST);
+            AddBasicTag('ns', XMLNS_DISCOITEMS);
+            AddBasicTag('ns', XMLNS_DISCOINFO);
 
+            AddBasicTag('ns', XMLNS_BM);
+            AddBasicTag('ns', XMLNS_XDATA);
+            AddBasicTag('ns', XMLNS_XCONFERENCE);
+            AddBasicTag('ns', XMLNS_XEVENT);
+
+            AddBasicTag('ns', XMLNS_MUC);
+            AddBasicTag('ns', XMLNS_MUCUSER);
+            AddBasicTag('ns', XMLNS_MUCOWNER);
             end;
         end;
+    _session.SendTag(r);
+end;
+
+{---------------------------------------}
+constructor TDiscoItemsResponder.Create(Session: TJabberSession);
+begin
+    inherited Create(Session, XMLNS_DISCOITEMS);
+end;
+
+{---------------------------------------}
+procedure TDiscoItemsResponder.iqCallback(event: string; tag:TXMLTag);
+var
+    r, q: TXMLTag;
+begin
+    // return an empty result set.
+    if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
+    DoNotify(nil, 'notify_autoresponse',
+             Format(sNotifyAutoResponse, [sDisco,
+                                          getNick(tag.getAttribute('from'))]),
+             ico_info);
+
+    r := TXMLTag.Create('iq');
+    with r do begin
+        PutAttribute('to', tag.getAttribute('from'));
+        PutAttribute('id', tag.GetAttribute('id'));
+        PutAttribute('type', 'result');
+        q := AddTag('query');
+        q.PutAttribute('xmlns', XMLNS_DISCOITEMS);
+        end;
+    _session.SendTag(r);
+end;
+
+{---------------------------------------}
+constructor TDiscoInfoResponder.Create(Session: TJabberSession);
+begin
+    inherited Create(Session, XMLNS_DISCOINFO);
+end;
+
+{---------------------------------------}
+procedure TDiscoInfoResponder.iqCallback(event: string; tag:TXMLTag);
+
+    procedure addFeature(qtag: TXMLTag; stype: WideString);
+    begin
+        with qtag.AddTag('feature') do
+            PutAttribute('type', stype);
+    end;
+
+var
+    r, q: TXMLTag;
+begin
+    // return info results
+    if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
+    DoNotify(nil, 'notify_autoresponse',
+             Format(sNotifyAutoResponse, [sDisco,
+                                          getNick(tag.getAttribute('from'))]),
+             ico_info);
+
+    r := TXMLTag.Create('iq');
+    with r do begin
+        PutAttribute('to', tag.getAttribute('from'));
+        PutAttribute('id', tag.GetAttribute('id'));
+        PutAttribute('type', 'result');
+        q := AddTag('query');
+        with q do begin
+            PutAttribute('xmlns', XMLNS_DISCOINFO);
+            with AddTag('identity') do begin
+                PutAttribute('category', 'user');
+                PutAttribute('type', 'client');
+                PutAttribute('name', _session.Username);
+                end;
+            end;
+
+        addFeature(q, XMLNS_SEARCH);
+        addFeature(q, XMLNS_AGENTS);
+
+        addFeature(q, XMLNS_IQOOB);
+        addFeature(q, XMLNS_BROWSE);
+        addFeature(q, XMLNS_TIME);
+        addFeature(q, XMLNS_VERSION);
+        addFeature(q, XMLNS_LAST);
+        addFeature(q, XMLNS_DISCOITEMS);
+        addFeature(q, XMLNS_DISCOINFO);
+
+        addFeature(q, XMLNS_BM);
+        addFeature(q, XMLNS_XDATA);
+        addFeature(q, XMLNS_XCONFERENCE);
+        addFeature(q, XMLNS_XEVENT);
+
+        addFeature(q, XMLNS_MUC);
+        addFeature(q, XMLNS_MUCUSER);
+        addFeature(q, XMLNS_MUCOWNER);
+        end;
+
     _session.SendTag(r);
 end;
 

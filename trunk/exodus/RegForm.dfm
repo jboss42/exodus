@@ -39,6 +39,8 @@ object frmRegister: TfrmRegister
         Caption = '< Previous'
         Enabled = False
         TabOrder = 0
+        Visible = False
+        OnClick = btnPrevClick
       end
       object btnNext: TButton
         Left = 88

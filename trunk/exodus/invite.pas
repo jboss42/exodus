@@ -64,7 +64,8 @@ resourcestring
     sConfRoom = 'Conference Room:';
 
 procedure showRecvInvite(tag: TXMLTag);
-procedure ShowInvite(room_jid: WideString; jids: TWideStringList);
+procedure ShowInvite(room_jid: WideString; items: TList); overload;
+procedure ShowInvite(room_jid: WideString; jids: TWideStringList); overload;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -94,6 +95,19 @@ begin
         end
     else
         frmExodus.RenderEvent(e);
+end;
+
+{---------------------------------------}
+procedure ShowInvite(room_jid: WideString; items: TList);
+var
+    jids: TWideStringlist;
+    i: integer;
+begin
+    jids := TWideStringList.Create();
+    for i := 0 to items.Count - 1 do
+        jids.add(TJabberRosterItem(items[i]).jid.jid);
+    ShowInvite(room_jid, jids);
+    jids.Free();
 end;
 
 {---------------------------------------}

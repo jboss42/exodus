@@ -93,6 +93,7 @@ var
     c: TControl;
 begin
     //
+    AssignDefaultFont(Self.Canvas.Font);
     packet := tag.Name;
     to_jid := tag.GetAttribute('from');
     AssignDefaultFont(Self.Font);
@@ -186,7 +187,7 @@ begin
     // do something
     getResponseTag(m, x);
 
-    x.PutAttribute('xmlns', XMLNS_DATA);
+    x.PutAttribute('xmlns', XMLNS_XDATA);
     x.PutAttribute('type', 'submit');
     if (_title <> '') then
         x.AddBasicTag('title', _title);
@@ -206,11 +207,11 @@ begin
             end;
         end;
 
-        if (not valid) then begin
-            if (m <> nil) then m.Free();
-            MessageDlg(sAllRequired, mtError, [mbOK], 0);
-            exit;
-            end;
+    if (not valid) then begin
+        if (m <> nil) then m.Free();
+        MessageDlg(sAllRequired, mtError, [mbOK], 0);
+        exit;
+        end;
 
     MainSession.SendTag(m);
     Self.Close();
@@ -240,7 +241,7 @@ begin
         x := q.AddTag('x');
         end;
 
-    x.PutAttribute('xmlns', XMLNS_DATA);
+    x.PutAttribute('xmlns', XMLNS_XDATA);
 end;
 
 {---------------------------------------}

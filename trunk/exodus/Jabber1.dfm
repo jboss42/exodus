@@ -25,10 +25,18 @@ object frmExodus: TfrmExodus
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object Tabs: TTntPageControl
-    Left = 0
+  object SplitterLeft: TSplitter
+    Left = 57
     Top = 31
-    Width = 442
+    Width = 3
+    Height = 256
+    Cursor = crHSplit
+    OnMoved = SplitterRightMoved
+  end
+  object Tabs: TTntPageControl
+    Left = 60
+    Top = 31
+    Width = 382
     Height = 256
     ActivePage = tbsRoster
     Align = alClient
@@ -45,6 +53,8 @@ object frmExodus: TfrmExodus
     TabOrder = 0
     OnChange = TabsChange
     OnDockDrop = TabsDockDrop
+    OnDragDrop = TabsDragDrop
+    OnDragOver = TabsDragOver
     OnMouseDown = TabsMouseDown
     OnUnDock = TabsUnDock
     object tbsRoster: TTabSheet
@@ -56,14 +66,14 @@ object frmExodus: TfrmExodus
       Font.Style = []
       ImageIndex = -1
       ParentFont = False
-      object Splitter1: TSplitter
+      object SplitterRight: TSplitter
         Left = 209
         Top = 0
         Width = 3
         Height = 226
         Cursor = crHSplit
         ResizeStyle = rsUpdate
-        OnMoved = Splitter1Moved
+        OnMoved = SplitterRightMoved
       end
       object pnlRoster: TPanel
         Left = 0
@@ -80,7 +90,7 @@ object frmExodus: TfrmExodus
       object pnlRight: TPanel
         Left = 212
         Top = 0
-        Width = 222
+        Width = 162
         Height = 226
         Align = alClient
         BevelOuter = bvNone
@@ -191,6 +201,16 @@ object frmExodus: TfrmExodus
         OnClick = btnDelPersonClick
       end
     end
+  end
+  object pnlLeft: TPanel
+    Left = 0
+    Top = 31
+    Width = 57
+    Height = 256
+    Align = alLeft
+    BevelOuter = bvNone
+    BorderWidth = 1
+    TabOrder = 2
   end
   object MainMenu1: TMainMenu
     Images = ImageList2

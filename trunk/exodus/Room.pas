@@ -144,7 +144,9 @@ type
     mynick: Widestring;
     procedure SendMsg; override;
     function GetNick(rjid: Widestring): Widestring;
+
     property HintText: Widestring read _hint_text;
+    property getJid: WideString read jid;
 
     procedure DockForm; override;
     procedure FloatForm; override;
@@ -1012,7 +1014,7 @@ end;
 procedure TfrmRoom.popInviteClick(Sender: TObject);
 begin
   inherited;
-    ShowInvite(Self.jid, nil);
+    ShowInvite(Self.jid, TWideStringList(nil));
 end;
 
 {---------------------------------------}

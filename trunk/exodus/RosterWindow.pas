@@ -28,6 +28,7 @@ uses
     ComCtrls, ExtCtrls, Buttons, ImgList, Menus, StdCtrls;
 
 type
+
   TfrmRosterWindow = class(TForm)
     treeRoster: TTreeView;
     ImageList1: TImageList;
@@ -176,7 +177,6 @@ type
     _adURL : string;
 
     function getNodeType(node: TTreeNode = nil): integer;
-    function getSelectedContacts(online: boolean = true): TList;
     procedure popUnBlockClick(Sender: TObject);
     procedure ExpandNodes;
     procedure RenderNode(ritem: TJabberRosterItem; p: TJabberPres);
@@ -199,13 +199,15 @@ type
     { Public declarations }
     DockOffset: longint;
     Docked: boolean;
+    inMessenger: boolean;
 
     procedure ClearNodes;
     procedure Redraw;
     procedure DockRoster;
     procedure FloatRoster;
     procedure ShowPresence(show: string);
-    function  RenderGroup(grp_idx: integer): TTreeNode;
+    function RenderGroup(grp_idx: integer): TTreeNode;
+    function getSelectedContacts(online: boolean = true): TList;
   end;
 
 var
@@ -1082,7 +1084,14 @@ procedure TfrmRosterWindow.DockRoster;
 begin
     // dock the window to the main form
     StatBar.Visible := false;
-    Self.ManualDock(frmExodus.pnlRoster, nil, alClient);
+    if (MainSession.Prefs.GetBool('roster_messenger')) then begin
+        Self.ManualDock(frmExodus.pnlRoster, nil, alClient);
+        inMessenger := true;
+        end
+    else begin
+        Self.ManualDock(frmExodus.pnlLeft, nil, alClient);
+        inMessenger := false;
+        end;
     Self.Align := alClient;
     Docked := true;
     MainSession.dock_windows := Docked;
@@ -1829,9 +1838,6 @@ end;
 procedure TfrmRosterWindow.popSendContactsClick(Sender: TObject);
 var
     fsel: TfrmSelContact;
-    x, item, msg: TXMLTag;
-    s, i: integer;
-    ri: TJabberRosterItem;
     sel: TList;
 begin
     // Send contacts to this JID..
@@ -1847,28 +1853,8 @@ begin
     fsel.frameTreeRoster1.treeRoster.MultiSelect := false;
 
     frmExodus.PreModal(fsel);
-
-    if (fsel.ShowModal = mrOK) then begin
-        // do the send
-        msg := TXMLTag.Create('message');
-        msg.PutAttribute('id', MainSession.generateID());
-        msg.PutAttribute('to', fsel.GetSelectedJID());
-
-        s := treeRoster.SelectionCount;
-
-        msg.AddBasicTag('body', Format(sMsgRosterItems, [s]));
-        x := msg.AddTag('x');
-        x.PutAttribute('xmlns', XMLNS_XROSTER);
-        for i := 0 to sel.Count - 1 do begin
-            ri := TJabberRosterItem(sel[i]);
-            item := x.AddTag('item');
-            item.PutAttribute('jid', ri.jid.full);
-            item.PutAttribute('name', ri.RawNickname);
-            end;
-
-        MainSession.SendTag(msg);
-        end;
-
+    if (fsel.ShowModal = mrOK) then
+        jabberSendRosterItems(fsel.GetSelectedJID(), sel);
     frmExodus.PostModal();
 
     sel.Free();
@@ -2049,5 +2035,8 @@ begin
     if (_adURL <> '') then
         ShellExecute(0, 'open', PChar(_adURL), nil, nil, SW_SHOWNORMAL);
 end;
+
+initialization
+    frmRosterWindow := nil;
 
 end.

@@ -1570,12 +1570,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 357
-    ActivePage = tbsNotify
+    ActivePage = tbsRoster
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 6
+    TabIndex = 0
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1623,7 +1623,7 @@ object frmPrefs: TfrmPrefs
       end
       object optDblClick: TRadioGroup
         Left = 8
-        Top = 176
+        Top = 190
         Width = 161
         Height = 55
         Caption = 'Double Click Action '
@@ -1635,7 +1635,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkInlineStatus: TCheckBox
         Left = 8
-        Top = 128
+        Top = 142
         Width = 241
         Height = 17
         Caption = 'Show status in the roster: Joe <Meeting>'
@@ -1644,7 +1644,7 @@ object frmPrefs: TfrmPrefs
       end
       object cboInlineStatus: TColorBox
         Left = 32
-        Top = 144
+        Top = 158
         Width = 145
         Height = 22
         DefaultColorColor = clBlue
@@ -1677,6 +1677,14 @@ object frmPrefs: TfrmPrefs
         Height = 17
         Caption = 'Show pending contacts'
         TabOrder = 9
+      end
+      object chkMessenger: TCheckBox
+        Left = 8
+        Top = 126
+        Width = 273
+        Height = 17
+        Caption = 'Roster && Msg Queue share a tab when expanded'
+        TabOrder = 10
       end
     end
     object tbsSubscriptions: TTabSheet
