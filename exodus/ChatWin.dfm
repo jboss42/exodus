@@ -1,10 +1,10 @@
 object frmChat: TfrmChat
-  Left = 292
-  Top = 190
+  Left = 257
+  Top = 214
   ActiveControl = MsgOut
   AutoScroll = False
   Caption = 'Chat Window'
-  ClientHeight = 274
+  ClientHeight = 267
   ClientWidth = 392
   Color = clBtnFace
   Constraints.MinHeight = 285
@@ -27,7 +27,7 @@ object frmChat: TfrmChat
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 240
+    Top = 233
     Width = 392
     Height = 3
     Cursor = crVSplit
@@ -39,7 +39,7 @@ object frmChat: TfrmChat
     Left = 0
     Top = 0
     Width = 392
-    Height = 43
+    Height = 25
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -47,7 +47,7 @@ object frmChat: TfrmChat
       Left = 0
       Top = 0
       Width = 392
-      Height = 43
+      Height = 25
       Align = alClient
       BevelOuter = bvNone
       BorderWidth = 2
@@ -62,33 +62,25 @@ object frmChat: TfrmChat
         Left = 2
         Top = 2
         Width = 388
-        Height = 22
+        Height = 23
         Align = alTop
         BevelOuter = bvNone
         BorderWidth = 2
         TabOrder = 0
-        object StaticText1: TStaticText
+        object imgStatus: TPaintBox
+          Tag = 1
           Left = 2
           Top = 2
-          Width = 59
-          Height = 18
+          Width = 20
+          Height = 19
           Align = alLeft
-          Caption = 'Chat:     '
-          Color = clBtnFace
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBtnText
-          Font.Height = -13
-          Font.Name = 'MS Sans Serif'
-          Font.Style = [fsBold]
-          ParentColor = False
-          ParentFont = False
-          TabOrder = 0
+          OnPaint = imgStatusPaint
         end
         object lblJID: TStaticText
-          Left = 89
+          Left = 50
           Top = 2
           Width = 38
-          Height = 18
+          Height = 19
           Cursor = crHandPoint
           Align = alLeft
           Caption = '<JID>'
@@ -100,14 +92,14 @@ object frmChat: TfrmChat
           Font.Style = [fsUnderline]
           ParentColor = False
           ParentFont = False
-          TabOrder = 1
+          TabOrder = 0
           OnClick = lblJIDClick
         end
         object lblNick: TStaticText
-          Left = 61
+          Left = 22
           Top = 2
           Width = 28
-          Height = 18
+          Height = 19
           Cursor = crHandPoint
           Align = alLeft
           Caption = 'Foo'
@@ -119,60 +111,17 @@ object frmChat: TfrmChat
           Font.Style = []
           ParentColor = False
           ParentFont = False
-          TabOrder = 2
-          OnClick = lblJIDClick
-        end
-      end
-      object pnlSubject: TPanel
-        Left = 2
-        Top = 24
-        Width = 388
-        Height = 22
-        Align = alTop
-        BevelOuter = bvNone
-        BorderWidth = 2
-        TabOrder = 1
-        object StaticText3: TStaticText
-          Left = 2
-          Top = 2
-          Width = 60
-          Height = 18
-          Align = alLeft
-          Caption = 'Subject:'
-          Color = clBtnFace
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBtnText
-          Font.Height = -13
-          Font.Name = 'MS Sans Serif'
-          Font.Style = [fsBold]
-          ParentColor = False
-          ParentFont = False
-          TabOrder = 0
-        end
-        object lblSubject: TStaticText
-          Left = 62
-          Top = 2
-          Width = 324
-          Height = 18
-          Align = alClient
-          Color = clBtnFace
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBtnText
-          Font.Height = -13
-          Font.Name = 'MS Sans Serif'
-          Font.Style = []
-          ParentColor = False
-          ParentFont = False
           TabOrder = 1
+          OnClick = lblJIDClick
         end
       end
     end
   end
   object Panel3: TPanel
     Left = 0
-    Top = 43
+    Top = 25
     Width = 392
-    Height = 197
+    Height = 208
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
@@ -182,7 +131,7 @@ object frmChat: TfrmChat
       Left = 4
       Top = 4
       Width = 384
-      Height = 189
+      Height = 200
       Align = alClient
       PopupMenu = popContact
       ReadOnly = True
@@ -193,7 +142,7 @@ object frmChat: TfrmChat
   end
   object pnlInput: TPanel
     Left = 0
-    Top = 243
+    Top = 236
     Width = 392
     Height = 31
     Align = alBottom

@@ -1,8 +1,8 @@
 object frmRosterWindow: TfrmRosterWindow
-  Left = 275
-  Top = 121
-  Width = 199
-  Height = 450
+  Left = 276
+  Top = 122
+  Width = 197
+  Height = 448
   AlphaBlendValue = 220
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Roster - Exodus'
@@ -48,8 +48,8 @@ object frmRosterWindow: TfrmRosterWindow
   TextHeight = 13
   object splitTask: TSplitter
     Left = 0
-    Top = 295
-    Width = 191
+    Top = 293
+    Width = 189
     Height = 4
     Cursor = crVSplit
     Align = alBottom
@@ -57,8 +57,8 @@ object frmRosterWindow: TfrmRosterWindow
   object treeRoster: TTreeView
     Left = 0
     Top = 0
-    Width = 191
-    Height = 295
+    Width = 189
+    Height = 293
     Cursor = crArrow
     Hint = 'Roster Hint'
     Align = alClient
@@ -90,8 +90,8 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object StatBar: TStatusBar
     Left = 0
-    Top = 400
-    Width = 191
+    Top = 398
+    Width = 189
     Height = 21
     Panels = <
       item
@@ -103,8 +103,8 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object pnlShow: TPanel
     Left = 0
-    Top = 376
-    Width = 191
+    Top = 374
+    Width = 189
     Height = 24
     Align = alBottom
     BevelOuter = bvNone
@@ -121,7 +121,7 @@ object frmRosterWindow: TfrmRosterWindow
     object pnlStatus: TPanel
       Left = 25
       Top = 2
-      Width = 164
+      Width = 162
       Height = 20
       Cursor = crHandPoint
       Align = alClient
@@ -141,8 +141,8 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object pnlTasks: TPanel
     Left = 0
-    Top = 299
-    Width = 191
+    Top = 297
+    Width = 189
     Height = 77
     Align = alBottom
     BevelOuter = bvNone
@@ -152,7 +152,7 @@ object frmRosterWindow: TfrmRosterWindow
     object lstTasks: TListView
       Left = 0
       Top = 21
-      Width = 191
+      Width = 189
       Height = 56
       Align = alClient
       Columns = <>
@@ -163,7 +163,7 @@ object frmRosterWindow: TfrmRosterWindow
     object pnlTaskHeader: TPanel
       Left = 0
       Top = 0
-      Width = 191
+      Width = 189
       Height = 21
       Align = alTop
       BevelOuter = bvNone
@@ -172,7 +172,7 @@ object frmRosterWindow: TfrmRosterWindow
       object txtFrom: TStaticText
         Left = 21
         Top = 0
-        Width = 170
+        Width = 168
         Height = 21
         Align = alClient
         Alignment = taCenter

@@ -121,6 +121,7 @@ type
     _cur_bm: TJabberBookmark;
     _cur_status: integer;
 
+    _collapsed_grps: TStringList;
 
     procedure RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
     procedure PresCallback(event: string; tag: TXMLTag; p: TJabberPres);
@@ -153,23 +154,6 @@ var
   frmRosterWindow: TfrmRosterWindow;
 
 const
-    ico_Unassigned = -1;
-    ico_Offline = 0;
-    ico_None = 1;
-    ico_Online = 1;
-    ico_Chat = 4;
-    ico_Away = 2;
-    ico_XA = 10;
-    ico_DND = 3;
-    ico_Folder = 9;
-    ico_ResFolder = 7;
-    ico_Unknown = 6;
-    ico_msg = 11;
-    ico_info = 12;
-
-    ico_down = 27;
-    ico_right = 28;
-
     node_none = 0;
     node_ritem = 1;
     node_bm = 2;
@@ -201,6 +185,7 @@ procedure TfrmRosterWindow.FormCreate(Sender: TObject);
 begin
     // register the callback
     _FullRoster := false;
+    _collapsed_grps := TStringList.Create();
     _rostercb := MainSession.RegisterCallback(RosterCallback);
     _prescb := MainSession.RegisterCallback(PresCallback);
     _sessionCB := MainSession.RegisterCallback(SessionCallback, '/session');
@@ -292,6 +277,11 @@ begin
 
         frmJabber.pnlRoster.ShowHint := not _show_status;
         Redraw();
+        end
+    else if event = '/session/server_prefs' then begin
+        // we are getting server side prefs
+        _collapsed_grps := MainSession.Prefs.getStringlist('col_groups', true);
+        Self.Redraw();
         end;
 end;
 
@@ -372,8 +362,10 @@ begin
     // expand all nodes except special nodes
     for i := 0 to treeRoster.Items.Count - 1 do begin
         n := treeRoster.Items[i];
-        if ((n.Level = 0) and (n <> _offline)) then
-            n.Expand(true);
+        if ((n.Level = 0) and (n <> _offline)) then begin
+            if (_collapsed_grps.IndexOf(n.Text) < 0) then
+                n.Expand(true);
+            end;
         end;
 end;
 
@@ -748,8 +740,10 @@ var
     cp : TPoint;
 begin
     // popup the menu and to change our status
-    GetCursorPos(cp);
-    popStatus.Popup(cp.x, cp.y);
+    if MainSession.Stream.Active then begin
+        GetCursorPos(cp);
+        popStatus.Popup(cp.x, cp.y);
+        end;
 end;
 
 {---------------------------------------}
@@ -855,16 +849,25 @@ begin
     if Node.Data = nil then begin
         Node.ImageIndex := ico_Right;
         Node.SelectedIndex := ico_Right;
+        _collapsed_grps.Add(Node.Text);
+        MainSession.Prefs.setStringlist('col_groups', _collapsed_grps, true);
         end;
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterExpanded(Sender: TObject;
   Node: TTreeNode);
+var
+    i: integer;
 begin
     if Node.Data = nil then begin
         Node.ImageIndex := ico_Down;
         Node.SelectedIndex := ico_Down;
+        i := _collapsed_grps.IndexOf(node.Text);
+        if (i >= 0) then begin
+            _collapsed_grps.Delete(i);
+            MainSession.Prefs.setStringlist('col_groups', _collapsed_grps, true);
+            end;
         end;
 end;
 

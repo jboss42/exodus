@@ -40,6 +40,8 @@ type
         _Callback: TPacketEvent;
         _cbIndex: integer;
         _timer: TTimer;
+        _ticks: longint;
+        _timeout: longint;
 
         procedure Timeout(Sender: TObject);
         procedure iqCallback(event: string; xml: TXMLTag);
@@ -52,11 +54,13 @@ type
         constructor Create(session: TJabberSession;
             id: string;
             cb: TPacketEvent;
-            time: longint = 15000
+            seconds: longint = 15
             ); reintroduce; overload;
         destructor Destroy; override;
 
         procedure Send;
+
+        property ElapsedTime: longint read _ticks;
     end;
 
 {---------------------------------------}
@@ -65,7 +69,7 @@ type
 implementation
 
 {---------------------------------------}
-constructor TJabberIQ.Create(session: TJabberSession; id: string; cb: TPacketEvent; time: longint);
+constructor TJabberIQ.Create(session: TJabberSession; id: string; cb: TPacketEvent; seconds: longint);
 begin
     inherited Create;
 
@@ -74,9 +78,11 @@ begin
     _callback := cb;
     _cbIndex := -1;
     _timer := TTimer.Create(nil);
-    _timer.Interval := time;
+    _timer.Interval := 1000;
     _timer.Enabled := false;
     _timer.OnTimer := Timeout;
+    _ticks := 0;
+    _timeout := seconds;
 
     // manip the xml tag
     Self.Name := 'iq';
@@ -95,10 +101,14 @@ end;
 procedure TJabberIQ.Timeout(Sender: TObject);
 begin
     // we got a timeout event
-    _callback('timeout', nil);
-    _js.UnRegisterCallback(_cbIndex);
-    _cbIndex := -1;
-    Self.Free;
+    inc(_ticks);
+
+    if (_ticks >= _timeout) then begin
+        _callback('timeout', nil);
+        _js.UnRegisterCallback(_cbIndex);
+        _cbIndex := -1;
+        Self.Free;
+        end;
 end;
 
 {---------------------------------------}
@@ -125,6 +135,7 @@ begin
     // this is our singleton
     _timer.Enabled := false;
     _js.UnRegisterCallback(_cbIndex);
+    xml.PutAttribute('iq_elapsed_time', IntToStr(_ticks));
     _callback('xml', xml);
     _cbIndex := -1;
     Self.Free;

@@ -68,7 +68,7 @@ function ShowEvent(e: TJabberEvent): TfrmMsgRecv;
 implementation
 uses
     ShellAPI, 
-    JabberMsg,
+    ExUtils, JabberMsg,
     Room,
     Session;
 
@@ -119,19 +119,8 @@ end;
 procedure TfrmMsgRecv.FormCreate(Sender: TObject);
 begin
     // pre-fill parts of the header grid
-    with MainSession.Prefs do begin
-        txtMsg.Font.Name := getString('font_name');
-        txtMsg.Font.Size := getInt('font_size');
-        txtMsg.Font.Style := [];
-        txtMsg.Color := TColor(getInt('color_bg'));
-        txtMsg.Font.Color := TColor(getInt('font_color'));
-        if getBool('font_bold') then
-            txtMsg.Font.Style := txtMsg.Font.Style + [fsBold];
-        if getBool('font_italic') then
-            txtMsg.Font.Style := txtMsg.Font.Style + [fsItalic];
-        if getBool('font_underline') then
-            txtMsg.Font.Style := txtMsg.Font.Style + [fsUnderline];
-        end;
+    AssignDefaultFont(txtMsg.Font);
+    txtMsg.Color := TColor(MainSession.Prefs.getInt('color_bg'));
     Self.ClientHeight := 200;
 end;
 
