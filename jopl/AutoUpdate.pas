@@ -206,8 +206,12 @@ begin
         http := TIdHTTP.Create(nil);
         http.HandleRedirects := true;
         MainSession.Prefs.setProxy(http);
-        http.Head(_url);
-        if (http.ResponseCode <> 200) then begin
+        try
+            http.Head(_url);
+            if (http.ResponseCode <> 200) then begin
+                exit;
+            end;
+        except
             exit;
         end;
 
