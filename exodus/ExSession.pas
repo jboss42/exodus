@@ -482,6 +482,8 @@ begin
 
 end;
 
+{---------------------------------------}
+{---------------------------------------}
 procedure ParseXMPPFile(filename: string; var connect_node: TXMLTag;
     var jid: TJabberID);
 var
