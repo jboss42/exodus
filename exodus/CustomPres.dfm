@@ -17,21 +17,21 @@ object frmCustomPres: TfrmCustomPres
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
+  object Label1: TTntLabel
     Left = 8
     Top = 11
     Width = 75
     Height = 13
     Caption = 'Presence Type:'
   end
-  object Label2: TLabel
+  object Label2: TTntLabel
     Left = 8
     Top = 43
     Width = 33
     Height = 13
     Caption = 'Status:'
   end
-  object Label3: TLabel
+  object Label3: TTntLabel
     Left = 8
     Top = 75
     Width = 31
@@ -55,16 +55,16 @@ object frmCustomPres: TfrmCustomPres
       inherited Panel1: TPanel
         Left = 153
         Height = 29
-        inherited btnOK: TButton
+        inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end
-        inherited btnCancel: TButton
+        inherited btnCancel: TTntButton
           OnClick = frameButtons1btnCancelClick
         end
       end
     end
   end
-  object cboType: TComboBox
+  object cboType: TTntComboBox
     Left = 96
     Top = 8
     Width = 129
@@ -72,7 +72,7 @@ object frmCustomPres: TfrmCustomPres
     Style = csDropDownList
     ItemHeight = 13
     TabOrder = 0
-    Items.Strings = (
+    Items.WideStrings = (
       'Chat'
       'Available'
       'Away'
@@ -93,7 +93,7 @@ object frmCustomPres: TfrmCustomPres
     ParentFont = False
     TabOrder = 1
   end
-  object txtPriority: TEdit
+  object txtPriority: TTntEdit
     Left = 96
     Top = 72
     Width = 33
@@ -101,7 +101,7 @@ object frmCustomPres: TfrmCustomPres
     TabOrder = 2
     Text = '0'
   end
-  object chkSave: TCheckBox
+  object chkSave: TTntCheckBox
     Left = 8
     Top = 104
     Width = 241
@@ -116,7 +116,7 @@ object frmCustomPres: TfrmCustomPres
     Width = 289
     Height = 81
     TabOrder = 4
-    object lblTitle: TLabel
+    object lblTitle: TTntLabel
       Left = 8
       Top = 18
       Width = 23
@@ -124,7 +124,7 @@ object frmCustomPres: TfrmCustomPres
       Caption = 'Title:'
       Enabled = False
     end
-    object lblHotkey: TLabel
+    object lblHotkey: TTntLabel
       Left = 8
       Top = 50
       Width = 38
@@ -132,7 +132,7 @@ object frmCustomPres: TfrmCustomPres
       Caption = 'HotKey:'
       Enabled = False
     end
-    object txtTitle: TEdit
+    object txtTitle: TTntEdit
       Left = 80
       Top = 15
       Width = 193

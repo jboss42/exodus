@@ -23,20 +23,20 @@ interface
 uses
     Roster, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, buttonFrame, StdCtrls;
+    Dialogs, buttonFrame, StdCtrls, TntStdCtrls;
 
 type
   TfrmBookmark = class(TForm)
     frameButtons1: TframeButtons;
-    Label1: TLabel;
-    cboType: TComboBox;
-    Label2: TLabel;
-    txtName: TEdit;
-    Label3: TLabel;
-    txtJID: TEdit;
-    Label4: TLabel;
-    txtNick: TEdit;
-    chkAutoJoin: TCheckBox;
+    Label1: TTntLabel;
+    cboType: TTntComboBox;
+    Label2: TTntLabel;
+    txtName: TTntEdit;
+    Label3: TTntLabel;
+    txtJID: TTntEdit;
+    Label4: TTntLabel;
+    txtNick: TTntEdit;
+    chkAutoJoin: TTntCheckBox;
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -59,7 +59,7 @@ implementation
 {$R *.dfm}
 
 uses
-    GnuGetText, JabberID, Session, RosterWindow;
+    ExUtils, GnuGetText, JabberID, Session, RosterWindow;
 
 function ShowBookmark(jid: string): TfrmBookmark;
 var
@@ -131,6 +131,7 @@ end;
 
 procedure TfrmBookmark.FormCreate(Sender: TObject);
 begin
+    AssignUnicodeFont(Self);
     TranslateProperties(Self);
 end;
 

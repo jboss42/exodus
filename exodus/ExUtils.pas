@@ -21,7 +21,8 @@ unit ExUtils;
 
 interface
 uses
-    Unicode, ExRichEdit, RichEdit2, Signals, XMLTag,  
+    Unicode, ExRichEdit, RichEdit2, Signals, XMLTag,
+    TntStdCtrls,
     JabberMsg, Graphics, Controls, StdCtrls, Forms, Classes, SysUtils, Windows;
 
 const
@@ -68,7 +69,8 @@ procedure ShowLog(jid: string);
 procedure DebugMsg(Message : string);
 procedure AssignDefaultFont(font: TFont);
 procedure AssignUnicodeFont(Form: TForm; font_size: short = 0);
-procedure URLLabel(lbl: TLabel);
+procedure URLLabel(lbl: TLabel); overload;
+procedure URLLabel(lbl: TTntLabel); overload;
 
 procedure jabberSendCTCP(jid, xmlns: string; callback: TPacketEvent = nil);
 procedure jabberSendRosterItems(to_jid: WideString; items: TList);
@@ -462,6 +464,13 @@ end;
 
 {---------------------------------------}
 procedure URLLabel(lbl: TLabel);
+begin
+    lbl.Font.Color := clBlue;
+    lbl.Font.Style := [fsUnderline];
+end;
+
+{---------------------------------------}
+procedure URLLabel(lbl: TTntLabel);
 begin
     lbl.Font.Color := clBlue;
     lbl.Font.Style := [fsUnderline];

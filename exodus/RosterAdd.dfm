@@ -18,28 +18,28 @@ object frmAdd: TfrmAdd
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
+  object Label1: TTntLabel
     Left = 8
     Top = 41
     Width = 54
     Height = 13
     Caption = 'Contact ID:'
   end
-  object Label2: TLabel
+  object Label2: TTntLabel
     Left = 8
     Top = 73
     Width = 51
     Height = 13
     Caption = 'Nickname:'
   end
-  object Label3: TLabel
+  object Label3: TTntLabel
     Left = 8
     Top = 102
     Width = 32
     Height = 13
     Caption = 'Group:'
   end
-  object lblAddGrp: TLabel
+  object lblAddGrp: TTntLabel
     Left = 94
     Top = 125
     Width = 83
@@ -56,14 +56,14 @@ object frmAdd: TfrmAdd
     ParentFont = False
     OnClick = lblAddGrpClick
   end
-  object Label4: TLabel
+  object Label4: TTntLabel
     Left = 8
     Top = 9
     Width = 67
     Height = 13
     Caption = 'Contact Type:'
   end
-  object lblGateway: TLabel
+  object lblGateway: TTntLabel
     Left = 8
     Top = 153
     Width = 79
@@ -71,7 +71,7 @@ object frmAdd: TfrmAdd
     Caption = 'Gateway Server:'
     Enabled = False
   end
-  object txtJID: TEdit
+  object txtJID: TTntEdit
     Left = 94
     Top = 38
     Width = 139
@@ -79,14 +79,14 @@ object frmAdd: TfrmAdd
     TabOrder = 0
     OnExit = txtJIDExit
   end
-  object txtNickname: TEdit
+  object txtNickname: TTntEdit
     Left = 94
     Top = 70
     Width = 139
     Height = 21
     TabOrder = 1
   end
-  object cboGroup: TComboBox
+  object cboGroup: TTntComboBox
     Left = 94
     Top = 101
     Width = 142
@@ -112,16 +112,16 @@ object frmAdd: TfrmAdd
       inherited Panel1: TPanel
         Left = 91
         Height = 29
-        inherited btnOK: TButton
+        inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end
-        inherited btnCancel: TButton
+        inherited btnCancel: TTntButton
           OnClick = frameButtons1btnCancelClick
         end
       end
     end
   end
-  object cboType: TComboBox
+  object cboType: TTntComboBox
     Left = 94
     Top = 8
     Width = 142
@@ -130,14 +130,14 @@ object frmAdd: TfrmAdd
     ItemHeight = 13
     TabOrder = 4
     OnChange = cboTypeChange
-    Items.Strings = (
+    Items.WideStrings = (
       'Jabber'
       'MSN'
       'Yahoo'
       'AIM'
       'ICQ')
   end
-  object txtGateway: TEdit
+  object txtGateway: TTntEdit
     Left = 94
     Top = 150
     Width = 139
