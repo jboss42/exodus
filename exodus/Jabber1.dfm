@@ -1,6 +1,6 @@
 object Exodus: TExodus
-  Left = 244
-  Top = 252
+  Left = 273
+  Top = 200
   Width = 531
   Height = 328
   AlphaBlendValue = 240

@@ -151,6 +151,10 @@ uses
     QGraphics;
     {$endif}
 
+var
+    dflt_top: integer;
+    dflt_left: integer;
+
 {$ifdef Win32}
 {---------------------------------------}
 function getUserDir: string;
@@ -187,6 +191,54 @@ begin
     if (not DirectoryExists(Result)) then
         MkDir(Result);
 end; //getProfilePath
+
+{---------------------------------------}
+procedure getDefaultPos;
+var
+    taskbar: HWND;
+    _taskrect: TRect;
+    _taskdir: word;
+    mh, mw: longint;
+begin
+    //
+    taskbar := FindWindow('Shell_TrayWnd', '');
+    GetWindowRect(taskbar, _taskrect);
+
+    mh := Screen.Height div 2;
+    mw := Screen.Width div 2;
+    if ((_taskrect.Left < mw) and (_taskrect.Top < mh) and (_taskrect.Right < mw)) then
+        _taskdir := 0
+    else if ((_taskrect.left > mw) and (_taskrect.Top < mh)) then
+        _taskdir := 1
+    else if (_taskrect.top < mh) then
+        _taskdir := 2
+    else
+        _taskdir := 3;
+
+    case _taskdir of
+    0: begin
+        // left
+        dflt_top := 0;
+        dflt_left := _taskrect.Left + 10;
+        end;
+    1: begin
+        // right
+        dflt_top := 0;
+        dflt_left := 0;
+        end;
+    2: begin
+        // top
+        dflt_top := _taskrect.Bottom + 10;
+        dflt_left := 0;
+        end;
+    3: begin
+        // bottom
+        dflt_top := 0;
+        dflt_left := 0;
+        end;
+    end;
+end;
+
 {$endif}
 
 {---------------------------------------}
@@ -209,6 +261,8 @@ begin
     _server_dirty := false;
 
     _profiles := TStringList.Create;
+
+    getDefaultPos();
 end;
 
 {---------------------------------------}
@@ -562,8 +616,8 @@ var
     t,l,w,h: integer;
 begin
     // set the bounds based on the position info
-    t := 10;
-    l := 10;
+    t := dflt_top;
+    l := dflt_left;
     w := 300;
     h := 300;
 
@@ -576,6 +630,10 @@ begin
         w := SafeInt(f.getAttribute('width'));
         h := SafeInt(f.getAttribute('height'));
         end;
+
+    if (t < dflt_top) then t := dflt_top;
+    if (l < dflt_left) then l := dflt_left;
+
 
     if (t + h > Screen.Height) then begin
         t := Screen.Height - h;

@@ -22,7 +22,7 @@ unit ExEvents;
 interface
 uses
     XMLTag, 
-    SysUtils, Classes;
+    Types, SysUtils, Classes;
 
 type
     TJabberEventType = (
@@ -55,6 +55,7 @@ type
         property Data: TStringlist read _data_list;
     end;
 
+function getTaskBarRect(): TRect;
 function CreateJabberEvent(tag: TXMLTag): TJabberEvent;
 
 {---------------------------------------}
@@ -62,7 +63,10 @@ function CreateJabberEvent(tag: TXMLTag): TJabberEvent;
 {---------------------------------------}
 implementation
 uses
-    ExUtils, Session;
+    Messages, Windows, ExUtils, Session;
+
+var
+    _taskbar_rect: TRect;
 
 {---------------------------------------}
 function CreateJabberEvent(tag: TXMLTag): TJabberEvent;
@@ -72,6 +76,21 @@ begin
     e := TJabberEvent.Create;
     e.Parse(tag);
     Result := e;
+end;
+
+{---------------------------------------}
+function getTaskBarRect: TRect;
+var
+    taskbar: HWND;
+begin
+    //
+    if (_taskbar_rect.left = _taskbar_rect.right) then begin
+        taskbar := FindWindow('Shell_TrayWnd', '');
+        GetWindowRect(taskbar, _taskbar_rect);
+        end;
+
+    Result := _taskbar_rect;
+
 end;
 
 {---------------------------------------}
