@@ -83,16 +83,6 @@ object frmDebug: TfrmDebug
       Cursor = crVSplit
       Align = alBottom
     end
-    object MsgDebug: TRichEdit
-      Left = 4
-      Top = 4
-      Width = 335
-      Height = 202
-      Align = alClient
-      ReadOnly = True
-      ScrollBars = ssBoth
-      TabOrder = 0
-    end
     object MemoSend: TMemo
       Left = 4
       Top = 211
@@ -107,8 +97,108 @@ object frmDebug: TfrmDebug
       ParentFont = False
       PopupMenu = PopupMenu1
       ScrollBars = ssVertical
-      TabOrder = 1
+      TabOrder = 0
       OnKeyPress = MemoSendKeyPress
+    end
+    object MsgDebug: TExRichEdit
+      Left = 4
+      Top = 4
+      Width = 335
+      Height = 202
+      Align = alClient
+      AutoURLDetect = adNone
+      CustomURLs = <
+        item
+          Name = 'e-mail'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'http'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'file'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'mailto'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'ftp'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'https'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'gopher'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'nntp'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'prospero'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'telnet'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'news'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end
+        item
+          Name = 'wais'
+          Color = clWindowText
+          Cursor = crDefault
+          Underline = True
+        end>
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Arial Unicode MS'
+      Font.Style = []
+      LangOptions = [loAutoFont]
+      Language = 1033
+      ParentFont = False
+      ScrollBars = ssVertical
+      ShowSelectionBar = False
+      TabOrder = 1
+      URLColor = clBlue
+      URLCursor = crHandPoint
+      InputFormat = ifUnicode
+      OutputFormat = ofUnicode
+      SelectedInOut = False
+      PlainRTF = False
+      UndoLimit = 0
+      AllowInPlace = False
     end
   end
   object PopupMenu1: TPopupMenu
