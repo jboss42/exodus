@@ -51,10 +51,8 @@ type
     procedure MemoSendKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
-    _ccb: integer;
-
-    procedure DebugCallback(send: boolean; data: string);
-    procedure SessionCallback(event: string; tag: TXMLTag);
+    _cb: integer;
+    procedure DataCallback(event: string; tag: TXMLTag; data: string);
   end;
 
     procedure ShowDebugForm();
@@ -141,20 +139,12 @@ procedure TfrmDebug.FormCreate(Sender: TObject);
 begin
     // make sure the output is showing..
     inherited;
-    // MainSession.Stream.RegisterDataCallback(DebugCallback);
-    _ccb := MainSession.RegisterCallback(SessionCallback, '/session/connected');
+
+    _cb := MainSession.RegisterCallback(DataCallback);
 end;
 
 {---------------------------------------}
-procedure TfrmDebug.SessionCallback(event: string; tag: TXMLTag);
-begin
-    // either connected or disconnected
-    if (event = '/session/connected') then
-        MainSession.Stream.RegisterDataCallback(DebugCallback);
-end;
-
-{---------------------------------------}
-procedure TfrmDebug.DebugCallback(send: boolean; data: string);
+procedure TfrmDebug.DataCallback(event: string; tag: TXMLTag; data: string);
 var
     l, d: integer;
 begin
@@ -167,7 +157,7 @@ begin
             MsgDebug.Lines.Delete(0);
         end;
 
-    if send then with MsgDebug do begin
+    if (event = '/data/send') then with MsgDebug do begin
         SelStart := GetTextLen;
         SelLength := 0;
         SelAttributes.Color := clBlue;
@@ -272,8 +262,9 @@ end;
 procedure TfrmDebug.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     Action := caFree;
-    // Action := caHide;
-    // MainSession.Stream.UnregisterDataCallback(DebugCallback);
+    if ((MainSession <> nil) and (_cb <> -1)) then
+        MainSession.UnregisterCallback(_cb);
+
     inherited;
     frmDebug := nil;
 end;

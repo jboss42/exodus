@@ -387,7 +387,6 @@ end;
 {---------------------------------------}
 procedure TfrmChat.showMsg(tag: TXMLTag);
 var
-    etag, btag: TXMLTag;
     Msg: TJabberMessage;
 begin
     // display the body of the msg

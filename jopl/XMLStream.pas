@@ -56,15 +56,15 @@ type
         lparam: integer;
     end;
 
-    TDataCallback = procedure (send: boolean; data: string) of object;
+    TDataEvent = procedure (send: boolean; data: string) of object;
     TXMLStreamCallback = procedure (msg: string; tag: TXMLTag) of object;
 
     TParseThread = class;
-    
+
     TXMLStream = class
     private
         _callbacks: TObjectList;
-        _data_callbacks: TObjectList;
+        _data_event: TDataEvent;
 
     protected
         _Server:    string;
@@ -87,12 +87,12 @@ type
         procedure Disconnect; virtual; abstract;
 
         procedure RegisterStreamCallback(p: TXMLStreamCallback);
-        procedure RegisterDataCallback(p: TDataCallback);
         procedure UnregisterStreamCallback(p: TXMLStreamCallback);
-        procedure UnregisterDataCallback(p: TDataCallback);
 
         property Active: boolean read _active;
         property LocalIP: string read _local_ip;
+
+        property OnData: TDataEvent read _data_event write _data_event;
     end;
 
     TParseThread = class(TIdThread)
@@ -417,7 +417,6 @@ begin
     inherited Create();
     _root_tag := root;
     _callbacks := TObjectList.Create;
-    _data_callbacks := TObjectList.Create;
     _active := false;
 end;
 
@@ -426,7 +425,6 @@ destructor TXMLStream.Destroy();
 begin
     // free all our objects and free the window handle
     _callbacks.Clear();
-    _data_callbacks.Clear();
 
     if _thread <> nil then begin
         _thread._stream := nil;
@@ -434,8 +432,6 @@ begin
         end;
 
     _callbacks.Free;
-    _data_callbacks.Free;
-
     inherited;
 end;
 
@@ -449,18 +445,6 @@ begin
     l := TSignalListener.Create;
     l.callback := TMethod(p);
     _callbacks.add(l);
-end;
-
-{---------------------------------------}
-procedure TXMLStream.RegisterDataCallback(p: TDataCallback);
-var
-    l: TSignalListener;
-begin
-    // Register a socket callback.
-    // Socket callbacks get raw data read in our sent thru the socket
-    l := TSignalListener.Create;
-    l.callback := TMethod(p);
-    _data_callbacks.add(l);
 end;
 
 {---------------------------------------}
@@ -481,38 +465,12 @@ begin
 end;
 
 {---------------------------------------}
-procedure TXMLStream.UnregisterDataCallback(p: TDataCallback);
-var
-    i : integer;
-    cb: TDataCallback;
-    l:  TSignalListener;
-begin
-    for i := 0 to _data_callbacks.Count -1 do begin
-        l := TSignalListener(_data_callbacks[i]);
-        cb := TDataCallback(l.callback);
-        if (@cb = @p) then begin
-            _data_callbacks.Delete(i);
-            exit;
-            end;
-        end;
-end;
-
-{---------------------------------------}
 procedure TXMLStream.DoDataCallbacks(send: boolean; data: string);
-var
-    i: integer;
-    cb: TDataCallback;
-    l: TSignalListener;
 begin
-    // Dispatch socket data to all of our register'd callbacks
-    cb := nil;
-
-    for i := 0 to _data_callbacks.Count - 1 do begin
-        l := TSignalListener(_data_callbacks[i]);
-        cb := TDataCallback(l.callback);
-        cb(send, data);
-        end;
+    if (Assigned(_data_event)) then
+        _data_event(send, data);
 end;
+
 
 {---------------------------------------}
 procedure TXMLStream.DoCallbacks(msg: string; tag: TXMLTag);
@@ -523,12 +481,15 @@ var
 begin
     // dispatch a TXMLTag object to all of the callbacks
     cb := nil;
-
     for i := 0 to _callbacks.Count - 1 do begin
         l := TSignalListener(_callbacks[i]);
         cb := TXMLStreamCallback(l.callback);
         cb(msg, tag);
         end;
+
+    // free the tag here after it's been dispatched thru the system
+    if (tag <> nil) then
+        tag.Free();
 end;
 
 {---------------------------------------}
@@ -537,8 +498,6 @@ begin
     // Send this xml tag out the socket
     Send(tag.xml);
 end;
-
-
 
 end.
 
