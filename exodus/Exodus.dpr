@@ -78,7 +78,6 @@ uses
   JabberConst in '..\jopl\JabberConst.pas',
   JabberID in '..\jopl\JabberID.pas',
   JabberMsg in '..\jopl\JabberMsg.pas',
-  JoinRoom in 'JoinRoom.pas' {frmJoinRoom},
   Langs in '..\jopl\Langs.pas',
   LibXmlComps in '..\jopl\LibXmlComps.pas',
   LibXmlParser in '..\jopl\LibXmlParser.pas',
@@ -166,7 +165,8 @@ uses
   Entity in '..\jopl\Entity.pas',
   EntityCache in '..\jopl\EntityCache.pas',
   SASLAuth in '..\jopl\SASLAuth.pas',
-  ExGettextUtils in 'ExGettextUtils.pas';
+  ExGettextUtils in 'ExGettextUtils.pas',
+  JoinRoom in 'JoinRoom.pas';
 
 {$R *.TLB}
 

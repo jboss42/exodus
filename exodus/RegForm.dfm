@@ -19,7 +19,6 @@ inherited frmRegister: TfrmRegister
     end
   end
   inherited Tabs: TPageControl
-    ActivePage = TabSheet3
     inherited TabSheet1: TTabSheet
       object Label1: TTntLabel
         Left = 0

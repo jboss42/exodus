@@ -166,13 +166,13 @@ begin
         end
         else
             // Re-walk since we don't have all the info.
-            e.walk(js);
-
+            e.walk(js, items_limit);
+            
         exit;
     end;
 
     e := TJabberEntity.Create(TJabberID.Create(jid));
-    e.walk(js);
+    e.walk(js, items_limit);
     _cache.AddObject(jid, e);
     Result := e;
 end;
