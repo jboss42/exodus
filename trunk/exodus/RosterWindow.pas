@@ -1093,7 +1093,6 @@ end;
 procedure TfrmRosterWindow.popVersionClick(Sender: TObject);
 var
     jid: string;
-    iq: TJabberIQ;
     p: TJabberPres;
 begin
     // send a client info request
@@ -1678,14 +1677,18 @@ procedure TfrmRosterWindow.popBlockClick(Sender: TObject);
 var
     recips: TList;
     i: integer;
+    ri: TJabberRosterItem;
 begin
     recips := getSelectedContacts(false);
     if (recips.Count > 1) then begin
         if (MessageDlg(Format(sBlockContacts, [recips.Count]), mtConfirmation,
             [mbYes, mbNo], 0) = mrNo) then exit;
         end;
-    for i := 0 to recips.Count - 1 do
-        MainSession.Block(TJabberRosterItem(recips[i]).jid);
+    for i := 0 to recips.Count - 1 do begin
+        ri := TJabberRosterItem(recips[i]);
+        RemoveItemNodes(ri);
+        MainSession.Block(ri.jid);
+        end;
 
     recips.Clear();
     recips.Free();
