@@ -1533,5 +1533,9 @@ object frmAbout: TfrmAbout
     PlainRTF = False
     UndoLimit = 0
     AllowInPlace = False
+    RTF = 
+      '{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcha' +
+      'rset0 MS Sans Serif;}}'#13#10'\viewkind4\uc1\pard\f0\fs16 Test Line\pa' +
+      'r'#13#10'\par'#13#10'}'#13#10
   end
 end
