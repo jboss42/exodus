@@ -498,7 +498,7 @@ implementation
 uses
     About, AutoUpdate, Bookmark, Browser, ChatWin, CommCtrl, CustomPres,
     Debug, Dockable, ExUtils, GetOpt, InputPassword,
-    Iq, JUD, JabberID, JabberMsg,
+    Iq, JUD, JabberID, JabberMsg, IdGlobal,
     JoinRoom, Login, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, Profile, RegForm, RemoveContact, RiserWindow,
     Roster, RosterAdd, Session, Transfer, VCard, xData, XMLUtils;
@@ -1453,8 +1453,8 @@ begin
         if MainSession.IsPaused then begin
             with tag.AddTag('x') do begin
                 PutAttribute('xmlns', XMLNS_DELAY);
-                PutAttribute('stamp', DateTimeToJabber(Now) + TimeZoneBias());
-                end; + TimeZoneBias()
+                PutAttribute('stamp', DateTimeToJabber(Now + TimeZoneBias()));
+                end;
             MainSession.QueueEvent(event, tag, Self.MsgCallback)
             end
         else begin
