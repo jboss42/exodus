@@ -86,7 +86,7 @@ begin
                 $30..$39, $3B, $3D, $3F,
                 $41..$7E, $80..$D7FF,
                 $E000..$FFFD, $10000..$10FFFF: valid_char := true;
-            end;
+                end;
                 if (not valid_char) then exit;
                 if (curlen > 256) then exit;
             end;
@@ -94,7 +94,7 @@ begin
                 // domain
                 case c of
                 $2D, $2E, $30..$39, $5F, $41..$5A, $61..$7A: valid_char := true;
-            end;
+                end;
                 if (not valid_char) then exit;
                 if (curlen > 256) then exit;
             end;
@@ -103,7 +103,7 @@ begin
                 case c of
                 $20..$D7FF, $E000..$FFFD,
                 $10000..$10FFFF: valid_char := true;
-            end;
+                end;
 
                 if (not valid_char) then exit;
                 if (curlen > 256) then exit;
