@@ -93,7 +93,7 @@ inherited frmChat: TfrmChat
     Left = 16
     Top = 152
     object mnuHistory: TMenuItem
-      Caption = 'Show History'
+      Caption = 'Show History ...'
       OnClick = doHistory
     end
     object popClearHistory: TMenuItem
@@ -101,7 +101,7 @@ inherited frmChat: TfrmChat
       OnClick = popClearHistoryClick
     end
     object mnuProfile: TMenuItem
-      Caption = 'Show Profile'
+      Caption = 'Show Profile ...'
       OnClick = doProfile
     end
     object C1: TMenuItem
@@ -124,7 +124,7 @@ inherited frmChat: TfrmChat
       OnClick = mnuBlockClick
     end
     object mnuSendFile: TMenuItem
-      Caption = 'Send File'
+      Caption = 'Send File ...'
       OnClick = mnuSendFileClick
     end
     object mnuSave: TMenuItem
@@ -133,6 +133,10 @@ inherited frmChat: TfrmChat
     end
     object N1: TMenuItem
       Caption = '-'
+    end
+    object NotificationOptions1: TMenuItem
+      Caption = 'Notification Options ...'
+      OnClick = NotificationOptions1Click
     end
     object mnuOnTop: TMenuItem
       Caption = 'Always on Top'

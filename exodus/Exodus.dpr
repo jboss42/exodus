@@ -125,7 +125,8 @@ uses
   COMPPDB in 'COMPPDB.pas' {ExodusPPDB: CoClass},
   COMRosterItem in 'COMRosterItem.pas' {ExodusRosterItem: CoClass},
   COMPresence in 'COMPresence.pas' {ExodusPresence: CoClass},
-  PathSelector in 'PathSelector.pas' {frmPathSelector};
+  PathSelector in 'PathSelector.pas' {frmPathSelector},
+  CustomNotify in 'CustomNotify.pas' {frmCustomNotify};
 
 //  COMPluginShell in 'COMPluginShell.pas' {ExodusPlugin: CoClass},
 //  COMChatPluginShell in 'COMChatPluginShell.pas' {ExodusChatPlugin: CoClass};
@@ -143,6 +144,7 @@ begin
 
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TfrmPathSelector, frmPathSelector);
+  Application.CreateForm(TfrmCustomNotify, frmCustomNotify);
   if (frmExodus = nil) then
     Halt;
 

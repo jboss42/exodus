@@ -51,6 +51,7 @@ type
     popClearHistory: TMenuItem;
     lblNick: TTntLabel;
     mnuWordwrap: TMenuItem;
+    NotificationOptions1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -79,6 +80,7 @@ type
     procedure mnuWordwrapClick(Sender: TObject);
     procedure btnCloseMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure NotificationOptions1Click(Sender: TObject);
   private
     { Private declarations }
     jid: widestring;        // jid of the person we are talking to
@@ -101,6 +103,9 @@ type
 
     _destroying: boolean;
     _redock: boolean;
+
+    // custom notification options to use..
+    _notify: array[0..3] of integer;
 
     procedure SetupPrefs();
     procedure ChangePresImage(show: widestring; status: widestring);
@@ -151,7 +156,7 @@ implementation
 {$R *.dfm}
 
 uses
-    COMChatController, Debug, ExEvents,
+    CustomNotify, COMChatController, Debug, ExEvents,
     JabberConst, ExUtils, Presence, PrefController, Room,
     Transfer, RosterAdd, RiserWindow, Notify,
     Jabber1, Profile, MsgDisplay, IQ,
@@ -315,6 +320,22 @@ begin
     _jid := nil;
     _destroying := false;
     _redock := false;
+
+    {
+        _notify[0]  := getInt('notify_online');
+        _notify[1]  := getInt('notify_offline');
+        _notify[2]  := getInt('notify_newchat');
+        _notify[3]  := getInt('notify_normalmsg');
+        _notify[4]  := getInt('notify_s10n');
+        _notify[5]  := getInt('notify_invite');
+        _notify[6]  := getInt('notify_keyword');
+        _notify[7]  := getInt('notify_chatactivity');
+        _notify[8]  := getInt('notify_roomactivity');
+        _notify[9]  := getInt('notify_oob');
+        _notify[10] := getInt('notify_autoresponse');
+    }
+
+    _notify[0] := MainSession.Prefs.getInt('notify_chatactivity');
 
     if (MainSession.Profile.ConnectionType = conn_normal) then
         DragAcceptFiles( Handle, True );
@@ -531,7 +552,8 @@ begin
     end;
 
     if (Msg.Body <> '') then begin
-        DoNotify(Self, 'notify_chatactivity', sChatActivity + OtherNick, ico_user);
+        // DoNotify(Self, 'notify_chatactivity', sChatActivity + OtherNick, ico_user);
+        DoNotify(Self, _notify[0], sChatActivity + OtherNick, ico_user, 'notify_chatactivity');
         DisplayMsg(Msg, MsgList);
 
         // log if we want..
@@ -1113,6 +1135,23 @@ procedure TfrmChat.btnCloseMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
     _destroying := (ssCtrl in Shift);
+end;
+
+{---------------------------------------}
+procedure TfrmChat.NotificationOptions1Click(Sender: TObject);
+var
+    f: TfrmCustomNotify;
+begin
+    // change notification options..
+    f := TfrmCustomNotify.Create(Application);
+
+    f.addItem('Chat activity');
+    f.setVal(0, _notify[0]);
+    if (f.ShowModal) = mrOK then begin
+        _notify[0] := f.getVal(0);
+    end;
+
+    f.Free();
 end;
 
 end.

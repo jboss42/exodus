@@ -316,6 +316,7 @@ implementation
 
 {$R *.DFM}
 {$WARN UNIT_PLATFORM OFF}
+
 uses
     ActiveX, ComObj,
     AutoUpdate,
