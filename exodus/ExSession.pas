@@ -389,7 +389,7 @@ begin
                 if (s <> '') then
                     profile.Host := s;
                 if (connect_node.GetFirstTag('ssl') <> nil) then
-                    profile.ssl := true;
+                    profile.ssl := ssl_port;
                 s := connect_node.GetBasicText('port');
                 if (s <> '') then
                     profile.Port := SafeInt(s);

@@ -61,6 +61,11 @@ const
     roster_chat = 0;
     roster_msg = 1;
 
+    // Different consts for ssl int on profiles.
+    ssl_tls = 0;
+    ssl_only_tls = 1;
+    ssl_port = 2;
+
     // bits for notify events
     notify_toast = 1;
     notify_event = 2;
@@ -131,14 +136,15 @@ type
         // Socket connection
         Host: Widestring;
         Port: integer;
-        ssl: boolean;
+        srv: boolean;
+        ssl: integer;
+        SSL_Cert: string;
         SocksType: integer;
         SocksHost: Widestring;
         SocksPort: integer;
         SocksAuth: boolean;
         SocksUsername: string;
         SocksPassword: string;
-        SSL_Cert: string;
 
         // HTTP Connection
         URL: Widestring;
@@ -1331,7 +1337,8 @@ begin
     // Socket connection
     Host          := getDefault('brand_profile_host');
     Port          := SafeInt(getDefault('brand_profile_port'));
-    ssl           := SafeBool(getDefault('brand_profile_ssl'));
+    srv           := SafeBool(getDefault('brand_profile_srv'));
+    ssl           := SafeInt(getDefault('brand_profile_ssl'));
     SocksType     := SafeInt(getDefault('brand_profile_socks_type'));
     SocksHost     := getDefault('brand_profile_socks_host');
     SocksPort     := SafeInt(getDefault('brand_profile_socks_port'));
@@ -1390,7 +1397,8 @@ begin
     // Socket connection
     Host := tag.GetBasicText('host');
     Port := StrToIntDef(tag.GetBasicText('port'), 5222);
-    ssl := SafeBool(tag.GetBasicText('ssl'));
+    srv := SafeBool(tag.GetBasicText('srv'));
+    ssl := StrToIntDef(tag.GetBasicText('ssl'), 0);
     ssl_cert := tag.GetBasicText('ssl_cert');
     SocksType := StrToIntDef(tag.GetBasicText('socks_type'), 0);
     SocksHost := tag.GetBasicText('socks_host');
@@ -1435,7 +1443,8 @@ begin
     // Socket connection
     node.AddBasicTag('host', Host);
     node.AddBasicTag('port', IntToStr(Port));
-    node.AddBasicTag('ssl', SafeBoolStr(ssl));
+    node.AddBasicTag('srv', SafeBoolStr(srv));
+    node.AddBasicTag('ssl', IntToStr(ssl));
     node.AddBasicTag('socks_type', IntToStr(SocksType));
     node.AddBasicTag('socks_host', SocksHost);
     node.AddBasicTag('socks_port', IntToStr(SocksPort));

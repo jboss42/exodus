@@ -2,7 +2,7 @@ object frmConnDetails: TfrmConnDetails
   Left = 249
   Top = 169
   Width = 304
-  Height = 323
+  Height = 307
   ActiveControl = txtUsername
   Caption = 'Connection Details'
   Color = clBtnFace
@@ -18,7 +18,7 @@ object frmConnDetails: TfrmConnDetails
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 257
+    Top = 241
     Width = 296
     Height = 32
     Align = alBottom
@@ -44,7 +44,7 @@ object frmConnDetails: TfrmConnDetails
     Left = 0
     Top = 0
     Width = 296
-    Height = 257
+    Height = 241
     ActivePage = tbsProfile
     Align = alClient
     TabOrder = 1
@@ -154,7 +154,7 @@ object frmConnDetails: TfrmConnDetails
       end
       object chkRegister: TTntCheckBox
         Left = 100
-        Top = 198
+        Top = 190
         Width = 181
         Height = 17
         Caption = 'This is a new account'
@@ -165,22 +165,6 @@ object frmConnDetails: TfrmConnDetails
     object tbsConn: TTntTabSheet
       Caption = 'Connection'
       ImageIndex = -1
-      object Label4: TTntLabel
-        Left = 2
-        Top = 38
-        Width = 25
-        Height = 13
-        Caption = 'Host:'
-        Transparent = True
-      end
-      object Label7: TTntLabel
-        Left = 2
-        Top = 65
-        Width = 22
-        Height = 13
-        Caption = 'Port:'
-        Transparent = True
-      end
       object Label8: TTntLabel
         Left = 2
         Top = 9
@@ -191,43 +175,11 @@ object frmConnDetails: TfrmConnDetails
       end
       object Label6: TTntLabel
         Left = 2
-        Top = 94
+        Top = 38
         Width = 34
         Height = 13
         Caption = 'Priority:'
         Transparent = True
-      end
-      object TntLabel1: TTntLabel
-        Left = 1
-        Top = 121
-        Width = 73
-        Height = 13
-        Caption = 'SSL Certificate:'
-        Transparent = True
-      end
-      object txtHost: TTntEdit
-        Left = 75
-        Top = 34
-        Width = 190
-        Height = 21
-        TabOrder = 1
-      end
-      object txtPort: TTntEdit
-        Left = 75
-        Top = 62
-        Width = 46
-        Height = 21
-        TabOrder = 2
-        Text = '5222'
-      end
-      object chkSSL: TTntCheckBox
-        Left = 147
-        Top = 64
-        Width = 93
-        Height = 17
-        Caption = 'Use SSL'
-        TabOrder = 3
-        OnClick = chkSSLClick
       end
       object cboConnection: TTntComboBox
         Left = 75
@@ -247,36 +199,106 @@ object frmConnDetails: TfrmConnDetails
       end
       object txtPriority: TTntEdit
         Left = 75
-        Top = 90
+        Top = 34
         Width = 46
         Height = 21
-        TabOrder = 4
+        TabOrder = 1
         Text = '0'
       end
       object spnPriority: TUpDown
         Left = 121
-        Top = 90
+        Top = 34
         Width = 16
-        Height = 21
+        Height = 23
         Associate = txtPriority
         Max = 1000
-        TabOrder = 5
+        TabOrder = 2
+      end
+      object chkSRV: TTntCheckBox
+        Left = 4
+        Top = 74
+        Width = 269
+        Height = 17
+        Caption = 'Automatically discover host and port'
+        TabOrder = 3
+        OnClick = chkSRVClick
+      end
+      object boxHost: TTntGroupBox
+        Left = 7
+        Top = 92
+        Width = 225
+        Height = 81
+        TabOrder = 4
+        object Label4: TTntLabel
+          Left = 6
+          Top = 17
+          Width = 25
+          Height = 13
+          Caption = 'Host:'
+          Transparent = True
+        end
+        object Label7: TTntLabel
+          Left = 6
+          Top = 44
+          Width = 22
+          Height = 13
+          Caption = 'Port:'
+          Transparent = True
+        end
+        object txtHost: TTntEdit
+          Left = 55
+          Top = 13
+          Width = 158
+          Height = 21
+          TabOrder = 0
+        end
+        object txtPort: TTntEdit
+          Left = 55
+          Top = 41
+          Width = 46
+          Height = 21
+          TabOrder = 1
+          Text = '5222'
+        end
+      end
+    end
+    object tbsSSL: TTntTabSheet
+      Caption = 'SSL'
+      object TntLabel1: TTntLabel
+        Left = 1
+        Top = 9
+        Width = 73
+        Height = 13
+        Caption = 'SSL Certificate:'
+        Transparent = True
       end
       object txtSSLCert: TTntEdit
         Left = 18
-        Top = 141
+        Top = 29
         Width = 190
         Height = 21
-        TabOrder = 6
+        TabOrder = 0
       end
       object btnCertBrowse: TTntButton
         Left = 213
-        Top = 140
+        Top = 28
         Width = 72
         Height = 25
         Caption = 'Browse'
-        TabOrder = 7
+        TabOrder = 1
         OnClick = btnCertBrowseClick
+      end
+      object optSSL: TRadioGroup
+        Left = 8
+        Top = 72
+        Width = 273
+        Height = 81
+        Items.Strings = (
+          'Use StartTLS whenever the server allows it.'
+          'Only allow connections which use StartTLS.'
+          'The specified port is SSL only.')
+        TabOrder = 2
+        OnClick = optSSLClick
       end
     end
     object tbsSocket: TTntTabSheet
@@ -423,7 +445,7 @@ object frmConnDetails: TfrmConnDetails
       end
       object lblNote: TTntLabel
         Left = 0
-        Top = 113
+        Top = 97
         Width = 284
         Height = 112
         Align = alBottom
@@ -462,6 +484,6 @@ object frmConnDetails: TfrmConnDetails
     DefaultExt = 'pem'
     Filter = 'SSL Key Files|*.pem|All Files|*.*'
     Left = 8
-    Top = 256
+    Top = 288
   end
 end

@@ -45,6 +45,7 @@ type
         _cur_server: Widestring;
         _tls_cb: integer;
         _lang: Widestring;
+        _ssl_on: boolean;
 
         // Dispatcher
         _dispatcher: TSignalDispatcher;
@@ -175,6 +176,7 @@ type
 
         property isXMPP: boolean read _xmpp;
         property xmppFeatures: TXMLTag read _features;
+        property SSLEnabled: boolean read _ssl_on;
     end;
 
 var
@@ -223,6 +225,7 @@ begin
     _avails := TWidestringlist.Create();
     _features := nil;
     _xmpp := false;
+    _ssl_on := false;
 
     // Create all the things which might register w/ the session
 
@@ -399,6 +402,7 @@ begin
     DoConnect();
 end;
 
+{---------------------------------------}
 procedure TJabberSession.DoConnect;
 begin
     if (_profile = nil) then
@@ -422,6 +426,9 @@ begin
     _stream.RegisterStreamCallback(Self.StreamCallback);
     _stream.OnData := DataEvent;
     _stream.Connect(_profile);
+
+    if (_profile.ssl = ssl_port) then
+        _ssl_on := true;
 end;
 
 {---------------------------------------}
@@ -1065,6 +1072,7 @@ begin
 
     _stream.EnableSSL();
     ResetStream();
+    _ssl_on := true;
 end;
 
 end.
