@@ -196,7 +196,6 @@ inherited frmJUD: TfrmJUD
     TabOrder = 1
     ViewStyle = vsReport
     OnColumnClick = lstContactsColumnClick
-    OnCompare = lstContactsCompare
     OnContextPopup = lstContactsContextPopup
     OnData = lstContactsData
     OnDataFind = lstContactsDataFind

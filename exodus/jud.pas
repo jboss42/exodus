@@ -72,8 +72,6 @@ type
     procedure popMessageClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure lstContactsColumnClick(Sender: TObject; Column: TListColumn);
-    procedure lstContactsCompare(Sender: TObject; Item1, Item2: TListItem;
-      Data: Integer; var Compare: Integer);
     procedure lstContactsData(Sender: TObject; Item: TListItem);
     procedure lstContactsDataFind(Sender: TObject; Find: TItemFind;
       const FindString: String; const FindPosition: TPoint;
@@ -82,7 +80,6 @@ type
   private
     { Private declarations }
     field_set: TStringList;
-
     virtlist: TObjectList;
 
     cur_jid: string;
@@ -90,8 +87,6 @@ type
     cur_state: string;
 
     cur_iq: TJabberIQ;
-    cur_sort: integer;
-    cur_dir: boolean;
 
     procedure getFields;
     procedure sendRequest();
@@ -116,6 +111,7 @@ resourceString
     sJUDAdd = 'Add Contacts';
 
 function StartSearch(sjid: string): TfrmJUD;
+function ItemCompare(Item1, Item2: Pointer): integer;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -125,8 +121,12 @@ implementation
 uses
     Profile, Roster, Agents,
     JabberID,
-    Session, ExUtils, XMLUtils, 
+    Session, ExUtils, XMLUtils,
     fTopLabel, Jabber1;
+
+var
+    cur_sort: integer;
+    cur_dir: boolean;
 
 {$R *.dfm}
 
@@ -616,6 +616,7 @@ begin
         cur_iq.Free();
 end;
 
+{---------------------------------------}
 procedure TfrmJUD.lstContactsColumnClick(Sender: TObject;
   Column: TListColumn);
 begin
@@ -626,46 +627,54 @@ begin
     cur_dir := true;
 
   cur_sort := Column.Index;
-  lstContacts.SortType := stText;
-  lstContacts.AlphaSort();
+
+  // lstContacts.SortType := stText;
+  // lstContacts.AlphaSort();
+
+  virtlist.Sort(ItemCompare);
+  lstContacts.Refresh;
 end;
 
-procedure TfrmJUD.lstContactsCompare(Sender: TObject; Item1,
-  Item2: TListItem; Data: Integer; var Compare: Integer);
+function ItemCompare(Item1, Item2: Pointer): integer;
 var
+    j1, j2: TJUDItem;
     s1, s2: string;
 begin
-  inherited;
-  if (cur_sort = -1) then begin
-    Compare := 0;
-    exit;
-    end;
+    // compare 2 items..
+    if (cur_sort = -1) then begin
+        Result := 0;
+        exit;
+        end;
 
-  if (cur_sort = 0) then begin
-    if (cur_dir) then begin
-        s1 := Item1.Caption;
-        s2 := Item2.Caption;
+    j1 := TJUDItem(Item1);
+    j2 := TJUDItem(Item2);
+
+    if (cur_sort = 0) then begin
+        if (cur_dir) then begin
+            s1 := j1.jid;
+            s2 := j2.jid;
+            end
+        else begin
+            s1 := j2.jid;
+            s2 := j1.jid;
+            end;
         end
     else begin
-        s1 := Item2.Caption;
-        s2 := Item1.Caption;
+        if (cur_dir) then begin
+            s1 := j1.cols[cur_sort];
+            s2 := j2.cols[cur_sort];
+            end
+        else begin
+            s1 := j2.cols[cur_sort];
+            s2 := j1.cols[cur_sort];
+            end;
         end;
-    end
-  else begin
-    if (cur_dir) then begin
-        s1 := Item1.SubItems[cur_sort - 1];
-        s2 := Item2.SubItems[cur_sort - 1];
-        end
-    else begin
-        s1 := Item2.SubItems[cur_sort - 1];
-        s2 := Item1.SubItems[cur_sort - 1];
-        end;
-    end;
 
-  Compare := StrComp(pchar(LowerCase(s1)),
-                     pchar(LowerCase(s2)));
+    Result := StrComp(PChar(LowerCase(s1)),
+                      PChar(LowerCase(s2)));
 end;
 
+{---------------------------------------}
 procedure TfrmJUD.lstContactsData(Sender: TObject; Item: TListItem);
 var
     i: integer;
@@ -674,7 +683,7 @@ begin
   inherited;
     if (Item.Index < 0) then exit;
     if (Item.Index >= virtlist.Count) then exit;
-    
+
     ji := TJUDItem(virtlist[Item.Index]);
     if ji <> nil then begin
         Item.Caption := ji.jid;
@@ -684,13 +693,37 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmJUD.lstContactsDataFind(Sender: TObject; Find: TItemFind;
   const FindString: String; const FindPosition: TPoint; FindData: Pointer;
   StartIndex: Integer; Direction: TSearchDirection; Wrap: Boolean;
   var Index: Integer);
+var
+    ji: TJUDItem;
+    i: integer;
+    f: boolean;
 begin
   inherited;
     // pgm todo: implement this!!
+
+    // OnDataFind gets called in response to calls to FindCaption, FindData,
+    // GetNearestItem, etc. It also gets called for each keystroke sent to the
+    // ListView (for incremental searching)
+
+    i := StartIndex;
+
+    if (Find = ifExactString) or (Find = ifPartialString) then begin
+        repeat
+            if (i = virtlist.Count - 1) then begin
+                if Wrap then i := 0 else exit;
+                end;
+            ji := TJUDItem(virtlist[i]);
+            f := Pos(Uppercase(FindString), ji.jid) > 0;
+            inc(i);
+        until (f or (i = StartIndex));
+        if (f) then Index := i - 1;
+        end;
 end;
+
 
 end.
