@@ -65,6 +65,7 @@ begin
     if (e is EIdSocketError) then exit;
     if (e is EIdClosedSocket) then exit;
     if (e is EIdDNSResolverError) then exit;
+    if (e is EIdConnClosedGracefully) then exit;
     //if (e is EIdTerminateThreadTimeout) then exit;
 
     // Just use the existing error log stuff.
