@@ -15,6 +15,7 @@ object frmTransfer: TfrmTransfer
   Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object pnlFrom: TPanel
@@ -89,7 +90,7 @@ object frmTransfer: TfrmTransfer
     Left = 0
     Top = 57
     Width = 259
-    Height = 57
+    Height = 62
     Align = alClient
     AutoURLDetect = adDefault
     CustomURLs = <
@@ -181,7 +182,7 @@ object frmTransfer: TfrmTransfer
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 139
+    Top = 144
     Width = 259
     Height = 34
     Align = alBottom
@@ -204,7 +205,7 @@ object frmTransfer: TfrmTransfer
   end
   object pnlProgress: TPanel
     Left = 0
-    Top = 114
+    Top = 119
     Width = 259
     Height = 25
     Align = alBottom

@@ -44,6 +44,7 @@ type
     _controller: IExodusController;
     _menu_id: Widestring;
     _parser: TXMLTagParser;
+    _agent_cb: integer;
 
     procedure AgentsList(Server: Widestring);
   end;
@@ -122,6 +123,8 @@ end;
 procedure TAIMImportPlugin.Shutdown;
 begin
     _controller.removePluginMenu(_menu_id);
+    _controller.UnRegisterCallback(_agent_cb);
+    _parser.Free();
 end;
 
 {---------------------------------------}
@@ -130,7 +133,7 @@ procedure TAIMImportPlugin.Startup(
 begin
     _controller := ExodusController;
     _menu_id := _controller.addPluginMenu('Import AIM Buddy List');
-    _controller.RegisterCallback('/session/agents', Self);
+    _agent_cb := _controller.RegisterCallback('/session/agents', Self);
     _parser := TXMLTagParser.Create();
 end;
 

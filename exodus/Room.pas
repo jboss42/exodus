@@ -106,6 +106,7 @@ type
     procedure popVoiceClick(Sender: TObject);
     procedure popVoiceListClick(Sender: TObject);
     procedure popDestroyClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
@@ -1010,33 +1011,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmRoom.FormClose(Sender: TObject; var Action: TCloseAction);
-var
-    p: TJabberPres;
-    i: integer;
 begin
-    // Unregister callbacks and send unavail pres.
-    MainSession.UnRegisterCallback(_mcallback);
-    MainSession.UnRegisterCallback(_ecallback);
-    MainSession.UnRegisterCallback(_pcallback);
-    MainSession.UnRegisterCallback(_scallback);
-
-    if ((MainSession <> nil) and (MainSession.Active)) then begin
-        p := TJabberPres.Create();
-        p.toJID := TJabberID.Create(jid);
-        p.PresType := 'unavailable';
-        MainSession.SendTag(p);
-    end;
-
-    _keywords.Free;
-    ClearStringListObjects(_roster);
-    _roster.Free();
-
-    i := room_list.IndexOf(jid);
-    if (i >= 0) then
-        room_list.Delete(i);
-
     inherited;
-
     Action := caFree;
 end;
 
@@ -1559,6 +1535,38 @@ begin
         if (c >=0) then
             lstRoster.Items[c].Selected := true;
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.FormDestroy(Sender: TObject);
+var
+    p: TJabberPres;
+    i: integer;
+begin
+    // Unregister callbacks and send unavail pres.
+    if (MainSession <> nil) then begin
+        MainSession.UnRegisterCallback(_mcallback);
+        MainSession.UnRegisterCallback(_ecallback);
+        MainSession.UnRegisterCallback(_pcallback);
+        MainSession.UnRegisterCallback(_scallback);
+    end;
+
+    if ((MainSession <> nil) and (MainSession.Active)) then begin
+        p := TJabberPres.Create();
+        p.toJID := TJabberID.Create(jid);
+        p.PresType := 'unavailable';
+        MainSession.SendTag(p);
+    end;
+
+    _keywords.Free;
+    ClearStringListObjects(_roster);
+    _roster.Free();
+
+    i := room_list.IndexOf(jid);
+    if (i >= 0) then
+        room_list.Delete(i);
+
+    inherited;
 end;
 
 initialization

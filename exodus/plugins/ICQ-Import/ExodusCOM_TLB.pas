@@ -11,11 +11,11 @@ unit ExodusCOM_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.4 $
-// File generated on 1/9/2003 7:36:21 AM from Type Library described below.
+// PASTLWTR : $Revision: 1.5 $
+// File generated on 1/15/2003 6:51:26 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\src\exodus\runner\exodus.exe (1)
+// Type Lib: D:\src\exodus\exodus\exodus.exe (1)
 // LIBID: {219E0029-5710-4C9B-BE33-4C7F046D7792}
 // LCID: 0
 // Helpfile: 

@@ -557,7 +557,6 @@ var
     i: integer;
     item: TTntListItem;
     sl: TWidestringlist;
-    loaded: TStringlist;
 begin
     // save all "checked" captions
     sl := TWidestringlist.Create();

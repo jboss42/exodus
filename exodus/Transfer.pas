@@ -82,6 +82,7 @@ type
     procedure httpClientDisconnected(Sender: TObject);
     procedure httpServerStatus(axSender: TObject;
       const axStatus: TIdStatus; const asStatusText: String);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
     fstream: TFileStream;
@@ -366,9 +367,6 @@ end;
 procedure TfrmTransfer.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
-    if (fstream <> nil) then
-        FreeAndNil(fstream);
-
     Action := caFree;
 end;
 
@@ -466,6 +464,13 @@ procedure TfrmTransfer.httpServerStatus(axSender: TObject;
 begin
   inherited;
     txtMsg.Lines.Add(asStatusText);
+end;
+
+procedure TfrmTransfer.FormDestroy(Sender: TObject);
+begin
+  inherited;
+    if (fstream <> nil) then
+        FreeAndNil(fstream);
 end;
 
 end.
