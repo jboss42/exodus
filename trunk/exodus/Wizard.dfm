@@ -1,6 +1,6 @@
 object frmWizard: TfrmWizard
-  Left = 248
-  Top = 139
+  Left = 496
+  Top = 232
   BorderStyle = bsDialog
   Caption = 'Wizard'
   ClientHeight = 358

@@ -45,7 +45,7 @@ type
     procedure UnRegisterCallback(callback_id: Integer); safecall;
     procedure GetProfile(const jid: WideString); safecall;
     procedure StartChat(const jid, resource, nickname: WideString); safecall;
-    procedure CreateDockableWindow(HWND: Integer; const Caption: WideString);
+    function CreateDockableWindow(const Caption: WideString): Integer;
       safecall;
     function addPluginMenu(const Caption: WideString): WideString; safecall;
     procedure removePluginMenu(const ID: WideString); safecall;
@@ -654,25 +654,15 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusController.CreateDockableWindow(HWND: Integer;
-  const Caption: WideString);
+function TExodusController.CreateDockableWindow(
+  const Caption: WideString): Integer;
 var
-    r: integer;
     f: TfrmDockContainer;
 begin
-    // subclass frmDockable, and re-parent
-    // this HWND to the new form
-    f := TfrmDockContainer.Create(Application);
+    Application.CreateForm(TfrmDockContainer, f);
     f.ShowDefault();
-
-    r := SetParent(HWND, f.Panel1.Handle);
-    if (r = 0) then begin
-        r := GetLastError();
-        ShowMessage('SetParent error: ' + IntToStr(r));
-    end;
-
-    //ShowWindow(HWND, SW_SHOW);
-
+    f.Caption := Caption;
+    Result := f.Panel1.Handle;
 end;
 
 {---------------------------------------}

@@ -1,6 +1,6 @@
 inherited frmCommandWizard: TfrmCommandWizard
-  Left = 250
-  Top = 117
+  Left = 500
+  Top = 195
   Height = 312
   BorderStyle = bsSizeable
   Caption = 'frmCommandWizard'
@@ -10,7 +10,7 @@ inherited frmCommandWizard: TfrmCommandWizard
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
-    Top = 241
+    Top = 237
     inherited Panel3: TPanel
       inherited btnBack: TTntButton
         OnClick = btnBackClick
@@ -33,7 +33,7 @@ inherited frmCommandWizard: TfrmCommandWizard
     end
   end
   inherited Tabs: TPageControl
-    Height = 181
+    Height = 177
     ActivePage = tbsExecute
     inherited TabSheet1: TTabSheet
       object TntLabel1: TTntLabel
@@ -95,7 +95,7 @@ inherited frmCommandWizard: TfrmCommandWizard
         Left = 0
         Top = 0
         Width = 402
-        Height = 150
+        Height = 146
         Align = alClient
         BevelInner = bvNone
         BevelOuter = bvNone

@@ -12,16 +12,18 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 11/17/2004 7:54:45 AM from Type Library described below.
+// File generated on 12/27/2004 4:11:04 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\src\exodus\exodus\Exodus.tlb (1)
+// Type Lib: C:\src\exodus\exodus\Exodus.exe (1)
 // LIBID: {5BABCA07-A359-4B42-8C03-C5B329E79E31}
 // LCID: 0
 // Helpfile: 
 // HelpString: Exodus COM Plugin interfaces
 // DepndLst: 
 //   (1) v2.0 stdole, (C:\WINDOWS\System32\STDOLE2.TLB)
+// Parent TypeLibrary:
+//   (0) v1.0 ExSQLLogger, (C:\src\exodus\exodus\plugins\SQLLogger\ExSQLLogger.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -143,7 +145,7 @@ type
     procedure StartChat(const jid: WideString; const resource: WideString; 
                         const nickname: WideString); safecall;
     procedure GetProfile(const jid: WideString); safecall;
-    procedure CreateDockableWindow(HWND: Integer; const Caption: WideString); safecall;
+    function CreateDockableWindow(const Caption: WideString): Integer; safecall;
     function addPluginMenu(const Caption: WideString): WideString; safecall;
     procedure removePluginMenu(const ID: WideString); safecall;
     procedure monitorImplicitRegJID(const JabberID: WideString; FullJID: WordBool); safecall;
@@ -241,7 +243,7 @@ type
     procedure StartChat(const jid: WideString; const resource: WideString; 
                         const nickname: WideString); dispid 12;
     procedure GetProfile(const jid: WideString); dispid 13;
-    procedure CreateDockableWindow(HWND: Integer; const Caption: WideString); dispid 16;
+    function CreateDockableWindow(const Caption: WideString): Integer; dispid 16;
     function addPluginMenu(const Caption: WideString): WideString; dispid 14;
     procedure removePluginMenu(const ID: WideString); dispid 15;
     procedure monitorImplicitRegJID(const JabberID: WideString; FullJID: WordBool); dispid 17;

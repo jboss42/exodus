@@ -221,7 +221,6 @@ begin
             c := xdataBox.Controls[i];
             if (c is TframeGeneric) then begin
                 f := TframeGeneric(c);
-
                 if (not f.isValid()) then
                     valid := false;
                 if (x <> nil) then begin
@@ -237,6 +236,7 @@ begin
                 mtError, [mbOK], 0);
             exit;
         end;
+
         _iq.Send();
         end;
     end;

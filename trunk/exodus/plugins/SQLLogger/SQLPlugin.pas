@@ -107,7 +107,7 @@ const
 implementation
 
 uses
-    Viewer, XMLUtils, SQLUtils,  
+    Viewer, XMLUtils, SQLUtils, Controls, Forms,   
     SysUtils, Dialogs, JabberUtils, JabberID, ComServ;
 
 const
@@ -329,10 +329,16 @@ end;
 {---------------------------------------}
 procedure TSQLLogger.MenuClick(const ID: WideString);
 var
+    h: integer;
     f: TfrmView;
 begin
     if (id = _menu_search) then begin
+        h := _exodus.CreateDockableWindow('Search Logs');
         f := TfrmView.Create(nil);
+        f.ParentWindow := h;
+        f.Align := alClient;
+        f.BorderStyle := bsNone;
+
         f.db := _db;
         f.ShowSearch();
         f.Show();
@@ -428,9 +434,14 @@ end;
 {---------------------------------------}
 procedure TSQLLogger.showLog(jid: Widestring);
 var
+    h: integer;
     f: TfrmView;
 begin
+    h := _exodus.CreateDockableWindow('SQL Log Viewer');
+
     f := TfrmView.Create(nil);
+    f.ParentWindow := h;
+
     f.db := _db;
     f.ShowJid(jid);
     f.Show();
