@@ -678,13 +678,6 @@ begin
             member.JID := from;
             member.Nick := _jid.resource;
 
-            t := tag.GetFirstTag('status');
-            if ((t <> nil) and (t.getAttribute('code') = '201')) then begin
-                // we are the owner... config the room
-                _isMUC := true;
-                configRoom();
-            end;
-
             _roster.AddObject(from, member);
             member.Node := AddMember(member);
 
@@ -693,6 +686,14 @@ begin
                 _isMUC := true;
                 mtag := newRoomMessage(Format(sNewUser, [member.nick]));
                 showMsg(mtag);
+
+                t := xtag.GetFirstTag('status');
+                if ((t <> nil) and (t.getAttribute('code') = '201')) then begin
+                    // we are the owner... config the room
+                    _isMUC := true;
+                    configRoom();
+                end;
+
             end;
         end
         else begin
@@ -1170,7 +1171,7 @@ var
 begin
     // finds a room form given a jid.
     idx := room_list.IndexOf(rjid);
-    if (idx >= 0) then                           
+    if (idx >= 0) then
         Result := TfrmRoom(room_list.Objects[idx])
     else
         Result := nil;
