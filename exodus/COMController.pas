@@ -25,8 +25,7 @@ interface
 
 uses
     XMLTag, Unicode, Menus,
-    Windows,
-    Classes, ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
+    Windows, Classes, ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
 
 type
   TExodusController = class(TAutoObject, IExodusController)
@@ -163,10 +162,17 @@ type
 
 // Forward declares for plugin utils
 procedure InitPlugins();
-procedure LoadPlugin(com_name: string);
+function LoadPlugin(com_name: string): boolean;
 procedure UnloadPlugins();
 procedure ConfigurePlugin(com_name: string);
 procedure ReloadPlugins(sl: TWidestringlist);
+
+
+resourcestring
+    sPluginErrCreate = 'Plugin could not be created. (%s)';
+    sPluginErrNoIntf = 'Plugin class does not support IExodusPlugin. (%s)';
+    sPluginErrInit   = 'Plugin class could not be initialized. (%s)';
+    sPluginRemove    = 'Remove this plugin from the list of plugins to be loaded at startup?';
 
 implementation
 
@@ -176,7 +182,7 @@ uses
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
     COMChatController, Dockable, Agents,
     Jabber1, Session, Roster, RosterWindow, PluginAuth, PrefController,
-    Dialogs, Variants, Forms, SysUtils, ComServ;
+    Controls, Dialogs, Variants, Forms, SysUtils, ComServ;
 
 var
     plugs: TStringList;
@@ -187,20 +193,34 @@ var
 {---------------------------------------}
 procedure InitPlugins();
 var
-    s: TWideStringlist;
+    s, ok: TWideStringlist;
     i: integer;
 begin
     // load all of the plugins listed in the prefs
     s := TWideStringlist.Create();
+    ok := TWidestringList.Create();
     MainSession.Prefs.fillStringList('plugin_selected', s);
 
-    for i := 0 to s.count - 1 do
-        LoadPlugin(s[i]);
+    for i := 0 to s.count - 1 do begin
+        if (LoadPlugin(s[i]) = false) then begin
+            // remove from list?
+            if (MessageDlg(sPluginRemove, mtConfirmation, [mbYes, mbNo], 0) = mrNo) then
+                ok.Add(s[i]);
+        end
+        else
+            ok.Add(s[i]);
+    end;
+
+    // re-save the "ok" ones.
+    if (ok.Count <> s.Count) then
+        MainSession.Prefs.setStringlist('plugin_selected', ok);
+    
     s.Free();
+    ok.Free();
 end;
 
 {---------------------------------------}
-procedure LoadPlugin(com_name: string);
+function LoadPlugin(com_name: string): boolean;
 var
     idisp: IDispatch;
     plugin: IExodusPlugin;
@@ -208,14 +228,14 @@ var
     msg: Widestring;
 begin
     // Fire up an instance of the specified COM object
+    Result := false;
     if (plugs.indexof(com_name) > -1) then exit;
 
     try
         idisp := CreateOleObject(com_name);
     except
         on EOleSysError do begin
-            msg := 'Plugin class could not be created. ';
-            msg := msg + '(' + com_name + ')';
+            msg := Format(sPluginErrCreate, [com_name]);
             MessageDlg(msg, mtError, [mbOK], 0);
             exit;
         end;
@@ -225,8 +245,7 @@ begin
         plugin := IUnknown(idisp) as IExodusPlugin;
     except
         on EIntfCastError do begin
-            msg := 'Plugin class does not support IExodusPlugin. ';
-            msg := msg + '(' + com_name + ')';
+            msg := Format(sPluginErrNoIntf, [com_name]);
             MessageDlg(msg, mtError, [mbOK], 0);
             exit;
         end;
@@ -238,11 +257,12 @@ begin
     try
         p.com.Startup(frmExodus.ComController);
     except
-        msg := 'Plugin class could not be initialized. ';
-        msg := msg + '(' + com_name + ')';
+        msg := Format(sPluginErrInit, [com_name]);
         MessageDlg(msg, mtError, [mbOK], 0);
         exit;
     end;
+
+    Result := true;
 end;
 
 {---------------------------------------}

@@ -100,7 +100,7 @@ Conditionals=
 DebugSourceDirs=
 UsePackages=1
 [Parameters]
-RunParams=-c debug.xml
+RunParams=-d -c debug.xml
 HostApplication=
 Launcher=
 UseLauncher=0
