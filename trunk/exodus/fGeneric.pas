@@ -104,11 +104,14 @@ begin
            lblLabel.Caption := '* ' + lblLabel.Caption;
         end;
 
-    if (t = 'text-multi') then begin
+    if ((t = 'text-multi') or (t = 'jid-multi')) then begin
         lblLabel.Layout := tlTop;
         c := TTntMemo.Create(Self);
+        opts := tag.QueryTags('value');
         with TTntMemo(c) do begin
-            Text := value;
+            Lines.Clear();
+            for i := 0 to opts.Count - 1 do
+                Lines.Add(opts[i].Data);
             Align := alClient;
             end;
         Self.Height := Self.Height * 3;
@@ -121,7 +124,6 @@ begin
         opts_vals := TStringList.Create();
         opts := tag.QueryTags('option');
         with TTntCheckListbox(c) do begin
-            //IntegralHeight := true;
             Align := alClient;
             for i := 0 to opts.Count - 1 do begin
                 Items.Add(opts[i].GetAttribute('label'));
@@ -189,7 +191,7 @@ begin
         c := nil;
         end
 
-    else if (t = 'jid') then begin
+    else if ((t = 'jid') or (t = 'jid-single')) then begin
         c :=  TTntEdit.Create(Self);
         with TTntEdit(c) do begin
             Text := value;
@@ -293,8 +295,10 @@ begin
         end
     else if (c is TTntMemo) then begin
         tmps := Trim(TTntMemo(c).Text);
-        if (tmps <> '') then
-            Result.Add(TTntMemo(c).Text);
+        if (tmps <> '') then with TTntMemo(c) do begin
+            for i := 0 to Lines.Count - 1 do
+                Result.Add(Lines[i]);
+            end;
         end
     else if (c is TTntCheckListbox) then with TTntCheckListbox(c) do begin
         for i := 0 to Items.Count - 1 do begin
