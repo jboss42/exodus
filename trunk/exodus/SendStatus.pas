@@ -74,6 +74,7 @@ type
         _disco_count: integer;
         _stream: TFileStream;
         _hash: Widestring;
+        _size: longint;
 
         procedure DoState();
         procedure BuildStreamHosts(ptag: TXMLTag);
@@ -117,6 +118,7 @@ type
         _lock: TCriticalSection;
         _url: string;
         _method: string;
+        _size: longint;
 
         procedure Update();
         procedure setHttp(value: TIdHttp);
@@ -145,6 +147,7 @@ type
         property form: TfSendStatus read _form write _form;
         property url: String read _url write _url;
         property method: String read _method write _method;
+        property size: longint read _size write _size;
     end;
 
 var
@@ -215,7 +218,8 @@ begin
                     SendMessage(_form.Handle, WM_SEND_BAD, 0, 0);
                     exit;
                 end;
-                _client.WriteStream(_stream, true, false, 0);
+                //_client.WriteStream(_stream, true, false, 0);
+                _client.WriteStream(_stream, false, true, _size);
             end
             else if (_method = 'get') then
                 _http.Get(_url, _stream)
@@ -368,7 +372,6 @@ procedure TfSendStatus.DoState();
 var
     fld, x: TXMLTag;
     f: File of Byte;
-    size: longint;
     p: THostPortPair;
     i: integer;
     tmp_jid: TJabberID;
@@ -405,9 +408,9 @@ begin
         // get the file size
         AssignFile(f, _pkg.pathname);
         Reset(f);
-        size := FileSize(f);
+        _size := FileSize(f);
         CloseFile(f);
-        x.setAttribute('size', IntToStr(size));
+        x.setAttribute('size', IntToStr(_size));
 
         // put in the fneg stuff
         x := _iq.qTag.AddTagNS('feature', XMLNS_FEATNEG);
@@ -519,6 +522,7 @@ begin
             _thread.client := tcpClient;
             _thread.stream := _stream;
             _thread.method := 'si';
+            _thread.size := _size;
             _thread.Resume();
         end;
 
