@@ -37,6 +37,7 @@ type
     public
         msg_queue: TQueue;
         window: TObject;
+        ComController: TObject;
 
         constructor Create(sjid, sresource: Widestring);
         destructor Destroy; override;

@@ -165,7 +165,8 @@ begin
         chat := MainSession.ChatList.AddChat(sjid, resource);
         echat := TExodusChat.Create();
         echat.setChatSession(chat);
-        frmExodus.ComController.fireNewChat(sjid);
+        chat.ComController := echat;
+        frmExodus.ComController.fireNewChat(sjid, echat);
         end;
 
     if (chat.window = nil) then begin
@@ -511,8 +512,10 @@ begin
     // Send the msg if they hit return
     if ((Key = #13) and (not mnuReturns.Checked)) then
         SendMsg()
-    else
+    else begin
+        TExodusChat(chat_object.ComController).fireMsgKeyPress(Key);
         inherited;
+        end;
 
 end;
 
