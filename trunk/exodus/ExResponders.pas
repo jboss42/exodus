@@ -29,28 +29,28 @@ uses
 
 type
     TVersionResponder = class(TJabberResponder)
-    protected
+    published
         procedure iqCallback(event: string; tag: TXMLTag); override;
     public
-        constructor Create(Session: TJabberSession); overload; 
+        constructor Create(Session: TJabberSession); overload;
     end;
 
     TTimeResponder = class(TJabberResponder)
-    protected
+    published
         procedure iqCallback(event: string; tag: TXMLTag); override;
     public
         constructor Create(Session: TJabberSession); overload;
     end;
 
     TLastResponder = class(TJabberResponder)
-    protected
+    published
         procedure iqCallback(event: string; tag: TXMLTag); override;
     public
         constructor Create(Session: TJabberSession); overload;
     end;
 
     TBrowseResponder = class(TJabberResponder)
-    protected
+    published
         procedure iqCallback(event: string; tag: TXMLTag); override;
     public
         constructor Create(Session: TJabberSession); overload;

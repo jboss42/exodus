@@ -42,7 +42,7 @@ type
         _timer: TTimer;
         _ticks: longint;
         _timeout: longint;
-
+    published
         procedure Timeout(Sender: TObject);
         procedure iqCallback(event: string; xml: TXMLTag);
     public

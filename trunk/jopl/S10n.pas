@@ -34,6 +34,7 @@ type
         _subd: longint;
         _unsub: longint;
         _unsubd: longint;
+    published
         procedure SessionCallback(event: string; tag: TXMLTag);
     public
         Constructor Create;

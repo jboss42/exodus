@@ -139,9 +139,6 @@ type
 
     _collapsed_grps: TStringList;
 
-    procedure RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
-    procedure PresCallback(event: string; tag: TXMLTag; p: TJabberPres);
-    procedure SessionCallback(event: string; tag: TXMLTag);
     function getNodeType(node: TTreeNode = nil): integer;
     function getSelectedContacts(online: boolean = true): TList;
     procedure ClearNodes;
@@ -156,6 +153,10 @@ type
     procedure ChangeStatusImage(idx: integer);
   protected
     procedure CreateParams(var Params: TCreateParams); override;
+  published
+    procedure RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
+    procedure PresCallback(event: string; tag: TXMLTag; p: TJabberPres);
+    procedure SessionCallback(event: string; tag: TXMLTag);
   public
     { Public declarations }
     DockOffset: longint;

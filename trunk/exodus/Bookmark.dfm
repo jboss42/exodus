@@ -56,12 +56,11 @@ object frmBookmark: TfrmBookmark
     end
     inherited Panel1: TPanel
       Left = 120
+      Height = 29
       inherited btnOK: TButton
-        Top = 1
         OnClick = frameButtons1btnOKClick
       end
       inherited btnCancel: TButton
-        Top = 1
         OnClick = frameButtons1btnCancelClick
       end
     end

@@ -77,10 +77,11 @@ type
         _js: TObject;
         _last_pres: TJabberPres;
 
-        procedure Callback(event: string; tag: TXMLTag);
         procedure DeletePres(p: TJabberPres);
         procedure AddPres(p: TJabberPres);
         function  GetPresList(sjid: string): TStringList;
+    published
+        procedure Callback(event: string; tag: TXMLTag);
     public
         constructor Create;
         destructor Destroy; override;
@@ -423,6 +424,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 function TPresenceSignal.addListener(callback: TPresenceEvent): TPresenceListener;
 var
     l: TPresenceListener;
@@ -430,10 +432,11 @@ begin
     //
     l := TPresenceListener.Create();
     l.callback := TMethod(callback);
-    Self.AddObject('', l);
+    inherited addListener('', l);
     Result := l
 end;
 
+{---------------------------------------}
 procedure TPresenceSignal.Invoke(event: string; tag: TXMLTag; p: TJabberPres);
 var
     i: integer;

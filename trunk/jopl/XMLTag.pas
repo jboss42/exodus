@@ -55,6 +55,7 @@ type
 
     constructor Create; overload; override;
     constructor Create(tagname: string); reintroduce; overload;
+    constructor Create(tag: TXMLTag); reintroduce; overload;
     destructor Destroy; override;
 
     function AddTag(tagname: string): TXMLTag;
@@ -154,6 +155,7 @@ begin
     NodeType := xml_tag;
     _AttrList := TAttrList.Create();
     _Children := TXMLNodeList.Create(true);
+
     pTag := nil;
 end;
 
@@ -165,7 +167,20 @@ begin
 
     _AttrList := TAttrList.Create();
     _Children := TXMLNodeList.Create(true);
+    ptag := nil;
     Name := tagname;
+end;
+
+constructor TXMLTag.Create(tag: TXMLTag);
+begin
+    //
+    inherited Create();
+
+    _AttrList := TAttrList.Create();
+    _Children := TXMLNodeList.Create(true);
+
+    ptag := nil;
+    Self.AssignTag(tag);
 end;
 
 {---------------------------------------}
@@ -488,6 +503,7 @@ var
     tags: TXMLTagList;
 begin
     // Make self contain all the info that xml does
+    Self.Name := xml.Name;
     tags := xml.ChildTags();
 
     for i := 0 to tags.Count - 1 do begin

@@ -53,8 +53,9 @@ type
     cb: integer;
     agents: TAgents;
     svc, gw, sjid, snick, sgrp: string;
-    procedure agentsCallback(event: string; tag: TXMLTag);
     procedure doAdd;
+  published
+    procedure agentsCallback(event: string; tag: TXMLTag);
   public
     { Public declarations }
   end;

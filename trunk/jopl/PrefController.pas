@@ -770,7 +770,7 @@ procedure TPrefController.ServerprefsCallback(event: string; tag: TXMLTag);
 begin
     // Cache the prefs node
     if (tag = nil) then exit;
-    _server_node := tag.QueryXPTag('/iq/query/storage');
+    _server_node := TXMLTag.Create(tag.QueryXPTag('/iq/query/storage'));
     TJabberSession(_js).FireEvent('/session/server_prefs', _server_node);
 end;
 

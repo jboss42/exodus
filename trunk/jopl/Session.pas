@@ -64,13 +64,13 @@ type
 
         // auth stuff
         procedure AuthGet;
-        procedure AuthGetCallback(event: string; xml: TXMLTag);
-        procedure AuthCallback(event: string; tag: TXMLTag);
         procedure SendRegistration;
-        procedure RegistrationCallback(event: string; xml: TXMLTag);
 
         function getMyAgents(): TAgents;
-
+    published
+        procedure AuthGetCallback(event: string; xml: TXMLTag);
+        procedure AuthCallback(event: string; tag: TXMLTag);
+        procedure RegistrationCallback(event: string; xml: TXMLTag);
     public
         ppdb: TJabberPPDB;
         roster: TJabberRoster;

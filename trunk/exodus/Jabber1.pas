@@ -261,10 +261,10 @@ type
     _shutdown: boolean;
     _close_min: boolean;
 
-    // Callbacks
-    procedure SessionCallback(event: string; tag: TXMLTag);
-    procedure MsgCallback(event: string; tag: TXMLTag);
-    procedure iqCallback(event: string; tag: TXMLTag);
+    _sessioncb: integer;
+    _msgcb: integer;
+    _iqcb: integer;
+
 
     procedure presCustomPresClick(Sender: TObject);
 
@@ -291,6 +291,12 @@ type
     procedure WMTray(var msg: TMessage); message WM_TRAY;
     procedure WMQueryEndSession(var msg: TMessage); message WM_QUERYENDSESSION;
     procedure WMEndSession(var msg: TMessage); message WM_ENDSESSION;
+  published
+    // Callbacks
+    procedure SessionCallback(event: string; tag: TXMLTag);
+    procedure MsgCallback(event: string; tag: TXMLTag);
+    procedure iqCallback(event: string; tag: TXMLTag);
+
   public
     // other stuff..
     last_tick: longword;
@@ -631,9 +637,9 @@ begin
     end;
 
     // Setup callbacks
-    MainSession.RegisterCallback(SessionCallback, '/session');
-    MainSession.RegisterCallback(MsgCallback, '/packet/message');
-    MainSession.RegisterCallback(iqCallback, '/packet/iq[@type="set"]/query[@xmlns="jabber:iq:oob"]');
+    _sessioncb := MainSession.RegisterCallback(SessionCallback, '/session');
+    _msgcb := MainSession.RegisterCallback(MsgCallback, '/packet/message');
+    _iqcb := MainSession.RegisterCallback(iqCallback, '/packet/iq[@type="set"]/query[@xmlns="jabber:iq:oob"]');
 
     // Create responders to other queries on us.
     _version := TVersionResponder.Create(MainSession);
@@ -1109,6 +1115,12 @@ end;
 procedure TExodus.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
+    // Unregister callbacks, etc.
+
+    MainSession.UnRegisterCallback(_sessioncb);
+    MainSession.UnRegisterCallback(_msgcb);
+    MainSession.UnRegisterCallback(_iqcb);
+
     if (_hookLib <> 0) then begin
         dec(_lpHookRec^.InstanceCount);
         _StopHooks();

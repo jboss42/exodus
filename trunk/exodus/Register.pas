@@ -29,6 +29,7 @@ type
     private
         _s: TObject;
         _cb: integer;
+    published
         procedure callback(event: string; tag: TXMLTag);
     public
         procedure SetSession(s: TObject);

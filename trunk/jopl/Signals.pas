@@ -26,6 +26,7 @@ uses
 
 type
 
+    {M+}
     {---------------------------------------}
     // Base callback method for TSignal listeners
     TSignalEvent = procedure (event: string; tag: TXMLTag) of object;
@@ -71,6 +72,8 @@ type
     public
         cb_id: longint;
         callback: TMethod;
+        classname: string;
+        methodname: string;
     end;
 
     TQueuedEvent = class
@@ -138,6 +141,8 @@ type
         function addListener(xplite: string; callback: TPacketEvent): TPacketListener; overload;
         procedure Invoke(event: string; tag: TXMLTag); override;
     end;
+
+    {M-}
 
 
 
@@ -216,6 +221,8 @@ begin
     li.lid := lid;
     li.sig := sig;
     li.l := l;
+    with l do begin
+        end;
 
     _lid_info.Objects[i] := li;
 end;
@@ -287,6 +294,9 @@ begin
     // return false if added to the change list
     if (Dispatcher <> nil) then
         l.cb_id := Dispatcher.getNextID();
+
+    l.classname := TObject(l.callback.Data).ClassName;
+    l.methodname := TObject(l.callback.Data).MethodName(l.callback.code);
 
     if (invoking) then begin
         // add to change list

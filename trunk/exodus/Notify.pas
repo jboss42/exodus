@@ -33,6 +33,7 @@ type
         _session: TObject;
         _presCallback: longint;
         _chatCallback: longint;
+    published
         procedure Callback (event: string; tag: TXMLTag);
         procedure PresCallback(event: string; tag: TXMLTag; p: TJabberPres);
     public
