@@ -284,12 +284,6 @@ type
     _StopHooks: TStopHooks;
     _richedit: THandle;
 
-    // Some responders for CTCP stuff
-    _version: TVersionResponder;
-    _time: TTimeResponder;
-    _last: TLastResponder;
-    _browse: TBrowseResponder;
-
     // Tray Icon stuff
     _tray: NOTIFYICONDATA;
     _tray_tip: string;
@@ -299,7 +293,6 @@ type
     // Some callbacks
     _sessioncb: integer;
     _msgcb: integer;
-    _iqcb: integer;
 
     // Reconnect variables
     _reconnect_interval: integer;
@@ -352,10 +345,7 @@ type
     // Callbacks
     procedure SessionCallback(event: string; tag: TXMLTag);
     procedure MsgCallback(event: string; tag: TXMLTag);
-    procedure iqCallback(event: string; tag: TXMLTag);
     procedure ChangePasswordCallback(event: string; tag: TXMLTag);
-
-    procedure xDataCallback(event: string; tag: TXMLTag);
 
   public
     ActiveChat: TfrmBaseChat;
@@ -651,7 +641,7 @@ begin
 
         reg.CloseKey();
         reg.Free();
-        
+
         _shutdown := true;
         Self.Close;
         end;
@@ -889,15 +879,8 @@ begin
     // Setup callbacks
     _sessioncb := MainSession.RegisterCallback(SessionCallback, '/session');
     _msgcb := MainSession.RegisterCallback(MsgCallback, '/packet/message');
-    _iqcb := MainSession.RegisterCallback(iqCallback, '/packet/iq[@type="set"]/query[@xmlns="jabber:iq:oob"]');
 
-    MainSession.RegisterCallback(xDataCallback, '/packet/message/x[@xmlns="jabber:x:data"]');
-
-    // Create responders to other queries on us.
-    _version := TVersionResponder.Create(MainSession);
-    _time := TTimeResponder.Create(MainSession);
-    _last := TLastResponder.Create(MainSession);
-    _browse := TBrowseResponder.Create(MainSession);
+    initResponders();
 
     Tabs.ActivePage := tbsRoster;
     restoreToolbar();
@@ -1427,25 +1410,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmExodus.iqCallback(event: string; tag: TXMLTag);
-var
-    qTag, tmp_tag: TXMLTag;
-    from, url, desc: string;
-begin
-    // Callback for receiving file transfers
-    from := tag.GetAttribute('from');
-    qTag := tag.getFirstTag('query');
-    tmp_tag := qtag.GetFirstTag('url');
-    url := tmp_tag.Data;
-    tmp_tag := qTag.GetFirstTag('desc');
-    if (tmp_tag <> nil) then
-        desc := tmp_tag.Data
-    else
-        desc := '';
-    FileReceive(from, url, desc);
-end;
-
-{---------------------------------------}
 procedure TfrmExodus.MsgCallback(event: string; tag: TXMLTag);
 var
     b, mtype: Widestring;
@@ -1513,7 +1477,7 @@ begin
             MainSession.QueueEvent(event, tag, Self.CTCPCallback)
         else begin
             e := CreateJabberEvent(tag);
-            e.elapsed_time := SafeInt(tag.GetAttribute('iq_elapsed_time')); 
+            e.elapsed_time := SafeInt(tag.GetAttribute('iq_elapsed_time'));
             RenderEvent(e);
             end;
         end
@@ -1619,15 +1583,11 @@ begin
         // Unregister callbacks, etc.
         MainSession.UnRegisterCallback(_sessioncb);
         MainSession.UnRegisterCallback(_msgcb);
-        MainSession.UnRegisterCallback(_iqcb);
         MainSession.Prefs.SavePosition(Self);
-
-        // Free the responders
-        _version.Free();
-        _time.Free();
-        _last.Free();
-        _browse.Free();
         end;
+
+    // kill all of the auto-responders..
+    cleanupResponders();
 
     // Unhook the auto-away DLL
     if (_hookLib <> 0) then begin
@@ -2675,12 +2635,6 @@ end;
 procedure TfrmExodus.ShowEventsWindow1Click(Sender: TObject);
 begin
     getMsgQueue.Show();
-end;
-
-{---------------------------------------}
-procedure TfrmExodus.xDataCallback(event: string; tag: TXMLTag);
-begin
-    showXData(tag);
 end;
 
 {---------------------------------------}

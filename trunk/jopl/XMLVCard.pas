@@ -123,7 +123,12 @@ begin
         Country := element.Data
     else begin
         element := tag.GetFirstTag('CNTRY');
-        if (element <> nil) then Country := element.Data;
+        if (element <> nil) then
+            Country := element.Data
+        else begin
+            element := tag.GetFirstTag('CTRY');
+            if (element <> nil) then Country := element.Data;
+            end;
         end;
 
 end;

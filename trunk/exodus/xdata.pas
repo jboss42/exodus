@@ -22,7 +22,7 @@ unit xdata;
 interface
 
 uses
-    XMLTag, 
+    XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, StdCtrls, ComCtrls, ExtCtrls, TntStdCtrls;
 
@@ -69,6 +69,7 @@ uses
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
+
 procedure showXData(tag: TXMLTag);
 var
     f: TfrmXData;
