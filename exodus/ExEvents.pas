@@ -295,11 +295,12 @@ end;
 {---------------------------------------}
 procedure TJabberEvent.Parse(tag: TXMLTag);
 var
-    ns, t: Widestring;
+    tmps, ns, t: Widestring;
     delay, qtag, tmp_tag: TXMLTag;
     i_tags: TXMLTagList;
     j: integer;
     ri: TJabberRosterItem;
+    url_tags: TXMLTagList;
 begin
     // create the event from a xml tag
     _tag := TXMLTag.Create(tag);
@@ -362,12 +363,15 @@ begin
                 _data_list.Add(tmp_tag.Data);
 
             // check for x:oob URL's
-            tmp_tag := tag.QueryXPTag(XP_XOOB);
-            if (tmp_tag <> nil) then begin
+            url_tags := tag.QUeryXPTags(XP_XOOB);
+            for j := 0 to url_tags.Count - 1 do begin
+                tmp_tag := url_tags[j];
                 _data_list.Add(sMsgURL);
-                _data_list.Add(tmp_tag.GetBasicText('desc'));
                 _data_list.Add(tmp_tag.GetBasicText('url'));
+                tmps := tmp_tag.GetBasicText('desc');
+                if (tmps <> '') then _data_list.Add(tmps);
             end;
+            url_tags.Free();
         end;
 
         // For messages, pull out the subject
