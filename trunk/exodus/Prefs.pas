@@ -252,6 +252,7 @@ begin
     tbsNetwork.TabVisible := false;
 
     // Load the system panel
+    _system := nil;
     _cur_panel := nil;
     TabSelect(lblSystem);
 

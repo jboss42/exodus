@@ -197,6 +197,7 @@ type
     procedure RenderNode(ritem: TJabberRosterItem; p: TJabberPres);
     procedure RenderBookmark(bm: TJabberBookmark);
     procedure RemoveItemNodes(ritem: TJabberRosterItem);
+    procedure RemoveItemNode(ritem: TJabberRosterItem; p: TJabberPres);
     procedure RemoveGroupNode(node: TTreeNode);
     procedure RemoveEmptyGroups();
     procedure ResetPanels;
@@ -841,17 +842,17 @@ begin
 
     if (event = '/presence/error') then
         // ignore
-
     else if (event = '/presence/offline') then begin
         // remove the node
-        p := MainSession.PPDB.FindPres(jid, '');
+        if (ritem.jid.jid <> MainSession.BareJid) then
+            p := MainSession.PPDB.FindPres(jid, '');
         if (ritem <> nil) then
             RenderNode(ritem, p);
     end
-
     else if (ritem <> nil) then begin
         // possibly re-render the node based on this pres packet
-        p := MainSession.ppdb.FindPres(tmp_jid.jid, '');
+        if (ritem.jid.jid <> MainSession.BareJid) then
+            p := MainSession.ppdb.FindPres(tmp_jid.jid, '');
         RenderNode(ritem, p);
     end;
 
@@ -879,6 +880,41 @@ begin
         end;
     end;
     treeRoster.Items.EndUpdate();
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.RemoveItemNode(ritem: TJabberRosterItem; p: TJabberPres);
+var
+    n: TTreeNode;
+    node_list: TList;
+    idx, i: integer;
+    mr: TJabberMyResource;
+begin
+    //
+    idx := -1;
+    node_list := TList(ritem.Data);
+    if (node_list = nil) then exit;
+
+    for i := 0 to node_list.Count - 1 do begin
+        n := TTreeNode(node_list[i]);
+        if (n.Data = nil) then continue;
+
+        mr := TJabberMyResource(n.Data);
+        if (mr.Resource = p.fromJid.resource) then begin
+            idx := i;
+            break;
+        end;
+    end;
+
+    if (idx >= 0) then begin
+        n := TTreeNode(node_list[idx]);
+        node_list.Delete(idx);
+        n.Free();
+        if (_myres.Count <= 0) then begin
+            Self.RemoveGroupNode(_myres);
+            _myres := nil;
+        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -975,7 +1011,11 @@ begin
         ((p = nil) or (p.PresType = 'unavailable'))) then begin
         // Only show online, and don't use the offline grp
         // This person is not online, remove all nodes and bail
-        RemoveItemNodes(ritem);
+        if (ritem.jid.jid = MainSession.BareJid) then begin
+            RemoveItemNode(ritem, p);
+        end
+        else
+            RemoveItemNodes(ritem);
         exit;
     end
 
@@ -1111,9 +1151,13 @@ begin
         cur_node := nil;
         for i := 0 to node_list.count - 1 do begin
             n := TTreeNode(node_list[i]);
-            if n.HasAsParent(grp_node) then begin
-                cur_node := n;
-                break;
+            if (n.HasAsParent(grp_node)) then begin
+                if (is_me) and (n.Text = tmps) then
+                    cur_node := n
+                else if (not is_me) then
+                    cur_node := n;
+                if (cur_node <> nil) then
+                    break;
             end;
         end;
 
