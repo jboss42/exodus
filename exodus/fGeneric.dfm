@@ -1,8 +1,8 @@
 object frameGeneric: TframeGeneric
   Left = 0
   Top = 0
-  Width = 160
-  Height = 23
+  Width = 181
+  Height = 26
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -16,13 +16,13 @@ object frameGeneric: TframeGeneric
   object lblLabel: TTntLabel
     Left = 0
     Top = 0
-    Width = 97
-    Height = 23
+    Width = 81
+    Height = 26
     Align = alLeft
     AutoSize = False
     Caption = 'lblLabel'
     ParentShowHint = False
     ShowHint = True
-    Layout = tlCenter
+    WordWrap = True
   end
 end

@@ -143,14 +143,19 @@ begin
     l := 1;
     while l <= length(tmps) do begin
         // search for the first non-space
-        while ((l <= length(tmps)) and (UnicodeIsWhiteSpace(Cardinal(tmps[l])))) do
+        while (
+            (l <= length(tmps)) and
+            (UnicodeIsSeparator(Ord(tmps[l]))) and
+            (UnicodeIsWhiteSpace(Ord(tmps[l])))) do
             inc(l);
 
         if l > length(tmps) then exit;
         i := l;
 
         // search for the first space
-        while (i <= length(tmps)) and (not UnicodeIsWhiteSpace(Cardinal(tmps[i]))) do
+        while (i <= length(tmps)) and
+            (not UnicodeIsSeparator(Ord(tmps[i]))) and
+            (not UnicodeIsWhiteSpace(Ord(tmps[i]))) do
             inc(i);
 
         list.Add(Copy(tmps, l, i - l));
