@@ -264,16 +264,24 @@ begin
     if ((_clickHandle <> 0) and (not IsWindow(_clickHandle))) then
         exit;
 
+    // Special case for the main exodus window.
+    if ((_clickForm = frmExodus) and (frmExodus.isMinimized())) then
+        frmExodus.trayShowClick(nil)
+
+    else if (_clickForm.WindowState = wsMinimized) then
+        ShowWindow(_clickForm.Handle, SW_SHOWNORMAL);
+
     // ok, try and raise the window
     if (_clickForm is TfrmDockable) then with TfrmDockable(_clickForm) do begin
         if Docked then begin
             frmExodus.Tabs.ActivePage := TabSheet;
+            if (frmExodus.isMinimized()) then
+                frmExodus.trayShowClick(nil);
             frmExodus.Show();
             exit;
         end;
     end;
-    if (_clickForm.WindowState = wsMinimized) then
-        ShowWindow(_clickForm.Handle, SW_SHOWNORMAL);
+
     _clickForm.Show();
 end;
 
