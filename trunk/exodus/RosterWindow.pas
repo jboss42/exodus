@@ -2403,6 +2403,7 @@ var
 begin
     // Do this since the treeview doesn't use WideStrings for
     // processing of Editing events
+    getNodeType();
     ri := _cur_ritem;
     nick := ri.Nickname;
     if (InputQueryW('Rename Roster Item', 'New Nickname: ', nick)) then begin
