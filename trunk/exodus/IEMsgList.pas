@@ -329,11 +329,14 @@ var
     cd: TXMLCData;
     dv: WideString;
 begin
-    body := Msg.Tag.QueryXPTag(xp_xhtml);
-    if (body <> nil) then begin
-        nodes := body.nodes;
-        for i := 0 to nodes.Count - 1 do
-            txt := txt + ProcessTag(body, TXMLNode(nodes[i]));
+    if (not Msg.Action) then begin
+        // ignore HTML for actions.  it's harder than you think.
+        body := Msg.Tag.QueryXPTag(xp_xhtml);
+        if (body <> nil) then begin
+            nodes := body.nodes;
+            for i := 0 to nodes.Count - 1 do
+                txt := txt + ProcessTag(body, TXMLNode(nodes[i]));
+        end;
     end;
 
     if (txt = '') then begin
@@ -348,12 +351,12 @@ begin
     dv := '<div class="line">';
     if (MainSession.Prefs.getBool('timestamp')) then begin
         try
-            dv := dv + '<span class="ts">[' +
+            dv := dv + '<span class="ts" align="right">[' +
                 FormatDateTime(MainSession.Prefs.getString('timestamp_format'), Msg.Time) +
                 ']</span>';
         except
             on EConvertError do begin
-                dv := dv + '<span class="ts">[' +
+                dv := dv + '<span class="ts" align="right">[' +
                     FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
                     Now()) + ']</span>';
             end;
@@ -362,20 +365,20 @@ begin
 
     if (Msg.Nick = '') then begin
         // Server generated msgs (mostly in TC Rooms)
-        dv := dv + '&nbsp;<span class="svr">' + txt + '</span>';
+        dv := dv + '<span class="svr">' + txt + '</span>';
     end
     else if not Msg.Action then begin
         // This is a normal message
         if Msg.isMe then
             // our own msgs
-            dv := dv + '&nbsp;<span class="me">&lt;' + Msg.Nick + '&gt;</span>'
+            dv := dv + '<span class="me">&lt;' + Msg.Nick + '&gt;</span>'
         else
-            dv := dv + '&nbsp;<span class="other">&lt;' + Msg.Nick + '&gt;</span>';
+            dv := dv + '<span class="other">&lt;' + Msg.Nick + '&gt;</span>';
 
         if (Msg.Highlight) then
-            dv := dv + '&nbsp;<span class="alert"> ' + txt + '</span>'
+            dv := dv + '<span class="alert"> ' + txt + '</span>'
         else
-            dv := dv + '&nbsp;<span class="msg">' + txt + '</span>';
+            dv := dv + '<span class="msg">' + txt + '</span>';
     end
     else
         // This is an action
