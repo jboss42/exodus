@@ -1,45 +1,29 @@
 inherited frmRegister: TfrmRegister
-  Width = 429
-  BorderStyle = bsSizeable
-  Caption = 'Registration'
+  Left = 245
+  Top = 360
+  Caption = 'frmRegister'
   OldCreateOrder = True
+  OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
-    Width = 421
-    inherited Bevel1: TBevel
-      Width = 421
+    inherited btnBack: TTntButton
+      OnClick = btnPrevClick
     end
-    inherited Panel3: TPanel
-      Left = 164
-      inherited btnBack: TTntButton
-        OnClick = btnPrevClick
-      end
-      inherited btnNext: TTntButton
-        OnClick = btnNextClick
-      end
-      inherited btnCancel: TTntButton
-        OnClick = btnCancelClick
-      end
+    inherited btnNext: TTntButton
+      OnClick = btnNextClick
     end
-  end
-  inherited Panel1: TPanel
-    Width = 421
-    inherited Bevel2: TBevel
-      Width = 421
-    end
-    inherited Image1: TImage
-      Left = 380
+    inherited btnCancel: TTntButton
+      OnClick = btnCancelClick
     end
   end
   inherited Tabs: TPageControl
-    Width = 421
     inherited TabSheet1: TTabSheet
       object Label1: TTntLabel
         Left = 0
         Top = 0
-        Width = 413
+        Width = 408
         Height = 90
         Align = alTop
         AutoSize = False
@@ -58,8 +42,8 @@ inherited frmRegister: TfrmRegister
       object lblIns: TTntLabel
         Left = 0
         Top = 90
-        Width = 413
-        Height = 136
+        Width = 408
+        Height = 135
         Align = alClient
         AutoSize = False
         Caption = 'Waiting for agent instructions.....'
@@ -75,14 +59,27 @@ inherited frmRegister: TfrmRegister
     object TabSheet2: TTabSheet
       Caption = 'TabSheet2'
       ImageIndex = 1
+      object formBox: TScrollBox
+        Left = 0
+        Top = 0
+        Width = 408
+        Height = 193
+        Align = alClient
+        BevelInner = bvNone
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        Ctl3D = True
+        ParentCtl3D = False
+        TabOrder = 0
+      end
       object Panel2: TPanel
         Left = 0
-        Top = 194
-        Width = 413
+        Top = 193
+        Width = 408
         Height = 32
         Align = alBottom
         BevelOuter = bvNone
-        TabOrder = 0
+        TabOrder = 1
         object btnDelete: TTntButton
           Left = 243
           Top = 3
@@ -93,19 +90,6 @@ inherited frmRegister: TfrmRegister
           OnClick = btnDeleteClick
         end
       end
-      object formBox: TScrollBox
-        Left = 0
-        Top = 0
-        Width = 413
-        Height = 194
-        Align = alClient
-        BevelInner = bvNone
-        BevelOuter = bvNone
-        BorderStyle = bsNone
-        Ctl3D = True
-        ParentCtl3D = False
-        TabOrder = 1
-      end
     end
     object TabSheet3: TTabSheet
       Caption = 'TabSheet3'
@@ -113,7 +97,7 @@ inherited frmRegister: TfrmRegister
       object Label2: TTntLabel
         Left = 0
         Top = 0
-        Width = 413
+        Width = 408
         Height = 90
         Align = alTop
         AutoSize = False
@@ -133,7 +117,7 @@ inherited frmRegister: TfrmRegister
       object lblOK: TTntLabel
         Left = 0
         Top = 0
-        Width = 413
+        Width = 408
         Height = 90
         Align = alTop
         AutoSize = False
@@ -152,7 +136,7 @@ inherited frmRegister: TfrmRegister
       object lblBad: TTntLabel
         Left = 0
         Top = 90
-        Width = 413
+        Width = 408
         Height = 90
         Align = alTop
         AutoSize = False
