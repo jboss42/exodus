@@ -287,7 +287,7 @@ var
     l: Widestring;
 begin
     l := trim(LowerCase(str));
-    Result := ((l = 'yes') or (l = 'true') or (l = 'ok') or (l = '-1'))
+    Result := ((l = 'yes') or (l = 'true') or (l = 'ok') or (l = '-1') or (l = '1'))
 end;
 
 {---------------------------------------}
