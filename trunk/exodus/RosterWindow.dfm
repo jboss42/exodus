@@ -1721,4 +1721,24 @@ object frmRosterWindow: TfrmRosterWindow
       OnClick = popAddGroupClick
     end
   end
+  object popBookmark: TPopupMenu
+    Left = 8
+    Top = 296
+    object Join1: TMenuItem
+      Caption = 'Join Group'
+      OnClick = treeRosterDblClick
+    end
+    object N5: TMenuItem
+      Caption = '-'
+    end
+    object Delete1: TMenuItem
+      Caption = 'Remove'
+      ShortCut = 46
+      OnClick = popRemoveClick
+    end
+    object Properties1: TMenuItem
+      Caption = 'Properties'
+      OnClick = popPropertiesClick
+    end
+  end
 end
