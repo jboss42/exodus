@@ -8,7 +8,6 @@ inherited frmChat: TfrmChat
   OldCreateOrder = True
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
-  OnEndDock = FormEndDock
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 18
@@ -43,6 +42,7 @@ inherited frmChat: TfrmChat
       ParentFont = False
       Visible = False
       OnClick = btnCloseClick
+      OnMouseDown = btnCloseMouseDown
     end
     object pnlJID: TPanel
       Left = 2
