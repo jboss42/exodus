@@ -46,6 +46,7 @@ type
       State: TDragState; var Accept: Boolean);
     procedure lstJIDSDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure btnRemoveClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
   public
@@ -203,6 +204,11 @@ begin
         if lstJIDS.Items[i].Selected then
             lstJIDS.Items.Delete(i);
         end;
+end;
+
+procedure TfrmInvite.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+    action := caFree;
 end;
 
 end.
