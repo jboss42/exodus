@@ -1,6 +1,6 @@
 object frmChat: TfrmChat
-  Left = 278
-  Top = 214
+  Left = 132
+  Top = 145
   ActiveControl = MsgOut
   AutoScroll = False
   Caption = 'Chat Window'
@@ -134,7 +134,6 @@ object frmChat: TfrmChat
       Height = 200
       Align = alClient
       PopupMenu = popContact
-      ReadOnly = True
       ScrollBars = ssBoth
       TabOrder = 0
       OnURLClick = MsgListURLClick

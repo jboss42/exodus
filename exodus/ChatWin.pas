@@ -29,7 +29,7 @@ uses
     Chat, Dockable,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     StdCtrls, ComCtrls, ExtCtrls, Buttons, Menus, ToolWin, ExRichEdit,
-    AppEvnts;
+    AppEvnts, OLERichEdit, ImgList;
 
 type
   TfrmChat = class(TfrmDockable)

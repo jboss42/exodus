@@ -30,6 +30,8 @@ requires
   vcl;
 
 contains
-  ExRichEdit in 'ExRichEdit.pas';
+  ExRichEdit in 'ExRichEdit.pas',
+  OLERichEdit in 'OLERichEdit.pas',
+  RichOLE in 'richole.pas';
 
 end.

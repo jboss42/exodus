@@ -3,13 +3,13 @@ unit ExRichEdit;
 interface
 
 uses
-    RichEdit,
+    OLERichEdit, RichEdit,
     Windows, Messages, SysUtils, Classes, Controls, StdCtrls, ComCtrls;
 
 type
   TRichEditURLClick = procedure (Sender: TObject; url: string) of object;
 
-  TExRichEdit = class(TRichEdit)
+  TExRichEdit = class(TOLEEdit)
   private
     { Private declarations }
     FOnURLClick: TRichEditURLClick;
