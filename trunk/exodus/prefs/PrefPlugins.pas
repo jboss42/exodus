@@ -148,7 +148,12 @@ begin
 
             // try to register it??
             // From the TRegSvr example.
-            LibHandle := LoadLibrary(PChar(String(item.SubItems[1])));
+            try
+                LibHandle := LoadLibrary(PChar(String(item.SubItems[1])));
+            except
+                LibHandle := 0;
+            end;
+            
             if LibHandle = 0 then begin
                 MessageDlg(sRegPluginError, mtError, [mbOK], 0);
                 continue;
