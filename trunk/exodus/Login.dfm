@@ -21,28 +21,28 @@ object frmLogin: TfrmLogin
     Top = 32
     Width = 51
     Height = 13
-    Caption = 'Username:'
+    Caption = '&Username:'
   end
   object Label2: TLabel
     Left = 9
     Top = 56
     Width = 49
     Height = 13
-    Caption = 'Password:'
+    Caption = '&Password:'
   end
   object Label3: TLabel
     Left = 9
     Top = 80
     Width = 34
     Height = 13
-    Caption = 'Server:'
+    Caption = '&Server:'
   end
   object Label4: TLabel
     Left = 9
     Top = 104
     Width = 49
     Height = 13
-    Caption = 'Resource:'
+    Caption = '&Resource:'
   end
   object Label5: TLabel
     Left = 9
@@ -106,7 +106,7 @@ object frmLogin: TfrmLogin
     Height = 37
     Align = alBottom
     AutoScroll = False
-    TabOrder = 5
+    TabOrder = 8
     inherited Bevel1: TBevel
       Width = 238
     end
@@ -133,7 +133,7 @@ object frmLogin: TfrmLogin
     Top = 144
     Width = 97
     Height = 15
-    Caption = 'Invisible'
+    Caption = 'In&visible'
     TabOrder = 6
   end
   object btnDetails: TButton
@@ -141,7 +141,7 @@ object frmLogin: TfrmLogin
     Top = 162
     Width = 75
     Height = 23
-    Caption = 'Details...'
+    Caption = '&Details...'
     TabOrder = 7
     OnClick = btnDetailsClick
   end
@@ -150,8 +150,8 @@ object frmLogin: TfrmLogin
     Top = 125
     Width = 127
     Height = 17
-    Caption = 'Save password'
-    TabOrder = 8
+    Caption = 'Save pass&word'
+    TabOrder = 5
   end
   object popProfiles: TPopupMenu
     Left = 8
