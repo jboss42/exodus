@@ -854,8 +854,6 @@ var
     f: boolean;
 begin
   inherited;
-    // todo: This may have bugs still.. incremental searching in JUD results
-
     // OnDataFind gets called in response to calls to FindCaption, FindData,
     // GetNearestItem, etc. It also gets called for each keystroke sent to the
     // ListView (for incremental searching)

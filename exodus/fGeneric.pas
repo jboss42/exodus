@@ -57,6 +57,9 @@ type
     procedure JidFieldDotClick(Sender: TObject);
   public
     { Public declarations }
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy(); override;
+    
     procedure render(tag: TXMLTag);
     function isValid: boolean;
     function getXML: TXMLTag;
@@ -82,6 +85,22 @@ const
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
+constructor TframeGeneric.Create(AOwner: TComponent);
+begin
+    inherited;
+    
+    urls := TObjectList.Create();
+    urls.OwnsObjects := true;
+end;
+
+{---------------------------------------}
+destructor TframeGeneric.Destroy();
+begin
+    urls.Free();
+    inherited;
+end;
+
+{---------------------------------------}
 procedure TframeGeneric.render(tag: TXMLTag);
 var
     v, l, t: Widestring;
@@ -92,10 +111,6 @@ begin
     Self.BorderWidth := 1;
     AssignDefaultFont(Self.Font);
     dot := nil;
-
-    // XXX: PGM: where does this get freed?
-    urls := TObjectList.Create();
-    urls.OwnsObjects := true;
 
     fld_var := tag.GetAttribute('var');
     t := tag.GetAttribute('type');

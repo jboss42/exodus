@@ -548,7 +548,7 @@ end;
 {---------------------------------------}
 function trimNewLines(value: WideString): WideString;
 var
-    ins_list: TStringList;
+    ins_list: TWideStringList;
     tmps: WideString;
     i: integer;
 begin
@@ -558,10 +558,8 @@ begin
         Result := ''
     else begin
         tmps := AnsiReplaceText(value, ''#13, '');
-        // TODO: This needs to be a WideStringList to support unicode!
-        ins_list := TStringList.Create();
-        ins_list.Delimiter := #10;
-        ins_list.DelimitedText := tmps;
+        ins_list := TWideStringList.Create();
+        split(tmps, ins_list, #10);
         tmps := '';
         for i := 0 to ins_list.Count - 1 do
             tmps := tmps + Trim(ins_list[i]) + ' ';

@@ -189,7 +189,7 @@ uses
     Chat, ChatController, JabberID, MsgRecv, Room, Browser, Jud,
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
     COMChatController, Dockable, RegForm,
-    Jabber1, Session, NodeItem, Roster, RosterWindow, PluginAuth, PrefController,
+    Jabber1, Session, NodeItem, RemoveContact, Roster, RosterWindow, PluginAuth, PrefController,
     Controls, Dialogs, Variants, Forms, SysUtils, ComServ;
 
 const
@@ -617,6 +617,7 @@ end;
 procedure TExodusController.RemoveRosterItem(const jid: WideString);
 begin
     // todo: plugin remove roster item
+    QuietRemoveRosterItem(jid);
 end;
 
 {---------------------------------------}

@@ -182,7 +182,9 @@ uses
   JabberUtils in '..\jopl\JabberUtils.pas',
   DockContainer in 'DockContainer.pas' {frmDockContainer},
   Random in '..\jopl\Random.pas',
-  stringprep in '..\jopl\stringprep.pas';
+  stringprep in '..\jopl\stringprep.pas',
+  CommandWizard in 'CommandWizard.pas' {frmCommandWizard},
+  fResults in 'fResults.pas' {frameResults: TFrame};
 
 {$R *.TLB}
 

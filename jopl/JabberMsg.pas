@@ -183,7 +183,6 @@ function TJabberMessage.GetTag: TXMLTag;
 var
     raw_body: WideString;
 begin
-    // XXX: I don't think we ever free these.  MEM LEAK!
     // I made the _tag form allocate the same way, so that we can always free
     // or not. /hildjj
     if (_tag <> nil) then begin

@@ -489,6 +489,7 @@ const
 {---------------------------------------}
 implementation
 uses
+    CommandWizard, 
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
     ChatController, ChatWin, Debug, Dockable, DNSUtils, Entity,
     EntityCache, ExSession, JabberUtils, ExUtils, 
@@ -497,7 +498,7 @@ uses
     JabberConst, ComController, CommCtrl, CustomPres,
     JoinRoom, Login, MsgController, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow, Room,
-    XferManager, NodeItem, SSLWarn, 
+    XferManager, NodeItem, Stringprep, SSLWarn, 
     Roster, RosterAdd, Session, StandardAuth, Subscribe, Unicode, VCard, xData,
     XMLUtils, XMLParser;
 
@@ -1004,8 +1005,8 @@ begin
     _dns_cb := -1;
     t := tag.getAttribute('type');
     if (t = 'failed') then with MainSession.Profile do begin
-        // XXX: stringprep here for idn's
-        ResolvedIP := Lowercase(Server);
+        // stringprep here for idn's
+        ResolvedIP := xmpp_nameprep(Server);
         if (ssl = ssl_port) then
             ResolvedPort := 5223
         else
@@ -2664,8 +2665,10 @@ var
 var
     f, m, x: TXMLTag;
 }
+{
 var
     hex: string;
+}
 begin
     // Test something..
     // LoadPlugin('RosterClean.ExodusRosterClean');
@@ -2707,8 +2710,9 @@ begin
     ShowXData(m);
     }
 
-    hex := MD5File('d:\temp\64ptn_en.pdf');
-    ShowMessage(hex);
+    //hex := MD5File('d:\temp\64ptn_en.pdf');
+    //ShowMessage(hex);
+    StartCommandWizard('');
 
     // Cause an AV
     // PInteger(nil)^ := 0;

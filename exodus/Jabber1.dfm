@@ -30,14 +30,14 @@ object frmExodus: TfrmExodus
   object SplitterLeft: TSplitter
     Left = 57
     Top = 31
-    Height = 290
+    Height = 289
     OnMoved = SplitterRightMoved
   end
   object Tabs: TTntPageControl
     Left = 60
     Top = 31
     Width = 141
-    Height = 290
+    Height = 289
     ActivePage = tbsRoster
     Align = alClient
     DockSite = True
@@ -68,7 +68,7 @@ object frmExodus: TfrmExodus
       object SplitterRight: TSplitter
         Left = 105
         Top = 0
-        Height = 261
+        Height = 260
         ResizeStyle = rsUpdate
         OnMoved = SplitterRightMoved
       end
@@ -76,7 +76,7 @@ object frmExodus: TfrmExodus
         Left = 0
         Top = 0
         Width = 105
-        Height = 261
+        Height = 260
         Align = alLeft
         BevelOuter = bvNone
         BorderWidth = 1
@@ -89,7 +89,7 @@ object frmExodus: TfrmExodus
         Left = 108
         Top = 0
         Width = 25
-        Height = 261
+        Height = 260
         Align = alClient
         BevelOuter = bvNone
         Caption = 'THIS IS PNLRIGHT'
@@ -208,7 +208,7 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 31
     Width = 57
-    Height = 290
+    Height = 289
     Align = alLeft
     BevelOuter = bvNone
     BorderWidth = 1
@@ -223,7 +223,6 @@ object frmExodus: TfrmExodus
       Caption = '&Exodus'
       object Test1: TTntMenuItem
         Caption = 'Test'
-        Visible = False
         OnClick = Test1Click
       end
       object Connect2: TTntMenuItem
