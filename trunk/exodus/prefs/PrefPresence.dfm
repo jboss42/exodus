@@ -241,7 +241,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     Height = 24
     Align = alTop
     BevelOuter = bvLowered
-    Caption = 'Roster Options'
+    Caption = 'Presence Options'
     Color = clHighlight
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clHighlightText
