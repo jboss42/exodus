@@ -2120,8 +2120,8 @@ begin
 
             {$ifdef TEST_AUTOAWAY}
             if (not _is_autoaway) and (not _is_autoxa) then begin
-                dmsg := 'Idle Check: ' + BoolToStr(_is_autoaway, true) + ', ' +
-                    BoolToStr(_is_autoxa, true) + ', ' +
+                dmsg := 'Idle Check: ' + SafeBoolStr(_is_autoaway, true) + ', ' +
+                    SafeBoolStr(_is_autoxa, true) + ', ' +
                     IntToStr(cur_idle ) + ' secs'#13#10;
                 DebugMsg(dmsg);
                 end;

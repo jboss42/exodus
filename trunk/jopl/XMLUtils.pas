@@ -39,6 +39,7 @@ function DecodeString(value: Widestring): Widestring;
 function MungeName(str: Widestring): Widestring;
 function SafeInt(str: Widestring): integer;
 function SafeBool(str: Widestring): boolean;
+function SafeBoolStr(value: boolean) : Widestring;
 
 function JabberToDateTime(datestr: Widestring): TDateTime;
 function DateTimeToJabber(dt: TDateTime): Widestring;
@@ -287,6 +288,14 @@ var
 begin
     l := trim(LowerCase(str));
     Result := ((l = 'yes') or (l = 'true') or (l = 'ok'))
+end;
+
+function SafeBoolStr(value: boolean) : Widestring;
+begin
+    if value then
+        Result := 'true'
+    else
+        Result := 'false';
 end;
 
 {---------------------------------------}
