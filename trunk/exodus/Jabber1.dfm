@@ -104,6 +104,7 @@ object frmExodus: TfrmExodus
     Width = 213
     Height = 31
     AutoSize = True
+    BandBorderStyle = bsNone
     Bands = <
       item
         Control = ToolBar1

@@ -315,13 +315,11 @@ begin
     with MainSession.ChatList do begin
         for i := Count - 1 downto 0 do begin
             c := TChatController(Objects[i]);
+            Delete(i);
             if c <> nil then begin
                 if c.window <> nil then
-                    TfrmChat(c.window).chat_object := nil;
                     TfrmChat(c.window).Free();
             end;
-            c.Free;
-            Delete(i);
         end;
     end;
 end;

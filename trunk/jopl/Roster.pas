@@ -633,15 +633,19 @@ var
     i, idx: integer;
     p: TJabberPres;
 begin
-    // make sure the _groups list matches the .Groups from the ritem
+
+    // make sure we remove them from unfiled if they
+    // were there, and they now have at least 1 group.
     if (ritem.groups.Count > 0) then begin
         idx := _unfiled.IndexOf(ritem.jid.full);
         if (idx >= 0) then
             _unfiled.Delete(idx);
     end;
 
+    // get whether or not they are online
     p := MainSession.ppdb.FindPres(ritem.jid.jid, '');
 
+    // iterate over all the groups
     for i := 0 to _groups.Count - 1 do begin
         g := _groups[i];
         jids := TWidestringlist(_groups.Objects[i]);

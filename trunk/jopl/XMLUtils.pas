@@ -132,6 +132,8 @@ var
     j, i: integer;
 begin
     // escape special chars .. not &apos; --> only XML
+
+    // XXX: Joe, Can we optimize this w/ regex please??
     tok := '';
     tmps := '';
     i := 1;

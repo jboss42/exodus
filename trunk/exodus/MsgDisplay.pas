@@ -509,6 +509,7 @@ var
     color, txt, html, time, bg, font: string;
     cr_pos: integer;
 begin
+    // XXX: Joe, optimize with regex PLEASE!
     // replace CR's w/ <br> tags
     txt := HTML_EscapeChars(Msg.Body, false);
     repeat

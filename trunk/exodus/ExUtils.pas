@@ -396,12 +396,11 @@ end;
 {---------------------------------------}
 procedure LogMessage(Msg: TJabberMessage);
 var
-    h, fn: string;
-    f: TextFile;
-    fh: integer;
+    buff, fn: string;
     header: boolean;
     _jid: TJabberID;
     ndate: TDateTime;
+    fs: TFileStream;
 begin
     // log this msg..
     fn := MainSession.Prefs.getString('log_path');
@@ -424,27 +423,27 @@ begin
 
     // Munge the filename
     fn := fn + MungeName(_jid.jid) + '.html';
-    AssignFile(f, fn);
-    if FileExists(fn) then begin
-        fh := FileOpen(fn, fmOpenRead);
-        ndate := FileDateToDateTime(FileGetDate(fh));
-        FileClose(fh);
+
+    if (FileExists(fn)) then begin
+        fs := TFileStream.Create(fn, fmOpenReadWrite, fmShareDenyNone);
+        ndate := FileDateToDateTime(FileGetDate(fs.Handle));
         header := (abs(Now - nDate) > 0.04);
-        Append(f);
     end
     else begin
+        fs := TFileStream.Create(fn, fmCreate, fmShareDenyNone);
         header := true;
-        ReWrite(f);
     end;
 
-    // if the file is over an hour old..put a new header on it.
-    if (header) then
-        Writeln(f, '<p><font size=+1><b>New Conversation at: ' +
-            DateTimeToStr(Now) + '</b></font><br />');
+    if (header) then begin
+        buff := '<p><font size=+1><b>New Conversation at: ' +
+            DateTimeToStr(Now) + '</b></font><br />';
+        fs.Write(Pointer(buff)^, Length(buff));
+    end;
 
-    h := GetMsgHTML(Msg);
-    Writeln(f, h);
-    CloseFile(f);
+    buff := GetMsgHTML(Msg);
+    fs.Write(Pointer(buff)^, Length(buff));
+    fs.Free();
+
     _jid.Free();
 end;
 

@@ -62,7 +62,7 @@ function TExodusRoster.Find(const JabberID: WideString): IExodusRosterItem;
 var
     ri: TJabberRosterItem;
 begin
-    // xxx: Should we be spinning up new COM objects for every item??
+    // Should we be spinning up new COM objects for every item??
     // they should go away via RefCounting.
     ri := MainSession.roster.Find(JabberID);
     if (ri <> nil) then
