@@ -124,7 +124,10 @@ type
         function generateID: string;
         function IsBlocked(jid : string): boolean;  overload;
         function IsBlocked(jid : TJabberID): boolean; overload;
+
         procedure Block(jid : TJabberID);
+        procedure UnBlock(jid : TJabberID);
+
 
         property Username: string read GetUsername write SetUsername;
         property Password: string read GetPassword write SetPassword;
@@ -808,6 +811,26 @@ begin
     else
         result := true;
     blockers.Free();
+end;
+
+{---------------------------------------}
+procedure TJabberSession.UnBlock(jid : TJabberID);
+var
+    i: integer;
+    blockers: TStringList;
+    block : TXMLTag;
+begin
+    blockers := TStringList.Create();
+    Prefs.fillStringlist('blockers', blockers);
+    i := blockers.IndexOf(jid.jid);
+    if (i >= 0) then begin
+        blockers.Delete(i);
+        Prefs.setStringlist('blockers', blockers);
+        end;
+    blockers.Free();
+    block := TXMLTag.Create('unblock');
+    block.PutAttribute('jid', jid.jid);
+    MainSession.FireEvent('/session/unblock', block);
 end;
 
 {---------------------------------------}
