@@ -87,14 +87,14 @@ status:
 	StrCpy $6 '-s "$6"'
 
 exec:
-	;MessageBox MB_OK '"$INSTDIR\Exodus.exe" -t $2 -i $3 $4 $5 $6'
+	DetailPrint '"$INSTDIR\Exodus.exe" -t $2 -i $3 $4 $5 $6'
 	Exec '"$INSTDIR\Exodus.exe" -t $2 -i $3 -f "$4" $5 $6'
 	SetAutoClose "true"
 
 done:
 	DeleteRegKey HKLM "Software\Jabber\Exodus\Restart\$1"
 
-    IntOp $0 $0 + 1
+;    IntOp $0 $0 + 1
   	Goto outer_loop
 abort:
 
@@ -216,6 +216,8 @@ prompt:
 	Quit
 
 done:
+	; wait for shutdowns to complete
+	Sleep 1000
 	Pop $1
 	Pop $0
 FunctionEnd
