@@ -1618,7 +1618,7 @@ object frmPrefs: TfrmPrefs
         Font.Style = [fsBold]
         ParentColor = False
         ParentFont = False
-        TabOrder = 1
+        TabOrder = 11
       end
       object chkShowUnsubs: TCheckBox
         Left = 8
@@ -1626,7 +1626,7 @@ object frmPrefs: TfrmPrefs
         Width = 209
         Height = 17
         Caption = 'Show unsubscribed contacts.'
-        TabOrder = 2
+        TabOrder = 1
       end
       object chkOfflineGroup: TCheckBox
         Left = 8
@@ -1642,7 +1642,7 @@ object frmPrefs: TfrmPrefs
         Width = 241
         Height = 17
         Caption = 'Show status in the roster: Joe <Meeting>'
-        TabOrder = 4
+        TabOrder = 7
         OnClick = chkInlineStatusClick
       end
       object cboInlineStatus: TColorBox
@@ -1655,7 +1655,7 @@ object frmPrefs: TfrmPrefs
         Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
         DropDownCount = 12
         ItemHeight = 16
-        TabOrder = 5
+        TabOrder = 8
       end
       object chkHideBlocked: TCheckBox
         Left = 8
@@ -1663,7 +1663,7 @@ object frmPrefs: TfrmPrefs
         Width = 201
         Height = 17
         Caption = 'Hide blocked contacts '
-        TabOrder = 6
+        TabOrder = 4
       end
       object chkPresErrors: TCheckBox
         Left = 8
@@ -1671,7 +1671,7 @@ object frmPrefs: TfrmPrefs
         Width = 209
         Height = 17
         Caption = 'Detect invalid roster items'
-        TabOrder = 7
+        TabOrder = 5
       end
       object chkShowPending: TCheckBox
         Left = 8
@@ -1679,7 +1679,7 @@ object frmPrefs: TfrmPrefs
         Width = 161
         Height = 17
         Caption = 'Show pending contacts'
-        TabOrder = 8
+        TabOrder = 2
       end
       object chkMessenger: TCheckBox
         Left = 8
@@ -1687,7 +1687,7 @@ object frmPrefs: TfrmPrefs
         Width = 273
         Height = 17
         Caption = 'Roster && Msg Queue share a tab when expanded'
-        TabOrder = 9
+        TabOrder = 6
       end
       object txtGatewayGrp: TTntEdit
         Left = 32
@@ -1703,7 +1703,7 @@ object frmPrefs: TfrmPrefs
         Height = 21
         Style = csDropDownList
         ItemHeight = 13
-        TabOrder = 11
+        TabOrder = 9
         Items.Strings = (
           'A new one to one chat window'
           'An instant message window'
@@ -1988,7 +1988,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 102
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2001,7 +2001,7 @@ object frmPrefs: TfrmPrefs
         Font.Style = [fsBold]
         ParentColor = False
         ParentFont = False
-        TabOrder = 0
+        TabOrder = 12
       end
       object chkAutoUpdate: TCheckBox
         Left = 8
@@ -2009,7 +2009,7 @@ object frmPrefs: TfrmPrefs
         Width = 233
         Height = 17
         Caption = 'Check for updates automatically'
-        TabOrder = 6
+        TabOrder = 8
       end
       object chkExpanded: TCheckBox
         Left = 8
@@ -2017,7 +2017,7 @@ object frmPrefs: TfrmPrefs
         Width = 169
         Height = 17
         Caption = 'Start in Expanded Mode'
-        TabOrder = 3
+        TabOrder = 2
       end
       object chkDebug: TCheckBox
         Left = 8
@@ -2025,7 +2025,7 @@ object frmPrefs: TfrmPrefs
         Width = 169
         Height = 17
         Caption = 'Start with Debug visible'
-        TabOrder = 4
+        TabOrder = 3
       end
       object chkAutoLogin: TCheckBox
         Left = 8
@@ -2033,7 +2033,7 @@ object frmPrefs: TfrmPrefs
         Width = 241
         Height = 17
         Caption = 'Automatically login with last profile'
-        TabOrder = 1
+        TabOrder = 0
       end
       object chkCloseMin: TCheckBox
         Left = 8
@@ -2041,14 +2041,14 @@ object frmPrefs: TfrmPrefs
         Width = 241
         Height = 17
         Caption = 'Close button minimizes to the tray'
-        TabOrder = 5
+        TabOrder = 6
       end
       object txtXFerPath: TEdit
         Left = 29
         Top = 220
         Width = 188
         Height = 21
-        TabOrder = 7
+        TabOrder = 10
       end
       object btnTransferBrowse: TButton
         Left = 222
@@ -2056,7 +2056,7 @@ object frmPrefs: TfrmPrefs
         Width = 75
         Height = 25
         Caption = 'Browse'
-        TabOrder = 8
+        TabOrder = 11
         OnClick = btnTransferBrowseClick
       end
       object chkAutoStart: TCheckBox
@@ -2065,7 +2065,7 @@ object frmPrefs: TfrmPrefs
         Width = 233
         Height = 17
         Caption = 'Run Exodus when windows starts'
-        TabOrder = 2
+        TabOrder = 1
       end
       object chkOnTop: TCheckBox
         Left = 8
@@ -2073,7 +2073,7 @@ object frmPrefs: TfrmPrefs
         Width = 169
         Height = 17
         Caption = 'Exodus is always on top'
-        TabOrder = 9
+        TabOrder = 4
       end
       object chkToolbox: TCheckBox
         Left = 8
@@ -2081,7 +2081,7 @@ object frmPrefs: TfrmPrefs
         Width = 217
         Height = 17
         Caption = 'Small Titlebar for Exodus window'
-        TabOrder = 10
+        TabOrder = 5
       end
       object btnUpdateCheck: TButton
         Left = 222
@@ -2089,7 +2089,7 @@ object frmPrefs: TfrmPrefs
         Width = 75
         Height = 25
         Caption = 'Check Now'
-        TabOrder = 11
+        TabOrder = 9
         OnClick = btnUpdateCheckClick
         OnMouseUp = btnUpdateCheckMouseUp
       end
@@ -2099,7 +2099,7 @@ object frmPrefs: TfrmPrefs
         Width = 209
         Height = 17
         Caption = 'Only allow a single instance of Exodus'
-        TabOrder = 12
+        TabOrder = 7
       end
     end
     object tbsDialog: TTabSheet
@@ -2108,7 +2108,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 97
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2121,7 +2121,7 @@ object frmPrefs: TfrmPrefs
         Font.Style = [fsBold]
         ParentColor = False
         ParentFont = False
-        TabOrder = 0
+        TabOrder = 8
       end
       object chkRosterAlpha: TCheckBox
         Left = 8
@@ -2129,7 +2129,7 @@ object frmPrefs: TfrmPrefs
         Width = 209
         Height = 17
         Caption = 'Use Alpha Blending for Roster '
-        TabOrder = 1
+        TabOrder = 0
         OnClick = chkRosterAlphaClick
       end
       object trkRosterAlpha: TTrackBar
@@ -2145,7 +2145,7 @@ object frmPrefs: TfrmPrefs
         Position = 255
         SelEnd = 0
         SelStart = 0
-        TabOrder = 2
+        TabOrder = 1
         ThumbLength = 15
         TickMarks = tmBottomRight
         TickStyle = tsNone
@@ -2157,7 +2157,7 @@ object frmPrefs: TfrmPrefs
         Width = 49
         Height = 21
         Enabled = False
-        TabOrder = 3
+        TabOrder = 2
         Text = '255'
         OnChange = txtRosterAlphaChange
       end
@@ -2171,7 +2171,7 @@ object frmPrefs: TfrmPrefs
         Min = 10
         Max = 255
         Position = 255
-        TabOrder = 4
+        TabOrder = 9
         Wrap = False
       end
       object chkToastAlpha: TCheckBox
@@ -2180,7 +2180,7 @@ object frmPrefs: TfrmPrefs
         Width = 273
         Height = 17
         Caption = 'Use Alpha Blending for Toast Notifications'
-        TabOrder = 5
+        TabOrder = 3
         OnClick = chkToastAlphaClick
       end
       object trkToastAlpha: TTrackBar
@@ -2196,7 +2196,7 @@ object frmPrefs: TfrmPrefs
         Position = 255
         SelEnd = 0
         SelStart = 0
-        TabOrder = 6
+        TabOrder = 4
         ThumbLength = 15
         TickMarks = tmBottomRight
         TickStyle = tsNone
@@ -2208,7 +2208,7 @@ object frmPrefs: TfrmPrefs
         Width = 49
         Height = 21
         Enabled = False
-        TabOrder = 7
+        TabOrder = 5
         Text = '255'
         OnChange = txtToastAlphaChange
       end
@@ -2222,7 +2222,7 @@ object frmPrefs: TfrmPrefs
         Min = 10
         Max = 255
         Position = 255
-        TabOrder = 8
+        TabOrder = 10
         Wrap = False
       end
       object chkSnap: TCheckBox
@@ -2231,7 +2231,7 @@ object frmPrefs: TfrmPrefs
         Width = 273
         Height = 17
         Caption = 'Make the main window snap to screen edges'
-        TabOrder = 9
+        TabOrder = 6
         OnClick = chkSnapClick
       end
       object txtSnap: TEdit
@@ -2240,7 +2240,7 @@ object frmPrefs: TfrmPrefs
         Width = 49
         Height = 21
         Enabled = False
-        TabOrder = 10
+        TabOrder = 7
         Text = '255'
         OnChange = txtToastAlphaChange
       end
@@ -2303,7 +2303,7 @@ object frmPrefs: TfrmPrefs
         Width = 156
         Height = 17
         Caption = 'Timestamp messages'
-        TabOrder = 1
+        TabOrder = 3
       end
       object chkLog: TCheckBox
         Left = 5
@@ -2311,7 +2311,7 @@ object frmPrefs: TfrmPrefs
         Width = 97
         Height = 17
         Caption = 'Log Messages'
-        TabOrder = 2
+        TabOrder = 5
         OnClick = chkLogClick
       end
       object txtLogPath: TEdit
@@ -2319,7 +2319,7 @@ object frmPrefs: TfrmPrefs
         Top = 148
         Width = 207
         Height = 21
-        TabOrder = 3
+        TabOrder = 6
       end
       object StaticText11: TStaticText
         Left = 0
@@ -2337,14 +2337,14 @@ object frmPrefs: TfrmPrefs
         Font.Style = [fsBold]
         ParentColor = False
         ParentFont = False
-        TabOrder = 4
+        TabOrder = 14
       end
       object txtTimestampFmt: TEdit
         Left = 69
         Top = 98
         Width = 164
         Height = 21
-        TabOrder = 5
+        TabOrder = 4
       end
       object btnLogBrowse: TButton
         Left = 243
@@ -2352,7 +2352,7 @@ object frmPrefs: TfrmPrefs
         Width = 75
         Height = 25
         Caption = 'Browse'
-        TabOrder = 6
+        TabOrder = 7
         OnClick = btnLogBrowseClick
       end
       object chkMsgQueue: TCheckBox
@@ -2361,7 +2361,7 @@ object frmPrefs: TfrmPrefs
         Width = 284
         Height = 17
         Caption = 'Messages, Events always goto the Events Window'
-        TabOrder = 7
+        TabOrder = 1
       end
       object chkLogRooms: TCheckBox
         Left = 26
@@ -2378,7 +2378,7 @@ object frmPrefs: TfrmPrefs
         Height = 21
         Style = csDropDownList
         ItemHeight = 13
-        TabOrder = 9
+        TabOrder = 10
         Items.Strings = (
           'Use default message handling'
           'Treat all messages as chats'
@@ -2390,7 +2390,7 @@ object frmPrefs: TfrmPrefs
         Width = 75
         Height = 25
         Caption = 'Clear All Logs'
-        TabOrder = 10
+        TabOrder = 9
         OnClick = btnLogClearAllClick
       end
       object chkCloseQueue: TCheckBox
@@ -2399,7 +2399,7 @@ object frmPrefs: TfrmPrefs
         Width = 276
         Height = 17
         Caption = 'Close the Event window going to Compressed Mode'
-        TabOrder = 11
+        TabOrder = 2
       end
       object txtSpoolPath: TEdit
         Left = 26
@@ -2424,7 +2424,7 @@ object frmPrefs: TfrmPrefs
         Height = 21
         Style = csDropDownList
         ItemHeight = 13
-        TabOrder = 14
+        TabOrder = 11
         Items.Strings = (
           'Treat as a normal event'
           'Always popup window'
@@ -2470,7 +2470,7 @@ object frmPrefs: TfrmPrefs
           'Conf. Room activity'
           'File Transfers'
           'Auto Response generated')
-        TabOrder = 0
+        TabOrder = 4
         OnClick = chkNotifyClick
       end
       object optNotify: TGroupBox
@@ -2479,14 +2479,14 @@ object frmPrefs: TfrmPrefs
         Width = 257
         Height = 97
         Caption = 'Notify Options'
-        TabOrder = 1
+        TabOrder = 5
         object chkFlash: TCheckBox
           Left = 8
           Top = 48
           Width = 209
           Height = 17
           Caption = 'Flash Taskbar button, or highlight tab'
-          TabOrder = 0
+          TabOrder = 1
           OnClick = chkToastClick
         end
         object chkToast: TCheckBox
@@ -2495,7 +2495,7 @@ object frmPrefs: TfrmPrefs
           Width = 153
           Height = 17
           Caption = 'Show a "Toast" popup'
-          TabOrder = 1
+          TabOrder = 0
           OnClick = chkToastClick
         end
         object chkTrayNotify: TCheckBox
@@ -2524,7 +2524,7 @@ object frmPrefs: TfrmPrefs
         Font.Style = [fsBold]
         ParentColor = False
         ParentFont = False
-        TabOrder = 2
+        TabOrder = 6
       end
       object chkSound: TCheckBox
         Left = 8
@@ -2532,7 +2532,7 @@ object frmPrefs: TfrmPrefs
         Width = 145
         Height = 17
         Caption = 'Use sound notifications'
-        TabOrder = 3
+        TabOrder = 0
         OnClick = chkToastClick
       end
       object chkNotifyActive: TCheckBox
@@ -2546,7 +2546,7 @@ object frmPrefs: TfrmPrefs
         Caption = 'Do notifications when active'
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 4
+        TabOrder = 1
       end
       object chkFlashInfinite: TCheckBox
         Left = 8
@@ -2556,7 +2556,7 @@ object frmPrefs: TfrmPrefs
         Caption = 'Flash the taskbar until window gets focus.'
         ParentShowHint = False
         ShowHint = True
-        TabOrder = 5
+        TabOrder = 3
       end
       object chkNotifyActiveWindow: TCheckBox
         Left = 8
@@ -2564,7 +2564,7 @@ object frmPrefs: TfrmPrefs
         Width = 209
         Height = 17
         Caption = 'Do notifications for active window'
-        TabOrder = 6
+        TabOrder = 2
       end
     end
     object tbsAway: TTabSheet
@@ -2609,7 +2609,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 124
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2622,7 +2622,7 @@ object frmPrefs: TfrmPrefs
         Font.Style = [fsBold]
         ParentColor = False
         ParentFont = False
-        TabOrder = 1
+        TabOrder = 6
       end
       object txtAwayTime: TEdit
         Left = 232
@@ -2642,7 +2642,7 @@ object frmPrefs: TfrmPrefs
         Min = 1
         Max = 600
         Position = 5
-        TabOrder = 3
+        TabOrder = 7
         Wrap = False
       end
       object txtXATime: TEdit
@@ -2650,7 +2650,7 @@ object frmPrefs: TfrmPrefs
         Top = 94
         Width = 33
         Height = 21
-        TabOrder = 4
+        TabOrder = 3
         Text = '30'
         OnChange = txtRosterAlphaChange
       end
@@ -2663,7 +2663,7 @@ object frmPrefs: TfrmPrefs
         Min = 1
         Max = 600
         Position = 30
-        TabOrder = 5
+        TabOrder = 8
         Wrap = False
       end
       object txtAway: TEdit
@@ -2671,14 +2671,14 @@ object frmPrefs: TfrmPrefs
         Top = 126
         Width = 201
         Height = 21
-        TabOrder = 6
+        TabOrder = 4
       end
       object txtXA: TEdit
         Left = 80
         Top = 150
         Width = 201
         Height = 21
-        TabOrder = 7
+        TabOrder = 5
       end
       object chkAAReducePri: TCheckBox
         Left = 8
@@ -2686,7 +2686,7 @@ object frmPrefs: TfrmPrefs
         Width = 273
         Height = 17
         Caption = 'Reduce priority to 0 during auto-away.'
-        TabOrder = 8
+        TabOrder = 1
       end
     end
     object tbsKeywords: TTabSheet
@@ -2695,7 +2695,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 112
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2729,7 +2729,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TLabel
           Left = 0
           Top = 0
-          Width = 306
+          Width = 363
           Height = 13
           Align = alTop
           Caption = 
@@ -2753,7 +2753,7 @@ object frmPrefs: TfrmPrefs
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 352
+        Width = 363
         Height = 26
         Align = alTop
         Caption = 
@@ -2764,7 +2764,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 146
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2824,7 +2824,7 @@ object frmPrefs: TfrmPrefs
         Font.Style = [fsBold]
         ParentColor = False
         ParentFont = False
-        TabOrder = 1
+        TabOrder = 6
       end
       object pnlCustomPresButtons: TPanel
         Left = 0
@@ -2833,7 +2833,7 @@ object frmPrefs: TfrmPrefs
         Height = 34
         Align = alTop
         BevelOuter = bvNone
-        TabOrder = 2
+        TabOrder = 1
         object btnCustomPresAdd: TButton
           Left = 4
           Top = 4
@@ -2868,7 +2868,7 @@ object frmPrefs: TfrmPrefs
         Width = 281
         Height = 119
         Caption = 'Custom Presence Properties'
-        TabOrder = 3
+        TabOrder = 2
         object Label11: TLabel
           Left = 6
           Top = 23
@@ -2987,7 +2987,7 @@ object frmPrefs: TfrmPrefs
         Caption = 'When presence changes, send Windows message'
         Checked = True
         State = cbChecked
-        TabOrder = 5
+        TabOrder = 3
       end
       object cboPresTracking: TComboBox
         Left = 23
@@ -2995,7 +2995,7 @@ object frmPrefs: TfrmPrefs
         Width = 207
         Height = 21
         ItemHeight = 13
-        TabOrder = 6
+        TabOrder = 5
         Items.Strings = (
           'Track all presence changes'
           'Show only last presence change'
@@ -3008,7 +3008,7 @@ object frmPrefs: TfrmPrefs
       object Label6: TLabel
         Left = 0
         Top = 20
-        Width = 335
+        Width = 363
         Height = 26
         Align = alTop
         Caption = 
@@ -3019,7 +3019,7 @@ object frmPrefs: TfrmPrefs
       object StaticText12: TStaticText
         Left = 0
         Top = 0
-        Width = 51
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
