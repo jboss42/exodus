@@ -22,7 +22,7 @@ unit ExUtils;
 interface
 uses
     Unicode, ExRichEdit, RichEdit2, Signals, XMLTag, IQ,
-    TntStdCtrls, TntClasses,
+    TntStdCtrls, TntClasses, Menus, 
     JabberMsg, Graphics, Controls, StdCtrls, Forms, Classes, SysUtils, Windows;
 
 const
@@ -109,6 +109,8 @@ function jabberIQError(orig: TXMLTag): TXMLTag;
 
 procedure centerMainForm(f: TForm);
 
+procedure BuildPresMenus(parent: TObject; clickev: TNotifyEvent);
+
 resourcestring
     sDownloading      = 'Downloading...';
     sDownloadComplete = 'Download Complete';
@@ -126,7 +128,7 @@ var
 {---------------------------------------}
 implementation
 uses
-    ExSession, GnuGetText, 
+    ExSession, GnuGetText, Presence,
     IniFiles, Dialogs, StrUtils, IdGlobal, ShellAPI,
     XMLUtils, Session, JabberID, Jabber1, NodeItem, Roster,
     JabberConst, MsgDisplay, Debug;
@@ -1000,6 +1002,7 @@ begin
     f.SetBounds(l,t,w,h);
 end;
 
+{---------------------------------------}
 procedure AssignTntStrings(sl: TWidestringlist; tnt: TTntStrings);
 var
     i: integer;
@@ -1009,6 +1012,7 @@ begin
         tnt.Add(sl[i])
 end;
 
+{---------------------------------------}
 function jabberIQResult(orig: TXMLTag): TXMLTag;
 begin
     //
@@ -1018,11 +1022,117 @@ begin
     Result.setAttribute('type', 'result');
 end;
 
+{---------------------------------------}
 function jabberIQError(orig: TXMLTag): TXMLTag;
 begin
     //
     Result := jabberIQResult(orig);
     Result.setAttribute('type', 'error');
+end;
+
+{---------------------------------------}
+procedure BuildPresMenus(parent: TObject; clickev: TNotifyEvent);
+
+    procedure ClearCustoms(mi: TMenuItem);
+    var
+        j: integer;
+        s: TMenuItem;
+    begin
+        // This removes all old custom menu items
+        for j := mi.Count - 1 downto 0 do begin
+            s := mi.Items[j];
+            if (s.Tag <> -1) then
+                s.Free();
+        end;
+    end;
+
+var
+    plist: TList;
+    grp, i: integer;
+    mnu: TMenuItem;
+    cp: TJabberCustompres;
+    c, avail, away, xa, dnd: TMenuItem;
+    pm: TMenuItem;
+    pp: TPopupMenu;
+begin
+    // Build the custom presence menus.
+    // make sure to leave the main "Custom" entry and the divider
+
+    // Parent is a has children, which have children..
+    avail := nil;
+    away := nil;
+    xa := nil;
+    dnd := nil;
+
+    if (parent is TMenuItem) then begin
+        pm := TMenuItem(Parent);
+        for i := 0 to pm.Count - 1 do begin
+            c := pm.Items[i];
+            if (c.Caption = 'Available') then avail := c
+            else if (c.Caption = 'Away') then away := c
+            else if (c.Caption = 'Xtended Away') then xa := c
+            else if (c.Caption = 'Do Not Disturb') then dnd := c
+            else
+                continue;
+            ClearCustoms(c);
+        end;
+    end
+    else if (parent is TPopupMenu) then begin
+        pp := TPopupMenu(parent);
+        for i := 0 to pp.Items.Count - 1 do begin
+            c := pp.Items[i];
+            if (c.Caption = 'Available') then avail := c
+            else if (c.Caption = 'Away') then away := c
+            else if (c.Caption = 'Xtended Away') then xa := c
+            else if (c.Caption = 'Do Not Disturb') then dnd := c
+            else
+                continue;
+            ClearCustoms(c);
+        end;
+    end;
+
+    // Make sure we got them all.
+    if ((avail = nil) or (away = nil) or (xa = nil) or (dnd = nil)) then exit;
+
+    plist := MainSession.prefs.getAllPresence();
+    for i := 0 to plist.count - 1 do begin
+        cp := TJabberCustomPres(plist[i]);
+
+        if (cp.show = 'chat') then begin
+            grp := 0;
+            c := avail;
+        end
+        else if (cp.show = 'away') then begin
+            grp := 1;
+            c := away;
+        end
+        else if (cp.Show = 'xa') then begin
+            grp := 2;
+            c := xa;
+        end
+        else if (cp.show = 'dnd') then begin
+            grp := 3;
+            c := dnd;
+        end
+        else begin
+            grp := 0;
+            c := avail;
+        end;
+
+        mnu := TMenuItem.Create(c);
+        mnu.Caption := cp.title;
+        mnu.tag := i;
+        mnu.OnClick := clickev;
+        mnu.ShortCut := TextToShortcut(cp.hotkey);
+        mnu.GroupIndex := grp;
+        //mnu.ImageIndex := imidx;
+        c.Add(mnu);
+        cp.Free();
+    end;
+
+    plist.Clear();
+    plist.Free();
+
 end;
 
 
