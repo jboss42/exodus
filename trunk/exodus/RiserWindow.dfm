@@ -14,6 +14,7 @@ object frmRiser: TfrmRiser
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   FormStyle = fsStayOnTop
+  KeyPreview = True
   OldCreateOrder = False
   OnClick = Panel2Click
   OnClose = FormClose
