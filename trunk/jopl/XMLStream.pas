@@ -314,6 +314,9 @@ begin
     sbuff := buff;
     l := Length(sbuff);
 
+    // Check for empty buffers
+    if (Trim(sbuff)) = '' then exit;
+
     // find the first tag
     p := Pos('<', sbuff);
     if p <= 0 then raise EXMLStream.Create('');
@@ -324,7 +327,7 @@ begin
     i := Pos('/>', tmps);
 
     // If we have no end tags at all, then bail
-    if ((e = 0) and (i = 0)) then exit; 
+    if ((e = 0) and (i = 0)) then exit;
 
     if _root = '' then begin
         // snag the first tag off the front and cache it as the "root" of our fragment
