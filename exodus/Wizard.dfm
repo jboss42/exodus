@@ -30,7 +30,7 @@ object frmWizard: TfrmWizard
       Align = alTop
       Shape = bsTopLine
     end
-    object TntButton1: TTntButton
+    object btnBack: TTntButton
       Left = 176
       Top = 8
       Width = 75
@@ -38,7 +38,7 @@ object frmWizard: TfrmWizard
       Caption = '< Back'
       TabOrder = 0
     end
-    object TntButton2: TTntButton
+    object btnNext: TTntButton
       Left = 252
       Top = 8
       Width = 75
@@ -46,11 +46,12 @@ object frmWizard: TfrmWizard
       Caption = 'Next >'
       TabOrder = 1
     end
-    object TntButton3: TTntButton
+    object btnCancel: TTntButton
       Left = 336
       Top = 8
       Width = 75
       Height = 25
+      Cancel = True
       Caption = 'Cancel'
       TabOrder = 2
     end

@@ -10,9 +10,9 @@ type
   TfrmWizard = class(TForm)
     TntPanel1: TTntPanel;
     Bevel1: TBevel;
-    TntButton1: TTntButton;
-    TntButton2: TTntButton;
-    TntButton3: TTntButton;
+    btnBack: TTntButton;
+    btnNext: TTntButton;
+    btnCancel: TTntButton;
     Panel1: TPanel;
     Bevel2: TBevel;
     lblWizardTitle: TTntLabel;
