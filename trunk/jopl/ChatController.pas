@@ -44,6 +44,7 @@ type
         _memory: TTimer;
         _window: TObject;
         _refs: integer;
+        _queued: boolean;
 
         procedure SetWindow(new_window: TObject);
     protected
@@ -110,6 +111,7 @@ begin
     _memory := TTimer.Create(nil);
     _memory.OnTimer := timMemoryTimer;
     _memory.Enabled := false;
+    _queued := false;
 
     if (_resource <> '') then
         self.SetJID(_jid + '/' + _resource)
@@ -191,7 +193,7 @@ begin
     _memory.Free();
     msg_queue.Free();
     inherited;
-end;
+end;        
 
 {---------------------------------------}
 procedure TChatController.MsgCallback(event: string; tag: TXMLTag);
@@ -239,15 +241,22 @@ begin
         end;
     end;
 
+    if ((_queued) and (MainSession.IsResuming)) then
+        _queued := false;
+
     if Assigned(_event) then begin
-        if MainSession.IsPaused then
-            MainSession.QueueEvent(event, tag, Self.MsgCallback)
+        if MainSession.IsPaused then begin
+            MainSession.QueueEvent(event, tag, Self.MsgCallback);
+            _queued := true;
+        end
         else
             _event(tag);
     end
     else begin
-        if MainSession.IsPaused then
-            MainSession.QueueEvent(event, tag, Self.MsgCallback)
+        if MainSession.IsPaused then begin
+            MainSession.QueueEvent(event, tag, Self.MsgCallback);
+            _queued := true;
+        end
         else begin
             msg_queue.Push(TXMLTag.Create(tag));
 
@@ -306,7 +315,7 @@ end;
 procedure TChatController.timMemoryTimer(Sender: TObject);
 begin
     // time to free the window if we still have no refs.
-    if (msg_queue.AtLeast(1)) then begin
+    if ((msg_queue.AtLeast(1)) or (_queued)) then begin
         stopTimer();
         exit;
     end;
