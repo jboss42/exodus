@@ -61,14 +61,18 @@ function URLToFilename(url: string): string;
 
 procedure LogMessage(Msg: TJabberMessage);
 procedure ShowLog(jid: string);
-
-function getDisplayField(fld: string): string;
 procedure DebugMsg(Message : string);
 procedure AssignDefaultFont(font: TFont);
+
+procedure jabberSendCTCP(jid, xmlns: string);
+
+function getDisplayField(fld: string): string;
 function secsToDuration(seconds: string): string;
 function GetPresenceAtom(status: string): ATOM;
 function GetPresenceString(a: ATOM): string;
 function ColorToHTML( Color: TColor): string;
+
+
 
 var
     _GetLastInputInfo: Pointer;
@@ -82,7 +86,7 @@ uses
     StrUtils, IdGlobal,
     ShellAPI,
     MsgDisplay,
-    Session,
+    Session, IQ, Jabber1,  
     XMLUtils,
     JabberID,
     IniFiles,
@@ -98,6 +102,7 @@ type
 var
     presenceToAtom: TStringList;
 
+{---------------------------------------}
 constructor TAtom.Create(at: ATOM);
 begin
     a := at;
@@ -513,6 +518,18 @@ end;
 function ColorToHTML( Color: TColor): string;
 begin
   result := Format( '#%.2x%.2x%.2x', [ GetRValue( Color), GetGValue( Color), GetBValue( Color)]);
+end;
+
+procedure jabberSendCTCP(jid, xmlns: string);
+var
+    iq: TJabberIQ;
+begin
+    // Send an iq-get to some jid, with this namespace
+    iq := TJabberIQ.Create(MainSession, MainSession.generateID, frmExodus.CTCPCallback);
+    iq.iqType := 'get';
+    iq.toJID := jid;
+    iq.Namespace := xmlns;
+    iq.Send;
 end;
 
 {---------------------------------------}

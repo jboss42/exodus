@@ -138,7 +138,8 @@ function ShowBrowser(jid: string = ''): TfrmBrowse;
 implementation
 {$R *.DFM}
 uses
-    Session, JUD, Profile, RegForm, Jabber1;
+    Room, 
+    ExUtils, Session, JUD, Profile, RegForm, Jabber1;
 
 var
     browseCache: TStringList;
@@ -584,7 +585,6 @@ procedure TfrmBrowse.mVCardClick(Sender: TObject);
 var
     itm: TListItem;
     jid: string;
-    iq: TJabberIQ;
 begin
     // do some CTCP stuff
     itm := vwBrowse.Selected;
@@ -594,15 +594,9 @@ begin
     if Sender = mVCard then
         ShowProfile(itm.SubItems[0])
     else begin
-        iq := TJabberIQ.Create(MainSession, MainSession.generateID, frmExodus.CTCPCallback);
-        iq.iqType := 'get';
-        iq.toJID := jid;
-
-        if Sender = mVersion then iq.Namespace := XMLNS_VERSION;
-        if Sender = mTime then iq.Namespace := XMLNS_TIME;
-        if Sender = mLast then iq.Namespace := XMLNS_LAST;
-
-        iq.Send();
+        if Sender = mVersion then jabberSendCTCP(jid, XMLNS_VERSION);
+        if Sender = mTime then jabberSendCTCP(jid, XMLNS_TIME);
+        if Sender = mLast then jabberSendCTCP(jid, XMLNS_LAST);
         end;
 end;
 
@@ -639,8 +633,12 @@ end;
 
 {---------------------------------------}
 procedure TfrmBrowse.mJoinConfClick(Sender: TObject);
+var
+    cjid: string;
 begin
-    // todo: join conf. room
+    // join conf. room
+    cjid := _history[_cur - 1];
+    StartRoom(cjid, MainSession.Username);
 end;
 
 {---------------------------------------}

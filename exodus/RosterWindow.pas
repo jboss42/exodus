@@ -1092,6 +1092,7 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.popVersionClick(Sender: TObject);
 var
+    jid: string;
     iq: TJabberIQ;
     p: TJabberPres;
 begin
@@ -1099,25 +1100,19 @@ begin
     if (getNodeType() <> node_ritem) then exit;
     if (_cur_ritem = nil) then exit;
 
-    iq := TJabberIQ.Create(MainSession, MainSession.generateID, frmExodus.CTCPCallback);
-    iq.iqType := 'get';
-
     p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
-    if p = nil then begin
+    if p = nil then
         // this person isn't online.
-        iq.toJid := _cur_ritem.jid.jid;
-        end
-    else begin
-        iq.toJID := p.fromJID.full;
-        end;
+        jid := _cur_ritem.jid.jid
+    else
+        jid := p.fromJID.full;
 
     if Sender = popVersion then
-        iq.Namespace := XMLNS_VERSION
+        jabberSendCTCP(jid, XMLNS_VERSION)
     else if Sender = popTime then
-        iq.Namespace := XMLNS_TIME
+        jabberSendCTCP(jid, XMLNS_TIME)
     else if Sender = popLast then
-        iq.Namespace := XMLNS_LAST;
-    iq.Send;
+        jabberSendCTCP(jid, XMLNS_LAST);
 end;
 
 {---------------------------------------}
