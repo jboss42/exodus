@@ -61,8 +61,8 @@ type
         btnCancel: TButton;
         SocksHandler: TIdIOHandlerSocket;
         IdSocksInfo1: TIdSocksInfo;
-    Bevel3: TBevel;
-    Bevel2: TBevel;
+        Bevel3: TBevel;
+        Bevel2: TBevel;
         procedure btnRecvClick(Sender: TObject);
         procedure btnCancelClick(Sender: TObject);
     private
@@ -78,6 +78,7 @@ type
         _size: longint;
 
         procedure attemptSIConnection();
+        procedure SendError(code, condition: string);
 
     protected
         procedure WMRecvDone(var msg: TMessage); message WM_RECV_DONE;
@@ -349,7 +350,6 @@ var
     hosts: TXMLTagList;
     p: THostPortPair;
     pi: integer;
-    e, r: TXMLTag;
     file_path: string;
     fStream: TFileStream;
 begin
@@ -358,17 +358,20 @@ begin
     _cur := -1;
 
     if (event = 'timeout') then begin
-        // xxx: codeme
+        lblStatus.Caption := _('Receive request timed out.');
+        btnCancel.Caption := _('Close');
+        btnRecv.Enabled := false;
+        btnCancel.Enabled := true;
+        _state := recv_si_cancel;
         exit;
     end;
 
+    FreeAndNil(_pkg.packet);
+    _pkg.packet := TXMLTag.Create(tag);
+
     // check to see if they cancel'd before
     if (_state = recv_si_cancel) then begin
-        r := jabberIQError(tag);
-        e := r.AddTag('error');
-        e.setAttribute('code', '406');
-        e.AddCData('User Canceled the stream.');
-        MainSession.SendTag(r);
+        SendError('406', 'not-acceptable');
         getXferManager().killFrame(Self);
         exit;
     end;
@@ -393,11 +396,9 @@ begin
     end;
 
     if (_hosts.Count = 0) then begin
-        r := jabberIQError(tag);
-        e := r.AddTag('error');
-        e.setAttribute('code', '406');
-        e.AddCData('No acceptable hosts found');
-        MainSession.SendTag(r);
+        MessageDlg(_('No acceptable stream hosts were sent. Have the sender check their settings.'),
+            mtError, [mbOK], 0);
+        SendError('406', 'not-acceptable');
         getXFerManager().killFrame(Self);
         exit;
     end;
@@ -405,11 +406,7 @@ begin
     // use the save as dialog
     SaveDialog1.Filename := _filename;
     if (not SaveDialog1.Execute) then begin
-        r := jabberIQError(tag);
-        e := r.AddTag('error');
-        e.setAttribute('code', '406');
-        e.AddCData('User Canceled the stream.');
-        MainSession.SendTag(r);
+        SendError('406', 'not-acceptable');
         getXferManager().killFrame(Self);
         exit;
     end;
@@ -438,7 +435,6 @@ begin
         end;
     end;
 
-    _pkg.packet := TXMLTag.Create(tag);
     _stream := fStream;
     _stream.Seek(0, soFromBeginning);
 
@@ -491,6 +487,7 @@ begin
         if (_state = recv_si_offer) then begin
             // send SI accept
             assert(_pkg.packet <> nil);
+            lblStatus.Caption := _('Negotiating with sender...');
             p := _pkg.packet;
             _sid := p.QueryXPData('/iq/si@id');
             _filename := ExtractFilename(p.QueryXPData('/iq/si/file@name'));
@@ -515,10 +512,7 @@ begin
             _cur := MainSession.RegisterCallback(
                 Self.BytestreamCallback,
                 '/packet/iq[@type="set"]/query[@xmlns="' + XMLNS_BYTESTREAMS + '"]');
-
             MainSession.SendTag(t);
-            FreeAndNil(_pkg.packet);
-
             btnRecv.Enabled := false;
         end;
     end
@@ -576,7 +570,7 @@ begin
     bar1.Max := pkg.size;
     lblFrom.Caption := pkg.recip;
     lblFile.Caption := ExtractFilename(pkg.pathname);
-    lblStatus.Caption := _('Negotiating with sender...');
+    lblStatus.Caption := '';
 end;
 
 {---------------------------------------}
@@ -617,7 +611,7 @@ var
     p: THostPortPair;
     x, r: TXMLTag;
 begin
-    //
+    // We connected to one of the stream hosts listed. Sweet.
     r := jabberIQResult(_pkg.packet);
     p := THostPortPair(_hosts.Pop());
 
@@ -641,15 +635,43 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfRecvStatus.SendError(code, condition: string);
+var
+    c,r,x: TXMLTag;
+begin
+    assert(_pkg.packet <> nil);
+    r := jabberIQError(_pkg.packet);
+    r.setAttribute('type', 'error');
+    x := r.AddTag('error');
+    x.setAttribute('code', '404');
+    x.setAttribute('type', 'cancel');
+    c := x.AddTag('condition');
+    c.setAttribute('xmlns', 'urn:ietf:params:xml:ns:xmpp-stanzas');
+    c.AddTag('item-not-found');
+    MainSession.SendTag(r);
+end;
+
+{---------------------------------------}
 procedure TfRecvStatus.WMRecvNext(var msg: TMessage);
 var
     p: THostPortPair;
 begin
+    // pop the failed stream host from the stack
     p := THostPortPair(_hosts.Pop());
     p.Free();
-    if (_hosts.Count = 0) then exit;
 
-    attemptSIConnection();
+    if (_hosts.Count = 0) then begin
+        // we ran out of streamhosts to try. bummer :(
+        MessageDlg(_('Exodus was unable to connect to any file transfer proxies or the sender.'),
+            mtError, [mbOK], 0);
+
+        // send error back to sender.
+        SendError('404', 'item-not-found');
+        getXferManager().killFrame(Self);
+        exit;
+    end
+    else
+        attemptSIConnection();
 end;
 
 {---------------------------------------}
@@ -668,13 +690,17 @@ begin
         case _state of
         recv_si_offer: begin
             // just refuse the SI, and close panel
+            SendError('406', 'not-acceptable');
             getXferManager().killFrame(Self);
             end;
         recv_si_wait: begin
             // disable btn, and wait for stream hosts, then
             // immediately turn around and refuse.
+            lblStatus.Caption := _('Waiting to cancel transfer...');
+            btnCancel.Enabled := false;
+            _state := recv_si_cancel;
             end;
-        recv_si_stream, recv_done: begin
+        recv_si_cancel, recv_si_stream, recv_done: begin
             // kill the socket and close panel.
             if (_thread <> nil) then
                 _thread.Terminate();

@@ -63,8 +63,9 @@ type
         tcpClient: TIdTCPClient;
         SocksHandler: TIdIOHandlerSocket;
         IdSocksInfo1: TIdSocksInfo;
-    Bevel1: TBevel;
-    Bevel2: TBevel;
+        Bevel1: TBevel;
+        Bevel2: TBevel;
+        procedure btnCancelClick(Sender: TObject);
     private
         { Private declarations }
         _thread: TFileSendThread;
@@ -721,7 +722,7 @@ var
     tmps: Widestring;
     p: THostPortPair;
 begin
-    //
+    // we got the disco#items back (hopefully)
     _iq := nil;
     if ((event = 'xml') and (tag.GetAttribute('type') = 'result')) then begin
         // Clear the shosts Queue..
@@ -800,8 +801,12 @@ begin
 
     if (accept) then
         _state := send_get_hosts
-    else
+    else begin
+        lblStatus.Caption := Format(_('Your file transfer was refused to %s'),
+            [_pkg.recip]);
+        btnCancel.Caption := _('Close');
         _state := send_cancel;
+    end;
 
     DoState();
 end;
@@ -873,8 +878,15 @@ begin
 
         _state := send_try_connect;
         DoState();
+    end
+    else if ((event = 'xml') and (tag.getAttribute('type') = 'error')) then begin
+        // they refused
+        MessageDlg(Format(_('The recipient (%s) refused your file: %s'),
+            [_pkg.recip, _pkg.pathname]), mtError, [mbOK], 0);
+        _state := send_cancel;
+        DoState();
+        getXferManager().killFrame(Self);
     end;
-
 end;
 
 {---------------------------------------}
@@ -887,11 +899,15 @@ begin
             _state := send_sending;
             DoState();
             exit;
-        end
-        else begin
-            // xxx: error
         end;
     end;
+
+    // error
+    MessageDlg(Format(_('The stream was not actived for file: %s'),
+        [_pkg.pathname]), mtError, [mbOK], 0);
+    _state := send_cancel;
+    DoState();
+    getXferManager().killFrame(Self);
 end;
 
 {---------------------------------------}
@@ -919,12 +935,11 @@ begin
     DoState();
 end;
 
-
-
 {---------------------------------------}
 procedure TfSendStatus.WMSendBad(var msg: TMessage);
 begin
     //
+    lblStatus.Caption := _('Send failed.');
     _state := send_cancel;
     DoState();
 end;
@@ -945,14 +960,18 @@ end;
 
 {---------------------------------------}
 procedure TfSendStatus.WMSendStatus(var msg: TMessage);
-var
-    n: string;
 begin
     // Setup the progress bar
     // PChar is in lparam
-    if (msg.WParam = 1) then
-        n := 'Connected.';
-    lblStatus.Caption := n;
+    if (msg.WParam = 1) then lblStatus.Caption := _('Connected.');
+end;
+
+{---------------------------------------}
+procedure TfSendStatus.btnCancelClick(Sender: TObject);
+begin
+    // XXX: code cancel on sends.
+    if (_state = send_cancel) then
+        getXferManager().killFrame(Self);
 end;
 
 initialization
