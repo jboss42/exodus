@@ -382,6 +382,7 @@ resourcestring
     sStartChat = 'Start Chat';
     sRegService = 'Register with Service';
 
+    sJID = 'Jabber ID';
     sEnterJID = 'Enter Jabber ID: ';
     sEnterSvcJID = 'Enter Jabber ID of Service: ';
 

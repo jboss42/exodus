@@ -63,6 +63,14 @@ var
 
 procedure ShowLogin;
 
+resourcestring
+    sProfileRemove = 'Remove this profile?';
+    sProfileDefalt = 'Default Profile';
+    sProfileNew = 'Untitled Profile';
+    sProfileCreate = 'New Profile';
+    sProfileNamePrompt = 'Enter Profile Name';
+
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -137,11 +145,13 @@ begin
     // cboConnection.ItemIndex := p.ConnectionType;
 end;
 
+{---------------------------------------}
 procedure TfrmLogin.FormCreate(Sender: TObject);
 begin
     MainSession.Prefs.RestorePosition(Self);
 end;
 
+{---------------------------------------}
 procedure TfrmLogin.btnDetailsClick(Sender: TObject);
 var
     i : integer;
@@ -152,14 +162,15 @@ begin
     ShowConnDetails(p);
 end;
 
+{---------------------------------------}
 procedure TfrmLogin.CreateNew1Click(Sender: TObject);
 var
     pname: string;
     i: integer;
 begin
     // Create a new profile
-    pname := 'Untitled Profile';
-    if InputQuery('New Exodus Profile', 'Profile Name', pname) then begin
+    pname := sProfileNew;
+    if InputQuery(sProfileCreate, sProfileNamePrompt, pname) then begin
         MainSession.Prefs.CreateProfile(pname);
         cboProfiles.Items.Assign(MainSession.Prefs.Profiles);
         i := cboProfiles.Items.Indexof(pname);
@@ -169,14 +180,14 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmLogin.Delete1Click(Sender: TObject);
 var
     i: integer;
     p: TJabberProfile;
 begin
     // Delete this profile
-    if (MessageDlg('Remove this profile?', mtConfirmation,
-        [mbYes, mbNo], 0) = mrNo) then exit;
+    if (MessageDlg(sProfileRemove, mtConfirmation, [mbYes, mbNo], 0) = mrNo) then exit;
 
     i := cboProfiles.ItemIndex;
     p := TJabberProfile(MainSession.Prefs.Profiles.Objects[i]);
@@ -185,7 +196,7 @@ begin
 
     // make sure we have at least a default profile
     if (MainSession.Prefs.Profiles.Count) <= 0 then begin
-        MainSession.Prefs.CreateProfile('Default Profile')
+        MainSession.Prefs.CreateProfile(sProfileDefault)
         end;
 
     cboProfiles.Items.Assign(MainSession.Prefs.Profiles);
@@ -194,6 +205,7 @@ begin
 
 end;
 
+{---------------------------------------}
 procedure TfrmLogin.Label5Click(Sender: TObject);
 var
     cp: TPoint;

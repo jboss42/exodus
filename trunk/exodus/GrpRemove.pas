@@ -49,12 +49,20 @@ var
 
 procedure RemoveGroup(grp: string; contacts: TList = nil);
 
+resourcestring
+    sRemoveContacts = 'Remove %d contacts';
+    sRemoveGroup = 'Remove the %s group';
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 
 {$R *.dfm}
 uses
     Roster, XMLTag, IQ, Session, S10n;
 
+{---------------------------------------}
 procedure RemoveGroup(grp: string; contacts: TList = nil);
 var
     f: TfrmGrpRemove;
@@ -65,14 +73,14 @@ begin
 
     with f do begin
         if (contacts <> nil) then begin
-            Caption := 'Remove ' + IntToStr(contacts.Count) + ' contacts';
+            Caption := Format(sRemoveContacts, [contacts.Count]);
             optMove.Enabled := false;
             cboNewGroup.Enabled := false;
             optNuke.Checked := true;
             ct_list.Assign(contacts);
             end
         else begin
-            Caption := 'Remove the ' + grp + ' group';
+            Caption := Format(sRemoveGroup, [grp]);
             cboNewGroup.Items.Assign(MainSession.Roster.GrpList);
             cboNewGroup.Items.Delete(cboNewGroup.Items.IndexOf(grp));
             cboNewGroup.ItemIndex := 0;
@@ -82,6 +90,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmGrpRemove.frameButtons1btnOKClick(Sender: TObject);
 var
     iq: TXMLTag;
@@ -140,6 +149,7 @@ begin
     Self.Close;
 end;
 
+{---------------------------------------}
 procedure TfrmGrpRemove.FormCreate(Sender: TObject);
 begin
     //
@@ -147,11 +157,13 @@ begin
     ct_list := TList.Create;
 end;
 
+{---------------------------------------}
 procedure TfrmGrpRemove.frameButtons1btnCancelClick(Sender: TObject);
 begin
     Self.Close;
 end;
 
+{---------------------------------------}
 procedure TfrmGrpRemove.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin

@@ -349,6 +349,7 @@ begin
     CloseFile(f);
 end;
 
+{---------------------------------------}
 function getDisplayField(fld: string): string;
 begin
     // send back "well formatted" field names
@@ -363,11 +364,13 @@ begin
         result := fld;
 end;
 
+{---------------------------------------}
 procedure DebugMsg(Message : string);
 begin
     DebugMessage(Message);
 end;
 
+{---------------------------------------}
 procedure AssignDefaultFont(font: TFont);
 begin
     with MainSession.Prefs do begin
@@ -385,6 +388,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 function secsToDuration(seconds: string): string;
 var
     d : integer;
@@ -401,6 +405,7 @@ var
         else
             result := ' ' + IntToStr(i) + ' ' + modifier + 's';
     end;
+
 begin
     s := StrToIntDef(seconds, -1);
 
@@ -420,6 +425,9 @@ begin
     end;
 end;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 initialization
     _GetLastInputInfo := GetProcAddress(GetModuleHandle('user32.dll'), 'GetLastInputInfo');
 
