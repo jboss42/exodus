@@ -1694,7 +1694,7 @@ begin
         if _cur_ritem <> nil then begin
             n := treeRoster.Selected.Parent;
             if (n <> nil) then  g := n.Text else g := '';
-            RemoveRosterItem(_cur_ritem.jid.jid, g);
+            RemoveRosterItem(_cur_ritem.jid.full, g);
         end;
     end;
     end;
