@@ -163,7 +163,7 @@ const
 
 var
     cur_sort: integer;
-    cur_dir: boolean;
+    sort_rev: boolean;
 
 
 {---------------------------------------}
@@ -303,6 +303,8 @@ begin
     _node_hist := TWidestringList.Create();
     _blist := TList.Create();
     _iq := nil;
+    cur_sort := -1;
+    sort_rev := false;
     vwBrowse.ViewStyle := TViewStyle(MainSession.Prefs.getInt('browse_view'));
     _node := MainSession.Prefs.getBool('browse_node');
     NodeVisible(_node);
@@ -788,28 +790,26 @@ begin
   inherited;
 
   if (Column.Index = cur_sort) then
-    cur_dir := not cur_dir
+    sort_rev := not sort_rev
   else
-    cur_dir := true;
+    sort_rev := false;
 
   cur_sort := Column.Index;
 
   case cur_sort of
   0: begin
-    if (cur_dir) then _blist.Sort(EntityNameCompareRev)
-        else _blist.Sort(EntityNameCompareRev);
+    if (sort_rev) then _blist.Sort(EntityNameCompareRev)
+        else _blist.Sort(EntityNameCompare);
     end;
   1: begin
-    if (cur_dir) then _blist.Sort(EntityJidCompareRev)
+    if (sort_rev) then _blist.Sort(EntityJidCompareRev)
         else _blist.Sort(EntityJidCompare);
     end;
   2: begin
-    if (cur_dir) then _blist.Sort(EntityCatCompareRev)
-        else _blist.Sort(EntityCatCompareRev);
+    if (sort_rev) then _blist.Sort(EntityCatCompareRev)
+        else _blist.Sort(EntityCatCompare);
     end;
   end;
-
-  // _blist.Sort(ItemCompare);
   vwBrowse.Refresh;
 end;
 
