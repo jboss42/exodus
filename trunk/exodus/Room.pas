@@ -276,7 +276,7 @@ begin
         end;
 
     if Msg.Subject <> '' then begin
-        lblSubject.Text := '  ' + Msg.Subject;
+        lblSubject.Text := Msg.Subject;
         tmps := Msg.Subject;
         tmps := AnsiReplaceText(tmps, '|', Chr(13));
         tmps := AnsiReplaceText(tmps, '&', '&&');
