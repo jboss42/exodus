@@ -1,1 +1,0 @@
-Generate statistics about the jabber traffic you receive.
