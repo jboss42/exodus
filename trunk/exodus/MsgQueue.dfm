@@ -49,6 +49,7 @@ object frmMsgQueue: TfrmMsgQueue
     OwnerData = True
     ReadOnly = True
     RowSelect = True
+    PopupMenu = PopupMenu1
     SmallImages = frmExodus.ImageList2
     TabOrder = 0
     ViewStyle = vsReport
@@ -151,5 +152,13 @@ object frmMsgQueue: TfrmMsgQueue
     PlainRTF = False
     UndoLimit = 0
     AllowInPlace = False
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 64
+    Top = 80
+    object D1: TMenuItem
+      Caption = 'Delete'
+      OnClick = D1Click
+    end
   end
 end
