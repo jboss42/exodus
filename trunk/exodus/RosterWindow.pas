@@ -2001,7 +2001,7 @@ procedure TfrmRosterWindow.treeRosterCustomDrawItem(
   Sender: TCustomTreeView; Node: TTreeNode; State: TCustomDrawState;
   var DefaultDraw: Boolean);
 var
-    c1, c2: WideString;
+    cur_grp, c1, c2: WideString;
     p: TJabberPres;
     ntype, online, total: integer;
 begin
@@ -2013,6 +2013,7 @@ begin
         if (not Node.isVisible) then exit;
         if (not _group_counts) then exit;
 
+        // XXX: We need a unicode way of dealing with node.txt here
         if ((Node = _offline) or
             (Node = _bookmark) or
             (Node = _myres) or
@@ -2023,8 +2024,11 @@ begin
             DrawNodeText(Node, State, c1, c2);
         end
         else begin
-            total := MainSession.roster.getGroupCount(Node.Text, false);
-            online := MainSession.roster.getGroupCount(Node.Text, true);
+            cur_grp := Node.Text;
+            if (cur_grp = g_unfiled) then
+                cur_grp := '';
+            total := MainSession.roster.getGroupCount(cur_grp, false);
+            online := MainSession.roster.getGroupCount(cur_grp, true);
             c1 := Node.Text + ' ';
             c2 := '(' + IntToStr(online) + '/' + IntToStr(total) + ')';
             DrawNodeText(Node, State, c1, c2);

@@ -97,6 +97,7 @@ type
     private
         _js: TObject;
         _groups: TWidestringlist;
+        _unfiled: TWidestringlist;
         _pres_cb: integer;
 
         procedure ParseFullRoster(event: string; tag: TXMLTag);
@@ -365,6 +366,7 @@ begin
     GrpList := TWideStringList.Create();
     Bookmarks := TWideStringList.Create();
     _groups := TWidestringlist.Create();
+    _unfiled := TWidestringList.Create();
 end;
 
 {---------------------------------------}
@@ -525,11 +527,9 @@ var
     q: TXMLTag;
     ritems: TXMLTagList;
     ri: TJabberRosterItem;
-    g, idx, i: integer;
+    idx, i: integer;
     iq_type, j: Widestring;
     s: TJabberSession;
-    grp_list: TWidestringlist;
-    cur_grp: Widestring;
 begin
     // callback from the session
     s := TJabberSession(_js);
@@ -551,21 +551,8 @@ begin
             ri := TJabberRosterItem.Create;
             Self.AddObject(j, ri);
         end
-        else begin
-            // remove this JID from all old groups
-            // before we reparse, etc..
-            // xxx: there is a better way to do this (diffs)...
-            // but we can always optimize later
-            for g := 0 to ri.Groups.Count - 1 do begin
-                cur_grp := ri.Groups[g];
-                grp_list := getGroupList(cur_grp);
-                if (grp_list <> nil) then begin
-                    idx := grp_list.IndexOf(ri.jid.full);
-                    if (idx >= 0) then
-                        grp_list.Delete(idx);
-                end;
-            end;
-        end;
+        else
+            UpdateGroupLists(ri);
 
         ri.parse(ritems[i]);
         checkGroups(ri);
@@ -599,6 +586,18 @@ begin
 
         if (ri = nil) then exit;
 
+        // special case for unfiled
+        if (ri.Groups.Count = 0) then begin
+            idx := _unfiled.IndexOf(ri.jid.full);
+            if ((idx < 0) and (insert)) then
+                _unfiled.AddObject(ri.jid.full, pres)
+            else if (insert) then
+                _unfiled.Objects[idx] := pres
+            else
+                _unfiled.Objects[idx] := nil;
+            exit;
+        end;
+
         // iterate over all groups for this user.
         for i := 0 to ri.Groups.Count - 1 do begin
             cur_grp := ri.Groups[i];
@@ -628,8 +627,17 @@ var
     g: Widestring;
     jids: TWidestringList;
     i, idx: integer;
+    p: TJabberPres;
 begin
     // make sure the _groups list matches the .Groups from the ritem
+    if (ritem.groups.Count > 0) then begin
+        idx := _unfiled.IndexOf(ritem.jid.full);
+        if (idx >= 0) then
+            _unfiled.Delete(idx);
+    end;
+
+    p := MainSession.ppdb.FindPres(ritem.jid.jid, '');
+
     for i := 0 to _groups.Count - 1 do begin
         g := _groups[i];
         jids := TWidestringlist(_groups.Objects[i]);
@@ -638,8 +646,20 @@ begin
             // check to make sure this grp is in ritem.groups
             if (ritem.groups.IndexOf(g) = -1) then
                 jids.Delete(idx);
+        end
+        else begin
+            // if this grp is in groups, add this jid back in
+            if (ritem.groups.IndexOf(g) >= 0) then
+                jids.AddObject(ritem.jid.full, p);
         end;
     end;
+
+    if (ritem.Groups.Count = 0) then begin
+        idx := _unfiled.IndexOf(ritem.jid.full);
+        if (idx = -1) then
+            _unfiled.AddObject(ritem.jid.full, p);
+    end;
+
 end;
 
 {---------------------------------------}
@@ -660,7 +680,21 @@ var
     grp_list: TWidestringList;
     c, i: integer;
 begin
-    //
+    if (grp_name = '') then begin
+        // get all items in no groups
+        if (not online) then begin
+            Result := _unfiled.Count;
+            exit;
+        end;
+
+        c := 0;
+        for i := 0 to _unfiled.Count - 1 do begin
+            if (_unfiled.Objects[i] <> nil) then inc(c);
+        end;
+        Result := c;
+        exit;
+    end;
+
     Result := 0;
     grp_list := getGroupList(grp_name);
     if (grp_list <> nil) then begin
@@ -687,6 +721,15 @@ var
     grp_list: TWidestringlist;
     idx: integer;
 begin
+    if ((ri.Subscription <> 'to') and (ri.Subscription <> 'both')) then exit;
+
+    if (ri.Groups.Count = 0) then begin
+        idx := _unfiled.indexOf(ri.jid.full);
+        if (idx < 0) then
+            _unfiled.Add(ri.jid.full);
+        exit;
+    end;
+
     // make sure the GrpList is populated.
     for g := 0 to ri.Groups.Count - 1 do begin
         cur_grp := ri.Groups[g];
