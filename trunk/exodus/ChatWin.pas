@@ -488,8 +488,6 @@ begin
         imgAvatar.Visible := false;
     end;
 
-
-
     // setup the callbacks if we don't have them already
     if (_pcallback = -1) then
         _pcallback := MainSession.RegisterCallback(PresCallback,
@@ -497,7 +495,6 @@ begin
 
     if (_scallback = -1) then
         _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
-
 
     // setup the captions, etc..
     ritem := MainSession.Roster.Find(_jid.jid);
@@ -883,11 +880,13 @@ end;
 
 {---------------------------------------}
 procedure TfrmChat.ChangePresImage(show: WideString; status: WideString);
+var
+    h: Widestring;
 begin
     // Change the bulb
     if (_pres_img = tab_notify) then
         exit;
-        
+
     if (show = _('offline')) then
         _pres_img := ico_Offline
     else if (show = _('unknown')) then
@@ -905,6 +904,12 @@ begin
 
     _show := show;
     _status := status;
+
+    h := show;
+    if (status <> '') then h := h + ', ' + status;
+    h := h + ' <' + _jid.full + '>';
+    lblNick.Hint := h;
+
     frmExodus.ImageList2.GetIcon(_pres_img, Self.Icon);
     if (Docked) then
         Self.TabSheet.ImageIndex := _pres_img;
