@@ -41,6 +41,7 @@ type
         _time     : TDateTime;
         _isxdata  : boolean;
         _highlight: boolean;
+        _tag      : TXMLTag;
 
         procedure SetSubject(const Value: WideString);
         procedure SetBody(const Value: WideString);
@@ -101,6 +102,7 @@ begin
     _isme := false;
     _time := Now();
     _highlight := false;
+    _tag := nil;
 end;
 
 {---------------------------------------}
@@ -112,7 +114,8 @@ begin
     // create a msg object based on the msg tag
     Create();
 
-    with mTag do begin
+    _tag := TXMLTag.Create(mTag);
+    with _tag do begin
         _id := GetAttribute('id');
         _toJID := GetAttribute('to');
         _fromJID := GetAttribute('from');
@@ -169,6 +172,9 @@ end;
 {---------------------------------------}
 destructor TJabberMessage.Destroy;
 begin
+    if (_tag <> nil) then
+        _tag.Free();
+        
     inherited destroy;
 end;
 
@@ -177,6 +183,14 @@ function TJabberMessage.GetTag: TXMLTag;
 var
     raw_body: WideString;
 begin
+    // XXX: I don't think we ever free these.  MEM LEAK!
+    // I made the _tag form allocate the same way, so that we can always free
+    // or not. /hildjj
+    if (_tag <> nil) then begin
+        result := TXMLTag.Create(_tag);
+        exit;
+    end;
+
     // build a tag based on this
     Result := TXMLTag.Create;
 
@@ -197,6 +211,8 @@ begin
 
         AddBasicTag('body', raw_body);
     end;
+
+    _tag := TXMLTag.Create(result);
 end;
 
 {---------------------------------------}
