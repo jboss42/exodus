@@ -251,7 +251,7 @@ procedure TfrmPrefSystem.btnUpdateCheckMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
     if (ssShift in Shift) or (ssCtrl in Shift) then begin
-        MainSession.Prefs.setString('last_update', DateTimeToStr(Now()));
+        MainSession.Prefs.setDateTime('last_update', Now());
     end;
 end;
 

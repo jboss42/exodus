@@ -32,8 +32,8 @@ type
   TAutoUpdateThread = class(TThread)
   private
     { Private declarations }
-    _url : string;
-    _last : TDateTime;
+    _url  : string;
+    _pkey : Widestring;
     _available : boolean;
     _background : boolean;
     _onNew : TNewUrlEvent;
@@ -41,8 +41,8 @@ type
   protected
     procedure Execute; override;
   public
-    property URL : string read _url write _url;
-    property Last : TDateTime read _last write _last;
+    property PKey : Widestring read _pkey write _pkey;
+    property URL  : string read _url write _url;
     property Available : boolean read _available;
     property Background : boolean write _background;
     property OnNewUrl :  TNewUrlEvent write _onNew;
@@ -69,17 +69,8 @@ function RoundDateTime(val: TDateTime) : TDateTime;
 var
     f: TFormatSettings;
 begin
-    GetLocaleFormatSettings(LOCALE_USER_DEFAULT, f);
+    GetLocaleFormatSettings(LANG_NEUTRAL, f);
     Result := StrToDateTime(DateTimeToStr(val), f);
-end;
-
-{---------------------------------------}
-function LocaleDateTime(val: string): TDateTime;
-var
-    f: TFormatSettings;
-begin
-    GetLocaleFormatSettings(LOCALE_USER_DEFAULT, f);
-    Result := StrToDateTime(val, f);
 end;
 
 {---------------------------------------}
@@ -88,7 +79,6 @@ end;
 function InitAutoUpdate(background : boolean = true) : boolean;
 var
     url  : string;
-    last : TDateTime;
     t    : TAutoUpdateThread;
 begin
     result := false;
@@ -101,18 +91,10 @@ begin
     // </brand>
     // TODO: add an edit box to the pref window?
     url  := MainSession.Prefs.getString('auto_update_url');
-    try
-        last := LocaleDateTime(MainSession.Prefs.getString('last_update'));
-    except
-        on EConvertError do begin
-            last := Now();
-            MainSession.Prefs.setString('last_update', DateTimeToStr(last));
-        end;
-    end;
 
     t := TAutoUpdateThread.Create(true);
+    t.PKey := 'last_update';
     t.URL := url;
-    t.Last := last;
     t.Background := background;
     t.OnNewUrl := @ShowAutoUpdateStatus;
     if (background) then begin
@@ -167,24 +149,14 @@ end;
 procedure InitUpdateBranding();
 var
     url  : string;
-    last : TDateTime;
     t    : TAutoUpdateThread;
 begin
     url  := MainSession.Prefs.getString('branding_url');
     if (url = '') then exit;
 
-    try
-        last := LocaleDateTime(MainSession.Prefs.getString('last_branding_update'));
-    except
-        on EConvertError do begin
-            last := Now();
-            MainSession.Prefs.setString('last_branding_update', DateTimeToStr(last));
-        end;
-    end;
-
     t := TAutoUpdateThread.Create(true);
     t.URL := url;
-    t.Last := last;
+    t.PKey := 'last_branding_update';
     t.Background := true;
     t.OnNewUrl := @OnNewBrand;
     t.FreeOnTerminate := true;
@@ -199,9 +171,12 @@ end;
 procedure TAutoUpdateThread.Execute;
 var
     http : TIdHTTP;
+    last, rounded : TDateTime;
 begin
     _available := false;
     http := nil;
+    last := MainSession.Prefs.getSetDateTime(_pkey);
+
     try
         http := TIdHTTP.Create(nil);
         http.HandleRedirects := true;
@@ -215,8 +190,13 @@ begin
             exit;
         end;
 
-        if (RoundDateTime(http.Response.LastModified) <= _last) then
+        rounded := RoundDateTime(http.Response.LastModified);
+        if (rounded <= last) then begin
+            if (rounded <> last) then
+                MainSession.Prefs.setDateTime(_pkey, http.Response.LastModified);
             exit;
+        end;
+
         if (Assigned(_onNew)) then begin
             if (_background) then
                 synchronize(checkDoUpdate)

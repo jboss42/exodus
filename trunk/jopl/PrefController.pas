@@ -177,6 +177,8 @@ end;
         function getString(pkey: Widestring; server_side: TPrefKind = pkClient): Widestring;
         function getInt(pkey: Widestring; server_side: TPrefKind = pkClient): integer;
         function getBool(pkey: Widestring; server_side: TPrefKind = pkClient): boolean;
+        function getDateTime(pkey: Widestring; server_side: TPrefKind = pkClient): TDateTime;
+        function getSetDateTime(pkey: Widestring; server_side: TPrefKind = pkClient): TDateTime;        
         procedure fillStringlist(pkey: Widestring; sl: TWideStrings; server_side: TPrefKind = pkClient); overload;
         {$ifdef Exodus}
         procedure fillStringlist(pkey: Widestring; sl: TTntStrings; server_side: TPrefKind = pkClient); overload;
@@ -190,6 +192,7 @@ end;
         procedure setString(pkey, pvalue: Widestring; server_side: TPrefKind = pkClient);
         procedure setInt(pkey: Widestring; pvalue: integer; server_side: TPrefKind = pkClient);
         procedure setBool(pkey: Widestring; pvalue: boolean; server_side: TPrefKind = pkClient);
+        procedure setDateTime(pkey: Widestring; pvalue: TDateTime; server_side: TPrefKind = pkClient);
         procedure setStringlist(pkey: Widestring; pvalue: TWideStrings; server_side: TPrefKind = pkClient); overload;
         {$ifdef Exodus}
         procedure setStringlist(pkey: Widestring; pvalue: TTntStrings; server_side: TPrefKind = pkClient); overload;
@@ -589,6 +592,32 @@ begin
 end;
 
 {---------------------------------------}
+function TPrefController.getDateTime(pkey: Widestring; server_side: TPrefKind = pkClient): TDateTime;
+var
+    f: TFormatSettings;
+begin
+    GetLocaleFormatSettings(LANG_NEUTRAL, f);
+    Result := StrToDateTimeDef(getString(pkey, server_side), Now(), f);
+end;
+
+{---------------------------------------}
+function TPrefController.getSetDateTime(pkey: Widestring; server_side: TPrefKind = pkClient): TDateTime;
+var
+    f: TFormatSettings;
+    s: string;
+    n: TDateTime;
+begin
+    GetLocaleFormatSettings(LANG_NEUTRAL, f);
+    s := getString(pkey, server_side);
+    n := Now();
+    if (s = '') then begin
+        Result := n;
+        setString(pkey, DateTimeToStr(n, f), server_side);
+    end else
+        Result := StrToDateTimeDef(s, n, f);
+end;
+
+{---------------------------------------}
 procedure TPrefController.fillStringlist(pkey: Widestring; sl: TWideStrings; server_side: TPrefKind = pkClient);
 var
     p: TXMLTag;
@@ -645,6 +674,16 @@ begin
         setString(pkey, 'true', server_side)
      else
         setString(pkey, 'false', server_side);
+end;
+
+{---------------------------------------}
+procedure TPrefController.setDateTime(pkey: Widestring; pvalue: TDateTime; server_side: TPrefKind = pkClient);
+var
+    f: TFormatSettings;
+begin
+    // store in lang-independant way, so we know how to read in.
+    GetLocaleFormatSettings(LANG_NEUTRAL, f);
+    setString(pkey, DateTimeToStr(pvalue, f), server_side);
 end;
 
 {---------------------------------------}
