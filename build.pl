@@ -144,7 +144,7 @@ LangString DESC_$base \${LANG_ENGLISH} "$readme"
 EOF
   
   chdir "..";
-  e("zip -9 $base.zip $base.dll");
+  e("zip $base.zip $base.dll");
 }
 
 sub msgfmt() {
