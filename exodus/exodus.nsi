@@ -33,6 +33,8 @@
 
 ; The file to write
 OutFile "setup.exe"
+ShowInstDetails show
+ShowUninstDetails show
 
 ; The default installation directory
 InstallDir "$PROGRAMFILES\${MUI_PRODUCT}"
@@ -40,6 +42,7 @@ InstallDir "$PROGRAMFILES\${MUI_PRODUCT}"
 ; overwrite the old one automatically)
 InstallDirRegKey HKLM "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
 
+!define MUI_INNERTEXT_LICENSE_TOP "Exodus is licensed under the GPL.  Press Page Down to see the rest of the agreement."
 !define MUI_CHECKBITMAP "checks.bmp"
 !define MUI_ICON "exodus.ico"
 !define MUI_UNICON "exodus.ico"
@@ -60,6 +63,7 @@ InstallDirRegKey HKLM "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
 !define MUI_UNCONFIRMPAGE
   
 ;Modern UI System
+!define MUI_BRANDINGTEXT " "
 !insertmacro MUI_SYSTEM
 !insertmacro MUI_LANGUAGE "English"
 
@@ -67,19 +71,28 @@ InstallDirRegKey HKLM "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
 ;Language Strings
 
 ;Description
-LangString DESC_Exodus ${LANG_ENGLISH} "The main exodus program."
-LangString DESC_SSL ${LANG_ENGLISH} "You will need these libraries to use SSL connections.  These will be retrieved via the Internet, using your IE proxy settings."
-LangString DESC_Bleed ${LANG_ENGLISH} "Exodus will check for new versions of the latest development build whenever you login.  These sometimes happen several times a day."
-LangString DESC_Plugins ${LANG_ENGLISH} "Download Exodus plugins via the Internet, using your IE proxy settings."
+LangString DESC_Exodus ${LANG_ENGLISH} \
+"The main exodus program."
+
+LangString DESC_SSL ${LANG_ENGLISH} \
+"You will need these libraries to use SSL connections.  These will be retrieved via the Internet, using your IE proxy settings."
+
+LangString DESC_Bleed ${LANG_ENGLISH} \
+"Exodus will check for new versions of the latest development build whenever you login.  These sometimes happen several times a day."
+
+LangString DESC_Plugins ${LANG_ENGLISH} \
+"Download Exodus plugins via the Internet, using your IE proxy settings."
 
 ; BRANDING: YOU MUST NOT REMOVE THE GPL!
 LicenseData GPL-LICENSE.TXT
-CheckBitmap checks.bmp
 SubCaption 3 ": Exit running Exodus versions!"
 
 ; The stuff to install
 Section "!${MUI_PRODUCT} (Required)" SEC_Exodus
+        ; this one is required
         SectionIn 1 RO
+
+        ; shut down running instances
         call NotifyInstances
 
         ; Set output path to the installation directory.
@@ -98,7 +111,8 @@ Section "!${MUI_PRODUCT} (Required)" SEC_Exodus
         IfFileExists IdleHooks.dll lbl_noIdle
 
         ; BRANDING: change this URL.
-        NSISdl::download "${HOME_URL}/daily/extras/IdleHooks.dll" $INSTDIR\IdleHooks.dll
+        NSISdl::download "${HOME_URL}/daily/extras/IdleHooks.dll" \
+                         $INSTDIR\IdleHooks.dll
         StrCmp $0 "success" lbl_noIdle
             Abort "Error downloading IdleHooks library"
 
@@ -117,11 +131,12 @@ Section "!${MUI_PRODUCT} (Required)" SEC_Exodus
         StrCmp $0 "success" lbl_execrich
             Abort "Error downloading richtext library"
   lbl_execrich:
-        WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Runonce "Exodus-Setup" "$CMDLINE"
+        WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Runonce \
+          "Exodus-Setup" "$CMDLINE"
         Exec $INSTDIR\richupd.exe
         Quit
   lbl_reportVer:
-        DetailPrint "Richedit verion ok."
+        DetailPrint "Richedit version ok."
 
         ; delete any leftover richupd.exe file.  This should not error
         ; if the file doesn't exist.
@@ -131,8 +146,12 @@ Section "!${MUI_PRODUCT} (Required)" SEC_Exodus
         WriteRegStr HKLM SOFTWARE\Jabber\Exodus "Install_Dir" "$INSTDIR"
 
         ; Write the uninstall keys for Windows
-        WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Exodus" "DisplayName" "Exodus Jabber Client (remove only)"
-        WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Exodus" "UninstallString" '"$INSTDIR\uninstall.exe"'
+        WriteRegStr HKLM \
+          "Software\Microsoft\Windows\CurrentVersion\Uninstall\Exodus" \
+          "DisplayName" "Exodus Jabber Client (remove only)"
+        WriteRegStr HKLM \
+          "Software\Microsoft\Windows\CurrentVersion\Uninstall\Exodus" \
+          "UninstallString" '"$INSTDIR\uninstall.exe"'
         WriteUninstaller "uninstall.exe"
 
         StrCpy $0 0
@@ -186,13 +205,16 @@ Section "SSL Support" SEC_SSL
         IfFileExists $INSTDIR\libeay32.dll no_ssl
   need_ssl:
         ; BRANDING: Change this URL
-        NSISdl::download "${HOME_URL}/indy_openssl096g.zip" $INSTDIR\indy_openssl096.zip
+        NSISdl::download "${HOME_URL}/indy_openssl096g.zip" \
+                         $INSTDIR\indy_openssl096.zip
         StrCmp $0 "success" ssl
             Abort "Error downloading ssl libraries"
   ssl:
         ZipDLL::extractall $INSTDIR $INSTDIR\indy_openssl096.zip
         Delete $INSTDIR\indy_openssl096.zip
+	Delete $INSTDIR\readme.txt
         goto ssl_done
+
   no_ssl:
         DetailPrint "SSL libraries already installed."
         ssl_done:
@@ -202,23 +224,40 @@ Section /e "Plugins" SEC_Plugins
   AddSize 1693
   CreateDirectory "$INSTDIR\plugins"
   ; BRANDING: Change this URL
-  NSISdl::download "${HOME_URL}/daily/plugins.zip" "$INSTDIR\plugins\plugins.zip"
+  NSISdl::download "${HOME_URL}/daily/plugins.zip" \
+                   "$INSTDIR\plugins\plugins.zip"
   StrCmp $0 "success" plugins
     Abort "Error downloading plugin libraries"
 
   plugins:
   ZipDLL::extractall "$INSTDIR" "$INSTDIR\plugins\plugins.zip" 
-  Delete "$INSTDIR\plugins\plugins.zip"
 
-  ; register all of the .dll's
+  ; register all of the plugin .dll's
+  ClearErrors
   FindFirst $0 $1 "$INSTDIR\plugins\*.dll"
-  IfErrors dllregdone
+  IfErrors nodlls
   nextdll:
-  RegDll "$INSTDIR\plugins\$1"
+
+  ClearErrors
+  RegDll $INSTDIR\plugins\$1
+  IfErrors regerror findnextdll
+    regerror:
+    DetailPrint "Error trying to register $INSTDIR\plugins\$1"
+    
+  findnextdll:
+  ClearErrors
   FindNext $0 $1
   IfErrors dllregdone nextdll
+
   dllregdone:
   FindClose $0
+  goto pluginend
+  
+  nodlls:
+  DetailPrint "$0 $1 No dlls found in $INSTDIR\plugins"
+
+  pluginend:
+  Delete "$INSTDIR\plugins\plugins.zip"
 SectionEnd
 
 ; Start menu shortcuts
@@ -232,11 +271,17 @@ Section "" SEC_Menu
     StrCmp $0 "/S" silent
     !insertmacro MUI_STARTMENU_WRITE_BEGIN
       CreateDirectory "$SMPROGRAMS\${MUI_STARTMENU_VARIABLE}"
-      CreateShortCut "$SMPROGRAMS\${MUI_STARTMENU_VARIABLE}\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
-      CreateShortCut "$SMPROGRAMS\${MUI_STARTMENU_VARIABLE}\Exodus.lnk" "$INSTDIR\Exodus.exe" "" "$INSTDIR\Exodus.exe" 0
+      CreateShortCut "$SMPROGRAMS\${MUI_STARTMENU_VARIABLE}\Uninstall.lnk" \
+        "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
+      CreateShortCut "$SMPROGRAMS\${MUI_STARTMENU_VARIABLE}\Exodus.lnk" \
+        "$INSTDIR\Exodus.exe" "" "$INSTDIR\Exodus.exe" 0
+
       ; BRANDING: Change this URL
-      CreateShortCut "$SMPROGRAMS\${MUI_STARTMENU_VARIABLE}\Exodus Homepage.lnk" "${HOME_URL}"
-      WriteRegStr HKLM SOFTWARE\Jabber\Exodus "StartMenu" "${MUI_STARTMENU_VARIABLE}"
+      CreateShortCut \
+        "$SMPROGRAMS\${MUI_STARTMENU_VARIABLE}\Exodus Homepage.lnk" \
+        "${HOME_URL}"
+      WriteRegStr HKLM SOFTWARE\Jabber\Exodus "StartMenu" \
+        "${MUI_STARTMENU_VARIABLE}"
 
     !insertmacro MUI_STARTMENU_WRITE_END
 
@@ -275,6 +320,25 @@ Section "Uninstall"
     RMDir "$SMPROGRAMS\$0"
   noshortcuts:
 
+  ; unregister all of the plugin .dll's
+  ClearErrors
+  FindFirst $0 $1 "$INSTDIR\plugins\*.dll"
+  IfErrors dllregdone
+
+  nextdll:
+  UnRegDll "$INSTDIR\plugins\$1"
+
+  ClearErrors
+  FindNext $0 $1
+  IfErrors dllregdone nextdll
+
+  dllregdone:
+  FindClose $0
+
+  ; remove plugins
+  Delete "$INSTDIR\plugins\*.dll"
+  RMDir "$INSTDIR\plugins"
+
   ; remove files
   Delete $INSTDIR\Exodus.exe
   Delete $INSTDIR\IdleHooks.dll
@@ -287,7 +351,9 @@ Section "Uninstall"
   RMDir "$INSTDIR"
 
   ; remove registry keys
-  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\Exodus"
+  DeleteRegKey HKLM \
+    "Software\Microsoft\Windows\CurrentVersion\Uninstall\Exodus"
+
   DeleteRegKey HKLM SOFTWARE\Jabber\Exodus\Restart
   DeleteRegKey HKLM SOFTWARE\Jabber\Exodus
 
