@@ -170,6 +170,7 @@ object frmTransfer: TfrmTransfer
     TabOrder = 1
     URLColor = clBlue
     URLCursor = crHandPoint
+    OnKeyDown = txtMsgKeyDown
     InputFormat = ifRTF
     OutputFormat = ofRTF
     SelectedInOut = False

@@ -24,18 +24,15 @@ interface
 uses
     Session,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    StdCtrls, buttonFrame, ComCtrls, Menus;
+    StdCtrls, buttonFrame, ComCtrls, Menus, TntStdCtrls;
 
 type
   TfrmLogin = class(TForm)
     Label1: TLabel;
-    txtUsername: TEdit;
     Label2: TLabel;
-    txtPassword: TEdit;
     Label3: TLabel;
     Label4: TLabel;
     cboServer: TComboBox;
-    cboResource: TComboBox;
     frameButtons1: TframeButtons;
     Label5: TLabel;
     cboProfiles: TComboBox;
@@ -45,6 +42,9 @@ type
     CreateNew1: TMenuItem;
     Delete1: TMenuItem;
     chkSavePasswd: TCheckBox;
+    txtUsername: TTntEdit;
+    txtPassword: TTntEdit;
+    cboResource: TTntComboBox;
 
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cboProfilesChange(Sender: TObject);
@@ -156,6 +156,9 @@ end;
 procedure TfrmLogin.FormCreate(Sender: TObject);
 begin
     MainSession.Prefs.RestorePosition(Self);
+    cboResource.Items.Add('Home');
+    cboResource.Items.Add('Work');
+    cboResource.Items.Add('Exodus');
 end;
 
 {---------------------------------------}

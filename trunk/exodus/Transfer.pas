@@ -88,7 +88,7 @@ resourcestring
     sOpen = 'Open';
     sClose = 'Close';
     sTo = 'To:     ';
-    sXferOverwrite = 'The Contact must be online before you can send a file.';
+    sXferOverwrite = 'This file already exists. Overwrite?';
     sXferWaiting = 'Waiting for connection...';
     sXferSending = 'Sending file...';
     sXferRecvDisconnected = 'Receiver disconnected.';
@@ -142,7 +142,7 @@ begin
             tmps := tmp_jid.full;
         txtFrom.Caption := tmps;
 
-        lblFile.Caption := URLToFilename(url);
+        lblFile.Caption := ExtractFilename(URLToFileName(url));
         lblFile.Hint := url;
 
         txtMsg.Lines.Clear();
@@ -218,7 +218,7 @@ begin
                ExtractFileName(filename);
         txtMsg.Lines.Clear();
         txtMsg.Lines.Add(sXferDefaultDesc);
-        lblFile.Hint := url;
+        lblFile.Hint := filename;
         lblFile.Caption := ExtractFileName(filename);
         end;
     xfer.Show;
