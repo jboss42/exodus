@@ -108,6 +108,7 @@ type
     N2: TTntMenuItem;
     popSendInvisible: TTntMenuItem;
     popSendPres: TTntMenuItem;
+    popTransEdit: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -176,6 +177,7 @@ type
     procedure txtFindChange(Sender: TObject);
     procedure btnFindCloseClick(Sender: TObject);
     procedure presDNDClick(Sender: TObject);
+    procedure popTransEditClick(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;             // roster callback id
@@ -295,7 +297,7 @@ procedure setRosterMenuCaptions(online, chat, away, xa, dnd: TTntMenuItem);
 
 implementation
 uses
-    ExSession, XferManager, CustomPres,
+    ExSession, XferManager, CustomPres, RegForm, 
     JabberConst, Chat, ChatController, GrpManagement, GnuGetText, InputPassword,
     SelContact, Invite, Bookmark, S10n, MsgRecv, PrefController,
     ExEvents, ExUtils, Room, Profile, JabberID, RiserWindow, ShellAPI,
@@ -3006,12 +3008,21 @@ begin
     MainSession.setPresence(show, '', MainSession.Priority);
 end;
 
+{---------------------------------------}
 procedure TfrmRosterWindow.updateReconnect(secs: integer);
 begin
     lblLogin.Caption := _(sCancelReconnect);
     lblStatus.Caption := WideFormat(_(sReconnectIn), [secs]);
 end;
 
+{---------------------------------------}
+procedure TfrmRosterWindow.popTransEditClick(Sender: TObject);
+begin
+    // Bring up a iq:register form for this transport
+    if (_cur_ritem <> nil) then begin
+        StartServiceReg(_cur_ritem.jid.full);
+    end;
+end;
 
 initialization
     frmRosterWindow := nil;
