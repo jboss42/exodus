@@ -26,7 +26,7 @@ uses
     Dialogs, IdTCPConnection, IdTCPClient, IdHTTP, IdBaseComponent,
     IdComponent, IdTCPServer, IdHTTPServer, ComCtrls, StdCtrls, buttonFrame,
     ExRichEdit, ExtCtrls, IdThreadMgr, IdThreadMgrPool, IdAntiFreezeBase,
-    IdAntiFreeze, IdThreadMgrDefault, RichEdit2;
+    IdAntiFreeze, IdThreadMgrDefault, RichEdit2, Grids;
 
 const
     WM_XFER = WM_USER + 5000;
@@ -34,8 +34,6 @@ const
 type
   TfrmTransfer = class(TForm)
     pnlFrom: TPanel;
-    lblFrom: TStaticText;
-    txtFrom: TStaticText;
     txtMsg: TExRichEdit;
     frameButtons1: TframeButtons;
     pnlProgress: TPanel;
@@ -45,7 +43,11 @@ type
     httpClient: TIdHTTP;
     OpenDialog1: TOpenDialog;
     SaveDialog1: TSaveDialog;
-    procedure txtMsgURLClick(Sender: TObject; url: String);
+    lblFrom: TLabel;
+    txtFrom: TLabel;
+    lblFile: TLabel;
+    Label5: TLabel;
+    lblDesc: TLabel;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure httpClientWork(Sender: TObject; AWorkMode: TWorkMode;
       const AWorkCount: Integer);
@@ -58,6 +60,7 @@ type
       RequestInfo: TIdHTTPRequestInfo; ResponseInfo: TIdHTTPResponseInfo);
     procedure httpServerDisconnect(AThread: TIdPeerThread);
     procedure httpServerConnect(AThread: TIdPeerThread);
+    procedure lblFileClick(Sender: TObject);
   private
     { Private declarations }
     fstream: TFileStream;
@@ -88,6 +91,7 @@ resourcestring
     sXferRecvDisconnected = 'Receiver disconnected.';
     sXferTryingClose = 'Trying to close.';
     sXferConn = 'Got connection.';
+    sXferDefaultDesc = 'Sending you a file.';
 
 procedure FileReceive(from, url, desc: string);
 procedure FileSend(tojid: string; fn: string = '');
@@ -126,17 +130,27 @@ begin
         if (ritem = nil) then
             ritem := MainSession.Roster.Find(tmp_jid.full);
 
-        if (ritem <> nil) then
-            tmps := ritem.Nickname
+        if (ritem <> nil) then begin
+            tmps := ritem.Nickname;
+            txtFrom.Hint := from;
+            end
         else
             tmps := tmp_jid.full;
-
         txtFrom.Caption := tmps;
+
+        lblFile.Caption := URLToFilename(url);
+        lblFile.Hint := url;
+
+        txtMsg.Lines.Clear();
         txtMsg.Lines.Add(Format(sXferRecv, [from]));
-        txtMsg.Lines.Add(sXferURL + url);
 
         if (desc <> '') then
             txtMsg.Lines.Add(sXferDesc + desc);
+
+        txtMsg.ReadOnly := true;
+        lblDesc.Visible := false;
+        tmp_jid.Free();
+        
         end;
     xfer.Show;
     DoNotify(xfer, 'notify_oob', 'File from ' + tmps, ico_service);
@@ -147,8 +161,9 @@ procedure FileSend(tojid: string; fn: string = '');
 var
     xfer: TFrmTransfer;
     tmp_id: TJabberID;
-    s_jid: string;
+    tmps: string;
     pri: TJabberPres;
+    ritem: TJabberRosterItem;
 begin
     xfer := TfrmTransfer.Create(Application);
 
@@ -163,13 +178,27 @@ begin
                 xfer.Close;
                 exit;
                 end;
-            s_jid := pri.fromJID.full;
+            tmps := pri.fromJID.full;
             end
         else
-            s_jid := tojid;
+            tmps := tojid;
+        tmp_id.Free();
 
+        tmp_id := TJabberID.Create(tmps);
+        ritem := MainSession.Roster.Find(tmp_id.jid);
+        if (ritem = nil) then
+            ritem := MainSession.Roster.Find(tmp_id.full);
+
+        if (ritem <> nil) then begin
+            tmps := ritem.Nickname;
+            txtFrom.Hint := tmps;
+            end
+        else
+            tmps := tmp_id.full;
+        txtFrom.Caption := tmps;
+        txtFrom.Hint := tmp_id.full;
         lblFrom.Caption := sTo;
-        txtFrom.Caption := s_jid;
+        
         pnlProgress.Visible := false;
         frameButtons1.btnOK.Caption := sSend;
         if (fn <> '') then
@@ -181,30 +210,11 @@ begin
         url := 'http://' + MainSession.Stream.LocalIP + ':5280/' +
                ExtractFileName(filename);
         txtMsg.Lines.Clear();
-        txtMsg.Lines.Add(sXferURL + url);
+        txtMsg.Lines.Add(sXferDefaultDesc);
+        lblFile.Hint := url;
+        lblFile.Caption := ExtractFileName(filename);
         end;
     xfer.Show;
-end;
-
-{---------------------------------------}
-procedure TfrmTransfer.txtMsgURLClick(Sender: TObject; url: String);
-begin
-    // Browse for a new file..
-    if Mode = 0 then begin
-        frameButtons1btnOKClick(Sender);
-        end
-    else if Mode = 1 then begin
-        if OpenDialog1.Execute then begin
-            // reset the text in the txtMsg richedit..
-            filename := OpenDialog1.FileName;
-            url := 'http://' + MainSession.Stream.LocalIP + ':5280/' +
-                   ExtractFileName(filename);
-            txtMsg.Lines.Clear();
-            txtMsg.Lines.Add(sXferURL + url);
-            end;
-        end
-    else if Mode = 2 then
-        ShellExecute(0, 'open', PChar(filename), '', '', SW_NORMAL);
 end;
 
 {---------------------------------------}
@@ -241,6 +251,7 @@ begin
             with AddTag('query') do begin
                 putAttribute('xmlns', XMLNS_IQOOB);
                 AddBasicTag('url', url);
+                AddBasicTag('desc', txtMsg.WideText);
                 end;
             end;
         MainSession.SendTag(iq);
@@ -322,6 +333,26 @@ end;
 procedure TfrmTransfer.httpServerConnect(AThread: TIdPeerThread);
 begin
     txtMsg.Lines.Add(sXferConn);
+end;
+
+procedure TfrmTransfer.lblFileClick(Sender: TObject);
+begin
+    // Browse for a new file..
+    if Mode = 0 then begin
+        frameButtons1btnOKClick(Sender);
+        end
+    else if Mode = 1 then begin
+        if OpenDialog1.Execute then begin
+            // reset the text in the txtMsg richedit..
+            filename := OpenDialog1.FileName;
+            url := 'http://' + MainSession.Stream.LocalIP + ':5280/' +
+                   ExtractFileName(filename);
+            txtMsg.Lines.Clear();
+            txtMsg.Lines.Add(sXferURL + url);
+            end;
+        end
+    else if Mode = 2 then
+        ShellExecute(0, 'open', PChar(filename), '', '', SW_NORMAL);
 end;
 
 end.

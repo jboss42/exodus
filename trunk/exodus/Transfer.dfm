@@ -1,8 +1,9 @@
 object frmTransfer: TfrmTransfer
-  Left = 383
-  Top = 358
+  Left = 252
+  Top = 175
   Width = 267
   Height = 207
+  ActiveControl = frameButtons1.btnOK
   Caption = 'File Transfer'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,51 +20,75 @@ object frmTransfer: TfrmTransfer
     Left = 0
     Top = 0
     Width = 259
-    Height = 22
+    Height = 57
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 2
     TabOrder = 0
-    object lblFrom: TStaticText
-      Left = 2
-      Top = 2
-      Width = 63
-      Height = 18
-      Align = alLeft
-      Caption = 'From:     '
-      Color = clBtnFace
+    object lblFrom: TLabel
+      Left = 0
+      Top = 0
+      Width = 32
+      Height = 13
+      Caption = 'From:'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -13
+      Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = [fsBold]
-      ParentColor = False
       ParentFont = False
-      TabOrder = 0
     end
-    object txtFrom: TStaticText
-      Left = 65
-      Top = 2
-      Width = 192
-      Height = 18
-      Align = alClient
-      Caption = '<JID>'
-      Color = clBtnFace
+    object txtFrom: TLabel
+      Left = 50
+      Top = 0
+      Width = 34
+      Height = 13
+      Caption = 'txtFrom'
+      ParentShowHint = False
+      ShowHint = True
+    end
+    object lblFile: TLabel
+      Left = 50
+      Top = 16
+      Width = 32
+      Height = 13
+      Caption = 'Label3'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlue
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsUnderline]
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
+      OnClick = lblFileClick
+    end
+    object Label5: TLabel
+      Left = 0
+      Top = 16
+      Width = 25
+      Height = 13
+      Caption = 'File:'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
-      Font.Height = -13
+      Font.Height = -11
       Font.Name = 'MS Sans Serif'
-      Font.Style = []
-      ParentColor = False
+      Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 1
+    end
+    object lblDesc: TLabel
+      Left = 0
+      Top = 40
+      Width = 84
+      Height = 13
+      Caption = 'Enter Description:'
     end
   end
   object txtMsg: TExRichEdit
     Left = 0
-    Top = 22
+    Top = 57
     Width = 259
-    Height = 92
+    Height = 57
     Align = alClient
     AutoURLDetect = adDefault
     CustomURLs = <
@@ -141,12 +166,10 @@ object frmTransfer: TfrmTransfer
       end>
     LangOptions = [loAutoFont]
     Language = 1033
-    ReadOnly = True
     ShowSelectionBar = False
     TabOrder = 1
     URLColor = clBlue
     URLCursor = crHandPoint
-    OnURLClick = txtMsgURLClick
     InputFormat = ifRTF
     OutputFormat = ofRTF
     SelectedInOut = False

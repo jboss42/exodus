@@ -449,6 +449,7 @@ object frmExodus: TfrmExodus
       end
       object mnuBrowser: TMenuItem
         Caption = 'Jabber Browser'
+        ShortCut = 122
         OnClick = mnuBrowserClick
       end
       object mnuServer: TMenuItem
@@ -468,6 +469,7 @@ object frmExodus: TfrmExodus
       end
       object ShowXML1: TMenuItem
         Caption = 'Show Debug XML'
+        ShortCut = 123
         OnClick = ShowXML1Click
       end
       object N1: TMenuItem
