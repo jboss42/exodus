@@ -32,7 +32,7 @@ program Exodus;
 uses
   Forms,
   Controls,
-  Windows,
+  Windows,  
   About in 'About.pas' {frmAbout},
   Agents in '..\jopl\Agents.pas',
   AutoUpdate in '..\jopl\AutoUpdate.pas',
@@ -173,9 +173,6 @@ begin
   if (not continue) then exit;
 
   Application.CreateForm(TfrmExodus, frmExodus);
-  Application.CreateForm(TfrmWebDownload, frmWebDownload);
-  Application.CreateForm(TfrmPrefNetwork, frmPrefNetwork);
-  Application.CreateForm(TfrmPrefGroups, frmPrefGroups);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);

@@ -68,6 +68,7 @@ resourcestring
     sCmdProfile =   ' -f [prof] '#9' : Profile name'#13#10;
     sCmdConfig =    ' -c [file] '#9' : Config path name'#13#10;
     sUnkArg = 'Invalid command line:%s';
+    sWinsock2 = 'Winsock2 is required for this application. Please obtain the winsock2 installer from Microsoft for your operating system.';
 
 var
     sExodusMutex: Cardinal;
@@ -89,7 +90,7 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 
 uses
-    Controls, GnuGetText, ConnDetails,
+    Controls, GnuGetText, ConnDetails, IdWinsock2,
     ChatWin, GetOpt, Jabber1, JabberID, PrefController, StandardAuth,
     PrefNotify,
     ExResponders, MsgDisplay,
@@ -135,12 +136,23 @@ var
     xmpp_children: TXMLTagList;
     i: integer;
 
+    ws2: THandle;
+
 begin
     // setup all the session stuff, parse cmd line params, etc..
     {$ifdef TRACE_EXCEPTIONS}
     // Application.OnException := ApplicationException;
     Include(JclStackTrackingOptions, stRawMode);
     {$endif}
+
+    // Make sure winsock2 is available..
+    ws2 := LoadLibrary('WS2_32.DLL');
+    if (ws2 = 0) then begin
+        MessageDlg(sWinsock2, mtError, [mbOK], 0);
+        Result := false;
+        exit;
+    end;
+    FreeLibrary(ws2);
 
     // init the cmd line stuff
     cli_priority := -1;

@@ -3,7 +3,7 @@ object frmConnDetails: TfrmConnDetails
   Top = 168
   Width = 304
   Height = 305
-  ActiveControl = cboSocksType
+  ActiveControl = txtUsername
   Caption = 'Connection Details'
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -18,7 +18,7 @@ object frmConnDetails: TfrmConnDetails
   TextHeight = 16
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 239
+    Top = 244
     Width = 296
     Height = 32
     Align = alBottom
@@ -44,13 +44,13 @@ object frmConnDetails: TfrmConnDetails
     Left = 0
     Top = 0
     Width = 296
-    Height = 239
-    ActivePage = tbsSocket
+    Height = 244
+    ActivePage = tbsProfile
     Align = alClient
     TabOrder = 1
     object tbsProfile: TTabSheet
       Caption = 'Profile'
-      ImageIndex = 2
+      ImageIndex = -1
       object Label3: TLabel
         Left = 9
         Top = 8
@@ -157,7 +157,7 @@ object frmConnDetails: TfrmConnDetails
     end
     object tbsConn: TTabSheet
       Caption = 'Connection'
-      ImageIndex = 3
+      ImageIndex = -1
       object Label4: TLabel
         Left = 2
         Top = 38
@@ -248,6 +248,7 @@ object frmConnDetails: TfrmConnDetails
     end
     object tbsSocket: TTabSheet
       Caption = 'Proxy'
+      ImageIndex = -1
       object lblSocksHost: TLabel
         Left = 5
         Top = 38
@@ -349,7 +350,7 @@ object frmConnDetails: TfrmConnDetails
     end
     object tbsHttp: TTabSheet
       Caption = 'HTTP Polling'
-      ImageIndex = 1
+      ImageIndex = -1
       object Label1: TLabel
         Left = 2
         Top = 3
