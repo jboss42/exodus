@@ -289,8 +289,9 @@ end;
 function TJabberSession.GetServer(): string;
 begin
     if (_profile = nil) then
-        result := '';
-    result := _profile.Server;
+        result := ''
+    else
+        result := _profile.Server;
 end;
 
 {---------------------------------------}
@@ -650,15 +651,25 @@ end;
 {---------------------------------------}
 procedure TJabberSession.AuthGetCallback(event: string; xml: TXMLTag);
 var
-    tok, seq, dig, qtag: TXMLTag;
+    etag, tok, seq, dig, qtag: TXMLTag;
     authDigest, authHash, authToken, hashA, key: string;
     i, authSeq: integer;
     auth: TJabberIQ;
 begin
     // auth get result or error
     if ((xml = nil) or (xml.getAttribute('type') = 'error')) then begin
-        _dispatcher.DispatchSignal('/session/noaccount', xml);
-        exit;
+        if (xml <> nil) then begin
+            // check for non-existant account
+            etag := xml.GetFirstTag('error');
+            if ((etag <> nil) and
+                (etag.getAttribute('code') = '401'))then begin
+                _dispatcher.DispatchSignal('/session/noaccount', xml);
+                exit;
+                end;
+            end;
+
+        // otherwise, auth-error
+        _dispatcher.DispatchSignal('/session/autherror', xml);
         end;
 
     qtag := xml.GetFirstTag('query');

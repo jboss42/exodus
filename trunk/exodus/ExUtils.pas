@@ -228,18 +228,16 @@ begin
     ds := Copy(Datestr, 7, 2);
     ts := Copy(Datestr, 10, 8);
 
-    try
-        yw := StrToInt(ys);
-        mw := StrToInt(ms);
-        dw := StrToInt(ds);
+    yw := StrToInt(ys);
+    mw := StrToInt(ms);
+    dw := StrToInt(ds);
 
-        rdate := EncodeDate(yw, mw, dw);
+    if (TryEncodeDate(yw, mw, dw, rdate)) then begin
         rdate := rdate + StrToTime(ts);
-
         Result := rdate - TimeZoneBias();
-    except
+        end
+    else
         Result := Now;
-    end;
 end;
 
 {---------------------------------------}

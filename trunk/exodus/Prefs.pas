@@ -188,6 +188,7 @@ type
     Label8: TLabel;
     cboPresTracking: TComboBox;
     btnLogClearAll: TButton;
+    chkCloseQueue: TCheckBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -364,6 +365,7 @@ begin
         chkTimestamp.Checked := getBool('timestamp');
         txtTimestampFmt.Text := getString('timestamp_format');
         chkMsgQueue.Checked := getBool('msg_queue');
+        chkCloseQueue.Checked := getBool('close_queue');
         chkEmoticons.Checked := getBool('emoticons');
         chkLog.Checked := getBool('log');
         chkLogRooms.Checked := getBool('log_rooms');
@@ -504,6 +506,7 @@ begin
         setString('timestamp_format', txtTimestampFmt.Text);
         setBool('emoticons', chkEmoticons.Checked);
         setBool('msg_queue', chkMsgQueue.Checked);
+        setBool('close_queue', chkCloseQueue.Checked);
         setBool('log', chkLog.Checked);
         setBool('log_rooms', chkLogRooms.Checked);
         setString('log_path', txtLogPath.Text);
