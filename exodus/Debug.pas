@@ -22,7 +22,7 @@ unit Debug;
 interface
 
 uses
-    Dockable, 
+    Dockable, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, ExtCtrls, ComCtrls, Menus;
 
@@ -51,7 +51,10 @@ type
     procedure MemoSendKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
+    _ccb: integer;
+
     procedure DebugCallback(send: boolean; data: string);
+    procedure SessionCallback(event: string; tag: TXMLTag);
   end;
 
     procedure ShowDebugForm();
@@ -138,9 +141,17 @@ procedure TfrmDebug.FormCreate(Sender: TObject);
 begin
     // make sure the output is showing..
     inherited;
-    MainSession.Stream.RegisterDataCallback(DebugCallback);
+    // MainSession.Stream.RegisterDataCallback(DebugCallback);
+    _ccb := MainSession.RegisterCallback(SessionCallback, '/session/connected');
 end;
 
+{---------------------------------------}
+procedure TfrmDebug.SessionCallback(event: string; tag: TXMLTag);
+begin
+    // either connected or disconnected
+    if (event = '/session/connected') then
+        MainSession.Stream.RegisterDataCallback(DebugCallback);
+end;
 
 {---------------------------------------}
 procedure TfrmDebug.DebugCallback(send: boolean; data: string);

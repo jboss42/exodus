@@ -924,7 +924,7 @@ var
     cp : TPoint;
 begin
     // popup the menu and to change our status
-    if MainSession.Stream.Active then begin
+    if MainSession.Active then begin
         GetCursorPos(cp);
         popStatus.Popup(cp.x, cp.y);
         end;

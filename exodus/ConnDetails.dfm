@@ -86,7 +86,7 @@ object frmConnDetails: TfrmConnDetails
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 300
+    Top = 305
     Width = 252
     Height = 32
     Align = alBottom
@@ -107,7 +107,7 @@ object frmConnDetails: TfrmConnDetails
     Left = 0
     Top = 65
     Width = 252
-    Height = 235
+    Height = 240
     ActivePage = tbsSocket
     Align = alClient
     Style = tsFlatButtons

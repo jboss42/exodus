@@ -49,7 +49,7 @@ object frmRosterWindow: TfrmRosterWindow
   TextHeight = 13
   object splitTask: TSplitter
     Left = 0
-    Top = 288
+    Top = 293
     Width = 189
     Height = 4
     Cursor = crVSplit
@@ -59,7 +59,7 @@ object frmRosterWindow: TfrmRosterWindow
     Left = 0
     Top = 0
     Width = 189
-    Height = 288
+    Height = 293
     Cursor = crArrow
     Hint = 'Roster Hint'
     Align = alClient
@@ -90,7 +90,7 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object StatBar: TStatusBar
     Left = 0
-    Top = 393
+    Top = 398
     Width = 189
     Height = 21
     Panels = <
@@ -103,7 +103,7 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object pnlShow: TPanel
     Left = 0
-    Top = 369
+    Top = 374
     Width = 189
     Height = 24
     Align = alBottom
@@ -141,7 +141,7 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object pnlTasks: TPanel
     Left = 0
-    Top = 292
+    Top = 297
     Width = 189
     Height = 77
     Align = alBottom

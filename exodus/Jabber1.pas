@@ -1054,7 +1054,7 @@ begin
             end;
 
         // do other stuff
-        restoreMenus(MainSession.Stream.Active);
+        restoreMenus(MainSession.Active);
         restoreToolbar();
         restoreAlpha();
         restoreEvents(MainSession.Prefs.getBool('expanded'));
@@ -1330,7 +1330,7 @@ end;
 procedure TfrmExodus.btnConnectClick(Sender: TObject);
 begin
     // connect to the server
-    if MainSession.Stream.Active then
+    if MainSession.Active then
         MainSession.Disconnect
     else
         ShowLogin;
@@ -1342,7 +1342,7 @@ procedure TfrmExodus.FormCloseQuery(Sender: TObject;
 begin
     // Unregister callbacks, etc.
 
-    if ((MainSession.Stream.Active) and (not _appclosing))then begin
+    if ((MainSession.Active) and (not _appclosing))then begin
         MainSession.Stream.Disconnect();
         _appclosing := true;
         CanClose := false;
@@ -1417,7 +1417,7 @@ begin
         mnuOnline.Checked := e;
         end;
 
-    if MainSession.Stream.Active then
+    if MainSession.Active then
         frmRosterWindow.Redraw;
 end;
 
@@ -1775,7 +1775,7 @@ var
 begin
     // get the latest idle amount
     if (MainSession = nil) then exit;
-    if (not MainSession.Stream.Active) then exit;
+    if (not MainSession.Active) then exit;
 
     with MainSession.Prefs do begin
         if ((_auto_away)) then begin
