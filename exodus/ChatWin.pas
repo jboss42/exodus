@@ -124,6 +124,7 @@ type
 
     // the current contact's avatar
     _avatar: TAvatar;
+    _unknown_avatar: TBitmap;
 
     // Stash away the status
     _status: Widestring;
@@ -359,6 +360,8 @@ begin
     _jid := nil;
     _destroying := false;
     _res_menus := TWidestringlist.Create();
+    _unknown_avatar := TBitmap.Create();
+    frmExodus.bigImages.GetBitmap(0, _unknown_avatar);
 
     _notify[0] := MainSession.Prefs.getInt('notify_chatactivity');
 
@@ -457,6 +460,7 @@ begin
 
     _jid := TJabberID.Create(cjid);
     _avatar := nil;
+    // XXX: check pref
     //imgAvatar.Visible := false;
     Panel1.ClientHeight := 28;
 
@@ -1362,6 +1366,7 @@ end;
 procedure TfrmChat.imgAvatarPaint(Sender: TObject);
 var
     r: TRect;
+    b: TBitmap;
 begin
   inherited;
     if (_avatar <> nil) then begin
@@ -1374,6 +1379,13 @@ begin
         end
         else
             _avatar.Draw(imgAvatar.Canvas);
+    end
+    else begin
+        r.Top := 1;
+        r.Left := 1;
+        r.Bottom := 28;
+        r.Right := 28;
+        imgAvatar.Canvas.StretchDraw(r, _unknown_avatar);
     end;
 end;
 

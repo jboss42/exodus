@@ -9,18 +9,18 @@ inherited frmRoom: TfrmRoom
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
-    Top = 243
+    Top = 239
     Width = 382
   end
   inherited pnlMsgList: TPanel
     Top = 23
     Width = 382
-    Height = 220
+    Height = 216
     TabOrder = 1
     object Splitter2: TSplitter
       Left = 270
       Top = 4
-      Height = 212
+      Height = 208
       Align = alRight
       ResizeStyle = rsUpdate
     end
@@ -28,7 +28,7 @@ inherited frmRoom: TfrmRoom
       Left = 273
       Top = 4
       Width = 105
-      Height = 212
+      Height = 208
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -38,7 +38,7 @@ inherited frmRoom: TfrmRoom
         Left = 1
         Top = 1
         Width = 103
-        Height = 210
+        Height = 206
         Align = alClient
         Columns = <
           item
@@ -71,7 +71,7 @@ inherited frmRoom: TfrmRoom
     end
   end
   inherited pnlInput: TPanel
-    Top = 247
+    Top = 243
     Width = 382
     TabOrder = 0
     inherited MsgOut: TExRichEdit

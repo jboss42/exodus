@@ -220,6 +220,7 @@ begin
   if (not continue) then exit;
 
   Application.CreateForm(TfrmExodus, frmExodus);
+  Application.CreateForm(TFloatImage, FloatImage);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
 
   frmRosterWindow.DockRoster;

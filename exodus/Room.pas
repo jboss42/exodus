@@ -393,8 +393,10 @@ begin
             f.sendStartPresence();
 
         f.Caption := WideFormat(_(sRoom), [tmp_jid.user]);
-        if MainSession.Prefs.getBool('expanded') then
+        if (MainSession.Prefs.getBool('expanded')) then begin
             f.DockForm;
+        end;
+
 
         // setup prefs
         with f do begin
@@ -418,8 +420,12 @@ begin
     end;
 
     f.Show;
-    if f.TabSheet <> nil then
+    
+    if (f.TabSheet <> nil) then begin
         frmExodus.Tabs.ActivePage := f.TabSheet;
+        f.TabSheet.ImageIndex := ico_conf;
+    end;
+    
     Result := f;
 end;
 
@@ -438,7 +444,6 @@ begin
         ShowMsg(tag)
     else if (tag.getAttribute('type') = 'error') then
         ShowMsg(tag);
-
 end;
 
 {---------------------------------------}
@@ -1832,7 +1837,7 @@ begin
 
     inherited;
     if (Docked and (Self.TabSheet <> nil)) then
-        Self.TabSheet.ImageIndex := -1;
+        Self.TabSheet.ImageIndex := ico_conf;
 
     btnClose.Visible := Docked;
 
@@ -2304,7 +2309,7 @@ end;
 procedure TfrmRoom.EntityCallback(event: string; tag: TXMLTag);
 begin
     if (_pending_start = false) then exit;
-    if (event <> 'xml') or (tag = nil) then exit;
+    if (tag = nil) then exit;
 
     if (tag.getAttribute('from') = Self.jid) then begin
         // we got info from our room...

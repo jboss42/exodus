@@ -55,6 +55,8 @@ type
   public
     { Public declarations }
     TabSheet: TTntTabSheet;
+    ImageIndex: integer;
+    
     procedure DockForm; virtual;
     procedure FloatForm; virtual;
     procedure ShowDefault;
