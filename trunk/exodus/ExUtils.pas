@@ -38,6 +38,7 @@ const
     node_bm = 2;
     node_grp = 3;
     node_transport = 4;
+    node_myres = 5;
 
 type
     PLASTINPUTINFO = ^LASTINPUTINFO;

@@ -1088,11 +1088,9 @@ begin
     Test1.Visible := true;
     {$endif}
 
-    sExodusCWPHook := SetWindowsHookEx(WH_CALLWNDPROC, @ExodusCWPHook,
-        0, GetCurrentThreadID);
-    sExodusGMHook := SetWindowsHookEx(WH_GETMESSAGE, @ExodusGMHook,
-        0, GetCurrentThreadID);
-        
+    sExodusCWPHook := 0;
+    sExodusGMHook := 0;
+
 end;
 
 {---------------------------------------}
@@ -2963,6 +2961,14 @@ procedure TfrmExodus.TrackWindowsMsg(windows_msg: integer);
 var
     idx: integer;
 begin
+
+    if (sExodusCWPHook = 0) then begin
+        sExodusCWPHook := SetWindowsHookEx(WH_CALLWNDPROC, @ExodusCWPHook,
+            0, GetCurrentThreadID);
+        sExodusGMHook := SetWindowsHookEx(WH_GETMESSAGE, @ExodusGMHook,
+            0, GetCurrentThreadID);
+    end;
+
     idx := win32TrackerIndex(windows_msg);
     if (idx = -1) then begin
         _win32_tracker[_win32_idx] := windows_msg;
