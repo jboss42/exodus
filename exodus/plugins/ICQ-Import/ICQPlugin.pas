@@ -24,10 +24,10 @@ unit ICQPlugin;
 interface
 
 uses
-    XMLParser, ExodusCOM_TLB, ComObj, ActiveX, ICQImport_TLB, StdVcl;
+    XMLParser, ExodusCOM_TLB, ComObj, ActiveX, StdVcl;
 
 type
-  TICQImportPlugin = class(TAutoObject, IICQImportPlugin, IExodusPlugin)
+  TICQImportPlugin = class(TAutoObject, IExodusPlugin)
   protected
     procedure Startup(const ExodusController: IExodusController); safecall;
     procedure Shutdown; safecall;
@@ -147,7 +147,4 @@ begin
     //
 end;
 
-initialization
-  TAutoObjectFactory.Create(ComServer, TICQImportPlugin, Class_ICQImportPlugin,
-    ciMultiInstance, tmApartment);
 end.

@@ -22,11 +22,8 @@ unit XMLParser;
 interface
 
 uses
-    Unicode,
-    XMLTag,
-    XMLUtils,
-    LibXMLParser,
-    SysUtils, Classes;
+    Unicode, XMLTag,
+    XMLUtils, LibXMLParser, SysUtils, Classes;
 
 type
     TXMLTagParser = class
@@ -35,7 +32,7 @@ type
         _dom_list: TList;
         function processTag(curtag: TXMLTag): TXMLTag;
     public
-        constructor Create;
+        constructor Create();
         destructor Destroy; override;
 
         procedure ParseString(buff, stream_tag: WideString);
@@ -198,6 +195,5 @@ begin
         Result := curtag.pTag;
     end;
 end;
-
 
 end.

@@ -11,8 +11,8 @@ unit AIMImport_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.7 $
-// File generated on 1/8/2003 10:17:49 AM from Type Library described below.
+// PASTLWTR : $Revision: 1.8 $
+// File generated on 2/9/2003 2:35:35 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\AIM-Import\AIMImport.tlb (1)
@@ -20,9 +20,9 @@ unit AIMImport_TLB;
 // LCID: 0
 // Helpfile: 
 // DepndLst: 
-//   (1) v1.0 ExodusCOM, (D:\src\exodus\runner\Exodus.exe)
-//   (2) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
-//   (3) v4.0 StdVCL, (C:\WINNT\System32\STDVCL40.DLL)
+//   (1) v1.0 ExodusCOM, (D:\src\exodus\runner\exodus.exe)
+//   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
+//   (3) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}

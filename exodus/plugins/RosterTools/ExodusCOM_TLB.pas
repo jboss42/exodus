@@ -11,18 +11,18 @@ unit ExodusCOM_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.6 $
-// File generated on 2/9/2003 2:33:26 PM from Type Library described below.
+// PASTLWTR : $Revision: 1.1 $
+// File generated on 2/9/2003 7:43:31 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\src\exodus\runner\exodus.exe (1)
+// Type Lib: D:\src\exodus\exodus\Exodus.exe (1)
 // LIBID: {219E0029-5710-4C9B-BE33-4C7F046D7792}
 // LCID: 0
 // Helpfile: 
 // DepndLst: 
 //   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
 // Parent TypeLibrary:
-//   (0) v1.0 ICQImport, (D:\src\exodus\exodus\plugins\ICQ-Import\ICQImport.tlb)
+//   (0) v1.0 RosterTools, (D:\src\exodus\exodus\plugins\RosterTools\RosterTools.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -414,6 +414,7 @@ type
     procedure RemoveBookmark(const JabberID: WideString); safecall;
     function Find(const JabberID: WideString): IExodusRosterItem; safecall;
     function Item(Index: Integer): IExodusRosterItem; safecall;
+    function Count: Integer; safecall;
   end;
 
 // *********************************************************************//
@@ -432,6 +433,7 @@ type
     procedure RemoveBookmark(const JabberID: WideString); dispid 5;
     function Find(const JabberID: WideString): IExodusRosterItem; dispid 6;
     function Item(Index: Integer): IExodusRosterItem; dispid 7;
+    function Count: Integer; dispid 8;
   end;
 
 // *********************************************************************//
