@@ -153,7 +153,9 @@ begin
     i := -1;
     if full <> '' then
         i := indexOf(full);
-    if i < 0 then begin
+
+    // only check for other resources if we didn't specify one
+    if ((i < 0) and (sresource = '')) then begin
         p := nil;
         i := indexOf(sjid);
         while (i < 0) do begin
