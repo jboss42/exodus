@@ -461,7 +461,7 @@ begin
         _ssl_err := 'Certificate does not match host: ' + Certificate.Subject.OneLine;
     end;
 
-    // XXX: Check issuer
+    // TODO: Check issuer of SSL cert?
 
     n := Now();
     if (n < Certificate.NotBefore) then begin

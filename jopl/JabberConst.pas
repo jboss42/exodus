@@ -64,6 +64,7 @@ const
     XMLNS_CLIENTCAPS = 'http://jabber.org/protocol/caps';
 
     XMLNS_STREAMERR  = 'urn:ietf:params:xml:ns:xmpp-stanzas';
+    XMLNS_XMPP_SASL  = 'urn:ietf:params:xml:ns:xmpp-sasl';
 
 var
     XP_MSGXDATA: TXPLite;

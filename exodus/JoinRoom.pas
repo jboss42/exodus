@@ -22,7 +22,7 @@ unit JoinRoom;
 interface
 
 uses
-    JabberID, 
+    JabberID, XMLTag,  
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, TntStdCtrls;
 
@@ -37,14 +37,24 @@ type
     txtServer: TTntComboBox;
     txtPassword: TTntEdit;
     lblPassword: TTntLabel;
+    optSpecify: TTntRadioButton;
+    optList: TTntRadioButton;
+    lstRooms: TTntListBox;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure optSpecifyClick(Sender: TObject);
   private
     { Private declarations }
+    _cb: integer;
+  published
+    procedure EntityCallback(event: string; tag: TXMLTag);
+
   public
     { Public declarations }
+    procedure populateServers();
   end;
 
 var
@@ -58,7 +68,7 @@ resourcestring
 
 implementation
 uses
-    Entity, EntityCache, ExUtils, GnuGetText, Jabber1, Session, Room;
+    Entity, EntityCache, ExUtils, GnuGetText, Jabber1, Session, Room, Unicode;
 {$R *.DFM}
 
 procedure StartJoinRoom;
@@ -74,9 +84,7 @@ begin
             txtNick.Text := MainSession.Prefs.getString('default_nick');
         if (txtNick.Text = '') then
             txtNick.Text := MainSession.Username;
-
-        txtServer.Items.Clear();
-        jEntityCache.getByFeature(FEAT_GROUPCHAT, txtServer.Items);
+        populateServers();
         Show;
     end;
 end;
@@ -94,18 +102,68 @@ begin
         if (txtNick.Text = '') then
             txtNick.Text := MainSession.Username;
 
-        txtServer.Items.Clear();
-        jEntityCache.getByFeature(FEAT_GROUPCHAT, txtServer.Items);
+        populateServers();
         Show;
     end;
+end;
+
+procedure TfrmJoinRoom.populateServers();
+var
+    l: TWidestringlist;
+    i: integer;
+    tmp: TJabberID;
+    ce: TJabberEntity;
+begin
+    txtServer.Items.Clear();
+    l := TWidestringlist.Create();
+
+    jEntityCache.getByFeature(FEAT_GROUPCHAT, l);
+
+    tmp := TJabberID.Create('');
+    for i := 0 to l.Count - 1 do begin
+        tmp.ParseJID(l[i]);
+        if (tmp.user = '') then begin
+            txtServer.Items.Add(l[i]);
+            ce := jEntityCache.getByJid(l[i]);
+            if (not ce.hasItems) then
+                ce.walk(MainSession);
+        end
+        else
+            lstRooms.Items.Add(l[i]);
+    end;
+    tmp.Free();
+    l.Free();
+end;
+
+procedure TfrmJoinRoom.EntityCallback(event: string; tag: TXMLTag);
+var
+    tmp: TJabberID;
+    ce: TJabberEntity;
+begin
+    tmp := TJabberID.Create(tag.getAttribute('from'));
+    if (tmp.user = '') then exit;
+
+    ce := jEntityCache.getByJid(tmp.full);
+    if (ce = nil) then exit;
+
+    if (ce.hasFeature(FEAT_GROUPCHAT)) then
+        lstRooms.Items.Add(tmp.full);
+    tmp.Free();
 end;
 
 procedure TfrmJoinRoom.frameButtons1btnOKClick(Sender: TObject);
 var
     pass: Widestring;
-    rjid: string;
+    rjid: Widestring;
+    tmp: TJabberID;
 begin
     // join this room
+    if (optList.Checked) then begin
+        tmp := TJabberID.Create(lstRooms.Items[lstRooms.ItemIndex]);
+        txtRoom.Text := tmp.user;
+        txtServer.Text := tmp.domain;
+    end;
+
     rjid := txtRoom.Text + '@' + txtServer.Text;
     if (not isValidJid(rjid)) then begin
         MessageDlg(sInvalidRoomJID, mtError, [mbOK], 0);
@@ -144,6 +202,20 @@ procedure TfrmJoinRoom.FormCreate(Sender: TObject);
 begin
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
+    _cb := MainSession.RegisterCallback(EntityCallback, '/session/entity/info');
+end;
+
+procedure TfrmJoinRoom.FormDestroy(Sender: TObject);
+begin
+    if (MainSession <> nil) then
+        MainSession.UnRegisterCallback(_cb);
+end;
+
+procedure TfrmJoinRoom.optSpecifyClick(Sender: TObject);
+begin
+    txtServer.Enabled := optSpecify.Checked;
+    txtRoom.Enabled := optSpecify.Checked;
+    lstRooms.Enabled := optList.Checked;
 end;
 
 end.
