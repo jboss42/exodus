@@ -23,7 +23,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, TntExtCtrls;
+  Dialogs, StdCtrls, ComCtrls, ExtCtrls, TntStdCtrls, TntExtCtrls;
 
 type
   TfrmPrefPanel = class(TForm)
@@ -45,16 +45,54 @@ implementation
 {$R *.dfm}
 
 uses
-    GnuGetText, ExUtils;
+    Session, PrefFile, PrefController, GnuGetText, ExUtils;
 
 procedure TfrmPrefPanel.LoadPrefs();
+var
+    s: TPrefState;
+    e, v, bval: boolean;
+    ival: integer;
+    p, sval: Widestring;
+    c: TControl;
+    i: integer;
 begin
-    //
+    // auto-load prefs based on controls and their types.
+    for i := 0 to Self.ControlCount - 1 do begin
+        c := Self.Controls[i];
+        p := MainSession.Prefs.getPref(c.name);
+        if (p = '') then continue;
+
+        s := getPrefState(p);
+
+        // XXX: lots more controls need to go here.
+        if (c.inheritsFrom(TTntCheckBox)) then begin
+            bval := MainSession.Prefs.getBool(p);
+            TCheckBox(c).Checked := bval;
+        end
+        else if (c.inheritsFrom(TUpDown)) then begin
+            ival := MainSession.Prefs.getInt(p);
+            TUpDown(c).Position := ival;
+        end
+        else if (c.inheritsFrom(TTntEdit)) then begin
+            sval := MainSession.Prefs.getString(p);
+            TTntEdit(c).Text := sval;
+        end;
+
+        // Make sure to set state for this control
+        if (s = psReadOnly) then begin
+            c.enabled := false;
+            if (c.inheritsFrom(TTntEdit)) then
+                TTntEdit(c).ReadOnly := true;
+        end
+        else if (s = psInvisible) then
+            c.visible := false;
+
+    end;
 end;
 
 procedure TfrmPrefPanel.SavePrefs();
 begin
-    //
+    // XXX: save prefs using controls array
 end;
 
 procedure TfrmPrefPanel.FormCreate(Sender: TObject);

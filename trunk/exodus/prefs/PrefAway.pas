@@ -34,8 +34,8 @@ type
     spnXA: TUpDown;
     Label2: TTntLabel;
     Label3: TTntLabel;
-    Label4: TTntLabel;
-    Label9: TTntLabel;
+    lblAwayStatus: TTntLabel;
+    lblXAStatus: TTntLabel;
     chkAutoAway: TTntCheckBox;
     txtAway: TTntEdit;
     txtXA: TTntEdit;
@@ -66,6 +66,8 @@ uses
 
 procedure TfrmPrefAway.LoadPrefs();
 begin
+    inherited;
+    (*
     with MainSession.Prefs do begin
         // Autoaway options
         chkAutoAway.Checked := getBool('auto_away');
@@ -76,10 +78,11 @@ begin
         spnAway.Position := getInt('away_time');
         spnXA.Position := getInt('xa_time');
         spnDisconnect.Position := getInt('disconnect_time');
-        
+
         txtAway.Text := getString('away_status');
         txtXA.Text := getString('xa_status');
     end;
+    *)
 end;
 
 procedure TfrmPrefAway.SavePrefs();
@@ -108,7 +111,7 @@ end;
 
 procedure TfrmPrefAway.DoEnables();
 var
-    e, xa, dis: boolean;
+    aro, xro, e, xa, dis: boolean;
 begin
     e := chkAutoAway.Checked;
     if (e) then begin
@@ -120,6 +123,9 @@ begin
         dis := false;
     end;
 
+    aro := txtAway.ReadOnly;
+    xro := txtXA.ReadOnly;
+
     chkAAReducePri.Enabled := e;
     chkAutoXA.Enabled := e;
     chkAutoDisconnect.Enabled := e;
@@ -127,8 +133,8 @@ begin
     txtAwayTime.Enabled := e;
     txtXATime.Enabled := xa;
     txtDisconnectTime.Enabled := dis;
-    txtAway.Enabled := e;
-    txtXA.Enabled := xa;
+    txtAway.Enabled := e and (not aro);
+    txtXA.Enabled := xa and (not xro);
     spnAway.Enabled := e;
     spnXA.Enabled := xa;
     spnDisconnect.Enabled := dis;

@@ -179,6 +179,9 @@ end;
 
         procedure Save;
         procedure ServerPrefsCallback(event: string; tag: TXMLTag);
+
+        function getDynamicDefault(pkey: Widestring): Widestring;
+
     public
         constructor Create(filename: Widestring);
         Destructor Destroy; override;
@@ -196,6 +199,9 @@ end;
         function getAllPresence(): TWidestringList;
         function getPresence(pkey: Widestring): TJabberCustomPres;
         function getPresIndex(idx: integer): TJabberCustomPres;
+
+        function getControl(pkey: Widestring): Widestring;
+        function getPref(cname: Widestring): Widestring;
 
         procedure setString(pkey, pvalue: Widestring; server_side: TPrefKind = pkClient);
         procedure setInt(pkey: Widestring; pvalue: integer; server_side: TPrefKind = pkClient);
@@ -247,6 +253,7 @@ const
     sIdleXA = 'XA as a result of idle.';
 
 
+function getPrefState(pkey: Widestring): TPrefState;
 function getMyDocs: string;
 function getUserDir: string;
 
@@ -275,7 +282,8 @@ var
     task_dir: integer;
 
 
-function getState(pkey: WideString): TPrefState;
+{---------------------------------------}
+function getPrefState(pkey: WideString): TPrefState;
 begin
     Result :=  s_brand_file.getState(pkey);
     if (Result = psUnknown) then
@@ -528,7 +536,7 @@ begin
 
     getDefaultPos();
 
-    {$ifdef EXODUS}
+    {$ifdef Exodus}
     // Write out the current prefs file..
     // this is so the un-installer can remove the prefs
     // when it does it's thing.
@@ -592,12 +600,16 @@ begin
         uf := _server_file;
 
     bv := s_brand_file.getString(pkey);
-    s := getState(pkey);
+    s := getPrefState(pkey);
     if ((s = psReadOnly) or (s = psInvisible)) then begin
         if (bv <> '') then
             Result := bv
         else
             Result := s_default_file.getString(pkey);
+
+        if (Result = '') then
+            Result := Self.getDynamicDefault(pkey);
+
         exit;
     end;
 
@@ -609,8 +621,13 @@ begin
     else
         Result := s_default_file.getString(pkey);
 
-    if (Result <> '') then exit;
+    if (Result = '') then
+        Result := getDynamicDefault(pkey);
+end;
 
+{---------------------------------------}
+function TPrefController.getDynamicDefault(pkey: Widestring): Widestring;
+begin
     // set the defaults for the pref controller
     if pkey = 'away_status' then
         result := _(sIdleAway)
@@ -825,6 +842,20 @@ procedure TPrefController.setPresence(pvalue: TJabberCustomPres);
 begin
     _pref_file.setPresence(pvalue);
     Save();
+end;
+
+{---------------------------------------}
+function TPrefController.getControl(pkey: Widestring): Widestring;
+begin
+    // get the primary control for this pref
+    Result := s_default_file.getControl(pkey);
+end;
+
+{---------------------------------------}
+function TPrefController.getPref(cname: Widestring): Widestring;
+begin
+    // get the preference for this control name.. always from default.
+    Result := s_default_file.getPref(cname);
 end;
 
 {---------------------------------------

@@ -34,7 +34,8 @@ type
 
     TPrefFile = class
     private
-        _node     : TXMLTag;
+        _root     : TXMLTag;
+        _pref     : TXMLTag;
         _pres     : TXMLTag;
         _pos      : TXMLTag;
         _prof     : TXMLTag;
@@ -57,11 +58,11 @@ type
         function getString(pkey: Widestring): Widestring;
 
         function getState(pkey: Widestring): TPrefState;
-        function getControl(pkey: Widestring): string;
+        function getControl(pkey: Widestring): Widestring;
         function getPref(control: Widestring): Widestring;
 
         procedure setString(pkey: Widestring; val: Widestring);
-{$ifdef EXODUS}
+{$ifdef Exodus}
         procedure setStringlist(pkey: Widestring; pvalue: TWideStrings); overload;
         procedure setStringlist(pkey: Widestring; pvalue: TTntStrings); overload;
         function fillStringlist(pkey: Widestring; sl: TWideStrings): boolean; overload;
@@ -93,20 +94,20 @@ uses
     SysUtils, XMLParser, Session;
 
 const
-    // DO NOT LOCALIZE!
-    PRES    = 'presii';
-    ROOT    = 'exodus';
-    VER     = 'version';
-    VER_NUM = '0.9';
-    VALUE   = 'value';
-    POS     = 'positions';
-    PROF    = 'profiles';
+    PRES    = 'presii';         // DO NOT LOCALIZE
+    ROOT    = 'exodus';         // DO NOT LOCALIZE
+    VER     = 'version';        // DO NOT LOCALIZE
+    VER_NUM = '0.9';            // DO NOT LOCALIZE
+    VALUE   = 'value';          // DO NOT LOCALIZE
+    POS     = 'positions';      // DO NOT LOCALIZE
+    PROF    = 'profiles';       // DO NOT LOCALIZE
+    PREF    = 'prefs';          // DO NOT LOCALIZE
 
 {---------------------------------------}
 constructor TPrefFile.Create(tag: TXMLTag);
 begin
     _filename := '';
-    _node := TXMLTag.Create(tag);
+    _root := TXMLTag.Create(tag);
     init();
 end;
 
@@ -122,7 +123,7 @@ begin
         if (fileExists(_filename)) then begin
             parser.ParseFile(_filename);
             if (parser.Count > 0) then begin
-                _node := parser.popTag();
+                _root := parser.popTag();
             end
         end
     except
@@ -150,7 +151,7 @@ begin
         parser.ParseString(sl.Text, '');
         sl.Free();
         if (parser.Count > 0) then begin
-            _node := parser.popTag();
+            _root := parser.popTag();
         end
     except
     end;
@@ -170,56 +171,66 @@ begin
     _dirty := false;
     _need_default_pres := false;
     _ctrlHash := TWideStringList.Create();
-    _ctrlHash.Sorted := true;
-    _ctrlHash.Duplicates := dupIgnore;
+    //_ctrlHash.Sorted := true;
+    //_ctrlHash.Duplicates := dupIgnore;
 
-    if (_node = nil) then begin
+    if (_root = nil) then begin
         // nothing there yet.
-        _node := TXmlTag.Create(ROOT);
-        _node.setAttribute(VER, VER_NUM);
-        _pres := _node.AddTag(PRES);
-        _pos  := _node.AddTag(POS);
-        _prof := _node.AddTag(PROF);
+        _root := TXmlTag.Create(ROOT);
+        _root.setAttribute(VER, VER_NUM);
+        _pref := _root.AddTag(PREF);
+        _pres := _root.AddTag(PRES);
+        _pos  := _root.AddTag(POS);
+        _prof := _root.AddTag(PROF);
         exit;
     end;
 
-    _pres := _node.GetFirstTag(PRES);
+    _pref := _root.GetFirstTag(PREF);
+    if (_pref = nil) then
+        _pref := _root.AddTag(PREF);
+
+    _pres := _root.GetFirstTag(PRES);
     if (_pres = nil) then
-        _pres := _node.AddTag(PRES);
+        _pres := _root.AddTag(PRES);
 
-    _pos := _node.GetFirstTag(POS);
+    _pos := _root.GetFirstTag(POS);
     if (_pos = nil) then
-        _pos := _node.AddTag(POS);
+        _pos := _root.AddTag(POS);
 
-    _prof := _node.GetFirstTag(PROF);
+    _prof := _root.GetFirstTag(PROF);
     if (_prof = nil) then
-        _prof := _node.AddTag(PROF);
+        _prof := _root.AddTag(PROF);
 
     // If the format changes again, also check VER_NUM.
-    if (_node.getAttribute(VER) = '') then begin
+    if (_root.getAttribute(VER) = '') then begin
         _dirty := true;
-        _node.Name := ROOT;
-        _node.setAttribute(VER, VER_NUM);
+        _root.Name := ROOT;
+        _root.setAttribute(VER, VER_NUM);
 
         _need_default_pres := true;
         // old-style prefs.  convert to new style, so that save() will
         // do the right thing.
-        s := _node.ChildTags();
-        for i:= s.Count - 1 downto 0 do begin
+        s := _root.ChildTags();
+        for i := 0 to s.count - 1 do begin
             t := s.Tags[i];
             if (t.Name = 'presence') then begin
                 _pres.AddTag(TXMLTag.Create(t));
-                _node.RemoveTag(t);
+                _root.RemoveTag(t);
             end
             else if (t.Name = 'custom_pres') then begin // older dailies
                 _need_default_pres := false;
-                _node.RemoveTag(t);
+                _root.RemoveTag(t);
             end
             else if (t.Name = 'profile') then begin
                 _prof.AddTag(TXMLTag.Create(t));
-                _node.RemoveTag(t);
+                _root.RemoveTag(t);
             end
-            else if ((t.Name <> PRES) and (t.Name <> POS) and (t.Name <> PROF)) then begin  // in case there was a custom_pres
+            else if (
+                (t.Name <> PRES) and
+                (t.Name <> POS) and
+                (t.Name <> PROF) and
+                (t.Name <> PREF)) then begin  // in case there was a custom_pres
+
                 // if there are s's inside, leave them.  otherwise, pull
                 // the cdata out into the value attrib
                 fs := t.GetFirstTag('s');
@@ -227,25 +238,27 @@ begin
                     setString(t.Name, t.Data);
                     t.ClearCData();
                 end;
+                _pref.AddTag(TXMLTag.Create(t));
+                _root.RemoveTag(t);
             end;
         end;
         s.Free();
         save();
     end;
 
-    s := _node.ChildTags();
+    s := _pref.ChildTags();
     for i := 0 to s.Count - 1 do begin
         t := s.Tags[i];
-        if (t.Name = PRES) then continue;
 
         c := t.GetAttribute('control');
         if (c <> '') then begin
+            _ctrlHash.Add(c);
             _ctrlHash.Values[c] := t.Name;
         end;
 
         cs := t.QueryTags('control');
         for j := 0 to cs.Count - 1 do begin
-            c := cs.Tags[i].GetAttribute('name');
+            c := cs.Tags[j].GetAttribute('name');
             if (c <> '') then begin
                 assert(_ctrlHash.IndexOf(c) = -1);
                 _ctrlHash.Add(c);
@@ -260,8 +273,8 @@ end;
 {---------------------------------------}
 destructor TPrefFile.Destroy;
 begin
-    if _node <> nil then
-        _node.Free();
+    if _root <> nil then
+        _root.Free();
     _ctrlHash.Free();
 end;
 
@@ -273,7 +286,7 @@ begin
     if ((_filename = '') or (not _dirty)) then exit;
 
     fs := TStringList.Create;
-    fs.Text := UTF8Encode(_node.xml);
+    fs.Text := UTF8Encode(_root.xml);
 
     try
         fs.SaveToFile(_filename);
@@ -290,7 +303,7 @@ function TPrefFile.getString(pkey: Widestring): Widestring;
 var
     t: TXMLTag;
 begin
-    t := _node.GetFirstTag(pkey);
+    t := _pref.GetFirstTag(pkey);
     if (t = nil) then
         Result := ''
     else
@@ -307,7 +320,7 @@ begin
     sl.Clear();
     Result := false;
 
-    t := _node.GetFirstTag(pkey);
+    t := _pref.GetFirstTag(pkey);
     if (t = nil) then exit;
 
     s := t.QueryTags('s');
@@ -325,9 +338,9 @@ var
     t: TXMLTag;
     s: Widestring;
 begin
-    t := _node.GetFirstTag(pkey);
+    t := _pref.GetFirstTag(pkey);
     if (t = nil) then begin
-        Result := psReadWrite;
+        Result := psUnknown;
         exit;
     end;
 
@@ -343,11 +356,11 @@ begin
 end;
 
 {---------------------------------------}
-function TPrefFile.getControl(pkey: Widestring): string;
+function TPrefFile.getControl(pkey: Widestring): Widestring;
 var
     t: TXMLTag;
 begin
-    t := _node.GetFirstTag(pkey);
+    t := _pref.GetFirstTag(pkey);
     if (t = nil) then begin
         Result := '';
         exit;
@@ -362,7 +375,6 @@ begin
     Result := _ctrlHash.Values[control];
 end;
 
-
 {---------------------------------------}
 procedure TPrefFile.setString(pkey: Widestring; val: Widestring);
 var
@@ -370,14 +382,14 @@ var
 begin
     _dirty := true;
 
-    t := _node.GetFirstTag(pkey);
+    t := _pref.GetFirstTag(pkey);
     if ((t = nil) and (val <> '')) then
-        t := _node.AddTag(pkey);
+        t := _pref.AddTag(pkey);
 
     if (val <> '') then
         t.setAttribute(VALUE, val)
     else if (t <> nil) then
-        _node.removeTag(t);
+        _pref.removeTag(t);
 end;
 
 {---------------------------------------}
@@ -391,9 +403,9 @@ begin
 
     // setup the stringlist in it's own parent..
     // with multiple <s> tags for each value.
-    t := _node.GetFirstTag(pkey);
+    t := _pref.GetFirstTag(pkey);
     if (t = nil) then
-        t := _node.AddTag(pkey);
+        t := _pref.AddTag(pkey);
 
     // clear out the old
     s := t.QueryTags('s');
@@ -408,7 +420,7 @@ begin
     end;
 end;
 
-{$ifdef EXODUS}
+{$ifdef Exodus}
 {---------------------------------------}
 function TPrefFile.fillStringlist(pkey: Widestring; sl: TTntStrings): boolean;
 var
@@ -419,7 +431,7 @@ begin
     sl.Clear();
     Result := false;
 
-    t := _node.GetFirstTag(pkey);
+    t := _pref.GetFirstTag(pkey);
     if (t = nil) then exit;
 
     s := t.QueryTags('s');
@@ -441,9 +453,9 @@ begin
 
     // setup the stringlist in it's own parent..
     // with multiple <s> tags for each value.
-    t := _node.GetFirstTag(pkey);
+    t := _pref.GetFirstTag(pkey);
     if (t = nil) then
-        t := _node.AddTag(pkey);
+        t := _pref.AddTag(pkey);
 
     // clear out the old
     s := t.QueryTags('s');
