@@ -1248,12 +1248,14 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.lblSubjectURLClick(Sender: TObject);
 var
-    s: WideString;
+    o, s: WideString;
 begin
     // Change the subject
     s := lblSubject.Caption;
+    o := s;
     if InputQueryW(sRoomSubjPrompt, sRoomNewSubj, s) then begin
-        changeSubject(s);
+        if (o <> s) then
+            changeSubject(s);
     end;
 end;
 
