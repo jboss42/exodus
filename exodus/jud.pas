@@ -61,6 +61,7 @@ type
     N1: TTntMenuItem;
     popProfile: TTntMenuItem;
     popAdd: TTntMenuItem;
+    lblCount: TTntLabel;
     procedure btnCloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnNextClick(Sender: TObject);
@@ -82,6 +83,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnCancelClick(Sender: TObject);
     procedure btnBackClick(Sender: TObject);
+    procedure FormResize(Sender: TObject);
   private
     { Private declarations }
     virtlist: TObjectList;
@@ -114,6 +116,7 @@ const
     sJUDTimeout = 'The search timed out.';
     sJUDEmpty = 'No Results were found.';
     sJUDAdd = 'Add Contacts';
+    sJUDCount = '%d items found.';
 
 function StartSearch(sjid: string): TfrmJUD;
 function ItemCompare(Item1, Item2: Pointer): integer;
@@ -553,6 +556,7 @@ begin
             cur_state := 'xadd';
         end;
 
+        lblCount.Caption := WideFormat(_(sJUDCount), [virtlist.count]);
         lstContacts.Items.Count := virtlist.Count;
 
         if (clist <> nil) then clist.Free();
@@ -858,7 +862,7 @@ begin
     end;
 end;
 
-
+{---------------------------------------}
 procedure TfrmJUD.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   inherited;
@@ -867,6 +871,7 @@ begin
 end;
 
 
+{---------------------------------------}
 procedure TfrmJud.btnCancelClick(Sender: TObject);
 begin
   inherited;
@@ -881,6 +886,7 @@ begin
     Self.Close();
 end;
 
+{---------------------------------------}
 procedure TfrmJud.btnBackClick(Sender: TObject);
 begin
   inherited;
@@ -903,6 +909,13 @@ begin
         cur_state := 'xsearch';
         Tabs.ActivePage := TabSheet3;
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmJud.FormResize(Sender: TObject);
+begin
+  inherited;
+    lblCount.Left := Self.ClientWidth - lblCount.Width - 8;
 end;
 
 end.

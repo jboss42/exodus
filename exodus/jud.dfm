@@ -7,6 +7,7 @@ inherited frmJud: TfrmJud
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
@@ -50,7 +51,7 @@ inherited frmJud: TfrmJud
   end
   inherited Tabs: TPageControl
     Width = 409
-    ActivePage = TabSheet3
+    ActivePage = TabSheet4
     inherited TabSheet1: TTabSheet
       object lblSelect: TTntLabel
         Left = 0
@@ -132,14 +133,14 @@ inherited frmJud: TfrmJud
         BorderWidth = 2
         TabOrder = 0
         object Label3: TTntLabel
-          Left = 6
-          Top = 5
+          Left = 2
+          Top = 2
           Width = 128
-          Height = 13
+          Height = 15
           Caption = 'Add Contacts to this group:'
         end
         object lblAddGrp: TTntLabel
-          Left = 6
+          Left = 2
           Top = 43
           Width = 83
           Height = 13
@@ -148,6 +149,14 @@ inherited frmJud: TfrmJud
           Color = clBtnFace
           ParentColor = False
           OnClick = lblAddGrpClick
+        end
+        object lblCount: TTntLabel
+          Left = 322
+          Top = 2
+          Width = 65
+          Height = 13
+          Alignment = taRightJustify
+          Caption = 'N items found'
         end
         object cboGroup: TTntComboBox
           Left = 5
