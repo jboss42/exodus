@@ -435,10 +435,16 @@ end;
 
 {---------------------------------------}
 procedure AssignDefaultFont(font: TFont);
+var
+    cs: integer;
 begin
     with MainSession.Prefs do begin
         Font.Name := getString('font_name');
         Font.Size := getInt('font_size');
+        cs := getInt('font_charset');
+        if cs <> 0 then
+            Font.Charset := cs;
+
         Font.Style := [];
         // Color := TColor(getInt('color_bg'));
         Font.Color := TColor(getInt('font_color'));

@@ -329,6 +329,9 @@ begin
             Font.Name := getString('font_name');
             Font.Size := getInt('font_size');
             Font.Color := TColor(getInt('font_color'));
+            Font.Charset := getInt('font_charset');
+            if (Font.Charset = 0) then Font.Charset := 1;
+
             Font.Style := [];
             if (getBool('font_bold')) then Font.Style := Font.Style + [fsBold];
             if (getBool('font_italic')) then Font.Style := Font.Style + [fsItalic];
@@ -343,6 +346,8 @@ begin
             Font.Color := TColor(getInt('roster_font_color'));
             Font.Name := getString('roster_font_name');
             Font.Size := getInt('roster_font_size');
+            Font.Charset := getInt('roster_font_charset');
+            if (Font.Charset = 0) then Font.Charset := 1;
             Font.Style := [];
             end;
         lblColor.Caption := sRosterFontLabel;
@@ -484,19 +489,6 @@ begin
 
         // S10n prefs
         setInt('s10n_auto_accept', optIncomingS10n.ItemIndex);
-
-        // Font, Color prefs
-        {
-        setString('font_name', pnlFont.Font.Name);
-        setInt('font_size', pnlFont.Font.Size);
-        setInt('font_color', integer(pnlFont.Font.Color));
-        setBool('font_bold', (fsBold in pnlFont.Font.Style));
-        setBool('font_underline', (fsUnderline in pnlFont.Font.Style));
-        setBool('font_italic', (fsItalic in pnlFont.Font.Style));
-        setInt('color_bg', integer(pnlBGColor.Color));
-        setInt('color_me', integer(pnlMyColor.Font.Color));
-        setInt('color_other', integer(pnlOtherColor.Font.Color));
-        }
 
         // System Prefs
         setBool('auto_updates', chkAutoUpdate.Checked);
@@ -1060,6 +1052,7 @@ begin
 
             with MainSession.prefs do begin
                 setString(_clr_font + '_name', Font.Name);
+                setInt(_clr_font + '_charset', Font.Charset);
                 setInt(_clr_font + '_size', Font.Size);
                 setBool(_clr_font + '_bold', (fsBold in Font.Style));
                 setBool(_clr_font + '_italic', (fsItalic in Font.Style));
