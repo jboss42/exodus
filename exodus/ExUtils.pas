@@ -22,7 +22,7 @@ unit ExUtils;
 interface
 uses
     Unicode, ExRichEdit, RichEdit2, Signals, XMLTag,
-    TntStdCtrls,
+    TntStdCtrls, TntClasses, 
     JabberMsg, Graphics, Controls, StdCtrls, Forms, Classes, SysUtils, Windows;
 
 const
@@ -92,6 +92,10 @@ function CanvasTextWidthW(Canvas: TCanvas; const Text: WideString): integer;
 
 procedure removeSpecialGroups(grps: TStrings); overload;
 procedure removeSpecialGroups(grps: TWidestrings); overload;
+procedure removeSpecialGroups(grps: TTntStrings); overload;
+
+procedure AssignTntStrings(sl: TWidestringlist; tnt: TTntStrings);
+
 
 procedure jabberSendMsg(to_jid: Widestring; mtag, xtags: TXMLTag;
     body, subject: Widestring); overload;
@@ -822,6 +826,25 @@ begin
 end;
 
 {---------------------------------------}
+procedure removeSpecialGroups(grps: TTntStrings);
+var
+    i: integer;
+begin
+    i := grps.IndexOf(sGrpBookmarks);
+    if (i >= 0) then grps.Delete(i);
+
+    i := grps.IndexOf(sGrpUnfiled);
+    if (i >= 0) then grps.Delete(i);
+
+    i := grps.IndexOf(sGrpOffline);
+    if (i >= 0) then grps.Delete(i);
+
+    i := grps.IndexOf(MainSession.Prefs.getString('roster_transport_grp'));
+    if (i >= 0) then grps.Delete(i);
+end;
+
+
+{---------------------------------------}
 procedure jabberSendMsg(to_jid: Widestring; mtag: TXMLTag;
     xtags, body, subject: Widestring);
 var
@@ -949,6 +972,16 @@ begin
 
     f.SetBounds(l,t,w,h);
 end;
+
+procedure AssignTntStrings(sl: TWidestringlist; tnt: TTntStrings);
+var
+    i: integer;
+begin
+    tnt.Clear();
+    for i := 0 to sl.Count - 1 do
+        tnt.Add(sl[i])
+end;
+
 
 {---------------------------------------}
 {---------------------------------------}

@@ -41,6 +41,7 @@ type
     txtXA: TTntEdit;
     chkAAReducePri: TTntCheckBox;
     StaticText4: TTntPanel;
+    TntLabel1: TTntLabel;
   private
     { Private declarations }
   public

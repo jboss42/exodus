@@ -86,6 +86,8 @@ type
     Memo1: TTntMemo;
     StaticText4: TTntPanel;
     TntPanel1: TTntPanel;
+    TntLabel1: TTntLabel;
+    TntLabel2: TTntLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);

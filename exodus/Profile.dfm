@@ -20,14 +20,14 @@ object frmProfile: TfrmProfile
   object Splitter1: TSplitter
     Left = 121
     Top = 0
-    Height = 288
+    Height = 293
   end
   object PageControl1: TTntPageControl
     Left = 124
     Top = 0
     Width = 330
-    Height = 288
-    ActivePage = TabSheet1
+    Height = 293
+    ActivePage = TabSheet2
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 0
@@ -233,7 +233,7 @@ object frmProfile: TfrmProfile
       end
       object Panel3: TPanel
         Left = 0
-        Top = 216
+        Top = 221
         Width = 322
         Height = 41
         Align = alBottom
@@ -1141,7 +1141,7 @@ object frmProfile: TfrmProfile
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 288
+    Top = 293
     Width = 454
     Height = 34
     Align = alBottom
@@ -1169,7 +1169,7 @@ object frmProfile: TfrmProfile
     Left = 0
     Top = 0
     Width = 121
-    Height = 288
+    Height = 293
     Align = alLeft
     Indent = 19
     ReadOnly = True

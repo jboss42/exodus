@@ -40,6 +40,7 @@ type
     chkNotifyActiveWindow: TTntCheckBox;
     chkFront: TTntCheckBox;
     StaticText4: TTntPanel;
+    TntLabel1: TTntLabel;
     procedure lblConfigSoundsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure chkNotifyClick(Sender: TObject);
@@ -90,17 +91,18 @@ begin
 
     _loading := true;
 
-    chkNotify.Items.Strings[0]  := sSoundOnline;
-    chkNotify.Items.Strings[1]  := sSoundOffline;
-    chkNotify.Items.Strings[2]  := sSoundNewchat;
-    chkNotify.Items.Strings[3]  := sSoundNormalmsg;
-    chkNotify.Items.Strings[4]  := sSoundS10n;
-    chkNotify.Items.Strings[5]  := sSoundInvite;
-    chkNotify.Items.Strings[6]  := sSoundKeyword;
-    chkNotify.Items.Strings[7]  := sSoundChatactivity;
-    chkNotify.Items.Strings[8]  := sSoundRoomactivity;
-    chkNotify.Items.Strings[9]  := sSoundOOB;
-    chkNotify.Items.Strings[10] := sSoundAutoResponse;
+    chkNotify.Items.Clear();
+    chkNotify.Items.Add(sSoundOnline);
+    chkNotify.Items.Add(sSoundOffline);
+    chkNotify.Items.Add(sSoundNewchat);
+    chkNotify.Items.Add(sSoundNormalmsg);
+    chkNotify.Items.Add(sSoundS10n);
+    chkNotify.Items.Add(sSoundInvite);
+    chkNotify.Items.Add(sSoundKeyword);
+    chkNotify.Items.Add(sSoundChatactivity);
+    chkNotify.Items.Add(sSoundRoomactivity);
+    chkNotify.Items.Add(sSoundOOB);
+    chkNotify.Items.Add(sSoundAutoResponse);
 
     with MainSession.Prefs do begin
         // Notify Options
@@ -131,8 +133,11 @@ begin
         for i := 0 to NUM_NOTIFIES - 1 do
             chkNotify.Checked[i] := (_notify[i] > 0);
 
+        {
+        chkNotify.Invalidate();
         chkNotify.ItemIndex := 0;
         chkNotifyClick(Self);
+        }
     end;
 
     _loading := false;
@@ -227,6 +232,7 @@ var
 begin
     // update the current notify selection
     if (_no_notify_update) then exit;
+
     i := chkNotify.ItemIndex;
 
     if (i < 0) then exit;
@@ -242,8 +248,8 @@ end;
 procedure TfrmPrefNotify.chkSoundClick(Sender: TObject);
 begin
   inherited;
-
     if (_loading) then exit;
+
     if (chkSound.Checked) then
         MessageDlg(sSoundSetup, mtInformation, [mbOK], 0);
 end;

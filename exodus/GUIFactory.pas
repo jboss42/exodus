@@ -124,7 +124,7 @@ begin
             chkSubscribe.Checked := tmp_b;
             chkSubscribe.Enabled := tmp_b;
             boxAdd.Enabled := tmp_b;
-            cboGroup.Items.Assign(MainSession.Roster.GrpList);
+            AssignTntStrings(MainSession.Roster.GrpList, cboGroup.Items);
             removeSpecialGroups(cboGroup.Items);
             if (tmp_b) then begin
                 txtNickname.Text := tmp_jid.user;

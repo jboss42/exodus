@@ -47,6 +47,7 @@ type
     txtChatMemory: TTntEdit;
     spnChatMemory: TTntUpDown;
     StaticText4: TTntPanel;
+    TntLabel1: TTntLabel;
     procedure chkRosterAlphaClick(Sender: TObject);
     procedure chkToastAlphaClick(Sender: TObject);
     procedure trkRosterAlphaChange(Sender: TObject);

@@ -92,7 +92,7 @@ begin
   inherited;
 
     // Fill up the groups drop down
-    cboGroup.Items.Assign(MainSession.Roster.GrpList);
+    AssignTntStrings(MainSession.Roster.GrpList, cboGroup.Items);
     removeSpecialGroups(cboGroup.Items);
     cboGroup.ItemIndex := 0;
     cboGroup.Text := MainSession.Prefs.getString('roster_default');

@@ -197,7 +197,7 @@ begin
     cur_sort := -1;
     cur_dir := true;
     field_set := TStringList.Create();
-    cboGroup.Items.Assign(MainSession.Roster.GrpList);
+    AssignTntStrings(MainSession.Roster.GrpList, cboGroup.Items);
     removeSpecialGroups(cboGroup.Items);
     dflt_grp := MainSession.Prefs.getString('roster_default');
 
@@ -721,7 +721,7 @@ begin
     ngrp := sDefaultGroup;
     if InputQueryW(sNewGroup, sNewGroupPrompt, ngrp) then begin
         MainSession.Roster.GrpList.Add(ngrp);
-        cboGroup.Items.Assign(MainSession.Roster.GrpList);
+        AssignTntStrings(MainSession.Roster.GrpList, cboGroup.Items);
         removeSpecialGroups(cboGroup.Items);
     end;
 end;

@@ -601,6 +601,7 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Subscriptions'
+      Color = clWindow
       ParentColor = False
       Transparent = False
       WordWrap = True
@@ -794,6 +795,7 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Roster'
+      Color = clWindow
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -2808,6 +2810,7 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Groups'
+      Color = clWindow
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -2989,7 +2992,7 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 369
     Height = 393
-    ActivePage = tbsKeywords
+    ActivePage = tbsBlockList
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
@@ -3041,16 +3044,28 @@ object frmPrefs: TfrmPrefs
         Height = 24
         Align = alTop
         BevelOuter = bvLowered
-        BorderWidth = 1
-        Caption = 'Keyword Notification'
-        Color = clMenuHighlight
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clCaptionText
-        Font.Height = -13
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
+        ParentColor = True
         TabOrder = 2
+        object TntLabel1: TTntLabel
+          Left = 1
+          Top = 1
+          Width = 359
+          Height = 22
+          Align = alClient
+          Alignment = taCenter
+          AutoSize = False
+          Caption = 'Notification Keywords'
+          Color = clHighlight
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWhite
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+          Transparent = False
+          Layout = tlCenter
+        end
       end
     end
     object tbsBlockList: TTntTabSheet
@@ -3087,16 +3102,28 @@ object frmPrefs: TfrmPrefs
         Height = 24
         Align = alTop
         BevelOuter = bvLowered
-        BorderWidth = 1
-        Caption = 'Blocked Contacts'
-        Color = clMenuHighlight
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clCaptionText
-        Font.Height = -13
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentFont = False
+        ParentColor = True
         TabOrder = 2
+        object TntLabel2: TTntLabel
+          Left = 1
+          Top = 1
+          Width = 359
+          Height = 22
+          Align = alClient
+          Alignment = taCenter
+          AutoSize = False
+          Caption = 'Blocked Contacts'
+          Color = clHighlight
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clWhite
+          Font.Height = -13
+          Font.Name = 'Arial'
+          Font.Style = [fsBold]
+          ParentColor = False
+          ParentFont = False
+          Transparent = False
+          Layout = tlCenter
+        end
       end
     end
   end
