@@ -716,15 +716,18 @@ begin
     // Show the emoticons form
     GetCursorPos(cp);
 
-    if (Self.Docked) then
-        t := frmJabber.Top + frmJabber.ClientHeight - 10
-    else
+    if (Self.Docked) then begin
+        t := frmJabber.Top + frmJabber.ClientHeight - 10;
+        frmEmoticons.Left := frmJabber.Left + 20;
+        end
+    else begin
         t := Self.Top + Self.ClientHeight - 10;
+        frmEmoticons.Left := Self.Left + 20;
+        end;
 
     if ((t + frmEmoticons.Height) > Screen.Height) then
         t := Screen.Height - frmEmoticons.Height;
 
-    frmEmoticons.Left := cp.x;
     frmEmoticons.Top := t;
     frmEmoticons.ChatWindow := Self;
     frmEmoticons.Show;

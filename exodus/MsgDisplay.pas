@@ -205,9 +205,7 @@ begin
     y := frmJabber.imgYahooEmoticons;
     msn := frmJabber.imgMSNEmoticons;
 
-    // build up the regex expression as we go..
-    // AddEmot returns the proper string
-    //e := '(.*)((\([a-zA-Z0-9@{}%&~?^]+\))|([:;BoOxX][^\t ]+)|(=;))([ \t\r\n]|$)';
+    // This is a "meta-regex" that should match everything
     e := '(.*)((\([a-zA-Z0-9@{}%&~?^]+\))|([:;BoOxX][^\t ]+)|(=;))(\s|$)';
 
     // Normal smileys
@@ -266,6 +264,7 @@ begin
     AddEmot('(X)', msn, 35);     // girl
     AddEmot(':girl', msn, 35);
     AddEmot('(Z)', msn, 37);     // boy
+    AddEmot(':boy', msn, 37);
     AddEmot('(L)', msn, 25);     // Love
     AddEmot('(U)', msn, 33);     // Unlove
     AddEmot('(P)', msn, 29);     // Picture
@@ -324,17 +323,17 @@ begin
     :king
     :redeyes
     :blah
-    :mad
-    :eek2
-    :jester
-    :saint
+    x:mad
+    x:eek2
+    x:jester
+    x:saint
     :oops
     :crazed
     :roll
     :crazy
     :love
     :ninja
-    :girl
+    x:girl
     :sigh
     x:conf
 

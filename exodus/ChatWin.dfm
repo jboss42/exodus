@@ -1,6 +1,6 @@
 object frmChat: TfrmChat
-  Left = 239
-  Top = 179
+  Left = 232
+  Top = 161
   ActiveControl = MsgOut
   AutoScroll = False
   Caption = 'Chat Window'
