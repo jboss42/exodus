@@ -19,6 +19,3 @@
 	Push ${SEC_ExRosterTools}
 	Call TurnOff
 
-	Push ${SEC_ExSQLLogger}
-	Call TurnOff
-

@@ -716,10 +716,10 @@ begin
     StrPCopy(@resp[5], PChar(myip));
     AThread.Connection.WriteBuffer(resp^, resp_len, true);
 
-    // PGM, don't actually write 2 bytes for some reason..
-    // just 1, since otherwise, it just doesn't work. *sigh*
-    buff[1] := Chr($00);
-    AThread.Connection.WriteBuffer(buff, 1, true);
+    // Send 2 NULL bytes to finish the negotiation.
+    resp[0] := Chr($00);
+    resp[1] := Chr($00);
+    AThread.Connection.WriteBuffer(resp^, 2, true);
 
     // Write the file.
     AThread.Connection.WriteStream(spkg.stream, true, false);

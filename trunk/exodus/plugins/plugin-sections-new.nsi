@@ -47,10 +47,3 @@
       RegDll "$INSTDIR\plugins\ExRosterTools.dll"
 	SectionEnd
 
-	Section "SQLLogger" SEC_ExSQLLogger
-	  AddSize 901
-	  Push "ExSQLLogger"
-	  Call DownloadPlugin
-      RegDll "$INSTDIR\plugins\ExSQLLogger.dll"
-	SectionEnd
-

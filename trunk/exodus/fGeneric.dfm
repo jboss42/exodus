@@ -17,7 +17,7 @@ object frameGeneric: TframeGeneric
     Left = 0
     Top = 0
     Width = 81
-    Height = 26
+    Height = 23
     Align = alLeft
     AutoSize = False
     Caption = 'lblLabel'

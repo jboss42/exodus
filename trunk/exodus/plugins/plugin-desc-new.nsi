@@ -5,4 +5,3 @@
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC_ExJabberStats} $(DESC_ExJabberStats)
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC_ExNetMeeting} $(DESC_ExNetMeeting)
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC_ExRosterTools} $(DESC_ExRosterTools)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_ExSQLLogger} $(DESC_ExSQLLogger)
