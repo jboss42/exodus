@@ -130,7 +130,7 @@ end;
 {---------------------------------------}
 procedure TChatController.MsgCallback(event: string; tag: TXMLTag);
 var
-    etag: TXMLTag;
+    m, etag: TXMLTag;
 begin
     // do stuff
     // check for exclusions.. don't show x-data or invites
@@ -140,14 +140,23 @@ begin
     if (tag.GetAttribute('type') = 'groupchat') then exit;
 
     // if we don't have a window, then ignore composing events
+    etag := tag.QueryXPTag(XP_MSGXEVENT);
     if (not Assigned(_event)) then begin
         // if we have an event, then just bail
-        etag := tag.QueryXPTag(XP_MSGXEVENT);
         if ((etag <> nil) and
             (etag.GetFirstTag('composing') <> nil) and
             (etag.GetFirstTag('id') <> nil)) then exit;
         // if we have no body, then bail
         if (tag.GetFirstTag('body') = nil) then exit;
+    end;
+
+    // check for delivered requests
+    if (etag <> nil) then begin
+        if ((etag.GetFirstTag('delivered') <> nil) and
+            (etag.GetFirstTag('id') = nil)) then begin
+            m := generateEventMsg(tag, 'delivered');
+            MainSession.SendTag(m);
+        end;
     end;
 
     // if we are paused, put on a delay tag.

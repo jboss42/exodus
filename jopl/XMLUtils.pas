@@ -51,6 +51,9 @@ procedure ClearStringListObjects(sl: TWideStringList); overload;
 
 function XPLiteEscape(value: widestring): widestring;
 
+function generateEventMsg(tag: TXMLTag; event: widestring): TXMLTag;
+
+
 {$ifdef VER150}
     {$define INDY9}
 {$endif}
@@ -438,6 +441,21 @@ begin
     Result := FormatDateTime('yyyymmdd', dt);
     Result := Result + 'T';
     Result := Result + FormatDateTime('hh:nn:ss', dt);
+end;
+
+{---------------------------------------}
+function generateEventMsg(tag: TXMLTag; event: widestring): TXMLTag;
+var
+    m, e: TXMLTag;
+begin
+    m := TXMLTag.Create('message');
+    m.setAttribute('to', tag.getAttribute('from'));
+    m.setAttribute('from', tag.getAttribute('to'));
+    e := m.AddTag('x');
+    e.setAttribute('xmlns', 'jabber:x:event');
+    e.AddBasicTag('id', tag.getAttribute('id'));
+    e.AddTag(event);
+    Result := m;
 end;
 
 {---------------------------------------}

@@ -538,6 +538,7 @@ end;
 {---------------------------------------}
 procedure TfrmChat.showMsg(tag: TXMLTag);
 var
+    m, etag: TXMLTag;
     subj_msg, msg: TJabberMessage;
 begin
     // display the body of the msg
@@ -566,13 +567,22 @@ begin
     end;
 
     if (Msg.Body <> '') then begin
-        // DoNotify(Self, 'notify_chatactivity', sChatActivity + OtherNick, ico_user);
         DoNotify(Self, _notify[0], sChatActivity + OtherNick, ico_user, 'notify_chatactivity');
         DisplayMsg(Msg, MsgList);
 
         // log if we want..
         if (MainSession.Prefs.getBool('log')) then
             LogMessage(Msg);
+
+        // check for displayed events
+        etag := tag.QueryXPTag(XP_MSGXEVENT);
+        if ((etag <> nil) and (etag.GetFirstTag('id') = nil)) then begin
+            if (etag.GetFirstTag('displayed') <> nil) then begin
+                // send back a displayed event
+                m := generateEventMsg(tag, 'displayed');
+                MainSession.SendTag(m);
+            end;
+        end;
     end;
 
     Msg.Free();

@@ -1545,7 +1545,7 @@ var
     msg_treatment: integer;
     cc: TChatController;
     tmp_jid: TJabberID;
-    xoob: TXMLTag;
+    etag, m, xoob: TXMLTag;
     ritem: TJabberRosterItem;
 begin
     // record the event
@@ -1590,6 +1590,16 @@ begin
                 end;
             end;
 
+            // check for delivered events
+            etag := tag.QueryXPTag(XP_MSGXEVENT);
+            if ((etag <> nil) and (etag.GetFirstTag('id') = nil)) then begin
+                if (etag.GetFirstTag('delivered') <> nil) then begin
+                    // send back a displayed event
+                    m := generateEventMsg(tag, 'delivered');
+                    MainSession.SendTag(m);
+                end;
+            end;
+
             if MainSession.IsPaused then begin
                 with tag.AddTag('x') do begin
                     setAttribute('xmlns', XMLNS_DELAY);
@@ -1600,6 +1610,17 @@ begin
             else begin
                 e := CreateJabberEvent(tag);
                 RenderEvent(e);
+
+                // check for displayed events
+                etag := tag.QueryXPTag(XP_MSGXEVENT);
+                if ((etag <> nil) and (etag.GetFirstTag('id') = nil)) then begin
+                    if (etag.GetFirstTag('displayed') <> nil) then begin
+                        // send back a displayed event
+                        m := generateEventMsg(tag, 'displayed');
+                        MainSession.SendTag(m);
+                    end;
+                end;
+
             end;
 
             // log the msg if we're logging.
