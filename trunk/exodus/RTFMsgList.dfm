@@ -101,6 +101,7 @@ inherited fRTFMsgList: TfRTFMsgList
     URLCursor = crHandPoint
     OnEnter = MsgListEnter
     OnKeyPress = MsgListKeyPress
+    OnMouseDown = MsgListMouseDown
     OnMouseUp = MsgListMouseUp
     OnURLClick = MsgListURLClick
     InputFormat = ifUnicode
