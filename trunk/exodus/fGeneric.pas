@@ -42,6 +42,7 @@ type
 
     function getValues: TWideStringList;
     procedure JidFieldDotClick(Sender: TObject);
+    procedure URLClick(Sender: TObject; url: String);
   public
     { Public declarations }
     procedure render(tag: TXMLTag);
@@ -61,9 +62,9 @@ implementation
 {$R *.dfm}
 uses
     Jabber1,
-    JabberID,
-    SelContact,
-    ExUtils, CheckLst;
+    JabberID, ShellAPI,
+    SelContact, ExRichEdit,
+    ExUtils, CheckLst, RichEdit2;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -174,6 +175,7 @@ begin
         end;
     end
     else if (t = 'fixed') then begin
+    (*
         c := lblLabel;
         self.AutoSize := true;
         with lblLabel do begin
@@ -182,6 +184,26 @@ begin
             WordWrap := true;
             Caption := value;
             Align := alTop;
+        end;
+        *)
+        lblLabel.Visible := false;
+        Self.Height := Self.Height * 2;
+        c := TExRichEdit.Create(Self);
+        with TExRichEdit(c) do begin
+            Parent := Self;
+            BorderWidth := 0;
+            BorderStyle := Forms.TBorderStyle(0);
+            AutoURLDetect := adDefault;
+            Align := alClient;
+            ScrollBars := ssVertical;
+            URLColor := clBlue;
+            URLCursor := crHandPoint;
+            AllowInPlace := false;
+            Color := clBtnFace;
+            LangOptions := [loAutoFont];
+            WideText := value;
+            ReadOnly := true;
+            OnURLClick := URLClick;
         end;
     end
 
@@ -234,6 +256,11 @@ begin
     fld_type := t;
     if (frm_type = 'submit') then
         c.Enabled := false;
+end;
+
+procedure TframeGeneric.URLClick(Sender: TObject; url: String);
+begin
+    ShellExecute(0, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
 end;
 
 {---------------------------------------}
