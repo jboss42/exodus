@@ -1,8 +1,8 @@
 object frmBaseChat: TfrmBaseChat
-  Left = 317
-  Top = 428
-  Width = 388
-  Height = 310
+  Left = 207
+  Top = 406
+  Width = 363
+  Height = 294
   Color = clBtnFace
   DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
@@ -19,9 +19,9 @@ object frmBaseChat: TfrmBaseChat
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 245
-    Width = 380
-    Height = 3
+    Top = 228
+    Width = 355
+    Height = 4
     Cursor = crVSplit
     Align = alBottom
     AutoSnap = False
@@ -31,8 +31,8 @@ object frmBaseChat: TfrmBaseChat
   object pnlMsgList: TPanel
     Left = 0
     Top = 22
-    Width = 380
-    Height = 223
+    Width = 355
+    Height = 206
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
@@ -40,8 +40,8 @@ object frmBaseChat: TfrmBaseChat
   end
   object pnlInput: TPanel
     Left = 0
-    Top = 248
-    Width = 380
+    Top = 232
+    Width = 355
     Height = 28
     Align = alBottom
     BevelOuter = bvNone
@@ -50,7 +50,7 @@ object frmBaseChat: TfrmBaseChat
     object MsgOut: TExRichEdit
       Left = 2
       Top = 2
-      Width = 376
+      Width = 351
       Height = 24
       Align = alClient
       AutoURLDetect = adNone
@@ -154,7 +154,7 @@ object frmBaseChat: TfrmBaseChat
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 380
+    Width = 355
     Height = 22
     Align = alTop
     BevelOuter = bvNone

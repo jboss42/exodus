@@ -1,7 +1,7 @@
 inherited frmRoom: TfrmRoom
-  Left = 255
-  Top = 317
-  Width = 395
+  Left = 252
+  Top = 264
+  Width = 390
   Height = 305
   Caption = 'Conference Room'
   OldCreateOrder = True
@@ -9,26 +9,26 @@ inherited frmRoom: TfrmRoom
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
-    Top = 240
-    Width = 387
+    Top = 239
+    Width = 382
   end
   inherited pnlMsgList: TPanel
     Top = 23
-    Width = 387
-    Height = 217
+    Width = 382
+    Height = 216
     TabOrder = 1
     object Splitter2: TSplitter
-      Left = 275
+      Left = 270
       Top = 4
-      Height = 209
+      Height = 208
       Align = alRight
       ResizeStyle = rsUpdate
     end
     object Panel6: TPanel
-      Left = 278
+      Left = 273
       Top = 4
       Width = 105
-      Height = 209
+      Height = 208
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -38,7 +38,7 @@ inherited frmRoom: TfrmRoom
         Left = 1
         Top = 1
         Width = 103
-        Height = 207
+        Height = 206
         Align = alClient
         Columns = <
           item
@@ -72,15 +72,14 @@ inherited frmRoom: TfrmRoom
   end
   inherited pnlInput: TPanel
     Top = 243
-    Width = 387
-    AutoSize = True
+    Width = 382
     TabOrder = 0
     inherited MsgOut: TExRichEdit
-      Width = 383
+      Width = 378
     end
   end
   inherited Panel1: TPanel
-    Width = 387
+    Width = 382
     Height = 23
     BorderWidth = 1
     object btnClose: TSpeedButton
@@ -89,7 +88,6 @@ inherited frmRoom: TfrmRoom
       Width = 23
       Height = 20
       Caption = 'X'
-      Flat = True
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
       Font.Height = -13
@@ -127,7 +125,7 @@ inherited frmRoom: TfrmRoom
       object lblSubject: TTntLabel
         Left = 39
         Top = 0
-        Width = 314
+        Width = 250
         Height = 21
         Align = alLeft
         Anchors = [akLeft, akTop, akRight, akBottom]
