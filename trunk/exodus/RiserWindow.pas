@@ -49,6 +49,7 @@ type
   end;
 
 var
+    pre_last_tick: integer;
     singleToast: TfrmRiser;
     frmRiser: TfrmRiser;
 
@@ -58,7 +59,7 @@ implementation
 
 {$R *.dfm}
 uses
-    Session, 
+    Session,
     Jabber1;
 
 procedure ShowRiserWindow(msg: string; imgIndex: integer);
@@ -69,6 +70,8 @@ begin
 
     // Don't show toast while auto away
     if ((frmJabber.IsAutoAway) or (frmJabber.IsAutoXA)) then exit;
+
+    pre_last_tick := frmJabber.last_tick;
 
     bmp := TBitmap.Create;
     frmJabber.ImageList2.GetBitmap(imgIndex, bmp);
@@ -207,6 +210,7 @@ end;
 
 procedure TfrmRiser.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+    frmJabber.ResetLastTick(pre_last_tick + (5 * 1000));
     singleToast := nil;
     Action := caFree;
 end;

@@ -31,6 +31,9 @@ type
     private
         _id: longint;
     public
+        constructor Create();
+        destructor Destroy(); override;
+
         procedure DeleteListener(id: longint);
         procedure DispatchSignal(event: string; tag: TXMLTag);
         function getNextID: longint;
@@ -45,6 +48,13 @@ type
         callback: TMethod;
     end;
 
+    TQueuedEvent = class
+    public
+        callback: TMethod;
+        event: string;
+        tag: TXMLTag;
+    end;
+
     TSignal = class(TStringList)
     private
         _pattern: string;
@@ -52,7 +62,7 @@ type
         constructor Create(event_pattern: string);
         destructor Destroy; override;
 
-        function addListener(callback: TSignalEvent): TSignalListener; overload;
+        function addListener(event: string; callback: TSignalEvent): TSignalListener; overload;
         procedure Invoke(event: string; tag: TXMLTag); overload; virtual;
     end;
 
@@ -84,12 +94,25 @@ uses
 
 {------------------------------------------------------------------------------}
 {------------------------------------------------------------------------------}
+constructor TSignalDispatcher.Create();
+begin
+    inherited Create();
+    _id := 0;
+end;
+
+{---------------------------------------}
+destructor TSignalDispatcher.Destroy();
+begin
+    inherited Destroy;
+end;
+
+{---------------------------------------}
 procedure TSignalDispatcher.DispatchSignal(event: string; tag: TXMLTag);
 var
     levt: string;
     i: integer;
     sig: TSignal;
-begin     
+begin
     // find the correct signal to dispatch this event on
     levt := Lowercase(Trim(event));
     for i := Self.Count - 1 downto 0 do begin
@@ -158,13 +181,13 @@ begin
 end;
 
 {---------------------------------------}
-function TSignal.addListener(callback: TSignalEvent): TSignalListener;
+function TSignal.addListener(event: string; callback: TSignalEvent): TSignalListener;
 var
     l: TSignalListener;
 begin
     l := TSignalListener.Create;
     l.callback := TMethod(callback);
-    Self.AddObject('', l);
+    Self.AddObject(event, l);
     Result := l;
 end;
 
@@ -178,6 +201,7 @@ var
 begin
     // dispatch this to all interested listeners
     cmp := Lowercase(Trim(event));
+
     for i := Self.Count - 1 downto 0 do begin
         e := Strings[i];
         l := TSignalListener(Objects[i]);
@@ -189,11 +213,11 @@ begin
                     sig(event, tag);
                 end
             else
+                // otherwise, signal
                 sig(event, tag);
             end;
         end;
 end;
-
 
 {------------------------------------------------------------------------------}
 {------------------------------------------------------------------------------}

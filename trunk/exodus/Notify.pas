@@ -44,6 +44,7 @@ type
 
 implementation
 uses
+    ExUtils,  
     PrefController,
     Jabber1,
     ExEvents,
@@ -70,7 +71,7 @@ begin
     _session := js;
     with TJabberSession(_session) do begin
         _presCallback := RegisterCallback(PresCallback);
-        _chatCallback := RegisterCallback(Callback, '/chat/new');
+        _chatCallback := RegisterCallback(Callback, '/session/gui/chat');
         end;
 end;
 
@@ -91,6 +92,13 @@ var
     n: integer;
 begin
     // we are getting some event to do notification on
+
+    DebugMsg('Notify Callback: ' + BoolToStr(MainSession.IsPaused, true) + ''#13#10);
+    if MainSession.IsPaused then begin
+        MainSession.QueueEvent(event, tag, Self.Callback);
+        exit;
+        end;
+
     sess := TJabberSession(_session);
     from := tag.GetAttribute('from');
     tmp_jid := TJabberID.Create(from);
@@ -106,7 +114,7 @@ begin
         end;
 
     // Someone started a chat session w/ us
-    if (event = '/chat/new') then begin
+    if (event = '/session/gui/chat') then begin
         msg := 'Chat with '#10#13 + nick;
         ShowRiserWindow(msg, 20);
         n := sess.Prefs.getInt('notify_newchat')

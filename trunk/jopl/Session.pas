@@ -25,7 +25,7 @@ uses
     PrefController,
     Agents, Chat, Presence, Roster,
     Signals, XMLStream, XMLTag,
-    Classes, SysUtils;
+    Contnrs, Classes, SysUtils;
 
 type
     TJabberAuthType = (jatZeroK, jatDigest, jatPlainText, jatNoAuth);
@@ -46,13 +46,16 @@ type
         _priority: integer;
         _AuthType: TJabberAuthType;
 
+        // Dispatcher
         _dispatcher: TSignalDispatcher;
         _packetSignal: TPacketSignal;
         _sessionSignal: TSignal;
-        _chatSignal: TSignal;
         _rosterSignal: TRosterSignal;
         _presSignal: TPresenceSignal;
 
+        _paused: boolean;
+        _pauseQueue: TQueue;
+        
         _id: longint;
         _cb_id: longint;
 
@@ -84,7 +87,7 @@ type
 
         procedure setPresence(show, status: string; priority: integer);
 
-        function RegisterCallback(callback: TPacketEvent; xplite: string): integer; overload;
+        function RegisterCallback(callback: TPacketEvent; xplite: string; pausable: boolean = false): integer; overload;
         function RegisterCallback(callback: TRosterEvent): integer; overload;
         function RegisterCallback(callback: TPresenceEvent): integer; overload;
         procedure UnRegisterCallback(index: integer);
@@ -96,6 +99,10 @@ type
         procedure SendTag(tag: TXMLTag);
         procedure AssignProfile(profile: TJabberProfile);
         procedure ActivateProfile(i: integer);
+
+        procedure Pause;
+        procedure Play;
+        procedure QueueEvent(event: string; tag: TXMLTag; Callback: TPacketEvent);
 
         function NewAgentsList(srv: string): TAgents;
         function GetAgentsList(srv: string): TAgents;
@@ -112,6 +119,7 @@ type
         property Stream: TXMLStream read _stream;
         property Dispatcher: TSignalDispatcher read _dispatcher;
         property MyAgents: TAgents read getMyAgents;
+        property IsPaused: boolean read _paused;
     end;
 
 const
@@ -166,13 +174,13 @@ begin
     _sessionSignal := TSignal.Create('/session');
     _rosterSignal := TRosterSignal.Create('/roster');
     _presSignal := TPresenceSignal.Create('/presence');
-    _chatSignal := TSignal.Create('/chat');
 
     _dispatcher.AddObject('/packet', _packetSignal);
     _dispatcher.AddObject('/session', _sessionSignal);
     _dispatcher.AddObject('/roster', _rosterSignal);
     _dispatcher.AddObject('/presence', _presSignal);
-    _dispatcher.AddObject('/chat', _chatSignal);
+
+    _pauseQueue := TQueue.Create();
 
     // Register our session to get XML Tags
     _stream.RegisterStreamCallback(Self.StreamCallback);
@@ -282,7 +290,44 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberSession.RegisterCallback(callback: TPacketEvent; xplite: string): integer;
+procedure TJabberSession.Pause();
+begin
+    // pause the _pDispatcher;
+    _paused := true;
+end;
+
+{---------------------------------------}
+procedure TJabberSession.Play();
+var
+    q: TQueuedEvent;
+    sig: TSignalEvent;
+begin
+    // playback the stuff in the queue
+    _paused := false;
+
+    while (_pauseQueue.Count > 0) do begin
+        q := TQueuedEvent(_pauseQueue.pop);
+        sig := TSignalEvent(q.callback);
+        sig(q.event, q.tag);
+        q.Free;
+        end;
+end;
+
+{---------------------------------------}
+procedure TJabberSession.QueueEvent(event: string; tag: TXMLTag; Callback: TPacketEvent);
+var
+    q: TQueuedEvent;
+begin
+    // Queue an event to a specific Callback
+    q := TQueuedEvent.Create();
+    q.callback := TMethod(Callback);
+    q.event := event;
+    q.tag := tag;
+    _pauseQueue.Push(q);
+end;
+
+{---------------------------------------}
+function TJabberSession.RegisterCallback(callback: TPacketEvent; xplite: string; pausable: boolean = false): integer;
 var
     p, i: integer;
     l: TSignalListener;
@@ -306,7 +351,7 @@ begin
         end
     else if i >= 0 then begin
         sig := TSignal(_dispatcher.Objects[i]);
-        l := sig.addListener(callback);
+        l := sig.addListener(xplite, callback);
         l.cb_id := _dispatcher.getNextID();
         result := l.cb_id;
         end;
@@ -371,7 +416,7 @@ procedure TJabberSession.UnRegisterCallback(index: integer);
 var
     msg: string;
 begin
-    // todo: do something for unregistering callbacks
+    // Unregister a callback
     _dispatcher.DeleteListener(index);
 
     msg := 'UnRegistering callback. Total=' + IntToStr(_dispatcher.TotalCount);
