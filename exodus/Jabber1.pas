@@ -38,6 +38,36 @@ const
 
     RECONNECT_RETRIES = 3;
 
+    // FROM pbt.h in the win32 SDK
+    {
+    #define PBT_APMQUERYSUSPEND 0x0000
+    #define PBT_APMQUERYSTANDBY 0x0001
+    #define PBT_APMQUERYSUSPENDFAILED 0x0002
+    #define PBT_APMQUERYSTANDBYFAILED 0x0003
+    #define PBT_APMSUSPEND 0x0004
+    #define PBT_APMSTANDBY 0x0005
+    #define PBT_APMRESUMECRITICAL 0x0006
+    #define PBT_APMRESUMESUSPEND 0x0007
+    #define PBT_APMRESUMESTANDBY 0x0008
+    #define PBTF_APMRESUMEFROMFAILURE 0x00000001
+    #define PBT_APMBATTERYLOW 0x0009
+    #define PBT_APMPOWERSTATUSCHANGE 0x000A
+    #define PBT_APMOEMEVENT 0x000B
+    }
+    PBT_APMQUERYSUSPEND = $0000;
+    PBT_APMQUERYSTANDBY = $0001;
+    PBT_APMQUERYSUSPENDFAILED = $0002;
+    PBT_APMQUERYSTANDBYFAILED = $0003;
+    PBT_APMSUSPEND = $0004;
+    PBT_APMSTANDBY = $0005;
+    PBT_APMRESUMECRITICAL = $0006;
+    PBT_APMRESUMESUSPEND = $0007;
+    PBT_APMRESUMESTANDBY = $0008;
+    PBT_APMBATTERYLOW = $0009;
+    PBT_APMPOWERSTATUSCHANGE = $000A;
+    PBT_APMOEMEVENT = $000B;
+    PBTF_APMRESUMEFROMFAILURE = $0000001;
+
     WM_TRAY = WM_USER + 5269;
     WM_PREFS = WM_USER + 5272;
     WM_SHOWLOGIN = WM_USER + 5273;
@@ -292,6 +322,7 @@ type
     _win32_tracker: Array of integer;
     _win32_idx: integer;
 
+    procedure setupReconnect();
     procedure setupTrayIcon();
     procedure setTrayInfo(tip: string);
     procedure setTrayIcon(iconNum: integer);
@@ -321,6 +352,7 @@ type
     procedure WMInstaller(var msg: TMessage); message WM_INSTALLER;
     procedure WMDisconnect(var msg: TMessage); message WM_DISCONNECT;
     procedure WMDisplayChange(var msg: TMessage); message WM_DISPLAYCHANGE;
+    procedure WMPowerChange(var msg: TMessage); message WM_POWERBROADCAST;
 
     procedure CMMouseEnter(var msg: TMessage); message CM_MOUSEENTER;
     procedure CMMouseLeave(var msg: TMessage); message CM_MOUSELEAVE;
@@ -553,6 +585,37 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmExodus.WMPowerChange(var msg: TMessage);
+begin
+    // APM event
+    case msg.wParam of
+    PBT_APMQUERYSUSPEND, PBT_APMQUERYSTANDBY: begin
+        // system wants to be suspended
+        DebugMsg('Got a PBT_APMQUERYSUSPEND. Logging off');
+        MainSession.Prefs.SaveProfiles();
+        MainSession.Prefs.SaveServerPrefs();
+        _logoff := true;
+        PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
+        msg.Result := 1;
+        exit;
+        end;
+    PBT_APMSUSPEND, PBT_APMSTANDBY: begin
+        // disconnect
+        DebugMsg('Got a PBT_APMSUSPEND.');
+        msg.Result := 1;
+        end;
+    PBT_APMRESUMECRITICAL, PBT_APMRESUMESUSPEND, PBT_APMRESUMESTANDBY: begin
+        // connect
+        DebugMsg('Got a PBT_RESUME*.');
+        _logoff := false;
+        _reconnect_tries := 0;
+        setupReconnect();
+        msg.Result := 1;
+        end;
+    end;
+end;
+
+{---------------------------------------}
 procedure TfrmExodus.WMSysCommand(var msg: TWmSysCommand);
 begin
     // Catch some of the important windows msgs
@@ -702,6 +765,7 @@ var
     mi: TMenuItem;
     s: TXMLTag;
 begin
+    Randomize();
     ActiveChat := nil;
     _docked_forms := TList.Create;
     _new_tabindex := -1;
@@ -1075,7 +1139,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.SessionCallback(event: string; tag: TXMLTag);
 var
-    ssl, rtries, rint: integer; 
+    ssl, rtries: integer; 
     msg : TMessage;
     exp: boolean;
     tmp: TXMLTag;
@@ -1247,21 +1311,9 @@ begin
 
             rtries := MainSession.Prefs.getInt('recon_tries');
             if (rtries < 0) then rtries := 3;
-            rint := MainSession.Prefs.getInt('recon_time');
 
             if (_reconnect_tries < rtries) then begin
-                Randomize();
-                if (rint <= 0) then
-                    _reconnect_interval := Trunc(Random(20)) + 2
-                else
-                    _reconnect_interval := rint;
-
-                Interval := 1000;
-                DebugMsg('Setting reconnect timer to: ' + IntToStr(_reconnect_interval));
-
-                _reconnect_cur := 0;
-                frmRosterWindow.aniWait.Visible := false;
-                PostMessage(Self.Handle, WM_RECONNECT, 0, 0);
+                setupReconnect();
             end
             else
                 DebugMsg('Attempted to reconnect too many times.');
@@ -1367,6 +1419,27 @@ begin
         msg.LParamLo := GetPresenceAtom(MainSession.Status);
         PostMessage(HWND_BROADCAST, sExodusPresence, self.Handle, msg.LParam);
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.setupReconnect();
+var
+    rint: integer;
+begin
+    // Setup a reconnect timer
+    rint := MainSession.Prefs.getInt('recon_time');
+    if (rint <= 0) then
+        _reconnect_interval := Trunc(Random(20)) + 2
+    else
+        _reconnect_interval := rint;
+
+    // Make sure the timer is set to 1 second incs.
+    timReconnect.Interval := 1000;
+    DebugMsg('Setting reconnect timer to: ' + IntToStr(_reconnect_interval));
+
+    _reconnect_cur := 0;
+    frmRosterWindow.aniWait.Visible := false;
+    PostMessage(Self.Handle, WM_RECONNECT, 0, 0);
 end;
 
 {---------------------------------------}

@@ -142,10 +142,9 @@ end;
 {---------------------------------------}
 procedure TChatController.TimedRelease();
 begin
-    if (_refs = 1) then
-        startTimer()
-    else
-        dec(_refs);
+    dec(_refs);
+    if (_refs = 0) then
+        StartTimer();
 end;
 
 {---------------------------------------}
@@ -306,8 +305,8 @@ end;
 {---------------------------------------}
 procedure TChatController.timMemoryTimer(Sender: TObject);
 begin
-    // time to free the window..
-    Self.Release();
+    // time to free the window if we still have no refs.
+    if (_refs = 0) then Self.Free();
 end;
 
 {---------------------------------------}
