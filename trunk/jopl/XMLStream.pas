@@ -626,6 +626,7 @@ begin
             _timer.Enabled := false;
             _active := false;
             _thread := nil;
+            DoCallbacks('disconnected', nil);
             DoCallbacks('commerror', nil);
             end;
 
@@ -636,18 +637,6 @@ begin
             _thread := nil;
             _timer.Enabled := false;
             end;
-
-        // pgm 8/9/01 - Handle these windows messages
-        {
-        WM_QUERYENDSESSION: begin
-            // DoDisconnect(true);
-            msg.Result := 1;
-            end;
-
-        WM_ENDSESSION: begin
-            msg.Result := 0
-            end;
-        }
 
         else
             inherited;
