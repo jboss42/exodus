@@ -620,6 +620,13 @@ begin
         Prefs.SaveServerPrefs();
 
     MainSession.FireEvent('/session/presence', nil);
+
+    if (_paused) then begin
+        // If the session is paused, and we're changing back
+        // to available, or chat, then make sure we play the session
+        if ((_show <> 'away') and (_show <> 'xa') and (_show <> 'dnd')) then
+            Self.Play();
+        end;
 end;
 
 {---------------------------------------}

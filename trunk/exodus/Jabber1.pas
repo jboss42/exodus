@@ -350,10 +350,12 @@ resourcestring
     sCmdConfig =    ' -c [file] '#9' : Config path name'#13#10;
 
     sExodus = 'Exodus';
+    sChat = 'Chat';
     sDefaultProfile = 'Default Profile';
     sDefaultGroup = 'Untitled Group';
 
     sCommError = 'There was an error during communication with the Jabber Server';
+    sDisconnected = 'You have been disconnected.';
     sAuthError = 'There was an error trying to authenticate you. Please try again, or create a new account';
     sAuthNoAccount = 'This account does not exist on this server. Create a new account?';
 
@@ -388,6 +390,7 @@ resourcestring
     sPasswordOldError = 'Old password is incorrect.';
     sPasswordNewError = 'New password does not match.';
 
+    sAlreadySubscribed = 'You are already subscribed to this contact';
 
 
 {---------------------------------------}

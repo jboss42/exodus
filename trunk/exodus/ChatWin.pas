@@ -109,6 +109,13 @@ var
 function StartChat(sjid, resource: string; show_window: boolean; chat_nick: string=''): TfrmChat;
 procedure CloseAllChats;
 
+resourcestring
+    sReplying = ' is replying.';
+    sChatActivity = 'Chat Activity: ';
+    sUserBlocked = 'This user is now blocked.';
+    sIsNow = 'is now';
+    
+
 implementation
 
 {$R *.dfm}
@@ -241,15 +248,15 @@ begin
     if ritem <> nil then begin
         lblNick.Caption := ' ' + ritem.Nickname;
         lblJID.Caption := '<' + _jid.full + '>';
-        Caption := ritem.Nickname + ' - Chat';
+        Caption := ritem.Nickname + ' - ' + sChat;
         end
     else begin
         lblNick.Caption := ' ';
         lblJID.Caption := cjid;
         if OtherNick <> '' then
-            Caption := OtherNick + ' - Chat'
+            Caption := OtherNick + ' - ' + sChat;
         else
-            Caption := _jid.user + ' - Chat';
+            Caption := _jid.user + ' - ' + sChat;
         end;
 
     if (p = nil) then
@@ -333,7 +340,7 @@ begin
                     // _old_hint := imgStatus.Hint;
 
                     _cur_img := _pres_img;
-                    imgStatus.Hint := OtherNick + ' is replying';
+                    imgStatus.Hint := OtherNick + sReplying;
                     timFlashTimer(Self);
                     timFlash.Enabled := true;
 
@@ -392,7 +399,7 @@ begin
     if (not Application.Active) then begin
         // Pop toast
         if (cn and notify_toast) > 0 then begin
-            ShowRiserWindow('Chat Activity: ' + OtherNick, 20);
+            ShowRiserWindow(sChatActivity + OtherNick, 20);
             end;
 
         // Flash Window
@@ -472,7 +479,7 @@ end;
 procedure TfrmChat.SessionCallback(event: string; tag: TXMLTag);
 begin
     if (event = '/session/disconnected') then begin
-        DisplayPresence('You have been disconnected', MsgList);
+        DisplayPresence(sDisconnected, MsgList);
         MainSession.UnRegisterCallback(_callback);
         MainSession.UnRegisterCallback(_pcallback);
         _callback := -1;
@@ -484,7 +491,7 @@ begin
     else if (event = '/session/block') then begin
         // if this jid just got blocked, just close the window.
         if (_jid.jid = tag.GetAttribute('jid')) then begin
-            DisplayPresence('This user is now blocked.', Self.MsgList);
+            DisplayPresence(sUserBlocked, Self.MsgList);
             MainSession.UnRegisterCallback(_callback);
             MainSession.UnRegisterCallback(_pcallback);
             _callback := -1;
@@ -563,7 +570,7 @@ begin
         txt := status;
         
     txt := '[' + formatdatetime(MainSession.Prefs.getString('timestamp_format'),now) + '] ' +
-            jid + ' is now ' + txt;
+            jid + ' ' + sIsNow + ' ' + txt;
     DisplayPresence(txt, MsgList);
 end;
 
@@ -598,7 +605,7 @@ begin
     // check to see if we're already subscribed...
     ritem := MainSession.roster.find(_jid.jid);
     if ((ritem <> nil) and ((ritem.subscription = 'both') or (ritem.subscription = 'to'))) then begin
-        MessageDlg('You are already subscribed to this contact', mtInformation,
+        MessageDlg(sAlreadySubscribed, mtInformation,
             [mbOK], 0);
         exit;
         end
@@ -695,31 +702,24 @@ end;
 {---------------------------------------}
 procedure TfrmChat.AcceptFiles( var msg : TMessage );
 const
-  cnMaxFileNameLen = 255;
+    cnMaxFileNameLen = 255;
 var
-  i,
-  nCount     : integer;
-  acFileName : array [0..cnMaxFileNameLen] of char;
+    i,
+    nCount     : integer;
+    acFileName : array [0..cnMaxFileNameLen] of char;
 begin
-  // find out how many files we're accepting
-  nCount := DragQueryFile( msg.WParam,
-                           $FFFFFFFF,
-                           acFileName,
-                           cnMaxFileNameLen );
+    // find out how many files we're accepting
+    nCount := DragQueryFile( msg.WParam, $FFFFFFFF, acFileName, cnMaxFileNameLen );
 
-  // query Windows one at a time for the file name
-  for i := 0 to nCount-1 do
-  begin
-    DragQueryFile( msg.WParam, i,
-                   acFileName, cnMaxFileNameLen );
+    // query Windows one at a time for the file name
+    for i := 0 to nCount-1 do begin
+        DragQueryFile( msg.WParam, i, acFileName, cnMaxFileNameLen );
+        // do your thing with the acFileName
+        FileSend(_jid.full, acFileName);
+        end;
 
-    // do your thing with the acFileName
-    //MessageBox( Handle, acFileName, '', MB_OK );
-    FileSend(_jid.full, acFileName);
-  end;
-
-  // let Windows know that you're done
-  DragFinish( msg.WParam );
+    // let Windows know that you're done
+    DragFinish( msg.WParam );
 end;
 
 {---------------------------------------}
