@@ -41,20 +41,6 @@ const
     node_transport = 4;
     node_myres = 5;
 
-type
-    PLASTINPUTINFO = ^LASTINPUTINFO;
-    tagLASTINPUTINFO = record
-        cbSize: UINT;
-        dwTime: DWORD;
-    end;
-    {$EXTERNALSYM tagLASTINPUTINFO}
-    LASTINPUTINFO = tagLASTINPUTINFO;
-    {$EXTERNALSYM LASTINPUTINFO}
-    TLastInputInfo = LASTINPUTINFO;
-
-function GetLastInputInfo(var plii: LASTINPUTINFO): BOOL; stdcall;
-{$EXTERNALSYM GetLastInputInfo}
-
 function WindowsVersion(var verinfo: string): integer;
 
 function URLToFilename(url: string): string;
@@ -105,10 +91,6 @@ procedure checkAndCenterForm(f: TForm);
 procedure BuildPresMenus(parent: TObject; clickev: TNotifyEvent);
 function promptNewGroup: TJabberGroup;
 
-var
-    _GetLastInputInfo: Pointer;
-
-
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -154,17 +136,6 @@ var
 constructor TAtom.Create(at: ATOM);
 begin
     a := at;
-end;
-
-{---------------------------------------}
-function GetLastInputInfo;
-begin
-    Result := false;
-    asm
-        mov esp, ebp
-        pop ebp
-        jmp [_GetLastInputInfo]
-    end;
 end;
 
 {---------------------------------------}
@@ -1040,7 +1011,6 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 initialization
-    _GetLastInputInfo := GetProcAddress(GetModuleHandle('user32.dll'), 'GetLastInputInfo');
     presenceToAtom := TStringList.Create();
     unicode_font := nil;
 
