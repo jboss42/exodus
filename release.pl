@@ -1,22 +1,26 @@
 #!/bin/perl -w
 
 use strict;
-#$::USER = 'hildjj@jabberstudio.org';
-$::USER = 'pgmillard@jabberstudio.org';
+# publish server
+$::USER = 'hildjj';
+$::SERVER = 'jabberstudio.org';
+$::ROOT = '/var/projects/exodus';
 
-#$::SCP = 'scp -C';
-#$::SSH = 'ssh';
-$::SCP = 'pscp';
-$::SSH = 'plink';
+$::SCP = 'scp -C';
+$::SSH = 'ssh';
+$::CVS = 'cvs';
+
+$::RTYPE = "daily";
+$::VTYPE = "build";
 
 do "dopts.pl";
 
-my $rtype = "daily";
-my $vtype = "build";
+my $userhost = $::USER ? "$::USER\@$::SERVER" : $::SERVER;
+
 if ($#ARGV >= 0) {
   if ($ARGV[0] eq "release") {
-	$rtype = "release";
-	$vtype = "sp";
+	$::RTYPE = "release";
+	$::VTYPE = "sp";
   } elsif ($ARGV[0] eq "help") {
 	print <<EOF;
 USAGE:
@@ -29,33 +33,34 @@ EOF
   }
 
   if ($#ARGV >= 1) {
-	$vtype = $ARGV[1];
+	$::VTYPE = $ARGV[1];
   }
 }
 
 
-print "$rtype build (version $vtype)...\n";
+print "$::RTYPE build (version $::VTYPE)...\n";
 
 chdir "exodus" or die;
 
-my $version = `perl version.pl $vtype`;
+my $version = `perl version.pl $::VTYPE`;
 $? and exit(1);
 chomp $version;
 
 print "$version\n";
-
-e("perl build.pl $rtype");
-e("cvs ci -m \"$rtype build\" version.h version.nsi default.po");
 chdir ".." or die;
-e("cvs tag -F " . uc($rtype));
+
+e("perl build.pl $::RTYPE");
+e("$::CVS ci -m \"$::RTYPE build\" exodus/version.h exodus/version.nsi exodus/default.po") if $::CVS;
+e("$::CVS tag -F " . uc($::RTYPE)) if $::CVS;
+
 chdir "exodus" or die;
-if ($rtype eq "daily") {
-  e("$::SCP setup.exe Exodus.zip plugins/*.zip $::USER:/var/projects/exodus/www/daily/stage");
-  e("$::SSH $::USER \"cd /var/projects/exodus/www/daily/stage; chmod 644 *; mv setup.exe ..; mv Exodus.zip ..; mv *.zip ../plugins\"");
+if ($::RTYPE eq "daily") {
+  e("$::SCP setup.exe Exodus.zip plugins/*.zip $userhost:$::ROOT/www/daily/stage");
+  e("$::SSH $userhost \"cd $::ROOT/www/daily/stage; chmod 644 *; mv setup.exe ..; mv Exodus.zip ..; mv *.zip ../plugins\"");
 } else {
-  e("$::SCP setup.exe $::USER:/var/projects/exodus/files/exodus_$version.exe");
-  e("$::SCP plugins/*.zip $::USER:/var/projects/exodus/www/plugins");
-  e("$::SSH $::USER \"chmod 644 /var/projects/exodus/files/exodus_$version.exe /var/projects/exodus/www/plugins/*.zip\"");
+  e("$::SCP setup.exe $userhost:$::ROOT/files/exodus_$version.exe");
+  e("$::SCP plugins/*.zip $userhost:$::ROOT/www/plugins");
+  e("$::SSH $userhost \"chmod 644 $::ROOT/files/exodus_$version.exe $::ROOT/www/plugins/*.zip\"");
 }
 
 print "\n\nSUCCESS!\n";

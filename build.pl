@@ -34,6 +34,8 @@ EOF
   }
 }
 
+chdir "exodus" or die;
+
 unlink "setup.exe";
 unlink "Exodus.exe";
 grep unlink, glob("output/*.dcu"); # rm *.dcu
@@ -86,6 +88,7 @@ if ($rtype eq "daily") {
 }
   
 print "SUCCESS!!!\n";
+chdir ".." or die;
 
 sub e {
   my $cmd = shift;
