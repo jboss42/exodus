@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-12-05 08:20\n"
-"PO-Revision-Date: 2003-12-05 08:20\n"
+"POT-Creation-Date: 2003-12-08 08:32\n"
+"PO-Revision-Date: 2003-12-08 08:32\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -155,7 +155,7 @@ msgstr ""
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: RosterRecv.dfm:48
 #. show the next event
-#: MsgRecv.pas:434
+#: MsgRecv.pas:441
 #: RecvStatus.pas:383
 #: RecvStatus.pas:610
 #: RecvStatus.pas:621
@@ -448,6 +448,15 @@ msgstr ""
 msgid "wais"
 msgstr ""
 
+#. frmAbout..InfoBox....AllowInPlace
+#: About.dfm:1539
+msgid "{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang1033{\\fonttbl{\\f0\\fnil\\fcharset0 "
+"MS Sans Serif;}}\n"
+"\\viewkind4\\uc1\\pard\\f0\\fs16 Test Line\\par\n"
+"\\par\n"
+"}\n"
+msgstr ""
+
 #. frmAutoUpdateStatus..Caption
 #: AutoUpdateStatus.dfm:7
 msgid "Auto Update"
@@ -716,15 +725,15 @@ msgstr ""
 #. frmPrefs..Font.Name
 #: Prefs.dfm:12
 #. frmRegister..Tabs..TabSheet1..Label1..Font.Name
-#: RegForm.dfm:26
+#: RegForm.dfm:55
 #. frmRegister..Tabs..TabSheet1..lblIns..Font.Name
-#: RegForm.dfm:42
+#: RegForm.dfm:71
 #. frmRegister..Tabs..TabSheet3..Label2..Font.Name
-#: RegForm.dfm:97
+#: RegForm.dfm:126
 #. frmRegister..Tabs..TabSheet4..lblOK..Font.Name
-#: RegForm.dfm:119
+#: RegForm.dfm:148
 #. frmRegister..Tabs..TabSheet4..lblBad..Font.Name
-#: RegForm.dfm:139
+#: RegForm.dfm:168
 #. frmRoom..Panel3..MsgList..Font.Name
 #: Room.dfm:30
 #. frmRoom..Panel1..btnClose..Font.Name
@@ -999,6 +1008,7 @@ msgstr ""
 #: MsgRecv.dfm:522
 #. frmProfile..PageControl1..TabSheet7..Caption
 #: Profile.dfm:162
+#: Profile.pas:295
 msgid "Resources"
 msgstr ""
 
@@ -2272,7 +2282,7 @@ msgstr ""
 #. frmJud..Tabs..TabSheet2..Caption
 #: jud.dfm:77
 #. frmRegister..Tabs..TabSheet2..Caption
-#: RegForm.dfm:49
+#: RegForm.dfm:78
 msgid "TabSheet2"
 msgstr ""
 
@@ -2327,7 +2337,7 @@ msgstr ""
 #. frmJud..Tabs..TabSheet3..Caption
 #: jud.dfm:99
 #. frmRegister..Tabs..TabSheet3..Caption
-#: RegForm.dfm:84
+#: RegForm.dfm:113
 msgid "TabSheet3"
 msgstr ""
 
@@ -2340,7 +2350,7 @@ msgstr ""
 #. frmJud..Tabs..TabSheet4..Caption
 #: jud.dfm:123
 #. frmRegister..Tabs..TabSheet4..Caption
-#: RegForm.dfm:104
+#: RegForm.dfm:133
 msgid "TabSheet4"
 msgstr ""
 
@@ -2441,6 +2451,8 @@ msgstr ""
 
 #. frmMsgQueue..lstEvents......Caption
 #: MsgQueue.dfm:44
+#. ugh.. some translations use the old caption w/ trailing spaces
+#: MsgRecv.pas:293
 msgid "Subject"
 msgstr ""
 
@@ -2629,6 +2641,7 @@ msgstr ""
 #: Prefs.dfm:2832
 #. frmProfile..PageControl1..TabSheet2..Caption
 #: Profile.dfm:222
+#: Profile.pas:296
 msgid "Groups"
 msgstr ""
 
@@ -5693,6 +5706,10 @@ msgstr ""
 
 #. frmProfile..PageControl1..TabSheet6..Caption
 #: Profile.dfm:806
+#: Profile.pas:298
+#: Profile.pas:300
+#: vcard.pas:158
+#: vcard.pas:160
 msgid "Address"
 msgstr ""
 
@@ -5721,41 +5738,41 @@ msgid "Receive"
 msgstr ""
 
 #. frmRegister..Caption
-#: RegForm.dfm:3
+#: RegForm.dfm:4
 msgid "Registration"
 msgstr ""
 
 #. frmRegister..Tabs..TabSheet1..Label1....AutoSize
-#: RegForm.dfm:22
+#: RegForm.dfm:51
 msgid "This wizard will register you with a service or Agent. Use the Next "
 "button to advance through the steps. Use Cancel anytime to cancel "
 "this registration."
 msgstr ""
 
 #. frmRegister..Tabs..TabSheet1..lblIns..Caption
-#: RegForm.dfm:38
+#: RegForm.dfm:67
 msgid "Waiting for agent instructions....."
 msgstr ""
 
 #. frmRegister..Tabs..TabSheet2..Panel2..btnDelete..Caption
-#: RegForm.dfm:64
+#: RegForm.dfm:93
 msgid "Delete My Registration"
 msgstr ""
 
 #. frmRegister..Tabs..TabSheet3..Label2..Caption
-#: RegForm.dfm:93
+#: RegForm.dfm:122
 msgid "Please wait, Sending your registration to the "
 "service...."
 msgstr ""
 
 #. frmRegister..Tabs..TabSheet4..lblOK....AutoSize
-#: RegForm.dfm:115
+#: RegForm.dfm:144
 msgid "Your Registration to this service has been completed Successfully. "
 "Press the 'Next' button to Finish."
 msgstr ""
 
 #. frmRegister..Tabs..TabSheet4..lblBad....AutoSize
-#: RegForm.dfm:135
+#: RegForm.dfm:164
 msgid "Your Registration to this service has Failed! Press Previous to go "
 "back and verify that all of the parameters have been filled in "
 "correctly. Press Cancel to close this "
@@ -6259,7 +6276,7 @@ msgstr ""
 #. frmSubscribe..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: subscribe.dfm:124
 #. Change button captions for TC Invites
-#: MsgRecv.pas:371
+#: MsgRecv.pas:378
 msgid "Accept"
 msgstr ""
 
@@ -6322,7 +6339,7 @@ msgstr ""
 msgid "File Transfer Manager"
 msgstr ""
 
-#: About.pas:83
+#: About.pas:84
 msgid "Exodus is the creation of Peter Millard  (mailto:me@pgmillard.com).  "
 "Checkout the website at http://exodus.jabberstudio.org for more "
 "information. It is currently licensed under the GNU Public License "
@@ -6330,12 +6347,12 @@ msgid "Exodus is the creation of Peter Millard  (mailto:me@pgmillard.com).  "
 "GPL."
 msgstr ""
 
-#: About.pas:85
+#: About.pas:86
 msgid "Preference Icons used with permission from collections of \"Foood\". "
 "http://www.foood.net/icons/index.htm"
 msgstr ""
 
-#: About.pas:87
+#: About.pas:88
 msgid "TCP/IP components are Copyright (c) 1993 - 2002, Chad Z. Hower "
 "(Kudzu) and the Indy Pit Crew - http://www.nevrona.com/Indy/. This "
 "application may also be using the IndySSL components from Nevrona, "
@@ -6343,19 +6360,19 @@ msgid "TCP/IP components are Copyright (c) 1993 - 2002, Chad Z. Hower "
 "Intellicom.si."
 msgstr ""
 
-#: About.pas:89
+#: About.pas:90
 msgid "SAX XML Parser by: Stefan Heymann Eschenweg 3, 72076 Tubingen, "
 "GERMANY mailto:stefan@destructor.de, "
 "http://www.destructor.de"
 msgstr ""
 
-#: About.pas:91
+#: About.pas:92
 msgid "Unicode library is Copyright (c) 1999, 2000 Mike Lischke "
 "(public@lischke-online.de) and Portions Copyright (c) 1999, 2000 "
 "Azret Botash (az)."
 msgstr ""
 
-#: About.pas:93
+#: About.pas:94
 msgid "RichEdit98 and DBRichEdit98 components for Delphi 3.0-4.0. version "
 "1.40 Author Alexander Obukhov, Minsk, Belarus "
 "<alex@niiomr.belpak.minsk.by>"
@@ -7070,35 +7087,35 @@ msgid "Exodus could not create or write to the spool directory specified in "
 "the options."
 msgstr ""
 
-#: MsgRecv.pas:372
+#: MsgRecv.pas:379
 msgid "Decline"
 msgstr ""
 
 #. This is an error.. show the error panel
-#: MsgRecv.pas:379
+#: MsgRecv.pas:386
 msgid "Error:"
 msgstr ""
 
-#: MsgRecv.pas:402
+#: MsgRecv.pas:409
 msgid "To:"
 msgstr ""
 
-#: MsgRecv.pas:436
-#: MsgRecv.pas:749
+#: MsgRecv.pas:443
+#: MsgRecv.pas:756
 msgid "Next"
 msgstr ""
 
-#: MsgRecv.pas:682
 #: MsgRecv.pas:689
+#: MsgRecv.pas:696
 msgid "Message to "
 msgstr ""
 
-#: MsgRecv.pas:684
 #: MsgRecv.pas:691
+#: MsgRecv.pas:698
 msgid "Message from "
 msgstr ""
 
-#: MsgRecv.pas:761
+#: MsgRecv.pas:768
 msgid "You have unread messages. Read all messages before closing the "
 "window."
 msgstr ""
@@ -7111,6 +7128,23 @@ msgstr ""
 #. someone is going offline
 #: Notify.pas:134
 msgid " is now offline."
+msgstr ""
+
+#. Do this to ensure the nodes are properly translated.
+#: Profile.pas:294
+#. Do this to ensure the nodes are properly translated.
+#: vcard.pas:156
+msgid "Basic"
+msgstr ""
+
+#: Profile.pas:297
+#: vcard.pas:157
+msgid "Personal Information"
+msgstr ""
+
+#: Profile.pas:299
+#: vcard.pas:159
+msgid "Work Information"
 msgstr ""
 
 #: RecvStatus.pas:284
@@ -7500,6 +7534,15 @@ msgstr ""
 msgid "Click to Cancel Reconnect"
 msgstr ""
 
+#. processing of Editing events
+#: RosterWindow.pas:2733
+msgid "Rename Roster Item"
+msgstr ""
+
+#: RosterWindow.pas:2733
+msgid "New Nickname: "
+msgstr ""
+
 #: RosterWindow.pas:2967
 msgid "Reconnect in %d seconds."
 msgstr ""
@@ -7583,7 +7626,7 @@ msgid "Your request was successful."
 msgstr ""
 
 #. callback for vcard info
-#: vcard.pas:179
+#: vcard.pas:193
 msgid "No vCard response was ever returned."
 msgstr ""
 
@@ -7618,13 +7661,13 @@ msgid "The Contact must be online before you can send a "
 "file."
 msgstr ""
 
-#: XferManager.pas:272
-#: XferManager.pas:339
+#: XferManager.pas:277
+#: XferManager.pas:344
 msgid "%s is sending you a file."
 msgstr ""
 
 #. check to see if we should disconnect current xfers
-#: XferManager.pas:468
+#: XferManager.pas:473
 msgid "Your new file transfer port will not take affect until all current "
 "trasfers are stopped. Stop existing "
 "transfers?"
