@@ -200,7 +200,6 @@ end;
 {---------------------------------------}
 destructor TJabberGroup.Destroy();
 begin
-    // xxx: inform our parent grp we've gone away somehow???
     FreeAndNil(_parts);
     FreeAndNil(_jids);
     FreeAndNil(_grps);

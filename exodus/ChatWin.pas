@@ -78,7 +78,6 @@ type
     procedure btnCloseClick(Sender: TObject);
     procedure popClearHistoryClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
-    // procedure timMemoryTimer(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure mnuWordwrapClick(Sender: TObject);
