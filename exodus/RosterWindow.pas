@@ -151,6 +151,8 @@ type
     procedure imgAdClick(Sender: TObject);
     procedure treeRosterKeyPress(Sender: TObject; var Key: Char);
     procedure popRenameClick(Sender: TObject);
+    procedure treeRosterCompare(Sender: TObject; Node1, Node2: TTreeNode;
+      Data: Integer; var Compare: Integer);
   private
     { Private declarations }
     _rostercb: integer;         // roster callback id
@@ -784,6 +786,7 @@ var
 begin
     // Remove the nodes for this item..
     node_list := TList(ritem.Data);
+    treeRoster.Items.BeginUpdate();
     if node_list <> nil then begin
         for i := node_list.count - 1 downto 0 do begin
             n := TTreeNode(node_list[i]);
@@ -794,6 +797,7 @@ begin
             node_list.Delete(i);
         end;
     end;
+    treeRoster.Items.EndUpdate();
 end;
 
 {---------------------------------------}
@@ -843,6 +847,7 @@ var
     show_offgrp: boolean;
     show_pending: boolean;
     exp_grpnode: boolean;
+    resort: boolean;
 begin
     // Render a specific roster item, with the given presence info.
     is_blocked := MainSession.isBlocked(ritem.jid);
@@ -857,6 +862,7 @@ begin
 
     exp_grpnode := false;
     is_transport := false;
+    resort := false;
 
     top_item := treeRoster.TopItem;
 
@@ -910,6 +916,7 @@ begin
     roster item, and assign it to the .Data property
     of the roster item object
     }
+
     node_list := TList(ritem.Data);
     if node_list = nil then begin
         node_list := TList.Create;
@@ -970,6 +977,7 @@ begin
                 _offline := treeRoster.Items.AddChild(nil, sGrpOffline);
                 _offline.ImageIndex := ico_right;
                 _offline.SelectedIndex := ico_right;
+                resort := true;
             end;
             grp_node := _offline;
         end
@@ -1044,8 +1052,8 @@ begin
     check for any empty groups
     }
     if not _FullRoster then begin
-        treeRoster.AlphaSort;
-        treeRoster.Refresh;
+        if (resort) then
+            treeRoster.AlphaSort;
         RemoveEmptyGroups();
         treeRoster.TopItem := top_item;
     end;
@@ -1060,11 +1068,16 @@ var
 begin
     // Show this group node
     cur_grp := MainSession.Roster.GrpList[grp_idx];
+
+    treeRoster.Items.BeginUpdate();
     grp_node := treeRoster.Items.AddChild(nil, cur_grp);
     MainSession.Roster.GrpList.Objects[grp_idx] := grp_node;
     grp_node.ImageIndex := ico_Right;
     grp_node.SelectedIndex := ico_Right;
     grp_node.Data := nil;
+    treeRoster.AlphaSort(true);
+    treeRoster.Items.EndUpdate();
+
     result := grp_node;
 end;
 
@@ -2123,6 +2136,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmRosterWindow.popRenameClick(Sender: TObject);
 var
     nick: Widestring;
@@ -2133,6 +2147,28 @@ begin
     if (InputQueryW('Rename Roster Item', 'New Nickname: ', nick)) then begin
         _cur_ritem.Nickname := nick;
         _cur_ritem.update();
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.treeRosterCompare(Sender: TObject; Node1,
+  Node2: TTreeNode; Data: Integer; var Compare: Integer);
+begin
+    // define a custom sort routine for two roster nodes
+
+    // handle special cases
+    if (Node1 = _offline) then Compare := +1
+    else if (Node2 = _offline) then Compare := -1
+    else if (Node1 = _bookmark) then Compare := -1
+    else if (Node2 = _bookmark) then Compare := +1
+    else if (Node1.Level = Node2.Level) then begin
+        Compare := AnsiCompareText(Node1.Text, Node2.Text);
+    end
+    else begin
+        if (Node1.Level < Node2.Level) then
+            Compare := -1
+        else
+            Compare := +1;
     end;
 end;
 

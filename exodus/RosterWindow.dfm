@@ -1,6 +1,6 @@
 object frmRosterWindow: TfrmRosterWindow
-  Left = 401
-  Top = 243
+  Left = 290
+  Top = 261
   Width = 195
   Height = 446
   AlphaBlendValue = 220
@@ -50,7 +50,7 @@ object frmRosterWindow: TfrmRosterWindow
   TextHeight = 13
   object imgAd: TImage
     Left = 0
-    Top = 381
+    Top = 386
     Width = 187
     Height = 10
     Align = alBottom
@@ -66,7 +66,7 @@ object frmRosterWindow: TfrmRosterWindow
     Left = 0
     Top = 161
     Width = 187
-    Height = 196
+    Height = 201
     Cursor = crArrow
     Hint = 'Roster Hint'
     Align = alClient
@@ -83,11 +83,12 @@ object frmRosterWindow: TfrmRosterWindow
     ShowButtons = False
     ShowLines = False
     ShowRoot = False
-    SortType = stText
+    SortType = stData
     TabOrder = 0
     Visible = False
     OnChange = treeRosterChange
     OnCollapsed = treeRosterCollapsed
+    OnCompare = treeRosterCompare
     OnContextPopup = treeRosterContextPopup
     OnCustomDrawItem = treeRosterCustomDrawItem
     OnDblClick = treeRosterDblClick
@@ -103,7 +104,7 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object StatBar: TStatusBar
     Left = 0
-    Top = 391
+    Top = 396
     Width = 187
     Height = 21
     Panels = <
@@ -116,7 +117,7 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object pnlShow: TPanel
     Left = 0
-    Top = 357
+    Top = 362
     Width = 187
     Height = 24
     Align = alBottom
