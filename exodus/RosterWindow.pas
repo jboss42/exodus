@@ -581,6 +581,8 @@ begin
                 bm := TJabberBookmark(MainSession.roster.Bookmarks.Objects[bi]);
                 if (bm <> nil) then
                     RenderBookmark(bm);
+                if (bm.autoJoin and (bm.bmType = 'conference')) then
+                    StartRoom(bm.jid.jid, bm.nick);
             end;
         end;
     end
@@ -631,10 +633,7 @@ begin
         bm_node.ImageIndex := 21;
         bm_node.SelectedIndex := bm_node.ImageIndex;
         bm_node.Data := bm;
-        if (bm.autoJoin and (bm.bmType = 'conference')) then
-            StartRoom(bm.jid.jid, bm.nick);
     end;
-
 
     _bookmark.Expand(true);
 end;
