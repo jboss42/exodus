@@ -24,7 +24,7 @@ interface
 uses
     Jabber1, ExEvents,  
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, Dockable, ComCtrls, StdCtrls, ExtCtrls;
+    Dialogs, Dockable, ComCtrls, StdCtrls, ExtCtrls, ToolWin;
 
 type
   TfrmMsgQueue = class(TfrmDockable)
@@ -58,13 +58,12 @@ implementation
 {$R *.dfm}
 
 uses
-    MsgRecv, Session, PrefController;
+    ExUtils, MsgRecv, Session, PrefController;
 
 function getMsgQueue: TfrmMsgQueue;
 begin
     if frmMsgQueue = nil then begin
         frmMsgQueue := TfrmMsgQueue.Create(nil);
-        frmMsgQueue.Show;
         end;
 
     Result := frmMsgQueue;
@@ -85,13 +84,17 @@ end;
 
 procedure TfrmMsgQueue.FormCreate(Sender: TObject);
 begin
-  inherited;
     MainSession.Prefs.RestorePosition(Self);
+
+    lstEvents.Color := TColor(MainSession.Prefs.getInt('roster_bg'));
+    txtMsg.Color := lstEvents.Color;
+
+    AssignDefaultFont(lstEvents.Font);
+    AssignDefaultFont(txtMsg.Font);
 end;
 
 procedure TfrmMsgQueue.FormResize(Sender: TObject);
 begin
-  inherited;
     MainSession.prefs.SavePosition(Self);
 end;
 
@@ -100,9 +103,10 @@ procedure TfrmMsgQueue.lstEventsChange(Sender: TObject; Item: TListItem;
 var
     e: TJabberEvent;
 begin
-  inherited;
     e := TJabberEvent(Item.Data);
-    if (e <> nil) then
+    if (lstEvents.SelCount <= 0) then
+        txtMsg.Lines.Clear
+    else if ((e <> nil) and (lstEvents.SelCount = 1)) then
         txtMsg.Lines.Assign(e.Data);
 end;
 
@@ -110,7 +114,6 @@ procedure TfrmMsgQueue.lstEventsDblClick(Sender: TObject);
 var
     e: TJabberEvent;
 begin
-  inherited;
     if (lstEvents.SelCount <= 0) then exit;
 
     e := TJabberEvent(lstEvents.Selected.Data);
@@ -120,7 +123,6 @@ end;
 procedure TfrmMsgQueue.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
-  inherited;
     Action := caFree;
     frmMsgQueue := nil;
 end;
@@ -130,7 +132,6 @@ procedure TfrmMsgQueue.lstEventsKeyDown(Sender: TObject; var Key: Word;
 var
     i: integer;
 begin
-  inherited;
     // pickup hot-keys on the list view..
     case Key of
     VK_DELETE, VK_BACK, Ord('d'), Ord('D'): begin
@@ -152,7 +153,6 @@ end;
 procedure TfrmMsgQueue.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
-  inherited;
     lstEvents.Items.Clear;
 end;
 

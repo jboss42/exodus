@@ -1,6 +1,6 @@
 object frmPrefs: TfrmPrefs
-  Left = 265
-  Top = 150
+  Left = 266
+  Top = 151
   Width = 407
   Height = 406
   Caption = 'Exodus Preferences'

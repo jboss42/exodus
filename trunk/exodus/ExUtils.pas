@@ -21,8 +21,7 @@ unit ExUtils;
 
 interface
 uses
-    JabberMsg,
-    Forms, Classes, SysUtils, Windows;
+    JabberMsg, Graphics, Forms, Classes, SysUtils, Windows;
 
 const
     cWIN_95 = 1;             { Windows version constants}
@@ -47,6 +46,7 @@ procedure ShowLog(jid: string);
 
 function getDisplayField(fld: string): string;
 procedure DebugMsg(Message : string);
+procedure AssignDefaultFont(font: TFont);
 
 {---------------------------------------}
 {---------------------------------------}
@@ -326,6 +326,23 @@ procedure DebugMsg(Message : string);
 begin
     if (frmDebug <> nil) then
         frmDebug.debugMsg(Message);
+end;
+
+procedure AssignDefaultFont(font: TFont);
+begin
+    with MainSession.Prefs do begin
+        Font.Name := getString('font_name');
+        Font.Size := getInt('font_size');
+        Font.Style := [];
+        // Color := TColor(getInt('color_bg'));
+        Font.Color := TColor(getInt('font_color'));
+        if getBool('font_bold') then
+            Font.Style := Font.Style + [fsBold];
+        if getBool('font_italic') then
+            Font.Style := Font.Style + [fsItalic];
+        if getBool('font_underline') then
+            Font.Style := Font.Style + [fsUnderline];
+        end;
 end;
 
 end.

@@ -482,19 +482,21 @@ end;
 procedure TXMLTag.AssignTag(const xml: TXMLTag);
 var
     i: integer;
-    t, c: TXMLTag;
+    c: TXMLTag;
+    tags: TXMLTagList;
 begin
-    // Make this tag be a duplicate of the old one.
+    // Make self contain all the info that xml does
+    tags := xml.ChildTags();
 
-    for i := 0 to _Children.Count - 1 do begin
-        t := TXMLTag(_Children.Items[i]);
-        c := xml.AddTag(t.name);
-        c.AssignTag(t);
+    for i := 0 to tags.Count - 1 do begin
+        c := Self.AddTag(tags[i].Name);
+        c.AssignTag(tags[i]);
         end;
 
-    for i := 0 to _AttrList.Count - 1 do begin
-        end;
+    Self.AddCData(xml.Data);
 
+    for i := 0 to xml._AttrList.Count - 1 do
+        Self.PutAttribute(xml._AttrList.Name(i), xml._AttrList.Value(i));
 end;
 
 

@@ -46,11 +46,7 @@ type
     Panel7: TPanel;
     MsgList: TExRichEdit;
     pnlFrom: TPanel;
-    StaticText1: TStaticText;
     lblJID: TStaticText;
-    pnlSubject: TPanel;
-    StaticText3: TStaticText;
-    lblSubject: TStaticText;
     popContact: TPopupMenu;
     mnuHistory: TMenuItem;
     mnuBlock: TMenuItem;
@@ -62,12 +58,12 @@ type
     mnuEncrypt: TMenuItem;
     mnuAdd: TMenuItem;
     lblNick: TStaticText;
+    imgStatus: TPaintBox;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnCloseClick(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
     procedure FormActivate(Sender: TObject);
-    procedure FormResize(Sender: TObject);
     procedure MsgOutKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure btnHistoryClick(Sender: TObject);
@@ -77,18 +73,22 @@ type
     procedure lblJIDClick(Sender: TObject);
     procedure mnuReturnsClick(Sender: TObject);
     procedure mnuSendFileClick(Sender: TObject);
+    procedure imgStatusPaint(Sender: TObject);
   private
     { Private declarations }
     jid: string;            // jid of the person we are talking to
-    _jid: TJabberID;
+    _jid: TJabberID;        // JID object of jid
     _callback: integer;     // Message Callback
     _pcallback: integer;    // Presence Callback
     _scallback: integer;    // Session callback
     _thread : string;       // thread for conversation
+    _pres_img: integer;     // current index of the presence image
 
     procedure MsgCallback(event: string; tag: TXMLTag);
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
+
+    procedure ChangePresImage(show: string);
 
     function GetThread: String;
   protected
@@ -117,11 +117,11 @@ implementation
 {$R *.DFM}
 
 uses
-    PrefController,
+    Presence, PrefController,
     Transfer, RosterAdd, RiserWindow,
     Jabber1, Profile, ExUtils, MsgDisplay,
     JabberMsg, Roster, Session, XMLUtils,
-    ShellAPI;
+    ShellAPI, RosterWindow;
 
 
 {---------------------------------------}
@@ -168,20 +168,8 @@ begin
         SetJID(cjid);
 
         // setup prefs
-        with MainSession.Prefs do begin
-            MsgList.Font.Name := getString('font_name');
-            MsgList.Font.Size := getInt('font_size');
-            MsgList.Font.Style := [];
-            MsgList.Color := TColor(getInt('color_bg'));
-            MsgList.Font.Color := TColor(getInt('font_color'));
-            if getBool('font_bold') then
-                MsgList.Font.Style := MsgList.Font.Style + [fsBold];
-            if getBool('font_italic') then
-                MsgList.Font.Style := MsgList.Font.Style + [fsItalic];
-            if getBool('font_underline') then
-                MsgList.Font.Style := MsgList.Font.Style + [fsUnderline];
-            end;
-
+        AssignDefaultFont(MsgList.Font);
+        MsgList.Color := TColor(MainSession.Prefs.getInt('color_bg'));
         MsgOut.Color := MsgList.Color;
         MsgOut.Font.Assign(MsgList.Font);
 
@@ -223,12 +211,14 @@ begin
     _pcallback := -1;
     _scallback := -1;
     OtherNick := '';
+    _pres_img := -1;
 end;
 
 {---------------------------------------}
 procedure TfrmChat.SetJID(cjid: string);
 var
     ritem: TJabberRosterItem;
+    p: TJabberPres;
     i: integer;
 begin
     jid := cjid;
@@ -244,19 +234,26 @@ begin
 
     // setup the captions, etc..
     ritem := MainSession.Roster.Find(_jid.jid);
+    p := MainSession.ppdb.FindPres(_jid.jid, '');
+
     if ritem <> nil then begin
-        lblNick.Caption := ritem.Nickname;
+        lblNick.Caption := ' ' + ritem.Nickname;
         lblJID.Caption := '<' + _jid.full + '>';
         Caption := ritem.Nickname + ' - Chat';
         end
     else begin
-        lblNick.Caption := '';
+        lblNick.Caption := ' ';
         lblJID.Caption := cjid;
         if OtherNick <> '' then
             Caption := OtherNick + ' - Chat'
         else
             Caption := _jid.user + ' - Chat';
         end;
+
+    if (p = nil) then
+        ChangePresImage('offline')
+    else
+        ChangePresImage(p.show);
 
     // synchronize the session chat list with this JID
     i := MainSession.ChatList.indexOfObject(chat_object);
@@ -440,11 +437,30 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmChat.ChangePresImage(show: string);
+begin
+    // Change the bulb
+    if (show = 'offline') then
+        _pres_img := ico_Offline
+    else if (show = 'away') then
+        _pres_img := ico_Away
+    else if (show = 'xa') then
+        _pres_img := ico_XA
+    else if (show = 'dnd') then
+        _pres_img := ico_DND
+    else if (show = 'chat') then
+        _pres_img := ico_Chat
+    else
+        _pres_img := ico_Online;
+
+    Self.imgStatusPaint(Self);
+end;
+
+{---------------------------------------}
 procedure TfrmChat.showPres(tag: TXMLTag);
 var
     txt: string;
-    stag: TXMLTag;
-    User  : String;
+    s, User  : String;
 begin
     // Get the user
     user := tag.GetAttribute('from');
@@ -452,13 +468,13 @@ begin
     //check to see if this is the person you are chatting with...
     if pos(jid, user) = 0 then Exit;
     txt := '';
-    stag := tag.GetFirstTag('status');
 
-    if stag <> nil then
-        txt := stag.Data
-    else
-        txt := tag.GetAttribute('type');
+    s := tag.GetBasicText('show');
+    ChangePresImage(s);
 
+    txt := tag.GetBasicText('status');
+
+    if (txt = '') then txt := s;
     if txt = '' then exit;
 
     txt := '[' + formatdatetime('HH:MM',now) + '] ' + jid + ' is now ' + txt;
@@ -471,17 +487,6 @@ begin
     if Self.Visible then
         MsgOut.SetFocus;
     // FlashWindow(Self.Handle, false);
-end;
-
-{---------------------------------------}
-procedure TfrmChat.FormResize(Sender: TObject);
-begin
-  inherited;
-    // check to make sure the JID and Subject fit..
-    {
-    lw := lblJID.width;
-    tw := Panel7.Canvas.TextWidth(lblJID.Caption);
-    }
 end;
 
 {---------------------------------------}
@@ -516,18 +521,21 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmChat.btnHistoryClick(Sender: TObject);
 begin
   inherited;
     ShowLog(_jid.jid);
 end;
 
+{---------------------------------------}
 procedure TfrmChat.btnProfileClick(Sender: TObject);
 begin
   inherited;
     ShowProfile(_jid.jid);
 end;
 
+{---------------------------------------}
 procedure TfrmChat.btnAddRosterClick(Sender: TObject);
 var
     ritem: TJabberRosterItem;
@@ -549,12 +557,14 @@ begin
 
 end;
 
+{---------------------------------------}
 procedure TfrmChat.MsgListURLClick(Sender: TObject; url: String);
 begin
   inherited;
     ShellExecute(0, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
 end;
 
+{---------------------------------------}
 procedure TfrmChat.lblJIDClick(Sender: TObject);
 var
     cp: TPoint;
@@ -564,16 +574,27 @@ begin
     popContact.popup(cp.x, cp.y);
 end;
 
+{---------------------------------------}
 procedure TfrmChat.mnuReturnsClick(Sender: TObject);
 begin
   inherited;
     mnuReturns.Checked := not mnuReturns.Checked;
 end;
 
+{---------------------------------------}
 procedure TfrmChat.mnuSendFileClick(Sender: TObject);
 begin
   inherited;
     FileSend(_jid.full);
 end;
 
+{---------------------------------------}
+procedure TfrmChat.imgStatusPaint(Sender: TObject);
+begin
+  inherited;
+    // repaint
+    frmRosterWindow.ImageList1.Draw(imgStatus.Canvas, 1, 1, _pres_img);
+end;
+
 end.
+

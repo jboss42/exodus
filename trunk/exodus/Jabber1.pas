@@ -124,7 +124,6 @@ type
     ImageList2: TImageList;
     mnuExpanded: TMenuItem;
     Splitter1: TSplitter;
-    lstEvents: TListView;
     N1: TMenuItem;
     N2: TMenuItem;
     timFlasher: TTimer;
@@ -177,6 +176,7 @@ type
     Custom3: TMenuItem;
     N18: TMenuItem;
     btnRoom: TToolButton;
+    pnlRight: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -189,9 +189,6 @@ type
     procedure Preferences1Click(Sender: TObject);
     procedure btnExpandedClick(Sender: TObject);
     procedure ClearMessages1Click(Sender: TObject);
-    procedure lstEventsDblClick(Sender: TObject);
-    procedure lstEventsKeyDown(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
     procedure FormShow(Sender: TObject);
     procedure btnDelPersonClick(Sender: TObject);
     procedure ShowXML1Click(Sender: TObject);
@@ -311,6 +308,24 @@ var
 {---------------------------------------}
 const
     MaxIcons = 64;      // How many icons are in icons.res ??
+
+    ico_Unassigned = -1;
+    ico_Offline = 0;
+    ico_None = 1;
+    ico_Online = 1;
+    ico_Chat = 4;
+    ico_Away = 2;
+    ico_XA = 10;
+    ico_DND = 3;
+    ico_Folder = 9;
+    ico_ResFolder = 7;
+    ico_Unknown = 6;
+    ico_msg = 11;
+    ico_info = 12;
+
+    ico_down = 27;
+    ico_right = 28;
+
 
     ico_Error = 21;
     ico_Unread = 23;
@@ -617,10 +632,7 @@ begin
 
     exp := MainSession.Prefs.getBool('expanded');
 
-    if exp then
-        lstEvents.Width := MainSession.Prefs.getInt('event_width')
-    else
-        lstEvents.Visible := false;
+    pnlRight.Visible := exp;
 
     restoreEvents(exp);
     _noMoveCheck := false;
@@ -663,6 +675,13 @@ end;
 {---------------------------------------}
 procedure TExodus.Startup;
 begin
+    if (MainSession.Prefs.getBool('expanded')) then begin
+        getMsgQueue();
+        frmMsgQueue.ManualDock(Self.pnlRight, nil, alClient);
+        frmMsgQueue.Align := alClient;
+        frmMsgQueue.Show;
+        end;
+
     with MainSession.Prefs do begin
         if (_auto_login) then begin
             // snag default profile, etc..
@@ -674,53 +693,10 @@ begin
         end;
 end;
 
-(*
-{---------------------------------------}
-function KeyboardHook(code: integer; wParam: word; lparam: longword): longword; stdcall; export;
-begin
-    //
-    if (((HiWord(lParam) and KF_UP) <> 0) and (code = HC_ACTION)) then
-        frmJabber.last_tick := GetTickCount();
-
-    Result := CallNextHookEx(frmJabber._hook_keyboard, code, wparam, lparam);
-end;
-
-{---------------------------------------}
-function MouseHook(code: integer; wParam: word; lparam: longword): longword; stdcall; export;
-begin
-    //
-    if (code = HC_ACTION) then begin
-        {
-        case wParam of
-        WM_LBUTTONDOWN, WM_LBUTTONUP, WM_LBUTTONDBLCLK,
-        WM_RBUTTONDOWN, WM_RBUTTONUP, WM_RBUTTONDBLCLK,
-        WM_MBUTTONDOWN, WM_MBUTTONUP, WM_MBUTTONDBLCLK,
-        WM_MOUSEMOVE: begin
-        }
-            DebugMsg('MouseHook ');
-            frmJabber.last_tick := GetTickCount();
-        {
-            end;
-        else
-            // do nothing
-        end;
-        }
-        end;
-
-    Result := CallNextHookEx(frmJabber._hook_mouse, code, wparam, lparam);
-end;
-*)
-
 {---------------------------------------}
 procedure TExodus.setupAutoAwayTimer();
 begin
     DebugMsg('Trying to setup the Auto Away timer.'#13#10);
-
-    {
-    _hook_keyboard := SetWindowsHookEx(WH_KEYBOARD, @KeyboardHook, 0, GetCurrentThreadID());
-    _hook_mouse := SetWindowsHookEx(WH_MOUSE, @MouseHook, 0, GetCurrentThreadID());
-    }
-
     @_GetHookPointer := nil;
     @_InitHooks := nil;
     @_StopHooks := nil;
@@ -791,7 +767,9 @@ begin
         if _event <> next_none then
             nextTimer.Enabled := true;
         timAutoAway.Enabled := false;
-        lstEvents.Items.Clear;
+
+        if (frmMsgQueue <> nil) then
+            frmMsgQueue.lstEvents.Items.Clear;
 
         Self.Caption := 'Exodus';
         setTrayInfo(Self.Caption);
@@ -861,7 +839,8 @@ begin
             Self.AlphaBlendValue := MainSession.Prefs.getInt('roster_alpha_val')
         else
             Self.AlphaBlendValue := 255;
-        lstEvents.Color := TColor(getInt('roster_bg'));
+        if (frmMsgQueue <> nil) then
+            frmMsgQueue.lstEvents.Color := TColor(getInt('roster_bg'));
         end;
 end;
 
@@ -985,7 +964,6 @@ procedure TExodus.RenderEvent(e: TJabberEvent);
 var
     toast, msg: string;
     img_idx, n_flag: integer;
-    item: TListItem;
     mqueue: TfrmMsgQueue;
 begin
     // create a listview item for this event
@@ -1052,11 +1030,7 @@ begin
         FlashWindow(Self.Handle, true);
 
     if MainSession.Prefs.getBool('expanded') then begin
-        item := lstEvents.Items.Add;
-        item.Caption := e.from;
-        item.Data := e;
-        item.ImageIndex := img_idx;
-        item.SubItems.Add(msg);
+        getMsgQueue().LogEvent(e, msg, img_idx);
         end
     else if (e.delayed) then begin
         // we are collapsed, just display in regular windows
@@ -1088,10 +1062,10 @@ begin
         end;
 
     MainSession.Prefs.SavePosition(Self);
-    lstEvents.Items.Clear;
-
-    if (frmMsgQueue <> nil) then
+    if (frmMsgQueue <> nil) then begin
+        frmMsgQueue.lstEvents.Items.Clear;
         frmMsgQueue.Close;
+        end;
 
     if MainSession <> nil then begin
         _event := next_Exit;
@@ -1187,15 +1161,24 @@ begin
         Tabs.DockSite := true;
         w := MainSession.Prefs.getInt('event_width');
         Self.ClientWidth := Self.ClientWidth + w - delta;
-        lstEvents.Visible := true;
+        pnlRight.Visible := true;
+        getMsgQueue().ManualDock(pnlRight, nil, alClient);
         pnlRoster.Width := Self.ClientWidth - w;
-        lstEvents.Width := w;
+        pnlRight.Width := w;
         end
     else begin
         // we are compressed now
-        w := lstEvents.Width;
-        lstEvents.Visible := false;
+        w := pnlRight.Width;
+        pnlRight.Visible := false;
         MainSession.Prefs.setInt('event_width', w);
+
+        // Undock the MsgQueue... if it's empty, close it.
+        if (frmMsgQueue <> nil) then begin
+            if (frmMsgQueue.lstEvents.Items.Count > 0) then
+                frmMsgQueue.FloatForm
+            else
+                frmMsgQueue.Close;
+            end;
 
         // make sure we undock all of the tabs..
         while (Tabs.DockClientCount > 0) do begin
@@ -1228,13 +1211,19 @@ begin
             pnlRoster.align := alLeft;
             Splitter1.align := alRight;
             Splitter1.align := alLeft;
+            pnlRight.Width := w;
             ew := Self.ClientWidth - w;
             if (ew < 0) then ew := Self.ClientWidth div 2;
             pnlRoster.Width := ew;
-            lstEvents.Visible := true;
-            lstEvents.Width := w;
+            pnlRight.Visible := true;
+            pnlRight.Width := w;
             tbsMsg.TabVisible := true;
-            // tbsDebug.TabVisible := true;
+
+            // make sure the MsgQueue window is docked
+            if (frmMsgQueue <> nil) then begin
+                frmMsgQueue.ManualDock(pnlRight, nil, alClient);
+                frmMsgQueue.Show;
+                end;
 
             // make sure the debug window is docked
             activeTab := Tabs.ActivePageIndex;
@@ -1244,10 +1233,9 @@ begin
                 end;
 
             Tabs.ActivePageIndex := activeTab;
-            lstEvents.Width := w;
             end
         else begin
-            w := lstEvents.Width;
+            w := pnlRight.Width;
             setInt('event_width', w);
             tbsMsg.TabVisible := false;
             //tbsDebug.TabVisible := false;
@@ -1268,42 +1256,8 @@ end;
 procedure TExodus.ClearMessages1Click(Sender: TObject);
 begin
     // Clear events from the list view.
-    lstEvents.Items.Clear;
-end;
-
-{---------------------------------------}
-procedure TExodus.lstEventsDblClick(Sender: TObject);
-var
-    e: TJabberEvent;
-begin
-    // show info for this node
-    if (lstEvents.Selected = nil) then exit;
-    e := TJabberEvent(lstEvents.Selected.Data);
-    ShowEvent(e);
-end;
-
-{---------------------------------------}
-procedure TExodus.lstEventsKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-var
-    i: integer;
-begin
-    // pickup hot-keys on the list view..
-    case Key of
-    VK_DELETE, VK_BACK, Ord('d'), Ord('D'): begin
-        // delete the selected item
-        if lstEvents.Selected <> nil then begin
-            i := lstEvents.Selected.Index;
-            lstEvents.Items.Delete(i);
-            if (i < lstEvents.Items.Count) then
-                lstEvents.Selected := lstEvents.Items[i]
-            else if (lstEvents.Items.Count > 0) then
-                lstEvents.Selected := lstEvents.Items[lstEvents.Items.Count - 1];
-            end;
-        Key := $0;
-        end;
-    end;
-
+    if (frmMsgQueue <> nil) then
+        frmMsgQueue.lstEvents.Items.Clear;
 end;
 
 {---------------------------------------}
@@ -1389,7 +1343,7 @@ end;
 procedure TExodus.Splitter1Moved(Sender: TObject);
 begin
     // Save the current width
-    MainSession.Prefs.setInt('event_width', lstEvents.Width);
+    MainSession.Prefs.setInt('event_width', pnlRight.Width);
 end;
 
 {---------------------------------------}

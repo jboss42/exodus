@@ -320,7 +320,7 @@ begin
         toJid := '';
         Namespace := 'jabber:iq:private';
         with qtag.AddTag('bookmarks') do
-            putAttribute('xmlns', 'storage:bookmarks');
+            putAttribute('xmlns', XMLNS_BM);
         Send();
         end;
 end;

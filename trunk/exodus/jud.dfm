@@ -1,8 +1,8 @@
 inherited frmJUD: TfrmJUD
-  Left = 271
-  Top = 166
-  Width = 437
-  Height = 442
+  Left = 272
+  Top = 167
+  Width = 435
+  Height = 440
   BorderWidth = 3
   Caption = 'Search for Contacts'
   OldCreateOrder = True
@@ -12,7 +12,7 @@ inherited frmJUD: TfrmJUD
     Left = 0
     Top = 0
     Width = 164
-    Height = 407
+    Height = 405
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 0
@@ -66,7 +66,7 @@ inherited frmJUD: TfrmJUD
     end
     object pnlBottom: TPanel
       Left = 0
-      Top = 373
+      Top = 371
       Width = 164
       Height = 34
       Align = alBottom
@@ -95,7 +95,7 @@ inherited frmJUD: TfrmJUD
       Left = 0
       Top = 276
       Width = 164
-      Height = 97
+      Height = 95
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
@@ -173,8 +173,8 @@ inherited frmJUD: TfrmJUD
   object lstContacts: TListView
     Left = 164
     Top = 0
-    Width = 259
-    Height = 407
+    Width = 257
+    Height = 405
     Align = alClient
     Columns = <>
     MultiSelect = True

@@ -112,6 +112,7 @@ function StartRoom(rjid, rnick: string): TfrmRoom;
 {---------------------------------------}
 implementation
 uses
+    ExUtils, 
     RiserWindow, 
     ShellAPI, 
     RichEdit, 
@@ -147,28 +148,16 @@ begin
         f.DockForm;
 
     // setup prefs
-    with MainSession.Prefs, f do begin
-        MsgList.Font.Name := getString('font_name');
-        MsgList.Font.Size := getInt('font_size');
-        MsgList.Font.Style := [];
-        MsgList.Color := TColor(getInt('color_bg'));
-        MsgList.Font.Color := TColor(getInt('font_color'));
-        if getBool('font_bold') then
-            MsgList.Font.Style := MsgList.Font.Style + [fsBold];
-        if getBool('font_italic') then
-            MsgList.Font.Style := MsgList.Font.Style + [fsItalic];
-        if getBool('font_underline') then
-            MsgList.Font.Style := MsgList.Font.Style + [fsUnderline];
-
+    with f do begin
+        AssignDefaultFont(MsgList.Font);
+        MsgList.Color := TColor(MainSession.Prefs.getInt('color_bg'));
         MsgOut.Color := MsgList.Color;
         MsgOut.Font.Assign(MsgList.Font);
-
         treeRoster.Color := MsgList.Color;
         //treeRoster.Font.Assign(MsgList.Font);
+        Caption := tmp_jid.user + ' Room';
+        Show;
         end;
-
-    f.Caption := tmp_jid.user + ' Room';
-    f.Show;
 
     if f.TabSheet <> nil then
         frmJabber.Tabs.ActivePage := f.TabSheet;

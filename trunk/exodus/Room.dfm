@@ -1,8 +1,8 @@
 object frmRoom: TfrmRoom
-  Left = 257
-  Top = 217
-  Width = 443
-  Height = 349
+  Left = 258
+  Top = 218
+  Width = 441
+  Height = 347
   Caption = 'Conference Room'
   Color = clBtnFace
   DragKind = dkDock
@@ -20,8 +20,8 @@ object frmRoom: TfrmRoom
   TextHeight = 13
   object Splitter2: TSplitter
     Left = 0
-    Top = 281
-    Width = 435
+    Top = 284
+    Width = 433
     Height = 3
     Cursor = crVSplit
     Align = alBottom
@@ -30,27 +30,27 @@ object frmRoom: TfrmRoom
   object Panel3: TPanel
     Left = 0
     Top = 18
-    Width = 435
-    Height = 263
+    Width = 433
+    Height = 266
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
     Caption = 'pnlMsgs'
     TabOrder = 0
     object Splitter1: TSplitter
-      Left = 323
+      Left = 321
       Top = 4
       Width = 3
-      Height = 255
+      Height = 258
       Cursor = crHSplit
       Align = alRight
       ResizeStyle = rsUpdate
     end
     object Panel6: TPanel
-      Left = 326
+      Left = 324
       Top = 4
       Width = 105
-      Height = 255
+      Height = 258
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -60,7 +60,7 @@ object frmRoom: TfrmRoom
         Left = 1
         Top = 1
         Width = 103
-        Height = 253
+        Height = 256
         Align = alClient
         Images = frmRosterWindow.ImageList1
         Indent = 19
@@ -77,8 +77,8 @@ object frmRoom: TfrmRoom
     object MsgList: TExRichEdit
       Left = 4
       Top = 4
-      Width = 319
-      Height = 255
+      Width = 317
+      Height = 258
       Align = alClient
       PopupMenu = popRoom
       ReadOnly = True
@@ -89,8 +89,8 @@ object frmRoom: TfrmRoom
   end
   object pnlInput: TPanel
     Left = 0
-    Top = 284
-    Width = 435
+    Top = 287
+    Width = 433
     Height = 31
     Align = alBottom
     BevelOuter = bvNone
@@ -100,7 +100,7 @@ object frmRoom: TfrmRoom
     object MsgOut: TMemo
       Left = 2
       Top = 2
-      Width = 431
+      Width = 429
       Height = 27
       Align = alClient
       Font.Charset = DEFAULT_CHARSET
@@ -118,7 +118,7 @@ object frmRoom: TfrmRoom
   object Panel7: TPanel
     Left = 0
     Top = 0
-    Width = 435
+    Width = 433
     Height = 18
     Align = alTop
     BevelOuter = bvNone
@@ -127,7 +127,7 @@ object frmRoom: TfrmRoom
     object Panel2: TPanel
       Left = 2
       Top = 2
-      Width = 431
+      Width = 429
       Height = 14
       Align = alClient
       BevelOuter = bvNone
@@ -135,7 +135,7 @@ object frmRoom: TfrmRoom
       object lblSubject: TLabel
         Left = 39
         Top = 0
-        Width = 392
+        Width = 390
         Height = 14
         Align = alClient
         ParentShowHint = False

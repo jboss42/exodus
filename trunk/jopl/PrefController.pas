@@ -86,29 +86,34 @@ type
 
     TPrefController = class
     private
+        _js: TObject;
         _pref_filename: string;
         _pref_node: TXMLTag;
+        _server_node: TXMLTag;
         _profiles: TStringList;
         _parser: TXMLTagParser;
-        
+        _server_dirty: boolean;
+
         function getDefault(pkey: string): string;
         function findPresenceTag(pkey: string): TXMLTag;
         procedure Save;
+        procedure ServerPrefsCallback(event: string; tag: TXMLTag);
     public
         constructor Create(filename: string);
 
-        function getString(pkey: string): string;
-        function getInt(pkey: string): integer;
-        function getBool(pkey: string): boolean;
-        function getStringlist(pkey: string): TStringList;
+        function getString(pkey: string; server_side: boolean = false): string;
+        function getInt(pkey: string; server_side: boolean = false): integer;
+        function getBool(pkey: string; server_side: boolean = false): boolean;
+        function getStringlist(pkey: string; server_side: boolean = false): TStringList;
+
         function getAllPresence(): TList;
         function getPresence(pkey: string): TJabberCustomPres;
         function getPresIndex(idx: integer): TJabberCustomPres;
 
-        procedure setString(pkey, pvalue: string);
-        procedure setInt(pkey: string; pvalue: integer);
-        procedure setBool(pkey: string; pvalue: boolean);
-        procedure setStringlist(pkey: string; pvalue: TStrings);
+        procedure setString(pkey, pvalue: string; server_side: boolean = false);
+        procedure setInt(pkey: string; pvalue: integer; server_side: boolean = false);
+        procedure setBool(pkey: string; pvalue: boolean; server_side: boolean = false);
+        procedure setStringlist(pkey: string; pvalue: TStrings; server_side: boolean = false);
         procedure setPresence(pvalue: TJabberCustomPres);
         procedure removePresence(pvalue: TJabberCustomPres);
         procedure removeAllPresence();
@@ -118,6 +123,10 @@ type
 
         procedure LoadProfiles;
         procedure SaveProfiles;
+
+        procedure SetSession(js: TObject);
+        procedure FetchServerPrefs();
+        procedure SaveServerPrefs();
 
         function CreateProfile(name: string): TJabberProfile;
         procedure RemoveProfile(p: TJabberProfile);
@@ -135,7 +144,7 @@ function getUserDir: string;
 {---------------------------------------}
 implementation
 uses
-    XMLUtils,
+    Session, IQ, XMLUtils,
     {$ifdef Win32}
     Graphics;
     {$else}
@@ -195,6 +204,9 @@ begin
         end
     else
         _pref_node := TXMLTag.Create('exodus');
+
+    _server_node := nil;
+    _server_dirty := false;
 
     _profiles := TStringList.Create;
 end;
@@ -290,12 +302,16 @@ begin
 end;
 
 {---------------------------------------}
-function TPrefController.getString(pkey: string): string;
+function TPrefController.getString(pkey: string; server_side: boolean = false): string;
 var
     t: TXMLTag;
 begin
     // find string value
-    t := _pref_node.GetFirstTag(pkey);
+    if (Server_side) then
+        t := _server_node.GetFirstTag(pkey)
+    else
+        t := _pref_node.GetFirstTag(pkey);
+
     if (t = nil) then
         Result := getDefault(pkey)
     else
@@ -303,23 +319,24 @@ begin
 end;
 
 {---------------------------------------}
-function TPrefController.getInt(pkey: string): integer;
+function TPrefController.getInt(pkey: string; server_side: boolean = false): integer;
 begin
     // find int value
-    Result := SafeInt(getString(pkey));
+    Result := SafeInt(getString(pkey, server_side));
 end;
 
 {---------------------------------------}
-function TPrefController.getBool(pkey: string): boolean;
+function TPrefController.getBool(pkey: string; server_side: boolean = false): boolean;
 begin
-    if ((lowercase(getString(pkey)) = 'true') or (getString(pkey) = '1')) then
+    if ((lowercase(getString(pkey, server_side)) = 'true') or
+    (getString(pkey, server_side) = '1')) then
         Result := true
     else
         Result := false;
 end;
 
 {---------------------------------------}
-function TPrefController.getStringlist(pkey: string): TStringList;
+function TPrefController.getStringlist(pkey: string; server_side: boolean = false): TStringList;
 var
     sl: TStringList;
     p: TXMLTag;
@@ -328,7 +345,11 @@ var
 begin
     sl := TStringList.Create;
 
-    p := _pref_node.getFirstTag(pkey);
+    if (server_side) then
+        p := _server_node.getFirstTag(pkey)
+    else
+        p := _pref_node.getFirstTag(pkey);
+
     if (p <> nil) then begin
         s := p.QueryTags('s');
         for i := 0 to s.Count - 1 do
@@ -339,49 +360,63 @@ begin
 end;
 
 {---------------------------------------}
-procedure TPrefController.setBool(pkey: string; pvalue: boolean);
+procedure TPrefController.setBool(pkey: string; pvalue: boolean; server_side: boolean = false);
 begin
      if (pvalue) then
-        setString(pkey, 'true')
+        setString(pkey, 'true', server_side)
      else
-        setString(pkey, 'false');
+        setString(pkey, 'false', server_side);
 end;
 
 {---------------------------------------}
-procedure TPrefController.setString(pkey, pvalue: string);
+procedure TPrefController.setString(pkey, pvalue: string; server_side: boolean = false);
 var
-    t: TXMLTag;
+    n, t: TXMLTag;
 begin
-    t := _pref_node.GetFirstTag(pkey);
+    if (server_side) then begin
+        n := _server_node;
+        _server_dirty := true;
+        end
+    else
+        n := _pref_node;
+
+    t := n.GetFirstTag(pkey);
     if (t <> nil) then begin
         t.ClearCData;
         t.AddCData(pvalue);
         end
     else
-        _pref_node.AddBasicTag(pkey, pvalue);
+        n.AddBasicTag(pkey, pvalue);
 
     // do we really want to ALWAYS save here?
-    Self.Save();
+    if (not server_side) then Self.Save();
 end;
 
 {---------------------------------------}
-procedure TPrefController.setInt(pkey: string; pvalue: integer);
+procedure TPrefController.setInt(pkey: string; pvalue: integer; server_side: boolean = false);
 begin
-    setString(pkey, IntToStr(pvalue));
+    setString(pkey, IntToStr(pvalue), server_side);
 end;
 
 {---------------------------------------}
-procedure TPrefController.setStringlist(pkey: string; pvalue: TStrings);
+procedure TPrefController.setStringlist(pkey: string; pvalue: TStrings; server_side: boolean = false);
 var
     i: integer;
-    p: TXMLTag;
+    n, p: TXMLTag;
 begin
     // setup the stringlist in it's own parent..
     // with multiple <s> tags for each value.
-    p := _pref_node.GetFirstTag(pkey);
+    if (Server_side) then begin
+        n := _server_node;
+        _server_dirty := true;
+        end
+    else
+        n := _pref_node;
+
+    p := n.GetFirstTag(pkey);
 
     if (p = nil) then
-        p := _pref_node.AddTag(pkey)
+        p := n.AddTag(pkey)
     else
         p.ClearTags();
 
@@ -389,7 +424,8 @@ begin
     for i := 0 to pvalue.Count - 1 do
         p.AddBasicTag('s', pvalue[i]);
 
-    Self.Save();
+    if (not server_side) then
+        Self.Save();
 end;
 
 {---------------------------------------}
@@ -403,7 +439,7 @@ begin
 
     ptags := _pref_node.QueryTags('presence');
     for i := 0 to ptags.count - 1 do begin
-        if (ptags[i].GetAttribute('title') = pkey) then begin
+        if (ptags[i].GetAttribute('name') = pkey) then begin
             Result := ptags[i];
             break;
             end;
@@ -418,7 +454,7 @@ var
     tag: TXMLTag;
 begin
     // remove this specific presence
-    tag := _pref_node.QueryXPTag('/exodus/presence@title="' + pvalue.title + '"');
+    tag := _pref_node.QueryXPTag('/exodus/presence@name="' + pvalue.title + '"');
 
     if (tag <> nil) then
         _pref_node.RemoveTag(tag);
@@ -434,6 +470,7 @@ begin
     ptags := _pref_node.QueryTags('presence');
     for i := 0 to ptags.count - 1 do
         _pref_node.RemoveTag(ptags.Tags[i]);
+    ptags.Free;
 end;
 
 {---------------------------------------}
@@ -477,7 +514,7 @@ begin
     Result := nil;
     ptags := _pref_node.QueryTags('presence');
     if ((idx >= 0) and (idx < ptags.Count)) then
-        Result := getPresence(ptags[idx].GetAttribute('title'));
+        Result := getPresence(ptags[idx].GetAttribute('name'));
 end;
 
 {---------------------------------------}
@@ -612,6 +649,69 @@ begin
 
     Self.Save();
     ptags.Free;
+end;
+
+{---------------------------------------}
+procedure TPrefController.SetSession(js: TObject);
+begin
+    // Save the session pointer;
+    _js := js;
+end;
+
+{---------------------------------------}
+procedure TPrefController.FetchServerPrefs();
+var
+    iq: TJabberIQ;
+    js: TJabberSession;
+begin
+    // Fetch the server stored prefs
+    js := TJabberSession(_js);
+    iq := TJabberIQ.Create(js, js.generateID(), ServerprefsCallback, 60);
+    with iq do begin
+        iqType := 'get';
+        toJID := js.Server;
+        Namespace := XMLNS_PRIVATE;
+        with qtag.AddTag('storage') do
+            putAttribute('xmlns', XMLNS_PREFS);
+        Send();
+        end;
+end;
+
+{---------------------------------------}
+procedure TPrefController.SaveServerPrefs();
+var
+    js: TJabberSession;
+    stag, iq: TXMLTag;
+begin
+    // Save the prefs to the server
+    if (_server_node = nil) then exit;
+    if (_js = nil) then exit;
+    js := TJabberSession(_js);
+    if (not js.Stream.Active) then exit;
+    if (not _server_dirty) then exit;
+
+    iq := TXMLTag.Create('iq');
+    with iq do begin
+        putAttribute('type', 'set');
+        putAttribute('id', js.generateID());
+        with AddTag('query') do begin
+            putAttribute('xmlns', XMLNS_PRIVATE);
+            stag := AddTag('storage');
+            stag.AssignTag(_server_node);
+            stag.PutAttribute('xmlns', XMLNS_PREFS);
+            end;
+        end;
+    js.SendTag(iq);
+    _server_dirty := false;
+end;
+
+{---------------------------------------}
+procedure TPrefController.ServerprefsCallback(event: string; tag: TXMLTag);
+begin
+    // Cache the prefs node
+    if (tag = nil) then exit;
+    _server_node := tag.QueryXPTag('/iq/query/storage');
+    TJabberSession(_js).FireEvent('/session/server_prefs', _server_node);
 end;
 
 {---------------------------------------}

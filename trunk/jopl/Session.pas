@@ -135,6 +135,7 @@ const
     XMLNS_SEARCH    = 'jabber:iq:search';
     XMLNS_PRIVATE   = 'jabber:iq:private';
     XMLNS_BM        = 'storage:bookmarks';
+    XMLNS_PREFS     = 'storage:imprefs';
 
 
 var
@@ -196,6 +197,7 @@ begin
 
     Prefs := TPrefController.Create(ConfigFile);
     Prefs.LoadProfiles;
+    Prefs.SetSession(Self);
 
     Agents := TStringList.Create();
 end;
@@ -239,6 +241,8 @@ end;
 {---------------------------------------}
 procedure TJabberSession.Disconnect;
 begin
+    // Save the server side prefs and kill our connection.
+    Prefs.SaveServerPrefs();
     _stream.Send('<presence type="unavailable"/>');
     _stream.Disconnect;
     _register := false;
@@ -447,7 +451,7 @@ var
 begin
     // find out the potential auth kinds for this user
     // iqAuth := TJabberIQ.Create(Self, generateID, Self.AuthGetCallback);
-    iqAuth := TJabberIQ.Create(Self, generateID, AuthGetCallback, 180000);
+    iqAuth := TJabberIQ.Create(Self, generateID, AuthGetCallback, 180);
     with iqAuth do begin
         Namespace := XMLNS_AUTH;
         iqType := 'get';
@@ -463,7 +467,7 @@ var
     iqReg: TJabberIQ;
 begin
     // send an iq register
-    iqReg := TJabberIQ.Create(Self, generateID, RegistrationCallback, 180000);
+    iqReg := TJabberIQ.Create(Self, generateID, RegistrationCallback, 180);
     with iqReg do begin
         Namespace := XMLNS_REGISTER;
         iqType := 'set';
@@ -567,6 +571,7 @@ begin
         cur_agents := TAgents.Create();
         Agents.AddObject(_server, cur_agents);
         cur_agents.Fetch(_server);
+        Prefs.FetchServerPrefs();
         end;
 end;
 
@@ -603,6 +608,11 @@ begin
     _status := status;
     _priority := priority;
     SendTag(p);
+
+    // if we are going away or xa, save the prefs
+    if ((show = 'away') or (show = 'xa')) then
+        Prefs.SaveServerPrefs();
+
     MainSession.FireEvent('/session/presence', nil);
 end;
 
