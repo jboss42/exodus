@@ -161,7 +161,10 @@ type
     end;
 
     TPacketSignal = class(TSignal)
+    private
+        _next: string;
     public
+        constructor Create(next_sig: string = '');
         function addListener(xplite: string; callback: TPacketEvent): TPacketListener; overload;
         procedure Invoke(event: string; tag: TXMLTag); override;
     end;
@@ -521,6 +524,14 @@ end;
 
 {------------------------------------------------------------------------------}
 {------------------------------------------------------------------------------}
+constructor TPacketSignal.Create(next_sig: string);
+begin
+    inherited Create();
+    
+    _next := next_sig;
+end;
+
+{---------------------------------------}
 function TPacketSignal.addListener(xplite: string; callback: TPacketEvent): TPacketListener;
 var
     l: TPacketListener;
@@ -550,8 +561,9 @@ begin
     use basic syntax like:
     /iq/query@xmlns='jabber:iq:roster'
     }
-    invoking := true;
     fired := false;
+
+    invoking := true;
     for i := 0 to Self.Count - 1 do begin
         pl := TPacketListener(Self.Objects[i]);
         xp := pl.XPLite;
@@ -568,9 +580,9 @@ begin
     end;
     invoking := false;
 
-    if (fired = false) then begin
-        // fire unhandled packet
-        Dispatcher.DispatchSignal('/unhandled', tag);
+    // if we didn't fire, and we have a signal to call next, do so.
+    if ((fired = false) and (_next <> '')) then begin
+        Dispatcher.DispatchSignal(_next, tag);
     end;
 
     if change_list.Count > 0 then

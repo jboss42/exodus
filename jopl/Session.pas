@@ -49,6 +49,7 @@ type
 
         // Dispatcher
         _dispatcher: TSignalDispatcher;
+        _preSignal: TPacketSignal;
         _packetSignal: TPacketSignal;
         _sessionSignal: TBasicSignal;
         _rosterSignal: TRosterSignal;
@@ -199,7 +200,8 @@ begin
 
     // Create the event dispatcher mechanism
     _dispatcher := TSignalDispatcher.Create;
-    _packetSignal := TPacketSignal.Create();
+    _preSignal := TPacketSignal.Create('/packet');
+    _packetSignal := TPacketSignal.Create('/unhandled');
     _sessionSignal := TBasicSignal.Create();
     _rosterSignal := TRosterSignal.Create();
     _presSignal := TPresenceSignal.Create();
@@ -207,6 +209,7 @@ begin
     _unhandledSignal := TBasicSignal.Create();
     _winSignal := TPacketSignal.Create();
 
+    _dispatcher.AddSignal('/pre', _preSignal);
     _dispatcher.AddSignal('/packet', _packetSignal);
     _dispatcher.AddSignal('/session', _sessionSignal);
     _dispatcher.AddSignal('/roster', _rosterSignal);
@@ -586,8 +589,9 @@ begin
             end;
         end
 
-        else
-            _dispatcher.DispatchSignal('/packet', tag);
+        else begin
+            _dispatcher.DispatchSignal('/pre', tag);
+        end;
     end;
 
 end;
@@ -694,7 +698,11 @@ begin
 
     // Find the correct signal to register with
     i := _dispatcher.IndexOf(tok1);
-    if tok1 = '/packet' then begin
+    if (tok1 = '/pre') then begin
+        pk := _preSignal.addListener(xplite, callback);
+        result := pk.cb_id;
+    end
+    else if tok1 = '/packet' then begin
         pk := _packetSignal.addListener(xplite, callback);
         result := pk.cb_id;
     end

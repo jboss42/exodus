@@ -69,6 +69,7 @@ implementation
 uses
     GnuGetText, ExUtils, PrefController, Session, Registry;
 
+{---------------------------------------}
 procedure TfrmPrefNetwork.LoadPrefs();
 begin
     inherited;
@@ -76,6 +77,7 @@ begin
     chkProxyAuthClick(chkProxyAuth);
 end;
 
+{---------------------------------------}
 procedure TfrmPrefNetwork.SavePrefs();
 var
     reg: TRegistry;
