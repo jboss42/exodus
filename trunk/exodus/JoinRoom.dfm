@@ -110,12 +110,6 @@ object frmJoinRoom: TfrmJoinRoom
       Height = 13
       Cursor = crHandPoint
       Caption = 'Get room list from this server...'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clBlue
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsUnderline]
-      ParentFont = False
       OnClick = lblFetchClick
     end
     object txtServer: TTntComboBox

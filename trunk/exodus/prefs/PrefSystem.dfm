@@ -21,12 +21,6 @@ inherited frmPrefSystem: TfrmPrefSystem
     Height = 13
     Cursor = crHandPoint
     Caption = 'Scan for language catalogs'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clBlue
-    Font.Height = -11
-    Font.Name = 'MS Sans Serif'
-    Font.Style = [fsUnderline]
-    ParentFont = False
     OnClick = lblPluginScanClick
   end
   object Label15: TTntLabel [2]

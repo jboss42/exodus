@@ -21,12 +21,6 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     Height = 13
     Cursor = crHandPoint
     Caption = 'Re-Scan this directory for plugins'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clBlue
-    Font.Height = -11
-    Font.Name = 'MS Sans Serif'
-    Font.Style = [fsUnderline]
-    ParentFont = False
     OnClick = lblPluginScanClick
   end
   inherited pnlHeader: TTntPanel

@@ -15,12 +15,6 @@ inherited frmPrefNotify: TfrmPrefNotify
     Cursor = crHandPoint
     Hint = 'Open Sounds Control Panel'
     Caption = 'Configure Sounds...'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clBlue
-    Font.Height = -11
-    Font.Name = 'MS Sans Serif'
-    Font.Style = [fsUnderline]
-    ParentFont = False
     ParentShowHint = False
     ShowHint = True
     OnClick = lblConfigSoundsClick

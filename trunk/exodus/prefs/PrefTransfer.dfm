@@ -14,20 +14,14 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     Height = 13
     Caption = 'File transfer download directory:'
   end
-  object Label2: TTntLabel [1]
+  object lblDefault: TTntLabel [1]
     Left = 0
     Top = 320
     Width = 184
     Height = 13
     Cursor = crHandPoint
     Caption = 'Reset all file transfer options to defaults'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clBlue
-    Font.Height = -11
-    Font.Name = 'MS Sans Serif'
-    Font.Style = [fsUnderline]
-    ParentFont = False
-    OnClick = Label2Click
+    OnClick = lblDefaultClick
   end
   object TntLabel2: TTntLabel [2]
     Left = 0

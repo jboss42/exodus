@@ -9,14 +9,14 @@ inherited frmPrefGroups: TfrmPrefGroups
   TextHeight = 13
   object Label18: TTntLabel [0]
     Left = 0
-    Top = 187
+    Top = 193
     Width = 150
     Height = 13
     Caption = 'Group to be used for Gateways:'
   end
   object Label1: TTntLabel [1]
     Left = 0
-    Top = 235
+    Top = 241
     Width = 69
     Height = 13
     Caption = 'Default Group:'
@@ -24,9 +24,8 @@ inherited frmPrefGroups: TfrmPrefGroups
   object lblFilter: TTntLabel [2]
     Left = 2
     Top = 121
-    Width = 231
-    Height = 24
-    AutoSize = False
+    Width = 263
+    Height = 26
     Caption = 
       'When showing only online contacts, visible contacts must be at l' +
       'east:'
@@ -34,7 +33,7 @@ inherited frmPrefGroups: TfrmPrefGroups
   end
   object txtGatewayGrp: TTntComboBox [3]
     Left = 20
-    Top = 203
+    Top = 209
     Width = 169
     Height = 21
     ItemHeight = 13
@@ -42,7 +41,7 @@ inherited frmPrefGroups: TfrmPrefGroups
   end
   object txtDefaultGrp: TTntComboBox [4]
     Left = 20
-    Top = 251
+    Top = 257
     Width = 169
     Height = 21
     ItemHeight = 13
@@ -58,7 +57,7 @@ inherited frmPrefGroups: TfrmPrefGroups
   end
   object cboVisible: TTntComboBox [6]
     Left = 20
-    Top = 156
+    Top = 162
     Width = 169
     Height = 21
     Style = csDropDownList

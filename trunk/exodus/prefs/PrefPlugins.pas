@@ -40,6 +40,7 @@ type
     procedure btnBrowsePluginPathClick(Sender: TObject);
     procedure lblPluginScanClick(Sender: TObject);
     procedure btnConfigPluginClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
 
@@ -245,6 +246,12 @@ begin
     if (li = nil) then exit;
     com_name := li.Caption;
     ConfigurePlugin(com_name);
+end;
+
+procedure TfrmPrefPlugins.FormCreate(Sender: TObject);
+begin
+  inherited;
+    AssignUnicodeURL(lblPluginScan.Font, 8);
 end;
 
 end.

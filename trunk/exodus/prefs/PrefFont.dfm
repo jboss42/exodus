@@ -7,31 +7,19 @@ inherited frmPrefFont: TfrmPrefFont
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object Label22: TTntLabel [0]
+  object lblRoster: TTntLabel [0]
     Left = 8
     Top = 56
-    Width = 87
+    Width = 73
     Height = 13
     Caption = 'Roster Window'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'MS Sans Serif'
-    Font.Style = [fsBold]
-    ParentFont = False
   end
-  object Label23: TTntLabel [1]
+  object lblChat: TTntLabel [1]
     Left = 136
     Top = 56
-    Width = 82
+    Width = 69
     Height = 13
     Caption = 'Chat Windows'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'MS Sans Serif'
-    Font.Style = [fsBold]
-    ParentFont = False
   end
   object Label24: TTntLabel [2]
     Left = 8
@@ -57,15 +45,9 @@ inherited frmPrefFont: TfrmPrefFont
   object lblColor: TTntLabel [5]
     Left = 8
     Top = 168
-    Width = 82
+    Width = 69
     Height = 13
     Caption = 'Element Name'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'MS Sans Serif'
-    Font.Style = [fsBold]
-    ParentFont = False
   end
   object colorRoster: TTreeView [6]
     Left = 8

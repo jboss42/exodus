@@ -73,7 +73,6 @@ type
     txtWorkVoice: TTntEdit;
     txtWorkFax: TTntEdit;
     frameButtons1: TframeButtons;
-    TreeView1: TTreeView;
     TabSheet6: TTntTabSheet;
     Label15: TTntLabel;
     Label16: TTntLabel;
@@ -113,6 +112,7 @@ type
     txtLast: TTntEdit;
     ResListBox: TTntListBox;
     optSubscrip: TTntRadioGroup;
+    TreeView1: TTntTreeView;
     procedure FormCreate(Sender: TObject);
     procedure TreeView1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -264,9 +264,15 @@ end;
 
 {---------------------------------------}
 procedure TfrmProfile.FormCreate(Sender: TObject);
+var
+    i: integer;
 begin
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
+
+    // make sure our treeview is expanded.
+    for i := 0 to TreeView1.Items.Count - 1 do
+        TreeView1.Items[i].Expand(true);
 
     URLLabel(lblUpdateNick);
     URLLabel(lblEmail);

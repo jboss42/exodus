@@ -186,6 +186,7 @@ procedure TfrmPrefNotify.FormCreate(Sender: TObject);
 begin
   inherited;
     SetLength(_notify, NUM_NOTIFIES);
+    AssignUnicodeURL(lblConfigSounds.Font, 8);
 end;
 
 procedure TfrmPrefNotify.chkNotifyClick(Sender: TObject);
