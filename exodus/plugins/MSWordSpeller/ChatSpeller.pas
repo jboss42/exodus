@@ -18,6 +18,7 @@ type
     procedure onKeyPress(const Key: WideString); safecall;
     procedure onRecvMessage(const Body, xml: WideString); safecall;
     procedure onClose; safecall;
+    procedure onMenu(const ID: WideString); safecall;
     { Protected declarations }
   private
     _word: TWordApplication;
@@ -119,6 +120,11 @@ begin
     _chat.UnRegister(reg_id);
 end;
 
+
+procedure TChatSpeller.onMenu(const ID: WideString);
+begin
+
+end;
 
 initialization
   TAutoObjectFactory.Create(ComServer, TChatSpeller, Class_ChatSpeller,

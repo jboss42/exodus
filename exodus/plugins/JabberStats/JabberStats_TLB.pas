@@ -11,23 +11,23 @@ unit JabberStats_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.2 $
-// File generated on 2/10/2003 7:26:06 AM from Type Library described below.
+// PASTLWTR : 1.2
+// File generated on 2/12/2003 7:06:32 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\JabberStats\JabberStats.tlb (1)
 // LIBID: {402F95BD-62AB-4596-AEB2-79A0E84271AD}
 // LCID: 0
 // Helpfile: 
+// HelpString: Project1 Library
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
-//   (2) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
-//   (3) v1.0 ExodusCOM, (D:\src\exodus\exodus\exodus.exe)
+//   (1) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
+//   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
 {$WRITEABLECONST ON}
-
+{$VARPROPSETTER ON}
 interface
 
 uses Windows, ActiveX, Classes, ExodusCOM_TLB, Graphics, StdVCL, Variants;
