@@ -718,23 +718,28 @@ begin
         t := tl.Tags[i];
         add := false;
 
+        // Check ea. tag for the appropriate tag name
         if ((cm.tag_name = '*') or (t.Name = cm.tag_name)) then begin
             add := true;
+
+            // Check ea. tag to make sure it has the correct attributes
             for a := 0 to cm.AttrCount - 1 do begin
                 ca := cm.getAttribute(a);
                 wild_card := (Copy(ca.Value, length(ca.Value), 1) = '*');
                 if wild_card then begin
                     tmps := ca.Value;
                     Delete(tmps, length(tmps), 1);
-                    if (Pos(tmps, t.getAttribute(ca.Name)) <= 0) then
+                    if (Pos(Lowercase(tmps), Lowercase(t.getAttribute(ca.Name))) <= 0) then
                         add := false;
                     end
                 else if (ca.Value <> '') then begin
-                    if (t.getAttribute(ca.name) <> ca.Value) then
+                    if (Lowercase(t.getAttribute(ca.name)) <> Lowercase(ca.Value)) then
                         add := false;
                     end;
                 end;
             end;
+
+        // If the add flag is still true, add the tag to the result set
         if (add) then
             r.Add(t);
         end;
