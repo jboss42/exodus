@@ -225,6 +225,7 @@ type
     procedure JabberBugzilla1Click(Sender: TObject);
     procedure mnuVersionClick(Sender: TObject);
     procedure mnuPasswordClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -315,6 +316,7 @@ type
     procedure Startup;
     procedure CTCPCallback(event: string; tag: TXMLTag);
     procedure ResetLastTick(value: longint);
+    procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
   end;
 
 var
@@ -504,8 +506,8 @@ begin
             try
                 // -d          : debug
                 // -m          : minimized
+                // -v          : invisible
                 // -?          : help
-                // -n          : invisible
                 // -x [yes|no] : expanded
                 // -j [jid]    : jid
                 // -p [pass]   : password
@@ -717,6 +719,9 @@ begin
 
     // Make sure we read in and setup the prefs..
     Self.SessionCallback('/session/prefs', nil);
+
+    // Accept files dragged from Explorer
+    DragAcceptFiles(Handle, True);
 end;
 
 {---------------------------------------}
@@ -1214,8 +1219,6 @@ begin
         MainSession.Free();
         MainSession := nil;
         end;
-
-
 end;
 
 {---------------------------------------}
@@ -1924,6 +1927,60 @@ begin
         else
             MessageDlg('Error changing password.', mtError, [mbOK], 0);
         end;
+end;
+
+
+{---------------------------------------}
+procedure TExodus.AcceptFiles( var msg : TWMDropFiles );
+const
+  cnMaxFileNameLen = 255;
+var
+  i,
+  nCount     : integer;
+  acFileName : array [0..cnMaxFileNameLen] of char;
+  p          : TPoint;
+  Node       : TTreeNode;
+  ri         : TJabberRosterItem;
+begin
+    // figure out which node was the drop site.
+    if (DragQueryPoint(msg.Drop, p) = false) then exit;
+
+    // Translate to screen coordinates, then back to client coordinates
+    // for the roster window.  This would have been easier if RosterWindow
+    // had worked as the target of DragAcceptFiles.
+    p := ClientToScreen(p);
+    p := frmRosterWindow.treeRoster.ScreenToClient(p);
+    Node := frmRosterWindow.treeRoster.GetNodeAt(p.X, p.Y);
+    if ((Node = nil) or (Node.HasChildren)) then exit;
+
+    // get the roster item attached to this node.
+    if (Node.Data = nil) then exit;
+    if (TObject(Node.Data) is TJabberBookmark) then exit;
+
+    ri := TJabberRosterItem(Node.Data);
+    if ri = nil then exit;
+
+    // find out how many files we're accepting
+    nCount := DragQueryFile( msg.Drop,
+                             $FFFFFFFF,
+                             acFileName,
+                             cnMaxFileNameLen );
+
+    // query Windows one at a time for the file name
+    for i := 0 to nCount-1 do begin
+        DragQueryFile( msg.Drop, i,
+                       acFileName, cnMaxFileNameLen );
+
+        FileSend(ri.jid.full, acFileName);
+    end;
+
+    // let Windows know that we're done
+    DragFinish( msg.Drop );
+end;
+
+procedure TExodus.FormDestroy(Sender: TObject);
+begin
+    DragAcceptFiles(Handle, False);
 end;
 
 end.
