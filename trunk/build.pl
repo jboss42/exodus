@@ -5,6 +5,7 @@ use strict;
 $::D = 'f:/lang/Delphi7';
 $::TNT = "D:\\src\\exodus\\exodus\\components\\tntUnicode";
 $::ICQ = "\"D:\\src\\exodus\\exodus\\plugins\\ICQ-Import\\ICQ\\Component\"";
+$::JCL = "\"D:\\src\\jcl\"";
 $::NSIS = "\"D:\\Program Files\\NSIS\\makensis.exe\"";
 $::DXGETDIR = "F:\\lang\\dxgettext";
 do "dopts.pl";
@@ -47,9 +48,9 @@ e("$dcc $opts -Noutput IdleHooks.dpr");
 e("$rcc version.rc");
 e("$rcc xml.rc");
 
-if ($rtype eq "daily") {    
+if ($rtype eq "daily") {
     # Generate a detailed MAP file, and build in stack frame tracing
-    e("$dcc $opts -GP -DTRACE_EXCEPTIONS -Noutput -U\"$::TNT\" Exodus.dpr");
+    e("$dcc $opts -GP -DTRACE_EXCEPTIONS -Noutput -U\"$::JCL\" -U\"$::TNT\" Exodus.dpr");
 } else {
     e("$dcc $opts -D -Noutput -U\"$::TNT\" Exodus.dpr");
 }
@@ -64,7 +65,7 @@ e('zip locale ' . join(' ', glob("locale/*/LC_MESSAGES/default.mo")));
 chdir "plugins";
 grep unlink, glob("*.zip"); # rm *.zip
 grep unlink, glob("*.dll"); # rm *.dll
-  
+
 open OFF,">plugin-off-new.nsi" or die $!;
 open SEC,">plugin-sections-new.nsi" or die $!;
 open DESC,">plugin-desc-new.nsi" or die $!;
@@ -93,12 +94,12 @@ e('zip Exodus.zip @zipfiles.txt ' . join(' ', glob("plugins/*.dll")));
 if ($rtype eq "daily") {
   e("$::NSIS /v1 /DDAILY exodus-new.nsi");
 } elsif ($rtype eq "stage") {
-  e("$::NSIS /v1 /DSTAGE exodus-new.nsi");  
+  e("$::NSIS /v1 /DSTAGE exodus-new.nsi");
 } else {
   e("$::NSIS /v1 exodus-new.nsi");
   e("$::NSIS /v1 /DNO_NETWORK exodus-new.nsi");
 }
-  
+
 print "SUCCESS!!!\n";
 chdir ".." or die;
 
@@ -142,7 +143,7 @@ EOF
 	  Call DownloadPlugin
       RegDll "\$INSTDIR\\plugins\\$base.dll"
 	SectionEnd
-	
+
 EOF
 
   print DESC <<"EOF";
@@ -154,7 +155,7 @@ EOF
 LangString DESC_$base \${LANG_ENGLISH} "$readme"
 
 EOF
-  
+
   chdir "..";
   e("zip $base.zip $base.dll");
 }
@@ -162,6 +163,6 @@ EOF
 sub msgfmt() {
   my $po = $_;
   (my $mo = $po) =~ s/po$/mo/;
-  
+
   e("$::MSGFMT $po -o $mo");
 }

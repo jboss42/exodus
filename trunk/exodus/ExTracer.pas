@@ -50,7 +50,7 @@ implementation
 
 {$ifdef TRACE_EXCEPTIONS}
 uses
-    ExResponders, Unicode, 
+    ExResponders, Unicode,
     IdException, JclDebug, JclHookExcept, TypInfo;
 
 procedure ExodusException(ExceptObj: TObject; ExceptAddr: Pointer; OSException: Boolean);
