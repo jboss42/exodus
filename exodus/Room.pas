@@ -446,6 +446,8 @@ var
     first : bool;
     re : bool;
 begin
+    inherited;
+    
     // Create
     _callback := -1;
     _pcallback := -1;
