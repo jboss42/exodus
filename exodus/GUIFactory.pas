@@ -81,7 +81,7 @@ end;
 procedure TGUIFactory.SessionCallback(event: string; tag: TXMLTag);
 var
     i: integer;
-    sjid: Widestring;
+    dgrp, sjid: Widestring;
     tmp_jid: TJabberID;
     tmp_b: boolean;
     chat: TfrmChat;
@@ -171,17 +171,14 @@ begin
             lblJID.Caption := sjid;
             chkSubscribe.Checked := tmp_b;
             chkSubscribe.Enabled := tmp_b;
-            boxAdd.Enabled := tmp_b;
             MainSession.Roster.AssignGroups(cboGroup.Items);
-            if (tmp_b) then begin
-                txtNickname.Text := tmp_jid.user;
-                cboGroup.Text := MainSession.Prefs.getString('roster_default');
-            end
-            else if (ri <> nil) then begin
+            dgrp := MainSession.Prefs.getString('roster_default');
+            cboGroup.itemIndex := cboGroup.Items.indexOf(dgrp);
+            if (tmp_b) then
+                txtNickname.Text := tmp_jid.user
+            else if (ri <> nil) then
                 txtNickName.Text := ri.nickname;
-                if (ri.Groups.Count > 0) then
-                    cboGroup.ItemIndex := cboGroup.Items.IndexOf(ri.Groups[0]);
-            end;
+            EnableAdd(tmp_b);
         end;
         DoNotify(nil, 'notify_s10n',
                  'Subscription from ' + sjid, ico_key);

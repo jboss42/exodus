@@ -67,6 +67,7 @@ object frmSubscribe: TfrmSubscribe
     Checked = True
     State = cbChecked
     TabOrder = 0
+    OnClick = chkSubscribeClick
   end
   object boxAdd: TGroupBox
     Left = 24
@@ -74,14 +75,14 @@ object frmSubscribe: TfrmSubscribe
     Width = 209
     Height = 81
     TabOrder = 1
-    object Label2: TTntLabel
+    object lblNickname: TTntLabel
       Left = 8
       Top = 16
       Width = 51
       Height = 13
       Caption = 'Nickname:'
     end
-    object Label3: TTntLabel
+    object lblGroup: TTntLabel
       Left = 8
       Top = 48
       Width = 32
@@ -116,11 +117,13 @@ object frmSubscribe: TfrmSubscribe
     TabOrder = 2
     inherited Panel2: TPanel
       Width = 252
+      Height = 36
       inherited Bevel1: TBevel
         Width = 252
       end
       inherited Panel1: TPanel
         Left = 92
+        Height = 31
         inherited btnOK: TTntButton
           Caption = 'Accept'
           OnClick = frameButtons1btnOKClick

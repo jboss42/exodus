@@ -112,6 +112,7 @@ var
     incoming: integer;
     prompt: boolean;
     ritem: TJabberRosterItem;
+    dgrp: Widestring;
 begin
     // getting a s10n request
     j := TJabberID.Create(tag.GetAttribute('from'));
@@ -145,11 +146,20 @@ begin
         if (prompt) then
             MainSession.FireEvent('/session/gui/subscribe', tag)
         else begin
-            if ((ritem = nil) or (ritem.subscription = 'none')) then begin
-                SendSubscribe(j.jid, MainSession);
+            if ((ritem = nil) or (ritem.subscription = 'none') or
+                (ritem.subscription = '')) then begin
+
+                // if we didn't ask for this subscription,
+                // then we should subscribe back to them
+                if ((ritem = nil) or (ritem.ask <> 'subscribe')) then begin
+                    dgrp := MainSession.Prefs.getString('roster_default');
+                    MainSession.Roster.AddItem(j.jid, j.user, dgrp, true);
+                end;
+
+                // we are in auto-approve mode, so approve it
                 SendSubscribed(j.jid, MainSession);
             end
-            else if (ritem.subscription = 'to') then
+            else
                 SendSubscribed(j.jid, MainSession);
         end;
 
