@@ -31,9 +31,9 @@ type
     Label2: TLabel;
     Label3: TLabel;
     txtRoom: TEdit;
-    txtServer: TEdit;
     txtNick: TEdit;
     frameButtons1: TframeButtons;
+    txtServer: TComboBox;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -50,6 +50,9 @@ procedure StartJoinRoom;
 
 implementation
 uses
+    Jabber1, 
+    JabberID, 
+    Agents,
     Session,
     Room;
 {$R *.DFM}
@@ -57,20 +60,41 @@ uses
 procedure StartJoinRoom;
 var
     f: TfrmJoinRoom;
+    i: integer;
+    agents: TAgents;
+    a: TAgentItem;
 begin
     f := TfrmJoinRoom.Create(Application);
     with f do begin
         txtRoom.Text := MainSession.Prefs.getString('tc_lastroom');
         txtServer.Text := MainSession.Prefs.getString('tc_lastserver');
         txtNick.Text := MainSession.Prefs.getString('tc_lastnick');
+
+        with txtServer do begin
+            Items.Clear;
+            agents := MainSession.MyAgents;
+            for i := 0 to agents.Count -1 do begin
+                a := agents.getAgent(i);
+                if (a.groupchat) then
+                    Items.Add(a.jid);
+                end;
+            end;
         Show;
         end;
 end;
 
 procedure TfrmJoinRoom.frameButtons1btnOKClick(Sender: TObject);
+var
+    rjid: string;
 begin
     // join this room
-    StartRoom(txtRoom.Text + '@' + txtServer.Text, txtNick.Text);
+    rjid := txtRoom.Text + '@' + txtServer.Text;
+    if (not isValidJid(rjid)) then begin
+        MessageDlg(sInvalidJID, mtError, [mbOK], 0);
+        exit;
+        end;
+
+    StartRoom(rjid, txtNick.Text);
 
     with MainSession.Prefs do begin
         setString('tc_lastroom', txtRoom.Text);

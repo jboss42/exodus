@@ -1826,8 +1826,10 @@ begin
         end;
 
     fsel := TfrmSelContact.Create(Application);
-    fsel.frameTreeRoster1.DrawRoster(false);
+    // fsel.frameTreeRoster1.DrawRoster(false);
     fsel.frameTreeRoster1.treeRoster.MultiSelect := false;
+
+    frmExodus.PreModal(fsel);
 
     if (fsel.ShowModal = mrOK) then begin
         // do the send
@@ -1849,6 +1851,8 @@ begin
 
         MainSession.SendTag(msg);
         end;
+
+    frmExodus.PostModal();
 
     sel.Free();
     fSel.Free();

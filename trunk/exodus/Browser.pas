@@ -178,7 +178,7 @@ begin
     Result.ShowDefault();
 
     if (jid = '') then
-        Result.GoJID(MainSession.Server, true)
+        Result.GoJID(MainSession.Server, false)
     else
         Result.GoJID(jid, true);
 end;
@@ -228,6 +228,10 @@ begin
         pSearch.Visible := false;
         pConf.Visible := false;
     end;
+
+    if (_iq <> nil) then
+        _iq.Free();
+
 end;
 
 {---------------------------------------}
@@ -370,6 +374,11 @@ var
     i: integer;
 begin
     // Actually Browse to the JID entered in the address box
+    if (not isValidJID(jid)) then begin
+        MessageDlg(sInvalidJID, mtError, [mbOK], 0);
+        exit;
+        end;
+
     StartList;
     StartBar;
 
@@ -454,6 +463,7 @@ begin
     // Create the History list
     _History := TStringList.Create;
     _blist := TObjectList.Create();
+    _iq := nil;
 end;
 
 {---------------------------------------}
@@ -620,6 +630,9 @@ end;
 {---------------------------------------}
 procedure TfrmBrowse.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+    if (_iq <> nil) then
+        _iq.Free();
+
     Action := caFree;
 end;
 
@@ -734,6 +747,7 @@ begin
         end;
 
     vwBrowse.Items.Count := _blist.Count;
+    _iq := nil;
 end;
 
 {---------------------------------------}

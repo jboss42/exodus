@@ -1,6 +1,6 @@
 object frmInvite: TfrmInvite
-  Left = 291
-  Top = 167
+  Left = 237
+  Top = 181
   AutoScroll = False
   Caption = 'Invite to Conference'
   ClientHeight = 268

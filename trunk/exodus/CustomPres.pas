@@ -60,17 +60,23 @@ implementation
 {$R *.dfm}
 
 uses
-    Session, Presence;
+    Jabber1, Session, Presence;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 procedure ShowCustomPresence();
 var
     f: TfrmCustomPres;
 begin
     // show a new custom presence dialog box
     f := TfrmCustomPres.Create(Application);
+    frmExodus.PreModal(f);
     f.ShowModal;
+    frmExodus.PostModal();
 end;
 
+{---------------------------------------}
 procedure TfrmCustomPres.FormCreate(Sender: TObject);
 var
     i: integer;
@@ -88,6 +94,7 @@ begin
     chkSave.Checked := false;
 end;
 
+{---------------------------------------}
 procedure TfrmCustomPres.frameButtons1btnOKClick(Sender: TObject);
 var
     show, status: string;
@@ -123,11 +130,13 @@ begin
     Self.Close;
 end;
 
+{---------------------------------------}
 procedure TfrmCustomPres.frameButtons1btnCancelClick(Sender: TObject);
 begin
     Self.Close;
 end;
 
+{---------------------------------------}
 procedure TfrmCustomPres.chkSaveClick(Sender: TObject);
 var
     e: boolean;

@@ -22,15 +22,18 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, fRosterTree, buttonFrame;
+  Dialogs, fRosterTree, buttonFrame, Menus;
 
 type
   TfrmSelContact = class(TForm)
     frameButtons1: TframeButtons;
     frameTreeRoster1: TframeTreeRoster;
+    PopupMenu1: TPopupMenu;
+    ShowOnlineOnly1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure frameTreeRoster1treeRosterDblClick(Sender: TObject);
+    procedure ShowOnlineOnly1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -48,12 +51,14 @@ implementation
 
 {$R *.dfm}
 uses
-    Roster, ComCtrls;
+    Session, Roster, ComCtrls;
 
 {---------------------------------------}
 procedure TfrmSelContact.FormCreate(Sender: TObject);
 begin
     frameTreeRoster1.Initialize();
+    ShowOnlineOnly1.Checked := MainSession.Prefs.getBool('roster_only_online');
+    frameTreeRoster1.DrawRoster(ShowOnlineOnly1.Checked);
 end;
 
 {---------------------------------------}
@@ -84,6 +89,13 @@ begin
     if (n.Level = 0) then exit;
 
     Result := TJabberRosterItem(n.Data).jid.full;
+end;
+
+procedure TfrmSelContact.ShowOnlineOnly1Click(Sender: TObject);
+begin
+    // toggle online on/off
+    ShowOnlineOnly1.Checked := not ShowOnlineOnly1.Checked;
+    frameTreeRoster1.DrawRoster(ShowOnlineOnly1.Checked);
 end;
 
 end.

@@ -1,9 +1,10 @@
 object frmCustomPres: TfrmCustomPres
   Left = 251
   Top = 129
-  Width = 323
-  Height = 297
+  BorderStyle = bsDialog
   Caption = 'Custom Presence'
+  ClientHeight = 263
+  ClientWidth = 315
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

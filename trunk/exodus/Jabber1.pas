@@ -368,6 +368,9 @@ type
     procedure FloatMsgQueue();
     procedure DockMsgQueue();
 
+    procedure PreModal(frm: TForm);
+    procedure PostModal();
+
     property ComController: TExodusController read _controller;
 
   end;
@@ -441,6 +444,7 @@ resourcestring
     sJID = 'Jabber ID';
     sEnterJID = 'Enter Jabber ID: ';
     sEnterSvcJID = 'Enter Jabber ID of Service: ';
+    sInvalidJID = 'The Jabber ID you entered is invalid.';
 
     sPasswordError = 'Error changing password.';
     sPasswordChanged = 'Password changed.';
@@ -2615,25 +2619,28 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.ShowEventsWindow1Click(Sender: TObject);
 begin
     getMsgQueue.Show();
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.xDataCallback(event: string; tag: TXMLTag);
 begin
     showXData(tag);
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.presToggleClick(Sender: TObject);
 begin
     if (MainSession.Show = '') then
         MainSession.setPresence('away', sRosterAway, MainSession.Priority)
     else
         MainSession.setPresence('', sRosterAvail, MainSession.Priority)
-
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.ApplicationEvents1Activate(Sender: TObject);
 var
     last: hwnd;
@@ -2642,6 +2649,24 @@ begin
     last := GetLastActivePopup(Application.Handle);
     if (last <> Application.Handle) then
         SetWindowPos(last, HWND_TOP, 0, 0, 0, 0, (SWP_NOSIZE or SWP_NOMOVE or SWP_SHOWWINDOW));
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.PreModal(frm: TForm);
+begin
+    // make not on top.
+    if (MainSession.Prefs.getBool('window_ontop')) then begin
+        SetWindowPos(frmExodus.Handle, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE + SWP_NOMOVE);
+        BringWindowToTop(frm.Handle);
+        end;
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.PostModal();
+begin
+    //
+    if (MainSession.Prefs.getBool('window_ontop')) then
+        SetWindowPos(frmExodus.Handle, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE + SWP_NOMOVE);
 end;
 
 initialization
