@@ -22,6 +22,7 @@ unit XMLTag;
 interface
 
 uses
+    WStrList, 
     XMLNode,
     XMLAttrib,
     XMLCData,
@@ -49,34 +50,34 @@ type
   private
     _AttrList: TAttrList;       // list of attributes
     _Children: TXMLNodeList; // list of nodes
-    _ns: string;
+    _ns: WideString;
   public
     pTag: TXMLTag;
 
     constructor Create; overload; override;
-    constructor Create(tagname: string); reintroduce; overload; virtual;
+    constructor Create(tagname: WideString); reintroduce; overload; virtual;
     constructor Create(tag: TXMLTag); reintroduce; overload; virtual;
     destructor Destroy; override;
 
-    function AddTag(tagname: string): TXMLTag;
-    function AddBasicTag(tagname, cdata: string): TXMLTag;
-    function AddCData(content: string): TXMLCData;
+    function AddTag(tagname: WideString): TXMLTag;
+    function AddBasicTag(tagname, cdata: WideString): TXMLTag;
+    function AddCData(content: WideString): TXMLCData;
 
-    function GetAttribute(key: string): string;
-    procedure PutAttribute(key, value: string);
+    function GetAttribute(key: WideString): WideString;
+    procedure PutAttribute(key, value: WideString);
 
     function ChildTags: TXMLTagList;
-    function QueryXPTags(path: string): TXMLTagList;
-    function QueryXPTag(path: string): TXMLTag;
-    function QueryXPData(path: string): string;
-    function QueryTags(key: string): TXMLTagList;
-    function GetFirstTag(key: string): TXMLTag;
-    function GetBasicText(key: string): string;
-    function TagExists(key: string): boolean;
+    function QueryXPTags(path: WideString): TXMLTagList;
+    function QueryXPTag(path: WideString): TXMLTag;
+    function QueryXPData(path: WideString): WideString;
+    function QueryTags(key: WideString): TXMLTagList;
+    function GetFirstTag(key: WideString): TXMLTag;
+    function GetBasicText(key: WideString): WideString;
+    function TagExists(key: WideString): boolean;
 
-    function Data: string;
-    function Namespace: string;
-    function xml: string; override;
+    function Data: WideString;
+    function Namespace: WideString;
+    function xml: WideString; override;
 
     procedure ClearTags;
     procedure ClearCData;
@@ -92,12 +93,12 @@ type
     _AttrList: TAttrList;       // list of attributes
     function GetAttrCount: integer;
   public
-    tag_name: string;
+    tag_name: WideString;
     get_cdata: boolean;
     constructor Create;
     destructor Destroy; override;
-    procedure Parse(xps: string);
-    procedure putAttribute(name, value: string);
+    procedure Parse(xps: WideString);
+    procedure putAttribute(name, value: WideString);
     function getAttribute(i: integer): TAttr;
 
     property AttrCount: integer read GetAttrCount;
@@ -106,22 +107,22 @@ type
 
   TXPLite = class
   private
-    Matches: TStringList;
-    attr: string;
-    value: string;
-    function GetString: string;
+    Matches: TWideStringList;
+    attr: WideString;
+    value: WideString;
+    function GetString: WideString;
     function checkTags(Tag: TXMLTag; match_idx: integer): TXMLTagList;
     function doCompare(tag: TXMLTag; start: integer): boolean;
   public
     Constructor Create;
     Destructor Destroy; override;
-    procedure Parse(xps: string);
+    procedure Parse(xps: Widestring);
     function Compare(Tag: TXMLTag): boolean;
-    function Query(Tag: TXMLTag): string;
+    function Query(Tag: TXMLTag): WideString;
     function GetTags(tag: TXMLTag): TXMLTagList;
 
-    property AsString: string read GetString;
-    property XPMatchList: TStringList read Matches;
+    property AsString: Widestring read GetString;
+    property XPMatchList: TWideStringList read Matches;
   end;
 
 
@@ -159,7 +160,7 @@ begin
 end;
 
 {---------------------------------------}
-constructor TXMLTag.Create(tagname: string);
+constructor TXMLTag.Create(tagname: WideString);
 begin
     //
     Create();
@@ -185,7 +186,7 @@ begin
 end;
 
 {---------------------------------------}
-function TXMLTag.AddTag(tagname: string): TXMLTag;
+function TXMLTag.AddTag(tagname: WideString): TXMLTag;
 var
     t: TXMLTag;
 begin
@@ -198,7 +199,7 @@ begin
 end;
 
 {---------------------------------------}
-function TXMLTag.AddBasicTag(tagname, cdata: string): TXMLTag;
+function TXMLTag.AddBasicTag(tagname, cdata: WideString): TXMLTag;
 var
     t: TXMLTag;
 begin
@@ -248,7 +249,7 @@ begin
 end;
 
 {---------------------------------------}
-function TXMLTag.AddCData(content: string): TXMLCData;
+function TXMLTag.AddCData(content: WideString): TXMLCData;
 var
     c: TXMLCData;
 begin
@@ -259,7 +260,7 @@ begin
 end;
 
 {---------------------------------------}
-function TXMLTag.GetAttribute(key: string): string;
+function TXMLTag.GetAttribute(key: WideString): WideString;
 var
     attr: TNvpNode;
 begin
@@ -271,7 +272,7 @@ begin
     end;
 
 {---------------------------------------}
-procedure TXMLTag.PutAttribute(key, value: string);
+procedure TXMLTag.PutAttribute(key, value: WideString);
 var
     a: TNvpNode;
 begin
@@ -287,7 +288,7 @@ begin
 end;
 
 {---------------------------------------}
-function TXMLTag.QueryXPTags(path: string): TXMLTagList;
+function TXMLTag.QueryXPTags(path: WideString): TXMLTagList;
 var
     xp: TXPLite;
 begin
@@ -299,7 +300,7 @@ begin
 end;
 
 {---------------------------------------}
-function TXMLTag.QueryXPTag(path: string): TXMLTag;
+function TXMLTag.QueryXPTag(path: WideString): TXMLTag;
 var
     tags: TXMLTagList;
 begin
@@ -313,14 +314,14 @@ begin
 end;
 
 {---------------------------------------}
-function TXMLTag.QueryXPData(path: string): string;
+function TXMLTag.QueryXPData(path: WideString): WideString;
 var
     i: integer;
-    spath, att: string;
+    spath, att: WideString;
     ftags: TXMLTagList;
     t: TXMLTag;
 begin
-    // Return a string based on the xpath stuff
+    // Return a WideString based on the xpath stuff
     att := '';
     spath := path;
     Result := '';
@@ -368,11 +369,11 @@ end;
 
 
 {---------------------------------------}
-function TXMLTag.QueryTags(key: string): TXMLTagList;
+function TXMLTag.QueryTags(key: WideString): TXMLTagList;
 var
     t: TXMLTagList;
     n: TXMLNode;
-    sname: string;
+    sname: WideString;
     i: integer;
 begin
     // Return all of the immediate children which
@@ -389,15 +390,15 @@ begin
 end;
 
 {---------------------------------------}
-function TXMLTag.TagExists(key: string): boolean;
+function TXMLTag.TagExists(key: WideString): boolean;
 begin
     Result := (GetFirstTag(key) <> nil);
 end;
 
 {---------------------------------------}
-function TXMLTag.GetFirstTag(key: string): TXMLTag;
+function TXMLTag.GetFirstTag(key: WideString): TXMLTag;
 var
-    sname: string;
+    sname: WideString;
     i: integer;
     n: TXMLNode;
 begin
@@ -413,7 +414,7 @@ begin
 end;
 
 {---------------------------------------}
-function TXMLTag.GetBasicText(key: string): string;
+function TXMLTag.GetBasicText(key: WideString): WideString;
 var
     t: TXMLTag;
 begin
@@ -425,7 +426,7 @@ begin
 end;
 
 {---------------------------------------}
-function TXMLTag.Data: string;
+function TXMLTag.Data: WideString;
 var
     i: integer;
     n: TXMLNode;
@@ -443,7 +444,7 @@ begin
 end;
 
 {---------------------------------------}
-function TXMLTag.Namespace: string;
+function TXMLTag.Namespace: WideString;
 var
     n:  TXMLNode;
     i:  integer;
@@ -467,12 +468,12 @@ begin
 end;
 
 {---------------------------------------}
-function TXMLTag.xml: string;
+function TXMLTag.xml: WideString;
 var
     i: integer;
-    x: string;
+    x: WideString;
 begin
-    // Return a string containing the full
+    // Return a WideString containing the full
     // representation of this tag
     x := '<' + Self.Name;
     for i := 0 to _AttrList.Count - 1 do
@@ -536,7 +537,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TXPMatch.putAttribute(name, value: string);
+procedure TXPMatch.putAttribute(name, value: WideString);
 var
     pair: TAttr;
 begin
@@ -561,11 +562,11 @@ begin
 end;
 
 {---------------------------------------}
-procedure TXPMatch.Parse(xps: string);
+procedure TXPMatch.Parse(xps: Widestring);
 var
     l, i, s, s2: integer;
     state: integer;
-    xp, q, name, val, c, cur: string;
+    xp, q, name, val, c, cur: Widestring;
 begin
     // this should be a single "block"
     // parse the /foo[@a="b"][@c="d"] stuff
@@ -631,7 +632,7 @@ begin
     attr := '';
     value := '';
 
-    Matches := TStringList.Create;
+    Matches := TWideStringList.Create;
 end;
 
 {---------------------------------------}
@@ -644,10 +645,10 @@ begin
 end;
 
 {---------------------------------------}
-procedure TXPLite.Parse(xps: string);
+procedure TXPLite.Parse(xps: Widestring);
 var
     s, l, i, f: integer;
-    c, cur: string;
+    c, cur: Widestring;
     m: TXPMatch;
 begin
     // parse the full /foo/bar[@xmlns="jabber:iq:roster"] string
@@ -696,7 +697,7 @@ begin
 end;
 
 {---------------------------------------}
-function TXPLite.Query(Tag: TXMLTag): string;
+function TXPLite.Query(Tag: TXMLTag): Widestring;
 begin
     //
     result := '';
@@ -711,7 +712,7 @@ var
     r, tl: TXMLTagList;
     t: TXMLTag;
     wild_card: boolean;
-    tmps: string;
+    tmps: Widestring;
     add: boolean;
 begin
     // find the tags that matches the specific TXPMatch object
@@ -853,7 +854,7 @@ begin
 end;
 
 {---------------------------------------}
-function TXPLite.GetString: string;
+function TXPLite.GetString: Widestring;
 var
     m: TXPMatch;
     ca: TAttr;

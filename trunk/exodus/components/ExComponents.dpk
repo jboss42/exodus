@@ -1,6 +1,7 @@
 package ExComponents;
 
 {$R *.res}
+{$R 'RichEdit2.dcr'}
 {$ALIGN 8}
 {$ASSERTIONS ON}
 {$BOOLEVAL OFF}
@@ -27,11 +28,18 @@ package ExComponents;
 
 requires
   rtl,
-  vcl;
+  vcl,
+  designide,
+  dbrtl,
+  vcldb;
 
 contains
   ExRichEdit in 'ExRichEdit.pas',
-  OLERichEdit in 'OLERichEdit.pas',
-  RichOLE in 'richole.pas';
+  RichOLE in 'richole.pas',
+  RichEdit2 in 'RichEdit2.pas',
+  RTFProperty in 'RTFProperty.pas',
+  RTFEditor in 'RTFEditor.pas' {RichEdit98Editor},
+  WStrList in 'WStrList.pas',
+  Langs in 'Langs.pas';
 
 end.

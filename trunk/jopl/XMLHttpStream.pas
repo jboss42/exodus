@@ -8,6 +8,7 @@ unit XMLHttpStream;
 interface
 
 uses
+    XMLUtils,
     XMLTag,
     XMLStream,
     PrefController,
@@ -16,6 +17,7 @@ uses
     {$else}
     ExtCtrls,
     {$endif}
+    WStrList, 
     Classes, SysUtils, IdException,
     IdHTTP, SyncObjs;
 
@@ -32,7 +34,7 @@ type
         destructor Destroy; override;
 
         procedure Connect(profile: TJabberProfile); override;
-        procedure Send(xml: string); override;
+        procedure Send(xml: Widestring); override;
         procedure Disconnect; override;
     end;
 
@@ -42,7 +44,7 @@ type
         _poll_id: string;
         _poll_time: integer;
         _http: TIdHttp;
-        _request: TStringlist;
+        _request: TWideStringlist;
         _response: TStringStream;
         _cookie_list : TStringList;
         _lock: TCriticalSection;
@@ -55,7 +57,7 @@ type
         constructor Create(strm: TXMLHttpStream; profile: TJabberProfile; root: string);
         destructor Destroy(); override;
 
-        procedure Send(xml: String);
+        procedure Send(xml: WideString);
         procedure Disconnect(end_tag: string);
     end;
 
@@ -100,7 +102,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TXMLHttpStream.Send(xml: string);
+procedure TXMLHttpStream.Send(xml: Widestring);
 begin
     if (_thread <> nil) then begin
         DoDataCallbacks(true, xml);
@@ -186,7 +188,7 @@ begin
     _lock := TCriticalSection.Create();
     _event := TEvent.Create(nil, false, false, 'exodus_http_poll');
 
-    _request := TStringlist.Create();
+    _request := TWideStringlist.Create();
     _response := TStringstream.Create('');
 
     if (_profile.ProxyApproach = http_proxy_ie) then begin
@@ -234,10 +236,10 @@ begin
 end;
 
 {---------------------------------------}
-procedure THttpThread.Send(xml: string);
+procedure THttpThread.Send(xml: Widestring);
 begin
     _lock.Acquire();
-    _request.Add(AnsiToUTF8(xml));
+    _request.Add(WideStringToUTF8(xml));
     _lock.Release();
     _event.SetEvent();
 end;

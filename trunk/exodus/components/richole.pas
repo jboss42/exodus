@@ -14,7 +14,7 @@ Unit RichOLE;
 
 interface
 
-uses Windows, ActiveX, Richedit;
+uses Windows, ActiveX, Richedit,ComCtrls,ComObj,OleCtnrs;
 
 // Structure passed to GetObject and InsertObject
 type
@@ -134,6 +134,8 @@ type
          const chrg: TCharRange; var menu: HMENU): HRESULT; stdcall;
   end;
 
+
+
 function RichEdit_SetOleCallback(RichEdit: HWnd; OleInterface: IRichEditOleCallback): BOOL;
 function RichEdit_GetOleInterface(RichEdit: HWnd; out OleInterface: IRichEditOle): BOOL;
 
@@ -148,6 +150,8 @@ function RichEdit_GetOleInterface(RichEdit: HWnd; out OleInterface: IRichEditOle
 begin
   Result:= BOOL(SendMessage(RichEdit, EM_GETOLEINTERFACE, 0, longint(@OleInterface)));
 end;
+
+
 
 end.
 

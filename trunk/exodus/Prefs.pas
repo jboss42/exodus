@@ -24,8 +24,8 @@ interface
 uses
     Menus, ShellAPI, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, 
-    ComCtrls, StdCtrls, ExtCtrls, buttonFrame, CheckLst, OLERichEdit,
-    ExRichEdit, Dialogs;
+    ComCtrls, StdCtrls, ExtCtrls, buttonFrame, CheckLst,
+    ExRichEdit, Dialogs, RichEdit2;
 
 type
   TfrmPrefs = class(TForm)

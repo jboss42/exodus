@@ -21,8 +21,8 @@ unit MsgDisplay;
 
 interface
 uses
-    OLERichEdit, iniFiles, 
-    RegExpr, Classes, JabberMsg,
+    iniFiles,
+    ExRichEdit, RichEdit2, RegExpr, Classes, JabberMsg,
     Graphics, ComCtrls, Controls,
     Messages, Windows, SysUtils;
 
@@ -37,12 +37,12 @@ var
     emoticon_regex: TRegExpr;
     emoticon_list: THashedStringList;
 
-procedure DisplayMsg(Msg: TJabberMessage; RichEdit: TRichEdit);
-procedure DisplayPresence(txt: string; Browser: TRichEdit);
+procedure DisplayMsg(Msg: TJabberMessage; RichEdit: TExRichEdit);
+procedure DisplayPresence(txt: string; Browser: TExRichEdit);
 
 function GetMsgHTML(Msg: TJabberMessage): string;
 
-procedure ProcessEmoticons(RichEdit: TOLEEdit; color: TColor; txt: string);
+procedure ProcessEmoticons(RichEdit: TExRichEdit; color: TColor; txt: Widestring);
 procedure ConfigEmoticons();
 
 // procedure AddHTML(html: string; Browser: TRichEdit);
@@ -59,9 +59,9 @@ uses
     XMLUtils, Session;
 
 {---------------------------------------}
-procedure DisplayMsg(Msg: TJabberMessage; RichEdit: TRichEdit);
+procedure DisplayMsg(Msg: TJabberMessage; RichEdit: TExRichEdit);
 var
-    txt: string;
+    txt: WideString;
     c: TColor;
     min, max, thumb: integer;
     at_bottom: boolean;
@@ -78,12 +78,13 @@ begin
 
     txt := Msg.Body;
 
-    RichEdit.SelStart := Length(RichEdit.Lines.Text);
+    RichEdit.InputFormat := ifUnicode;
+    RichEdit.SelStart := Length(RichEdit.WideLines.Text);
     RichEdit.SelLength := 0;
 
     if (MainSession.Prefs.getBool('timestamp')) then begin
         RichEdit.SelAttributes.Color := clGray;
-        RichEdit.SelText := '[' +
+        RichEdit.WideSelText := '[' +
                             FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
                             Msg.Time) + ']';
         end;
@@ -92,7 +93,7 @@ begin
         // Server generated msgs (mostly in TC Rooms)
         c := clGreen;
         RichEdit.SelAttributes.Color := c;
-        RichEdit.SelText := ' ' + txt;
+        RichEdit.WideSelText := ' ' + txt;
         end
 
     else if not Msg.Action then begin
@@ -105,29 +106,29 @@ begin
             c := TColor(MainSession.Prefs.getInt('color_other'));
 
         RichEdit.SelAttributes.Color := c;
-        RichEdit.SelText := '<' + Msg.nick + '>';
+        RichEdit.WideSelText := '<' + Msg.nick + '>';
         c := TColor(MainSession.Prefs.getInt('font_color'));
         RichEdit.SelAttributes.Color := c;
-        RichEdit.SelText := ' ';
+        RichEdit.WideSelText := ' ';
 
         if (use_emoticons) then
-            ProcessEmoticons(TOLEEdit(RichEdit), c, txt)
+            ProcessEmoticons(RichEdit, c, txt)
         else
-            RichEdit.SelText := txt;
+            RichEdit.WideSelText := txt;
         end
 
     else begin
         // This is an action
         RichEdit.SelAttributes.Color := clPurple;
-        RichEdit.SelText := ' * ' + Msg.Nick + ' ';
+        RichEdit.WideSelText := ' * ' + Msg.Nick + ' ';
         if (use_emoticons) then
-            ProcessEmoticons(TOLEEdit(RichEdit), clPurple, Trim(txt))
+            ProcessEmoticons(RichEdit, clPurple, Trim(txt))
         else
-            RichEdit.SelText := txt;
+            RichEdit.WideSelText := txt;
         end;
 
     RichEdit.SelAttributes.Color := TColor(MainSession.Prefs.getInt('font_color'));
-    RichEdit.SelText := #13#10;
+    RichEdit.WideSelText := #13#10;
 
     // AutoScroll the window
     if (at_bottom) then with RichEdit do begin
@@ -138,11 +139,11 @@ begin
 end;
 
 {---------------------------------------}
-procedure ProcessEmoticons(RichEdit: TOLEEdit; color: TColor; txt: string);
+procedure ProcessEmoticons(RichEdit: TExRichEdit; color: TColor; txt: Widestring);
 var
     m: boolean;
     pic: TPicture;
-    ms, s: string;
+    ms, s: Widestring;
     im, lm: integer;
     eo: TEmoticon;
 begin
@@ -158,7 +159,7 @@ begin
         // we have a match
         lm := emoticon_regex.MatchPos[0] + emoticon_regex.MatchLen[0];
         RichEdit.SelAttributes.Color := color;
-        RichEdit.SelText := emoticon_regex.Match[1];
+        RichEdit.WideSelText := emoticon_regex.Match[1];
 
         if (pic = nil) then
             pic := TPicture.Create()
@@ -182,22 +183,30 @@ begin
             end
         else begin
             RichEdit.SelAttributes.Color := color;
-            RichEdit.SelText := ms;
+            RichEdit.WideSelText := ms;
             end;
 
         // Match-6 is any trailing whitespace
         RichEdit.SelAttributes.Color := color;
-        RichEdit.SelText := emoticon_regex.Match[6];
+        if (lm <= length(txt)) then
+            RichEdit.WideSelText := emoticon_regex.Match[6];
 
         // Search for the next emoticon
         m := emoticon_regex.ExecNext();
+
+        // do a sanity check here, probably because the regex prolly isn't
+        // _REALLY_ widestr compliant
+        if (m) then begin
+            if (length(txt) < emoticon_regex.MatchPos[0]) then
+                m := false;
+            end;
         end;
 
     if (lm <= length(txt)) then begin
         // we have a remainder
         txt := Copy(txt, lm, length(txt) - lm + 1);
         RichEdit.SelAttributes.Color := color;
-        RichEdit.SelText := txt;
+        RichEdit.WideSelText := txt;
         end;
 
     RichEdit.ReadOnly := true;
@@ -446,7 +455,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure DisplayPresence(txt: string; Browser: TRichEdit);
+procedure DisplayPresence(txt: string; Browser: TExRichEdit);
 begin
     // add presence to the richEdit control
     with Browser do begin
@@ -454,7 +463,7 @@ begin
         SelLength := 0;
 
         SelAttributes.Color := clGray;
-        SelText := txt + #13#10;
+        WideSelText := txt + #13#10;
         end;
 end;
 

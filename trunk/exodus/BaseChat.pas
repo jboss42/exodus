@@ -24,7 +24,7 @@ interface
 uses
     Dockable, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, Menus, StdCtrls, ExtCtrls, ComCtrls, OLERichEdit, ExRichEdit;
+    Dialogs, Menus, StdCtrls, ExtCtrls, ComCtrls, ExRichEdit, RichEdit2;
 
 type
   TfrmBaseChat = class(TfrmDockable)
@@ -32,7 +32,6 @@ type
     MsgList: TExRichEdit;
     Splitter1: TSplitter;
     pnlInput: TPanel;
-    MsgOut: TMemo;
     Panel1: TPanel;
     popOut: TPopupMenu;
     Copy1: TMenuItem;
@@ -41,6 +40,7 @@ type
     Emoticons1: TMenuItem;
     Paste1: TMenuItem;
     dash1: TMenuItem;
+    MsgOut: TExRichEdit;
 
     procedure Emoticons1Click(Sender: TObject);
     procedure MsgListURLClick(Sender: TObject; url: String);
@@ -237,7 +237,7 @@ begin
     _msgHistory.Add(MsgOut.Text);
     _lastMsg := _msgHistory.Count;
 
-    MsgOut.Text := '';
+    MsgOut.WideText := '';
     MsgOut.SetFocus;
 end;
 

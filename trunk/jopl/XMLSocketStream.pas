@@ -21,6 +21,7 @@ unit XMLSocketStream;
 
 interface
 uses
+    XMLUtils, 
     XMLTag,
     XMLStream,
     PrefController,
@@ -65,7 +66,7 @@ type
         destructor Destroy; override;
 
         procedure Connect(profile: TJabberProfile); override;
-        procedure Send(xml: string); override;
+        procedure Send(xml: Widestring); override;
         procedure Disconnect; override;
     end;
 
@@ -74,7 +75,7 @@ type
     private
         _socket: TidTCPClient;
         _stage: integer;
-        _data: String;
+        _data: WideString;
 
     protected
         procedure Run; override;
@@ -506,12 +507,13 @@ begin
 end;
 
 {---------------------------------------}
-procedure TXMLSocketStream.Send(xml: string);
+procedure TXMLSocketStream.Send(xml: Widestring);
 var
     utf: string;
 begin
     // Send this text out the socket
-    utf := AnsiToUTF8(xml);
+    // utf := AnsiToUTF8(xml);
+    utf := WideStringToUTF8(xml);
     DoDataCallbacks(true, utf);
     _Socket.Write(utf);
     _timer.Enabled := false;

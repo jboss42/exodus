@@ -28,16 +28,16 @@ uses
 type
   TXMLAttrib = class(TXMLNode)
   private
-    fData: string;
-    function Get_Data: string; safecall;
-    procedure Set_Data(const Value: string); safecall;
+    fData: WideString;
+    function Get_Data: WideString; safecall;
+    procedure Set_Data(const Value: WideString); safecall;
   protected
   public
     constructor create; override;
     destructor Destroy; override;
 
-    function XML: string; override;
-    property Data: string read Get_Data write Set_Data;
+    function XML: WideString; override;
+    property Data: WideString read Get_Data write Set_Data;
   end;
 
 
@@ -64,21 +64,21 @@ begin
 end;
 
 {---------------------------------------}
-function TXMLAttrib.Get_Data: string;
+function TXMLAttrib.Get_Data: WideString;
 begin
     Result := XML_UnescapeChars(fData);
 end;
 
 {---------------------------------------}
-procedure TXMLAttrib.Set_Data(const Value: string);
+procedure TXMLAttrib.Set_Data(const Value: WideString);
 begin
     fData := TrimQuotes(Value);
 end;
 
 {---------------------------------------}
-function TXMLAttrib.XML: string;
+function TXMLAttrib.XML: WideString;
 begin
-    // Return the XML string
+    // Return the XML WideString
     Result := Name + '="' + XML_EscapeChars(fData) + '"';
 end;
 
