@@ -1601,6 +1601,7 @@ var
     cur_idle: longword;
     // dmsg: string;
     last_info: TLastInputInfo;
+    avail: boolean;
 begin
     // get the latest idle amount
     if (MainSession = nil) then exit;
@@ -1637,10 +1638,13 @@ begin
             away := getInt('away_time');
             xa := getInt('xa_time');
 
+            avail := (MainSession.Show <> 'dnd') and (MainSession.Show <> 'xa') and
+                (MainSession.Show <> 'away');
+
             if ((mins = 0) and ((_is_autoaway) or (_is_autoxa))) then SetAutoAvailable()
             else if (_is_autoxa) then exit
             else if ((mins >= xa) and (_is_autoaway)) then SetAutoXA()
-            else if ((mins >= away) and (not _is_autoaway)) then SetAutoAway();
+            else if ((mins >= away) and (not _is_autoaway) and (avail)) then SetAutoAway();
             end;
         end;
 end;
