@@ -1,6 +1,6 @@
 object frmDockable: TfrmDockable
-  Left = 229
-  Top = 178
+  Left = 261
+  Top = 182
   Width = 269
   Height = 262
   Caption = 'frmDockable'

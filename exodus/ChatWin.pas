@@ -494,6 +494,7 @@ var
     txt: string;
     s, User  : String;
     p: TJabberPres;
+    j: TJabberID;
 begin
     // Get the user
     user := tag.GetAttribute('from');
@@ -503,7 +504,9 @@ begin
     txt := '';
 
     // make sure the user is still connected
-    p := MainSession.ppdb.FindPres(jid, '');
+    j := TJabberID.Create(jid);
+    p := MainSession.ppdb.FindPres(j.jid, j.resource);
+    j.Free();
     if (p = nil) then
         ChangePresImage('offline')
     else begin
