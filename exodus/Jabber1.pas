@@ -29,7 +29,7 @@ uses
     RosterWindow,
     Presence,
     XMLTag,
-    ShellAPI,
+    ShellAPI, Registry, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
     Buttons, OleCtrls, AppEvnts, ToolWin;
@@ -386,6 +386,7 @@ procedure TfrmJabber.FormCreate(Sender: TObject);
 var
     exp: boolean;
     profile: TJabberProfile;
+    reg: TRegistry;
 begin
     // We should already have the wjSession
 
@@ -466,7 +467,15 @@ begin
 
     _hidden := false;
     _shutdown := false;
-    _close_min := MainSession.prefs.getBool('close_min')
+    _close_min := MainSession.prefs.getBool('close_min');
+
+    // if we have an old registry pref thing, then kill it.
+    // todo: REMOVE EVENTUALLY
+    reg := TRegistry.Create();
+    reg.RootKey := HKEY_CURRENT_USER;
+    if (reg.KeyExists('\SOFTWARE\Jabber\Exodus')) then
+        reg.DeleteKey('\SOFTWARE\Jabber\Exodus');
+    reg.Free();
 
 end;
 
