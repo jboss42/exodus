@@ -1536,6 +1536,7 @@ var
     Node : TTreeNode;
     ri  : TJabberRosterItem;
     p: TJabberPres;
+    tmps: Widestring;
 begin
     // Handle the changing of the treeview Hints
     // Based on the current node we are hovering over.
@@ -1560,12 +1561,18 @@ begin
         if ri = nil then exit;
 
         p := MainSession.ppdb.FindPres(ri.JID.jid, '');
-        if MainSession.Prefs.getBool('inline_status') then
-            _hint_text := ri.jid.full
-        else if P = nil then
+        if (p = nil) then
             _hint_text := ri.jid.full + ': ' + g_offline
-        else
-            _hint_text := ri.jid.full + ': ' + p.Status;
+        else begin
+            // Compile a list of jid: status for each resource
+            tmps := '';
+            while (p <> nil) do begin
+                if (tmps <> '') then tmps := tmps + ''#13#10;
+                tmps := tmps + p.fromJid.full + ': ' + p.Status;
+                p := MainSession.ppdb.NextPres(p);
+            end;
+            _hint_text := tmps;
+        end;
     end
     else
         _hint_text := '';
