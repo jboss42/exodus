@@ -1525,10 +1525,12 @@ procedure TExodus.SetAutoAvailable;
 begin
     // reset our status to available
     DebugMsg('Setting Auto Available'#13#10);
-    MainSession.SetPresence(_last_show, _last_status, MainSession.Priority);
+    timAutoAway.Enabled := false;
     timAutoAway.Interval := 10000;
     _is_autoaway := false;
     _is_autoxa := false;
+    MainSession.SetPresence(_last_show, _last_status, MainSession.Priority);
+    timAutoAway.Enabled := true;
 end;
 
 {---------------------------------------}
