@@ -154,7 +154,8 @@ uses
   GTLanguagesEx in 'GTLanguagesEx.pas',
   PrefLayouts in 'prefs\PrefLayouts.pas' {frmPrefLayouts},
   Wizard in 'Wizard.pas' {frmWizard},
-  RegForm in 'RegForm.pas' {frmRegister};
+  RegForm in 'RegForm.pas' {frmRegister},
+  LocalUtils in 'LocalUtils.pas';
 
 {$R *.TLB}
 
