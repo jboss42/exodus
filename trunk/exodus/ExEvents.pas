@@ -484,8 +484,6 @@ begin
             _data_list.Add('Double click to open chat window');
             cjid := TJabberID.Create(from);
             c := MainSession.ChatList.FindChat(cjid.jid, cjid.resource, '');
-            if (c = nil) then
-                c := MainSession.ChatList.FindChat(cjid.jid, cjid.resource, '');
             assert(c <> nil);
             c.addRef();
             FreeAndNil(_tag);

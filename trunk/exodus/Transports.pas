@@ -29,6 +29,7 @@ uses
 type
     TTransportProxy = class
     private
+        iq: TJabberIQ;
         jid: Widestring;
         action: Widestring;
         key: Widestring;
@@ -37,6 +38,7 @@ type
         procedure RemoveGetCallback(event: string; tag: TXMLTag);
         procedure RemoveSetCallback(event: string; tag: TXMLTag);
     public
+        destructor Destroy(); override;
         procedure UnRegister();
 end;
 
@@ -73,9 +75,14 @@ begin
 end;
 
 {---------------------------------------}
+destructor TTransportProxy.Destroy();
+begin
+    if (iq <> nil) then
+        iq.Free();
+end;
+
+{---------------------------------------}
 procedure TTransportProxy.UnRegister();
-var
-    iq: TJabberIQ;
 begin
     action := 'remove';
     iq := TJabberIQ.Create(MainSession, MainSession.generateID(), RemoveSetCallback, 4);
@@ -83,7 +90,7 @@ begin
         toJid := jid;
         iqType := 'set';
         Namespace := XMLNS_REGISTER;
-        iq.qTag.AddTag('remove');
+        qTag.AddTag('remove');
         Send();
     end;
 end;
@@ -98,9 +105,9 @@ end;
 procedure TTransportProxy.RemoveGetCallback(event: string; tag: TXMLTag);
 var
     user_tag, key_tag: TXMLTag;
-    iq: TJabberIQ;
     user: WideString;
 begin
+    iq := nil;
     if (event = 'timeout') then begin
         ShowError(_(sTransportTimeout));
         Self.Free();
@@ -147,6 +154,7 @@ end;
 {---------------------------------------}
 procedure TTransportProxy.RemoveSetCallback(event: string; tag: TXMLTag);
 begin
+    iq := nil;
     if (event = 'timeout') then begin
         ShowError(_(sTransportTimeout));
     end

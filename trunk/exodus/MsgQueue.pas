@@ -186,7 +186,7 @@ begin
             for d := 0 to event.Data.Count - 1 do
                 e.AddBasicTag('data', event.Data.Strings[d]);
 
-            // spool out queue chat messages to disk.
+            // spool out queued chat messages to disk.
             if (event.eType = evt_Chat) then begin
                 c := MainSession.ChatList.FindChat(event.from_jid.jid, event.from_jid.resource, '');
                 assert(c <> nil);
