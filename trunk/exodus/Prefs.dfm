@@ -3,6 +3,7 @@ object frmPrefs: TfrmPrefs
   Top = 214
   Width = 468
   Height = 455
+  BorderWidth = 1
   Caption = 'Exodus Preferences'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -21,7 +22,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 389
+    Height = 387
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1675,8 +1676,8 @@ object frmPrefs: TfrmPrefs
   object PageControl1: TPageControl
     Left = 89
     Top = 0
-    Width = 371
-    Height = 389
+    Width = 369
+    Height = 387
     ActivePage = tbsKeywords
     Align = alClient
     Constraints.MinHeight = 340
@@ -1689,7 +1690,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 361
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1703,19 +1704,20 @@ object frmPrefs: TfrmPrefs
         ParentColor = False
         ParentFont = False
         TabOrder = 0
+        Transparent = False
       end
       object memKeywords: TTntMemo
         Left = 0
         Top = 73
-        Width = 363
-        Height = 285
+        Width = 361
+        Height = 283
         Align = alClient
         TabOrder = 1
       end
       object Panel2: TPanel
         Left = 0
         Top = 20
-        Width = 363
+        Width = 361
         Height = 53
         Align = alTop
         BevelOuter = bvNone
@@ -1723,7 +1725,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TLabel
           Left = 0
           Top = 0
-          Width = 363
+          Width = 361
           Height = 13
           Align = alTop
           Caption = 
@@ -1772,6 +1774,7 @@ object frmPrefs: TfrmPrefs
         ParentColor = False
         ParentFont = False
         TabOrder = 0
+        Transparent = False
       end
       object memBlocks: TTntMemo
         Left = 0
@@ -1894,7 +1897,7 @@ object frmPrefs: TfrmPrefs
       object StaticText13: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 361
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1908,31 +1911,32 @@ object frmPrefs: TfrmPrefs
         ParentColor = False
         ParentFont = False
         TabOrder = 1
+        Transparent = False
       end
     end
   end
   object Panel1: TPanel
     Left = 0
-    Top = 389
-    Width = 460
+    Top = 387
+    Width = 458
     Height = 37
     Align = alBottom
     BevelOuter = bvNone
+    BorderWidth = 1
     TabOrder = 2
     object Bevel1: TBevel
-      Left = 0
-      Top = 0
-      Width = 460
+      Left = 1
+      Top = 1
+      Width = 456
       Height = 5
       Align = alTop
       Shape = bsTopLine
-      Visible = False
     end
     object Panel3: TPanel
-      Left = 219
-      Top = 5
+      Left = 216
+      Top = 6
       Width = 241
-      Height = 32
+      Height = 30
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 0

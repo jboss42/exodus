@@ -65,7 +65,6 @@ type
     imgCustompres: TImage;
     lblCustomPres: TLabel;
     Panel1: TPanel;
-    Bevel1: TBevel;
     Panel3: TPanel;
     btnOK: TButton;
     btnCancel: TButton;
@@ -95,6 +94,7 @@ type
     StaticText13: TStaticText;
     imgTransfer: TImage;
     lblTransfer: TLabel;
+    Bevel1: TBevel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);

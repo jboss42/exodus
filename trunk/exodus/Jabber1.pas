@@ -556,7 +556,7 @@ uses
     JclHookExcept, JclDebug, ExceptTracer,
     {$endif}
 
-    GnuGetText, 
+    GnuGetText,  
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat, ChatController, ChatWin,
     JabberConst, CommCtrl, CustomPres,
     Debug, Dockable, ExUtils, GetOpt, InputPassword, Invite,
@@ -2764,7 +2764,7 @@ begin
     end;
     }
 
-    FileReceive('pgmillard@jabber.org', 'http://exodus.jabberstudio.org/indy_openssl096g.zip', 'SSL Zip Files');
+    //FileReceive('pgmillard@jabber.org', 'http://exodus.jabberstudio.org/indy_openssl096g.zip', 'SSL Zip Files');
 end;
 
 {---------------------------------------}

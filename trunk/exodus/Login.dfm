@@ -1,10 +1,9 @@
 object frmLogin: TfrmLogin
-  Left = 258
-  Top = 268
-  Width = 376
+  Left = 260
+  Top = 270
+  Width = 372
   Height = 145
   BorderIcons = [biSystemMenu, biMinimize]
-  BorderWidth = 1
   Caption = 'Login'
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -18,8 +17,8 @@ object frmLogin: TfrmLogin
   OnClose = FormClose
   OnCreate = FormCreate
   DesignSize = (
-    366
-    114)
+    364
+    116)
   PixelsPerInch = 96
   TextHeight = 16
   object Label5: TLabel
@@ -44,37 +43,10 @@ object frmLogin: TfrmLogin
     Height = 16
     Caption = 'foo@bar.com/resource'
   end
-  object Bevel1: TBevel
-    Left = 0
-    Top = 75
-    Width = 366
-    Height = 2
-    Align = alBottom
-    Shape = bsTopLine
-  end
-  inline frameButtons1: TframeButtons
-    Left = 0
-    Top = 77
-    Width = 366
-    Height = 37
-    Align = alBottom
-    AutoScroll = False
-    TabOrder = 3
-    inherited Bevel1: TBevel
-      Width = 366
-      Height = 7
-    end
-    inherited Panel1: TPanel
-      Left = 204
-      Top = 7
-      Width = 162
-      Height = 30
-    end
-  end
   object cboProfiles: TTntComboBox
     Left = 66
     Top = 4
-    Width = 211
+    Width = 209
     Height = 24
     Style = csDropDownList
     Anchors = [akLeft, akTop, akRight]
@@ -94,14 +66,29 @@ object frmLogin: TfrmLogin
     TabOrder = 1
   end
   object btnDetails: TButton
-    Left = 285
+    Left = 278
     Top = 4
-    Width = 75
+    Width = 76
     Height = 23
     Anchors = [akTop, akRight]
     Caption = '&Details...'
     TabOrder = 2
     OnClick = btnDetailsClick
+  end
+  inline frameButtons1: TframeButtons
+    Left = 0
+    Top = 82
+    Width = 364
+    Height = 34
+    Align = alBottom
+    AutoScroll = False
+    TabOrder = 3
+    inherited Bevel1: TBevel
+      Width = 364
+    end
+    inherited Panel1: TPanel
+      Left = 204
+    end
   end
   object popProfiles: TPopupMenu
     Left = 16

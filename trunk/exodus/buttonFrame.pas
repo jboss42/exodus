@@ -27,10 +27,11 @@ uses
 
 type
   TframeButtons = class(TFrame)
+    Panel2: TPanel;
+    Bevel1: TBevel;
     Panel1: TPanel;
     btnOK: TButton;
     btnCancel: TButton;
-    Bevel1: TBevel;
   private
     { Private declarations }
   public
