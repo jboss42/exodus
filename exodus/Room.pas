@@ -1317,16 +1317,25 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.popRoomRosterPopup(Sender: TObject);
 var
+    e: boolean;
     rm: TRoomMember;
 begin
-  rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
-  if (rm <> nil) then begin
-     if (rm.show = sBlocked) then
-        popRosterBlock.Caption := sUnblock
-     else
-        popRosterBlock.Caption := sBlock;
- end;
-  inherited;
+    e := (lstRoster.Selected <> nil);
+    popRosterMsg.Enabled := e;
+    popRosterChat.Enabled := e;
+    popRosterSendJID.Enabled := e;
+    popRosterblock.Enabled := e;
+
+    if (not e) then exit;
+
+    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
+    if (rm <> nil) then begin
+        if (rm.show = sBlocked) then
+            popRosterBlock.Caption := sUnblock
+        else
+            popRosterBlock.Caption := sBlock;
+    end;
+    inherited;
 end;
 
 {---------------------------------------}
