@@ -203,37 +203,44 @@ var
     fx, m, x: TXMLTag;
     valid: boolean;
 begin
-    if (_type = 'form') then begin
-      // do something
-      getResponseTag(m, x);
 
-      x.setAttribute('xmlns', XMLNS_XDATA);
-      x.setAttribute('type', 'submit');
-      if (_title <> '') then
+    if (_type = 'form') then begin
+        // do something
+        if (not MainSession.Active) then begin
+            MessageDlg(_('You are currently disconnected. Please reconnect before responding to this form.'),
+                mtError, [mbOK], 0);
+            exit;
+        end;
+
+        getResponseTag(m, x);
+
+        x.setAttribute('xmlns', XMLNS_XDATA);
+        x.setAttribute('type', 'submit');
+        if (_title <> '') then
           x.AddBasicTag('title', _title);
 
-      valid := true;
-      for i := 0 to Self.box.ControlCount - 1 do begin
-          c := Self.box.Controls[i];
-          if (c is TframeGeneric) then begin
-              f := TframeGeneric(c);
+        valid := true;
+        for i := 0 to Self.box.ControlCount - 1 do begin
+            c := Self.box.Controls[i];
+            if (c is TframeGeneric) then begin
+                f := TframeGeneric(c);
 
-              if (not f.isValid()) then
-                  valid := false;
-              if (x <> nil) then begin
-                  fx := f.getXML();
-                  if (fx <> nil) then x.AddTag(fx);
-              end;
-          end;
-      end;
+                if (not f.isValid()) then
+                    valid := false;
+                if (x <> nil) then begin
+                    fx := f.getXML();
+                    if (fx <> nil) then x.AddTag(fx);
+                end;
+            end;
+        end;
 
-      if (not valid) then begin
-          if (m <> nil) then m.Free();
-          MessageDlg(sAllRequired, mtError, [mbOK], 0);
-          exit;
-      end;
-      MainSession.SendTag(m);
-      _responded := true;
+        if (not valid) then begin
+            if (m <> nil) then m.Free();
+            MessageDlg(sAllRequired, mtError, [mbOK], 0);
+            exit;
+        end;
+        MainSession.SendTag(m);
+        _responded := true;
     end;
 
     Self.Close();
@@ -297,10 +304,15 @@ var
     m, x: TXMLTag;
 begin
     if (_type = 'form') then begin
-      getResponseTag(m, x);
-      x.setAttribute('type', 'cancel');
-      MainSession.SendTag(m);
-      _responded := true;
+        if (not MainSession.Active) then begin
+            MessageDlg(_('You are currently disconnected. Please reconnect before responding to this form.'),
+                mtError, [mbOK], 0);
+            exit;
+        end;
+        getResponseTag(m, x);
+        x.setAttribute('type', 'cancel');
+        MainSession.SendTag(m);
+        _responded := true;
     end;
 end;
 
