@@ -1190,16 +1190,13 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.restoreToolbar;
-var
-    i: integer;
 begin
     // setup the toolbar based on prefs
     with MainSession.Prefs do begin
         mnuExpanded.Checked := getBool('expanded');
 
-        i := getInt('roster_visible');
-        mnuOnline.Checked := (i <> show_offline);
-        btnOnlineRoster.Down := (i <> show_offline);
+        btnOnlineRoster.Down := getBool('roster_only_online');
+        mnuOnline.Checked := btnOnlineRoster.Down;
 
         if getBool('expanded') then begin
             btnExpanded.ImageIndex := 9;
