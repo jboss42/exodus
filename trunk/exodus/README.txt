@@ -4,9 +4,9 @@ Getting started with Exodus development
 2. Set up Subversion (http://subversion.tigris.org)
 3. Checkout Exodus source code:
    a) If you have a ssh account on jabberstudio.org use:
-	svn co svn+ssh://username@jabberstudio.org/var/projects/exodus/svn/trunk exodus
+	svn co svn+ssh://username@svn.jabberstudio.org/var/projects/exodus/svn/trunk exodus
    b) If you want to do anonymous checkouts use:
-	svn co svn://jabberstudio.org/exodus/svn/trunk exodus
+	svn co svn://svn.jabberstudio.org/exodus/svn/trunk exodus
 4. Start Delphi 7.
 5. Install the TNT Unicode components
    a) Unzip .\components\tntUnicode.zip 

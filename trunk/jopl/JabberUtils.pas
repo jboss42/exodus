@@ -30,7 +30,7 @@ function UTCNow(): TDateTime;
 function ColorToHTML(Color: TColor): string;
 function MessageDlgW(const Msg: Widestring; DlgType: TMsgDlgType;
     Buttons: TMsgDlgButtons; HelpCtx: Longint; Caption: Widestring = ''): Word;
-
+function percentDecode(encoded: string; escape: boolean = false): Widestring;
 
 procedure split(value: WideString; list: TWideStringList; seps : WideString = ' '#9#10#13);
 procedure WordSplit(value: WideString; list: TWideStringList);
@@ -226,7 +226,46 @@ begin
 
 end;
 
+{---------------------------------------}
+function percentDecode(encoded: string; escape: boolean): Widestring;
+const
+    // each hex digit, -1 for non-hex
+    Convert: array['0'..'f'] of SmallInt =
+        ( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,-1,-1,-1,-1,-1,-1,
+         -1,10,11,12,13,14,15,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+         -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+         -1,10,11,12,13,14,15);
+var
+    tmp: UTF8String;
+    i: integer;
+    len: integer;
+begin
+    tmp := '';
+    i := 1;
+    len := Length(encoded);
+    while i <= len do begin
+        if (encoded[i] = '%') then begin
+            if i + 2 > len then break;
+            if not (encoded[i+1] in ['0'..'f']) or not (encoded[i+2] in ['0'..'f']) then break;
 
+            tmp := tmp + Char((Convert[encoded[i+1]] shl 4) + Convert[encoded[i + 2]]);
+            inc(i, 2);
+        end
+        else
+            if escape then begin
+                if encoded[i] = '&' then
+                    tmp := tmp + '#26;'
+                else if encoded[i] = '/' then
+                    tmp := tmp + '#2f;'
+                else
+                    tmp := tmp + encoded[i];
+            end
+            else
+                tmp := tmp + encoded[i];
 
+        inc(i);
+    end;
+    result := UTF8Decode(tmp);
+end;
 
 end.

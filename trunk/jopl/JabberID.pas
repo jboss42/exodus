@@ -33,7 +33,8 @@ type
         _resource: widestring;
         _valid: boolean;
     public
-        constructor Create(jid: widestring);
+        constructor Create(jid: widestring); overload;
+        constructor Create(user: widestring; domain: widestring; resource: widestring); overload;
 
         function jid: widestring;
         function full: widestring;
@@ -47,7 +48,6 @@ type
 
         property isValid: boolean read _valid;
 end;
-
 
 function isValidJID(jid: Widestring): boolean;
 
@@ -133,6 +133,16 @@ begin
     _resource := '';
 
     if (_raw <> '') then ParseJID(_raw);
+end;
+
+constructor TJabberID.Create(user: widestring; domain: widestring; resource: widestring);
+begin
+    inherited Create();
+
+    _raw := '';
+    _user := user;
+    _domain := domain;
+    _resource := resource;
 end;
 
 {---------------------------------------}
