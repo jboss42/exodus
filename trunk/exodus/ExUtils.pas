@@ -45,6 +45,8 @@ function URLToFilename(url: string): string;
 procedure LogMessage(Msg: TJabberMessage);
 procedure ShowLog(jid: string);
 
+function getDisplayField(fld: string): string;
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -312,5 +314,20 @@ begin
     Writeln(f, h);
     CloseFile(f);
 end;
+
+function getDisplayField(fld: string): string;
+begin
+    // send back "well formatted" field names
+
+    if (fld = 'nick') then result := 'Nickname:'
+    else if (fld = 'first') then result := 'First Name:'
+    else if (fld = 'last') then result := 'Last Name:'
+    else if (fld = 'email') then result := 'EMail Address:'
+    else if (fld = 'password') then result := 'Password'
+    else if (fld = 'username') then result := 'UserName:'
+    else
+        result := fld;
+end;
+
 
 end.

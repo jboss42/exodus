@@ -52,6 +52,7 @@ type
     procedure DebugCallback(send: boolean; data: string);
   public
     { Public declarations }
+    procedure debugMsg(txt: string);
   end;
 
 var
@@ -71,6 +72,19 @@ begin
     // make sure the output is showing..
     inherited;
     MainSession.Stream.RegisterSocketCallback(DebugCallback);
+end;
+
+{---------------------------------------}
+procedure TfrmDebug.debugMsg(txt: string);
+begin
+    // add some text to the debug log
+    with MsgDebug do begin
+        SelStart := GetTextLen;
+        SelLength := 0;
+        SelAttributes.Color := clRed;
+        SelText := 'DEBUG: ' + txt;
+        SelAttributes.Color := clBlack;
+        end;
 end;
 
 {---------------------------------------}

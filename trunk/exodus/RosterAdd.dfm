@@ -1,6 +1,6 @@
 object frmAdd: TfrmAdd
-  Left = 260
-  Top = 425
+  Left = 268
+  Top = 579
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'Add Contact'

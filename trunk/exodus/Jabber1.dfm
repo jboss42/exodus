@@ -27,14 +27,13 @@ object frmJabber: TfrmJabber
     Left = 0
     Top = 30
     Width = 532
-    Height = 257
+    Height = 258
     ActivePage = tbsMsg
     Align = alClient
     DockSite = True
     TabIndex = 0
     TabOrder = 0
     object tbsMsg: TTabSheet
-      BorderWidth = 1
       Caption = 'Messenger'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlack
@@ -47,7 +46,7 @@ object frmJabber: TfrmJabber
         Left = 209
         Top = 0
         Width = 3
-        Height = 227
+        Height = 230
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = Splitter1Moved
@@ -56,10 +55,9 @@ object frmJabber: TfrmJabber
         Left = 0
         Top = 0
         Width = 209
-        Height = 227
+        Height = 230
         Align = alLeft
         BevelOuter = bvNone
-        BorderWidth = 1
         UseDockManager = False
         DragCursor = crDefault
         DragKind = dkDock
@@ -68,8 +66,8 @@ object frmJabber: TfrmJabber
       object lstEvents: TListView
         Left = 212
         Top = 0
-        Width = 310
-        Height = 227
+        Width = 312
+        Height = 230
         Align = alClient
         Columns = <
           item
@@ -247,6 +245,7 @@ object frmJabber: TfrmJabber
         object SearchforPerson1: TMenuItem
           Caption = 'Search for a Contact'
           ShortCut = 16454
+          OnClick = SearchforPerson1Click
         end
         object MessageHistory2: TMenuItem
           Caption = 'Contact'#39's Message History'

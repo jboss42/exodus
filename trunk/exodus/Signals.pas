@@ -89,13 +89,14 @@ var
     levt: string;
     i: integer;
     sig: TSignal;
-begin
+begin     
     // find the correct signal to dispatch this event on
     levt := Lowercase(Trim(event));
-    for i := 0 to Self.Count - 1 do begin
+    for i := Self.Count - 1 downto 0 do begin
         if (Pos(Lowercase(Strings[i]), levt) = 1) then begin
             sig := TSignal(Objects[i]);
-            sig.Invoke(event, tag);
+            if (sig <> nil) then
+                sig.Invoke(event, tag);
             end;
         end;
 end;
@@ -127,6 +128,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 function TSignalDispatcher.TotalCount: longint;
 var
     i: integer;
@@ -176,17 +178,19 @@ var
 begin
     // dispatch this to all interested listeners
     cmp := Lowercase(Trim(event));
-    for i := 0 to Self.Count - 1 do begin
+    for i := Self.Count - 1 downto 0 do begin
         e := Strings[i];
         l := TSignalListener(Objects[i]);
-        sig := TSignalEvent(l.callback);
-        if (e <> '') then begin
-            // check to see if the listener's string is a substring of the event
-            if (Pos(e, cmp) >= 1) then
+        if (l <> nil) then begin
+            sig := TSignalEvent(l.callback);
+            if (e <> '') then begin
+                // check to see if the listener's string is a substring of the event
+                if (Pos(e, cmp) >= 1) then
+                    sig(event, tag);
+                end
+            else
                 sig(event, tag);
-            end
-        else
-            sig(event, tag);
+            end;
         end;
 end;
 
@@ -228,6 +232,7 @@ begin
     Result := l;
 end;
 
+{---------------------------------------}
 procedure TPacketSignal.Invoke(event: string; tag: TXMLTag);
 var
     i: integer;
@@ -240,7 +245,7 @@ begin
     use basic syntax like:
     /iq/query@xmlns='jabber:iq:roster'
     }
-    for i := 0 to Self.Count - 1 do begin
+    for i := Self.Count - 1 downto 0 do begin
         pl := TPacketListener(Self.Objects[i]);
         xp := pl.XPLite;
         if xp.Compare(tag) then begin

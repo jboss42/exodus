@@ -163,6 +163,7 @@ type
     procedure MessageHistory2Click(Sender: TObject);
     procedure Properties2Click(Sender: TObject);
     procedure mnuVCardClick(Sender: TObject);
+    procedure SearchforPerson1Click(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -236,6 +237,7 @@ const
 {---------------------------------------}
 implementation
 uses
+    JUD, 
     Transfer, 
     Profile,
     RiserWindow,
@@ -290,11 +292,15 @@ var
     profile: TJabberProfile;
 begin
     // We should already have the wjSession
+
+    // Hide the application's window, and set our own
+    // window to the proper parameters..
     ShowWindow(Application.Handle, SW_HIDE);
     SetWindowLong(Application.Handle, GWL_EXSTYLE,
         GetWindowLong(Application.Handle, GWL_EXSTYLE)
         and not WS_EX_APPWINDOW or WS_EX_TOOLWINDOW);
     ShowWindow(Application.Handle, SW_SHOW);
+
     _event := next_none;
     _noMoveCheck := true;
     frmDebug := nil;
@@ -1003,6 +1009,7 @@ begin    // get the latest idle amount
         if getBool('auto_away') then begin
             cur_idle := (GetTickCount() - IdleUIGetLastInputTime()) div 1000;
             mins := cur_idle div 60;
+            frmDebug.debugMsg('Idle time: ' + IntToStr(cur_idle) + ' secs'#13#10);
             away := getInt('away_time');
             xa := getInt('xa_time');
 
@@ -1019,7 +1026,7 @@ begin    // get the latest idle amount
              else if (_is_autoxa) then
                  exit
 
-             else if (mins >= xa) then begin
+             else if ((mins >= xa) and (_is_autoaway)) then begin
                  // set us to xa
                  MainSession.setPresence('xa', getString('xa_status'),
                      MainSession.Priority);
@@ -1058,6 +1065,13 @@ begin
     // lookup some arbitrary vcard..
     if InputQuery('Lookup Profile', 'Enter Jabber ID:', jid) then
         ShowProfile(jid);
+end;
+
+{---------------------------------------}
+procedure TfrmJabber.SearchforPerson1Click(Sender: TObject);
+begin
+    // Start a default search
+    StartSearch(MainSession.Agents.getFirstSearch);
 end;
 
 end.
