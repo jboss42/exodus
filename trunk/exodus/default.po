@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-11-20 00:25\n"
-"PO-Revision-Date: 2003-11-20 00:25\n"
+"POT-Creation-Date: 2003-11-20 06:45\n"
+"PO-Revision-Date: 2003-11-20 06:45\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,8 +87,6 @@ msgstr ""
 #: JoinRoom.dfm:14
 #. frmJoinRoom..Panel1..lblFetch..Font.Name
 #: JoinRoom.dfm:116
-#. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Font.Name
-#: Jud.dfm:152
 #. frmLogin..Font.Name
 #: Login.dfm:12
 #. frmMsgQueue..Font.Name
@@ -205,6 +203,7 @@ msgstr ""
 
 #. frmAbout..pnlVersion..Caption
 #: About.dfm:1436
+#: About.pas:81
 #: ExEvents.pas:285
 msgid "Version: "
 msgstr ""
@@ -485,40 +484,6 @@ msgstr ""
 msgid "wais"
 msgstr ""
 
-#. frmAbout..InfoBox....AllowInPlace
-#: About.dfm:1557
-msgid "{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang1033{\\fonttbl{\\f0\\fnil\\fcharset0 "
-"MS Sans Serif;}}\n"
-"\\viewkind4\\uc1\\pard\\f0\\fs16 Exodus is the creation of Peter Millard  "
-"(mailto:me@pgmillard.com).  Checkout the website at "
-"http://exodus.jabberstudio.org for more information. It is currently "
-"licensed under the GNU Public License (GPL) see www.gnu.org for more "
-"information on the GPL.\\par\n"
-"\\par\n"
-"Preference Icons used with permission from collections of \"Foood\"\\par\n"
-"http://www.foood.net/icons/index.htm\\par\n"
-"\\par\n"
-"Portions of this software are Copyright (c) 1993 - 2002, Chad Z. "
-"Hower (Kudzu) and the Indy Pit Crew - http://www.nevrona.com/Indy/. "
-"This application may also be using the IndySSL components from "
-"Nevrona, and the Open-SSL binaries available from Intellicom.si.\\par\n"
-"\\par\n"
-"SAX XML Parser by: Stefan Heymann\\par\n"
-"Eschenweg 3, 72076 T\\'fcbingen, GERMANY mailto:stefan@destructor.de, "
-"http://www.destructor.de\\par\n"
-"\\par\n"
-"Unicode library is Copyright (c) 1999, 2000 Mike Lischke "
-"(public@lischke-online.de) and Portions Copyright (c) 1999, 2000 "
-"Azret Botash (az).\\par\n"
-"\\par\n"
-"RichEdit98 and DBRichEdit98 components for Delphi 3.0-4.0. version "
-"1.40 Author Alexander Obukhov, Minsk, Belarus "
-"<alex@niiomr.belpak.minsk.by>\\par\n"
-"\\par\n"
-"\\par\n"
-"}\n"
-msgstr ""
-
 #. frmAutoUpdateStatus..Caption
 #: AutoUpdateStatus.dfm:7
 msgid "Auto Update"
@@ -661,7 +626,7 @@ msgstr ""
 #. frmExodus..popTray..N01..Caption
 #: Jabber1.dfm:2706
 #. frmJud..PopupMenu1..N1..Caption
-#: Jud.dfm:217
+#: Jud.dfm:211
 #. frmMsgRecv..popContact..N1..Caption
 #: MsgRecv.dfm:543
 #. frmMsgRecv..popContact..N2..Caption
@@ -1956,7 +1921,7 @@ msgstr ""
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Hint
 #: Jabber1.dfm:145
 #. frmJud..PopupMenu1..popAdd..Caption
-#: Jud.dfm:209
+#: Jud.dfm:203
 #. frmAdd..Caption
 #: RosterAdd.dfm:6
 #. frmRosterWindow..popActions..popAddContact..Caption
@@ -2263,7 +2228,7 @@ msgstr ""
 #. frmExodus..popTray..trayMessage..Caption
 #: Jabber1.dfm:2694
 #. frmJud..PopupMenu1..popMessage..Caption
-#: Jud.dfm:224
+#: Jud.dfm:218
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
 #: subscribe.dfm:146
 msgid "Send Message"
@@ -2374,21 +2339,21 @@ msgid "Add a new Group"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Button1..Caption
-#: Jud.dfm:173
+#: Jud.dfm:167
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: RosterRecv.dfm:44
-#: Jud.pas:640
-#: Jud.pas:642
+#: Jud.pas:641
+#: Jud.pas:643
 msgid "Add Contacts"
 msgstr ""
 
 #. frmJud..PopupMenu1..popProfile..Caption
-#: Jud.dfm:213
+#: Jud.dfm:207
 msgid "View Profile"
 msgstr ""
 
 #. frmJud..PopupMenu1..popChat..Caption
-#: Jud.dfm:220
+#: Jud.dfm:214
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:142
 #: Jabber1.pas:2254
@@ -6336,6 +6301,45 @@ msgstr ""
 msgid "File Transfer Manager"
 msgstr ""
 
+#: About.pas:83
+msgid "Exodus is the creation of Peter Millard  (mailto:me@pgmillard.com).  "
+"Checkout the website at http://exodus.jabberstudio.org for more "
+"information. It is currently licensed under the GNU Public License "
+"(GPL) see www.gnu.org for more information on the "
+"GPL."
+msgstr ""
+
+#: About.pas:85
+msgid "Preference Icons used with permission from collections of \"Foood\". "
+"http://www.foood.net/icons/index.htm"
+msgstr ""
+
+#: About.pas:87
+msgid "TCP/IP components are Copyright (c) 1993 - 2002, Chad Z. Hower "
+"(Kudzu) and the Indy Pit Crew - http://www.nevrona.com/Indy/. This "
+"application may also be using the IndySSL components from Nevrona, "
+"and the Open-SSL binaries available from "
+"Intellicom.si."
+msgstr ""
+
+#: About.pas:89
+msgid "SAX XML Parser by: Stefan Heymann Eschenweg 3, 72076 Tubingen, "
+"GERMANY mailto:stefan@destructor.de, "
+"http://www.destructor.de"
+msgstr ""
+
+#: About.pas:91
+msgid "Unicode library is Copyright (c) 1999, 2000 Mike Lischke "
+"(public@lischke-online.de) and Portions Copyright (c) 1999, 2000 "
+"Azret Botash (az)."
+msgstr ""
+
+#: About.pas:93
+msgid "RichEdit98 and DBRichEdit98 components for Delphi 3.0-4.0. version "
+"1.40 Author Alexander Obukhov, Minsk, Belarus "
+"<alex@niiomr.belpak.minsk.by>"
+msgstr ""
+
 #: AutoUpdateStatus.pas:187
 #: WebGet.pas:120
 msgid "Downloading..."
@@ -6961,18 +6965,18 @@ msgid "You must enter a nickname"
 msgstr ""
 
 #. timeout
-#: Jud.pas:316
+#: Jud.pas:317
 #. we got an iq-error back
-#: Jud.pas:322
+#: Jud.pas:323
 msgid "Could not contact the search agent."
 msgstr ""
 
 #. timeout
-#: Jud.pas:425
+#: Jud.pas:426
 msgid "The search timed out."
 msgstr ""
 
-#: Jud.pas:454
+#: Jud.pas:455
 msgid "No Results were found."
 msgstr ""
 
