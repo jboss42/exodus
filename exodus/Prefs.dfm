@@ -1435,12 +1435,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 340
-    ActivePage = tbsMessages
+    ActivePage = tbsNotify
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 5
+    TabIndex = 6
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1721,7 +1721,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 102
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2160,7 +2160,7 @@ object frmPrefs: TfrmPrefs
         Hint = 
           'NOTE: Notifications always occur when Exodus is in the backgroun' +
           'd.'
-        Caption = 'Do notifications  when active'
+        Caption = 'Do notifications when active'
         ParentShowHint = False
         ShowHint = True
         TabOrder = 4
