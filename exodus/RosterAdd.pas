@@ -55,7 +55,7 @@ type
     svc, gw, sjid, snick, sgrp: Widestring;
     procedure doAdd;
   published
-    procedure agentsCallback(event: string; tag: TXMLTag);
+    procedure EntityCallback(event: string; tag: TXMLTag);
   public
     { Public declarations }
   end;
@@ -107,13 +107,13 @@ begin
         svc := 'jabber';
     end;
 
-    // check to see if we need an agents list
+    // check to see if we need an entity info
     if (cboType.ItemIndex > 0) then begin
         // Adding a gateway'd user
         gw := txtGateway.Text;
         gw_ent := jEntityCache.getByJid(gw);
         if (gw_ent = nil) then begin
-            cb := MainSession.RegisterCallback(agentsCallback, '/session/entity/items');
+            cb := MainSession.RegisterCallback(EntityCallback, '/session/entity/items');
             gw_ent := jEntityCache.walk(gw, MainSession);
             self.Hide();
         end
@@ -248,10 +248,11 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmAdd.agentsCallback(event: string; tag: TXMLTag);
+procedure TfrmAdd.EntityCallback(event: string; tag: TXMLTag);
 begin
-    // we are getting some kind of agents list
-    if (tag.GetAttribute('from') = gw) then begin
+    // we are getting some kind of entity info
+    if ((event = '/session/entity/items') and
+        (tag.GetAttribute('from') = gw)) then begin
         MainSession.UnRegisterCallback(cb);
         doAdd();
     end;

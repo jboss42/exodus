@@ -22,7 +22,7 @@ unit RegForm;
 interface
 
 uses
-    XMLTag, IQ, Agents, Presence, fGeneric, fLeftLabel,
+    XMLTag, IQ, Presence, fGeneric, fLeftLabel,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Wizard, ComCtrls, ExtCtrls, StdCtrls, TntStdCtrls, TntExtCtrls;
 
@@ -65,7 +65,7 @@ type
   public
     { Public declarations }
     jid: Widestring;
-    agent: TAgentItem;
+    // XXX: entity: TJabberEntity;
     procedure Start();
   end;
 
@@ -135,7 +135,7 @@ begin
     cur_iq := nil;
     cur_key := '';
     pres_cb := -1;
-    agent := TAgentItem.Create();
+    // XXX: entity := nil;
 end;
 
 {---------------------------------------}
@@ -259,7 +259,7 @@ begin
         end;
     end
     else begin
-        // timeout on agent query
+        // timeout on entity query
         MessageDlg(sServiceRegTimeout, mtError, [mbOK], 0);
         Self.Close();
         exit;
@@ -345,7 +345,7 @@ begin
 
     t := TXMLTag.Create('transport');
     t.setAttribute('jid', cur_iq.toJid);
-    t.setAttribute('name', agent.name);
+    // XXX: t.setAttribute('name', entity.name);
     MainSession.FireEvent('/session/transport', t);
     t.Free;
 
@@ -367,7 +367,7 @@ begin
         if (pres.isSubscription) then begin
             // this is the service subscribing to us..
             // The s10n.pas handler will catch this.
-            tmps := agent.name;
+            // XXX: tmps := entity.name;
             if (tmps = '') then
                 tmps := pres.fromJid.domain;
 

@@ -689,7 +689,10 @@ begin
         else
             caption := b.jid.full;
 
-        ImageIndex := b.tag;
+        if (b.Tag = -1) then
+            ImageIndex := 8
+        else
+            ImageIndex := b.tag;
         SubItems.Add(b.jid.full);
         SubItems.Add(b.catType);
     end;
