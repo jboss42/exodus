@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-10-10 23:07\n"
-"PO-Revision-Date: 2004-10-10 23:07\n"
+"POT-Creation-Date: 2004-10-17 10:52\n"
+"PO-Revision-Date: 2004-10-17 10:52\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,7 +98,7 @@ msgstr ""
 #. frmPathSelector..Label1..Font.Name
 #: PathSelector.dfm:32
 #. frmPrefs..PageControl1..tbsBlockList..pnlBlocked..Font.Name
-#: Prefs.dfm:8208
+#: Prefs.dfm:8191
 #. frmProfile..Font.Name
 #: Profile.dfm:13
 #. frmRemove..Font.Name
@@ -501,7 +501,7 @@ msgstr ""
 #. frmTracer..frameButtons1..Panel1..btnCancel..Caption
 #: ExceptTracer.dfm:37
 #. frmPrefs..Panel1..Panel3..btnOK..Caption
-#: Prefs.dfm:8246
+#: Prefs.dfm:8250
 #. frmSSLWarn..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: SSLWarn.dfm:183
 msgid "OK"
@@ -521,7 +521,7 @@ msgstr ""
 #. frmEmoteProps..btnCancel..Caption
 #: EmoteProps.dfm:73
 #. frmPrefs..Panel1..Panel3..btnCancel..Caption
-#: Prefs.dfm:8257
+#: Prefs.dfm:8261
 #. fRecvStatus..Panel1..btnCancel..Caption
 #: RecvStatus.dfm:100
 #. fSendStatus..Panel1..btnCancel..Caption
@@ -644,7 +644,7 @@ msgstr ""
 #. frmExodus..popTray..N01..Caption
 #: Jabber1.dfm:2714
 #. frmJud..PopupMenu1..N1..Caption
-#: jud.dfm:220
+#: Jud.dfm:220
 #. frmMsgRecv..popContact..N1..Caption
 #: MsgRecv.dfm:519
 #. frmMsgRecv..popContact..N2..Caption
@@ -2031,7 +2031,7 @@ msgstr ""
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Hint
 #: Jabber1.dfm:146
 #. frmJud..PopupMenu1..popAdd..Caption
-#: jud.dfm:212
+#: Jud.dfm:212
 #. frmAdd..Caption
 #: RosterAdd.dfm:6
 #. frmRosterWindow..popActions..popAddContact..Caption
@@ -2351,7 +2351,7 @@ msgstr ""
 #. frmExodus..popTray..trayMessage..Caption
 #: Jabber1.dfm:2702
 #. frmJud..PopupMenu1..popMessage..Caption
-#: jud.dfm:227
+#: Jud.dfm:227
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
 #: subscribe.dfm:150
 msgid "Send Message"
@@ -2434,7 +2434,7 @@ msgstr ""
 #. frmJoinRoom..Tabs..TabSheet2..Caption
 #: JoinRoom.dfm:148
 #. frmJud..Tabs..TabSheet2..Caption
-#: jud.dfm:78
+#: Jud.dfm:78
 #. frmRegister..Tabs..TabSheet2..Caption
 #: RegForm.dfm:60
 msgid "TabSheet2"
@@ -2468,79 +2468,79 @@ msgid "Fetch Rooms"
 msgstr ""
 
 #. frmJud..Caption
-#: jud.dfm:5
+#: Jud.dfm:5
 msgid "Jabber Search"
 msgstr ""
 
 #. frmJud..Panel1..lblWizardTitle..Caption
-#: jud.dfm:43
+#: Jud.dfm:43
 msgid "Jabber Search Wizard"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet1..lblSelect....Align
-#: jud.dfm:64
+#: Jud.dfm:64
 msgid "Select the user database or enter in the Jabber ID of the search "
 "agent to use:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet2..lblWait..Caption
-#: jud.dfm:86
+#: Jud.dfm:86
 msgid "Please wait. Contacting search agent:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..Caption
-#: jud.dfm:100
+#: Jud.dfm:100
 #. frmRegister..Tabs..TabSheet3..Caption
 #: RegForm.dfm:95
 msgid "TabSheet3"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..lblInstructions..Caption
-#: jud.dfm:108
+#: Jud.dfm:108
 msgid "Fill in the search criteria to find contacts "
 "on."
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Caption
-#: jud.dfm:124
+#: Jud.dfm:124
 #. frmRegister..Tabs..TabSheet4..Caption
 #: RegForm.dfm:115
 msgid "TabSheet4"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Label3..Caption
-#: jud.dfm:140
+#: Jud.dfm:140
 msgid "Add Contacts to this group:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Caption
-#: jud.dfm:148
+#: Jud.dfm:148
 #. frmAdd..lblAddGrp..Caption
 #: RosterAdd.dfm:49
 msgid "Add a new Group"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblCount..Caption
-#: jud.dfm:159
+#: Jud.dfm:159
 msgid "N items found"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Button1..Caption
-#: jud.dfm:176
+#: Jud.dfm:176
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: RosterRecv.dfm:38
-#: jud.pas:650
-#: jud.pas:652
+#: Jud.pas:652
+#: Jud.pas:654
 msgid "Add Contacts"
 msgstr ""
 
 #. frmJud..PopupMenu1..popProfile..Caption
-#: jud.dfm:216
+#: Jud.dfm:216
 msgid "View Profile"
 msgstr ""
 
 #. frmJud..PopupMenu1..popChat..Caption
-#: jud.dfm:223
+#: Jud.dfm:223
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:146
 #: Jabber1.pas:2389
@@ -2837,29 +2837,20 @@ msgstr ""
 msgid "BlockList"
 msgstr ""
 
-#. frmPrefs..PageControl1..tbsBlockList..Memo1......Lines.WideStrings
-#: Prefs.dfm:8189
-msgid "Enter in the Jabber Addresses (JIDs) of the people to block from "
-msgstr ""
-
-#. frmPrefs..PageControl1..tbsBlockList..Memo1....Lines.WideStrings
-#: Prefs.dfm:8190
-msgid "sending "
-msgstr ""
-
-#. frmPrefs..PageControl1..tbsBlockList..Memo1....Lines.WideStrings
-#: Prefs.dfm:8191
-msgid "you messages. All messages from these contacts will be "
-"blocked."
-msgstr ""
-
 #. frmPrefs..PageControl1..tbsBlockList..pnlBlocked..Caption
-#: Prefs.dfm:8203
+#: Prefs.dfm:8186
 msgid "Blocked Contacts"
 msgstr ""
 
+#. frmPrefs..PageControl1..tbsBlockList..Panel4..TntLabel1....Align
+#: Prefs.dfm:8214
+msgid "Enter in the Jabber Addresses (JIDs) of the people to block from "
+"sending you messages. All messages from these contacts will be "
+"blocked."
+msgstr ""
+
 #. frmPrefs..Panel1..Panel3..Button6..Caption
-#: Prefs.dfm:8266
+#: Prefs.dfm:8270
 msgid "Apply"
 msgstr ""
 
@@ -7305,7 +7296,7 @@ msgstr ""
 #: JoinRoom.pas:237
 #: JoinRoom.pas:393
 #. normal result
-#: RegForm.pas:415
+#: RegForm.pas:417
 msgid "Finish"
 msgstr ""
 
@@ -7314,22 +7305,22 @@ msgid "You must enter a nickname"
 msgstr ""
 
 #. timeout
-#: jud.pas:318
+#: Jud.pas:320
 #. we got an iq-error back
-#: jud.pas:324
+#: Jud.pas:326
 msgid "Could not contact the search agent."
 msgstr ""
 
 #. timeout
-#: jud.pas:426
+#: Jud.pas:428
 msgid "The search timed out."
 msgstr ""
 
-#: jud.pas:455
+#: Jud.pas:457
 msgid "No Results were found."
 msgstr ""
 
-#: jud.pas:565
+#: Jud.pas:567
 msgid "%d items found."
 msgstr ""
 
@@ -7504,34 +7495,34 @@ msgid "The sender of a file transfer (%s) went "
 "offline."
 msgstr ""
 
-#: RegForm.pas:132
+#: RegForm.pas:134
 msgid "Jabber Service Registration"
 msgstr ""
 
-#: RegForm.pas:133
+#: RegForm.pas:135
 msgid "This wizard will guide you through registration with a jabber "
 "service."
 msgstr ""
 
 #. error packet
-#: RegForm.pas:178
+#: RegForm.pas:180
 msgid "The agent you are trying to register with returned an "
 "error."
 msgstr ""
 
 #. timeout on entity query
-#: RegForm.pas:266
-#: RegForm.pas:475
+#: RegForm.pas:268
+#: RegForm.pas:477
 msgid "The agent you are trying to register with can not be "
 "reached."
 msgstr ""
 
-#: RegForm.pas:479
+#: RegForm.pas:481
 msgid "There was an error trying to remove your "
 "registration."
 msgstr ""
 
-#: RegForm.pas:483
+#: RegForm.pas:485
 msgid "Your registration has been removed."
 msgstr ""
 
