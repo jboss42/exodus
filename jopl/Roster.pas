@@ -132,7 +132,7 @@ type
 {---------------------------------------}
 implementation
 uses
-    JabberConst, iq,
+    Jabber1, JabberConst, iq,
     presence,
     s10n,
     XMLUtils,
@@ -418,7 +418,7 @@ begin
                     end;
                 bm := TJabberBookmark.Create(bms[i]);
                 Bookmarks.AddObject(jid, bm);
-                checkGroup('Bookmarks');
+                checkGroup(sGrpBookmarks);
                 end;
 
             for i := 0 to Bookmarks.Count - 1 do
