@@ -782,6 +782,7 @@ begin
         mnuConference.Visible := getBool('brand_muc');
         btnRoom.Visible := getBool('brand_muc');
         mnuPlugins.Visible := getBool('brand_plugs');
+        mnuMyVCard.Visible := getBool('brand_vcard');
     end;
 
     // Setup the Tabs, toolbar, panel, and roster madness
