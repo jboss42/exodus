@@ -40,6 +40,7 @@ type
 
         procedure ParseString(buff, stream_tag: WideString);
         procedure ParseFile(filename: String);
+        procedure Clear();
         function Count: integer;
         function popTag: TXMLTag;
     end;
@@ -173,6 +174,12 @@ begin
         end;
     // StrDispose(pbuff);
     StrDisposeW(pbuff);
+end;
+
+{---------------------------------------}
+procedure TXmlTagParser.Clear();
+begin
+    _dom_list.Clear();
 end;
 
 {---------------------------------------}
