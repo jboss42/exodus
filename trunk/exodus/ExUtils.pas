@@ -70,7 +70,7 @@ var
 {---------------------------------------}
 implementation
 uses
-    IdGlobal,
+    StrUtils, IdGlobal,
     ShellAPI,
     MsgDisplay,
     Session,
@@ -258,7 +258,7 @@ end;
 function URLToFilename(url: string): string;
 var
     i: integer;
-    c, fn: string;
+    fp, c, fn: string;
 begin
     fn := '';
     i := length(url);
@@ -270,7 +270,11 @@ begin
     if (i > 0) then begin
         // we got a seperator
         fn := Copy(url, i + 2, length(url) - i);
-        fn := MainSession.Prefs.getString('xfer_path') + '\' + fn;
+        fp := MainSession.Prefs.getString('xfer_path');
+        if (AnsiEndsText('\', fp)) then
+            fn := fp + fn
+        else
+            fn := fp + '\' + fn;
         end
     else
         fn := url;

@@ -42,6 +42,7 @@ object frmRosterWindow: TfrmRosterWindow
   OldCreateOrder = False
   Position = poDefaultPosOnly
   OnClose = FormClose
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnResize = FormResize
   PixelsPerInch = 96
