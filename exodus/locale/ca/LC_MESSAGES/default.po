@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: exodus\n"
 "POT-Creation-Date: 2003-05-19 10:00+0200\n"
-"PO-Revision-Date: 2003-05-19 10:01+0100\n"
+"PO-Revision-Date: 2003-05-22 16:45+0100\n"
 "Last-Translator: Luis Peralta <peralta@aditel.org>\n"
 "Language-Team: CENT <peralta@aditel.org>\n"
 "MIME-Version: 1.0\n"
@@ -1310,7 +1310,7 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsProfile..chkSavePasswd..Caption
 #: ConnDetails.dfm:129
 msgid "Save pass&word"
-msgstr "Guardar contrasenya"
+msgstr "Guardar co&ntrasenya"
 
 #. frmConnDetails..PageControl1..tbsProfile..txtPassword..PasswordChar
 #. frmConnDetails..PageControl1..tbsSocket..txtSocksPassword..PasswordChar
@@ -1597,7 +1597,7 @@ msgstr "Guardar aquesta presència en les meves preferencies."
 #. frmVCard..PageControl1..TabSheet5..Label24..Caption
 #: CustomPres.dfm:120
 msgid "Title:"
-msgstr "Títul:"
+msgstr "Títol:"
 
 #. frmCustomPres..boxSave..lblHotkey..Caption
 #. frmPrefPresence..GroupBox1..lblHotkey..Caption
@@ -1826,7 +1826,7 @@ msgstr "Error de pres."
 #. frmInvalidRoster..popItems..oggleCheckboxes1..Caption
 #: InvalidRoster.dfm:71
 msgid "Toggle Checkboxes"
-msgstr "Canviar recuadres"
+msgstr "Canviar requadres"
 
 #. frmInvite..Caption
 #. frmRosterWindow..popRoster..InvitetoConference1..Caption
@@ -2548,7 +2548,7 @@ msgstr "Paraules clau"
 #. frmPrefs..ScrollBox1..lblBlockList..Caption
 #: Prefs.dfm:1716
 msgid "Block List"
-msgstr "Lista de bloquejats"
+msgstr "Llista de bloquejats"
 
 #. frmPrefs..ScrollBox1..lblMessages..Caption
 #: Prefs.dfm:2100
@@ -2597,7 +2597,7 @@ msgstr "Utilitzar expr. regulars per a trovar paraules clau"
 #. frmPrefs..PageControl1..tbsBlockList..Caption
 #: Prefs.dfm:2896
 msgid "BlockList"
-msgstr "Lista de bloquejats"
+msgstr "Llista de bloquejats"
 
 #. frmPrefs..PageControl1..tbsBlockList..Label10....Align
 #: Prefs.dfm:2906
@@ -2607,7 +2607,7 @@ msgstr "Introdueix les direccions Jabber (JIDs) de la gent per a bloquejar la re
 #. frmPrefs..PageControl1..tbsBlockList..StaticText9..Caption
 #: Prefs.dfm:2916
 msgid "Blocked Jabber ID List"
-msgstr "Lista d'IDs Jabber bloquejats"
+msgstr "Llista d'IDs Jabber bloquejats"
 
 #. frmPrefs..Panel1..Panel3..Button6..Caption
 #: Prefs.dfm:2988
