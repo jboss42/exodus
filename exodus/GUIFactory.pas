@@ -41,7 +41,7 @@ type
 implementation
 
 uses
-    ChatWin, Subscribe, Notify, Jabber1, 
+    InvalidRoster, ChatWin, Subscribe, Notify, Jabber1,
     Roster, JabberID, Session;
 
 {---------------------------------------}
@@ -63,6 +63,7 @@ var
     chat: TfrmChat;
     sub: TfrmSubscribe;
     ri: TJabberRosterItem;
+    ir: TfrmInvalidRoster;
 begin
     // check for various events to start GUIS
     if (event = '/session/gui/chat') then begin
@@ -72,6 +73,14 @@ begin
         tmp_jid.Free;
         DoNotify(chat, 'notify_newchat', sNotifyChat + ''#10#13 +
                  chat.Othernick, ico_user)
+        end
+
+    else if (event = '/session/gui/pres-error') then begin
+        // Presence errors
+        if MainSession.Prefs.getBool('roster_pres_errors') then begin
+            ir := getInvalidRoster();
+            ir.AddPacket(tag);
+            end;
         end
 
     else if (event = '/session/gui/subscribe') then begin

@@ -2070,12 +2070,14 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.MessageHistory2Click(Sender: TObject);
 begin
+    // show a history dialog
     frmRosterWindow.popHistoryClick(Sender);
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.Properties2Click(Sender: TObject);
 begin
+    // Show a properties dialog
     frmRosterWindow.popPropertiesClick(Sender);
 end;
 
@@ -2107,7 +2109,7 @@ begin
     // select a tab automatically if we have a right click.
     if Button = mbRight then begin
         {
-        EEK! this is really gross because the pagecontrol sucks.
+        pgm: EEK! this is really gross because the pagecontrol sucks.
         Make sure the tab is visible before fetching it's bounding rect,
         and checking the hit test.
 
@@ -2138,6 +2140,7 @@ end;
 {---------------------------------------}
 function TfrmExodus.getTabForm(tab: TTabSheet): TForm;
 begin
+    // Get an associated form for a specific tabsheet
     Result := nil;
     if (tab.ControlCount = 1) then begin
         if (tab.Controls[0] is TForm) then begin
@@ -2287,6 +2290,8 @@ var
     f : TfrmPassword;
 begin
     {
+    // change the password.. send the following XML to do this
+    // This only works if we're authenticated
     <iq type='set' to='jabberhostname[e.g., jabber.org]'>
       <query xmlns='jabber:iq:register'>
         <username>username</username>

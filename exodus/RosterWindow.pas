@@ -661,10 +661,12 @@ begin
 
     if event = '/presence/error' then begin
         // check for 504 errors..
+        {
         if MainSession.Prefs.getBool('roster_pres_errors') then begin
             e := CreateJabberEvent(tag);
             frmExodus.RenderEvent(e);
             end;
+        }
         end
     else if (event = '/presence/unavailable') then begin
         // remove the node
