@@ -220,6 +220,7 @@ begin
     Result := Result + FormatDateTime('hh:nn:ss', dt);
 end;
 
+{---------------------------------------}
 function URLToFilename(url: string): string;
 var
     i: integer;
@@ -251,7 +252,8 @@ begin
     fn := '';
     for i := 0 to Length(jid) - 1 do begin
         c := jid[i + 1];
-        if ( (c='@') or (c=':') or (c='|') or (c='<') or (c='>') or (c='\') or (c='/')  ) then
+        if ( (c='@') or (c=':') or (c='|') or (c='<') or
+        (c='>') or (c='\') or (c='/') or (c='*') ) then
             fn := fn + '_'
         else
             fn := fn + c;
