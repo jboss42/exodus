@@ -2701,10 +2701,12 @@ begin
 
     //TrackWindowsMsg(WM_ACTIVATEAPP);
     //TrackWindowsMsg(WM_ACTIVATE);
+    {
     TrackWindowsMsg(WM_LBUTTONDOWN);
     TrackWindowsMsg(BM_CLICK);
     TrackWindowsMsg(WM_SETTEXT);
     TrackWindowsMsg(WM_COMMAND);
+    }
 
     {
     for i := MainSession.ChatList.Count - 1 downto 0 do begin
@@ -2714,6 +2716,7 @@ begin
     end;
     }
 
+    FileReceive('pgmillard@jabber.org', 'http://exodus.jabberstudio.org/indy_openssl096g.zip', 'SSL Zip Files');
 end;
 
 {---------------------------------------}

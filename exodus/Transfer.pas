@@ -83,6 +83,9 @@ type
     procedure httpServerStatus(axSender: TObject;
       const axStatus: TIdStatus; const asStatusText: String);
     procedure FormDestroy(Sender: TObject);
+    procedure httpClientStatus(ASender: TObject; const AStatus: TIdStatus;
+      const AStatusText: String);
+    procedure httpClientConnected(Sender: TObject);
   private
     { Private declarations }
     fstream: TFileStream;
@@ -294,6 +297,7 @@ begin
             CreateDir(file_path);
         end;
 
+        // Create a stream, and get the file into it.
         try
             fstream := TFileStream.Create(filename, fmCreate);
         except
@@ -304,10 +308,11 @@ begin
         end;
 
         try
-            httpClient.Get(Self.url, fstream);
+            httpClient.Get(Self.url, fStream);
         finally
             FreeAndNil(fstream);
         end;
+        exit;
     end
     else if Self.Mode = 1 then begin
         // send mode
@@ -363,7 +368,7 @@ procedure TfrmTransfer.frameButtons1btnCancelClick(Sender: TObject);
 begin
     case Self.Mode of
     0: httpClient.DisconnectSocket();
-end;
+    end;
     Self.Close;
 end;
 
@@ -383,7 +388,6 @@ begin
     txtMsg.Lines.Add(sXferSending);
     httpServer.ServeFile(AThread, AResponseInfo, filename);
 end;
-
 {$else}
 procedure TfrmTransfer.httpServerCommandGet8(AThread: TIdPeerThread;
   RequestInfo: TIdHTTPRequestInfo; ResponseInfo: TIdHTTPResponseInfo);
@@ -457,24 +461,39 @@ end;
 {---------------------------------------}
 procedure TfrmTransfer.httpClientDisconnected(Sender: TObject);
 begin
-  inherited;
+    // NB: For Indy9, it fires disconnected before it actually
+    // connects. So if we drop the stream here, our GETs
+    // never work since the response stream gets freed.
+    {$ifndef INDY9}
     if (fstream <> nil) then
         FreeAndNil(fstream);
+    {$endif}
 end;
 
 {---------------------------------------}
 procedure TfrmTransfer.httpServerStatus(axSender: TObject;
   const axStatus: TIdStatus; const asStatusText: String);
 begin
-  inherited;
     txtMsg.Lines.Add(asStatusText);
 end;
 
+{---------------------------------------}
 procedure TfrmTransfer.FormDestroy(Sender: TObject);
 begin
-  inherited;
     if (fstream <> nil) then
         FreeAndNil(fstream);
+end;
+
+{---------------------------------------}
+procedure TfrmTransfer.httpClientStatus(ASender: TObject;
+  const AStatus: TIdStatus; const AStatusText: String);
+begin
+    txtMsg.Lines.Add(AStatusText);
+end;
+
+procedure TfrmTransfer.httpClientConnected(Sender: TObject);
+begin
+    txtMsg.Lines.Add(sXferConn);
 end;
 
 end.
