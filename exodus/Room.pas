@@ -252,6 +252,8 @@ begin
                      sNotifyActivity + Self.Caption,
                      ico_conf);
         end;
+
+    Msg.Free();
 end;
 
 {---------------------------------------}

@@ -62,6 +62,7 @@ type
     procedure CTCPClick(Sender: TObject);
     procedure mnuBlockClick(Sender: TObject);
     procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
+    procedure mnuSaveClick(Sender: TObject);
   private
     { Private declarations }
     jid: string;            // jid of the person we are talking to
@@ -323,7 +324,7 @@ var
     msg_type, from_jid: string;
     etag, tagThread : TXMLTag;
 begin
-    // callback
+    // callback for messages
     if MainSession.IsPaused then begin
         MainSession.QueueEvent(event, tag, Self.MsgCallback);
         exit;
@@ -346,9 +347,6 @@ begin
                     _flash_ticks := 0;
 
                     // Setup the cache'd old versions in ChangePresImage
-                    // _old_img := _pres_img;
-                    // _old_hint := imgStatus.Hint;
-
                     _cur_img := _pres_img;
                     imgStatus.Hint := OtherNick + sReplying;
                     timFlashTimer(Self);
@@ -393,28 +391,25 @@ var
     Msg: TJabberMessage;
 begin
     // display the body of the msg
-    btag := tag.QueryXPTag('/message/body');
-    etag := tag.QueryXPTag('/message/*[@xmlns="jabber:iq:event"]');
-    if ((etag <> nil) and (btag = nil)) then begin
-        // display the event type..
-        end;
-
     if (timFlash.Enabled) then
         Self.ResetPresImage();
     _check_event := false;
 
-    DoNotify(Self, 'notify_chatactivity', sChatActivity + OtherNick, ico_user);
-
-    if ((btag = nil) or (btag.Data = '')) then exit;
-
     Msg := TJabberMessage.Create(tag);
     Msg.Nick := OtherNick;
     Msg.IsMe := false;
-    DisplayMsg(Msg, MsgList);
 
-    // log if we want..
-    if (MainSession.Prefs.getBool('log')) then
-        LogMessage(Msg);
+    // only display + notify if we have something to display :)
+    if (Msg.Body <> '') then begin
+        DoNotify(Self, 'notify_chatactivity', sChatActivity + OtherNick, ico_user);
+        DisplayMsg(Msg, MsgList);
+
+        // log if we want..
+        if (MainSession.Prefs.getBool('log')) then
+            LogMessage(Msg);
+        end;
+
+    Msg.Free();
 end;
 
 {---------------------------------------}
@@ -641,6 +636,7 @@ end;
 {---------------------------------------}
 procedure TfrmChat.ResetPresImage;
 begin
+    // turn off flashing of the presence icon
     timFlash.Enabled := false;
     _pres_img := _old_img;
     imgStatus.Hint := _old_hint;
@@ -760,22 +756,36 @@ begin
     MainSession.Block(_jid);
 end;
 
+{---------------------------------------}
 procedure TfrmChat.DockForm;
 begin
     inherited;
     DragAcceptFiles( Handle, False );
 end;
 
+{---------------------------------------}
 procedure TfrmChat.FloatForm;
 begin
     inherited;
     DragAcceptFiles( Handle, True );
 end;
 
+{---------------------------------------}
 procedure TfrmChat.FormEndDock(Sender, Target: TObject; X, Y: Integer);
 begin
     inherited;
     DragAcceptFiles( Handle, not Docked);
+end;
+
+{---------------------------------------}
+procedure TfrmChat.mnuSaveClick(Sender: TObject);
+begin
+  inherited;
+    // save the conversation as RTF
+    if SaveDialog1.Execute then begin
+        MsgList.PlainText := false;
+        MsgList.Lines.SaveToFile(SaveDialog1.Filename);
+        end;
 end;
 
 end.

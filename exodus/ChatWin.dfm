@@ -100,6 +100,7 @@ inherited frmChat: TfrmChat
     end
     object mnuSave: TMenuItem
       Caption = 'Save Conversation'
+      OnClick = mnuSaveClick
     end
     object N1: TMenuItem
       Caption = '-'
@@ -121,7 +122,7 @@ inherited frmChat: TfrmChat
   end
   object SaveDialog1: TSaveDialog
     DefaultExt = 'html'
-    Filter = 'HTML Files|*.html|All Files|*.*'
+    Filter = 'RTF Files|*.rtf|All Files|*.*'
     Left = 48
     Top = 184
   end

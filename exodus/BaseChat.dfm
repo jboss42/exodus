@@ -24,6 +24,7 @@ object frmBaseChat: TfrmBaseChat
     Align = alBottom
     AutoSnap = False
     Beveled = True
+    OnMoved = Splitter1Moved
   end
   object Panel3: TPanel
     Left = 0

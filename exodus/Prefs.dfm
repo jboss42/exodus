@@ -800,7 +800,14 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Roster'
+      Color = clHighlight
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clHighlightText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
       ParentColor = False
+      ParentFont = False
       WordWrap = True
       OnClick = TabSelect
     end
@@ -1428,12 +1435,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 310
     Height = 370
-    ActivePage = tbsNotify
+    ActivePage = tbsRoster
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 6
+    TabIndex = 0
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1776,7 +1783,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 102
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1863,7 +1870,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 97
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2057,7 +2064,7 @@ object frmPrefs: TfrmPrefs
       object StaticText11: TStaticText
         Left = 0
         Top = 0
-        Width = 111
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2162,7 +2169,7 @@ object frmPrefs: TfrmPrefs
         Height = 20
         Align = alTop
         Alignment = taCenter
-        Caption = 'Notify Options'
+        Caption = 'Notification Options'
         Color = clHighlight
         Font.Charset = ANSI_CHARSET
         Font.Color = clCaptionText
@@ -2238,7 +2245,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 124
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2316,7 +2323,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 112
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2335,7 +2342,7 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 73
         Width = 302
-        Height = 271
+        Height = 266
         Align = alClient
         TabOrder = 1
       end
@@ -2350,7 +2357,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TLabel
           Left = 0
           Top = 0
-          Width = 256
+          Width = 302
           Height = 26
           Align = alTop
           Caption = 
@@ -2374,7 +2381,7 @@ object frmPrefs: TfrmPrefs
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 292
+        Width = 302
         Height = 26
         Align = alTop
         Caption = 
@@ -2385,7 +2392,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 146
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
