@@ -41,6 +41,7 @@ type
     Emoticons1: TMenuItem;
     procedure Emoticons1Click(Sender: TObject);
     procedure MsgListURLClick(Sender: TObject; url: String);
+    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -121,6 +122,13 @@ end;
 procedure TfrmBaseChat.MsgListURLClick(Sender: TObject; url: String);
 begin
     ShellExecute(0, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
+end;
+
+procedure TfrmBaseChat.FormActivate(Sender: TObject);
+begin
+  inherited;
+    if (frmEmoticons.Visible) then
+        frmEmoticons.Hide;
 end;
 
 end.

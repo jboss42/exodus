@@ -513,9 +513,6 @@ procedure TfrmChat.FormActivate(Sender: TObject);
 begin
     if Self.Visible then
         MsgOut.SetFocus;
-        
-    if (frmEmoticons.Visible) then
-        frmEmoticons.Hide;
 end;
 
 {---------------------------------------}
