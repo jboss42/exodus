@@ -103,17 +103,16 @@ begin
     //
 end;
 
-
 function TWordSpeller.NewIM(const jid: WideString; var Body,
   Subject: WideString; const XTags: WideString): WideString;
 begin
-
+    //
 end;
 
 procedure TWordSpeller.MsgMenuClick(const ID, jid: WideString; var Body,
   Subject: WideString);
 begin
-
+    //
 end;
 
 initialization

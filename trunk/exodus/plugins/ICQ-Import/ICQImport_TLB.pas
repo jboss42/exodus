@@ -12,7 +12,7 @@ unit ICQImport_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 2/12/2003 9:31:58 AM from Type Library described below.
+// File generated on 2/27/2003 7:03:26 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\ICQ-Import\ICQImport.tlb (1)
@@ -22,7 +22,7 @@ unit ICQImport_TLB;
 // HelpString: ICQImport Library
 // DepndLst: 
 //   (1) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
-//   (2) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
+//   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}

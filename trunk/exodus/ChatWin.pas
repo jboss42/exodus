@@ -220,7 +220,7 @@ begin
     // Create a window if we don't have one.
     if (chat.window = nil) then begin
         win := TfrmChat.Create(Application);
-        chat.window := win;
+        chat.Window := win;
         chat.stopTimer();
         win.chat_object := chat;
         hist := TrimRight(chat.getHistory());

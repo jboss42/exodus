@@ -100,7 +100,7 @@ Conditionals=
 DebugSourceDirs=
 UsePackages=1
 [Parameters]
-RunParams=-d -c debug.xml
+RunParams=-d -c .\plugins\MSWordSpeller\plugin.xml
 HostApplication=
 Launcher=
 UseLauncher=0
