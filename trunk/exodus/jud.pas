@@ -339,24 +339,6 @@ begin
                     end;
                 end;
             fields.Free();
-
-            // reported columns
-            fields := x.QueryXPTags('/x/reported/field');
-            lstContacts.Columns.Clear();
-
-            with lstContacts.Columns.Add() do begin
-                Caption := sJID;
-                Width := 100;
-                end;
-
-            for i := 0 to fields.Count - 1 do begin
-                with lstContacts.Columns.Add() do begin
-                    Caption := fields[i].GetAttribute('label');
-                    Width := 100;
-                    end;
-                end;
-
-            fields.Free();
             end
         else begin
           fields := tag.QueryXPTag('/iq/query').ChildTags();
@@ -433,6 +415,10 @@ begin
         // get all the returned items
         items := tag.QueryXPTags('/iq/query/item');
 
+        if ((items = nil) or (items.Count = 0)) then
+            items := tag.QueryXPTags('//x[@xmlns="jabber:x:data"]/item');
+
+
         if ((items = nil) or (items.Count = 0)) then begin
             cur_state := 'get_fields';
             lstContacts.Clear();
@@ -442,9 +428,25 @@ begin
             end;
 
         lstContacts.AllocBy := 25;
-        // lstContacts.Items.BeginUpdate();
         lstContacts.Items.Clear;
         virtlist.Clear();
+
+        // reported columns
+        cols := tag.QueryXPTags('//x[@xmlns="jabber:x:data"]/reported/field');
+        lstContacts.Columns.Clear();
+
+        with lstContacts.Columns.Add() do begin
+            Caption := sJID;
+            Width := 100;
+            end;
+
+        for i := 0 to cols.Count - 1 do begin
+            with lstContacts.Columns.Add() do begin
+                Caption := cols[i].GetAttribute('label');
+                Width := 100;
+                end;
+            end;
+
 
         if (cur_state = 'items') then begin
             // setup the columns...
@@ -457,13 +459,11 @@ begin
             // add a JID column by default
             col := lstContacts.Columns.Add();
             col.Caption := sJID;
-            // col.Width := ColumnTextWidth;
             col.Width := 100;
 
             for i := 0 to cols.count - 1 do begin
                 col := lstContacts.Columns.Add();
                 col.Caption := getDisplayField(cols[i].Name);
-                // col.Width := ColumnTextWidth;
                 col.Width := 100;
                 end;
 
@@ -473,14 +473,6 @@ begin
         // populate the listview.
         for i := 0 to items.count - 1 do begin
             cur := items[i];
-            {
-            item := lstContacts.Items.Add();
-            item.Caption := cur.getAttribute('jid');
-            cols := cur.ChildTags();
-            for c := 0 to cols.count - 1 do
-                item.SubItems.Add(cols[c].Data);
-            cols.Free();
-            }
             ji := TJUDItem.Create();
             ji.jid := cur.GetAttribute('jid');
             if (cur_state = 'items') then begin
@@ -491,7 +483,7 @@ begin
                 cols.Free();
                 end
             else begin // xitems
-                cols := cur.QueryXPTags('/item/x/field');
+                cols := cur.QueryXPTags('/item/field');
                 ji.count := cols.Count;
                 for c := 0 to cols.count - 1 do
                     // TODO: look up right column based on var
