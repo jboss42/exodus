@@ -78,6 +78,7 @@ type
         _auth_agent: TJabberAuth;
         _logger: boolean;
         _logger_id: integer;
+        _no_auth: boolean;
 
         procedure StreamCallback(msg: string; tag: TXMLTag);
 
@@ -186,6 +187,7 @@ type
         property SSLEnabled: boolean read _ssl_on;
         property xmlLang: WideString read _lang;
         property LoggingEnabled: boolean read _logger;
+        property NoAuth: boolean read _no_auth write _no_auth;
     end;
 
 var
@@ -584,7 +586,9 @@ begin
             _cur_server := tag.getAttribute('from');
             _dispatcher.DispatchSignal('/session/connected', nil);
 
-            if (((_register) or (_profile.NewAccount)) and (_xmpp = false)) then begin
+            if (_no_auth) then
+                // do nothing
+            else if (((_register) or (_profile.NewAccount)) and (_xmpp = false)) then begin
                 _xmpp := false;
                 CreateAccount()
             end

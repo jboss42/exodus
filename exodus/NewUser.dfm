@@ -42,13 +42,6 @@ inherited frmNewUser: TfrmNewUser
           'der, or you may use one of the public jabber servers.'
         WordWrap = True
       end
-      object TntLabel2: TTntLabel
-        Left = 16
-        Top = 64
-        Width = 108
-        Height = 13
-        Caption = 'Select a Jabber Server'
-      end
       object cboServer: TTntComboBox
         Left = 40
         Top = 80
@@ -57,6 +50,24 @@ inherited frmNewUser: TfrmNewUser
         ItemHeight = 13
         TabOrder = 0
         Text = 'jabber.org'
+      end
+      object optServer: TTntRadioButton
+        Left = 16
+        Top = 60
+        Width = 321
+        Height = 17
+        Caption = 'Select a Jabber Server'
+        Checked = True
+        TabOrder = 1
+        TabStop = True
+      end
+      object optPublic: TTntRadioButton
+        Left = 16
+        Top = 124
+        Width = 321
+        Height = 17
+        Caption = 'Get a list of public Jabber Servers'
+        TabOrder = 2
       end
     end
     object tbsUser: TTabSheet
@@ -97,7 +108,7 @@ inherited frmNewUser: TfrmNewUser
       object lblWait: TTntLabel
         Left = 0
         Top = 0
-        Width = 402
+        Width = 63
         Height = 13
         Align = alTop
         Caption = 'Please wait...'
@@ -116,7 +127,7 @@ inherited frmNewUser: TfrmNewUser
     object tbsXData: TTabSheet
       Caption = 'tbsXData'
       ImageIndex = 2
-      inline frameXData1: TframeXData
+      inline xData: TframeXData
         Left = 0
         Top = 0
         Width = 402
@@ -137,7 +148,7 @@ inherited frmNewUser: TfrmNewUser
       Caption = 'tbsReg'
       ImageIndex = 3
     end
-    object tbsProfile: TTabSheet
+    object tbsFinish: TTabSheet
       Caption = 'tbsFinish'
       ImageIndex = 4
       object lblBad: TTntLabel
