@@ -521,8 +521,10 @@ begin
             ShowWindow(Handle, SW_RESTORE);
         _hidden := false;
     end
-    else if (Self.WindowState = wsMaximized) then
-        ShowWindow(Handle, SW_RESTORE)
+    else if (Self.WindowState = wsMaximized) then begin
+        ShowWindow(Handle, SW_RESTORE);
+        _was_max := false;
+    end;
 end;
 
 {---------------------------------------}
