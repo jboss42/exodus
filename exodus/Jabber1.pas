@@ -36,6 +36,12 @@ uses
 const
     RECONNECT_RETRIES = 3;
 
+    DT_UNKNOWN=0;	    // unknown desktop status
+    DT_OPEN=1;	        // the default desktop is active
+    DT_LOCKED=2;	    // the winlogon desktop is active, and a user is logged
+    DT_NO_LOG=3;	    // the winlogon desktop is active, and no user is logged
+    DT_SCREENSAVER=4;	// the screensaver desktop is active
+
     // FROM pbt.h in the win32 SDK
     PBT_APMQUERYSUSPEND = $0000;
     PBT_APMQUERYSTANDBY = $0001;
@@ -366,6 +372,7 @@ type
     ActiveChat: TfrmBaseChat;
 
     function getLastTick(): dword;
+    function screenStatus(): integer;
     function getTabForm(tab: TTabSheet): TForm;
     function IsAutoAway(): boolean;
     function IsAutoXA(): boolean;
@@ -2111,6 +2118,62 @@ begin
     end;
 end;
 
+function TfrmExodus.screenStatus(): integer;
+var
+    desk: HDESK;
+    name: string;
+    len: dword;
+    hw: HWINSTA;
+begin
+    if ((_windows_ver < cWIN_NT) or (_windows_ver = cWIN_ME)) then begin
+        result := DT_UNKNOWN;
+        exit;
+    end;
+
+    desk := OpenInputDesktop(0, False, MAXIMUM_ALLOWED);
+    if desk = 0 then begin
+        result := DT_LOCKED;
+        exit;
+    end;
+
+    GetUserObjectInformation(desk, UOI_NAME, PChar(name), 0, len);
+    SetLength(name, len + 1);
+    if not GetUserObjectInformation(desk, UOI_NAME, PChar(name), len, len) then begin
+        CloseDesktop(desk);
+        result := DT_UNKNOWN;
+        exit;
+    end;
+    CloseDesktop(desk);
+    SetLength(name, len);
+
+    if name = 'Default' then begin  // NO I18N!
+        result := DT_OPEN;
+        exit;
+    end;
+
+    if name = 'Screen-saver' then begin
+        result := DT_SCREENSAVER;
+        exit;
+    end;
+
+    if name = 'Winlogon' then begin
+		hw := OpenWindowStation('winsta0', False, WINSTA_ENUMERATE or WINSTA_ENUMDESKTOPS);
+		GetUserObjectInformation(hw, UOI_USER_SID, Nil, 0, len);
+		CloseWindowStation(hw);
+
+		// if no user is assosiated with winsta0, then no user is
+		// is logged on:
+		if len = 0 then
+			// no one is logged on:
+			result := DT_NO_LOG
+		else
+			// the station is locked
+			result := DT_LOCKED;
+        exit;
+    end;
+
+    result := DT_UNKNOWN;
+end;
 {---------------------------------------}
 procedure TfrmExodus.timAutoAwayTimer(Sender: TObject);
 var
@@ -2139,6 +2202,11 @@ begin
     with MainSession.Prefs do begin
         if ((_auto_away)) then begin
 
+            if (not _is_autoaway) and (screenStatus() > DT_OPEN) then begin
+                SetAutoAway();
+                exit;
+            end;
+            
             _last_tick := getLastTick();
             if (_last_tick = 0) then exit;
 
