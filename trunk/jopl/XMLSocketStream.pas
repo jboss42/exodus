@@ -569,13 +569,10 @@ begin
 
             {$ifdef INDY9}
             if (_profile.ssl) then begin
-                _ssl_int.SocksInfo := _socks_info;
-                _socket.IOHandler := _ssl_int;
-            end
-            else begin
-                _iohandler.SocksInfo := _socks_info;
-                _socket.IOHandler := _iohandler;
+                _socks_info.IOHandler := _ssl_int;
             end;
+            _iohandler.SocksInfo := _socks_info;
+            _socket.IOHandler := _iohandler;
             {$endif}
         end;
     end;
