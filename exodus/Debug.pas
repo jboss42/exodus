@@ -233,6 +233,9 @@ begin
         if (Trim(data) <> '') then
             AddWideText('SENT: ' + data, clBlue);
     end
+    else if (event = '/data/debug') then begin
+        AddWideText(data, clRed);
+    end
     else
         AddWideText('RECV: ' + data, clGreen);
 end;
@@ -256,6 +259,8 @@ var
     msg: WideString;
     l: TSignalListener;
 begin
+    if (not MainSession.Active) then exit;
+
     // Send the text in the MsgSend memo box
     cmd := getInputText(MemoSend);
     // cmd := Trim(MemoSend.Lines.Text);

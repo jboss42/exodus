@@ -1557,13 +1557,16 @@ begin
     // start chat w/ room participant
     // Chat w/ this person..
     rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
-    if (rm <> nil) then begin
-        tmp_jid := TJabberID.Create(rm.jid);
-        chat_win := StartChat(tmp_jid.jid, tmp_jid.resource, true, rm.Nick);
-        if (chat_win.TabSheet <> nil) then
-            frmExodus.Tabs.ActivePage := chat_win.TabSheet;
-        tmp_jid.Free();
-    end;
+    if (rm = nil) then exit;
+
+    tmp_jid := TJabberID.Create(rm.jid);
+    chat_win := StartChat(tmp_jid.jid, tmp_jid.resource, true, rm.Nick);
+    if (chat_win.TabSheet <> nil) then
+        frmExodus.Tabs.ActivePage := chat_win.TabSheet
+    else
+        chat_win.Show();
+
+    tmp_jid.Free();
 end;
 
 {---------------------------------------}

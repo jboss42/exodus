@@ -579,8 +579,7 @@ end;
 procedure TfrmBrowse.SessionCallback(event: string; tag: TXMLTag);
 begin
     if (event = '/session/disconnected') then begin
-        StartList;
-        StartBar;
+        Self.Close();
     end;
 end;
 
