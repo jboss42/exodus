@@ -199,6 +199,7 @@ begin
         timWinFlash.Enabled := false;
 
     frmExodus.ActiveChat := Self;
+    MsgList.Invalidate();
 
     if ((frmEmoticons <> nil) and (frmEmoticons.Visible)) then
         frmEmoticons.Hide;
@@ -391,8 +392,7 @@ begin
   inherited;
     if (timWinFlash.Enabled) then
         timWinFlash.Enabled := false;
-
-    MsgList.Repaint();
+    MsgList.Invalidate();
 end;
 
 {---------------------------------------}
