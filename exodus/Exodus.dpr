@@ -183,7 +183,8 @@ uses
   stringprep in '..\jopl\stringprep.pas',
   CommandWizard in 'CommandWizard.pas' {frmCommandWizard},
   fResults in 'fResults.pas' {frameResults: TFrame},
-  Avatar in '..\jopl\Avatar.pas';
+  Avatar in '..\jopl\Avatar.pas',
+  FloatingImage in 'FloatingImage.pas' {FloatImage};
 
 {$R *.TLB}
 
@@ -217,6 +218,7 @@ begin
   if (not continue) then exit;
 
   Application.CreateForm(TfrmExodus, frmExodus);
+  Application.CreateForm(TFloatImage, FloatImage);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
 
   frmRosterWindow.DockRoster;
