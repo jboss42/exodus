@@ -105,6 +105,11 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
     SetOutPath $INSTDIR
     File "Exodus.exe"
     File "IdleHooks.dll"
+    
+    ; Make sure exodus is registered, for Win95 and NT4
+    ; We need to do this to ensure that plugins can register properly.
+    ExecWait "$INSTDIR\Exodus.exe -0"
+    
 
     ; BRANDING: Uncomment if you are doing a branded setup.
     ; SetOverwrite off ; only if you don't want to overwrite existing file.
@@ -650,7 +655,7 @@ Function DownloadPlugin
 
   unzip:
     ZipDLL::extractall "$INSTDIR\plugins\$1.zip" "$INSTDIR\plugins"
-    Delete "$INSTDIR\plugins\$1.zip"
+    ;Delete "$INSTDIR\plugins\$1.zip"
 FunctionEnd
 
 Function TurnOff
