@@ -24,7 +24,7 @@ interface
 uses
     PrefController,
     Agents, Chat, Presence, Roster,
-    Signals, XMLStream, XMLTag,
+    Signals, XMLStream, XMLTag, Unicode, 
     Contnrs, Classes, SysUtils, JabberID;
 
 type
@@ -93,6 +93,7 @@ type
         Prefs: TPrefController;
         Agents: TStringList;
         dock_windows: boolean;
+        Presence_XML: TWideStringlist;
 
         Constructor Create(ConfigFile: widestring);
         Destructor Destroy; override;
@@ -158,7 +159,7 @@ uses
     {$else}
     QForms, QDialogs,
     {$endif}
-    Unicode, XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal,
+    XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal,
     JabberConst, iq;
 
 var
@@ -207,6 +208,9 @@ begin
     Prefs.SetSession(Self);
 
     Agents := TStringList.Create();
+
+    Presence_XML := TWideStringlist.Create();
+
 end;
 
 {---------------------------------------}
@@ -745,6 +749,7 @@ end;
 procedure TJabberSession.setPresence(show, status: WideString; priority: integer);
 var
     p: TJabberPres;
+    i: integer;
 begin
     _show := show;
     _status := status;
@@ -758,6 +763,9 @@ begin
         p.Priority := priority;
         if (_invisible) then
             p.PresType := 'invisible';
+
+        for i := 0 to Presence_XML.Count - 1 do
+            p.addInsertedXML(Presence_XML[i]);
 
         SendTag(p);
 

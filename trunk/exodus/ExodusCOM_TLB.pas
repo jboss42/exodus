@@ -11,8 +11,8 @@ unit ExodusCOM_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.9 $
-// File generated on 1/2/2003 7:32:34 AM from Type Library described below.
+// PASTLWTR : $Revision: 1.10 $
+// File generated on 1/2/2003 5:01:13 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -20,8 +20,8 @@ unit ExodusCOM_TLB;
 // LCID: 0
 // Helpfile: 
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
-//   (2) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
+//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
+//   (2) v4.0 StdVCL, (C:\WINNT\System32\STDVCL40.DLL)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -60,6 +60,8 @@ const
   CLASS_ExodusPPDB: TGUID = '{41BB1EC9-3299-45C3-BBA9-7DD897F29826}';
   IID_IExodusRosterItem: TGUID = '{F710F80C-C74A-4A69-8D2B-023504125B96}';
   CLASS_ExodusRosterItem: TGUID = '{9C6A0965-39B0-4D72-A143-D210FB1BA988}';
+  IID_IExodusPresence: TGUID = '{D2FD3425-40CE-469F-A95C-1C80B7FF3119}';
+  CLASS_ExodusPresence: TGUID = '{B9EED6FA-AB95-48CA-B485-1AF7E3CC0D0B}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -92,6 +94,8 @@ type
   IExodusPPDBDisp = dispinterface;
   IExodusRosterItem = interface;
   IExodusRosterItemDisp = dispinterface;
+  IExodusPresence = interface;
+  IExodusPresenceDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -104,6 +108,7 @@ type
   ExodusRoster = IExodusRoster;
   ExodusPPDB = IExodusPPDB;
   ExodusRosterItem = IExodusRosterItem;
+  ExodusPresence = IExodusPresence;
 
 
 // *********************************************************************//
@@ -141,7 +146,7 @@ type
     function isBlocked(const JabberID: WideString): WordBool; safecall;
     procedure Block(const JabberID: WideString); safecall;
     procedure UnBlock(const JabberID: WideString); safecall;
-    function Get_Resource: WideString; safecall;
+    function Get_resource: WideString; safecall;
     function Get_Port: Integer; safecall;
     function Get_Priority: Integer; safecall;
     function Get_PresenceStatus: WideString; safecall;
@@ -156,13 +161,13 @@ type
     procedure setPrefAsString(const Key: WideString; const Value: WideString); safecall;
     procedure setPrefAsInt(const Key: WideString; Value: Integer); safecall;
     procedure setPrefAsBool(const Key: WideString; Value: WordBool); safecall;
-    function findChat(const JabberID: WideString; const Resource: WideString): Integer; safecall;
+    function findChat(const JabberID: WideString; const resource: WideString): Integer; safecall;
     procedure startSearch(const SearchJID: WideString); safecall;
-    procedure startRoom(const RoomJID: WideString; const Nickname: WideString; 
+    procedure startRoom(const RoomJID: WideString; const nickname: WideString; 
                         const Password: WideString); safecall;
     procedure startInstantMsg(const JabberID: WideString); safecall;
     procedure startBrowser(const BrowseJID: WideString); safecall;
-    procedure showJoinRoom(const RoomJID: WideString; const Nickname: WideString; 
+    procedure showJoinRoom(const RoomJID: WideString; const nickname: WideString; 
                            const Password: WideString); safecall;
     procedure showPrefs; safecall;
     procedure showCustomPresDialog; safecall;
@@ -172,10 +177,18 @@ type
     procedure setPresence(const Show: WideString; const Status: WideString; Priority: Integer); safecall;
     function Get_Roster: IExodusRoster; safecall;
     function Get_PPDB: IExodusPPDB; safecall;
+    function registerBrowseNS(const Namespace: WideString): WideString; safecall;
+    function registerDiscoItem(const JabberID: WideString; const Name: WideString): WideString; safecall;
+    function registerDiscoFeature(const Feature: WideString): WideString; safecall;
+    procedure removeBrowseNS(const ID: WideString); safecall;
+    procedure removeDiscoItem(const ID: WideString); safecall;
+    procedure removeDiscoFeature(const ID: WideString); safecall;
+    function registerPresenceXML(const XML: WideString): WideString; safecall;
+    procedure removePresenceXML(const ID: WideString); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
-    property Resource: WideString read Get_Resource;
+    property resource: WideString read Get_resource;
     property Port: Integer read Get_Port;
     property Priority: Integer read Get_Priority;
     property PresenceStatus: WideString read Get_PresenceStatus;
@@ -215,7 +228,7 @@ type
     function isBlocked(const JabberID: WideString): WordBool; dispid 21;
     procedure Block(const JabberID: WideString); dispid 22;
     procedure UnBlock(const JabberID: WideString); dispid 23;
-    property Resource: WideString readonly dispid 24;
+    property resource: WideString readonly dispid 24;
     property Port: Integer readonly dispid 25;
     property Priority: Integer readonly dispid 26;
     property PresenceStatus: WideString readonly dispid 28;
@@ -230,13 +243,13 @@ type
     procedure setPrefAsString(const Key: WideString; const Value: WideString); dispid 37;
     procedure setPrefAsInt(const Key: WideString; Value: Integer); dispid 38;
     procedure setPrefAsBool(const Key: WideString; Value: WordBool); dispid 39;
-    function findChat(const JabberID: WideString; const Resource: WideString): Integer; dispid 40;
+    function findChat(const JabberID: WideString; const resource: WideString): Integer; dispid 40;
     procedure startSearch(const SearchJID: WideString); dispid 41;
-    procedure startRoom(const RoomJID: WideString; const Nickname: WideString; 
+    procedure startRoom(const RoomJID: WideString; const nickname: WideString; 
                         const Password: WideString); dispid 42;
     procedure startInstantMsg(const JabberID: WideString); dispid 43;
     procedure startBrowser(const BrowseJID: WideString); dispid 44;
-    procedure showJoinRoom(const RoomJID: WideString; const Nickname: WideString; 
+    procedure showJoinRoom(const RoomJID: WideString; const nickname: WideString; 
                            const Password: WideString); dispid 45;
     procedure showPrefs; dispid 46;
     procedure showCustomPresDialog; dispid 47;
@@ -246,6 +259,14 @@ type
     procedure setPresence(const Show: WideString; const Status: WideString; Priority: Integer); dispid 51;
     property Roster: IExodusRoster readonly dispid 54;
     property PPDB: IExodusPPDB readonly dispid 55;
+    function registerBrowseNS(const Namespace: WideString): WideString; dispid 9;
+    function registerDiscoItem(const JabberID: WideString; const Name: WideString): WideString; dispid 10;
+    function registerDiscoFeature(const Feature: WideString): WideString; dispid 27;
+    procedure removeBrowseNS(const ID: WideString); dispid 52;
+    procedure removeDiscoItem(const ID: WideString); dispid 53;
+    procedure removeDiscoFeature(const ID: WideString); dispid 56;
+    function registerPresenceXML(const XML: WideString): {??PWideString1}OleVariant; dispid 57;
+    procedure removePresenceXML(const ID: WideString); dispid 58;
   end;
 
 // *********************************************************************//
@@ -289,11 +310,12 @@ type
     ['{72470D1C-9A66-4735-A7CF-446F43561C92}']
     procedure Startup(const ExodusController: IExodusController); safecall;
     procedure Shutdown; safecall;
-    procedure Process(const xml: WideString); safecall;
+    procedure Process(const xpath: WideString; const event: WideString; const xml: WideString); safecall;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat); safecall;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat); safecall;
     procedure menuClick(const ID: WideString); safecall;
-    procedure onAgentsList(const Server: WideString); safecall;
+    function onInstantMsg(const Body: WideString; const Subject: WideString): WideString; safecall;
+    procedure Configure; safecall;
   end;
 
 // *********************************************************************//
@@ -305,11 +327,12 @@ type
     ['{72470D1C-9A66-4735-A7CF-446F43561C92}']
     procedure Startup(const ExodusController: IExodusController); dispid 1;
     procedure Shutdown; dispid 2;
-    procedure Process(const xml: WideString); dispid 3;
+    procedure Process(const xpath: WideString; const event: WideString; const xml: WideString); dispid 3;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat); dispid 4;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat); dispid 5;
     procedure menuClick(const ID: WideString); dispid 6;
-    procedure onAgentsList(const Server: WideString); dispid 7;
+    function onInstantMsg(const Body: WideString; const Subject: WideString): WideString; dispid 8;
+    procedure Configure; dispid 12;
   end;
 
 // *********************************************************************//
@@ -351,9 +374,10 @@ type
     ['{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}']
     procedure Fetch; safecall;
     procedure SaveBookmarks; safecall;
-    function AddItem(const JabberID: WideString; const Nickname: WideString; const Group: WideString): IExodusRosterItem; safecall;
+    procedure AddItem(const JabberID: WideString; const nickname: WideString; 
+                      const Group: WideString; Subscribe: WordBool); safecall;
     procedure AddBookmark(const JabberID: WideString; const bmType: WideString; 
-                          const bmName: WideString; const Nickname: WideString; AutoJoin: WordBool); safecall;
+                          const bmName: WideString; const nickname: WideString; AutoJoin: WordBool); safecall;
     procedure RemoveBookmark(const JabberID: WideString); safecall;
     function Find(const JabberID: WideString): IExodusRosterItem; safecall;
     function Item(Index: Integer): IExodusRosterItem; safecall;
@@ -368,9 +392,10 @@ type
     ['{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}']
     procedure Fetch; dispid 1;
     procedure SaveBookmarks; dispid 2;
-    function AddItem(const JabberID: WideString; const Nickname: WideString; const Group: WideString): IExodusRosterItem; dispid 3;
+    procedure AddItem(const JabberID: WideString; const nickname: WideString; 
+                      const Group: WideString; Subscribe: WordBool); dispid 3;
     procedure AddBookmark(const JabberID: WideString; const bmType: WideString; 
-                          const bmName: WideString; const Nickname: WideString; AutoJoin: WordBool); dispid 4;
+                          const bmName: WideString; const nickname: WideString; AutoJoin: WordBool); dispid 4;
     procedure RemoveBookmark(const JabberID: WideString); dispid 5;
     function Find(const JabberID: WideString): IExodusRosterItem; dispid 6;
     function Item(Index: Integer): IExodusRosterItem; dispid 7;
@@ -383,6 +408,12 @@ type
 // *********************************************************************//
   IExodusPPDB = interface(IDispatch)
     ['{284E49F2-2006-4E48-B0E0-233867A78E54}']
+    function Find(const JabberID: WideString; const resource: WideString): IExodusPresence; safecall;
+    function Next(const JabberID: WideString; const resource: WideString): IExodusPresence; safecall;
+    function Get_Count: Integer; safecall;
+    function Get_LastPresence: IExodusPresence; safecall;
+    property Count: Integer read Get_Count;
+    property LastPresence: IExodusPresence read Get_LastPresence;
   end;
 
 // *********************************************************************//
@@ -392,6 +423,10 @@ type
 // *********************************************************************//
   IExodusPPDBDisp = dispinterface
     ['{284E49F2-2006-4E48-B0E0-233867A78E54}']
+    function Find(const JabberID: WideString; const resource: WideString): IExodusPresence; dispid 1;
+    function Next(const JabberID: WideString; const resource: WideString): IExodusPresence; dispid 2;
+    property Count: Integer readonly dispid 3;
+    property LastPresence: IExodusPresence readonly dispid 4;
   end;
 
 // *********************************************************************//
@@ -407,18 +442,18 @@ type
     procedure Set_Subscription(const Value: WideString); safecall;
     function Get_Ask: WideString; safecall;
     function Get_GroupCount: Integer; safecall;
-    procedure Group(Index: Integer; const Value: WideString); safecall;
-    function XML: WideString; safecall;
+    function Group(Index: Integer): WideString; safecall;
+    function xml: WideString; safecall;
     procedure Remove; safecall;
     procedure Update; safecall;
-    function Get_Nickname: WideString; safecall;
-    procedure Set_Nickname(const Value: WideString); safecall;
+    function Get_nickname: WideString; safecall;
+    procedure Set_nickname(const Value: WideString); safecall;
     function Get_RawNickname: WideString; safecall;
     property JabberID: WideString read Get_JabberID write Set_JabberID;
     property Subscription: WideString read Get_Subscription write Set_Subscription;
     property Ask: WideString read Get_Ask;
     property GroupCount: Integer read Get_GroupCount;
-    property Nickname: WideString read Get_Nickname write Set_Nickname;
+    property nickname: WideString read Get_nickname write Set_nickname;
     property RawNickname: WideString read Get_RawNickname;
   end;
 
@@ -433,12 +468,62 @@ type
     property Subscription: WideString dispid 2;
     property Ask: WideString readonly dispid 4;
     property GroupCount: Integer readonly dispid 5;
-    procedure Group(Index: Integer; const Value: WideString); dispid 6;
-    function XML: WideString; dispid 7;
+    function Group(Index: Integer): WideString; dispid 6;
+    function xml: WideString; dispid 7;
     procedure Remove; dispid 8;
     procedure Update; dispid 9;
-    property Nickname: WideString dispid 10;
+    property nickname: WideString dispid 10;
     property RawNickname: WideString readonly dispid 11;
+  end;
+
+// *********************************************************************//
+// Interface: IExodusPresence
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {D2FD3425-40CE-469F-A95C-1C80B7FF3119}
+// *********************************************************************//
+  IExodusPresence = interface(IDispatch)
+    ['{D2FD3425-40CE-469F-A95C-1C80B7FF3119}']
+    function Get_PresType: WideString; safecall;
+    procedure Set_PresType(const Value: WideString); safecall;
+    function Get_Status: WideString; safecall;
+    procedure Set_Status(const Value: WideString); safecall;
+    function Get_Show: WideString; safecall;
+    procedure Set_Show(const Value: WideString); safecall;
+    function Get_Priority: Integer; safecall;
+    procedure Set_Priority(Value: Integer); safecall;
+    function Get_ErrorString: WideString; safecall;
+    procedure Set_ErrorString(const Value: WideString); safecall;
+    function xml: WideString; safecall;
+    function isSubscription: WordBool; safecall;
+    function Get_toJid: WideString; safecall;
+    procedure Set_toJid(const Value: WideString); safecall;
+    function Get_fromJid: WideString; safecall;
+    procedure Set_fromJid(const Value: WideString); safecall;
+    property PresType: WideString read Get_PresType write Set_PresType;
+    property Status: WideString read Get_Status write Set_Status;
+    property Show: WideString read Get_Show write Set_Show;
+    property Priority: Integer read Get_Priority write Set_Priority;
+    property ErrorString: WideString read Get_ErrorString write Set_ErrorString;
+    property toJid: WideString read Get_toJid write Set_toJid;
+    property fromJid: WideString read Get_fromJid write Set_fromJid;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusPresenceDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {D2FD3425-40CE-469F-A95C-1C80B7FF3119}
+// *********************************************************************//
+  IExodusPresenceDisp = dispinterface
+    ['{D2FD3425-40CE-469F-A95C-1C80B7FF3119}']
+    property PresType: WideString dispid 1;
+    property Status: WideString dispid 2;
+    property Show: WideString dispid 3;
+    property Priority: Integer dispid 4;
+    property ErrorString: WideString dispid 5;
+    function xml: WideString; dispid 6;
+    function isSubscription: WordBool; dispid 7;
+    property toJid: WideString dispid 8;
+    property fromJid: WideString dispid 9;
   end;
 
 // *********************************************************************//
@@ -525,6 +610,18 @@ type
     class function CreateRemote(const MachineName: string): IExodusRosterItem;
   end;
 
+// *********************************************************************//
+// The Class CoExodusPresence provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusPresence exposed by              
+// the CoClass ExodusPresence. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusPresence = class
+    class function Create: IExodusPresence;
+    class function CreateRemote(const MachineName: string): IExodusPresence;
+  end;
+
 implementation
 
 uses ComObj;
@@ -597,6 +694,16 @@ end;
 class function CoExodusRosterItem.CreateRemote(const MachineName: string): IExodusRosterItem;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusRosterItem) as IExodusRosterItem;
+end;
+
+class function CoExodusPresence.Create: IExodusPresence;
+begin
+  Result := CreateComObject(CLASS_ExodusPresence) as IExodusPresence;
+end;
+
+class function CoExodusPresence.CreateRemote(const MachineName: string): IExodusPresence;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusPresence) as IExodusPresence;
 end;
 
 end.

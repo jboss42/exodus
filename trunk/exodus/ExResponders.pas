@@ -23,7 +23,7 @@ interface
 uses
     Responder,
     Session,
-    XMLTag,
+    XMLTag, Unicode,
     ExUtils,
     Windows, Classes, SysUtils;
 
@@ -36,42 +36,56 @@ type
         procedure iqCallback(event: string; tag: TXMLTag); override;
     public
         constructor Create(Session: TJabberSession); overload;
-end;
+    end;
 
     TTimeResponder = class(TJabberResponder)
     published
         procedure iqCallback(event: string; tag: TXMLTag); override;
     public
         constructor Create(Session: TJabberSession); overload;
-end;
+    end;
 
     TLastResponder = class(TJabberResponder)
     published
         procedure iqCallback(event: string; tag: TXMLTag); override;
     public
         constructor Create(Session: TJabberSession); overload;
-end;
+    end;
 
     TBrowseResponder = class(TJabberResponder)
     published
         procedure iqCallback(event: string; tag: TXMLTag); override;
     public
+        Namespaces: TWidestringList;
         constructor Create(Session: TJabberSession); overload;
-end;
+        destructor Destroy; override;
+    end;
+
+    TDiscoItem = class
+        Name: Widestring;
+        JID: Widestring;
+    end;
 
     TDiscoItemsResponder = class(TJabberResponder)
+    private
+        _items: TWidestringList;
     published
         procedure iqCallback(event: string; tag:TXMLTag); override;
     public
         constructor Create(Session: TJabberSession); overload;
-end;
+        destructor Destroy; override;
+        function addItem(Name, JabberID: Widestring): Widestring;
+        procedure removeItem(id: Widestring);
+    end;
 
     TDiscoInfoResponder = class(TJabberResponder)
     published
         procedure iqCallback(event: string; tag:TXMLTag); override;
     public
+        Features: TWidestringlist;
         constructor Create(Session: TJabberSession); overload;
-end;
+        destructor Destroy; override;
+    end;
 
     TFactoryResponder = class
     private
@@ -83,10 +97,15 @@ end;
     public
         constructor Create(Session: TJabberSession; xpath: string; factory: TResponderFactory);
         destructor Destroy; override;
-end;
+    end;
 
 procedure initResponders();
 procedure cleanupResponders();
+
+var
+    Exodus_Disco_Items: TDiscoItemsResponder;
+    Exodus_Disco_Info: TDiscoInfoResponder;
+    Exodus_Browse: TBrowseResponder;
 
 resourcestring
     sNotifyAutoResponse = '%s query from: %s';
@@ -108,13 +127,10 @@ var
     _version: TVersionResponder;
     _time: TTimeResponder;
     _last: TLastResponder;
-    _browse: TBrowseResponder;
     _xdata: TFactoryResponder;
     _iqoob: TFactoryResponder;
     _muc_invite: TFactoryResponder;
     _conf_invite: TFactoryResponder;
-    _disco_items: TDiscoItemsResponder;
-    _disco_info: TDiscoInfoResponder;
 
 {---------------------------------------}
 function getNick(j: string): string;
@@ -139,7 +155,6 @@ begin
     _version := TVersionResponder.Create(MainSession);
     _time := TTimeResponder.Create(MainSession);
     _last := TLastResponder.Create(MainSession);
-    _browse := TBrowseResponder.Create(MainSession);
     _xdata := TFactoryResponder.Create(MainSession,
         '/packet/message/x[@xmlns="' + XMLNS_XDATA +'"]',
         showXData);
@@ -152,32 +167,27 @@ begin
     _conf_invite := TFactoryResponder.Create(MainSession,
         '/packet/message/x[@xmlns="' + XMLNS_XCONFERENCE + '"]',
         showConfInvite);
+
+    // Create some globally accessable responders.
+    Exodus_Browse := TBrowseResponder.Create(MainSession);
+    Exodus_Disco_Items := TDiscoItemsResponder.Create(MainSession);
+    Exodus_Disco_Info := TDiscoInfoResponder.Create(MainSession);
 end;
 
 {---------------------------------------}
 procedure cleanupResponders();
 begin
-    _disco_info.Free();
-    _disco_items.Free();
-    _conf_invite.Free();
-    _muc_invite.Free();
-    _iqoob.Free();
-    _xdata.Free();
-    _browse.Free();
-    _last.Free();
-    _time.Free();
-    _version.Free();
+    FreeAndNil(Exodus_Disco_Info);
+    FreeAndNil(Exodus_Disco_Items);
+    FreeAndNil(Exodus_Browse);
 
-    _disco_info := nil;
-    _disco_items := nil;
-    _conf_invite := nil;
-    _muc_invite := nil;
-    _iqoob := nil;
-    _xdata := nil;
-    _browse := nil;
-    _last := nil;
-    _time := nil;
-    _version := nil;
+    FreeAndNil(_conf_invite);
+    FreeAndNil(_muc_invite);
+    FreeAndNil(_iqoob);
+    FreeAndNil(_xdata);
+    FreeAndNil(_last);
+    FreeAndNil(_time);
+    FreeAndNil(_version);
 end;
 
 {---------------------------------------}
@@ -325,11 +335,20 @@ end;
 constructor TBrowseResponder.Create(Session: TJabberSession);
 begin
     inherited Create(Session, XMLNS_BROWSE);
+    Namespaces := TWidestringlist.Create();
+end;
+
+{---------------------------------------}
+destructor TBrowseResponder.Destroy();
+begin
+    Namespaces.Free();
+    inherited;
 end;
 
 {---------------------------------------}
 procedure TBrowseResponder.iqCallback(event: string; tag: TXMLTag);
 var
+    i: integer;
     r: TXMLTag;
 begin
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
@@ -371,6 +390,9 @@ begin
             AddBasicTag('ns', XMLNS_MUC);
             AddBasicTag('ns', XMLNS_MUCUSER);
             AddBasicTag('ns', XMLNS_MUCOWNER);
+
+            for i := 0 to Namespaces.Count - 1 do
+                AddBasicTag('ns', Namespaces[i]);
         end;
     end;
     _session.SendTag(r);
@@ -380,12 +402,53 @@ end;
 constructor TDiscoItemsResponder.Create(Session: TJabberSession);
 begin
     inherited Create(Session, XMLNS_DISCOITEMS);
+
+    _items := TWidestringList.Create();
+end;
+
+{---------------------------------------}
+destructor TDiscoItemsResponder.Destroy();
+var
+    i: integer;
+begin
+    for i := 0 to _items.Count - 1 do
+        _items.Objects[i].Free();
+    _items.Free();
+    inherited;
+end;
+
+{---------------------------------------}
+function TDiscoItemsResponder.addItem(Name, JabberID: Widestring): Widestring;
+var
+    di: TDiscoItem;
+begin
+    //
+    Result := IntToStr(_items.Count);
+    di := TDiscoitem.Create();
+    di.Name := Name;
+    di.JID := JabberID;
+    _items.AddObject(Result, di);
+end;
+
+{---------------------------------------}
+procedure TDiscoItemsResponder.removeItem(id: Widestring);
+var
+    idx: integer;
+begin
+    //
+    idx := _items.IndexOf(ID);
+    if ((idx >= 0) and (idx < _items.Count)) then begin
+        _items.Objects[idx].Free();
+        _items.Delete(idx);
+    end;
 end;
 
 {---------------------------------------}
 procedure TDiscoItemsResponder.iqCallback(event: string; tag:TXMLTag);
 var
-    r, q: TXMLTag;
+    di: TDiscoItem;
+    i: integer;
+    n, r, q: TXMLTag;
 begin
     // return an empty result set.
     if (_session.IsBlocked(tag.getAttribute('from'))) then exit;
@@ -401,6 +464,13 @@ begin
         setAttribute('type', 'result');
         q := AddTag('query');
         q.setAttribute('xmlns', XMLNS_DISCOITEMS);
+
+        for i := 0 to _items.Count - 1 do begin
+            di := TDiscoItem(_items.Objects[i]);
+            n := q.AddTag('entity');
+            n.setAttribute('name', di.Name);
+            n.setAttribute('jid', di.JID);
+        end;
     end;
     _session.SendTag(r);
 end;
@@ -409,6 +479,14 @@ end;
 constructor TDiscoInfoResponder.Create(Session: TJabberSession);
 begin
     inherited Create(Session, XMLNS_DISCOINFO);
+    Features := TWideStringList.Create();
+end;
+
+{---------------------------------------}
+destructor TDiscoInfoResponder.Destroy;
+begin
+    Features.Free();
+    inherited;
 end;
 
 {---------------------------------------}
@@ -418,9 +496,10 @@ procedure TDiscoInfoResponder.iqCallback(event: string; tag:TXMLTag);
     begin
         with qtag.AddTag('feature') do
             setAttribute('type', stype);
-end;
+    end;
 
 var
+    i: integer;
     r, q: TXMLTag;
 begin
     // return info results
@@ -464,6 +543,9 @@ begin
         addFeature(q, XMLNS_MUC);
         addFeature(q, XMLNS_MUCUSER);
         addFeature(q, XMLNS_MUCOWNER);
+
+        for i := 0 to Features.Count - 1 do
+            addFeature(q, Features[i]);
     end;
 
     _session.SendTag(r);
@@ -490,10 +572,13 @@ begin
 end;
 
 initialization
+    Exodus_Browse := nil;
+    Exodus_Disco_Items := nil;
+    Exodus_Disco_Info := nil;
+    
     _version := nil;
     _time := nil;
     _last := nil;
-    _browse := nil;
     _xdata := nil;
     _iqoob := nil;
 
