@@ -311,31 +311,6 @@ SubSectionEnd
 
 ; Start menu shortcuts
 Section "" SEC_Menu
-    ; register all of the plugin .dll's
-    ClearErrors
-    FindFirst $0 $1 "$INSTDIR\plugins\*.dll"
-    IfErrors nodlls
-  nextdll:
-    ClearErrors
-    RegDll $INSTDIR\plugins\$1
-    IfErrors regerror findnextdll
-  regerror:
-    DetailPrint "Error trying to register $INSTDIR\plugins\$1"
-
-  findnextdll:
-    ClearErrors
-    FindNext $0 $1
-    IfErrors dllregdone nextdll
-
-  dllregdone:
-    FindClose $0
-    goto pluginend
-
-  nodlls:
-    DetailPrint "$0 $1 No dlls found in $INSTDIR\plugins"
-
-  pluginend:
-
     ; if in silent mode, don't do any of the menu stuff, ever
     Push $CMDLINE
     Push "/S"
@@ -752,6 +727,8 @@ Function .onInstSuccess
     strcpy $2 '"$INSTDIR\Exodus.exe" $2'
 
   exec:
+;    WriteRegStr HKCU "Software\Jabber\Exodus\Start" $1 $2
+    
     DetailPrint $2
     Exec $2
     SetAutoClose "true"

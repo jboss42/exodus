@@ -7,9 +7,9 @@ $::TNT = "D:\\src\\exodus\\exodus\\components\\tntUnicode";
 $::ICQ = "\"D:\\src\\exodus\\exodus\\plugins\\ICQ-Import\\ICQ\\Component\"";
 $::NSIS = "\"D:\\Program Files\\NSIS\\makensis.exe\"";
 $::DXGETDIR = "F:\\lang\\dxgettext";
+do "dopts.pl";
 $::MSGFMT = "$::DXGETDIR\\msgfmt.exe";
 $::DXGETTEXT = "$::DXGETDIR\\dxgettext.exe";
-do "dopts.pl";
 
 my $DD;
 ($DD = $::D) =~ s/\//\\/g;
@@ -98,6 +98,7 @@ EOF
 	  AddSize $size
 	  Push "$base"
 	  Call DownloadPlugin
+          RegDll "\$INSTDIR\\plugins\\$base.dll"
 	SectionEnd
 	
 EOF
