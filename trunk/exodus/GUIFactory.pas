@@ -33,7 +33,10 @@ type
         procedure SessionCallback(event: string; tag: TXMLTag);
     public
         procedure SetSession(js: TObject);
-end;
+    end;
+
+resourcestring
+    sPrefWriteError = 'There was an error attempting to save your options. Another process may be accessing your options file. Some options may be lost. ';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -41,6 +44,7 @@ end;
 implementation
 
 uses
+    Dialogs, 
     InvalidRoster, ChatWin, ExEvents, ExUtils, Subscribe, Notify, Jabber1,
     MsgQueue, Roster, JabberID, Session;
 
@@ -98,6 +102,10 @@ begin
             ir := getInvalidRoster();
             ir.AddPacket(tag);
         end;
+    end
+
+    else if (event = '/session/gui/prefs-write-error') then begin
+        MessageDlg(sPrefWriteError, mtError, [mbOK], 0);
     end
 
     else if (event = '/session/gui/subscribe') then begin
