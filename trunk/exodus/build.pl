@@ -14,7 +14,7 @@ my $DD;
 my $imports = "\"$DD\\Imports\"";
 my $dcc = "\"$::D/Bin/dcc32.exe\"";
 my $rcc = "\"$::D/Bin/brcc32.exe\"";
-my $opts = '-B -Q -DExodus';
+my $opts = "-B -Q -DExodus -U\"$DD\\Lib\"";
 my $comp = "..\\..\\Components";
 my $plugopts = "$opts -U\"$comp\" -U\"$::TNT\"";
 
