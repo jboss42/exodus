@@ -116,12 +116,14 @@ uses
   xdata in 'xdata.pas' {frmXData},
   fGeneric in 'fGeneric.pas' {frameGeneric: TFrame},
   Transports in 'Transports.pas',
+  {$IFDEF TRACE_EXCEPTIONS}
   ExceptDlg in 'tracer\ExceptDlg.pas' {ExceptionDialog},
   ExceptTracer in 'ExceptTracer.pas' {frmTracer},
+  {$ENDIF}
   RoomAdminList in 'RoomAdminList.pas' {frmRoomAdminList},
   JabberConst in '..\jopl\JabberConst.pas',
   AutoUpdate in '..\jopl\AutoUpdate.pas',
-  COMController in 'COMController.pas' {ExodusController: CoClass} ,
+  COMController in 'COMController.pas' {ExodusController: CoClass},
   COMChatController in 'COMChatController.pas' {ExodusChatController: CoClass};
 
 {$R *.TLB}
