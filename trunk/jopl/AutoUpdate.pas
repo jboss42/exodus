@@ -76,10 +76,20 @@ uses
     XMLUtils, PrefController;
 
 function RoundDateTime(val: TDateTime) : TDateTime;
+var
+    f: TFormatSettings;
 begin
-    Result := StrToDateTime(DateTimeToStr(val));
+    GetLocaleFormatSettings(LOCALE_USER_DEFAULT, f);
+    Result := StrToDateTime(DateTimeToStr(val), f);
 end;
 
+function LocaleDateTime(val: string): TDateTime;
+var
+    f: TFormatSettings;
+begin
+    GetLocaleFormatSettings(LOCALE_USER_DEFAULT, f);
+    Result := StrToDateTime(val, f);
+end;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -97,7 +107,7 @@ begin
     {$ifdef Win32}
     // If we have the magic reg key, this is the first time we've run this version,
     // with the new "save to session" logic.  Copy over the value, and keep going.
-    // NOTE:  Take this out later, after everyone updates a couple of times.
+    // TODO:  Take this out later, after everyone updates a couple of times.
     reg := TRegistry.Create();
     reg.RootKey := HKEY_LOCAL_MACHINE;
     reg.OpenKey(EXODUS_REG, true);
@@ -117,7 +127,7 @@ begin
     // TODO: add an edit box to the pref window?
     url  := MainSession.Prefs.getString('auto_update_url');
     try
-        last := StrToDateTime(MainSession.Prefs.getString('last_update'));
+        last := LocaleDateTime(MainSession.Prefs.getString('last_update'));
     except
         on EConvertError do begin
             last := Now();
@@ -180,9 +190,9 @@ var
 begin
     url  := MainSession.Prefs.getString('branding_url');
     if (url = '') then exit;
-    
+
     try
-        last := StrToDateTime(MainSession.Prefs.getString('last_branding_update'));
+        last := LocaleDateTime(MainSession.Prefs.getString('last_branding_update'));
     except
         on EConvertError do begin
             last := Now();
