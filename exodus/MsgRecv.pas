@@ -184,6 +184,7 @@ uses
 {---------------------------------------}
 procedure StartRecvMsg(e: TJabberEvent);
 var
+    c: TMsgController;
     fmsg: TfrmMsgRecv;
     fcts: TfrmRosterRecv;
 begin
@@ -196,12 +197,19 @@ begin
     end
     else begin
         // other things
-        fmsg := TfrmMsgRecv.Create(Application);
-        fmsg.cid := MainSession.MsgList.AddController(e.from, fmsg.Controller);
-        fmsg.DisplayEvent(e);
-        fmsg.sizeHeaders();
-        fmsg.ShowDefault();
-        e.Free();
+        c := MainSession.MsgList.FindJid(e.from);
+        if (c = nil) then begin
+            fmsg := TfrmMsgRecv.Create(Application);
+            fmsg.cid := MainSession.MsgList.AddController(e.from, fmsg.Controller);
+            fmsg.DisplayEvent(e);
+            fmsg.sizeHeaders();
+            fmsg.ShowDefault();
+            e.Free();
+        end
+        else begin
+            fmsg := TfrmMsgRecv(c.Data);
+            fmsg.PushEvent(e);
+        end;
     end;
     end;
 end;
@@ -459,7 +467,7 @@ begin
         e.Free();
     end;
 
-    if ((cid <> -1) and (MainSession <> nil)) then
+    if ((cid <> -1) and (MainSession <> nil) and (cid < MainSession.MsgList.Count)) then
         MainSession.MsgList.Delete(cid);
 
     Action := caFree;
@@ -751,6 +759,7 @@ end;
 {---------------------------------------}
 procedure TfrmMsgRecv.PushEvent(e: TJabberEvent);
 begin
+    // Make sure we don't get dups
     _events.Push(e);
     frameButtons1.btnCancel.Caption := _(sBtnNext)
 end;
