@@ -669,7 +669,7 @@ begin
     dig := qtag.GetFirstTag('digest');
 
     // setup the iq-set
-    Auth := TJabberIQ.Create(Self, generateID, AuthCallback);
+    Auth := TJabberIQ.Create(Self, generateID, AuthCallback, 180);
     with Auth do begin
         Namespace := XMLNS_AUTH;
         iqType := 'set';
