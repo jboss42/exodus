@@ -100,7 +100,8 @@ type
     imgSSL: TImage;
     N8: TMenuItem;
     Custom1: TMenuItem;
-    Online1: TMenuItem;
+    presOnline: TMenuItem;
+    presChat: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -333,6 +334,13 @@ begin
     g_unfiled := _('Unfiled');
     g_bookmarks := _('Bookmarks');
     g_myres := _('My Resources');
+
+    // Make sure presence menus have unified captions
+    presOnline.Caption := sRosterAvail;
+    presChat.Caption := sRosterChat;
+    presAway.Caption := sRosterAway;
+    presXA.Caption := sRosterXA;
+    presDND.Caption := sRosterDND;
 
     // register the callback
     _FullRoster := false;
@@ -1575,17 +1583,26 @@ end;
 procedure TfrmRosterWindow.presAvailableClick(Sender: TObject);
 var
     stat, show: Widestring;
+    cp: TJabberCustomPres;
+    mi: TMenuItem;
+    pri: integer;
 begin
     // change our own presence
-    case TMenuItem(Sender).GroupIndex of
+    mi := TMenuItem(sender);
+    case mi.GroupIndex of
     0: show := '';
     1: show := 'away';
     2: show := 'xa';
     3: show := 'dnd';
     4: show := 'chat';
     end;
-    stat := TMenuItem(Sender).Caption;
-    MainSession.setPresence(show, stat, MainSession.Priority);
+    stat := mi.Caption;
+    pri := MainSession.Priority;
+    if (mi.Tag >= 0) then begin
+        cp := MainSession.Prefs.getPresIndex(mi.Tag);
+        if (cp.Priority <> -1) then pri := cp.Priority;
+    end;
+    MainSession.setPresence(show, stat, pri);
 end;
 
 {---------------------------------------}

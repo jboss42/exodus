@@ -122,9 +122,9 @@ type
     trayExit: TMenuItem;
     trayPresence: TMenuItem;
     N5: TMenuItem;
-    DoNotDisturb1: TMenuItem;
-    XtendedAway1: TMenuItem;
-    Away1: TMenuItem;
+    trayPresDND: TMenuItem;
+    trayPresXA: TMenuItem;
+    trayPresAway: TMenuItem;
     Custom2: TMenuItem;
     Custom3: TMenuItem;
     pnlRight: TPanel;
@@ -154,7 +154,9 @@ type
     N3: TMenuItem;
     XMPPAction: TDdeServerConv;
     presOnline: TMenuItem;
-    Available2: TMenuItem;
+    trayPresOnline: TMenuItem;
+    presChat: TMenuItem;
+    trayPresChat: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -389,9 +391,9 @@ resourcestring
 
     sRosterPending = ' (Pending)';
     sRosterAvail = 'Available';
-    sRosterChat = 'Wants to chat';
+    sRosterChat = 'Free to Chat';
     sRosterAway = 'Away';
-    sRosterXA = 'Ext. Away';
+    sRosterXA = 'Xtended Away';
     sRosterDND = 'Do Not Disturb';
     sRosterOffline = 'Offline';
 
@@ -824,6 +826,19 @@ begin
 
     sExodusCWPHook := 0;
     sExodusGMHook := 0;
+
+    // Make sure presence menus have unified captions
+    presOnline.Caption := sRosterAvail;
+    presChat.Caption := sRosterChat;
+    presAway.Caption := sRosterAway;
+    presXA.Caption := sRosterXA;
+    presDND.Caption := sRosterDND;
+    trayPresOnline.Caption := sRosterAvail;
+    trayPresChat.Caption := sRosterChat;
+    trayPresAway.Caption := sRosterAway;
+    trayPresXA.Caption := sRosterXA;
+    trayPresDND.Caption := sRosterDND;
+
 
 end;
 
@@ -1802,23 +1817,27 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.presOnlineClick(Sender: TObject);
 var
-    m: TMenuItem;
-    show, status: string;
+    stat, show: Widestring;
+    cp: TJabberCustomPres;
+    mi: TMenuItem;
+    pri: integer;
 begin
-    // Set some presence..
-    // TMenuItem.tag represent the show to use..
-
-    m := TMenuItem(Sender);
-    case m.GroupIndex of
-    0: Show := '';
-    5: Show := 'chat';
-    1: Show := 'away';
-    2: Show := 'xa';
-    3: Show := 'dnd';
+    // change our own presence
+    mi := TMenuItem(sender);
+    case mi.GroupIndex of
+    0: show := '';
+    1: show := 'away';
+    2: show := 'xa';
+    3: show := 'dnd';
+    4: show := 'chat';
     end;
-
-    Status := m.Caption;
-    MainSession.setPresence(show, status, MainSession.Priority);
+    stat := mi.Caption;
+    pri := MainSession.Priority;
+    if (mi.Tag >= 0) then begin
+        cp := MainSession.Prefs.getPresIndex(mi.Tag);
+        if (cp.Priority <> -1) then pri := cp.Priority;
+    end;
+    MainSession.setPresence(show, stat, pri);
 end;
 
 {---------------------------------------}

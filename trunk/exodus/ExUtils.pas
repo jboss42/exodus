@@ -1051,7 +1051,7 @@ var
     grp, i: integer;
     mnu: TMenuItem;
     cp: TJabberCustompres;
-    c, avail, away, xa, dnd: TMenuItem;
+    c, avail, chat, away, xa, dnd: TMenuItem;
     pm: TMenuItem;
     pp: TPopupMenu;
 begin
@@ -1063,15 +1063,26 @@ begin
     away := nil;
     xa := nil;
     dnd := nil;
+    chat := nil;
+
+    {
+    sRosterAvail = 'Available';
+    sRosterChat = 'Free to Chat';
+    sRosterAway = 'Away';
+    sRosterXA = 'Xtended Away';
+    sRosterDND = 'Do Not Disturb';
+    sRosterOffline = 'Offline';
+    }
 
     if (parent is TMenuItem) then begin
         pm := TMenuItem(Parent);
         for i := 0 to pm.Count - 1 do begin
             c := pm.Items[i];
-            if (c.Caption = 'Available') then avail := c
-            else if (c.Caption = 'Away') then away := c
-            else if (c.Caption = 'Xtended Away') then xa := c
-            else if (c.Caption = 'Do Not Disturb') then dnd := c
+            if (c.Caption = sRosterAvail) then avail := c
+            else if (c.Caption = sRosterChat) then chat := c
+            else if (c.Caption = sRosterAway) then away := c
+            else if (c.Caption = sRosterXA) then xa := c
+            else if (c.Caption = sRosterDND) then dnd := c
             else
                 continue;
             ClearCustoms(c);
@@ -1081,10 +1092,11 @@ begin
         pp := TPopupMenu(parent);
         for i := 0 to pp.Items.Count - 1 do begin
             c := pp.Items[i];
-            if (c.Caption = 'Available') then avail := c
-            else if (c.Caption = 'Away') then away := c
-            else if (c.Caption = 'Xtended Away') then xa := c
-            else if (c.Caption = 'Do Not Disturb') then dnd := c
+            if (c.Caption = sRosterAvail) then avail := c
+            else if (c.Caption = sRosterChat) then chat := c
+            else if (c.Caption = sRosterAway) then away := c
+            else if (c.Caption = sRosterXA) then xa := c
+            else if (c.Caption = sRosterDND) then dnd := c
             else
                 continue;
             ClearCustoms(c);
@@ -1092,15 +1104,15 @@ begin
     end;
 
     // Make sure we got them all.
-    if ((avail = nil) or (away = nil) or (xa = nil) or (dnd = nil)) then exit;
+    if ((avail = nil) or (chat = nil) or (away = nil) or (xa = nil) or (dnd = nil)) then exit;
 
     plist := MainSession.prefs.getAllPresence();
     for i := 0 to plist.count - 1 do begin
         cp := TJabberCustomPres(plist.Objects[i]);
 
         if (cp.show = 'chat') then begin
-            grp := 0;
-            c := avail;
+            grp := 4;
+            c := chat;
         end
         else if (cp.show = 'away') then begin
             grp := 1;

@@ -335,9 +335,13 @@ object frmRosterWindow: TfrmRosterWindow
     Images = frmExodus.ImageList2
     Left = 8
     Top = 240
-    object Online1: TMenuItem
+    object presOnline: TMenuItem
       Caption = 'Available'
       ImageIndex = 1
+    end
+    object presChat: TMenuItem
+      Caption = 'Free to Chat'
+      ImageIndex = 4
     end
     object presAway: TMenuItem
       Tag = 2

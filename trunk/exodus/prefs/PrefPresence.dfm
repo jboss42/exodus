@@ -3,7 +3,7 @@ inherited frmPrefPresence: TfrmPrefPresence
   Top = 148
   Caption = 'frmPrefPresence'
   ClientHeight = 433
-  ClientWidth = 329
+  ClientWidth = 349
   OldCreateOrder = True
   OnDestroy = FormDestroy
   PixelsPerInch = 96
@@ -11,7 +11,7 @@ inherited frmPrefPresence: TfrmPrefPresence
   object lstCustomPres: TTntListBox
     Left = 0
     Top = 145
-    Width = 329
+    Width = 349
     Height = 102
     Align = alTop
     ItemHeight = 13
@@ -21,7 +21,7 @@ inherited frmPrefPresence: TfrmPrefPresence
   object pnlCustomPresButtons: TPanel
     Left = 0
     Top = 247
-    Width = 329
+    Width = 349
     Height = 34
     Align = alTop
     BevelOuter = bvNone
@@ -66,7 +66,7 @@ inherited frmPrefPresence: TfrmPrefPresence
   object GroupBox1: TGroupBox
     Left = 0
     Top = 281
-    Width = 329
+    Width = 349
     Height = 119
     Align = alTop
     Caption = 'Properties'
@@ -143,6 +143,9 @@ inherited frmPrefPresence: TfrmPrefPresence
       Top = 69
       Width = 39
       Height = 21
+      Hint = 'Priority of -1 uses current priority.'
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 3
       Text = '0'
       OnChange = txtCPTitleChange
@@ -152,8 +155,12 @@ inherited frmPrefPresence: TfrmPrefPresence
       Top = 69
       Width = 16
       Height = 21
+      Hint = 'Priority of -1 uses current priority.'
       Associate = txtCPPriority
+      Min = -1
       Max = 1000
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 4
     end
     object txtCPHotkey: THotKey
@@ -169,7 +176,7 @@ inherited frmPrefPresence: TfrmPrefPresence
   object Panel1: TPanel
     Left = 0
     Top = 24
-    Width = 329
+    Width = 349
     Height = 121
     Align = alTop
     BevelOuter = bvNone
@@ -177,9 +184,9 @@ inherited frmPrefPresence: TfrmPrefPresence
     object Label8: TTntLabel
       Left = 5
       Top = 52
-      Width = 126
+      Width = 217
       Height = 13
-      Caption = 'Presence tracking in chats'
+      Caption = 'Presence tracking in chat windows and rooms'
     end
     object Label1: TTntLabel
       Left = 0
@@ -207,14 +214,14 @@ inherited frmPrefPresence: TfrmPrefPresence
     object cboPresTracking: TTntComboBox
       Left = 15
       Top = 68
-      Width = 207
+      Width = 258
       Height = 21
       ItemHeight = 13
       TabOrder = 1
       Items.WideStrings = (
         'Track all presence changes'
         'Show only last presence change'
-        'Don'#39't show presence changes')
+        'Don'#39't show any presence changes')
     end
     object chkClientCaps: TTntCheckBox
       Left = 4
@@ -230,7 +237,7 @@ inherited frmPrefPresence: TfrmPrefPresence
   object StaticText4: TTntPanel
     Left = 0
     Top = 0
-    Width = 329
+    Width = 349
     Height = 24
     Align = alTop
     BevelOuter = bvLowered

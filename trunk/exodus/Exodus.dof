@@ -100,7 +100,7 @@ Conditionals=Exodus
 DebugSourceDirs=
 UsePackages=0
 [Parameters]
-RunParams=-c foo.xml
+RunParams=-d -c debug.xml
 HostApplication=
 Launcher=
 UseLauncher=0
