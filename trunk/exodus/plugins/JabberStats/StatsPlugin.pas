@@ -26,7 +26,7 @@ interface
 
 uses
     XMLParser, XMLTag, 
-    ExodusCOM_TLB, ComObj, ActiveX, ExJabberStats_TLB, StdVcl;
+    ExodusCOM_TLB, Classes, ComObj, ActiveX, ExJabberStats_TLB, StdVcl;
 
 type
   TStatsPlugin = class(TAutoObject, IExodusPlugin)
@@ -50,7 +50,8 @@ type
   private
     _parser: TXMLTagParser;
     _exodus: ExodusController;
-    _stat_file: TextFile;
+    // _stat_file: TextFile;
+    _stream: TFileStream;
     _filename: string;
     _cb: integer;
   end;
@@ -95,6 +96,7 @@ end;
 procedure TStatsPlugin.Process(const xpath, event, xml: WideString);
 var
     from, t, ns, dt, size, op: Widestring;
+    buff: string;
     tag: TXMLTag;
 begin
     // we are getting a packet
@@ -110,14 +112,18 @@ begin
     if (ns = '') then ns := 'jabber:client';
     size := IntToStr(Length(xml));
     dt := FormatDateTime(LongDateFormat, Now());
-    op := Format('%s '#9' %s '#9' %s '#9' %s '#9' %s '#9, [from, t, ns, dt, size]);
-    Writeln(_stat_file, op);
+    op := Format('%s '#9' %s '#9' %s '#9' %s '#9' %s '#13#10, [from, t, ns, dt, size]);
+    // Writeln(_stat_file, op);
+    buff := UTF8Encode(op);
+    _stream.Write(Pointer(buff)^, Length(buff));
 end;
 
 procedure TStatsPlugin.Shutdown;
 begin
-    CloseFile(_stat_file);
-    _exodus.UnRegisterCallback(_cb);
+    // CloseFile(_stat_file);
+    _stream.Free();
+    if (_cb >= 0) then
+        _exodus.UnRegisterCallback(_cb);
     _parser.Free();
 end;
 
@@ -133,15 +139,23 @@ begin
     end;
 
     // open the stat file
+    try
+        _stream := TFileStream.Create(_filename, fmCreate or fmShareDenyWrite);
+        _exodus.setPrefAsString('stats_filename', _filename);
+        _cb := _exodus.RegisterCallback('/packet', Self);
+    except
+        _stream := nil;
+        _cb := -1;
+    end;
+
+    {
     AssignFile(_stat_file, _filename);
     if (FileExists(_filename)) then
         Append(_stat_file)
     else
         Rewrite(_stat_file);
+    }
 
-    _exodus.setPrefAsString('stats_filename', _filename);
-
-    _cb := _exodus.RegisterCallback('/packet', Self);
 end;
 
 function TStatsPlugin.NewIM(const jid: WideString; var Body,
