@@ -46,6 +46,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure optSpecifyClick(Sender: TObject);
+    procedure lstRoomsDblClick(Sender: TObject);
   private
     { Private declarations }
     _cb: integer;
@@ -216,6 +217,11 @@ begin
     txtServer.Enabled := optSpecify.Checked;
     txtRoom.Enabled := optSpecify.Checked;
     lstRooms.Enabled := optList.Checked;
+end;
+
+procedure TfrmJoinRoom.lstRoomsDblClick(Sender: TObject);
+begin
+    frameButtons1btnOKClick(Self);
 end;
 
 end.
