@@ -85,6 +85,7 @@ type
   private
     { Private declarations }
     _base_jid: WideString;
+    _xtags: Widestring;
 
     procedure SetupResources();
     procedure DisablePopup();
@@ -96,6 +97,9 @@ type
 
     procedure SetupSend();
     procedure setFrom(jid: WideString);
+
+    procedure AddOutgoing(txt: Widestring);
+    procedure AddXTagXML(xml: Widestring);
   end;
 
 var
@@ -270,6 +274,8 @@ begin
     recips := TWideStringlist.Create();
 
     pnlTop.Height := pnlSubject.Top + pnlSubject.Height + 3;
+
+    _xtags := '';
 end;
 
 {---------------------------------------}
@@ -361,6 +367,9 @@ begin
         // log the msg
         if (MainSession.Prefs.getBool('log')) then
             LogMessage(m);
+
+        if (_xtags <> '') then
+            m.Tag.addInsertedXML(_xtags);
 
         MainSession.SendTag(m.Tag);
         m.Free();
@@ -543,6 +552,16 @@ begin
         frameButtons2btnOKClick(Self);
     end;
 
+end;
+
+procedure TfrmMsgRecv.AddOutgoing(txt: Widestring);
+begin
+    MsgOut.WideLines.Add(txt);
+end;
+
+procedure TfrmMsgRecv.AddXTagXML(xml: Widestring);
+begin
+    _xtags := _xtags + xml;
 end;
 
 end.

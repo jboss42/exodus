@@ -126,10 +126,8 @@ uses
   COMRosterItem in 'COMRosterItem.pas' {ExodusRosterItem: CoClass},
   COMPresence in 'COMPresence.pas' {ExodusPresence: CoClass},
   PathSelector in 'PathSelector.pas' {frmPathSelector},
-  CustomNotify in 'CustomNotify.pas' {frmCustomNotify};
-
-//  COMPluginShell in 'COMPluginShell.pas' {ExodusPlugin: CoClass},
-//  COMChatPluginShell in 'COMChatPluginShell.pas' {ExodusChatPlugin: CoClass};
+  CustomNotify in 'CustomNotify.pas' {frmCustomNotify},
+  DropTarget in 'DropTarget.pas' {ExDropTarget: CoClass};
 
 {$R *.TLB}
 
