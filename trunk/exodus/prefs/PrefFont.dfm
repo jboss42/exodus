@@ -1,6 +1,6 @@
 inherited frmPrefFont: TfrmPrefFont
-  Left = 256
-  Top = 192
+  Left = 320
+  Top = 256
   Caption = 'frmPrefFont'
   ClientHeight = 366
   ClientWidth = 421
@@ -180,13 +180,12 @@ inherited frmPrefFont: TfrmPrefFont
     LangOptions = [loAutoFont]
     Language = 1033
     ReadOnly = True
-    ScrollBars = ssBoth
     ShowSelectionBar = False
     TabOrder = 1
     URLColor = clBlue
     URLCursor = crHandPoint
     WordWrap = False
-    OnMouseUp = colorChatMouseUp
+    OnSelectionChange = colorChatSelectionChange
     InputFormat = ifRTF
     OutputFormat = ofRTF
     SelectedInOut = False

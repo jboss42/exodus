@@ -670,6 +670,8 @@ begin
     end;
 
     // send the msg
+    // XXX: PGM: is this your trim?  What should we do with messages that
+    // start with $#D, etc.?
     msg := TJabberMessage.Create(jid, 'chat', Trim(body), '');
     msg.thread := _thread;
     msg.nick := _mynick;
