@@ -70,15 +70,11 @@ uses
 {---------------------------------------}
 procedure ShowRiserWindow(clickForm: TForm; msg: Widestring; imgIndex: integer);
 var
-    bmp: TBitmap;
     animate: boolean;
 begin
 
     // Don't show toast while auto away
     if ((frmExodus.IsAutoAway) or (frmExodus.IsAutoXA)) then exit;
-
-    bmp := TBitmap.Create;
-    frmExodus.ImageList2.GetBitmap(imgIndex, bmp);
 
     if singleToast = nil then begin
         // create a new instance
@@ -88,7 +84,7 @@ begin
 
         // reduce the font size by 1 pt.
         singleToast.Label1.Font.Size := singleToast.Label1.Font.Size - 1;
-        
+
         // Setup alpha blending..
         if MainSession.Prefs.getBool('toast_alpha') then begin
             singleToast.AlphaBlend := true;
@@ -106,8 +102,15 @@ begin
 
     singleToast._clickForm := clickForm;
     singleToast._clickHandle := clickForm.Handle;
-    singleToast.Image1.Picture.Assign(bmp);
     singleToast.Label1.Caption := msg;
+
+    // madness to make sure toast images are transparent.
+    with singleToast.Image1 do begin
+        Canvas.Brush.Color := clBtnFace;
+        Canvas.FillRect(Rect(0, 0,  Width, Height));
+        frmExodus.ImageList2.GetBitmap(imgIndex, Picture.Bitmap);
+        if (not animate) then Repaint();
+        end;
 
     // raise the window
     if animate then begin
@@ -116,6 +119,7 @@ begin
         singleToast.Visible := true;
         singleToast.Timer1.Enabled := true;
         end;
+
 end;
 
 {---------------------------------------}
