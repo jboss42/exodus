@@ -22,7 +22,7 @@ unit RosterWindow;
 interface
 
 uses
-    DropTarget, Unicode, XMLTag, Presence, Roster, NodeItem, 
+    DropTarget, Unicode, XMLTag, Presence, Roster, NodeItem,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ComCtrls, ExtCtrls, Buttons, ImgList, Menus, StdCtrls, TntStdCtrls,
     TntExtCtrls, TntMenus;
@@ -656,7 +656,7 @@ var
 begin
     // render this bookmark
     if (not _brand_muc) then exit;
-    
+
     if _bookmark = nil then begin
         // create some container for bookmarks.. addGrp returns
         // the group if it already exists.
@@ -1249,7 +1249,7 @@ begin
                 _offline_go := TJabberGroup.Create(_(sGrpOffline));
                 _offline_go.Data := _offline;
                 _offline.Data := _offline_go;
-                
+
                 resort := true;
             end;
             grp_node := _offline;
@@ -2430,7 +2430,7 @@ begin
     // Rename some grp.
     go := TJabberGroup(treeRoster.Selected.Data);
     if (go = nil) then exit;
-    
+
     new_grp := go.FullName;
     if (InputQueryW(_(sRenameGrp), _(sRenameGrpPrompt), new_grp)) then begin
         old_grp := go.FullName;
@@ -2730,7 +2730,7 @@ begin
     getNodeType();
     ri := _cur_ritem;
     nick := ri.Nickname;
-    if (InputQueryW('Rename Roster Item', 'New Nickname: ', nick)) then begin
+    if (InputQueryW(_('Rename Roster Item'), _('New Nickname: '), nick)) then begin
         ri.Nickname := nick;
         ri.update();
     end;
