@@ -271,8 +271,8 @@ end;
 procedure TfrmDebug.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     Action := caFree;
-    //Action := caHide;
-    MainSession.Stream.UnregisterDataCallback(DebugCallback);
+    // Action := caHide;
+    // MainSession.Stream.UnregisterDataCallback(DebugCallback);
     inherited;
     frmDebug := nil;
 end;
