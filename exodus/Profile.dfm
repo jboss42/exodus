@@ -2,7 +2,7 @@ object frmProfile: TfrmProfile
   Left = 259
   Top = 184
   Width = 459
-  Height = 279
+  Height = 361
   Caption = 'Contact Properties'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,18 +20,18 @@ object frmProfile: TfrmProfile
     Left = 121
     Top = 0
     Width = 3
-    Height = 211
+    Height = 293
     Cursor = crHSplit
   end
   object PageControl1: TPageControl
     Left = 124
     Top = 0
     Width = 317
-    Height = 211
-    ActivePage = TabSheet2
+    Height = 293
+    ActivePage = TabSheet3
     Align = alLeft
     Style = tsFlatButtons
-    TabIndex = 2
+    TabIndex = 3
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'General'
@@ -183,7 +183,7 @@ object frmProfile: TfrmProfile
         Left = 0
         Top = 25
         Width = 161
-        Height = 155
+        Height = 237
         Align = alLeft
         ItemHeight = 13
         TabOrder = 0
@@ -232,12 +232,12 @@ object frmProfile: TfrmProfile
       ImageIndex = 1
       DesignSize = (
         309
-        180)
+        262)
       object GrpListBox: TCheckListBox
         Left = 8
         Top = 8
         Width = 299
-        Height = 131
+        Height = 213
         Anchors = [akLeft, akTop, akRight, akBottom]
         ItemHeight = 13
         Sorted = True
@@ -245,7 +245,7 @@ object frmProfile: TfrmProfile
       end
       object txtNewGrp: TEdit
         Left = 8
-        Top = 149
+        Top = 231
         Width = 211
         Height = 21
         Anchors = [akLeft, akRight, akBottom]
@@ -253,7 +253,7 @@ object frmProfile: TfrmProfile
       end
       object Button1: TButton
         Left = 224
-        Top = 147
+        Top = 229
         Width = 75
         Height = 25
         Anchors = [akRight, akBottom]
@@ -314,6 +314,13 @@ object frmProfile: TfrmProfile
         Height = 13
         Caption = 'Fax Tel:'
       end
+      object Label3: TLabel
+        Left = 9
+        Top = 145
+        Width = 56
+        Height = 13
+        Caption = 'Description:'
+      end
       object txtWeb: TEdit
         Left = 92
         Top = 6
@@ -372,6 +379,16 @@ object frmProfile: TfrmProfile
         Height = 21
         ReadOnly = True
         TabOrder = 4
+      end
+      object memDesc: TTntMemo
+        Left = 16
+        Top = 160
+        Width = 281
+        Height = 97
+        ReadOnly = True
+        ScrollBars = ssVertical
+        TabOrder = 5
+        WantTabs = True
       end
     end
     object TabSheet4: TTabSheet
@@ -1130,7 +1147,7 @@ object frmProfile: TfrmProfile
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 211
+    Top = 293
     Width = 451
     Height = 34
     Align = alBottom
@@ -1154,7 +1171,7 @@ object frmProfile: TfrmProfile
     Left = 0
     Top = 0
     Width = 121
-    Height = 211
+    Height = 293
     Align = alLeft
     Indent = 19
     ReadOnly = True

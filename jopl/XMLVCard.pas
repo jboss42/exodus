@@ -62,6 +62,7 @@ type
         bday: WideString;
         url: WideString;
         role: WideString;
+        desc: WideString;
 
         OrgName: WideString;
         OrgUnit: WideString;
@@ -118,7 +119,12 @@ begin
     element := tag.GetFirstTag('PCODE');
     if element <> nil then PCode := element.Data;
     element := tag.GetFirstTag('COUNTRY');
-    if element <> nil then Country := element.Data;
+    if element <> nil then
+        Country := element.Data
+    else begin
+        element := tag.GetFirstTag('CNTRY');
+        if (element <> nil) then Country := element.Data;
+        end;
 
 end;
 
@@ -200,6 +206,7 @@ begin
     OrgName := '';
     OrgUnit := '';
     OrgTitle := '';
+    Desc := '';
 
     Home := TXMLVCardAddress.Create();
     Work := TXMLVCardAddress.Create();
@@ -279,6 +286,8 @@ begin
     if t1 <> nil then bday := t1.Data;
     t1 := vtag.GetFirstTag('TITLE');
     if t1 <> nil then OrgTitle := t1.Data;
+    t1 := vtag.GetFirstTag('DESC');
+    if t1 <> nil then Desc := t1.Data;
 
     t1 := vtag.GetFirstTag('ORG');
     if t1 <> nil then begin
@@ -342,6 +351,7 @@ begin
     t1 := vtag.AddTag('ORG');
     t1.AddBasicTag('ORGNAME', OrgName);
     t1.AddBasicTag('ORGUNIT', OrgUnit);
+    t1.AddBasicTag('DESC', Desc);
 
     t1 := vtag.AddTag('ADR');
     Home.fillTag(t1);
@@ -356,6 +366,7 @@ begin
     WorkPhone.fillTag(t1);
     t1 := vtag.AddTag('TEL');
     WorkFax.fillTag(t1);
+
 
 end;
 
