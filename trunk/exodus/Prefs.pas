@@ -979,13 +979,15 @@ var
     win : String;
 begin
     // pop open the proper control panel applet.
+    // It sure was nice of MS to change this for various versions
+    // of the OS. *SIGH*
     ver := WindowsVersion(win);
     if (ver = cWIN_XP) then
         ShellExecute(Self.Handle, nil, 'rundll32.exe',
           'shell32.dll,Control_RunDLL mmsys.cpl,,1', nil, SW_SHOW)
     else if ((ver = cWIN_98) or (ver = cWIN_NT)) then
         ShellExecute(Self.Handle, nil, 'rundll32.exe',
-            'shell32.dll,Control_RunDLL mmsys.cpl,sounds,0', nil, SW_SOWN)
+            'shell32.dll,Control_RunDLL mmsys.cpl,sounds,0', nil, SW_SHOW)
     else 
         ShellExecute(Self.Handle, nil, 'rundll32.exe',
           'shell32.dll,Control_RunDLL mmsys.cpl,,0', nil, SW_SHOW);

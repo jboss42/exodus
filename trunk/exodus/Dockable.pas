@@ -216,7 +216,7 @@ begin
         (SWP_NOMOVE or SWP_NOSIZE) then begin
         {  Window is moved or sized, get usable screen area. }
 
-        SystemParametersInfo( SPI_GETWORKAREA, 0, @r, 0 );
+        SystemParametersInfo(SPI_GETWORKAREA, 0, @r, 0 );
 
         {
         Check if operation would move part of the window out of this area.
