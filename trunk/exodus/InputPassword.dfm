@@ -18,10 +18,10 @@ object frmInputPass: TfrmInputPass
   OnCreate = FormCreate
   DesignSize = (
     267
-    96)
+    91)
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
+  object Label1: TTntLabel
     Left = 0
     Top = 0
     Width = 267
@@ -33,18 +33,22 @@ object frmInputPass: TfrmInputPass
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 64
+    Top = 59
     Width = 267
     Height = 32
     Align = alBottom
     AutoScroll = False
     TabOrder = 0
-    inherited Bevel1: TBevel
+    inherited Panel2: TPanel
       Width = 267
-    end
-    inherited Panel1: TPanel
-      Left = 107
-      Height = 27
+      Height = 32
+      inherited Bevel1: TBevel
+        Width = 267
+      end
+      inherited Panel1: TPanel
+        Left = 107
+        Height = 27
+      end
     end
   end
   object txtPassword: TTntEdit

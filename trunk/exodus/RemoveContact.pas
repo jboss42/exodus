@@ -30,10 +30,10 @@ type
   TfrmRemove = class(TForm)
     frameButtons1: TframeButtons;
     Bevel1: TBevel;
-    optMove: TRadioButton;
-    optRemove: TRadioButton;
-    chkRemove1: TCheckBox;
-    chkRemove2: TCheckBox;
+    optMove: TTntRadioButton;
+    optRemove: TTntRadioButton;
+    chkRemove1: TTntCheckBox;
+    chkRemove2: TTntCheckBox;
     lblJID: TTntStaticText;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);

@@ -32,7 +32,7 @@ type
     PopupMenu1: TPopupMenu;
     ShowOnlineOnly1: TMenuItem;
     Panel1: TPanel;
-    Label1: TLabel;
+    Label1: TTntLabel;
     txtJID: TTntEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);

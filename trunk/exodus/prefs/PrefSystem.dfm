@@ -15,14 +15,14 @@ object frmPrefSystem: TfrmPrefSystem
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object Label7: TLabel
+  object Label7: TTntLabel
     Left = 8
     Top = 186
     Width = 133
     Height = 13
     Caption = 'Exodus language file to use:'
   end
-  object lblPluginScan: TLabel
+  object lblPluginScan: TTntLabel
     Left = 27
     Top = 227
     Width = 130
@@ -37,7 +37,7 @@ object frmPrefSystem: TfrmPrefSystem
     ParentFont = False
     OnClick = lblPluginScanClick
   end
-  object StaticText4: TStaticText
+  object StaticText4: TTntStaticText
     Left = 0
     Top = 0
     Width = 307
@@ -54,9 +54,8 @@ object frmPrefSystem: TfrmPrefSystem
     ParentColor = False
     ParentFont = False
     TabOrder = 0
-    Transparent = False
   end
-  object chkAutoUpdate: TCheckBox
+  object chkAutoUpdate: TTntCheckBox
     Left = 8
     Top = 161
     Width = 185
@@ -64,7 +63,7 @@ object frmPrefSystem: TfrmPrefSystem
     Caption = 'Check for updates automatically'
     TabOrder = 1
   end
-  object chkDebug: TCheckBox
+  object chkDebug: TTntCheckBox
     Left = 8
     Top = 68
     Width = 169
@@ -72,7 +71,7 @@ object frmPrefSystem: TfrmPrefSystem
     Caption = 'Start with Debug visible'
     TabOrder = 2
   end
-  object chkAutoLogin: TCheckBox
+  object chkAutoLogin: TTntCheckBox
     Left = 8
     Top = 32
     Width = 241
@@ -80,7 +79,7 @@ object frmPrefSystem: TfrmPrefSystem
     Caption = 'Automatically login with last profile'
     TabOrder = 3
   end
-  object chkCloseMin: TCheckBox
+  object chkCloseMin: TTntCheckBox
     Left = 8
     Top = 123
     Width = 233
@@ -88,7 +87,7 @@ object frmPrefSystem: TfrmPrefSystem
     Caption = 'Close button minimizes to the tray'
     TabOrder = 4
   end
-  object chkAutoStart: TCheckBox
+  object chkAutoStart: TTntCheckBox
     Left = 8
     Top = 50
     Width = 233
@@ -96,7 +95,7 @@ object frmPrefSystem: TfrmPrefSystem
     Caption = 'Run Exodus when windows starts'
     TabOrder = 5
   end
-  object chkOnTop: TCheckBox
+  object chkOnTop: TTntCheckBox
     Left = 8
     Top = 256
     Width = 169
@@ -105,7 +104,7 @@ object frmPrefSystem: TfrmPrefSystem
     TabOrder = 6
     Visible = False
   end
-  object chkToolbox: TCheckBox
+  object chkToolbox: TTntCheckBox
     Left = 8
     Top = 105
     Width = 217
@@ -113,7 +112,7 @@ object frmPrefSystem: TfrmPrefSystem
     Caption = 'Small Titlebar for Exodus window'
     TabOrder = 7
   end
-  object btnUpdateCheck: TButton
+  object btnUpdateCheck: TTntButton
     Left = 222
     Top = 157
     Width = 75
@@ -123,7 +122,7 @@ object frmPrefSystem: TfrmPrefSystem
     OnClick = btnUpdateCheckClick
     OnMouseUp = btnUpdateCheckMouseUp
   end
-  object chkSingleInstance: TCheckBox
+  object chkSingleInstance: TTntCheckBox
     Left = 8
     Top = 142
     Width = 209
@@ -131,7 +130,7 @@ object frmPrefSystem: TfrmPrefSystem
     Caption = 'Only allow a single instance of Exodus'
     TabOrder = 9
   end
-  object chkStartMin: TCheckBox
+  object chkStartMin: TTntCheckBox
     Left = 8
     Top = 86
     Width = 225
@@ -139,7 +138,7 @@ object frmPrefSystem: TfrmPrefSystem
     Caption = 'Start minimized to the system tray'
     TabOrder = 10
   end
-  object cboLocale: TComboBox
+  object cboLocale: TTntComboBox
     Left = 29
     Top = 202
     Width = 143
@@ -147,7 +146,7 @@ object frmPrefSystem: TfrmPrefSystem
     Style = csDropDownList
     ItemHeight = 13
     TabOrder = 11
-    Items.Strings = (
+    Items.WideStrings = (
       'English (American)')
   end
 end

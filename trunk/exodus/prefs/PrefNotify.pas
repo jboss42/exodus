@@ -23,22 +23,22 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, CheckLst;
+  Dialogs, PrefPanel, StdCtrls, CheckLst, TntStdCtrls, TntCheckLst;
 
 type
   TfrmPrefNotify = class(TfrmPrefPanel)
-    lblConfigSounds: TLabel;
-    chkNotify: TCheckListBox;
+    lblConfigSounds: TTntLabel;
+    chkNotify: TTntCheckListBox;
     optNotify: TGroupBox;
-    chkFlash: TCheckBox;
-    chkToast: TCheckBox;
-    chkTrayNotify: TCheckBox;
-    StaticText6: TStaticText;
-    chkSound: TCheckBox;
-    chkNotifyActive: TCheckBox;
-    chkFlashInfinite: TCheckBox;
-    chkNotifyActiveWindow: TCheckBox;
-    chkFront: TCheckBox;
+    chkFlash: TTntCheckBox;
+    chkToast: TTntCheckBox;
+    chkTrayNotify: TTntCheckBox;
+    StaticText6: TTntStaticText;
+    chkSound: TTntCheckBox;
+    chkNotifyActive: TTntCheckBox;
+    chkFlashInfinite: TTntCheckBox;
+    chkNotifyActiveWindow: TTntCheckBox;
+    chkFront: TTntCheckBox;
     procedure lblConfigSoundsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure chkNotifyClick(Sender: TObject);

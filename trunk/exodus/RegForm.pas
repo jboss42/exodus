@@ -25,7 +25,7 @@ uses
     XMLTag, IQ, Agents, Presence, fGeneric,
     fLeftLabel,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    StdCtrls, ComCtrls, ExtCtrls;
+    StdCtrls, ComCtrls, ExtCtrls, TntStdCtrls, TntComCtrls;
 
 type
     RegFormStage = (rsWelcome, rsForm, rsXData, rsRegister, rsFinish, rsDone);
@@ -34,22 +34,22 @@ type
   TfrmRegister = class(TForm)
     pnlBottom: TPanel;
     pnlBtns: TPanel;
-    btnPrev: TButton;
-    btnNext: TButton;
-    btnCancel: TButton;
-    Tabs: TPageControl;
-    tabWelcome: TTabSheet;
-    Label1: TLabel;
-    lblIns: TLabel;
-    tabAgent: TTabSheet;
+    btnPrev: TTntButton;
+    btnNext: TTntButton;
+    btnCancel: TTntButton;
+    Tabs: TTntPageControl;
+    tabWelcome: TTntTabSheet;
+    Label1: TTntLabel;
+    lblIns: TTntLabel;
+    tabAgent: TTntTabSheet;
     Panel2: TPanel;
     Panel3: TPanel;
-    btnDelete: TButton;
-    tabWait: TTabSheet;
-    Label2: TLabel;
-    tabResult: TTabSheet;
-    lblBad: TLabel;
-    lblOK: TLabel;
+    btnDelete: TTntButton;
+    tabWait: TTntTabSheet;
+    Label2: TTntLabel;
+    tabResult: TTntTabSheet;
+    lblBad: TTntLabel;
+    lblOK: TTntLabel;
     procedure FormCreate(Sender: TObject);
     procedure btnNextClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);

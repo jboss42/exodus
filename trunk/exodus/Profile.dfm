@@ -20,13 +20,13 @@ object frmProfile: TfrmProfile
   object Splitter1: TSplitter
     Left = 121
     Top = 0
-    Height = 293
+    Height = 288
   end
   object PageControl1: TTntPageControl
     Left = 124
     Top = 0
     Width = 330
-    Height = 293
+    Height = 288
     ActivePage = TabSheet1
     Align = alClient
     Style = tsFlatButtons
@@ -221,7 +221,7 @@ object frmProfile: TfrmProfile
     object TabSheet2: TTntTabSheet
       Caption = 'Groups'
       ImageIndex = 1
-      object GrpListBox: TCheckListBox
+      object GrpListBox: TTntCheckListBox
         Left = 0
         Top = 0
         Width = 322
@@ -233,7 +233,7 @@ object frmProfile: TfrmProfile
       end
       object Panel3: TPanel
         Left = 0
-        Top = 221
+        Top = 216
         Width = 322
         Height = 41
         Align = alBottom
@@ -1141,7 +1141,7 @@ object frmProfile: TfrmProfile
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 293
+    Top = 288
     Width = 454
     Height = 34
     Align = alBottom
@@ -1169,7 +1169,7 @@ object frmProfile: TfrmProfile
     Left = 0
     Top = 0
     Width = 121
-    Height = 293
+    Height = 288
     Align = alLeft
     Indent = 19
     ReadOnly = True

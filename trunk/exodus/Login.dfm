@@ -18,10 +18,10 @@ object frmLogin: TfrmLogin
   OnCreate = FormCreate
   DesignSize = (
     364
-    116)
+    111)
   PixelsPerInch = 96
   TextHeight = 13
-  object lblProfile: TLabel
+  object lblProfile: TTntLabel
     Left = 9
     Top = 9
     Width = 32
@@ -59,7 +59,7 @@ object frmLogin: TfrmLogin
     Caption = 'In&visible'
     TabOrder = 1
   end
-  object btnDetails: TButton
+  object btnDetails: TTntButton
     Left = 278
     Top = 4
     Width = 76
@@ -71,7 +71,7 @@ object frmLogin: TfrmLogin
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 81
+    Top = 76
     Width = 364
     Height = 35
     Align = alBottom

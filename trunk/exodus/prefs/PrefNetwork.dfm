@@ -60,7 +60,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Font.Style = []
       ParentFont = False
     end
-    object txtReconnectTries: TEdit
+    object txtReconnectTries: TTntEdit
       Left = 168
       Top = 16
       Width = 33
@@ -76,7 +76,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Associate = txtReconnectTries
       TabOrder = 1
     end
-    object txtReconnectTime: TEdit
+    object txtReconnectTime: TTntEdit
       Left = 168
       Top = 48
       Width = 33
@@ -140,7 +140,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Height = 13
       Caption = 'Approach:'
     end
-    object txtProxyHost: TEdit
+    object txtProxyHost: TTntEdit
       Left = 59
       Top = 49
       Width = 130
@@ -148,7 +148,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Enabled = False
       TabOrder = 0
     end
-    object txtProxyPort: TEdit
+    object txtProxyPort: TTntEdit
       Left = 59
       Top = 72
       Width = 39
@@ -166,7 +166,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       TabOrder = 2
       OnClick = chkProxyAuthClick
     end
-    object txtProxyUsername: TEdit
+    object txtProxyUsername: TTntEdit
       Left = 59
       Top = 116
       Width = 130
@@ -174,7 +174,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Enabled = False
       TabOrder = 3
     end
-    object txtProxyPassword: TEdit
+    object txtProxyPassword: TTntEdit
       Left = 59
       Top = 142
       Width = 130

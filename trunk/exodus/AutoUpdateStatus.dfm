@@ -20,7 +20,7 @@ object frmAutoUpdateStatus: TfrmAutoUpdateStatus
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
+  object Label1: TTntLabel
     Left = 40
     Top = 6
     Width = 178
@@ -44,17 +44,21 @@ object frmAutoUpdateStatus: TfrmAutoUpdateStatus
     Align = alBottom
     AutoScroll = False
     TabOrder = 0
-    inherited Bevel1: TBevel
+    inherited Panel2: TPanel
       Width = 218
-    end
-    inherited Panel1: TPanel
-      Left = 58
-      Height = 27
-      inherited btnOK: TButton
-        OnClick = frameButtons1btnOKClick
+      Height = 32
+      inherited Bevel1: TBevel
+        Width = 218
       end
-      inherited btnCancel: TButton
-        OnClick = frameButtons1btnCancelClick
+      inherited Panel1: TPanel
+        Left = 58
+        Height = 27
+        inherited btnOK: TTntButton
+          OnClick = frameButtons1btnOKClick
+        end
+        inherited btnCancel: TTntButton
+          OnClick = frameButtons1btnCancelClick
+        end
       end
     end
   end

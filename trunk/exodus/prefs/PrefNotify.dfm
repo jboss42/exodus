@@ -7,7 +7,7 @@ inherited frmPrefNotify: TfrmPrefNotify
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object lblConfigSounds: TLabel
+  object lblConfigSounds: TTntLabel
     Left = 169
     Top = 32
     Width = 93
@@ -25,13 +25,13 @@ inherited frmPrefNotify: TfrmPrefNotify
     ShowHint = True
     OnClick = lblConfigSoundsClick
   end
-  object chkNotify: TCheckListBox
+  object chkNotify: TTntCheckListBox
     Left = 8
     Top = 112
     Width = 257
     Height = 97
     ItemHeight = 13
-    Items.Strings = (
+    Items.WideStrings = (
       'Contact is online'
       'Contact is offline'
       'New chat session'
@@ -53,7 +53,7 @@ inherited frmPrefNotify: TfrmPrefNotify
     Height = 103
     Caption = 'Notify Options'
     TabOrder = 5
-    object chkFlash: TCheckBox
+    object chkFlash: TTntCheckBox
       Left = 8
       Top = 36
       Width = 209
@@ -62,7 +62,7 @@ inherited frmPrefNotify: TfrmPrefNotify
       TabOrder = 1
       OnClick = chkToastClick
     end
-    object chkToast: TCheckBox
+    object chkToast: TTntCheckBox
       Left = 8
       Top = 16
       Width = 153
@@ -71,7 +71,7 @@ inherited frmPrefNotify: TfrmPrefNotify
       TabOrder = 0
       OnClick = chkToastClick
     end
-    object chkTrayNotify: TCheckBox
+    object chkTrayNotify: TTntCheckBox
       Left = 8
       Top = 56
       Width = 209
@@ -80,7 +80,7 @@ inherited frmPrefNotify: TfrmPrefNotify
       TabOrder = 2
       OnClick = chkToastClick
     end
-    object chkFront: TCheckBox
+    object chkFront: TTntCheckBox
       Left = 8
       Top = 76
       Width = 209
@@ -90,7 +90,7 @@ inherited frmPrefNotify: TfrmPrefNotify
       OnClick = chkToastClick
     end
   end
-  object StaticText6: TStaticText
+  object StaticText6: TTntStaticText
     Left = 0
     Top = 0
     Width = 338
@@ -107,9 +107,8 @@ inherited frmPrefNotify: TfrmPrefNotify
     ParentColor = False
     ParentFont = False
     TabOrder = 6
-    Transparent = False
   end
-  object chkSound: TCheckBox
+  object chkSound: TTntCheckBox
     Left = 8
     Top = 32
     Width = 145
@@ -118,7 +117,7 @@ inherited frmPrefNotify: TfrmPrefNotify
     TabOrder = 0
     OnClick = chkSoundClick
   end
-  object chkNotifyActive: TCheckBox
+  object chkNotifyActive: TTntCheckBox
     Left = 8
     Top = 48
     Width = 249
@@ -131,7 +130,7 @@ inherited frmPrefNotify: TfrmPrefNotify
     ShowHint = True
     TabOrder = 1
   end
-  object chkFlashInfinite: TCheckBox
+  object chkFlashInfinite: TTntCheckBox
     Left = 8
     Top = 82
     Width = 289
@@ -141,7 +140,7 @@ inherited frmPrefNotify: TfrmPrefNotify
     ShowHint = True
     TabOrder = 3
   end
-  object chkNotifyActiveWindow: TCheckBox
+  object chkNotifyActiveWindow: TTntCheckBox
     Left = 8
     Top = 65
     Width = 281

@@ -23,20 +23,25 @@ object frmInvalidRoster: TfrmInvalidRoster
     Align = alBottom
     AutoScroll = False
     TabOrder = 0
-    inherited Bevel1: TBevel
+    inherited Panel2: TPanel
       Width = 314
-    end
-    inherited Panel1: TPanel
-      Left = 154
-      inherited btnOK: TButton
-        Caption = 'Remove'
-        Default = False
-        OnClick = frameButtons1btnOKClick
+      Height = 32
+      inherited Bevel1: TBevel
+        Width = 314
       end
-      inherited btnCancel: TButton
-        Caption = 'Close'
-        Default = True
-        OnClick = frameButtons1btnCancelClick
+      inherited Panel1: TPanel
+        Left = 154
+        Height = 27
+        inherited btnOK: TTntButton
+          Caption = 'Remove'
+          Default = False
+          OnClick = frameButtons1btnOKClick
+        end
+        inherited btnCancel: TTntButton
+          Caption = 'Close'
+          Default = True
+          OnClick = frameButtons1btnCancelClick
+        end
       end
     end
   end

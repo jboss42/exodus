@@ -27,7 +27,7 @@ object frmTransfer: TfrmTransfer
     BevelOuter = bvNone
     BorderWidth = 2
     TabOrder = 0
-    object lblFrom: TLabel
+    object lblFrom: TTntLabel
       Left = 0
       Top = 0
       Width = 32
@@ -40,7 +40,7 @@ object frmTransfer: TfrmTransfer
       Font.Style = [fsBold]
       ParentFont = False
     end
-    object txtFrom: TLabel
+    object txtFrom: TTntLabel
       Left = 50
       Top = 0
       Width = 34
@@ -49,7 +49,7 @@ object frmTransfer: TfrmTransfer
       ParentShowHint = False
       ShowHint = True
     end
-    object lblFile: TLabel
+    object lblFile: TTntLabel
       Left = 50
       Top = 16
       Width = 32
@@ -65,7 +65,7 @@ object frmTransfer: TfrmTransfer
       ShowHint = True
       OnClick = lblFileClick
     end
-    object Label5: TLabel
+    object Label5: TTntLabel
       Left = 0
       Top = 16
       Width = 25
@@ -78,7 +78,7 @@ object frmTransfer: TfrmTransfer
       Font.Style = [fsBold]
       ParentFont = False
     end
-    object lblDesc: TLabel
+    object lblDesc: TTntLabel
       Left = 0
       Top = 40
       Width = 84
@@ -90,7 +90,7 @@ object frmTransfer: TfrmTransfer
     Left = 0
     Top = 57
     Width = 259
-    Height = 62
+    Height = 57
     Align = alClient
     AutoURLDetect = adDefault
     CustomURLs = <
@@ -182,7 +182,7 @@ object frmTransfer: TfrmTransfer
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 144
+    Top = 139
     Width = 259
     Height = 34
     Align = alBottom
@@ -197,11 +197,11 @@ object frmTransfer: TfrmTransfer
       inherited Panel1: TPanel
         Left = 99
         Height = 29
-        inherited btnOK: TButton
+        inherited btnOK: TTntButton
           Caption = 'Receive'
           OnClick = frameButtons1btnOKClick
         end
-        inherited btnCancel: TButton
+        inherited btnCancel: TTntButton
           OnClick = frameButtons1btnCancelClick
         end
       end
@@ -209,14 +209,14 @@ object frmTransfer: TfrmTransfer
   end
   object pnlProgress: TPanel
     Left = 0
-    Top = 119
+    Top = 114
     Width = 259
     Height = 25
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 3
     TabOrder = 3
-    object Label1: TLabel
+    object Label1: TTntLabel
       Left = 3
       Top = 3
       Width = 53

@@ -24,11 +24,11 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, buttonFrame, IdBaseComponent, IdComponent,
-  IdTCPConnection, IdTCPClient, IdHTTP, StdCtrls;
+  IdTCPConnection, IdTCPClient, IdHTTP, StdCtrls, TntStdCtrls;
 
 type
   TfrmWebDownload = class(TForm)
-    lblStatus: TLabel;
+    lblStatus: TTntLabel;
     IdHTTP1: TIdHTTP;
     frameButtons1: TframeButtons;
     ProgressBar1: TProgressBar;

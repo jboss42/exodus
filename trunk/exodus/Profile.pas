@@ -26,7 +26,7 @@ uses
     ShellAPI, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, CheckLst, ExtCtrls, ComCtrls, TntStdCtrls,
-    TntComCtrls;
+    TntComCtrls, TntCheckLst;
 
 type
   TfrmProfile = class(TForm)
@@ -40,7 +40,7 @@ type
     Label5: TTntLabel;
     optSubscrip: TRadioGroup;
     TabSheet2: TTntTabSheet;
-    GrpListBox: TCheckListBox;
+    GrpListBox: TTntCheckListBox;
     TabSheet3: TTntTabSheet;
     lblURL: TTntLabel;
     Label12: TTntLabel;

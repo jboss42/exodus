@@ -18,7 +18,7 @@ object frameObjectActions: TframeObjectActions
     BorderWidth = 3
     Color = clWindow
     TabOrder = 0
-    object lblRegister: TLabel
+    object lblRegister: TTntLabel
       Left = 3
       Top = 3
       Width = 210
@@ -45,7 +45,7 @@ object frameObjectActions: TframeObjectActions
     BorderWidth = 3
     Color = clWindow
     TabOrder = 1
-    object lblSearch: TLabel
+    object lblSearch: TTntLabel
       Left = 3
       Top = 3
       Width = 210
@@ -72,7 +72,7 @@ object frameObjectActions: TframeObjectActions
     BorderWidth = 3
     Color = clWindow
     TabOrder = 2
-    object lblConf: TLabel
+    object lblConf: TTntLabel
       Left = 3
       Top = 3
       Width = 210
@@ -99,7 +99,7 @@ object frameObjectActions: TframeObjectActions
     BorderWidth = 3
     Color = clWindow
     TabOrder = 3
-    object Label1: TLabel
+    object Label1: TTntLabel
       Left = 3
       Top = 3
       Width = 210

@@ -23,35 +23,35 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls;
+  Dialogs, PrefPanel, StdCtrls, TntStdCtrls;
 
 type
   TfrmPrefTransfer = class(TfrmPrefPanel)
     StaticText7: TStaticText;
-    Label15: TLabel;
-    txtXFerPath: TEdit;
+    Label15: TTntLabel;
+    txtXFerPath: TTntEdit;
     btnTransferBrowse: TButton;
-    Label2: TLabel;
+    Label2: TTntLabel;
     optPeer: TRadioButton;
     grpPeer: TGroupBox;
-    Label1: TLabel;
-    txtPort: TEdit;
+    Label1: TTntLabel;
+    txtPort: TTntEdit;
     chkIP: TCheckBox;
-    txtIP: TEdit;
+    txtIP: TTntEdit;
     optWebDav: TRadioButton;
     grpWebDav: TGroupBox;
-    Label3: TLabel;
-    txtDavHost: TEdit;
-    txtDavPort: TEdit;
-    Label4: TLabel;
-    txtDavPath: TEdit;
-    Label5: TLabel;
-    Label6: TLabel;
-    Label7: TLabel;
-    txtDavUsername: TEdit;
-    txtDavPassword: TEdit;
-    Label8: TLabel;
-    Label9: TLabel;
+    Label3: TTntLabel;
+    txtDavHost: TTntEdit;
+    txtDavPort: TTntEdit;
+    Label4: TTntLabel;
+    txtDavPath: TTntEdit;
+    Label5: TTntLabel;
+    Label6: TTntLabel;
+    Label7: TTntLabel;
+    txtDavUsername: TTntEdit;
+    txtDavPassword: TTntEdit;
+    Label8: TTntLabel;
+    Label9: TTntLabel;
     procedure btnTransferBrowseClick(Sender: TObject);
     procedure chkIPClick(Sender: TObject);
     procedure Label2Click(Sender: TObject);

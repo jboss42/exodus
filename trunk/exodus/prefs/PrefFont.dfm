@@ -7,7 +7,7 @@ inherited frmPrefFont: TfrmPrefFont
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object Label22: TLabel
+  object Label22: TTntLabel
     Left = 8
     Top = 56
     Width = 87
@@ -20,7 +20,7 @@ inherited frmPrefFont: TfrmPrefFont
     Font.Style = [fsBold]
     ParentFont = False
   end
-  object Label23: TLabel
+  object Label23: TTntLabel
     Left = 136
     Top = 56
     Width = 82
@@ -33,28 +33,28 @@ inherited frmPrefFont: TfrmPrefFont
     Font.Style = [fsBold]
     ParentFont = False
   end
-  object Label24: TLabel
+  object Label24: TTntLabel
     Left = 8
     Top = 186
     Width = 88
     Height = 13
     Caption = 'Background Color:'
   end
-  object Label25: TLabel
+  object Label25: TTntLabel
     Left = 8
     Top = 210
     Width = 51
     Height = 13
     Caption = 'Font Color:'
   end
-  object Label5: TLabel
+  object Label5: TTntLabel
     Left = 8
     Top = 32
     Width = 283
     Height = 13
     Caption = 'Click on the appropriate font or window to change elements.'
   end
-  object lblColor: TLabel
+  object lblColor: TTntLabel
     Left = 8
     Top = 168
     Width = 82
@@ -67,7 +67,7 @@ inherited frmPrefFont: TfrmPrefFont
     Font.Style = [fsBold]
     ParentFont = False
   end
-  object StaticText3: TStaticText
+  object StaticText3: TTntStaticText
     Left = 0
     Top = 0
     Width = 403
@@ -84,7 +84,6 @@ inherited frmPrefFont: TfrmPrefFont
     ParentColor = False
     ParentFont = False
     TabOrder = 0
-    Transparent = False
   end
   object colorRoster: TTreeView
     Left = 8
@@ -129,7 +128,7 @@ inherited frmPrefFont: TfrmPrefFont
     TabOrder = 3
     OnChange = clrBoxFontChange
   end
-  object btnFont: TButton
+  object btnFont: TTntButton
     Left = 135
     Top = 234
     Width = 90

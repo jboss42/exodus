@@ -16,7 +16,7 @@ object frmCustomNotify: TfrmCustomNotify
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
+  object Label1: TTntLabel
     Left = 16
     Top = 192
     Width = 146
@@ -77,17 +77,22 @@ object frmCustomNotify: TfrmCustomNotify
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 231
+    Top = 226
     Width = 318
     Height = 30
     Align = alBottom
     AutoScroll = False
     TabOrder = 2
-    inherited Bevel1: TBevel
+    inherited Panel2: TPanel
       Width = 318
-    end
-    inherited Panel1: TPanel
-      Left = 158
+      Height = 30
+      inherited Bevel1: TBevel
+        Width = 318
+      end
+      inherited Panel1: TPanel
+        Left = 158
+        Height = 25
+      end
     end
   end
 end

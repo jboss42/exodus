@@ -270,7 +270,7 @@ begin
 
     if (fld_type = 'jid') then
         // make sure we have a valid JID
-        Result := isValidJID(TEdit(c).Text);
+        Result := isValidJID(TTntEdit(c).Text);
 
     if (Result) then
        lblLabel.Font.Color := clWindowText
@@ -355,7 +355,7 @@ begin
     frmExodus.PreModal(fsel);
 
     if (fsel.ShowModal = mrOK) then begin
-        TEdit(c).Text := fsel.GetSelectedJID();
+        TTntEdit(c).Text := fsel.GetSelectedJID();
     end;
 
     frmExodus.PostModal();

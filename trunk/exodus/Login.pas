@@ -28,10 +28,10 @@ uses
 
 type
   TfrmLogin = class(TForm)
-    lblProfile: TLabel;
+    lblProfile: TTntLabel;
     cboProfiles: TTntComboBox;
     chkInvisible: TCheckBox;
-    btnDetails: TButton;
+    btnDetails: TTntButton;
     popProfiles: TPopupMenu;
     CreateNew1: TMenuItem;
     Delete1: TMenuItem;

@@ -23,23 +23,24 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, ComCtrls, RichEdit2, ExRichEdit, ExtCtrls;
+  Dialogs, PrefPanel, StdCtrls, ComCtrls, RichEdit2, ExRichEdit, ExtCtrls,
+  TntStdCtrls;
 
 type
   TfrmPrefFont = class(TfrmPrefPanel)
-    Label22: TLabel;
-    Label23: TLabel;
-    Label24: TLabel;
-    Label25: TLabel;
-    Label5: TLabel;
-    StaticText3: TStaticText;
+    Label22: TTntLabel;
+    Label23: TTntLabel;
+    Label24: TTntLabel;
+    Label25: TTntLabel;
+    Label5: TTntLabel;
+    StaticText3: TTntStaticText;
     colorRoster: TTreeView;
     clrBoxBG: TColorBox;
     clrBoxFont: TColorBox;
-    btnFont: TButton;
+    btnFont: TTntButton;
     colorChat: TExRichEdit;
     FontDialog1: TFontDialog;
-    lblColor: TLabel;
+    lblColor: TTntLabel;
     procedure btnFontClick(Sender: TObject);
     procedure colorChatMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);

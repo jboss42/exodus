@@ -23,33 +23,34 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, ComCtrls, ExtCtrls;
+  Dialogs, PrefPanel, StdCtrls, ComCtrls, ExtCtrls, TntStdCtrls,
+  TntComCtrls;
 
 type
   TfrmPrefPresence = class(TfrmPrefPanel)
-    lstCustomPres: TListBox;
-    StaticText10: TStaticText;
+    lstCustomPres: TTntListBox;
+    StaticText10: TTntStaticText;
     pnlCustomPresButtons: TPanel;
-    btnCustomPresAdd: TButton;
-    btnCustomPresRemove: TButton;
-    btnCustomPresClear: TButton;
+    btnCustomPresAdd: TTntButton;
+    btnCustomPresRemove: TTntButton;
+    btnCustomPresClear: TTntButton;
     GroupBox1: TGroupBox;
-    Label11: TLabel;
-    Label12: TLabel;
-    Label13: TLabel;
-    Label14: TLabel;
-    lblHotkey: TLabel;
-    txtCPTitle: TEdit;
-    txtCPStatus: TEdit;
-    cboCPType: TComboBox;
-    txtCPPriority: TEdit;
-    spnPriority: TUpDown;
+    Label11: TTntLabel;
+    Label12: TTntLabel;
+    Label13: TTntLabel;
+    Label14: TTntLabel;
+    lblHotkey: TTntLabel;
+    txtCPTitle: TTntEdit;
+    txtCPStatus: TTntEdit;
+    cboCPType: TTntComboBox;
+    txtCPPriority: TTntEdit;
+    spnPriority: TTntUpDown;
     txtCPHotkey: THotKey;
     Panel1: TPanel;
-    chkPresenceSync: TCheckBox;
-    Label8: TLabel;
-    cboPresTracking: TComboBox;
-    Label1: TLabel;
+    chkPresenceSync: TTntCheckBox;
+    Label8: TTntLabel;
+    cboPresTracking: TTntComboBox;
+    Label1: TTntLabel;
     procedure FormDestroy(Sender: TObject);
     procedure lstCustomPresClick(Sender: TObject);
     procedure txtCPTitleChange(Sender: TObject);

@@ -35,7 +35,7 @@ uses
 
     // Normal Delphi things
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, ComCtrls, StdCtrls, ExtCtrls;
+    Dialogs, ComCtrls, StdCtrls, ExtCtrls, TntStdCtrls;
 
 type
   TfrmTransfer = class(TfrmDockable)
@@ -43,16 +43,16 @@ type
     txtMsg: TExRichEdit;
     frameButtons1: TframeButtons;
     pnlProgress: TPanel;
-    Label1: TLabel;
+    Label1: TTntLabel;
     bar1: TProgressBar;
     httpClient: TIdHTTP;
     OpenDialog1: TOpenDialog;
     SaveDialog1: TSaveDialog;
-    lblFrom: TLabel;
-    txtFrom: TLabel;
-    lblFile: TLabel;
-    Label5: TLabel;
-    lblDesc: TLabel;
+    lblFrom: TTntLabel;
+    txtFrom: TTntLabel;
+    lblFile: TTntLabel;
+    Label5: TTntLabel;
+    lblDesc: TTntLabel;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure httpClientWork(Sender: TObject; AWorkMode: TWorkMode;
       const AWorkCount: Integer);

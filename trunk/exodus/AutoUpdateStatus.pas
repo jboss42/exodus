@@ -24,12 +24,12 @@ uses
     XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, ComCtrls, StdCtrls, buttonFrame, ExtCtrls, IdBaseComponent,
-    IdComponent, IdTCPConnection, IdTCPClient, IdHTTP;
+    IdComponent, IdTCPConnection, IdTCPClient, IdHTTP, TntStdCtrls;
 
 type
   TfrmAutoUpdateStatus = class(TForm)
     frameButtons1: TframeButtons;
-    Label1: TLabel;
+    Label1: TTntLabel;
     ProgressBar1: TProgressBar;
     Image1: TImage;
     HttpClient: TIdHTTP;

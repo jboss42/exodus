@@ -44,16 +44,16 @@ object frmRemove: TfrmRemove
       inherited Panel1: TPanel
         Left = 168
         Height = 29
-        inherited btnOK: TButton
+        inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end
-        inherited btnCancel: TButton
+        inherited btnCancel: TTntButton
           OnClick = frameButtons1btnCancelClick
         end
       end
     end
   end
-  object optMove: TRadioButton
+  object optMove: TTntRadioButton
     Left = 8
     Top = 24
     Width = 249
@@ -62,7 +62,7 @@ object frmRemove: TfrmRemove
     TabOrder = 2
     OnClick = optRemoveClick
   end
-  object optRemove: TRadioButton
+  object optRemove: TTntRadioButton
     Left = 8
     Top = 48
     Width = 233
@@ -73,7 +73,7 @@ object frmRemove: TfrmRemove
     TabStop = True
     OnClick = optRemoveClick
   end
-  object chkRemove1: TCheckBox
+  object chkRemove1: TTntCheckBox
     Left = 24
     Top = 72
     Width = 217
@@ -83,7 +83,7 @@ object frmRemove: TfrmRemove
     State = cbChecked
     TabOrder = 4
   end
-  object chkRemove2: TCheckBox
+  object chkRemove2: TTntCheckBox
     Left = 24
     Top = 96
     Width = 265

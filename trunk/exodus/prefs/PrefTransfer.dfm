@@ -7,14 +7,14 @@ inherited frmPrefTransfer: TfrmPrefTransfer
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object Label15: TLabel
+  object Label15: TTntLabel
     Left = 0
     Top = 35
     Width = 149
     Height = 13
     Caption = 'File transfer download directory:'
   end
-  object Label2: TLabel
+  object Label2: TTntLabel
     Left = 0
     Top = 320
     Width = 184
@@ -35,84 +35,84 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     Width = 281
     Height = 177
     TabOrder = 6
-    object Label3: TLabel
+    object Label3: TTntLabel
       Left = 8
       Top = 16
       Width = 51
       Height = 13
       Caption = 'Web Host:'
     end
-    object Label4: TLabel
+    object Label4: TTntLabel
       Left = 8
       Top = 56
       Width = 22
       Height = 13
       Caption = 'Port:'
     end
-    object Label5: TLabel
+    object Label5: TTntLabel
       Left = 8
       Top = 80
       Width = 51
       Height = 13
       Caption = 'Web Path:'
     end
-    object Label6: TLabel
+    object Label6: TTntLabel
       Left = 72
       Top = 99
       Width = 131
       Height = 13
       Caption = 'Example: /~foo/public_html'
     end
-    object Label7: TLabel
+    object Label7: TTntLabel
       Left = 8
       Top = 128
       Width = 51
       Height = 13
       Caption = 'Username:'
     end
-    object Label8: TLabel
+    object Label8: TTntLabel
       Left = 8
       Top = 152
       Width = 49
       Height = 13
       Caption = 'Password:'
     end
-    object Label9: TLabel
+    object Label9: TTntLabel
       Left = 72
       Top = 35
       Width = 150
       Height = 13
       Caption = 'Example: http://dav.server.com'
     end
-    object txtDavHost: TEdit
+    object txtDavHost: TTntEdit
       Left = 72
       Top = 13
       Width = 193
       Height = 21
       TabOrder = 0
     end
-    object txtDavPort: TEdit
+    object txtDavPort: TTntEdit
       Left = 72
       Top = 53
       Width = 193
       Height = 21
       TabOrder = 1
     end
-    object txtDavPath: TEdit
+    object txtDavPath: TTntEdit
       Left = 72
       Top = 77
       Width = 193
       Height = 21
       TabOrder = 2
     end
-    object txtDavUsername: TEdit
+    object txtDavUsername: TTntEdit
       Left = 72
       Top = 125
       Width = 193
       Height = 21
       TabOrder = 3
     end
-    object txtDavPassword: TEdit
+    object txtDavPassword: TTntEdit
       Left = 72
       Top = 149
       Width = 193
@@ -140,7 +140,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     TabOrder = 0
     Transparent = False
   end
-  object txtXFerPath: TEdit
+  object txtXFerPath: TTntEdit
     Left = 21
     Top = 51
     Width = 188
@@ -173,14 +173,14 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     Width = 281
     Height = 113
     TabOrder = 4
-    object Label1: TLabel
+    object Label1: TTntLabel
       Left = 16
       Top = 19
       Width = 160
       Height = 13
       Caption = 'Port to use for HTTP file transfers:'
     end
-    object txtPort: TEdit
+    object txtPort: TTntEdit
       Left = 37
       Top = 36
       Width = 140
@@ -196,7 +196,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
       TabOrder = 1
       OnClick = chkIPClick
     end
-    object txtIP: TEdit
+    object txtIP: TTntEdit
       Left = 37
       Top = 84
       Width = 140
