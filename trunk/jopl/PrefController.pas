@@ -217,7 +217,7 @@ function TPrefController.getDefault(pkey: string): string;
 begin
     // set the defaults for the pref controller
     if pkey = P_EXPANDED then
-        result := '1'
+        result := '0'
     else if pkey = P_SHOWONLINE then
         result := '0'
     else if pkey = P_SHOWUNSUB then
@@ -254,6 +254,8 @@ begin
         result := '315'
     else if pkey = 'edge_snap' then
         result := '15'
+    else if pkey = 'snap_on' then
+        result := '1'
     else if pkey = 'fade_limit' then
         result := '100'
     else if pkey = 'toolbar' then
@@ -273,7 +275,9 @@ begin
     else if pkey = 'xa_status' then
         result := 'XA as a result of idle'
     else if pkey = 'log_path' then
-        result := ExtractFilePath(Application.EXEName) + 'logs\'
+        result := ExtractFilePath(Application.EXEName) + 'logs'
+    else if pkey = 'xfer_path' then
+        result := ExtractFilePath(Application.EXEName)
     else if pkey = 'inline_status' then
         result := '0'
     else

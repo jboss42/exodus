@@ -236,7 +236,7 @@ begin
     if (i > 0) then begin
         // we got a seperator
         fn := Copy(url, i + 2, length(url) - i);
-        fn := ExtractFileDir(Application.EXEName) + '\' + fn;
+        fn := MainSession.Prefs.getString('xfer_path') + '\' + fn;
         end
     else
         fn := url;
@@ -266,6 +266,10 @@ var
 begin
     // log this msg..
     fn := MainSession.Prefs.getString('log_path');
+
+    if (Copy(fn, length(fn), 1) <> '\') then
+        fn := fn + '\';
+
     if (not DirectoryExists(fn)) then begin
         // mkdir
         CreateDir(fn);

@@ -1399,10 +1399,10 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 313
     Height = 336
-    ActivePage = tbsNotify
+    ActivePage = tbsCustomPres
     Align = alClient
     Style = tsFlatButtons
-    TabIndex = 5
+    TabIndex = 9
     TabOrder = 2
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1651,7 +1651,7 @@ object frmPrefs: TfrmPrefs
       object StaticText3: TStaticText
         Left = 0
         Top = 0
-        Width = 142
+        Width = 305
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1670,10 +1670,17 @@ object frmPrefs: TfrmPrefs
     object tbsSystem: TTabSheet
       Caption = 'System'
       ImageIndex = 3
+      object Label15: TLabel
+        Left = 8
+        Top = 224
+        Width = 149
+        Height = 13
+        Caption = 'File transfer download directory:'
+      end
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 102
+        Width = 305
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1744,6 +1751,38 @@ object frmPrefs: TfrmPrefs
         Caption = 'Close button minimizes to the tray'
         TabOrder = 7
       end
+      object txtLogPath: TEdit
+        Left = 29
+        Top = 194
+        Width = 188
+        Height = 21
+        TabOrder = 8
+      end
+      object btnLogBrowse: TButton
+        Left = 224
+        Top = 192
+        Width = 75
+        Height = 25
+        Caption = 'Browse'
+        TabOrder = 9
+        OnClick = btnLogBrowseClick
+      end
+      object txtXFerPath: TEdit
+        Left = 29
+        Top = 242
+        Width = 188
+        Height = 21
+        TabOrder = 10
+      end
+      object btnTransferBrowse: TButton
+        Left = 222
+        Top = 240
+        Width = 75
+        Height = 25
+        Caption = 'Browse'
+        TabOrder = 11
+        OnClick = btnTransferBrowseClick
+      end
     end
     object tbsDialog: TTabSheet
       Caption = 'Dialogs'
@@ -1751,7 +1790,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 97
+        Width = 305
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1874,6 +1913,38 @@ object frmPrefs: TfrmPrefs
         Max = 255
         Position = 255
         TabOrder = 9
+        Wrap = False
+      end
+      object chkSnap: TCheckBox
+        Left = 8
+        Top = 152
+        Width = 273
+        Height = 17
+        Caption = 'Make the main window snap to screen edges'
+        TabOrder = 10
+        OnClick = chkSnapClick
+      end
+      object txtSnap: TEdit
+        Left = 32
+        Top = 174
+        Width = 49
+        Height = 21
+        Enabled = False
+        TabOrder = 11
+        Text = '255'
+        OnChange = txtToastAlphaChange
+      end
+      object spnSnap: TUpDown
+        Left = 81
+        Top = 174
+        Width = 16
+        Height = 21
+        Associate = txtSnap
+        Enabled = False
+        Min = 10
+        Max = 255
+        Position = 255
+        TabOrder = 12
         Wrap = False
       end
     end

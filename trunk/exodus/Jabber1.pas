@@ -445,8 +445,6 @@ begin
     restoreEvents(exp);
     _noMoveCheck := false;
     _flash := false;
-    restoreAlpha();
-    restoreMenus(false);
 
     // Setup the IdleUI stuff..
     _is_autoaway := false;
@@ -477,6 +475,8 @@ begin
         reg.DeleteKey('\SOFTWARE\Jabber\Exodus');
     reg.Free();
 
+    // Make sure we read in and setup the prefs..
+    Self.SessionCallback('/session/prefs', nil);
 end;
 
 {---------------------------------------}
@@ -530,12 +530,21 @@ begin
         end;
 
     if event = '/session/prefs' then begin
+        // some private vars we want
+        with MainSession.prefs do begin
+            if (getBool('snap_on')) then
+                _edge_snap := getInt('edge_snap')
+            else
+                _edge_snap := -1;
+            _close_min := getBool('close_min')
+            end;
+
+        // do other stuff
         restoreToolbar();
         restoreAlpha();
         restoreEvents(MainSession.Prefs.getBool('expanded'));
         if not MainSession.Prefs.getBool('expanded') then
             tbsMsg.TabVisible := false;
-        _close_min := MainSession.prefs.getBool('close_min')
         end;
 end;
 
@@ -543,7 +552,6 @@ end;
 procedure TfrmJabber.restoreToolbar;
 begin
     with MainSession.Prefs do begin
-        _edge_snap := getInt('edge_snap');
         mnuExpanded.Checked := getBool('expanded');
         mnuOnline.Checked := getBool('roster_only_online');
         btnOnlineRoster.Down := getBool('roster_only_online');
@@ -980,6 +988,7 @@ var
     r: TRect;
 begin
     if _noMoveCheck then exit;
+    if _edge_snap = -1 then exit;
         
     If ((SWP_NOMOVE or SWP_NOSIZE) and msg.WindowPos^.flags) <>
         (SWP_NOMOVE or SWP_NOSIZE) then begin
