@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exodus 0.8-Daily\n"
 "POT-Creation-Date: 2003-05-08 06:59\n"
-"PO-Revision-Date: 2004-04-22 09:37-0000\n"
+"PO-Revision-Date: 2004-04-28 07:07-0000\n"
 "Last-Translator: Lazarus Long <lazarus.long@bigfoot.com>\n"
 "Language-Team: pt_PT <lazarus.long@bigfoot.com>\n"
 "MIME-Version: 1.0\n"
@@ -33,6 +33,7 @@ msgstr "Acerca do Exodus"
 #. frmDockable..Font.Name
 #. frmDockWizard..Font.Name
 #. frmDockWizard..Panel1..lblWizardTitle..Font.Name
+#. frmEmoteProps..Font.Name
 #. frmEmoticons..Font.Name
 #. frmTracer..Font.Name
 #. frmException..Font.Name
@@ -96,6 +97,7 @@ msgstr "Acerca do Exodus"
 #: Dockable.dfm:14
 #: DockWizard.dfm:13
 #: DockWizard.dfm:89
+#: EmoteProps.dfm:12
 #: Emoticons.dfm:14
 #: ExceptTracer.dfm:13
 #: ExTracer.dfm:11
@@ -120,7 +122,7 @@ msgstr "Acerca do Exodus"
 #: MsgRecv.dfm:413
 #: PathSelector.dfm:14
 #: PathSelector.dfm:32
-#: Prefs.dfm:8209
+#: Prefs.dfm:8208
 #: Profile.dfm:13
 #: RemoveContact.dfm:15
 #: RemoveContact.dfm:106
@@ -155,7 +157,7 @@ msgstr "MS Sans Serif"
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #. show the next event
 #: About.dfm:1424
-#: ExTracer.dfm:46
+#: ExTracer.dfm:48
 #: InvalidRoster.dfm:42
 #: MsgRecv.dfm:474
 #: RosterRecv.dfm:42
@@ -480,13 +482,15 @@ msgstr "O que há de novo?"
 
 #. frmAutoUpdateStatus..Panel1..Panel2..btnOK..Caption
 #. frameButtons..Panel2..Panel1..btnOK..Caption
+#. frmEmoteProps..btnOK..Caption
 #. frmTracer..frameButtons1..Panel1..btnCancel..Caption
 #. frmPrefs..Panel1..Panel3..btnOK..Caption
 #. frmSSLWarn..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: AutoUpdateStatus.dfm:95
 #: buttonFrame.dfm:37
+#: EmoteProps.dfm:62
 #: ExceptTracer.dfm:37
-#: Prefs.dfm:8247
+#: Prefs.dfm:8246
 #: SSLWarn.dfm:183
 msgid "OK"
 msgstr "OK"
@@ -499,6 +503,7 @@ msgstr "Protelar"
 #. frmAutoUpdateStatus..Panel1..Panel2..btnCancel..Caption
 #. frameButtons..Panel2..Panel1..btnCancel..Caption
 #. frmDockWizard..TntPanel1..btnCancel..Caption
+#. frmEmoteProps..btnCancel..Caption
 #. frmPrefs..Panel1..Panel3..btnCancel..Caption
 #. fRecvStatus..Panel1..btnCancel..Caption
 #. fSendStatus..Panel1..btnCancel..Caption
@@ -506,7 +511,8 @@ msgstr "Protelar"
 #: AutoUpdateStatus.dfm:115
 #: buttonFrame.dfm:48
 #: DockWizard.dfm:56
-#: Prefs.dfm:8257
+#: EmoteProps.dfm:73
+#: Prefs.dfm:8256
 #: RecvStatus.dfm:100
 #: SendStatus.dfm:20
 #: Wizard.dfm:64
@@ -566,10 +572,10 @@ msgid "Copy All"
 msgstr "Copiar tudo"
 
 #. frmBaseChat..popMsgList..Clear1..Caption
-#. frmPrefEmote..pnlCustomPresButtons..btnEmoteClear..Caption
+#. frmPrefEmote..pageEmotes..TntTabSheet1..pnlCustomPresButtons..btnEmoteClear..Caption
 #. frmPrefPresence..pnlCustomPresButtons..btnCustomPresClear..Caption
 #: BaseChat.dfm:180
-#: prefs/PrefEmote.dfm:42
+#: prefs/PrefEmote.dfm:72
 #: prefs/PrefPresence.dfm:57
 msgid "Clear"
 msgstr "Limpar"
@@ -590,7 +596,6 @@ msgstr "Colar "
 #. frmChat..popContact..N5..Caption
 #. frmChat..popContact..N4..Caption
 #. frmChat..popContact..N1..Caption
-#. frmChat..popContact..N3..Caption
 #. frmDebug..PopupMenu1..N1..Caption
 #. frmExodus..MainMenu1..Exodus1..N7..Caption
 #. frmExodus..MainMenu1..Exodus1..N14..Caption
@@ -630,7 +635,6 @@ msgstr "Colar "
 #: ChatWin.dfm:105
 #: ChatWin.dfm:112
 #: ChatWin.dfm:146
-#: ChatWin.dfm:165
 #: Debug.dfm:304
 #: Jabber1.dfm:235
 #: Jabber1.dfm:264
@@ -647,7 +651,7 @@ msgstr "Colar "
 #: Jabber1.dfm:2686
 #: Jabber1.dfm:2700
 #: Jabber1.dfm:2707
-#: jud.dfm:220
+#: Jud.dfm:220
 #: MsgRecv.dfm:519
 #: MsgRecv.dfm:528
 #: Room.dfm:210
@@ -670,7 +674,7 @@ msgstr "-"
 #. frmBaseChat..popOut..Emoticons2..Caption
 #. frmPrefs..Scroller..lblEmote..Caption
 #: BaseChat.dfm:203
-#: Prefs.dfm:8097
+#: Prefs.dfm:8096
 msgid "Emoticons"
 msgstr "Ícones emotivos"
 
@@ -928,6 +932,7 @@ msgstr "Lista"
 
 #. frmBrowse..popContext..mBrowse..Caption
 #. frmConnDetails..PageControl1..tbsSSL..btnCertBrowse..Caption
+#. frmEmoteProps..btnBrowse..Caption
 #. frmPrefFont..btnCSSBrowse..Caption
 #. frmPrefMsg..btnLogBrowse..Caption
 #. frmPrefMsg..btnSpoolBrowse..Caption
@@ -935,6 +940,7 @@ msgstr "Lista"
 #. frmPrefTransfer..btnTransferBrowse..Caption
 #: Browser.dfm:3857
 #: ConnDetails.dfm:281
+#: EmoteProps.dfm:46
 #: ExResponders.pas:480
 #: prefs/PrefFont.dfm:228
 #: prefs/PrefMsg.dfm:67
@@ -942,7 +948,7 @@ msgstr "Lista"
 #: prefs/PrefPlugins.dfm:71
 #: prefs/PrefTransfer.dfm:143
 msgid "Browse"
-msgstr "Explorar"
+msgstr "Localizar"
 
 #. frmBrowse..popContext..mBrowseNew..Caption
 #: Browser.dfm:3861
@@ -1130,12 +1136,12 @@ msgid "Word Wrap Input"
 msgstr "Moldar texto à janela"
 
 #. frmChat..SaveDialog1..DefaultExt
-#: ChatWin.dfm:176
+#: ChatWin.dfm:173
 msgid "html"
 msgstr "html"
 
 #. frmChat..SaveDialog1..Filter
-#: ChatWin.dfm:177
+#: ChatWin.dfm:174
 msgid "RTF Files|*.rtf|All Files|*.*"
 msgstr "Rich Text Format (*.rtf)|*.rtf|Todos os ficheiros (*.*)|*.*"
 
@@ -1370,7 +1376,7 @@ msgstr "Intervalo de pesquisa:"
 
 #. frmConnDetails..PageControl1..tbsHttp..Label5..Caption
 #: ConnDetails.dfm:429
-#: ExUtils.pas:605
+#: ExUtils.pas:563
 msgid "seconds"
 msgstr "segundos"
 
@@ -1458,10 +1464,10 @@ msgstr "Prioridade"
 #. frmRoom..popRoomRoster..popRosterChat..Caption
 #: CustomPres.dfm:75
 #: Room.dfm:265
-#: ChatWin.pas:452
-#: ChatWin.pas:464
+#: ChatWin.pas:451
 #: ChatWin.pas:466
 #: ChatWin.pas:468
+#: ChatWin.pas:470
 msgid "Chat"
 msgstr "Conversa"
 
@@ -1478,7 +1484,7 @@ msgstr "Conversa"
 #: Jabber1.dfm:2656
 #: RosterWindow.dfm:403
 #: ExSession.pas:184
-#: Jabber1.pas:2737
+#: Jabber1.pas:2739
 #: RosterWindow.pas:348
 #: RosterWindow.pas:370
 #: RosterWindow.pas:1654
@@ -1499,7 +1505,7 @@ msgstr "Disponível"
 #: Jabber1.dfm:377
 #: Jabber1.dfm:2668
 #: RosterWindow.dfm:415
-#: Jabber1.pas:2735
+#: Jabber1.pas:2737
 #: RosterWindow.pas:350
 #: RosterWindow.pas:371
 #: RosterWindow.pas:1638
@@ -1623,7 +1629,7 @@ msgstr "IQ Set"
 #. frmRosterWindow..popRoster..popPresence..Caption
 #: Debug.dfm:319
 #: Jabber1.dfm:2653
-#: Prefs.dfm:1933
+#: Prefs.dfm:1932
 #: RosterWindow.dfm:350
 msgid "Presence"
 msgstr "Presença"
@@ -1675,20 +1681,35 @@ msgstr "lblWizardDetails"
 msgid "TabSheet1"
 msgstr "TabSheet1"
 
+#. frmEmoteProps..Caption
+#: EmoteProps.dfm:5
+msgid "Emoticon Properties"
+msgstr "Propriedades do ícone emotivo"
+
+#. frmEmoteProps..TntLabel1..Caption
+#: EmoteProps.dfm:25
+msgid "Emoticon Filename:"
+msgstr "Nome de ficheiro do ícone emotivo:"
+
+#. frmEmoteProps..TntLabel2..Caption
+#: EmoteProps.dfm:32
+msgid "Emoticon text to match:"
+msgstr "Texto a que corresponde o ícone emotivo:"
+
+#. frmEmoteProps..OpenDialog1..Filter
+#: EmoteProps.dfm:78
+msgid "Image Files|*.bmp;*.gif|All Files|*.*"
+msgstr "Ficheiros de imagens (*.bmp;*.gif)|*.bmp;*.gif|Todos os ficheiros (*.*)|*.*"
+
 #. frmEmoticons..Caption
 #: Emoticons.dfm:6
 msgid "frmEmoticons"
 msgstr "frmEmoticons"
 
-#. frmEmoticons..ToolBar1..Caption
-#: Emoticons.dfm:32
-msgid "ToolBar1"
-msgstr "ToolBar1"
-
-#. frmEmoticons..ToolBar2..Caption
-#: Emoticons.dfm:321
-msgid "ToolBar2"
-msgstr "ToolBar2"
+#. frmEmoticons..SpeedButton1..Caption
+#: Emoticons.dfm:29
+msgid "x"
+msgstr "x"
 
 #. frmTracer..Caption
 #: ExceptTracer.dfm:7
@@ -1797,7 +1818,7 @@ msgstr "Forçar os contactos a removerem-me do seu rol"
 #. frmInputPass..Caption
 #. accordingly.
 #: InputPassword.dfm:8
-#: Jabber1.pas:909
+#: Jabber1.pas:910
 msgid "Exodus Password"
 msgstr "Palavra-passe do Exodus"
 
@@ -1817,7 +1838,8 @@ msgstr "Ítens do rol inválidos"
 #. frmRosterWindow..popGroup..popGrpRemove..Caption
 #. frmRosterWindow..popBookmark..Delete1..Caption
 #. frmRosterWindow..popTransport..popTransUnRegister..Caption
-#. frmPrefEmote..pnlCustomPresButtons..btnEmoteRemove..Caption
+#. frmPrefEmote..pageEmotes..TntTabSheet1..pnlCustomPresButtons..btnEmoteRemove..Caption
+#. frmPrefEmote..pageEmotes..TntTabSheet2..Panel2..btnCustomEmoteRemove..Caption
 #. frmPrefPlugins..btnRemovePlugin..Caption
 #. frmPrefPresence..pnlCustomPresButtons..btnCustomPresRemove..Caption
 #: InvalidRoster.dfm:37
@@ -1826,7 +1848,8 @@ msgstr "Ítens do rol inválidos"
 #: RosterWindow.dfm:642
 #: RosterWindow.dfm:665
 #: RosterWindow.dfm:698
-#: prefs/PrefEmote.dfm:34
+#: prefs/PrefEmote.dfm:63
+#: prefs/PrefEmote.dfm:120
 #: prefs/PrefPlugins.dfm:55
 #: prefs/PrefPresence.dfm:48
 msgid "Remove"
@@ -1872,12 +1895,12 @@ msgstr "Alcunha"
 
 #. frmInvite..pnlMain..Panel1..btnAdd..Caption
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Caption
-#. frmPrefEmote..pnlCustomPresButtons..btnEmoteAdd..Caption
+#. frmPrefEmote..pageEmotes..TntTabSheet1..pnlCustomPresButtons..btnEmoteAdd..Caption
 #. frmPrefPlugins..btnAddPlugin..Caption
 #. frmPrefPresence..pnlCustomPresButtons..btnCustomPresAdd..Caption
 #: invite.dfm:109
 #: Jabber1.dfm:149
-#: prefs/PrefEmote.dfm:26
+#: prefs/PrefEmote.dfm:54
 #: prefs/PrefPlugins.dfm:36
 #: prefs/PrefPresence.dfm:39
 msgid "Add"
@@ -1903,8 +1926,8 @@ msgstr "Junte-se a nós nesta sala de conferência."
 #: Jabber1.dfm:7
 #: ConnDetails.pas:402
 #: ExSession.pas:473
-#: ExUtils.pas:1225
-#: Jabber1.pas:1225
+#: ExUtils.pas:1183
+#: Jabber1.pas:1227
 #: Login.pas:110
 #: Login.pas:184
 msgid "Exodus"
@@ -1935,7 +1958,7 @@ msgstr "Ver"
 #. frmAdd..Caption
 #. frmRosterWindow..popActions..popAddContact..Caption
 #: Jabber1.dfm:146
-#: jud.dfm:212
+#: Jud.dfm:212
 #: RosterAdd.dfm:6
 #: RosterWindow.dfm:591
 msgid "Add Contact"
@@ -2243,7 +2266,7 @@ msgstr "Personalizado ..."
 #. frmJud..PopupMenu1..popMessage..Caption
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
 #: Jabber1.dfm:2695
-#: jud.dfm:227
+#: Jud.dfm:227
 #: subscribe.dfm:150
 msgid "Send Message"
 msgstr "Enviar mensagem"
@@ -2324,7 +2347,7 @@ msgstr "Aceitar sempre a configuração predefinida para a sala."
 #. frmJud..Tabs..TabSheet2..Caption
 #. frmRegister..Tabs..TabSheet2..Caption
 #: JoinRoom.dfm:148
-#: jud.dfm:78
+#: Jud.dfm:78
 #: RegForm.dfm:60
 msgid "TabSheet2"
 msgstr "TabSheet2"
@@ -2357,80 +2380,80 @@ msgid "Fetch Rooms"
 msgstr "Obter salas"
 
 #. frmJud..Caption
-#: jud.dfm:5
+#: Jud.dfm:5
 msgid "Jabber Search"
 msgstr "Pesquisa Jabber"
 
 #. frmJud..Panel1..lblWizardTitle..Caption
-#: jud.dfm:43
+#: Jud.dfm:43
 msgid "Jabber Search Wizard"
 msgstr "Assistente de pesquisa Jabber"
 
 #. frmJud..Tabs..TabSheet1..lblSelect....Align
-#: jud.dfm:64
+#: Jud.dfm:64
 msgid "Select the user database or enter in the Jabber ID of the search agent to use:"
 msgstr "Seleccione a base de dados de utilizadores ou indique o ID Jabber do agente de busca a usar:"
 
 #. frmJud..Tabs..TabSheet2..lblWait..Caption
-#: jud.dfm:86
+#: Jud.dfm:86
 msgid "Please wait. Contacting search agent:"
 msgstr "Por favor aguarde. A contactar o agente de busca:"
 
 #. frmJud..Tabs..TabSheet3..Caption
 #. frmRegister..Tabs..TabSheet3..Caption
-#: jud.dfm:100
+#: Jud.dfm:100
 #: RegForm.dfm:95
 msgid "TabSheet3"
 msgstr "TabSheet3"
 
 #. frmJud..Tabs..TabSheet3..lblInstructions..Caption
-#: jud.dfm:108
+#: Jud.dfm:108
 msgid "Fill in the search criteria to find contacts on."
 msgstr "Preencha os parâmetros para localizar os contactos."
 
 #. frmJud..Tabs..TabSheet4..Caption
 #. frmRegister..Tabs..TabSheet4..Caption
-#: jud.dfm:124
+#: Jud.dfm:124
 #: RegForm.dfm:115
 msgid "TabSheet4"
 msgstr "TabSheet4"
 
 #. frmJud..Tabs..TabSheet4..Panel2..Label3..Caption
-#: jud.dfm:140
+#: Jud.dfm:140
 msgid "Add Contacts to this group:"
 msgstr "Adicionar contactos a este grupo:"
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Caption
 #. frmAdd..lblAddGrp..Caption
-#: jud.dfm:148
+#: Jud.dfm:148
 #: RosterAdd.dfm:49
 msgid "Add a new Group"
 msgstr "Adicionar um grupo novo"
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblCount..Caption
-#: jud.dfm:159
+#: Jud.dfm:159
 msgid "N items found"
 msgstr "Nenhum resultado encontrado"
 
 #. frmJud..Tabs..TabSheet4..Panel2..Button1..Caption
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
-#: jud.dfm:176
+#: Jud.dfm:176
 #: RosterRecv.dfm:38
-#: jud.pas:650
-#: jud.pas:652
+#: Jud.pas:650
+#: Jud.pas:652
 msgid "Add Contacts"
 msgstr "Adicionar contactos"
 
 #. frmJud..PopupMenu1..popProfile..Caption
-#: jud.dfm:216
+#: Jud.dfm:216
 msgid "View Profile"
 msgstr "Ver perfil"
 
 #. frmJud..PopupMenu1..popChat..Caption
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
-#: jud.dfm:223
+#: Jud.dfm:223
 #: subscribe.dfm:146
-#: Jabber1.pas:2296
+#: Jabber1.pas:2298
 msgid "Start Chat"
 msgstr "Iniciar conversa"
 
@@ -2616,66 +2639,66 @@ msgid "Exodus Preferences"
 msgstr "Preferências do Exodus"
 
 #. frmPrefs..Scroller..lblDialog..Caption
-#: Prefs.dfm:242
+#: Prefs.dfm:241
 msgid "Windows"
 msgstr "Janelas"
 
 #. frmPrefs..Scroller..lblFonts..Caption
-#: Prefs.dfm:436
+#: Prefs.dfm:435
 msgid "Fonts, Colors"
 msgstr "Tipos de letra, Cores"
 
 #. frmPrefs..Scroller..lblS10n..Caption
-#: Prefs.dfm:631
+#: Prefs.dfm:630
 msgid "Subscriptions"
 msgstr "Subscrições"
 
 #. frmPrefs..Scroller..lblRoster..Caption
-#: Prefs.dfm:825
+#: Prefs.dfm:824
 msgid "Roster"
 msgstr "Rol"
 
 #. frmPrefs..Scroller..lblSystem..Caption
-#: Prefs.dfm:1019
+#: Prefs.dfm:1018
 msgid "System"
 msgstr "Sistema"
 
 #. frmPrefs..Scroller..lblNotify..Caption
-#: Prefs.dfm:1157
+#: Prefs.dfm:1156
 msgid "Notification"
 msgstr "Notificação"
 
 #. frmPrefs..Scroller..lblAway..Caption
-#: Prefs.dfm:1351
+#: Prefs.dfm:1350
 msgid "Auto-Away"
 msgstr "Ausência automática"
 
 #. frmPrefs..Scroller..lblKeywords..Caption
 #. frmPrefs..PageControl1..tbsKeywords..Caption
-#: Prefs.dfm:1545
-#: Prefs.dfm:8117
+#: Prefs.dfm:1544
+#: Prefs.dfm:8116
 msgid "Keywords"
 msgstr "Palavras-chave"
 
 #. frmPrefs..Scroller..lblBlockList..Caption
-#: Prefs.dfm:1739
+#: Prefs.dfm:1738
 msgid "Block List"
 msgstr "Lista de bloqueios"
 
 #. frmPrefs..Scroller..lblMessages..Caption
-#: Prefs.dfm:2127
+#: Prefs.dfm:2126
 msgid "Messages"
 msgstr "Mensagens"
 
 #. frmPrefs..Scroller..lblPlugins..Caption
-#: Prefs.dfm:2265
+#: Prefs.dfm:2264
 msgid "Plugins"
 msgstr "Extensões"
 
 #. frmPrefs..Scroller..lblTransfer..Caption
 #. frmXferManager..Panel1..pnlCaption..Caption
 #. frmPrefNotify..chkNotify....Items.WideStrings
-#: Prefs.dfm:2640
+#: Prefs.dfm:2639
 #: XferManager.dfm:53
 #: ExSession.pas:483
 #: prefs/PrefNotify.dfm:43
@@ -2685,64 +2708,64 @@ msgstr "Transferências de ficheiros"
 
 #. frmPrefs..Scroller..lblGroups..Caption
 #. frmProfile..PageControl1..TabSheet2..Caption
-#: Prefs.dfm:2834
+#: Prefs.dfm:2833
 #: Profile.dfm:223
 #: Profile.pas:296
 msgid "Groups"
 msgstr "Grupos"
 
 #. frmPrefs..Scroller..lblLayouts..Caption
-#: Prefs.dfm:3001
+#: Prefs.dfm:3000
 msgid "Layouts"
 msgstr "Disposições"
 
 #. frmPrefs..Scroller..lblNetwork..Caption
-#: Prefs.dfm:3014
+#: Prefs.dfm:3013
 msgid "Network"
 msgstr "Rede"
 
 #. frmPrefs..PageControl1..tbsKeywords..Panel2..Label1....Align
-#: Prefs.dfm:8144
+#: Prefs.dfm:8143
 msgid "Exodus can notify you when a keyword appears in chat room. Enter in the keywords that you want Exodus to look for in messages."
 msgstr "O Exodus pode notificá-lo quando determinada palavra-chave aparece numa sala de conferência. Indique as palavras-chave que quer que o Exodus procure nas mensagens."
 
 #. frmPrefs..PageControl1..tbsKeywords..Panel2..chkRegex..Caption
-#: Prefs.dfm:8152
+#: Prefs.dfm:8151
 msgid "Use Regular Expressions for Keyword matches"
 msgstr "Usar expressões regulares para a pesquisa de palavras-chave"
 
 #. frmPrefs..PageControl1..tbsKeywords..pnlKeyword..Caption
-#: Prefs.dfm:8163
+#: Prefs.dfm:8162
 msgid "Notification Keywords"
 msgstr "Palavras-chave a monitorizar"
 
 #. frmPrefs..PageControl1..tbsBlockList..Caption
-#: Prefs.dfm:8170
+#: Prefs.dfm:8169
 msgid "BlockList"
 msgstr "Lista de bloqueios"
 
 #. frmPrefs..PageControl1..tbsBlockList..Memo1......Lines.WideStrings
-#: Prefs.dfm:8190
+#: Prefs.dfm:8189
 msgid "Enter in the Jabber Addresses (JIDs) of the people to block from "
 msgstr "Indique os endereços Jabber (JIDs) das pessoas a impedir de "
 
 #. frmPrefs..PageControl1..tbsBlockList..Memo1....Lines.WideStrings
-#: Prefs.dfm:8191
+#: Prefs.dfm:8190
 msgid "sending "
 msgstr "lhe "
 
 #. frmPrefs..PageControl1..tbsBlockList..Memo1....Lines.WideStrings
-#: Prefs.dfm:8192
+#: Prefs.dfm:8191
 msgid "you messages. All messages from these contacts will be blocked."
 msgstr "enviar mensagens. Todas as mensagens destes contactos serão bloqueadas."
 
 #. frmPrefs..PageControl1..tbsBlockList..pnlBlocked..Caption
-#: Prefs.dfm:8204
+#: Prefs.dfm:8203
 msgid "Blocked Contacts"
 msgstr "Contactos bloqueados"
 
 #. frmPrefs..Panel1..Panel3..Button6..Caption
-#: Prefs.dfm:8266
+#: Prefs.dfm:8265
 msgid "Apply"
 msgstr "Aplicar"
 
@@ -5898,37 +5921,37 @@ msgstr "Administrar"
 #. frmRoom..popRoom..popAdmin..popVoiceList..Caption
 #. edit a list
 #: Room.dfm:194
-#: Room.pas:1988
+#: Room.pas:1994
 msgid "Edit Voice List"
 msgstr "Editar a lista de vozes activas"
 
 #. frmRoom..popRoom..popAdmin..popBanList..Caption
 #: Room.dfm:198
-#: Room.pas:1990
+#: Room.pas:1996
 msgid "Edit Ban List"
 msgstr "Editar a lista de banimentos"
 
 #. frmRoom..popRoom..popAdmin..popMemberList..Caption
 #: Room.dfm:202
-#: Room.pas:1992
+#: Room.pas:1998
 msgid "Edit Member List"
 msgstr "Editar a lista de membros"
 
 #. frmRoom..popRoom..popAdmin..popModeratorList..Caption
 #: Room.dfm:206
-#: Room.pas:1994
+#: Room.pas:2000
 msgid "Edit Moderator List"
 msgstr "Editar a lista de moderadores"
 
 #. frmRoom..popRoom..popAdmin..popAdminList..Caption
 #: Room.dfm:213
-#: Room.pas:1996
+#: Room.pas:2002
 msgid "Edit Admin List"
 msgstr "Editar a lista de administradores"
 
 #. frmRoom..popRoom..popAdmin..popOwnerList..Caption
 #: Room.dfm:217
-#: Room.pas:1998
+#: Room.pas:2004
 msgid "Edit Owner List"
 msgstr "Editar a lista de proprietários"
 
@@ -5939,7 +5962,7 @@ msgstr "Configurar a sala"
 
 #. frmRoom..popRoom..popAdmin..popDestroy..Caption
 #: Room.dfm:228
-#: Room.pas:2012
+#: Room.pas:2018
 msgid "Destroy Room"
 msgstr "Eliminar a sala"
 
@@ -5960,7 +5983,7 @@ msgstr "Enviar o meu JID"
 #: Room.dfm:273
 #: RosterWindow.dfm:380
 #: RosterWindow.dfm:634
-#: Room.pas:1710
+#: Room.pas:1716
 #: RosterWindow.pas:2087
 #: RosterWindow.pas:2124
 #: RosterWindow.pas:2129
@@ -6046,7 +6069,7 @@ msgstr "ID do contacto:"
 #. frmSubscribe..boxAdd..lblNickname..Caption
 #: RosterAdd.dfm:34
 #: subscribe.dfm:83
-#: ExUtils.pas:490
+#: ExUtils.pas:448
 msgid "Nickname:"
 msgstr "Alcunha:"
 
@@ -6130,9 +6153,9 @@ msgstr "JID"
 #. frmRosterWindow..pnlShow..pnlStatus..lblStatusLink..Caption
 #. it at all times (if it exists).
 #: RosterWindow.dfm:245
-#: ExUtils.pas:862
-#: ExUtils.pas:880
-#: ExUtils.pas:898
+#: ExUtils.pas:820
+#: ExUtils.pas:838
+#: ExUtils.pas:856
 #: RosterWindow.pas:369
 #: RosterWindow.pas:1271
 #: RosterWindow.pas:1275
@@ -6470,68 +6493,68 @@ msgid "Objects"
 msgstr "Objectos"
 
 #. Setup the cache'd old versions in ChangePresImage
-#: ChatWin.pas:546
+#: ChatWin.pas:549
 msgid " is replying."
 msgstr " está a responder."
 
-#: ChatWin.pas:625
+#: ChatWin.pas:628
 msgid "Chat Activity: "
 msgstr "Conversa: "
 
 #. post a msg to the window and disable the text input box.
-#: ChatWin.pas:743
+#: ChatWin.pas:746
 #: Room.pas:847
 msgid "You have been disconnected."
 msgstr "Você foi desligado."
 
 #. if this jid just got blocked, just close the window.
-#: ChatWin.pas:760
+#: ChatWin.pas:763
 msgid "This user is now blocked."
 msgstr "Este utilizador está agora bloqueado."
 
 #. Change the bulb
 #. make sure the user is still connected
-#: ChatWin.pas:782
-#: ChatWin.pas:827
-#: ChatWin.pas:828
+#: ChatWin.pas:785
+#: ChatWin.pas:830
+#: ChatWin.pas:831
 msgid "offline"
 msgstr "desligado"
 
-#: ChatWin.pas:784
+#: ChatWin.pas:787
 msgid "unknown"
 msgstr "desconhecido"
 
-#: ChatWin.pas:786
+#: ChatWin.pas:789
 msgid "away"
 msgstr "ausente"
 
-#: ChatWin.pas:788
+#: ChatWin.pas:791
 msgid "xa"
 msgstr "ap"
 
-#: ChatWin.pas:790
+#: ChatWin.pas:793
 msgid "dnd"
 msgstr "transf"
 
-#: ChatWin.pas:792
+#: ChatWin.pas:795
 msgid "chat"
 msgstr "conversa"
 
-#: ChatWin.pas:842
+#: ChatWin.pas:845
 msgid "available"
 msgstr "disponível"
 
-#: ChatWin.pas:846
-#: ChatWin.pas:848
+#: ChatWin.pas:849
+#: ChatWin.pas:851
 msgid "is now"
 msgstr "está agora"
 
 #. check to see if we're already subscribed...
-#: ChatWin.pas:877
+#: ChatWin.pas:880
 msgid "You are already subscribed to this contact"
 msgstr "Já subscreveu este contacto"
 
-#: ChatWin.pas:1213
+#: ChatWin.pas:1216
 msgid "This chat window is busy. Close anyways?"
 msgstr "Esta janela de conversa está activa. Fechar na mesma?"
 
@@ -6832,93 +6855,84 @@ msgstr "Tem a certeza que deseja apagar todos os registos de actividade das suas
 msgid "%d log files deleted."
 msgstr "%d ficheiros com registo de actividade apagados."
 
-#. mkdir
-#: ExUtils.pas:446
-msgid "The log directory you specified is invalid. Either turn off logging, or specify a valid path."
-msgstr "A pasta que especificou para guardar os ficheiros com o registo de actividade é inválida. Desligue o registo de actividade ou indique um caminho válido."
-
-#: ExUtils.pas:467
-msgid "Could not open log file: "
-msgstr "Não foi possível abrir o ficheiro de registo de actividade: "
-
-#: ExUtils.pas:491
+#: ExUtils.pas:449
 msgid "First Name:"
 msgstr "Nome próprio:"
 
-#: ExUtils.pas:492
+#: ExUtils.pas:450
 msgid "Last Name:"
 msgstr "Apelido:"
 
-#: ExUtils.pas:493
+#: ExUtils.pas:451
 msgid "EMail Address:"
 msgstr "Endereço de correio electrónico:"
 
-#: ExUtils.pas:494
+#: ExUtils.pas:452
 msgid "Password"
 msgstr "Palavra-passe"
 
-#: ExUtils.pas:495
+#: ExUtils.pas:453
 msgid "UserName:"
 msgstr "Nome de utilizador:"
 
-#: ExUtils.pas:602
+#: ExUtils.pas:560
 msgid "days"
 msgstr "dias"
 
-#: ExUtils.pas:603
+#: ExUtils.pas:561
 msgid "hours"
 msgstr "horas"
 
-#: ExUtils.pas:604
+#: ExUtils.pas:562
 msgid "minutes"
 msgstr "minutos"
 
-#: ExUtils.pas:608
+#: ExUtils.pas:566
 msgid " unknown last result: "
 msgstr " último resultado desconhecido: "
 
-#: ExUtils.pas:619
-#: ExUtils.pas:620
-#: ExUtils.pas:621
-#: ExUtils.pas:622
-#: ExUtils.pas:768
+#: ExUtils.pas:577
+#: ExUtils.pas:578
+#: ExUtils.pas:579
+#: ExUtils.pas:580
+#: ExUtils.pas:726
 msgid "This message contains %d roster items."
 msgstr "Esta mensagem contém %d ítens de rol."
 
-#: ExUtils.pas:856
-#: ExUtils.pas:874
-#: ExUtils.pas:892
+#: ExUtils.pas:814
+#: ExUtils.pas:832
+#: ExUtils.pas:850
 #: RosterWindow.pas:375
 #: RosterWindow.pas:669
 msgid "Bookmarks"
 msgstr "Favoritos"
 
-#: ExUtils.pas:859
-#: ExUtils.pas:877
-#: ExUtils.pas:895
+#: ExUtils.pas:817
+#: ExUtils.pas:835
+#: ExUtils.pas:853
 #: RosterWindow.pas:374
 msgid "Unfiled"
 msgstr "Não preenchido"
 
-#: ExUtils.pas:1246
+#: ExUtils.pas:1204
 msgid "Untitled Group"
 msgstr "Novo Grupo"
 
-#: ExUtils.pas:1247
+#: ExUtils.pas:1205
 msgid "New Roster Group"
 msgstr "Novo grupo de rol"
 
-#: ExUtils.pas:1247
+#: ExUtils.pas:1205
 msgid "Enter new group name: "
 msgstr "Nome a dar ao grupo: "
 
 #. add the new grp.
-#: ExUtils.pas:1252
+#: ExUtils.pas:1210
 msgid "This group already exists!"
 msgstr "Este grupo já existe!"
 
-#: fGeneric.pas:91
-#: fGeneric.pas:93
+#: fGeneric.pas:92
+#: fGeneric.pas:94
 msgid "(Required)"
 msgstr "(Obrigatório)"
 
@@ -6982,29 +6996,29 @@ msgstr "Foi convidado a entrar na sala %s."
 msgid "Conference Room:"
 msgstr "Sala de conferência:"
 
-#: Jabber1.pas:909
+#: Jabber1.pas:910
 msgid "Enter Password"
 msgstr "Digite a palavra-passe"
 
 #. For other OS's we need to use the wicked nasty DLL
-#: Jabber1.pas:1000
+#: Jabber1.pas:1001
 msgid "Trying to setup the Auto Away timer."
 msgstr "A tentar activar o cronómetro para a ausência automática."
 
-#: Jabber1.pas:1022
+#: Jabber1.pas:1023
 msgid "AutoAway Setup FAILED!"
 msgstr "A activação da ausência automática FALHOU!"
 
 #. do nothing here..
-#: Jabber1.pas:1029
+#: Jabber1.pas:1030
 msgid "Using Win32 API for Autoaway checks!!"
 msgstr "A usar o API Win32 para as verificações de ausência automática!!"
 
-#: Jabber1.pas:1033
+#: Jabber1.pas:1034
 msgid "ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!"
 msgstr "ERRO AO OBTER O ENDEREÇO DO API WIN32 PARA GetLastInputInfo!!"
 
-#: Jabber1.pas:1096
+#: Jabber1.pas:1097
 msgid ""
 "There was an error trying to authenticate you.\n"
 "Either you used the wrong password, or this account is already in use by someone else."
@@ -7012,76 +7026,76 @@ msgstr ""
 "Houve um erro ao tentar autenticá-lo.\n"
 "Ou utilizou uma palavra-passe incorrecta, ou esta conta já está a ser usada por outra pessoa."
 
-#: Jabber1.pas:1103
+#: Jabber1.pas:1104
 msgid "There was an error trying to setup SSL."
 msgstr "Houve um erro ao tentar configurar a ligação segura (SSL)."
 
-#: Jabber1.pas:1139
+#: Jabber1.pas:1140
 msgid "An Error occurred trying to register your new account. This server may not allow open registration."
 msgstr "Ocorreu um erro ao tentar registar a sua nova conta. Este servidor pode não permitir registos públicos."
 
-#: Jabber1.pas:1154
+#: Jabber1.pas:1155
 msgid "This account does not exist on this server. Create a new account?"
 msgstr "Esta conta não existe neste servidor. Deseja criar uma conta nova?"
 
 #. if we have a new account, prompt for reg info
-#: Jabber1.pas:1204
+#: Jabber1.pas:1205
 msgid "Your new jabber account is activated. Would you like to fill out additional registration information?"
 msgstr "A sua nova conta jabber foi activada. Deseja preencher dados adicionais de registo?"
 
 #. set us to away
-#: Jabber1.pas:2092
+#: Jabber1.pas:2094
 msgid "Setting AutoAway"
 msgstr "A activar a ausência automática"
 
 #. set us to xa
-#: Jabber1.pas:2128
+#: Jabber1.pas:2130
 msgid "Setting AutoXA"
 msgstr "A activar a ausência prolongada automática"
 
 #. reset our status to available
-#: Jabber1.pas:2145
+#: Jabber1.pas:2147
 msgid "Setting Auto Available"
 msgstr "A activar a disponibilidade automática"
 
 #. lookup some arbitrary vcard..
-#: Jabber1.pas:2180
+#: Jabber1.pas:2182
 msgid "Lookup Profile"
 msgstr "Localizar perfil"
 
-#: Jabber1.pas:2180
-#: Jabber1.pas:2296
-#: Jabber1.pas:2564
+#: Jabber1.pas:2182
+#: Jabber1.pas:2298
+#: Jabber1.pas:2566
 msgid "Enter Jabber ID: "
 msgstr "Introduza o ID de Jabber: "
 
-#: Jabber1.pas:2397
+#: Jabber1.pas:2399
 msgid "Old password is incorrect."
 msgstr "A palavra-passe actual está incorrecta."
 
-#: Jabber1.pas:2401
+#: Jabber1.pas:2403
 msgid "New password does not match."
 msgstr "A nova palavra-passe não é igual."
 
-#: Jabber1.pas:2421
-#: Jabber1.pas:2426
+#: Jabber1.pas:2423
+#: Jabber1.pas:2428
 msgid "Error changing password."
 msgstr "Erro a alterar a palavra-passe."
 
-#: Jabber1.pas:2424
+#: Jabber1.pas:2426
 msgid "Password changed."
 msgstr "Palavra-passe alterada."
 
 #. kick off a service registration..
-#: Jabber1.pas:2511
+#: Jabber1.pas:2513
 msgid "Register with Service"
 msgstr "Registar com um serviço"
 
-#: Jabber1.pas:2511
+#: Jabber1.pas:2513
 msgid "Enter Jabber ID of Service: "
 msgstr "Introduza o ID de Jabber do serviço: "
 
-#: Jabber1.pas:2564
+#: Jabber1.pas:2566
 msgid "Send a Message"
 msgstr "Enviar uma mensagem"
 
@@ -7089,8 +7103,8 @@ msgstr "Enviar uma mensagem"
 #. send roster items to this contact.
 #. Send contacts to this JID..
 #. we got a URL drop
-#: Jabber1.pas:2830
-#: Jabber1.pas:2840
+#: Jabber1.pas:2832
+#: Jabber1.pas:2842
 #: RosterWindow.pas:2563
 #: RosterWindow.pas:2775
 #: RosterWindow.pas:2871
@@ -7098,7 +7112,7 @@ msgstr "Enviar uma mensagem"
 msgid "You must select one or more contacts."
 msgstr "Tem que seleccionar um ou mais contactos."
 
-#: Jabber1.pas:2968
+#: Jabber1.pas:2970
 msgid "Branding error!"
 msgstr "Erro de personalização!"
 
@@ -7120,21 +7134,21 @@ msgstr "Tem que indicar uma alcunha"
 
 #. timeout
 #. we got an iq-error back
-#: jud.pas:318
-#: jud.pas:324
+#: Jud.pas:318
+#: Jud.pas:324
 msgid "Could not contact the search agent."
 msgstr "Não foi possível contactar o agente de procura."
 
 #. timeout
-#: jud.pas:426
+#: Jud.pas:426
 msgid "The search timed out."
 msgstr "A pesquisa excedeu o tempo."
 
-#: jud.pas:455
+#: Jud.pas:455
 msgid "No Results were found."
 msgstr "Não foram encontrados resultados."
 
-#: jud.pas:565
+#: Jud.pas:565
 msgid "%d items found."
 msgstr "%d resultados encontrados."
 
@@ -7333,10 +7347,10 @@ msgstr "Sala %s"
 #. get the data for this person..
 #: Room.pas:480
 #: Room.pas:1250
-#: Room.pas:1662
-#: Room.pas:1670
-#: Room.pas:1707
-#: Room.pas:2168
+#: Room.pas:1668
+#: Room.pas:1676
+#: Room.pas:1713
+#: Room.pas:2174
 msgid "Blocked"
 msgstr "Bloqueado"
 
@@ -7357,7 +7371,7 @@ msgstr "Mensagem privada"
 #. they match
 #: Room.pas:922
 #: Room.pas:1164
-#: Room.pas:1529
+#: Room.pas:1535
 msgid "Your nickname is already being used. Please select another one."
 msgstr "A sua alcunha já está a ser usada. Por favor escolha outra."
 
@@ -7440,71 +7454,71 @@ msgid "Your room keyword regular expressions are invalid. Keyword matching will 
 msgstr "As suas expressões regulares para a pesquisa de palavras-chave nesta sala de conferência são inválidas. A detecção de palavras-chave será desactivada para esta sala de conferência."
 
 #. send the msg out
-#: Room.pas:1492
+#: Room.pas:1498
 msgid "/me has changed the subject to: "
 msgstr "/me mudou o assunto para: "
 
 #. Change the subject
-#: Room.pas:1505
+#: Room.pas:1511
 msgid "Change room subject"
 msgstr "Alterar o assunto da sala"
 
-#: Room.pas:1505
+#: Room.pas:1511
 msgid "New subject"
 msgstr "Novo assunto"
 
-#: Room.pas:1548
+#: Room.pas:1554
 msgid "New nickname"
 msgstr "Nova alcunha"
 
-#: Room.pas:1571
+#: Room.pas:1577
 msgid "Bookmark Room"
 msgstr "Adicionar sala aos 'Favoritos'"
 
-#: Room.pas:1571
+#: Room.pas:1577
 msgid "Enter bookmark name:"
 msgstr "Indique o nome do favorito:"
 
-#: Room.pas:1708
+#: Room.pas:1714
 #: RosterWindow.pas:2083
 #: RosterWindow.pas:2134
 msgid "UnBlock"
 msgstr "Desbloquear"
 
-#: Room.pas:1862
+#: Room.pas:1868
 msgid "Role: "
 msgstr "Papel:"
 
-#: Room.pas:1863
+#: Room.pas:1869
 msgid "Affiliation: "
 msgstr "Afiliação: "
 
-#: Room.pas:1890
+#: Room.pas:1896
 msgid "You have been kicked."
 msgstr "Você foi expulso."
 
-#: Room.pas:1891
+#: Room.pas:1897
 msgid "Kick Reason"
 msgstr "Razão da expulsão"
 
-#: Room.pas:1894
+#: Room.pas:1900
 msgid "You have been banned."
 msgstr "Você foi banido."
 
-#: Room.pas:1895
+#: Room.pas:1901
 msgid "Ban Reason"
 msgstr "Razão do banimento"
 
 #. Destroy Room
-#: Room.pas:2009
+#: Room.pas:2015
 msgid "Do you really want to destroy the room? All users will be removed."
 msgstr "Quer realmente eliminar a sala? Todos os utilizadores serão removidos."
 
-#: Room.pas:2011
+#: Room.pas:2017
 msgid "The owner has destroyed the room."
 msgstr "O proprietário eliminou a sala."
 
-#: Room.pas:2012
+#: Room.pas:2018
 msgid "Destroy Reason"
 msgstr "Razão da eliminação"
 
@@ -7715,7 +7729,7 @@ msgstr "Formulário de %s"
 
 #. do something
 #: xdata.pas:235
-#: xdata.pas:333
+#: xdata.pas:345
 msgid "You are currently disconnected. Please reconnect before responding to this form."
 msgstr "Encontra-se actualmente desligado. Por favor ligue-se de novo antes de responder a este formulário."
 
@@ -7951,31 +7965,61 @@ msgid "frmPrefEmote"
 msgstr "frmPrefEmote"
 
 #. frmPrefEmote..pnlHeader..Caption
-#: prefs/PrefEmote.dfm:11
+#: prefs/PrefEmote.dfm:12
 msgid "Emoticon Options"
 msgstr "Opções de ícones emotivos"
 
-#. frmPrefEmote..pnlCustomPresButtons..btnEmoteDefault..Caption
+#. frmPrefEmote..Panel1..chkEmoticons..Caption
+#: prefs/PrefEmote.dfm:27
+msgid "Auto detect Emoticons in messages"
+msgstr "Detectar automaticamente ícones emotivos nas mensagens"
+
+#. frmPrefEmote..pageEmotes..TntTabSheet1..Caption
+#: prefs/PrefEmote.dfm:40
+msgid "Emoticon Packages"
+msgstr "Conjuntos de ícones emotivos"
+
+#. frmPrefEmote..pageEmotes..TntTabSheet1..pnlCustomPresButtons..btnEmoteDefault..Caption
 #. frmPrefPresence..pnlCustomPresButtons..btnDefaults..Caption
-#: prefs/PrefEmote.dfm:50
+#: prefs/PrefEmote.dfm:81
 #: prefs/PrefPresence.dfm:66
 msgid "Defaults"
 msgstr "Predefinições"
 
-#. frmPrefEmote..Panel1..Label1..Caption
-#: prefs/PrefEmote.dfm:76
-msgid "Emoticon Resource DLL's"
-msgstr "Bibliotecas DLL de ícones emotivos"
+#. frmPrefEmote..pageEmotes..TntTabSheet2..Caption
+#: prefs/PrefEmote.dfm:97
+msgid "Custom Emoticons"
+msgstr "Ícones emotivos personalizados"
 
-#. frmPrefEmote..Panel1..chkEmoticons..Caption
-#: prefs/PrefEmote.dfm:83
-msgid "Auto detect Emoticons in messages"
-msgstr "Detectar automaticamente ícones emotivos nas mensagens"
+#. frmPrefEmote..pageEmotes..TntTabSheet2..Panel2..btnCustomEmoteAdd..Caption
+#: prefs/PrefEmote.dfm:111
+msgid "Add ..."
+msgstr "Adicionar"
+
+#. frmPrefEmote..pageEmotes..TntTabSheet2..Panel2..btnCustomEmoteEdit..Caption
+#: prefs/PrefEmote.dfm:129
+msgid "Edit ..."
+msgstr "Editar"
+
+#. frmPrefEmote..pageEmotes..TntTabSheet2..Panel3..TntLabel3..Caption
+#: prefs/PrefEmote.dfm:147
+msgid "Filename of custom emoticon definitions:"
+msgstr "Arquivo das definições personalizadas dos ícones emotivos:"
+
+#. frmPrefEmote..pageEmotes..TntTabSheet2..Panel3..btnCustomEmoteBrowse..Caption
+#: prefs/PrefEmote.dfm:161
+msgid "..."
+msgstr "..."
 
 #. frmPrefEmote..EmoteOpen..Filter
-#: prefs/PrefEmote.dfm:88
+#: prefs/PrefEmote.dfm:185
 msgid "Resource Files|*.dll|All Files|*.*"
 msgstr "Ficheiros de recursos (*.dll)|*.dll|Todos os ficheiros (*.*)|*.*"
+
+#. frmPrefEmote..XMLDialog1..Filter
+#: prefs/PrefEmote.dfm:190
+msgid "XML Files|*.xml|All Files|*.*"
+msgstr "Ficheiros XML (*.xml)|*.xml|Todos os ficheiros (*.*)|*.*"
 
 #. frmPrefFont..Caption
 #: prefs/PrefFont.dfm:4
@@ -8015,7 +8059,7 @@ msgstr "Nome do elemento"
 #. frmPrefFont..TntLabel1..Caption
 #: prefs/PrefFont.dfm:57
 msgid "Display Style:"
-msgstr "Estilo:"
+msgstr "Estilo de visualização:"
 
 #. frmPrefFont..TntLabel2..Caption
 #: prefs/PrefFont.dfm:64
@@ -8797,6 +8841,40 @@ msgstr "Utilizar um servidor web para alojar os ficheiros que enviar."
 #: prefs/PrefTransfer.dfm:211
 msgid "Jabber Address of File Transfer Server:"
 msgstr "Endereço Jabber do servidor de transferência de ficheiros:"
+
+#: prefs/PrefEmote.pas:161
+msgid "Remove this emoticon set?"
+msgstr "Remover este conjunto de ícones emotivos?"
+
+#: prefs/PrefEmote.pas:170
+msgid "Remove all emoticon sets?"
+msgstr "Remover todos os conjuntos de ícones emotivos?"
+
+#: prefs/PrefEmote.pas:178
+msgid "Reset emoticon sets back to defaults?"
+msgstr "Repor os conjuntos de ícones emotivos nos valores de origem?"
+
+#: prefs/PrefEmote.pas:235
+msgid "The text you entered is not a valid emoticon string. Try (foo), or ::foo::"
+msgstr "O texto que introduziu não é um identificador de ícone emotivo válido. Experimente (exemplo) ou ::exemplo::"
+
+#: prefs/PrefEmote.pas:247
+msgid "The emoticon file specified does not exist."
+msgstr "O fiicheiro de ícone emotivo especificado não existe."
+
+#. Create the new emoticon.
+#: prefs/PrefEmote.pas:258
+msgid "The file you specified has an unknown mime type."
+msgstr "O ficheiro que especificou é de um tipo MIME desconhecido."
+
+#. Edit
+#: prefs/PrefEmote.pas:279
+msgid "Select a single emoticon to edit."
+msgstr "Seleccione um único ícone emotivo a editar."
+
+#: prefs/PrefEmote.pas:319
+msgid "Remove all selected emoticons?"
+msgstr "Remover os ícones emotivos seleccionados?"
 
 #: prefs/PrefFont.pas:99
 msgid "Sample Group"
