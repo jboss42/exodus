@@ -60,7 +60,7 @@ type
     { Private declarations }
     cur_iq: TJabberIQ;
     cur_stage: RegFormStage;
-    cur_key: string;
+    cur_key: Widestring;
     pres_cb: integer;
     function doField(fld: string): TfrmField;
   published
@@ -71,7 +71,7 @@ type
     procedure RemoveCallback(event: string; tag: TXMLTag);
   public
     { Public declarations }
-    jid: string;
+    jid: Widestring;
     agent: TAgentItem;
     procedure Start();
   end;
@@ -331,11 +331,14 @@ begin
 
         else begin
             // ok registration, check all pendings and re-subscribe to them
-            MainSession.roster.AddItem(pres.fromJID.full, agent.name, 'Transports', false);
+            MainSession.roster.AddItem(pres.fromJID.full, agent.name,
+                MainSession.Prefs.getString('roster_transport_grp'), false);
+
             with MainSession do begin
                 for i := 0 to roster.Count - 1 do begin
                     ritem := TJabberRosterItem(Roster.Objects[i]);
-                    if ((ritem.ask = 'subscribe') and (ritem.jid.domain = self.jid)) then begin
+                    if ((ritem.ask = 'subscribe') and
+                        (ritem.jid.domain = self.jid)) then begin
                         SendSubscribe(ritem.jid.jid, MainSession);
                         end;
                     end;
@@ -363,7 +366,7 @@ begin
         // some kind of error
         lblOK.Visible := false;
         lblBad.Visible := true;
-        btnPrev.Enabled := false;
+        btnPrev.Enabled := true;
         btnNext.Caption := sBtnCancel;
         btnNext.Enabled := true;
         btnCancel.Enabled := false;
@@ -428,17 +431,19 @@ begin
     exit;
 end;
 
-
+{---------------------------------------}
 procedure TfrmRegister.btnDeleteClick(Sender: TObject);
 begin
     RemoveTransport(jid);
     Self.Close();
 end;
 
+{---------------------------------------}
 procedure TfrmRegister.btnPrevClick(Sender: TObject);
 begin
     // previous page
-
+    if (Tabs.ActivePage = tabResult) then
+        Tabs.ActivePage := tabAgent;
 end;
 
 end.

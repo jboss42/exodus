@@ -174,6 +174,7 @@ type
     _collapsed_grps: TWideStringList;
     _blockers: TWideStringlist;
     _adURL : string;
+    _transports: Widestring;
 
     function getNodeType(node: TTreeNode = nil): integer;
     procedure popUnBlockClick(Sender: TObject);
@@ -266,6 +267,7 @@ begin
     _change_node := nil;
     _show_status := MainSession.Prefs.getBool('inline_status');
     _status_color := TColor(MainSession.Prefs.getInt('inline_color'));
+    _transports := MainSession.Prefs.getString('roster_transport_grp');
 
     frmExodus.pnlRoster.ShowHint := not _show_status;
 
@@ -426,6 +428,7 @@ begin
         MainSession.Prefs.fillStringlist('blockers', _blockers);
         _show_status := MainSession.Prefs.getBool('inline_status');
         _status_color := TColor(MainSession.Prefs.getInt('inline_color'));
+        _transports := MainSession.Prefs.getString('roster_transport_grp');
         treeRoster.Font.Name := MainSession.Prefs.getString('roster_font_name');
         treeRoster.Font.Size := MainSession.Prefs.getInt('roster_font_size');
         treeRoster.Font.Color := TColor(MainSession.Prefs.getInt('roster_font_color'));
@@ -627,7 +630,7 @@ begin
         // check to see if it's a transport
         if (n.Level > 0) then begin
             grp_node := n.Parent;
-            if (grp_node.Text = 'Transports') then
+            if (grp_node.Text = _transports) then
                 Result := node_transport;
             end;
         end;
@@ -714,7 +717,24 @@ begin
     jid := tag.getAttribute('from');
     tmp_jid := TJabberID.Create(jid);
     jid := tmp_jid.jid;
+
+    // this should always work for normal items
     ritem := MainSession.Roster.Find(jid);
+
+    // if we can't find the item based on bare jid, check the full jid.
+    // NB: this should catch most of the transport madness.
+    if (ritem = nil) then begin
+        jid := tmp_jid.full;
+        ritem := MainSession.Roster.Find(tmp_jid.full);
+        end;
+
+    // if we still don't have a roster item,
+    // and we have no username portion of the JID, then
+    // check for jid/registered for more transport madness
+    if ((ritem = nil) and (tmp_jid.user = '') and (tmp_jid.resource = '')) then begin
+        jid := tmp_jid.jid + '/registered';
+        ritem := MainSession.Roster.Find(jid);
+        end;
 
     if (event = '/presence/error') then
         // ignore
@@ -724,18 +744,10 @@ begin
         if ritem <> nil then
             RenderNode(ritem, p);
         end
-    else begin
+    else if ritem <> nil then begin
         // possibly re-render the node based on this pres packet
-        ritem := MainSession.Roster.Find(jid);
-
-        // if we can't find the item based on bare jid, check the full jid.
-        // NB: this should catch most of the transport madness.
-        if ritem = nil then
-            ritem := MainSession.Roster.Find(tmp_jid.full);
-        if ritem <> nil then begin
-            p := MainSession.ppdb.FindPres(tmp_jid.jid, '');
-            RenderNode(ritem, p);
-            end;
+        p := MainSession.ppdb.FindPres(tmp_jid.jid, '');
+        RenderNode(ritem, p);
         end;
 
     tmp_jid.Free();
@@ -835,9 +847,9 @@ begin
         exit;
         end
 
-    else if ((ritem.Groups.IndexOf('Transports') <> -1) and
-        (ritem.Groups.Count = 1) and (p <> nil)) then begin
-        // we have a transport... let them pass
+    else if ((ritem.Groups.IndexOf(_transports) <> -1) and
+        (ritem.Groups.Count = 1)) then begin
+        // we have a transport... always let them pass
         end
 
     else if ((ritem.subscription = 'none') or
@@ -1480,7 +1492,14 @@ begin
         popBlock.Enabled := true;
         end;
     node_grp: begin
-        // we have multiple contacts or a group selected
+        // check to see if we have the Transports grp selected
+        if (n.Text = _transports) then begin
+            treeRoster.PopupMenu := popActions;
+            popProperties.Enabled := false;
+            exit;
+            end;
+
+        // check to see if we have multiple contacts or a group selected
         treeRoster.PopupMenu := popGroup;
         if (treeRoster.SelectionCount <= 1) then begin
             treeRoster.Selected := n;
