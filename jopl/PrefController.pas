@@ -587,11 +587,11 @@ end;
 function TPrefController.getString(pkey: Widestring; server_side: TPrefKind = pkClient): Widestring;
 var
     uf: TPrefFile;
-    bv, uv: Widestring;
-    s: TPrefState;
+    dv, bv, uv: Widestring;
+    ds, bs: TPrefState;
 begin
     Result := '';
-    
+
     // TODO: what SHOULD we do if we get a server-side pref request, and we
     // haven't gotten any server prefs yet?
     if ((server_side <> pkServer) or (_server_file = nil)) then
@@ -599,17 +599,27 @@ begin
     else
         uf := _server_file;
 
+    ds := s_default_file.getState(pkey);
+    dv := s_default_file.getString(pkey);
+    if ((ds = psReadOnly) or (ds = psInvisible)) then begin
+        // default isn't over-ridable, even by branding.  This can happen
+        // if the admin compiles in the defaults.
+        if (dv <> '') then
+            Result := dv
+        else
+            Result := Self.getDynamicDefault(pkey); 
+        exit;
+    end;
+
     bv := s_brand_file.getString(pkey);
-    s := getPrefState(pkey);
-    if ((s = psReadOnly) or (s = psInvisible)) then begin
+    bs := s_brand_file.getState(pkey);
+    if ((bs = psReadOnly) or (bs = psInvisible)) then begin
         if (bv <> '') then
             Result := bv
+        else if (dv <> '') then
+            Result := dv
         else
-            Result := s_default_file.getString(pkey);
-
-        if (Result = '') then
             Result := Self.getDynamicDefault(pkey);
-
         exit;
     end;
 
@@ -618,10 +628,9 @@ begin
         Result := uv
     else if (bv <> '') then
         Result := bv
+    else if (dv <> '') then
+        Result := dv
     else
-        Result := s_default_file.getString(pkey);
-
-    if (Result = '') then
         Result := getDynamicDefault(pkey);
 end;
 

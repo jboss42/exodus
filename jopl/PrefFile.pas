@@ -167,6 +167,7 @@ var
     s, cs: TXMLTagList;
     i, j: integer;
     c: Widestring;
+    sl: TWideStringList;
 begin
     _dirty := false;
     _need_default_pres := false;
@@ -211,7 +212,7 @@ begin
         // old-style prefs.  convert to new style, so that save() will
         // do the right thing.
         s := _root.ChildTags();
-        for i := 0 to s.count - 1 do begin
+        for i := s.count - 1 downto 0 do begin
             t := s.Tags[i];
             if (t.Name = 'presence') then begin
                 _pres.AddTag(TXMLTag.Create(t));
@@ -237,8 +238,17 @@ begin
                 if ((fs = nil) and (t.Data <> '')) then begin
                     setString(t.Name, t.Data);
                     t.ClearCData();
+                end
+                else if (fs <> nil) then begin
+                    // setStringList...
+                    sl := TWideStringList.Create();
+                    cs := t.QueryTags('s');
+                    for j := 0 to cs.Count - 1 do
+                        sl.Add(cs.Tags[j].Data);
+                    cs.Free;
+                    setStringlist(t.Name, sl);
+                    sl.Free(); 
                 end;
-                _pref.AddTag(TXMLTag.Create(t));
                 _root.RemoveTag(t);
             end;
         end;
