@@ -587,6 +587,7 @@ begin
     if (i >= 0) then begin
         tbm := TJabberBookmark(Bookmarks.Objects[i]);
         tbm.Copy(bm);
+        bm.Free();
     end
     else
         Self.Bookmarks.AddObject(sjid, bm);

@@ -75,7 +75,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure timMemoryTimer(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure FormDeactivate(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
     jid: widestring;        // jid of the person we are talking to
@@ -97,6 +97,7 @@ type
     _send_composing: boolean;
 
     _destroying: boolean;
+    _redock: boolean;
 
     procedure SetupPrefs();
     procedure ChangePresImage(show: widestring; status: widestring);
@@ -123,6 +124,7 @@ type
     procedure FloatForm; override;
 
     property getJid: Widestring read jid;
+    property redock: boolean read _redock;
   end;
 
 var
@@ -157,6 +159,7 @@ uses
 {---------------------------------------}
 function StartChat(sjid, resource: widestring; show_window: boolean; chat_nick: widestring=''): TfrmChat;
 var
+    r, m: integer;
     chat: TChatController;
     win: TfrmChat;
     tmp_jid: TJabberID;
@@ -168,19 +171,40 @@ begin
     chat := MainSession.ChatList.FindChat(sjid, resource, '');
     new_chat := false;
 
+    // If we have an existing chat, we may just want to raise it
+    // or redock it, etc...
+    r := MainSession.Prefs.getInt(P_CHAT);
+    m := MainSession.Prefs.getInt('chat_memory');
+
+    if (((r = msg_existing_chat) or (m > 0)) and (chat <> nil)) then begin
+        win := TfrmChat(chat.window);
+        if ((win.Docked) or (win.Redock)) then begin
+            if (not win.Visible) then
+                win.ShowDefault()
+            else
+                frmExodus.Tabs.ActivePage := win.TabSheet;
+        end
+        else
+            win.ShowDefault();
+        Result := win;
+        exit;
+    end;
+
+    // Create a new chat controller if we don't have one
     if chat = nil then begin
-        // Create one
         chat := MainSession.ChatList.AddChat(sjid, resource);
         new_chat := true;
     end;
 
+    // Create a window if we don't have one.
     if (chat.window = nil) then begin
-        // if we don't have a window, then create one.
         win := TfrmChat.Create(Application);
         chat.window := win;
         win.chat_object := chat;
     end;
 
+    // Setup the properties of the window,
+    // and hook it up to the chat controller.
     with TfrmChat(chat.window) do begin
         tmp_jid := TJabberID.Create(sjid);
         if (chat_nick = '') then begin
@@ -220,7 +244,6 @@ begin
     if (new_chat) then
         frmExodus.ComController.fireNewChat(sjid, TExodusChat(chat.ComController));
 
-
     Result := TfrmChat(chat.window);
 end;
 
@@ -259,6 +282,7 @@ begin
     _msg_out := false;
     _jid := nil;
     _destroying := false;
+    _redock := false;
 
     if (MainSession.Profile.ConnectionType = conn_normal) then
         DragAcceptFiles( Handle, True );
@@ -360,15 +384,8 @@ end;
 {---------------------------------------}
 procedure TfrmChat.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-    if (timMemory.Interval > 0) then begin
-        timMemory.Enabled := true;
-        Action := caHide;
-    end
-    else begin
-        _destroying := true;
-        Action := caFree;
-    end;
-
+    _destroying := true;
+    Action := caFree;
     inherited;
 end;
 
@@ -829,6 +846,7 @@ begin
         FreeAndNil(_jid);
 
     DragAcceptFiles(Handle, false);
+
     inherited;
 end;
 
@@ -998,6 +1016,21 @@ end;
 procedure TfrmChat.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   inherited;
+    if (timMemory.Interval > 0) then begin
+        CanClose := false;
+        timMemory.Enabled := true;
+        Self.Hide();
+        if (Docked) then begin
+            // We must float the form, so when it is free'd
+            // there is no tab flashing madness.
+            // the redock flag tells the roster window
+            // that this form SHOULD be redocked,
+            // instead of a window that is manually undocked
+            Self.FloatForm();
+            _redock := true;
+        end;
+    end
+
 end;
 
 {---------------------------------------}
@@ -1016,11 +1049,10 @@ begin
     timMemory.Enabled := false;
 end;
 
-procedure TfrmChat.FormDeactivate(Sender: TObject);
+procedure TfrmChat.FormActivate(Sender: TObject);
 begin
   inherited;
-    if ((Docked) and (Visible = false)) then
-        frmExodus.ChatHiding := true;
+    if (_redock) then _redock := false;
 end;
 
 end.
