@@ -544,9 +544,9 @@ const
   HKEY_DYN_DATA         = DWORD($80000006);
 
   function GetProcAddress(hModule: HMODULE; lpProcName: LPCSTR): FARPROC;
-    stdcall; external 'kernel32' name 'GetProcAddress';
+    stdcall; external 'kernel32.dll' name 'GetProcAddress';
   function LoadLibrary(lpLibFileName: PChar): HMODULE;
-    stdcall; external 'kernel32' name 'LoadLibraryA';
+    stdcall; external 'kernel32.dll' name 'LoadLibraryA';
 
 function LoadAspell(dllname:string=ASPELLDLL):boolean;
 var AspellHandle:THandle;

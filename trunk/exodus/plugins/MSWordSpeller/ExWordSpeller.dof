@@ -98,7 +98,7 @@ SearchPath=..\..\components
 Packages=vcl;rtl;vclshlctrls
 Conditionals=
 DebugSourceDirs=
-UsePackages=1
+UsePackages=0
 [Parameters]
 RunParams=-d -c plugin.xml
 HostApplication=D:\src\exodus\exodus\exodus.exe
