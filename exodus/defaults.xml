@@ -47,7 +47,7 @@
     <inline_color value="8421376" control="cboInlineStatus"/>
     <nested_groups value="1" control="chkNestedGrps"/>
     <group_seperator value="/" control="txtGrpSeperator"/>
-    <roster_avatars value="true" control="chkRosterAvatars"/>
+    <roster_avatars value="false" control="chkRosterAvatars"/>
     
     <!-- Roster Group Options -->
     <roster_sort value="0" control="chkSort"/>

@@ -12,21 +12,21 @@ inherited frmChat: TfrmChat
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
-    Top = 244
+    Top = 240
   end
   inherited pnlMsgList: TPanel
-    Top = 24
-    Height = 220
+    Top = 32
+    Height = 208
   end
   inherited pnlInput: TPanel
-    Top = 247
+    Top = 243
     inherited MsgOut: TExRichEdit
       WantReturns = False
       OnChange = MsgOutChange
     end
   end
   inherited Panel1: TPanel
-    Height = 24
+    Height = 32
     object btnClose: TSpeedButton
       Left = 354
       Top = 2
@@ -48,7 +48,7 @@ inherited frmChat: TfrmChat
       Left = 2
       Top = 2
       Width = 351
-      Height = 20
+      Height = 28
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
@@ -57,7 +57,7 @@ inherited frmChat: TfrmChat
         Left = 0
         Top = 0
         Width = 20
-        Height = 20
+        Height = 28
         Align = alLeft
         ParentShowHint = False
         ShowHint = True
@@ -67,7 +67,7 @@ inherited frmChat: TfrmChat
         Left = 20
         Top = 0
         Width = 39
-        Height = 20
+        Height = 28
         Align = alLeft
         Caption = ' Foo '#32072#32073#32074#32075' '
         Layout = tlCenter
@@ -77,12 +77,20 @@ inherited frmChat: TfrmChat
         Left = 59
         Top = 0
         Width = 28
-        Height = 20
+        Height = 28
         Cursor = crHandPoint
         Align = alLeft
         Caption = '<JID>'
         Layout = tlCenter
         OnClick = lblJIDClick
+      end
+      object imgAvatar: TPaintBox
+        Left = 316
+        Top = 0
+        Width = 35
+        Height = 28
+        Align = alRight
+        OnPaint = imgAvatarPaint
       end
     end
   end

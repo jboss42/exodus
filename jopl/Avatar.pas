@@ -39,6 +39,7 @@ type
         _hash: string;  // contains the sha1 hash
         _data: string;  // contains the base64 encoded image
         _iq: TJabberIQ;
+        _height, _width: integer;
 
         procedure _genData();
         function getMimeType(): string;
@@ -62,6 +63,8 @@ type
         function  getHash(): string;
         property  Data: string read _data;
         property  MimeType: string read getMimeType;
+        property  Height: integer read _height;
+        property  Width: integer read _width;
     end;
 
     TAvatarCache = class
@@ -149,14 +152,17 @@ begin
     ext := Lowercase(ExtractFileExt(filename));
     if (ext = '.gif') then begin
         _pic := TGifImage.Create();
+        _pic.Transparent := true;
         _pic.LoadFromFile(filename);
     end
     else if ((ext = '.jpg') or (ext = '.jpeg')) then begin
         _pic := TJpegImage.Create();
+        _pic.Transparent := true;
         _pic.LoadFromFile(filename);
     end
     else if (ext = '.bmp') then begin
         _pic := TBitmap.Create();
+        _pic.Transparent := true;
         _pic.LoadFromFile(filename);
     end
     else begin
@@ -186,6 +192,9 @@ begin
     c := TIdEncoderMime.Create(nil);
     _data := c.Encode(m);
     c.Free();
+
+    _height := _pic.Height;
+    _width := _pic.Width;
 
     Valid := true;
 end;
@@ -380,6 +389,7 @@ begin
         tmpjid := TJabberID.Create(jid);
         Avatars.Add(tmpjid.jid, Self);
         tmpjid.Free();
+        MainSession.FireEvent('/session/avatars', nil);
     end;
 end;
 
@@ -552,7 +562,8 @@ begin
             items := root.QueryTags('item');
             for i := 0 to items.Count - 1 do begin
                 t := items[i];
-                name := path + '\' + t.GetAttribute('name');
+                //name := path + '\' + t.GetAttribute('name');
+                name := t.GetAttribute('name');
                 jid := t.GetAttribute('jid');
                 if ((jid <> '') and (name <> '') and (FileExists(name))) then begin
                     a := TAvatar.Create();

@@ -629,6 +629,11 @@ begin
 
     // we are getting server side prefs
     else if event = '/session/server_prefs' then begin
+    end
+
+    // we got a new avatar in the cache
+    else if (event = '/session/avatars') then begin
+        treeRoster.Refresh();
     end;
 end;
 
