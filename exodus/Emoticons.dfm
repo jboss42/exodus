@@ -1,6 +1,6 @@
 object frmEmoticons: TfrmEmoticons
-  Left = 235
-  Top = 413
+  Left = 280
+  Top = 341
   BorderIcons = []
   BorderStyle = bsNone
   Caption = 'frmEmoticons'
@@ -30,7 +30,7 @@ object frmEmoticons: TfrmEmoticons
     Caption = 'ToolBar1'
     EdgeBorders = []
     Flat = True
-    Images = Exodus.imgMSNEmoticons
+    Images = frmExodus.imgMSNEmoticons
     TabOrder = 0
     OnClick = ToolBar1Click
     object ToolButton1: TToolButton
@@ -364,7 +364,7 @@ object frmEmoticons: TfrmEmoticons
     Caption = 'ToolBar2'
     EdgeBorders = []
     Flat = True
-    Images = Exodus.imgYahooEmoticons
+    Images = frmExodus.imgYahooEmoticons
     TabOrder = 1
     OnClick = ToolBar1Click
     object ToolButton27: TToolButton
