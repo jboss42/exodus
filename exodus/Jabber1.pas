@@ -3036,12 +3036,10 @@ begin
     end
     else if (f is TfrmRoom) then begin
         Tabs.ActivePage.ImageIndex := ico_conf;
-    end;
-    {
-    else if (Tabs.ActivePage.ImageIndex <> -1) then
-        Tabs.ActivePage.ImageIndex := -1;
-    }
-
+    end
+    else if ((Tabs.ActivePage = tbsRoster) and
+        (tbsRoster.ImageIndex <> ico_ResFolder)) then
+        tbsRoster.ImageIndex := ico_ResFolder;
 
     if (f is TfrmBaseChat) then begin
         if (TfrmBaseChat(f).MsgOut.Visible) then
