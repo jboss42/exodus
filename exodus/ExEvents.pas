@@ -238,7 +238,7 @@ begin
         from := tag.getAttribute('from');
         id := tag.getAttribute('id');
 
-        ns := tag.Namespace;
+        ns := tag.Namespace(true);
         if ns = XMLNS_TIME then begin
             eType := evt_Time;
             data_type := sMsgTime;

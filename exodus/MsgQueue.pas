@@ -226,7 +226,7 @@ begin
         txtMsg.WideLines.Clear
     else begin
         e := TJabberEvent(_queue[lstEvents.Selected.Index]);
-        if ((e <> nil) and (lstEvents.SelCount = 1)) then
+        if ((e <> nil) and (lstEvents.SelCount = 1) and (e.Data.Text <> '')) then
             txtMsg.WideText := e.Data.Text;
         end;
 end;
@@ -303,7 +303,7 @@ begin
         if ((first <> -1) and (first < lstEvents.Items.Count)) then begin
             lstEvents.Selected := lstEvents.Items[first];
             e := TJabberEvent(_queue[first]);
-            if ((e <> nil) and (lstEvents.SelCount = 1)) then
+            if ((e <> nil) and (lstEvents.SelCount = 1) and (e.Data.Text <> '')) then
                 txtMsg.WideText := e.Data.Text;
             end
         else if (lstEvents.Items.Count > 0) then
