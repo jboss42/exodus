@@ -112,7 +112,7 @@ implementation
 
 {$R *.dfm}
 uses
-    RTFMsgList, ClipBrd, Session, MsgDisplay, ShellAPI, Emoticons, Jabber1;
+    RTFMsgList, IEMsgList, ClipBrd, Session, MsgDisplay, ShellAPI, Emoticons, Jabber1;
 
 {---------------------------------------}
 procedure TfrmBaseChat.Emoticons1Click(Sender: TObject);
@@ -302,8 +302,9 @@ begin
     _esc := false;
 
     // XXX: Put IE MsgList frame creation here
-    _msgframe := TfRTFMsgList.Create(Self);
-    
+//    _msgframe := TfRTFMsgList.Create(Self);
+    _msgframe := TfIEMsgList.Create(Self);
+
     with MsgList do begin
         Name := 'msg_list_frame';
         Parent := pnlMsgList;
