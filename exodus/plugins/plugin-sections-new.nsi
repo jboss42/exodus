@@ -1,5 +1,5 @@
 	Section /o "ImportAIM" SEC_ExImportAIM
-	  AddSize 163
+	  AddSize 164
 	  Push "ExImportAIM"
 	  Call DownloadPlugin
       RegDll "$INSTDIR\plugins\ExImportAIM.dll"
@@ -13,42 +13,42 @@
 	SectionEnd
 
 	Section /o "HTMLLogger" SEC_ExHTMLLogger
-	  AddSize 265
+	  AddSize 266
 	  Push "ExHTMLLogger"
 	  Call DownloadPlugin
       RegDll "$INSTDIR\plugins\ExHTMLLogger.dll"
 	SectionEnd
 
 	Section /o "ImportICQ" SEC_ExImportICQ
-	  AddSize 196
+	  AddSize 197
 	  Push "ExImportICQ"
 	  Call DownloadPlugin
       RegDll "$INSTDIR\plugins\ExImportICQ.dll"
 	SectionEnd
 
 	Section /o "JabberStats" SEC_ExJabberStats
-	  AddSize 217
+	  AddSize 218
 	  Push "ExJabberStats"
 	  Call DownloadPlugin
       RegDll "$INSTDIR\plugins\ExJabberStats.dll"
 	SectionEnd
 
 	Section /o "NetMeeting" SEC_ExNetMeeting
-	  AddSize 159
+	  AddSize 160
 	  Push "ExNetMeeting"
 	  Call DownloadPlugin
       RegDll "$INSTDIR\plugins\ExNetMeeting.dll"
 	SectionEnd
 
 	Section /o "RosterTools" SEC_ExRosterTools
-	  AddSize 262
+	  AddSize 263
 	  Push "ExRosterTools"
 	  Call DownloadPlugin
       RegDll "$INSTDIR\plugins\ExRosterTools.dll"
 	SectionEnd
 
 	Section /o "SQLLogger" SEC_ExSQLLogger
-	  AddSize 396
+	  AddSize 424
 	  Push "ExSQLLogger"
 	  Call DownloadPlugin
       RegDll "$INSTDIR\plugins\ExSQLLogger.dll"
