@@ -198,9 +198,21 @@ begin
         end;
     end;
 
+    if (FileIsReadOnly(fn)) then begin
+        MessageDlgW(_('The file you specified to store queued messages is read only. Please specify another file'),
+            mtError, [mbOK], 0);
+        exit;
+    end;
+
     ss := TStringlist.Create();
-    ss.Add(UTF8Encode(s.xml));
-    ss.SaveToFile(fn);
+    try
+        ss.Add(UTF8Encode(s.xml));
+        ss.SaveToFile(fn);
+    except
+        MessageDlgW(Format(_('There was an error trying to write to the file: %s'), [fn]),
+            mtError, [mbOK], 0);
+    end;
+
     ss.Free();
     s.Free();
 end;
