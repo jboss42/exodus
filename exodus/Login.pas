@@ -28,11 +28,6 @@ uses
 
 type
   TfrmLogin = class(TForm)
-    Label1: TLabel;
-    Label2: TLabel;
-    Label3: TLabel;
-    Label4: TLabel;
-    cboServer: TTntComboBox;
     frameButtons1: TframeButtons;
     Label5: TLabel;
     cboProfiles: TTntComboBox;
@@ -41,10 +36,6 @@ type
     popProfiles: TPopupMenu;
     CreateNew1: TMenuItem;
     Delete1: TMenuItem;
-    chkSavePasswd: TCheckBox;
-    txtUsername: TTntEdit;
-    txtPassword: TTntEdit;
-    cboResource: TTntComboBox;
 
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cboProfilesChange(Sender: TObject);
@@ -53,7 +44,6 @@ type
     procedure CreateNew1Click(Sender: TObject);
     procedure Delete1Click(Sender: TObject);
     procedure Label5Click(Sender: TObject);
-    procedure txtUsernameKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
   public
@@ -72,11 +62,6 @@ resourcestring
     sProfileNew = 'Untitled Profile';
     sProfileCreate = 'New Profile';
     sProfileNamePrompt = 'Enter Profile Name';
-    sProfileInvalidJid = 'The Jabber ID you entered (username@server/resource) is invalid. Please enter a valid username, server, and resource.';
-
-    sResourceWork = 'Work';
-    sResourceHome = 'Home';
-
 
 {---------------------------------------}
 {---------------------------------------}
@@ -86,7 +71,7 @@ implementation
 {$R *.DFM}
 
 uses
-    Jabber1,  JabberID, Unicode, InputPassword, 
+    ExUtils, Jabber1,  JabberID, Unicode, InputPassword, 
     ConnDetails, PrefController;
 
 {---------------------------------------}
@@ -109,13 +94,6 @@ begin
         // Save the info on the profile and login
         i := l.cboProfiles.ItemIndex;
         p := TJabberProfile(MainSession.Prefs.Profiles.Objects[i]);
-
-        // Update the profile
-        p.Server := l.cboServer.Text;
-        p.Username := l.txtUsername.Text;
-        p.SavePasswd := l.chkSavePasswd.Checked;
-        p.password := l.txtPassword.Text;
-        p.resource := l.cboResource.Text;
 
         if (Trim(p.Resource) = '') then
             p.Resource := sProfileDefaultResource;
@@ -144,50 +122,14 @@ end;
 
 {---------------------------------------}
 procedure TfrmLogin.cboProfilesChange(Sender: TObject);
-var
-    i: integer;
-    p: TJabberProfile;
 begin
-    // Display this profile..
-    i := cboProfiles.ItemIndex;
-    p := TJabberProfile(MainSession.Prefs.Profiles.Objects[i]);
-
-    // populate the fields
-    txtUsername.Text := p.Username;
-    txtPassword.Text := p.Password;
-    cboServer.Text := p.Server;
-    cboResource.Text := p.Resource;
-    chkSavePasswd.Checked := p.SavePasswd;
     chkInvisible.Checked := false;
 end;
 
 {---------------------------------------}
 procedure TfrmLogin.FormCreate(Sender: TObject);
-var
-    list : TWideStrings;
-    i : integer;
 begin
     MainSession.Prefs.RestorePosition(Self);
-
-    list := TWideStringList.Create();
-    fillDefaultStringList('brand_profile_server_list', list);
-    if (list.Count > 0) then begin
-        cboServer.Clear();
-        for i := 0 to list.Count - 1 do
-            cboServer.Items.Add(list[i]);
-    end;
-    fillDefaultStringList('brand_profile_resource_list', list);
-    if (list.Count > 0) then begin
-        cboResource.Clear();
-        for i := 0 to list.Count - 1 do
-            cboResource.Items.Add(list[i]);
-    end
-    else begin
-        cboResource.Items.Add(sResourceHome);
-        cboResource.Items.Add(sResourceWork);
-        cboResource.Items.Add('Exodus');
-    end;
-    list.Free();
 end;
 
 {---------------------------------------}
@@ -206,17 +148,18 @@ procedure TfrmLogin.CreateNew1Click(Sender: TObject);
 var
     pname: WideString;
     i: integer;
+    p : TJabberProfile;
 begin
     // Create a new profile
     pname := sProfileNew;
     if InputQueryW(sProfileCreate, sProfileNamePrompt, pname) then begin
-        MainSession.Prefs.CreateProfile(pname);
+        p := MainSession.Prefs.CreateProfile(pname);
         cboProfiles.Items.Assign(MainSession.Prefs.Profiles);
         i := cboProfiles.Items.Indexof(pname);
         cboProfiles.ItemIndex := i;
         cboProfilesChange(Self);
-        cboResource.Text := sProfileDefaultResource;
-        txtUsername.SetFocus();
+        p.Resource := sProfileDefaultResource;
+        ShowConnDetails(p);
     end;
 end;
 
@@ -253,27 +196,6 @@ begin
     // show the popup
     GetCursorPos(cp);
     popProfiles.Popup(cp.x, cp.y);
-end;
-
-procedure TfrmLogin.txtUsernameKeyPress(Sender: TObject; var Key: Char);
-var
-    u, h, r, jid: Widestring;
-begin
-    // alway allow people to fix mistakes :)
-    if (Key = #8) then exit;
-
-    // check to make sure JID is valid
-    u := txtUsername.Text;
-    h := cboServer.Text;
-    r := cboResource.Text;
-
-    if (Sender = txtUsername) then u := u + Key
-    else if (Sender = cboServer) then h := h + Key
-    else if (Sender = cboResource) then r := r + Key;
-
-    jid := u + '@' + h + '/' + r;
-    if (not isValidJid(jid)) then
-        Key := #0;
 end;
 
 end.
