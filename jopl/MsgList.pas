@@ -174,7 +174,8 @@ begin
                     from_jid.resource, '');
             if (cc <> nil) then exit;
         end
-        else if ((msgt = msg_all_chat) and (mtype = '')) then begin
+        else if ((msgt = msg_all_chat) and (mtype = '') and
+                 (tag.QueryXPTag(XP_XROSTER) = nil)) then begin
             // do we need to do more here??
             exit;
         end;

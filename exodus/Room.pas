@@ -82,6 +82,8 @@ type
     S1: TMenuItem;
     dlgSave: TSaveDialog;
     N6: TMenuItem;
+    Message1: TMenuItem;
+    SendmyJID1: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -115,6 +117,8 @@ type
     procedure mnuWordwrapClick(Sender: TObject);
     procedure NotificationOptions1Click(Sender: TObject);
     procedure S1Click(Sender: TObject);
+    procedure Message1Click(Sender: TObject);
+    procedure SendmyJID1Click(Sender: TObject);
   private
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
@@ -274,6 +278,7 @@ uses
     JabberMsg,
     JoinRoom,
     MsgDisplay,
+    MsgRecv,
     Notify,
     PrefController,
     Presence,
@@ -1726,6 +1731,41 @@ begin
     TExodusChat(COMController).fireMenuClick(Sender);
 end;
 
+
+procedure TfrmRoom.Message1Click(Sender: TObject);
+var
+    rm: TRoomMember;
+    tmp_jid: TJabberID;
+begin
+  inherited;
+    // start chat w/ room participant
+    // Chat w/ this person..
+    rm := GetCurrentMember();
+    if (rm <> nil) then begin
+        tmp_jid := TJabberID.Create(rm.jid);
+        StartMsg(tmp_jid.full);
+        tmp_jid.Free();
+    end;
+end;
+
+procedure TfrmRoom.SendmyJID1Click(Sender: TObject);
+var
+    rm: TRoomMember;
+    ri: TJabberRosterItem;
+    itms: TList;
+begin
+  inherited;
+    // Send my JID to this user
+    rm := GetCurrentMember();
+    if (rm <> nil) then begin
+        ri := MainSession.Roster.Find(MainSession.BareJid);
+        itms := TList.Create();
+        itms.Add(ri);
+        jabberSendRosterItems(rm.jid, itms);
+        itms.Clear();
+        itms.Free();
+    end;
+end;
 
 initialization
     // list for all of the current rooms
