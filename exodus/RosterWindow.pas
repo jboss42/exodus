@@ -2379,14 +2379,16 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.popRenameClick(Sender: TObject);
 var
+    ri: TJabberRosterItem;
     nick: Widestring;
 begin
     // Do this since the treeview doesn't use WideStrings for
     // processing of Editing events
-    nick := _cur_ritem.Nickname;
+    ri := _cur_ritem;
+    nick := ri.Nickname;
     if (InputQueryW('Rename Roster Item', 'New Nickname: ', nick)) then begin
-        _cur_ritem.Nickname := nick;
-        _cur_ritem.update();
+        ri.Nickname := nick;
+        ri.update();
     end;
 end;
 
@@ -2482,7 +2484,7 @@ begin
         exit;
         end;
     end;
-    
+
 end;
 
 
