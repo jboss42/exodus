@@ -226,15 +226,16 @@ object frmRosterWindow: TfrmRosterWindow
     Width = 189
     Height = 161
     Align = alTop
-    BevelOuter = bvNone
+    BevelOuter = bvLowered
     BorderWidth = 4
+    Color = clWindow
     TabOrder = 4
     object lblStatus: TLabel
-      Left = 4
-      Top = 82
-      Width = 181
+      Left = 5
+      Top = 62
+      Width = 179
       Height = 60
-      Align = alBottom
+      Align = alTop
       Alignment = taCenter
       AutoSize = False
       Caption = 'Disconnected.'
@@ -246,12 +247,12 @@ object frmRosterWindow: TfrmRosterWindow
       ParentFont = False
     end
     object lblLogin: TLabel
-      Left = 4
-      Top = 142
-      Width = 181
+      Left = 5
+      Top = 122
+      Width = 179
       Height = 15
       Cursor = crHandPoint
-      Align = alBottom
+      Align = alTop
       Alignment = taCenter
       Caption = 'Click Here to Sign On'
       Font.Charset = ANSI_CHARSET
@@ -262,15 +263,24 @@ object frmRosterWindow: TfrmRosterWindow
       ParentFont = False
       OnClick = lblLoginClick
     end
-    object aniWait: TAnimate
-      Left = 24
-      Top = 19
-      Width = 32
-      Height = 32
-      Active = False
-      FileName = '.\ball.AVI'
-      StopFrame = 8
-      Visible = False
+    object Panel1: TPanel
+      Left = 5
+      Top = 5
+      Width = 179
+      Height = 57
+      Align = alTop
+      BevelOuter = bvNone
+      Color = clWindow
+      TabOrder = 0
+      object aniWait: TAnimate
+        Left = 48
+        Top = 3
+        Width = 32
+        Height = 32
+        Active = False
+        StopFrame = 8
+        Visible = False
+      end
     end
   end
   object ImageList1: TImageList

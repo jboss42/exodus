@@ -86,9 +86,10 @@ type
     popGroupBlock: TMenuItem;
     BroadcastMessage1: TMenuItem;
     pnlConnect: TPanel;
-    aniWait: TAnimate;
     lblStatus: TLabel;
     lblLogin: TLabel;
+    Panel1: TPanel;
+    aniWait: TAnimate;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -251,6 +252,8 @@ begin
 
     aniWait.Filename := '';
     aniWait.ResName := 'Status';
+    pnlConnect.Visible := true;
+    pnlConnect.Align := alClient;
 
     treeRoster.Visible := false;
     pnlStatus.Visible := true;
@@ -340,10 +343,12 @@ begin
         aniWait.Active := false;
         aniWait.Visible := false;
         pnlConnect.Visible := true;
+        pnlConnect.Align := alClient;
         lblStatus.Caption := 'Disconnected.';
         end
     else if event = '/session/connecting' then begin
         pnlConnect.Visible := true;
+        pnlConnect.Align := alClient;
         lblStatus.Visible := true;
         lblStatus.Caption := 'Trying to connect...';
         Self.showAniStatus();
