@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-04-06 08:10\n"
-"PO-Revision-Date: 2004-04-06 08:10\n"
+"POT-Creation-Date: 2004-04-08 09:36\n"
+"PO-Revision-Date: 2004-04-08 09:36\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -178,10 +178,8 @@ msgstr ""
 
 #. frmAbout..InfoBox......Name
 #: About.dfm:1452
-#. frmBaseChat..Panel3..MsgList......Name
-#: BaseChat.dfm:51
 #. frmBaseChat..pnlInput..MsgOut......Name
-#: BaseChat.dfm:175
+#: BaseChat.dfm:62
 #. frmDebug..Panel2..MsgDebug......Name
 #: Debug.dfm:51
 #. frmDebug..Panel2..MemoSend......Name
@@ -194,6 +192,8 @@ msgstr ""
 #: MsgRecv.dfm:174
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:101
+#. fRTFMsgList..MsgList......Name
+#: RTFMsgList.dfm:11
 #. frmPrefFont..colorChat......Name
 #: prefs/PrefFont.dfm:95
 msgid "e-mail"
@@ -201,10 +201,8 @@ msgstr ""
 
 #. frmAbout..InfoBox......Name
 #: About.dfm:1458
-#. frmBaseChat..Panel3..MsgList......Name
-#: BaseChat.dfm:57
 #. frmBaseChat..pnlInput..MsgOut......Name
-#: BaseChat.dfm:181
+#: BaseChat.dfm:68
 #. frmDebug..Panel2..MsgDebug......Name
 #: Debug.dfm:57
 #. frmDebug..Panel2..MemoSend......Name
@@ -217,6 +215,8 @@ msgstr ""
 #: MsgRecv.dfm:180
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:107
+#. fRTFMsgList..MsgList......Name
+#: RTFMsgList.dfm:17
 #. frmPrefFont..colorChat......Name
 #: prefs/PrefFont.dfm:101
 msgid "http"
@@ -224,10 +224,8 @@ msgstr ""
 
 #. frmAbout..InfoBox......Name
 #: About.dfm:1464
-#. frmBaseChat..Panel3..MsgList......Name
-#: BaseChat.dfm:63
 #. frmBaseChat..pnlInput..MsgOut......Name
-#: BaseChat.dfm:187
+#: BaseChat.dfm:74
 #. frmDebug..Panel2..MsgDebug......Name
 #: Debug.dfm:63
 #. frmDebug..Panel2..MemoSend......Name
@@ -240,6 +238,8 @@ msgstr ""
 #: MsgRecv.dfm:186
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:113
+#. fRTFMsgList..MsgList......Name
+#: RTFMsgList.dfm:23
 #. frmPrefFont..colorChat......Name
 #: prefs/PrefFont.dfm:107
 msgid "file"
@@ -247,10 +247,8 @@ msgstr ""
 
 #. frmAbout..InfoBox......Name
 #: About.dfm:1470
-#. frmBaseChat..Panel3..MsgList......Name
-#: BaseChat.dfm:69
 #. frmBaseChat..pnlInput..MsgOut......Name
-#: BaseChat.dfm:193
+#: BaseChat.dfm:80
 #. frmDebug..Panel2..MsgDebug......Name
 #: Debug.dfm:69
 #. frmDebug..Panel2..MemoSend......Name
@@ -263,6 +261,8 @@ msgstr ""
 #: MsgRecv.dfm:192
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:119
+#. fRTFMsgList..MsgList......Name
+#: RTFMsgList.dfm:29
 #. frmPrefFont..colorChat......Name
 #: prefs/PrefFont.dfm:113
 msgid "mailto"
@@ -270,10 +270,8 @@ msgstr ""
 
 #. frmAbout..InfoBox......Name
 #: About.dfm:1476
-#. frmBaseChat..Panel3..MsgList......Name
-#: BaseChat.dfm:75
 #. frmBaseChat..pnlInput..MsgOut......Name
-#: BaseChat.dfm:199
+#: BaseChat.dfm:86
 #. frmDebug..Panel2..MsgDebug......Name
 #: Debug.dfm:75
 #. frmDebug..Panel2..MemoSend......Name
@@ -286,6 +284,8 @@ msgstr ""
 #: MsgRecv.dfm:198
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:125
+#. fRTFMsgList..MsgList......Name
+#: RTFMsgList.dfm:35
 #. frmPrefFont..colorChat......Name
 #: prefs/PrefFont.dfm:119
 msgid "ftp"
@@ -293,10 +293,8 @@ msgstr ""
 
 #. frmAbout..InfoBox......Name
 #: About.dfm:1482
-#. frmBaseChat..Panel3..MsgList......Name
-#: BaseChat.dfm:81
 #. frmBaseChat..pnlInput..MsgOut......Name
-#: BaseChat.dfm:205
+#: BaseChat.dfm:92
 #. frmDebug..Panel2..MsgDebug......Name
 #: Debug.dfm:81
 #. frmDebug..Panel2..MemoSend......Name
@@ -309,6 +307,8 @@ msgstr ""
 #: MsgRecv.dfm:204
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:131
+#. fRTFMsgList..MsgList......Name
+#: RTFMsgList.dfm:41
 #. frmPrefFont..colorChat......Name
 #: prefs/PrefFont.dfm:125
 msgid "https"
@@ -316,10 +316,8 @@ msgstr ""
 
 #. frmAbout..InfoBox......Name
 #: About.dfm:1488
-#. frmBaseChat..Panel3..MsgList......Name
-#: BaseChat.dfm:87
 #. frmBaseChat..pnlInput..MsgOut......Name
-#: BaseChat.dfm:211
+#: BaseChat.dfm:98
 #. frmDebug..Panel2..MsgDebug......Name
 #: Debug.dfm:87
 #. frmDebug..Panel2..MemoSend......Name
@@ -332,6 +330,8 @@ msgstr ""
 #: MsgRecv.dfm:210
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:137
+#. fRTFMsgList..MsgList......Name
+#: RTFMsgList.dfm:47
 #. frmPrefFont..colorChat......Name
 #: prefs/PrefFont.dfm:131
 msgid "gopher"
@@ -339,10 +339,8 @@ msgstr ""
 
 #. frmAbout..InfoBox......Name
 #: About.dfm:1494
-#. frmBaseChat..Panel3..MsgList......Name
-#: BaseChat.dfm:93
 #. frmBaseChat..pnlInput..MsgOut......Name
-#: BaseChat.dfm:217
+#: BaseChat.dfm:104
 #. frmDebug..Panel2..MsgDebug......Name
 #: Debug.dfm:93
 #. frmDebug..Panel2..MemoSend......Name
@@ -355,6 +353,8 @@ msgstr ""
 #: MsgRecv.dfm:216
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:143
+#. fRTFMsgList..MsgList......Name
+#: RTFMsgList.dfm:53
 #. frmPrefFont..colorChat......Name
 #: prefs/PrefFont.dfm:137
 msgid "nntp"
@@ -362,10 +362,8 @@ msgstr ""
 
 #. frmAbout..InfoBox......Name
 #: About.dfm:1500
-#. frmBaseChat..Panel3..MsgList......Name
-#: BaseChat.dfm:99
 #. frmBaseChat..pnlInput..MsgOut......Name
-#: BaseChat.dfm:223
+#: BaseChat.dfm:110
 #. frmDebug..Panel2..MsgDebug......Name
 #: Debug.dfm:99
 #. frmDebug..Panel2..MemoSend......Name
@@ -378,6 +376,8 @@ msgstr ""
 #: MsgRecv.dfm:222
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:149
+#. fRTFMsgList..MsgList......Name
+#: RTFMsgList.dfm:59
 #. frmPrefFont..colorChat......Name
 #: prefs/PrefFont.dfm:143
 msgid "prospero"
@@ -385,10 +385,8 @@ msgstr ""
 
 #. frmAbout..InfoBox......Name
 #: About.dfm:1506
-#. frmBaseChat..Panel3..MsgList......Name
-#: BaseChat.dfm:105
 #. frmBaseChat..pnlInput..MsgOut......Name
-#: BaseChat.dfm:229
+#: BaseChat.dfm:116
 #. frmDebug..Panel2..MsgDebug......Name
 #: Debug.dfm:105
 #. frmDebug..Panel2..MemoSend......Name
@@ -401,6 +399,8 @@ msgstr ""
 #: MsgRecv.dfm:228
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:155
+#. fRTFMsgList..MsgList......Name
+#: RTFMsgList.dfm:65
 #. frmPrefFont..colorChat......Name
 #: prefs/PrefFont.dfm:149
 msgid "telnet"
@@ -408,10 +408,8 @@ msgstr ""
 
 #. frmAbout..InfoBox......Name
 #: About.dfm:1512
-#. frmBaseChat..Panel3..MsgList......Name
-#: BaseChat.dfm:111
 #. frmBaseChat..pnlInput..MsgOut......Name
-#: BaseChat.dfm:235
+#: BaseChat.dfm:122
 #. frmDebug..Panel2..MsgDebug......Name
 #: Debug.dfm:111
 #. frmDebug..Panel2..MemoSend......Name
@@ -424,6 +422,8 @@ msgstr ""
 #: MsgRecv.dfm:234
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:161
+#. fRTFMsgList..MsgList......Name
+#: RTFMsgList.dfm:71
 #. frmPrefFont..colorChat......Name
 #: prefs/PrefFont.dfm:155
 msgid "news"
@@ -431,10 +431,8 @@ msgstr ""
 
 #. frmAbout..InfoBox......Name
 #: About.dfm:1518
-#. frmBaseChat..Panel3..MsgList......Name
-#: BaseChat.dfm:117
 #. frmBaseChat..pnlInput..MsgOut......Name
-#: BaseChat.dfm:241
+#: BaseChat.dfm:128
 #. frmDebug..Panel2..MsgDebug......Name
 #: Debug.dfm:117
 #. frmDebug..Panel2..MemoSend......Name
@@ -447,6 +445,8 @@ msgstr ""
 #: MsgRecv.dfm:240
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:167
+#. fRTFMsgList..MsgList......Name
+#: RTFMsgList.dfm:77
 #. frmPrefFont..colorChat......Name
 #: prefs/PrefFont.dfm:161
 msgid "wais"
@@ -558,66 +558,56 @@ msgstr ""
 msgid "Mozilla/3.0 (compatible; Indy Library)"
 msgstr ""
 
-#. frmBaseChat..Panel3..Caption
+#. frmBaseChat..pnlMsgList..Caption
 #: BaseChat.dfm:40
 msgid "pnlMsgs"
 msgstr ""
 
-#. frmBaseChat..Panel3..MsgList......Name
-#: BaseChat.dfm:123
-msgid "xmpp"
-msgstr ""
-
-#. frmBaseChat..Panel3..MsgList......Name
-#: BaseChat.dfm:129
-msgid "jabber"
-msgstr ""
-
 #. frmBaseChat..popMsgList..Copy1..Caption
-#: BaseChat.dfm:285
+#: BaseChat.dfm:172
 #. frmBaseChat..popOut..Copy3..Caption
-#: BaseChat.dfm:305
+#: BaseChat.dfm:192
 #. frmMsgRecv..popClipboard..popCopy..Caption
 #: MsgRecv.dfm:536
 msgid "Copy"
 msgstr ""
 
 #. frmBaseChat..popMsgList..CopyAll1..Caption
-#: BaseChat.dfm:289
+#: BaseChat.dfm:176
 msgid "Copy All"
 msgstr ""
 
 #. frmBaseChat..popMsgList..Clear1..Caption
-#: BaseChat.dfm:293
+#: BaseChat.dfm:180
 #. frmPrefPresence..pnlCustomPresButtons..btnCustomPresClear..Caption
 #: prefs/PrefPresence.dfm:57
 msgid "Clear"
 msgstr ""
 
 #. frmBaseChat..popOut..Copy2..Caption
-#: BaseChat.dfm:301
+#: BaseChat.dfm:188
 msgid "Cut"
 msgstr ""
 
 #. frmBaseChat..popOut..Paste2..Caption
-#: BaseChat.dfm:309
+#: BaseChat.dfm:196
 msgid "Paste "
 msgstr ""
 
 #. frmBaseChat..popOut..N2..Caption
-#: BaseChat.dfm:313
+#: BaseChat.dfm:200
 #. frmBaseChat..popOut..emot_sep..Caption
-#: BaseChat.dfm:321
+#: BaseChat.dfm:208
 #. frmBrowse..popContext..N1..Caption
 #: Browser.dfm:3869
 #. frmChat..popContact..N5..Caption
-#: ChatWin.dfm:109
+#: ChatWin.dfm:105
 #. frmChat..popContact..N4..Caption
-#: ChatWin.dfm:116
+#: ChatWin.dfm:112
 #. frmChat..popContact..N1..Caption
-#: ChatWin.dfm:150
+#: ChatWin.dfm:146
 #. frmChat..popContact..N3..Caption
-#: ChatWin.dfm:169
+#: ChatWin.dfm:165
 #. frmDebug..PopupMenu1..N1..Caption
 #: Debug.dfm:304
 #. frmExodus..MainMenu1..Exodus1..N7..Caption
@@ -667,7 +657,7 @@ msgstr ""
 #. frmRoom..popRoomRoster..N7..Caption
 #: Room.dfm:287
 #. frmRoom..popRoomRoster..N3..Caption
-#: Room.dfm:300
+#: Room.dfm:305
 #. frmRosterWindow..popRoster..popPresence..N2..Caption
 #: RosterWindow.dfm:360
 #. frmRosterWindow..popRoster..N1..Caption
@@ -688,7 +678,7 @@ msgid "-"
 msgstr ""
 
 #. frmBaseChat..popOut..Emoticons2..Caption
-#: BaseChat.dfm:316
+#: BaseChat.dfm:203
 msgid "Emoticons"
 msgstr ""
 
@@ -774,7 +764,7 @@ msgstr ""
 #. frmBrowse..pnlTop..btnClose..Font.Name
 #: Browser.dfm:136
 #. frmChat..Panel1..btnClose..Font.Name
-#: ChatWin.dfm:44
+#: ChatWin.dfm:40
 #. frmDebug..pnlTop..btnClose..Font.Name
 #: Debug.dfm:257
 #. frmTracer..Panel1..Font.Name
@@ -812,7 +802,7 @@ msgstr ""
 #. frmBrowse..pnlTop..btnClose..Caption
 #: Browser.dfm:131
 #. frmChat..Panel1..btnClose..Caption
-#: ChatWin.dfm:39
+#: ChatWin.dfm:35
 #. frmDebug..pnlTop..btnClose..Caption
 #: Debug.dfm:252
 #. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..Panel1..btnClose..Caption
@@ -1014,35 +1004,40 @@ msgstr ""
 msgid "Join Conference"
 msgstr ""
 
+#. frmBrowse..popContext..mAddContact..Caption
+#: Browser.dfm:3900
+msgid "Add this Contact "
+msgstr ""
+
 #. frmChat..Caption
 #: ChatWin.dfm:6
 msgid "Chat Window"
 msgstr ""
 
 #. frmChat..Panel1..pnlJID..lblNick..Caption_UTF7
-#: ChatWin.dfm:78
+#: ChatWin.dfm:74
 msgid " Foo +fUh9SX1KfUs "
 msgstr ""
 
 #. frmChat..Panel1..pnlJID..lblJID..Caption
-#: ChatWin.dfm:87
+#: ChatWin.dfm:83
 #. frmRosterRecv..pnlFrom..txtFrom..Caption
 #: RosterRecv.dfm:80
 msgid "<JID>"
 msgstr ""
 
 #. frmChat..popContact..mnuSave..Caption
-#: ChatWin.dfm:97
+#: ChatWin.dfm:93
 msgid "Save Conversation"
 msgstr ""
 
 #. frmChat..popContact..mnuHistory..Caption
-#: ChatWin.dfm:101
+#: ChatWin.dfm:97
 msgid "Show History ..."
 msgstr ""
 
 #. frmChat..popContact..popClearHistory..Caption
-#: ChatWin.dfm:105
+#: ChatWin.dfm:101
 #. frmMsgRecv..popContact..popClearHistory..Caption
 #: MsgRecv.dfm:488
 #. frmRoom..popRoom..popClearHistory..Caption
@@ -1051,7 +1046,7 @@ msgid "Clear History"
 msgstr ""
 
 #. frmChat..popContact..popResources..Caption
-#: ChatWin.dfm:113
+#: ChatWin.dfm:109
 #. frmMsgRecv..popContact..mnuResources..Caption
 #: MsgRecv.dfm:523
 #. frmProfile..PageControl1..TabSheet7..Caption
@@ -1061,27 +1056,27 @@ msgid "Resources"
 msgstr ""
 
 #. frmChat..popContact..mnuSendFile..Caption
-#: ChatWin.dfm:119
+#: ChatWin.dfm:115
 msgid "Send File ..."
 msgstr ""
 
 #. frmChat..popContact..popAddContact..Caption
-#: ChatWin.dfm:123
+#: ChatWin.dfm:119
 msgid "Add to roster ..."
 msgstr ""
 
 #. frmChat..popContact..mnuProfile..Caption
-#: ChatWin.dfm:127
+#: ChatWin.dfm:123
 msgid "Show Profile ..."
 msgstr ""
 
 #. frmChat..popContact..C1..Caption
-#: ChatWin.dfm:131
+#: ChatWin.dfm:127
 msgid "Contact Info"
 msgstr ""
 
 #. frmChat..popContact..C1..mnuVersionRequest..Caption
-#: ChatWin.dfm:133
+#: ChatWin.dfm:129
 #. frmMsgRecv..popContact..C1..mnuVersionRequest..Caption
 #: MsgRecv.dfm:498
 #. frmRosterWindow..popRoster..popClientInfo..popVersion..Caption
@@ -1090,7 +1085,7 @@ msgid "Version Request"
 msgstr ""
 
 #. frmChat..popContact..C1..mnuTimeRequest..Caption
-#: ChatWin.dfm:137
+#: ChatWin.dfm:133
 #. frmMsgRecv..popContact..C1..mnuTimeRequest..Caption
 #: MsgRecv.dfm:502
 #. frmRosterWindow..popRoster..popClientInfo..popTime..Caption
@@ -1099,7 +1094,7 @@ msgid "Time Request"
 msgstr ""
 
 #. frmChat..popContact..C1..mnuLastActivity..Caption
-#: ChatWin.dfm:141
+#: ChatWin.dfm:137
 #. frmMsgRecv..popContact..C1..mnuLastActivity..Caption
 #: MsgRecv.dfm:506
 #. frmProfile..PageControl1..TabSheet7..Panel2..btnLast..Caption
@@ -1111,45 +1106,45 @@ msgid "Last Activity"
 msgstr ""
 
 #. frmChat..popContact..mnuBlock..Caption
-#: ChatWin.dfm:146
+#: ChatWin.dfm:142
 #. frmMsgRecv..popContact..mnuBlock..Caption
 #: MsgRecv.dfm:511
 msgid "Block Contact"
 msgstr ""
 
 #. frmChat..popContact..NotificationOptions1..Caption
-#: ChatWin.dfm:153
+#: ChatWin.dfm:149
 #. frmRoom..popRoom..NotificationOptions1..Caption
 #: Room.dfm:246
 msgid "Notification Options ..."
 msgstr ""
 
 #. frmChat..popContact..mnuOnTop..Caption
-#: ChatWin.dfm:157
+#: ChatWin.dfm:153
 #. frmRoom..popRoom..mnuOnTop..Caption
 #: Room.dfm:254
 msgid "Always on Top"
 msgstr ""
 
 #. frmChat..popContact..mnuReturns..Caption
-#: ChatWin.dfm:161
+#: ChatWin.dfm:157
 msgid "Embed Returns"
 msgstr ""
 
 #. frmChat..popContact..mnuWordwrap..Caption
-#: ChatWin.dfm:165
+#: ChatWin.dfm:161
 #. frmRoom..popRoom..mnuWordwrap..Caption
 #: Room.dfm:250
 msgid "Word Wrap Input"
 msgstr ""
 
 #. frmChat..SaveDialog1..DefaultExt
-#: ChatWin.dfm:180
+#: ChatWin.dfm:176
 msgid "html"
 msgstr ""
 
 #. frmChat..SaveDialog1..Filter
-#: ChatWin.dfm:181
+#: ChatWin.dfm:177
 msgid "RTF Files|*.rtf|All Files|*.*"
 msgstr ""
 
@@ -1476,10 +1471,10 @@ msgstr ""
 #: CustomPres.dfm:75
 #. frmRoom..popRoomRoster..popRosterChat..Caption
 #: Room.dfm:275
-#: ChatWin.pas:460
-#: ChatWin.pas:472
-#: ChatWin.pas:474
-#: ChatWin.pas:476
+#: ChatWin.pas:452
+#: ChatWin.pas:464
+#: ChatWin.pas:466
+#: ChatWin.pas:468
 msgid "Chat"
 msgstr ""
 
@@ -5932,37 +5927,37 @@ msgstr ""
 #. frmRoom..popRoom..popAdmin..popVoiceList..Caption
 #: Room.dfm:204
 #. edit a list
-#: Room.pas:1979
+#: Room.pas:1988
 msgid "Edit Voice List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popBanList..Caption
 #: Room.dfm:208
-#: Room.pas:1981
+#: Room.pas:1990
 msgid "Edit Ban List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popMemberList..Caption
 #: Room.dfm:212
-#: Room.pas:1983
+#: Room.pas:1992
 msgid "Edit Member List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popModeratorList..Caption
 #: Room.dfm:216
-#: Room.pas:1985
+#: Room.pas:1994
 msgid "Edit Moderator List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popAdminList..Caption
 #: Room.dfm:223
-#: Room.pas:1987
+#: Room.pas:1996
 msgid "Edit Admin List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popOwnerList..Caption
 #: Room.dfm:227
-#: Room.pas:1989
+#: Room.pas:1998
 msgid "Edit Owner List"
 msgstr ""
 
@@ -5973,7 +5968,7 @@ msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popDestroy..Caption
 #: Room.dfm:238
-#: Room.pas:2003
+#: Room.pas:2012
 msgid "Destroy Room"
 msgstr ""
 
@@ -5993,7 +5988,7 @@ msgstr ""
 #: RosterWindow.dfm:380
 #. frmRosterWindow..popGroup..popGroupBlock..Caption
 #: RosterWindow.dfm:634
-#: Room.pas:1702
+#: Room.pas:1710
 #: RosterWindow.pas:2087
 #. do blocking madness
 #: RosterWindow.pas:2124
@@ -6008,46 +6003,51 @@ msgstr ""
 
 #. frmRoom..popRoomRoster..popRosterVCard..Caption
 #: Room.dfm:295
-msgid "Lookup vCard"
+msgid "Contact's Profile"
+msgstr ""
+
+#. frmRoom..popRoomRoster..popRosterBrowse..Caption
+#: Room.dfm:300
+msgid "Browse contact"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popKick..Caption
-#: Room.dfm:303
+#: Room.dfm:308
 msgid "Kick"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popBan..Caption
-#: Room.dfm:308
+#: Room.dfm:313
 msgid "Ban"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popVoice..Caption
-#: Room.dfm:313
+#: Room.dfm:318
 msgid "Toggle Voice"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popModerator..Caption
-#: Room.dfm:318
+#: Room.dfm:323
 msgid "Make Moderator"
 msgstr ""
 
 #. frmRoom..popRoomRoster..popAdministrator..Caption
-#: Room.dfm:323
+#: Room.dfm:328
 msgid "Make Administrator"
 msgstr ""
 
 #. frmRoom..dlgSave..DefaultExt
-#: Room.dfm:329
+#: Room.dfm:334
 msgid ".rtf"
 msgstr ""
 
 #. frmRoom..dlgSave..Filter
-#: Room.dfm:330
+#: Room.dfm:335
 msgid "RTF (*.rtf)|*.rtf|Text (*.txt)|*.txt"
 msgstr ""
 
 #. frmRoom..dlgSave..Title
-#: Room.dfm:333
+#: Room.dfm:338
 msgid "Save Room Contents"
 msgstr ""
 
@@ -6300,6 +6300,16 @@ msgstr ""
 msgid "Properties ..."
 msgstr ""
 
+#. fRTFMsgList..MsgList......Name
+#: RTFMsgList.dfm:83
+msgid "xmpp"
+msgstr ""
+
+#. fRTFMsgList..MsgList......Name
+#: RTFMsgList.dfm:89
+msgid "jabber"
+msgstr ""
+
 #. frmSelContact..Caption
 #: SelContact.dfm:6
 msgid "Select Contact"
@@ -6499,77 +6509,77 @@ msgid "Error: %s"
 msgstr ""
 
 #. Actually Browse to the JID entered in the address box
-#: Browser.pas:210
+#: Browser.pas:211
 msgid "The Jabber ID you entered is invalid."
 msgstr ""
 
-#: Browser.pas:638
+#: Browser.pas:649
 msgid "Objects"
 msgstr ""
 
 #. Setup the cache'd old versions in ChangePresImage
-#: ChatWin.pas:554
+#: ChatWin.pas:546
 msgid " is replying."
 msgstr ""
 
-#: ChatWin.pas:633
+#: ChatWin.pas:625
 msgid "Chat Activity: "
 msgstr ""
 
-#: ChatWin.pas:751
+#: ChatWin.pas:743
 #. post a msg to the window and disable the text input box.
-#: Room.pas:845
+#: Room.pas:847
 msgid "You have been disconnected."
 msgstr ""
 
 #. if this jid just got blocked, just close the window.
-#: ChatWin.pas:768
+#: ChatWin.pas:760
 msgid "This user is now blocked."
 msgstr ""
 
 #. Change the bulb
-#: ChatWin.pas:790
+#: ChatWin.pas:782
 #. make sure the user is still connected
-#: ChatWin.pas:835
-#: ChatWin.pas:836
+#: ChatWin.pas:827
+#: ChatWin.pas:828
 msgid "offline"
 msgstr ""
 
-#: ChatWin.pas:792
+#: ChatWin.pas:784
 msgid "unknown"
 msgstr ""
 
-#: ChatWin.pas:794
+#: ChatWin.pas:786
 msgid "away"
 msgstr ""
 
-#: ChatWin.pas:796
+#: ChatWin.pas:788
 msgid "xa"
 msgstr ""
 
-#: ChatWin.pas:798
+#: ChatWin.pas:790
 msgid "dnd"
 msgstr ""
 
-#: ChatWin.pas:800
+#: ChatWin.pas:792
 msgid "chat"
 msgstr ""
 
-#: ChatWin.pas:850
+#: ChatWin.pas:842
 msgid "available"
 msgstr ""
 
-#: ChatWin.pas:854
-#: ChatWin.pas:856
+#: ChatWin.pas:846
+#: ChatWin.pas:848
 msgid "is now"
 msgstr ""
 
 #. check to see if we're already subscribed...
-#: ChatWin.pas:885
+#: ChatWin.pas:877
 msgid "You are already subscribed to this contact"
 msgstr ""
 
-#: ChatWin.pas:1218
+#: ChatWin.pas:1213
 msgid "This chat window is busy. Close anyways?"
 msgstr ""
 
@@ -6677,8 +6687,8 @@ msgstr ""
 
 #: ExEvents.pas:402
 #: ExEvents.pas:403
-#: Room.pas:468
 #: Room.pas:470
+#: Room.pas:472
 msgid "ERROR: "
 msgstr ""
 
@@ -7411,199 +7421,199 @@ msgstr ""
 msgid "Remove this contact from the %s group."
 msgstr ""
 
-#: Room.pas:384
+#: Room.pas:387
 msgid "%s Room"
 msgstr ""
 
 #. if blocked ignore anything they say, even subject changes.
-#: Room.pas:478
-#: Room.pas:1248
-#: Room.pas:1655
+#: Room.pas:480
+#: Room.pas:1250
+#: Room.pas:1662
 #. block
-#: Room.pas:1663
-#: Room.pas:1699
+#: Room.pas:1670
+#: Room.pas:1707
 #. get the data for this person..
-#: Room.pas:2169
+#: Room.pas:2168
 msgid "Blocked"
 msgstr ""
 
 #. check for keywords
-#: Room.pas:490
+#: Room.pas:492
 msgid "Keyword in "
 msgstr ""
 
-#: Room.pas:496
+#: Room.pas:498
 msgid "Activity in "
 msgstr ""
 
-#: Room.pas:737
+#: Room.pas:739
 msgid "Groupchat private message"
 msgstr ""
 
 #. check for various presence errors
-#: Room.pas:920
-#: Room.pas:1162
+#: Room.pas:922
+#: Room.pas:1164
 #. they match
-#: Room.pas:1522
+#: Room.pas:1529
 msgid "Your nickname is already being used. Please select another "
 "one."
 msgstr ""
 
-#: Room.pas:929
+#: Room.pas:931
 msgid "You supplied an invalid password to enter this "
 "room."
 msgstr ""
 
-#: Room.pas:937
+#: Room.pas:939
 msgid "The room is being created. Please try again "
 "later."
 msgstr ""
 
-#: Room.pas:942
+#: Room.pas:944
 msgid "You are not allowed to enter the room. You must be on the member "
 "list."
 msgstr ""
 
-#: Room.pas:947
-#: Room.pas:1161
+#: Room.pas:949
+#: Room.pas:1163
 msgid "You are not on the member list for this room. Try and "
 "register?"
 msgstr ""
 
-#: Room.pas:963
+#: Room.pas:965
 msgid "The room has been destroyed for an unknown "
 "reason."
 msgstr ""
 
 #. this user has changed their nick..
-#: Room.pas:986
-#: Room.pas:1157
+#: Room.pas:988
+#: Room.pas:1159
 msgid "%s is now known as %s."
 msgstr ""
 
-#: Room.pas:994
-#: Room.pas:1155
+#: Room.pas:996
+#: Room.pas:1157
 msgid "%s has been banned from this room. %s"
 msgstr ""
 
-#: Room.pas:995
-#: Room.pas:1158
+#: Room.pas:997
+#: Room.pas:1160
 msgid "%s has been kicked from this room. %s"
 msgstr ""
 
-#: Room.pas:1001
+#: Room.pas:1003
 msgid "%s has left the room."
 msgstr ""
 
-#: Room.pas:1029
+#: Room.pas:1031
 msgid "%s has entered the room."
 msgstr ""
 
 #. someone maybe changed my role
-#: Room.pas:1055
+#: Room.pas:1057
 msgid "You have been granted voice."
 msgstr ""
 
-#: Room.pas:1057
+#: Room.pas:1059
 msgid "Your voice has been revoked."
 msgstr ""
 
-#: Room.pas:1059
+#: Room.pas:1061
 msgid "%s has a new role of %s."
 msgstr ""
 
-#: Room.pas:1156
+#: Room.pas:1158
 msgid "This room has been destroyed."
 msgstr ""
 
-#: Room.pas:1159
+#: Room.pas:1161
 msgid "You are on the ban list for this room."
 msgstr ""
 
-#: Room.pas:1160
+#: Room.pas:1162
 msgid "You are not allowed to create rooms."
 msgstr ""
 
-#: Room.pas:1204
+#: Room.pas:1206
 msgid "There was an error using the default room configuration. Configuring "
 "it manually."
 msgstr ""
 
-#: Room.pas:1345
+#: Room.pas:1352
 msgid "Your room keyword regular expressions are invalid. Keyword matching "
 "will be turned off for this room."
 msgstr ""
 
 #. send the msg out
-#: Room.pas:1485
+#: Room.pas:1492
 msgid "/me has changed the subject to: "
 msgstr ""
 
 #. Change the subject
-#: Room.pas:1498
+#: Room.pas:1505
 msgid "Change room subject"
 msgstr ""
 
-#: Room.pas:1498
+#: Room.pas:1505
 msgid "New subject"
 msgstr ""
 
-#: Room.pas:1541
-#: Room.pas:1541
+#: Room.pas:1548
+#: Room.pas:1548
 msgid "New nickname"
 msgstr ""
 
-#: Room.pas:1564
+#: Room.pas:1571
 msgid "Bookmark Room"
 msgstr ""
 
-#: Room.pas:1564
+#: Room.pas:1571
 msgid "Enter bookmark name:"
 msgstr ""
 
-#: Room.pas:1700
+#: Room.pas:1708
 #: RosterWindow.pas:2083
 #: RosterWindow.pas:2134
 msgid "UnBlock"
 msgstr ""
 
-#: Room.pas:1853
+#: Room.pas:1862
 msgid "Role: "
 msgstr ""
 
-#: Room.pas:1854
+#: Room.pas:1863
 msgid "Affiliation: "
 msgstr ""
 
-#: Room.pas:1881
+#: Room.pas:1890
 msgid "You have been kicked."
 msgstr ""
 
-#: Room.pas:1882
-#: Room.pas:1882
+#: Room.pas:1891
+#: Room.pas:1891
 msgid "Kick Reason"
 msgstr ""
 
-#: Room.pas:1885
+#: Room.pas:1894
 msgid "You have been banned."
 msgstr ""
 
-#: Room.pas:1886
-#: Room.pas:1886
+#: Room.pas:1895
+#: Room.pas:1895
 msgid "Ban Reason"
 msgstr ""
 
 #. Destroy Room
-#: Room.pas:2000
+#: Room.pas:2009
 msgid "Do you really want to destroy the room? All users will be "
 "removed."
 msgstr ""
 
-#: Room.pas:2002
+#: Room.pas:2011
 msgid "The owner has destroyed the room."
 msgstr ""
 
-#: Room.pas:2003
+#: Room.pas:2012
 msgid "Destroy Reason"
 msgstr ""
 
