@@ -42,6 +42,9 @@ uses
     SysUtils, SyncObjs;
 
 type
+
+    TSSLVerifyError = (SVE_NONE, SVE_CNAME, SVE_NOTVALIDYET, SVE_EXPIRED);
+
     TSocketThread = class;
     TXMLSocketStream = class(TXMLStream)
     private
@@ -63,6 +66,8 @@ type
         _ssl_ok:    boolean;
         _timer:     TTimer;
         _profile:   TJabberProfile;
+        _ssl_cert:  string;
+        _ssl_err:   string;
 
         procedure Keepalive(Sender: TObject);
         procedure KillSocket();
@@ -81,6 +86,10 @@ type
         // TODO: make this a real event handler, so that other subclasses
         // know how to get these events more explicitly.
         procedure MsgHandler(var msg: TJabberMsg); message WM_JABBER;
+
+        {$ifdef INDY9}
+        function VerifyPeer(Certificate: TIdX509): TSSLVerifyError;
+        {$endif}
 
     public
         constructor Create(root: String); override;
@@ -394,19 +403,53 @@ begin
     end;
 end;
 }
+{$endif}
 
-{
-function TXMLSocketStream.VerifyPeer(Certificate: TIdX509): Boolean;
+{$ifdef INDY9}
+function TXMLSocketStream.VerifyPeer(Certificate: TIdX509): TSSLVerifyError;
+var
+    res: TSSLVerifyError;
+    sl : TStringList;
+    i  : integer;
+    n  : TDateTime;
 begin
-    if (not _ssl_check) then begin
-        _cert := Certificate;
-        _thread.synchronize(VerifyUI);
-        _ssl_check := true;
+    _ssl_err := '';
+    sl := TStringList.Create();
+    sl.Delimiter := '/';
+    sl.QuoteChar := #0;
+    sl.DelimitedText := Certificate.Subject.OneLine;
+
+    res := SVE_NONE;
+    for i := 0 to sl.Count - 1 do begin
+        if (sl[i] = ('CN=' + _profile.Server)) then begin
+            _ssl_ok := true;
+            break;
+        end;
+    end;
+    sl.Free();
+
+    if (not _ssl_ok) then begin
+        res := SVE_CNAME;
+        _ssl_ok := false;
+        _ssl_err := 'Certificate does not match host: ' + Certificate.Subject.OneLine;
     end;
 
-    result := _ssl_ok;
+    // XXX: Check issuer
+
+    n := Now();
+    if (n < Certificate.NotBefore) then begin
+        res := SVE_NOTVALIDYET;
+        _ssl_ok := false;
+        _ssl_err := 'Certificate not valid until ' + DateTimeToStr(Certificate.NotBefore);
+    end;
+
+    if (n > Certificate.NotAfter) then begin
+        res := SVE_EXPIRED;
+        _ssl_ok := false;
+        _ssl_err := 'Certificate expired on ' + DateTimeToStr(Certificate.NotAfter);
+    end;
+    Result := res;
 end;
-}
 {$endif}
 
 {---------------------------------------}
@@ -449,6 +492,18 @@ begin
                 end;
 
                 _ssl_int.PassThrough := false;
+            end;
+
+            // Validate here, not in onVerifyPeer
+            if ((_profile.ssl) and (_ssl_int <> nil)) then begin
+                if (VerifyPeer(_ssl_int.SSLSocket.PeerCert) <> SVE_NONE) then begin
+                    // KILL SOCKET
+                    // xxx: bubble up _ssl_err
+                    tag := TXMLTag.Create('ssl');
+                    tag.AddCData(_ssl_err);
+                    DoCallbacks('ssl-error', tag);
+                    Disconnect();
+                end;
             end;
 
             {$else}
@@ -541,16 +596,21 @@ procedure TXMLSocketStream._setupSSL();
 begin
     //
     with _ssl_int do begin
+        SSLOptions.Mode := sslmClient;
         SSLOptions.Method :=  sslvTLSv1;
 
         // TODO: get certs from profile, that would be *cool*.
         SSLOptions.CertFile := '';
         SSLOptions.RootCertFile := '';
 
-        // TODO: Indy9 problems... if we try and verify, it disconnects us.
-        // SSLOptions.VerifyMode := [sslvrfPeer, sslvrfFailIfNoPeerCert];
-        // SSLOptions.VerifyDepth := 2;
-        // OnVerifyPeer := VerifyPeer;
+        if (_ssl_cert <> '') then
+            SSLOptions.KeyFile := _ssl_cert;
+
+        // XXX: Indy9 problems... if we try and verify, it disconnects us.
+        //SSLOptions.VerifyMode := [sslvrfPeer, sslvrfFailIfNoPeerCert];
+        //SSLOptions.VerifyMode := [sslvrfPeer];
+        //SSLOptions.VerifyMode := [sslvrfClientOnce];
+        SSLOptions.VerifyDepth := 9;
     end;
 end;
 
@@ -668,6 +728,8 @@ begin
         _socket.Host := _profile.Server
     else
         _socket.Host := _profile.Host;
+
+    _ssl_cert := _profile.SSL_Cert;
 
     // Create the socket reader thread and start it.
     // The thread will open the socket and read all of the data.

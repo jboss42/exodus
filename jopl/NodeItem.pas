@@ -83,6 +83,8 @@ type
         property Parent: TJabberGroup read _parent;
     end;
 
+    TRosterItemAction = (RIA_NONE, RIA_OFFLINE, RIA_ONLINE);
+
     TJabberRosterItem = class(TJabberNodeItem)
     private
         _nickname: WideString;
@@ -94,6 +96,7 @@ type
         ask: string;
         Groups: TWideStringList;
         Data: TObject;
+        Action: TRosterItemAction;
 
         constructor Create; overload;
         destructor Destroy; override;
@@ -493,6 +496,7 @@ begin
     _nickname := '';
     ask := '';
     Data := nil;
+    Action := RIA_NONE;
 end;
 
 {---------------------------------------}

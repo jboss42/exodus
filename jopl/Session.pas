@@ -401,7 +401,6 @@ begin
     // Register our session to get XML Tags
     _stream.RegisterStreamCallback(Self.StreamCallback);
     _stream.OnData := DataEvent;
-
     _stream.Connect(_profile);
 end;
 
@@ -501,6 +500,10 @@ begin
             '>';
         _stream.Send(tmps);
     end
+
+    else if msg = 'ssl-error' then
+        // Throw a dialog box up..
+        _dispatcher.DispatchSignal('/session/sslerror', tag)
 
     else if msg = 'disconnected' then
         Self.handleDisconnect()

@@ -138,6 +138,7 @@ type
         SocksAuth: boolean;
         SocksUsername: string;
         SocksPassword: string;
+        SSL_Cert: string;
 
         // HTTP Connection
         URL: Widestring;
@@ -1290,6 +1291,7 @@ begin
     Host := tag.GetBasicText('host');
     Port := StrToIntDef(tag.GetBasicText('port'), 5222);
     ssl := SafeBool(tag.GetBasicText('ssl'));
+    ssl_cert := tag.GetBasicText('ssl_cert');
     SocksType := StrToIntDef(tag.GetBasicText('socks_type'), 0);
     SocksHost := tag.GetBasicText('socks_host');
     SocksPort := StrToIntDef(tag.GetBasicText('socks_port'), 0);
@@ -1340,6 +1342,7 @@ begin
     node.AddBasicTag('socks_auth', SafeBoolStr(SocksAuth));
     node.AddBasicTag('socks_username', SocksUsername);
     node.AddBasicTag('socks_password', SocksPassword);
+    node.AddBasicTag('ssl_cert', SSL_Cert);
 
     // HTTP Connection
     node.AddBasicTag('url', URL);

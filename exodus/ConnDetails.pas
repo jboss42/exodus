@@ -76,6 +76,10 @@ type
     lblServerList: TTntLabel;
     Label13: TTntLabel;
     chkRegister: TTntCheckBox;
+    TntLabel1: TTntLabel;
+    txtSSLCert: TTntEdit;
+    btnCertBrowse: TTntButton;
+    OpenDialog1: TOpenDialog;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure chkSocksAuthClick(Sender: TObject);
     procedure cboSocksTypeChange(Sender: TObject);
@@ -85,6 +89,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure txtUsernameKeyPress(Sender: TObject; var Key: Char);
     procedure lblServerListClick(Sender: TObject);
+    procedure btnCertBrowseClick(Sender: TObject);
   private
     { Private declarations }
     _profile: TJabberProfile;
@@ -344,6 +349,7 @@ begin
             chkSSL.Checked := ssl;
         cboConnection.ItemIndex := ConnectionType;
         spnPriority.Position := Priority;
+        txtSSLCert.Text := SSL_Cert;
     end;
 end;
 
@@ -356,6 +362,7 @@ begin
         ssl := chkSSL.Checked;
         ConnectionType := cboConnection.ItemIndex;
         Priority := spnPriority.Position;
+        SSL_Cert := txtSSLCert.Text;
     end;
 end;
 
@@ -513,6 +520,13 @@ begin
         q.Free();
     end;
     parser.Free();
+end;
+
+{---------------------------------------}
+procedure TfrmConnDetails.btnCertBrowseClick(Sender: TObject);
+begin
+    if (OpenDialog1.Execute()) then
+        txtSSLCert.Text := OpenDialog1.FileName;
 end;
 
 end.
