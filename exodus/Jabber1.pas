@@ -2128,6 +2128,7 @@ end;
 procedure TfrmExodus.trayMessageClick(Sender: TObject);
 var
     fsel: TfrmSelContact;
+    jid : string;
 begin
     //
     fsel := TfrmSelContact.Create(nil);
@@ -2135,11 +2136,13 @@ begin
     fsel.frameTreeRoster1.treeRoster.MultiSelect := false;
 
     if (fsel.ShowModal = mrOK) then begin
+        jid := fsel.GetSelectedJID();
+        if (jid = '') then exit;
         // do the send
         if (MainSession.Prefs.getBool(P_CHAT)) then
-            StartChat(fsel.GetSelectedJID(), '', true)
+            StartChat(jid, '', true)
         else
-            StartMsg(fsel.GetSelectedJID());
+            StartMsg(jid);
 
         end;
     fSel.Free();
