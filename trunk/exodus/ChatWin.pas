@@ -887,7 +887,6 @@ end;
 procedure TfrmChat.doAddToRoster(Sender: TObject);
 var
     ritem: TJabberRosterItem;
-    add: TfrmAdd;
 begin
   inherited;
     // check to see if we're already subscribed...
@@ -898,9 +897,7 @@ begin
         exit;
     end
     else begin
-        add := ShowAddContact();
-        add.txtJID.Text := _jid.jid;
-        add.txtNickname.Text := _jid.user;
+        ShowAddContact(TJabberID.Create(_jid.full));
     end;
 
 end;

@@ -75,7 +75,7 @@ type
 var
   frmCommandWizard: TfrmCommandWizard;
 
-procedure StartCommandWizard(jid: Widestring; r: TXMLTag);
+procedure StartCommandWizard(jid: Widestring; r: TXMLTag = nil);
 
 {---------------------------------------}
 {---------------------------------------}

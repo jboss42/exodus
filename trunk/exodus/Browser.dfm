@@ -26,16 +26,16 @@ object frmBrowse: TfrmBrowse
     Left = 0
     Top = 84
     Width = 422
-    Height = 291
+    Height = 290
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 3
     TabOrder = 0
     object vwBrowse: TTntListView
-      Left = 145
+      Left = 73
       Top = 3
-      Width = 274
-      Height = 285
+      Width = 346
+      Height = 284
       Align = alClient
       Columns = <
         item
@@ -72,8 +72,8 @@ object frmBrowse: TfrmBrowse
     object pnlInfo: TTntPanel
       Left = 3
       Top = 3
-      Width = 142
-      Height = 285
+      Width = 70
+      Height = 284
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 4
@@ -84,7 +84,7 @@ object frmBrowse: TfrmBrowse
       object lblError: TTntLabel
         Left = 4
         Top = 4
-        Width = 130
+        Width = 58
         Height = 19
         Align = alTop
         Caption = 'Error: '
@@ -100,7 +100,7 @@ object frmBrowse: TfrmBrowse
   end
   object StatBar: TStatusBar
     Left = 0
-    Top = 375
+    Top = 374
     Width = 422
     Height = 20
     Panels = <
@@ -3874,31 +3874,36 @@ object frmBrowse: TfrmBrowse
       OnClick = mVCardClick
     end
     object mVersion: TTntMenuItem
-      Caption = 'Version'
+      Caption = 'Get Version'
       OnClick = mVCardClick
     end
     object mTime: TTntMenuItem
-      Caption = 'Time'
+      Caption = 'Get Time'
       OnClick = mVCardClick
     end
     object mLast: TTntMenuItem
-      Caption = 'Last Time/Activity'
+      Caption = 'Get Last Time/Activity'
       OnClick = mVCardClick
     end
     object mSearch: TTntMenuItem
-      Caption = 'Search'
+      Caption = 'Search ...'
       OnClick = mSearchClick
     end
     object mRegister: TTntMenuItem
-      Caption = 'Register'
+      Caption = 'Register ...'
       OnClick = mRegisterClick
     end
     object mJoinConf: TTntMenuItem
-      Caption = 'Join Conference'
+      Caption = 'Join Conference ...'
       OnClick = mJoinConfClick
     end
     object mAddContact: TTntMenuItem
-      Caption = 'Add this Contact '
+      Caption = 'Add this Contact ... '
+      OnClick = mAddContactClick
+    end
+    object mRunCommand: TTntMenuItem
+      Caption = 'Execute a Command ...'
+      OnClick = mRunCommandClick
     end
   end
 end

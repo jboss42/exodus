@@ -62,7 +62,7 @@ var
 
 function  showXDataEx(tag: TXMLTag): boolean;
 procedure showXData(tag: TXMLTag);
-function buildXData(x: TXMLTag; box: TScrollBox): integer;
+function buildXData(x: TXMLTag; box: TWinControl): integer;
 
 implementation
 
@@ -110,7 +110,7 @@ begin
 end;
 
 {---------------------------------------}
-function buildXData(x: TXMLTag; box: TScrollBox): integer;
+function buildXData(x: TXMLTag; box: TWinControl): integer;
 var
     tpe: Widestring;
     i, h, m: integer;

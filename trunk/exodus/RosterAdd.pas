@@ -22,8 +22,7 @@ unit RosterAdd;
 interface
 
 uses
-    Entity, EntityCache,
-    XMLTag,
+    Entity, EntityCache, JabberID, XMLTag,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, TntStdCtrls;
 
@@ -63,15 +62,16 @@ type
 var
   frmAdd: TfrmAdd;
 
-function ShowAddContact: TfrmAdd;
+procedure ShowAddContact(contact: TJabberID = nil); overload;
+procedure ShowAddContact(contact: Widestring); overload;
 
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 implementation
 uses
-    InputPassword, ExSession, JabberUtils, ExUtils,  NodeItem, 
-    GnuGetText, Jabber1, JabberID,  Presence, Session;
+    InputPassword, ExSession, JabberUtils, ExUtils,  NodeItem,
+    GnuGetText, Jabber1, Presence, Session;
 
 const
     sNoDomain = 'The contact ID you entered does not follow the standard user@host convention. Do you want to continue?';
@@ -81,10 +81,26 @@ const
 {$R *.DFM}
 
 {---------------------------------------}
-function ShowAddContact: TfrmAdd;
+procedure ShowAddContact(contact: TJabberID);
+var
+    f: TfrmAdd;
 begin
-    Result := TfrmAdd.Create(Application);
-    Result.Show;
+    f := TfrmAdd.Create(Application);
+    if (contact <> nil) then begin
+        f.txtJid.Text := contact.jid;
+        f.txtNickname.Text := contact.user;
+    end;
+    contact.Free();
+    f.Show;
+end;
+
+{---------------------------------------}
+procedure ShowAddContact(contact: Widestring);
+var
+    j: TJabberID;
+begin
+    j := TJabberID.Create(contact);
+    ShowAddContact(j);
 end;
 
 {---------------------------------------}
