@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exodus\n"
 "POT-Creation-Date: 2003-08-03 07:30\n"
-"PO-Revision-Date: 2004-06-17 17:18+0200\n"
+"PO-Revision-Date: 2004-06-17 17:24+0200\n"
 "Last-Translator: Rimas Kudelis <rq@akl.lt>\n"
 "Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
 "MIME-Version: 1.0\n"
@@ -7957,7 +7957,7 @@ msgstr "Jausmukų nustatymai"
 #. frmPrefEmote..Panel1..chkEmoticons..Caption
 #: prefs/PrefEmote.dfm:27
 msgid "Auto detect Emoticons in messages"
-msgstr "Automatiškai aptikti šypsenėles žinutėse"
+msgstr "Automatiškai aptikti jausmukus žinutėse"
 
 #. frmPrefEmote..pageEmotes..TntTabSheet1..Caption
 #: prefs/PrefEmote.dfm:40
