@@ -1,24 +1,50 @@
-2004-03-10 08:31  pgmillard
+2004-03-17 08:27  pgmillard
 
-	* exodus/: version.h, default.po, version.nsi: daily build
+	* exodus/: default.po, version.h, version.nsi: daily build
 
-2004-03-09 23:01  pgmillard
+2004-03-17 07:22  pgmillard
 
-	* exodus/RosterWindow.pas: Feature Request #3421 - Show resources
-	  in tooltips for roster items.
+	* exodus/: Jabber1.pas, RecvStatus.pas, SendStatus.pas,
+	  XferManager.dfm, XferManager.pas, branding.xml, defaults.xml: Bug
+	  #3512 - Fixup sending files to another resource.
 
-2004-03-09 22:40  pgmillard
+2004-03-17 07:03  pgmillard
 
-	* jopl/DNSUtils.pas: [no log message]
+	* exodus/: defaults.xml, xml.res: Bug #3509 - Don't make autoaway
+	  prefs read-only by default.
 
-2004-03-09 22:31  pgmillard
+2004-03-17 06:57  pgmillard
 
-	* exodus/: Debug.dfm, Dockable.dfm, Jabber1.dfm, RiserWindow.pas,
-	  RosterWindow.dfm: Bug #3466 - Use taskbar RECT when smarter algo
-	  for determining where taskbar is and what dir to move toast. This
-	  should help w/ multi-head configurations.
+	* exodus/Debug.dfm, jopl/PrefController.pas: Tweaks to
+	  checkPositions for forms. PtInRect has some oddness about edge
+	  conditions.
 
-2004-03-08 07:04  pgmillard
+2004-03-16 22:14  pgmillard
 
-	* exodus/Jabber1.pas: [no log message]
+	* exodus/Debug.pas: Inherit scrolling fixes into the debug window.
+	  AT LAST!
+
+2004-03-16 22:11  pgmillard
+
+	* exodus/: BaseChat.pas, MsgDisplay.pas, Transports.pas,
+	  components/ExRichEdit.pas: Lots of win32 magic to always make
+	  sure we're at the bottom of a chat window
+
+2004-03-16 20:17  pgmillard
+
+	* exodus/Room.pas, exodus/xdata.pas, jopl/IQ.pas: Fixup MUC rooms
+	  that have empty x-data forms. Submit a blank form automatically.
+	  Needed to add ability to have TJabberIQ objects which have no
+	  callback.
+
+2004-03-11 06:52  pgmillard
+
+	* exodus/: Dockable.dfm, Jabber1.pas: [no log message]
+
+2004-03-10 21:05  pgmillard
+
+	* exodus/Debug.dfm, exodus/Debug.pas, exodus/Dockable.dfm,
+	  exodus/Exodus.dof, exodus/ExodusCOM_TLB.pas, exodus/Jabber1.dfm,
+	  exodus/RosterWindow.dfm, jopl/PrefController.pas: Tweaks to the
+	  multi-head and form position code
 
