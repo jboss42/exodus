@@ -468,10 +468,12 @@ begin
         _iq.Namespace := XMLNS_BYTESTREAMS;
 
         // add in myself here..
-        x := _iq.qTag.AddTag('streamhost');
-        x.setAttribute('jid', MainSession.jid);
-        x.setAttribute('host', MainSession.Stream.LocalIP);
-        x.setAttribute('port', IntToStr(getXferManager().tcpServer.DefaultPort));
+        if (not MainSession.Prefs.getBool('xfer_proxy')) then begin
+            x := _iq.qTag.AddTag('streamhost');
+            x.setAttribute('jid', MainSession.jid);
+            x.setAttribute('host', MainSession.Stream.LocalIP);
+            x.setAttribute('port', IntToStr(getXferManager().tcpServer.DefaultPort));
+        end;
 
         // get a handle to the stream
         try
