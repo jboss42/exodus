@@ -38,6 +38,7 @@ type
     chkNotifyActive: TCheckBox;
     chkFlashInfinite: TCheckBox;
     chkNotifyActiveWindow: TCheckBox;
+    chkFront: TCheckBox;
     procedure lblConfigSoundsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure chkNotifyClick(Sender: TObject);
@@ -118,6 +119,7 @@ begin
         chkToast.Checked := false;
         chkFlash.Checked := false;
         chkTrayNotify.Checked := false;
+        chkFront.Checked := false;
 
         for i := 0 to NUM_NOTIFIES - 1 do
             chkNotify.Checked[i] := (_notify[i] > 0);
@@ -191,16 +193,19 @@ begin
     chkToast.Enabled := e;
     chkFlash.Enabled := e;
     chkTrayNotify.Enabled := e;
+    chkFront.Enabled := e;
 
     if chkToast.Enabled then begin
         chkToast.Checked := ((_notify[i] and notify_toast) > 0);
         chkFlash.Checked := ((_notify[i] and notify_flash) > 0);
         chkTrayNotify.Checked := ((_notify[i] and notify_tray) > 0);
+        chkFront.Checked := ((_notify[i] and notify_front) > 0);
     end
     else begin
         chkToast.Checked := false;
         chkFlash.Checked := false;
         chkTrayNotify.Checked := false;
+        chkFront.Checked := false;
         _notify[i] := 0;
     end;
 
@@ -222,6 +227,7 @@ begin
     if (chkToast.Checked) then _notify[i] := _notify[i] + notify_toast;
     if (chkFlash.Checked) then _notify[i] := _notify[i] + notify_flash;
     if (chkTrayNotify.Checked) then _notify[i] := _notify[i] + notify_tray;
+    if (chkFront.Checked) then _notify[i] := _notify[i] + notify_front;
 end;
 
 end.

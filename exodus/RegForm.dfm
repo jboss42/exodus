@@ -1,6 +1,6 @@
 object frmRegister: TfrmRegister
-  Left = 237
-  Top = 267
+  Left = 230
+  Top = 175
   Width = 312
   Height = 327
   Caption = 'Agent Registration'
@@ -73,7 +73,6 @@ object frmRegister: TfrmRegister
     Align = alClient
     MultiLine = True
     Style = tsButtons
-    TabIndex = 1
     TabOrder = 1
     object tabWelcome: TTabSheet
       Caption = 'tabWelcome'

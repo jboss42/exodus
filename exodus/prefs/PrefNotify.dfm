@@ -43,19 +43,19 @@ inherited frmPrefNotify: TfrmPrefNotify
       'Conf. Room activity'
       'File Transfers'
       'Auto Response generated')
-    TabOrder = 0
+    TabOrder = 4
     OnClick = chkNotifyClick
   end
   object optNotify: TGroupBox
     Left = 8
     Top = 216
     Width = 257
-    Height = 97
+    Height = 103
     Caption = 'Notify Options'
-    TabOrder = 1
+    TabOrder = 5
     object chkFlash: TCheckBox
       Left = 8
-      Top = 48
+      Top = 36
       Width = 209
       Height = 17
       Caption = 'Flash Taskbar button, or highlight tab'
@@ -64,7 +64,7 @@ inherited frmPrefNotify: TfrmPrefNotify
     end
     object chkToast: TCheckBox
       Left = 8
-      Top = 24
+      Top = 16
       Width = 153
       Height = 17
       Caption = 'Show a "Toast" popup'
@@ -73,11 +73,20 @@ inherited frmPrefNotify: TfrmPrefNotify
     end
     object chkTrayNotify: TCheckBox
       Left = 8
-      Top = 71
+      Top = 56
       Width = 209
       Height = 17
       Caption = 'Flash tray icon'
       TabOrder = 2
+      OnClick = chkToastClick
+    end
+    object chkFront: TCheckBox
+      Left = 8
+      Top = 76
+      Width = 209
+      Height = 17
+      Caption = 'Bring window to front'
+      TabOrder = 3
       OnClick = chkToastClick
     end
   end
@@ -97,7 +106,7 @@ inherited frmPrefNotify: TfrmPrefNotify
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
-    TabOrder = 2
+    TabOrder = 6
     Transparent = False
   end
   object chkSound: TCheckBox
@@ -106,7 +115,7 @@ inherited frmPrefNotify: TfrmPrefNotify
     Width = 145
     Height = 17
     Caption = 'Use sound notifications'
-    TabOrder = 3
+    TabOrder = 0
   end
   object chkNotifyActive: TCheckBox
     Left = 8
@@ -119,7 +128,7 @@ inherited frmPrefNotify: TfrmPrefNotify
     Caption = 'Do notifications when active'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 4
+    TabOrder = 1
   end
   object chkFlashInfinite: TCheckBox
     Left = 8
@@ -129,7 +138,7 @@ inherited frmPrefNotify: TfrmPrefNotify
     Caption = 'Flash the taskbar until window gets focus.'
     ParentShowHint = False
     ShowHint = True
-    TabOrder = 5
+    TabOrder = 3
   end
   object chkNotifyActiveWindow: TCheckBox
     Left = 8
@@ -137,6 +146,6 @@ inherited frmPrefNotify: TfrmPrefNotify
     Width = 209
     Height = 17
     Caption = 'Do notifications for active window'
-    TabOrder = 6
+    TabOrder = 2
   end
 end

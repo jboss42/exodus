@@ -217,10 +217,18 @@ begin
                     f := flds[i];
                     if (f.Name = 'instructions') then
                         lblIns.Caption := f.Data
+
                     else if (f.Name = 'key') then
                         cur_key := f.Data
+
                     else if ((f.Name = 'x') and (f.GetAttribute('xmlns') = XMLNS_XDATA)) then
-                         // ignore x-data fields here
+                        // ignore x-data fields here
+
+                    else if (f.Name = 'registered') then begin
+                        // ignore registered elements
+                        btnDelete.Enabled := true;
+                        end
+
                     else begin
                         cur_fld := doField(f.Name);
                         if (f.Data <> '') then
@@ -262,6 +270,7 @@ begin
         field := fld;
         AssignDefaultFont(txtData.Font);
         AssignDefaultFont(lblPrompt.Font);
+        Height := txtData.Height + 3;
     end;
     Result := frm;
 end;
