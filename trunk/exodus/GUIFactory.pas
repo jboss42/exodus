@@ -45,7 +45,7 @@ type
 implementation
 
 uses
-    Dialogs, GnuGetText, AutoUpdateStatus,
+    Dialogs, GnuGetText, AutoUpdateStatus, Controls, 
     InvalidRoster, ChatWin, ExEvents, ExUtils, Subscribe, Notify, Jabber1,
     MsgQueue, NodeItem, Roster, JabberID, Session;
 
@@ -126,9 +126,12 @@ begin
         RenderEvent(e);
     end
 
-    else if (event = '/session/gui/server-no-reg') then begin
-        MessageDlgW(_('This server does not support in-band registration.'),
-            mtError, [mbOK], 0);
+    else if (event = '/session/gui/no-inband-reg') then begin
+        if (MessageDlgW(_('This server does not advertise support for in-band registration. Try to register a new account anyway?'),
+            mtError, [mbYes, mbNo], 0) = mrYes) then
+            MainSession.CreateAccount()
+        else
+            MainSession.FireEvent('/session/regerror', nil);
     end
 
     else if (event = '/session/gui/reg-not-supported') then begin

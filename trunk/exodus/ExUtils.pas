@@ -1192,6 +1192,7 @@ begin
         result := Now + (tzi.Bias / 1440.0);;
 end;
 
+{---------------------------------------}
 function MessageDlgW(const Msg: Widestring; DlgType: TMsgDlgType;
     Buttons: TMsgDlgButtons; HelpCtx: Longint): Word;
 var

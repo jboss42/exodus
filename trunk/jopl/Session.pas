@@ -609,9 +609,6 @@ begin
                     if (_features.QueryXPTag('/stream:features/register[@xmlns="http://jabber.org/features/iq-register"]') = nil) then begin
                         // this server doesn't support inband reg.
                         FireEvent('/session/gui/no-inband-reg', nil);
-                        FireEvent('/session/regerror', nil);
-                        _profile.NewAccount := false;
-                        _register := false;
                         exit;
                     end;
 
