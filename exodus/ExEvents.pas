@@ -38,6 +38,8 @@ type
     TJabberEvent = class
     private
         _data_list: TWideStringlist;
+        _tag: TXMLTag;
+
     public
         Timestamp: TDateTime;
         eType: TJabberEventType;
@@ -57,10 +59,14 @@ type
         procedure Parse(tag: TXMLTag);
 
         property Data: TWideStringlist read _data_list;
+        property Tag: TXMLTag read _tag;
 end;
 
-function getTaskBarRect(): TRect;
 function CreateJabberEvent(tag: TXMLTag): TJabberEvent;
+procedure RenderEvent(e: TJabberEvent);
+
+function getTaskBarRect(): TRect;
+
 
 resourcestring
     sPresUnavailable = 'Unavailable presence';
@@ -95,7 +101,12 @@ resourcestring
 {---------------------------------------}
 implementation
 uses
-    XMLUtils, JabberConst, Roster, Messages, Windows, ExUtils, Session;
+    // Exodus/JOPL stuff
+    ExUtils, JabberConst, Jabber1, JabberID, JabberMsg, MsgController, MsgRecv,
+    MsgQueue, Notify, PrefController, Roster, Session, XMLUtils,
+
+    // delphi stuff
+    Messages, Windows;
 
 var
     _taskbar_rect: TRect;
@@ -112,6 +123,112 @@ begin
 end;
 
 {---------------------------------------}
+procedure RenderEvent(e: TJabberEvent);
+var
+    msg: string;
+    img_idx: integer;
+    mqueue: TfrmMsgQueue;
+    tmp_jid: TJabberID;
+    m, xml, etag: TXMLTag;
+    ritem: TJabberRosterItem;
+    msgo: TJabberMessage;
+    mc: TMsgController;
+begin
+    // create a listview item for this event
+    tmp_jid := TJabberID.Create(e.from);
+    case e.etype of
+    evt_Time: begin
+        img_idx := 12;
+        msg := e.data_type;
+        e.Data.Add(Format(sMsgPing, [IntToStr(e.elapsed_time)]));
+    end;
+
+    evt_Message: begin
+        img_idx := 18;
+        msg := e.data_type;
+        DoNotify(nil, 'notify_normalmsg',
+                 sMsgMessage + tmp_jid.jid, img_idx);
+        if (e.error) then img_idx := ico_error;
+
+        xml := e.tag;
+        if (xml <> nil) then begin
+
+            // check for displayed events
+            etag := xml.QueryXPTag(XP_MSGXEVENT);
+            if ((etag <> nil) and (etag.GetFirstTag('id') = nil)) then begin
+                if (etag.GetFirstTag('displayed') <> nil) then begin
+                    // send back a displayed event
+                    m := generateEventMsg(xml, 'displayed');
+                    MainSession.SendTag(m);
+                end;
+            end;
+
+            // log the msg if we're logging.
+            if (MainSession.Prefs.getBool('log')) then begin
+                msgo := TJabberMessage.Create(xml);
+                msgo.isMe := false;
+                ritem := MainSession.roster.Find(tmp_jid.jid);
+                if (ritem <> nil) then
+                    msgo.Nick := ritem.Nickname
+                else
+                    msgo.Nick := msgo.FromJID;
+                LogMessage(msgo);
+                msgo.Free();
+            end;
+        end;
+    end;
+
+    evt_Invite: begin
+        img_idx := 21;
+        msg := e.data_type;
+        DoNotify(nil, 'notify_invite',
+                 sMsgInvite + tmp_jid.jid, img_idx);
+    end;
+
+    evt_RosterItems: begin
+        img_idx := 26;
+        msg := e.data_type;
+    end;
+
+    else begin
+        img_idx := 12;
+        msg := e.data_type;
+    end;
+    end;
+
+    tmp_jid.Free();
+
+    if MainSession.Prefs.getBool('expanded') then begin
+        getMsgQueue().LogEvent(e, msg, img_idx);
+        if ((MainSession.Prefs.getInt('invite_treatment') = invite_popup) and
+            (e.eType = evt_Invite)) then begin
+            StartRecvMsg(e);
+        end;
+    end
+
+    else if (e.delayed) or (MainSession.Prefs.getBool('msg_queue')) then begin
+        // we are collapsed, but this event was delayed (offline'd)
+        // or we always want to use the msg queue
+        // so display it in the msg queue, not live
+        mqueue := getMsgQueue();
+        mqueue.Show;
+
+        // Note that LogEvent takes ownership of e
+        mqueue.LogEvent(e, msg, img_idx);
+    end
+
+    else begin
+        // we are collapsed, just display in regular popup windows
+        mc := MainSession.MsgList.FindJid(e.from);
+        if (mc <> nil) then
+            TfrmMsgRecv(mc).PushEvent(e)
+        else
+            StartRecvMsg(e);
+    end;
+end;
+
+
+{---------------------------------------}
 function getTaskBarRect: TRect;
 var
     taskbar: HWND;
@@ -121,9 +238,7 @@ begin
         taskbar := FindWindow('Shell_TrayWnd', '');
         GetWindowRect(taskbar, _taskbar_rect);
     end;
-
     Result := _taskbar_rect;
-
 end;
 
 {---------------------------------------}
@@ -134,6 +249,7 @@ begin
     inherited;
 
     _data_list := TWideStringList.Create;
+    _tag := nil;
     delayed := false;
     error := false;
     edate := Now();
@@ -144,6 +260,8 @@ destructor TJabberEvent.destroy;
 begin
     ClearStringListObjects(_data_list);
     _data_list.Free;
+    FreeAndNil(_tag);
+
     inherited Destroy;
 end;
 
@@ -157,6 +275,8 @@ var
     ri: TJabberRosterItem;
 begin
     // create the event from a xml tag
+    _tag := TXMLTag.Create(tag);
+    
     data_type := '';
     if (tag.name = 'message') then begin
         t := tag.getAttribute('type');

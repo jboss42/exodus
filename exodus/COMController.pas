@@ -110,11 +110,15 @@ type
     function getActiveGroup: WideString; safecall;
     function getActiveContacts(Online: WordBool): WideString; safecall;
     function Get_LocalIP: WideString; safecall;
+    procedure setPluginAuth(const AuthAgent: IExodusAuth); safecall;
+    procedure setAuthenticated(Authed: WordBool; const XML: WideString);
+      safecall;
+    procedure setAuthJID(const Username, Host, Resource: WideString); safecall;
     { Protected declarations }
   private
     _menu_items: TWideStringList;
     _roster_menus: TWidestringlist;
-    
+
   public
     constructor Create();
     destructor Destroy(); override;
@@ -122,7 +126,6 @@ type
     procedure fireNewChat(jid: WideString; ExodusChat: IExodusChat);
     procedure fireMenuClick(Sender: TObject);
     procedure fireRosterMenuClick(Sender: TObject);
-
   end;
 
   TPlugin = class
@@ -155,7 +158,7 @@ uses
     Chat, ChatController, JabberID, MsgRecv, Room, Browser, Jud,
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
     COMChatController, Dockable, Agents,
-    Jabber1, Session, Roster, RosterWindow, PrefController, 
+    Jabber1, Session, Roster, RosterWindow, PluginAuth, PrefController, 
     Menus, Dialogs, Variants, Forms, SysUtils, ComServ;
 
 var
@@ -936,6 +939,32 @@ end;
 function TExodusController.Get_LocalIP: WideString;
 begin
     Result := MainSession.Stream.LocalIP;
+end;
+
+{---------------------------------------}
+procedure TExodusController.setPluginAuth(const AuthAgent: IExodusAuth);
+var
+    aa: TExPluginAuth;
+begin
+    // spin up a new auth agent, and register it w/ the session.
+    aa := TExPluginAuth.Create();
+    aa.plugin := AuthAgent;
+    MainSession.setAuthAgent(aa);
+end;
+
+{---------------------------------------}
+procedure TExodusController.setAuthenticated(Authed: WordBool;
+  const XML: WideString);
+begin
+    // xxx: parse & pass along the XML Tag.
+    MainSession.setAuthenticated(authed, nil);
+end;
+
+{---------------------------------------}
+procedure TExodusController.setAuthJID(const Username, Host,
+  Resource: WideString);
+begin
+    MainSession.setAuthdJID(username, host, resource);
 end;
 
 initialization

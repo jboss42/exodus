@@ -102,7 +102,7 @@ begin
         e.Free();
     end
     else
-        frmExodus.RenderEvent(e);
+        RenderEvent(e);
 end;
 
 {---------------------------------------}

@@ -302,7 +302,7 @@ type
 
     // Some callbacks
     _sessioncb: integer;
-    _msgcb: integer;
+    // _msgcb: integer;
 
     // Reconnect variables
     _reconnect_interval: integer;
@@ -367,8 +367,9 @@ type
   published
     // Callbacks
     procedure SessionCallback(event: string; tag: TXMLTag);
-    procedure MsgCallback(event: string; tag: TXMLTag);
     procedure ChangePasswordCallback(event: string; tag: TXMLTag);
+
+    // procedure MsgCallback(event: string; tag: TXMLTag);
 
   public
     ActiveChat: TfrmBaseChat;
@@ -378,7 +379,6 @@ type
     function IsAutoAway(): boolean;
     function IsAutoXA(): boolean;
 
-    procedure RenderEvent(e: TJabberEvent);
     procedure Startup();
     procedure DoConnect();
     procedure CTCPCallback(event: string; tag: TXMLTag);
@@ -551,7 +551,7 @@ uses
     JabberConst, CommCtrl, CustomPres,
     Debug, Dockable, ExUtils, GetOpt, InputPassword, Invite,
     Iq, JUD, JabberID, JabberMsg, IdGlobal,
-    JoinRoom, Login, MsgDisplay, MsgQueue, MsgRecv, Password,
+    JoinRoom, Login, MsgController, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, Profile, RegForm, RemoveContact, RiserWindow, Room,
     Roster, RosterAdd, Session, StandardAuth, Transfer, Unicode, VCard, xData,
     XMLUtils;
@@ -1003,7 +1003,7 @@ begin
 
     // Setup callbacks
     _sessioncb := MainSession.RegisterCallback(SessionCallback, '/session');
-    _msgcb := MainSession.RegisterCallback(MsgCallback, '/packet/message');
+    // _msgcb := MainSession.RegisterCallback(MsgCallback, '/packet/message');
 
     // Initialize the global responders/xpath events
     initResponders();
@@ -1555,6 +1555,7 @@ begin
 end;
 
 {---------------------------------------}
+(*
 procedure TfrmExodus.MsgCallback(event: string; tag: TXMLTag);
 var
     b, mtype: Widestring;
@@ -1658,6 +1659,7 @@ begin
         tmp_jid.Free();
     end;
 end;
+*)
 
 {---------------------------------------}
 procedure TfrmExodus.CTCPCallback(event: string; tag: TXMLTag);
@@ -1674,78 +1676,6 @@ begin
             RenderEvent(e);
         end;
     end
-end;
-
-{---------------------------------------}
-procedure TfrmExodus.RenderEvent(e: TJabberEvent);
-var
-    msg: string;
-    img_idx: integer;
-    mqueue: TfrmMsgQueue;
-    tmp_jid: TJabberID;
-begin
-    // create a listview item for this event
-    tmp_jid := TJabberID.Create(e.from);
-    case e.etype of
-    evt_Time: begin
-        img_idx := 12;
-        msg := e.data_type;
-        e.Data.Add(Format(sMsgPing, [IntToStr(e.elapsed_time)]));
-    end;
-
-    evt_Message: begin
-        img_idx := 18;
-        msg := e.data_type;
-        DoNotify(nil, 'notify_normalmsg',
-                 sMsgMessage + tmp_jid.jid, img_idx);
-        if (e.error) then img_idx := ico_error;
-    end;
-
-    evt_Invite: begin
-        img_idx := 21;
-        msg := e.data_type;
-        DoNotify(nil, 'notify_invite',
-                 sMsgInvite + tmp_jid.jid, img_idx);
-    end;
-
-    evt_RosterItems: begin
-        img_idx := 26;
-        msg := e.data_type;
-    end;
-
-    else begin
-        img_idx := 12;
-        msg := e.data_type;
-    end;
-    end;
-
-    tmp_jid.Free();
-
-    if MainSession.Prefs.getBool('expanded') then begin
-        getMsgQueue().LogEvent(e, msg, img_idx);
-        if ((MainSession.Prefs.getInt('invite_treatment') = invite_popup) and
-            (e.eType = evt_Invite)) then begin
-            ShowEvent(e);
-            e.Free();
-        end;
-    end
-
-    else if (e.delayed) or (MainSession.Prefs.getBool('msg_queue')) then begin
-        // we are collapsed, but this event was delayed (offline'd)
-        // or we always want to use the msg queue
-        // so display it in the msg queue, not live
-        mqueue := getMsgQueue();
-        mqueue.Show;
-
-        // Note that LogEvent takes ownership of e
-        mqueue.LogEvent(e, msg, img_idx);
-    end
-
-    else begin
-        // we are collapsed, just display in regular windows
-        ShowEvent(e);
-        e.Free();
-    end;
 end;
 
 {---------------------------------------}
@@ -1784,7 +1714,7 @@ begin
 
         // Unregister callbacks, etc.
         MainSession.UnRegisterCallback(_sessioncb);
-        MainSession.UnRegisterCallback(_msgcb);
+        // MainSession.UnRegisterCallback(_msgcb);
         MainSession.Prefs.SavePosition(Self);
     end;
 

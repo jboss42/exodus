@@ -41,7 +41,7 @@ end;
 implementation
 
 uses
-    InvalidRoster, ChatWin, ExUtils, Subscribe, Notify, Jabber1,
+    InvalidRoster, ChatWin, ExEvents, ExUtils, Subscribe, Notify, Jabber1,
     Roster, JabberID, Session;
 
 {---------------------------------------}
@@ -64,6 +64,7 @@ var
     sub: TfrmSubscribe;
     ri: TJabberRosterItem;
     ir: TfrmInvalidRoster;
+    e: TJabberEvent;
 begin
     // check for various events to start GUIS
     if (event = '/session/gui/chat') then begin
@@ -73,6 +74,12 @@ begin
         tmp_jid.Free;
         DoNotify(chat, 'notify_newchat', sNotifyChat +
                  chat.Othernick, ico_user)
+    end
+
+    else if (event = '/session/gui/msgevent') then begin
+        // New Msg-Event style window
+        e := CreateJabberEvent(tag);
+        RenderEvent(e);
     end
 
     else if (event = '/session/gui/pres-error') then begin

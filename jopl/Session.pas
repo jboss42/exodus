@@ -23,7 +23,7 @@ interface
 
 uses
     PrefController,
-    JabberAuth, Agents, Chat, Presence, Roster,
+    JabberAuth, Agents, Chat, MsgList, Presence, Roster,
     Signals, XMLStream, XMLTag, Unicode, 
     Contnrs, Classes, SysUtils, JabberID;
 
@@ -90,6 +90,7 @@ type
     public
         ppdb: TJabberPPDB;
         roster: TJabberRoster;
+        MsgList: TJabberMsgList;
         ChatList: TJabberChatList;
         Prefs: TPrefController;
         Agents: TStringList;
@@ -216,8 +217,11 @@ begin
     roster := TJabberRoster.Create;
     roster.SetSession(Self);
 
-    // Create the chat list
-    ChatList := TJabberChatList.Create;
+    // Create the msg & chat controllers
+    MsgList := TJabberMsgList.Create();
+    ChatList := TJabberChatList.Create();
+    MsgList.SetSession(Self);
+    ChatList.SetSession(Self);
 
     // Create the preferences controller
     Prefs := TPrefController.Create(ConfigFile);
@@ -243,6 +247,7 @@ begin
     Prefs.Free;
     ppdb.Free;
     roster.Free;
+    MsgList.Free;
     ChatList.Free;
     Agents.Free;
 
@@ -861,6 +866,7 @@ begin
     _profile.Resource := res;
 end;
 
+{---------------------------------------}
 procedure TJabberSession.setAuthenticated(ok: boolean; tag: TXMLTag);
 var
     cur_agents: TAgents;
@@ -869,7 +875,6 @@ begin
     if (ok) then begin
         _first_pres := true;
         _dispatcher.DispatchSignal('/session/authenticated', tag);
-        RegisterCallback(ChatList.MsgCallback, '/packet/message');
         cur_agents := TAgents.Create();
         Agents.AddObject(Server, cur_agents);
         cur_agents.Fetch(Server);

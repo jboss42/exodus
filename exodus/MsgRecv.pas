@@ -22,14 +22,24 @@ unit MsgRecv;
 interface
 
 uses
-    Unicode, Dockable, ExEvents,
+    Unicode, Dockable, ExEvents, MsgController, XMLTag, Contnrs,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2,
     Buttons, TntStdCtrls, Menus;
 
 type
+
+    TExMessageEvent = procedure(tag: TXMLTag) of object;
+
+    TExMsgController = class(TMsgController)
+    public
+        MessageEvent: TExMessageEvent;
+        constructor Create;
+        procedure HandleMessage(tag: TXMLTag); override;
+    end;
+
+type
   TfrmMsgRecv = class(TfrmDockable)
-    frameButtons1: TframeButtons;
     pnlReply: TPanel;
     frameButtons2: TframeButtons;
     Splitter1: TSplitter;
@@ -61,13 +71,13 @@ type
     txtFrom: TStaticText;
     pnlError: TPanel;
     Image1: TImage;
+    frameButtons1: TframeButtons;
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons2btnOKClick(Sender: TObject);
-    procedure frameButtons2btnCancelClick(Sender: TObject);
     procedure txtMsgURLClick(Sender: TObject; url: String);
     procedure MsgOutKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -82,33 +92,49 @@ type
     procedure txtFromClick(Sender: TObject);
     procedure MsgOutKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     { Private declarations }
     _base_jid: WideString;
     _xtags: Widestring;
+    _events: TQueue;
+    _controller: TExMsgController;
 
     procedure SetupResources();
     procedure DisablePopup();
     procedure mnuResourceClick(Sender: TObject);
+
+    procedure NextOrClose();
   public
     { Public declarations }
+    cid: integer;
     eType: TJabberEventType;
     recips: TWideStringlist;
+
+    procedure PushEvent(e: TJabberEvent);
+    procedure DisplayEvent(e: TJabberEvent);
 
     procedure SetupSend();
     procedure setFrom(jid: WideString);
 
     procedure AddOutgoing(txt: Widestring);
     procedure AddXTagXML(xml: Widestring);
+
+    // TMsgController
+    function getObject(): TObject;
+    procedure MessageEvent(tag: TXMLTag);
+
+    property Controller: TExMsgController read _controller;
+
   end;
 
 var
   frmMsgRecv: TfrmMsgRecv;
 
+procedure StartRecvMsg(e: TJabberEvent);
+
 function StartMsg(jid: WideString): TfrmMsgRecv;
 function BroadcastMsg(jids: TWideStringlist): TfrmMsgRecv;
-
-procedure ShowEvent(e: TJabberEvent);
 
 resourcestring
     sMessageFrom = 'Message from ';
@@ -119,6 +145,9 @@ resourcestring
     sDecline = 'Decline';
     sTo = 'To:';
     sError = 'Error:';
+    sBtnClose = 'Close';
+    sBtnNext = 'Next';
+    sMsgsPending = 'You have unread messages. Read all messages before closing the window.';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -133,7 +162,7 @@ uses
 {$R *.DFM}
 
 {---------------------------------------}
-procedure ShowEvent(e: TJabberEvent);
+procedure StartRecvMsg(e: TJabberEvent);
 var
     fmsg: TfrmMsgRecv;
     fcts: TfrmRosterRecv;
@@ -148,40 +177,12 @@ begin
     else begin
         // other things
         fmsg := TfrmMsgRecv.Create(Application);
-        with fmsg do begin
-            eType := e.eType;
-            recips.Add(e.from);
-            setFrom(e.from);
-            txtSubject.Caption := e.data_type;
-            txtMsg.InputFormat := ifUnicode;
-            txtMsg.WideText := e.Data.Text;
-
-            DisablePopup();
-
-            if eType = evt_Invite then begin
-                // Change button captions for TC Invites
-                frameButtons1.btnOK.Caption := sAccept;
-                frameButtons1.btnCancel.Caption := sDecline;
-            end
-
-            else if e.error then begin
-                // This is an error.. show the error panel
-                frameButtons1.btnOK.Visible := false;
-                pnlError.Visible := true;
-                lblSubject2.Caption := sError;
-            end
-
-            else
-                // normally, we don't want a REPLY button
-                frameButtons1.btnOK.Visible := (eType = evt_Message);
-
-            ShowDefault;
-            pnlTop.Height := pnlSubject.Top + pnlSubject.Height + 3;
-            btnClose.Visible := Docked;
-            FormResize(nil);
-        end;
+        fmsg.cid := MainSession.MsgList.AddController(e.from, fmsg.Controller);
+        fmsg.DisplayEvent(e);
+        fmsg.ShowDefault();
+        e.Free();
     end;
-end;
+    end;
 end;
 
 {---------------------------------------}
@@ -233,12 +234,53 @@ begin
 end;
 
 {---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+constructor TExMsgController.Create;
+begin
+    MessageEvent := nil;
+end;
+
+procedure TExMsgController.HandleMessage(tag: TXMLTag);
+begin
+    if (assigned(MessageEvent)) then
+        MessageEvent(tag);
+end;
+
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+procedure TfrmMsgRecv.FormCreate(Sender: TObject);
+begin
+    // pre-fill parts of the header grid
+    AssignDefaultFont(txtMsg.Font);
+    txtMsg.Color := TColor(MainSession.Prefs.getInt('color_bg'));
+    AssignDefaultFont(MsgOut.Font);
+    MsgOut.Color := TColor(MainSession.Prefs.getInt('color_bg'));
+
+    AssignDefaultFont(txtSubject.Font);
+    AssignDefaultFont(txtSendSubject.Font);
+
+    Self.ClientHeight := 200;
+    recips := TWideStringlist.Create();
+
+    pnlTop.Height := pnlSubject.Top + pnlSubject.Height + 3;
+
+    _xtags := '';
+    _events := TQueue.Create();
+    _controller := TExMsgController.Create();
+    _controller.MessageEvent := Self.MessageEvent;
+    cid := -1;
+end;
+
+{---------------------------------------}
 procedure TfrmMsgRecv.DisablePopup();
 var
     i: integer;
 begin
     for i := 0 to popContact.Items.Count - 1 do
-        popCOntact.Items[i].Enabled := false;
+        popContact.Items[i].Enabled := false;
 end;
 
 {---------------------------------------}
@@ -259,23 +301,40 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmMsgRecv.FormCreate(Sender: TObject);
+procedure TfrmMsgRecv.DisplayEvent(e: TJabberEvent);
 begin
-    // pre-fill parts of the header grid
-    AssignDefaultFont(txtMsg.Font);
-    txtMsg.Color := TColor(MainSession.Prefs.getInt('color_bg'));
-    AssignDefaultFont(MsgOut.Font);
-    MsgOut.Color := TColor(MainSession.Prefs.getInt('color_bg'));
+    eType := e.eType;
+    recips.Add(e.from);
+    setFrom(e.from);
+    frameButtons1.btnOK.Enabled := true;
+    frameButtons1.btnCancel.Enabled := true;
+    txtSubject.Caption := e.data_type;
+    txtMsg.InputFormat := ifUnicode;
+    txtMsg.WideText := e.Data.Text;
 
-    AssignDefaultFont(txtSubject.Font);
-    AssignDefaultFont(txtSendSubject.Font);
+    DisablePopup();
 
-    Self.ClientHeight := 200;
-    recips := TWideStringlist.Create();
+    if eType = evt_Invite then begin
+        // Change button captions for TC Invites
+        frameButtons1.btnOK.Caption := sAccept;
+        frameButtons1.btnCancel.Caption := sDecline;
+    end
+
+    else if e.error then begin
+        // This is an error.. show the error panel
+        frameButtons1.btnOK.Visible := false;
+        pnlError.Visible := true;
+        lblSubject2.Caption := sError;
+    end
+
+    else
+        // normally, we don't want a REPLY button
+        frameButtons1.btnOK.Visible := (eType = evt_Message);
 
     pnlTop.Height := pnlSubject.Top + pnlSubject.Height + 3;
+    btnClose.Visible := Docked;
+    FormResize(nil);
 
-    _xtags := '';
 end;
 
 {---------------------------------------}
@@ -306,16 +365,50 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmMsgRecv.NextOrClose();
+var
+    e: TJabberEvent;
+begin
+    if (_events.Count = 0) then
+        // Close the dialog, the queue is empty
+        Self.Close
+    else begin
+        // show the next event
+        e := _events.Pop;
+        DisplayEvent(e);
+        if (_events.Count = 0) then
+            frameButtons1.btnCancel.Caption := sBtnClose
+        else
+            frameButtons1.btnCancel.Caption := sBtnNext;
+        e.Free();
+    end;
+end;
+
+{---------------------------------------}
 procedure TfrmMsgRecv.FormClose(Sender: TObject; var Action: TCloseAction);
+var
+    e: TJabberEvent;
 begin
     recips.Free();
+
+    // make sure the queue is clear
+    while (_events.Count > 0) do begin
+        e := TJabberEvent(_events.Pop);
+        e.Free();
+    end;
+    FreeAndNil(_events);
+
+    if ((cid <> -1) and (MainSession <> nil)) then
+        MainSession.MsgList.Delete(cid);
+    FreeAndNil(_controller);
+
     Action := caFree;
 end;
 
 {---------------------------------------}
 procedure TfrmMsgRecv.frameButtons1btnCancelClick(Sender: TObject);
 begin
-    Self.Close;
+    NextOrClose();
 end;
 
 {---------------------------------------}
@@ -328,12 +421,12 @@ begin
         // join this grp... grp is in the subject
         jid := txtSubject.Caption;
         StartRoom(jid, MainSession.Username);
-        Self.Close();
     end
 
     else begin
+        // reply
         Self.ClientHeight := Self.ClientHeight + pnlReply.Height - frameButtons1.Height - 3;
-        frameButtons1.Visible := false;
+        frameButtons1.btnOK.Enabled := true;
         pnlReply.Visible := true;
         MsgOut.SetFocus;
     end;
@@ -374,14 +467,8 @@ begin
         MainSession.SendTag(m.Tag);
         m.Free();
     end;
-
-    Self.Close;
-end;
-
-{---------------------------------------}
-procedure TfrmMsgRecv.frameButtons2btnCancelClick(Sender: TObject);
-begin
-    Self.Close;
+    pnlReply.Visible := false;
+    NextOrClose();
 end;
 
 {---------------------------------------}
@@ -404,8 +491,7 @@ end;
 {---------------------------------------}
 procedure TfrmMsgRecv.btnCloseClick(Sender: TObject);
 begin
-  inherited;
-    Self.Close;
+    NextOrClose();
 end;
 
 {---------------------------------------}
@@ -531,20 +617,12 @@ begin
     tmp_jid.Free();
 end;
 
-
+{---------------------------------------}
 procedure TfrmMsgRecv.MsgOutKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   inherited;
     if (Key = 0) then exit;
-
-    // handle Ctrl-Tab to switch tabs
-    {
-    if ((Key = VK_TAB) and (ssCtrl in Shift) and (self.Docked))then begin
-        Self.TabSheet.PageControl.SelectNextPage(not (ssShift in Shift));
-        Key := 0;
-    end
-    }
 
     // handle Ctrl-ENTER and ENTER to send msgs
     if ((Key = VK_RETURN) and (Shift = [ssCtrl])) then begin
@@ -554,14 +632,52 @@ begin
 
 end;
 
+{---------------------------------------}
 procedure TfrmMsgRecv.AddOutgoing(txt: Widestring);
 begin
     MsgOut.WideLines.Add(txt);
 end;
 
+{---------------------------------------}
 procedure TfrmMsgRecv.AddXTagXML(xml: Widestring);
 begin
     _xtags := _xtags + xml;
+end;
+
+{---------------------------------------}
+function TfrmMsgRecv.getObject(): TObject;
+begin
+    Result := Self;
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.MessageEvent(tag: TXMLTag);
+var
+    e: TJabberEvent;
+begin
+    // add this event to the queue.
+    e := CreateJabberEvent(tag);
+    PushEvent(e);
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.PushEvent(e: TJabberEvent);
+begin
+    _events.Push(e);
+    frameButtons1.btnCancel.Caption := sBtnNext
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.FormCloseQuery(Sender: TObject;
+  var CanClose: Boolean);
+begin
+  inherited;
+    if (_events.Count = 0) then
+        CanClose := true
+    else begin
+        CanClose := false;
+        MessageDlg(sMsgsPending, mtError, [mbOK], 0);
+    end;
 end;
 
 end.
