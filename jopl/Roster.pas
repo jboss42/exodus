@@ -83,7 +83,7 @@ type
         procedure bmCallback(event: string; tag: TXMLTag);
         procedure checkGroups(ri: TJabberRosterItem);
         procedure checkGroup(grp: string);
-
+        procedure fireBookmark(bm: TJabberBookmark);
         function getItem(index: integer): TJabberRosterItem;
     public
         GrpList: TStringList;
@@ -369,7 +369,6 @@ end;
 {---------------------------------------}
 procedure TJabberRoster.bmCallback(event: string; tag: TXMLTag);
 var
-    s: TJabberSession;
     bms: TXMLTagList;
     i, idx: integer;
     stag: TXMLTag;
@@ -389,7 +388,6 @@ begin
         </query></iq>
         }
 
-        s := TJabberSession(_js);
         stag := tag.QueryXPTag('/iq/query/storage');
         if (stag <> nil) then begin
             bms := stag.ChildTags();
@@ -404,8 +402,10 @@ begin
                 bm := TJabberBookmark.Create(bms[i]);
                 Bookmarks.AddObject(jid, bm);
                 checkGroup('Bookmarks');
-                s.FireEvent('/roster/bookmark', bms[i], TJabberRosterItem(nil));
                 end;
+
+            for i := 0 to Bookmarks.Count - 1 do
+                FireBookmark(TJabberBookmark(Bookmarks.Objects[i]));
             bms.Free();
             end;
         end;
@@ -532,17 +532,37 @@ begin
 end;
 
 {---------------------------------------}
+procedure TJabberRoster.FireBookmark(bm: TJabberBookmark);
+var
+    p: TXMLTag;
+    t: TXMLTag;
+begin
+    p := TXMLTag.Create('bm');
+    t := bm.AddToTag(p);
+    with TJabberSession(_js) do
+        FireEvent('/roster/bookmark', t);
+    p.Free();
+end;
+
+{---------------------------------------}
 procedure TJabberRoster.AddBookmark(sjid: string; bm: TJabberBookmark);
 var
-    t: TXMLTag;
+    tbm : TJabberBookmark;
+    i : integer;
 begin
     // Add a new bookmark to the list,
     // save them, and fire out a new event
-    Self.Bookmarks.AddObject(sjid, bm);
+    i := Bookmarks.IndexOf(sjid);
+    if (i >= 0) then begin
+        tbm := TJabberBookmark(Bookmarks.Objects[i]);
+        tbm.bmName := bm.bmName;
+        tbm.nick := bm.nick;
+        end
+    else
+        Self.Bookmarks.AddObject(sjid, bm);
+
     Self.SaveBookmarks();
-    t := bm.AddToTag(TXMLTag.Create('bm'));
-    with TJabberSession(_js) do
-        FireEvent('/roster/bookmark', t, TJabberRosterItem(nil));
+    fireBookmark(bm);
 end;
 
 {---------------------------------------}
@@ -562,13 +582,9 @@ end;
 
 {---------------------------------------}
 procedure TJabberRoster.UpdateBookmark(bm: TJabberBookmark);
-var
-    t: TXMLTag;
 begin
     Self.SaveBookmarks();
-    t := bm.AddToTag(TXMLTag.Create('bm'));
-    with TJabberSession(_js) do
-        FireEvent('/roster/bookmark', t);
+    Self.fireBookmark(bm);
 end;
 
 {---------------------------------------}
