@@ -659,9 +659,17 @@ procedure InitializeEmoticonLists();
 var
     dlls : TWideStringList;
     i : integer;
+    fn: Widestring;
 begin
     dlls := TWideStringList.Create();
     EmoticonList.Clear();
+
+    // Load up any custom ones we have..
+    fn := MainSession.Prefs.getString('custom_icondefs');
+    if ((fn <> '') and (FileExists(fn))) then
+        EmoticonList.AddIconDefsFile(fn);
+
+    // Load up any icon sets we have...
     MainSession.Prefs.fillStringlist('emoticon_dlls', dlls);
     for i := 0 to dlls.Count - 1 do begin
         EmoticonList.AddResourceFile(dlls[i]);
