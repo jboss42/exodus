@@ -140,7 +140,12 @@ begin
 
     // open the stat file
     try
-        _stream := TFileStream.Create(_filename, fmCreate or fmShareDenyWrite);
+        if (FileExists(_filename)) then 
+            _stream := TFileStream.Create(_filename, fmOpenReadWrite,
+                fmShareDenyNone)
+        else
+            _stream := TFileStream.Create(_filename, fmCreate, fmShareDenyNone);
+
         _exodus.setPrefAsString('stats_filename', _filename);
         _cb := _exodus.RegisterCallback('/packet', Self);
     except
