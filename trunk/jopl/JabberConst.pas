@@ -68,6 +68,7 @@ var
     XP_XOOB: TXPLite;
     XP_XDELIVER: TXPLite;
     XP_XDISPLAY: TXPLite;
+    XP_XROSTER: TXPLite;
 
 implementation
 
@@ -83,6 +84,7 @@ initialization
     XP_XOOB := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XOOB + '"]');
     XP_XDELIVER := TXPLIte.Create('/message/x[@xmlns="' + XMLNS_XEVENT + '"]/delivered');
     XP_XDISPLAY := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XEVENT + '"]/displayed');
+    XP_XROSTER := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XROSTER + '"]');
 
 finalization
     XP_XOOB.Free();
