@@ -87,6 +87,7 @@ procedure TfrmCustomNotify.FormCreate(Sender: TObject);
 begin
     TranslateProperties(Self);
     SetLength(_vals, 20);
+    SetLength(_defs, 20);
 end;
 
 procedure TfrmCustomNotify.chkNotifyClick(Sender: TObject);
@@ -146,10 +147,13 @@ end;
 
 procedure TfrmCustomNotify.setVal(idx, value: integer);
 begin
-    if (Length(_vals) <= idx) then
+    if (Length(_vals) <= idx) then begin
         SetLength(_vals, idx + 5);
+        SetLength(_defs, idx + 5);
+    end;
 
     _vals[idx] := value;
+    _defs[idx] := value;
 
     if (idx < chkNotify.Items.Count) then
         chkNotify.Checked[idx] := (_vals[idx] > 0);
@@ -181,6 +185,7 @@ begin
         _vals[i] := _defs[i];
         chkNotify.Checked[i] := (_vals[i] > 0);
     end;
+    chkToastClick(Self);
 end;
 
 end.
