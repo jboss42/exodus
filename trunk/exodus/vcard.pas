@@ -67,7 +67,6 @@ type
     Label14: TTntLabel;
     txtWorkCountry: TTntComboBox;
     frameButtons1: TframeButtons;
-    TreeView1: TTreeView;
     lblURL: TTntLabel;
     txtNick: TTntEdit;
     txtPriEmail: TTntEdit;
@@ -94,6 +93,7 @@ type
     txtWorkStreet1: TTntEdit;
     memDesc: TTntMemo;
     Label1: TTntLabel;
+    TreeView1: TTntTreeView;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure frameButtons1btnCancelClick(Sender: TObject);
@@ -136,6 +136,8 @@ end;
 {---------------------------------------}
 procedure TfrmVCard.FormCreate(Sender: TObject);
 var
+    n: TTntTreeNode;
+    i: integer;
     tmps: Widestring;
     iq: TJabberIQ;
 begin
@@ -148,6 +150,18 @@ begin
     TabSheet4.TabVisible := false;
     TabSheet5.TabVisible := false;
     TabSheet6.TabVisible := false;
+
+    // Do this to ensure the nodes are properly translated.
+         TreeView1.Items.Clear();
+         TreeView1.Items.Add(nil,       _('Basic'));
+    n := TreeView1.Items.AddChild(nil,  _('Personal Information'));
+         TreeView1.Items.AddChild(n,    _('Address'));
+    n := TreeView1.Items.AddChild(nil,  _('Work Information'));
+         TreeView1.Items.AddChild(n,    _('Address'));
+
+    for i := 0 to TreeView1.Items.Count - 1 do
+        TreeView1.Items[i].Expand(true);
+
 
     PageControl1.ActivePageIndex := 0;
     TreeView1.FullExpand();

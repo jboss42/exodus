@@ -18,16 +18,16 @@ object frmProfile: TfrmProfile
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
-    Left = 121
+    Left = 137
     Top = 0
     Height = 288
   end
   object PageControl1: TTntPageControl
-    Left = 124
+    Left = 140
     Top = 0
-    Width = 330
+    Width = 314
     Height = 288
-    ActivePage = TabSheet6
+    ActivePage = TabSheet1
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 0
@@ -164,7 +164,7 @@ object frmProfile: TfrmProfile
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 322
+        Width = 306
         Height = 25
         Align = alTop
         Alignment = taLeftJustify
@@ -173,7 +173,7 @@ object frmProfile: TfrmProfile
         TabOrder = 1
       end
       object Panel2: TPanel
-        Left = 217
+        Left = 201
         Top = 25
         Width = 105
         Height = 232
@@ -211,7 +211,7 @@ object frmProfile: TfrmProfile
       object ResListBox: TTntListBox
         Left = 0
         Top = 25
-        Width = 217
+        Width = 201
         Height = 232
         Align = alClient
         ItemHeight = 13
@@ -224,7 +224,7 @@ object frmProfile: TfrmProfile
       object GrpListBox: TTntCheckListBox
         Left = 0
         Top = 0
-        Width = 322
+        Width = 306
         Height = 216
         Align = alClient
         ItemHeight = 13
@@ -234,25 +234,25 @@ object frmProfile: TfrmProfile
       object Panel3: TPanel
         Left = 0
         Top = 216
-        Width = 322
+        Width = 306
         Height = 41
         Align = alBottom
         BevelOuter = bvNone
         Caption = 'Panel3'
         TabOrder = 1
         DesignSize = (
-          322
+          306
           41)
         object txtNewGrp: TTntEdit
           Left = 5
           Top = 10
-          Width = 226
+          Width = 210
           Height = 21
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
         end
         object btnAddGroup: TTntButton
-          Left = 239
+          Left = 223
           Top = 8
           Width = 75
           Height = 25
@@ -1166,7 +1166,7 @@ object frmProfile: TfrmProfile
   object TreeView1: TTntTreeView
     Left = 0
     Top = 0
-    Width = 121
+    Width = 137
     Height = 288
     Align = alLeft
     BevelWidth = 0
@@ -1179,11 +1179,11 @@ object frmProfile: TfrmProfile
       040000001E0000000000000000000000FFFFFFFFFFFFFFFF0000000001000000
       054261736963220000000000000000000000FFFFFFFFFFFFFFFF000000000000
       0000095265736F75726365731F0000000000000000000000FFFFFFFFFFFFFFFF
-      00000000000000000647726F757073260000000000000000000000FFFFFFFFFF
-      FFFFFF00000000010000000D506572736F6E616C20496E666F20000000000000
-      0000000000FFFFFFFFFFFFFFFF00000000000000000741646472657373220000
-      000000000000000000FFFFFFFFFFFFFFFF000000000100000009576F726B2049
-      6E666F200000000000000000000000FFFFFFFFFFFFFFFF000000000000000007
-      41646472657373}
+      00000000000000000647726F7570732D0000000000000000000000FFFFFFFFFF
+      FFFFFF000000000100000014506572736F6E616C20496E666F726D6174696F6E
+      200000000000000000000000FFFFFFFFFFFFFFFF000000000000000007416464
+      72657373290000000000000000000000FFFFFFFFFFFFFFFF0000000001000000
+      10576F726B20496E666F726D6174696F6E200000000000000000000000FFFFFF
+      FFFFFFFFFF00000000000000000741646472657373}
   end
 end
