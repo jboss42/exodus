@@ -51,7 +51,6 @@ type
     }
     TSignalDispatcher = class(TStringList)
     private
-        _id: longint;
         _lid_info: TStringList;
     public
         constructor Create();
@@ -63,7 +62,6 @@ type
 
         procedure AddListenerInfo(lid: integer; sig: TSignal; l: TSignalListener);
 
-        function getNextID: longint;
         function TotalCount: longint;
     end;
 
@@ -74,6 +72,8 @@ type
         callback: TMethod;
         classname: string;
         methodname: string;
+
+        constructor Create;
     end;
 
     TQueuedEvent = class
@@ -144,18 +144,18 @@ type
 
     {M-}
 
-
-
 implementation
 uses
     XMLUtils;
+
+var
+    _lid: longint = 0;
 
 {------------------------------------------------------------------------------}
 {------------------------------------------------------------------------------}
 constructor TSignalDispatcher.Create();
 begin
     inherited Create();
-    _id := 0;
     _lid_info := TStringList.Create();
 end;
 
@@ -193,13 +193,6 @@ begin
 end;
 
 {---------------------------------------}
-function TSignalDispatcher.getNextID: longint;
-begin
-    inc(_id);
-    Result := _id;
-end;
-
-{---------------------------------------}
 procedure TSignalDispatcher.AddListenerInfo(lid: integer; sig: TSignal; l: TSignalListener);
 var
     i: integer;
@@ -207,7 +200,6 @@ var
     li: TListenerInfo;
 begin
     // add an entry into the stringlist
-
     // first check to see if this lid is already in the list
     ls := IntToStr(lid);
     i := _lid_info.IndexOf(ls);
@@ -221,8 +213,6 @@ begin
     li.lid := lid;
     li.sig := sig;
     li.l := l;
-    with l do begin
-        end;
 
     _lid_info.Objects[i] := li;
 end;
@@ -265,6 +255,12 @@ end;
 
 {------------------------------------------------------------------------------}
 {------------------------------------------------------------------------------}
+constructor TSignalListener.Create;
+begin
+    cb_id := _lid;
+    inc(_lid);
+end;
+
 constructor TSignal.Create();
 begin
     inherited Create;
@@ -292,12 +288,6 @@ begin
 
     // return true if added now,
     // return false if added to the change list
-    if (Dispatcher <> nil) then
-        l.cb_id := Dispatcher.getNextID();
-
-    l.classname := TObject(l.callback.Data).ClassName;
-    l.methodname := TObject(l.callback.Data).MethodName(l.callback.code);
-
     if (invoking) then begin
         // add to change list
         co := TChangeListEvent.Create();
@@ -309,6 +299,9 @@ begin
         Result := false;
         end
     else begin
+        l.classname := TObject(l.callback.Data).ClassName;
+        l.methodname := TObject(l.callback.Data).MethodName(l.callback.code);
+
         Self.AddObject(event, l);
         if (Dispatcher <> nil) then
             Dispatcher.AddListenerInfo(l.cb_id, Self, l);
