@@ -35,6 +35,9 @@ type
     procedure browserDocumentComplete(Sender: TObject;
       const pDisp: IDispatch; var URL: OleVariant);
     procedure browserEnter(Sender: TObject);
+    procedure browserBeforeNavigate2(Sender: TObject;
+      const pDisp: IDispatch; var URL, Flags, TargetFrameName, PostData,
+      Headers: OleVariant; var Cancel: WordBool);
 
   private
     { Private declarations }
@@ -99,7 +102,7 @@ var
 {---------------------------------------}
 implementation
 
-uses Jabber1, BaseChat, ExUtils;
+uses Jabber1, BaseChat, ExUtils, ShellAPI;
 
 {$R *.dfm}
 
@@ -272,7 +275,7 @@ begin
     end
     else if (n.NodeType = xml_CDATA) then begin
         // Check for URLs
-        if (parent.Name <> 'a') then
+        if ((parent = nil) or (parent.Name <> 'a')) then
             result := result +
                 url_regex.Replace(TXMLCData(n).Data,
                                   '<a href="$0">$0</a>', true)
@@ -290,6 +293,7 @@ var
     body: TXmlTag;
     i: integer;
     nodes: TXMLNodeList;
+    cd: TXMLCData;
 begin
     body := Msg.Tag.QueryXPTag(xp_xhtml);
     if (body <> nil) then begin
@@ -298,8 +302,10 @@ begin
             txt := txt + ProcessTag(body, TXMLNode(nodes[i]));
     end;
 
-    if (txt = '') then
-        txt := Msg.Body;
+    if (txt = '') then begin
+        cd := TXMLCData.Create(Msg.Body);
+        txt := ProcessTag(nil, cd);
+    end;
 
     if (MainSession.Prefs.getBool('timestamp')) then begin
         try
@@ -474,6 +480,20 @@ begin
     bc := TfrmBaseChat(_base);
     if (frmExodus.ActiveChat <> bc) then
         bc.FormActivate(bc);
+    inherited;
+end;
+
+procedure TfIEMsgList.browserBeforeNavigate2(Sender: TObject;
+  const pDisp: IDispatch; var URL, Flags, TargetFrameName, PostData,
+  Headers: OleVariant; var Cancel: WordBool);
+var
+    u: string;
+begin
+    u := URL;
+    if (u <> _home + '/iemsglist') then begin
+        ShellExecute(Application.Handle, 'open', pAnsiChar(u), '', '', SW_SHOW);
+        cancel := true;
+    end;
     inherited;
 end;
 
