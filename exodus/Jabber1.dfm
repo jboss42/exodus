@@ -63,7 +63,7 @@ object frmExodus: TfrmExodus
       Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = []
-      ImageIndex = -1
+      ImageIndex = 7
       ParentFont = False
       object SplitterRight: TSplitter
         Left = 105
