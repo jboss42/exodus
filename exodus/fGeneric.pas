@@ -257,10 +257,11 @@ var
     vals: TWideStringlist;
     i: integer;
 begin
-    //
+    // Return the xml for this field
     vals := getValues();
 
     if (vals.Count = 0) then begin
+        vals.Free();
         Result := nil;
         exit;
     end;

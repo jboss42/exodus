@@ -317,6 +317,7 @@ begin
             work.parse(tags[i])
         else
             home.parse(tags[i]);
+        a.Free();
     end;
     tags.Free();
 
@@ -337,6 +338,7 @@ begin
             else
                 HomePhone.Parse(tags[i]);
         end;
+        t.Free();
     end;
     tags.Free();
 end;

@@ -3,6 +3,7 @@ object frmProfile: TfrmProfile
   Top = 184
   Width = 459
   Height = 361
+  BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Contact Properties'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET

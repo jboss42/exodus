@@ -185,6 +185,7 @@ begin
         cboResource.Items.Add(sResourceWork);
         cboResource.Items.Add('Exodus');
     end;
+    list.Free();
 end;
 
 {---------------------------------------}

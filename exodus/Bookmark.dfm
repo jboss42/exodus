@@ -3,6 +3,7 @@ object frmBookmark: TfrmBookmark
   Top = 169
   Width = 288
   Height = 216
+  BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Bookmark Properties'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
