@@ -400,7 +400,7 @@ begin
         restoreMenus(true);
         end;
 
-    if event = '/session/disconnected' then begin
+    if (event = '/session/disconnected') then begin
         if _event <> next_none then
             nextTimer.Enabled := true;
         lstEvents.Items.Clear;
@@ -688,6 +688,7 @@ var
 begin
     // either expand or compress the whole thing
     newval := not MainSession.Prefs.getBool('expanded');
+    mnuExpanded.Checked := newval;
     delta := Self.ClientWidth - tbsMsg.Width + Splitter1.Width;
 
     if newval then begin
@@ -979,6 +980,7 @@ procedure TfrmJabber.mnuToolbarClick(Sender: TObject);
 begin
     // toggle toolbar on/off
     Toolbar.Visible := not Toolbar.Visible;
+    mnuToolbar.Checked := Toolbar.Visible;
     MainSession.Prefs.setBool('toolbar', Toolbar.Visible);
 end;
 
