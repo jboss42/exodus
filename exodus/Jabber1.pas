@@ -970,6 +970,13 @@ begin
         if ((not InputQueryW(_(sPasswordCaption), _(sPasswordPrompt), pw, True)) or
             (pw = '')) then exit;
         MainSession.Password := pw;
+
+        // resave this password if we're supposed to
+        if (MainSession.Profile.SavePasswd) then begin
+            MainSession.Profile.password := pw;
+            MainSession.Prefs.SaveProfiles();
+        end;
+
     end;
 
     MainSession.FireEvent('/session/connecting', nil);
