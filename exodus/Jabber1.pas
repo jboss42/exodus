@@ -557,16 +557,19 @@ begin
     msg.Result := 0;
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.WMShowLogin(var msg: TMessage);
 begin
     ShowLogin();
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.WMCloseApp(var msg: TMessage);
 begin
     Self.Close();
 end;
 
+{---------------------------------------}
 procedure AddSound(reg: TRegistry; pref_name: string; user_text: string);
 begin
     reg.CreateKey('\AppEvents\Schemes\Apps\Exodus\EXODUS_' + pref_name);
@@ -2207,6 +2210,7 @@ begin
         StartMsg(jid);
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.Test1Click(Sender: TObject);
 begin
     // Test something..
@@ -2219,6 +2223,7 @@ begin
         Self.SetAutoAvailable();
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.trayMessageClick(Sender: TObject);
 var
     fsel: TfrmSelContact;
@@ -2242,6 +2247,7 @@ begin
     fSel.Free();
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.DefaultHandler(var msg);
 var
     m : TMessage;
