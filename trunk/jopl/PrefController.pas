@@ -47,6 +47,12 @@ const
     http_proxy_ie = 0;
     http_proxy_custom = 2;
 
+    proxy_none = 0;
+    proxy_socks4 = 1;
+    proxy_socks4a = 2;
+    proxy_socks5 = 3;
+    proxy_http = 4;
+    
     roster_chat = 0;
     roster_msg = 1;
 

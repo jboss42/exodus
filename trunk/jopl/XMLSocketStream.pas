@@ -119,6 +119,9 @@ end;
 implementation
 
 uses
+    {$ifdef INDY9}
+    HttpProxyIOHandler,
+    {$endif}
     Classes;
 
 {---------------------------------------}
@@ -529,11 +532,14 @@ begin
     _socks_info := TIdSocksInfo.Create(nil);
     if (_profile.ssl) then begin
         _ssl_int := TIdSSLIOHandlerSocket.Create(nil);
-        _ssl_int.PassThrough := (_profile.SocksType <> 0);
+        _ssl_int.PassThrough := (_profile.SocksType <> proxy_none);
         _ssl_int.UseNagle := false;
         _setupSSL();
         _iohandler := _ssl_int;
         _ssl_int.OnStatusInfo := TSocketThread(_thread).StatusInfo;
+    end
+    else if (_profile.SocksType = proxy_http) then begin
+        _iohandler := THttpProxyIOHandler.Create(nil);
     end
     else
         _iohandler := TIdIOHandlerSocket.Create(nil);
@@ -541,26 +547,27 @@ begin
     _iohandler.UseNagle := false;
     _socket.IOHandler := _iohandler;
 
-    if (_profile.SocksType <> 0) then begin
+    if (_profile.SocksType <> proxy_none) then begin
         // setup the socket to point to the handler..
         // and the handler to point to our SOCKS stuff
         with _socks_info do begin
             case _profile.SocksType of
-            1: Version := svSocks4;
-            2: Version := svSocks4a;
-            3: Version := svSocks5;
+            proxy_socks4: Version := svSocks4;
+            proxy_socks4a: Version := svSocks4a;
+            proxy_socks5: Version := svSocks5;
             end;
             Host := _profile.SocksHost;
             Port := _profile.SocksPort;
             Authentication := saNoAuthentication;
             if (_profile.SocksAuth) then begin
-                _socks_info.Username := _profile.SocksUsername;
-                _socks_info.Password := _profile.SocksPassword;
                 Authentication := saUsernamePassword;
+                Username := _profile.SocksUsername;
+                Password := _profile.SocksPassword;
             end;
-            _iohandler.SocksInfo := _socks_info;
         end;
+        _iohandler.SocksInfo := _socks_info;
     end;
+
 end;
 {$endif}
 
@@ -578,12 +585,12 @@ begin
     _socket.Intercept := _ssl_int;
     _socket.InterceptEnabled := _profile.ssl;
 
-    if (_profile.SocksType <> 0) then begin
+    if (_profile.SocksType <> proxy_none) then begin
         with _socket.SocksInfo do begin
             case _profile.SocksType of
-            1: Version := svSocks4;
-            2: Version := svSocks4a;
-            3: Version := svSocks5;
+            proxy_socks4: Version := svSocks4;
+            proxy_socks4a: Version := svSocks4a;
+            proxy_socks5: Version := svSocks5;
             end;
 
             Host := _profile.SocksHost;
