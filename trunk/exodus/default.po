@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-04-09 08:18\n"
-"PO-Revision-Date: 2004-04-09 08:18\n"
+"POT-Creation-Date: 2004-04-13 13:23\n"
+"PO-Revision-Date: 2004-04-13 13:23\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,7 +96,7 @@ msgstr ""
 #. frmPathSelector..Label1..Font.Name
 #: PathSelector.dfm:32
 #. frmPrefs..PageControl1..tbsBlockList..pnlBlocked..Font.Name
-#: Prefs.dfm:3125
+#: Prefs.dfm:8209
 #. frmProfile..Font.Name
 #: Profile.dfm:13
 #. frmRemove..Font.Name
@@ -142,7 +142,7 @@ msgstr ""
 #. frmXData..frameButtons1..Font.Name
 #: xdata.dfm:49
 #. frmPrefFont..FontDialog1..Font.Name
-#: prefs/PrefFont.dfm:205
+#: prefs/PrefFont.dfm:258
 #. frmPrefPanel..Font.Name
 #: prefs/PrefPanel.dfm:13
 msgid "MS Sans Serif"
@@ -195,7 +195,7 @@ msgstr ""
 #. fRTFMsgList..MsgList......Name
 #: RTFMsgList.dfm:11
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:95
+#: prefs/PrefFont.dfm:109
 msgid "e-mail"
 msgstr ""
 
@@ -218,7 +218,7 @@ msgstr ""
 #. fRTFMsgList..MsgList......Name
 #: RTFMsgList.dfm:17
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:101
+#: prefs/PrefFont.dfm:115
 msgid "http"
 msgstr ""
 
@@ -241,7 +241,7 @@ msgstr ""
 #. fRTFMsgList..MsgList......Name
 #: RTFMsgList.dfm:23
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:107
+#: prefs/PrefFont.dfm:121
 msgid "file"
 msgstr ""
 
@@ -264,7 +264,7 @@ msgstr ""
 #. fRTFMsgList..MsgList......Name
 #: RTFMsgList.dfm:29
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:113
+#: prefs/PrefFont.dfm:127
 msgid "mailto"
 msgstr ""
 
@@ -287,7 +287,7 @@ msgstr ""
 #. fRTFMsgList..MsgList......Name
 #: RTFMsgList.dfm:35
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:119
+#: prefs/PrefFont.dfm:133
 msgid "ftp"
 msgstr ""
 
@@ -310,7 +310,7 @@ msgstr ""
 #. fRTFMsgList..MsgList......Name
 #: RTFMsgList.dfm:41
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:125
+#: prefs/PrefFont.dfm:139
 msgid "https"
 msgstr ""
 
@@ -333,7 +333,7 @@ msgstr ""
 #. fRTFMsgList..MsgList......Name
 #: RTFMsgList.dfm:47
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:131
+#: prefs/PrefFont.dfm:145
 msgid "gopher"
 msgstr ""
 
@@ -356,7 +356,7 @@ msgstr ""
 #. fRTFMsgList..MsgList......Name
 #: RTFMsgList.dfm:53
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:137
+#: prefs/PrefFont.dfm:151
 msgid "nntp"
 msgstr ""
 
@@ -379,7 +379,7 @@ msgstr ""
 #. fRTFMsgList..MsgList......Name
 #: RTFMsgList.dfm:59
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:143
+#: prefs/PrefFont.dfm:157
 msgid "prospero"
 msgstr ""
 
@@ -402,7 +402,7 @@ msgstr ""
 #. fRTFMsgList..MsgList......Name
 #: RTFMsgList.dfm:65
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:149
+#: prefs/PrefFont.dfm:163
 msgid "telnet"
 msgstr ""
 
@@ -425,7 +425,7 @@ msgstr ""
 #. fRTFMsgList..MsgList......Name
 #: RTFMsgList.dfm:71
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:155
+#: prefs/PrefFont.dfm:169
 msgid "news"
 msgstr ""
 
@@ -448,7 +448,7 @@ msgstr ""
 #. fRTFMsgList..MsgList......Name
 #: RTFMsgList.dfm:77
 #. frmPrefFont..colorChat......Name
-#: prefs/PrefFont.dfm:161
+#: prefs/PrefFont.dfm:175
 msgid "wais"
 msgstr ""
 
@@ -497,7 +497,7 @@ msgstr ""
 #. frmTracer..frameButtons1..Panel1..btnCancel..Caption
 #: ExceptTracer.dfm:37
 #. frmPrefs..Panel1..Panel3..btnOK..Caption
-#: Prefs.dfm:3163
+#: Prefs.dfm:8247
 #. frmSSLWarn..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: SSLWarn.dfm:183
 msgid "OK"
@@ -515,7 +515,7 @@ msgstr ""
 #. frmDockWizard..TntPanel1..btnCancel..Caption
 #: DockWizard.dfm:56
 #. frmPrefs..Panel1..Panel3..btnCancel..Caption
-#: Prefs.dfm:3173
+#: Prefs.dfm:8257
 #. fRecvStatus..Panel1..btnCancel..Caption
 #: RecvStatus.dfm:100
 #. fSendStatus..Panel1..btnCancel..Caption
@@ -579,6 +579,8 @@ msgstr ""
 
 #. frmBaseChat..popMsgList..Clear1..Caption
 #: BaseChat.dfm:180
+#. frmPrefEmote..pnlCustomPresButtons..btnEmoteClear..Caption
+#: prefs/PrefEmote.dfm:42
 #. frmPrefPresence..pnlCustomPresButtons..btnCustomPresClear..Caption
 #: prefs/PrefPresence.dfm:57
 msgid "Clear"
@@ -679,6 +681,8 @@ msgstr ""
 
 #. frmBaseChat..popOut..Emoticons2..Caption
 #: BaseChat.dfm:203
+#. frmPrefs..Scroller..lblEmote..Caption
+#: Prefs.dfm:8097
 msgid "Emoticons"
 msgstr ""
 
@@ -940,10 +944,12 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsSSL..btnCertBrowse..Caption
 #: ConnDetails.dfm:281
 #: ExResponders.pas:480
+#. frmPrefFont..btnCSSBrowse..Caption
+#: prefs/PrefFont.dfm:228
 #. frmPrefMsg..btnLogBrowse..Caption
-#: prefs/PrefMsg.dfm:75
+#: prefs/PrefMsg.dfm:67
 #. frmPrefMsg..btnSpoolBrowse..Caption
-#: prefs/PrefMsg.dfm:129
+#: prefs/PrefMsg.dfm:121
 #. frmPrefPlugins..btnBrowsePluginPath..Caption
 #: prefs/PrefPlugins.dfm:71
 #. frmPrefTransfer..btnTransferBrowse..Caption
@@ -1486,7 +1492,7 @@ msgstr ""
 #: RosterWindow.dfm:403
 #. init the cmd line stuff
 #: ExSession.pas:184
-#: Jabber1.pas:2736
+#: Jabber1.pas:2737
 #: RosterWindow.pas:348
 #: RosterWindow.pas:370
 #: RosterWindow.pas:1654
@@ -1508,7 +1514,7 @@ msgstr ""
 #: Jabber1.dfm:2668
 #. frmRosterWindow..popStatus..presAway..Caption
 #: RosterWindow.dfm:415
-#: Jabber1.pas:2734
+#: Jabber1.pas:2735
 #: RosterWindow.pas:350
 #: RosterWindow.pas:371
 #: RosterWindow.pas:1638
@@ -1633,7 +1639,7 @@ msgstr ""
 #. frmExodus..popTray..trayPresence..Caption
 #: Jabber1.dfm:2653
 #. frmPrefs..Scroller..lblCustomPres..Caption
-#: Prefs.dfm:1932
+#: Prefs.dfm:1933
 #. frmRosterWindow..popRoster..popPresence..Caption
 #: RosterWindow.dfm:350
 msgid "Presence"
@@ -1811,7 +1817,7 @@ msgstr ""
 #. frmInputPass..Caption
 #: InputPassword.dfm:8
 #. accordingly.
-#: Jabber1.pas:908
+#: Jabber1.pas:909
 msgid "Exodus Password"
 msgstr ""
 
@@ -1837,6 +1843,8 @@ msgstr ""
 #: RosterWindow.dfm:665
 #. frmRosterWindow..popTransport..popTransUnRegister..Caption
 #: RosterWindow.dfm:698
+#. frmPrefEmote..pnlCustomPresButtons..btnEmoteRemove..Caption
+#: prefs/PrefEmote.dfm:34
 #. frmPrefPlugins..btnRemovePlugin..Caption
 #: prefs/PrefPlugins.dfm:55
 #. frmPrefPresence..pnlCustomPresButtons..btnCustomPresRemove..Caption
@@ -1886,6 +1894,8 @@ msgstr ""
 #: invite.dfm:109
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Caption
 #: Jabber1.dfm:149
+#. frmPrefEmote..pnlCustomPresButtons..btnEmoteAdd..Caption
+#: prefs/PrefEmote.dfm:26
 #. frmPrefPlugins..btnAddPlugin..Caption
 #: prefs/PrefPlugins.dfm:36
 #. frmPrefPresence..pnlCustomPresButtons..btnCustomPresAdd..Caption
@@ -1914,7 +1924,7 @@ msgstr ""
 #. do this.
 #: ExSession.pas:473
 #: ExUtils.pas:1225
-#: Jabber1.pas:1224
+#: Jabber1.pas:1225
 #: Login.pas:110
 #: Login.pas:184
 msgid "Exodus"
@@ -2444,7 +2454,7 @@ msgstr ""
 #: jud.dfm:223
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:146
-#: Jabber1.pas:2295
+#: Jabber1.pas:2296
 msgid "Start Chat"
 msgstr ""
 
@@ -2630,64 +2640,64 @@ msgid "Exodus Preferences"
 msgstr ""
 
 #. frmPrefs..Scroller..lblDialog..Caption
-#: Prefs.dfm:241
+#: Prefs.dfm:242
 msgid "Windows"
 msgstr ""
 
 #. frmPrefs..Scroller..lblFonts..Caption
-#: Prefs.dfm:435
+#: Prefs.dfm:436
 msgid "Fonts, Colors"
 msgstr ""
 
 #. frmPrefs..Scroller..lblS10n..Caption
-#: Prefs.dfm:630
+#: Prefs.dfm:631
 msgid "Subscriptions"
 msgstr ""
 
 #. frmPrefs..Scroller..lblRoster..Caption
-#: Prefs.dfm:824
+#: Prefs.dfm:825
 msgid "Roster"
 msgstr ""
 
 #. frmPrefs..Scroller..lblSystem..Caption
-#: Prefs.dfm:1018
+#: Prefs.dfm:1019
 msgid "System"
 msgstr ""
 
 #. frmPrefs..Scroller..lblNotify..Caption
-#: Prefs.dfm:1156
+#: Prefs.dfm:1157
 msgid "Notification"
 msgstr ""
 
 #. frmPrefs..Scroller..lblAway..Caption
-#: Prefs.dfm:1350
+#: Prefs.dfm:1351
 msgid "Auto-Away"
 msgstr ""
 
 #. frmPrefs..Scroller..lblKeywords..Caption
-#: Prefs.dfm:1544
+#: Prefs.dfm:1545
 #. frmPrefs..PageControl1..tbsKeywords..Caption
-#: Prefs.dfm:3033
+#: Prefs.dfm:8117
 msgid "Keywords"
 msgstr ""
 
 #. frmPrefs..Scroller..lblBlockList..Caption
-#: Prefs.dfm:1738
+#: Prefs.dfm:1739
 msgid "Block List"
 msgstr ""
 
 #. frmPrefs..Scroller..lblMessages..Caption
-#: Prefs.dfm:2126
+#: Prefs.dfm:2127
 msgid "Messages"
 msgstr ""
 
 #. frmPrefs..Scroller..lblPlugins..Caption
-#: Prefs.dfm:2264
+#: Prefs.dfm:2265
 msgid "Plugins"
 msgstr ""
 
 #. frmPrefs..Scroller..lblTransfer..Caption
-#: Prefs.dfm:2639
+#: Prefs.dfm:2640
 #. frmXferManager..Panel1..pnlCaption..Caption
 #: XferManager.dfm:53
 #: ExSession.pas:483
@@ -2698,7 +2708,7 @@ msgid "File Transfers"
 msgstr ""
 
 #. frmPrefs..Scroller..lblGroups..Caption
-#: Prefs.dfm:2833
+#: Prefs.dfm:2834
 #. frmProfile..PageControl1..TabSheet2..Caption
 #: Profile.dfm:223
 #: Profile.pas:296
@@ -2706,61 +2716,61 @@ msgid "Groups"
 msgstr ""
 
 #. frmPrefs..Scroller..lblLayouts..Caption
-#: Prefs.dfm:3000
+#: Prefs.dfm:3001
 msgid "Layouts"
 msgstr ""
 
 #. frmPrefs..Scroller..lblNetwork..Caption
-#: Prefs.dfm:3013
+#: Prefs.dfm:3014
 msgid "Network"
 msgstr ""
 
 #. frmPrefs..PageControl1..tbsKeywords..Panel2..Label1....Align
-#: Prefs.dfm:3060
+#: Prefs.dfm:8144
 msgid "Exodus can notify you when a keyword appears in chat room. Enter in "
 "the keywords that you want Exodus to look for in "
 "messages."
 msgstr ""
 
 #. frmPrefs..PageControl1..tbsKeywords..Panel2..chkRegex..Caption
-#: Prefs.dfm:3068
+#: Prefs.dfm:8152
 msgid "Use Regular Expressions for Keyword "
 "matches"
 msgstr ""
 
 #. frmPrefs..PageControl1..tbsKeywords..pnlKeyword..Caption
-#: Prefs.dfm:3079
+#: Prefs.dfm:8163
 msgid "Notification Keywords"
 msgstr ""
 
 #. frmPrefs..PageControl1..tbsBlockList..Caption
-#: Prefs.dfm:3086
+#: Prefs.dfm:8170
 msgid "BlockList"
 msgstr ""
 
 #. frmPrefs..PageControl1..tbsBlockList..Memo1......Lines.WideStrings
-#: Prefs.dfm:3106
+#: Prefs.dfm:8190
 msgid "Enter in the Jabber Addresses (JIDs) of the people to block from "
 msgstr ""
 
 #. frmPrefs..PageControl1..tbsBlockList..Memo1....Lines.WideStrings
-#: Prefs.dfm:3107
+#: Prefs.dfm:8191
 msgid "sending "
 msgstr ""
 
 #. frmPrefs..PageControl1..tbsBlockList..Memo1....Lines.WideStrings
-#: Prefs.dfm:3108
+#: Prefs.dfm:8192
 msgid "you messages. All messages from these contacts will be "
 "blocked."
 msgstr ""
 
 #. frmPrefs..PageControl1..tbsBlockList..pnlBlocked..Caption
-#: Prefs.dfm:3120
+#: Prefs.dfm:8204
 msgid "Blocked Contacts"
 msgstr ""
 
 #. frmPrefs..Panel1..Panel3..Button6..Caption
-#: Prefs.dfm:3182
+#: Prefs.dfm:8266
 msgid "Apply"
 msgstr ""
 
@@ -7062,114 +7072,114 @@ msgstr ""
 msgid "Conference Room:"
 msgstr ""
 
-#: Jabber1.pas:908
+#: Jabber1.pas:909
 msgid "Enter Password"
 msgstr ""
 
 #. For other OS's we need to use the wicked nasty DLL
-#: Jabber1.pas:999
+#: Jabber1.pas:1000
 msgid "Trying to setup the Auto Away timer."
 msgstr ""
 
-#: Jabber1.pas:1021
+#: Jabber1.pas:1022
 msgid "AutoAway Setup FAILED!"
 msgstr ""
 
 #. do nothing here..
-#: Jabber1.pas:1028
+#: Jabber1.pas:1029
 msgid "Using Win32 API for Autoaway checks!!"
 msgstr ""
 
-#: Jabber1.pas:1032
+#: Jabber1.pas:1033
 msgid "ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!"
 msgstr ""
 
-#: Jabber1.pas:1095
+#: Jabber1.pas:1096
 msgid "There was an error trying to authenticate you.\n"
 "Either you used the wrong password, or this account is already in use "
 "by someone else."
 msgstr ""
 
-#: Jabber1.pas:1102
+#: Jabber1.pas:1103
 msgid "There was an error trying to setup SSL."
 msgstr ""
 
-#: Jabber1.pas:1138
+#: Jabber1.pas:1139
 msgid "An Error occurred trying to register your new account. This server "
 "may not allow open registration."
 msgstr ""
 
-#: Jabber1.pas:1153
+#: Jabber1.pas:1154
 msgid "This account does not exist on this server. Create a new "
 "account?"
 msgstr ""
 
 #. if we have a new account, prompt for reg info
-#: Jabber1.pas:1203
+#: Jabber1.pas:1204
 msgid "Your new jabber account is activated. Would you like to fill out "
 "additional registration information?"
 msgstr ""
 
 #. set us to away
-#: Jabber1.pas:2091
+#: Jabber1.pas:2092
 msgid "Setting AutoAway"
 msgstr ""
 
 #. set us to xa
-#: Jabber1.pas:2127
+#: Jabber1.pas:2128
 msgid "Setting AutoXA"
 msgstr ""
 
 #. reset our status to available
-#: Jabber1.pas:2144
+#: Jabber1.pas:2145
 msgid "Setting Auto Available"
 msgstr ""
 
 #. lookup some arbitrary vcard..
-#: Jabber1.pas:2179
+#: Jabber1.pas:2180
 msgid "Lookup Profile"
 msgstr ""
 
-#: Jabber1.pas:2179
-#: Jabber1.pas:2295
-#: Jabber1.pas:2563
+#: Jabber1.pas:2180
+#: Jabber1.pas:2296
+#: Jabber1.pas:2564
 msgid "Enter Jabber ID: "
 msgstr ""
 
-#: Jabber1.pas:2396
+#: Jabber1.pas:2397
 msgid "Old password is incorrect."
 msgstr ""
 
-#: Jabber1.pas:2400
+#: Jabber1.pas:2401
 msgid "New password does not match."
 msgstr ""
 
-#: Jabber1.pas:2420
-#: Jabber1.pas:2425
+#: Jabber1.pas:2421
+#: Jabber1.pas:2426
 msgid "Error changing password."
 msgstr ""
 
-#: Jabber1.pas:2423
+#: Jabber1.pas:2424
 msgid "Password changed."
 msgstr ""
 
 #. kick off a service registration..
-#: Jabber1.pas:2510
+#: Jabber1.pas:2511
 msgid "Register with Service"
 msgstr ""
 
-#: Jabber1.pas:2510
+#: Jabber1.pas:2511
 msgid "Enter Jabber ID of Service: "
 msgstr ""
 
-#: Jabber1.pas:2563
+#: Jabber1.pas:2564
 msgid "Send a Message"
 msgstr ""
 
 #. fire up an invite for this room using the selected contacts
-#: Jabber1.pas:2829
+#: Jabber1.pas:2830
 #. send roster items to this contact.
-#: Jabber1.pas:2839
+#: Jabber1.pas:2840
 #. Send contacts to this JID..
 #: RosterWindow.pas:2563
 #: RosterWindow.pas:2775
@@ -7179,7 +7189,7 @@ msgstr ""
 msgid "You must select one or more contacts."
 msgstr ""
 
-#: Jabber1.pas:2967
+#: Jabber1.pas:2968
 msgid "Branding error!"
 msgstr ""
 
@@ -8068,6 +8078,38 @@ msgstr ""
 msgid "Window Options"
 msgstr ""
 
+#. frmPrefEmote..Caption
+#: prefs/PrefEmote.dfm:4
+msgid "frmPrefEmote"
+msgstr ""
+
+#. frmPrefEmote..pnlHeader..Caption
+#: prefs/PrefEmote.dfm:11
+msgid "Emoticon Options"
+msgstr ""
+
+#. frmPrefEmote..pnlCustomPresButtons..btnEmoteDefault..Caption
+#: prefs/PrefEmote.dfm:50
+#. frmPrefPresence..pnlCustomPresButtons..btnDefaults..Caption
+#: prefs/PrefPresence.dfm:66
+msgid "Defaults"
+msgstr ""
+
+#. frmPrefEmote..Panel1..Label1..Caption
+#: prefs/PrefEmote.dfm:76
+msgid "Emoticon Resource DLL's"
+msgstr ""
+
+#. frmPrefEmote..Panel1..chkEmoticons..Caption
+#: prefs/PrefEmote.dfm:83
+msgid "Auto detect Emoticons in messages"
+msgstr ""
+
+#. frmPrefEmote..EmoteOpen..Filter
+#: prefs/PrefEmote.dfm:88
+msgid "Resource Files|*.dll|All Files|*.*"
+msgstr ""
+
 #. frmPrefFont..Caption
 #: prefs/PrefFont.dfm:4
 msgid "frmPrefFont"
@@ -8104,14 +8146,45 @@ msgstr ""
 msgid "Element Name"
 msgstr ""
 
+#. frmPrefFont..TntLabel1..Caption
+#: prefs/PrefFont.dfm:57
+msgid "Display Style:"
+msgstr ""
+
+#. frmPrefFont..TntLabel2..Caption
+#: prefs/PrefFont.dfm:64
+msgid "Chat windows and TC rooms will be displayed "
+"using:"
+msgstr ""
+
 #. frmPrefFont..btnFont..Caption
-#: prefs/PrefFont.dfm:83
+#: prefs/PrefFont.dfm:97
 msgid "Change Font"
 msgstr ""
 
 #. frmPrefFont..pnlHeader..Caption
-#: prefs/PrefFont.dfm:185
+#: prefs/PrefFont.dfm:199
 msgid "Fonts and Colors"
+msgstr ""
+
+#. frmPrefFont..cboMsgList....Items.WideStrings
+#: prefs/PrefFont.dfm:242
+msgid "Richedit control (Default)"
+msgstr ""
+
+#. frmPrefFont..cboMsgList....Items.WideStrings
+#: prefs/PrefFont.dfm:243
+msgid "Internet Explorer"
+msgstr ""
+
+#. frmPrefFont..btnCSSEdit..Caption
+#: prefs/PrefFont.dfm:250
+msgid "Edit"
+msgstr ""
+
+#. frmPrefFont..OpenDialog1..Filter
+#: prefs/PrefFont.dfm:265
+msgid "CSS Stylesheets|*.css|All Files|*.*"
 msgstr ""
 
 #. frmPrefGroups..Caption
@@ -8228,122 +8301,117 @@ msgid "When I get invited to a chat room, do "
 "this:"
 msgstr ""
 
-#. frmPrefMsg..chkEmoticons..Caption
-#: prefs/PrefMsg.dfm:43
-msgid "Auto detect Emoticons in messages"
-msgstr ""
-
 #. frmPrefMsg..chkTimestamp..Caption
-#: prefs/PrefMsg.dfm:51
+#: prefs/PrefMsg.dfm:43
 msgid "Timestamp messages"
 msgstr ""
 
 #. frmPrefMsg..chkLog..Caption
-#: prefs/PrefMsg.dfm:59
+#: prefs/PrefMsg.dfm:51
 msgid "Log Messages"
 msgstr ""
 
 #. frmPrefMsg..chkMsgQueue..Caption
-#: prefs/PrefMsg.dfm:84
+#: prefs/PrefMsg.dfm:76
 msgid "Instant Messages never popup a new window"
 msgstr ""
 
 #. frmPrefMsg..chkLogRooms..Caption
-#: prefs/PrefMsg.dfm:92
+#: prefs/PrefMsg.dfm:84
 msgid "Log conference rooms"
 msgstr ""
 
 #. frmPrefMsg..cboMsgOptions....Items.WideStrings
-#: prefs/PrefMsg.dfm:104
+#: prefs/PrefMsg.dfm:96
 msgid "Use default message handling"
 msgstr ""
 
 #. frmPrefMsg..cboMsgOptions....Items.WideStrings
-#: prefs/PrefMsg.dfm:105
+#: prefs/PrefMsg.dfm:97
 msgid "Treat all messages as chats"
 msgstr ""
 
 #. frmPrefMsg..cboMsgOptions....Items.WideStrings
-#: prefs/PrefMsg.dfm:106
+#: prefs/PrefMsg.dfm:98
 msgid "Put messages into existing chats"
 msgstr ""
 
 #. frmPrefMsg..btnLogClearAll..Caption
-#: prefs/PrefMsg.dfm:113
+#: prefs/PrefMsg.dfm:105
 msgid "Clear All Logs"
 msgstr ""
 
 #. frmPrefMsg..cboInviteOptions....Items.WideStrings
-#: prefs/PrefMsg.dfm:142
+#: prefs/PrefMsg.dfm:134
 msgid "Treat as a normal instant message"
 msgstr ""
 
 #. frmPrefMsg..cboInviteOptions....Items.WideStrings
-#: prefs/PrefMsg.dfm:143
+#: prefs/PrefMsg.dfm:135
 msgid "Always popup the invitation"
 msgstr ""
 
 #. frmPrefMsg..cboInviteOptions....Items.WideStrings
-#: prefs/PrefMsg.dfm:144
+#: prefs/PrefMsg.dfm:136
 msgid "Automatically join the room."
 msgstr ""
 
 #. frmPrefMsg..chkBlockNonRoster..Caption
-#: prefs/PrefMsg.dfm:151
+#: prefs/PrefMsg.dfm:143
 msgid "Block messages from people not on my "
 "roster"
 msgstr ""
 
 #. frmPrefMsg..txtTimestampFmt..Text
-#: prefs/PrefMsg.dfm:161
+#: prefs/PrefMsg.dfm:153
 #. frmPrefMsg..txtTimestampFmt....Items.WideStrings
-#: prefs/PrefMsg.dfm:163
+#: prefs/PrefMsg.dfm:155
 msgid "h:mm am/pm"
 msgstr ""
 
 #. frmPrefMsg..txtTimestampFmt....Items.WideStrings
-#: prefs/PrefMsg.dfm:164
+#: prefs/PrefMsg.dfm:156
 msgid "hh:mm"
 msgstr ""
 
 #. frmPrefMsg..txtTimestampFmt....Items.WideStrings
-#: prefs/PrefMsg.dfm:165
+#: prefs/PrefMsg.dfm:157
 msgid "t"
 msgstr ""
 
 #. frmPrefMsg..txtTimestampFmt....Items.WideStrings
-#: prefs/PrefMsg.dfm:166
+#: prefs/PrefMsg.dfm:158
 msgid "tt"
 msgstr ""
 
 #. frmPrefMsg..chkLogRoster..Caption
-#: prefs/PrefMsg.dfm:173
+#: prefs/PrefMsg.dfm:165
 msgid "Only log messages from people in my "
 "roster"
 msgstr ""
 
 #. frmPrefMsg..pnlHeader..Caption
-#: prefs/PrefMsg.dfm:178
+#: prefs/PrefMsg.dfm:170
 msgid "Message Options"
 msgstr ""
 
 #. frmPrefMsg..chkQueueDNDChats..Caption
-#: prefs/PrefMsg.dfm:186
+#: prefs/PrefMsg.dfm:178
 msgid "Queue chat messages when in DND mode."
 msgstr ""
 
 #. frmPrefMsg..chkQueueOffline..Caption
-#: prefs/PrefMsg.dfm:194
+#: prefs/PrefMsg.dfm:186
 msgid "Queue all offline messages (even chats)"
 msgstr ""
 
 #. frmPrefMsg..OpenDialog1..Filter
-#: prefs/PrefMsg.dfm:198
+#: prefs/PrefMsg.dfm:190
 msgid "XML|*.xml"
 msgstr ""
 
 #. frmPrefMsg..OpenDialog1..Title
-#: prefs/PrefMsg.dfm:200
+#: prefs/PrefMsg.dfm:192
 msgid "Select a spool file"
 msgstr ""
 
@@ -8560,11 +8628,6 @@ msgstr ""
 #. frmPrefPresence..pnlHeader..Caption
 #: prefs/PrefPresence.dfm:13
 msgid "Presence Options"
-msgstr ""
-
-#. frmPrefPresence..pnlCustomPresButtons..btnDefaults..Caption
-#: prefs/PrefPresence.dfm:66
-msgid "Defaults"
 msgstr ""
 
 #. frmPrefPresence..Panel1..lblPresTracking..Caption
@@ -8890,39 +8953,39 @@ msgstr ""
 msgid "Jabber Address of File Transfer Server:"
 msgstr ""
 
-#: prefs/PrefFont.pas:88
+#: prefs/PrefFont.pas:99
 msgid "Sample Group"
 msgstr ""
 
-#: prefs/PrefFont.pas:89
+#: prefs/PrefFont.pas:100
 msgid "Peter M."
 msgstr ""
 
-#: prefs/PrefFont.pas:90
+#: prefs/PrefFont.pas:101
 msgid "Cowboy Neal"
 msgstr ""
 
-#: prefs/PrefFont.pas:118
+#: prefs/PrefFont.pas:129
 #. Select the chat window
-#: prefs/PrefFont.pas:207
+#: prefs/PrefFont.pas:217
 #. find the "thing" that we clicked on in the window..
-#: prefs/PrefFont.pas:264
+#: prefs/PrefFont.pas:274
 msgid "Roster Font and Background"
 msgstr ""
 
-#: prefs/PrefFont.pas:181
+#: prefs/PrefFont.pas:191
 msgid "Some text from me"
 msgstr ""
 
-#: prefs/PrefFont.pas:183
+#: prefs/PrefFont.pas:193
 msgid "Your nick"
 msgstr ""
 
-#: prefs/PrefFont.pas:187
+#: prefs/PrefFont.pas:197
 msgid "Some reply text"
 msgstr ""
 
-#: prefs/PrefFont.pas:189
+#: prefs/PrefFont.pas:199
 msgid "Other nick"
 msgstr ""
 
