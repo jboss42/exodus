@@ -19,11 +19,11 @@ object frmBrowse: TfrmBrowse
   OnResize = ResizeAddressBar
   PixelsPerInch = 96
   TextHeight = 13
-  object Panel3: TPanel
+  object Panel3: TTntPanel
     Left = 0
     Top = 46
     Width = 419
-    Height = 328
+    Height = 333
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 3
@@ -31,15 +31,13 @@ object frmBrowse: TfrmBrowse
     object Splitter1: TSplitter
       Left = 199
       Top = 3
-      Width = 3
-      Height = 322
-      Cursor = crHSplit
+      Height = 327
     end
-    object vwBrowse: TListView
+    object vwBrowse: TTntListView
       Left = 202
       Top = 3
       Width = 214
-      Height = 322
+      Height = 327
       Align = alClient
       Columns = <
         item
@@ -69,11 +67,11 @@ object frmBrowse: TfrmBrowse
       OnData = vwBrowseData
       OnResize = vwBrowseResize
     end
-    object pnlInfo: TPanel
+    object pnlInfo: TTntPanel
       Left = 3
       Top = 3
       Width = 196
-      Height = 322
+      Height = 327
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 4
@@ -890,7 +888,7 @@ object frmBrowse: TfrmBrowse
         Width = 37
         Height = 35
       end
-      object lblHeader: TLabel
+      object lblHeader: TTntLabel
         Left = 43
         Top = 18
         Width = 79
@@ -909,15 +907,15 @@ object frmBrowse: TfrmBrowse
         Left = 4
         Top = 173
         Width = 184
-        Height = 141
+        Height = 146
         Align = alClient
         TabOrder = 0
-        inherited List1: TListBox
+        inherited List1: TTntListBox
           Width = 184
-          Height = 124
+          Height = 129
           BorderStyle = bsNone
         end
-        inherited lblCaption: TStaticText
+        inherited lblCaption: TTntStaticText
           Width = 184
           Font.Style = [fsBold]
         end
@@ -932,38 +930,38 @@ object frmBrowse: TfrmBrowse
         Color = clWindow
         ParentColor = False
         TabOrder = 1
-        inherited pRegister: TPanel
+        inherited pRegister: TTntPanel
           Width = 184
-          inherited lblRegister: TLabel
+          inherited lblRegister: TTntLabel
             Width = 178
             ParentColor = False
             OnClick = mRegisterClick
           end
         end
-        inherited pSearch: TPanel
+        inherited pSearch: TTntPanel
           Width = 184
-          inherited lblSearch: TLabel
+          inherited lblSearch: TTntLabel
             Width = 178
             WordWrap = True
             OnClick = mSearchClick
           end
         end
-        inherited pConf: TPanel
+        inherited pConf: TTntPanel
           Width = 184
-          inherited lblConf: TLabel
+          inherited lblConf: TTntLabel
             Width = 178
             OnClick = mJoinConfClick
           end
         end
-        inherited pnlTop: TPanel
+        inherited pnlTop: TTntPanel
           Width = 184
-          inherited Label1: TLabel
+          inherited Label1: TTntLabel
             Width = 178
             Cursor = crDefault
           end
         end
       end
-      object Panel1: TPanel
+      object Panel1: TTntPanel
         Left = 4
         Top = 156
         Width = 184
@@ -973,7 +971,7 @@ object frmBrowse: TfrmBrowse
         Color = clWindow
         TabOrder = 2
       end
-      object pnlTitle: TPanel
+      object pnlTitle: TTntPanel
         Left = 4
         Top = 54
         Width = 184
@@ -989,7 +987,7 @@ object frmBrowse: TfrmBrowse
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 3
-        object lblTitle: TLabel
+        object lblTitle: TTntLabel
           Left = 0
           Top = 0
           Width = 184
@@ -1003,7 +1001,7 @@ object frmBrowse: TfrmBrowse
   end
   object StatBar: TStatusBar
     Left = 0
-    Top = 374
+    Top = 379
     Width = 419
     Height = 20
     Panels = <
@@ -1018,9 +1016,8 @@ object frmBrowse: TfrmBrowse
       item
         Width = 50
       end>
-    SimplePanel = False
   end
-  object pnlTop: TPanel
+  object pnlTop: TTntPanel
     Left = 0
     Top = 0
     Width = 419
@@ -1148,7 +1145,7 @@ object frmBrowse: TfrmBrowse
         DesignSize = (
           379
           22)
-        object pnlJID: TPanel
+        object pnlJID: TTntPanel
           Left = 0
           Top = 0
           Width = 88
@@ -1158,7 +1155,7 @@ object frmBrowse: TfrmBrowse
           Caption = 'Jabber Address:   '
           TabOrder = 1
         end
-        object cboJID: TComboBox
+        object cboJID: TTntComboBox
           Left = 88
           Top = 0
           Width = 225
@@ -1168,7 +1165,7 @@ object frmBrowse: TfrmBrowse
           TabOrder = 0
           OnKeyPress = cboJIDKeyPress
         end
-        object pnlButtons: TPanel
+        object pnlButtons: TTntPanel
           Left = 313
           Top = 0
           Width = 52

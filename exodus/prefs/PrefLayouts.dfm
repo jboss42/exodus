@@ -4,9 +4,10 @@ inherited frmPrefLayouts: TfrmPrefLayouts
   Caption = 'PrefLayouts'
   ClientHeight = 426
   ClientWidth = 357
+  OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object lblPreview: TLabel
+  object lblPreview: TTntLabel
     Left = 8
     Top = 108
     Width = 38
@@ -1129,7 +1130,7 @@ inherited frmPrefLayouts: TfrmPrefLayouts
       E7CF7F79F3DFDE7CF7F79F3DFDE24D8A010251669073FFD9}
     Stretch = True
   end
-  object lblViewHelp: TLabel
+  object lblViewHelp: TTntLabel
     Left = 8
     Top = 64
     Width = 273
@@ -1140,7 +1141,7 @@ inherited frmPrefLayouts: TfrmPrefLayouts
       'ratly and are never docked.'
     WordWrap = True
   end
-  object cboView: TComboBox
+  object cboView: TTntComboBox
     Left = 4
     Top = 36
     Width = 277
@@ -1149,12 +1150,12 @@ inherited frmPrefLayouts: TfrmPrefLayouts
     ItemHeight = 13
     TabOrder = 0
     OnChange = cboViewChange
-    Items.Strings = (
+    Items.WideStrings = (
       'Show small roster and never dock'
       'Dock windows. Roster is always visible'
       'Dock windows and use tabs')
   end
-  object StaticText5: TStaticText
+  object StaticText5: TTntStaticText
     Left = 0
     Top = 0
     Width = 357
@@ -1171,6 +1172,5 @@ inherited frmPrefLayouts: TfrmPrefLayouts
     ParentColor = False
     ParentFont = False
     TabOrder = 1
-    Transparent = False
   end
 end

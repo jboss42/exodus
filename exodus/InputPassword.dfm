@@ -18,7 +18,7 @@ object frmInputPass: TfrmInputPass
   OnCreate = FormCreate
   DesignSize = (
     267
-    91)
+    96)
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TTntLabel
@@ -33,7 +33,7 @@ object frmInputPass: TfrmInputPass
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 59
+    Top = 64
     Width = 267
     Height = 32
     Align = alBottom

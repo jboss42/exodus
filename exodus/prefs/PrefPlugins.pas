@@ -32,7 +32,7 @@ type
     lblPluginScan: TTntLabel;
     StaticText12: TTntStaticText;
     btnAddPlugin: TTntButton;
-    btnConfigPlugin: TButton;
+    btnConfigPlugin: TTntButton;
     btnRemovePlugin: TTntButton;
     txtPluginDir: TTntEdit;
     btnBrowsePluginPath: TTntButton;

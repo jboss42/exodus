@@ -25,18 +25,18 @@ uses
     Dockable, ExEvents,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2,
-  TntStdCtrls, TntComCtrls;
+    TntStdCtrls, TntComCtrls, TntExtCtrls;
 
 type
   TfrmRosterRecv = class(TfrmDockable)
     frameButtons1: TframeButtons;
-    pnlFrom: TPanel;
+    pnlFrom: TTntPanel;
     StaticText1: TTntStaticText;
     txtFrom: TTntStaticText;
     txtMsg: TExRichEdit;
     Splitter1: TSplitter;
     lvContacts: TTntListView;
-    Panel1: TPanel;
+    Panel1: TTntPanel;
     Label2: TTntLabel;
     cboGroup: TTntComboBox;
     procedure FormCreate(Sender: TObject);

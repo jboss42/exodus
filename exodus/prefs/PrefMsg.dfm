@@ -7,7 +7,7 @@ inherited frmPrefMsg: TfrmPrefMsg
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object Label19: TLabel
+  object Label19: TTntLabel
     Left = 26
     Top = 93
     Width = 35

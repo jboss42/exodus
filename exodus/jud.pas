@@ -24,7 +24,8 @@ interface
 uses
     IQ, XMLTag, Contnrs,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, Dockable, StdCtrls, ExtCtrls, ComCtrls, Menus, TntStdCtrls;
+    Dialogs, Dockable, StdCtrls, ExtCtrls, ComCtrls, Menus, TntStdCtrls,
+    TntComCtrls;
 
 type
 
@@ -41,11 +42,11 @@ type
 
   TfrmJUD = class(TfrmDockable)
     pnlLeft: TPanel;
-    lstContacts: TListView;
+    lstContacts: TTntListView;
     lblInstructions: TTntLabel;
     lblSelect: TTntLabel;
     Panel1: TPanel;
-    cboJID: TComboBox;
+    cboJID: TTntComboBox;
     pnlBottom: TPanel;
     btnAction: TTntButton;
     btnClose: TTntButton;
@@ -60,7 +61,7 @@ type
     pnlResults: TPanel;
     Label1: TTntLabel;
     Label3: TTntLabel;
-    cboGroup: TComboBox;
+    cboGroup: TTntComboBox;
     lblAddGrp: TTntLabel;
     Splitter1: TSplitter;
     pnlFields: TScrollBox;

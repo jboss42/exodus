@@ -23,15 +23,15 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, buttonFrame, StdCtrls, CheckLst, TntStdCtrls;
+  Dialogs, buttonFrame, StdCtrls, CheckLst, TntStdCtrls, TntCheckLst;
 
 type
   TfrmCustomNotify = class(TForm)
-    chkNotify: TCheckListBox;
+    chkNotify: TTntCheckListBox;
     optNotify: TGroupBox;
-    chkFlash: TCheckBox;
-    chkToast: TCheckBox;
-    chkTrayNotify: TCheckBox;
+    chkFlash: TTntCheckBox;
+    chkToast: TTntCheckBox;
+    chkTrayNotify: TTntCheckBox;
     frameButtons1: TframeButtons;
     Label1: TTntLabel;
     procedure FormCreate(Sender: TObject);

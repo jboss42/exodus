@@ -10,25 +10,25 @@ type
   TfrmPrefNetwork = class(TfrmPrefPanel)
     StaticText13: TStaticText;
     GroupBox1: TGroupBox;
-    Label2: TLabel;
-    Label3: TLabel;
-    Label4: TLabel;
+    Label2: TTntLabel;
+    Label3: TTntLabel;
+    Label4: TTntLabel;
     txtReconnectTries: TTntEdit;
     spnAttempts: TUpDown;
     txtReconnectTime: TTntEdit;
     spnTime: TUpDown;
     GroupBox2: TGroupBox;
-    lblProxyHost: TLabel;
-    lblProxyPort: TLabel;
-    lblProxyUsername: TLabel;
-    lblProxyPassword: TLabel;
+    lblProxyHost: TTntLabel;
+    lblProxyPort: TTntLabel;
+    lblProxyUsername: TTntLabel;
+    lblProxyPassword: TTntLabel;
     Label28: TLabel;
     txtProxyHost: TTntEdit;
     txtProxyPort: TTntEdit;
-    chkProxyAuth: TCheckBox;
+    chkProxyAuth: TTntCheckBox;
     txtProxyUsername: TTntEdit;
     txtProxyPassword: TTntEdit;
-    cboProxyApproach: TComboBox;
+    cboProxyApproach: TTntComboBox;
     procedure cboProxyApproachChange(Sender: TObject);
     procedure chkProxyAuthClick(Sender: TObject);
   private

@@ -18,27 +18,31 @@ object frmGrpRemove: TfrmGrpRemove
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 137
+    Top = 142
     Width = 306
     Height = 34
     Align = alBottom
     AutoScroll = False
     TabOrder = 0
-    inherited Bevel1: TBevel
+    inherited Panel2: TPanel
       Width = 306
-    end
-    inherited Panel1: TPanel
-      Left = 146
-      Height = 29
-      inherited btnOK: TButton
-        OnClick = frameButtons1btnOKClick
+      Height = 34
+      inherited Bevel1: TBevel
+        Width = 306
       end
-      inherited btnCancel: TButton
-        OnClick = frameButtons1btnCancelClick
+      inherited Panel1: TPanel
+        Left = 146
+        Height = 29
+        inherited btnOK: TTntButton
+          OnClick = frameButtons1btnOKClick
+        end
+        inherited btnCancel: TTntButton
+          OnClick = frameButtons1btnCancelClick
+        end
       end
     end
   end
-  object optMove: TRadioButton
+  object optMove: TTntRadioButton
     Left = 8
     Top = 8
     Width = 249
@@ -48,7 +52,7 @@ object frmGrpRemove: TfrmGrpRemove
     TabOrder = 1
     TabStop = True
   end
-  object cboNewGroup: TComboBox
+  object cboNewGroup: TTntComboBox
     Left = 24
     Top = 32
     Width = 145
@@ -58,7 +62,7 @@ object frmGrpRemove: TfrmGrpRemove
     Sorted = True
     TabOrder = 2
   end
-  object optNuke: TRadioButton
+  object optNuke: TTntRadioButton
     Left = 8
     Top = 64
     Width = 209
@@ -66,7 +70,7 @@ object frmGrpRemove: TfrmGrpRemove
     Caption = 'Remove all contacts in this group:'
     TabOrder = 3
   end
-  object chkUnsub: TCheckBox
+  object chkUnsub: TTntCheckBox
     Left = 24
     Top = 88
     Width = 217
@@ -76,7 +80,7 @@ object frmGrpRemove: TfrmGrpRemove
     State = cbChecked
     TabOrder = 4
   end
-  object chkUnsubed: TCheckBox
+  object chkUnsubed: TTntCheckBox
     Left = 24
     Top = 112
     Width = 265

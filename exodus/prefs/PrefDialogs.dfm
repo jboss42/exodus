@@ -2,7 +2,6 @@ inherited frmPrefDialogs: TfrmPrefDialogs
   Left = 257
   Top = 156
   Caption = 'frmPrefDialogs'
-  ClientHeight = 462
   ClientWidth = 362
   OldCreateOrder = True
   PixelsPerInch = 96

@@ -25,25 +25,25 @@ uses
     XMLTag, IQ, Agents, Presence, fGeneric,
     fLeftLabel,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    StdCtrls, ComCtrls, ExtCtrls, TntStdCtrls, TntComCtrls;
+    StdCtrls, ComCtrls, ExtCtrls, TntStdCtrls, TntComCtrls, TntExtCtrls;
 
 type
     RegFormStage = (rsWelcome, rsForm, rsXData, rsRegister, rsFinish, rsDone);
 
 type
   TfrmRegister = class(TForm)
-    pnlBottom: TPanel;
-    pnlBtns: TPanel;
+    pnlBottom: TTntPanel;
+    pnlBtns: TTntPanel;
     btnPrev: TTntButton;
     btnNext: TTntButton;
     btnCancel: TTntButton;
     Tabs: TTntPageControl;
     tabWelcome: TTntTabSheet;
-    Label1: TTntLabel;
+    Label1: TLabel;
     lblIns: TTntLabel;
     tabAgent: TTntTabSheet;
     Panel2: TPanel;
-    Panel3: TPanel;
+    Panel3: TTntPanel;
     btnDelete: TTntButton;
     tabWait: TTntTabSheet;
     Label2: TTntLabel;

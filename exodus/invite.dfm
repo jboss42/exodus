@@ -62,7 +62,7 @@ object frmInvite: TfrmInvite
       Cursor = crVSplit
       Align = alTop
     end
-    object lstJIDS: TListView
+    object lstJIDS: TTntListView
       Left = 3
       Top = 125
       Width = 253
@@ -136,13 +136,13 @@ object frmInvite: TfrmInvite
         Align = alTop
         Caption = 'Invite the following contacts to:'
       end
-      object memReason: TMemo
+      object memReason: TTntMemo
         Left = 0
         Top = 57
         Width = 317
         Height = 62
         Align = alClient
-        Lines.Strings = (
+        Lines.WideStrings = (
           'Please join us in this conference room.')
         TabOrder = 0
       end
@@ -154,7 +154,7 @@ object frmInvite: TfrmInvite
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 1
-        object cboRoom: TComboBox
+        object cboRoom: TTntComboBox
           Left = 3
           Top = 4
           Width = 214

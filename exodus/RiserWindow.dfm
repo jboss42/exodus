@@ -74,17 +74,11 @@ object frmRiser: TfrmRiser
   object Label1: TTntLabel
     Left = 28
     Top = 4
-    Width = 149
-    Height = 14
+    Width = 98
+    Height = 13
     Alignment = taCenter
     Anchors = [akLeft, akTop, akRight]
     Caption = 'something really long'
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Verdana'
-    Font.Style = []
-    ParentFont = False
     Transparent = True
     WordWrap = True
     OnClick = Panel2Click

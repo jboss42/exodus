@@ -31,7 +31,7 @@ object frmCustomNotify: TfrmCustomNotify
     ParentFont = False
     OnClick = Label1Click
   end
-  object chkNotify: TCheckListBox
+  object chkNotify: TTntCheckListBox
     Left = 16
     Top = 8
     Width = 257
@@ -47,7 +47,7 @@ object frmCustomNotify: TfrmCustomNotify
     Height = 97
     Caption = 'Notify Options'
     TabOrder = 1
-    object chkFlash: TCheckBox
+    object chkFlash: TTntCheckBox
       Left = 8
       Top = 48
       Width = 209
@@ -56,7 +56,7 @@ object frmCustomNotify: TfrmCustomNotify
       TabOrder = 1
       OnClick = chkToastClick
     end
-    object chkToast: TCheckBox
+    object chkToast: TTntCheckBox
       Left = 8
       Top = 24
       Width = 153
@@ -65,7 +65,7 @@ object frmCustomNotify: TfrmCustomNotify
       TabOrder = 0
       OnClick = chkToastClick
     end
-    object chkTrayNotify: TCheckBox
+    object chkTrayNotify: TTntCheckBox
       Left = 8
       Top = 71
       Width = 209
@@ -77,7 +77,7 @@ object frmCustomNotify: TfrmCustomNotify
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 226
+    Top = 231
     Width = 318
     Height = 30
     Align = alBottom

@@ -26,7 +26,7 @@ uses
     XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, ComCtrls, buttonFrame, StdCtrls, ExtCtrls, TntStdCtrls,
-  TntComCtrls;
+    TntComCtrls;
 
 type
   TfrmVCard = class(TForm)

@@ -3082,14 +3082,14 @@ object frmPrefs: TfrmPrefs
         Align = alClient
         TabOrder = 1
       end
-      object Memo1: TMemo
+      object Memo1: TTntMemo
         Left = 0
         Top = 20
         Width = 361
         Height = 53
         Align = alTop
         BorderStyle = bsNone
-        Lines.Strings = (
+        Lines.WideStrings = (
           
             'Enter in the Jabber Addresses (JIDs) of the people to block from' +
             ' sending you '

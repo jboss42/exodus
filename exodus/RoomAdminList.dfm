@@ -37,7 +37,7 @@ object frmRoomAdminList: TfrmRoomAdminList
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 259
+    Top = 264
     Width = 309
     Height = 30
     Align = alBottom
@@ -65,7 +65,7 @@ object frmRoomAdminList: TfrmRoomAdminList
     Left = 0
     Top = 182
     Width = 309
-    Height = 77
+    Height = 82
     Align = alClient
     ScrollBars = ssVertical
     TabOrder = 1

@@ -25,21 +25,21 @@ uses
     Unicode, XMLTag, SelContact,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, CheckLst, ExtCtrls, buttonFrame, ComCtrls, Grids,
-  TntStdCtrls;
+  TntStdCtrls, TntComCtrls;
 
 type
   TfrmInvite = class(TForm)
     frameButtons1: TframeButtons;
     pnlMain: TPanel;
-    lstJIDS: TListView;
+    lstJIDS: TTntListView;
     Splitter1: TSplitter;
     Panel1: TPanel;
     btnRemove: TTntButton;
     Panel2: TPanel;
-    memReason: TMemo;
+    memReason: TTntMemo;
     Label2: TTntLabel;
     pnl1: TPanel;
-    cboRoom: TComboBox;
+    cboRoom: TTntComboBox;
     Label1: TTntLabel;
     btnAdd: TTntButton;
     procedure frameButtons1btnCancelClick(Sender: TObject);

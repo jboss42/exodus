@@ -12,13 +12,13 @@ inherited frmJUD: TfrmJUD
   object Splitter1: TSplitter
     Left = 217
     Top = 0
-    Height = 331
+    Height = 336
   end
   object pnlLeft: TPanel
     Left = 0
     Top = 0
     Width = 217
-    Height = 331
+    Height = 336
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 0
@@ -61,7 +61,7 @@ inherited frmJUD: TfrmJUD
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
-      object cboJID: TComboBox
+      object cboJID: TTntComboBox
         Left = 0
         Top = 4
         Width = 145
@@ -73,7 +73,7 @@ inherited frmJUD: TfrmJUD
     end
     object pnlBottom: TPanel
       Left = 0
-      Top = 297
+      Top = 302
       Width = 217
       Height = 34
       Align = alBottom
@@ -158,7 +158,7 @@ inherited frmJUD: TfrmJUD
         ParentFont = False
         OnClick = lblAddGrpClick
       end
-      object cboGroup: TComboBox
+      object cboGroup: TTntComboBox
         Left = 0
         Top = 26
         Width = 145
@@ -173,7 +173,7 @@ inherited frmJUD: TfrmJUD
       Left = 0
       Top = 237
       Width = 217
-      Height = 60
+      Height = 65
       Align = alClient
       BevelInner = bvNone
       BevelOuter = bvNone
@@ -181,11 +181,11 @@ inherited frmJUD: TfrmJUD
       TabOrder = 4
     end
   end
-  object lstContacts: TListView
+  object lstContacts: TTntListView
     Left = 220
     Top = 0
     Width = 201
-    Height = 331
+    Height = 336
     Align = alClient
     Columns = <
       item
@@ -205,7 +205,6 @@ inherited frmJUD: TfrmJUD
     OnColumnClick = lstContactsColumnClick
     OnContextPopup = lstContactsContextPopup
     OnData = lstContactsData
-    OnDataFind = lstContactsDataFind
   end
   object PopupMenu1: TPopupMenu
     Left = 176

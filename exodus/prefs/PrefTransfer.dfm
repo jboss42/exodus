@@ -3,7 +3,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
   Top = 172
   Caption = 'frmPrefTransfer'
   ClientHeight = 343
-  ClientWidth = 441
+  ClientWidth = 318
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
@@ -33,7 +33,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     Left = 16
     Top = 130
     Width = 281
-    Height = 177
+    Height = 178
     TabOrder = 6
     object Label3: TTntLabel
       Left = 8
@@ -57,7 +57,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
       Caption = 'Web Path:'
     end
     object Label6: TTntLabel
-      Left = 72
+      Left = 85
       Top = 99
       Width = 131
       Height = 13
@@ -78,53 +78,53 @@ inherited frmPrefTransfer: TfrmPrefTransfer
       Caption = 'Password:'
     end
     object Label9: TTntLabel
-      Left = 72
+      Left = 85
       Top = 35
       Width = 150
       Height = 13
       Caption = 'Example: http://dav.server.com'
     end
     object txtDavHost: TTntEdit
-      Left = 72
+      Left = 85
       Top = 13
-      Width = 193
+      Width = 180
       Height = 21
       TabOrder = 0
     end
     object txtDavPort: TTntEdit
-      Left = 72
+      Left = 85
       Top = 53
-      Width = 193
+      Width = 180
       Height = 21
       TabOrder = 1
     end
     object txtDavPath: TTntEdit
-      Left = 72
+      Left = 85
       Top = 77
-      Width = 193
+      Width = 180
       Height = 21
       TabOrder = 2
     end
     object txtDavUsername: TTntEdit
-      Left = 72
+      Left = 85
       Top = 125
-      Width = 193
+      Width = 180
       Height = 21
       TabOrder = 3
     end
     object txtDavPassword: TTntEdit
-      Left = 72
+      Left = 85
       Top = 149
-      Width = 193
+      Width = 180
       Height = 21
       PasswordChar = '*'
       TabOrder = 4
     end
   end
-  object StaticText7: TStaticText
+  object StaticText7: TTntStaticText
     Left = 0
     Top = 0
-    Width = 441
+    Width = 318
     Height = 20
     Align = alTop
     Alignment = taCenter
@@ -138,7 +138,6 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     ParentColor = False
     ParentFont = False
     TabOrder = 0
-    Transparent = False
   end
   object txtXFerPath: TTntEdit
     Left = 21
@@ -147,7 +146,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     Height = 21
     TabOrder = 1
   end
-  object btnTransferBrowse: TButton
+  object btnTransferBrowse: TTntButton
     Left = 214
     Top = 49
     Width = 75
@@ -156,7 +155,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     TabOrder = 2
     OnClick = btnTransferBrowseClick
   end
-  object optPeer: TRadioButton
+  object optPeer: TTntRadioButton
     Left = 0
     Top = 88
     Width = 281
@@ -169,7 +168,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
   end
   object grpPeer: TGroupBox
     Left = 16
-    Top = 128
+    Top = 130
     Width = 281
     Height = 113
     TabOrder = 4
@@ -187,7 +186,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
       Height = 21
       TabOrder = 0
     end
-    object chkIP: TCheckBox
+    object chkIP: TTntCheckBox
       Left = 16
       Top = 64
       Width = 249
@@ -204,7 +203,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
       TabOrder = 2
     end
   end
-  object optWebDav: TRadioButton
+  object optWebDav: TTntRadioButton
     Left = 0
     Top = 110
     Width = 281

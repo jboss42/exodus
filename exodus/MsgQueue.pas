@@ -25,11 +25,11 @@ uses
     Jabber1, ExEvents, Contnrs, Unicode, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Dockable, ComCtrls, StdCtrls, ExtCtrls, ToolWin, RichEdit2,
-    ExRichEdit, Menus;
+    ExRichEdit, Menus, TntComCtrls;
 
 type
   TfrmMsgQueue = class(TfrmDockable)
-    lstEvents: TListView;
+    lstEvents: TTntListView;
     Splitter1: TSplitter;
     txtMsg: TExRichEdit;
     PopupMenu1: TPopupMenu;

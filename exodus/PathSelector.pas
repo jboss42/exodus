@@ -6,12 +6,12 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, buttonFrame, ComCtrls, ShellCtrls;
+  Dialogs, StdCtrls, buttonFrame, ComCtrls, ShellCtrls, TntStdCtrls;
 
 type
   TfrmPathSelector = class(TForm)
     frameButtons1: TframeButtons;
-    Label1: TLabel;
+    Label1: TTntLabel;
     Folders: TShellTreeView;
     procedure FormCreate(Sender: TObject);
   private

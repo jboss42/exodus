@@ -18,7 +18,7 @@ object frmLogin: TfrmLogin
   OnCreate = FormCreate
   DesignSize = (
     364
-    111)
+    116)
   PixelsPerInch = 96
   TextHeight = 13
   object lblProfile: TTntLabel
@@ -51,7 +51,7 @@ object frmLogin: TfrmLogin
     Items.WideStrings = (
       'Default Profile')
   end
-  object chkInvisible: TCheckBox
+  object chkInvisible: TTntCheckBox
     Left = 66
     Top = 57
     Width = 97
@@ -71,7 +71,7 @@ object frmLogin: TfrmLogin
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 76
+    Top = 81
     Width = 364
     Height = 35
     Align = alBottom

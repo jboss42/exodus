@@ -30,7 +30,7 @@ type
   TfrmLogin = class(TForm)
     lblProfile: TTntLabel;
     cboProfiles: TTntComboBox;
-    chkInvisible: TCheckBox;
+    chkInvisible: TTntCheckBox;
     btnDetails: TTntButton;
     popProfiles: TPopupMenu;
     CreateNew1: TMenuItem;

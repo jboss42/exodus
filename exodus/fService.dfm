@@ -7,7 +7,7 @@ object frameObjectActions: TframeObjectActions
   Color = clWindow
   ParentColor = False
   TabOrder = 0
-  object pRegister: TPanel
+  object pRegister: TTntPanel
     Left = 0
     Top = 19
     Width = 216
@@ -34,7 +34,7 @@ object frameObjectActions: TframeObjectActions
       ParentFont = False
     end
   end
-  object pSearch: TPanel
+  object pSearch: TTntPanel
     Left = 0
     Top = 38
     Width = 216
@@ -61,7 +61,7 @@ object frameObjectActions: TframeObjectActions
       ParentFont = False
     end
   end
-  object pConf: TPanel
+  object pConf: TTntPanel
     Left = 0
     Top = 57
     Width = 216
@@ -88,7 +88,7 @@ object frameObjectActions: TframeObjectActions
       ParentFont = False
     end
   end
-  object pnlTop: TPanel
+  object pnlTop: TTntPanel
     Left = 0
     Top = 0
     Width = 216

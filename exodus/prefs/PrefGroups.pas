@@ -26,18 +26,18 @@ uses
 
 type
   TfrmPrefGroups = class(TfrmPrefPanel)
-    StaticText1: TStaticText;
-    Label18: TLabel;
-    Label1: TLabel;
+    StaticText1: TTntStaticText;
+    Label18: TTntLabel;
+    Label1: TTntLabel;
     txtGatewayGrp: TTntComboBox;
     txtDefaultGrp: TTntComboBox;
-    chkSort: TCheckBox;
-    lblFilter: TLabel;
+    chkSort: TTntCheckBox;
+    lblFilter: TTntLabel;
     cboVisible: TTntComboBox;
-    chkCollapsed: TCheckBox;
-    chkGroupCounts: TCheckBox;
-    chkOfflineGrp: TCheckBox;
-    chkOnlineOnly: TCheckBox;
+    chkCollapsed: TTntCheckBox;
+    chkGroupCounts: TTntCheckBox;
+    chkOfflineGrp: TTntCheckBox;
+    chkOnlineOnly: TTntCheckBox;
     procedure chkOfflineGrpClick(Sender: TObject);
   private
     { Private declarations }
