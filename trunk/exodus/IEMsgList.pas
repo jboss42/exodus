@@ -107,8 +107,6 @@ type
 var
   fIEMsgList: TfIEMsgList;
   xp_xhtml: TXPLite;
-  url_regex: TRegExpr;
-  crlf_regex: TRegExpr;
   ok_tags: THashedStringList;
   style_tags: THashedStringList;
   style_props: THashedStringList;
@@ -118,7 +116,7 @@ var
 {---------------------------------------}
 implementation
 
-uses Jabber1, BaseChat, JabberUtils, ExUtils,  ShellAPI, Emote;
+uses JabberConst, Jabber1, BaseChat, JabberUtils, ExUtils,  ShellAPI, Emote;
 
 {$R *.dfm}
 
@@ -312,7 +310,7 @@ begin
     else if (n.NodeType = xml_CDATA) then begin
         // Check for URLs
         if ((parent = nil) or (parent.Name <> 'a')) then begin
-            str := url_regex.Replace(TXMLCData(n).Data,
+            str := REGEX_URL.Replace(TXMLCData(n).Data,
                                      '<a href="$0">$0</a>', true);
             result := result + ProcessIEEmoticons(str);
         end
@@ -346,7 +344,7 @@ begin
         txt := StringReplace(txt, ' ', '&ensp;', [rfReplaceAll]);
         cd := TXMLCData.Create(txt);
         txt := ProcessTag(nil, cd);
-        txt := crlf_regex.Replace(txt, '<br />', true);
+        txt := REGEX_CRLF.Replace(txt, '<br />', true);
     end;
 
     // build up a string, THEN call writeHTML, since IE is being "helpful" by
@@ -652,14 +650,6 @@ initialization
 
     xp_xhtml := TXPLite.Create('/message/html/body');
 
-    url_regex := TRegExpr.Create();
-    url_regex.expression := '(https?|ftp|xmpp)://[^ "'''#$D#$A#$9']+';
-    url_regex.Compile();
-
-    crlf_regex := TRegExpr.Create();
-    crlf_regex.expression := '('#$D'?'#$A'|'#$D')';
-    crlf_regex.Compile();
-
     ok_tags := THashedStringList.Create();
     ok_tags.Add('blockquote');
     ok_tags.Add('br');
@@ -707,7 +697,6 @@ initialization
 
 finalization
     xp_xhtml.Free();
-    url_regex.Free();
     ok_tags.Free();
     style_tags.Free();
     style_props.Free();
