@@ -136,6 +136,9 @@ var
     tmps: WideString;
     p1, p2: integer;
 begin
+    _user := '';
+    _domain := '';
+    _resource := '';
     _raw := jid;
 
     p1 := Pos('@', _raw);

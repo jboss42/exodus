@@ -29,9 +29,6 @@ type
   TfrmWizard = class(TForm)
     TntPanel1: TTntPanel;
     Bevel1: TBevel;
-    btnBack: TTntButton;
-    btnNext: TTntButton;
-    btnCancel: TTntButton;
     Panel1: TPanel;
     Bevel2: TBevel;
     lblWizardTitle: TTntLabel;
@@ -39,6 +36,10 @@ type
     Image1: TImage;
     Tabs: TPageControl;
     TabSheet1: TTabSheet;
+    Panel3: TPanel;
+    btnBack: TTntButton;
+    btnNext: TTntButton;
+    btnCancel: TTntButton;
   private
     { Private declarations }
   public

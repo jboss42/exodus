@@ -1,6 +1,8 @@
 inherited frmJoinRoom: TfrmJoinRoom
   Left = 249
   Top = 151
+  Height = 355
+  BorderStyle = bsSizeable
   Caption = 'Join Room'
   OldCreateOrder = True
   OnClose = FormClose
@@ -9,14 +11,17 @@ inherited frmJoinRoom: TfrmJoinRoom
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
-    inherited btnBack: TTntButton
-      OnClick = btnBackClick
-    end
-    inherited btnNext: TTntButton
-      OnClick = btnNextClick
-    end
-    inherited btnCancel: TTntButton
-      OnClick = btnCancelClick
+    Top = 280
+    inherited Panel3: TPanel
+      inherited btnBack: TTntButton
+        OnClick = btnBackClick
+      end
+      inherited btnNext: TTntButton
+        OnClick = btnNextClick
+      end
+      inherited btnCancel: TTntButton
+        OnClick = btnCancelClick
+      end
     end
   end
   inherited Panel1: TPanel
@@ -29,7 +34,7 @@ inherited frmJoinRoom: TfrmJoinRoom
     end
   end
   inherited Tabs: TPageControl
-    ActivePage = TabSheet2
+    Height = 220
     inherited TabSheet1: TTabSheet
       object Label2: TTntLabel
         Left = 22
@@ -120,8 +125,8 @@ inherited frmJoinRoom: TfrmJoinRoom
       object lstRooms: TTntListView
         Left = 0
         Top = 49
-        Width = 410
-        Height = 178
+        Width = 402
+        Height = 140
         Align = alClient
         Columns = <
           item
@@ -149,7 +154,7 @@ inherited frmJoinRoom: TfrmJoinRoom
       object Panel2: TPanel
         Left = 0
         Top = 0
-        Width = 410
+        Width = 402
         Height = 49
         Align = alTop
         BevelOuter = bvNone
