@@ -266,6 +266,7 @@ object frmMsgRecv: TfrmMsgRecv
     Width = 377
     Height = 76
     Align = alTop
+    AutoSize = True
     BevelOuter = bvNone
     TabOrder = 0
     object pnlHeader: TPanel
@@ -274,11 +275,12 @@ object frmMsgRecv: TfrmMsgRecv
       Width = 336
       Height = 76
       Align = alClient
+      AutoSize = True
       BevelOuter = bvNone
       TabOrder = 0
       object pnlSendSubject: TPanel
         Left = 0
-        Top = 22
+        Top = 25
         Width = 336
         Height = 24
         Align = alTop
@@ -316,7 +318,7 @@ object frmMsgRecv: TfrmMsgRecv
       end
       object pnlSubject: TPanel
         Left = 0
-        Top = 46
+        Top = 49
         Width = 336
         Height = 22
         Align = alTop
@@ -353,33 +355,19 @@ object frmMsgRecv: TfrmMsgRecv
         Left = 0
         Top = 0
         Width = 336
-        Height = 22
+        Height = 25
         Align = alTop
+        AutoSize = True
         BevelOuter = bvNone
-        BorderWidth = 2
+        BorderWidth = 1
         TabOrder = 2
-        object btnClose: TSpeedButton
-          Left = 310
-          Top = 2
-          Width = 23
-          Height = 20
-          Caption = 'X'
-          Flat = True
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          ParentFont = False
-          OnClick = btnCloseClick
-        end
         object txtFrom: TTntLabel
-          Left = 53
-          Top = 2
-          Width = 34
-          Height = 18
+          Left = 52
+          Top = 1
+          Width = 256
+          Height = 23
           Cursor = crHandPoint
-          Align = alLeft
+          Align = alClient
           Caption = 'txtFrom'
           Color = clBtnFace
           Font.Charset = ANSI_CHARSET
@@ -390,14 +378,16 @@ object frmMsgRecv: TfrmMsgRecv
           ParentColor = False
           ParentFont = False
           Transparent = True
+          WordWrap = True
           OnClick = txtFromClick
         end
-        object lblFrom: TTntStaticText
-          Left = 2
-          Top = 2
+        object lblFrom: TTntLabel
+          Left = 1
+          Top = 1
           Width = 51
-          Height = 18
+          Height = 23
           Align = alLeft
+          AutoSize = False
           Caption = 'From:    '
           Color = clBtnFace
           Font.Charset = DEFAULT_CHARSET
@@ -407,7 +397,31 @@ object frmMsgRecv: TfrmMsgRecv
           Font.Style = [fsBold]
           ParentColor = False
           ParentFont = False
+          Transparent = True
+        end
+        object Panel1: TPanel
+          Left = 308
+          Top = 1
+          Width = 27
+          Height = 23
+          Align = alRight
+          BevelOuter = bvNone
           TabOrder = 0
+          object btnClose: TSpeedButton
+            Left = 2
+            Top = 2
+            Width = 23
+            Height = 20
+            Caption = 'X'
+            Flat = True
+            Font.Charset = ANSI_CHARSET
+            Font.Color = clWindowText
+            Font.Height = -13
+            Font.Name = 'Arial'
+            Font.Style = [fsBold]
+            ParentFont = False
+            OnClick = btnCloseClick
+          end
         end
       end
     end
