@@ -77,7 +77,7 @@ inherited frmJud: TfrmJud
       object lblWait: TTntLabel
         Left = 0
         Top = 0
-        Width = 401
+        Width = 179
         Height = 13
         Align = alTop
         Caption = 'Please wait. Contacting search agent:'
@@ -131,7 +131,7 @@ inherited frmJud: TfrmJud
         TabOrder = 0
         object Label3: TTntLabel
           Left = 6
-          Top = 2
+          Top = 5
           Width = 128
           Height = 13
           Caption = 'Add Contacts to this group:'
@@ -155,8 +155,8 @@ inherited frmJud: TfrmJud
         end
         object cboGroup: TTntComboBox
           Left = 5
-          Top = 17
-          Width = 225
+          Top = 20
+          Width = 228
           Height = 21
           Style = csDropDownList
           ItemHeight = 13
@@ -165,7 +165,7 @@ inherited frmJud: TfrmJud
         end
         object Button1: TButton
           Left = 256
-          Top = 16
+          Top = 19
           Width = 145
           Height = 25
           Caption = 'Add Contacts'

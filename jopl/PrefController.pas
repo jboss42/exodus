@@ -1355,6 +1355,7 @@ begin
     URL           := getDefault('brand_profile_http_url');
     Poll          := SafeInt(getDefault('brand_profile_http_poll'));
     NumPollKeys   := SafeInt(getDefault('brand_profile_num_poll_keys'));
+
 end;
 
 {---------------------------------------}

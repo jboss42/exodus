@@ -21,7 +21,7 @@ unit Jud;
 interface
 
 uses
-    IQ, XMLTag, Contnrs,
+    IQ, XMLTag, Contnrs, Unicode, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, DockWizard, ComCtrls, TntComCtrls, StdCtrls, TntStdCtrls, ExtCtrls,
     TntExtCtrls, Menus, Wizard;
@@ -84,7 +84,6 @@ type
     procedure btnBackClick(Sender: TObject);
   private
     { Private declarations }
-    field_set: TStringList;
     virtlist: TObjectList;
 
     cur_jid: string;
@@ -123,8 +122,8 @@ function ItemCompare(Item1, Item2: Pointer): integer;
 implementation
 
 uses
-    ChatWin, MsgRecv, 
-    Unicode, InputPassword, NodeItem, 
+    ChatWin, MsgRecv,
+    InputPassword, NodeItem,
     JabberConst, Profile, Roster, Agents, JabberID, fGeneric,
     Session, ExUtils, XMLUtils, fTopLabel, Jabber1;
 
@@ -193,7 +192,6 @@ begin
     cur_state := 'get_fields';
     cur_sort := -1;
     cur_dir := true;
-    field_set := TStringList.Create();
     MainSession.Roster.AssignGroups(cboGroup.Items);
     dflt_grp := MainSession.Prefs.getString('roster_default');
 
@@ -202,6 +200,7 @@ begin
         
     virtlist := TObjectList.Create();
     virtlist.OwnsObjects := true;
+
     AssignUnicodeFont(Tabs.Font, 8);
 
     TabSheet1.TabVisible := false;
@@ -308,10 +307,10 @@ procedure TfrmJUD.FieldsCallback(event: string; tag: TXMLTag);
 var
     fields: TXMLTagList;
     cur_tag, x: TXMLTag;
-    ti, i: integer;
+    tt, ti, i: integer;
     ff, cur_frame: TframeTopLabel;
     cur_gen: TframeGeneric;
-    cur_field: string;
+    cur_field: Widestring;
 begin
     // callback when we get the fields back
     cur_state := 'search';
@@ -335,8 +334,6 @@ begin
     end
     else if (tag <> nil) then begin
         // *whoop*, we got a result tag
-        field_set.Clear();
-
         // Check for x-data support
         x := tag.QueryXPTag('/iq/query/x[@xmlns="jabber:x:data"]');
         if (x <> nil) then begin
@@ -365,9 +362,9 @@ begin
         else begin
           fields := tag.QueryXPTag('/iq/query').ChildTags();
           pnlFields.Visible := false;
-          //for i := fields.Count - 1 downto 0 do begin
           ti := 0;
-          for i := 0 to fields.Count - 1 do begin
+          tt := 0;
+          for i := 0 to fields.Count -1 do begin
               cur_tag := fields[i];
               if (cur_tag.Name = 'instructions') then
                   // do nothing
@@ -378,11 +375,10 @@ begin
               end
               else begin
                   cur_field := cur_tag.Name;
-                  field_set.Add(cur_field);
                   cur_frame := TframeTopLabel.Create(Self);
                   with cur_frame do begin
                       Parent := pnlFields;
-                      Align := alTop;
+                      Top := tt;
                       Visible := true;
                       field_name := cur_field;
                       lbl.Caption := getDisplayField(cur_field);
@@ -392,6 +388,10 @@ begin
                           txtData.PasswordChar := '*';
                       inc(ti);
                   end;
+
+                  tt := tt + cur_frame.height + 1;
+                  cur_frame.Align := alTop;
+
                   if (ff = nil) then
                       ff := cur_frame;
               end;
@@ -861,7 +861,6 @@ end;
 procedure TfrmJUD.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   inherited;
-    field_set.Free();
     virtlist.Free();
     Action := caFree;
 end;
