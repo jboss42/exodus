@@ -209,7 +209,7 @@ begin
     msn := frmJabber.imgMSNEmoticons;
 
     // This is a "meta-regex" that should match everything
-    e := '(.*)((\([a-zA-Z0-9@{}%&~?^]+\))|([:;BoOxX][^\t ]+)|(=;))(\s|$)';
+    e := '(.*)((\([a-zA-Z0-9@{}%&~?/^]+\))|([:;BoOxX][^\t ]+)|(=;))(\s|$)';
 
     // Normal smileys
     AddEmot(':)', msn, 0);       // normal
@@ -237,12 +237,15 @@ begin
     AddEmot(':O', msn, 44);
     AddEmot(':-o', msn, 44);
     AddEmot(':-O', msn, 44);
+    AddEmot('(/)', msn, 43);     // graphy-thing
     AddEmot(':|', msn, 2);       // undecided
     AddEmot(':-|', msn, 2);
     AddEmot(':cool', msn, 22);   // sunglasses
     AddEmot('B)', msn, 22);
     AddEmot('B-)', msn, 22);
-    AddEmot('>:)', y, 13);       // yahoo devil
+
+//    AddEmot('>:)', y, 13);       // yahoo devil
+    AddEmot(':devil', y, 13);       // yahoo devil
     AddEmot('O:)', y, 17);       // yahoo angel
     AddEmot('O:-)', y, 17);
     AddEmot('o:)', y, 17);
@@ -251,9 +254,9 @@ begin
     AddEmot(':-B', y, 18);
     AddEmot('=;', y, 19);        // talk to the hand
     AddEmot(':sleep', y, 20);       // sleeping
-    AddEmot('@}:-', msn, 20);    // rose
     AddEmot('(F)', msn, 20);
-    AddEmot(':rose', msn, 20);
+    AddEmot(':rose', msn, 20);   // rose
+//    AddEmot('@}:-', msn, 20);  // regex doesn't match this.
     AddEmot(':skull', y, 25);       // skull
     AddEmot('(A)', msn, 15);     // Angel
     AddEmot(':saint', msn, 15);
@@ -286,7 +289,8 @@ begin
     AddEmot('o/~', msn, 5);
     AddEmot('o/`', msn, 5);
     AddEmot('(@)', msn, 10);     // cat
-    AddEmot('(C)', msn, 18);     // cup
+    AddEmot('(C)', msn, 17);     // cup
+    AddEmot('(c)', msn, 17);     // cup
     AddEmot('(^)', msn, 11);     // cake
     AddEmot('(W)', msn, 34);     // Wilted rose
     AddEmot('(?)', msn, 41);     // ASL/Age Sex Location
@@ -301,7 +305,7 @@ begin
     AddEmot('({)', msn, 12);     // hug right
     AddEmot('(})', msn, 13);     // hug left
     AddEmot(':''(', y, 14);   // cry
-    AddEmot(';''(', y, 14);
+    AddEmot(';''(', msn, 8);
     AddEmot(':cry', y, 14);
     AddEmot('(&)', msn, 7);      // dog
     AddEmot('(~)', msn, 14);     // movie
