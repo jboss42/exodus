@@ -348,6 +348,7 @@ begin
         end;
 
         tmp_grplist := TWideStringlist.Create;
+        tmp_grplist.CaseSensitive := true;
         for i := 0 to GrpListBox.Items.Count - 1 do begin
             if GrpListBox.Checked[i] then
                 tmp_grplist.Add(grpListBox.Items[i]);

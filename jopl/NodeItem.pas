@@ -166,7 +166,9 @@ begin
     _full := name;
     _parts := TWidestringlist.Create();
     _jids := TWidestringlist.Create();
+
     _grps := TWidestringlist.Create();
+    _grps.CaseSensitive := true;
 
     // actually parse for nested groups
     if ((MainSession <> nil) and
@@ -467,6 +469,8 @@ begin
     inherited;
 
     Groups := TWidestringList.Create();
+    Groups.CaseSensitive := true;
+
     Data := nil;
     Presence := nil;
     Resource := '';
@@ -498,6 +502,8 @@ constructor TJabberRosterItem.Create;
 begin
     inherited;
     Groups := TWideStringList.Create;
+    Groups.CaseSensitive := true;
+    
     jid := TJabberID.Create('');
     subscription := 'none';
     _nickname := '';
