@@ -178,6 +178,7 @@ type
     chkSound: TCheckBox;
     Label20: TLabel;
     chkNotifyActive: TCheckBox;
+    chkMsgQueue: TCheckBox;
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -351,6 +352,7 @@ begin
         // Message Options
         chkTimestamp.Checked := getBool('timestamp');
         txtTimestampFmt.Text := getString('timestamp_format');
+        chkMsgQueue.Checked := getBool('msg_queue');
         chkEmoticons.Checked := getBool('emoticons');
         chkLog.Checked := getBool('log');
         txtLogPath.Text := getString('log_path');
@@ -479,6 +481,7 @@ begin
         setBool('timestamp', chkTimestamp.Checked);
         setString('timestamp_format', txtTimestampFmt.Text);
         setBool('emoticons', chkEmoticons.Checked);
+        setBool('msg_queue', chkMsgQueue.Checked);
         setBool('log', chkLog.Checked);
         setString('log_path', txtLogPath.Text);
 

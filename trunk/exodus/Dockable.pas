@@ -166,8 +166,10 @@ procedure TfrmDockable.WMWindowPosChanging(var msg: TWMWindowPosChanging);
 var
     r: TRect;
 begin
-    if _noMoveCheck then exit;
-
+    if _noMoveCheck then begin
+        inherited;
+        exit;
+        end;
 
     {
     _top indicates that we are moving the window to the top of
@@ -257,7 +259,7 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.FormResize(Sender: TObject);
 begin
-    if (MainSession <> nil) then
+    if ((MainSession <> nil)) then
         MainSession.Prefs.SavePosition(Self);
 end;
 

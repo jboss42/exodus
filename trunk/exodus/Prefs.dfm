@@ -1435,12 +1435,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 310
     Height = 370
-    ActivePage = tbsRoster
+    ActivePage = tbsMessages
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 0
+    TabIndex = 5
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1870,7 +1870,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 97
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2025,7 +2025,7 @@ object frmPrefs: TfrmPrefs
       ImageIndex = 5
       object Label19: TLabel
         Left = 25
-        Top = 69
+        Top = 93
         Width = 35
         Height = 13
         Caption = 'Format:'
@@ -2040,7 +2040,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkTimestamp: TCheckBox
         Left = 5
-        Top = 48
+        Top = 72
         Width = 156
         Height = 17
         Caption = 'Timestamp messages'
@@ -2048,7 +2048,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkLog: TCheckBox
         Left = 5
-        Top = 95
+        Top = 119
         Width = 97
         Height = 17
         Caption = 'Log Messages'
@@ -2056,7 +2056,7 @@ object frmPrefs: TfrmPrefs
       end
       object txtLogPath: TEdit
         Left = 26
-        Top = 113
+        Top = 137
         Width = 188
         Height = 21
         TabOrder = 3
@@ -2081,19 +2081,27 @@ object frmPrefs: TfrmPrefs
       end
       object txtTimestampFmt: TEdit
         Left = 69
-        Top = 65
+        Top = 89
         Width = 145
         Height = 21
         TabOrder = 5
       end
       object btnLogBrowse: TButton
         Left = 219
-        Top = 111
+        Top = 135
         Width = 75
         Height = 25
         Caption = 'Browse'
         TabOrder = 6
         OnClick = btnLogBrowseClick
+      end
+      object chkMsgQueue: TCheckBox
+        Left = 5
+        Top = 47
+        Width = 284
+        Height = 17
+        Caption = 'Messages, Events always goto the Msg Queue'
+        TabOrder = 7
       end
     end
     object tbsNotify: TTabSheet
@@ -2245,7 +2253,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 124
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2323,7 +2331,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 112
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2357,7 +2365,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TLabel
           Left = 0
           Top = 0
-          Width = 302
+          Width = 256
           Height = 26
           Align = alTop
           Caption = 
@@ -2381,7 +2389,7 @@ object frmPrefs: TfrmPrefs
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 302
+        Width = 292
         Height = 26
         Align = alTop
         Caption = 
@@ -2392,7 +2400,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 146
         Height = 20
         Align = alTop
         Alignment = taCenter

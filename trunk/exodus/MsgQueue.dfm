@@ -1,6 +1,6 @@
 object frmMsgQueue: TfrmMsgQueue
-  Left = 271
-  Top = 207
+  Left = 228
+  Top = 376
   Width = 436
   Height = 328
   Caption = 'Events'
@@ -11,10 +11,10 @@ object frmMsgQueue: TfrmMsgQueue
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = True
+  Position = poDefaultPosOnly
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
-  OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter

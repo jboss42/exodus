@@ -33,7 +33,6 @@ type
     txtMsg: TRichEdit;
     StatusBar1: TStatusBar;
     procedure FormCreate(Sender: TObject);
-    procedure FormResize(Sender: TObject);
     procedure lstEventsChange(Sender: TObject; Item: TListItem;
       Change: TItemChange);
     procedure lstEventsDblClick(Sender: TObject);
@@ -43,6 +42,8 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     { Private declarations }
+    procedure SaveEvents(exclude: TListItem = nil);
+    procedure LoadEvents();
   public
     { Public declarations }
     procedure LogEvent(e: TJabberEvent; msg: string; img_idx: integer);
@@ -61,6 +62,7 @@ implementation
 {$R *.dfm}
 
 uses
+    XMLUtils, XMLParser, XMLTag,
     ExUtils, MsgRecv, Session, PrefController;
 
 {---------------------------------------}
@@ -85,28 +87,120 @@ begin
     item.ImageIndex := img_idx;
     item.SubItems.Add(DateTimeToStr(e.edate));
     item.SubItems.Add(msg);         // Subject
+
+    SaveEvents();
 end;
+
+{---------------------------------------}
+procedure TfrmMsgQueue.SaveEvents(exclude: TListItem = nil);
+var
+    i,d: integer;
+    itm: TListItem;
+    fn: string;
+    s, e: TXMLTag;
+    event: TJabberEvent;
+    ss: TStringList;
+begin
+    // save all of the events in the listview out to a file
+
+    fn := ExtractFilePath(Application.EXEName) + 'spool.xml';
+
+    s := TXMLTag.Create('spool');
+    for i := 0 to lstEvents.Items.Count - 1 do begin
+        itm := lstEvents.Items[i];
+        if (itm <> exclude) then begin
+            event := TJabberEvent(itm.Data);
+            e := s.AddTag('event');
+            with e do begin
+                e.PutAttribute('img', IntToStr(itm.ImageIndex));
+                e.PutAttribute('caption', itm.Caption);
+                e.PutAttribute('msg', itm.SubItems[1]);
+                e.PutAttribute('timestamp', DateTimeToStr(event.Timestamp));
+                e.PutAttribute('edate', DateTimeToStr(event.edate));
+                e.PutAttribute('elapsed_time', IntToStr(event.elapsed_time));
+                e.PutAttribute('etype', IntToStr(integer(event.eType)));
+                e.PutAttribute('from', event.from);
+                e.PutAttribute('id', event.id);
+                e.PutAttribute('data_type', event.data_type);
+                for d := 0 to event.Data.Count - 1 do
+                    e.AddBasicTag('data', event.Data.Strings[d]);
+                end;
+            end;
+        end;
+
+    ss := TStringlist.Create();
+    ss.Add(s.xml);
+    ss.SaveToFile(fn);
+    ss.Free();
+
+    s.Free();
+end;
+
+{---------------------------------------}
+procedure TfrmMsgQueue.LoadEvents();
+var
+    i,d: integer;
+    p: TXMLTagParser;
+    cur_e, s: TXMLTag;
+    dtags, etags: TXMLTagList;
+    e: TJabberEvent;
+    itm: TListItem;
+    fn: string;
+begin
+    // Load events from the spool file
+    fn := ExtractFilePath(Application.EXEName) + 'spool.xml';
+
+    if (not FileExists(fn)) then exit;
+
+    p := TXMLTagParser.Create();
+    p.ParseFile(fn);
+
+    if p.Count > 0 then begin
+        s := p.popTag();
+        etags := s.ChildTags();
+
+        for i := 0 to etags.Count - 1 do begin
+            cur_e := etags[i];
+            e := TJabberEvent.Create();
+            itm := lstEvents.Items.Add();
+            e.eType := TJabberEventType(SafeInt(cur_e.GetAttribute('etype')));
+            e.from := cur_e.GetAttribute('from');
+            e.id := cur_e.GetAttribute('id');
+            e.Timestamp := StrToDateTime(cur_e.GetAttribute('timestamp'));
+            e.edate := StrToDateTime(cur_e.GetAttribute('edate'));
+            e.data_type := cur_e.GetAttribute('date_type');
+            e.elapsed_time := SafeInt(cur_e.GetAttribute('elapsed_time'));
+
+            itm.ImageIndex := SafeInt(cur_e.GetAttribute('img'));
+            itm.Caption := cur_e.GetAttribute('caption');
+            itm.SubItems.Add(DateTimeToStr(e.edate));
+            itm.SubItems.Add(cur_e.GetAttribute('msg'));
+
+            dtags := cur_e.QueryTags('data');
+            for d := 0 to dtags.Count - 1 do
+                e.Data.Add(dtags[d].Data);
+
+            itm.Data := e;
+            end;
+        end;
+
+    p.Free();
+
+end;
+
 
 {---------------------------------------}
 procedure TfrmMsgQueue.FormCreate(Sender: TObject);
 begin
     inherited;
 
-    MainSession.Prefs.RestorePosition(Self);
-
     lstEvents.Color := TColor(MainSession.Prefs.getInt('roster_bg'));
     txtMsg.Color := lstEvents.Color;
 
     AssignDefaultFont(lstEvents.Font);
     AssignDefaultFont(txtMsg.Font);
-end;
 
-{---------------------------------------}
-procedure TfrmMsgQueue.FormResize(Sender: TObject);
-begin
-    inherited;
-
-    MainSession.prefs.SavePosition(Self);
+    Self.LoadEvents();
 end;
 
 {---------------------------------------}
@@ -164,6 +258,7 @@ begin
             i := item.Index;
             first := i;
             lstEvents.Items.Delete(i);
+            Self.SaveEvents();
             end
         else begin
             for i := lstEvents.Items.Count-1 downto 0 do begin
@@ -172,6 +267,7 @@ begin
                     first := i;
                     end;
                 end;
+            Self.SaveEvents();
             end;
 
         if (first < lstEvents.Items.Count) then
@@ -188,7 +284,6 @@ procedure TfrmMsgQueue.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
     inherited;
-
     lstEvents.Items.Clear;
 end;
 
