@@ -1,8 +1,8 @@
 object Exodus: TExodus
-  Left = 273
-  Top = 200
-  Width = 531
-  Height = 328
+  Left = 275
+  Top = 202
+  Width = 527
+  Height = 324
   AlphaBlendValue = 240
   Caption = 'Exodus'
   Color = clBtnFace
@@ -27,8 +27,8 @@ object Exodus: TExodus
   object Tabs: TPageControl
     Left = 0
     Top = 30
-    Width = 523
-    Height = 250
+    Width = 519
+    Height = 246
     ActivePage = tbsMsg
     Align = alClient
     DockSite = True
@@ -49,7 +49,7 @@ object Exodus: TExodus
         Left = 209
         Top = 0
         Width = 3
-        Height = 222
+        Height = 218
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = Splitter1Moved
@@ -58,7 +58,7 @@ object Exodus: TExodus
         Left = 0
         Top = 0
         Width = 209
-        Height = 222
+        Height = 218
         Align = alLeft
         BevelOuter = bvNone
         UseDockManager = False
@@ -69,8 +69,8 @@ object Exodus: TExodus
       object pnlRight: TPanel
         Left = 212
         Top = 0
-        Width = 303
-        Height = 222
+        Width = 299
+        Height = 218
         Align = alClient
         BevelOuter = bvNone
         DragCursor = crDefault
@@ -82,7 +82,7 @@ object Exodus: TExodus
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 523
+    Width = 519
     Height = 30
     BandBorderStyle = bsNone
     Bands = <
@@ -90,7 +90,7 @@ object Exodus: TExodus
         Control = ToolBar1
         ImageIndex = -1
         MinHeight = 22
-        Width = 515
+        Width = 511
       end>
     BorderWidth = 1
     DockSite = True
@@ -98,7 +98,7 @@ object Exodus: TExodus
     object ToolBar1: TToolBar
       Left = 9
       Top = 0
-      Width = 502
+      Width = 498
       Height = 22
       AutoSize = True
       ButtonWidth = 24
