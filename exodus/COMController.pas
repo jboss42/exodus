@@ -136,6 +136,8 @@ type
 procedure InitPlugins();
 procedure LoadPlugin(com_name: string);
 procedure UnloadPlugins();
+procedure ConfigurePlugin(com_name: string);
+procedure ReloadPlugins(sl: TWidestringlist);
 
 implementation
 
@@ -208,6 +210,58 @@ begin
             mtError, [mbOK], 0);
         exit;
     end;
+end;
+
+{---------------------------------------}
+procedure ConfigurePlugin(com_name: string);
+var
+    idx: integer;
+    p: TPlugin;
+begin
+    //
+    idx := plugs.IndexOf(com_name);
+    if (idx < 0) then begin
+        LoadPlugin(com_name);
+        idx := plugs.IndexOf(com_name);
+    end;
+
+    if (idx < 0) then begin
+        MessageDlg('Plugin could not be initialized or configured.',
+            mtError, [mbOK], 0);
+        exit;
+    end;
+
+    p := TPlugin(plugs.Objects[idx]);
+    p.com.Configure();
+end;
+
+{---------------------------------------}
+procedure ReloadPlugins(sl: TWidestringlist);
+var
+    i, idx: integer;
+    loaded: TStringlist;
+    p: TPlugin;
+begin
+    // load all plugins listed, if they are not already loaded.
+    loaded := TStringlist.Create();
+    for i := 0 to sl.Count -1  do begin
+        idx := plugs.IndexOf(sl[i]);
+        if (idx < 0) then
+            LoadPlugin(sl[i]);
+        loaded.Add(sl[i]);
+    end;
+
+    // unload any plugins not in the loaded list
+    for i := plugs.Count - 1 downto 0 do begin
+        idx := loaded.IndexOf(plugs[i]);
+        if (idx < 0) then begin
+            // unload the plugin
+            p := TPlugin(plugs.Objects[i]);
+            p.com.Shutdown();
+            plugs.Delete(i);
+        end;
+    end;
+    loaded.Free();
 end;
 
 {---------------------------------------}

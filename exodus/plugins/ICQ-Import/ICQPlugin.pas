@@ -118,7 +118,7 @@ end;
 {-----------------------------------------}
 procedure TICQImportPlugin.Shutdown;
 begin
-
+    _controller.removePluginMenu(_menu_id);
 end;
 
 {-----------------------------------------}
