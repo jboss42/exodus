@@ -53,18 +53,23 @@ type
     { Private declarations }
     _cb: integer;
     procedure DataCallback(event: string; tag: TXMLTag; data: Widestring);
+  public
+    procedure AddWideText(txt: WideString; txt_color: TColor);
   end;
 
-    procedure ShowDebugForm();
-    procedure DockDebugForm();
-    procedure FloatDebugForm();
-    procedure CloseDebugForm();
-    procedure DebugMessage(txt: string);
+procedure ShowDebugForm();
+procedure DockDebugForm();
+procedure FloatDebugForm();
+procedure CloseDebugForm();
+procedure DebugMessage(txt: Widestring);
 
 const
     DEBUG_LIMIT = 500;
 
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 
 {$R *.dfm}
@@ -117,19 +122,12 @@ begin
 end;
 
 {---------------------------------------}
-procedure DebugMessage(txt: string);
+procedure DebugMessage(txt: Widestring);
 begin
     if (frmDebug = nil) then exit;
     if (not frmDebug.Visible) then exit;
 
-    // add some text to the debug log
-    with frmDebug.MsgDebug do begin
-        SelStart := GetTextLen;
-        SelLength := 0;
-        SelAttributes.Color := clRed;
-        SelText := txt + ''#13#10;
-        SelAttributes.Color := clBlack;
-        end;
+    frmDebug.AddWideText(txt, clRed);
 end;
 
 {---------------------------------------}
@@ -141,6 +139,36 @@ begin
     inherited;
 
     _cb := MainSession.RegisterCallback(DataCallback);
+end;
+
+{---------------------------------------}
+procedure TfrmDebug.AddWideText(txt: WideString; txt_color: TColor);
+var
+    ScrollInfo: TScrollInfo;
+    r: integer;
+    ts: longword;
+    bot_thumb: integer;
+    at_bottom: boolean;
+begin
+    //
+    with MsgDebug do begin
+        ScrollInfo.cbSize := SizeOf(TScrollInfo);
+        ScrollInfo.fMask := SIF_PAGE + SIF_POS + SIF_RANGE;
+        GetScrollInfo(Handle, SB_VERT, ScrollInfo);
+        ts := ScrollInfo.nPage;
+        r := ScrollInfo.nMax - Scrollinfo.nMin;
+        bot_thumb := ScrollInfo.nPos + Integer(ScrollInfo.nPage) + 2;
+        at_bottom := (bot_thumb >= ScrollInfo.nMax) or (ScrollInfo.nMax = 0) or
+            (ts >= Trunc(0.8 * r));
+
+        SelStart := GetTextLen;
+        SelLength := 0;
+        SelAttributes.Color := txt_Color;
+        WideSelText := txt + ''#13#10;
+
+        if (at_bottom) then
+        Perform(EM_SCROLL, SB_PAGEDOWN, 0);
+        end;
 end;
 
 {---------------------------------------}
@@ -157,33 +185,10 @@ begin
             MsgDebug.Lines.Delete(0);
         end;
 
-    if (event = '/data/send') then with MsgDebug do begin
-        SelStart := GetTextLen;
-        SelLength := 0;
-        SelAttributes.Color := clBlue;
-        WideSelText := 'SENT: ' + data + #13#10;
-        SelAttributes.Color := clBlack;
-        end
-    else with MsgDebug do begin
-        SelStart := GetTextLen;
-        SelLength := 0;
-        SelAttributes.Color := clGreen;
-        WideSelText := 'RECV: ' + data + #13#10;
-        SelAttributes.Color := clBlack;
-        end;
-
-    with MsgDebug do begin
-        {
-        GetScrollRange(Handle, SB_VERT, min, max);
-        thumb := GetScrollPos(Handle, SB_VERT);
-        if ((thumb >= max) or ((thumb = 0) and ((max - Height) < 20))) then begin
-            SelStart := GetTextLen;
-            Perform(EM_SCROLLCARET, 0, 0);
-            end;
-        }
-        SelStart := GetTextLen;
-        Perform(EM_SCROLLCARET, 0, 0);
-        end;
+    if (event = '/data/send') then
+        AddWideText('SENT: ' + data, clBlue)
+    else
+        AddWideText('RECV: ' + data, clGreen);
 end;
 
 {---------------------------------------}
