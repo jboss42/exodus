@@ -1,0 +1,16 @@
+TODO List
+===============
+
+0.8.2 Stuff
+pm test socks+ssl
+pm test win95 installer
+
+jh Remove jabber auto-update stuff.. Prefer only HTTP
+jh test jep25
+jh check comctl32.dll version in installer
+jh uninstall prefs, maybe logs
+jh custom panel in installer for closing running instances.
+
+   Have installer ask for setting up "run exodus when windows starts"
+
+
