@@ -71,7 +71,7 @@ uses
 begin
   Application.Initialize;
   Application.Title := 'Exodus';
-  Application.CreateForm(TfrmJabber, frmJabber);
+  Application.CreateForm(TExodus, frmJabber);
   Application.CreateForm(TfrmRosterWindow, frmRosterWindow);
   Application.CreateForm(TfrmCustomPres, frmCustomPres);
   Application.ShowMainForm := false;
