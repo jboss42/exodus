@@ -28,6 +28,9 @@ uses
     Windows, Classes, SysUtils;
 
 type
+
+    TResponderFactory = procedure(tag: TXMLTag);
+
     TVersionResponder = class(TJabberResponder)
     published
         procedure iqCallback(event: string; tag: TXMLTag); override;
@@ -56,6 +59,21 @@ type
         constructor Create(Session: TJabberSession); overload;
     end;
 
+    TFactoryResponder = class
+    private
+        _session: TJabberSession;
+        _cb: integer;
+        _factory: TResponderFactory;
+    published
+        procedure respCallback(event: string; tag: TXMLTag);
+    public
+        constructor Create(Session: TJabberSession; xpath: string; factory: TResponderFactory);
+        destructor Destroy; override;
+    end;
+
+procedure initResponders();
+procedure cleanupResponders();
+
 resourcestring
     sNotifyAutoResponse = '%s query from:'#10#13' %s';
     sVersion = 'Version';
@@ -68,8 +86,17 @@ resourcestring
 {---------------------------------------}
 implementation
 uses
-    XMLUtils, Jabber1, JabberID, Notify, Roster;
+    xData, XMLUtils, Jabber1, JabberID, Notify, Transfer, Roster;
 
+var
+    _version: TVersionResponder;
+    _time: TTimeResponder;
+    _last: TLastResponder;
+    _browse: TBrowseResponder;
+    _xdata: TFactoryResponder;
+    _iqoob: TFactoryResponder;
+
+{---------------------------------------}
 function getNick(j: string): string;
 var
     jid: TJabberID;
@@ -82,6 +109,41 @@ begin
     else
         result := ritem.Nickname;
     jid.Free();
+end;
+
+{---------------------------------------}
+procedure initResponders();
+begin
+    assert(_version = nil);
+
+    _version := TVersionResponder.Create(MainSession);
+    _time := TTimeResponder.Create(MainSession);
+    _last := TLastResponder.Create(MainSession);
+    _browse := TBrowseResponder.Create(MainSession);
+    _xdata := TFactoryResponder.Create(MainSession,
+                '/packet/message/x[@xmlns="jabber:x:data"]',
+                showXData);
+    _iqoob := TFactoryResponder.Create(MainSession,
+                '/packet/iq[@type="set"]/query[@xmlns="jabber:iq:oob"]',
+                FileReceive);
+end;
+
+{---------------------------------------}
+procedure cleanupResponders();
+begin
+    _iqoob.Free();
+    _xdata.Free();
+    _browse.Free();
+    _last.Free();
+    _time.Free();
+    _version.Free();
+
+    _iqoob := nil;
+    _xdata := nil;
+    _browse := nil;
+    _last := nil;
+    _time := nil;
+    _version := nil;
 end;
 
 {---------------------------------------}
@@ -268,5 +330,33 @@ begin
         end;
     _session.SendTag(r);
 end;
+
+{---------------------------------------}
+constructor TFactoryResponder.Create(Session: TJabberSession; xpath: string; factory: TResponderFactory);
+begin
+    _factory := factory;
+    _session := Session;
+    _cb := _session.RegisterCallback(respCallback, xpath);
+end;
+
+{---------------------------------------}
+destructor TFactoryResponder.Destroy();
+begin
+    _session.UnRegisterCallback(_cb);
+end;
+
+{---------------------------------------}
+procedure TFactoryResponder.respCallback(event: string; tag: TXMLTag);
+begin
+    _factory(tag);
+end;
+
+initialization
+    _version := nil;
+    _time := nil;
+    _last := nil;
+    _browse := nil;
+    _xdata := nil;
+    _iqoob := nil;
 
 end.

@@ -22,6 +22,7 @@ unit Transfer;
 interface
 
 uses
+    XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, IdTCPConnection, IdTCPClient, IdHTTP, IdBaseComponent,
     IdComponent, IdTCPServer, IdHTTPServer, ComCtrls, StdCtrls, buttonFrame,
@@ -96,7 +97,9 @@ resourcestring
     sXferConn = 'Got connection.';
     sXferDefaultDesc = 'Sending you a file.';
 
-procedure FileReceive(from, url, desc: string);
+procedure FileReceive(tag: TXMLTag); overload;
+procedure FileReceive(from, url, desc: string); overload;
+
 procedure FileSend(tojid: string; fn: string = '');
 
 {---------------------------------------}
@@ -107,16 +110,33 @@ implementation
 {$R *.dfm}
 
 uses
-    Notify, 
+    Notify,
     JabberID, Roster,
     Session,
     Presence,
-    XMLTag,
     ShellAPI,
     Jabber1, ExUtils;
 
 {---------------------------------------}
-procedure FileReceive(from, url, desc: string);
+procedure FileReceive(tag: TXMLTag); overload;
+var
+    qTag, tmp_tag: TXMLTag;
+    from, url, desc: string;
+begin
+    // Callback for receiving file transfers
+    from := tag.GetAttribute('from');
+    qTag := tag.getFirstTag('query');
+    tmp_tag := qtag.GetFirstTag('url');
+    url := tmp_tag.Data;
+    tmp_tag := qTag.GetFirstTag('desc');
+    if (tmp_tag <> nil) then
+        desc := tmp_tag.Data
+    else
+        desc := '';
+    FileReceive(from, url, desc);
+end;
+
+procedure FileReceive(from, url, desc: string); overload;
 var
     tmps: string;
     tmp_jid: TJabberID;
@@ -154,7 +174,7 @@ begin
         txtMsg.ReadOnly := true;
         lblDesc.Visible := false;
         tmp_jid.Free();
-        
+
         end;
     xfer.Show;
     DoNotify(xfer, 'notify_oob', 'File from ' + tmps, ico_service);
@@ -205,7 +225,7 @@ begin
         txtFrom.Caption := tmps;
         txtFrom.Hint := jid;
         lblFrom.Caption := sTo;
-        
+
         pnlProgress.Visible := false;
         frameButtons1.btnOK.Caption := sSend;
         if (fn <> '') then
