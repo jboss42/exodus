@@ -1631,6 +1631,9 @@ begin
             frmRosterWindow.Refresh();
         rpanel.Align := alClient;
         Self.Width := Self.Width + 1;
+        Self.Refresh();
+        Self.Width := Self.Width - 1;
+        Self.Refresh;
     end;
 end;
 
