@@ -288,8 +288,8 @@ begin
             frmx := TframeGeneric(tabAgent.Controls[i]);
             if (xdata = nil) then begin
                 xdata := cur_iq.qTag.AddTag('x');
-                xdata.PutAttribute('xmlns', XMLNS_XDATA);
-                xdata.PutAttribute('type', 'submit');
+                xdata.setAttribute('xmlns', XMLNS_XDATA);
+                xdata.setAttribute('type', 'submit');
                 end;
 
             fx := frmx.getXML();
@@ -303,8 +303,8 @@ begin
     cur_stage := rsRegister;
 
     t := TXMLTag.Create('transport');
-    t.PutAttribute('jid', cur_iq.toJid);
-    t.PutAttribute('name', agent.name);
+    t.setAttribute('jid', cur_iq.toJid);
+    t.setAttribute('name', agent.name);
     MainSession.FireEvent('/session/transport', t);
     t.Free;
 

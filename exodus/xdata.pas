@@ -187,8 +187,8 @@ begin
     // do something
     getResponseTag(m, x);
 
-    x.PutAttribute('xmlns', XMLNS_XDATA);
-    x.PutAttribute('type', 'submit');
+    x.setAttribute('xmlns', XMLNS_XDATA);
+    x.setAttribute('type', 'submit');
     if (_title <> '') then
         x.AddBasicTag('title', _title);
 
@@ -224,7 +224,7 @@ var
 begin
     // Get a properly formatted result or cancel packet
     m := TXMLTag.Create(packet);
-    m.PutAttribute('to', to_jid);
+    m.setAttribute('to', to_jid);
 
     if (packet = 'message') then begin
         if (_thread <> '') then
@@ -233,15 +233,15 @@ begin
         x := m.AddTag('x');
         end
     else if (packet = 'iq') then begin
-        m.putAttribute('type', 'set');
-        m.putAttribute('id', MainSession.generateID());
+        m.setAttribute('type', 'set');
+        m.setAttribute('id', MainSession.generateID());
 
         q := m.AddTag('query');
-        q.PutAttribute('xmlns', ns);
+        q.setAttribute('xmlns', ns);
         x := q.AddTag('x');
         end;
 
-    x.PutAttribute('xmlns', XMLNS_XDATA);
+    x.setAttribute('xmlns', XMLNS_XDATA);
 end;
 
 {---------------------------------------}
@@ -250,7 +250,7 @@ var
     m, x: TXMLTag;
 begin
     getResponseTag(m, x);
-    x.PutAttribute('type', 'cancel');
+    x.setAttribute('type', 'cancel');
     MainSession.SendTag(m);
     Self.Close;
 end;

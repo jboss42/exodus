@@ -142,7 +142,7 @@ begin
 
                 // add all the attributes to it..
                 for i := 0 to _parser.CurAttr.Count - 1 do
-                    curtag.PutAttribute(_parser.CurAttr.Name(i), _parser.CurAttr.Value(i));
+                    curtag.setAttribute(_parser.CurAttr.Name(i), _parser.CurAttr.Value(i));
 
                 // If this is an empty tag <foo bar="item"/>, dispatch send
                 if _parser.CurPartType = ptEmptyTag then

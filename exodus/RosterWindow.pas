@@ -1620,12 +1620,12 @@ begin
         // Send pres to everyone in the list.
         for i := 0 to recips.Count - 1 do begin
             t := TXMLTag.Create('presence');
-            if (ptype) <> '' then t.PutAttribute('type', ptype);
+            if (ptype) <> '' then t.setAttribute('type', ptype);
             if (pshow) <> '' then t.AddBasicTag('show', pshow);
             if (pstatus) <> '' then t.AddBasicTag('status', pstatus);
             if (pri > 0) then t.AddBasicTag('priority', IntToStr(pri));
 
-            t.PutAttribute('to', TJabberRosterItem(recips[i]).jid.full);
+            t.setAttribute('to', TJabberRosterItem(recips[i]).jid.full);
             MainSession.SendTag(t);
             end;
         end;
@@ -2011,8 +2011,8 @@ begin
     if (_cur_ritem <> nil) then begin
         p := TXMLTag.Create('presence');
         if (Sender = popTransLogoff) then
-            p.PutAttribute('type', 'unavailable');
-        p.PutAttribute('to', _cur_ritem.jid.full);
+            p.setAttribute('type', 'unavailable');
+        p.setAttribute('to', _cur_ritem.jid.full);
         MainSession.SendTag(p);
         end;
 end;

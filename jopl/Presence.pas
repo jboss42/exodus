@@ -134,10 +134,10 @@ end;
 function TJabberPres.xml: Widestring;
 begin
     if toJID.jid <> '' then
-        PutAttribute('to', toJID.full);
+        setAttribute('to', toJID.full);
 
     if fromJID.jid <> '' then
-        PutAttribute('from', fromJID.jid);
+        setAttribute('from', fromJID.jid);
 
     if Status <> '' then
         Self.AddBasicTag('status', Status);
@@ -146,7 +146,7 @@ begin
         Self.AddBasicTag('show', Show);
 
     if PresType <> '' then
-        PutAttribute('type', PresType);
+        setAttribute('type', PresType);
 
     if Priority >= 0 then
         Self.AddBasicTag('priority', IntToStr(priority));
@@ -216,7 +216,7 @@ procedure TJabberCustomPres.FillTag(tag: TXMLTag);
 begin
     // populate into a tag
     tag.ClearTags();
-    tag.PutAttribute('name', title);
+    tag.setAttribute('name', title);
     tag.AddBasicTag('show', show);
     tag.AddBasicTag('status', status);
     tag.AddBasicTag('priority', IntToStr(priority));

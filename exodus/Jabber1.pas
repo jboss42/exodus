@@ -1528,8 +1528,8 @@ begin
 
         if MainSession.IsPaused then begin
             with tag.AddTag('x') do begin
-                PutAttribute('xmlns', XMLNS_DELAY);
-                PutAttribute('stamp', DateTimeToJabber(Now + TimeZoneBias()));
+                setAttribute('xmlns', XMLNS_DELAY);
+                setAttribute('stamp', DateTimeToJabber(Now + TimeZoneBias()));
                 end;
             MainSession.QueueEvent(event, tag, Self.MsgCallback)
             end

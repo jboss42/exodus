@@ -800,10 +800,10 @@ begin
     if (f = nil) then
         f := p.AddTag(fkey);
 
-    f.PutAttribute('top', IntToStr(Form.top));
-    f.PutAttribute('left', IntToStr(Form.left));
-    f.PutAttribute('width', IntToStr(Form.width));
-    f.PutAttribute('height', IntToStr(Form.height));
+    f.setAttribute('top', IntToStr(Form.top));
+    f.setAttribute('left', IntToStr(Form.left));
+    f.setAttribute('width', IntToStr(Form.width));
+    f.setAttribute('height', IntToStr(Form.height));
 
     Self.Save();
 end;
@@ -938,7 +938,7 @@ begin
         toJID := '';
         Namespace := XMLNS_PRIVATE;
         with qtag.AddTag('storage') do
-            putAttribute('xmlns', XMLNS_PREFS);
+            setAttribute('xmlns', XMLNS_PREFS);
         Send();
         end;
 end;
@@ -958,13 +958,13 @@ begin
 
     iq := TXMLTag.Create('iq');
     with iq do begin
-        putAttribute('type', 'set');
-        putAttribute('id', js.generateID());
+        setAttribute('type', 'set');
+        setAttribute('id', js.generateID());
         with AddTag('query') do begin
-            putAttribute('xmlns', XMLNS_PRIVATE);
+            setAttribute('xmlns', XMLNS_PRIVATE);
             stag := AddTag('storage');
             stag.AssignTag(_server_node);
-            stag.PutAttribute('xmlns', XMLNS_PREFS);
+            stag.setAttribute('xmlns', XMLNS_PREFS);
             end;
         end;
     js.SendTag(iq);
@@ -1106,7 +1106,7 @@ var
     ptag: TXMLTag;
 begin
     node.ClearTags();
-    node.PutAttribute('name', Name);
+    node.setAttribute('name', Name);
     node.AddBasicTag('username', Username);
     node.AddBasicTag('server', Server);
     node.AddBasicTag('save_passwd', SafeBoolStr(SavePasswd));
@@ -1114,7 +1114,7 @@ begin
     // node.AddBasicTag('password', Password);
     ptag := node.AddTag('password');
     if (SavePasswd) then begin
-        ptag.PutAttribute('encoded', 'yes');
+        ptag.setAttribute('encoded', 'yes');
         ptag.AddCData(EncodeString(Password));
         end;
 

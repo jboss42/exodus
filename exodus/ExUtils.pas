@@ -627,17 +627,17 @@ var
     ri: TJabberRosterItem;
 begin
     msg := TXMLTag.Create('message');
-    msg.PutAttribute('id', MainSession.generateID());
-    msg.PutAttribute('to', to_jid);
+    msg.setAttribute('id', MainSession.generateID());
+    msg.setAttribute('to', to_jid);
 
     b := Format(sMsgRosterItems, [items.Count]);
     x := msg.AddTag('x');
-    x.PutAttribute('xmlns', XMLNS_XROSTER);
+    x.setAttribute('xmlns', XMLNS_XROSTER);
     for i := 0 to items.Count - 1 do begin
         ri := TJabberRosterItem(items[i]);
         item := x.AddTag('item');
-        item.PutAttribute('jid', ri.jid.full);
-        item.PutAttribute('name', ri.RawNickname);
+        item.setAttribute('jid', ri.jid.full);
+        item.setAttribute('name', ri.RawNickname);
         b := b + Chr(13) + Chr(10) + ri.RawNickname + ': ' + ri.jid.full;
         end;
     msg.AddBasicTag('body', b);

@@ -129,16 +129,16 @@ begin
         event := TJabberEvent(_queue[i]);
         e := s.AddTag('event');
         with e do begin
-            e.PutAttribute('img', IntToStr(event.img_idx));
-            e.PutAttribute('caption', event.caption);
-            e.PutAttribute('msg', event.msg);
-            e.PutAttribute('timestamp', DateTimeToStr(event.Timestamp));
-            e.PutAttribute('edate', DateTimeToStr(event.edate));
-            e.PutAttribute('elapsed_time', IntToStr(event.elapsed_time));
-            e.PutAttribute('etype', IntToStr(integer(event.eType)));
-            e.PutAttribute('from', event.from);
-            e.PutAttribute('id', event.id);
-            e.PutAttribute('data_type', event.data_type);
+            e.setAttribute('img', IntToStr(event.img_idx));
+            e.setAttribute('caption', event.caption);
+            e.setAttribute('msg', event.msg);
+            e.setAttribute('timestamp', DateTimeToStr(event.Timestamp));
+            e.setAttribute('edate', DateTimeToStr(event.edate));
+            e.setAttribute('elapsed_time', IntToStr(event.elapsed_time));
+            e.setAttribute('etype', IntToStr(integer(event.eType)));
+            e.setAttribute('from', event.from);
+            e.setAttribute('id', event.id);
+            e.setAttribute('data_type', event.data_type);
             for d := 0 to event.Data.Count - 1 do
                 e.AddBasicTag('data', event.Data.Strings[d]);
             end;

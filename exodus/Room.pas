@@ -262,7 +262,7 @@ begin
         p := TJabberPres.Create;
         p.toJID := TJabberID.Create(rjid + '/' + rnick);
         with p.AddTag('x') do begin
-            PutAttribute('xmlns', XMLNS_MUC);
+            setAttribute('xmlns', XMLNS_MUC);
             if (password <> '') then
                 AddBasicTag('password', password);
             end;
@@ -536,8 +536,8 @@ end;
 function TfrmRoom.newRoomMessage(body: Widestring): TXMLTag;
 begin
     Result := TXMLTag.Create('message');
-    Result.PutAttribute('from', jid);
-    Result.PutAttribute('type', 'groupchat');
+    Result.setAttribute('from', jid);
+    Result.setAttribute('type', 'groupchat');
     Result.AddBasicTag('body', body);
 end;
 
@@ -597,7 +597,7 @@ begin
                 if (messageDlg('You are not on the member list for this room. Try and register?',
                     mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
                     t := TXMLTag.Create('register');
-                    t.PutAttribute('jid', Self.jid);
+                    t.setAttribute('jid', Self.jid);
                     MainSession.FireEvent('/session/register', t);
                     t.Free();
                     end;
@@ -1399,11 +1399,11 @@ begin
         end;
 
     iq := TXMLTag.Create('iq');
-    iq.PutAttribute('type', 'set');
-    iq.PutAttribute('id', MainSession.generateID());
-    iq.PutAttribute('to', jid);
+    iq.setAttribute('type', 'set');
+    iq.setAttribute('id', MainSession.generateID());
+    iq.setAttribute('to', jid);
     q := iq.AddTag('query');
-    q.PutAttribute('xmlns', XMLNS_MUCADMIN);
+    q.setAttribute('xmlns', XMLNS_MUCADMIN);
 
     if (Sender = popKick) then
         AddMemberItems(q, reason, MUC_NONE)
@@ -1424,13 +1424,13 @@ begin
     for i := 0 to lstRoster.Items.Count - 1 do begin
         if lstRoster.Items[i].Selected then begin
             with tag.AddTag('item') do begin
-                PutAttribute('nick', lstRoster.Items[i].Caption);
+                setAttribute('nick', lstRoster.Items[i].Caption);
                 if (NewRole <> '') then
-                    PutAttribute('role', NewRole);
+                    setAttribute('role', NewRole);
                 if (Reason <> '') then
                     AddBasicTag('reason', reason);
                 if (NewAffiliation <> '') then
-                    PutAttribute('affiliation', NewAffiliation);
+                    setAttribute('affiliation', NewAffiliation);
                 end;
             end;
         end;
@@ -1449,11 +1449,11 @@ begin
     if (lstRoster.SelCount = 0) then exit;
 
     iq := TXMLTag.Create('iq');
-    iq.PutAttribute('type', 'set');
-    iq.PutAttribute('id', MainSession.generateID());
-    iq.PutAttribute('to', jid);
+    iq.setAttribute('type', 'set');
+    iq.setAttribute('id', MainSession.generateID());
+    iq.setAttribute('to', jid);
     q := iq.AddTag('query');
-    q.PutAttribute('xmlns', XMLNS_MUCADMIN);
+    q.setAttribute('xmlns', XMLNS_MUCADMIN);
 
     // Iterate over all selected items, and toggle
     // voice by changing roles
@@ -1467,8 +1467,8 @@ begin
                 new_role := MUC_PART;
             if (new_role <> '') then begin
                 with q.AddTag('item') do begin
-                    PutAttribute('nick', cur_member.Nick);
-                    PutAttribute('role', new_role);
+                    setAttribute('nick', cur_member.Nick);
+                    setAttribute('role', new_role);
                     end;
                 end;
             end;
@@ -1508,11 +1508,11 @@ begin
     if InputQuery('Destroy Room', 'Destroy Reason: ', reason) = false then exit;
 
     iq := TXMLTag.Create('iq');
-    iq.PutAttribute('type', 'set');
-    iq.PutAttribute('id', MainSession.generateID());
-    iq.PutAttribute('to', jid);
+    iq.setAttribute('type', 'set');
+    iq.setAttribute('id', MainSession.generateID());
+    iq.setAttribute('to', jid);
     d := iq.AddTag('destroy');
-    d.PutAttribute('xmlns', XMLNS_MUCOWNER);
+    d.setAttribute('xmlns', XMLNS_MUCOWNER);
     d.AddBasicTag('reason', reason);
     MainSession.SendTag(iq);
 end;

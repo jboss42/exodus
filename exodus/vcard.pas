@@ -288,8 +288,8 @@ begin
         end;
 
     iq := TXMLTag.Create('iq');
-    iq.PutAttribute('id', MainSession.generateID());
-    iq.PutAttribute('type', 'set');
+    iq.setAttribute('id', MainSession.generateID());
+    iq.setAttribute('type', 'set');
     _vcard.fillTag(iq);
 
     MainSession.SendTag(iq);

@@ -340,7 +340,7 @@ var
 begin
     //
     vtag := tag.AddTag('vCard');
-    vtag.PutAttribute('xmlns', 'vcard-temp');
+    vtag.setAttribute('xmlns', 'vcard-temp');
 
     t1 := vtag.AddTag('N');
     t1.AddBasicTag('GIVEN', GivenName);

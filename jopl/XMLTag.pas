@@ -68,7 +68,7 @@ type
     function AddCData(content: WideString): TXMLCData;
 
     function GetAttribute(key: WideString): WideString;
-    procedure PutAttribute(key, value: WideString);
+    procedure setAttribute(key, value: WideString);
 
     function ChildTags: TXMLTagList;
     function QueryXPTags(path: WideString): TXMLTagList; overload;
@@ -106,7 +106,7 @@ type
     constructor Create;
     destructor Destroy; override;
     procedure Parse(xps: WideString);
-    procedure putAttribute(name, value: WideString);
+    procedure setAttribute(name, value: WideString);
     function getAttribute(i: integer): TAttr;
 
     property AttrCount: integer read GetAttrCount;
@@ -293,7 +293,7 @@ begin
     end;
 
 {---------------------------------------}
-procedure TXMLTag.PutAttribute(key, value: WideString);
+procedure TXMLTag.setAttribute(key, value: WideString);
 var
     a: TNvpNode;
 begin
@@ -578,7 +578,7 @@ begin
     Self.AddCData(xml.Data);
 
     for i := 0 to xml._AttrList.Count - 1 do
-        Self.PutAttribute(xml._AttrList.Name(i), xml._AttrList.Value(i));
+        Self.setAttribute(xml._AttrList.Name(i), xml._AttrList.Value(i));
 end;
 
 
@@ -604,7 +604,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TXPMatch.putAttribute(name, value: WideString);
+procedure TXPMatch.setAttribute(name, value: WideString);
 var
     pair: TAttr;
 begin
@@ -670,7 +670,7 @@ begin
             while ((i <= l) and (xp[i] <> q)) do
                 inc(i);
             val := TrimQuotes(Copy(xp, s2, (i-s2) + 1));
-            PutAttribute(name, val);
+            setAttribute(name, val);
             state := 1;
             inc(i);
             end
@@ -684,7 +684,7 @@ begin
                 inc(i);
             name := Copy(xp, s, (i-s));
             val := '';
-            PutAttribute(name, val);
+            setAttribute(name, val);
             end
         else if (state = 0) then
             cur := cur + c;

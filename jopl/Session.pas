@@ -843,7 +843,7 @@ begin
         end;
     blockers.Free();
     block := TXMLTag.Create('unblock');
-    block.PutAttribute('jid', jid.jid);
+    block.setAttribute('jid', jid.jid);
     MainSession.FireEvent('/session/unblock', block);
 end;
 
@@ -861,7 +861,7 @@ begin
         end;
     blockers.Free();
     block := TXMLTag.Create('block');
-    block.PutAttribute('jid', jid.jid);
+    block.setAttribute('jid', jid.jid);
     MainSession.FireEvent('/session/block', block);
 end;
 

@@ -117,12 +117,12 @@ end;
 procedure TJabberIQ.Send;
 begin
     if _id <> '' then
-        Self.PutAttribute('id', _id);
+        Self.setAttribute('id', _id);
     if iqType <> '' then
-        Self.PutAttribute('type', iqType);
+        Self.setAttribute('type', iqType);
     if toJID <> '' then
-        Self.PutAttribute('to', toJID);
-    qTag.PutAttribute('xmlns', Namespace);
+        Self.setAttribute('to', toJID);
+    qTag.setAttribute('xmlns', Namespace);
 
     _cbIndex := _js.RegisterCallback(iqCallback, '/packet/iq[@id="' + _id + '"]');
     _js.Stream.Send(Self.xml);
@@ -137,7 +137,7 @@ begin
     // this is our singleton
     _timer.Enabled := false;
     _js.UnRegisterCallback(_cbIndex);
-    xml.PutAttribute('iq_elapsed_time', IntToStr(_ticks));
+    xml.setAttribute('iq_elapsed_time', IntToStr(_ticks));
     _callback('xml', xml);
     _cbIndex := -1;
     Self.Free;
