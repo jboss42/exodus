@@ -1298,6 +1298,7 @@ begin
         setTrayInfo(Self.Caption);
         setTrayIcon(0);
 
+        CloseAllChats();
         btnConnect.Down := false;
         restoreMenus(false);
 
@@ -1787,7 +1788,7 @@ begin
         CloseDebugForm();
         frmRosterWindow.ClearNodes();
         frmRosterWindow.Close;
-        ChatWin.CloseAllChats();
+        CloseAllChats();
 
         _notify.Free();
         _guiBuilder.Free();

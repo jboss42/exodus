@@ -43,7 +43,7 @@ type
         function AddChat(sjid, sresource: string): TChatController; overload;
 
         procedure MsgCallback(event: string; tag: TXMLTag);
-end;
+    end;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -172,7 +172,6 @@ begin
     else
         Self.AddObject(sjid + '/' + sresource, Result);
 end;
-
 
 end.
 
