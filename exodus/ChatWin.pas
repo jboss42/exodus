@@ -478,8 +478,6 @@ begin
                     imgAvatar.Width := _avatar.Width;
 
                 Panel1.ClientHeight := m + 1;
-                //imgAvatar.ClientWidth := imgAvatar.Width;
-                //imgAvatar.Visible := true;
             end;
         end
     end
@@ -1402,7 +1400,8 @@ var
   r : TRect;
 begin
   inherited;
-  if FloatingImage.FloatImage.Active then exit;
+  if (FloatingImage.FloatImage.Active) then exit;
+  if (_avatar = nil) then exit;
 
   with FloatingImage.FloatImage do
   begin
