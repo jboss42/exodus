@@ -777,6 +777,13 @@ begin
     // Setup callbacks
     _sessioncb := MainSession.RegisterCallback(SessionCallback, '/session');
 
+    // setup some branding stuff
+    with (MainSession.Prefs) do begin
+        mnuConference.Visible := getBool('brand_muc');
+        btnRoom.Visible := getBool('brand_muc');
+        mnuPlugins.Visible := getBool('brand_plugs');
+    end;
+
     // Setup the Tabs, toolbar, panel, and roster madness
     Tabs.ActivePage := tbsRoster;
     restoreToolbar();
@@ -872,7 +879,8 @@ end;
 procedure TfrmExodus.Startup;
 begin
     // load up all the plugins..
-    InitPlugins();
+    if (MainSession.Prefs.getBool('brand_plugs')) then
+        InitPlugins();
 
     // Creat and dock the MsgQueue if we're in expanded mode
     if (MainSession.Prefs.getBool('expanded')) then begin

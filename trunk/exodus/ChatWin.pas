@@ -345,13 +345,17 @@ begin
 
     _notify[0] := MainSession.Prefs.getInt('notify_chatactivity');
 
-    if (MainSession.Profile.ConnectionType = conn_normal) then
-        DragAcceptFiles( Handle, True );
-
     SetupPrefs();
 
-    mnuSendFile.Enabled := (MainSession.Profile.ConnectionType = conn_normal);
-
+    // branding/menus
+    with MainSession.Prefs do begin
+        if (getBool('brand_ft') and (MainSession.Profile.ConnectionType = conn_normal)) then begin
+            mnuSendFile.Enabled := true;
+            DragAcceptFiles( Handle, True );
+        end
+        else
+            mnuSendFile.Visible := false;
+    end;
 end;
 
 {---------------------------------------}

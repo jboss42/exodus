@@ -53,6 +53,9 @@
     <brand_profile_socks_user></brand_profile_socks_user>
     <brand_profile_ssl>false</brand_profile_ssl>
     <brand_profile_username></brand_profile_username>
+    <brand_muc>1</brand_muc>
+    <brand_ft>1</brand_ft>
+    <brand_plugs>1</brand_plugs>
     <browse_view>0</browse_view>
     <chat_memory>60</chat_memory>
     <client_caps>1</client_caps>
