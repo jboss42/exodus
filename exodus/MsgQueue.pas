@@ -221,7 +221,7 @@ begin
                 on EConvertError do
                     e.edate := Now();
             end;
-            e.data_type := cur_e.GetAttribute('date_type');
+            e.data_type := cur_e.GetAttribute('data_type');
             e.elapsed_time := SafeInt(cur_e.GetAttribute('elapsed_time'));
             e.msg := cur_e.GetAttribute('msg');
             e.caption := cur_e.GetAttribute('caption');
