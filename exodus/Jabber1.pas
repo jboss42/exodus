@@ -2712,8 +2712,6 @@ end;
 procedure TfrmExodus.Test1Click(Sender: TObject);
 var
     i: integer;
-    tmps: Widestring;
-    xp: TXPLite;
 begin
     // Test something..
     // LoadPlugin('RosterClean.ExodusRosterClean');
@@ -2725,29 +2723,6 @@ begin
     i := Random(40);
     ShowRiserWindow(Self, 'Test Toast ' + IntToStr(i) + ' Some more text to Some more text to Some more text to Some more text to make toast really long.', i);
     //ShowRiserWindow(Self, 'Test Toast ' + IntToStr(i), i);
-    {
-    tmps := XPLiteEscape('foo"bar');
-    ShowMessage(tmps);
-    tmps := XPLiteEscape('foobar"');
-    ShowMessage(tmps);
-    tmps := XPLiteEscape('foobar');
-    ShowMessage(tmps);
-    tmps := XPLiteEscape('""');
-    ShowMessage(tmps);
-    tmps := XPLiteEscape('"foo"');
-    ShowMessage(tmps);
-    tmps := XPLiteEscape('"foo');
-    ShowMessage(tmps);
-    tmps := XPLiteEscape('"foo"bar"');
-    ShowMessage(tmps);
-    tmps := XPLiteEscape('foo""bar');
-    ShowMessage(tmps);
-    tmps := XPLiteEscape('foo"bar"baz');
-    ShowMessage(tmps);
-
-    tmps := 'pgm@jabber.org/foo"bar';
-    xp := TXPLite.Create('/message[@from="' + XPLiteEscape(tmps) + '"]');
-    }
 end;
 
 {---------------------------------------}

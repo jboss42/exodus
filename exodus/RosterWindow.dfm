@@ -72,7 +72,7 @@ object frmRosterWindow: TfrmRosterWindow
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
-    ChangeDelay = 75
+    ChangeDelay = 30
     DragMode = dmAutomatic
     HideSelection = False
     Images = frmExodus.ImageList2
@@ -282,6 +282,10 @@ object frmRosterWindow: TfrmRosterWindow
         Caption = 'Subscribe'
         OnClick = popSendSubscribeClick
       end
+    end
+    object popRename: TMenuItem
+      Caption = 'Rename'
+      OnClick = popRenameClick
     end
     object popHistory: TMenuItem
       Caption = 'History'

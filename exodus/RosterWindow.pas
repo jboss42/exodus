@@ -96,6 +96,7 @@ type
     popTransProperties: TMenuItem;
     lblStatusLink: TLabel;
     imgAd: TImage;
+    popRename: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -149,6 +150,7 @@ type
     procedure popTransUnRegisterClick(Sender: TObject);
     procedure imgAdClick(Sender: TObject);
     procedure treeRosterKeyPress(Sender: TObject; var Key: Char);
+    procedure popRenameClick(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;         // roster callback id
@@ -643,9 +645,11 @@ end;
 {---------------------------------------}
 function TfrmRosterWindow.getSelectedContacts(online: boolean = true): TList;
 var
-    i: integer;
+    i, j: integer;
     ri: TJabberRosterItem;
     node: TTreeNode;
+    ntype: integer;
+    glist: TList;
 begin
     // return a list of the selected roster items
     Result := TList.Create();
@@ -657,21 +661,22 @@ begin
     end;
     node_grp: begin
         // add all online contacts in this grp to the Result list
-        if (treeRoster.SelectionCount > 1) then begin
-            // we have a collection of contacts selected
-            for i := 0 to treeRoster.SelectionCount - 1 do begin
-                node := treeRoster.Selections[i];
-                if getNodeType(node) = node_ritem then begin
-                    ri := TJabberRosterItem(node.Data);
-                    if (((online) and (ri.IsOnline)) or (not online)) then
-                        Result.Add(TJabberRosterItem(node.Data));
-                end;
+        for i := 0 to treeRoster.SelectionCount - 1 do begin
+            node := treeRoster.Selections[i];
+            ntype := getNodeType(node);
+            if (ntype = node_ritem) then begin
+                // add this roster item to the selection
+                ri := TJabberRosterItem(node.Data);
+                if (((online) and (ri.IsOnline)) or (not online)) then
+                    Result.Add(TJabberRosterItem(node.Data));
+            end
+            else if (ntype = node_grp) then begin
+                // add this grp to the selection
+                glist := MainSession.roster.GetGroupItems(node.Text, online);
+                for j := 0 to glist.count - 1 do
+                    Result.Add(TJabberRosterItem(glist[j]));
+                glist.Free();
             end;
-        end
-        else begin
-            // we have a single grp selected
-            Result.Free();
-            Result := MainSession.Roster.GetGroupItems(_cur_grp, online);
         end;
     end;
 end;
@@ -2040,24 +2045,10 @@ procedure TfrmRosterWindow.treeRosterEditing(Sender: TObject;
   Node: TTreeNode; var AllowEdit: Boolean);
 var
     ntype: integer;
-    nick: Widestring;
 begin
     // user is trying to change a node caption
     ntype := getNodeType(Node);
-    if (ntype = node_ritem) then begin
-        // Do this since the treeview doesn't use WideStrings for
-        // processing of Editing events
-        AllowEdit := false;
-        nick := _cur_ritem.Nickname;
-        if (InputQueryW('Rename Roster Item', 'New Nickname: ', nick)) then begin
-            _cur_ritem.Nickname := nick;
-            _cur_ritem.update();
-        end;
-    end
-    else if (ntype = node_bm) then
-        AllowEdit := true
-    else
-        AllowEdit := false;
+    AllowEdit := (ntype = node_bm);
 end;
 
 {---------------------------------------}
@@ -2128,6 +2119,19 @@ begin
     if Key = #13 then begin
         Self.treeRosterDblClick(Self);
         Key := #0;
+    end;
+end;
+
+procedure TfrmRosterWindow.popRenameClick(Sender: TObject);
+var
+    nick: Widestring;
+begin
+    // Do this since the treeview doesn't use WideStrings for
+    // processing of Editing events
+    nick := _cur_ritem.Nickname;
+    if (InputQueryW('Rename Roster Item', 'New Nickname: ', nick)) then begin
+        _cur_ritem.Nickname := nick;
+        _cur_ritem.update();
     end;
 end;
 
