@@ -1165,6 +1165,7 @@ begin
     // Create a temporary list of grps that this
     // contact should be in.
     tmp_grps := TWideStringlist.Create;
+    tmp_grps.CaseSensitive := true;
     if (ritem.jid.jid = MainSession.BareJid) then begin
         // this is another one of my own resources
         is_me := true;

@@ -167,6 +167,9 @@ begin
     Application.CreateForm(TfrmBrowse, Result);
     Result.ShowDefault();
 
+    if Result.TabSheet <> nil then
+        frmExodus.Tabs.ActivePage := Result.TabSheet;
+
     if (jid = '') then
         Result.GoJID(MainSession.Server, false)
     else

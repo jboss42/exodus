@@ -132,7 +132,10 @@ constructor TJabberRoster.Create;
 begin
     inherited;
     Bookmarks := TWideStringList.Create();
+
     _groups := TWidestringlist.Create();
+    _groups.CaseSensitive := true;
+
     _unfiled := TJabberGroup.Create('Unfiled');
     _xdb_bm := true;
 end;
@@ -427,7 +430,9 @@ var
     cur_grp: Widestring;
     p: TJabberPres;
 begin
-    if ((ri.Subscription <> 'to') and (ri.Subscription <> 'both')) then exit;
+    if ((ri.Subscription <> 'to') and
+        (ri.Subscription <> 'both') and
+        (MainSession.Prefs.getBool('roster_show_unsub') = false)) then exit;
 
     // make sure _groups is populated.
     p := MainSession.ppdb.FindPres(ri.jid.jid, '');

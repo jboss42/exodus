@@ -484,6 +484,7 @@ type
                                        // (can be set explicitely, but expect losses if there's true Unicode content
                                        // and this flag is set to False)
     FOnConfirmConversion: TConfirmConversionEvent;
+    FCaseSensitive: Boolean;  // pgm 1/7/04 - don't always do case insensitive searches
     function GetCommaText: WideString;
     function GetName(Index: Integer): WideString;
     function GetValue(const Name: WideString): WideString;
@@ -546,6 +547,7 @@ type
     property SaveUnicode: Boolean read FSaveUnicode write FSaveUnicode;
     property Strings[Index: Integer]: WideString read Get write Put; default;
     property Text: WideString read GetTextStr write SetTextStr;
+    property CaseSensitive: Boolean read FCaseSensitive write FCaseSensitive;
 
     property OnConfirmConversion: TConfirmConversionEvent read FOnConfirmConversion write FOnConfirmConversion;
   end;
@@ -4304,6 +4306,7 @@ constructor TWideStrings.Create;
 begin
   inherited;
   // there should seldom be the need to use a language other than the one of the system
+  FCaseSensitive := false;
   FLanguage := GetUserDefaultLCID;
 end;
 
@@ -4658,8 +4661,14 @@ end;
 function TWideStrings.IndexOf(const S: WideString): Integer;
 
 begin
-  for Result := 0 to GetCount - 1 do
-    if WideCompareText(Get(Result), S, FLanguage) = 0 then Exit;
+  for Result := 0 to GetCount - 1 do begin
+    if (FCaseSensitive) then begin
+        if (Get(Result) = S) then Exit;
+    end
+    else begin
+        if WideCompareText(Get(Result), S, FLanguage) = 0 then Exit;
+    end;
+  end;
   Result := -1;
 end;
 
