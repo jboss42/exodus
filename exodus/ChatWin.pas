@@ -94,6 +94,7 @@ type
     procedure showPres(tag: TXMLTag);
     procedure sendMsg;
     procedure SetJID(cjid: string);
+    procedure AcceptFiles( var msg : TMessage ); message WM_DROPFILES;
   end;
 
 var
@@ -203,6 +204,7 @@ begin
     _check_event := false;
     _last_id := '';
     _reply_id := '';
+    DragAcceptFiles( Handle, True );
 end;
 
 {---------------------------------------}
@@ -659,6 +661,35 @@ begin
             end;
         MainSession.SendTag(c);
         end;
+end;
+
+procedure TfrmChat.AcceptFiles( var msg : TMessage );
+const
+  cnMaxFileNameLen = 255;
+var
+  i,
+  nCount     : integer;
+  acFileName : array [0..cnMaxFileNameLen] of char;
+begin
+  // find out how many files we're accepting
+  nCount := DragQueryFile( msg.WParam,
+                           $FFFFFFFF,
+                           acFileName,
+                           cnMaxFileNameLen );
+
+  // query Windows one at a time for the file name
+  for i := 0 to nCount-1 do
+  begin
+    DragQueryFile( msg.WParam, i,
+                   acFileName, cnMaxFileNameLen );
+
+    // do your thing with the acFileName
+    //MessageBox( Handle, acFileName, '', MB_OK );
+    FileSend(_jid.full, acFileName);
+  end;
+
+  // let Windows know that you're done
+  DragFinish( msg.WParam );
 end;
 
 end.
