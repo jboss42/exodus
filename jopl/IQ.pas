@@ -105,6 +105,7 @@ begin
     inc(_ticks);
 
     if (_ticks >= _timeout) then begin
+        _timer.Enabled := false;
         _callback('timeout', nil);
         _js.UnRegisterCallback(_cbIndex);
         _cbIndex := -1;

@@ -57,7 +57,6 @@ type
     cur_stage: integer;
     cur_key: string;
     pres_cb: integer;
-
     function doField(fld: string): TfrmField;
   published
     procedure AgentCallback(event: string; tag: TXMLTag);
@@ -68,7 +67,6 @@ type
     { Public declarations }
     jid: string;
     agent: TAgentItem;
-
     procedure Start();
   end;
 
@@ -128,7 +126,7 @@ begin
     btnNext.Enabled := false;
     btnCancel.Enabled := true;
     Self.Show();
-    cur_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), AgentCallback);
+    cur_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), AgentCallback, 4);
     with cur_iq do begin
         toJid := self.jid;
         iqType := 'get';
@@ -181,9 +179,8 @@ begin
             end;
         end
     else begin
-        // todo: timeout on agent query
-        MessageDlg('The agent you are trying to register with can not be reached.',
-            mtError, [mbOK], 0);
+        // timeout on agent query
+        MessageDlg('The agent you are trying to register with can not be reached.', mtError, [mbOK], 0);
         Self.Close();
         exit;
         end;
