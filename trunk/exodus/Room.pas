@@ -268,7 +268,7 @@ const
     sStatus_403  = 'You are on the ban list for this room.';
     sStatus_404  = 'The room is being created. Please try again later.';
     sStatus_405  = 'You are not allowed to create rooms.';
-    sStatus_405a = 'You are not allowed to enter the room. You must be on the member list.';
+    sStatus_405a = 'You are not allowed to enter the room.';
     sStatus_407  = 'You are not on the member list for this room. Try and register?';
     sStatus_409  = 'Your nickname is already being used. Please select another one.';
     sStatus_Unknown = 'The room has been destroyed for an unknown reason.';
