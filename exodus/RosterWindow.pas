@@ -1169,14 +1169,23 @@ begin
         // check to see if this jid node exists under it
         cur_node := nil;
 
-        // XXX: this is all horked for my resources. :(
-        i := node_list.indexOf(cur_grp);
-        if (i >= 0) then begin
-            n := TTreeNode(node_list.Objects[i]);
-            if ((is_me) and (Pos(p.fromJid.resource, n.Text) = 1)) then
-                cur_node := n
-            else if (not is_me) then
-                cur_node := n
+        if (is_me) then begin
+            // check all nodes in the My Resources grp.
+            for i := 0 to node_list.Count - 1 do begin
+                n := TTreeNode(node_list.Objects[i]);
+                if (Pos(p.fromJid.resource, n.Text) = 1) then begin
+                    cur_node := n;
+                    break;
+                end;
+            end;
+        end
+        else begin
+            // find the node for this grp
+            i := node_list.indexOf(cur_grp);
+            if (i >= 0) then begin
+                n := TTreeNode(node_list.Objects[i]);
+                cur_node := n;
+            end;
         end;
 
         my_res := nil;
