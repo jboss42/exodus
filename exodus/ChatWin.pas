@@ -138,6 +138,7 @@ implementation
 {$R *.dfm}
 
 uses
+    COMChatController, 
     JabberConst, ExUtils, Presence, PrefController, Room,
     Transfer, RosterAdd, RiserWindow, Notify,
     Jabber1, Profile, MsgDisplay, IQ,
@@ -154,13 +155,18 @@ var
     tmp_jid: TJabberID;
     cjid: widestring;
     ritem: TJabberRosterItem;
+    echat: TExodusChat;
 begin
     // either show an existing chat or start one.
     chat := MainSession.ChatList.FindChat(sjid, resource, '');
 
-    if chat = nil then
+    if chat = nil then begin
         // Create one
         chat := MainSession.ChatList.AddChat(sjid, resource);
+        echat := TExodusChat.Create();
+        echat.setChatSession(chat);
+        frmExodus.ComController.fireNewChat(sjid);
+        end;
 
     if (chat.window = nil) then begin
         // if we don't have a window, then create one.
