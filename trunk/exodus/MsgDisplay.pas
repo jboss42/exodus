@@ -37,6 +37,9 @@ uses
     Clipbrd, Jabber1, JabberUtils, ExUtils,  Emote,
     ExtCtrls, Dialogs, XMLUtils, Session;
 
+const
+    MAX_MSG_LENGTH = 512;
+
 {---------------------------------------}
 procedure DisplayMsg(Msg: TJabberMessage; msglist: TfBaseMsgList; AutoScroll: boolean = true);
 begin
@@ -60,7 +63,7 @@ end;
 {---------------------------------------}
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true);
 var
-    fvl: integer;
+    len, fvl: integer;
     txt: WideString;
     at_bottom: boolean;
     is_scrolling: boolean;
@@ -99,6 +102,8 @@ begin
         txt := txt + ']';
     end;
 
+    len := Length(Msg.Body);
+    
     if (Msg.Nick = '') then begin
         // Server generated msgs (mostly in TC Rooms)
         txt := txt + '\cf2  ' + EscapeRTF(Msg.Body);
@@ -120,7 +125,7 @@ begin
         else
             txt := txt + '\cf6  ';
 
-        if (use_emoticons) then
+        if ((use_emoticons) and (len < MAX_MSG_LENGTH)) then
             txt := txt + ProcessRTFEmoticons(Msg.Body)
         else
             txt := txt + EscapeRTF(Msg.Body);
@@ -129,7 +134,7 @@ begin
     else begin
         // This is an action
         txt := txt + '\cf3  * ' + Msg.Nick + ' ';
-        if (use_emoticons) then
+        if ((use_emoticons) and (len < MAX_MSG_LENGTH)) then
             txt := txt + ProcessRTFEmoticons(Trim(Msg.Body))
         else
             txt := txt + EscapeRTF(Msg.Body);
