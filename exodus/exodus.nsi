@@ -1,3 +1,24 @@
+;    Copyright 2003, Joe Hildebrand
+;
+;    This file is part of Exodus.
+;
+;    Exodus is free software; you can redistribute it and/or modify
+;    it under the terms of the GNU General Public License as published by
+;    the Free Software Foundation; either version 2 of the License, or
+;    (at your option) any later version.
+;
+;    Exodus is distributed in the hope that it will be useful,
+;    but WITHOUT ANY WARRANTY; without even the implied warranty of
+;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;    GNU General Public License for more details.
+;
+;    You should have received a copy of the GNU General Public License
+;    along with Exodus; if not, write to the Free Software
+;    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+; If you are trying to create a branded version of Exodus, search for
+; BRANDING in this file.
+
 ; exodus.nsi
 ;
 !verbose 2
@@ -22,6 +43,7 @@ XPStyle on
 InstProgressFlags smooth colored
 
 ComponentText "This will install Exodus."
+; BRANDING: YOU MUST NOT REMOVE THE GPL!
 LicenseData GPL-LICENSE.TXT
 LicenseText "Exodus is licensed under the GPL" "Groovy"
 CheckBitmap checks.bmp
@@ -38,9 +60,12 @@ Section "!Exodus (Required)"
 
 	; Set output path to the installation directory.
   	SetOutPath $INSTDIR
-  	; Put file there
   	File "Exodus.exe"
-  	
+	; BRANDING: Uncomment if you are doing a branded setup.
+	; SetOverwrite off ; only if you don't want to overwrite existing file.
+  	; File "branding.xml"
+	; SetOverwrite on
+
 	; install idlehooks on non-nt
 	Call GetWindowsVersion
   	Pop $0
@@ -48,6 +73,7 @@ Section "!Exodus (Required)"
 
 	IfFileExists IdleHooks.dll lbl_noIdle
 
+	; BRANDING: change this URL.
 	NSISdl::download http://exodus.jabberstudio.org/daily/extras/IdleHooks.dll $INSTDIR\IdleHooks.dll
 	StrCmp $0 "success" lbl_noIdle
 	    Abort "Error downloading IdleHooks library"
@@ -62,6 +88,7 @@ Section "!Exodus (Required)"
 	IntCmp 327710 $R0 lbl_reportVer lbl_reportVer
 
 	DetailPrint "Old version of richedit controls.  Upgrading."
+	; BRANDING: change this URL
 	NSISdl::download http://exodus.jabberstudio.org/richupd.exe $INSTDIR\richupd.exe
 	StrCmp $0 "success" lbl_execrich
 	    Abort "Error downloading richtext library"
@@ -133,6 +160,7 @@ Section "SSL Support (web connection needed)"
   libea:
 	IfFileExists $INSTDIR\libeay32.dll no_ssl
   need_ssl:
+	; BRANDING: Change this URL
 	NSISdl::download http://exodus.jabberstudio.org/indy_openssl096g.zip $INSTDIR\indy_openssl096.zip
 	StrCmp $0 "success" ssl
 	    Abort "Error downloading ssl libraries"
@@ -161,6 +189,7 @@ Section "Start Menu Shortcuts"
 
 SectionEnd
 
+; BRANDING: Remove this section
 Section "Bleeding-edge updates"
 	SetOverwrite off
   	File "branding.xml"	
