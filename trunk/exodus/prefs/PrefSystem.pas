@@ -50,6 +50,7 @@ type
   private
     { Private declarations }
     _old_locale: Widestring;
+    _lang_codes: TStringlist;
 
     procedure ScanLocales();
   public
@@ -70,9 +71,10 @@ resourcestring
 {---------------------------------------}
 {---------------------------------------}
 implementation
-{$WARN UNIT_PLATFORM OFF}
+{$WARNINGS OFF}
 {$R *.dfm}
 uses
+    GTLanguagesEx, 
     AutoUpdate, FileCtrl,
     PathSelector, PrefController, Registry, Session;
 
@@ -85,6 +87,8 @@ var
     langs: TStringlist;
     mo, lm, lang, dir: Widestring;
     sr: TSearchRec;
+    lang_name: string;
+    lid: LCID;
 begin
     // scan .\locale\... for possible lang packs
     dir := ExtractFilePath(Application.EXEName) + '\locale';
@@ -92,6 +96,9 @@ begin
 
     // look for subdirs in locale
     langs := TStringlist.Create();
+    _lang_codes.Clear();
+    _lang_codes.Add('Default');
+    _lang_codes.Add('en');
     if (FindFirst(dir + '\*.*', faDirectory, sr) = 0) then begin
         repeat
             // check for a LM_MESSAGES dir, and default.mo inside of it
@@ -99,8 +106,17 @@ begin
             lm := lang + '\LC_MESSAGES';
             if (DirectoryExists(lm)) then begin
                 mo := lm + '\default.mo';
-                if (FileExists(mo)) then
-                    langs.add(sr.Name);
+                if (FileExists(mo)) then begin
+                    _lang_codes.add(sr.Name);
+                    lid := LanguagesEx.GNUGetTextID[sr.Name];
+                    if lid = 0 then
+                        lid := LanguagesEx.IDFromISO3166Name[sr.Name];
+                    lang_name := LanguagesEx.NameFromLocaleID[lid];
+                    if (lang_name <> '') then
+                        langs.add(lang_name)
+                    else
+                        langs.add(sr.Name);
+                end;
             end;
         until FindNext(sr) <> 0;
         FindClose(sr);
@@ -108,7 +124,8 @@ begin
 
     cboLocale.Items.Clear();
     cboLocale.Items.Assign(langs);
-    cboLocale.Items.Insert(0, 'Default - English');
+    cboLocale.Items.Insert(0, 'Default');
+    cboLocale.Items.Insert(1, 'English');
     FreeAndNil(langs);
 end;
 
@@ -120,6 +137,8 @@ var
     reg: TRegistry;
 begin
     // System Prefs
+    if (_lang_codes = nil) then
+        _lang_codes := TStringlist.Create();
     ScanLocales();
     with MainSession.Prefs do begin
         chkAutoUpdate.Checked := getBool('auto_updates');
@@ -136,8 +155,10 @@ begin
         // locale info, we should always have at least "default-english"
         // in the drop down box here.
         tmps := getString('locale');
+        _old_locale := tmps;
+
         if (tmps <> '') then begin
-            i := cboLocale.Items.IndexOf(tmps);
+            i := _lang_codes.IndexOf(tmps);
             if (i >= 0) then
                 cboLocale.ItemIndex := i
             else begin
@@ -158,8 +179,6 @@ begin
         finally
             reg.Free();
         end;
-
-        _old_locale := cboLocale.Text;
     end;
 end;
 
@@ -182,10 +201,10 @@ begin
         setBool('close_min', chkCloseMin.Checked);
         setBool('single_instance', chkSingleInstance.Checked);
 
-        tmp := cboLocale.Text;
+        i := cboLocale.ItemIndex;
+        tmp := _lang_codes[i];
         if (tmp <> _old_locale) then
             MessageDlg(sNewLocale, mtInformation, [mbOK], 0);
-
         setString('locale', tmp);
 
         reg := TRegistry.Create();
