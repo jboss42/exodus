@@ -61,6 +61,7 @@ type
     procedure MsgOutStartDrag(Sender: TObject;
       var DragObject: TDragObject);
     procedure MsgOutDragDrop(Sender, Source: TObject; X, Y: Integer);
+    procedure FormResize(Sender: TObject);
   private
     { Private declarations }
     _msgHistory : TStringList;
@@ -338,6 +339,12 @@ begin
   inherited;
   ShowMessage('dragdrop');
 
+end;
+
+procedure TfrmBaseChat.FormResize(Sender: TObject);
+begin
+  inherited;
+    MsgList.Repaint();
 end;
 
 end.

@@ -194,7 +194,8 @@ end;
 {---------------------------------------}
 procedure TfrmMsgRecv.FormResize(Sender: TObject);
 begin
-    // Resize some of the form elements
+    // Resize some of the form element
+    txtMsg.Repaint();
 end;
 
 {---------------------------------------}
