@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-06-24 08:28\n"
-"PO-Revision-Date: 2004-06-24 08:28\n"
+"POT-Creation-Date: 2004-06-28 08:10\n"
+"PO-Revision-Date: 2004-06-28 08:10\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -162,11 +162,11 @@ msgstr ""
 #: RosterRecv.dfm:42
 #. show the next event
 #: MsgRecv.pas:450
-#: RecvStatus.pas:384
-#: RecvStatus.pas:616
-#: RecvStatus.pas:627
-#: SendStatus.pas:787
-#: SendStatus.pas:913
+#: RecvStatus.pas:386
+#: RecvStatus.pas:619
+#: RecvStatus.pas:638
+#: SendStatus.pas:791
+#: SendStatus.pas:917
 #: xdata.pas:215
 msgid "Close"
 msgstr ""
@@ -617,35 +617,35 @@ msgstr ""
 #. frmDebug..PopupMenu1..N1..Caption
 #: Debug.dfm:304
 #. frmExodus..MainMenu1..Exodus1..N7..Caption
-#: Jabber1.dfm:235
+#: Jabber1.dfm:234
 #. frmExodus..MainMenu1..Exodus1..N14..Caption
-#: Jabber1.dfm:264
+#: Jabber1.dfm:263
 #. frmExodus..MainMenu1..Exodus1..N6..Caption
-#: Jabber1.dfm:282
+#: Jabber1.dfm:281
 #. frmExodus..MainMenu1..Exodus1..N9..Caption
-#: Jabber1.dfm:293
+#: Jabber1.dfm:292
 #. frmExodus..MainMenu1..Tools1..mnuContacts..N10..Caption
-#: Jabber1.dfm:325
+#: Jabber1.dfm:324
 #. frmExodus..MainMenu1..Tools1..mnuContacts..N13..Caption
-#: Jabber1.dfm:343
+#: Jabber1.dfm:342
 #. frmExodus..MainMenu1..Tools1..mnuContacts..N8..Caption
-#: Jabber1.dfm:355
+#: Jabber1.dfm:354
 #. frmExodus..MainMenu1..Tools1..mnuPresence..N11..Caption
-#: Jabber1.dfm:395
+#: Jabber1.dfm:394
 #. frmExodus..MainMenu1..Tools1..N2..Caption
-#: Jabber1.dfm:411
+#: Jabber1.dfm:410
 #. frmExodus..MainMenu1..Tools1..N3..Caption
-#: Jabber1.dfm:422
+#: Jabber1.dfm:421
 #. frmExodus..MainMenu1..Tools1..N1..Caption
-#: Jabber1.dfm:461
+#: Jabber1.dfm:460
 #. frmExodus..MainMenu1..Help1..N12..Caption
-#: Jabber1.dfm:472
+#: Jabber1.dfm:471
 #. frmExodus..popTray..trayPresence..N5..Caption
-#: Jabber1.dfm:2686
+#: Jabber1.dfm:2685
 #. frmExodus..popTray..N4..Caption
-#: Jabber1.dfm:2700
+#: Jabber1.dfm:2699
 #. frmExodus..popTray..N01..Caption
-#: Jabber1.dfm:2707
+#: Jabber1.dfm:2706
 #. frmJud..PopupMenu1..N1..Caption
 #: jud.dfm:220
 #. frmMsgRecv..popContact..N1..Caption
@@ -974,7 +974,7 @@ msgstr ""
 #. frmBrowse..popContext..mVCard..Caption
 #: Browser.dfm:3873
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuServerVCard..Caption
-#: Jabber1.dfm:448
+#: Jabber1.dfm:447
 msgid "vCard"
 msgstr ""
 
@@ -987,7 +987,7 @@ msgstr ""
 #. frmBrowse..popContext..mTime..Caption
 #: Browser.dfm:3881
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuTime..Caption
-#: Jabber1.dfm:444
+#: Jabber1.dfm:443
 #: ExResponders.pas:394
 msgid "Time"
 msgstr ""
@@ -1489,14 +1489,14 @@ msgstr ""
 #. frmCustomPres..cboType....Items.WideStrings
 #: CustomPres.dfm:76
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presOnline..Caption
-#: Jabber1.dfm:365
+#: Jabber1.dfm:364
 #. frmExodus..popTray..trayPresence..trayPresOnline..Caption
-#: Jabber1.dfm:2656
+#: Jabber1.dfm:2655
 #. frmRosterWindow..popStatus..presOnline..Caption
 #: RosterWindow.dfm:403
 #. init the cmd line stuff
 #: ExSession.pas:184
-#: Jabber1.pas:2840
+#: Jabber1.pas:2849
 #: RosterWindow.pas:348
 #: RosterWindow.pas:370
 #: RosterWindow.pas:1655
@@ -1513,12 +1513,12 @@ msgstr ""
 #. frmCustomPres..cboType....Items.WideStrings
 #: CustomPres.dfm:77
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presAway..Caption
-#: Jabber1.dfm:377
+#: Jabber1.dfm:376
 #. frmExodus..popTray..trayPresence..trayPresAway..Caption
-#: Jabber1.dfm:2668
+#: Jabber1.dfm:2667
 #. frmRosterWindow..popStatus..presAway..Caption
 #: RosterWindow.dfm:415
-#: Jabber1.pas:2838
+#: Jabber1.pas:2847
 #: RosterWindow.pas:350
 #: RosterWindow.pas:371
 #: RosterWindow.pas:1639
@@ -1541,9 +1541,9 @@ msgstr ""
 #. frmCustomPres..cboType....Items.WideStrings
 #: CustomPres.dfm:79
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presDND..Caption
-#: Jabber1.dfm:389
+#: Jabber1.dfm:388
 #. frmExodus..popTray..trayPresence..trayPresDND..Caption
-#: Jabber1.dfm:2680
+#: Jabber1.dfm:2679
 #. frmRosterWindow..popStatus..presDND..Caption
 #: RosterWindow.dfm:427
 #: RosterWindow.pas:352
@@ -1641,7 +1641,7 @@ msgstr ""
 #. frmDebug..PopupMenu1..popPres..Caption
 #: Debug.dfm:319
 #. frmExodus..popTray..trayPresence..Caption
-#: Jabber1.dfm:2653
+#: Jabber1.dfm:2652
 #. frmPrefs..Scroller..lblCustomPres..Caption
 #: Prefs.dfm:1932
 #. frmRosterWindow..popRoster..popPresence..Caption
@@ -2037,139 +2037,139 @@ msgid "Test"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..Connect2..Caption
-#: Jabber1.dfm:230
+#: Jabber1.dfm:229
 msgid "Sign &On/Off"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..View1..Caption
-#: Jabber1.dfm:238
+#: Jabber1.dfm:237
 msgid "&View"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..View1..mnuToolbar..Caption
-#: Jabber1.dfm:240
+#: Jabber1.dfm:239
 msgid "Show Toolbar"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..View1..mnuStatBar..Caption
-#: Jabber1.dfm:244
+#: Jabber1.dfm:243
 msgid "Show Status Bar"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..View1..mnuExpanded..Caption
-#: Jabber1.dfm:248
+#: Jabber1.dfm:247
 msgid "Dock Windows"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..View1..ShowEventsWindow1..Caption
-#: Jabber1.dfm:254
+#: Jabber1.dfm:253
 msgid "Instant Messages"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..ClearMessages1..Caption
-#: Jabber1.dfm:259
+#: Jabber1.dfm:258
 msgid "Clear &Instant Messages"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..mnuMessage..Caption
-#: Jabber1.dfm:267
+#: Jabber1.dfm:266
 msgid "Send Instant &Message"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..mnuChat..Caption
-#: Jabber1.dfm:272
+#: Jabber1.dfm:271
 msgid "Start &Chat"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..mnuConference..Caption
-#: Jabber1.dfm:277
+#: Jabber1.dfm:276
 msgid "&Join a Chat Room"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..mnuRegisterService..Caption
-#: Jabber1.dfm:285
+#: Jabber1.dfm:284
 msgid "&Register with a Service"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..mnuPassword..Caption
-#: Jabber1.dfm:289
+#: Jabber1.dfm:288
 msgid "Change &Password"
 msgstr ""
 
 #. frmExodus..MainMenu1..Exodus1..Exit2..Caption
-#: Jabber1.dfm:296
+#: Jabber1.dfm:295
 msgid "E&xit"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..Caption
-#: Jabber1.dfm:302
+#: Jabber1.dfm:301
 msgid "&Tools"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..Caption
-#: Jabber1.dfm:304
+#: Jabber1.dfm:303
 msgid "&Contacts"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..AddPerson1..Caption
-#: Jabber1.dfm:306
+#: Jabber1.dfm:305
 msgid "&Add Contact"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..RemovePerson1..Caption
-#: Jabber1.dfm:311
+#: Jabber1.dfm:310
 msgid "&Remove a Contact"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..MessageHistory2..Caption
-#: Jabber1.dfm:315
+#: Jabber1.dfm:314
 msgid "Contact's Message &History"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..Properties2..Caption
-#: Jabber1.dfm:320
+#: Jabber1.dfm:319
 msgid "Contact &Properties"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..mnuFind..Caption
-#: Jabber1.dfm:328
+#: Jabber1.dfm:327
 msgid "&Find Contact in Roster"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..mnuFindAgain..Caption
-#: Jabber1.dfm:333
+#: Jabber1.dfm:332
 msgid "Fin&d Contact Again"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..mnuSearch..Caption
-#: Jabber1.dfm:338
+#: Jabber1.dfm:337
 msgid "&Search for a Contact"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..mnuOnline..Caption
-#: Jabber1.dfm:346
+#: Jabber1.dfm:345
 msgid "Show &Only Online"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..NewGroup2..Caption
-#: Jabber1.dfm:351
+#: Jabber1.dfm:350
 msgid "Add Roster &Group"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..SubscribetoPresence2..Caption
-#: Jabber1.dfm:358
+#: Jabber1.dfm:357
 msgid "Su&bscribe to Presence"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuPresence..Caption
-#: Jabber1.dfm:363
+#: Jabber1.dfm:362
 msgid "&Presence"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presChat..Caption
-#: Jabber1.dfm:371
+#: Jabber1.dfm:370
 #. frmExodus..popTray..trayPresence..trayPresChat..Caption
-#: Jabber1.dfm:2662
+#: Jabber1.dfm:2661
 #. frmRosterWindow..popStatus..presChat..Caption
 #: RosterWindow.dfm:409
 #: RosterWindow.pas:349
@@ -2181,9 +2181,9 @@ msgid "Free to Chat"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presXA..Caption
-#: Jabber1.dfm:383
+#: Jabber1.dfm:382
 #. frmExodus..popTray..trayPresence..trayPresXA..Caption
-#: Jabber1.dfm:2674
+#: Jabber1.dfm:2673
 #. frmRosterWindow..popStatus..presXA..Caption
 #: RosterWindow.dfm:421
 #: RosterWindow.pas:351
@@ -2194,99 +2194,99 @@ msgid "Xtended Away"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuPresence..Custom3..Caption
-#: Jabber1.dfm:399
+#: Jabber1.dfm:398
 msgid "Custom"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presToggle..Caption
-#: Jabber1.dfm:405
+#: Jabber1.dfm:404
 msgid "Toggle"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuRegistration..Caption
-#: Jabber1.dfm:414
+#: Jabber1.dfm:413
 msgid "Edit My &Registration"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuMyVCard..Caption
-#: Jabber1.dfm:418
+#: Jabber1.dfm:417
 msgid "Edit My &vCard / Profile"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuVCard..Caption
-#: Jabber1.dfm:425
+#: Jabber1.dfm:424
 msgid "&Lookup a vCard"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuBookmark..Caption
-#: Jabber1.dfm:429
+#: Jabber1.dfm:428
 msgid "Add a Boo&kmark"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuBrowser..Caption
-#: Jabber1.dfm:433
+#: Jabber1.dfm:432
 msgid "Jabber &Browser"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuServer..Caption
-#: Jabber1.dfm:438
+#: Jabber1.dfm:437
 msgid "Server Info"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuVersion..Caption
-#: Jabber1.dfm:440
+#: Jabber1.dfm:439
 msgid "Version "
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..ShowXML1..Caption
-#: Jabber1.dfm:453
+#: Jabber1.dfm:452
 msgid "Show Debug XML"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..mnuPlugins..Caption
-#: Jabber1.dfm:458
+#: Jabber1.dfm:457
 msgid "Plu&gins"
 msgstr ""
 
 #. frmExodus..MainMenu1..Tools1..Preferences1..Caption
-#: Jabber1.dfm:464
+#: Jabber1.dfm:463
 msgid "&Options..."
 msgstr ""
 
 #. frmExodus..MainMenu1..Help1..Caption
-#: Jabber1.dfm:470
+#: Jabber1.dfm:469
 msgid "&Help"
 msgstr ""
 
 #. frmExodus..MainMenu1..Help1..About1..Caption
-#: Jabber1.dfm:475
+#: Jabber1.dfm:474
 msgid "About"
 msgstr ""
 
 #. frmExodus..popTabs..popCloseTab..Caption
-#: Jabber1.dfm:2634
+#: Jabber1.dfm:2633
 msgid "Close Window"
 msgstr ""
 
 #. frmExodus..popTabs..popFloatTab..Caption
-#: Jabber1.dfm:2639
+#: Jabber1.dfm:2638
 msgid "Float Window"
 msgstr ""
 
 #. frmExodus..popTray..trayShow..Caption
-#: Jabber1.dfm:2649
+#: Jabber1.dfm:2648
 msgid "Show Exodus"
 msgstr ""
 
 #. frmExodus..popTray..trayPresence..Custom2..Caption
-#: Jabber1.dfm:2690
+#: Jabber1.dfm:2689
 #. frmRosterWindow..popStatus..Custom1..Caption
 #: RosterWindow.dfm:437
 msgid "Custom ..."
 msgstr ""
 
 #. frmExodus..popTray..trayMessage..Caption
-#: Jabber1.dfm:2695
+#: Jabber1.dfm:2694
 #. frmJud..PopupMenu1..popMessage..Caption
 #: jud.dfm:227
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
@@ -2295,12 +2295,12 @@ msgid "Send Message"
 msgstr ""
 
 #. frmExodus..popTray..trayConnect..Caption
-#: Jabber1.dfm:2703
+#: Jabber1.dfm:2702
 msgid "Log On/Off"
 msgstr ""
 
 #. frmExodus..popTray..trayExit..Caption
-#: Jabber1.dfm:2710
+#: Jabber1.dfm:2709
 msgid "Exit Exodus"
 msgstr ""
 
@@ -7172,9 +7172,9 @@ msgid "Send a Message"
 msgstr ""
 
 #. fire up an invite for this room using the selected contacts
-#: Jabber1.pas:2933
+#: Jabber1.pas:2942
 #. send roster items to this contact.
-#: Jabber1.pas:2943
+#: Jabber1.pas:2952
 #. Send contacts to this JID..
 #: RosterWindow.pas:2567
 #: RosterWindow.pas:2779
@@ -7184,7 +7184,7 @@ msgstr ""
 msgid "You must select one or more contacts."
 msgstr ""
 
-#: Jabber1.pas:3070
+#: Jabber1.pas:3079
 msgid "Branding error!"
 msgstr ""
 
@@ -7318,73 +7318,74 @@ msgstr ""
 msgid "Work Information"
 msgstr ""
 
-#: RecvStatus.pas:284
+#: RecvStatus.pas:286
 #: SendStatus.pas:289
 msgid "Got connection."
 msgstr ""
 
-#: RecvStatus.pas:307
+#: RecvStatus.pas:309
 #: SendStatus.pas:312
 msgid "File transfer is done."
 msgstr ""
 
-#: RecvStatus.pas:383
+#: RecvStatus.pas:385
 msgid "Receive request timed out."
 msgstr ""
 
-#: RecvStatus.pas:410
+#: RecvStatus.pas:412
 msgid "No acceptable stream hosts were sent. Have the sender check their "
 "settings."
 msgstr ""
 
-#: RecvStatus.pas:441
-#: RecvStatus.pas:555
+#: RecvStatus.pas:443
+#: RecvStatus.pas:557
 msgid "This file already exists. Overwrite?"
 msgstr ""
 
-#: RecvStatus.pas:448
-#: RecvStatus.pas:562
+#: RecvStatus.pas:450
+#: RecvStatus.pas:564
 msgid "This directory does not exist. Create "
 "it?"
 msgstr ""
 
 #. Create a stream, and get the file into it.
-#: RecvStatus.pas:458
+#: RecvStatus.pas:460
 #. Create a stream, and get the file into it.
-#: RecvStatus.pas:572
+#: RecvStatus.pas:574
 msgid "There was an error trying to create the "
 "file."
 msgstr ""
 
 #. send SI accept
-#: RecvStatus.pas:515
+#: RecvStatus.pas:517
 msgid "Negotiating with sender..."
 msgstr ""
 
 #. our thread completed.
-#: RecvStatus.pas:615
-#: RecvStatus.pas:626
+#: RecvStatus.pas:618
+#. XXX: show msg for non-match hash
+#: RecvStatus.pas:637
 msgid "Open"
 msgstr ""
 
-#: RecvStatus.pas:631
+#: RecvStatus.pas:642
 msgid "There was an error receiving the file. "
 "(%d)"
 msgstr ""
 
 #. we ran out of streamhosts to try. bummer :(
-#: RecvStatus.pas:695
+#: RecvStatus.pas:708
 msgid "Exodus was unable to connect to any file transfer proxies or the "
 "sender."
 msgstr ""
 
 #. immediately turn around and refuse.
-#: RecvStatus.pas:725
+#: RecvStatus.pas:738
 msgid "Waiting to cancel transfer..."
 msgstr ""
 
 #. the sender went offline
-#: RecvStatus.pas:747
+#: RecvStatus.pas:761
 msgid "The sender of a file transfer (%s) went "
 "offline."
 msgstr ""
@@ -7738,43 +7739,43 @@ msgid "Waiting for connection..."
 msgstr ""
 
 #. get the file size
-#: SendStatus.pas:515
+#: SendStatus.pas:517
 #. get a handle to the stream
-#: SendStatus.pas:579
+#: SendStatus.pas:583
 #. get a handle to the stream
-#: SendStatus.pas:728
+#: SendStatus.pas:732
 msgid "There was an error trying to read the "
 "file."
 msgstr ""
 
-#: SendStatus.pas:785
+#: SendStatus.pas:789
 msgid "Your file transfer was refused to %s"
 msgstr ""
 
 #. they refused
-#: SendStatus.pas:868
+#: SendStatus.pas:872
 msgid "The recipient (%s) refused your file: "
 "%s"
 msgstr ""
 
 #. error
-#: SendStatus.pas:892
+#: SendStatus.pas:896
 msgid "The stream was not activated for file: "
 "%s"
 msgstr ""
 
 #. our thread completed.
-#: SendStatus.pas:908
+#: SendStatus.pas:912
 msgid "There was an error trying to upload the file to your web "
 "host."
 msgstr ""
 
-#: SendStatus.pas:929
+#: SendStatus.pas:933
 msgid "Send failed."
 msgstr ""
 
 #. PChar is in lparam
-#: SendStatus.pas:953
+#: SendStatus.pas:957
 msgid "Connected."
 msgstr ""
 
@@ -7842,18 +7843,18 @@ msgid "All required fields must be filled out"
 msgstr ""
 
 #. Make sure the contact is online
-#: XferManager.pas:180
+#: XferManager.pas:181
 msgid "The Contact must be online before you can send a "
 "file."
 msgstr ""
 
-#: XferManager.pas:290
-#: XferManager.pas:354
+#: XferManager.pas:291
+#: XferManager.pas:355
 msgid "%s is sending you a file."
 msgstr ""
 
 #. check to see if we should disconnect current xfers
-#: XferManager.pas:480
+#: XferManager.pas:482
 msgid "Your new file transfer port will not take affect until all current "
 "trasfers are stopped. Stop existing "
 "transfers?"
