@@ -542,11 +542,11 @@ begin
 
         WM_DISCONNECTED: begin
             // Socket is disconnected
+            _active := false;
             KillSocket();
             if (_thread <> nil) then
                 _thread.Terminate();
             _timer.Enabled := false;
-            _active := false;
             _thread := nil;
             DoCallbacks('disconnected', nil);
         end;

@@ -237,6 +237,8 @@ type
     procedure mnuFindClick(Sender: TObject);
     procedure mnuFindAgainClick(Sender: TObject);
     procedure presDNDClick(Sender: TObject);
+    procedure ResolverStatus(ASender: TObject; const AStatus: TIdStatus;
+      const AStatusText: String);
 
   private
     { Private declarations }
@@ -1052,7 +1054,8 @@ begin
     if (_dns_cb <> -1) then begin
         MainSession.UnRegisterCallback(_dns_cb);
         _dns_cb := -1;
-        SessionCallback('/session/disconnect', nil);
+        CancelDNS();
+        MainSession.FireEvent('/session/disconnected', nil);
     end
     else if (MainSession.Active) then
         MainSession.Disconnect()
@@ -3048,6 +3051,13 @@ begin
     end;
     MainSession.setPresence(show, '', MainSession.Priority);
 
+end;
+
+procedure TfrmExodus.ResolverStatus(ASender: TObject;
+  const AStatus: TIdStatus; const AStatusText: String);
+begin
+    // DNS status
+    DebugMsg('DNS Lookup status: ' + AStatusText);
 end;
 
 initialization

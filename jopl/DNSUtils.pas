@@ -77,6 +77,7 @@ type
 
 procedure GetSRVAsync(Session: TJabberSession; Resolver: TIdDNSResolver;
     srv_req, a_req: string);
+procedure CancelDNS();
 function GetSRVRecord(Resolver: TIdDNSResolver; srv_req, a_req: string;
     var ip: string; var port: Word): boolean;
 function GetNameServers(): string;
@@ -92,19 +93,27 @@ uses
 const
     IpHlpDLL = 'IPHLPAPI.DLL'; // DO NOT TRANSLATE
 
+var
+    cur_thd: TDNSResolverThread;
+
 {---------------------------------------}
 procedure GetSRVAsync(Session: TJabberSession; Resolver: TIdDNSResolver;
     srv_req, a_req: string);
-var
-    thd: TDNSResolverThread;
 begin
-    thd := TDNSResolverThread.Create(true);
-    thd._session := Session;
-    thd._a := a_req;
-    thd._srv := srv_req;
-    thd._resolver := Resolver;
-    thd.FreeOnTerminate := true;
-    thd.Execute();
+    cur_thd := TDNSResolverThread.Create(true);
+    cur_thd._session := Session;
+    cur_thd._a := a_req;
+    cur_thd._srv := srv_req;
+    cur_thd._resolver := Resolver;
+    cur_thd.FreeOnTerminate := true;
+    cur_thd.Execute();
+end;
+
+{---------------------------------------}
+procedure CancelDNS();
+begin
+    if (cur_thd <> nil) then
+        cur_thd.Terminate();
 end;
 
 {---------------------------------------}
@@ -130,6 +139,7 @@ begin
     end;
     _session.FireEvent('/session/dns', t);
     t.Free();
+    cur_thd := nil;
 end;
 
 {---------------------------------------}
@@ -261,13 +271,13 @@ begin
             a_req := srv.IP;
         end;
     except
-        on E: EAssertionFailed do begin
+        on EAssertionFailed do begin
             ip := '';
             port := 0;
             Result := false;
             exit;
         end;
-        on E: EIdDNSResolverError do begin
+        on EIdDnsResolverError do begin
             ip := '';
             port := 0;
             try
@@ -277,6 +287,12 @@ begin
                 Result := false;
                 exit;
             end;
+        end
+        else begin
+            ip := '';
+            port := 0;
+            Result := false;
+            exit;
         end;
     end;
 
