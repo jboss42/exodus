@@ -107,7 +107,7 @@ type
     procedure removeContactMenu(const ID: WideString); safecall;
     function getActiveContact: WideString; safecall;
     function getActiveGroup: WideString; safecall;
-    function getActiveContacts(Online: WordBool): PSafeArray; safecall;
+    function getActiveContacts(Online: WordBool): OleVariant; safecall;
     function Get_LocalIP: WideString; safecall;
     procedure setPluginAuth(const AuthAgent: IExodusAuth); safecall;
     procedure setAuthenticated(Authed: WordBool; const XML: WideString);
@@ -1023,31 +1023,22 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusController.getActiveContacts(Online: WordBool): PSafeArray;
+function TExodusController.getActiveContacts(Online: WordBool): OleVariant;
 var
     clist: TList;
     i: integer;
     ritem: TJabberRosterItem;
-    ArrayBounds : TSafeArrayBound;
-    psa : PSafeArray;
-    ArrayData : pointer;
-    type WideStringArray = Array of WideString;
+    va : Variant;
 begin
     clist := frmRosterWindow.getSelectedContacts(Online);
-    ArrayBounds.lLbound := 0;
-    ArrayBounds.cElements := clist.Count;
-    psa := SafeArrayCreate(varOleStr, 1, ArrayBounds);
-    if SafeArrayAccessData(psa, ArrayData) = S_OK then begin
-        for i := 0 to clist.count - 1 do begin
-            ritem := TJabberRosterItem(clist[i]);
-            WideStringArray(ArrayData)[i] := ritem.jid.full;
-        end;
+    va := VarArrayCreate([0,clist.Count], varOleStr);
 
-        SafeArrayUnAccessData(psa);
+    for i := 0 to clist.count - 1 do begin
+        ritem := TJabberRosterItem(clist[i]);
+        VarArrayPut(va, ritem.jid.full, i);
     end;
-    clist.Clear();
     clist.Free();
-    result := psa;
+    result := va;
 end;
 
 {---------------------------------------}

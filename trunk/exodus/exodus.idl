@@ -1,5 +1,5 @@
 [
-  uuid(219E0029-5710-4C9B-BE33-4C7F046D7792), 
+  uuid(5BABCA07-A359-4B42-8C03-C5B329E79E31), 
   version(1.0), 
   helpstring("Exodus COM Plugin interfaces")
     
@@ -40,6 +40,49 @@ library ExodusCOM
     HWND_MsgOutput = 2, 
     Ptr_MsgOutput = 3
   } ChatParts;
+
+  [
+    uuid(2C576B16-DD6A-4E8C-8DEB-38E255B48A88), 
+    version(1.0), 
+    helpstring("Dispatch interface for ExodusChatPlugin Object"), 
+    dual, 
+    oleautomation
+  ]
+   interface IExodusChatPlugin: IDispatch
+  {
+    [
+    id(0x00000001)
+    ]
+    HRESULT _stdcall onBeforeMessage([in] BSTR * Body );
+    [
+    id(0x00000002)
+    ]
+    HRESULT _stdcall onAfterMessage([in] BSTR * Body, [out, retval] BSTR * Additional_XML );
+    [
+    id(0x00000003)
+    ]
+    HRESULT _stdcall onKeyPress([in] BSTR Key );
+    [
+    id(0x00000004)
+    ]
+    HRESULT _stdcall onContextMenu([in] BSTR ID );
+    [
+    id(0x00000005)
+    ]
+    HRESULT _stdcall onRecvMessage([in] BSTR Body, [in] BSTR xml );
+    [
+    id(0x00000006)
+    ]
+    HRESULT _stdcall onClose( void );
+    [
+    id(0x000000C9)
+    ]
+    HRESULT _stdcall onMenu([in] BSTR ID );
+    [
+    id(0x000000CA)
+    ]
+    HRESULT _stdcall onNewWindow([in] long HWND );
+  };
 
   [
     uuid(438DF52E-F892-456B-9FB0-3C64DBB85240), 
@@ -279,11 +322,8 @@ library ExodusCOM
     HRESULT _stdcall CancelRegistration( void );
   };
 
-  
-  typedef BSTR * PWideString1;
-
   [
-    uuid(C61D9B1C-6CC8-4E7E-83B7-C8CA730911F0), 
+    uuid(808426B8-8C56-49FD-AE15-5D91DE1DE5EF), 
     version(1.0), 
     helpstring("Dispatch interface for ExodusController Object"), 
     dual, 
@@ -558,7 +598,7 @@ library ExodusCOM
     [
     id(0x00000041)
     ]
-    HRESULT _stdcall getActiveContacts([in] VARIANT_BOOL Online, [out, retval] SAFEARRAY(BSTR) * JIDS );
+    HRESULT _stdcall getActiveContacts([in] VARIANT_BOOL Online, [out, retval] VARIANT * JIDS );
     [
     propget, 
     id(0x00000040)
@@ -674,7 +714,7 @@ library ExodusCOM
   };
 
   [
-    uuid(BCF0FB71-F2EF-4AC5-953E-36E8C4A06490), 
+    uuid(DCDFAD67-6CB2-4202-B29C-50D633C02596), 
     version(1.0), 
     helpstring("Dispatch interface for ExodusPlugin Object"), 
     dual, 
@@ -729,49 +769,6 @@ library ExodusCOM
     id(0x000000CB)
     ]
     HRESULT _stdcall NewOutgoingIM([in] BSTR jid, [in] IExodusChat * InstantMsg /*Warning: unable to validate structure name: */ );
-  };
-
-  [
-    uuid(2C576B16-DD6A-4E8C-8DEB-38E255B48A88), 
-    version(1.0), 
-    helpstring("Dispatch interface for ExodusChatPlugin Object"), 
-    dual, 
-    oleautomation
-  ]
-   interface IExodusChatPlugin: IDispatch
-  {
-    [
-    id(0x00000001)
-    ]
-    HRESULT _stdcall onBeforeMessage([in] BSTR * Body );
-    [
-    id(0x00000002)
-    ]
-    HRESULT _stdcall onAfterMessage([in] BSTR * Body, [out, retval] BSTR * Additional_XML );
-    [
-    id(0x00000003)
-    ]
-    HRESULT _stdcall onKeyPress([in] BSTR Key );
-    [
-    id(0x00000004)
-    ]
-    HRESULT _stdcall onContextMenu([in] BSTR ID );
-    [
-    id(0x00000005)
-    ]
-    HRESULT _stdcall onRecvMessage([in] BSTR Body, [in] BSTR xml );
-    [
-    id(0x00000006)
-    ]
-    HRESULT _stdcall onClose( void );
-    [
-    id(0x000000C9)
-    ]
-    HRESULT _stdcall onMenu([in] BSTR ID );
-    [
-    id(0x000000CA)
-    ]
-    HRESULT _stdcall onNewWindow([in] long HWND );
   };
 
   [
