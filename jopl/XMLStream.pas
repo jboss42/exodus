@@ -24,14 +24,14 @@ interface
 uses
     XMLTag,
     XMLUtils,
-    XMLParser, 
+    XMLParser,
     LibXMLParser,
     {$ifdef linux}
     QForms, QExtCtrls,
     {$else}
     Forms, Messages, Windows, StdVcl, ExtCtrls,
     {$endif}
-    SysUtils, IdThread, IdException,
+    SysUtils, IdThread, IdException, IdGlobal, 
     IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
     SyncObjs, Classes;
 
@@ -54,6 +54,7 @@ const
 
 type
     TDataThread = class;
+    TEventQueue = class;
 
     EXMLStream = class(Exception)
     public
@@ -62,6 +63,18 @@ type
     TJabberMsg = record
         msg: Cardinal;
         lparam: integer;
+    end;
+
+    TStringObject = class
+    public
+        buff: string;
+        constructor Create(s: string);
+    end;
+
+    TJabberEvent = class
+    public
+        event: string;
+        o: TObject;
     end;
 
     TSocketCallback = procedure (send: boolean; data: string) of object;
@@ -86,7 +99,9 @@ type
     protected
         // procedure WndProc(var msg: TMessage);
         procedure MsgHandler(var msg: TJabberMsg); message WM_JABBER;
+        procedure handleEvent(e: TJabberEvent);
     public
+        sig_event: TEvent;
         constructor Create(root: String);
         destructor Destroy; override;
 
@@ -116,6 +131,7 @@ type
         _counter: integer;
         _rbuff: string;
         _root: string;
+        _eq: TEventQueue;
         _domstack: TList;
 
         _cur_msg: TJabberMsg;
@@ -129,6 +145,7 @@ type
 
     protected
         procedure Run; override;
+        procedure AddEvent(e: string; obj: TObject);
         procedure doMessage(msg: integer);
         procedure Sock_Connect(Sender: TObject);
         procedure Sock_Disconnect(Sender: TObject);
@@ -140,14 +157,83 @@ type
         procedure GotException (Sender: TObject; E: Exception);
 
         function GetTag: TXMLTag;
+        function GetEvent: TJabberEvent;
 
         property Data: string read GetData;
     end;
 
+    TEventQueue = class(TThread)
+    private
+        _lock: TCriticalSection;
+        _q: TStringList;
+        _stream: TXMLStream;
+        _signal: boolean;
+        procedure DispatchEvent;
+    protected
+        procedure Execute; override;
+    public
+        constructor Create(xs: TXMLStream); reintroduce;
+        procedure addEvent(e: string; o: TObject);
+    end;
+
 implementation
 uses
-    Signals, 
+    Signals,
     Math;
+
+constructor TStringObject.Create(s: string);
+begin
+    buff := s;
+end;
+
+constructor TEventQueue.Create(xs: TXMLStream);
+begin
+    inherited Create(false);
+    _q := TStringList.Create;
+    _signal := false;
+    _lock := TCriticalSection.Create();
+    _stream := xs
+end;
+
+procedure TEventQueue.Execute;
+begin
+    // do the queue processing
+    while (not Terminated) do begin
+        // nothing
+        if (_signal) then Synchronize(DispatchEvent);
+        end;
+
+    _q.Free;
+    _lock.Free;
+end;
+
+procedure TEventQueue.addEvent(e: string; o: TObject);
+begin
+    _lock.Acquire();
+    DebugOutput('XMLStream Add Event: ' + e);
+    _q.AddObject(e, o);
+    _lock.Release();
+    _signal := true;
+end;
+
+procedure TEventQueue.DispatchEvent;
+var
+    e: TJabberEvent;
+begin
+    _signal := false;
+    e := TJabberEvent.Create;
+    if (_q.Count > 0) then begin
+        e.event := _q.Strings[0];
+        e.o := _q.Objects[0];
+        _q.Delete(0);
+        end
+    else begin
+        e.event := '';
+        e.o := nil;
+        end;
+    _stream.handleEvent(e);
+end;
+
 
 {---------------------------------------}
 {      TDataThread Class                }
@@ -178,6 +264,7 @@ begin
     _counter := 0;
     _indata := TStringList.Create;
     _tag_parser := TXMLTagParser.Create;
+    _eq := TEventQueue.Create(strm);
     _domstack := TList.Create;
     _lock := TCriticalSection.Create;
 end;
@@ -191,8 +278,18 @@ begin
         end
     else if (_Socket <> nil) and (_Socket.Connected) then begin
         _Data := 'Reader socket terminated.';
-        doMessage(WM_DROPPED);
+        // doMessage(WM_DROPPED);
+        addEvent('drop', nil);
         end;
+end;
+
+procedure TDataThread.AddEvent(e: string; obj: TObject);
+begin
+    //_lock.acquire();
+    // _evstack.AddObject(e, obj);
+    // _stream.sig_event.SetEvent();
+    _eq.addEvent(e, obj);
+    //_lock.release();
 end;
 
 {---------------------------------------}
@@ -223,6 +320,10 @@ begin
     Read stuff from the socket and feed it into the
     parser.
     }
+
+    // fire up the event queue thread
+    _eq.Resume();
+
     if _Stage = 0 then begin
         // try to connect
         if (_socket.Connected) then
@@ -244,7 +345,8 @@ begin
     else begin
         // Read in the current buffer, yadda.
         if not _Socket.Connected then begin
-            doMessage(WM_COMMERROR);
+            // doMessage(WM_COMMERROR);
+            addEvent('disconnect', nil);
             Self.Terminate;
             end
         else begin
@@ -257,14 +359,18 @@ begin
             if bytes > 0 then begin
                 // stuff the socket data into the stream
                 // add the raw txt to the indata list
+                {
                 _lock.Acquire;
                 _indata.Add(buff);
                 _lock.Release;
+                }
 
-                doMessage(WM_SOCKET);
+                addEvent('socket', TStringObject.Create(buff));
+                // doMessage(WM_SOCKET);
 
                 if (Copy(buff, 1, _root_len + 2) = '</' + _root_tag) then
-                    doMessage(WM_DROPPED)
+                    // doMessage(WM_DROPPED)
+                    addEvent('drop', nil)
                 else begin
                     handleBuffer(buff);
                     end;
@@ -309,17 +415,40 @@ begin
 end;
 
 {---------------------------------------}
+function TDataThread.GetEvent: TJabberEvent;
+var
+    e: TJabberEvent;
+begin
+    // snag the next thing off the event stack and send it back
+    _lock.Acquire();
+
+    Result := nil;
+    {
+    if (_evstack.Count > 0) then begin
+        e := TJabberEvent.Create();
+        e.event := _evstack.Strings[0];
+        e.o := _evstack.Objects[0];
+        _evstack.Delete(0);
+        Result := e;
+        end;
+    }
+    _lock.Release();
+end;
+
+{---------------------------------------}
 procedure TDataThread.Sock_Connect(Sender: TObject);
 begin
     // Socket is connected, signal the main thread
-    doMessage(WM_CONNECTED);
+    // doMessage(WM_CONNECTED);
+    addEvent('connect', nil);
 end;
 
 {---------------------------------------}
 procedure TDataThread.Sock_Disconnect(Sender: TObject);
 begin
     // Socket is disconnected
-    doMessage(WM_DISCONNECTED);
+    // doMessage(WM_DISCONNECTED);
+    addEvent('disconnect', nil);
 end;
 
 {---------------------------------------}
@@ -334,7 +463,8 @@ begin
             _Data := 'Could not connect to the server.'
         else
             _Data := 'Exception: ' + E.Message;
-        doMessage(WM_COMMERROR);
+        // doMessage(WM_COMMERROR);
+        addEvent('commerror', nil);
     end
     else begin
         // Some exception occurded during Read ops
@@ -344,7 +474,8 @@ begin
             se := E as EIdSocketError;
             if se.LastError <> 10038 then begin
                 _Data := E.Message;
-                doMessage(WM_COMMERROR);
+                // doMessage(WM_COMMERROR);
+                addEvent('commerror', nil);
                 end;
             end;
 
@@ -499,10 +630,13 @@ begin
     repeat
         c_tag := _tag_parser.popTag();
         if (c_tag <> nil) then begin
+            {
             _lock.Acquire;
             _domStack.Add(c_tag);
             doMessage(WM_XML);
             _lock.Release;
+            }
+            addEvent('xml', c_tag);
             end;
     until (c_tag = nil);
     
@@ -528,7 +662,6 @@ begin
     _timer.Interval := 60000;
     _timer.Enabled := false;
     _timer.OnTimer := KeepAlive;
-
 
     _socket.RecvBufferSize := 4096;
 end;
@@ -652,6 +785,13 @@ end;
 
 {---------------------------------------}
 procedure TXMLStream.Connect(server: string; port: integer);
+var
+    stop: boolean;
+    res: TWaitResult;
+    e: TJabberEvent;
+    idx: integer;
+    tmps: string;
+    tag: TXMLTag;
 begin
     // connect to this server
     _server := Server;
@@ -661,8 +801,70 @@ begin
 
     // Create the socket reader thread and start it.
     // The thread will open the socket and read all of the data.
+    Randomize();
+    idx := Random(1000);
+    sig_event := TEvent.Create(nil, true, false, 'xml_stream' + Trim(IntToStr(idx)));
+    sig_event.ResetEvent();
     _thread := TDataThread.Create(Self, _socket, _root_tag);
     _thread.Start;
+end;
+
+procedure TXMLStream.handleEvent(e: TJabberEvent);
+var
+    tmps: string;
+    tag: TXMLTag;
+begin
+    if (e.event = 'connect') then begin
+        // Socket is connected
+        _LocalIP := _Socket.Binding.IP;
+        _active := true;
+        _timer.Enabled := true;
+        DoCallbacks('connected', nil);
+        end;
+
+    if (e.event = 'disconnect') then begin
+        // Socket is disconnected
+        if ((_thread <> nil) and (not _thread.Stopped)) then
+            _thread.TerminateAndWaitFor
+        else if (_thread.Stopped) then
+            _thread.Terminate();
+        _timer.Enabled := false;
+        _active := false;
+        _thread := nil;
+        DoCallbacks('disconnected', nil);
+        end;
+
+    if (e.event = 'socket') then begin
+        // We are getting something on the socket
+        tmps := TStringObject(e.o).buff;
+        if (tmps <> '') then
+            DoSocketCallbacks(false, tmps);
+        end;
+
+    if (e.event = 'xml') then begin
+        // We are getting XML data from the thread
+        if _thread = nil then exit;
+
+        tag := TXMLTag(e.o);
+        if tag <> nil then begin
+            DoCallbacks('xml', tag);
+            end;
+        end;
+
+    if (e.event = 'commerror') then begin
+        // There was a COMM ERROR
+        _timer.Enabled := false;
+        _active := false;
+        _thread := nil;
+        DoCallbacks('commerror', nil);
+        end;
+
+    if (e.event = 'drop') then begin
+        // something dropped our connection
+        if (_socket.Connected) then
+            _socket.Disconnect();
+        _thread := nil;
+        end;
 end;
 
 {---------------------------------------}
