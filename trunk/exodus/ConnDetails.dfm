@@ -285,13 +285,12 @@ object frmConnDetails: TfrmConnDetails
         Left = 8
         Top = 72
         Width = 273
-        Height = 81
+        Height = 89
         Items.Strings = (
           'Use StartTLS whenever the server allows it.'
           'Only allow connections which use StartTLS.'
           'Use SSL immediately when connected.')
         TabOrder = 2
-        OnClick = optSSLClick
       end
     end
     object tbsSocket: TTntTabSheet
