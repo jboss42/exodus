@@ -1676,12 +1676,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 384
-    ActivePage = tbsSystem
+    ActivePage = tbsDialog
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 3
+    TabIndex = 4
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -2236,22 +2236,29 @@ object frmPrefs: TfrmPrefs
       ImageIndex = 4
       object Label26: TLabel
         Left = 8
-        Top = 207
+        Top = 231
         Width = 197
         Height = 13
         Caption = 'Minutes to keep chat windows in memory:'
       end
       object Label27: TLabel
         Left = 8
-        Top = 221
+        Top = 245
         Width = 244
         Height = 13
         Caption = 'Use 0 minutes to destroy chat windows immediately.'
       end
+      object Label29: TLabel
+        Left = 39
+        Top = 131
+        Width = 120
+        Height = 13
+        Caption = 'Toast duration (seconds):'
+      end
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 97
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2370,7 +2377,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkSnap: TCheckBox
         Left = 8
-        Top = 128
+        Top = 152
         Width = 273
         Height = 17
         Caption = 'Make the main window snap to screen edges'
@@ -2379,7 +2386,7 @@ object frmPrefs: TfrmPrefs
       end
       object txtSnap: TEdit
         Left = 32
-        Top = 150
+        Top = 174
         Width = 49
         Height = 21
         Enabled = False
@@ -2389,7 +2396,7 @@ object frmPrefs: TfrmPrefs
       end
       object spnSnap: TUpDown
         Left = 81
-        Top = 150
+        Top = 174
         Width = 16
         Height = 21
         Associate = txtSnap
@@ -2397,21 +2404,21 @@ object frmPrefs: TfrmPrefs
         Min = 10
         Max = 255
         Position = 255
-        TabOrder = 11
+        TabOrder = 12
         Wrap = False
       end
       object txtChatMemory: TEdit
         Left = 32
-        Top = 237
+        Top = 261
         Width = 49
         Height = 21
-        TabOrder = 12
+        TabOrder = 13
         Text = '60'
         OnChange = txtToastAlphaChange
       end
       object spnChatMemory: TUpDown
         Left = 81
-        Top = 237
+        Top = 261
         Width = 16
         Height = 21
         Associate = txtChatMemory
@@ -2419,16 +2426,24 @@ object frmPrefs: TfrmPrefs
         Max = 360
         Increment = 5
         Position = 60
-        TabOrder = 13
+        TabOrder = 14
         Wrap = False
       end
       object chkBusy: TCheckBox
         Left = 8
-        Top = 184
+        Top = 208
         Width = 265
         Height = 17
         Caption = 'Warn when trying to close busy chat windows.'
-        TabOrder = 14
+        TabOrder = 15
+      end
+      object txtToastDuration: TEdit
+        Left = 168
+        Top = 127
+        Width = 49
+        Height = 21
+        TabOrder = 11
+        OnChange = txtToastAlphaChange
       end
     end
     object tbsMessages: TTabSheet
@@ -2790,7 +2805,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 124
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2876,7 +2891,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 112
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2910,7 +2925,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TLabel
           Left = 0
           Top = 0
-          Width = 363
+          Width = 306
           Height = 13
           Align = alTop
           Caption = 
@@ -2934,7 +2949,7 @@ object frmPrefs: TfrmPrefs
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 363
+        Width = 352
         Height = 26
         Align = alTop
         Caption = 
@@ -2945,7 +2960,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 146
         Height = 20
         Align = alTop
         Alignment = taCenter
