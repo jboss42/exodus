@@ -411,6 +411,7 @@ var
 begin
     Result := nil;
     sname := Trim(key);
+    assert(_children <> nil);
     for i := 0 to _Children.Count - 1 do begin
         n := TXMLNode(_Children[i]);
         if ((n.IsTag) and (NameMatch(sname, n.name))) then begin

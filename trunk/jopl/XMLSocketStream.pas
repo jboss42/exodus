@@ -277,7 +277,6 @@ destructor TXMLSocketStream.Destroy;
 begin
     inherited;
 
-    _ssl_int.Free();
     _timer.Free();
 
     KillSocket();
@@ -507,6 +506,14 @@ begin
     _sock_lock.Acquire();
 
     if (_socket <> nil) then begin
+        _socket.InterceptEnabled := false;
+        _socket.Intercept := nil;
+
+        if (_ssl_int <> nil) then begin
+            _ssl_int.Free();
+            _ssl_int := nil;
+            end;
+
         _socket.Free();
         _socket := nil;
         end;
