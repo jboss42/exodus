@@ -27,7 +27,7 @@ uses
 
 type
   TfrmPrefRoster = class(TfrmPrefPanel)
-    Label21: TTntLabel;
+    lblDblClick: TTntLabel;
     chkShowUnsubs: TTntCheckBox;
     chkHideBlocked: TTntCheckBox;
     chkPresErrors: TTntCheckBox;
@@ -60,7 +60,9 @@ uses
 
 procedure TfrmPrefRoster.LoadPrefs();
 begin
-    //
+    inherited;
+
+    {
     with MainSession.Prefs do begin
         // Roster Prefs
         chkShowUnsubs.Checked := getBool('roster_show_unsub');
@@ -69,15 +71,16 @@ begin
         chkPresErrors.Checked := getBool('roster_pres_errors');
         chkRosterUnicode.Checked := getBool('roster_unicode');
         cboDblClick.ItemIndex := getInt('roster_chat');
-
         chkInlineStatus.Checked := getBool('inline_status');
         cboInlineStatus.Selected := TColor(getInt('inline_color'));
-        cboInlineStatus.Enabled := chkInlineStatus.Checked;
-
         chkNestedGrps.Checked := getBool('nested_groups');
         txtGrpSeperator.Text := getString('group_seperator');
-
     end;
+    }
+
+    cboInlineStatus.Enabled := chkInlineStatus.Checked;
+    txtGrpSeperator.Enabled := chkNestedGrps.Checked;
+
 end;
 
 procedure TfrmPrefRoster.SavePrefs();
