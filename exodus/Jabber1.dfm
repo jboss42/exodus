@@ -1,6 +1,6 @@
 object frmExodus: TfrmExodus
-  Left = 236
-  Top = 277
+  Left = 318
+  Top = 300
   Width = 452
   Height = 344
   AlphaBlendValue = 240

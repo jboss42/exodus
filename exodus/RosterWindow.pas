@@ -718,6 +718,8 @@ begin
     else begin
         // possibly re-render the node based on this pres packet
         ritem := MainSession.Roster.Find(jid);
+        if ritem = nil then
+            ritem := MainSession.Roster.Find(tmp_jid.full);
         if ritem <> nil then
             RenderNode(ritem, p);
         end;
@@ -2007,8 +2009,6 @@ end;
 procedure TfrmRosterWindow.popTransUnRegisterClick(Sender: TObject);
 begin
     // unregister from the transport.
-    if MessageDlg('Remove Registration?', mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
-
     RemoveTransport(_cur_ritem.jid.jid);
 end;
 
