@@ -22,7 +22,8 @@ unit Profile;
 interface
 
 uses
-    XMLTag, IQ, 
+    XMLTag, IQ,
+    ShellAPI, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, CheckLst, ExtCtrls, ComCtrls;
 
@@ -100,17 +101,20 @@ type
     txtHomeFax: TEdit;
     TabSheet7: TTabSheet;
     ResListBox: TListBox;
-    Button2: TButton;
-    Button3: TButton;
     Panel1: TPanel;
-    Button4: TButton;
     Splitter1: TSplitter;
     aniProfile: TAnimate;
+    btnLast: TButton;
+    btnVersion: TButton;
+    btnTime: TButton;
     procedure FormCreate(Sender: TObject);
     procedure TreeView1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
+    procedure TreeView1Change(Sender: TObject; Node: TTreeNode);
+    procedure btnVersionClick(Sender: TObject);
+    procedure lblEmailClick(Sender: TObject);
   private
     { Private declarations }
     iq: TJabberIQ;
@@ -132,7 +136,7 @@ uses
     Presence,
     Roster,
     JabberID,
-    Session;
+    Session, Jabber1;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -327,6 +331,46 @@ begin
         MainSession.FireEvent('/roster/item', nil, ritem);
         end;
     Self.Close;
+end;
+
+{---------------------------------------}
+procedure TfrmProfile.TreeView1Change(Sender: TObject; Node: TTreeNode);
+begin
+    Self.TreeView1Click(Self);
+end;
+
+{---------------------------------------}
+procedure TfrmProfile.btnVersionClick(Sender: TObject);
+var
+    jid, res: string;
+    iq: TJabberIQ;
+begin
+    // do some CTCP queries..
+    if (ResListBox.ItemIndex < 0) then exit;
+    res := ResListBox.Items[ResListBox.ItemIndex];
+    iq := TJabberIQ.Create(MainSession, MainSession.generateID, frmExodus.CTCPCallback);
+    iq.iqType := 'get';
+    jid := txtJID.Text + '/' + res;
+    iq.toJID := jid;
+    if Sender = btnVersion then
+        iq.Namespace := XMLNS_VERSION
+    else if Sender = btnTime then
+        iq.Namespace := XMLNS_TIME
+    else if Sender = btnLast then
+        iq.Namespace := XMLNS_LAST;
+    iq.Send;
+end;
+
+procedure TfrmProfile.lblEmailClick(Sender: TObject);
+var
+    url: string;
+begin
+    // launch a mailto link..
+    if (Sender = lblURL) then
+        url := txtWeb.Text
+    else
+        url := 'mailto:' + txtPriEmail.Text;
+    ShellExecute(0, 'open', PChar(url), '', '', SW_SHOW);
 end;
 
 end.
