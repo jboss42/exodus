@@ -118,6 +118,7 @@ uses
 {---------------------------------------}
 procedure TfrmBaseChat.Emoticons1Click(Sender: TObject);
 var
+    r: TRect;
     m, w, h, l, t: integer;
     cp: TPoint;
 begin
@@ -127,8 +128,9 @@ begin
     l := MsgOut.ClientOrigin.x + cp.X;
     m := Screen.MonitorFromWindow(Self.Handle).MonitorNum;
 
-    w := Screen.Monitors[m].Width;
-    h := Screen.Monitors[m].Height;
+    r := Screen.Monitors[m].WorkAreaRect;
+    w := Abs(r.Right - r.Left);
+    h := Abs(r.Bottom - r.Top);
 
     if ((l + frmEmoticons.Width) > w) then
         l := w - frmEmoticons.Width - 5;
