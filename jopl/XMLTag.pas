@@ -877,7 +877,7 @@ begin
                 if wild_card then begin
                     tmps := ca.Value;
                     Delete(tmps, length(tmps), 1);
-                    if (Pos(Lowercase(tmps), Lowercase(t.getAttribute(ca.Name))) <= 0) then
+                    if (Pos(Lowercase(tmps), Lowercase(t.getAttribute(ca.Name))) <> 1) then
                         add := false;
                 end
                 else if (ca.Value <> '') then begin
