@@ -101,7 +101,7 @@ begin
 
     // Make sure we're inputting text in Unicode format.
     RichEdit.InputFormat := ifUnicode;
-    RichEdit.SelAttributes.Protected := false;
+    //RichEdit.SelAttributes.Protected := false;
     RichEdit.SelStart := Length(RichEdit.WideLines.Text);
     RichEdit.SelLength := 0;
 
