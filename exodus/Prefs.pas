@@ -403,6 +403,9 @@ begin
         for i := 0 to NUM_NOTIFIES - 1 do
             chkNotify.Checked[i] := (_notify[i] > 0);
 
+        chkNotify.ItemIndex := 0;
+        chkNotifyClick(Self);
+
         optNotify.Enabled;
         chkToast.Checked := false;
         chkFlash.Checked := false;

@@ -20,7 +20,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 345
+    Height = 340
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1434,7 +1434,7 @@ object frmPrefs: TfrmPrefs
     Left = 89
     Top = 0
     Width = 371
-    Height = 345
+    Height = 340
     ActivePage = tbsNotify
     Align = alClient
     Constraints.MinHeight = 340
@@ -2671,7 +2671,7 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 345
+    Top = 340
     Width = 460
     Height = 37
     Align = alBottom

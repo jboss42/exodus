@@ -696,7 +696,6 @@ begin
     _appclosing := false;
     _event := next_none;
     _noMoveCheck := true;
-    //frmDebug := nil;
 
     try
         with TGetOpts.Create(nil) do begin
@@ -782,6 +781,9 @@ begin
         _Notify.SetSession(MainSession);
 
         _subcontroller := TSubController.Create();
+
+        if not debug then
+            debug := MainSession.Prefs.getBool('debug');
 
         with MainSession.Prefs do begin
             RestorePosition(Self);
@@ -1589,10 +1591,6 @@ begin
     // and all of the associated windows
     if MainSession <> nil then begin
         _event := next_Exit;
-        {
-        if frmDebug <> nil then
-            frmDebug.Close;
-        }
         CloseDebugForm();
         frmRosterWindow.ClearNodes();
         frmRosterWindow.Close;
