@@ -2,7 +2,7 @@ object frmPrefs: TfrmPrefs
   Left = 264
   Top = 181
   Width = 468
-  Height = 411
+  Height = 428
   Caption = 'Exodus Preferences'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,7 +20,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 340
+    Height = 357
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1569,13 +1569,13 @@ object frmPrefs: TfrmPrefs
     Left = 89
     Top = 0
     Width = 371
-    Height = 340
-    ActivePage = tbsMessages
+    Height = 357
+    ActivePage = tbsCustomPres
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 5
+    TabIndex = 10
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -2640,11 +2640,18 @@ object frmPrefs: TfrmPrefs
     object tbsCustomPres: TTabSheet
       Caption = 'CustPres'
       ImageIndex = 10
+      object Label8: TLabel
+        Left = 5
+        Top = 287
+        Width = 126
+        Height = 13
+        Caption = 'Presence tracking in chats'
+      end
       object lstCustomPres: TListBox
         Left = 0
         Top = 20
         Width = 363
-        Height = 109
+        Height = 77
         Align = alTop
         ItemHeight = 13
         TabOrder = 0
@@ -2670,7 +2677,7 @@ object frmPrefs: TfrmPrefs
       end
       object pnlCustomPresButtons: TPanel
         Left = 0
-        Top = 129
+        Top = 97
         Width = 363
         Height = 34
         Align = alTop
@@ -2706,7 +2713,7 @@ object frmPrefs: TfrmPrefs
       end
       object GroupBox1: TGroupBox
         Left = 8
-        Top = 168
+        Top = 131
         Width = 281
         Height = 119
         Caption = 'Custom Presence Properties'
@@ -2813,7 +2820,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkPresenceMessageListen: TCheckBox
         Left = 4
-        Top = 307
+        Top = 270
         Width = 273
         Height = 17
         Caption = 'When Windows message received, change presence'
@@ -2823,13 +2830,25 @@ object frmPrefs: TfrmPrefs
       end
       object chkPresenceMessageSend: TCheckBox
         Left = 4
-        Top = 291
+        Top = 254
         Width = 281
         Height = 17
         Caption = 'When presence changes, send Windows message'
         Checked = True
         State = cbChecked
         TabOrder = 5
+      end
+      object cboPresTracking: TComboBox
+        Left = 23
+        Top = 304
+        Width = 207
+        Height = 21
+        ItemHeight = 13
+        TabOrder = 6
+        Items.Strings = (
+          'Track all presence changes'
+          'Show only last presence change'
+          'Don'#39't show presence changes')
       end
     end
     object tbsPlugins: TTabSheet
@@ -2876,7 +2895,7 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 340
+    Top = 357
     Width = 460
     Height = 37
     Align = alBottom
