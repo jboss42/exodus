@@ -180,7 +180,9 @@ end;
 procedure TfRTFMsgList.MsgListURLClick(Sender: TObject; URL: String);
 begin
   inherited;
+    Screen.Cursor := crHourGlass;
     ShellExecute(Application.Handle, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
+    Screen.Cursor := crDefault;
 end;
 
 {---------------------------------------}
