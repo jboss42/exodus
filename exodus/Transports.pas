@@ -40,7 +40,7 @@ type
         procedure UnRegister();
     end;
 
-procedure RemoveTransport(jid: WideString);
+procedure RemoveTransport(jid: WideString; Quiet: boolean = false);
 
 resourceString
     sTransportRemove = 'Remove Registration?';
@@ -58,12 +58,15 @@ uses
     JabberConst, Controls, Dialogs;
 
 {---------------------------------------}
-procedure RemoveTransport(jid: Widestring);
+procedure RemoveTransport(jid: Widestring; Quiet: boolean = false);
 var
     proxy: TTransportProxy;
 begin
     // Delete the registration
-    if MessageDlg(sTransportRemove, mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
+    if (Quiet = false) then begin
+        if MessageDlg(sTransportRemove, mtConfirmation, [mbYes, mbNo], 0) = mrNo then
+            exit;
+        end;
 
     proxy := TTransportProxy.Create();
     proxy.jid := jid;
