@@ -2,7 +2,7 @@ inherited frmPrefMsg: TfrmPrefMsg
   Left = 277
   Top = 150
   Caption = 'frmPrefMsg'
-  ClientHeight = 399
+  ClientHeight = 366
   ClientWidth = 348
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -16,29 +16,29 @@ inherited frmPrefMsg: TfrmPrefMsg
   end
   object Label7: TTntLabel
     Left = 5
-    Top = 181
-    Width = 170
+    Top = 229
+    Width = 287
     Height = 13
     Caption = 'Simple message (non-chat) handling'
   end
   object Label16: TTntLabel
     Left = 5
-    Top = 267
-    Width = 128
+    Top = 315
+    Width = 287
     Height = 13
     Caption = 'Store Unread messages to:'
   end
   object Label17: TTntLabel
     Left = 5
-    Top = 221
-    Width = 198
+    Top = 269
+    Width = 287
     Height = 13
     Caption = 'When I get invited to a chat room, do this:'
   end
   object chkEmoticons: TTntCheckBox
     Left = 5
     Top = 24
-    Width = 241
+    Width = 300
     Height = 17
     Caption = 'Auto detect Emoticons in messages'
     TabOrder = 0
@@ -46,7 +46,7 @@ inherited frmPrefMsg: TfrmPrefMsg
   object chkTimestamp: TTntCheckBox
     Left = 5
     Top = 73
-    Width = 156
+    Width = 300
     Height = 17
     Caption = 'Timestamp messages'
     TabOrder = 1
@@ -79,7 +79,7 @@ inherited frmPrefMsg: TfrmPrefMsg
   object chkMsgQueue: TTntCheckBox
     Left = 5
     Top = 40
-    Width = 284
+    Width = 300
     Height = 17
     Caption = 'Instant Messages never popup a new window'
     TabOrder = 5
@@ -87,14 +87,14 @@ inherited frmPrefMsg: TfrmPrefMsg
   object chkLogRooms: TTntCheckBox
     Left = 26
     Top = 156
-    Width = 151
+    Width = 287
     Height = 17
     Caption = 'Log conference rooms'
     TabOrder = 6
   end
   object cboMsgOptions: TTntComboBox
     Left = 26
-    Top = 197
+    Top = 245
     Width = 207
     Height = 21
     Style = csDropDownList
@@ -106,9 +106,9 @@ inherited frmPrefMsg: TfrmPrefMsg
       'Put messages into existing chats')
   end
   object btnLogClearAll: TTntButton
-    Left = 243
-    Top = 160
-    Width = 75
+    Left = 26
+    Top = 192
+    Width = 102
     Height = 25
     Caption = 'Clear All Logs'
     TabOrder = 8
@@ -116,14 +116,14 @@ inherited frmPrefMsg: TfrmPrefMsg
   end
   object txtSpoolPath: TTntEdit
     Left = 26
-    Top = 283
+    Top = 331
     Width = 207
     Height = 21
     TabOrder = 9
   end
   object btnSpoolBrowse: TTntButton
     Left = 243
-    Top = 281
+    Top = 329
     Width = 75
     Height = 25
     Caption = 'Browse'
@@ -132,7 +132,7 @@ inherited frmPrefMsg: TfrmPrefMsg
   end
   object cboInviteOptions: TTntComboBox
     Left = 26
-    Top = 237
+    Top = 285
     Width = 207
     Height = 21
     Style = csDropDownList
@@ -146,7 +146,7 @@ inherited frmPrefMsg: TfrmPrefMsg
   object chkBlockNonRoster: TTntCheckBox
     Left = 5
     Top = 56
-    Width = 252
+    Width = 300
     Height = 17
     Caption = 'Block messages from people not on my roster'
     TabOrder = 12
@@ -182,6 +182,14 @@ inherited frmPrefMsg: TfrmPrefMsg
     ParentBackground = False
     ParentFont = False
     TabOrder = 14
+  end
+  object chkLogRoster: TTntCheckBox
+    Left = 26
+    Top = 172
+    Width = 287
+    Height = 17
+    Caption = 'Only log messages from people in my roster'
+    TabOrder = 15
   end
   object OpenDialog1: TOpenDialog
     Filter = 'XML|*.xml'

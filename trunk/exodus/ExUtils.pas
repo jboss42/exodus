@@ -126,7 +126,7 @@ var
 {---------------------------------------}
 implementation
 uses
-    ExSession,
+    ExSession, GnuGetText, 
     IniFiles, Dialogs, StrUtils, IdGlobal, ShellAPI,
     XMLUtils, Session, JabberID, Jabber1, NodeItem, Roster,
     JabberConst, MsgDisplay, Debug;
@@ -136,7 +136,7 @@ type
     public
         a : ATOM;
         constructor Create(at: ATOM);
-end;
+    end;
 
 var
     presenceToAtom: TStringList;
@@ -397,14 +397,28 @@ end;
 {---------------------------------------}
 procedure LogMessage(Msg: TJabberMessage);
 var
-    buff, fn: string;
+    buff, fn: Widestring;
     header: boolean;
     _jid: TJabberID;
     ndate: TDateTime;
     fs: TFileStream;
+    ritem: TJabberRosterItem;
 begin
     // log this msg..
     fn := MainSession.Prefs.getString('log_path');
+
+    if (Msg.isMe) then
+        _jid := TJabberID.Create(Msg.ToJID)
+    else
+        _jid := TJabberID.Create(Msg.FromJID);
+
+    if (MainSession.Prefs.getBool('log_roster')) then begin
+        // verify this jid is on our roster..
+        ritem := MainSession.Roster.Find(_jid.jid);
+        if (ritem = nil) then
+            ritem := MainSession.Roster.Find(_jid.full);
+        if (ritem = nil) then exit;
+    end;
 
     if (Copy(fn, length(fn), 1) <> '\') then
         fn := fn + '\';
@@ -417,23 +431,25 @@ begin
         end;
     end;
 
-    if (Msg.isMe) then
-        _jid := TJabberID.Create(Msg.ToJID)
-    else
-        _jid := TJabberID.Create(Msg.FromJID);
-
     // Munge the filename
     fn := fn + MungeName(_jid.jid) + '.html';
 
-    if (FileExists(fn)) then begin
-        fs := TFileStream.Create(fn, fmOpenReadWrite, fmShareDenyNone);
-        ndate := FileDateToDateTime(FileGetDate(fs.Handle));
-        header := (abs(Now - nDate) > 0.04);
-        fs.Seek(0, soFromEnd);
-    end
-    else begin
-        fs := TFileStream.Create(fn, fmCreate, fmShareDenyNone);
-        header := true;
+    try
+        if (FileExists(fn)) then begin
+            fs := TFileStream.Create(fn, fmOpenReadWrite, fmShareDenyNone);
+            ndate := FileDateToDateTime(FileGetDate(fs.Handle));
+            header := (abs(Now - nDate) > 0.04);
+            fs.Seek(0, soFromEnd);
+        end
+        else begin
+            fs := TFileStream.Create(fn, fmCreate, fmShareDenyNone);
+            header := true;
+        end;
+    except
+        on e: Exception do begin
+            MessageDlg(_('Could not open log file: ' + fn), mtError, [mbOK], 0);
+            exit;
+        end;
     end;
 
     if (header) then begin

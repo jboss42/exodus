@@ -47,6 +47,7 @@ type
     OpenDialog1: TOpenDialog;
     txtTimestampFmt: TTntComboBox;
     StaticText4: TTntPanel;
+    chkLogRoster: TTntCheckBox;
     procedure btnLogBrowseClick(Sender: TObject);
     procedure btnLogClearAllClick(Sender: TObject);
     procedure btnSpoolBrowseClick(Sender: TObject);
@@ -82,6 +83,7 @@ begin
         chkBlockNonRoster.Checked := getBool('block_nonroster');
         chkLog.Checked := getBool('log');
         chkLogRooms.Checked := getBool('log_rooms');
+        chkLogRoster.Checked := getBool('log_roster');
         txtLogPath.Text := getString('log_path');
         txtSpoolPath.Text := getString('spool_path');
         cboInviteOptions.ItemIndex := getInt('invite_treatment');
@@ -101,6 +103,7 @@ begin
         setBool('msg_queue', chkMsgQueue.Checked);
         setBool('log', chkLog.Checked);
         setBool('log_rooms', chkLogRooms.Checked);
+        setBool('log_roster', chkLogRoster.Checked);
         setString('log_path', txtLogPath.Text);
         setString('spool_path', txtSpoolPath.Text);
         setInt('invite_treatment', cboInviteOptions.ItemIndex);
