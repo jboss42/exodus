@@ -107,7 +107,6 @@ type
     txtXA: TEdit;
     Label9: TLabel;
     tbsKeywords: TTabSheet;
-    Label1: TLabel;
     StaticText8: TStaticText;
     memKeywords: TMemo;
     tbsBlockList: TTabSheet;
@@ -165,6 +164,8 @@ type
     btnCancel: TButton;
     Button6: TButton;
     chkEmoticons: TCheckBox;
+    Panel2: TPanel;
+    Label1: TLabel;
     chkRegex: TCheckBox;
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
