@@ -6,29 +6,38 @@ uses
     SQLiteTable,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, ExtCtrls, ComCtrls, RichEdit2, ExRichEdit,
-    TntStdCtrls;
+    TntStdCtrls, Buttons, TntExtCtrls, Grids, TntGrids;
 
 type
   TfrmView = class(TForm)
     MsgList: TExRichEdit;
     Panel1: TPanel;
     Panel2: TPanel;
-    cal: TMonthCalendar;
+    pnlCal: TPanel;
+    TntPanel1: TTntPanel;
+    pnlCalHeader: TTntPanel;
+    btnPrevMonth: TSpeedButton;
+    btnNextMonth: TSpeedButton;
+    gridCal: TTntStringGrid;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure calClick(Sender: TObject);
-    procedure calGetMonthInfo(Sender: TObject; Month: Cardinal;
-      var MonthBoldInfo: Cardinal);
     procedure FormCreate(Sender: TObject);
+    procedure gridCalSelectCell(Sender: TObject; ACol, ARow: Integer;
+      var CanSelect: Boolean);
+    procedure gridCalDrawCell(Sender: TObject; ACol, ARow: Integer;
+      Rect: TRect; State: TGridDrawState);
+    procedure btnNextMonthClick(Sender: TObject);
   private
     { Private declarations }
     _jid: String;
     _days: Array of longword;
     _last: TDatetime;
+    _m: Word;
+    _y: Word;
 
     procedure DisplayMsg(tmp: TSQLiteTable);
     procedure SelectMonth(d: TDateTime);
     procedure SelectDay(d: TDateTime);
-
+    procedure DrawCal(d: TDateTime);
 
   public
     { Public declarations }
@@ -42,7 +51,8 @@ var
 
 implementation
 
-uses DateUtils;
+uses
+    XMLUtils, DateUtils;
 
 {$R *.dfm}
 
@@ -64,19 +74,14 @@ procedure TfrmView.ShowJid(jid: Widestring);
 begin
     _jid := UTF8Encode(jid);
     _last := 0;
-    cal.Date := Now();
-end;
-
-{---------------------------------------}
-procedure TfrmView.calClick(Sender: TObject);
-begin
-    SelectDay(cal.Date);
+    SelectMonth(Now());
+    SelectDay(Now());
 end;
 
 {---------------------------------------}
 procedure TfrmView.SelectDay(d: TDateTime);
 var
-    i: integer;
+    r, c, i: integer;
     sql, cmd, ds: string;
     tmp: TSQLiteTable;
 begin
@@ -90,6 +95,13 @@ begin
         DisplayMsg(tmp);
         tmp.Next();
     end;
+
+    _last := d;
+
+    c := DayOfWeek(d) - 1;
+    r := NthDayOfWeek(d);
+    gridCal.Row := r;
+    gridCal.Col := c;
 end;
 
 {---------------------------------------}
@@ -176,23 +188,128 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmView.calGetMonthInfo(Sender: TObject; Month: Cardinal;
-  var MonthBoldInfo: Cardinal);
-begin
-    if (cal.Date = _last) then
-        cal.BoldDays(_days, MonthBoldInfo)
-    else begin
-        SelectMonth(cal.Date);
-        cal.BoldDays(_days, MonthBoldInfo);
-        _last := cal.Date;
-    end;
-end;
-
-{---------------------------------------}
 procedure TfrmView.FormCreate(Sender: TObject);
 begin
     _last := 0;
+    gridCal.Cells[0, 0] := 'S';
+    gridCal.Cells[1, 0] := 'M';
+    gridCal.Cells[2, 0] := 'T';
+    gridCal.Cells[3, 0] := 'W';
+    gridCal.Cells[4, 0] := 'T';
+    gridCal.Cells[5, 0] := 'F';
+    gridCal.Cells[6, 0] := 'S';
+    DrawCal(Now());
+end;
 
+{---------------------------------------}
+procedure TfrmView.DrawCal(d: TDateTime);
+var
+    cur: TDateTime;
+    days: Word;
+    r, c, i: integer;
+begin
+    // Draw this month in the calandar
+    r := 1;
+    _m := MonthOf(d);
+    _y := YearOf(d);
+    pnlCalHeader.Caption := FormatDateTime('mmmm, yyyy', d);
+    days := DaysInMonth(d);
+    for i := 1 to days do begin
+        cur := EncodeDate(_y, _m, i);
+        // DayOfTheWeek, 1 = Monday, 7 = Sunday
+        c := DayOfTheWeek(cur);
+        if (c = 7) then begin
+            inc(r);
+            c := 0;
+        end;
+        gridCal.Cells[c, r] := IntToStr(i);
+    end;
+end;
+
+
+procedure TfrmView.gridCalSelectCell(Sender: TObject; ACol, ARow: Integer;
+  var CanSelect: Boolean);
+var
+    d: Word;
+    td: TDateTime;
+begin
+    d := SafeInt(gridCal.Cells[ACol, ARow]);
+    if (d = 0) then exit;
+    td := EncodeDate(_y, _m, d);
+    if (td <> _last) then
+        SelectDay(td);
+end;
+
+procedure TfrmView.gridCalDrawCell(Sender: TObject; ACol, ARow: Integer;
+  Rect: TRect; State: TGridDrawState);
+var
+    b: boolean;
+    l, i: integer;
+    d: Word;
+    txt: string;
+    pw, ph, tw, th: integer;
+begin
+    txt := gridCal.Cells[ACol, ARow];
+    d := SafeInt(txt);
+
+    // Draw the cell..
+    gridCal.Canvas.Brush.Style := bsSolid;
+    if (gdFixed in State) then begin
+        gridCal.Canvas.Brush.Color := clBtnFace;
+        gridCal.Canvas.Font.Color := clBtnText;
+    end
+    else if (gdSelected in State) then begin
+        gridCal.Canvas.Brush.Color := clHighlight;
+        gridCal.Canvas.Font.Color := clHighlightText;
+    end
+    else begin
+        gridCal.Canvas.Brush.Color := clWindow;
+        gridCal.Canvas.Font.Color := clWindowText;
+    end;
+
+    // Draw the cell's BG
+    gridCal.Canvas.FillRect(Rect);
+
+    // If this day is bold, make it so..
+    b := false;
+    l := Length(_days);
+    for i := 0 to l - 1 do begin
+        if (_days[i] = d) then begin
+            b := true;
+            break;
+        end;
+    end;
+
+    if (b) then
+        gridCal.Canvas.Font.Style := [fsBold]
+    else
+        gridCal.Canvas.Font.Style := [];
+
+    // center the text
+    tw := gridCal.Canvas.TextWidth(txt);
+    th := gridCal.Canvas.TextHeight(txt);
+    pw := ((Rect.Right - Rect.Left) - tw) div 2;
+    ph := ((Rect.Bottom - Rect.Top) - th) div 2;
+    gridCal.Canvas.TextOut(Rect.Left + pw, Rect.Top + ph, txt);
+end;
+
+procedure TfrmView.btnNextMonthClick(Sender: TObject);
+var
+    i: integer;
+    new: TDateTime;
+    d: Word;
+begin
+    if (Sender = btnPrevMonth) then
+        i := -1
+    else
+        i := +1;
+
+    d := DayOf(_last);
+    IncAMonth(_y, _m, d, i);
+    new := EncodeDate(_y, _m, d);
+    DrawCal(new);
+    SelectMonth(new);
+    SelectDay(new);
 end;
 
 end.
