@@ -65,9 +65,7 @@ type
     StaticText3: TStaticText;
     tbsSystem: TTabSheet;
     StaticText4: TStaticText;
-    chkTimestamp: TCheckBox;
     chkAutoUpdate: TCheckBox;
-    chkLog: TCheckBox;
     chkExpanded: TCheckBox;
     imgSystem: TImage;
     lblSystem: TLabel;
@@ -140,10 +138,8 @@ type
     Label14: TLabel;
     lblHotkey: TLabel;
     txtCPHotkey: THotKey;
-    imgCustomPres: TImage;
+    imgCustompres: TImage;
     lblCustomPres: TLabel;
-    txtLogPath: TEdit;
-    btnLogBrowse: TButton;
     txtXFerPath: TEdit;
     btnTransferBrowse: TButton;
     Label15: TLabel;
@@ -163,11 +159,21 @@ type
     btnOK: TButton;
     btnCancel: TButton;
     Button6: TButton;
-    chkEmoticons: TCheckBox;
     Panel2: TPanel;
     Label1: TLabel;
     chkRegex: TCheckBox;
     chkAutoStart: TCheckBox;
+    tbsMessages: TTabSheet;
+    chkEmoticons: TCheckBox;
+    chkTimestamp: TCheckBox;
+    chkLog: TCheckBox;
+    txtLogPath: TEdit;
+    StaticText11: TStaticText;
+    txtTimestampFmt: TEdit;
+    btnLogBrowse: TButton;
+    Label19: TLabel;
+    imgMessages: TImage;
+    lblMessages: TLabel;
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -320,17 +326,20 @@ begin
 
 
         // System Prefs
-        chkTimestamp.Checked := getBool('timestamp');
-        chkEmoticons.Checked := getBool('emoticons');
         chkAutoUpdate.Checked := getBool('auto_updates');
         chkAutoStart.Checked := getBool('auto_start');
-        chkLog.Checked := getBool('log');
         chkExpanded.Checked := getBool('expanded');
         chkDebug.Checked := getBool('debug');
         chkAutoLogin.Checked := getBool('autologin');
         chkCloseMin.Checked := getBool('close_min');
-        txtLogPath.Text := getString('log_path');
         txtXFerPath.Text := getString('xfer_path');
+
+        // Message Options
+        chkTimestamp.Checked := getBool('timestamp');
+        txtTimestampFmt.Text := getString('timestamp_format');
+        chkEmoticons.Checked := getBool('emoticons');
+        chkLog.Checked := getBool('log');
+        txtLogPath.Text := getString('log_path');
 
         // Dialog Options
         chkRosterAlpha.Checked := getBool('roster_alpha');
@@ -436,16 +445,19 @@ begin
         setInt('color_other', integer(pnlOtherColor.Font.Color));
 
         // System Prefs
-        setBool('timestamp', chkTimestamp.Checked);
-        setBool('emoticons', chkEmoticons.Checked);
         setBool('auto_updates', chkAutoUpdate.Checked);
         setBool('auto_start', chkAutoStart.Checked);
-        setBool('log', chkLog.Checked);
         setBool('debug', chkDebug.Checked);
         setBool('autologin', chkAutoLogin.Checked);
         setBool('close_min', chkCloseMin.Checked);
-        setString('log_path', txtLogPath.Text);
         setString('xfer_path', txtXFerPath.Text);
+
+        // Message Prefs
+        setBool('timestamp', chkTimestamp.Checked);
+        setString('timestamp_format', txtTimestampFmt.Text);
+        setBool('emoticons', chkEmoticons.Checked);
+        setBool('log', chkLog.Checked);
+        setString('log_path', txtLogPath.Text);
 
         reg := TRegistry.Create();
         try
@@ -550,6 +562,7 @@ begin
     tbsFonts.TabVisible := false;
     tbsSystem.TabVisible := false;
     tbsDialog.TabVisible := false;
+    tbsMessages.TabVisible := false;
     tbsNotify.TabVisible := false;
     tbsAway.TabVisible := false;
     tbsKeywords.TabVisible := false;
@@ -587,6 +600,8 @@ begin
         PageControl1.ActivePage := tbsBlockList;
     if ((Sender = imgCustompres) or (Sender = lblCustomPres)) then
         PageControl1.ActivePage := tbsCustomPres;
+    if ((Sender = imgMessages) or (Sender = lblMessages)) then
+        PageControl1.ActivePage := tbsMessages;
 end;
 
 {---------------------------------------}
