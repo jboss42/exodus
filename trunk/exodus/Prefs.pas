@@ -82,7 +82,6 @@ type
     lblGroups: TTntLabel;
     imgLayouts: TImage;
     lblLayouts: TTntLabel;
-    Memo1: TTntMemo;
     pnlBlocked: TTntPanel;
     pnlKeyword: TTntPanel;
     Shape1: TShape;
@@ -90,6 +89,8 @@ type
     lblNetwork: TTntLabel;
     imgEmote: TImage;
     lblEmote: TTntLabel;
+    Panel4: TPanel;
+    TntLabel1: TTntLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
