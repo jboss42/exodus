@@ -20,19 +20,16 @@ object frmProfile: TfrmProfile
   object Splitter1: TSplitter
     Left = 121
     Top = 0
-    Width = 3
     Height = 293
-    Cursor = crHSplit
   end
   object PageControl1: TPageControl
     Left = 124
     Top = 0
     Width = 330
     Height = 293
-    ActivePage = TabSheet1
+    ActivePage = TabSheet3
     Align = alClient
     Style = tsFlatButtons
-    TabIndex = 0
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'General'
@@ -186,7 +183,6 @@ object frmProfile: TfrmProfile
         Top = 24
         Width = 16
         Height = 16
-        Active = False
         CommonAVI = aviFindFile
         StopFrame = 8
         Visible = False
@@ -332,9 +328,9 @@ object frmProfile: TfrmProfile
       object Label28: TLabel
         Left = 92
         Top = 78
-        Width = 96
+        Width = 143
         Height = 13
-        Caption = 'Format: mm/dd/yyyy'
+        Caption = 'Typical Format: YYYY-MM-DD'
       end
       object Label8: TLabel
         Left = 7
