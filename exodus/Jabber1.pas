@@ -831,8 +831,7 @@ begin
             config := getUserDir() + 'exodus.xml';
 
         // Create our main Session object
-        MainSession := TJabberSession.Create(config,
-            ExtractFilePath(Application.EXEName) + 'branding.xml');
+        MainSession := TJabberSession.Create(config);
 
         // Check for a single instance
         if (MainSession.Prefs.getBool('single_instance')) then begin

@@ -168,13 +168,13 @@ begin
     MainSession.Prefs.RestorePosition(Self);
 
     list := TWideStringList.Create();
-    MainSession.Prefs.fillStringlist('brand_profile_server_list', list, pkBrand);
+    fillDefaultStringList('brand_profile_server_list', list);
     if (list.Count > 0) then begin
         cboServer.Clear();
         for i := 0 to list.Count - 1 do
             cboServer.Items.Add(list[i]);
         end;
-    MainSession.Prefs.fillStringlist('brand_profile_resource_list', list, pkBrand);
+    fillDefaultStringList('brand_profile_resource_list', list);
     if (list.Count > 0) then begin
         cboResource.Clear();
         for i := 0 to list.Count - 1 do

@@ -126,7 +126,7 @@ type
         ProxyUsername: Widestring;
         ProxyPassword: Widestring;
 
-        constructor Create(prof_name: string; brand: TXMLTag);
+        constructor Create(prof_name: string);
 
         procedure Load(tag: TXMLTag);
         procedure Save(node: TXMLTag);
@@ -135,28 +135,24 @@ type
         property password: Widestring read getPassword write setPassword;
     end;
 
-    TPrefKind = (pkClient, pkServer, pkBrand, pkDefault);
+    TPrefKind = (pkClient, pkServer);
 
     TPrefController = class
     private
         _js: TObject;
         _pref_filename: Widestring;
-        _brand_filename: Widestring;
         _pref_node: TXMLTag;
-        _brand_node: TXMLTag;
-        _default_node: TXmlTag;
         _server_node: TXMLTag;
         _profiles: TStringList;
         _parser: TXMLTagParser;
         _server_dirty: boolean;
         _updating: boolean;
 
-        function getDefault(pkey: Widestring): Widestring;
         function findPresenceTag(pkey: Widestring): TXMLTag;
         procedure Save;
         procedure ServerPrefsCallback(event: string; tag: TXMLTag);
     public
-        constructor Create(filename: Widestring; BrandingFile: widestring);
+        constructor Create(filename: Widestring);
         Destructor Destroy; override;
 
         function getString(pkey: Widestring; server_side: TPrefKind = pkClient): Widestring;
@@ -193,6 +189,13 @@ type
 
         property Profiles: TStringlist read _profiles write _profiles;
     end;
+
+procedure fillDefaultStringlist(pkey: Widestring; sl: TWideStrings);
+function getDefault(pkey: Widestring): Widestring;
+
+var
+    s_brand_node: TXMLTag;
+    s_default_node: TXmlTag;
 
 resourceString
     sIdleAway = 'Away as a result of idle.';
@@ -344,15 +347,11 @@ end;
 {$endif}
 
 {---------------------------------------}
-constructor TPrefController.Create(filename: Widestring; BrandingFile: Widestring);
-var
-    res: TResourceStream;
-    sl: TStringList;
+constructor TPrefController.Create(filename: Widestring);
 begin
     inherited Create();
 
     _pref_filename := filename;
-    _brand_filename := BrandingFile;
     _parser := TXMLTagParser.Create;
     _parser.ParseFile(_pref_filename);
     if (_parser.Count > 0) then begin
@@ -364,29 +363,6 @@ begin
         // create some default node
         _pref_node := TXMLTag.Create('exodus');
 
-    // WTF is HInstance?
-    res := TResourceStream.Create(HInstance, 'defaults', 'XML');
-    sl := TStringList.Create();
-    sl.LoadFromStream(res);
-    res.Free();
-    _parser.ParseString(sl.Text, '');
-    sl.Free();
-    if (_parser.Count > 0) then begin
-        _default_node := _parser.popTag();
-        _parser.Clear();
-        end
-    else
-        _default_node := TXmlTag.Create('brand');
-        
-    _parser.ParseFile(_brand_filename);
-    if (_parser.Count > 0) then begin
-        // we have something to read.. hopefully it's correct :)
-        _brand_node := _parser.popTag();
-        _parser.Clear();
-        end
-    else
-        // create some default node
-        _brand_node := TXMLTag.Create('brand');
 
     _server_node := nil;
     _server_dirty := false;
@@ -402,10 +378,6 @@ begin
     // Kill our cache'd nodes, etc.
     if (_pref_node <> nil) then
         _pref_node.Free();
-    if (_brand_node <> nil) then
-        _brand_node.Free();
-    if (_default_node <> nil) then
-        _default_node.Free();
     if (_server_node <> nil) then
         _server_node.Free();
     _parser.Free();
@@ -431,64 +403,6 @@ begin
 end;
 
 {---------------------------------------}
-function TPrefController.getDefault(pkey: Widestring): Widestring;
-begin
-    result := getString(pkey, pkBrand);
-    if (result <> '') then
-        exit;
-
-    result := getString(pkey, pkDefault);
-    if (result <> '') then
-        exit;
-        
-    // set the defaults for the pref controller
-    if pkey = P_FONT_COLOR then
-        result := IntToStr(Integer(clBlack))
-    else if pkey = P_COLOR_BG then
-        result := IntToStr(Integer(clWhite))
-    else if pkey = P_COLOR_ME then
-        result := IntToStr(Integer(clBlue))
-    else if pkey = P_COLOR_OTHER then
-        result := IntToStr(Integer(clRed))
-    else if pkey = 'away_status' then
-        result := sIdleAway
-    else if pkey = 'xa_status' then
-        result := sIdleXA
-    else if pkey = 'log_path' then
-        result := ExtractFilePath(Application.EXEName) + 'logs'
-    else if pkey = 'xfer_path' then
-        result := ExtractFilePath(Application.EXEName)
-    else if pkey = 'spool_path' then
-        result := getUserDir() + 'spool.xml'
-    else if pkey = 'inline_status' then
-        result := '0'
-    else if pkey = 'roster_bg' then
-        result := IntToStr(Integer(clWindow))
-
-    {$ifdef Win32}
-    else if pkey = 'roster_font_name' then
-        result := Screen.IconFont.Name
-    else if pkey = 'roster_font_size' then
-        result := IntToStr(Screen.IconFont.Size)
-    else if pkey = 'roster_font_color' then
-        result := IntToStr(Integer(Screen.IconFont.Color))
-    else if pkey = 'browse_view' then
-        result := IntToStr(integer(vsIcon))
-    {$else}
-    else if pkey = 'roster_font_name' then
-        result := Application.Font.Name
-    else if pkey = 'roster_font_size' then
-        result := IntToStr(Application.Font.Size)
-    else if pkey = 'roster_font_color' then
-        result := IntToStr(Integer(Application.Font.Color))
-    {$endif}
-
-    
-    else
-        result := '';
-end;
-
-{---------------------------------------}
 function TPrefController.getString(pkey: Widestring; server_side: TPrefKind = pkClient): Widestring;
 var
     t: TXMLTag;
@@ -499,16 +413,10 @@ begin
     case server_side of
         pkClient:  t := _pref_node.GetFirstTag(pkey);
         pkServer:  t := _server_node.GetFirstTag(pkey);
-        pkBrand:   t := _brand_node.GetFirstTag(pkey);
-        pkDefault: t := _default_node.GetFirstTag(pkey);
     end;
 
-    if (t = nil) then begin
-        if (server_side in [pkBrand, pkDefault]) then
-            Result := ''
-        else
-            Result := getDefault(pkey);
-        end
+    if (t = nil) then 
+        Result := getDefault(pkey)
     else
         Result := t.Data;
 end;
@@ -533,23 +441,21 @@ var
     s: TXMLTagList;
     i: integer;
 begin
-    sl.Clear();
-
-    p := nil;
-
     case server_side of
         pkClient:   p := _pref_node.GetFirstTag(pkey);
         pkServer:   p := _server_node.GetFirstTag(pkey);
-        pkBrand:    p := _brand_node.GetFirstTag(pkey);
-        pkDefault:  p := _default_node.GetFirstTag(pkey);
+        else p:= nil;
     end;
 
     if (p <> nil) then begin
+        sl.Clear();
         s := p.QueryTags('s');
         for i := 0 to s.Count - 1 do
             sl.Add(s.Tags[i].Data);
         s.Free;
-        end;
+        end
+    else
+        fillDefaultStringList(pkey, sl);
 end;
 
 {---------------------------------------}
@@ -570,11 +476,9 @@ begin
         n := _server_node;
         _server_dirty := true;
         end
-    else if (server_side = pkClient) then
-        n := _pref_node
-    else // brand
-        n := _brand_node;
-
+    else
+        n := _pref_node;
+        
     t := n.GetFirstTag(pkey);
     if (t <> nil) then begin
         t.ClearCData;
@@ -605,10 +509,8 @@ begin
         n := _server_node;
         _server_dirty := true;
         end
-    else if (Server_side = pkClient) then
-        n := _pref_node
-    else // brand
-        n := _brand_node;
+    else
+        n := _pref_node;
 
     p := n.GetFirstTag(pkey);
 
@@ -801,7 +703,7 @@ end;
 {---------------------------------------}
 function TPrefController.CreateProfile(name: Widestring): TJabberProfile;
 begin
-    Result := TJabberProfile.Create(name, _brand_node);
+    Result := TJabberProfile.Create(name);
     _profiles.AddObject(name, Result);
 end;
 
@@ -829,7 +731,7 @@ begin
     pcount := ptags.Count;
 
     for i := 0 to pcount - 1 do begin
-        cur_profile := TJabberProfile.Create('', nil);
+        cur_profile := TJabberProfile.Create('');
         cur_profile.Load(ptags[i]);
         _profiles.AddObject(cur_profile.name, cur_profile);
         end;
@@ -940,79 +842,42 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-function getDefaultString(key: string; node: TXMLTag; defaultstr: string): string;
-var
-    t: TXMLTag;
-begin
-    if (node = nil) then
-        result := defaultstr
-    else begin
-        t := node.GetFirstTag(key);
-        if (t = nil) then
-            result := defaultstr
-        else
-            result := t.Data;
-        end;
-end;
-
-function getDefaultInt(key: string; brand: TXMLTag; defint: integer) : integer;
-var
-    t: string;
-begin
-    t := getDefaultString(key, brand, '');
-    if (t = '') then
-        result := defint
-    else
-        result := SafeInt(t);
-end;
-
-function getDefaultBoolean(key: string; brand: TXMLTag; defbool: boolean) : boolean;
-var
-    t: string;
-begin
-    t := getDefaultString(key, brand, '');
-    if (t = '') then
-        result := defbool
-    else
-        result := SafeBool(t);
-end;
-
-constructor TJabberProfile.Create(prof_name : string; brand: TXMLTag);
+constructor TJabberProfile.Create(prof_name : string);
 begin
     inherited Create;
 
     Name       := prof_name;
 
-    Username   := getDefaultString('brand_profile_username', brand, '');
-    password   := getDefaultString('brand_profile_password', brand, '');
-    Server     := getDefaultString('brand_profile_server', brand, 'jabber.org');
-    Resource   := getDefaultString('brand_profile_resource', brand, 'Exodus');
-    Priority   := getDefaultInt('brand_profile_priority', brand, 1);
-    SavePasswd := getDefaultBoolean('brand_profile_save_password', brand, true);
+    Username   := getDefault('brand_profile_username');
+    password   := getDefault('brand_profile_password');
+    Server     := getDefault('brand_profile_server');
+    Resource   := getDefault('brand_profile_resource');
+    Priority   := SafeInt(getDefault('brand_profile_priority'));
+    SavePasswd := SafeBool(getDefault('brand_profile_save_password'));
 
-    ConnectionType := getDefaultInt('brand_profile_conn_type', brand, conn_normal);
+    ConnectionType := SafeInt(getDefault('brand_profile_conn_type'));
 
     // Socket connection
-    Host          := getDefaultString('brand_profile_host', brand, '');
-    Port          := getDefaultInt('brand_profile_port', brand, 5222);
-    ssl           := getDefaultBoolean('brand_profile_ssl', brand, false);
-    SocksType     := getDefaultInt('brand_profile_socks_type', brand, 0);
-    SocksHost     := getDefaultString('brand_profile_socks_host', brand, '');
-    SocksPort     := getDefaultInt('brand_profile_socks_port', brand, 1);
-    SocksAuth     := getDefaultBoolean('brand_profile_socks_auth', brand, false);
-    SocksUsername := getDefaultString('brand_profile_socks_user', brand, '');
-    SocksPassword := getDefaultString('brand_profile_socks_password', brand, '');
+    Host          := getDefault('brand_profile_host');
+    Port          := SafeInt(getDefault('brand_profile_port'));
+    ssl           := SafeBool(getDefault('brand_profile_ssl'));
+    SocksType     := SafeInt(getDefault('brand_profile_socks_type'));
+    SocksHost     := getDefault('brand_profile_socks_host');
+    SocksPort     := SafeInt(getDefault('brand_profile_socks_port'));
+    SocksAuth     := SafeBool(getDefault('brand_profile_socks_auth'));
+    SocksUsername := getDefault('brand_profile_socks_user');
+    SocksPassword := getDefault('brand_profile_socks_password');
 
     // HTTP Connection
-    URL           := getDefaultString('brand_profile_http_url', brand, '');
-    Poll          := getDefaultInt('brand_profile_http_poll', brand, 1000);
-    NumPollKeys   := getDefaultInt('brand_profile_num_poll_keys', brand, 256);
-    ProxyApproach := getDefaultInt('brand_profile_http_proxy_approach', brand, 0);
-    ProxyHost     := getDefaultString('brand_profile_http_proxy_host', brand, '');
-    ProxyPort     := getDefaultInt('brand_profile_http_proxy_port', brand, 0);
-    ProxyAuth     := getDefaultBoolean('brand_profile_http_proxy_auth', brand, false);
-    ProxyUsername := getDefaultString('brand_profile_http_proxy_user', brand, '');
-    ProxyPassword := getDefaultString('brand_profile_http_proxy_password', brand, '');
+    URL           := getDefault('brand_profile_http_url');
+    Poll          := SafeInt(getDefault('brand_profile_http_poll'));
+    NumPollKeys   := SafeInt(getDefault('brand_profile_num_poll_keys'));
+    ProxyApproach := SafeInt(getDefault('brand_profile_http_proxy_approach'));
+    ProxyHost     := getDefault('brand_profile_http_proxy_host');
+    ProxyPort     := SafeInt(getDefault('brand_profile_http_proxy_port'));
+    ProxyAuth     := SafeBool(getDefault('brand_profile_http_proxy_auth'));
+    ProxyUsername := getDefault('brand_profile_http_proxy_user');
+    ProxyPassword := getDefault('brand_profile_http_proxy_password');
 end;
 
 {---------------------------------------}
@@ -1142,4 +1007,111 @@ begin
     else result := true;
 end;
 
+{---------------------------------------}
+procedure fillDefaultStringlist(pkey: Widestring; sl: TWideStrings);
+var
+    t: TXMLTag;
+    s: TXMLTagList;
+    i: integer;
+begin
+    sl.Clear();
+    t := s_brand_node.GetFirstTag(pkey);
+    if (t = nil) then
+        t := s_default_node.GetFirstTag(pkey);
+    if (t = nil) then exit;
+
+    s := t.QueryTags('s');
+    for i := 0 to s.Count - 1 do
+        sl.Add(s.Tags[i].Data);
+    s.Free;
+end;
+
+{---------------------------------------}
+function getDefault(pkey: Widestring): Widestring;
+var
+    t: TXMLTag;
+begin
+    t := s_brand_node.GetFirstTag(pkey);
+    if (t <> nil) then begin
+        result := t.Data;
+        exit;
+        end;
+
+    t := s_default_node.GetFirstTag(pkey);
+    if (t <> nil) then begin
+        result := t.Data;
+        exit;
+        end;
+
+    // set the defaults for the pref controller
+    if pkey = 'away_status' then
+        result := sIdleAway
+    else if pkey = 'xa_status' then
+        result := sIdleXA
+    else if pkey = 'log_path' then
+        result := ExtractFilePath(Application.EXEName) + 'logs'
+    else if pkey = 'xfer_path' then
+        result := ExtractFilePath(Application.EXEName)
+    else if pkey = 'spool_path' then
+        result := getUserDir() + 'spool.xml'
+
+    {$ifdef Win32}
+    else if pkey = 'roster_font_name' then
+        result := Screen.IconFont.Name
+    else if pkey = 'roster_font_size' then
+        result := IntToStr(Screen.IconFont.Size)
+    else if pkey = 'roster_font_color' then
+        result := IntToStr(Integer(Screen.IconFont.Color))
+    {$else}
+    else if pkey = 'roster_font_name' then
+        result := Application.Font.Name
+    else if pkey = 'roster_font_size' then
+        result := IntToStr(Application.Font.Size)
+    else if pkey = 'roster_font_color' then
+        result := IntToStr(Integer(Application.Font.Color))
+    {$endif}
+    else
+        result := '';
+end;
+
+procedure init();
+var
+    res: TResourceStream;
+    sl: TStringList;
+    parser: TXMLTagParser;
+begin
+    parser := TXMLTagParser.Create;
+
+    // WTF is HInstance?
+    res := TResourceStream.Create(HInstance, 'defaults', 'XML');
+    sl := TStringList.Create();
+    sl.LoadFromStream(res);
+    res.Free();
+    parser.ParseString(sl.Text, '');
+    sl.Free();
+    if (parser.Count > 0) then begin
+        s_default_node := parser.popTag();
+        parser.Clear();
+        end
+    else
+        s_default_node := TXmlTag.Create('brand');
+
+    parser.ParseFile(ExtractFilePath(Application.EXEName) + 'branding.xml');
+    if (parser.Count > 0) then begin
+        // we have something to read.. hopefully it's correct :)
+        s_brand_node := parser.popTag();
+        parser.Clear();
+        end
+    else
+        // create some default node
+        s_brand_node := TXMLTag.Create('brand');
+        
+    parser.Free();
+end;
+
+initialization
+    init();
+finalization
+    s_default_node.Free();
+    s_brand_node.Free();
 end.

@@ -79,16 +79,18 @@
     <auto_updates>1</auto_updates>
     <roster_chat>1</roster_chat>
     <s10n_auto_accept>0</s10n_auto_accept>
-    <!--<log></log>-->
     <font_name>Arial</font_name>
     <font_size>10</font_size>
-    <!--<font_color></font_color>-->
+    <font_color>0</font_color>
     <font_bold>0</font_bold>
     <font_italic>0</font_italic>
     <font_underline>0</font_underline>
-    <!--<color_bg></color_bg>
-    <color_me></color_me>
-    <color_other></color_other>-->
+    <color_bg>$ffffff</color_bg>
+    <color_me>$ff0000</color_me>
+    <color_other>$0000ff</color_other>
     <event_width>315</event_width>
     <debug>0</debug>
+    <inline_status>0</inline_status>
+    <roster_bg>$80000005</roster_bg>
+    <browse_view>0</browse_view>
 </brand>

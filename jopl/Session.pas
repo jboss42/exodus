@@ -94,7 +94,7 @@ type
         Agents: TStringList;
         dock_windows: boolean;
 
-        Constructor Create(ConfigFile: widestring; BrandingFile: widestring);
+        Constructor Create(ConfigFile: widestring);
         Destructor Destroy; override;
 
         procedure CreateAccount;
@@ -166,7 +166,7 @@ var
 
 
 {---------------------------------------}
-Constructor TJabberSession.Create(ConfigFile: widestring; BrandingFile: widestring);
+Constructor TJabberSession.Create(ConfigFile: widestring);
 begin
     //
     inherited Create();
@@ -202,7 +202,7 @@ begin
 
     ChatList := TJabberChatList.Create;
 
-    Prefs := TPrefController.Create(ConfigFile, BrandingFile);
+    Prefs := TPrefController.Create(ConfigFile);
     Prefs.LoadProfiles;
     Prefs.SetSession(Self);
 
