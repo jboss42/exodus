@@ -271,7 +271,14 @@ begin
         exit;
 
     // Special case for the main exodus window.
-    if ((_clickForm = frmExodus) and (frmExodus.isMinimized())) then
+    if ((_clickForm = nil) and (_clickHandle <> 0)) then begin
+        setForegroundWindow(_clickHandle);
+        exit;
+    end
+    else if (_clickForm = nil) then
+        exit
+
+    else if ((_clickForm = frmExodus) and (frmExodus.isMinimized())) then
         frmExodus.trayShowClick(nil)
 
     else if (_clickForm.WindowState = wsMinimized) then

@@ -1054,9 +1054,15 @@ begin
         exit;
     end;
 
-    _stream.EnableSSL();
-    ResetStream();
-    _ssl_on := true;
+    try
+        _stream.EnableSSL();
+        ResetStream();
+        _ssl_on := true;
+    except
+        Self.FireEvent('/session/tlserror', nil);
+        _ssl_on := false;
+    end;
+
 end;
 
 end.
