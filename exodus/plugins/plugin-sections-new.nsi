@@ -13,7 +13,7 @@
 	SectionEnd
 
 	Section "HTMLLogger" SEC_ExHTMLLogger
-	  AddSize 712
+	  AddSize 713
 	  Push "ExHTMLLogger"
 	  Call DownloadPlugin
       RegDll "$INSTDIR\plugins\ExHTMLLogger.dll"
@@ -48,7 +48,7 @@
 	SectionEnd
 
 	Section "SQLLogger" SEC_ExSQLLogger
-	  AddSize 834
+	  AddSize 886
 	  Push "ExSQLLogger"
 	  Call DownloadPlugin
       RegDll "$INSTDIR\plugins\ExSQLLogger.dll"
