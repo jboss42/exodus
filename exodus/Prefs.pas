@@ -220,6 +220,7 @@ type
     lblPluginScan: TLabel;
     chkBusy: TCheckBox;
     chkCollapsed: TCheckBox;
+    chkGroupCounts: TCheckBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -365,6 +366,7 @@ begin
         chkMessenger.Checked := getBool('roster_messenger');
         chkRosterUnicode.Checked := getBool('roster_unicode');
         chkCollapsed.Checked := getBool('roster_collapsed');
+        chkGroupCounts.Checked := getBool('roster_groupcounts');
 
         cboDblClick.ItemIndex := getInt('roster_chat');
         txtGatewayGrp.Text := getString('roster_transport_grp');
@@ -684,6 +686,7 @@ begin
         setBool('roster_messenger', chkMessenger.Checked);
         setBool('roster_unicode', chkRosterUnicode.Checked);
         setBool('roster_collapsed', chkCollapsed.Checked);
+        setBool('roster_groupcounts', chkGroupCounts.Checked);
         setString('roster_transport_grp', txtGatewayGrp.Text);
 
         // S10n prefs

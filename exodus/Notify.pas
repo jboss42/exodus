@@ -126,7 +126,7 @@ begin
         DoNotify(nil, 'notify_online', nick + sNotifyOnline, ico_Online)
 
     // someone is going offline
-    else if (event = '/presence/unavailable') then
+    else if (event = '/presence/offline') then
         DoNotify(nil, 'notify_offline', nick + sNotifyOffline, ico_Offline)
 
     // don't display normal presence changes

@@ -1588,14 +1588,14 @@ object frmPrefs: TfrmPrefs
       Caption = 'Roster'
       object Label18: TLabel
         Left = 8
-        Top = 282
+        Top = 298
         Width = 150
         Height = 13
         Caption = 'Group to be used for Gateways:'
       end
       object Label21: TLabel
         Left = 8
-        Top = 229
+        Top = 245
         Width = 93
         Height = 13
         Caption = 'Double Click Action'
@@ -1644,7 +1644,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkInlineStatus: TCheckBox
         Left = 8
-        Top = 182
+        Top = 198
         Width = 241
         Height = 17
         Caption = 'Show status in the roster: Joe <Meeting>'
@@ -1653,7 +1653,7 @@ object frmPrefs: TfrmPrefs
       end
       object cboInlineStatus: TColorBox
         Left = 32
-        Top = 198
+        Top = 214
         Width = 201
         Height = 22
         DefaultColorColor = clBlue
@@ -1697,14 +1697,14 @@ object frmPrefs: TfrmPrefs
       end
       object txtGatewayGrp: TTntEdit
         Left = 32
-        Top = 296
+        Top = 312
         Width = 201
         Height = 21
         TabOrder = 10
       end
       object cboDblClick: TComboBox
         Left = 26
-        Top = 245
+        Top = 261
         Width = 207
         Height = 21
         Style = csDropDownList
@@ -1730,6 +1730,14 @@ object frmPrefs: TfrmPrefs
         Height = 17
         Caption = 'Collapse all roster groups initially.'
         TabOrder = 13
+      end
+      object chkGroupCounts: TCheckBox
+        Left = 9
+        Top = 176
+        Width = 288
+        Height = 17
+        Caption = 'Show online and total group counts in roster (eg, 5/10)'
+        TabOrder = 14
       end
     end
     object tbsSubscriptions: TTabSheet
@@ -2144,7 +2152,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 97
         Height = 20
         Align = alTop
         Alignment = taCenter
