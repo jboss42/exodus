@@ -1266,12 +1266,6 @@ begin
             end;
 
         // setup the Exodus window..
-        {
-        if (MainSession.Prefs.getBool('window_ontop')) then
-            Self.FormStyle := fsStayOnTop
-        else
-            Self.FormStyle := fsNormal;
-        }
         if (MainSession.Prefs.getBool('window_ontop')) then
             SetWindowPos(Self.Handle, HWND_TOPMOST, 0,0,0,0,
                 SWP_NOMOVE + SWP_NOREPOSITION + SWP_NOSIZE)
@@ -1709,14 +1703,14 @@ end;
 procedure TfrmExodus.btnAddContactClick(Sender: TObject);
 begin
     // add a contact
-    ShowAddContact;
+    ShowAddContact();
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.mnuConferenceClick(Sender: TObject);
 begin
     // Join a TC Room
-    StartJoinRoom;
+    StartJoinRoom();
 end;
 
 {---------------------------------------}
@@ -1731,7 +1725,7 @@ end;
 procedure TfrmExodus.Preferences1Click(Sender: TObject);
 begin
     // Show the prefs
-    StartPrefs;
+    StartPrefs();
 end;
 
 {---------------------------------------}
@@ -1978,7 +1972,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.JabberCentralWebsite1Click(Sender: TObject);
 begin
-    // goto www.jabbecentral.org
+    // goto www.jabberstudio.org
     ShellExecute(0, 'open', 'http://www.jabberstudio.org', '', '', SW_SHOW);
 end;
 
@@ -1987,7 +1981,7 @@ procedure TfrmExodus.About1Click(Sender: TObject);
 begin
     // Show some about dialog box
     frmAbout := TfrmAbout.Create(Application);
-    frmAbout.ShowModal;
+    frmAbout.ShowModal();
 end;
 
 {---------------------------------------}
@@ -2401,14 +2395,14 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.WinJabWebsite1Click(Sender: TObject);
 begin
-    // goto exodus.sf.net
+    // goto exodus.jabberstudio.org
     ShellExecute(0, 'open', 'http://exodus.jabberstudio.org', '', '', SW_SHOW);
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.JabberBugzilla1Click(Sender: TObject);
 begin
-    // submit a bug on SF.
+    // submit a bug on JS.org
     ShellExecute(0, 'open', 'http://www.jabberstudio.org/projects/exodus/bugs/', '', '', SW_SHOW);
 end;
 
@@ -2605,6 +2599,8 @@ procedure TfrmExodus.Test1Click(Sender: TObject);
 begin
     // Test something..
     // LoadPlugin('RosterClean.ExodusRosterClean');
+
+    // Cause an AV
     PInteger(nil)^ := 0;
 end;
 
@@ -2727,6 +2723,7 @@ begin
         Self.ActiveChat.HideEmoticons();
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.TabsChange(Sender: TObject);
 begin
     if (Tabs.ActivePage.ImageIndex <> -1) then
