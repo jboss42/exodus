@@ -176,7 +176,7 @@ type
     imgYahooEmoticons: TImageList;
     btnFind: TToolButton;
     imgMSNEmoticons: TImageList;
-    RegisterwithaService1: TMenuItem;
+    mnuRegisterService: TMenuItem;
     btnExpanded: TToolButton;
     trayMessage: TMenuItem;
     timReconnect: TTimer;
@@ -227,7 +227,7 @@ type
     procedure mnuVersionClick(Sender: TObject);
     procedure mnuPasswordClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure RegisterwithaService1Click(Sender: TObject);
+    procedure mnuRegisterServiceClick(Sender: TObject);
     procedure TabsUnDock(Sender: TObject; Client: TControl;
       NewTarget: TWinControl; var Allow: Boolean);
     procedure TabsDockDrop(Sender: TObject; Source: TDragDockObject; X,
@@ -1400,6 +1400,7 @@ begin
     mnuChat.Enabled := enable;
     mnuConference.Enabled := enable;
     mnuPassword.Enabled := enable;
+    mnuRegisterService.Enabled := enable;
 
     mnuContacts.Enabled := enable;
     mnuPresence.Enabled := enable;
@@ -2550,7 +2551,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmExodus.RegisterwithaService1Click(Sender: TObject);
+procedure TfrmExodus.mnuRegisterServiceClick(Sender: TObject);
 var
     tmps: string;
     f: TfrmRegister;

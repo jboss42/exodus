@@ -291,7 +291,10 @@ procedure TfrmRoom.MsgCallback(event: string; tag: TXMLTag);
 begin
     // We are getting a msg
     if (tag.getAttribute('type') = 'groupchat') then
+        ShowMsg(tag)
+    else if (tag.getAttribute('type') = 'error') then
         ShowMsg(tag);
+
 end;
 
 {---------------------------------------}
@@ -566,19 +569,6 @@ begin
             member.JID := from;
             member.Nick := _jid.resource;
 
-            // get extended stuff for MUC
-            if (xtag <> nil) then begin
-                t := xtag.GetFirstTag('item');
-                if (t <> nil) then begin
-                    member.role := t.GetAttribute('role');
-                    member.real_jid := t.GetAttribute('jid');
-                    member.affil := t.GetAttribute('affiliation');
-                    end;
-
-                mtag := newRoomMessage(Format(sNewUser, [member.Nick]));
-                showMsg(mtag);
-                end;
-
             t := tag.GetFirstTag('created');
             if (t <> nil) then
                 // we are the owner... config the room
@@ -586,6 +576,10 @@ begin
 
             _roster.AddObject(from, member);
             member.Node := AddMember(member);
+
+            // show new user message
+            mtag := newRoomMessage(Format(sNewUser, [member.nick]));
+            showMsg(mtag);
             end
         else begin
             member := TRoomMember(_roster.Objects[i]);
@@ -606,6 +600,17 @@ begin
                 showMsg(mtag);
                 end;
             end;
+
+        // get extended stuff for MUC, and update the member struct
+        if (xtag <> nil) then begin
+            t := xtag.GetFirstTag('item');
+            if (t <> nil) then begin
+                member.role := t.GetAttribute('role');
+                member.real_jid := t.GetAttribute('jid');
+                member.affil := t.GetAttribute('affiliation');
+                end;
+            end;
+
 
         // for all protocols, our nick is our resource
         member.nick := _jid.resource;
@@ -716,20 +721,8 @@ begin
     if (member.show = '') then
         member.show := 'Available';
 
-    // member.Node.SelectedIndex := member.Node.ImageIndex;
     member.Node.Data := member;
 end;
-
-{---------------------------------------}
-{
-procedure TfrmRoom.ShowPresence(nick, msg: Widestring);
-var
-    txt: Widestring;
-begin
-    txt := '[' + formatdatetime('HH:MM',now) + '] ' + nick + msg;
-    DisplayPresence(txt, MsgList);
-end;
-}
 
 {---------------------------------------}
 procedure TfrmRoom.RemoveMember(member: TRoomMember);
@@ -800,6 +793,7 @@ begin
     // setup our callbacks
     if (_callback = -1) then begin
         _callback := MainSession.RegisterCallback(MsgCallback, '/packet/message[@type="groupchat"][@from="' + sjid + '*"]');
+        _callback := MainSession.RegisterCallback(MsgCallback, '/packet/message[@type="errror"][@from="' + sjid + '"]');
         _pcallback := MainSession.RegisterCallback(PresCallback, '/packet/presence[@from="' + sjid + '*"]');
         if (_scallback = -1) then
             _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
@@ -890,7 +884,6 @@ begin
             end;
         Key := Chr(0);
         end
-    // else if ( (Key = #13) and not(Returns.Down)) then
     else if (Key = #13) then
         SendMsg()
     else begin
@@ -1033,7 +1026,7 @@ function TfrmRoom.GetNick(rjid: Widestring): Widestring;
 var
     i: integer;
 begin
-    //
+    // Get a nick based on the NickJID 
     i := _roster.indexOf(rjid);
     if (i >= 0) then
         Result := TRoomMember(_roster.Objects[i]).Nick
@@ -1405,7 +1398,6 @@ begin
     // callback for list administration
     if event <> 'xml' then exit;
     if tag = nil then exit;
-
     ShowRoomAdminList(tag);
 end;
 

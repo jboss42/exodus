@@ -677,12 +677,19 @@ end;
 procedure TfrmBrowse.mSearchClick(Sender: TObject);
 var
     itm: TListItem;
+    j: string;
 begin
     // Search using this service.
-    itm := vwBrowse.Selected;
-    if itm = nil then exit;
+    j := '';
+    if (Sender = fActions.lblSearch) then
+        j := cboJID.Text
+    else begin
+        itm := vwBrowse.Selected;
+        j := itm.SubItems[0];
+        end;
 
-    StartSearch(itm.SubItems[0]);
+    if (j <> '') then
+        StartSearch(j);
 end;
 
 {---------------------------------------}
