@@ -181,6 +181,8 @@ type
     chkMsgQueue: TCheckBox;
     chkOnTop: TCheckBox;
     chkToolbox: TCheckBox;
+    Label21: TLabel;
+    cboChatFontColor: TColorBox;
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -210,6 +212,7 @@ type
     procedure cboRosterBGChange(Sender: TObject);
     procedure cboRosterFontColorChange(Sender: TObject);
     procedure Label20Click(Sender: TObject);
+    procedure cboChatFontColorChange(Sender: TObject);
   private
     { Private declarations }
     _notify: array of integer;
@@ -311,6 +314,8 @@ begin
         pnlFont.Font.Size := getInt('font_size');
         pnlFont.Font.Color := TColor(getInt('font_color'));
         pnlFont.Font.Style := [];
+        cboChatFontColor.Selected := TColor(getInt('font_color'));
+
         if getBool('font_bold') then
             pnlFont.Font.Style := pnlFont.Font.Style + [fsBold];
         if getBool('font_italic') then
@@ -961,6 +966,13 @@ procedure TfrmPrefs.Label20Click(Sender: TObject);
 begin
     ShellExecute(Self.Handle, nil, 'rundll32.exe',
       'shell32.dll,Control_RunDLL mmsys.cpl,,1', nil, SW_SHOW);
+end;
+
+procedure TfrmPrefs.cboChatFontColorChange(Sender: TObject);
+begin
+    // Change the font color for chats
+    pnlFont.Font.Color := cboChatFontColor.Selected;
+    pnlBGColor.Font.Color := cboChatFontColor.Selected;
 end;
 
 end.
