@@ -3,7 +3,7 @@ object frmConnDetails: TfrmConnDetails
   Top = 169
   Width = 304
   Height = 323
-  ActiveControl = txtUsername
+  ActiveControl = cboConnection
   Caption = 'Connection Details'
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -45,7 +45,7 @@ object frmConnDetails: TfrmConnDetails
     Top = 0
     Width = 296
     Height = 257
-    ActivePage = tbsProfile
+    ActivePage = tbsConn
     Align = alClient
     TabOrder = 1
     object tbsProfile: TTntTabSheet
@@ -197,6 +197,14 @@ object frmConnDetails: TfrmConnDetails
         Caption = 'Priority:'
         Transparent = True
       end
+      object TntLabel1: TTntLabel
+        Left = 1
+        Top = 121
+        Width = 73
+        Height = 13
+        Caption = 'SSL Certificate:'
+        Transparent = True
+      end
       object txtHost: TTntEdit
         Left = 75
         Top = 34
@@ -253,6 +261,22 @@ object frmConnDetails: TfrmConnDetails
         Associate = txtPriority
         Max = 1000
         TabOrder = 5
+      end
+      object txtSSLCert: TTntEdit
+        Left = 18
+        Top = 141
+        Width = 190
+        Height = 21
+        TabOrder = 6
+      end
+      object btnCertBrowse: TTntButton
+        Left = 213
+        Top = 140
+        Width = 72
+        Height = 25
+        Caption = 'Browse'
+        TabOrder = 7
+        OnClick = btnCertBrowseClick
       end
     end
     object tbsSocket: TTntTabSheet
@@ -433,5 +457,11 @@ object frmConnDetails: TfrmConnDetails
         TabOrder = 2
       end
     end
+  end
+  object OpenDialog1: TOpenDialog
+    DefaultExt = 'pem'
+    Filter = 'SSL Key Files|*.pem|All Files|*.*'
+    Left = 8
+    Top = 256
   end
 end

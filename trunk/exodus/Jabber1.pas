@@ -1029,6 +1029,10 @@ begin
         exit;
     end
 
+    else if event = '/session/sslerror' then begin
+        MessageDlg(_('SSL Connection Error'), mtError, [mbOK], 0);
+    end
+
     else if event = '/session/regerror' then begin
         _logoff := true;
 
