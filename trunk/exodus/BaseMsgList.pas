@@ -56,6 +56,10 @@ type
     procedure refresh(); virtual; // start dock
     procedure ready(); virtual;  // form up, (un)dock done, etc.
 
+    procedure DisplayComposing(msg: Widestring); virtual;
+    procedure HideComposing(); virtual;
+    function  isComposing(): boolean; virtual;
+
     property Handle: THandle read getHandle;
     property winObject: TObject read getObject;
   end;
@@ -171,6 +175,21 @@ end;
 procedure TfBaseMsgList.refresh();
 begin
     // NOOP
+end;
+
+procedure TfBaseMsgList.DisplayComposing(msg: Widestring);
+begin
+    // NOOP
+end;
+
+procedure TfBaseMsgList.HideComposing();
+begin
+    // NOOP
+end;
+
+function TfBaseMsgList.IsComposing(): boolean;
+begin
+    result := false;
 end;
 
 end.

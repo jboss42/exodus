@@ -1,6 +1,6 @@
 inherited frmChat: TfrmChat
-  Left = 306
-  Top = 168
+  Left = 284
+  Top = 219
   Width = 391
   Height = 305
   ActiveControl = MsgOut
@@ -13,16 +13,16 @@ inherited frmChat: TfrmChat
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
-    Top = 243
+    Top = 239
     Width = 383
   end
   inherited pnlMsgList: TPanel
     Top = 32
     Width = 383
-    Height = 211
+    Height = 207
   end
   inherited pnlInput: TPanel
-    Top = 247
+    Top = 243
     Width = 383
     inherited MsgOut: TExRichEdit
       Width = 379
@@ -79,29 +79,6 @@ inherited frmChat: TfrmChat
         OnClick = imgAvatarClick
         OnPaint = imgAvatarPaint
       end
-      object lblReply: TTntLabel
-        Left = 99
-        Top = 0
-        Width = 52
-        Height = 28
-        Cursor = crHandPoint
-        Align = alLeft
-        Caption = '(is replying)'
-        ParentShowHint = False
-        ShowHint = True
-        Layout = tlCenter
-        Visible = False
-        OnClick = lblJIDClick
-      end
-      object Panel2: TPanel
-        Left = 91
-        Top = 0
-        Width = 8
-        Height = 28
-        Align = alLeft
-        BevelOuter = bvNone
-        TabOrder = 0
-      end
       object Panel3: TPanel
         Left = 35
         Top = 0
@@ -109,7 +86,7 @@ inherited frmChat: TfrmChat
         Height = 28
         Align = alLeft
         BevelOuter = bvNone
-        TabOrder = 1
+        TabOrder = 0
       end
     end
   end

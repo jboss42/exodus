@@ -36,6 +36,7 @@ type
   private
     { Private declarations }
     _presence_last : boolean;
+    _composing: integer;
 
   public
     { Public declarations }
@@ -58,6 +59,9 @@ type
     procedure Save(fn: string); override;
     procedure populate(history: Widestring); override;
     procedure setupPrefs(); override;
+    procedure DisplayComposing(msg: Widestring); override;
+    procedure HideComposing(); override;
+    function  isComposing(): boolean; override;
   end;
 
 var
@@ -69,6 +73,7 @@ var
 implementation
 
 uses
+    Emote, 
     JabberUtils, ExUtils,  Session, MsgDisplay, ShellAPI, BaseChat, Jabber1;
 
 {$R *.dfm}
@@ -78,6 +83,7 @@ constructor TfRTFMsgList.Create(Owner: TComponent);
 begin
     inherited Create(Owner);
     _presence_last := false;
+    _composing := -1;
 end;
 
 {---------------------------------------}
@@ -301,6 +307,34 @@ end;
 procedure TfRTFMsgList.setDragDrop(event: TDragDropEvent);
 begin
     MsgList.onDragDrop := event;
+end;
+
+{---------------------------------------}
+procedure TfRTFMsgList.DisplayComposing(msg: Widestring);
+begin
+    HideComposing();
+    _composing := MsgList.WideLines.Count;
+    MsgList.SelStart := Length(MsgList.WideLines.Text);
+    MsgList.SelLength := 0;
+    MsgList.SelAttributes.Color := TColor(MainSession.Prefs.getInt('color_action'));
+    MsgList.Paragraph.Alignment := taCenter;
+    MsgList.WideSelText := msg + #13#10;
+end;
+
+{---------------------------------------}
+procedure TfRTFMsgList.HideComposing();
+begin
+    //
+    if (_composing = -1) then exit;
+
+    MsgList.WideLines.Delete(_composing);
+    _composing := -1;
+end;
+
+{---------------------------------------}
+function TfRTFMsgList.isComposing(): boolean;
+begin
+    Result := (_composing >= 0);
 end;
 
 end.
