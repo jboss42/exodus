@@ -587,7 +587,7 @@ begin
         if (_show_status) then begin
             if (p <> nil) then begin
                 if (p.Status <> '') then
-                    tmps := tmps + ': ' + p.Status;
+                    tmps := tmps + ' (' + p.Status + ')';
                 end;
             end;
 
@@ -1188,7 +1188,9 @@ begin
 
                 with treeRoster.Canvas do begin
                     TextFlags := ETO_OPAQUE;
+                    tw := TextWidth(c1);
                     xRect := Node.DisplayRect(true);
+                    xRect.Right := xRect.Left + tw + 8 + TextWidth(c2);
                     nRect := xRect;
                     nRect.Left := nRect.Left - (2*treeRoster.Indent);
 
@@ -1210,7 +1212,6 @@ begin
                     Draw(nRect.Left + treeRoster.Indent, nRect.Top, bm);
 
                     // draw the text
-                    tw := TextWidth(c1);
                     SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(treeRoster.Font.Color));
                     TextOut(xRect.Left + 1, xRect.Top + 1, c1);
                     SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(_status_color));
