@@ -80,10 +80,10 @@ type
     public
         constructor Create(root: String); virtual;
         destructor Destroy(); override;
-        
+
         procedure Connect(server: string; port: integer; use_ssl: boolean = false); virtual; abstract;
         procedure Send(xml: string); virtual; abstract; // Make sure the imp. does ANSI -> UTF8
-        procedure SendTag(tag: TXMLTag); 
+        procedure SendTag(tag: TXMLTag);
         procedure Disconnect; virtual; abstract;
 
         procedure RegisterStreamCallback(p: TXMLStreamCallback);
@@ -102,27 +102,27 @@ type
         _tag_parser: TXMLTagParser;
         _stream:     TXMLStream;
         _domstack:   TList;
-        _root:       string;
-        _root_tag:   string;
+        _root:       Widestring;
+        _root_tag:   Widestring;
         _root_len:   integer;
         _cur_msg:    TJabberMsg;
-        _rbuff:      string;
+        _rbuff:      Widestring;
         _counter:    integer;
 
         procedure DispatchMsg();
-        procedure ParseTags(buff: string);
-        procedure handleBuffer(buff: string);
-        function getFullTag(buff: string): string;
+        procedure ParseTags(buff: Widestring);
+        procedure handleBuffer(buff: Widestring);
+        function getFullTag(buff: Widestring): Widestring;
 
     protected
-        function GetData(): string;
-        procedure Push(buff: string);
+        function GetData(): Widestring;
+        procedure Push(buff: Widestring);
         procedure CleanUp(); virtual;
         procedure doMessage(msg: integer);
 
     public
-        constructor Create(strm: TXMLStream; root: string); reintroduce;
-        property Data: string read GetData;
+        constructor Create(strm: TXMLStream; root: Widestring); reintroduce;
+        property Data: Widestring read GetData;
         function GetTag: TXMLTag;
     end;
 
@@ -135,7 +135,7 @@ uses
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-constructor TParseThread.Create(strm: TXMLStream; root: string);
+constructor TParseThread.Create(strm: TXMLStream; root: Widestring);
 begin
     // Create a new thread and setup the events
     inherited  Create(True);
@@ -157,7 +157,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TParseThread.Push(buff: string);
+procedure TParseThread.Push(buff: Widestring);
 begin
     _lock.Acquire;
     _indata.Add(buff);
@@ -173,10 +173,10 @@ begin
 end;
 
 {---------------------------------------}
-procedure TParseThread.handleBuffer(buff: string);
+procedure TParseThread.handleBuffer(buff: Widestring);
 var
-    cp_buff: string;
-    fc, frag: string;
+    cp_buff: Widestring;
+    fc, frag: Widestring;
 begin
     // scan the buffer to see if it's complete
     cp_buff := buff;
@@ -197,7 +197,7 @@ begin
 end;
 
 {---------------------------------------}
-function TParseThread.GetData: string;
+function TParseThread.GetData: Widestring;
 begin
     {
     Suck some data off of the _indata stack and return it.
@@ -257,7 +257,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TParseThread.ParseTags(buff: string);
+procedure TParseThread.ParseTags(buff: Widestring);
 var
     c_tag: TXMLTag;
 begin
@@ -276,7 +276,7 @@ begin
 end;
 
 {---------------------------------------}
-function TParseThread.getFullTag(buff: string): string;
+function TParseThread.getFullTag(buff: Widestring): Widestring;
 var
     // pbuff: array of char;
     sbuff, r, stag, etag, tmps: String;
@@ -292,22 +292,28 @@ begin
     <!--  foo bar -->
 
     }
-    e := 0;
-    i := 0;
+    //e := 0;
+    //i := 0;
     _counter := 0;
     Result := '';
     sbuff := buff;
     l := Length(sbuff);
 
+    p := Pos('<', sbuff);
+    if p <= 0 then raise EXMLStream.Create('');
+    tmps := Copy(sbuff, p, l - p + 1);
+    e := Pos('>', tmps);
+    i := Pos('/>', tmps);
+
     if _root = '' then begin
         // snag the first tag off the front
+        {
         p := Pos('<', sbuff);
-
         if p <= 0 then raise EXMLStream.Create('');
-
         tmps := Copy(sbuff, p, l - p + 1);
         e := Pos('>', tmps);
         i := Pos('/>', tmps);
+        }
 
         // various kinds of whitespace
         sp := Pos(' ', tmps);
@@ -339,6 +345,10 @@ begin
             Result := r;
             exit;
             end;
+        end
+    else begin
+        // we already have a root element..
+        // look for <foo bar="baz"/>
         end;
 
     if (e = (i + 1)) then begin
