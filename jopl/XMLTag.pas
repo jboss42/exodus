@@ -57,6 +57,7 @@ type
     constructor Create; overload; override;
     constructor Create(tagname: WideString); reintroduce; overload; virtual;
     constructor Create(tag: TXMLTag); reintroduce; overload; virtual;
+    constructor Create(tagname, CDATA: WideString); reintroduce; overload; virtual;
     destructor Destroy; override;
 
     function AddTag(tagname: WideString): TXMLTag;
@@ -172,6 +173,12 @@ begin
     //
     Create();
     Self.AssignTag(tag);
+end;
+
+constructor TXMLTag.Create(tagname, CDATA: WideString);
+begin
+    Create(tagname);
+    self.AddCData(CDATA);
 end;
 
 {---------------------------------------}
