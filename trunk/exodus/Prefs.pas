@@ -28,7 +28,6 @@ uses
 
 type
   TfrmPrefs = class(TForm)
-    frameButtons1: TframeButtons;
     ScrollBox1: TScrollBox;
     imgDialog: TImage;
     lblDialog: TLabel;
@@ -78,7 +77,6 @@ type
     trkRosterAlpha: TTrackBar;
     txtRosterAlpha: TEdit;
     spnRosterAlpha: TUpDown;
-    chkFadeRoster: TCheckBox;
     chkDebug: TCheckBox;
     chkToastAlpha: TCheckBox;
     trkToastAlpha: TTrackBar;
@@ -153,11 +151,19 @@ type
     chkSnap: TCheckBox;
     txtSnap: TEdit;
     spnSnap: TUpDown;
-    Label16: TLabel;
-    cboRosterBG: TColorBox;
     Label17: TLabel;
     pnlRoster: TPanel;
     Button5: TButton;
+    Label16: TLabel;
+    cboRosterBG: TColorBox;
+    Label18: TLabel;
+    cboRosterFontColor: TColorBox;
+    Panel1: TPanel;
+    Bevel1: TBevel;
+    Panel3: TPanel;
+    btnOK: TButton;
+    btnCancel: TButton;
+    Button6: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -185,6 +191,7 @@ type
     procedure chkSnapClick(Sender: TObject);
     procedure Button5Click(Sender: TObject);
     procedure cboRosterBGChange(Sender: TObject);
+    procedure cboRosterFontColorChange(Sender: TObject);
   private
     { Private declarations }
     _notify: array of integer;
@@ -237,6 +244,7 @@ begin
         oColor := (pnlOtherColor.Font.Color);
 
         pnlFont.Font.Assign(FontDialog1.Font);
+        pnlFont.Caption := pnlFont.Font.Name + ', ' + IntToStr(pnlFont.Font.Size) + ' pt.';
         pnlBGColor.Font.Assign(FontDialog1.Font);
         pnlMyColor.Font.Assign(FontDialog1.Font);
         pnlOtherColor.Font.Assign(FontDialog1.Font);
@@ -264,12 +272,6 @@ begin
             optDblClick.ItemIndex := 0
         else
             optDblClick.ItemIndex := 1;
-        cboRosterBG.Selected := TColor(getInt('roster_bg'));
-        pnlRoster.Color := cboRosterBG.Selected;
-        pnlRoster.Font.Name := getString('roster_font_name');
-        pnlRoster.Font.Size := getInt('roster_font_size');
-        pnlRoster.Font.Color := TColor(getInt('roster_font_color'));
-        pnlRoster.Font.Style := [];
 
         // s10n prefs
         optIncomingS10n.ItemIndex := getInt('s10n_auto_accept');
@@ -301,6 +303,15 @@ begin
         pnlFont.Caption := pnlFont.Font.Name + ', ' +
             IntToStr(pnlFont.Font.Size) + ' pt.';
 
+        cboRosterBG.Selected := TColor(getInt('roster_bg'));
+        cboRosterFontColor.Selected := TColor(getInt('roster_font_color'));
+        pnlRoster.Color := cboRosterBG.Selected;
+        pnlRoster.Font.Name := getString('roster_font_name');
+        pnlRoster.Font.Size := getInt('roster_font_size');
+        pnlRoster.Font.Color := cboRosterFontColor.Selected;
+        pnlRoster.Font.Style := [];
+
+
         // System Prefs
         chkTimestamp.Checked := getBool('timestamp');
         chkAutoUpdate.Checked := getBool('auto_updates');
@@ -314,7 +325,6 @@ begin
 
         // Dialog Options
         chkRosterAlpha.Checked := getBool('roster_alpha');
-        chkFadeRoster.Checked := getBool('roster_fade');
         chkToastAlpha.Checked := getBool('toast_alpha');
         chkSnap.Checked := getBool('snap_on');
         chkRosterAlphaClick(Self);
@@ -429,7 +439,6 @@ begin
         setInt('roster_alpha_val', trkRosterAlpha.Position);
         setBool('toast_alpha', chkToastAlpha.Checked);
         setInt('toast_alpha_val', trkToastAlpha.Position);
-        setBool('roster_fade', chkFadeRoster.Checked);
         setBool('snap_on', chkSnap.Checked);
         setInt('edge_snap', spnSnap.Position);
 
@@ -495,6 +504,7 @@ end;
 {---------------------------------------}
 procedure TfrmPrefs.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+    MainSession.Prefs.SavePosition(Self);
     Action := caFree;
 end;
 
@@ -516,6 +526,8 @@ begin
 
     _no_notify_update := false;
     _no_pres_change := false;
+
+    MainSession.Prefs.RestorePosition(Self);
 end;
 
 {---------------------------------------}
@@ -584,6 +596,7 @@ end;
 {---------------------------------------}
 procedure TfrmPrefs.chkNotifyClick(Sender: TObject);
 var
+    e: boolean;
     i: integer;
 begin
     // Show this item's options in the optNotify box.
@@ -591,7 +604,11 @@ begin
 
     _no_notify_update := true;
 
-    optNotify.Enabled := chkNotify.Checked[i];
+    e := chkNotify.Checked[i];
+    chkToast.Enabled := e;
+    chkFlash.Enabled := e;
+    chkSound.Enabled := e;
+
     if optNotify.Enabled then begin
         chkToast.Checked := ((_notify[i] and notify_toast) > 0);
         chkFlash.Checked := ((_notify[i] and notify_flash) > 0);
@@ -783,6 +800,13 @@ procedure TfrmPrefs.cboRosterBGChange(Sender: TObject);
 begin
     // Change the roster BG color
     pnlRoster.Color := cboRosterBG.Selected;
+end;
+
+{---------------------------------------}
+procedure TfrmPrefs.cboRosterFontColorChange(Sender: TObject);
+begin
+    // Change the roster font color.
+    pnlRoster.Font.Color := cboRosterFontColor.Selected;
 end;
 
 end.

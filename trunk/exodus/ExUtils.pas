@@ -53,6 +53,7 @@ procedure DebugMsg(Message : string);
 {---------------------------------------}
 implementation
 uses
+    IdGlobal,
     ShellAPI,
     MsgDisplay,
     Session,
@@ -208,7 +209,7 @@ begin
         rdate := EncodeDate(yw, mw, dw);
         rdate := rdate + StrToTime(ts);
 
-        Result := rdate;
+        Result := rdate - TimeZoneBias();
     except
         Result := Now;
     end;

@@ -127,7 +127,6 @@ type
     lstEvents: TListView;
     N1: TMenuItem;
     N2: TMenuItem;
-    timFader: TTimer;
     timFlasher: TTimer;
     N3: TMenuItem;
     mnuOnline: TMenuItem;
@@ -197,7 +196,6 @@ type
     procedure btnDelPersonClick(Sender: TObject);
     procedure ShowXML1Click(Sender: TObject);
     procedure Splitter1Moved(Sender: TObject);
-    procedure timFaderTimer(Sender: TObject);
     procedure Exit2Click(Sender: TObject);
     procedure timFlasherTimer(Sender: TObject);
     procedure JabberorgWebsite1Click(Sender: TObject);
@@ -228,10 +226,8 @@ type
     { Private declarations }
     _event: TNextEventType;
     _noMoveCheck: boolean;
-    _fade: boolean;
     _flash: boolean;
     _edge_snap: integer;
-    _fade_limit: integer;
     _prof_index: integer;
     _auto_login: boolean;
     _auto_away: boolean;
@@ -331,7 +327,7 @@ const
 {---------------------------------------}
 implementation
 uses
-    JoinRoom, Login, ChatWin, RosterAdd,
+    MsgQueue, JoinRoom, Login, ChatWin, RosterAdd,
     JUD, Bookmark, CustomPres,
     MsgRecv, Prefs, Dockable,
     RiserWindow, RemoveContact,
@@ -858,17 +854,11 @@ var
 begin
     with MainSession.Prefs do begin
         alpha := getBool('roster_alpha');
-        _fade := getBool('roster_fade');
-        _fade_limit := getInt('fade_limit');
-        Self.AlphaBlend := (alpha or _fade);
+        Self.AlphaBlend := (alpha);
         if alpha then
             Self.AlphaBlendValue := MainSession.Prefs.getInt('roster_alpha_val')
         else
             Self.AlphaBlendValue := 255;
-        if _fade then
-            Self.FormStyle := fsStayOnTop
-        else
-            Self.FormStyle := fsNormal;
         lstEvents.Color := TColor(getInt('roster_bg'));
         end;
 end;
@@ -993,6 +983,7 @@ var
     toast, msg: string;
     img_idx, n_flag: integer;
     item: TListItem;
+    mqueue: TfrmMsgQueue;
 begin
     // create a listview item for this event
     n_flag := 0;
@@ -1058,10 +1049,14 @@ begin
         item.ImageIndex := img_idx;
         item.SubItems.Add(msg);
         end
-    else begin
+    else if (e.delayed) then begin
         // we are collapsed, just display in regular windows
+        mqueue := getMsgQueue();
+        mqueue.Show;
+        mqueue.LogEvent(e, msg, img_idx);
+        end
+    else
         ShowEvent(e);
-        end;
 end;
 
 {---------------------------------------}
@@ -1082,15 +1077,12 @@ begin
         dec(_lpHookRec^.InstanceCount);
         _StopHooks();
         end;
-    {
-    if (_hook_keyboard <> 0) then
-        UnhookWindowsHookEx(_hook_keyboard);
-    if (_hook_mouse <> 0) then
-        UnhookWindowsHookEx(_hook_mouse);
-    }
 
     MainSession.Prefs.SavePosition(Self);
     lstEvents.Items.Clear;
+
+    if (frmMsgQueue <> nil) then
+        frmMsgQueue.Close;
 
     if MainSession <> nil then begin
         _event := next_Exit;
@@ -1199,8 +1191,6 @@ begin
         // make sure we undock all of the tabs..
         while (Tabs.DockClientCount > 0) do begin
             docked := TfrmDockable(Tabs.DockClients[0]);
-            if ((frmDebug <> nil) and (docked = frmDebug)) then
-                frmDebug.Hide;
             docked.FloatForm;
             end;
 
@@ -1381,14 +1371,9 @@ end;
 procedure TExodus.ShowXML1Click(Sender: TObject);
 begin
     // show the debug window if it's hidden
-    if (MainSession.Prefs.getBool('expanded')) then
-        // do something here
-    else if (frmDebug = nil) then begin
+    if (frmDebug = nil) then
         frmDebug := TfrmDebug.Create(nil);
-        frmDebug.Show;
-        end
-    else
-        frmDebug.Show;
+    frmDebug.ShowDefault();
 end;
 
 {---------------------------------------}
@@ -1396,15 +1381,6 @@ procedure TExodus.Splitter1Moved(Sender: TObject);
 begin
     // Save the current width
     MainSession.Prefs.setInt('event_width', lstEvents.Width);
-end;
-
-{---------------------------------------}
-procedure TExodus.timFaderTimer(Sender: TObject);
-begin
-    // fade the main window's alpha blending to 100
-    Self.AlphaBlendValue := Self.AlphaBlendValue - 10;
-    if (Self.AlphaBlendValue <= _fade_limit) then
-        timFader.Enabled := false;
 end;
 
 {---------------------------------------}

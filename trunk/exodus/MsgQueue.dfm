@@ -1,11 +1,13 @@
 inherited frmMsgQueue: TfrmMsgQueue
   Left = 283
-  Top = 131
+  Top = 213
   Width = 438
   Height = 335
-  Caption = 'Messages'
+  Caption = 'Events'
   OldCreateOrder = True
   Position = poDesigned
+  OnClose = FormClose
+  OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
@@ -16,16 +18,14 @@ inherited frmMsgQueue: TfrmMsgQueue
     Cursor = crVSplit
     Align = alTop
   end
-  object ListView1: TListView
+  object lstEvents: TListView
     Left = 0
     Top = 0
     Width = 430
     Height = 150
     Align = alTop
+    Checkboxes = True
     Columns = <
-      item
-        Width = 20
-      end
       item
         Caption = 'From'
         Width = 100
@@ -38,22 +38,28 @@ inherited frmMsgQueue: TfrmMsgQueue
         Caption = 'Subject'
         Width = 200
       end>
+    ColumnClick = False
+    ReadOnly = True
+    RowSelect = True
+    SmallImages = Exodus.ImageList2
     TabOrder = 0
     ViewStyle = vsReport
+    OnChange = lstEventsChange
+    OnDblClick = lstEventsDblClick
+    OnKeyDown = lstEventsKeyDown
   end
-  object RichEdit1: TRichEdit
+  object txtMsg: TRichEdit
     Left = 0
     Top = 153
     Width = 430
-    Height = 132
+    Height = 129
     Align = alClient
-    Lines.Strings = (
-      'RichEdit1')
+    ReadOnly = True
     TabOrder = 1
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 285
+    Top = 282
     Width = 430
     Height = 19
     Panels = <>

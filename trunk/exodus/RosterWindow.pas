@@ -114,6 +114,7 @@ type
     _status_color: TColor;
 
     _bookmark: TTreeNode;
+    _offline: TTreeNode;
     _hint_text : String;
 
     _cur_ritem: TJabberRosterItem;
@@ -126,6 +127,7 @@ type
     procedure SessionCallback(event: string; tag: TXMLTag);
     function getNodeType(node: TTreeNode = nil): integer;
     procedure ClearNodes;
+    procedure ExpandNodes;
     procedure RenderNode(ritem: TJabberRosterItem; p: TJabberPres);
     procedure RenderBookmark(bm: TJabberBookmark);
     procedure RemoveItemNodes(ritem: TJabberRosterItem);
@@ -211,6 +213,7 @@ begin
     SessionCallback('/session/prefs', nil);
     _task_collapsed := false;
     _bookmark := nil;
+    _offline := nil;
     _show_status := MainSession.Prefs.getBool('inline_status');
     _status_color := TColor(MainSession.Prefs.getInt('inline_color'));
 
@@ -310,7 +313,7 @@ begin
         _FullRoster := false;
         treeRoster.Items.EndUpdate;
         treeRoster.AlphaSort;
-        treeRoster.FullExpand;
+        Self.ExpandNodes();
         if treeRoster.items.Count > 0 then
             treeRoster.TopItem := treeRoster.Items[0];
         end
@@ -361,6 +364,19 @@ begin
     _bookmark.Expand(true);
 end;
 
+procedure TfrmRosterWindow.ExpandNodes;
+var
+    i: integer;
+    n: TTreeNode;
+begin
+    // expand all nodes except special nodes
+    for i := 0 to treeRoster.Items.Count - 1 do begin
+        n := treeRoster.Items[i];
+        if ((n.Level = 0) and (n <> _offline)) then
+            n.Expand(true);
+        end;
+end;
+
 {---------------------------------------}
 procedure TfrmRosterWindow.ClearNodes;
 var
@@ -386,6 +402,7 @@ begin
         end;
 
     _bookmark := nil;
+    _offline := nil;
 
     treeRoster.Items.EndUpdate;
 end;
@@ -427,7 +444,6 @@ var
 begin
     // loop through all roster items and draw them
     _FullRoster := true;
-    _bookmark := nil;
     ClearNodes;
     treeRoster.Color := TColor(MainSession.prefs.getInt('roster_bg'));
     treeRoster.Items.BeginUpdate;
@@ -448,7 +464,7 @@ begin
 
     _FullRoster := false;
     treeRoster.AlphaSort;
-    treeRoster.FullExpand;
+    ExpandNodes();
     treeRoster.Items.EndUpdate;
 end;
 
@@ -523,17 +539,20 @@ var
     node_list: TList;
     tmp_grps: TStringlist;
     show_online: boolean;
+    show_offgrp: boolean;
 begin
     // The Data parameter contains a list of nodes for this item
     show_online := MainSession.Prefs.getBool('roster_only_online');
+    show_offgrp := MainSession.Prefs.getBool('roster_offline_group');
 
-    if ((show_online) and ((p = nil) or (p.PresType = 'unavailable'))) then begin
-        RemoveItemNodes(ritem);
-        exit;
+    if (ritem.ask = 'subscribe') then begin
+        // allow these items to pass thru
         end
 
-    else if (ritem.ask = 'subscribe') then begin
-        // allow these items to pass thru
+    else if (((show_online) and (not show_offgrp)) and
+        ((p = nil) or (p.PresType = 'unavailable'))) then begin
+        RemoveItemNodes(ritem);
+        exit;
         end
 
     else if ((ritem.subscription = 'none') or
@@ -551,7 +570,10 @@ begin
 
     // for each group, put in a node
     tmp_grps := TStringlist.Create;
-    tmp_grps.Assign(ritem.Groups);
+    if (((p = nil) or (p.PresType = 'unavailble')) and (show_offgrp)) then
+        tmp_grps.Add('Offline')
+    else
+        tmp_grps.Assign(ritem.Groups);
 
     if tmp_grps.Count <= 0 then
         tmp_grps.Add('Unfiled');
@@ -570,14 +592,25 @@ begin
 
     for g := 0 to tmp_grps.Count - 1 do begin
         cur_grp := tmp_grps[g];
-        grp_idx := MainSession.Roster.GrpList.indexOf(cur_grp);
 
-        if (grp_idx < 0) then
-            grp_idx := MainSession.Roster.GrpList.Add(cur_grp);
+        if (cur_grp = 'Offline') then begin
+            if (_offline = nil) then begin
+                _offline := treeRoster.Items.AddChild(nil, 'Offline');
+                _offline.ImageIndex := ico_right;
+                _offline.SelectedIndex := ico_right;
+                end;
+            grp_node := _offline;
+            end
+        else begin
+            grp_idx := MainSession.Roster.GrpList.indexOf(cur_grp);
 
-        grp_node := TTreeNode(MainSession.Roster.GrpList.Objects[grp_idx]);
-        if (grp_node = nil) then
-            grp_node := RenderGroup(grp_idx);
+            if (grp_idx < 0) then
+                grp_idx := MainSession.Roster.GrpList.Add(cur_grp);
+
+            grp_node := TTreeNode(MainSession.Roster.GrpList.Objects[grp_idx]);
+            if (grp_node = nil) then
+                grp_node := RenderGroup(grp_idx);
+            end;
 
         // check to see if this node exists under this grp_node
         cur_node := nil;
@@ -630,7 +663,7 @@ begin
                 end;
             cur_node.SelectedIndex := cur_node.ImageIndex;
 
-            if ((not _FullRoster) and (grp_node <> nil)) then
+            if ((not _FullRoster) and (grp_node <> nil) and (grp_node <> _offline)) then
                 grp_node.Expand(true);
             end;
         end;
@@ -1169,6 +1202,7 @@ var
     xRect: TRect;
     nRect: TRect;
     p: TJabberPres;
+    main_color, stat_color: TColor;
 begin
     // Try drawing the roster custom..
     DefaultDraw := true;
@@ -1223,10 +1257,18 @@ begin
                         nRect.Top, Node.ImageIndex);
 
                     // draw the text
-                    // todo: change the text color for selected items!!
-                    SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(treeRoster.Font.Color));
+                    if (cdsSelected in State) then begin
+                        main_color := clHighlightText;
+                        stat_color := main_color;
+                        end
+                    else begin
+                        main_color := treeRoster.Font.Color;
+                        stat_color := _status_color;
+                    end;
+
+                    SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(main_color));
                     TextOut(xRect.Left + 1, xRect.Top + 1, c1);
-                    SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(_status_color));
+                    SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(stat_color));
                     TextOut(xRect.Left + tw + 5, xRect.Top + 1, c2);
 
                     if (cdsSelected in State) then
