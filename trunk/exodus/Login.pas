@@ -65,7 +65,7 @@ procedure ShowLogin;
 
 resourcestring
     sProfileRemove = 'Remove this profile?';
-    sProfileDefalt = 'Default Profile';
+    sProfileDefault = 'Default Profile';
     sProfileNew = 'Untitled Profile';
     sProfileCreate = 'New Profile';
     sProfileNamePrompt = 'Enter Profile Name';
