@@ -144,7 +144,6 @@ type
     function  checkCommand(txt: Widestring): boolean;
 
     procedure SetJID(sjid: Widestring);
-    procedure ShowMsg(tag: TXMLTag);
     procedure RenderMember(member: TRoomMember; tag: TXMLTag);
     procedure changeSubject(subj: Widestring);
     procedure configRoom();
@@ -162,6 +161,7 @@ type
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
     procedure ConfigCallback(event: string; Tag: TXMLTag);
+
   public
     { Public declarations }
     mynick: Widestring;
@@ -170,6 +170,11 @@ type
     procedure SendMsg; override;
     procedure pluginMenuClick(Sender: TObject); override;
 
+    procedure ShowMsg(tag: TXMLTag);
+    procedure SendRawMessage(body, subject, xml: Widestring; fire_plugins: boolean);
+
+    function addRoomUser(jid, nick: Widestring): TRoomMember;
+    procedure removeRoomUser(jid: Widestring);
     function GetNick(rjid: Widestring): Widestring;
 
     property HintText: Widestring read _hint_text;
@@ -257,7 +262,8 @@ const
 
 
 function FindRoom(rjid: Widestring): TfrmRoom;
-function StartRoom(rjid, rnick: Widestring; Password: WideString = ''): TfrmRoom;
+function StartRoom(rjid, rnick: Widestring; Password: WideString = '';
+    send_presence: boolean = true): TfrmRoom;
 function IsRoom(rjid: Widestring): boolean;
 function FindRoomNick(rjid: Widestring): Widestring;
 
@@ -302,7 +308,8 @@ uses
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-function StartRoom(rjid, rnick: Widestring; Password: WideString = ''): TfrmRoom;
+function StartRoom(rjid, rnick: Widestring; Password: WideString = '';
+    send_presence: boolean = true): TfrmRoom;
 var
     f: TfrmRoom;
     p: TJabberPres;
@@ -319,18 +326,22 @@ begin
         f.SetJID(rjid);
         f.MyNick := rnick;
         tmp_jid := TJabberID.Create(rjid);
-        p := TJabberPres.Create;
-        p.toJID := TJabberID.Create(rjid + '/' + rnick);
-        with p.AddTag('x') do begin
-            setAttribute('xmlns', XMLNS_MUC);
-            if (password <> '') then
-                AddBasicTag('password', password);
+
+        if (send_presence) then begin
+            p := TJabberPres.Create;
+            p.toJID := TJabberID.Create(rjid + '/' + rnick);
+            with p.AddTag('x') do begin
+                setAttribute('xmlns', XMLNS_MUC);
+                if (password <> '') then
+                    AddBasicTag('password', password);
+            end;
+
+            if (MainSession.Invisible) then
+                MainSession.addAvailJid(rjid);
+
+            MainSession.SendTag(p);
         end;
 
-        if (MainSession.Invisible) then
-            MainSession.addAvailJid(rjid);
-
-        MainSession.SendTag(p);
         f.Caption := Format(sRoom, [tmp_jid.user]);
         if MainSession.Prefs.getBool('expanded') then
             f.DockForm;
@@ -460,11 +471,38 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoom.SendMsg;
+procedure TfrmRoom.SendRawMessage(body, subject, xml: Widestring; fire_plugins: boolean);
 var
-    xml, txt: Widestring;
+    add_xml: Widestring;
     msg: TJabberMessage;
     mtag: TXMLTag;
+begin
+    //
+    msg := TJabberMessage.Create(jid, 'groupchat', body, Subject);
+    msg.nick := MyNick;
+    msg.isMe := true;
+    msg.ID := MainSession.generateID();
+
+    // additional plugin madness
+    mtag := msg.Tag;
+
+    if (fire_plugins) then begin
+        add_xml := TExodusChat(ComController).fireAfterMsg(body);
+        if (add_xml <> '') then
+            mtag.addInsertedXML(add_xml);
+    end;
+
+    if (xml <> '') then
+        mtag.AddInsertedXML(xml);
+
+    MainSession.SendTag(mtag);
+    msg.Free();
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.SendMsg;
+var
+    txt: Widestring;
 begin
     // Send the actual message out
     txt := getInputText(MsgOut);
@@ -478,19 +516,9 @@ begin
         if (checkCommand(txt)) then
             exit;
     end;
-    msg := TJabberMessage.Create(jid, 'groupchat', txt, '');
-    msg.nick := MyNick;
-    msg.isMe := true;
-    msg.ID := MainSession.generateID();
 
-    // additional plugin madness
-    mtag := msg.Tag;
-    xml := TExodusChat(ComController).fireAfterMsg(txt);
-    if (xml <> '') then
-        mtag.addInsertedXML(xml);
+    SendRawMessage(txt, '', '', true);
 
-    MainSession.SendTag(mtag);
-    msg.Free();
     inherited;
 end;
 
@@ -744,18 +772,10 @@ begin
     end
     else begin
         // SOME KIND OF AVAIL
+        tmp_jid := TJabberID.Create(from);
         if i < 0 then begin
             // this is a new member
-            tmp_jid := TJabberID.Create(from);
-            member := TRoomMember.Create;
-            member.JID := from;
-            member.Nick := tmp_jid.resource;
-
-            _roster.AddObject(from, member);
-            _rlist.Add(member);
-            _rlist.Sort(ItemCompare);
-            lstRoster.Items.Count := _rlist.Count;
-            lstRoster.Invalidate();
+            member := AddRoomUser(from, tmp_jid.resource);
 
             // show new user message
             if (xtag <> nil) then begin
@@ -770,9 +790,6 @@ begin
                     configRoom();
                 end;
             end;
-
-            tmp_jid.Free();
-
         end
         else begin
             member := TRoomMember(_roster.Objects[i]);
@@ -809,7 +826,6 @@ begin
         end;
 
         // for all protocols, our nick is our resource
-        tmp_jid := TJabberID.Create(from);
         member.nick := tmp_jid.resource;
         tmp_jid.Free();
 
@@ -828,6 +844,46 @@ begin
         RenderMember(member, tag);
     end;
 
+end;
+
+{---------------------------------------}
+function TfrmRoom.addRoomUser(jid, nick: Widestring): TRoomMember;
+var
+    member: TRoomMember;
+begin
+    //
+    member := TRoomMember.Create;
+    member.JID := jid;
+    member.Nick := nick;
+
+    _roster.AddObject(jid, member);
+    _rlist.Add(member);
+    _rlist.Sort(ItemCompare);
+    lstRoster.Items.Count := _rlist.Count;
+    lstRoster.Invalidate();
+
+    Result := member;
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.removeRoomUser(jid: Widestring);
+var
+    i: integer;
+    member: TRoomMember;
+begin
+    //
+    i := _roster.IndexOf(jid);
+    if (i = -1) then exit;
+
+    member := TRoomMember(_roster.Objects[i]);
+    _roster.Delete(i);
+    i := _rlist.IndexOf(member);
+    if (i >= 0) then begin
+        _rlist.Delete(i);
+        _rlist.Sort(ItemCompare);
+        lstRoster.Items.Count := _rlist.Count;
+        lstRoster.Invalidate();
+    end;
 end;
 
 {---------------------------------------}

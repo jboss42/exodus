@@ -23,6 +23,12 @@ type
     procedure AddMsgOut(const Value: WideString); safecall;
     function AddMsgOutMenu(const Caption: WideString): WideString; safecall;
     procedure RemoveMsgOutMenu(const MenuID: WideString); safecall;
+    procedure SendMessage(var Body: WideString; var Subject: WideString; var XML: WideString); safecall;
+    function Get_CurrentThreadID: WideString; safecall;
+    procedure DisplayMessage(const Body, Subject, From: WideString); safecall;
+    procedure AddRoomUser(const JID, Nickname: WideString); safecall;
+    procedure RemoveRoomUser(const JID: WideString); safecall;
+    function Get_CurrentNick: WideString; safecall;
     { Protected declarations }
 
   public
@@ -56,7 +62,7 @@ end;
 
 implementation
 
-uses ComServ, Menus, SysUtils;
+uses XMLTag, ComServ, Menus, SysUtils;
 
 {---------------------------------------}
 constructor TExodusChat.Create();
@@ -381,6 +387,69 @@ begin
         _room.MsgList.WideLines.Add(Value)
     else if (_im <> nil) then
         _im.txtMsg.WideLines.Add(Value);
+end;
+
+{---------------------------------------}
+procedure TExodusChat.SendMessage(var Body: WideString; var Subject: WideString;
+    var XML: WideString);
+begin
+    // spin up a message and send it..
+    if (_chat <> nil) then
+        TfrmChat(_chat.window).SendRawMessage(Body, Subject, XML, false)
+    else if (_room <> nil) then
+        _room.SendRawMessage(Body, Subject, XML, false);
+end;
+
+{---------------------------------------}
+function TExodusChat.Get_CurrentThreadID: WideString;
+begin
+    //
+    if (_chat <> nil) then
+        Result := TfrmChat(_chat.window).CurrentThread
+    else
+        Result := '';
+end;
+
+{---------------------------------------}
+procedure TExodusChat.DisplayMessage(const Body, Subject,
+  From: WideString);
+var
+    tag: TXMLTag;
+begin
+    tag := TXMLTag.Create('message');
+    tag.setAttribute('from', from);
+    if (Body <> '') then
+        tag.AddBasicTag('body', Body);
+    if (Subject <> '') then
+        tag.AddBasicTag('subject', Subject);
+
+    if (_chat <> nil) then
+        TfrmChat(_chat.window).showMsg(tag)
+    else if (_room <> nil) then
+        _room.ShowMsg(tag);
+
+    tag.Free();
+end;
+
+{---------------------------------------}
+procedure TExodusChat.AddRoomUser(const JID, Nickname: WideString);
+begin
+    if (_room <> nil) then
+        _room.addRoomUser(JID, Nickname);
+end;
+
+{---------------------------------------}
+procedure TExodusChat.RemoveRoomUser(const JID: WideString);
+begin
+    if (_room <> nil) then
+        _room.removeRoomUser(Jid);
+end;
+
+{---------------------------------------}
+function TExodusChat.Get_CurrentNick: WideString;
+begin
+    if (_room <> nil) then
+        Result := _room.myNick;
 end;
 
 initialization

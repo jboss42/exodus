@@ -136,6 +136,7 @@ type
     procedure showMsg(tag: TXMLTag);
     procedure showPres(tag: TXMLTag);
     procedure SetupResources();
+    procedure SendRawMessage(body, subject, xml: Widestring; fire_plugins: boolean);
 
     procedure sendMsg; override;
     procedure SetJID(cjid: widestring);
@@ -147,6 +148,7 @@ type
 
     property getJid: Widestring read jid;
     property redock: boolean read _redock;
+    property CurrentThread: string read _thread;
   end;
 
 var
@@ -608,24 +610,19 @@ begin
     Msg.Free();
 end;
 
-procedure TfrmChat._sendMsg(txt: Widestring);
+procedure TfrmChat.SendRawMessage(body, subject, xml: Widestring;
+    fire_plugins: boolean);
 var
-    xml: WideString;
+    add_xml: WideString;
     msg: TJabberMessage;
     mtag: TXMLTag;
 begin
-    // plugin madness
-    if (chat_object <> nil) then
-        TExodusChat(chat_object.ComController).fireBeforeMsg(txt);
-
-    if (txt = '') then exit;
-
     if _thread = '' then begin   //get thread from message
         _thread := GetThread;
     end;
 
     // send the msg
-    msg := TJabberMessage.Create(jid, 'chat', Trim(txt), '');
+    msg := TJabberMessage.Create(jid, 'chat', Trim(body), '');
     msg.thread := _thread;
     msg.nick := MainSession.Username;
     msg.isMe := true;
@@ -634,6 +631,7 @@ begin
     _check_event := true;
     msg.id := _last_id;
 
+    // put in the composing stuff
     mtag := msg.Tag;
     with mtag.AddTag('x') do begin
         setAttribute('xmlns', XMLNS_XEVENT);
@@ -641,10 +639,16 @@ begin
     end;
 
     // additional plugin madness
-    if (chat_object <> nil) then
-        xml := TExodusChat(chat_object.ComController).fireAfterMsg(txt);
-    if (xml <> '') then
-        mtag.addInsertedXML(xml);
+    if (fire_plugins) then begin
+        if (chat_object <> nil) then
+            add_xml := TExodusChat(chat_object.ComController).fireAfterMsg(body);
+        if (add_xml <> '') then
+            mtag.addInsertedXML(add_xml);
+    end;
+
+    // add any xml passed to us
+    if (xml <> '') then mtag.addInsertedXML(xml);
+
     MainSession.SendTag(mtag);
     DisplayMsg(Msg, MsgList);
 
@@ -653,6 +657,19 @@ begin
         LogMessage(Msg);
 
     Msg.Free();
+end;
+
+
+procedure TfrmChat._sendMsg(txt: Widestring);
+begin
+    // plugin madness
+    if (chat_object <> nil) then
+        TExodusChat(chat_object.ComController).fireBeforeMsg(txt);
+
+    if (txt = '') then exit;
+
+    sendRawMessage(txt, '', '', true);
+
 end;
 
 {---------------------------------------}
