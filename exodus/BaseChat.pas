@@ -88,6 +88,7 @@ type
     _embed_returns: boolean;
     _wrap_input: boolean;
     _scroll: boolean;
+    _esc: boolean;
 
     procedure _scrollBottom();
     procedure WMThrob(var msg: TMessage); message WM_THROB;
@@ -266,6 +267,9 @@ begin
     else if ((Key = Ord('W')) and (ssCtrl in Shift)) then
         Self.Close()
 
+    else if ((_esc) and (Key = 27)) then
+        Self.Close()
+
     // handle Ctrl-ENTER and ENTER to send msgs
     else if (Key = VK_RETURN) then begin
         if ((Shift = []) and (not _embed_returns)) then begin
@@ -298,6 +302,7 @@ begin
 
     _msgHistory := TStringList.Create();
     _lastMsg := -1;
+    _esc := false;
 
     if (MainSession <> nil) then begin
         ht := MainSession.Prefs.getInt('chat_textbox');
@@ -305,6 +310,7 @@ begin
             pnlInput.Height := ht
         else
             MainSession.prefs.setInt('chat_textbox', pnlInput.Height);
+        _esc := MainSession.Prefs.getBool('esc_close');
     end;
 
     _scroll := true;
