@@ -366,7 +366,10 @@ var
     tmps: Widestring;
 begin
     // getting some pres packet
-    if (pres.fromJID.jid = self.jid) then begin
+    if (event <> 'xml') then begin
+        // something bad happened
+    end
+    else if (pres.fromJID.jid = self.jid) then begin
         MainSession.UnRegisterCallback(pres_cb);
         pres_cb := -1;
         if (pres.PresType = 'error') then begin
