@@ -196,7 +196,7 @@ type
     procedure DoShowHint(var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
     procedure ChangeStatusImage(idx: integer);
     procedure showAniStatus();
-    procedure DrawNodeText(Node: TTreeNode; c1, c2: Widestring);
+    procedure DrawNodeText(Node: TTreeNode; State: TCustomDrawState; c1, c2: Widestring);
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
@@ -529,13 +529,14 @@ begin
         _FullRoster := false;
         Self.SessionCallback('/roster/end', nil);
         treeRoster.Items.EndUpdate;
-        treeRoster.AlphaSort;
-        
+
         if (not MainSession.Prefs.getBool('roster_collapsed')) then
             Self.ExpandNodes();
 
         if treeRoster.items.Count > 0 then
             treeRoster.TopItem := treeRoster.Items[0];
+
+        treeRoster.AlphaSort();
     end
     else if event = '/roster/bookmark' then begin
         bi := MainSession.Roster.Bookmarks.indexOf(tag.getAttribute('jid'));
@@ -573,6 +574,8 @@ begin
             _bookmark.SelectedIndex := ico_down;
             MainSession.roster.GrpList.Objects[bi] :=  _bookmark;
         end;
+
+        treeRoster.AlphaSort();
     end;
 
     if (bm.Data <> nil) then begin
@@ -877,7 +880,7 @@ var
     show_pending: boolean;
     exp_grpnode: boolean;
     resort: boolean;
-    node_rect: TRect;
+    grp_rect, node_rect: TRect;
 begin
     // Render a specific roster item, with the given presence info.
     is_blocked := MainSession.isBlocked(ritem.jid);
@@ -1081,6 +1084,12 @@ begin
 
         // invalidate just the rect which contains our node
         InvalidateRect(treeRoster.Handle, @node_rect, false);
+
+        // if we showing grp counts, then invalidate the grp rect as well.
+        if (_group_counts) then begin
+            grp_rect := cur_node.Parent.DisplayRect(false);
+            InvalidateRect(treeRoster.Handle, @grp_rect, false);
+        end;
     end;
 
     tmp_grps.Free();
@@ -1806,7 +1815,7 @@ begin
             total := MainSession.roster.getGroupCount(Node.Text, false);
             online := MainSession.roster.getGroupCount(Node.Text, true);
             c1 := Node.Text + ' (' + IntToStr(online) + '/' + IntToStr(total) + ')';
-            DrawNodeText(Node, c1, '');
+            DrawNodeText(Node, State, c1, '');
             DefaultDraw := false;
         end;
 
@@ -1841,7 +1850,7 @@ begin
                 if (p.Status <> '') then
                     c2 := '(' + p.Status + ')';
             end;
-            DrawNodeText(Node, c1, c2);
+            DrawNodeText(Node, State, c1, c2);
             DefaultDraw := false;
         end;
     end;
@@ -1849,9 +1858,11 @@ begin
     end;
 end;
 
-procedure TfrmRosterWindow.DrawNodeText(Node: TTreeNode; c1, c2: Widestring);
+{---------------------------------------}
+procedure TfrmRosterWindow.DrawNodeText(Node: TTreeNode; State: TCustomDrawState;
+    c1, c2: Widestring);
 var
-    tw: integer;
+    ico, tw: integer;
     xRect: TRect;
     nRect: TRect;
     main_color, stat_color: TColor;
@@ -1878,15 +1889,17 @@ begin
         end;
 
         // draw the image
-        if (Node.Level > 1) then begin
+        if (Node.Level > 0) then begin
             frmExodus.ImageList2.Draw(treeRoster.Canvas,
                 nRect.Left + treeRoster.Indent,
                 nRect.Top, Node.ImageIndex);
-        end;
-        {
+        end
         else begin
-            frmExodus.ImageList2.Draw(treeRoster.Canvas, );
-        }
+            // 27 = grp_expanded
+            // 28 = grp_collapsed
+            if (Node.Expanded) then ico := 27 else ico := 28;
+            frmExodus.ImageList2.Draw(treeRoster.Canvas, 1, nRect.Top, ico);
+        end;
 
         // draw the text
         if (cdsSelected in State) then begin
