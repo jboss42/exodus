@@ -430,6 +430,7 @@ resourcestring
     sCmdPriority =  ' -i [pri] '#9' : Priority'#13#10;
     sCmdProfile =   ' -f [prof] '#9' : Profile name'#13#10;
     sCmdConfig =    ' -c [file] '#9' : Config path name'#13#10;
+    sUnkArg = 'Invalid command line:%s';
 
     sExodus = 'Exodus';
     sChat = 'Chat';
@@ -734,6 +735,15 @@ begin
 end;
 {$endif}
 
+function CmdLine(): string;
+var
+    i : integer;
+begin
+    result := '';
+    for i := 0 to ParamCount do
+        result := result + ' ' + ParamStr(i);
+end;
+
 {---------------------------------------}
 {---------------------------------------}
 procedure TfrmExodus.FormCreate(Sender: TObject);
@@ -818,7 +828,7 @@ begin
                 LongOpts := 'debug,minimized,invisible,aatest,help,expanded,jid,password,resource,priority,profile,config,status,show';
                 while GetOpt do begin
                     case Ord(OptChar) of
-                        0: raise EConfigException.Create('unknown argument');
+                        0: raise EConfigException.Create(format(sUnkArg, [CmdLine()]));
                         Ord('d'): debug := true;
                         Ord('x'): expanded := OptArg;
                         Ord('m'): minimized := true;
