@@ -21,7 +21,7 @@ unit ExEvents;
 
 interface
 uses
-    XMLTag, ChatController, Unicode, JabberID, 
+    XMLTag, ChatController, Unicode, JabberID,
     Types, SysUtils, Classes;
 
 type
@@ -263,7 +263,7 @@ begin
     Result := '';
     qTag := iq.getFirstTag('query');
     if (qTag = nil) then exit;
-    
+
     msg := _(sMsgTime);
     tmp_tag := qtag.getFirstTag('display');
     if (tmp_tag <> nil) then
@@ -357,7 +357,8 @@ var
     c: TChatController;
 begin
     if ((eType = evt_Chat) and (from_jid <> nil) and (MainSession <> nil)) then begin
-        c := MainSession.ChatList.FindChat(from_jid.jid, '', '');
+        c := MainSession.ChatList.FindChat(from_jid.jid, from_jid.resource, '');
+        assert(c <> nil);
         c.Release();
     end;
 
@@ -461,14 +462,14 @@ begin
         else if (t = 'chat') then begin
             // this is a queue'd chat msg
             eType := evt_Chat;
-            str_content := tag.QueryXPData('/subject');
+            str_content := tag.QueryXPData('/message/subject');
             _data_list.Clear();
             _data_list.Add(_('New chat conversation'));
             _data_list.Add('Double click to open chat window');
             cjid := TJabberID.Create(from);
             c := MainSession.ChatList.FindChat(cjid.jid, cjid.resource, '');
             if (c = nil) then
-                c := MainSession.ChatList.FindChat(cjid.jid, '', '');
+                c := MainSession.ChatList.FindChat(cjid.jid, cjid.resource, '');
             assert(c <> nil);
             c.addRef();
             FreeAndNil(_tag);
@@ -477,10 +478,10 @@ begin
         else begin
             // general non-chat message
             eType := evt_Message;
-            str_content := tag.QueryXPData('/subject');
+            str_content := tag.QueryXPData('/message/subject');
 
             // Add the body to the event
-            _data_list.Add(tag.QueryXPData('/body'));
+            _data_list.Add(tag.QueryXPData('/message/body'));
 
             // check for x:oob URL's
             url_tags := tag.QueryXPTags(XP_XOOB);

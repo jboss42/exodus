@@ -118,6 +118,7 @@
     !endif
     !include "ZipDLL.nsh"
 !endif
+
 !include "version.nsi" ; you might want to edit version.pl to rename this file
                        ; version.nsh since it's a header inclusion (yes I know
                        ; I'm a purist)
