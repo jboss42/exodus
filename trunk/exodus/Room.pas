@@ -1814,7 +1814,7 @@ begin
 
     if ((MainSession <> nil) and (MainSession.Active)) then begin
         p := TJabberPres.Create();
-        p.toJID := TJabberID.Create(jid);
+        p.toJID := TJabberID.Create(jid + '/' + mynick);
         p.PresType := 'unavailable';
         MainSession.SendTag(p);
     end;
