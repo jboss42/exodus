@@ -15,7 +15,6 @@ object frmXData: TfrmXData
   OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
-  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object lblIns: TLabel
@@ -31,13 +30,13 @@ object frmXData: TfrmXData
     Left = 0
     Top = 13
     Width = 310
-    Height = 2
+    Height = 10
     Align = alTop
-    Shape = bsTopLine
+    Shape = bsBottomLine
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 337
+    Top = 342
     Width = 310
     Height = 32
     Align = alBottom
@@ -58,7 +57,7 @@ object frmXData: TfrmXData
   end
   object lstReport: TListView
     Left = 0
-    Top = 187
+    Top = 192
     Width = 310
     Height = 150
     Align = alBottom
@@ -68,9 +67,9 @@ object frmXData: TfrmXData
   end
   object box: TScrollBox
     Left = 0
-    Top = 15
+    Top = 23
     Width = 310
-    Height = 172
+    Height = 169
     Align = alClient
     BevelEdges = []
     BevelInner = bvNone
