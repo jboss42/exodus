@@ -2894,30 +2894,25 @@ procedure TfrmRosterWindow.txtFindChange(Sender: TObject);
 var
     i:         integer;
     ri:        TJabberRosterItem;
-    node_list: TWidestringlist;
     node:      TTreeNode;
     comp:      WideString;
     search:    WideString;
 begin
     search := Lowercase(txtFind.Text);
     if (search = '') then begin
-        _last_search := 0;
-        txtFind.Color := clWindow;
         exit;
     end;
 
-    for i := _last_search to MainSession.roster.Count - 1 do begin
-        ri := MainSession.roster.Items[i];
+    for i := _last_search to treeRoster.Items.Count - 1 do begin
+        node := treeRoster.Items[i];
+        if (not (TObject(node.Data) is TJabberRosterItem)) then continue;
+        ri := TJabberRosterItem(node.Data);
         if radNick.Checked then
             comp := Lowercase(ri.Nickname)
         else
             comp := Lowercase(ri.jid.jid);
 
         if Pos(search, comp) > 0 then begin
-            if (ri.Data = nil) then continue;
-            node_list := TWideStringList(ri.Data);
-            if (node_list.Count = 0) then continue;
-            node := TTreeNode(node_list.Objects[0]);
             treeRoster.Select(node, []);
             _last_search := i;
             exit;
