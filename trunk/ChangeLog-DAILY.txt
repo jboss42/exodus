@@ -1,21 +1,24 @@
-2004-03-05 08:34  pgmillard
+2004-03-10 08:31  pgmillard
 
-	* exodus/: default.po, version.h, version.nsi: daily build
+	* exodus/: version.h, default.po, version.nsi: daily build
 
-2004-03-05 07:05  pgmillard
+2004-03-09 23:01  pgmillard
 
-	* exodus/: BaseChat.dfm, Debug.dfm, Dockable.dfm, Jabber1.dfm,
-	  Profile.dfm, Room.dfm, RosterWindow.pas, fRosterTree.pas,
-	  xdata.dfm: Bug #3453 - Don't set TopItem property on roster when
-	  there are no items.
+	* exodus/RosterWindow.pas: Feature Request #3421 - Show resources
+	  in tooltips for roster items.
 
-2004-03-05 06:58  pgmillard
+2004-03-09 22:40  pgmillard
 
-	* exodus/Profile.dfm, exodus/Profile.pas, jopl/NodeItem.pas: Bug
-	  #3451 - Fixup group changes and case sensitivity issues.
+	* jopl/DNSUtils.pas: [no log message]
 
-2004-03-04 11:19  llong
+2004-03-09 22:31  pgmillard
 
-	* exodus/locale/pt_PT/LC_MESSAGES/default.po: Translated the new
-	  strings to synchronize with version 1.100 of the main default.po
+	* exodus/: Debug.dfm, Dockable.dfm, Jabber1.dfm, RiserWindow.pas,
+	  RosterWindow.dfm: Bug #3466 - Use taskbar RECT when smarter algo
+	  for determining where taskbar is and what dir to move toast. This
+	  should help w/ multi-head configurations.
+
+2004-03-08 07:04  pgmillard
+
+	* exodus/Jabber1.pas: [no log message]
 
