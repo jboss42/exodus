@@ -58,6 +58,9 @@ type
         _id: longint;
         _cb_id: longint;
 
+        _first_pres: boolean;
+        _avails: TWidestringlist;
+
         procedure StreamCallback(msg: string; tag: TXMLTag);
 
         // auth stuff
@@ -73,6 +76,7 @@ type
         procedure SetPort(port: integer);
 
         procedure handleDisconnect();
+        procedure manualBlastPresence(p: TXMLTag);
 
         function GetUsername(): WideString;
         function GetPassword(): WideString;
@@ -134,6 +138,8 @@ type
         procedure Block(jid : TJabberID);
         procedure UnBlock(jid : TJabberID);
 
+        procedure addAvailJid(jid: Widestring);
+        procedure removeAvailJid(jid: Widestring);
 
         property Username: WideString read GetUsername write SetUsername;
         property Password: WideString read GetPassword write SetPassword;
@@ -201,6 +207,7 @@ begin
     _dispatcher.AddSignal('/windows', _winSignal);
 
     _pauseQueue := TQueue.Create();
+    _avails := TWidestringlist.Create();
 
     // Create all the things which might register w/ the session
 
@@ -415,6 +422,7 @@ end;
 procedure TJabberSession.handleDisconnect();
 begin
     // Clear the roster, ppdb and fire the callbacks
+    _first_pres := false;
     _dispatcher.DispatchSignal('/session/disconnected', nil);
     if (_paused) then
         Self.Play();
@@ -751,6 +759,7 @@ begin
         Disconnect();
     end
     else begin
+        _first_pres := true;
         _dispatcher.DispatchSignal('/session/authenticated', tag);
         // Self.RegisterCallback(ChatList.MsgCallback, '/packet/message[@type="chat"]');
         Self.RegisterCallback(ChatList.MsgCallback, '/packet/message');
@@ -787,8 +796,6 @@ begin
         p.Status := status;
         if (priority = -1) then priority := 0;
         p.Priority := priority;
-        if (_invisible) then
-            p.PresType := 'invisible';
 
         // allow plugins to add stuff, by trapping this event
         MainSession.FireEvent('/session/before_presence', p);
@@ -796,7 +803,17 @@ begin
         for i := 0 to Presence_XML.Count - 1 do
             p.addInsertedXML(Presence_XML[i]);
 
-        SendTag(p);
+        // for invisible, only send to those people we've
+        // directed presence to.
+        if ((self.Invisible) and (Self.Active) and (not _first_pres)) then begin
+            manualBlastPresence(p);
+        end
+        else begin
+            if (_invisible) then
+                p.setAttribute('type', 'invisible');
+            SendTag(p);
+            if (_first_pres) then _first_pres := false;
+        end;
 
         // if we are going away or xa, save the prefs
         if ((show = 'away') or (show = 'xa')) then
@@ -811,6 +828,37 @@ begin
                 Self.Play();
         end;
     end;
+end;
+
+{---------------------------------------}
+procedure TJabberSession.manualBlastPresence(p: TXMLTag);
+var
+    i: integer;
+    xml: Widestring;
+begin
+    for i := 0 to _avails.Count - 1 do begin
+        p.setAttribute('to', _avails[i]);
+        xml := p.xml();
+        _stream.Send(xml);
+    end;
+    p.Free();
+end;
+
+{---------------------------------------}
+procedure TJabberSession.addAvailJid(jid: Widestring);
+begin
+    if (_avails.IndexOf(jid) < 0) then
+        _avails.Add(jid);
+end;
+
+{---------------------------------------}
+procedure TJabberSession.removeAvailJid(jid: Widestring);
+var
+    idx: integer;
+begin
+    idx := _avails.IndexOf(jid);
+    if (idx >= 0) then
+        _avails.Delete(idx);
 end;
 
 {---------------------------------------}
