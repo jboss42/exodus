@@ -62,6 +62,9 @@ resourcestring
     sInstalling       = 'Installing...';
     sError            = 'Error: %s';
 
+var
+  frmAutoUpdateStatus: TfrmAutoUpdateStatus;
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -76,9 +79,6 @@ uses
     Registry,
     Session,
     ShellAPI;
-
-var
-  frmAutoUpdateStatus: TfrmAutoUpdateStatus;
 
 {---------------------------------------}
 procedure ShowAutoUpdateStatus(URL : string);
