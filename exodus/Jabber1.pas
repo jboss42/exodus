@@ -2680,17 +2680,111 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.Test1Click(Sender: TObject);
 var
+    {
     h: integer;
     i: IExodusController;
+    }
+    f, o, m, x: TXMLTag;
 begin
     //
     {
     Application.CreateForm(TfrmTest1, frmTest1);
     frmTest1.ShowDefault();
     }
+    {
     i := ExComController as IExodusController;
     h := i.CreateDockableWindow('foo');
     ShowMessage(IntToStr(h));
+    }
+
+    // Do some xdata tests
+    m := TXMLTag.Create('message');
+    x := m.AddTag('x');
+    x.setAttribute('xmlns', 'jabber:x:data');
+    x.setAttribute('type', 'form');
+
+    // just a simple edit field
+    f := x.addTag('field');
+    f.setAttribute('type',  'text');
+    f.setAttribute('var',   'field1');
+    f.setAttribute('label', 'field 1');
+    f.AddBasicTag('value', 'Some basic text');
+
+    // list-single
+    f := x.addTag('field');
+    f.setAttribute('type',  'list-single');
+    f.setAttribute('var',   'single');
+    f.setAttribute('label', 'A');
+    f.AddBasicTag('value', '2');
+    o := f.AddTag('option');
+    o.setAttribute('label', 'Choice 1');
+    o.AddBasicTag('value', '1');
+    o := f.AddTag('option');
+    o.setAttribute('label', 'Choice 2');
+    o.AddBasicTag('value', '2');
+    o := f.AddTag('option');
+    o.setAttribute('label', 'Choice 3');
+    o.AddBasicTag('value', '3');
+
+    // list-multi
+    f := x.addTag('field');
+    f.setAttribute('type',  'list-multi');
+    f.setAttribute('var',   'B');
+    f.setAttribute('label', 'Some choices');
+    f.AddBasicTag('value', '1');
+    f.AddBasicTag('value', '2');
+    o := f.AddTag('option');
+    o.setAttribute('label', 'Choice 1');
+    o.AddBasicTag('value', '1');
+    o := f.AddTag('option');
+    o.setAttribute('label', 'Choice 2');
+    o.AddBasicTag('value', '2');
+    o := f.AddTag('option');
+    o.setAttribute('label', 'Choice 3');
+    o.AddBasicTag('value', '3');
+    o := f.AddTag('option');
+    o.setAttribute('label', 'Choice 4');
+    o.AddBasicTag('value', '4');
+    o := f.AddTag('option');
+    o.setAttribute('label', 'Choice 5');
+    o.AddBasicTag('value', '5');
+
+    // boolean
+    f := x.addTag('field');
+    f.setAttribute('type',  'boolean');
+    f.setAttribute('var',   'C');
+    f.setAttribute('label', 'Some boolean');
+    f.AddBasicTag('value', 'YES');
+
+
+    // a bunch of fixed fields
+    f := x.AddTag('field');
+    f.setAttribute('type', 'fixed');
+    f.AddBasicTag('value', 'This is some longish fixed label. Blah, blah, blah, blah, blah, blah.');
+
+    f := x.AddTag('field');
+    f.setAttribute('type', 'fixed');
+    f.addBasicTag('value', 'A label with a url like http://www.yahoo.com voo blah.');
+
+    {
+    f := x.AddTag('field');
+    f.setAttribute('type', 'fixed');
+    f.addBasicTag('value', 'A label with a url like http://www.yahoo.com blahlkjad;lasdlkasdlkasd;lksa;dlkasd;lkas;as;asa;ldakdalkda;ldka;kdasdla;kk.');
+
+    f := x.AddTag('field');
+    f.setAttribute('type', 'fixed');
+    f.addBasicTag('value', '0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789.');
+
+    f := x.AddTag('field');
+    f.setAttribute('type', 'fixed');
+    f.addBasicTag('value', 'foo bar 0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789.');
+
+    f := x.AddTag('field');
+    f.setAttribute('type', 'fixed');
+    f.addBasicTag('value', 'foo bar'#13#10' sdkfjls'#13#10'kjdflksjdf;ljsf;'#13#10'klsjf;lkjsafkjsaldfj;lasjfd;klsajd;kljasdjf;ajdf;ljsfd;kjasdf;jas;fkja;df;ljaslfkj;asdf;klasdfklasdfj;ajdf;ljsf;ksafd;kjadsf;jkasdjfs;lf;lsdf');
+    }
+
+    ShowXData(m);
 end;
 
 {---------------------------------------}
