@@ -2600,7 +2600,7 @@ object frmPrefs: TfrmPrefs
       BevelOuter = bvNone
       TabOrder = 0
       object btnOK: TButton
-        Left = 83
+        Left = 4
         Top = 1
         Width = 75
         Height = 25
@@ -2610,7 +2610,7 @@ object frmPrefs: TfrmPrefs
         OnClick = frameButtons1btnOKClick
       end
       object btnCancel: TButton
-        Left = 162
+        Left = 83
         Top = 1
         Width = 75
         Height = 25
@@ -2619,7 +2619,7 @@ object frmPrefs: TfrmPrefs
         TabOrder = 1
       end
       object Button6: TButton
-        Left = 4
+        Left = 162
         Top = 1
         Width = 75
         Height = 25
