@@ -77,7 +77,7 @@ implementation
 {$R *.dfm}
 
 uses
-    Debug, ExUtils, Session, Jabber1;
+    ChatWin, Debug, ExUtils, Session, Jabber1;
 
 {---------------------------------------}
 procedure TfrmDockable.FormCreate(Sender: TObject);
@@ -86,7 +86,11 @@ begin
     _noMoveCheck := true;
     _top := false;
 
-    MainSession.Prefs.RestorePosition(Self);
+    if (Self is TfrmChat) then
+        // do nothing
+    else
+        MainSession.Prefs.RestorePosition(Self);
+
     _edge_snap := MainSession.Prefs.getInt('edge_snap');
     Self.SavePos();
     _noMoveCheck := false;

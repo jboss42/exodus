@@ -1078,7 +1078,7 @@ begin
         r := MainSession.Prefs.getInt(P_CHAT);
         m := MainSession.Prefs.getInt('chat_memory');
 
-        if ((r = 0) or ((r = 2) and (m > 0))) then
+        if ((r = 0) or (r = 2)) then
             // StartChat will handle doing the right thing
             StartChat(_cur_ritem.jid.jid, '', true)
 

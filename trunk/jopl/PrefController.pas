@@ -173,7 +173,9 @@ end;
         procedure removeAllPresence();
 
         procedure SavePosition(form: TForm);
-        procedure RestorePosition(form: TForm);
+        procedure RestorePosition(form: TForm); overload;
+        function RestorePosition(form: TForm; key: Widestring): boolean; overload;
+
 
         procedure LoadProfiles;
         procedure SaveProfiles;
@@ -699,6 +701,40 @@ begin
 end;
 
 {---------------------------------------}
+function TPrefController.RestorePosition(form: TForm; key: Widestring): boolean;
+var
+    f: TXMLTag;
+    t,l,w,h: integer;
+begin
+    f := _pref_node.QueryXPTag('/exodus/positions/' + key);
+    if (f <> nil) then begin
+        t := SafeInt(f.getAttribute('top'));
+        l := SafeInt(f.getAttribute('left'));
+        w := SafeInt(f.getAttribute('width'));
+        h := SafeInt(f.getAttribute('height'));
+    end
+    else begin
+        Result := false;
+        exit;
+    end;
+
+    if (t < dflt_top) then t := dflt_top;
+    if (l < dflt_left) then l := dflt_left;
+
+
+    if (t + h > Screen.Height) then begin
+        t := Screen.Height - h;
+    end;
+
+    if (l + w > Screen.Width) then begin
+        l := Screen.Width - w;
+    end;
+
+    Form.SetBounds(l, t, w, h);
+    Result := true;
+end;
+
+{---------------------------------------}
 procedure TPrefController.RestorePosition(form: TForm);
 var
     f: TXMLTag;
@@ -734,10 +770,11 @@ begin
 
     if (t + h > Screen.Height) then begin
         t := Screen.Height - h;
-end;
+    end;
+
     if (l + w > Screen.Width) then begin
         l := Screen.Width - w;
-end;
+    end;
 
     Form.SetBounds(l, t, w, h);
 end;
