@@ -303,11 +303,14 @@ begin
         // we are getting server side prefs
         _collapsed_grps := MainSession.Prefs.getStringlist('col_groups', true);
 
-        for i := 0 to _collapsed_grps.Count - 1 do begin
-            grp_idx := MainSession.Roster.GrpList.indexOf(_collapsed_grps[i]);
-            if (grp_idx >= 0) then begin
-                grp_node := TTreeNode(MainSession.Roster.GrpList.Objects[grp_idx]);
-                grp_node.Collapse(true);
+        // Iterate over all grp nodes
+        for i := 0 to MainSession.Roster.GrpList.Count - 1 do begin
+            grp_node := TTreeNode(MainSession.Roster.GrpList.Objects[i]);
+            if (grp_node <> nil) then begin
+                if (_collapsed_grps.IndexOf(grp_node.Text) >= 0) then
+                    grp_node.Collapse(true)
+                else
+                    grp_node.Expand(true);
                 end;
             end;
         end;
@@ -382,6 +385,7 @@ begin
     _bookmark.Expand(true);
 end;
 
+{---------------------------------------}
 procedure TfrmRosterWindow.ExpandNodes;
 var
     i: integer;
