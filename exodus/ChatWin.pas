@@ -121,6 +121,7 @@ implementation
 {$R *.DFM}
 
 uses
+    PrefController, 
     Transfer,
     RosterAdd,
     Profile,
@@ -323,17 +324,30 @@ end;
 {---------------------------------------}
 procedure TfrmChat.showMsg(tag: TXMLTag);
 var
+    cn: integer;
     etag, btag: TXMLTag;
     Msg: TJabberMessage;
 begin
     // display the body of the msg
     btag := tag.QueryXPTag('/message/body');
-    
     etag := tag.QueryXPTag('/message/*@xmlns="jabber:iq:event"');
     if ((etag <> nil) and (btag = nil)) then begin
         // display the event type..
         end;
-        
+
+    cn := MainSession.Prefs.getInt('notify_chatactivity');
+
+    if (not Application.Active) then begin
+        if (cn and notify_toast) > 0 then begin
+            end;
+        if (cn and notify_flash) > 0 then begin
+            if (Self.Docked) then
+                FlashWindow(frmJabber.Handle, true)
+            else
+                FlashWindow(Self.Handle, true);
+            end;
+        end;
+
     if ((btag = nil) or (btag.Data = '')) then exit;
     
     Msg := TJabberMessage.Create(tag);

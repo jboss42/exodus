@@ -108,6 +108,7 @@ type
         procedure setBool(pkey: string; pvalue: boolean);
         procedure setStringlist(pkey: string; pvalue: TStrings);
         procedure setPresence(pvalue: TJabberCustomPres);
+        procedure removePresence(pvalue: TJabberCustomPres);
         procedure removeAllPresence();
 
         procedure SavePosition(form: TForm);
@@ -400,6 +401,18 @@ begin
         end;
 
     ptags.Free;
+end;
+
+{---------------------------------------}
+procedure TPrefController.removePresence(pvalue: TJabberCustomPres);
+var
+    tag: TXMLTag;
+begin
+    // remove this specific presence
+    tag := _pref_node.QueryXPTag('/exodus/presence@title="' + pvalue.title + '"');
+
+    if (tag <> nil) then
+        _pref_node.RemoveTag(tag);
 end;
 
 {---------------------------------------}

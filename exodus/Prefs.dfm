@@ -1,6 +1,6 @@
 object frmPrefs: TfrmPrefs
-  Left = 294
-  Top = 182
+  Left = 236
+  Top = 150
   Width = 410
   Height = 407
   Caption = 'Exodus Preferences'
@@ -40,14 +40,13 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 89
     Height = 336
-    VertScrollBar.Position = 198
     Align = alLeft
     Color = clWindow
     ParentColor = False
     TabOrder = 1
     object imgDialog: TImage
       Left = 0
-      Top = 14
+      Top = 212
       Width = 68
       Height = 40
       Align = alTop
@@ -171,7 +170,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblDialog: TLabel
       Left = 0
-      Top = 54
+      Top = 252
       Width = 68
       Height = 13
       Align = alTop
@@ -182,7 +181,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgFonts: TImage
       Left = 0
-      Top = -92
+      Top = 106
       Width = 68
       Height = 40
       Align = alTop
@@ -424,7 +423,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblFonts: TLabel
       Left = 0
-      Top = -52
+      Top = 146
       Width = 68
       Height = 13
       Align = alTop
@@ -435,7 +434,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgS10n: TImage
       Left = 0
-      Top = -145
+      Top = 53
       Width = 68
       Height = 40
       Align = alTop
@@ -677,7 +676,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblS10n: TLabel
       Left = 0
-      Top = -105
+      Top = 93
       Width = 68
       Height = 13
       Align = alTop
@@ -688,7 +687,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgRoster: TImage
       Left = 0
-      Top = -198
+      Top = 0
       Width = 68
       Height = 40
       Align = alTop
@@ -812,18 +811,19 @@ object frmPrefs: TfrmPrefs
     end
     object lblRoster: TLabel
       Left = 0
-      Top = -158
+      Top = 40
       Width = 68
       Height = 13
       Align = alTop
       Alignment = taCenter
       Caption = 'Roster'
+      ParentColor = False
       WordWrap = True
       OnClick = TabSelect
     end
     object imgSystem: TImage
       Left = 0
-      Top = -39
+      Top = 159
       Width = 68
       Height = 40
       Align = alTop
@@ -1065,7 +1065,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblSystem: TLabel
       Left = 0
-      Top = 1
+      Top = 199
       Width = 68
       Height = 13
       Align = alTop
@@ -1076,7 +1076,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgNotify: TImage
       Left = 0
-      Top = 67
+      Top = 265
       Width = 68
       Height = 40
       Align = alTop
@@ -1200,7 +1200,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblNotify: TLabel
       Left = 0
-      Top = 107
+      Top = 305
       Width = 68
       Height = 13
       Align = alTop
@@ -1211,7 +1211,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgAway: TImage
       Left = 0
-      Top = 120
+      Top = 318
       Width = 68
       Height = 40
       Align = alTop
@@ -1246,7 +1246,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblAway: TLabel
       Left = 0
-      Top = 160
+      Top = 358
       Width = 68
       Height = 13
       Align = alTop
@@ -1257,7 +1257,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgKeywords: TImage
       Left = 0
-      Top = 173
+      Top = 371
       Width = 68
       Height = 40
       Align = alTop
@@ -1292,7 +1292,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblKeywords: TLabel
       Left = 0
-      Top = 213
+      Top = 411
       Width = 68
       Height = 13
       Align = alTop
@@ -1303,7 +1303,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgBlockList: TImage
       Left = 0
-      Top = 226
+      Top = 424
       Width = 68
       Height = 40
       Align = alTop
@@ -1338,7 +1338,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblBlockList: TLabel
       Left = 0
-      Top = 266
+      Top = 464
       Width = 68
       Height = 13
       Align = alTop
@@ -1349,7 +1349,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgCustomPres: TImage
       Left = 0
-      Top = 279
+      Top = 477
       Width = 68
       Height = 40
       Align = alTop
@@ -1384,7 +1384,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblCustomPres: TLabel
       Left = 0
-      Top = 319
+      Top = 517
       Width = 68
       Height = 13
       Align = alTop
@@ -1399,10 +1399,10 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 313
     Height = 336
-    ActivePage = tbsCustomPres
+    ActivePage = tbsNotify
     Align = alClient
     Style = tsFlatButtons
-    TabIndex = 9
+    TabIndex = 5
     TabOrder = 2
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1673,7 +1673,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 305
+        Width = 102
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1893,7 +1893,8 @@ object frmPrefs: TfrmPrefs
           'Normal Messages'
           'Subscription Requests'
           'Conference Invites'
-          'Keywords (Conf. Rooms)')
+          'Keywords (Conf. Rooms)'
+          'Chat window activity')
         TabOrder = 0
         OnClick = chkNotifyClick
       end
@@ -2001,7 +2002,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 305
+        Width = 124
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2079,7 +2080,7 @@ object frmPrefs: TfrmPrefs
       object Label1: TLabel
         Left = 0
         Top = 20
-        Width = 305
+        Width = 256
         Height = 26
         Align = alTop
         Caption = 
@@ -2090,7 +2091,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 305
+        Width = 112
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2120,7 +2121,7 @@ object frmPrefs: TfrmPrefs
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 305
+        Width = 292
         Height = 26
         Align = alTop
         Caption = 
@@ -2131,7 +2132,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 305
+        Width = 146
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2210,6 +2211,7 @@ object frmPrefs: TfrmPrefs
           Height = 25
           Caption = 'Remove'
           TabOrder = 1
+          OnClick = btnCustomPresRemoveClick
         end
         object btnCustomPresClear: TButton
           Left = 132
@@ -2218,6 +2220,7 @@ object frmPrefs: TfrmPrefs
           Height = 25
           Caption = 'Clear'
           TabOrder = 2
+          OnClick = btnCustomPresClearClick
         end
       end
       object GroupBox1: TGroupBox
@@ -2320,7 +2323,6 @@ object frmPrefs: TfrmPrefs
           Top = 92
           Width = 97
           Height = 19
-          Enabled = False
           HotKey = 32833
           InvalidKeys = [hcNone, hcShift]
           Modifiers = [hkAlt]
