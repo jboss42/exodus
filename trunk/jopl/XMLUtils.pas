@@ -46,6 +46,7 @@ function DateTimeToJabber(dt: TDateTime): Widestring;
 
 function GetAppVersion: string;
 
+procedure ClearListObjects(l: TList);
 procedure ClearStringListObjects(sl: TStringList); overload;
 procedure ClearStringListObjects(sl: TWideStringList); overload;
 
@@ -372,6 +373,19 @@ begin
         Result := 'true'
     else
         Result := 'false';
+end;
+
+{---------------------------------------}
+procedure ClearListObjects(l: TList);
+var
+    i: integer;
+begin
+    for i := 0 to l.Count - 1 do begin
+        if (l[i] <> nil) then begin
+            TObject(l[i]).Free();
+            l[i] := nil;
+        end;
+    end;
 end;
 
 {---------------------------------------}

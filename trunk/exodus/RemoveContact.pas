@@ -114,11 +114,10 @@ begin
                 ritem.Groups.Delete(idx);
             ritem.update();
         end;
-        Self.Close();
-    end;
+    end
 
     // Really remove or unsub
-    if (chkRemove1.Checked) and (chkRemove2.Checked) then begin
+    else if ((chkRemove1.Checked) and (chkRemove2.Checked)) then begin
         // send a subscription='remove'
         iq := TXMLTag.Create('iq');
         with iq do begin

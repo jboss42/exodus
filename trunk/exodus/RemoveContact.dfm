@@ -22,7 +22,7 @@ object frmRemove: TfrmRemove
   TextHeight = 13
   object Bevel1: TBevel
     Left = 0
-    Top = 22
+    Top = 20
     Width = 328
     Height = 2
     Align = alTop
@@ -35,16 +35,21 @@ object frmRemove: TfrmRemove
     Align = alBottom
     AutoScroll = False
     TabOrder = 1
-    inherited Bevel1: TBevel
+    inherited Panel2: TPanel
       Width = 328
-    end
-    inherited Panel1: TPanel
-      Left = 168
-      inherited btnOK: TButton
-        OnClick = frameButtons1btnOKClick
+      Height = 34
+      inherited Bevel1: TBevel
+        Width = 328
       end
-      inherited btnCancel: TButton
-        OnClick = frameButtons1btnCancelClick
+      inherited Panel1: TPanel
+        Left = 168
+        Height = 29
+        inherited btnOK: TButton
+          OnClick = frameButtons1btnOKClick
+        end
+        inherited btnCancel: TButton
+          OnClick = frameButtons1btnCancelClick
+        end
       end
     end
   end
@@ -92,7 +97,7 @@ object frmRemove: TfrmRemove
     Left = 0
     Top = 0
     Width = 328
-    Height = 22
+    Height = 20
     Align = alTop
     Caption = 'foo@jabber.org'
     Color = clBtnFace

@@ -150,7 +150,7 @@ begin
     flds := x.QueryTags('field');
     h := 1;
     m := 0;
-    xtra := lblIns.Height + 10 + frameButtons1.Height;
+    xtra := lblIns.Height + 5 + frameButtons1.Height;
 
     for i := flds.Count - 1 downto 0 do begin
         frm := TframeGeneric.Create(Self);
@@ -173,9 +173,9 @@ begin
         end;
     end;
 
-    if (h > Trunc(Screen.Height * 0.667)) then
-        h := Trunc(Screen.Height * 0.667) - xtra;
-
+    h := h + xtra;
+    if (h > Trunc(Screen.Height * 0.750)) then
+        h := Trunc(Screen.Height * 0.750);
 
     insBevel.Visible := lblIns.Visible;
     if (lblIns.Visible) then begin
@@ -189,9 +189,9 @@ begin
     end;
 
     MainSession.Prefs.RestorePosition(Self);
-    Self.ClientHeight := h + xtra;
+    Self.ClientHeight := h;
 
-    centerMainForm(Self);
+    CenterMainForm(Self);
 end;
 
 {---------------------------------------}

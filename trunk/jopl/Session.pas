@@ -40,6 +40,8 @@ type
         _priority: integer;
         _invisible: boolean;
         _profile: TJabberProfile;
+        _features: TList;
+        _xmpp: boolean;
 
         // Dispatcher
         _dispatcher: TSignalDispatcher;
@@ -161,6 +163,9 @@ type
         property Invisible: boolean read _invisible write _invisible;
         property Active: boolean read GetActive;
         property Profile: TJabberProfile read _profile;
+
+        property isXMPP: boolean read _xmpp;
+        property xmppFeatures: TList read _features;
     end;
 
 var
@@ -207,7 +212,9 @@ begin
 
     _pauseQueue := TQueue.Create();
     _avails := TWidestringlist.Create();
-    
+    _features := TList.Create();
+    _xmpp := false;
+
     // Create all the things which might register w/ the session
 
     // Create the Presence Proxy Database (PPDB)
@@ -461,11 +468,18 @@ end;
 procedure TJabberSession.StreamCallback(msg: string; tag: TXMLTag);
 var
     tmps: WideString;
+    i: integer;
+    fp: TXMLTag;
+    f: TXMLTagList;
+    fo: TXMLTag;
 begin
     // Process callback info..
     if msg = 'connected' then begin
         // we are connected... send auth stuff.
-        tmps := '<stream:stream to="' + Trim(Server) + '" xmlns="jabber:client" xmlns:stream="http://etherx.jabber.org/streams">';
+        tmps := '<stream:stream to="' + Trim(Server) +
+            '" xmlns="jabber:client" ' +
+            'xmlns:stream="http://etherx.jabber.org/streams" ' +
+            '>';
         _stream.Send(tmps);
     end
 
@@ -474,7 +488,7 @@ begin
 
     else if msg = 'commtimeout' then
         _dispatcher.DispatchSignal('/session/commtimeout', nil)
-        
+
     else if msg = 'commerror' then
         _dispatcher.DispatchSignal('/session/commerror', nil)
 
@@ -484,13 +498,30 @@ begin
         if (tag.Name = 'stream:stream') then begin
             // we got dropped
             _stream_id := tag.getAttribute('id');
+            _xmpp := (tag.GetAttribute('version') = '1.0');
+            if (_xmpp) then begin
+                // populate stream features..
+                ClearListObjects(_features);
+                _features.Clear();
+                fp := tag.GetFirstTag('stream:features');
+                if (fp <> nil) then begin
+                    f := fp.ChildTags();
+                    for i := 0 to f.Count - 1 do begin
+                        fo := TXMLTag.Create(f.Tags[i]);
+                        _features.Add(fo);
+                    end;
+                end;
+            end;
+            // check for XMPP 1.0 stuff..
+
             _dispatcher.DispatchSignal('/session/connected', nil);
 
             if _register then
                 CreateAccount()
             else
                 _auth_agent.StartAuthentication();
-
+                
+            //tag.Free();
         end
         else if (tag.Name = 'stream:error') then begin
             // we got a stream error
