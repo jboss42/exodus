@@ -72,7 +72,7 @@ const
 {---------------------------------------}
 procedure TframeGeneric.render(tag: TXMLTag);
 var
-    t: Widestring;
+    v, l, t: Widestring;
     opts: TXMLTagList;
     idx, i: integer;
     dot : TButton;
@@ -129,8 +129,14 @@ begin
         with TTntCheckListbox(c) do begin
             Align := alClient;
             for i := 0 to opts.Count - 1 do begin
-                Items.Add(opts[i].GetAttribute('label'));
-                opts_vals.Add(opts[i].GetBasicText('value'));
+                v := opts[i].GetBasicText('value');
+                if (v = '') then continue;
+
+                l := opts[i].GetAttribute('label');
+                if (l = '') then l := v;
+
+                Items.Add(l);
+                opts_vals.Add(v);
             end;
         end;
 
@@ -158,8 +164,14 @@ begin
             Style := csDropDownList;
             Align := alClient;
             for i := 0 to opts.Count - 1 do begin
-                Items.Add(opts[i].GetAttribute('label'));
-                opts_vals.Add(opts[i].GetBasicText('value'));
+                v := opts[i].GetBasicText('value');
+                if (v = '') then continue;
+
+                l := opts[i].GetAttribute('label');
+                if (l = '') then l := v;
+
+                Items.Add(l);
+                opts_vals.Add(v);
             end;
             ItemIndex := opts_vals.IndexOf(value);
         end;
