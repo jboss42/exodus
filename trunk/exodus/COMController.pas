@@ -5,7 +5,7 @@ unit COMController;
 interface
 
 uses
-    XMLTag, Unicode, 
+    XMLTag, Unicode,
     Windows,
     Classes, ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
 
@@ -33,14 +33,23 @@ type
     procedure removePluginMenu(const ID: WideString); safecall;
     procedure monitorImplicitRegJID(const JabberID: WideString;
       FullJID: WordBool); safecall;
+    function getAgentService(const Server, Service: WideString): WideString;
+      safecall;
+    procedure getAgentList(const Server: WideString); safecall;
     { Protected declarations }
   private
     _menu_items: TWideStringList;
+    _agents_cb: integer;
+
+  protected
+    procedure agentsCallback(event: string; tag: TXMLTag);
+
   public
     constructor Create();
 
     procedure fireNewChat(jid: WideString; ExodusChat: IExodusChat);
     procedure fireMenuClick(Sender: TObject);
+    procedure fireAgentsList(server: Widestring);
   end;
 
   TPlugin = class
@@ -65,7 +74,7 @@ procedure UnloadPlugins();
 implementation
 
 uses
-    COMChatController, Dockable,
+    COMChatController, Dockable, Agents,
     Jabber1, Session, Roster, PrefController, 
     Menus, Dialogs, Variants, Forms, SysUtils, ComServ;
 
@@ -200,6 +209,7 @@ constructor TExodusController.Create();
 begin
     inherited Create();
     _menu_items := TWidestringList.Create();
+    _agents_cb := MainSession.RegisterCallback(agentsCallback, '/session/agents');
 end;
 
 {---------------------------------------}
@@ -209,6 +219,15 @@ var
 begin
     for i := 0 to plugs.count - 1 do
         TPlugin(plugs.Objects[i]).com.NewChat(jid, ExodusChat);
+end;
+
+{---------------------------------------}
+procedure TExodusController.fireAgentsList(server: Widestring);
+var
+    i: integer;
+begin
+    for i := 0 to plugs.count - 1 do
+        TPlugin(plugs.Objects[i]).com.onAgentsList(Server);
 end;
 
 {---------------------------------------}
@@ -368,6 +387,44 @@ procedure TExodusController.monitorImplicitRegJID(
   const JabberID: WideString; FullJID: WordBool);
 begin
     frmExodus.RegisterController.MonitorJid(JabberID, FullJID);
+end;
+
+{---------------------------------------}
+function TExodusController.getAgentService(const Server,
+  Service: WideString): WideString;
+var
+    al: TAgents;
+    a: TAgentItem;
+begin
+    Result := '';
+    al := MainSession.GetAgentsList(Server);
+    if (al <> nil) then begin
+        a := al.findService(Lowercase(Service));
+        if (a <> nil) then
+            Result := a.jid;
+    end;
+end;
+
+{---------------------------------------}
+procedure TExodusController.getAgentList(const Server: WideString);
+var
+    al: TAgents;
+begin
+    al := MainSession.GetAgentsList(Server);
+    if (al =  nil) then begin
+        al := MainSession.NewAgentsList(Server);
+        al.Fetch(Server);
+    end
+    else begin
+        // we already have it, fire now.
+        fireAgentsList(Server);
+    end;
+end;
+
+{---------------------------------------}
+procedure TExodusController.agentsCallback(event: string; tag: TXMLTag);
+begin
+    fireAgentsList(tag.GetAttribute('from'));
 end;
 
 initialization

@@ -19,6 +19,7 @@ type
     procedure Process(const xml: WideString); safecall;
     procedure Shutdown; safecall;
     procedure Startup(const ExodusController: IExodusController); safecall;
+    procedure onAgentsList(const Server: WideString); safecall;
     { Protected declarations }
   private
     _controller: IExodusController;
@@ -28,7 +29,7 @@ type
 implementation
 
 uses
-    Importer,
+    Importer, StrUtils, SysUtils,
     Dialogs, ComServ;
 
 procedure TAIMImportPlugin.menuClick(const ID: WideString);
@@ -42,10 +43,21 @@ begin
                 mtError, [mbOK], 0);
             exit;
         end;
+        f := getImportForm(_controller, true);
+        f.Show();
+    end;
+end;
 
-        f := TfrmImport.Create(nil);
-        f.exodus := _controller;
-        f.Show;
+procedure TAIMImportPlugin.onAgentsList(const Server: WideString);
+var
+    f: TfrmImport;
+begin
+    // we got back an agents list
+    f := getImportForm(_controller, false);
+    if (f <> nil) then begin
+        if (AnsiSameText(Server, f.txtGateway.Text)) then begin
+            f.processAgents();
+        end;
     end;
 end;
 
@@ -68,7 +80,7 @@ end;
 
 procedure TAIMImportPlugin.Shutdown;
 begin
-    
+
 end;
 
 procedure TAIMImportPlugin.Startup(

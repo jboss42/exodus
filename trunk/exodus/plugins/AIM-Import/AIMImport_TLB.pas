@@ -11,8 +11,8 @@ unit AIMImport_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.1 $
-// File generated on 12/31/2002 1:45:56 PM from Type Library described below.
+// PASTLWTR : $Revision: 1.2 $
+// File generated on 12/31/2002 2:19:38 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\AIM-Import\AIMImport.tlb (1)

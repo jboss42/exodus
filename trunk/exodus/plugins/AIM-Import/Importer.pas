@@ -11,37 +11,61 @@ type
   TfrmImport = class(TForm)
     Label1: TLabel;
     txtFilename: TEdit;
-    btnFileBrowse: TButton;
-    btnImport: TButton;
     ListView1: TListView;
     Label2: TLabel;
     txtGateway: TEdit;
-    btnGatewayBrowse: TButton;
+    btnFileBrowse: TButton;
     Label3: TLabel;
-    btnAdd: TButton;
+    btnNext: TButton;
     btnCancel: TButton;
     OpenDialog1: TOpenDialog;
     procedure btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnFileBrowseClick(Sender: TObject);
-    procedure btnImportClick(Sender: TObject);
-    procedure btnAddClick(Sender: TObject);
+    procedure btnNextClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
+    _stage: integer;
+    procedure validateGateway();
+    procedure importFile();
+    procedure addItems();
   public
     { Public declarations }
     exodus: IExodusController;
+    procedure processAgents();
   end;
 
 var
   frmImport: TfrmImport;
+
+function getImportForm(controller: IExodusController; create: boolean): TfrmImport;
 
 implementation
 
 {$R *.dfm}
 
 uses
-    StrUtils; 
+    Selector, StrUtils;
+
+function getImportForm(controller: IExodusController; create: boolean): TfrmImport;
+begin
+    if (frmImport <> nil) then begin
+        Result := frmImport;
+        frmImport.Show();
+        exit;
+    end
+    else if (create) then begin
+        frmImport := TfrmImport.Create(nil);
+        with frmImport do begin
+            exodus := controller;
+            txtGateway.Text := controller.Server;
+        end;
+        Result := frmImport;
+        end
+    else
+        Result := nil;
+end;
 
 procedure TfrmImport.btnCancelClick(Sender: TObject);
 begin
@@ -50,6 +74,7 @@ end;
 
 procedure TfrmImport.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+    frmImport := nil;
     Action := caFree;
 end;
 
@@ -62,7 +87,33 @@ begin
     end;
 end;
 
-procedure TfrmImport.btnImportClick(Sender: TObject);
+procedure TfrmImport.validateGateway();
+begin
+    // wait for the callback
+    btnNext.Enabled := false;
+    exodus.getAgentList(txtGateway.Text);
+end;
+
+procedure TfrmImport.processAgents();
+var
+    gjid: Widestring;
+begin
+    // make sure we have a AIM service
+    btnNext.Enabled := true;
+    gjid := exodus.getAgentService(txtGateway.Text, 'aim');
+    if (gjid = '') then begin
+        // not found!
+        MessageDlg('The jabber server you entered does not have an AIM Gateway. Please select another server.',
+            mtError, [mbOK], 0);
+        _stage := 0;
+        exit;
+    end;
+    MessageDlg('The AIM gateway has been found', mtInformation, [mbOK], 0);
+    importFile();
+end;
+
+
+procedure TfrmImport.importFile();
 var
     jid, cur_grp, tmps, fn: String;
     itms, sl: TStringList;
@@ -120,12 +171,10 @@ begin
         end;
     end;
     sl.Free();
-    MessageDlg('Finished importing buddies. Use the Add button to add them to your jabber account.',
-        mtInformation, [mbOK], 0);
-
+    btnNext.Caption := 'Finish';
 end;
 
-procedure TfrmImport.btnAddClick(Sender: TObject);
+procedure TfrmImport.addItems();
 var
     li: TListItem;
     i: integer;
@@ -140,8 +189,22 @@ begin
 
         exodus.AddRosterItem(li.SubItems[1], li.SubItems[0], li.Caption);
     end;
+end;
 
-    Self.Close();
+procedure TfrmImport.btnNextClick(Sender: TObject);
+begin
+    inc(_stage);
+    if (_stage = 1) then
+        validateGateway()
+    else if (_stage = 2) then begin
+        addItems();
+        Self.Close();
+    end;
+end;
+
+procedure TfrmImport.FormCreate(Sender: TObject);
+begin
+    _stage := 0;
 end;
 
 end.
