@@ -140,6 +140,7 @@ object frmBaseChat: TfrmBaseChat
       TabOrder = 0
       URLColor = clBlue
       URLCursor = crHandPoint
+      OnEnter = MsgListEnter
       OnKeyPress = MsgListKeyPress
       OnMouseUp = MsgListMouseUp
       OnURLClick = MsgListURLClick
@@ -253,9 +254,11 @@ object frmBaseChat: TfrmBaseChat
       URLCursor = crHandPoint
       WantTabs = True
       WordWrap = False
+      OnEnter = MsgOutEnter
       OnKeyDown = MsgOutKeyDown
       OnKeyPress = MsgOutKeyPress
       OnKeyUp = MsgOutKeyUp
+      OnMouseDown = MsgOutMouseDown
       AutoVerbMenu = False
       InputFormat = ifUnicode
       OutputFormat = ofUnicode

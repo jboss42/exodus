@@ -75,6 +75,10 @@ type
     procedure timWinFlashTimer(Sender: TObject);
     procedure FormPaint(Sender: TObject);
     procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
+    procedure MsgListEnter(Sender: TObject);
+    procedure MsgOutEnter(Sender: TObject);
+    procedure MsgOutMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private declarations }
     _msgHistory : TStringList;
@@ -97,9 +101,6 @@ type
     procedure SendMsg(); virtual;
     procedure HideEmoticons();
     procedure Flash;
-
-    function newMsgoutMenu(caption: Widestring): Widestring;
-    function newContextMenu(caption: Widestring): Widestring;
     procedure pluginMenuClick(Sender: TObject); virtual; abstract;
 
   end;
@@ -206,7 +207,6 @@ begin
     if ( Key = #27 ) then
         Close();
     }
-
     if (key <> #0) then
         inherited;
 end;
@@ -486,17 +486,6 @@ begin
 end;
 
 {---------------------------------------}
-function TfrmBaseChat.newMsgoutMenu(caption: Widestring): Widestring;
-begin
-    // xxx: code me
-end;
-
-{---------------------------------------}
-function TfrmBaseChat.newContextMenu(caption: Widestring): Widestring;
-begin
-    // xxx: code me
-end;
-
 procedure TfrmBaseChat.WMVScroll(var msg: TMessage);
 begin
     //
@@ -506,10 +495,32 @@ begin
     else if (msg.WParamLo = SB_THUMBTRACK) then begin
         _scroll := false;
     end;
-
     inherited;
-
 end;
 
+{---------------------------------------}
+procedure TfrmBaseChat.MsgListEnter(Sender: TObject);
+begin
+    if (frmExodus.ActiveChat <> Self) then
+        Self.FormActivate(Self);
+  inherited;
+end;
+
+{---------------------------------------}
+procedure TfrmBaseChat.MsgOutEnter(Sender: TObject);
+begin
+    if (frmExodus.ActiveChat <> Self) then
+        Self.FormActivate(Self);
+  inherited;
+end;
+
+{---------------------------------------}
+procedure TfrmBaseChat.MsgOutMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+    if (frmExodus.ActiveChat <> Self) then
+        Self.FormActivate(Self);
+  inherited;
+end;
 
 end.

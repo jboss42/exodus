@@ -439,7 +439,6 @@ var
     i: integer;
     xml: Widestring;
 begin
-    // xxx: pass along xtags to the plugins
     xml := '';
     for i := 0 to plugs.Count - 1 do
         xml := xml + TPlugin(plugs.Objects[i]).com.NewIM(jid, body, subject, xtags);
