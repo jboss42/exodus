@@ -192,22 +192,11 @@ end;
 {---------------------------------------}
 procedure TfrmPrefEmote._addListItem(e: TEmoticon);
 var
-    bmp: TBitmap;
     li: TListItem;
-    idx: integer;
 begin
     li := lstCustomEmotes.Items.Add();
-    // TODO: put correct caption in for custom emoticons
     li.Caption := el.getText(e);
-
-    bmp := e.Bitmap;
-    if (bmp.Height > imagesCustom.Height) then
-        imagesCustom.Height := bmp.Height;
-    if (bmp.Width > imagesCustom.Width) then
-        imagesCustom.Width := bmp.Width;
-
-    idx := imagesCustom.Add(e.Bitmap, nil);
-    li.imageIndex := idx;
+    li.imageIndex := 0;
     li.Data := e;
 end;
 
@@ -329,6 +318,7 @@ var
     icon_r: TRect;
     lbl_r: TRect;
     e: TEmoticon;
+    w,h: integer;
 begin
   inherited;
     // draw this item
@@ -340,10 +330,13 @@ begin
 
     with lstCustomEmotes do begin
         // draw the bmp
-        canvas.Draw(icon_r.left, icon_r.Top, e.Bitmap);
+        w := ((icon_r.Right - icon_r.left) - (e.Bitmap.Width)) div 2;
+        h := ((icon_r.Bottom - icon_r.Top) - (e.Bitmap.Height)) div 2;
+        canvas.Draw(icon_r.left + w, icon_r.Top + h, e.Bitmap);
+
+        // XXX: Center text
         canvas.TextOut(lbl_r.left, lbl_r.Top, el.getText(e));
     end;
-
     DefaultDraw := false;
 
 end;
