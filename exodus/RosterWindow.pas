@@ -98,6 +98,7 @@ type
     imgAd: TImage;
     popRename: TMenuItem;
     NetMeetingCall1: TMenuItem;
+    N7: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -154,6 +155,7 @@ type
     procedure popRenameClick(Sender: TObject);
     procedure treeRosterCompare(Sender: TObject; Node1, Node2: TTreeNode;
       Data: Integer; var Compare: Integer);
+    procedure pluginClick(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;         // roster callback id
@@ -2210,6 +2212,13 @@ begin
             Compare := +1;
     end;
 end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.pluginClick(Sender: TObject);
+begin
+    // a plugin menu got clicked
+end;
+
 
 {---------------------------------------}
 {

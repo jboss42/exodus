@@ -18,6 +18,7 @@ type
     function RegisterPlugin(const Plugin: IExodusChatPlugin): Integer;
       safecall;
     function getMagicInt(Part: ChatParts): Integer; safecall;
+    procedure RemoveContextMenu(const ID: WideString); safecall;
     { Protected declarations }
 
   public
@@ -191,7 +192,13 @@ begin
     end
     else
         Result := -1;
+    end;
 end;
+
+{---------------------------------------}
+procedure TExodusChat.RemoveContextMenu(const ID: WideString);
+begin
+    // remove this menu item.
 end;
 
 initialization
