@@ -49,7 +49,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 300
     Height = 17
     Caption = 'Timestamp messages'
-    TabOrder = 1
+    TabOrder = 3
   end
   object chkLog: TTntCheckBox
     Left = 5
@@ -57,7 +57,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 97
     Height = 17
     Caption = 'Log Messages'
-    TabOrder = 2
+    TabOrder = 5
     OnClick = chkLogClick
   end
   object txtLogPath: TTntEdit
@@ -65,7 +65,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Top = 132
     Width = 207
     Height = 21
-    TabOrder = 3
+    TabOrder = 6
   end
   object btnLogBrowse: TTntButton
     Left = 243
@@ -73,7 +73,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 75
     Height = 25
     Caption = 'Browse'
-    TabOrder = 4
+    TabOrder = 7
     OnClick = btnLogBrowseClick
   end
   object chkMsgQueue: TTntCheckBox
@@ -82,7 +82,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 300
     Height = 17
     Caption = 'Instant Messages never popup a new window'
-    TabOrder = 5
+    TabOrder = 1
   end
   object chkLogRooms: TTntCheckBox
     Left = 26
@@ -90,7 +90,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 287
     Height = 17
     Caption = 'Log conference rooms'
-    TabOrder = 6
+    TabOrder = 8
   end
   object cboMsgOptions: TTntComboBox
     Left = 26
@@ -99,7 +99,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 7
+    TabOrder = 11
     Items.WideStrings = (
       'Use default message handling'
       'Treat all messages as chats'
@@ -111,7 +111,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 102
     Height = 25
     Caption = 'Clear All Logs'
-    TabOrder = 8
+    TabOrder = 10
     OnClick = btnLogClearAllClick
   end
   object txtSpoolPath: TTntEdit
@@ -119,7 +119,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Top = 331
     Width = 207
     Height = 21
-    TabOrder = 9
+    TabOrder = 13
   end
   object btnSpoolBrowse: TTntButton
     Left = 243
@@ -127,7 +127,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 75
     Height = 25
     Caption = 'Browse'
-    TabOrder = 10
+    TabOrder = 14
     OnClick = btnSpoolBrowseClick
   end
   object cboInviteOptions: TTntComboBox
@@ -137,7 +137,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 11
+    TabOrder = 12
     Items.WideStrings = (
       'Treat as a normal instant message'
       'Always popup the invitation'
@@ -149,7 +149,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 300
     Height = 17
     Caption = 'Block messages from people not on my roster'
-    TabOrder = 12
+    TabOrder = 2
   end
   object txtTimestampFmt: TTntComboBox
     Left = 72
@@ -157,7 +157,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 161
     Height = 21
     ItemHeight = 13
-    TabOrder = 13
+    TabOrder = 4
     Text = 'h:mm am/pm'
     Items.WideStrings = (
       'h:mm am/pm'
@@ -181,7 +181,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Font.Style = [fsBold]
     ParentBackground = False
     ParentFont = False
-    TabOrder = 14
+    TabOrder = 15
   end
   object chkLogRoster: TTntCheckBox
     Left = 26
@@ -189,7 +189,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 287
     Height = 17
     Caption = 'Only log messages from people in my roster'
-    TabOrder = 15
+    TabOrder = 9
   end
   object OpenDialog1: TOpenDialog
     Filter = 'XML|*.xml'

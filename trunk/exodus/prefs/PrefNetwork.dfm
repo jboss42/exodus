@@ -127,7 +127,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Width = 130
       Height = 21
       Enabled = False
-      TabOrder = 0
+      TabOrder = 1
     end
     object txtProxyPort: TTntEdit
       Left = 59
@@ -135,7 +135,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Width = 39
       Height = 21
       Enabled = False
-      TabOrder = 1
+      TabOrder = 2
     end
     object chkProxyAuth: TTntCheckBox
       Left = 59
@@ -144,7 +144,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Height = 17
       Caption = 'Authentication Required'
       Enabled = False
-      TabOrder = 2
+      TabOrder = 3
       OnClick = chkProxyAuthClick
     end
     object txtProxyUsername: TTntEdit
@@ -153,7 +153,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Width = 130
       Height = 21
       Enabled = False
-      TabOrder = 3
+      TabOrder = 4
     end
     object txtProxyPassword: TTntEdit
       Left = 59
@@ -162,7 +162,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Height = 21
       Enabled = False
       PasswordChar = '*'
-      TabOrder = 4
+      TabOrder = 5
     end
     object cboProxyApproach: TTntComboBox
       Left = 59
@@ -172,7 +172,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Style = csOwnerDrawFixed
       ItemHeight = 16
       ItemIndex = 0
-      TabOrder = 5
+      TabOrder = 0
       Text = 'Use IE settings'
       OnChange = cboProxyApproachChange
       Items.WideStrings = (

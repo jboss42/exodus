@@ -38,7 +38,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     Width = 169
     Height = 21
     ItemHeight = 13
-    TabOrder = 0
+    TabOrder = 6
   end
   object txtDefaultGrp: TTntComboBox
     Left = 20
@@ -46,7 +46,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     Width = 169
     Height = 21
     ItemHeight = 13
-    TabOrder = 1
+    TabOrder = 7
   end
   object chkSort: TTntCheckBox
     Left = 0
@@ -54,7 +54,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     Width = 193
     Height = 17
     Caption = 'Sort Contacts by their availability'
-    TabOrder = 2
+    TabOrder = 0
   end
   object cboVisible: TTntComboBox
     Left = 20
@@ -63,7 +63,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 3
+    TabOrder = 5
     Items.WideStrings = (
       'Do Not Disturb'
       'Ext. Away'
@@ -76,7 +76,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     Width = 200
     Height = 17
     Caption = 'Collapse all roster groups initially.'
-    TabOrder = 4
+    TabOrder = 1
   end
   object chkGroupCounts: TTntCheckBox
     Left = 0
@@ -84,7 +84,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     Width = 217
     Height = 17
     Caption = 'Show group counts in roster (eg, 5/10)'
-    TabOrder = 5
+    TabOrder = 2
   end
   object chkOfflineGrp: TTntCheckBox
     Left = 0
@@ -92,7 +92,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     Width = 217
     Height = 17
     Caption = 'Show offline contacts in an Offline group'
-    TabOrder = 6
+    TabOrder = 3
     OnClick = chkOfflineGrpClick
   end
   object chkOnlineOnly: TTntCheckBox
@@ -101,7 +101,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     Width = 217
     Height = 17
     Caption = 'Only show online contacts'
-    TabOrder = 7
+    TabOrder = 4
   end
   object StaticText4: TTntPanel
     Left = 0

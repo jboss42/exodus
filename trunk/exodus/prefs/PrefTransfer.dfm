@@ -41,7 +41,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     Top = 128
     Width = 281
     Height = 178
-    TabOrder = 3
+    TabOrder = 4
     Visible = False
     object Label3: TTntLabel
       Left = 8
@@ -150,7 +150,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     Top = 128
     Width = 281
     Height = 113
-    TabOrder = 2
+    TabOrder = 3
     Visible = False
     object Label1: TTntLabel
       Left = 16
@@ -199,7 +199,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     Font.Style = [fsBold]
     ParentBackground = False
     ParentFont = False
-    TabOrder = 4
+    TabOrder = 5
   end
   object cboXferMode: TTntComboBox
     Left = 8
@@ -208,7 +208,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 5
+    TabOrder = 2
     OnChange = cboXferModeChange
     Items.WideStrings = (
       'Discover a file transfer component using my server.'

@@ -47,7 +47,7 @@ inherited frmPrefAway: TfrmPrefAway
     Top = 104
     Width = 33
     Height = 21
-    TabOrder = 0
+    TabOrder = 4
     Text = '5'
   end
   object spnAway: TUpDown
@@ -59,14 +59,14 @@ inherited frmPrefAway: TfrmPrefAway
     Min = 1
     Max = 600
     Position = 5
-    TabOrder = 1
+    TabOrder = 5
   end
   object txtXATime: TTntEdit
     Left = 232
     Top = 128
     Width = 33
     Height = 21
-    TabOrder = 2
+    TabOrder = 6
     Text = '30'
   end
   object spnXA: TUpDown
@@ -78,7 +78,7 @@ inherited frmPrefAway: TfrmPrefAway
     Min = 1
     Max = 600
     Position = 30
-    TabOrder = 3
+    TabOrder = 7
   end
   object chkAutoAway: TTntCheckBox
     Left = 8
@@ -86,7 +86,7 @@ inherited frmPrefAway: TfrmPrefAway
     Width = 270
     Height = 17
     Caption = 'Enable Auto Away'
-    TabOrder = 4
+    TabOrder = 0
     OnClick = chkAutoAwayClick
   end
   object txtAway: TTntEdit
@@ -94,14 +94,14 @@ inherited frmPrefAway: TfrmPrefAway
     Top = 184
     Width = 201
     Height = 21
-    TabOrder = 5
+    TabOrder = 10
   end
   object txtXA: TTntEdit
     Left = 80
     Top = 208
     Width = 201
     Height = 21
-    TabOrder = 6
+    TabOrder = 11
   end
   object chkAAReducePri: TTntCheckBox
     Left = 8
@@ -109,7 +109,7 @@ inherited frmPrefAway: TfrmPrefAway
     Width = 273
     Height = 17
     Caption = 'Reduce priority to 0 during auto-away.'
-    TabOrder = 7
+    TabOrder = 3
   end
   object StaticText4: TTntPanel
     Left = 0
@@ -127,7 +127,7 @@ inherited frmPrefAway: TfrmPrefAway
     Font.Style = [fsBold]
     ParentBackground = False
     ParentFont = False
-    TabOrder = 8
+    TabOrder = 12
   end
   object chkAutoXA: TTntCheckBox
     Left = 8
@@ -135,7 +135,7 @@ inherited frmPrefAway: TfrmPrefAway
     Width = 270
     Height = 17
     Caption = 'Enable Auto Extended Away'
-    TabOrder = 9
+    TabOrder = 1
     OnClick = chkAutoAwayClick
   end
   object chkAutoDisconnect: TTntCheckBox
@@ -144,7 +144,7 @@ inherited frmPrefAway: TfrmPrefAway
     Width = 270
     Height = 17
     Caption = 'Enable Auto Disconnect'
-    TabOrder = 10
+    TabOrder = 2
     OnClick = chkAutoAwayClick
   end
   object txtDisconnectTime: TTntEdit
@@ -152,7 +152,7 @@ inherited frmPrefAway: TfrmPrefAway
     Top = 152
     Width = 33
     Height = 21
-    TabOrder = 11
+    TabOrder = 8
     Text = '60'
   end
   object spnDisconnect: TUpDown
@@ -164,6 +164,6 @@ inherited frmPrefAway: TfrmPrefAway
     Min = 1
     Max = 600
     Position = 60
-    TabOrder = 12
+    TabOrder = 9
   end
 end
