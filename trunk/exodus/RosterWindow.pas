@@ -1814,8 +1814,9 @@ begin
         if (_group_counts) then begin
             total := MainSession.roster.getGroupCount(Node.Text, false);
             online := MainSession.roster.getGroupCount(Node.Text, true);
-            c1 := Node.Text + ' (' + IntToStr(online) + '/' + IntToStr(total) + ')';
-            DrawNodeText(Node, State, c1, '');
+            c1 := Node.Text + ' ';
+            c2 := '(' + IntToStr(online) + '/' + IntToStr(total) + ')';
+            DrawNodeText(Node, State, c1, c2);
             DefaultDraw := false;
         end;
 
