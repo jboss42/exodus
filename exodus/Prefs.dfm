@@ -1,6 +1,6 @@
 object frmPrefs: TfrmPrefs
-  Left = 194
-  Top = 317
+  Left = 192
+  Top = 266
   Width = 466
   Height = 462
   BorderWidth = 1
@@ -8135,7 +8135,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TTntLabel
           Left = 0
           Top = 0
-          Width = 349
+          Width = 344
           Height = 28
           Align = alTop
           Caption = 
@@ -8202,7 +8202,7 @@ object frmPrefs: TfrmPrefs
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 2
-        object TntLabel1: TTntLabel
+        object lblBlockIns: TTntLabel
           Left = 0
           Top = 0
           Width = 349
