@@ -48,6 +48,9 @@ var
 
 procedure StartJoinRoom;
 
+resourcestring
+    sInvalidNick = 'You must enter a nickname';
+
 implementation
 uses
     Jabber1, 
@@ -69,6 +72,8 @@ begin
         txtRoom.Text := MainSession.Prefs.getString('tc_lastroom');
         txtServer.Text := MainSession.Prefs.getString('tc_lastserver');
         txtNick.Text := MainSession.Prefs.getString('tc_lastnick');
+        if (txtNick.Text = '') then
+            txtNick.Text := MainSession.Username;
 
         with txtServer do begin
             Items.Clear;
@@ -91,6 +96,11 @@ begin
     rjid := txtRoom.Text + '@' + txtServer.Text;
     if (not isValidJid(rjid)) then begin
         MessageDlg(sInvalidJID, mtError, [mbOK], 0);
+        exit;
+        end;
+
+    if (txtNick.Text = '') then begin
+        MessageDlg(sInvalidNick, mtError, [mbOK], 0);
         exit;
         end;
 
