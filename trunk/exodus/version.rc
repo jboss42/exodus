@@ -14,7 +14,7 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "040904b0"
+        BLOCK "040904B0"
         BEGIN
             VALUE "Comments", "This is free! Promote jabber and give it to a friend.\0"
             VALUE "CompanyName", "Jabber.org\0"
@@ -24,7 +24,7 @@ BEGIN
             VALUE "LegalCopyright", "Copyright (C) Peter Millard, 2002\0"
             VALUE "OriginalFilename", "Exodus.EXE\0"
             VALUE "ProductName", "Exodus\0"
-            VALUE "ProductVersion", "1,0,0,0\0"
+            VALUE "ProductVersion", "1.0.0.0\0"
         END
     END
     BLOCK "VarFileInfo"

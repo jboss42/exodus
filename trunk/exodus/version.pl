@@ -39,7 +39,7 @@ else { usage(); }
 open VF, ">version.h";
 print VF <<"EOF";
 #define EXVERSION        $maj,$min,$sp,$build
-#define EXVERSIONSTR     "$maj,$min,$sp,$build\\0"
+#define EXVERSIONSTR     "$maj.$min.$sp.$build\\0"
 EOF
 close VF;
 
