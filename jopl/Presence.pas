@@ -27,28 +27,33 @@ uses
 
 type
     TJabberCustomPres = class
+    private
+        _pri: SmallInt;
+        procedure setPri(value: SmallInt);
     public
         Status: WideString;
         Show: WideString;
-        Priority: integer;
         title: WideString;
         hotkey: WideString;
 
         procedure Parse(tag: TXMLTag);
         procedure FillTag(tag: TXMLTag);
+
+        property Priority: SmallInt read _pri write setPri;
     end;
 
     TJabberPres = class(TXMLTag)
     private
         _toJID: TJabberID;
         _fromJID: TJabberID;
+        _pri: SmallInt;
         procedure setToJid(value: TJabberID);
         procedure setFromJid(value: TJabberID);
+        procedure setPri(value: SmallInt);
     public
         PresType: WideString;
         Status: WideString;
         Show: WideString;
-        Priority: integer;
         error_code: WideString;
 
         constructor Create; override;
@@ -60,6 +65,7 @@ type
 
         property toJid: TJabberID read _toJID write setToJid;
         property fromJid: TJabberID read _fromJID write setFromJid;
+        property Priority: SmallInt read _pri write setPri;
     end;
 
     TJabberPPDB = class;
@@ -147,6 +153,17 @@ procedure TJabberPres.setFromJid(value: TJabberID);
 begin
     _fromJid.Free();
     _fromJid := value;
+end;
+
+{---------------------------------------}
+procedure TJabberPres.setPri(value: SmallInt);
+begin
+    if (value > 128) then
+        _pri := 128
+    else if (value < -128) then
+        _pri := -128
+    else
+        _pri := value;
 end;
 
 {---------------------------------------}
@@ -249,6 +266,17 @@ begin
     tag.AddBasicTag('status', status);
     tag.AddBasicTag('priority', IntToStr(priority));
     tag.AddBasicTag('hotkey', hotkey);
+end;
+
+{---------------------------------------}
+procedure TJabberCustomPres.setPri(value: SmallInt);
+begin
+    if (value > 128) then
+        _pri := 128
+    else if (value < -128) then
+        _pri := -128
+    else
+        _pri := value;
 end;
 
 {---------------------------------------}
