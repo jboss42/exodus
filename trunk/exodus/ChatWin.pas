@@ -148,7 +148,7 @@ implementation
 {$R *.dfm}
 
 uses
-    COMChatController, Debug, ExEvents, 
+    COMChatController, Debug, ExEvents,
     JabberConst, ExUtils, Presence, PrefController, Room,
     Transfer, RosterAdd, RiserWindow, Notify,
     Jabber1, Profile, MsgDisplay, IQ,
@@ -204,6 +204,7 @@ begin
     if (chat.window = nil) then begin
         win := TfrmChat.Create(Application);
         chat.window := win;
+        chat.stopTimer();
         win.chat_object := chat;
         hist := TrimRight(chat.getHistory());
         if (hist <> '') then with win.MsgList do begin
@@ -342,7 +343,7 @@ var
 begin
     jid := cjid;
     if (_jid <> nil) then _jid.Free();
-    
+
     _jid := TJabberID.Create(cjid);
 
     // setup the callbacks if we don't have them already

@@ -119,6 +119,7 @@ end;
 destructor TChatController.Destroy;
 begin
     // Unregister the callback, and free the queue
+    _memory.Free();
     if (_cb >= 0) then
         MainSession.UnRegisterCallback(_cb);
     msg_queue.Free();
@@ -175,8 +176,13 @@ end;
 
 {---------------------------------------}
 procedure TChatController.timMemoryTimer(Sender: TObject);
+var
+    idx: integer;
 begin
     // time to free the window..
+    idx := MainSession.ChatList.IndexOfObject(Self);
+    if (idx >= 0) then
+        MainSession.ChatList.Delete(idx);
     Self.Free();
 end;
 
