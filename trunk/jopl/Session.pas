@@ -918,7 +918,7 @@ begin
         result := true;
     blockers.Free();
 
-    if (Prefs.getBool('block_nonroster')) then begin
+    if ((not result) and (Prefs.getBool('block_nonroster'))) then begin
         // block this jid if they are not in my roster
         Result := (Roster.Find(jid.jid) = nil); 
     end;
