@@ -105,6 +105,7 @@ type
     procedure SetupPrefs();
     procedure ChangePresImage(show: widestring; status: widestring);
     procedure ResetPresImage;
+    procedure freeChatObject();
 
     function GetThread: String;
   published
@@ -428,6 +429,8 @@ var
 begin
     // pull all of the msgs from the controller queue,
     // and feed them into this window
+    if (chat_object = nil) then exit;
+
     while (chat_object.msg_queue.AtLeast(1)) do begin
         t := TXMLTag(chat_object.msg_queue.Pop());
         Self.MessageEvent(t);
@@ -550,7 +553,8 @@ begin
     txt := getInputText(MsgOut);
 
     // plugin madness
-    TExodusChat(chat_object.ComController).fireBeforeMsg(txt);
+    if (chat_object <> nil) then
+        TExodusChat(chat_object.ComController).fireBeforeMsg(txt);
 
     if (txt = '') then exit;
 
@@ -575,7 +579,8 @@ begin
     end;
 
     // additional plugin madness
-    xml := TExodusChat(chat_object.ComController).fireAfterMsg(txt);
+    if (chat_object <> nil) then
+        xml := TExodusChat(chat_object.ComController).fireAfterMsg(txt);
     if (xml <> '') then
         mtag.addInsertedXML(xml);
     MainSession.SendTag(mtag);
@@ -594,6 +599,7 @@ end;
 procedure TfrmChat.MsgOutKeyPress(Sender: TObject; var Key: Char);
 begin
     if (Key = #0) then exit;
+    if (chat_object = nil) then exit;
 
     // dispatch key-presses to Plugins
     TExodusChat(chat_object.ComController).fireMsgKeyPress(Key);
@@ -625,6 +631,7 @@ begin
             DisplayPresence(sUserBlocked, Self.MsgList);
             MainSession.UnRegisterCallback(_pcallback);
             _pcallback := -1;
+            freeChatObject();
         end;
     end;
 end;
@@ -874,9 +881,19 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmChat.FormDestroy(Sender: TObject);
+procedure TfrmChat.freeChatObject();
 var
-    i: integer;
+    idx: integer;
+begin
+    if (chat_object = nil) then exit;
+    idx := MainSession.ChatList.IndexOfObject(chat_object);
+    if (idx >= 0) then
+        MainSession.ChatList.Delete(idx);
+    FreeAndNil(chat_object);
+end;
+
+{---------------------------------------}
+procedure TfrmChat.FormDestroy(Sender: TObject);
 begin
     // Unregister the callbacks + stuff
     if (MainSession <> nil) then begin
@@ -884,14 +901,8 @@ begin
         MainSession.UnRegisterCallback(_scallback);
     end;
 
-    if (chat_object <> nil) then begin
-        if (MainSession <> nil) then begin
-            i := MainSession.ChatList.IndexOfObject(chat_object);
-            if i >= 0 then
-                MainSession.ChatList.Delete(i);
-        end;
-        FreeAndNil(chat_object);
-    end;
+    if (chat_object <> nil) then
+        freeChatObject();
 
     if (_jid <> nil) then
         FreeAndNil(_jid);
@@ -986,6 +997,7 @@ end;
 procedure TfrmChat.mnuBlockClick(Sender: TObject);
 begin
     MainSession.Block(_jid);
+    freeChatObject();
 end;
 
 {---------------------------------------}
@@ -1069,6 +1081,7 @@ var
 begin
     if ((MainSession.Prefs.getInt('chat_memory') > 0) and
         (MsgList.Lines.Count > 0) and
+        (chat_object <> nil) and
         (not _destroying)) then begin
         MsgList.SelectAll();
         s := MsgList.RTFSelText;

@@ -383,6 +383,8 @@ procedure TfrmRosterWindow.SessionCallback(event: string; tag: TXMLTag);
 var
     i: integer;
     grp_node: TTreeNode;
+    ritem: TJabberRosterItem;
+    b_jid: Widestring;
 begin
     // catch session events
     if event = '/session/disconnected' then begin
@@ -463,6 +465,12 @@ begin
 
     // someone has been blocked
     else if ((event = '/session/block') or (event = '/session/unblock')) then begin
+        // re-render this jid if it's in our roster
+        b_jid := tag.GetAttribute('jid');
+        ritem := MainSession.Roster.Find(b_jid);
+        if (ritem <> nil) then begin
+            RenderNode(ritem, MainSession.ppdb.FindPres(b_jid, ''));
+        end;
         MainSession.Prefs.fillStringlist('col_groups', _collapsed_grps, pkServer);
     end
 
