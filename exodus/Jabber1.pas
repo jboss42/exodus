@@ -333,7 +333,7 @@ type
     // Window message handlers
     procedure CreateParams(var Params: TCreateParams); override;
     procedure WMSysCommand(var msg: TWmSysCommand); message WM_SYSCOMMAND;
-    procedure WMShowWindow(var msg: TWMShowWindow); message WM_SHOWWINDOW;
+    procedure WMSize(var msg: TMessage); message WM_SIZE;
     procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
     procedure WMTray(var msg: TMessage); message WM_TRAY;
     procedure WMQueryEndSession(var msg: TMessage); message WM_QUERYENDSESSION;
@@ -569,9 +569,20 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmExodus.WMShowWindow(var msg: TWMShowWindow);
+procedure TfrmExodus.WMSize(var msg: TMessage);
 begin
-    // xxx Windows-M is supposed to use this to hide all windows
+    // Windows-M and "Show Desktop" use this to hide all windows
+    if ((msg.WParam = SIZE_MINIMIZED) and (not _hidden)) then begin
+        _hidden := true;
+        _was_max := (Self.WindowState = wsMaximized);
+        msg.Result := 0;
+    end
+    else if ((msg.WParam = SIZE_RESTORED) and (_hidden)) then begin
+        doRestore();
+        msg.Result := 0;
+    end
+    else
+        inherited;
 end;
 
 {---------------------------------------}
