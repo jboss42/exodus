@@ -95,8 +95,6 @@ uses
   fRosterTree in 'fRosterTree.pas' {frameTreeRoster: TFrame},
   SelContact in 'SelContact.pas' {frmSelContact},
   XMLHttpStream in '..\jopl\XMLHttpStream.pas',
-  HttpDetails in 'HttpDetails.pas' {frmHttpDetails},
-  SocketDetails in 'SocketDetails.pas' {frmSocketDetails},
   ConnDetails in 'ConnDetails.pas' {frmConnDetails};
 
 {$R *.RES}

@@ -34,9 +34,6 @@ implementation
 uses
     ShellAPI;
 
-var
-    _riched20: THandle;
-
 procedure TExRichEdit.CreateWnd;
 var
     mask: integer;
