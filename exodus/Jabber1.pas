@@ -895,9 +895,7 @@ begin
     _is_autoaway := false;
     _is_autoxa := false;
     _is_min := false;
-
     _is_broadcast := false;
-
     _windows_ver := WindowsVersion(win_ver);
     setupAutoAwayTimer();
     ConfigEmoticons();
@@ -913,7 +911,6 @@ begin
     reg.RootKey := HKEY_CURRENT_USER;
     reg.OpenKey('\AppEvents\Schemes\Apps\Exodus', true);
     reg.WriteString('', sExodus);
-
     AddSound(reg, 'notify_chatactivity', sSoundChatactivity);
     AddSound(reg, 'notify_invite', sSoundInvite);
     AddSound(reg, 'notify_keyword', sSoundKeyword);
@@ -925,15 +922,14 @@ begin
     AddSound(reg, 'notify_s10n', sSoundS10n);
     AddSound(reg, 'notify_oob', sSoundOOB);
     AddSound(reg, 'notify_autoresponse', sSoundAutoResponse);
-
     reg.CloseKey();
     reg.Free();
 
     // Make sure we read in and setup the prefs..
     Self.SessionCallback('/session/prefs', nil);
 
+    // setup the tray icon
     Self.setupTrayIcon();
-
     MainSession.setPresence(_cli_show, _cli_status, _cli_priority);
     _controller := TExodusController.Create();
 
@@ -994,6 +990,9 @@ end;
 procedure TfrmExodus.Startup;
 begin
     if (_updating) then exit;
+
+    // load up all the plugins..
+    InitPlugins();
 
     // Setup initial startup stuff
     if (MainSession.Prefs.getBool('expanded')) then begin
@@ -1259,6 +1258,12 @@ begin
         restoreEvents(MainSession.Prefs.getBool('expanded'));
         if not MainSession.Prefs.getBool('expanded') then
             tbsRoster.TabVisible := false;
+
+        // Unload all prefs, and reinit them.
+        {
+        UnloadPlugins();
+        InitPlugins();
+        }
         end
 
     else if (event = '/session/presence') then begin

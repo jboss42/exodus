@@ -176,6 +176,12 @@ type
     Label5: TLabel;
     chkHideBlocked: TCheckBox;
     chkPresErrors: TCheckBox;
+    tbsPlugins: TTabSheet;
+    StaticText12: TStaticText;
+    Label6: TLabel;
+    memPlugins: TMemo;
+    imgPlugins: TImage;
+    lblPlugins: TLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -420,6 +426,7 @@ begin
         // Keywords and Blockers
         fillStringList('keywords', memKeywords.Lines);
         fillStringList('blockers', memBlocks.Lines);
+        fillStringList('plugins', memPlugins.Lines);
 
         // Custom Presence options
         _pres_list := getAllPresence();
@@ -541,6 +548,7 @@ begin
         setStringList('keywords', memKeywords.Lines);
         setBool('regex_keywords', chkRegex.Checked);
         setStringList('blockers', memBlocks.Lines);
+        setStringList('plugins', memPlugins.Lines);
 
         // Custom presence list
         RemoveAllPresence();
@@ -576,6 +584,7 @@ begin
     tbsKeywords.TabVisible := false;
     tbsBlockList.TabVisible := false;
     tbsCustomPres.TabVisible := false;
+    tbsPlugins.TabVisible := false;
 
     chkNotify.Items.Strings[0]  := sSoundOnline;
     chkNotify.Items.Strings[1]  := sSoundOffline;
@@ -610,56 +619,61 @@ begin
         PageControl1.ActivePage := tbsRoster;
         // img := imgRoster;
         lbl := lblRoster;
-        end;
-    if ((Sender = imgS10n) or (Sender = lblS10n)) then begin
+        end
+    else if ((Sender = imgS10n) or (Sender = lblS10n)) then begin
         PageControl1.ActivePage := tbsSubscriptions;
         // img := imgS10n;
         lbl := lblS10n;
-        end;
-    if ((Sender = imgFonts) or (Sender = lblFonts)) then begin
+        end
+    else if ((Sender = imgFonts) or (Sender = lblFonts)) then begin
         PageControl1.ActivePage := tbsFonts;
         // img := imgFonts;
         lbl := lblFonts;
-        end;
-    if ((Sender = imgSystem) or (Sender = lblSystem)) then begin
+        end
+    else if ((Sender = imgSystem) or (Sender = lblSystem)) then begin
         PageControl1.ActivePage := tbsSystem;
         // img := imgSystem;
         lbl := lblSystem;
-        end;
-    if ((Sender = imgDialog) or (Sender = lblDialog)) then begin
+        end
+    else if ((Sender = imgDialog) or (Sender = lblDialog)) then begin
         PageControl1.ActivePage := tbsDialog;
         // img := imgDialog;
         lbl := lblDialog;
-        end;
-    if ((Sender = imgNotify) or (Sender = lblNotify)) then begin
+        end
+    else if ((Sender = imgNotify) or (Sender = lblNotify)) then begin
         PageControl1.ActivePage := tbsNotify;
         // img := imgNotify;
         lbl := lblNotify;
-        end;
-    if ((Sender = imgAway) or (Sender = lblAway)) then begin
+        end
+    else if ((Sender = imgAway) or (Sender = lblAway)) then begin
         PageControl1.ActivePage := tbsAway;
         // img := imgAway;
         lbl := lblAway;
-        end;
-    if ((Sender = imgKeywords) or (Sender = lblKeywords)) then begin
+        end
+    else if ((Sender = imgKeywords) or (Sender = lblKeywords)) then begin
         PageControl1.ActivePage := tbsKeywords;
         // img := imgKeywords;
         lbl := lblKeywords;
-        end;
-    if ((Sender = imgBlockList) or (Sender = lblBlockList)) then begin
+        end
+    else if ((Sender = imgBlockList) or (Sender = lblBlockList)) then begin
         PageControl1.ActivePage := tbsBlockList;
         // img := imgBlocklist;
         lbl := lblBlocklist;
-        end;
-    if ((Sender = imgCustompres) or (Sender = lblCustomPres)) then begin
+        end
+    else if ((Sender = imgCustompres) or (Sender = lblCustomPres)) then begin
         PageControl1.ActivePage := tbsCustomPres;
         // img := imgCustompres;
         lbl := lblCustompres;
-        end;
-    if ((Sender = imgMessages) or (Sender = lblMessages)) then begin
+        end
+    else if ((Sender = imgMessages) or (Sender = lblMessages)) then begin
         PageControl1.ActivePage := tbsMessages;
         // img := imgMessages;
         lbl := lblMessages;
+        end
+    else if ((Sender = imgPlugins) or (Sender = lblPlugins)) then begin
+        PageControl1.ActivePage := tbsPlugins;
+        // img := imgPlugins;
+        lbl := lblPlugins;
         end;
 
     for i := 0 to ScrollBox1.ControlCount - 1 do begin
