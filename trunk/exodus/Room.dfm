@@ -59,6 +59,7 @@ inherited frmRoom: TfrmRoom
         IconOptions.WrapText = False
         MultiSelect = True
         OwnerData = True
+        OwnerDraw = True
         ReadOnly = True
         ParentShowHint = False
         PopupMenu = popRoomRoster
@@ -69,6 +70,7 @@ inherited frmRoom: TfrmRoom
         SortType = stText
         TabOrder = 0
         ViewStyle = vsReport
+        OnCustomDrawItem = lstRosterCustomDrawItem
         OnData = lstRosterData
         OnDblClick = lstRosterDblClick
         OnDragDrop = lstRosterDragDrop
@@ -280,6 +282,19 @@ inherited frmRoom: TfrmRoom
     object popRosterBlock: TTntMenuItem
       Caption = 'Block'
       OnClick = popRosterBlockClick
+    end
+    object N7: TTntMenuItem
+      Caption = '-'
+    end
+    object popRosterSubscribe: TTntMenuItem
+      Caption = 'Add contact to my roster'
+      Enabled = False
+      OnClick = popRosterSubscribeClick
+    end
+    object popRosterVCard: TTntMenuItem
+      Caption = 'Lookup vCard'
+      Enabled = False
+      OnClick = popRosterVCardClick
     end
     object N3: TTntMenuItem
       Caption = '-'
