@@ -7,9 +7,9 @@ uses Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls,
 
 type
   TfrmPassword = class(TForm)
-    frameButtons1: TframeButtons;
     Label1: TLabel;
     txtOldPassword: TEdit;
+    frameButtons1: TframeButtons;
     Label2: TLabel;
     txtNewPassword: TEdit;
     Label3: TLabel;
