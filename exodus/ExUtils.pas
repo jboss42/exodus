@@ -21,7 +21,7 @@ unit ExUtils;
 
 interface
 uses
-    JabberMsg, 
+    JabberMsg,
     Forms, Classes, SysUtils, Windows;
 
 const
@@ -31,6 +31,7 @@ const
     cWIN_2000 = 4;
     cWIN_ME = 5;
     cWIN_XP = 6;
+
 
 
 function GetAppVersion: string;

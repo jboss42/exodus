@@ -40,6 +40,18 @@ const
 type
     TNextEventType = (next_none, next_Exit, next_Login);
 
+    THookRec = packed record
+        InstanceCount: integer;
+        KeyHook: HHOOK;
+        MouseHook: HHOOK;
+        LastTick: longint;
+        end;
+    PHookRec = ^THookRec;
+
+    TGetHookPointer = function: pointer; stdcall;
+    TInitHooks = procedure; stdcall;
+    TStopHooks = procedure; stdcall;
+
 type
   TExodus = class(TForm)
     Tabs: TPageControl;
@@ -232,6 +244,11 @@ type
     _is_min: boolean;
     _last_show: string;
     _last_status: string;
+    _hookLib: THandle;
+    _getHookPointer: TGetHookPointer;
+    _InitHooks: TInitHooks;
+    _StopHooks: TStopHooks;
+    _lpHookRec: PHookRec;
 
     _version: TVersionResponder;
     _time: TTimeResponder;
@@ -701,9 +718,28 @@ end;
 procedure TExodus.setupAutoAwayTimer();
 begin
     DebugMsg('Trying to setup the Auto Away timer.'#13#10);
+    {
     _hook_keyboard := SetWindowsHookEx(WH_KEYBOARD, @KeyboardHook, 0, GetCurrentThreadID());
     _hook_mouse := SetWindowsHookEx(WH_MOUSE, @MouseHook, 0, GetCurrentThreadID());
-    last_tick := GetTickCount();
+    }
+
+    @_GetHookPointer := nil;
+    @_InitHooks := nil;
+    @_StopHooks := nil;
+    _lpHookRec := nil;
+    _hookLib := LoadLibrary('IdleHooks.dll');
+    if (_hookLib <> 0) then begin
+        // start the hooks
+        @_GetHookPointer := GetProcAddress(_hookLib, 'GetHookPointer');
+        @_InitHooks := GetProcAddress(_hookLib, 'InitHooks');
+        @_StopHooks := GetProcAddress(_hookLib, 'StopHooks');
+        _lpHookRec := _GetHookPointer();
+        inc(_lpHookRec^.InstanceCount);
+        if (_lpHookRec^.KeyHook = 0) then
+            _InitHooks();
+        _lpHookRec^.LastTick := GetTickCount();
+        end;
+    //last_tick := GetTickCount();
 end;
 
 {---------------------------------------}
@@ -1031,10 +1067,16 @@ end;
 procedure TExodus.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
+    if (_hookLib <> 0) then begin
+        dec(_lpHookRec^.InstanceCount);
+        _StopHooks();
+        end;
+    {
     if (_hook_keyboard <> 0) then
         UnhookWindowsHookEx(_hook_keyboard);
     if (_hook_mouse <> 0) then
         UnhookWindowsHookEx(_hook_mouse);
+    }
 
     MainSession.Prefs.SavePosition(Self);
     lstEvents.Items.Clear;
@@ -1457,28 +1499,30 @@ procedure TExodus.timAutoAwayTimer(Sender: TObject);
 var
     mins, away, xa: integer;
     cur_idle: longword;
-    // dmsg: string;
+    dmsg: string;
 begin
     // get the latest idle amount
     if (MainSession = nil) then exit;
     if (not MainSession.Stream.Active) then exit;
 
     with MainSession.Prefs do begin
-        if (_auto_away) then begin
+        if ((_auto_away) and (_lpHookRec <> nil)) then begin
             // cur_idle := (GetTickCount() - IdleUIGetLastInputTime()) div 1000;
-            cur_idle := (GetTickCount() - last_tick) div 1000;
-            mins := cur_idle div 60;
+            // cur_idle := (GetTickCount() - last_tick) div 1000;
+            cur_idle := _lpHookRec^.LastTick;
+            if (cur_idle = 0) then
+                mins := 0
+            else begin
+                cur_idle := (GetTickCount() - cur_idle) div 1000;
+                mins := cur_idle div 60;
+                end;
 
-            {
             if (not _is_autoaway) and (not _is_autoxa) then begin
                 dmsg := 'Idle Check: ' + BoolToStr(_is_autoaway, true) + ', ' +
                     BoolToStr(_is_autoxa, true) + ', ' +
                     IntToStr(cur_idle ) + ' secs'#13#10;
                 DebugMsg(dmsg);
-                end
-            else
-                DebugMsg('.');
-            }
+                end;
 
             away := getInt('away_time');
             xa := getInt('xa_time');
