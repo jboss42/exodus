@@ -834,7 +834,7 @@ procedure TfrmRosterWindow.RenderNode(ritem: TJabberRosterItem; p: TJabberPres);
 var
     i, g, grp_idx: integer;
     cur_grp, tmps: string;
-    cur_node, grp_node, n: TTreeNode;
+    top_item, cur_node, grp_node, n: TTreeNode;
     node_list: TList;
     tmp_grps: TWideStringlist;
     is_blocked: boolean;
@@ -857,6 +857,8 @@ begin
 
     exp_grpnode := false;
     is_transport := false;
+
+    top_item := treeRoster.TopItem;
 
     {
     OK, here we want to bail on some circumstances
@@ -1045,6 +1047,7 @@ begin
         treeRoster.AlphaSort;
         treeRoster.Refresh;
         RemoveEmptyGroups();
+        treeRoster.TopItem := top_item;
     end;
 
 end;
