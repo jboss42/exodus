@@ -2590,8 +2590,10 @@ end;
 procedure TfrmExodus.ApplicationEvents1Deactivate(Sender: TObject);
 begin
     // app was deactivated..
-    if (Self.ActiveChat <> nil) then
+    if (Self.ActiveChat <> nil) then begin
         Self.ActiveChat.HideEmoticons();
+        Self.ActiveChat := nil;
+    end;
 end;
 
 {---------------------------------------}
