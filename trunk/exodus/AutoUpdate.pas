@@ -11,11 +11,13 @@ type
   private
     { Private declarations }
     _url : string;
+    _last : TDateTime;
     procedure checkDoUpdate();
   protected
     procedure Execute; override;
   public
     property URL : string read _url write _url;
+    property Last : TDateTime read _last write _last;
   end;
 
   TAutoUpdate = class
@@ -59,6 +61,7 @@ procedure InitAutoUpdate();
 var
     reg : TRegistry;
     j, url : string;
+    last : TDateTime;
     t : TAutoUpdateThread;
     x : TXMLTag;
 begin
@@ -75,12 +78,14 @@ begin
     reg.RootKey := HKEY_LOCAL_MACHINE;
     reg.OpenKey('\Software\Jabber\Exodus', true);
     url := reg.ReadString('Update_URL');
+    last := reg.ReadDateTime('Last_Update');
     reg.CloseKey();
     reg.Free();
 
     if (url <> '') then begin
         t := TAutoUpdateThread.Create(true);
         t.URL := url;
+        t.Last := last;
         t.FreeOnTerminate := true;
         t.Resume();
         end
@@ -97,7 +102,6 @@ end;
 procedure TAutoUpdateThread.Execute;
 var
     http : TIdHTTP;
-    last: TDateTime;
 begin
     http := nil;
     try
@@ -109,9 +113,7 @@ begin
             exit;
             end;
 
-        last := FileDateToDateTime(FileAge(Application.EXEName));
-
-        if (http.Response.LastModified <= last) then
+        if (http.Response.LastModified <= _last) then
             exit;
 
         synchronize(checkDoUpdate);
@@ -178,21 +180,36 @@ var
     fstream: TFileStream;
     http: TIdHttp;
     url: string;
+    reg : TRegistry;
 begin
     url := tag.Data;
     if (url = '') then exit;
+    reg := nil;
+    http := nil;
 
-    // ok, there's a new one.
-    SetLength(tmp, 256);
-    SetLength(tmp, GetTempPath(255, PChar(tmp)));
+    try
+        // ok, there's a new one.
+        SetLength(tmp, 256);
+        SetLength(tmp, GetTempPath(255, PChar(tmp)));
 
-    tmp := tmp + ExtractFileName(URLToFilename(url));
+        tmp := tmp + ExtractFileName(URLToFilename(url));
 
-    http := TIdHTTP.Create(nil);
-    fstream := TFileStream.Create(tmp, fmCreate);
-    http.Get(url, fstream);
-    fstream.Free();
-    http.Free();
+        http := TIdHTTP.Create(nil);
+        fstream := TFileStream.Create(tmp, fmCreate);
+        http.Get(url, fstream);
+        fstream.Free();
+
+        if (http.ResponseCode <> 200) then exit;
+
+        reg := TRegistry.Create();
+        reg.RootKey := HKEY_LOCAL_MACHINE;
+        reg.OpenKey('\Software\Jabber\Exodus', true);
+        reg.WriteDateTime('Last_Update', http.Response.LastModified);
+        reg.CloseKey();
+    finally
+        if (reg <> nil) then reg.Free();
+        if (http <> nil) then http.Free();
+        end;
 
     ShellExecute(0, 'open', PChar(tmp), '/S', nil, SW_SHOWNORMAL);
 end;
