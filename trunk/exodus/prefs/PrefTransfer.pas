@@ -102,7 +102,6 @@ end;
 procedure TfrmPrefTransfer.SavePrefs();
 var
     p: integer;
-    s: Widestring;
 begin
     with MainSession.Prefs do begin
         setString('xfer_path', txtXFerPath.Text);
