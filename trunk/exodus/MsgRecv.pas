@@ -68,7 +68,6 @@ type
     pnlFrom: TPanel;
     btnClose: TSpeedButton;
     lblFrom: TStaticText;
-    txtFrom: TStaticText;
     pnlError: TPanel;
     Image1: TImage;
     frameButtons1: TframeButtons;
@@ -76,6 +75,7 @@ type
     popClipboard: TPopupMenu;
     popCopy: TMenuItem;
     popPaste: TMenuItem;
+    txtFrom: TTntLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -101,6 +101,8 @@ type
     procedure popPasteClick(Sender: TObject);
     procedure popClipboardPopup(Sender: TObject);
     procedure frameButtons2btnCancelClick(Sender: TObject);
+    procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
     _base_jid: WideString;
@@ -118,6 +120,7 @@ type
     cid: integer;
     eType: TJabberEventType;
     recips: TWideStringlist;
+    ComController: TObject;
 
     procedure PushEvent(e: TJabberEvent);
     procedure DisplayEvent(e: TJabberEvent);
@@ -127,6 +130,9 @@ type
 
     procedure AddOutgoing(txt: Widestring);
     procedure AddXTagXML(xml: Widestring);
+
+    procedure pluginMenuClick(Sender: TObject);
+    function JID: Widestring;
 
     // TMsgController
     function getObject(): TObject;
@@ -141,7 +147,7 @@ var
 
 procedure StartRecvMsg(e: TJabberEvent);
 
-function StartMsg(jid: WideString): TfrmMsgRecv;
+function StartMsg(msg_jid: WideString): TfrmMsgRecv;
 function BroadcastMsg(jids: TWideStringlist): TfrmMsgRecv;
 
 resourcestring
@@ -162,7 +168,7 @@ resourcestring
 {---------------------------------------}
 implementation
 uses
-    Clipbrd, JabberConst, ShellAPI, Profile, Transfer,
+    Clipbrd, COMChatController, JabberConst, ShellAPI, Profile, Transfer,
     ExUtils, JabberMsg, JabberID,
     RosterWindow, RemoveContact, RosterRecv, Room, Roster,
     Presence, Session, Jabber1;
@@ -221,7 +227,7 @@ begin
 end;
 
 {---------------------------------------}
-function StartMsg(jid: WideString): TfrmMsgRecv;
+function StartMsg(msg_jid: WideString): TfrmMsgRecv;
 begin
     // send a normal msg to this person
     Result := TfrmMsgRecv.Create(Application);
@@ -230,15 +236,16 @@ begin
 
         // setup the form for sending a msg
         SetupSend();
-        recips.Add(jid);
+        recips.Add(msg_jid);
         SetupResources();
-        setFrom(jid);
+        setFrom(msg_jid);
         ShowDefault;
         btnClose.Visible := Docked;
         FormResize(nil);
         if (txtSendSubject.Showing) then
             txtSendSubject.SetFocus();
     end;
+    frmExodus.ComController.fireNewOutgoingIM(msg_jid, TExodusChat(Result.ComController));
 end;
 
 {---------------------------------------}
@@ -260,6 +267,8 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 procedure TfrmMsgRecv.FormCreate(Sender: TObject);
+var
+    echat: TExodusChat;
 begin
     // pre-fill parts of the header grid
     AssignDefaultFont(txtMsg.Font);
@@ -280,6 +289,12 @@ begin
     _controller := TExMsgController.Create();
     _controller.MessageEvent := Self.MessageEvent;
     cid := -1;
+
+    // COM interface for this MsgWindow
+    echat := TExodusChat.Create();
+    echat.setIM(Self);
+    echat.ObjAddRef();
+    ComController := echat;
 end;
 
 {---------------------------------------}
@@ -445,12 +460,19 @@ end;
 procedure TfrmMsgRecv.frameButtons2btnOKClick(Sender: TObject);
 var
     m: TJabberMessage;
-    xml, txt, s: WideString;
+    x2, xml, txt, s: WideString;
     i: integer;
     mtag: TXMLTag;
 begin
     // Send the outgoing msg
     txt := getInputText(MsgOut);
+    if (txt = '') then exit;
+
+    // let plugins know about message going out
+    // if they don't want to allow it, they change txt to NULL
+    if (ComController <> nil) then
+        TExodusChat(ComController).fireBeforeMsg(txt);
+
     if (txt = '') then exit;
 
     if (pnlSendSubject.Visible) then
@@ -467,8 +489,15 @@ begin
         m.isMe := true;
         m.Nick := MainSession.Username;
 
-        // more plugin stuff
         mtag := m.Tag;
+
+        // plugin stuff
+        if (ComController <> nil) then
+            x2 := TExodusChat(ComController).fireAfterMsg(txt);
+        if (x2 <> '') then
+            mtag.addInsertedXML(x2);
+
+        // add any x-tags from inside Exodus
         if (xml <> '') then
             mtag.addInsertedXML(xml);
 
@@ -666,11 +695,17 @@ end;
 {---------------------------------------}
 procedure TfrmMsgRecv.MessageEvent(tag: TXMLTag);
 var
+    body, xml: Widestring;
     e: TJabberEvent;
 begin
     // add this event to the queue.
     e := CreateJabberEvent(tag);
     PushEvent(e);
+
+    // plugin
+    xml := tag.xml();
+    body := tag.GetBasicText('body');
+    TExodusChat(ComController).fireRecvMsg(body, xml);
 end;
 
 {---------------------------------------}
@@ -718,14 +753,55 @@ begin
     popPaste.Enabled := (Self.ActiveControl = MsgOut);
 end;
 
+{---------------------------------------}
+function TfrmMsgRecv.JID: Widestring;
+begin
+    //
+    if (recips.Count > 0) then
+        Result := recips[0]
+    else
+        Result := txtFrom.Caption;
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.pluginMenuClick(Sender: TObject);
+begin
+    TExodusChat(ComController).fireMenuClick(Sender);
+end;
+
+{---------------------------------------}
 procedure TfrmMsgRecv.frameButtons2btnCancelClick(Sender: TObject);
 begin
   inherited;
     // cancel the reply window
-    Self.ClientHeight := Self.ClientHeight - pnlReply.Height + frameButtons1.Height + 3;
-    frameButtons1.btnOK.Enabled := true;
-    pnlReply.Visible := false;
-    frameButtons1.Align := alBottom;
+    if (not txtMsg.Visible) then
+        Self.Close
+    else begin
+        Self.ClientHeight := Self.ClientHeight - pnlReply.Height + frameButtons1.Height + 3;
+        frameButtons1.btnOK.Enabled := true;
+        pnlReply.Visible := false;
+        frameButtons1.Align := alBottom;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.MsgOutKeyPress(Sender: TObject; var Key: Char);
+begin
+    if (Key = #0) then exit;
+    if (ComController = nil) then exit;
+
+    // dispatch key-presses to Plugins
+    TExodusChat(ComController).fireMsgKeyPress(Key);
+    inherited;
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.FormDestroy(Sender: TObject);
+begin
+    if (ComController <> nil) then
+        ComController.Free();
+
+  inherited;
 end;
 
 end.

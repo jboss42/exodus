@@ -40,6 +40,8 @@ type
       const XTags: WideString): WideString; safecall;
     procedure MsgMenuClick(const ID, jid: WideString; var Body,
       Subject: WideString); safecall;
+    procedure NewOutgoingIM(const jid: WideString;
+      const InstantMsg: IExodusChat); safecall;
     { Protected declarations }
 
   private
@@ -153,6 +155,12 @@ end;
 {-----------------------------------------}
 procedure TICQImportPlugin.MsgMenuClick(const ID, jid: WideString;
   var Body, Subject: WideString);
+begin
+
+end;
+
+procedure TICQImportPlugin.NewOutgoingIM(const jid: WideString;
+  const InstantMsg: IExodusChat);
 begin
 
 end;

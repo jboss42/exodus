@@ -117,17 +117,20 @@ begin
     StartMsg(lblJID.Caption);
 end;
 
+{---------------------------------------}
 procedure TfrmSubscribe.mnuChatClick(Sender: TObject);
 begin
     StartChat(lblJID.Caption, '', true);
 end;
 
+{---------------------------------------}
 procedure TfrmSubscribe.mnuProfileClick(Sender: TObject);
 begin
     // muh.  not exactly right, but at least it isn't *wrong*.
     ShowProfile(lblJID.Caption).FormStyle := fsStayOnTop;
 end;
 
+{---------------------------------------}
 procedure TfrmSubscribe.lblJIDClick(Sender: TObject);
 var
     cp: TPoint;
@@ -136,6 +139,7 @@ begin
     PopupMenu1.popup(cp.x, cp.y);
 end;
 
+{---------------------------------------}
 procedure TfrmSubscribe.FormCreate(Sender: TObject);
 begin
     TranslateProperties(Self);

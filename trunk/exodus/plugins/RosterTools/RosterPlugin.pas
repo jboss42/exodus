@@ -45,6 +45,8 @@ type
       const XTags: WideString): WideString; safecall;
     procedure MsgMenuClick(const ID, jid: WideString; var Body,
       Subject: WideString); safecall;
+    procedure NewOutgoingIM(const jid: WideString;
+      const InstantMsg: IExodusChat); safecall;
     { Protected declarations }
   private
     _exodus: IExodusController;
@@ -151,6 +153,12 @@ end;
 
 procedure TRosterPlugin.MsgMenuClick(const ID, jid: WideString; var Body,
   Subject: WideString);
+begin
+
+end;
+
+procedure TRosterPlugin.NewOutgoingIM(const jid: WideString;
+  const InstantMsg: IExodusChat);
 begin
 
 end;

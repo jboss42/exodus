@@ -14,6 +14,7 @@ object frmMsgRecv: TfrmMsgRecv
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnEndDock = FormEndDock
   OnResize = FormResize
   PixelsPerInch = 96
@@ -49,7 +50,6 @@ object frmMsgRecv: TfrmMsgRecv
       end
       inherited Panel1: TPanel
         Left = 211
-        Height = 29
         inherited btnCancel: TButton [0]
           OnClick = frameButtons2btnCancelClick
         end
@@ -147,6 +147,7 @@ object frmMsgRecv: TfrmMsgRecv
       URLColor = clBlue
       URLCursor = crHandPoint
       OnKeyDown = MsgOutKeyDown
+      OnKeyPress = MsgOutKeyPress
       OnKeyUp = MsgOutKeyUp
       OnURLClick = txtMsgURLClick
       InputFormat = ifUnicode
@@ -367,6 +368,25 @@ object frmMsgRecv: TfrmMsgRecv
           ParentFont = False
           OnClick = btnCloseClick
         end
+        object txtFrom: TTntLabel
+          Left = 53
+          Top = 2
+          Width = 41
+          Height = 18
+          Cursor = crHandPoint
+          Align = alLeft
+          Caption = 'txtFrom'
+          Color = clBtnFace
+          Font.Charset = ANSI_CHARSET
+          Font.Color = clBlue
+          Font.Height = -12
+          Font.Name = 'Arial Unicode MS'
+          Font.Style = [fsUnderline]
+          ParentColor = False
+          ParentFont = False
+          Transparent = True
+          OnClick = txtFromClick
+        end
         object lblFrom: TStaticText
           Left = 2
           Top = 2
@@ -383,25 +403,6 @@ object frmMsgRecv: TfrmMsgRecv
           ParentColor = False
           ParentFont = False
           TabOrder = 0
-        end
-        object txtFrom: TStaticText
-          Left = 53
-          Top = 2
-          Width = 32
-          Height = 18
-          Cursor = crHandPoint
-          Align = alLeft
-          Caption = '<JID>'
-          Color = clBtnFace
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlue
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = [fsUnderline]
-          ParentColor = False
-          ParentFont = False
-          TabOrder = 1
-          OnClick = txtFromClick
         end
       end
     end
@@ -468,6 +469,7 @@ object frmMsgRecv: TfrmMsgRecv
     end
     inherited Panel1: TPanel
       Left = 217
+      Height = 25
       inherited btnOK: TButton
         Caption = 'Reply'
         OnClick = frameButtons1btnOKClick

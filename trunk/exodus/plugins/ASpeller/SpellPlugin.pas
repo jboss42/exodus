@@ -24,6 +24,8 @@ type
     procedure Process(const xpath, event, xml: WideString); safecall;
     procedure Shutdown; safecall;
     procedure Startup(const ExodusController: IExodusController); safecall;
+    procedure NewOutgoingIM(const jid: WideString;
+      const InstantMsg: IExodusChat); safecall;
 
   private
     _exodus: IExodusController;
@@ -88,8 +90,29 @@ end;
 {---------------------------------------}
 procedure TSpellPlugin.NewRoom(const jid: WideString;
   const Room: IExodusChat);
+var
+    cp: TChatSpeller;
+    chat_com: IExodusChat;
 begin
+    // a new room window is firing up
+    chat_com := IUnknown(Room) as IExodusChat;
+    cp := TChatSpeller.Create(_speller, chat_com);
+    cp.ObjAddRef();
+    cp.reg_id := chat_com.RegisterPlugin(IExodusChatPlugin(cp));
+end;
 
+{---------------------------------------}
+procedure TSpellPlugin.NewOutgoingIM(const jid: WideString;
+  const InstantMsg: IExodusChat);
+var
+    cp: TChatSpeller;
+    chat_com: IExodusChat;
+begin
+    // a new IM window is firing up
+    chat_com := IUnknown(InstantMsg) as IExodusChat;
+    cp := TChatSpeller.Create(_speller, chat_com);
+    cp.ObjAddRef();
+    cp.reg_id := chat_com.RegisterPlugin(IExodusChatPlugin(cp));
 end;
 
 {---------------------------------------}
@@ -163,6 +186,7 @@ begin
 
     _loaded := true;
 end;
+
 
 initialization
   TAutoObjectFactory.Create(ComServer, TSpellPlugin, Class_SpellPlugin,

@@ -44,6 +44,8 @@ type
       const XTags: WideString): WideString; safecall;
     procedure MsgMenuClick(const ID, jid: WideString; var Body,
       Subject: WideString); safecall;
+    procedure NewOutgoingIM(const jid: WideString;
+      const InstantMsg: IExodusChat); safecall;
     { Protected declarations }
   private
     _parser: TXMLTagParser;
@@ -150,6 +152,12 @@ end;
 
 procedure TStatsPlugin.MsgMenuClick(const ID, jid: WideString; var Body,
   Subject: WideString);
+begin
+
+end;
+
+procedure TStatsPlugin.NewOutgoingIM(const jid: WideString;
+  const InstantMsg: IExodusChat);
 begin
 
 end;
