@@ -227,7 +227,7 @@ begin
             else begin
                 cmd := '"' + ParamStr(0) + '"';
                 for i := 1 to ParamCount do
-                    cmd := cmd + ' ' + ParamStr(i);
+                    cmd := cmd + ' "' + ParamStr(i) + '"';
                 reg.WriteString('Exodus',  cmd);
             end;
             reg.CloseKey();
