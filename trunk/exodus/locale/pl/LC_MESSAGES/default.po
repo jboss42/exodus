@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: exodus\n"
 "POT-Creation-Date: 2003-08-03 07:30\n"
-"PO-Revision-Date: 2003-12-04 09:04+0100\n"
+"PO-Revision-Date: 2003-12-04 19:14+0100\n"
 "Last-Translator: Mariusz Smykuła <marian@t-system.com.pl>\n"
 "Language-Team: Mariusz Smykuła <smys@rocketmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -1123,7 +1123,7 @@ msgstr "Użytkownik:"
 #. frmPrefTransfer..grpWebDav..Label8..Caption
 #: ConnDetails.dfm:67
 #: ConnDetails.dfm:339
-#: JoinRoom.dfm:52
+#: JoinRoom.dfm:53
 #: prefs/PrefNetwork.dfm:117
 #: prefs/PrefTransfer.dfm:85
 msgid "Password:"
@@ -1177,7 +1177,7 @@ msgstr "Zacho&waj hasło"
 #: ConnDetails.dfm:137
 #: ConnDetails.dfm:399
 #: InputPassword.dfm:60
-#: JoinRoom.dfm:85
+#: JoinRoom.dfm:86
 #: Password.dfm:42
 #: Password.dfm:70
 #: Password.dfm:78
@@ -1605,7 +1605,7 @@ msgstr "Cofnij"
 #. frmDockWizard..TntPanel1..btnNext..Caption
 #. frmWizard..TntPanel1..btnNext..Caption
 #: DockWizard.dfm:46
-#: JoinRoom.pas:277
+#: JoinRoom.pas:349
 #: Wizard.dfm:46
 msgid "Next >"
 msgstr "Następny >"
@@ -2192,9 +2192,8 @@ msgstr "Pokaż komunikator"
 #. frmRosterWindow..popStatus..Custom1..Caption
 #: Jabber1.dfm:2690
 #: RosterWindow.dfm:435
-#, fuzzy
 msgid "Custom ..."
-msgstr "Inny"
+msgstr "Inny ..."
 
 #. frmExodus..popTray..trayMessage..Caption
 #. frmJud..PopupMenu1..popMessage..Caption
@@ -2231,19 +2230,19 @@ msgid "Specify or browse for a room to join or create."
 msgstr "Wymyśl lub wybierz pokój "
 
 #. frmJoinRoom..Tabs..TabSheet1..Label2..Caption
-#: JoinRoom.dfm:38
+#: JoinRoom.dfm:39
 msgid "Room Server:"
 msgstr "Serwer pokoi:"
 
 #. frmJoinRoom..Tabs..TabSheet1..Label1..Caption
-#: JoinRoom.dfm:45
+#: JoinRoom.dfm:46
 msgid "Room Name:"
 msgstr "Nazwa pokoju"
 
 #. frmJoinRoom..Tabs..TabSheet1..Label3..Caption
 #. frmAdd..Label2..Caption
 #. frmSubscribe..boxAdd..Label2..Caption
-#: JoinRoom.dfm:59
+#: JoinRoom.dfm:60
 #: RosterAdd.dfm:33
 #: subscribe.dfm:81
 msgid "Nickname:"
@@ -2251,55 +2250,63 @@ msgstr "Użytkownik:"
 
 #. frmJoinRoom..Tabs..TabSheet1..txtServer..Hint
 #. frmJoinRoom..Tabs..TabSheet2..Panel2..txtServerFilter..Hint
-#: JoinRoom.dfm:66
-#: JoinRoom.dfm:160
+#: JoinRoom.dfm:67
+#: JoinRoom.dfm:170
 msgid "Select the room server to use."
-msgstr ""
+msgstr "Wybierz serwer pokoi."
 
 #. frmJoinRoom..Tabs..TabSheet1..txtServer..Text
-#: JoinRoom.dfm:71
+#: JoinRoom.dfm:72
 msgid "txtServer"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..optSpecify..Caption
-#: JoinRoom.dfm:100
+#: JoinRoom.dfm:101
 #, fuzzy
 msgid "Join or Create the following room:"
 msgstr "Zaproś następujące kontakty do:"
 
 #. frmJoinRoom..Tabs..TabSheet1..optBrowse..Caption
-#: JoinRoom.dfm:111
+#: JoinRoom.dfm:112
 msgid "Browse servers for a room to join"
-msgstr ""
+msgstr "Pokaż dostępne pokoje na serwerach"
 
 #. frmJoinRoom..Tabs..TabSheet2..Caption
 #. frmJud..Tabs..TabSheet2..Caption
 #. frmRegister..Tabs..TabSheet2..Caption
-#: JoinRoom.dfm:117
+#: JoinRoom.dfm:118
 #: RegForm.dfm:60
 #: jud.dfm:77
 msgid "TabSheet2"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet2..lstRooms......Caption
-#: JoinRoom.dfm:127
+#: JoinRoom.dfm:128
 #, fuzzy
 msgid "Room"
 msgstr "Pokoje"
 
 #. frmJoinRoom..Tabs..TabSheet2..lstRooms......Caption
-#: JoinRoom.dfm:131
+#: JoinRoom.dfm:132
 #, fuzzy
 msgid "Server"
 msgstr "&Serwer:"
 
+#. frmJoinRoom..Tabs..TabSheet2..lstRooms......Caption
+#. frmPrefPlugins..lstPlugins......Caption
+#: JoinRoom.dfm:136
+#: prefs/PrefPlugins.dfm:89
+#, fuzzy
+msgid "Description"
+msgstr "Opis:"
+
 #. frmJoinRoom..Tabs..TabSheet2..Panel2..lblFetch..Caption
-#: JoinRoom.dfm:153
+#: JoinRoom.dfm:163
 msgid "Show rooms found on this server"
-msgstr ""
+msgstr "Pokaż pokoie na tym serwerze"
 
 #. frmJoinRoom..Tabs..TabSheet2..Panel2..btnFetch..Caption
-#: JoinRoom.dfm:172
+#: JoinRoom.dfm:184
 #, fuzzy
 msgid "Fetch Rooms"
 msgstr "Pokoje"
@@ -2313,7 +2320,7 @@ msgstr "Użytkownika Jabbera"
 #. frmJud..Panel1..lblWizardTitle..Caption
 #: jud.dfm:42
 msgid "Jabber Search Wizard"
-msgstr ""
+msgstr "Kreator wyszukiwania"
 
 #. frmJud..Tabs..TabSheet1..lblSelect....Align
 #: jud.dfm:63
@@ -2335,7 +2342,7 @@ msgstr ""
 #. frmJud..Tabs..TabSheet3..lblInstructions..Caption
 #: jud.dfm:107
 msgid "Fill in the search criteria to find contacts on."
-msgstr ""
+msgstr "Podaj kryteria wyszukiwania."
 
 #. frmJud..Tabs..TabSheet4..Caption
 #. frmRegister..Tabs..TabSheet4..Caption
@@ -2368,7 +2375,7 @@ msgstr "Dodawanie kontaów"
 #. frmJud..PopupMenu1..popProfile..Caption
 #: jud.dfm:207
 msgid "View Profile"
-msgstr ""
+msgstr "Pokaż profil"
 
 #. frmJud..PopupMenu1..popChat..Caption
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
@@ -2376,7 +2383,7 @@ msgstr ""
 #: jud.dfm:214
 #: subscribe.dfm:142
 msgid "Start Chat"
-msgstr ""
+msgstr "Rozpocznij rozmowę"
 
 #. frmLogin..Caption
 #: Login.dfm:7
@@ -2512,7 +2519,7 @@ msgstr "Informacje o kliencie"
 #. frmMsgRecv..popContact..mnuSendFile..Caption
 #: MsgRecv.dfm:514
 msgid "Send File"
-msgstr ""
+msgstr "Wyślij plik"
 
 #. frmMsgRecv..popClipboard..popPaste..Caption
 #: MsgRecv.dfm:539
@@ -2547,7 +2554,7 @@ msgstr "Przeglądaj ten katalog"
 #. frmPathSelector..Label1..Caption
 #: PathSelector.dfm:26
 msgid "Directories"
-msgstr ""
+msgstr "Katalogi"
 
 #. frmPathSelector..Folders..Root
 #: PathSelector.dfm:63
@@ -2557,7 +2564,7 @@ msgstr ""
 #. frmPrefs..Caption
 #: Prefs.dfm:7
 msgid "Exodus Preferences"
-msgstr ""
+msgstr "Opcje Exodusa"
 
 #. frmPrefs..Scroller..lblDialog..Caption
 #: Prefs.dfm:240
@@ -2568,12 +2575,12 @@ msgstr "Okno rozmowy"
 #. frmPrefs..Scroller..lblFonts..Caption
 #: Prefs.dfm:434
 msgid "Fonts, Colors"
-msgstr ""
+msgstr "Czcionki, kolory"
 
 #. frmPrefs..Scroller..lblS10n..Caption
 #: Prefs.dfm:629
 msgid "Subscriptions"
-msgstr ""
+msgstr "Subskrypcje"
 
 #. frmPrefs..Scroller..lblRoster..Caption
 #: Prefs.dfm:823
@@ -2588,19 +2595,19 @@ msgstr ""
 #. frmPrefs..Scroller..lblNotify..Caption
 #: Prefs.dfm:1155
 msgid "Notification"
-msgstr ""
+msgstr "Powiadomienia"
 
 #. frmPrefs..Scroller..lblAway..Caption
 #: Prefs.dfm:1349
 msgid "Auto-Away"
-msgstr ""
+msgstr "Auto-zdala"
 
 #. frmPrefs..Scroller..lblKeywords..Caption
 #. frmPrefs..PageControl1..tbsKeywords..Caption
 #: Prefs.dfm:1543
 #: Prefs.dfm:3032
 msgid "Keywords"
-msgstr ""
+msgstr "Słowa kluczowe"
 
 #. frmPrefs..Scroller..lblBlockList..Caption
 #: Prefs.dfm:1737
@@ -2610,12 +2617,12 @@ msgstr "Lista zablokowanych"
 #. frmPrefs..Scroller..lblMessages..Caption
 #: Prefs.dfm:2125
 msgid "Messages"
-msgstr ""
+msgstr "Wiadomości"
 
 #. frmPrefs..Scroller..lblPlugins..Caption
 #: Prefs.dfm:2263
 msgid "Plugins"
-msgstr ""
+msgstr "Wtyczki"
 
 #. frmPrefs..Scroller..lblTransfer..Caption
 #. frmXferManager..Panel1..pnlCaption..Caption
@@ -2626,7 +2633,7 @@ msgstr ""
 #: prefs/PrefNotify.dfm:43
 #: prefs/PrefNotify.pas:102
 msgid "File Transfers"
-msgstr ""
+msgstr "Przesyłane pliki"
 
 #. frmPrefs..Scroller..lblGroups..Caption
 #. frmProfile..PageControl1..TabSheet2..Caption
@@ -2638,12 +2645,12 @@ msgstr "Grupy"
 #. frmPrefs..Scroller..lblLayouts..Caption
 #: Prefs.dfm:2999
 msgid "Layouts"
-msgstr ""
+msgstr "Wyglądy"
 
 #. frmPrefs..Scroller..lblNetwork..Caption
 #: Prefs.dfm:3012
 msgid "Network"
-msgstr ""
+msgstr "Sieć"
 
 #. frmPrefs..PageControl1..tbsKeywords..Panel2..Label1....Align
 #: Prefs.dfm:3059
@@ -2654,7 +2661,7 @@ msgstr "Wprowadź ciąg znaków który chcesz odnaleźć w wiadomościach."
 #. frmPrefs..PageControl1..tbsKeywords..Panel2..chkRegex..Caption
 #: Prefs.dfm:3067
 msgid "Use Regular Expressions for Keyword matches"
-msgstr ""
+msgstr "Używa wyrażeń regularnych dla słów kluczowych"
 
 #. frmPrefs..PageControl1..tbsKeywords..pnlKeyword..Caption
 #: Prefs.dfm:3078
@@ -3056,7 +3063,7 @@ msgstr "Kod pocztowy:"
 #: vcard.dfm:667
 #: vcard.dfm:894
 msgid "United States  "
-msgstr ""
+msgstr "Stany Zjednoczone"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3866,7 +3873,7 @@ msgstr ""
 #: vcard.dfm:338
 #: vcard.dfm:743
 msgid "France  "
-msgstr ""
+msgstr "Francja"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3943,7 +3950,7 @@ msgstr ""
 #: vcard.dfm:345
 #: vcard.dfm:750
 msgid "Germany  "
-msgstr ""
+msgstr "Niemcy"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4218,7 +4225,7 @@ msgstr ""
 #: vcard.dfm:370
 #: vcard.dfm:775
 msgid "Italy  "
-msgstr ""
+msgstr "Włochy"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -5939,12 +5946,12 @@ msgstr "Zmień prawo głosu"
 #. frmRoom..popRoomRoster..popModerator..Caption
 #: Room.dfm:300
 msgid "Make Moderator"
-msgstr ""
+msgstr "Zrób moderatorem"
 
 #. frmRoom..popRoomRoster..popAdministrator..Caption
 #: Room.dfm:305
 msgid "Make Administrator"
-msgstr ""
+msgstr "Zrób administratorem"
 
 #. frmRoom..dlgSave..DefaultExt
 #: Room.dfm:311
@@ -6118,9 +6125,8 @@ msgstr "Wyślij niedostępność"
 
 #. frmRosterWindow..popRoster..popPresence..popSendSubscribe..Caption
 #: RosterWindow.dfm:362
-#, fuzzy
 msgid "Subscribe Again"
-msgstr "Zapisz"
+msgstr "Zapisz ponownie"
 
 #. frmRosterWindow..popRoster..popRename..Caption
 #: RosterWindow.dfm:367
@@ -6150,7 +6156,7 @@ msgstr "Niewidoczny"
 #. frmRosterWindow..popGroup..BroadcastMessage1..Caption
 #: RosterWindow.dfm:617
 msgid "Broadcast Message"
-msgstr ""
+msgstr "Wiadomość rozgłoszeniowa"
 
 #. frmRosterWindow..popGroup..SendContactsTo1..Caption
 #: RosterWindow.dfm:621
@@ -6853,7 +6859,7 @@ msgid "There was an error attempting to save your options. Another process may b
 msgstr ""
 
 #. otherwise, just join..
-#: JoinRoom.pas:202
+#: JoinRoom.pas:223
 #: invite.pas:192
 msgid "The Room Address you entered is invalid. It must be valid Jabber ID."
 msgstr "Nazwa pokoju którą podałeś jest nieprawidłowa. To musi być poprawny Jabber ID."
@@ -6981,14 +6987,18 @@ msgstr ""
 msgid "Branding error!"
 msgstr ""
 
+#: JoinRoom.pas:187
+msgid "- ALL SERVERS -"
+msgstr ""
+
 #. change tabs if they selected browse
 #. normal result
-#: JoinRoom.pas:194
+#: JoinRoom.pas:215
 #: RegForm.pas:415
 msgid "Finish"
 msgstr "Zakończ"
 
-#: JoinRoom.pas:213
+#: JoinRoom.pas:234
 msgid "You must enter a nickname"
 msgstr "Musisz podać pseudonim"
 
@@ -7085,7 +7095,7 @@ msgstr "Transfer plików"
 
 #: RecvStatus.pas:382
 msgid "Receive request timed out."
-msgstr ""
+msgstr "Przekroczono czas oczekiwania na odpowiedź."
 
 #: RecvStatus.pas:409
 msgid "No acceptable stream hosts were sent. Have the sender check their settings."
@@ -7106,7 +7116,7 @@ msgstr "Taki katalog nie istnieje. Utworzyć go?"
 #: RecvStatus.pas:455
 #: RecvStatus.pas:569
 msgid "There was an error trying to create the file."
-msgstr ""
+msgstr "Wystąpił błąd podczas tworzenia pliku."
 
 #. send SI accept
 #: RecvStatus.pas:512
@@ -7121,7 +7131,7 @@ msgstr "Otwórz"
 
 #: RecvStatus.pas:625
 msgid "There was an error receiving the file. (%d)"
-msgstr ""
+msgstr "Wystąpił błąd podczas odbierania pliku. (%d)"
 
 #. we ran out of streamhosts to try. bummer :(
 #: RecvStatus.pas:689
@@ -7161,11 +7171,11 @@ msgstr ""
 
 #: RegForm.pas:479
 msgid "There was an error trying to remove your registration."
-msgstr ""
+msgstr "Wystąpił błąd podczas próby usunięcia twojej rejestracji"
 
 #: RegForm.pas:483
 msgid "Your registration has been removed."
-msgstr ""
+msgstr "Twoja rejestracja została usunięta."
 
 #: RemoveContact.pas:79
 msgid "Remove this contact from the %s group."
@@ -7229,7 +7239,7 @@ msgstr "Pokój został zniszczony bez znanej przyczyny."
 #: Room.pas:788
 #: Room.pas:954
 msgid "%s is now known as %s."
-msgstr ""
+msgstr "%s nazywa się teraz %s."
 
 #: Room.pas:796
 #: Room.pas:952
@@ -7253,11 +7263,11 @@ msgstr "%s wszedł do pokoju."
 #. someone maybe changed my role
 #: Room.pas:853
 msgid "You have been granted voice."
-msgstr ""
+msgstr "Przyznano CI prawo zabierania głosu."
 
 #: Room.pas:855
 msgid "Your voice has been revoked."
-msgstr ""
+msgstr "Odebrano Ci prawo zabierania głosu."
 
 #: Room.pas:857
 msgid "%s has a new role of %s."
@@ -7425,7 +7435,7 @@ msgstr "Nowa nazwa grupy:"
 #. Block or Unblock this user
 #: RosterWindow.pas:2550
 msgid "Block %d contacts?"
-msgstr ""
+msgstr "Zablokować %d?"
 
 #. Block or Unblock this user
 #: RosterWindow.pas:2579
@@ -7496,12 +7506,12 @@ msgstr ""
 
 #: SSLWarn.pas:68
 msgid "Certificate fingerprint: "
-msgstr ""
+msgstr "Odcisk palca certyfikatu:"
 
 #. Delete the registration
 #: Transports.pas:66
 msgid "Remove Registration?"
-msgstr ""
+msgstr "Usunąć rejestrację?"
 
 #: Transports.pas:107
 #: Transports.pas:150
@@ -7548,17 +7558,17 @@ msgstr ""
 
 #: xdata.pas:239
 msgid "All required fields must be filled out"
-msgstr ""
+msgstr "Wszystkie wymagane pola muszą być wypełnione."
 
 #. Make sure the contact is online
 #: XferManager.pas:180
 msgid "The Contact must be online before you can send a file."
-msgstr ""
+msgstr "Kontakt musibyć dostępny aby można było mu wysłać mu plik."
 
 #: XferManager.pas:272
 #: XferManager.pas:339
 msgid "%s is sending you a file."
-msgstr ""
+msgstr "%s wysyła Ci plik."
 
 #. check to see if we should disconnect current xfers
 #: XferManager.pas:468
@@ -7583,7 +7593,7 @@ msgstr ""
 #. Programmer's name: VALUE
 #: version.rc:19
 msgid "Comments"
-msgstr ""
+msgstr "Komentarze"
 
 #. Programmer's name: VALUE
 #: version.rc:20
@@ -7688,7 +7698,7 @@ msgstr ""
 #. Programmer's name for it: SUREExpressionEmpty
 #: /src/exodus/jopl/Unicode.pas:829
 msgid "Expression is empty."
-msgstr ""
+msgstr "Wyrażenie jest puste."
 
 #. frmPrefAway..Caption
 #: prefs/PrefAway.dfm:4
@@ -7708,7 +7718,7 @@ msgstr ""
 #. frmPrefAway..Label4..Caption
 #: prefs/PrefAway.dfm:29
 msgid "Away Status:"
-msgstr ""
+msgstr "Opis dla nieobecności:"
 
 #. frmPrefAway..Label9..Caption
 #: prefs/PrefAway.dfm:36
@@ -7746,7 +7756,7 @@ msgstr "Połącz/Rozłącz"
 #. frmPrefAway..pnlHeader..Caption
 #: prefs/PrefAway.dfm:153
 msgid "Auto Away Options"
-msgstr ""
+msgstr "Opcje auto-zdala:"
 
 #. frmPrefDialogs..Caption
 #: prefs/PrefDialogs.dfm:4
@@ -8027,7 +8037,7 @@ msgstr ""
 #. frmPrefMsg..cboInviteOptions....Items.WideStrings
 #: prefs/PrefMsg.dfm:144
 msgid "Automatically join the room."
-msgstr ""
+msgstr "Automatycznie wejdź do pokoju."
 
 #. frmPrefMsg..chkBlockNonRoster..Caption
 #: prefs/PrefMsg.dfm:151
@@ -8270,12 +8280,6 @@ msgstr "Skonfiguruj pokój"
 #, fuzzy
 msgid "Plugin"
 msgstr "W&tyczki"
-
-#. frmPrefPlugins..lstPlugins......Caption
-#: prefs/PrefPlugins.dfm:89
-#, fuzzy
-msgid "Description"
-msgstr "Opis:"
 
 #. frmPrefPlugins..lstPlugins......Caption
 #: prefs/PrefPlugins.dfm:93
