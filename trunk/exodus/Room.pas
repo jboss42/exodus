@@ -678,8 +678,8 @@ begin
             member.JID := from;
             member.Nick := _jid.resource;
 
-            t := tag.GetFirstTag('created');
-            if (t <> nil) then begin
+            t := tag.GetFirstTag('status');
+            if ((t <> nil) and (t.getAttribute('code') = '201')) then begin
                 // we are the owner... config the room
                 _isMUC := true;
                 configRoom();
@@ -1530,7 +1530,7 @@ end;
 procedure TfrmRoom.popDestroyClick(Sender: TObject);
 var
     reason: WideString;
-    iq, d: TXMLTag;
+    iq, q, d: TXMLTag;
 begin
   inherited;
     // Destroy Room
@@ -1543,8 +1543,10 @@ begin
     iq.setAttribute('type', 'set');
     iq.setAttribute('id', MainSession.generateID());
     iq.setAttribute('to', jid);
-    d := iq.AddTag('destroy');
-    d.setAttribute('xmlns', XMLNS_MUCOWNER);
+    q := iq.AddTag('query');
+    q.setAttribute('xmlns', XMLNS_MUCOWNER);
+    d := q.AddTag('destroy');
+    // xxx: alt-jid goes onto <destroy jid="newroom@server">
     d.AddBasicTag('reason', reason);
     MainSession.SendTag(iq);
 end;

@@ -23,7 +23,7 @@ interface
 
 uses
     PrefController,
-    Agents, Chat, Presence, Roster,
+    JabberAuth, Agents, Chat, Presence, Roster,
     Signals, XMLStream, XMLTag, Unicode, 
     Contnrs, Classes, SysUtils, JabberID;
 
@@ -38,7 +38,6 @@ type
         _show: WideString;
         _status: WideString;
         _priority: integer;
-        _AuthType: TJabberAuthType;
         _invisible: boolean;
         _profile: TJabberProfile;
 
@@ -61,11 +60,9 @@ type
         _first_pres: boolean;
         _avails: TWidestringlist;
 
-        procedure StreamCallback(msg: string; tag: TXMLTag);
+        _auth_agent: TJabberAuth;
 
-        // auth stuff
-        procedure AuthGet;
-        procedure SendRegistration;
+        procedure StreamCallback(msg: string; tag: TXMLTag);
 
         function getMyAgents(): TAgents;
 
@@ -85,15 +82,11 @@ type
         function GetPort(): integer;
         function GetFullJid(): Widestring;
         function GetBareJid(): Widestring;
-
         function GetActive(): boolean;
+
     published
-        procedure AuthGetCallback(event: string; xml: TXMLTag);
-        procedure AuthCallback(event: string; tag: TXMLTag);
-        procedure RegistrationCallback(event: string; xml: TXMLTag);
-
-
         procedure DataEvent(send: boolean; data: Widestring);
+
     public
         ppdb: TJabberPPDB;
         roster: TJabberRoster;
@@ -109,6 +102,12 @@ type
         procedure CreateAccount;
         procedure Connect;
         procedure Disconnect;
+
+
+        // AuthAgent stuff
+        procedure setAuthAgent(new_auth: TJabberAuth);
+        procedure setAuthdJID(user, host, res: Widestring);
+        procedure setAuthenticated(ok: boolean; tag: TXMLTag);
 
         procedure setPresence(show, status: WideString; priority: integer);
 
@@ -153,6 +152,7 @@ type
         property Show: WideString read _show;
         property Status: WideString read _status;
         property Stream: TXMLStream read _stream;
+        property StreamID: Widestring read _stream_id;
         property Dispatcher: TSignalDispatcher read _dispatcher;
         property MyAgents: TAgents read getMyAgents;
         property IsPaused: boolean read _paused;
@@ -174,10 +174,6 @@ uses
     XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal,
     JabberConst, iq;
 
-var
-    _auth_iq: TJabberIQ;
-
-
 {---------------------------------------}
 Constructor TJabberSession.Create(ConfigFile: widestring);
 begin
@@ -188,7 +184,6 @@ begin
     _id := 1;
     _cb_id := 1;
     _profile := nil;
-    _auth_iq := nil;
 
     // Create the event dispatcher mechanism
     _dispatcher := TSignalDispatcher.Create;
@@ -360,7 +355,10 @@ end;
 procedure TJabberSession.CreateAccount;
 begin
     _register := true;
-    SendRegistration();
+    if (not _auth_agent.StartRegistration()) then begin
+        // xxx: throw some kind of error..
+        // this auth mechanism doesn't support registration
+    end;
 end;
 
 {---------------------------------------}
@@ -369,7 +367,9 @@ begin
     if (_profile = nil) then
         raise Exception.Create('Invalid profile')
     else if (_stream <> nil) then
-        raise Exception.Create('Session is already connected');
+        raise Exception.Create('Session is already connected')
+    else if (not Assigned(_auth_agent)) then
+        raise Exception.Create('No auth agent has been assigned');
 
     case _profile.ConnectionType of
     conn_normal:
@@ -379,7 +379,7 @@ begin
     else
         // don't I18N
         raise Exception.Create('Invalid connection type');
-end;
+    end;
 
     // Register our session to get XML Tags
     _stream.RegisterStreamCallback(Self.StreamCallback);
@@ -481,9 +481,9 @@ begin
             _dispatcher.DispatchSignal('/session/connected', nil);
 
             if _register then
-                SendRegistration()
+                CreateAccount()
             else
-                AuthGet();
+                _auth_agent.StartAuthentication();
 
         end
         else if (tag.Name = 'stream:error') then begin
@@ -642,148 +642,6 @@ begin
     _id := _id + 1;
 end;
 
-{---------------------------------------}
-procedure TJabberSession.AuthGet;
-begin
-    // find out the potential auth kinds for this user
-    if (_auth_iq <> nil) then _auth_iq.Free();
-
-    _auth_iq := TJabberIQ.Create(Self, generateID, AuthGetCallback, 180);
-    with _auth_iq do begin
-        Namespace := XMLNS_AUTH;
-        iqType := 'get';
-        with qTag do
-            AddBasicTag('username', Username);
-    end;
-    _auth_iq.Send;
-end;
-
-{---------------------------------------}
-procedure TJabberSession.SendRegistration;
-begin
-    // send an iq register
-    if (_auth_iq <> nil) then _auth_iq.Free();
-
-    _auth_iq := TJabberIQ.Create(Self, generateID, RegistrationCallback, 180);
-    with _auth_iq do begin
-        Namespace := XMLNS_REGISTER;
-        iqType := 'set';
-        with qTag do begin
-            AddBasicTag('username', Username);
-            AddBasicTag('password', Password);
-        end;
-    end;
-    _auth_iq.Send;
-end;
-
-{---------------------------------------}
-procedure TJabberSession.RegistrationCallback(event: string; xml: TXMLTag);
-begin
-    // callback from our registration request
-    _auth_iq := nil;
-    if ((xml = nil) or (xml.getAttribute('type') = 'error')) then begin
-        Disconnect();
-        _dispatcher.DispatchSignal('/session/regerror', xml);
-    end
-    else begin
-        // We got a good registration...
-        // Go do the entire Auth sequence now.
-        AuthGet();
-    end;
-end;
-
-{---------------------------------------}
-procedure TJabberSession.AuthGetCallback(event: string; xml: TXMLTag);
-var
-    etag, tok, seq, dig, qtag: TXMLTag;
-    authDigest, authHash, authToken, hashA, key: WideString;
-    i, authSeq: integer;
-begin
-    // auth get result or error
-    _auth_iq := nil;
-    if ((xml = nil) or (xml.getAttribute('type') = 'error')) then begin
-        if (xml <> nil) then begin
-            // check for non-existant account
-            etag := xml.GetFirstTag('error');
-            if ((etag <> nil) and
-                (etag.getAttribute('code') = '401'))then begin
-                _dispatcher.DispatchSignal('/session/noaccount', xml);
-                exit;
-            end;
-        end;
-
-        // otherwise, auth-error
-        _dispatcher.DispatchSignal('/session/autherror', xml);
-    end;
-
-    qtag := xml.GetFirstTag('query');
-    if qtag = nil then exit;
-
-    seq := qtag.GetFirstTag('sequence');
-    tok := qtag.GetFirstTag('token');
-    dig := qtag.GetFirstTag('digest');
-
-    // setup the iq-set
-    _auth_iq := TJabberIQ.Create(Self, generateID, AuthCallback, 180);
-    with _auth_iq do begin
-        Namespace := XMLNS_AUTH;
-        iqType := 'set';
-        qTag.AddBasicTag('username', Username);
-        qTag.AddBasicTag('resource', Resource);
-    end;
-
-    if seq <> nil then begin
-        if tok = nil then exit;
-        // Zero-k auth
-        _AuthType := jatZeroK;
-        authSeq := StrToInt(seq.data);
-        authToken := tok.Data;
-        hashA := Sha1Hash(Password);
-        key := Sha1Hash(Trim(hashA) + Trim(authToken));
-        for i := 1 to authSeq do
-            key := Sha1Hash(key);
-        authHash := key;
-        _auth_iq.qTag.AddBasicTag('hash', authHash);
-    end
-
-    else if dig <> nil then begin
-        // Digest (basic Sha1)
-        _AuthType := jatDigest;
-        authDigest := Sha1Hash(Trim(_stream_id + Password));
-        _auth_iq.qTag.AddBasicTag('digest', authDigest);
-    end
-
-    else begin
-        // Plaintext
-        _AuthType := jatPlainText;
-        _auth_iq.qTag.AddBasicTag('password', Password);
-    end;
-    _auth_iq.Send;
-end;
-
-{---------------------------------------}
-procedure TJabberSession.AuthCallback(event: string; tag: TXMLTag);
-var
-    cur_agents: TAgents;
-begin
-    // check the result of the authentication
-    _auth_iq := nil;
-    if ((tag = nil) or (tag.getAttribute('type') = 'error')) then begin
-        // timeout
-        _dispatcher.DispatchSignal('/session/autherror', tag);
-        Disconnect();
-    end
-    else begin
-        _first_pres := true;
-        _dispatcher.DispatchSignal('/session/authenticated', tag);
-        // Self.RegisterCallback(ChatList.MsgCallback, '/packet/message[@type="chat"]');
-        Self.RegisterCallback(ChatList.MsgCallback, '/packet/message');
-        cur_agents := TAgents.Create();
-        Agents.AddObject(Server, cur_agents);
-        cur_agents.Fetch(Server);
-        Prefs.FetchServerPrefs();
-    end;
-end;
 
 {---------------------------------------}
 procedure TJabberSession.ActivateProfile(i: integer);
@@ -980,10 +838,50 @@ begin
     block.Free();
 end;
 
+{---------------------------------------}
 function TJabberSession.GetActive(): boolean;
 begin
     Result := (_stream <> nil);
 end;
+
+{---------------------------------------}
+procedure TJabberSession.setAuthAgent(new_auth: TJabberAuth);
+begin
+    if (assigned(_auth_agent)) then
+        FreeAndNil(_auth_agent);
+
+    _auth_agent := new_auth;
+end;
+
+{---------------------------------------}
+procedure TJabberSession.setAuthdJID(user, host, res: Widestring);
+begin
+    _profile.Username := user;
+    _profile.Server := host;
+    _profile.Resource := res;
+end;
+
+procedure TJabberSession.setAuthenticated(ok: boolean; tag: TXMLTag);
+var
+    cur_agents: TAgents;
+begin
+    // our auth-agent is all set
+    if (ok) then begin
+        _first_pres := true;
+        _dispatcher.DispatchSignal('/session/authenticated', tag);
+        RegisterCallback(ChatList.MsgCallback, '/packet/message');
+        cur_agents := TAgents.Create();
+        Agents.AddObject(Server, cur_agents);
+        cur_agents.Fetch(Server);
+        Prefs.FetchServerPrefs();
+    end
+    else begin
+        _dispatcher.DispatchSignal('/session/autherror', tag);
+        Disconnect();
+    end;
+
+end;
+
 
 end.
 
