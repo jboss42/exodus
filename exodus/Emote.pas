@@ -44,6 +44,9 @@ type
 
         procedure Draw(canvas: TCanvas; r: TRect); virtual; abstract;
 
+        function Width: integer; virtual; abstract;
+        function Height: integer; virtual; abstract;
+
         property RTF: string read GetRTF;
         property Bitmap: Graphics.TBitmap read GetBitmap;
         property Filename: Widestring read _file;
@@ -61,6 +64,8 @@ type
         constructor Create(filename: string); overload;
         constructor Create(resHandle: cardinal; resFile: WideString; resType: string; fileName: WideString); overload;
         procedure Draw(canvas: TCanvas; r: TRect); override;
+        function Width: integer; override;
+        function Height: integer; override;
     end;
 
     {---------------------------------------}
@@ -74,6 +79,8 @@ type
         constructor Create(filename: string); overload;
         constructor Create(resHandle: cardinal; resFile: Widestring; resType: string; filename: Widestring); overload;
         procedure Draw(canvas: TCanvas; r: TRect); override;
+        function Width: integer; override;
+        function Height: integer; override;
     end;
 
     {---------------------------------------}
@@ -115,6 +122,7 @@ procedure InitializeEmoticonLists();
 procedure ProcessRTFEmoticons(RichEdit: TExRichEdit; color: TColor; txt: Widestring);
 function ProcessIEEmoticons(txt: Widestring): WideString;
 function BitmapToRTF(pict: Graphics.TBitmap): string;
+function EmoteToRTF(e: TEmoticon): string;
 
 var
     EmoticonList   : TEmoticonList;
@@ -184,7 +192,7 @@ begin
         result := _rtf;
         exit;
     end;
-    _rtf := BitmapToRTF(getBitmap());
+    _rtf := EmoteToRTF(self);
     result := _rtf;
 end;
 
@@ -212,6 +220,18 @@ begin
     cr.Right := cr.Left + _gif.Width;
     cr.Bottom := cr.Top + _gif.Height;
     _gif.Paint(canvas, cr, [goTransparent, goDirectDraw]);
+end;
+
+{---------------------------------------}
+function TGifEmoticon.Width: integer;
+begin
+    Result := _gif.Width;
+end;
+
+{---------------------------------------}
+function TGifEmoticon.Height: integer;
+begin
+    Result := _gif.Height;
 end;
 
 {---------------------------------------}
@@ -249,7 +269,7 @@ begin
         result := _rtf;
         exit;
     end;
-    _rtf := BitmapToRTF(_bmp);
+    _rtf := EmoteToRTF(Self);
     result := _rtf;
 end;
 
@@ -271,6 +291,52 @@ begin
 end;
 
 {---------------------------------------}
+function TBMPEmoticon.Width: integer;
+begin
+    Result := _bmp.Width;
+end;
+
+{---------------------------------------}
+function TBMPEmoticon.Height: integer;
+begin
+    Result := _bmp.Height;
+end;
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+function EmoteToRTF(e: TEmoticon): string;
+var
+    r: TRect;
+    tbmp: Graphics.TBitmap;
+begin
+    // transparent fu.. The idea here, is that we create a temp bitmap which
+    // is the same size, and we first draw the bg color onto it,
+    // THEN draw the pict bitmap over the top. When we draw pict, if it's
+    // transparent property is set to true, the only pixels that are affected
+    // on tbmp are those that are not the same color as the transparent color.
+    tbmp := Graphics.TBitmap.Create();
+    tbmp.Width := e.Width;
+    tbmp.Height := e.Height;
+    with tbmp.Canvas do begin
+        Pen.Width := 0;
+        Brush.Style := bsSolid;
+        Brush.Color := TColor(MainSession.Prefs.getInt('color_bg'));
+        Pen.Color := Brush.Color;
+        Rectangle(0, 0, tbmp.Width, tbmp.Height);
+    end;
+
+    r.Top := 0;
+    r.Left := 0;
+    r.Right := tbmp.Width;
+    r.Bottom := tbmp.Height;
+    e.Draw(tbmp.Canvas, r);
+    Result := BitmapToRTF(tbmp);
+    tbmp.Free();
+end;
+
+
+{---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 function BitmapToRTF(pict: Graphics.TBitmap): string;
@@ -280,31 +346,11 @@ var
     achar: ShortString;
     hexpict: string;
     i: Integer;
-
-    tbmp: Graphics.TBitmap;
 begin
-
-    // transparent fu.. The idea here, is that we create a temp bitmap which
-    // is the same size, and we first draw the bg color onto it,
-    // THEN draw the pict bitmap over the top. When we draw pict, if it's
-    // transparent property is set to true, the only pixels that are affected
-    // on tbmp are those that are not the same color as the transparent color.
-    tbmp := Graphics.TBitmap.Create();
-    tbmp.Width := pict.Width;
-    tbmp.Height := pict.Height;
-    with tbmp.Canvas do begin
-        Pen.Width := 0;
-        Brush.Style := bsSolid;
-        Brush.Color := TColor(MainSession.Prefs.getInt('color_bg'));
-        Pen.Color := Brush.Color;
-        Rectangle(0, 0, tbmp.Width, tbmp.Height);
-        Draw(0, 0, pict);
-    end;
-
-    GetDIBSizes(tbmp.Handle, bis, bbs);
+    GetDIBSizes(pict.Handle, bis, bbs);
     SetLength(bi,bis);
     SetLength(bb,bbs);
-    GetDIB(tbmp.Handle, tbmp.Palette, PChar(bi)^, PChar(bb)^);
+    GetDIB(pict.Handle, pict.Palette, PChar(bi)^, PChar(bb)^);
     rtf := '{\rtf1 {\pict\dibitmap ';
     SetLength(hexpict,(Length(bb) + Length(bi)) * 2);
     i := 2;
@@ -326,9 +372,6 @@ begin
     end;
     rtf := rtf + hexpict + ' }}';
     Result := rtf;
-
-    // Free the temp bmp we used.
-    tbmp.Free();
 end;
 
 {---------------------------------------}
