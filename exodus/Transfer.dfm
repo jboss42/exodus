@@ -33,7 +33,7 @@ object frmTransfer: TfrmTransfer
       Caption = 'From:     '
       Color = clBtnFace
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clHighlightText
+      Font.Color = clWindowText
       Font.Height = -13
       Font.Name = 'MS Sans Serif'
       Font.Style = [fsBold]
@@ -50,7 +50,7 @@ object frmTransfer: TfrmTransfer
       Caption = '<JID>'
       Color = clBtnFace
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clHighlightText
+      Font.Color = clWindowText
       Font.Height = -13
       Font.Name = 'MS Sans Serif'
       Font.Style = []
@@ -63,7 +63,7 @@ object frmTransfer: TfrmTransfer
     Left = 0
     Top = 22
     Width = 259
-    Height = 92
+    Height = 97
     Align = alClient
     ReadOnly = True
     TabOrder = 1
@@ -71,7 +71,7 @@ object frmTransfer: TfrmTransfer
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 139
+    Top = 144
     Width = 259
     Height = 34
     Align = alBottom
@@ -94,7 +94,7 @@ object frmTransfer: TfrmTransfer
   end
   object pnlProgress: TPanel
     Left = 0
-    Top = 114
+    Top = 119
     Width = 259
     Height = 25
     Align = alBottom

@@ -3,8 +3,8 @@ inherited frmChat: TfrmChat
   Top = 362
   Caption = 'Chat Window'
   OldCreateOrder = True
-  OnActivate = FormActivate
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
