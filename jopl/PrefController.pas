@@ -70,7 +70,6 @@ const
     P_AUTOUPDATE = 'auto_updates';
     P_CHAT = 'roster_chat';
     P_SUB_AUTO = 's10n_auto_accept';
-    P_LOG = 'log';
 
     P_FONT_NAME = 'font_name';
     P_FONT_SIZE = 'font_size';
@@ -136,7 +135,7 @@ type
         property password: Widestring read getPassword write setPassword;
     end;
 
-    TPrefKind = (pkClient, pkServer, pkBrand);
+    TPrefKind = (pkClient, pkServer, pkBrand, pkDefault);
 
     TPrefController = class
     private
@@ -145,6 +144,7 @@ type
         _brand_filename: Widestring;
         _pref_node: TXMLTag;
         _brand_node: TXMLTag;
+        _default_node: TXmlTag;
         _server_node: TXMLTag;
         _profiles: TStringList;
         _parser: TXMLTagParser;
@@ -345,6 +345,9 @@ end;
 
 {---------------------------------------}
 constructor TPrefController.Create(filename: Widestring; BrandingFile: Widestring);
+var
+    res: TResourceStream;
+    sl: TStringList;
 begin
     inherited Create();
 
@@ -361,6 +364,20 @@ begin
         // create some default node
         _pref_node := TXMLTag.Create('exodus');
 
+    // WTF is HInstance?
+    res := TResourceStream.Create(HInstance, 'defaults', 'XML');
+    sl := TStringList.Create();
+    sl.LoadFromStream(res);
+    res.Free();
+    _parser.ParseString(sl.Text, '');
+    sl.Free();
+    if (_parser.Count > 0) then begin
+        _default_node := _parser.popTag();
+        _parser.Clear();
+        end
+    else
+        _default_node := TXmlTag.Create('brand');
+        
     _parser.ParseFile(_brand_filename);
     if (_parser.Count > 0) then begin
         // we have something to read.. hopefully it's correct :)
@@ -387,6 +404,8 @@ begin
         _pref_node.Free();
     if (_brand_node <> nil) then
         _brand_node.Free();
+    if (_default_node <> nil) then
+        _default_node.Free();
     if (_server_node <> nil) then
         _server_node.Free();
     _parser.Free();
@@ -418,63 +437,19 @@ begin
     if (result <> '') then
         exit;
 
+    result := getString(pkey, pkDefault);
+    if (result <> '') then
+        exit;
+        
     // set the defaults for the pref controller
-    if pkey = 'brand_caption' then
-        result := 'Exodus'
-    else if pkey = P_EXPANDED then
-        result := '0'
-    else if pkey = P_SHOWONLINE then
-        result := '0'
-    else if pkey = P_SHOWUNSUB then
-        result := '0'
-    else if pkey = P_OFFLINEGROUP then
-        result := '0'
-    else if pkey = P_TIMESTAMP then
-        result := '1'
-    else if pkey = P_AUTOUPDATE then
-        result := '1'
-    else if pkey = P_CHAT then
-        result := '1'
-    else if pkey = P_SUB_AUTO then
-        result := '0'
-    else if pkey = P_FONT_NAME then
-        result := 'Arial'
-    else if pkey = P_FONT_SIZE then
-        result := '10'
-    else if pkey = P_FONT_COLOR then
+    if pkey = P_FONT_COLOR then
         result := IntToStr(Integer(clBlack))
-    else if pkey = P_FONT_BOLD then
-        result := '0'
-    else if pkey = P_FONT_ITALIC then
-        result := '0'
-    else if pkey = P_FONT_ULINE then
-        result := '0'
     else if pkey = P_COLOR_BG then
         result := IntToStr(Integer(clWhite))
     else if pkey = P_COLOR_ME then
         result := IntToStr(Integer(clBlue))
     else if pkey = P_COLOR_OTHER then
         result := IntToStr(Integer(clRed))
-    else if pkey = P_EVENT_WIDTH then
-        result := '315'
-    else if pkey = 'edge_snap' then
-        result := '15'
-    else if pkey = 'snap_on' then
-        result := '1'
-    else if pkey = 'fade_limit' then
-        result := '100'
-    else if pkey = 'toolbar' then
-        result := '1'
-    else if pkey = 'autologin' then
-        result := '0'
-    else if pkey = 'profile_active' then
-        result := '0'
-    else if pkey = 'auto_away' then
-        result := '1'
-    else if pkey = 'away_time' then
-        result := '5'
-    else if pkey = 'xa_time' then
-        result := '30'
     else if pkey = 'away_status' then
         result := sIdleAway
     else if pkey = 'xa_status' then
@@ -508,44 +483,7 @@ begin
         result := IntToStr(Integer(Application.Font.Color))
     {$endif}
 
-    else if pkey = 'emoticons' then
-        result := '1'
-    else if pkey = 'timestamp_format' then
-        result := 'H:MM AM/PM'
-    else if pkey = 'notify_online' then
-        result := IntToStr(notify_toast)
-    else if pkey = 'notify_normalmsg' then
-        result := IntToStr(notify_toast)
-    else if pkey = 'notify_newchat' then
-        result := IntToStr(notify_toast)
-    else if pkey = 'notify_chatactivity' then
-        result := IntToStr(notify_flash)
-    else if pkey = 'notify_s10n' then
-        result := IntToStr(notify_toast)
-    else if pkey = 'notify_keyword' then
-        result := IntToStr(notify_toast)
-    else if pkey = 'notify_invite' then
-        result := IntToStr(notify_toast)
-    else if pkey = 'notify_roomactivity' then
-        result := IntToStr(notify_toast)
-    else if pkey = 'notify_oob' then
-        result := IntToStr(notify_toast)
-    else if pkey = 'presence_message_listen' then
-        result := '1'
-    else if pkey = 'presence_message_send' then
-        result := '1'
-    else if pkey = 'notify_sounds' then
-        result := '1'
-    else if pkey = 'roster_show_pending' then
-        result := '1'
-    else if pkey = 'auto_update_url' then
-        result := 'http://exodus.jabberstudio.org/exodus-released.exe'
-    else if pkey = 'roster_messenger' then
-        result := '1'
-    else if pkey = 'single_instance' then
-        result := '1'
-    else if pkey = 'roster_transport_grp' then
-        result := 'Transports'
+    
     else
         result := '';
 end;
@@ -559,13 +497,14 @@ begin
 
     // find string value
     case server_side of
-        pkClient: t := _pref_node.GetFirstTag(pkey);
-        pkServer: t := _server_node.GetFirstTag(pkey);
-        pkBrand:  t := _brand_node.GetFirstTag(pkey);
+        pkClient:  t := _pref_node.GetFirstTag(pkey);
+        pkServer:  t := _server_node.GetFirstTag(pkey);
+        pkBrand:   t := _brand_node.GetFirstTag(pkey);
+        pkDefault: t := _default_node.GetFirstTag(pkey);
     end;
 
     if (t = nil) then begin
-        if (server_side = pkBrand) then
+        if (server_side in [pkBrand, pkDefault]) then
             Result := ''
         else
             Result := getDefault(pkey);
@@ -599,9 +538,10 @@ begin
     p := nil;
 
     case server_side of
-        pkClient: p := _pref_node.GetFirstTag(pkey);
-        pkServer: p := _server_node.GetFirstTag(pkey);
-        pkBrand:  p := _brand_node.GetFirstTag(pkey);
+        pkClient:   p := _pref_node.GetFirstTag(pkey);
+        pkServer:   p := _server_node.GetFirstTag(pkey);
+        pkBrand:    p := _brand_node.GetFirstTag(pkey);
+        pkDefault:  p := _default_node.GetFirstTag(pkey);
     end;
 
     if (p <> nil) then begin

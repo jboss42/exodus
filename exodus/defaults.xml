@@ -1,0 +1,94 @@
+<brand>
+    <brand_profile_server_list>
+        <s>jabber.org</s>
+        <s>jabber.com</s>
+    </brand_profile_server_list>
+    <brand_profile_resource_list>
+        <s>Home</s>
+        <s>Work</s>
+        <s>Exodus</s>
+    </brand_profile_resource_list>
+    
+    <brand_profile_username></brand_profile_username>
+    <brand_profile_password></brand_profile_password>
+    <brand_profile_server>jabber.org</brand_profile_server>
+    <brand_profile_resource>Exodus</brand_profile_resource>
+    <brand_profile_priority>1</brand_profile_priority>
+    <brand_profile_save_password></brand_profile_save_password>
+    <brand_profile_conn_type>0</brand_profile_conn_type>
+
+    <brand_profile_host></brand_profile_host>
+    <brand_profile_port>5222</brand_profile_port>
+    <brand_profile_ssl>false</brand_profile_ssl>
+    <brand_profile_socks_type>0</brand_profile_socks_type>
+    <brand_profile_socks_host></brand_profile_socks_host>
+    <brand_profile_socks_port>1</brand_profile_socks_port>
+    <brand_profile_socks_auth>false</brand_profile_socks_auth>
+    <brand_profile_socks_user></brand_profile_socks_user>
+    <brand_profile_socks_password></brand_profile_socks_password>
+
+    <brand_profile_http_url></brand_profile_http_url>
+    <brand_profile_http_poll>1000</brand_profile_http_poll>
+    <brand_profile_num_poll_keys>256</brand_profile_num_poll_keys>
+    <brand_profile_http_proxy_approach>0</brand_profile_http_proxy_approach>
+    <brand_profile_http_proxy_host></brand_profile_http_proxy_host>
+    <brand_profile_http_proxy_port>0</brand_profile_http_proxy_port>
+    <brand_profile_http_proxy_auth>false</brand_profile_http_proxy_auth>
+    <brand_profile_http_proxy_user></brand_profile_http_proxy_user>
+    <brand_profile_http_proxy_password></brand_profile_http_proxy_password>
+
+    <brand_icon></brand_icon>
+    <brand_ad></brand_ad>
+    <brand_ad_url></brand_ad_url>
+
+    <brand_caption>Exodus</brand_caption>
+    <edge_snap>15</edge_snap>
+    <snap_on>1</snap_on>
+    <fade_limit>100</fade_limit>
+    <toolbar>1</toolbar>
+    <autologin>0</autologin>
+    <profile_active>0</profile_active>
+    <auto_away>1</auto_away>
+    <away_time>5</away_time>
+    <xa_time>30</xa_time>
+    <presence_message_listen>1</presence_message_listen>
+    <presence_message_send>1</presence_message_send>
+    <notify_sounds>1</notify_sounds>
+    <roster_show_pending>1</roster_show_pending>
+    <auto_update_url>http://exodus.jabberstudio.org/exodus-released.exe</auto_update_url>
+    <roster_messenger>1</roster_messenger>
+    <single_instance>1</single_instance>
+    <roster_transport_grp>Transports</roster_transport_grp>
+    <emoticons>1</emoticons>
+    <timestamp_format>H:MM AM/PM</timestamp_format>
+    <notify_online>1</notify_online>
+    <notify_normalmsg>1</notify_normalmsg>
+    <notify_newchat>1</notify_newchat>
+    <notify_chatactivity>4</notify_chatactivity>
+    <notify_s10n>1</notify_s10n>
+    <notify_keyword>1</notify_keyword>
+    <notify_invite>1</notify_invite>
+    <notify_roomactivity>1</notify_roomactivity>
+    <notify_oob>1</notify_oob>
+
+    <expanded>0</expanded>
+    <roster_only_online>0</roster_only_online>
+    <roster_show_unsub>0</roster_show_unsub>
+    <roster_offline_group>0</roster_offline_group>
+    <timestamp>1</timestamp>
+    <auto_updates>1</auto_updates>
+    <roster_chat>1</roster_chat>
+    <s10n_auto_accept>0</s10n_auto_accept>
+    <!--<log></log>-->
+    <font_name>Arial</font_name>
+    <font_size>10</font_size>
+    <!--<font_color></font_color>-->
+    <font_bold>0</font_bold>
+    <font_italic>0</font_italic>
+    <font_underline>0</font_underline>
+    <!--<color_bg></color_bg>
+    <color_me></color_me>
+    <color_other></color_other>-->
+    <event_width>315</event_width>
+    <debug>0</debug>
+</brand>
