@@ -643,9 +643,18 @@ begin
         // some kind of roster fetch error
         etag := tag.GetFirstTag('error');
         if (etag <> nil) then begin
-            if (etag.GetAttribute('code') = '404') then
+            if (etag.GetAttribute('code') = '404') then begin
                 Self.Fetch();
+                exit;
+            end;
         end;
+
+        // this will happen if people are not using
+        // mod_roster, but using mod_groups or something
+        // similar
+        s.FireEvent('/roster/start', nil);
+        s.FireEvent('/roster/end', nil);
+        exit;
     end
 
     else begin
