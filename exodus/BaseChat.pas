@@ -173,41 +173,9 @@ end;
 
 {---------------------------------------}
 procedure TfrmBaseChat.MsgOutKeyPress(Sender: TObject; var Key: Char);
-var
-    cur_buff: string;
-    e, i: integer;
-    start: boolean;
 begin
     if ( Key = #27 ) then
-        Close()
-    else if ((Key = #127) and
-             ((GetKeyState(VK_CONTROL) and (1 shl 16)) = (1 shl 16))) then begin
-        Key := #0;
-        // delete the last word.
-        // JJH: yes, this is at least slight overkill, but it was bothering me.
-        cur_buff := MsgOut.Lines.Text;
-        e := MsgOut.SelStart;
-        i := e;
-        start := true;
-        while (i > 0) do begin
-            if (start) then begin
-                if (cur_buff[i] <> ' ') then begin
-                    start := false;
-                    dec(i);
-                end;
-            end
-            else if (cur_buff[i] = ' ') then
-                break;
-
-            dec(i);
-        end;
-
-        if (i >= 0) then with MsgOut do begin
-            SelStart := i;
-            SelLength := (e - i);
-            SelText := '';
-        end;
-    end;
+        Close();
 
     if (key <> #0) then
         inherited;
