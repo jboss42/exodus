@@ -67,6 +67,8 @@ type
     popAddContact: TMenuItem;
     popAddGroup: TMenuItem;
     imgStatus: TPaintBox;
+    N2: TMenuItem;
+    popSendInvisible: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -1189,9 +1191,13 @@ begin
         ri := TJabberRosterItem(node.Data);
         p := TJabberPres.Create();
         p.toJID := TJabberID.Create(ri.jid.full);
-        p.Show := MainSession.Show;
-        p.Status := MainSession.Status;
-        p.Priority := MainSession.Priority;
+        if (Sender = popSendInvisible) then
+            p.PresType := 'invisible'
+        else begin
+            p.Show := MainSession.Show;
+            p.Status := MainSession.Status;
+            p.Priority := MainSession.Priority;
+            end;
         MainSession.SendTag(p);
         end;
 end;
