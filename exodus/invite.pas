@@ -63,6 +63,7 @@ var
 resourcestring
     sConfRoom = 'Conference Room:';
 
+procedure showConfInvite(tag: TXMLTag);
 procedure showRecvInvite(tag: TXMLTag);
 procedure ShowInvite(room_jid: WideString; items: TList); overload;
 procedure ShowInvite(room_jid: WideString; jids: TWideStringList); overload;
@@ -72,11 +73,18 @@ procedure ShowInvite(room_jid: WideString; jids: TWideStringList); overload;
 {---------------------------------------}
 implementation
 uses
-    JabberConst, 
-    ExEvents, Jabber1, JabberID, PrefController, 
+    JabberConst,
+    ExEvents, Jabber1, JabberID, PrefController,
     Session, Room, RosterWindow, Roster;
 
 {$R *.dfm}
+
+procedure showConfInvite(tag: TXMLTag);
+begin
+    // if this also has a muc-invite, then just bail.
+    if (tag.QueryXPTag('/message/x[@xmlns="' + XMLNS_MUCUSER + '"]/invite') = nil) then
+        showRecvInvite(tag);
+end;
 
 {---------------------------------------}
 procedure showRecvInvite(tag: TXMLTag);
@@ -85,7 +93,6 @@ var
 begin
     // factory for GUI
     // kick and ban get here.. because of status codes
-
     e := CreateJabberEvent(tag);
 
     if (MainSession.prefs.getInt('invite_treatment') = invite_accept) then begin

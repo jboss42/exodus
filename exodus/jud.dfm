@@ -28,7 +28,7 @@ inherited frmJUD: TfrmJUD
       Left = 0
       Top = 70
       Width = 217
-      Height = 26
+      Height = 13
       Align = alTop
       Caption = 'Fill in the search criteria to find contacts on.'
       Visible = False
@@ -104,16 +104,16 @@ inherited frmJUD: TfrmJUD
     end
     object pnlFields: TPanel
       Left = 0
-      Top = 250
+      Top = 237
       Width = 217
-      Height = 47
+      Height = 60
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
     end
     object aniWait: TAnimate
       Left = 0
-      Top = 96
+      Top = 83
       Width = 217
       Height = 50
       Align = alTop
@@ -124,7 +124,7 @@ inherited frmJUD: TfrmJUD
     end
     object pnlResults: TPanel
       Left = 0
-      Top = 146
+      Top = 133
       Width = 217
       Height = 104
       Align = alTop

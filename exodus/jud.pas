@@ -325,12 +325,13 @@ begin
         exit;
         end
     else if ((tag <> nil) and (tag.GetAttribute('type') = 'error')) then begin
+        // we got an iq-error back
         MessageDlg(sJUDErrorContacting, mtError, [mbOK], 0);
         Self.Reset();
         exit;
         end
     else if (tag <> nil) then begin
-        // tag
+        // *whoop*, we got a result tag
         lblInstructions.Visible := true;
         cur_frame := nil;
         field_set.Clear();
