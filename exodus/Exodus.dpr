@@ -90,7 +90,8 @@ uses
   Password in 'Password.pas' {frmPassword},
   XMLSocketStream in '..\jopl\XMLSocketStream.pas',
   RosterRecv in 'RosterRecv.pas' {frmRosterRecv},
-  RosterSend in 'RosterSend.pas' {frmRosterSend};
+  fRosterTree in 'fRosterTree.pas' {frameTreeRoster: TFrame},
+  SelContact in 'SelContact.pas' {frmSelContact};
 
 {$R *.RES}
 

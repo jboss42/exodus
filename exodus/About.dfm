@@ -1442,8 +1442,11 @@ object frmAbout: TfrmAbout
       
         'Exodus is the creation of Peter Millard  (mailto:me@pgmillard.co' +
         'm). '
+      
+        'Checkout the website at http://exodus.sf.net for more informatio' +
+        'n.'
       'It is currently licensed under the GNU Public License (GPL) see '
-      'www.gnu.org for more  nformation on the GPL.')
+      'www.gnu.org for more information on the GPL.')
     TabOrder = 3
     OnURLClick = InfoBoxURLClick
   end

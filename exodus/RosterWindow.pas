@@ -81,6 +81,7 @@ type
     N4: TMenuItem;
     NewGroup1: TMenuItem;
     InvitetoConference1: TMenuItem;
+    SendContactsTo1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -177,17 +178,10 @@ type
 var
   frmRosterWindow: TfrmRosterWindow;
 
-const
-    node_none = 0;
-    node_ritem = 1;
-    node_bm = 2;
-    node_grp = 3;
-
-
 implementation
 uses
-    RosterSend, 
-    Invite, 
+    SelContact,
+    Invite,
     Bookmark,
     S10n,
     Transfer,
@@ -587,6 +581,7 @@ var
     node_list: TList;
     i: integer;
 begin
+    // Remove the nodes for this item..
     node_list := TList(ritem.Data);
     if node_list <> nil then begin
         for i := node_list.count - 1 downto 0 do begin
@@ -1575,28 +1570,64 @@ end;
 procedure TfrmRosterWindow.popGrpInviteClick(Sender: TObject);
 var
     i: integer;
-    r, g: TTreeNode;
+    sel: TList;
     jids: TStringlist;
 begin
     // Invite the whole group to the conference.
-    g := treeRoster.Selected;
+    sel := Self.getSelectedContacts(true);
     jids := TStringlist.Create();
-    for i := 0 to g.Count - 1 do begin
-        r := g.Item[i];
-        if ((r.Data <> nil) and (TObject(r.Data) is TJabberRosterItem)) then
-            jids.Add(TJabberRosterItem(r.Data).jid.jid);
-        end;
+    for i := 0 to sel.Count - 1 do
+        jids.Add(TJabberRosterItem(sel[i]).jid.full);
 
     ShowInvite('', jids);
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popSendContactsClick(Sender: TObject);
+var
+    fsel: TfrmSelContact;
+    x, item, msg: TXMLTag;
+    s, i: integer;
+    ri: TJabberRosterItem;
+    sel: TList;
 begin
     // Send contacts to this JID..
-    if (_cur_ritem = nil) then exit;
+    sel := getSelectedContacts(false);
+    if (sel.Count = 0) then begin
+        MessageDlg('You must select the contacts you wish to send.', mtError,
+            [mbOK], 0);
+        sel.Free();
+        exit;
+        end;
 
-    SendRoster(_cur_ritem.jid.jid);
+    fsel := TfrmSelContact.Create(nil);
+    fsel.frameTreeRoster1.DrawRoster(false);
+    fsel.frameTreeRoster1.treeRoster.MultiSelect := false;
+
+    if (fsel.ShowModal = mrOK) then begin
+        // do the send
+
+        msg := TXMLTag.Create('message');
+        msg.PutAttribute('id', MainSession.generateID());
+        msg.PutAttribute('to', fsel.GetSelectedJID());
+
+        s := treeRoster.SelectionCount;
+
+        msg.AddBasicTag('body', 'This message contains ' + IntToStr(s) + ' roster items.');
+        x := msg.AddTag('x');
+        x.PutAttribute('xmlns', XMLNS_XROSTER);
+        for i := 0 to sel.Count - 1 do begin
+            ri := TJabberRosterItem(sel[i]);
+            item := x.AddTag('item');
+            item.PutAttribute('jid', ri.jid.full);
+            item.PutAttribute('name', ri.nickname);
+            end;
+
+        MainSession.SendTag(msg);
+        end;
+
+    sel.Free();
+    fSel.Free();
 end;
 
 end.

@@ -315,7 +315,7 @@ type
 
   public
     // other stuff..
-    last_tick: longword;
+    last_tick: dword;
     function getTabForm(tab: TTabSheet): TForm;
     function IsAutoAway(): boolean;
     function IsAutoXA(): boolean;

@@ -579,29 +579,78 @@ end;
 
 {---------------------------------------}
 procedure TfrmPrefs.TabSelect(Sender: TObject);
+var
+    // img: TImage;
+    lbl: TLabel;
+    i: integer;
+    c: TControl;
 begin
-    if ((Sender = imgRoster) or (Sender = lblRoster)) then
+    lbl := nil;
+    if ((Sender = imgRoster) or (Sender = lblRoster)) then begin
         PageControl1.ActivePage := tbsRoster;
-    if ((Sender = imgS10n) or (Sender = lblS10n)) then
+        // img := imgRoster;
+        lbl := lblRoster;
+        end;
+    if ((Sender = imgS10n) or (Sender = lblS10n)) then begin
         PageControl1.ActivePage := tbsSubscriptions;
-    if ((Sender = imgFonts) or (Sender = lblFonts)) then
+        // img := imgS10n;
+        lbl := lblS10n;
+        end;
+    if ((Sender = imgFonts) or (Sender = lblFonts)) then begin
         PageControl1.ActivePage := tbsFonts;
-    if ((Sender = imgSystem) or (Sender = lblSystem)) then
+        // img := imgFonts;
+        lbl := lblFonts;
+        end;
+    if ((Sender = imgSystem) or (Sender = lblSystem)) then begin
         PageControl1.ActivePage := tbsSystem;
-    if ((Sender = imgDialog) or (Sender = lblDialog)) then
+        // img := imgSystem;
+        lbl := lblSystem;
+        end;
+    if ((Sender = imgDialog) or (Sender = lblDialog)) then begin
         PageControl1.ActivePage := tbsDialog;
-    if ((Sender = imgNotify) or (Sender = lblNotify)) then
+        // img := imgDialog;
+        lbl := lblDialog;
+        end;
+    if ((Sender = imgNotify) or (Sender = lblNotify)) then begin
         PageControl1.ActivePage := tbsNotify;
-    if ((Sender = imgAway) or (Sender = lblAway)) then
+        // img := imgNotify;
+        lbl := lblNotify;
+        end;
+    if ((Sender = imgAway) or (Sender = lblAway)) then begin
         PageControl1.ActivePage := tbsAway;
-    if ((Sender = imgKeywords) or (Sender = lblKeywords)) then
+        // img := imgAway;
+        lbl := lblAway;
+        end;
+    if ((Sender = imgKeywords) or (Sender = lblKeywords)) then begin
         PageControl1.ActivePage := tbsKeywords;
-    if ((Sender = imgBlockList) or (Sender = lblBlockList)) then
+        // img := imgKeywords;
+        lbl := lblKeywords;
+        end;
+    if ((Sender = imgBlockList) or (Sender = lblBlockList)) then begin
         PageControl1.ActivePage := tbsBlockList;
-    if ((Sender = imgCustompres) or (Sender = lblCustomPres)) then
+        // img := imgBlocklist;
+        lbl := lblBlocklist;
+        end;
+    if ((Sender = imgCustompres) or (Sender = lblCustomPres)) then begin
         PageControl1.ActivePage := tbsCustomPres;
-    if ((Sender = imgMessages) or (Sender = lblMessages)) then
+        // img := imgCustompres;
+        lbl := lblCustompres;
+        end;
+    if ((Sender = imgMessages) or (Sender = lblMessages)) then begin
         PageControl1.ActivePage := tbsMessages;
+        // img := imgMessages;
+        lbl := lblMessages;
+        end;
+
+    for i := 0 to ScrollBox1.ControlCount - 1 do begin
+        c := ScrollBox1.Controls[i];
+        if (c is TLabel) then begin
+            if (c = lbl) then
+                TLabel(c).Color := clHighlight
+            else
+                TLabel(c).Color := clWindow;
+            end;
+        end;
 end;
 
 {---------------------------------------}

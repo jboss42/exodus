@@ -31,6 +31,12 @@ const
     cWIN_ME = 5;
     cWIN_XP = 6;
 
+const
+    node_none = 0;
+    node_ritem = 1;
+    node_bm = 2;
+    node_grp = 3;
+
 type
     PLASTINPUTINFO = ^LASTINPUTINFO;
     tagLASTINPUTINFO = record
