@@ -11,23 +11,23 @@ unit AIMImport_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.8 $
-// File generated on 2/9/2003 2:35:35 PM from Type Library described below.
+// PASTLWTR : 1.2
+// File generated on 2/12/2003 7:30:28 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\AIM-Import\AIMImport.tlb (1)
 // LIBID: {1DC7B769-E8C0-42B0-BD6A-A89E9000854F}
 // LCID: 0
 // Helpfile: 
+// HelpString: AIMImport Library
 // DepndLst: 
-//   (1) v1.0 ExodusCOM, (D:\src\exodus\runner\exodus.exe)
+//   (1) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
 //   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
-//   (3) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
 {$WRITEABLECONST ON}
-
+{$VARPROPSETTER ON}
 interface
 
 uses Windows, ActiveX, Classes, ExodusCOM_TLB, Graphics, StdVCL, Variants;

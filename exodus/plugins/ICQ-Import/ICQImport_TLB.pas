@@ -11,23 +11,23 @@ unit ICQImport_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.4 $
-// File generated on 2/9/2003 2:33:26 PM from Type Library described below.
+// PASTLWTR : 1.2
+// File generated on 2/12/2003 7:06:33 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\ICQ-Import\ICQImport.tlb (1)
 // LIBID: {E164BC8D-3C8D-4CB8-832A-F11638E78E69}
 // LCID: 0
 // Helpfile: 
+// HelpString: ICQImport Library
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
-//   (2) v1.0 ExodusCOM, (D:\src\exodus\runner\exodus.exe)
-//   (3) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
+//   (1) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
+//   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
 {$WRITEABLECONST ON}
-
+{$VARPROPSETTER ON}
 interface
 
 uses Windows, ActiveX, Classes, ExodusCOM_TLB, Graphics, StdVCL, Variants;

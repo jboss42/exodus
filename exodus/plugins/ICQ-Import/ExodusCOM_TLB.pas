@@ -11,14 +11,15 @@ unit ExodusCOM_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.6 $
-// File generated on 2/9/2003 2:33:26 PM from Type Library described below.
+// PASTLWTR : 1.2
+// File generated on 2/12/2003 7:27:34 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\src\exodus\runner\exodus.exe (1)
+// Type Lib: D:\src\exodus\exodus\Exodus.exe (1)
 // LIBID: {219E0029-5710-4C9B-BE33-4C7F046D7792}
 // LCID: 0
 // Helpfile: 
+// HelpString: Exodus COM Plugin interfaces
 // DepndLst: 
 //   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
 // Parent TypeLibrary:
@@ -27,7 +28,7 @@ unit ExodusCOM_TLB;
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
 {$WRITEABLECONST ON}
-
+{$VARPROPSETTER ON}
 interface
 
 uses Windows, ActiveX, Classes, Graphics, StdVCL, Variants;
@@ -204,6 +205,7 @@ type
     procedure setAuthenticated(Authed: WordBool; const xml: WideString); safecall;
     procedure setAuthJID(const Username: WideString; const Host: WideString; 
                          const resource: WideString); safecall;
+    function addMessageMenu(const Caption: WideString): WideString; safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -298,6 +300,7 @@ type
     procedure setAuthenticated(Authed: WordBool; const xml: WideString); dispid 67;
     procedure setAuthJID(const Username: WideString; const Host: WideString; 
                          const resource: WideString); dispid 68;
+    function addMessageMenu(const Caption: WideString): WideString; dispid 201;
   end;
 
 // *********************************************************************//
@@ -314,6 +317,7 @@ type
     function UnRegister(ID: Integer): WordBool; safecall;
     function getMagicInt(Part: ChatParts): Integer; safecall;
     procedure RemoveContextMenu(const ID: WideString); safecall;
+    procedure AddMsgOut(const Value: WideString); safecall;
     property jid: WideString read Get_jid;
     property MsgOutText: WideString read Get_MsgOutText;
   end;
@@ -332,6 +336,7 @@ type
     function UnRegister(ID: Integer): WordBool; dispid 5;
     function getMagicInt(Part: ChatParts): Integer; dispid 6;
     procedure RemoveContextMenu(const ID: WideString); dispid 7;
+    procedure AddMsgOut(const Value: WideString); dispid 201;
   end;
 
 // *********************************************************************//
@@ -346,9 +351,12 @@ type
     procedure Process(const xpath: WideString; const event: WideString; const xml: WideString); safecall;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat); safecall;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat); safecall;
-    procedure menuClick(const ID: WideString); safecall;
-    function onInstantMsg(const Body: WideString; const Subject: WideString): WideString; safecall;
+    function NewIM(const jid: WideString; var Body: WideString; var Subject: WideString; 
+                   const XTags: WideString): WideString; safecall;
     procedure Configure; safecall;
+    procedure MenuClick(const ID: WideString); safecall;
+    procedure MsgMenuClick(const ID: WideString; const jid: WideString; var Body: WideString; 
+                           var Subject: WideString); safecall;
   end;
 
 // *********************************************************************//
@@ -363,9 +371,12 @@ type
     procedure Process(const xpath: WideString; const event: WideString; const xml: WideString); dispid 3;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat); dispid 4;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat); dispid 5;
-    procedure menuClick(const ID: WideString); dispid 6;
-    function onInstantMsg(const Body: WideString; const Subject: WideString): WideString; dispid 8;
+    function NewIM(const jid: WideString; var Body: WideString; var Subject: WideString; 
+                   const XTags: WideString): WideString; dispid 8;
     procedure Configure; dispid 12;
+    procedure MenuClick(const ID: WideString); dispid 201;
+    procedure MsgMenuClick(const ID: WideString; const jid: WideString; var Body: WideString; 
+                           var Subject: WideString); dispid 202;
   end;
 
 // *********************************************************************//
@@ -381,6 +392,7 @@ type
     procedure onContextMenu(const ID: WideString); safecall;
     procedure onRecvMessage(const Body: WideString; const xml: WideString); safecall;
     procedure onClose; safecall;
+    procedure onMenu(const ID: WideString); safecall;
   end;
 
 // *********************************************************************//
@@ -396,6 +408,7 @@ type
     procedure onContextMenu(const ID: WideString); dispid 4;
     procedure onRecvMessage(const Body: WideString; const xml: WideString); dispid 5;
     procedure onClose; dispid 6;
+    procedure onMenu(const ID: WideString); dispid 201;
   end;
 
 // *********************************************************************//
@@ -414,6 +427,7 @@ type
     procedure RemoveBookmark(const JabberID: WideString); safecall;
     function Find(const JabberID: WideString): IExodusRosterItem; safecall;
     function Item(Index: Integer): IExodusRosterItem; safecall;
+    function Count: Integer; safecall;
   end;
 
 // *********************************************************************//
@@ -432,6 +446,7 @@ type
     procedure RemoveBookmark(const JabberID: WideString); dispid 5;
     function Find(const JabberID: WideString): IExodusRosterItem; dispid 6;
     function Item(Index: Integer): IExodusRosterItem; dispid 7;
+    function Count: Integer; dispid 8;
   end;
 
 // *********************************************************************//

@@ -81,6 +81,7 @@ type
     NotificationOptions1: TMenuItem;
     S1: TMenuItem;
     dlgSave: TSaveDialog;
+    N6: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);

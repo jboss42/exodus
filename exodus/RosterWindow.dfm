@@ -255,10 +255,6 @@ object frmRosterWindow: TfrmRosterWindow
       Caption = 'Send Contact To...'
       OnClick = popSendContactsClick
     end
-    object NetMeetingCall1: TMenuItem
-      Caption = 'NetMeeting Call'
-      Visible = False
-    end
     object popClientInfo: TMenuItem
       Caption = 'Client Info'
       object popVersion: TMenuItem

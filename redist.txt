@@ -1,0 +1,7 @@
+Joe - I'm trying to build with packages now.. to decrease the plugin sizes. This means the following files will need to go into the appropriate Windows\System32 dirs.
+
+vcl;		09/27/2001  06:01 AM         1,324,032 vclx0.bpl
+rtl;		09/27/2001  06:01 AM           641,536 rtlx0.bpl	
+vclshlctrls;	05/22/2001  12:00 AM            90,112 vclshlctrlsx0.bpl
+TntUnicodeVcl_R70 
+TntUnicodeVcl_D70

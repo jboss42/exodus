@@ -24,7 +24,7 @@ unit COMController;
 interface
 
 uses
-    XMLTag, Unicode,
+    XMLTag, Unicode, Menus,
     Windows,
     Classes, ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
 
@@ -114,10 +114,12 @@ type
     procedure setAuthenticated(Authed: WordBool; const XML: WideString);
       safecall;
     procedure setAuthJID(const Username, Host, Resource: WideString); safecall;
+    function addMessageMenu(const Caption: WideString): WideString; safecall;
     { Protected declarations }
   private
     _menu_items: TWideStringList;
     _roster_menus: TWidestringlist;
+    _msg_menus: TWidestringList;
 
   public
     constructor Create();
@@ -127,6 +129,13 @@ type
     procedure fireNewRoom(jid: Widestring; ExodusChat: IExodusChat);
     procedure fireMenuClick(Sender: TObject);
     procedure fireRosterMenuClick(Sender: TObject);
+    function fireIM(Jid: Widestring; var Body: Widestring;
+        var Subject: Widestring; xtags: Widestring): Widestring;
+    procedure fireMsgMenuClick(idx: integer; jid: Widestring;
+        var Body: Widestring; var Subject: Widestring);
+
+    procedure populateMsgMenus(parent: TPopupMenu; event: TNotifyEvent);
+
   end;
 
   TPlugin = class
@@ -144,6 +153,13 @@ type
         procedure Callback(event: string; tag: TXMLTag);
     end;
 
+  TMenuContainer = class
+    public
+        idx: integer;
+        id: Widestring;
+        caption: Widestring;
+    end;
+
 
 // Forward declares for plugin utils
 procedure InitPlugins();
@@ -159,8 +175,8 @@ uses
     Chat, ChatController, JabberID, MsgRecv, Room, Browser, Jud,
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
     COMChatController, Dockable, Agents,
-    Jabber1, Session, Roster, RosterWindow, PluginAuth, PrefController, 
-    Menus, Dialogs, Variants, Forms, SysUtils, ComServ;
+    Jabber1, Session, Roster, RosterWindow, PluginAuth, PrefController,
+    Dialogs, Variants, Forms, SysUtils, ComServ;
 
 var
     plugs: TStringList;
@@ -189,6 +205,7 @@ var
     idisp: IDispatch;
     plugin: IExodusPlugin;
     p: TPlugin;
+    msg: Widestring;
 begin
     // Fire up an instance of the specified COM object
     if (plugs.indexof(com_name) > -1) then exit;
@@ -197,8 +214,9 @@ begin
         idisp := CreateOleObject(com_name);
     except
         on EOleSysError do begin
-            MessageDlg('Plugin class could not be initialized.',
-                mtError, [mbOK], 0);
+            msg := 'Plugin class could not be created. ';
+            msg := msg + '(' + com_name + ')';
+            MessageDlg(msg, mtError, [mbOK], 0);
             exit;
         end;
     end;
@@ -207,8 +225,9 @@ begin
         plugin := IUnknown(idisp) as IExodusPlugin;
     except
         on EIntfCastError do begin
-            MessageDlg('Plugin class does not support IExodusPlugin',
-                mtError, [mbOK], 0);
+            msg := 'Plugin class does not support IExodusPlugin. ';
+            msg := msg + '(' + com_name + ')';
+            MessageDlg(msg, mtError, [mbOK], 0);
             exit;
         end;
     end;
@@ -219,8 +238,9 @@ begin
     try
         p.com.Startup(frmExodus.ComController);
     except
-        MessageDlg('Plugin class could not be initialized.',
-            mtError, [mbOK], 0);
+        msg := 'Plugin class could not be initialized. ';
+        msg := msg + '(' + com_name + ')';
+        MessageDlg(msg, mtError, [mbOK], 0);
         exit;
     end;
 end;
@@ -348,14 +368,17 @@ begin
     inherited Create();
     _menu_items := TWidestringList.Create();
     _roster_menus := Twidestringlist.Create();
-    
+    _msg_menus := TWidestringlist.Create();
 end;
 
 {---------------------------------------}
 destructor TExodusController.Destroy();
 begin
+    // xxx: cleanup these menu items???
     _menu_items.Free();
     _roster_menus.Free();
+    _msg_menus.Free();
+
     OutputDebugString('Destroying TExodusController');
 
     inherited;
@@ -377,6 +400,32 @@ var
 begin
     for i := 0 to plugs.Count - 1 do
         TPlugin(plugs.Objects[i]).com.NewRoom(jid, ExodusChat);
+end;
+
+{---------------------------------------}
+function TExodusController.fireIM(Jid: Widestring; var Body: Widestring;
+    var Subject: Widestring; xtags: Widestring): Widestring;
+var
+    i: integer;
+    xml: Widestring;
+begin
+    // xxx: pass along xtags to the plugins
+    xml := '';
+    for i := 0 to plugs.Count - 1 do
+        xml := xml + TPlugin(plugs.Objects[i]).com.NewIM(jid, body, subject, xtags);
+    Result := xml;
+end;
+
+{---------------------------------------}
+procedure TExodusController.fireMsgMenuClick(idx: integer; jid: Widestring;
+        var Body: Widestring; var Subject: Widestring);
+var
+    i: integer;
+begin
+    if (idx >= _msg_menus.Count) then exit;
+    for i := 0 to plugs.Count - 1 do
+        TPlugin(plugs.Objects[i]).com.MsgMenuClick(_msg_menus[idx], jid,
+            Body, Subject);
 end;
 
 {---------------------------------------}
@@ -501,8 +550,8 @@ begin
     frmExodus.mnuPlugins.Add(mi);
     mi.Caption := caption;
     mi.OnClick := frmExodus.mnuPluginDummyClick;
-
     id := 'plugin_' + IntToStr(_menu_items.Count);
+    mi.Name := id;
     _menu_items.AddObject(id, mi);
     Result := id;
 end;
@@ -888,7 +937,8 @@ begin
     frmRosterWindow.popRoster.Items.Add(mi);
     mi.Caption := caption;
     mi.OnClick := frmRosterWindow.pluginClick;
-    id := 'plugin_' + IntToStr(_roster_menus.Count);
+    id := 'ct_menu_' + IntToStr(_roster_menus.Count);
+    mi.Name := id;
     _roster_menus.AddObject(id, mi);
     Result := id;
 end;
@@ -978,6 +1028,41 @@ procedure TExodusController.setAuthJID(const Username, Host,
 begin
     MainSession.setAuthdJID(username, host, resource);
 end;
+
+{---------------------------------------}
+function TExodusController.addMessageMenu(
+  const Caption: WideString): WideString;
+var
+    mc: TMenuContainer;
+    id: Widestring;
+begin
+    // add a new TMenuItem to the Msg-Plugins menu
+    id := 'msg_menu_' + IntToStr(_msg_menus.Count);
+    mc := TMenuContainer.Create();
+    mc.id := id;
+    mc.caption := Caption;
+    mc.idx := _msg_menus.AddObject(id, mc);
+    Result := id;
+end;
+
+{---------------------------------------}
+procedure TExodusController.populateMsgMenus(parent: TPopupMenu;
+    event: TNotifyEvent);
+var
+    i: integer;
+    mc: TMenuContainer;
+    mi: TMenuItem;
+begin
+    for i := 0 to _msg_menus.Count - 1 do begin
+        mc := TMenuContainer(_msg_menus.Objects[i]);
+        mi := TMenuItem.Create(parent.Owner);
+        mi.Caption := mc.caption;
+        mi.Tag := i;
+        mi.OnClick := event;
+        mi.Name := mc.id;
+    end;
+end;
+
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusController, Class_ExodusController,

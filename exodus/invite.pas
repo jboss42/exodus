@@ -74,7 +74,7 @@ procedure ShowInvite(room_jid: WideString; jids: TWideStringList); overload;
 implementation
 uses
     JabberConst, InputPassword,
-    ExEvents, Jabber1, JabberID, PrefController,
+    ExEvents, ExUtils, Jabber1, JabberID, PrefController,
     Session, Room, RosterWindow, Roster;
 
 {$R *.dfm}
@@ -169,8 +169,8 @@ procedure TfrmInvite.frameButtons1btnOKClick(Sender: TObject);
 var
     frm: TfrmRoom;
     i: integer;
-    msg: TXMLTag;
-    room: WideString;
+    x, msg: TXMLTag;
+    b, room: WideString;
     room_idx: integer;
 begin
     // Make sure we are actually in this room...
@@ -194,7 +194,8 @@ begin
         if ((frm <> nil) and (frm.isMUCRoom)) then begin
             // this is MUC.. use muc#user
             msg.setAttribute('to', room);
-            with msg.AddTag('x') do begin
+            x := msg.AddTag('x');
+            with x do begin
                 setAttribute('xmlns', xmlns_mucuser);
                 with AddTag('invite') do begin
                     setAttribute('to', lstJIDS.Items[i].SubItems[0]);
@@ -206,13 +207,13 @@ begin
             // this is GC 1.0, or we aren't in the room yet..
             // Use jabber;x:conference
             msg.setAttribute('to', lstJIDS.Items[i].SubItems[0]);
-            with msg.AddTag('x') do begin
+            x := msg.AddTag('x');
+            with x do begin
                 setAttribute('xmlns', 'jabber:x:conference');
                 setAttribute('jid', room);
             end;
-            msg.AddBasicTag('body', memReason.Lines.Text);
         end;
-        MainSession.SendTag(msg);
+        jabberSendMsg(msg.getAttribute('to'), msg, x, b, '');
     end;
     Self.Close;
 end;

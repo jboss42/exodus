@@ -21,7 +21,7 @@ unit ExUtils;
 
 interface
 uses
-    Unicode, ExRichEdit, RichEdit2, Signals,  
+    Unicode, ExRichEdit, RichEdit2, Signals, XMLTag,  
     JabberMsg, Graphics, Controls, StdCtrls, Forms, Classes, SysUtils, Windows;
 
 const
@@ -88,6 +88,12 @@ function CanvasTextWidthW(Canvas: TCanvas; const Text: WideString): integer;
 procedure removeSpecialGroups(grps: TStrings); overload;
 procedure removeSpecialGroups(grps: TWidestrings); overload;
 
+procedure jabberSendMsg(to_jid: Widestring; mtag, xtags: TXMLTag;
+    body, subject: Widestring); overload;
+
+procedure jabberSendMsg(to_jid: Widestring; mtag: TXMLTag;
+    xtags, body, subject: Widestring); overload;
+
 var
     _GetLastInputInfo: Pointer;
 
@@ -98,7 +104,7 @@ var
 implementation
 uses
     IniFiles, Dialogs, StrUtils, IdGlobal, ShellAPI,
-    XMLTag, XMLUtils, Session, IQ, JabberID, Jabber1, Roster,
+    XMLUtils, Session, IQ, JabberID, Jabber1, Roster,
     JabberConst, MsgDisplay, Debug;
 
 type
@@ -190,34 +196,32 @@ begin
                     szCSDVersion]);
         end;
     end; { end with }
-end;
-    VER_PLATFORM_WIN32_NT:
-    begin
+    end;
+    VER_PLATFORM_WIN32_NT: begin
         with OSVersionInfo32 do begin
             if (dwMajorVersion <= 4) then begin
                 { Windows NT 3.5/4.0 }
                 Result := cWIN_NT;
                 verinfo := Format('Windows-NT %d.%.2d.%d%s', [dwMajorVersion,
                     dwMinorVersion, dwBuildNumber, szCSDVersion]);
-        end
+            end
             else begin
                 if (dwMinorVersion > 0) then begin
                     { Windows XP }
                     Result := cWIN_XP;
                     verinfo := Format('Windows-XP %d.%.2d.%d%s', [dwMajorVersion,
                         dwMinorVersion, dwBuildNumber, szCSDVersion]);
-            end
+                end
                 else begin
                     { Windows 2000 }
                     Result := cWIN_2000;
                     verinfo := Format('Windows-2000 %d.%.2d.%d%s', [dwMajorVersion,
                         dwMinorVersion, dwBuildNumber, szCSDVersion]);
+                end;
             end;
         end;
     end;
-end;
-end; { end case }
-
+    end; { end case }
 end;
 
 {---------------------------------------}
@@ -652,8 +656,8 @@ begin
         item.setAttribute('name', ri.RawNickname);
         b := b + Chr(13) + Chr(10) + ri.RawNickname + ': ' + ri.jid.full;
     end;
-    msg.AddBasicTag('body', b);
-    MainSession.SendTag(msg);
+
+    jabberSendMsg(to_jid, msg, x, b, '');
 end;
 
 {---------------------------------------}
@@ -756,6 +760,36 @@ begin
     i := grps.IndexOf(MainSession.Prefs.getString('roster_transport_grp'));
     if (i >= 0) then grps.Delete(i);
 end;
+
+{---------------------------------------}
+procedure jabberSendMsg(to_jid: Widestring; mtag: TXMLTag;
+    xtags, body, subject: Widestring);
+var
+    xml, s, b: Widestring;
+begin
+    // handle allowing the plugins to get a pass at all
+    // outgoing messages
+    b := body;
+    s := subject;
+    xml := frmExodus.COMController.fireIM(to_jid, b, s, xtags);
+
+    mtag.AddBasicTag('body', b);
+    if (s <> '') then
+        mtag.AddBasicTag('subject', s);
+
+    if (xml <> '') then
+        mtag.addInsertedXML(xml);
+
+    MainSession.SendTag(mtag);
+end;
+
+{---------------------------------------}
+procedure jabberSendMsg(to_jid: Widestring; mtag, xtags: TXMLTag;
+    body, subject: Widestring);
+begin
+    jabberSendMsg(to_jid, mtag, xtags.xml, body, subject);
+end;
+
 
 {---------------------------------------}
 {---------------------------------------}

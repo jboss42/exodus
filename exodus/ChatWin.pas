@@ -36,7 +36,6 @@ type
     mnuSave: TMenuItem;
     N1: TMenuItem;
     mnuReturns: TMenuItem;
-    mnuEncrypt: TMenuItem;
     timFlash: TTimer;
     SaveDialog1: TSaveDialog;
     C1: TMenuItem;
@@ -54,6 +53,7 @@ type
     timBusy: TTimer;
     popAddContact: TMenuItem;
     lblJID: TTntLabel;
+    N3: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
