@@ -418,6 +418,10 @@ begin
         result := IntToStr(notify_toast)
     else if pkey = 'notify_roomactivity' then
         result := IntToStr(notify_toast)
+    else if pkey = 'presence_message_listen' then
+        result := '1'
+    else if pkey = 'presence_message_send' then
+        result := '1'
     else
         result := '';
 end;

@@ -1,6 +1,6 @@
 object frmPrefs: TfrmPrefs
-  Left = 587
-  Top = 173
+  Left = 763
+  Top = 205
   Width = 407
   Height = 441
   Caption = 'Exodus Preferences'
@@ -20,7 +20,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 375
+    Height = 370
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1427,7 +1427,7 @@ object frmPrefs: TfrmPrefs
     Left = 89
     Top = 0
     Width = 310
-    Height = 375
+    Height = 370
     ActivePage = tbsCustomPres
     Align = alClient
     Constraints.MinHeight = 340
@@ -1776,7 +1776,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 102
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1863,7 +1863,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 97
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2057,7 +2057,7 @@ object frmPrefs: TfrmPrefs
       object StaticText11: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 111
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2552,11 +2552,31 @@ object frmPrefs: TfrmPrefs
           OnChange = txtCPTitleChange
         end
       end
+      object chkPresenceMessageListen: TCheckBox
+        Left = 4
+        Top = 307
+        Width = 273
+        Height = 17
+        Caption = 'When Windows message received, change presence'
+        Checked = True
+        State = cbChecked
+        TabOrder = 4
+      end
+      object chkPresenceMessageSend: TCheckBox
+        Left = 4
+        Top = 291
+        Width = 281
+        Height = 17
+        Caption = 'When presence changes, send Windows message'
+        Checked = True
+        State = cbChecked
+        TabOrder = 5
+      end
     end
   end
   object Panel1: TPanel
     Left = 0
-    Top = 375
+    Top = 370
     Width = 399
     Height = 37
     Align = alBottom

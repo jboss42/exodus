@@ -174,6 +174,8 @@ type
     Label19: TLabel;
     imgMessages: TImage;
     lblMessages: TLabel;
+    chkPresenceMessageListen: TCheckBox;
+    chkPresenceMessageSend: TCheckBox;
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -406,6 +408,8 @@ begin
         _pres_list := getAllPresence();
         for i := 0 to _pres_list.Count - 1 do
             lstCustomPres.Items.Add(TJabberCustomPres(_pres_list[i]).title);
+        chkPresenceMessageSend.Checked := getBool('presence_message_send');
+        chkPresenceMessageListen.Checked := getBool('presence_message_listen');
         end;
 end;
 
@@ -519,6 +523,8 @@ begin
             cp := TJabberCustomPres(_pres_list.Items[i]);
             setPresence(cp);
             end;
+        setBool('presence_message_send', chkPresenceMessageSend.Checked);
+        setBool('presence_message_listen', chkPresenceMessageListen.Checked);
         EndUpdate();
         end;
     MainSession.FireEvent('/session/prefs', nil);
