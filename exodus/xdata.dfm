@@ -25,7 +25,7 @@ object frmXData: TfrmXData
     Width = 509
     Height = 8
     Align = alTop
-    Shape = bsTopLine
+    Shape = bsBottomLine
   end
   object lblIns: TExodusLabel
     Left = 0

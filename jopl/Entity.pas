@@ -456,8 +456,12 @@ begin
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Dispatch a browse query
-        if (not _fallback) then exit;
-
+        if (not _fallback) then begin
+            _has_info := true;
+            js.FireEvent('/session/entity/info', tag);
+            exit;
+        end;
+        
         _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, _timeout);
         _iq.toJid := _jid.full;
         _iq.Namespace := XMLNS_BROWSE;
