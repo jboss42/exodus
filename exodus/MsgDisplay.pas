@@ -81,10 +81,12 @@ begin
     RichEdit.SelStart := Length(RichEdit.Lines.Text);
     RichEdit.SelLength := 0;
 
-    RichEdit.SelAttributes.Color := clGray;
-    RichEdit.SelText := '[' +
-                        FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
-                        Msg.Time) + ']';
+    if (MainSession.Prefs.getBool('timestamp')) then begin
+        RichEdit.SelAttributes.Color := clGray;
+        RichEdit.SelText := '[' +
+                            FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
+                            Msg.Time) + ']';
+        end;
 
     if (Msg.Nick = '') then begin
         // Server generated msgs (mostly in TC Rooms)

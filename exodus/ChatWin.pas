@@ -568,9 +568,13 @@ begin
         txt := show
     else
         txt := status;
+
+    if (MainSession.Prefs.getBool('timestamp')) then
+        txt := '[' + formatdatetime(MainSession.Prefs.getString('timestamp_format'),now) + '] ' +
+                jid + ' ' + sIsNow + ' ' + txt
+    else
+        txt :=  jid + ' ' + sIsNow + ' ' + txt;
         
-    txt := '[' + formatdatetime(MainSession.Prefs.getString('timestamp_format'),now) + '] ' +
-            jid + ' ' + sIsNow + ' ' + txt;
     DisplayPresence(txt, MsgList);
 end;
 
