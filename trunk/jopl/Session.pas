@@ -134,6 +134,7 @@ type
         property IsPaused: boolean read _paused;
         property Invisible: boolean read _invisible write _invisible;
         property Active: boolean read GetActive;
+        property Profile: TJabberProfile read _profile;
     end;
 
 const
