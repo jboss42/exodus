@@ -43,16 +43,21 @@ inherited frmRoom: TfrmRoom
         Width = 103
         Height = 215
         Align = alClient
-        Columns = <>
+        Columns = <
+          item
+            AutoSize = True
+          end>
         IconOptions.Arrangement = iaLeft
         IconOptions.WrapText = False
         ParentShowHint = False
         PopupMenu = popRoomRoster
+        ShowColumnHeaders = False
+        ShowWorkAreas = True
         ShowHint = True
         SmallImages = frmRosterWindow.ImageList1
         SortType = stText
         TabOrder = 0
-        ViewStyle = vsSmallIcon
+        ViewStyle = vsReport
         OnDblClick = lstRosterDblClick
         OnDragDrop = lstRosterDragDrop
         OnDragOver = lstRosterDragOver
