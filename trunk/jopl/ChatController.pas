@@ -162,11 +162,6 @@ var
     is_composing: boolean;
 begin
     // do stuff
-    // check for exclusions.. don't show x-data or invites
-    if (tag.QueryXPTag(XP_MSGXDATA) <> nil) then exit;
-    if (tag.QueryXPTag(XP_MUCINVITE) <> nil) then exit;
-    if (tag.QueryXPTag(XP_CONFINVITE) <> nil) then exit;
-
     // if we don't have a window, then ignore composing events
     etag := tag.QueryXPTag(XP_MSGXEVENT);
     is_composing := ((etag <> nil) and

@@ -53,7 +53,9 @@ type
         // main packet handling signals
         _logSignal: TPacketSignal;
         _filterSignal: TPacketSignal;
+        _preSignal: TPacketSignal;
         _packetSignal: TPacketSignal;
+        _postSignal: TPacketSignal;
         _sessionSignal: TBasicSignal;
         _unhandledSignal: TBasicSignal;
 
@@ -210,12 +212,16 @@ begin
 
     // Core packet signals
     _logSignal := TPacketSignal.Create('');
-    _filterSignal := TPacketSignal.Create('/packet');
-    _packetSignal := TPacketSignal.Create('/unhandled');
+    _filterSignal := TPacketSignal.Create('/pre');
+    _preSignal := TPacketSignal.Create('/packet');
+    _packetSignal := TPacketSignal.Create('/post');
+    _postSignal := TPacketSignal.Create('/unhandled');
     _unhandledSignal := TBasicSignal.Create();
     _dispatcher.AddSignal('/log', _logSignal);
     _dispatcher.AddSignal('/filter', _filterSignal);
+    _dispatcher.AddSignal('/pre', _preSignal);
     _dispatcher.AddSignal('/packet', _packetSignal);
+    _dispatcher.AddSignal('/post', _postSignal);
     _dispatcher.AddSignal('/unhandled', _unhandledSignal);
 
     // other signals
@@ -719,8 +725,16 @@ begin
         pk := _filterSignal.addListener(xplite, callback);
         result := pk.cb_id;
     end
+    else if (tok1 = '/pre') then begin
+        pk := _preSignal.addListener(xplite, callback);
+        result := pk.cb_id;
+    end
     else if tok1 = '/packet' then begin
         pk := _packetSignal.addListener(xplite, callback);
+        result := pk.cb_id;
+    end
+    else if (tok1 = '/post') then begin
+        pk := _postSignal.addListener(xplite, callback);
         result := pk.cb_id;
     end
     else if i >= 0 then begin
