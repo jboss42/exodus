@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-12-03 11:31\n"
-"PO-Revision-Date: 2003-12-03 11:31\n"
+"POT-Creation-Date: 2003-12-04 08:27\n"
+"PO-Revision-Date: 2003-12-04 08:27\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1121,7 +1121,7 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksPassword..Caption
 #: ConnDetails.dfm:339
 #. frmJoinRoom..Tabs..TabSheet1..lblPassword..Caption
-#: JoinRoom.dfm:52
+#: JoinRoom.dfm:53
 #. frmPrefNetwork..GroupBox2..lblProxyPassword..Caption
 #: prefs/PrefNetwork.dfm:117
 #. frmPrefTransfer..grpWebDav..Label8..Caption
@@ -1171,7 +1171,7 @@ msgstr ""
 #. frmInputPass..txtPassword..PasswordChar
 #: InputPassword.dfm:60
 #. frmJoinRoom..Tabs..TabSheet1..txtPassword..PasswordChar
-#: JoinRoom.dfm:85
+#: JoinRoom.dfm:86
 #. frmPassword..txtOldPassword..PasswordChar
 #: Password.dfm:42
 #. frmPassword..txtNewPassword..PasswordChar
@@ -1607,7 +1607,7 @@ msgstr ""
 #: DockWizard.dfm:46
 #. frmWizard..TntPanel1..btnNext..Caption
 #: Wizard.dfm:46
-#: JoinRoom.pas:277
+#: JoinRoom.pas:349
 msgid "Next >"
 msgstr ""
 
@@ -2226,17 +2226,17 @@ msgid "Specify or browse for a room to join or "
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..Label2..Caption
-#: JoinRoom.dfm:38
+#: JoinRoom.dfm:39
 msgid "Room Server:"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..Label1..Caption
-#: JoinRoom.dfm:45
+#: JoinRoom.dfm:46
 msgid "Room Name:"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..Label3..Caption
-#: JoinRoom.dfm:59
+#: JoinRoom.dfm:60
 #. frmAdd..Label2..Caption
 #: RosterAdd.dfm:33
 #. frmSubscribe..boxAdd..Label2..Caption
@@ -2245,29 +2245,29 @@ msgid "Nickname:"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..txtServer..Hint
-#: JoinRoom.dfm:66
+#: JoinRoom.dfm:67
 #. frmJoinRoom..Tabs..TabSheet2..Panel2..txtServerFilter..Hint
-#: JoinRoom.dfm:160
+#: JoinRoom.dfm:170
 msgid "Select the room server to use."
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..txtServer..Text
-#: JoinRoom.dfm:71
+#: JoinRoom.dfm:72
 msgid "txtServer"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..optSpecify..Caption
-#: JoinRoom.dfm:100
+#: JoinRoom.dfm:101
 msgid "Join or Create the following room:"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..optBrowse..Caption
-#: JoinRoom.dfm:111
+#: JoinRoom.dfm:112
 msgid "Browse servers for a room to join"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet2..Caption
-#: JoinRoom.dfm:117
+#: JoinRoom.dfm:118
 #. frmJud..Tabs..TabSheet2..Caption
 #: jud.dfm:77
 #. frmRegister..Tabs..TabSheet2..Caption
@@ -2276,22 +2276,29 @@ msgid "TabSheet2"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet2..lstRooms......Caption
-#: JoinRoom.dfm:127
+#: JoinRoom.dfm:128
 msgid "Room"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet2..lstRooms......Caption
-#: JoinRoom.dfm:131
+#: JoinRoom.dfm:132
 msgid "Server"
 msgstr ""
 
+#. frmJoinRoom..Tabs..TabSheet2..lstRooms......Caption
+#: JoinRoom.dfm:136
+#. frmPrefPlugins..lstPlugins......Caption
+#: prefs/PrefPlugins.dfm:89
+msgid "Description"
+msgstr ""
+
 #. frmJoinRoom..Tabs..TabSheet2..Panel2..lblFetch..Caption
-#: JoinRoom.dfm:153
+#: JoinRoom.dfm:163
 msgid "Show rooms found on this server"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet2..Panel2..btnFetch..Caption
-#: JoinRoom.dfm:172
+#: JoinRoom.dfm:184
 msgid "Fetch Rooms"
 msgstr ""
 
@@ -6877,7 +6884,7 @@ msgstr ""
 
 #: invite.pas:192
 #. otherwise, just join..
-#: JoinRoom.pas:202
+#: JoinRoom.pas:223
 msgid "The Room Address you entered is invalid. It must be valid Jabber "
 "ID."
 msgstr ""
@@ -7007,14 +7014,18 @@ msgstr ""
 msgid "Branding error!"
 msgstr ""
 
+#: JoinRoom.pas:187
+msgid "- ALL SERVERS -"
+msgstr ""
+
 #. change tabs if they selected browse
-#: JoinRoom.pas:194
+#: JoinRoom.pas:215
 #. normal result
 #: RegForm.pas:415
 msgid "Finish"
 msgstr ""
 
-#: JoinRoom.pas:213
+#: JoinRoom.pas:234
 msgid "You must enter a nickname"
 msgstr ""
 
@@ -8311,11 +8322,6 @@ msgstr ""
 #. frmPrefPlugins..lstPlugins......Caption
 #: prefs/PrefPlugins.dfm:85
 msgid "Plugin"
-msgstr ""
-
-#. frmPrefPlugins..lstPlugins......Caption
-#: prefs/PrefPlugins.dfm:89
-msgid "Description"
 msgstr ""
 
 #. frmPrefPlugins..lstPlugins......Caption
