@@ -65,6 +65,8 @@ type
     procedure Copy3Click(Sender: TObject);
     procedure MsgListMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure MsgOutKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
     _msgHistory : TStringList;
@@ -244,6 +246,17 @@ begin
         inherited;
 end;
 
+procedure TfrmBaseChat.MsgOutKeyDown(Sender: TObject; var Key: Word;
+                                     Shift: TShiftState);
+begin
+    if ((Key = VK_TAB) and (ssCtrl in Shift) and (self.Docked))then begin
+        Self.TabSheet.PageControl.SelectNextPage(not (ssShift in Shift));
+        Key := 0;
+        end
+    else
+        inherited;
+end;
+
 {---------------------------------------}
 procedure TfrmBaseChat.SendMsg();
 begin
@@ -376,5 +389,7 @@ begin
         MsgList.PopupMenu.Popup(cp.x, cp.y);
         end;
 end;
+
+
 
 end.

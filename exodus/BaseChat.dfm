@@ -158,6 +158,7 @@ object frmBaseChat: TfrmBaseChat
       TabOrder = 0
       WantReturns = False
       WantTabs = True
+      OnKeyDown = MsgOutKeyDown
       OnKeyPress = MsgOutKeyPress
       OnKeyUp = MsgOutKeyUp
     end
