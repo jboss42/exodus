@@ -98,7 +98,7 @@ type
         constructor Create();
         destructor Destroy(); override;
 
-        procedure AddResourceFile(resdll: WideString);
+        function AddResourceFile(resdll: WideString): boolean;
         procedure AddIconDefsFile(filename: string);
         procedure SaveIconDefsFile(filename: string);
         procedure Clear();
@@ -533,7 +533,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TEmoticonList.AddResourceFile(resdll: WideString);
+function TEmoticonList.AddResourceFile(resdll: WideString): boolean;
 var
     parser : TXMLTagParser;
     icondef : TXMLTag;
@@ -544,8 +544,10 @@ var
     h: cardinal;
 begin
     h := LoadLibraryW(PWChar(resdll));
+
     if (h = 0) then begin
         // TODO: debug warning
+        Result := false;
         exit;
     end;
 
@@ -553,6 +555,7 @@ begin
     parser.ParseResource(h, 'icondef');
     if (parser.Count <= 0) then begin
         parser.Free();
+        Result := false;
         exit;
     end;
 
@@ -582,6 +585,7 @@ begin
 
     end;
     icons.Free();
+    Result := true;
 end;
 
 {---------------------------------------}
@@ -716,6 +720,7 @@ begin
     MainSession.Prefs.fillStringlist('emoticon_dlls', dlls);
     for i := 0 to dlls.Count - 1 do begin
         EmoticonList.AddResourceFile(dlls[i]);
+        // XXX: check results of addresourcefile to ensure this DLL is ok.
     end;
     dlls.Free();
 

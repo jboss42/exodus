@@ -764,6 +764,7 @@ begin
     assert(_iq <> nil);
     _iq := nil;
     accept := false;
+
     if (event = 'xml') then begin
         if (tag.GetAttribute('type') = 'result') then begin
             // TODO: eventually, grovel, and get the selected stream-method
@@ -792,10 +793,11 @@ var
     sh: TXMLTagList;
 begin
     // We are getting the address of a streamhost back
+
     if ((event = 'xml') and (tag.getAttribute('type') = 'result')) then begin
         assert(_iq <> nil);
         _iq := nil;
-        sh := tag.QUeryXPTags('/iq/query/streamhost');
+        sh := tag.QueryXPTags('/iq/query/streamhost');
         for j := 0 to sh.Count - 1 do begin
             i := shosts.indexOf(sh[j].GetAttribute('jid'));
 

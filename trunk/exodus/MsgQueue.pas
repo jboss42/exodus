@@ -306,6 +306,7 @@ var
 begin
     inherited;
 
+    _cb := -1;
     _loading := false;
     _queue := TObjectList.Create();
     _queue.OwnsObjects := true;
@@ -439,6 +440,8 @@ end;
 procedure TfrmMsgQueue.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
+    if ((_cb <> -1) and (MainSession <> nil)) then
+        MainSession.UnRegisterCallback(_cb);
     _queue.Free();
     Action := caFree;
     frmMsgQueue := nil;
