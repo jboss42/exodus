@@ -399,10 +399,10 @@ begin
         if ((_close_min) and (not _shutdown)) then begin
             _hidden := true;
             ShowWindow(Handle, SW_HIDE);
+            msg.Result := 0;
             end
         else
             inherited;
-        msg.Result := 0;
         end;
     else
         inherited;
