@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: exodus 0.1\n"
 "POT-Creation-Date: 2003-08-03 07:30\n"
-"PO-Revision-Date: 2003-12-04 23:33+0100\n"
+"PO-Revision-Date: 2003-12-05 08:36+0100\n"
 "Last-Translator: Mariusz Smykuła <smys@lodz.mm.pl>\n"
 "Language-Team: Mariusz Smykuła <redakcja@jabberpl.org>\n"
 "MIME-Version: 1.0\n"
@@ -893,7 +893,7 @@ msgstr "Dodaj zakładkę do Rostera"
 #: Browser.dfm:3830
 #: Jabber1.dfm:447
 msgid "vCard"
-msgstr ""
+msgstr "Wizytówka"
 
 #. frmBrowse..popContext..mVersion..Caption
 #: Browser.dfm:3834
@@ -1405,7 +1405,7 @@ msgstr ""
 #. frmCustomPres..Label3..Caption
 #: CustomPres.dfm:39
 msgid "Priority"
-msgstr ""
+msgstr "Priorytet"
 
 #. frmCustomPres..cboType....Items.WideStrings
 #. frmRoom..popRoomRoster..popRosterChat..Caption
@@ -1588,7 +1588,7 @@ msgstr ""
 #. frmDockWizard..Caption
 #: DockWizard.dfm:5
 msgid "Dockable Wizard"
-msgstr ""
+msgstr "Kreator dokowania"
 
 #. frmDockWizard..TntPanel1..btnBack..Caption
 #. frmWizard..TntPanel1..btnBack..Caption
@@ -1704,7 +1704,7 @@ msgstr ""
 #. frmGrpManagement..Caption
 #: GrpManagement.dfm:6
 msgid "Group Management"
-msgstr ""
+msgstr "Zarządzanie grupami"
 
 #. frmGrpManagement..optMove..Caption
 #: GrpManagement.dfm:53
@@ -1856,7 +1856,7 @@ msgstr ""
 #. frmExodus..Tabs..tbsRoster..Caption
 #: Jabber1.dfm:59
 msgid "Messenger"
-msgstr ""
+msgstr "Komunikator"
 
 #. frmExodus..Tabs..tbsRoster..pnlRight..Caption
 #: Jabber1.dfm:94
@@ -6520,7 +6520,7 @@ msgstr "Wiadomość zawiera URL:"
 #: Room.pas:443
 #: Room.pas:445
 msgid "ERROR: "
-msgstr ""
+msgstr "BŁĄD:"
 
 #: ExEvents.pas:448
 msgid ", Code="
@@ -6528,7 +6528,7 @@ msgstr ""
 
 #: ExEvents.pas:452
 msgid "Unknown Error"
-msgstr ""
+msgstr "Nieznany błąd"
 
 #: ExEvents.pas:454
 msgid "Original Message was:"
@@ -6675,7 +6675,7 @@ msgstr "Wygenerowano automatyczną odpowiedź"
 #. Show the log, or ask the user to turn on logging
 #: ExUtils.pas:336
 msgid "You currently have logging turned off. Turn Logging On? (Warning: Logs are not encrypted)"
-msgstr ""
+msgstr "Archiwizacja jest wyłączona. Włączyć archiwizację? (Ostrzeżenie: Archiwum nie jest zaszyfrowane)"
 
 #: ExUtils.pas:349
 msgid "There is no history file for this contact."
@@ -6717,7 +6717,7 @@ msgstr "Nie mogę otworzyć pliku historii."
 
 #: ExUtils.pas:598
 msgid " unknown last result: "
-msgstr ""
+msgstr " nieznany ostatni wynik: "
 
 #: ExUtils.pas:609
 #: ExUtils.pas:610
@@ -6870,7 +6870,7 @@ msgstr "Ustawienia autobezczynności"
 #. set us to xa
 #: Jabber1.pas:2091
 msgid "Setting AutoXA"
-msgstr ""
+msgstr "Ustawienia AutoXA"
 
 #. reset our status to available
 #: Jabber1.pas:2105
@@ -6928,7 +6928,7 @@ msgstr "Wyślij wiadomość"
 #: RosterWindow.pas:2824
 #: RosterWindow.pas:2856
 msgid "You must select one or more contacts."
-msgstr ""
+msgstr "Musisz wybrać jeden lub więcej kontaktów."
 
 #: Jabber1.pas:2913
 msgid "Branding error!"
@@ -6936,7 +6936,7 @@ msgstr ""
 
 #: JoinRoom.pas:187
 msgid "- ALL SERVERS -"
-msgstr ""
+msgstr "- WSZYSTKIE SERWERY -"
 
 #. change tabs if they selected browse
 #. normal result
@@ -7100,7 +7100,7 @@ msgstr "Rejestracja w usłudze Jabbera"
 
 #: RegForm.pas:131
 msgid "This wizard will guide you through registration with a jabber service."
-msgstr ""
+msgstr "Ten kreator ułatwi Ci przejście przez proces rejestracji w usłudze jabberowej/"
 
 #. error packet
 #: RegForm.pas:176
@@ -7111,7 +7111,7 @@ msgstr "Usługa do której próbowałeś się zarejestrować zwróciła błąd."
 #: RegForm.pas:264
 #: RegForm.pas:475
 msgid "The agent you are trying to register with can not be reached."
-msgstr ""
+msgstr "Usługa w której próbujesz się zarejestrować nie jest osiągalna."
 
 #: RegForm.pas:479
 msgid "There was an error trying to remove your registration."
@@ -7148,7 +7148,7 @@ msgstr "Słowo kluczowe w "
 
 #: Room.pas:469
 msgid "Activity in "
-msgstr ""
+msgstr "Aktywność w "
 
 #. check for various presence errors
 #. they match
@@ -7411,21 +7411,21 @@ msgstr "Oczekuję na połączenie..."
 #: SendStatus.pas:537
 #: SendStatus.pas:686
 msgid "There was an error trying to read the file."
-msgstr ""
+msgstr "Wystąpił błąd podczas próby odczytu pliku."
 
 #: SendStatus.pas:842
 msgid "Your file transfer was refused to %s"
-msgstr ""
+msgstr "Twój transfer został odrzucony przez %s"
 
 #. they refused
 #: SendStatus.pas:922
 msgid "The recipient (%s) refused your file: %s"
-msgstr ""
+msgstr "Odbiorca (%s) odrzucił twój plik: %s"
 
 #. error
 #: SendStatus.pas:944
 msgid "The stream was not activated for file: %s"
-msgstr ""
+msgstr "Strumień nie został uaktywniony dla pliku: %s"
 
 #. our thread completed.
 #: SendStatus.pas:960
@@ -7443,7 +7443,7 @@ msgstr "Połączony."
 
 #: SSLWarn.pas:66
 msgid "The SSL certificate received from the server has errors."
-msgstr ""
+msgstr "Certyfikat SSL odebrany od serwera zawiera błędy."
 
 #: SSLWarn.pas:68
 msgid "Certificate fingerprint: "
@@ -7457,16 +7457,16 @@ msgstr "Usunąć rejestrację?"
 #: Transports.pas:107
 #: Transports.pas:150
 msgid "The transport could not be reached. Your request timed out."
-msgstr ""
+msgstr "Transport nie jest osiągalny. Czas oczekiwania został przekroczny."
 
 #: Transports.pas:112
 #: Transports.pas:155
 msgid "There was an error processing your request."
-msgstr ""
+msgstr "Wystąpił błąd podczas przetwarzania Twojego żądania."
 
 #: Transports.pas:126
 msgid "You are not registered with this transport."
-msgstr ""
+msgstr "Nie jesteś zarejestrowany w tym transporcie."
 
 #: Transports.pas:159
 msgid "Your request was successful."
@@ -7475,7 +7475,7 @@ msgstr "Twoja prośba została powiodła się."
 #. callback for vcard info
 #: vcard.pas:179
 msgid "No vCard response was ever returned."
-msgstr ""
+msgstr "Nie zwrócono wizytówki."
 
 #. this is a cancel notice
 #: xdata.pas:122
@@ -7584,7 +7584,7 @@ msgstr ""
 #. Programmer's name: VALUE
 #: version.rc:32
 msgid "Translation"
-msgstr ""
+msgstr "Tłumaczenie"
 
 #. Programmer's name: defaults XML
 #: xml.rc:1
@@ -8087,7 +8087,7 @@ msgstr "Kontakt jest niedostępny."
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:36
 msgid "New chat session"
-msgstr ""
+msgstr "Nowa sesja rozmów"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:37
@@ -8560,9 +8560,8 @@ msgstr ""
 #: prefs/PrefPlugins.pas:157
 #: prefs/PrefPlugins.pas:165
 #: prefs/PrefPlugins.pas:170
-#, fuzzy
 msgid "The plugin could not be registered with windows."
-msgstr "Wtyczka nie może być utworzona. (%s)"
+msgstr "Wtyczka nie może być zarejestrowana w oknie."
 
 #. clear all entries
 #: prefs/PrefPresence.pas:250
@@ -8575,7 +8574,7 @@ msgstr ""
 
 #: prefs/PrefSystem.pas:230
 msgid "You must exit exodus, and restart it before your new locale settings will take affect."
-msgstr ""
+msgstr "Musisz wyłączyć Exodusa i uruchomić ponownie aby nowe ustawienie językowe zadziałały."
 
 #: prefs/PrefSystem.pas:268
 msgid "No new update available."
