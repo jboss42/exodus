@@ -94,6 +94,7 @@ type
     cur_iq: TJabberIQ;
 
     jid_col: integer;
+    nick_col: integer;
 
     procedure getFields;
     procedure sendRequest();
@@ -407,7 +408,7 @@ var
     cur: TXMLTag;
     col: TListColumn;
     ji: TJUDItem;
-    jid_fld: Widestring;
+    fld, jid_fld: Widestring;
     clist: TWideStringList;
     tmps: Widestring;
 begin
@@ -485,9 +486,14 @@ begin
                 jid_col := 0;
             end;
 
+            nick_col := -1;
             for i := 0 to cols.count - 1 do begin
                 col := lstContacts.Columns.Add();
                 col.Caption := getDisplayField(cols[i].Name);
+                if ((nick_col = -1) and
+                    ((Lowercase(cols[i].name) = 'nickname') or
+                     (Lowercase(cols[i].name) = 'nick'))) then
+                    nick_col := i;
                 col.Width := 100;
             end;
 
@@ -501,12 +507,15 @@ begin
                 for i := 0 to cols.Count - 1 do begin
                     with lstContacts.Columns.Add() do begin
                         Caption := cols[i].GetAttribute('label');
+                        fld := cols[i].getAttribute('var');
                         Width := 100;
                         tmps := cols[i].getAttribute('type');
                         if ((tmps = 'jid') or (tmps = 'jid-single')) then begin
                             jid_col := i;
-                            jid_fld := cols[i].GetAttribute('var');
-                        end;
+                            jid_fld := fld;
+                        end
+                        else if ((fld = 'nick') or (fld = 'nickname')) then
+                            nick_col := i;
                     end;
                     clist.Add(cols[i].GetAttribute('var'));
                 end;
@@ -654,6 +663,7 @@ var
 
     procedure doAdd(item: TListItem);
     var
+        nick: Widestring;
         ritem: TJabberRosterItem;
         jid: TJabberID;
     begin
@@ -666,7 +676,13 @@ var
 
         // add the item
         jid := TJabberID.Create(item.caption);
-        MainSession.roster.AddItem(item.caption, jid.user, cboGroup.Text, true);
+        nick := '';
+        if (nick_col >= 0) then
+            nick := item.SubItems[nick_col];
+
+        if (nick = '') then nick := jid.user;
+
+        MainSession.roster.AddItem(item.caption, nick, cboGroup.Text, true);
         jid.Free();
         
     end;
