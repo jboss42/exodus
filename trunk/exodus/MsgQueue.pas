@@ -137,20 +137,36 @@ procedure TfrmMsgQueue.lstEventsKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 var
     i: integer;
+    first : integer;
+    item : TListItem;
 begin
     // pickup hot-keys on the list view..
     case Key of
     VK_DELETE, VK_BACK, Ord('d'), Ord('D'): begin
-        // delete the selected item
-        if lstEvents.Selected <> nil then begin
-            i := lstEvents.Selected.Index;
-            lstEvents.Items.Delete(i);
-            if (i < lstEvents.Items.Count) then
-                lstEvents.Selected := lstEvents.Items[i]
-            else if (lstEvents.Items.Count > 0) then
-                lstEvents.Selected := lstEvents.Items[lstEvents.Items.Count - 1];
-            end;
         Key := $0;
+        first := -1;
+        if (lstEvents.SelCount = 0) then begin
+            exit;
+            end
+        else if (lstEvents.SelCount = 1) then begin
+            item := lstEvents.Selected;
+            i := item.Index;
+            first := i;
+            lstEvents.Items.Delete(i);
+            end
+        else begin
+            for i := lstEvents.Items.Count-1 downto 0 do begin
+                if (lstEvents.Items[i].Selected) then begin
+                    lstEvents.Items.Delete(i);
+                    first := i;
+                    end;
+                end;
+            end;
+
+        if (first < lstEvents.Items.Count) then
+            lstEvents.Selected := lstEvents.Items[first]
+        else if (lstEvents.Items.Count > 0) then
+            lstEvents.Selected := lstEvents.Items[lstEvents.Items.Count - 1];
         end;
     end;
 
