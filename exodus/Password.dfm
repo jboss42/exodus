@@ -47,7 +47,7 @@ object frmPassword: TfrmPassword
     Height = 33
     Align = alBottom
     AutoScroll = False
-    TabOrder = 1
+    TabOrder = 3
     inherited Bevel1: TBevel
       Width = 233
     end
@@ -68,7 +68,7 @@ object frmPassword: TfrmPassword
     Width = 217
     Height = 21
     PasswordChar = '*'
-    TabOrder = 2
+    TabOrder = 1
   end
   object txtConfirmPassword: TEdit
     Left = 8
@@ -76,6 +76,6 @@ object frmPassword: TfrmPassword
     Width = 217
     Height = 21
     PasswordChar = '*'
-    TabOrder = 3
+    TabOrder = 2
   end
 end
