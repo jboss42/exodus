@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2003-05-08 06:59\n"
-"PO-Revision-Date: 2003-06-10 21:48--700\n"
-"Last-Translator: Peter Millard <me@pgmillard.com>\n"
-"Language-Team:  <>\n"
+"PO-Revision-Date: 2003-06-18 03:43-0000\n"
+"Last-Translator: Lazarus Long <lazarus.long@bigfoot.com>\n"
+"Language-Team: pt_PT <lazarus.long@bigfoot.com>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=iso-8859-1\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 #. frmAbout..Caption
@@ -1414,7 +1414,7 @@ msgstr "Nº de chaves:"
 #. frmConnDetails..PageControl1..tbsHttp..Label14....AutoSize
 #: ConnDetails.dfm:394
 msgid "NOTE: You must use the URL of your jabber server's HTTP tunnelling proxy. You can not use some \"standard\" HTTP proxy for this to work. Contact your server administrator for additional information."
-msgstr "NOTA: Tem que usar o endereço do proxy de HTTP do seu servidor jabber. Para que isto funcione não é possível usar um proxy HTTP \"padrão\" qualquer. Contacte o administrador do seu servidor para mais informações."
+msgstr "NOTA: Tem que usar o endereço do proxy de encapsulamento HTTP do seu servidor jabber. Para que isto funcione não é possível usar um proxy HTTP \"padrão\" qualquer. Contacte o administrador do seu servidor para mais informações."
 
 #. frmCustomNotify..Caption
 #: CustomNotify.dfm:7
@@ -2196,7 +2196,7 @@ msgstr "Ajuda"
 #. frmExodus..MainMenu1..Help1..About1..Caption
 #: Jabber1.dfm:522
 msgid "About"
-msgstr "Acerca do Jabber"
+msgstr "Acerca do Exodus"
 
 #. frmExodus..popTabs..popCloseTab..Caption
 #: Jabber1.dfm:2681
@@ -2910,7 +2910,7 @@ msgstr "Estado / Região:"
 #: vcard.dfm:310
 #: vcard.dfm:781
 msgid "Address 2:"
-msgstr "Endereço 1:"
+msgstr "Endereço 2:"
 
 #. frmProfile..PageControl1..TabSheet4..Label30..Caption
 #. frmProfile..PageControl1..TabSheet6..Label18..Caption
@@ -2921,7 +2921,7 @@ msgstr "Endereço 1:"
 #: vcard.dfm:317
 #: vcard.dfm:788
 msgid "Address 1:"
-msgstr "Endereço 2:"
+msgstr "Endereço 1:"
 
 #. frmProfile..PageControl1..TabSheet4..Label31..Caption
 #. frmProfile..PageControl1..TabSheet6..Label26..Caption
@@ -5684,7 +5684,7 @@ msgstr "O seu registo neste serviço falhou! Carregue em 'Anterior' para voltar 
 #. frmRegister..Tabs..tabResult..lblOK....AutoSize
 #: RegForm.dfm:199
 msgid "Your Registration to this service has been completed Successfully. Press the 'Next' button to Finish."
-msgstr "O seu registo neste serviço foi bem sucedido. Carregue no botão 'Seguinte' para terminar."
+msgstr "O seu registo neste serviço foi bem sucedido. Carregue no botão 'Concluir' para terminar."
 
 #. frmRemove..optMove..Caption
 #: RemoveContact.dfm:61
@@ -6245,7 +6245,7 @@ msgstr "Objectos"
 #. Programmer's name for it: sReplying
 #: ChatWin.pas:153
 msgid " is replying."
-msgstr "está a responder."
+msgstr " está a responder."
 
 #. Programmer's name for it: sChatActivity
 #: ChatWin.pas:154
@@ -6275,7 +6275,7 @@ msgstr "desligado"
 #. Programmer's name for it: sCloseBusy
 #: ChatWin.pas:159
 msgid "This chat window is busy. Close anyways?"
-msgstr "Esta janela de conversa está ocupada. Fechar à mesma?"
+msgstr "Esta janela de conversa está ocupada. Fechar na mesma?"
 
 #. Programmer's name for it: sPluginErrCreate
 #: COMController.pas:173
@@ -6564,7 +6564,7 @@ msgstr "Não existe ficheiro de historial para este contacto."
 #. Programmer's name for it: sBadLogDir
 #: ExUtils.pas:136
 msgid "The log directory you specified is invalid. Either turn off logging, or specify a valid path."
-msgstr "A pasta que especificou para guardas os ficheiros com o registo de actividade é inválida. Ou desligue o registo de actividade ou indique um caminho válido."
+msgstr "A pasta que especificou para guardar os ficheiros com o registo de actividade é inválida. Desligue o registo de actividade ou indique um caminho válido."
 
 #. Programmer's name for it: sHistoryDeleted
 #: ExUtils.pas:137
@@ -6604,12 +6604,12 @@ msgstr "(Obrigatório)"
 #. Programmer's name for it: sXferNewPort
 #: FileServer.pas:65
 msgid "Your new file transfer port will not take affect until all current trasfers are stopped. Stop existing transfers?"
-msgstr "A sua nova porta de transferência de ficheiros não entrará em efeito até que as transferências em curso terminem. Cancear as transferências em curso?"
+msgstr "A sua nova porta de transferência de ficheiros não entrará em efeito até que as transferências em curso terminem. Cancelar as transferências em curso?"
 
 #. Programmer's name for it: SPropertiesMissing
 #: getOpt.pas:122
 msgid "%s: improper use of TGetOpts, one, some or more properties not initialized."
-msgstr "%s: uso incorecto de TGetOpts, uma ou mais propriedades não foram inicializadas."
+msgstr "%s: uso incorrecto de TGetOpts, uma ou mais propriedades não foram inicializadas."
 
 #. Programmer's name for it: SReqOptMissing
 #: getOpt.pas:123
@@ -6648,9 +6648,11 @@ msgstr "Sala de conferência:"
 
 #. Programmer's name for it: sCommandLine
 #: Jabber1.pas:395
-msgid "The following command line parameters are available in Exodus: \n"
+msgid ""
+"The following command line parameters are available in Exodus: \n"
 "\n"
-msgstr "As seguintes opções de linha de comandos estão disponíveis no Exodus: \n"
+msgstr ""
+"As seguintes opções de linha de comandos estão disponíveis no Exodus: \n"
 "\n"
 
 #. Programmer's name for it: sXMPP_Profile
@@ -6690,9 +6692,11 @@ msgstr "Você foi desligado."
 
 #. Programmer's name for it: sAuthError
 #: Jabber1.pas:434
-msgid "There was an error trying to authenticate you.\n"
+msgid ""
+"There was an error trying to authenticate you.\n"
 "Either you used the wrong password, or this account is already in use by someone else."
-msgstr "Houve um erro ao tentar autenticá-lo.\n"
+msgstr ""
+"Houve um erro ao tentar autenticá-lo.\n"
 "Ou utilizou uma palavra-passe incorrecta, ou esta conta já está a ser usada por outra pessoa."
 
 #. Programmer's name for it: sRegError
@@ -6793,7 +6797,7 @@ msgstr "Novo grupo de rol"
 #. Programmer's name for it: sNewGroupPrompt
 #: Jabber1.pas:457
 msgid "Enter new group name: "
-msgstr "Nome a dar ao grupo:"
+msgstr "Nome a dar ao grupo: "
 
 #. Programmer's name for it: sNewGroupExists
 #: Jabber1.pas:458
@@ -6973,7 +6977,7 @@ msgstr "Conversa com "
 #. Programmer's name for it: sBtnFinish
 #: RegForm.pas:93
 msgid "Finish"
-msgstr "Fim"
+msgstr "Concluir"
 
 #. Programmer's name for it: sServiceRegError
 #: RegForm.pas:95
@@ -7259,16 +7263,20 @@ msgstr "A estabelecer ligação..."
 
 #. Programmer's name for it: sAuthenticating
 #: RosterWindow.pas:265
-msgid "Connected. \n"
+msgid ""
+"Connected. \n"
 "Authenticating..."
-msgstr "Ligado.\n"
+msgstr ""
+"Ligado.\n"
 "A autenticar..."
 
 #. Programmer's name for it: sAuthenticated
 #: RosterWindow.pas:266
-msgid "Authenticated.\n"
+msgid ""
+"Authenticated.\n"
 "Getting Settings..."
-msgstr "Autenticado.\n"
+msgstr ""
+"Autenticado.\n"
 "A obter parâmetros..."
 
 #. Programmer's name for it: sMyResources
@@ -7324,7 +7332,7 @@ msgstr "Este ficheiro já existe. Substituir?"
 #. Programmer's name for it: sXferWaiting
 #: Transfer.pas:108
 msgid "Waiting for connection..."
-msgstr "À espera de ligação..."
+msgstr "A aguardar ligação..."
 
 #. Programmer's name for it: sXferSending
 #: Transfer.pas:109
@@ -7399,7 +7407,7 @@ msgstr "Nunca foi devolvido um cartão de visita como resposta."
 #. Programmer's name for it: sAllRequired
 #: xdata.pas:63
 msgid "All required fields must be filled out"
-msgstr "Todos os campos obrigatórios têm ue ser preenchidos"
+msgstr "Todos os campos obrigatórios têm que ser preenchidos"
 
 #. Programmer's name for it: sFormFrom
 #: xdata.pas:64
