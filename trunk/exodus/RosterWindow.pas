@@ -23,7 +23,7 @@ interface
 
 uses
     XMLTag,
-    Presence, Roster, 
+    Presence, Roster,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ComCtrls, ExtCtrls, Buttons, ImgList, Menus, StdCtrls;
 
@@ -98,6 +98,8 @@ type
     procedure popAddGroupClick(Sender: TObject);
     procedure popSendPresClick(Sender: TObject);
     procedure popSendSubscribeClick(Sender: TObject);
+    procedure treeRosterCustomDrawItem(Sender: TCustomTreeView;
+      Node: TTreeNode; State: TCustomDrawState; var DefaultDraw: Boolean);
   private
     { Private declarations }
     _rostercb: integer;
@@ -107,6 +109,7 @@ type
     _pos: TRect;
     _task_height: longint;
     _task_collapsed: boolean;
+    _show_status: boolean;
 
     _bookmark: TTreeNode;
     _hint_text : String;
@@ -118,7 +121,7 @@ type
     procedure RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
     procedure PresCallback(event: string; tag: TXMLTag; p: TJabberPres);
     procedure SessionCallback(event: string; tag: TXMLTag);
-    function getNodeType: integer;
+    function getNodeType(node: TTreeNode = nil): integer;
     procedure ClearNodes;
     procedure RenderNode(ritem: TJabberRosterItem; p: TJabberPres);
     procedure RenderBookmark(bm: TJabberBookmark);
@@ -367,12 +370,16 @@ begin
 end;
 
 {---------------------------------------}
-function TfrmRosterWindow.getNodeType: integer;
+function TfrmRosterWindow.getNodeType(Node: TTreeNode): integer;
 var
     n: TTreeNode;
 begin
     // return the type of node this is..
-    n := treeRoster.Selected;
+    if (Node = nil) then
+        n := treeRoster.Selected
+    else
+        n := Node;
+        
     Result := node_none;
     _cur_ritem := nil;
     _cur_bm := nil;
@@ -494,11 +501,10 @@ var
     node_list: TList;
     tmp_grps: TStringlist;
     show_online: boolean;
-    show_status: boolean;
 begin
     // The Data parameter contains a list of nodes for this item
     show_online := MainSession.Prefs.getBool('roster_only_online');
-    show_status := MainSession.Prefs.getBool('inline_status');
+    _show_status := MainSession.Prefs.getBool('inline_status');
 
     if ((show_online) and ((p = nil) or (p.PresType = 'unavailable'))) then begin
         RemoveItemNodes(ritem);
@@ -571,7 +577,7 @@ begin
         if (ritem.ask = 'subscribe') then
             tmps := tmps + ' (Pending)';
 
-        if (show_status) then begin
+        if (_show_status) then begin
             if (p <> nil) then begin
                 if (p.Status <> '') then
                     tmps := tmps + ': ' + p.Status;
@@ -1131,6 +1137,87 @@ begin
 
     if (TObject(node.Data) is TJabberRosterItem) then
         SendSubscribe(TJabberRosterItem(node.Data).jid.jid, MainSession);
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.treeRosterCustomDrawItem(
+  Sender: TCustomTreeView; Node: TTreeNode; State: TCustomDrawState;
+  var DefaultDraw: Boolean);
+var
+    tw: integer;
+    c1, c2: string;
+    xRect: TRect;
+    nRect: TRect;
+    p: TJabberPres;
+    bm: TBitmap;
+begin
+    // Try drawing the roster custom..
+    DefaultDraw := true;
+    if (Node.Level = 0) then
+        treeRoster.Canvas.Font.Style := [fsBold]
+    else begin
+        // we are drawing some kind of node
+        treeRoster.Canvas.Font.Style := [];
+        case getNodeType(Node) of
+        node_bm: DefaultDraw := true;
+        node_ritem: begin
+            // draw a roster item
+            if (_show_status) then begin
+
+                // determine the caption
+                if (_cur_ritem.Nickname <> '') then
+                    c1 := _cur_ritem.Nickname
+                else
+                    c1 := _cur_ritem.jid.Full;
+
+                if (_cur_ritem.ask = 'subscribe') then
+                    c1 := c1 + ' (Pending)';
+
+                p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
+                if (p <> nil) then begin
+                    if (p.Status <> '') then
+                        c2 := '(' + p.Status + ')';
+                    end;
+
+                with treeRoster.Canvas do begin
+                    TextFlags := ETO_OPAQUE;
+                    xRect := Node.DisplayRect(true);
+                    nRect := xRect;
+                    nRect.Left := nRect.Left - (2*treeRoster.Indent);
+
+                    if (cdsSelected in State) then begin
+                        Font.Color := clHighlightText;
+                        Brush.Color := clHighlight;
+                        FillRect(xRect);
+                        end
+                    else begin
+                        Font.Color := clWindowText;
+                        Brush.Color := treeRoster.Color;
+                        Brush.Style := bsSolid;
+                        FillRect(xRect);
+                        end;
+
+                    // draw the image
+                    bm := TBitmap.Create();
+                    ImageList1.GetBitmap(Node.ImageIndex, bm);
+                    Draw(nRect.Left + treeRoster.Indent, nRect.Top, bm);
+
+                    // draw the text
+                    tw := TextWidth(c1);
+                    SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(treeRoster.Font.Color));
+                    TextOut(xRect.Left + 1, xRect.Top + 1, c1);
+                    SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(clBlue));
+                    TextOut(xRect.Left + tw + 5, xRect.Top + 1, c2);
+                    end;
+
+                DefaultDraw := false;
+                end
+            else
+                DefaultDraw := true;
+            end;
+        end;
+
+        end;
 end;
 
 end.

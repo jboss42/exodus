@@ -1,6 +1,6 @@
 object frmRosterWindow: TfrmRosterWindow
-  Left = 272
-  Top = 142
+  Left = 293
+  Top = 125
   Width = 205
   Height = 461
   AlphaBlendValue = 220
@@ -80,6 +80,7 @@ object frmRosterWindow: TfrmRosterWindow
     TabOrder = 0
     OnCollapsed = treeRosterCollapsed
     OnContextPopup = treeRosterContextPopup
+    OnCustomDrawItem = treeRosterCustomDrawItem
     OnDblClick = treeRosterDblClick
     OnDragDrop = treeRosterDragDrop
     OnDragOver = treeRosterDragOver
