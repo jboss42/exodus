@@ -18,9 +18,21 @@ my $min   = $2;
 my $sp    = $3;
 my $build = $4;
 
-if ($ARGV[0] eq "maj") { $maj++; }
-elsif ($ARGV[0] eq "min") { $min++; }
-elsif ($ARGV[0] eq "sp") { $sp++; }
+if ($ARGV[0] eq "maj") {
+  $maj++;
+  $min = 0;
+  $sp = 0;
+  $build = 0;
+}
+elsif ($ARGV[0] eq "min") {
+  $min++;
+  $sp = 0;
+  $build = 0;
+}
+elsif ($ARGV[0] eq "sp") {
+  $sp++;
+  $build = 0;
+}
 elsif ($ARGV[0] eq "build") { $build++; }
 else { usage(); }
 
