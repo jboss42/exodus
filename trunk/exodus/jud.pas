@@ -122,7 +122,7 @@ function ItemCompare(Item1, Item2: Pointer): integer;
 implementation
 
 uses
-    ChatWin, MsgRecv,
+    ChatWin, MsgRecv, Entity, EntityCache,
     InputPassword, NodeItem,
     JabberConst, Profile, Roster, Agents, JabberID, fGeneric,
     Session, ExUtils, XMLUtils, fTopLabel, Jabber1;
@@ -137,8 +137,6 @@ var
 function StartSearch(sjid: string): TfrmJUD;
 var
     f: TfrmJUD;
-    i: integer;
-    a: TAgentItem;
 begin
     // Start a new search
     // create a new room
@@ -148,15 +146,8 @@ begin
         f.DockForm;
 
     // populate the drop down box based on our current agents..
-    with f.cboJID.Items do begin
-        Clear;
-        for i := 0 to MainSession.MyAgents.Count - 1 do begin
-            a := MainSession.MyAgents.getAgent(i);
-            if (a.search) then
-                Add(a.jid);
-        end;
-    end;
-
+    f.cboJID.Items.Clear();
+    jEntityCache.getByFeature(FEAT_SEARCH, f.cboJID.Items);
     f.Show;
     f.reset();
 

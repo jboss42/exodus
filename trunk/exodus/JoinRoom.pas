@@ -58,15 +58,12 @@ resourcestring
 
 implementation
 uses
-    ExUtils, GnuGetText, Jabber1, Agents, Session, Room;
+    Entity, EntityCache, ExUtils, GnuGetText, Jabber1, Session, Room;
 {$R *.DFM}
 
 procedure StartJoinRoom;
 var
     f: TfrmJoinRoom;
-    i: integer;
-    agents: TAgents;
-    a: TAgentItem;
 begin
     f := TfrmJoinRoom.Create(Application);
     with f do begin
@@ -78,15 +75,8 @@ begin
         if (txtNick.Text = '') then
             txtNick.Text := MainSession.Username;
 
-        with txtServer do begin
-            Items.Clear;
-            agents := MainSession.MyAgents;
-            for i := 0 to agents.Count -1 do begin
-                a := agents.getAgent(i);
-                if (a.groupchat) then
-                    Items.Add(a.jid);
-            end;
-        end;
+        txtServer.Items.Clear();
+        jEntityCache.getByFeature(FEAT_GROUPCHAT, txtServer.Items);
         Show;
     end;
 end;
@@ -94,9 +84,6 @@ end;
 procedure StartJoinRoom(room_jid: TJabberID; nick, password: WideString); overload;
 var
     f: TfrmJoinRoom;
-    i: integer;
-    agents: TAgents;
-    a: TAgentItem;
 begin
     f := TfrmJoinRoom.Create(Application);
     with f do begin
@@ -107,15 +94,8 @@ begin
         if (txtNick.Text = '') then
             txtNick.Text := MainSession.Username;
 
-        with txtServer do begin
-            Items.Clear;
-            agents := MainSession.MyAgents;
-            for i := 0 to agents.Count -1 do begin
-                a := agents.getAgent(i);
-                if (a.groupchat) then
-                    Items.Add(a.jid);
-            end;
-        end;
+        txtServer.Items.Clear();
+        jEntityCache.getByFeature(FEAT_GROUPCHAT, txtServer.Items);
         Show;
     end;
 end;

@@ -21,25 +21,12 @@ unit Browser;
 interface
 
 uses
-    Dockable, IQ, XMLTag, XMLUtils, Contnrs, Unicode, 
+    Dockable, Entity, IQ, XMLTag, XMLUtils, Contnrs, Unicode,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     StdCtrls, ImgList, Buttons, ComCtrls, ExtCtrls, Menus, ToolWin, fListbox,
     fService, TntStdCtrls, TntComCtrls, TntExtCtrls;
 
 type
-
-  TBrowseItem = class
-  public
-    img_idx: integer;
-    jid: Widestring;
-    stype: string;
-    category: string;
-    name: string;
-    nslist: TWideStringlist;
-
-    constructor create;
-    destructor destroy; override;
-end;
 
   TfrmBrowse = class(TfrmDockable)
     Panel3: TTntPanel;
@@ -116,30 +103,31 @@ end;
   private
     { Private declarations }
     _cur: integer;
-    _history: TStringList;
+    _history: TWidestringList;
     _iq: TJabberIQ;
-    _blist: TObjectList;
+    _blist: TList;
     _scb: integer;
+    _ecb: integer;
+
+    _ent: TJabberEntity;
 
     procedure SessionCallback(event: string; tag: TXMLTag);
-    procedure BrowseCallback(event: string; tag: TXMLTag);
+    procedure EntityCallback(event: string; tag:TXMLTag);
+    procedure ShowItems();
+    procedure ShowInfo(e: TJabberEntity);
 
-    procedure ShowMain(tag: TXMLTag);
-    procedure ShowBrowse(tag: TXMLTag);
-    procedure SetupTitle(title, name, jid: string);
+    // Generic GUI stuff
+    procedure SetupTitle(name, jid: Widestring);
     procedure StartList();
-    procedure DoBrowse(jid: string; refresh: boolean);
-    procedure PushJID(jid: string);
+    procedure DoBrowse(jid: Widestring; refresh: boolean);
+    procedure PushJID(jid: Widestring);
     procedure StartBar();
     procedure StopBar();
     procedure ContextMenu(enabled: boolean);
-    procedure getBrowseProps(tag: TXMLTag; var title: string; var image_index: integer);
-
-    function ShowError(Tag: TXMLTag): boolean;
 
   public
     { Public declarations }
-    procedure GoJID(jid: string; refresh: boolean);
+    procedure GoJID(jid: Widestring; refresh: boolean);
 
     procedure DockForm; override;
     procedure FloatForm; override;
@@ -157,11 +145,11 @@ function ShowBrowser(jid: string = ''): TfrmBrowse;
 implementation
 {$R *.DFM}
 uses
+    EntityCache, 
     JabberConst, JoinRoom, Room, Roster, JabberID, Bookmark,
     ExUtils, Session, JUD, Profile, RegForm, Jabber1;
 
 var
-    browseCache: TStringList;
     cur_sort: integer;
     cur_dir: boolean;
 
@@ -194,29 +182,7 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-constructor TBrowseItem.Create();
-begin
-    inherited Create;
-
-    nslist := TWideStringlist.Create();
-    jid := '';
-    name := '';
-    stype := '';
-    category := '';
-    img_idx := -1;
-end;
-
-{---------------------------------------}
-destructor TBrowseItem.destroy();
-begin
-    nslist.Free();
-    inherited Destroy;
-end;
-
-{---------------------------------------}
-{---------------------------------------}
-{---------------------------------------}
-procedure TfrmBrowse.SetupTitle(title, name, jid: string);
+procedure TfrmBrowse.SetupTitle(name, jid: Widestring);
 begin
     //lblTitle.Caption := title + ': ' + name;
     //lblHeader.Caption := title;
@@ -234,123 +200,7 @@ begin
 end;
 
 {---------------------------------------}
-function TfrmBrowse.ShowError(Tag: TXMLTag): boolean;
-begin
-    pnlInfo.Visible := true;
-    vwBrowse.Visible := false;
-    Result := false;
-    lblError.Caption := 'Error browsing jabber object.';
-    StopBar;
-end;
-
-{---------------------------------------}
-procedure TfrmBrowse.getBrowseProps(tag: TXMLTag; var title: string; var image_index: integer);
-var
-    cat: string;
-begin
-    cat := tag.GetAttribute('category');
-    if (cat = '') then
-        cat := tag.Name;
-
-    image_index := -1;
-    if (cat = 'service') then begin
-        image_index := 5;
-        title := sService;
-    end
-    else if (cat = 'conference') then begin
-        image_index := 1;
-        title := sConference;
-    end
-    else if (cat = 'user') then begin
-        image_index := 0;
-        title := sUser;
-    end
-    else if (cat = 'application') then begin
-        image_index := 7;
-        title := sApplication;
-    end
-    else if (cat = 'headline') then begin
-        image_index := 6;
-        title := sHeadline;
-    end
-    else if (cat = 'render') then begin
-        image_index := 2;
-        title := sRender;
-    end
-    else if (cat = 'keyword') then begin
-        image_index := 3;
-        title := sKeyword;
-    end
-    else begin
-        image_index := 4;
-        title := sItem;
-    end;
-end;
-
-{---------------------------------------}
-procedure TfrmBrowse.ShowMain(tag: TXMLTag);
-var
-    title: string;
-    idx: integer;
-    bmp: TBitmap;
-begin
-    // Show the main object info
-    title := '';
-    idx := -1;
-    getBrowseProps(tag, title, idx);
-
-    if (idx = -1) then
-        //Image1.Picture.Assign(nil)
-    else begin
-        bmp := TBitmap.Create();
-        ImageList2.GetBitmap(idx, bmp);
-        bmp.Free();
-    end;
-
-    Self.SetupTitle(title, tag.GetAttribute('name'), '');
-    StatBar.Panels[0].Text := IntToStr(_blist.Count) + ' ' + sObjects;
-    pnlInfo.Visible := false;
-    vwBrowse.Visible := true;
-
-    StopBar;
-end;
-
-{---------------------------------------}
-procedure TfrmBrowse.ShowBrowse(tag: TXMLTag);
-var
-    itm: TBrowseItem;
-    title: string;
-    i, idx: integer;
-    ns: TXMLTagList;
-begin
-    // Show this item.
-    itm := TBrowseItem.Create();
-    itm.jid := tag.getAttribute('jid');
-    itm.name := tag.getAttribute('name');
-    itm.stype := tag.GetAttribute('type');
-    itm.category := tag.GetAttribute('category');
-
-    with itm do begin
-        // create a list of namespaces linked to the object
-        title := '';
-        idx := -1;
-        getBrowseProps(tag, title, idx);
-        img_idx := idx;
-
-        // Add strings to the nslist to enable the context
-        // popup support.
-        ns := tag.QueryTags('ns');
-        for i := 0 to ns.Count - 1 do
-            nslist.Add(ns[i].Data);
-    end;
-    _blist.Add(itm);
-end;
-
-{---------------------------------------}
-procedure TfrmBrowse.DoBrowse(jid: string; refresh: boolean);
-var
-    id: string;
-    i: integer;
+procedure TfrmBrowse.DoBrowse(jid: Widestring; refresh: boolean);
 begin
     // Actually Browse to the JID entered in the address box
     if (not isValidJID(jid)) then begin
@@ -363,30 +213,19 @@ begin
 
     if (not refresh) then begin
         // check the browse cache
-        i := browseCache.IndexOf(jid);
-        if (i >= 0) then begin
-            // we have the tag in the cache
-            BrowseCallback('cache', TXMLTag(browseCache.Objects[i]));
-            exit;
-        end;
+        // XXX: entity cache
     end;
 
     // do the browse query
-    id := MainSession.generateID();
-
-    if (_iq <> nil) then FreeAndNil(_iq);
-
-    _iq := TJabberIQ.Create(MainSession, id, BrowseCallback, 30);
-    with _iq do begin
-        Namespace := XMLNS_BROWSE;
-        iqType := 'get';
-        toJid := jid;
-        Send();
-    end;
+    _ent := jEntityCache.getByJid(jid);
+    if (_ent = nil) then
+        _ent := jEntityCache.walk(jid, MainSession)
+    else
+        _ent := jEntityCache.walk(jid, MainSession);
 end;
 
 {---------------------------------------}
-procedure TfrmBrowse.GoJID(jid: string; refresh: boolean);
+procedure TfrmBrowse.GoJID(jid: Widestring; refresh: boolean);
 begin
     cboJID.Text := jid;
     DoBrowse(jid, refresh);
@@ -394,7 +233,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmBrowse.PushJID(jid: string);
+procedure TfrmBrowse.PushJID(jid: Widestring);
 var
     hi, lo, i: integer;
 begin
@@ -444,8 +283,8 @@ procedure TfrmBrowse.FormCreate(Sender: TObject);
 begin
     // Create the History list
     AssignUnicodeFont(Self);
-    _History := TStringList.Create;
-    _blist := TObjectList.Create();
+    _History := TWidestringList.Create;
+    _blist := TList.Create();
     _iq := nil;
     vwBrowse.ViewStyle := TViewStyle(MainSession.Prefs.getInt('browse_view'));
 
@@ -457,6 +296,7 @@ begin
     pnlInfo.Align := alClient;
 
     _scb := MainSession.RegisterCallback(SessionCallback, '/session/disconnected');
+    _ecb := MainSession.RegisterCallback(EntityCallback, '/session/entity');
 end;
 
 {---------------------------------------}
@@ -466,9 +306,11 @@ begin
     if (_iq <> nil) then
         FreeAndNil(_iq);
 
-    if (MainSession <> nil) then
+    if (MainSession <> nil) then begin
         MainSession.UnRegisterCallback(_scb);
-    
+        MainSession.UnRegisterCallback(_ecb);
+    end;
+
     _History.Free();
     _blist.Clear();
     _blist.Free();
@@ -584,8 +426,7 @@ end;
 procedure TfrmBrowse.vwBrowseChange(Sender: TObject; Item: TListItem;
   Change: TItemChange);
 var
-    b: TBrowseItem;
-
+    b: TJabberEntity;
 begin
     // The selection has changed from one item to another
     if Item = nil then begin
@@ -595,21 +436,20 @@ begin
 
     ContextMenu(true);
 
-    b := TBrowseItem(_blist[Item.Index]);
-    with b.nslist do begin
-        mVersion.Enabled := IndexOf(XMLNS_VERSION) >= 0;
-        mTime.Enabled := IndexOf(XMLNS_TIME) >= 0;
-        mLast.Enabled := Indexof(XMLNS_LAST) >= 0;
-        mSearch.Enabled := IndexOf(XMLNS_SEARCH) >= 0;
-        mRegister.Enabled := IndexOf(XMLNS_REGISTER) >= 0;
+    b := TJabberEntity(_blist[Item.Index]);
 
-        // various conference namespaces
-        if (IndexOf(XMLNS_CONFERENCE) >= 0) then mJoinConf.Enabled := true
-        else if (IndexOf(XMLNS_MUC) >= 0) then mJoinConf.Enabled := true
-        else if (IndexOf('gc-1.0') >= 0) then mJoinConf.Enabled := true
-        else if (b.category = 'conference') then mJoinConf.Enabled := true
-        else mJoinConf.Enabled := false;
-    end;
+    mVersion.Enabled := b.hasFeature(XMLNS_VERSION);
+    mTime.Enabled := b.hasFeature(XMLNS_TIME);
+    mLast.Enabled := b.hasFeature(XMLNS_LAST);
+    mSearch.Enabled := b.hasFeature(XMLNS_SEARCH);
+    mRegister.Enabled := b.hasFeature(XMLNS_REGISTER);
+
+    // various conference namespaces
+    if (b.hasFeature(XMLNS_CONFERENCE)) then mJoinConf.Enabled := true
+    else if (b.hasFeature(XMLNS_MUC)) then mJoinConf.Enabled := true
+    else if (b.hasFeature('gc-1.0')) then mJoinConf.Enabled := true
+    else if (b.category = 'conference') then mJoinConf.Enabled := true
+    else mJoinConf.Enabled := false;
 end;
 
 {---------------------------------------}
@@ -748,78 +588,110 @@ begin
     end;
 end;
 
-
 {---------------------------------------}
-procedure TfrmBrowse.BrowseCallback(event: string; tag: TXMLTag);
+procedure TfrmBrowse.EntityCallback(event: string; tag:TXMLTag);
 var
-    i: integer;
-    dup, ptag: TXMLTag;
-    clist: TXMLTagList;
-    jid: string;
+    tmps: Widestring;
+    ce: TJabberEntity;
 begin
-    // IQ Callback for current query
-    _iq := nil;
-    if ((event = 'xml') or (event = 'cache')) then begin
-        if (tag.GetAttribute('type') = 'error') then begin
-            Self.ShowError(tag);
-            exit;
-        end;
+    // XXX: entity
 
-        // we have some kind of result
-        clist := tag.ChildTags();
-        if (clist.Count <= 0) then begin
-            Self.ShowError(tag);
-            exit;
-        end;
+    if (_ent = nil) then exit;
+    if (tag = nil) then exit;
 
-        ptag := clist[0];
-        clist.Free();
+    tmps := tag.getAttribute('from');
 
-        // show the main parent details
-        clist := ptag.ChildTags();
-        for i := 0 to clist.Count - 1 do begin
-            if (clist[i].Name <> 'ns') then
-                ShowBrowse(clist[i]);
-        end;
-        ShowMain(ptag);
+    if (_ent.jid.full = tmps) then begin
+        if (event = '/session/entity/items') then
+            ShowItems()
+        else begin
+            ShowInfo(_ent);
 
-        if (event <> 'cache') then begin
-            // cache the tag..
-            jid := ptag.GetAttribute('jid');
-            dup := TXMLTag.Create('iq');
-            dup.AssignTag(tag);
-            i := browseCache.indexOf(jid);
-            if (i < 0) then
-                browseCache.AddObject(jid, dup)
-            else begin
-                TXMLTag(browseCache.Objects[i]).Free();
-                browseCache.Objects[i] := dup;
-            end;
+            setupTitle(_ent.Name, _ent.Jid.full);
+            StatBar.Panels[0].Text := IntToStr(_blist.Count) + ' ' + sObjects;
+            pnlInfo.Visible := false;
+            vwBrowse.Visible := true;
+
+            StopBar();
+
         end;
     end
-    else begin
-        // probably a timeout
-        Self.ShowError(nil);
-        exit;
+    else if (event = '/session/entity/info') then begin
+        // check to see if this is a child item of _ent
+        ce := _ent.ItemByJid(tmps);
+        if (ce <> nil) then
+            ShowInfo(ce);
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmBrowse.ShowItems();
+var
+    i: integer;
+begin
+    // populate listview with empty items.
+    _blist.Clear();
+    for i := 0 to _ent.ItemCount - 1 do
+        _blist.Add(_ent.Items[i]);
+
+    // set the listview count
     vwBrowse.Items.Count := _blist.Count;
+end;
+
+{---------------------------------------}
+procedure TfrmBrowse.ShowInfo(e: TJabberEntity);
+var
+    i: integer;
+begin
+    //
+    e.tag := -1;
+    if (e.category =  'service') then begin
+        e.tag := 5;
+    end
+    else if (e.category =  'conference') then begin
+        e.tag := 1;
+    end
+    else if (e.category =  'user') then begin
+        e.tag := 0;
+    end
+    else if (e.category =  'application') then begin
+        e.tag := 7;
+    end
+    else if (e.category =  'headline') then begin
+        e.tag := 6;
+    end
+    else if (e.category =  'render') then begin
+        e.tag := 2;
+    end
+    else if (e.category =  'keyword') then begin
+        e.tag := 3;
+    end
+    else begin
+        e.tag := 4;
+    end;
+
+    i := _blist.IndexOf(e);
+    if (i >= 0) then
+        vwBrowse.Invalidate();
+
 end;
 
 {---------------------------------------}
 procedure TfrmBrowse.vwBrowseData(Sender: TObject; Item: TListItem);
 var
-    b: TBrowseItem;
+    b: TJabberEntity;
 begin
   inherited;
     with Item do begin
-        b := TBrowseItem(_blist[index]);
+        b := TJabberEntity(_blist[index]);
         if (b.name <> '') then
             caption := b.name
         else
-            caption := b.jid;
-        ImageIndex := b.img_idx;
-        SubItems.Add(b.jid);
-        SubItems.Add(b.stype);
+            caption := b.jid.full;
+
+        ImageIndex := b.tag;
+        SubItems.Add(b.jid.full);
+        SubItems.Add(b.catType);
     end;
 end;
 
@@ -840,8 +712,8 @@ end;
 {---------------------------------------}
 function ItemCompare(Item1, Item2: Pointer): integer;
 var
-    j1, j2: TBrowseItem;
-    s1, s2: string;
+    j1, j2: TJabberEntity;
+    s1, s2: Widestring;
 begin
     // compare 2 items..
     if (cur_sort = -1) then begin
@@ -849,8 +721,8 @@ begin
         exit;
     end;
 
-    j1 := TBrowseItem(Item1);
-    j2 := TBrowseItem(Item2);
+    j1 := TJabberEntity(Item1);
+    j2 := TJabberEntity(Item2);
 
     case (cur_sort) of
     0: begin
@@ -858,12 +730,12 @@ begin
         s2 := j2.name;
     end;
     1: begin
-        s1 := j1.jid;
-        s2 := j2.jid;
+        s1 := j1.jid.full;
+        s2 := j2.jid.full;
     end;
     2: begin
-        s1 := j1.stype;
-        s2 := j2.stype;
+        s1 := j1.catType;
+        s2 := j2.catType;
     end
     else begin
         Result := 0;
@@ -872,11 +744,9 @@ begin
     end;
 
     if (cur_dir) then
-        Result := StrComp(PChar(LowerCase(s1)),
-                          PChar(LowerCase(s2)))
+        Result := AnsiCompareText(s1, s2)
     else
-        Result := StrComp(PChar(LowerCase(s2)),
-                          PChar(LowerCase(s1)));
+        Result := AnsiCompareText(s2, s1);
 
 end;
 
@@ -885,15 +755,13 @@ procedure TfrmBrowse.vwBrowseColumnClick(Sender: TObject;
   Column: TListColumn);
 begin
   inherited;
+
   if (Column.Index = cur_sort) then
     cur_dir := not cur_dir
   else
     cur_dir := true;
 
   cur_sort := Column.Index;
-
-  // lstContacts.SortType := stText;
-  // lstContacts.AlphaSort();
 
   _blist.Sort(ItemCompare);
   vwBrowse.Refresh;
@@ -930,12 +798,5 @@ begin
         ContextMenu(false);
 end;
 
-initialization
-    browseCache := TStringList.Create();
-
-finalization
-    ClearStringlistObjects(browseCache);
-    browseCache.Clear();
-    browseCache.Free();
 
 end.

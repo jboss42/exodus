@@ -22,7 +22,7 @@ unit ExUtils;
 interface
 uses
     Unicode, ExRichEdit, RichEdit2, Signals, XMLTag, IQ,
-    TntStdCtrls, TntClasses, Menus, 
+    TntStdCtrls, TntClasses, Menus,
     JabberMsg, Graphics, Controls, StdCtrls, Forms, Classes, SysUtils, Windows;
 
 const
@@ -97,10 +97,8 @@ procedure removeSpecialGroups(grps: TTntStrings); overload;
 
 procedure AssignTntStrings(sl: TWidestringlist; tnt: TTntStrings);
 
-
 procedure jabberSendMsg(to_jid: Widestring; mtag, xtags: TXMLTag;
     body, subject: Widestring); overload;
-
 procedure jabberSendMsg(to_jid: Widestring; mtag: TXMLTag;
     xtags, body, subject: Widestring); overload;
 
@@ -108,7 +106,6 @@ function jabberIQResult(orig: TXMLTag): TXMLTag;
 function jabberIQError(orig: TXMLTag): TXMLTag;
 
 procedure centerMainForm(f: TForm);
-
 procedure BuildPresMenus(parent: TObject; clickev: TNotifyEvent);
 
 function UTCNow(): TDateTime;

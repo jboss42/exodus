@@ -23,7 +23,7 @@ interface
 
 uses
     PrefController,
-    JabberAuth, Agents, Chat, MsgList, Presence, Roster, NodeItem,
+    JabberAuth, Chat, MsgList, Presence, Roster, NodeItem,
     Signals, XMLStream, XMLTag, Unicode,
     Contnrs, Classes, SysUtils, JabberID;
 
@@ -67,8 +67,6 @@ type
 
         procedure StreamCallback(msg: string; tag: TXMLTag);
 
-        function getMyAgents(): TAgents;
-
         procedure SetUsername(username: WideString);
         procedure SetPassword(password: WideString);
         procedure SetServer(server: WideString);
@@ -104,7 +102,6 @@ type
         MsgList: TJabberMsgList;
         ChatList: TJabberChatList;
         Prefs: TPrefController;
-        Agents: TStringList;
         dock_windows: boolean;
         Presence_XML: TWideStringlist;
 
@@ -142,8 +139,6 @@ type
         procedure Play;
         procedure QueueEvent(event: string; tag: TXMLTag; Callback: TPacketEvent);
 
-        function NewAgentsList(srv: WideString): TAgents;
-        function GetAgentsList(srv: WideString): TAgents;
         function generateID: WideString;
         function IsBlocked(jid : WideString): boolean;  overload;
         function IsBlocked(jid : TJabberID): boolean; overload;
@@ -167,7 +162,6 @@ type
         property Stream: TXMLStream read _stream;
         property StreamID: Widestring read _stream_id;
         property Dispatcher: TSignalDispatcher read _dispatcher;
-        property MyAgents: TAgents read getMyAgents;
         property IsPaused: boolean read _paused;
         property Invisible: boolean read _invisible write _invisible;
         property Active: boolean read GetActive;
@@ -254,7 +248,6 @@ begin
         _lang := '';
 
     // Create the agents master list, and the Presence_XML list.
-    Agents := TStringList.Create();
     Presence_XML := TWideStringlist.Create();
 end;
 
@@ -264,17 +257,12 @@ begin
     // Clean up everything
 
     ClearStringListObjects(ppdb);
-    ClearStringListObjects(Agents);
-
     ppdb.Clear();
-    Agents.Clear();
-
     Prefs.Free;
     ppdb.Free;
     roster.Free;
     MsgList.Free;
     ChatList.Free;
-    Agents.Free;
 
     if (_stream <> nil) then
         _stream.Free();
@@ -495,12 +483,10 @@ begin
     if (_paused) then
         Self.Play();
 
-    ClearStringListObjects(Agents);
     FreeAndNil(_features);
 
     ppdb.Clear;
     Roster.Clear;
-    Agents.Clear;
     ppdb.Clear;
 
     _stream.Free();
@@ -630,14 +616,9 @@ end;
 
 {---------------------------------------}
 procedure TJabberSession.StartSession(tag: TXMLTag);
-var
-    cur_agents: TAgents;
 begin
     _first_pres := true;
     _dispatcher.DispatchSignal('/session/authenticated', tag);
-    cur_agents := TAgents.Create();
-    Agents.AddObject(Server, cur_agents);
-    cur_agents.Fetch(Server);
     Prefs.FetchServerPrefs();
 end;
 
@@ -877,36 +858,6 @@ begin
     idx := _avails.IndexOf(jid);
     if (idx >= 0) then
         _avails.Delete(idx);
-end;
-
-{---------------------------------------}
-function TJabberSession.getMyAgents: TAgents;
-begin
-    //
-    if (Agents.Count > 0) then
-        Result := TAgents(Agents.Objects[0])
-    else
-        Result := nil;
-end;
-
-{---------------------------------------}
-function TJabberSession.NewAgentsList(srv: WideString): TAgents;
-begin
-    // create some new agents list object and return it
-    Result := TAgents.Create();
-    Self.Agents.AddObject(srv, Result);
-end;
-
-{---------------------------------------}
-function TJabberSession.GetAgentsList(srv: WideString): TAgents;
-var
-    idx: integer;
-begin
-    idx := Agents.indexOf(srv);
-    if (idx >= 0) then
-        Result := TAgents(Agents.Objects[idx])
-    else
-        Result := nil;
 end;
 
 {---------------------------------------}

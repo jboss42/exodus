@@ -651,37 +651,14 @@ end;
 {---------------------------------------}
 function TExodusController.getAgentService(const Server,
   Service: WideString): WideString;
-var
-    al: TAgents;
-    a: TAgentItem;
 begin
-    Result := '';
-    al := MainSession.GetAgentsList(Server);
-    if (al <> nil) then begin
-        a := al.findService(Lowercase(Service));
-        if (a <> nil) then
-            Result := a.jid;
-    end;
+    // XXX: COM interface for agents/entities
 end;
 
 {---------------------------------------}
 procedure TExodusController.getAgentList(const Server: WideString);
-var
-    atag: TXMLTag;
-    al: TAgents;
 begin
-    al := MainSession.GetAgentsList(Server);
-    if (al =  nil) then begin
-        al := MainSession.NewAgentsList(Server);
-        al.Fetch(Server);
-    end
-    else begin
-        // we already have it, fire now.
-        atag := TXMLTag.Create('iq');
-        atag.setAttribute('from', Server);
-        MainSession.FireEvent('/session/agents', atag);
-        atag.Free();
-    end;
+    // XXX: COM interface for agents/entities
 end;
 
 {---------------------------------------}

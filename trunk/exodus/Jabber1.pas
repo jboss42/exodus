@@ -508,7 +508,8 @@ uses
     {$endif}
 
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
-    ChatController, ChatWin, Debug, Dockable, DNSUtils, ExSession, ExUtils,
+    ChatController, ChatWin, Debug, Dockable, DNSUtils, Entity,
+    EntityCache, ExSession, ExUtils,
     InputPassword, Invite, GnuGetText,
     Iq, JUD, JabberID, JabberMsg, IdGlobal, LocalUtils,
     JabberConst, ComController, CommCtrl, CustomPres,
@@ -1178,6 +1179,9 @@ begin
 
         // Fetch the roster
         Roster.Fetch;
+
+        // Discover our server stuff..
+        jEntityCache.walk(MainSession.Server, MainSession);
 
         // Don't broadcast our initial presence
         _is_broadcast := true;
@@ -2189,7 +2193,7 @@ end;
 procedure TfrmExodus.mnuSearchClick(Sender: TObject);
 begin
     // Start a default search
-    StartSearch(MainSession.MyAgents.getFirstSearch);
+    StartSearch(jEntityCache.getFirstSearch());
 end;
 
 {---------------------------------------}
@@ -2568,6 +2572,8 @@ var
     i: integer;
     c: TChatController;
 }
+var
+    e: TJabberEntity;
 begin
     // Test something..
     // LoadPlugin('RosterClean.ExodusRosterClean');
@@ -2603,7 +2609,11 @@ begin
     }
 
     //FileReceive('pgmillard@jabber.org', 'http://exodus.jabberstudio.org/indy_openssl096g.zip', 'SSL Zip Files');
-    MainSession.RegisterCallback(BadCallback, '/packet/message/x[@xmlns="exodus:puke"]');
+    //MainSession.RegisterCallback(BadCallback, '/packet/message/x[@xmlns="exodus:puke"]');
+
+    //e := TJabberEntity.Create(TJabberID.Create('jabberd.jabberstudio.org'));
+    e := TJabberEntity.Create(TJabberID.Create('jabber.org'));
+    e.walk(MainSession);
 end;
 
 {---------------------------------------}
