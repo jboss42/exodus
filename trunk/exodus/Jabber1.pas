@@ -44,6 +44,7 @@ const
     WM_RECONNECT = WM_USER + 5300;
     WM_INSTALLER = WM_USER + 5350;
     WM_MUTEX = WM_USER + 5351;
+    WM_DISCONNECT = WM_USER + 5352;
 
 type
     TGetLastTick = function: dword; stdcall;
@@ -332,6 +333,7 @@ type
     procedure WMCloseApp(var msg: TMessage); message WM_CLOSEAPP;
     procedure WMReconnect(var msg: TMessage); message WM_RECONNECT;
     procedure WMInstaller(var msg: TMessage); message WM_INSTALLER;
+    procedure WMDisconnect(var msg: TMessage); message WM_DISCONNECT;
 
     function WMAppBar(dwMessage: DWORD; var pData: TAppBarData): UINT; stdcall;
 
@@ -687,6 +689,13 @@ begin
     end;
 end;
 
+procedure TfrmExodus.WMDisconnect(var msg: TMessage);
+begin
+    //
+    MainSession.Disconnect();
+end;
+
+
 {---------------------------------------}
 {---------------------------------------}
 {$ifdef TRACE_EXCEPTIONS}
@@ -993,7 +1002,7 @@ begin
         if (MessageDlg(sAuthNoAccount, mtConfirmation, [mbYes, mbNo], 0) = mrNo) then begin
             // Just disconnect, they don't want an account
             _logoff := true;
-            MainSession.Disconnect()
+            PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
         end
         else begin
             // create the new account
