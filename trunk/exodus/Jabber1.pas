@@ -359,6 +359,7 @@ type
     procedure fireWndMessage(handle: HWND; msg: Cardinal;
         wParam: integer; lParam: integer);
 
+    procedure Flash();
     procedure doRestore();
 
     procedure PreModal(frm: TForm);
@@ -496,6 +497,25 @@ begin
     with Params do begin
         ExStyle := ExStyle or WS_EX_APPWINDOW;
         WndParent := GetDesktopWindow();
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.Flash();
+begin
+    // flash window
+    if (_hidden) then begin
+        Self.WindowState := wsMinimized;
+        //Self.Visible := true;
+        ShowWindow(Handle, SW_SHOWMINNOACTIVE);
+    end;
+
+    if MainSession.Prefs.getBool('notify_flasher') then begin
+        timFlasher.Enabled := true;
+    end
+    else begin
+        timFlasher.Enabled := false;
+        timFlasherTimer(Self);
     end;
 end;
 
@@ -1585,11 +1605,8 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.FormResize(Sender: TObject);
 begin
-    // When we are resized, save the new position
-    {
-    if MainSession <> nil then
-        MainSession.Prefs.SavePosition(Self);
-    }
+    if (timFlasher.Enabled) then
+        timFlasher.Enabled := false;
 end;
 
 {---------------------------------------}
@@ -1887,7 +1904,7 @@ end;
 procedure TfrmExodus.timFlasherTimer(Sender: TObject);
 begin
     // Flash the window
-    FlashWindow(Application.Handle, true);
+    FlashWindow(Self.Handle, true);
 end;
 
 {---------------------------------------}
@@ -2323,7 +2340,9 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.FormActivate(Sender: TObject);
 begin
-    // FlashWindow(Self.Handle, false);
+    if (timFlasher.Enabled) then
+        timFlasher.Enabled := false;
+
     if (frmRosterWindow <> nil) then
         frmRosterWindow.treeRoster.Invalidate();
     StopTrayAlert();
@@ -2724,6 +2743,8 @@ end;
 procedure TfrmExodus.ApplicationEvents1Activate(Sender: TObject);
 begin
     // do something here maybe
+    if (timFlasher.Enabled) then
+        timFlasher.Enabled := false;
 end;
 
 {---------------------------------------}
