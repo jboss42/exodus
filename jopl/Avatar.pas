@@ -21,7 +21,7 @@ unit Avatar;
 
 interface
 uses
-    Session, IQ,
+    Session, IQ, PNGImage, 
     Unicode, JabberUtils, SecHash, Graphics, IdCoderMime, GifImage, Jpeg, XMLTag,
     Types, SysUtils, Classes;
 
@@ -144,6 +144,10 @@ begin
             filename := base + '.jpg';
             TJPEGImage(_pic).SaveToFile(filename);
         end
+        else if (_pic is TPNGObject) then begin
+            filename := base + '.png';
+            TPNGObject(_pic).SaveToFile(filename);
+        end
         else begin
             filename := base + '.bmp';
             TBitmap(_pic).SaveToFile(filename);
@@ -167,6 +171,11 @@ begin
     end
     else if ((ext = '.jpg') or (ext = '.jpeg')) then begin
         _pic := TJpegImage.Create();
+        _pic.Transparent := true;
+        _pic.LoadFromFile(filename);
+    end
+    else if (ext = '.png') then begin
+        _pic := TPNGObject.Create();
         _pic.Transparent := true;
         _pic.LoadFromFile(filename);
     end
@@ -287,7 +296,7 @@ end;
 {---------------------------------------}
 procedure TAvatar.parse(tag: TXMLTag);
 var
-    bv: TXMLTag;
+    mtype, bv: TXMLTag;
     data, mt: Widestring;
     m: TMemoryStream;
     d: TIdDecoderMime;
@@ -322,9 +331,16 @@ begin
         d.DecodeToStream(_data, m);
         m.Position := 0;
 
-        mt := tag.GetAttribute('mimetype');
-        if (mt = '') then mt := tag.GetAttribute('mime-type');
-        if (mt = '') then mt := tag.GetAttribute('type');
+        mtype := tag.GetFirstTag('TYPE');
+        if (mtype = nil) then
+            mtype := tag.GetFirstTag('type');
+        if (mtype <> nil) then
+            mt := mtype.Data
+        else begin
+            mt := tag.GetAttribute('mimetype');
+            if (mt = '') then mt := tag.GetAttribute('mime-type');
+            if (mt = '') then mt := tag.GetAttribute('type');
+        end;
 
         if (mt = 'image/gif') then begin
             _pic := TGifImage.Create();
@@ -340,6 +356,12 @@ begin
         end
         else if (mt = 'image/x-ms-bmp') or (mt = 'image/bmp') then begin
             _pic := TBitmap.Create();
+            _pic.Transparent := true;
+            _pic.LoadFromStream(m);
+            _genData();
+        end
+        else if (mt = 'image/png') then begin
+            _pic := TPNGObject.Create();
             _pic.Transparent := true;
             _pic.LoadFromStream(m);
             _genData();
@@ -360,6 +382,8 @@ begin
                     _genData();
                 except
                     try
+                        // XXX: try PNG?
+
                         FreeAndNil(_pic);
                         m.Position := 0;
                         _pic := TBitmap.Create();
@@ -457,7 +481,9 @@ begin
     else if (_pic is TJPEGImage) then
         Result := 'image/jpeg'
     else if (_pic is TBitmap) then
-        Result := 'image/x-ms-bmp';
+        Result := 'image/x-ms-bmp'
+    else if (_pic is TPNGObject) then
+        Result := 'image/png';
 end;
 
 function TAvatar.isValid(): boolean;

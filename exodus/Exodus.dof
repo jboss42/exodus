@@ -107,10 +107,6 @@ UseLauncher=0
 DebugCWD=
 RemoteHost=192.168.1.188
 RemotePath=C:\Program Files\Exodus.exe
-[Language]
-ActiveLang=
-ProjectLang=
-RootDir=
 [Version Info]
 IncludeVerInfo=0
 AutoIncBuild=0

@@ -186,7 +186,10 @@ uses
   FloatingImage in 'FloatingImage.pas' {FloatImage},
   xdata in 'xdata.pas' {frmXData},
   fXData in 'fXData.pas' {frameXData: TFrame},
-  NewUser in 'NewUser.pas' {frmNewUser};
+  NewUser in 'NewUser.pas' {frmNewUser},
+  pngzlib in '..\jopl\png\pngzlib.pas',
+  pngimage in '..\jopl\png\pngimage.pas',
+  pnglang in '..\jopl\png\pnglang.pas';
 
 {$R *.TLB}
 
