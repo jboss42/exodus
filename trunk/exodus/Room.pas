@@ -148,10 +148,10 @@ type
     mynick: Widestring;
     procedure SendMsg; override;
     function GetNick(rjid: Widestring): Widestring;
-    function isMUCRoom(): boolean;
 
     property HintText: Widestring read _hint_text;
     property getJid: WideString read jid;
+    property isMUCRoom: boolean read _isMUC;
 
     procedure DockForm; override;
     procedure FloatForm; override;
@@ -293,12 +293,6 @@ begin
     if f.TabSheet <> nil then
         frmExodus.Tabs.ActivePage := f.TabSheet;
     Result := f;
-end;
-
-{---------------------------------------}
-function TfrmRoom.isMUCRoom(): boolean;
-begin
-    Result := _isMUC;
 end;
 
 {---------------------------------------}
@@ -587,7 +581,8 @@ begin
     i := _roster.indexOf(from);
 
     xtag := tag.QueryXPTag(xp_muc_presence);
-    if (xtag <> nil) then _isMUC := true;
+    if (xtag <> nil) then
+        _isMUC := true;
 
     // if ((ptype = 'error') and (_jid.resource = mynick)) then begin
     if ((ptype = 'error') and ((from = jid) or (from = jid + '/' + MyNick))) then begin
@@ -1169,8 +1164,8 @@ var
 begin
     // finds a room form given a jid.
     idx := room_list.IndexOf(rjid);
-    if (idx >= 0) then
-        Result := TfrmRoom(room_list[idx])
+    if (idx >= 0) then                           
+        Result := TfrmRoom(room_list.Objects[idx])
     else
         Result := nil;
 end;
