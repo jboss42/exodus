@@ -840,10 +840,6 @@ begin
     _wrap_input := mnuWordwrap.Checked;
     MsgOut.WordWrap := _wrap_input;
     MainSession.Prefs.setBool('wrap_input', _wrap_input);
-
-    if (_wrap_input) then begin
-        MessageDlg(sWordWrapWarning, mtWarning, [mbOK], 0);
-    end;
 end;
 
 {---------------------------------------}
