@@ -529,7 +529,7 @@ begin
     for i := 0 to Self.Count - 1 do begin
         sl := TStringListener(Self.Objects[i]);
         se := TDataStringEvent(sl.Callback);
-        se('data', tag, data);
+        se(event, tag, data);
         end;
     invoking := false;
 
