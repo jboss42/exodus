@@ -2712,9 +2712,9 @@ object frmExodus: TfrmExodus
       OnClick = trayExitClick
     end
   end
-  object ApplicationEvents1: TApplicationEvents
-    OnActivate = ApplicationEvents1Activate
-    OnDeactivate = ApplicationEvents1Deactivate
+  object AppEvents: TApplicationEvents
+    OnActivate = AppEventsActivate
+    OnDeactivate = AppEventsDeactivate
     Left = 88
     Top = 136
   end

@@ -86,7 +86,7 @@ type
     popTabs: TTntPopupMenu;
     popTray: TTntPopupMenu;
     pnlRight: TPanel;
-    ApplicationEvents1: TApplicationEvents;
+    AppEvents: TApplicationEvents;
     Toolbar: TCoolBar;
     ToolBar1: TToolBar;
     btnConnect: TToolButton;
@@ -240,8 +240,8 @@ type
     procedure timReconnectTimer(Sender: TObject);
     procedure ShowEventsWindow1Click(Sender: TObject);
     procedure presToggleClick(Sender: TObject);
-    procedure ApplicationEvents1Activate(Sender: TObject);
-    procedure ApplicationEvents1Deactivate(Sender: TObject);
+    procedure AppEventsActivate(Sender: TObject);
+    procedure AppEventsDeactivate(Sender: TObject);
     procedure TabsChange(Sender: TObject);
     procedure TabsDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
@@ -670,7 +670,6 @@ begin
         else begin
             // minimize our app
             _hidden := true;
-            //self.WindowState := wsMinimized;
             ShowWindow(Handle, SW_HIDE);
             PostMessage(Self.handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
         end;
@@ -2986,7 +2985,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmExodus.ApplicationEvents1Activate(Sender: TObject);
+procedure TfrmExodus.AppEventsActivate(Sender: TObject);
 begin
     // do something here maybe
     if (timFlasher.Enabled) then
@@ -3012,7 +3011,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmExodus.ApplicationEvents1Deactivate(Sender: TObject);
+procedure TfrmExodus.AppEventsDeactivate(Sender: TObject);
 begin
     // app was deactivated..
     if (Self.ActiveChat <> nil) then begin
@@ -3185,7 +3184,7 @@ begin
         end;
     end;
 
-    ApplicationEvents1.Activate();
+    AppEvents.Activate();
 end;
 
 {---------------------------------------}
