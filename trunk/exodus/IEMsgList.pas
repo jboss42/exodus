@@ -421,7 +421,7 @@ begin
         end;
     end;
 
-    if timestamp <> '') then
+    if timestamp <> '' then
         writeHTML('<div class="line"><span class="ts">[' + timestamp + ']</span><span class="pres">' + txt + '</span></div>')
     else
         writeHTML('<div class="line"><span class="pres">' + txt + '</span></div>');
