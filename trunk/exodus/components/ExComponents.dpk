@@ -30,7 +30,7 @@ requires
   vcl,
   designide,
   vclx,
-  TntUnicodeVcl_R60;
+  TntUnicodeVcl_R70;
 
 contains
   ExRichEdit in 'ExRichEdit.pas',

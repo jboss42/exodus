@@ -22,9 +22,7 @@ unit Jabber1;
 interface
 
 uses
-    BaseChat, GUIFactory, Register, Notify, S10n, FileServer,
-    COMController, COMRoster, COMPPDB,
-    ExResponders, ExEvents, RosterWindow, Presence, XMLTag,
+    BaseChat, ExResponders, ExEvents, RosterWindow, Presence, XMLTag,
     ShellAPI, Registry,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
@@ -261,17 +259,7 @@ type
     _flash: boolean;
     _tray_notify: boolean;
     _edge_snap: integer;
-    _prof_index: integer;
-    _auto_login: boolean;
     _auto_away: boolean;
-    _updating: boolean;
-
-    // Various other key controllers
-    _guibuilder: TGUIFactory;
-    _regController: TRegController;
-    _Notify: TNotifyController;
-    _subcontroller: TSubController;
-    _fileserver: TExodusFileServer;
 
     // Various state flags
     _windows_ver: integer;
@@ -287,7 +275,6 @@ type
     _shutdown: boolean;
     _close_min: boolean;
     _appclosing: boolean;
-    _testaa: boolean;
     _new_tabindex: integer;
     _new_account: boolean;
 
@@ -296,7 +283,6 @@ type
     _GetLastTick: TGetLastTick;
     _InitHooks: TInitHooks;
     _StopHooks: TStopHooks;
-    _richedit: THandle;
     _valid_aa: boolean;
 
     // Tray Icon stuff
@@ -314,20 +300,9 @@ type
     _reconnect_tries: integer;
 
     _auto_away_interval: integer;
-    last_tick: dword;
-
-    // Variables to cache Cmd Line parameters passed in
-    _cli_priority: integer;
-    _cli_show: string;
-    _cli_status: string;
-
-    // COM Interfaces for plugins
-    _com_controller: TExodusController;
-    _com_roster: TExodusRoster;
-    _com_ppdb: TExodusPPDB;
+    _last_tick: dword;
 
     // Stuff for tracking win32 API events
-    _mutex: THandle;
     _win32_tracker: Array of integer;
     _win32_idx: integer;
 
@@ -353,8 +328,6 @@ type
     _hook_mouse: HHOOK;
 
     // Window message handlers
-    // procedure WndProc(var Message: TMessage); override;
-
     procedure CreateParams(var Params: TCreateParams); override;
     procedure WMSysCommand(var msg: TWmSysCommand); message WM_SYSCOMMAND;
     procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
@@ -367,14 +340,11 @@ type
     procedure WMInstaller(var msg: TMessage); message WM_INSTALLER;
 
     function WMAppBar(dwMessage: DWORD; var pData: TAppBarData): UINT; stdcall;
-    // function AppHook(var Message: TMessage): boolean;
 
   published
     // Callbacks
     procedure SessionCallback(event: string; tag: TXMLTag);
     procedure ChangePasswordCallback(event: string; tag: TXMLTag);
-
-    // procedure MsgCallback(event: string; tag: TXMLTag);
 
   public
     ActiveChat: TfrmBaseChat;
@@ -398,17 +368,6 @@ type
     procedure PreModal(frm: TForm);
     procedure PostModal();
 
-    property COMController: TExodusController read _com_controller;
-    property COMRoster: TExodusRoster read _com_roster;
-    property COMPPDB: TExodusPPDB read _com_ppdb;
-
-    property RegisterController: TRegController read _regController;
-    property FileServer: TExodusFileServer read _fileserver;
-
-  end;
-
-  ExodusStartException = class(Exception)
-  public
   end;
 
 
@@ -561,8 +520,8 @@ uses
 
     GnuGetText,
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat, ChatController, ChatWin,
-    JabberConst, CommCtrl, CustomPres,
-    Debug, Dockable, ExUtils, GetOpt, InputPassword, Invite,
+    JabberConst, ComController, CommCtrl, CustomPres,
+    Debug, Dockable, ExSession, ExUtils, GetOpt, InputPassword, Invite,
     Iq, JUD, JabberID, JabberMsg, IdGlobal,
     JoinRoom, Login, MsgController, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow, Room,
@@ -722,17 +681,6 @@ begin
     end;
 end;
 
-
-{---------------------------------------}
-{---------------------------------------}
-procedure AddSound(reg: TRegistry; pref_name: string; user_text: string);
-begin
-    // Add a new sound entry into the registry
-    reg.CreateKey('\AppEvents\Schemes\Apps\Exodus\EXODUS_' + pref_name);
-    reg.OpenKey('\AppEvents\EventLabels\EXODUS_' + pref_name, true);
-    reg.WriteString('', user_text);
-end;
-
 {---------------------------------------}
 {---------------------------------------}
 {$ifdef TRACE_EXCEPTIONS}
@@ -748,46 +696,14 @@ begin
 end;
 {$endif}
 
-function CmdLine(): string;
-var
-    i : integer;
-begin
-    result := '';
-    for i := 0 to ParamCount do
-        result := result + ' ' + ParamStr(i);
-end;
-
 {---------------------------------------}
 {---------------------------------------}
 procedure TfrmExodus.FormCreate(Sender: TObject);
 var
-    exp: boolean;
-    profile: TJabberProfile;
-    reg: TRegistry;
-    show_help: boolean;
-    debug: boolean;
-    minimized: boolean;
-    invisible: boolean;
-    expanded: string;
-    jid: TJabberID;
-    pass: string;
-    resource: string;
-    profile_name: string;
-    config: string;
-    help_msg: string;
     win_ver: string;
-    s : string;
-    auth: TStandardAuth;
     menu_list: TWideStringList;
     i : integer;
     mi: TMenuItem;
-    tmp_locale: Widestring;
-    xmpp_file: string;
-    parser: TXMLTagParser;
-    xmpp_node: TXMLTag;
-    connect_node: TXMLTag;
-    auth_node: TXMLTag;
-    node: TXMLTag;
 begin
     // initialize vars
 
@@ -796,30 +712,8 @@ begin
     Include(JclStackTrackingOptions, stRawMode);
     {$endif}
 
-    debug := false;
-    minimized := false;
-    invisible := false;
-    show_help := false;
-    jid := nil;
     ActiveChat := nil;
-
-    _testaa := false;
-    _cli_priority := -1;
-    _cli_status := sAvailable;
-    _cli_show := '';
-    _updating := false;
     _new_tabindex := -1;
-
-    // Hide the application's window, and set our own
-    // window to the proper parameters..
-    ShowWindow(Application.Handle, SW_HIDE);
-    SetWindowLong(Application.Handle, GWL_EXSTYLE,
-        GetWindowLong(Application.Handle, GWL_EXSTYLE)
-        and not WS_EX_APPWINDOW or WS_EX_TOOLWINDOW);
-    ShowWindow(Application.Handle, SW_SHOW);
-
-    // Initialize the Riched20.dll stuff
-    _richedit := LoadLibrary('Riched20.dll');
 
     // Do translation magic
     TranslateProperties(Self);
@@ -829,303 +723,48 @@ begin
     _event := next_none;
     _noMoveCheck := true;
 
-    try
-        with TGetOpts.Create(nil) do begin
-            try
-                // -d          : debug
-                // -m          : minimized
-                // -v          : invisible
-                // -?          : help
-                // -x [yes|no] : expanded
-                // -j [jid]    : jid
-                // -p [pass]   : password
-                // -r [res]    : resource
-                // -i [pri]    : priority
-                // -f [prof]   : profile name
-                // -c [file]   : config file name
-                // -s [status] : presence status
-                // -w [show]   : presence show
-                Options  := 'dmva?xjprifcswo';
-                OptFlags := '-----::::::::::';
-                ReqFlags := '               ';
-                LongOpts := 'debug,minimized,invisible,aatest,help,expanded,jid,password,resource,priority,profile,config,status,show,xmpp';
-                while GetOpt do begin
-                    case Ord(OptChar) of
-                        0: raise EConfigException.Create(format(sUnkArg, [CmdLine()]));
-                        Ord('d'): debug := true;
-                        Ord('x'): expanded := OptArg;
-                        Ord('m'): minimized := true;
-                        Ord('a'): _testaa := true;
-                        Ord('v'): invisible := true;
-                        Ord('j'): jid := TJabberID.Create(OptArg);
-                        Ord('p'): pass := OptArg;
-                        Ord('r'): resource := OptArg;
-                        Ord('i'): _cli_priority := SafeInt(OptArg);
-                        Ord('f'): profile_name := OptArg;
-                        Ord('c'): config := OptArg;
-                        Ord('?'): show_help := true;
-                        Ord('w'): _cli_show := OptArg;
-                        Ord('s'): _cli_status := OptArg;
-                        Ord('o'): xmpp_file := OptArg;
-                    end;
-                end;
-            finally
-                Free
-            end;
+    // if we are testing auto-away, then fire the
+    // timer every 1 second, instead of every 10 secs.
+    if (ExStartup.testaa) then
+        _auto_away_interval := 1
+    else
+        _auto_away_interval := 10;
+    timAutoAway.Interval := _auto_away_interval * 1000;
+
+    with MainSession.Prefs do begin
+        // Setup our caption and the help menus.
+        self.Caption := GetString('brand_caption');
+        RestorePosition(Self);
+
+        menu_list := TWideStringList.Create();
+        fillStringlist('brand_help_menu_list', menu_list);
+        for i := 0 to menu_list.Count-1 do begin
+            mi := TMenuItem.Create(self);
+            mi.Caption := menu_list.Strings[i];
+            mi.OnClick := ShowBrandURL;
+            Help1.Insert(i, mi);
+        end;
+        menu_list.Free();
+
+        // If we are supposed to be hidden, make it so.
+        if (ExStartup.minimized) then begin
+            _hidden := true;
+            self.WindowState := wsMinimized;
+            ShowWindow(Handle, SW_HIDE);
+            PostMessage(Self.handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
         end;
 
-        if (_testaa) then
-            _auto_away_interval := 1
-        else
-            _auto_away_interval := 10;
-
-        timAutoAway.Interval := _auto_away_interval * 1000;
-
-        if (show_help) then begin
-            // show the help message
-            help_msg := sCommandLine;
-            help_msg := help_msg + sCmdDebug;
-            help_msg := help_msg + sCmdMinimized;
-            help_msg := help_msg + sCmdInvisible;
-            help_msg := help_msg + sCmdHelp;
-            help_msg := help_msg + sCmdExpanded;
-            help_msg := help_msg + sCmdJID;
-            help_msg := help_msg + sCmdPassword;
-            help_msg := help_msg + sCmdResource;
-            help_msg := help_msg + sCmdPriority;
-            help_msg := help_msg + sCmdProfile;
-            help_msg := help_msg + sCmdConfig;
-            MessageDlg(help_msg, mtInformation, [mbOK], 0);
-            // xxx: Fix the Halt commands
-            Halt;
-        end;
-
-        if (config = '') then
-            config := getUserDir() + 'exodus.xml';
-
-        // Create our main Session object
-        MainSession := TJabberSession.Create(config);
-
-        // Get our over-riding locale..
-        // Normally, the GNUGetText stuff will try to find
-        // a subdir which matches our Win32 specified locale.
-        // This is used if someone wants to over-ride that.
-        tmp_locale := MainSession.Prefs.getString('locale');
-        if (tmp_locale <> '') then begin
-            UseLanguage(tmp_locale);
-            TranslateProperties(Self);
-        end;
-
-        // Set our session to use the normal auth agent
-        auth := TStandardAuth.Create(MainSession);
-        MainSession.setAuthAgent(auth);
-
-        // Check for a single instance
-        if (MainSession.Prefs.getBool('single_instance')) then begin
-            _mutex := CreateMutex(nil, true, PChar('Exodus' +
-                ExtractFileName(config)));
-            if (_mutex <> 0) and (GetLastError = 0) then begin
-                // we are good to go..
-            end
-            else begin
-                // We are not good to go..
-                // Send the Windows Msg, and bail.
-                PostMessage(HWND_BROADCAST, sExodusMutex, 0, 0);
-                Halt;
-            end;
-        end;
-
-        _guibuilder := TGUIFactory.Create();
-        _guibuilder.SetSession(MainSession);
-
-        _regController := TRegController.Create();
-        _regController.SetSession(MainSession);
-
-        _Notify := TNotifyController.Create;
-        _Notify.SetSession(MainSession);
-
-        _subcontroller := TSubController.Create();
-        _fileserver := TExodusFileServer.Create();
-
-        if not debug then
-            debug := MainSession.Prefs.getBool('debug');
-
-        if not minimized then
-            minimized := MainSession.Prefs.getBool('min_start');
-
-        with MainSession.Prefs do begin
-            s := GetString('brand_icon');
-            if (s <> '') then
-                Application.Icon.LoadFromFile(s);
-            self.Caption := GetString('brand_caption');
-
-            menu_list := TWideStringList.Create();
-            fillStringlist('brand_help_menu_list', menu_list);
-
-            for i := 0 to menu_list.Count-1 do begin
-                mi := TMenuItem.Create(self);
-                mi.Caption := menu_list.Strings[i];
-                mi.OnClick := ShowBrandURL;
-                Help1.Insert(i, mi);
-            end;
-
-            menu_list.Free();
-
-            RestorePosition(Self);
-
-            if (expanded <> '') then
-                SetBool('expanded', (expanded = 'yes'));
-
-            connect_node := nil;
-            if (xmpp_file <> '') then begin
-                parser := TXMLTagParser.Create;
-                parser.ParseFile(xmpp_file);
-                if (parser.Count > 0) then begin
-                    xmpp_node := parser.popTag();
-                    connect_node := xmpp_node.GetFirstTag('connect');
-                    if (connect_node <> nil) then
-                        jid := TJabberID.Create(connect_node.GetBasicText('host'));
-                end;
-                parser.Free();
-            end;
-
-            // if a profile name was specified, use it.
-            // otherwise, if a jid was specified, use it as the profile name.
-            // otherwise, if we have no profiles yet, use the default profile name.
-
-            // TODO: Let's add a profile.temp flag, and not save it
-            // for .xmpp stuff, we'll just spin up a whole new profile then.
-            if (connect_node <> nil) then begin
-                profile_name := Format(sXMPP_Profile, [jid.jid]);
-            end
-            else begin
-                if (profile_name = '') then begin
-                    if (jid <> nil) then
-                        profile_name := jid.jid
-                    else if (Profiles.Count = 0) then
-                        profile_name := sDefaultProfile;
-                end;
-            end;
-
-            // if a profile was specified, use it, or create it if it doesn't exist.
-            if (profile_name <> '') then begin
-                _prof_index := Profiles.IndexOf(profile_name);
-
-                if (_prof_index = -1) then begin
-                    // no profile called this, yet
-                    //if (jid = nil) or (pass = '') then
-                    //    raise EConfigException.Create('need jid and password for new profile');
-
-                    profile := CreateProfile(profile_name);
-                    {
-                    if (jid = nil) then
-                        profile.Server := 'jabber.org';
-                    if (resource = '') then
-                        resource := 'Exodus';
-                    if (_cli_priority = -1) then
-                        _cli_priority := 0;
-                    }
-                end
-                else
-                    profile := TJabberProfile(Profiles.Objects[_prof_index]);
-
-                if (jid <> nil) then begin
-                    profile.Username := jid.user;
-                    profile.Server := jid.domain;
-                end;
-
-                if (resource <> '') then
-                    profile.Resource := resource;
-                if (_cli_priority <> -1) then
-                    profile.Priority := _cli_priority;
-                if (pass <> '') then
-                    profile.password := pass;
-
-                if (connect_node <> nil) then begin
-                    s := connect_node.GetBasicText('ip');
-                    if (s <> '') then
-                        profile.Host := s;
-                    if (connect_node.GetFirstTag('ssl') <> nil) then
-                        profile.ssl := true;
-                    s := connect_node.GetBasicText('port');
-                    if (s <> '') then
-                        profile.Port := SafeInt(s);
-
-                    auth_node := connect_node.GetFirstTag('authenticate');
-                    if (auth_node <> nil) then begin
-                        node := auth_node.GetFirstTag('username');
-                        if (node <> nil) then begin
-                            profile.Username := node.Data;
-                            auth_node.RemoveTag(node);
-                        end;
-
-                        node := auth_node.GetFirstTag('password');
-                        if (node <> nil) then begin
-                            profile.password := node.Data;
-                            auth_node.RemoveTag(node);
-                        end;
-
-                        node := auth_node.GetFirstTag('resource');
-                        if (node <> nil) then begin
-                            profile.Resource := node.Data;
-                            auth_node.RemoveTag(node);
-                        end;
-
-                        node := auth_node.GetFirstTag('tokenauth');
-                        if (node <> nil) then
-                            MainSession.TokenAuth := node;
-                    end;
-
-                    _prof_index := Profiles.IndexOfObject(profile);
-                    setInt('profile_active', _prof_index);
-                    _auto_login := true;
-                end
-                else begin
-                    SaveProfiles();
-                    _prof_index := Profiles.IndexOfObject(profile);
-
-                    if (profile.IsValid()) then begin
-                        setInt('profile_active', _prof_index);
-                        _auto_login := true;
-                    end;
-                end;
-            end
-            else begin
-                _prof_index := getInt('profile_active');
-                if ((_prof_index < 0) or (_prof_index >= Profiles.Count)) then
-                    _prof_index := 0;
-                _auto_login := getBool('autologin');
-            end;
-
-            if (minimized) then begin
-                _hidden := true;
-                self.WindowState := wsMinimized;
-                ShowWindow(Handle, SW_HIDE);
-                PostMessage(Self.handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
-            end;
-
-            MainSession.Invisible := invisible;
-            if (debug) then ShowDebugForm();
-        end;
-    except
-        on E : EConfigException do begin
-            MessageDlg(E.Message, mtError, [mbOK], 0);
-            Halt;
-            exit;
-        end;
+        // Show the debug form, if they've asked for it.
+        if (ExStartup.debug) then ShowDebugForm();
     end;
 
     // Setup callbacks
     _sessioncb := MainSession.RegisterCallback(SessionCallback, '/session');
 
-    // Initialize the global responders/xpath events
-    initResponders();
-
-    // Setup the GUI
+    // Setup the Tabs, toolbar, panel, and roster madness
     Tabs.ActivePage := tbsRoster;
     restoreToolbar();
-    exp := MainSession.Prefs.getBool('expanded');
-    pnlRight.Visible := exp;
+    pnlRight.Visible := MainSession.Prefs.getBool('expanded');
     restoreRoster();
 
     // some gui related flags
@@ -1143,52 +782,19 @@ begin
     _is_min := false;
     _is_broadcast := false;
     _windows_ver := WindowsVersion(win_ver);
-    setupAutoAwayTimer();
 
-    // Setup emoticons
+    // Setup various callbacks, timers, etc.
+    setupAutoAwayTimer();
+    Self.SessionCallback('/session/prefs', nil);
+    Self.setupTrayIcon();
     ConfigEmoticons();
 
-    // if we don't have sound registry settings, then add them
-    // sigh.  If we had an installer, that would be the place to
-    // do this.
-    reg := TRegistry.Create();
-    reg.RootKey := HKEY_CURRENT_USER;
-    reg.OpenKey('\AppEvents\Schemes\Apps\Exodus', true);
-    reg.WriteString('', sExodus);
-    AddSound(reg, 'notify_chatactivity', sSoundChatactivity);
-    AddSound(reg, 'notify_invite', sSoundInvite);
-    AddSound(reg, 'notify_keyword', sSoundKeyword);
-    AddSound(reg, 'notify_newchat', sSoundNewchat);
-    AddSound(reg, 'notify_normalmsg', sSoundNormalmsg);
-    AddSound(reg, 'notify_offline', sSoundOffline);
-    AddSound(reg, 'notify_online', sSoundOnline);
-    AddSound(reg, 'notify_roomactivity', sSoundRoomactivity);
-    AddSound(reg, 'notify_s10n', sSoundS10n);
-    AddSound(reg, 'notify_oob', sSoundOOB);
-    AddSound(reg, 'notify_autoresponse', sSoundAutoResponse);
-    reg.CloseKey();
-    reg.Free();
-
-    // Make sure we read in and setup the prefs..
-    Self.SessionCallback('/session/prefs', nil);
-
-    // setup the tray icon
-    Self.setupTrayIcon();
-    MainSession.setPresence(_cli_show, _cli_status, _cli_priority);
-
-    // create COM interfaces for plugins to use
-    _com_controller := TExodusController.Create();
-    _com_roster := TExodusRoster.Create();
-    _com_ppdb := TExodusPPDB.Create();
-
+    MainSession.setPresence(ExStartup.show, ExStartup.Status, ExStartup.Priority);
 
     SetLength(_win32_tracker, 20);
     _win32_idx := 0;
 
     {$ifdef TRACE_EXCEPTIONS}
-    // Start Exception tracking
-    JclStartExceptionTracking;
-    JclAddExceptNotifier(ExceptionTracker);
     Test1.Visible := true;
     {$endif}
 
@@ -1200,7 +806,7 @@ end;
 {---------------------------------------}
 function TfrmExodus.WMAppBar(dwMessage: DWORD; var pData: TAppBarData): UINT; stdcall;
 begin
-    //
+    // what the heck fires this?????
     Result := 0;
     MoveWindow(Self.Handle, pData.rc.Left, pData.rc.Top,
         Self.Width, Screen.Height, true);
@@ -1229,8 +835,6 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.Startup;
 begin
-    if (_updating) then exit;
-
     // load up all the plugins..
     InitPlugins();
 
@@ -1246,11 +850,10 @@ begin
     // Note that we use a Windows Msg to do this to show the login
     // window async since it's a modal dialog.
     with MainSession.Prefs do begin
-        if (_auto_login) then begin
+        if (ExStartup.auto_login) then begin
             // snag default profile, etc..
-            MainSession.ActivateProfile(_prof_index);
-            if (_cli_priority <> -1) then
-                MainSession.Priority := _cli_priority;
+            if (ExStartup.priority <> -1) then
+                MainSession.Priority := ExStartup.priority;
             Self.DoConnect();
         end
         else
@@ -1266,8 +869,12 @@ begin
     // Make sure that the active profile
     // has the password field filled out.
     // If not, pop up the password prompt,
-    // otherwise, just call connect
-    if ((MainSession.TokenAuth = nil) and (MainSession.Password = '')) then begin
+    // otherwise, just call connect.
+
+    // NB: For non-std auth agents, set prompt_password
+    // accordingly.
+    if ((MainSession.password = '') and
+        (MainSession.getAuthAgent().prompt_password)) then begin
         pw := '';
         if ((not InputQueryW(sPasswordCaption, sPasswordPrompt, pw, True)) or
             (pw = '')) then exit;
@@ -1309,7 +916,7 @@ begin
         end
         else
             DebugMsg(sAutoAwayFail);
-        last_tick := GetTickCount();
+        _last_tick := GetTickCount();
     end
     else begin
         // Use the GetLastInputInfo API call
@@ -1633,6 +1240,7 @@ begin
     mnuPresence.Enabled := enable;
     trayPresence.Enabled := enable;
 
+    mnuRegistration.Enabled := enable;
     mnuMyVCard.Enabled := enable;
     mnuVCard.Enabled := enable;
 
@@ -1740,9 +1348,6 @@ begin
 
     end;
 
-    // kill all of the auto-responders..
-    cleanupResponders();
-
     // Unhook the auto-away DLL
     if (_hookLib <> 0) then begin
         _StopHooks();
@@ -1757,13 +1362,6 @@ begin
     if (sExodusCWPHook <> 0) then begin
         UnhookWindowsHookEx(sExodusCWPHook);
         sExodusCWPHook := 0;
-    end;
-
-
-    // Free the Richedit library
-    if (_richedit <> 0) then begin
-        FreeLibrary(_richedit);
-        _richedit := 0;
     end;
 
     // Close up the msg queue
@@ -1788,29 +1386,12 @@ begin
         MainSession.UnRegisterCallback(_sessioncb);
         MainSession.Prefs.SavePosition(Self);
 
-        _fileserver.Free();
-        _notify.Free();
-        _guiBuilder.Free();
-        _regController.Free();
-        _SubController.Free();
-
-        MainSession.Free();
-        MainSession := nil;
-    end;
-
-    if (_mutex <> 0) then begin
-        CloseHandle(_mutex);
-        _mutex := 0;
+        TeardownSession();
     end;
 
     // Kill the tray icon stuff
     if (_tray_icon <> nil) then
         FreeAndNil(_tray_icon);
-
-    // Free the COM stuff
-    FreeAndNil(_com_roster);
-    FreeAndNil(_com_ppdb);
-    FreeAndNil(_com_controller);
 end;
 
 {---------------------------------------}
@@ -2293,11 +1874,11 @@ begin
     with MainSession.Prefs do begin
         if ((_auto_away)) then begin
 
-            last_tick := getLastTick();
-            if (last_tick = 0) then exit;
+            _last_tick := getLastTick();
+            if (_last_tick = 0) then exit;
 
-            cur_idle := (GetTickCount() - last_tick) div 1000;
-            if (not _testaa) then
+            cur_idle := (GetTickCount() - _last_tick) div 1000;
+            if (not ExStartup.testaa) then
                 mins := cur_idle div 60
             else
                 mins := cur_idle;
@@ -3085,7 +2666,7 @@ end;
 procedure TfrmExodus.mnuPluginDummyClick(Sender: TObject);
 begin
     // call the COM Controller
-    _com_controller.fireMenuClick(Sender);
+    ExCOMController.fireMenuClick(Sender);
 end;
 
 {---------------------------------------}

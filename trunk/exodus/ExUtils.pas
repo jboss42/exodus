@@ -104,6 +104,7 @@ var
 {---------------------------------------}
 implementation
 uses
+    ExSession,
     IniFiles, Dialogs, StrUtils, IdGlobal, ShellAPI,
     XMLUtils, Session, IQ, JabberID, Jabber1, Roster,
     JabberConst, MsgDisplay, Debug;
@@ -486,7 +487,7 @@ var
             result := ' ' + IntToStr(i) + ' ' + modifier
         else
             result := ' ' + IntToStr(i) + ' ' + modifier + 's';
-end;
+    end;
 
 begin
     s := StrToIntDef(seconds, -1);
@@ -504,7 +505,7 @@ begin
         s := s mod 60;
         result := toText(d, 'day') + toText(h, 'hour') +
                   toText(m, 'minute') + toText(s, 'second');
-end;
+    end;
 end;
 
 {---------------------------------------}
@@ -778,7 +779,7 @@ begin
     // outgoing messages
     b := body;
     s := subject;
-    xml := frmExodus.COMController.fireIM(to_jid, b, s, xtags);
+    xml := ExCOMController.fireIM(to_jid, b, s, xtags);
 
     // don't put in two body elements.
     btag := (mtag.GetFirstTag('body'));

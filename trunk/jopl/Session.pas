@@ -61,7 +61,6 @@ type
         _avails: TWidestringlist;
 
         _auth_agent: TJabberAuth;
-        _token_auth: TXMLTag;
 
         procedure StreamCallback(msg: string; tag: TXMLTag);
 
@@ -110,6 +109,7 @@ type
         procedure setAuthAgent(new_auth: TJabberAuth);
         procedure setAuthdJID(user, host, res: Widestring);
         procedure setAuthenticated(ok: boolean; tag: TXMLTag);
+        function  getAuthAgent: TJabberAuth;
 
         procedure setPresence(show, status: WideString; priority: integer);
 
@@ -145,7 +145,6 @@ type
 
         property Username: WideString read GetUsername write SetUsername;
         property Password: WideString read GetPassword write SetPassword;
-        property TokenAuth: TXMLTag read _token_auth write _token_auth;
         property Server: WideString read GetServer write SetServer;
         property Resource: WideString read GetResource write SetResource;
         property Jid: Widestring read GetFullJid;
@@ -209,8 +208,6 @@ begin
     _pauseQueue := TQueue.Create();
     _avails := TWidestringlist.Create();
     
-    _token_auth := nil;
-
     // Create all the things which might register w/ the session
 
     // Create the Presence Proxy Database (PPDB)
@@ -860,6 +857,12 @@ begin
         FreeAndNil(_auth_agent);
 
     _auth_agent := new_auth;
+end;
+
+{---------------------------------------}
+function TJabberSession.getAuthAgent: TJabberAuth;
+begin
+    Result := _auth_agent;
 end;
 
 {---------------------------------------}

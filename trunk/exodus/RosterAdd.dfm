@@ -103,17 +103,21 @@ object frmAdd: TfrmAdd
     Align = alBottom
     AutoScroll = False
     TabOrder = 3
-    inherited Bevel1: TBevel
+    inherited Panel2: TPanel
       Width = 251
-    end
-    inherited Panel1: TPanel
-      Left = 91
-      Height = 29
-      inherited btnOK: TButton
-        OnClick = frameButtons1btnOKClick
+      Height = 34
+      inherited Bevel1: TBevel
+        Width = 251
       end
-      inherited btnCancel: TButton
-        OnClick = frameButtons1btnCancelClick
+      inherited Panel1: TPanel
+        Left = 91
+        Height = 29
+        inherited btnOK: TButton
+          OnClick = frameButtons1btnOKClick
+        end
+        inherited btnCancel: TButton
+          OnClick = frameButtons1btnCancelClick
+        end
       end
     end
   end

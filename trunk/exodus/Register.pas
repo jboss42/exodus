@@ -58,7 +58,7 @@ end;
 
 implementation
 uses
-    JabberID, Jabber1, Forms, RegForm, Session;
+    ExSession, JabberID, Jabber1, Forms, RegForm, Session;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -151,7 +151,7 @@ begin
         tmp_jid.Free();
     end;
     f.Start();
-    frmExodus.RegisterController.RemoveProxy(Self);
+    ExRegController.RemoveProxy(Self);
 end;
 
 {---------------------------------------}

@@ -262,10 +262,8 @@ function FindRoomNick(rjid: Widestring): Widestring;
 {---------------------------------------}
 implementation
 uses
-    ChatWin,
-    COMChatController, 
-    CustomNotify,
-    ExUtils,
+    ChatWin, COMChatController, CustomNotify,
+    ExSession, ExUtils,
     InputPassword,
     Invite,
     IQ,
@@ -342,7 +340,7 @@ begin
         end;
 
         // let the plugins know about the new room
-        frmExodus.ComController.fireNewRoom(tmp_jid.jid, TExodusChat(f.ComController));
+        ExComController.fireNewRoom(tmp_jid.jid, TExodusChat(f.ComController));
         
         tmp_jid.Free();
         room_list.AddObject(rjid, f);

@@ -169,7 +169,7 @@ resourcestring
 implementation
 uses
     Clipbrd, COMChatController, JabberConst, ShellAPI, Profile, Transfer,
-    ExUtils, JabberMsg, JabberID,
+    ExSession, ExUtils, JabberMsg, JabberID,
     RosterWindow, RemoveContact, RosterRecv, Room, Roster,
     Presence, Session, Jabber1;
 
@@ -245,7 +245,7 @@ begin
         if (txtSendSubject.Showing) then
             txtSendSubject.SetFocus();
     end;
-    frmExodus.ComController.fireNewOutgoingIM(msg_jid, TExodusChat(Result.ComController));
+    ExComController.fireNewOutgoingIM(msg_jid, TExodusChat(Result.ComController));
 end;
 
 {---------------------------------------}

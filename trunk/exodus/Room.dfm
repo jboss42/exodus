@@ -8,17 +8,17 @@ inherited frmRoom: TfrmRoom
   TextHeight = 13
   inherited Panel3: TPanel
     Top = 23
-    Height = 230
+    Height = 228
     object Splitter2: TSplitter [0]
       Left = 268
       Top = 4
-      Height = 222
+      Height = 220
       Align = alRight
       ResizeStyle = rsUpdate
     end
     inherited MsgList: TExRichEdit
       Width = 264
-      Height = 222
+      Height = 220
       PopupMenu = popRoom
       ReadOnly = False
       OnDragDrop = lstRosterDragDrop
@@ -28,7 +28,7 @@ inherited frmRoom: TfrmRoom
       Left = 271
       Top = 4
       Width = 105
-      Height = 222
+      Height = 220
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -38,7 +38,7 @@ inherited frmRoom: TfrmRoom
         Left = 1
         Top = 1
         Width = 103
-        Height = 220
+        Height = 218
         Align = alClient
         Columns = <
           item

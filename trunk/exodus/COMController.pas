@@ -178,7 +178,7 @@ resourcestring
 implementation
 
 uses
-    ExResponders,
+    ExResponders, ExSession,
     Chat, ChatController, JabberID, MsgRecv, Room, Browser, Jud,
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
     COMChatController, Dockable, Agents,
@@ -256,7 +256,7 @@ begin
     p.com := plugin;
     plugs.AddObject(com_name, p);
     try
-        p.com.Startup(frmExodus.ComController);
+        p.com.Startup(ExComController);
     except
         msg := Format(sPluginErrInit, [com_name]);
         MessageDlg(msg, mtError, [mbOK], 0);
@@ -628,7 +628,7 @@ end;
 procedure TExodusController.monitorImplicitRegJID(
   const JabberID: WideString; FullJID: WordBool);
 begin
-    frmExodus.RegisterController.MonitorJid(JabberID, FullJID);
+    ExRegController.MonitorJid(JabberID, FullJID);
 end;
 
 {---------------------------------------}
@@ -876,15 +876,15 @@ end;
 {---------------------------------------}
 function TExodusController.Get_Roster: IExodusRoster;
 begin
-    frmExodus.COMRoster.ObjAddRef();
-    Result := frmExodus.COMRoster;
+    ExCOMRoster.ObjAddRef();
+    Result := ExCOMRoster;
 end;
 
 {---------------------------------------}
 function TExodusController.Get_PPDB: IExodusPPDB;
 begin
-    frmExodus.COMPPDB.ObjAddRef();
-    Result := frmExodus.COMPPDB;
+    ExCOMPPDB.ObjAddRef();
+    Result := ExCOMPPDB;
 end;
 
 {---------------------------------------}

@@ -106,8 +106,8 @@ type
         Resource: Widestring;
         Priority: integer;
         SavePasswd: boolean;
-
         ConnectionType: integer;
+        temp: boolean;
 
         // Socket connection
         Host: Widestring;
@@ -901,7 +901,7 @@ begin
     for i := 0 to _profiles.Count - 1 do begin
         cur_profile := TJabberProfile(_profiles.Objects[i]);
         // don't save temp profiles.
-        if (LeftStr(cur_profile.Name, 3) <> '-*-') then begin
+        if (not cur_profile.temp) then begin
             ptag := _pref_node.AddTag('profile');
             cur_profile.Save(ptag);
         end;
@@ -1002,8 +1002,8 @@ begin
     Resource   := getDefault('brand_profile_resource');
     Priority   := SafeInt(getDefault('brand_profile_priority'));
     SavePasswd := SafeBool(getDefault('brand_profile_save_password'));
-
     ConnectionType := SafeInt(getDefault('brand_profile_conn_type'));
+    temp       := false;
 
     // Socket connection
     Host          := getDefault('brand_profile_host');
@@ -1090,13 +1090,14 @@ procedure TJabberProfile.Save(node: TXMLTag);
 var
     ptag: TXMLTag;
 begin
+    if (temp) then exit;
+
     node.ClearTags();
     node.setAttribute('name', Name);
     node.AddBasicTag('username', Username);
     node.AddBasicTag('server', Server);
     node.AddBasicTag('save_passwd', SafeBoolStr(SavePasswd));
 
-    // node.AddBasicTag('password', Password);
     ptag := node.AddTag('password');
     if (SavePasswd) then begin
         ptag.setAttribute('encoded', 'yes');
@@ -1105,7 +1106,6 @@ begin
 
     node.AddBasicTag('resource', Resource);
     node.AddBasicTag('priority', IntToStr(Priority));
-
     node.AddBasicTag('connection_type', IntToStr(ConnectionType));
 
     // Socket connection
@@ -1241,6 +1241,7 @@ end;
 
 initialization
     init();
+
 finalization
     s_default_node.Free();
     s_brand_node.Free();
