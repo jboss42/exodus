@@ -56,6 +56,8 @@ type
     lblSubject: TLabel;
     lblSubjectURL: TLabel;
     btnClose: TSpeedButton;
+    popClearHistory: TMenuItem;
+    popShowHistory: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -80,6 +82,8 @@ type
     procedure FormResize(Sender: TObject);
     procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
     procedure popRoomRosterPopup(Sender: TObject);
+    procedure popShowHistoryClick(Sender: TObject);
+    procedure popClearHistoryClick(Sender: TObject);
   private
     { Private declarations }
     jid: Widestring;                // jid of the conf. room
@@ -1001,6 +1005,18 @@ procedure TfrmRoom.FormEndDock(Sender, Target: TObject; X, Y: Integer);
 begin
   inherited;
     btnClose.Visible := Docked;
+end;
+
+procedure TfrmRoom.popShowHistoryClick(Sender: TObject);
+begin
+    inherited;
+    ShowLog(Self.jid);
+end;
+
+procedure TfrmRoom.popClearHistoryClick(Sender: TObject);
+begin
+    inherited;
+    ClearLog(Self.jid);
 end;
 
 initialization

@@ -59,6 +59,7 @@ function DateTimeToJabber(dt: TDateTime): string;
 
 function URLToFilename(url: string): string;
 
+procedure ClearLog(jid: string);
 procedure LogMessage(Msg: TJabberMessage);
 procedure ShowLog(jid: string);
 procedure DebugMsg(Message : string);
@@ -109,6 +110,9 @@ resourceString
         'Turn Logging On? (Warning: Logs are not encrypted)';
     sNoHistory = 'There is no history file for this contact.';
     sBadLogDir = 'The log directory you specified is invalid. Either turn off logging, or specify a valid path.';
+    sHistoryDeleted = 'History deleted.';
+    sHistoryError = 'Could not delete history file.';
+    sHistoryNone = 'No history file for this user.';
 
 {---------------------------------------}
 constructor TAtom.Create(at: ATOM);
@@ -296,6 +300,28 @@ begin
         end;
 
     ShellExecute(0, 'open', PChar(fn), '', '', SW_NORMAL);
+end;
+
+{---------------------------------------}
+procedure ClearLog(jid: string);
+var
+    fn: string;
+begin
+    fn := MainSession.Prefs.getString('log_path');
+
+    if (Copy(fn, length(fn), 1) <> '\') then
+        fn := fn + '\';
+
+    // Munge the filename
+    fn := fn + MungeName(jid) + '.html';
+    if FileExists(fn) then begin
+        if (DeleteFile(PChar(fn))) then
+            MessageDlg(sHistoryDeleted, mtInformation, [mbOK], 0)
+        else
+            MessageDlg(sHistoryError, mtError, [mbCancel], 0);
+        end
+    else
+        MessageDlg(sHistoryNone, mtWarning, [mbOK,mbCancel], 0);
 end;
 
 {---------------------------------------}

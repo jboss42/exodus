@@ -9,19 +9,19 @@ inherited frmRoom: TfrmRoom
   TextHeight = 13
   inherited Panel3: TPanel
     Top = 23
-    Height = 227
+    Height = 232
     object Splitter2: TSplitter [0]
       Left = 270
       Top = 4
       Width = 3
-      Height = 219
+      Height = 224
       Cursor = crHSplit
       Align = alRight
       ResizeStyle = rsUpdate
     end
     inherited MsgList: TExRichEdit
       Width = 266
-      Height = 219
+      Height = 224
       PopupMenu = popRoom
       OnDragDrop = treeRosterDragDrop
       OnDragOver = treeRosterDragOver
@@ -31,7 +31,7 @@ inherited frmRoom: TfrmRoom
       Left = 273
       Top = 4
       Width = 105
-      Height = 219
+      Height = 224
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -41,7 +41,7 @@ inherited frmRoom: TfrmRoom
         Left = 1
         Top = 1
         Width = 103
-        Height = 217
+        Height = 222
         Align = alClient
         Images = frmRosterWindow.ImageList1
         Indent = 19
@@ -118,6 +118,14 @@ inherited frmRoom: TfrmRoom
     object popClear: TMenuItem
       Caption = 'Clear Window'
       OnClick = popClearClick
+    end
+    object popShowHistory: TMenuItem
+      Caption = 'Show History'
+      OnClick = popShowHistoryClick
+    end
+    object popClearHistory: TMenuItem
+      Caption = 'Clear History'
+      OnClick = popClearHistoryClick
     end
     object popBookmark: TMenuItem
       Caption = 'Bookmark Room'
