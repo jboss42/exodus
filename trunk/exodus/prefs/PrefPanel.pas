@@ -50,7 +50,7 @@ uses
 procedure TfrmPrefPanel.LoadPrefs();
 var
     s: TPrefState;
-    e, v, bval: boolean;
+    bval: boolean;
     ival: integer;
     p, sval: Widestring;
     c: TControl;
