@@ -173,15 +173,20 @@ type
     _status_color: TColor;          // inline status font color
 
     _change_node: TTreeNode;        // the current node being changed
-    _bookmark: TTreeNode;           // the Bookmarks container node
+
 
     _online: TTreeNode;             // Special groups
     _away: TTreeNode;
     _xa: TTreeNode;
     _dnd: TTreeNode;
     _offline: TTreeNode;
-
+    _bookmark: TTreeNode;           // the Bookmarks container node
     _myres: TTreeNode;              // The My Resources node
+
+    _offline_go: TJabberGroup;
+    _myres_go: TJabberGroup;
+    //_bookmark_go: TJabberGroup;
+
     _hint_text : WideString;        // the hint text for the current node
 
     _cur_ritem: TJabberRosterItem;  // current roster item selected
@@ -670,6 +675,7 @@ var
     ri:         TJabberRosterItem;
     node_list:  TWideStringlist;
     go:         TJabberGroup;
+    n:          TJabberNest;
 begin
     treeRoster.Items.BeginUpdate;
     treeRoster.Items.Clear;
@@ -680,6 +686,9 @@ begin
             go := Groups[i];
             go.Data := nil;
         end;
+        
+        for i := NestCount -1 downto 0 do
+            removeNest(i);
 
         // remove all item pointers to tree nodes
         for i := 0 to Count - 1 do begin
@@ -1171,6 +1180,11 @@ begin
                 _offline := treeRoster.Items.AddChild(nil, sGrpOffline);
                 _offline.ImageIndex := ico_right;
                 _offline.SelectedIndex := ico_right;
+
+                _offline_go := TJabberGroup.Create(sGrpOffline);
+                _offline_go.Data := _offline;
+                _offline.Data := _offline_go;
+                
                 resort := true;
             end;
             grp_node := _offline;
@@ -1182,6 +1196,11 @@ begin
                 _myres := treeRoster.Items.AddChild(nil, sMyResources);
                 _myres.ImageIndex := ico_right;
                 _myres.SelectedIndex := ico_right;
+
+                _myres_go := TJabberGroup.Create(sMyResources);
+                _myres_go.Data := _myres;
+                _myres.Data := _myres;
+
                 resort := true;
             end;
             grp_node := _myres;
@@ -1361,7 +1380,9 @@ begin
                 grp_node := treeRoster.Items.AddChild(grp_node, part);
                 grp_node.Data := nest;
                 nest.Data := grp_node;
-            end;
+            end
+            else
+                grp_node := TTreeNode(nest.Data);
         end;
 
         p := grp_node;
@@ -2186,7 +2207,7 @@ begin
         else begin
             c1 := go.Parts[Node.Level] + ' ';
             if (Node.Level + 1 = go.NestLevel) then
-                c2 := '(' + IntToStr(go.Online) + '/' + IntToStr(Node.Count) + ')'
+                c2 := '(' + IntToStr(go.Online) + '/' + IntToStr(go.Total) + ')'
             else
                 c2 := '';
             DrawNodeText(Node, State, c1, c2);

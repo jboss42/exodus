@@ -54,9 +54,14 @@ type
         procedure bmCallback(event: string; tag: TXMLTag);
         procedure presCallback(event: string; tag: TXMLTag; pres: TJabberPres);
         procedure checkGroups(ri: TJabberRosterItem);
+
         function  checkGroup(grp: Widestring): TJabberGroup;
         function  getNumGroups: integer;
+        function  getNumNests: integer;
+
         function  getGroupIndex(idx: integer): TJabberGroup;
+        function  getNestIndex(idx: integer): TJabberNest;
+
         procedure fireBookmark(bm: TJabberBookmark);
 
         function getItem(index: integer): TJabberRosterItem;
@@ -86,6 +91,7 @@ type
 
         function getNest(name: Widestring): TJabberNest;
         function addNest(name: Widestring): TJabberNest;
+        procedure removeNest(idx: integer);
 
         function getGroupItems(grp: Widestring; online: boolean): TList;
 
@@ -94,9 +100,11 @@ type
         procedure AssignGroups(tnt: TTntStrings); overload;
         {$endif}
 
+        property NestCount: integer read getNumNests;
         property GroupsCount: integer read getNumGroups;
         property Groups[index: integer]: TJabberGroup read getGroupIndex;
         property Items[index: integer]: TJabberRosterItem read getItem;
+        property Nests[index: integer]: TJabberNest read getNestIndex;
     end;
 
     TRosterAddItem = class
@@ -484,6 +492,21 @@ begin
 end;
 
 {---------------------------------------}
+function TJabberRoster.getNumNests: integer;
+begin
+    Result := _nests.Count;
+end;
+
+{---------------------------------------}
+function TJabberRoster.getNestIndex(idx: integer): TJabberNest;
+begin
+    if (idx >= _nests.Count) then
+        Result := nil
+    else
+        Result := TJabberNest(_nests.Objects[idx]);
+end;
+
+{---------------------------------------}
 function  TJabberRoster.getGroupIndex(idx: integer): TJabberGroup;
 begin
     if (idx >= _groups.Count) then
@@ -542,6 +565,15 @@ begin
         Result := TJabberNest.Create(nil, name);
         _nests.AddObject(name, Result);
     end;
+end;
+
+{---------------------------------------}
+procedure TJabberRoster.removeNest(idx: integer);
+begin
+    if (idx >= _nests.Count) then exit;
+
+    TJabberNest(_nests.Objects[idx]).Free();
+    _nests.Delete(idx);
 end;
 
 {---------------------------------------}
