@@ -222,6 +222,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 destructor TXMLVCard.Destroy;
 begin
     Home.Free;
@@ -235,6 +236,7 @@ begin
     inherited destroy;
 end;
 
+{---------------------------------------}
 procedure TXMLVCard.Parse(tag: TXMLTag);
 var
     vtag, t1, t2: TXMLTag;

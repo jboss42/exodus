@@ -186,6 +186,7 @@ object frmMsgRecv: TfrmMsgRecv
     Width = 325
     Height = 85
     Align = alClient
+    ScrollBars = ssBoth
     TabOrder = 4
     OnURLClick = txtMsgURLClick
   end
