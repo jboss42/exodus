@@ -122,6 +122,8 @@ const
     XMLNS_BROWSE    = 'jabber:iq:browse';
     XMLNS_AGENTS    = 'jabber:iq:agents';
     XMLNS_SEARCH    = 'jabber:iq:search';
+    XMLNS_PRIVATE   = 'jabber:iq:private';
+    XMLNS_BM        = 'storage:bookmarks';
     
 
 var

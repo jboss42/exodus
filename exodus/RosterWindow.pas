@@ -277,7 +277,7 @@ begin
         if treeRoster.items.Count > 0 then
             treeRoster.TopItem := treeRoster.Items[0];
         end
-    else if event = '/roster/conference' then begin
+    else if event = '/roster/bookmark' then begin
         bi := MainSession.Roster.Bookmarks.indexOf(tag.getAttribute('jid'));
         if bi >= 0 then begin
             bm := TJabberBookmark(MainSession.roster.Bookmarks.Objects[bi]);
@@ -309,6 +309,8 @@ begin
 
         if (_bookmark = nil) then begin
             _bookmark := treeRoster.Items.AddChild(nil, 'Bookmarks');
+            _bookmark.ImageIndex := ico_down;
+            _bookmark.SelectedIndex := ico_down;
             MainSession.roster.GrpList.Objects[bi] :=  _bookmark;
             end;
         end;
@@ -318,6 +320,8 @@ begin
     bm_node.ImageIndex := 21;
     bm_node.SelectedIndex := bm_node.ImageIndex;
     bm_node.Data := bm;
+
+    _bookmark.Expand(true);
 end;
 
 {---------------------------------------}
@@ -623,8 +627,12 @@ begin
     if ((Node = nil) or (Node.HasChildren)) then exit;
 
     // get the roster item attached to this node.
+    if (Node.Data = nil) then exit;
+    if (TObject(Node.Data) is TJabberBookmark) then exit;
+
     ri := TJabberRosterItem(Node.Data);
     if ri = nil then exit;
+
     p := MainSession.ppdb.FindPres(ri.JID.jid, '');
     if P = nil then
         _hint_text := Node.Text + ': Offline'

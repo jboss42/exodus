@@ -25,7 +25,7 @@ uses
     XMLTag,
     Dockable, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    ToolWin, ComCtrls, StdCtrls, Buttons, ExtCtrls, ExRichEdit;
+    ToolWin, ComCtrls, StdCtrls, Buttons, ExtCtrls, ExRichEdit, Menus;
 
 type
   TRoomMember = class
@@ -40,8 +40,6 @@ type
     pnlInput: TPanel;
     MsgOut: TMemo;
     Panel7: TPanel;
-    Panel1: TPanel;
-    btnClose: TSpeedButton;
     Panel2: TPanel;
     lblSubject: TLabel;
     Panel6: TPanel;
@@ -50,6 +48,13 @@ type
     Splitter2: TSplitter;
     lblSubjectURL: TLabel;
     MsgList: TExRichEdit;
+    popRoom: TPopupMenu;
+    popClear: TMenuItem;
+    popBookmark: TMenuItem;
+    popInvite: TMenuItem;
+    popNick: TMenuItem;
+    N1: TMenuItem;
+    popClose: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
     procedure btnCloseClick(Sender: TObject);
@@ -62,19 +67,23 @@ type
     procedure MsgListDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
     procedure MsgListURLClick(Sender: TObject; url: String);
+    procedure popClearClick(Sender: TObject);
+    procedure popNickClick(Sender: TObject);
+    procedure popCloseClick(Sender: TObject);
+    procedure popBookmarkClick(Sender: TObject);
   private
     { Private declarations }
     jid: string;                // jid of the conf. room
-    _roster: TStringlist;
+    _roster: TStringlist;       // roster for this room
     _isGC: boolean;
     _callback: integer;         // Message Callback
     _pcallback: integer;        // Presence Callback
     _scallback: integer;        // Session callback
-    _nick_prefix: string;
+    _nick_prefix: string;       // stuff for nick completion:
     _nick_idx: integer;
     _nick_len: integer;
     _nick_start: integer;
-    _keywords: TStringList;
+    _keywords: TStringList;     // list of keywords to monitor for
 
     procedure MsgCallback(event: string; tag: TXMLTag);
     procedure PresCallback(event: string; tag: TXMLTag);
@@ -182,26 +191,35 @@ var
     Msg: TJabberMessage;
 begin
     // display the body of the msg
+    Msg := TJabberMessage.Create(tag);
+
     i := _roster.indexOf(tag.getAttribute('from'));
-    if (i >= 0) then begin
-        Msg := TJabberMessage.Create(tag);
+    if (i < 0) then begin
+        // some kind of server msg..
+        Msg.Nick := '';
+        Msg.IsMe := false;
+        end
+    else begin
         Msg.Nick := TRoomMember(_roster.Objects[i]).Nick;
         Msg.IsMe := (Msg.Nick = MyNick);
-        if Msg.Subject <> '' then
-            lblSubject.Caption := '  ' + Msg.Subject;
+        end;
 
-        // check for keywords
-        if (not Application.Active) then begin
-            for k := 0 to _keywords.Count - 1 do begin
-                if (pos(_keywords[k], Msg.Body) > 0) then begin
-                    ShowRiserWindow('Keyword in ' + Self.Caption, 12);
-                    break;
-                    end;
+    if Msg.Subject <> '' then begin
+        lblSubject.Caption := '  ' + Msg.Subject;
+        lblSubject.Hint := Msg.Subject;
+        end;
+
+    // check for keywords
+    if (not Application.Active) then begin
+        for k := 0 to _keywords.Count - 1 do begin
+            if (pos(_keywords[k], Msg.Body) > 0) then begin
+                ShowRiserWindow('Keyword in ' + Self.Caption, 12);
+                break;
                 end;
             end;
-
-        DisplayMsg(Msg, MsgList);
         end;
+
+    DisplayMsg(Msg, MsgList);
 end;
 
 {---------------------------------------}
@@ -228,6 +246,7 @@ function TfrmRoom.checkCommand(txt: string): boolean;
 var
     l, i: integer;
     c, tmps, tok: string;
+    p: TJabberPres;
 begin
     // check for various / commands
     result := false;
@@ -246,6 +265,11 @@ begin
         tok := Copy(tmps, 1, i - 1);
         if (tok = '/nick') then begin
             // change nickname
+            myNick := Trim(Copy(tmps, 6, length(tmps) - 5));
+            p := TJabberPres.Create;
+            p.toJID := TJabberID.Create(jid + '/' + myNick);
+            MainSession.SendTag(p);
+            MsgOut.Lines.Clear;
             Result := true;
             end
         else if (tok = '/clear') then begin
@@ -604,6 +628,53 @@ end;
 procedure TfrmRoom.MsgListURLClick(Sender: TObject; url: String);
 begin
     ShellExecute(0, 'open', pchar(url), '', '', SW_NORMAL);
+end;
+
+procedure TfrmRoom.popClearClick(Sender: TObject);
+begin
+  inherited;
+    MsgList.Lines.Clear;
+end;
+
+procedure TfrmRoom.popNickClick(Sender: TObject);
+var
+    new_nick: string;
+    p: TJabberPres;
+begin
+  inherited;
+    new_nick := myNick;
+    if (InputQuery('Nickname', 'New Nickname', new_nick)) then begin
+        if (new_nick = myNick) then exit;
+        p := TJabberPres.Create;
+        p.toJID := TJabberID.Create(jid + '/' + myNick);
+        MainSession.SendTag(p);
+        end;
+end;
+
+procedure TfrmRoom.popCloseClick(Sender: TObject);
+begin
+  inherited;
+    Self.Close();
+end;
+
+procedure TfrmRoom.popBookmarkClick(Sender: TObject);
+var
+    bm: TJabberBookmark;
+    bm_name: string;
+begin
+  inherited;
+    // bookmark this room..
+    bm_name := Self.jid;
+
+    if (inputQuery('Bookmark Room', 'Enter Bookmark Name: ', bm_name)) then begin
+        bm := TJabberBookmark.Create(nil);
+        bm.jid := TJabberID.Create(Self.jid);
+        bm.bmType := 'conference';
+        bm.nick := myNick;
+        bm.Name := bm_name;
+        MainSession.roster.Bookmarks.AddObject(bm.jid.full, bm);
+        MainSession.roster.SaveBookmarks();
+        end;
 end;
 
 end.
