@@ -601,15 +601,6 @@ begin
         _show_unsub := MainSession.Prefs.getBool('roster_show_unsub');
         _avatars := MainSession.Prefs.getBool('roster_avatars');
 
-        if (_avatars) then begin
-            treeRoster.Perform(TVM_SETITEMHEIGHT, _item_height, 0);
-            _item_height := Round(1.7*(treeRoster.Canvas.TextHeight('Ag'))) + 2;
-        end
-        else begin
-            _item_height := treeRoster.Canvas.TextHeight('Ag') + 2;
-            treeRoster.Perform(TVM_SETITEMHEIGHT, -1, 0);
-        end;
-
         frmExodus.pnlRoster.ShowHint := not _show_status;
 
         BuildPresMenus(TTntMenuItem(popStatus), presAvailableClick);
@@ -949,6 +940,18 @@ begin
     _FullRoster := true;
     treeRoster.Color := TColor(MainSession.prefs.getInt('roster_bg'));
     ClearNodes;
+
+    // make sure our item heights are setup correctly.
+    if (_avatars) then begin
+        _item_height := Round(1.7 * (treeRoster.Canvas.TextHeight('Ag'))) + 2;
+        treeRoster.Perform(TVM_SETITEMHEIGHT, _item_height, 0);
+    end
+    else begin
+        _item_height := treeRoster.Canvas.TextHeight('Ag') + 2;
+        treeRoster.Perform(TVM_SETITEMHEIGHT, -1, 0);
+    end;
+
+    // Render everything
     treeRoster.Items.BeginUpdate;
 
     with MainSession.Roster do begin
