@@ -83,8 +83,11 @@ type
   protected
     _embed_returns: boolean;
     _wrap_input: boolean;
+    _scroll: boolean;
+
     procedure _scrollBottom();
     procedure WMThrob(var msg: TMessage); message WM_THROB;
+    procedure WMVScroll(var msg: TMessage); message WM_VSCROLL;
 
   public
     { Public declarations }
@@ -301,6 +304,8 @@ begin
             MainSession.prefs.setInt('chat_textbox', pnlInput.Height);
     end;
 
+    _scroll := true;
+
     inherited;
 end;
 
@@ -490,5 +495,20 @@ function TfrmBaseChat.newContextMenu(caption: Widestring): Widestring;
 begin
     // xxx: code me
 end;
+
+procedure TfrmBaseChat.WMVScroll(var msg: TMessage);
+begin
+    //
+    if (msg.WParamLo = SB_THUMBPOSITION) then begin
+        _scroll := true;
+    end
+    else if (msg.WParamLo = SB_THUMBTRACK) then begin
+        _scroll := false;
+    end;
+
+    inherited;
+
+end;
+
 
 end.
