@@ -1028,8 +1028,10 @@ begin
             // the redock flag tells the roster window
             // that this form SHOULD be redocked,
             // instead of a window that is manually undocked
+            LockWindowUpdate(frmExodus.Tabs.Handle);
             Self.FloatForm();
             _redock := true;
+            LockWindowUpdate(0);
         end;
     end
 
