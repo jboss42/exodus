@@ -18,14 +18,14 @@ object frmVCard: TfrmVCard
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
-    Left = 121
+    Left = 153
     Top = 0
     Height = 292
   end
   object PageControl1: TTntPageControl
-    Left = 124
+    Left = 156
     Top = 0
-    Width = 318
+    Width = 286
     Height = 292
     ActivePage = TabSheet6
     Align = alClient
@@ -968,21 +968,15 @@ object frmVCard: TfrmVCard
       end
     end
   end
-  object TreeView1: TTreeView
+  object TreeView1: TTntTreeView
     Left = 0
     Top = 0
-    Width = 121
+    Width = 153
     Height = 292
     Align = alLeft
+    BevelWidth = 0
     Indent = 19
     TabOrder = 2
     OnClick = TreeView1Click
-    Items.Data = {
-      030000001F0000000000000000000000FFFFFFFFFFFFFFFF0000000000000000
-      06426173696320260000000000000000000000FFFFFFFFFFFFFFFF0000000001
-      0000000D506572736F6E616C20496E666F200000000000000000000000FFFFFF
-      FFFFFFFFFF000000000000000007416464726573732200000000000000000000
-      00FFFFFFFFFFFFFFFF000000000100000009576F726B20496E666F2000000000
-      00000000000000FFFFFFFFFFFFFFFF00000000000000000741646472657373}
   end
 end

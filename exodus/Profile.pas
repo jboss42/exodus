@@ -266,6 +266,7 @@ end;
 procedure TfrmProfile.FormCreate(Sender: TObject);
 var
     i: integer;
+    n: TTntTreeNode;
 begin
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
@@ -287,6 +288,20 @@ begin
     tabSheet6.TabVisible := false;
     tabSheet7.TabVisible := false;
     iq := nil;
+
+    // Do this to ensure the nodes are properly translated.
+    TreeView1.Items.Clear();
+    n := TreeView1.Items.Add(nil,       _('Basic'));
+    TreeView1.Items.AddChild(n,    _('Resources'));
+    TreeView1.Items.AddChild(nil,  _('Groups'));
+    n := TreeView1.Items.AddChild(nil,  _('Personal Information'));
+    TreeView1.Items.AddChild(n,    _('Address'));
+    n := TreeView1.Items.AddChild(nil,  _('Work Information'));
+    TreeView1.Items.AddChild(n,    _('Address'));
+
+    for i := 0 to TreeView1.Items.Count - 1 do
+        TreeView1.Items[i].Expand(true);
+
     MainSession.Prefs.RestorePosition(Self);
 end;
 
