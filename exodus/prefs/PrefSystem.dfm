@@ -37,13 +37,14 @@ object frmPrefSystem: TfrmPrefSystem
     ParentFont = False
     OnClick = lblPluginScanClick
   end
-  object StaticText4: TTntStaticText
+  object StaticText4: TTntPanel
     Left = 0
     Top = 0
     Width = 307
-    Height = 20
+    Height = 24
     Align = alTop
-    Alignment = taCenter
+    BevelOuter = bvLowered
+    BorderWidth = 1
     Caption = 'System Options'
     Color = clMenuHighlight
     Font.Charset = ANSI_CHARSET
@@ -51,7 +52,6 @@ object frmPrefSystem: TfrmPrefSystem
     Font.Height = -13
     Font.Name = 'Arial'
     Font.Style = [fsBold]
-    ParentColor = False
     ParentFont = False
     TabOrder = 0
   end

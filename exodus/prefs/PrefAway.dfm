@@ -1,6 +1,6 @@
 inherited frmPrefAway: TfrmPrefAway
-  Left = 254
-  Top = 167
+  Left = 252
+  Top = 255
   Caption = 'frmPrefAway'
   ClientHeight = 212
   ClientWidth = 300
@@ -103,21 +103,21 @@ inherited frmPrefAway: TfrmPrefAway
     Caption = 'Reduce priority to 0 during auto-away.'
     TabOrder = 7
   end
-  object StaticText7: TTntStaticText
+  object StaticText4: TTntPanel
     Left = 0
     Top = 0
     Width = 300
-    Height = 20
+    Height = 24
     Align = alTop
-    Alignment = taCenter
+    BevelOuter = bvLowered
+    BorderWidth = 1
     Caption = 'Auto Away Options'
-    Color = clHighlight
+    Color = clMenuHighlight
     Font.Charset = ANSI_CHARSET
     Font.Color = clCaptionText
     Font.Height = -13
     Font.Name = 'Arial'
     Font.Style = [fsBold]
-    ParentColor = False
     ParentFont = False
     TabOrder = 8
   end

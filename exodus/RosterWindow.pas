@@ -821,19 +821,19 @@ begin
         ritem := MainSession.Roster.Find(jid);
     end;
 
-    if (event = '/presence/offline') then begin
-        // remove the node
-        if ((ritem <> nil) and (ritem.jid.jid <> MainSession.BareJid)) then
-            p := MainSession.PPDB.FindPres(jid, '');
-        if (ritem <> nil) then
+    if (ritem <> nil) then begin
+        if (event = '/presence/offline') then begin
+            // remove the node
+            if (ritem.jid.jid <> MainSession.BareJid) then
+                p := MainSession.PPDB.FindPres(jid, '');
             RenderNode(ritem, p);
-
-    end
-    else if (ritem <> nil) then begin
-        // possibly re-render the node based on this pres packet
-        if (ritem.jid.jid <> MainSession.BareJid) then
-            p := MainSession.ppdb.FindPres(tmp_jid.jid, '');
-        RenderNode(ritem, p);
+        end
+        else begin
+            // possibly re-render the node based on this pres packet
+            if (ritem.jid.jid <> MainSession.BareJid) then
+                p := MainSession.ppdb.FindPres(tmp_jid.jid, '');
+            RenderNode(ritem, p);
+        end;
     end;
 
     tmp_jid.Free();

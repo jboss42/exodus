@@ -10,7 +10,7 @@ inherited frmPrefPresence: TfrmPrefPresence
   TextHeight = 13
   object lstCustomPres: TTntListBox
     Left = 0
-    Top = 113
+    Top = 117
     Width = 329
     Height = 102
     Align = alTop
@@ -18,32 +18,14 @@ inherited frmPrefPresence: TfrmPrefPresence
     TabOrder = 0
     OnClick = lstCustomPresClick
   end
-  object StaticText10: TTntStaticText
-    Left = 0
-    Top = 0
-    Width = 329
-    Height = 20
-    Align = alTop
-    Alignment = taCenter
-    Caption = 'Presence Options'
-    Color = clHighlight
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clCaptionText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-    TabOrder = 1
-  end
   object pnlCustomPresButtons: TPanel
     Left = 0
-    Top = 215
+    Top = 219
     Width = 329
     Height = 34
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 2
+    TabOrder = 1
     object btnCustomPresAdd: TTntButton
       Left = 4
       Top = 4
@@ -74,12 +56,12 @@ inherited frmPrefPresence: TfrmPrefPresence
   end
   object GroupBox1: TGroupBox
     Left = 0
-    Top = 249
+    Top = 253
     Width = 329
     Height = 119
     Align = alTop
     Caption = 'Properties'
-    TabOrder = 3
+    TabOrder = 2
     object Label11: TTntLabel
       Left = 6
       Top = 23
@@ -177,12 +159,12 @@ inherited frmPrefPresence: TfrmPrefPresence
   end
   object Panel1: TPanel
     Left = 0
-    Top = 20
+    Top = 24
     Width = 329
     Height = 93
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 4
+    TabOrder = 3
     object Label8: TTntLabel
       Left = 5
       Top = 28
@@ -225,5 +207,23 @@ inherited frmPrefPresence: TfrmPrefPresence
         'Show only last presence change'
         'Don'#39't show presence changes')
     end
+  end
+  object StaticText4: TTntPanel
+    Left = 0
+    Top = 0
+    Width = 329
+    Height = 24
+    Align = alTop
+    BevelOuter = bvLowered
+    BorderWidth = 1
+    Caption = 'Presence Options'
+    Color = clMenuHighlight
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clCaptionText
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 4
   end
 end

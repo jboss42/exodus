@@ -9,69 +9,51 @@ inherited frmPrefRoster: TfrmPrefRoster
   TextHeight = 13
   object Label21: TTntLabel
     Left = 0
-    Top = 117
+    Top = 125
     Width = 164
     Height = 13
     Caption = 'When I double click a contact, do:'
   end
-  object StaticText1: TTntStaticText
-    Left = 0
-    Top = 0
-    Width = 344
-    Height = 20
-    Align = alTop
-    Alignment = taCenter
-    Caption = 'Roster Options'
-    Color = clHighlight
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clCaptionText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-    TabOrder = 0
-  end
   object chkShowUnsubs: TTntCheckBox
     Left = 0
-    Top = 25
+    Top = 33
     Width = 265
     Height = 17
     Caption = 'Show contacts who can not see my presence'
-    TabOrder = 1
+    TabOrder = 0
   end
   object chkHideBlocked: TTntCheckBox
     Left = 0
-    Top = 60
+    Top = 68
     Width = 201
     Height = 17
     Caption = 'Hide blocked contacts '
-    TabOrder = 2
+    TabOrder = 1
   end
   object chkPresErrors: TTntCheckBox
     Left = 0
-    Top = 78
+    Top = 86
     Width = 321
     Height = 17
     Caption = 'Detect contacts which are unreachable or no longer exist'
-    TabOrder = 3
+    TabOrder = 2
   end
   object chkShowPending: TTntCheckBox
     Left = 0
-    Top = 42
+    Top = 50
     Width = 289
     Height = 17
     Caption = 'Show contacts I have asked to add as "Pending"'
-    TabOrder = 4
+    TabOrder = 3
   end
   object cboDblClick: TTntComboBox
     Left = 24
-    Top = 133
+    Top = 141
     Width = 201
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 5
+    TabOrder = 4
     Items.WideStrings = (
       'A new one to one chat window'
       'An instant message window'
@@ -79,24 +61,24 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object chkRosterUnicode: TTntCheckBox
     Left = 0
-    Top = 95
+    Top = 103
     Width = 328
     Height = 17
     Caption = 'Allow Unicode characters in the roster (requires 2000, ME, XP).'
-    TabOrder = 6
+    TabOrder = 5
   end
   object chkInlineStatus: TTntCheckBox
     Left = 0
-    Top = 168
+    Top = 176
     Width = 241
     Height = 17
     Caption = 'Show status in the roster: Joe <Meeting>'
-    TabOrder = 7
+    TabOrder = 6
     OnClick = chkInlineStatusClick
   end
   object cboInlineStatus: TColorBox
     Left = 24
-    Top = 187
+    Top = 195
     Width = 201
     Height = 22
     DefaultColorColor = clBlue
@@ -104,6 +86,24 @@ inherited frmPrefRoster: TfrmPrefRoster
     Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
     DropDownCount = 12
     ItemHeight = 16
+    TabOrder = 7
+  end
+  object StaticText4: TTntPanel
+    Left = 0
+    Top = 0
+    Width = 344
+    Height = 24
+    Align = alTop
+    BevelOuter = bvLowered
+    BorderWidth = 1
+    Caption = 'Roster Options'
+    Color = clMenuHighlight
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clCaptionText
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentFont = False
     TabOrder = 8
   end
 end

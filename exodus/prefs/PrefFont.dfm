@@ -67,24 +67,6 @@ inherited frmPrefFont: TfrmPrefFont
     Font.Style = [fsBold]
     ParentFont = False
   end
-  object StaticText3: TTntStaticText
-    Left = 0
-    Top = 0
-    Width = 403
-    Height = 20
-    Align = alTop
-    Alignment = taCenter
-    Caption = 'Font && Color options'
-    Color = clHighlight
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clCaptionText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-    TabOrder = 0
-  end
   object colorRoster: TTreeView
     Left = 8
     Top = 72
@@ -94,7 +76,7 @@ inherited frmPrefFont: TfrmPrefFont
     ReadOnly = True
     ShowButtons = False
     ShowLines = False
-    TabOrder = 1
+    TabOrder = 0
     OnMouseDown = colorRosterMouseDown
     Items.Data = {
       01000000200000001B0000001B00000000000000FFFFFFFF0000000002000000
@@ -112,7 +94,7 @@ inherited frmPrefFont: TfrmPrefFont
     Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
     DropDownCount = 12
     ItemHeight = 16
-    TabOrder = 2
+    TabOrder = 1
     OnChange = clrBoxBGChange
   end
   object clrBoxFont: TColorBox
@@ -125,7 +107,7 @@ inherited frmPrefFont: TfrmPrefFont
     Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
     DropDownCount = 12
     ItemHeight = 16
-    TabOrder = 3
+    TabOrder = 2
     OnChange = clrBoxFontChange
   end
   object btnFont: TTntButton
@@ -134,7 +116,7 @@ inherited frmPrefFont: TfrmPrefFont
     Width = 90
     Height = 25
     Caption = 'Change Font'
-    TabOrder = 4
+    TabOrder = 3
     OnClick = btnFontClick
   end
   object colorChat: TExRichEdit
@@ -221,7 +203,7 @@ inherited frmPrefFont: TfrmPrefFont
     ReadOnly = True
     ScrollBars = ssBoth
     ShowSelectionBar = False
-    TabOrder = 5
+    TabOrder = 4
     URLColor = clBlue
     URLCursor = crHandPoint
     WordWrap = False
@@ -232,6 +214,24 @@ inherited frmPrefFont: TfrmPrefFont
     PlainRTF = False
     UndoLimit = 0
     AllowInPlace = False
+  end
+  object StaticText4: TTntPanel
+    Left = 0
+    Top = 0
+    Width = 403
+    Height = 24
+    Align = alTop
+    BevelOuter = bvLowered
+    BorderWidth = 1
+    Caption = 'Font and Color Options'
+    Color = clMenuHighlight
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clCaptionText
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 5
   end
   object FontDialog1: TFontDialog
     Font.Charset = DEFAULT_CHARSET

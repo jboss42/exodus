@@ -23,7 +23,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, ComCtrls, TntStdCtrls;
+  Dialogs, PrefPanel, StdCtrls, ComCtrls, TntStdCtrls, ExtCtrls,
+  TntExtCtrls;
 
 type
   TfrmPrefAway = class(TfrmPrefPanel)
@@ -39,7 +40,7 @@ type
     txtAway: TTntEdit;
     txtXA: TTntEdit;
     chkAAReducePri: TTntCheckBox;
-    StaticText7: TTntStaticText;
+    StaticText4: TTntPanel;
   private
     { Private declarations }
   public

@@ -24,7 +24,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, PrefPanel, ComCtrls, StdCtrls, jpeg, ExtCtrls, TntStdCtrls,
-  TntComCtrls;
+  TntComCtrls, TntExtCtrls;
 
 type
   TfrmPrefDialogs = class(TfrmPrefPanel)
@@ -46,7 +46,7 @@ type
     txtToastDuration: TTntEdit;
     txtChatMemory: TTntEdit;
     spnChatMemory: TTntUpDown;
-    StaticText5: TTntStaticText;
+    StaticText4: TTntPanel;
     procedure chkRosterAlphaClick(Sender: TObject);
     procedure chkToastAlphaClick(Sender: TObject);
     procedure trkRosterAlphaChange(Sender: TObject);

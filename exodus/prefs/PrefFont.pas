@@ -24,7 +24,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, PrefPanel, StdCtrls, ComCtrls, RichEdit2, ExRichEdit, ExtCtrls,
-  TntStdCtrls;
+  TntStdCtrls, TntExtCtrls;
 
 type
   TfrmPrefFont = class(TfrmPrefPanel)
@@ -33,7 +33,6 @@ type
     Label24: TTntLabel;
     Label25: TTntLabel;
     Label5: TTntLabel;
-    StaticText3: TTntStaticText;
     colorRoster: TTreeView;
     clrBoxBG: TColorBox;
     clrBoxFont: TColorBox;
@@ -41,6 +40,7 @@ type
     colorChat: TExRichEdit;
     FontDialog1: TFontDialog;
     lblColor: TTntLabel;
+    StaticText4: TTntPanel;
     procedure btnFontClick(Sender: TObject);
     procedure colorChatMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);

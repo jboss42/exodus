@@ -31,7 +31,7 @@ uses
     Menus, ShellAPI, Unicode,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
     ComCtrls, StdCtrls, ExtCtrls, buttonFrame, CheckLst,
-    ExRichEdit, Dialogs, RichEdit2, TntStdCtrls, TntComCtrls;
+    ExRichEdit, Dialogs, RichEdit2, TntStdCtrls, TntComCtrls, TntExtCtrls;
 
 type
   TfrmPrefs = class(TForm)
@@ -53,10 +53,8 @@ type
     imgAway: TImage;
     lblAway: TTntLabel;
     tbsKeywords: TTntTabSheet;
-    StaticText8: TTntStaticText;
     memKeywords: TTntMemo;
     tbsBlockList: TTntTabSheet;
-    StaticText9: TTntStaticText;
     memBlocks: TTntMemo;
     imgKeywords: TImage;
     lblKeywords: TTntLabel;
@@ -86,6 +84,8 @@ type
     imgLayouts: TImage;
     lblLayouts: TTntLabel;
     Memo1: TTntMemo;
+    StaticText4: TTntPanel;
+    TntPanel1: TTntPanel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -266,14 +266,14 @@ procedure TfrmPrefs.TabSelect(Sender: TObject);
     begin
         for i := 0 to ScrollBox1.ControlCount - 1 do begin
             c := ScrollBox1.Controls[i];
-            if (c is TLabel) then begin
+            if (c is TTntLabel) then begin
                 if (c = lbl) then begin
-                    TLabel(c).Color := clHighlight;
-                    TLabel(c).Font.Color := clHighlightText;
+                    TTntLabel(c).Color := clHighlight;
+                    TTntLabel(c).Font.Color := clHighlightText;
                 end
                 else begin
-                    TLabel(c).Color := clWindow;
-                    TLabel(c).Font.Color := clWindowText;
+                    TTntLabel(c).Color := clWindow;
+                    TTntLabel(c).Font.Color := clWindowText;
                 end;
             end;
         end;

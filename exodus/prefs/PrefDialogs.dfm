@@ -183,21 +183,21 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Position = 60
     TabOrder = 14
   end
-  object StaticText5: TTntStaticText
+  object StaticText4: TTntPanel
     Left = 0
     Top = 0
     Width = 362
-    Height = 20
+    Height = 24
     Align = alTop
-    Alignment = taCenter
+    BevelOuter = bvLowered
+    BorderWidth = 1
     Caption = 'Window Options'
-    Color = clHighlight
+    Color = clMenuHighlight
     Font.Charset = ANSI_CHARSET
     Font.Color = clCaptionText
     Font.Height = -13
     Font.Name = 'Arial'
     Font.Style = [fsBold]
-    ParentColor = False
     ParentFont = False
     TabOrder = 15
   end

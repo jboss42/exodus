@@ -23,7 +23,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, TntStdCtrls;
+  Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls;
 
 type
   TfrmPrefMsg = class(TfrmPrefPanel)
@@ -35,7 +35,6 @@ type
     chkTimestamp: TTntCheckBox;
     chkLog: TTntCheckBox;
     txtLogPath: TTntEdit;
-    StaticText11: TTntStaticText;
     btnLogBrowse: TTntButton;
     chkMsgQueue: TTntCheckBox;
     chkLogRooms: TTntCheckBox;
@@ -47,6 +46,7 @@ type
     chkBlockNonRoster: TTntCheckBox;
     OpenDialog1: TOpenDialog;
     txtTimestampFmt: TTntComboBox;
+    StaticText4: TTntPanel;
     procedure btnLogBrowseClick(Sender: TObject);
     procedure btnLogClearAllClick(Sender: TObject);
     procedure btnSpoolBrowseClick(Sender: TObject);

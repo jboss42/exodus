@@ -29,24 +29,6 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     ParentFont = False
     OnClick = lblPluginScanClick
   end
-  object StaticText12: TTntStaticText
-    Left = 0
-    Top = 0
-    Width = 353
-    Height = 20
-    Align = alTop
-    Alignment = taCenter
-    Caption = 'Plugins'
-    Color = clHighlight
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clCaptionText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-    TabOrder = 0
-  end
   object btnAddPlugin: TTntButton
     Left = 6
     Top = 200
@@ -54,7 +36,7 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     Height = 25
     Caption = 'Add'
     Enabled = False
-    TabOrder = 1
+    TabOrder = 0
   end
   object btnConfigPlugin: TTntButton
     Left = 90
@@ -63,7 +45,7 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     Height = 25
     Caption = 'Configure'
     Enabled = False
-    TabOrder = 2
+    TabOrder = 1
     OnClick = btnConfigPluginClick
   end
   object btnRemovePlugin: TTntButton
@@ -73,14 +55,14 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     Height = 25
     Caption = 'Remove'
     Enabled = False
-    TabOrder = 3
+    TabOrder = 2
   end
   object txtPluginDir: TTntEdit
     Left = 8
     Top = 260
     Width = 225
     Height = 21
-    TabOrder = 4
+    TabOrder = 3
   end
   object btnBrowsePluginPath: TTntButton
     Left = 239
@@ -88,12 +70,12 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     Width = 75
     Height = 25
     Caption = 'Browse'
-    TabOrder = 5
+    TabOrder = 4
     OnClick = btnBrowsePluginPathClick
   end
   object lstPlugins: TTntListView
     Left = 0
-    Top = 20
+    Top = 24
     Width = 353
     Height = 173
     Align = alTop
@@ -112,7 +94,25 @@ inherited frmPrefPlugins: TfrmPrefPlugins
         Caption = 'Filename'
         Width = 80
       end>
-    TabOrder = 6
+    TabOrder = 5
     ViewStyle = vsReport
+  end
+  object StaticText4: TTntPanel
+    Left = 0
+    Top = 0
+    Width = 353
+    Height = 24
+    Align = alTop
+    BevelOuter = bvLowered
+    BorderWidth = 1
+    Caption = 'Plugins'
+    Color = clMenuHighlight
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clCaptionText
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 6
   end
 end

@@ -24,19 +24,20 @@ interface
 uses
     Unicode,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, PrefPanel, ComCtrls, TntComCtrls, StdCtrls, TntStdCtrls;
+    Dialogs, PrefPanel, ComCtrls, TntComCtrls, StdCtrls, TntStdCtrls,
+  ExtCtrls, TntExtCtrls;
 
 type
   TfrmPrefPlugins = class(TfrmPrefPanel)
     Label6: TTntLabel;
     lblPluginScan: TTntLabel;
-    StaticText12: TTntStaticText;
     btnAddPlugin: TTntButton;
     btnConfigPlugin: TTntButton;
     btnRemovePlugin: TTntButton;
     txtPluginDir: TTntEdit;
     btnBrowsePluginPath: TTntButton;
     lstPlugins: TTntListView;
+    StaticText4: TTntPanel;
     procedure btnBrowsePluginPathClick(Sender: TObject);
     procedure lblPluginScanClick(Sender: TObject);
     procedure btnConfigPluginClick(Sender: TObject);

@@ -22,11 +22,10 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, TntStdCtrls;
+  Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls;
 
 type
   TfrmPrefGroups = class(TfrmPrefPanel)
-    StaticText1: TTntStaticText;
     Label18: TTntLabel;
     Label1: TTntLabel;
     txtGatewayGrp: TTntComboBox;
@@ -38,6 +37,7 @@ type
     chkGroupCounts: TTntCheckBox;
     chkOfflineGrp: TTntCheckBox;
     chkOnlineOnly: TTntCheckBox;
+    StaticText4: TTntPanel;
     procedure chkOfflineGrpClick(Sender: TObject);
   private
     { Private declarations }
