@@ -1,6 +1,6 @@
 inherited frmRoom: TfrmRoom
-  Left = 268
-  Top = 405
+  Left = 179
+  Top = 661
   Caption = 'Conference Room'
   OldCreateOrder = True
   OnClose = FormClose
@@ -65,8 +65,8 @@ inherited frmRoom: TfrmRoom
     object lblSubject: TLabel
       Left = 41
       Top = 2
-      Width = 312
-      Height = 16
+      Width = 3
+      Height = 13
       ParentShowHint = False
       ShowHint = True
     end
@@ -134,11 +134,16 @@ inherited frmRoom: TfrmRoom
     end
   end
   object popRoomRoster: TPopupMenu
+    OnPopup = popRoomRosterPopup
     Left = 80
     Top = 184
     object popRosterChat: TMenuItem
       Caption = 'Chat'
       OnClick = treeRosterDblClick
+    end
+    object popRosterBlock: TMenuItem
+      Caption = 'Block'
+      OnClick = popRosterBlockClick
     end
   end
 end
