@@ -64,10 +64,108 @@ type
 var
     jEntityCache: TJabberEntityCache;
 
+function EntityJidCompare(Item1, Item2: Pointer): integer;
+function EntityNameCompare(Item1, Item2: Pointer): integer;
+function EntityCatCompare(Item1, Item2: Pointer): integer;
+function EntityDomainCompare(Item1, Item2: Pointer): integer;
+
+function EntityJidCompareRev(Item1, Item2: Pointer): integer;
+function EntityNameCompareRev(Item1, Item2: Pointer): integer;
+function EntityCatCompareRev(Item1, Item2: Pointer): integer;
+function EntityDomainCompareRev(Item1, Item2: Pointer): integer;
+
+
 implementation
 uses
     XMLUtils;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+function _entityCompare(cur_sort: integer; ascending: boolean; Item1, Item2: Pointer): integer;
+var
+    j1, j2: TJabberEntity;
+    s1, s2: Widestring;
+begin
+    // compare 2 items..
+    if (cur_sort = -1) then begin
+        Result := 0;
+        exit;
+    end;
+
+    j1 := TJabberEntity(Item1);
+    j2 := TJabberEntity(Item2);
+
+    case (cur_sort) of
+    0: begin
+        s1 := j1.name;
+        s2 := j2.name;
+        end;
+    1: begin
+        s1 := j1.jid.full;
+        s2 := j2.jid.full;
+        end;
+    2: begin
+        s1 := j1.catType;
+        s2 := j2.catType;
+        end;
+    3: begin
+        s1 := j1.jid.domain;
+        s2 := j2.jid.domain;
+        end
+    else begin
+        Result := 0;
+        exit;
+        end;
+    end;
+
+    if (ascending) then
+        Result := AnsiCompareText(s1, s2)
+    else
+        Result := AnsiCompareText(s2, s1);
+
+end;
+
+
+// Just call _entityCompare
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+function EntityJidCompare(Item1, Item2: Pointer): integer;
+begin
+    Result := _entityCompare(1, true, Item1, Item2);
+end;
+function EntityNameCompare(Item1, Item2: Pointer): integer;
+begin
+    Result := _entityCompare(0, true, Item1, Item2);
+end;
+function EntityCatCompare(Item1, Item2: Pointer): integer;
+begin
+    Result := _entityCompare(2, true, Item1, Item2);
+end;
+function EntityJidCompareRev(Item1, Item2: Pointer): integer;
+begin
+    Result := _entityCompare(1, false, Item1, Item2);
+end;
+function EntityNameCompareRev(Item1, Item2: Pointer): integer;
+begin
+    Result := _entityCompare(0, false, Item1, Item2);
+end;
+function EntityCatCompareRev(Item1, Item2: Pointer): integer;
+begin
+    Result := _entityCompare(2, false, Item1, Item2);
+end;
+function EntityDomainCompare(Item1, Item2: Pointer): integer;
+begin
+    Result := _entityCompare(3, true, Item1, Item2);
+end;
+function EntityDomainCompareRev(item1, Item2: Pointer): integer;
+begin
+    Result := _entityCompare(3, false, Item1, Item2);
+end;
+
+{---------------------------------------}
+{---------------------------------------}
 {---------------------------------------}
 constructor TJabberEntityCache.Create();
 begin

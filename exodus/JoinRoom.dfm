@@ -29,6 +29,7 @@ inherited frmJoinRoom: TfrmJoinRoom
     end
   end
   inherited Tabs: TPageControl
+    ActivePage = TabSheet2
     inherited TabSheet1: TTabSheet
       object Label2: TTntLabel
         Left = 22
@@ -130,11 +131,20 @@ inherited frmJoinRoom: TfrmJoinRoom
           item
             Caption = 'Server'
             Width = 150
+          end
+          item
+            Caption = 'Description'
+            Width = 100
           end>
+        OwnerData = True
         ReadOnly = True
         SortType = stText
         TabOrder = 0
         ViewStyle = vsReport
+        OnChange = lstRoomsChange
+        OnColumnClick = lstRoomsColumnClick
+        OnData = lstRoomsData
+        OnDblClick = lstRoomsDblClick
       end
       object Panel2: TPanel
         Left = 0
@@ -162,7 +172,9 @@ inherited frmJoinRoom: TfrmJoinRoom
           ParentShowHint = False
           ShowHint = True
           TabOrder = 0
+          OnChange = txtServerFilterChange
           OnKeyPress = txtServerFilterKeyPress
+          OnSelect = txtServerFilterSelect
         end
         object btnFetch: TTntButton
           Left = 296
