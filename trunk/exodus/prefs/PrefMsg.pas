@@ -41,7 +41,6 @@ type
     chkLogRooms: TCheckBox;
     cboMsgOptions: TComboBox;
     btnLogClearAll: TButton;
-    chkCloseQueue: TCheckBox;
     txtSpoolPath: TEdit;
     btnSpoolBrowse: TButton;
     cboInviteOptions: TComboBox;
@@ -79,7 +78,6 @@ begin
         chkTimestamp.Checked := getBool('timestamp');
         txtTimestampFmt.Text := getString('timestamp_format');
         chkMsgQueue.Checked := getBool('msg_queue');
-        chkCloseQueue.Checked := getBool('close_queue');
         chkEmoticons.Checked := getBool('emoticons');
         chkBlockNonRoster.Checked := getBool('block_nonroster');
         chkLog.Checked := getBool('log');
@@ -101,7 +99,6 @@ begin
         setBool('emoticons', chkEmoticons.Checked);
         setBool('block_nonroster', chkBlockNonRoster.Checked);
         setBool('msg_queue', chkMsgQueue.Checked);
-        setBool('close_queue', chkCloseQueue.Checked);
         setBool('log', chkLog.Checked);
         setBool('log_rooms', chkLogRooms.Checked);
         setString('log_path', txtLogPath.Text);

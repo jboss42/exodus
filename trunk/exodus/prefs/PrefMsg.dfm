@@ -1,6 +1,6 @@
 inherited frmPrefMsg: TfrmPrefMsg
-  Left = 231
-  Top = 151
+  Left = 277
+  Top = 150
   Caption = 'frmPrefMsg'
   ClientHeight = 399
   ClientWidth = 348
@@ -9,31 +9,31 @@ inherited frmPrefMsg: TfrmPrefMsg
   TextHeight = 13
   object Label19: TLabel
     Left = 26
-    Top = 109
+    Top = 93
     Width = 35
     Height = 13
     Caption = 'Format:'
   end
   object Label7: TLabel
     Left = 5
-    Top = 197
+    Top = 181
     Width = 170
     Height = 13
     Caption = 'Simple message (non-chat) handling'
   end
   object Label16: TLabel
     Left = 5
-    Top = 283
-    Width = 85
+    Top = 267
+    Width = 128
     Height = 13
-    Caption = 'Event Queue File:'
+    Caption = 'Store Unread messages to:'
   end
   object Label17: TLabel
     Left = 5
-    Top = 237
-    Width = 153
+    Top = 221
+    Width = 198
     Height = 13
-    Caption = 'Text Conference invite handling:'
+    Caption = 'When I get invited to a chat room, do this:'
   end
   object chkEmoticons: TCheckBox
     Left = 5
@@ -45,7 +45,7 @@ inherited frmPrefMsg: TfrmPrefMsg
   end
   object chkTimestamp: TCheckBox
     Left = 5
-    Top = 89
+    Top = 73
     Width = 156
     Height = 17
     Caption = 'Timestamp messages'
@@ -53,7 +53,7 @@ inherited frmPrefMsg: TfrmPrefMsg
   end
   object chkLog: TCheckBox
     Left = 5
-    Top = 130
+    Top = 114
     Width = 97
     Height = 17
     Caption = 'Log Messages'
@@ -62,7 +62,7 @@ inherited frmPrefMsg: TfrmPrefMsg
   end
   object txtLogPath: TEdit
     Left = 26
-    Top = 148
+    Top = 132
     Width = 207
     Height = 21
     TabOrder = 3
@@ -88,7 +88,7 @@ inherited frmPrefMsg: TfrmPrefMsg
   end
   object btnLogBrowse: TButton
     Left = 243
-    Top = 146
+    Top = 130
     Width = 75
     Height = 25
     Caption = 'Browse'
@@ -100,12 +100,12 @@ inherited frmPrefMsg: TfrmPrefMsg
     Top = 40
     Width = 284
     Height = 17
-    Caption = 'Messages, Events always goto the Events Window'
+    Caption = 'Instant Messages never popup a new window'
     TabOrder = 6
   end
   object chkLogRooms: TCheckBox
     Left = 26
-    Top = 172
+    Top = 156
     Width = 151
     Height = 17
     Caption = 'Log conference rooms'
@@ -113,7 +113,7 @@ inherited frmPrefMsg: TfrmPrefMsg
   end
   object cboMsgOptions: TComboBox
     Left = 26
-    Top = 213
+    Top = 197
     Width = 207
     Height = 21
     Style = csDropDownList
@@ -126,65 +126,57 @@ inherited frmPrefMsg: TfrmPrefMsg
   end
   object btnLogClearAll: TButton
     Left = 243
-    Top = 176
+    Top = 160
     Width = 75
     Height = 25
     Caption = 'Clear All Logs'
     TabOrder = 9
     OnClick = btnLogClearAllClick
   end
-  object chkCloseQueue: TCheckBox
-    Left = 5
-    Top = 56
-    Width = 276
-    Height = 17
-    Caption = 'Close the Event window going to Compressed Mode'
-    TabOrder = 10
-  end
   object txtSpoolPath: TEdit
     Left = 26
-    Top = 299
+    Top = 283
     Width = 207
     Height = 21
-    TabOrder = 11
+    TabOrder = 10
   end
   object btnSpoolBrowse: TButton
     Left = 243
-    Top = 297
+    Top = 281
     Width = 75
     Height = 25
     Caption = 'Browse'
-    TabOrder = 12
+    TabOrder = 11
     OnClick = btnSpoolBrowseClick
   end
   object cboInviteOptions: TComboBox
     Left = 26
-    Top = 253
+    Top = 237
     Width = 207
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 13
+    TabOrder = 12
     Items.Strings = (
-      'Treat as a normal event'
-      'Always popup window'
-      'Auto-Accept all invites')
+      'Treat as a normal instant message'
+      'Always popup the invitation'
+      'Automatically join the room.')
   end
   object chkBlockNonRoster: TCheckBox
     Left = 5
-    Top = 72
+    Top = 56
     Width = 252
     Height = 17
     Caption = 'Block messages from people not on my roster'
-    TabOrder = 14
+    TabOrder = 13
   end
   object txtTimestampFmt: TComboBox
     Left = 72
-    Top = 106
+    Top = 90
     Width = 161
     Height = 21
     ItemHeight = 13
-    TabOrder = 15
+    TabOrder = 14
     Text = 'h:mm am/pm'
     Items.Strings = (
       'h:mm am/pm'

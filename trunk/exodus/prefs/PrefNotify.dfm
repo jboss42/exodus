@@ -126,7 +126,7 @@ inherited frmPrefNotify: TfrmPrefNotify
     Hint = 
       'NOTE: Notifications always occur when Exodus is in the backgroun' +
       'd.'
-    Caption = 'Perform notifications when Exodus has focus'
+    Caption = 'Perform notifications when I am using Exodus'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 1
@@ -136,7 +136,7 @@ inherited frmPrefNotify: TfrmPrefNotify
     Top = 82
     Width = 289
     Height = 17
-    Caption = 'Flash taskbar continuously until the window gets focus.'
+    Caption = 'Flash taskbar continuously until Exodus gets focus.'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 3
@@ -144,9 +144,9 @@ inherited frmPrefNotify: TfrmPrefNotify
   object chkNotifyActiveWindow: TCheckBox
     Left = 8
     Top = 65
-    Width = 209
+    Width = 281
     Height = 17
-    Caption = 'Perform notifications for current window'
+    Caption = 'Perform notifications in the window I'#39'm typing in'
     TabOrder = 2
   end
 end

@@ -176,6 +176,7 @@ object frmExodus: TfrmExodus
         AutoSize = True
         Caption = 'Expanded'
         ImageIndex = 9
+        Visible = False
         OnClick = btnExpandedClick
       end
       object btnConnect: TToolButton
@@ -242,17 +243,18 @@ object frmExodus: TfrmExodus
           Visible = False
         end
         object mnuExpanded: TMenuItem
-          Caption = 'Expanded Mode'
+          Caption = 'Dock Windows'
           Checked = True
+          Visible = False
           OnClick = btnExpandedClick
         end
         object ShowEventsWindow1: TMenuItem
-          Caption = 'Events Window'
+          Caption = 'Instant Messages'
           OnClick = ShowEventsWindow1Click
         end
       end
       object ClearMessages1: TMenuItem
-        Caption = 'Clear &Events'
+        Caption = 'Clear &Instant Messages'
         ShortCut = 16430
         OnClick = ClearMessages1Click
       end
@@ -260,7 +262,7 @@ object frmExodus: TfrmExodus
         Caption = '-'
       end
       object mnuMessage: TMenuItem
-        Caption = 'Send &Message'
+        Caption = 'Send Instant &Message'
         ShortCut = 116
         OnClick = mnuMessageClick
       end
@@ -270,7 +272,7 @@ object frmExodus: TfrmExodus
         OnClick = mnuChatClick
       end
       object mnuConference: TMenuItem
-        Caption = '&Join a Conference'
+        Caption = '&Join a Chat Room'
         ShortCut = 118
         OnClick = mnuConferenceClick
       end
@@ -282,7 +284,7 @@ object frmExodus: TfrmExodus
         OnClick = mnuRegisterServiceClick
       end
       object mnuPassword: TMenuItem
-        Caption = 'Change Jabber &Password'
+        Caption = 'Change &Password'
         OnClick = mnuPasswordClick
       end
       object N9: TMenuItem

@@ -153,7 +153,10 @@ procedure TfrmPrefTransfer.optWebDavClick(Sender: TObject);
 begin
   inherited;
     grpPeer.Enabled := optPeer.Checked;
+    grpPeer.Visible := optPeer.Checked;
+
     grpWebDav.Enabled := optWebDav.Checked;
+    grpWebDav.Visible := optWebDav.Checked;
 end;
 
 end.

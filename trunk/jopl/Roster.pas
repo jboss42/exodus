@@ -124,11 +124,13 @@ type
         procedure SaveBookmarks;
 
         procedure AddItem(sjid, nickname, group: Widestring; subscribe: boolean);
+        procedure UpdateGroupLists(ritem: TJabberRosterItem);
         procedure AddBookmark(sjid: Widestring; bm: TJabberBookmark);
         procedure RemoveBookmark(sjid: Widestring);
         procedure UpdateBookmark(bm: TJabberBookmark);
 
         function Find(sjid: Widestring): TJabberRosterItem; reintroduce; overload;
+
         function getGroupItems(grp: Widestring; online: boolean): TList;
         function getGroupCount(grp_name: Widestring; online: boolean): integer;
 
@@ -290,7 +292,7 @@ begin
         item := AddTag('item');
         Self.fillTag(item);
     end;
-
+    MainSession.Roster.UpdateGroupLists(Self);
     MainSession.SendTag(iq);
 end;
 
@@ -620,6 +622,25 @@ begin
     end;
 end;
 
+{---------------------------------------}
+procedure TJabberRoster.UpdateGroupLists(ritem: TJabberRosterItem);
+var
+    g: Widestring;
+    jids: TWidestringList;
+    i, idx: integer;
+begin
+    // make sure the _groups list matches the .Groups from the ritem
+    for i := 0 to _groups.Count - 1 do begin
+        g := _groups[i];
+        jids := TWidestringlist(_groups.Objects[i]);
+        idx := jids.indexOf(ritem.jid.full);
+        if (idx >= 0) then begin
+            // check to make sure this grp is in ritem.groups
+            if (ritem.groups.IndexOf(g) = -1) then
+                jids.Delete(idx);
+        end;
+    end;
+end;
 
 {---------------------------------------}
 function TJabberRoster.getGroupList(grp_name: Widestring): TWidestringlist;

@@ -110,7 +110,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     Top = 72
     Width = 217
     Height = 17
-    Caption = 'Show offline contacts in the Offline group'
+    Caption = 'Show offline contacts in an Offline group'
     TabOrder = 7
     OnClick = chkOfflineGrpClick
   end
