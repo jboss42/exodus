@@ -128,8 +128,15 @@ begin
         prompt := false; // auto-accept all
         if (incoming = 0) then // auto-accept from none
             prompt := true
-        else if (incoming = 1) then // auto-accept from roster
-            prompt := (ritem = nil)
+        else if (incoming = 1) then begin // auto-accept from roster
+            if (ritem = nil) then
+                prompt := true
+            else begin
+                if ((ritem.subscription <> 'to') and
+                    (ritem.subscription <> 'both')) then
+                    prompt := true;
+            end;
+        end
         else if (incoming = 3) then begin // auto-deny all
             SendUnsubscribed(j.jid, MainSession);
             exit;
