@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-10-20 07:49\n"
-"PO-Revision-Date: 2004-10-20 07:49\n"
+"POT-Creation-Date: 2004-10-25 08:13\n"
+"PO-Revision-Date: 2004-10-25 08:13\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -644,7 +644,7 @@ msgstr ""
 #. frmExodus..popTray..N01..Caption
 #: Jabber1.dfm:2714
 #. frmJud..PopupMenu1..N1..Caption
-#: Jud.dfm:220
+#: jud.dfm:220
 #. frmMsgRecv..popContact..N1..Caption
 #: MsgRecv.dfm:519
 #. frmMsgRecv..popContact..N2..Caption
@@ -849,9 +849,9 @@ msgstr ""
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnHome..Hint
 #: Browser.dfm:210
 #. frmProfile..PageControl1..TabSheet4..Caption
-#: Profile.dfm:392
+#: Profile.dfm:408
 #. frmVCard..PageControl1..TabSheet4..Caption
-#: vcard.dfm:212
+#: vcard.dfm:228
 #: ConnDetails.pas:401
 msgid "Home"
 msgstr ""
@@ -1058,8 +1058,8 @@ msgstr ""
 #. frmMsgRecv..popContact..mnuResources..Caption
 #: MsgRecv.dfm:523
 #. frmProfile..PageControl1..TabSheet7..Caption
-#: Profile.dfm:163
-#: Profile.pas:297
+#: Profile.dfm:179
+#: Profile.pas:303
 msgid "Resources"
 msgstr ""
 
@@ -1106,7 +1106,7 @@ msgstr ""
 #. frmMsgRecv..popContact..C1..mnuLastActivity..Caption
 #: MsgRecv.dfm:506
 #. frmProfile..PageControl1..TabSheet7..Panel2..btnLast..Caption
-#: Profile.dfm:207
+#: Profile.dfm:223
 #. frmRosterWindow..popRoster..popClientInfo..popLast..Caption
 #: RosterWindow.dfm:349
 #: ExEvents.pas:535
@@ -1404,7 +1404,7 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.Strings
 #: ConnDetails.dfm:384
 #. frmProfile..PageControl1..TabSheet1..optSubscrip....Items.WideStrings
-#: Profile.dfm:155
+#: Profile.dfm:171
 msgid "None"
 msgstr ""
 
@@ -1440,7 +1440,7 @@ msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..Label5..Caption
 #: ConnDetails.dfm:433
-#: ExUtils.pas:432
+#: ExUtils.pas:433
 msgid "seconds"
 msgstr ""
 
@@ -1547,13 +1547,13 @@ msgstr ""
 #. frmRosterWindow..popStatus..presOnline..Caption
 #: RosterWindow.dfm:403
 #. init the cmd line stuff
-#: ExSession.pas:185
-#: Jabber1.pas:2774
-#: RosterWindow.pas:351
-#: RosterWindow.pas:373
-#: RosterWindow.pas:1658
+#: ExSession.pas:186
+#: Jabber1.pas:2775
+#: RosterWindow.pas:360
+#: RosterWindow.pas:384
+#: RosterWindow.pas:1688
 #. reset status to online;
-#: RosterWindow.pas:1702
+#: RosterWindow.pas:1732
 #: /src/exodus/jopl/PrefController.pas:1240
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:70
@@ -1570,10 +1570,10 @@ msgstr ""
 #: Jabber1.dfm:2675
 #. frmRosterWindow..popStatus..presAway..Caption
 #: RosterWindow.dfm:415
-#: Jabber1.pas:2772
-#: RosterWindow.pas:353
-#: RosterWindow.pas:374
-#: RosterWindow.pas:1642
+#: Jabber1.pas:2773
+#: RosterWindow.pas:362
+#: RosterWindow.pas:385
+#: RosterWindow.pas:1672
 #: /src/exodus/jopl/PrefController.pas:1258
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:69
@@ -1584,7 +1584,7 @@ msgstr ""
 
 #. frmCustomPres..cboType....Items.WideStrings
 #: CustomPres.dfm:80
-#: RosterWindow.pas:375
+#: RosterWindow.pas:386
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:68
 msgid "Ext. Away"
@@ -1598,9 +1598,9 @@ msgstr ""
 #: Jabber1.dfm:2687
 #. frmRosterWindow..popStatus..presDND..Caption
 #: RosterWindow.dfm:427
-#: RosterWindow.pas:355
-#: RosterWindow.pas:376
-#: RosterWindow.pas:1650
+#: RosterWindow.pas:364
+#: RosterWindow.pas:387
+#: RosterWindow.pas:1680
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:67
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
@@ -1616,9 +1616,9 @@ msgstr ""
 #. frmCustomPres..boxSave..lblTitle..Caption
 #: CustomPres.dfm:124
 #. frmProfile..PageControl1..TabSheet5..Label24..Caption
-#: Profile.dfm:749
+#: Profile.dfm:765
 #. frmVCard..PageControl1..TabSheet5..Label24..Caption
-#: vcard.dfm:564
+#: vcard.dfm:580
 msgid "Title:"
 msgstr ""
 
@@ -1893,7 +1893,7 @@ msgstr ""
 #. frmInputPass..Caption
 #: InputPassword.dfm:8
 #. accordingly.
-#: Jabber1.pas:973
+#: Jabber1.pas:974
 msgid "Exodus Password"
 msgstr ""
 
@@ -2000,8 +2000,8 @@ msgstr ""
 #: Jabber1.dfm:7
 #: ConnDetails.pas:403
 #. do this.
-#: ExSession.pas:476
-#: Jabber1.pas:1299
+#: ExSession.pas:477
+#: Jabber1.pas:1300
 #: Login.pas:113
 #: Login.pas:189
 #: /src/exodus/jopl/JabberUtils.pas:212
@@ -2031,7 +2031,7 @@ msgstr ""
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Hint
 #: Jabber1.dfm:146
 #. frmJud..PopupMenu1..popAdd..Caption
-#: Jud.dfm:212
+#: jud.dfm:212
 #. frmAdd..Caption
 #: RosterAdd.dfm:6
 #. frmRosterWindow..popActions..popAddContact..Caption
@@ -2224,9 +2224,9 @@ msgstr ""
 #: Jabber1.dfm:2669
 #. frmRosterWindow..popStatus..presChat..Caption
 #: RosterWindow.dfm:409
-#: RosterWindow.pas:352
+#: RosterWindow.pas:361
 #. display this show type
-#: RosterWindow.pas:1638
+#: RosterWindow.pas:1668
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
 #: prefs/PrefPresence.dfm:211
 msgid "Free to Chat"
@@ -2238,8 +2238,8 @@ msgstr ""
 #: Jabber1.dfm:2681
 #. frmRosterWindow..popStatus..presXA..Caption
 #: RosterWindow.dfm:421
-#: RosterWindow.pas:354
-#: RosterWindow.pas:1646
+#: RosterWindow.pas:363
+#: RosterWindow.pas:1676
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
 #: prefs/PrefPresence.dfm:214
 msgid "Xtended Away"
@@ -2351,7 +2351,7 @@ msgstr ""
 #. frmExodus..popTray..trayMessage..Caption
 #: Jabber1.dfm:2702
 #. frmJud..PopupMenu1..popMessage..Caption
-#: Jud.dfm:227
+#: jud.dfm:227
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
 #: subscribe.dfm:150
 msgid "Send Message"
@@ -2434,7 +2434,7 @@ msgstr ""
 #. frmJoinRoom..Tabs..TabSheet2..Caption
 #: JoinRoom.dfm:148
 #. frmJud..Tabs..TabSheet2..Caption
-#: Jud.dfm:78
+#: jud.dfm:78
 #. frmRegister..Tabs..TabSheet2..Caption
 #: RegForm.dfm:60
 msgid "TabSheet2"
@@ -2468,82 +2468,82 @@ msgid "Fetch Rooms"
 msgstr ""
 
 #. frmJud..Caption
-#: Jud.dfm:5
+#: jud.dfm:5
 msgid "Jabber Search"
 msgstr ""
 
 #. frmJud..Panel1..lblWizardTitle..Caption
-#: Jud.dfm:43
+#: jud.dfm:43
 msgid "Jabber Search Wizard"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet1..lblSelect....Align
-#: Jud.dfm:64
+#: jud.dfm:64
 msgid "Select the user database or enter in the Jabber ID of the search "
 "agent to use:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet2..lblWait..Caption
-#: Jud.dfm:86
+#: jud.dfm:86
 msgid "Please wait. Contacting search agent:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..Caption
-#: Jud.dfm:100
+#: jud.dfm:100
 #. frmRegister..Tabs..TabSheet3..Caption
 #: RegForm.dfm:95
 msgid "TabSheet3"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..lblInstructions..Caption
-#: Jud.dfm:108
+#: jud.dfm:108
 msgid "Fill in the search criteria to find contacts "
 "on."
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Caption
-#: Jud.dfm:124
+#: jud.dfm:124
 #. frmRegister..Tabs..TabSheet4..Caption
 #: RegForm.dfm:115
 msgid "TabSheet4"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Label3..Caption
-#: Jud.dfm:140
+#: jud.dfm:140
 msgid "Add Contacts to this group:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Caption
-#: Jud.dfm:148
+#: jud.dfm:148
 #. frmAdd..lblAddGrp..Caption
 #: RosterAdd.dfm:49
 msgid "Add a new Group"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblCount..Caption
-#: Jud.dfm:159
+#: jud.dfm:159
 msgid "N items found"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Button1..Caption
-#: Jud.dfm:176
+#: jud.dfm:176
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: RosterRecv.dfm:38
-#: Jud.pas:652
-#: Jud.pas:654
+#: jud.pas:652
+#: jud.pas:654
 msgid "Add Contacts"
 msgstr ""
 
 #. frmJud..PopupMenu1..popProfile..Caption
-#: Jud.dfm:216
+#: jud.dfm:216
 msgid "View Profile"
 msgstr ""
 
 #. frmJud..PopupMenu1..popChat..Caption
-#: Jud.dfm:223
+#: jud.dfm:223
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:146
-#: Jabber1.pas:2389
+#: Jabber1.pas:2390
 msgid "Start Chat"
 msgstr ""
 
@@ -2565,7 +2565,7 @@ msgstr ""
 #. frmLogin..Panel1..cboProfiles....Items.WideStrings
 #: Login.dfm:99
 #. otherwise, if we have no profiles yet, use the default profile name.
-#: ExSession.pas:374
+#: ExSession.pas:375
 #. make sure we have at least a default profile
 #: Login.pas:212
 msgid "Default Profile"
@@ -2599,7 +2599,7 @@ msgstr ""
 #. frmMsgQueue..lstEvents......Caption
 #: MsgQueue.dfm:37
 #. frmProfile..PageControl1..TabSheet1..optSubscrip....Items.WideStrings
-#: Profile.dfm:157
+#: Profile.dfm:173
 msgid "From"
 msgstr ""
 
@@ -2789,7 +2789,7 @@ msgstr ""
 #: Prefs.dfm:2639
 #. frmXferManager..Panel1..pnlCaption..Caption
 #: XferManager.dfm:53
-#: ExSession.pas:486
+#: ExSession.pas:487
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:43
 #: prefs/PrefNotify.pas:102
@@ -2799,8 +2799,8 @@ msgstr ""
 #. frmPrefs..Scroller..lblGroups..Caption
 #: Prefs.dfm:2833
 #. frmProfile..PageControl1..TabSheet2..Caption
-#: Profile.dfm:223
-#: Profile.pas:298
+#: Profile.dfm:239
+#: Profile.pas:304
 msgid "Groups"
 msgstr ""
 
@@ -2873,22 +2873,22 @@ msgstr ""
 
 #. frmProfile..PageControl1..TabSheet1..Label2..Caption
 #: Profile.dfm:49
-#. frmVCard..PageControl1..TabSheet1..Label2..Caption
-#: vcard.dfm:42
+#. frmVCard..PageControl1..TabSheet1..Panel1..Label2..Caption
+#: vcard.dfm:57
 msgid "Nick:"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet1..lblEmail..Caption
 #: Profile.dfm:57
-#. frmVCard..PageControl1..TabSheet1..lblEmail..Caption
-#: vcard.dfm:50
+#. frmVCard..PageControl1..TabSheet1..Panel1..lblEmail..Caption
+#: vcard.dfm:65
 msgid "Email:"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet1..Label7..Caption
 #: Profile.dfm:65
-#. frmVCard..PageControl1..TabSheet1..Label7..Caption
-#: vcard.dfm:57
+#. frmVCard..PageControl1..TabSheet1..Panel1..Label7..Caption
+#: vcard.dfm:72
 msgid "First (Given)"
 msgstr ""
 
@@ -2899,8 +2899,8 @@ msgstr ""
 
 #. frmProfile..PageControl1..TabSheet1..Label5..Caption
 #: Profile.dfm:79
-#. frmVCard..PageControl1..TabSheet1..Label5..Caption
-#: vcard.dfm:64
+#. frmVCard..PageControl1..TabSheet1..Panel1..Label5..Caption
+#: vcard.dfm:79
 msgid "Last (Family)"
 msgstr ""
 
@@ -2909,489 +2909,318 @@ msgstr ""
 msgid "Update nickname based on names."
 msgstr ""
 
+#. frmProfile..PageControl1..TabSheet1..TntLabel1..Caption
+#: Profile.dfm:103
+msgid "Picture:"
+msgstr ""
+
 #. frmProfile..PageControl1..TabSheet1..optSubscrip..Caption
-#: Profile.dfm:151
+#: Profile.dfm:167
 msgid "Subscription Type"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet1..optSubscrip....Items.WideStrings
-#: Profile.dfm:156
+#: Profile.dfm:172
 msgid "To"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet1..optSubscrip....Items.WideStrings
-#: Profile.dfm:158
+#: Profile.dfm:174
 msgid "Both"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet7..Panel1..Caption
-#: Profile.dfm:173
+#: Profile.dfm:189
 msgid "Online Resources"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet7..Panel2..btnVersion..Caption
-#: Profile.dfm:189
+#: Profile.dfm:205
 msgid "Client Version"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet7..Panel2..btnTime..Caption
-#: Profile.dfm:198
+#: Profile.dfm:214
 msgid "Client Time"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet2..Panel3..Caption
-#: Profile.dfm:242
+#: Profile.dfm:258
 msgid "Panel3"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet2..Panel3..btnAddGroup..Caption
-#: Profile.dfm:261
+#: Profile.dfm:277
 #. frmRosterWindow..popActions..popAddGroup..Caption
 #: RosterWindow.dfm:595
 msgid "Add Group"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet3..Caption
-#: Profile.dfm:268
+#: Profile.dfm:284
 #. frmVCard..PageControl1..TabSheet3..Caption
-#: vcard.dfm:111
+#: vcard.dfm:127
 msgid "Personal Info."
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet3..lblURL..Caption
-#: Profile.dfm:276
+#: Profile.dfm:292
 msgid "Personal URL:"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet3..Label12..Caption
-#: Profile.dfm:284
+#: Profile.dfm:300
 #. frmVCard..PageControl1..TabSheet3..Label12..Caption
-#: vcard.dfm:118
+#: vcard.dfm:134
 msgid "Occupation:"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet3..Label6..Caption
-#: Profile.dfm:291
+#: Profile.dfm:307
 #. frmVCard..PageControl1..TabSheet3..Label6..Caption
-#: vcard.dfm:125
+#: vcard.dfm:141
 msgid "Birthday:"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet3..Label28..Caption
-#: Profile.dfm:298
+#: Profile.dfm:314
 #. frmVCard..PageControl1..TabSheet3..Label28..Caption
-#: vcard.dfm:132
+#: vcard.dfm:148
 msgid "Typical Format: YYYY-MM-DD"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet3..Label8..Caption
-#: Profile.dfm:305
+#: Profile.dfm:321
 #. frmProfile..PageControl1..TabSheet5..Label19..Caption
-#: Profile.dfm:756
+#: Profile.dfm:772
 #. frmVCard..PageControl1..TabSheet3..Label8..Caption
-#: vcard.dfm:139
+#: vcard.dfm:155
 #. frmVCard..PageControl1..TabSheet5..Label19..Caption
-#: vcard.dfm:571
+#: vcard.dfm:587
 msgid "Voice Tel:"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet3..Label9..Caption
-#: Profile.dfm:312
+#: Profile.dfm:328
 #. frmProfile..PageControl1..TabSheet5..Label20..Caption
-#: Profile.dfm:763
+#: Profile.dfm:779
 #. frmVCard..PageControl1..TabSheet3..Label9..Caption
-#: vcard.dfm:146
+#: vcard.dfm:162
 #. frmVCard..PageControl1..TabSheet5..Label20..Caption
-#: vcard.dfm:578
+#: vcard.dfm:594
 msgid "Fax Tel:"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet3..Label3..Caption
-#: Profile.dfm:319
+#: Profile.dfm:335
 #. frmVCard..PageControl1..TabSheet3..Label1..Caption
-#: vcard.dfm:153
-msgid "Description:"
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: Profile.dfm:338
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: vcard.dfm:163
-msgid "Accounting/Finance"
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: Profile.dfm:339
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: vcard.dfm:164
-msgid "Computer related (IS, MIS, DP)"
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: Profile.dfm:340
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: vcard.dfm:165
-msgid "Computer related (WWW)"
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: Profile.dfm:341
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: vcard.dfm:166
-msgid "Consulting"
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: Profile.dfm:342
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: vcard.dfm:167
-msgid "Education/training"
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: Profile.dfm:343
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: vcard.dfm:168
-msgid "Engineering"
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: Profile.dfm:344
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #: vcard.dfm:169
-msgid "Executive/senior management"
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: Profile.dfm:345
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: vcard.dfm:170
-msgid "General administrative/supervisory"
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: Profile.dfm:346
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: vcard.dfm:171
-msgid "Government/Military"
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: Profile.dfm:347
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: vcard.dfm:172
-msgid "Manufacturing/production/operations"
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: Profile.dfm:348
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: vcard.dfm:173
-msgid "Professional services (medical, legal, "
-"etc.)"
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: Profile.dfm:349
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: vcard.dfm:174
-msgid "Research and development"
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: Profile.dfm:350
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: vcard.dfm:175
-msgid "Retired"
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: Profile.dfm:351
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: vcard.dfm:176
-msgid "Sales/marketing/advertising"
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: Profile.dfm:352
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: vcard.dfm:177
-msgid "Self-employed/owner"
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: Profile.dfm:353
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#: vcard.dfm:178
-msgid "Student"
+msgid "Description:"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #: Profile.dfm:354
 #. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #: vcard.dfm:179
+msgid "Accounting/Finance"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: Profile.dfm:355
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: vcard.dfm:180
+msgid "Computer related (IS, MIS, DP)"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: Profile.dfm:356
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: vcard.dfm:181
+msgid "Computer related (WWW)"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: Profile.dfm:357
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: vcard.dfm:182
+msgid "Consulting"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: Profile.dfm:358
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: vcard.dfm:183
+msgid "Education/training"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: Profile.dfm:359
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: vcard.dfm:184
+msgid "Engineering"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: Profile.dfm:360
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: vcard.dfm:185
+msgid "Executive/senior management"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: Profile.dfm:361
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: vcard.dfm:186
+msgid "General administrative/supervisory"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: Profile.dfm:362
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: vcard.dfm:187
+msgid "Government/Military"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: Profile.dfm:363
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: vcard.dfm:188
+msgid "Manufacturing/production/operations"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: Profile.dfm:364
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: vcard.dfm:189
+msgid "Professional services (medical, legal, "
+"etc.)"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: Profile.dfm:365
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: vcard.dfm:190
+msgid "Research and development"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: Profile.dfm:366
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: vcard.dfm:191
+msgid "Retired"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: Profile.dfm:367
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: vcard.dfm:192
+msgid "Sales/marketing/advertising"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: Profile.dfm:368
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: vcard.dfm:193
+msgid "Self-employed/owner"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: Profile.dfm:369
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: vcard.dfm:194
+msgid "Student"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: Profile.dfm:370
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#: vcard.dfm:195
 msgid "Unemployed/Between Jobs"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..Label13..Caption
-#: Profile.dfm:399
+#: Profile.dfm:415
 #. frmProfile..PageControl1..TabSheet6..Label16..Caption
-#: Profile.dfm:821
+#: Profile.dfm:837
 #. frmVCard..PageControl1..TabSheet4..Label13..Caption
-#: vcard.dfm:219
+#: vcard.dfm:235
 #. frmVCard..PageControl1..TabSheet6..Label16..Caption
-#: vcard.dfm:631
+#: vcard.dfm:647
 msgid "Country:"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..Label21..Caption
-#: Profile.dfm:406
+#: Profile.dfm:422
 #. frmProfile..PageControl1..TabSheet6..Label15..Caption
-#: Profile.dfm:814
+#: Profile.dfm:830
 #. frmVCard..PageControl1..TabSheet4..Label21..Caption
-#: vcard.dfm:226
+#: vcard.dfm:242
 #. frmVCard..PageControl1..TabSheet6..Label15..Caption
-#: vcard.dfm:624
+#: vcard.dfm:640
 msgid "State / Region:"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..Label29..Caption
-#: Profile.dfm:413
+#: Profile.dfm:429
 #. frmProfile..PageControl1..TabSheet6..Label17..Caption
-#: Profile.dfm:828
+#: Profile.dfm:844
 #. frmVCard..PageControl1..TabSheet4..Label29..Caption
-#: vcard.dfm:233
+#: vcard.dfm:249
 #. frmVCard..PageControl1..TabSheet6..Label17..Caption
-#: vcard.dfm:638
+#: vcard.dfm:654
 msgid "Address 2:"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..Label30..Caption
-#: Profile.dfm:420
+#: Profile.dfm:436
 #. frmProfile..PageControl1..TabSheet6..Label18..Caption
-#: Profile.dfm:835
+#: Profile.dfm:851
 #. frmVCard..PageControl1..TabSheet4..Label30..Caption
-#: vcard.dfm:240
+#: vcard.dfm:256
 #. frmVCard..PageControl1..TabSheet6..Label18..Caption
-#: vcard.dfm:645
+#: vcard.dfm:661
 msgid "Address 1:"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..Label31..Caption
-#: Profile.dfm:427
+#: Profile.dfm:443
 #. frmProfile..PageControl1..TabSheet6..Label26..Caption
-#: Profile.dfm:842
+#: Profile.dfm:858
 #. frmVCard..PageControl1..TabSheet4..Label31..Caption
-#: vcard.dfm:247
+#: vcard.dfm:263
 #. frmVCard..PageControl1..TabSheet6..Label26..Caption
-#: vcard.dfm:652
+#: vcard.dfm:668
 msgid "City / Locality:"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..Label32..Caption
-#: Profile.dfm:434
+#: Profile.dfm:450
 #. frmProfile..PageControl1..TabSheet6..Label14..Caption
-#: Profile.dfm:849
+#: Profile.dfm:865
 #. frmVCard..PageControl1..TabSheet4..Label32..Caption
-#: vcard.dfm:254
+#: vcard.dfm:270
 #. frmVCard..PageControl1..TabSheet6..Label14..Caption
-#: vcard.dfm:659
+#: vcard.dfm:675
 msgid "Zip / Postal Code:"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry..Text
-#: Profile.dfm:484
-#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: Profile.dfm:710
-#. frmProfile..PageControl1..TabSheet6..txtWorkCountry..Text
-#: Profile.dfm:899
-#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: Profile.dfm:1125
-#. frmVCard..PageControl1..TabSheet4..txtHomeCountry..Text
-#: vcard.dfm:263
-#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:490
-#. frmVCard..PageControl1..TabSheet6..txtWorkCountry..Text
-#: vcard.dfm:668
-#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:895
-msgid "United States  "
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: Profile.dfm:486
-#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: Profile.dfm:901
-#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:265
-#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:670
-msgid "Afghanistan  "
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: Profile.dfm:487
-#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: Profile.dfm:902
-#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:266
-#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:671
-msgid "Albania  "
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: Profile.dfm:488
-#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: Profile.dfm:903
-#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:267
-#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:672
-msgid "Algeria  "
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: Profile.dfm:489
-#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: Profile.dfm:904
-#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:268
-#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:673
-msgid "American Samoa  "
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: Profile.dfm:490
-#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: Profile.dfm:905
-#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:269
-#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:674
-msgid "Andorra  "
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: Profile.dfm:491
-#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: Profile.dfm:906
-#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:270
-#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:675
-msgid "Angola  "
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: Profile.dfm:492
-#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: Profile.dfm:907
-#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:271
-#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:676
-msgid "Anguilla  "
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: Profile.dfm:493
-#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: Profile.dfm:908
-#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:272
-#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:677
-msgid "Antarctica  "
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: Profile.dfm:494
-#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: Profile.dfm:909
-#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:273
-#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:678
-msgid "Antigua and Barbuda  "
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: Profile.dfm:495
-#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: Profile.dfm:910
-#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:274
-#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:679
-msgid "Argentina  "
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: Profile.dfm:496
-#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: Profile.dfm:911
-#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:275
-#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:680
-msgid "Armenia  "
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: Profile.dfm:497
-#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: Profile.dfm:912
-#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:276
-#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:681
-msgid "Aruba  "
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: Profile.dfm:498
-#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: Profile.dfm:913
-#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:277
-#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:682
-msgid "Australia  "
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: Profile.dfm:499
-#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: Profile.dfm:914
-#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:278
-#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:683
-msgid "Austria  "
-msgstr ""
-
-#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #: Profile.dfm:500
-#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: Profile.dfm:915
-#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:279
-#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:684
-msgid "Azerbaijan  "
-msgstr ""
-
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: Profile.dfm:501
+#: Profile.dfm:726
+#. frmProfile..PageControl1..TabSheet6..txtWorkCountry..Text
+#: Profile.dfm:915
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: Profile.dfm:916
+#: Profile.dfm:1141
+#. frmVCard..PageControl1..TabSheet4..txtHomeCountry..Text
+#: vcard.dfm:279
 #. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:280
+#: vcard.dfm:506
+#. frmVCard..PageControl1..TabSheet6..txtWorkCountry..Text
+#: vcard.dfm:684
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:685
-msgid "Bahamas  "
+#: vcard.dfm:911
+msgid "United States  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3402,7 +3231,7 @@ msgstr ""
 #: vcard.dfm:281
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:686
-msgid "Bahrain  "
+msgid "Afghanistan  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3413,7 +3242,7 @@ msgstr ""
 #: vcard.dfm:282
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:687
-msgid "Bangladesh  "
+msgid "Albania  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3424,7 +3253,7 @@ msgstr ""
 #: vcard.dfm:283
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:688
-msgid "Barbados  "
+msgid "Algeria  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3435,7 +3264,7 @@ msgstr ""
 #: vcard.dfm:284
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:689
-msgid "Belarus  "
+msgid "American Samoa  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3446,7 +3275,7 @@ msgstr ""
 #: vcard.dfm:285
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:690
-msgid "Belgium  "
+msgid "Andorra  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3457,7 +3286,7 @@ msgstr ""
 #: vcard.dfm:286
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:691
-msgid "Belize  "
+msgid "Angola  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3468,7 +3297,7 @@ msgstr ""
 #: vcard.dfm:287
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:692
-msgid "Benin  "
+msgid "Anguilla  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3479,7 +3308,7 @@ msgstr ""
 #: vcard.dfm:288
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:693
-msgid "Bermuda  "
+msgid "Antarctica  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3490,7 +3319,7 @@ msgstr ""
 #: vcard.dfm:289
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:694
-msgid "Bhutan  "
+msgid "Antigua and Barbuda  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3501,7 +3330,7 @@ msgstr ""
 #: vcard.dfm:290
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:695
-msgid "Bolivia  "
+msgid "Argentina  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3512,7 +3341,7 @@ msgstr ""
 #: vcard.dfm:291
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:696
-msgid "Bosnia and Herzogovina  "
+msgid "Armenia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3523,7 +3352,7 @@ msgstr ""
 #: vcard.dfm:292
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:697
-msgid "Botswana  "
+msgid "Aruba  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3534,7 +3363,7 @@ msgstr ""
 #: vcard.dfm:293
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:698
-msgid "Bouvet Island  "
+msgid "Australia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3545,7 +3374,7 @@ msgstr ""
 #: vcard.dfm:294
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:699
-msgid "Brazil  "
+msgid "Austria  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3556,7 +3385,7 @@ msgstr ""
 #: vcard.dfm:295
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:700
-msgid "British Indian Ocean Territory  "
+msgid "Azerbaijan  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3567,7 +3396,7 @@ msgstr ""
 #: vcard.dfm:296
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:701
-msgid "Brunei Darussalam  "
+msgid "Bahamas  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3578,7 +3407,7 @@ msgstr ""
 #: vcard.dfm:297
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:702
-msgid "Bulgaria  "
+msgid "Bahrain  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3589,7 +3418,7 @@ msgstr ""
 #: vcard.dfm:298
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:703
-msgid "Burkina Faso  "
+msgid "Bangladesh  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3600,7 +3429,7 @@ msgstr ""
 #: vcard.dfm:299
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:704
-msgid "Burundi  "
+msgid "Barbados  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3611,7 +3440,7 @@ msgstr ""
 #: vcard.dfm:300
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:705
-msgid "Cambodia  "
+msgid "Belarus  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3622,7 +3451,7 @@ msgstr ""
 #: vcard.dfm:301
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:706
-msgid "Cameroon  "
+msgid "Belgium  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3633,7 +3462,7 @@ msgstr ""
 #: vcard.dfm:302
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:707
-msgid "Canada  "
+msgid "Belize  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3644,7 +3473,7 @@ msgstr ""
 #: vcard.dfm:303
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:708
-msgid "Cape Verde  "
+msgid "Benin  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3655,7 +3484,7 @@ msgstr ""
 #: vcard.dfm:304
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:709
-msgid "Cayman Islands  "
+msgid "Bermuda  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3666,7 +3495,7 @@ msgstr ""
 #: vcard.dfm:305
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:710
-msgid "Central African Republic  "
+msgid "Bhutan  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3677,7 +3506,7 @@ msgstr ""
 #: vcard.dfm:306
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:711
-msgid "Chad  "
+msgid "Bolivia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3688,7 +3517,7 @@ msgstr ""
 #: vcard.dfm:307
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:712
-msgid "Chile  "
+msgid "Bosnia and Herzogovina  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3699,7 +3528,7 @@ msgstr ""
 #: vcard.dfm:308
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:713
-msgid "China  "
+msgid "Botswana  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3710,14 +3539,18 @@ msgstr ""
 #: vcard.dfm:309
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:714
-msgid "Christmas Island  "
+msgid "Bouvet Island  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #: Profile.dfm:531
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: Profile.dfm:946
-msgid "Cocos (Keeling) Islands  "
+#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: vcard.dfm:310
+#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: vcard.dfm:715
+msgid "Brazil  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3725,10 +3558,10 @@ msgstr ""
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: Profile.dfm:947
 #. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:312
+#: vcard.dfm:311
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:717
-msgid "Columbia  "
+#: vcard.dfm:716
+msgid "British Indian Ocean Territory  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3736,10 +3569,10 @@ msgstr ""
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: Profile.dfm:948
 #. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:313
+#: vcard.dfm:312
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:718
-msgid "Comoros  "
+#: vcard.dfm:717
+msgid "Brunei Darussalam  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3747,10 +3580,10 @@ msgstr ""
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: Profile.dfm:949
 #. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:314
+#: vcard.dfm:313
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:719
-msgid "Congo (Republic of) "
+#: vcard.dfm:718
+msgid "Bulgaria  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3758,10 +3591,10 @@ msgstr ""
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: Profile.dfm:950
 #. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:315
+#: vcard.dfm:314
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:720
-msgid "Congo (Democratic Republic of) "
+#: vcard.dfm:719
+msgid "Burkina Faso  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3769,10 +3602,10 @@ msgstr ""
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: Profile.dfm:951
 #. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:316
+#: vcard.dfm:315
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:721
-msgid "Cook Islands  "
+#: vcard.dfm:720
+msgid "Burundi  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3780,10 +3613,10 @@ msgstr ""
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: Profile.dfm:952
 #. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:317
+#: vcard.dfm:316
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:722
-msgid "Costa Rica  "
+#: vcard.dfm:721
+msgid "Cambodia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3791,10 +3624,10 @@ msgstr ""
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: Profile.dfm:953
 #. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:318
+#: vcard.dfm:317
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:723
-msgid "Cote d'Ivoire  "
+#: vcard.dfm:722
+msgid "Cameroon  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3802,10 +3635,10 @@ msgstr ""
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: Profile.dfm:954
 #. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:319
+#: vcard.dfm:318
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:724
-msgid "Croatia  "
+#: vcard.dfm:723
+msgid "Canada  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3813,10 +3646,10 @@ msgstr ""
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: Profile.dfm:955
 #. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:320
+#: vcard.dfm:319
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:725
-msgid "Cuba  "
+#: vcard.dfm:724
+msgid "Cape Verde  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3824,10 +3657,10 @@ msgstr ""
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: Profile.dfm:956
 #. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:321
+#: vcard.dfm:320
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:726
-msgid "Cyprus  "
+#: vcard.dfm:725
+msgid "Cayman Islands  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3835,10 +3668,10 @@ msgstr ""
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: Profile.dfm:957
 #. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:322
+#: vcard.dfm:321
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:727
-msgid "Czech Republic  "
+#: vcard.dfm:726
+msgid "Central African Republic  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3846,10 +3679,10 @@ msgstr ""
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: Profile.dfm:958
 #. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:323
+#: vcard.dfm:322
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:728
-msgid "Denmark  "
+#: vcard.dfm:727
+msgid "Chad  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3857,10 +3690,10 @@ msgstr ""
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: Profile.dfm:959
 #. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:324
+#: vcard.dfm:323
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:729
-msgid "Djibouti  "
+#: vcard.dfm:728
+msgid "Chile  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3868,10 +3701,10 @@ msgstr ""
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: Profile.dfm:960
 #. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:325
+#: vcard.dfm:324
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:730
-msgid "Dominica  "
+#: vcard.dfm:729
+msgid "China  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3879,21 +3712,17 @@ msgstr ""
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: Profile.dfm:961
 #. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:326
+#: vcard.dfm:325
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:731
-msgid "Dominican Republic  "
+#: vcard.dfm:730
+msgid "Christmas Island  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #: Profile.dfm:547
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: Profile.dfm:962
-#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:327
-#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:732
-msgid "East Timor  "
+msgid "Cocos (Keeling) Islands  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3904,7 +3733,7 @@ msgstr ""
 #: vcard.dfm:328
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:733
-msgid "Ecuador  "
+msgid "Columbia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3915,7 +3744,7 @@ msgstr ""
 #: vcard.dfm:329
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:734
-msgid "Egypt  "
+msgid "Comoros  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3926,7 +3755,7 @@ msgstr ""
 #: vcard.dfm:330
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:735
-msgid "El Salvador  "
+msgid "Congo (Republic of) "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3937,7 +3766,7 @@ msgstr ""
 #: vcard.dfm:331
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:736
-msgid "Equatorial Guinea  "
+msgid "Congo (Democratic Republic of) "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3948,7 +3777,7 @@ msgstr ""
 #: vcard.dfm:332
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:737
-msgid "Eritrea  "
+msgid "Cook Islands  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3959,7 +3788,7 @@ msgstr ""
 #: vcard.dfm:333
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:738
-msgid "Estonia  "
+msgid "Costa Rica  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3970,7 +3799,7 @@ msgstr ""
 #: vcard.dfm:334
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:739
-msgid "Ethiopia  "
+msgid "Cote d'Ivoire  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3981,7 +3810,7 @@ msgstr ""
 #: vcard.dfm:335
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:740
-msgid "Falkland Islands (Malvinas) "
+msgid "Croatia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3992,7 +3821,7 @@ msgstr ""
 #: vcard.dfm:336
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:741
-msgid "Faroe Islands  "
+msgid "Cuba  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4003,7 +3832,7 @@ msgstr ""
 #: vcard.dfm:337
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:742
-msgid "Fiji  "
+msgid "Cyprus  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4014,7 +3843,7 @@ msgstr ""
 #: vcard.dfm:338
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:743
-msgid "Finland  "
+msgid "Czech Republic  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4025,7 +3854,7 @@ msgstr ""
 #: vcard.dfm:339
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:744
-msgid "France  "
+msgid "Denmark  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4036,7 +3865,7 @@ msgstr ""
 #: vcard.dfm:340
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:745
-msgid "French Guiana  "
+msgid "Djibouti  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4047,7 +3876,7 @@ msgstr ""
 #: vcard.dfm:341
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:746
-msgid "French Polynesia  "
+msgid "Dominica  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4058,7 +3887,7 @@ msgstr ""
 #: vcard.dfm:342
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:747
-msgid "French Southern Territories  "
+msgid "Dominican Republic  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4069,7 +3898,7 @@ msgstr ""
 #: vcard.dfm:343
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:748
-msgid "Gabon  "
+msgid "East Timor  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4080,7 +3909,7 @@ msgstr ""
 #: vcard.dfm:344
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:749
-msgid "Gambia  "
+msgid "Ecuador  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4091,7 +3920,7 @@ msgstr ""
 #: vcard.dfm:345
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:750
-msgid "Georgia  "
+msgid "Egypt  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4102,7 +3931,7 @@ msgstr ""
 #: vcard.dfm:346
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:751
-msgid "Germany  "
+msgid "El Salvador  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4113,7 +3942,7 @@ msgstr ""
 #: vcard.dfm:347
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:752
-msgid "Ghana  "
+msgid "Equatorial Guinea  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4124,7 +3953,7 @@ msgstr ""
 #: vcard.dfm:348
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:753
-msgid "Gibraltar  "
+msgid "Eritrea  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4135,7 +3964,7 @@ msgstr ""
 #: vcard.dfm:349
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:754
-msgid "Greece  "
+msgid "Estonia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4146,7 +3975,7 @@ msgstr ""
 #: vcard.dfm:350
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:755
-msgid "Greenland  "
+msgid "Ethiopia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4157,7 +3986,7 @@ msgstr ""
 #: vcard.dfm:351
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:756
-msgid "Grenada  "
+msgid "Falkland Islands (Malvinas) "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4168,7 +3997,7 @@ msgstr ""
 #: vcard.dfm:352
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:757
-msgid "Guadeloupe  "
+msgid "Faroe Islands  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4179,7 +4008,7 @@ msgstr ""
 #: vcard.dfm:353
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:758
-msgid "Guam  "
+msgid "Fiji  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4190,7 +4019,7 @@ msgstr ""
 #: vcard.dfm:354
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:759
-msgid "Guatemala  "
+msgid "Finland  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4201,7 +4030,7 @@ msgstr ""
 #: vcard.dfm:355
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:760
-msgid "Guinea  "
+msgid "France  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4212,7 +4041,7 @@ msgstr ""
 #: vcard.dfm:356
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:761
-msgid "Guinea-Bissau  "
+msgid "French Guiana  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4223,7 +4052,7 @@ msgstr ""
 #: vcard.dfm:357
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:762
-msgid "Guyana  "
+msgid "French Polynesia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4234,7 +4063,7 @@ msgstr ""
 #: vcard.dfm:358
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:763
-msgid "Haiti  "
+msgid "French Southern Territories  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4245,7 +4074,7 @@ msgstr ""
 #: vcard.dfm:359
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:764
-msgid "Heard Island and McDonald Islands  "
+msgid "Gabon  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4256,7 +4085,7 @@ msgstr ""
 #: vcard.dfm:360
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:765
-msgid "Holy See (Vatican City State) "
+msgid "Gambia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4267,7 +4096,7 @@ msgstr ""
 #: vcard.dfm:361
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:766
-msgid "Honduras  "
+msgid "Georgia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4278,7 +4107,7 @@ msgstr ""
 #: vcard.dfm:362
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:767
-msgid "Hong Kong  "
+msgid "Germany  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4289,7 +4118,7 @@ msgstr ""
 #: vcard.dfm:363
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:768
-msgid "Hungary  "
+msgid "Ghana  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4300,7 +4129,7 @@ msgstr ""
 #: vcard.dfm:364
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:769
-msgid "Iceland  "
+msgid "Gibraltar  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4311,7 +4140,7 @@ msgstr ""
 #: vcard.dfm:365
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:770
-msgid "India  "
+msgid "Greece  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4322,7 +4151,7 @@ msgstr ""
 #: vcard.dfm:366
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:771
-msgid "Indonesia  "
+msgid "Greenland  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4333,7 +4162,7 @@ msgstr ""
 #: vcard.dfm:367
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:772
-msgid "Iran, Islamic Republic of  "
+msgid "Grenada  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4344,7 +4173,7 @@ msgstr ""
 #: vcard.dfm:368
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:773
-msgid "Iraq  "
+msgid "Guadeloupe  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4355,7 +4184,7 @@ msgstr ""
 #: vcard.dfm:369
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:774
-msgid "Ireland  "
+msgid "Guam  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4366,7 +4195,7 @@ msgstr ""
 #: vcard.dfm:370
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:775
-msgid "Israel  "
+msgid "Guatemala  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4377,7 +4206,7 @@ msgstr ""
 #: vcard.dfm:371
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:776
-msgid "Italy  "
+msgid "Guinea  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4388,7 +4217,7 @@ msgstr ""
 #: vcard.dfm:372
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:777
-msgid "Jamaica  "
+msgid "Guinea-Bissau  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4399,7 +4228,7 @@ msgstr ""
 #: vcard.dfm:373
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:778
-msgid "Japan  "
+msgid "Guyana  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4410,7 +4239,7 @@ msgstr ""
 #: vcard.dfm:374
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:779
-msgid "Jordan  "
+msgid "Haiti  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4421,7 +4250,7 @@ msgstr ""
 #: vcard.dfm:375
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:780
-msgid "Kazakhstan  "
+msgid "Heard Island and McDonald Islands  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4432,7 +4261,7 @@ msgstr ""
 #: vcard.dfm:376
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:781
-msgid "Kenya  "
+msgid "Holy See (Vatican City State) "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4443,7 +4272,7 @@ msgstr ""
 #: vcard.dfm:377
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:782
-msgid "Kiribati  "
+msgid "Honduras  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4454,7 +4283,7 @@ msgstr ""
 #: vcard.dfm:378
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:783
-msgid "Korea, Democratic People's Republic of  "
+msgid "Hong Kong  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4465,7 +4294,7 @@ msgstr ""
 #: vcard.dfm:379
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:784
-msgid "Korea, Republic of  "
+msgid "Hungary  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4476,7 +4305,7 @@ msgstr ""
 #: vcard.dfm:380
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:785
-msgid "Kuwait  "
+msgid "Iceland  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4487,7 +4316,7 @@ msgstr ""
 #: vcard.dfm:381
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:786
-msgid "Kyrgyzstan  "
+msgid "India  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4498,7 +4327,7 @@ msgstr ""
 #: vcard.dfm:382
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:787
-msgid "Lao People's Democratic Republic  "
+msgid "Indonesia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4509,7 +4338,7 @@ msgstr ""
 #: vcard.dfm:383
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:788
-msgid "Latvia  "
+msgid "Iran, Islamic Republic of  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4520,7 +4349,7 @@ msgstr ""
 #: vcard.dfm:384
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:789
-msgid "Lebanon  "
+msgid "Iraq  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4531,7 +4360,7 @@ msgstr ""
 #: vcard.dfm:385
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:790
-msgid "Lesotho  "
+msgid "Ireland  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4542,7 +4371,7 @@ msgstr ""
 #: vcard.dfm:386
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:791
-msgid "Liberia  "
+msgid "Israel  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4553,7 +4382,7 @@ msgstr ""
 #: vcard.dfm:387
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:792
-msgid "Libyan Arab Jamahiriya  "
+msgid "Italy  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4564,7 +4393,7 @@ msgstr ""
 #: vcard.dfm:388
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:793
-msgid "Liechtenstein  "
+msgid "Jamaica  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4575,7 +4404,7 @@ msgstr ""
 #: vcard.dfm:389
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:794
-msgid "Lithuania  "
+msgid "Japan  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4586,7 +4415,7 @@ msgstr ""
 #: vcard.dfm:390
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:795
-msgid "Luxembourg  "
+msgid "Jordan  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4597,7 +4426,7 @@ msgstr ""
 #: vcard.dfm:391
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:796
-msgid "Macau  "
+msgid "Kazakhstan  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4608,7 +4437,7 @@ msgstr ""
 #: vcard.dfm:392
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:797
-msgid "Macedonia  "
+msgid "Kenya  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4619,7 +4448,7 @@ msgstr ""
 #: vcard.dfm:393
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:798
-msgid "Madagascar  "
+msgid "Kiribati  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4630,7 +4459,7 @@ msgstr ""
 #: vcard.dfm:394
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:799
-msgid "Malawi  "
+msgid "Korea, Democratic People's Republic of  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4641,7 +4470,7 @@ msgstr ""
 #: vcard.dfm:395
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:800
-msgid "Malaysia  "
+msgid "Korea, Republic of  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4652,7 +4481,7 @@ msgstr ""
 #: vcard.dfm:396
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:801
-msgid "Maldives  "
+msgid "Kuwait  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4663,7 +4492,7 @@ msgstr ""
 #: vcard.dfm:397
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:802
-msgid "Mali  "
+msgid "Kyrgyzstan  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4674,7 +4503,7 @@ msgstr ""
 #: vcard.dfm:398
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:803
-msgid "Malta  "
+msgid "Lao People's Democratic Republic  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4685,7 +4514,7 @@ msgstr ""
 #: vcard.dfm:399
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:804
-msgid "Marshall Islands  "
+msgid "Latvia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4696,7 +4525,7 @@ msgstr ""
 #: vcard.dfm:400
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:805
-msgid "Martinique  "
+msgid "Lebanon  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4707,7 +4536,7 @@ msgstr ""
 #: vcard.dfm:401
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:806
-msgid "Mauritania  "
+msgid "Lesotho  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4718,7 +4547,7 @@ msgstr ""
 #: vcard.dfm:402
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:807
-msgid "Mauritius  "
+msgid "Liberia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4729,7 +4558,7 @@ msgstr ""
 #: vcard.dfm:403
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:808
-msgid "Mayotte  "
+msgid "Libyan Arab Jamahiriya  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4740,7 +4569,7 @@ msgstr ""
 #: vcard.dfm:404
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:809
-msgid "Mexico  "
+msgid "Liechtenstein  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4751,7 +4580,7 @@ msgstr ""
 #: vcard.dfm:405
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:810
-msgid "Micronesia, Federated States of  "
+msgid "Lithuania  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4762,7 +4591,7 @@ msgstr ""
 #: vcard.dfm:406
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:811
-msgid "Moldova, Republic of  "
+msgid "Luxembourg  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4773,7 +4602,7 @@ msgstr ""
 #: vcard.dfm:407
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:812
-msgid "Monaco  "
+msgid "Macau  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4784,7 +4613,7 @@ msgstr ""
 #: vcard.dfm:408
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:813
-msgid "Mongolia  "
+msgid "Macedonia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4795,7 +4624,7 @@ msgstr ""
 #: vcard.dfm:409
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:814
-msgid "Montserrat  "
+msgid "Madagascar  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4806,7 +4635,7 @@ msgstr ""
 #: vcard.dfm:410
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:815
-msgid "Morocco  "
+msgid "Malawi  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4817,7 +4646,7 @@ msgstr ""
 #: vcard.dfm:411
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:816
-msgid "Mozambique  "
+msgid "Malaysia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4828,7 +4657,7 @@ msgstr ""
 #: vcard.dfm:412
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:817
-msgid "Myanmar  "
+msgid "Maldives  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4839,7 +4668,7 @@ msgstr ""
 #: vcard.dfm:413
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:818
-msgid "Namibia  "
+msgid "Mali  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4850,7 +4679,7 @@ msgstr ""
 #: vcard.dfm:414
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:819
-msgid "Nauru  "
+msgid "Malta  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4861,7 +4690,7 @@ msgstr ""
 #: vcard.dfm:415
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:820
-msgid "Nepal  "
+msgid "Marshall Islands  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4872,7 +4701,7 @@ msgstr ""
 #: vcard.dfm:416
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:821
-msgid "Netherlands  "
+msgid "Martinique  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4883,7 +4712,7 @@ msgstr ""
 #: vcard.dfm:417
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:822
-msgid "Netherlands Antilles  "
+msgid "Mauritania  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4894,7 +4723,7 @@ msgstr ""
 #: vcard.dfm:418
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:823
-msgid "New Caledonia  "
+msgid "Mauritius  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4905,7 +4734,7 @@ msgstr ""
 #: vcard.dfm:419
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:824
-msgid "New Zealand  "
+msgid "Mayotte  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4916,7 +4745,7 @@ msgstr ""
 #: vcard.dfm:420
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:825
-msgid "Nicaragua  "
+msgid "Mexico  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4927,7 +4756,7 @@ msgstr ""
 #: vcard.dfm:421
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:826
-msgid "Niger  "
+msgid "Micronesia, Federated States of  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4938,7 +4767,7 @@ msgstr ""
 #: vcard.dfm:422
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:827
-msgid "Nigeria  "
+msgid "Moldova, Republic of  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4949,7 +4778,7 @@ msgstr ""
 #: vcard.dfm:423
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:828
-msgid "Niue  "
+msgid "Monaco  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4960,7 +4789,7 @@ msgstr ""
 #: vcard.dfm:424
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:829
-msgid "Norfolk Island  "
+msgid "Mongolia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4971,7 +4800,7 @@ msgstr ""
 #: vcard.dfm:425
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:830
-msgid "Nothern Mariana Islands  "
+msgid "Montserrat  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4982,7 +4811,7 @@ msgstr ""
 #: vcard.dfm:426
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:831
-msgid "Norway  "
+msgid "Morocco  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4993,7 +4822,7 @@ msgstr ""
 #: vcard.dfm:427
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:832
-msgid "Oman  "
+msgid "Mozambique  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5004,7 +4833,7 @@ msgstr ""
 #: vcard.dfm:428
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:833
-msgid "Pakistan  "
+msgid "Myanmar  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5015,7 +4844,7 @@ msgstr ""
 #: vcard.dfm:429
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:834
-msgid "Palau  "
+msgid "Namibia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5026,7 +4855,7 @@ msgstr ""
 #: vcard.dfm:430
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:835
-msgid "Palestinian Territory, Occupied  "
+msgid "Nauru  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5037,7 +4866,7 @@ msgstr ""
 #: vcard.dfm:431
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:836
-msgid "Panama  "
+msgid "Nepal  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5048,7 +4877,7 @@ msgstr ""
 #: vcard.dfm:432
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:837
-msgid "Papua New Guinea  "
+msgid "Netherlands  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5059,7 +4888,7 @@ msgstr ""
 #: vcard.dfm:433
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:838
-msgid "Paraguay  "
+msgid "Netherlands Antilles  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5070,7 +4899,7 @@ msgstr ""
 #: vcard.dfm:434
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:839
-msgid "Peru  "
+msgid "New Caledonia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5081,7 +4910,7 @@ msgstr ""
 #: vcard.dfm:435
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:840
-msgid "Philippines  "
+msgid "New Zealand  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5092,7 +4921,7 @@ msgstr ""
 #: vcard.dfm:436
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:841
-msgid "Pitcairn  "
+msgid "Nicaragua  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5103,7 +4932,7 @@ msgstr ""
 #: vcard.dfm:437
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:842
-msgid "Poland  "
+msgid "Niger  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5114,7 +4943,7 @@ msgstr ""
 #: vcard.dfm:438
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:843
-msgid "Portugal  "
+msgid "Nigeria  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5125,7 +4954,7 @@ msgstr ""
 #: vcard.dfm:439
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:844
-msgid "Puerto Rico  "
+msgid "Niue  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5136,7 +4965,7 @@ msgstr ""
 #: vcard.dfm:440
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:845
-msgid "Qatar  "
+msgid "Norfolk Island  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5147,7 +4976,7 @@ msgstr ""
 #: vcard.dfm:441
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:846
-msgid "Reunion  "
+msgid "Nothern Mariana Islands  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5158,7 +4987,7 @@ msgstr ""
 #: vcard.dfm:442
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:847
-msgid "Romania  "
+msgid "Norway  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5169,7 +4998,7 @@ msgstr ""
 #: vcard.dfm:443
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:848
-msgid "Russian Federation  "
+msgid "Oman  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5180,7 +5009,7 @@ msgstr ""
 #: vcard.dfm:444
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:849
-msgid "Rwanda  "
+msgid "Pakistan  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5191,7 +5020,7 @@ msgstr ""
 #: vcard.dfm:445
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:850
-msgid "Saint Helena  "
+msgid "Palau  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5202,7 +5031,7 @@ msgstr ""
 #: vcard.dfm:446
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:851
-msgid "Saint Kitts and Nevis  "
+msgid "Palestinian Territory, Occupied  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5213,7 +5042,7 @@ msgstr ""
 #: vcard.dfm:447
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:852
-msgid "Saint Lucia  "
+msgid "Panama  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5224,7 +5053,7 @@ msgstr ""
 #: vcard.dfm:448
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:853
-msgid "Saint Pierre and Miquelon  "
+msgid "Papua New Guinea  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5235,7 +5064,7 @@ msgstr ""
 #: vcard.dfm:449
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:854
-msgid "Saint Vincent and the Grenadines  "
+msgid "Paraguay  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5246,7 +5075,7 @@ msgstr ""
 #: vcard.dfm:450
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:855
-msgid "Samoa  "
+msgid "Peru  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5257,7 +5086,7 @@ msgstr ""
 #: vcard.dfm:451
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:856
-msgid "San Marino  "
+msgid "Philippines  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5268,7 +5097,7 @@ msgstr ""
 #: vcard.dfm:452
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:857
-msgid "Sao Tome and Principe  "
+msgid "Pitcairn  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5279,7 +5108,7 @@ msgstr ""
 #: vcard.dfm:453
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:858
-msgid "Saudi Arabia  "
+msgid "Poland  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5290,7 +5119,7 @@ msgstr ""
 #: vcard.dfm:454
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:859
-msgid "Senegal  "
+msgid "Portugal  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5301,7 +5130,7 @@ msgstr ""
 #: vcard.dfm:455
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:860
-msgid "Seychelles  "
+msgid "Puerto Rico  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5312,7 +5141,7 @@ msgstr ""
 #: vcard.dfm:456
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:861
-msgid "Sierra Leone  "
+msgid "Qatar  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5323,7 +5152,7 @@ msgstr ""
 #: vcard.dfm:457
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:862
-msgid "Singapore  "
+msgid "Reunion  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5334,7 +5163,7 @@ msgstr ""
 #: vcard.dfm:458
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:863
-msgid "Slovakia  "
+msgid "Romania  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5345,7 +5174,7 @@ msgstr ""
 #: vcard.dfm:459
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:864
-msgid "Slovenia  "
+msgid "Russian Federation  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5356,7 +5185,7 @@ msgstr ""
 #: vcard.dfm:460
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:865
-msgid "Solomon Islands  "
+msgid "Rwanda  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5367,7 +5196,7 @@ msgstr ""
 #: vcard.dfm:461
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:866
-msgid "Somalia  "
+msgid "Saint Helena  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5378,7 +5207,7 @@ msgstr ""
 #: vcard.dfm:462
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:867
-msgid "South Africa  "
+msgid "Saint Kitts and Nevis  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5389,7 +5218,7 @@ msgstr ""
 #: vcard.dfm:463
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:868
-msgid "South Georgia and the South Sandwich Islands  "
+msgid "Saint Lucia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5400,7 +5229,7 @@ msgstr ""
 #: vcard.dfm:464
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:869
-msgid "Spain  "
+msgid "Saint Pierre and Miquelon  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5411,7 +5240,7 @@ msgstr ""
 #: vcard.dfm:465
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:870
-msgid "Sri Lanka  "
+msgid "Saint Vincent and the Grenadines  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5422,7 +5251,7 @@ msgstr ""
 #: vcard.dfm:466
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:871
-msgid "Sudan  "
+msgid "Samoa  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5433,7 +5262,7 @@ msgstr ""
 #: vcard.dfm:467
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:872
-msgid "Suriname  "
+msgid "San Marino  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5444,7 +5273,7 @@ msgstr ""
 #: vcard.dfm:468
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:873
-msgid "Svalbard and Jan Mayen Islands  "
+msgid "Sao Tome and Principe  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5455,7 +5284,7 @@ msgstr ""
 #: vcard.dfm:469
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:874
-msgid "Swaziland  "
+msgid "Saudi Arabia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5466,7 +5295,7 @@ msgstr ""
 #: vcard.dfm:470
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:875
-msgid "Sweden  "
+msgid "Senegal  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5477,7 +5306,7 @@ msgstr ""
 #: vcard.dfm:471
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:876
-msgid "Switzerland  "
+msgid "Seychelles  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5488,7 +5317,7 @@ msgstr ""
 #: vcard.dfm:472
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:877
-msgid "Syrian Arab Republic  "
+msgid "Sierra Leone  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5499,7 +5328,7 @@ msgstr ""
 #: vcard.dfm:473
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:878
-msgid "Taiwan, Province of China  "
+msgid "Singapore  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5510,7 +5339,7 @@ msgstr ""
 #: vcard.dfm:474
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:879
-msgid "Tajikistan  "
+msgid "Slovakia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5521,7 +5350,7 @@ msgstr ""
 #: vcard.dfm:475
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:880
-msgid "Tanzania, United Republic of  "
+msgid "Slovenia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5532,7 +5361,7 @@ msgstr ""
 #: vcard.dfm:476
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:881
-msgid "Thailand  "
+msgid "Solomon Islands  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5543,7 +5372,7 @@ msgstr ""
 #: vcard.dfm:477
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:882
-msgid "Togo  "
+msgid "Somalia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5554,7 +5383,7 @@ msgstr ""
 #: vcard.dfm:478
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:883
-msgid "Tokelau  "
+msgid "South Africa  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5565,7 +5394,7 @@ msgstr ""
 #: vcard.dfm:479
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:884
-msgid "Tonga  "
+msgid "South Georgia and the South Sandwich Islands  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5576,7 +5405,7 @@ msgstr ""
 #: vcard.dfm:480
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:885
-msgid "Trinidad and Tobago  "
+msgid "Spain  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5587,7 +5416,7 @@ msgstr ""
 #: vcard.dfm:481
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:886
-msgid "Tunisia  "
+msgid "Sri Lanka  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5598,7 +5427,7 @@ msgstr ""
 #: vcard.dfm:482
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:887
-msgid "Turkey  "
+msgid "Sudan  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5609,7 +5438,7 @@ msgstr ""
 #: vcard.dfm:483
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:888
-msgid "Turkmenistan  "
+msgid "Suriname  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5620,7 +5449,7 @@ msgstr ""
 #: vcard.dfm:484
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:889
-msgid "Turks and Caicos Islands  "
+msgid "Svalbard and Jan Mayen Islands  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5631,7 +5460,7 @@ msgstr ""
 #: vcard.dfm:485
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:890
-msgid "Tuvalu  "
+msgid "Swaziland  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5642,7 +5471,7 @@ msgstr ""
 #: vcard.dfm:486
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:891
-msgid "Uganda  "
+msgid "Sweden  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5653,7 +5482,7 @@ msgstr ""
 #: vcard.dfm:487
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:892
-msgid "Ukraine  "
+msgid "Switzerland  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5664,7 +5493,7 @@ msgstr ""
 #: vcard.dfm:488
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:893
-msgid "United Arab Emirates  "
+msgid "Syrian Arab Republic  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5675,7 +5504,18 @@ msgstr ""
 #: vcard.dfm:489
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:894
-msgid "United Kingdom  "
+msgid "Taiwan, Province of China  "
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: Profile.dfm:710
+#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: Profile.dfm:1125
+#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: vcard.dfm:490
+#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: vcard.dfm:895
+msgid "Tajikistan  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5686,7 +5526,7 @@ msgstr ""
 #: vcard.dfm:491
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:896
-msgid "United States Minor Outlying Islands  "
+msgid "Tanzania, United Republic of  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5697,7 +5537,7 @@ msgstr ""
 #: vcard.dfm:492
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:897
-msgid "Uruguay  "
+msgid "Thailand  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5708,7 +5548,7 @@ msgstr ""
 #: vcard.dfm:493
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:898
-msgid "Uzbekistan  "
+msgid "Togo  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5719,7 +5559,7 @@ msgstr ""
 #: vcard.dfm:494
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:899
-msgid "Vanuatu  "
+msgid "Tokelau  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5730,7 +5570,7 @@ msgstr ""
 #: vcard.dfm:495
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:900
-msgid "Venezuela  "
+msgid "Tonga  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5741,7 +5581,7 @@ msgstr ""
 #: vcard.dfm:496
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:901
-msgid "Vietnam  "
+msgid "Trinidad and Tobago  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5752,7 +5592,7 @@ msgstr ""
 #: vcard.dfm:497
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:902
-msgid "Virgin Islands, British  "
+msgid "Tunisia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5763,7 +5603,7 @@ msgstr ""
 #: vcard.dfm:498
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:903
-msgid "Virgin Islands, U.S.  "
+msgid "Turkey  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5774,7 +5614,7 @@ msgstr ""
 #: vcard.dfm:499
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:904
-msgid "Wallis and Futuna  "
+msgid "Turkmenistan  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5785,7 +5625,7 @@ msgstr ""
 #: vcard.dfm:500
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:905
-msgid "Western Sahara  "
+msgid "Turks and Caicos Islands  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5796,7 +5636,7 @@ msgstr ""
 #: vcard.dfm:501
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:906
-msgid "Yemen  "
+msgid "Tuvalu  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5807,7 +5647,7 @@ msgstr ""
 #: vcard.dfm:502
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:907
-msgid "Yugoslavia  "
+msgid "Uganda  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5818,7 +5658,7 @@ msgstr ""
 #: vcard.dfm:503
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:908
-msgid "Zambia  "
+msgid "Ukraine  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5829,37 +5669,202 @@ msgstr ""
 #: vcard.dfm:504
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:909
+msgid "United Arab Emirates  "
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: Profile.dfm:725
+#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: Profile.dfm:1140
+#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: vcard.dfm:505
+#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: vcard.dfm:910
+msgid "United Kingdom  "
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: Profile.dfm:727
+#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: Profile.dfm:1142
+#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: vcard.dfm:507
+#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: vcard.dfm:912
+msgid "United States Minor Outlying Islands  "
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: Profile.dfm:728
+#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: Profile.dfm:1143
+#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: vcard.dfm:508
+#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: vcard.dfm:913
+msgid "Uruguay  "
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: Profile.dfm:729
+#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: Profile.dfm:1144
+#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: vcard.dfm:509
+#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: vcard.dfm:914
+msgid "Uzbekistan  "
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: Profile.dfm:730
+#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: Profile.dfm:1145
+#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: vcard.dfm:510
+#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: vcard.dfm:915
+msgid "Vanuatu  "
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: Profile.dfm:731
+#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: Profile.dfm:1146
+#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: vcard.dfm:511
+#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: vcard.dfm:916
+msgid "Venezuela  "
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: Profile.dfm:732
+#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: Profile.dfm:1147
+#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: vcard.dfm:512
+#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: vcard.dfm:917
+msgid "Vietnam  "
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: Profile.dfm:733
+#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: Profile.dfm:1148
+#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: vcard.dfm:513
+#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: vcard.dfm:918
+msgid "Virgin Islands, British  "
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: Profile.dfm:734
+#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: Profile.dfm:1149
+#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: vcard.dfm:514
+#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: vcard.dfm:919
+msgid "Virgin Islands, U.S.  "
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: Profile.dfm:735
+#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: Profile.dfm:1150
+#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: vcard.dfm:515
+#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: vcard.dfm:920
+msgid "Wallis and Futuna  "
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: Profile.dfm:736
+#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: Profile.dfm:1151
+#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: vcard.dfm:516
+#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: vcard.dfm:921
+msgid "Western Sahara  "
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: Profile.dfm:737
+#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: Profile.dfm:1152
+#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: vcard.dfm:517
+#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: vcard.dfm:922
+msgid "Yemen  "
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: Profile.dfm:738
+#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: Profile.dfm:1153
+#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: vcard.dfm:518
+#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: vcard.dfm:923
+msgid "Yugoslavia  "
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: Profile.dfm:739
+#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: Profile.dfm:1154
+#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: vcard.dfm:519
+#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: vcard.dfm:924
+msgid "Zambia  "
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: Profile.dfm:740
+#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: Profile.dfm:1155
+#. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
+#: vcard.dfm:520
+#. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
+#: vcard.dfm:925
 msgid "Zimbabwe  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet5..Caption
-#: Profile.dfm:728
+#: Profile.dfm:744
 #. frmVCard..PageControl1..TabSheet5..Caption
-#: vcard.dfm:543
+#: vcard.dfm:559
 #: ConnDetails.pas:402
 msgid "Work"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet5..Label22..Caption
-#: Profile.dfm:735
+#: Profile.dfm:751
 #. frmVCard..PageControl1..TabSheet5..Label22..Caption
-#: vcard.dfm:550
+#: vcard.dfm:566
 msgid "Company Name:"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet5..Label23..Caption
-#: Profile.dfm:742
+#: Profile.dfm:758
 #. frmVCard..PageControl1..TabSheet5..Label23..Caption
-#: vcard.dfm:557
+#: vcard.dfm:573
 msgid "Org. Unit (Dept):"
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet6..Caption
-#: Profile.dfm:807
-#: Profile.pas:300
-#: Profile.pas:302
-#: vcard.pas:158
+#: Profile.dfm:823
+#: Profile.pas:306
+#: Profile.pas:308
 #: vcard.pas:160
+#: vcard.pas:162
 msgid "Address"
 msgstr ""
 
@@ -6077,10 +6082,10 @@ msgstr ""
 #. frmRosterWindow..popGroup..popGroupBlock..Caption
 #: RosterWindow.dfm:634
 #: Room.pas:1742
-#: RosterWindow.pas:2108
+#: RosterWindow.pas:2136
 #. do blocking madness
-#: RosterWindow.pas:2145
-#: RosterWindow.pas:2150
+#: RosterWindow.pas:2173
+#: RosterWindow.pas:2178
 msgid "Block"
 msgstr ""
 
@@ -6163,7 +6168,7 @@ msgstr ""
 #: RosterAdd.dfm:34
 #. frmSubscribe..boxAdd..lblNickname..Caption
 #: subscribe.dfm:83
-#: ExUtils.pas:317
+#: ExUtils.pas:318
 msgid "Nickname:"
 msgstr ""
 
@@ -6247,22 +6252,22 @@ msgstr ""
 
 #. frmRosterWindow..pnlShow..pnlStatus..lblStatusLink..Caption
 #: RosterWindow.dfm:245
-#: ExUtils.pas:655
-#: ExUtils.pas:673
-#: ExUtils.pas:691
-#: RosterWindow.pas:372
+#: ExUtils.pas:672
+#: ExUtils.pas:690
+#: ExUtils.pas:708
+#: RosterWindow.pas:383
 #. it at all times (if it exists).
-#: RosterWindow.pas:1275
-#: RosterWindow.pas:1279
-#: RosterWindow.pas:1654
+#: RosterWindow.pas:1303
+#: RosterWindow.pas:1307
+#: RosterWindow.pas:1684
 msgid "Offline"
 msgstr ""
 
 #. frmRosterWindow..pnlConnect..lblStatus..Caption
 #: RosterWindow.dfm:273
-#: RosterWindow.pas:381
+#: RosterWindow.pas:392
 #. catch session events
-#: RosterWindow.pas:498
+#: RosterWindow.pas:508
 msgid "Disconnected."
 msgstr ""
 
@@ -6473,27 +6478,27 @@ msgstr ""
 msgid "My Profile"
 msgstr ""
 
-#. frmVCard..PageControl1..TabSheet1..lblURL..Caption
-#: vcard.dfm:72
+#. frmVCard..PageControl1..TabSheet1..Panel1..lblURL..Caption
+#: vcard.dfm:87
 msgid "Web:"
 msgstr ""
 
 #. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:310
+#: vcard.dfm:326
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:715
+#: vcard.dfm:731
 msgid "Cocos (Keeling) "
 msgstr ""
 
 #. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
-#: vcard.dfm:311
+#: vcard.dfm:327
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
-#: vcard.dfm:716
+#: vcard.dfm:732
 msgid "Islands  "
 msgstr ""
 
 #. frmVCard..PageControl1..TabSheet6..Caption
-#: vcard.dfm:617
+#: vcard.dfm:633
 msgid "TabSheet6"
 msgstr ""
 
@@ -6873,215 +6878,215 @@ msgid "Disco"
 msgstr ""
 
 #. Make sure winsock2 is available..
-#: ExSession.pas:168
+#: ExSession.pas:169
 msgid "Winsock2 is required for this application. Please obtain the winsock2 "
 "installer from Microsoft for your operating "
 "system."
 msgstr ""
 
 #. -t           : show test menu
-#: ExSession.pas:228
+#: ExSession.pas:229
 msgid "Invalid command line:%s"
 msgstr ""
 
 #. show the help message
-#: ExSession.pas:260
+#: ExSession.pas:261
 msgid "The following command line parameters are available in Exodus: \n"
 "\n"
 msgstr ""
 
-#: ExSession.pas:261
+#: ExSession.pas:262
 msgid " -d \t\t : Debug mode on\n"
 msgstr ""
 
-#: ExSession.pas:262
+#: ExSession.pas:263
 msgid " -m \t\t : Start minimized\n"
 msgstr ""
 
-#: ExSession.pas:263
+#: ExSession.pas:264
 msgid " -v \t\t : invisible mode\n"
 msgstr ""
 
-#: ExSession.pas:264
+#: ExSession.pas:265
 msgid " -? \t\t : Show Help\n"
 msgstr ""
 
-#: ExSession.pas:265
+#: ExSession.pas:266
 msgid " -x [yes|no] \t : Expanded Mode\n"
 msgstr ""
 
-#: ExSession.pas:266
+#: ExSession.pas:267
 msgid " -j [jid] \t\t : Jid\n"
 msgstr ""
 
-#: ExSession.pas:267
+#: ExSession.pas:268
 msgid " -p [pass] \t : Password\n"
 msgstr ""
 
-#: ExSession.pas:268
+#: ExSession.pas:269
 msgid " -r [res] \t : Resource\n"
 msgstr ""
 
-#: ExSession.pas:269
+#: ExSession.pas:270
 msgid " -i [pri] \t : Priority\n"
 msgstr ""
 
-#: ExSession.pas:270
+#: ExSession.pas:271
 msgid " -f [prof] \t : Profile name\n"
 msgstr ""
 
-#: ExSession.pas:271
+#: ExSession.pas:272
 msgid " -c [file] \t : Config path name\n"
 msgstr ""
 
-#: ExSession.pas:355
+#: ExSession.pas:356
 msgid "Missing file:"
 msgstr ""
 
-#: ExSession.pas:477
+#: ExSession.pas:478
 #: prefs/PrefNotify.pas:100
 msgid "Activity in a chat window"
 msgstr ""
 
-#: ExSession.pas:478
+#: ExSession.pas:479
 #: prefs/PrefNotify.pas:98
 msgid "Invited to a room"
 msgstr ""
 
-#: ExSession.pas:479
+#: ExSession.pas:480
 #: prefs/PrefNotify.pas:99
 msgid "Keyword in a room"
 msgstr ""
 
-#: ExSession.pas:480
+#: ExSession.pas:481
 #: prefs/PrefNotify.pas:95
 msgid "New conversation"
 msgstr ""
 
-#: ExSession.pas:481
+#: ExSession.pas:482
 #: prefs/PrefNotify.pas:96
 msgid "Received a normal message"
 msgstr ""
 
-#: ExSession.pas:482
+#: ExSession.pas:483
 #: prefs/PrefNotify.pas:94
 msgid "Contact went offline"
 msgstr ""
 
-#: ExSession.pas:483
+#: ExSession.pas:484
 #: prefs/PrefNotify.pas:93
 msgid "Contact came online"
 msgstr ""
 
-#: ExSession.pas:484
+#: ExSession.pas:485
 #: prefs/PrefNotify.pas:101
 msgid "Activity in a room"
 msgstr ""
 
-#: ExSession.pas:485
+#: ExSession.pas:486
 #: prefs/PrefNotify.pas:97
 msgid "Subscription request"
 msgstr ""
 
-#: ExSession.pas:487
+#: ExSession.pas:488
 #: prefs/PrefNotify.pas:103
 msgid "Auto response generated"
 msgstr ""
 
-#: ExUtils.pas:318
+#: ExUtils.pas:319
 msgid "First Name:"
 msgstr ""
 
-#: ExUtils.pas:319
+#: ExUtils.pas:320
 msgid "Last Name:"
 msgstr ""
 
-#: ExUtils.pas:320
+#: ExUtils.pas:321
 msgid "EMail Address:"
 msgstr ""
 
-#: ExUtils.pas:321
+#: ExUtils.pas:322
 msgid "Password"
 msgstr ""
 
-#: ExUtils.pas:322
+#: ExUtils.pas:323
 msgid "UserName:"
 msgstr ""
 
-#: ExUtils.pas:429
+#: ExUtils.pas:430
 msgid "days"
 msgstr ""
 
-#: ExUtils.pas:430
+#: ExUtils.pas:431
 msgid "hours"
 msgstr ""
 
-#: ExUtils.pas:431
+#: ExUtils.pas:432
 msgid "minutes"
 msgstr ""
 
-#: ExUtils.pas:435
+#: ExUtils.pas:436
 msgid " unknown last result: "
 msgstr ""
 
-#: ExUtils.pas:446
+#: ExUtils.pas:447
 msgid "%d day, "
 msgid_plural ""
 msgstr[0] ""
 
-#: ExUtils.pas:447
+#: ExUtils.pas:448
 msgid "%d hour, "
 msgid_plural ""
 msgstr[0] ""
 
-#: ExUtils.pas:448
+#: ExUtils.pas:449
 msgid "%d minute, "
 msgid_plural ""
 msgstr[0] ""
 
-#: ExUtils.pas:449
+#: ExUtils.pas:450
 msgid "%d second."
 msgid_plural ""
 msgstr[0] ""
 
-#: ExUtils.pas:587
+#: ExUtils.pas:588
 msgid "This message contains %d roster items."
 msgstr ""
 
-#: ExUtils.pas:649
-#: ExUtils.pas:667
-#: ExUtils.pas:685
-#: RosterWindow.pas:378
-#: RosterWindow.pas:673
+#: ExUtils.pas:666
+#: ExUtils.pas:684
+#: ExUtils.pas:702
+#: RosterWindow.pas:389
+#: RosterWindow.pas:699
 msgid "Bookmarks"
 msgstr ""
 
-#: ExUtils.pas:652
-#: ExUtils.pas:670
-#: ExUtils.pas:688
-#: RosterWindow.pas:377
+#: ExUtils.pas:669
+#: ExUtils.pas:687
+#: ExUtils.pas:705
+#: RosterWindow.pas:388
 msgid "Unfiled"
 msgstr ""
 
-#: ExUtils.pas:969
+#: ExUtils.pas:986
 msgid "Untitled Group"
 msgstr ""
 
-#: ExUtils.pas:970
+#: ExUtils.pas:987
 msgid "Enter new group name below. "
 msgstr ""
 
-#: ExUtils.pas:973
+#: ExUtils.pas:990
 msgid "To create a nested group a name like "
 "foo%sbar."
 msgstr ""
 
-#: ExUtils.pas:975
+#: ExUtils.pas:992
 msgid "New Roster Group"
 msgstr ""
 
 #. add the new grp.
-#: ExUtils.pas:980
+#: ExUtils.pas:997
 msgid "This group already exists!"
 msgstr ""
 
@@ -7162,129 +7167,129 @@ msgid "Conference Room:"
 msgstr ""
 
 #. enable a logging plugin now.
-#: Jabber1.pas:926
+#: Jabber1.pas:927
 msgid "Message logging is now performed by plugins. Please enable a logging "
 "plugin to regain this functionality."
 msgstr ""
 
-#: Jabber1.pas:973
+#: Jabber1.pas:974
 msgid "Enter Password"
 msgstr ""
 
 #. For other OS's we need to use the wicked nasty DLL
-#: Jabber1.pas:1066
+#: Jabber1.pas:1067
 msgid "Trying to setup the Auto Away timer."
 msgstr ""
 
-#: Jabber1.pas:1088
+#: Jabber1.pas:1089
 msgid "AutoAway Setup FAILED!"
 msgstr ""
 
 #. depending on that API call.
-#: Jabber1.pas:1101
+#: Jabber1.pas:1102
 msgid "Using Win32 API for Autoaway checks!!"
 msgstr ""
 
-#: Jabber1.pas:1106
+#: Jabber1.pas:1107
 msgid "ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!"
 msgstr ""
 
-#: Jabber1.pas:1169
+#: Jabber1.pas:1170
 msgid "There was an error trying to authenticate you.\n"
 "Either you used the wrong password, or this account is already in use "
 "by someone else."
 msgstr ""
 
-#: Jabber1.pas:1176
+#: Jabber1.pas:1177
 msgid "There was an error trying to setup SSL."
 msgstr ""
 
-#: Jabber1.pas:1212
+#: Jabber1.pas:1213
 msgid "An Error occurred trying to register your new account. This server "
 "may not allow open registration."
 msgstr ""
 
-#: Jabber1.pas:1227
+#: Jabber1.pas:1228
 msgid "This account does not exist on this server. Create a new "
 "account?"
 msgstr ""
 
 #. if we have a new account, prompt for reg info
-#: Jabber1.pas:1277
+#: Jabber1.pas:1278
 msgid "Your new jabber account is activated. Would you like to fill out "
 "additional registration information?"
 msgstr ""
 
 #. set us to away
-#: Jabber1.pas:2185
+#: Jabber1.pas:2186
 msgid "Setting AutoAway"
 msgstr ""
 
 #. set us to xa
-#: Jabber1.pas:2221
+#: Jabber1.pas:2222
 msgid "Setting AutoXA"
 msgstr ""
 
 #. reset our status to available
-#: Jabber1.pas:2238
+#: Jabber1.pas:2239
 msgid "Setting Auto Available"
 msgstr ""
 
 #. lookup some arbitrary vcard..
-#: Jabber1.pas:2273
+#: Jabber1.pas:2274
 msgid "Lookup Profile"
 msgstr ""
 
-#: Jabber1.pas:2273
-#: Jabber1.pas:2389
-#: Jabber1.pas:2657
+#: Jabber1.pas:2274
+#: Jabber1.pas:2390
+#: Jabber1.pas:2658
 msgid "Enter Jabber ID: "
 msgstr ""
 
-#: Jabber1.pas:2490
+#: Jabber1.pas:2491
 msgid "Old password is incorrect."
 msgstr ""
 
-#: Jabber1.pas:2494
+#: Jabber1.pas:2495
 msgid "New password does not match."
 msgstr ""
 
-#: Jabber1.pas:2514
-#: Jabber1.pas:2519
+#: Jabber1.pas:2515
+#: Jabber1.pas:2520
 msgid "Error changing password."
 msgstr ""
 
-#: Jabber1.pas:2517
+#: Jabber1.pas:2518
 msgid "Password changed."
 msgstr ""
 
 #. kick off a service registration..
-#: Jabber1.pas:2604
+#: Jabber1.pas:2605
 msgid "Register with Service"
 msgstr ""
 
-#: Jabber1.pas:2604
+#: Jabber1.pas:2605
 msgid "Enter Jabber ID of Service: "
 msgstr ""
 
-#: Jabber1.pas:2657
+#: Jabber1.pas:2658
 msgid "Send a Message"
 msgstr ""
 
 #. fire up an invite for this room using the selected contacts
-#: Jabber1.pas:2867
+#: Jabber1.pas:2868
 #. send roster items to this contact.
-#: Jabber1.pas:2877
+#: Jabber1.pas:2878
 #. Send contacts to this JID..
-#: RosterWindow.pas:2583
-#: RosterWindow.pas:2795
+#: RosterWindow.pas:2715
+#: RosterWindow.pas:2927
 #. we got a URL drop
-#: RosterWindow.pas:2891
-#: RosterWindow.pas:2923
+#: RosterWindow.pas:3023
+#: RosterWindow.pas:3055
 msgid "You must select one or more contacts."
 msgstr ""
 
-#: Jabber1.pas:3004
+#: Jabber1.pas:3005
 msgid "Branding error!"
 msgstr ""
 
@@ -7305,22 +7310,22 @@ msgid "You must enter a nickname"
 msgstr ""
 
 #. timeout
-#: Jud.pas:320
+#: jud.pas:320
 #. we got an iq-error back
-#: Jud.pas:326
+#: jud.pas:326
 msgid "Could not contact the search agent."
 msgstr ""
 
 #. timeout
-#: Jud.pas:428
+#: jud.pas:428
 msgid "The search timed out."
 msgstr ""
 
-#: Jud.pas:457
+#: jud.pas:457
 msgid "No Results were found."
 msgstr ""
 
-#: Jud.pas:567
+#: jud.pas:567
 msgid "%d items found."
 msgstr ""
 
@@ -7402,19 +7407,19 @@ msgid " is now offline."
 msgstr ""
 
 #. Do this to ensure the nodes are properly translated.
-#: Profile.pas:296
+#: Profile.pas:302
 #. Do this to ensure the nodes are properly translated.
-#: vcard.pas:156
+#: vcard.pas:158
 msgid "Basic"
 msgstr ""
 
-#: Profile.pas:299
-#: vcard.pas:157
+#: Profile.pas:305
+#: vcard.pas:159
 msgid "Personal Information"
 msgstr ""
 
-#: Profile.pas:301
-#: vcard.pas:159
+#: Profile.pas:307
+#: vcard.pas:161
 msgid "Work Information"
 msgstr ""
 
@@ -7682,8 +7687,8 @@ msgid "Enter bookmark name:"
 msgstr ""
 
 #: Room.pas:1740
-#: RosterWindow.pas:2104
-#: RosterWindow.pas:2155
+#: RosterWindow.pas:2132
+#: RosterWindow.pas:2183
 msgid "UnBlock"
 msgstr ""
 
@@ -7753,90 +7758,90 @@ msgid "The gateway server you requested does not have a transport for this "
 "contact type."
 msgstr ""
 
-#: RosterWindow.pas:379
+#: RosterWindow.pas:390
 #. The My resources grp is also special.. same as offline
-#: RosterWindow.pas:1291
-#: RosterWindow.pas:1295
+#: RosterWindow.pas:1319
+#: RosterWindow.pas:1323
 msgid "My Resources"
 msgstr ""
 
-#: RosterWindow.pas:382
-#: RosterWindow.pas:499
+#: RosterWindow.pas:393
+#: RosterWindow.pas:509
 msgid "Click to Sign On"
 msgstr ""
 
 #. We are in the process of connecting
-#: RosterWindow.pas:508
+#: RosterWindow.pas:518
 msgid "Trying to connect..."
 msgstr ""
 
-#: RosterWindow.pas:509
+#: RosterWindow.pas:519
 #. we've got a socket connection
-#: RosterWindow.pas:515
+#: RosterWindow.pas:525
 #. we've been authenticated
-#: RosterWindow.pas:524
+#: RosterWindow.pas:534
 #. Login to the client..
-#: RosterWindow.pas:2685
+#: RosterWindow.pas:2817
 msgid "Click to Cancel..."
 msgstr ""
 
-#: RosterWindow.pas:516
+#: RosterWindow.pas:526
 msgid "Connected. \n"
 "Authenticating..."
 msgstr ""
 
-#: RosterWindow.pas:525
+#: RosterWindow.pas:535
 msgid "Authenticated.\n"
 "Getting Contacts..."
 msgstr ""
 
 #. remove a bookmark
-#: RosterWindow.pas:1889
+#: RosterWindow.pas:1919
 msgid "Remove this bookmark?"
 msgstr ""
 
-#: RosterWindow.pas:2385
+#: RosterWindow.pas:2415
 msgid " (Pending)"
 msgstr ""
 
-#: RosterWindow.pas:2496
+#: RosterWindow.pas:2628
 msgid "Rename group"
 msgstr ""
 
-#: RosterWindow.pas:2496
+#: RosterWindow.pas:2628
 msgid "New group name:"
 msgstr ""
 
 #. Block or Unblock this user
-#: RosterWindow.pas:2611
+#: RosterWindow.pas:2743
 msgid "Block %d contacts?"
 msgstr ""
 
 #. Block or Unblock this user
-#: RosterWindow.pas:2640
+#: RosterWindow.pas:2772
 msgid "Unblock %d contacts?"
 msgstr ""
 
-#: RosterWindow.pas:2668
+#: RosterWindow.pas:2800
 msgid "You must select more than one online contact to "
 "broadcast."
 msgstr ""
 
 #. Cancel the connection
-#: RosterWindow.pas:2689
-#: RosterWindow.pas:3034
+#: RosterWindow.pas:2821
+#: RosterWindow.pas:3166
 msgid "Click to Cancel Reconnect"
 msgstr ""
 
-#: RosterWindow.pas:2800
+#: RosterWindow.pas:2932
 msgid "Rename Roster Item"
 msgstr ""
 
-#: RosterWindow.pas:2800
+#: RosterWindow.pas:2932
 msgid "New Nickname: "
 msgstr ""
 
-#: RosterWindow.pas:3035
+#: RosterWindow.pas:3167
 msgid "Reconnect in %d seconds."
 msgstr ""
 
@@ -7919,7 +7924,7 @@ msgid "Your request was successful."
 msgstr ""
 
 #. callback for vcard info
-#: vcard.pas:193
+#: vcard.pas:195
 msgid "No vCard response was ever returned."
 msgstr ""
 
@@ -8853,6 +8858,11 @@ msgstr ""
 #. frmPrefRoster..chkNestedGrps..Caption
 #: prefs/PrefRoster.dfm:108
 msgid "Use nested groups"
+msgstr ""
+
+#. frmPrefRoster..chkRosterAvatars..Caption
+#: prefs/PrefRoster.dfm:124
+msgid "Show Avatars in the roster"
 msgstr ""
 
 #. frmPrefSubscription..Caption

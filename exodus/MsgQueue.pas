@@ -282,12 +282,14 @@ begin
 
             // create a new chat controller for this event and populate it
             msgs := cur_e.QueryTags('message');
-            c := MainSession.ChatList.FindChat(e.from_jid.jid, e.from_jid.resource, '');
-            if (c = nil) then 
-                c := MainSession.ChatList.AddChat(e.from_jid.jid, e.from_jid.resource);
-            c.AddRef();
-            for m := 0 to msgs.Count - 1 do
-                c.PushMessage(msgs[m]);
+            if (msgs.Count > 0) then begin
+                c := MainSession.ChatList.FindChat(e.from_jid.jid, e.from_jid.resource, '');
+                if (c = nil) then
+                    c := MainSession.ChatList.AddChat(e.from_jid.jid, e.from_jid.resource);
+                c.AddRef();
+                for m := 0 to msgs.Count - 1 do
+                    c.PushMessage(msgs[m]);
+            end;
             msgs.Free();
         end;
         etags.Free();
