@@ -237,9 +237,9 @@ begin
         chat.OnMessage := MessageEvent;
 
         // handle setting position for this window
-        if (not MainSession.Prefs.RestorePosition(TfrmChat(chat.window), Caption)) then
+        if (not MainSession.Prefs.RestorePosition(TfrmChat(chat.window),
+            MungeName(Caption))) then
             Position := poDefaultPosOnly;
-
 
         ShowDefault();
         if ((show_window) and (Application.Active)) then

@@ -77,7 +77,7 @@ implementation
 {$R *.dfm}
 
 uses
-    ChatWin, Debug, ExUtils, Session, Jabber1;
+    XMLUtils, ChatWin, Debug, ExUtils, Session, Jabber1;
 
 {---------------------------------------}
 procedure TfrmDockable.FormCreate(Sender: TObject);
@@ -152,8 +152,12 @@ end;
 procedure TfrmDockable.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
-    if ((not _docked) and (MainSession <> nil)) then
-        MainSession.Prefs.SavePosition(Self);
+    if ((not _docked) and (MainSession <> nil)) then begin
+        if (Self is TfrmChat) then
+            MainSession.Prefs.SavePosition(Self, MungeName(Self.Caption))
+        else
+            MainSession.Prefs.SavePosition(Self);
+    end;
 
     CanClose := true;
 end;

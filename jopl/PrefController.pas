@@ -172,7 +172,9 @@ end;
         procedure removePresence(pvalue: TJabberCustomPres);
         procedure removeAllPresence();
 
-        procedure SavePosition(form: TForm);
+        procedure SavePosition(form: TForm); overload;
+        procedure SavePosition(form: TForm; key: Widestring); overload;
+
         procedure RestorePosition(form: TForm); overload;
         function RestorePosition(form: TForm; key: Widestring): boolean; overload;
 
@@ -680,17 +682,24 @@ end;
 procedure TPrefController.SavePosition(form: TForm);
 var
     fkey: Widestring;
+begin
+    fkey := MungeName(form.ClassName);
+    SavePosition(form, fkey);
+end;
+
+{---------------------------------------}
+procedure TPrefController.SavePosition(form: TForm; key: Widestring);
+var
     p, f: TXMLTag;
 begin
     // save the positions for this form
-    fkey := MungeName(form.ClassName);
     p := _pref_node.GetFirstTag('positions');
     if (p = nil) then
         p := _pref_node.AddTag('positions');
 
-    f := p.GetFirstTag(fkey);
+    f := p.GetFirstTag(key);
     if (f = nil) then
-        f := p.AddTag(fkey);
+        f := p.AddTag(key);
 
     f.setAttribute('top', IntToStr(Form.top));
     f.setAttribute('left', IntToStr(Form.left));
@@ -699,6 +708,7 @@ begin
 
     Self.Save();
 end;
+
 
 {---------------------------------------}
 function TPrefController.RestorePosition(form: TForm; key: Widestring): boolean;
