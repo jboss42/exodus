@@ -184,6 +184,7 @@ begin
 
   frmRosterWindow.DockRoster;
   frmRosterWindow.Show;
+
   frmExodus.Startup();
   Application.Run;
 end.

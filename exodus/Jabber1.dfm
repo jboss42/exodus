@@ -15,7 +15,6 @@ object frmExodus: TfrmExodus
   Menu = MainMenu1
   OldCreateOrder = False
   ShowHint = True
-  Visible = True
   OnActivate = FormActivate
   OnClick = FormPaint
   OnClose = FormClose
