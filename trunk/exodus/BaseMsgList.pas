@@ -53,6 +53,8 @@ type
     procedure populate(history: Widestring); virtual;
     procedure setupPrefs(); virtual;
     procedure setTitle(title: Widestring); virtual;
+    procedure refresh(); virtual; // start dock
+    procedure ready(); virtual;  // form up, (un)dock done, etc.
 
     property Handle: THandle read getHandle;
     property winObject: TObject read getObject;
@@ -157,6 +159,16 @@ begin
 end;
 
 procedure TfBaseMsgList.setTitle(title: Widestring);
+begin
+    // NOOP
+end;
+
+procedure TfBaseMsgList.ready();
+begin
+    // NOOP
+end;
+
+procedure TfBaseMsgList.refresh();
 begin
     // NOOP
 end;

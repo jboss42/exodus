@@ -73,6 +73,7 @@ type
     procedure MsgOutEnter(Sender: TObject);
     procedure MsgOutMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+
   private
     { Private declarations }
     _msgHistory : TStringList;
@@ -112,7 +113,7 @@ implementation
 
 {$R *.dfm}
 uses
-    RTFMsgList, IEMsgList, ClipBrd, Session, MsgDisplay, ShellAPI, Emoticons, Jabber1;
+    RTFMsgList, IEMsgList, ClipBrd, Session, MsgDisplay, ShellAPI, Emoticons, Jabber1, ExUtils;
 
 {---------------------------------------}
 procedure TfrmBaseChat.Emoticons1Click(Sender: TObject);
@@ -295,6 +296,7 @@ begin
         Align := alClient;
         Visible := true;
         setContextMenu(popMsgList);
+        ready();
     end;
 
     inherited;
@@ -428,6 +430,7 @@ begin
   inherited;
     if timWinFlash.Enabled then
         timWinFlash.Enabled := false;
+    MsgList.refresh();
 end;
 
 {---------------------------------------}
@@ -459,4 +462,5 @@ begin
     Result := TfBaseMsgList(_msgframe);
 end;
 
+{---------------------------------------}
 end.
