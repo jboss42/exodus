@@ -21,7 +21,7 @@ unit fRosterTree;
 interface
 
 uses
-    Roster, Presence,
+    Roster, Presence, Unicode, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ImgList, ComCtrls;
 
@@ -39,18 +39,19 @@ type
   private
     { Private declarations }
     _cur_ritem: TJabberRosterItem;
-    _cur_grp: string;
+    _cur_grp: Widestring;
     _cur_bm: TJabberBookmark;
 
-    _jid_nodes: TStringlist;
-    _grp_nodes: TSTringlist;
+    _jid_nodes: TWideStringlist;
+    _grp_nodes: TWideStringlist;
 
     _show_online: boolean;
     _show_status: boolean;
     _status_color: TColor;
     _offline: TTreeNode;
     _fullRoster: boolean;
-    _collapsed_grps: TStringList;
+
+    _collapsed_grps: TWideStringList;
 
     procedure RemoveEmptyGroups();
     procedure RemoveGroupNode(node: TTreeNode);
@@ -81,11 +82,15 @@ uses
 {---------------------------------------}
 procedure TframeTreeRoster.Initialize();
 begin
-    _jid_nodes := TStringlist.Create();
-    _collapsed_grps := TStringlist.Create();
-    _grp_nodes := TStringlist.Create();
+    _jid_nodes := TWideStringlist.Create();
+    _collapsed_grps := TWideStringlist.Create();
+    _grp_nodes := TWideStringlist.Create();
+
     _show_status := MainSession.Prefs.getBool('inline_status');
     _status_color := TColor(MainSession.Prefs.getInt('inline_color'));
+
+    // get all the current coll'd grps.
+    MainSession.Prefs.fillStringlist('col_groups', _collapsed_grps);
 end;
 
 {---------------------------------------}
@@ -185,12 +190,6 @@ begin
         node_list.Clear();
     end;
 
-    {
-    for i := 0 to Bookmarks.Count - 1 do
-        TJabberBookmark(Bookmarks.Objects[i]).Data := nil;
-    }
-
-    // _bookmark := nil;
     _offline := nil;
 
     treeRoster.Items.EndUpdate;
@@ -458,7 +457,6 @@ begin
 
         if (_collapsed_grps.IndexOf(Node.Text) < 0) then begin
             _collapsed_grps.Add(Node.Text);
-            // MainSession.Prefs.setStringlist('col_groups', _collapsed_grps, true);
         end;
     end;
 end;
@@ -468,24 +466,16 @@ procedure TframeTreeRoster.treeRosterExpanded(Sender: TObject;
   Node: TTreeNode);
 var
     i: integer;
-    // dirty: boolean;
 begin
     if Node.Level = 0 then begin
         Node.ImageIndex := ico_Down;
         Node.SelectedIndex := ico_Down;
-        // dirty := false;
         repeat
             i := _collapsed_grps.IndexOf(node.Text);
             if (i >= 0) then begin
-                // dirty := true;
                 _collapsed_grps.Delete(i);
             end;
         until (i < 0);
-
-        {
-        if (dirty) then
-            MainSession.Prefs.setStringlist('col_groups', _collapsed_grps, true);
-        }
     end;
 end;
 
