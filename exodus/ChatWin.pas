@@ -680,7 +680,7 @@ procedure TfrmChat.imgStatusPaint(Sender: TObject);
 begin
   inherited;
     // repaint
-    frmRosterWindow.ImageList1.Draw(imgStatus.Canvas, 1, 1, _pres_img);
+    frmExodus.ImageList2.Draw(imgStatus.Canvas, 1, 1, _pres_img);
 end;
 
 {---------------------------------------}
@@ -700,8 +700,10 @@ begin
   inherited;
     // Flash the presence image for 30 seconds..
     inc(_flash_ticks);
-    if (_cur_img = _old_img) then
-        _cur_img := ico_Chat
+    if (_cur_img = _old_img) then begin
+        _cur_img := _old_img + 33;
+        if (_cur_img > 38) then _cur_img := 38;
+        end
     else
         _cur_img := _old_img;
 

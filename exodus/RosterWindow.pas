@@ -31,7 +31,6 @@ type
 
   TfrmRosterWindow = class(TForm)
     treeRoster: TTreeView;
-    ImageList1: TImageList;
     popRoster: TPopupMenu;
     popProperties: TMenuItem;
     popRemove: TMenuItem;
@@ -1239,7 +1238,7 @@ begin
 
     if n.Data <> nil then begin
         end
-    else if X < (ImageList1.Width + 5) then begin
+    else if X < (frmExodus.ImageList2.Width + 5) then begin
         // clicking on a grp's widget
         if n.Expanded then
             n.Collapse(false)
@@ -1709,7 +1708,7 @@ begin
                         end;
 
                     // draw the image
-                    ImageList1.Draw(treeRoster.Canvas, nRect.Left + treeRoster.Indent,
+                    frmExodus.ImageList2.Draw(treeRoster.Canvas, nRect.Left + treeRoster.Indent,
                         nRect.Top, Node.ImageIndex);
 
                     // draw the text
@@ -1745,7 +1744,7 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.imgStatusPaint(Sender: TObject);
 begin
-    ImageList1.Draw(imgStatus.Canvas, 1, 1, _cur_status);
+    frmExodus.ImageList2.Draw(imgStatus.Canvas, 1, 1, _cur_status);
 end;
 
 {---------------------------------------}
