@@ -226,17 +226,17 @@ inherited frmRoom: TfrmRoom
     OnPopup = popRoomRosterPopup
     Left = 48
     Top = 152
-    object Message1: TMenuItem
+    object popRosterMsg: TMenuItem
       Caption = 'Message'
-      OnClick = Message1Click
+      OnClick = popRosterMsgClick
     end
     object popRosterChat: TMenuItem
       Caption = 'Chat'
       OnClick = lstRosterDblClick
     end
-    object SendmyJID1: TMenuItem
+    object popRosterSendJID: TMenuItem
       Caption = 'Send my JID'
-      OnClick = SendmyJID1Click
+      OnClick = popRosterSendJIDClick
     end
     object popRosterBlock: TMenuItem
       Caption = 'Block'

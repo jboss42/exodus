@@ -82,8 +82,8 @@ type
     S1: TMenuItem;
     dlgSave: TSaveDialog;
     N6: TMenuItem;
-    Message1: TMenuItem;
-    SendmyJID1: TMenuItem;
+    popRosterMsg: TMenuItem;
+    popRosterSendJID: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -117,8 +117,8 @@ type
     procedure mnuWordwrapClick(Sender: TObject);
     procedure NotificationOptions1Click(Sender: TObject);
     procedure S1Click(Sender: TObject);
-    procedure Message1Click(Sender: TObject);
-    procedure SendmyJID1Click(Sender: TObject);
+    procedure popRosterMsgClick(Sender: TObject);
+    procedure popRosterSendJIDClick(Sender: TObject);
     procedure lstRosterData(Sender: TObject; Item: TListItem);
   private
     { Private declarations }
@@ -191,7 +191,7 @@ var
   xp_muc_reason: TXPLite;
 
 resourcestring
-    sRoom = 'Room';
+    sRoom = '%s Room';
     sNotifyKeyword = 'Keyword in ';
     sNotifyActivity = 'Activity in ';
     sRoomSubjChange = '/me has changed the subject to: ';
@@ -330,7 +330,7 @@ begin
             MainSession.addAvailJid(rjid);
 
         MainSession.SendTag(p);
-        f.Caption := tmp_jid.user + ' ' + sRoom;
+        f.Caption := Format(sRoom, [tmp_jid.user]);
         if MainSession.Prefs.getBool('expanded') then
             f.DockForm;
 
@@ -1282,28 +1282,41 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.popRosterBlockClick(Sender: TObject);
 var
+    e: boolean;
     rm: TRoomMember;
 begin
-    inherited;
-    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
-    if (rm <> nil) then begin
-       if (rm.show = sBlocked) then begin
-          //unblock
-          rm.show := rm.blockShow;
+    if (lstRoster.Selected = nil) then
+        rm := nil
+    else begin
+        rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
+        if (rm <> nil) then begin
+           if (rm.show = sBlocked) then begin
+              //unblock
+              rm.show := rm.blockShow;
 
-          if rm.Show = 'away' then rm.Node.ImageIndex := ico_Away
-          else if rm.Show = 'xa' then rm.Node.ImageIndex := ico_XA
-          else if rm.Show = 'dnd' then rm.Node.ImageIndex := ico_DND
-          else if rm.Show = 'chat' then rm.Node.ImageIndex := ico_Chat
-          else rm.Node.ImageIndex := ico_Online;
-      end
-       else begin
-          //block
-          rm.blockShow := rm.show;
-          rm.show := sBlocked;
-          rm.Node.ImageIndex := ico_blocked;
-      end;
-   end;
+              if rm.Show = 'away' then rm.Node.ImageIndex := ico_Away
+              else if rm.Show = 'xa' then rm.Node.ImageIndex := ico_XA
+              else if rm.Show = 'dnd' then rm.Node.ImageIndex := ico_DND
+              else if rm.Show = 'chat' then rm.Node.ImageIndex := ico_Chat
+              else rm.Node.ImageIndex := ico_Online;
+          end
+           else begin
+              //block
+              rm.blockShow := rm.show;
+              rm.show := sBlocked;
+              rm.Node.ImageIndex := ico_blocked;
+          end;
+       end;
+    end;
+
+    e := (rm <> nil);
+    popRosterMsg.Enabled := e;
+    popRosterChat.Enabled := e;
+    popRosterSendJID.Enabled := e;
+    popRosterblock.Enabled := e;
+
+    inherited;
+
 end;
 
 {---------------------------------------}
@@ -1715,7 +1728,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoom.Message1Click(Sender: TObject);
+procedure TfrmRoom.popRosterMsgClick(Sender: TObject);
 var
     rm: TRoomMember;
     tmp_jid: TJabberID;
@@ -1732,7 +1745,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoom.SendmyJID1Click(Sender: TObject);
+procedure TfrmRoom.popRosterSendJIDClick(Sender: TObject);
 var
     rm: TRoomMember;
     ri: TJabberRosterItem;
