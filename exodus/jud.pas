@@ -514,11 +514,10 @@ begin
         end;
 
         // populate the listview.
-        for i := 0 to items.count - 1 do begin
-            cur := items[i];
-            ji := TJUDItem.Create();
-
-            if (cur_state = 'items') then begin
+        if (cur_state = 'items') then begin
+            for i := 0 to items.count - 1 do begin
+                cur := items[i];
+                ji := TJUDItem.Create();
                 ji.xdata := false;
                 cols := cur.ChildTags();
                 ji.jid := cur.GetAttribute('jid');
@@ -526,10 +525,15 @@ begin
                 for c := 0 to cols.count - 1 do
                     ji.cols[c + 1] := cols[c].Data;
                 cols.Free();
-                cur_state := 'add';
-            end
+                virtlist.Add(ji);
+            end;
+            cur_state := 'add';
+        end
 
-            else begin // xitems
+        else begin // xitems
+            for i := 0 to items.count - 1 do begin
+                cur := items[i];
+                ji := TJUDItem.Create();
                 ji.xdata := true;
                 cols := cur.QueryTags('field');
                 ji.count := cols.Count;
@@ -543,9 +547,9 @@ begin
                     end;
                 end;
                 cols.Free();
-                cur_state := 'xadd';
+                virtlist.Add(ji);
             end;
-            virtlist.Add(ji);
+            cur_state := 'xadd';
         end;
 
         lstContacts.Items.Count := virtlist.Count;
