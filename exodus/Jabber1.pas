@@ -242,6 +242,8 @@ type
     procedure MsgCallback(event: string; tag: TXMLTag);
     procedure iqCallback(event: string; tag: TXMLTag);
 
+    procedure presCustomPresClick(Sender: TObject);
+
     procedure restoreEvents(expanded: boolean);
     procedure restoreToolbar;
     procedure restoreAlpha;
@@ -571,9 +573,10 @@ end;
 {---------------------------------------}
 procedure TfrmJabber.restoreMenus(enable: boolean);
 var
-    plist: TStringlist;
-    i: integer;
+    plist: TList;
+    imidx, i: integer;
     mnu: TMenuItem;
+    cp: TJabberCustompres;
 begin
     // (dis)enable the menus
     mnuMessage.Enabled := enable;
@@ -600,14 +603,30 @@ begin
     for i := trayCustom.Count - 1 downto 2 do
         trayCustom.Items[i].Free;
 
-    plist := MainSession.prefs.getStringlist('custom_pres');
+    plist := MainSession.prefs.getAllPresence();
     for i := 0 to plist.count - 1 do begin
+        cp := TJabberCustomPres(plist[i]);
+
+        if (cp.show = 'chat') then imidx := ico_Chat
+        else if (cp.show = 'away') then imidx := ico_Away
+        else if (cp.Show = 'xa') then imidx := ico_XA
+        else if (cp.show = 'dnd') then imidx := ico_DND
+        else imidx := ico_Online;
+
         mnu := TMenuItem.Create(presCustom);
-        mnu.Caption := plist[i];
+        mnu.Caption := cp.title;
+        mnu.tag := i;
+        mnu.OnClick := presCustomPresClick;
+        mnu.ShortCut := TextToShortcut(cp.hotkey);
+        mnu.ImageIndex := imidx;
         presCustom.Add(mnu);
 
         mnu := TMenuItem.Create(trayCustom);
-        mnu.Caption := plist[i];
+        mnu.Caption := cp.title;
+        mnu.tag := i;
+        mnu.OnClick := presCustomPresClick;
+        mnu.ImageIndex := imidx;
+
         trayCustom.Add(mnu);
         end;
 end;
@@ -1298,6 +1317,21 @@ begin
     // Custom presence
     ShowCustomPresence();
 end;
+
+procedure TfrmJabber.presCustomPresClick(Sender: TObject);
+var
+    i: integer;
+    cp: TJabberCustomPres;
+begin
+    // Our own Custom presence
+    with TMenuItem(Sender) do
+        i := Tag;
+
+    cp := MainSession.prefs.getPresIndex(i);
+    if (cp <> nil) then
+        MainSession.setPresence(cp.show, cp.status, cp.priority);
+end;
+
 
 procedure TfrmJabber.trayShowClick(Sender: TObject);
 begin

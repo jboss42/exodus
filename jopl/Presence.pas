@@ -35,6 +35,9 @@ type
         Priority: integer;
         title: string;
         hotkey: string;
+
+        procedure Parse(tag: TXMLTag);
+        procedure FillTag(tag: TXMLTag);
     end;
 
     TJabberPres = class(TXMLTag)
@@ -193,6 +196,32 @@ begin
         if (err_tag <> nil) then
             error_code := err_tag.getAttribute('code');
         end;
+end;
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+procedure TJabberCustomPres.Parse(tag: TXMLTag);
+begin
+    // parse the tag
+
+    title := tag.getAttribute('name');
+    show := tag.getBasicText('show');
+    status := tag.GetBasicText('status');
+    priority := SafeInt(tag.GetBasicText('priority'));
+    hotkey := tag.GetBasicText('hotkey');
+end;
+
+{---------------------------------------}
+procedure TJabberCustomPres.FillTag(tag: TXMLTag);
+begin
+    // populate into a tag
+    tag.ClearTags();
+    tag.PutAttribute('name', title);
+    tag.AddBasicTag('show', show);
+    tag.AddBasicTag('status', status);
+    tag.AddBasicTag('priority', IntToStr(priority));
+    tag.AddBasicTag('hotkey', hotkey);
 end;
 
 {---------------------------------------}
