@@ -5,9 +5,9 @@ object frmDebug: TfrmDebug
   Height = 414
   Caption = 'Debug'
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   DragKind = dkDock
   DragMode = dmAutomatic
-  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

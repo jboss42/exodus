@@ -37,7 +37,10 @@ type
     _available : boolean;
     _background : boolean;
     _onNew : TNewUrlEvent;
+    _debug: Widestring;
     procedure checkDoUpdate();
+    procedure debugMsg();
+
   protected
     procedure Execute; override;
   public
@@ -67,11 +70,15 @@ uses
 
 {---------------------------------------}
 function RoundDateTime(val: TDateTime) : TDateTime;
+{
 var
     f: TFormatSettings;
+}
 begin
-    GetLocaleFormatSettings(LANG_NEUTRAL, f);
-    Result := StrToDateTime(DateTimeToStr(val), f);
+    //GetLocaleFormatSettings(LANG_NEUTRAL, f);
+    // Result := StrToDateTime(DateTimeToStr(val), f);
+    //Result := StrToDateTime(DateTimeToStr(val, f), f);
+    Result := StrToDateTime(DateTimeToStr(val));
 end;
 
 {---------------------------------------}
@@ -178,6 +185,9 @@ begin
     http := nil;
     last := MainSession.Prefs.getSetDateTime(_pkey);
 
+    _debug := 'AUTOUPDATE. Last = ' + DateTimeToStr(last);
+    Synchronize(debugMsg);
+
     try
         http := TIdHTTP.Create(nil);
         http.HandleRedirects := true;
@@ -192,6 +202,9 @@ begin
         end;
 
         rounded := RoundDateTime(http.Response.LastModified);
+        _debug := 'AUTOUPDATE: Rounded = ' + DateTimeToStr(rounded);
+        Synchronize(debugMsg);
+
         if (rounded <= last) then begin
             if (rounded <> last) then
                 MainSession.Prefs.setDateTime(_pkey, rounded);
@@ -209,6 +222,12 @@ begin
     finally
         if (http <> nil) then http.Free();
     end;
+end;
+
+{---------------------------------------}
+procedure TAutoUpdateThread.debugMsg();
+begin
+    MainSession.FireEvent('/data/debug', nil, _debug);
 end;
 
 {---------------------------------------}
