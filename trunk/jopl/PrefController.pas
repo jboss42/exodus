@@ -386,6 +386,8 @@ begin
         result := IntToStr(notify_toast)
     else if pkey = 'notify_invite' then
         result := IntToStr(notify_toast)
+    else if pkey = 'notify_roomactivity' then
+        result := IntToStr(notify_toast)
     else
         result := '';
 end;
