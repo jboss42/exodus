@@ -38,6 +38,12 @@ type
     procedure browserBeforeNavigate2(Sender: TObject;
       const pDisp: IDispatch; var URL, Flags, TargetFrameName, PostData,
       Headers: OleVariant; var Cancel: WordBool);
+    procedure FrameUnDock(Sender: TObject; Client: TControl;
+      NewTarget: TWinControl; var Allow: Boolean);
+    procedure FrameStartDock(Sender: TObject;
+      var DragObject: TDragDockObject);
+    procedure FrameCanResize(Sender: TObject; var NewWidth,
+      NewHeight: Integer; var Resize: Boolean);
 
   private
     { Private declarations }
@@ -57,6 +63,7 @@ type
     _menu:  TTntPopupMenu;
     _queue: TWideStringList;
     _title: WideString;
+    _ready: Boolean;
 
     procedure onScroll(Sender: TObject);
     procedure onResize(Sender: TObject);
@@ -88,6 +95,8 @@ type
     procedure populate(history: Widestring); override;
     procedure setupPrefs(); override;
     procedure setTitle(title: Widestring); override;
+    procedure ready(); override;
+    procedure refresh(); override;
 
     procedure ChangeStylesheet(url: WideString);
   end;
@@ -114,7 +123,7 @@ constructor TfIEMsgList.Create(Owner: TComponent);
 begin
     inherited;
     _queue := TWideStringList.Create();
-    clear();
+    _ready := true;
 end;
 
 {---------------------------------------}
@@ -142,7 +151,7 @@ end;
 {---------------------------------------}
 procedure TfIEMsgList.Invalidate();
 begin
-    browser.Invalidate();
+//    browser.Invalidate();
 end;
 
 {---------------------------------------}
@@ -180,6 +189,7 @@ end;
 {---------------------------------------}
 procedure TfIEMsgList.Clear();
 begin
+    _ready := true;
     _home := 'res://' + URL_EscapeChars(Application.ExeName);
     browser.Navigate(_home + '/iemsglist');
 end;
@@ -404,14 +414,18 @@ end;
 {---------------------------------------}
 function TfIEMsgList.empty(): boolean;
 begin
-    Result := (_body.innerHTML = '');
+    if (_content = nil) then
+        Result := true
+    else
+        Result := (_content.innerHTML = '');
 end;
 
 {---------------------------------------}
 function TfIEMsgList.getHistory(): Widestring;
 begin
-    Result := _body.innerHTML;
+    Result := _content.innerHTML;
 end;
+
 
 {---------------------------------------}
 procedure TfIEMsgList.setDragOver(event: TDragOverEvent);
@@ -449,6 +463,7 @@ end;
 {---------------------------------------}
 function TfIEMsgList.onContextMenu(Sender: TObject): WordBool;
 begin
+    Refresh();
     _menu.Popup(_win.event.screenX, _win.event.screeny);
     result := false;
 end;
@@ -460,9 +475,10 @@ var
     i: integer;
 begin
     inherited;
-    if (browser.Document = nil) then
+    if ((not _ready) or (browser.Document = nil)) then
         exit;
 
+    _ready := false;
     _doc := browser.Document as IHTMLDocument2;
     ChangeStylesheet(_home + '/iemsglist_style');
 
@@ -477,8 +493,9 @@ begin
 
     _we := TMSHTMLHTMLElementEvents.Create(self);
     _we.Connect(_content);
-    _we.onscroll := onscroll;
-    _we.onresize := onresize;
+    _we.onscroll   := onscroll;
+    _we.onresize   := onresize;
+   // _we.onkeypress := onkeypress;
 
     if (_de <> nil) then
         _de.Free();
@@ -493,7 +510,6 @@ begin
     _queue.Clear();
     if (_title <> '') then begin
         setTitle(_title);
-        _title := '';
     end;
     ScrollToBottom();
 end;
@@ -540,6 +556,38 @@ begin
     splash.innerText := _title;
 end;
 
+procedure TfIEMsgList.ready();
+begin
+//    _ready := true;
+    Clear();
+end;
+
+procedure TfIEMsgList.refresh();
+begin
+    _queue.Add(getHistory());
+    Clear();
+end;
+
+procedure TfIEMsgList.FrameUnDock(Sender: TObject; Client: TControl;
+  NewTarget: TWinControl; var Allow: Boolean);
+begin
+  inherited;
+  DebugMsg('undock');
+end;
+
+procedure TfIEMsgList.FrameStartDock(Sender: TObject;
+  var DragObject: TDragDockObject);
+begin
+  inherited;
+  DebugMsg('start dock');
+end;
+
+procedure TfIEMsgList.FrameCanResize(Sender: TObject; var NewWidth,
+  NewHeight: Integer; var Resize: Boolean);
+begin
+  inherited;
+  DebugMsg('can resize');
+end;
 
 initialization
     TP_GlobalIgnoreClassProperty(TWebBrowser, 'StatusText');

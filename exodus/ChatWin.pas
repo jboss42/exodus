@@ -57,6 +57,7 @@ type
     popClearHistory: TTntMenuItem;
     mnuHistory: TTntMenuItem;
     mnuSave: TTntMenuItem;
+    refresh1: TTntMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -88,6 +89,7 @@ type
     procedure NotificationOptions1Click(Sender: TObject);
     procedure timBusyTimer(Sender: TObject);
     procedure popResourcesClick(Sender: TObject);
+    procedure refresh1Click(Sender: TObject);
   private
     { Private declarations }
     jid: widestring;        // jid of the person we are talking to
@@ -1301,6 +1303,12 @@ begin
   inherited;
     // set the message to this resource.
     SetJid(_jid.jid + '/' + TMenuItem(Sender).Caption);
+end;
+
+procedure TfrmChat.refresh1Click(Sender: TObject);
+begin
+  inherited;
+    MsgList.refresh();
 end;
 
 end.
