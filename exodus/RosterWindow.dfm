@@ -1,6 +1,6 @@
 object frmRosterWindow: TfrmRosterWindow
-  Left = 397
-  Top = 223
+  Left = 273
+  Top = 260
   Width = 195
   Height = 446
   AlphaBlendValue = 220
@@ -400,26 +400,31 @@ object frmRosterWindow: TfrmRosterWindow
     object presOnline: TTntMenuItem
       Caption = 'Available'
       ImageIndex = 1
+      OnClick = presDNDClick
     end
     object presChat: TTntMenuItem
       Tag = 1
       Caption = 'Free to Chat'
       ImageIndex = 4
+      OnClick = presDNDClick
     end
     object presAway: TTntMenuItem
       Tag = 2
       Caption = 'Away'
       ImageIndex = 2
+      OnClick = presDNDClick
     end
     object presXA: TTntMenuItem
       Tag = 3
       Caption = 'Xtended Away'
       ImageIndex = 10
+      OnClick = presDNDClick
     end
     object presDND: TTntMenuItem
       Tag = 4
       Caption = 'Do Not Disturb'
       ImageIndex = 3
+      OnClick = presDNDClick
     end
     object N8: TTntMenuItem
       Caption = '-'

@@ -175,6 +175,7 @@ type
       Shift: TShiftState);
     procedure txtFindChange(Sender: TObject);
     procedure btnFindCloseClick(Sender: TObject);
+    procedure presDNDClick(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;             // roster callback id
@@ -550,7 +551,7 @@ begin
 
         frmExodus.pnlRoster.ShowHint := not _show_status;
 
-        BuildPresMenus(TMenuItem(popStatus), presAvailableClick);
+        BuildPresMenus(TTntMenuItem(popStatus), presAvailableClick);
 
         Redraw();
     end
@@ -1603,11 +1604,11 @@ procedure TfrmRosterWindow.presAvailableClick(Sender: TObject);
 var
     stat, show: Widestring;
     cp: TJabberCustomPres;
-    mi: TMenuItem;
+    mi: TTntMenuItem;
     pri: integer;
 begin
     // change our own presence
-    mi := TMenuItem(sender);
+    mi := TTntMenuItem(sender);
     case mi.GroupIndex of
     0: show := '';
     1: show := 'away';
@@ -2854,6 +2855,7 @@ begin
     ShowCustomPresence();
 end;
 
+{---------------------------------------}
 procedure TfrmRosterWindow.txtFindKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
@@ -2874,6 +2876,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmRosterWindow.txtFindChange(Sender: TObject);
 var
     i:         integer;
@@ -2906,9 +2909,30 @@ begin
     txtFind.Color := clRed;
 end;
 
+{---------------------------------------}
 procedure TfrmRosterWindow.btnFindCloseClick(Sender: TObject);
 begin
     pnlFind.Visible := false;
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.presDNDClick(Sender: TObject);
+var
+    m: TTntMenuItem;
+    show: Widestring;
+begin
+    m := TTntMenuItem(Sender);
+    if (m.Count > 0) then exit;
+
+    case m.Tag of
+    0: show := '';
+    1: show := 'chat';
+    2: show := 'away';
+    3: show := 'xa';
+    4: show := 'dnd';
+    end;
+    MainSession.setPresence(show, '', MainSession.Priority);
+
 end;
 
 initialization

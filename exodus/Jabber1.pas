@@ -235,6 +235,7 @@ type
     procedure XMPPActionExecuteMacro(Sender: TObject; Msg: TStrings);
     procedure mnuFindClick(Sender: TObject);
     procedure mnuFindAgainClick(Sender: TObject);
+    procedure presDNDClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -3042,6 +3043,25 @@ end;
 procedure TfrmExodus.mnuFindAgainClick(Sender: TObject);
 begin
     frmRosterWindow.FindAgain();
+end;
+
+procedure TfrmExodus.presDNDClick(Sender: TObject);
+var
+    m: TTntMenuItem;
+    show: Widestring;
+begin
+    m := TTntMenuItem(Sender);
+    if (m.Count > 0) then exit;
+
+    case m.Tag of
+    0: show := '';
+    1: show := 'chat';
+    2: show := 'away';
+    3: show := 'xa';
+    4: show := 'dnd';
+    end;
+    MainSession.setPresence(show, '', MainSession.Priority);
+
 end;
 
 initialization
