@@ -74,6 +74,7 @@ end;
     procedure setAttribute(key, value: WideString);
     procedure removeAttribute(key: Widestring);
 
+    function ChildCount: integer;
     function ChildTags: TXMLTagList;
     function QueryXPTags(path: WideString): TXMLTagList; overload;
     function QUeryXPTags(xp: TXPLite): TXMLTagList; overload;
@@ -408,6 +409,12 @@ begin
         for i := 0 to ftags.Count - 1 do
             Result := Result + ftags.tags[i].Data;
     end;
+end;
+
+{---------------------------------------}
+function TXMLTag.ChildCount: integer;
+begin
+    Result := _children.Count;
 end;
 
 {---------------------------------------}
