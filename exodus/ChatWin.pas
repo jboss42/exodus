@@ -291,6 +291,8 @@ begin
         end;
 
     Action := caFree;
+
+    inherited;
 end;
 
 {---------------------------------------}

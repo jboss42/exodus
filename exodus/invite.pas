@@ -23,28 +23,40 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, CheckLst, ExtCtrls, buttonFrame, ComCtrls;
+  Dialogs, StdCtrls, CheckLst, ExtCtrls, buttonFrame, ComCtrls, Grids;
 
 type
   TfrmInvite = class(TForm)
     frameButtons1: TframeButtons;
-    Panel1: TPanel;
-    Label1: TLabel;
-    lblJID: TLabel;
-    Label2: TLabel;
+    pnlMain: TPanel;
+    pnl1: TPanel;
     memReason: TMemo;
-    Splitter1: TSplitter;
     lstJIDS: TListView;
+    Splitter1: TSplitter;
+    pnlRight: TPanel;
+    Splitter2: TSplitter;
+    Label1: TLabel;
+    Label2: TLabel;
+    cboRoom: TComboBox;
+    Panel1: TPanel;
+    btnRemove: TButton;
+    btnAdd: TButton;
+    Label3: TLabel;
+    sgContacts: TStringGrid;
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
-    procedure lstJIDSCompare(Sender: TObject; Item1, Item2: TListItem;
-      Data: Integer; var Compare: Integer);
-    procedure lstJIDSChange(Sender: TObject; Item: TListItem;
-      Change: TItemChange);
+    procedure btnAddClick(Sender: TObject);
+    procedure pnlRightResize(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure lstJIDSDragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
+    procedure lstJIDSDragDrop(Sender, Source: TObject; X, Y: Integer);
+    procedure btnRemoveClick(Sender: TObject);
   private
     { Private declarations }
   public
     { Public declarations }
+    procedure AddRecip(jid: string);
   end;
 
 var
@@ -52,82 +64,197 @@ var
 
 procedure ShowInvite(room_jid: string; jids: TStringList);
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 uses
-    XMLTag, 
-    Session, 
+    XMLTag,
+    Session,
+    Room, 
     RosterWindow,
     Roster;
 
 {$R *.dfm}
 
+{---------------------------------------}
 procedure ShowInvite(room_jid: string; jids: TStringList);
 var
     i: integer;
-    ritem: TJabberRosterItem;
-    n: TListItem;
     f: TfrmInvite;
 begin
     f := TfrmInvite.Create(nil);
-    f.lblJID.Caption := room_jid;
-    for i := 0 to MainSession.roster.Count - 1 do begin
-        ritem := TJabberRosterItem(MainSession.roster.Objects[i]);
-        n := f.lstJIDS.Items.Add;
-        n.Caption := ritem.nickname;
-        n.SubItems.Add(ritem.jid.jid);
-        n.Checked := (jids.IndexOf(ritem.jid.jid) >= 0);
+    f.cboRoom.Text := room_jid;
+
+    // Only add the jids selected
+    if (jids <> nil) then begin
+        for i := 0 to jids.Count - 1 do
+            f.AddRecip(jids[i]);
+        jids.Free();
         end;
-
-    f.lstJIDS.CustomSort(nil, 0);
-
     f.Show;
 end;
 
+{---------------------------------------}
+procedure TfrmInvite.AddRecip(jid: string);
+var
+    i: integer;
+    cap: string;
+    ritem: TJabberRosterItem;
+    n: TListItem;
+begin
+    ritem := MainSession.roster.Find(jid);
+    if ritem <> nil then
+        cap := ritem.nickname
+    else
+        cap := jid;
+
+    // make sure we don't already have an item w/ this caption
+    for i := 0 to lstJIDS.Items.Count - 1 do
+        if (lstJIDS.Items[i].SubItems[0] = jid) then exit;
+
+    n := lstJIDS.Items.Add();
+    n.Caption := cap;
+    n.SubItems.Add(jid);
+end;
+
+{---------------------------------------}
 procedure TfrmInvite.frameButtons1btnCancelClick(Sender: TObject);
 begin
     Self.Close;
 end;
 
+{---------------------------------------}
 procedure TfrmInvite.frameButtons1btnOKClick(Sender: TObject);
 var
     i: integer;
     msg: TXMLTag;
 begin
     // Send out invites.
+    memReason.Lines.Add('Conference room: ' + cboRoom.Text);
     for i := 0 to lstJIDS.Items.Count - 1 do begin
-        if lstJIDS.Items[i].Checked then begin
-            msg := TXMLTag.Create('message');
-            msg.PutAttribute('to', lstJIDS.Items[i].SubItems[0]);
-            with msg.AddTag('x') do begin
-                putAttribute('xmlns', 'jabber:x:conference');
-                putAttribute('jid', lblJID.Caption);
-                end;
-            msg.AddBasicTag('body', memReason.Lines.Text);
-            MainSession.SendTag(msg);
+        msg := TXMLTag.Create('message');
+        msg.PutAttribute('to', lstJIDS.Items[i].SubItems[0]);
+        with msg.AddTag('x') do begin
+            putAttribute('xmlns', 'jabber:x:conference');
+            putAttribute('jid', cboRoom.Text);
             end;
+        msg.AddBasicTag('body', memReason.Lines.Text);
+        MainSession.SendTag(msg);
         end;
     Self.Close;
 end;
 
-procedure TfrmInvite.lstJIDSCompare(Sender: TObject; Item1,
-  Item2: TListItem; Data: Integer; var Compare: Integer);
+{---------------------------------------}
+procedure TfrmInvite.btnAddClick(Sender: TObject);
+var
+    i: integer;
+    tl: TStringList;
+    gsel: TGridRect;
 begin
-    // sort selected options first
-    Compare := 0;
-    if (((Item1.Checked) and (Item2.Checked)) or
-       ((not Item1.Checked) and (not Item2.Checked))) then
-        // sort by caption
-        Compare := AnsiCompareText(Item1.Caption, Item2.Caption)
-    else if (Item1.Checked) and (not Item2.Checked) then
-        Compare := -1
-    else if (not Item1.Checked) and (item2.Checked) then
-        Compare := +1;
+    // make sure pnlRight is visible
+    if (not pnlRight.Visible) then begin
+        Self.ClientWidth := Self.ClientWidth + 175;
+        pnlRight.Visible := true;
+
+        // populate the string grid
+        with MainSession.Roster do begin
+
+            // build a sorted list on nicks.
+            tl := TStringlist.Create();
+            for i := 0 to Count - 1 do
+                tl.AddObject(Items[i].nickname, Items[i]);
+            tl.Sort();
+
+            sgContacts.RowCount := Count;
+            // for i := 0 to Count - 1 do begin
+            for i := 0 to tl.Count - 1 do begin
+                sgContacts.Cells[0, i] := tl[i];
+                sgContacts.Cells[1, i] := TJabberRosterItem(tl.Objects[i]).jid.jid;
+                end;
+            end;
+        sgContacts.ColWidths[0] := sgContacts.Width div 2;
+        sgContacts.ColWidths[1] := sgContacts.Width div 2;
+        end
+    else begin
+        // move over the selected items..
+        gsel := sgContacts.Selection;
+        for i := gsel.Top to gsel.Bottom do
+            Self.AddRecip(sgContacts.Cells[1,i]);
+        end;
+
 end;
 
-procedure TfrmInvite.lstJIDSChange(Sender: TObject; Item: TListItem;
-  Change: TItemChange);
+{---------------------------------------}
+procedure TfrmInvite.pnlRightResize(Sender: TObject);
 begin
-    lstJIDS.CustomSort(nil, 0);
+    // change the col widths..
+    sgContacts.ColWidths[0] := sgContacts.Width div 2;
+    sgContacts.ColWidths[1] := sgContacts.Width div 2;
+end;
+
+{---------------------------------------}
+procedure TfrmInvite.FormCreate(Sender: TObject);
+begin
+    // make the form the same width as the list view
+    Self.ClientWidth := pnlMain.Width + 2;
+    cboRoom.Items.Assign(room.room_list);
+end;
+
+{---------------------------------------}
+procedure TfrmInvite.lstJIDSDragOver(Sender, Source: TObject; X,
+  Y: Integer; State: TDragState; var Accept: Boolean);
+begin
+    // accept roster items from the main roster as well
+    // as the string grid on this form
+    Accept := ((Source = Self.sgContacts) or (Source = frmRosterWindow.treeRoster));
+end;
+
+{---------------------------------------}
+procedure TfrmInvite.lstJIDSDragDrop(Sender, Source: TObject; X,
+  Y: Integer);
+var
+    r, n: TTreeNode;
+    i,j: integer;
+    gsel: TGridRect;
+begin
+    if Source = Self.sgContacts then begin
+        // dropping from our own string grid
+        gsel := sgContacts.Selection;
+        for i := gsel.Top to gsel.Bottom do
+            Self.AddRecip(sgContacts.Cells[1,i]);
+        end
+    else begin
+        // dropping from main roster window
+        with frmRosterWindow.treeRoster do begin
+            for i := 0 to SelectionCount - 1 do begin
+                n := Selections[i];
+                if ((n.Data <> nil) and (TObject(n.Data) is TJabberRosterItem)) then
+                    // We have a roster item
+                    Self.AddRecip(TJabberRosterItem(n.Data).jid.jid)
+                else if (n.Level = 0) then begin
+                    // we prolly have a grp
+                    for j := 0 to n.Count - 1 do begin
+                        r := n.Item[j];
+                        if ((r.Data <> nil) and (TObject(r.Data) is TJabberRosterItem)) then
+                            Self.AddRecip(TJabberRosterItem(r.Data).jid.jid);
+                        end;
+                    end;
+                end;
+            end;
+        end;
+end;
+
+{---------------------------------------}
+procedure TfrmInvite.btnRemoveClick(Sender: TObject);
+var
+    i: integer;
+begin
+    // Remove all the selected items
+    for i := lstJIDS.Items.Count - 1 downto 0 do begin
+        if lstJIDS.Items[i].Selected then
+            lstJIDS.Items.Delete(i);
+        end;
 end;
 
 end.
