@@ -44,7 +44,6 @@ type
     StaticText1: TStaticText;
     chkShowUnsubs: TCheckBox;
     chkOfflineGroup: TCheckBox;
-    optDblClick: TRadioGroup;
     tbsSubscriptions: TTabSheet;
     StaticText2: TStaticText;
     optIncomingS10n: TRadioGroup;
@@ -205,6 +204,8 @@ type
     chkSingleInstance: TCheckBox;
     Label18: TLabel;
     txtGatewayGrp: TTntEdit;
+    Label21: TLabel;
+    cboDblClick: TComboBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -340,10 +341,7 @@ begin
         chkPresErrors.Checked := getBool('roster_pres_errors');
         chkMessenger.Checked := getBool('roster_messenger');
 
-        if (getBool('roster_chat')) then
-            optDblClick.ItemIndex := 0
-        else
-            optDblClick.ItemIndex := 1;
+        cboDblClick.ItemIndex := getInt('roster_chat');
         txtGatewayGrp.Text := getString('roster_transport_grp');
 
         // s10n prefs
@@ -516,7 +514,7 @@ begin
         setBool('roster_hide_block', chkHideBlocked.Checked);
         setBool('inline_status', chkInlineStatus.Checked);
         setInt('inline_color', integer(cboInlineStatus.Selected));
-        setBool('roster_chat', (optDBlClick.ItemIndex = 0));
+        setInt('roster_chat', cboDblClick.ItemIndex);
         setBool('roster_pres_errors', chkPresErrors.Checked);
         setBool('roster_messenger', chkMessenger.Checked);
         setString('roster_transport_grp', txtGatewayGrp.Text);

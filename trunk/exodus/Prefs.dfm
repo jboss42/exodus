@@ -1571,21 +1571,28 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 357
-    ActivePage = tbsNotify
+    ActivePage = tbsRoster
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 6
+    TabIndex = 0
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
       object Label18: TLabel
         Left = 8
-        Top = 258
+        Top = 242
         Width = 150
         Height = 13
         Caption = 'Group to be used for Gateways:'
+      end
+      object Label21: TLabel
+        Left = 8
+        Top = 189
+        Width = 93
+        Height = 13
+        Caption = 'Double Click Action'
       end
       object chkOnlineOnly: TCheckBox
         Left = 8
@@ -1629,38 +1636,26 @@ object frmPrefs: TfrmPrefs
         Caption = 'Show offline contacts in the "Offline" group.'
         TabOrder = 3
       end
-      object optDblClick: TRadioGroup
-        Left = 8
-        Top = 190
-        Width = 161
-        Height = 55
-        Caption = 'Double Click Action '
-        ItemIndex = 0
-        Items.Strings = (
-          'One to One Chat'
-          'Normal Message')
-        TabOrder = 4
-      end
       object chkInlineStatus: TCheckBox
         Left = 8
         Top = 142
         Width = 241
         Height = 17
         Caption = 'Show status in the roster: Joe <Meeting>'
-        TabOrder = 5
+        TabOrder = 4
         OnClick = chkInlineStatusClick
       end
       object cboInlineStatus: TColorBox
         Left = 32
         Top = 158
-        Width = 161
+        Width = 201
         Height = 22
         DefaultColorColor = clBlue
         Selected = clBlue
         Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
         DropDownCount = 12
         ItemHeight = 16
-        TabOrder = 6
+        TabOrder = 5
       end
       object chkHideBlocked: TCheckBox
         Left = 8
@@ -1668,7 +1663,7 @@ object frmPrefs: TfrmPrefs
         Width = 201
         Height = 17
         Caption = 'Hide blocked contacts '
-        TabOrder = 7
+        TabOrder = 6
       end
       object chkPresErrors: TCheckBox
         Left = 8
@@ -1676,7 +1671,7 @@ object frmPrefs: TfrmPrefs
         Width = 209
         Height = 17
         Caption = 'Detect invalid roster items'
-        TabOrder = 8
+        TabOrder = 7
       end
       object chkShowPending: TCheckBox
         Left = 8
@@ -1684,7 +1679,7 @@ object frmPrefs: TfrmPrefs
         Width = 161
         Height = 17
         Caption = 'Show pending contacts'
-        TabOrder = 9
+        TabOrder = 8
       end
       object chkMessenger: TCheckBox
         Left = 8
@@ -1692,14 +1687,27 @@ object frmPrefs: TfrmPrefs
         Width = 273
         Height = 17
         Caption = 'Roster && Msg Queue share a tab when expanded'
-        TabOrder = 10
+        TabOrder = 9
       end
       object txtGatewayGrp: TTntEdit
         Left = 32
-        Top = 272
-        Width = 153
+        Top = 256
+        Width = 201
         Height = 21
+        TabOrder = 10
+      end
+      object cboDblClick: TComboBox
+        Left = 26
+        Top = 205
+        Width = 207
+        Height = 21
+        Style = csDropDownList
+        ItemHeight = 13
         TabOrder = 11
+        Items.Strings = (
+          'A new one to one chat window'
+          'An instant message window'
+          'A new or existing chat window')
       end
     end
     object tbsSubscriptions: TTabSheet
@@ -2100,7 +2108,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 97
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
