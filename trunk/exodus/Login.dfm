@@ -141,7 +141,7 @@ object frmLogin: TfrmLogin
     Height = 37
     Align = alBottom
     AutoScroll = False
-    TabOrder = 8
+    TabOrder = 9
     inherited Bevel1: TBevel
       Width = 242
     end
@@ -174,7 +174,7 @@ object frmLogin: TfrmLogin
     Top = 148
     Width = 39
     Height = 21
-    TabOrder = 5
+    TabOrder = 6
     Text = '0'
   end
   object spnPriority: TUpDown
@@ -186,7 +186,7 @@ object frmLogin: TfrmLogin
     Min = 0
     Max = 1000
     Position = 0
-    TabOrder = 6
+    TabOrder = 7
     Wrap = False
   end
   object chkSSL: TCheckBox
@@ -195,7 +195,7 @@ object frmLogin: TfrmLogin
     Width = 127
     Height = 17
     Caption = 'Use SSL to connect'
-    TabOrder = 7
+    TabOrder = 8
     OnClick = chkSSLClick
   end
   object chkInvisible: TCheckBox
@@ -204,14 +204,14 @@ object frmLogin: TfrmLogin
     Width = 103
     Height = 15
     Caption = 'Invisible Mode'
-    TabOrder = 9
+    TabOrder = 10
   end
   object txtPort: TEdit
     Left = 98
     Top = 124
     Width = 130
     Height = 21
-    TabOrder = 10
+    TabOrder = 5
     Text = '5222'
   end
 end
