@@ -66,6 +66,7 @@ object frmBrowse: TfrmBrowse
       OnChange = vwBrowseChange
       OnClick = vwBrowseClick
       OnData = vwBrowseData
+      OnResize = vwBrowseResize
     end
     object pnlInfo: TPanel
       Left = 3

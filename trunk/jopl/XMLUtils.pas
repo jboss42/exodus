@@ -287,9 +287,10 @@ var
     l: Widestring;
 begin
     l := trim(LowerCase(str));
-    Result := ((l = 'yes') or (l = 'true') or (l = 'ok'))
+    Result := ((l = 'yes') or (l = 'true') or (l = 'ok') or (l = '-1'))
 end;
 
+{---------------------------------------}
 function SafeBoolStr(value: boolean) : Widestring;
 begin
     if value then
