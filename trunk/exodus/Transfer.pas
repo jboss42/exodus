@@ -101,24 +101,38 @@ implementation
 {$R *.dfm}
 
 uses
-    JabberID,
+    Notify, 
+    JabberID, Roster,
     Session,
     Presence,
     XMLTag,
     ShellAPI,
-    ExUtils;
+    Jabber1, ExUtils;
 
 {---------------------------------------}
 procedure FileReceive(from, url, desc: string);
 var
+    tmps: string;
+    tmp_jid: TJabberID;
     xfer: TfrmTransfer;
+    ritem: TJabberRosterItem;
 begin
     xfer := TfrmTransfer.Create(nil);
     xfer.url := url;
     with xfer do begin
         Mode := 0;
 
-        txtFrom.Caption := from;
+        tmp_jid := TJabberID.Create(from);
+        ritem := MainSession.Roster.Find(tmp_jid.jid);
+        if (ritem = nil) then
+            ritem := MainSession.Roster.Find(tmp_jid.full);
+
+        if (ritem <> nil) then
+            tmps := ritem.Nickname
+        else
+            tmps := tmp_jid.full;
+
+        txtFrom.Caption := tmps;
         txtMsg.Lines.Add(Format(sXferRecv, [from]));
         txtMsg.Lines.Add(sXferURL + url);
 
@@ -126,6 +140,7 @@ begin
             txtMsg.Lines.Add(sXferDesc + desc);
         end;
     xfer.Show;
+    DoNotify(xfer, 'notify_oob', 'File from ' + tmps, ico_service);
 end;
 
 {---------------------------------------}

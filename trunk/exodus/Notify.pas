@@ -42,7 +42,7 @@ type
         procedure SetSession(js: TObject);
     end;
 
-procedure DoNotify(win: TfrmDockable; pref_name: string; msg: string; icon: integer);
+procedure DoNotify(win: TForm; pref_name: string; msg: string; icon: integer);
 
 resourcestring
     sNotifyOnline = 'is now online.';
@@ -138,7 +138,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure DoNotify(win: TfrmDockable; pref_name: string; msg: string; icon: integer);
+procedure DoNotify(win: TForm; pref_name: string; msg: string; icon: integer);
 var
     notify : integer;
     w : TForm;

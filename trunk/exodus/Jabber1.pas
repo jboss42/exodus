@@ -423,6 +423,7 @@ resourcestring
     sSoundOnline = 'Contact came online';
     sSoundRoomactivity = 'Activity in a room';
     sSoundS10n = 'Subscription request';
+    sSoundOOB = 'File Transfers';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -867,6 +868,7 @@ begin
     AddSound(reg, 'notify_online', sSoundOnline);
     AddSound(reg, 'notify_roomactivity', sSoundRoomactivity);
     AddSound(reg, 'notify_s10n', sSoundS10n);
+    AddSound(reg, 'notify_oob', sSoundOOB);
     reg.Free();
 
     // Make sure we read in and setup the prefs..

@@ -4,7 +4,7 @@ object frmRiser: TfrmRiser
   AlphaBlendValue = 235
   BorderIcons = []
   BorderStyle = bsNone
-  ClientHeight = 52
+  ClientHeight = 45
   ClientWidth = 184
   Color = clBtnFace
   TransparentColorValue = clWindow
@@ -23,7 +23,7 @@ object frmRiser: TfrmRiser
     Left = 0
     Top = 0
     Width = 184
-    Height = 52
+    Height = 45
     Align = alClient
     Brush.Style = bsClear
     Pen.Color = clBackground
@@ -33,7 +33,7 @@ object frmRiser: TfrmRiser
     Left = 4
     Top = 5
     Width = 30
-    Height = 42
+    Height = 32
     Center = True
     Transparent = True
     OnClick = Panel2Click
@@ -41,13 +41,13 @@ object frmRiser: TfrmRiser
   object Label1: TLabel
     Left = 35
     Top = 6
-    Width = 133
-    Height = 32
+    Width = 127
+    Height = 28
     Alignment = taCenter
     Caption = 'Peter Millard is now online.'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
-    Font.Height = -13
+    Font.Height = -12
     Font.Name = 'Verdana'
     Font.Style = []
     ParentFont = False

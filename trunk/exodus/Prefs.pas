@@ -250,7 +250,7 @@ uses
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
-    NUM_NOTIFIES = 9;
+    NUM_NOTIFIES = 10;
 
 {---------------------------------------}
 procedure StartPrefs;
@@ -406,6 +406,7 @@ begin
         _notify[6] := getInt('notify_keyword');
         _notify[7] := getInt('notify_chatactivity');
         _notify[8] := getInt('notify_roomactivity');
+        _notify[9] := getInt('notify_oob');
 
         for i := 0 to NUM_NOTIFIES - 1 do
             chkNotify.Checked[i] := (_notify[i] > 0);
