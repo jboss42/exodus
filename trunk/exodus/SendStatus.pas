@@ -428,17 +428,31 @@ begin
         // get our hosts that we want to offer..
         if (MainSession.Prefs.getBool('xfer_proxy')) then begin
             // always use xfer_prefproxy
-            if (shosts.Count > 1) then begin
-                for i := 0 to shosts.Count - 1 do begin
-                    p := THostPortPair(shosts.Objects[i]);
+            tmps := MainSession.Prefs.getString('xfer_prefproxy');
+            for i := shosts.Count - 1 downto 0 do begin
+                p := THostPortPair(shosts.Objects[i]);
+                if (p.jid <> tmps) then begin
                     p.Free();
+                    shosts.Delete(i);
                 end;
-                shosts.Clear();
             end;
-            p := THostPortPair.Create();
-            p.jid := MainSession.Prefs.getString('xfer_prefproxy');
-            shosts.AddObject(p.jid, p);
+
+            // make sure our pref proxy is in the list.
+            // if we already have the addr, then just offer.
             _state := send_get_addr;
+            i := shosts.IndexOf(tmps);
+            if (i = -1) then begin
+                // add it
+                p := THostPortPair.Create();
+                p.jid := tmps;
+                shosts.AddObject(p.jid, p);
+            end
+            else begin
+                p := THostPortPair(shosts.Objects[i]);
+                if ((p.host <> '') and (p.Port > 0)) then
+                    _state := send_offer_hosts;
+            end;
+
             DoState();
         end
         else begin
@@ -869,8 +883,10 @@ begin
             _state := send_sending;
             DoState();
             exit;
+        end
+        else begin
+            // xxx: error
         end;
-
     end;
 end;
 
