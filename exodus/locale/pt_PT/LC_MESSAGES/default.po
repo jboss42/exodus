@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exodus 0.8-Daily\n"
 "POT-Creation-Date: 2003-05-08 06:59\n"
-"PO-Revision-Date: 2003-10-30 12:14-0000\n"
+"PO-Revision-Date: 2003-10-30 12:33-0000\n"
 "Last-Translator: Lazarus Long <lazarus.long@bigfoot.com>\n"
 "Language-Team: pt_PT <lazarus.long@bigfoot.com>\n"
 "MIME-Version: 1.0\n"
@@ -5970,7 +5970,7 @@ msgstr "Tornar moderador"
 #. frmRoom..popRoomRoster..popAdministrator..Caption
 #: Room.dfm:299
 msgid "Make Administrator"
-msgstr "Tornar Administrador"
+msgstr "Tornar administrador"
 
 #. frmRoom..dlgSave..DefaultExt
 #: Room.dfm:305
