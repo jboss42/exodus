@@ -586,8 +586,8 @@ begin
         else if (node.Name = 'register') then begin
             if (jid <> '') then begin
                 reg := TfrmRegister.Create(Application);
-                f.jid := jid;
-                f.Start();
+                reg.jid := jid;
+                reg.Start();
             end;
         end;
 
