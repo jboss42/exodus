@@ -921,9 +921,7 @@ begin
         else if (textile_regex.Match[3] = '^') then
             tag := '\super'
         else if (textile_regex.Match[3] = '~') then
-            tag := '\sub'
-        else if (textile_regex.Match[3] = '-') then
-            tag := '\strike';
+            tag := '\sub';
 
         result := result + tag + ' ' +
                   textile_regex.Match[3] + EscapeRTF(textile_regex.Match[4]) +
@@ -957,7 +955,7 @@ initialization
     textile_regex := TRegExpr.Create();
     with textile_regex do begin
         ModifierG := false;
-        Expression := '(.*)(^|\s)([*_^~-])(.+)\3(\s|$)';
+        Expression := '(.*)(^|\s)([*_^~])(.+)\3(\s|$)';
         Compile();
     end;
 
