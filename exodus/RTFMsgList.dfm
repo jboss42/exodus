@@ -78,37 +78,19 @@ inherited fRTFMsgList: TfRTFMsgList
         Color = clWindowText
         Cursor = crDefault
         Underline = True
-      end
-      item
-        Name = 'xmpp'
-        Color = clBlack
-        Cursor = crDefault
-        Underline = True
-      end
-      item
-        Name = 'jabber'
-        Color = clBlack
-        Cursor = crDefault
-        Underline = True
       end>
-    HideScrollBars = False
     LangOptions = [loAutoFont]
     Language = 1033
-    ParentShowHint = False
-    ReadOnly = True
     ScrollBars = ssVertical
-    ShowHint = False
-    ShowSelectionBar = True
+    ShowSelectionBar = False
     TabOrder = 0
     URLColor = clBlue
     URLCursor = crHandPoint
-    OnKeyPress = MsgListKeyPress
-    OnMouseUp = MsgListMouseUp
-    OnURLClick = MsgListURLClick
+    WantTabs = True
     InputFormat = ifUnicode
     OutputFormat = ofRTF
-    SelectedInOut = True
-    PlainRTF = True
+    SelectedInOut = False
+    PlainRTF = False
     UndoLimit = 0
     IncludeOLE = True
     AllowInPlace = False
