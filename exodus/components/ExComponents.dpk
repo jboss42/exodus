@@ -39,7 +39,6 @@ contains
   RTFProperty in 'RTFProperty.pas',
   RTFEditor in 'RTFEditor.pas' {RichEdit98Editor},
   WStrList in 'WStrList.pas',
-  Langs in 'Langs.pas',
-  ExPageControl in 'ExPageControl.pas';
+  Langs in 'Langs.pas';
 
 end.
