@@ -1090,7 +1090,14 @@ var
 begin
     // check to see if we're hitting a button
     n := treeRoster.GetNodeAt(X, Y);
-    if n = nil then exit;
+    if n = nil then begin
+        n := treeRoster.GetNodeAt((treeRoster.Indent * 2), Y);
+        if (n = nil) then begin
+            treeRoster.Selected := nil;
+            exit;
+            end;
+        end;
+
     if n.Data <> nil then begin
         end
     else if X < (ImageList1.Width + 5) then begin
@@ -1099,6 +1106,12 @@ begin
             n.Collapse(false)
         else
             n.Expand(false);
+        end;
+
+    // if we have a legit node.... make sure it's selected..
+    if ((treeRoster.SelectionCount = 1) and
+        (treeRoster.Selected <> n)) then begin
+        treeRoster.Selected := n;
         end;
 
 end;
