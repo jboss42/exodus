@@ -439,13 +439,15 @@ begin
         mw := StrToInt(ms);
         dw := StrToInt(ds);
 
-        rdate := EncodeDate(yw, mw, dw);
-        rdate := rdate + StrToTime(ts);
-
-        Result := rdate - TimeZoneBias();
+        if (TryEncodeDate(yw, mw, dw, rdate)) then begin
+            rdate := rdate + StrToTime(ts);
+            Result := rdate - TimeZoneBias();
+        end
+        else
+            Result := Now();
     except
         Result := Now;
-end;
+    end;
 end;
 
 {---------------------------------------}
