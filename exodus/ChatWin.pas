@@ -189,6 +189,7 @@ var
     ritem: TJabberRosterItem;
     new_chat: boolean;
     do_scroll: boolean;
+    exp: boolean;
     hist: string;
 begin
     // either show an existing chat or start one.
@@ -282,10 +283,14 @@ begin
             Position := poDefaultPosOnly;
 
         ShowDefault();
+        exp := MainSession.Prefs.getBool('expanded');
         if ((show_window) and (Application.Active)) then begin
             Show();
-            if (TfrmChat(chat.window).Visible) then
-                TfrmChat(chat.window).SetFocus();
+            if (((exp) and (frmExodus.Tabs.ActivePage = TfrmChat(chat.window).TabSheet)) or
+                (exp = false)) then begin
+                if (TfrmChat(chat.window).Visible) then
+                    TfrmChat(chat.window).SetFocus();
+            end;
         end;
 
         PlayQueue();

@@ -3,7 +3,802 @@
 
 <dl>
 
-<br /><dt>2003-05-11 17:42  pgmillard
+<br /><dt>2003-07-01 22:08  pgmillard
+
+</dt><dd> exodus/: default.po, exodus.nsi, plugins/download-daily.nsi,
+	plugins/download-release.nsi, plugins/plugin-download.nsi:
+	Seperated NSI for plugins to allow dailys to pull from a differnet
+	directory
+
+</dd><br /><dt>2003-07-01 21:43  pgmillard
+
+</dt><dd> exodus/: Browser.dfm, Browser.pas, Prefs.dfm, default.po,
+	version.h, version.nsi, prefs/PrefNotify.pas: Fixup some cosmetics
+	before 0.8.6
+
+</dd><br /><dt>2003-07-01 20:50  pgmillard
+
+</dt><dd> exodus/: Jabber1.dfm, Jabber1.pas: Bug #2257 - Remember maximized
+	state when minimizing to the tray
+
+</dd><br /><dt>2003-06-30 10:28  hildjj
+
+</dt><dd> exodus/: default.po, version.h, version.nsi: Daily build
+
+</dd><br /><dt>2003-06-30 00:55  hildjj
+
+</dt><dd> exodus/: build.pl, exodus.nsi: Only register the .dll's that are
+	downloaded, not all of the dll's in the plugins directory.
+
+</dd><br /><dt>2003-06-30 00:54  hildjj
+
+</dt><dd> release.pl: Do daily tags.  Eventually, this can be used to cut
+	changelogs for daily builds.
+
+</dd><br /><dt>2003-06-29 17:24  pgmillard
+
+</dt><dd> exodus/: Exodus.dpr, ExodusCOM_TLB.pas, GTLanguagesEx.pas,
+	Jabber1.pas, LocalUtils.pas, default.po: Use homegrown lang and
+	country codes for plain english locales.
+
+</dd><br /><dt>2003-06-29 17:16  hildjj
+
+</dt><dd> exodus/: Jabber1.pas, exodus.nsi: bug #2179: don't try to restart
+	with current profile, etc. after auto-update.  It turns out that's
+	a lot more trouble than it's worth, considering that it was liable
+	to screw up other things.
+
+</dd><br /><dt>2003-06-29 16:54  pgmillard
+
+</dt><dd> exodus/: ExodusCOM_TLB.pas, Jabber1.dfm, Jabber1.pas,
+	LocalUtils.pas, RosterWindow.dfm, RosterWindow.pas, build.pl,
+	version.rc, xml.rc, prefs/PrefSystem.pas: Added langutils, and new
+	resource file
+
+</dd><br /><dt>2003-06-29 16:28  hildjj
+
+</dt><dd> lang-codes.xml: Change to XML
+
+</dd><br /><dt>2003-06-29 16:24  hildjj
+
+</dt><dd> country-codes.xml: Change to XML
+
+</dd><br /><dt>2003-06-29 16:20  pgmillard
+
+</dt><dd> country-codes.txt, lang-codes.txt, exodus/Exodus.dpr,
+	exodus/ExodusCOM_TLB.pas, jopl/PrefController.pas: Added country
+	list and lang list
+
+</dd><br /><dt>2003-06-28 14:58  pgmillard
+
+</dt><dd> exodus/locale/ja/LC_MESSAGES/default.po: Added text files with
+	lang and country codes. Moved japanese translation to ja, instead
+	of jp
+
+</dd><br /><dt>2003-06-27 16:07  pgmillard
+
+</dt><dd> exodus/locale/fr/LC_MESSAGES/default.po: Updated french trans.
+	file
+
+</dd><br /><dt>2003-06-27 11:47  peralta
+
+</dt><dd> exodus/locale/ca/LC_MESSAGES/default.po: Updated.
+
+</dd><br /><dt>2003-06-27 10:19  hildjj
+
+</dt><dd> exodus/: default.po, version.h, version.nsi: Daily build
+
+</dd><br /><dt>2003-06-27 10:18  hildjj
+
+</dt><dd> exodus/locale/: ca/LC_MESSAGES/.cvsignore,
+	es/LC_MESSAGES/.cvsignore, fr/LC_MESSAGES/.cvsignore,
+	ko/LC_MESSAGES/.cvsignore, nl/LC_MESSAGES/.cvsignore,
+	pl/LC_MESSAGES/.cvsignore, pt_BR/LC_MESSAGES/.cvsignore,
+	pt_PT/LC_MESSAGES/.cvsignore: add .cvsignore files, so that .mo
+	files get ignored
+
+</dd><br /><dt>2003-06-27 10:12  hildjj
+
+</dt><dd> exodus/build.pl: *Really* put jopl and prefs into default.po
+
+</dd><br /><dt>2003-06-27 09:39  pgmillard
+
+</dt><dd> exodus/locale/pt_BR/LC_MESSAGES/default.po: Translation
+	submissions, new jp, and updated pt_BR
+
+</dd><br /><dt>2003-06-27 07:15  pgmillard
+
+</dt><dd> exodus/: RosterWindow.dfm, RosterWindow.pas: Bug #2143 -
+	Judicious use of mouse-up on the roster allows drag-n-drop to work
+	properly with multi-selected groups of contacts
+
+</dd><br /><dt>2003-06-27 07:07  pgmillard
+
+</dt><dd> exodus/: ChatWin.dfm, ChatWin.pas, Jabber1.pas, invite.pas: Bug
+	#2239 - Fix error when trying to invite to a room
+
+</dd><br /><dt>2003-06-26 13:04  hildjj
+
+</dt><dd> exodus/: version.h, version.nsi: Daily build
+
+</dd><br /><dt>2003-06-26 13:03  hildjj
+
+</dt><dd> exodus/build.pl: Add prefs and jopl to the default.po file.
+
+</dd><br /><dt>2003-06-26 07:12  pgmillard
+
+</dt><dd> exodus/: ChatWin.dfm, ChatWin.pas, RosterWindow.dfm: Feature
+	Request #2148 - Adding resources menu to chat windows. Totally
+	untested still
+
+</dd><br /><dt>2003-06-26 06:51  pgmillard
+
+</dt><dd> exodus/ChatWin.pas, exodus/RosterWindow.pas, jopl/Roster.pas: Bug
+	#2205 - Some fixes for group counts for the unfiled group, and
+	others.
+
+</dd><br /><dt>2003-06-25 11:12  hildjj
+
+</dt><dd> exodus/: default.po, version.h, version.nsi: Daily build
+
+</dd><br /><dt>2003-06-25 07:23  pgmillard
+
+</dt><dd> exodus/Transfer.pas: Bug #2199 - Make sure to cleanup file xfers
+	which did not succeed.
+
+</dd><br /><dt>2003-06-24 21:52  pgmillard
+
+</dt><dd> exodus/: Exodus.dpr, ExodusCOM_TLB.pas, Jabber1.pas, Prefs.dfm,
+	Prefs.pas, RosterWindow.pas: Bug #2189 - Small titlebar now allows
+	you to start minimized (mostly), and fixed ANNOYING AV when the
+	borderstyle is toggled.
+
+</dd><br /><dt>2003-06-24 21:16  pgmillard
+
+</dt><dd> exodus/: Transfer.pas, fRosterTree.pas: Bug #2224 - Make sure
+	selContact dialog uses the appropriate color scheme. It was just
+	using the bgcolor, not setting fonts correctly.
+
+</dd><br /><dt>2003-06-24 21:01  pgmillard
+
+</dt><dd> exodus/: Transfer.dfm, Transfer.pas: Implement real threads for
+	sending files to a DAV server, and fetching them.
+
+</dd><br /><dt>2003-06-23 07:20  pgmillard
+
+</dt><dd> exodus/ConnDetails.dfm: [no log message]
+
+</dd><br /><dt>2003-06-20 07:30  pgmillard
+
+</dt><dd> exodus/RosterWindow.pas: Converted node_list to be a
+	widestringlist since lookups are faster than looping. Also try to
+	keep better grip around widestr vs. ansistr in roster code...
+	Assignment from Ansi to Wide is causing AV's someplace
+
+</dd><br /><dt>2003-06-20 06:29  pgmillard
+
+</dt><dd> exodus/MsgQueue.pas, jopl/PrefController.pas: Added additional
+	check for spool path, to ensure that the dir is not empty.
+
+</dd><br /><dt>2003-06-19 09:36  hildjj
+
+</dt><dd> exodus/: default.po, version.h, version.nsi: Daily build
+
+</dd><br /><dt>2003-06-19 07:29  pgmillard
+
+</dt><dd> exodus/Jabber1.dfm: [no log message]
+
+</dd><br /><dt>2003-06-19 07:01  pgmillard
+
+</dt><dd> exodus/GUIFactory.pas, exodus/Prefs.dfm, jopl/PrefController.pas:
+	Added error handling when pref writing throws an exception
+
+</dd><br /><dt>2003-06-18 21:17  pgmillard
+
+</dt><dd> exodus/: Exodus.dpr, ExodusCOM_TLB.pas, Prefs.dfm, Prefs.pas,
+	RegForm.dfm, RegForm.pas, Wizard.dfm, Wizard.pas,
+	prefs/PrefAway.dfm, prefs/PrefAway.pas, prefs/PrefDialogs.dfm,
+	prefs/PrefDialogs.pas, prefs/PrefFont.dfm, prefs/PrefFont.pas,
+	prefs/PrefGroups.dfm, prefs/PrefGroups.pas, prefs/PrefLayouts.dfm,
+	prefs/PrefLayouts.pas, prefs/PrefMsg.dfm, prefs/PrefMsg.pas,
+	prefs/PrefNetwork.dfm, prefs/PrefNetwork.pas, prefs/PrefNotify.dfm,
+	prefs/PrefNotify.pas, prefs/PrefPlugins.dfm, prefs/PrefPlugins.pas,
+	prefs/PrefPresence.dfm, prefs/PrefPresence.pas,
+	prefs/PrefRoster.dfm, prefs/PrefRoster.pas,
+	prefs/PrefSubscription.dfm, prefs/PrefSubscription.pas,
+	prefs/PrefSystem.dfm, prefs/PrefSystem.pas, prefs/PrefTransfer.dfm,
+	prefs/PrefTransfer.pas: Converted RegForm to use a XP'ish wizard.
+	Lots of preference tweaks, including a really cool new selector
+
+</dd><br /><dt>2003-06-18 09:51  hildjj
+
+</dt><dd> exodus/: default.po, version.h, version.nsi: Daily build
+
+</dd><br /><dt>2003-06-18 09:50  hildjj
+
+</dt><dd> exodus/build.pl, release.pl: make default.po for daily builds
+
+</dd><br /><dt>2003-06-18 07:25  pgmillard
+
+</dt><dd> exodus/: Exodus.dpr, ExodusCOM_TLB.pas, RosterWindow.pas,
+	Wizard.dfm, Wizard.pas, Wizard.dfm, Wizard.pas: Added a wizard
+	template
+
+</dd><br /><dt>2003-06-17 23:29  pgmillard
+
+</dt><dd> exodus/: ConnDetails.dfm, ConnDetails.pas, ExSession.pas,
+	ExUtils.pas: Bug #2173 - Check for SSL dll's before showing the
+	option. Also check for a SSL profile, and no dlls
+
+</dd><br /><dt>2003-06-17 23:08  pgmillard
+
+</dt><dd> exodus/RosterWindow.dfm, exodus/RosterWindow.pas,
+	jopl/XMLVCard.pas: Bug #2156 - Fixups for vcard crap.
+
+</dd><br /><dt>2003-06-17 22:17  pgmillard
+
+</dt><dd> exodus/ExUtils.pas, exodus/GUIFactory.pas, exodus/GrpRemove.pas,
+	exodus/Prefs.dfm, exodus/Prefs.pas, exodus/Profile.dfm,
+	exodus/Profile.pas, exodus/RosterAdd.pas, exodus/RosterRecv.pas,
+	exodus/jud.pas, exodus/components/tntUnicode.zip,
+	exodus/prefs/PrefAway.dfm, exodus/prefs/PrefAway.pas,
+	exodus/prefs/PrefDialogs.dfm, exodus/prefs/PrefDialogs.pas,
+	exodus/prefs/PrefFont.dfm, exodus/prefs/PrefFont.pas,
+	exodus/prefs/PrefGroups.dfm, exodus/prefs/PrefGroups.pas,
+	exodus/prefs/PrefLayouts.dfm, exodus/prefs/PrefLayouts.pas,
+	exodus/prefs/PrefMsg.dfm, exodus/prefs/PrefMsg.pas,
+	exodus/prefs/PrefNetwork.dfm, exodus/prefs/PrefNetwork.pas,
+	exodus/prefs/PrefNotify.dfm, exodus/prefs/PrefNotify.pas,
+	exodus/prefs/PrefPlugins.dfm, exodus/prefs/PrefPlugins.pas,
+	exodus/prefs/PrefPresence.dfm, exodus/prefs/PrefPresence.pas,
+	exodus/prefs/PrefRoster.dfm, exodus/prefs/PrefRoster.pas,
+	exodus/prefs/PrefSubscription.dfm,
+	exodus/prefs/PrefSubscription.pas, exodus/prefs/PrefSystem.dfm,
+	exodus/prefs/PrefSystem.pas, exodus/prefs/PrefTransfer.dfm,
+	exodus/prefs/PrefTransfer.pas, jopl/PrefController.pas: Bug #2177 -
+	Upgraded to latest TNT controls. Fixed problems due to the
+	introduction of TTntStrings, etc... Anyone compiling MUST upgrade
+	their TNT controls before compiling
+
+</dd><br /><dt>2003-06-17 21:55  llong
+
+</dt><dd> exodus/locale/pt_PT/LC_MESSAGES/default.po: Several misspell
+	corrections and space aditions, result of full cross-revision by
+	pt_BR and pt_PT translators.
+
+</dd><br /><dt>2003-06-17 13:46  pgmillard
+
+</dt><dd> exodus/locale/pt_BR/LC_MESSAGES/default.po: New pt_BR translation
+	from mailing list
+
+</dd><br /><dt>2003-06-17 10:40  hildjj
+
+</dt><dd> exodus/: version.h, version.nsi: Daily build
+
+</dd><br /><dt>2003-06-17 10:33  pgmillard
+
+</dt><dd> exodus/: locale/ko/LC_MESSAGES/default.po,
+	locale/pt_BR/LC_MESSAGES/default.po, web/branding.html,
+	web/index.html: Added partial Korean lang.
+
+</dd><br /><dt>2003-06-17 10:30  hildjj
+
+</dt><dd> exodus/exodus.nsi: install locale files
+
+</dd><br /><dt>2003-06-17 10:29  hildjj
+
+</dt><dd> exodus/build.pl: move locale.zip around
+
+</dd><br /><dt>2003-06-17 07:21  pgmillard
+
+</dt><dd> exodus/: Prefs.dfm, Prefs.pas, RosterWindow.dfm,
+	RosterWindow.pas, prefs/PrefAway.dfm, prefs/PrefAway.pas,
+	prefs/PrefDialogs.dfm, prefs/PrefDialogs.pas, prefs/PrefFont.dfm,
+	prefs/PrefFont.pas, prefs/PrefGroups.dfm, prefs/PrefGroups.pas,
+	prefs/PrefLayouts.dfm, prefs/PrefLayouts.pas, prefs/PrefMsg.dfm,
+	prefs/PrefMsg.pas, prefs/PrefNetwork.dfm, prefs/PrefNetwork.pas,
+	prefs/PrefNotify.dfm, prefs/PrefNotify.pas, prefs/PrefPlugins.dfm,
+	prefs/PrefPlugins.pas, prefs/PrefPresence.dfm,
+	prefs/PrefPresence.pas, prefs/PrefRoster.dfm, prefs/PrefRoster.pas,
+	prefs/PrefSubscription.dfm, prefs/PrefSubscription.pas,
+	prefs/PrefSystem.dfm, prefs/PrefSystem.pas, prefs/PrefTransfer.dfm,
+	prefs/PrefTransfer.pas: Bug #2177 - Fixed prefs GUI problems after
+	TNT conversion
+
+</dd><br /><dt>2003-06-16 22:39  pgmillard
+
+</dt><dd> exodus/: Room.dfm, Room.pas: Fix blocking contacts in a room
+
+</dd><br /><dt>2003-06-16 13:46  hildjj
+
+</dt><dd> exodus/plugins/: regenidl.pl, AIM-Import/ExImportAIM.dof,
+	AIM-Import/ExImportAIM.tlb, AIM-Import/ExImportAIM_TLB.pas,
+	AIM-Import/ExodusCOM_TLB.pas, ICQ-Import/ExImportICQ.dof,
+	ICQ-Import/ExImportICQ.tlb, ICQ-Import/ExImportICQ_TLB.pas,
+	ICQ-Import/ExodusCOM_TLB.pas: update for latest GUID
+
+</dd><br /><dt>2003-06-16 13:39  hildjj
+
+</dt><dd> exodus/: version.h, version.nsi: Daily build
+
+</dd><br /><dt>2003-06-16 13:38  hildjj
+
+</dt><dd> exodus/plugins/: ASpeller/ExASpell.tlb,
+	ASpeller/ExASpell_TLB.pas, ASpeller/ExAspell.idl,
+	ASpeller/ExodusCOM_TLB.pas, MSWordSpeller/ExWordSpeller.idl,
+	MSWordSpeller/ExWordSpeller.tlb, RosterTools/ExRosterTools.dof,
+	RosterTools/ExRosterTools.tlb, RosterTools/ExodusCOM_TLB.pas,
+	RosterTools/RosterTools_TLB.pas: update for latest GUID
+
+</dd><br /><dt>2003-06-16 12:36  hildjj
+
+</dt><dd> exodus/plugins/RosterTools/: ExRosterTools.dpr,
+	ExRosterTools.idl, ExRosterTools.tlb, ExodusCOM_TLB.pas,
+	RosterPlugin.pas, RosterTools_TLB.pas: Update plugins to latest
+	GUID
+
+</dd><br /><dt>2003-06-16 12:32  hildjj
+
+</dt><dd> exodus/plugins/RosterTools/: ExRosterTools.idl,
+	ExRosterTools.tlb, ExRosterTools_TLB.pas, ExodusCOM_TLB.pas: Update
+	plugins to latest GUID
+
+</dd><br /><dt>2003-06-16 12:27  hildjj
+
+</dt><dd> exodus/plugins/: JabberStats/ExJabberStats.idl,
+	JabberStats/ExJabberStats.tlb, JabberStats/ExJabberStats_TLB.pas,
+	JabberStats/ExodusCOM_TLB.pas, NetMeeting/ExNetMeeting.idl,
+	NetMeeting/ExNetMeeting.tlb, NetMeeting/ExNetMeeting_TLB.pas,
+	NetMeeting/ExodusCOM_TLB.pas: Update plugins to latest GUID
+
+</dd><br /><dt>2003-06-16 12:24  hildjj
+
+</dt><dd> exodus/plugins/AIM-Import/: AIMPlugin.pas, ExImportAIM.idl,
+	ExImportAIM.tlb, ExImportAIM_TLB.pas, ExodusCOM_TLB.pas: Update
+	plugins to latest GUID
+
+</dd><br /><dt>2003-06-16 12:17  hildjj
+
+</dt><dd> exodus/plugins/ICQ-Import/: ExImportICQ.idl, ExImportICQ.tlb,
+	ExImportICQ_TLB.pas, ExodusCOM_TLB.pas: Update plugins to latest
+	GUID
+
+</dd><br /><dt>2003-06-16 07:41  pgmillard
+
+</dt><dd> exodus/: About.dfm, Bookmark.dfm, Browser.dfm, Browser.pas,
+	ChatWin.dfm, ConnDetails.dfm, CustomNotify.dfm, CustomNotify.pas,
+	Debug.dfm, GrpRemove.dfm, GrpRemove.pas, InputPassword.dfm,
+	InvalidRoster.dfm, InvalidRoster.pas, Login.dfm, Login.pas,
+	MsgQueue.dfm, MsgQueue.pas, MsgRecv.dfm, MsgRecv.pas,
+	PathSelector.dfm, PathSelector.pas, Prefs.dfm, Prefs.pas,
+	RegForm.dfm, RegForm.pas, RiserWindow.dfm, RiserWindow.pas,
+	RoomAdminList.dfm, RoomAdminList.pas, RosterAdd.dfm, RosterAdd.pas,
+	RosterRecv.dfm, RosterRecv.pas, RosterWindow.pas, Transfer.dfm,
+	Transfer.pas, fService.dfm, fService.pas, invite.dfm, invite.pas,
+	jud.dfm, jud.pas, vcard.pas, xdata.dfm, prefs/PrefAway.dfm,
+	prefs/PrefDialogs.dfm, prefs/PrefGroups.dfm, prefs/PrefGroups.pas,
+	prefs/PrefLayouts.dfm, prefs/PrefLayouts.pas, prefs/PrefMsg.dfm,
+	prefs/PrefMsg.pas, prefs/PrefNetwork.dfm, prefs/PrefNetwork.pas,
+	prefs/PrefPlugins.dfm, prefs/PrefPlugins.pas,
+	prefs/PrefTransfer.dfm, prefs/PrefTransfer.pas: Lots more switching
+	of controls to TnT versions
+
+</dd><br /><dt>2003-06-16 02:15  peralta
+
+</dt><dd> exodus/locale/es/LC_MESSAGES/default.po: Updated - matches
+	current cvs code
+
+</dd><br /><dt>2003-06-15 16:49  hildjj
+
+</dt><dd> exodus/: AutoUpdateStatus.dfm, AutoUpdateStatus.pas,
+	Bookmark.dfm, ConnDetails.dfm, CustomNotify.dfm, CustomNotify.pas,
+	Debug.dfm, Debug.pas, Dockable.pas, InputPassword.dfm,
+	InputPassword.pas, InvalidRoster.dfm, Jabber1.dfm, Jabber1.pas,
+	Login.dfm, Login.pas, MsgRecv.dfm, MsgRecv.pas, Prefs.dfm,
+	Prefs.pas, Profile.dfm, Profile.pas, RegForm.dfm, RegForm.pas,
+	RemoveContact.dfm, RemoveContact.pas, Room.dfm, Room.pas,
+	RoomAdminList.dfm, RoomAdminList.pas, RosterRecv.dfm,
+	RosterRecv.pas, RosterWindow.dfm, SelContact.dfm, SelContact.pas,
+	Transfer.dfm, Transfer.pas, WebGet.dfm, WebGet.pas, fGeneric.pas,
+	fListbox.dfm, fListbox.pas, fService.dfm, fService.pas, invite.dfm,
+	invite.pas, jud.dfm, jud.pas, vcard.dfm, vcard.pas,
+	prefs/PrefAway.dfm, prefs/PrefAway.pas, prefs/PrefDialogs.dfm,
+	prefs/PrefDialogs.pas, prefs/PrefFont.dfm, prefs/PrefFont.pas,
+	prefs/PrefMsg.dfm, prefs/PrefMsg.pas, prefs/PrefNetwork.dfm,
+	prefs/PrefNetwork.pas, prefs/PrefNotify.dfm, prefs/PrefNotify.pas,
+	prefs/PrefPlugins.dfm, prefs/PrefPlugins.pas,
+	prefs/PrefPresence.dfm, prefs/PrefPresence.pas,
+	prefs/PrefRoster.dfm, prefs/PrefRoster.pas,
+	prefs/PrefSubscription.dfm, prefs/PrefSubscription.pas,
+	prefs/PrefSystem.dfm, prefs/PrefSystem.pas, prefs/PrefTransfer.dfm,
+	prefs/PrefTransfer.pas: Many more Tnt changes.	Fixed most of the
+	TButton not found stuff, I hope, as well.
+
+</dd><br /><dt>2003-06-14 08:24  cobaco
+
+</dt><dd> exodus/locale/nl/LC_MESSAGES/default.po: Tested dutch
+	translation, made adjustments where necessary
+
+</dd><br /><dt>2003-06-13 12:06  hildjj
+
+</dt><dd> exodus/: version.h, version.nsi: Daily build
+
+</dd><br /><dt>2003-06-13 12:01  hildjj
+
+</dt><dd> exodus/ConnDetails.dfm: TButton -> TTntButton
+
+</dd><br /><dt>2003-06-13 11:25  hildjj
+
+</dt><dd> exodus/: version.h, version.nsi: Daily build
+
+</dd><br /><dt>2003-06-13 08:08  peralta
+
+</dt><dd> exodus/locale/ca/LC_MESSAGES/default.po: Updated.
+
+</dd><br /><dt>2003-06-13 07:29  pgmillard
+
+</dt><dd> exodus/: Bookmark.dfm, Bookmark.pas, ConnDetails.dfm,
+	ConnDetails.pas, CustomPres.dfm, CustomPres.pas, ExUtils.pas,
+	JoinRoom.dfm, JoinRoom.pas, Password.dfm, Password.pas,
+	Profile.dfm, Profile.pas, RosterAdd.dfm, RosterAdd.pas,
+	buttonFrame.dfm, buttonFrame.pas, subscribe.dfm, subscribe.pas:
+	Lots of conversions to TNT controls for lots of dialogs
+
+</dd><br /><dt>2003-06-12 20:31  hildjj
+
+</dt><dd> exodus/fGeneric.pas: Use RichTextEdit to render type='fixed', so
+	that URL's can get underlined.	PGM: please take a look at this. 
+	There has *got* to be a better way.
+
+</dd><br /><dt>2003-06-12 20:29  hildjj
+
+</dt><dd> exodus/build.pl: Build .mo files at build time.
+
+</dd><br /><dt>2003-06-12 11:47  hildjj
+
+</dt><dd> exodus/: version.h, version.nsi: Daily build
+
+</dd><br /><dt>2003-06-12 11:41  hildjj
+
+</dt><dd> exodus/: COMController.pas, Exodus.tlb: Add registerWithService
+	and addGroupMenu, change getActiveContacts to return a real array.
+
+</dd><br /><dt>2003-06-12 11:36  hildjj
+
+</dt><dd> exodus/ExodusCOM_TLB.pas: Add registerWithService and
+	addGroupMenu, change getActiveContacts to return a real array.
+
+</dd><br /><dt>2003-06-12 11:35  hildjj
+
+</dt><dd> exodus/prefs/PrefSystem.pas: Slight tweak to locale
+	backward-compatibility
+
+</dd><br /><dt>2003-06-12 09:28  cobaco
+
+</dt><dd> exodus/locale/nl/LC_MESSAGES/default.po: Added initial dutch
+	translation
+
+</dd><br /><dt>2003-06-12 08:31  pgmillard
+
+</dt><dd> exodus/prefs/: PrefLayouts.dfm, PrefLayouts.pas: New tab for
+	options
+
+</dd><br /><dt>2003-06-12 07:25  pgmillard
+
+</dt><dd> exodus/prefs/PrefNotify.dfm: [no log message]
+
+</dd><br /><dt>2003-06-12 07:12  pgmillard
+
+</dt><dd> exodus/plugins/JabberStats/: StatsPlugin.pas, StatsPlugin.pas:
+	When configure happens, close old stream, and open a new one
+
+</dd><br /><dt>2003-06-12 06:50  pgmillard
+
+</dt><dd> exodus/Exodus.dof, exodus/Exodus.dpr, exodus/ExodusCOM_TLB.pas,
+	exodus/Jabber1.dfm, exodus/Jabber1.pas, exodus/Prefs.dfm,
+	exodus/Prefs.pas, exodus/RosterWindow.pas,
+	exodus/prefs/PrefDialogs.dfm, exodus/prefs/PrefDialogs.pas,
+	exodus/prefs/PrefFont.dfm, exodus/prefs/PrefFont.pas,
+	exodus/prefs/PrefGroups.dfm, exodus/prefs/PrefMsg.dfm,
+	exodus/prefs/PrefMsg.pas, exodus/prefs/PrefNotify.dfm,
+	exodus/prefs/PrefRoster.dfm, exodus/prefs/PrefRoster.pas,
+	exodus/prefs/PrefSystem.dfm, exodus/prefs/PrefSystem.pas,
+	exodus/prefs/PrefTransfer.dfm, exodus/prefs/PrefTransfer.pas,
+	jopl/Roster.pas: Bug #2142 - Fixed group counts when moving roster
+	items. Also, tons of work on prefs to make them more useable.
+
+</dd><br /><dt>2003-06-11 15:55  hildjj
+
+</dt><dd> exodus/prefs/PrefSystem.pas: Don't error on only Default locale
+
+</dd><br /><dt>2003-06-11 07:27  pgmillard
+
+</dt><dd> exodus/: GUIFactory.pas, jud.pas,
+	plugins/JabberStats/StatsPlugin.pas, prefs/PrefGroups.pas: Fixed
+	headline/normal msg handling so subjects are displayed properly.
+	Also added better error msg to the JabberStats plugin.
+
+</dd><br /><dt>2003-06-10 22:04  pgmillard
+
+</dt><dd> exodus/: Exodus.dpr, ExodusCOM_TLB.pas, GTLanguagesEx.pas,
+	GUIFactory.pas, locale/pt_PT/LC_MESSAGES/default.po,
+	prefs/PrefSystem.pas: Language tweaks... need to verify license
+	issues around GTLangsEx.pas file
+
+</dd><br /><dt>2003-06-10 19:50  pgmillard
+
+</dt><dd> exodus/COMController.pas: Fix for hildjj on COMController so that
+	ritems are not freed in the COM code (this yanks them out from
+	under the roster object).
+
+</dd><br /><dt>2003-06-09 07:13  pgmillard
+
+</dt><dd> exodus/: RosterWindow.dfm, RosterWindow.pas: Fixup rosterwindow
+	so it uses Unicode controls for links.
+
+</dd><br /><dt>2003-06-07 14:04  marian
+
+</dt><dd> exodus/locale/pl/LC_MESSAGES/default.po: First relase of polish
+	translation. 50% translated...
+
+</dd><br /><dt>2003-06-06 12:34  llong
+
+</dt><dd> exodus/locale/pt_PT/LC_MESSAGES/default.po: Update resulting from
+	spellchecking the country names and blank spaces aditions on
+	several entries
+
+</dd><br /><dt>2003-06-05 10:08  pgmillard
+
+</dt><dd> exodus/.cvslog: Added jid for cvs notifications
+
+</dd><br /><dt>2003-06-05 09:26  hildjj
+
+</dt><dd> exodus/: version.h, version.nsi: Daily build
+
+</dd><br /><dt>2003-06-05 09:12  llong
+
+</dt><dd> exodus/locale/pt_PT/LC_MESSAGES/default.po: Fixed a  misspell in
+	the "Use SSL" entry
+
+</dd><br /><dt>2003-06-05 08:53  llong
+
+</dt><dd> exodus/locale/pt_PT/LC_MESSAGES/default.po: Small entry changes
+	and fixes for clarity
+
+</dd><br /><dt>2003-06-05 07:23  pgmillard
+
+</dt><dd> exodus/: ChatWin.pas, MsgDisplay.pas: Bug #2114 - chats don't
+	recall old if pref is set correctly
+
+</dd><br /><dt>2003-06-05 06:51  pgmillard
+
+</dt><dd> exodus/locale/pt_PT/LC_MESSAGES/default.po: pt_pt PO file
+
+</dd><br /><dt>2003-06-04 22:33  pgmillard
+
+</dt><dd> exodus/RosterRecv.pas: Bug #2112 - Don't break when adding
+	received contacts. We should be continuing to make sure we get them
+	all
+
+</dd><br /><dt>2003-06-04 22:30  pgmillard
+
+</dt><dd> exodus/MsgDisplay.pas, jopl/XMLSocketStream.pas: Bug #1928 - Make
+	sure richedit box isn't 'protected' before erasing it when sending
+	msgs
+
+</dd><br /><dt>2003-06-04 21:43  pgmillard
+
+</dt><dd> exodus/: locale/fr/LC_MESSAGES/default.po,
+	plugins/JabberStats/StatsPlugin.pas: Added french and portugese
+	translations
+
+</dd><br /><dt>2003-06-04 09:22  hildjj
+
+</dt><dd> exodus/: version.h, version.nsi: Daily build
+
+</dd><br /><dt>2003-06-04 07:23  pgmillard
+
+</dt><dd> exodus/plugins/JabberStats/ExJabberStats.dof,
+	exodus/plugins/JabberStats/ExJabberStats_TLB.pas,
+	exodus/plugins/JabberStats/ExodusCOM_TLB.pas,
+	exodus/plugins/JabberStats/StatsPlugin.pas,
+	jopl/XMLSocketStream.pas: Changing jabber stats to use a stream...
+	perms need to be tweaked still
+
+</dd><br /><dt>2003-06-03 22:15  pgmillard
+
+</dt><dd> exodus/Jabber1.pas, jopl/Session.pas: Bug #1988 - Proper
+	disconnect handling during auth-errors. Fixes SSL hangs
+
+</dd><br /><dt>2003-06-03 21:59  pgmillard
+
+</dt><dd> exodus/ChatWin.dfm, exodus/ConnDetails.dfm,
+	exodus/ConnDetails.pas, exodus/CustomPres.dfm,
+	exodus/CustomPres.pas, exodus/Debug.dfm, exodus/Debug.pas,
+	exodus/Dockable.pas, exodus/ExUtils.pas, exodus/InputPassword.pas,
+	exodus/Jabber1.dfm, exodus/Jabber1.pas, exodus/Login.dfm,
+	exodus/Login.pas, exodus/MsgQueue.dfm, exodus/MsgQueue.pas,
+	exodus/MsgRecv.dfm, exodus/Profile.dfm, exodus/Profile.pas,
+	exodus/RemoveContact.dfm, exodus/RemoveContact.pas,
+	exodus/Room.dfm, exodus/RosterWindow.pas, exodus/subscribe.dfm,
+	exodus/subscribe.pas, exodus/vcard.dfm, exodus/vcard.pas,
+	jopl/Presence.pas, jopl/Roster.pas, jopl/Signals.pas,
+	jopl/XMLUtils.pas: Bug #1997 - Arial is now used if Arial Unicode
+	is not found on the system for dialogs which require Unicode fonts
+
+</dd><br /><dt>2003-06-03 07:29  pgmillard
+
+</dt><dd> exodus/default.po: New default.po checked into cvs using current
+	source.
+
+</dd><br /><dt>2003-06-03 07:20  pgmillard
+
+</dt><dd> exodus/: ExodusCOM_TLB.pas, Room.dfm, Room.pas: Fixed AV when
+	right clicking on member list in room window. Also fixed up room
+	captions so they are handled properly for langs.
+
+</dd><br /><dt>2003-05-29 11:31  hildjj
+
+</dt><dd> exodus/: version.h, version.nsi: Daily build
+
+</dd><br /><dt>2003-05-29 07:24  pgmillard
+
+</dt><dd> exodus/ExodusCOM_TLB.pas: [no log message]
+
+</dd><br /><dt>2003-05-29 07:18  pgmillard
+
+</dt><dd> exodus/: ExSession.pas, branding.xml: Bug #1958 - Make sure icon
+	file is referenced from the base install path
+
+</dd><br /><dt>2003-05-29 07:04  pgmillard
+
+</dt><dd> exodus/RosterWindow.pas: Bug #2060 - Fixed per patch/comments.
+
+</dd><br /><dt>2003-05-28 21:36  pgmillard
+
+</dt><dd> exodus/ConnDetails.pas: Bug #2073 - Make sure to re-enable the OK
+	button on conn-details after getting the server list
+
+</dd><br /><dt>2003-05-28 21:29  pgmillard
+
+</dt><dd> exodus/ExResponders.pas, jopl/AutoUpdate.pas,
+	jopl/AutoUpdate.pas: Bug #2062 - Make sure we eat exceptions from
+	IdHTTP.
+
+</dd><br /><dt>2003-05-28 21:06  pgmillard
+
+</dt><dd> exodus/RegForm.pas: Bug #2063 - Make sure iq-reg errors are
+	handled properly.
+
+</dd><br /><dt>2003-05-28 20:12  pgmillard
+
+</dt><dd> exodus/: ChatWin.pas, Dockable.pas: Bug #2038 - Fix setFocus
+	problem when window is not showing
+
+</dd><br /><dt>2003-05-28 19:49  pgmillard
+
+</dt><dd> exodus/Jabber1.dfm, exodus/Jabber1.pas, jopl/StandardAuth.pas:
+	Bug #1988 - Don't disconnect from inside a callback. EVER.
+
+</dd><br /><dt>2003-05-28 19:34  pgmillard
+
+</dt><dd> exodus/RosterWindow.pas: Bug #2010 - More checks to see if
+	PresCallback AV goes away. Need an accurate way to reproduce this.
+
+</dd><br /><dt>2003-05-28 19:02  pgmillard
+
+</dt><dd> jopl/Roster.pas: Bug #2010 - Use <storage> for retrieving and
+	storing bookmarks.
+
+</dd><br /><dt>2003-05-27 07:26  pgmillard
+
+</dt><dd> jopl/PrefController.pas: Bug #2061 - Make sure to handle forms
+	which were saved in maximized mode
+
+</dd><br /><dt>2003-05-26 22:25  pgmillard
+
+</dt><dd> exodus/: ConnDetails.pas, ExResponders.pas: Bug #2028 - Changed
+	type to var in disco results
+
+</dd><br /><dt>2003-05-26 22:23  pgmillard
+
+</dt><dd> exodus/: ConnDetails.pas,
+	plugins/NetMeeting/ExNetMeeting_TLB.pas,
+	plugins/NetMeeting/ExodusCOM_TLB.pas: Bug #2027 - Validate JID on
+	btnOK in Connection Details
+
+</dd><br /><dt>2003-05-26 05:43  peralta
+
+</dt><dd> exodus/locale/es/LC_MESSAGES/default.po: Updated (in sync with
+	cvs code) - Please revise
+
+</dd><br /><dt>2003-05-26 05:42  peralta
+
+</dt><dd> exodus/locale/ca/LC_MESSAGES/default.po: Updated
+
+</dd><br /><dt>2003-05-21 07:31  pgmillard
+
+</dt><dd> exodus/ExEvents.pas: Event tweaks
+
+</dd><br /><dt>2003-05-21 07:21  pgmillard
+
+</dt><dd> exodus/COMController.pas: Bug #2007 - Make sure to catch
+	exceptions when calling plugins back.
+
+</dd><br /><dt>2003-05-21 07:18  pgmillard
+
+</dt><dd> exodus/RegForm.pas, jopl/S10n.pas: Bug #2006 - Ignore s10n
+	packets in regform.pas
+
+</dd><br /><dt>2003-05-21 07:11  pgmillard
+
+</dt><dd> jopl/: JabberMsg.pas, XMLUtils.pas: Bug #2005 - Added additional
+	checks for parsing date/time stamps
+
+</dd><br /><dt>2003-05-21 07:03  pgmillard
+
+</dt><dd> exodus/ChatWin.dfm, exodus/ChatWin.pas, jopl/Signals.pas: Bug
+	#2003 - Make sure to focus new chat windows in docked, not shared
+	mode
+
+</dd><br /><dt>2003-05-21 06:50  pgmillard
+
+</dt><dd> exodus/: Profile.dfm, vcard.dfm: Bug #</dd><br /><dt>2001 - Country typos
+
+</dd><br /><dt>2003-05-19 05:12  peralta
+
+</dt><dd> exodus/locale/ca/LC_MESSAGES/default.po: First revision of the
+	Catalan translation - Updated Spanish coming soon.
+
+</dd><br /><dt>2003-05-14 11:27  hildjj
+
+</dt><dd> exodus/: version.h, version.nsi: Daily build
+
+</dd><br /><dt>2003-05-13 07:23  pgmillard
+
+</dt><dd> changelog.html, notes-0.8.1.0.html, notes-0.8.5.html,
+	exodus/RiserWindow.pas, exodus/version.h, exodus/version.nsi: 0.8.5
+	RELEASE
+
+</dd><br /><dt>2003-05-12 18:07  hildjj
+
+</dt><dd> exodus/: version.h, version.nsi: Daily build
+
+</dd><br /><dt>2003-05-12 18:06  hildjj
+
+</dt><dd> exodus/exodus.nsi: Registry keys in installer for DDE work.
+
+</dd><br /><dt>2003-05-12 17:59  pgmillard
+
+</dt><dd> exodus/: ExSession.pas, Jabber1.dfm, Jabber1.pas: DDE handling
+	for .xmpp files. Holy time-warp batman.
+
+</dd><br /><dt>2003-05-12 17:11  hildjj
+
+</dt><dd> exodus/ExSession.pas: Check in one more time, to account for my
+	lack of 'Save File' foo.
+
+</dd><br /><dt>2003-05-12 15:15  hildjj
+
+</dt><dd> exodus/ExSession.pas: More complete JEP-81 support.  Still no
+	disco or search, though.
+
+</dd><br /><dt>2003-05-12 11:31  hildjj
+
+</dt><dd> exodus/: version.h, version.nsi: Daily build
+
+</dd><br /><dt>2003-05-12 07:04  pgmillard
+
+</dt><dd> exodus/: BaseChat.dfm, BaseChat.pas, COMController.pas,
+	ChatWin.dfm, Jabber1.pas, plugins/MSWordSpeller/ExWordSpeller.dpr,
+	plugins/MSWordSpeller/ExWordSpeller.old-dpr: Bug #1930 - Make sure
+	we disable flashing windows on all kinds of focus/mouse events.
+
+</dd><br /><dt>2003-05-11 22:45  hildjj
+
+</dt><dd> exodus/: version.h, version.nsi: Daily build
+
+</dd><br /><dt>2003-05-11 17:42  pgmillard
 
 </dt><dd> exodus/: BaseChat.dfm, Prefs.dfm, Profile.dfm, vcard.dfm:
 	Optimized preference icons.. exe size went from 4229KB to 2608KB.
