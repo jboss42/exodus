@@ -253,6 +253,7 @@ begin
     execute in the main VCL thread
     }
     if (_stream = nil) then exit;
+    if (not _stream._active) then exit;
 
     _cur_msg.msg := WM_JABBER;
     _cur_msg.lparam := msg;
