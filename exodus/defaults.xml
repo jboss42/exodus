@@ -1,6 +1,6 @@
 <exodus version="0.9">
   <prefs>
-    <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.41 2004/04/13 16:00:37 hildjj Exp $"/>
+    <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.42 2004/04/14 13:24:02 pgmillard Exp $"/>
     
     <!-- System Options -->
     <auto_update_url value="http://exodus.jabberstudio.org/exodus-released.exe"/>
@@ -119,11 +119,6 @@
       <control name="lblTimestampFmt"/>
     </timestamp_format>
     <msg_queue value="0" control="chkMsgQueue"/>
-    <emoticons value="1" control="chkEmoticons"/>
-    <emoticon_dlls>
-      <s>msn_emoticons.dll</s>
-      <s>yahoo_emoticons.dll</s>
-    </emoticon_dlls>
     <block_nonroster value="0" control="chkBlockNonRoster"/>
     <log value="1" control="chkLog"/>
     <log_rooms value="0" control="chkLogRooms"/>
@@ -139,11 +134,15 @@
       <control name="lblMsgOptions"/>
     </msg_treatment>
     <queue_offline value="1" control="chkQueueOffline"/>
-    <queue_dnd_chats value="0" control="chkQueueDNDChats"/>  
-    
+    <queue_dnd_chats value="0" control="chkQueueDNDChats"/>
+
     <!-- Emoticon Options -->
-    <emoticons value="1" control="chkEmoticons"/>        
-    
+    <emoticons value="1" control="chkEmoticons"/>
+    <emoticon_dlls>
+      <s>msn_emoticons.dll</s>
+      <s>yahoo_emoticons.dll</s>
+    </emoticon_dlls>
+
     <!-- Network Options -->
     <recon_tries value="25" control="spnAttempts">
       <control name="lblAttempts"/>

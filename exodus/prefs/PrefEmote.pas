@@ -37,6 +37,10 @@ type
     chkEmoticons: TTntCheckBox;
     Label1: TTntLabel;
     EmoteOpen: TOpenDialog;
+    procedure btnEmoteAddClick(Sender: TObject);
+    procedure btnEmoteRemoveClick(Sender: TObject);
+    procedure btnEmoteClearClick(Sender: TObject);
+    procedure btnEmoteDefaultClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -48,18 +52,75 @@ type
 var
   frmPrefEmote: TfrmPrefEmote;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
-
 {$R *.dfm}
+uses
+    Emote, GnuGetText, ExUtils, Session, PrefController;
 
+{---------------------------------------}
 procedure TfrmPrefEmote.LoadPrefs();
 begin
-    // XXX: do something here
+    inherited;
+    MainSession.Prefs.fillStringlist('emoticon_dlls', lstEmotes.Items);
 end;
 
+{---------------------------------------}
 procedure TfrmPrefEmote.SavePrefs();
 begin
-    // XXX: do something here
+    inherited;
+    MainSession.Prefs.setStringlist('emoticon_dlls', lstEmotes.Items);
+
+    // Reload our lists.
+    InitializeEmoticonLists();
+end;
+
+{---------------------------------------}
+procedure TfrmPrefEmote.btnEmoteAddClick(Sender: TObject);
+var
+    i: integer;
+begin
+  inherited;
+    if (EmoteOpen.Execute) then begin
+        // make sure they don't add dupes.
+        i := lstEmotes.Items.IndexOf(EmoteOpen.Filename);
+        if (i = -1) then
+            lstEmotes.Items.Add(EmoteOpen.Filename);
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmPrefEmote.btnEmoteRemoveClick(Sender: TObject);
+var
+    i: integer;
+begin
+  inherited;
+    i := lstEmotes.ItemIndex;
+    if (i = -1) then exit;
+    if (MessageDlgW(_('Remove this emoticon set?'), mtConfirmation, [mbYes, mbNo], 0) = mrNo) then exit;
+
+    lstEmotes.Items.Delete(i);
+end;
+
+{---------------------------------------}
+procedure TfrmPrefEmote.btnEmoteClearClick(Sender: TObject);
+begin
+  inherited;
+    if (MessageDlgW(_('Remove all emoticon sets?'), mtConfirmation, [mbYes, mbNo], 0) = mrNo) then exit;
+    lstEmotes.Items.Clear();
+end;
+
+{---------------------------------------}
+procedure TfrmPrefEmote.btnEmoteDefaultClick(Sender: TObject);
+begin
+  inherited;
+    if (MessageDlgW(_('Reset emoticon sets back to defaults?'), mtConfirmation,
+        [mbYes, mbNo], 0) = mrNo) then exit;
+    lstEmotes.Items.Clear();
+    lstEmotes.Items.Add('msn_emoticons.dll');
+    lstEmotes.Items.Add('yahoo_emoticons.dll');
 end;
 
 end.
