@@ -77,7 +77,12 @@ begin
     if (role <> '') then begin
         f.role := true;
         f.onList := role;
-        f.offList := MUC_NONE;
+        if (role = MUC_PART) then
+            f.offList := MUC_VISITOR
+        else if (role = MUC_MOD) then
+            f.offList := MUC_PART
+        else
+            f.offList := MUC_NONE;
     end
     else begin
         f.role := false;
