@@ -1,214 +1,206 @@
-inherited frmJUD: TfrmJUD
-  Left = 341
-  Top = 213
-  Width = 435
-  Height = 371
-  BorderWidth = 3
-  Caption = 'Search for Contacts'
+inherited frmJud: TfrmJud
+  Width = 417
+  BorderIcons = [biSystemMenu, biMaximize]
+  BorderStyle = bsSizeable
+  Caption = 'Jabber Search'
   OldCreateOrder = True
   OnClose = FormClose
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object Splitter1: TSplitter
-    Left = 217
-    Top = 0
-    Height = 336
+  inherited TntPanel1: TTntPanel
+    Width = 409
+    inherited Bevel1: TBevel
+      Width = 409
+    end
+    inherited btnBack: TTntButton
+      Left = 167
+      Anchors = [akTop, akRight]
+      OnClick = btnBackClick
+    end
+    inherited btnNext: TTntButton
+      Left = 243
+      Anchors = [akTop, akRight]
+      OnClick = btnNextClick
+    end
+    inherited btnCancel: TTntButton
+      Left = 327
+      Anchors = [akTop, akRight]
+      OnClick = btnCancelClick
+    end
   end
-  object pnlLeft: TPanel
-    Left = 0
-    Top = 0
-    Width = 217
-    Height = 336
-    Align = alLeft
-    BevelOuter = bvNone
-    TabOrder = 0
-    object lblInstructions: TTntLabel
-      Left = 0
-      Top = 70
-      Width = 217
-      Height = 13
-      Align = alTop
-      Caption = 'Fill in the search criteria to find contacts on.'
-      Visible = False
-      WordWrap = True
+  inherited Panel1: TPanel
+    Width = 409
+    inherited Bevel2: TBevel
+      Width = 409
     end
-    object lblSelect: TTntLabel
-      Left = 0
-      Top = 0
-      Width = 217
-      Height = 26
-      Align = alTop
-      Caption = 
-        'Select the user database or enter in the Jabber ID of the search' +
-        ' agent to use:'
-      WordWrap = True
+    inherited lblWizardTitle: TTntLabel
+      Width = 126
+      Caption = 'Jabber Search Wizard'
     end
-    object lblWait: TTntLabel
-      Left = 0
-      Top = 57
-      Width = 217
-      Height = 13
-      Align = alTop
-      Caption = 'Please wait. Contacting search agent:'
-      Visible = False
-      WordWrap = True
+    inherited lblWizardDetails: TTntLabel
+      Caption = ''
     end
-    object Panel1: TPanel
-      Left = 0
-      Top = 26
-      Width = 217
-      Height = 31
-      Align = alTop
-      BevelOuter = bvNone
-      TabOrder = 0
+    inherited Image1: TImage
+      Left = 368
+    end
+  end
+  inherited Tabs: TPageControl
+    Width = 409
+    inherited TabSheet1: TTabSheet
+      object lblSelect: TTntLabel
+        Left = 0
+        Top = 0
+        Width = 401
+        Height = 13
+        Align = alTop
+        Caption = 
+          'Select the user database or enter in the Jabber ID of the search' +
+          ' agent to use:'
+        WordWrap = True
+      end
       object cboJID: TTntComboBox
-        Left = 0
-        Top = 4
-        Width = 145
+        Left = 16
+        Top = 33
+        Width = 233
         Height = 21
         ItemHeight = 13
         Sorted = True
         TabOrder = 0
       end
     end
-    object pnlBottom: TPanel
-      Left = 0
-      Top = 302
-      Width = 217
-      Height = 34
-      Align = alBottom
-      BevelOuter = bvNone
-      TabOrder = 1
-      object btnAction: TTntButton
-        Left = 2
-        Top = 4
-        Width = 75
-        Height = 25
-        Caption = 'Search'
-        Default = True
-        TabOrder = 0
-        OnClick = btnActionClick
+    object TabSheet2: TTabSheet
+      Caption = 'TabSheet2'
+      ImageIndex = 1
+      object lblWait: TTntLabel
+        Left = 0
+        Top = 0
+        Width = 179
+        Height = 13
+        Align = alTop
+        Caption = 'Please wait. Contacting search agent:'
+        WordWrap = True
       end
-      object btnClose: TTntButton
-        Left = 82
-        Top = 4
-        Width = 75
-        Height = 25
-        Cancel = True
-        Caption = 'Close'
+      object aniWait: TAnimate
+        Left = 0
+        Top = 13
+        Width = 401
+        Height = 50
+        Align = alTop
+        CommonAVI = aviFindFolder
+        StopFrame = 29
+      end
+    end
+    object TabSheet3: TTabSheet
+      Caption = 'TabSheet3'
+      ImageIndex = 2
+      object lblInstructions: TTntLabel
+        Left = 0
+        Top = 0
+        Width = 204
+        Height = 13
+        Align = alTop
+        Caption = 'Fill in the search criteria to find contacts on.'
+        WordWrap = True
+      end
+      object pnlFields: TScrollBox
+        Left = 0
+        Top = 13
+        Width = 401
+        Height = 214
+        Align = alClient
+        BevelInner = bvNone
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        TabOrder = 0
+      end
+    end
+    object TabSheet4: TTabSheet
+      Caption = 'TabSheet4'
+      ImageIndex = 3
+      object Panel2: TPanel
+        Left = 0
+        Top = 168
+        Width = 401
+        Height = 59
+        Align = alBottom
+        BevelOuter = bvNone
+        BorderWidth = 2
+        TabOrder = 0
+        object Label3: TTntLabel
+          Left = 6
+          Top = 2
+          Width = 128
+          Height = 13
+          Caption = 'Add Contacts to this group:'
+        end
+        object lblAddGrp: TTntLabel
+          Left = 6
+          Top = 43
+          Width = 83
+          Height = 13
+          Cursor = crHandPoint
+          Caption = 'Add a new Group'
+          Color = clBtnFace
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clBlue
+          Font.Height = -11
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsUnderline]
+          ParentColor = False
+          ParentFont = False
+          OnClick = lblAddGrpClick
+        end
+        object cboGroup: TTntComboBox
+          Left = 5
+          Top = 17
+          Width = 225
+          Height = 21
+          Style = csDropDownList
+          ItemHeight = 0
+          Sorted = True
+          TabOrder = 0
+        end
+        object Button1: TButton
+          Left = 256
+          Top = 16
+          Width = 145
+          Height = 25
+          Caption = 'Add Contacts'
+          TabOrder = 1
+          OnClick = popAddClick
+        end
+      end
+      object lstContacts: TTntListView
+        Left = 0
+        Top = 0
+        Width = 401
+        Height = 168
+        Align = alClient
+        Columns = <
+          item
+          end
+          item
+          end
+          item
+          end>
+        HideSelection = False
+        MultiSelect = True
+        OwnerData = True
+        ReadOnly = True
+        RowSelect = True
         TabOrder = 1
-        OnClick = btnCloseClick
+        ViewStyle = vsReport
+        OnColumnClick = lstContactsColumnClick
+        OnContextPopup = lstContactsContextPopup
+        OnData = lstContactsData
       end
     end
-    object aniWait: TAnimate
-      Left = 0
-      Top = 83
-      Width = 217
-      Height = 50
-      Align = alTop
-      CommonAVI = aviFindFolder
-      StopFrame = 29
-      Visible = False
-    end
-    object pnlResults: TPanel
-      Left = 0
-      Top = 133
-      Width = 217
-      Height = 104
-      Align = alTop
-      BevelOuter = bvNone
-      TabOrder = 3
-      Visible = False
-      object Label1: TTntLabel
-        Left = 0
-        Top = 80
-        Width = 64
-        Height = 13
-        Cursor = crHandPoint
-        Caption = 'Search Again'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsUnderline]
-        ParentFont = False
-        OnClick = Label1Click
-      end
-      object Label3: TTntLabel
-        Left = 1
-        Top = 11
-        Width = 128
-        Height = 13
-        Caption = 'Add Contacts to this group:'
-      end
-      object lblAddGrp: TTntLabel
-        Left = 1
-        Top = 50
-        Width = 83
-        Height = 13
-        Cursor = crHandPoint
-        Caption = 'Add a new Group'
-        Color = clBtnFace
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsUnderline]
-        ParentColor = False
-        ParentFont = False
-        OnClick = lblAddGrpClick
-      end
-      object cboGroup: TTntComboBox
-        Left = 0
-        Top = 26
-        Width = 145
-        Height = 21
-        Style = csDropDownList
-        ItemHeight = 13
-        Sorted = True
-        TabOrder = 0
-      end
-    end
-    object pnlFields: TScrollBox
-      Left = 0
-      Top = 237
-      Width = 217
-      Height = 65
-      Align = alClient
-      BevelInner = bvNone
-      BevelOuter = bvNone
-      BorderStyle = bsNone
-      TabOrder = 4
-    end
-  end
-  object lstContacts: TTntListView
-    Left = 220
-    Top = 0
-    Width = 201
-    Height = 336
-    Align = alClient
-    Columns = <
-      item
-      end
-      item
-      end
-      item
-      end>
-    HideSelection = False
-    MultiSelect = True
-    OwnerData = True
-    ReadOnly = True
-    RowSelect = True
-    PopupMenu = PopupMenu1
-    TabOrder = 1
-    ViewStyle = vsReport
-    OnColumnClick = lstContactsColumnClick
-    OnContextPopup = lstContactsContextPopup
-    OnData = lstContactsData
   end
   object PopupMenu1: TPopupMenu
-    Left = 176
-    Top = 32
+    Left = 296
+    Top = 16
     object popAdd: TMenuItem
       Caption = 'Add Contact'
       OnClick = popAddClick

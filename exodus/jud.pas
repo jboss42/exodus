@@ -1,6 +1,6 @@
-unit jud;
+unit Jud;
 {
-    Copyright 2002, Peter Millard
+    Copyright 2003, Peter Millard
 
     This file is part of Exodus.
 
@@ -18,14 +18,13 @@ unit jud;
     along with Exodus; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
-
 interface
 
 uses
     IQ, XMLTag, Contnrs,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, Dockable, StdCtrls, ExtCtrls, ComCtrls, Menus, TntStdCtrls,
-    TntComCtrls;
+    Dialogs, DockWizard, ComCtrls, TntComCtrls, StdCtrls, TntStdCtrls, ExtCtrls,
+    TntExtCtrls, Menus, Wizard;
 
 type
 
@@ -40,34 +39,31 @@ type
     property Count: integer read _count write setCount;
   end;
 
-  TfrmJUD = class(TfrmDockable)
-    pnlLeft: TPanel;
-    lstContacts: TTntListView;
-    lblInstructions: TTntLabel;
+  TfrmJud = class(TfrmDockWizard)
     lblSelect: TTntLabel;
-    Panel1: TPanel;
     cboJID: TTntComboBox;
-    pnlBottom: TPanel;
-    btnAction: TTntButton;
-    btnClose: TTntButton;
-    aniWait: TAnimate;
+    TabSheet2: TTabSheet;
     lblWait: TTntLabel;
+    aniWait: TAnimate;
+    TabSheet3: TTabSheet;
+    lblInstructions: TTntLabel;
+    pnlFields: TScrollBox;
+    TabSheet4: TTabSheet;
+    Panel2: TPanel;
+    Label3: TTntLabel;
+    cboGroup: TTntComboBox;
+    lblAddGrp: TTntLabel;
+    lstContacts: TTntListView;
     PopupMenu1: TPopupMenu;
     popAdd: TMenuItem;
     popProfile: TMenuItem;
     N1: TMenuItem;
     popChat: TMenuItem;
     popMessage: TMenuItem;
-    pnlResults: TPanel;
-    Label1: TTntLabel;
-    Label3: TTntLabel;
-    cboGroup: TTntComboBox;
-    lblAddGrp: TTntLabel;
-    Splitter1: TSplitter;
-    pnlFields: TScrollBox;
+    Button1: TButton;
     procedure btnCloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure btnActionClick(Sender: TObject);
+    procedure btnNextClick(Sender: TObject);
     procedure lstContactsContextPopup(Sender: TObject; MousePos: TPoint;
       var Handled: Boolean);
     procedure popAddClick(Sender: TObject);
@@ -84,6 +80,8 @@ type
       FindData: Pointer; StartIndex: Integer; Direction: TSearchDirection;
       Wrap: Boolean; var Index: Integer);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnCancelClick(Sender: TObject);
+    procedure btnBackClick(Sender: TObject);
   private
     { Private declarations }
     field_set: TStringList;
@@ -107,7 +105,7 @@ type
   end;
 
 var
-  frmJUD: TfrmJUD;
+  frmJud: TfrmJud;
 
 resourceString
     sJUDSearch = 'Search';
@@ -121,9 +119,7 @@ resourceString
 function StartSearch(sjid: string): TfrmJUD;
 function ItemCompare(Item1, Item2: Pointer): integer;
 
-{---------------------------------------}
-{---------------------------------------}
-{---------------------------------------}
+
 implementation
 
 uses
@@ -148,7 +144,7 @@ begin
     // Start a new search
     // create a new room
     f := TfrmJUD.Create(Application);
-    f.Caption := sJUDSearch;
+
     if MainSession.Prefs.getBool('expanded') then
         f.DockForm;
 
@@ -175,7 +171,6 @@ begin
     else if (f.cboJID.Items.Count > 0) then begin
         f.cboJID.ItemIndex := 0;
     end;
-    f.btnAction.Caption := sJUDStart;
     Result := f;
 end;
 
@@ -206,8 +201,13 @@ begin
         
     virtlist := TObjectList.Create();
     virtlist.OwnsObjects := true;
-    AssignDefaultFont(pnlLeft.Font);
-    pnlLeft.Font.Size := pnlLeft.Font.Size - 1;
+    AssignUnicodeFont(Tabs.Font, 8);
+
+    TabSheet1.TabVisible := false;
+    TabSheet2.TabVisible := false;
+    TabSheet3.TabVisible := false;
+    TabSheet4.TabVisible := false;
+    Tabs.ActivePage := TabSheet1;
 end;
 
 {---------------------------------------}
@@ -225,11 +225,8 @@ begin
     lstContacts.Items.EndUpdate();
 
     // show the wait stuff
-    lblWait.Visible := true;
-    aniWait.Visible := true;
     aniWait.Active := true;
-
-    btnAction.Caption := sJUDStop;
+    Tabs.ActivePage := TabSheet2;
 
     cur_jid := cboJID.Text;
     cur_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), FieldsCallback);
@@ -295,12 +292,8 @@ begin
 
     if (valid) then begin
         clearFields();
-        lblInstructions.Visible := false;
-        lblWait.Visible := true;
-        aniWait.Visible := true;
         aniWait.Active := true;
-        btnAction.Caption := sJUDStop;
-
+        Tabs.ActivePage := TabSheet2;
         cur_iq.Send();
     end;
 end;
@@ -318,11 +311,7 @@ begin
     // callback when we get the fields back
     cur_state := 'search';
     cur_iq := nil;
-    lblWait.Visible := false;
-    aniWait.Visible := false;
     aniWait.Active := false;
-    btnAction.Caption := sJUDSearch;
-    cboJID.Enabled := false;
 
     if (event <> 'xml') then begin
         // timeout
@@ -338,7 +327,6 @@ begin
     end
     else if (tag <> nil) then begin
         // *whoop*, we got a result tag
-        lblInstructions.Visible := true;
         cur_frame := nil;
         field_set.Clear();
 
@@ -400,6 +388,7 @@ begin
         if (cur_frame <> nil) then
             cur_frame.txtData.SetFocus();
     end;
+    Tabs.ActivePage := TabSheet3;
 end;
 
 {---------------------------------------}
@@ -417,10 +406,7 @@ begin
     // callback when we get our search results back
     cur_iq := nil;
     clist := nil;
-    lblWait.Visible := false;
-    aniWait.Visible := false;
     aniWait.Active := false;
-    btnAction.Caption := sJUDStart;
     cboJID.Enabled := true;
 
     if (event <> 'xml') then begin
@@ -547,19 +533,9 @@ begin
         if (clist <> nil) then clist.Free();
         if (items <> nil) then Items.Free();
 
-        // hide all of the other stuff
-        lblWait.Visible := false;
-        aniWait.Visible := false;
-        lblSelect.Visible := false;
-        lblInstructions.Visible := false;
-        cboJID.Visible := false;
-
-        // show results panel
-        pnlResults.Align := alNone;
-        pnlResults.Align := alTop;
-        pnlResults.Visible := true;
-        btnAction.Caption := sJUDAdd;
+        aniWait.Active := false;
         cur_state := 'add';
+        Tabs.ActivePage := TabSheet4;
     end;
 end;
 
@@ -585,7 +561,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmJUD.btnActionClick(Sender: TObject);
+procedure TfrmJUD.btnNextClick(Sender: TObject);
 begin
   inherited;
     {
@@ -594,16 +570,7 @@ begin
     or (for x-data):
     init -> get_fields -> fields -> xsearch -> xitems
     }
-    if ((cur_state = 'fields') or
-        (cur_state = 'items') or
-        (cur_state = 'xitems')) then begin
-        // stop waiting for the fields, or results
-        cur_iq.Free();
-        cur_iq := nil;
-        self.reset();
-    end
-
-    else if (cur_state = 'get_fields') then begin
+    if (cur_state = 'get_fields') then begin
         // get the fields for this agent
         getFields();
     end
@@ -614,8 +581,8 @@ begin
     end
 
     else if (cur_state = 'add') then begin
-        // add selected contacts
-        popAddClick(self);
+        // loop back and search again
+        reset();
     end
 
     else begin
@@ -626,19 +593,13 @@ end;
 procedure TfrmJUD.reset();
 begin
     // reset the GUI
-    lblWait.Visible := false;
-    aniWait.Visible := false;
     aniWait.Active := false;
-    pnlResults.Visible := false;
-    lblSelect.Visible := true;
-    cboJID.Visible := true;
-
-    btnAction.Caption := sJUDStart;
     cur_state := 'get_fields';
     cur_sort := -1;
     cur_dir := true;
     cboJID.Enabled := true;
     self.ClearFields();
+    Tabs.ActivePage := TabSheet1;
 end;
 
 {---------------------------------------}
@@ -878,6 +839,27 @@ begin
     field_set.Free();
     virtlist.Free();
     Action := caFree;
+end;
+
+
+procedure TfrmJud.btnCancelClick(Sender: TObject);
+begin
+  inherited;
+    if ((cur_state = 'fields') or
+        (cur_state = 'items') or
+        (cur_state = 'xitems')) then begin
+        // stop waiting for the fields, or results
+        cur_iq.Free();
+        cur_iq := nil;
+        self.reset();
+    end;
+    Self.Close();
+end;
+
+procedure TfrmJud.btnBackClick(Sender: TObject);
+begin
+  inherited;
+    // xxx
 end;
 
 end.

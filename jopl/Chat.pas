@@ -76,7 +76,7 @@ end;
 procedure TJabberChatList.SetSession(s: TObject);
 begin
     _s := s;
-    _callback := TJabberSession(s).RegisterCallback(MsgCallback, '/packet/message[@type!="error"]');
+    _callback := TJabberSession(s).RegisterCallback(MsgCallback,'/packet/message[@type!="error"]');
 end;
 
 {---------------------------------------}
@@ -92,9 +92,6 @@ begin
     // this jid, if not, create one.
     fjid := tag.getAttribute('from');
     mtype := tag.getAttribute('type');
-
-    if (mtype = 'groupchat') then exit;
-    if (mtype = 'headline') then exit;
 
     mt := MainSession.Prefs.getInt('msg_treatment');
 
