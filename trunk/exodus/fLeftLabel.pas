@@ -21,9 +21,10 @@ unit fLeftLabel;
 
 interface
 
-uses 
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, TntStdCtrls;
+uses
+    Unicode, XMLTag,
+    Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+    StdCtrls, TntStdCtrls;
 
 type
   TfrmField = class(TFrame)
