@@ -6,7 +6,9 @@ $::D = 'f:/lang/Delphi7';
 $::TNT = "D:\\src\\exodus\\exodus\\components\\tntUnicode";
 $::ICQ = "\"D:\\src\\exodus\\exodus\\plugins\\ICQ-Import\\ICQ\\Component\"";
 $::NSIS = "\"D:\\Program Files\\NSIS\\makensis.exe\"";
-$::MSGFMT = "F:\\lang\\dxgettext\\msgfmt.exe";
+$::DXGETDIR = "F:\\lang\\dxgettext";
+$::MSGFMT = "$::DXGETDIR\\msgfmt.exe";
+$::DXGETTEXT = "$::DXGETDIR\\dxgettext.exe";
 do "dopts.pl";
 
 my $DD;
@@ -25,6 +27,8 @@ grep unlink, glob("output/*.dcu"); # rm *.dcu
 e("$dcc $opts -Noutput IdleHooks.dpr");
 e("$rcc version.rc");
 e("$dcc $opts -Noutput -U\"$::TNT\" Exodus.dpr");
+
+e("$::DXGETTEXT --delphi");
 
 unlink "locale.zip";
 grep unlink, glob("locale/*/LC_MESSAGES/default.mo");

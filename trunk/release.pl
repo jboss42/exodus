@@ -9,7 +9,7 @@ chdir "exodus" or die;
 
 e("perl version.pl build");
 e("perl build.pl");
-e("cvs ci -m \"Daily build\" version.h version.nsi");
+e("cvs ci -m \"Daily build\" version.h version.nsi default.po");
 e("scp -C setup.exe plugins/*.zip  $::USER:/var/projects/exodus/www/daily/stage");
 e("ssh $::USER \"cd /var/projects/exodus/www/daily/stage; chmod 644 *; mv setup.exe ..; mv *.zip ../../plugins\"");
 
