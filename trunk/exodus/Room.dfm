@@ -4,7 +4,6 @@ inherited frmRoom: TfrmRoom
   Caption = 'Conference Room'
   OldCreateOrder = True
   OnClose = FormClose
-  OnEndDock = FormEndDock
   PixelsPerInch = 96
   TextHeight = 13
   inherited Panel3: TPanel
@@ -196,6 +195,10 @@ inherited frmRoom: TfrmRoom
     end
     object N1: TMenuItem
       Caption = '-'
+    end
+    object NotificationOptions1: TMenuItem
+      Caption = 'Notification Options ...'
+      OnClick = NotificationOptions1Click
     end
     object mnuWordwrap: TMenuItem
       Caption = 'Word Wrap Input'

@@ -78,6 +78,7 @@ type
     popOwner: TMenuItem;
     popOwnerList: TMenuItem;
     mnuWordwrap: TMenuItem;
+    NotificationOptions1: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -109,6 +110,7 @@ type
     procedure popDestroyClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure mnuWordwrapClick(Sender: TObject);
+    procedure NotificationOptions1Click(Sender: TObject);
   private
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
@@ -127,6 +129,8 @@ type
 
     _old_nick: WideString;
 
+    _notify: array[0..2] of integer;
+
     function  AddMember(member: TRoomMember): TMemberNode;
     function  checkCommand(txt: Widestring): boolean;
     function  GetCurrentMember(Node: TMemberNode = nil): TRoomMember;
@@ -144,6 +148,7 @@ type
 
     function newRoomMessage(body: Widestring): TXMLTag;
     procedure changeNick(new_nick: WideString);
+    procedure setupKeywords();
 
   published
     procedure MsgCallback(event: string; tag: TXMLTag);
@@ -248,7 +253,7 @@ function FindRoomNick(rjid: Widestring): Widestring;
 {---------------------------------------}
 implementation
 uses
-    JabberConst, InputPassword,
+    CustomNotify, JabberConst, InputPassword,
     IQ, xData, JoinRoom, RoomAdminList,
     ExUtils, RiserWindow, ShellAPI, RichEdit,
     Invite, ChatWin, RosterWindow, Presence, Roster,
@@ -393,15 +398,13 @@ begin
         (not MainSession.IsPaused)) then begin
         // check for keywords
         if ((_keywords <> nil) and (_keywords.Exec(Msg.Body))) then
-            DoNotify(Self,
-                     'notify_keyword',
+            DoNotify(Self, _notify[1],
                      sNotifyKeyword + Self.Caption + ': ' + _keywords.Match[1],
-                     ico_conf)
+                     ico_conf, 'notify_keyword')
         else
-            DoNotify(Self,
-                     'notify_roomactivity',
+            DoNotify(Self, _notify[0],
                      sNotifyActivity + Self.Caption,
-                     ico_conf);
+                     ico_conf, 'notify_roomactivity');
     end;
 
     Msg.Free();
@@ -855,12 +858,6 @@ end;
 
 {---------------------------------------}
 procedure TfrmRoom.FormCreate(Sender: TObject);
-var
-    kw_list : TWideStringList;
-    i : integer;
-    e : Widestring;
-    first : bool;
-    re : bool;
 begin
     inherited;
 
@@ -877,37 +874,54 @@ begin
     _hint_text := '';
     _old_nick := '';
 
+    _keywords := nil;
+
+    _notify[0] := MainSession.Prefs.getInt('notify_roomactivity');
+    _notify[1] := MainSession.Prefs.getInt('notify_keyword');
+
     lblSubject.Caption := '';
 
-    if (MainSession.Prefs.getInt('notify_keyword') <> 0) then begin
-        kw_list := TWideStringList.Create();
-        MainSession.Prefs.fillStringlist('keywords', kw_list);
-        if (kw_list.Count > 0) then begin
-            re := MainSession.Prefs.getBool('regex_keywords');
-            first := true;
-            e :=  '(';
-            for i := 0 to kw_list.Count-1 do begin
-                if (first) then
-                    first := false
-                else
-                    e := e + '|';
-                if (re) then
-                    e := e + kw_list[i]
-                else
-                    e := e + QuoteRegExprMetaChars(kw_list[i]);
-            end;
-                e := e + ')';
-            _keywords := TRegExpr.Create();
-            _keywords.Expression := e;
-            _keywords.Compile();
-        end;
-        kw_list.Free();
-    end;
+    if (_notify[1] <> 0) then
+        setupKeywords();
+
     MyNick := '';
 
     _wrap_input := MainSession.Prefs.getBool('wrap_input');
     MsgOut.WordWrap := _wrap_input;
     mnuWordwrap.Checked := _wrap_input;
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.setupKeywords();
+var
+    kw_list : TWideStringList;
+    re : bool;
+    e : Widestring;
+    first : bool;
+    i : integer;
+begin
+    kw_list := TWideStringList.Create();
+    MainSession.Prefs.fillStringlist('keywords', kw_list);
+    if (kw_list.Count > 0) then begin
+        re := MainSession.Prefs.getBool('regex_keywords');
+        first := true;
+        e :=  '(';
+        for i := 0 to kw_list.Count-1 do begin
+            if (first) then
+                first := false
+            else
+                e := e + '|';
+            if (re) then
+                e := e + kw_list[i]
+            else
+                e := e + QuoteRegExprMetaChars(kw_list[i]);
+        end;
+            e := e + ')';
+        _keywords := TRegExpr.Create();
+        _keywords.Expression := e;
+        _keywords.Compile();
+    end;
+    kw_list.Free();
 end;
 
 {---------------------------------------}
@@ -1593,6 +1607,29 @@ begin
     if (_wrap_input) then begin
         MessageDlg(sWordWrapWarning, mtWarning, [mbOK], 0);
     end;
+end;
+
+procedure TfrmRoom.NotificationOptions1Click(Sender: TObject);
+var
+    f: TfrmCustomNotify;
+begin
+    // change notification options..
+    f := TfrmCustomNotify.Create(Application);
+
+    f.addItem('Room activity');
+    f.addItem('Keywords');
+    f.setVal(0, _notify[0]);
+    f.setVal(1, _notify[1]);
+
+    if (f.ShowModal) = mrOK then begin
+        _notify[0] := f.getVal(0);
+        _notify[1] := f.getVal(1);
+
+        if ((_notify[1] <> 0) and (_keywords = nil)) then
+            setupKeywords();
+    end;
+
+    f.Free();
 end;
 
 initialization

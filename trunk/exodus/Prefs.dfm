@@ -1,6 +1,6 @@
 object frmPrefs: TfrmPrefs
-  Left = 255
-  Top = 176
+  Left = 243
+  Top = 144
   Width = 468
   Height = 455
   Caption = 'Exodus Preferences'
@@ -2136,7 +2136,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 97
         Height = 20
         Align = alTop
         Alignment = taCenter
