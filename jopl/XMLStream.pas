@@ -26,12 +26,8 @@ uses
     XMLUtils,
     XMLParser,
     LibXMLParser,
-    {$ifdef linux}
-    QForms, QExtCtrls,
-    {$else}
-    Forms, Messages, Windows, StdVcl, ExtCtrls,
-    {$endif}
-    SysUtils, IdThread, IdException, 
+    Messages,
+    SysUtils, IdThread, IdException,
     SyncObjs, Classes;
 
 const
