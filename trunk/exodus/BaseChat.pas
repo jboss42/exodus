@@ -125,13 +125,16 @@ begin
     GetCaretPos(cp);
     l := MsgOut.ClientOrigin.x + cp.X;
 
+    if ((l + frmEmoticons.Width) > Screen.Width) then
+        l := Screen.Width - frmEmoticons.Width - 5;
+
+    frmEmoticons.Left := l + 10;
+
     if (Self.Docked) then begin
         t := frmExodus.Top + frmExodus.ClientHeight - 10;
-        frmEmoticons.Left := l + 10;
     end
     else begin
         t := Self.Top + Self.ClientHeight - 10;
-        frmEmoticons.Left := l + 10;
     end;
 
     if ((t + frmEmoticons.Height) > Screen.Height) then
