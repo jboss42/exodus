@@ -1,7 +1,7 @@
 object frmExodus: TfrmExodus
   Left = 425
   Top = 247
-  Width = 205
+  Width = 239
   Height = 416
   AlphaBlendValue = 240
   Caption = 'Exodus'
@@ -29,17 +29,17 @@ object frmExodus: TfrmExodus
   TextHeight = 13
   object SplitterLeft: TSplitter
     Left = 57
-    Top = 31
+    Top = 27
     Width = 3
-    Height = 331
+    Height = 335
     Cursor = crHSplit
     OnMoved = SplitterRightMoved
   end
   object Tabs: TTntPageControl
     Left = 60
-    Top = 31
-    Width = 137
-    Height = 331
+    Top = 27
+    Width = 171
+    Height = 335
     ActivePage = tbsRoster
     Align = alClient
     DockSite = True
@@ -72,7 +72,7 @@ object frmExodus: TfrmExodus
         Left = 105
         Top = 0
         Width = 3
-        Height = 301
+        Height = 305
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = SplitterRightMoved
@@ -81,7 +81,7 @@ object frmExodus: TfrmExodus
         Left = 0
         Top = 0
         Width = 105
-        Height = 301
+        Height = 305
         Align = alLeft
         BevelOuter = bvNone
         BorderWidth = 1
@@ -93,8 +93,8 @@ object frmExodus: TfrmExodus
       object pnlRight: TPanel
         Left = 108
         Top = 0
-        Width = 21
-        Height = 301
+        Width = 55
+        Height = 305
         Align = alClient
         BevelOuter = bvNone
         Caption = 'THIS IS PNLRIGHT'
@@ -107,33 +107,34 @@ object frmExodus: TfrmExodus
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 197
-    Height = 31
+    Width = 231
+    Height = 27
     AutoSize = True
     Bands = <
       item
         Control = ToolBar1
         ImageIndex = -1
-        MinHeight = 27
-        Width = 193
+        MinHeight = 23
+        Width = 227
       end>
     object ToolBar1: TToolBar
       Left = 9
       Top = 0
-      Width = 167
-      Height = 27
+      Width = 161
+      Height = 23
       Align = alNone
       AutoSize = True
-      BorderWidth = 1
       ButtonHeight = 23
       DragKind = dkDock
       EdgeBorders = []
+      EdgeInner = esNone
+      EdgeOuter = esNone
       Flat = True
       Images = ImageList1
-      Indent = 2
       TabOrder = 0
+      Transparent = True
       object btnOnlineRoster: TToolButton
-        Left = 2
+        Left = 0
         Top = 0
         Hint = 'View Online/All'
         AllowAllUp = True
@@ -143,7 +144,7 @@ object frmExodus: TfrmExodus
         OnClick = btnOnlineRosterClick
       end
       object btnAddContact: TToolButton
-        Left = 25
+        Left = 23
         Top = 0
         Hint = 'Add Contact'
         AllowAllUp = True
@@ -153,7 +154,7 @@ object frmExodus: TfrmExodus
         OnClick = btnAddContactClick
       end
       object btnRoom: TToolButton
-        Left = 48
+        Left = 46
         Top = 0
         Hint = 'Join a conference'
         AllowAllUp = True
@@ -163,7 +164,7 @@ object frmExodus: TfrmExodus
         OnClick = mnuConferenceClick
       end
       object btnFind: TToolButton
-        Left = 71
+        Left = 69
         Top = 0
         Hint = 'Search for Contacts'
         AllowAllUp = True
@@ -173,7 +174,7 @@ object frmExodus: TfrmExodus
         OnClick = SearchforPerson1Click
       end
       object btnExpanded: TToolButton
-        Left = 94
+        Left = 92
         Top = 0
         Hint = 'Toggle Expanded Mode'
         AllowAllUp = True
@@ -183,7 +184,7 @@ object frmExodus: TfrmExodus
         OnClick = btnExpandedClick
       end
       object btnConnect: TToolButton
-        Left = 117
+        Left = 115
         Top = 0
         Hint = 'Connect/Disconnect'
         AllowAllUp = True
@@ -194,7 +195,7 @@ object frmExodus: TfrmExodus
         OnClick = btnConnectClick
       end
       object btnDelContact: TToolButton
-        Left = 140
+        Left = 138
         Top = 0
         Hint = 'Remove Contact'
         AllowAllUp = True
@@ -207,9 +208,9 @@ object frmExodus: TfrmExodus
   end
   object pnlLeft: TPanel
     Left = 0
-    Top = 31
+    Top = 27
     Width = 57
-    Height = 331
+    Height = 335
     Align = alLeft
     BevelOuter = bvNone
     BorderWidth = 1
