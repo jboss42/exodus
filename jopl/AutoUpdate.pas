@@ -31,7 +31,7 @@ uses
   XMLTag;
 
 type
-  TNewUrlEvent = procedure(url: widestring);
+  TNewUrlEvent = procedure(url: string);
 
   TAutoUpdateThread = class(TThread)
   private
@@ -133,7 +133,7 @@ begin
         end;
 end;
 
-procedure OnNewBrand(url : widestring);
+procedure OnNewBrand(url : string);
 var
     bfn : string;
     bfs : TFileStream;
