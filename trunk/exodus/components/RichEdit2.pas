@@ -3607,7 +3607,10 @@ begin
   if not FWide then
     begin
       W:= CharToWide(PChar(Message.LParam), FCP);
-      Message.LParam:= Integer(@W[1]);
+      if (Length(W) > 0) then
+        Message.LParam := Integer(@W[1])
+      else
+        Message.LParam := 0;
     end;
   Message.WParam:= 1;
   Message.Result:= PrivatePerform(Message.Msg, Message.WParam, Message.LParam);
