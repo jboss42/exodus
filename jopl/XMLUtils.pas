@@ -21,25 +21,26 @@ unit XMLUtils;
 
 interface
 uses
-    WStrList, XMLTag, Classes, SysUtils;
+    Unicode, XMLTag, Classes, SysUtils;
 
-function XML_EscapeChars(txt: string): string;
-function XML_UnEscapeChars(txt: string): string;
+function XML_EscapeChars(txt: Widestring): Widestring;
+function XML_UnEscapeChars(txt: Widestring): Widestring;
 
-function HTML_EscapeChars(txt: string; DoAPOS: boolean): string;
-function TrimQuotes(instring: string): string;
-function RightChar(instring: string; nchar: word): string;
-function LeftChar(instring: string; nchar: word): string;
-function SToInt(inp: string): integer;
-function NameMatch(s1, s2: string): boolean;
-function Sha1Hash(fkey: string): string;
-function EncodeString(value: string): string;
-function DecodeString(value: string): string;
-function MungeName(str: string): string;
-function SafeInt(str: string): integer;
+function HTML_EscapeChars(txt: Widestring; DoAPOS: boolean): Widestring;
 
-function JabberToDateTime(datestr: string): TDateTime;
-function DateTimeToJabber(dt: TDateTime): string;
+function TrimQuotes(instring: Widestring): Widestring;
+function RightChar(instring: Widestring; nchar: word): Widestring;
+function LeftChar(instring: Widestring; nchar: word): Widestring;
+function SToInt(inp: Widestring): integer;
+function NameMatch(s1, s2: Widestring): boolean;
+function Sha1Hash(fkey: Widestring): Widestring;
+function EncodeString(value: Widestring): Widestring;
+function DecodeString(value: Widestring): Widestring;
+function MungeName(str: Widestring): Widestring;
+function SafeInt(str: Widestring): integer;
+
+function JabberToDateTime(datestr: Widestring): TDateTime;
+function DateTimeToJabber(dt: TDateTime): Widestring;
 
 procedure ClearStringListObjects(sl: TStringList); overload;
 procedure ClearStringListObjects(sl: TWideStringList); overload;
@@ -54,9 +55,9 @@ uses
 
 
 {---------------------------------------}
-function HTML_EscapeChars(txt: string; DoAPOS: boolean): string;
+function HTML_EscapeChars(txt: Widestring; DoAPOS: boolean): Widestring;
 var
-    tok, tmps: string;
+    tok, tmps: Widestring;
     j, i: integer;
 begin
     // escape special chars .. not &apos; --> only XML
@@ -93,16 +94,16 @@ begin
 end;
 
 {---------------------------------------}
-function XML_EscapeChars(txt: string): string;
+function XML_EscapeChars(txt: Widestring): Widestring;
 begin
     // escape the special chars.
     Result := HTML_EscapeChars(txt, true);
 end;
 
 {---------------------------------------}
-function XML_UnescapeChars(txt: string): string;
+function XML_UnescapeChars(txt: Widestring): Widestring;
 var
-    tok, tmps: string;
+    tok, tmps: Widestring;
     a, i: integer;
 begin
     // un-escape the special chars.
@@ -133,9 +134,9 @@ begin
 end;
 
 {---------------------------------------}
-function TrimQuotes(instring: string): string;
+function TrimQuotes(instring: Widestring): Widestring;
 var
-	tmps: string;
+	tmps: Widestring;
 begin
 	{strip off first and last " or ' characters}
     tmps := Trim(instring);
@@ -152,9 +153,9 @@ begin
 end;
 
 {---------------------------------------}
-function RightChar(instring: string; nchar: word): string;
+function RightChar(instring: Widestring; nchar: word): Widestring;
 var
-	tmps: string;
+	tmps: Widestring;
 begin
 	{returns the rightmost n characters of a string}
     tmps := Copy(instring, length(instring) - nchar + 1, nchar);
@@ -162,9 +163,9 @@ begin
 end;
 
 {---------------------------------------}
-function LeftChar(instring: string; nchar: word): string;
+function LeftChar(instring: Widestring; nchar: word): Widestring;
 var
-	tmps: string;
+	tmps: Widestring;
 begin
 	{returns the leftmost n characters of a string}
     tmps := Copy(instring, 1, nchar);
@@ -172,7 +173,7 @@ begin
 end;
 
 {---------------------------------------}
-function SToInt(inp: string): integer;
+function SToInt(inp: Widestring): integer;
 var
 	tmpi: integer;
 begin
@@ -186,18 +187,18 @@ begin
 end;
 
 {---------------------------------------}
-function NameMatch(s1, s2: string): boolean;
+function NameMatch(s1, s2: Widestring): boolean;
 begin
-    Result := (StrComp(PChar(s1), PChar(s2)) = 0);
+    Result := (StrCompW(PWideChar(s1), PWideChar(s2)) = 0);
 end;
 
 {---------------------------------------}
-function Sha1Hash(fkey: string): string;
+function Sha1Hash(fkey: Widestring): Widestring;
 var
     hasher: TSecHash;
     h: TIntDigest;
     i: integer;
-    s: string;
+    s: Widestring;
 begin
     // Do a SHA1 hash using the sechash.pas unit
     hasher := TSecHash.Create(nil);
@@ -211,36 +212,40 @@ begin
 end;
 
 {---------------------------------------}
-function EncodeString(value: string): string;
+function EncodeString(value: Widestring): Widestring;
 var
+    tmps: String;
     e: TIdBase64Encoder;
 begin
     // do base64 encode
     e := TIdBase64Encoder.Create(nil);
     e.CodeString(value);
-    Result := e.CompletedInput();
-    Fetch(Result, ';');
+    tmps := e.CompletedInput();
+    Fetch(tmps, ';');
     e.Free();
+    Result := tmps;
 end;
 
 {---------------------------------------}
-function DecodeString(value: string): string;
+function DecodeString(value: Widestring): Widestring;
 var
+    tmps: string;
     d: TIdBase64Decoder;
 begin
     // do base64 decode
     d := TIdBase64Decoder.Create(nil);
     d.CodeString(value);
-    Result := d.CompletedInput();
-    Fetch(Result, ';');
+    tmps := d.CompletedInput();
+    Fetch(tmps, ';');
     d.Free();
+    Result := tmps;
 end;
 
 {---------------------------------------}
-function MungeName(str: string): string;
+function MungeName(str: Widestring): Widestring;
 var
     i: integer;
-    c, fn: string;
+    c, fn: Widestring;
 begin
     // Munge some string into a filename
     // Removes all chars which aren't allowed
@@ -257,7 +262,7 @@ begin
 end;
 
 {---------------------------------------}
-function SafeInt(str: string): integer;
+function SafeInt(str: Widestring): integer;
 begin
     // Null safe string to int function
     try
@@ -297,10 +302,10 @@ end;
 
 
 {---------------------------------------}
-function JabberToDateTime(datestr: string): TDateTime;
+function JabberToDateTime(datestr: Widestring): TDateTime;
 var
     rdate: TDateTime;
-    ys, ms, ds, ts: string;
+    ys, ms, ds, ts: Widestring;
     yw, mw, dw: Word;
 begin
     // translate date from 20000110T19:54:00 to proper format..
@@ -324,7 +329,7 @@ begin
 end;
 
 {---------------------------------------}
-function DateTimeToJabber(dt: TDateTime): string;
+function DateTimeToJabber(dt: TDateTime): Widestring;
 begin
     // Format the current date/time into "Jabber" format
     Result := FormatDateTime('yyyymmdd', dt);

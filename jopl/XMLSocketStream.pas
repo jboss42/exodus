@@ -511,8 +511,8 @@ var
     buff: UTF8String;
 begin
     // Send this text out the socket
+    DoDataCallbacks(true, xml);
     buff := UTF8Encode(xml);
-    DoDataCallbacks(true, buff);
     _Socket.Write(buff);
     _timer.Enabled := false;
     _timer.Enabled := true;

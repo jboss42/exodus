@@ -59,7 +59,7 @@ type
         lparam: integer;
     end;
 
-    TDataEvent = procedure (send: boolean; data: string) of object;
+    TDataEvent = procedure (send: boolean; data: Widestring) of object;
     TXMLStreamCallback = procedure (msg: string; tag: TXMLTag) of object;
 
     TParseThread = class;
@@ -78,7 +78,7 @@ type
         _thread:    TParseThread;
 
         procedure DoCallbacks(msg: string; tag: TXMLTag);
-        procedure DoDataCallbacks(send: boolean; data: string);
+        procedure DoDataCallbacks(send: boolean; data: Widestring);
 
     public
         constructor Create(root: String); virtual;
@@ -471,7 +471,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TXMLStream.DoDataCallbacks(send: boolean; data: string);
+procedure TXMLStream.DoDataCallbacks(send: boolean; data: Widestring);
 begin
     if (Assigned(_data_event)) then
         _data_event(send, data);

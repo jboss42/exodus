@@ -914,22 +914,60 @@ begin
         end;
 end;
 
+(*
+procedure SetWideString(var s: WideString; buffer: PWideChar; len: Integer);
+{
+var
+    cp : PWideChar;
+    Size: integer;
+}
+begin
+    // pgm 5/8/02 - Don't use SetString, it's BAD! (AnsiStr/PChar junk, not WideString/PWideChar)
+    {
+    s_buff := StrAllocW(len);
+    StrLCopyW(s_buff, Start, len);
+    Result := WideString(s_buff);
+    }
+
+
+    //todo: move to unicode lib
+    {
+    cp := @s;
+    Dec(cp, SizeOf(Cardinal) div SizeOf(WideChar));
+    Size := SizeOf(WideChar) * len + SizeOf(Cardinal);
+    ReallocMem(cp, Size);
+    Cardinal(Pointer(cp)^) := len;
+    Inc(cp, SizeOf(Cardinal) div SizeOf(WideChar));
+    StrLCopyW(cp, buffer, len);
+    s := WideString(cp);
+    }
+
+    SetLength(s, len);
+    StrLCopyW(PWideChar(s), buffer, len);
+
+end;
+*)
+
 
 PROCEDURE SetStringSF (VAR S : WideString; BufferStart, BufferFinal : PWideChar);
 BEGIN
-  SetString (S, BufferStart, BufferFinal-BufferStart+1);
-END;
+    SetString (S, BufferStart, BufferFinal - BufferStart + 1);
 
+    // Note to Joe: Pascal pointer is more like C pointer arithmatic than you thought.
+    // Note to pgm: Why the heck do we have 3 functions??????????
+
+    // S := SetWideString(BufferStart, BufferFinal - BufferStart + 1);
+    // StrLCopyW(PWideChar(S), BufferStart, (BufferFinal - BufferStart) + 1);
+END;
 
 FUNCTION  StrLPas  (Start : PWideChar; Len : INTEGER) : WideString;
 BEGIN
-  SetString (Result, Start, Len);
+    SetString(Result, Start, Len);
 END;
-
 
 FUNCTION  StrSFPas (Start, Finish : PWideChar) : WideString;
 BEGIN
-  SetString (Result, Start, Finish-Start+1);
+    SetString(Result, Start, Finish - Start + 1);
 END;
 
 
@@ -1644,7 +1682,6 @@ BEGIN
   CurFinal := StrPos (CurStart, CDEnd);
   IF CurFinal = NIL THEN BEGIN
     CurFinal   := StrEndW (CurStart)-1;
-    // CurContent := TranslateEncoding (StrPas (CurStart+Length (CDStart)));
     CurContent := TranslateEncoding (WideString(CurStart + Length(CDStart)));
     END
   ELSE BEGIN
@@ -1681,6 +1718,8 @@ PROCEDURE TXmlParser.AnalyzeText (VAR IsDone : BOOLEAN);
 
       // Is it a Character Entity?
       IF (CurFinal+1)^ = '#' THEN BEGIN
+        // pgm 5/8/02 - NOT SURE IF THIS WORKS W/ UNICODE!!
+        // todo: Verify Char Entities work correctly w/ unicode
         if (((CurFinal + 2)^ = 'X') or ((CurFinal + 2)^ = 'x'))
         // IF UpCase ((CurFinal+2)^) = 'X'       // !!! Can't use "CHR" for Unicode characters > 255:
           THEN CurContent := CurContent + CHR (StrToIntDef ('$'+ Copy (Name, 3, MaxInt), 32))
@@ -1799,7 +1838,8 @@ BEGIN
       Final := F;
       F := StrScan (Final+1, '>');
       IF F = NIL THEN BEGIN
-        Element.Definition := STRING (Final);
+        // Element.Definition := STRING (Final);
+        Element.Definition := WideString(Final);
         Final := StrEndW (Final);
         BREAK;
         END
@@ -1919,7 +1959,8 @@ BEGIN
                                         F := StrScan (Final+1, ')');
                                         IF F <> NIL
                                           THEN SetStringSF (AttrDef.TypeDef, Final+1, F-1)
-                                          ELSE AttrDef.TypeDef := STRING (Final+1);
+                                          ELSE AttrDef.TypeDef := WideString(Final + 1);
+                                          // ELSE AttrDef.TypeDef := STRING (Final+1);
                                         // AttrDef.TypeDef := DelChars (AttrDef.TypeDef, CWhitespace);
                                         AttrDef.TypeDef := DelWhitespace(AttrDef.TypeDef);
                                         AttrDef.AttrType := atEnumeration;
@@ -1951,7 +1992,8 @@ BEGIN
                                       IF F <> NIL THEN
                                         SetStringSF (AttrDef.Notations, Final+1, F-1)
                                       ELSE BEGIN
-                                        AttrDef.Notations := STRING (Final+1);
+                                        AttrDef.Notations := WideString(Final + 1);
+                                        // AttrDef.Notations := STRING (Final+1);
                                         Final := StrEndW (Final);
                                         END;
                                       ReplaceParameterEntities (AttrDef.Notations);
@@ -2195,9 +2237,12 @@ BEGIN
     PosAmp := PAmp - PWideChar (Str) + 1;
     Len    := PSemi-PAmp+1;
     if (Str[PosAmp + 2] = 'x')
+    //todo: Need a better way to generate Unicode char entities
     //IF CompareText (Str [PosAmp+2], 'x') = 0          // !!! Can't use "CHR" for Unicode characters > 255
       THEN Str [PosAmp] := WideChar(CHR (StrToIntDef ('$'+ Copy(Str, PosAmp + 3, Len - 4), 0)))
       ELSE Str [PosAmp] := WideChar(CHR (StrToIntDef (Copy(Str, PosAmp + 2, Len - 3), 32)));
+
+    //todo: Build a DeleteWideChars() procedure to use instead of Delete();
     Delete (Str, PosAmp+1, Len-1);  
     Start := PosAmp + 1;
   UNTIL FALSE;
@@ -2305,7 +2350,7 @@ FUNCTION  TXmlParser.LoadExternalEntity (SystemId, PublicId, Notation : WideStri
           // file name (relative to the Document source) and loads this file using
           // the LoadFromFile method.
 VAR
-  Filename : WideString;
+  Filename : String;
 BEGIN
   // --- Convert System ID to complete filename
   Filename := StringReplace (SystemId, '/', '\', [rfReplaceAll]);
@@ -2335,7 +2380,7 @@ FUNCTION  TXmlParser.TranslateEncoding  (CONST Source : WideString) : WideString
           // override this function.
 BEGIN
 
-    // pgm - we are unicode now, so don't translate anything!
+    // pgm - we are unicode now, so don't translate anything.. everything is UCS-2
     Result := Source;
 
     (*
@@ -2453,7 +2498,8 @@ BEGIN
     T := (L+H) DIV 2;
     IF T=Last THEN BREAK;
     Result := TNvpNode (Items [T]);
-    C := CompareStr (Result.Name, Name);
+    // C := CompareStr (Result.Name, Name);
+    C := StrCompW(PWideChar(Result.Name), PWideChar(Name));
     IF      C = 0 THEN EXIT
     ELSE IF C < 0 THEN L := T
     ELSE               H := T;
@@ -2585,7 +2631,8 @@ BEGIN
     T := (L+H) DIV 2;
     IF T=Last THEN BREAK;
     Result := TElemDef (Items [T]);
-    C := CompareStr (Result.Name, Name);
+    // C := CompareStr (Result.Name, Name);
+    C := StrCompW(PWideChar(Result.Name), PWideChar(Name));
     IF C = 0 THEN EXIT
     ELSE IF C < 0 THEN L := T
     ELSE               H := T;
@@ -2656,7 +2703,7 @@ BEGIN
       deAttList  : Scanner.WhenAttList  (ElemDef);
       deEntity   : Scanner.WhenEntity   (EntityDef);
       deNotation : Scanner.WhenNotation (NotationDef);
-      dePI       : Scanner.WhenPI       (STRING (Target), STRING (Content), AttrList);
+      dePI       : Scanner.WhenPI       (WideString(Target), WideString(Content), AttrList);
       deComment  : Scanner.WhenComment  (StrSFPas (Start, Final));
       deError    : Scanner.WhenDtdError (Pos);
       END;
