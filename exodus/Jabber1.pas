@@ -1025,6 +1025,7 @@ begin
 
     else if event = '/session/autherror' then begin
         _logoff := true;
+        MainSession.Profile.password := '';
         MessageDlg(sAuthError, mtError, [mbOK], 0);
         PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
         PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
