@@ -25,7 +25,7 @@ object frmAbout: TfrmAbout
     Height = 130
     Align = alTop
     BevelOuter = bvLowered
-    Color = clWhite
+    Color = clWindow
     TabOrder = 0
     object Image1: TImage
       Left = 1
@@ -1434,7 +1434,7 @@ object frmAbout: TfrmAbout
     Align = alTop
     BevelOuter = bvNone
     Caption = 'Version: '
-    ParentColor = True
+    Color = clWindow
     TabOrder = 2
     OnMouseDown = pnlVersionMouseDown
   end
@@ -1521,7 +1521,6 @@ object frmAbout: TfrmAbout
       end>
     LangOptions = [loAutoFont]
     Language = 1033
-    ParentColor = True
     ScrollBars = ssVertical
     ShowSelectionBar = False
     TabOrder = 3

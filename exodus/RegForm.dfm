@@ -7,23 +7,12 @@ inherited frmRegister: TfrmRegister
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  inherited TntPanel1: TTntPanel
-    inherited btnBack: TTntButton
-      OnClick = btnPrevClick
-    end
-    inherited btnNext: TTntButton
-      OnClick = btnNextClick
-    end
-    inherited btnCancel: TTntButton
-      OnClick = btnCancelClick
-    end
-  end
   inherited Tabs: TPageControl
     inherited TabSheet1: TTabSheet
       object Label1: TTntLabel
         Left = 0
         Top = 0
-        Width = 410
+        Width = 402
         Height = 90
         Align = alTop
         AutoSize = False
@@ -42,8 +31,8 @@ inherited frmRegister: TfrmRegister
       object lblIns: TTntLabel
         Left = 0
         Top = 90
-        Width = 410
-        Height = 137
+        Width = 402
+        Height = 136
         Align = alClient
         AutoSize = False
         Caption = 'Waiting for agent instructions.....'

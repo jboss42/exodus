@@ -174,6 +174,8 @@ begin
     tabSheet2.TabVisible := false;
     Tabs.ActivePage := tabSheet1;
 
+    MainSession.Prefs.RestorePosition(Self);
+
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
 
@@ -185,13 +187,21 @@ begin
 
     _cb := MainSession.RegisterCallback(EntityCallback, '/session/entity/info');
     txtServerFilter.Items.Add(_('- ALL SERVERS -'));
+
+    if (MainSession.Prefs.getBool('tc_browse')) then
+        optBrowse.Checked := true
+    else
+        optSpecify.Checked := true;
+
 end;
 
 {---------------------------------------}
 procedure TfrmJoinRoom.FormDestroy(Sender: TObject);
 begin
-    if (MainSession <> nil) then
+    if (MainSession <> nil) then begin
+        MainSession.Prefs.SavePosition(Self);
         MainSession.UnRegisterCallback(_cb);
+    end;
 end;
 
 {---------------------------------------}
@@ -242,6 +252,7 @@ begin
         setString('tc_lastroom', txtRoom.Text);
         setString('tc_lastserver', txtServer.Text);
         setString('tc_lastnick', txtNick.Text);
+        setBool('tc_browse', optBrowse.Checked);
     end;
     Self.Close;
     exit;
@@ -363,6 +374,11 @@ begin
     txtServer.Enabled := optSpecify.Checked;
     txtRoom.Enabled := optSpecify.Checked;
     txtPassword.Enabled := optSpecify.Checked;
+
+    if (optSpecify.Checked) then
+        btnNext.Caption := _('Finish')
+    else
+        btnNext.Caption := _('Next >');
 end;
 
 {---------------------------------------}
@@ -417,6 +433,7 @@ begin
     ce := TJabberEntity(_cur[i]);
     Item.Caption := ce.Jid.user;
     Item.SubItems.Add(ce.jid.domain);
+    Item.SubItems.Add(ce.Name);
 end;
 
 procedure TfrmJoinRoom.lstRoomsColumnClick(Sender: TObject;

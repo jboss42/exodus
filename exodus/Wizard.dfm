@@ -3,8 +3,8 @@ object frmWizard: TfrmWizard
   Top = 139
   BorderStyle = bsDialog
   Caption = 'Wizard'
-  ClientHeight = 359
-  ClientWidth = 418
+  ClientHeight = 358
+  ClientWidth = 410
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,8 +16,8 @@ object frmWizard: TfrmWizard
   TextHeight = 13
   object TntPanel1: TTntPanel
     Left = 0
-    Top = 318
-    Width = 418
+    Top = 317
+    Width = 410
     Height = 41
     Align = alBottom
     BevelOuter = bvNone
@@ -25,41 +25,50 @@ object frmWizard: TfrmWizard
     object Bevel1: TBevel
       Left = 0
       Top = 0
-      Width = 418
+      Width = 410
       Height = 5
       Align = alTop
       Shape = bsTopLine
     end
-    object btnBack: TTntButton
-      Left = 176
-      Top = 8
-      Width = 75
-      Height = 25
-      Caption = '< Back'
+    object Panel3: TPanel
+      Left = 153
+      Top = 5
+      Width = 257
+      Height = 36
+      Align = alRight
+      BevelOuter = bvNone
       TabOrder = 0
-    end
-    object btnNext: TTntButton
-      Left = 252
-      Top = 8
-      Width = 75
-      Height = 25
-      Caption = 'Next >'
-      TabOrder = 1
-    end
-    object btnCancel: TTntButton
-      Left = 336
-      Top = 8
-      Width = 75
-      Height = 25
-      Cancel = True
-      Caption = 'Cancel'
-      TabOrder = 2
+      object btnBack: TTntButton
+        Left = 9
+        Top = 5
+        Width = 75
+        Height = 25
+        Caption = '< Back'
+        TabOrder = 0
+      end
+      object btnNext: TTntButton
+        Left = 87
+        Top = 5
+        Width = 75
+        Height = 25
+        Caption = 'Next >'
+        TabOrder = 1
+      end
+      object btnCancel: TTntButton
+        Left = 175
+        Top = 5
+        Width = 75
+        Height = 25
+        Cancel = True
+        Caption = 'Cancel'
+        TabOrder = 2
+      end
     end
   end
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 418
+    Width = 410
     Height = 60
     Align = alTop
     BevelOuter = bvNone
@@ -71,7 +80,7 @@ object frmWizard: TfrmWizard
     object Bevel2: TBevel
       Left = 0
       Top = 51
-      Width = 418
+      Width = 410
       Height = 9
       Align = alBottom
       Shape = bsBottomLine
@@ -100,7 +109,7 @@ object frmWizard: TfrmWizard
       Transparent = True
     end
     object Image1: TImage
-      Left = 377
+      Left = 369
       Top = 0
       Width = 41
       Height = 51
@@ -1049,8 +1058,8 @@ object frmWizard: TfrmWizard
   object Tabs: TPageControl
     Left = 0
     Top = 60
-    Width = 418
-    Height = 258
+    Width = 410
+    Height = 257
     ActivePage = TabSheet1
     Align = alClient
     Style = tsFlatButtons
