@@ -85,7 +85,7 @@ inherited frmChat: TfrmChat
       end
     end
   end
-  object popContact: TPopupMenu
+  object popContact: TPopupMenu [5]
     Left = 16
     Top = 152
     object mnuHistory: TMenuItem
@@ -142,14 +142,14 @@ inherited frmChat: TfrmChat
       Caption = 'Encrypt Conversation'
     end
   end
-  object timFlash: TTimer
+  object timFlash: TTimer [6]
     Enabled = False
     Interval = 500
     OnTimer = timFlashTimer
     Left = 48
     Top = 152
   end
-  object SaveDialog1: TSaveDialog
+  object SaveDialog1: TSaveDialog [7]
     DefaultExt = 'html'
     Filter = 'RTF Files|*.rtf|All Files|*.*'
     Left = 48
