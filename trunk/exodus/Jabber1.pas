@@ -2434,6 +2434,7 @@ var
     Node       : TTreeNode;
     ri         : TJabberRosterItem;
     f          : TForm;
+    j          : TJabberID;
 begin
     // Accept some files being dropped on this form
     // If we are expaned, and not showing the roster tab,
@@ -2462,7 +2463,15 @@ begin
     // get the roster item attached to this node.
     if (Node.Data = nil) then exit;
     if (TObject(Node.Data) is TJabberBookmark) then exit;
-    ri := TJabberRosterItem(Node.Data);
+
+
+    if (TObject(Node.Data) is TJabberMyResource) then begin
+        j := TJabberMyResource(Node.Data).jid;
+    end
+    else begin
+        ri := TJabberRosterItem(Node.Data);
+        j := ri.jid;
+    end;
 
     // find out how many files we're accepting
     nCount := DragQueryFile( msg.Drop,
@@ -2474,7 +2483,7 @@ begin
     for i := 0 to nCount-1 do begin
         DragQueryFile( msg.Drop, i,
                        acFileName, cnMaxFileNameLen );
-        FileSend(ri.jid.full, acFileName);
+        FileSend(j.full, acFileName);
     end;
 
     // let Windows know that we're done
