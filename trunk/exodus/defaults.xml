@@ -125,6 +125,7 @@
     <xa_time>30</xa_time>
     <roster_default>Friends</roster_default>
     <xfer_port>5280</xfer_port>
+    <close_hotkey>Alt + W</close_hotkey>
 
     <!-- default custom presence stuff -->
     <presence name='Available'>

@@ -22,9 +22,10 @@ unit PrefDialogs;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, ComCtrls, StdCtrls, jpeg, ExtCtrls, TntStdCtrls,
-  TntComCtrls, TntExtCtrls;
+    Menus,
+    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+    Dialogs, PrefPanel, ComCtrls, StdCtrls, jpeg, ExtCtrls, TntStdCtrls,
+    TntComCtrls, TntExtCtrls;
 
 type
   TfrmPrefDialogs = class(TfrmPrefPanel)
@@ -47,7 +48,11 @@ type
     txtChatMemory: TTntEdit;
     spnChatMemory: TTntUpDown;
     StaticText4: TTntPanel;
+    TntLabel1: TTntLabel;
+    hkClose: THotKey;
     chkEscClose: TTntCheckBox;
+    trkSnap: TTrackBar;
+    trkChatMemory: TTrackBar;
     procedure chkRosterAlphaClick(Sender: TObject);
     procedure chkToastAlphaClick(Sender: TObject);
     procedure trkRosterAlphaChange(Sender: TObject);
@@ -55,6 +60,8 @@ type
     procedure chkSnapClick(Sender: TObject);
     procedure txtRosterAlphaChange(Sender: TObject);
     procedure txtToastAlphaChange(Sender: TObject);
+    procedure trkSnapChange(Sender: TObject);
+    procedure trkChatMemoryChange(Sender: TObject);
   private
     { Private declarations }
   public
@@ -112,12 +119,12 @@ begin
 
         spnChatMemory.Position := getInt('chat_memory');
         chkEscClose.Checked := getBool('esc_close');
+        hkClose.HotKey := TextToShortcut(getString('close_hotkey'));
     end;
 end;
 
 procedure TfrmPrefDialogs.SavePrefs();
 begin
-    //
     with MainSession.Prefs do begin
         // Dialog Prefs
         setBool('roster_alpha', chkRosterAlpha.Checked);
@@ -131,6 +138,7 @@ begin
         setInt('edge_snap', spnSnap.Position);
         setInt('chat_memory', spnChatMemory.Position);
         setBool('esc_close', chkEscClose.Checked);
+        setString('close_hotkey', ShortCutToText(hkClose.HotKey));
     end;
 end;
     
@@ -169,6 +177,7 @@ begin
   inherited;
     spnSnap.Enabled := chkSnap.Checked;
     txtSnap.Enabled := chkSnap.Checked;
+    trkSnap.Enabled := chkSnap.Checked;
 end;
 
 procedure TfrmPrefDialogs.txtRosterAlphaChange(Sender: TObject);
@@ -188,6 +197,18 @@ begin
         trkToastAlpha.Position := StrToInt(txtToastAlpha.Text);
     except
     end;
+end;
+
+procedure TfrmPrefDialogs.trkSnapChange(Sender: TObject);
+begin
+  inherited;
+    spnSnap.Position := trkSnap.Position;
+end;
+
+procedure TfrmPrefDialogs.trkChatMemoryChange(Sender: TObject);
+begin
+  inherited;
+    spnChatMemory.Position := trkChatMemory.Position;
 end;
 
 end.
