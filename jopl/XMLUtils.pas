@@ -209,7 +209,7 @@ var
 begin
     // Do a SHA1 hash using the sechash.pas unit
     hasher := TSecHash.Create(nil);
-    h := hasher.ComputeString(fkey);
+    h := hasher.ComputeString(UTF8Encode(fkey));
     s := '';
     for i := 0 to 4 do
         s := s + IntToHex(h[i], 8);

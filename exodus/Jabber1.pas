@@ -1818,8 +1818,10 @@ end;
 procedure TfrmExodus.ClearMessages1Click(Sender: TObject);
 begin
     // Clear events from the list view.
-    if (frmMsgQueue <> nil) then
-        frmMsgQueue.lstEvents.Items.Clear;
+    if (frmMsgQueue <> nil) then with frmMsgQueue do begin
+        while (lstEvents.Items.Count > 0) do
+            frmMsgQueue.RemoveItem(0);
+        end;
 end;
 
 {---------------------------------------}
