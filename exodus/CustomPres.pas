@@ -83,7 +83,6 @@ var
     i: integer;
 begin
     AssignUnicodeFont(Self);
-    // TranslateComponent(Self);
     TranslateComponent(Self);
 
     // Default to the current settings

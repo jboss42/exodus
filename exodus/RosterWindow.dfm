@@ -402,6 +402,7 @@ object frmRosterWindow: TfrmRosterWindow
       ImageIndex = 1
     end
     object presChat: TTntMenuItem
+      Tag = 1
       Caption = 'Free to Chat'
       ImageIndex = 4
     end
