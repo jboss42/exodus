@@ -155,19 +155,16 @@ var
     tmp_jid: TJabberID;
     cjid: widestring;
     ritem: TJabberRosterItem;
-    echat: TExodusChat;
+    new_chat: boolean;
 begin
     // either show an existing chat or start one.
     chat := MainSession.ChatList.FindChat(sjid, resource, '');
+    new_chat := false;
 
     if chat = nil then begin
         // Create one
         chat := MainSession.ChatList.AddChat(sjid, resource);
-        echat := TExodusChat.Create();
-        echat.setChatSession(chat);
-        echat.ObjAddRef();
-        chat.ComController := echat;
-        frmExodus.ComController.fireNewChat(sjid, echat);
+        new_chat := true;
         end;
 
     if (chat.window = nil) then begin
@@ -212,6 +209,10 @@ begin
 
         PlayQueue();
         end;
+
+    if (new_chat) then
+        frmExodus.ComController.fireNewChat(sjid, TExodusChat(chat.ComController));
+
 
     Result := TfrmChat(chat.window);
 end;

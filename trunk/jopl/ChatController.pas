@@ -52,12 +52,15 @@ type
 {---------------------------------------}
 implementation
 uses
+    COMChatController, 
     JabberConst, XMLUtils, Session, Chat, IdGlobal;
 
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 constructor TChatController.Create(sjid, sresource: Widestring);
+var
+    echat: TExodusChat;
 begin
     // Create a new chat controller..
     // Setup msg callbacks, and either queue them,
@@ -73,6 +76,12 @@ begin
         self.SetJID(_jid + '/' + _resource)
     else
         self.SetJID(_jid);
+
+    echat := TExodusChat.Create();
+    echat.setChatSession(Self);
+    echat.ObjAddRef();
+    ComController := echat;
+
 end;
 
 {---------------------------------------}
