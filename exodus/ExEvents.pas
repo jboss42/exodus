@@ -21,7 +21,7 @@ unit ExEvents;
 
 interface
 uses
-    XMLTag,
+    XMLTag, WStrList,
     Types, SysUtils, Classes;
 
 type
@@ -37,26 +37,26 @@ type
 
     TJabberEvent = class
     private
-        _data_list: TStringlist;
+        _data_list: TWideStringlist;
     public
         Timestamp: TDateTime;
         eType: TJabberEventType;
-        from: string;
-        id: string;
+        from: WideString;
+        id: WideString;
         edate: TDateTime;
-        data_type: string;
+        data_type: WideString;
         delayed: boolean;
         elapsed_time: longint;
         img_idx: integer;
-        msg: string;
-        caption: string;
+        msg: WideString;
+        caption: WideString;
         error: boolean;
 
         constructor create;
         destructor destroy; override;
         procedure Parse(tag: TXMLTag);
 
-        property Data: TStringlist read _data_list;
+        property Data: TWideStringlist read _data_list;
     end;
 
 function getTaskBarRect(): TRect;
@@ -133,7 +133,7 @@ constructor TJabberEvent.create;
 begin
     inherited;
 
-    _data_list := TStringList.Create;
+    _data_list := TWideStringList.Create;
     delayed := false;
     error := false;
     edate := Now();
@@ -149,7 +149,7 @@ end;
 {---------------------------------------}
 procedure TJabberEvent.Parse(tag: TXMLTag);
 var
-    ns, t: string;
+    ns, t: Widestring;
     delay, qtag, tmp_tag: TXMLTag;
     i_tags, c_tags: TXMLTagList;
     i, j: integer;

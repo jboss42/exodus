@@ -221,12 +221,13 @@ procedure TfrmMsgQueue.lstEventsChange(Sender: TObject; Item: TListItem;
 var
     e: TJabberEvent;
 begin
+    txtMsg.InputFormat := ifUnicode;
     if (lstEvents.SelCount <= 0) then
-        txtMsg.Lines.Clear
+        txtMsg.WideLines.Clear
     else begin
         e := TJabberEvent(_queue[lstEvents.Selected.Index]);
         if ((e <> nil) and (lstEvents.SelCount = 1)) then
-            txtMsg.Lines.Assign(e.Data);
+            txtMsg.WideLines.Assign(e.Data);
         end;
 end;
 
@@ -259,7 +260,7 @@ begin
     lstEvents.Items.Count := _queue.Count;
     if (_queue.Count = 0) then begin
         lstEvents.Items.Clear();
-        txtMsg.Lines.Clear();
+        txtMsg.WideLines.Clear();
         end;
     Self.SaveEvents();
 end;
@@ -302,7 +303,7 @@ begin
             lstEvents.Selected := lstEvents.Items[first];
             e := TJabberEvent(_queue[first]);
             if ((e <> nil) and (lstEvents.SelCount = 1)) then
-                txtMsg.Lines.Assign(e.Data);
+                txtMsg.WideLines.Assign(e.Data);
             end
         else if (lstEvents.Items.Count > 0) then
             lstEvents.Selected := lstEvents.Items[lstEvents.Items.Count - 1];

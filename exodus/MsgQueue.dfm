@@ -1,6 +1,6 @@
 object frmMsgQueue: TfrmMsgQueue
-  Left = 255
-  Top = 219
+  Left = 237
+  Top = 185
   Width = 432
   Height = 324
   Caption = 'Events'
@@ -145,7 +145,7 @@ object frmMsgQueue: TfrmMsgQueue
     URLColor = clBlue
     URLCursor = crHandPoint
     OnURLClick = txtMsgURLClick
-    InputFormat = ifRTF
+    InputFormat = ifUnicode
     OutputFormat = ofRTF
     SelectedInOut = False
     PlainRTF = False

@@ -313,7 +313,6 @@ begin
         end;
 
     // TODO: check issuer.
-
     n := Now();
     if (n < _cert.NotBefore) then begin
         _ssl_ok := false;

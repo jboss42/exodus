@@ -150,7 +150,7 @@ object frmDebug: TfrmDebug
       URLCursor = crHandPoint
       OnKeyPress = MsgDebugKeyPress
       InputFormat = ifUnicode
-      OutputFormat = ofUnicode
+      OutputFormat = ofRTF
       SelectedInOut = False
       PlainRTF = False
       UndoLimit = 0
