@@ -83,7 +83,6 @@ type
     _embed_returns: boolean;
     _wrap_input: boolean;
     procedure _scrollBottom();
-
     procedure WMThrob(var msg: TMessage); message WM_THROB;
 
   public
