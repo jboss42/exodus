@@ -6,7 +6,7 @@ interface
 
 uses
     XMLTag,
-    ExodusPlugins_TLB,
+    ExodusPlugins_TLB, Windows, 
     Classes, ComObj, ActiveX, Register_TLB, StdVcl;
 
 type
@@ -59,7 +59,7 @@ procedure UnloadPlugins();
 implementation
 
 uses
-    COMChatController,
+    COMChatController, Dockable, 
     Jabber1, Session, Roster, PrefController, Unicode,
     Dialogs, Variants, Forms, SysUtils, ComServ;
 
@@ -286,9 +286,15 @@ end;
 {---------------------------------------}
 procedure TExodusController.CreateDockableWindow(HWND: Integer;
   const Caption: WideString);
+var
+    f: TfrmDockable;
 begin
     // subclass frmDockable, and re-parent
     // this HWND to the new form
+    f := TfrmDockable.Create(Application);
+    SetParent(HWND, f.Handle);
+    f.ShowDefault();
+    ShowWindow(HWND, SW_SHOW);
 end;
 
 initialization
