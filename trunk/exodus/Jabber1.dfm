@@ -1,8 +1,8 @@
 object Exodus: TExodus
-  Left = 272
-  Top = 174
-  Width = 539
-  Height = 341
+  Left = 275
+  Top = 177
+  Width = 533
+  Height = 330
   AlphaBlendValue = 240
   Caption = 'Exodus'
   Color = clBtnFace
@@ -27,8 +27,8 @@ object Exodus: TExodus
   object Tabs: TPageControl
     Left = 0
     Top = 30
-    Width = 531
-    Height = 258
+    Width = 525
+    Height = 251
     ActivePage = tbsMsg
     Align = alClient
     DockSite = True
@@ -49,7 +49,7 @@ object Exodus: TExodus
         Left = 209
         Top = 0
         Width = 3
-        Height = 230
+        Height = 223
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = Splitter1Moved
@@ -58,7 +58,7 @@ object Exodus: TExodus
         Left = 0
         Top = 0
         Width = 209
-        Height = 230
+        Height = 223
         Align = alLeft
         BevelOuter = bvNone
         UseDockManager = False
@@ -69,8 +69,8 @@ object Exodus: TExodus
       object lstEvents: TListView
         Left = 212
         Top = 0
-        Width = 311
-        Height = 230
+        Width = 305
+        Height = 223
         Align = alClient
         Columns = <
           item
@@ -94,7 +94,7 @@ object Exodus: TExodus
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 531
+    Width = 525
     Height = 30
     BandBorderStyle = bsNone
     Bands = <
@@ -102,7 +102,7 @@ object Exodus: TExodus
         Control = ToolBar1
         ImageIndex = -1
         MinHeight = 22
-        Width = 523
+        Width = 517
       end>
     BorderWidth = 1
     DockSite = True
@@ -110,7 +110,7 @@ object Exodus: TExodus
     object ToolBar1: TToolBar
       Left = 9
       Top = 0
-      Width = 510
+      Width = 504
       Height = 22
       AutoSize = True
       ButtonWidth = 24
@@ -2247,6 +2247,7 @@ object Exodus: TExodus
     Top = 104
     object popCloseTab: TMenuItem
       Caption = 'Close Window'
+      ShortCut = 16499
       OnClick = popCloseTabClick
     end
     object popFloatTab: TMenuItem

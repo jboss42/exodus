@@ -24,11 +24,7 @@ interface
 uses
     XMLTag,
     Clipbrd,
-{$IFDEF LINUX}
-    Xlib,
-{$ELSE}
     RichEdit,
-{$ENDIF}
     JabberID,
     Chat, Dockable,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
@@ -111,7 +107,7 @@ type
 var
   frmChat: TfrmChat;
 
-function StartChat(sjid, resource: string; show_window: boolean): TfrmChat;
+function StartChat(sjid, resource: string; show_window: boolean; chat_nick: string=''): TfrmChat;
 procedure CloseAllChats;
 
 {---------------------------------------}
@@ -131,13 +127,14 @@ uses
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-function StartChat(sjid, resource: string; show_window: boolean): TfrmChat;
+function StartChat(sjid, resource: string; show_window: boolean; chat_nick: string=''): TfrmChat;
 var
     chat: TJabberChat;
     win: TfrmChat;
     tmp_jid: TJabberID;
     cjid: string;
     lt: longword;
+    ritem: TJabberRosterItem;
 begin
     // either show an existing chat or start one.
     lt := frmJabber.last_tick;
@@ -153,7 +150,16 @@ begin
 
     with TfrmChat(chat.window) do begin
         tmp_jid := TJabberID.Create(sjid);
-        OtherNick := tmp_jid.user;
+        if (chat_nick = '') then begin
+            ritem := MainSession.roster.Find(sjid);
+            if (ritem = nil) then
+                OtherNick := tmp_jid.user
+            else
+                OtherNick := ritem.nickname;
+            end
+        else
+            OtherNick := chat_nick;
+
         if resource <> '' then
             cjid := sjid + '/' + resource
         else
@@ -216,6 +222,7 @@ begin
     _callback := -1;
     _pcallback := -1;
     _scallback := -1;
+    OtherNick := '';
 end;
 
 {---------------------------------------}
@@ -245,7 +252,10 @@ begin
     else begin
         lblNick.Caption := '';
         lblJID.Caption := cjid;
-        Caption := _jid.user + ' - Chat';
+        if OtherNick <> '' then
+            Caption := OtherNick + ' - Chat'
+        else
+            Caption := _jid.user + ' - Chat';
         end;
 
     // synchronize the session chat list with this JID

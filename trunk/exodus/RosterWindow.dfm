@@ -1,8 +1,8 @@
 object frmRosterWindow: TfrmRosterWindow
-  Left = 272
-  Top = 118
-  Width = 205
-  Height = 461
+  Left = 275
+  Top = 121
+  Width = 199
+  Height = 450
   AlphaBlendValue = 220
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Roster - Exodus'
@@ -48,8 +48,8 @@ object frmRosterWindow: TfrmRosterWindow
   TextHeight = 13
   object splitTask: TSplitter
     Left = 0
-    Top = 301
-    Width = 197
+    Top = 295
+    Width = 191
     Height = 4
     Cursor = crVSplit
     Align = alBottom
@@ -57,8 +57,8 @@ object frmRosterWindow: TfrmRosterWindow
   object treeRoster: TTreeView
     Left = 0
     Top = 0
-    Width = 197
-    Height = 301
+    Width = 191
+    Height = 295
     Cursor = crArrow
     Hint = 'Roster Hint'
     Align = alClient
@@ -90,8 +90,8 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object StatBar: TStatusBar
     Left = 0
-    Top = 406
-    Width = 197
+    Top = 400
+    Width = 191
     Height = 21
     Panels = <
       item
@@ -103,8 +103,8 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object pnlShow: TPanel
     Left = 0
-    Top = 382
-    Width = 197
+    Top = 376
+    Width = 191
     Height = 24
     Align = alBottom
     BevelOuter = bvNone
@@ -121,21 +121,28 @@ object frmRosterWindow: TfrmRosterWindow
     object pnlStatus: TPanel
       Left = 25
       Top = 2
-      Width = 170
+      Width = 164
       Height = 20
+      Cursor = crHandPoint
       Align = alClient
       Alignment = taLeftJustify
       BevelOuter = bvNone
       BorderWidth = 2
       Caption = 'Offline'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlue
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsUnderline]
+      ParentFont = False
       TabOrder = 0
       OnClick = pnlStatusClick
     end
   end
   object pnlTasks: TPanel
     Left = 0
-    Top = 305
-    Width = 197
+    Top = 299
+    Width = 191
     Height = 77
     Align = alBottom
     BevelOuter = bvNone
@@ -145,7 +152,7 @@ object frmRosterWindow: TfrmRosterWindow
     object lstTasks: TListView
       Left = 0
       Top = 21
-      Width = 197
+      Width = 191
       Height = 56
       Align = alClient
       Columns = <>
@@ -156,7 +163,7 @@ object frmRosterWindow: TfrmRosterWindow
     object pnlTaskHeader: TPanel
       Left = 0
       Top = 0
-      Width = 197
+      Width = 191
       Height = 21
       Align = alTop
       BevelOuter = bvNone
@@ -165,7 +172,7 @@ object frmRosterWindow: TfrmRosterWindow
       object txtFrom: TStaticText
         Left = 21
         Top = 0
-        Width = 176
+        Width = 170
         Height = 21
         Align = alClient
         Alignment = taCenter

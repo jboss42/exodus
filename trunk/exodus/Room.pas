@@ -568,7 +568,7 @@ begin
         rm := TRoomMember(_roster.Objects[i]);
         if (rm.Nick = sel_nick) then begin
             tmp_jid := TJabberID.Create(rm.jid);
-            StartChat(tmp_jid.jid, tmp_jid.resource, true);
+            StartChat(tmp_jid.jid, tmp_jid.resource, true, sel_nick);
             end;
         end;
 end;

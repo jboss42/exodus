@@ -1,11 +1,11 @@
 object frmChat: TfrmChat
-  Left = 289
-  Top = 187
+  Left = 292
+  Top = 190
   ActiveControl = MsgOut
   AutoScroll = False
   Caption = 'Chat Window'
-  ClientHeight = 260
-  ClientWidth = 326
+  ClientHeight = 274
+  ClientWidth = 392
   Color = clBtnFace
   Constraints.MinHeight = 285
   Constraints.MinWidth = 285
@@ -27,8 +27,8 @@ object frmChat: TfrmChat
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 226
-    Width = 326
+    Top = 240
+    Width = 392
     Height = 3
     Cursor = crVSplit
     Align = alBottom
@@ -38,7 +38,7 @@ object frmChat: TfrmChat
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 326
+    Width = 392
     Height = 43
     Align = alTop
     BevelOuter = bvNone
@@ -46,7 +46,7 @@ object frmChat: TfrmChat
     object Panel7: TPanel
       Left = 0
       Top = 0
-      Width = 326
+      Width = 392
       Height = 43
       Align = alClient
       BevelOuter = bvNone
@@ -61,7 +61,7 @@ object frmChat: TfrmChat
       object pnlFrom: TPanel
         Left = 2
         Top = 2
-        Width = 322
+        Width = 388
         Height = 22
         Align = alTop
         BevelOuter = bvNone
@@ -126,7 +126,7 @@ object frmChat: TfrmChat
       object pnlSubject: TPanel
         Left = 2
         Top = 24
-        Width = 322
+        Width = 388
         Height = 22
         Align = alTop
         BevelOuter = bvNone
@@ -152,7 +152,7 @@ object frmChat: TfrmChat
         object lblSubject: TStaticText
           Left = 62
           Top = 2
-          Width = 258
+          Width = 324
           Height = 18
           Align = alClient
           Color = clBtnFace
@@ -171,8 +171,8 @@ object frmChat: TfrmChat
   object Panel3: TPanel
     Left = 0
     Top = 43
-    Width = 326
-    Height = 183
+    Width = 392
+    Height = 197
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
@@ -181,8 +181,8 @@ object frmChat: TfrmChat
     object MsgList: TExRichEdit
       Left = 4
       Top = 4
-      Width = 318
-      Height = 175
+      Width = 384
+      Height = 189
       Align = alClient
       PopupMenu = popContact
       ReadOnly = True
@@ -193,8 +193,8 @@ object frmChat: TfrmChat
   end
   object pnlInput: TPanel
     Left = 0
-    Top = 229
-    Width = 326
+    Top = 243
+    Width = 392
     Height = 31
     Align = alBottom
     BevelOuter = bvNone
@@ -203,7 +203,7 @@ object frmChat: TfrmChat
     object MsgOut: TMemo
       Left = 2
       Top = 2
-      Width = 322
+      Width = 388
       Height = 27
       Align = alClient
       Font.Charset = DEFAULT_CHARSET
