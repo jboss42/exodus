@@ -405,10 +405,9 @@ begin
     if (not ExStartup.ssl_ok) then
         ExStartup.ssl_ok := checkSSL();
 
-    tbsSSL.Visible := ExStartup.ssl_ok;
-    if (not tbsSSL.Visible) then
+    tbsSSL.TabVisible := ExStartup.ssl_ok;
+    if (not tbsSSL.TabVisible) then
         optSSL.ItemIndex := ssl_tls;
-
 end;
 
 {---------------------------------------}

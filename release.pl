@@ -50,7 +50,7 @@ chdir ".." or die;
 e("cvs tag -F " . uc($rtype));
 chdir "exodus" or die;
 if ($rtype eq "daily") {
-  e("$::SCP -C setup.exe Exodus.zip plugins/*.zip $::USER:/var/projects/exodus/www/daily/stage");
+  e("$::SCP setup.exe Exodus.zip plugins/*.zip $::USER:/var/projects/exodus/www/daily/stage");
   e("$::SSH $::USER \"cd /var/projects/exodus/www/daily/stage; chmod 644 *; mv setup.exe ..; mv Exodus.zip ..; mv *.zip ../plugins\"");
 } else {
   e("$::SCP setup.exe $::USER:/var/projects/exodus/files/exodus_$version.exe");

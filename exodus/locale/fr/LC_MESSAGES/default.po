@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exodus\n"
 "POT-Creation-Date: 2003-05-08 06:59\n"
-"PO-Revision-Date: 2003-10-03 21:45+0100\n"
-"Last-Translator: Op de Beeck <js_opdebeeck@syldex.com>\n"
+"PO-Revision-Date: 2003-10-24 07:20-0000\n"
+"Last-Translator: \n"
 "Language-Team:  <js_opdebeeck@syldex.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -204,7 +204,7 @@ msgstr "Fermer"
 #: About.dfm:1436
 #: ExEvents.pas:91
 msgid "Version: "
-msgstr "Version: "
+msgstr "Version : "
 
 #. frmAbout..InfoBox......Name
 #. frmBaseChat..Panel3..MsgList......Name
@@ -227,7 +227,7 @@ msgstr "Version: "
 #: RosterRecv.dfm:107
 #: prefs/PrefFont.dfm:130
 msgid "e-mail"
-msgstr "e-mail"
+msgstr "Courriel"
 
 #. frmAbout..InfoBox......Name
 #. frmBaseChat..Panel3..MsgList......Name
@@ -699,31 +699,31 @@ msgstr "Emoticons"
 #. frmBookmark..Caption
 #: Bookmark.dfm:7
 msgid "Bookmark Properties"
-msgstr "Propriété des Favoris"
+msgstr "Propriété des favoris"
 
 #. frmBookmark..Label1..Caption
 #: Bookmark.dfm:25
 msgid "Type of Bookmark:"
-msgstr "Type de Favoris:"
+msgstr "Type de favoris :"
 
 #. frmBookmark..Label2..Caption
 #. frmPrefPresence..GroupBox1..Label11..Caption
 #: Bookmark.dfm:32
 #: prefs/PrefPresence.dfm:79
 msgid "Name:"
-msgstr "Nom:"
+msgstr "Nom :"
 
 #. frmBookmark..Label3..Caption
 #. frmSelContact..Panel1..Label1..Caption
 #: Bookmark.dfm:39
 #: SelContact.dfm:70
 msgid "Jabber ID:"
-msgstr "ID Jabber:"
+msgstr "ID Jabber :"
 
 #. frmBookmark..Label4..Caption
 #: Bookmark.dfm:46
 msgid "Room Nickname:"
-msgstr "Nom de la Salle:"
+msgstr "Nom de la salle :"
 
 #. frmBookmark..cboType....Items.WideStrings
 #. frmRoom..Caption
@@ -735,7 +735,7 @@ msgstr "Salle de conférence"
 #. frmBookmark..chkAutoJoin..Caption
 #: Bookmark.dfm:111
 msgid "Join on login"
-msgstr "Joindre au login"
+msgstr "Joindre à la connexion"
 
 #. frmBrowse..Caption
 #: Browser.dfm:6
@@ -768,7 +768,7 @@ msgstr "Type"
 #. frmBrowse..Panel3..pnlInfo..lblError..Caption
 #: Browser.dfm:84
 msgid "Error: "
-msgstr "Erreur:"
+msgstr "Erreur :"
 
 #. frmBrowse..Panel3..pnlInfo..lblError..Font.Name
 #. frmBrowse..pnlTop..btnClose..Font.Name
@@ -911,7 +911,7 @@ msgstr "ToolButton1"
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnBookmark..Hint
 #: Browser.dfm:221
 msgid "Add a Bookmark"
-msgstr "Ajouter un Favoris"
+msgstr "Ajouter un favori"
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnBookmark..Caption
 #: Browser.dfm:222
@@ -921,7 +921,7 @@ msgstr "btnBookmark"
 #. frmBrowse..pnlTop..CoolBar1..tlbJID..pnlJID..Caption
 #: Browser.dfm:249
 msgid "Jabber Address:   "
-msgstr "Adresse Jabber:"
+msgstr "Adresse Jabber :"
 
 #. frmBrowse..pnlTop..CoolBar1..tlbJID..pnlButtons..btnGo..Caption
 #: Browser.dfm:274
@@ -936,7 +936,7 @@ msgstr "Re-explorer cet objet"
 #. frmBrowse..popViewStyle..Details1..Caption
 #: Browser.dfm:3126
 msgid "Details"
-msgstr "Details"
+msgstr "Détails"
 
 #. frmBrowse..popViewStyle..LargeIcons1..Caption
 #: Browser.dfm:3130
@@ -978,7 +978,7 @@ msgstr "Explorer dans une nouvelle fenêtre"
 #. frmBrowse..popContext..mBookmark..Caption
 #: Browser.dfm:3155
 msgid "Add Bookmark to Roster"
-msgstr "Ajouter le Favoris au Répertoire"
+msgstr "Ajouter le favori au répertoire"
 
 #. frmBrowse..popContext..mVCard..Caption
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuServerVCard..Caption
@@ -1006,7 +1006,7 @@ msgstr "Date"
 #. frmBrowse..popContext..mLast..Caption
 #: Browser.dfm:3174
 msgid "Last Time/Activity"
-msgstr "Dernière Date/Activitée"
+msgstr "Dernière Date/Activité"
 
 #. frmBrowse..popContext..mSearch..Caption
 #. Programmer's name for it: sJUDSearch
@@ -1054,7 +1054,7 @@ msgstr "Annuler"
 #. frmChat..Caption
 #: ChatWin.dfm:5
 msgid "Chat Window"
-msgstr "Fenêtre de Chat"
+msgstr "Fenêtre de chat"
 
 #. frmChat..Panel1..pnlJID..lblNick..Caption_UTF7
 #: ChatWin.dfm:73
@@ -1071,7 +1071,7 @@ msgstr "<JID>"
 #. frmChat..popContact..mnuSave..Caption
 #: ChatWin.dfm:92
 msgid "Save Conversation"
-msgstr "Enregister la Conversation"
+msgstr "Enregister la conversation"
 
 #. frmChat..popContact..mnuHistory..Caption
 #: ChatWin.dfm:96
@@ -1099,7 +1099,7 @@ msgstr "Ressources"
 #. frmChat..popContact..mnuSendFile..Caption
 #: ChatWin.dfm:114
 msgid "Send File ..."
-msgstr "Envoyer un Fichier ..."
+msgstr "Envoyer un fichier ..."
 
 #. frmChat..popContact..popAddContact..Caption
 #: ChatWin.dfm:118
@@ -1109,7 +1109,7 @@ msgstr "Ajouter au répertoire"
 #. frmChat..popContact..mnuProfile..Caption
 #: ChatWin.dfm:122
 msgid "Show Profile ..."
-msgstr "Afficher le Profile ..."
+msgstr "Afficher le profil..."
 
 #. frmChat..popContact..C1..Caption
 #: ChatWin.dfm:126
@@ -1123,7 +1123,7 @@ msgstr "Info. sur le Contact"
 #: MsgRecv.dfm:524
 #: RosterWindow.dfm:336
 msgid "Version Request"
-msgstr "Requête de Version"
+msgstr "Demande de version"
 
 #. frmChat..popContact..C1..mnuTimeRequest..Caption
 #. frmMsgRecv..popContact..C1..mnuTimeRequest..Caption
@@ -1132,7 +1132,7 @@ msgstr "Requête de Version"
 #: MsgRecv.dfm:528
 #: RosterWindow.dfm:340
 msgid "Time Request"
-msgstr "Requête Horaire"
+msgstr "Demande d'heure"
 
 #. frmChat..popContact..C1..mnuLastActivity..Caption
 #. frmMsgRecv..popContact..C1..mnuLastActivity..Caption
@@ -1145,21 +1145,21 @@ msgstr "Requête Horaire"
 #: Profile.dfm:206
 #: RosterWindow.dfm:344
 msgid "Last Activity"
-msgstr "Dernière activitée"
+msgstr "Dernière activité"
 
 #. frmChat..popContact..mnuBlock..Caption
 #. frmMsgRecv..popContact..mnuBlock..Caption
 #: ChatWin.dfm:141
 #: MsgRecv.dfm:537
 msgid "Block Contact"
-msgstr "Bloquer le Contact"
+msgstr "Bloquer le contact"
 
 #. frmChat..popContact..NotificationOptions1..Caption
 #. frmRoom..popRoom..NotificationOptions1..Caption
 #: ChatWin.dfm:148
 #: Room.dfm:214
 msgid "Notification Options ..."
-msgstr "Options de notification ..."
+msgstr "Options de notification..."
 
 #. frmChat..popContact..mnuOnTop..Caption
 #. frmRoom..popRoom..mnuOnTop..Caption
@@ -1193,12 +1193,12 @@ msgstr "Fichier RTF|*.rtf|Tout les Fichier|*.*"
 #. frmConnDetails..Caption
 #: ConnDetails.dfm:7
 msgid "Connection Details"
-msgstr "Détails de connection"
+msgstr "Détails de connexion"
 
 #. frmConnDetails..PageControl1..tbsProfile..Caption
 #: ConnDetails.dfm:52
 msgid "Profile"
-msgstr "Profile"
+msgstr "Profil"
 
 #. frmConnDetails..PageControl1..tbsProfile..lblUsername..Caption
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksUsername..Caption
@@ -1209,7 +1209,7 @@ msgstr "Profile"
 #: prefs/PrefNetwork.dfm:106
 #: prefs/PrefTransfer.dfm:79
 msgid "Username:"
-msgstr "Utilisateur:"
+msgstr "Utilisateur :"
 
 #. frmConnDetails..PageControl1..tbsProfile..Label10..Caption
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksPassword..Caption
@@ -1222,22 +1222,22 @@ msgstr "Utilisateur:"
 #: prefs/PrefNetwork.dfm:114
 #: prefs/PrefTransfer.dfm:86
 msgid "Password:"
-msgstr "Mot de passe:"
+msgstr "Mot de passe :"
 
 #. frmConnDetails..PageControl1..tbsProfile..Label11..Caption
 #: ConnDetails.dfm:75
 msgid "Server:"
-msgstr "Serveur:"
+msgstr "Serveur :"
 
 #. frmConnDetails..PageControl1..tbsProfile..Label12..Caption
 #: ConnDetails.dfm:83
 msgid "Resource:"
-msgstr "Ressource:"
+msgstr "Ressource :"
 
 #. frmConnDetails..PageControl1..tbsProfile..lblServerList..Caption
 #: ConnDetails.dfm:92
 msgid "Download a list of servers"
-msgstr "Télécharger la liste des serveurs"
+msgstr "Télécharger une liste des serveurs"
 
 #. frmConnDetails..PageControl1..tbsProfile..Label13..Caption
 #: ConnDetails.dfm:107
@@ -1257,7 +1257,7 @@ msgstr "jabber.com"
 #. frmConnDetails..PageControl1..tbsProfile..chkSavePasswd..Caption
 #: ConnDetails.dfm:127
 msgid "Save pass&word"
-msgstr "Sauver le mot de passe"
+msgstr "Sauvegarder le mot de passe"
 
 #. frmConnDetails..PageControl1..tbsProfile..txtPassword..PasswordChar
 #. frmConnDetails..PageControl1..tbsSocket..txtSocksPassword..PasswordChar
@@ -1288,7 +1288,7 @@ msgstr "C'est un nouveau compte"
 #. frmConnDetails..PageControl1..tbsConn..Caption
 #: ConnDetails.dfm:166
 msgid "Connection"
-msgstr "Connection"
+msgstr "Connexion"
 
 #. frmConnDetails..PageControl1..tbsConn..Label4..Caption
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksHost..Caption
@@ -1297,7 +1297,7 @@ msgstr "Connection"
 #: ConnDetails.dfm:290
 #: prefs/PrefNetwork.dfm:90
 msgid "Host:"
-msgstr "Hôte:"
+msgstr "Hôte :"
 
 #. frmConnDetails..PageControl1..tbsConn..Label7..Caption
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksPort..Caption
@@ -1308,7 +1308,7 @@ msgstr "Hôte:"
 #: prefs/PrefNetwork.dfm:98
 #: prefs/PrefTransfer.dfm:58
 msgid "Port:"
-msgstr "Port:"
+msgstr "Por t:"
 
 #. frmConnDetails..PageControl1..tbsConn..Label8..Caption
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksType..Caption
@@ -1317,19 +1317,19 @@ msgstr "Port:"
 #: ConnDetails.dfm:308
 #: prefs/PrefPresence.dfm:93
 msgid "Type:"
-msgstr "Type:"
+msgstr "Type :"
 
 #. frmConnDetails..PageControl1..tbsConn..Label6..Caption
 #. frmPrefPresence..GroupBox1..Label14..Caption
 #: ConnDetails.dfm:197
 #: prefs/PrefPresence.dfm:100
 msgid "Priority:"
-msgstr "Priorité:"
+msgstr "Priorité :"
 
 #. frmConnDetails..PageControl1..tbsConn..TntLabel1..Caption
 #: ConnDetails.dfm:205
 msgid "SSL Certificate:"
-msgstr "Certificat SSL:"
+msgstr "Certificat SSL :"
 
 #. frmConnDetails..PageControl1..tbsConn..chkSSL..Caption
 #: ConnDetails.dfm:228
@@ -1341,7 +1341,7 @@ msgstr "Utiliser SSL"
 #: ConnDetails.dfm:242
 #: ConnDetails.dfm:245
 msgid "Normal"
-msgstr "Normale"
+msgstr "Normal"
 
 #. frmConnDetails..PageControl1..tbsConn..cboConnection....Items.WideStrings
 #. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.Strings
@@ -1360,7 +1360,7 @@ msgstr "Proxy"
 #: ConnDetails.dfm:334
 #: prefs/PrefNetwork.dfm:145
 msgid "Authentication Required"
-msgstr "Auth. Indispensable"
+msgstr "Authentification requise"
 
 #. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.Strings
 #. frmProfile..PageControl1..TabSheet1..optSubscrip....Items.Strings
@@ -1387,17 +1387,17 @@ msgstr "Version 5"
 #. frmConnDetails..PageControl1..tbsHttp..Caption
 #: ConnDetails.dfm:391
 msgid "HTTP Polling"
-msgstr "HTTP Polling"
+msgstr "Polling HTTP"
 
 #. frmConnDetails..PageControl1..tbsHttp..Label1..Caption
 #: ConnDetails.dfm:398
 msgid "URL:"
-msgstr "URL:"
+msgstr "URL :"
 
 #. frmConnDetails..PageControl1..tbsHttp..Label2..Caption
 #: ConnDetails.dfm:406
 msgid "Poll Time:"
-msgstr "Delais:"
+msgstr "Delai de polling :"
 
 #. frmConnDetails..PageControl1..tbsHttp..Label5..Caption
 #: ConnDetails.dfm:414
@@ -1412,7 +1412,7 @@ msgstr "# de clés:"
 #. frmConnDetails..PageControl1..tbsHttp..lblNote....AutoSize
 #: ConnDetails.dfm:435
 msgid "NOTE: You must use the URL of your jabber server's HTTP tunnelling proxy. You can not use some \"standard\" HTTP proxy for this to work. Contact your server administrator for additional information."
-msgstr "NOTE: Vous devez utiliser l'URL du  proxy HTTP de votre serveur jabber. Vous ne pouvez pas utiliser de Proxy HTTP \"standard\" pour cet usage. Contactez votre administrateur serveur pour de plus amples informations."
+msgstr "NOTE : Vous devez utiliser l'URL du  proxy HTTP de votre serveur Jabber. Vous ne pouvez pas utiliser de Proxy HTTP \"standard\" pour cet usage. Contactez votre administrateur serveur pour plus d'informations."
 
 #. frmConnDetails..OpenDialog1..DefaultExt
 #: ConnDetails.dfm:462
@@ -1422,7 +1422,7 @@ msgstr "pem"
 #. frmConnDetails..OpenDialog1..Filter
 #: ConnDetails.dfm:463
 msgid "SSL Key Files|*.pem|All Files|*.*"
-msgstr "Clé SSL|*.pem|Tout les Fichier|*.*"
+msgstr "Clé SSL|*.pem|Tous les Fichier|*.*"
 
 #. frmCustomNotify..Caption
 #: CustomNotify.dfm:7
@@ -1446,7 +1446,7 @@ msgstr "Options de Notification"
 #: CustomNotify.dfm:55
 #: prefs/PrefNotify.dfm:61
 msgid "Flash Taskbar button, or highlight tab"
-msgstr "Faire clignoter le bouton, ou la barre de tâche"
+msgstr "Faire clignoter le bouton ou la barre de tâche"
 
 #. frmCustomNotify..optNotify..chkToast..Caption
 #. frmPrefNotify..optNotify..chkToast..Caption
@@ -1465,19 +1465,19 @@ msgstr "Faire clignoter l'icône en barre de tâche"
 #. frmCustomPres..Caption
 #: CustomPres.dfm:5
 msgid "Custom Presence"
-msgstr "Présence Personnalisée "
+msgstr "Présence personnalisée "
 
 #. frmCustomPres..Label1..Caption
 #: CustomPres.dfm:25
 msgid "Presence Type:"
-msgstr "Type de Présence :"
+msgstr "Type de présence :"
 
 #. frmCustomPres..Label2..Caption
 #. frmPrefPresence..GroupBox1..Label12..Caption
 #: CustomPres.dfm:32
 #: prefs/PrefPresence.dfm:86
 msgid "Status:"
-msgstr "Status:"
+msgstr "Statut :"
 
 #. frmCustomPres..Label3..Caption
 #: CustomPres.dfm:39
@@ -1547,7 +1547,7 @@ msgstr "Absent(e)"
 #: prefs/PrefGroups.dfm:69
 #: prefs/PrefPresence.dfm:138
 msgid "Ext. Away"
-msgstr "Abs. Prolongée"
+msgstr "Abs. prolongée"
 
 #. frmCustomPres..cboType....Items.WideStrings
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presDND..Caption
@@ -1581,14 +1581,14 @@ msgstr "Sauver cette présence dans mes préférences"
 #: Profile.dfm:748
 #: vcard.dfm:563
 msgid "Title:"
-msgstr "Titre:"
+msgstr "Titre :"
 
 #. frmCustomPres..boxSave..lblHotkey..Caption
 #. frmPrefPresence..GroupBox1..lblHotkey..Caption
 #: CustomPres.dfm:132
 #: prefs/PrefPresence.dfm:107
 msgid "HotKey:"
-msgstr "Mot Clé:"
+msgstr "Mot Clé :"
 
 #. frmDebug..Caption
 #: Debug.dfm:6
@@ -1715,12 +1715,12 @@ msgstr "frmEmoticons"
 #. frmEmoticons..ToolBar1..Caption
 #: Emoticons.dfm:31
 msgid "ToolBar1"
-msgstr "Barre d'outils 1"
+msgstr "ToolBar1"
 
 #. frmEmoticons..ToolBar2..Caption
 #: Emoticons.dfm:320
 msgid "ToolBar2"
-msgstr "Barre d'outils 2"
+msgstr "ToolBar2"
 
 #. frmTracer..Caption
 #: ExceptTracer.dfm:7
@@ -1745,14 +1745,14 @@ msgstr "lblPrompt"
 #. frameListbox..lblCaption..Caption
 #: fListbox.dfm:22
 msgid "Supported Namespaces:"
-msgstr "Nom de travail supporté:"
+msgstr "Nom de travail autorisé :"
 
 #. frameTreeRoster..treeRoster..Hint
 #. frmRosterWindow..treeRoster..Hint
 #: RosterWindow.dfm:134
 #: fRosterTree.dfm:13
 msgid "Roster Hint"
-msgstr "Information du Répertoire"
+msgstr "Information du répertoire"
 
 #. frameObjectActions..pRegister..lblRegister..Caption
 #: fService.dfm:28
@@ -1774,7 +1774,7 @@ msgstr "Rejoindre une conférence"
 #. frameObjectActions..pnlTop..Label1..Caption
 #: fService.dfm:109
 msgid "See Also:"
-msgstr "Voir aussi:"
+msgstr "Voir aussi :"
 
 #. frameTopLabel..Panel1..lbl..Caption
 #: fTopLabel.dfm:23
@@ -1789,37 +1789,37 @@ msgstr "Gestion de Groupe"
 #. frmGrpManagement..optMove..Caption
 #: GrpManagement.dfm:53
 msgid "Move the selected contacts to the following group:"
-msgstr "Déplacer le(s) Contact(s) suivant dans ce groupe:"
+msgstr "Déplacer le(s) contact(s) suivant dans ce groupe :"
 
 #. frmGrpManagement..optCopy..Caption
 #: GrpManagement.dfm:64
 msgid "Copy the selected contacts to the following group:"
-msgstr "Copier le(s) Contact(s) suivant dans ce groupe:"
+msgstr "Copier le(s) contact(s) suivant dans ce groupe :"
 
 #. frmGrpRemove..Caption
 #: GrpRemove.dfm:6
 msgid "Remove Contacts"
-msgstr "Enlever les Contacts"
+msgstr "Enlever les contacts"
 
 #. frmGrpRemove..optMove..Caption
 #: GrpRemove.dfm:50
 msgid "Move contacts to another group:"
-msgstr "Déplacer les Contacts vers un autre groupe:"
+msgstr "Déplacer les contacts vers un autre groupe :"
 
 #. frmGrpRemove..optNuke..Caption
 #: GrpRemove.dfm:70
 msgid "Remove all contacts in this group:"
-msgstr "Enlever tous les Contacts de ce groupe:"
+msgstr "Enlever tous les contacts de ce groupe :"
 
 #. frmGrpRemove..chkUnsub..Caption
 #: GrpRemove.dfm:78
 msgid "Remove these contacts from my roster."
-msgstr "Enlever ces Contacts de mon répertoire"
+msgstr "Enlever ces contacts de mon répertoire"
 
 #. frmGrpRemove..chkUnsubed..Caption
 #: GrpRemove.dfm:88
 msgid "Force the contacts to remove me from their roster"
-msgstr "Obliger les Contacts à m'enlever de leur répertoire "
+msgstr "Forcer les contacts à m'enlever de leur répertoire "
 
 #. frmInputPass..Caption
 #. Programmer's name for it: sPasswordCaption
@@ -1831,7 +1831,7 @@ msgstr "Mot de passe Exodus"
 #. frmInputPass..Label1..Caption
 #: InputPassword.dfm:31
 msgid "Enter password:"
-msgstr "Insérez le mot de passe:"
+msgstr "Entrez le mot de passe :"
 
 #. frmInvalidRoster..Caption
 #: InvalidRoster.dfm:6
@@ -1877,7 +1877,7 @@ msgstr "Erreur Pres."
 #. frmInvalidRoster..popItems..oggleCheckboxes1..Caption
 #: InvalidRoster.dfm:76
 msgid "Toggle Checkboxes"
-msgstr "Basculer la Case à Cocher"
+msgstr "Cocher la case à cocher"
 
 #. frmInvite..Caption
 #. frmRosterWindow..popRoster..popInvite..Caption
@@ -1886,7 +1886,7 @@ msgstr "Basculer la Case à Cocher"
 #: RosterWindow.dfm:605
 #: invite.dfm:5
 msgid "Invite to Conference"
-msgstr "Inviter dans une salle de  Conf."
+msgstr "Inviter à une conférence"
 
 #. frmInvite..pnlMain..lstJIDS......Caption
 #. frmRosterRecv..lvContacts......Caption
@@ -1921,7 +1921,7 @@ msgstr "Inviter le Contact dans :"
 #. frmInvite..pnlMain..Panel2..memReason....Lines.WideStrings
 #: invite.dfm:146
 msgid "Please join us in this conference room."
-msgstr "Svp, rejoins-moi dans cette salle de conférence."
+msgstr "Rejoignez-nous svp dans cette salle de conférence."
 
 #. frmExodus..Caption
 #. Programmer's name for it: sExodus
@@ -1976,7 +1976,7 @@ msgstr "Rechercher"
 #. frmExodus..Toolbar..ToolBar1..btnExpanded..Hint
 #: Jabber1.dfm:175
 msgid "Toggle Expanded Mode"
-msgstr "Bascule en mode étandu"
+msgstr "Bascule en mode étendu"
 
 #. frmExodus..Toolbar..ToolBar1..btnExpanded..Caption
 #: Jabber1.dfm:178
@@ -2040,7 +2040,7 @@ msgstr "Arrimer la fenêtre"
 #. frmExodus..MainMenu1..Exodus1..View1..ShowEventsWindow1..Caption
 #: Jabber1.dfm:253
 msgid "Instant Messages"
-msgstr "Messages Instantané"
+msgstr "Messages instantanés"
 
 #. frmExodus..MainMenu1..Exodus1..ClearMessages1..Caption
 #: Jabber1.dfm:258
@@ -2050,7 +2050,7 @@ msgstr "Nettoyer les messages"
 #. frmExodus..MainMenu1..Exodus1..mnuMessage..Caption
 #: Jabber1.dfm:266
 msgid "Send Instant &Message"
-msgstr "Envoyer un &Message Instantané"
+msgstr "Envoyer un &Message instantané"
 
 #. frmExodus..MainMenu1..Exodus1..mnuChat..Caption
 #: Jabber1.dfm:271
@@ -2060,7 +2060,7 @@ msgstr "Démarrer un &Chat"
 #. frmExodus..MainMenu1..Exodus1..mnuConference..Caption
 #: Jabber1.dfm:276
 msgid "&Join a Chat Room"
-msgstr "Re&joint la Salle de Discussion"
+msgstr "Re&joint la salle de discussion"
 
 #. frmExodus..MainMenu1..Exodus1..mnuRegisterService..Caption
 #: Jabber1.dfm:284
@@ -2070,7 +2070,7 @@ msgstr "S'en&register dans ce service"
 #. frmExodus..MainMenu1..Exodus1..mnuPassword..Caption
 #: Jabber1.dfm:288
 msgid "Change &Password"
-msgstr "Changer de Mot de &Passe"
+msgstr "Changer de mot de &passe"
 
 #. frmExodus..MainMenu1..Exodus1..Exit2..Caption
 #: Jabber1.dfm:295
@@ -2110,12 +2110,12 @@ msgstr "&Propriétés"
 #. frmExodus..MainMenu1..Tools1..mnuContacts..mnuFind..Caption
 #: Jabber1.dfm:327
 msgid "&Find Contact in Roster"
-msgstr "Chercher un Contact dans le répertoire"
+msgstr "Chercher un contact dans le répertoire"
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..mnuFindAgain..Caption
 #: Jabber1.dfm:332
 msgid "Fin&d Contact Again"
-msgstr "Rechercher un Contact"
+msgstr "Rechercher un contact"
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..mnuSearch..Caption
 #: Jabber1.dfm:337
@@ -2125,7 +2125,7 @@ msgstr "&Rechercher"
 #. frmExodus..MainMenu1..Tools1..mnuContacts..mnuOnline..Caption
 #: Jabber1.dfm:345
 msgid "Show &Only Online"
-msgstr "Afficher seulement ceux 'Connecté'"
+msgstr "Afficher seulement ceux en &ligne"
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..NewGroup2..Caption
 #: Jabber1.dfm:350
@@ -2135,7 +2135,7 @@ msgstr "Ajouter un Groupe"
 #. frmExodus..MainMenu1..Tools1..mnuContacts..SubscribetoPresence2..Caption
 #: Jabber1.dfm:357
 msgid "Su&bscribe to Presence"
-msgstr "Souscrire à la Présence"
+msgstr "Souscrire à la présence"
 
 #. frmExodus..MainMenu1..Tools1..mnuPresence..Caption
 #: Jabber1.dfm:362
@@ -2162,14 +2162,14 @@ msgstr "Dispo. pour Chat"
 #: Jabber1.pas:402
 #: RosterWindow.dfm:415
 msgid "Xtended Away"
-msgstr "Absence Prolongée"
+msgstr "Absence prolongée"
 
 #. frmExodus..MainMenu1..Tools1..mnuPresence..Custom3..Caption
 #. frmPrefNetwork..GroupBox2..cboProxyApproach....Items.WideStrings
 #: Jabber1.dfm:390
 #: prefs/PrefNetwork.dfm:181
 msgid "Custom"
-msgstr "Personnalisée ..."
+msgstr "Personnalisée..."
 
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presToggle..Caption
 #: Jabber1.dfm:395
@@ -2184,7 +2184,7 @@ msgstr "Editer mes renseignements"
 #. frmExodus..MainMenu1..Tools1..mnuMyVCard..Caption
 #: Jabber1.dfm:408
 msgid "Edit My &vCard / Profile"
-msgstr "Editer ma vCard/Profile"
+msgstr "Editer ma vCard/Profil"
 
 #. frmExodus..MainMenu1..Tools1..mnuVCard..Caption
 #: Jabber1.dfm:415
@@ -2194,7 +2194,7 @@ msgstr "Regarder une vCard"
 #. frmExodus..MainMenu1..Tools1..mnuBookmark..Caption
 #: Jabber1.dfm:419
 msgid "Add a Boo&kmark"
-msgstr "Ajouter un Favoris"
+msgstr "Ajouter un favori"
 
 #. frmExodus..MainMenu1..Tools1..mnuBrowser..Caption
 #: Jabber1.dfm:423
@@ -2204,7 +2204,7 @@ msgstr "Explorateur Jabber"
 #. frmExodus..MainMenu1..Tools1..mnuServer..Caption
 #: Jabber1.dfm:428
 msgid "Server Info"
-msgstr "Infos Serveur"
+msgstr "Infos serveur"
 
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuVersion..Caption
 #: Jabber1.dfm:430
@@ -2214,7 +2214,7 @@ msgstr "Version "
 #. frmExodus..MainMenu1..Tools1..ShowXML1..Caption
 #: Jabber1.dfm:443
 msgid "Show Debug XML"
-msgstr "Afficher Debug. XML"
+msgstr "Afficher débug. XML"
 
 #. frmExodus..MainMenu1..Tools1..mnuPlugins..Caption
 #: Jabber1.dfm:448
@@ -2224,7 +2224,7 @@ msgstr "Composants supplémentaires"
 #. frmExodus..MainMenu1..Tools1..Preferences1..Caption
 #: Jabber1.dfm:454
 msgid "&Options..."
-msgstr "Options ..."
+msgstr "Options..."
 
 #. frmExodus..MainMenu1..Help1..Caption
 #: Jabber1.dfm:460
@@ -2234,7 +2234,7 @@ msgstr "&Aide"
 #. frmExodus..MainMenu1..Help1..About1..Caption
 #: Jabber1.dfm:465
 msgid "About"
-msgstr "A propos ..."
+msgstr "A propos..."
 
 #. frmExodus..popTabs..popCloseTab..Caption
 #: Jabber1.dfm:2625
@@ -2256,7 +2256,7 @@ msgstr "Afficher Exodus"
 #: Jabber1.dfm:2673
 #: RosterWindow.dfm:427
 msgid "Custom ..."
-msgstr "Personnaliser ..."
+msgstr "Personnaliser..."
 
 #. frmExodus..popTray..trayMessage..Caption
 #. frmJud..PopupMenu1..popMessage..Caption
@@ -2265,7 +2265,7 @@ msgstr "Personnaliser ..."
 #: jud.dfm:222
 #: subscribe.dfm:146
 msgid "Send Message"
-msgstr "Envoyer un Message"
+msgstr "Envoyer un message"
 
 #. frmExodus..popTray..trayConnect..Caption
 #: Jabber1.dfm:2686
@@ -2280,17 +2280,17 @@ msgstr "Quitter Exodus"
 #. frmJoinRoom..Caption
 #: JoinRoom.dfm:6
 msgid "Join Room"
-msgstr "Joindre la Salle"
+msgstr "Joindre la salle"
 
 #. frmJoinRoom..Label1..Caption
 #: JoinRoom.dfm:27
 msgid "Room Name:"
-msgstr "Nom de la Salle:"
+msgstr "Nom de la salle :"
 
 #. frmJoinRoom..Label2..Caption
 #: JoinRoom.dfm:34
 msgid "Room Server:"
-msgstr "Server de la Salle:"
+msgstr "Server de la salle :"
 
 #. frmJoinRoom..Label3..Caption
 #. frmAdd..Label2..Caption
@@ -2299,7 +2299,7 @@ msgstr "Server de la Salle:"
 #: RosterAdd.dfm:33
 #: subscribe.dfm:81
 msgid "Nickname:"
-msgstr "Surnom:"
+msgstr "Surnom :"
 
 #. frmJoinRoom..txtServer..Text
 #: JoinRoom.dfm:97
@@ -2319,7 +2319,7 @@ msgstr "Assistant Rechercher Jabber"
 #. frmJud..Tabs..TabSheet1..lblSelect....Align
 #: jud.dfm:61
 msgid "Select the user database or enter in the Jabber ID of the search agent to use:"
-msgstr "Selectionnez la base de données utilisateur , ou insérez l'ID Jabber du Contact à rechercher avec l'Agent:"
+msgstr "Selectionnez la base de données utilisateur , ou insérez l'ID Jabber du contact à rechercher avec l'agent:"
 
 #. frmJud..Tabs..TabSheet2..Caption
 #. frmRegister..Tabs..TabSheet2..Caption
@@ -2331,7 +2331,7 @@ msgstr "TabSheet2"
 #. frmJud..Tabs..TabSheet2..lblWait..Caption
 #: jud.dfm:83
 msgid "Please wait. Contacting search agent:"
-msgstr "Patientez. Contact avec l'agent de recherche :"
+msgstr "Patientez, contact avec l'agent de recherche :"
 
 #. frmJud..Tabs..TabSheet3..Caption
 #. frmRegister..Tabs..TabSheet3..Caption
@@ -2343,7 +2343,7 @@ msgstr "TabSheet3"
 #. frmJud..Tabs..TabSheet3..lblInstructions..Caption
 #: jud.dfm:105
 msgid "Fill in the search criteria to find contacts on."
-msgstr "Remplissez les critères de recherche pour trouver le Contact."
+msgstr "Remplissez les critères de recherche pour trouver le contact."
 
 #. frmJud..Tabs..TabSheet4..Caption
 #. frmRegister..Tabs..TabSheet4..Caption
@@ -2355,7 +2355,7 @@ msgstr "TabSheet4"
 #. frmJud..Tabs..TabSheet4..Panel2..Label3..Caption
 #: jud.dfm:137
 msgid "Add Contacts to this group:"
-msgstr "Ajouter un Contact à ce groupe:"
+msgstr "Ajouter un contact à ce groupe:"
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Caption
 #. frmAdd..lblAddGrp..Caption
@@ -2371,12 +2371,12 @@ msgstr "Ajouter un nouveau groupe"
 #: jud.dfm:171
 #: jud.pas:117
 msgid "Add Contacts"
-msgstr "Ajouter un Contact"
+msgstr "Ajouter un contact"
 
 #. frmJud..PopupMenu1..popProfile..Caption
 #: jud.dfm:211
 msgid "View Profile"
-msgstr "Voir le profile"
+msgstr "Voir le profil"
 
 #. frmJud..PopupMenu1..popChat..Caption
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
@@ -2385,7 +2385,7 @@ msgstr "Voir le profile"
 #: jud.dfm:218
 #: subscribe.dfm:142
 msgid "Start Chat"
-msgstr "Démarrer le Chat"
+msgstr "Démarrer le chat"
 
 #. frmLogin..Caption
 #: Login.dfm:7
@@ -2395,7 +2395,7 @@ msgstr "Se connecter"
 #. frmLogin..Panel1..lblProfile..Caption
 #: Login.dfm:61
 msgid "Profile:"
-msgstr "Profile:"
+msgstr "Profil :"
 
 #. frmLogin..Panel1..Panel2..btnDetails..Caption
 #: Login.dfm:81
@@ -2409,7 +2409,7 @@ msgstr "Détails..."
 #: Login.dfm:98
 #: Login.pas:65
 msgid "Default Profile"
-msgstr "Profile par defaut"
+msgstr "Profil par défaut"
 
 #. frmLogin..Panel1..chkInvisible..Caption
 #: Login.dfm:105
@@ -2424,12 +2424,12 @@ msgstr "lblJID"
 #. frmLogin..popProfiles..CreateNew1..Caption
 #: Login.dfm:121
 msgid "Create New Profile..."
-msgstr "Créer un nouveau profile"
+msgstr "Créer un nouveau profil"
 
 #. frmLogin..popProfiles..Delete1..Caption
 #: Login.dfm:125
 msgid "Delete Profile..."
-msgstr "Détruire le profile..."
+msgstr "Détruire le profil..."
 
 #. frmMsgQueue..Caption
 #: MsgQueue.dfm:6
@@ -2466,7 +2466,7 @@ msgstr "Envoyer"
 #. frmMsgRecv..pnlTop..pnlHeader..pnlSendSubject..lblSubject1..Caption
 #: MsgRecv.dfm:297
 msgid "Subject:    "
-msgstr "Sujet:"
+msgstr "Sujet :"
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlSubject..txtSubject..Caption
 #: MsgRecv.dfm:334
@@ -2478,7 +2478,7 @@ msgstr "txtSubject"
 #: MsgRecv.dfm:342
 #: Room.dfm:105
 msgid "Subject:"
-msgstr "Sujet:"
+msgstr "Sujet :"
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..txtFrom..Caption
 #: MsgRecv.dfm:371
@@ -2490,7 +2490,7 @@ msgstr "txtFrom"
 #: MsgRecv.dfm:391
 #: RosterRecv.dfm:69
 msgid "From:    "
-msgstr "De:"
+msgstr "De :"
 
 #. frmMsgRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: MsgRecv.dfm:496
@@ -2509,14 +2509,14 @@ msgstr "Afficher l'historique"
 #: MsgRecv.dfm:518
 #: subscribe.dfm:138
 msgid "Show Profile"
-msgstr "Afficher le Profile"
+msgstr "Afficher le profil"
 
 #. frmMsgRecv..popContact..C1..Caption
 #. frmRosterWindow..popRoster..popClientInfo..Caption
 #: MsgRecv.dfm:522
 #: RosterWindow.dfm:334
 msgid "Client Info"
-msgstr "Info. Client"
+msgstr "Info. client"
 
 #. frmMsgRecv..popContact..mnuSendFile..Caption
 #: MsgRecv.dfm:541
@@ -2536,17 +2536,17 @@ msgstr "Fenêtre de mot de passe"
 #. frmPassword..Label1..Caption
 #: Password.dfm:21
 msgid "Old password:"
-msgstr "Ancien mot de passe:"
+msgstr "Ancien mot de passe :"
 
 #. frmPassword..Label2..Caption
 #: Password.dfm:28
 msgid "New password:"
-msgstr "Nouveau mot de passe:"
+msgstr "Nouveau mot de passe :"
 
 #. frmPassword..Label3..Caption
 #: Password.dfm:35
 msgid "Confirm new password:"
-msgstr "Confirmer le mot de passe:"
+msgstr "Confirmer le mot de passe :"
 
 #. frmPathSelector..Caption
 #: PathSelector.dfm:8
@@ -2616,7 +2616,7 @@ msgstr "Notification"
 #. frmPrefs..Scroller..lblAway..Caption
 #: Prefs.dfm:1384
 msgid "Auto-Away"
-msgstr "Absence Automatique"
+msgstr "Absence automatique"
 
 #. frmPrefs..Scroller..lblKeywords..Caption
 #. frmPrefs..PageControl1..tbsKeywords..Caption
@@ -2628,7 +2628,7 @@ msgstr "Mots clé"
 #. frmPrefs..Scroller..lblBlockList..Caption
 #: Prefs.dfm:1774
 msgid "Block List"
-msgstr "Liste Noire"
+msgstr "Liste noire"
 
 #. frmPrefs..Scroller..lblMessages..Caption
 #: Prefs.dfm:2164
@@ -2671,7 +2671,7 @@ msgstr "Affichage"
 #. frmPrefs..PageControl1..tbsKeywords..Panel2..Label1....Align
 #: Prefs.dfm:3116
 msgid "Exodus can notify you when a keyword appears in chat room. Enter in the keywords that you want Exodus to look for in messages."
-msgstr "Exodus peut vous avertir quand un mot est utilisé dans une Salle de discussion. Insérez les mots clé à surveiller."
+msgstr "Exodus peut vous avertir quand un mot est utilisé dans une salle de discussion. Insérez les mots-clé à surveiller."
 
 #. frmPrefs..PageControl1..tbsKeywords..Panel2..chkRegex..Caption
 #: Prefs.dfm:3124
@@ -2686,27 +2686,27 @@ msgstr "Notification de mot clé"
 #. frmPrefs..PageControl1..tbsBlockList..Caption
 #: Prefs.dfm:3148
 msgid "BlockList"
-msgstr "Liste Noire"
+msgstr "Liste noire"
 
 #. frmPrefs..PageControl1..tbsBlockList..Memo1......Lines.WideStrings
 #: Prefs.dfm:3168
 msgid "Enter in the Jabber Addresses (JIDs) of the people to block from sending "
-msgstr "Insérez l'Adresse Jabber (JID) des personnes à bloquer lors des envois."
+msgstr "Insérez les adresses Jabber (JID) des personnes à bloquer lors "
 
 #. frmPrefs..PageControl1..tbsBlockList..Memo1....Lines.WideStrings
 #: Prefs.dfm:3169
 msgid "you "
-msgstr "vers vous de messages"
+msgstr "des"
 
 #. frmPrefs..PageControl1..tbsBlockList..Memo1....Lines.WideStrings
 #: Prefs.dfm:3170
 msgid "messages. All messages from these contacts will be blocked."
-msgstr "Tous les messages de ce Contact seront bloqués."
+msgstr "envois. Tous les messages de ces contacts seront bloqués."
 
 #. frmPrefs..PageControl1..tbsBlockList..StaticText4..Caption
 #: Prefs.dfm:3182
 msgid "Blocked Contacts"
-msgstr "Bloquer le Contact"
+msgstr "Bloquer le contact"
 
 #. frmPrefs..Panel1..Panel3..Button6..Caption
 #: Prefs.dfm:3245
@@ -2716,7 +2716,7 @@ msgstr "Appliquer"
 #. frmProfile..Caption
 #: Profile.dfm:7
 msgid "Contact Properties"
-msgstr "Propriétés du Contact"
+msgstr "Propriétés du contact"
 
 #. frmProfile..PageControl1..TabSheet1..Caption
 #. frmVCard..PageControl1..TabSheet1..Caption
@@ -2728,21 +2728,21 @@ msgstr "Général"
 #. frmProfile..PageControl1..TabSheet1..Label1..Caption
 #: Profile.dfm:41
 msgid "JID:"
-msgstr "JID:"
+msgstr "JID :"
 
 #. frmProfile..PageControl1..TabSheet1..Label2..Caption
 #. frmVCard..PageControl1..TabSheet1..Label2..Caption
 #: Profile.dfm:48
 #: vcard.dfm:41
 msgid "Nick:"
-msgstr "Surnom:"
+msgstr "Surnom :"
 
 #. frmProfile..PageControl1..TabSheet1..lblEmail..Caption
 #. frmVCard..PageControl1..TabSheet1..lblEmail..Caption
 #: Profile.dfm:56
 #: vcard.dfm:49
 msgid "Email:"
-msgstr "Email:"
+msgstr "Courriel :"
 
 #. frmProfile..PageControl1..TabSheet1..Label7..Caption
 #. frmVCard..PageControl1..TabSheet1..Label7..Caption
@@ -2796,7 +2796,7 @@ msgstr "Version du client"
 #. frmProfile..PageControl1..TabSheet7..Panel2..btnTime..Caption
 #: Profile.dfm:197
 msgid "Client Time"
-msgstr "Durée du Client"
+msgstr "Heure du client"
 
 #. frmProfile..PageControl1..TabSheet2..Panel3..Caption
 #: Profile.dfm:241
@@ -2808,40 +2808,40 @@ msgstr "Panel3"
 #: Profile.dfm:260
 #: RosterWindow.dfm:585
 msgid "Add Group"
-msgstr "Ajouter un Groupe"
+msgstr "Ajouter un groupe"
 
 #. frmProfile..PageControl1..TabSheet3..Caption
 #. frmVCard..PageControl1..TabSheet3..Caption
 #: Profile.dfm:267
 #: vcard.dfm:110
 msgid "Personal Info."
-msgstr "Info. Personnelle"
+msgstr "Info. personnelle"
 
 #. frmProfile..PageControl1..TabSheet3..lblURL..Caption
 #: Profile.dfm:275
 msgid "Personal URL:"
-msgstr "URL Personnelle:"
+msgstr "URL personnelle :"
 
 #. frmProfile..PageControl1..TabSheet3..Label12..Caption
 #. frmVCard..PageControl1..TabSheet3..Label12..Caption
 #: Profile.dfm:283
 #: vcard.dfm:117
 msgid "Occupation:"
-msgstr "Activité:"
+msgstr "Activité :"
 
 #. frmProfile..PageControl1..TabSheet3..Label6..Caption
 #. frmVCard..PageControl1..TabSheet3..Label6..Caption
 #: Profile.dfm:290
 #: vcard.dfm:124
 msgid "Birthday:"
-msgstr "Anniversaire:"
+msgstr "Anniversaire :"
 
 #. frmProfile..PageControl1..TabSheet3..Label28..Caption
 #. frmVCard..PageControl1..TabSheet3..Label28..Caption
 #: Profile.dfm:297
 #: vcard.dfm:131
 msgid "Typical Format: YYYY-MM-DD"
-msgstr "Format type: AAAA-MM-JJ"
+msgstr "Format type : AAAA-MM-JJ"
 
 #. frmProfile..PageControl1..TabSheet3..Label8..Caption
 #. frmProfile..PageControl1..TabSheet5..Label19..Caption
@@ -2852,7 +2852,7 @@ msgstr "Format type: AAAA-MM-JJ"
 #: vcard.dfm:138
 #: vcard.dfm:570
 msgid "Voice Tel:"
-msgstr "Téléphone (voix):"
+msgstr "Téléphone :"
 
 #. frmProfile..PageControl1..TabSheet3..Label9..Caption
 #. frmProfile..PageControl1..TabSheet5..Label20..Caption
@@ -2863,14 +2863,14 @@ msgstr "Téléphone (voix):"
 #: vcard.dfm:145
 #: vcard.dfm:577
 msgid "Fax Tel:"
-msgstr "Téléphone (fax):"
+msgstr "Télécopie :"
 
 #. frmProfile..PageControl1..TabSheet3..Label3..Caption
 #. frmVCard..PageControl1..TabSheet3..Label1..Caption
 #: Profile.dfm:318
 #: vcard.dfm:152
 msgid "Description:"
-msgstr "Description:"
+msgstr "Description :"
 
 #. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
@@ -2884,7 +2884,7 @@ msgstr "Gestion/Finance"
 #: Profile.dfm:338
 #: vcard.dfm:163
 msgid "Computer related (IS, MIS, DP)"
-msgstr "Relatif à l'informatique  (IS, MIS, DP)"
+msgstr "Relatif à l'informatique  (SI, BDD)"
 
 #. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
@@ -2898,7 +2898,7 @@ msgstr "Relatif à l'informatique  (WWW)"
 #: Profile.dfm:340
 #: vcard.dfm:165
 msgid "Consulting"
-msgstr "Consultance"
+msgstr "Consultant"
 
 #. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
@@ -2919,7 +2919,7 @@ msgstr "Ingénieur"
 #: Profile.dfm:343
 #: vcard.dfm:168
 msgid "Executive/senior management"
-msgstr "Directeur/Cadre d'Entreprise"
+msgstr "Directeur/Cadre d'entreprise"
 
 #. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
@@ -2947,14 +2947,14 @@ msgstr "Fabrication/confection"
 #: Profile.dfm:347
 #: vcard.dfm:172
 msgid "Professional services (medical, legal, etc.)"
-msgstr "Justice, Medical, ..."
+msgstr "Justice, médical, ..."
 
 #. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #: Profile.dfm:348
 #: vcard.dfm:173
 msgid "Research and development"
-msgstr "Recherche et Développement"
+msgstr "Recherche et développement"
 
 #. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
@@ -3000,7 +3000,7 @@ msgstr "Sans emploi / Entre deux postes"
 #: vcard.dfm:218
 #: vcard.dfm:630
 msgid "Country:"
-msgstr "Pays:"
+msgstr "Pays :"
 
 #. frmProfile..PageControl1..TabSheet4..Label21..Caption
 #. frmProfile..PageControl1..TabSheet6..Label15..Caption
@@ -3011,7 +3011,7 @@ msgstr "Pays:"
 #: vcard.dfm:225
 #: vcard.dfm:623
 msgid "State / Region:"
-msgstr "Etat/Région:"
+msgstr "Etat/Région :"
 
 #. frmProfile..PageControl1..TabSheet4..Label29..Caption
 #. frmProfile..PageControl1..TabSheet6..Label17..Caption
@@ -3022,7 +3022,7 @@ msgstr "Etat/Région:"
 #: vcard.dfm:232
 #: vcard.dfm:637
 msgid "Address 2:"
-msgstr "Adresse 2:"
+msgstr "Adresse 2 :"
 
 #. frmProfile..PageControl1..TabSheet4..Label30..Caption
 #. frmProfile..PageControl1..TabSheet6..Label18..Caption
@@ -3033,7 +3033,7 @@ msgstr "Adresse 2:"
 #: vcard.dfm:239
 #: vcard.dfm:644
 msgid "Address 1:"
-msgstr "Adresse 1:"
+msgstr "Adresse 1 :"
 
 #. frmProfile..PageControl1..TabSheet4..Label31..Caption
 #. frmProfile..PageControl1..TabSheet6..Label26..Caption
@@ -3044,7 +3044,7 @@ msgstr "Adresse 1:"
 #: vcard.dfm:246
 #: vcard.dfm:651
 msgid "City / Locality:"
-msgstr "Ville/Localité:"
+msgstr "Ville/Localité :"
 
 #. frmProfile..PageControl1..TabSheet4..Label32..Caption
 #. frmProfile..PageControl1..TabSheet6..Label14..Caption
@@ -3055,7 +3055,7 @@ msgstr "Ville/Localité:"
 #: vcard.dfm:253
 #: vcard.dfm:658
 msgid "Zip / Postal Code:"
-msgstr "Code postal:"
+msgstr "Code postal :"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry..Text
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -3074,7 +3074,7 @@ msgstr "Code postal:"
 #: vcard.dfm:667
 #: vcard.dfm:894
 msgid "United States  "
-msgstr "Etats Unis"
+msgstr "Etats-Unis"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3241,7 +3241,7 @@ msgstr "Autriche"
 #: vcard.dfm:278
 #: vcard.dfm:683
 msgid "Azerbaijan  "
-msgstr "Azerbaijan  "
+msgstr "Azerbaïdjan  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3373,7 +3373,7 @@ msgstr "Bolivie"
 #: vcard.dfm:290
 #: vcard.dfm:695
 msgid "Bosnia and Herzogovina  "
-msgstr "Bosnie Herzegovine"
+msgstr "Bosnie Herzégovine"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3417,7 +3417,7 @@ msgstr "Brésil  "
 #: vcard.dfm:294
 #: vcard.dfm:699
 msgid "British Indian Ocean Territory  "
-msgstr "Iles Britanique des Territoires Oceanique"
+msgstr "Iles Britanique des Territoires Océaniques"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3528,7 +3528,7 @@ msgstr "Iles Caïman"
 #: vcard.dfm:304
 #: vcard.dfm:709
 msgid "Central African Republic  "
-msgstr "Republique de Centre Afrique"
+msgstr "Republique Centrafriquaine"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3572,7 +3572,7 @@ msgstr "Chine"
 #: vcard.dfm:308
 #: vcard.dfm:713
 msgid "Christmas Island  "
-msgstr "Ile de Paques"
+msgstr "Ile de Pâques"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3612,7 +3612,7 @@ msgstr "Comores"
 #: vcard.dfm:313
 #: vcard.dfm:718
 msgid "Congo (Republic of) "
-msgstr "Republic D. du Congo"
+msgstr "République du Congo"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3700,7 +3700,7 @@ msgstr "Chypre"
 #: vcard.dfm:321
 #: vcard.dfm:726
 msgid "Czech Republic  "
-msgstr "Republique Tcheque"
+msgstr "Republique Tchèque"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3711,7 +3711,7 @@ msgstr "Republique Tcheque"
 #: vcard.dfm:322
 #: vcard.dfm:727
 msgid "Denmark  "
-msgstr "Denmark"
+msgstr "Danemark"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -5719,14 +5719,14 @@ msgstr "Travail"
 #: Profile.dfm:734
 #: vcard.dfm:549
 msgid "Company Name:"
-msgstr "Nom de la société:"
+msgstr "Nom de la société :"
 
 #. frmProfile..PageControl1..TabSheet5..Label23..Caption
 #. frmVCard..PageControl1..TabSheet5..Label23..Caption
 #: Profile.dfm:741
 #: vcard.dfm:556
 msgid "Org. Unit (Dept):"
-msgstr "Secteur de travail:"
+msgstr "Secteur de travail :"
 
 #. frmProfile..PageControl1..TabSheet6..Caption
 #: Profile.dfm:806
@@ -5765,22 +5765,22 @@ msgstr "Enregistrement"
 #. frmRegister..Tabs..TabSheet1..Label1....AutoSize
 #: RegForm.dfm:34
 msgid "This wizard will register you with a service or Agent. Use the Next button to advance through the steps. Use Cancel anytime to cancel this registration."
-msgstr "L'Assistant va vous enregister dans un Service ou un Agent. Utilisez le bouton Suivant pour progresser à travers des étapes. Utilisez Annuler si vous souhaitez quitter votre enregistrement."
+msgstr "L'Assistant va vous enregister dans un Service ou un Agent. Utilisez le bouton Suivant pour continuer. Utilisez Annuler si vous souhaitez quitter votre enregistrement."
 
 #. frmRegister..Tabs..TabSheet1..lblIns..Caption
 #: RegForm.dfm:50
 msgid "Waiting for agent instructions....."
-msgstr "Attente des instructions de l'Agent ..."
+msgstr "Attente des instructions de l'agent ..."
 
 #. frmRegister..Tabs..TabSheet2..Panel2..btnDelete..Caption
 #: RegForm.dfm:76
 msgid "Delete My Registration"
-msgstr "Effacer ..."
+msgstr "Effacez mon enregistrement"
 
 #. frmRegister..Tabs..TabSheet3..Label2..Caption
 #: RegForm.dfm:105
 msgid "Please wait, Sending your registration to the service...."
-msgstr "Attendez. Envois de votre enregistrement vers le service ..."
+msgstr "Attendez. Envoi de votre demande vers le service..."
 
 #. frmRegister..Tabs..TabSheet4..lblOK....AutoSize
 #: RegForm.dfm:127
@@ -5795,22 +5795,22 @@ msgstr "Votre enregistrement auprès du service a échoué ! Appuyez sur Précé
 #. frmRemove..optMove..Caption
 #: RemoveContact.dfm:61
 msgid "Remove this contact from this group"
-msgstr "Enlèver ce Contact de ce groupe"
+msgstr "Enlever ce contact de ce groupe"
 
 #. frmRemove..optRemove..Caption
 #: RemoveContact.dfm:70
 msgid "Remove this contact from my roster."
-msgstr "Enlèver ce Contact de mon répertoire."
+msgstr "Enlever ce contact de mon répertoire."
 
 #. frmRemove..chkRemove1..Caption
 #: RemoveContact.dfm:81
 msgid "Remove this person from my roster."
-msgstr "Enlèver ce Contact de mon répertoire"
+msgstr "Enlever ce contact de mon répertoire"
 
 #. frmRemove..chkRemove2..Caption
 #: RemoveContact.dfm:91
 msgid "Force this person to remove me from their roster"
-msgstr "Force ce Contact à m'enlever de son répertoire"
+msgstr "Forcer ce contact à m'enlever de son répertoire"
 
 #. frmRemove..lblJID..Caption
 #. frmRosterWindow..StatBar......Text
@@ -5837,7 +5837,7 @@ msgstr " lblSubject"
 #. frmRoom..popRoom..popClear..Caption
 #: Room.dfm:145
 msgid "Clear Window"
-msgstr "Efface la fenêtre"
+msgstr "Effacer la fenêtre"
 
 #. frmRoom..popRoom..popBookmark..Caption
 #. Programmer's name for it: sRoomBMPrompt
@@ -5849,17 +5849,17 @@ msgstr "Salle dans mes Favoris"
 #. frmRoom..popRoom..popInvite..Caption
 #: Room.dfm:161
 msgid "Invite Contacts"
-msgstr "Inviter un Contact"
+msgstr "Inviter un contact"
 
 #. frmRoom..popRoom..popNick..Caption
 #: Room.dfm:165
 msgid "Change Nickname"
-msgstr "Change Surnom"
+msgstr "Changer le surnom"
 
 #. frmRoom..popRoom..S1..Caption
 #: Room.dfm:169
 msgid "Save As..."
-msgstr "Enregistre sous ..."
+msgstr "Enregistrer sous ..."
 
 #. frmRoom..popRoom..popAdmin..Caption
 #: Room.dfm:173
@@ -5871,57 +5871,57 @@ msgstr "Admin"
 #: Room.dfm:176
 #: Room.pas:246
 msgid "Edit Voice List"
-msgstr "Edition de la Liste Vocale"
+msgstr "Edition de la liste vocale"
 
 #. frmRoom..popRoom..popAdmin..popBanList..Caption
 #. Programmer's name for it: sEditBan
 #: Room.dfm:180
 #: Room.pas:247
 msgid "Edit Ban List"
-msgstr "Edition de la Liste Bannis"
+msgstr "Edition de la liste bannis"
 
 #. frmRoom..popRoom..popAdmin..popMemberList..Caption
 #. Programmer's name for it: sEditMember
 #: Room.dfm:184
 #: Room.pas:248
 msgid "Edit Member List"
-msgstr "Edition de la Liste des Membres"
+msgstr "Edition de la liste des membres"
 
 #. frmRoom..popRoom..popAdmin..popAdminList..Caption
 #. Programmer's name for it: sEditAdmin
 #: Room.dfm:191
 #: Room.pas:249
 msgid "Edit Admin List"
-msgstr "Edition de la Liste Admin"
+msgstr "Edition de la liste admin"
 
 #. frmRoom..popRoom..popAdmin..popOwnerList..Caption
 #. Programmer's name for it: sEditOwner
 #: Room.dfm:195
 #: Room.pas:250
 msgid "Edit Owner List"
-msgstr "Edition de la Liste Propriétaires"
+msgstr "Edition de la liste propriétaires"
 
 #. frmRoom..popRoom..popAdmin..popConfigure..Caption
 #: Room.dfm:202
 msgid "Configure Room"
-msgstr "Configure la Salle"
+msgstr "Configurer la salle"
 
 #. frmRoom..popRoom..popAdmin..popDestroy..Caption
 #. Programmer's name for it: sDestroyRoom
 #: Room.dfm:206
 #: Room.pas:214
 msgid "Destroy Room"
-msgstr "Detruire la Salle"
+msgstr "Détruire la salle"
 
 #. frmRoom..popRoom..popClose..Caption
 #: Room.dfm:226
 msgid "Close Room"
-msgstr "Fermer la Salle"
+msgstr "Fermer la salle"
 
 #. frmRoom..popRoomRoster..popRosterSendJID..Caption
 #: Room.dfm:247
 msgid "Send my JID"
-msgstr "Envoi mon JID"
+msgstr "Envoyer mon JID"
 
 #. frmRoom..popRoomRoster..popRosterBlock..Caption
 #. frmRosterWindow..popRoster..popBlock..Caption
@@ -5949,7 +5949,7 @@ msgstr "Bannir"
 #. frmRoom..popRoomRoster..popVoice..Caption
 #: Room.dfm:268
 msgid "Toggle Voice"
-msgstr "Téléphone (voix):"
+msgstr "Passer en voix"
 
 #. frmRoom..popRoomRoster..popOwner..Caption
 #: Room.dfm:273
@@ -5969,17 +5969,17 @@ msgstr "RTF (*.rtf)|*.rtf|Text (*.txt)|*.txt"
 #. frmRoom..dlgSave..Title
 #: Room.dfm:283
 msgid "Save Room Contents"
-msgstr "Sauver le contenu de la Salle"
+msgstr "Sauver le contenu de la salle"
 
 #. frmRoomAdminList..Caption
 #: RoomAdminList.dfm:7
 msgid "Room List Modifier"
-msgstr "Liste des Modificateurs"
+msgstr "Liste des modificateurs"
 
 #. frmRoomAdminList..Label1..Caption
 #: RoomAdminList.dfm:35
 msgid "Enter New Jabber ID's for this list:"
-msgstr "Entrez le nouvel Jabber ID pour cette liste:"
+msgstr "Entrez le nouveau Jabber ID pour cette liste:"
 
 #. frmRoomAdminList..lstItems......Caption
 #: RoomAdminList.dfm:82
@@ -5989,24 +5989,24 @@ msgstr "Surnom"
 #. frmAdd..Label1..Caption
 #: RosterAdd.dfm:26
 msgid "Contact ID:"
-msgstr "ID du Contact"
+msgstr "ID du Contact :"
 
 #. frmAdd..Label3..Caption
 #. frmSubscribe..boxAdd..Label3..Caption
 #: RosterAdd.dfm:40
 #: subscribe.dfm:88
 msgid "Group:"
-msgstr "Groupe:"
+msgstr "Groupe :"
 
 #. frmAdd..Label4..Caption
 #: RosterAdd.dfm:58
 msgid "Contact Type:"
-msgstr "Type de Contact:"
+msgstr "Type de Contact :"
 
 #. frmAdd..lblGateway..Caption
 #: RosterAdd.dfm:65
 msgid "Gateway Server:"
-msgstr "Serveur Passerelle:"
+msgstr "Serveur Passerelle :"
 
 #. frmAdd..cboType....Items.WideStrings
 #: RosterAdd.dfm:128
@@ -6041,7 +6041,7 @@ msgstr "Réception de Liste"
 #. frmRosterRecv..Panel1..Label2..Caption
 #: RosterRecv.dfm:226
 msgid "Add contacts to this group:"
-msgstr "Ajouter un Contact à ce groupe:"
+msgstr "Ajouter des contacts à ce groupe :"
 
 #. frmRosterWindow..Caption
 #: RosterWindow.dfm:8
@@ -6051,12 +6051,12 @@ msgstr "Répertoire - Exodus"
 #. frmRosterWindow..pnlFind..lblFind..Caption
 #: RosterWindow.dfm:80
 msgid "Find:"
-msgstr "Rechercher:"
+msgstr "Rechercher :"
 
 #. frmRosterWindow..pnlFind..txtFind..Hint
 #: RosterWindow.dfm:102
 msgid "Esc to quit, Enter to select current,  F3 to search again"
-msgstr "Ech pour quitter, Enter pour sélectionner, F3 pour chercher encore"
+msgstr "Ech pour quitter, Entrée pour sélectionner, F3 pour chercher encore"
 
 #. frmRosterWindow..pnlFind..radJID..Caption
 #: RosterWindow.dfm:114
@@ -6071,7 +6071,7 @@ msgstr "JID"
 #: RosterWindow.dfm:244
 #: RosterWindow.pas:344
 msgid "Offline"
-msgstr "Mode non connecté"
+msgstr "Hors ligne"
 
 #. frmRosterWindow..pnlConnect..lblStatus..Caption
 #. Programmer's name for it: sDisconnected
@@ -6083,7 +6083,7 @@ msgstr "Déconnecté."
 #. frmRosterWindow..pnlConnect..lblLogin..Caption
 #: RosterWindow.dfm:283
 msgid "Click to Login"
-msgstr "Cliquer pour vous authentifier"
+msgstr "Cliquez pour vous authentifier"
 
 #. frmRosterWindow..popRoster..popChat..Caption
 #: RosterWindow.dfm:314
@@ -6098,22 +6098,22 @@ msgstr "Message..."
 #. frmRosterWindow..popRoster..popSendFile..Caption
 #: RosterWindow.dfm:322
 msgid "Send File..."
-msgstr "Envoyer un Fichier"
+msgstr "Envoyer un fichier"
 
 #. frmRosterWindow..popRoster..popSendContacts..Caption
 #: RosterWindow.dfm:330
 msgid "Send Contact To..."
-msgstr "Envoyer un contact A ..."
+msgstr "Envoyer un contact à ..."
 
 #. frmRosterWindow..popRoster..popPresence..popSendPres..Caption
 #: RosterWindow.dfm:351
 msgid "Send Available"
-msgstr "Envoyer Présent"
+msgstr "Envoyer présent"
 
 #. frmRosterWindow..popRoster..popPresence..popSendInvisible..Caption
 #: RosterWindow.dfm:355
 msgid "Send Invisible"
-msgstr "Envoyer Invisible"
+msgstr "Envoyer invisible"
 
 #. frmRosterWindow..popRoster..popPresence..popSendSubscribe..Caption
 #: RosterWindow.dfm:362
@@ -6123,7 +6123,7 @@ msgstr "Souscrire encore"
 #. frmRosterWindow..popRoster..popRename..Caption
 #: RosterWindow.dfm:367
 msgid "Rename..."
-msgstr "Renomer ..."
+msgstr "Renommer..."
 
 #. frmRosterWindow..popRoster..popHistory..Caption
 #: RosterWindow.dfm:371
@@ -6133,7 +6133,7 @@ msgstr "Historique"
 #. frmRosterWindow..popRoster..popProperties..Caption
 #: RosterWindow.dfm:387
 msgid "Properties..."
-msgstr "Propriété ..."
+msgstr "Propriétés ..."
 
 #. frmRosterWindow..popGroup..popGrpPresence..Caption
 #: RosterWindow.dfm:594
@@ -6148,22 +6148,22 @@ msgstr "Invisible"
 #. frmRosterWindow..popGroup..BroadcastMessage1..Caption
 #: RosterWindow.dfm:609
 msgid "Broadcast Message"
-msgstr "Message Diffusé"
+msgstr "Diffusion de message"
 
 #. frmRosterWindow..popGroup..SendContactsTo1..Caption
 #: RosterWindow.dfm:613
 msgid "Send Contacts To..."
-msgstr "Envoyer le(s) Contact(s) à ..."
+msgstr "Envoyer le(s) contact(s) à ..."
 
 #. frmRosterWindow..popGroup..MoveorCopyContacts1..Caption
 #: RosterWindow.dfm:617
 msgid "Move or Copy Contacts..."
-msgstr "Bouger ou Copier le(s) Contact(s) ..."
+msgstr "Déplacer ou copier le(s) contact(s)..."
 
 #. frmRosterWindow..popGroup..popGrpRename..Caption
 #: RosterWindow.dfm:628
 msgid "Rename"
-msgstr "Renomer"
+msgstr "Renommer"
 
 #. frmRosterWindow..popGroup..NewGroup1..Caption
 #: RosterWindow.dfm:639
@@ -6190,12 +6190,12 @@ msgstr "Fermer la Session"
 #. frmRosterWindow..popTransport..popTransProperties..Caption
 #: RosterWindow.dfm:680
 msgid "Rename ..."
-msgstr "Renomer"
+msgstr "Renommer"
 
 #. frmSelContact..Caption
 #: SelContact.dfm:6
 msgid "Select Contact"
-msgstr "Sélectionner le Contact"
+msgstr "Sélectionner le contact"
 
 #. frmSelContact..PopupMenu1..ShowOnlineOnly1..Caption
 #: SelContact.dfm:85
@@ -6215,7 +6215,7 @@ msgstr "Requête de souscription"
 #. frmSubscribe..Label1....Align
 #: subscribe.dfm:32
 msgid "This person or agent would like to see your online presence and add you to their roster."
-msgstr "Ce Contact/Agent souhaite connaitre votre Présence et vous ajouter à son répertoire."
+msgstr "Ce contact/agent souhaite connaitre votre présence et vous ajouter à son répertoire."
 
 #. frmSubscribe..lblJID..Caption
 #: subscribe.dfm:50
@@ -6225,7 +6225,7 @@ msgstr "lblJID"
 #. frmSubscribe..chkSubscribe..Caption
 #: subscribe.dfm:65
 msgid "Add this person to my roster"
-msgstr "Ajouter ce Contact à mon Répertoire"
+msgstr "Ajouter ce contact à mon répertoire"
 
 #. frmSubscribe..frameButtons1..Panel2..Panel1..btnOK..Caption
 #. Programmer's name for it: sAccept
@@ -6242,12 +6242,12 @@ msgstr "Refuser"
 #. frmVCard..Caption
 #: vcard.dfm:6
 msgid "My Profile"
-msgstr "Mon Profile"
+msgstr "Mon profil"
 
 #. frmVCard..PageControl1..TabSheet1..lblURL..Caption
 #: vcard.dfm:71
 msgid "Web:"
-msgstr "Web:"
+msgstr "Web :"
 
 #. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -6261,7 +6261,7 @@ msgstr "Iles Coco (Keeling) "
 #: vcard.dfm:310
 #: vcard.dfm:715
 msgid "Islands  "
-msgstr "Islandes  "
+msgstr "Iles"
 
 #. frmVCard..PageControl1..TabSheet6..Caption
 #: vcard.dfm:616
@@ -6291,7 +6291,7 @@ msgstr "lblIns"
 #. frmXferManager..Caption
 #: XferManager.dfm:5
 msgid "File Transfer Manager"
-msgstr "Gestionnaire du Transfer de Fichiers"
+msgstr "Gestionnaire de transfert de fichiers"
 
 #. Programmer's name for it: sService
 #: Browser.pas:168
@@ -6351,12 +6351,12 @@ msgstr " est en train de répondre."
 #. Programmer's name for it: sChatActivity
 #: ChatWin.pas:168
 msgid "Chat Activity: "
-msgstr "Activitée Chat"
+msgstr "Activité chat"
 
 #. Programmer's name for it: sUserBlocked
 #: ChatWin.pas:169
 msgid "This user is now blocked."
-msgstr "Cet Utilisateur est maintenant Bloqué."
+msgstr "Cet utilisateur est maintenant bloqué."
 
 #. Programmer's name for it: sIsNow
 #: ChatWin.pas:170
@@ -6381,22 +6381,22 @@ msgstr "Cette fenêtre de Chat est active. Fermer quand même ?"
 #. Programmer's name for it: sPluginErrCreate
 #: COMController.pas:176
 msgid "Plugin could not be created. (%s)"
-msgstr "Le complément ne peut être créé. (%s)"
+msgstr "Le plugin n'a pu être créé. (%s)"
 
 #. Programmer's name for it: sPluginErrNoIntf
 #: COMController.pas:177
 msgid "Plugin class does not support IExodusPlugin. (%s)"
-msgstr "La classe du Complément ne supporte pas IExodusPlugin. (%s)"
+msgstr "La classe du plugin ne supporte pas IExodusPlugin. (%s)"
 
 #. Programmer's name for it: sPluginErrInit
 #: COMController.pas:178
 msgid "Plugin class could not be initialized. (%s)"
-msgstr "Le complément ne peut être initializé. (%s)"
+msgstr "La classe du plugin n'a pas pu être initialisée. (%s)"
 
 #. Programmer's name for it: sPluginRemove
 #: COMController.pas:179
 msgid "Remove this plugin from the list of plugins to be loaded at startup?"
-msgstr "Retirez ce complément de la liste de compléments chargés lors du démarrage de l'application"
+msgstr "Retirez ce plugin de la liste de plugins chargés lors du démarrage de l'application"
 
 #. Programmer's name for it: sSmallKeys
 #: ConnDetails.pas:117
@@ -6412,27 +6412,27 @@ msgstr "%s Détails"
 #. Programmer's name for it: sProfileInvalidJid
 #: ConnDetails.pas:119
 msgid "The Jabber ID you entered (username@server/resource) is invalid. Please enter a valid username, server, and resource."
-msgstr "L'ID Jabber que vous avez entré (nom@serveur/ressource) est invalide. Please introduisez un nom, un serveur et une ressource valide"
+msgstr "L'ID Jabber que vous avez entré (nom@serveur/ressource) est invalide. Veuillez introduire un nom, un serveur et une ressource valide."
 
 #. Programmer's name for it: sDownloadServers
 #: ConnDetails.pas:122
 msgid "Download the public server list from jabber.org? (Requires an internet connection)."
-msgstr "Télécharger la liste des serveurs publiques de jabber.org ? (Connection Internet nécessaire)."
+msgstr "Télécharger la liste des serveurs publics de jabber.org ? (Connection Internet nécessaire)."
 
 #. Programmer's name for it: sDownloadCaption
 #: ConnDetails.pas:123
 msgid "Downloading public server list"
-msgstr "Télécharger la liste des serveur publiques"
+msgstr "Télécharger la liste des serveurs publics"
 
 #. Programmer's name for it: sNoSSL
 #: ConnDetails.pas:124
 msgid "This profile is currently to use SSL, however, your system does not have the required libraries to use SSL. Turning SSL OFF."
-msgstr "Ce profile utilise actuellement SSL, apparement, votre système n'as pas les librairies SSL nécessaires. Désactivation de SSL."
+msgstr "Ce profil utilise actuellement SSL, mais votre système n'a pas les librairies SSL nécessaires. Désactivation de SSL."
 
 #. Programmer's name for it: sPresUnavailable
 #: ExEvents.pas:74
 msgid "Unavailable presence"
-msgstr "Présence Non Disponible"
+msgstr "Présence non disponible"
 
 #. Programmer's name for it: sPresAvailable
 #: ExEvents.pas:75
@@ -6457,14 +6457,14 @@ msgstr "Absence Prolongée"
 #. Programmer's name for it: sPresDND
 #: ExEvents.pas:79
 msgid "Do Not Disturb presence"
-msgstr "Ne pas Déranger"
+msgstr "Ne pas déranger"
 
 #. Programmer's name for it: sPresS10n
 #. Programmer's name for it: sSoundS10n
 #: ExEvents.pas:80
 #: prefs/PrefNotify.pas:72
 msgid "Subscription request"
-msgstr "Requête de souscription"
+msgstr "Demande de souscription"
 
 #. Programmer's name for it: sPresGrant
 #: ExEvents.pas:81
@@ -6479,37 +6479,37 @@ msgstr "Souscription refusée/périmée"
 #. Programmer's name for it: sPresUnsub
 #: ExEvents.pas:83
 msgid "Unsubscribe presence packet"
-msgstr "Se désinscrire des packet de présence"
+msgstr "Se désinscrire des avertissements de présence"
 
 #. Programmer's name for it: sMsgTime
 #: ExEvents.pas:85
 msgid "Time Response"
-msgstr "Temp de réponse"
+msgstr "Temps de réponse"
 
 #. Programmer's name for it: sMsgTimeInfo
 #: ExEvents.pas:86
 msgid "Time, Ping Response: "
-msgstr "Temps de réponse Ping:"
+msgstr "Temps de réponse Ping :"
 
 #. Programmer's name for it: sMsgLocalTime
 #: ExEvents.pas:87
 msgid "Local Time: "
-msgstr "Heure Locale:"
+msgstr "Heure locale :"
 
 #. Programmer's name for it: sMsgVersion
 #: ExEvents.pas:89
 msgid "Version Response"
-msgstr "Réponse de version"
+msgstr "Version (réponse)"
 
 #. Programmer's name for it: sMsgVerClient
 #: ExEvents.pas:90
 msgid "Description: "
-msgstr "Description: "
+msgstr "Description : "
 
 #. Programmer's name for it: sMsgVerOS
 #: ExEvents.pas:92
 msgid "OS: "
-msgstr "OS: "
+msgstr "OS : "
 
 #. Programmer's name for it: sMsgLastInfo
 #: ExEvents.pas:95
@@ -6524,12 +6524,12 @@ msgstr "Ce message contient une URL"
 #. Programmer's name for it: sPresError
 #: ExEvents.pas:100
 msgid "The jabber server can not contact the server where this user is hosted.Click \"Remove\" to remove this contact from your roster."
-msgstr "Le serveur Jabber ne peut pas contacter où l'utilisateur est hébergé. Cliquez\"Supprimer\" pour supprimer cet individu de votre répertoire."
+msgstr "Le serveur Jabber ne peut pas contacter le serveur où cet utilisateur est hébergé. Cliquez\"Supprimer\" pour supprimer ce contact de votre répertoire."
 
 #. Programmer's name for it: sNotifyAutoResponse
 #: ExResponders.pas:122
 msgid "%s query from: %s"
-msgstr "Requête %s de: %s"
+msgstr "Requête %s de : %s"
 
 #. Programmer's name for it: sLast
 #: ExResponders.pas:125
@@ -6544,21 +6544,21 @@ msgstr "Disco"
 #. Programmer's name for it: sExceptionMsg
 #: ExResponders.pas:128
 msgid "An error has occurred. Exodus will automatically save an error log file to your desktop. Use this file to a bug report at the exodus website."
-msgstr "Une erreur s'est produite. Exodus va automatiquement sauver les évènement dans un fichier log sur votre bureau. Utilisez ce fichier pour rapporter ce Bug sur le site Web de Exodus."
+msgstr "Une erreur s'est produite. Exodus va automatiquement sauvegarder les évènements dans un fichier journal sur votre bureau. Utilisez ce fichier pour rapporter ce Bug sur le site Web d'Exodus."
 
 #. Programmer's name for it: sCmdDebug
 #. Programmer's name for it: sCmdDebug
 #: ExSession.pas:64
 #: Jabber1.pas:380
 msgid " -d \t\t : Debug mode on\n"
-msgstr " -d \t\t : Mode Debug Activé \n"
+msgstr " -d \t\t : Mode débug activé \n"
 
 #. Programmer's name for it: sCmdMinimized
 #. Programmer's name for it: sCmdMinimized
 #: ExSession.pas:65
 #: Jabber1.pas:381
 msgid " -m \t\t : Start minimized\n"
-msgstr " -m \t\t : Démarrer Minimisé\n"
+msgstr " -m \t\t : Démarrer minimisé\n"
 
 #. Programmer's name for it: sCmdInvisible
 #. Programmer's name for it: sCmdInvisible
@@ -6572,14 +6572,14 @@ msgstr " -v \t\t : Mode invisible\n"
 #: ExSession.pas:67
 #: Jabber1.pas:383
 msgid " -? \t\t : Show Help\n"
-msgstr " -? \t\t : Affiche l'Aide\n"
+msgstr " -? \t\t : Affiche l'aide\n"
 
 #. Programmer's name for it: sCmdExpanded
 #. Programmer's name for it: sCmdExpanded
 #: ExSession.pas:68
 #: Jabber1.pas:384
 msgid " -x [yes|no] \t : Expanded Mode\n"
-msgstr " -x [yes|no] \t : Expanded Mode\n"
+msgstr " -x [yes|no] \t : Mode étendu\n"
 
 #. Programmer's name for it: sCmdJID
 #. Programmer's name for it: sCmdJID
@@ -6593,7 +6593,7 @@ msgstr " -j [jid] \t\t : Jid\n"
 #: ExSession.pas:70
 #: Jabber1.pas:386
 msgid " -p [pass] \t : Password\n"
-msgstr " -p [pass] \t : Mot de Passe\n"
+msgstr " -p [pass] \t : Mot de passe\n"
 
 #. Programmer's name for it: sCmdResource
 #. Programmer's name for it: sCmdResource
@@ -6607,33 +6607,33 @@ msgstr " -r [res] \t : Ressource\n"
 #: ExSession.pas:72
 #: Jabber1.pas:388
 msgid " -i [pri] \t : Priority\n"
-msgstr " -i [pri] \t : Priority\n"
+msgstr " -i [pri] \t : Priorité\n"
 
 #. Programmer's name for it: sCmdProfile
 #. Programmer's name for it: sCmdProfile
 #: ExSession.pas:73
 #: Jabber1.pas:389
 msgid " -f [prof] \t : Profile name\n"
-msgstr " -f [prof] \t : Nom du profile\n"
+msgstr " -f [prof] \t : Nom du profil\n"
 
 #. Programmer's name for it: sCmdConfig
 #. Programmer's name for it: sCmdConfig
 #: ExSession.pas:74
 #: Jabber1.pas:390
 msgid " -c [file] \t : Config path name\n"
-msgstr " -c [file] \t : Config path name\n"
+msgstr " -c [file] \t : Emplacement du fichier de configuration\n"
 
 #. Programmer's name for it: sUnkArg
 #. Programmer's name for it: sUnkArg
 #: ExSession.pas:75
 #: Jabber1.pas:391
 msgid "Invalid command line:%s"
-msgstr "Ligne de commande invalide: %s"
+msgstr "Ligne de commande invalide : %s"
 
 #. Programmer's name for it: sWinsock2
 #: ExSession.pas:76
 msgid "Winsock2 is required for this application. Please obtain the winsock2 installer from Microsoft for your operating system."
-msgstr "Winsock2 est requis pas cette application. Installez une version winsock2 ou téléchargez-la a partir du site de Microsoft. "
+msgstr "Winsock2 est requis par cette application. Installez une version Winsock2 ou téléchargez-la a partir du site de Microsoft. "
 
 #. Programmer's name for it: sDownloading
 #: ExUtils.pas:115
@@ -6658,22 +6658,22 @@ msgstr "Installation..."
 #. Programmer's name for it: sError
 #: ExUtils.pas:119
 msgid "Error: %s"
-msgstr "Erreur: %s"
+msgstr "Erreur : %s"
 
 #. Programmer's name for it: sTurnOnBlocking
 #: ExUtils.pas:149
 msgid "You currently have logging turned off. Turn Logging On? (Warning: Logs are not encrypted)"
-msgstr "Votre système de fichier log est actuellement désactivé. Le ré-activer ?  (Attention: Les logs ne sont pas chiffrés)"
+msgstr "Votre système de fichier log est actuellement désactivé. Le ré-activer ?  (Attention : les logs ne sont pas chiffrés)"
 
 #. Programmer's name for it: sNoHistory
 #: ExUtils.pas:150
 msgid "There is no history file for this contact."
-msgstr "Il n'y a pas de fichier d'historique pour ce Contact."
+msgstr "Il n'y a pas de fichier d'historique pour ce contact."
 
 #. Programmer's name for it: sBadLogDir
 #: ExUtils.pas:151
 msgid "The log directory you specified is invalid. Either turn off logging, or specify a valid path."
-msgstr "Le répertoire spécifié pour vos logs n'est pas valide. Soit désactivez votre system de logs, ou donnez un chemin valide."
+msgstr "Le répertoire spécifié pour vos logs n'est pas valide. Désactivez votre système de logs, ou donnez un chemin valide."
 
 #. Programmer's name for it: sHistoryDeleted
 #: ExUtils.pas:152
@@ -6688,7 +6688,7 @@ msgstr "Ne peut effacer le fichier d'historique."
 #. Programmer's name for it: sHistoryNone
 #: ExUtils.pas:154
 msgid "No history file for this user."
-msgstr "Pas de fichier d'historique pour cet Utilisateur."
+msgstr "Pas de fichier d'historique pour cet utilisateur."
 
 #. Programmer's name for it: sConfirmClearLog
 #: ExUtils.pas:155
@@ -6732,7 +6732,7 @@ msgstr "%s: L'option %s nécessite un argument."
 #. Programmer's name for it: SOPtUnknown
 #: getOpt.pas:125
 msgid "%s: Unknown option %s."
-msgstr "%s: Option Inconnue %s."
+msgstr "%s: Option inconnue %s."
 
 #. Programmer's name for it: SNoLongOpt
 #: getOpt.pas:126
@@ -6752,17 +6752,17 @@ msgstr "Retirer le groupe %s"
 #. Programmer's name for it: sPrefWriteError
 #: GUIFactory.pas:39
 msgid "There was an error attempting to save your options. Another process may be accessing your options file. Some options may be lost. "
-msgstr "Il s'est produit une erreur lors de la sauvergarde de vos options. Un autre processus semble accèder à vos fichier. Des informations risquent d'être perdues."
+msgstr "Il s'est produit une erreur lors de la sauvergarde de vos options. Un autre processus semble accéder à vos fichiers. Des informations risquent d'être perdues."
 
 #. Programmer's name for it: sConfRoom
 #: invite.pas:68
 msgid "Conference Room:"
-msgstr "Salle de conférence:"
+msgstr "Salle de conférence :"
 
 #. Programmer's name for it: sInviteBody
 #: invite.pas:69
 msgid "You have been invited to the %s room."
-msgstr "Vous avez été invité dans la salle %s ."
+msgstr "Vous avez été invité dans la salle %s."
 
 #. Programmer's name for it: sCommandLine
 #: Jabber1.pas:379
@@ -6770,7 +6770,7 @@ msgid ""
 "The following command line parameters are available in Exodus: \n"
 "\n"
 msgstr ""
-"Les paramêtres de commandes suivantes sont disponibles dans Exodus: \n"
+"Les paramêtres de commandes suivantes sont disponibles dans Exodus : \n"
 "\n"
 
 #. Programmer's name for it: sXMPP_Profile
@@ -6804,8 +6804,8 @@ msgid ""
 "There was an error trying to authenticate you.\n"
 "Either you used the wrong password, or this account is already in use by someone else."
 msgstr ""
-"Il s'est produit une erreur lors de votre authetification.\n"
-"Soit vous utilisez un mot de passe erroné, ou ce compte est déjà utilisé par quelqu'un d'autre."
+"Il s'est produit une erreur lors de votre authentification.\n"
+"Soit vous utilisez un mot de passe erroné, soit ce compte est déjà utilisé par quelqu'un d'autre."
 
 #. Programmer's name for it: sRegError
 #: Jabber1.pas:412
@@ -6820,17 +6820,17 @@ msgstr "Ce compte n'existe pas dans ce serveur. Créer un nouveau compte ?"
 #. Programmer's name for it: sNewAccount
 #: Jabber1.pas:414
 msgid "Your new jabber account is activated. Would you like to fill out additional registration information?"
-msgstr "Nouveau compte Jabber est actif. Voulez-vous enregistre la suite des informations ?"
+msgstr "Votre nouveau compte Jabber est actif. Voulez-vous enregistrer la suite des informations ?"
 
 #. Programmer's name for it: sCancelReconnect
 #: Jabber1.pas:415
 msgid "Click to Cancel Reconnect"
-msgstr "Cliquer pour Annuler la Reconnection"
+msgstr "Cliquer pour Annuler la reconnexion"
 
 #. Programmer's name for it: sReconnectIn
 #: Jabber1.pas:416
 msgid "Reconnect in "
-msgstr "Reconnection dans"
+msgstr "Reconnexion dans"
 
 #. Programmer's name for it: sSeconds
 #: Jabber1.pas:417
@@ -6840,42 +6840,42 @@ msgstr "secondes."
 #. Programmer's name for it: sSetAutoAvailable
 #: Jabber1.pas:419
 msgid "Setting Auto Available"
-msgstr "Paramêtre Présence Automatique"
+msgstr "Paramètre présence automatique"
 
 #. Programmer's name for it: sSetAutoAway
 #: Jabber1.pas:420
 msgid "Setting AutoAway"
-msgstr "Paramêtre Absence Automatique"
+msgstr "Paramètre absence automatique"
 
 #. Programmer's name for it: sSetAutoXA
 #: Jabber1.pas:421
 msgid "Setting AutoXA"
-msgstr "Appliquer l'état Absence Prolongée"
+msgstr "Appliquer l'état absence prolongée"
 
 #. Programmer's name for it: sSetupAutoAway
 #: Jabber1.pas:422
 msgid "Trying to setup the Auto Away timer."
-msgstr "Tentative d'initialisation du Minuteur d'état Non disponible"
+msgstr "Tentative d'initialisation du minuteur d'état non disponible."
 
 #. Programmer's name for it: sAutoAwayFail
 #: Jabber1.pas:423
 msgid "AutoAway Setup FAILED!"
-msgstr "Etat Non Disponnible à ECHOUE!"
+msgstr "Etat non disponible a échoué !"
 
 #. Programmer's name for it: sAutoAwayWin32
 #: Jabber1.pas:424
 msgid "Using Win32 API for Autoaway checks!!"
-msgstr "Utilisation de l'API Win32 pour l'état Non Disponible vérifié!!"
+msgstr "Utilisation de l'API Win32 pour vérification de l'état non disponible !!"
 
 #. Programmer's name for it: sAutoAwayFailWin32
 #: Jabber1.pas:425
 msgid "ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!"
-msgstr "Recetion d'ERREUR WIN32 API ADDR pour GetLastInputInfo!!"
+msgstr "Erreur lors de la réception de WIN32 API ADDR pour GetLastInputInfo !!"
 
 #. Programmer's name for it: sMsgPing
 #: Jabber1.pas:427
 msgid "Ping Time: %s seconds."
-msgstr "La durée du Ping est de %s secondes."
+msgstr "La durée du ping est de %s secondes."
 
 #. Programmer's name for it: sMsgMessage
 #: Jabber1.pas:428
@@ -6905,7 +6905,7 @@ msgstr "Nouveau groupe dans le répertoire"
 #. Programmer's name for it: sNewGroupPrompt
 #: Jabber1.pas:434
 msgid "Enter new group name: "
-msgstr "Insérer le nouveau nom du groupe:"
+msgstr "Insérer le nouveau nom du groupe :"
 
 #. Programmer's name for it: sNewGroupExists
 #: Jabber1.pas:435
@@ -6915,12 +6915,12 @@ msgstr "Ce groupe existe déjà !"
 #. Programmer's name for it: sLookupProfile
 #: Jabber1.pas:437
 msgid "Lookup Profile"
-msgstr "Recherche du Profile"
+msgstr "Recherche du profil"
 
 #. Programmer's name for it: sSendMessage
 #: Jabber1.pas:438
 msgid "Send a Message"
-msgstr "Envoyer un Message"
+msgstr "Envoyer un message"
 
 #. Programmer's name for it: sRegService
 #: Jabber1.pas:440
@@ -6930,12 +6930,12 @@ msgstr "S'enregistrer dans ce sevice"
 #. Programmer's name for it: sEnterJID
 #: Jabber1.pas:443
 msgid "Enter Jabber ID: "
-msgstr "Insérez l'ID Jabber:"
+msgstr "Insérez l'ID Jabber :"
 
 #. Programmer's name for it: sEnterSvcJID
 #: Jabber1.pas:444
 msgid "Enter Jabber ID of Service: "
-msgstr "Insérez l'ID Jabber de ce Service:"
+msgstr "Insérez l'ID Jabber de ce service :"
 
 #. Programmer's name for it: sInvalidJID
 #: Jabber1.pas:445
@@ -6955,7 +6955,7 @@ msgstr "Mot de passe changé."
 #. Programmer's name for it: sPasswordOldError
 #: Jabber1.pas:449
 msgid "Old password is incorrect."
-msgstr "Ancien mot de passe incorrecte."
+msgstr "Ancien mot de passe incorrect."
 
 #. Programmer's name for it: sPasswordNewError
 #: Jabber1.pas:450
@@ -6975,11 +6975,11 @@ msgstr "Vous avez déjà souscrit à ce contact"
 #. Programmer's name for it: sBrandingError
 #: Jabber1.pas:455
 msgid "Branding error!"
-msgstr "Erreur Anormale!"
+msgstr "Erreur Anormale !"
 
 #: Jabber1.pas:1040
 msgid "SSL Connection Error: \n"
-msgstr "Errur de connection SSL: \n"
+msgstr "Errur de connection SSL : \n"
 
 #: Jabber1.pas:1041
 msgid "Continue?"
@@ -7003,7 +7003,7 @@ msgstr "Arrêter"
 #. Programmer's name for it: sJUDErrorContacting
 #: jud.pas:114
 msgid "Could not contact the search agent."
-msgstr "Ne peut trouver l'Agent de recherche."
+msgstr "Ne peut trouver l'agent de recherche."
 
 #. Programmer's name for it: sJUDTimeout
 #: jud.pas:115
@@ -7018,27 +7018,27 @@ msgstr "Pas de résultat trouvé."
 #. Programmer's name for it: sProfileRemove
 #: Login.pas:64
 msgid "Remove this profile?"
-msgstr "Enlever ce Profile ?"
+msgstr "Enlever ce profil ?"
 
 #. Programmer's name for it: sProfileNew
 #: Login.pas:66
 msgid "Untitled Profile"
-msgstr "Profile sans nom"
+msgstr "Profil sans nom"
 
 #. Programmer's name for it: sProfileCreate
 #: Login.pas:67
 msgid "New Profile"
-msgstr "Nouveau Profile"
+msgstr "Nouveau profil"
 
 #. Programmer's name for it: sProfileNamePrompt
 #: Login.pas:68
 msgid "Enter Profile Name"
-msgstr "Entrez le nom du Profile"
+msgstr "Entrez le nom du profil"
 
 #. Programmer's name for it: sNoSpoolDir
 #: MsgQueue.pas:71
 msgid "Exodus could not create or write to the spool directory specified in the options."
-msgstr "Exodus ne peut pas créer ou écrire dans la zone spécifée dans les options (Spool)."
+msgstr "Exodus ne peut pas créer ou écrire dans le répertoire de spool spécifié dans les options."
 
 #. Programmer's name for it: sMessageFrom
 #: MsgRecv.pas:155
@@ -7058,12 +7058,12 @@ msgstr "Refuser"
 #. Programmer's name for it: sTo
 #: MsgRecv.pas:161
 msgid "To:"
-msgstr "A:"
+msgstr "A :"
 
 #. Programmer's name for it: sError
 #: MsgRecv.pas:162
 msgid "Error:"
-msgstr "Erreur:"
+msgstr "Erreur :"
 
 #. Programmer's name for it: sBtnNext
 #: MsgRecv.pas:164
@@ -7073,17 +7073,17 @@ msgstr "Suivant"
 #. Programmer's name for it: sMsgsPending
 #: MsgRecv.pas:165
 msgid "You have unread messages. Read all messages before closing the window."
-msgstr "Vous avez des messages non lu. Lisez tout les messages avant de fermer cette fenêtre."
+msgstr "Vous avez des messages non lus. Lisez tous les messages avant de fermer cette fenêtre."
 
 #. Programmer's name for it: sNotifyOnline
 #: Notify.pas:50
 msgid " is now online."
-msgstr "Est connecté"
+msgstr " est maintenant en ligne."
 
 #. Programmer's name for it: sNotifyOffline
 #: Notify.pas:51
 msgid " is now offline."
-msgstr "N'est pas/plus connecté"
+msgstr " n'est plus en ligne."
 
 #. Programmer's name for it: sNotifyChat
 #: Notify.pas:52
@@ -7092,11 +7092,11 @@ msgstr "Chat avec"
 
 #: RecvStatus.pas:374
 msgid "Receive request timed out."
-msgstr "Requête expirée."
+msgstr "Réponse à la requête expirée."
 
 #: RecvStatus.pas:412
 msgid "No acceptable stream hosts were sent. Have the sender check their settings."
-msgstr "Flux de données non corrects . Demandez à l'émetteur de vérifier ses paramêtres."
+msgstr "Flux de données non correct . Demandez à l'émetteur de vérifier ses paramêtres."
 
 #. send SI accept
 #: RecvStatus.pas:503
@@ -7106,12 +7106,12 @@ msgstr "Négociation avec l'émetteur..."
 #. we ran out of streamhosts to try. bummer :(
 #: RecvStatus.pas:680
 msgid "Exodus was unable to connect to any file transfer proxies or the sender."
-msgstr "Exodus est incapable de se connecter sur le proxy de transfer de fichier ou sur l'utilisateur."
+msgstr "Exodus est incapable de se connecter à aucun proxy de transfert de fichier ou à l'émetteur."
 
 #. immediately turn around and refuse.
 #: RecvStatus.pas:711
 msgid "Waiting to cancel transfer..."
-msgstr "Attente d'annulation de transfert ..."
+msgstr "Attente d'annulation de transfert..."
 
 #. the sender went offline
 #: RecvStatus.pas:733
@@ -7131,17 +7131,17 @@ msgstr "Service d'enregistrement Jabber"
 #. Programmer's name for it: sServiceRegDetails
 #: RegForm.pas:89
 msgid "This wizard will guide you through registration with a jabber service."
-msgstr "Cet assistant vous guidera à travers l'enregistrement des Services Jabber."
+msgstr "Cet assistant vous guidera à travers votre enregistrement aux services Jabber."
 
 #. Programmer's name for it: sServiceRegError
 #: RegForm.pas:90
 msgid "The agent you are trying to register with returned an error."
-msgstr "L'Agent que vous cherchez à enregister a provoqué une erreur."
+msgstr "L'agent que vous cherchez à enregister a provoqué une erreur."
 
 #. Programmer's name for it: sServiceRegTimeout
 #: RegForm.pas:91
 msgid "The agent you are trying to register with can not be reached."
-msgstr "L'Agent que vous cherchez à enregister ne peut être localisé."
+msgstr "L'agent que vous cherchez à enregister ne peut être contacté."
 
 #. Programmer's name for it: sServiceRegRemoveError
 #: RegForm.pas:92
@@ -7156,12 +7156,12 @@ msgstr "Votre enregistrement a été effacé."
 #. Programmer's name for it: sRemoveGrpLabel
 #: RemoveContact.pas:55
 msgid "Remove this contact from the %s group."
-msgstr "Enlever ce Contact du groupe  %s."
+msgstr "Enlever ce contact du groupe  %s."
 
 #. Programmer's name for it: sRoom
 #: Room.pas:199
 msgid "%s Room"
-msgstr "%s Salle"
+msgstr "Salle %s"
 
 #. Programmer's name for it: sNotifyKeyword
 #: Room.pas:200
@@ -7176,7 +7176,7 @@ msgstr "Activité dans"
 #. Programmer's name for it: sRoomSubjChange
 #: Room.pas:202
 msgid "/me has changed the subject to: "
-msgstr "/me a sont sujet changé en: "
+msgstr "/me a changé le sujet changé en : "
 
 #. Programmer's name for it: sRoomSubjPrompt
 #: Room.pas:203
@@ -7196,7 +7196,7 @@ msgstr "Nouveau surnom"
 #. Programmer's name for it: sRoomNewBookmark
 #: Room.pas:207
 msgid "Enter bookmark name:"
-msgstr "Insérez le nom de votre Favoris:"
+msgstr "Insérez le nom de votre favori :"
 
 #. Programmer's name for it: sBlocked
 #: Room.pas:208
@@ -7208,7 +7208,7 @@ msgstr "Bloqué"
 #: Room.pas:210
 #: RosterWindow.pas:311
 msgid "UnBlock"
-msgstr "Non Bloqué"
+msgstr "Non bloqué"
 
 #. Programmer's name for it: sUnknownFileType
 #: Room.pas:211
@@ -7223,42 +7223,42 @@ msgstr "L'adresse de cette salle est invalide. Elle doit être un Jabber ID vali
 #. Programmer's name for it: sKickReason
 #: Room.pas:215
 msgid "Kick Reason"
-msgstr "Motif d'Exclusion"
+msgstr "Motif d'exclusion"
 
 #. Programmer's name for it: sBanReason
 #: Room.pas:216
 msgid "Ban Reason"
-msgstr "Motif du Bannissement"
+msgstr "Motif du bannissement"
 
 #. Programmer's name for it: sDestroyReason
 #: Room.pas:217
 msgid "Destroy Reason"
-msgstr "Motif de Destruction"
+msgstr "Motif de destruction"
 
 #. Programmer's name for it: sKickDefault
 #: Room.pas:218
 msgid "You have been kicked."
-msgstr "Vous avez été Exclus."
+msgstr "Vous avez été exclus."
 
 #. Programmer's name for it: sBanDefault
 #: Room.pas:219
 msgid "You have been banned."
-msgstr "Vous avez été Bannis"
+msgstr "Vous avez été banni"
 
 #. Programmer's name for it: sDestroyDefault
 #: Room.pas:220
 msgid "The owner has destroyed the room."
-msgstr "Le propriétaire a détruit la Salle."
+msgstr "Le propriétaire a détruit la salle."
 
 #. Programmer's name for it: sGrantVoice
 #: Room.pas:222
 msgid "You have been granted voice."
-msgstr "Votre service vocale est accepté."
+msgstr "Le service vocal vous est autorisé.."
 
 #. Programmer's name for it: sRevokeVoice
 #: Room.pas:223
 msgid "Your voice has been revoked."
-msgstr "Votre service vocale a été annulé."
+msgstr "Le service vocal vous a été annulé."
 
 #. Programmer's name for it: sNewUser
 #: Room.pas:225
@@ -7278,17 +7278,17 @@ msgstr "%s a comme nouvelle fonction %s."
 #. Programmer's name for it: sDestroyRoomConfirm
 #: Room.pas:229
 msgid "Do you really want to destroy the room? All users will be removed."
-msgstr "Voulez-vous réellement détruire cette salle ? Tous ses occupants seront éjecté."
+msgstr "Voulez-vous réellement détruire cette salle ? Tous ses occupants seront supprimés."
 
 #. Programmer's name for it: sStatus_100
 #: Room.pas:231
 msgid "This room is not anonymous"
-msgstr "Cette salle n'est pas de type Anonyme"
+msgstr "Cette salle n'est pas de type anonyme"
 
 #. Programmer's name for it: sStatus_301
 #: Room.pas:232
 msgid "%s has been banned from this room. %s"
-msgstr "%s a été bannis de cette salle. %s"
+msgstr "%s a été banni de cette salle. %s"
 
 #. Programmer's name for it: sStatus_302
 #: Room.pas:233
@@ -7298,7 +7298,7 @@ msgstr "Cette salle a été détruite."
 #. Programmer's name for it: sStatus_303
 #: Room.pas:234
 msgid "%s is now known as %s."
-msgstr "%s est maintenant connu comme %s."
+msgstr "%s est maintenant connu sous le nom de %s."
 
 #. Programmer's name for it: sStatus_307
 #: Room.pas:235
@@ -7313,12 +7313,12 @@ msgstr "Vous avez donné un mauvais mot de passe pour accéder à cette salle."
 #. Programmer's name for it: sStatus_403
 #: Room.pas:238
 msgid "You are on the ban list for this room."
-msgstr "Vous ête sur la liste des gens Bannis de cette salle."
+msgstr "Vous ête sur la liste des gens bannis de cette salle."
 
 #. Programmer's name for it: sStatus_404
 #: Room.pas:239
 msgid "The room is being created. Please try again later."
-msgstr "Cette salle est déjà existante . Svp, essayez plus tard."
+msgstr "Cette salle est déjà existante . Veuillez essayer plus tard."
 
 #. Programmer's name for it: sStatus_405
 #: Room.pas:240
@@ -7328,12 +7328,12 @@ msgstr "Vous n'êtes pas autorisé à créer des salles."
 #. Programmer's name for it: sStatus_405a
 #: Room.pas:241
 msgid "You are not allowed to enter the room. You must be on the member list."
-msgstr "Vous n'ête pas autorisé a entrer dans cette salle. Vous devez faire partie de sa liste de membres."
+msgstr "Vous n'ête pas autorisé a entrer dans cette salle. Vous devez faire partie de sa liste des membres."
 
 #. Programmer's name for it: sStatus_407
 #: Room.pas:242
 msgid "You are not on the member list for this room. Try and register?"
-msgstr "Vous ne faite pas partie des usagers de cette salle. Voulez-vous vous enregister ?"
+msgstr "Vous ne faite pas partie des membres de cette salle. Voulez-vous vous enregister ?"
 
 #. Programmer's name for it: sStatus_409
 #: Room.pas:243
@@ -7348,46 +7348,46 @@ msgstr "La salle a été détruite pour une raison inconnue."
 #: Room.pas:443
 #: Room.pas:445
 msgid "ERROR: "
-msgstr "ERREUR:"
+msgstr "ERREUR :"
 
 #: Room.pas:1076
 msgid "Your room keyword regular expressions are invalid. Keyword matching will be turned off for this room."
-msgstr "Votre mot ou expression est invalide. La recherche de mots clé est désactivée pour cette salle."
+msgstr "Votre expression régulière de mot-clé de salle est invalide. La recherche de mots-clé est désactivée pour cette salle."
 
 #. Programmer's name for it: sNoDomain
 #: RosterAdd.pas:67
 msgid "The contact ID you entered does not follow the standard user@host convention. Do you want to continue?"
-msgstr "L'ID du Contact que vous avez introduit ne correspond pas aux standard de type Utilisteur@Hôte . Continuer quand même ?"
+msgstr "L'ID du contact que vous avez entré ne correspond pas au standard de type Utilisteur@Hôt . Continuer quand même ?"
 
 #. Programmer's name for it: sResourceSpec
 #: RosterAdd.pas:68
 msgid "Jabber Contact IDs do not typically include a resource. Are you sure you want to add this contact ID?"
-msgstr "Les ID du Contact Jabber n'incluent habituellement pas de ressource. Etes vous sûre de vouloir ajouter l'ID du Contact ?"
+msgstr "Les ID du contact Jabber n'incluent habituellement pas de ressource. Etes vous sûr(e) de vouloir ajouter l'ID du contact ?"
 
 #. Programmer's name for it: sNoGatewayFound
 #: RosterAdd.pas:69
 msgid "The gateway server you requested does not have a transport for this contact type."
-msgstr "Le serveur passerelle ne fournis pas le System de Transport requis."
+msgstr "Le serveur passerelle ne fourni pas le système de transport requis."
 
 #. Programmer's name for it: sNotAddMyself
 #: RosterAdd.pas:70
 msgid "You can not add yourself to your roster."
-msgstr "Vous ne pouvez pas vous mettre dans votre propre Répertoire."
+msgstr "Vous ne pouvez pas vous mettre dans votre propre répertoire."
 
 #. Programmer's name for it: sRemoveBookmark
 #: RosterWindow.pas:296
 msgid "Remove this bookmark?"
-msgstr "Enlever ce Favoris?"
+msgstr "Enlever ce favori?"
 
 #. Programmer's name for it: sRenameGrp
 #: RosterWindow.pas:297
 msgid "Rename group"
-msgstr "Renomer le groupe"
+msgstr "Renommer le groupe"
 
 #. Programmer's name for it: sRenameGrpPrompt
 #: RosterWindow.pas:298
 msgid "New group name:"
-msgstr "Nouveau nom de Groupe:"
+msgstr "Nouveau nom de groupe :"
 
 #. Programmer's name for it: sNoContactsSel
 #: RosterWindow.pas:299
@@ -7407,7 +7407,7 @@ msgstr "Bloquer le contact %d ?"
 #. Programmer's name for it: sNoBroadcast
 #: RosterWindow.pas:302
 msgid "You must select more than one online contact to broadcast."
-msgstr "Vous devez sélectionner plus d'un Contact pour faire uen Diffusion."
+msgstr "Vous devez sélectionner plus d'un contact pour faire une diffusion."
 
 #. Programmer's name for it: sSignOn
 #: RosterWindow.pas:303
@@ -7422,7 +7422,7 @@ msgstr "Cliquer pour annuler"
 #. Programmer's name for it: sConnecting
 #: RosterWindow.pas:306
 msgid "Trying to connect..."
-msgstr "Tentative de connection..."
+msgstr "Tentative de connexion..."
 
 #. Programmer's name for it: sAuthenticating
 #: RosterWindow.pas:307
@@ -7431,7 +7431,7 @@ msgid ""
 "Authenticating..."
 msgstr ""
 "Connecté. \n"
-"Authentification ..."
+"Authentification..."
 
 #. Programmer's name for it: sAuthenticated
 #: RosterWindow.pas:308
@@ -7440,18 +7440,18 @@ msgid ""
 "Getting Settings..."
 msgstr ""
 "Authentifié.\n"
-"Récupération des paramêtres ..."
+"Récupération des paramêtres..."
 
 #. Programmer's name for it: sMyResources
 #: RosterWindow.pas:312
 #: RosterWindow.pas:351
 msgid "My Resources"
-msgstr "Mes Ressources"
+msgstr "Mes ressources"
 
 #. Programmer's name for it: sNetMeetingConnError
 #: RosterWindow.pas:314
 msgid "Your connection type does not support direct connections."
-msgstr "Votre type de connection ne supporte pas de conenction directe."
+msgstr "Votre type de connexion ne supporte pas de connexion directe."
 
 #. Programmer's name for it: sGrpUnfiled
 #: /src/exodus/jopl/Roster.pas:115
@@ -7467,17 +7467,17 @@ msgstr "Favoris"
 
 #: SendStatus.pas:805
 msgid "Your file transfer was refused to %s"
-msgstr "Votre transfert a été refusé vers %s"
+msgstr "Votre transfert vers %s a été refusé"
 
 #. they refused
 #: SendStatus.pas:884
 msgid "The recipient (%s) refused your file: %s"
-msgstr "Le destinataire (%s) a refusé votre fichier: %s"
+msgstr "Le destinataire (%s) a refusé votre fichier : %s"
 
 #. error
 #: SendStatus.pas:906
 msgid "The stream was not actived for file: %s"
-msgstr "Le flux n'est pas activé pour le fichier: %s"
+msgstr "Le flux n'est pas activé pour le fichier : %s"
 
 #: SendStatus.pas:942
 msgid "Send failed."
@@ -7491,22 +7491,22 @@ msgstr "Connecté."
 #. Programmer's name for it: sTransportRemove
 #: Transports.pas:46
 msgid "Remove Registration?"
-msgstr "Enlever l'enregistrement ?"
+msgstr "Supprimer l'enregistrement ?"
 
 #. Programmer's name for it: sTransportTimeout
 #: Transports.pas:47
 msgid "The transport could not be reached. Your request timed out."
-msgstr "Le Système de Transport ne peut être joint. Votre requête a dépassé le temps limite."
+msgstr "Le système de transport n'a pu être joint. Votre requête a dépassé le temps limite."
 
 #. Programmer's name for it: sTransportError
 #: Transports.pas:48
 msgid "There was an error processing your request."
-msgstr "Il s'est produit une erreur lors du passage de votre requête."
+msgstr "Il s'est produit une erreur lors du traîtement de votre requête."
 
 #. Programmer's name for it: sTransportNotReg
 #: Transports.pas:49
 msgid "You are not registered with this transport."
-msgstr "Vous n'ête pas enregistré pour ce System de Transport"
+msgstr "Vous n'ête pas enregistré pour ce système de transport."
 
 #. Programmer's name for it: sTransportSuccess
 #: Transports.pas:50
@@ -7516,17 +7516,17 @@ msgstr "Votre requête à réussi."
 #. Programmer's name for it: sVCardError
 #: vcard.pas:117
 msgid "No vCard response was ever returned."
-msgstr "Aucune réponse vcard n'a jamais été affichée."
+msgstr "Aucune réponse vCard n'a jamais été reçue."
 
 #. Programmer's name for it: sAllRequired
 #: xdata.pas:63
 msgid "All required fields must be filled out"
-msgstr "Tout les champs Obligatoire doivent être complétés."
+msgstr "Tout les champs obligatoires doivent être complétés."
 
 #. Programmer's name for it: sFormFrom
 #: xdata.pas:64
 msgid "Form from %s"
-msgstr "Msg de %s"
+msgstr "Formulaire de %s"
 
 #. Programmer's name for it: sCancelled
 #: xdata.pas:66
@@ -7536,12 +7536,12 @@ msgstr "Annulé"
 #. Programmer's name for it: sCancelMsg
 #: xdata.pas:67
 msgid "%s cancelled your form."
-msgstr "%s annulé votre requête."
+msgstr "%s a annulé votre requête."
 
 #. Programmer's name for it: sXferNewPort
 #: XferManager.pas:131
 msgid "Your new file transfer port will not take affect until all current trasfers are stopped. Stop existing transfers?"
-msgstr "Votre nouveau port pour le transfert de fichier ne sera valide qu'une fois tous les transfert arrêtés. Arrêter le(s) transfert(s) existant ?"
+msgstr "Votre nouveau port pour le transfert de fichier ne sera valide qu'une fois tous les transferts arrêtés. Arrêter le(s) transfert(s) existant ?"
 
 #. Programmer's name for it: sXferRecv
 #: XferManager.pas:132
@@ -7551,17 +7551,17 @@ msgstr "% est en train de vous envoyer un fichier."
 #. Programmer's name for it: sXferURL
 #: XferManager.pas:133
 msgid "File transfer URL: "
-msgstr "URL du Fichier à transférer:"
+msgstr "URL du fichier à transférer:"
 
 #. Programmer's name for it: sXferDesc
 #: XferManager.pas:134
 msgid "File Description: "
-msgstr "Description du Fichier"
+msgstr "Description du fichier"
 
 #. Programmer's name for it: sXferOnline
 #: XferManager.pas:135
 msgid "The Contact must be online before you can send a file."
-msgstr "Le Contact doit être En Ligne avant de lui envoyer un Fichier."
+msgstr "Le contact doit être en ligne avant de lui envoyer un fichier."
 
 #. Programmer's name for it: sSend
 #: XferManager.pas:136
@@ -7571,12 +7571,12 @@ msgstr "Envoyer"
 #. Programmer's name for it: sOpen
 #: XferManager.pas:137
 msgid "Open"
-msgstr "Ouvert"
+msgstr "Ouvrir"
 
 #. Programmer's name for it: sTo
 #: XferManager.pas:139
 msgid "To:     "
-msgstr "A:"
+msgstr "A :"
 
 #. Programmer's name for it: sXferOverwrite
 #: XferManager.pas:140
@@ -7586,22 +7586,22 @@ msgstr "Ce fichier existe déjà. L'écraser ?"
 #. Programmer's name for it: sXferWaiting
 #: XferManager.pas:141
 msgid "Waiting for connection..."
-msgstr "Attente de Connection"
+msgstr "Attente de connexion..."
 
 #. Programmer's name for it: sXferSending
 #: XferManager.pas:142
 msgid "Sending file..."
-msgstr "Envoi du Fichier..."
+msgstr "Envoi du fichier..."
 
 #. Programmer's name for it: sXferRecvDisconnected
 #: XferManager.pas:143
 msgid "Receiver disconnected."
-msgstr "Destinataire Déconnecté."
+msgstr "Destinataire déconnecté."
 
 #. Programmer's name for it: sXferTryingClose
 #: XferManager.pas:144
 msgid "Trying to close."
-msgstr "Tentative de Fermeture."
+msgstr "Tentative de fermeture."
 
 #. Programmer's name for it: sXferDone
 #: XferManager.pas:145
@@ -7611,12 +7611,12 @@ msgstr "Transfert de fichier effectué."
 #. Programmer's name for it: sXferConn
 #: XferManager.pas:146
 msgid "Got connection."
-msgstr "Connection Reçue."
+msgstr "Connexion reçue."
 
 #. Programmer's name for it: sXferDefaultDesc
 #: XferManager.pas:147
 msgid "Sending you a file."
-msgstr "Vous transmet un Fichier."
+msgstr "Je vous transmets ce fichier."
 
 #. Programmer's name for it: sXferCreateDir
 #: XferManager.pas:148
@@ -7626,17 +7626,17 @@ msgstr "Ce répertoire n'existe pas. Le créer ?"
 #. Programmer's name for it: sXferStreamError
 #: XferManager.pas:149
 msgid "There was an error trying to create the file."
-msgstr "Il s'est produit une erreur lors de la création du Fichier."
+msgstr "Il s'est produit une erreur lors de la création du fichier."
 
 #. Programmer's name for it: sXferDavError
 #: XferManager.pas:150
 msgid "There was an error trying to upload the file to your web host."
-msgstr "Il s'est produit une erreur lors du téléchargement du Fichier sur l'hôte Web.."
+msgstr "Il s'est produit une erreur lors du téléchargement du fichier vers votre hôte web.."
 
 #. Programmer's name for it: sXferRecvError
 #: XferManager.pas:151
 msgid "There was an error receiving the file. (%d)"
-msgstr "Il s'est produit une erreur lors de la réception du Fichier. (%d)"
+msgstr "Il s'est produit une erreur lors de la réception du fichier. (%d)"
 
 #. Programmer's name: 1 24
 #: manifest.rc:1
@@ -7726,12 +7726,12 @@ msgstr "..country-codes.xml"
 #. Programmer's name for it: sIdleAway
 #: /src/exodus/jopl/PrefController.pas:244
 msgid "Away as a result of idle."
-msgstr "Absence résultant d'innactivité."
+msgstr "Absence résultant d'inactivité."
 
 #. Programmer's name for it: sIdleXA
 #: /src/exodus/jopl/PrefController.pas:245
 msgid "XA as a result of idle."
-msgstr "Abs Prolongée résultant d'une innactivitée."
+msgstr "Abs. prolongée résultant d'une inactivité."
 
 #. Programmer's name for it: sS10nDeny
 #: /src/exodus/jopl/S10n.pas:53
@@ -7739,13 +7739,13 @@ msgid ""
 "The contact: %s did not grant your subscription request.\n"
 "This user may not exist."
 msgstr ""
-"Le contact %s n'as pas répondu à votre requête de souscription.\n"
+"Le contact %s n'a pas répondu à votre requête de souscription.\n"
 "Cet utilisateur semble ne pas exister."
 
 #. Programmer's name for it: SUREBaseString
 #: /src/exodus/jopl/Unicode.pas:822
 msgid "Error in regular expression: %s"
-msgstr "Expression régulière en Erreur: %s"
+msgstr "Erreur dans l'expression régulière : %s"
 
 #. Programmer's name for it: SUREUnexpectedEOS
 #: /src/exodus/jopl/Unicode.pas:823
@@ -7755,7 +7755,7 @@ msgstr "Fin inattendue d'instruction."
 #. Programmer's name for it: SURECharacterClassOpen
 #: /src/exodus/jopl/Unicode.pas:824
 msgid "Character class not closed, ']' is missing."
-msgstr "Character class non fermé, ']' est manquant."
+msgstr "Classe de caractère non fermée, ']' est manquant."
 
 #. Programmer's name for it: SUREUnbalancedGroup
 #: /src/exodus/jopl/Unicode.pas:825
@@ -7770,7 +7770,7 @@ msgstr "Un Caractère n'est pas valide."
 #. Programmer's name for it: SUREInvalidRepeatRange
 #: /src/exodus/jopl/Unicode.pas:827
 msgid "Invalid repeation range."
-msgstr "L'Information n'est pas valide."
+msgstr "L'information n'est pas valide."
 
 #. Programmer's name for it: SURERepeatRangeOpen
 #: /src/exodus/jopl/Unicode.pas:828
@@ -7780,7 +7780,7 @@ msgstr "Zone répétée non fermée, '}' est manquant."
 #. Programmer's name for it: SUREExpressionEmpty
 #: /src/exodus/jopl/Unicode.pas:829
 msgid "Expression is empty."
-msgstr "L'Expression est vide"
+msgstr "L'expression est vide"
 
 #. frmPrefAway..Caption
 #: prefs/PrefAway.dfm:4
@@ -7790,12 +7790,12 @@ msgstr "frmPrefAway"
 #. frmPrefAway..Label2..Caption
 #: prefs/PrefAway.dfm:15
 msgid "Minutes to wait before setting status to Away:"
-msgstr "Mettre en  Absence au bout de (.mn)"
+msgstr "Mettre en absence au bout de (mn) :"
 
 #. frmPrefAway..Label3..Caption
 #: prefs/PrefAway.dfm:22
 msgid "Minutes to wait before setting status to XA:"
-msgstr "Mettre en Absence prolongée au bout de ( .mn)"
+msgstr "Mettre en absence prolongée au bout de (mn) :"
 
 #. frmPrefAway..Label4..Caption
 #: prefs/PrefAway.dfm:29
@@ -7810,17 +7810,17 @@ msgstr "Abs Prolongée :"
 #. frmPrefAway..chkAutoAway..Caption
 #: prefs/PrefAway.dfm:81
 msgid "Enable Auto Away"
-msgstr "Activer l'Absence Automatique"
+msgstr "Activer l'absence automatique"
 
 #. frmPrefAway..chkAAReducePri..Caption
 #: prefs/PrefAway.dfm:103
 msgid "Reduce priority to 0 during auto-away."
-msgstr "Réduction de la priorité à 0 en phase d'Absence Automatique"
+msgstr "Réduction de la priorité à 0 en phase d'absence automatique"
 
 #. frmPrefAway..StaticText4..Caption
 #: prefs/PrefAway.dfm:113
 msgid "Auto Away Options"
-msgstr "Options d'Absence Automatique"
+msgstr "Options d'absence automatique"
 
 #. frmPrefDialogs..Caption
 #: prefs/PrefDialogs.dfm:4
@@ -7830,12 +7830,12 @@ msgstr "frmPrefDialogs"
 #. frmPrefDialogs..Label26..Caption
 #: prefs/PrefDialogs.dfm:15
 msgid "Minutes to keep chat windows in memory:"
-msgstr "Minute(s) de rétention du dialogue en mémoire:"
+msgstr "Durée de sauvegarde du dialogue en mémoire (mn) :"
 
 #. frmPrefDialogs..Label27..Caption
 #: prefs/PrefDialogs.dfm:22
 msgid "Use 0 minutes to destroy chat windows immediately."
-msgstr "Destruction immédiate de la salle si 0 minute utilisé."
+msgstr "Utilisez 0 minutes pour détruire immédiatement la salle."
 
 #. frmPrefDialogs..Label29..Caption
 #: prefs/PrefDialogs.dfm:29
@@ -7845,12 +7845,12 @@ msgstr "Durée (en sec.) :"
 #. frmPrefDialogs..chkRosterAlpha..Caption
 #: prefs/PrefDialogs.dfm:36
 msgid "Use Alpha Blending for Roster "
-msgstr "Transparence pour le Répertoire"
+msgstr "Transparence pour le répertoire"
 
 #. frmPrefDialogs..chkToastAlpha..Caption
 #: prefs/PrefDialogs.dfm:82
 msgid "Use Alpha Blending for Toast Notifications"
-msgstr "Transparence pour les Notifications"
+msgstr "Transparence pour les notifications"
 
 #. frmPrefDialogs..chkSnap..Caption
 #: prefs/PrefDialogs.dfm:128
@@ -7865,12 +7865,12 @@ msgstr "Avertir si tentative de fermeture de fenêtre active."
 #. frmPrefDialogs..StaticText4..Caption
 #: prefs/PrefDialogs.dfm:194
 msgid "Window Options"
-msgstr "Options de Fenêtrage"
+msgstr "Options de fenêtrage"
 
 #. frmPrefDialogs..chkEscClose..Caption
 #: prefs/PrefDialogs.dfm:210
 msgid "Pressing the ESC key closes windows."
-msgstr "Appuyez la touche ECH pour fermer."
+msgstr "Appuyez la touche Ech pour fermer."
 
 #. frmPrefFont..Caption
 #: prefs/PrefFont.dfm:4
@@ -7880,27 +7880,27 @@ msgstr "frmPrefFont"
 #. frmPrefFont..Label22..Caption
 #: prefs/PrefFont.dfm:15
 msgid "Roster Window"
-msgstr "Fenêtre du Répertoire"
+msgstr "Fenêtre du répertoire"
 
 #. frmPrefFont..Label23..Caption
 #: prefs/PrefFont.dfm:28
 msgid "Chat Windows"
-msgstr "Fenêtre de Discussion"
+msgstr "Fenêtre de discussion"
 
 #. frmPrefFont..Label24..Caption
 #: prefs/PrefFont.dfm:41
 msgid "Background Color:"
-msgstr "Couleur d'Arrière Plan:"
+msgstr "Couleur d'arrière-plan:"
 
 #. frmPrefFont..Label25..Caption
 #: prefs/PrefFont.dfm:48
 msgid "Font Color:"
-msgstr "Police, Couleurs:"
+msgstr "Police, couleurs:"
 
 #. frmPrefFont..Label5..Caption
 #: prefs/PrefFont.dfm:55
 msgid "Click on the appropriate font or window to change elements."
-msgstr "Cliquer sur la police de caractère ou fenêtre appropriée pour changer les éléments."
+msgstr "Cliquer sur la police de caractère ou la fenêtre appropriée pour changer les éléments."
 
 #. frmPrefFont..lblColor..Caption
 #: prefs/PrefFont.dfm:62
@@ -7910,7 +7910,7 @@ msgstr "Nom de l'élément"
 #. frmPrefFont..btnFont..Caption
 #: prefs/PrefFont.dfm:118
 msgid "Change Font"
-msgstr "Changer ..."
+msgstr "Changer de police"
 
 #. frmPrefFont..StaticText4..Caption
 #: prefs/PrefFont.dfm:225
@@ -7925,17 +7925,17 @@ msgstr "frmPrefGroups"
 #. frmPrefGroups..Label18..Caption
 #: prefs/PrefGroups.dfm:15
 msgid "Group to be used for Gateways:"
-msgstr "Groupe à utiliser comme passerelle:"
+msgstr "Groupe à utiliser comme passerelle :"
 
 #. frmPrefGroups..Label1..Caption
 #: prefs/PrefGroups.dfm:22
 msgid "Default Group:"
-msgstr "Groupe par défaut:"
+msgstr "Groupe par défaut :"
 
 #. frmPrefGroups..lblFilter....AutoSize
 #: prefs/PrefGroups.dfm:32
 msgid "When showing only online contacts, visible contacts must be at least:"
-msgstr "Considérer comme présent, les contacts ayant une Présence au moins égale à :"
+msgstr "Considérer comme présent, les contacts ayant une présence au moins égale à :"
 
 #. frmPrefGroups..chkSort..Caption
 #: prefs/PrefGroups.dfm:56
@@ -7945,17 +7945,17 @@ msgstr "Trier les contacts par leur disponibilité."
 #. frmPrefGroups..chkCollapsed..Caption
 #: prefs/PrefGroups.dfm:78
 msgid "Collapse all roster groups initially."
-msgstr "Réduire le répertoires à l'état initial."
+msgstr "Réduire les groupes du répertoire au démarrage."
 
 #. frmPrefGroups..chkGroupCounts..Caption
 #: prefs/PrefGroups.dfm:86
 msgid "Show group counts in roster (eg, 5/10)"
-msgstr "Nombre d'individus  (ex..5/10) "
+msgstr "Nombre d'individus (ex..5/10) "
 
 #. frmPrefGroups..chkOfflineGrp..Caption
 #: prefs/PrefGroups.dfm:94
 msgid "Show offline contacts in an Offline group"
-msgstr "Les absents dans le groupe Absents"
+msgstr "Les absents dans le groupe absents"
 
 #. frmPrefGroups..chkOnlineOnly..Caption
 #: prefs/PrefGroups.dfm:103
@@ -7965,7 +7965,7 @@ msgstr "Seulement les contacts présents"
 #. frmPrefGroups..StaticText4..Caption
 #: prefs/PrefGroups.dfm:113
 msgid "Roster Group Options"
-msgstr "Options des Groupes"
+msgstr "Options des groupes"
 
 #. frmPrefLayouts..Caption
 #: prefs/PrefLayouts.dfm:4
@@ -7980,27 +7980,27 @@ msgstr "Aperçu"
 #. frmPrefLayouts..lblViewHelp....AutoSize
 #: prefs/PrefLayouts.dfm:1141
 msgid "Main window shows only the roster. Other windows are opened seperatly and are never docked."
-msgstr "La fenêtre principale affiche seulement le répertoire. Les autres fenêtres sont ouvertes séparément sans être arrimées."
+msgstr "La fenêtre principale affiche seulement le répertoire. Les autres fenêtres sont ouvertes séparément sans être fixes."
 
 #. frmPrefLayouts..cboView....Items.WideStrings
 #: prefs/PrefLayouts.dfm:1154
 msgid "Show small roster and never dock"
-msgstr "Afficher un petit répertoire et ne jamais l'arrimer"
+msgstr "Afficher un petit répertoire et ne jamais le fixer"
 
 #. frmPrefLayouts..cboView....Items.WideStrings
 #: prefs/PrefLayouts.dfm:1155
 msgid "Dock windows. Roster is always visible"
-msgstr "Arrimer les fenêtres. Le répertoire est toujours visible"
+msgstr "Fixer les fenêtres. Le répertoire est toujours visible"
 
 #. frmPrefLayouts..cboView....Items.WideStrings
 #: prefs/PrefLayouts.dfm:1156
 msgid "Dock windows and use tabs"
-msgstr "Arrimer les fenêtres et utiliser des onglets"
+msgstr "Fixer les fenêtres et utiliser des onglets"
 
 #. frmPrefLayouts..StaticText4..Caption
 #: prefs/PrefLayouts.dfm:1165
 msgid "Window Layouts"
-msgstr "Gestion de Fenêtrage"
+msgstr "Gestion du fenêtrage"
 
 #. frmPrefMsg..Caption
 #: prefs/PrefMsg.dfm:4
@@ -8010,7 +8010,7 @@ msgstr "frmPrefMsg"
 #. frmPrefMsg..Label19..Caption
 #: prefs/PrefMsg.dfm:15
 msgid "Format:"
-msgstr "Format:"
+msgstr "Format :"
 
 #. frmPrefMsg..Label7..Caption
 #: prefs/PrefMsg.dfm:22
@@ -8020,12 +8020,12 @@ msgstr "Message simple (non-chat) :"
 #. frmPrefMsg..Label16..Caption
 #: prefs/PrefMsg.dfm:29
 msgid "Store Unread messages to:"
-msgstr "Garder les messages non lu à:"
+msgstr "Stocker les messages non lus vers :"
 
 #. frmPrefMsg..Label17..Caption
 #: prefs/PrefMsg.dfm:36
 msgid "When I get invited to a chat room, do this:"
-msgstr "Quand je suis convié à une salle, faire ceci: "
+msgstr "Quand je suis convié à une salle, faire ceci : "
 
 #. frmPrefMsg..chkEmoticons..Caption
 #: prefs/PrefMsg.dfm:43
@@ -8040,7 +8040,7 @@ msgstr "Afficher Date/Heure"
 #. frmPrefMsg..chkLog..Caption
 #: prefs/PrefMsg.dfm:59
 msgid "Log Messages"
-msgstr "Historiques"
+msgstr "Messages d'historique"
 
 #. frmPrefMsg..chkMsgQueue..Caption
 #: prefs/PrefMsg.dfm:84
@@ -8050,7 +8050,7 @@ msgstr "La messagerie instantanée toujours dans la même fenêtre"
 #. frmPrefMsg..chkLogRooms..Caption
 #: prefs/PrefMsg.dfm:92
 msgid "Log conference rooms"
-msgstr "Historique de Conférence"
+msgstr "Historique des conférences"
 
 #. frmPrefMsg..cboMsgOptions....Items.WideStrings
 #: prefs/PrefMsg.dfm:104
@@ -8060,17 +8060,17 @@ msgstr "Employer la gestion de messages de défaut"
 #. frmPrefMsg..cboMsgOptions....Items.WideStrings
 #: prefs/PrefMsg.dfm:105
 msgid "Treat all messages as chats"
-msgstr "Prendre tous les messages comme un Chat"
+msgstr "Prendre tous les messages comme un chat"
 
 #. frmPrefMsg..cboMsgOptions....Items.WideStrings
 #: prefs/PrefMsg.dfm:106
 msgid "Put messages into existing chats"
-msgstr "Insérer les messages dans les discussions existante"
+msgstr "Insérer les messages dans les discussions existantes"
 
 #. frmPrefMsg..btnLogClearAll..Caption
 #: prefs/PrefMsg.dfm:113
 msgid "Clear All Logs"
-msgstr "Purger tout"
+msgstr "Purger tous les logs"
 
 #. frmPrefMsg..cboInviteOptions....Items.WideStrings
 #: prefs/PrefMsg.dfm:142
@@ -8080,12 +8080,12 @@ msgstr "Prendre tous les messages comme Message instantané"
 #. frmPrefMsg..cboInviteOptions....Items.WideStrings
 #: prefs/PrefMsg.dfm:143
 msgid "Always popup the invitation"
-msgstr "Toujousr afficher les invitations "
+msgstr "Toujours afficher les invitations "
 
 #. frmPrefMsg..cboInviteOptions....Items.WideStrings
 #: prefs/PrefMsg.dfm:144
 msgid "Automatically join the room."
-msgstr "Automatiquement rejoindre une salle."
+msgstr "Rejoindre automatiquement une salle."
 
 #. frmPrefMsg..chkBlockNonRoster..Caption
 #: prefs/PrefMsg.dfm:151
@@ -8117,12 +8117,12 @@ msgstr "tt"
 #. frmPrefMsg..StaticText4..Caption
 #: prefs/PrefMsg.dfm:175
 msgid "Message Options"
-msgstr "Options des Messages"
+msgstr "Options des messages"
 
 #. frmPrefMsg..chkLogRoster..Caption
 #: prefs/PrefMsg.dfm:191
 msgid "Only log messages from people in my roster"
-msgstr "Enregister seulement les messages des Contacts de mon Répertoire"
+msgstr "Enregister seulement les messages des contacts de mon répertoire"
 
 #. frmPrefMsg..OpenDialog1..Filter
 #: prefs/PrefMsg.dfm:195
@@ -8142,17 +8142,17 @@ msgstr "frmPrefNetwork"
 #. frmPrefNetwork..GroupBox1..Caption
 #: prefs/PrefNetwork.dfm:15
 msgid "Reconnect Options"
-msgstr "Options de Reconnection"
+msgstr "Options de reconnexion"
 
 #. frmPrefNetwork..GroupBox1..Label2..Caption
 #: prefs/PrefNetwork.dfm:22
 msgid "# of Reconnect attempts:"
-msgstr "Tentative(s) des connection:"
+msgstr "Tentative(s) des reconnexion :"
 
 #. frmPrefNetwork..GroupBox1..Label3..Caption
 #: prefs/PrefNetwork.dfm:29
 msgid "Time lapse between attempts:"
-msgstr "Délais entre chaque tentative:"
+msgstr "Délai entre chaque tentative :"
 
 #. frmPrefNetwork..GroupBox1..Label4..Caption
 #: prefs/PrefNetwork.dfm:36
@@ -8179,12 +8179,12 @@ msgstr "Utiliser les paramêtres des IE"
 #. frmPrefNetwork..GroupBox2..cboProxyApproach....Items.WideStrings
 #: prefs/PrefNetwork.dfm:180
 msgid "Direct Connection"
-msgstr "Connection Directe"
+msgstr "Connection directe"
 
 #. frmPrefNetwork..StaticText4..Caption
 #: prefs/PrefNetwork.dfm:191
 msgid "Connection Options"
-msgstr "Options de Connection"
+msgstr "Options de connexion"
 
 #. frmPrefNotify..Caption
 #: prefs/PrefNotify.dfm:4
@@ -8199,12 +8199,12 @@ msgstr "Ouvrir les paramètres audio."
 #. frmPrefNotify..lblConfigSounds..Caption
 #: prefs/PrefNotify.dfm:17
 msgid "Configure Sounds..."
-msgstr "Configurer les Sons..."
+msgstr "Configurer les sons..."
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:35
 msgid "Contact is online"
-msgstr "Le contact est Présent"
+msgstr "Le contact est présent"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:36
@@ -8214,17 +8214,17 @@ msgstr "Le contact est absent"
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:37
 msgid "New chat session"
-msgstr "Nouvelle session de Discussion"
+msgstr "Nouvelle session de discussion"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:38
 msgid "Normal Messages"
-msgstr "Messages Normaux"
+msgstr "Messages normaux"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:39
 msgid "Subscription Requests"
-msgstr "Requête de Souscription"
+msgstr "Demande de souscription"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:40
@@ -8234,17 +8234,17 @@ msgstr "Invitation à une conférence"
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:41
 msgid "Keywords (Conf. Rooms)"
-msgstr "Mot clé (Salles de Con.)"
+msgstr "Mot clé (Salles de Conf.)"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:42
 msgid "Chat window activity"
-msgstr "Activité dans Fenêtre de Discussion"
+msgstr "Activité dans fenêtre de discussion"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:43
 msgid "Conf. Room activity"
-msgstr "Conf. Activité de la Salle"
+msgstr "Activité dans salle de conf."
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:45
@@ -8254,7 +8254,7 @@ msgstr "Réponse automatique générée"
 #. frmPrefNotify..optNotify..chkFront..Caption
 #: prefs/PrefNotify.dfm:88
 msgid "Bring window to front"
-msgstr "Pousser la fenêtre en avant plan."
+msgstr "Passer la fenêtre en avant-plan."
 
 #. frmPrefNotify..chkSound..Caption
 #: prefs/PrefNotify.dfm:98
@@ -8264,12 +8264,12 @@ msgstr "Avertissements sonores"
 #. frmPrefNotify..chkNotifyActive....Height
 #: prefs/PrefNotify.dfm:109
 msgid "NOTE: Notifications always occur when Exodus is in the background."
-msgstr "NOTE: Les avertissement n'apparaissent que si Exodus est en arrière plan."
+msgstr "NOTE : Les avertissements n'apparaissent que si Exodus est en arrière-plan."
 
 #. frmPrefNotify..chkNotifyActive..Caption
 #: prefs/PrefNotify.dfm:110
 msgid "Perform notifications when I am using Exodus."
-msgstr "Faire une notification quand j'utilise Exodus."
+msgstr "Faire des notifications quand j'utilise Exodus."
 
 #. frmPrefNotify..chkFlashInfinite..Caption
 #: prefs/PrefNotify.dfm:120
@@ -8284,7 +8284,7 @@ msgstr "Faire une notification pour la fenêtre 'Je suis en train d'écrire'."
 #. frmPrefNotify..StaticText4..Caption
 #: prefs/PrefNotify.dfm:140
 msgid "Notification Options"
-msgstr "Options de Notification"
+msgstr "Options de notification"
 
 #. frmPrefPanel..Caption
 #: prefs/PrefPanel.dfm:6
@@ -8299,12 +8299,12 @@ msgstr "frmPrefPlugins"
 #. frmPrefPlugins..Label6..Caption
 #: prefs/PrefPlugins.dfm:15
 msgid "Plugin Directory (automatically scanned):"
-msgstr "Répertoirte des compléments (exploré automatiquement):"
+msgstr "Répertoire des plugins (exploré automatiquement):"
 
 #. frmPrefPlugins..lblPluginScan..Caption
 #: prefs/PrefPlugins.dfm:23
 msgid "Re-Scan this directory for plugins"
-msgstr "Re-vérifier le répertoire à la recherche de compléments"
+msgstr "Re-vérifier le répertoire à la recherche de plugins"
 
 #. frmPrefPlugins..btnConfigPlugin..Caption
 #: prefs/PrefPlugins.dfm:46
@@ -8314,7 +8314,7 @@ msgstr "Configurer"
 #. frmPrefPlugins..lstPlugins......Caption
 #: prefs/PrefPlugins.dfm:86
 msgid "Plugin"
-msgstr "Complément"
+msgstr "Plugin"
 
 #. frmPrefPlugins..lstPlugins......Caption
 #: prefs/PrefPlugins.dfm:90
@@ -8329,7 +8329,7 @@ msgstr "Nom du Fichier"
 #. frmPrefPlugins..StaticText4..Caption
 #: prefs/PrefPlugins.dfm:107
 msgid "Application Plugins"
-msgstr "Compléments Applicatif"
+msgstr "Plugins applicatifs"
 
 #. frmPrefPresence..Caption
 #: prefs/PrefPresence.dfm:4
@@ -8356,7 +8356,7 @@ msgstr "Surveiller la disponibilité durant les conversations"
 #. frmPrefPresence..Panel1..Label1..Caption
 #: prefs/PrefPresence.dfm:196
 msgid "Custom Presence Entries"
-msgstr "Personnaliser les Présences"
+msgstr "Personnaliser les présences"
 
 #. frmPrefPresence..Panel1..chkPresenceSync..Caption
 #: prefs/PrefPresence.dfm:209
@@ -8366,12 +8366,12 @@ msgstr "Synchroniser toutes les sessions d'Exodus (Présence)"
 #. frmPrefPresence..Panel1..cboPresTracking....Items.WideStrings
 #: prefs/PrefPresence.dfm:222
 msgid "Track all presence changes"
-msgstr "Surveilller tous les changements de Présence"
+msgstr "Surveilller tous les changements de présence"
 
 #. frmPrefPresence..Panel1..cboPresTracking....Items.WideStrings
 #: prefs/PrefPresence.dfm:223
 msgid "Show only last presence change"
-msgstr "Afficher seulement le dernier changement de Présence"
+msgstr "Afficher seulement le dernier changement de présence"
 
 #. frmPrefPresence..Panel1..cboPresTracking....Items.WideStrings
 #: prefs/PrefPresence.dfm:224
@@ -8381,14 +8381,14 @@ msgstr "N'afficher aucun changement de présence"
 #. frmPrefPresence..Panel1..chkClientCaps..Caption
 #: prefs/PrefPresence.dfm:231
 msgid "Send client capabilities in presence."
-msgstr "Afficher les possibilité de présence du client."
+msgstr "Afficher les possibilités de présence du client."
 
 #. frmPrefPresence..StaticText4..Caption
 #. frmPrefRoster..StaticText4..Caption
 #: prefs/PrefPresence.dfm:244
 #: prefs/PrefRoster.dfm:98
 msgid "Roster Options"
-msgstr "Options du Répertoire"
+msgstr "Options du répertoire"
 
 #. frmPrefRoster..Caption
 #: prefs/PrefRoster.dfm:4
@@ -8398,12 +8398,12 @@ msgstr "frmPrefRoster"
 #. frmPrefRoster..Label21..Caption
 #: prefs/PrefRoster.dfm:15
 msgid "When I double click a contact, do:"
-msgstr "Un double clic sur un contact produit: "
+msgstr "Un double-clic sur un contact produit : "
 
 #. frmPrefRoster..chkShowUnsubs..Caption
 #: prefs/PrefRoster.dfm:22
 msgid "Show contacts which I do not have a subscription to."
-msgstr "Afficher les contacts absent de mes souscriptions ."
+msgstr "Afficher les contacts absents de mes souscriptions ."
 
 #. frmPrefRoster..chkHideBlocked..Caption
 #: prefs/PrefRoster.dfm:30
@@ -8418,17 +8418,17 @@ msgstr "Détecter les contacts qui n'existent plus ou introuvables"
 #. frmPrefRoster..chkShowPending..Caption
 #: prefs/PrefRoster.dfm:46
 msgid "Show contacts I have asked to add as \"Pending\""
-msgstr "Afficher les Contacts en cours de souscription comme \"En attente\""
+msgstr "Afficher les contacts en cours de souscription comme \"En attente\""
 
 #. frmPrefRoster..cboDblClick....Items.WideStrings
 #: prefs/PrefRoster.dfm:58
 msgid "A new one to one chat window"
-msgstr "Une nouvelle fenêtre de Chat Un à  Un"
+msgstr "Une nouvelle fenêtre de chat un à  un"
 
 #. frmPrefRoster..cboDblClick....Items.WideStrings
 #: prefs/PrefRoster.dfm:59
 msgid "An instant message window"
-msgstr "Une fenêtre de Message Instantané"
+msgstr "Une fenêtre de message instantané"
 
 #. frmPrefRoster..cboDblClick....Items.WideStrings
 #: prefs/PrefRoster.dfm:60
@@ -8453,17 +8453,17 @@ msgstr "frmPrefSubscription"
 #. frmPrefSubscription..optIncomingS10n..Caption
 #: prefs/PrefSubscription.dfm:14
 msgid "Incoming Behavior "
-msgstr "Action Entrante"
+msgstr "Comportement entrant"
 
 #. frmPrefSubscription..optIncomingS10n....Items.Strings
 #: prefs/PrefSubscription.dfm:17
 msgid "Ask me for all requests"
-msgstr "Demander pour chaque requête"
+msgstr "Demandez-moi pour chaque requête"
 
 #. frmPrefSubscription..optIncomingS10n....Items.Strings
 #: prefs/PrefSubscription.dfm:18
 msgid "Auto-Accept requests from people in my roster."
-msgstr "Accepter toutes les requêtes, en provenance des Contacts de mon répertoire."
+msgstr "Accepter toutes les requêtes, en provenance des contacts de mon répertoire."
 
 #. frmPrefSubscription..optIncomingS10n....Items.Strings
 #: prefs/PrefSubscription.dfm:19
@@ -8473,7 +8473,7 @@ msgstr "Accepter toutes les requêtes."
 #. frmPrefSubscription..StaticText4..Caption
 #: prefs/PrefSubscription.dfm:29
 msgid "Subscription Options"
-msgstr "Options de Souscription"
+msgstr "Options de souscription"
 
 #. frmPrefSystem..Caption
 #: prefs/PrefSystem.dfm:7
@@ -8483,7 +8483,7 @@ msgstr "frmPrefSystem"
 #. frmPrefSystem..Label7..Caption
 #: prefs/PrefSystem.dfm:23
 msgid "Exodus language file to use:"
-msgstr "Fichier de langue à Utiliser:"
+msgstr "Fichier de langue à utiliser :"
 
 #. frmPrefSystem..lblPluginScan..Caption
 #: prefs/PrefSystem.dfm:31
@@ -8498,22 +8498,22 @@ msgstr "Mon surnom est :"
 #. frmPrefSystem..StaticText4..Caption
 #: prefs/PrefSystem.dfm:54
 msgid "System Options"
-msgstr "Options Système"
+msgstr "Options système"
 
 #. frmPrefSystem..chkAutoUpdate..Caption
 #: prefs/PrefSystem.dfm:70
 msgid "Check for updates automatically"
-msgstr "Mises à jours automatique"
+msgstr "Mises à jours automatiques"
 
 #. frmPrefSystem..chkDebug..Caption
 #: prefs/PrefSystem.dfm:78
 msgid "Start with Debug visible"
-msgstr "Démarrer avec le Debug visible"
+msgstr "Démarrer avec le débug visible"
 
 #. frmPrefSystem..chkAutoLogin..Caption
 #: prefs/PrefSystem.dfm:86
 msgid "Automatically login with last profile"
-msgstr "Au démarrage, utiliser le dernier Profile "
+msgstr "Au démarrage, utiliser le dernier profil "
 
 #. frmPrefSystem..chkCloseMin..Caption
 #: prefs/PrefSystem.dfm:94
@@ -8528,7 +8528,7 @@ msgstr "Lancer Exodus lorsque Windows démarre"
 #. frmPrefSystem..chkOnTop..Caption
 #: prefs/PrefSystem.dfm:110
 msgid "Exodus is always on top"
-msgstr "Exodus Toujours visible"
+msgstr "Exodus toujours visible"
 
 #. frmPrefSystem..chkToolbox..Caption
 #: prefs/PrefSystem.dfm:119
@@ -8538,7 +8538,7 @@ msgstr "Petite barre de titre dans la fenêtre Exodus"
 #. frmPrefSystem..btnUpdateCheck..Caption
 #: prefs/PrefSystem.dfm:127
 msgid "Check Now"
-msgstr "Vérifier..."
+msgstr "Vérifier maintenant"
 
 #. frmPrefSystem..chkSingleInstance..Caption
 #: prefs/PrefSystem.dfm:137
@@ -8553,7 +8553,7 @@ msgstr "Démarre en mode réduit (à coté de l'heure)"
 #. frmPrefSystem..cboLocale....Items.WideStrings
 #: prefs/PrefSystem.dfm:157
 msgid "English (American)"
-msgstr "Anglais (Americain)"
+msgstr "Anglais (Américain)"
 
 #. frmPrefTransfer..Caption
 #: prefs/PrefTransfer.dfm:4
@@ -8563,7 +8563,7 @@ msgstr "frmPrefTransfer"
 #. frmPrefTransfer..Label15..Caption
 #: prefs/PrefTransfer.dfm:15
 msgid "File transfer download directory:"
-msgstr "Répertoire de téléchargement des transferts de fichier:"
+msgstr "Répertoire de téléchargement des transferts de fichier :"
 
 #. frmPrefTransfer..Label2..Caption
 #: prefs/PrefTransfer.dfm:23
@@ -8573,27 +8573,27 @@ msgstr "Remettre tous ces paramêtres à l'état initial."
 #. frmPrefTransfer..TntLabel2..Caption
 #: prefs/PrefTransfer.dfm:37
 msgid "Send file using this method:"
-msgstr "Envoyer ce fichier en utilisant cette methode:"
+msgstr "Envoyer ce fichier en utilisant cette méthode :"
 
 #. frmPrefTransfer..grpWebDav..Label3..Caption
 #: prefs/PrefTransfer.dfm:51
 msgid "Web Host:"
-msgstr "Hôte Web:"
+msgstr "Hôte Web :"
 
 #. frmPrefTransfer..grpWebDav..Label5..Caption
 #: prefs/PrefTransfer.dfm:65
 msgid "Web Path:"
-msgstr "Chemin Web:"
+msgstr "Chemin Web :"
 
 #. frmPrefTransfer..grpWebDav..Label6..Caption
 #: prefs/PrefTransfer.dfm:72
 msgid "Example: /~foo/public_html"
-msgstr "Exemple: /~foo/public_html"
+msgstr "Exemple : /~foo/public_html"
 
 #. frmPrefTransfer..grpWebDav..Label9..Caption
 #: prefs/PrefTransfer.dfm:93
 msgid "Example: http://dav.server.com"
-msgstr "Exemple: http://dav.server.com"
+msgstr "Exemple : http://dav.server.com"
 
 #. frmPrefTransfer..grpPeer..Label1..Caption
 #: prefs/PrefTransfer.dfm:160
@@ -8603,7 +8603,7 @@ msgstr "Port à utiliser lors des transferts HTTP:"
 #. frmPrefTransfer..grpPeer..chkIP..Caption
 #: prefs/PrefTransfer.dfm:174
 msgid "Use a custom IP address for HTTP transfers"
-msgstr "Utiliser une Adresse IP personnalisée lors des transferts HTTP"
+msgstr "Utiliser une adresse IP personnalisée lors des transferts HTTP"
 
 #. frmPrefTransfer..StaticText4..Caption
 #: prefs/PrefTransfer.dfm:193
@@ -8613,44 +8613,44 @@ msgstr "Options de transfert de fichier:"
 #. frmPrefTransfer..cboXferMode....Items.WideStrings
 #: prefs/PrefTransfer.dfm:214
 msgid "Discover a file transfer component using my server."
-msgstr "Découvrir un composant en utilisant mon serveur."
+msgstr "Découvrir un composant de transfert de fichier utilisant mon serveur."
 
 #. frmPrefTransfer..cboXferMode....Items.WideStrings
 #: prefs/PrefTransfer.dfm:215
 msgid "Always use a specific file transfer component."
-msgstr "Toujours utiliser un composant spécifique."
+msgstr "Toujours utiliser un composant de transfert de fichier spécifique."
 
 #. frmPrefTransfer..cboXferMode....Items.WideStrings
 #: prefs/PrefTransfer.dfm:216
 msgid "Send files directly from my machine to the recipient."
-msgstr "Envoyer directement de ma machine vers le Destinataire."
+msgstr "Envoyer directement de ma machine vers le destinataire."
 
 #. frmPrefTransfer..cboXferMode....Items.WideStrings
 #: prefs/PrefTransfer.dfm:217
 msgid "Use a web server to host the files which I send."
-msgstr "Utiliser un serveur Web pour stocker le fichier que j'envoi."
+msgstr "Utiliser un serveur Web pour stocker le fichier que j'envoie."
 
 #. frmPrefTransfer..grpProxy..TntLabel1..Caption
 #: prefs/PrefTransfer.dfm:230
 msgid "Jabber Address of File Transfer Server:"
-msgstr "Adresse Jabber du Serveur de transfer de Fichiers:"
+msgstr "Adresse Jabber du serveur de transfer de fichiers :"
 
 #. Programmer's name for it: sRosterFontLabel
 #. Programmer's name for it: sChatFontLabel
 #: prefs/PrefFont.pas:70
 #: prefs/PrefFont.pas:71
 msgid "Roster Font and Background"
-msgstr "Police de Caractère du Répertoire et de l'Arrière Plan"
+msgstr "Police de caractère du répertoire et de l'arrière-plan"
 
 #. Programmer's name for it: sOfflineGrpWarn
 #: prefs/PrefGroups.pas:54
 msgid "The offline group will only show up if you have show only online contacts turned off."
-msgstr "Le groupe 'non connecté' s'affiche seulement si les 'Contacts non Connecté' ne sont pas sélectionnés comme 'Caché'."
+msgstr "Le groupe 'non connecté' s'affiche seulement si les 'Contacts non Connectés' ne sont pas sélectionnés comme 'Caché'."
 
 #. Programmer's name for it: sViewSimple
 #: prefs/PrefLayouts.pas:50
 msgid "The main window shows only the roster. Other windows are opened in seperate windows and never docked"
-msgstr "La fenêtre principale affiche seulement le répertoire. Les autres fenêtres sont ouvertes séparément et ne sont pas arrimées."
+msgstr "La fenêtre principale affiche seulement le répertoire. Les autres fenêtres sont ouvertes séparément et ne sont pas fixées.."
 
 #. Programmer's name for it: sViewShare
 #: prefs/PrefLayouts.pas:51
@@ -8670,7 +8670,7 @@ msgstr "Sélectionner un répertoire pour les logs."
 #. Programmer's name for it: sBadProxy
 #: prefs/PrefNetwork.pas:47
 msgid "Your IE proxy settings won't help, since you use an autoconfiguration script.  Please configure your proxy manually."
-msgstr "Vos paramêtres proxy IE ne marchent pas (config. automatique). Svp configurez les manuellement ."
+msgstr "Vos paramêtres proxy IE ne marchent pas (config. automatique). Veuillez les configurer manuellement."
 
 #. Programmer's name for it: sSoundChatactivity
 #: prefs/PrefNotify.pas:64
@@ -8680,12 +8680,12 @@ msgstr "Activité dans une fenêtre de discussion"
 #. Programmer's name for it: sSoundInvite
 #: prefs/PrefNotify.pas:65
 msgid "Invited to a room"
-msgstr "Invité dans une Salle"
+msgstr "Invité dans une salle"
 
 #. Programmer's name for it: sSoundKeyword
 #: prefs/PrefNotify.pas:66
 msgid "Keyword in a room"
-msgstr "Mot de la salle"
+msgstr "Mot-clé dans une salle"
 
 #. Programmer's name for it: sSoundNewchat
 #: prefs/PrefNotify.pas:67
@@ -8710,7 +8710,7 @@ msgstr "Le contact est connecté"
 #. Programmer's name for it: sSoundRoomactivity
 #: prefs/PrefNotify.pas:71
 msgid "Activity in a room"
-msgstr "Activité de la Salle"
+msgstr "Activité dans une salle"
 
 #. Programmer's name for it: sSoundAutoResponse
 #: prefs/PrefNotify.pas:74
@@ -8725,17 +8725,17 @@ msgstr "Vérifiez que vous avez correctement configuré le son dans le Panneau d
 #. Programmer's name for it: sRegPluginError
 #: prefs/PrefPlugins.pas:62
 msgid "The plugin could not be registered with windows."
-msgstr "Le complément ne s'enregister dans Windows."
+msgstr "Le plugin n'a pas pu s'enregister dans Windows."
 
 #. Programmer's name for it: sPrefsDfltPres
 #: prefs/PrefPresence.pas:79
 msgid "Untitled Presence"
-msgstr "Presence non définie"
+msgstr "Présence non définie"
 
 #. Programmer's name for it: sPrefsClearPres
 #: prefs/PrefPresence.pas:80
 msgid "Clear all custom presence entries?"
-msgstr "Effacer les entrées de Présence personnalisées ?"
+msgstr "Effacer les entrées de présence personnalisée ?"
 
 #. Programmer's name for it: sNoUpdate
 #: prefs/PrefSystem.pas:67
@@ -8745,12 +8745,12 @@ msgstr "Pas de mise à jour disponible."
 #. Programmer's name for it: sBadLocale
 #: prefs/PrefSystem.pas:68
 msgid "Exodus is set to use a language which is not available on your system. Resetting language to default."
-msgstr "Exodus est paramêtré pour utiliser un langage absent de votre système. Retour aux paramêtres par défaut."
+msgstr "Exodus est paramétré pour utiliser un langage absent de votre système. Retour aux paramètres par défaut."
 
 #. Programmer's name for it: sNewLocale
 #: prefs/PrefSystem.pas:69
 msgid "You must exit exodus, and restart it before your new locale settings will take affect."
-msgstr "Vous devez quitter Exodus, et le relancer pour appliquer les nouveaux paramètres."
+msgstr "Vous devez quitter Exodus et le relancer pour appliquer les nouveaux paramètres."
 
 #. Programmer's name for it: sPrefsXFerDir
 #: prefs/PrefTransfer.pas:80
