@@ -26,6 +26,8 @@ uses
     ComCtrls, Dialogs;
 
 type
+  TDockNotify = procedure of object;
+
   TfrmDockable = class(TForm)
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -37,6 +39,10 @@ type
     _noMoveCheck: boolean;
     _edge_snap: integer;
     _top: boolean;
+
+    _onDockStartChange: TDockNotify;
+    _onDockEndChange: TDockNotify;
+
     procedure CheckPos();
     procedure SavePos();
   protected
@@ -44,6 +50,9 @@ type
     procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
     procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
     procedure WMMouseActivate(var msg: TMessage); message WM_MOUSEACTIVATE;
+  published
+    property OnDockStartChange: TDockNotify read _onDockStartChange write _onDockStartChange;
+    property OnDockEndChange: TDockNotify read _onDockEndChange write _onDockEndChange;
   public
     { Public declarations }
     TabSheet: TTabSheet;
@@ -84,11 +93,17 @@ end;
 procedure TfrmDockable.DockForm;
 begin
     // dock the window to the main form
+    if Assigned(_onDockStartChange) then
+        Self.OnDockStartChange();
+
     Self.SavePos();
     Self.ManualDock(frmExodus.Tabs);
     Self.Align := alClient;
     _docked := true;
     Self.TabSheet := frmExodus.Tabs.Pages[frmExodus.Tabs.PageCount-1];
+
+    if Assigned(_onDockEndChange) then
+        Self.OnDockEndChange();
 end;
 
 {---------------------------------------}
@@ -113,10 +128,14 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.FloatForm;
 begin
+    if Assigned(_onDockStartChange) then
+        Self.OnDockStartChange();
     Self.CheckPos();
     Self.ManualFloat(_pos);
     _docked := false;
     Self.TabSheet := nil;
+    if Assigned(_onDockEndChange) then
+        Self.OnDockEndChange();
 end;
 
 {---------------------------------------}
