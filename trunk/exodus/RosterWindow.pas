@@ -99,6 +99,7 @@ type
     pnlStatus: TTntPanel;
     lblStatusLink: TTntLabel;
     MoveorCopyContacts1: TMenuItem;
+    imgSSL: TImage;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -1666,6 +1667,7 @@ procedure TfrmRosterWindow.ResetPanels;
 begin
     // order here is important
     pnlShow.Align := alBottom;
+    imgSSL.Visible := MainSession.Profile.ssl;
 end;
 
 {---------------------------------------}
