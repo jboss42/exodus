@@ -900,8 +900,11 @@ begin
 
     for i := 0 to _profiles.Count - 1 do begin
         cur_profile := TJabberProfile(_profiles.Objects[i]);
-        ptag := _pref_node.AddTag('profile');
-        cur_profile.Save(ptag);
+        // don't save temp profiles.
+        if (LeftStr(cur_profile.Name, 3) <> '-*-') then begin
+            ptag := _pref_node.AddTag('profile');
+            cur_profile.Save(ptag);
+        end;
     end;
 
     Self.Save();
