@@ -52,12 +52,14 @@ type
     Label1: TTntLabel;
     StaticText4: TTntPanel;
     chkClientCaps: TTntCheckBox;
+    btnDefaults: TTntButton;
     procedure FormDestroy(Sender: TObject);
     procedure lstCustomPresClick(Sender: TObject);
     procedure txtCPTitleChange(Sender: TObject);
     procedure btnCustomPresAddClick(Sender: TObject);
     procedure btnCustomPresRemoveClick(Sender: TObject);
     procedure btnCustomPresClearClick(Sender: TObject);
+    procedure btnDefaultsClick(Sender: TObject);
   private
     { Private declarations }
     _pres_list: TList;
@@ -77,11 +79,15 @@ resourcestring
     sPrefsDfltPres = 'Untitled Presence';
     sPrefsClearPres = 'Clear all custom presence entries?';
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 {$R *.dfm}
 uses
     Menus, Presence, Session, XMLUtils;
 
+{---------------------------------------}
 procedure TfrmPrefPresence.LoadPrefs();
 var
     i: integer;
@@ -97,6 +103,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmPrefPresence.SavePrefs();
 var
     i: integer;
@@ -116,7 +123,7 @@ begin
     end;
 end;
 
-
+{---------------------------------------}
 procedure TfrmPrefPresence.clearPresList();
 var
     i: integer;
@@ -127,6 +134,7 @@ begin
     _pres_list.Clear();
 end;
 
+{---------------------------------------}
 procedure TfrmPrefPresence.FormDestroy(Sender: TObject);
 begin
   inherited;
@@ -134,6 +142,7 @@ begin
     _pres_list.Free();
 end;
 
+{---------------------------------------}
 procedure TfrmPrefPresence.lstCustomPresClick(Sender: TObject);
 var
     e: boolean;
@@ -169,6 +178,7 @@ begin
     _no_pres_change := false;
 end;
 
+{---------------------------------------}
 procedure TfrmPrefPresence.txtCPTitleChange(Sender: TObject);
 var
     i: integer;
@@ -190,12 +200,13 @@ begin
         2: show := 'away';
         3: show := 'xa';
         4: show := 'dnd';
-    end;
+        end;
         if (title <> lstCustomPres.Items[i]) then
             lstCustomPres.Items[i] := title;
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmPrefPresence.btnCustomPresAddClick(Sender: TObject);
 var
     cp: TJabberCustomPres;
@@ -213,6 +224,7 @@ begin
     lstCustompresClick(Self);
 end;
 
+{---------------------------------------}
 procedure TfrmPrefPresence.btnCustomPresRemoveClick(Sender: TObject);
 var
     cp: TJabberCustomPres;
@@ -226,6 +238,7 @@ begin
     cp.Free();
 end;
 
+{---------------------------------------}
 procedure TfrmPrefPresence.btnCustomPresClearClick(Sender: TObject);
 begin
     // clear all entries
@@ -235,6 +248,22 @@ begin
     clearPresList();
     lstCustompresClick(Self);
     MainSession.Prefs.removeAllPresence();
+end;
+
+{---------------------------------------}
+procedure TfrmPrefPresence.btnDefaultsClick(Sender: TObject);
+var
+    i: integer;
+    dlist: TList;
+begin
+  inherited;
+    // Recreate all of the "canned" custom presence
+    dlist := MainSession.Prefs.getDefaultPresence();
+    for i := 0 to dlist.count - 1 do begin
+        _pres_list.Add(dlist[i]);
+        lstCustomPres.Items.Add(TJabberCustomPres(dlist[i]).title);
+    end;
+    dlist.Free();
 end;
 
 end.

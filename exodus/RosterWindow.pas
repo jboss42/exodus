@@ -40,7 +40,6 @@ type
     StatBar: TStatusBar;
     popStatus: TPopupMenu;
     pnlShow: TPanel;
-    presChat: TMenuItem;
     presAway: TMenuItem;
     presXA: TMenuItem;
     presDND: TMenuItem;
@@ -102,18 +101,6 @@ type
     N8: TMenuItem;
     Custom1: TMenuItem;
     Online1: TMenuItem;
-    Away1: TMenuItem;
-    Lunch1: TMenuItem;
-    Meeting1: TMenuItem;
-    Bank1: TMenuItem;
-    ExtendedAway1: TMenuItem;
-    GoneHome1: TMenuItem;
-    GonetoWork1: TMenuItem;
-    Sleeping1: TMenuItem;
-    Busy1: TMenuItem;
-    Working1: TMenuItem;
-    Mad1: TMenuItem;
-    Available1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -1584,10 +1571,11 @@ var
 begin
     // change our own presence
     case TMenuItem(Sender).GroupIndex of
-    0: show := 'chat';
+    0: show := '';
     1: show := 'away';
     2: show := 'xa';
     3: show := 'dnd';
+    4: show := 'chat';
     end;
     stat := TMenuItem(Sender).Caption;
     MainSession.setPresence(show, stat, MainSession.Priority);

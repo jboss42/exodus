@@ -1,6 +1,6 @@
 inherited frmPrefPresence: TfrmPrefPresence
-  Left = 252
-  Top = 144
+  Left = 253
+  Top = 148
   Caption = 'frmPrefPresence'
   ClientHeight = 433
   ClientWidth = 329
@@ -52,6 +52,15 @@ inherited frmPrefPresence: TfrmPrefPresence
       Caption = 'Clear'
       TabOrder = 2
       OnClick = btnCustomPresClearClick
+    end
+    object btnDefaults: TTntButton
+      Left = 196
+      Top = 4
+      Width = 60
+      Height = 25
+      Caption = 'Defaults'
+      TabOrder = 3
+      OnClick = btnDefaultsClick
     end
   end
   object GroupBox1: TGroupBox
