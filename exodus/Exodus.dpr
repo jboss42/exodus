@@ -107,7 +107,7 @@ uses
   PrefSystem in 'prefs\PrefSystem.pas' {frmPrefSystem},
   presence in '..\jopl\Presence.pas',
   Profile in 'Profile.pas' {frmProfile},
-  RegExpr in 'RegExpr.pas',
+  RegExpr in '..\jopl\RegExpr.pas',
   Register in 'Register.pas',
   RemoveContact in 'RemoveContact.pas' {frmRemove},
   Responder in '..\jopl\Responder.pas',

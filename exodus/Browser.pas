@@ -107,6 +107,7 @@ type
     procedure popContextPopup(Sender: TObject);
     procedure ToolButton3Click(Sender: TObject);
     procedure btnNodeClick(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     { Private declarations }
     _cur: integer;
@@ -507,14 +508,11 @@ end;
 procedure TfrmBrowse.mBookmarkClick(Sender: TObject);
 var
     itm: TTntListItem;
-    fbm: TfrmBookmark;
 begin
     itm := vwBrowse.Selected;
     if itm = nil then exit;
 
-    fbm := ShowBookmark('');
-    fbm.txtJID.Text := itm.SubItems[0];
-    fbm.txtName.Text := itm.Caption;
+    ShowBookmark(itm.SubItems[0], itm.Caption);
 end;
 
 {---------------------------------------}
@@ -885,6 +883,15 @@ begin
     btnNode.Down := _node;
     pnlNode.Visible := vis;
     MainSession.Prefs.setBool('browse_node', _node);
+end;
+
+{---------------------------------------}
+procedure TfrmBrowse.FormCloseQuery(Sender: TObject;
+  var CanClose: Boolean);
+begin
+  inherited;
+    _blist.Clear();
+    vwBrowse.Items.Count := 0;
 end;
 
 end.

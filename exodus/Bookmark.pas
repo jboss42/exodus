@@ -52,7 +52,7 @@ type
 var
   frmBookmark: TfrmBookmark;
 
-function ShowBookmark(jid: string): TfrmBookmark;
+function ShowBookmark(jid: Widestring; bm_name: Widestring = ''): TfrmBookmark;
 
 implementation
 
@@ -61,26 +61,28 @@ implementation
 uses
     JabberUtils, ExUtils,  GnuGetText, JabberID, Session, RosterWindow;
 
-function ShowBookmark(jid: string): TfrmBookmark;
+function ShowBookmark(jid: Widestring; bm_name: Widestring = ''): TfrmBookmark;
 var
+    f: TfrmBookmark;
     i: integer;
 begin
-    Result := nil;
-
-    if (jid <> '') then begin
+    i := -1;
+    if (jid <> '') then
         i := MainSession.Roster.Bookmarks.IndexOf(jid);
-        if (i < 0) then exit;
-    end
-    else
-        i := -1;
 
-    Result := TfrmBookmark.Create(Application);
-
-    with Result do begin
+    f := TfrmBookmark.Create(Application);
+    if (i = -1) then f.Caption := _('Add a new bookmark');
+    
+    with f do begin
         cboType.ItemIndex := 0;
         if (i < 0) then begin
             new := true;
+            txtJid.Text := jid;
             txtNick.Text := MainSession.Profile.Username;
+            if (name <> '') then
+                txtName.Text := bm_name
+            else
+                txtName.Text := jid;
         end
         else begin
             new := false;
@@ -92,6 +94,8 @@ begin
         end;
         Show();
     end;
+
+    Result := f;
 end;
 
 

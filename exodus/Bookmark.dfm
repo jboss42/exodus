@@ -48,7 +48,7 @@ object frmBookmark: TfrmBookmark
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 148
+    Top = 152
     Width = 338
     Height = 34
     Align = alBottom

@@ -15,6 +15,7 @@ object frmBrowse: TfrmBrowse
   Font.Style = []
   OldCreateOrder = False
   OnClose = FormClose
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnDragOver = FormDragOver
