@@ -165,8 +165,14 @@ begin
         while ((last > 0) and ((_MsgOut.Text[last] in WhitespaceChars) = false)) do
             dec(last);
 
-        word := Trim(Copy(_MsgOut.Text, last, (cur - last) + 1));
-        ok := checkWord(word);
+        word := Trim(Copy(_MsgOut.Text, last + 1, (cur - last) + 1));
+        if (word = '') then
+            ok := true
+        else
+            ok := checkWord(word);
+
+        // XXX: look for numbers in the word, and don't spell check
+
         with _MsgOut do begin
             SelStart := last;
             SelLength := (cur - last);

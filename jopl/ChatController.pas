@@ -145,11 +145,11 @@ end;
 destructor TChatController.Destroy;
 begin
     // Unregister the callback, and free the queue
+    ComController.Free();
     _memory.Free();
     if (_cb >= 0) then
         MainSession.UnRegisterCallback(_cb);
     msg_queue.Free();
-    ComController.Free();
     inherited;
 end;
 
