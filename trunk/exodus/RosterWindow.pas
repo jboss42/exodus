@@ -1581,6 +1581,9 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popRemoveClick(Sender: TObject);
+var
+    n: TTreeNode;
+    g: Widestring;
 begin
     // Remove this roster item.
     case getNodeType() of
@@ -1593,10 +1596,13 @@ begin
     end;
     node_ritem: begin
         // remove a roster item
-        if _cur_ritem <> nil then
-            RemoveRosterItem(_cur_ritem.jid.jid);
+        if _cur_ritem <> nil then begin
+            n := treeRoster.Selected.Parent;
+            if (n <> nil) then  g := n.Text else g := '';
+            RemoveRosterItem(_cur_ritem.jid.jid, g);
+        end;
     end;
-end;
+    end;
 end;
 
 {---------------------------------------}
