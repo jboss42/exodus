@@ -581,9 +581,13 @@ begin
 
         WM_DISCONNECTED: begin
             // Socket is disconnected
+            {
             if ((_thread <> nil) and (not _thread.Stopped)) then
                 _thread.TerminateAndWaitFor
             else if (_thread.Stopped) then
+                _thread.Terminate();
+            }
+            if (_thread <> nil) then
                 _thread.Terminate();
             _timer.Enabled := false;
             _active := false;
