@@ -439,7 +439,7 @@ procedure TfrmRoom.showMsg(tag: TXMLTag);
 var
     i : integer;
     Msg: TJabberMessage;
-    from: Widestring;
+    emsg, from: Widestring;
     tmp_jid: TJabberID;
     server: boolean;
     rm: TRoomMember;
@@ -467,10 +467,16 @@ begin
 
         if (tag.getAttribute('type') = 'error') then begin
             etag := tag.GetFirstTag('error');
-            if (etag <> nil) then
-                Msg.Body := _('ERROR: ') + etag.Data
+            if (etag <> nil) then begin
+                emsg := etag.QueryXPData('/error/text[@xmlns="urn:ietf:params:xml:ns:xmpp-streams"]');
+                if (emsg = '') then
+                    emsg := etag.Data;
+                if (emsg = '') then
+                    emsg := _('Your message to the room bounced.');
+                Msg.Body := _('ERROR: ') + emsg;
+            end
             else
-                Msg.Body := _('ERROR: ') + Msg.Body;
+                Msg.Body := _('ERROR: ') + _('Your message to the room bounced.');
             DisplayMsg(Msg, MsgList);
             exit;
         end;
