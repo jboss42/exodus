@@ -152,6 +152,7 @@ begin
     try
         // check for messages we don't care about
         if ((mtype = 'groupchat') or (mtype = 'chat')) then exit;
+        if (mtype = 'normal') then mtype := '';
 
         // if (mtype = 'headline') then exit;
         if (tag.QueryXPTag(XP_MSGXDATA) <> nil) then exit;
@@ -172,6 +173,10 @@ begin
                 cc := js.ChatList.FindChat(from_jid.jid,
                     from_jid.resource, '');
             if (cc <> nil) then exit;
+        end
+        else if ((msgt = msg_all_chat) and (mtype = '')) then begin
+            // do we need to do more here??
+            exit;
         end;
 
         // if we're paused, queue the event
