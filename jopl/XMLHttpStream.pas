@@ -77,8 +77,8 @@ end;
         _poll_time: integer;
         _http: TIdHttp;
         _request: TStringlist;
+        _strstream: TStringStream;
         _response: TStringStream;
-        _cookie_list : TStringList;
         _lock: TCriticalSection;
         _event: TEvent;
         _hasher : TSecHash;
@@ -86,6 +86,7 @@ end;
         _encoder: TIdEncoderMIME;
         {$else}
         _encoder: TIdBase64Encoder;
+        _cookie_list : TStringList;
         {$endif}
 
         _keys: array of string;
@@ -224,12 +225,11 @@ begin
     _http := TIdHTTP.Create(nil);
     {$ifdef INDY9}
     _http.AllowCookies := true;
+    _http.ProtocolVersion := pv1_1;
+    _http.HTTPOptions := [hoKeepOrigProtocol];
     {$endif}
     MainSession.Prefs.setProxy(_http);
     
-    _cookie_list := TStringList.Create();
-    _cookie_list.Delimiter := ';';
-    _cookie_list.QuoteChar := #0;
     _lock := TCriticalSection.Create();
     _event := TEvent.Create(nil, false, false, 'exodus_http_poll');
     _hasher := TSecHash.Create(nil);
@@ -237,13 +237,16 @@ begin
     _encoder := TIdEncoderMIME.Create(nil);
     {$else}
     _encoder := TIdBase64Encoder.Create(nil);
+    _cookie_list := TStringList.Create();
+    _cookie_list.Delimiter := ';';
+    _cookie_list.QuoteChar := #0;
     {$endif}
     SetLength(_keys, _profile.NumPollKeys);
     GenKeys();
 
     _request := TStringlist.Create();
     _response := TStringstream.Create('');
-
+    _strstream := TStringstream.Create('');
 end;
 
 {---------------------------------------}
@@ -253,10 +256,13 @@ begin
    _hasher.Free();
    _encoder.Free();
    _event.Free();
+   {$ifndef INDY9}
    _cookie_list.Free();
+   {$endif}
    _http.Free();
    _request.Free();
    _response.Free();
+   _strstream.Free();
 end;
 
 procedure THttpThread.GenKeys;
@@ -313,10 +319,14 @@ begin
         Assert(_kcount <> 0);
     end;
 
-    _request.Insert(0, key + ',');
+        // _request.Insert(0, key + ',');
+    _strstream.WriteString(key);
+    _strstream.WriteString(',');
+    _strstream.WriteString(_request.Text);
     try
         _lock.Acquire();
-        _http.Post(_profile.URL, _request, _response);
+        _http.Post(_profile.URL, _strstream, _response);
+        _strstream.Size := 0;
         _request.Clear();
         _lock.Release();
     except
@@ -326,8 +336,8 @@ begin
                 Self.Terminate();
             end;
             exit;
+        end;
     end;
-end;
 end;
 
 {---------------------------------------}
@@ -357,8 +367,7 @@ begin
 
     // Get the cookie values + parse them, looking for the ID
     {$ifdef INDY9}
-    // TODO: Make this work w/ Indy9... this is probably close
-    pid := _http.CookieManager.CookieCollection.Cookie['ID', ''].CookieText;
+    pid := _http.CookieManager.CookieCollection.Cookie['ID', _http.URL.Host].Value;
     {$else}
     new_cookie := _http.Response.ExtraHeaders.Values['Set-Cookie'];
     _cookie_list.DelimitedText := new_cookie;
