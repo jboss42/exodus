@@ -63,6 +63,7 @@ type
     procedure lstCustomEmotesAdvancedCustomDrawItem(
       Sender: TCustomListView; Item: TListItem; State: TCustomDrawState;
       Stage: TCustomDrawStage; var DefaultDraw: Boolean);
+    procedure chkEmoticonsClick(Sender: TObject);
   private
     { Private declarations }
     el: TEmoticonList;
@@ -118,6 +119,7 @@ begin
     end;
 
     pageEmotes.TabIndex := 0;
+    chkEmoticonsClick(Self);
 end;
 
 {---------------------------------------}
@@ -377,6 +379,21 @@ begin
     end;
     DefaultDraw := false;
 
+end;
+
+procedure TfrmPrefEmote.chkEmoticonsClick(Sender: TObject);
+begin
+  inherited;
+    btnEmoteAdd.Enabled := chkEmoticons.Checked;
+    btnEmoteRemove.Enabled := chkEmoticons.Checked;
+    btnEmoteClear.Enabled := chkEmoticons.Checked;
+    btnEmoteDefault.Enabled := chkEmoticons.Checked;
+    pageEmotes.Enabled := chkEmoticons.Checked;
+
+    btnCustomEmoteAdd.Enabled := chkEmoticons.Checked;
+    btnCustomEmoteRemove.Enabled := chkEmoticons.Checked;
+    btnCustomEmoteEdit.Enabled := chkEmoticons.Checked;
+    txtCustomEmoteFilename.Enabled := chkEmoticons.Checked;
 end;
 
 end.

@@ -26,6 +26,7 @@ inherited frmPrefEmote: TfrmPrefEmote
       Height = 17
       Caption = 'Auto detect Emoticons in messages'
       TabOrder = 0
+      OnClick = chkEmoticonsClick
     end
   end
   object pageEmotes: TTntPageControl
