@@ -26,7 +26,7 @@ object frmBrowse: TfrmBrowse
     Left = 0
     Top = 84
     Width = 422
-    Height = 290
+    Height = 291
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 3
@@ -35,7 +35,7 @@ object frmBrowse: TfrmBrowse
       Left = 73
       Top = 3
       Width = 346
-      Height = 284
+      Height = 285
       Align = alClient
       Columns = <
         item
@@ -73,7 +73,7 @@ object frmBrowse: TfrmBrowse
       Left = 3
       Top = 3
       Width = 70
-      Height = 284
+      Height = 285
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 4
@@ -100,7 +100,7 @@ object frmBrowse: TfrmBrowse
   end
   object StatBar: TStatusBar
     Left = 0
-    Top = 374
+    Top = 375
     Width = 422
     Height = 20
     Panels = <
