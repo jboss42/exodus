@@ -484,7 +484,7 @@ const
     ico_blocked = 30;
     ico_error = 32;
 
-{$ifdef TRACE_EXCEPTIONS}
+{$ifndef NOTRACE_EXCEPTIONS}
 procedure ExceptionTracker(ExceptObj: TObject; ExceptAddr: Pointer; OSException: Boolean);
 {$endif}
 
@@ -494,7 +494,7 @@ procedure ExceptionTracker(ExceptObj: TObject; ExceptAddr: Pointer; OSException:
 {---------------------------------------}
 implementation
 uses
-    {$ifdef TRACE_EXCEPTIONS}
+    {$ifndef NOTRACE_EXCEPTIONS}
     IdException,
     JclHookExcept, JclDebug, ExceptTracer,
     {$endif}
@@ -668,7 +668,7 @@ end;
 
 {---------------------------------------}
 {---------------------------------------}
-{$ifdef TRACE_EXCEPTIONS}
+{$ifndef NOTRACE_EXCEPTIONS}
 procedure ExceptionTracker(ExceptObj: TObject; ExceptAddr: Pointer; OSException: Boolean);
 var
     // trace: TStringList;
@@ -717,7 +717,7 @@ var
 begin
     // initialize vars.  wish we were using a 'real' compiler.
 
-    {$ifdef TRACE_EXCEPTIONS}
+    {$ifndef NOTRACE_EXCEPTIONS}
     // Application.OnException := ApplicationException;
     Include(JclStackTrackingOptions, stRawMode);
     {$endif}
@@ -1000,7 +1000,7 @@ begin
     SHAppBarMessage(ABM_SETAUTOHIDEBAR, appbar);
     *)
 
-    {$ifdef TRACE_EXCEPTIONS}
+    {$ifndef NOTRACE_EXCEPTIONS}
     // Start Exception tracking
     JclStartExceptionTracking;
     JclAddExceptNotifier(ExceptionTracker);
