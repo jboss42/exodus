@@ -32,6 +32,8 @@ type
     Nick: string;
     jid: string;
     Node: TTreeNode;
+    status: string;
+    show: string;
   end;
 
   TfrmRoom = class(TfrmBaseChat)
@@ -63,6 +65,8 @@ type
     procedure popInviteClick(Sender: TObject);
     procedure MsgListMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure treeRosterMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
   private
     { Private declarations }
     jid: string;                // jid of the conf. room
@@ -76,24 +80,26 @@ type
     _nick_len: integer;
     _nick_start: integer;
     _keywords: TRegExpr;     // list of keywords to monitor for
+    _hint_text: string;
+
+    function  AddMember(member: TRoomMember): TTreeNode;
+    function  checkCommand(txt: string): boolean;
 
     procedure SetJID(sjid: string);
     procedure ShowMsg(tag: TXMLTag);
     procedure SendMsg;
     procedure RemoveMember(member: TRoomMember);
-    function  AddMember(member: TRoomMember): TTreeNode;
-    function  checkCommand(txt: string): boolean;
-    // procedure ShowPresence(nick, msg: string);
     procedure RenderMember(member: TRoomMember; tag: TXMLTag);
     procedure changeSubject(subj: string);
   published
     procedure MsgCallback(event: string; tag: TXMLTag);
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
-
   public
     { Public declarations }
     mynick: string;
+
+    property HintText: string read _hint_text;
   end;
 
 var
@@ -393,7 +399,7 @@ begin
     // show the member
     if member = nil then exit;
     if member.Node = nil then exit;
-    
+
     if tag = nil then
         member.Node.ImageIndex := 1
     else begin
@@ -405,9 +411,16 @@ begin
         else if p.Show = 'dnd' then member.Node.ImageIndex := 3
         else if p.Show = 'chat' then member.Node.ImageIndex := 4
         else member.Node.ImageIndex := 1;
+
+        member.show := p.Show;
+        member.status := p.Status;
         end;
 
+    if (member.show = '') then
+        member.show := 'Available';
+
     member.Node.SelectedIndex := member.Node.ImageIndex;
+    member.Node.Data := member;
 end;
 
 {---------------------------------------}
@@ -447,6 +460,7 @@ begin
     _nick_prefix := '';
     _nick_idx := 0;
     _nick_start := 0;
+    _hint_text := '';
 
     kw_list := MainSession.Prefs.getStringlist('keywords');
     if (kw_list.Count > 0) then begin
@@ -766,6 +780,31 @@ begin
     if Button = mbRight then begin
         GetCursorPos(cp);
         popRoom.Popup(cp.x, cp.y);
+        end;
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.treeRosterMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+var
+    n: TTreeNode;
+    m: TRoomMember;
+begin
+  inherited;
+    // setup _hint_text
+
+    n := treeRoster.GetNodeAt(x,y);
+    if (n = nil) then
+        _hint_text := ''
+    else begin
+        m := TRoomMember(n.Data);
+        if (m = nil) then
+            _hint_text := ''
+        else begin
+            _hint_text := m.show;
+            if (m.status <> '') then
+                _hint_text := _hint_text + ': ' + m.status;
+            end;
         end;
 end;
 

@@ -16,6 +16,7 @@ type
   protected
     { Protected declarations }
     procedure CreateWnd; override;
+    procedure CreateParams(var Params: TCreateParams); override;
     procedure CN_NOTIFY(var Msg: TWMNotify); message CN_NOTIFY;
   public
     { Public declarations }
@@ -33,6 +34,9 @@ implementation
 uses
     ShellAPI;
 
+var
+    _riched20: THandle;
+
 procedure TExRichEdit.CreateWnd;
 var
     mask: integer;
@@ -47,6 +51,18 @@ begin
 
     // Tell the window we want EN_LINK events
     SendMessage(Self.Handle, EM_SETEVENTMASK, 0, (mask + ENM_LINK));
+end;
+
+procedure TExRichEdit.CreateParams(var Params: TCreateParams);
+begin
+    // Make sure the richedit controls are subclassed using riched20.dll
+    if (_riched20 = 0) then begin
+        _riched20 := LoadLibrary('RICHED20.DLL');
+        if (_riched20 <= HINSTANCE_ERROR) then
+            _riched20 := 0;
+        end;
+    inherited CreateParams(Params);
+    CreateSubClass(Params, RICHEDIT_CLASS);
 end;
 
 {

@@ -255,14 +255,35 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.DoShowHint(var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
+var
+    c: TControl;
+    f: TForm;
 begin
     // show a hint..
-    if HintInfo.HintControl = treeRoster then begin
+    c := HintInfo.HintControl;
+    if (c.Owner is TForm) then
+        f := TForm(c.Owner)
+    else
+        exit;
+
+    {
+    This is kind of hackish because the application can only
+    have a single OnShowHint handler at once.. *SIGH*
+    We have this functionality so that TC rooms can also
+    display status just like the roster window does.
+    }
+
+    if ((f = Self) and (c = treeRoster)) then begin
         // Tweak the hint properties for the roster,
         // this allows us to display custom hint text
         // which is set in the MouseMove event.
         HintInfo.ReshowTimeout := 500;
         HintStr := _hint_text;
+        end
+    else if ((f is TfrmRoom) and (c is TTreeView)) then begin
+        // this is a TC room
+        HintInfo.ReshowTimeout := 500;
+        HintStr := TfrmRoom(f).HintText;
         end;
 end;
 
@@ -1238,9 +1259,15 @@ begin
     // based on the selection
 
     n := treeRoster.GetNodeAt(MousePos.X, MousePos.Y);
-    r := getNodeType(n);
-    if (treeRoster.SelectionCount > 1) then
-        r := node_grp;
+    if (n <> nil) then begin
+        r := getNodeType(n);
+        if (treeRoster.SelectionCount > 1) then
+            r := node_grp;
+        end
+    else begin
+        treeRoster.Selected := nil;
+        r := node_none;
+        end;
 
     case r of
     node_none: begin
