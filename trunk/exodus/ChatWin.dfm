@@ -12,9 +12,9 @@ inherited frmChat: TfrmChat
   TextHeight = 13
   inherited Panel3: TPanel
     Top = 24
-    Height = 224
+    Height = 227
     inherited MsgList: TExRichEdit
-      Height = 216
+      Height = 219
       PlainRTF = True
     end
   end

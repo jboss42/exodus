@@ -623,14 +623,20 @@ begin
         addFeature(q, XMLNS_DISCOITEMS);
         addFeature(q, XMLNS_DISCOINFO);
 
+        // Various core extensions
         addFeature(q, XMLNS_BM);
         addFeature(q, XMLNS_XDATA);
         addFeature(q, XMLNS_XCONFERENCE);
         addFeature(q, XMLNS_XEVENT);
 
+        // MUC Stuff
         addFeature(q, XMLNS_MUC);
         addFeature(q, XMLNS_MUCUSER);
         addFeature(q, XMLNS_MUCOWNER);
+
+        // File xfer
+        addFeature(q, XMLNS_SI);
+        addFeature(q, XMLNS_FTPROFILE);
 
         for i := 0 to Features.Count - 1 do
             addFeature(q, Features[i]);

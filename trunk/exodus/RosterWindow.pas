@@ -287,7 +287,7 @@ resourcestring
 
 implementation
 uses
-    ExSession,
+    ExSession, SendFile, 
     JabberConst, Chat, ChatController, GnuGetText, InputPassword,
     SelContact, Invite, Bookmark, S10n, Transfer, MsgRecv, PrefController,
     ExEvents, ExUtils, Room, Profile, JabberID, RiserWindow, ShellAPI,
