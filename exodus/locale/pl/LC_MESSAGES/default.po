@@ -1,0 +1,321 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Exodus 0.8.1.0\n"
+"POT-Creation-Date: 2003-02-26 22:21\n"
+"PO-Revision-Date: 2002-03-03 00:45+0100\n"
+"Last-Translator: Mariusz Smykuła <smys@lodz.mm.pl>\n"
+"Language-Team: JabberPL Group <redakcja@jabberpl.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. frmBaseChat..popOut..N2..Caption
+#. frmBrowse..popContext..N1..Caption
+#. frmChat..popContact..N1..Caption
+#. frmChat..popContact..N3..Caption
+#. frmDebug..PopupMenu1..N1..Caption
+#. frmExodus..MainMenu1..WInJab1..N7..Caption
+#. frmExodus..MainMenu1..WInJab1..N14..Caption
+#. frmExodus..MainMenu1..WInJab1..N6..Caption
+#. frmExodus..MainMenu1..WInJab1..N9..Caption
+#. frmExodus..MainMenu1..PGPTools1..mnuContacts..N13..Caption
+#. frmExodus..MainMenu1..PGPTools1..mnuContacts..N8..Caption
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..N10..Caption
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..N11..Caption
+#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presCustom..N18..Caption
+#. frmExodus..MainMenu1..PGPTools1..N2..Caption
+#. frmExodus..MainMenu1..PGPTools1..N3..Caption
+#. frmExodus..MainMenu1..PGPTools1..N1..Caption
+#. frmExodus..MainMenu1..Help1..N12..Caption
+#. frmExodus..popTray..trayPresence..N15..Caption
+#. frmExodus..popTray..trayPresence..N5..Caption
+#. frmExodus..popTray..trayPresence..trayCustom..N16..Caption
+#. frmExodus..popTray..N4..Caption
+#. frmExodus..popTray..N01..Caption
+#. frmJUD..PopupMenu1..N1..Caption
+#. frmMsgRecv..popContact..N1..Caption
+#. frmMsgRecv..popContact..N2..Caption
+#. frmRoom..popRoom..popAdmin..N4..Caption
+#. frmRoom..popRoom..popAdmin..N5..Caption
+#. frmRoom..popRoom..N1..Caption
+#. frmRoom..popRoom..N6..Caption
+#. frmRoom..popRoomRoster..N3..Caption
+#. frmRosterWindow..popRoster..popPresence..N2..Caption
+#. frmRosterWindow..popRoster..N1..Caption
+#. frmRosterWindow..popRoster..N7..Caption
+#. frmRosterWindow..popGroup..N3..Caption
+#. frmRosterWindow..popGroup..N4..Caption
+#. frmRosterWindow..popBookmark..N5..Caption
+#. frmRosterWindow..popTransport..N6..Caption
+#: BaseChat.dfm:308
+#: Browser.dfm:4067
+#: ChatWin.dfm:140
+#: ChatWin.dfm:159
+#: Debug.dfm:321
+#: Jabber1.dfm:231
+#: Jabber1.dfm:259
+#: Jabber1.dfm:277
+#: Jabber1.dfm:288
+#: Jabber1.dfm:325
+#: Jabber1.dfm:337
+#: Jabber1.dfm:360
+#: Jabber1.dfm:436
+#: Jabber1.dfm:447
+#: Jabber1.dfm:457
+#: Jabber1.dfm:468
+#: Jabber1.dfm:507
+#: Jabber1.dfm:518
+#: Jabber1.dfm:2713
+#: Jabber1.dfm:2786
+#: Jabber1.dfm:2796
+#: Jabber1.dfm:2806
+#: Jabber1.dfm:2813
+#: jud.dfm:222
+#: MsgRecv.dfm:520
+#: MsgRecv.dfm:529
+#: Room.dfm:176
+#: Room.dfm:187
+#: Room.dfm:199
+#: Room.dfm:218
+#: Room.dfm:234
+#: RosterWindow.dfm:289
+#: RosterWindow.dfm:305
+#: RosterWindow.dfm:322
+#: RosterWindow.dfm:543
+#: RosterWindow.dfm:558
+#: RosterWindow.dfm:573
+#: RosterWindow.dfm:597
+msgid "-"
+msgstr ""
+
+#: Jabber1.pas:448
+msgid " (Pending)"
+msgstr ""
+
+#: Jabber1.pas:431
+msgid " -? \0x09\0x09 : Show Help\r\n"
+msgstr ""
+
+#: Jabber1.pas:438
+msgid " -c [file] \0x09 : Config path name\r\n"
+msgstr ""
+
+#: Jabber1.pas:428
+msgid " -d \0x09\0x09 : Debug mode on\r\n"
+msgstr ""
+
+#: Jabber1.pas:437
+msgid " -f [prof] \0x09 : Profile name\r\n"
+msgstr ""
+
+#. frmChat..Panel1..pnlJID..lblNick..Caption_UTF7
+#: ChatWin.dfm:73
+msgid " Foo +fUh9SX1KfUs "
+msgstr ""
+
+#. frmChat..Panel1..pnlJID..lblNick..Caption
+#: ChatWin.dfm:72
+msgid " Foo HIJK "
+msgstr ""
+
+#: Jabber1.pas:436
+msgid " -i [pri] \0x09 : Priority\r\n"
+msgstr " -i [pri] \0x09 : Priorytet\r\n"
+
+#: Notify.pas:51
+msgid " is now offline."
+msgstr "jest rozłączony."
+
+#: Notify.pas:50
+msgid " is now online."
+msgstr "jest rozłączony."
+
+#: ChatWin.pas:153
+msgid " is replying."
+msgstr "odpowiada."
+
+#: Jabber1.pas:433
+msgid " -j [jid] \0x09\0x09 : Jid\r\n"
+msgstr ""
+
+#. frmRoom..Panel1..pnlSubj..lblSubject..Caption
+#: Room.dfm:118
+msgid " lblSubject"
+msgstr ""
+
+#: Jabber1.pas:429
+msgid " -m \0x09\0x09 : Start minimized\r\n"
+msgstr ""
+
+#: Jabber1.pas:434
+msgid " -p [pass] \0x09 : Password\r\n"
+msgstr ""
+
+#: Jabber1.pas:435
+msgid " -r [res] \0x09 : Resource\r\n"
+msgstr ""
+
+#: Jabber1.pas:430
+msgid " -v \0x09\0x09 : invisible mode\r\n"
+msgstr ""
+
+#: Jabber1.pas:432
+msgid " -x [yes|no] \0x09 : Expanded Mode\r\n"
+msgstr ""
+
+#. frmConnDetails..PageControl1..tbsHttp..Label9..Caption
+#: ConnDetails.dfm:349
+msgid "# of Keys:"
+msgstr ""
+
+#: ExUtils.pas:131
+msgid "%d log files deleted."
+msgstr "%d plik dziennika skaskowany."
+
+#: xdata.pas:66
+msgid "%s cancelled your form."
+msgstr ""
+
+#: ConnDetails.pas:107
+msgid "%s Details"
+msgstr "%s Szczegóły"
+
+#: Room.pas:219
+msgid "%s has a new role of %s."
+msgstr ""
+
+#: Room.pas:224
+msgid "%s has been banned from this room. %s"
+msgstr ""
+
+#: Room.pas:227
+msgid "%s has been kicked from this room. %s"
+msgstr ""
+
+#: Room.pas:217
+msgid "%s has entered the room."
+msgstr ""
+
+#: Room.pas:218
+msgid "%s has left the room."
+msgstr ""
+
+#: Room.pas:226
+msgid "%s is now known as %s."
+msgstr ""
+
+#: Transfer.pas:88
+msgid "%s is sending you a file."
+msgstr "%s wysyła CI plik."
+
+#: ExResponders.pas:122
+msgid "%s query from: %s"
+msgstr "%s prośba od: %s"
+
+#: getOpt.pas:123
+msgid "%s: a required option (-%s) is missing."
+msgstr ""
+
+#: getOpt.pas:122
+msgid "%s: improper use of TGetOpts, one, some or more properties not initialized."
+msgstr ""
+
+#: getOpt.pas:126
+msgid "%s: long option format not supported."
+msgstr ""
+
+#: getOpt.pas:124
+msgid "%s: Option %s requires an argument."
+msgstr ""
+
+#: getOpt.pas:125
+msgid "%s: Unknown option %s."
+msgstr ""
+
+#. frmLogin..btnDetails..Caption
+#: Login.dfm:84
+msgid "&Details..."
+msgstr ""
+
+#. frmConnDetails..PageControl1..tbsProfile..Label10..Caption
+#: ConnDetails.dfm:63
+msgid "&Password:"
+msgstr "&Hasło:"
+
+#. frmConnDetails..PageControl1..tbsProfile..Label12..Caption
+#: ConnDetails.dfm:77
+msgid "&Resource:"
+msgstr "&Zasób:"
+
+#. frmMsgRecv..pnlReply..frameButtons2..Panel1..btnOK..Caption
+#: MsgRecv.dfm:57
+msgid "&Send"
+msgstr "&Wyślij"
+
+#. frmConnDetails..PageControl1..tbsProfile..Label11..Caption
+#: ConnDetails.dfm:70
+msgid "&Server:"
+msgstr "&Serwer:"
+
+#. frmConnDetails..PageControl1..tbsProfile..Label3..Caption
+#: ConnDetails.dfm:56
+msgid "&Username:"
+msgstr "&Użytkownik:"
+
+#. frmDebug..pnlTop..lblJID..Caption
+#: Debug.dfm:279
+msgid "(Disconnected)"
+msgstr ""
+
+#: fGeneric.pas:57
+msgid "(Required)"
+msgstr ""
+
+#. frmConnDetails..PageControl1..tbsProfile..txtPassword..PasswordChar
+#. frmConnDetails..PageControl1..tbsSocket..txtSocksPassword..PasswordChar
+#. frmInputPass..txtPassword..PasswordChar
+#. frmJoinRoom..txtPassword..PasswordChar
+#. frmPassword..txtOldPassword..PasswordChar
+#. frmPassword..txtNewPassword..PasswordChar
+#. frmPassword..txtConfirmPassword..PasswordChar
+#. frmPrefs..PageControl1..tbsNetwork..GroupBox2..txtProxyPassword..PasswordChar
+#: ConnDetails.dfm:112
+#: ConnDetails.dfm:314
+#: InputPassword.dfm:55
+#: JoinRoom.dfm:99
+#: Password.dfm:41
+#: Password.dfm:65
+#: Password.dfm:73
+#: Prefs.dfm:1874
+msgid "*"
+msgstr ""
+
+#. frmRoom..dlgSave..DefaultExt
+#: Room.dfm:258
+msgid ".rtf"
+msgstr ""
+
+#: Room.pas:194
+msgid "/me has changed the subject to: "
+msgstr "/me zmienił temat na: "
+
+#. frmRoom..Panel3..Panel6..Caption
+#: Room.dfm:35
+msgid "`"
+msgstr ""
+
+#. frmAbout..InfoBox....AllowInPlace
+#: About.dfm:1549
+msgid ""
+"{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang1033{\\fonttbl{\\f0\\fnil\\fcharset0 MS Sans Serif;}}\r\n"
+"\\viewkind4\\uc1\\pard\\f0\\fs16 Exodus is the creation of Peter Millard  (mailto:me@pgmillard.com).  Checkout the website at http://exodus.jabberstudio.org for more information. It is currently licensed under the GNU Public License (GPL) see www.gnu.org for more information on the GPL.\\par\r\n"
+"\\par\r\n"
+"Portions of this software are Copyright (c) 1993 - 2002, Chad Z. Hower (Kudzu) and the Indy Pit Crew - http://www.nevrona.com/Indy/. This application may also be using the IndySSL components from Nevrona, and the Open-SSL binaries available from Intellicom.si.\\par\r\n"
+"\\par\r\n"
+"SAX XML Parser by: Stefan Heymann\\par\r\n"
+"Eschen
