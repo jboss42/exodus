@@ -442,20 +442,18 @@ const
     ico_msg = 11;
     ico_info = 12;
 
-    ico_down = 27;
-    ico_right = 28;
-
-
-    ico_Error = 21;
-    ico_Unread = 23;
-
+    ico_key = 16;
+    ico_application = 19;
     ico_user = 20;
+    ico_Error = 21;
     ico_conf = 21;
-    ico_render = 25;
-    ico_keyword = 24;
     ico_service = 22;
     ico_headline = 23;
-    ico_application = 19;
+    ico_Unread = 23;
+    ico_keyword = 24;
+    ico_render = 25;
+    ico_down = 27;
+    ico_right = 28;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -847,28 +845,18 @@ begin
     // do this.
     reg := TRegistry.Create();
     reg.RootKey := HKEY_CURRENT_USER;
-    if (not reg.KeyExists('\AppEvents\Schemes\Apps\Exodus')) then begin
-        reg.OpenKey('\AppEvents\Schemes\Apps\Exodus', true);
-        reg.WriteString('', sExodus);
+    reg.OpenKey('\AppEvents\Schemes\Apps\Exodus', true);
+    reg.WriteString('', sExodus);
 
-        AddSound(reg, 'notify_chatactivity', sSoundChatactivity);
-        AddSound(reg, 'notify_invite', sSoundInvite);
-        AddSound(reg, 'notify_keyword', sSoundKeyword);
-        AddSound(reg, 'notify_newchat', sSoundNewchat);
-        AddSound(reg, 'notify_normalmsg', sSoundNormalmsg);
-        AddSound(reg, 'notify_offline', sSoundOffline);
-        AddSound(reg, 'notify_online', sSoundOnline);
-        AddSound(reg, 'notify_roomactivity', sSoundRoomactivity);
-        AddSound(reg, 'notify_s10n', sSoundS10n);
-        end;
-    reg.Free();
-
-    // if we have an old registry pref thing, then kill it.
-    // todo: REMOVE EVENTUALLY
-    reg := TRegistry.Create();
-    reg.RootKey := HKEY_CURRENT_USER;
-    if (reg.KeyExists('\SOFTWARE\Jabber\Exodus')) then
-        reg.DeleteKey('\SOFTWARE\Jabber\Exodus');
+    AddSound(reg, 'notify_chatactivity', sSoundChatactivity);
+    AddSound(reg, 'notify_invite', sSoundInvite);
+    AddSound(reg, 'notify_keyword', sSoundKeyword);
+    AddSound(reg, 'notify_newchat', sSoundNewchat);
+    AddSound(reg, 'notify_normalmsg', sSoundNormalmsg);
+    AddSound(reg, 'notify_offline', sSoundOffline);
+    AddSound(reg, 'notify_online', sSoundOnline);
+    AddSound(reg, 'notify_roomactivity', sSoundRoomactivity);
+    AddSound(reg, 'notify_s10n', sSoundS10n);
     reg.Free();
 
     // Make sure we read in and setup the prefs..
@@ -892,7 +880,6 @@ begin
         if (_auto_login) then begin
             // snag default profile, etc..
             MainSession.ActivateProfile(_prof_index);
-            // MainSession.Connect;
             Self.DoConnect();
             end
         else
@@ -916,8 +903,8 @@ begin
         if Password = '' then begin
             pf := TfrmInputPass.Create(nil);
             if (pf.ShowModal) = mrOK then begin
-                MainSession.Password := pf.txtPassword.Text;
-                MainSession.Connect();
+                Password := pf.txtPassword.Text;
+                Connect();
                 end;
             pf.Close();
             end
@@ -1381,7 +1368,7 @@ begin
         {
         if frmDebug <> nil then
             frmDebug.Close;
-            }
+        }
         CloseDebugForm();
         frmRosterWindow.ClearNodes();
         frmRosterWindow.Close;

@@ -110,16 +110,14 @@ begin
         MainSession.Prefs.setInt('profile_active', i);
         MainSession.Prefs.SaveProfiles();
 
+        // Active this profile, and fire it UP!
         MainSession.ActivateProfile(i);
         MainSession.Invisible := l.chkInvisible.Checked;
-
-        l.Free;
+        l.Close();
         frmExodus.DoConnect();
-
-        // frmExodus.Tabs.ActivePage := frmExodus.Tabs.Pages[0];
         end
     else
-        l.Free;
+        l.Close();
 
 end;
 

@@ -33,7 +33,6 @@ type
     private
         _session: TObject;
         _presCallback: longint;
-        _chatCallback: longint;
     published
         procedure Callback (event: string; tag: TXMLTag);
         procedure PresCallback(event: string; tag: TXMLTag; p: TJabberPres);
@@ -83,7 +82,6 @@ begin
     _session := js;
     with TJabberSession(_session) do begin
         _presCallback := RegisterCallback(PresCallback);
-        _chatCallback := RegisterCallback(Callback, '/session/gui/chat');
         end;
 end;
 
@@ -124,15 +122,11 @@ begin
 
     // someone is coming online for the first time..
     if (event = '/presence/online') then
-        DoNotify(nil, 'notify_online', nick + ''#10#13 + sNotifyOnline, 1)
+        DoNotify(nil, 'notify_online', nick + ''#10#13 + sNotifyOnline, ico_Online)
 
     // someone is going offline
     else if (event = '/presence/unavailable') then
-        DoNotify(nil, 'notify_offline', nick + ''#10#13 + sNotifyOffline, 0)
-
-    // Someone started a chat session w/ us
-    else if (event = '/session/gui/chat') then
-        DoNotify(nil, 'notify_newchat', sNotifyChat + ''#10#13 + nick, 20)
+        DoNotify(nil, 'notify_offline', nick + ''#10#13 + sNotifyOffline, ico_Offline)
 
     // don't display normal presence changes
     else if ((event = '/presence/available') or (event = '/presence/error')) then
@@ -149,9 +143,10 @@ var
     notify : integer;
     w : TForm;
 begin
-    if (Application.Active or MainSession.IsPaused) then exit;
+    if ((Application.Active and (not MainSession.prefs.getBool('notify_active'))) or
+        (MainSession.IsPaused)) then exit;
 
-    if ((win = nil) or win.Docked) then
+    if (win = nil) then
         w := frmExodus
     else
         w := win;
@@ -164,7 +159,7 @@ begin
     if ((notify and notify_flash) > 0) then
         FlashWindow(w.Handle, true);
 
-    if ((notify and notify_sound) > 0) then
+    if (MainSession.prefs.getBool('notify_sounds')) then
         PlaySound(pchar('EXODUS_' + pref_name), 0,
                   SND_APPLICATION or SND_ASYNC or SND_NOWAIT or SND_NODEFAULT);
 end;

@@ -115,7 +115,6 @@ type
     lblKeywords: TLabel;
     imgBlockList: TImage;
     lblBlockList: TLabel;
-    chkSound: TCheckBox;
     chkInlineStatus: TCheckBox;
     cboInlineStatus: TColorBox;
     chkCloseMin: TCheckBox;
@@ -176,7 +175,9 @@ type
     lblMessages: TLabel;
     chkPresenceMessageListen: TCheckBox;
     chkPresenceMessageSend: TCheckBox;
+    chkSound: TCheckBox;
     Label20: TLabel;
+    chkNotifyActive: TCheckBox;
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -384,6 +385,8 @@ begin
 
         // Notify Options
         SetLength(_notify, 9);
+        chkSound.Checked := getBool('notify_sounds');
+        chkNotifyActive.Checked := getBool('notify_active');
         _notify[0] := getInt('notify_online');
         _notify[1] := getInt('notify_offline');
         _notify[2] := getInt('notify_newchat');
@@ -399,7 +402,7 @@ begin
         optNotify.Enabled;
         chkToast.Checked := false;
         chkFlash.Checked := false;
-        chkSound.Checked := false;
+
 
         // Autoaway options
         chkAutoAway.Checked := getBool('auto_away');
@@ -503,6 +506,9 @@ begin
         setInt('edge_snap', spnSnap.Position);
 
         // Notify events
+        setBool('notify_sounds', chkSound.Checked);
+        setBool('notify_active', chkNotifyActive.Checked);
+
         setInt('notify_online', _notify[0]);
         setInt('notify_offline', _notify[1]);
         setInt('notify_newchat', _notify[2]);
@@ -724,17 +730,14 @@ begin
     e := chkNotify.Checked[i];
     chkToast.Enabled := e;
     chkFlash.Enabled := e;
-    chkSound.Enabled := e;
 
     if optNotify.Enabled then begin
         chkToast.Checked := ((_notify[i] and notify_toast) > 0);
         chkFlash.Checked := ((_notify[i] and notify_flash) > 0);
-        chkSound.Checked := ((_notify[i] and notify_sound) > 0);
         end
     else begin
         chkToast.Checked := false;
         chkFlash.Checked := false;
-        chkSound.Checked := false;
         _notify[i] := 0;
         end;
 
@@ -753,7 +756,6 @@ begin
     _notify[i] := 0;
     if (chkToast.Checked) then _notify[i] := _notify[i] + notify_toast;
     if (chkFlash.Checked) then _notify[i] := _notify[i] + notify_flash;
-    if (chkSound.Checked) then _notify[i] := _notify[i] + notify_sound;
 end;
 
 {---------------------------------------}

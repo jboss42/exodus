@@ -246,6 +246,7 @@ begin
     inherited;
 end;
 
+{---------------------------------------}
 procedure TfrmBaseChat.MsgListKeyPress(Sender: TObject; var Key: Char);
 begin
   inherited;
