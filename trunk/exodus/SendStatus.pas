@@ -207,8 +207,6 @@ end;
 
 {---------------------------------------}
 procedure TFileSendThread.Execute();
-var
-    buff: array[1..1] of char;
 begin
     try
         try
