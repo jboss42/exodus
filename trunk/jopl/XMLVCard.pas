@@ -291,8 +291,6 @@ begin
     if t1 <> nil then bday := t1.Data;
     t1 := vtag.GetFirstTag('TITLE');
     if t1 <> nil then OrgTitle := t1.Data;
-    t1 := vtag.GetFirstTag('DESC');
-    if t1 <> nil then Desc := t1.Data;
 
     t1 := vtag.GetFirstTag('ORG');
     if t1 <> nil then begin
@@ -300,6 +298,8 @@ begin
         if t2 <> nil then OrgName := t2.Data;
         t2 := t1.GetFirstTag('ORGUNIT');
         if t2 <> nil then OrgUnit := t2.Data;
+        t2 := t1.GetFirstTag('DESC');
+        if (t2 <> nil) then Desc := t2.Data;
         end;
 
     tags := vtag.QueryTags('ADR');
@@ -312,6 +312,7 @@ begin
         else
             home.parse(tags[i]);
         end;
+    tags.Free();
 
     tags := vtag.QueryTags('TEL');
     for i := 0 to tags.Count - 1 do begin
@@ -331,6 +332,7 @@ begin
                 HomePhone.Parse(tags[i]);
             end;
         end;
+    tags.Free();
 end;
 
 {---------------------------------------}

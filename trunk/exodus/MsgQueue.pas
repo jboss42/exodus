@@ -60,6 +60,9 @@ type
 var
   frmMsgQueue: TfrmMsgQueue;
 
+resourcestring
+    sNoSpoolDir = 'Exodus could not create or write to the spool directory specified in the options.';
+
 function getMsgQueue: TfrmMsgQueue;
 
 {---------------------------------------}
@@ -114,7 +117,7 @@ end;
 procedure TfrmMsgQueue.SaveEvents();
 var
     i,d: integer;
-    fn: string;
+    dir, fn: string;
     s, e: TXMLTag;
     event: TJabberEvent;
     ss: TStringList;
@@ -123,6 +126,15 @@ begin
     // fn := ExtractFilePath(Application.EXEName) + 'spool.xml';
     // fn := getUserDir() + 'spool.xml';
     fn := MainSession.Prefs.getString('spool_path');
+    dir := ExtractFilePath(fn);
+
+    if (not DirectoryExists(dir)) then begin
+        MkDir(dir);
+        if (not DirectoryExists(dir)) then begin
+            MessageDlg(sNoSpoolDir, mtError, [mbOK], 0);
+            exit;
+            end;
+        end;
 
     s := TXMLTag.Create('spool');
     for i := 0 to _queue.Count - 1 do begin
@@ -195,12 +207,13 @@ begin
             dtags := cur_e.QueryTags('data');
             for d := 0 to dtags.Count - 1 do
                 e.Data.Add(dtags[d].Data);
+            dtags.Free();
 
             end;
+        etags.Free();
+        s.Free();
         end;
-
     p.Free();
-
 end;
 
 
@@ -252,10 +265,9 @@ end;
 procedure TfrmMsgQueue.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
-
+    _queue.Free();
     Action := caFree;
     frmMsgQueue := nil;
-
     inherited;
 end;
 

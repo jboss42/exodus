@@ -818,12 +818,14 @@ begin
 end;
 
 {---------------------------------------}
-procedure TPrefController.ServerprefsCallback(event: string; tag: TXMLTag);
+procedure TPrefController.ServerPrefsCallback(event: string; tag: TXMLTag);
 begin
     // Cache the prefs node
     if (tag = nil) then exit;
     _server_node := TXMLTag.Create(tag.QueryXPTag('/iq/query/storage'));
     TJabberSession(_js).FireEvent('/session/server_prefs', _server_node);
+    if (_server_node <> nil) then
+        FreeAndNil(_server_node);
 end;
 
 {---------------------------------------}

@@ -253,6 +253,8 @@ type
     _clr_bg: string;
 
     procedure redrawChat();
+    procedure clearPresList();
+
   public
     { Public declarations }
     procedure LoadPrefs;
@@ -621,8 +623,20 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmPrefs.clearPresList();
+var
+    i: integer;
+begin
+    for i := 0 to _pres_list.Count - 1 do
+        TJabberCustomPres(_pres_list[i]).Free();
+    _pres_list.Clear();
+end;
+
+{---------------------------------------}
 procedure TfrmPrefs.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+    clearPresList();
+    _pres_list.Free();
     MainSession.Prefs.SavePosition(Self);
     Action := caFree;
 end;
@@ -643,6 +657,7 @@ begin
     tbsCustomPres.TabVisible := false;
     tbsPlugins.TabVisible := false;
 
+    // note these are already pre-populated, so no leaks
     chkNotify.Items.Strings[0]  := sSoundOnline;
     chkNotify.Items.Strings[1]  := sSoundOffline;
     chkNotify.Items.Strings[2]  := sSoundNewchat;
@@ -959,7 +974,7 @@ begin
     // clear all entries
     if MessageDlg(sPrefsClearPres, mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
     lstCustomPres.Items.Clear;
-    _pres_list.Clear;
+    clearPresList();
     lstCustompresClick(Self);
     MainSession.Prefs.removeAllPresence();
 end;

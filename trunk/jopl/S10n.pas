@@ -172,6 +172,7 @@ begin
         MessageDlg(Format(sS10nDeny, [from.jid]), mtInformation, [mbOK], 0);
         ritem.remove();
         end;
+    from.Free();
 end;
 
 {---------------------------------------}

@@ -81,6 +81,7 @@ begin
 
     for i := 0 to s.count - 1 do
         LoadPlugin(s[i]);
+    s.Free();
 end;
 
 {---------------------------------------}

@@ -34,7 +34,6 @@ type
 
 var
     use_emoticons: boolean;
-    emoticon_regex: TRegExpr;
     emoticon_list: THashedStringList;
 
 procedure DisplayMsg(Msg: TJabberMessage; RichEdit: TExRichEdit; AutoScroll: boolean = true);
@@ -57,6 +56,10 @@ uses
     Jabber1, ExUtils,
     ExtCtrls, Dialogs,
     XMLUtils, Session;
+
+var
+    _pic: TPicture;
+    emoticon_regex: TRegExpr;
 
 {---------------------------------------}
 function atBottom(RichEdit: TExRichEdit): boolean;
@@ -158,7 +161,6 @@ end;
 procedure ProcessEmoticons(RichEdit: TExRichEdit; color: TColor; txt: Widestring);
 var
     m: boolean;
-    pic: TPicture;
     ms, s: Widestring;
     im, lm: integer;
     eo: TEmoticon;
@@ -167,7 +169,6 @@ begin
 
     // Change the control to allow pasting
     RichEdit.ReadOnly := false;
-    pic := nil;
     s := txt;
     m := emoticon_regex.Exec(txt);
     lm := 0;
@@ -177,10 +178,10 @@ begin
         RichEdit.SelAttributes.Color := color;
         RichEdit.WideSelText := emoticon_regex.Match[1];
 
-        if (pic = nil) then
-            pic := TPicture.Create()
+        if (_pic = nil) then
+            _pic := TPicture.Create()
         else
-            pic.Graphic := nil;
+            _pic.Graphic := nil;
 
         eo := nil;
         // Grab the match text and look it up in our emoticon list
@@ -194,8 +195,8 @@ begin
         // if we have a legal emoticon object, insert it..
         // otherwise insert the matched text
         if (eo <> nil) then begin
-            eo.il.GetBitmap(eo.idx, pic.Bitmap);
-            RichEdit.InsertBitmap(pic.Bitmap);
+            eo.il.GetBitmap(eo.idx, _pic.Bitmap);
+            RichEdit.InsertBitmap(_pic.Bitmap);
             end
         else begin
             RichEdit.SelAttributes.Color := color;
@@ -470,6 +471,8 @@ begin
     emoticon_regex.ModifierG := false;
     emoticon_regex.Expression := e;
     emoticon_regex.Compile();
+
+    _pic := nil;
 end;
 
 {---------------------------------------}
@@ -614,6 +617,8 @@ initialization
 finalization
     if (emoticon_regex <> nil) then
         emoticon_regex.Free();
+    if (_pic <> nil) then
+        _pic.Free();
     ClearStringListObjects(emoticon_list);
     emoticon_list.Free();
 

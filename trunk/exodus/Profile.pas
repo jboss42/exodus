@@ -250,6 +250,8 @@ begin
         txtOrgTitle.Text := OrgTitle;
         memDesc.Lines.Text := Desc;
         end;
+
+    vcard.Free();
 end;
 
 {---------------------------------------}
