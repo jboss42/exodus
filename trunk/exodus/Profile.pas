@@ -22,7 +22,7 @@ unit Profile;
 interface
 
 uses
-    XMLTag, IQ,
+    XMLTag, IQ, XMLVcard, 
     ShellAPI, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, CheckLst, ExtCtrls, ComCtrls, TntStdCtrls,
@@ -113,6 +113,8 @@ type
     ResListBox: TTntListBox;
     optSubscrip: TTntRadioGroup;
     TreeView1: TTntTreeView;
+    picBox: TPaintBox;
+    TntLabel1: TTntLabel;
     procedure FormCreate(Sender: TObject);
     procedure TreeView1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -123,9 +125,11 @@ type
     procedure lblEmailClick(Sender: TObject);
     procedure btnAddGroupClick(Sender: TObject);
     procedure btnUpdateNickClick(Sender: TObject);
+    procedure picBoxPaint(Sender: TObject);
   private
     { Private declarations }
     iq: TJabberIQ;
+    _vcard: TXMLVCard;
   public
     { Public declarations }
     procedure vcard(event: string; tag: TXMLTag);
@@ -140,7 +144,7 @@ implementation
 
 {$R *.DFM}
 uses
-    JabberConst, XMLVCard, JabberUtils, ExUtils,  GnuGetText,  
+    JabberConst, JabberUtils, ExUtils,  GnuGetText,
     Presence, NodeItem, Roster, JabberID, Session, Unicode, Jabber1;
 
 {---------------------------------------}
@@ -212,8 +216,6 @@ end;
 
 {---------------------------------------}
 procedure TfrmProfile.vcard (event: string; tag: TXMLTag);
-var
-    vcard: TXMLVCard;
 begin
     // callback for vcard info
     iq := nil;
@@ -221,10 +223,12 @@ begin
     aniProfile.Active := false;
 
     if (event <> 'xml') then exit;
-    vcard := TXMLVCard.Create;
-    vcard.parse(tag);
+    if (_vcard <> nil) then _vcard.Free();
+    
+    _vcard := TXMLVCard.Create;
+    _vcard.parse(tag);
 
-    with vcard do begin
+    with _vcard do begin
         txtFirst.Text := GivenName;
         txtLast.Text := FamilyName;
         txtPriEmail.Text := email;
@@ -259,9 +263,11 @@ begin
         txtOrgUnit.Text := OrgUnit;
         txtOrgTitle.Text := OrgTitle;
         memDesc.Lines.Text := Desc;
-    end;
 
-    vcard.Free();
+        if (Picture <> nil) then begin
+            Picture.Draw(picBox.Canvas);
+        end;
+    end;
 end;
 
 {---------------------------------------}
@@ -321,8 +327,8 @@ end;
 procedure TfrmProfile.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     MainSession.Prefs.SavePosition(Self);
-    if (iq <> nil) then
-        iq.Free;
+    if (iq <> nil) then iq.Free;
+    if (_vcard <> nil) then _vcard.Free();
     Action := caFree;
 end;
 
@@ -434,6 +440,12 @@ procedure TfrmProfile.btnUpdateNickClick(Sender: TObject);
 begin
     if (txtFirst.Text <> '') or (txtLast.Text <> '') then
         txtNick.Text := txtFirst.Text + ' ' + txtLast.Text;
+end;
+
+procedure TfrmProfile.picBoxPaint(Sender: TObject);
+begin
+    if (_vcard = nil) or (_vcard.picture = nil) then exit;
+    _vcard.Picture.Draw(picBox.Canvas);
 end;
 
 end.

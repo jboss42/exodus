@@ -22,7 +22,7 @@ unit ExSession;
 interface
 uses
     // Exodus'y stuff
-    COMController, COMRoster, COMPPDB, JabberID,
+    COMController, COMRoster, COMPPDB, JabberID, 
     Unicode, Signals, XMLTag, Session, GUIFactory, Register, Notify,
     S10n,
 
@@ -79,6 +79,7 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 
 uses
+    Avatar, 
     ActnList, Graphics, ExtCtrls, ExRichEdit,
     Controls, GnuGetText, ConnDetails, IdWinsock2,
     ChatWin, GetOpt, Jabber1, PrefController, StandardAuth,
@@ -500,8 +501,10 @@ begin
     ExStartup.status := cli_status;
     ExStartup.ssl_ok := checkSSL();
 
-    Result := true;
+    // Setup our avatar cache
+    Avatars.setSession(MainSession);
 
+    Result := true;
 end;
 
 {---------------------------------------}

@@ -179,6 +179,7 @@ type
     IdAntiFreeze1: TIdAntiFreeze;
     mnuPluginOpts: TTntMenuItem;
     N15: TTntMenuItem;
+    imgListClients: TImageList;
 
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);

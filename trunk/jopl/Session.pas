@@ -126,7 +126,6 @@ type
         procedure Connect;
         procedure Disconnect;
 
-
         // AuthAgent stuff
         procedure setAuthAgent(new_auth: TJabberAuth);
         procedure setAuthdJID(user, host, res: Widestring);
