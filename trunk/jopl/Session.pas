@@ -50,6 +50,7 @@ type
         _presSignal: TPresenceSignal;
         _dataSignal: TStringSignal;
         _unhandledSignal: TBasicSignal;
+        _winSignal: TPacketSignal;
 
         _paused: boolean;
         _pauseQueue: TQueue;
@@ -187,6 +188,7 @@ begin
     _presSignal := TPresenceSignal.Create();
     _dataSignal := TStringSignal.Create();
     _unhandledSignal := TBasicSignal.Create();
+    _winSignal := TPacketSignal.Create();
 
     _dispatcher.AddSignal('/packet', _packetSignal);
     _dispatcher.AddSignal('/session', _sessionSignal);
@@ -194,26 +196,31 @@ begin
     _dispatcher.AddSignal('/presence', _presSignal);
     _dispatcher.AddSignal('/data', _dataSignal);
     _dispatcher.AddSignal('/unhandled', _unhandledSignal);
+    _dispatcher.AddSignal('/windows', _winSignal);
 
     _pauseQueue := TQueue.Create();
 
     // Create all the things which might register w/ the session
+
+    // Create the Presence Proxy Database (PPDB)
     ppdb := TJabberPPDB.Create;
     ppdb.SetSession(Self);
 
+    // Create the Roster
     roster := TJabberRoster.Create;
     roster.SetSession(Self);
 
+    // Create the chat list
     ChatList := TJabberChatList.Create;
 
+    // Create the preferences controller
     Prefs := TPrefController.Create(ConfigFile);
     Prefs.LoadProfiles;
     Prefs.SetSession(Self);
 
+    // Create the agents master list, and the Presence_XML list.
     Agents := TStringList.Create();
-
     Presence_XML := TWideStringlist.Create();
-
 end;
 
 {---------------------------------------}
@@ -511,6 +518,7 @@ begin
     else
         tok1 := xplite;
 
+    // Find the correct signal to register with
     i := _dispatcher.IndexOf(tok1);
     if tok1 = '/packet' then begin
         pk := _packetSignal.addListener(xplite, callback);

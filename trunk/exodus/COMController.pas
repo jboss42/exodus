@@ -103,6 +103,7 @@ type
     procedure removeDiscoItem(const ID: WideString); safecall;
     function registerPresenceXML(const XML: WideString): WideString; safecall;
     procedure removePresenceXML(const ID: WideString); safecall;
+    procedure trackWindowsMsg(Message: Integer); safecall;
     { Protected declarations }
   private
     _menu_items: TWideStringList;
@@ -764,6 +765,12 @@ begin
     idx := StrToIntDef(ID, -1);
     if ((idx >= 0) and (idx < MainSession.Presence_XML.Count)) then
         MainSession.Presence_XML.Delete(idx);
+end;
+
+{---------------------------------------}
+procedure TExodusController.trackWindowsMsg(Message: Integer);
+begin
+    frmExodus.TrackWindowsMsg(Message);
 end;
 
 initialization

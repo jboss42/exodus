@@ -254,6 +254,8 @@ type
     procedure timTrayAlertTimer(Sender: TObject);
     procedure JabberUserGuide1Click(Sender: TObject);
     procedure mnuPluginDummyClick(Sender: TObject);
+    procedure ApplicationEvents1Message(var Msg: tagMSG;
+      var Handled: Boolean);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -325,6 +327,8 @@ type
     _com_ppdb: TExodusPPDB;
 
     _mutex: THandle;
+    _win32_tracker: Array of integer;
+    _win32_idx: integer;
 
     procedure presCustomPresClick(Sender: TObject);
     procedure restoreToolbar;
@@ -339,6 +343,9 @@ type
     procedure SetAutoXA();
     procedure SetAutoAvailable();
     procedure SetupAutoAwayTimer();
+
+    function win32TrackerIndex(windows_msg: integer): integer;
+
   protected
     // Hooks for the keyboard and the mouse
     _hook_keyboard: HHOOK;
@@ -378,11 +385,7 @@ type
     procedure CTCPCallback(event: string; tag: TXMLTag);
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
     procedure DefaultHandler(var msg); override;
-
-    (*
-    procedure FloatMsgQueue();
-    procedure DockMsgQueue();
-    *)
+    procedure TrackWindowsMsg(windows_msg: integer);
 
     procedure PreModal(frm: TForm);
     procedure PostModal();
@@ -1027,6 +1030,10 @@ end;
     _com_controller := TExodusController.Create();
     _com_roster := TExodusRoster.Create();
     _com_ppdb := TExodusPPDB.Create();
+
+
+    SetLength(_win32_tracker, 20);
+    _win32_idx := 0;
 
     {$ifdef TRACE_EXCEPTIONS}
     // Start Exception tracking
@@ -2724,8 +2731,10 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.Test1Click(Sender: TObject);
+{
 var
     i: integer;
+}
 begin
     // Test something..
     // LoadPlugin('RosterClean.ExodusRosterClean');
@@ -2734,12 +2743,17 @@ begin
     // PInteger(nil)^ := 0;
 
     // Show a toast window
+    {
     i := Random(2);
     if (i = 0) then
         ShowRiserWindow(Self, 'Test Toast ' + IntToStr(i) + ' Some more text to Some more text to Some more text to Some more text to make toast really long.', i)
     else
         ShowRiserWindow(Self, 'Test Toast ' + IntToStr(i) + ' cvs commit from cvsnotify@jabberstudio.org', i);
+    }
     //ShowRiserWindow(Self, 'Test Toast ' + IntToStr(i), i);
+
+    TrackWindowsMsg(WM_ACTIVATEAPP);
+    TrackWindowsMsg(WM_ACTIVATE);
 end;
 
 {---------------------------------------}
@@ -2974,6 +2988,58 @@ procedure TfrmExodus.mnuPluginDummyClick(Sender: TObject);
 begin
     // call the COM Controller
     _com_controller.fireMenuClick(Sender);
+end;
+
+{---------------------------------------}
+function TfrmExodus.win32TrackerIndex(windows_msg: integer): integer;
+var
+    i: integer;
+begin
+    Result := -1;
+    for i := 0 to _win32_idx - 1 do begin
+        if (_win32_tracker[i] = windows_msg) then begin
+            Result := i;
+            break;
+        end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.TrackWindowsMsg(windows_msg: integer);
+var
+    idx: integer;
+begin
+    idx := win32TrackerIndex(windows_msg);
+    if (idx = -1) then begin
+        _win32_tracker[_win32_idx] := windows_msg;
+        inc(_win32_idx);
+        if (_win32_idx >= Length(_win32_tracker)) then begin
+            SetLength(_win32_tracker, _win32_idx + 20);
+        end;
+    end;
+
+    ApplicationEvents1.Activate();
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.ApplicationEvents1Message(var Msg: tagMSG;
+  var Handled: Boolean);
+var
+    idx: integer;
+    etag: TXMLTag;
+begin
+    // check to see if this Msg is one we are tracking..
+    // and fire the appropriate event if it is.
+    idx := win32TrackerIndex(Msg.message);
+    if (idx >= 0) then begin
+        etag := TXMLTag.Create('event');
+        etag.setAttribute('msg', IntToStr(Msg.message));
+        etag.setAttribute('hwnd', IntToStr(Msg.hwnd));
+        etag.setAttribute('lparam', IntToStr(Msg.lParam));
+        etag.setAttribute('wparam', IntToStr(Msg.wParam));
+        OutputDebugString('firing windows event msg');
+        MainSession.FireEvent('/windows/msg', etag);
+    end;
 end;
 
 initialization
