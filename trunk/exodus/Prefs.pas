@@ -167,6 +167,7 @@ type
     Panel2: TPanel;
     Label1: TLabel;
     chkRegex: TCheckBox;
+    chkAutoStart: TCheckBox;
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -222,10 +223,13 @@ implementation
 uses
     FileCtrl,
     XMLUtils,
-    Presence, 
+    Presence,
     PrefController,
+    Registry,
     Session;
 
+const
+    RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
 {---------------------------------------}
 procedure StartPrefs;
 var
@@ -319,6 +323,7 @@ begin
         chkTimestamp.Checked := getBool('timestamp');
         chkEmoticons.Checked := getBool('emoticons');
         chkAutoUpdate.Checked := getBool('auto_updates');
+        chkAutoStart.Checked := getBool('auto_start');
         chkLog.Checked := getBool('log');
         chkExpanded.Checked := getBool('expanded');
         chkDebug.Checked := getBool('debug');
@@ -399,6 +404,8 @@ procedure TfrmPrefs.SavePrefs;
 var
     i: integer;
     cp: TJabberCustomPres;
+    reg: TRegistry;
+    cmd: string;
 begin
     // save prefs to the reg
     with MainSession.Prefs do begin
@@ -432,12 +439,33 @@ begin
         setBool('timestamp', chkTimestamp.Checked);
         setBool('emoticons', chkEmoticons.Checked);
         setBool('auto_updates', chkAutoUpdate.Checked);
+        setBool('auto_start', chkAutoStart.Checked);
         setBool('log', chkLog.Checked);
         setBool('debug', chkDebug.Checked);
         setBool('autologin', chkAutoLogin.Checked);
         setBool('close_min', chkCloseMin.Checked);
         setString('log_path', txtLogPath.Text);
         setString('xfer_path', txtXFerPath.Text);
+
+        reg := TRegistry.Create();
+        try
+            reg.RootKey := HKEY_CURRENT_USER;
+            reg.OpenKey(RUN_ONCE, false);
+
+            if (not chkAutoStart.Checked) then begin
+                if (reg.ValueExists('Exodus')) then
+                    reg.DeleteValue('Exodus');
+                end
+            else begin
+                cmd := '"' + ParamStr(0) + '"';
+                for i := 1 to ParamCount do
+                    cmd := cmd + ' ' + ParamStr(i);
+                reg.WriteString('Exodus',  cmd);
+                end;
+            reg.CloseKey();
+        finally
+            reg.Free();
+        end;
 
         // Dialog Prefs
         setBool('roster_alpha', chkRosterAlpha.Checked);

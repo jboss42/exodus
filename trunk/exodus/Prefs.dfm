@@ -1,8 +1,8 @@
 object frmPrefs: TfrmPrefs
-  Left = 43
-  Top = 430
+  Left = 262
+  Top = 120
   Width = 407
-  Height = 411
+  Height = 442
   Caption = 'Exodus Preferences'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,7 +20,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 340
+    Height = 376
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1379,13 +1379,13 @@ object frmPrefs: TfrmPrefs
     Left = 89
     Top = 0
     Width = 310
-    Height = 340
-    ActivePage = tbsRoster
+    Height = 376
+    ActivePage = tbsSystem
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 0
+    TabIndex = 3
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1720,7 +1720,7 @@ object frmPrefs: TfrmPrefs
       ImageIndex = 3
       object Label15: TLabel
         Left = 8
-        Top = 248
+        Top = 271
         Width = 149
         Height = 13
         Caption = 'File transfer download directory:'
@@ -1728,7 +1728,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 102
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1745,43 +1745,44 @@ object frmPrefs: TfrmPrefs
       end
       object chkTimestamp: TCheckBox
         Left = 8
-        Top = 128
+        Top = 152
         Width = 241
         Height = 17
         Caption = 'Timestamp displayed messages'
-        TabOrder = 1
+        TabOrder = 6
       end
       object chkAutoUpdate: TCheckBox
         Left = 8
-        Top = 176
+        Top = 200
         Width = 233
         Height = 17
         Caption = 'Check for updates automatically'
-        TabOrder = 2
+        Enabled = False
+        TabOrder = 8
       end
       object chkLog: TCheckBox
         Left = 8
-        Top = 200
+        Top = 223
         Width = 97
         Height = 17
         Caption = 'Log Messages'
-        TabOrder = 3
+        TabOrder = 9
       end
       object chkExpanded: TCheckBox
-        Left = 8
-        Top = 56
-        Width = 169
-        Height = 17
-        Caption = 'Start in Expanded Mode'
-        TabOrder = 4
-      end
-      object chkDebug: TCheckBox
         Left = 8
         Top = 80
         Width = 169
         Height = 17
+        Caption = 'Start in Expanded Mode'
+        TabOrder = 3
+      end
+      object chkDebug: TCheckBox
+        Left = 8
+        Top = 104
+        Width = 169
+        Height = 17
         Caption = 'Start with Debug visible'
-        TabOrder = 5
+        TabOrder = 4
       end
       object chkAutoLogin: TCheckBox
         Left = 8
@@ -1789,55 +1790,63 @@ object frmPrefs: TfrmPrefs
         Width = 241
         Height = 17
         Caption = 'Automatically login with last profile'
-        TabOrder = 6
+        TabOrder = 1
       end
       object chkCloseMin: TCheckBox
         Left = 8
-        Top = 104
+        Top = 128
         Width = 241
         Height = 17
         Caption = 'Close button minimizes to the tray'
-        TabOrder = 7
+        TabOrder = 5
       end
       object txtLogPath: TEdit
         Left = 29
-        Top = 218
-        Width = 188
-        Height = 21
-        TabOrder = 8
-      end
-      object btnLogBrowse: TButton
-        Left = 224
-        Top = 216
-        Width = 75
-        Height = 25
-        Caption = 'Browse'
-        TabOrder = 9
-        OnClick = btnLogBrowseClick
-      end
-      object txtXFerPath: TEdit
-        Left = 29
-        Top = 266
+        Top = 241
         Width = 188
         Height = 21
         TabOrder = 10
       end
-      object btnTransferBrowse: TButton
-        Left = 222
-        Top = 264
+      object btnLogBrowse: TButton
+        Left = 224
+        Top = 239
         Width = 75
         Height = 25
         Caption = 'Browse'
         TabOrder = 11
+        OnClick = btnLogBrowseClick
+      end
+      object txtXFerPath: TEdit
+        Left = 29
+        Top = 289
+        Width = 188
+        Height = 21
+        TabOrder = 12
+      end
+      object btnTransferBrowse: TButton
+        Left = 222
+        Top = 287
+        Width = 75
+        Height = 25
+        Caption = 'Browse'
+        TabOrder = 13
         OnClick = btnTransferBrowseClick
       end
       object chkEmoticons: TCheckBox
         Left = 8
-        Top = 152
+        Top = 176
         Width = 241
         Height = 17
         Caption = 'Auto detect Emoticons in messages'
-        TabOrder = 12
+        TabOrder = 7
+      end
+      object chkAutoStart: TCheckBox
+        Left = 8
+        Top = 56
+        Width = 233
+        Height = 17
+        Caption = 'Run Exodus when windows starts'
+        TabOrder = 2
       end
     end
     object tbsDialog: TTabSheet
@@ -2190,7 +2199,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 112
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2224,7 +2233,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TLabel
           Left = 0
           Top = 0
-          Width = 302
+          Width = 256
           Height = 26
           Align = alTop
           Caption = 
@@ -2461,7 +2470,7 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 340
+    Top = 376
     Width = 399
     Height = 37
     Align = alBottom
