@@ -6,13 +6,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-08-05 09:53\n"
-"PO-Revision-Date: 2004-08-05 09:53\n"
+"POT-Creation-Date: 2004-08-12 06:52\n"
+"PO-Revision-Date: 2004-08-12 06:52\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: dxgettext 1.1.1\n"
+"X-Generator: dxgettext 1.2 beta 2\n"
 
 #. frmAbout..Caption
 #: About.dfm:8
@@ -92,7 +92,7 @@ msgstr ""
 #. frmMsgRecv..Font.Name
 #: MsgRecv.dfm:12
 #. frmMsgRecv..pnlTop..pnlError..Font.Name
-#: MsgRecv.dfm:413
+#: MsgRecv.dfm:415
 #. frmPathSelector..Font.Name
 #: PathSelector.dfm:14
 #. frmPathSelector..Label1..Font.Name
@@ -153,11 +153,11 @@ msgstr ""
 #. frmAbout..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: About.dfm:1424
 #. frmException..frameButtons1..Panel2..Panel1..btnCancel..Caption
-#: ExTracer.dfm:46
+#: ExTracer.dfm:48
 #. frmInvalidRoster..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: InvalidRoster.dfm:42
 #. frmMsgRecv..frameButtons1..Panel2..Panel1..btnCancel..Caption
-#: MsgRecv.dfm:474
+#: MsgRecv.dfm:476
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: RosterRecv.dfm:42
 #. show the next event
@@ -189,9 +189,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:72
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:75
+#: MsgRecv.dfm:77
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:174
+#: MsgRecv.dfm:176
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:101
 #. fRTFMsgList..MsgList......Name
@@ -212,9 +212,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:78
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:81
+#: MsgRecv.dfm:83
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:180
+#: MsgRecv.dfm:182
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:107
 #. fRTFMsgList..MsgList......Name
@@ -235,9 +235,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:84
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:87
+#: MsgRecv.dfm:89
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:186
+#: MsgRecv.dfm:188
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:113
 #. fRTFMsgList..MsgList......Name
@@ -258,9 +258,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:90
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:93
+#: MsgRecv.dfm:95
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:192
+#: MsgRecv.dfm:194
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:119
 #. fRTFMsgList..MsgList......Name
@@ -281,9 +281,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:96
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:99
+#: MsgRecv.dfm:101
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:198
+#: MsgRecv.dfm:200
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:125
 #. fRTFMsgList..MsgList......Name
@@ -304,9 +304,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:102
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:105
+#: MsgRecv.dfm:107
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:204
+#: MsgRecv.dfm:206
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:131
 #. fRTFMsgList..MsgList......Name
@@ -327,9 +327,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:108
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:111
+#: MsgRecv.dfm:113
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:210
+#: MsgRecv.dfm:212
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:137
 #. fRTFMsgList..MsgList......Name
@@ -350,9 +350,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:114
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:117
+#: MsgRecv.dfm:119
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:216
+#: MsgRecv.dfm:218
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:143
 #. fRTFMsgList..MsgList......Name
@@ -373,9 +373,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:120
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:123
+#: MsgRecv.dfm:125
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:222
+#: MsgRecv.dfm:224
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:149
 #. fRTFMsgList..MsgList......Name
@@ -396,9 +396,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:126
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:129
+#: MsgRecv.dfm:131
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:228
+#: MsgRecv.dfm:230
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:155
 #. fRTFMsgList..MsgList......Name
@@ -419,9 +419,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:132
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:135
+#: MsgRecv.dfm:137
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:234
+#: MsgRecv.dfm:236
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:161
 #. fRTFMsgList..MsgList......Name
@@ -442,9 +442,9 @@ msgstr ""
 #. frmMsgQueue..txtMsg......Name
 #: MsgQueue.dfm:138
 #. frmMsgRecv..pnlReply..MsgOut......Name
-#: MsgRecv.dfm:141
+#: MsgRecv.dfm:143
 #. frmMsgRecv..txtMsg......Name
-#: MsgRecv.dfm:240
+#: MsgRecv.dfm:242
 #. frmRosterRecv..txtMsg......Name
 #: RosterRecv.dfm:167
 #. fRTFMsgList..MsgList......Name
@@ -574,7 +574,7 @@ msgstr ""
 #. frmBaseChat..popOut..Copy3..Caption
 #: BaseChat.dfm:192
 #. frmMsgRecv..popClipboard..popCopy..Caption
-#: MsgRecv.dfm:536
+#: MsgRecv.dfm:538
 msgid "Copy"
 msgstr ""
 
@@ -651,9 +651,9 @@ msgstr ""
 #. frmJud..PopupMenu1..N1..Caption
 #: jud.dfm:220
 #. frmMsgRecv..popContact..N1..Caption
-#: MsgRecv.dfm:519
+#: MsgRecv.dfm:521
 #. frmMsgRecv..popContact..N2..Caption
-#: MsgRecv.dfm:528
+#: MsgRecv.dfm:530
 #. frmRoom..popRoom..popAdmin..N4..Caption
 #: Room.dfm:210
 #. frmRoom..popRoom..popAdmin..N5..Caption
@@ -782,7 +782,7 @@ msgstr ""
 #. frmTracer..Panel1..Font.Name
 #: ExceptTracer.dfm:53
 #. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..Panel1..btnClose..Font.Name
-#: MsgRecv.dfm:394
+#: MsgRecv.dfm:396
 #. frmPrefs..Font.Name
 #: Prefs.dfm:13
 #. frmRegister..Tabs..TabSheet1..Label1..Font.Name
@@ -816,7 +816,7 @@ msgstr ""
 #. frmDebug..pnlTop..btnClose..Caption
 #: Debug.dfm:252
 #. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..Panel1..btnClose..Caption
-#: MsgRecv.dfm:389
+#: MsgRecv.dfm:391
 #. frmRoom..Panel1..btnClose..Caption
 #: Room.dfm:91
 #. frmRosterWindow..pnlFind..btnFindClose..Caption
@@ -1052,7 +1052,7 @@ msgstr ""
 #. frmChat..popContact..popClearHistory..Caption
 #: ChatWin.dfm:102
 #. frmMsgRecv..popContact..popClearHistory..Caption
-#: MsgRecv.dfm:488
+#: MsgRecv.dfm:490
 #. frmRoom..popRoom..popClearHistory..Caption
 #: Room.dfm:167
 msgid "Clear History"
@@ -1061,10 +1061,10 @@ msgstr ""
 #. frmChat..popContact..popResources..Caption
 #: ChatWin.dfm:110
 #. frmMsgRecv..popContact..mnuResources..Caption
-#: MsgRecv.dfm:523
+#: MsgRecv.dfm:525
 #. frmProfile..PageControl1..TabSheet7..Caption
 #: Profile.dfm:163
-#: Profile.pas:295
+#: Profile.pas:297
 msgid "Resources"
 msgstr ""
 
@@ -1091,7 +1091,7 @@ msgstr ""
 #. frmChat..popContact..C1..mnuVersionRequest..Caption
 #: ChatWin.dfm:130
 #. frmMsgRecv..popContact..C1..mnuVersionRequest..Caption
-#: MsgRecv.dfm:498
+#: MsgRecv.dfm:500
 #. frmRosterWindow..popRoster..popClientInfo..popVersion..Caption
 #: RosterWindow.dfm:341
 msgid "Version Request"
@@ -1100,7 +1100,7 @@ msgstr ""
 #. frmChat..popContact..C1..mnuTimeRequest..Caption
 #: ChatWin.dfm:134
 #. frmMsgRecv..popContact..C1..mnuTimeRequest..Caption
-#: MsgRecv.dfm:502
+#: MsgRecv.dfm:504
 #. frmRosterWindow..popRoster..popClientInfo..popTime..Caption
 #: RosterWindow.dfm:345
 msgid "Time Request"
@@ -1109,7 +1109,7 @@ msgstr ""
 #. frmChat..popContact..C1..mnuLastActivity..Caption
 #: ChatWin.dfm:138
 #. frmMsgRecv..popContact..C1..mnuLastActivity..Caption
-#: MsgRecv.dfm:506
+#: MsgRecv.dfm:508
 #. frmProfile..PageControl1..TabSheet7..Panel2..btnLast..Caption
 #: Profile.dfm:207
 #. frmRosterWindow..popRoster..popClientInfo..popLast..Caption
@@ -1121,7 +1121,7 @@ msgstr ""
 #. frmChat..popContact..mnuBlock..Caption
 #: ChatWin.dfm:143
 #. frmMsgRecv..popContact..mnuBlock..Caption
-#: MsgRecv.dfm:511
+#: MsgRecv.dfm:513
 msgid "Block Contact"
 msgstr ""
 
@@ -2626,70 +2626,70 @@ msgid "Delete"
 msgstr ""
 
 #. frmMsgRecv..pnlReply..frameButtons2..Panel2..Panel1..btnOK..Caption
-#: MsgRecv.dfm:60
+#: MsgRecv.dfm:62
 msgid "&Send"
 msgstr ""
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlSendSubject..lblSubject1..Caption
-#: MsgRecv.dfm:296
+#: MsgRecv.dfm:298
 msgid "Subject: "
 msgstr ""
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlSubject..txtSubject..Caption
-#: MsgRecv.dfm:327
+#: MsgRecv.dfm:329
 msgid "txtSubject"
 msgstr ""
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlSubject..lblSubject2..Caption
-#: MsgRecv.dfm:335
+#: MsgRecv.dfm:337
 #. frmRoom..Panel1..pnlSubj..lblSubjectURL..Caption
 #: Room.dfm:117
 msgid "Subject:"
 msgstr ""
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..txtFrom..Caption
-#: MsgRecv.dfm:358
+#: MsgRecv.dfm:360
 msgid "txtFrom"
 msgstr ""
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..lblFrom..Caption
-#: MsgRecv.dfm:371
+#: MsgRecv.dfm:373
 msgid "From: "
 msgstr ""
 
 #. frmMsgRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
-#: MsgRecv.dfm:470
+#: MsgRecv.dfm:472
 msgid "Reply"
 msgstr ""
 
 #. frmMsgRecv..popContact..mnuHistory..Caption
-#: MsgRecv.dfm:484
+#: MsgRecv.dfm:486
 #. frmRoom..popRoom..popShowHistory..Caption
 #: Room.dfm:163
 msgid "Show History"
 msgstr ""
 
 #. frmMsgRecv..popContact..mnuProfile..Caption
-#: MsgRecv.dfm:492
+#: MsgRecv.dfm:494
 #. frmSubscribe..PopupMenu1..mnuProfile..Caption
 #: subscribe.dfm:142
 msgid "Show Profile"
 msgstr ""
 
 #. frmMsgRecv..popContact..C1..Caption
-#: MsgRecv.dfm:496
+#: MsgRecv.dfm:498
 #. frmRosterWindow..popRoster..popClientInfo..Caption
 #: RosterWindow.dfm:339
 msgid "Client Info"
 msgstr ""
 
 #. frmMsgRecv..popContact..mnuSendFile..Caption
-#: MsgRecv.dfm:515
+#: MsgRecv.dfm:517
 msgid "Send File"
 msgstr ""
 
 #. frmMsgRecv..popClipboard..popPaste..Caption
-#: MsgRecv.dfm:540
+#: MsgRecv.dfm:542
 msgid "Paste"
 msgstr ""
 
@@ -2805,7 +2805,7 @@ msgstr ""
 #: Prefs.dfm:2833
 #. frmProfile..PageControl1..TabSheet2..Caption
 #: Profile.dfm:223
-#: Profile.pas:296
+#: Profile.pas:298
 msgid "Groups"
 msgstr ""
 
@@ -5870,8 +5870,8 @@ msgstr ""
 
 #. frmProfile..PageControl1..TabSheet6..Caption
 #: Profile.dfm:807
-#: Profile.pas:298
 #: Profile.pas:300
+#: Profile.pas:302
 #: vcard.pas:158
 #: vcard.pas:160
 msgid "Address"
@@ -7409,18 +7409,18 @@ msgid " is now offline."
 msgstr ""
 
 #. Do this to ensure the nodes are properly translated.
-#: Profile.pas:294
+#: Profile.pas:296
 #. Do this to ensure the nodes are properly translated.
 #: vcard.pas:156
 msgid "Basic"
 msgstr ""
 
-#: Profile.pas:297
+#: Profile.pas:299
 #: vcard.pas:157
 msgid "Personal Information"
 msgstr ""
 
-#: Profile.pas:299
+#: Profile.pas:301
 #: vcard.pas:159
 msgid "Work Information"
 msgstr ""
