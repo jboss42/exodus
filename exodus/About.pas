@@ -80,6 +80,7 @@ begin
     TranslateComponent(Self);
     pnlVersion.Caption := _('Version: ') + GetAppVersion();
 
+    InfoBox.WideLines.Clear();
     InfoBox.WideLines.Add(_(sAbout1));
     InfoBox.WideLines.Add('');
     InfoBox.WideLines.Add(_(sAbout2));
