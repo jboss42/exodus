@@ -27,7 +27,8 @@ uses
   RichOLE in '..\..\components\richole.pas',
   ExRichEdit in '..\..\components\ExRichEdit.pas',
   RegExpr in '..\..\..\jopl\RegExpr.pas',
-  Stringprep in '..\..\..\jopl\Stringprep.pas';
+  Stringprep in '..\..\..\jopl\Stringprep.pas',
+  SQLUtils in 'SQLUtils.pas';
 
 exports
   DllGetClassObject,

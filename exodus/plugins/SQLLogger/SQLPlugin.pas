@@ -62,6 +62,9 @@ type
     _cur_user: Widestring;
     _mid: String;
 
+    // menus
+    _menu_search: Widestring;
+
     // db stuff
     _db: TSQLiteDatabase;
 
@@ -104,7 +107,7 @@ const
 implementation
 
 uses
-    Viewer, XMLUtils, 
+    Viewer, XMLUtils, SQLUtils,  
     SysUtils, Dialogs, JabberUtils, JabberID, ComServ;
 
 const
@@ -128,7 +131,7 @@ begin
     Result := mid;
 end;
 
-{---------------------------------------}
+{-------------- -------------------------}
 procedure TSQLLogger.Startup(const ExodusController: IExodusController);
 var
     ver: integer;
@@ -146,7 +149,22 @@ begin
         _path := _exodus.getPrefAsString('log_path');
         _fn := _path + '\exodus-logs.db';
         _exodus.setPrefAsString('log_sql_filename', _fn);
+    end
+    else
+        _path := ExtractFileDir(_fn);
+
+    // If the dir doesn't exist, try to create it.
+    if (DirectoryExists(_path) = false) then begin
+        CreateDir(_path);
     end;
+
+    // otherwise, error
+    if (DirectoryExists(_path) = false) then begin
+        MessageDlgW('Could not locale the log path: ' + _path,
+            mtError, [mbOK], 0);
+        exit;
+    end;
+
 
     _db := TSQLiteDatabase.Create(_fn);
     if (_db = nil) then begin
@@ -222,6 +240,9 @@ begin
     _clear := _exodus.RegisterCallback('/log/clear', Self);
     _purge := _exodus.RegisterCallback('/log/purge', Self);
     _sess := _exodus.RegisterCallback('/session', Self);
+
+    // Register menu items
+    _menu_search := _exodus.addPluginMenu('Search Logs');
 end;
 
 {---------------------------------------}
@@ -251,6 +272,11 @@ end;
 {---------------------------------------}
 procedure TSQLLogger.Shutdown;
 begin
+
+    // unreg menu items
+    _exodus.removePluginMenu(_menu_search);
+
+    // unreg callbacks
     _exodus.UnRegisterCallback(_logger);
     _exodus.UnRegisterCallback(_show);
     _exodus.UnRegisterCallback(_clear);
@@ -302,8 +328,15 @@ end;
 
 {---------------------------------------}
 procedure TSQLLogger.MenuClick(const ID: WideString);
+var
+    f: TfrmView;
 begin
-
+    if (id = _menu_search) then begin
+        f := TfrmView.Create(nil);
+        f.db := _db;
+        f.ShowSearch();
+        f.Show();
+    end;
 end;
 
 {---------------------------------------}
@@ -370,10 +403,11 @@ begin
         jid := UTF8Encode(fromjid.jid);
 
     thread := UTF8Encode(log.GetBasicText('thread'));
-    subject := UTF8Encode(log.GetBasicText('subject'));
-    nick := UTF8Encode(log.getAttribute('nick'));
-    body := UTF8Encode(log.GetBasicText('body'));
     mtype := log.getAttribute('type');
+
+    subject := str2sql(UTF8Encode(log.GetBasicText('subject')));
+    nick := str2sql(UTF8Encode(log.getAttribute('nick')));
+    body := str2sql(UTF8Encode(log.GetBasicText('body')));
 
     if (outb) then outstr := 'TRUE' else outstr := 'FALSE';
 

@@ -1,8 +1,8 @@
 object frmView: TfrmView
-  Left = 247
-  Top = 149
-  Width = 574
-  Height = 369
+  Left = 289
+  Top = 145
+  Width = 595
+  Height = 459
   BorderWidth = 5
   Caption = 'frmView'
   Color = clBtnFace
@@ -20,8 +20,8 @@ object frmView: TfrmView
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 556
-    Height = 65
+    Width = 577
+    Height = 78
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
@@ -34,10 +34,17 @@ object frmView: TfrmView
     end
     object TntLabel2: TTntLabel
       Left = 5
-      Top = 30
-      Width = 52
+      Top = 54
+      Width = 49
       Height = 13
-      Caption = 'Keywords: '
+      Caption = 'Keywords:'
+    end
+    object TntLabel3: TTntLabel
+      Left = 5
+      Top = 28
+      Width = 51
+      Height = 13
+      Caption = 'Date Filter:'
     end
     object cboJid: TTntComboBox
       Left = 112
@@ -45,24 +52,62 @@ object frmView: TfrmView
       Width = 217
       Height = 21
       ItemHeight = 13
+      ItemIndex = 0
       TabOrder = 0
+      Text = '<ALL CONTACTS>'
       OnChange = cboJidChange
+      OnSelect = cboJidSelect
       Items.WideStrings = (
         '<ALL CONTACTS>')
     end
     object txtWords: TTntEdit
       Left = 112
-      Top = 27
+      Top = 51
       Width = 217
       Height = 21
       TabOrder = 1
     end
+    object btnSearch: TTntButton
+      Left = 337
+      Top = 49
+      Width = 75
+      Height = 25
+      Caption = 'Search'
+      Default = True
+      TabOrder = 2
+      OnClick = btnSearchClick
+    end
+    object cboDateFilter: TTntComboBox
+      Left = 112
+      Top = 24
+      Width = 217
+      Height = 21
+      Style = csDropDownList
+      ItemHeight = 13
+      ItemIndex = 0
+      TabOrder = 3
+      Text = 'Selected Day'
+      OnChange = cboDateFilterChange
+      Items.WideStrings = (
+        'Selected Day'
+        'Current Month'
+        'All Dates')
+    end
+    object btnDetails: TTntButton
+      Left = 419
+      Top = 49
+      Width = 75
+      Height = 25
+      Caption = 'Show SQL'
+      TabOrder = 4
+      OnClick = btnDetailsClick
+    end
   end
   object Panel2: TPanel
     Left = 0
-    Top = 65
+    Top = 153
     Width = 197
-    Height = 264
+    Height = 262
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 1
@@ -181,25 +226,25 @@ object frmView: TfrmView
   end
   object pnlRight: TPanel
     Left = 197
-    Top = 65
-    Width = 359
-    Height = 264
+    Top = 153
+    Width = 380
+    Height = 262
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 2
     object Splitter1: TSplitter
       Left = 0
-      Top = 120
-      Width = 359
+      Top = 150
+      Width = 380
       Height = 3
       Cursor = crVSplit
       Align = alTop
     end
     object MsgList: TExRichEdit
       Left = 0
-      Top = 123
-      Width = 359
-      Height = 141
+      Top = 153
+      Width = 380
+      Height = 109
       Align = alClient
       AutoURLDetect = adDefault
       CustomURLs = <
@@ -295,24 +340,56 @@ object frmView: TfrmView
       UndoLimit = 0
       AllowInPlace = False
     end
-    object gridConv: TDrawGrid
+    object lstConv: TTntListView
       Left = 0
       Top = 0
-      Width = 359
-      Height = 120
+      Width = 380
+      Height = 150
       Align = alTop
-      ColCount = 1
-      DefaultColWidth = 75
-      DefaultRowHeight = 30
-      FixedCols = 0
-      FixedRows = 0
-      Options = [goFixedVertLine, goFixedHorzLine, goHorzLine, goRangeSelect, goThumbTracking]
-      ScrollBars = ssVertical
+      BevelInner = bvNone
+      BevelWidth = 2
+      Columns = <
+        item
+          Caption = 'Date/Time'
+          Width = 100
+        end
+        item
+          Caption = '# Msgs'
+        end
+        item
+          Caption = 'Contact'
+          Width = 150
+        end>
+      ColumnClick = False
+      MultiSelect = True
+      OwnerData = True
+      ReadOnly = True
+      RowSelect = True
       TabOrder = 1
-      OnDrawCell = gridConvDrawCell
-      OnSelectCell = gridConvSelectCell
-      ColWidths = (
-        333)
+      ViewStyle = vsReport
+      OnData = lstConvData
+      OnDataStateChange = lstConvDataStateChange
+      OnDblClick = lstConvDblClick
+      OnSelectItem = lstConvSelectItem
+    end
+  end
+  object pnlSQL: TPanel
+    Left = 0
+    Top = 78
+    Width = 577
+    Height = 75
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 3
+    Visible = False
+    object lblSQL: TTntLabel
+      Left = 0
+      Top = 0
+      Width = 577
+      Height = 75
+      Align = alClient
+      AutoSize = False
+      WordWrap = True
     end
   end
 end

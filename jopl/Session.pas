@@ -748,6 +748,7 @@ begin
         if (xplite = '/log/logger') then begin
             _logger := true;
             _logger_id := pk.cb_id;
+            Prefs.setBool('log', true);
             FireEvent('/session/logger', nil);
         end;
     end
