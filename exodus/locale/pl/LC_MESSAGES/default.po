@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exodus 0.8.6.43\n"
 "POT-Creation-Date: 2003-08-03 07:30\n"
-"PO-Revision-Date: 2004-01-04 12:07+0100\n"
+"PO-Revision-Date: 2004-01-10 21:42+0100\n"
 "Last-Translator: Mariusz Smykuła <smys@lodz.mm.pl>\n"
 "Language-Team: JabberPL Group <redakcja@jabberpl.org>\n"
 "MIME-Version: 1.0\n"
@@ -35,6 +35,7 @@ msgstr "O programie"
 #. frmDockWizard..Panel1..lblWizardTitle..Font.Name
 #. frmEmoticons..Font.Name
 #. frmTracer..Font.Name
+#. frmException..Font.Name
 #. frameGeneric..Font.Name
 #. frmField..lblPrompt..Font.Name
 #. frameListbox..lblCaption..Font.Name
@@ -97,6 +98,7 @@ msgstr "O programie"
 #: DockWizard.dfm:89
 #: Emoticons.dfm:14
 #: ExceptTracer.dfm:13
+#: ExTracer.dfm:11
 #: fGeneric.dfm:9
 #: fLeftLabel.dfm:16
 #: fListbox.dfm:26
@@ -147,11 +149,13 @@ msgid "MS Sans Serif"
 msgstr ""
 
 #. frmAbout..frameButtons1..Panel2..Panel1..btnCancel..Caption
+#. frmException..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #. frmInvalidRoster..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #. frmMsgRecv..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #. show the next event
 #: About.dfm:1424
+#: ExTracer.dfm:46
 #: InvalidRoster.dfm:42
 #: MsgRecv.dfm:474
 #: RosterRecv.dfm:49
@@ -647,7 +651,7 @@ msgstr "Wklej"
 #: Jabber1.dfm:2686
 #: Jabber1.dfm:2700
 #: Jabber1.dfm:2707
-#: jud.dfm:212
+#: jud.dfm:220
 #: MsgRecv.dfm:519
 #: MsgRecv.dfm:528
 #: Room.dfm:216
@@ -766,11 +770,11 @@ msgstr "Błąd:"
 #: ExceptTracer.dfm:53
 #: MsgRecv.dfm:394
 #: Prefs.dfm:13
-#: RegForm.dfm:56
-#: RegForm.dfm:72
-#: RegForm.dfm:127
-#: RegForm.dfm:149
-#: RegForm.dfm:169
+#: RegForm.dfm:37
+#: RegForm.dfm:53
+#: RegForm.dfm:108
+#: RegForm.dfm:130
+#: RegForm.dfm:150
 #: Room.dfm:31
 #: Room.dfm:104
 #: RosterWindow.dfm:93
@@ -1450,12 +1454,12 @@ msgstr "Rozmowa"
 #: Jabber1.dfm:2656
 #: RosterWindow.dfm:402
 #: RosterWindow.dfm:605
-#: ExSession.pas:189
-#: Jabber1.pas:2720
+#: ExSession.pas:184
+#: Jabber1.pas:2710
 #: RosterWindow.pas:346
 #: RosterWindow.pas:368
-#: RosterWindow.pas:1618
-#: RosterWindow.pas:1661
+#: RosterWindow.pas:1619
+#: RosterWindow.pas:1662
 #: /src/exodus/jopl/PrefController.pas:1257
 #: prefs/PrefGroups.dfm:70
 #: prefs/PrefPresence.dfm:202
@@ -1472,10 +1476,10 @@ msgstr "Dostępny"
 #: Jabber1.dfm:377
 #: Jabber1.dfm:2668
 #: RosterWindow.dfm:414
-#: Jabber1.pas:2718
+#: Jabber1.pas:2708
 #: RosterWindow.pas:348
 #: RosterWindow.pas:369
-#: RosterWindow.pas:1602
+#: RosterWindow.pas:1603
 #: /src/exodus/jopl/PrefController.pas:1275
 #: prefs/PrefGroups.dfm:69
 #: prefs/PrefPresence.dfm:203
@@ -1502,7 +1506,7 @@ msgstr "Nieobecny"
 #: RosterWindow.dfm:426
 #: RosterWindow.pas:350
 #: RosterWindow.pas:371
-#: RosterWindow.pas:1610
+#: RosterWindow.pas:1611
 #: prefs/PrefGroups.dfm:67
 #: prefs/PrefPresence.dfm:205
 msgid "Do Not Disturb"
@@ -1674,6 +1678,11 @@ msgstr ""
 msgid "Exception Tracer"
 msgstr ""
 
+#. frmException..Caption
+#: ExTracer.dfm:6
+msgid "frmException"
+msgstr ""
+
 #. frameGeneric..lblLabel..Caption
 #: fGeneric.dfm:23
 msgid "lblLabel"
@@ -1766,7 +1775,7 @@ msgstr "Nakaż temu kontaktowi usunięcie mnie ze swojej listy"
 #. frmInputPass..Caption
 #. accordingly.
 #: InputPassword.dfm:8
-#: Jabber1.pas:903
+#: Jabber1.pas:894
 msgid "Exodus Password"
 msgstr "Hasło do Exodusa"
 
@@ -1867,9 +1876,9 @@ msgstr "Proszę, dołącz do tego pokoju konferencyjnego."
 #. do this.
 #: Jabber1.dfm:7
 #: ConnDetails.pas:402
-#: ExSession.pas:475
+#: ExSession.pas:470
 #: ExUtils.pas:1223
-#: Jabber1.pas:1217
+#: Jabber1.pas:1208
 #: Login.pas:104
 #: Login.pas:177
 msgid "Exodus"
@@ -1900,7 +1909,7 @@ msgstr "Pokaż"
 #. frmAdd..Caption
 #. frmRosterWindow..popActions..popAddContact..Caption
 #: Jabber1.dfm:146
-#: jud.dfm:204
+#: jud.dfm:212
 #: RosterAdd.dfm:6
 #: RosterWindow.dfm:590
 msgid "Add Contact"
@@ -2094,7 +2103,7 @@ msgstr "&Obecność"
 #: Jabber1.dfm:2662
 #: RosterWindow.dfm:408
 #: RosterWindow.pas:347
-#: RosterWindow.pas:1598
+#: RosterWindow.pas:1599
 #: prefs/PrefPresence.dfm:201
 msgid "Free to Chat"
 msgstr "Chętny do rozmowy"
@@ -2107,7 +2116,7 @@ msgstr "Chętny do rozmowy"
 #: Jabber1.dfm:2674
 #: RosterWindow.dfm:420
 #: RosterWindow.pas:349
-#: RosterWindow.pas:1606
+#: RosterWindow.pas:1607
 #: prefs/PrefPresence.dfm:204
 msgid "Xtended Away"
 msgstr "Odszedłem na dłużej"
@@ -2208,7 +2217,7 @@ msgstr "Inny ..."
 #. frmJud..PopupMenu1..popMessage..Caption
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
 #: Jabber1.dfm:2695
-#: jud.dfm:219
+#: jud.dfm:227
 #: subscribe.dfm:147
 msgid "Send Message"
 msgstr "Wyślij wiadomość"
@@ -2290,7 +2299,7 @@ msgstr "Zawsze akceptuj domyślną konfigurację."
 #. frmRegister..Tabs..TabSheet2..Caption
 #: JoinRoom.dfm:148
 #: jud.dfm:78
-#: RegForm.dfm:79
+#: RegForm.dfm:60
 msgid "TabSheet2"
 msgstr ""
 
@@ -2344,7 +2353,7 @@ msgstr "Proszę czekać. Łączę sie z usługą wyszukiwania."
 #. frmJud..Tabs..TabSheet3..Caption
 #. frmRegister..Tabs..TabSheet3..Caption
 #: jud.dfm:100
-#: RegForm.dfm:114
+#: RegForm.dfm:95
 msgid "TabSheet3"
 msgstr ""
 
@@ -2356,7 +2365,7 @@ msgstr "Podaj kryteria wyszukiwania."
 #. frmJud..Tabs..TabSheet4..Caption
 #. frmRegister..Tabs..TabSheet4..Caption
 #: jud.dfm:124
-#: RegForm.dfm:134
+#: RegForm.dfm:115
 msgid "TabSheet4"
 msgstr ""
 
@@ -2372,9 +2381,14 @@ msgstr "Dodaj kontakty do tej grupy:"
 msgid "Add a new Group"
 msgstr "Dodaj nową grupę"
 
+#. frmJud..Tabs..TabSheet4..Panel2..lblCount..Caption
+#: jud.dfm:159
+msgid "N items found"
+msgstr ""
+
 #. frmJud..Tabs..TabSheet4..Panel2..Button1..Caption
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
-#: jud.dfm:168
+#: jud.dfm:176
 #: RosterRecv.dfm:45
 #: jud.pas:641
 #: jud.pas:643
@@ -2382,15 +2396,15 @@ msgid "Add Contacts"
 msgstr "Dodaj"
 
 #. frmJud..PopupMenu1..popProfile..Caption
-#: jud.dfm:208
+#: jud.dfm:216
 msgid "View Profile"
 msgstr "Pokaż profil"
 
 #. frmJud..PopupMenu1..popChat..Caption
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
-#: jud.dfm:215
+#: jud.dfm:223
 #: subscribe.dfm:143
-#: Jabber1.pas:2291
+#: Jabber1.pas:2279
 msgid "Start Chat"
 msgstr "Rozpocznij rozmowę"
 
@@ -2413,7 +2427,7 @@ msgstr "&Szczegóły"
 #. otherwise, if we have no profiles yet, use the default profile name.
 #. make sure we have at least a default profile
 #: Login.dfm:99
-#: ExSession.pas:373
+#: ExSession.pas:368
 #: Login.pas:200
 msgid "Default Profile"
 msgstr "Domyślny profil"
@@ -2637,7 +2651,7 @@ msgstr "Wtyczki"
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: Prefs.dfm:2639
 #: XferManager.dfm:54
-#: ExSession.pas:485
+#: ExSession.pas:480
 #: prefs/PrefNotify.dfm:43
 #: prefs/PrefNotify.pas:102
 msgid "File Transfers"
@@ -5740,36 +5754,37 @@ msgstr "Odebrano"
 
 #. frmRegister..Caption
 #: RegForm.dfm:4
-msgid "Registration"
-msgstr "Rejestracja"
+#, fuzzy
+msgid "Service Registration"
+msgstr "Rejestracja w usłudze Jabbera"
 
 #. frmRegister..Tabs..TabSheet1..Label1....AutoSize
-#: RegForm.dfm:52
+#: RegForm.dfm:33
 msgid "This wizard will register you with a service or Agent. Use the Next button to advance through the steps. Use Cancel anytime to cancel this registration."
 msgstr "Ten kreator zarejestruje Cię w usłudze. Użyj przycisków Dalej aby przejść do kolejnych kroków. Użyj Anuluj w dowolnej chwili aby przerwać rejestrację."
 
 #. frmRegister..Tabs..TabSheet1..lblIns..Caption
-#: RegForm.dfm:68
+#: RegForm.dfm:49
 msgid "Waiting for agent instructions....."
 msgstr "Czekamy na instrukcje usługi....."
 
 #. frmRegister..Tabs..TabSheet2..Panel2..btnDelete..Caption
-#: RegForm.dfm:94
+#: RegForm.dfm:88
 msgid "Delete My Registration"
 msgstr "Usuń moją rejestrację"
 
 #. frmRegister..Tabs..TabSheet3..Label2..Caption
-#: RegForm.dfm:123
+#: RegForm.dfm:104
 msgid "Please wait, Sending your registration to the service...."
 msgstr "Proszę czekać. Wysyłam Twoją rejestrację do usługi..."
 
 #. frmRegister..Tabs..TabSheet4..lblOK....AutoSize
-#: RegForm.dfm:145
+#: RegForm.dfm:126
 msgid "Your Registration to this service has been completed Successfully. Press the 'Next' button to Finish."
 msgstr "Rejestracja przebiegła pomyślnie. Naciśnij przyciski 'Dalej' aby zakończyć."
 
 #. frmRegister..Tabs..TabSheet4..lblBad....AutoSize
-#: RegForm.dfm:165
+#: RegForm.dfm:146
 msgid "Your Registration to this service has Failed! Press Previous to go back and verify that all of the parameters have been filled in correctly. Press Cancel to close this wizard."
 msgstr "Rejestracja w usłudze nie powiodła się! Naciśnij Poprzedni aby cofnąć się i sprawdzić poprawność wszystkich wprowadzonych parametrów. Naciśnij Anuluj aby zamknąć kreator."
 
@@ -5921,9 +5936,9 @@ msgstr "Wyślij mój JID"
 #: RosterWindow.dfm:379
 #: RosterWindow.dfm:633
 #: Room.pas:1491
-#: RosterWindow.pas:2049
-#: RosterWindow.pas:2086
-#: RosterWindow.pas:2091
+#: RosterWindow.pas:2050
+#: RosterWindow.pas:2087
+#: RosterWindow.pas:2092
 msgid "Block"
 msgstr "Zablokuj"
 
@@ -6079,9 +6094,9 @@ msgstr ""
 #: ExUtils.pas:879
 #: ExUtils.pas:897
 #: RosterWindow.pas:367
-#: RosterWindow.pas:1246
-#: RosterWindow.pas:1250
-#: RosterWindow.pas:1614
+#: RosterWindow.pas:1247
+#: RosterWindow.pas:1251
+#: RosterWindow.pas:1615
 msgid "Offline"
 msgstr "Niedostępny"
 
@@ -6386,11 +6401,11 @@ msgid "Error: %s"
 msgstr "Błąd: %s"
 
 #. Actually Browse to the JID entered in the address box
-#: Browser.pas:201
+#: Browser.pas:204
 msgid "The Jabber ID you entered is invalid."
 msgstr "Wprowadzone Jabber ID jest nieprawidłowe."
 
-#: Browser.pas:602
+#: Browser.pas:605
 msgid "Objects"
 msgstr "Obiektów"
 
@@ -6405,8 +6420,6 @@ msgstr "Aktywność rozmowy:"
 
 #. post a msg to the window and disable the text input box.
 #: ChatWin.pas:743
-#: Jabber1.pas:2608
-#: Jabber1.pas:2614
 #: Room.pas:656
 msgid "You have been disconnected."
 msgstr "Zostałeś rozłączony."
@@ -6599,17 +6612,17 @@ msgid "Disco"
 msgstr ""
 
 #. Make sure winsock2 is available..
-#: ExSession.pas:172
+#: ExSession.pas:167
 msgid "Winsock2 is required for this application. Please obtain the winsock2 installer from Microsoft for your operating system."
 msgstr "Winsock2 jest wymagany przez tą aplikację. Proszę pobrać instalator winsock2 z Microsoftu dla swojego systemu operacyjnego."
 
 #. -w [show]   : presence show
-#: ExSession.pas:231
+#: ExSession.pas:226
 msgid "Invalid command line:%s"
 msgstr "Niewłaściwe polecenie:%s"
 
 #. show the help message
-#: ExSession.pas:262
+#: ExSession.pas:257
 msgid ""
 "The following command line parameters are available in Exodus: \n"
 "\n"
@@ -6617,100 +6630,100 @@ msgstr ""
 "Następujące komendy są dostępne z linii poleceń dla Exodusa: \n"
 "\n"
 
-#: ExSession.pas:263
+#: ExSession.pas:258
 msgid " -d \t\t : Debug mode on\n"
 msgstr " -d \t\t : Włącz tryb testowania\n"
 
-#: ExSession.pas:264
+#: ExSession.pas:259
 msgid " -m \t\t : Start minimized\n"
 msgstr " -m \t\t : Uruchom zminimalizowany\n"
 
-#: ExSession.pas:265
+#: ExSession.pas:260
 msgid " -v \t\t : invisible mode\n"
 msgstr " -v \t\t : tryb niewidoczny\n"
 
-#: ExSession.pas:266
+#: ExSession.pas:261
 msgid " -? \t\t : Show Help\n"
 msgstr " -? \t\t : Pokaż pomoc\n"
 
-#: ExSession.pas:267
+#: ExSession.pas:262
 msgid " -x [yes|no] \t : Expanded Mode\n"
 msgstr " -x [yes|no] \t : Tryb rozszerzony\n"
 
-#: ExSession.pas:268
+#: ExSession.pas:263
 msgid " -j [jid] \t\t : Jid\n"
 msgstr ""
 
-#: ExSession.pas:269
+#: ExSession.pas:264
 msgid " -p [pass] \t : Password\n"
 msgstr " -p [pass] \t : Hasło\n"
 
-#: ExSession.pas:270
+#: ExSession.pas:265
 msgid " -r [res] \t : Resource\n"
 msgstr " -r [res] \t : Zasób\n"
 
-#: ExSession.pas:271
+#: ExSession.pas:266
 msgid " -i [pri] \t : Priority\n"
 msgstr " -i [pri] \t : Priorytet\n"
 
-#: ExSession.pas:272
+#: ExSession.pas:267
 msgid " -f [prof] \t : Profile name\n"
 msgstr " -f [prof] \t : Nazwa profilu\n"
 
-#: ExSession.pas:273
+#: ExSession.pas:268
 msgid " -c [file] \t : Config path name\n"
 msgstr " -c [file] \t : Ścieżka do konfiguracji\n"
 
-#: ExSession.pas:354
+#: ExSession.pas:349
 msgid "Missing file:"
 msgstr "Brakujący plik:"
 
-#: ExSession.pas:476
+#: ExSession.pas:471
 #: prefs/PrefNotify.pas:100
 msgid "Activity in a chat window"
 msgstr "Aktywność w oknie rozmowy"
 
-#: ExSession.pas:477
+#: ExSession.pas:472
 #: prefs/PrefNotify.pas:98
 msgid "Invited to a room"
 msgstr "Zaproszenie do pokoju"
 
-#: ExSession.pas:478
+#: ExSession.pas:473
 #: prefs/PrefNotify.pas:99
 msgid "Keyword in a room"
 msgstr "Słowa kluczowe w pokojach"
 
-#: ExSession.pas:479
+#: ExSession.pas:474
 #: prefs/PrefNotify.pas:95
 msgid "New conversation"
 msgstr "Nowa rozmowa"
 
-#: ExSession.pas:480
+#: ExSession.pas:475
 #: prefs/PrefNotify.pas:96
 msgid "Received a normal message"
 msgstr "Odebrano zwykłą wiadomość"
 
-#: ExSession.pas:481
+#: ExSession.pas:476
 #: prefs/PrefNotify.pas:94
 msgid "Contact went offline"
 msgstr "Kontakt rozłączył się"
 
-#: ExSession.pas:482
+#: ExSession.pas:477
 #: prefs/PrefNotify.pas:93
 msgid "Contact came online"
 msgstr "Kontakt stał się dostępny"
 
-#: ExSession.pas:483
+#: ExSession.pas:478
 #: prefs/PrefNotify.pas:101
 msgid "Activity in a room"
 msgstr "Aktywność w pokoju"
 
-#: ExSession.pas:484
+#: ExSession.pas:479
 #: prefs/PrefNotify.pas:97
 msgid "Subscription request"
 msgstr "Prośba o autoryzację"
 
-#: ExSession.pas:486
+#: ExSession.pas:481
 #: prefs/PrefNotify.pas:103
 msgid "Auto response generated"
 msgstr "Wygenerowano automatyczną odpowiedź"
@@ -6900,29 +6913,29 @@ msgstr "Zostałeś zaproszony do pokoju. %s"
 msgid "Conference Room:"
 msgstr "Pokój konferencji:"
 
-#: Jabber1.pas:903
+#: Jabber1.pas:894
 msgid "Enter Password"
 msgstr "Wprowadź hasło"
 
 #. For other OS's we need to use the wicked nasty DLL
-#: Jabber1.pas:992
+#: Jabber1.pas:983
 msgid "Trying to setup the Auto Away timer."
 msgstr "Próbuję ustawić zegar autobezczynności"
 
-#: Jabber1.pas:1014
+#: Jabber1.pas:1005
 msgid "AutoAway Setup FAILED!"
 msgstr "Ustawienie autobezczynności nie powiodło się"
 
 #. do nothing here..
-#: Jabber1.pas:1021
+#: Jabber1.pas:1012
 msgid "Using Win32 API for Autoaway checks!!"
 msgstr ""
 
-#: Jabber1.pas:1025
+#: Jabber1.pas:1016
 msgid "ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!"
 msgstr ""
 
-#: Jabber1.pas:1088
+#: Jabber1.pas:1079
 msgid ""
 "There was an error trying to authenticate you.\n"
 "Either you used the wrong password, or this account is already in use by someone else."
@@ -6930,76 +6943,76 @@ msgstr ""
 "Wystąpił błąd podczas próby autoryzowania.\n"
 "Stało się tak dlatego, gdyż podałeś złe hasło lub twoje konto jest teraz używanie przez kogoś innego."
 
-#: Jabber1.pas:1095
+#: Jabber1.pas:1086
 msgid "There was an error trying to setup SSL."
 msgstr "Wystąpił błąd podczas próby ustawienia SSL."
 
-#: Jabber1.pas:1131
+#: Jabber1.pas:1122
 msgid "An Error occurred trying to register your new account. This server may not allow open registration."
 msgstr "Wystąpił błąd podczas próby rejestracji nowego konta. Prawdobnie ten serwer nie umożliwia swobodnej rejestracji."
 
-#: Jabber1.pas:1146
+#: Jabber1.pas:1137
 msgid "This account does not exist on this server. Create a new account?"
 msgstr "Takie konto nie istnieje na serwerze. Utworzyć nowe konto?"
 
 #. if we have a new account, prompt for reg info
-#: Jabber1.pas:1196
+#: Jabber1.pas:1187
 msgid "Your new jabber account is activated. Would you like to fill out additional registration information?"
 msgstr "Twoje konto jest aktywne. Czy chcesz wprowadzić dodatkowe informacje rejestracyjne?"
 
 #. set us to away
-#: Jabber1.pas:2087
+#: Jabber1.pas:2075
 msgid "Setting AutoAway"
 msgstr "Ustawienia autobezczynności"
 
 #. set us to xa
-#: Jabber1.pas:2123
+#: Jabber1.pas:2111
 msgid "Setting AutoXA"
 msgstr "Ustawienia AutoXA"
 
 #. reset our status to available
-#: Jabber1.pas:2140
+#: Jabber1.pas:2128
 msgid "Setting Auto Available"
 msgstr "Ustawienia auto dostępności"
 
 #. lookup some arbitrary vcard..
-#: Jabber1.pas:2175
+#: Jabber1.pas:2163
 msgid "Lookup Profile"
 msgstr "Pokaż profil"
 
-#: Jabber1.pas:2175
-#: Jabber1.pas:2291
-#: Jabber1.pas:2548
+#: Jabber1.pas:2163
+#: Jabber1.pas:2279
+#: Jabber1.pas:2538
 msgid "Enter Jabber ID: "
 msgstr "Podaj Jabber ID:"
 
-#: Jabber1.pas:2390
+#: Jabber1.pas:2380
 msgid "Old password is incorrect."
 msgstr "Stare hasło jest nie prawidłowe."
 
-#: Jabber1.pas:2394
+#: Jabber1.pas:2384
 msgid "New password does not match."
 msgstr "Nowe hasło nie pasuje."
 
-#: Jabber1.pas:2414
-#: Jabber1.pas:2419
+#: Jabber1.pas:2404
+#: Jabber1.pas:2409
 msgid "Error changing password."
 msgstr "Błąd podczas zmiany hasła."
 
-#: Jabber1.pas:2417
+#: Jabber1.pas:2407
 msgid "Password changed."
 msgstr "Hasło zmienione."
 
 #. kick off a service registration..
-#: Jabber1.pas:2495
+#: Jabber1.pas:2485
 msgid "Register with Service"
 msgstr "Rejestracja w usłudze"
 
-#: Jabber1.pas:2495
+#: Jabber1.pas:2485
 msgid "Enter Jabber ID of Service: "
 msgstr "Podaj adres usługi:"
 
-#: Jabber1.pas:2548
+#: Jabber1.pas:2538
 msgid "Send a Message"
 msgstr "Wyślij wiadomość"
 
@@ -7007,15 +7020,15 @@ msgstr "Wyślij wiadomość"
 #. send roster items to this contact.
 #. Send contacts to this JID..
 #. we got a URL drop
-#: Jabber1.pas:2811
-#: Jabber1.pas:2821
-#: RosterWindow.pas:2523
-#: RosterWindow.pas:2825
-#: RosterWindow.pas:2857
+#: Jabber1.pas:2803
+#: Jabber1.pas:2813
+#: RosterWindow.pas:2524
+#: RosterWindow.pas:2826
+#: RosterWindow.pas:2858
 msgid "You must select one or more contacts."
 msgstr "Musisz wybrać jeden lub więcej kontaktów."
 
-#: Jabber1.pas:2949
+#: Jabber1.pas:2941
 msgid "Branding error!"
 msgstr ""
 
@@ -7027,7 +7040,7 @@ msgstr "- WSZYSTKIE SERWERY -"
 #. normal result
 #: JoinRoom.pas:237
 #: JoinRoom.pas:393
-#: RegForm.pas:415
+#: RegForm.pas:417
 msgid "Finish"
 msgstr "Zakończ"
 
@@ -7043,13 +7056,17 @@ msgid "Could not contact the search agent."
 msgstr "Nie mogę się połączyć z usługą wyszukiwania."
 
 #. timeout
-#: jud.pas:426
+#: jud.pas:425
 msgid "The search timed out."
 msgstr "Przekroczono czas oczekiwania na wyniki."
 
-#: jud.pas:455
+#: jud.pas:454
 msgid "No Results were found."
 msgstr "Nikogo nie znaleziono."
+
+#: jud.pas:556
+msgid "%d items found."
+msgstr ""
 
 #. Create a new profile
 #: Login.pas:170
@@ -7197,30 +7214,30 @@ msgstr "Czekamy na przerwanie transferu...."
 msgid "The sender of a file transfer (%s) went offline."
 msgstr "Nadawca pliku (%s) rozłączył się."
 
-#: RegForm.pas:130
+#: RegForm.pas:132
 msgid "Jabber Service Registration"
 msgstr "Rejestracja w usłudze Jabbera"
 
-#: RegForm.pas:131
+#: RegForm.pas:133
 msgid "This wizard will guide you through registration with a jabber service."
 msgstr "Ten kreator ułatwi Ci przejście przez proces rejestracji w usłudze jabberowej/"
 
 #. error packet
-#: RegForm.pas:176
+#: RegForm.pas:178
 msgid "The agent you are trying to register with returned an error."
 msgstr "Usługa do której próbowałeś się zarejestrować zwróciła błąd."
 
 #. timeout on entity query
-#: RegForm.pas:264
-#: RegForm.pas:475
+#: RegForm.pas:266
+#: RegForm.pas:477
 msgid "The agent you are trying to register with can not be reached."
 msgstr "Usługa w której próbujesz się zarejestrować nie jest osiągalna."
 
-#: RegForm.pas:479
+#: RegForm.pas:481
 msgid "There was an error trying to remove your registration."
 msgstr "Wystąpił błąd podczas próby usunięcia twojej rejestracji"
 
-#: RegForm.pas:483
+#: RegForm.pas:485
 msgid "Your registration has been removed."
 msgstr "Twoja rejestracja została usunięta."
 
@@ -7367,8 +7384,8 @@ msgid "Enter bookmark name:"
 msgstr "Podaj nazwę zakładki"
 
 #: Room.pas:1489
-#: RosterWindow.pas:2045
-#: RosterWindow.pas:2096
+#: RosterWindow.pas:2046
+#: RosterWindow.pas:2097
 msgid "UnBlock"
 msgstr "Odblokuj"
 
@@ -7425,8 +7442,8 @@ msgstr "Wyznaczona bramka nie posiada transportu żądanego typu."
 
 #. The My resources grp is also special.. same as offline
 #: RosterWindow.pas:374
-#: RosterWindow.pas:1262
-#: RosterWindow.pas:1266
+#: RosterWindow.pas:1263
+#: RosterWindow.pas:1267
 msgid "My Resources"
 msgstr "Moje zasoby"
 
@@ -7446,7 +7463,7 @@ msgstr "Próbuję się połączyć..."
 #: RosterWindow.pas:502
 #: RosterWindow.pas:508
 #: RosterWindow.pas:517
-#: RosterWindow.pas:2625
+#: RosterWindow.pas:2626
 msgid "Click to Cancel..."
 msgstr "Kliknij aby przerwać..."
 
@@ -7467,52 +7484,52 @@ msgstr ""
 "Pobieramy kontakty..."
 
 #. remove a bookmark
-#: RosterWindow.pas:1847
+#: RosterWindow.pas:1848
 msgid "Remove this bookmark?"
 msgstr "Usunąć zakładkę?"
 
-#: RosterWindow.pas:2324
+#: RosterWindow.pas:2325
 msgid " (Pending)"
 msgstr " (Oczekujący)"
 
-#: RosterWindow.pas:2436
+#: RosterWindow.pas:2437
 msgid "Rename group"
 msgstr "Zmiana nazwy grupy"
 
-#: RosterWindow.pas:2436
+#: RosterWindow.pas:2437
 msgid "New group name:"
 msgstr "Nowa nazwa dla grupy:"
 
 #. Block or Unblock this user
-#: RosterWindow.pas:2551
+#: RosterWindow.pas:2552
 msgid "Block %d contacts?"
 msgstr "Zablokować %d?"
 
 #. Block or Unblock this user
-#: RosterWindow.pas:2580
+#: RosterWindow.pas:2581
 msgid "Unblock %d contacts?"
 msgstr "Odblokuj %d?"
 
-#: RosterWindow.pas:2608
+#: RosterWindow.pas:2609
 msgid "You must select more than one online contact to broadcast."
 msgstr "Musisz wybrać więcej niż jeden kontakt aby wysłać wiadomość rozgłoszeniową."
 
 #. Cancel the connection
-#: RosterWindow.pas:2629
-#: RosterWindow.pas:2967
+#: RosterWindow.pas:2630
+#: RosterWindow.pas:2968
 msgid "Click to Cancel Reconnect"
 msgstr "Kliknj aby zrezygnować z ponownego połączenia"
 
 #. processing of Editing events
-#: RosterWindow.pas:2734
+#: RosterWindow.pas:2735
 msgid "Rename Roster Item"
 msgstr "Zmiana nazwy"
 
-#: RosterWindow.pas:2734
+#: RosterWindow.pas:2735
 msgid "New Nickname: "
 msgstr "Nowa nazwa: "
 
-#: RosterWindow.pas:2968
+#: RosterWindow.pas:2969
 msgid "Reconnect in %d seconds."
 msgstr "Ponownie połącz po %d sekundach."
 
@@ -7690,42 +7707,42 @@ msgid "Mad"
 msgstr "Wściekły"
 
 #. Programmer's name for it: SUREBaseString
-#: /src/exodus/jopl/Unicode.pas:822
+#: /src/exodus/jopl/Unicode.pas:824
 msgid "Error in regular expression: %s"
 msgstr "Błąd w wyrażeniu regularnym: %s"
 
 #. Programmer's name for it: SUREUnexpectedEOS
-#: /src/exodus/jopl/Unicode.pas:823
+#: /src/exodus/jopl/Unicode.pas:825
 msgid "Unexpected end of pattern."
 msgstr "Nieoczekiwane zakończenie wzorca."
 
 #. Programmer's name for it: SURECharacterClassOpen
-#: /src/exodus/jopl/Unicode.pas:824
+#: /src/exodus/jopl/Unicode.pas:826
 msgid "Character class not closed, ']' is missing."
 msgstr "Otwarta klasa znaków, brakuje ']'."
 
 #. Programmer's name for it: SUREUnbalancedGroup
-#: /src/exodus/jopl/Unicode.pas:825
+#: /src/exodus/jopl/Unicode.pas:827
 msgid "Unbalanced group expression, ')' is missing."
 msgstr "Niezbalansowana grupa wyrażeń, brakuje ')'."
 
 #. Programmer's name for it: SUREInvalidCharProperty
-#: /src/exodus/jopl/Unicode.pas:826
+#: /src/exodus/jopl/Unicode.pas:828
 msgid "A character property is invalid"
 msgstr "Właściwość znakowa jest niepoprawna"
 
 #. Programmer's name for it: SUREInvalidRepeatRange
-#: /src/exodus/jopl/Unicode.pas:827
+#: /src/exodus/jopl/Unicode.pas:829
 msgid "Invalid repeation range."
 msgstr "Niepoprawny zakres powtarzania."
 
 #. Programmer's name for it: SURERepeatRangeOpen
-#: /src/exodus/jopl/Unicode.pas:828
+#: /src/exodus/jopl/Unicode.pas:830
 msgid "Repeation range not closed, '}' is missing."
 msgstr "Zakres powtarzania otwarty, brakuje '}'."
 
 #. Programmer's name for it: SUREExpressionEmpty
-#: /src/exodus/jopl/Unicode.pas:829
+#: /src/exodus/jopl/Unicode.pas:831
 msgid "Expression is empty."
 msgstr "Wyrażenie jest puste."
 
