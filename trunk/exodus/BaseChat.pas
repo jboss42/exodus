@@ -365,15 +365,15 @@ begin
     MsgOut.CopyToClipboard();
 end;
 
+{---------------------------------------}
 procedure TfrmBaseChat.MsgListMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
     cp: TPoint;
 begin
-  inherited;
-    if (Button = mbRight) then begin
+    if ((Button = mbRight) and (MsgList.PopupMenu <> nil)) then begin
         GetCursorPos(cp);
-        popMsgList.Popup(cp.x, cp.y);
+        MsgList.PopupMenu.Popup(cp.x, cp.y);
         end;
 end;
 

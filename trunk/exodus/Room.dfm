@@ -1,6 +1,6 @@
 inherited frmRoom: TfrmRoom
-  Left = 227
-  Top = 159
+  Left = 276
+  Top = 177
   Caption = 'Conference Room'
   OldCreateOrder = True
   OnClose = FormClose
@@ -23,6 +23,7 @@ inherited frmRoom: TfrmRoom
       Width = 264
       Height = 217
       PopupMenu = popRoom
+      ReadOnly = False
       OnDragDrop = lstRosterDragDrop
       OnDragOver = lstRosterDragOver
     end
@@ -129,8 +130,8 @@ inherited frmRoom: TfrmRoom
     end
   end
   object popRoom: TPopupMenu
-    Left = 48
-    Top = 184
+    Left = 16
+    Top = 152
     object popClear: TMenuItem
       Caption = 'Clear Window'
       OnClick = popClearClick
@@ -189,8 +190,8 @@ inherited frmRoom: TfrmRoom
   end
   object popRoomRoster: TPopupMenu
     OnPopup = popRoomRosterPopup
-    Left = 80
-    Top = 184
+    Left = 48
+    Top = 152
     object popRosterChat: TMenuItem
       Caption = 'Chat'
       OnClick = lstRosterDblClick
