@@ -72,10 +72,6 @@ begin
         ScrollInfo.fMask := SIF_PAGE + SIF_POS + SIF_RANGE;
         GetScrollInfo(Handle, SB_VERT, ScrollInfo);
         bot_thumb := ScrollInfo.nPos + Integer(ScrollInfo.nPage) + 2;
-        {
-        Result := (bot_thumb >= ScrollInfo.nMax) or (ScrollInfo.nMax = 0) or
-            (ts >= Trunc(0.8 * r));
-        }
         Result := ((bot_thumb >= ScrollInfo.nMax) or (ScrollInfo.nMax = 0));
     end;
 end;
