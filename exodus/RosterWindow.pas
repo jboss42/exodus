@@ -186,6 +186,10 @@ type
     _collapse_all: boolean;     // Collapse all groups by default?
     _group_counts: boolean;
 
+    _show_online: boolean;
+    _show_offgrp: boolean;
+    _show_pending: boolean;
+
     _drop: TExDropTarget;
 
     procedure popUnBlockClick(Sender: TObject);
@@ -497,6 +501,9 @@ begin
             end;
         end;
 
+        _show_online := MainSession.Prefs.getBool('roster_only_online');
+        _show_offgrp := MainSession.Prefs.getBool('roster_offline_group');
+        _show_pending := MainSession.Prefs.getBool('roster_show_pending');
 
         frmExodus.pnlRoster.ShowHint := not _show_status;
         Redraw();
@@ -747,6 +754,11 @@ var
     bm: TJabberBookmark;
     p: TJabberPres;
 begin
+    // Make sure we have current settings
+    _show_online := MainSession.Prefs.getBool('roster_only_online');
+    _show_offgrp := MainSession.Prefs.getBool('roster_offline_group');
+    _show_pending := MainSession.Prefs.getBool('roster_show_pending');
+
     // loop through all roster items and draw them
     _FullRoster := true;
     treeRoster.Color := TColor(MainSession.prefs.getInt('roster_bg'));
@@ -894,9 +906,6 @@ var
     tmp_grps: TWideStringlist;
     is_blocked: boolean;
     is_transport: boolean;
-    show_online: boolean;
-    show_offgrp: boolean;
-    show_pending: boolean;
     exp_grpnode: boolean;
     resort: boolean;
     grp_rect, node_rect: TRect;
@@ -907,14 +916,11 @@ begin
         if MainSession.Prefs.getBool('roster_hide_block') then exit;
     end;
 
-    // First Cache some prefs
-    show_online := MainSession.Prefs.getBool('roster_only_online');
-    show_offgrp := MainSession.Prefs.getBool('roster_offline_group');
-    show_pending := MainSession.Prefs.getBool('roster_show_pending');
-
+    // some flags
     is_transport := false;
     resort := false;
 
+    // cache the current top item
     top_item := treeRoster.TopItem;
 
     {
@@ -930,7 +936,7 @@ begin
         exit;
     end
 
-    else if (ritem.ask = 'subscribe') and (show_pending) then begin
+    else if (ritem.ask = 'subscribe') and (_show_pending) then begin
         // allow these items to pass thru
     end
 
@@ -940,7 +946,7 @@ begin
         is_transport := true;
     end
 
-    else if (((show_online) and (not show_offgrp)) and
+    else if (((_show_online) and (not _show_offgrp)) and
         ((p = nil) or (p.PresType = 'unavailable'))) then begin
         // Only show online, and don't use the offline grp
         // This person is not online, remove all nodes and bail
@@ -977,7 +983,7 @@ begin
     // Create a temporary list of grps that this
     // contact should be in.
     tmp_grps := TWideStringlist.Create;
-    if (((p = nil) or (p.PresType = 'unavailble')) and (show_offgrp)
+    if (((p = nil) or (p.PresType = 'unavailble')) and (_show_offgrp)
         and (is_transport = false)) then
         // they are offline, and we want an offline grp
         tmp_grps.Add(sGrpOffline)

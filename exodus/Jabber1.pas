@@ -293,6 +293,7 @@ type
     _InitHooks: TInitHooks;
     _StopHooks: TStopHooks;
     _richedit: THandle;
+    _valid_aa: boolean;
 
     // Tray Icon stuff
     _tray: NOTIFYICONDATA;
@@ -1172,6 +1173,7 @@ begin
     // Note that for W2k and XP, we are just going to
     // use the special API calls for getting inactivity.
     // For other OS's we need to use the wicked nasty DLL
+    _valid_aa := false;
     DebugMsg(sSetupAutoAway);
     if ((_windows_ver < cWIN_2000) or (_windows_ver = cWIN_ME)) then begin
         // Use the DLL
@@ -1191,6 +1193,8 @@ begin
             DebugMsg('_StopHooks = ' + IntToStr(integer(@_StopHooks)));
 
             _InitHooks();
+
+            _valid_aa := true;
         end
         else
             DebugMsg(sAutoAwayFail);
@@ -1199,8 +1203,10 @@ begin
     else begin
         // Use the GetLastInputInfo API call
         // do nothing here..
-        if (_GetLastInputInfo <> nil) then
-            DebugMsg(sAutoAwayWin32)
+        if (_GetLastInputInfo <> nil) then begin
+            DebugMsg(sAutoAwayWin32);
+            _valid_aa := true;
+            end
         else
             DebugMsg(sAutoAwayFailWin32);
     end;
@@ -1289,7 +1295,7 @@ begin
         restoreMenus(true);
 
         // turn on the auto-away timer
-        timAutoAway.Enabled := true;
+        if (_valid_aa) then timAutoAway.Enabled := true;
 
         // check for new brand.
         InitUpdateBranding();
@@ -2106,7 +2112,7 @@ begin
     // Return the last tick count of activity
     Result := 0;
     if ((_windows_ver < cWIN_2000) or (_windows_ver = cWIN_ME)) then begin
-        if (_GetLastTick <> 0) then
+        if ((_hookLib <> 0) and (@_GetLastTick <> nil)) then
             Result := _GetLastTick();
     end
     else begin
@@ -2157,8 +2163,8 @@ begin
 
             {$ifdef TEST_AUTOAWAY}
             if (not _is_autoaway) and (not _is_autoxa) then begin
-                dmsg := 'Idle Check: ' + SafeBoolStr(_is_autoaway, true) + ', ' +
-                    SafeBoolStr(_is_autoxa, true) + ', ' +
+                dmsg := 'Idle Check: ' + SafeBoolStr(_is_autoaway) + ', ' +
+                    SafeBoolStr(_is_autoxa) + ', ' +
                     IntToStr(cur_idle ) + ' secs'#13#10;
                 DebugMsg(dmsg);
             end;
@@ -2237,7 +2243,9 @@ begin
     // must be *after* SetPresence
     _is_autoaway := false;
     _is_autoxa := false;
-    timAutoAway.Enabled := true;
+
+    if (_valid_aa) then
+        timAutoAway.Enabled := true;
 
     MainSession.Play();
 end;
