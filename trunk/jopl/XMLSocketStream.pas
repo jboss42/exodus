@@ -216,7 +216,14 @@ begin
         if (_socket.Connected) then
             _Socket.Disconnect();
 
-        _Socket.Connect;
+        try
+            _Socket.Connect;
+        except
+            _socket := nil;
+            doMessage(WM_DISCONNECTED);
+            Self.Terminate();
+            exit;
+        end;
 
         {
         If we successfully connect, change the stage of the
@@ -428,9 +435,7 @@ end;
 destructor TXMLSocketStream.Destroy;
 begin
     inherited;
-
     _timer.Free();
-
     KillSocket();
     _sock_lock.Free;
 end;
@@ -575,6 +580,7 @@ begin
 
         WM_TIMEOUT: begin
             // That server isn't listening on that port.
+            _active := false;
             KillSocket();
             if _thread <> nil then
                 tmps := _thread.Data
@@ -585,7 +591,6 @@ begin
             DoDataCallbacks(false, tmps);
 
             _timer.Enabled := false;
-            _active := false;
             _thread := nil;
             DoCallbacks('commtimeout', nil);
             DoCallbacks('disconnected', nil);
@@ -593,6 +598,7 @@ begin
             
         WM_COMMERROR: begin
             // There was a COMM ERROR
+            _active := false;
             KillSocket();
             if _thread <> nil then
                 tmps := _thread.Data
@@ -603,7 +609,6 @@ begin
             DoDataCallbacks(false, tmps);
 
             _timer.Enabled := false;
-            _active := false;
             _thread := nil;
             DoCallbacks('commerror', nil);
             DoCallbacks('disconnected', nil);
@@ -778,6 +783,9 @@ end;
 {---------------------------------------}
 procedure TXMLSocketStream.Connect(profile: TJabberProfile);
 begin
+    if (_active) then exit;
+
+    _active := true;
     _profile := profile;
 
     // Not sure we even need this, since we're using ResolvedPort, ResolvedIP
@@ -806,7 +814,6 @@ begin
     _connectIndy8();
     {$ifend}
 
-    _active := true;
     _thread.Start;
 end;
 
@@ -857,13 +864,12 @@ begin
         {$endif}
         _socket.Disconnect();
     end
-    else begin
+    else if (_active) then begin
+        _active := false;
         if (_thread <> nil) then
             _thread.Terminate;
         _timer.Enabled := false;
-        _active := false;
         _thread := nil;
-        DoCallbacks('disconnected', nil);
     end;
 end;
 
