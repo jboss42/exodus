@@ -498,7 +498,7 @@ begin
             end;
         end
     else if event = '/roster/item' then begin
-        if ritem <> nil then with treeRoster do begin
+        if ritem <> nil then begin
             p := MainSession.ppdb.FindPres(ritem.JID.jid, '');
             RenderNode(ritem, p);
             end;
@@ -842,7 +842,13 @@ begin
     item, and the current presence info, etc..
     }
 
-    if (ritem.ask = 'subscribe') and (show_pending) then begin
+    if (ritem.subscription = 'remove') then begin
+        // something is getting removed.. ALWAYS remove it
+        RemoveItemNodes(ritem);
+        exit;
+        end
+
+    else if (ritem.ask = 'subscribe') and (show_pending) then begin
         // allow these items to pass thru
         end
 
@@ -866,8 +872,7 @@ begin
 
     else if ((ritem.subscription = 'none') or
         (ritem.subscription = '') or
-        (ritem.subscription = 'from') or
-        (ritem.subscription = 'remove')) then begin
+        (ritem.subscription = 'from')) then begin
         // We aren't subscribed to these people,
         // or we are removing them from the roster
         RemoveItemNodes(ritem);
