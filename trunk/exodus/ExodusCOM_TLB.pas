@@ -11,8 +11,8 @@ unit ExodusCOM_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.6 $
-// File generated on 12/31/2002 2:08:24 PM from Type Library described below.
+// PASTLWTR : $Revision: 1.7 $
+// File generated on 12/31/2002 6:52:06 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -54,6 +54,10 @@ const
   CLASS_ExodusPlugin: TGUID = '{B4CEBD09-6E5E-4A42-8CEA-219989832597}';
   IID_IExodusChatPlugin: TGUID = '{2C576B16-DD6A-4E8C-8DEB-38E255B48A88}';
   CLASS_ExodusChatPlugin: TGUID = '{4B956942-1A82-4AE9-804F-68E1B6CA4AB4}';
+  IID_IExodusRoster: TGUID = '{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}';
+  CLASS_ExodusRoster: TGUID = '{438DF52E-F892-456B-9FB0-3C64DBB85240}';
+  IID_IExodusPPDB: TGUID = '{284E49F2-2006-4E48-B0E0-233867A78E54}';
+  CLASS_ExodusPPDB: TGUID = '{41BB1EC9-3299-45C3-BBA9-7DD897F29826}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -80,6 +84,10 @@ type
   IExodusPluginDisp = dispinterface;
   IExodusChatPlugin = interface;
   IExodusChatPluginDisp = dispinterface;
+  IExodusRoster = interface;
+  IExodusRosterDisp = dispinterface;
+  IExodusPPDB = interface;
+  IExodusPPDBDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -89,6 +97,8 @@ type
   ExodusChat = IExodusChat;
   ExodusPlugin = IExodusPlugin;
   ExodusChatPlugin = IExodusChatPlugin;
+  ExodusRoster = IExodusRoster;
+  ExodusPPDB = IExodusPPDB;
 
 
 // *********************************************************************//
@@ -125,9 +135,53 @@ type
     procedure monitorImplicitRegJID(const JabberID: WideString; FullJID: WordBool); safecall;
     procedure getAgentList(const Server: WideString); safecall;
     function getAgentService(const Server: WideString; const Service: WideString): WideString; safecall;
+    function generateID: WideString; safecall;
+    function isBlocked(const JabberID: WideString): WordBool; safecall;
+    procedure Block(const JabberID: WideString); safecall;
+    procedure UnBlock(const JabberID: WideString); safecall;
+    function Get_Resource: WideString; safecall;
+    function Get_Port: Integer; safecall;
+    function Get_Priority: Integer; safecall;
+    function Get_PresenceStatus: WideString; safecall;
+    function Get_PresenceShow: WideString; safecall;
+    function Get_IsPaused: WordBool; safecall;
+    function Get_IsInvisible: WordBool; safecall;
+    procedure Connect; safecall;
+    procedure Disconnect; safecall;
+    function getPrefAsString(const Key: WideString): WideString; safecall;
+    function getPrefAsInt(const Key: WideString): Integer; safecall;
+    function getPrefAsBool(const Key: WideString): WordBool; safecall;
+    procedure setPrefAsString(const Key: WideString; const Value: WideString); safecall;
+    procedure setPrefAsInt(const Key: WideString; Value: Integer); safecall;
+    procedure setPrefAsBool(const Key: WideString; Value: WordBool); safecall;
+    function findChat(const JabberID: WideString; const Resource: WideString): Integer; safecall;
+    procedure startSearch(const SearchJID: WideString); safecall;
+    procedure startRoom(const RoomJID: WideString; const Nickname: WideString; 
+                        const Password: WideString); safecall;
+    procedure startInstantMsg(const JabberID: WideString); safecall;
+    procedure startBrowser(const BrowseJID: WideString); safecall;
+    procedure showJoinRoom(const RoomJID: WideString; const Nickname: WideString; 
+                           const Password: WideString); safecall;
+    procedure showPrefs; safecall;
+    procedure showCustomPresDialog; safecall;
+    procedure showDebug; safecall;
+    procedure showLogin; safecall;
+    procedure showToast(const Message: WideString; wndHandle: Integer; imageIndex: Integer); safecall;
+    procedure setPresence(const Show: WideString; const Status: WideString; Priority: Integer); safecall;
+    function Get_Roster: IExodusRoster; safecall;
+    function Get_PPDB: IExodusPPDB; safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
+    property Resource: WideString read Get_Resource;
+    property Port: Integer read Get_Port;
+    property Priority: Integer read Get_Priority;
+    property PresenceStatus: WideString read Get_PresenceStatus;
+    property PresenceShow: WideString read Get_PresenceShow;
+    property IsPaused: WordBool read Get_IsPaused;
+    property IsInvisible: WordBool read Get_IsInvisible;
+    property Roster: IExodusRoster read Get_Roster;
+    property PPDB: IExodusPPDB read Get_PPDB;
   end;
 
 // *********************************************************************//
@@ -158,6 +212,41 @@ type
     procedure monitorImplicitRegJID(const JabberID: WideString; FullJID: WordBool); dispid 17;
     procedure getAgentList(const Server: WideString); dispid 18;
     function getAgentService(const Server: WideString; const Service: WideString): WideString; dispid 19;
+    function generateID: WideString; dispid 20;
+    function isBlocked(const JabberID: WideString): WordBool; dispid 21;
+    procedure Block(const JabberID: WideString); dispid 22;
+    procedure UnBlock(const JabberID: WideString); dispid 23;
+    property Resource: WideString readonly dispid 24;
+    property Port: Integer readonly dispid 25;
+    property Priority: Integer readonly dispid 26;
+    property PresenceStatus: WideString readonly dispid 28;
+    property PresenceShow: WideString readonly dispid 29;
+    property IsPaused: WordBool readonly dispid 30;
+    property IsInvisible: WordBool readonly dispid 31;
+    procedure Connect; dispid 32;
+    procedure Disconnect; dispid 33;
+    function getPrefAsString(const Key: WideString): WideString; dispid 34;
+    function getPrefAsInt(const Key: WideString): Integer; dispid 35;
+    function getPrefAsBool(const Key: WideString): WordBool; dispid 36;
+    procedure setPrefAsString(const Key: WideString; const Value: WideString); dispid 37;
+    procedure setPrefAsInt(const Key: WideString; Value: Integer); dispid 38;
+    procedure setPrefAsBool(const Key: WideString; Value: WordBool); dispid 39;
+    function findChat(const JabberID: WideString; const Resource: WideString): Integer; dispid 40;
+    procedure startSearch(const SearchJID: WideString); dispid 41;
+    procedure startRoom(const RoomJID: WideString; const Nickname: WideString; 
+                        const Password: WideString); dispid 42;
+    procedure startInstantMsg(const JabberID: WideString); dispid 43;
+    procedure startBrowser(const BrowseJID: WideString); dispid 44;
+    procedure showJoinRoom(const RoomJID: WideString; const Nickname: WideString; 
+                           const Password: WideString); dispid 45;
+    procedure showPrefs; dispid 46;
+    procedure showCustomPresDialog; dispid 47;
+    procedure showDebug; dispid 48;
+    procedure showLogin; dispid 49;
+    procedure showToast(const Message: WideString; wndHandle: Integer; imageIndex: Integer); dispid 50;
+    procedure setPresence(const Show: WideString; const Status: WideString; Priority: Integer); dispid 51;
+    property Roster: IExodusRoster readonly dispid 54;
+    property PPDB: IExodusPPDB readonly dispid 55;
   end;
 
 // *********************************************************************//
@@ -255,6 +344,42 @@ type
   end;
 
 // *********************************************************************//
+// Interface: IExodusRoster
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}
+// *********************************************************************//
+  IExodusRoster = interface(IDispatch)
+    ['{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}']
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusRosterDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}
+// *********************************************************************//
+  IExodusRosterDisp = dispinterface
+    ['{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}']
+  end;
+
+// *********************************************************************//
+// Interface: IExodusPPDB
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {284E49F2-2006-4E48-B0E0-233867A78E54}
+// *********************************************************************//
+  IExodusPPDB = interface(IDispatch)
+    ['{284E49F2-2006-4E48-B0E0-233867A78E54}']
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusPPDBDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {284E49F2-2006-4E48-B0E0-233867A78E54}
+// *********************************************************************//
+  IExodusPPDBDisp = dispinterface
+    ['{284E49F2-2006-4E48-B0E0-233867A78E54}']
+  end;
+
+// *********************************************************************//
 // The Class CoExodusController provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusController exposed by              
 // the CoClass ExodusController. The functions are intended to be used by             
@@ -302,6 +427,30 @@ type
     class function CreateRemote(const MachineName: string): IExodusChatPlugin;
   end;
 
+// *********************************************************************//
+// The Class CoExodusRoster provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusRoster exposed by              
+// the CoClass ExodusRoster. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusRoster = class
+    class function Create: IExodusRoster;
+    class function CreateRemote(const MachineName: string): IExodusRoster;
+  end;
+
+// *********************************************************************//
+// The Class CoExodusPPDB provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusPPDB exposed by              
+// the CoClass ExodusPPDB. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusPPDB = class
+    class function Create: IExodusPPDB;
+    class function CreateRemote(const MachineName: string): IExodusPPDB;
+  end;
+
 implementation
 
 uses ComObj;
@@ -344,6 +493,26 @@ end;
 class function CoExodusChatPlugin.CreateRemote(const MachineName: string): IExodusChatPlugin;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusChatPlugin) as IExodusChatPlugin;
+end;
+
+class function CoExodusRoster.Create: IExodusRoster;
+begin
+  Result := CreateComObject(CLASS_ExodusRoster) as IExodusRoster;
+end;
+
+class function CoExodusRoster.CreateRemote(const MachineName: string): IExodusRoster;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusRoster) as IExodusRoster;
+end;
+
+class function CoExodusPPDB.Create: IExodusPPDB;
+begin
+  Result := CreateComObject(CLASS_ExodusPPDB) as IExodusPPDB;
+end;
+
+class function CoExodusPPDB.CreateRemote(const MachineName: string): IExodusPPDB;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusPPDB) as IExodusPPDB;
 end;
 
 end.
