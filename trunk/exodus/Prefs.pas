@@ -449,7 +449,7 @@ begin
             f := _xfer;
         end;
     end
-    else if ((Sender = imgNetwork) or (Sender = imgNetwork)) then begin
+    else if ((Sender = imgNetwork) or (Sender = lblNetwork)) then begin
         toggleSelector(lblNetwork);
         if (_network <> nil) then
             f := _network
@@ -465,7 +465,9 @@ begin
     else if ((Sender = imgBlockList) or (Sender = lblBlockList)) then begin
         PageControl1.ActivePage := tbsBlockList;
         toggleSelector(lblBlocklist);
-    end;
+    end
+    else
+        exit;
 
     // setup the panel..
     if (f <> nil) then begin
