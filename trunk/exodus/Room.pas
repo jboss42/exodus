@@ -136,6 +136,7 @@ type
     procedure AddMemberItems(tag: TXMLTag; reason: WideString = '';
         NewRole: WideString = ''; NewAffiliation: WideString = '');
     procedure showStatusCode(t: TXMLTag);
+    procedure selectNicks(wsl: TWideStringList);
 
     function newRoomMessage(body: Widestring): TXMLTag;
   published
@@ -412,117 +413,92 @@ end;
 {---------------------------------------}
 function TfrmRoom.checkCommand(txt: Widestring): boolean;
 var
-    l, i: integer;
-    c, tmps, tok: Widestring;
-    wsl : TWideStringList;
+    cmd: Widestring;
+    rest: Widestring;
+    wsl: TWideStringList;
     p: TJabberPres;
+    m: TJabberMessage;
+    c: integer;
 begin
     // check for various / commands
     result := false;
-    tmps := trim(txt);
 
-    if (tmps = '/clear') then begin
-        msgList.Lines.Clear;
-        msgOut.Lines.Clear;
-        Result := true;
+    wsl := TWideStringList.Create();
+    Split(txt, wsl);
+    if (wsl.Count = 0) then begin
+        wsl.Destroy();
+        exit;
+        end;
+    cmd := wsl[0];
+    if (cmd = '') or (cmd[1] <> '/') then begin
+        wsl.Destroy();
         exit;
         end;
 
-    i := 1;
-    l := length(tmps);
-    repeat
-        inc(i);
-        if (i < l) then
-            c := tmps[i]
-        else
-            c := '';
-    until (c = ' ') or (c = #9) or (i >= l);
+    wsl.Delete(0);
+    c := pos(cmd, txt) + length(cmd) + 1;
+    rest := copy(txt, c, length(txt) - c + 1);
 
-    if (i < l) then begin
-        tok := Copy(tmps, 1, i - 1);
-        if (tok = '/nick') then begin
-            // change nickname
-            _old_nick := myNick;
-            myNick := Trim(Copy(tmps, 6, length(tmps) - 5));
-            p := TJabberPres.Create;
-            p.toJID := TJabberID.Create(jid + '/' + myNick);
-            MainSession.SendTag(p);
-            MsgOut.Lines.Clear;
-            Result := true;
-            end
-        else if (tok = '/subject') then begin
-            // set subject
-            tok := Trim(Copy(tmps, 9, length(tmps) - 8));
-            changeSubject(tok);
-            MsgOut.Lines.Clear;
-            Result := true;
-            end
-        else if (tok = '/invite') then begin
-            tok := Trim(Copy(tmps, 8, length(tmps) - 7));
-            if (tok = '') then exit;
+    if (cmd = '/clear') then begin
+        msgList.Lines.Clear;
+        Result := true;
+        end
+    else if (cmd = '/config') then begin
+        configRoom();
+        Result := true;
+        end
+    else if (cmd = '/help') then begin
+        m := TJabberMessage.Create(self.jid, 'groupchat',
+        '/ commands: '#13#10'/clear'#13#10'/config'#13#10'/subject <subject>'#13#10'/invite <jid>'#13#10'/block <nick>'#13#10'/kick <nick>'#13#10'/ban <nick>'#13#10'/nick <nick>'#13#10'/voice <nick>', '');
+        DisplayMsg(m, MsgList);
+        m.Destroy();
+        Result := true;
+        end
+    else if (cmd = '/nick') then begin
+        // change nickname
+        _old_nick := myNick;
+        if (rest = '') then exit;
+        myNick := rest;
+        p := TJabberPres.Create;
+        p.toJID := TJabberID.Create(jid + '/' + myNick);
+        MainSession.SendTag(p);
+        Result := true;
+        end
+    else if (cmd = '/subject') then begin
+        // set subject
+        changeSubject(rest);
+        Result := true;
+        end
+    else if (cmd = '/invite') then begin
+        ShowInvite(Self.jid, wsl);
+        Result := true;
+        end
+    else if (cmd = '/kick') then begin
+        selectNicks(wsl);
+        popKickClick(popKick);
+        Result := true;
+        end
+    else if (cmd = '/ban') then begin
+        selectNicks(wsl);
+        popKickClick(popBan);
+        Result := true;
+        end
+    else if (cmd = '/voice') then begin
+        selectNicks(wsl);
+        popVoiceClick(nil);
 
-            wsl := TWideStringList.Create();
-            wsl.Add(tok);
-            ShowInvite(Self.jid, wsl);
-            wsl.Destroy();
+        Result := true;
+        end
+    else if (cmd = '/block') then begin
+        selectNicks(wsl);
+        popRosterBlockClick(nil);
 
-            MsgOut.Lines.Clear;
-            Result := true;
-            end
-        else if (tok = '/kick') then begin
-            tok := Trim(Copy(tmps, 6, length(tmps) - 5));
-            if (tok = '') then exit;
-
-            i := _roster.indexOf(Self.jid + '/' + tok);
-            if (i = -1) then exit;
-
-            lstRoster.Items[i].Selected := true;
-            popKickClick(popKick);
-
-            MsgOut.Lines.Clear;
-            Result := true;
-            end
-        else if (tok = '/ban') then begin
-            tok := Trim(Copy(tmps, 5, length(tmps) - 4));
-            if (tok = '') then exit;
-
-            i := _roster.indexOf(Self.jid + '/' + tok);
-            if (i = -1) then exit;
-
-            lstRoster.Items[i].Selected := true;
-            popKickClick(popBan);
-
-            MsgOut.Lines.Clear;
-            Result := true;
-            end
-        else if (tok = '/voice') then begin
-            tok := Trim(Copy(tmps, 7, length(tmps) - 6));
-            if (tok = '') then exit;
-
-            i := _roster.indexOf(Self.jid + '/' + tok);
-            if (i = -1) then exit;
-
-            lstRoster.Items[i].Selected := true;
-            popVoiceClick(nil);
-
-            MsgOut.Lines.Clear;
-            Result := true;
-            end
-        else if (tok = '/block') then begin
-            tok := Trim(Copy(tmps, 7, length(tmps) - 6));
-            if (tok = '') then exit;
-
-            i := _roster.indexOf(Self.jid + '/' + tok);
-            if (i = -1) then exit;
-
-            lstRoster.Items[i].Selected := true;
-            popRosterBlockClick(nil);
-
-            MsgOut.Lines.Clear;
-            Result := true;
-            end;
+        Result := true;
         end;
 
+    wsl.Destroy();
+    if (Result) then
+        MsgOut.Lines.Clear();
 end;
 
 {---------------------------------------}
@@ -1535,6 +1511,17 @@ begin
     d.PutAttribute('xmlns', XMLNS_MUCOWNER);
     d.AddBasicTag('reason', reason);
     MainSession.SendTag(iq);
+end;
+
+procedure TfrmRoom.selectNicks(wsl: TWideStringList);
+var
+    i, c: integer;
+begin
+    for i := 0 to wsl.Count - 1 do begin
+        c := _roster.indexOf(Self.jid + '/' + wsl[i]);
+        if (c >=0) then
+            lstRoster.Items[c].Selected := true;
+        end;
 end;
 
 initialization
