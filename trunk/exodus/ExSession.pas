@@ -275,7 +275,14 @@ begin
     // a subdir which matches our Win32 specified locale.
     // This is used if someone wants to over-ride that.
     tmp_locale := MainSession.Prefs.getString('locale');
-    if (tmp_locale <> '') then begin
+    if (Lowercase(tmp_locale) = 'default') then begin
+        // Save current lang
+        tmp_locale := GetCurrentLanguage();
+        if (Pos('en', tmp_locale) = 1) then
+            tmp_locale := 'en';
+        MainSession.Prefs.setString('locale', tmp_locale);
+    end
+    else if (tmp_locale <> '') then begin
         UseLanguage(tmp_locale);
     end;
 
