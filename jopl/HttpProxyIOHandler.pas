@@ -8,7 +8,7 @@ unit HttpProxyIOHandler;
 interface
 
 uses
-  Classes, IdIOHandlerSocket, IdComponent, IdGlobal, IdSocks;
+  Classes, IdIOHandlerSocket, IdComponent, IdGlobal, IdSocks, IdIOHandler;
 
 type
 
@@ -19,14 +19,14 @@ type
      const ATimeout: Integer = IdTimeoutDefault); override;
   end;
 
+procedure HttpProxyConnect(handler: TIdIOHandler; const AHost: string; const APort: Integer);
+
 implementation
 
 uses
   IdException, IdResourceStrings, SysUtils;
 
-procedure THttpProxyIOHandler.ConnectClient(const AHost: string; const APort: Integer; const ABoundIP: string;
-     const ABoundPort: Integer; const ABoundPortMin: Integer; const ABoundPortMax: Integer;
-     const ATimeout: Integer = IdTimeoutDefault);
+procedure HttpProxyConnect(handler: TIdIOHandler; const AHost: string; const APort: Integer);
 var
     hostport: string;
     connect: string;
@@ -39,19 +39,15 @@ begin
 
     len := length(connect);
 
-
-    inherited ConnectClient(FSocksInfo.Host, FSocksInfo.Port,
-                            ABoundIP, ABoundPort, ABoundPortMin,
-                            ABoundPortMax, ATimeout);
-
-    if (Send(Pointer(connect)^, len) <> len) then
+    if (handler.Send(Pointer(connect)^, len) <> len) then
         raise Exception.Create('HTTP proxy send error');
 
     state := 0;
 
     // search forward for eand of response header
     while (state < 4) do begin
-        if (Recv(c, 1) <> 1) then
+        len := handler.Recv(c, 1);
+        if (len <> 1) then
             raise Exception.Create('HTTP proxy recv error');
 
         // these should all work:
@@ -84,6 +80,17 @@ begin
                 state := 0;
         end;
     end;
+end;
+
+procedure THttpProxyIOHandler.ConnectClient(const AHost: string; const APort: Integer; const ABoundIP: string;
+     const ABoundPort: Integer; const ABoundPortMin: Integer; const ABoundPortMax: Integer;
+     const ATimeout: Integer = IdTimeoutDefault);
+begin
+
+    inherited ConnectClient(FSocksInfo.Host, FSocksInfo.Port,
+                            ABoundIP, ABoundPort, ABoundPortMin,
+                            ABoundPortMax, ATimeout);
+    HttpProxyConnect(self, AHost, APort);
 end;
 {$endif}
 

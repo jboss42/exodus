@@ -416,9 +416,17 @@ begin
             {$ifdef INDY9}
             _local_ip := _socket.Socket.Binding.IP;
 
-            if ((_profile.ssl) and (_profile.SocksType <> 0) and
-                (_ssl_int.PassThrough)) then
+            if ((_profile.ssl) and (_profile.SocksType <> proxy_none) and
+                (_ssl_int.PassThrough)) then begin
+                if (_profile.SocksType = proxy_http) then begin
+                    if (_profile.Host <> '') then
+                        HttpProxyConnect(_iohandler, _profile.Host, _profile.Port)
+                    else
+                        HttpProxyConnect(_iohandler, _profile.Server, _profile.Port)
+                end;
+
                 _ssl_int.PassThrough := false;
+            end;
 
             {$else}
             _local_ip := _Socket.Binding.IP;
@@ -525,6 +533,7 @@ end;
 
 {---------------------------------------}
 {$ifdef INDY9}
+
 procedure TXMLSocketStream._connectIndy9();
 begin
     // Setup everything for Indy9 objects
@@ -537,6 +546,10 @@ begin
         _setupSSL();
         _iohandler := _ssl_int;
         _ssl_int.OnStatusInfo := TSocketThread(_thread).StatusInfo;
+        if (_profile.SocksType = proxy_http) then begin
+            _socket.Host := _profile.SocksHost;
+            _socket.Port := _profile.SocksPort;
+        end;
     end
     else if (_profile.SocksType = proxy_http) then begin
         _iohandler := THttpProxyIOHandler.Create(nil);
