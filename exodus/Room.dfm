@@ -64,6 +64,7 @@ object frmRoom: TfrmRoom
         Align = alClient
         Images = frmRosterWindow.ImageList1
         Indent = 19
+        ReadOnly = True
         ShowLines = False
         ShowRoot = False
         SortType = stText
@@ -80,6 +81,7 @@ object frmRoom: TfrmRoom
       Height = 255
       Align = alClient
       PopupMenu = popRoom
+      ReadOnly = True
       ScrollBars = ssBoth
       TabOrder = 1
       OnURLClick = MsgListURLClick

@@ -1,6 +1,6 @@
 object frmTransfer: TfrmTransfer
-  Left = 272
-  Top = 122
+  Left = 269
+  Top = 184
   Width = 267
   Height = 207
   Caption = 'File Transfer'
@@ -82,6 +82,7 @@ object frmTransfer: TfrmTransfer
     end
     inherited Panel1: TPanel
       Left = 99
+      Height = 29
       inherited btnOK: TButton
         Caption = 'Receive'
         OnClick = frameButtons1btnOKClick
@@ -145,6 +146,10 @@ object frmTransfer: TfrmTransfer
   end
   object OpenDialog1: TOpenDialog
     Left = 144
+    Top = 32
+  end
+  object SaveDialog1: TSaveDialog
+    Left = 112
     Top = 32
   end
 end

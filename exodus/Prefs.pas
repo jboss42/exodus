@@ -22,7 +22,7 @@ unit Prefs;
 interface
 
 uses
-    Menus, 
+    Menus, ShellAPI, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ComCtrls, StdCtrls, ExtCtrls, buttonFrame, CheckLst;
 
@@ -146,6 +146,14 @@ type
     txtCPHotkey: THotKey;
     imgCustomPres: TImage;
     lblCustomPres: TLabel;
+    txtLogPath: TEdit;
+    btnLogBrowse: TButton;
+    txtXFerPath: TEdit;
+    btnTransferBrowse: TButton;
+    Label15: TLabel;
+    chkSnap: TCheckBox;
+    txtSnap: TEdit;
+    spnSnap: TUpDown;
     procedure Button1Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -168,6 +176,9 @@ type
     procedure btnCustomPresAddClick(Sender: TObject);
     procedure btnCustomPresRemoveClick(Sender: TObject);
     procedure btnCustomPresClearClick(Sender: TObject);
+    procedure btnLogBrowseClick(Sender: TObject);
+    procedure btnTransferBrowseClick(Sender: TObject);
+    procedure chkSnapClick(Sender: TObject);
   private
     { Private declarations }
     _notify: array of integer;
@@ -191,8 +202,10 @@ procedure StartPrefs;
 implementation
 
 {$R *.DFM}
+{$WARN UNIT_PLATFORM OFF}
 uses
-    XMLUtils, 
+    FileCtrl,
+    XMLUtils,
     Presence, 
     PrefController,
     Session;
@@ -284,11 +297,14 @@ begin
         chkDebug.Checked := getBool('debug');
         chkAutoLogin.Checked := getBool('autologin');
         chkCloseMin.Checked := getBool('close_min');
+        txtLogPath.Text := getString('log_path');
+        txtXFerPath.Text := getString('xfer_path');
 
         // Dialog Options
         chkRosterAlpha.Checked := getBool('roster_alpha');
         chkFadeRoster.Checked := getBool('roster_fade');
         chkToastAlpha.Checked := getBool('toast_alpha');
+        chkSnap.Checked := getBool('snap_on');
         chkRosterAlphaClick(Self);
         if chkRosterAlpha.Checked then begin
             trkRosterAlpha.Position := getInt('roster_alpha_val');
@@ -308,6 +324,13 @@ begin
             trkToastAlpha.Position := 255;
             spnToastAlpha.Position := 255;
             end;
+
+        chkSnapClick(Self);
+        if (chkSnap.Checked) then
+            spnSnap.Position := getInt('edge_snap')
+        else
+            spnSnap.Position := 10;
+
 
         // Notify Options
         SetLength(_notify, 8);
@@ -383,6 +406,8 @@ begin
         setBool('debug', chkDebug.Checked);
         setBool('autologin', chkAutoLogin.Checked);
         setBool('close_min', chkCloseMin.Checked);
+        setString('log_path', txtLogPath.Text);
+        setString('xfer_path', txtXFerPath.Text);
 
         // Dialog Prefs
         setBool('roster_alpha', chkRosterAlpha.Checked);
@@ -390,6 +415,8 @@ begin
         setBool('toast_alpha', chkToastAlpha.Checked);
         setInt('toast_alpha_val', trkToastAlpha.Position);
         setBool('roster_fade', chkFadeRoster.Checked);
+        setBool('snap_on', chkSnap.Checked);
+        setInt('edge_snap', spnSnap.Position);
 
         // Notify events
         setInt('notify_online', _notify[0]);
@@ -611,13 +638,13 @@ begin
     // show the props of this presence object
     _no_pres_change := true;
 
-    e := (lstCustomPres.ItemIndex = -1);
+    e := (lstCustomPres.ItemIndex >= 0);
     txtCPTitle.Enabled := e;
     txtCPStatus.Enabled := e;
     txtCPPriority.Enabled := e;
     txtCPHotkey.Enabled := e;
 
-    if (e) then begin
+    if (not e) then begin
         txtCPTitle.Text := '';
         txtCPStatus.Text := '';
         txtCPPriority.Text := '0';
@@ -699,6 +726,33 @@ begin
         mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
 
     MainSession.Prefs.removeAllPresence();
+end;
+
+{---------------------------------------}
+procedure TfrmPrefs.btnLogBrowseClick(Sender: TObject);
+var
+    tmps: string;
+begin
+    tmps := txtLogPath.Text;
+    if SelectDirectory('Select Log Directory', '', tmps) then
+        txtLogPath.Text := tmps;
+end;
+
+{---------------------------------------}
+procedure TfrmPrefs.btnTransferBrowseClick(Sender: TObject);
+var
+    tmps: string;
+begin
+    tmps := txtXFerPath.Text;
+    if SelectDirectory('Select Transfer Path', '', tmps) then
+        txtXFerPath.Text := tmps;
+end;
+
+{---------------------------------------}
+procedure TfrmPrefs.chkSnapClick(Sender: TObject);
+begin
+    spnSnap.Enabled := chkSnap.Checked;
+    txtSnap.Enabled := chkSnap.Checked;
 end;
 
 end.

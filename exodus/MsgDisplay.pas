@@ -80,7 +80,7 @@ begin
         
     else begin
         Browser.SelAttributes.Color := clPurple;
-        Browser.SelText := ' * ' + Msg.Nick + ' ' + txt;
+        Browser.SelText := ' * ' + Msg.Nick + ' ' + Trim(txt);
         end;
     Browser.SelAttributes.Color := TColor(MainSession.Prefs.getInt('font_color'));
     Browser.SelText := #13#10;

@@ -185,6 +185,7 @@ object frmChat: TfrmChat
       Height = 175
       Align = alClient
       PopupMenu = popContact
+      ReadOnly = True
       ScrollBars = ssBoth
       TabOrder = 0
       OnURLClick = MsgListURLClick

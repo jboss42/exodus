@@ -44,6 +44,7 @@ type
     httpServer: TIdHTTPServer;
     httpClient: TIdHTTP;
     OpenDialog1: TOpenDialog;
+    SaveDialog1: TSaveDialog;
     procedure txtMsgURLClick(Sender: TObject; url: String);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure httpClientWork(Sender: TObject; AWorkMode: TWorkMode;
@@ -169,6 +170,12 @@ begin
         // receive mode
         totBytes := 0;
         filename := URLToFilename(Self.url);
+
+        // use the save as dialog
+        SaveDialog1.Filename := filename;
+        if (not SaveDialog1.Execute) then exit;
+        filename := SaveDialog1.filename;
+        
         if FileExists(filename) then begin
             if MessageDlg('This file already exists. Overwrite?',
                 mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
@@ -176,6 +183,7 @@ begin
             end;
         fstream := TFileStream.Create(filename, fmCreate);
         httpClient.Get(Self.url, fstream);
+        fstream.Free;
         end
     else if Self.Mode = 1 then begin
         // send mode
