@@ -96,7 +96,10 @@ uses
   SelContact in 'SelContact.pas' {frmSelContact},
   XMLHttpStream in '..\jopl\XMLHttpStream.pas',
   ConnDetails in 'ConnDetails.pas' {frmConnDetails},
-  InputPassword in 'InputPassword.pas' {frmInputPass};
+  InputPassword in 'InputPassword.pas' {frmInputPass},
+  Browser in 'Browser.pas' {frmBrowse},
+  fListbox in 'fListbox.pas' {frameListbox: TFrame},
+  fService in 'fService.pas' {frameObjectActions: TFrame};
 
 {$R *.RES}
 
@@ -109,6 +112,7 @@ begin
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TfrmConnDetails, frmConnDetails);
   Application.CreateForm(TfrmInputPass, frmInputPass);
+  Application.CreateForm(TfrmBrowse, frmBrowse);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);

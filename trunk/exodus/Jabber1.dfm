@@ -438,7 +438,7 @@ object frmExodus: TfrmExodus
       end
       object mnuBrowser: TMenuItem
         Caption = 'Jabber Browser'
-        Visible = False
+        OnClick = mnuBrowserClick
       end
       object mnuServer: TMenuItem
         Caption = 'Server Info'
