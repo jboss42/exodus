@@ -18,6 +18,10 @@ my $opts = '-B -Q -DExodus';
 my $comp = "..\\..\\Components";
 my $plugopts = "$opts -U\"$comp\" -U\"$::TNT\"";
 
+unlink "setup.exe";
+unlink "Exodus.exe";
+grep unlink, glob("output/*.dcu"); # rm *.dcu
+
 e("$dcc $opts -Noutput IdleHooks.dpr");
 e("$rcc version.rc");
 e("$dcc $opts -Noutput -U\"$::TNT\" Exodus.dpr");
