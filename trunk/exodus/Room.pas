@@ -271,6 +271,7 @@ implementation
 uses
     ChatWin, COMChatController, CustomNotify,
     ExSession, ExUtils,
+    GnuGetText, 
     InputPassword,
     Invite,
     IQ,
@@ -982,9 +983,15 @@ begin
                 e := e + QuoteRegExprMetaChars(kw_list[i]);
         end;
             e := e + ')';
-        _keywords := TRegExpr.Create();
-        _keywords.Expression := e;
-        _keywords.Compile();
+        try
+            _keywords := TRegExpr.Create();
+            _keywords.Expression := e;
+            _keywords.Compile();
+        except
+            FreeAndNil(_keywords);
+            MessageDlg(_('Your room keyword regular expressions are invalid. Keyword matching will be turned off for this room.'),
+                mtError, [mbOK], 0);
+        end;
     end;
     kw_list.Free();
 end;
