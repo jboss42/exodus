@@ -1,5 +1,7 @@
 <exodus version="0.9">
     <prefs>
+        <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.30 2003/12/19 23:18:05 hildjj Exp $"/>
+
         <!-- AutoAway prefs -->
         <auto_away value="1" control="chkAutoAway"/>
     	<aa_reduce_pri value="1" control="chkAAReducePri"/>
