@@ -6,13 +6,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2005-03-07 23:49\n"
-"PO-Revision-Date: 2005-03-07 23:49\n"
+"POT-Creation-Date: 2005-03-08 09:22\n"
+"PO-Revision-Date: 2005-03-08 09:22\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: dxgettext 1.2 beta 2\n"
+"X-Generator: dxgettext 1.1.1\n"
 
 #. frmAbout..Caption
 #: About.dfm:8
@@ -1733,8 +1733,8 @@ msgstr ""
 #: DockWizard.dfm:47
 #. frmWizard..TntPanel1..Panel3..btnNext..Caption
 #: Wizard.dfm:55
-#: JoinRoom.pas:415
-#: JoinRoom.pas:436
+#: JoinRoom.pas:411
+#: JoinRoom.pas:432
 msgid "Next >"
 msgstr ""
 
@@ -7335,7 +7335,7 @@ msgstr ""
 
 #. change tabs if they selected browse
 #: JoinRoom.pas:246
-#: JoinRoom.pas:434
+#: JoinRoom.pas:430
 #. normal result
 #: RegForm.pas:427
 msgid "Finish"
@@ -7998,6 +7998,12 @@ msgstr ""
 #. callback for vcard info
 #: vcard.pas:198
 msgid "No vCard response was ever returned."
+msgstr ""
+
+#. check size of a
+#: vcard.pas:358
+msgid "Your avatar is larger than the recommended size. "
+"Continue?"
 msgstr ""
 
 #. this is a cancel notice
