@@ -394,9 +394,8 @@ begin
         lblOK.Visible := false;
         lblBad.Visible := true;
         btnPrev.Enabled := true;
-        btnNext.Caption := sBtnCancel;
-        btnNext.Enabled := true;
-        btnCancel.Enabled := false;
+        btnNext.Enabled := false;
+        btnCancel.Enabled := true;
     end;
     cur_stage := rsFinish;
 end;
