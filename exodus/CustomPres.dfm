@@ -2,7 +2,7 @@ object frmCustomPres: TfrmCustomPres
   Left = 269
   Top = 122
   Width = 323
-  Height = 188
+  Height = 172
   Caption = 'Custom Presence'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -36,7 +36,7 @@ object frmCustomPres: TfrmCustomPres
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 120
+    Top = 104
     Width = 315
     Height = 34
     Align = alBottom
