@@ -378,7 +378,7 @@ begin
     r := TXMLTag.Create('iq');
     res := GetTimeZoneInformation(tzi);
     if res = TIME_ZONE_ID_DAYLIGHT then
-        utc := Now + ((tzi.Bias + 60) / 1440.0)
+        utc := Now + ((tzi.Bias - 60) / 1440.0)
     else
         utc := Now + (tzi.Bias / 1440.0);
 
