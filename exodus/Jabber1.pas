@@ -939,10 +939,17 @@ begin
             @_GetHookPointer := GetProcAddress(_hookLib, 'GetHookPointer');
             @_InitHooks := GetProcAddress(_hookLib, 'InitHooks');
             @_StopHooks := GetProcAddress(_hookLib, 'StopHooks');
+
+            DebugMsg('_GetHookPointer = ' + IntToStr(integer(@_GetHookPointer)));
+            DebugMsg('_InitHooks = ' + IntToStr(integer(@_InitHooks)));
+            DebugMsg('_StopHooks = ' + IntToStr(integer(@_StopHooks)));
+
             _lpHookRec := _GetHookPointer();
             inc(_lpHookRec^.InstanceCount);
             _InitHooks();
             _lpHookRec^.LastTick := GetTickCount();
+
+            DebugMsg('_lpHookRec = ' + IntToStr(integer(_lpHookRec)));
             end
         else
             DebugMsg(sAutoAwayFail);

@@ -59,18 +59,10 @@ object frmMsgQueue: TfrmMsgQueue
     Left = 0
     Top = 153
     Width = 428
-    Height = 122
+    Height = 141
     Align = alClient
     ReadOnly = True
     ScrollBars = ssBoth
     TabOrder = 1
-  end
-  object StatusBar1: TStatusBar
-    Left = 0
-    Top = 275
-    Width = 428
-    Height = 19
-    Panels = <>
-    SimplePanel = False
   end
 end

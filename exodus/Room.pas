@@ -649,6 +649,7 @@ var
     node: TTreeNode;
     tmp_jid: TJabberID;
     sel_nick: string;
+    chat_win: TfrmChat;
 begin
     // Chat w/ this person..
     node := treeRoster.Selected;
@@ -659,7 +660,9 @@ begin
         rm := TRoomMember(_roster.Objects[i]);
         if (rm.Nick = sel_nick) then begin
             tmp_jid := TJabberID.Create(rm.jid);
-            StartChat(tmp_jid.jid, tmp_jid.resource, true, sel_nick);
+            chat_win := StartChat(tmp_jid.jid, tmp_jid.resource, true, sel_nick);
+            if (chat_win.TabSheet <> nil) then
+                frmExodus.Tabs.ActivePage := chat_win.TabSheet;
             tmp_jid.Free();
             end;
         end;
