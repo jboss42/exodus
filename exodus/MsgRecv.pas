@@ -205,7 +205,8 @@ begin
         ShowDefault;
         btnClose.Visible := Docked;
         FormResize(nil);
-        txtSendSubject.SetFocus();
+        if (txtSendSubject.Showing) then
+            txtSendSubject.SetFocus();
         end;
 end;
 

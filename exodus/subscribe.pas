@@ -23,7 +23,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, buttonFrame, ExtCtrls;
+  StdCtrls, buttonFrame, ExtCtrls, Menus;
 
 type
   TfrmSubscribe = class(TForm)
@@ -37,9 +37,16 @@ type
     Label3: TLabel;
     cboGroup: TComboBox;
     Bevel1: TBevel;
+    PopupMenu1: TPopupMenu;
+    mnuProfile: TMenuItem;
+    mnuChat: TMenuItem;
+    mnuMessage: TMenuItem;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure mnuMessageClick(Sender: TObject);
+    procedure mnuChatClick(Sender: TObject);
+    procedure mnuProfileClick(Sender: TObject);
     procedure lblJIDClick(Sender: TObject);
   private
     { Private declarations }
@@ -55,7 +62,9 @@ var
 {---------------------------------------}
 implementation
 uses
+    ChatWin,
     JabberID,
+    MsgRecv,
     Session,
     Profile,
     Presence;
@@ -107,10 +116,28 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmSubscribe.lblJIDClick(Sender: TObject);
+procedure TfrmSubscribe.mnuMessageClick(Sender: TObject);
+begin
+    StartMsg(lblJID.Caption);
+end;
+
+procedure TfrmSubscribe.mnuChatClick(Sender: TObject);
+begin
+    StartChat(lblJID.Caption, '', true);
+end;
+
+procedure TfrmSubscribe.mnuProfileClick(Sender: TObject);
 begin
     // muh.  not exactly right, but at least it isn't *wrong*.
     ShowProfile(lblJID.Caption).FormStyle := fsStayOnTop;
+end;
+
+procedure TfrmSubscribe.lblJIDClick(Sender: TObject);
+var
+    cp: TPoint;
+begin
+    GetCursorPos(cp);
+    PopupMenu1.popup(cp.x, cp.y);
 end;
 
 end.

@@ -53,6 +53,7 @@ object frmSubscribe: TfrmSubscribe
     Font.Style = [fsBold, fsUnderline]
     ParentColor = False
     ParentFont = False
+    PopupMenu = PopupMenu1
     TabOrder = 0
     OnClick = lblJIDClick
   end
@@ -126,6 +127,22 @@ object frmSubscribe: TfrmSubscribe
         Caption = 'Deny'
         OnClick = frameButtons1btnCancelClick
       end
+    end
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 8
+    Top = 168
+    object mnuProfile: TMenuItem
+      Caption = 'Show Profile'
+      OnClick = mnuProfileClick
+    end
+    object mnuChat: TMenuItem
+      Caption = 'Start Chat'
+      OnClick = mnuChatClick
+    end
+    object mnuMessage: TMenuItem
+      Caption = 'Send Message'
+      OnClick = mnuMessageClick
     end
   end
 end
