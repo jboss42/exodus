@@ -1172,7 +1172,7 @@ begin
             with MsgOut do begin
                 SelStart := _nick_start;
                 SelLength := _nick_len;
-                SelText := '';
+                WideSelText := '';
             end;
         end;
 
@@ -1188,9 +1188,9 @@ begin
                 if Pos(_nick_prefix, Lowercase(nick)) = 1 then with MsgOut do begin
                     _nick_idx := i + 1;
                     if _nick_start <= 0 then
-                        SelText := nick + ': '
+                        WideSelText := nick + ': '
                     else
-                        SelText := nick + ' ';
+                        WideSelText := nick + ' ';
                     SelStart := Length(Lines.text) + 1;
                     _nick_len := SelStart - _nick_start;
                     SelLength := 0;
@@ -1207,7 +1207,7 @@ begin
         until (found) or (exloop);
 
         if not found then begin
-            MsgOut.SelText := _nick_prefix;
+            MsgOut.WideSelText := _nick_prefix;
             _nick_prefix := '';
             _nick_idx := 0;
         end;
@@ -1968,7 +1968,7 @@ begin
 
     if (pnlInput.Visible) then begin
         MsgOut.SetFocus();
-        MsgOut.SelText := Key;
+        MsgOut.WideSelText := Key;
     end;
 end;
 

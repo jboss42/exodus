@@ -338,7 +338,7 @@ begin
 
     if (pnlInput.Visible) then begin
         MsgOut.SetFocus();
-        MsgOut.SelText := Key;
+        MsgOut.WideSelText := Key;
     end;
 end;
 

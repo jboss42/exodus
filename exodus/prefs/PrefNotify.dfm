@@ -51,50 +51,6 @@ inherited frmPrefNotify: TfrmPrefNotify
     TabOrder = 4
     OnClick = chkNotifyClick
   end
-  object optNotify: TGroupBox
-    Left = 8
-    Top = 216
-    Width = 257
-    Height = 103
-    Caption = 'Notify Options'
-    TabOrder = 5
-    object chkFlash: TTntCheckBox
-      Left = 8
-      Top = 36
-      Width = 209
-      Height = 17
-      Caption = 'Flash Taskbar button, or highlight tab'
-      TabOrder = 1
-      OnClick = chkToastClick
-    end
-    object chkToast: TTntCheckBox
-      Left = 8
-      Top = 16
-      Width = 153
-      Height = 17
-      Caption = 'Show a "Toast" popup'
-      TabOrder = 0
-      OnClick = chkToastClick
-    end
-    object chkTrayNotify: TTntCheckBox
-      Left = 8
-      Top = 56
-      Width = 209
-      Height = 17
-      Caption = 'Flash tray icon'
-      TabOrder = 2
-      OnClick = chkToastClick
-    end
-    object chkFront: TTntCheckBox
-      Left = 8
-      Top = 76
-      Width = 209
-      Height = 17
-      Caption = 'Bring window to front'
-      TabOrder = 3
-      OnClick = chkToastClick
-    end
-  end
   object chkSound: TTntCheckBox
     Left = 8
     Top = 32
@@ -134,5 +90,49 @@ inherited frmPrefNotify: TfrmPrefNotify
     Height = 17
     Caption = 'Perform notifications for the window I'#39'm typing in.'
     TabOrder = 2
+  end
+  object optNotify: TTntGroupBox
+    Left = 8
+    Top = 216
+    Width = 257
+    Height = 103
+    Caption = 'Notify Options'
+    TabOrder = 5
+    object chkFlash: TTntCheckBox
+      Left = 8
+      Top = 36
+      Width = 241
+      Height = 17
+      Caption = 'Flash Taskbar button, or highlight tab'
+      TabOrder = 1
+      OnClick = chkToastClick
+    end
+    object chkToast: TTntCheckBox
+      Left = 8
+      Top = 16
+      Width = 241
+      Height = 17
+      Caption = 'Show a "Toast" popup'
+      TabOrder = 0
+      OnClick = chkToastClick
+    end
+    object chkTrayNotify: TTntCheckBox
+      Left = 8
+      Top = 56
+      Width = 241
+      Height = 17
+      Caption = 'Flash tray icon'
+      TabOrder = 2
+      OnClick = chkToastClick
+    end
+    object chkFront: TTntCheckBox
+      Left = 8
+      Top = 76
+      Width = 241
+      Height = 17
+      Caption = 'Bring window to front'
+      TabOrder = 3
+      OnClick = chkToastClick
+    end
   end
 end

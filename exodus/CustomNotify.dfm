@@ -16,20 +16,14 @@ object frmCustomNotify: TfrmCustomNotify
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TTntLabel
+  object lblDefault: TTntLabel
     Left = 16
     Top = 192
     Width = 146
     Height = 13
     Cursor = crHandPoint
     Caption = 'Reset to default preferences ...'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clBlue
-    Font.Height = -11
-    Font.Name = 'MS Sans Serif'
-    Font.Style = [fsUnderline]
-    ParentFont = False
-    OnClick = Label1Click
+    OnClick = lblDefaultClick
   end
   object chkNotify: TTntCheckListBox
     Left = 16
@@ -40,7 +34,27 @@ object frmCustomNotify: TfrmCustomNotify
     TabOrder = 0
     OnClick = chkNotifyClick
   end
-  object optNotify: TGroupBox
+  inline frameButtons1: TframeButtons
+    Left = 0
+    Top = 226
+    Width = 318
+    Height = 30
+    Align = alBottom
+    AutoScroll = False
+    TabOrder = 2
+    inherited Panel2: TPanel
+      Width = 318
+      Height = 30
+      inherited Bevel1: TBevel
+        Width = 318
+      end
+      inherited Panel1: TPanel
+        Left = 158
+        Height = 25
+      end
+    end
+  end
+  object optNotify: TTntGroupBox
     Left = 16
     Top = 85
     Width = 257
@@ -73,26 +87,6 @@ object frmCustomNotify: TfrmCustomNotify
       Caption = 'Flash tray icon'
       TabOrder = 2
       OnClick = chkToastClick
-    end
-  end
-  inline frameButtons1: TframeButtons
-    Left = 0
-    Top = 231
-    Width = 318
-    Height = 30
-    Align = alBottom
-    AutoScroll = False
-    TabOrder = 2
-    inherited Panel2: TPanel
-      Width = 318
-      Height = 30
-      inherited Bevel1: TBevel
-        Width = 318
-      end
-      inherited Panel1: TPanel
-        Left = 158
-        Height = 25
-      end
     end
   end
 end

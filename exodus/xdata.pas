@@ -319,6 +319,7 @@ end;
 {---------------------------------------}
 procedure TfrmXData.FormCreate(Sender: TObject);
 begin
+    AssignUnicodeFont(Self);
     TranslateComponent(Self);
 end;
 
