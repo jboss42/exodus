@@ -93,7 +93,7 @@ uses
     ActnList, Graphics, ExtCtrls, ExRichEdit,
     Controls, GnuGetText, ConnDetails, IdWinsock2,
     ChatWin, GetOpt, Jabber1, JabberID, PrefController, StandardAuth,
-    PrefNotify,
+    PrefNotify, Room, RosterAdd, MsgRecv, Profile, RegForm,
     ExResponders, MsgDisplay,
     XMLParser, XMLUtils;
 
@@ -549,12 +549,48 @@ procedure PlayXMPPActions();
 var
     i : integer;
     node: TXMLTag;
+    jid: WideString;
+    add: TfrmAdd;
+    reg: TfrmRegister;
 begin
     for i := 0 to _xmpp_action_list.Count - 1 do begin
         node := TXMLTag(_xmpp_action_list[i]);
+        jid := node.GetAttribute('jid');
         if (node.Name = 'chat') then begin
-            StartChat(node.GetAttribute('jid'), '', true);
+            if (jid <> '') then
+                StartChat(jid, '', true);
+        end
+        else if (node.Name = 'groupchat') then begin
+            if (jid <> '') then
+                StartRoom(jid, MainSession.Username);
+        end
+        else if (node.Name = 'subscribe') then begin
+            if (jid <> '') then begin
+                add := TfrmAdd.Create(Application);
+                add.cboType.ItemIndex := 0;
+                add.txtJID.Text := jid;
+                add.Show;
+                add.txtNickname.SetFocus();
+            end;
+        end
+        else if (node.Name = 'message') then begin
+            if (jid <> '') then begin
+                StartMsg(jid);
+            end;
+        end
+        else if (node.Name = 'vcard') then begin
+            if (jid <> '') then begin
+                ShowProfile(jid);
+            end;
+        end
+        else if (node.Name = 'register') then begin
+            if (jid <> '') then begin
+                reg := TfrmRegister.Create(Application);
+                f.jid := jid;
+                f.Start();
+            end;
         end;
+
         node.Free();
     end;
     _xmpp_action_list.Clear();
