@@ -42,7 +42,6 @@ const
     node_myres = 5;
 
 function WindowsVersion(var verinfo: string): integer;
-
 function URLToFilename(url: string): string;
 
 procedure ClearLog(jid: string);
@@ -93,6 +92,8 @@ procedure checkAndCenterForm(f: TForm);
 procedure BuildPresMenus(parent: TObject; clickev: TNotifyEvent);
 function promptNewGroup: TJabberGroup;
 
+function IsUnicodeEnabled(): boolean;
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -134,6 +135,7 @@ const
 var
     presenceToAtom: TStringList;
     unicode_font: TFont;
+    unicode_enabled: integer;
 
 {---------------------------------------}
 constructor TAtom.Create(at: ATOM);
@@ -1047,12 +1049,48 @@ begin
     end;
 end;
 
+function IsUnicodeEnabled(): boolean;
+var
+    info: string;
+    h: THandle;
+    os: integer;
+begin
+    // check to see if we're an NT based OS, or we have
+    // the unicode layer installed
+    if (unicode_enabled = 0) then begin
+        {
+        1 = Win95
+        2 = Win98
+        3 = WinNT
+        4 = W2k
+        5 = Win ME
+        6 = Win XP
+        }
+        os := WindowsVersion(info);
+        if (os = 3) or (os = 4) or (os = 6) then
+            unicode_enabled := +1
+        else begin
+            h := LoadLibrary('unicows.dll');
+            if (h = 0) then
+                unicode_enabled := -1
+            else
+                unicode_enabled := +1;
+        end;
+    end;
+
+    if (unicode_enabled = 1) then
+        Result := true
+    else
+        Result := false;
+end;
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 initialization
     presenceToAtom := TStringList.Create();
     unicode_font := nil;
+    unicode_enabled := 0;
 
 finalization
     if (presenceToAtom <> nil) then begin

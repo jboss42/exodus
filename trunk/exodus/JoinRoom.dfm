@@ -18,6 +18,7 @@ inherited frmJoinRoom: TfrmJoinRoom
         OnClick = btnBackClick
       end
       inherited btnNext: TTntButton
+        Default = True
         OnClick = btnNextClick
       end
       inherited btnCancel: TTntButton

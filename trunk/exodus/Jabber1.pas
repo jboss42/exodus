@@ -2749,6 +2749,7 @@ var
     f, o, m, x: TXMLTag;
 begin
     //
+    ShowMessage(BoolToStr(IsUnicodeEnabled()));
     {
     Application.CreateForm(TfrmTest1, frmTest1);
     frmTest1.ShowDefault();
