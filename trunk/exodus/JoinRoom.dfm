@@ -147,5 +147,15 @@ object frmJoinRoom: TfrmJoinRoom
       OnDblClick = lstRoomsDblClick
       OnMouseMove = lstRoomsMouseMove
     end
+    object aniSearch: TAnimate
+      Left = 116
+      Top = 128
+      Width = 29
+      Height = 25
+      AutoSize = False
+      CommonAVI = aviFindComputer
+      StopFrame = 8
+      Visible = False
+    end
   end
 end
