@@ -36,6 +36,7 @@ type
     txtJID: TEdit;
     Label4: TLabel;
     txtNick: TEdit;
+    chkAutoJoin: TCheckBox;
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -86,6 +87,7 @@ begin
             txtJID.Text := bm.jid.full;
             txtName.Text := bm.bmName;
             txtNick.Text := bm.nick;
+            chkAutoJoin.Checked := bm.autoJoin;
             end;
         Show();
         end;
@@ -106,13 +108,15 @@ begin
             jid := TJabberID.Create(txtJID.Text);
             bmName := txtName.Text;
             nick := txtNick.Text;
-            end;            
+            autoJoin := chkAutoJoin.Checked;
+            end;
         MainSession.roster.AddBookmark(txtJID.Text, bm)
         end
     else with bm do begin
         bmName := txtName.Text;
         jid.ParseJID(txtJID.Text);
         nick := txtNick.Text;
+        autoJoin := chkAutoJoin.Checked;
         MainSession.Roster.UpdateBookmark(bm);
         end;
     Self.Close;
