@@ -114,7 +114,6 @@ object frmInvite: TfrmInvite
       Height = 119
       Align = alTop
       BevelOuter = bvNone
-      Caption = 'Panel2'
       TabOrder = 2
       object Label2: TLabel
         Left = 0
