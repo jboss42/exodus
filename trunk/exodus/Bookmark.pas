@@ -76,8 +76,10 @@ begin
 
     with Result do begin
         cboType.ItemIndex := 0;
-        if (i < 0) then
-            new := true
+        if (i < 0) then begin
+            new := true;
+            txtNick.Text := MainSession.Profile.Username;
+            end
         else begin
             new := false;
             bm := TJabberBookmark(MainSession.Roster.Bookmarks.Objects[i]);
