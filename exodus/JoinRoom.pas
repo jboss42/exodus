@@ -288,9 +288,18 @@ end;
 
 {---------------------------------------}
 procedure TfrmJoinRoom.btnFetchClick(Sender: TObject);
+var
+    tj: TJabberID;
 begin
-    _fetch(txtServerFilter.Text);
-    //_processFilter();
+    if (txtServerFilter.Text = _('- ALL SERVERS -')) then exit;
+    tj := TJabberID.Create(txtServerFilter.Text);
+    if ((not tj.isValid) or (tj.user <> '') or (tj.resource <> '')) then begin
+        tj.Free();
+        MessageDlgW(_('You must enter a valid server name.'), mtError, [mbOK], 0);
+        exit;
+    end;
+    _fetch(tj.Domain);
+    tj.Free();
 end;
 
 {---------------------------------------}
