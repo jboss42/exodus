@@ -85,10 +85,12 @@ type
     _lastMsg : integer;
 
   protected
-    _embed_returns: boolean;
-    _wrap_input: boolean;
-    _scroll: boolean;
-    _esc: boolean;
+    _embed_returns: boolean;        // Put CR/LF's into message
+    _wrap_input: boolean;           // Wrap text input
+    _scroll: boolean;               // Should we scroll
+    _esc: boolean;                  // Does ESC close
+    _close_key: Word;               // Normal Hot-key to use to close
+    _close_shift: TShiftState;
 
     procedure _scrollBottom();
     procedure WMVScroll(var msg: TMessage); message WM_VSCROLL;
@@ -263,7 +265,7 @@ begin
     end
 
     // handle Ctrl-W to close tab
-    else if ((Key = Ord('W')) and (ssCtrl in Shift)) then
+    else if ((Key = _close_key) and (Shift = _close_shift)) then
         Self.Close()
 
     else if ((_esc) and (Key = 27)) then
@@ -296,6 +298,7 @@ end;
 procedure TfrmBaseChat.FormCreate(Sender: TObject);
 var
     ht: integer;
+    sc: TShortcut;
 begin
     AutoScroll := true;
 
@@ -310,6 +313,9 @@ begin
         else
             MainSession.prefs.setInt('chat_textbox', pnlInput.Height);
         _esc := MainSession.Prefs.getBool('esc_close');
+
+        sc := TextToShortcut(MainSession.Prefs.getString('close_hotkey'));
+        ShortCutToKey(sc, _close_key, _close_shift);
     end;
 
     _scroll := true;

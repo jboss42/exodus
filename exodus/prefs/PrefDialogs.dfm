@@ -3,21 +3,21 @@ inherited frmPrefDialogs: TfrmPrefDialogs
   Top = 156
   Caption = 'frmPrefDialogs'
   ClientHeight = 360
-  ClientWidth = 362
+  ClientWidth = 294
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   object Label26: TTntLabel
     Left = 8
-    Top = 247
-    Width = 197
+    Top = 199
+    Width = 289
     Height = 13
     Caption = 'Minutes to keep chat windows in memory:'
   end
   object Label27: TTntLabel
     Left = 8
-    Top = 261
-    Width = 244
+    Top = 213
+    Width = 305
     Height = 13
     Caption = 'Use 0 minutes to destroy chat windows immediately.'
   end
@@ -27,6 +27,13 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Width = 120
     Height = 13
     Caption = 'Toast duration (seconds):'
+  end
+  object TntLabel1: TTntLabel
+    Left = 8
+    Top = 291
+    Width = 305
+    Height = 13
+    Caption = 'Use this key sequence used to close chat windows'
   end
   object chkRosterAlpha: TTntCheckBox
     Left = 8
@@ -130,7 +137,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     OnClick = chkSnapClick
   end
   object txtSnap: TTntEdit
-    Left = 32
+    Left = 168
     Top = 174
     Width = 49
     Height = 21
@@ -139,21 +146,21 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Text = '255'
   end
   object spnSnap: TTntUpDown
-    Left = 81
+    Left = 217
     Top = 174
     Width = 16
     Height = 21
     Associate = txtSnap
     Enabled = False
     Min = 10
-    Max = 255
-    Position = 255
+    Max = 250
+    Position = 250
     TabOrder = 10
   end
   object chkBusy: TTntCheckBox
     Left = 8
-    Top = 208
-    Width = 265
+    Top = 256
+    Width = 305
     Height = 17
     Caption = 'Warn when trying to close busy chat windows.'
     TabOrder = 11
@@ -166,20 +173,20 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     TabOrder = 12
   end
   object txtChatMemory: TTntEdit
-    Left = 32
-    Top = 277
+    Left = 168
+    Top = 229
     Width = 49
     Height = 21
     TabOrder = 13
     Text = '60'
   end
   object spnChatMemory: TTntUpDown
-    Left = 81
-    Top = 277
+    Left = 217
+    Top = 229
     Width = 16
     Height = 21
     Associate = txtChatMemory
-    Max = 360
+    Max = 180
     Increment = 5
     Position = 60
     TabOrder = 14
@@ -187,7 +194,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
   object StaticText4: TTntPanel
     Left = 0
     Top = 0
-    Width = 362
+    Width = 294
     Height = 24
     Align = alTop
     BevelOuter = bvLowered
@@ -202,12 +209,53 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     ParentFont = False
     TabOrder = 15
   end
+  object hkClose: THotKey
+    Left = 32
+    Top = 308
+    Width = 145
+    Height = 19
+    HotKey = 57431
+    InvalidKeys = []
+    Modifiers = [hkShift, hkCtrl, hkAlt]
+    TabOrder = 16
+  end
   object chkEscClose: TTntCheckBox
     Left = 8
-    Top = 226
-    Width = 265
+    Top = 274
+    Width = 297
     Height = 17
-    Caption = 'Pressing the ESC key closes windows.'
-    TabOrder = 16
+    Caption = 'Use ESC key to close chat windows.'
+    TabOrder = 17
+  end
+  object trkSnap: TTrackBar
+    Left = 30
+    Top = 176
+    Width = 137
+    Height = 19
+    Enabled = False
+    Max = 250
+    Min = 10
+    PageSize = 10
+    Frequency = 5
+    Position = 250
+    TabOrder = 18
+    ThumbLength = 15
+    TickStyle = tsNone
+    OnChange = trkSnapChange
+  end
+  object trkChatMemory: TTrackBar
+    Left = 30
+    Top = 230
+    Width = 137
+    Height = 19
+    Enabled = False
+    Max = 180
+    PageSize = 10
+    Frequency = 15
+    Position = 60
+    TabOrder = 19
+    ThumbLength = 15
+    TickStyle = tsNone
+    OnChange = trkChatMemoryChange
   end
 end
