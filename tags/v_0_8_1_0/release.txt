@@ -1,0 +1,12 @@
+@echo off
+cd exodus
+perl version.pl build
+cvs ci -m "Daily build" version.h
+call build.cmd
+@echo compiling installer
+"D:\Program Files\NSIS\makensis.exe" /v2 exodus.nsi
+@echo copying to jabberstudio
+scp -C setup.exe user@jabberstudio.org:/var/projects/exodus/www/daily/stage
+ssh user@jabberstudio.org "cd /var/projects/exodus/www/daily/stage; mv *.exe ..; cd ..; chmod 777 *.exe"
+cd ..
+@echo done
