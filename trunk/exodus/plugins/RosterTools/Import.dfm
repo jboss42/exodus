@@ -17,24 +17,29 @@ object frmImport: TfrmImport
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 262
+    Top = 257
     Width = 401
     Height = 30
     Align = alBottom
     AutoScroll = False
     TabOrder = 0
-    inherited Bevel1: TBevel
+    inherited Panel2: TPanel
       Width = 401
-    end
-    inherited Panel1: TPanel
-      Left = 241
-      inherited btnOK: TButton
-        Caption = 'Import'
-        OnClick = frameButtons1btnOKClick
+      Height = 30
+      inherited Bevel1: TBevel
+        Width = 401
       end
-      inherited btnCancel: TButton
-        Caption = 'Close'
-        OnClick = frameButtons1btnCancelClick
+      inherited Panel1: TPanel
+        Left = 241
+        Height = 25
+        inherited btnOK: TTntButton
+          Caption = 'Import'
+          OnClick = frameButtons1btnOKClick
+        end
+        inherited btnCancel: TTntButton
+          Caption = 'Close'
+          OnClick = frameButtons1btnCancelClick
+        end
       end
     end
   end
@@ -42,7 +47,7 @@ object frmImport: TfrmImport
     Left = 0
     Top = 0
     Width = 401
-    Height = 262
+    Height = 257
     Align = alClient
     Checkboxes = True
     Columns = <
@@ -68,6 +73,7 @@ object frmImport: TfrmImport
     Top = 264
   end
   object SaveDialog1: TSaveDialog
+    DefaultExt = 'xml'
     Filter = 'Roster Files|*.xml|All Files|*.*'
     Left = 40
     Top = 264
