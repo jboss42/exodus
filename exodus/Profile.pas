@@ -176,6 +176,8 @@ begin
 
             for i := 0 to ritem.Groups.Count - 1 do begin
                 gi := GrpListBox.Items.IndexOf(ritem.Groups[i]);
+                if (gi = -1) then
+                    gi := GrpListBox.Items.Add(ritem.Groups[i]);
                 GrpListBox.Checked[gi] := true;
             end;
         end;
