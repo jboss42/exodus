@@ -302,8 +302,6 @@ type
     procedure SetAutoAvailable();
     procedure SetupAutoAwayTimer();
 
-    procedure doRestore();
-
     function win32TrackerIndex(windows_msg: integer): integer;
 
   protected
@@ -360,6 +358,8 @@ type
     procedure TrackWindowsMsg(windows_msg: integer);
     procedure fireWndMessage(handle: HWND; msg: Cardinal;
         wParam: integer; lParam: integer);
+
+    procedure doRestore();
 
     procedure PreModal(frm: TForm);
     procedure PostModal();
