@@ -1244,7 +1244,7 @@ begin
     4: begin
         show := 'dnd';
     end;
-end;
+    end;
     MainSession.setPresence(show, '', MainSession.Priority);
 end;
 
@@ -1692,29 +1692,42 @@ var
     i: integer;
     t: TXMLTag;
     recips: TList;
-    ptype, pshow, pstatus: string;
+    invis: boolean;
+    pshow, pstatus: string;
     pri: integer;
+    cur_jid: Widestring;
 begin
     // Send whatever my presence is right now.
     recips := getSelectedContacts(true);
 
     if (recips.Count > 0) then begin
-        ptype := '';
+        invis := false;
         if ((Sender = popSendInvisible) or (Sender = popGrpInvisible)) then
-            ptype := 'invisible';
+            invis := true;
         pshow := MainSession.Show;
         pstatus := MainSession.Status;
         pri := MainSession.Priority;
 
         // Send pres to everyone in the list.
         for i := 0 to recips.Count - 1 do begin
+            cur_jid := TJabberRosterItem(recips[i]).jid.full;
             t := TXMLTag.Create('presence');
-            if (ptype) <> '' then t.setAttribute('type', ptype);
+
+            // do insane invisible hacking to keep our own
+            // avails list.
+            if (invis) then begin
+                t.setAttribute('type', 'invisible');
+                if (MainSession.Invisible) then
+                    MainSession.removeAvailJid(cur_jid);
+                end
+            else if (MainSession.Invisible) then
+                MainSession.addAvailJid(cur_jid);
+
             if (pshow) <> '' then t.AddBasicTag('show', pshow);
             if (pstatus) <> '' then t.AddBasicTag('status', pstatus);
             if (pri > 0) then t.AddBasicTag('priority', IntToStr(pri));
 
-            t.setAttribute('to', TJabberRosterItem(recips[i]).jid.full);
+            t.setAttribute('to', cur_jid);
             MainSession.SendTag(t);
         end;
     end;

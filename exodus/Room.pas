@@ -283,6 +283,9 @@ begin
                 AddBasicTag('password', password);
         end;
 
+        if (MainSession.Invisible) then
+            MainSession.addAvailJid(rjid);
+
         MainSession.SendTag(p);
         f.Caption := tmp_jid.user + ' ' + sRoom;
         if MainSession.Prefs.getBool('expanded') then
@@ -538,6 +541,7 @@ begin
     end
     else if (event = '/session/presence') then begin
         // We changed our own presence, send it to the room
+        if (MainSession.Invisible) then exit;
         p := TJabberPres.Create();
         p.toJID := TJabberID.Create(self.jid);
         p.Show := MainSession.Show;
@@ -1555,6 +1559,9 @@ begin
         MainSession.UnRegisterCallback(_ecallback);
         MainSession.UnRegisterCallback(_pcallback);
         MainSession.UnRegisterCallback(_scallback);
+
+        if (MainSession.Invisible) then
+            MainSession.removeAvailJid(jid);
     end;
 
     if ((MainSession <> nil) and (MainSession.Active)) then begin
