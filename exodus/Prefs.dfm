@@ -1,6 +1,6 @@
 object frmPrefs: TfrmPrefs
-  Left = 255
-  Top = 404
+  Left = 271
+  Top = 237
   Width = 468
   Height = 461
   BorderWidth = 1
@@ -18,10 +18,10 @@ object frmPrefs: TfrmPrefs
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
-  object ScrollBox1: TScrollBox
+  object Scroller: TScrollBox
     Left = 0
     Top = 0
-    Width = 89
+    Width = 96
     Height = 388
     VertScrollBar.Tracking = True
     Align = alLeft
@@ -49,9 +49,9 @@ object frmPrefs: TfrmPrefs
     end
     object imgDialog: TImage
       Left = 0
-      Top = 330
-      Width = 68
-      Height = 42
+      Top = 318
+      Width = 75
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -230,11 +230,12 @@ object frmPrefs: TfrmPrefs
     end
     object lblDialog: TTntLabel
       Left = 0
-      Top = 372
-      Width = 68
-      Height = 13
+      Top = 351
+      Width = 75
+      Height = 20
       Align = alTop
       Alignment = taCenter
+      AutoSize = False
       Caption = 'Windows'
       Transparent = True
       WordWrap = True
@@ -243,9 +244,9 @@ object frmPrefs: TfrmPrefs
     end
     object imgFonts: TImage
       Left = 0
-      Top = 220
-      Width = 68
-      Height = 42
+      Top = 212
+      Width = 75
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -424,12 +425,19 @@ object frmPrefs: TfrmPrefs
     end
     object lblFonts: TTntLabel
       Left = 0
-      Top = 262
-      Width = 68
-      Height = 13
+      Top = 245
+      Width = 75
+      Height = 20
       Align = alTop
       Alignment = taCenter
+      AutoSize = False
       Caption = 'Fonts, Colors'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clMenuText
+      Font.Height = -11
+      Font.Name = 'Arial Unicode MS'
+      Font.Style = []
+      ParentFont = False
       Transparent = True
       WordWrap = True
       OnClick = TabSelect
@@ -437,9 +445,9 @@ object frmPrefs: TfrmPrefs
     end
     object imgS10n: TImage
       Left = 0
-      Top = 165
-      Width = 68
-      Height = 42
+      Top = 159
+      Width = 75
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -619,14 +627,21 @@ object frmPrefs: TfrmPrefs
     end
     object lblS10n: TTntLabel
       Left = 0
-      Top = 207
-      Width = 68
-      Height = 13
+      Top = 192
+      Width = 75
+      Height = 20
       Align = alTop
       Alignment = taCenter
+      AutoSize = False
       Caption = 'Subscriptions'
       Color = clWindow
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clMenuText
+      Font.Height = -11
+      Font.Name = 'Arial Unicode MS'
+      Font.Style = []
       ParentColor = False
+      ParentFont = False
       Transparent = True
       WordWrap = True
       OnClick = TabSelect
@@ -634,9 +649,9 @@ object frmPrefs: TfrmPrefs
     end
     object imgRoster: TImage
       Left = 0
-      Top = 55
-      Width = 68
-      Height = 42
+      Top = 53
+      Width = 75
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -815,17 +830,18 @@ object frmPrefs: TfrmPrefs
     end
     object lblRoster: TTntLabel
       Left = 0
-      Top = 97
-      Width = 68
-      Height = 13
+      Top = 86
+      Width = 75
+      Height = 20
       Align = alTop
       Alignment = taCenter
+      AutoSize = False
       Caption = 'Roster'
       Color = clWindow
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clMenuText
       Font.Height = -11
-      Font.Name = 'MS Sans Serif'
+      Font.Name = 'Arial Unicode MS'
       Font.Style = []
       ParentColor = False
       ParentFont = False
@@ -837,8 +853,8 @@ object frmPrefs: TfrmPrefs
     object imgSystem: TImage
       Left = 0
       Top = 0
-      Width = 68
-      Height = 42
+      Width = 75
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -1017,17 +1033,18 @@ object frmPrefs: TfrmPrefs
     end
     object lblSystem: TTntLabel
       Left = 0
-      Top = 42
-      Width = 68
-      Height = 13
+      Top = 33
+      Width = 75
+      Height = 20
       Align = alTop
       Alignment = taCenter
+      AutoSize = False
       Caption = 'System'
       Color = clWindow
-      Font.Charset = DEFAULT_CHARSET
+      Font.Charset = ANSI_CHARSET
       Font.Color = clMenuText
       Font.Height = -11
-      Font.Name = 'MS Sans Serif'
+      Font.Name = 'Arial Unicode MS'
       Font.Style = []
       ParentColor = False
       ParentFont = False
@@ -1038,9 +1055,9 @@ object frmPrefs: TfrmPrefs
     end
     object imgNotify: TImage
       Left = 0
-      Top = 385
-      Width = 68
-      Height = 42
+      Top = 371
+      Width = 75
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -1163,11 +1180,12 @@ object frmPrefs: TfrmPrefs
     end
     object lblNotify: TTntLabel
       Left = 0
-      Top = 427
-      Width = 68
-      Height = 13
+      Top = 404
+      Width = 75
+      Height = 20
       Align = alTop
       Alignment = taCenter
+      AutoSize = False
       Caption = 'Notification'
       Transparent = True
       WordWrap = True
@@ -1176,9 +1194,9 @@ object frmPrefs: TfrmPrefs
     end
     object imgAway: TImage
       Left = 0
-      Top = 550
-      Width = 68
-      Height = 42
+      Top = 530
+      Width = 75
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -1357,11 +1375,12 @@ object frmPrefs: TfrmPrefs
     end
     object lblAway: TTntLabel
       Left = 0
-      Top = 592
-      Width = 68
-      Height = 13
+      Top = 563
+      Width = 75
+      Height = 20
       Align = alTop
       Alignment = taCenter
+      AutoSize = False
       Caption = 'Auto-Away'
       Transparent = True
       WordWrap = True
@@ -1370,9 +1389,9 @@ object frmPrefs: TfrmPrefs
     end
     object imgKeywords: TImage
       Left = 0
-      Top = 605
-      Width = 68
-      Height = 42
+      Top = 583
+      Width = 75
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -1551,11 +1570,12 @@ object frmPrefs: TfrmPrefs
     end
     object lblKeywords: TTntLabel
       Left = 0
-      Top = 647
-      Width = 68
-      Height = 13
+      Top = 616
+      Width = 75
+      Height = 20
       Align = alTop
       Alignment = taCenter
+      AutoSize = False
       Caption = 'Keywords'
       Transparent = True
       WordWrap = True
@@ -1564,9 +1584,9 @@ object frmPrefs: TfrmPrefs
     end
     object imgBlockList: TImage
       Left = 0
-      Top = 660
-      Width = 68
-      Height = 42
+      Top = 636
+      Width = 75
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -1745,11 +1765,12 @@ object frmPrefs: TfrmPrefs
     end
     object lblBlockList: TTntLabel
       Left = 0
-      Top = 702
-      Width = 68
-      Height = 13
+      Top = 669
+      Width = 75
+      Height = 20
       Align = alTop
       Alignment = taCenter
+      AutoSize = False
       Caption = 'Block List'
       Transparent = True
       WordWrap = True
@@ -1758,9 +1779,9 @@ object frmPrefs: TfrmPrefs
     end
     object imgCustompres: TImage
       Left = 0
-      Top = 715
-      Width = 68
-      Height = 42
+      Top = 689
+      Width = 75
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -1939,11 +1960,12 @@ object frmPrefs: TfrmPrefs
     end
     object lblCustomPres: TTntLabel
       Left = 0
-      Top = 757
-      Width = 68
-      Height = 13
+      Top = 722
+      Width = 75
+      Height = 20
       Align = alTop
       Alignment = taCenter
+      AutoSize = False
       Caption = 'Presence'
       Transparent = True
       WordWrap = True
@@ -1952,9 +1974,9 @@ object frmPrefs: TfrmPrefs
     end
     object imgMessages: TImage
       Left = 0
-      Top = 440
-      Width = 68
-      Height = 42
+      Top = 424
+      Width = 75
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -2133,11 +2155,12 @@ object frmPrefs: TfrmPrefs
     end
     object lblMessages: TTntLabel
       Left = 0
-      Top = 482
-      Width = 68
-      Height = 13
+      Top = 457
+      Width = 75
+      Height = 20
       Align = alTop
       Alignment = taCenter
+      AutoSize = False
       Caption = 'Messages'
       Transparent = True
       WordWrap = True
@@ -2146,9 +2169,9 @@ object frmPrefs: TfrmPrefs
     end
     object imgPlugins: TImage
       Left = 0
-      Top = 825
-      Width = 68
-      Height = 42
+      Top = 795
+      Width = 75
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -2271,11 +2294,12 @@ object frmPrefs: TfrmPrefs
     end
     object lblPlugins: TTntLabel
       Left = 0
-      Top = 867
-      Width = 68
-      Height = 13
+      Top = 828
+      Width = 75
+      Height = 20
       Align = alTop
       Alignment = taCenter
+      AutoSize = False
       Caption = 'Plugins'
       Transparent = True
       WordWrap = True
@@ -2284,9 +2308,9 @@ object frmPrefs: TfrmPrefs
     end
     object imgNetwork: TImage
       Left = 0
-      Top = 770
-      Width = 68
-      Height = 42
+      Top = 742
+      Width = 75
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -2465,11 +2489,12 @@ object frmPrefs: TfrmPrefs
     end
     object lblNetwork: TTntLabel
       Left = 0
-      Top = 812
-      Width = 68
-      Height = 13
+      Top = 775
+      Width = 75
+      Height = 20
       Align = alTop
       Alignment = taCenter
+      AutoSize = False
       Caption = 'Network'
       Transparent = True
       OnClick = TabSelect
@@ -2477,9 +2502,9 @@ object frmPrefs: TfrmPrefs
     end
     object imgTransfer: TImage
       Left = 0
-      Top = 495
-      Width = 68
-      Height = 42
+      Top = 477
+      Width = 75
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -2658,11 +2683,12 @@ object frmPrefs: TfrmPrefs
     end
     object lblTransfer: TTntLabel
       Left = 0
-      Top = 537
-      Width = 68
-      Height = 13
+      Top = 510
+      Width = 75
+      Height = 20
       Align = alTop
       Alignment = taCenter
+      AutoSize = False
       Caption = 'File Transfers'
       Transparent = True
       WordWrap = True
@@ -2671,9 +2697,9 @@ object frmPrefs: TfrmPrefs
     end
     object imgGroups: TImage
       Left = 0
-      Top = 110
-      Width = 68
-      Height = 42
+      Top = 106
+      Width = 75
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -2852,17 +2878,18 @@ object frmPrefs: TfrmPrefs
     end
     object lblGroups: TTntLabel
       Left = 0
-      Top = 152
-      Width = 68
-      Height = 13
+      Top = 139
+      Width = 75
+      Height = 20
       Align = alTop
       Alignment = taCenter
+      AutoSize = False
       Caption = 'Groups'
       Color = clWindow
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clMenuText
       Font.Height = -11
-      Font.Name = 'MS Sans Serif'
+      Font.Name = 'Arial Unicode MS'
       Font.Style = []
       ParentColor = False
       ParentFont = False
@@ -2873,9 +2900,9 @@ object frmPrefs: TfrmPrefs
     end
     object imgLayouts: TImage
       Left = 0
-      Top = 275
-      Width = 68
-      Height = 42
+      Top = 265
+      Width = 75
+      Height = 33
       Align = alTop
       Center = True
       Picture.Data = {
@@ -3027,12 +3054,19 @@ object frmPrefs: TfrmPrefs
     end
     object lblLayouts: TTntLabel
       Left = 0
-      Top = 317
-      Width = 68
-      Height = 13
+      Top = 298
+      Width = 75
+      Height = 20
       Align = alTop
       Alignment = taCenter
+      AutoSize = False
       Caption = 'Layouts'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clMenuText
+      Font.Height = -11
+      Font.Name = 'Arial Unicode MS'
+      Font.Style = []
+      ParentFont = False
       Transparent = True
       WordWrap = True
       OnClick = TabSelect
@@ -3040,9 +3074,9 @@ object frmPrefs: TfrmPrefs
     end
   end
   object PageControl1: TTntPageControl
-    Left = 89
+    Left = 96
     Top = 0
-    Width = 369
+    Width = 362
     Height = 388
     ActivePage = tbsBlockList
     Align = alClient
@@ -3074,7 +3108,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TTntLabel
           Left = 0
           Top = 0
-          Width = 361
+          Width = 350
           Height = 26
           Align = alTop
           Caption = 
@@ -3116,7 +3150,7 @@ object frmPrefs: TfrmPrefs
       object memBlocks: TTntMemo
         Left = 0
         Top = 77
-        Width = 361
+        Width = 354
         Height = 280
         Align = alClient
         TabOrder = 0
@@ -3124,14 +3158,15 @@ object frmPrefs: TfrmPrefs
       object Memo1: TTntMemo
         Left = 0
         Top = 24
-        Width = 361
+        Width = 354
         Height = 53
         Align = alTop
         BorderStyle = bsNone
         Lines.WideStrings = (
           
             'Enter in the Jabber Addresses (JIDs) of the people to block from' +
-            ' sending you '
+            ' sending '
+          'you '
           'messages. All messages from these contacts will be blocked.')
         ParentColor = True
         ReadOnly = True
@@ -3140,7 +3175,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TTntPanel
         Left = 0
         Top = 0
-        Width = 361
+        Width = 354
         Height = 24
         Align = alTop
         BevelOuter = bvLowered
