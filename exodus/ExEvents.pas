@@ -33,8 +33,7 @@ type
         evt_OOB,
         evt_Version,
         evt_Time,
-        evt_Last,
-        evt_PresError);
+        evt_Last);
 
     TJabberEvent = class
     private
@@ -145,8 +144,8 @@ end;
 {---------------------------------------}
 procedure TJabberEvent.Parse(tag: TXMLTag);
 var
-    tmps, s, ptype, ns, t: string;
-    etag, delay, qtag, tmp_tag: TXMLTag;
+    ns, t: string;
+    delay, qtag, tmp_tag: TXMLTag;
     i_tags, c_tags: TXMLTagList;
     i, j: integer;
     ri: TJabberRosterItem;
@@ -214,14 +213,6 @@ begin
             end
         else
             edate := Now();
-        end
-
-    else if ((tag.name = 'presence') and (tag.getAttribute('type') = 'error')) then begin
-        from := tag.getAttribute('from');
-        eType := evt_PresError;
-        etag := tag.GetFirstTag('error');
-        data_type := etag.Data;
-        _data_list.Add(sPresError);
         end
 
     else if (tag.name = 'iq') then begin

@@ -650,7 +650,6 @@ var
     ritem: TJabberRosterItem;
     jid, ptype: string;
     tmp_jid: TJabberID;
-    e: TJabberEvent;
 begin
     // callback for the ppdb
     ptype := tag.getAttribute('type');
