@@ -496,8 +496,12 @@ begin
         end;
     end;
     // not found
-    if (GlobalGetAtomName(a, buf, sizeof(buf)) = 0) then
-        raise Exception.Create('Global atom not found for: ' + IntToStr(a));
+    if (GlobalGetAtomName(a, buf, sizeof(buf)) = 0) then begin
+        //raise Exception.Create('Global atom not found for: ' + IntToStr(a));
+        result := MainSession.Status;
+        exit;
+    end;
+    
     status := StrPas(buf);
     presenceToAtom.AddObject(status, TAtom.Create(a));
     result := status;
