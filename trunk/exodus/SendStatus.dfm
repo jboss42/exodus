@@ -19,6 +19,7 @@ object fSendStatus: TfSendStatus
       Height = 26
       Caption = 'Cancel'
       TabOrder = 0
+      OnClick = btnCancelClick
     end
   end
   object Panel2: TPanel
