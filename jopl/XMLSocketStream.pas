@@ -318,7 +318,7 @@ begin
     n := Now();
     if (n < _cert.NotBefore) then begin
         _ssl_ok := false;
-        MessageDlg('Certificate not valid until ' + DateTimeToStr(_cert.NotBefore)
+        MessageDlg('Certificate not valid until ' + DateTimeToStr(_cert.NotBefore),
                                mtWarning, [mbOK], 0);
         end;
 
