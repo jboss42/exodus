@@ -122,6 +122,9 @@ begin
         Self.setAttribute('to', toJID);
     qTag.setAttribute('xmlns', Namespace);
 
+    if (_js.xmlLang <> '') then
+        self.setAttribute('xml:lang', _js.xmlLang);
+
     _cbIndex := _js.RegisterCallback(iqCallback, '/packet/iq[@id="' + _id + '"]');
     _js.Stream.Send(Self.xml);
 

@@ -44,8 +44,8 @@ type
         _xmpp: boolean;
         _cur_server: Widestring;
         _tls_cb: integer;
-        _lang: Widestring;
         _ssl_on: boolean;
+        _lang: WideString;
 
         // Dispatcher
         _dispatcher: TSignalDispatcher;
@@ -112,8 +112,7 @@ type
         Destructor Destroy; override;
 
         procedure CreateAccount;
-        procedure Connect; overload;
-        procedure Connect(xmllang: Widestring); overload;
+        procedure Connect;
         procedure Disconnect;
 
 
@@ -177,6 +176,7 @@ type
         property isXMPP: boolean read _xmpp;
         property xmppFeatures: TXMLTag read _features;
         property SSLEnabled: boolean read _ssl_on;
+        property xmlLang: WideString read _lang;
     end;
 
 var
@@ -248,6 +248,11 @@ begin
     Prefs.LoadProfiles;
     Prefs.SetSession(Self);
 
+    if (Prefs.getBool('always_lang')) then
+        _lang := Prefs.getString('locale')
+    else
+        _lang := '';
+    
     // Create the agents master list, and the Presence_XML list.
     Agents := TStringList.Create();
     Presence_XML := TWideStringlist.Create();
@@ -389,16 +394,8 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberSession.Connect(xmllang: Widestring);
-begin
-    _lang := xmllang;
-    DoConnect();
-end;
-
-{---------------------------------------}
 procedure TJabberSession.Connect;
 begin
-    _lang := '';
     DoConnect();
 end;
 
@@ -460,6 +457,9 @@ procedure TJabberSession.SendTag(tag: TXMLTag);
 begin
     // Send this tag out to the socket
     if (_stream <> nil) then begin
+        if (_lang <> '') then
+            tag.setAttribute('xml:lang', _lang);
+            
         _stream.SendTag(tag);
         tag.Free;
     end
@@ -511,12 +511,13 @@ end;
 procedure TJabberSession.StreamCallback(msg: string; tag: TXMLTag);
 var
     biq: TJabberIQ;
-    l, tmps: WideString;
+    l, lang, tmps: WideString;
 begin
     // Process callback info..
     if msg = 'connected' then begin
         // we are connected... send auth stuff.
-        if (_lang <> '') then l := ' xml:lang="' + _lang + '" ' else l := '';
+        lang := Prefs.getString('locale');
+        if (lang <> '') then l := ' xml:lang="' + lang + '" ' else l := '';
         tmps := '<stream:stream to="' + Trim(Server) +
             '" xmlns="jabber:client" ' +
             'xmlns:stream="http://etherx.jabber.org/streams" ' + l +

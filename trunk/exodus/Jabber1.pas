@@ -958,7 +958,7 @@ begin
         end
         else begin
             DebugMsg('Using specified Host/Port: ' + Host + '  ' + IntToStr(Port));
-            MainSession.Connect(ExStartup.xmllang);
+            MainSession.Connect();
         end;
     end;
 
@@ -982,7 +982,7 @@ begin
             ResolvedPort := 5222;
 
         DebugMsg('Direct DNS failed.. Using server: ' + Server);
-        MainSession.Connect(ExStartup.xmllang);
+        MainSession.Connect();
         exit;
     end;
 
@@ -1005,7 +1005,7 @@ begin
         else
             DebugMsg('Got A: ' + ip + '  ' + IntToStr(ResolvedPort));
     end;
-    MainSession.Connect(ExStartup.xmllang);
+    MainSession.Connect();
 end;
 
 {---------------------------------------}
