@@ -68,6 +68,7 @@ procedure AssignDefaultFont(font: TFont);
 function secsToDuration(seconds: string): string;
 function GetPresenceAtom(status: string): ATOM;
 function GetPresenceString(a: ATOM): string;
+function ColorToHTML( Color: TColor): string;
 
 var
     _GetLastInputInfo: Pointer;
@@ -507,6 +508,11 @@ begin
         GlobalDeleteAtom(a.a);
         a.Free();
         end;
+end;
+
+function ColorToHTML( Color: TColor): string;
+begin
+  result := Format( '#%.2x%.2x%.2x', [ GetRValue( Color), GetGValue( Color), GetBValue( Color)]);
 end;
 
 {---------------------------------------}
