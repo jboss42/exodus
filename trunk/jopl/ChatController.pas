@@ -221,11 +221,14 @@ begin
     mt := MainSession.Prefs.getInt('msg_treatment');
     mtype := tag.getAttribute('type');
     if (mtype = 'groupchat') then exit;
-    if ((mtype <> 'chat') and (mt = msg_normal) and (not is_composing)) then exit;
+    if ((mtype <> 'chat') and
+        (mtype <> 'error') and
+        (mt = msg_normal) and
+        (not is_composing)) then exit;
 
 
     // check for delivered requests
-    if (etag <> nil) then begin
+    if (mtype <> 'error') and (etag <> nil) then begin
         if ((etag.GetFirstTag('delivered') <> nil) and
             (etag.GetFirstTag('id') = nil)) then begin
             m := generateEventMsg(tag, 'delivered');
@@ -264,7 +267,7 @@ begin
             if (msg_queue.Count = 1) then
                 MainSession.FireEvent('/session/gui/chat', tag)
             else
-                MainSession.FireEvent('/session/gui/update-chat', tag); 
+                MainSession.FireEvent('/session/gui/update-chat', tag);
         end;
     end;
 end;
