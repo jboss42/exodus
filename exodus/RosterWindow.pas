@@ -832,7 +832,7 @@ end;
 procedure TfrmRosterWindow.PresCallback(event: string; tag: TXMLTag; p: TJabberPres);
 var
     ritem: TJabberRosterItem;
-    jid, ptype: string;
+    jid, ptype: Widestring;
     tmp_jid: TJabberID;
 begin
     // callback for the ppdb
