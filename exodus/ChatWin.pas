@@ -244,9 +244,9 @@ begin
     // setup the callbacks if we don't have them already
     if (_callback < 0) then begin
         _callback := MainSession.RegisterCallback(MsgCallback,
-            '/packet/message[@from="' + cjid + '*"]');
+            '/packet/message[@from="' + Lowercase(cjid) + '*"]');
         _pcallback := MainSession.RegisterCallback(PresCallback,
-            '/packet/presence[@from="' + cjid + '*"]');
+            '/packet/presence[@from="' + Lowercase(cjid) + '*"]');
         end;
 
     if (_scallback < 0) then

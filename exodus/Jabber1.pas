@@ -170,13 +170,15 @@ type
     N18: TMenuItem;
     pnlRight: TPanel;
     ApplicationEvents1: TApplicationEvents;
-    ToolBar: TToolBar;
+    Toolbar: TCoolBar;
+    ToolBar1: TToolBar;
     btnConnect: TToolButton;
     btnOnlineRoster: TToolButton;
     btnAddContact: TToolButton;
     btnRoom: TToolButton;
     btnDelContact: TToolButton;
     btnExpanded: TToolButton;
+    btnFind: TToolButton;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -482,7 +484,7 @@ begin
                 // -i [pri]    : priority
                 // -f [prof]   : profile name
                 // -c [file]   : config file name
-                Options  := 'dmn?xjprifc';
+                Options  := 'dmv?xjprifc';
                 OptFlags := '----:::::::';
                 ReqFlags := '           ';
                 LongOpts := 'debug,minimized,invisible,help,expanded,jid,password,resource,priority,profile,config';
@@ -492,7 +494,7 @@ begin
                      Ord('d'): debug := true;
                      Ord('x'): expanded := OptArg;
                      Ord('m'): minimized := true;
-                     Ord('n'): invisible := true;
+                     Ord('v'): invisible := true;
                      Ord('j'): jid := TJabberID.Create(OptArg);
                      Ord('p'): pass := OptArg;
                      Ord('r'): resource := OptArg;
@@ -512,6 +514,7 @@ begin
             help_msg := 'The following command line parameters are available in Exodus: '#13#10#13#10;
             help_msg := help_msg + ' -d '#9#9' : Debug mode on'#13#10;
             help_msg := help_msg + ' -m '#9#9' : Start minimized'#13#10;
+            help_msg := help_msg + ' -v '#9#9' : invisible mode'#13#10;
             help_msg := help_msg + ' -? '#9#9' : Show Help'#13#10;
             help_msg := help_msg + ' -x [yes|no] '#9' : Expanded Mode'#13#10;
             help_msg := help_msg + ' -j [jid] '#9#9' : Jid'#13#10;
@@ -604,6 +607,7 @@ begin
                 _hidden := true;
                 self.WindowState := wsMinimized;
                 ShowWindow(Handle, SW_HIDE);
+                PostMessage(Self.handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
                 end;
 
             MainSession.Invisible := invisible;
@@ -893,6 +897,12 @@ begin
     mnuFilters.Enabled := enable;
     mnuBrowser.Enabled := enable;
     mnuServer.Enabled := enable;
+
+    // Enable toolbar btns
+    btnOnlineRoster.Enabled := enable;
+    btnAddContact.Enabled := enable;
+    btnRoom.Enabled := enable;
+    btnFind.Enabled := enable;
 
     // Build the custom presence menus.
     // make sure to leave the main "Custom" entry and the divider
@@ -1652,12 +1662,13 @@ var
     jid: string;
 begin
     // Start a chat w/ a specific JID
-    n := frmRosterWindow.treeRoster.Selected;
-    ritem := TJabberRosterItem(n.Data);
-    if ritem <> nil then
-        jid := ritem.jid.jid
-    else
-        jid := '';
+    jid := '';
+    if (frmRosterWindow.treeRoster.SelectionCount > 0) then begin
+        n := frmRosterWindow.treeRoster.Selected;
+        ritem := TJabberRosterItem(n.Data);
+        if ritem <> nil then
+            jid := ritem.jid.jid
+        end;
 
     if InputQuery('Start Chat', 'Enter Jabber ID:', jid) then
         StartChat(jid, '', true);
