@@ -147,14 +147,15 @@ type
         constructor Create(sjid, nickname, group: string; subscribe: boolean);
     end;
 
-
+resourcestring
+    sGrpBookmarks = 'Bookmarks';
 
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 implementation
 uses
-    Jabber1, JabberConst, iq, s10n,
+    JabberConst, iq, s10n,
     XMLUtils, Session;
 
 {---------------------------------------}
