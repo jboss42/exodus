@@ -2451,7 +2451,7 @@ end;
 procedure TfrmRosterWindow.imgAdClick(Sender: TObject);
 begin
     if (_adURL <> '') then
-        ShellExecute(0, 'open', PChar(_adURL), nil, nil, SW_SHOWNORMAL);
+        ShellExecute(Application.Handle, 'open', PChar(_adURL), nil, nil, SW_SHOWNORMAL);
 end;
 
 {---------------------------------------}

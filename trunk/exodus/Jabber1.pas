@@ -1809,21 +1809,21 @@ end;
 procedure TfrmExodus.JabberorgWebsite1Click(Sender: TObject);
 begin
     // goto www.jabber.org
-    ShellExecute(0, 'open', 'http://www.jabber.org', '', '', SW_SHOW);
+    ShellExecute(Application.Handle, 'open', 'http://www.jabber.org', '', '', SW_SHOW);
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.JabberCentralWebsite1Click(Sender: TObject);
 begin
     // goto www.jabberstudio.org
-    ShellExecute(0, 'open', 'http://www.jabberstudio.org', '', '', SW_SHOW);
+    ShellExecute(Application.Handle, 'open', 'http://www.jabberstudio.org', '', '', SW_SHOW);
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.SubmitExodusFeatureRequest1Click(Sender: TObject);
 begin
     // goto http://www.jabberstudio.org/projects/exodus/features/add.php
-    ShellExecute(0, 'open', 'http://www.jabberstudio.org', '', '', SW_SHOW);
+    ShellExecute(Application.Handle, 'open', 'http://www.jabberstudio.org', '', '', SW_SHOW);
 
 end;
 
@@ -2255,14 +2255,14 @@ end;
 procedure TfrmExodus.WinJabWebsite1Click(Sender: TObject);
 begin
     // goto exodus.jabberstudio.org
-    ShellExecute(0, 'open', 'http://exodus.jabberstudio.org', '', '', SW_SHOW);
+    ShellExecute(Application.Handle, 'open', 'http://exodus.jabberstudio.org', '', '', SW_SHOW);
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.JabberBugzilla1Click(Sender: TObject);
 begin
     // submit a bug on JS.org
-    ShellExecute(0, 'open', 'http://www.jabberstudio.org/projects/exodus/bugs/', '', '', SW_SHOW);
+    ShellExecute(Application.Handle, 'open', 'http://www.jabberstudio.org/projects/exodus/bugs/', '', '', SW_SHOW);
 end;
 
 {---------------------------------------}
@@ -2753,7 +2753,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.JabberUserGuide1Click(Sender: TObject);
 begin
-    ShellExecute(0, 'open', pchar(string(MainSession.Prefs.getString('brand_help_userguide'))), '', '', SW_SHOW);
+    ShellExecute(Application.Handle, 'open', pchar(string(MainSession.Prefs.getString('brand_help_userguide'))), '', '', SW_SHOW);
 end;
 
 {---------------------------------------}
@@ -2831,7 +2831,7 @@ begin
     MainSession.Prefs.fillStringlist('brand_help_url_list', url_list);
 
     if (i < url_list.Count) then
-        ShellExecute(0, 'open',
+        ShellExecute(Application.Handle, 'open',
                      pchar(string(url_list.Strings[i])),
                      '', '', SW_SHOW)
     else

@@ -334,7 +334,7 @@ begin
         exit;
     end;
 
-    ShellExecute(0, 'open', PChar(fn), '', '', SW_NORMAL);
+    ShellExecute(Application.Handle, 'open', PChar(fn), '', '', SW_NORMAL);
 end;
 
 {---------------------------------------}

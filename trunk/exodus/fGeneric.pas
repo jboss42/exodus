@@ -260,7 +260,7 @@ end;
 
 procedure TframeGeneric.URLClick(Sender: TObject; url: String);
 begin
-    ShellExecute(0, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
+    ShellExecute(Application.Handle, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
 end;
 
 {---------------------------------------}

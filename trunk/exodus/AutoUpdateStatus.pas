@@ -167,7 +167,8 @@ begin
                 label1.Refresh();
                 Application.ProcessMessages();
 
-                ShellExecute(0, 'open', PChar(tmp), '/S', nil, SW_SHOWNORMAL);
+                ShellExecute(Application.Handle, 'open', PChar(tmp), '/S', nil,
+                    SW_SHOWNORMAL);
             end
             else begin
                 label1.Caption := Format(sError, [httpClient.ResponseText]);
