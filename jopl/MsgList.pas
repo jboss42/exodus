@@ -152,7 +152,8 @@ begin
     try
         // check for messages we don't care about
         if ((mtype = 'groupchat') or (mtype = 'chat')) then exit;
-        if (mtype = 'headline') then exit;
+
+        // if (mtype = 'headline') then exit;
         if (tag.QueryXPTag(XP_MSGXDATA) <> nil) then exit;
         if (tag.QueryXPTag(XP_MUCINVITE) <> nil) then exit;
         if (tag.QueryXPTag(XP_CONFINVITE) <> nil) then exit;
@@ -183,7 +184,7 @@ begin
             exit;
         end;
 
-        // check for delivered events
+        // check for delivered event requests
         etag := tag.QueryXPTag(XP_MSGXEVENT);
         if ((etag <> nil) and
             (etag.GetFirstTag('id') = nil) and
@@ -193,13 +194,17 @@ begin
             js.SendTag(m);
         end;
 
-        mc := FindJid(from_jid);
-        if (mc <> nil) then
-            // send the msg to the existing window
-            mc.HandleMessage(tag)
-        else
-            // spin up a new window
-            js.FireEvent('/session/gui/msgevent', tag);
+        if (mtype = 'headline') then
+            js.FireEvent('/session/gui/headline', tag)
+        else begin
+            mc := FindJid(from_jid);
+            if (mc <> nil) then
+                // send the msg to the existing window
+                mc.HandleMessage(tag)
+            else
+                // spin up a new window
+                js.FireEvent('/session/gui/msgevent', tag);
+        end;
 
     finally
         from_jid.Free();
