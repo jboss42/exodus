@@ -62,6 +62,8 @@ type
         btnCancel: TButton;
         SocksHandler: TIdIOHandlerSocket;
         IdSocksInfo1: TIdSocksInfo;
+    Bevel3: TBevel;
+    Bevel2: TBevel;
         procedure btnRecvClick(Sender: TObject);
         procedure btnCancelClick(Sender: TObject);
     private

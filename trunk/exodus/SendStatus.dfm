@@ -2,13 +2,13 @@ object fSendStatus: TfSendStatus
   Left = 0
   Top = 0
   Width = 402
-  Height = 46
+  Height = 89
   TabOrder = 0
   object Panel1: TPanel
     Left = 313
-    Top = 0
+    Top = 45
     Width = 89
-    Height = 46
+    Height = 44
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 0
@@ -22,10 +22,10 @@ object fSendStatus: TfSendStatus
     end
   end
   object Panel2: TPanel
-    Left = 155
-    Top = 0
-    Width = 158
-    Height = 46
+    Left = 0
+    Top = 45
+    Width = 313
+    Height = 44
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 7
@@ -33,7 +33,7 @@ object fSendStatus: TfSendStatus
     object lblStatus: TTntLabel
       Left = 7
       Top = 7
-      Width = 144
+      Width = 299
       Height = 13
       Align = alTop
       Caption = 'Status...'
@@ -41,7 +41,7 @@ object fSendStatus: TfSendStatus
     object Bar1: TProgressBar
       Left = 7
       Top = 20
-      Width = 144
+      Width = 299
       Height = 17
       Align = alTop
       TabOrder = 0
@@ -50,30 +50,46 @@ object fSendStatus: TfSendStatus
   object Panel3: TPanel
     Left = 0
     Top = 0
-    Width = 155
-    Height = 46
-    Align = alLeft
+    Width = 402
+    Height = 45
+    Align = alTop
     BevelOuter = bvNone
     BorderWidth = 2
     TabOrder = 2
     object lblFile: TTntLabel
       Left = 2
-      Top = 15
-      Width = 151
-      Height = 29
-      Align = alClient
+      Top = 20
+      Width = 398
+      Height = 19
+      Align = alTop
       Caption = 'lblFile'
       Transparent = False
       Layout = tlCenter
     end
     object lblTo: TTntLabel
       Left = 2
-      Top = 2
-      Width = 151
+      Top = 7
+      Width = 398
       Height = 13
       Align = alTop
       Caption = 'lblTo'
       Transparent = False
+    end
+    object Bevel1: TBevel
+      Left = 2
+      Top = 38
+      Width = 398
+      Height = 5
+      Align = alBottom
+      Shape = bsBottomLine
+    end
+    object Bevel2: TBevel
+      Left = 2
+      Top = 2
+      Width = 398
+      Height = 5
+      Align = alTop
+      Shape = bsTopLine
     end
   end
   object httpClient: TIdHTTP

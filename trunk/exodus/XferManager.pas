@@ -30,7 +30,8 @@ uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Dockable, ExtCtrls, IdCustomHTTPServer, IdHTTPServer, IdSocks,
     IdTCPServer, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
-    IdHTTP, IdServerIOHandler, IdServerIOHandlerSocket;
+    IdHTTP, IdServerIOHandler, IdServerIOHandlerSocket, StdCtrls,
+  TntStdCtrls, Buttons;
 
 const
     WM_CLOSE_FRAME = WM_USER + 6005;
@@ -75,6 +76,9 @@ type
     box: TScrollBox;
     OpenDialog1: TOpenDialog;
     tcpServer: TIdTCPServer;
+    Panel1: TPanel;
+    TntLabel1: TTntLabel;
+    btnClose: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure httpServerCommandGet(AThread: TIdPeerThread;
       ARequestInfo: TIdHTTPRequestInfo;
@@ -85,6 +89,9 @@ type
     procedure tcpServerExecute(AThread: TIdPeerThread);
     procedure tcpServerDisconnect(AThread: TIdPeerThread);
     procedure FormDestroy(Sender: TObject);
+    procedure FormResize(Sender: TObject);
+    procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
+    procedure btnCloseClick(Sender: TObject);
 
   protected
     procedure WMCloseFrame(var msg: TMessage); message WM_CLOSE_FRAME;
@@ -105,6 +112,9 @@ type
 
   public
     { Public declarations }
+    procedure DockForm; override;
+    procedure FloatForm; override;
+
     procedure SendFile(pkg: TFileXferPkg);
     procedure RecvFile(pkg: TFileXferPkg);
 
@@ -358,7 +368,7 @@ begin
         frmXferManager := TfrmXferManager.Create(Application);
 
     Result := frmXferManager;
-    Result.Show();
+    Result.ShowDefault();
 end;
 
 {---------------------------------------}
@@ -749,6 +759,7 @@ begin
     // remove this connection from the list
 end;
 
+{---------------------------------------}
 procedure TfrmXferManager.FormDestroy(Sender: TObject);
 begin
   inherited;
@@ -757,6 +768,43 @@ begin
         MainSession.UnRegisterCallback(_cb);
         _cb := -1;
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmXferManager.DockForm;
+begin
+    inherited;
+    btnClose.Visible := true;
+end;
+
+{---------------------------------------}
+procedure TfrmXferManager.FloatForm;
+begin
+    inherited;
+    btnClose.Visible := false;
+end;
+
+{---------------------------------------}
+procedure TfrmXferManager.FormResize(Sender: TObject);
+begin
+  inherited;
+    btnClose.Left := Panel1.Width - btnClose.Width - 2;
+end;
+
+{---------------------------------------}
+procedure TfrmXferManager.FormEndDock(Sender, Target: TObject; X,
+  Y: Integer);
+begin
+  inherited;
+    btnClose.Visible := Docked;
+    if ((Docked) and (TabSheet <> nil)) then Self.TabSheet.ImageIndex := -1;
+end;
+
+{---------------------------------------}
+procedure TfrmXferManager.btnCloseClick(Sender: TObject);
+begin
+  inherited;
+    Self.Close();
 end;
 
 initialization
