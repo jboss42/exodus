@@ -131,6 +131,7 @@ procedure DockDebugForm();
 begin
     if ((frmDebug <> nil) and (not frmDebug.Docked)) then begin
         frmDebug.DockForm;
+        //frmDebug.TabSheet.ImageIndex := ico_render;
         frmDebug.Show;
     end;
 end;
@@ -168,6 +169,8 @@ procedure TfrmDebug.FormCreate(Sender: TObject);
 begin
     // make sure the output is showing..
     inherited;
+
+    ImageIndex := ico_render;
 
     lblJID.Left := lblLabel.Left + lblLabel.Width + 5;
     lblJID.Font.Color := clBlue;
@@ -356,6 +359,12 @@ procedure TfrmDebug.FormEndDock(Sender, Target: TObject; X, Y: Integer);
 begin
     inherited;
     btnClose.Visible := Docked;
+
+    {
+    if (Docked) then
+        Self.TabSheet.ImageIndex := ico_render;
+    }
+
 end;
 
 {---------------------------------------}

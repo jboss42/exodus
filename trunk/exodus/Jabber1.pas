@@ -3036,9 +3036,11 @@ begin
     end
     else if (f is TfrmRoom) then begin
         Tabs.ActivePage.ImageIndex := ico_conf;
-    end
+    end;
+    {
     else if (Tabs.ActivePage.ImageIndex <> -1) then
         Tabs.ActivePage.ImageIndex := -1;
+    }
 
 
     if (f is TfrmBaseChat) then begin

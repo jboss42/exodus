@@ -80,6 +80,8 @@ uses
 {---------------------------------------}
 procedure TfrmDockable.FormCreate(Sender: TObject);
 begin
+    ImageIndex := -1;
+    
     _docked := false;
     _noMoveCheck := true;
 
@@ -111,8 +113,9 @@ begin
     Self.Align := alClient;
     _docked := true;
     Self.TabSheet := TTntTabSheet(frmExodus.Tabs.Pages[frmExodus.Tabs.PageCount-1]);
+
     if (Self.TabSheet <> nil) then
-        Self.TabSheet.ImageIndex := -1;
+        Self.TabSheet.ImageIndex := ImageIndex;;
 
     if Assigned(_onDockEndChange) then
         Self.OnDockEndChange();
@@ -264,8 +267,8 @@ begin
     if (Target <> frmExodus.Tabs) then exit;
 
     if Self.TabSheet <> nil then begin
-        Self.TabSheet.ImageIndex := -1;
-        frmExodus.Tabs.ActivePage.ImageIndex := -1;
+        Self.TabSheet.ImageIndex := ImageIndex;
+        //frmExodus.Tabs.ActivePage.ImageIndex := -1;
     end;
 end;
 
