@@ -1573,12 +1573,24 @@ procedure TfrmRosterWindow.treeRosterMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
     i: integer;
+    c, n: TTreeNode;
 begin
-    if ((treeRoster.SelectionCount > 1) and (Button = mbLeft) and
-        (Shift = [ssLeft])) then begin
-        // de-select everything, and select this node
-        for i := 0 to treeRoster.Items.Count - 1 do
-            treeRoster.Items[i].Selected := false;
+    // If they are clicking on an already selected node,
+    // without the Ctrl-key pressed, then deselect everything
+    // except the current node.
+    n := treeRoster.GetNodeAt(X, Y);
+    if (n = nil) then exit;
+
+    // I have no clue why we can't check Shift here,
+    // but it just doesn't seem to work, so use _drop_copy instead
+    // which is set in the MouseDown event.
+    if ((Button = mbLeft) and (_drop_copy = false) and (n.Selected)) then begin
+        for i := 0 to treeRoster.Items.Count - 1 do begin
+            c := treeRoster.Items[i];
+            if ((c.Selected) and (c <> n)) then
+                treeRoster.Deselect(c);
+        end;
+        n.Selected := true;
     end;
 end;
 
