@@ -1,6 +1,6 @@
 object frmDebug: TfrmDebug
-  Left = 8
-  Top = 342
+  Left = 768
+  Top = 313
   Width = 351
   Height = 320
   Caption = 'Debug'
@@ -19,7 +19,7 @@ object frmDebug: TfrmDebug
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 255
+    Top = 260
     Width = 343
     Height = 31
     Align = alBottom
@@ -68,7 +68,7 @@ object frmDebug: TfrmDebug
     Left = 0
     Top = 0
     Width = 343
-    Height = 255
+    Height = 260
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
@@ -76,7 +76,7 @@ object frmDebug: TfrmDebug
     TabOrder = 1
     object Splitter1: TSplitter
       Left = 4
-      Top = 206
+      Top = 211
       Width = 335
       Height = 5
       Cursor = crVSplit
@@ -86,7 +86,7 @@ object frmDebug: TfrmDebug
       Left = 4
       Top = 4
       Width = 335
-      Height = 202
+      Height = 207
       Align = alClient
       ReadOnly = True
       ScrollBars = ssBoth
@@ -94,7 +94,7 @@ object frmDebug: TfrmDebug
     end
     object MemoSend: TMemo
       Left = 4
-      Top = 211
+      Top = 216
       Width = 335
       Height = 40
       Align = alBottom
@@ -107,6 +107,7 @@ object frmDebug: TfrmDebug
       PopupMenu = PopupMenu1
       ScrollBars = ssVertical
       TabOrder = 1
+      OnKeyDown = MemoSendKeyDown
     end
   end
   object PopupMenu1: TPopupMenu

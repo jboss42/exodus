@@ -47,6 +47,8 @@ type
     procedure btnClearDebugClick(Sender: TObject);
     procedure btnSendRawClick(Sender: TObject);
     procedure popMsgClick(Sender: TObject);
+    procedure MemoSendKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
     procedure DebugCallback(send: boolean; data: string);
@@ -169,7 +171,6 @@ begin
                         l := TSignalListener(sig.Objects[i]);
                         msg := 'LID: ' + IntToStr(l.cb_id) + ', ';
                         msg := msg + sig.Strings[i] + ', ';
-                        msg := msg + 'Class: ' + l.ClassName + ', ';
                         msg := msg + l.classname + ', ';
                         msg := msg + l.methodname;
                         DebugMsg(msg + ''#13#10);
@@ -200,6 +201,16 @@ begin
             Add('<iq type="set" to="" id="' + id + '"><query xmlns=""></query></iq>')
         else if Sender = popPres then
             Add('<presence to="" id="' + id + '"/>');
+        end;
+end;
+
+procedure TfrmDebug.MemoSendKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  inherited;
+    if ((Key = VK_RETURN) and (ssCtrl in Shift)) then begin
+        btnSendRawClick(Self);
+        Key = #0;
         end;
 end;
 
