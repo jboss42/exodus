@@ -71,6 +71,7 @@ end;
 
     function GetAttribute(key: WideString): WideString;
     procedure setAttribute(key, value: WideString);
+    procedure removeAttribute(key: Widestring);
 
     function ChildTags: TXMLTagList;
     function QueryXPTags(path: WideString): TXMLTagList; overload;
@@ -310,7 +311,17 @@ begin
     end
     else
         a.value := value;
+end;
 
+{---------------------------------------}
+procedure TXMLTag.removeAttribute(key: Widestring);
+var
+    a: TNvpNode;
+begin
+    a := _AttrList.Node(key);
+    if (a <> nil) then begin
+        _AttrList.Remove(a);
+    end;
 end;
 
 {---------------------------------------}
