@@ -1264,6 +1264,9 @@ var
     cp: TPoint;
     idx: integer;
 begin
+    if (Assigned(Application.MainForm)) then
+        Application.MainForm.Monitor;
+
     // Get the nearest monitor to the form
     tmp := f.BoundsRect;
     cp := CenterPoint(tmp);
