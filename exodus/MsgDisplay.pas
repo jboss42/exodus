@@ -31,8 +31,8 @@ type
         idx: integer;
     end;
 
-//const EM_AUTOURLDETECT = WM_USER + 91;
 var
+    use_emoticons: boolean;
     emoticon_regex: TRegExpr;
     emoticon_list: TStringList;
 
@@ -43,6 +43,7 @@ function GetMsgHTML(Msg: TJabberMessage): string;
 
 procedure ProcessEmoticons(RichEdit: TRichEdit; txt: string);
 procedure ConfigEmoticons();
+
 function getEmoticonIndex(match: string): integer;
 
 // procedure AddHTML(html: string; Browser: TRichEdit);
@@ -105,7 +106,10 @@ begin
         RichEdit.SelAttributes.Color := TColor(MainSession.Prefs.getInt('font_color'));
         RichEdit.SelText := ' ';
 
-        ProcessEmoticons(RichEdit, txt);
+        if (use_emoticons) then
+            ProcessEmoticons(RichEdit, txt)
+        else
+            RichEdit.SelText := txt;
         end
 
     else begin
@@ -135,8 +139,10 @@ var
     eo: TEmoticon;
 begin
     // search for various smileys
+    {
     if (emoticon_regex = nil) then
         ConfigEmoticons();
+    }
 
     RichEdit.ReadOnly := false;
     pic := nil;
@@ -192,10 +198,13 @@ var
     e: string;
     y, msn: TImageList;
 begin
-    //
+    // Build the regex expression and
+    // compile the emoticon_list for fast lookups.
     y := frmJabber.imgYahooEmoticons;
     msn := frmJabber.imgMSNEmoticons;
-    // emoticon_list := TStringList.Create();
+
+    // build up the regex expression as we go..
+    // AddEmot returns the proper string
     e := '(.*)(';
 
     // Normal smileys
@@ -434,6 +443,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 function GetMsgHTML(Msg: TJabberMessage): string;
 var
     color, txt, html: string;
