@@ -624,7 +624,7 @@ begin
         if (not MainSession.Prefs.getBool('roster_collapsed')) then
             Self.ExpandNodes();
 
-        if treeRoster.items.Count > 0 then
+        if (treeRoster.items.Count > 0) then
             treeRoster.TopItem := treeRoster.Items[0];
 
         treeRoster.AlphaSort();
@@ -1413,7 +1413,8 @@ begin
         if (resort) then
             treeRoster.AlphaSort;
         RemoveEmptyGroups();
-        treeRoster.TopItem := top_item;
+        if ((treeRoster.Items.Count > 0) and (top_item <> nil)) then
+            treeRoster.TopItem := top_item;
     end;
 
 end;

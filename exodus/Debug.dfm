@@ -1,6 +1,6 @@
 object frmDebug: TfrmDebug
-  Left = 263
-  Top = 202
+  Left = 264
+  Top = 203
   Width = 408
   Height = 414
   Caption = 'Debug'
@@ -25,7 +25,7 @@ object frmDebug: TfrmDebug
     Left = 0
     Top = 25
     Width = 400
-    Height = 355
+    Height = 359
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
@@ -33,7 +33,7 @@ object frmDebug: TfrmDebug
     TabOrder = 0
     object Splitter1: TSplitter
       Left = 4
-      Top = 306
+      Top = 310
       Width = 392
       Height = 5
       Cursor = crVSplit
@@ -43,7 +43,7 @@ object frmDebug: TfrmDebug
       Left = 4
       Top = 4
       Width = 392
-      Height = 302
+      Height = 306
       Align = alClient
       AutoURLDetect = adNone
       CustomURLs = <
@@ -137,7 +137,7 @@ object frmDebug: TfrmDebug
     end
     object MemoSend: TExRichEdit
       Left = 4
-      Top = 311
+      Top = 315
       Width = 392
       Height = 40
       Align = alBottom
