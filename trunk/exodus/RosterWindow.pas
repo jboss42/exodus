@@ -41,7 +41,6 @@ type
     popStatus: TPopupMenu;
     pnlShow: TPanel;
     presChat: TMenuItem;
-    presAvailable: TMenuItem;
     presAway: TMenuItem;
     presXA: TMenuItem;
     presDND: TMenuItem;
@@ -100,6 +99,21 @@ type
     lblStatusLink: TTntLabel;
     MoveorCopyContacts1: TMenuItem;
     imgSSL: TImage;
+    N8: TMenuItem;
+    Custom1: TMenuItem;
+    Online1: TMenuItem;
+    Away1: TMenuItem;
+    Lunch1: TMenuItem;
+    Meeting1: TMenuItem;
+    Bank1: TMenuItem;
+    ExtendedAway1: TMenuItem;
+    GoneHome1: TMenuItem;
+    GonetoWork1: TMenuItem;
+    Sleeping1: TMenuItem;
+    Busy1: TMenuItem;
+    Working1: TMenuItem;
+    Mad1: TMenuItem;
+    Available1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -161,6 +175,7 @@ type
     procedure treeRosterMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure MoveorCopyContacts1Click(Sender: TObject);
+    procedure presCustomClick(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;             // roster callback id
@@ -299,7 +314,7 @@ resourcestring
 
 implementation
 uses
-    ExSession, XferManager, 
+    ExSession, XferManager, CustomPres,  
     JabberConst, Chat, ChatController, GrpManagement, GnuGetText, InputPassword,
     SelContact, Invite, Bookmark, S10n, MsgRecv, PrefController,
     ExEvents, ExUtils, Room, Profile, JabberID, RiserWindow, ShellAPI,
@@ -531,6 +546,8 @@ begin
         _show_unsub := MainSession.Prefs.getBool('roster_show_unsub');
 
         frmExodus.pnlRoster.ShowHint := not _show_status;
+
+        BuildPresMenus(TMenuItem(popStatus), presAvailableClick);
 
         Redraw();
     end
@@ -1563,27 +1580,17 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.presAvailableClick(Sender: TObject);
 var
-    show: Widestring;
+    stat, show: Widestring;
 begin
     // change our own presence
-    case TMenuItem(Sender).Tag of
-    0: begin
-        show := 'chat';
+    case TMenuItem(Sender).GroupIndex of
+    0: show := 'chat';
+    1: show := 'away';
+    2: show := 'xa';
+    3: show := 'dnd';
     end;
-    1: begin
-        show := '';
-    end;
-    2: begin
-        show := 'away';
-    end;
-    3: begin
-        show := 'xa';
-    end;
-    4: begin
-        show := 'dnd';
-    end;
-    end;
-    MainSession.setPresence(show, '', MainSession.Priority);
+    stat := TMenuItem(Sender).Caption;
+    MainSession.setPresence(show, stat, MainSession.Priority);
 end;
 
 {---------------------------------------}
@@ -2802,6 +2809,12 @@ var
 begin
     sel := Self.getSelectedContacts(false);
     ShowGrpManagement(sel);
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.presCustomClick(Sender: TObject);
+begin
+    ShowCustomPresence();
 end;
 
 initialization

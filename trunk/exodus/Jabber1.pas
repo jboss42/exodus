@@ -62,7 +62,6 @@ type
     Preferences1: TMenuItem;
     N7: TMenuItem;
     mnuPresence: TMenuItem;
-    presOnline: TMenuItem;
     Exit2: TMenuItem;
     mnuContacts: TMenuItem;
     AddPerson1: TMenuItem;
@@ -87,14 +86,12 @@ type
     Sleeping1: TMenuItem;
     presDND: TMenuItem;
     presChat: TMenuItem;
-    N10: TMenuItem;
     Away2: TMenuItem;
     ExtendedAway1: TMenuItem;
     Busy1: TMenuItem;
     Working1: TMenuItem;
     Mad1: TMenuItem;
     N11: TMenuItem;
-    presCustom: TMenuItem;
     N12: TMenuItem;
     ShowXML1: TMenuItem;
     SearchforPerson1: TMenuItem;
@@ -136,7 +133,6 @@ type
     N01: TMenuItem;
     trayExit: TMenuItem;
     trayPresence: TMenuItem;
-    trayCustom: TMenuItem;
     N5: TMenuItem;
     DoNotDisturb1: TMenuItem;
     Mad2: TMenuItem;
@@ -152,13 +148,9 @@ type
     Meeting2: TMenuItem;
     Lunch1: TMenuItem;
     Away3: TMenuItem;
-    N15: TMenuItem;
     FreeforChat1: TMenuItem;
-    Online1: TMenuItem;
     Custom2: TMenuItem;
-    N16: TMenuItem;
     Custom3: TMenuItem;
-    N18: TMenuItem;
     pnlRight: TPanel;
     ApplicationEvents1: TApplicationEvents;
     Toolbar: TCoolBar;
@@ -185,6 +177,10 @@ type
     mnuRegistration: TMenuItem;
     N3: TMenuItem;
     XMPPAction: TDdeServerConv;
+    presOnline: TMenuItem;
+    Available1: TMenuItem;
+    Available2: TMenuItem;
+    Available3: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -310,8 +306,6 @@ type
     _win32_tracker: Array of integer;
     _win32_idx: integer;
 
-
-    procedure presCustomPresClick(Sender: TObject);
 
     procedure setupTrayIcon();
     procedure setTrayInfo(tip: string);
@@ -1317,11 +1311,6 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.restoreMenus(enable: boolean);
-var
-    plist: TList;
-    imidx, i: integer;
-    mnu: TMenuItem;
-    cp: TJabberCustompres;
 begin
     // (dis)enable the menus
     mnuMessage.Enabled := enable;
@@ -1353,42 +1342,8 @@ begin
     btnFind.Enabled := enable;
 
     // Build the custom presence menus.
-    // make sure to leave the main "Custom" entry and the divider
-    for i := presCustom.Count - 1 downto 2 do
-        presCustom.Items[i].Free;
-    for i := trayCustom.Count - 1 downto 2 do
-        trayCustom.Items[i].Free;
-
-    plist := MainSession.prefs.getAllPresence();
-    for i := 0 to plist.count - 1 do begin
-        cp := TJabberCustomPres(plist[i]);
-
-        if (cp.show = 'chat') then imidx := ico_Chat
-        else if (cp.show = 'away') then imidx := ico_Away
-        else if (cp.Show = 'xa') then imidx := ico_XA
-        else if (cp.show = 'dnd') then imidx := ico_DND
-        else imidx := ico_Online;
-
-        mnu := TMenuItem.Create(presCustom);
-        mnu.Caption := cp.title;
-        mnu.tag := i;
-        mnu.OnClick := presCustomPresClick;
-        mnu.ShortCut := TextToShortcut(cp.hotkey);
-        mnu.ImageIndex := imidx;
-        presCustom.Add(mnu);
-
-        mnu := TMenuItem.Create(trayCustom);
-        mnu.Caption := cp.title;
-        mnu.tag := i;
-        mnu.OnClick := presCustomPresClick;
-        mnu.ImageIndex := imidx;
-
-        trayCustom.Add(mnu);
-        cp.Free();
-    end;
-
-    plist.Clear();
-    plist.Free();
+    BuildPresMenus(mnuPresence, presOnlineClick);
+    BuildPresMenus(trayPresence, presOnlineClick);
 end;
 
 {---------------------------------------}
@@ -1880,7 +1835,7 @@ begin
     // TMenuItem.tag represent the show to use..
 
     m := TMenuItem(Sender);
-    case m.Tag of
+    case m.GroupIndex of
     0: Show := '';
     1: Show := 'chat';
     2: Show := 'away';
@@ -2235,19 +2190,6 @@ procedure TfrmExodus.presCustomClick(Sender: TObject);
 begin
     // Custom presence
     ShowCustomPresence();
-end;
-
-{---------------------------------------}
-procedure TfrmExodus.presCustomPresClick(Sender: TObject);
-var
-    i: integer;
-    cp: TJabberCustomPres;
-begin
-    // Our own Custom presence
-    i := TMenuItem(Sender).Tag;
-    cp := MainSession.prefs.getPresIndex(i);
-    if (cp <> nil) then
-        MainSession.setPresence(cp.show, cp.status, cp.priority);
 end;
 
 {---------------------------------------}
