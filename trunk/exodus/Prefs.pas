@@ -266,7 +266,7 @@ uses
     ExUtils,
     FileCtrl,
     XMLUtils,
-    Presence, MsgDisplay, JabberMsg,  
+    Presence, MsgDisplay, JabberMsg, Jabber1,
     PrefController,
     Registry,
     Session;

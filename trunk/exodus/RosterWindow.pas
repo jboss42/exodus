@@ -718,6 +718,9 @@ begin
     else begin
         // possibly re-render the node based on this pres packet
         ritem := MainSession.Roster.Find(jid);
+
+        // if we can't find the item based on bare jid, check the full jid.
+        // NB: this should catch most of the transport madness.
         if ritem = nil then
             ritem := MainSession.Roster.Find(tmp_jid.full);
         if ritem <> nil then
@@ -821,6 +824,7 @@ begin
 
     else if ((ritem.subscription = 'none') or
         (ritem.subscription = '') or
+        (ritem.subscription = 'from') or
         (ritem.subscription = 'remove')) then begin
         // We aren't subscribed to these people,
         // or we are removing them from the roster

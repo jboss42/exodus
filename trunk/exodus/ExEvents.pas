@@ -50,6 +50,7 @@ type
         img_idx: integer;
         msg: string;
         caption: string;
+        error: boolean;
 
         constructor create;
         destructor destroy; override;
@@ -134,6 +135,7 @@ begin
 
     _data_list := TStringList.Create;
     delayed := false;
+    error := false;
     edate := Now();
 end;
 
@@ -194,18 +196,28 @@ begin
         from := tag.getAttribute('from');
         id := tag.getAttribute('id');
 
-        // For messages, pull out the subject
-        if (eType = evt_Message) then begin
-            tmp_tag := tag.GetFirstTag('subject');
-            if (tmp_tag <> nil) then
-                data_type := tmp_tag.Data;
-            end;
-
         // When we are doing roster items, the _data_list contains the items.
         if (eType <> evt_RosterItems) then begin
             tmp_tag := tag.GetFirstTag('body');
             if (tmp_tag <> nil) then
                 _data_list.Text := tmp_tag.Data;
+            end;
+
+        // For messages, pull out the subject
+        if (eType = evt_Message) then begin
+            tmp_tag := tag.GetFirstTag('subject');
+            if (tmp_tag <> nil) then
+                data_type := tmp_tag.Data;
+
+            // check for errors..
+            if (tag.getAttribute('type') = 'error') then begin
+                tmp_tag := tag.GetFirstTag('error');
+                data_type := 'ERROR: ' + tmp_tag.Data();
+                error := true;
+                _data_list.Insert(0, 'ERROR: ' + tmp_tag.Data() + ', Code=' +
+                    tmp_tag.getAttribute('code'));
+                _data_list.Insert(1, 'Original Message was:');
+                end;
             end;
 
         delay := tag.QueryXPTag('/message/x[@xmlns="jabber:x:delay"]');
@@ -229,7 +241,8 @@ begin
             qTag := tag.getFirstTag('query');
             tmp_tag := qtag.getFirstTag('display');
             _data_list.Add(sMsgTimeInfo);
-            _data_list.Add(sMsgLocalTime + tmp_tag.Data);
+            if (tmp_tag <> nil) then
+                _data_list.Add(sMsgLocalTime + tmp_tag.Data);
             end
 
         else if ns = XMLNS_VERSION then begin
