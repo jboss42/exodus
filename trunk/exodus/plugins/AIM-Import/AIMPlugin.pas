@@ -28,7 +28,7 @@ uses
     ComObj, ActiveX, AIMImport_TLB, StdVcl;
 
 type
-  TAIMImportPlugin = class(TAutoObject, IAIMImportPlugin, IExodusPlugin)
+  TAIMImportPlugin = class(TAutoObject, IExodusPlugin)
   protected
     procedure Startup(const ExodusController: IExodusController); safecall;
     procedure Shutdown; safecall;

@@ -3064,6 +3064,21 @@ object frmPrefs: TfrmPrefs
         Height = 13
         Caption = 'Plugin Directory (automatically scanned):'
       end
+      object lblPluginScan: TLabel
+        Left = 16
+        Top = 324
+        Width = 155
+        Height = 13
+        Cursor = crHandPoint
+        Caption = 'Re-Scan this directory for plugins'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlue
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsUnderline]
+        ParentFont = False
+        OnClick = lblPluginScanClick
+      end
       object StaticText12: TStaticText
         Left = 0
         Top = 0
@@ -3096,14 +3111,16 @@ object frmPrefs: TfrmPrefs
         Width = 75
         Height = 25
         Caption = 'Configure'
+        Enabled = False
         TabOrder = 3
       end
-      object btnRemove: TButton
+      object btnRemovePlugin: TButton
         Left = 174
         Top = 240
         Width = 75
         Height = 25
         Caption = 'Remove'
+        Enabled = False
         TabOrder = 4
       end
       object txtPluginDir: TEdit
@@ -3116,11 +3133,12 @@ object frmPrefs: TfrmPrefs
       end
       object btnBrowsePluginPath: TButton
         Left = 239
-        Top = 299
+        Top = 298
         Width = 75
         Height = 25
         Caption = 'Browse'
         TabOrder = 6
+        OnClick = btnBrowsePluginPathClick
       end
       object lstPlugins: TTntListView
         Left = 0

@@ -161,7 +161,7 @@ var
 begin
     // load all of the plugins listed in the prefs
     s := TWideStringlist.Create();
-    MainSession.Prefs.fillStringList('plugins', s);
+    MainSession.Prefs.fillStringList('plugin_selected', s);
 
     for i := 0 to s.count - 1 do
         LoadPlugin(s[i]);
@@ -186,7 +186,7 @@ begin
                 mtError, [mbOK], 0);
             exit;
         end;
-end;
+    end;
 
     try
         plugin := IUnknown(idisp) as IExodusPlugin;
@@ -196,7 +196,7 @@ end;
                 mtError, [mbOK], 0);
             exit;
         end;
-end;
+    end;
 
     p := TPlugin.Create();
     p.com := plugin;
@@ -207,7 +207,7 @@ end;
         MessageDlg('Plugin class could not be initialized.',
             mtError, [mbOK], 0);
         exit;
-end;
+    end;
 end;
 
 {---------------------------------------}

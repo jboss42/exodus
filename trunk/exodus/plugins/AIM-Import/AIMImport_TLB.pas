@@ -11,8 +11,8 @@ unit AIMImport_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.6 $
-// File generated on 1/8/2003 7:37:53 AM from Type Library described below.
+// PASTLWTR : $Revision: 1.7 $
+// File generated on 1/8/2003 10:17:49 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\AIM-Import\AIMImport.tlb (1)
@@ -20,9 +20,9 @@ unit AIMImport_TLB;
 // LCID: 0
 // Helpfile: 
 // DepndLst: 
-//   (1) v1.0 ExodusCOM, (D:\src\exodus\runner\exodus.exe)
-//   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
-//   (3) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
+//   (1) v1.0 ExodusCOM, (D:\src\exodus\runner\Exodus.exe)
+//   (2) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
+//   (3) v4.0 StdVCL, (C:\WINNT\System32\STDVCL40.DLL)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -47,65 +47,40 @@ const
 
   LIBID_AIMImport: TGUID = '{1DC7B769-E8C0-42B0-BD6A-A89E9000854F}';
 
-  IID_IAIMImportPlugin: TGUID = '{78FCA3E3-8744-4A42-BF2D-BEFE03F0C837}';
   CLASS_AIMImportPlugin: TGUID = '{13E0E3B0-4CFB-4EE0-A508-C3B9EC969BAA}';
 type
-
-// *********************************************************************//
-// Forward declaration of types defined in TypeLibrary                    
-// *********************************************************************//
-  IAIMImportPlugin = interface;
-  IAIMImportPluginDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
 // (NOTE: Here we map each CoClass to its Default Interface)              
 // *********************************************************************//
-  AIMImportPlugin = IAIMImportPlugin;
+  AIMImportPlugin = IExodusPlugin;
 
-
-// *********************************************************************//
-// Interface: IAIMImportPlugin
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {78FCA3E3-8744-4A42-BF2D-BEFE03F0C837}
-// *********************************************************************//
-  IAIMImportPlugin = interface(IDispatch)
-    ['{78FCA3E3-8744-4A42-BF2D-BEFE03F0C837}']
-  end;
-
-// *********************************************************************//
-// DispIntf:  IAIMImportPluginDisp
-// Flags:     (4416) Dual OleAutomation Dispatchable
-// GUID:      {78FCA3E3-8744-4A42-BF2D-BEFE03F0C837}
-// *********************************************************************//
-  IAIMImportPluginDisp = dispinterface
-    ['{78FCA3E3-8744-4A42-BF2D-BEFE03F0C837}']
-  end;
 
 // *********************************************************************//
 // The Class CoAIMImportPlugin provides a Create and CreateRemote method to          
-// create instances of the default interface IAIMImportPlugin exposed by              
+// create instances of the default interface IExodusPlugin exposed by              
 // the CoClass AIMImportPlugin. The functions are intended to be used by             
 // clients wishing to automate the CoClass objects exposed by the         
 // server of this typelibrary.                                            
 // *********************************************************************//
   CoAIMImportPlugin = class
-    class function Create: IAIMImportPlugin;
-    class function CreateRemote(const MachineName: string): IAIMImportPlugin;
+    class function Create: IExodusPlugin;
+    class function CreateRemote(const MachineName: string): IExodusPlugin;
   end;
 
 implementation
 
 uses ComObj;
 
-class function CoAIMImportPlugin.Create: IAIMImportPlugin;
+class function CoAIMImportPlugin.Create: IExodusPlugin;
 begin
-  Result := CreateComObject(CLASS_AIMImportPlugin) as IAIMImportPlugin;
+  Result := CreateComObject(CLASS_AIMImportPlugin) as IExodusPlugin;
 end;
 
-class function CoAIMImportPlugin.CreateRemote(const MachineName: string): IAIMImportPlugin;
+class function CoAIMImportPlugin.CreateRemote(const MachineName: string): IExodusPlugin;
 begin
-  Result := CreateRemoteComObject(MachineName, CLASS_AIMImportPlugin) as IAIMImportPlugin;
+  Result := CreateRemoteComObject(MachineName, CLASS_AIMImportPlugin) as IExodusPlugin;
 end;
 
 end.
