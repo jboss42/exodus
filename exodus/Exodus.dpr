@@ -4,7 +4,6 @@ uses
   Forms,
   Controls,
   Windows,
-  ChatWin in 'ChatWin.pas' {frmChat},
   Jabber1 in 'Jabber1.pas' {frmJabber},
   Login in 'Login.pas' {frmLogin},
   RosterWindow in 'RosterWindow.pas' {frmRosterWindow},
@@ -13,7 +12,6 @@ uses
   Subscribe in 'subscribe.pas' {frmSubscribe},
   RosterAdd in 'RosterAdd.pas' {frmAdd},
   RemoveContact in 'RemoveContact.pas' {frmRemove},
-  Room in 'Room.pas' {frmRoom},
   JoinRoom in 'JoinRoom.pas' {frmJoinRoom},
   MsgRecv in 'MsgRecv.pas' {frmMsgRecv},
   Prefs in 'Prefs.pas' {frmPrefs},
@@ -66,7 +64,9 @@ uses
   GrpRemove in 'GrpRemove.pas' {frmGrpRemove},
   RegExpr in 'RegExpr.pas',
   Emoticons in 'Emoticons.pas' {frmEmoticons},
-  BaseChat in 'BaseChat.pas' {frmBaseChat};
+  BaseChat in 'BaseChat.pas' {frmBaseChat},
+  ChatWin in 'ChatWin.pas' {frmChat},
+  Room in 'Room.pas' {frmRoom};
 
 {$R *.RES}
 

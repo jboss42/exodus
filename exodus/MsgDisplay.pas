@@ -150,7 +150,10 @@ begin
         lm := emoticon_regex.MatchPos[0] + emoticon_regex.MatchLen[0];
         RichEdit.SelText := emoticon_regex.Match[1];
 
-        if (pic = nil) then pic := TPicture.Create();
+        if (pic = nil) then
+            pic := TPicture.Create()
+        else
+            pic.Graphic := nil;
 
         eo := nil;
         // Grab the match text and look it up in our emoticon list
