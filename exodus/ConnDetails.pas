@@ -51,21 +51,14 @@ type
     txtSocksPort: TTntEdit;
     txtSocksUsername: TTntEdit;
     txtSocksPassword: TTntEdit;
-    cboServer: TTntComboBox;
+    cboJabberID: TTntComboBox;
     chkSavePasswd: TTntCheckBox;
-    txtUsername: TTntEdit;
     txtPassword: TTntEdit;
     cboResource: TTntComboBox;
     tbsConn: TTntTabSheet;
-    Label8: TTntLabel;
-    cboConnection: TTntComboBox;
-    Label6: TTntLabel;
-    txtPriority: TTntEdit;
-    spnPriority: TUpDown;
     lblNote: TTntLabel;
     lblUsername: TTntLabel;
     Label10: TTntLabel;
-    Label11: TTntLabel;
     Label12: TTntLabel;
     lblServerList: TTntLabel;
     Label13: TTntLabel;
@@ -75,18 +68,21 @@ type
     TntLabel1: TTntLabel;
     txtSSLCert: TTntEdit;
     btnCertBrowse: TTntButton;
+    optSSL: TTntRadioGroup;
+    cboSocksType: TTntComboBox;
+    Label6: TTntLabel;
+    txtPriority: TTntEdit;
+    spnPriority: TUpDown;
     chkSRV: TTntCheckBox;
     boxHost: TTntGroupBox;
     Label4: TTntLabel;
+    Label7: TTntLabel;
     txtHost: TTntEdit;
     txtPort: TTntEdit;
-    Label7: TTntLabel;
-    optSSL: TTntRadioGroup;
-    cboSocksType: TTntComboBox;
+    chkPolling: TTntCheckBox;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure chkSocksAuthClick(Sender: TObject);
     procedure cboSocksTypeChange(Sender: TObject);
-    procedure cboConnectionChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure txtUsernameKeyPress(Sender: TObject; var Key: Char);
@@ -166,15 +162,11 @@ end;
 procedure TfrmConnDetails.frameButtons1btnOKClick(Sender: TObject);
 var
     valid: boolean;
-    jid, u, h, r: Widestring;
+    jid: Widestring;
 begin
     // Validate the JID..
-    u := txtUsername.Text;
-    h := cboServer.Text;
-    r := cboResource.Text;
-
-    jid := u + '@' + h + '/' + r;
-    valid := (Pos('@', u) = 0);
+    jid := cboJabberID.Text + '/' + cboResource.Text;
+    valid := (Pos('@', jid) > 0);
     if (valid) then
         valid := isValidJid(jid);
 
@@ -277,10 +269,9 @@ procedure TfrmConnDetails.RestoreProfile(profile: TJabberProfile);
 begin
     with profile do begin
         // populate the fields
-        txtUsername.Text := Username;
-        txtPassword.Text := Password;
-        cboServer.Text := Server;
+        cboJabberID.Text := Username + '@' + Server;
         cboResource.Text := Resource;
+        txtPassword.Text := Password;
         chkSavePasswd.Checked := SavePasswd;
         chkRegister.Checked := NewAccount;
     end;
@@ -288,11 +279,14 @@ end;
 
 {---------------------------------------}
 procedure TfrmConnDetails.SaveProfile(profile: TJabberProfile);
+var
+    jid: TJabberID;
 begin
     with Profile do begin
         // Update the profile
-        Server := cboServer.Text;
-        Username := txtUsername.Text;
+        jid := TJabberID.Create(cboJabberID.Text);
+        Server := jid.domain;
+        Username := jid.user;
         SavePasswd := chkSavePasswd.Checked;
         password := txtPassword.Text;
         resource := cboResource.Text;
@@ -311,7 +305,7 @@ begin
             ssl := ssl_tls;
         end;
         optSSL.ItemIndex := ssl;
-        cboConnection.ItemIndex := ConnectionType;
+        chkPolling.Checked := (ConnectionType = conn_http);
         spnPriority.Position := Priority;
         txtSSLCert.Text := SSL_Cert;
         chkSRV.Checked := srv;
@@ -326,7 +320,10 @@ begin
         Host := txtHost.Text;
         Port := StrToIntDef(txtPort.Text, 5222);
         ssl := optSSL.ItemIndex;
-        ConnectionType := cboConnection.ItemIndex;
+        if (chkPolling.Checked) then
+            ConnectionType := conn_http
+        else
+            ConnectionType := conn_normal;
         Priority := spnPriority.Position;
         SSL_Cert := txtSSLCert.Text;
     end;
@@ -359,18 +356,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmConnDetails.cboConnectionChange(Sender: TObject);
-begin
-    // Change the current tab and the profile info.
-    if cboConnection.ItemIndex = 0 then
-        PageControl1.ActivePage := tbsSocket
-    else
-        PageControl1.ActivePage := tbsHttp;
-
-    _profile.ConnectionType := cboConnection.ItemIndex;
-end;
-
-{---------------------------------------}
 procedure TfrmConnDetails.FormCreate(Sender: TObject);
 var
     list : TWideStrings;
@@ -380,16 +365,14 @@ begin
     TranslateComponent(Self);
 
     URLLabel(lblServerList);
-    lblNote.Font.Size := 10;
-
     MainSession.Prefs.RestorePosition(Self);
 
     list := TWideStringList.Create();
     MainSession.Prefs.fillStringList('brand_profile_server_list', list);
     if (list.Count > 0) then begin
-        cboServer.Clear();
+        cboJabberID.Items.Clear();
         for i := 0 to list.Count - 1 do
-            cboServer.Items.Add(list[i]);
+            cboJabberID.Items.Add('@' + list[i]);
     end;
     MainSession.Prefs.fillStringList('brand_profile_resource_list', list);
     if (list.Count > 0) then begin
@@ -424,21 +407,19 @@ end;
 procedure TfrmConnDetails.txtUsernameKeyPress(Sender: TObject;
   var Key: Char);
 var
-    u, h, r, jid: Widestring;
+    uh, r, jid: Widestring;
 begin
     // alway allow people to fix mistakes :)
     if (Key = #8) then exit;
 
     // check to make sure JID is valid
-    u := txtUsername.Text;
-    h := cboServer.Text;
+    uh := cboJabberID.Text;
     r := cboResource.Text;
 
-    if (Sender = txtUsername) then u := u + Key
-    else if (Sender = cboServer) then h := h + Key
+    if (Sender = cboJabberID) then uh := uh + Key
     else if (Sender = cboResource) then r := r + Key;
 
-    jid := u + '@' + h + '/' + r;
+    jid := uh + '/' + r;
     if (not isValidJid(jid)) then
         Key := #0;
 end;
@@ -468,9 +449,10 @@ begin
     if (parser.Count > 0) then begin
         q := parser.popTag();
         items := q.QueryTags('item');
-        if (items.Count > 0) then cboServer.Items.Clear();
+        if (items.Count > 0) then
+            cboJabberID.Items.Clear();
         for i := 0 to items.Count - 1 do
-            cboServer.Items.Add(items[i].getAttribute('jid'));
+            cboJabberID.Items.Add(items[i].getAttribute('jid'));
         items.Free();
         q.Free();
     end;
@@ -508,24 +490,17 @@ end;
 {---------------------------------------}
 procedure TfrmConnDetails.txtUsernameExit(Sender: TObject);
 var
+    jid: TJabberID;
     inp, outp: Widestring;
 begin
     // stringprep txtUsername, cboServer, or cboResource.
-    if (Sender = txtUsername) then begin
-        inp := txtUsername.Text;
-        outp := xmpp_nodeprep(inp);
-        if (outp = '') then
-            MessageDlgW(_('The username you entered is not allowed.'), mtError, [mbOK], 0)
+    if (Sender = cboJabberID) then begin
+        jid := TJabberID.Create(cboJabberID.Text);
+        if (not jid.isValid) then
+            MessageDlgW(_('The Jabber ID you entered is not allowed.'), mtError, [mbOK], 0)
         else
-            txtUsername.Text := outp;
-    end
-    else if (Sender = cboServer) then begin
-        inp := cboServer.Text;
-        outp := xmpp_nameprep(inp);
-        if (outp = '') then
-            MessageDlgW(_('The hostname you entered is invald.'), mtError, [mbOK], 0)
-        else
-            cboServer.Text := outp;
+            cboJabberID.Text := jid.jid;
+        jid.Free();
     end
     else if (Sender = cboResource) then begin
         inp := cboResource.Text;
