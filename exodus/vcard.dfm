@@ -27,7 +27,7 @@ object frmVCard: TfrmVCard
     Top = 0
     Width = 318
     Height = 292
-    ActivePage = TabSheet6
+    ActivePage = TabSheet3
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 0

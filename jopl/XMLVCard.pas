@@ -276,6 +276,8 @@ begin
         vtag := tag.GetFirstTag('vCard');
     if vtag = nil then exit;
 
+    if (vtag.ChildCount = 0) then exit;
+
     // Parse the name
     t1 := vtag.GetFirstTag('N');
     if t1 <> nil then begin
