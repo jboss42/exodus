@@ -436,6 +436,7 @@ begin
 
     from := tag.GetAttribute('from');
     i := _roster.indexOf(from);
+
     if (i < 0) then begin
         // some kind of server msg..
         tmp_jid := TJabberID.Create(from);
@@ -453,6 +454,8 @@ begin
                 Msg.Body := _('ERROR: ') + etag.Data
             else
                 Msg.Body := _('ERROR: ') + Msg.Body;
+            DisplayMsg(Msg, MsgList);
+            exit;
         end;
     end
     else begin
@@ -494,7 +497,7 @@ begin
             MsgOut.SetFocus();
     end;
 
-    if Msg.Subject <> '' then begin
+    if (Msg.Subject <> '') then begin
         _subject := Msg.Subject;
         lblSubject.Hint := AnsiReplaceText(_subject, '|', Chr(13));
         lblSubject.Caption := AnsiReplaceText(_subject, '&', '&&');
@@ -1271,10 +1274,8 @@ var
     msg: TJabberMessage;
 begin
     // send the msg out
-    msg := TJabberMessage.Create(jid,
-                                 'groupchat',
-                                 _(sRoomSubjChange) + subj,
-                                 subj);
+    msg := TJabberMessage.Create(jid, 'groupchat',
+                                 _(sRoomSubjChange) + subj, subj);
     MainSession.SendTag(msg.Tag);
     msg.Free;
 end;
@@ -1288,8 +1289,7 @@ begin
     s := _subject;
     o := s;
     if InputQueryW(_(sRoomSubjPrompt), _(sRoomNewSubj), s) then begin
-        if (o <> s) then
-            changeSubject(s);
+        if (o <> s) then changeSubject(s);
     end;
 end;
 

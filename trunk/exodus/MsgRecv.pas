@@ -382,13 +382,13 @@ begin
 
     DisablePopup();
 
-    if eType = evt_Invite then begin
+    if (eType = evt_Invite) then begin
         // Change button captions for TC Invites
         frameButtons1.btnOK.Caption := _(sAccept);
         frameButtons1.btnCancel.Caption := _(sDecline);
     end
 
-    else if e.error then begin
+    else if (e.error) then begin
         // This is an error.. show the error panel
         frameButtons1.btnOK.Visible := false;
         pnlError.Visible := true;
