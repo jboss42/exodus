@@ -395,7 +395,7 @@ begin
         Self.ResetPresImage();
     _check_event := false;
 
-    DoNotify(Self, 'notify_chatactivity', sChatActivity + OtherNick, 20);
+    DoNotify(Self, 'notify_chatactivity', sChatActivity + OtherNick, ico_user);
 
     if ((btag = nil) or (btag.Data = '')) then exit;
 

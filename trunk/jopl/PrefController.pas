@@ -425,6 +425,8 @@ begin
         result := '1'
     else if pkey = 'presence_message_send' then
         result := '1'
+    else if pkey = 'notify_sounds' then
+        result := '1'
     else
         result := '';
 end;

@@ -35,12 +35,16 @@ type
         procedure SetSession(js: TObject);
     end;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 
 uses
-    ChatWin, Subscribe, Notify,
+    ChatWin, Subscribe, Notify, Jabber1, 
     Roster, JabberID, Session;
 
+{---------------------------------------}
 procedure TGUIFactory.setSession(js: TObject);
 var
     s: TJabberSession;
@@ -50,6 +54,7 @@ begin
     _cb := s.RegisterCallback(SessionCallback, '/session')
 end;
 
+{---------------------------------------}
 procedure TGUIFactory.SessionCallback(event: string; tag: TXMLTag);
 var
     sjid: string;
@@ -60,13 +65,14 @@ var
     ri: TJabberRosterItem;
 begin
     // check for various events to start GUIS
-    
     if (event = '/session/gui/chat') then begin
         // New Chat Window
         tmp_jid := TJabberID.Create(tag.getAttribute('from'));
         chat := StartChat(tmp_jid.jid, tmp_jid.resource, false);
         chat.MsgCallback('xml', tag);
         tmp_jid.Free;
+        DoNotify(chat, 'notify_newchat', sNotifyChat + ''#10#13 +
+                 chat.Othernick, ico_user)
         end
 
     else if (event = '/session/gui/subscribe') then begin
@@ -107,13 +113,10 @@ begin
                 end;
             end;
         DoNotify(nil, 'notify_s10n',
-                 'Subscription from '#10#13 + sjid, 16);
+                 'Subscription from '#10#13 + sjid, ico_key);
         tmp_jid.Free();
         sub.Show;
-
         end;
-
-
 end;
 
 

@@ -62,6 +62,7 @@ type
     procedure popProfileClick(Sender: TObject);
     procedure popChatClick(Sender: TObject);
     procedure popMessageClick(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     { Private declarations }
     field_set: TStringList;
@@ -560,6 +561,14 @@ procedure TfrmJUD.popMessageClick(Sender: TObject);
 begin
   inherited;
     // Send a message to this person
+end;
+
+{---------------------------------------}
+procedure TfrmJUD.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  inherited;
+    if (cur_iq <> nil) then
+        cur_iq.Free();
 end;
 
 end.

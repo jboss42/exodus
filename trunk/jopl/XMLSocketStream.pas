@@ -113,7 +113,8 @@ end;
 procedure TSocketThread.Run;
 var
     bytes: longint;
-    utf, buff: string;
+    utf: string;
+    buff: WideString;
 begin
     {
     This procedure gets run continuously, until
@@ -152,7 +153,7 @@ begin
         else begin
             // Get any pending incoming data
             utf := _Socket.CurrentReadBuffer;
-            buff := Utf8ToAnsi(utf);
+            buff := UTF8Decode(utf);
 
             // We are shutting down, or we've got an exception, so just bail
             if ((Self.Stopped) or (Self.Suspended) or (Self.Terminated)) then
@@ -353,17 +354,15 @@ begin
     // connect to this server
     _socket := TIdTCPClient.Create(nil);
     _socket.Intercept := _ssl_int;
-    _socket.InterceptEnabled := false;
     _socket.RecvBufferSize := 4096;
+    _socket.Port := profile.port;
+    _socket.InterceptEnabled := profile.ssl;
 
     _server := profile.Server;
     if (profile.Host = '') then
         _socket.Host := profile.Server
     else
         _socket.Host := profile.Host;
-
-    _socket.Port := profile.port;
-    _socket.InterceptEnabled := profile.ssl;
 
     if (profile.SocksType <> 0) then begin
         with _socket.SocksInfo do begin

@@ -246,12 +246,12 @@ begin
             DoNotify(Self,
                      'notify_keyword',
                      sNotifyKeyword + Self.Caption + ': ' + _keywords.Match[1],
-                     21)
+                     ico_conf)
         else
             DoNotify(Self,
                      'notify_roomactivity',
                      sNotifyActivity + Self.Caption,
-                     21);
+                     ico_conf);
         end;
 end;
 

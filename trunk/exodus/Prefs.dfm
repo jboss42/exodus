@@ -20,7 +20,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 375
+    Height = 370
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1427,7 +1427,7 @@ object frmPrefs: TfrmPrefs
     Left = 89
     Top = 0
     Width = 310
-    Height = 375
+    Height = 370
     ActivePage = tbsNotify
     Align = alClient
     Constraints.MinHeight = 340
@@ -1776,7 +1776,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 102
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1863,7 +1863,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 97
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2057,7 +2057,7 @@ object frmPrefs: TfrmPrefs
       object StaticText11: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 111
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2092,9 +2092,27 @@ object frmPrefs: TfrmPrefs
     object tbsNotify: TTabSheet
       Caption = 'Notifications'
       ImageIndex = 6
+      object Label20: TLabel
+        Left = 169
+        Top = 34
+        Width = 93
+        Height = 13
+        Cursor = crHandPoint
+        Hint = 'Open Sounds Control Panel'
+        Caption = 'Configure Sounds...'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlue
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsUnderline]
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = Label20Click
+      end
       object chkNotify: TCheckListBox
         Left = 8
-        Top = 40
+        Top = 72
         Width = 257
         Height = 121
         ItemHeight = 13
@@ -2113,25 +2131,11 @@ object frmPrefs: TfrmPrefs
       end
       object optNotify: TGroupBox
         Left = 8
-        Top = 168
+        Top = 200
         Width = 257
-        Height = 105
+        Height = 73
         Caption = 'Notify Options'
         TabOrder = 1
-        object Label20: TLabel
-          Left = 153
-          Top = 74
-          Width = 93
-          Height = 13
-          Caption = 'Configure Sounds...'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clBlue
-          Font.Height = -11
-          Font.Name = 'MS Sans Serif'
-          Font.Style = [fsUnderline]
-          ParentFont = False
-          OnClick = Label20Click
-        end
         object chkFlash: TCheckBox
           Left = 8
           Top = 48
@@ -2148,15 +2152,6 @@ object frmPrefs: TfrmPrefs
           Height = 17
           Caption = 'Show a "Toast" popup'
           TabOrder = 1
-          OnClick = chkToastClick
-        end
-        object chkSound: TCheckBox
-          Left = 8
-          Top = 72
-          Width = 97
-          Height = 17
-          Caption = 'Play a Sound'
-          TabOrder = 2
           OnClick = chkToastClick
         end
       end
@@ -2177,6 +2172,28 @@ object frmPrefs: TfrmPrefs
         ParentColor = False
         ParentFont = False
         TabOrder = 2
+      end
+      object chkSound: TCheckBox
+        Left = 8
+        Top = 32
+        Width = 145
+        Height = 17
+        Caption = 'Use sound notifications'
+        TabOrder = 3
+        OnClick = chkToastClick
+      end
+      object chkNotifyActive: TCheckBox
+        Left = 8
+        Top = 49
+        Width = 169
+        Height = 17
+        Hint = 
+          'NOTE: Notifications always occur when Exodus is in the backgroun' +
+          'd.'
+        Caption = 'Do notifications  when active'
+        ParentShowHint = False
+        ShowHint = True
+        TabOrder = 4
       end
     end
     object tbsAway: TTabSheet
@@ -2221,7 +2238,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 124
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2299,7 +2316,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 112
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2333,7 +2350,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TLabel
           Left = 0
           Top = 0
-          Width = 302
+          Width = 256
           Height = 26
           Align = alTop
           Caption = 
@@ -2590,7 +2607,7 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 375
+    Top = 370
     Width = 399
     Height = 37
     Align = alBottom

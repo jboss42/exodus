@@ -62,7 +62,7 @@ implementation
 
 {$R *.dfm}
 uses
-    Session,
+    Session, Dockable, 
     Jabber1;
 
 {---------------------------------------}
@@ -212,8 +212,14 @@ end;
 procedure TfrmRiser.Panel2Click(Sender: TObject);
 begin
     Self.Close;
-    // Hey PGM: does this need to set _hidden on TfrmExodus?
-    ShowWindow(_clickForm.Handle, SW_SHOWNOACTIVATE);
+    if (_clickForm is TfrmDockable) then with TfrmDockable(_clickForm) do begin
+        if Docked then begin
+            frmExodus.Tabs.ActivePage := TabSheet;
+            frmExodus.Show();
+            exit;
+            end;
+        end;
+    _clickForm.Show();
 end;
 
 {---------------------------------------}
