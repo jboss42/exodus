@@ -223,6 +223,7 @@ object frmExodus: TfrmExodus
       Caption = '&Exodus'
       object Test1: TTntMenuItem
         Caption = 'Test'
+        Visible = False
         OnClick = Test1Click
       end
       object Connect2: TTntMenuItem

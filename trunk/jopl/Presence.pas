@@ -556,7 +556,7 @@ var
 begin
     // dispatch this to all interested listeners
     cmp := Lowercase(Trim(event));
-    invoking := true;
+    inc(_invoking);
     for i := 0 to Self.Count - 1 do begin
         e := Strings[i];
         l := TPresenceListener(Objects[i]);
@@ -581,9 +581,9 @@ begin
             end;
         end;
     end;
-    invoking := false;
+    dec(_invoking);
 
-    if change_list.Count > 0 then
+    if (change_list.Count > 0) and (_invoking = 0) then
         Self.processChangeList();
 
 end;

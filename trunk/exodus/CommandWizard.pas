@@ -75,7 +75,7 @@ type
 var
   frmCommandWizard: TfrmCommandWizard;
 
-procedure StartCommandWizard(jid: Widestring; r: TXMLTag = nil);
+procedure StartCommandWizard(jid: Widestring);
 
 {---------------------------------------}
 {---------------------------------------}
@@ -89,21 +89,14 @@ uses
     GnuGetText, JabberConst, Session, Entity, EntityCache;
 
 {---------------------------------------}
-procedure StartCommandWizard(jid: Widestring; r: TXMLTag);
+procedure StartCommandWizard(jid: Widestring);
 var
     f: TfrmCommandWizard;
 begin
     Application.CreateForm(TfrmCommandWizard, f);
     jEntityCache.getByFeature(XMLNS_COMMANDS, f.txtJid.Items);
 
-    if (r <> nil) then begin
-        f.jid := 'responder@domain';
-        f.state := cwzResults;
-        f.execCallback('xml', r);
-        f.show();
-        exit;
-    end
-    else if (jid = '') then begin
+    if (jid = '') then begin
         f.jid := '';
         f.state := cwzJid;
         f.txtJid.Text := '';
