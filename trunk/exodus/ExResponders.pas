@@ -123,6 +123,10 @@ var
 {---------------------------------------}
 implementation
 uses
+    {$ifdef TRACE_EXCEPTIONS}
+    IdException, JclDebug, JclHookExcept, TypInfo,
+    {$endif}
+
     COMController, ExSession, GnuGetText,
     JabberConst, Invite, Dialogs, PrefController, Registry, Forms,
     XferManager, xData, XMLUtils, Jabber1, JabberID, Notify, NodeItem, Roster;
@@ -205,6 +209,9 @@ var
     reg: TRegistry;
     sig: TSignal;
     l: TSignalListener;
+    {$ifdef TRACE_EXCEPTIONS}
+    sl: TStringlist;
+    {$endif}
 begin
     // We got an exception during signal dispatching.
     MessageDlgW(_(sExceptionMsg), mtError, [mbOK], 0);
@@ -246,12 +253,12 @@ begin
     e_data.Insert(0, ver);
 
     // Dump current plugins
-    e_data.Add('------------------------------');
+    e_data.Add('---------------------------------------');
     e_data.Add('Plugins:');
     for s := 0 to plugs.Count - 1 do begin
         e_data.Add(plugs[s]);
     end;
-    e_data.Add('------------------------------');
+    e_data.Add('---------------------------------------');
 
     // Dump current dispatcher table:
     e_data.Add('Dispatcher Dump');
@@ -259,7 +266,7 @@ begin
         for s := 0 to Count - 1 do begin
             sig := TSignal(Objects[s]);
             e_data.Add('SIGNAL: ' + Strings[s] + ' of class: ' + sig.ClassName);
-            e_data.Add('-----------------------------------');
+            e_data.Add('---------------------------------------');
             for i := 0 to sig.Count - 1 do begin
                 l := TSignalListener(sig.Objects[i]);
                 msg := 'LID: ' + IntToStr(l.cb_id) + ', ';
@@ -270,6 +277,18 @@ begin
             end;
         end;
     end;
+
+    {$ifdef TRACE_EXCEPTIONS}
+    e_data.Add('---------------------------------------');
+    e_data.Add('Stack Trace:');
+    e_data.Add('---------------------------------------');
+    sl := TStringlist.Create();
+    JclLastExceptStackListToStrings(sl, true, false, false);
+    for i := 0 to sl.count - 1 do
+        e_data.Add(sl[i]);
+    sl.Free();
+    e_data.Add('---------------------------------------');
+    {$endif}
 
 
     e_data.SaveToFile(fname);

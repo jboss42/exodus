@@ -46,7 +46,13 @@ grep unlink, glob("output/*.dcu"); # rm *.dcu
 e("$dcc $opts -Noutput IdleHooks.dpr");
 e("$rcc version.rc");
 e("$rcc xml.rc");
-e("$dcc $opts -Noutput -U\"$::TNT\" Exodus.dpr");
+
+if ($rtype eq "daily") {    
+    # Generate a detailed MAP file, and build in stack frame tracing
+    e("$dcc $opts -GP -DTRACE_EXCEPTIONS -Noutput -U\"$::TNT\" Exodus.dpr");
+} else {
+    e("$dcc $opts -D -Noutput -U\"$::TNT\" Exodus.dpr");
+}
 
 e("$::DXGETTEXT *.pas *.inc *.dpr *.xfm *.dfm prefs\\*.pas prefs\\*.inc prefs\\*.rc prefs\\*.dpr prefs\\*.xfm prefs\\*.dfm ..\\jopl\\*.pas ..\\jopl\\*.inc ..\\jopl\\*.rc ..\\jopl\\*.dpr ..\\jopl\\*.xfm ..\\jopl\\*.dfm");
 

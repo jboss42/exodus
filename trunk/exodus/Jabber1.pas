@@ -814,9 +814,10 @@ begin
 
     SetLength(_win32_tracker, 20);
     _win32_idx := 0;
+    Test1.Visible := false;
 
     {$ifdef TRACE_EXCEPTIONS}
-    Test1.Visible := true;
+    //Test1.Visible := true;
     {$endif}
 
     sExodusCWPHook := 0;
@@ -2580,7 +2581,7 @@ begin
     // LoadPlugin('RosterClean.ExodusRosterClean');
 
     // Cause an AV
-    //PInteger(nil)^ := 0;
+    PInteger(nil)^ := 0;
 
     // Show a toast window
     {
@@ -2591,7 +2592,7 @@ begin
         ShowRiserWindow(Self, 'Test Toast ' + IntToStr(i) + ' cvs commit from cvsnotify@jabberstudio.org', i);
     }
     //ShowRiserWindow(Self, 'Test Toast ' + IntToStr(i), i);
-    ShowRiserWindow(Self.Handle, 'Test Toast', 1);
+    //ShowRiserWindow(Self.Handle, 'Test Toast', 1);
 
     //TrackWindowsMsg(WM_ACTIVATEAPP);
     //TrackWindowsMsg(WM_ACTIVATE);
