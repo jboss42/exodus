@@ -92,8 +92,10 @@ end;
 {---------------------------------------}
 procedure TXMLHttpStream.Send(xml: string);
 begin
-    if (_thread <> nil) then
+    if (_thread <> nil) then begin
+        DoDataCallbacks(true, xml);
         _thread.Send(xml);
+        end;
 end;
 
 {---------------------------------------}
@@ -104,9 +106,29 @@ end;
 
 {---------------------------------------}
 procedure TXMLHttpStream.MsgHandler(var msg: TJabberMsg);
+var
+    tmps: string;
+    tag: TXMLTag;
 begin
     //
     case msg.lparam of
+
+        WM_XML: begin
+            // We are getting XML data from the thread
+            if _thread = nil then exit;
+
+            tag := _thread.GetTag;
+            if tag <> nil then begin
+                DoCallbacks('xml', tag);
+                end;
+            end;
+
+        WM_SOCKET: begin
+            // We are getting something on the socket
+            tmps := _thread.Data;
+            if tmps <> '' then
+                DoDataCallbacks(false, tmps);
+            end;
         WM_CONNECTED: begin
             // Socket is connected
             DoCallbacks('connected', nil);
@@ -169,6 +191,7 @@ procedure THttpThread.Send(xml: string);
 begin
     _lock.Acquire();
     _request.Add(xml);
+    // utf := AnsiToUTF8(xml);
     _lock.Release();
     _event.SetEvent();
 end;
@@ -189,6 +212,7 @@ begin
     try
         _lock.Acquire();
         _http.Post(_profile.URL, _request, _response);
+        _request.Clear();
         _lock.Release();
     except
         on E: Exception do begin
