@@ -2,7 +2,7 @@ object frmPrefs: TfrmPrefs
   Left = 255
   Top = 176
   Width = 468
-  Height = 428
+  Height = 455
   Caption = 'Exodus Preferences'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,14 +20,15 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 357
+    Height = 384
+    VertScrollBar.Position = 26
     Align = alLeft
     Color = clWindow
     ParentColor = False
     TabOrder = 0
     object imgDialog: TImage
       Left = 0
-      Top = 212
+      Top = 186
       Width = 68
       Height = 40
       Align = alTop
@@ -151,7 +152,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblDialog: TLabel
       Left = 0
-      Top = 252
+      Top = 226
       Width = 68
       Height = 13
       Align = alTop
@@ -162,7 +163,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgFonts: TImage
       Left = 0
-      Top = 159
+      Top = 133
       Width = 68
       Height = 40
       Align = alTop
@@ -404,7 +405,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblFonts: TLabel
       Left = 0
-      Top = 199
+      Top = 173
       Width = 68
       Height = 13
       Align = alTop
@@ -415,7 +416,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgS10n: TImage
       Left = 0
-      Top = 106
+      Top = 80
       Width = 68
       Height = 40
       Align = alTop
@@ -658,7 +659,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblS10n: TLabel
       Left = 0
-      Top = 146
+      Top = 120
       Width = 68
       Height = 13
       Align = alTop
@@ -670,7 +671,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgRoster: TImage
       Left = 0
-      Top = 53
+      Top = 27
       Width = 68
       Height = 40
       Align = alTop
@@ -794,7 +795,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblRoster: TLabel
       Left = 0
-      Top = 93
+      Top = 67
       Width = 68
       Height = 13
       Align = alTop
@@ -812,7 +813,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgSystem: TImage
       Left = 0
-      Top = 0
+      Top = -26
       Width = 68
       Height = 40
       Align = alTop
@@ -1054,7 +1055,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblSystem: TLabel
       Left = 0
-      Top = 40
+      Top = 14
       Width = 68
       Height = 13
       Align = alTop
@@ -1067,7 +1068,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgNotify: TImage
       Left = 0
-      Top = 265
+      Top = 239
       Width = 68
       Height = 40
       Align = alTop
@@ -1191,7 +1192,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblNotify: TLabel
       Left = 0
-      Top = 305
+      Top = 279
       Width = 68
       Height = 13
       Align = alTop
@@ -1202,7 +1203,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgAway: TImage
       Left = 0
-      Top = 371
+      Top = 345
       Width = 68
       Height = 40
       Align = alTop
@@ -1237,7 +1238,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblAway: TLabel
       Left = 0
-      Top = 411
+      Top = 385
       Width = 68
       Height = 13
       Align = alTop
@@ -1248,7 +1249,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgKeywords: TImage
       Left = 0
-      Top = 424
+      Top = 398
       Width = 68
       Height = 40
       Align = alTop
@@ -1283,7 +1284,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblKeywords: TLabel
       Left = 0
-      Top = 464
+      Top = 438
       Width = 68
       Height = 13
       Align = alTop
@@ -1294,7 +1295,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgBlockList: TImage
       Left = 0
-      Top = 477
+      Top = 451
       Width = 68
       Height = 40
       Align = alTop
@@ -1329,7 +1330,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblBlockList: TLabel
       Left = 0
-      Top = 517
+      Top = 491
       Width = 68
       Height = 13
       Align = alTop
@@ -1340,7 +1341,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgCustompres: TImage
       Left = 0
-      Top = 530
+      Top = 504
       Width = 68
       Height = 40
       Align = alTop
@@ -1375,7 +1376,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblCustomPres: TLabel
       Left = 0
-      Top = 570
+      Top = 544
       Width = 68
       Height = 13
       Align = alTop
@@ -1386,7 +1387,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgMessages: TImage
       Left = 0
-      Top = 318
+      Top = 292
       Width = 68
       Height = 40
       Align = alTop
@@ -1421,7 +1422,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblMessages: TLabel
       Left = 0
-      Top = 358
+      Top = 332
       Width = 68
       Height = 13
       Align = alTop
@@ -1432,7 +1433,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgPlugins: TImage
       Left = 0
-      Top = 583
+      Top = 557
       Width = 68
       Height = 40
       Align = alTop
@@ -1556,7 +1557,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblPlugins: TLabel
       Left = 0
-      Top = 623
+      Top = 597
       Width = 68
       Height = 13
       Align = alTop
@@ -1570,13 +1571,13 @@ object frmPrefs: TfrmPrefs
     Left = 89
     Top = 0
     Width = 371
-    Height = 357
-    ActivePage = tbsRoster
+    Height = 384
+    ActivePage = tbsMessages
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 0
+    TabIndex = 5
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1996,7 +1997,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 102
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2271,7 +2272,7 @@ object frmPrefs: TfrmPrefs
       ImageIndex = 5
       object Label19: TLabel
         Left = 26
-        Top = 101
+        Top = 109
         Width = 35
         Height = 13
         Caption = 'Format:'
@@ -2307,7 +2308,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkTimestamp: TCheckBox
         Left = 5
-        Top = 81
+        Top = 89
         Width = 156
         Height = 17
         Caption = 'Timestamp messages'
@@ -2349,7 +2350,7 @@ object frmPrefs: TfrmPrefs
       end
       object txtTimestampFmt: TEdit
         Left = 69
-        Top = 98
+        Top = 106
         Width = 164
         Height = 21
         TabOrder = 4
@@ -2437,6 +2438,14 @@ object frmPrefs: TfrmPrefs
           'Treat as a normal event'
           'Always popup window'
           'Auto-Accept all invites')
+      end
+      object chkBlockNonRoster: TCheckBox
+        Left = 5
+        Top = 72
+        Width = 252
+        Height = 17
+        Caption = 'Block messages from people not on my roster'
+        TabOrder = 15
       end
     end
     object tbsNotify: TTabSheet
@@ -3054,7 +3063,7 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 357
+    Top = 384
     Width = 460
     Height = 37
     Align = alBottom
@@ -3118,18 +3127,18 @@ object frmPrefs: TfrmPrefs
     MaxFontSize = 0
     Options = []
     Left = 29
-    Top = 363
+    Top = 387
   end
   object ColorDialog1: TColorDialog
     Ctl3D = True
     Left = 69
-    Top = 364
+    Top = 388
   end
   object OpenDialog1: TOpenDialog
     Filter = 'XML|*.xml'
     Options = [ofHideReadOnly, ofNoValidate, ofPathMustExist, ofEnableSizing]
     Title = 'Select a spool file'
     Left = 108
-    Top = 364
+    Top = 388
   end
 end

@@ -207,6 +207,7 @@ type
     Label21: TLabel;
     cboDblClick: TComboBox;
     chkRosterUnicode: TCheckBox;
+    chkBlockNonRoster: TCheckBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -403,6 +404,7 @@ begin
         chkMsgQueue.Checked := getBool('msg_queue');
         chkCloseQueue.Checked := getBool('close_queue');
         chkEmoticons.Checked := getBool('emoticons');
+        chkBlockNonRoster.Checked := getBool('block_nonroster');
         chkLog.Checked := getBool('log');
         chkLogRooms.Checked := getBool('log_rooms');
         txtLogPath.Text := getString('log_path');
@@ -540,6 +542,7 @@ begin
         setBool('timestamp', chkTimestamp.Checked);
         setString('timestamp_format', txtTimestampFmt.Text);
         setBool('emoticons', chkEmoticons.Checked);
+        setBool('block_nonroster', chkBlockNonRoster.Checked);
         setBool('msg_queue', chkMsgQueue.Checked);
         setBool('close_queue', chkCloseQueue.Checked);
         setBool('log', chkLog.Checked);
