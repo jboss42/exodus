@@ -34,14 +34,17 @@ type
     Splitter1: TSplitter;
     pnlInput: TPanel;
     Panel1: TPanel;
-    popOut: TPopupMenu;
+    popMsgList: TPopupMenu;
     Copy1: TMenuItem;
     CopyAll1: TMenuItem;
     Clear1: TMenuItem;
-    Emoticons1: TMenuItem;
-    Paste1: TMenuItem;
-    dash1: TMenuItem;
     MsgOut: TTntMemo;
+    popOut: TPopupMenu;
+    Copy2: TMenuItem;
+    Copy3: TMenuItem;
+    Paste2: TMenuItem;
+    N2: TMenuItem;
+    Emoticons2: TMenuItem;
 
     procedure Emoticons1Click(Sender: TObject);
     procedure MsgListURLClick(Sender: TObject; url: String);
@@ -58,6 +61,10 @@ type
     procedure Copy1Click(Sender: TObject);
     procedure Paste1Click(Sender: TObject);
     procedure FormResize(Sender: TObject);
+    procedure Copy2Click(Sender: TObject);
+    procedure Copy3Click(Sender: TObject);
+    procedure MsgListMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private declarations }
     _msgHistory : TStringList;
@@ -78,7 +85,7 @@ implementation
 
 {$R *.dfm}
 uses
-    Session, MsgDisplay, ShellAPI, Emoticons, Jabber1;
+    ClipBrd, Session, MsgDisplay, ShellAPI, Emoticons, Jabber1;
 
 {---------------------------------------}
 procedure TfrmBaseChat.Emoticons1Click(Sender: TObject);
@@ -341,6 +348,33 @@ procedure TfrmBaseChat.HideEmoticons();
 begin
     if frmEmoticons.Visible then
         frmEmoticons.Hide();
+end;
+
+{---------------------------------------}
+procedure TfrmBaseChat.Copy2Click(Sender: TObject);
+begin
+  inherited;
+    MsgOut.CopyToClipboard();
+    MsgOut.SelText := '';
+end;
+
+{---------------------------------------}
+procedure TfrmBaseChat.Copy3Click(Sender: TObject);
+begin
+  inherited;
+    MsgOut.CopyToClipboard();
+end;
+
+procedure TfrmBaseChat.MsgListMouseUp(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var
+    cp: TPoint;
+begin
+  inherited;
+    if (Button = mbRight) then begin
+        GetCursorPos(cp);
+        popMsgList.Popup(cp.x, cp.y);
+        end;
 end;
 
 end.

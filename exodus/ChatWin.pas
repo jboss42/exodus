@@ -79,6 +79,7 @@ type
     _scallback: integer;    // Session callback
     _thread : string;       // thread for conversation
     _pres_img: integer;     // current index of the presence image
+    _msg_out: boolean;
 
     // Stuff for composing events
     _flash_ticks: integer;
@@ -237,6 +238,7 @@ begin
     _check_event := false;
     _last_id := '';
     _reply_id := '';
+    _msg_out := false;
 
     if (MainSession.Profile.ConnectionType = conn_normal) then
         DragAcceptFiles( Handle, True );
@@ -244,6 +246,7 @@ begin
     SetupPrefs();
 
     mnuSendFile.Enabled := (MainSession.Profile.ConnectionType = conn_normal);
+
 end;
 
 procedure TfrmChat.SetupPrefs();

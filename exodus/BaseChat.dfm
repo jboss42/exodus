@@ -1,6 +1,6 @@
 object frmBaseChat: TfrmBaseChat
-  Left = 312
-  Top = 223
+  Left = 331
+  Top = 167
   Width = 388
   Height = 313
   Color = clBtnFace
@@ -119,7 +119,7 @@ object frmBaseChat: TfrmBaseChat
         end>
       LangOptions = [loAutoFont]
       Language = 1033
-      PopupMenu = popOut
+      PopupMenu = popMsgList
       ReadOnly = True
       ScrollBars = ssVertical
       ShowSelectionBar = False
@@ -127,6 +127,7 @@ object frmBaseChat: TfrmBaseChat
       URLColor = clBlue
       URLCursor = crHandPoint
       OnKeyPress = MsgListKeyPress
+      OnMouseUp = MsgListMouseUp
       OnURLClick = MsgListURLClick
       AutoVerbMenu = False
       InputFormat = ifUnicode
@@ -171,9 +172,9 @@ object frmBaseChat: TfrmBaseChat
     BorderWidth = 2
     TabOrder = 2
   end
-  object popOut: TPopupMenu
+  object popMsgList: TPopupMenu
     Left = 16
-    Top = 184
+    Top = 120
     object Copy1: TMenuItem
       Caption = 'Copy'
       OnClick = Copy1Click
@@ -182,18 +183,30 @@ object frmBaseChat: TfrmBaseChat
       Caption = 'Copy All'
       OnClick = CopyAll1Click
     end
-    object Paste1: TMenuItem
-      Caption = 'Paste'
-      OnClick = Paste1Click
-    end
     object Clear1: TMenuItem
       Caption = 'Clear'
       OnClick = Clear1Click
     end
-    object dash1: TMenuItem
+  end
+  object popOut: TPopupMenu
+    Left = 48
+    Top = 120
+    object Copy2: TMenuItem
+      Caption = 'Cut'
+      OnClick = Copy2Click
+    end
+    object Copy3: TMenuItem
+      Caption = 'Copy'
+      OnClick = Copy3Click
+    end
+    object Paste2: TMenuItem
+      Caption = 'Paste '
+      OnClick = Paste1Click
+    end
+    object N2: TMenuItem
       Caption = '-'
     end
-    object Emoticons1: TMenuItem
+    object Emoticons2: TMenuItem
       Caption = 'Emoticons'
       ShortCut = 16453
       OnClick = Emoticons1Click
