@@ -382,7 +382,7 @@ begin
     display status just like the roster window does.
     }
 
-    if ((f = Self) and (c = treeRoster)) then begin
+    if ((f = frmExodus) and (c = frmExodus.tbsRoster)) then begin
         // Tweak the hint properties for the roster,
         // this allows us to display custom hint text
         // which is set in the MouseMove event.
