@@ -283,14 +283,23 @@ begin
 
         connect_node := nil;
         if (xmpp_file <> '') then begin
+            if (not FileExists(xmpp_file)) then
+                MessageDlg('NO file:' + xmpp_file, mtWarning, [mbOK], 0);
             parser := TXMLTagParser.Create;
             parser.ParseFile(xmpp_file);
+
             if (parser.Count > 0) then begin
                 xmpp_node := parser.popTag();
+                if (xmpp_node.GetFirstTag('delete') <> nil) then
+                    SysUtils.DeleteFile(xmpp_file);  // ignore return, on purpose.
+
                 connect_node := xmpp_node.GetFirstTag('connect');
                 if (connect_node <> nil) then
                     jid := TJabberID.Create(connect_node.GetBasicText('host'));
-            end;
+
+            end
+            else
+              MessageDlg('Bad file:' + xmpp_file, mtWarning, [mbOK], 0);
             parser.Free();
         end;
 
