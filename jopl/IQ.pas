@@ -93,7 +93,8 @@ end;
 destructor TJabberIQ.Destroy;
 begin
     _timer.Free;
-    _js.UnRegisterCallback(_cbIndex);
+    if (_cbIndex >= 0) then
+        _js.UnRegisterCallback(_cbIndex);
     inherited Destroy;
 end;
 
