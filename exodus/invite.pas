@@ -129,7 +129,6 @@ var
     msg: TXMLTag;
     room: string;
     room_idx: integer;
-    tmp_jid: TJabberID;
 begin
     // Make sure we are actually in this room...
     room := cboRoom.Text;
