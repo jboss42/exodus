@@ -704,6 +704,7 @@ begin
 end;
 
 {---------------------------------------}
+{
 function ItemCompare(Item1, Item2: Pointer): integer;
 var
     j1, j2: TJabberEntity;
@@ -743,6 +744,7 @@ begin
         Result := AnsiCompareText(s2, s1);
 
 end;
+}
 
 {---------------------------------------}
 procedure TfrmBrowse.vwBrowseColumnClick(Sender: TObject;
@@ -757,7 +759,22 @@ begin
 
   cur_sort := Column.Index;
 
-  _blist.Sort(ItemCompare);
+  case cur_sort of
+  0: begin
+    if (cur_dir) then _blist.Sort(EntityNameCompareRev)
+        else _blist.Sort(EntityNameCompareRev);
+    end;
+  1: begin
+    if (cur_dir) then _blist.Sort(EntityJidCompareRev)
+        else _blist.Sort(EntityJidCompare);
+    end;
+  2: begin
+    if (cur_dir) then _blist.Sort(EntityCatCompareRev)
+        else _blist.Sort(EntityCatCompareRev);
+    end;
+  end;
+
+  // _blist.Sort(ItemCompare);
   vwBrowse.Refresh;
 end;
 

@@ -54,10 +54,25 @@ type
     procedure btnCancelClick(Sender: TObject);
     procedure optSpecifyClick(Sender: TObject);
     procedure txtServerFilterKeyPress(Sender: TObject; var Key: Char);
+    procedure lstRoomsChange(Sender: TObject; Item: TListItem;
+      Change: TItemChange);
+    procedure lstRoomsDblClick(Sender: TObject);
+    procedure txtServerFilterSelect(Sender: TObject);
+    procedure lstRoomsData(Sender: TObject; Item: TListItem);
+    procedure lstRoomsColumnClick(Sender: TObject; Column: TListColumn);
+    procedure txtServerFilterChange(Sender: TObject);
   private
     { Private declarations }
     _cb: integer;
+    _all: TList;
+    _filter: TList;
+    _cur: TList;
+
+    _cur_sort: integer;
+    _asc: boolean;
+
     procedure _addRoomJid(tmp: TJabberID);
+    procedure _processFilter();
   published
     procedure EntityCallback(event: string; tag: TXMLTag);
   public
@@ -148,6 +163,7 @@ begin
     end;
     tmp.Free();
     l.Free();
+    txtServerFilter.ItemIndex := 0;
 end;
 
 {---------------------------------------}
@@ -159,16 +175,20 @@ begin
 
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
+
+    _all := TList.Create();
+    _filter := TList.Create();
+    _cur := _all;
+    _cur_sort := 0;
+    _asc := true;
+
     _cb := MainSession.RegisterCallback(EntityCallback, '/session/entity/info');
+    txtServerFilter.Items.Add(_('- ALL SERVERS -'));
 end;
 
 {---------------------------------------}
 procedure TfrmJoinRoom.FormDestroy(Sender: TObject);
 begin
-    {
-    for i := 0 to lstRooms.Items.Count - 1 do
-        TJabberID(lstRooms.Items.Objects[i]).Free();
-    }
     if (MainSession <> nil) then
         MainSession.UnRegisterCallback(_cb);
 end;
@@ -231,19 +251,64 @@ end;
 procedure TfrmJoinRoom.btnFetchClick(Sender: TObject);
 begin
     jEntityCache.fetch(txtServerFilter.Text, MainSession, false);
+    _processFilter();
 end;
 
 {---------------------------------------}
 procedure TfrmJoinRoom._addRoomJid(tmp: TJabberID);
 var
+    ce: TJabberEntity;
     tmps, n: Widestring;
-    li: TTntListItem;
 begin
     n := tmp.User;
     tmps := tmp.Domain;
-    li := lstRooms.Items.Add();
-    li.Caption := n;
-    li.SubItems.Add(tmps);
+    ce := jEntityCache.getByJid(tmp.full);
+    if (ce = nil) then exit;
+
+    // make sure to not add dupes.
+    if (_all.IndexOf(ce) = -1) then begin
+        _all.Add(ce);
+        _processFilter();
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmJoinRoom._processFilter();
+var
+    ce: TJabberEntity;
+    e, i: integer;
+    f: Widestring;
+begin
+    // filter on the current dropdown..
+    i := txtServerFilter.ItemIndex;
+
+    if (i = 0) then
+        _cur := _all
+    else begin
+        f := txtServerFilter.Text;
+        _filter.Clear();
+        for e := 0 to _all.Count - 1 do begin
+            ce := TJabberEntity(_all[e]);
+            if (ce.jid.domain = f) then
+                _filter.Add(ce);
+        end;
+        _cur := _filter;
+    end;
+
+    if (_cur_sort = 0) then begin
+        if (_asc) then
+            _cur.Sort(EntityJidCompare)
+        else
+            _cur.Sort(EntityJidCompareRev);
+    end
+    else begin
+        if (_asc) then
+            _cur.Sort(EntityDomainCompare)
+        else
+            _cur.Sort(EntityDomainCompare);
+    end;
+    lstRooms.Items.Count := _cur.Count;
+    lstRooms.Invalidate();
 end;
 
 {---------------------------------------}
@@ -253,18 +318,24 @@ var
     ce: TJabberEntity;
 begin
     tmp := TJabberID.Create(tag.getAttribute('from'));
-    if (tmp.user = '') then begin
-        tmp.Free();
-        exit;
-    end;
-
     ce := jEntityCache.getByJid(tmp.full);
     if (ce = nil) then begin
         tmp.Free();
         exit;
     end;
 
-    if (ce.hasFeature(FEAT_GROUPCHAT)) then
+    if (not ce.hasFeature(FEAT_GROUPCHAT)) then begin
+        tmp.Free();
+        exit;
+    end;
+
+    if (tmp.user = '') then begin
+        if (txtServer.Items.IndexOf(tmp.domain) = -1) then begin
+            txtServer.Items.Add(tmp.domain);
+            txtServerFilter.Items.Add(tmp.domain);
+        end;
+    end
+    else
         _addRoomJid(tmp);
     tmp.Free();
 end;
@@ -293,13 +364,78 @@ begin
     txtPassword.Enabled := optSpecify.Checked;
 end;
 
+{---------------------------------------}
 procedure TfrmJoinRoom.txtServerFilterKeyPress(Sender: TObject;
   var Key: Char);
 begin
   inherited;
     if (Key = Chr(13)) then begin
         jEntityCache.fetch(txtServerFilter.Text, MainSession, false);
+        _processFilter();
+        Key := Chr(0);
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmJoinRoom.lstRoomsChange(Sender: TObject; Item: TListItem;
+  Change: TItemChange);
+var
+    li: TTntListItem;
+begin
+    li := lstRooms.Selected;
+    if (li = nil) then exit;
+
+    txtServer.Text := li.SubItems[0];
+    txtRoom.Text := li.Caption;
+end;
+
+{---------------------------------------}
+procedure TfrmJoinRoom.lstRoomsDblClick(Sender: TObject);
+begin
+    btnNextClick(Self);
+end;
+
+{---------------------------------------}
+procedure TfrmJoinRoom.txtServerFilterSelect(Sender: TObject);
+begin
+    btnFetch.Enabled := (txtServerFilter.ItemIndex <> 0);
+
+    // Filter on this server.
+    _processFilter();
+end;
+
+{---------------------------------------}
+procedure TfrmJoinRoom.lstRoomsData(Sender: TObject; Item: TListItem);
+var
+    i: integer;
+    ce: TJabberEntity;
+begin
+    // populate this item from the current list
+    i := Item.Index;
+    if ((i < 0) or (i > _cur.Count)) then exit;
+    ce := TJabberEntity(_cur[i]);
+    Item.Caption := ce.Jid.user;
+    Item.SubItems.Add(ce.jid.domain);
+end;
+
+procedure TfrmJoinRoom.lstRoomsColumnClick(Sender: TObject;
+  Column: TListColumn);
+begin
+  inherited;
+    if (Column.Index = 2) then exit;
+
+    if (Column.Index = _cur_sort) then
+        _asc := not _asc
+    else begin
+        _cur_sort := Column.Index;
+        _asc := true;
+    end;
+    _processFilter();
+end;
+
+procedure TfrmJoinRoom.txtServerFilterChange(Sender: TObject);
+begin
+    btnFetch.Enabled := (txtServerFilter.ItemIndex <> 0);
 end;
 
 end.
