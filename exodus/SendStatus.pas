@@ -360,7 +360,6 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-
 procedure TfSendStatus.Setup(pkg: TFileXferPkg);
 begin
     _pkg := pkg;
@@ -389,6 +388,10 @@ procedure TfSendStatus.EntityCallback(event: string; tag: TXMLTag);
 var
     e: TJabberEntity;
 begin
+    // This event should never timeout
+    assert(_pkg <> nil);
+    assert(tag <> nil);
+    
     if (tag.getAttribute('from') <> _pkg.recip) then exit;
 
     _iq := nil;

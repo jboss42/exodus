@@ -306,6 +306,11 @@ end;
 procedure TChatController.timMemoryTimer(Sender: TObject);
 begin
     // time to free the window if we still have no refs.
+    if (msg_queue.AtLeast(1)) then begin
+        stopTimer();
+        exit;
+    end;
+    
     if (_refs = 0) then Self.Free();
 end;
 
