@@ -857,7 +857,11 @@ begin
     inherited;
     btnClose.Visible := Docked;
     if (Docked) then Self.TabSheet.ImageIndex := -1;
-    DragAcceptFiles( Handle, not Docked);
+    DragAcceptFiles(Handle, not Docked);
+
+    // scroll the MsgView to the bottom.
+    _scrollBottom();
+    Self.Refresh();
 end;
 
 {---------------------------------------}

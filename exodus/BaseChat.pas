@@ -74,6 +74,7 @@ type
 
   protected
     _embed_returns: boolean;
+    procedure _scrollBottom();
 
   public
     { Public declarations }
@@ -405,5 +406,28 @@ begin
         MsgList.PopupMenu.Popup(cp.x, cp.y);
     end;
 end;
+
+{---------------------------------------}
+procedure TfrmBaseChat._scrollBottom();
+var
+    vis_l: integer;
+    top_c, bot_c: integer;
+    top_l, bot_l: integer;
+    p: TPoint;
+
+begin
+    with MsgList do begin
+        p := Point(0, 0);
+        top_c := Perform(EM_CHARFROMPOS, 0, Integer(@P));
+        top_l := Perform(EM_LINEFROMCHAR, top_c, 0);
+        p := Point(0, ClientHeight);
+        bot_c := Perform(EM_CHARFROMPOS, 0, Integer(@P));
+        bot_l := Perform(EM_LINEFROMCHAR, bot_c, 0);
+        vis_l := bot_l - top_l;
+        Perform(EM_LINESCROLL, 0, Lines.Count - vis_l + 1);
+        Invalidate();
+    end;
+end;
+
 
 end.

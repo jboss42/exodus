@@ -1289,6 +1289,10 @@ begin
         Self.TabSheet.ImageIndex := -1;
 
     btnClose.Visible := Docked;
+
+    // scroll the MsgView to the bottom.
+    _scrollBottom();
+    Self.Refresh();
 end;
 
 {---------------------------------------}
