@@ -36,7 +36,8 @@ uses
   Unicode in '..\jopl\Unicode.pas',
   test_widestringlist in 'test_widestringlist.pas',
   test_prep in 'test_prep.pas',
-  stringprep in '..\jopl\stringprep.pas';
+  stringprep in '..\jopl\stringprep.pas',
+  RegExpr in '..\jopl\RegExpr.pas';
 
 {$R *.res}
 
@@ -49,6 +50,7 @@ begin
   // Hack DUnit so that it automatically runs the tests
 
   Application.Title := 'DUnit';
+  //Application.CreateForm(TGUITestRunner, MyForm);
   Application.CreateForm(TGUITestRunner, MyForm);
   with MyForm do begin
         Show();

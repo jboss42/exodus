@@ -21,13 +21,13 @@ var
     uin: String;
     uout: PChar;
 begin
+    Result := '';
     try
         uin := UTF8Encode(input);
         uout := jabber_nodeprep(PChar(uin));
         Result := UTF8Decode(uout);
         if (uout <> nil) then SysFreeMem(uout);
     except
-        Result := '';
     end;
 end;
 
@@ -36,13 +36,13 @@ var
     uin: String;
     uout: PChar;
 begin
+    Result := '';
     try
         uin := UTF8Encode(input);
         uout := jabber_nameprep(PChar(uin));
         Result := UTF8Decode(uout);
         if (uout <> nil) then SysFreeMem(uout);
     except
-        Result := '';
     end;
 end;
 
@@ -51,13 +51,13 @@ var
     uin: String;
     uout: PChar;
 begin
+    Result := '';
     try
         uin := UTF8Encode(input);
         uout := jabber_resourceprep(PChar(uin));
         Result := UTF8Decode(uout);
         if (uout <> nil) then SysFreeMem(uout);
     except
-        Result := '';
     end;
 end;
 
