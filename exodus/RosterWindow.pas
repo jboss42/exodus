@@ -548,7 +548,8 @@ begin
         bi := MainSession.Roster.Bookmarks.indexOf(tag.getAttribute('jid'));
         if bi >= 0 then begin
             bm := TJabberBookmark(MainSession.roster.Bookmarks.Objects[bi]);
-            RenderBookmark(bm);
+            if (bm <> nil) then
+                RenderBookmark(bm);
         end;
     end
     else if event = '/roster/item' then begin
@@ -1652,6 +1653,7 @@ var
     d_grp: Widestring;
     d_node: TTreeNode;
     s_node: TTreeNode;
+    grp_rect: TRect;
 begin
     // Drop the roster items onto the roster
 
@@ -1672,6 +1674,14 @@ begin
     for i := 0 to treeRoster.SelectionCount - 1 do begin
         s_node := treeRoster.Selections[i];
         ritem := TJabberRosterItem(s_node.Data);
+
+        // invalidate the old parent
+        if (s_node.Parent <> nil) then begin
+            grp_rect := s_node.Parent.DisplayRect(false);
+            InvalidateRect(treeRoster.Handle, @grp_rect, false);
+        end;
+
+        // change the ritem object
         if ritem <> nil then begin
             if (ritem.Groups.IndexOf(d_grp) < 0) then begin
                 if (not _drop_copy) then
@@ -1685,6 +1695,12 @@ begin
     // Make sure d_grp is expanded if it's not in _collapsed_grps
     if ((not d_node.expanded) and (_collapsed_grps.IndexOf(d_grp) < 0)) then
         d_node.Expand(true);
+
+    // Re-Draw both group nodes
+    grp_rect := d_node.DisplayRect(false);
+    InvalidateRect(treeRoster.Handle, @grp_rect, false);
+
+    treeRoster.Repaint();
 
 end;
 

@@ -152,7 +152,8 @@ uses
   PrefNetwork in 'prefs\PrefNetwork.pas' {frmPrefNetwork},
   PrefGroups in 'prefs\PrefGroups.pas' {frmPrefGroups},
   HttpProxyIOHandler in '..\jopl\HttpProxyIOHandler.pas',
-  GTLanguagesEx in 'GTLanguagesEx.pas';
+  GTLanguagesEx in 'GTLanguagesEx.pas',
+  PrefLayouts in 'prefs\PrefLayouts.pas' {frmPrefLayouts};
 
 {$R *.TLB}
 
@@ -174,6 +175,7 @@ begin
   if (not continue) then exit;
 
   Application.CreateForm(TfrmExodus, frmExodus);
+  Application.CreateForm(TfrmPrefLayouts, frmPrefLayouts);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);

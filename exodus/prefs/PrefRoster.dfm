@@ -1,18 +1,18 @@
 inherited frmPrefRoster: TfrmPrefRoster
-  Left = 236
-  Top = 161
+  Left = 265
+  Top = 156
   Caption = 'frmPrefRoster'
-  ClientHeight = 201
+  ClientHeight = 244
   ClientWidth = 344
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   object Label21: TLabel
     Left = 0
-    Top = 141
-    Width = 93
+    Top = 117
+    Width = 164
     Height = 13
-    Caption = 'Double Click Action'
+    Caption = 'When I double click a contact, do:'
   end
   object StaticText1: TStaticText
     Left = 0
@@ -36,9 +36,9 @@ inherited frmPrefRoster: TfrmPrefRoster
   object chkShowUnsubs: TCheckBox
     Left = 0
     Top = 25
-    Width = 209
+    Width = 265
     Height = 17
-    Caption = 'Show unsubscribed contacts.'
+    Caption = 'Show contacts who can not see my presence'
     TabOrder = 1
   end
   object chkHideBlocked: TCheckBox
@@ -52,35 +52,27 @@ inherited frmPrefRoster: TfrmPrefRoster
   object chkPresErrors: TCheckBox
     Left = 0
     Top = 78
-    Width = 209
+    Width = 321
     Height = 17
-    Caption = 'Detect invalid roster items'
+    Caption = 'Detect contacts which are unreachable or no longer exist'
     TabOrder = 3
   end
   object chkShowPending: TCheckBox
     Left = 0
     Top = 42
-    Width = 161
+    Width = 289
     Height = 17
-    Caption = 'Show pending contacts'
+    Caption = 'Show contacts I have asked to add as "Pending"'
     TabOrder = 4
-  end
-  object chkMessenger: TCheckBox
-    Left = 0
-    Top = 94
-    Width = 273
-    Height = 17
-    Caption = 'Roster && Msg Queue share a tab when expanded'
-    TabOrder = 5
   end
   object cboDblClick: TComboBox
     Left = 24
-    Top = 157
+    Top = 133
     Width = 201
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 6
+    TabOrder = 5
     Items.Strings = (
       'A new one to one chat window'
       'An instant message window'
@@ -88,10 +80,31 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object chkRosterUnicode: TCheckBox
     Left = 0
-    Top = 111
+    Top = 95
     Width = 328
     Height = 17
     Caption = 'Allow Unicode characters in the roster (requires 2000, ME, XP).'
+    TabOrder = 6
+  end
+  object chkInlineStatus: TCheckBox
+    Left = 0
+    Top = 168
+    Width = 241
+    Height = 17
+    Caption = 'Show status in the roster: Joe <Meeting>'
     TabOrder = 7
+    OnClick = chkInlineStatusClick
+  end
+  object cboInlineStatus: TColorBox
+    Left = 24
+    Top = 187
+    Width = 201
+    Height = 22
+    DefaultColorColor = clBlue
+    Selected = clBlue
+    Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
+    DropDownCount = 12
+    ItemHeight = 16
+    TabOrder = 8
   end
 end

@@ -2,7 +2,7 @@ inherited frmPrefTransfer: TfrmPrefTransfer
   Left = 249
   Top = 172
   Caption = 'frmPrefTransfer'
-  ClientHeight = 471
+  ClientHeight = 343
   ClientWidth = 441
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -15,8 +15,8 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     Caption = 'File transfer download directory:'
   end
   object Label2: TLabel
-    Left = 8
-    Top = 448
+    Left = 0
+    Top = 320
     Width = 184
     Height = 13
     Cursor = crHandPoint
@@ -29,101 +29,9 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     ParentFont = False
     OnClick = Label2Click
   end
-  object StaticText7: TStaticText
-    Left = 0
-    Top = 0
-    Width = 441
-    Height = 20
-    Align = alTop
-    Alignment = taCenter
-    Caption = 'File Transfer Options'
-    Color = clHighlight
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clCaptionText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-    TabOrder = 0
-    Transparent = False
-  end
-  object txtXFerPath: TEdit
-    Left = 21
-    Top = 51
-    Width = 188
-    Height = 21
-    TabOrder = 1
-  end
-  object btnTransferBrowse: TButton
-    Left = 214
-    Top = 49
-    Width = 75
-    Height = 25
-    Caption = 'Browse'
-    TabOrder = 2
-    OnClick = btnTransferBrowseClick
-  end
-  object optPeer: TRadioButton
-    Left = 0
-    Top = 88
-    Width = 281
-    Height = 17
-    Caption = 'Send files directly from my machine to the recipient'
-    Checked = True
-    TabOrder = 3
-    TabStop = True
-    OnClick = optWebDavClick
-  end
-  object grpPeer: TGroupBox
-    Left = 16
-    Top = 104
-    Width = 281
-    Height = 113
-    TabOrder = 4
-    object Label1: TLabel
-      Left = 16
-      Top = 19
-      Width = 160
-      Height = 13
-      Caption = 'Port to use for HTTP file transfers:'
-    end
-    object txtPort: TEdit
-      Left = 37
-      Top = 36
-      Width = 140
-      Height = 21
-      TabOrder = 0
-    end
-    object chkIP: TCheckBox
-      Left = 16
-      Top = 64
-      Width = 249
-      Height = 17
-      Caption = 'Use a custom IP address for HTTP transfers'
-      TabOrder = 1
-      OnClick = chkIPClick
-    end
-    object txtIP: TEdit
-      Left = 37
-      Top = 84
-      Width = 140
-      Height = 21
-      TabOrder = 2
-    end
-  end
-  object optWebDav: TRadioButton
-    Left = 0
-    Top = 230
-    Width = 281
-    Height = 17
-    Caption = 'Use a Web server to host the files which I send'
-    TabOrder = 5
-    OnClick = optWebDavClick
-  end
   object grpWebDav: TGroupBox
     Left = 16
-    Top = 248
+    Top = 130
     Width = 281
     Height = 177
     TabOrder = 6
@@ -212,5 +120,97 @@ inherited frmPrefTransfer: TfrmPrefTransfer
       PasswordChar = '*'
       TabOrder = 4
     end
+  end
+  object StaticText7: TStaticText
+    Left = 0
+    Top = 0
+    Width = 441
+    Height = 20
+    Align = alTop
+    Alignment = taCenter
+    Caption = 'File Transfer Options'
+    Color = clHighlight
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clCaptionText
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+    TabOrder = 0
+    Transparent = False
+  end
+  object txtXFerPath: TEdit
+    Left = 21
+    Top = 51
+    Width = 188
+    Height = 21
+    TabOrder = 1
+  end
+  object btnTransferBrowse: TButton
+    Left = 214
+    Top = 49
+    Width = 75
+    Height = 25
+    Caption = 'Browse'
+    TabOrder = 2
+    OnClick = btnTransferBrowseClick
+  end
+  object optPeer: TRadioButton
+    Left = 0
+    Top = 88
+    Width = 281
+    Height = 17
+    Caption = 'Send files directly from my machine to the recipient'
+    Checked = True
+    TabOrder = 3
+    TabStop = True
+    OnClick = optWebDavClick
+  end
+  object grpPeer: TGroupBox
+    Left = 16
+    Top = 128
+    Width = 281
+    Height = 113
+    TabOrder = 4
+    object Label1: TLabel
+      Left = 16
+      Top = 19
+      Width = 160
+      Height = 13
+      Caption = 'Port to use for HTTP file transfers:'
+    end
+    object txtPort: TEdit
+      Left = 37
+      Top = 36
+      Width = 140
+      Height = 21
+      TabOrder = 0
+    end
+    object chkIP: TCheckBox
+      Left = 16
+      Top = 64
+      Width = 249
+      Height = 17
+      Caption = 'Use a custom IP address for HTTP transfers'
+      TabOrder = 1
+      OnClick = chkIPClick
+    end
+    object txtIP: TEdit
+      Left = 37
+      Top = 84
+      Width = 140
+      Height = 21
+      TabOrder = 2
+    end
+  end
+  object optWebDav: TRadioButton
+    Left = 0
+    Top = 110
+    Width = 281
+    Height = 17
+    Caption = 'Use a Web server to host the files which I send'
+    TabOrder = 5
+    OnClick = optWebDavClick
   end
 end

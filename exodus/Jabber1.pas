@@ -264,6 +264,7 @@ type
     _auto_away: boolean;                // are we auto away
     _auto_away_interval: integer;
     _last_tick: dword;                  // last tick when something happened
+    _expanded: boolean;                 // are we expanded or not?
 
     // Various state flags
     _windows_ver: integer;
@@ -351,6 +352,7 @@ type
     procedure restoreAlpha;
     procedure restoreMenus(enable: boolean);
     procedure restoreRoster();
+    procedure setupExpanded(newval: boolean);
 
   public
     ActiveChat: TfrmBaseChat;
@@ -721,6 +723,7 @@ var
     menu_list: TWideStringList;
     i : integer;
     mi: TMenuItem;
+    s: TXMLTag;
 begin
     {$ifdef TRACE_EXCEPTIONS}
     // Application.OnException := ApplicationException;
@@ -800,7 +803,10 @@ begin
 
     // Setup various callbacks, timers, etc.
     setupAutoAwayTimer();
-    Self.SessionCallback('/session/prefs', nil);
+    s := TXMLTag.Create('startup');
+    Self.SessionCallback('/session/prefs', s);
+    s.Free();
+
     Self.setupTrayIcon();
     ConfigEmoticons();
 
@@ -855,11 +861,14 @@ begin
 
     // Creat and dock the MsgQueue if we're in expanded mode
     if (MainSession.Prefs.getBool('expanded')) then begin
+        _expanded := true;
         getMsgQueue();
         frmMsgQueue.ManualDock(Self.pnlRight, nil, alClient);
         frmMsgQueue.Align := alClient;
         frmMsgQueue.Show;
-    end;
+    end
+    else
+        _expanded := false;
 
     // auto-login if enabled, otherwise, show the login window
     // Note that we use a Windows Msg to do this to show the login
@@ -978,6 +987,7 @@ procedure TfrmExodus.SessionCallback(event: string; tag: TXMLTag);
 var
     rtries, rint: integer; 
     msg : TMessage;
+    exp: boolean;
 begin
     // session related events
     if event = '/session/connected' then begin
@@ -1176,10 +1186,15 @@ begin
         restoreMenus(MainSession.Active);
         restoreToolbar();
         restoreAlpha();
-        restoreRoster();
 
-        if not MainSession.Prefs.getBool('expanded') then
-            tbsRoster.TabVisible := false;
+        exp := MainSession.Prefs.getBool('expanded');
+        tbsRoster.TabVisible := exp;
+        if ((_expanded <> exp) and (tag = nil)) then begin
+            _expanded := exp;
+            setupExpanded(_expanded);
+        end
+        else
+            restoreRoster();
     end
 
     else if (event = '/session/presence') then begin
@@ -1485,11 +1500,18 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.btnExpandedClick(Sender: TObject);
 var
-    delta, w: longint;
     newval: boolean;
 begin
     // either expand or compress the whole thing
     newval := not MainSession.Prefs.getBool('expanded');
+    setupExpanded(newval);
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.setupExpanded(newval: boolean);
+var
+    delta, w: longint;
+begin
     mnuExpanded.Checked := newval;
 
     // this is how much we're changing
@@ -1514,7 +1536,6 @@ begin
         Self.ClientWidth := Self.ClientWidth - w;
         Self.Show;
     end;
-
 
     MainSession.Prefs.RestorePosition(Self);
     restoreToolbar();
@@ -1617,8 +1638,7 @@ begin
     else begin
         // Undock the MsgQueue... if it's empty, close it.
         if (frmMsgQueue <> nil) then begin
-            if ((frmMsgQueue.lstEvents.Items.Count > 0) and
-                (not MainSession.Prefs.getBool('close_queue'))) then begin
+            if (frmMsgQueue.lstEvents.Items.Count > 0) then begin
                 frmMsgQueue.Align := alNone;
                 frmMsgQueue.FloatForm;
             end

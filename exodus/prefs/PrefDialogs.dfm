@@ -1,7 +1,8 @@
 inherited frmPrefDialogs: TfrmPrefDialogs
-  Left = 216
-  Top = 545
+  Left = 257
+  Top = 156
   Caption = 'frmPrefDialogs'
+  ClientHeight = 462
   ClientWidth = 362
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -27,32 +28,13 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Height = 13
     Caption = 'Toast duration (seconds):'
   end
-  object StaticText5: TStaticText
-    Left = 0
-    Top = 0
-    Width = 362
-    Height = 20
-    Align = alTop
-    Alignment = taCenter
-    Caption = 'Dialog Options'
-    Color = clHighlight
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clCaptionText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-    TabOrder = 0
-    Transparent = False
-  end
   object chkRosterAlpha: TCheckBox
     Left = 8
     Top = 32
     Width = 209
     Height = 17
     Caption = 'Use Alpha Blending for Roster '
-    TabOrder = 1
+    TabOrder = 0
     OnClick = chkRosterAlphaClick
   end
   object trkRosterAlpha: TTrackBar
@@ -65,7 +47,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Min = 10
     Frequency = 5
     Position = 255
-    TabOrder = 2
+    TabOrder = 1
     ThumbLength = 15
     TickStyle = tsNone
     OnChange = trkRosterAlphaChange
@@ -76,7 +58,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Width = 49
     Height = 21
     Enabled = False
-    TabOrder = 3
+    TabOrder = 2
     Text = '255'
     OnChange = txtRosterAlphaChange
   end
@@ -90,7 +72,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Min = 10
     Max = 255
     Position = 255
-    TabOrder = 4
+    TabOrder = 3
   end
   object chkToastAlpha: TCheckBox
     Left = 8
@@ -98,7 +80,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Width = 273
     Height = 17
     Caption = 'Use Alpha Blending for Toast Notifications'
-    TabOrder = 5
+    TabOrder = 4
     OnClick = chkToastAlphaClick
   end
   object trkToastAlpha: TTrackBar
@@ -111,7 +93,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Min = 10
     Frequency = 5
     Position = 255
-    TabOrder = 6
+    TabOrder = 5
     ThumbLength = 15
     TickStyle = tsNone
     OnChange = trkToastAlphaChange
@@ -122,7 +104,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Width = 49
     Height = 21
     Enabled = False
-    TabOrder = 7
+    TabOrder = 6
     Text = '255'
     OnChange = txtToastAlphaChange
   end
@@ -136,7 +118,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Min = 10
     Max = 255
     Position = 255
-    TabOrder = 8
+    TabOrder = 7
   end
   object chkSnap: TCheckBox
     Left = 8
@@ -144,7 +126,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Width = 273
     Height = 17
     Caption = 'Make the main window snap to screen edges'
-    TabOrder = 9
+    TabOrder = 8
     OnClick = chkSnapClick
   end
   object txtSnap: TEdit
@@ -153,7 +135,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Width = 49
     Height = 21
     Enabled = False
-    TabOrder = 10
+    TabOrder = 9
     Text = '255'
   end
   object spnSnap: TUpDown
@@ -166,14 +148,29 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Min = 10
     Max = 255
     Position = 255
+    TabOrder = 10
+  end
+  object chkBusy: TCheckBox
+    Left = 8
+    Top = 208
+    Width = 265
+    Height = 17
+    Caption = 'Warn when trying to close busy chat windows.'
     TabOrder = 11
+  end
+  object txtToastDuration: TEdit
+    Left = 168
+    Top = 127
+    Width = 49
+    Height = 21
+    TabOrder = 12
   end
   object txtChatMemory: TEdit
     Left = 32
     Top = 261
     Width = 49
     Height = 21
-    TabOrder = 12
+    TabOrder = 13
     Text = '60'
   end
   object spnChatMemory: TUpDown
@@ -185,21 +182,25 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Max = 360
     Increment = 5
     Position = 60
-    TabOrder = 13
-  end
-  object chkBusy: TCheckBox
-    Left = 8
-    Top = 208
-    Width = 265
-    Height = 17
-    Caption = 'Warn when trying to close busy chat windows.'
     TabOrder = 14
   end
-  object txtToastDuration: TEdit
-    Left = 168
-    Top = 127
-    Width = 49
-    Height = 21
+  object StaticText5: TStaticText
+    Left = 0
+    Top = 0
+    Width = 362
+    Height = 20
+    Align = alTop
+    Alignment = taCenter
+    Caption = 'Window Options'
+    Color = clHighlight
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clCaptionText
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
     TabOrder = 15
+    Transparent = False
   end
 end

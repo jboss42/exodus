@@ -33,9 +33,11 @@ type
     chkHideBlocked: TCheckBox;
     chkPresErrors: TCheckBox;
     chkShowPending: TCheckBox;
-    chkMessenger: TCheckBox;
     cboDblClick: TComboBox;
     chkRosterUnicode: TCheckBox;
+    chkInlineStatus: TCheckBox;
+    cboInlineStatus: TColorBox;
+    procedure chkInlineStatusClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -62,9 +64,13 @@ begin
         chkShowPending.Checked := getBool('roster_show_pending');
         chkHideBlocked.Checked := getBool('roster_hide_block');
         chkPresErrors.Checked := getBool('roster_pres_errors');
-        chkMessenger.Checked := getBool('roster_messenger');
         chkRosterUnicode.Checked := getBool('roster_unicode');
         cboDblClick.ItemIndex := getInt('roster_chat');
+
+        chkInlineStatus.Checked := getBool('inline_status');
+        cboInlineStatus.Selected := TColor(getInt('inline_color'));
+        cboInlineStatus.Enabled := chkInlineStatus.Checked;
+
     end;
 end;
 
@@ -77,10 +83,20 @@ begin
         setBool('roster_show_pending', chkShowPending.Checked);
         setBool('roster_hide_block', chkHideBlocked.Checked);
         setBool('roster_pres_errors', chkPresErrors.Checked);
-        setBool('roster_messenger', chkMessenger.Checked);
         setBool('roster_unicode', chkRosterUnicode.Checked);
         setInt('roster_chat', cboDblClick.ItemIndex);
+
+        setBool('inline_status', chkInlineStatus.Checked);
+        setInt('inline_color', integer(cboInlineStatus.Selected));
+
     end;
+end;
+
+procedure TfrmPrefRoster.chkInlineStatusClick(Sender: TObject);
+begin
+  inherited;
+    // toggle the color drop down on/off
+    cboInlineStatus.Enabled := chkInlineStatus.Checked;
 end;
 
 end.

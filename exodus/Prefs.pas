@@ -25,7 +25,7 @@ uses
     // panels
     PrefPanel, PrefSystem, PrefRoster, PrefSubscription, PrefFont, PrefDialogs,
     PrefMsg, PrefNotify, PrefAway, PrefPresence, PrefPlugins, PrefTransfer,
-    PrefNetwork, PrefGroups,      
+    PrefNetwork, PrefGroups, PrefLayouts,       
 
     // other stuff
     Menus, ShellAPI, Unicode,
@@ -57,7 +57,6 @@ type
     memKeywords: TTntMemo;
     tbsBlockList: TTabSheet;
     StaticText9: TStaticText;
-    Label10: TLabel;
     memBlocks: TTntMemo;
     imgKeywords: TImage;
     lblKeywords: TLabel;
@@ -84,6 +83,9 @@ type
     Bevel1: TBevel;
     imgGroups: TImage;
     lblGroups: TLabel;
+    imgLayouts: TImage;
+    lblLayouts: TLabel;
+    Memo1: TMemo;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -105,6 +107,7 @@ type
     _plugs: TfrmPrefPlugins;
     _xfer: TfrmPrefTransfer;
     _network: TfrmPrefNetwork;
+    _layouts: TfrmPrefLayouts;
     
   public
     { Public declarations }
@@ -181,6 +184,9 @@ begin
         if (_dialogs <> nil) then
             _dialogs.SavePrefs();
 
+        if (_layouts <> nil) then
+            _layouts.SavePrefs();
+
         if (_message <> nil) then
             _message.SavePrefs();
 
@@ -238,6 +244,7 @@ begin
     _subscription := nil;
     _font := nil;
     _dialogs := nil;
+    _layouts := nil;
     _message := nil;
     _notify := nil;
     _away := nil;
@@ -336,6 +343,16 @@ begin
         else begin
             _dialogs := TfrmPrefDialogs.Create(Self);
             f := _dialogs;
+        end;
+    end
+    else if ((Sender = imgLayouts) or (Sender = lblLayouts)) then begin
+        // PageControl1.ActivePage := tbsDialog;
+        toggleSelector(lblLayouts);
+        if (_layouts <> nil) then
+            f := _layouts
+        else begin
+            _layouts := TfrmPrefLayouts.Create(Self);
+            f := _layouts;
         end;
     end
     else if ((Sender = imgMessages) or (Sender = lblMessages)) then begin

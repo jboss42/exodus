@@ -1,6 +1,6 @@
 inherited frmPrefFont: TfrmPrefFont
-  Left = 248
-  Top = 329
+  Left = 256
+  Top = 192
   Caption = 'frmPrefFont'
   ClientHeight = 349
   ClientWidth = 403
@@ -53,13 +53,6 @@ inherited frmPrefFont: TfrmPrefFont
     Width = 283
     Height = 13
     Caption = 'Click on the appropriate font or window to change elements.'
-  end
-  object Bevel2: TBevel
-    Left = 0
-    Top = 264
-    Width = 401
-    Height = 4
-    Anchors = [akLeft, akTop, akRight]
   end
   object lblColor: TLabel
     Left = 8
@@ -240,27 +233,6 @@ inherited frmPrefFont: TfrmPrefFont
     PlainRTF = False
     UndoLimit = 0
     AllowInPlace = False
-  end
-  object chkInlineStatus: TCheckBox
-    Left = 8
-    Top = 275
-    Width = 241
-    Height = 17
-    Caption = 'Show status in the roster: Joe <Meeting>'
-    TabOrder = 6
-    OnClick = chkInlineStatusClick
-  end
-  object cboInlineStatus: TColorBox
-    Left = 32
-    Top = 294
-    Width = 201
-    Height = 22
-    DefaultColorColor = clBlue
-    Selected = clBlue
-    Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
-    DropDownCount = 12
-    ItemHeight = 16
-    TabOrder = 7
   end
   object FontDialog1: TFontDialog
     Font.Charset = DEFAULT_CHARSET

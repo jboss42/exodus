@@ -23,14 +23,13 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, ComCtrls, StdCtrls;
+  Dialogs, PrefPanel, ComCtrls, StdCtrls, jpeg, ExtCtrls;
 
 type
   TfrmPrefDialogs = class(TfrmPrefPanel)
     Label26: TLabel;
     Label27: TLabel;
     Label29: TLabel;
-    StaticText5: TStaticText;
     chkRosterAlpha: TCheckBox;
     trkRosterAlpha: TTrackBar;
     txtRosterAlpha: TEdit;
@@ -42,10 +41,11 @@ type
     chkSnap: TCheckBox;
     txtSnap: TEdit;
     spnSnap: TUpDown;
-    txtChatMemory: TEdit;
-    spnChatMemory: TUpDown;
     chkBusy: TCheckBox;
     txtToastDuration: TEdit;
+    txtChatMemory: TEdit;
+    spnChatMemory: TUpDown;
+    StaticText5: TStaticText;
     procedure chkRosterAlphaClick(Sender: TObject);
     procedure chkToastAlphaClick(Sender: TObject);
     procedure trkRosterAlphaChange(Sender: TObject);
@@ -73,6 +73,7 @@ uses
 procedure TfrmPrefDialogs.LoadPrefs();
 begin
     //
+
     with MainSession.Prefs do begin
         // Dialog Options
         chkRosterAlpha.Checked := getBool('roster_alpha');

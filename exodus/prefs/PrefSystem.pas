@@ -30,7 +30,6 @@ type
   TfrmPrefSystem = class(TfrmPrefPanel)
     StaticText4: TStaticText;
     chkAutoUpdate: TCheckBox;
-    chkExpanded: TCheckBox;
     chkDebug: TCheckBox;
     chkAutoLogin: TCheckBox;
     chkCloseMin: TCheckBox;
@@ -143,7 +142,6 @@ begin
     with MainSession.Prefs do begin
         chkAutoUpdate.Checked := getBool('auto_updates');
         chkAutoStart.Checked := getBool('auto_start');
-        chkExpanded.Checked := getBool('expanded');
         chkDebug.Checked := getBool('debug');
         chkStartMin.Checked := getBool('min_start');
         chkAutoLogin.Checked := getBool('autologin');
@@ -157,7 +155,7 @@ begin
         tmps := getString('locale');
         _old_locale := tmps;
 
-        if (tmps <> '') and (LeftStr(tmps, 7) <> 'Default')) then begin
+        if ((tmps <> '') and (Pos('Default', tmps) = 1)) then begin
             i := _lang_codes.IndexOf(tmps);
             if (i >= 0) then
                 cboLocale.ItemIndex := i
