@@ -622,15 +622,16 @@ end;
 procedure CanvasTextOutW(Canvas: TCanvas; X, Y: Integer; const Text: WideString;
     max_right: integer);
 var
-    opts: integer;
+    tw, opts: integer;
     r: TRect;
 begin
     // Use ExtTextOutW:
     // function ExtTextOutW(DC: HDC; X, Y: Integer; Options: Longint;
     //   Rect: PRect; Str: PWideChar; Count: Longint; Dx: PInteger): BOOL; stdcall;
+    tw := CanvasTextWidthW(Canvas, Text) + 1;
     if (Canvas.CanvasOrientation = coRightToLeft) then
-        Inc(X, CanvasTextWidthW(Canvas, Text) + 1);
-    if (max_right > 0) then begin
+        Inc(X, tw);
+    if ((max_right > 0) and (tw > max_right)) then begin
         r.Top := Y;
         r.Left := X;
         r.Right := max_right;

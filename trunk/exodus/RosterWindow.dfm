@@ -139,7 +139,6 @@ object frmRosterWindow: TfrmRosterWindow
     ChangeDelay = 30
     Ctl3D = True
     DragMode = dmAutomatic
-    HideSelection = False
     Images = frmExodus.ImageList2
     Indent = 19
     MultiSelect = True

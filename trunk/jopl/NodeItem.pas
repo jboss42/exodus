@@ -132,9 +132,9 @@ type
     TJabberBookmark = class(TJabberNodeItem)
     public
         jid: TJabberID;
-        bmType: string;
-        bmName: string;
-        nick: string;
+        bmType: Widestring;
+        bmName: Widestring;
+        nick: Widestring;
         autoJoin: boolean;
         Data: TObject;
 
