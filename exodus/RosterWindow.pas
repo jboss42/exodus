@@ -83,7 +83,7 @@ type
     InvitetoConference1: TMenuItem;
     SendContactsTo1: TMenuItem;
     popBlock: TMenuItem;
-    Block1: TMenuItem;
+    popGroupBlock: TMenuItem;
     BroadcastMessage1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -149,9 +149,11 @@ type
     _cur_status: integer;
 
     _collapsed_grps: TStringList;
+    _blockers: TStringlist;
 
     function getNodeType(node: TTreeNode = nil): integer;
     function getSelectedContacts(online: boolean = true): TList;
+    procedure popUnBlockClick(Sender: TObject);
     procedure ExpandNodes;
     procedure RenderNode(ritem: TJabberRosterItem; p: TJabberPres);
     procedure RenderBookmark(bm: TJabberBookmark);
@@ -188,6 +190,7 @@ resourcestring
     sRenameGrp = 'Rename group';
     sRenameGrpPrompt = 'New group name:';
     sNoContactsSel = 'You must select one or more contacts.';
+    sUnblockContacts = 'Unblock %d contacts?';
     sBlockContacts = 'Block %d contacts?';
     sNoBroadcast = 'You must select more than one online contact to broadcast.';
 
@@ -220,6 +223,7 @@ begin
     // register the callback
     _FullRoster := false;
     _collapsed_grps := TStringList.Create();
+    _blockers := TStringlist.Create();
     _rostercb := MainSession.RegisterCallback(RosterCallback);
     _prescb := MainSession.RegisterCallback(PresCallback);
     _sessionCB := MainSession.RegisterCallback(SessionCallback, '/session');
@@ -300,7 +304,6 @@ begin
         end;
 end;
 
-
 {---------------------------------------}
 procedure TfrmRosterWindow.SessionCallback(event: string; tag: TXMLTag);
 var
@@ -321,6 +324,7 @@ begin
         ShowPresence(MainSession.show);
         end
     else if event = '/session/prefs' then begin
+        MainSession.Prefs.fillStringlist('blockers', _blockers);
         _show_status := MainSession.Prefs.getBool('inline_status');
         _status_color := TColor(MainSession.Prefs.getInt('inline_color'));
         treeRoster.Font.Name := MainSession.Prefs.getString('roster_font_name');
@@ -329,6 +333,9 @@ begin
 
         frmExodus.pnlRoster.ShowHint := not _show_status;
         Redraw();
+        end
+    else if ((event = '/session/block') or (event = '/session/unblock')) then begin
+        MainSession.Prefs.fillStringlist('col_groups', _collapsed_grps, true);
         end
     else if event = '/session/server_prefs' then begin
         // we are getting server side prefs
@@ -666,11 +673,16 @@ var
     cur_node, grp_node, n: TTreeNode;
     node_list: TList;
     tmp_grps: TStringlist;
+    is_blocked: boolean;
     show_online: boolean;
     show_offgrp: boolean;
     exp_grpnode: boolean;
 begin
     // Render a specific roster item, with the given presence info.
+    is_blocked := MainSession.isBlocked(ritem.jid);
+    if (is_blocked) then begin
+        if MainSession.Prefs.getBool('roster_hide_block') then exit;
+        end;
 
     // First Cache some prefs
     show_online := MainSession.Prefs.getBool('roster_only_online');
@@ -820,7 +832,9 @@ begin
         cur_node.Data := ritem;
 
         // setup the image
-        if (ritem.ask = 'subscribe') then
+        if (is_blocked) then
+            cur_node.ImageIndex := ico_blocked
+        else if (ritem.ask = 'subscribe') then
             cur_node.ImageIndex := ico_Unknown
         else if p = nil then
             cur_node.ImageIndex := ico_Offline
@@ -1263,19 +1277,23 @@ procedure TfrmRosterWindow.treeRosterContextPopup(Sender: TObject;
   MousePos: TPoint; var Handled: Boolean);
 var
     o, e: boolean;
-    r: integer;
+    b, u: boolean;
+    i, r: integer;
     n: TTreeNode;
     ri: TJabberRosterItem;
     pri: TJabberPres;
+    slist: TList;
 begin
     // Figure out what popup menu to show
     // based on the selection
 
+    ri := nil;
     n := treeRoster.GetNodeAt(MousePos.X, MousePos.Y);
     if (n <> nil) then begin
-        r := getNodeType(n);
         if (treeRoster.SelectionCount > 1) then
-            r := node_grp;
+            r := node_grp
+        else
+            r := getNodeType(n);
         end
     else begin
         treeRoster.Selected := nil;
@@ -1312,6 +1330,17 @@ begin
         popVersion.Enabled := o;
         popTime.Enabled := o;
         popHistory.Enabled := e;
+
+        if ((ri <> nil) and (MainSession.isBlocked(ri.jid))) then begin
+            popBlock.Caption := 'UnBlock';
+            popBlock.OnClick := popUnblockClick;
+            end
+        else begin
+            popBlock.Caption := 'Block';
+            popBlock.OnClick := popBlockClick;
+            end;
+        popGroupBlock.OnClick := popBlock.OnClick;
+        popBlock.Enabled := true;
         end;
     node_grp: begin
         // we have multiple contacts or a group selected
@@ -1320,9 +1349,45 @@ begin
             treeRoster.Selected := n;
             end;
         popGrpRename.Enabled := (treeRoster.SelectionCount <= 1);
+
+        b := true;
+        u := true;
+
+        // do blocking madness
+        slist := getSelectedContacts(MainSession.Prefs.getBool('roster_only_online'));
+        for i := 0 to slist.count - 1 do begin
+            ri := TJabberRosterItem(slist[i]);
+            if (_blockers.IndexOf(ri.jid.jid) >= 0) then begin
+                b := false;
+                if (not u) then break;
+                end
+            else begin
+                u := false;
+                if (not b) then break;
+                end;
+            end;
+        if ((not b) and (not u)) then begin
+            popGroupBlock.Caption := 'Block';
+            popGroupBlock.Enabled := false;
+            popBlock.OnClick := popBlockClick;
+            end
+        else if (b) then begin
+            popGroupBlock.Caption := 'Block';
+            popGroupBlock.Enabled := true;
+            popBlock.OnClick := popBlockClick;
+            end
+        else if (u) then begin
+            popGroupBlock.Caption := 'UnBlock';
+            popGroupBlock.Enabled := true;
+            popBlock.OnClick := popUnBlockClick;
+            end;
+
+        popGroupBlock.OnClick := popBlock.OnClick;
+
+        slist.Clear();
+        slist.Free();
         end;
     end;
-    
 end;
 
 {---------------------------------------}
@@ -1331,6 +1396,7 @@ var
     n: TTreeNode;
     ritem: TJabberRosterItem;
 begin
+    // Show history for this user
     n := treeRoster.Selected;
     ritem := TJabberRosterItem(n.Data);
     if ritem <> nil then
@@ -1586,6 +1652,8 @@ end;
 procedure TfrmRosterWindow.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
+    // Kill the blockers list and collapsed grps
+    _blockers.Free();
     _collapsed_grps.Free();
     if MainSession <> nil then with MainSession do begin
         UnRegisterCallback(_rostercb);
@@ -1648,7 +1716,6 @@ begin
 
     if (fsel.ShowModal = mrOK) then begin
         // do the send
-
         msg := TXMLTag.Create('message');
         msg.PutAttribute('id', MainSession.generateID());
         msg.PutAttribute('to', fsel.GetSelectedJID());
@@ -1678,7 +1745,9 @@ var
     recips: TList;
     i: integer;
     ri: TJabberRosterItem;
+    p: TJabberPres;
 begin
+    // Block or Unblock this user
     recips := getSelectedContacts(false);
     if (recips.Count > 1) then begin
         if (MessageDlg(Format(sBlockContacts, [recips.Count]), mtConfirmation,
@@ -1686,8 +1755,38 @@ begin
         end;
     for i := 0 to recips.Count - 1 do begin
         ri := TJabberRosterItem(recips[i]);
-        RemoveItemNodes(ri);
         MainSession.Block(ri.jid);
+        if MainSession.Prefs.getBool('roster_hide_block') then
+            RemoveItemNodes(ri)
+        else begin
+            p := MainSession.ppdb.FindPres(ri.jid.jid, '');
+            RenderNode(ri, p);
+            end;
+        end;
+
+    recips.Clear();
+    recips.Free();
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.popUnBlockClick(Sender: TObject);
+var
+    recips: TList;
+    i: integer;
+    ri: TJabberRosterItem;
+    p: TJabberPres;
+begin
+    // Block or Unblock this user
+    recips := getSelectedContacts(false);
+    if (recips.Count > 1) then begin
+        if (MessageDlg(Format(sUnblockContacts, [recips.Count]), mtConfirmation,
+            [mbYes, mbNo], 0) = mrNo) then exit;
+        end;
+    for i := 0 to recips.Count - 1 do begin
+        ri := TJabberRosterItem(recips[i]);
+        MainSession.UnBlock(ri.jid);
+        p := MainSession.ppdb.FindPres(ri.jid.jid, '');
+        RenderNode(ri, p);
         end;
 
     recips.Clear();

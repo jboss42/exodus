@@ -1435,12 +1435,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 340
-    ActivePage = tbsFonts
+    ActivePage = tbsRoster
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 2
+    TabIndex = 0
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1488,7 +1488,7 @@ object frmPrefs: TfrmPrefs
       end
       object optDblClick: TRadioGroup
         Left = 8
-        Top = 160
+        Top = 184
         Width = 161
         Height = 55
         Caption = 'Double Click Action '
@@ -1500,7 +1500,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkInlineStatus: TCheckBox
         Left = 8
-        Top = 96
+        Top = 120
         Width = 241
         Height = 17
         Caption = 'Show status in the roster: Joe <Meeting>'
@@ -1509,7 +1509,7 @@ object frmPrefs: TfrmPrefs
       end
       object cboInlineStatus: TColorBox
         Left = 32
-        Top = 120
+        Top = 144
         Width = 145
         Height = 22
         DefaultColorColor = clBlue
@@ -1518,6 +1518,14 @@ object frmPrefs: TfrmPrefs
         DropDownCount = 12
         ItemHeight = 16
         TabOrder = 6
+      end
+      object chkHideBlocked: TCheckBox
+        Left = 8
+        Top = 96
+        Width = 201
+        Height = 17
+        Caption = 'Hide blocked contacts '
+        TabOrder = 7
       end
     end
     object tbsSubscriptions: TTabSheet
@@ -1713,7 +1721,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 102
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1816,7 +1824,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 97
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2200,7 +2208,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 124
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2278,7 +2286,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 112
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2312,8 +2320,8 @@ object frmPrefs: TfrmPrefs
         object Label1: TLabel
           Left = 0
           Top = 0
-          Width = 363
-          Height = 26
+          Width = 306
+          Height = 13
           Align = alTop
           Caption = 
             'Enter in the strings that you want Exodus to look for in message' +
