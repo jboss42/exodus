@@ -11,23 +11,23 @@ unit RosterTools_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.1 $
-// File generated on 2/9/2003 5:52:56 PM from Type Library described below.
+// PASTLWTR : 1.2
+// File generated on 2/12/2003 9:41:50 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\RosterTools\RosterTools.tlb (1)
 // LIBID: {7FCD07D1-761C-4081-9A1F-CE2EFBC6CCD3}
 // LCID: 0
 // Helpfile: 
+// HelpString: RosterTools Library
 // DepndLst: 
-//   (1) v1.0 ExodusCOM, (D:\src\exodus\exodus\exodus.exe)
-//   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
-//   (3) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
+//   (1) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
+//   (2) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
 {$WRITEABLECONST ON}
-
+{$VARPROPSETTER ON}
 interface
 
 uses Windows, ActiveX, Classes, ExodusCOM_TLB, Graphics, StdVCL, Variants;
