@@ -196,6 +196,10 @@ begin
             lstRoster.Font.Name := MainSession.Prefs.getString('roster_font_name');
             lstRoster.Font.Color := TColor(MainSession.Prefs.getInt('font_color'));
             lstRoster.Font.Size := MainSession.Prefs.getInt('roster_font_size');
+            lstRoster.Font.Charset := MainSession.Prefs.getInt('roster_font_charset');
+            if (lstRoster.Font.Charset = 0) then
+                lstRoster.Font.Charset := 1;
+                
             Caption := tmp_jid.user + ' ' + sRoom;
             end;
         tmp_jid.Free();
