@@ -48,6 +48,9 @@ type
       const InstantMsg: IExodusChat); safecall;
     { Protected declarations }
   private
+
+    procedure _setupFile();
+
     _parser: TXMLTagParser;
     _exodus: ExodusController;
     // _stat_file: TextFile;
@@ -141,7 +144,16 @@ begin
         _filename := ExtractFilePath(_filename) + 'stats.txt';
     end;
 
-    // open the stat file
+    _setupFile();
+end;
+
+procedure TStatsPlugin._setupFile();
+begin
+    // close the old stream
+    if (_stream <> nil) then
+        _stream.Free();
+
+    // Try to open a new one
     try
         if (FileExists(_filename)) then
             _stream := TFileStream.Create(_filename, fmOpenReadWrite,
@@ -158,6 +170,7 @@ begin
             _exodus.UnRegisterCallback(_cb);
     end;
 end;
+
 
 function TStatsPlugin.NewIM(const jid: WideString; var Body,
   Subject: WideString; const XTags: WideString): WideString;
