@@ -254,6 +254,7 @@ procedure TfRTFMsgList.populate(history: Widestring);
 begin
     with MsgList do begin
         // repopulate history..
+        Line := 0;
         InputFormat := ifRTF;
         SelStart := 0;
         SelLength := Length(Lines.Text);
