@@ -16,6 +16,7 @@ uses
   XMLTag in '..\..\..\jopl\XMLTag.pas',
   Config in 'Config.pas' {frmConfig},
   buttonFrame in '..\..\buttonFrame.pas' {frameButtons: TFrame},
+  Stringprep in '..\..\..\jopl\Stringprep.pas',
   ExJabberStats_TLB in 'ExJabberStats_TLB.pas';
 
 exports

@@ -26,7 +26,8 @@ uses
   WStrList in '..\..\components\WStrList.pas',
   RichOLE in '..\..\components\richole.pas',
   ExRichEdit in '..\..\components\ExRichEdit.pas',
-  RegExpr in '..\..\..\jopl\RegExpr.pas';
+  RegExpr in '..\..\..\jopl\RegExpr.pas',
+  Stringprep in '..\..\..\jopl\Stringprep.pas';
 
 exports
   DllGetClassObject,

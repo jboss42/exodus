@@ -524,10 +524,10 @@ ${un.StrStrAdv}
 
 !ifdef NO_NETWORK
     !define INSTALLER_OUTPUT "setup-standalone"
-!else    
+!else
     !define INSTALLER_OUTPUT "setup"
 !endif
- 
+
 !define PLUGINS_DIR "plugins"
 !ifdef DAILY
      ; BRANDING: Change this PATH if different
@@ -556,6 +556,7 @@ ${un.StrStrAdv}
 !define MSN_EMOTICONS "msn_emoticons"
 !define YAHOO_EMOTICONS "yahoo_emoticons"
 !define IDLEHOOKS "IdleHooks"
+!define LIBIDN "libidn"
 !define RICHED "riched20"
 !define RICHED_UPDATER "richupd"
 !define COMCTL "comctl32"
@@ -1836,7 +1837,8 @@ Section "$(NAME_Exodus)" SEC_Exodus
     File "${IDLEHOOKS}${DLL_EXTENSION}"
     File "${MSN_EMOTICONS}${DLL_EXTENSION}"
     File "${YAHOO_EMOTICONS}${DLL_EXTENSION}"
-    
+    File "${LIBIDN}${DLL_EXTENSION}"
+
     ; Daily builds should include the MAP file to get detailed AV reports.
     !ifdef DAILY
         File "${PRODUCT}${MAP_EXTENSION}"
@@ -1850,16 +1852,16 @@ Section "$(NAME_Exodus)" SEC_Exodus
     ; SetOverwrite off ; only if you don't want to overwrite existing file.
     ; File "${BRANDING_FILE}${XML_EXTENSION}"
     ; SetOverwrite on
-    
+
     ; version(riched20) >= 5.30
     GetDLLVersion "$SYSDIR\${RICHED}${DLL_EXTENSION}" $R0 $R1
     IntOp $R1 $R0 / 65536
     IntOp $R2 $R0 & 0x00FF
     DetailPrint "$(MSG_RichEdVersion): $R1.$R2"
-    
+
     ; if the installed version is >= to 5.30, skip ahead.
     IntCmp 327710 $R0 lbl_reportVer lbl_reportVer
-    
+
     DetailPrint "$(MSG_RichEdUpgrade)"
 !ifndef NO_NETWORK
     ; BRANDING: change this URL
@@ -1875,25 +1877,25 @@ Section "$(NAME_Exodus)" SEC_Exodus
 
     ExecWait '"$INSTDIR\${RICHED_UPDATER}${EXEC_EXTENSION} /Q"'
     SetRebootFlag true
-    
+
   lbl_reportVer:
     DetailPrint "$(MSG_RichEdOK)"
-    
+
     ; delete any leftover richupd.exe file.  This should not error
     ; if the file doesn't exist.
     Delete $INSTDIR\${RICHED_UPDATER}${EXEC_EXTENSION}
-    
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ;; Update common controls, if needed 5.80
     GetDLLVersion "$SYSDIR\${COMCTL}${DLL_EXTENSION}" $R0 $R1
     IntOp $R1 $R0 / 65536
     IntOp $R2 $R0 & 0x00FF
     DetailPrint "$(MSG_COMCtlVersion): $R1.$R2"
-    
+
     ; (5 << 16) + 80 w00t!
     ; if the installed version is >= to 5.80, skip ahead.
     IntCmp 327760 $R0 com_reportVer com_reportVer
-    
+
     DetailPrint "$(MSG_COMCtlUpgrade)"
 !ifndef NO_NETWORK
     ; BRANDING: change this URL
@@ -1911,11 +1913,11 @@ Section "$(NAME_Exodus)" SEC_Exodus
 
   com_reportVer:
     DetailPrint "$(MSG_COMCtlOK)"
-    
+
     ; delete any leftover 50comupd.exe file.  This should not error
     ; if the file doesn't exist.
     Delete "$INSTDIR\${COMCTL_UPDATER}${EXEC_EXTENSION}"
-    
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ; Check for Win95, and no Winsock2
     Call funcGetWindowsVersion
@@ -1938,12 +1940,12 @@ Section "$(NAME_Exodus)" SEC_Exodus
     MessageBox MB_OK "$(MSG_NoReboot)"
     ExecWait '"$INSTDIR\${WINSOCK_UPDATER}${EXEC_EXTENSION}" /Q'
     SetRebootFlag true
-        
+
   winsock_done:
     DetailPrint "$(MSG_WinsockOK)"
     Delete "$INSTDIR\${WINSOCK_UPDATER}${EXEC_EXTENSION}"
-    
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ; Setup stuff based on custom Shell page
     Push "${INSTALLER_SWITCH_SILENT}"
     Call funcGetConfigParam
@@ -2002,7 +2004,7 @@ Section "$(NAME_Exodus)" SEC_Exodus
     WriteRegStr HKCR "${XMPP_SHELL_OPEN_DDE_IF_KEY}" "" "${IGNORE_KEY}"
     WriteRegStr HKCR "${XMPP_SHELL_OPEN_DDE_TOPIC_KEY}" "" "${XMPP_ACTION}"
     WriteRegStr HKCR "${XMPP_MIME_KEY}" "${EXTENSION_KEY}" "${XMPP_EXTENSION}"
-    
+
 SectionEnd ; end the section
 
 Section "$(NAME_SSL)" SEC_SSL
@@ -2570,12 +2572,12 @@ FunctionEnd
 Var "PluginFilename"
 
 Function InstallPlugin
-    Exch $1	
-    
+    Exch $1
+
 	;CreateDirectory "$INSTDIR\${PLUGINS_DIR}"
 	;File "/oname=$INSTDIR\${PLUGINS_DIR}\$R0" "${PLUGINS_DIR}\$R0"
-	
-    ;File /nonfatal "/oname=$NSISPATH\${DIR}\CVS\Entries.log" "..\${DIR}\CVS\Entries.log"	
+
+    ;File /nonfatal "/oname=$NSISPATH\${DIR}\CVS\Entries.log" "..\${DIR}\CVS\Entries.log"
     ;SetOutPath "$INSTDIR\${PLUGINS_DIR}"
     ;File ${PLUGINS_DIR}\$1${DLL_EXTENSION}
     ;SetOutPath $INSTDIR

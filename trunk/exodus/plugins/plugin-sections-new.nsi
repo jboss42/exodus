@@ -27,7 +27,7 @@
 	SectionEnd
 
 	Section "JabberStats" SEC_ExJabberStats
-	  AddSize 701
+	  AddSize 702
 	  Push "ExJabberStats"
 	  Call DownloadPlugin
       RegDll "$INSTDIR\plugins\ExJabberStats.dll"
