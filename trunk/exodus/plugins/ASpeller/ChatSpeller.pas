@@ -79,7 +79,7 @@ uses
 
 const
     // space, tab, LF, CR, !, ,, .
-    WhitespaceChars = [#32, #09, #10, #13, #33, #44, #46];
+    WhitespaceChars = [#09, #10, #13, #32, #33, #34, #35, #36, #37, #38, #39, #40, #41, #42, #43, #44, #46, #47];
 
 resourcestring
     sIgnore = 'Ignore';

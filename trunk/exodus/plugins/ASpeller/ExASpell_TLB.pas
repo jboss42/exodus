@@ -12,17 +12,17 @@ unit ExAspell_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 6/16/2003 10:29:07 AM from Type Library described below.
+// File generated on 7/20/2003 11:01:36 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\ASpeller\ExAspell.tlb (1)
-// LIBID: {2721BD17-AD89-4F53-9738-628F991BAFD3}
+// LIBID: {FCC22055-8B46-40DE-A8D1-59666F9B8D06}
 // LCID: 0
 // Helpfile: 
 // HelpString: ExAspell Library
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
-//   (2) v1.0 ExodusCOM, (C:\Program Files\Exodus\Exodus.exe)
+//   (1) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
+//   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -45,7 +45,7 @@ const
   ExAspellMajorVersion = 1;
   ExAspellMinorVersion = 0;
 
-  LIBID_ExAspell: TGUID = '{2721BD17-AD89-4F53-9738-628F991BAFD3}';
+  LIBID_ExAspell: TGUID = '{FCC22055-8B46-40DE-A8D1-59666F9B8D06}';
 
   CLASS_SpellPlugin: TGUID = '{0C80F5C7-86D3-4372-9158-2C5E463225D4}';
   CLASS_ChatSpeller: TGUID = '{28855332-70A4-465E-BF77-D4C141837D62}';

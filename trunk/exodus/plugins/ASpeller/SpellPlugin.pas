@@ -52,6 +52,8 @@ type
     _dicts: TStringlist;
     _config: ASpellConfig;
     _speller: ASpellSpeller;
+
+    procedure attemptConfigure();
   end;
 
 
@@ -64,7 +66,7 @@ resourcestring
 {---------------------------------------}
 implementation
 uses
-    ComServ, ChatSpeller, Dialogs;
+    Controls, ComServ, ChatSpeller, Dialogs;
 
 {---------------------------------------}
 function TSpellPlugin.NewIM(const jid: WideString; var Body,
@@ -76,7 +78,9 @@ end;
 {---------------------------------------}
 procedure TSpellPlugin.Configure;
 begin
-
+    if (MessageDlg('Attempt to reload and configure ASpell?', mtConfirmation,
+        [mbYes, mbNo], 0) = mrYes) then
+        attemptConfigure();
 end;
 
 {---------------------------------------}
@@ -100,6 +104,8 @@ var
     chat_com: IExodusChat;
 begin
     // a new chat window is firing up
+    if (not _loaded) then exit;
+
     chat_com := IUnknown(Chat) as IExodusChat;
     cp := TChatSpeller.Create(_speller, chat_com);
     cp.ObjAddRef();
@@ -114,6 +120,8 @@ var
     chat_com: IExodusChat;
 begin
     // a new room window is firing up
+    if (not _loaded) then exit;
+
     chat_com := IUnknown(Room) as IExodusChat;
     cp := TChatSpeller.Create(_speller, chat_com);
     cp.ObjAddRef();
@@ -128,6 +136,8 @@ var
     chat_com: IExodusChat;
 begin
     // a new IM window is firing up
+    if (not _loaded) then exit;
+
     chat_com := IUnknown(InstantMsg) as IExodusChat;
     cp := TChatSpeller.Create(_speller, chat_com);
     cp.ObjAddRef();
@@ -143,13 +153,28 @@ end;
 {---------------------------------------}
 procedure TSpellPlugin.Shutdown;
 begin
-    delete_aspell_config(_config);
+    if (_loaded) then begin
+        delete_aspell_speller(_speller);
+        delete_aspell_config(_config);
+    end;
+    
     _dicts.Clear();
     _dicts.Free();
 end;
 
 {---------------------------------------}
 procedure TSpellPlugin.Startup(const ExodusController: IExodusController);
+begin
+    _exodus := ExodusController;
+    _dicts := TStringlist.Create();
+    _config := nil;
+    _speller := nil;
+
+    attemptConfigure();
+end;
+
+{---------------------------------------}
+procedure TSpellPlugin.attemptConfigure();
 
     procedure showError(msg: string);
     begin
@@ -164,8 +189,6 @@ var
     di: TAspellDictInfo;
     poss_error: ASpellCanHaveError;
 begin
-    _exodus := ExodusController;
-    _dicts := TStringlist.Create();
 
     // try to initialize the aspell system..
     // passing a blank string asks the registry for the location
@@ -176,11 +199,22 @@ begin
         exit;
     end;
 
+    // Remove the old ones.
+    if (_speller <> nil) then begin
+        delete_aspell_speller(_speller);
+        _speller := nil;
+    end;
+    if (_config <> nil) then begin
+        delete_aspell_config(_config);
+        _config := nil;
+    end;
+
     // get the dictionaries from the _config..
     _config := new_aspell_config();
     di_list := get_aspell_dict_info_list(_config);
 
     // run through all dicts..
+    _dicts.Clear();
     di_elements := aspell_dict_info_list_elements(di_list);
     repeat
         di := aspell_dict_info_enumeration_next(di_elements)^;
@@ -201,6 +235,7 @@ begin
 
     poss_error := new_aspell_speller(_config);
     if (aspell_error_number(poss_error) <> 0) then exit;
+
     _speller := to_aspell_speller(poss_error);
 
     _loaded := true;
