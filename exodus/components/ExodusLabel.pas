@@ -128,6 +128,12 @@ begin
     // paint a fixed label, doing m4dd w0rd wr4pp1ng.
     x := 0;
     y := 0;
+
+    // Ensure we have the correct font in the Canvas.
+    if ((Self.Canvas.Font.Name <> Self.Font.Name) or
+        (Self.Canvas.Font.Size <> Self.Font.Size)) then
+        SelectObject(Self.Canvas.Handle, Self.Font.Handle);
+
     hCanvas := Self.Canvas.Handle;
 
     // cache the width of a space.

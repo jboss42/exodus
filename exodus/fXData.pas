@@ -49,7 +49,7 @@ type
 implementation
 {$R *.dfm}
 uses
-    GnuGetText, JabberConst, XMLUtils, Math, xdata;
+    ExUtils, GnuGetText, JabberConst, XMLUtils, Math, xdata;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -57,6 +57,8 @@ uses
 procedure TframeXData.Render(tag: TXMLTag);
 begin
     // Render the xdata fields
+    AssignUnicodeFont(Self.Font, XDATA_FONT_SIZE);
+    AssignUnicodeFont(ScrollBox1.Font, XDATA_FONT_SIZE);
     _rows := TList.Create();
 
     // force our widths to be correct at render time
@@ -167,12 +169,17 @@ begin
     if (abs(new - _w) < 10) then exit;
     _w := new;
 
+    // make sure we're at the top
+    if (ScrollBox1.VertScrollBar.Position > 0) then
+        ScrollBox1.ScrollBy(0, (-ScrollBox1.VertScrollBar.Range));
+
     t := 0;
     for i := 0 to _rows.Count - 1 do begin
         ro := TXDataRow(_rows[i]);
         rh := ro.Draw(t, 0, _w);
         t := t + rh;
     end;
+    ScrollBox1.Invalidate();
 
 end;
 
