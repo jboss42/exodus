@@ -181,9 +181,6 @@ begin
     frmExodus.ActiveChat := Self;
     if (_msgframe <> nil) then
         MsgList.invalidate();
-
-    if ((frmEmoticons <> nil) and (frmEmoticons.Visible)) then
-        frmEmoticons.Hide;
 end;
 
 {---------------------------------------}
