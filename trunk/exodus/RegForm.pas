@@ -345,6 +345,7 @@ procedure TfrmRegister.PresCallback(event: string; tag: TXMLTag; pres: TJabberPr
 var
     i: integer;
     ritem: TJabberRosterItem;
+    tmps: Widestring;
 begin
     // getting some pres packet
     if (pres.fromJID.jid = self.jid) then begin
@@ -354,6 +355,12 @@ begin
         if (pres.isSubscription) then begin
             // this is the service subscribing to us..
             // The s10n.pas handler will catch this.
+            tmps := agent.name;
+            if (tmps = '') then
+                tmps = pres.fromJid.domain;
+
+            MainSession.roster.AddItem(pres.fromJID.full, tmps,
+                MainSession.Prefs.getString('roster_transport_grp'), false);
         end
 
         else if (pres.PresType = 'error') then begin
@@ -366,9 +373,6 @@ begin
 
         else begin
             // ok registration, check all pendings and re-subscribe to them
-            MainSession.roster.AddItem(pres.fromJID.full, agent.name,
-                MainSession.Prefs.getString('roster_transport_grp'), false);
-
             with MainSession do begin
                 for i := 0 to roster.Count - 1 do begin
                     ritem := TJabberRosterItem(Roster.Objects[i]);
