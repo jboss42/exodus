@@ -1,6 +1,6 @@
 <exodus version="0.9">
     <prefs>
-        <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.32 2003/12/31 18:36:58 pgmillard Exp $"/>
+        <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.33 2004/01/08 06:13:07 pgmillard Exp $"/>
         
         <!-- System Options -->
         <auto_update_url value="http://exodus.jabberstudio.org/exodus-released.exe"/>
@@ -44,7 +44,7 @@
         	<control name="lblDblClick"/>
     	</roster_chat>
         <inline_status value="0" control="chkInlineStatus"/>
-        <inline_color value="$0000FF00" control="cboInlineStatus"/>
+        <inline_color value="8421376" control="cboInlineStatus"/>
         <nested_groups value="1" control="chkNestedGrps"/>
         <group_seperator value="/" control="txtGrpSeperator"/>
         
