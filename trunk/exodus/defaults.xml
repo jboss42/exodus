@@ -114,7 +114,7 @@
     <single_instance>1</single_instance>
     <snap_on>1</snap_on>
     <timestamp>1</timestamp>
-    <timestamp_format>H:MM AM/PM</timestamp_format>
+    <timestamp_format>t</timestamp_format>
     <toolbar>1</toolbar>
     <toast_duration>5</toast_duration>
     <warn_closebusy>1</warn_closebusy>
