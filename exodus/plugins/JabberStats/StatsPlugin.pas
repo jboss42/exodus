@@ -48,15 +48,14 @@ type
       const InstantMsg: IExodusChat); safecall;
     { Protected declarations }
   private
-
-    procedure _setupFile();
-
     _parser: TXMLTagParser;
     _exodus: ExodusController;
     // _stat_file: TextFile;
     _stream: TFileStream;
     _filename: string;
     _cb: integer;
+
+    procedure _setupFile();
   end;
 
 resourcestring
