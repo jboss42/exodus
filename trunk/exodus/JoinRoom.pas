@@ -186,10 +186,16 @@ var
     ce: TJabberEntity;
 begin
     tmp := TJabberID.Create(tag.getAttribute('from'));
-    if (tmp.user = '') then exit;
+    if (tmp.user = '') then begin
+        tmp.Free();
+        exit;
+    end;
 
     ce := jEntityCache.getByJid(tmp.full);
-    if (ce = nil) then exit;
+    if (ce = nil) then begin
+        tmp.Free();
+        exit;
+    end;
 
     if (ce.hasFeature(FEAT_GROUPCHAT)) then
         _addRoomJid(tmp);

@@ -125,6 +125,8 @@ var
     _richedit: THandle;
     _mutex: THandle;
     _xmpp_action_list: TList;
+    _auth: TStandardAuth;
+
 
 
 {---------------------------------------}
@@ -146,7 +148,6 @@ var
 
     // some temps we use
     s, help_msg, tmp_locale: string;
-    auth: TStandardAuth;
 
     // stuff for .xmpp
     connect_node: TXMLTag;
@@ -298,8 +299,8 @@ begin
     end;
 
     // Set our session to use the normal auth agent
-    auth := TStandardAuth.Create(MainSession);
-    MainSession.setAuthAgent(auth);
+    _auth := TStandardAuth.Create(MainSession);
+    MainSession.setAuthAgent(_auth);
 
     // Check for a single instance
     if (MainSession.Prefs.getBool('single_instance')) then begin
@@ -426,7 +427,7 @@ begin
 
                     node := auth_node.GetFirstTag('tokenauth');
                     if (node <> nil) then
-                        auth.TokenAuth := node;
+                        _auth.TokenAuth := node;
                 end;
 
                 prof_index := Profiles.IndexOfObject(profile);
@@ -602,7 +603,6 @@ begin
         _guiBuilder.Free();
         ExRegController.Free();
         _SubController.Free();
-
         MainSession.Free();
         MainSession := nil;
     end;
@@ -612,6 +612,15 @@ begin
         _mutex := 0;
     end;
 
+    {
+    FreeAndNil(_guibuilder);
+    FreeAndNil(_Notify);
+    FreeAndNil(_subcontroller);
+    FreeAndNil(ExRegController);
+    }
+
+    FreeAndNil(_auth);
+    FreeAndNil(ExStartup);
     FreeAndNil(ExCOMRoster);
     FreeAndNil(ExCOMPPDB);
     FreeAndNil(ExCOMController);

@@ -258,11 +258,13 @@ begin
 
     ClearStringListObjects(ppdb);
     ppdb.Clear();
-    Prefs.Free;
-    ppdb.Free;
-    roster.Free;
-    MsgList.Free;
-    ChatList.Free;
+    Prefs.Free();
+    ppdb.Free();
+    roster.Free();
+    MsgList.Free();
+    ChatList.Free();
+    
+    _avails.Free();
 
     if (_stream <> nil) then
         _stream.Free();

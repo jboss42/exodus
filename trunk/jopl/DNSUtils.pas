@@ -89,6 +89,7 @@ begin
         t.setAttribute('type', 'failed');
     end;
     _session.FireEvent('/session/dns', t);
+    t.Free();
 end;
 
 {---------------------------------------}
@@ -188,6 +189,8 @@ begin
 
     Resolver.Host := slist[0];
     Resolver.AllowRecursiveQueries := true;
+    slist.Free();
+
     try
         Resolver.QueryRecords := [qtSRV];
         Resolver.Resolve(srv_req);

@@ -941,7 +941,7 @@ begin
     end;
 
     // error
-    MessageDlgW(WideFormat(_('The stream was not actived for file: %s'),
+    MessageDlgW(WideFormat(_('The stream was not activated for file: %s'),
         [_pkg.pathname]), mtError, [mbOK], 0);
     _state := send_cancel;
     DoState();

@@ -142,6 +142,7 @@ destructor TJabberRoster.Destroy;
 begin
     ClearStringListObjects(_groups);
     _groups.Free();
+    _unfiled.Free();
     Bookmarks.Free;
 
     inherited Destroy;

@@ -1501,6 +1501,8 @@ begin
     // Kill the tray icon stuff
     if (_tray_icon <> nil) then
         FreeAndNil(_tray_icon);
+
+    FreeAndNil(_docked_forms);
 end;
 
 {---------------------------------------}
