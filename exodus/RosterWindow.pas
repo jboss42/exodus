@@ -1484,9 +1484,11 @@ var
 begin
     // Show history for this user
     n := treeRoster.Selected;
-    ritem := TJabberRosterItem(n.Data);
-    if ritem <> nil then
-        ShowLog(ritem.jid.jid);
+    if (getNodeType(n) = node_ritem) then begin
+        ritem := TJabberRosterItem(n.Data);
+        if ritem <> nil then
+            ShowLog(ritem.jid.jid);
+        end;
 end;
 
 {---------------------------------------}
