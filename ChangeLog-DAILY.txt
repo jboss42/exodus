@@ -1,8 +1,419 @@
-2004-04-09 08:20  pgmillard
+2004-04-26 14:11  pgmillard
 
 	* exodus/: default.po, version.h, version.nsi: daily build
 
-2004-04-09 08:18  pgmillard
+2004-04-26 13:09  pgmillard
 
-	* exodus/Room.dfm: Fix weird room panel problem, AGAIN.
+	* exodus/plugins/: example-plugin-i18n.nsi,
+	  example-plugin-locale.nsh, plugin-desc-new.nsi, plugin-desc.nsi,
+	  plugin-en-new.nsi, plugin-en.nsi, plugin-i18n-new.nsi,
+	  plugin-locale-new.nsh, plugin-off-new.nsi, plugin-off.nsi,
+	  plugin-sections-new.nsi, plugin-sections.nsi: Add missing
+	  installer files.
+
+2004-04-26 06:51  pgmillard
+
+	* exodus/: Emote.pas, xml.res, prefs/PrefEmote.pas: Custom
+	  emoticons appear to be working... still needs a few last tweaks.
+
+2004-04-24 13:58  pgmillard
+
+	* exodus/: Emote.pas, GIFImage.pas, prefs/PrefEmote.pas: Solve the
+	  whole transparency mess a few different ways.
+
+2004-04-23 17:10  pgmillard
+
+	* exodus/web/index.html: Add source zip file to index page.
+
+2004-04-22 07:20  pgmillard
+
+	* exodus/prefs/: PrefEmote.dfm, PrefEmote.pas: Tweaks to owner-draw
+	  stuff for custom emoticons
+
+2004-04-22 02:43  llong
+
+	* exodus/locale/pt_PT/LC_MESSAGES/default.po: Translated the new
+	  strings to synchronize with version 1.114 of the main default.po
+
+2004-04-21 23:12  pgmillard
+
+	* exodus/: EmoteProps.dfm, EmoteProps.pas: New files.
+
+2004-04-21 23:11  pgmillard
+
+	* exodus/: Emote.pas, Exodus.dpr, ExodusCOM_TLB.pas,
+	  prefs/PrefEmote.dfm, prefs/PrefEmote.pas: Lots more work on
+	  custom emoticons. They work, but the custom draw stuff needs to
+	  be fixed up.
+
+2004-04-21 20:32  pgmillard
+
+	* exodus/fGeneric.pas: Bug #3648 - Fixup x-data for list-single and
+	  list-multi when options don't have labels.
+
+2004-04-21 20:23  pgmillard
+
+	* exodus/ExUtils.pas: Yeah, yeah, it doesn't compile.
+
+2004-04-21 20:22  pgmillard
+
+	* exodus/ExUtils.pas: Bug #3636 - Put html headers on log files.
+
+2004-04-21 20:06  pgmillard
+
+	* jopl/: XMLSocketStream.pas, XMLStream.pas: Bug #3628 - Various
+	  conditions around disconnecting fixed up.
+
+2004-04-21 17:12  hildjj
+
+	* exodus/: fGeneric.pas, xdata.dfm, xdata.pas: try to resize
+	  type=fixed xdata fields more properly.
+
+2004-04-20 07:09  pgmillard
+
+	* exodus/Jabber1.pas, jopl/XMLSocketStream.pas: Attempts to fix Bug
+	  #3628
+
+2004-04-20 06:58  pgmillard
+
+	* exodus/locale/de/LC_MESSAGES/default.po: Bug #3618 - Add space in
+	  translated file.
+
+2004-04-19 11:17  hildjj
+
+	* exodus/IEMsgList.pas: Don't scroll to the bottom on resize: that
+	  introduces a whole kerfuffle.
+
+2004-04-19 10:58  hildjj
+
+	* exodus/IEMsgList.pas: Continue to do crlf's for plaintext
+	  messages
+
+2004-04-16 07:14  pgmillard
+
+	* exodus/: Emote.pas, Exodus.dpr, ExodusCOM_TLB.pas,
+	  prefs/PrefEmote.dfm, prefs/PrefEmote.pas: More code for loading
+	  custom icon-defs files.
+
+2004-04-15 17:26  hildjj
+
+	* exodus/IEMsgList.pas, jopl/XMLUtils.pas: got HTML escaping right
+	  (I think.)
+
+2004-04-15 16:45  hildjj
+
+	* exodus/IEMsgList.pas, jopl/XMLUtils.pas: do HTML escaping on
+	  displayed messages, when not in HTML mode
+
+2004-04-15 16:22  hildjj
+
+	* exodus/: BaseChat.dfm, BaseChat.pas, BaseMsgList.pas,
+	  ChatWin.dfm, ChatWin.pas, IEMsgList.dfm, IEMsgList.pas: fix IE
+	  bugs with doc/undoc, etc
+
+2004-04-15 07:21  pgmillard
+
+	* exodus/: Emote.pas, defaults.xml, prefs/PrefEmote.dfm,
+	  prefs/PrefEmote.pas: Some GUI work on custom emoticons
+
+2004-04-14 21:09  pgmillard
+
+	* exodus/: BaseChat.pas, Emote.pas, IEMsgList.pas, Jabber1.dfm,
+	  Jabber1.pas, MsgDisplay.pas: Some more code cleanup
+
+2004-04-14 20:19  pgmillard
+
+	* exodus/: BaseChat.dfm, BaseChat.pas, Emote.pas, Emoticons.dfm,
+	  Emoticons.pas, Exodus.dpr, ExodusCOM_TLB.pas, Jabber1.dfm,
+	  MsgDisplay.pas: Refactored emoticon window for graphically
+	  picking emoticons in chat/room windows.
+
+2004-04-14 14:47  hildjj
+
+	* exodus/IEMsgList.pas, exodus/iemsglist_style.css, exodus/xml.res,
+	  jopl/XMLUtils.pas: URL encode Application.exename before using it
+	  as a res: url, so that 'program files' installs will work.
+
+2004-04-14 07:24  pgmillard
+
+	* exodus/: Emote.pas, ExodusCOM_TLB.pas, Prefs.dfm, defaults.xml,
+	  prefs/PrefEmote.dfm, prefs/PrefEmote.pas: Some more Emoticon
+	  stuff... hooked in prefs, and started TBMPEmoticon
+
+2004-04-13 18:55  hildjj
+
+	* exodus/: BaseChat.dfm, BaseChat.pas, BaseMsgList.pas,
+	  ChatWin.dfm, ChatWin.pas, IEMsgList.pas, Room.dfm, Room.pas,
+	  iemsglist.htm, iemsglist_style.css: More triumphant style sheets
+	  for IE rendering; put the name of the room/nick of the person as
+	  a watermark.
+
+2004-04-13 14:32  hildjj
+
+	* exodus/plugins/: AIM-Import/README.txt, ASpeller/README.txt,
+	  ICQ-Import/README.txt, JabberStats/README.txt,
+	  MSWordSpeller/README.txt, NetMeeting/README.txt,
+	  RosterTools/README.txt: remove readme.txt files.  Use
+	  plugin-info.nsh instead, now.
+
+2004-04-13 13:34  hildjj
+
+	* build.pl, exodus/default.po, exodus/exodus-new.nsi,
+	  exodus/iemsglist_style.css, exodus/locale-new.nsh,
+	  exodus/xml.res, exodus/zipfiles.txt, exodus/plugins/.cvsignore,
+	  exodus/plugins/example-plugin-desc.nsi,
+	  exodus/plugins/example-plugin-en.nsi,
+	  exodus/plugins/example-plugin-off.nsi,
+	  exodus/plugins/example-plugin-sections.nsi,
+	  exodus/plugins/plugin-i18n.nsi, exodus/plugins/plugin-locale.nsh,
+	  exodus/plugins/AIM-Import/ExodusCOM_TLB.pas,
+	  exodus/plugins/AIM-Import/plugin-info.nsh,
+	  exodus/plugins/ASpeller/ExodusCOM_TLB.pas,
+	  exodus/plugins/ASpeller/plugin-info.nsh,
+	  exodus/plugins/ICQ-Import/ExodusCOM_TLB.pas,
+	  exodus/plugins/ICQ-Import/plugin-info.nsh,
+	  exodus/plugins/JabberStats/ExodusCOM_TLB.pas,
+	  exodus/plugins/JabberStats/plugin-info.nsh,
+	  exodus/plugins/MSWordSpeller/plugin-info.nsh,
+	  exodus/plugins/NetMeeting/ExodusCOM_TLB.pas,
+	  exodus/plugins/NetMeeting/plugin-info.nsh,
+	  exodus/plugins/RosterTools/ExodusCOM_TLB.pas,
+	  exodus/plugins/RosterTools/plugin-info.nsh: Ensure that new build
+	  system scales to adding new plugins.	TRANSLATORS: please update
+	  plugin-info.nsh in each plugin in two places, use PT_PT as an
+	  example of what to change.
+
+2004-04-13 12:44  pgmillard
+
+	* exodus/: BaseChat.pas, un-notify.ini: Added missing file.
+
+2004-04-13 11:45  hildjj
+
+	* build.pl, exodus/exodus-new.nsi, exodus/iemsglist_style.css: Add
+	  emoticons to the installer
+
+2004-04-13 10:00  hildjj
+
+	* exodus/: Emote.pas, defaults.xml, xml.res: set defaults for
+	  emoticon dlls
+
+2004-04-13 09:37  hildjj
+
+	* exodus/: msn-emoticons/msn_emoticons.cfg,
+	  msn-emoticons/msn_emoticons.res,
+	  yahoo-emoticons/yahoo_emoticons.cfg,
+	  yahoo-emoticons/yahoo_emoticons.dof,
+	  yahoo-emoticons/yahoo_emoticons.res: build emoticons dll's in ..
+
+2004-04-13 07:24  pgmillard
+
+	* exodus/: BaseChat.dfm, BaseChat.pas, Emote.pas, Exodus.dpr,
+	  ExodusCOM_TLB.pas, Prefs.dfm, Prefs.pas, defaults.xml, xml.res,
+	  prefs/PrefEmote.dfm, prefs/PrefEmote.pas, prefs/PrefFont.dfm,
+	  prefs/PrefFont.pas, prefs/PrefMsg.dfm, prefs/PrefMsg.pas,
+	  prefs/PrefPresence.dfm: Some of the GUI work for emoticons on
+	  pluggable MsgList stuff.
+
+2004-04-12 18:56  hildjj
+
+	* exodus/BaseChat.dfm, exodus/BaseChat.pas, exodus/Emote.pas,
+	  exodus/Exodus.dpr, exodus/ExodusCOM_TLB.pas, exodus/GIFImage.pas,
+	  exodus/IEMsgList.pas, exodus/Jabber1.dfm, exodus/Jabber1.pas,
+	  exodus/LocalUtils.pas, exodus/MsgDisplay.pas,
+	  exodus/iemsglist_style.css, exodus/msn-emoticons/icondef.xml,
+	  exodus/msn-emoticons/msn.rc, exodus/msn-emoticons/msn_angel.bmp,
+	  exodus/msn-emoticons/msn_angel.gif,
+	  exodus/msn-emoticons/msn_angry.bmp,
+	  exodus/msn-emoticons/msn_angry.gif,
+	  exodus/msn-emoticons/msn_asl.bmp,
+	  exodus/msn-emoticons/msn_asl.gif,
+	  exodus/msn-emoticons/msn_bat.bmp,
+	  exodus/msn-emoticons/msn_bat.gif,
+	  exodus/msn-emoticons/msn_beer.bmp,
+	  exodus/msn-emoticons/msn_beer.gif,
+	  exodus/msn-emoticons/msn_blush.bmp,
+	  exodus/msn-emoticons/msn_blush.gif,
+	  exodus/msn-emoticons/msn_boy.bmp,
+	  exodus/msn-emoticons/msn_boy.gif,
+	  exodus/msn-emoticons/msn_breath.bmp,
+	  exodus/msn-emoticons/msn_breath.gif,
+	  exodus/msn-emoticons/msn_broken.bmp,
+	  exodus/msn-emoticons/msn_broken.gif,
+	  exodus/msn-emoticons/msn_cake.bmp,
+	  exodus/msn-emoticons/msn_cake.gif,
+	  exodus/msn-emoticons/msn_camera.bmp,
+	  exodus/msn-emoticons/msn_camera.gif,
+	  exodus/msn-emoticons/msn_cat.bmp,
+	  exodus/msn-emoticons/msn_cat.gif,
+	  exodus/msn-emoticons/msn_clock.bmp,
+	  exodus/msn-emoticons/msn_clock.gif,
+	  exodus/msn-emoticons/msn_coffee.bmp,
+	  exodus/msn-emoticons/msn_coffee.gif,
+	  exodus/msn-emoticons/msn_cuffs.bmp,
+	  exodus/msn-emoticons/msn_cuffs.gif,
+	  exodus/msn-emoticons/msn_devil.bmp,
+	  exodus/msn-emoticons/msn_devil.gif,
+	  exodus/msn-emoticons/msn_dog.bmp,
+	  exodus/msn-emoticons/msn_dog.gif,
+	  exodus/msn-emoticons/msn_emoticons.cfg,
+	  exodus/msn-emoticons/msn_emoticons.dpr,
+	  exodus/msn-emoticons/msn_film.bmp,
+	  exodus/msn-emoticons/msn_film.gif,
+	  exodus/msn-emoticons/msn_frown.bmp,
+	  exodus/msn-emoticons/msn_frown.gif,
+	  exodus/msn-emoticons/msn_girl.bmp,
+	  exodus/msn-emoticons/msn_girl.gif,
+	  exodus/msn-emoticons/msn_glasses.bmp,
+	  exodus/msn-emoticons/msn_glasses.gif,
+	  exodus/msn-emoticons/msn_graph.bmp,
+	  exodus/msn-emoticons/msn_graph.gif,
+	  exodus/msn-emoticons/msn_grin.bmp,
+	  exodus/msn-emoticons/msn_grin.gif,
+	  exodus/msn-emoticons/msn_heart.bmp,
+	  exodus/msn-emoticons/msn_heart.gif,
+	  exodus/msn-emoticons/msn_hug_left.bmp,
+	  exodus/msn-emoticons/msn_hug_left.gif,
+	  exodus/msn-emoticons/msn_hug_right.bmp,
+	  exodus/msn-emoticons/msn_hug_right.gif,
+	  exodus/msn-emoticons/msn_kiss.bmp,
+	  exodus/msn-emoticons/msn_kiss.gif,
+	  exodus/msn-emoticons/msn_kissme.bmp,
+	  exodus/msn-emoticons/msn_kissme.gif,
+	  exodus/msn-emoticons/msn_lightbulb.bmp,
+	  exodus/msn-emoticons/msn_lightbulb.gif,
+	  exodus/msn-emoticons/msn_mail.bmp,
+	  exodus/msn-emoticons/msn_mail.gif,
+	  exodus/msn-emoticons/msn_martini.bmp,
+	  exodus/msn-emoticons/msn_martini.gif,
+	  exodus/msn-emoticons/msn_moon.bmp,
+	  exodus/msn-emoticons/msn_moon.gif,
+	  exodus/msn-emoticons/msn_note.bmp,
+	  exodus/msn-emoticons/msn_note.gif,
+	  exodus/msn-emoticons/msn_package.bmp,
+	  exodus/msn-emoticons/msn_package.gif,
+	  exodus/msn-emoticons/msn_phone.bmp,
+	  exodus/msn-emoticons/msn_phone.gif,
+	  exodus/msn-emoticons/msn_rainbow.bmp,
+	  exodus/msn-emoticons/msn_rainbow.gif,
+	  exodus/msn-emoticons/msn_rose.bmp,
+	  exodus/msn-emoticons/msn_rose.gif,
+	  exodus/msn-emoticons/msn_shocked.bmp,
+	  exodus/msn-emoticons/msn_shocked.gif,
+	  exodus/msn-emoticons/msn_smile.bmp,
+	  exodus/msn-emoticons/msn_smile.gif,
+	  exodus/msn-emoticons/msn_straight.bmp,
+	  exodus/msn-emoticons/msn_straight.gif,
+	  exodus/msn-emoticons/msn_tantrum.bmp,
+	  exodus/msn-emoticons/msn_tantrum.gif,
+	  exodus/msn-emoticons/msn_thumb_down.bmp,
+	  exodus/msn-emoticons/msn_thumb_down.gif,
+	  exodus/msn-emoticons/msn_thumb_up.bmp,
+	  exodus/msn-emoticons/msn_thumb_up.gif,
+	  exodus/msn-emoticons/msn_tilde.bmp,
+	  exodus/msn-emoticons/msn_tilde.gif,
+	  exodus/msn-emoticons/msn_tongue.bmp,
+	  exodus/msn-emoticons/msn_tongue.gif,
+	  exodus/msn-emoticons/msn_wilted.bmp,
+	  exodus/msn-emoticons/msn_wilted.gif,
+	  exodus/msn-emoticons/msn_wink.bmp,
+	  exodus/msn-emoticons/msn_wink.gif,
+	  exodus/yahoo-emoticons/icondef.xml,
+	  exodus/yahoo-emoticons/yahoo.rc,
+	  exodus/yahoo-emoticons/yahoo_alien.bmp,
+	  exodus/yahoo-emoticons/yahoo_alien.gif,
+	  exodus/yahoo-emoticons/yahoo_angel.bmp,
+	  exodus/yahoo-emoticons/yahoo_angel.gif,
+	  exodus/yahoo-emoticons/yahoo_breath.bmp,
+	  exodus/yahoo-emoticons/yahoo_breath.gif,
+	  exodus/yahoo-emoticons/yahoo_clown.bmp,
+	  exodus/yahoo-emoticons/yahoo_clown.gif,
+	  exodus/yahoo-emoticons/yahoo_cool.bmp,
+	  exodus/yahoo-emoticons/yahoo_cool.gif,
+	  exodus/yahoo-emoticons/yahoo_cow.bmp,
+	  exodus/yahoo-emoticons/yahoo_cow.gif,
+	  exodus/yahoo-emoticons/yahoo_devil.bmp,
+	  exodus/yahoo-emoticons/yahoo_devil.gif,
+	  exodus/yahoo-emoticons/yahoo_dweeb.bmp,
+	  exodus/yahoo-emoticons/yahoo_dweeb.gif,
+	  exodus/yahoo-emoticons/yahoo_embarassed.bmp,
+	  exodus/yahoo-emoticons/yahoo_embarassed.gif,
+	  exodus/yahoo-emoticons/yahoo_emoticons.cfg,
+	  exodus/yahoo-emoticons/yahoo_emoticons.dof,
+	  exodus/yahoo-emoticons/yahoo_emoticons.dpr,
+	  exodus/yahoo-emoticons/yahoo_frown.bmp,
+	  exodus/yahoo-emoticons/yahoo_frown.gif,
+	  exodus/yahoo-emoticons/yahoo_gray.bmp,
+	  exodus/yahoo-emoticons/yahoo_gray.gif,
+	  exodus/yahoo-emoticons/yahoo_grin.bmp,
+	  exodus/yahoo-emoticons/yahoo_grin.gif,
+	  exodus/yahoo-emoticons/yahoo_loud.bmp,
+	  exodus/yahoo-emoticons/yahoo_loud.gif,
+	  exodus/yahoo-emoticons/yahoo_love.bmp,
+	  exodus/yahoo-emoticons/yahoo_love.gif,
+	  exodus/yahoo-emoticons/yahoo_mean.bmp,
+	  exodus/yahoo-emoticons/yahoo_mean.gif,
+	  exodus/yahoo-emoticons/yahoo_question.bmp,
+	  exodus/yahoo-emoticons/yahoo_question.gif,
+	  exodus/yahoo-emoticons/yahoo_rose.bmp,
+	  exodus/yahoo-emoticons/yahoo_rose.gif,
+	  exodus/yahoo-emoticons/yahoo_shocked.bmp,
+	  exodus/yahoo-emoticons/yahoo_shocked.gif,
+	  exodus/yahoo-emoticons/yahoo_sleep.bmp,
+	  exodus/yahoo-emoticons/yahoo_sleep.gif,
+	  exodus/yahoo-emoticons/yahoo_smile.bmp,
+	  exodus/yahoo-emoticons/yahoo_smile.gif,
+	  exodus/yahoo-emoticons/yahoo_smirk.bmp,
+	  exodus/yahoo-emoticons/yahoo_smirk.gif,
+	  exodus/yahoo-emoticons/yahoo_stop.bmp,
+	  exodus/yahoo-emoticons/yahoo_stop.gif,
+	  exodus/yahoo-emoticons/yahoo_straight.bmp,
+	  exodus/yahoo-emoticons/yahoo_straight.gif,
+	  exodus/yahoo-emoticons/yahoo_tantrum.bmp,
+	  exodus/yahoo-emoticons/yahoo_tantrum.gif,
+	  exodus/yahoo-emoticons/yahoo_tex.bmp,
+	  exodus/yahoo-emoticons/yahoo_tex.gif,
+	  exodus/yahoo-emoticons/yahoo_tongue.bmp,
+	  exodus/yahoo-emoticons/yahoo_tongue.gif, jopl/PrefController.pas,
+	  jopl/PrefFile.pas, jopl/XMLParser.pas: Beginning of the great
+	  Emoticon transition of '04.  Should work for both RTF and HTML.
+	  PGM: still need to fix the Control-E popup.
+
+2004-04-12 07:19  pgmillard
+
+	* exodus/: BaseChat.dfm, BaseChat.pas, BaseMsgList.pas,
+	  ExodusCOM_TLB.pas, IEMsgList.pas, MSHTMLEvents.pas: IEMsgList
+	  tweaks Turn platform warnings off. Fix AVs when window is closed.
+
+2004-04-11 14:57  hildjj
+
+	* exodus/: IEMsgList.dfm, IEMsgList.pas: Catch URL clicks with
+	  default browser
+
+2004-04-11 14:38  hildjj
+
+	* exodus/: Emote.pas, Exodus.dpr, ExodusCOM_TLB.pas,
+	  MSHTMLEvents.pas, RegExpr.pas, iehtml.rc, iemsglist.htm,
+	  iemsglist_style.css, components/ExRichEdit.pas: Initial crack at
+	  IE rendering
+
+2004-04-11 14:34  hildjj
+
+	* exodus/: IEMsgList.dfm, IEMsgList.pas: Initial crack at IE
+	  rendering
+
+2004-04-11 14:33  hildjj
+
+	* exodus/: BaseChat.dfm, BaseChat.pas: Create an IEMsgList, instead
+	  of RTFMsgList
+
+2004-04-11 14:32  hildjj
+
+	* jopl/XMLTag.pas: Serialization needs to deal with mixed content,
+	  for XHTML
+
+2004-04-11 14:30  hildjj
+
+	* jopl/JabberMsg.pas: Hold on to the tag that was used to create
+	  the Message, so that when event handlers receive the message,
+	  they have access to the whole thing.
 
