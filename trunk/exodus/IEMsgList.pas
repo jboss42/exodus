@@ -99,6 +99,7 @@ var
   fIEMsgList: TfIEMsgList;
   xp_xhtml: TXPLite;
   url_regex: TRegExpr;
+  crlf_regex: TRegExpr;
   ok_tags: THashedStringList;
   style_tags: THashedStringList;
   style_props: THashedStringList;
@@ -323,7 +324,9 @@ begin
     end;
 
     if (txt = '') then begin
-        cd := TXMLCData.Create(HTML_EscapeChars(Msg.Body, false));
+        txt := HTML_EscapeChars(Msg.Body, false);
+        txt := crlf_regex.Replace(txt, '<br />', true);
+        cd := TXMLCData.Create(txt);
         txt := ProcessTag(nil, cd);
     end;
 
@@ -568,8 +571,12 @@ initialization
     xp_xhtml := TXPLite.Create('/message/html/body');
 
     url_regex := TRegExpr.Create();
-    url_regex.expression := '(https?|ftp|xmpp)://[^ \r\n\t]+';
+    url_regex.expression := '(https?|ftp|xmpp)://[^ '#$D#$A#$9']+';
     url_regex.Compile();
+
+    crlf_regex := TRegExpr.Create();
+    crlf_regex.expression := '('#$D'?'#$A'|'#$D')';
+    crlf_regex.Compile();
 
     ok_tags := THashedStringList.Create();
     ok_tags.Add('blockquote');
