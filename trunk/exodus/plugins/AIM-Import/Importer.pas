@@ -32,6 +32,7 @@ type
     procedure addItems();
   public
     { Public declarations }
+    _gjid: Widestring;
     exodus: IExodusController;
     procedure processAgents();
   end;
@@ -95,13 +96,11 @@ begin
 end;
 
 procedure TfrmImport.processAgents();
-var
-    gjid: Widestring;
 begin
     // make sure we have a AIM service
     btnNext.Enabled := true;
-    gjid := exodus.getAgentService(txtGateway.Text, 'aim');
-    if (gjid = '') then begin
+    _gjid := exodus.getAgentService(txtGateway.Text, 'aim');
+    if (_gjid = '') then begin
         // not found!
         MessageDlg('The jabber server you entered does not have an AIM Gateway. Please select another server.',
             mtError, [mbOK], 0);
@@ -158,7 +157,7 @@ begin
                                 li := ListView1.Items.Add();
                                 li.Caption := cur_grp;
                                 li.SubItems.Add(itms[n]);
-                                jid := itms[n] + '@' + txtGateway.Text;
+                                jid := itms[n] + '@' + _gjid;
                                 li.SubItems.Add(jid);
                                 li.Checked := true;
                             end;
