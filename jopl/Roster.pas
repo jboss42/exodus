@@ -56,6 +56,7 @@ type
         bmType: string;
         bmName: string;
         nick: string;
+        Data: TObject;
 
         constructor Create(tag: TXMLTag);
         destructor Destroy; override;
@@ -100,6 +101,7 @@ type
         procedure AddItem(sjid, nickname, group: string; subscribe: boolean);
         procedure AddBookmark(sjid: string; bm: TJabberBookmark);
         procedure RemoveBookmark(sjid: string);
+        procedure UpdateBookmark(bm: TJabberBookmark);
 
         function Find(sjid: string): TJabberRosterItem; reintroduce; overload;
         function GetGroupItems(grp: string; online: boolean): TList;
@@ -556,6 +558,17 @@ begin
         end;
     Self.SaveBookmarks();
     // todo: Fire an event here to tell everyone we nuked a BM???
+end;
+
+{---------------------------------------}
+procedure TJabberRoster.UpdateBookmark(bm: TJabberBookmark);
+var
+    t: TXMLTag;
+begin
+    Self.SaveBookmarks();
+    t := bm.AddToTag(TXMLTag.Create('bm'));
+    with TJabberSession(_js) do
+        FireEvent('/roster/bookmark', t);
 end;
 
 {---------------------------------------}

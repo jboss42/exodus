@@ -377,11 +377,19 @@ begin
             end;
         end;
 
-    // add this conference to the bookmark nodes
-    bm_node := treeRoster.Items.AddChild(_bookmark, bm.bmName);
-    bm_node.ImageIndex := 21;
-    bm_node.SelectedIndex := bm_node.ImageIndex;
-    bm_node.Data := bm;
+    if (bm.Data <> nil) then begin
+        bm_node := TTreeNode(bm.Data);
+        bm_node.Text := bm.bmName;
+        end
+    else begin
+        // add this conference to the bookmark nodes
+        bm_node := treeRoster.Items.AddChild(_bookmark, bm.bmName);
+        bm.Data := bm_node;
+        bm_node.ImageIndex := 21;
+        bm_node.SelectedIndex := bm_node.ImageIndex;
+        bm_node.Data := bm;
+        end;
+
 
     _bookmark.Expand(true);
 end;
