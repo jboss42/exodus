@@ -1,6 +1,6 @@
 object frmPrefs: TfrmPrefs
-  Left = 116
-  Top = 171
+  Left = 43
+  Top = 430
   Width = 407
   Height = 411
   Caption = 'Exodus Preferences'
@@ -20,7 +20,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 345
+    Height = 340
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1379,13 +1379,13 @@ object frmPrefs: TfrmPrefs
     Left = 89
     Top = 0
     Width = 310
-    Height = 345
-    ActivePage = tbsKeywords
+    Height = 340
+    ActivePage = tbsRoster
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 7
+    TabIndex = 0
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1728,7 +1728,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 102
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2112,7 +2112,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 124
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2187,17 +2187,6 @@ object frmPrefs: TfrmPrefs
     object tbsKeywords: TTabSheet
       Caption = 'Keywords'
       ImageIndex = 7
-      object Label1: TLabel
-        Left = 0
-        Top = 20
-        Width = 302
-        Height = 26
-        Align = alTop
-        Caption = 
-          'Enter in the strings that you want Exodus to look for in message' +
-          's.'
-        WordWrap = True
-      end
       object StaticText8: TStaticText
         Left = 0
         Top = 0
@@ -2218,19 +2207,39 @@ object frmPrefs: TfrmPrefs
       end
       object memKeywords: TMemo
         Left = 0
-        Top = 46
+        Top = 73
         Width = 302
-        Height = 268
+        Height = 236
         Align = alClient
         TabOrder = 1
       end
-      object chkRegex: TCheckBox
-        Left = 179
-        Top = 32
-        Width = 123
-        Height = 14
-        Caption = 'Regular Expressions?'
+      object Panel2: TPanel
+        Left = 0
+        Top = 20
+        Width = 302
+        Height = 53
+        Align = alTop
+        BevelOuter = bvNone
         TabOrder = 2
+        object Label1: TLabel
+          Left = 0
+          Top = 0
+          Width = 302
+          Height = 26
+          Align = alTop
+          Caption = 
+            'Enter in the strings that you want Exodus to look for in message' +
+            's.'
+          WordWrap = True
+        end
+        object chkRegex: TCheckBox
+          Left = 5
+          Top = 34
+          Width = 260
+          Height = 14
+          Caption = 'Use Regular Expressions for Keyword matches'
+          TabOrder = 0
+        end
       end
     end
     object tbsBlockList: TTabSheet
@@ -2239,7 +2248,7 @@ object frmPrefs: TfrmPrefs
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 302
+        Width = 292
         Height = 26
         Align = alTop
         Caption = 
@@ -2250,7 +2259,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 146
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2452,7 +2461,7 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 345
+    Top = 340
     Width = 399
     Height = 37
     Align = alBottom
