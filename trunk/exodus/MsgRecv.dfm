@@ -142,6 +142,7 @@ object frmMsgRecv: TfrmMsgRecv
         end>
       LangOptions = [loAutoFont]
       Language = 1033
+      PopupMenu = popClipboard
       ShowSelectionBar = False
       TabOrder = 0
       URLColor = clBlue
@@ -239,6 +240,7 @@ object frmMsgRecv: TfrmMsgRecv
       end>
     LangOptions = [loAutoFont]
     Language = 1033
+    PopupMenu = popClipboard
     ReadOnly = True
     ScrollBars = ssVertical
     ShowSelectionBar = False
@@ -526,6 +528,19 @@ object frmMsgRecv: TfrmMsgRecv
     end
     object N2: TMenuItem
       Caption = '-'
+    end
+  end
+  object popClipboard: TPopupMenu
+    OnPopup = popClipboardPopup
+    Left = 72
+    Top = 192
+    object popCopy: TMenuItem
+      Caption = 'Copy'
+      OnClick = popCopyClick
+    end
+    object popPaste: TMenuItem
+      Caption = 'Paste'
+      OnClick = popPasteClick
     end
   end
 end
