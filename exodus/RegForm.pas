@@ -353,8 +353,6 @@ end;
 
 {---------------------------------------}
 procedure TfrmRegister.Start();
-var
-    a: TAgentItem;
 begin
     // start the whole process off
     btnPrev.Enabled := false;

@@ -183,7 +183,7 @@ end;
 procedure TDataThread.Run;
 var
     bytes: longint;
-    buff: string;
+    utf, buff: string;
 begin
     {
     This procedure gets run continuously, until
@@ -219,7 +219,8 @@ begin
             end
         else begin
             // Get any pending incoming data
-            buff := _Socket.CurrentReadBuffer;
+            utf := _Socket.CurrentReadBuffer;
+            buff := Utf8ToAnsi(utf);
 
             if (Self.Stopped) or (Self.Suspended) then exit;
             bytes := length(buff);
@@ -648,10 +649,13 @@ end;
 
 {---------------------------------------}
 procedure TXMLStream.Send(xml: string);
+var
+    utf: string;
 begin
     // Send this text out the socket
-    DoSocketCallbacks(true, xml);
-    _Socket.Write(xml);
+    utf := AnsiToUTF8(xml);
+    DoSocketCallbacks(true, utf);
+    _Socket.Write(utf);
     _timer.Enabled := false;
     _timer.Enabled := true;
 end;
