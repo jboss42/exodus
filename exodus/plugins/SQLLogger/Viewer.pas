@@ -23,7 +23,7 @@ type
     Panel1: TPanel;
     Panel2: TPanel;
     pnlCal: TPanel;
-    TntPanel1: TTntPanel;
+    pnlToday: TTntPanel;
     pnlCalHeader: TTntPanel;
     btnPrevMonth: TSpeedButton;
     btnNextMonth: TSpeedButton;
@@ -102,6 +102,7 @@ var
     tmp: TSQLiteTable;
     conv: TConversation;
     tmp_b: boolean;
+    sel: TGridRect;
 begin
     if (_last = d) then exit;
     
@@ -162,8 +163,11 @@ begin
     // is the following sunday, which is row 2).
     if (c < c1) then r := r + 1;
 
-    gridCal.Row := r;
-    gridCal.Col := c;
+    sel.top := r;
+    sel.bottom := r;
+    sel.left := c;
+    sel.right := c;
+    gridCal.Selection := sel;
 
     // Select the first thing in the list automatically.
     if (_convs.Count > 0) then begin
@@ -284,8 +288,8 @@ begin
     cw := Trunc(gridCal.Width / 7.0);
     for i := 0 to 6 do
         gridCal.ColWidths[i] := cw;
-
     DrawCal(Now());
+    pnlToday.Caption := 'Today: ' + DateToStr(Now());
 end;
 
 {---------------------------------------}
@@ -316,6 +320,7 @@ begin
         end;
         gridCal.Cells[c, r] := IntToStr(i);
     end;
+    MsgList.Lines.Clear();
 end;
 
 {---------------------------------------}

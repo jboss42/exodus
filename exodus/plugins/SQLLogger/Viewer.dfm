@@ -80,7 +80,7 @@ object frmView: TfrmView
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      object TntPanel1: TTntPanel
+      object pnlToday: TTntPanel
         Left = 0
         Top = 164
         Width = 197
