@@ -28,7 +28,7 @@ object frmProfile: TfrmProfile
     Top = 0
     Width = 314
     Height = 330
-    ActivePage = TabSheet3
+    ActivePage = TabSheet1
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 0

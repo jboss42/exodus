@@ -1108,8 +1108,21 @@ begin
         member.nick := tmp_jid.resource;
         tmp_jid.Free();
 
-        if (member.Nick = myNick) then begin
+        // check for role=none to fixup bugs in some mu-c servers.
+        if (member.role = 'none') then begin
+            _roster.Delete(i);
+            i := _rlist.IndexOf(member);
+            if (i >= 0) then begin
+                _rlist.Delete(i);
+                _rlist.Sort(ItemCompare);
+                lstRoster.Items.Count := _rlist.Count;
+                lstRoster.Invalidate();
+            end;
+            member.Free;
+            exit;
+        end;
 
+        if (member.Nick = myNick) then begin
             if (i < 0) then begin
                 // this is the first time I've joined the room
                 mtag := nil;
