@@ -34,6 +34,8 @@ type
     procedure MsgListMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure MsgListURLClick(Sender: TObject; URL: String);
+    procedure MsgListMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private declarations }
 
@@ -315,6 +317,14 @@ end;
 procedure TfRTFMsgList.setDragDrop(event: TDragDropEvent);
 begin
     MsgList.onDragDrop := event;
+end;
+
+{---------------------------------------}
+procedure TfRTFMsgList.MsgListMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+  inherited;
+    Self.MsgListEnter(Self);
 end;
 
 end.
