@@ -1478,6 +1478,10 @@ begin
         if ((r = 0) or (r = 2)) then begin
             win := StartChat(_cur_ritem.jid.jid, '', true);
             win.Show();
+            if ((MainSession.Prefs.getBool('expanded')) and
+                (win.TabSheet <> nil) and
+                (frmExodus.Tabs.ActivePage <> win.TabSheet)) then
+                frmExodus.Tabs.ActivePage := win.TabSheet;
         end
         else if (r = 1) then
             StartMsg(_cur_ritem.jid.jid);
