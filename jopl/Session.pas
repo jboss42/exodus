@@ -540,7 +540,7 @@ begin
 
             _dispatcher.DispatchSignal('/session/connected', nil);
 
-            if _register then
+            if ((_register) or (_profile.NewAccount)) then
                 CreateAccount()
             else
                 _auth_agent.StartAuthentication();
@@ -942,6 +942,8 @@ begin
         Agents.AddObject(Server, cur_agents);
         cur_agents.Fetch(Server);
         Prefs.FetchServerPrefs();
+        _profile.NewAccount := false;
+        _register := false;
     end
     else begin
         _dispatcher.DispatchSignal('/session/autherror', tag);

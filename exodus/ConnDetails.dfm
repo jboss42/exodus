@@ -2,7 +2,7 @@ object frmConnDetails: TfrmConnDetails
   Left = 249
   Top = 169
   Width = 304
-  Height = 305
+  Height = 323
   ActiveControl = txtUsername
   Caption = 'Connection Details'
   Color = clBtnFace
@@ -18,7 +18,7 @@ object frmConnDetails: TfrmConnDetails
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 239
+    Top = 257
     Width = 296
     Height = 32
     Align = alBottom
@@ -44,7 +44,7 @@ object frmConnDetails: TfrmConnDetails
     Left = 0
     Top = 0
     Width = 296
-    Height = 239
+    Height = 257
     ActivePage = tbsProfile
     Align = alClient
     TabOrder = 1
@@ -151,6 +151,15 @@ object frmConnDetails: TfrmConnDetails
         ItemHeight = 13
         TabOrder = 2
         OnKeyPress = txtUsernameKeyPress
+      end
+      object chkRegister: TTntCheckBox
+        Left = 100
+        Top = 198
+        Width = 181
+        Height = 17
+        Caption = 'This is a new account'
+        TabOrder = 5
+        WordWrap = True
       end
     end
     object tbsConn: TTntTabSheet
@@ -390,7 +399,7 @@ object frmConnDetails: TfrmConnDetails
       end
       object lblNote: TTntLabel
         Left = 0
-        Top = 95
+        Top = 113
         Width = 284
         Height = 112
         Align = alBottom

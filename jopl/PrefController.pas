@@ -126,6 +126,7 @@ type
         SavePasswd: boolean;
         ConnectionType: integer;
         temp: boolean;
+        NewAccount: boolean;
 
         // Socket connection
         Host: Widestring;

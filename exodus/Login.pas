@@ -172,6 +172,7 @@ begin
         cboProfiles.ItemIndex := i;
         cboProfilesChange(Self);
         p.Resource := sProfileDefaultResource;
+        p.NewAccount := true;
         ShowConnDetails(p);
         lblJID.Caption := p.Username + '@' + p.Server + '/' + p.Resource;
     end;
