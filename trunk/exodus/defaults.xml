@@ -7,6 +7,22 @@
     <brand_ad></brand_ad>
     <brand_ad_url></brand_ad_url>
     <brand_caption>Exodus</brand_caption>
+    <brand_help_menu_list>
+        <s>Jabber User Guide</s>
+        <s>Exodus Website</s>
+        <s>Add Feature Request</s>
+        <s>Report Bug</s>
+        <s>Jabber.org Website</s>
+        <s>JabberStudio Website</s>
+    </brand_help_menu_list>
+    <brand_help_url_list>
+        <s>http://www.jabber.org/user/userguide/</s>
+        <s>http://exodus.jabberstudio.org/</s>
+        <s>http://www.jabberstudio.org/projects/exodus/features/</s>
+        <s>http://www.jabberstudio.org/projects/exodus/bugs/</s>
+        <s>http://www.jabber.org/</s>
+        <s>http://www.jabberstudio.org/</s>
+    </brand_help_url_list>
     <brand_icon></brand_icon>
     <brand_profile_conn_type>0</brand_profile_conn_type>
     <brand_profile_host></brand_profile_host>

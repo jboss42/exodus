@@ -95,12 +95,9 @@ type
     Mad1: TMenuItem;
     N11: TMenuItem;
     presCustom: TMenuItem;
-    JabberorgWebsite1: TMenuItem;
     N12: TMenuItem;
-    WinJabWebsite1: TMenuItem;
     ShowXML1: TMenuItem;
     SearchforPerson1: TMenuItem;
-    JabberBugzilla1: TMenuItem;
     mnuPassword: TMenuItem;
     N6: TMenuItem;
     N14: TMenuItem;
@@ -115,7 +112,6 @@ type
     mnuServerVCard: TMenuItem;
     mnuVCard: TMenuItem;
     N13: TMenuItem;
-    JabberCentralWebsite1: TMenuItem;
     mnuMyVCard: TMenuItem;
     N17: TMenuItem;
     mnuBookmark: TMenuItem;
@@ -187,7 +183,6 @@ type
     pnlLeft: TPanel;
     SplitterLeft: TSplitter;
     timTrayAlert: TTimer;
-    JabberUserGuide1: TMenuItem;
     mnuPlugins: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
@@ -254,6 +249,9 @@ type
     procedure timTrayAlertTimer(Sender: TObject);
     procedure JabberUserGuide1Click(Sender: TObject);
     procedure mnuPluginDummyClick(Sender: TObject);
+    procedure SubmitExodusFeatureRequest1Click(Sender: TObject);
+    procedure ShowBrandURL(Sender: TObject);
+
   private
     { Private declarations }
     _event: TNextEventType;
@@ -496,7 +494,8 @@ resourcestring
     sPasswordPrompt = 'Enter Password';
 
     sAlreadySubscribed = 'You are already subscribed to this contact';
-
+    sBrandingError = 'Branding error!';
+    
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -756,6 +755,9 @@ var
     win_ver: string;
     s : string;
     auth: TStandardAuth;
+    menu_list: TWideStringList;
+    i : integer;
+    mi: TMenuItem;
 begin
     // initialize vars
 
@@ -906,7 +908,19 @@ begin
             if (s <> '') then
                 Application.Icon.LoadFromFile(s);
             self.Caption := GetString('brand_caption');
-                
+
+            menu_list := TWideStringList.Create();
+            fillStringlist('brand_help_menu_list', menu_list);
+
+            for i := 0 to menu_list.Count-1 do begin
+                mi := TMenuItem.Create(self);
+                mi.Caption := menu_list.Strings[i];
+                mi.OnClick := ShowBrandURL;
+                Help1.Insert(i, mi);
+            end;
+
+            menu_list.Free();
+
             RestorePosition(Self);
 
             if (expanded <> '') then
@@ -2187,6 +2201,14 @@ begin
     ShellExecute(0, 'open', 'http://www.jabberstudio.org', '', '', SW_SHOW);
 end;
 
+
+procedure TfrmExodus.SubmitExodusFeatureRequest1Click(Sender: TObject);
+begin
+    // goto http://www.jabberstudio.org/projects/exodus/features/add.php
+    ShellExecute(0, 'open', 'http://www.jabberstudio.org', '', '', SW_SHOW);
+
+end;
+
 {---------------------------------------}
 procedure TfrmExodus.About1Click(Sender: TObject);
 begin
@@ -3081,7 +3103,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.JabberUserGuide1Click(Sender: TObject);
 begin
-    ShellExecute(0, 'open', 'http://www.jabber.org/user/userguide/', '', '', SW_SHOW);
+    ShellExecute(0, 'open', pchar(string(MainSession.Prefs.getString('brand_help_userguide'))), '', '', SW_SHOW);
 end;
 
 {---------------------------------------}
@@ -3137,6 +3159,28 @@ begin
     etag.setAttribute('lparam', IntToStr(lParam));
     etag.setAttribute('wparam', IntToStr(wParam));
     MainSession.FireEvent('/windows/msg', etag);
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.ShowBrandURL(Sender: TObject);
+var
+    i : integer;
+    url_list: TWideStringList;
+begin
+    i := Help1.IndexOf(TMenuItem(Sender));
+    if (i < 0) then exit;
+    
+    url_list := TWideStringList.Create();
+    MainSession.Prefs.fillStringlist('brand_help_url_list', url_list);
+
+    if (i < url_list.Count) then
+        ShellExecute(0, 'open',
+                     pchar(string(url_list.Strings[i])),
+                     '', '', SW_SHOW)
+    else
+        MessageDlg(sBrandingError, mtWarning, [mbOK], 0);
+
+    url_list.Free();
 end;
 
 {---------------------------------------}
