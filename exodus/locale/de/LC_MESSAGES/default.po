@@ -5986,7 +5986,7 @@ msgstr "Schlüsselwort in"
 
 #: Room.pas:469
 msgid "Activity in "
-msgstr "Aktivität in"
+msgstr "Aktivität in "
 
 #. check for various presence errors
 #. they match
