@@ -1,7 +1,0 @@
-REM -----------------------------------------------
-REM change this to build.cmd, and update the paths.
-REM -----------------------------------------------
-dcc32 -B -Q -Noutput IdleHooks.dpr
-brcc32 version.rc
-dcc32 -B -Q -Noutput -Ud:\lang\delphi\jcl\dcu -Id:\lang\delphi\jcl\source Exodus.dpr
-
