@@ -1144,14 +1144,6 @@ begin
         // Discover our server stuff..
         jEntityCache.fetch(MainSession.Server, MainSession);
 
-        // Don't broadcast our initial presence
-        _is_broadcast := true;
-        if (_last_show <> '') then
-            MainSession.setPresence(_last_show, _last_status, _last_priority)
-        else
-            MainSession.setPresence(MainSession.Show, MainSession.Status, MainSession.Priority);
-        _is_broadcast := false;
-
         // Make the roster the active tab
         Tabs.ActivePage := tbsRoster;
 
@@ -1166,6 +1158,18 @@ begin
 
         // check for new version
         InitAutoUpdate();
+
+        // Don't broadcast our initial presence
+        _is_broadcast := true;
+        if (_is_autoxa) then
+            setAutoXA()
+        else if (_is_autoaway) then
+            setAutoAway()
+        else if (_last_show <> '') then
+            MainSession.setPresence(_last_show, _last_status, _last_priority)
+        else
+            MainSession.setPresence(MainSession.Show, MainSession.Status, MainSession.Priority);
+        _is_broadcast := false;
 
         // if we have a new account, prompt for reg info
         if (_new_account) then begin
@@ -1201,9 +1205,13 @@ begin
         if (_appclosing) then
             PostMessage(Self.Handle, WM_CLOSEAPP, 0, 0)
         else if (not _logoff) then with timReconnect do begin
-            _last_show := MainSession.Show;
-            _last_status := MainSession.Status;
-            _last_priority := MainSession.Priority;
+            if ((_is_autoaway) or (_is_autoxa)) then
+                // keep _last_* the same.. do nothing
+            else begin
+                _last_show := MainSession.Show;
+                _last_status := MainSession.Status;
+                _last_priority := MainSession.Priority;
+            end;
 
             inc(_reconnect_tries);
 
@@ -2100,6 +2108,9 @@ begin
 
     MainSession.SetPresence('xa', MainSession.prefs.getString('xa_status'),
         MainSession.Priority);
+
+    if (timAutoAway.Interval > 1000) then
+        timAutoAway.Interval := 1000;
 end;
 
 {---------------------------------------}
