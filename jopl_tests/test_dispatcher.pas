@@ -67,7 +67,6 @@ procedure TDispatcherTest.TearDown;
 begin
     //
     tag.Free;
-    psig.Free;
     disp.Free;
 end;
 
