@@ -1,4 +1,5 @@
 <brand>
+	<aa_reduce_pri>1</aa_reduce_pri>
     <auto_away>1</auto_away>
     <auto_update_url>http://exodus.jabberstudio.org/exodus-released.exe</auto_update_url>
     <auto_updates>1</auto_updates>
@@ -54,6 +55,7 @@
     <brand_profile_username></brand_profile_username>
     <browse_view>0</browse_view>
     <chat_memory>60</chat_memory>
+    <close_min>1</close_min>
     <color_bg>$ffffff</color_bg>
     <color_me>$ff0000</color_me>
     <color_other>$0000ff</color_other>
@@ -76,6 +78,8 @@
     <http_proxy_port>8080</http_proxy_port>
     <http_proxy_user></http_proxy_user>
     <inline_status>0</inline_status>
+    <log>1</log>
+    <notify_active>1</notify_active>
     <notify_chatactivity>4</notify_chatactivity>
     <notify_invite>1</notify_invite>
     <notify_keyword>1</notify_keyword>
@@ -87,11 +91,13 @@
     <notify_s10n>1</notify_s10n>
     <notify_sounds>1</notify_sounds>
     <notify_flasher>1</notify_flasher>
+    <pres_tracking>1</pres_tracking>
     <presence_message_listen>1</presence_message_listen>
     <presence_message_send>1</presence_message_send>
     <profile_active>0</profile_active>
     <roster_bg>$80000005</roster_bg>
     <roster_chat>2</roster_chat>
+    <roster_groupcounts>1</roster_groupcounts>
     <roster_messenger>1</roster_messenger>
     <roster_offline_group>0</roster_offline_group>
     <roster_only_online>0</roster_only_online>
@@ -107,6 +113,7 @@
     <toolbar>1</toolbar>
     <toast_duration>5</toast_duration>
     <warn_closebusy>1</warn_closebusy>
+    <wrap_input>1</wrap_input>
     <xa_time>30</xa_time>
     <roster_default>Friends</roster_default>
     <xfer_port>5280</xfer_port>
