@@ -628,7 +628,7 @@ function StrRNScanW(S1, S2: PWideChar): Integer;
 function StrScanW(Str: PWideChar; Chr: WideChar): PWideChar; overload;
 function StrScanW(Str: PWideChar; Chr: WideChar; StrLen: Cardinal): PWideChar; overload;
 function StrRScanW(Str: PWideChar; Chr: WideChar): PWideChar;
-function StrPosW(Str, SubStr: PWideChar): PWideChar; 
+function StrPosW(Str, SubStr: PWideChar): PWideChar;
 function StrUpperW(Str: PWideChar): PWideChar;
 function StrLowerW(Str: PWideChar): PWideChar;
 function StrTitleW(Str: PWideChar): PWideChar;
@@ -731,6 +731,9 @@ function UnicodeIsUndefined(C: UCS4): Boolean;
 function UnicodeIsHan(C: UCS4): Boolean;
 function UnicodeIsHangul(C: UCS4): Boolean;
 
+// pgm May 23, 2002 - Expose the IsProperty function
+function IsProperty(Code, Mask1, Mask2: Cardinal): Boolean;
+
 // utility functions
 function CodePageFromLocale(Language: LCID): Integer;
 function KeyboardCodePage: Word;
@@ -742,36 +745,7 @@ function CodePageToWideString(A: AnsiString; CodePage: Word): WideString;
 function WideStringToUTF8(S: WideString): AnsiString;
 function UTF8ToWideString(S: AnsiString): WideString;
 
-//----------------------------------------------------------------------------------------------------------------------
-
-implementation
-
-// ~67K Unicode data for case mapping, decomposition, numbers etc.
-// This data is loaded on demand which means only those parts will be put in memory which are needed
-// by one of the lookup functions.
-{$R Unicode.res}
-
-uses
-  RTLConsts, Consts, SyncObjs, SysUtils;
-
-resourcestring
-  SUREBaseString = 'Error in regular expression: %s' + #13;
-  SUREUnexpectedEOS = 'Unexpected end of pattern.';
-  SURECharacterClassOpen = 'Character class not closed, '']'' is missing.';
-  SUREUnbalancedGroup = 'Unbalanced group expression, '')'' is missing.';
-  SUREInvalidCharProperty = 'A character property is invalid';
-  SUREInvalidRepeatRange = 'Invalid repeation range.';
-  SURERepeatRangeOpen = 'Repeation range not closed, ''}'' is missing.';
-  SUREExpressionEmpty = 'Expression is empty.';
-
-type
-  TCompareFunc = function (W1, W2: WideString; Locale: LCID): Integer;
-
-var
-  WideCompareText: TCompareFunc;
-
-//----------------- Loader routines for resource data ------------------------------------------------------------------
-
+// pgm May 23, 2002 - Expose character property constants
 const
   // Values that can appear in the Mask1 parameter of the IsProperty function.
   UC_MN = $00000001; // Mark, Non-Spacing
@@ -830,6 +804,37 @@ const
   // Added for UnicodeData-2.1.3.
   UC_PI = $00008000; // Punctuation, Initial
   UC_PF = $00010000; // Punctuation, Final
+
+
+//----------------------------------------------------------------------------------------------------------------------
+
+implementation
+
+// ~67K Unicode data for case mapping, decomposition, numbers etc.
+// This data is loaded on demand which means only those parts will be put in memory which are needed
+// by one of the lookup functions.
+{$R Unicode.res}
+
+uses
+  RTLConsts, Consts, SyncObjs, SysUtils;
+
+resourcestring
+  SUREBaseString = 'Error in regular expression: %s' + #13;
+  SUREUnexpectedEOS = 'Unexpected end of pattern.';
+  SURECharacterClassOpen = 'Character class not closed, '']'' is missing.';
+  SUREUnbalancedGroup = 'Unbalanced group expression, '')'' is missing.';
+  SUREInvalidCharProperty = 'A character property is invalid';
+  SUREInvalidRepeatRange = 'Invalid repeation range.';
+  SURERepeatRangeOpen = 'Repeation range not closed, ''}'' is missing.';
+  SUREExpressionEmpty = 'Expression is empty.';
+
+type
+  TCompareFunc = function (W1, W2: WideString; Locale: LCID): Integer;
+
+var
+  WideCompareText: TCompareFunc;
+
+//----------------- Loader routines for resource data ------------------------------------------------------------------
 
 type
   TUHeader = record
@@ -6606,6 +6611,7 @@ begin Result := ((C >= $4E00) and (C <= $9FFF))  or ((C >= $F900) and (C <= $FAF
 // Is the character a pre-composed Hangul syllable?
 function UnicodeIsHangul(C: UCS4): Boolean;
 begin Result := (C >= $AC00) and (C <= $D7FF); end;
+
 
 //----------------------------------------------------------------------------------------------------------------------
 

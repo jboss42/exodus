@@ -179,6 +179,9 @@ Date        Author Version Changes
                            TObjectList.Destroy: Inserted SetCapacity call.
                            Reduces need for frequent re-allocation of pointer buffer
                            Dedicated to my father, Theodor Heymann
+
+2002-05-01  pgm    1.1.00  Massive changes for Unicode Supoort
+2002-05-23  pgm    1.1.01  Changes to improve performance via set ops for WideChars.
 *)
 
 
@@ -456,24 +459,69 @@ TYPE
                    PublicId : WideString;
                  END;
 
+  TUnicodeset = record
+    Hibyte: byte;
+    LoByteSet: set of byte;
+    end;
+
+  TInvalidCharArray = array[0..7] of TUnicodeSet;
+  TNameStartArray = array[0..3] of TUnicodeSet;
+  TNameCharArray = array[0..0] of TUnicodeSet;
+
   TCharset = SET OF Char;
 
-
 CONST
-(*
-  CWhitespace   = [#32, #9, #13, #10];                // Whitespace characters (XmlSpec 2.3)
-  CLetter       = [#$41..#$5A, #$61..#$7A, #$C0..#$D6, #$D8..#$F6, #$F8..#$FF];
-  CDigit        = [#$30..#$39];
-  CNameChar     = CLetter + CDigit + ['.', '-', '_', ':', #$B7];
-  CNameStart    = CLetter + ['_', ':'];
-  CQuoteChar    = ['"', ''''];
-  CPubidChar    = [#32, ^M, ^J, #9, 'a'..'z', 'A'..'Z', '0'..'9',
-                   '-', '''', '(', ')', '+', ',', '.', '/', ':',
-                   '=', '?', ';', '!', '*', '#', '@', '$', '_', '%'];
-*)
+{
+From the W3C XML Spec...
+-Name start characters must have one of the categories
+    Ll, Lu, Lo, Lt, Nl.
+-Name characters other than Name-start characters must have one of the categories
+    Mc, Me, Mn, Lm, or Nd.
+-Characters in the compatibility area (i.e. with character code greater
+    than #xF900 and less than #xFFFE) are not allowed in XML names.
+-Characters which have a font or compatibility decomposition
+    (i.e. those with a "compatibility formatting tag" in field 5 of
+    the database -- marked by field 5 beginning with a "<") are not allowed.
+-The following characters are treated as name-start characters rather than
+    name characters, because the property file classifies them as
+    Alphabetic: [#x02BB-#x02C1], #x0559, #x06E5, #x06E6.
+-Characters #x20DD-#x20E0 are excluded (in accordance with Unicode 2.0, section 5.14).
+-Character #x00B7 is classified as an extender, because the
+    property list so identifies it.
+-Character #x0387 is added as a name character, because #x00B7
+    is its canonical equivalent.
+-Characters ':' and '_' are allowed as name-start characters.
+-Characters '-' and '.' are allowed as name characters
+}
 
-  CWhitespace = ''#32#9#13#10;
-  CQuoteChar = '"'#39;
+  // TCharsets we use, these are sets of Ansi Chars
+  CWhitespace       = [#$20, #$09, #$0D, #$0A];
+  CQuoteChar        = ['"', ''''];
+
+  // TUnicodeSets we use.. these are sets defined by the XML Spec
+  CInvalidNameChars: TInvalidCharArray = (
+                        (HiByte: $20; LoByteSet: [$DD..$E0]),   // #x20DD -> #x20E0
+                        (HiByte: $F9; LoByteSet: [$00..$FF]),   // #xF900 -> #xF9FF
+                        (HiByte: $FA; LoByteSet: [$00..$FF]),   // #xFA00 -> #xFAFF
+                        (HiByte: $FB; LoByteSet: [$00..$FF]),   // #xFB00 -> #xFBFF
+                        (HiByte: $FC; LoByteSet: [$00..$FF]),   // #xFC00 -> #xFCFF
+                        (HiByte: $FD; LoByteSet: [$00..$FF]),   // #xFD00 -> #xFDFF
+                        (HiByte: $FE; LoByteSet: [$00..$FF]),   // #xFE00 -> #xFEFF
+                        (HiByte: $FF; LoByteSet: [$00..$FE])    // #xFF00 -> #xFFFE
+                        );
+
+  CNameStart: TNameStartArray = (
+                        (HiByte: $00; LoByteSet: [58, 95]),     // '_' and ':'
+                        (HiByte: $02; LoByteSet: [$BB..$C1]),   // #x02BB -> #x02C1
+                        (HiByte: $05; LoByteSet: [$59]),        // #x0559
+                        (HiByte: $06; LoByteSet: [$E5, $E6])    // #x06E5, #x06E6
+                        );
+
+  CNameChar: TNameCharArray = (
+                        (HiByte: $03; LoByteSet: [$87])         // #0387
+                        );
+
+  // String contstants
   CDStart       = '<![CDATA[';
   CDEnd         = ']]>';
 
@@ -606,166 +654,6 @@ IMPLEMENTATION
 
 IMPLEMENTATION
 
-
-(*
-===============================================================================================
-Unicode and UTF-8 stuff
-===============================================================================================
-*)
-
-(*
-CONST
-  // --- Character Translation Table for Unicode <-> Win-1252
-  WIN1252_UNICODE : ARRAY [$00..$FF] OF WORD = (
-                    $0000, $0001, $0002, $0003, $0004, $0005, $0006, $0007, $0008, $0009,
-                    $000A, $000B, $000C, $000D, $000E, $000F, $0010, $0011, $0012, $0013,
-                    $0014, $0015, $0016, $0017, $0018, $0019, $001A, $001B, $001C, $001D,
-                    $001E, $001F, $0020, $0021, $0022, $0023, $0024, $0025, $0026, $0027,
-                    $0028, $0029, $002A, $002B, $002C, $002D, $002E, $002F, $0030, $0031,
-                    $0032, $0033, $0034, $0035, $0036, $0037, $0038, $0039, $003A, $003B,
-                    $003C, $003D, $003E, $003F, $0040, $0041, $0042, $0043, $0044, $0045,
-                    $0046, $0047, $0048, $0049, $004A, $004B, $004C, $004D, $004E, $004F,
-                    $0050, $0051, $0052, $0053, $0054, $0055, $0056, $0057, $0058, $0059,
-                    $005A, $005B, $005C, $005D, $005E, $005F, $0060, $0061, $0062, $0063,
-                    $0064, $0065, $0066, $0067, $0068, $0069, $006A, $006B, $006C, $006D,
-                    $006E, $006F, $0070, $0071, $0072, $0073, $0074, $0075, $0076, $0077,
-                    $0078, $0079, $007A, $007B, $007C, $007D, $007E, $007F,
-
-                    $20AC, $0081, $201A, $0192, $201E, $2026, $2020, $2021, $02C6, $2030,
-                    $0160, $2039, $0152, $008D, $017D, $008F, $0090, $2018, $2019, $201C,
-                    $201D, $2022, $2013, $2014, $02DC, $2122, $0161, $203A, $0153, $009D,
-                    $017E, $0178, $00A0, $00A1, $00A2, $00A3, $00A4, $00A5, $00A6, $00A7,
-                    $00A8, $00A9, $00AA, $00AB, $00AC, $00AD, $00AE, $00AF, $00B0, $00B1,
-                    $00B2, $00B3, $00B4, $00B5, $00B6, $00B7, $00B8, $00B9, $00BA, $00BB,
-                    $00BC, $00BD, $00BE, $00BF, $00C0, $00C1, $00C2, $00C3, $00C4, $00C5,
-                    $00C6, $00C7, $00C8, $00C9, $00CA, $00CB, $00CC, $00CD, $00CE, $00CF,
-                    $00D0, $00D1, $00D2, $00D3, $00D4, $00D5, $00D6, $00D7, $00D8, $00D9,
-                    $00DA, $00DB, $00DC, $00DD, $00DE, $00DF, $00E0, $00E1, $00E2, $00E3,
-                    $00E4, $00E5, $00E6, $00E7, $00E8, $00E9, $00EA, $00EB, $00EC, $00ED,
-                    $00EE, $00EF, $00F0, $00F1, $00F2, $00F3, $00F4, $00F5, $00F6, $00F7,
-                    $00F8, $00F9, $00FA, $00FB, $00FC, $00FD, $00FE, $00FF);
-
-*)
-
-(* UTF-8  (somewhat simplified)
-   -----
-   Character Range    Byte sequence
-   ---------------    --------------------------     (x=Bits from original character)
-   $0000..$007F       0xxxxxxx
-   $0080..$07FF       110xxxxx 10xxxxxx
-   $8000..$FFFF       1110xxxx 10xxxxxx 10xxxxxx
-
-   Example
-   --------
-   Transforming the Unicode character U+00E4 LATIN SMALL LETTER A WITH DIAERESIS  ("ä"):
-
-         ISO-8859-1,           Decimal  228
-         Win1252,              Hex      $E4
-         ANSI                  Bin      1110 0100
-                                        abcd efgh
-
-         UTF-8                 Binary   1100xxab 10cdefgh
-                               Binary   11000011 10100100
-                               Hex      $C3      $A4
-                               Decimal  195      164
-                               ANSI     Ã        ¤         *)
-
-(*
-FUNCTION  AnsiToUtf8 (Source : ANSISTRING) : WideString;
-          // Converts the given Windows ANSI (Win1252) String to UTF-8.
-VAR
-  I   : INTEGER;  // Loop counter
-  U   : WORD;     // Current Unicode value
-  Len : INTEGER;  // Current real length of "Result" string
-BEGIN
-  SetLength (Result, Length (Source) * 3);   // Worst case
-  Len := 0;
-  FOR I := 1 TO Length (Source) DO BEGIN
-    U := WIN1252_UNICODE [ORD (Source [I])];
-    CASE U OF
-      $0000..$007F : BEGIN
-                       INC (Len);
-                       Result [Len] := CHR (U);
-                     END;
-      $0080..$07FF : BEGIN
-                       INC (Len);
-                       Result [Len] := CHR ($C0 OR (U SHR 6));
-                       INC (Len);
-                       Result [Len] := CHR ($80 OR (U AND $3F));
-                     END;
-      $0800..$FFFF : BEGIN
-                       INC (Len);
-                       Result [Len] := CHR ($E0 OR (U SHR 12));
-                       INC (Len);
-                       Result [Len] := CHR ($80 OR ((U SHR 6) AND $3F));
-                       INC (Len);
-                       Result [Len] := CHR ($80 OR (U AND $3F));
-                     END;
-      END;
-    END;
-  SetLength (Result, Len);
-END;
-*)
-
-
-(*
-FUNCTION  Utf8ToAnsi (Source : WideString; UnknownChar : CHAR = '¿') : ANSISTRING;
-    // Converts the given UTF-8 String to Windows ANSI (Win-1252).
-    // If a character can not be converted, the "UnknownChar" is inserted.
-VAR
-  SourceLen : INTEGER;  // Length of Source string
-  I, K      : INTEGER;
-  A         : BYTE;     // Current ANSI character value
-  U         : WORD;
-  Ch        : CHAR;     // Dest char
-  Len       : INTEGER;  // Current real length of "Result" string
-BEGIN
-  SourceLen := Length (Source);
-  SetLength (Result, SourceLen);   // Enough room to live
-  Len := 0;
-  I   := 1;
-  WHILE I <= SourceLen DO BEGIN
-    A := ORD (Source [I]);
-    IF A < $80 THEN BEGIN                                               // Range $0000..$007F
-      INC (Len);
-      Result [Len] := Source [I];
-      INC (I);
-      END
-    ELSE BEGIN                                                          // Determine U, Inc I
-      IF (A AND $E0 = $C0) AND (I < SourceLen) THEN BEGIN               // Range $0080..$07FF
-        U := (WORD (A AND $1F) SHL 6) OR (ORD (Source [I+1]) AND $3F);
-        INC (I, 2);
-        END
-      ELSE IF (A AND $F0 = $E0) AND (I < SourceLen-1) THEN BEGIN        // Range $0800..$FFFF
-        U := (WORD (A AND $0F) SHL 12) OR
-             (WORD (ORD (Source [I+1]) AND $3F) SHL 6) OR
-             (      ORD (Source [I+2]) AND $3F);
-        INC (I, 3);
-        END
-      ELSE BEGIN                                                        // Unknown/unsupported
-        INC (I);
-        FOR K := 7 DOWNTO 0 DO
-          IF A AND (1 SHL K) = 0 THEN BEGIN
-            INC (I, (A SHR (K+1))-1);
-            BREAK;
-            END;
-        U := WIN1252_UNICODE [ORD (UnknownChar)];
-        END;
-      Ch := UnknownChar;                                                // Retrieve ANSI char
-      FOR A := $00 TO $FF DO
-        IF WIN1252_UNICODE [A] = U THEN BEGIN
-          Ch := CHR (A);
-          BREAK;
-          END;
-      INC (Len);
-      Result [Len] := Ch;
-      END;
-    END;
-  SetLength (Result, Len);
-END;
-*)
-
-
 (*
 ===============================================================================================
 "Special" Helper Functions
@@ -820,20 +708,109 @@ Helper Functions
 ===============================================================================================
 *)
 
+function WideCharInSet(c: WideChar; chars: TCharset): boolean; overload;
+var
+    hib: byte;
+    loc: Char;
+begin
+    // Check to see if this widechar is in a set of ANSI chars
+    // If the hibyte is != 0, then we know it's not ansi.
+    Result := false;
+    hib := Hi(Ord(c));
+    if (hib = 0) then begin
+        loc := Chr(Lo(Ord(c)));
+        Result := (loc in chars);
+        end;
+end;
 
-(*
-FUNCTION  DelChars (Source : STRING; CharsToDelete : TCharset) : STRING;
-          // Delete all "CharsToDelete" from the string
-VAR
-  I : INTEGER;
-BEGIN
-  Result := Source;
-  FOR I := Length (Result) DOWNTO 1 DO
-    IF Result [I] IN CharsToDelete THEN
-      Delete (Result, I, 1);
-END;
-*)
+function WideCharInSet(p: PWideChar; chars: TCharset): boolean; overload;
+begin
+    Result := WideCharInSet(p^, chars);
+end;
 
+// pgm May 23, 2002 - Added XML Spec stuff
+{
+From the W3C XML Spec...
+-Name start characters must have one of the categories
+    Ll, Lu, Lo, Lt, Nl.
+  UC_LL = $00008000; // Letter, Lowercase
+  UC_LU = $00004000; // Letter, Uppercase
+  UC_LO = $00040000; // Letter, Other
+  UC_LT = $00010000; // Letter, Titlecase
+  UC_NL = $00000010; // Number, Letter
+
+-Name characters other than Name-start characters must have one of the categories
+    Mc, Me, Mn, Lm, or Nd.
+  UC_MC = $00000002; // Mark, Spacing Combining
+  UC_ME = $00000004; // Mark, Enclosing
+  UC_MN = $00000001; // Mark, Non-Spacing
+  UC_LM = $00020000; // Letter, Modifier
+  UC_ND = $00000008; // Number, Decimal Digit
+
+-Characters in the compatibility area (i.e. with character code greater
+    than #xF900 and less than #xFFFE) are not allowed in XML names.
+-Characters which have a font or compatibility decomposition
+    (i.e. those with a "compatibility formatting tag" in field 5 of
+    the database -- marked by field 5 beginning with a "<") are not allowed.
+-The following characters are treated as name-start characters rather than
+    name characters, because the property file classifies them as
+    Alphabetic: [#x02BB-#x02C1], #x0559, #x06E5, #x06E6.
+-Characters #x20DD-#x20E0 are excluded (in accordance with Unicode 2.0, section 5.14).
+-Character #x00B7 is classified as an extender, because the
+    property list so identifies it.
+-Character #x0387 is added as a name character, because #x00B7
+    is its canonical equivalent.
+-Characters ':' and '_' are allowed as name-start characters.
+-Characters '-' and '.' are allowed as name characters
+}
+
+function UnicodeLookup(C: UCS4; s: array of TUnicodeset): boolean;
+var
+    i: integer;
+    lb, hb: byte;
+    u: TUnicodeSet;
+begin
+    // Lookup this Unicode char in an lookup table
+    // The tables are arrays of structs, where each array element
+    // is a TUnicodeSet
+    Result := false;
+    lb := Lo(C);
+    hb := Hi(C);
+
+    // loop thru all elements in the array
+    for i := 0 to Length(s) - 1 do begin
+        u := s[i];
+        if (u.Hibyte = hb) and (lb in u.LoByteSet) then begin
+            Result := true;
+            exit;
+            end;
+        end;
+end;
+
+function UnicodeIsXMLNameStart(C: UCS4): boolean;
+begin
+    // Is this char a valid XML name "start" char??
+    Result := false;
+
+    if (UnicodeLookup(C, CInvalidNameChars)) then exit;
+
+    if (UnicodeLookup(C, CNameStart)) then
+        Result := true
+    else
+        Result := IsProperty(C, UC_LL or UC_LU or UC_LO or UC_LT or UC_NL, 0);
+end;
+
+function UnicodeIsXMLName(C: UCS4): boolean;
+begin
+    // Is this character a valid XML name char?
+    if (UnicodeLookup(C, CInvalidNameChars)) then
+        Result := false
+    else if (UnicodeLookup(C, CNameChar)) then
+        Result := true
+    else
+        Result := UnicodeIsXMLNameStart(C) or
+            IsProperty(C, UC_MC or UC_ME or UC_MN or UC_LM or UC_ND, 0);
+end;
 
 function DelWhitespace(Source: WideString): WideString;
 var
@@ -843,53 +820,16 @@ begin
     Result := '';
     for i := 0 to Length(Source) do begin
         c := Source[i];
-        if (not UnicodeIsWhitespace(Ord(c))) then
+        if (not WideCharInSet(C, CWhitespace)) then
             Result := Result + c;
         end;
 end;
 
 
-(*
-FUNCTION  TrimWs (Source : WideString) : WideString;
-          // Trimms off Whitespace characters from both ends of the string
-VAR
-  I : INTEGER;
-BEGIN
-  // --- Trim Left
-  I := 1;
-  WHILE (I <= Length (Source)) AND (Source [I] IN CWhitespace) DO
-    INC (I);
-  Result := Copy (Source, I, MaxInt);
-
-  // --- Trim Right
-  I := Length (Result);
-  WHILE (I > 1) AND (Result [I] IN CWhitespace) DO
-    DEC (I);
-  Delete (Result, I+1, Length (Result)-I);
-END;
-*)
-
 function TrimWS(Source: WideString): WideString;
 begin
     Result := WideTrimRight(WideTrimLeft(Source));
 end;
-
-
-(*
-FUNCTION  ConvertWs (Source: WideString; PackWs: BOOLEAN) : WideString;
-          // Converts all Whitespace characters to the Space #x20 character
-          // If "PackWs" is true, contiguous Whitespace characters are packed to one
-VAR
-  I : INTEGER;
-BEGIN
-  Result := Source;
-  FOR I := Length (Result) DOWNTO 1 DO
-    IF (Result [I] IN CWhitespace) THEN
-      IF PackWs AND (I > 1) AND (Result [I-1] IN CWhitespace)
-        THEN Delete (Result, I, 1)
-        ELSE Result [I] := #32;
-END;
-*)
 
 Function ConvertWS(Source: WideString; PackWS: boolean): WideString;
 var
@@ -897,11 +837,13 @@ var
     c: WideChar;
     inws: boolean;
 begin
+    // Converts all Whitespace characters to the Space #x20 character
+    // If "PackWs" is true, contiguous Whitespace characters are packed to one
     Result := '';
     inws := false;
     for i := 1 to Length(Source) do begin
         c := Source[i];
-        if (UnicodeIsWhitespace(Ord(c))) then begin
+        if (WideCharInSet(c, CWhitespace)) then begin
             if ((inws) and (PackWS)) then
                 // do nothing
             else begin
@@ -941,72 +883,38 @@ BEGIN
     Result := StrEndW (Source)-1;
 END;
 
-
-(*
-PROCEDURE ExtractName (Start : PWideChar; Terminators : TCharset; VAR Final : PWideChar);
+Procedure ExtractName(Start: PWideChar; Terminators: TCharset; var Final: PWideChar);
           {
             Extracts the complete Name beginning at "Start".
             It is assumed that the name is contained in Markup, so the '>' character is
             always a Termination.
             Start:       IN  Pointer to first char of name. Is always considered to be valid
-            Terminators: IN  Characters which terminate the name
+            Terminators: TCharset of additional ansi characters to check as terminators
             Final:       OUT Pointer to last char of name
           }
-
-BEGIN
-  Final := Start+1;
-  Include (Terminators, #0);
-  Include (Terminators, '>');
-  WHILE NOT (Final^ IN Terminators) DO
-    INC (Final);
-  DEC (Final);
-END;
-
-*)
-
-function WideCharInSet(c: PWideChar; charset: WideString): boolean;
 var
-    l, i: integer;
-begin
-    Result := false;
-    l := length(charset);
-    for i := 1 to l do begin
-        if ((c^ = #0) or (c^ = charset[i])) then begin
-            Result := true;
-            exit;
-            end;
-        end;
-end;
-
-
-PROCEDURE ExtractName (Start : PWideChar; Terminators : Widestring; VAR Final : PWideChar);
-          {
-            Extracts the complete Name beginning at "Start".
-            It is assumed that the name is contained in Markup, so the '>' character is
-            always a Termination.
-            Start:       IN  Pointer to first char of name. Is always considered to be valid
-            Terminators: IN  Characters which terminate the name
-            Final:       OUT Pointer to last char of name
-
-            //todo: ask Joe to rewrite in assembler
-          }
-var
-    cset: WideString;
+    cont: boolean;
+    hib: byte;
+    c: Cardinal;
+    loc: Char;
 BEGIN
     Final := Start + 1;             // start at the next character past "Start"
+    Terminators := Terminators + ['>'];         // always look for ">"
+    cont := true;
+    while (cont) do begin
+        c := Ord(Final^);
 
-    cset := Terminators + '>';
-    while(true) do begin
-        // iterate over the terminators...
-        // when Final^ is any terminator bail..
-        if (WideCharInSet(Final, cset)) then begin
-            Dec(Final);
-            exit;
-            end
-        else
-            inc(Final);
+        // if the char doesn't meet the Unicode func, check the charset if it's
+        // an ANSI char (HiByte = 0)
+        hib := Hi(c);
+        loc := Chr(Lo(C));
+        if (hib = 0) then
+            cont := not (loc in Terminators);
+
+        if (cont) then inc(Final);
         end;
-END;
+    dec(Final);
+end;
 
 
 PROCEDURE ExtractQuote (Start : PWideChar; VAR Content : WideString; VAR Final : PWideChar);
@@ -1126,23 +1034,17 @@ BEGIN
   INHERITED Create;
   Final := Start;
   IF StrLCompW (Start, 'SYSTEM', 6) = 0 THEN BEGIN
-    While not (WideCharInSet(Final, CQuoteChar + '>' + '[')) do inc(Final);
+    While not (WideCharInSet(Final, CQuoteChar + [#0, '>', '['])) do inc(Final);
     if not (WideCharInSet(Final, CQuoteChar)) then exit;
-    // WHILE NOT (Final^ IN (CQuoteChar + [#0, '>', '['])) DO INC (Final);
-    // IF NOT (Final^ IN CQuoteChar) THEN EXIT;
     ExtractQuote (Final, SystemID, Final);
     END
   ELSE IF StrLCompW (Start, 'PUBLIC', 6) = 0 THEN BEGIN
-    While not (WideCharInSet(Final, CQuoteChar + '>' + '[')) do inc(Final);
+    While not (WideCharInSet(Final, CQuoteChar + [#0, '>', '['])) do inc(Final);
     if not (WideCharInSet(Final, CQuoteChar)) then exit;
-    // WHILE NOT (Final^ IN (CQuoteChar + [#0, '>', '['])) DO INC (Final);
-    // IF NOT (Final^ IN CQuoteChar) THEN EXIT;
     ExtractQuote (Final, PublicID, Final);
     INC (Final);
-    While not (WideCharInSet(Final, CQuoteChar + '>' + '[')) do inc(Final);
+    While not (WideCharInSet(Final, CQuoteChar + [#0, '>', '['])) do inc(Final);
     if not (WideCharInSet(Final, CQuoteChar)) then exit;
-    // WHILE NOT (Final^ IN (CQuoteChar + [#0, '>', '['])) DO INC (Final);
-    // IF NOT (Final^ IN CQuoteChar) THEN EXIT;
     ExtractQuote (Final, SystemID, Final);
     END;
 END;
@@ -1392,7 +1294,7 @@ BEGIN
   IF Final = NIL
     THEN Final := StrEndW (Start)-1
     ELSE INC (Final);
-  ExtractName(Start + 2, CWhitespace + '?' + '>', F);
+  ExtractName(Start + 2, CWhitespace + ['?', '>'], F);
   SetStringSF (CurName, Start+2, F);
   SetStringSF (CurContent, F+1, Final-2);
   CurAttr.Analyze (F+1, F);
@@ -1454,12 +1356,9 @@ BEGIN
       ']' : Phase := phFinishing;
       '>' : BREAK;
       else if not (WideCharInSet(CurFinal, CWhitespace)) then begin
-      // ELSE  IF NOT (CurFinal^ IN CWhitespace) THEN BEGIN
               CASE Phase OF
-                // todo: Verify that UnicodeIsAlpha is the "right" thing to check
-                phName : IF (UnicodeIsAlpha(Ord(CurFinal^))) then begin
-                // phName : IF (CurFinal^ IN CNameStart)  THEN BEGIN
-                           ExtractName(CurFinal, CWhitespace + '[' + '>', F);
+                phName : IF (UnicodeIsXMLNameStart(Ord(CurFinal^))) then begin
+                           ExtractName(CurFinal, CWhitespace + ['[', '>'], F);
                            SetStringSF (FRootName, CurFinal, F);
                            CurFinal := F;
                            Phase := phDtd;
@@ -1576,7 +1475,7 @@ BEGIN
     CurPartType := ptEndTag;
     INC (S);
     END;
-  ExtractName(S, CWhitespace + '/', F);
+  ExtractName(S, CWhitespace + ['/'], F);
   SetStringSF (CurName, S, F);
   CurAttr.Analyze (F+1, CurFinal);
   IF CurFinal^ = '/' THEN BEGIN
@@ -1794,9 +1693,7 @@ BEGIN
   REPEAT
     IF Final^ = '>' THEN BREAK;
 
-    // todo: Verify that UnicodeIsAlpha is "right" here.
-    if (UnicodeIsAlpha(Ord(Final^))) and (Element.Name = '') then begin
-    // IF (Final^ IN CNameStart) AND (Element.Name = '') THEN BEGIN
+    if (UnicodeIsXMLNameStart(Ord(Final^))) and (Element.Name = '') then begin
       ExtractName(Final, CWhitespace, F);
       SetStringSF (Element.Name, Final, F);
       Final := F;
@@ -1816,7 +1713,6 @@ BEGIN
     INC (Final);
   UNTIL FALSE;
   Element.Definition := DelWhitespace(Element.Definition);
-  // Element.Definition := DelChars (Element.Definition, CWhitespace);
   ReplaceParameterEntities (Element.Definition);
   IF      Element.Definition = 'EMPTY' THEN Element.ElemType := etEmpty
   ELSE IF Element.Definition = 'ANY'   THEN Element.ElemType := etAny
@@ -1879,7 +1775,6 @@ BEGIN
   ElemDef   := NIL;
   REPEAT
     if not (WideCharInSet(Final, CWhitespace)) then
-    // IF NOT (Final^ IN CWhitespace) THEN
       CASE Final^ OF
         '%' : BEGIN
                 PushPE (Final);
@@ -1894,7 +1789,7 @@ BEGIN
         '>' : BREAK;
         ELSE  CASE Phase OF
                 phElementName     : BEGIN
-                                      ExtractName (Final, CWhitespace + CQuoteChar + '#', F);
+                                      ExtractName(Final, CWhitespace + CQuoteChar +  ['#'], F);
                                       SetStringSF (ElementName, Final, F);
                                       Final := F;
                                       ElemDef := Elements.Node (ElementName);
@@ -1909,7 +1804,7 @@ BEGIN
                                     END;
                 phName            : BEGIN
                                       AttrDef := TAttrDef.Create;
-                                      ExtractName (Final, CWhitespace + CQuoteChar + '#', F);
+                                      ExtractName(Final, CWhitespace + CQuoteChar + ['#'], F);
                                       SetStringSF (AttrDef.Name, Final, F);
                                       Final := F;
                                       AttrDef2 := TAttrDef (ElemDef.Node (AttrDef.Name));
@@ -1924,8 +1819,6 @@ BEGIN
                                         IF F <> NIL
                                           THEN SetStringSF (AttrDef.TypeDef, Final+1, F-1)
                                           ELSE AttrDef.TypeDef := WideString(Final + 1);
-                                          // ELSE AttrDef.TypeDef := STRING (Final+1);
-                                        // AttrDef.TypeDef := DelChars (AttrDef.TypeDef, CWhitespace);
                                         AttrDef.TypeDef := DelWhitespace(AttrDef.TypeDef);
                                         AttrDef.AttrType := atEnumeration;
                                         ReplaceParameterEntities (AttrDef.TypeDef);
@@ -1938,7 +1831,7 @@ BEGIN
                                         Phase := phNotationContent;
                                         END
                                       ELSE BEGIN
-                                        ExtractName (Final, CWhitespace + CQuoteChar + '#', F);
+                                        ExtractName(Final, CWhitespace + CQuoteChar + ['#'], F);
                                         SetStringSF (AttrDef.TypeDef, Final, F);
                                         IF      AttrDef.TypeDef = 'CDATA'    THEN AttrDef.AttrType := atCData
                                         ELSE IF AttrDef.TypeDef = 'ID'       THEN AttrDef.AttrType := atId
@@ -1957,17 +1850,15 @@ BEGIN
                                         SetStringSF (AttrDef.Notations, Final+1, F-1)
                                       ELSE BEGIN
                                         AttrDef.Notations := WideString(Final + 1);
-                                        // AttrDef.Notations := STRING (Final+1);
                                         Final := StrEndW (Final);
                                         END;
                                       ReplaceParameterEntities (AttrDef.Notations);
-                                      // AttrDef.Notations := DelChars (AttrDef.Notations, CWhitespace);
                                       AttrDef.Notations := DelWhitespace(AttrDef.Notations);
                                       Phase := phDefault;
                                     END;
                 phDefault :         BEGIN
                                       IF Final^ = '#' THEN BEGIN
-                                        ExtractName (Final, CWhiteSpace + CQuoteChar, F);
+                                        ExtractName(Final, CWhitespace + CQuoteChar, F);
                                         SetStringSF (Strg, Final, F);
                                         Final := F;
                                         ReplaceParameterEntities (Strg);
@@ -1976,7 +1867,6 @@ BEGIN
                                         ELSE IF Strg = '#FIXED'    THEN       AttrDef.DefaultType := adFixed;
                                         END
                                       else if (WideCharInSet(Final, CQuoteChar)) then begin
-                                      // ELSE IF (Final^ IN CQuoteChar) THEN BEGIN
                                         ExtractQuote (Final, AttrDef.Value, Final);
                                         ReplaceParameterEntities (AttrDef.Value);
                                         ReplaceCharacterEntities (AttrDef.Value);
@@ -2041,20 +1931,17 @@ BEGIN
   EntityDef     := TEntityDef.Create;
   REPEAT
     if not (WideCharInSet(Final, CWhitespace)) then
-    // IF NOT (Final^ IN CWhitespace) THEN
       CASE Final^ OF
         '%' : IsParamEntity := TRUE;
         '>' : BREAK;
         ELSE  CASE Phase OF
-                phName:            if (UnicodeIsAlpha(Ord(Final^))) then begin
-                // phName         : IF Final^ IN CNameStart THEN BEGIN
-                                   ExtractName (Final, CWhitespace + CQuoteChar, F);
+                phName            : if (UnicodeIsXMLNameStart(Ord(Final^))) then begin
+                                   ExtractName(Final, CWhitespace + CQuoteChar, F);
                                    SetStringSF (EntityDef.Name, Final, F);
                                    Final := F;
                                    Phase := phContent;
                                    END;
                 phContent:         if (WideCharInSet(Final, CQuoteChar)) then begin
-                // phContent      : IF Final^ IN CQuoteChar THEN BEGIN
                                    ExtractQuote (Final, EntityDef.Value, Final);
                                    Phase := phFinalGT;
                                    END
@@ -2071,9 +1958,8 @@ BEGIN
                                    INC (Final, 4);
                                    Phase := phNotationName;
                                    END;
-                phNotationName:    if (UnicodeIsAlpha(Ord(Final^))) then begin
-                // phNotationName : IF Final^ IN CNameStart THEN BEGIN
-                                   ExtractName (Final, CWhitespace + '>', F);
+                phNotationName:    if (UnicodeIsXMLNameStart(Ord(Final^))) then begin
+                                   ExtractName(Final, CWhitespace + ['>'], F);
                                    SetStringSF (EntityDef.NotationName, Final, F);
                                    Final := F;
                                    Phase := phFinalGT;
@@ -2126,13 +2012,12 @@ BEGIN
   NotationDef := TNotationDef.Create;
   REPEAT
     if not (WideCharInSet(Final, CWhitespace)) then
-    // IF NOT (Final^ IN CWhitespace) THEN
       CASE Final^ OF
         '>',
         #0   : BREAK;
         ELSE   CASE Phase OF
                  phName  : BEGIN
-                             ExtractName (Final, CWhitespace + '>', F);
+                             ExtractName(Final, CWhitespace + ['>'], F);
                              SetStringSF (NotationDef.Name, Final, F);
                              Final := F;
                              Phase := phExtId;
@@ -2207,7 +2092,7 @@ BEGIN
       ELSE Str [PosAmp] := WideChar(CHR (StrToIntDef (Copy(Str, PosAmp + 2, Len - 3), 32)));
 
     //todo: Build a DeleteWideChars() procedure to use instead of Delete();
-    Delete (Str, PosAmp+1, Len-1);  
+    Delete (Str, PosAmp+1, Len-1);
     Start := PosAmp + 1;
   UNTIL FALSE;
 END;
@@ -2536,12 +2421,10 @@ BEGIN
   REPEAT
     IF (Final^ = #0) OR (Final^ = '>') THEN BREAK;
     if not (WideCharInSet(Final, CWhitespace)) then
-    // IF NOT (Final^ IN CWhitespace) THEN
       CASE Phase OF
         phName  : BEGIN
-                    if not (UnicodeIsAlpha(Ord(Final^))) then exit;
-                    // IF NOT (Final^ IN CNameStart) THEN EXIT;
-                    ExtractName (Final, CWhitespace + '=' + '/', F);
+                    if not (UnicodeIsXMLNameStart(Ord(Final^))) then exit;
+                    ExtractName(Final, CWhitespace + ['=', '+', '/'], F);
                     SetStringSF (Name, Final, F);
                     Final := F;
                     Phase := phEq;
@@ -2552,7 +2435,6 @@ BEGIN
                   END;
         phValue : BEGIN
                     if (WideCharInSet(Final, CQuoteChar)) then begin
-                    // IF Final^ IN CQuoteChar THEN BEGIN
                       ExtractQuote (Final, Value, F);
                       Attr := TAttr.Create;
                       Attr.Name      := Name;
@@ -2595,7 +2477,6 @@ BEGIN
     T := (L+H) DIV 2;
     IF T=Last THEN BREAK;
     Result := TElemDef (Items [T]);
-    // C := CompareStr (Result.Name, Name);
     C := StrCompW(PWideChar(Result.Name), PWideChar(Name));
     IF C = 0 THEN EXIT
     ELSE IF C < 0 THEN L := T
