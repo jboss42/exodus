@@ -90,6 +90,7 @@ inherited frmChat: TfrmChat
         Width = 35
         Height = 28
         Align = alRight
+        OnMouseMove = imgAvatarMouseMove
         OnPaint = imgAvatarPaint
       end
     end
