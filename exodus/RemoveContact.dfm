@@ -3,9 +3,10 @@ object frmRemove: TfrmRemove
   Top = 147
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
+  BorderWidth = 2
   Caption = 'Remove Contact'
-  ClientHeight = 147
-  ClientWidth = 297
+  ClientHeight = 157
+  ClientWidth = 328
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,62 +19,26 @@ object frmRemove: TfrmRemove
   OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
-    Left = 0
-    Top = 22
-    Width = 297
-    Height = 13
-    Align = alTop
-    Caption = 'You are about to remove this person from your Roster. '
-    WordWrap = True
-  end
   object Bevel1: TBevel
     Left = 0
-    Top = 20
-    Width = 297
+    Top = 22
+    Width = 328
     Height = 2
     Align = alTop
   end
-  object lblJID: TStaticText
-    Left = 0
-    Top = 0
-    Width = 297
-    Height = 20
-    Align = alTop
-    Caption = ' foo@jabber.org'
-    Color = clBtnFace
-    Font.Charset = ANSI_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentColor = False
-    ParentFont = False
-    TabOrder = 0
-  end
-  object chkRemove1: TCheckBox
-    Left = 8
-    Top = 56
-    Width = 217
-    Height = 17
-    Caption = 'Remove this person from my roster.'
-    Checked = True
-    State = cbChecked
-    TabOrder = 1
-  end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 113
-    Width = 297
+    Top = 123
+    Width = 328
     Height = 34
     Align = alBottom
     AutoScroll = False
-    TabOrder = 2
+    TabOrder = 1
     inherited Bevel1: TBevel
-      Width = 297
+      Width = 328
     end
     inherited Panel1: TPanel
-      Left = 137
+      Left = 168
       Height = 29
       inherited btnOK: TButton
         OnClick = frameButtons1btnOKClick
@@ -83,14 +48,61 @@ object frmRemove: TfrmRemove
       end
     end
   end
-  object chkRemove2: TCheckBox
+  object optMove: TRadioButton
     Left = 8
-    Top = 80
+    Top = 24
+    Width = 249
+    Height = 17
+    Caption = 'Remove this contact from this group'
+    TabOrder = 2
+    OnClick = optRemoveClick
+  end
+  object optRemove: TRadioButton
+    Left = 8
+    Top = 48
+    Width = 233
+    Height = 17
+    Caption = 'Remove this contact from my roster.'
+    Checked = True
+    TabOrder = 3
+    TabStop = True
+    OnClick = optRemoveClick
+  end
+  object chkRemove1: TCheckBox
+    Left = 24
+    Top = 72
+    Width = 217
+    Height = 17
+    Caption = 'Remove this person from my roster.'
+    Checked = True
+    State = cbChecked
+    TabOrder = 4
+  end
+  object chkRemove2: TCheckBox
+    Left = 24
+    Top = 96
     Width = 265
     Height = 17
     Caption = 'Force this person to remove me from their roster'
     Checked = True
     State = cbChecked
-    TabOrder = 3
+    TabOrder = 5
+  end
+  object lblJID: TTntStaticText
+    Left = 0
+    Top = 0
+    Width = 328
+    Height = 22
+    Align = alTop
+    Caption = 'foo@jabber.org'
+    Color = clBtnFace
+    Font.Charset = ANSI_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Arial Unicode MS'
+    Font.Style = [fsBold]
+    ParentColor = False
+    ParentFont = False
+    TabOrder = 0
   end
 end

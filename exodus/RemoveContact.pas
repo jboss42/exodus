@@ -24,21 +24,25 @@ interface
 uses
     Unicode, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    buttonFrame, StdCtrls, ExtCtrls;
+    buttonFrame, StdCtrls, ExtCtrls, TntStdCtrls;
 
 type
   TfrmRemove = class(TForm)
-    lblJID: TStaticText;
-    Label1: TLabel;
-    chkRemove1: TCheckBox;
     frameButtons1: TframeButtons;
-    chkRemove2: TCheckBox;
     Bevel1: TBevel;
+    optMove: TRadioButton;
+    optRemove: TRadioButton;
+    chkRemove1: TCheckBox;
+    chkRemove2: TCheckBox;
+    lblJID: TTntStaticText;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure optRemoveClick(Sender: TObject);
   private
     { Private declarations }
+    jid: Widestring;
+    sel_grp: Widestring;
   public
     { Public declarations }
   end;
@@ -46,28 +50,37 @@ type
 var
   frmRemove: TfrmRemove;
 
-procedure RemoveRosterItem(sjid: string);
-procedure QuietRemoveRosterItem(sjid: string);
+resourcestring
+    sRemoveGrpLabel = 'Remove this contact from the %s group.';
+
+procedure RemoveRosterItem(sjid: Widestring; grp: Widestring = '');
+procedure QuietRemoveRosterItem(sjid: Widestring);
 
 implementation
 uses
-    JabberConst, S10n,
+    JabberConst, S10n, Roster, 
     Session,
     XMLTag;
 {$R *.DFM}
 
-procedure RemoveRosterItem(sjid: string);
+procedure RemoveRosterItem(sjid: Widestring; grp: Widestring);
 var
     f: TfrmRemove;
+    ritem: TJabberRosterItem;
 begin
     f := TfrmRemove.Create(Application);
     with f do begin
         lblJID.Caption := sjid;
+        sel_grp := grp;
+        jid := sjid;
+        optMove.Caption := Format(sRemoveGrpLabel, [grp]);
+        ritem := MainSession.Roster.Find(sjid);
+        optMove.Enabled := ((ritem <> nil) and (ritem.Groups.Count > 1));
         Show;
     end;
 end;
 
-procedure QuietRemoveRosterItem(sjid: string);
+procedure QuietRemoveRosterItem(sjid: Widestring);
 var
     iq: TXMLTag;
 begin
@@ -89,8 +102,23 @@ end;
 
 procedure TfrmRemove.frameButtons1btnOKClick(Sender: TObject);
 var
+    idx: integer;
     iq: TXMLTag;
+    ritem: TJabberRosterItem;
 begin
+    // Handle removing from a single grp
+    if (optMove.Checked) then begin
+        ritem := MainSession.roster.Find(jid);
+        if (ritem <> nil) then begin
+            idx := ritem.Groups.IndexOf(sel_grp);
+            if (idx >= 0) then
+                ritem.Groups.Delete(idx);
+            ritem.update();
+        end;
+        Self.Close();
+    end;
+
+    // Really remove or unsub
     if (chkRemove1.Checked) and (chkRemove2.Checked) then begin
         // send a subscription='remove'
         iq := TXMLTag.Create('iq');
@@ -100,7 +128,7 @@ begin
             with AddTag('query') do begin
                 setAttribute('xmlns', XMLNS_ROSTER);
                 with AddTag('item') do begin
-                    setAttribute('jid', lblJID.Caption);
+                    setAttribute('jid', jid);
                     setAttribute('subscription', 'remove');
                 end;
             end;
@@ -126,6 +154,12 @@ end;
 procedure TfrmRemove.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     Action := caFree;
+end;
+
+procedure TfrmRemove.optRemoveClick(Sender: TObject);
+begin
+    chkRemove1.Enabled := optRemove.Checked;
+    chkRemove2.Enabled := optRemove.Checked;
 end;
 
 end.
