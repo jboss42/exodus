@@ -76,6 +76,7 @@ type
     popAdminList: TMenuItem;
     N5: TMenuItem;
     popOwner: TMenuItem;
+    popOwnerList: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -1074,8 +1075,9 @@ begin
     new_nick := myNick;
     if (InputQuery(sRoomNewNick, sRoomNewNick, new_nick)) then begin
         if (new_nick = myNick) then exit;
+        myNick := new_nick;
         p := TJabberPres.Create;
-        p.toJID := TJabberID.Create(jid + '/' + new_nick);
+        p.toJID := TJabberID.Create(jid + '/' + myNick);
         MainSession.SendTag(p);
         end;
 end;
@@ -1481,13 +1483,15 @@ begin
   inherited;
     // edit a list
     if (Sender = popVoiceList) then
-        ShowRoomAdminList(self.jid, MUC_PART, '')
+        ShowRoomAdminList(self.jid, MUC_PART, '', 'Edit Voice List')
     else if (Sender = popBanList) then
-        ShowRoomAdminList(self.jid, '', MUC_OUTCAST)
+        ShowRoomAdminList(self.jid, '', MUC_OUTCAST, 'Edit Ban List')
     else if (Sender = popMemberList) then
-        ShowRoomAdminList(self.jid, '', MUC_MEMBER)
+        ShowRoomAdminList(self.jid, '', MUC_MEMBER, 'Edit Member List')
     else if (Sender = popAdminList) then
-        ShowRoomAdminList(self.jid, '', MUC_ADMIN);
+        ShowRoomAdminList(self.jid, '', MUC_ADMIN, 'Edit Admin List')
+    else if (Sender = popOwnerList) then
+        ShowRoomAdminList(self.jid, '', MUC_OWNER, 'Edit Owner List');
 end;
 
 {---------------------------------------}
