@@ -282,6 +282,7 @@ var
     frm: TfrmField;
     frmx: TframeGeneric;
     fx, xdata, t: TXMLTag;
+    n,v: Widestring;
 begin
     // send the iq-set
     // get pres packets
@@ -297,9 +298,16 @@ begin
         if (formBox.Controls[i] is TfrmField) then begin
             // non x-data field
             frm := TfrmField(formBox.Controls[i]);
-            with frm do
-                cur_iq.qTag.AddBasicTag(lblPrompt.Caption, txtData.Text);
-
+            with frm do begin
+                n := lblPrompt.Caption;
+                v := txtData.Text;
+                
+                if ((lowercase(n) = 'password') and (Trim(v) = '')) then begin
+                    // don't add a password element in..
+                end
+                else
+                    cur_iq.qTag.AddBasicTag(n, v);
+            end;
         end
         else if (formBox.Controls[i] is TframeGeneric) then begin
             // this is an x-data field
