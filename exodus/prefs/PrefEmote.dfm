@@ -95,15 +95,6 @@ inherited frmPrefEmote: TfrmPrefEmote
     end
     object TntTabSheet2: TTntTabSheet
       Caption = 'Custom Emoticons'
-      object lstCustomEmote: TTntListBox
-        Left = 0
-        Top = 0
-        Width = 300
-        Height = 97
-        Align = alClient
-        ItemHeight = 13
-        TabOrder = 0
-      end
       object Panel2: TPanel
         Left = 0
         Top = 97
@@ -111,7 +102,7 @@ inherited frmPrefEmote: TfrmPrefEmote
         Height = 34
         Align = alBottom
         BevelOuter = bvNone
-        TabOrder = 1
+        TabOrder = 0
         object btnCustomEmoteAdd: TTntButton
           Left = 4
           Top = 4
@@ -147,7 +138,7 @@ inherited frmPrefEmote: TfrmPrefEmote
         Height = 115
         Align = alBottom
         BevelOuter = bvNone
-        TabOrder = 2
+        TabOrder = 1
         object TntLabel1: TTntLabel
           Left = 2
           Top = 17
@@ -199,6 +190,15 @@ inherited frmPrefEmote: TfrmPrefEmote
           TabOrder = 3
         end
       end
+      object lstCustomEmotes: TTntListView
+        Left = 0
+        Top = 0
+        Width = 300
+        Height = 97
+        Align = alClient
+        Columns = <>
+        TabOrder = 2
+      end
     end
   end
   object EmoteOpen: TOpenDialog
@@ -209,6 +209,10 @@ inherited frmPrefEmote: TfrmPrefEmote
   object XMLDialog1: TOpenDialog
     Filter = 'XML Files|*.xml|All Files|*.*'
     Left = 256
+    Top = 34
+  end
+  object imagesCustom: TImageList
+    Left = 288
     Top = 34
   end
 end
