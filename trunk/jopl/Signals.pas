@@ -21,13 +21,16 @@ unit Signals;
 
 interface
 uses
-    XMLTag,
+    Unicode, XMLTag,
     Contnrs, Classes, SysUtils;
 
 type
 
     // turn on M+ so we can do RTTI stuff on the signals + dispatcher at runtime
     {M+}
+
+    // A function definition for a global signal handler
+    TSignalExceptionHandler = procedure(e_data: TWidestringlist);
 
     {---------------------------------------}
     // Base callback method for TSignal listeners
@@ -51,6 +54,12 @@ type
     TSignalDispatcher = class(TStringList)
     private
         _lid_info: TStringList;
+        _handler: TSignalExceptionHandler;
+
+        procedure _setHandler(proc: TSignalExceptionHandler);
+    protected
+        procedure handleException(sig: TSignal; e: Exception;
+            sl: TSignalListener; tag: TXMLTag);
     public
         constructor Create();
         destructor Destroy(); override;
@@ -58,10 +67,11 @@ type
         procedure AddSignal(event: string; sig: TSignal);
         procedure DispatchSignal(event: string; tag: TXMLTag);
         procedure DeleteListener(lid: longint);
-
         procedure AddListenerInfo(lid: integer; sig: TSignal; l: TSignalListener);
 
         function TotalCount: longint;
+
+        property ExceptionHandler: TSignalExceptionHandler read _handler write _setHandler;
     end;
 
     {---------------------------------------}
@@ -76,6 +86,9 @@ type
         constructor Create;
     end;
 
+    {---------------------------------------}
+    // A class for storing queued events.
+    // Important for allowing us to "pause" the client
     TQueuedEvent = class
     public
         callback: TMethod;
@@ -87,6 +100,15 @@ type
 
     {---------------------------------------}
     // classes for change list stuff.
+    {
+    The deal is that callbacks that get fired by
+    a signal have the potential to change the listener
+    list for that signal. To hanle these cases, we
+    store these adds/deletes to the signal listener list
+    in a pending list while we are invoking.
+    After all _current_ listeners have been invoked, we process
+    the change list to the listener list.
+    }
     TChangeListOps = (cl_add, cl_delete);
     TChangeListEvent = class
     public
@@ -98,7 +120,6 @@ type
 
     {---------------------------------------}
     // Base class for all signals..
-    // This should never be implemented.
     TSignal = class(TStringList)
     private
         _change_list: TObjectQueue;
@@ -130,7 +151,6 @@ type
     {---------------------------------------}
     // Signal that understands XPLite statements and invokes based on them
     TPacketEvent = procedure(event: string; tag: TXMLTag) of object;
-
     TPacketListener = class(TSignalListener)
     private
         xp: TXPLite;
@@ -157,7 +177,6 @@ type
         function addListener(callback: TDataStringEvent): TStringListener; overload;
         procedure Invoke(event: string; tag: TXMLTag; data: Widestring); overload;
     end;
-
 
     {M-}
 
@@ -193,6 +212,7 @@ begin
     inherited;
 
     _lid_info := TStringList.Create();
+    _handler := nil;
 end;
 
 {---------------------------------------}
@@ -212,6 +232,32 @@ begin
     // add a signal to the list
     Self.AddObject(event, sig);
     sig.Dispatcher := Self;
+end;
+
+{---------------------------------------}
+procedure TSignalDispatcher._setHandler(proc: TSignalExceptionHandler);
+begin
+    _handler := proc;
+end;
+
+{---------------------------------------}
+procedure TSignalDispatcher.handleException(sig: TSignal; e: Exception;
+    sl: TSignalListener; tag: TXMLTag);
+var
+    data: TWideStringlist;
+begin
+    // call the exception handler
+    if (not Assigned(_handler)) then exit;
+
+    data := TWidestringList.Create();
+    data.Add('Exception: ' + e.Message);
+    data.Add('Signal Class: ' + sig.ClassName);
+    data.Add('Listener Classname: ' + sl.classname);
+    data.Add('Listener Methodname: ' + sl.methodname);
+    if (tag <> nil) then
+        data.Add('XML Packet: ' + tag.xml());
+
+    _handler(data);
 end;
 
 {---------------------------------------}
@@ -395,12 +441,23 @@ begin
             sig := TSignalEvent(l.callback);
             if (e <> '') then begin
                 // check to see if the listener's string is a substring of the event
-                if (Pos(e, cmp) >= 1) then
-                    sig(event, tag);
+                if (Pos(e, cmp) >= 1) then begin
+                    try
+                        sig(event, tag);
+                    except
+
+                    end;
+                end;
             end
-            else
+            else begin
                 // otherwise, signal
-                sig(event, tag);
+                try
+                    sig(event, tag);
+                except
+                    on e: Exception do
+                        Dispatcher.handleException(Self, e, l, tag);
+                end;
+            end;
         end;
     end;
     invoking := false;
@@ -499,8 +556,13 @@ begin
         xp := pl.XPLite;
         if xp.Compare(tag) then begin
             pe := TPacketEvent(pl.Callback);
-            pe('xml', tag);
-            fired := true;
+            try
+                pe('xml', tag);
+                fired := true;
+            except
+                on e: Exception do
+                    Dispatcher.handleException(Self, e, pl, tag);
+            end;
         end;
     end;
     invoking := false;
@@ -540,15 +602,18 @@ begin
     for i := 0 to Self.Count - 1 do begin
         sl := TStringListener(Self.Objects[i]);
         se := TDataStringEvent(sl.Callback);
-        se(event, tag, data);
+        try
+            se(event, tag, data);
+        except
+            on e: Exception do
+                Dispatcher.handleException(Self, e, sl, tag);
+        end;
     end;
     invoking := false;
 
     if change_list.Count > 0 then
         Self.processChangeList();
 end;
-
-
 
 
 end.

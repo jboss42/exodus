@@ -25,7 +25,7 @@ uses
     Dockable, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, ExtCtrls, ComCtrls, Menus, RichEdit2, ExRichEdit,
-  Buttons, TntStdCtrls;
+    Buttons, TntStdCtrls;
 
 type
   TfrmDebug = class(TfrmDockable)

@@ -21,10 +21,8 @@ unit ExResponders;
 
 interface
 uses
-    Responder,
-    Session,
-    XMLTag, Unicode,
-    ExUtils,
+    Responder, Session, Signals, 
+    XMLTag, Unicode, ExUtils,
     Windows, Classes, SysUtils;
 
 type
@@ -113,6 +111,8 @@ type
 procedure initResponders();
 procedure cleanupResponders();
 
+procedure ExHandleException(e_data: TWidestringlist);
+
 var
     Exodus_Disco_Items: TDiscoItemsResponder;
     Exodus_Disco_Info: TDiscoInfoResponder;
@@ -125,13 +125,14 @@ resourcestring
     sLast = 'Last';
     sBrowse = 'Browse';
     sDisco = 'Disco';
+    sExceptionMsg = 'An error has occurred. Exodus will automatically save an error log file to your desktop. Use this file to a bug report at the exodus website.';
 
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 implementation
 uses
-    JabberConst, Invite,
+    JabberConst, Invite, Dialogs, PrefController, Registry, Forms,   
     xData, XMLUtils, Jabber1, JabberID, Notify, Transfer, Roster;
 
 var
@@ -185,6 +186,79 @@ begin
     Exodus_Browse := TBrowseResponder.Create(MainSession);
     Exodus_Disco_Items := TDiscoItemsResponder.Create(MainSession);
     Exodus_Disco_Info := TDiscoInfoResponder.Create(MainSession);
+
+    // Register the dispatcher exception handler
+    MainSession.Dispatcher.ExceptionHandler := ExHandleException;
+end;
+
+{---------------------------------------}
+procedure ExHandleException(e_data: TWidestringlist);
+var
+    s, i: integer;
+    msg, ver, orig, fname, dir: String;
+    reg: TRegistry;
+    sig: TSignal;
+    l: TSignalListener;
+begin
+    // We got an exception during signal dispatching.
+    MessageDlg(sExceptionMsg, mtError, [mbOK], 0);
+
+    dir := '';
+    try
+        reg := TRegistry.Create;
+        try //finally free
+            with reg do begin
+                RootKey := HKEY_CURRENT_USER;
+                OpenKeyReadOnly('Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders');
+                if (ValueExists('Desktop')) then begin
+                    dir := ReadString('Desktop');
+                    dir := ReplaceEnvPaths(dir);
+                end;
+            end;
+        finally
+            reg.Free();
+        end;
+    except
+        dir := ExtractFilePath(Application.EXEName);
+    end;
+
+    // Send the data to a file in dir
+    orig := dir + '\Exodus error log';
+    fname := orig + '.txt';
+    i := 1;
+    while (FileExists(fname)) do begin
+        fname := orig + '-' + IntToStr(i) + '.txt';
+        i := i + 1;
+    end;
+
+    // Insert some more debugging info
+    ver := '';
+    WindowsVersion(ver);
+    e_data.Insert(0, '---------------------------------------');
+    e_data.Insert(0, 'Date, Time: ' + DateTimeToStr(Now()));
+    e_data.Insert(0, 'Exodus ver: ' + GetAppVersion());
+    e_data.Insert(0, ver);
+
+    // Dump current dispatcher table:
+    e_data.Add('Dispatcher Dump');
+    with MainSession.Dispatcher do begin
+        for s := 0 to Count - 1 do begin
+            sig := TSignal(Objects[s]);
+            e_data.Add('SIGNAL: ' + Strings[s] + ' of class: ' + sig.ClassName);
+            e_data.Add('-----------------------------------');
+            for i := 0 to sig.Count - 1 do begin
+                l := TSignalListener(sig.Objects[i]);
+                msg := 'LID: ' + IntToStr(l.cb_id) + ', ';
+                msg := msg + sig.Strings[i] + ', ';
+                msg := msg + l.classname + ', ';
+                msg := msg + l.methodname;
+                e_data.Add(msg);
+            end;
+        end;
+    end;
+
+    e_data.SaveToFile(fname);
+    e_data.Free();
 end;
 
 {---------------------------------------}

@@ -492,11 +492,23 @@ begin
         sig := TPresenceEvent(l.callback);
         if (e <> '') then begin
             // check to see if the listener's string is a substring of the event
-            if (Pos(e, cmp) >= 1) then
-                sig(event, tag, p);
+            if (Pos(e, cmp) >= 1) then begin
+                try
+                    sig(event, tag, p);
+                except
+                    on x: Exception do
+                        Dispatcher.handleException(Self, x, l, tag);
+                end;
+            end;
         end
-        else
-            sig(event, tag, p);
+        else begin
+            try
+                sig(event, tag, p);
+            except
+                on x: Exception do
+                    Dispatcher.handleException(Self, x, l, tag);
+            end;
+        end;
     end;
     invoking := false;
 
