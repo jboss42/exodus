@@ -69,23 +69,15 @@ inherited frmChat: TfrmChat
         OnPaint = imgStatusPaint
       end
       object lblNick: TTntLabel
-        Left = 20
+        Left = 28
         Top = 0
-        Width = 39
-        Height = 28
-        Align = alLeft
-        Caption = ' Foo '#32072#32073#32074#32075' '
-        Layout = tlCenter
-        Caption_UTF7 = ' Foo +fUh9SX1KfUs '
-      end
-      object lblJID: TTntLabel
-        Left = 59
-        Top = 0
-        Width = 28
+        Width = 48
         Height = 28
         Cursor = crHandPoint
         Align = alLeft
-        Caption = '<JID>'
+        Caption = 'Nickname'
+        ParentShowHint = False
+        ShowHint = True
         Layout = tlCenter
         OnClick = lblJIDClick
       end
@@ -97,6 +89,15 @@ inherited frmChat: TfrmChat
         Align = alRight
         OnClick = imgAvatarClick
         OnPaint = imgAvatarPaint
+      end
+      object Panel2: TPanel
+        Left = 20
+        Top = 0
+        Width = 8
+        Height = 28
+        Align = alLeft
+        BevelOuter = bvNone
+        TabOrder = 0
       end
     end
   end

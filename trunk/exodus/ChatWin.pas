@@ -39,7 +39,6 @@ type
     imgStatus: TPaintBox;
     lblNick: TTntLabel;
     timBusy: TTimer;
-    lblJID: TTntLabel;
     mnuWordwrap: TTntMenuItem;
     mnuReturns: TTntMenuItem;
     mnuOnTop: TTntMenuItem;
@@ -57,6 +56,7 @@ type
     mnuHistory: TTntMenuItem;
     mnuSave: TTntMenuItem;
     imgAvatar: TPaintBox;
+    Panel2: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -172,7 +172,7 @@ procedure CloseAllChats;
 
 implementation
 uses
-    CapPresence, 
+    CapPresence,  
     CustomNotify, COMChatController, Debug, ExEvents,
     JabberConst, ExSession, JabberUtils, ExUtils,  Presence, PrefController, Room,
     XferManager, RosterAdd, RiserWindow, Notify,
@@ -384,9 +384,7 @@ end;
 procedure TfrmChat.SetupPrefs();
 begin
     AssignDefaultFont(Self.Font);
-
-    lblJID.Font.Color := clBlue;
-    lblJID.Font.Style := [fsUnderline];
+    AssignUnicodeURL(lblNick.Font, 9);
 
     // setup prefs
     MsgList.setupPrefs();
@@ -447,6 +445,7 @@ var
     a: TAvatar;
     do_pres: boolean;
     dp: TCapPresence;
+    n: Widestring;
 begin
     jid := cjid;
     if (_jid <> nil) then _jid.Free();
@@ -495,9 +494,9 @@ begin
     do_pres := true;
 
     if ritem <> nil then begin
-        lblNick.Caption := ' ' + ritem.Nickname + ' ';
+        lblNick.Caption := ritem.Nickname;
         Caption := ritem.Nickname + ' - ' + _(sChat);
-        lblJID.Caption := '<' + _jid.full + '>';
+        lblNick.Hint := _jid.full;
         MsgList.setTitle(ritem.Nickname);
         if (p = nil) then
             ChangePresImage('offline', 'offline')
@@ -508,17 +507,17 @@ begin
     end
 
     else begin
-        lblNick.Caption := ' ';
-        lblJID.Caption := cjid;
-        MsgList.setTitle(cjid);
-
-        if OtherNick <> '' then
-            Caption := OtherNick + ' - ' + _(sChat)
+        if (OtherNick <> '') then
+            n := OtherNick
         else if (_jid.user <> '') then
-            Caption := _jid.user + ' - ' + _(sChat)
+            n := _jid.user
         else
-            Caption := _jid.full + ' - ' + _(sChat);
+            n := _jid.full;
 
+        lblNick.Caption := n;
+        lblNick.Hint := cjid;
+        MsgList.setTitle(cjid);
+        Caption := n + ' - ' + _(sChat);
         if (p = nil) then
             ChangePresImage('unknown', 'Unknown Presence')
         else
@@ -1391,6 +1390,7 @@ begin
     SetJid(_jid.jid + '/' + TMenuItem(Sender).Caption);
 end;
 
+{---------------------------------------}
 procedure TfrmChat.imgAvatarPaint(Sender: TObject);
 var
     r: TRect;
@@ -1409,6 +1409,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmChat.imgAvatarClick(Sender: TObject);
 var
   r : TRect;

@@ -2304,7 +2304,7 @@ end;
 procedure TfrmRoom.EntityCallback(event: string; tag: TXMLTag);
 begin
     if (_pending_start = false) then exit;
-    if (tag = nil) then exit;
+    if (event <> 'xml') or (tag = nil) then exit;
 
     if (tag.getAttribute('from') = Self.jid) then begin
         // we got info from our room...

@@ -135,18 +135,22 @@ begin
     if (_pic = nil) then exit;
     
     base := ChangeFileExt(filename, '');
-    if (_pic is TGifImage) then begin
-        filename := base + '.gif';
-        TGifImage(_pic).SaveToFile(filename);
-    end
-    else if (_pic is TJPEGImage) then begin
-        filename := base + '.jpg';
-        TJPEGImage(_pic).SaveToFile(filename);
-    end
-    else begin
-        filename := base + '.bmp';
-        TBitmap(_pic).SaveToFile(filename);
-   end;
+    try
+        if (_pic is TGifImage) then begin
+            filename := base + '.gif';
+            TGifImage(_pic).SaveToFile(filename);
+        end
+        else if (_pic is TJPEGImage) then begin
+            filename := base + '.jpg';
+            TJPEGImage(_pic).SaveToFile(filename);
+        end
+        else begin
+            filename := base + '.bmp';
+            TBitmap(_pic).SaveToFile(filename);
+        end;
+    except
+        // XXX: log save failure?
+    end;
 end;
 
 {---------------------------------------}
