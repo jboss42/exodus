@@ -324,6 +324,9 @@ type
     procedure WMDisconnect(var msg: TMessage); message WM_DISCONNECT;
     procedure WMDisplayChange(var msg: TMessage); message WM_DISPLAYCHANGE;
 
+    procedure CMMouseEnter(var msg: TMessage); message CM_MOUSEENTER;
+    procedure CMMouseLeave(var msg: TMessage); message CM_MOUSELEAVE;
+
     function WMAppBar(dwMessage: DWORD; var pData: TAppBarData): UINT; stdcall;
 
   published
@@ -3062,6 +3065,17 @@ begin
     MainSession.setPresence(show, '', MainSession.Priority);
 
 end;
+
+procedure TfrmExodus.CMMouseEnter(var msg: TMessage);
+begin
+    //
+end;
+
+procedure TfrmExodus.CMMouseLeave(var msg: TMessage);
+begin
+    //
+end;
+
 
 procedure TfrmExodus.ResolverStatus(ASender: TObject;
   const AStatus: TIdStatus; const AStatusText: String);
