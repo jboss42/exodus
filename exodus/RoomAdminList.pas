@@ -21,7 +21,7 @@ unit RoomAdminList;
 interface
 
 uses
-    XMLTag,
+    XMLTag, IQ, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, StdCtrls, ExtCtrls, CheckLst, ComCtrls,
     TntComCtrls, TntStdCtrls;
@@ -36,10 +36,14 @@ type
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   published
     procedure listAdminCallback(event: string; tag: TXMLTag);
   private
     { Private declarations }
+    _iq: TJabberIQ;
+    
     room_jid: Widestring;
     role: bool;
     onList: Widestring;
@@ -61,7 +65,7 @@ procedure ShowRoomAdminList(room_jid, role, affiliation: WideString;
 implementation
 
 uses
-    ExUtils, GnuGetText, IQ, JabberConst, JabberID, Session, Room;
+    ExUtils, GnuGetText, JabberConst, JabberID, Session, Room;
 
 {$R *.dfm}
 
@@ -99,13 +103,12 @@ end;
 {---------------------------------------}
 procedure TfrmRoomAdminList.Start();
 var
-    iq: TJabberIQ;
     item: TXMLTag;
 begin
     // Get the list to be edited
-    iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
+    _iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
         listAdminCallback, 30);
-    with iq do begin
+    with _iq do begin
         toJid := room_jid;
         if ((onList = MUC_ADMIN) or (onList = MUC_OWNER)) then
             Namespace := XMLNS_MUCOWNER
@@ -114,13 +117,12 @@ begin
         iqType := 'get';
     end;
 
-    item := iq.qTag.AddTag('item');
+    item := _iq.qTag.AddTag('item');
     if (role) then
         item.setAttribute('role', onList)
     else
         item.setAttribute('affiliation', onList);
-    iq.Send();
-
+    _iq.Send();
     Show();
 end;
 
@@ -133,6 +135,7 @@ var
     items: TXMLTagList;
 begin
     // callback for list administration
+    _iq := nil;
     if event <> 'xml' then exit;
     if tag = nil then exit;
 
@@ -220,6 +223,18 @@ procedure TfrmRoomAdminList.FormClose(Sender: TObject;
 begin
     TranslateComponent(Self);
     Action := caFree;
+end;
+
+{---------------------------------------}
+procedure TfrmRoomAdminList.FormCreate(Sender: TObject);
+begin
+    _iq := nil;
+end;
+
+{---------------------------------------}
+procedure TfrmRoomAdminList.FormDestroy(Sender: TObject);
+begin
+    if (_iq <> nil) then FreeAndNil(_iq);
 end;
 
 end.

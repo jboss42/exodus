@@ -945,11 +945,15 @@ begin
     end;
 
     // get the bits off the packet
-    ip := tag.getAttribute('ip');
+    ip := Trim(tag.getAttribute('ip'));
     p := StrToIntDef(tag.getAttribute('port'), 0);
 
     with MainSession.Profile do begin
-        ResolvedIP := ip;
+        if (ip <> '') then
+            ResolvedIP := ip
+        else
+            ResolvedIP := Server;
+            
         if (p > 0) then
             ResolvedPort := p
         else
