@@ -266,6 +266,7 @@ begin
             end;
 
         MainSession.SendTag(p);
+        f.Caption := tmp_jid.user + ' ' + sRoom;
         if MainSession.Prefs.getBool('expanded') then
             f.DockForm;
 
@@ -282,7 +283,6 @@ begin
             lstRoster.Font.Charset := MainSession.Prefs.getInt('roster_font_charset');
             if (lstRoster.Font.Charset = 0) then
                 lstRoster.Font.Charset := 1;
-            Caption := tmp_jid.user + ' ' + sRoom;
             end;
 
         tmp_jid.Free();
