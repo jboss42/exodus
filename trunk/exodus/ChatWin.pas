@@ -197,7 +197,7 @@ begin
         chat.OnMessage := MessageEvent;
 
         ShowDefault();
-        if (show_window) then
+        if ((show_window) and (Application.Active)) then
             Show();
 
         PlayQueue();
