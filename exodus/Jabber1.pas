@@ -1794,6 +1794,7 @@ begin
         end;
 
     MainSession.Prefs.setBool('expanded', newval);
+    MainSession.Prefs.RestorePosition(Self);
     restoreToolbar();
     restoreEvents(newval);
 end;

@@ -12,7 +12,7 @@ object frmLogin: TfrmLogin
   Font.Style = []
   FormStyle = fsStayOnTop
   OldCreateOrder = False
-  Position = poMainFormCenter
+  Position = poDefaultPosOnly
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
@@ -74,7 +74,7 @@ object frmLogin: TfrmLogin
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 196
+    Top = 191
     Width = 238
     Height = 37
     Align = alBottom
