@@ -1157,7 +1157,7 @@ end;
 procedure TfrmRoom.FormEndDock(Sender, Target: TObject; X, Y: Integer);
 begin
   inherited;
-    if Docked then Self.TabSheet.ImageIndex := -1;
+    if (Docked and (Self.TabSheet <> nil)) then Self.TabSheet.ImageIndex := -1;
     btnClose.Visible := Docked;
 end;
 
