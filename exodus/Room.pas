@@ -547,7 +547,18 @@ begin
                 Self.Close();
                 exit;
                 end
-            else if ((ecode = '407') or (ecode = '403')) then begin
+            else if (ecode = '407') then begin
+                if (messageDlg('You are not on the member list for this room. Try and register?',
+                    mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
+                    t := TXMLTag.Create('register');
+                    t.PutAttribute('jid', Self.jid);
+                    MainSession.FireEvent('/session/register', t);
+                    t.Free();
+                    end;
+                Self.Close();
+                exit;
+                end
+            else if (ecode = '403') then begin
                 MessageDlg(etag.Data(), mtError, [mbOK], 0);
                 Self.Close();
                 exit;

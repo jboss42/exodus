@@ -25,21 +25,29 @@ uses
     SysUtils, Classes;
 
 type
+
+    TRegController = class;
+
     TRegProxy = class
-    protected
-        cb: integer;
-        reg_controller: TRegController;
+    private
+        _jid: Widestring;
+        _cb: integer;
     published
         procedure Callback(event: string; tag: TXMLTag);
+    public
+        constructor Create(jid: WideString);
+        destructor Destroy; override;
     end;
 
     TRegController = class
     private
         _s: TObject;
         _cb: integer;
+        _monitors: TList;
     published
         procedure callback(event: string; tag: TXMLTag);
     public
+        constructor create();
         procedure SetSession(s: TObject);
         procedure MonitorJid(jid: WideString);
     end;
@@ -48,6 +56,12 @@ implementation
 uses
     Forms, RegForm,
     Session;
+
+{---------------------------------------}
+constructor TRegController.create();
+begin
+    _monitors := TList.Create();
+end;
 
 {---------------------------------------}
 procedure TRegController.SetSession(s: TObject);
@@ -80,16 +94,39 @@ var
 begin
     // monitor this JID for pres-error type 407
     // when we get one, fire off a register event
-    rp := TRegProxy.Create;
-    rp.reg_controller := Self;
-    rp.cb := js.RegisterCallback(rp.Callback, '/packet/presence[@type="error"]/error[@code="407"]');
+    rp := TRegProxy.Create(jid);
+    _monitors.Add(rp);
 end;
 
-procedure TRegProxy.Callback(event: string; tag:TXMLTag);
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+constructor TRegProxy.Create(jid: WideString);
 begin
-    //
-
+    _jid := jid;
+    _cb := MainSession.RegisterCallback(Self.Callback,
+        '/packet/presence[@type="error"][@from="' + jid + '"/error[@code="407"]');
 end;
+
+{---------------------------------------}
+procedure TRegProxy.Callback(event: string; tag:TXMLTag);
+var
+    f: TfrmRegister;
+begin
+    // Create a registration wizard..
+    f := TfrmRegister.Create(Application);
+    f.jid := tag.getAttribute(_jid);
+end;
+
+{---------------------------------------}
+destructor TRegProxy.Destroy();
+begin
+    if (_cb <> -1) then begin
+        MainSession.UnRegisterCallback(_cb);
+        _cb := -1;
+        end;
+end;
+
 
 
 end.

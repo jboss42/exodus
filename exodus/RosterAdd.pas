@@ -209,6 +209,7 @@ begin
                     j := j + sjid[i];
                 end;
             sjid := j + '@' + a.jid;
+            frmExodus.RegisterController.MonitorJid(a.jid);
             MainSession.Roster.AddItem(sjid, snick, sgrp, true);
             Self.Close;
             end
