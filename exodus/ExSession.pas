@@ -90,6 +90,7 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 
 uses
+    ActnList, Graphics, ExtCtrls, ExRichEdit,
     Controls, GnuGetText, ConnDetails, IdWinsock2,
     ChatWin, GetOpt, Jabber1, JabberID, PrefController, StandardAuth,
     PrefNotify,
@@ -153,6 +154,14 @@ begin
         exit;
     end;
     FreeLibrary(ws2);
+
+    // Make sure we ignore some stuff from translations
+    TP_GlobalIgnoreClassProperty(TAction, 'Category');
+    TP_GlobalIgnoreClassProperty(TControl, 'HelpKeyword');
+    TP_GlobalIgnoreClassProperty(TNotebook, 'Pages');
+    TP_GlobalIgnoreClassProperty(TControl, 'ImeName');
+    TP_GlobalIgnoreClass(TFont);
+    TP_GlobalIgnoreClass(TExRichEdit);
 
     // init the cmd line stuff
     cli_priority := -1;
