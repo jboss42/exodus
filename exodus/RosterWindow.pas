@@ -2046,6 +2046,7 @@ begin
         treeRoster.Selected := n;
         o := false;
         if (r = node_myres) then begin
+            o := true;
             me := true;
             e := (_cur_myres.item <> nil);
             ri := _cur_myres.item;
@@ -2065,8 +2066,8 @@ begin
         popMsg.Enabled := e;
         popProperties.Enabled := true;
         popSendFile.Enabled := (o) and
-            (MainSession.Profile.ConnectionType = conn_normal) and
-            (not me);
+            (MainSession.Profile.ConnectionType = conn_normal);
+            // and (not me);
         popPresence.Enabled := e and (not me);
         popClientInfo.Enabled := true;
         popVersion.Enabled := o;
@@ -2203,7 +2204,9 @@ begin
     if node.Data = nil then exit;
 
     if (TObject(node.Data) is TJabberRosterItem) then
-        FileSend(TJabberRosterItem(node.Data).jid.jid);
+        FileSend(TJabberRosterItem(node.Data).jid.jid)
+    else if (TObject(node.Data) is TJabberMyResource) then
+        FileSend(TJabberMyResource(node.Data).jid.full);
 end;
 
 {---------------------------------------}

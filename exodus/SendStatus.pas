@@ -74,11 +74,11 @@ type
         _iq: TJabberIQ;
         _sid: Widestring;
         _shost: Widestring;
-        _disco_count: integer;
         _stream: TFileStream;
         _hash: Widestring;
         _size: longint;
         _recip_si: boolean;
+        _ent_cb: integer;
 
         procedure DoState();
         procedure BuildStreamHosts(ptag: TXMLTag);
@@ -94,13 +94,11 @@ type
         procedure WMSendStatus(var msg: TMessage); message WM_SEND_STATUS;
 
     published
-        procedure RecipDiscoCallback(event: string; tag: TXMLTag);
-        procedure DiscoItemsCallback(event: string; tag: TXMLTag);
-        procedure DiscoInfoCallback(event: string; tag: TXMLTag);
         procedure FTCallback(event: string; tag: TXMLTag);
         procedure AddrCallback(event: string; tag: TXMLTag);
         procedure SelectHostCallback(event: string; tag: TXMLTag);
         procedure ActiveCallback(event: string; tag: TXMLTag);
+        procedure EntityCallback(event: string; tag: TXMLTag);
 
     public
         { Public declarations }
@@ -163,6 +161,7 @@ implementation
 {$R *.dfm}
 
 uses
+    EntityCache, Entity, 
     ExUtils, GnuGetText, JabberID, XMLUtils, JabberConst, Session;
 
 const
@@ -379,25 +378,57 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfSendStatus.EntityCallback(event: string; tag: TXMLTag);
+var
+    x, x2, x3: TXMLTag;
+begin
+    if (tag.getAttribute('from') <> _pkg.recip) then exit;
+
+    MainSession.UnRegisterCallback(_ent_cb);
+
+    _iq := nil;
+    _recip_si := false;
+
+    if ((event = '/session/entity/info') and (tag <> nil)) then begin
+        // check for SI, and FTPROFILE
+        x := tag.QueryXPTag('/iq/query/feature[@var="' + XMLNS_SI + '"]');
+        x2 := tag.QueryXPTag('/iq/query/feature[@var="' + XMLNS_FTPROFILE + '"]');
+        x3 := tag.QueryXPTag('/iq/query/feature[@var="' + XMLNS_BYTESTREAMS + '"]');
+        if ((x <> nil) and (x2 <> nil) and (x3 <> nil)) then
+            _recip_si := true;
+    end;
+
+    if (not _recip_si) then begin
+        // they don't support FT... so either do OOB, or DAV
+        _state := send_old_ft;
+    end
+    else begin
+        // they do support FT, and Bytestreams, so lets forge ahead
+        _state := send_get_hosts;
+    end;
+
+    DoState();
+
+end;
+
+{---------------------------------------}
 procedure TfSendStatus.DoState();
 var
     fld, x: TXMLTag;
     fs: TFileStream;
     p: THostPortPair;
     sh, i: integer;
-    tmp_jid: TJabberID;
     tmps: Widestring;
     spkg: TStreamPkg;
+    jl: TWidestringlist;
 begin
     // do something based on our current state
+    assert(_iq = nil);
+    
     case _state of
     send_disco: begin
-        _iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
-            Self.RecipDiscoCallback, 10);
-        _iq.Namespace := XMLNS_DISCOINFO;
-        _iq.iqType := 'get';
-        _iq.toJid := _pkg.recip;
-        _iq.Send();
+        _ent_cb := MainSession.RegisterCallback(Self.EntityCallback, '/session/entity/info');
+        jEntityCache.discoInfo(_pkg.recip, MainSession);
         end;
     send_old_ft: begin
         if MainSession.Prefs.getBool('xfer_webdav') then begin
@@ -445,13 +476,19 @@ begin
             DoState();
         end
         else begin
-            _iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
-                Self.DiscoItemsCallback, 20);
-            _iq.iqType := 'get';
-            tmp_jid := TJabberID.Create(MainSession.jid);
-            _iq.toJid := tmp_jid.domain;
-            _iq.Namespace := XMLNS_DISCOITEMS;
-            _iq.Send();
+            // This shouldn't be necessary anymore...
+            // we want category='proxy', type='bytestreams'
+            jl := TWidestringlist.Create();
+            jEntityCache.getByIdentity('proxy', 'bytestreams', jl);
+            for i := 0 to jl.Count - 1 do begin
+                p := THostPortPair.Create();
+                p.jid := jl[i];
+                shosts.AddObject(p.jid, p);
+            end;
+            jl.Free();
+
+            _state := send_get_addr;
+            DoState();
         end;
         end;
     send_get_addr: begin
@@ -719,112 +756,12 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfSendStatus.RecipDiscoCallback(event: string; tag: TXMLTag);
-var
-    x, x2, x3: TXMLTag;
-begin
-    // determine what mode to use based on disco results
-    _iq := nil;
-    _recip_si := false;
-
-    if (event = 'xml') then begin
-        // check for SI, and FTPROFILE
-        x := tag.QueryXPTag('/iq/query/feature[@var="' + XMLNS_SI + '"]');
-        x2 := tag.QueryXPTag('/iq/query/feature[@var="' + XMLNS_FTPROFILE + '"]');
-        x3 := tag.QueryXPTag('/iq/query/feature[@var="' + XMLNS_BYTESTREAMS + '"]');
-        if ((x <> nil) and (x2 <> nil) and (x3 <> nil)) then
-            _recip_si := true;
-    end;
-
-    if (not _recip_si) then begin
-        // they don't support FT... so either do OOB, or DAV
-        _state := send_old_ft;
-    end
-    else begin
-        // they do support FT, and Bytestreams, so lets forge ahead
-        _state := send_get_hosts;
-    end;
-
-    DoState();
-end;
-
-{---------------------------------------}
-procedure TfSendStatus.DiscoItemsCallback(event: string; tag: TXMLTag);
-var
-    i: integer;
-    iq: TJabberIQ;
-    items: TXMLTagList;
-    tmps: Widestring;
-    p: THostPortPair;
-begin
-    // we got the disco#items back (hopefully)
-    _iq := nil;
-    if ((event = 'xml') and (tag.GetAttribute('type') = 'result')) then begin
-        // Clear the shosts Queue..
-        while (shosts.Count > 0) do begin
-            p := THostPortPair(shosts.Objects[0]);
-            p.Free();
-            shosts.Delete(0);
-        end;
-
-        _disco_count := 0;
-        items := tag.QueryXPTags('/iq/query/item');
-        for i := 0 to items.count - 1 do begin
-            iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
-                Self.DiscoInfoCallback, 10);
-            iq.iqType := 'get';
-            iq.toJid := items[i].getAttribute('jid');
-            tmps := items[i].GetAttribute('node');
-            if (tmps <> '') then
-                iq.qTag.setAttribute('node', tmps);
-            iq.Namespace := XMLNS_DISCOINFO;
-            iq.Send();
-            _disco_count := _disco_count + 1;
-        end;
-    end
-    else begin
-        if (shosts.Count > 0) then begin
-            _state := send_get_addr;
-            DoState();
-        end
-        else begin
-            //_state := send_offer_hosts;
-            _state := send_ft_offer;
-            DoState();
-        end;
-    end;
-end;
-
-{---------------------------------------}
-procedure TfSendStatus.DiscoInfoCallback(event: string; tag: TXMLTag);
-var
-    x: TXMLTag;
-    p: THostPortPair;
-begin
-    // look at the features.. if it's category=proxy, type=bytestreams
-    if ((event = 'xml') and (tag.getAttribute('type') = 'result')) then begin
-        x := tag.QueryXPTag('/iq/query/identity[@category="proxy"][@type="bytestreams"]');
-        if (x <> nil) then begin
-            p := THostPortPair.Create();
-            p.jid := tag.GetAttribute('from');
-            shosts.AddObject(p.jid, p);
-        end;
-    end;
-
-    _disco_count := _disco_count - 1;
-    if (_disco_count = 0) then begin
-        _state := send_get_addr;
-        DoState();
-    end;
-
-end;
-
-{---------------------------------------}
 procedure TfSendStatus.FTCallback(event: string; tag: TXMLTag);
 var
     accept: boolean;
 begin
     // They either accept, or deny our ft offering
+    assert(_iq <> nil);
     _iq := nil;
     accept := false;
     if (event = 'xml') then begin
@@ -856,6 +793,7 @@ var
 begin
     // We are getting the address of a streamhost back
     if ((event = 'xml') and (tag.getAttribute('type') = 'result')) then begin
+        assert(_iq <> nil);
         _iq := nil;
         sh := tag.QUeryXPTags('/iq/query/streamhost');
         for j := 0 to sh.Count - 1 do begin
@@ -886,6 +824,7 @@ begin
             i := shosts.indexOf(tag.getAttribute('from'))
         else
             i := shosts.indexOf(_iq.toJid);
+        assert(_iq <> nil);
         _iq := nil;
         if (i >= 0) then begin
             p := THostPortPair(shosts.objects[i]);
@@ -905,6 +844,7 @@ end;
 procedure TfSendStatus.SelectHostCallback(event: string; tag: TXMLTag);
 begin
     // The recip has selected a host
+    assert(_iq <> nil);
     _iq := nil;
     if ((event = 'xml') and (tag.GetAttribute('type') = 'result')) then begin
         // they have accepted a specific streamhost
@@ -929,6 +869,7 @@ end;
 procedure TfSendStatus.ActiveCallback(event: string; tag: TXMLTag);
 begin
     // The stream host has told us that the channel is active.
+    assert(_iq <> nil);
     _iq := nil;
     if (event = 'xml') then begin
         if (tag.GetAttribute('type') = 'result') then begin
@@ -1006,24 +947,20 @@ end;
 {---------------------------------------}
 procedure TfSendStatus.btnCancelClick(Sender: TObject);
 begin
-    if ((_state = send_done) or (_state = send_cancel) or
-        (_state = send_do_oob) or (_state = send_do_dav)) then begin
-
-        if (_iq <> nil) then begin
-            _iq.Free();
-            _iq := nil;
-        end;
-
-        getXferManager().killFrame(Self);
-    end;
+    kill();
 end;
 
+{---------------------------------------}
 procedure TfSendStatus.Kill();
 begin
     if (_iq <> nil) then begin
         _iq.Free();
         _iq := nil;
     end;
+
+    if (_thread <> nil) then
+        _thread.Terminate();
+        
     getXferManager().killFrame(Self);
 end;
 
