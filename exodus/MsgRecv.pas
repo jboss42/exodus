@@ -60,7 +60,7 @@ type
     pnlTop: TPanel;
     pnlHeader: TPanel;
     pnlSendSubject: TPanel;
-    lblSubject1: TLabel;
+    lblSubject1: TTntLabel;
     txtSendSubject: TTntMemo;
     pnlSubject: TPanel;
     txtSubject: TTntLabel;

@@ -22,7 +22,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 393
+    Height = 388
     VertScrollBar.Tracking = True
     Align = alLeft
     Color = clWindow
@@ -208,7 +208,7 @@ object frmPrefs: TfrmPrefs
         0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFFFFFFFFFF}
       OnClick = TabSelect
     end
-    object lblDialog: TLabel
+    object lblDialog: TTntLabel
       Left = 0
       Top = 358
       Width = 68
@@ -400,7 +400,7 @@ object frmPrefs: TfrmPrefs
         00000000000000000000000000000000000000010000000180000003}
       OnClick = TabSelect
     end
-    object lblFonts: TLabel
+    object lblFonts: TTntLabel
       Left = 0
       Top = 252
       Width = 68
@@ -593,7 +593,7 @@ object frmPrefs: TfrmPrefs
       Transparent = True
       OnClick = TabSelect
     end
-    object lblS10n: TLabel
+    object lblS10n: TTntLabel
       Left = 0
       Top = 199
       Width = 68
@@ -601,7 +601,6 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Subscriptions'
-      Color = clWindow
       ParentColor = False
       Transparent = False
       WordWrap = True
@@ -787,7 +786,7 @@ object frmPrefs: TfrmPrefs
         FF0000FFFF8000FFFF8001FFFFC003FFFFC007FFFFD00BFFFFFC37FF}
       OnClick = TabSelect
     end
-    object lblRoster: TLabel
+    object lblRoster: TTntLabel
       Left = 0
       Top = 93
       Width = 68
@@ -795,7 +794,6 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Roster'
-      Color = clWindow
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -987,7 +985,7 @@ object frmPrefs: TfrmPrefs
         0000FFFF0000FFFF0001FFFF000FFFFF000FFFFF000FFFFFC01FFFFF}
       OnClick = TabSelect
     end
-    object lblSystem: TLabel
+    object lblSystem: TTntLabel
       Left = 0
       Top = 40
       Width = 68
@@ -1131,7 +1129,7 @@ object frmPrefs: TfrmPrefs
         000100000001000080010000C0030000C0070000E00F0000F8FF0000}
       OnClick = TabSelect
     end
-    object lblNotify: TLabel
+    object lblNotify: TTntLabel
       Left = 0
       Top = 411
       Width = 68
@@ -1323,7 +1321,7 @@ object frmPrefs: TfrmPrefs
         FE000000FE000000FE000000FE000000FE000001FFF8000FFFF81FFF}
       OnClick = TabSelect
     end
-    object lblAway: TLabel
+    object lblAway: TTntLabel
       Left = 0
       Top = 570
       Width = 68
@@ -1515,7 +1513,7 @@ object frmPrefs: TfrmPrefs
         F0002001F0007000F880F800F9C1FC01FFE7FE03FFFFFF07FFFFFF8F}
       OnClick = TabSelect
     end
-    object lblKeywords: TLabel
+    object lblKeywords: TTntLabel
       Left = 0
       Top = 623
       Width = 68
@@ -1707,7 +1705,7 @@ object frmPrefs: TfrmPrefs
         FE000003FE000003FE000007FF80000FFF60007FFFFFFFFFFFFFFFFF}
       OnClick = TabSelect
     end
-    object lblBlockList: TLabel
+    object lblBlockList: TTntLabel
       Left = 0
       Top = 676
       Width = 68
@@ -1899,7 +1897,7 @@ object frmPrefs: TfrmPrefs
         FC00003FFE00003FFE00007FFF0000FFFF8001FFFFC003FFFFF00FFF}
       OnClick = TabSelect
     end
-    object lblCustomPres: TLabel
+    object lblCustomPres: TTntLabel
       Left = 0
       Top = 729
       Width = 68
@@ -2091,7 +2089,7 @@ object frmPrefs: TfrmPrefs
         F000001FF800003FFE0000FFFF8003FFFFF83FFFFFFFFFFFFFFFFFFF}
       OnClick = TabSelect
     end
-    object lblMessages: TLabel
+    object lblMessages: TTntLabel
       Left = 0
       Top = 464
       Width = 68
@@ -2227,7 +2225,7 @@ object frmPrefs: TfrmPrefs
         FFFE0001FFF00001FFF00001FFF00031FFFFFF3FFFFFFFFFFFFFFFFF}
       OnClick = TabSelect
     end
-    object lblPlugins: TLabel
+    object lblPlugins: TTntLabel
       Left = 0
       Top = 835
       Width = 68
@@ -2419,7 +2417,7 @@ object frmPrefs: TfrmPrefs
         8000003FC000003FE000007FF00000FFF80001FFFC0007FFFF001FFF}
       OnClick = TabSelect
     end
-    object lblNetwork: TLabel
+    object lblNetwork: TTntLabel
       Left = 0
       Top = 782
       Width = 68
@@ -2610,7 +2608,7 @@ object frmPrefs: TfrmPrefs
         FC00001FFC00001FFC00003FFE00003FFE00007FFFC003FFFFC003FF}
       OnClick = TabSelect
     end
-    object lblTransfer: TLabel
+    object lblTransfer: TTntLabel
       Left = 0
       Top = 517
       Width = 68
@@ -2802,7 +2800,7 @@ object frmPrefs: TfrmPrefs
         E018003FF01C003FFC7C007FFFFE00FFFFFF83FFFFFFFFFFFFFFFFFF}
       OnClick = TabSelect
     end
-    object lblGroups: TLabel
+    object lblGroups: TTntLabel
       Left = 0
       Top = 146
       Width = 68
@@ -2810,7 +2808,6 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Groups'
-      Color = clWindow
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -2974,7 +2971,7 @@ object frmPrefs: TfrmPrefs
         0000000000000000000000000000000000000000}
       OnClick = TabSelect
     end
-    object lblLayouts: TLabel
+    object lblLayouts: TTntLabel
       Left = 0
       Top = 305
       Width = 68
@@ -2987,24 +2984,24 @@ object frmPrefs: TfrmPrefs
       OnClick = TabSelect
     end
   end
-  object PageControl1: TPageControl
+  object PageControl1: TTntPageControl
     Left = 89
     Top = 0
     Width = 369
-    Height = 393
+    Height = 388
     ActivePage = tbsBlockList
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
     TabOrder = 1
-    object tbsKeywords: TTabSheet
+    object tbsKeywords: TTntTabSheet
       Caption = 'Keywords'
       ImageIndex = 8
-      object StaticText8: TStaticText
+      object StaticText8: TTntStaticText
         Left = 0
         Top = 0
-        Width = 361
+        Width = 112
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -3018,7 +3015,6 @@ object frmPrefs: TfrmPrefs
         ParentColor = False
         ParentFont = False
         TabOrder = 0
-        Transparent = False
       end
       object memKeywords: TTntMemo
         Left = 0
@@ -3036,10 +3032,10 @@ object frmPrefs: TfrmPrefs
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 2
-        object Label1: TLabel
+        object Label1: TTntLabel
           Left = 0
           Top = 0
-          Width = 361
+          Width = 350
           Height = 26
           Align = alTop
           Caption = 
@@ -3047,7 +3043,7 @@ object frmPrefs: TfrmPrefs
             ' in the keywords that you want Exodus to look for in messages.'
           WordWrap = True
         end
-        object chkRegex: TCheckBox
+        object chkRegex: TTntCheckBox
           Left = 5
           Top = 34
           Width = 260
@@ -3057,10 +3053,10 @@ object frmPrefs: TfrmPrefs
         end
       end
     end
-    object tbsBlockList: TTabSheet
+    object tbsBlockList: TTntTabSheet
       Caption = 'BlockList'
       ImageIndex = 9
-      object StaticText9: TStaticText
+      object StaticText9: TTntStaticText
         Left = 0
         Top = 0
         Width = 361
@@ -3077,13 +3073,12 @@ object frmPrefs: TfrmPrefs
         ParentColor = False
         ParentFont = False
         TabOrder = 0
-        Transparent = False
       end
       object memBlocks: TTntMemo
         Left = 0
         Top = 73
         Width = 361
-        Height = 289
+        Height = 284
         Align = alClient
         TabOrder = 1
       end
@@ -3107,7 +3102,7 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 393
+    Top = 388
     Width = 458
     Height = 37
     Align = alBottom
@@ -3130,7 +3125,7 @@ object frmPrefs: TfrmPrefs
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 0
-      object btnOK: TButton
+      object btnOK: TTntButton
         Left = 4
         Top = 1
         Width = 75
@@ -3140,7 +3135,7 @@ object frmPrefs: TfrmPrefs
         TabOrder = 0
         OnClick = frameButtons1btnOKClick
       end
-      object btnCancel: TButton
+      object btnCancel: TTntButton
         Left = 83
         Top = 1
         Width = 75
@@ -3150,7 +3145,7 @@ object frmPrefs: TfrmPrefs
         ModalResult = 2
         TabOrder = 1
       end
-      object Button6: TButton
+      object Button6: TTntButton
         Left = 162
         Top = 1
         Width = 75

@@ -36,10 +36,10 @@ object frmInvite: TfrmInvite
         Left = 159
         Width = 164
         Height = 29
-        inherited btnOK: TButton
+        inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end
-        inherited btnCancel: TButton
+        inherited btnCancel: TTntButton
           OnClick = frameButtons1btnCancelClick
         end
       end
@@ -93,7 +93,7 @@ object frmInvite: TfrmInvite
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 1
-      object btnRemove: TButton
+      object btnRemove: TTntButton
         Left = 4
         Top = 34
         Width = 60
@@ -102,7 +102,7 @@ object frmInvite: TfrmInvite
         TabOrder = 0
         OnClick = btnRemoveClick
       end
-      object btnAdd: TButton
+      object btnAdd: TTntButton
         Left = 4
         Top = 6
         Width = 60
@@ -120,7 +120,7 @@ object frmInvite: TfrmInvite
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 2
-      object Label2: TLabel
+      object Label2: TTntLabel
         Left = 0
         Top = 44
         Width = 317
@@ -128,7 +128,7 @@ object frmInvite: TfrmInvite
         Align = alTop
         Caption = 'Reason:'
       end
-      object Label1: TLabel
+      object Label1: TTntLabel
         Left = 0
         Top = 0
         Width = 317

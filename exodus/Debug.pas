@@ -39,14 +39,14 @@ type
     MsgDebug: TExRichEdit;
     pnlTop: TPanel;
     btnClose: TSpeedButton;
-    lblJID: TLabel;
+    lblJID: TTntLabel;
     N1: TMenuItem;
     Clear1: TMenuItem;
     SendXML1: TMenuItem;
     Find1: TMenuItem;
     WordWrap1: TMenuItem;
     FindDialog1: TFindDialog;
-    lblLabel: TLabel;
+    lblLabel: TTntLabel;
     MemoSend: TExRichEdit;
     procedure FormCreate(Sender: TObject);
     procedure chkDebugWrapClick(Sender: TObject);

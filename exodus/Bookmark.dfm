@@ -47,7 +47,7 @@ object frmBookmark: TfrmBookmark
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 153
+    Top = 148
     Width = 338
     Height = 34
     Align = alBottom
@@ -62,10 +62,10 @@ object frmBookmark: TfrmBookmark
       inherited Panel1: TPanel
         Left = 178
         Height = 29
-        inherited btnOK: TButton
+        inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end
-        inherited btnCancel: TButton
+        inherited btnCancel: TTntButton
           OnClick = frameButtons1btnCancelClick
         end
       end

@@ -26,7 +26,7 @@ uses
 
 type
   TfrmInputPass = class(TForm)
-    Label1: TLabel;
+    Label1: TTntLabel;
     frameButtons1: TframeButtons;
     txtPassword: TTntEdit;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

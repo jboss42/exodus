@@ -17,7 +17,7 @@ object frmRegister: TfrmRegister
   TextHeight = 13
   object pnlBottom: TPanel
     Left = 0
-    Top = 263
+    Top = 258
     Width = 304
     Height = 35
     Align = alBottom
@@ -31,7 +31,7 @@ object frmRegister: TfrmRegister
       Align = alRight
       BevelOuter = bvNone
       TabOrder = 0
-      object btnPrev: TButton
+      object btnPrev: TTntButton
         Left = 8
         Top = 8
         Width = 75
@@ -41,7 +41,7 @@ object frmRegister: TfrmRegister
         TabOrder = 0
         OnClick = btnPrevClick
       end
-      object btnNext: TButton
+      object btnNext: TTntButton
         Left = 88
         Top = 8
         Width = 75
@@ -52,7 +52,7 @@ object frmRegister: TfrmRegister
         TabOrder = 1
         OnClick = btnNextClick
       end
-      object btnCancel: TButton
+      object btnCancel: TTntButton
         Left = 168
         Top = 8
         Width = 75
@@ -64,19 +64,19 @@ object frmRegister: TfrmRegister
       end
     end
   end
-  object Tabs: TPageControl
+  object Tabs: TTntPageControl
     Left = 0
     Top = 0
     Width = 304
-    Height = 263
+    Height = 258
     ActivePage = tabAgent
     Align = alClient
     MultiLine = True
     Style = tsButtons
     TabOrder = 1
-    object tabWelcome: TTabSheet
+    object tabWelcome: TTntTabSheet
       Caption = 'tabWelcome'
-      object Label1: TLabel
+      object Label1: TTntLabel
         Left = 0
         Top = 0
         Width = 296
@@ -95,7 +95,7 @@ object frmRegister: TfrmRegister
         ParentFont = False
         WordWrap = True
       end
-      object lblIns: TLabel
+      object lblIns: TTntLabel
         Left = 0
         Top = 90
         Width = 296
@@ -112,12 +112,12 @@ object frmRegister: TfrmRegister
         WordWrap = True
       end
     end
-    object tabAgent: TTabSheet
+    object tabAgent: TTntTabSheet
       Caption = 'tabAgent'
       ImageIndex = 1
       object Panel2: TPanel
         Left = 0
-        Top = 199
+        Top = 194
         Width = 296
         Height = 33
         Align = alBottom
@@ -132,7 +132,7 @@ object frmRegister: TfrmRegister
           BevelOuter = bvNone
           Caption = 'Panel3'
           TabOrder = 0
-          object btnDelete: TButton
+          object btnDelete: TTntButton
             Left = 3
             Top = 3
             Width = 161
@@ -144,10 +144,10 @@ object frmRegister: TfrmRegister
         end
       end
     end
-    object tabWait: TTabSheet
+    object tabWait: TTntTabSheet
       Caption = 'tabWait'
       ImageIndex = 4
-      object Label2: TLabel
+      object Label2: TTntLabel
         Left = 0
         Top = 0
         Width = 296
@@ -164,10 +164,10 @@ object frmRegister: TfrmRegister
         WordWrap = True
       end
     end
-    object tabResult: TTabSheet
+    object tabResult: TTntTabSheet
       Caption = 'tabResult'
       ImageIndex = 3
-      object lblBad: TLabel
+      object lblBad: TTntLabel
         Left = 0
         Top = 90
         Width = 296
@@ -187,7 +187,7 @@ object frmRegister: TfrmRegister
         Visible = False
         WordWrap = True
       end
-      object lblOK: TLabel
+      object lblOK: TTntLabel
         Left = 0
         Top = 0
         Width = 296

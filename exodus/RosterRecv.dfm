@@ -31,19 +31,23 @@ object frmRosterRecv: TfrmRosterRecv
     Align = alBottom
     AutoScroll = False
     TabOrder = 0
-    inherited Bevel1: TBevel
+    inherited Panel2: TPanel
       Width = 374
-    end
-    inherited Panel1: TPanel
-      Left = 214
-      Height = 29
-      inherited btnOK: TButton
-        Caption = 'Add Contacts'
-        OnClick = frameButtons1btnOKClick
+      Height = 34
+      inherited Bevel1: TBevel
+        Width = 374
       end
-      inherited btnCancel: TButton
-        Caption = 'Close'
-        OnClick = frameButtons1btnCancelClick
+      inherited Panel1: TPanel
+        Left = 214
+        Height = 29
+        inherited btnOK: TTntButton
+          Caption = 'Add Contacts'
+          OnClick = frameButtons1btnOKClick
+        end
+        inherited btnCancel: TTntButton
+          Caption = 'Close'
+          OnClick = frameButtons1btnCancelClick
+        end
       end
     end
   end
@@ -56,7 +60,7 @@ object frmRosterRecv: TfrmRosterRecv
     BevelOuter = bvNone
     BorderWidth = 2
     TabOrder = 1
-    object StaticText1: TStaticText
+    object StaticText1: TTntStaticText
       Left = 2
       Top = 2
       Width = 51
@@ -73,7 +77,7 @@ object frmRosterRecv: TfrmRosterRecv
       ParentFont = False
       TabOrder = 0
     end
-    object txtFrom: TStaticText
+    object txtFrom: TTntStaticText
       Left = 53
       Top = 2
       Width = 319
@@ -184,7 +188,7 @@ object frmRosterRecv: TfrmRosterRecv
     UndoLimit = 0
     AllowInPlace = False
   end
-  object lvContacts: TListView
+  object lvContacts: TTntListView
     Left = 0
     Top = 115
     Width = 374
@@ -214,14 +218,14 @@ object frmRosterRecv: TfrmRosterRecv
     DesignSize = (
       374
       29)
-    object Label2: TLabel
+    object Label2: TTntLabel
       Left = 3
       Top = 7
       Width = 127
       Height = 13
       Caption = 'Add contacts to this group:'
     end
-    object cboGroup: TComboBox
+    object cboGroup: TTntComboBox
       Left = 144
       Top = 3
       Width = 209

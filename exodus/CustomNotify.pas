@@ -23,7 +23,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, buttonFrame, StdCtrls, CheckLst;
+  Dialogs, buttonFrame, StdCtrls, CheckLst, TntStdCtrls;
 
 type
   TfrmCustomNotify = class(TForm)
@@ -33,7 +33,7 @@ type
     chkToast: TCheckBox;
     chkTrayNotify: TCheckBox;
     frameButtons1: TframeButtons;
-    Label1: TLabel;
+    Label1: TTntLabel;
     procedure FormCreate(Sender: TObject);
     procedure chkNotifyClick(Sender: TObject);
     procedure chkToastClick(Sender: TObject);

@@ -3,7 +3,7 @@ object frmConnDetails: TfrmConnDetails
   Top = 169
   Width = 304
   Height = 305
-  ActiveControl = txtUsername
+  ActiveControl = cboConnection
   Caption = 'Connection Details'
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -45,7 +45,7 @@ object frmConnDetails: TfrmConnDetails
     Top = 0
     Width = 296
     Height = 239
-    ActivePage = tbsProfile
+    ActivePage = tbsConn
     Align = alClient
     TabOrder = 1
     object tbsProfile: TTntTabSheet
@@ -57,7 +57,6 @@ object frmConnDetails: TfrmConnDetails
         Width = 51
         Height = 13
         Caption = 'Username:'
-        Transparent = False
       end
       object Label10: TTntLabel
         Left = 2
@@ -65,7 +64,6 @@ object frmConnDetails: TfrmConnDetails
         Width = 49
         Height = 13
         Caption = 'Password:'
-        Transparent = False
       end
       object Label11: TTntLabel
         Left = 2
@@ -73,7 +71,6 @@ object frmConnDetails: TfrmConnDetails
         Width = 34
         Height = 13
         Caption = 'Server:'
-        Transparent = False
       end
       object Label12: TTntLabel
         Left = 2
@@ -81,16 +78,20 @@ object frmConnDetails: TfrmConnDetails
         Width = 49
         Height = 13
         Caption = 'Resource:'
-        Transparent = False
       end
       object lblServerList: TTntLabel
         Left = 100
         Top = 93
-        Width = 57
+        Width = 121
         Height = 13
         Cursor = crHandPoint
-        Caption = 'lblServerList'
-        Transparent = False
+        Caption = 'Download a list of servers'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlue
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsUnderline]
+        ParentFont = False
         OnClick = lblServerListClick
       end
       object Label13: TTntLabel
@@ -100,7 +101,6 @@ object frmConnDetails: TfrmConnDetails
         Height = 29
         AutoSize = False
         Caption = 'Enter desired username for new accounts.'
-        Transparent = False
         WordWrap = True
       end
       object cboServer: TTntComboBox
@@ -380,7 +380,7 @@ object frmConnDetails: TfrmConnDetails
         Align = alBottom
         AutoSize = False
         Caption = 
-          'NOTE: You must use the URL of your jabber server'#39's HTTP tunnelli' +
+          'NOTE: You must use the URL of your jabber server''s HTTP tunnelli' +
           'ng proxy. You can not use some "standard" HTTP proxy for this to' +
           ' work. Contact your server administrator for additional informat' +
           'ion.'

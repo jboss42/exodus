@@ -8,7 +8,7 @@ inherited frmPrefPresence: TfrmPrefPresence
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
-  object lstCustomPres: TListBox
+  object lstCustomPres: TTntListBox
     Left = 0
     Top = 113
     Width = 329
@@ -18,7 +18,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     TabOrder = 0
     OnClick = lstCustomPresClick
   end
-  object StaticText10: TStaticText
+  object StaticText10: TTntStaticText
     Left = 0
     Top = 0
     Width = 329
@@ -35,7 +35,6 @@ inherited frmPrefPresence: TfrmPrefPresence
     ParentColor = False
     ParentFont = False
     TabOrder = 1
-    Transparent = False
   end
   object pnlCustomPresButtons: TPanel
     Left = 0
@@ -45,7 +44,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 2
-    object btnCustomPresAdd: TButton
+    object btnCustomPresAdd: TTntButton
       Left = 4
       Top = 4
       Width = 60
@@ -54,7 +53,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       TabOrder = 0
       OnClick = btnCustomPresAddClick
     end
-    object btnCustomPresRemove: TButton
+    object btnCustomPresRemove: TTntButton
       Left = 68
       Top = 4
       Width = 60
@@ -63,7 +62,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       TabOrder = 1
       OnClick = btnCustomPresRemoveClick
     end
-    object btnCustomPresClear: TButton
+    object btnCustomPresClear: TTntButton
       Left = 132
       Top = 4
       Width = 60
@@ -81,42 +80,42 @@ inherited frmPrefPresence: TfrmPrefPresence
     Align = alTop
     Caption = 'Properties'
     TabOrder = 3
-    object Label11: TLabel
+    object Label11: TTntLabel
       Left = 6
       Top = 23
       Width = 31
       Height = 13
       Caption = 'Name:'
     end
-    object Label12: TLabel
+    object Label12: TTntLabel
       Left = 6
       Top = 47
       Width = 33
       Height = 13
       Caption = 'Status:'
     end
-    object Label13: TLabel
+    object Label13: TTntLabel
       Left = 5
       Top = 71
       Width = 27
       Height = 13
       Caption = 'Type:'
     end
-    object Label14: TLabel
+    object Label14: TTntLabel
       Left = 177
       Top = 73
       Width = 34
       Height = 13
       Caption = 'Priority:'
     end
-    object lblHotkey: TLabel
+    object lblHotkey: TTntLabel
       Left = 5
       Top = 94
       Width = 38
       Height = 13
       Caption = 'HotKey:'
     end
-    object txtCPTitle: TEdit
+    object txtCPTitle: TTntEdit
       Left = 48
       Top = 20
       Width = 225
@@ -124,7 +123,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       TabOrder = 0
       OnChange = txtCPTitleChange
     end
-    object txtCPStatus: TEdit
+    object txtCPStatus: TTntEdit
       Left = 48
       Top = 44
       Width = 225
@@ -132,7 +131,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       TabOrder = 1
       OnChange = txtCPTitleChange
     end
-    object cboCPType: TComboBox
+    object cboCPType: TTntComboBox
       Left = 48
       Top = 68
       Width = 97
@@ -141,14 +140,14 @@ inherited frmPrefPresence: TfrmPrefPresence
       ItemHeight = 13
       TabOrder = 2
       OnChange = txtCPTitleChange
-      Items.Strings = (
+      Items.WideStrings = (
         'Chat'
         'Available'
         'Away'
         'Ext. Away'
         'Do Not Disturb')
     end
-    object txtCPPriority: TEdit
+    object txtCPPriority: TTntEdit
       Left = 218
       Top = 69
       Width = 39
@@ -157,7 +156,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       Text = '0'
       OnChange = txtCPTitleChange
     end
-    object spnPriority: TUpDown
+    object spnPriority: TTntUpDown
       Left = 257
       Top = 69
       Width = 16
@@ -184,14 +183,14 @@ inherited frmPrefPresence: TfrmPrefPresence
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 4
-    object Label8: TLabel
+    object Label8: TTntLabel
       Left = 5
       Top = 28
       Width = 126
       Height = 13
       Caption = 'Presence tracking in chats'
     end
-    object Label1: TLabel
+    object Label1: TTntLabel
       Left = 0
       Top = 75
       Width = 118
@@ -204,7 +203,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       Font.Style = []
       ParentFont = False
     end
-    object chkPresenceSync: TCheckBox
+    object chkPresenceSync: TTntCheckBox
       Left = 4
       Top = 4
       Width = 273
@@ -214,14 +213,14 @@ inherited frmPrefPresence: TfrmPrefPresence
       State = cbChecked
       TabOrder = 0
     end
-    object cboPresTracking: TComboBox
+    object cboPresTracking: TTntComboBox
       Left = 15
       Top = 44
       Width = 207
       Height = 21
       ItemHeight = 13
       TabOrder = 1
-      Items.Strings = (
+      Items.WideStrings = (
         'Track all presence changes'
         'Show only last presence change'
         'Don'#39't show presence changes')

@@ -23,7 +23,7 @@ interface
 
 uses
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    ComCtrls, Dialogs, ExtCtrls;
+    ComCtrls, Dialogs, ExtCtrls, TntComCtrls;
 
 type
   TDockNotify = procedure of object;
@@ -59,7 +59,7 @@ type
     property OnDockEndChange: TDockNotify read _onDockEndChange write _onDockEndChange;
   public
     { Public declarations }
-    TabSheet: TTabSheet;
+    TabSheet: TTntTabSheet;
     procedure DockForm; virtual;
     procedure FloatForm; virtual;
     procedure ShowDefault;
@@ -111,7 +111,7 @@ begin
     Self.ManualDock(frmExodus.Tabs);
     Self.Align := alClient;
     _docked := true;
-    Self.TabSheet := frmExodus.Tabs.Pages[frmExodus.Tabs.PageCount-1];
+    Self.TabSheet := TTntTabSheet(frmExodus.Tabs.Pages[frmExodus.Tabs.PageCount-1]);
     if (Self.TabSheet <> nil) then
         Self.TabSheet.ImageIndex := -1;
 

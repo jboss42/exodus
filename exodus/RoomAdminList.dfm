@@ -25,7 +25,7 @@ object frmRoomAdminList: TfrmRoomAdminList
     Align = alTop
     Beveled = True
   end
-  object Label1: TLabel
+  object Label1: TTntLabel
     Left = 0
     Top = 157
     Width = 309
@@ -43,20 +43,25 @@ object frmRoomAdminList: TfrmRoomAdminList
     Align = alBottom
     AutoScroll = False
     TabOrder = 0
-    inherited Bevel1: TBevel
+    inherited Panel2: TPanel
       Width = 309
-    end
-    inherited Panel1: TPanel
-      Left = 149
-      inherited btnOK: TButton
-        OnClick = frameButtons1btnOKClick
+      Height = 30
+      inherited Bevel1: TBevel
+        Width = 309
       end
-      inherited btnCancel: TButton
-        OnClick = frameButtons1btnCancelClick
+      inherited Panel1: TPanel
+        Left = 149
+        Height = 25
+        inherited btnOK: TTntButton
+          OnClick = frameButtons1btnOKClick
+        end
+        inherited btnCancel: TTntButton
+          OnClick = frameButtons1btnCancelClick
+        end
       end
     end
   end
-  object memNew: TMemo
+  object memNew: TTntMemo
     Left = 0
     Top = 182
     Width = 309
@@ -65,7 +70,7 @@ object frmRoomAdminList: TfrmRoomAdminList
     ScrollBars = ssVertical
     TabOrder = 1
   end
-  object lstItems: TListView
+  object lstItems: TTntListView
     Left = 0
     Top = 0
     Width = 309

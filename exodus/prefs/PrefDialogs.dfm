@@ -7,28 +7,28 @@ inherited frmPrefDialogs: TfrmPrefDialogs
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object Label26: TLabel
+  object Label26: TTntLabel
     Left = 8
     Top = 231
     Width = 197
     Height = 13
     Caption = 'Minutes to keep chat windows in memory:'
   end
-  object Label27: TLabel
+  object Label27: TTntLabel
     Left = 8
     Top = 245
     Width = 244
     Height = 13
     Caption = 'Use 0 minutes to destroy chat windows immediately.'
   end
-  object Label29: TLabel
+  object Label29: TTntLabel
     Left = 39
     Top = 131
     Width = 120
     Height = 13
     Caption = 'Toast duration (seconds):'
   end
-  object chkRosterAlpha: TCheckBox
+  object chkRosterAlpha: TTntCheckBox
     Left = 8
     Top = 32
     Width = 209
@@ -52,7 +52,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     TickStyle = tsNone
     OnChange = trkRosterAlphaChange
   end
-  object txtRosterAlpha: TEdit
+  object txtRosterAlpha: TTntEdit
     Left = 168
     Top = 54
     Width = 49
@@ -62,7 +62,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Text = '255'
     OnChange = txtRosterAlphaChange
   end
-  object spnRosterAlpha: TUpDown
+  object spnRosterAlpha: TTntUpDown
     Left = 217
     Top = 54
     Width = 16
@@ -74,7 +74,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Position = 255
     TabOrder = 3
   end
-  object chkToastAlpha: TCheckBox
+  object chkToastAlpha: TTntCheckBox
     Left = 8
     Top = 80
     Width = 273
@@ -98,7 +98,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     TickStyle = tsNone
     OnChange = trkToastAlphaChange
   end
-  object txtToastAlpha: TEdit
+  object txtToastAlpha: TTntEdit
     Left = 168
     Top = 102
     Width = 49
@@ -108,7 +108,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Text = '255'
     OnChange = txtToastAlphaChange
   end
-  object spnToastAlpha: TUpDown
+  object spnToastAlpha: TTntUpDown
     Left = 217
     Top = 102
     Width = 16
@@ -120,7 +120,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Position = 255
     TabOrder = 7
   end
-  object chkSnap: TCheckBox
+  object chkSnap: TTntCheckBox
     Left = 8
     Top = 152
     Width = 273
@@ -129,7 +129,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     TabOrder = 8
     OnClick = chkSnapClick
   end
-  object txtSnap: TEdit
+  object txtSnap: TTntEdit
     Left = 32
     Top = 174
     Width = 49
@@ -138,7 +138,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     TabOrder = 9
     Text = '255'
   end
-  object spnSnap: TUpDown
+  object spnSnap: TTntUpDown
     Left = 81
     Top = 174
     Width = 16
@@ -150,7 +150,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Position = 255
     TabOrder = 10
   end
-  object chkBusy: TCheckBox
+  object chkBusy: TTntCheckBox
     Left = 8
     Top = 208
     Width = 265
@@ -158,14 +158,14 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Caption = 'Warn when trying to close busy chat windows.'
     TabOrder = 11
   end
-  object txtToastDuration: TEdit
+  object txtToastDuration: TTntEdit
     Left = 168
     Top = 127
     Width = 49
     Height = 21
     TabOrder = 12
   end
-  object txtChatMemory: TEdit
+  object txtChatMemory: TTntEdit
     Left = 32
     Top = 261
     Width = 49
@@ -173,7 +173,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     TabOrder = 13
     Text = '60'
   end
-  object spnChatMemory: TUpDown
+  object spnChatMemory: TTntUpDown
     Left = 81
     Top = 261
     Width = 16
@@ -184,7 +184,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Position = 60
     TabOrder = 14
   end
-  object StaticText5: TStaticText
+  object StaticText5: TTntStaticText
     Left = 0
     Top = 0
     Width = 362
@@ -201,6 +201,5 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     ParentColor = False
     ParentFont = False
     TabOrder = 15
-    Transparent = False
   end
 end

@@ -14,28 +14,28 @@ inherited frmPrefMsg: TfrmPrefMsg
     Height = 13
     Caption = 'Format:'
   end
-  object Label7: TLabel
+  object Label7: TTntLabel
     Left = 5
     Top = 181
     Width = 170
     Height = 13
     Caption = 'Simple message (non-chat) handling'
   end
-  object Label16: TLabel
+  object Label16: TTntLabel
     Left = 5
     Top = 267
     Width = 128
     Height = 13
     Caption = 'Store Unread messages to:'
   end
-  object Label17: TLabel
+  object Label17: TTntLabel
     Left = 5
     Top = 221
     Width = 198
     Height = 13
     Caption = 'When I get invited to a chat room, do this:'
   end
-  object chkEmoticons: TCheckBox
+  object chkEmoticons: TTntCheckBox
     Left = 5
     Top = 24
     Width = 241
@@ -43,7 +43,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Caption = 'Auto detect Emoticons in messages'
     TabOrder = 0
   end
-  object chkTimestamp: TCheckBox
+  object chkTimestamp: TTntCheckBox
     Left = 5
     Top = 73
     Width = 156
@@ -51,7 +51,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Caption = 'Timestamp messages'
     TabOrder = 1
   end
-  object chkLog: TCheckBox
+  object chkLog: TTntCheckBox
     Left = 5
     Top = 114
     Width = 97
@@ -60,14 +60,14 @@ inherited frmPrefMsg: TfrmPrefMsg
     TabOrder = 2
     OnClick = chkLogClick
   end
-  object txtLogPath: TEdit
+  object txtLogPath: TTntEdit
     Left = 26
     Top = 132
     Width = 207
     Height = 21
     TabOrder = 3
   end
-  object StaticText11: TStaticText
+  object StaticText11: TTntStaticText
     Left = 0
     Top = 0
     Width = 348
@@ -84,9 +84,8 @@ inherited frmPrefMsg: TfrmPrefMsg
     ParentColor = False
     ParentFont = False
     TabOrder = 4
-    Transparent = False
   end
-  object btnLogBrowse: TButton
+  object btnLogBrowse: TTntButton
     Left = 243
     Top = 130
     Width = 75
@@ -95,7 +94,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     TabOrder = 5
     OnClick = btnLogBrowseClick
   end
-  object chkMsgQueue: TCheckBox
+  object chkMsgQueue: TTntCheckBox
     Left = 5
     Top = 40
     Width = 284
@@ -103,7 +102,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Caption = 'Instant Messages never popup a new window'
     TabOrder = 6
   end
-  object chkLogRooms: TCheckBox
+  object chkLogRooms: TTntCheckBox
     Left = 26
     Top = 156
     Width = 151
@@ -111,7 +110,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Caption = 'Log conference rooms'
     TabOrder = 7
   end
-  object cboMsgOptions: TComboBox
+  object cboMsgOptions: TTntComboBox
     Left = 26
     Top = 197
     Width = 207
@@ -119,12 +118,12 @@ inherited frmPrefMsg: TfrmPrefMsg
     Style = csDropDownList
     ItemHeight = 13
     TabOrder = 8
-    Items.Strings = (
+    Items.WideStrings = (
       'Use default message handling'
       'Treat all messages as chats'
       'Put messages into existing chats')
   end
-  object btnLogClearAll: TButton
+  object btnLogClearAll: TTntButton
     Left = 243
     Top = 160
     Width = 75
@@ -133,14 +132,14 @@ inherited frmPrefMsg: TfrmPrefMsg
     TabOrder = 9
     OnClick = btnLogClearAllClick
   end
-  object txtSpoolPath: TEdit
+  object txtSpoolPath: TTntEdit
     Left = 26
     Top = 283
     Width = 207
     Height = 21
     TabOrder = 10
   end
-  object btnSpoolBrowse: TButton
+  object btnSpoolBrowse: TTntButton
     Left = 243
     Top = 281
     Width = 75
@@ -149,7 +148,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     TabOrder = 11
     OnClick = btnSpoolBrowseClick
   end
-  object cboInviteOptions: TComboBox
+  object cboInviteOptions: TTntComboBox
     Left = 26
     Top = 237
     Width = 207
@@ -157,12 +156,12 @@ inherited frmPrefMsg: TfrmPrefMsg
     Style = csDropDownList
     ItemHeight = 13
     TabOrder = 12
-    Items.Strings = (
+    Items.WideStrings = (
       'Treat as a normal instant message'
       'Always popup the invitation'
       'Automatically join the room.')
   end
-  object chkBlockNonRoster: TCheckBox
+  object chkBlockNonRoster: TTntCheckBox
     Left = 5
     Top = 56
     Width = 252
@@ -170,7 +169,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Caption = 'Block messages from people not on my roster'
     TabOrder = 13
   end
-  object txtTimestampFmt: TComboBox
+  object txtTimestampFmt: TTntComboBox
     Left = 72
     Top = 90
     Width = 161
@@ -178,7 +177,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     ItemHeight = 13
     TabOrder = 14
     Text = 'h:mm am/pm'
-    Items.Strings = (
+    Items.WideStrings = (
       'h:mm am/pm'
       'hh:mm'
       't'

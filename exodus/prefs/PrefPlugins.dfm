@@ -7,14 +7,14 @@ inherited frmPrefPlugins: TfrmPrefPlugins
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object Label6: TLabel
+  object Label6: TTntLabel
     Left = 6
     Top = 239
     Width = 191
     Height = 13
     Caption = 'Plugin Directory (automatically scanned):'
   end
-  object lblPluginScan: TLabel
+  object lblPluginScan: TTntLabel
     Left = 16
     Top = 284
     Width = 155
@@ -29,7 +29,7 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     ParentFont = False
     OnClick = lblPluginScanClick
   end
-  object StaticText12: TStaticText
+  object StaticText12: TTntStaticText
     Left = 0
     Top = 0
     Width = 353
@@ -46,9 +46,8 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     ParentColor = False
     ParentFont = False
     TabOrder = 0
-    Transparent = False
   end
-  object btnAddPlugin: TButton
+  object btnAddPlugin: TTntButton
     Left = 6
     Top = 200
     Width = 75
@@ -67,7 +66,7 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     TabOrder = 2
     OnClick = btnConfigPluginClick
   end
-  object btnRemovePlugin: TButton
+  object btnRemovePlugin: TTntButton
     Left = 174
     Top = 200
     Width = 75
@@ -76,14 +75,14 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     Enabled = False
     TabOrder = 3
   end
-  object txtPluginDir: TEdit
+  object txtPluginDir: TTntEdit
     Left = 8
     Top = 260
     Width = 225
     Height = 21
     TabOrder = 4
   end
-  object btnBrowsePluginPath: TButton
+  object btnBrowsePluginPath: TTntButton
     Left = 239
     Top = 258
     Width = 75

@@ -23,15 +23,16 @@ interface
 uses
     XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, buttonFrame, StdCtrls, ExtCtrls, CheckLst, ComCtrls;
+    Dialogs, buttonFrame, StdCtrls, ExtCtrls, CheckLst, ComCtrls,
+  TntComCtrls, TntStdCtrls;
 
 type
   TfrmRoomAdminList = class(TForm)
     frameButtons1: TframeButtons;
     Splitter1: TSplitter;
-    Label1: TLabel;
-    memNew: TMemo;
-    lstItems: TListView;
+    Label1: TTntLabel;
+    memNew: TTntMemo;
+    lstItems: TTntListView;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

@@ -27,15 +27,15 @@ uses
 
 type
   TfrmPrefRoster = class(TfrmPrefPanel)
-    Label21: TLabel;
-    StaticText1: TStaticText;
-    chkShowUnsubs: TCheckBox;
-    chkHideBlocked: TCheckBox;
-    chkPresErrors: TCheckBox;
-    chkShowPending: TCheckBox;
-    cboDblClick: TComboBox;
-    chkRosterUnicode: TCheckBox;
-    chkInlineStatus: TCheckBox;
+    Label21: TTntLabel;
+    StaticText1: TTntStaticText;
+    chkShowUnsubs: TTntCheckBox;
+    chkHideBlocked: TTntCheckBox;
+    chkPresErrors: TTntCheckBox;
+    chkShowPending: TTntCheckBox;
+    cboDblClick: TTntComboBox;
+    chkRosterUnicode: TTntCheckBox;
+    chkInlineStatus: TTntCheckBox;
     cboInlineStatus: TColorBox;
     procedure chkInlineStatusClick(Sender: TObject);
   private

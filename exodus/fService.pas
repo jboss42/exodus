@@ -23,18 +23,18 @@ interface
 
 uses 
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ExtCtrls;
+  StdCtrls, ExtCtrls, TntStdCtrls;
 
 type
   TframeObjectActions = class(TFrame)
     pRegister: TPanel;
-    lblRegister: TLabel;
+    lblRegister: TTntLabel;
     pSearch: TPanel;
-    lblSearch: TLabel;
+    lblSearch: TTntLabel;
     pConf: TPanel;
-    lblConf: TLabel;
+    lblConf: TTntLabel;
     pnlTop: TPanel;
-    Label1: TLabel;
+    Label1: TTntLabel;
   private
     { Private declarations }
   public

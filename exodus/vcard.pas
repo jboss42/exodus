@@ -25,49 +25,50 @@ uses
     XMLVCard,
     XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, ComCtrls, buttonFrame, StdCtrls, ExtCtrls, TntStdCtrls;
+    Dialogs, ComCtrls, buttonFrame, StdCtrls, ExtCtrls, TntStdCtrls,
+  TntComCtrls;
 
 type
   TfrmVCard = class(TForm)
     Splitter1: TSplitter;
-    PageControl1: TPageControl;
-    TabSheet1: TTabSheet;
-    Label2: TLabel;
-    lblEmail: TLabel;
-    Label7: TLabel;
-    Label5: TLabel;
-    TabSheet3: TTabSheet;
-    Label12: TLabel;
-    Label6: TLabel;
-    Label28: TLabel;
-    Label8: TLabel;
-    Label9: TLabel;
+    PageControl1: TTntPageControl;
+    TabSheet1: TTntTabSheet;
+    Label2: TTntLabel;
+    lblEmail: TTntLabel;
+    Label7: TTntLabel;
+    Label5: TTntLabel;
+    TabSheet3: TTntTabSheet;
+    Label12: TTntLabel;
+    Label6: TTntLabel;
+    Label28: TTntLabel;
+    Label8: TTntLabel;
+    Label9: TTntLabel;
     cboOcc: TTntComboBox;
-    TabSheet4: TTabSheet;
-    Label13: TLabel;
-    Label21: TLabel;
-    Label29: TLabel;
-    Label30: TLabel;
-    Label31: TLabel;
-    Label32: TLabel;
+    TabSheet4: TTntTabSheet;
+    Label13: TTntLabel;
+    Label21: TTntLabel;
+    Label29: TTntLabel;
+    Label30: TTntLabel;
+    Label31: TTntLabel;
+    Label32: TTntLabel;
     txtHomeCountry: TTntComboBox;
-    TabSheet5: TTabSheet;
-    Label22: TLabel;
-    Label23: TLabel;
-    Label24: TLabel;
-    Label19: TLabel;
-    Label20: TLabel;
-    TabSheet6: TTabSheet;
-    Label15: TLabel;
-    Label16: TLabel;
-    Label17: TLabel;
-    Label18: TLabel;
-    Label26: TLabel;
-    Label14: TLabel;
+    TabSheet5: TTntTabSheet;
+    Label22: TTntLabel;
+    Label23: TTntLabel;
+    Label24: TTntLabel;
+    Label19: TTntLabel;
+    Label20: TTntLabel;
+    TabSheet6: TTntTabSheet;
+    Label15: TTntLabel;
+    Label16: TTntLabel;
+    Label17: TTntLabel;
+    Label18: TTntLabel;
+    Label26: TTntLabel;
+    Label14: TTntLabel;
     txtWorkCountry: TTntComboBox;
     frameButtons1: TframeButtons;
     TreeView1: TTreeView;
-    lblURL: TLabel;
+    lblURL: TTntLabel;
     txtNick: TTntEdit;
     txtPriEmail: TTntEdit;
     txtFirst: TTntEdit;
@@ -92,7 +93,7 @@ type
     txtWorkStreet2: TTntEdit;
     txtWorkStreet1: TTntEdit;
     memDesc: TTntMemo;
-    Label1: TLabel;
+    Label1: TTntLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure frameButtons1btnCancelClick(Sender: TObject);

@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, ComCtrls;
+  Dialogs, PrefPanel, StdCtrls, ComCtrls, TntStdCtrls;
 
 type
   TfrmPrefNetwork = class(TfrmPrefPanel)
@@ -13,9 +13,9 @@ type
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
-    txtReconnectTries: TEdit;
+    txtReconnectTries: TTntEdit;
     spnAttempts: TUpDown;
-    txtReconnectTime: TEdit;
+    txtReconnectTime: TTntEdit;
     spnTime: TUpDown;
     GroupBox2: TGroupBox;
     lblProxyHost: TLabel;
@@ -23,11 +23,11 @@ type
     lblProxyUsername: TLabel;
     lblProxyPassword: TLabel;
     Label28: TLabel;
-    txtProxyHost: TEdit;
-    txtProxyPort: TEdit;
+    txtProxyHost: TTntEdit;
+    txtProxyPort: TTntEdit;
     chkProxyAuth: TCheckBox;
-    txtProxyUsername: TEdit;
-    txtProxyPassword: TEdit;
+    txtProxyUsername: TTntEdit;
+    txtProxyPassword: TTntEdit;
     cboProxyApproach: TComboBox;
     procedure cboProxyApproachChange(Sender: TObject);
     procedure chkProxyAuthClick(Sender: TObject);

@@ -20,27 +20,27 @@ object frmVCard: TfrmVCard
   object Splitter1: TSplitter
     Left = 121
     Top = 0
-    Height = 297
+    Height = 292
   end
-  object PageControl1: TPageControl
+  object PageControl1: TTntPageControl
     Left = 124
     Top = 0
     Width = 318
-    Height = 297
+    Height = 292
     ActivePage = TabSheet6
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 0
-    object TabSheet1: TTabSheet
+    object TabSheet1: TTntTabSheet
       Caption = 'General'
-      object Label2: TLabel
+      object Label2: TTntLabel
         Left = 4
         Top = 72
         Width = 25
         Height = 13
         Caption = 'Nick:'
       end
-      object lblEmail: TLabel
+      object lblEmail: TTntLabel
         Left = 4
         Top = 95
         Width = 28
@@ -48,21 +48,21 @@ object frmVCard: TfrmVCard
         Cursor = crHandPoint
         Caption = 'Email:'
       end
-      object Label7: TLabel
+      object Label7: TTntLabel
         Left = 2
         Top = 6
         Width = 56
         Height = 13
         Caption = 'First (Given)'
       end
-      object Label5: TLabel
+      object Label5: TTntLabel
         Left = 2
         Top = 38
         Width = 58
         Height = 13
         Caption = 'Last (Family)'
       end
-      object lblURL: TLabel
+      object lblURL: TTntLabel
         Left = 4
         Top = 124
         Width = 26
@@ -106,45 +106,45 @@ object frmVCard: TfrmVCard
         TabOrder = 4
       end
     end
-    object TabSheet3: TTabSheet
+    object TabSheet3: TTntTabSheet
       Caption = 'Personal Info.'
       ImageIndex = 2
-      object Label12: TLabel
+      object Label12: TTntLabel
         Left = 4
         Top = 9
         Width = 58
         Height = 13
         Caption = 'Occupation:'
       end
-      object Label6: TLabel
+      object Label6: TTntLabel
         Left = 4
         Top = 35
         Width = 41
         Height = 13
         Caption = 'Birthday:'
       end
-      object Label28: TLabel
+      object Label28: TTntLabel
         Left = 92
         Top = 56
         Width = 143
         Height = 13
         Caption = 'Typical Format: YYYY-MM-DD'
       end
-      object Label8: TLabel
+      object Label8: TTntLabel
         Left = 1
         Top = 86
         Width = 48
         Height = 13
         Caption = 'Voice Tel:'
       end
-      object Label9: TLabel
+      object Label9: TTntLabel
         Left = 1
         Top = 113
         Width = 38
         Height = 13
         Caption = 'Fax Tel:'
       end
-      object Label1: TLabel
+      object Label1: TTntLabel
         Left = 1
         Top = 137
         Width = 56
@@ -207,45 +207,45 @@ object frmVCard: TfrmVCard
         TabOrder = 4
       end
     end
-    object TabSheet4: TTabSheet
+    object TabSheet4: TTntTabSheet
       Caption = 'Home'
       ImageIndex = 3
-      object Label13: TLabel
+      object Label13: TTntLabel
         Left = 10
         Top = 139
         Width = 39
         Height = 13
         Caption = 'Country:'
       end
-      object Label21: TLabel
+      object Label21: TTntLabel
         Left = 10
         Top = 85
         Width = 73
         Height = 13
         Caption = 'State / Region:'
       end
-      object Label29: TLabel
+      object Label29: TTntLabel
         Left = 10
         Top = 38
         Width = 50
         Height = 13
         Caption = 'Address 2:'
       end
-      object Label30: TLabel
+      object Label30: TTntLabel
         Left = 10
         Top = 12
         Width = 50
         Height = 13
         Caption = 'Address 1:'
       end
-      object Label31: TLabel
+      object Label31: TTntLabel
         Left = 10
         Top = 61
         Width = 67
         Height = 13
         Caption = 'City / Locality:'
       end
-      object Label32: TLabel
+      object Label32: TTntLabel
         Left = 10
         Top = 111
         Width = 86
@@ -538,38 +538,38 @@ object frmVCard: TfrmVCard
         TabOrder = 0
       end
     end
-    object TabSheet5: TTabSheet
+    object TabSheet5: TTntTabSheet
       Caption = 'Work'
       ImageIndex = 4
-      object Label22: TLabel
+      object Label22: TTntLabel
         Left = 10
         Top = 9
         Width = 78
         Height = 13
         Caption = 'Company Name:'
       end
-      object Label23: TLabel
+      object Label23: TTntLabel
         Left = 10
         Top = 35
         Width = 77
         Height = 13
         Caption = 'Org. Unit (Dept):'
       end
-      object Label24: TLabel
+      object Label24: TTntLabel
         Left = 10
         Top = 61
         Width = 23
         Height = 13
         Caption = 'Title:'
       end
-      object Label19: TLabel
+      object Label19: TTntLabel
         Left = 10
         Top = 91
         Width = 48
         Height = 13
         Caption = 'Voice Tel:'
       end
-      object Label20: TLabel
+      object Label20: TTntLabel
         Left = 10
         Top = 117
         Width = 38
@@ -612,45 +612,45 @@ object frmVCard: TfrmVCard
         TabOrder = 4
       end
     end
-    object TabSheet6: TTabSheet
+    object TabSheet6: TTntTabSheet
       Caption = 'TabSheet6'
       ImageIndex = 5
-      object Label15: TLabel
+      object Label15: TTntLabel
         Left = 10
         Top = 83
         Width = 73
         Height = 13
         Caption = 'State / Region:'
       end
-      object Label16: TLabel
+      object Label16: TTntLabel
         Left = 10
         Top = 135
         Width = 39
         Height = 13
         Caption = 'Country:'
       end
-      object Label17: TLabel
+      object Label17: TTntLabel
         Left = 10
         Top = 36
         Width = 50
         Height = 13
         Caption = 'Address 2:'
       end
-      object Label18: TLabel
+      object Label18: TTntLabel
         Left = 10
         Top = 10
         Width = 50
         Height = 13
         Caption = 'Address 1:'
       end
-      object Label26: TLabel
+      object Label26: TTntLabel
         Left = 10
         Top = 59
         Width = 67
         Height = 13
         Caption = 'City / Locality:'
       end
-      object Label14: TLabel
+      object Label14: TTntLabel
         Left = 10
         Top = 108
         Width = 86
@@ -946,7 +946,7 @@ object frmVCard: TfrmVCard
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 297
+    Top = 292
     Width = 442
     Height = 34
     Align = alBottom
@@ -961,10 +961,10 @@ object frmVCard: TfrmVCard
       inherited Panel1: TPanel
         Left = 282
         Height = 29
-        inherited btnOK: TButton
+        inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end
-        inherited btnCancel: TButton
+        inherited btnCancel: TTntButton
           OnClick = frameButtons1btnCancelClick
         end
       end
@@ -974,7 +974,7 @@ object frmVCard: TfrmVCard
     Left = 0
     Top = 0
     Width = 121
-    Height = 297
+    Height = 292
     Align = alLeft
     Indent = 19
     TabOrder = 2

@@ -9,22 +9,20 @@ inherited frmJUD: TfrmJUD
   OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 13
-  object Splitter1: TSplitter [0]
+  object Splitter1: TSplitter
     Left = 217
     Top = 0
-    Width = 3
-    Height = 336
-    Cursor = crHSplit
+    Height = 331
   end
-  object pnlLeft: TPanel [1]
+  object pnlLeft: TPanel
     Left = 0
     Top = 0
     Width = 217
-    Height = 336
+    Height = 331
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 0
-    object lblInstructions: TLabel
+    object lblInstructions: TTntLabel
       Left = 0
       Top = 70
       Width = 217
@@ -34,7 +32,7 @@ inherited frmJUD: TfrmJUD
       Visible = False
       WordWrap = True
     end
-    object lblSelect: TLabel
+    object lblSelect: TTntLabel
       Left = 0
       Top = 0
       Width = 217
@@ -45,7 +43,7 @@ inherited frmJUD: TfrmJUD
         ' agent to use:'
       WordWrap = True
     end
-    object lblWait: TLabel
+    object lblWait: TTntLabel
       Left = 0
       Top = 57
       Width = 217
@@ -75,13 +73,13 @@ inherited frmJUD: TfrmJUD
     end
     object pnlBottom: TPanel
       Left = 0
-      Top = 302
+      Top = 297
       Width = 217
       Height = 34
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 1
-      object btnAction: TButton
+      object btnAction: TTntButton
         Left = 2
         Top = 4
         Width = 75
@@ -91,7 +89,7 @@ inherited frmJUD: TfrmJUD
         TabOrder = 0
         OnClick = btnActionClick
       end
-      object btnClose: TButton
+      object btnClose: TTntButton
         Left = 82
         Top = 4
         Width = 75
@@ -108,7 +106,6 @@ inherited frmJUD: TfrmJUD
       Width = 217
       Height = 50
       Align = alTop
-      Active = False
       CommonAVI = aviFindFolder
       StopFrame = 29
       Visible = False
@@ -122,7 +119,7 @@ inherited frmJUD: TfrmJUD
       BevelOuter = bvNone
       TabOrder = 3
       Visible = False
-      object Label1: TLabel
+      object Label1: TTntLabel
         Left = 0
         Top = 80
         Width = 64
@@ -137,14 +134,14 @@ inherited frmJUD: TfrmJUD
         ParentFont = False
         OnClick = Label1Click
       end
-      object Label3: TLabel
+      object Label3: TTntLabel
         Left = 1
         Top = 11
         Width = 128
         Height = 13
         Caption = 'Add Contacts to this group:'
       end
-      object lblAddGrp: TLabel
+      object lblAddGrp: TTntLabel
         Left = 1
         Top = 50
         Width = 83
@@ -176,7 +173,7 @@ inherited frmJUD: TfrmJUD
       Left = 0
       Top = 237
       Width = 217
-      Height = 65
+      Height = 60
       Align = alClient
       BevelInner = bvNone
       BevelOuter = bvNone
@@ -184,11 +181,11 @@ inherited frmJUD: TfrmJUD
       TabOrder = 4
     end
   end
-  object lstContacts: TListView [2]
+  object lstContacts: TListView
     Left = 220
     Top = 0
     Width = 201
-    Height = 336
+    Height = 331
     Align = alClient
     Columns = <
       item

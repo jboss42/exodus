@@ -7,35 +7,35 @@ inherited frmPrefAway: TfrmPrefAway
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object Label2: TLabel
+  object Label2: TTntLabel
     Left = 8
     Top = 72
     Width = 213
     Height = 13
     Caption = 'Minutes to wait before setting status to Away:'
   end
-  object Label3: TLabel
+  object Label3: TTntLabel
     Left = 8
     Top = 96
     Width = 201
     Height = 13
     Caption = 'Minutes to wait before setting status to XA:'
   end
-  object Label4: TLabel
+  object Label4: TTntLabel
     Left = 8
     Top = 128
     Width = 62
     Height = 13
     Caption = 'Away Status:'
   end
-  object Label9: TLabel
+  object Label9: TTntLabel
     Left = 8
     Top = 152
     Width = 50
     Height = 13
     Caption = 'XA Status:'
   end
-  object txtAwayTime: TEdit
+  object txtAwayTime: TTntEdit
     Left = 232
     Top = 70
     Width = 33
@@ -54,7 +54,7 @@ inherited frmPrefAway: TfrmPrefAway
     Position = 5
     TabOrder = 1
   end
-  object txtXATime: TEdit
+  object txtXATime: TTntEdit
     Left = 232
     Top = 94
     Width = 33
@@ -73,7 +73,7 @@ inherited frmPrefAway: TfrmPrefAway
     Position = 30
     TabOrder = 3
   end
-  object chkAutoAway: TCheckBox
+  object chkAutoAway: TTntCheckBox
     Left = 8
     Top = 32
     Width = 177
@@ -81,21 +81,21 @@ inherited frmPrefAway: TfrmPrefAway
     Caption = 'Enable Auto Away'
     TabOrder = 4
   end
-  object txtAway: TEdit
+  object txtAway: TTntEdit
     Left = 80
     Top = 126
     Width = 201
     Height = 21
     TabOrder = 5
   end
-  object txtXA: TEdit
+  object txtXA: TTntEdit
     Left = 80
     Top = 150
     Width = 201
     Height = 21
     TabOrder = 6
   end
-  object chkAAReducePri: TCheckBox
+  object chkAAReducePri: TTntCheckBox
     Left = 8
     Top = 48
     Width = 273
@@ -103,7 +103,7 @@ inherited frmPrefAway: TfrmPrefAway
     Caption = 'Reduce priority to 0 during auto-away.'
     TabOrder = 7
   end
-  object StaticText7: TStaticText
+  object StaticText7: TTntStaticText
     Left = 0
     Top = 0
     Width = 396
@@ -120,6 +120,5 @@ inherited frmPrefAway: TfrmPrefAway
     ParentColor = False
     ParentFont = False
     TabOrder = 8
-    Transparent = False
   end
 end

@@ -4,7 +4,7 @@ object frameListbox: TframeListbox
   Width = 172
   Height = 212
   TabOrder = 0
-  object List1: TListBox
+  object List1: TTntListBox
     Left = 0
     Top = 17
     Width = 172
@@ -13,7 +13,7 @@ object frameListbox: TframeListbox
     ItemHeight = 13
     TabOrder = 0
   end
-  object lblCaption: TStaticText
+  object lblCaption: TTntStaticText
     Left = 0
     Top = 0
     Width = 172

@@ -23,23 +23,23 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, ComCtrls;
+  Dialogs, PrefPanel, StdCtrls, ComCtrls, TntStdCtrls;
 
 type
   TfrmPrefAway = class(TfrmPrefPanel)
-    txtAwayTime: TEdit;
+    txtAwayTime: TTntEdit;
     spnAway: TUpDown;
-    txtXATime: TEdit;
+    txtXATime: TTntEdit;
     spnXA: TUpDown;
-    Label2: TLabel;
-    Label3: TLabel;
-    Label4: TLabel;
-    Label9: TLabel;
-    chkAutoAway: TCheckBox;
-    txtAway: TEdit;
-    txtXA: TEdit;
-    chkAAReducePri: TCheckBox;
-    StaticText7: TStaticText;
+    Label2: TTntLabel;
+    Label3: TTntLabel;
+    Label4: TTntLabel;
+    Label9: TTntLabel;
+    chkAutoAway: TTntCheckBox;
+    txtAway: TTntEdit;
+    txtXA: TTntEdit;
+    chkAAReducePri: TTntCheckBox;
+    StaticText7: TTntStaticText;
   private
     { Private declarations }
   public

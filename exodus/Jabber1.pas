@@ -53,8 +53,8 @@ type
 
 type
   TfrmExodus = class(TForm)
-    Tabs: TPageControl;
-    tbsRoster: TTabSheet;
+    Tabs: TTntPageControl;
+    tbsRoster: TTntTabSheet;
     pnlRoster: TPanel;
     MainMenu1: TMainMenu;
     Exodus1: TMenuItem;
@@ -2403,7 +2403,7 @@ begin
     // We got a new form dropped on us.
     if (Source.Control is TfrmDockable) then begin
         TfrmDockable(Source.Control).Docked := true;
-        TfrmDockable(Source.Control).TabSheet := Tabs.Pages[Tabs.PageCount - 1];
+        TfrmDockable(Source.Control).TabSheet := TTntTabSheet(Tabs.Pages[Tabs.PageCount - 1]);
         _new_tabindex := Tabs.PageCount;
     end;
 end;

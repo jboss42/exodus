@@ -23,30 +23,30 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls;
+  Dialogs, PrefPanel, StdCtrls, TntStdCtrls;
 
 type
   TfrmPrefMsg = class(TfrmPrefPanel)
     Label19: TLabel;
-    Label7: TLabel;
-    Label16: TLabel;
-    Label17: TLabel;
-    chkEmoticons: TCheckBox;
-    chkTimestamp: TCheckBox;
-    chkLog: TCheckBox;
-    txtLogPath: TEdit;
-    StaticText11: TStaticText;
-    btnLogBrowse: TButton;
-    chkMsgQueue: TCheckBox;
-    chkLogRooms: TCheckBox;
-    cboMsgOptions: TComboBox;
-    btnLogClearAll: TButton;
-    txtSpoolPath: TEdit;
-    btnSpoolBrowse: TButton;
-    cboInviteOptions: TComboBox;
-    chkBlockNonRoster: TCheckBox;
+    Label7: TTntLabel;
+    Label16: TTntLabel;
+    Label17: TTntLabel;
+    chkEmoticons: TTntCheckBox;
+    chkTimestamp: TTntCheckBox;
+    chkLog: TTntCheckBox;
+    txtLogPath: TTntEdit;
+    StaticText11: TTntStaticText;
+    btnLogBrowse: TTntButton;
+    chkMsgQueue: TTntCheckBox;
+    chkLogRooms: TTntCheckBox;
+    cboMsgOptions: TTntComboBox;
+    btnLogClearAll: TTntButton;
+    txtSpoolPath: TTntEdit;
+    btnSpoolBrowse: TTntButton;
+    cboInviteOptions: TTntComboBox;
+    chkBlockNonRoster: TTntCheckBox;
     OpenDialog1: TOpenDialog;
-    txtTimestampFmt: TComboBox;
+    txtTimestampFmt: TTntComboBox;
     procedure btnLogBrowseClick(Sender: TObject);
     procedure btnLogClearAllClick(Sender: TObject);
     procedure btnSpoolBrowseClick(Sender: TObject);

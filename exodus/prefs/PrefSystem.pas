@@ -24,24 +24,24 @@ interface
 uses
     PrefPanel, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, StdCtrls;
+    Dialogs, StdCtrls, TntStdCtrls;
 
 type
   TfrmPrefSystem = class(TfrmPrefPanel)
-    StaticText4: TStaticText;
-    chkAutoUpdate: TCheckBox;
-    chkDebug: TCheckBox;
-    chkAutoLogin: TCheckBox;
-    chkCloseMin: TCheckBox;
-    chkAutoStart: TCheckBox;
-    chkOnTop: TCheckBox;
-    chkToolbox: TCheckBox;
-    btnUpdateCheck: TButton;
-    chkSingleInstance: TCheckBox;
-    chkStartMin: TCheckBox;
-    Label7: TLabel;
-    cboLocale: TComboBox;
-    lblPluginScan: TLabel;
+    StaticText4: TTntStaticText;
+    chkAutoUpdate: TTntCheckBox;
+    chkDebug: TTntCheckBox;
+    chkAutoLogin: TTntCheckBox;
+    chkCloseMin: TTntCheckBox;
+    chkAutoStart: TTntCheckBox;
+    chkOnTop: TTntCheckBox;
+    chkToolbox: TTntCheckBox;
+    btnUpdateCheck: TTntButton;
+    chkSingleInstance: TTntCheckBox;
+    chkStartMin: TTntCheckBox;
+    Label7: TTntLabel;
+    cboLocale: TTntComboBox;
+    lblPluginScan: TTntLabel;
     procedure btnUpdateCheckClick(Sender: TObject);
     procedure btnUpdateCheckMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);

@@ -24,7 +24,8 @@ interface
 uses
     Unicode, XMLTag, SelContact,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, StdCtrls, CheckLst, ExtCtrls, buttonFrame, ComCtrls, Grids;
+    Dialogs, StdCtrls, CheckLst, ExtCtrls, buttonFrame, ComCtrls, Grids,
+  TntStdCtrls;
 
 type
   TfrmInvite = class(TForm)
@@ -33,14 +34,14 @@ type
     lstJIDS: TListView;
     Splitter1: TSplitter;
     Panel1: TPanel;
-    btnRemove: TButton;
+    btnRemove: TTntButton;
     Panel2: TPanel;
     memReason: TMemo;
-    Label2: TLabel;
+    Label2: TTntLabel;
     pnl1: TPanel;
     cboRoom: TComboBox;
-    Label1: TLabel;
-    btnAdd: TButton;
+    Label1: TTntLabel;
+    btnAdd: TTntButton;
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);

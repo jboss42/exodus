@@ -21,7 +21,7 @@ object frmMsgRecv: TfrmMsgRecv
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 192
+    Top = 187
     Width = 377
     Height = 3
     Cursor = crVSplit
@@ -29,7 +29,7 @@ object frmMsgRecv: TfrmMsgRecv
   end
   object pnlReply: TPanel
     Left = 0
-    Top = 195
+    Top = 190
     Width = 377
     Height = 192
     Align = alBottom
@@ -54,10 +54,10 @@ object frmMsgRecv: TfrmMsgRecv
         inherited Panel1: TPanel
           Left = 211
           Height = 29
-          inherited btnCancel: TButton [0]
+          inherited btnCancel: TTntButton [0]
             OnClick = frameButtons2btnCancelClick
           end
-          inherited btnOK: TButton [1]
+          inherited btnOK: TTntButton [1]
             Caption = '&Send'
             OnClick = frameButtons2btnOKClick
           end
@@ -167,7 +167,7 @@ object frmMsgRecv: TfrmMsgRecv
     Left = 0
     Top = 76
     Width = 377
-    Height = 86
+    Height = 81
     Align = alClient
     AutoURLDetect = adDefault
     CustomURLs = <
@@ -286,7 +286,7 @@ object frmMsgRecv: TfrmMsgRecv
         BorderWidth = 2
         TabOrder = 0
         Visible = False
-        object lblSubject1: TLabel
+        object lblSubject1: TTntLabel
           Left = 2
           Top = 2
           Width = 64
@@ -463,7 +463,7 @@ object frmMsgRecv: TfrmMsgRecv
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 162
+    Top = 157
     Width = 377
     Height = 30
     Align = alBottom
@@ -478,11 +478,11 @@ object frmMsgRecv: TfrmMsgRecv
       inherited Panel1: TPanel
         Left = 217
         Height = 25
-        inherited btnOK: TButton
+        inherited btnOK: TTntButton
           Caption = 'Reply'
           OnClick = frameButtons1btnOKClick
         end
-        inherited btnCancel: TButton
+        inherited btnCancel: TTntButton
           Caption = 'Close'
           OnClick = frameButtons1btnCancelClick
         end

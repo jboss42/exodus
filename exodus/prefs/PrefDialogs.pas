@@ -23,29 +23,30 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, ComCtrls, StdCtrls, jpeg, ExtCtrls;
+  Dialogs, PrefPanel, ComCtrls, StdCtrls, jpeg, ExtCtrls, TntStdCtrls,
+  TntComCtrls;
 
 type
   TfrmPrefDialogs = class(TfrmPrefPanel)
-    Label26: TLabel;
-    Label27: TLabel;
-    Label29: TLabel;
-    chkRosterAlpha: TCheckBox;
+    Label26: TTntLabel;
+    Label27: TTntLabel;
+    Label29: TTntLabel;
+    chkRosterAlpha: TTntCheckBox;
     trkRosterAlpha: TTrackBar;
-    txtRosterAlpha: TEdit;
-    spnRosterAlpha: TUpDown;
-    chkToastAlpha: TCheckBox;
+    txtRosterAlpha: TTntEdit;
+    spnRosterAlpha: TTntUpDown;
+    chkToastAlpha: TTntCheckBox;
     trkToastAlpha: TTrackBar;
-    txtToastAlpha: TEdit;
-    spnToastAlpha: TUpDown;
-    chkSnap: TCheckBox;
-    txtSnap: TEdit;
-    spnSnap: TUpDown;
-    chkBusy: TCheckBox;
-    txtToastDuration: TEdit;
-    txtChatMemory: TEdit;
-    spnChatMemory: TUpDown;
-    StaticText5: TStaticText;
+    txtToastAlpha: TTntEdit;
+    spnToastAlpha: TTntUpDown;
+    chkSnap: TTntCheckBox;
+    txtSnap: TTntEdit;
+    spnSnap: TTntUpDown;
+    chkBusy: TTntCheckBox;
+    txtToastDuration: TTntEdit;
+    txtChatMemory: TTntEdit;
+    spnChatMemory: TTntUpDown;
+    StaticText5: TTntStaticText;
     procedure chkRosterAlphaClick(Sender: TObject);
     procedure chkToastAlphaClick(Sender: TObject);
     procedure trkRosterAlphaChange(Sender: TObject);

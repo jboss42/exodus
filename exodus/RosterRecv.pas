@@ -24,20 +24,21 @@ interface
 uses
     Dockable, ExEvents,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2;
+    buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2,
+  TntStdCtrls, TntComCtrls;
 
 type
   TfrmRosterRecv = class(TfrmDockable)
     frameButtons1: TframeButtons;
     pnlFrom: TPanel;
-    StaticText1: TStaticText;
-    txtFrom: TStaticText;
+    StaticText1: TTntStaticText;
+    txtFrom: TTntStaticText;
     txtMsg: TExRichEdit;
     Splitter1: TSplitter;
-    lvContacts: TListView;
+    lvContacts: TTntListView;
     Panel1: TPanel;
-    Label2: TLabel;
-    cboGroup: TComboBox;
+    Label2: TTntLabel;
+    cboGroup: TTntComboBox;
     procedure FormCreate(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);

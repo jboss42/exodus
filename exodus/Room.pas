@@ -56,7 +56,7 @@ type
     popRosterChat: TMenuItem;
     popRosterBlock: TMenuItem;
     pnlSubj: TPanel;
-    lblSubjectURL: TLabel;
+    lblSubjectURL: TTntLabel;
     btnClose: TSpeedButton;
     popClearHistory: TMenuItem;
     popShowHistory: TMenuItem;

@@ -6,7 +6,7 @@ inherited frmPrefSubscription: TfrmPrefSubscription
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object StaticText2: TStaticText
+  object StaticText2: TTntStaticText
     Left = 0
     Top = 0
     Width = 272
@@ -23,7 +23,6 @@ inherited frmPrefSubscription: TfrmPrefSubscription
     ParentColor = False
     ParentFont = False
     TabOrder = 0
-    Transparent = False
   end
   object optIncomingS10n: TRadioGroup
     Left = 8

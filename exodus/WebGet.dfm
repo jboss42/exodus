@@ -14,10 +14,10 @@ object frmWebDownload: TfrmWebDownload
   Position = poScreenCenter
   DesignSize = (
     354
-    99)
+    94)
   PixelsPerInch = 96
   TextHeight = 13
-  object lblStatus: TLabel
+  object lblStatus: TTntLabel
     Left = 8
     Top = 10
     Width = 40
@@ -27,13 +27,14 @@ object frmWebDownload: TfrmWebDownload
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 62
+    Top = 57
     Width = 354
     Height = 37
     Align = alBottom
     AutoScroll = False
     TabOrder = 0
     inherited Panel2: TPanel
+      Top = 1
       Width = 354
       Align = alBottom
       inherited Bevel1: TBevel
@@ -41,10 +42,10 @@ object frmWebDownload: TfrmWebDownload
       end
       inherited Panel1: TPanel
         Left = 194
-        inherited btnOK: TButton
+        inherited btnOK: TTntButton
           Visible = False
         end
-        inherited btnCancel: TButton
+        inherited btnCancel: TTntButton
           OnClick = frameButtons1btnCancelClick
         end
       end

@@ -23,11 +23,11 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PrefPanel, StdCtrls, ExtCtrls;
+  Dialogs, PrefPanel, StdCtrls, ExtCtrls, TntStdCtrls;
 
 type
   TfrmPrefSubscription = class(TfrmPrefPanel)
-    StaticText2: TStaticText;
+    StaticText2: TTntStaticText;
     optIncomingS10n: TRadioGroup;
   private
     { Private declarations }
