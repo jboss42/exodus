@@ -43,5 +43,11 @@ print VF <<"EOF";
 EOF
 close VF;
 
+open VF, ">version.nsi";
+print VF <<"EOF";
+!define MUI_VERSION "$maj.$min.$sp.$build"
+EOF
+close VF;
+
 print "$maj.$min.$sp.$build\n";
 
