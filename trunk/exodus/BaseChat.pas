@@ -39,15 +39,23 @@ type
     CopyAll1: TMenuItem;
     Clear1: TMenuItem;
     Emoticons1: TMenuItem;
+
     procedure Emoticons1Click(Sender: TObject);
     procedure MsgListURLClick(Sender: TObject; url: String);
     procedure FormActivate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
+    procedure MsgOutKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
+    _msgHistory : TStringList;
+    _lastMsg : integer;
   public
     { Public declarations }
     procedure SetEmoticon(msn: boolean; imgIndex: integer);
+    procedure SendMsg(); virtual;
   end;
 
 var
@@ -127,9 +135,11 @@ end;
 
 procedure TfrmBaseChat.FormActivate(Sender: TObject);
 begin
-  inherited;
+    inherited;
     if (frmEmoticons.Visible) then
         frmEmoticons.Hide;
+    if Self.Visible then
+        MsgOut.SetFocus;
 end;
 
 procedure TfrmBaseChat.MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -171,6 +181,63 @@ begin
 
     if (key <> #0) then
         inherited;
+end;
+
+procedure TfrmBaseChat.MsgOutKeyUp(Sender: TObject;
+                                   var Key: Word;
+                                   Shift: TShiftState);
+var
+    m : string;
+begin
+// for now.
+// TODO: use the message history that's in MsgList
+    if ((Key = VK_UP) and (Shift = [ssCtrl])) then begin
+        dec(_lastMsg);
+        if (_lastMsg < 0) then begin
+            _lastMsg := 0;
+            exit;
+            end;
+        m := _msgHistory[_lastMsg];
+        MsgOut.Text := m;
+        MsgOut.SelStart := length(m);
+        MsgOut.SetFocus();
+        end
+    else if ((Key = VK_DOWN) and (Shift = [ssCtrl])) then begin
+        if (_lastMsg = _msgHistory.Count) then exit;
+        inc(_lastMsg);
+        if (_lastMsg >= _msgHistory.Count) then begin
+            _lastMsg := _msgHistory.Count - 1;
+            exit;
+            end;
+        m := _msgHistory[_lastMsg];
+        MsgOut.Text := m;
+        MsgOut.SelStart := length(m);
+        MsgOut.SetFocus();
+        end
+    else
+        inherited;
+end;
+
+procedure TfrmBaseChat.SendMsg();
+begin
+    _msgHistory.Add(MsgOut.Text);
+    _lastMsg := _msgHistory.Count;
+
+    MsgOut.Text := '';
+    MsgOut.SetFocus;
+end;
+
+procedure TfrmBaseChat.FormCreate(Sender: TObject);
+begin
+    _msgHistory := TStringList.Create();
+    _lastMsg := -1;
+    inherited;
+end;
+
+procedure TfrmBaseChat.FormDestroy(Sender: TObject);
+begin
+    _msgHistory.Free();
+    inherited;
 end;
 
 end.

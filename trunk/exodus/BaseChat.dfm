@@ -11,6 +11,8 @@ object frmBaseChat: TfrmBaseChat
   Font.Style = []
   OldCreateOrder = False
   OnActivate = FormActivate
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
@@ -70,6 +72,7 @@ object frmBaseChat: TfrmBaseChat
       TabOrder = 0
       WantReturns = False
       OnKeyPress = MsgOutKeyPress
+      OnKeyUp = MsgOutKeyUp
     end
   end
   object Panel1: TPanel
