@@ -38,14 +38,14 @@ type
   TXPLite = class;
 
   TXMLNodeList = class(TObjectList)
-end;
+  end;
 
   TXMLTagList = class(TList)
     private
         function GetTag(index: integer): TXMLTag;
     public
         property Tags[index: integer]: TXMLTag read GetTag; default;
-end;
+  end;
 
   TXMLTag = class(TXMLNode)
   private
@@ -102,10 +102,21 @@ end;
     property Nodes: TXMLNodeList read _Children;
   end;
 
+  TXPPredicateOp = (XPP_EQUAL, XPP_NOTEQUAL, XPP_EXISTS, XPP_NOTEXISTS, XPP_VALUE);
+
+  TXPPredicate = class
+  public
+    name: widestring;
+    value: widestring;
+    op: TXPPredicateOp;
+    
+    constructor Create(pname, pvalue: Widestring; pop: TXPPredicateOp);
+  end;
+
   TXPMatch = class
   private
-    _AttrList: TAttrList;       // list of attributes
-    function GetAttrCount: integer;
+    _PredList: TWidestringlist;
+    function GetPredCount: integer;
   public
     tag_name: WideString;
     get_cdata: boolean;
@@ -113,11 +124,11 @@ end;
     constructor Create;
     destructor Destroy; override;
     procedure Parse(xps: WideString);
-    procedure setAttribute(name, value: WideString);
-    function getAttribute(i: integer): TAttr;
+    procedure setPredicate(name, value: WideString; op: TXPPredicateOp);
+    function getPredicate(i: integer): TXPPredicate;
 
-    property AttrCount: integer read GetAttrCount;
-    property AttrList: TAttrList read _AttrList;
+    property PredCount: integer read GetPredCount;
+    property PredList: TWidestringlist read _PredList;
   end;
 
   TXPLite = class
@@ -183,6 +194,7 @@ begin
     Name := tagname;
 end;
 
+{---------------------------------------}
 constructor TXMLTag.Create(tag: TXMLTag);
 begin
     //
@@ -190,6 +202,7 @@ begin
     Self.AssignTag(tag);
 end;
 
+{---------------------------------------}
 constructor TXMLTag.Create(tagname, CDATA: WideString);
 begin
     Create(tagname);
@@ -402,7 +415,10 @@ begin
 
     if (att <> '') then begin
         t := Self.QueryXPTag(spath);
-        Result := t.GetAttribute(att);
+        if (t <> nil) then
+            Result := t.GetAttribute(att)
+        else
+            Result := '';
     end
     else begin
         ftags := Self.QueryXPTags(spath);
@@ -621,14 +637,22 @@ begin
         Self.setAttribute(xml._AttrList.Name(i), xml._AttrList.Value(i));
 end;
 
+{------------------------------------------------------------------------------}
+{------------------------------------------------------------------------------}
+constructor TXPPredicate.Create(pname, pvalue: Widestring; pop: TXPPredicateOp);
+begin
+    name := pname;
+    value := pvalue;
+    op := pop;
+end;
 
 {------------------------------------------------------------------------------}
 {------------------------------------------------------------------------------}
 constructor TXPMatch.Create;
 begin
     inherited;
-    
-    _AttrList := TAttrList.Create();
+
+    _PredList := TWidestringlist.Create();
     tag_name := '';
     get_cdata := false;
     recursive := false;
@@ -636,36 +660,42 @@ end;
 
 {---------------------------------------}
 destructor TXPMatch.Destroy;
+var
+    i: integer;
 begin
     //
-    _AttrList.Free;
+    for i := 0 to _PredList.Count - 1 do begin
+        if (_PredList.Objects[i] <> nil) then
+            TObject(_PredList.Objects[i]).Free();
+    end;
+    _PredList.Free();
 
     inherited Destroy;
 end;
 
 {---------------------------------------}
-procedure TXPMatch.setAttribute(name, value: WideString);
+procedure TXPMatch.setPredicate(name, value: WideString; op: TXPPredicateOp);
 var
-    pair: TAttr;
+    pred: TXPPredicate;
 begin
     // specify an attribute on the tag.
-    pair := TAttr.Create(name, value);
-    _AttrList.Add(pair);
+    pred := TXPPredicate.Create(name, value, op);
+    _PredList.AddObject(name, pred);
 end;
 
 {---------------------------------------}
-function TXPMatch.getAttribute(i: integer): TAttr;
+function TXPMatch.getPredicate(i: integer): TXPPredicate;
 begin
-    if ((i >= 0) and (i < _AttrList.Count)) then
-        Result := TAttr(_AttrList.Node(i))
+    if ((i >= 0) and (i < _PredList.Count)) then
+        Result := TXPPredicate(_PredList.Objects[i])
     else
         Result := nil;
 end;
 
 {---------------------------------------}
-function TXPMatch.GetAttrCount: integer;
+function TXPMatch.GetPredCount: integer;
 begin
-    Result := _AttrList.Count;
+    Result := _PredList.Count;
 end;
 
 {---------------------------------------}
@@ -673,12 +703,16 @@ procedure TXPMatch.Parse(xps: Widestring);
 var
     l, i, s: integer;
     state: integer;
-    xp, q, name, val, c, cur: Widestring;
+    ptype, op, xp, q, name, val, c, cur: Widestring;
 begin
     // this should be a single "block"
     // parse the /foo[@a="b"][@c="d"] stuff
     // could be: /foo@a also to just get the attribute
     // could also be: //foo[@a="b"]
+
+    // deal with other operators for predicates:
+    // /foo[!a] for an element named foo, with NO attribute named a
+    // /foo[@a!="b"] for an element named foo, wgere the attr a does NOT eq. b
     i := 2;
     xp := Trim(xps);
     l := Length(xp);
@@ -696,31 +730,49 @@ begin
             // this is a where clause
             if (state = 0) then
                 tag_name := cur;
-            inc(i); // should be pointing to '@'
+            inc(i); // should be pointing to '@' or '!'
+            ptype := xp[i];
             inc(i); // should be pointing to first letter of attr
             s := i;
-            while ((i <= l) and (xp[i] <> '=')) do
+            while ((i <= l) and (xp[i] <> '=') and (xp[i] <> ']') and (xp[i] <> '!')) do
                 inc(i);
             name := Copy(xp, s, (i-s));
 
-            inc(i); // point to "
-            // s2 := i;
-            q := xp[i];
-            inc(i); // point to first letter
-
-            // XXX: Please optimize me!
-            val := '';
-            while (i <= l) do begin
-                if (xp[i] = '"') then begin
-                    if ((i = l) or (xp[i+1] <> '"')) then
-                        break
-                    else
-                        inc(i);
+            if (xp[i] = ']') then begin
+                // check for exist or not exist of an attr
+                if (ptype = '@') then
+                    setPredicate(name, '', XPP_EXISTS)
+                else if (ptype = '!') then
+                    setPredicate(name, '', XPP_NOTEXISTS);
+            end
+            else begin
+                // check = or != for an attribute
+                if (xp[i] = '!') then begin
+                    op := '!=';
+                    inc(i); // point to =
                 end;
-                val := val + xp[i];
-                inc(i);
+                inc(i); // point to "
+                q := xp[i];
+                inc(i); // point to first letter
+
+                // XXX: Please optimize me!
+                // Scan ahead for the matching quote char to q.
+                val := '';
+                while (i <= l) do begin
+                    if (xp[i] = '"') then begin
+                        if ((i = l) or (xp[i+1] <> '"')) then
+                            break
+                        else
+                            inc(i);
+                    end;
+                    val := val + xp[i];
+                    inc(i);
+                end;
+                if (op = '!=') then
+                    setPredicate(name, val, XPP_NOTEQUAL)
+                else
+                    setPredicate(name, val, XPP_EQUAL);
             end;
-            setAttribute(name, val);
             state := 1;
             inc(i);
         end
@@ -734,7 +786,7 @@ begin
                 inc(i);
             name := Copy(xp, s, (i-s));
             val := '';
-            setAttribute(name, val);
+            setPredicate(name, val, XPP_VALUE);
         end
         else if (state = 0) then
             cur := cur + c;
@@ -807,11 +859,6 @@ begin
                 inc(f);
             end;
 
-            {
-            while ((f <= l) and (xps[f] <> c)) do begin
-                inc(f);
-            }
-
             if (f <= l) then
                 i := f;
         end;
@@ -851,8 +898,8 @@ end;
 function TXPLite.checkTags(Tag: TXMLTag; match_idx: integer; first: boolean): TXMLTagList;
 var
     cm: TXPMatch;
-    ca: TAttr;
-    i, a: integer;
+    cp: TXPPredicate;
+    pp, i, p: integer;
     r, tl: TXMLTagList;
     t: TXMLTag;
     wild_card: boolean;
@@ -886,18 +933,36 @@ begin
             add := true;
 
             // Check ea. tag to make sure it has the correct attributes
-            for a := 0 to cm.AttrCount - 1 do begin
-                ca := cm.getAttribute(a);
-                wild_card := (Copy(ca.Value, length(ca.Value), 1) = '*');
-                if wild_card then begin
-                    tmps := ca.Value;
-                    Delete(tmps, length(tmps), 1);
-                    if (Pos(Lowercase(tmps), Lowercase(t.getAttribute(ca.Name))) <> 1) then
+            for p := 0 to cm.PredCount - 1 do begin
+                cp := cm.getPredicate(p);
+                case cp.op of
+                XPP_EXISTS: begin
+                    if (t.GetAttribute(cp.Name) = '') then add := false;
+                end;
+                XPP_NOTEXISTS: begin
+                    if (t.getAttribute(cp.Name) <> '') then add := false;
+                end;
+                XPP_EQUAL, XPP_NOTEQUAL: begin
+                    wild_card := (Copy(cp.Value, length(cp.Value), 1) = '*');
+                    if wild_card then begin
+                        tmps := cp.Value;
+                        Delete(tmps, length(tmps), 1);
+                        pp := Pos(Lowercase(tmps), Lowercase(t.getAttribute(cp.Name)));
+                        if ((cp.op = XPP_EQUAL) and (pp <> 1)) then
+                            add := false
+                        else if ((cp.op = XPP_NOTEQUAL) and (pp = 1)) then
+                            add := false;
+                    end
+
+                    // XXX: Need a better way to do jid's eventually..
+                    // We are lcasing here so jids match.
+                    else if ((cp.op = XPP_EQUAL) and
+                    (Lowercase(t.getAttribute(cp.Name)) <> Lowercase(cp.Value))) then
+                        add := false
+                    else if ((cp.op = XPP_NOTEQUAL) and
+                    (Lowercase(t.getAttribute(cp.Name)) = Lowercase(cp.Value))) then
                         add := false;
-                end
-                else if (ca.Value <> '') then begin
-                    if (Lowercase(t.getAttribute(ca.name)) <> Lowercase(ca.Value)) then
-                        add := false;
+                end;
                 end;
             end;
         end;
@@ -1002,8 +1067,8 @@ end;
 function TXPLite.GetString: Widestring;
 var
     m: TXPMatch;
-    ca: TAttr;
-    a, i: integer;
+    cp: TXPPredicate;
+    p, i: integer;
 begin
     // get the xplite string representation
     Result := '';
@@ -1012,12 +1077,15 @@ begin
         m := TXPMatch(Matches.Objects[i]);
         Result := Result + '/' + m.tag_name;
 
-        for a := 0 to m.AttrCount - 1 do begin
-            ca := m.getAttribute(a);
-            if (ca.Value = '') then
-                Result := Result + '@' + ca.Name
-            else
-                Result := Result + '[@' + ca.Name + '="' + ca.Value + '"]';
+        for p := 0 to m.PredCount - 1 do begin
+            cp := m.getPredicate(p);
+            case cp.op of
+            XPP_VALUE:      Result := Result + '@' + cp.Name;
+            XPP_EXISTS:     Result := Result + '[@' + cp.Name + ']';
+            XPP_NOTEXISTS:  Result := Result + '[!' + cp.Name + ']';
+            XPP_EQUAL:      Result := Result + '[@' + cp.Name + '="' + cp.Value + '"]';
+            XPP_NOTEQUAL:   Result := Result + '[@' + cp.Name + '!="' + cp.Value + '"]';
+            end;
         end;
     end;
 end;

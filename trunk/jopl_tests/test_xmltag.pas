@@ -32,18 +32,28 @@ uses
 {---------------------------------------}
 procedure TXMLNodeTest.Setup;
 begin
+
+    {
+    <message id="1" type="chat" from="test@jabber.org">
+      <body>body text</body>
+      <subject>subject text</subject>
+      <x xmlns="jabber:x:test">x1 tag</x>
+      <x>x2 tag</x>
+    </message>
+    }
+
     inherited;
     tag := TXMLTag.Create('message');
     with tag do begin
         AddBasicTag('body', 'body text');
         AddBasicTag('subject', 'subject text');
-        PutAttribute('id', '1');
-        PutAttribute('type', 'chat');
-        PutAttribute('from', 'test@jabber.org');
+        setAttribute('id', '1');
+        setAttribute('type', 'chat');
+        setAttribute('from', 'test@jabber.org');
 
         with AddTag('x') do begin
             AddCData('x1 tag');
-            PutAttribute('xmlns', 'jabber:x:test');
+            setAttribute('xmlns', 'jabber:x:test');
             end;
 
         AddBasicTag('x', 'x2 tag');
@@ -90,7 +100,7 @@ procedure TXMLNodeTest.testXPParse;
 var
     xp: TXPLite;
     xm: TXPMatch;
-    ca: TAttr;
+    cp: TXPPredicate;
 begin
     xp := TXPLite.Create();
     xp.Parse('/message/body[@from="test@jabber.org"]');
@@ -98,11 +108,21 @@ begin
     CheckEquals(2, xp.XPMatchList.Count, 'XPLite parse failed. Wrong # of Match elements');
 
     xm := TXPMatch(xp.XPMatchList.Objects[1]);
-    CheckEquals(1, xm.AttrCount, 'XPLite, Wrong attrcount for the xpmatch.');
-    ca := xm.getAttribute(0);
-    CheckNotNull(ca, 'XPMatch.getAttribute returned Null.');
-    CheckEquals('from', ca.Name, 'XPLite, Attribute has wrong name.');
-    CheckEquals('test@jabber.org', ca.Value, 'XPLite, Attribute has wrong value.');
+    CheckEquals(1, xm.PredCount, 'XPLite, Wrong attrcount for the xpmatch.');
+    cp := xm.getPredicate(0);
+    CheckNotNull(cp, 'XPMatch.getAttribute returned Null.');
+    CheckEquals('from', cp.Name, 'XPLite, Attribute has wrong name.');
+    CheckEquals('test@jabber.org', cp.Value, 'XPLite, Attribute has wrong value.');
+    xp.Free();
+
+    xp := TXPLite.Create();
+    xp.Parse('/message/body[@from="test@jabber.org"][!foo]');
+
+    xm := TXPMatch(xp.XPMatchList.Objects[1]);
+    CheckEquals(2, xm.PredCount, 'XPLite, Wrong attrcount for the xpmatch.');
+    cp := xm.getPredicate(1);
+    CheckEquals(integer(XPP_NOTEXISTS), integer(cp.op), 'Wrong operation for Not Exists');
+    xp.Free();
 
 end;
 
@@ -115,6 +135,13 @@ begin
     xp := TXPLite.Create();
     xp.Parse('/message/body');
     Check(xp.Compare(tag), 'XPLite.Compare failed');
+    xp.Free();
+
+    xp := TXPLite.Create();
+    xp.Parse('/message[@id="1"][!foo]');
+    Check(xp.Compare(tag), 'XPLite Compare failed');
+    xp.Free();
+
 end;
 
 {---------------------------------------}

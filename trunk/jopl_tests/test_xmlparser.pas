@@ -81,8 +81,6 @@ end;
 {---------------------------------------}
 procedure TXMLParserTest.testUnicode;
 var
-    cur_name: WideString;
-    i: integer;
     t, f: TXMLTag;
     c: TXMLTagList;
 begin
