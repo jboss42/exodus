@@ -156,11 +156,16 @@ begin
     voice := false;
     number := '';
     
-    if tag.GetFirstTag('WORK') <> nil then work := true;
-    if tag.GetFirstTag('HOME') <> nil then home := true;
+    if tag.GetFirstTag('WORK') <> nil then
+        work := true
+    else
+        home := true;
 
-    if tag.GetFirstTag('FAX') <> nil then fax := true else voice := true;
-
+    if tag.GetFirstTag('VOICE') <> nil then
+        voice := true
+    else
+        fax := true;
+        
     number := tag.Data;
 end;
 
@@ -170,8 +175,10 @@ begin
     //
     if work then tag.AddTag('WORK');
     if home then tag.AddTag('HOME');
-    if fax then tag.AddTag('FAX');
-    if voice then tag.AddTag('VOICE');
+    if voice then
+        tag.AddTag('VOICE')
+    else
+        tag.AddTag('FAX');
 
     tag.AddCData(number)
 end;
@@ -198,9 +205,21 @@ begin
     Work := TXMLVCardAddress.Create();
 
     HomePhone := TXMLVCardTel.Create();
+    with HomePhone do begin
+        home := true; work := false; voice := true; fax := false;
+        end;
     HomeFax := TXMLVCardTel.Create();
+    with HomeFax do begin
+        home := true; work := false; voice := false; fax := true;
+        end;
     WorkPhone := TXMLVCardTel.Create();
+    with WorkPhone do begin
+        home := false; work := true; voice := true; fax := false;
+        end;
     WorkFax := TXMLVCardTel.Create();
+    with WorkFax do begin
+        home := false; work := true; voice := false; fax := true;
+        end;
 end;
 
 destructor TXMLVCard.Destroy;
