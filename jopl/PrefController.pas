@@ -518,6 +518,8 @@ begin
         result := '1'
     else if pkey = 'notify_sounds' then
         result := '1'
+    else if pkey = 'roster_show_pending' then
+        result := '1'
     else
         result := '';
 end;

@@ -1570,12 +1570,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 357
-    ActivePage = tbsFonts
+    ActivePage = tbsRoster
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 2
+    TabIndex = 0
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1615,7 +1615,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkOfflineGroup: TCheckBox
         Left = 8
-        Top = 72
+        Top = 96
         Width = 241
         Height = 17
         Caption = 'Show offline contacts in the "Offline" group.'
@@ -1623,7 +1623,7 @@ object frmPrefs: TfrmPrefs
       end
       object optDblClick: TRadioGroup
         Left = 8
-        Top = 208
+        Top = 232
         Width = 161
         Height = 55
         Caption = 'Double Click Action '
@@ -1635,7 +1635,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkInlineStatus: TCheckBox
         Left = 8
-        Top = 144
+        Top = 168
         Width = 241
         Height = 17
         Caption = 'Show status in the roster: Joe <Meeting>'
@@ -1644,7 +1644,7 @@ object frmPrefs: TfrmPrefs
       end
       object cboInlineStatus: TColorBox
         Left = 32
-        Top = 168
+        Top = 192
         Width = 145
         Height = 22
         DefaultColorColor = clBlue
@@ -1656,7 +1656,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkHideBlocked: TCheckBox
         Left = 8
-        Top = 96
+        Top = 120
         Width = 201
         Height = 17
         Caption = 'Hide blocked contacts '
@@ -1664,11 +1664,19 @@ object frmPrefs: TfrmPrefs
       end
       object chkPresErrors: TCheckBox
         Left = 8
-        Top = 118
+        Top = 142
         Width = 209
         Height = 17
         Caption = 'Detect invalid roster items'
         TabOrder = 8
+      end
+      object chkShowPending: TCheckBox
+        Left = 8
+        Top = 72
+        Width = 161
+        Height = 17
+        Caption = 'Show pending contacts'
+        TabOrder = 9
       end
     end
     object tbsSubscriptions: TTabSheet
@@ -2923,7 +2931,7 @@ object frmPrefs: TfrmPrefs
       object Label6: TLabel
         Left = 0
         Top = 20
-        Width = 363
+        Width = 335
         Height = 26
         Align = alTop
         Caption = 
@@ -2934,7 +2942,7 @@ object frmPrefs: TfrmPrefs
       object StaticText12: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 51
         Height = 20
         Align = alTop
         Alignment = taCenter
