@@ -188,6 +188,7 @@ begin
 
         // otherwise, auth-error
         _session.FireEvent('/session/autherror', xml);
+        exit;
     end;
 
     qtag := xml.GetFirstTag('query');
