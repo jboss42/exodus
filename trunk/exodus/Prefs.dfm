@@ -1570,12 +1570,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 357
-    ActivePage = tbsNotify
+    ActivePage = tbsRoster
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 6
+    TabIndex = 0
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -2579,7 +2579,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 112
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2598,7 +2598,7 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 73
         Width = 363
-        Height = 236
+        Height = 253
         Align = alClient
         TabOrder = 1
       end
@@ -2613,7 +2613,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TLabel
           Left = 0
           Top = 0
-          Width = 306
+          Width = 363
           Height = 13
           Align = alTop
           Caption = 
@@ -2637,7 +2637,7 @@ object frmPrefs: TfrmPrefs
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 352
+        Width = 363
         Height = 26
         Align = alTop
         Caption = 
@@ -2648,7 +2648,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 146
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2667,7 +2667,7 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 46
         Width = 363
-        Height = 263
+        Height = 280
         Align = alClient
         TabOrder = 1
       end

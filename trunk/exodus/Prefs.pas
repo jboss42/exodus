@@ -453,6 +453,7 @@ begin
 
         // Keywords and Blockers
         fillStringList('keywords', memKeywords.Lines);
+        chkRegex.Checked := getBool('regex_keywords');
         fillStringList('blockers', memBlocks.Lines);
         fillStringList('plugins', memPlugins.Lines);
 
