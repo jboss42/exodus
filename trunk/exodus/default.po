@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-09-13 16:09\n"
-"PO-Revision-Date: 2004-09-13 16:09\n"
+"POT-Creation-Date: 2004-10-10 23:07\n"
+"PO-Revision-Date: 2004-10-10 23:07\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -743,7 +743,7 @@ msgstr ""
 #. frmBrowse..Panel3..vwBrowse......Caption
 #: Browser.dfm:46
 #. frmInvite..pnlMain..lstJIDS......Caption
-#: invite.dfm:76
+#: invite.dfm:78
 #. frmRoomAdminList..lstItems......Caption
 #: RoomAdminList.dfm:89
 #. frmRosterRecv..lvContacts......Caption
@@ -1204,7 +1204,7 @@ msgstr ""
 
 #. frmCommandWizard..Tabs..tbsWait..lblWait..Caption
 #: CommandWizard.dfm:119
-#: CommandWizard.pas:243
+#: CommandWizard.pas:244
 msgid "Please wait..."
 msgstr ""
 
@@ -1548,12 +1548,12 @@ msgstr ""
 #: RosterWindow.dfm:403
 #. init the cmd line stuff
 #: ExSession.pas:185
-#: Jabber1.pas:2771
+#: Jabber1.pas:2774
 #: RosterWindow.pas:351
 #: RosterWindow.pas:373
 #: RosterWindow.pas:1658
 #. reset status to online;
-#: RosterWindow.pas:1701
+#: RosterWindow.pas:1702
 #: /src/exodus/jopl/PrefController.pas:1240
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:70
@@ -1570,7 +1570,7 @@ msgstr ""
 #: Jabber1.dfm:2675
 #. frmRosterWindow..popStatus..presAway..Caption
 #: RosterWindow.dfm:415
-#: Jabber1.pas:2769
+#: Jabber1.pas:2772
 #: RosterWindow.pas:353
 #: RosterWindow.pas:374
 #: RosterWindow.pas:1642
@@ -1910,7 +1910,7 @@ msgstr ""
 #. frmInvalidRoster..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: InvalidRoster.dfm:37
 #. frmInvite..pnlMain..Panel1..btnRemove..Caption
-#: invite.dfm:100
+#: invite.dfm:102
 #. frmRosterWindow..popRoster..popRemove..Caption
 #: RosterWindow.dfm:384
 #. frmRosterWindow..popGroup..popGrpRemove..Caption
@@ -1960,7 +1960,7 @@ msgid "Invite to Conference"
 msgstr ""
 
 #. frmInvite..pnlMain..lstJIDS......Caption
-#: invite.dfm:72
+#: invite.dfm:74
 #. frmRosterRecv..lvContacts......Caption
 #: RosterRecv.dfm:194
 #. frmRosterWindow..pnlFind..radNick..Caption
@@ -1969,7 +1969,7 @@ msgid "Nickname"
 msgstr ""
 
 #. frmInvite..pnlMain..Panel1..btnAdd..Caption
-#: invite.dfm:109
+#: invite.dfm:111
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Caption
 #: Jabber1.dfm:149
 #. frmPrefEmote..pageEmotes..TntTabSheet1..pnlCustomPresButtons..btnEmoteAdd..Caption
@@ -1982,17 +1982,17 @@ msgid "Add"
 msgstr ""
 
 #. frmInvite..pnlMain..Panel2..Label2..Caption
-#: invite.dfm:128
+#: invite.dfm:130
 msgid "Reason:"
 msgstr ""
 
 #. frmInvite..pnlMain..Panel2..Label1..Caption
-#: invite.dfm:136
+#: invite.dfm:138
 msgid "Invite the following contacts to:"
 msgstr ""
 
 #. frmInvite..pnlMain..Panel2..memReason....Lines.WideStrings
-#: invite.dfm:145
+#: invite.dfm:147
 msgid "Please join us in this conference room."
 msgstr ""
 
@@ -2543,7 +2543,7 @@ msgstr ""
 #: jud.dfm:223
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:146
-#: Jabber1.pas:2386
+#: Jabber1.pas:2389
 msgid "Start Chat"
 msgstr ""
 
@@ -6086,10 +6086,10 @@ msgstr ""
 #. frmRosterWindow..popGroup..popGroupBlock..Caption
 #: RosterWindow.dfm:634
 #: Room.pas:1742
-#: RosterWindow.pas:2107
+#: RosterWindow.pas:2108
 #. do blocking madness
-#: RosterWindow.pas:2144
-#: RosterWindow.pas:2149
+#: RosterWindow.pas:2145
+#: RosterWindow.pas:2150
 msgid "Block"
 msgstr ""
 
@@ -6702,32 +6702,32 @@ msgstr ""
 msgid "Plugin could not be initialized or configured."
 msgstr ""
 
-#: CommandWizard.pas:235
+#: CommandWizard.pas:236
 #: xdata.pas:278
 msgid "All required fields must be filled out."
 msgstr ""
 
-#: CommandWizard.pas:256
+#: CommandWizard.pas:259
 msgid "The jabber entity timed out trying to execute the "
 "command."
 msgstr ""
 
-#: CommandWizard.pas:261
+#: CommandWizard.pas:264
 msgid "The execute query returned an error."
 msgstr ""
 
-#: CommandWizard.pas:267
+#: CommandWizard.pas:270
 msgid "The result of the command execute was "
 "mal-formed."
 msgstr ""
 
-#. we're not done yet
-#: CommandWizard.pas:287
+#. Make sure xdataBox is empty.
+#: CommandWizard.pas:295
 msgid "This command returned an unknown form "
 "type."
 msgstr ""
 
-#: CommandWizard.pas:335
+#: CommandWizard.pas:343
 msgid "This jabber entity does not support remote "
 "commands."
 msgstr ""
@@ -7072,34 +7072,34 @@ msgstr ""
 msgid "Unfiled"
 msgstr ""
 
-#: ExUtils.pas:967
+#: ExUtils.pas:969
 msgid "Untitled Group"
 msgstr ""
 
-#: ExUtils.pas:968
+#: ExUtils.pas:970
 msgid "Enter new group name below. "
 msgstr ""
 
-#: ExUtils.pas:971
+#: ExUtils.pas:973
 msgid "To create a nested group a name like "
 "foo%sbar."
 msgstr ""
 
-#: ExUtils.pas:973
+#: ExUtils.pas:975
 msgid "New Roster Group"
 msgstr ""
 
 #. add the new grp.
-#: ExUtils.pas:978
+#: ExUtils.pas:980
 msgid "This group already exists!"
 msgstr ""
 
-#: fGeneric.pas:93
-#: fGeneric.pas:95
+#: fGeneric.pas:94
+#: fGeneric.pas:96
 msgid "(Required)"
 msgstr ""
 
-#: fGeneric.pas:217
+#: fGeneric.pas:218
 #. frmPrefEmote..pageEmotes..TntTabSheet2..Panel3..btnCustomEmoteBrowse..Caption
 #: prefs/PrefEmote.dfm:161
 msgid "..."
@@ -7225,75 +7225,75 @@ msgid "Your new jabber account is activated. Would you like to fill out "
 msgstr ""
 
 #. set us to away
-#: Jabber1.pas:2182
+#: Jabber1.pas:2185
 msgid "Setting AutoAway"
 msgstr ""
 
 #. set us to xa
-#: Jabber1.pas:2218
+#: Jabber1.pas:2221
 msgid "Setting AutoXA"
 msgstr ""
 
 #. reset our status to available
-#: Jabber1.pas:2235
+#: Jabber1.pas:2238
 msgid "Setting Auto Available"
 msgstr ""
 
 #. lookup some arbitrary vcard..
-#: Jabber1.pas:2270
+#: Jabber1.pas:2273
 msgid "Lookup Profile"
 msgstr ""
 
-#: Jabber1.pas:2270
-#: Jabber1.pas:2386
-#: Jabber1.pas:2654
+#: Jabber1.pas:2273
+#: Jabber1.pas:2389
+#: Jabber1.pas:2657
 msgid "Enter Jabber ID: "
 msgstr ""
 
-#: Jabber1.pas:2487
+#: Jabber1.pas:2490
 msgid "Old password is incorrect."
 msgstr ""
 
-#: Jabber1.pas:2491
+#: Jabber1.pas:2494
 msgid "New password does not match."
 msgstr ""
 
-#: Jabber1.pas:2511
-#: Jabber1.pas:2516
+#: Jabber1.pas:2514
+#: Jabber1.pas:2519
 msgid "Error changing password."
 msgstr ""
 
-#: Jabber1.pas:2514
+#: Jabber1.pas:2517
 msgid "Password changed."
 msgstr ""
 
 #. kick off a service registration..
-#: Jabber1.pas:2601
+#: Jabber1.pas:2604
 msgid "Register with Service"
 msgstr ""
 
-#: Jabber1.pas:2601
+#: Jabber1.pas:2604
 msgid "Enter Jabber ID of Service: "
 msgstr ""
 
-#: Jabber1.pas:2654
+#: Jabber1.pas:2657
 msgid "Send a Message"
 msgstr ""
 
 #. fire up an invite for this room using the selected contacts
-#: Jabber1.pas:2864
+#: Jabber1.pas:2867
 #. send roster items to this contact.
-#: Jabber1.pas:2874
+#: Jabber1.pas:2877
 #. Send contacts to this JID..
-#: RosterWindow.pas:2582
-#: RosterWindow.pas:2794
+#: RosterWindow.pas:2583
+#: RosterWindow.pas:2795
 #. we got a URL drop
-#: RosterWindow.pas:2890
-#: RosterWindow.pas:2922
+#: RosterWindow.pas:2891
+#: RosterWindow.pas:2923
 msgid "You must select one or more contacts."
 msgstr ""
 
-#: Jabber1.pas:3001
+#: Jabber1.pas:3004
 msgid "Branding error!"
 msgstr ""
 
@@ -7691,8 +7691,8 @@ msgid "Enter bookmark name:"
 msgstr ""
 
 #: Room.pas:1740
-#: RosterWindow.pas:2103
-#: RosterWindow.pas:2154
+#: RosterWindow.pas:2104
+#: RosterWindow.pas:2155
 msgid "UnBlock"
 msgstr ""
 
@@ -7785,7 +7785,7 @@ msgstr ""
 #. we've been authenticated
 #: RosterWindow.pas:524
 #. Login to the client..
-#: RosterWindow.pas:2684
+#: RosterWindow.pas:2685
 msgid "Click to Cancel..."
 msgstr ""
 
@@ -7800,52 +7800,52 @@ msgid "Authenticated.\n"
 msgstr ""
 
 #. remove a bookmark
-#: RosterWindow.pas:1888
+#: RosterWindow.pas:1889
 msgid "Remove this bookmark?"
 msgstr ""
 
-#: RosterWindow.pas:2384
+#: RosterWindow.pas:2385
 msgid " (Pending)"
 msgstr ""
 
-#: RosterWindow.pas:2495
+#: RosterWindow.pas:2496
 msgid "Rename group"
 msgstr ""
 
-#: RosterWindow.pas:2495
+#: RosterWindow.pas:2496
 msgid "New group name:"
 msgstr ""
 
 #. Block or Unblock this user
-#: RosterWindow.pas:2610
+#: RosterWindow.pas:2611
 msgid "Block %d contacts?"
 msgstr ""
 
 #. Block or Unblock this user
-#: RosterWindow.pas:2639
+#: RosterWindow.pas:2640
 msgid "Unblock %d contacts?"
 msgstr ""
 
-#: RosterWindow.pas:2667
+#: RosterWindow.pas:2668
 msgid "You must select more than one online contact to "
 "broadcast."
 msgstr ""
 
 #. Cancel the connection
-#: RosterWindow.pas:2688
-#: RosterWindow.pas:3033
+#: RosterWindow.pas:2689
+#: RosterWindow.pas:3034
 msgid "Click to Cancel Reconnect"
 msgstr ""
 
-#: RosterWindow.pas:2799
+#: RosterWindow.pas:2800
 msgid "Rename Roster Item"
 msgstr ""
 
-#: RosterWindow.pas:2799
+#: RosterWindow.pas:2800
 msgid "New Nickname: "
 msgstr ""
 
-#: RosterWindow.pas:3034
+#: RosterWindow.pas:3035
 msgid "Reconnect in %d seconds."
 msgstr ""
 
