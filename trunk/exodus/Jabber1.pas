@@ -525,8 +525,8 @@ begin
 
                 if (_prof_index = -1) then begin
                     // no profile called this, yet
-                    if (jid = nil) or (pass = '') then
-                        raise EConfigException.Create('need jid and password for new profile');
+                    //if (jid = nil) or (pass = '') then
+                    //    raise EConfigException.Create('need jid and password for new profile');
 
                     profile := CreateProfile(profile_name);
                     if (jid = nil) then
@@ -553,8 +553,11 @@ begin
 
                 SaveProfiles();
                 _prof_index := Profiles.IndexOfObject(profile);
-                setInt('profile_active', _prof_index);
-                _auto_login := true;
+
+                if (profile.IsValid()) then begin
+                    setInt('profile_active', _prof_index);
+                    _auto_login := true;
+                    end;
                 end
             else begin
                 _prof_index := getInt('profile_active');

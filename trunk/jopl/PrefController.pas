@@ -81,6 +81,7 @@ type
 
         procedure Load(tag: TXMLTag);
         procedure Save(node: TXMLTag);
+        function IsValid() : boolean;
     end;
 
     TPrefController = class
@@ -646,6 +647,17 @@ begin
         node.AddBasicTag('ssl', 'yes')
     else
         node.AddBasicTag('ssl', 'no');
+end;
+
+{---------------------------------------}
+function TJabberProfile.IsValid() : boolean;
+begin
+    if (Name = '') then result := false
+    else if (Username = '') then result := false
+    else if (Server = '') then result := false
+    else if (Password = '') then result := false
+    else if (Resource = '') then result := false
+    else result := true;
 end;
 
 end.
