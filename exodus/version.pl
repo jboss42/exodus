@@ -49,5 +49,11 @@ print VF <<"EOF";
 EOF
 close VF;
 
+open VF, ">version";
+print VF <<"EOF";
+$maj.$min.$sp.$build
+EOF
+close VF;
+
 print "$maj.$min.$sp.$build\n";
 
