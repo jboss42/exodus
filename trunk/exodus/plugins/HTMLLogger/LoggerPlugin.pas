@@ -154,20 +154,34 @@ begin
         end;
     until (cr_pos <= 0);
 
+    // Get our window bg color in there
+    bg := 'background-color: ' + ColorToHTML(_bg) + ';';
+
+    //font-family: Arial Black; font-size: 10pt
+    font := 'font-family: ' + _font_name + '; ' +
+            'font-size: ' + _font_size + 'pt;';
+
+    // this is the output buffer
+    html := '';
+
+    // Make sure we do something with the subject..
+    if (Msg.Subject <> '') then begin
+        html := html + '<div style="' + bg + font + '">' + Msg.Nick +
+            ' set the subject to: ' + Msg.Subject + '</div>'#13#10;
+    end;
+
+    // timestamp if we're supposed to..
     if (_timestamp) then
         time := '<span style="color: gray;">[' +
                 FormatDateTime(_format, Msg.Time) +
                 ']</span>'
     else
         time := '';
-    bg := 'background-color: ' + ColorToHTML(_bg) + ';';
 
-    //font-family: Arial Black; font-size: 10pt
-    font := 'font-family: ' + _font_name + '; ' +
-            'font-size: ' + _font_size + 'pt;';
-    if Msg.Action then
-        html := '<div style="' + bg + font + '">' + time +
-                '<span style="color: purple;">* ' + Msg.Nick + ' ' + txt + '</span></div>'
+    if Msg.Action then begin
+        html := html + '<div style="' + bg + font + '">' + time +
+                '<span style="color: purple;">* ' + Msg.Nick + ' ' + txt + '</span></div>';
+    end
     else begin
         if Msg.isMe then
             color := ColorToHTML(_me)
@@ -175,11 +189,11 @@ begin
             color := ColorToHTML(_other);
 
         if (Msg.Nick <> '') then
-            html := '<div style="' + bg + font + '">' +
+            html := html + '<div style="' + bg + font + '">' +
                 time + '<span style="color: ' + color + ';">&lt;' +
                 Msg.Nick + '&gt;</span> ' + txt + '</div>'
         else
-            html := '<div style="' + bg + font + '">' +
+            html := html + '<div style="' + bg + font + '">' +
                 time + '<span style="color: green;">' +
                 txt + '</span></div>';
     end;
