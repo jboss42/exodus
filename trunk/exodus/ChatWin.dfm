@@ -1,6 +1,6 @@
 inherited frmChat: TfrmChat
-  Left = 223
-  Top = 175
+  Left = 746
+  Top = 273
   Caption = 'Chat Window'
   OldCreateOrder = True
   OnClose = FormClose
@@ -13,8 +13,6 @@ inherited frmChat: TfrmChat
   inherited pnlInput: TPanel
     inherited MsgOut: TMemo
       OnChange = MsgOutChange
-      OnKeyDown = MsgOutKeyDown
-      OnKeyPress = MsgOutKeyPress
     end
   end
   inherited Panel1: TPanel

@@ -47,8 +47,6 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormActivate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
-    procedure MsgOutKeyDown(Sender: TObject; var Key: Word;
-        Shift: TShiftState);
     procedure doHistory(Sender: TObject);
     procedure doProfile(Sender: TObject);
     procedure doAddToRoster(Sender: TObject);
@@ -438,11 +436,12 @@ end;
 {---------------------------------------}
 procedure TfrmChat.MsgOutKeyPress(Sender: TObject; var Key: Char);
 begin
+    inherited;
+    if (Key = #0) then exit;
+
     // Send the msg if they hit return
     if ( (Key = #13) and not(mnuReturns.Checked)) then
         SendMsg();
-    if ( Key = #27 ) then
-        Close();
 end;
 
 {---------------------------------------}
@@ -528,38 +527,6 @@ procedure TfrmChat.FormActivate(Sender: TObject);
 begin
     if Self.Visible then
         MsgOut.SetFocus;
-end;
-
-{---------------------------------------}
-procedure TfrmChat.MsgOutKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-var
-    cur_buff: string;
-    s,e, i: integer;
-begin
-  inherited;
-    if ((Key = VK_BACK) and (ssCtrl in Shift)) then begin
-        // delete the last word
-        cur_buff := MsgOut.Lines.Text;
-        e := MsgOut.SelStart;
-        s := -1;
-        i := e;
-        while (i > 0) do begin
-            if (cur_buff[i] = ' ') then begin
-                s := i;
-                break;
-                end
-            else
-                dec(i);
-            end;
-
-        if (s > 0) then with MsgOut do begin
-            SelStart := s;
-            SelLength := (e - s);
-            SelText := '';
-            Key := 0;
-            end;
-        end;
 end;
 
 {---------------------------------------}
