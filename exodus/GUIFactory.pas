@@ -21,7 +21,7 @@ unit GUIFactory;
 
 interface
 uses
-    XMLTag, Unicode, 
+    XMLTag, Unicode,
     Forms, Classes, SysUtils;
 
 type
@@ -174,10 +174,14 @@ begin
             MainSession.Roster.AssignGroups(cboGroup.Items);
             dgrp := MainSession.Prefs.getString('roster_default');
             cboGroup.itemIndex := cboGroup.Items.indexOf(dgrp);
-            if (tmp_b) then
-                txtNickname.Text := tmp_jid.user
-            else if (ri <> nil) then
+            if (tmp_b) then begin
+                txtNickname.Text := tmp_jid.user;
+            end
+            else if (ri <> nil) then begin
                 txtNickName.Text := ri.nickname;
+                if (ri.Groups.Count > 0) then
+                    cboGroup.itemIndex := cboGroup.Items.indexof(ri.Groups[0]);
+            end;
             EnableAdd(tmp_b);
         end;
         DoNotify(nil, 'notify_s10n',
