@@ -213,8 +213,10 @@ begin
             _socket.ReadFromStack();
             utf := _socket.InputBuffer.Extract(_socket.InputBuffer.Size);
 
-            if ((_remain_utf) <> '') then
-                inp := _remain_utf + utf
+            if ((_remain_utf) <> '') then begin
+                inp := _remain_utf + utf;
+                _remain_utf := '';
+            end
             else
                 inp := utf;
 
@@ -228,7 +230,9 @@ begin
             if (i < l) then begin
                 _remain_utf := RightStr(inp, l - i);
                 inp := LeftStr(inp, i);
-            end;
+            end
+            else
+                _remain_utf := '';
 
             buff := UTF8Decode(inp);
 
