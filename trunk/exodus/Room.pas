@@ -128,20 +128,21 @@ type
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
     _roster: TWideStringlist;   // roster for this room
-    _rlist: TList;
-    _isMUC: boolean;
+    _rlist: TList;              // Data storage for the virtual listview
+    _isMUC: boolean;            // Is this room JEP-45
     _mcallback: integer;        // Message Callback
     _ecallback: integer;        // Error msg callback
     _pcallback: integer;        // Presence Callback
     _scallback: integer;        // Session callback
-    _nick_prefix: Widestring;   // stuff for nick completion:
+    _keywords: TRegExpr;        // list of keywords to monitor for
+    _hint_text: Widestring;     // Current hint for nickname
+    _old_nick: WideString;      // Our own last nickname
+
+    // Stuff for nick completions
+    _nick_prefix: Widestring;
     _nick_idx: integer;
     _nick_len: integer;
     _nick_start: integer;
-    _keywords: TRegExpr;     // list of keywords to monitor for
-    _hint_text: Widestring;
-
-    _old_nick: WideString;
 
     _notify: array[0..2] of integer;
 

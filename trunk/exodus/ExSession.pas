@@ -593,6 +593,8 @@ begin
     FreeAndNil(ExCOMController);
 end;
 
+{---------------------------------------}
+{---------------------------------------}
 procedure PlayXMPPActions();
 var
     i : integer;
@@ -642,6 +644,8 @@ begin
     _xmpp_action_list.Clear();
 end;
 
+{---------------------------------------}
+{---------------------------------------}
 procedure ClearXMPPActions();
 var
     i : integer;
