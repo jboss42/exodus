@@ -598,11 +598,19 @@ var
     buff: UTF8String;
 begin
     // Send this text out the socket
+    if (_socket = nil) then exit;
+
     DoDataCallbacks(true, xml);
     buff := UTF8Encode(xml);
-    _Socket.Write(buff);
-    _timer.Enabled := false;
-    _timer.Enabled := true;
+    try
+        _Socket.Write(buff);
+        _timer.Enabled := false;
+        _timer.Enabled := true;
+    except
+        on E: EIdException do begin
+            _timer.Enabled := false;
+            end;
+    end;
 end;
 
 end.

@@ -622,7 +622,7 @@ begin
 
     if (event <> 'xml') then begin
         // timeout!
-        Self.Fetch();
+        if (s.Stream <> nil) then Self.Fetch();
         end
 
     else if (tag.GetAttribute('type') = 'error') then begin
