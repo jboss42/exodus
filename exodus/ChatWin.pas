@@ -433,6 +433,11 @@ begin
     body := tag.GetBasicText('body');
     TExodusChat(chat_object.ComController).fireRecvMsg(body, xml);
 
+    // make sure we are visible..
+    if (not visible) then begin
+        ShowDefault();
+    end;
+
     showMsg(tag);
     if _thread = '' then begin
         // cache thread from message
@@ -799,20 +804,24 @@ var
     i: integer;
 begin
     // Unregister the callbacks + stuff
-    MainSession.UnRegisterCallback(_pcallback);
-    MainSession.UnRegisterCallback(_scallback);
+    if (MainSession <> nil) then begin
+        MainSession.UnRegisterCallback(_pcallback);
+        MainSession.UnRegisterCallback(_scallback);
+    end;
 
-    if chat_object <> nil then begin
-        i := MainSession.ChatList.IndexOfObject(chat_object);
-        if i >= 0 then
-            MainSession.ChatList.Delete(i);
-        chat_object.Free;
+    if (chat_object <> nil) then begin
+        if (MainSession <> nil) then begin
+            i := MainSession.ChatList.IndexOfObject(chat_object);
+            if i >= 0 then
+                MainSession.ChatList.Delete(i);
+        end;
+        FreeAndNil(chat_object);
     end;
 
     if (_jid <> nil) then
-        _jid.Free();
+        FreeAndNil(_jid);
 
-    DragAcceptFiles( Handle, false );
+    DragAcceptFiles(Handle, false);
     inherited;
 end;
 
