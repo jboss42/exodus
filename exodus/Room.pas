@@ -254,6 +254,8 @@ const
 
     sGrantVoice = 'You have been granted voice.';
     sRevokeVoice = 'Your voice has been revoked.';
+    sNoVoice = 'You are not allowed to speak in this room.';
+    sCurModerator = 'You are currently a moderator of this room.';
 
     sNewUser = '%s has entered the room.';
     sUserLeave = '%s has left the room.';
@@ -1107,6 +1109,19 @@ begin
         tmp_jid.Free();
 
         if (member.Nick = myNick) then begin
+
+            if (i < 0) then begin
+                // this is the first time I've joined the room
+                mtag := nil;
+                if (member.Nick = myNick) then begin
+                    if (member.Role = MUC_VISITOR) then
+                        mtag := newRoomMessage(_(sNoVoice))
+                    else if (member.Role = MUC_MOD) then
+                        mtag := newRoomMessage(_(sCurModerator));
+                    if (mtag <> nil) then showMsg(mtag);
+                end;
+            end;
+
             // check to see what my role is
             _send_unavailable := true;
 
@@ -1125,6 +1140,10 @@ begin
 
             // Admin stuff
             popModerator.Enabled := (member.affil = MUC_ADMIN) or popConfigure.Enabled;
+
+            // Voice stuff
+            MsgOut.ReadOnly := (member.role = MUC_VISITOR);
+            if (MsgOut.Readonly) then MsgOut.Lines.Clear();
 
         end;
         RenderMember(member, tag);
