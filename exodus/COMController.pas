@@ -376,8 +376,13 @@ var
     plugin: IExodusPlugin;
 begin
     // call the plugin back
-    plugin := IUnknown(com) as IExodusPlugin;
-    plugin.Process(_xpath, event, tag.xml);
+    // Lets just wholesale catch exceptions here. This will prevent
+    // Exodus show catastrophic errors when plugins are bad
+    try
+        plugin := IUnknown(com) as IExodusPlugin;
+        plugin.Process(_xpath, event, tag.xml);
+    except
+    end;
 end;
 
 
