@@ -11,18 +11,18 @@ unit ExodusCOM_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.5 $
-// File generated on 1/3/2003 3:47:53 PM from Type Library described below.
+// PASTLWTR : $Revision: 1.6 $
+// File generated on 1/7/2003 7:38:47 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\src\exodus\exodus\Exodus.exe (1)
+// Type Lib: C:\Program Files\Exodus\Exodus.exe (1)
 // LIBID: {219E0029-5710-4C9B-BE33-4C7F046D7792}
 // LCID: 0
 // Helpfile: 
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
+//   (1) v2.0 stdole, (C:\WINNT\System32\Stdole2.tlb)
 // Parent TypeLibrary:
-//   (0) v1.0 ExodusWordSpeller, (D:\src\exodus\exodus\plugins\MSWordSpeller\ExodusWordSpeller.tlb)
+//   (0) v1.0 ExodusWordSpeller, (C:\src\jabber\exodus\exodus\plugins\MSWordSpeller\ExodusWordSpeller.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -186,6 +186,7 @@ type
     procedure removeDiscoFeature(const ID: WideString); safecall;
     function registerPresenceXML(const xml: WideString): WideString; safecall;
     procedure removePresenceXML(const ID: WideString); safecall;
+    procedure trackWindowsMsg(Message: Integer); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -268,6 +269,7 @@ type
     procedure removeDiscoFeature(const ID: WideString); dispid 56;
     function registerPresenceXML(const xml: WideString): WideString; dispid 57;
     procedure removePresenceXML(const ID: WideString); dispid 58;
+    procedure trackWindowsMsg(Message: Integer); dispid 59;
   end;
 
 // *********************************************************************//

@@ -10,7 +10,7 @@ uses
     ComObj, ActiveX, ExodusWordSpeller_TLB, StdVcl;
 
 type
-  TChatSpeller = class(TAutoObject, IChatSpeller, IExodusChatPlugin)
+  TChatSpeller = class(TAutoObject, IExodusChatPlugin)
   protected
     function onAfterMessage(var Body: WideString): WideString; safecall;
     procedure onBeforeMessage(var Body: WideString); safecall;
