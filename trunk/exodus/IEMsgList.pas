@@ -453,8 +453,8 @@ end;
 {---------------------------------------}
 procedure TfIEMsgList.onResize(Sender: TObject);
 begin
-    if (_bottom) then
-         ScrollToBottom();
+//    if (_bottom) then
+//         ScrollToBottom();
 end;
 
 {---------------------------------------}
