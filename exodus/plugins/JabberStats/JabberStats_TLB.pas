@@ -11,8 +11,8 @@ unit JabberStats_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.1 $
-// File generated on 2/10/2003 7:17:48 AM from Type Library described below.
+// PASTLWTR : $Revision: 1.2 $
+// File generated on 2/10/2003 7:26:06 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\JabberStats\JabberStats.tlb (1)
