@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exodus\n"
 "POT-Creation-Date: 2003-05-08 06:59\n"
-"PO-Revision-Date: 2003-06-03 20:57+0100\n"
+"PO-Revision-Date: 2003-06-17 23:08+0100\n"
 "Last-Translator: Op de Beeck <js_opdebeeck@syldex.com>\n"
 "Language-Team:  <js_opdebeeck@syldex.com>\n"
 "MIME-Version: 1.0\n"
@@ -1399,7 +1399,7 @@ msgstr "URL:"
 #. frmConnDetails..PageControl1..tbsHttp..Label2..Caption
 #: ConnDetails.dfm:368
 msgid "Poll Time:"
-msgstr "Durée du Client:"
+msgstr "Temps limite:"
 
 #. frmConnDetails..PageControl1..tbsHttp..Label5..Caption
 #: ConnDetails.dfm:375
@@ -1486,7 +1486,7 @@ msgstr "Chat"
 #: RosterWindow.dfm:338
 #: RosterWindow.dfm:524
 msgid "Available"
-msgstr "Présent"
+msgstr "Présent(e)"
 
 #. frmCustomPres..cboType....Items.Strings
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presAway..Caption
@@ -1505,7 +1505,7 @@ msgstr "Présent"
 #: Jabber1.pas:424
 #: RosterWindow.dfm:344
 msgid "Away"
-msgstr "Parti"
+msgstr "Absent(e)"
 
 #. frmCustomPres..cboType....Items.Strings
 #. frmRosterWindow..popStatus..presXA..Caption
@@ -1516,7 +1516,7 @@ msgstr "Parti"
 #: Jabber1.pas:425
 #: RosterWindow.dfm:350
 msgid "Ext. Away"
-msgstr "Parti depuis longtemps"
+msgstr "Absence Prolongée"
 
 #. frmCustomPres..cboType....Items.Strings
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presDND..Caption
@@ -1642,7 +1642,7 @@ msgstr "Barre d'outil 1"
 #. frmEmoticons..ToolBar2..Caption
 #: Emoticons.dfm:320
 msgid "ToolBar2"
-msgstr "Barre d'outil 1"
+msgstr "Barre d'outil 2"
 
 #. frmTracer..Caption
 #: ExceptTracer.dfm:7
@@ -2072,14 +2072,14 @@ msgstr "Banque"
 #: Jabber1.dfm:393
 #: Jabber1.dfm:2743
 msgid "Xtended Away"
-msgstr "Parti depuis longtemps"
+msgstr "Absence Prolongée"
 
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presXA..ExtendedAway1..Caption
 #. frmExodus..popTray..trayPresence..XtendedAway1..ExtendedAway2..Caption
 #: Jabber1.dfm:397
 #: Jabber1.dfm:2747
 msgid "Extended Away"
-msgstr "Parti depuis longtemps"
+msgstr "Absence Prolongée"
 
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presXA..GoneHome1..Caption
 #. frmExodus..popTray..trayPresence..XtendedAway1..GoneHome2..Caption
@@ -2100,7 +2100,7 @@ msgstr "Parti au travail"
 #: Jabber1.dfm:412
 #: Jabber1.dfm:2762
 msgid "Sleeping"
-msgstr "Dodo"
+msgstr "Repos"
 
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presDND..Busy1..Caption
 #. frmExodus..popTray..trayPresence..DoNotDisturb1..Busy2..Caption
@@ -2425,14 +2425,14 @@ msgstr "Répondre"
 #: MsgRecv.dfm:496
 #: Room.dfm:141
 msgid "Show History"
-msgstr "Montrer l'historique"
+msgstr "Afficher l'historique"
 
 #. frmMsgRecv..popContact..mnuProfile..Caption
 #. frmSubscribe..PopupMenu1..mnuProfile..Caption
 #: MsgRecv.dfm:504
 #: subscribe.dfm:140
 msgid "Show Profile"
-msgstr "Montre le Profile"
+msgstr "Afficher le Profile"
 
 #. frmMsgRecv..popContact..mnuSendFile..Caption
 #: MsgRecv.dfm:527
@@ -2524,7 +2524,7 @@ msgstr "Notification"
 #. frmPrefs..ScrollBox1..lblAway..Caption
 #: Prefs.dfm:1332
 msgid "Auto-Away"
-msgstr "Parti Automatique"
+msgstr "Absence Automatique"
 
 #. frmPrefs..ScrollBox1..lblKeywords..Caption
 #. frmPrefs..PageControl1..tbsKeywords..Caption
@@ -2603,7 +2603,7 @@ msgstr "Appliquer"
 #. frmProfile..Caption
 #: Profile.dfm:7
 msgid "Contact Properties"
-msgstr "Propriété des Contacts"
+msgstr "Propriétés du Contact"
 
 #. frmProfile..PageControl1..TabSheet1..Caption
 #. frmVCard..PageControl1..TabSheet1..Caption
@@ -3480,7 +3480,7 @@ msgstr ""
 #: vcard.dfm:394
 #: vcard.dfm:865
 msgid "Islands  "
-msgstr "Islands  "
+msgstr "Islandes  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.Strings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.Strings
@@ -4968,7 +4968,6 @@ msgstr "Saints Hélène"
 #: Profile.dfm:1118
 #: vcard.dfm:529
 #: vcard.dfm:1000
-#, fuzzy
 msgid "Saint Kitts and Nevis  "
 msgstr "Saint Pierre et Miquelon  "
 
@@ -5700,12 +5699,12 @@ msgstr "Enlèver ce contact de ce groupe"
 #. frmRemove..optRemove..Caption
 #: RemoveContact.dfm:70
 msgid "Remove this contact from my roster."
-msgstr "Enlève ce contact de mon répertoire"
+msgstr "Enlèver ce contact de mon répertoire."
 
 #. frmRemove..chkRemove1..Caption
 #: RemoveContact.dfm:81
 msgid "Remove this person from my roster."
-msgstr "Enlève cette personne de mon répertoire"
+msgstr "Enlèver cette personne de mon répertoire"
 
 #. frmRemove..chkRemove2..Caption
 #: RemoveContact.dfm:91
@@ -6054,7 +6053,7 @@ msgstr "Message Diffusé"
 #. frmRosterWindow..popGroup..SendContactsTo1..Caption
 #: RosterWindow.dfm:541
 msgid "Send Contacts To..."
-msgstr "Envoyer des Contacts A ..."
+msgstr "Envoyer le(s) Contact(s) à ..."
 
 #. frmRosterWindow..popGroup..popGrpRename..Caption
 #: RosterWindow.dfm:552
@@ -6089,7 +6088,7 @@ msgstr "Renomer"
 #. frmSelContact..Caption
 #: SelContact.dfm:6
 msgid "Select Contact"
-msgstr "Selectionner le Contact"
+msgstr "Sélectionner le Contact"
 
 #. frmSelContact..PopupMenu1..ShowOnlineOnly1..Caption
 #: SelContact.dfm:85
@@ -6161,7 +6160,7 @@ msgstr "Entrez la description:"
 #. frmTransfer..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: Transfer.dfm:201
 msgid "Receive"
-msgstr "Reçu"
+msgstr "Recevoir"
 
 #. frmTransfer..pnlProgress..Label1..Caption
 #: Transfer.dfm:226
@@ -6337,7 +6336,7 @@ msgstr "Présence Non Disponible"
 #. Programmer's name for it: sPresAvailable
 #: ExEvents.pas:75
 msgid "Available presence"
-msgstr "Présent"
+msgstr "Présent(e)"
 
 #. Programmer's name for it: sPresChat
 #: ExEvents.pas:76
@@ -6347,12 +6346,12 @@ msgstr "Chat"
 #. Programmer's name for it: sPresAway
 #: ExEvents.pas:77
 msgid "Away presence"
-msgstr "Parti"
+msgstr "Absent(e)"
 
 #. Programmer's name for it: sPresXA
 #: ExEvents.pas:78
 msgid "Ext. Away presence"
-msgstr "Parti depuis longtemps"
+msgstr "Absence Prolongée"
 
 #. Programmer's name for it: sPresDND
 #: ExEvents.pas:79
@@ -6412,7 +6411,7 @@ msgstr "OS: "
 #. Programmer's name for it: sMsgLastInfo
 #: ExEvents.pas:95
 msgid "Idle for "
-msgstr "Absent depuis"
+msgstr "Absent(e) depuis"
 
 #. Programmer's name for it: sMsgURL
 #: ExEvents.pas:97
@@ -6616,7 +6615,7 @@ msgstr "Votre nouveau port pour le transfert de fichier ne sera valide qu'une fo
 #. Programmer's name for it: SPropertiesMissing
 #: getOpt.pas:122
 msgid "%s: improper use of TGetOpts, one, some or more properties not initialized."
-msgstr ""
+msgstr "%s: mauvais usage de TGetOpts, quelques propriété non initialisées."
 
 #. Programmer's name for it: SReqOptMissing
 #: getOpt.pas:123
@@ -6739,12 +6738,12 @@ msgstr "secondes."
 #. Programmer's name for it: sSetAutoAvailable
 #: Jabber1.pas:442
 msgid "Setting Auto Available"
-msgstr "Paramêtre Auto Disponible"
+msgstr "Paramêtre Présence Automatique"
 
 #. Programmer's name for it: sSetAutoAway
 #: Jabber1.pas:443
 msgid "Setting AutoAway"
-msgstr "Paramêtre d'auto-veille"
+msgstr "Paramêtre Absence Automatique"
 
 #. Programmer's name for it: sSetAutoXA
 #: Jabber1.pas:444
@@ -7081,7 +7080,7 @@ msgstr "Motif d'Exclusion"
 #. Programmer's name for it: sBanReason
 #: Room.pas:211
 msgid "Ban Reason"
-msgstr "Motif du Banissement"
+msgstr "Motif du Bannissement"
 
 #. Programmer's name for it: sDestroyReason
 #: Room.pas:212
@@ -7131,7 +7130,7 @@ msgstr "%s a comme nouvelle fonction %s."
 #. Programmer's name for it: sDestroyRoomConfirm
 #: Room.pas:224
 msgid "Do you really want to destroy the room? All users will be removed."
-msgstr "Voulez-vous réellement détruire cette salle ? Tous ses occupants seront èjecté."
+msgstr "Voulez-vous réellement détruire cette salle ? Tous ses occupants seront éjecté."
 
 #. Programmer's name for it: sStatus_100
 #: Room.pas:226
@@ -7454,12 +7453,12 @@ msgstr "Commentaires"
 #. Programmer's name: VALUE
 #: version.rc:20
 msgid "CompanyName"
-msgstr ""
+msgstr "NomSociete"
 
 #. Programmer's name: VALUE
 #: version.rc:21
 msgid "FileDescription"
-msgstr ""
+msgstr "Description Fichier"
 
 #. Programmer's name: VALUE
 #: version.rc:22
