@@ -2202,8 +2202,9 @@ begin
     with MainSession.Prefs do begin
         if ((_auto_away)) then begin
 
-            if (not _is_autoaway) and (screenStatus() > DT_OPEN) then begin
-                SetAutoAway();
+            if screenStatus() > DT_OPEN then begin
+                if not _is_autoaway then
+                    SetAutoAway();
                 exit;
             end;
             
