@@ -153,7 +153,7 @@ begin
 
             if (tok = '&amp;') or (tok = '&quot;') or
             (tok = '&apos;') or (tok = '&lt;') or (tok = '&gt;') then
-                tmps := tmps + '&'
+                tmps := tmps + tok
             else
                 tmps := tmps + '&amp;'
         end
