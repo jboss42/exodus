@@ -1068,7 +1068,7 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterDblClick(Sender: TObject);
 var
-    m, r: integer;
+    r: integer;
 begin
     // Chat with this person
     _change_node := nil;
@@ -1076,7 +1076,6 @@ begin
     node_ritem: begin
         // chat w/ this person
         r := MainSession.Prefs.getInt(P_CHAT);
-        m := MainSession.Prefs.getInt('chat_memory');
 
         if ((r = 0) or (r = 2)) then
             // StartChat will handle doing the right thing
@@ -1091,7 +1090,7 @@ begin
         if _cur_bm.bmType = 'conference' then
             StartRoom(_cur_bm.jid.jid, _cur_bm.nick);
     end;
-end;
+    end;
 end;
 
 {---------------------------------------}
