@@ -1,6 +1,6 @@
 object frmExodus: TfrmExodus
-  Left = 274
-  Top = 242
+  Left = 275
+  Top = 182
   Width = 239
   Height = 416
   AlphaBlendValue = 240
@@ -506,6 +506,9 @@ object frmExodus: TfrmExodus
       end
       object N1: TMenuItem
         Caption = '-'
+      end
+      object mnuPlugins: TMenuItem
+        Caption = 'Plugins ...'
       end
       object Preferences1: TMenuItem
         Caption = 'Options...'

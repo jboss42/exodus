@@ -5,7 +5,7 @@ unit COMController;
 interface
 
 uses
-    XMLTag,
+    XMLTag, Unicode, 
     Windows,
     Classes, ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
 
@@ -29,12 +29,18 @@ type
     procedure StartChat(const jid, resource, nickname: WideString); safecall;
     procedure CreateDockableWindow(HWND: Integer; const Caption: WideString);
       safecall;
+    function addPluginMenu(const Caption: WideString): WideString; safecall;
+    procedure removePluginMenu(const ID: WideString); safecall;
+    procedure monitorImplicitRegJID(const JabberID: WideString;
+      FullJID: WordBool); safecall;
     { Protected declarations }
+  private
+    _menu_items: TWideStringList;
   public
     constructor Create();
 
     procedure fireNewChat(jid: WideString; ExodusChat: IExodusChat);
-
+    procedure fireMenuClick(Sender: TObject);
   end;
 
   TPlugin = class
@@ -59,9 +65,9 @@ procedure UnloadPlugins();
 implementation
 
 uses
-    COMChatController, Dockable, 
-    Jabber1, Session, Roster, PrefController, Unicode,
-    Dialogs, Variants, Forms, SysUtils, ComServ;
+    COMChatController, Dockable,
+    Jabber1, Session, Roster, PrefController, 
+    Menus, Dialogs, Variants, Forms, SysUtils, ComServ;
 
 var
     plugs: TStringList;
@@ -193,6 +199,7 @@ end;
 constructor TExodusController.Create();
 begin
     inherited Create();
+    _menu_items := TWidestringList.Create();
 end;
 
 {---------------------------------------}
@@ -312,6 +319,55 @@ begin
     SetParent(HWND, f.Handle);
     f.ShowDefault();
     ShowWindow(HWND, SW_SHOW);
+end;
+
+{---------------------------------------}
+function TExodusController.addPluginMenu(
+  const Caption: WideString): WideString;
+var
+    id: Widestring;
+    mi: TMenuItem;
+begin
+    // add a new TMenuItem to the Plugins menu
+    mi := TMenuItem.Create(frmExodus);
+    frmExodus.mnuPlugins.Add(mi);
+    mi.Caption := caption;
+    mi.OnClick := frmExodus.mnuPluginDummyClick;
+
+    id := 'plugin_' + IntToStr(_menu_items.Count);
+    _menu_items.AddObject(id, mi);
+    Result := id;
+end;
+
+{---------------------------------------}
+procedure TExodusController.removePluginMenu(const ID: WideString);
+var
+    idx: integer;
+begin
+    idx := _menu_items.IndexOf(id);
+    if (idx >= 0) then begin
+        TMenuItem(_menu_items.Objects[idx]).Free();
+        _menu_items.Delete(idx);
+    end;
+end;
+
+{---------------------------------------}
+procedure TExodusController.fireMenuClick(Sender: TObject);
+var
+    i, idx: integer;
+begin
+    idx := _menu_items.IndexOfObject(Sender);
+    if (idx >= 0) then begin
+        for i := 0 to plugs.count - 1 do
+            TPlugin(plugs.Objects[i]).com.menuClick(_menu_items[idx]);
+    end;
+end;
+
+{---------------------------------------}
+procedure TExodusController.monitorImplicitRegJID(
+  const JabberID: WideString; FullJID: WordBool);
+begin
+    frmExodus.RegisterController.MonitorJid(JabberID, FullJID);
 end;
 
 initialization

@@ -187,6 +187,7 @@ type
     SplitterLeft: TSplitter;
     timTrayAlert: TTimer;
     JabberUserGuide1: TMenuItem;
+    mnuPlugins: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -251,6 +252,7 @@ type
     procedure TabsDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure timTrayAlertTimer(Sender: TObject);
     procedure JabberUserGuide1Click(Sender: TObject);
+    procedure mnuPluginDummyClick(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -2949,6 +2951,12 @@ end;
 procedure TfrmExodus.JabberUserGuide1Click(Sender: TObject);
 begin
     ShellExecute(0, 'open', 'http://www.jabber.org/user/userguide/', '', '', SW_SHOW);
+end;
+
+procedure TfrmExodus.mnuPluginDummyClick(Sender: TObject);
+begin
+    // call the COM Controller
+    _controller.fireMenuClick(Sender);
 end;
 
 initialization
