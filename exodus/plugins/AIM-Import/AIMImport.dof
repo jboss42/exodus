@@ -49,7 +49,7 @@ SearchPath=
 Packages=vcl;rtl;vclshlctrls
 Conditionals=
 DebugSourceDirs=
-UsePackages=1
+UsePackages=0
 [Parameters]
 RunParams=-d -c aimimport.xml
 HostApplication=D:\src\exodus\exodus\exodus.exe
