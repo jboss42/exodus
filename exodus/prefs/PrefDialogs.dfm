@@ -52,7 +52,8 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Enabled = False
     Max = 255
     Min = 10
-    Frequency = 5
+    PageSize = 15
+    Frequency = 15
     Position = 255
     TabOrder = 1
     ThumbLength = 15
@@ -98,7 +99,8 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Enabled = False
     Max = 255
     Min = 10
-    Frequency = 5
+    PageSize = 15
+    Frequency = 15
     Position = 255
     TabOrder = 5
     ThumbLength = 15
@@ -143,7 +145,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Height = 21
     Enabled = False
     TabOrder = 11
-    Text = '250'
+    Text = '15'
     OnChange = txtSnapChange
   end
   object spnSnap: TTntUpDown [14]
@@ -154,8 +156,8 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Associate = txtSnap
     Enabled = False
     Min = 10
-    Max = 250
-    Position = 250
+    Max = 120
+    Position = 15
     TabOrder = 12
   end
   object chkBusy: TTntCheckBox [15]
@@ -188,7 +190,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Width = 16
     Height = 21
     Associate = txtChatMemory
-    Max = 180
+    Max = 360
     Increment = 5
     Position = 60
     TabOrder = 15
@@ -217,11 +219,11 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Width = 137
     Height = 19
     Enabled = False
-    Max = 250
+    Max = 120
     Min = 10
-    PageSize = 10
-    Frequency = 5
-    Position = 250
+    PageSize = 15
+    Frequency = 15
+    Position = 15
     TabOrder = 10
     ThumbLength = 15
     TickStyle = tsNone
@@ -232,8 +234,8 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Top = 230
     Width = 137
     Height = 19
-    Max = 180
-    PageSize = 10
+    Max = 120
+    PageSize = 15
     Frequency = 15
     Position = 60
     TabOrder = 13

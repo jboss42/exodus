@@ -1,5 +1,5 @@
 object frmMsgRecv: TfrmMsgRecv
-  Left = 498
+  Left = 250
   Top = 170
   Width = 385
   Height = 416
