@@ -20,7 +20,8 @@ my $DD;
 my $imports = "\"$DD\\Imports\"";
 my $dcc = "\"$::D\\Bin\\dcc32.exe\"";
 my $rcc = "\"$::D/Bin/brcc32.exe\"";
-my $opts = "-LUvcl -LUrtl -B -Q -U\"$DD\\Lib\"";
+my $jclopts = "-I\"$::JCL\" -U\"$::JCL\" -U\"$::JCL\\common\" -U\"$::JCL\\vcl\" -U\"$::JCL\\windows\"";
+my $opts = "-LUvcl -LUrtl -B -Q -U\"$DD\\Lib\" $jclopts";
 my $comp = "..\\..\\Components";
 my $plugopts = "$opts -U\"$comp\" -U\"$::TNT\"";
 my $installer = "1";
@@ -58,7 +59,7 @@ e("$rcc iehtml.rc");
 
 if ($::rtype eq "daily") {
     # Generate a detailed MAP file, and build in stack frame tracing
-    e("$dcc $opts -DExodus -GD -DTRACE_EXCEPTIONS -Noutput -I\"$::JCL\" -U\"$::JCL\" -U\"$::JCL\\common\" -U\"$::JCL\\vcl\" -U\"$::JCL\\windows\" -U\"$::TNT\" Exodus.dpr");
+    e("$dcc $opts -DExodus -GD -DTRACE_EXCEPTIONS -Noutput -U\"$::TNT\" Exodus.dpr");
 } else {
     e("$dcc $opts -DExodus -D -Noutput -U\"$::TNT\" Exodus.dpr");
 }

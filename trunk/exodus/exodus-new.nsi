@@ -198,6 +198,8 @@ REAL STUFF STARTS HERE
 !define YAHOO_EMOTICONS "yahoo_emoticons"
 !define IDLEHOOKS "IdleHooks"
 !define LIBIDN "libidn"
+!define SSLEAY "ssleay32"
+!define LIBEAY "libeay32"
 !define RICHED "riched20"
 !define VCL "..\redist\vcl70.bpl"
 !define RTL "..\redist\rtl70.bpl"
@@ -228,8 +230,6 @@ REAL STUFF STARTS HERE
 !define XMPP_ACTION "XMPPAction"
 !define XMPP_MIME_KEY "MIME\Database\${CONTENT_TYPE_KEY}\application/xmpp"
 !define EXTENSION_KEY "Extension"
-!define SSLEAY "ssleay32"
-!define LIBEAY "libeay32"
 !define SSL_INSTALLER "indy_openssl096k"
 !define README "readme"
 !define HOMEPAGE "Homepage"
@@ -435,6 +435,8 @@ Section Exodus SEC_Exodus
     File "${MSN_EMOTICONS}${DLL_EXTENSION}"
     File "${YAHOO_EMOTICONS}${DLL_EXTENSION}"
     File "${LIBIDN}${DLL_EXTENSION}"
+    File "${SSLEAY}${DLL_EXTENSION}";
+    File "${LIBEAY}${DLL_EXTENSION}";
     File "${VCL}"
     File "${RTL}"
 
@@ -597,44 +599,6 @@ Section Exodus SEC_Exodus
     WriteRegStr HKCR "${XMPP_MIME_KEY}" "${EXTENSION_KEY}" "${XMPP_EXTENSION}"
 
 SectionEnd ; end the section
-
-/*
-================================================================================
-SSL SECTION
-================================================================================
-*/
-Section /o "$(NAME_SSL)" SEC_SSL
-    !ifndef NO_NETWORK
-        AddSize 824
-    !endif
-    IfFileExists "$INSTDIR\${SSLEAY}${DLL_EXTENSION}" libea need_ssl
-
-  libea:
-    IfFileExists "$INSTDIR\${LIBEAY}${DLL_EXTENSION}" no_ssl
-
-  need_ssl:
-
-    !ifndef NO_NETWORK
-        ; BRANDING: Change this URL
-        NSISdl::download "${HOME_URL}/${SSL_INSTALLER}${ZIP_EXTENSION}" "$INSTDIR\${SSL_INSTALLER}${ZIP_EXTENSION}"
-        Pop $R0
-        StrCmp "$R0" "${NSISDL_SUCCESSFUL}" ssl
-        Abort "$(MSG_SSLAbort)"
-      ssl:
-        !insertmacro MUI_ZIPDLL_EXTRACTALL "$INSTDIR\${SSL_INSTALLER}${ZIP_EXTENSION}" "$INSTDIR"
-        Delete "$INSTDIR\${SSL_INSTALLER}${ZIP_EXTENSION}"
-        Delete "$INSTDIR\${README}${TEXT_EXTENSION}"
-    !else
-        File "${LIBEAY}${DLL_EXTENSION}"
-        File "${SSLEAY}${DLL_EXTENSION}"
-    !endif
-    goto ssl_done
-
-  no_ssl:
-    DetailPrint "$(MSG_SSLOK)"
-
-  ssl_done:
-SectionEnd
 
 /*
 ================================================================================
