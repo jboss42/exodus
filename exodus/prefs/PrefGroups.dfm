@@ -28,7 +28,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     Height = 24
     AutoSize = False
     Caption = 
-      'When showing only online contacts, Visible contacts must be at l' +
+      'When showing only online contacts, visible contacts must be at l' +
       'east:'
     WordWrap = True
   end
@@ -112,6 +112,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     Height = 17
     Caption = 'Show offline contacts in the Offline group'
     TabOrder = 7
+    OnClick = chkOfflineGrpClick
   end
   object chkOnlineOnly: TCheckBox
     Left = 0

@@ -20,6 +20,7 @@ type
     chkGroupCounts: TCheckBox;
     chkOfflineGrp: TCheckBox;
     chkOnlineOnly: TCheckBox;
+    procedure chkOfflineGrpClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -30,6 +31,9 @@ type
 
 var
   frmPrefGroups: TfrmPrefGroups;
+
+resourcestring
+    sOfflineGrpWarn = 'The offline group will only show up if you have show only online contacts turned off.';
 
 implementation
 
@@ -82,5 +86,17 @@ begin
     end;
 end;
 
+
+procedure TfrmPrefGroups.chkOfflineGrpClick(Sender: TObject);
+begin
+  inherited;
+    // this only makes sense if only online is OFF.
+    if (not Self.Visible) then exit;
+
+    if ((chkOfflineGrp.Checked) and (chkOnlineOnly.Checked)) then begin
+        MessageDlg(sOfflineGrpWarn, mtInformation, [mbOK], 0);
+        chkOnlineOnly.Checked := false;
+    end;
+end;
 
 end.
