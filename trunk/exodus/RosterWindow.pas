@@ -836,6 +836,10 @@ var
     tmp_jid: TJabberID;
 begin
     // callback for the ppdb
+    if ((event = '/presence/error') or (event = '/presence/subscription')) then
+        // ignore
+        exit;
+
     ptype := tag.getAttribute('type');
     jid := tag.getAttribute('from');
     tmp_jid := TJabberID.Create(jid);
@@ -859,9 +863,7 @@ begin
         ritem := MainSession.Roster.Find(jid);
     end;
 
-    if (event = '/presence/error') then
-        // ignore
-    else if (event = '/presence/offline') then begin
+    if (event = '/presence/offline') then begin
         // remove the node
         if ((ritem <> nil) and (ritem.jid.jid <> MainSession.BareJid)) then
             p := MainSession.PPDB.FindPres(jid, '');

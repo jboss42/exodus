@@ -90,7 +90,6 @@ var
     url  : string;
     last : TDateTime;
     t    : TAutoUpdateThread;
-    reg  : TRegistry;
 begin
     result := false;
     if (background and (not MainSession.Prefs.getBool('auto_updates'))) then exit;
