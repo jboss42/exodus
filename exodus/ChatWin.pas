@@ -108,6 +108,7 @@ type
     _reply_id: string;
     _check_event: boolean;
     _send_composing: boolean;
+    _sent_composing: boolean;
     _warn_busyclose: boolean;
 
     _destroying: boolean;
@@ -127,6 +128,7 @@ type
     procedure ResetPresImage;
     procedure freeChatObject();
     procedure _sendMsg(txt: Widestring);
+    procedure _sendComposing(id: Widestring);
 
     function GetThread: String;
   published
@@ -572,6 +574,7 @@ begin
 
     // process the msg
     etag := tag.QueryXPTag(XP_MSGCOMPOSING);
+    _sent_composing := false;
     _send_composing := (etag <> nil);
     if (_send_composing) then
         _reply_id := tag.GetAttribute('id');
@@ -707,7 +710,6 @@ begin
     if (txt = '') then exit;
 
     sendRawMessage(txt, '', '', true);
-
 end;
 
 {---------------------------------------}
@@ -724,6 +726,8 @@ begin
     end;
 
     _sendMsg(txt);
+
+    _sent_composing := false;
 
     inherited;
 end;
@@ -967,24 +971,39 @@ begin
         resetPresImage();
 end;
 
-{---------------------------------------}
-procedure TfrmChat.MsgOutChange(Sender: TObject);
+procedure TfrmChat._sendComposing(id: Widestring);
 var
     c: TXMLTag;
 begin
-  inherited;
-    if (_send_composing) then begin
-        _send_composing := false;
-        c := TXMLTag.Create('message');
-        with c do begin
-            setAttribute('to', jid);
-            with AddTag('x') do begin
-                setAttribute('xmlns', XMLNS_XEVENT);
-                AddTag('composing');
-                AddBasicTag('id', _reply_id);
-            end;
+    c := TXMLTag.Create('message');
+    with c do begin
+        setAttribute('to', jid);
+        with AddTag('x') do begin
+            setAttribute('xmlns', XMLNS_XEVENT);
+            AddTag('composing');
+            if (id <> '') then
+                AddBasicTag('id', id)
+            else
+                AddTag('id');
         end;
-        MainSession.SendTag(c);
+    end;
+    MainSession.SendTag(c);
+end;
+
+{---------------------------------------}
+procedure TfrmChat.MsgOutChange(Sender: TObject);
+begin
+  inherited;
+    if ((_sent_composing) and (MsgOut.Text = '')) then begin
+        // send cancel event
+        _sendComposing('');
+        _sent_composing := false;
+        _send_composing := true;
+    end
+    else if (_send_composing) then begin
+        _sendComposing(_reply_id);
+        _sent_composing := true;
+        _send_composing := false;
     end;
 end;
 
@@ -1201,6 +1220,10 @@ begin
             exit;
         end;
     end;
+
+    // Cancel our composing event
+    if (_sent_composing) then
+        _sendComposing('');
 
     if (_cur_ver <> nil) then FreeAndNil(_cur_ver);
     if (_cur_time <> nil) then FreeAndNil(_cur_time);
