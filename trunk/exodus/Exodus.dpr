@@ -122,7 +122,8 @@ uses
   COMController in 'COMController.pas' {ExodusController: CoClass},
   COMChatController in 'COMChatController.pas' {ExodusChatController: CoClass},
   COMRoster in 'COMRoster.pas' {ExodusRoster: CoClass},
-  COMPPDB in 'COMPPDB.pas' {ExodusPPDB: CoClass};
+  COMPPDB in 'COMPPDB.pas' {ExodusPPDB: CoClass},
+  COMRosterItem in 'COMRosterItem.pas' {ExodusRosterItem: CoClass};
 
 //  COMPluginShell in 'COMPluginShell.pas' {ExodusPlugin: CoClass},
 //  COMChatPluginShell in 'COMChatPluginShell.pas' {ExodusChatPlugin: CoClass};

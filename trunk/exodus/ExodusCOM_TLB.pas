@@ -11,8 +11,8 @@ unit ExodusCOM_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.7 $
-// File generated on 12/31/2002 6:52:06 PM from Type Library described below.
+// PASTLWTR : $Revision: 1.8 $
+// File generated on 1/2/2003 7:32:34 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -58,6 +58,8 @@ const
   CLASS_ExodusRoster: TGUID = '{438DF52E-F892-456B-9FB0-3C64DBB85240}';
   IID_IExodusPPDB: TGUID = '{284E49F2-2006-4E48-B0E0-233867A78E54}';
   CLASS_ExodusPPDB: TGUID = '{41BB1EC9-3299-45C3-BBA9-7DD897F29826}';
+  IID_IExodusRosterItem: TGUID = '{F710F80C-C74A-4A69-8D2B-023504125B96}';
+  CLASS_ExodusRosterItem: TGUID = '{9C6A0965-39B0-4D72-A143-D210FB1BA988}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -88,6 +90,8 @@ type
   IExodusRosterDisp = dispinterface;
   IExodusPPDB = interface;
   IExodusPPDBDisp = dispinterface;
+  IExodusRosterItem = interface;
+  IExodusRosterItemDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -99,6 +103,7 @@ type
   ExodusChatPlugin = IExodusChatPlugin;
   ExodusRoster = IExodusRoster;
   ExodusPPDB = IExodusPPDB;
+  ExodusRosterItem = IExodusRosterItem;
 
 
 // *********************************************************************//
@@ -122,9 +127,6 @@ type
     procedure Send(const xml: WideString); safecall;
     function isRosterJID(const jid: WideString): WordBool; safecall;
     function isSubscribed(const jid: WideString): WordBool; safecall;
-    procedure AddRosterItem(const jid: WideString; const nickname: WideString; 
-                            const group: WideString); safecall;
-    procedure RemoveRosterItem(const jid: WideString); safecall;
     procedure ChangePresence(const Show: WideString; const Status: WideString; Priority: Integer); safecall;
     procedure StartChat(const jid: WideString; const resource: WideString; 
                         const nickname: WideString); safecall;
@@ -199,9 +201,6 @@ type
     procedure Send(const xml: WideString); dispid 6;
     function isRosterJID(const jid: WideString): WordBool; dispid 7;
     function isSubscribed(const jid: WideString): WordBool; dispid 8;
-    procedure AddRosterItem(const jid: WideString; const nickname: WideString; 
-                            const group: WideString); dispid 9;
-    procedure RemoveRosterItem(const jid: WideString); dispid 10;
     procedure ChangePresence(const Show: WideString; const Status: WideString; Priority: Integer); dispid 11;
     procedure StartChat(const jid: WideString; const resource: WideString; 
                         const nickname: WideString); dispid 12;
@@ -350,6 +349,14 @@ type
 // *********************************************************************//
   IExodusRoster = interface(IDispatch)
     ['{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}']
+    procedure Fetch; safecall;
+    procedure SaveBookmarks; safecall;
+    function AddItem(const JabberID: WideString; const Nickname: WideString; const Group: WideString): IExodusRosterItem; safecall;
+    procedure AddBookmark(const JabberID: WideString; const bmType: WideString; 
+                          const bmName: WideString; const Nickname: WideString; AutoJoin: WordBool); safecall;
+    procedure RemoveBookmark(const JabberID: WideString); safecall;
+    function Find(const JabberID: WideString): IExodusRosterItem; safecall;
+    function Item(Index: Integer): IExodusRosterItem; safecall;
   end;
 
 // *********************************************************************//
@@ -359,6 +366,14 @@ type
 // *********************************************************************//
   IExodusRosterDisp = dispinterface
     ['{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}']
+    procedure Fetch; dispid 1;
+    procedure SaveBookmarks; dispid 2;
+    function AddItem(const JabberID: WideString; const Nickname: WideString; const Group: WideString): IExodusRosterItem; dispid 3;
+    procedure AddBookmark(const JabberID: WideString; const bmType: WideString; 
+                          const bmName: WideString; const Nickname: WideString; AutoJoin: WordBool); dispid 4;
+    procedure RemoveBookmark(const JabberID: WideString); dispid 5;
+    function Find(const JabberID: WideString): IExodusRosterItem; dispid 6;
+    function Item(Index: Integer): IExodusRosterItem; dispid 7;
   end;
 
 // *********************************************************************//
@@ -377,6 +392,53 @@ type
 // *********************************************************************//
   IExodusPPDBDisp = dispinterface
     ['{284E49F2-2006-4E48-B0E0-233867A78E54}']
+  end;
+
+// *********************************************************************//
+// Interface: IExodusRosterItem
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {F710F80C-C74A-4A69-8D2B-023504125B96}
+// *********************************************************************//
+  IExodusRosterItem = interface(IDispatch)
+    ['{F710F80C-C74A-4A69-8D2B-023504125B96}']
+    function Get_JabberID: WideString; safecall;
+    procedure Set_JabberID(const Value: WideString); safecall;
+    function Get_Subscription: WideString; safecall;
+    procedure Set_Subscription(const Value: WideString); safecall;
+    function Get_Ask: WideString; safecall;
+    function Get_GroupCount: Integer; safecall;
+    procedure Group(Index: Integer; const Value: WideString); safecall;
+    function XML: WideString; safecall;
+    procedure Remove; safecall;
+    procedure Update; safecall;
+    function Get_Nickname: WideString; safecall;
+    procedure Set_Nickname(const Value: WideString); safecall;
+    function Get_RawNickname: WideString; safecall;
+    property JabberID: WideString read Get_JabberID write Set_JabberID;
+    property Subscription: WideString read Get_Subscription write Set_Subscription;
+    property Ask: WideString read Get_Ask;
+    property GroupCount: Integer read Get_GroupCount;
+    property Nickname: WideString read Get_Nickname write Set_Nickname;
+    property RawNickname: WideString read Get_RawNickname;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusRosterItemDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {F710F80C-C74A-4A69-8D2B-023504125B96}
+// *********************************************************************//
+  IExodusRosterItemDisp = dispinterface
+    ['{F710F80C-C74A-4A69-8D2B-023504125B96}']
+    property JabberID: WideString dispid 1;
+    property Subscription: WideString dispid 2;
+    property Ask: WideString readonly dispid 4;
+    property GroupCount: Integer readonly dispid 5;
+    procedure Group(Index: Integer; const Value: WideString); dispid 6;
+    function XML: WideString; dispid 7;
+    procedure Remove; dispid 8;
+    procedure Update; dispid 9;
+    property Nickname: WideString dispid 10;
+    property RawNickname: WideString readonly dispid 11;
   end;
 
 // *********************************************************************//
@@ -451,6 +513,18 @@ type
     class function CreateRemote(const MachineName: string): IExodusPPDB;
   end;
 
+// *********************************************************************//
+// The Class CoExodusRosterItem provides a Create and CreateRemote method to          
+// create instances of the default interface IExodusRosterItem exposed by              
+// the CoClass ExodusRosterItem. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoExodusRosterItem = class
+    class function Create: IExodusRosterItem;
+    class function CreateRemote(const MachineName: string): IExodusRosterItem;
+  end;
+
 implementation
 
 uses ComObj;
@@ -513,6 +587,16 @@ end;
 class function CoExodusPPDB.CreateRemote(const MachineName: string): IExodusPPDB;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusPPDB) as IExodusPPDB;
+end;
+
+class function CoExodusRosterItem.Create: IExodusRosterItem;
+begin
+  Result := CreateComObject(CLASS_ExodusRosterItem) as IExodusRosterItem;
+end;
+
+class function CoExodusRosterItem.CreateRemote(const MachineName: string): IExodusRosterItem;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_ExodusRosterItem) as IExodusRosterItem;
 end;
 
 end.
