@@ -29,7 +29,7 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 30
     Width = 449
-    Height = 199
+    Height = 194
     ActivePage = tbsRoster
     Align = alClient
     DockSite = True
@@ -52,7 +52,7 @@ object frmExodus: TfrmExodus
         Left = 209
         Top = 0
         Width = 3
-        Height = 171
+        Height = 166
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = Splitter1Moved
@@ -61,7 +61,7 @@ object frmExodus: TfrmExodus
         Left = 0
         Top = 0
         Width = 209
-        Height = 171
+        Height = 166
         Align = alLeft
         BevelOuter = bvNone
         UseDockManager = False
@@ -73,7 +73,7 @@ object frmExodus: TfrmExodus
         Left = 212
         Top = 0
         Width = 229
-        Height = 171
+        Height = 166
         Align = alClient
         BevelOuter = bvNone
         DragCursor = crDefault

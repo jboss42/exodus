@@ -1343,8 +1343,8 @@ begin
     // Unregister callbacks, etc.
 
     if ((MainSession.Active) and (not _appclosing))then begin
-        MainSession.Stream.Disconnect();
         _appclosing := true;
+        MainSession.Stream.Disconnect();
         CanClose := false;
         exit;
         end;
