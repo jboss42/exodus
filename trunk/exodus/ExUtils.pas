@@ -57,15 +57,13 @@ function GetLastInputInfo(var plii: LASTINPUTINFO): BOOL; stdcall;
 
 function WindowsVersion(var verinfo: string): integer;
 
-function JabberToDateTime(datestr: string): TDateTime;
-function DateTimeToJabber(dt: TDateTime): string;
-
 function URLToFilename(url: string): string;
 
 procedure ClearLog(jid: string);
 procedure ClearAllLogs();
 procedure LogMessage(Msg: TJabberMessage);
 procedure ShowLog(jid: string);
+
 procedure DebugMsg(Message : string);
 procedure AssignDefaultFont(font: TFont);
 procedure AssignUnicodeFont(f: TFont; font_size: short = 0); overload
@@ -76,14 +74,12 @@ procedure URLLabel(lbl: TLabel); overload;
 procedure URLLabel(lbl: TTntLabel); overload;
 
 procedure jabberSendRosterItems(to_jid: WideString; items: TList);
-procedure split(value: WideString; list: TWideStringList; seps : WideString = ' '#9#10#13);
 
 function jabberSendCTCP(jid, xmlns: string; callback: TPacketEvent = nil): TJabberIQ;
 function getDisplayField(fld: string): string;
 function secsToDuration(seconds: string): Widestring;
 function GetPresenceAtom(status: string): ATOM;
 function GetPresenceString(a: ATOM): string;
-function ColorToHTML(Color: TColor): string;
 function getMemoText(memo: TMemo): WideString;
 function getInputText(Input: TExRichEdit): Widestring;
 function ForceForegroundWindow(hwnd: THandle): boolean;
@@ -104,18 +100,10 @@ procedure jabberSendMsg(to_jid: Widestring; mtag, xtags: TXMLTag;
 procedure jabberSendMsg(to_jid: Widestring; mtag: TXMLTag;
     xtags, body, subject: Widestring); overload;
 
-function jabberIQResult(orig: TXMLTag): TXMLTag;
-function jabberIQError(orig: TXMLTag): TXMLTag;
-
 procedure centerMainForm(f: TForm);
 procedure checkAndCenterForm(f: TForm);
 procedure BuildPresMenus(parent: TObject; clickev: TNotifyEvent);
 function promptNewGroup: TJabberGroup;
-
-function UTCNow(): TDateTime;
-
-function MessageDlgW(const Msg: Widestring; DlgType: TMsgDlgType;
-    Buttons: TMsgDlgButtons; HelpCtx: Longint): Word;
 
 var
     _GetLastInputInfo: Pointer;
@@ -128,7 +116,7 @@ implementation
 uses
     ExSession, GnuGetText, Presence, InputPassword, 
     IniFiles, StrUtils, IdGlobal, ShellAPI, Types, 
-    XMLUtils, Session, JabberID, Jabber1, Roster,
+    XMLUtils, Session, JabberUtils, JabberID, Jabber1, Roster,
     JabberConst, MsgDisplay, Debug;
 
 type
@@ -153,14 +141,6 @@ const
     sGrpUnfiled = 'Unfiled';
 
     sTurnOnBlocking = 'You currently have logging turned off. Turn Logging On? (Warning: Logs are not encrypted)';
-    sNoHistory = 'There is no history file for this contact.';
-    sBadLogDir = 'The log directory you specified is invalid. Either turn off logging, or specify a valid path.';
-    sHistoryDeleted = 'History deleted.';
-    sHistoryError = 'Could not delete history file.';
-    sHistoryNone = 'No history file for this user.';
-    sConfirmClearLog = 'Do you really want to clear the log for %s?';
-    sConfirmClearAllLogs = 'Are you sure you want to delete all of your message and room logs?';
-    sFilesDeleted = '%d log files deleted.';
 
     sNewGroup = 'New Roster Group';
     sNewGroupPrompt = 'Enter new group name: ';
@@ -267,40 +247,6 @@ begin
 end;
 
 {---------------------------------------}
-function JabberToDateTime(datestr: string): TDateTime;
-var
-    rdate: TDateTime;
-    ys, ms, ds, ts: string;
-    yw, mw, dw: Word;
-begin
-    // translate date from 20000110T19:54:00 to proper format..
-    ys := Copy(Datestr, 1, 4);
-    ms := Copy(Datestr, 5, 2);
-    ds := Copy(Datestr, 7, 2);
-    ts := Copy(Datestr, 10, 8);
-
-    yw := StrToInt(ys);
-    mw := StrToInt(ms);
-    dw := StrToInt(ds);
-
-    if (TryEncodeDate(yw, mw, dw, rdate)) then begin
-        rdate := rdate + StrToTime(ts);
-        Result := rdate - TimeZoneBias();
-    end
-    else
-        Result := Now;
-end;
-
-{---------------------------------------}
-function DateTimeToJabber(dt: TDateTime): string;
-begin
-    // Format the current date/time into "Jabber" format
-    Result := FormatDateTime('yyyymmdd', dt);
-    Result := Result + 'T';
-    Result := Result + FormatDateTime('hh:nn:ss', dt);
-end;
-
-{---------------------------------------}
 function URLToFilename(url: string): string;
 var
     i: integer;
@@ -328,86 +274,35 @@ begin
 end;
 
 {---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 procedure ShowLog(jid: string);
 var
-    fn: string;
+    x: TXMLTag;
 begin
     // Show the log, or ask the user to turn on logging
-    if (not MainSession.Prefs.getBool('log')) then begin
-        if (MessageDlgW(_(sTurnOnBlocking), mtConfirmation, [mbYes, mbNo], 0) = mrNo) then
-            exit
-        else begin
-            MainSession.Prefs.setBool('log', true);
-            exit;
-        end;
-    end;
-
-    fn := 'iexplore.exe ';
-    fn := MainSession.Prefs.getString('log_path');
-    fn := fn + '\' + MungeName(jid) + '.html';
-
-    if (not FileExists(fn)) then begin
-        MessageDlgW(_(sNoHistory), mtError, [mbOK], 0);
-        exit;
-    end;
-
-    ShellExecute(Application.Handle, 'open', PChar(fn), '', '', SW_NORMAL);
+    x := TXMLTag.Create('show');
+    x.setAttribute('jid', jid);
+    MainSession.FireEvent('/log', x);
 end;
 
 {---------------------------------------}
 procedure ClearLog(jid: string);
 var
-    fn: string;
+    x: TXMLTag;
 begin
-    if (MessageDlgW(WideFormat(_(sConfirmClearLog), [jid]),
-        mtConfirmation, [mbOK,mbCancel], 0) = mrCancel) then
-        exit;
-
-    fn := MainSession.Prefs.getString('log_path');
-
-    if (Copy(fn, length(fn), 1) <> '\') then
-        fn := fn + '\';
-
-    // Munge the filename
-    fn := fn + MungeName(jid) + '.html';
-    if FileExists(fn) then begin
-        if (DeleteFile(PChar(fn))) then
-            MessageDlgW(_(sHistoryDeleted), mtInformation, [mbOK], 0)
-        else
-            MessageDlgW(_(sHistoryError), mtError, [mbCancel], 0);
-    end
-    else
-        MessageDlgW(_(sHistoryNone), mtWarning, [mbOK,mbCancel], 0);
+    x := TXMLTag.Create('clear');
+    x.setAttribute('jid', jid);
+    MainSession.FireEvent('/log', x);
 end;
 
 {---------------------------------------}
 procedure ClearAllLogs();
 var
-    fn: string;
-    sr: TSearchRec;
-    count: integer;
+    x: TXMLTag;
 begin
-    if (MessageDlgW(_(sConfirmClearAllLogs),
-                   mtConfirmation, [mbOK,mbCancel], 0) = mrCancel) then
-        exit;
-
-    fn := MainSession.Prefs.getString('log_path');
-
-    if (Copy(fn, length(fn), 1) <> '\') then
-        fn := fn + '\';
-
-    count := 0;
-
-    // bleh.  FindClose is both a SysUtils thing and a Win32 thing.
-    if SysUtils.FindFirst(fn + '*.html', 0, sr) = 0 then begin
-        repeat
-            SysUtils.DeleteFile(PChar(fn + sr.Name));
-            count := count + 1;
-        until SysUtils.FindNext(sr) <> 0;
-        SysUtils.FindClose(sr);
-    end;
-
-    MessageDlgW(WideFormat(_(sFilesDeleted), [count]), mtInformation, [mbOK], 0);
+    x := TXMLTag.Create('purge');
+    MainSession.FireEvent('/log', x);
 end;
 
 {---------------------------------------}
@@ -440,6 +335,8 @@ begin
     MainSession.FireEvent('/log', x);
 end;
 
+{---------------------------------------}
+{---------------------------------------}
 {---------------------------------------}
 function getDisplayField(fld: string): string;
 begin
@@ -648,16 +545,6 @@ begin
 end;
 
 {---------------------------------------}
-function ColorToHTML( Color: TColor): string;
-var
-    rgb: longint;
-begin
-    rgb := ColorToRGB(Color);
-    result := Format( '#%.2x%.2x%.2x', [ GetRValue(rgb),
-                GetGValue(rgb), GetBValue(rgb)]);
-end;
-
-{---------------------------------------}
 function jabberSendCTCP(jid, xmlns: string; callback: TPacketEvent): TJabberIQ;
 var
     iq: TJabberIQ;
@@ -735,32 +622,6 @@ begin
     end;
 
     jabberSendMsg(to_jid, msg, x, b, '');
-end;
-
-{---------------------------------------}
-procedure split(value: WideString; list: TWideStringList; seps : WideString = ' '#9#10#13);
-var
-    i, l : integer;
-    tmps : WideString;
-begin
-    tmps := Trim(value);
-    l := 1;
-    while l <= length(tmps) do begin
-        // search for the first non-space
-        while ((l <= length(tmps)) and (pos(tmps[l], seps) > 0)) do
-            inc(l);
-
-        if l > length(tmps) then exit;
-        i := l;
-
-        // search for the first space
-        while (i <= length(tmps)) and (pos(tmps[i], seps) <=0) do
-            inc(i);
-
-        list.Add(Copy(tmps, l, i - l));
-        l := i + 1;
-
-    end;
 end;
 
 {---------------------------------------}
@@ -1007,23 +868,6 @@ begin
         tnt.Add(sl[i])
 end;
 
-{---------------------------------------}
-function jabberIQResult(orig: TXMLTag): TXMLTag;
-begin
-    //
-    Result := TXMLTag.Create('iq');
-    Result.setAttribute('to', orig.getAttribute('from'));
-    Result.setAttribute('id', orig.getAttribute('id'));
-    Result.setAttribute('type', 'result');
-end;
-
-{---------------------------------------}
-function jabberIQError(orig: TXMLTag): TXMLTag;
-begin
-    //
-    Result := jabberIQResult(orig);
-    Result.setAttribute('type', 'error');
-end;
 
 {---------------------------------------}
 procedure BuildPresMenus(parent: TObject; clickev: TNotifyEvent);
@@ -1136,63 +980,7 @@ begin
 
 end;
 
-
 {---------------------------------------}
-function UTCNow(): TDateTime;
-var
-    tzi: TTimeZoneInformation;
-    res: integer;
-begin
-    res := GetTimeZoneInformation(tzi);
-    if res = TIME_ZONE_ID_DAYLIGHT then
-        result := Now + ((tzi.Bias - 60) / 1440.0)
-    else
-        result := Now + (tzi.Bias / 1440.0);;
-end;
-
-{---------------------------------------}
-function MessageDlgW(const Msg: Widestring; DlgType: TMsgDlgType;
-    Buttons: TMsgDlgButtons; HelpCtx: Longint): Word;
-var
-    flags: Word;
-    res: integer;
-begin
-    flags := 0;
-    case DlgType of
-    mtWarning:          flags := flags + MB_ICONWARNING;
-    mtError:            flags := flags + MB_ICONERROR;
-    mtInformation:      flags := flags + MB_ICONINFORMATION;
-    mtConfirmation:     flags := flags + MB_ICONQUESTION;
-    end;
-
-    {
-    TMsgDlgBtn = (mbYes, mbNo, mbOK, mbCancel, mbAbort, mbRetry, mbIgnore,
-        mbAll, mbNoToAll, mbYesToAll, mbHelp);
-    }
-    if (Buttons = [mbYes, mbNo, mbCancel]) then
-        flags := flags or MB_YESNOCANCEL
-    else if (Buttons = [mbYes, mbNo]) then
-        flags := flags or MB_YESNO
-    else if (Buttons = [mbOK]) then
-        flags := flags or MB_OK
-    else if (Buttons = [mbOK, mbCancel]) then
-        flags := flags or MB_OKCANCEL
-    else
-        flags := flags or MB_OK;
-        
-    res := MessageBoxW(Application.Handle, PWideChar(Msg), PWideChar(_('Exodus')),
-        flags);
-
-    case res of
-    IDCANCEL: Result := mrCancel;
-    IDNO: Result := mrNo;
-    IDYES: Result := mrYes;
-    else
-        Result := mrOK;
-    end;
-
-end;
-
 function promptNewGroup: TJabberGroup;
 var
     new_grp: WideString;
@@ -1216,6 +1004,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure checkAndCenterForm(f: TForm);
 var
     ok: boolean;

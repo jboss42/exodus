@@ -56,7 +56,7 @@ implementation
 
 {$R *.dfm}
 uses
-    ExUtils, GnuGetText, JabberConst, NodeItem, Roster, XMLTag, IQ, Session, S10n;
+    JabberUtils, ExUtils,  GnuGetText, JabberConst, NodeItem, Roster, XMLTag, IQ, Session, S10n;
 
 const
     sRemoveContacts = 'Remove %d contacts';

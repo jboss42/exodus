@@ -62,7 +62,7 @@ uses
     Jabber1, GnuGetText,
     JabberID, ShellAPI,
     SelContact, ExRichEdit,
-    ExUtils, CheckLst, RichEdit2;
+    JabberUtils, ExUtils,  CheckLst, RichEdit2;
 
 const
     sRequired = '(Required)';

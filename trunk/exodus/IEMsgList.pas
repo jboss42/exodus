@@ -118,7 +118,7 @@ var
 {---------------------------------------}
 implementation
 
-uses Jabber1, BaseChat, ExUtils, ShellAPI, Emote;
+uses Jabber1, BaseChat, JabberUtils, ExUtils,  ShellAPI, Emote;
 
 {$R *.dfm}
 

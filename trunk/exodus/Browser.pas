@@ -155,7 +155,7 @@ implementation
 uses
     EntityCache, GnuGetText,
     JabberConst, JoinRoom, Room, Roster, JabberID, Bookmark,
-    ExUtils, Session, JUD, Profile, RegForm, Jabber1;
+    JabberUtils, ExUtils,  Session, JUD, Profile, RegForm, Jabber1;
 
 const
     sInvalidJID = 'The Jabber ID you entered is invalid.';

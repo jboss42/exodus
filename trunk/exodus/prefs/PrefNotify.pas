@@ -62,7 +62,7 @@ var
 implementation
 {$R *.dfm}
 uses
-    GnuGetText, ExUtils, PrefController, Session, ShellAPI;
+    GnuGetText, JabberUtils, ExUtils,  PrefController, Session, ShellAPI;
 
 const
     sSoundChatactivity = 'Activity in a chat window';

@@ -68,7 +68,7 @@ procedure CloseSubscribeWindows();
 {---------------------------------------}
 implementation
 uses
-    ChatWin, ExUtils, GnuGetText, JabberID, MsgRecv, Session, Profile, Presence;
+    ChatWin, JabberUtils, ExUtils,  GnuGetText, JabberID, MsgRecv, Session, Profile, Presence;
 
 var
     _subscribe_windows: TList;

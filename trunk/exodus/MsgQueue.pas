@@ -90,7 +90,7 @@ uses
     MsgList, MsgController, ChatWin, ChatController,
     ShellAPI, CommCtrl, GnuGetText,
     NodeItem, Roster, JabberID, XMLUtils, XMLParser,
-    ExUtils, MsgRecv, Session, PrefController;
+    JabberUtils, ExUtils,  MsgRecv, Session, PrefController;
 
 {---------------------------------------}
 function getMsgQueue: TfrmMsgQueue;

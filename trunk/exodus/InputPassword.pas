@@ -42,7 +42,7 @@ function InputQueryW(const ACaption, APrompt: WideString; var Value: WideString;
 implementation
 
 uses
-    ExUtils, GnuGetText;
+    JabberUtils, ExUtils,  GnuGetText;
 {$R *.dfm}
 
 function InputQueryW(const ACaption, APrompt: WideString; var Value: WideString; password:boolean = False): Boolean;

@@ -75,6 +75,8 @@ type
         _first_pres: boolean;
         _avails: TWidestringlist;
         _auth_agent: TJabberAuth;
+        _logger: boolean;
+        _logger_id: integer;
 
         procedure StreamCallback(msg: string; tag: TXMLTag);
 
@@ -182,6 +184,7 @@ type
         property xmppFeatures: TXMLTag read _features;
         property SSLEnabled: boolean read _ssl_on;
         property xmlLang: WideString read _lang;
+        property LoggingEnabled: boolean read _logger;
     end;
 
 var
@@ -242,6 +245,8 @@ begin
     _features := nil;
     _xmpp := false;
     _ssl_on := false;
+    _logger := false;
+    _logger_id := 0;
 
     // Create all the things which might register w/ the session
 
@@ -734,6 +739,13 @@ begin
     if (tok1 = '/log') then begin
         pk := _logSignal.addListener(xplite, callback);
         result := pk.cb_id;
+
+        // check to see if this a msg logger..
+        if (xplite = '/log/logger') then begin
+            _logger := true;
+            _logger_id := pk.cb_id;
+            FireEvent('/session/logger', nil);
+        end;
     end
     else if (tok1 = '/filter') then begin
         pk := _filterSignal.addListener(xplite, callback);
@@ -822,6 +834,12 @@ begin
     // Unregister a callback
     if (index >= 0) then
         _dispatcher.DeleteListener(index);
+
+    if ((_logger_id <> 0) and (_logger_id = index)) then begin
+        _logger_id := 0;
+        _logger := false;
+        FireEvent('/session/logger', nil);
+    end;
 end;
 
 {---------------------------------------}

@@ -70,7 +70,7 @@ function ShowAddContact: TfrmAdd;
 {---------------------------------------}
 implementation
 uses
-    InputPassword, ExSession, ExUtils, NodeItem, 
+    InputPassword, ExSession, JabberUtils, ExUtils,  NodeItem, 
     GnuGetText, Jabber1, JabberID,  Presence, Session;
 
 const

@@ -75,7 +75,7 @@ implementation
 {$R *.DFM}
 
 uses
-    ExUtils, GnuGetText, Jabber1,  JabberID, Unicode, InputPassword, 
+    JabberUtils, ExUtils,  GnuGetText, Jabber1,  JabberID, Unicode, InputPassword, 
     ConnDetails, PrefController;
 
 {---------------------------------------}

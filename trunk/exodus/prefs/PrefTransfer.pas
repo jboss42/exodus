@@ -84,7 +84,7 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 {$R *.dfm}
 uses
-    ExUtils, Session, FileCtrl;
+    JabberUtils, ExUtils,  Session, FileCtrl;
 
 procedure TfrmPrefTransfer.LoadPrefs();
 var

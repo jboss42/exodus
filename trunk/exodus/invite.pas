@@ -74,7 +74,7 @@ procedure ShowInvite(room_jid: WideString; jids: TWideStringList); overload;
 {---------------------------------------}
 implementation
 uses
-    ExEvents, ExUtils, GnuGetText, Jabber1, JabberID, PrefController,
+    ExEvents, JabberUtils, ExUtils,  GnuGetText, Jabber1, JabberID, PrefController,
     JabberConst, InputPassword,
     Session, Room, RosterWindow, NodeItem, Roster;
 

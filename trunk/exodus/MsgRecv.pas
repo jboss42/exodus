@@ -175,7 +175,7 @@ implementation
 uses
     Clipbrd, COMChatController, JabberConst, ShellAPI, Profile,
     XferManager, GnuGetText, 
-    ExSession, ExUtils, JabberMsg, JabberID,
+    ExSession, JabberUtils, ExUtils,  JabberMsg, JabberID,
     RosterWindow, RemoveContact, RosterRecv, Room, NodeItem, Roster,
     Presence, Session, Jabber1;
 

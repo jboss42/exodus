@@ -2,7 +2,7 @@ inherited frmPrefMsg: TfrmPrefMsg
   Left = 282
   Top = 230
   Caption = 'frmPrefMsg'
-  ClientHeight = 426
+  ClientHeight = 300
   ClientWidth = 348
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -16,21 +16,21 @@ inherited frmPrefMsg: TfrmPrefMsg
   end
   object lblMsgOptions: TTntLabel [1]
     Left = 5
-    Top = 257
+    Top = 145
     Width = 170
     Height = 13
     Caption = 'Simple message (non-chat) handling'
   end
   object lblSpoolPath: TTntLabel [2]
     Left = 5
-    Top = 343
+    Top = 231
     Width = 128
     Height = 13
     Caption = 'Store Unread messages to:'
   end
   object lblInviteOptions: TTntLabel [3]
     Left = 5
-    Top = 297
+    Top = 185
     Width = 198
     Height = 13
     Caption = 'When I get invited to a chat room, do this:'
@@ -43,32 +43,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Caption = 'Timestamp messages'
     TabOrder = 2
   end
-  object chkLog: TTntCheckBox [5]
-    Left = 5
-    Top = 142
-    Width = 97
-    Height = 17
-    Caption = 'Log Messages'
-    TabOrder = 4
-    OnClick = chkLogClick
-  end
-  object txtLogPath: TTntEdit [6]
-    Left = 26
-    Top = 160
-    Width = 207
-    Height = 21
-    TabOrder = 5
-  end
-  object btnLogBrowse: TTntButton [7]
-    Left = 243
-    Top = 158
-    Width = 75
-    Height = 25
-    Caption = 'Browse'
-    TabOrder = 6
-    OnClick = btnLogBrowseClick
-  end
-  object chkMsgQueue: TTntCheckBox [8]
+  object chkMsgQueue: TTntCheckBox [5]
     Left = 5
     Top = 28
     Width = 300
@@ -76,66 +51,49 @@ inherited frmPrefMsg: TfrmPrefMsg
     Caption = 'Instant Messages never popup a new window'
     TabOrder = 0
   end
-  object chkLogRooms: TTntCheckBox [9]
+  object cboMsgOptions: TTntComboBox [6]
     Left = 26
-    Top = 184
-    Width = 287
-    Height = 17
-    Caption = 'Log conference rooms'
-    TabOrder = 7
-  end
-  object cboMsgOptions: TTntComboBox [10]
-    Left = 26
-    Top = 273
+    Top = 161
     Width = 207
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 10
+    TabOrder = 4
     Items.WideStrings = (
       'Use default message handling'
       'Treat all messages as chats'
       'Put messages into existing chats')
   end
-  object btnLogClearAll: TTntButton [11]
+  object txtSpoolPath: TTntEdit [7]
     Left = 26
-    Top = 220
-    Width = 102
-    Height = 25
-    Caption = 'Clear All Logs'
-    TabOrder = 9
-    OnClick = btnLogClearAllClick
-  end
-  object txtSpoolPath: TTntEdit [12]
-    Left = 26
-    Top = 359
+    Top = 247
     Width = 207
     Height = 21
-    TabOrder = 12
+    TabOrder = 6
   end
-  object btnSpoolBrowse: TTntButton [13]
+  object btnSpoolBrowse: TTntButton [8]
     Left = 243
-    Top = 357
+    Top = 245
     Width = 75
     Height = 25
     Caption = 'Browse'
-    TabOrder = 13
+    TabOrder = 7
     OnClick = btnSpoolBrowseClick
   end
-  object cboInviteOptions: TTntComboBox [14]
+  object cboInviteOptions: TTntComboBox [9]
     Left = 26
-    Top = 313
+    Top = 201
     Width = 207
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 11
+    TabOrder = 5
     Items.WideStrings = (
       'Treat as a normal instant message'
       'Always popup the invitation'
       'Automatically join the room.')
   end
-  object chkBlockNonRoster: TTntCheckBox [15]
+  object chkBlockNonRoster: TTntCheckBox [10]
     Left = 5
     Top = 44
     Width = 300
@@ -143,7 +101,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Caption = 'Block messages from people not on my roster'
     TabOrder = 1
   end
-  object txtTimestampFmt: TTntComboBox [16]
+  object txtTimestampFmt: TTntComboBox [11]
     Left = 72
     Top = 118
     Width = 161
@@ -157,18 +115,10 @@ inherited frmPrefMsg: TfrmPrefMsg
       't'
       'tt')
   end
-  object chkLogRoster: TTntCheckBox [17]
-    Left = 26
-    Top = 200
-    Width = 287
-    Height = 17
-    Caption = 'Only log messages from people in my roster'
-    TabOrder = 8
-  end
   inherited pnlHeader: TTntPanel
     Width = 348
     Caption = 'Message Options'
-    TabOrder = 14
+    TabOrder = 8
   end
   object chkQueueDNDChats: TTntCheckBox
     Left = 5
@@ -176,7 +126,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 300
     Height = 17
     Caption = 'Queue chat messages when in DND mode.'
-    TabOrder = 15
+    TabOrder = 9
   end
   object chkQueueOffline: TTntCheckBox
     Left = 5
@@ -184,7 +134,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     Width = 300
     Height = 17
     Caption = 'Queue all offline messages (even chats)'
-    TabOrder = 16
+    TabOrder = 10
   end
   object OpenDialog1: TOpenDialog
     Filter = 'XML|*.xml'

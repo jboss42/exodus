@@ -72,7 +72,7 @@ var
 {---------------------------------------}
 implementation
 uses
-    ExUtils, GnuGetText, IdException, IQ, Registry, Session, ShellAPI;
+    JabberUtils, ExUtils,  GnuGetText, IdException, IQ, Registry, Session, ShellAPI;
 
 const
     sDownloading      = 'Downloading...';

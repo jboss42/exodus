@@ -58,7 +58,7 @@ var
 {---------------------------------------}
 implementation
 uses
-    ExUtils, S10n, NodeItem, Roster, Session, Jabber1;
+    JabberUtils, ExUtils,  S10n, NodeItem, Roster, Session, Jabber1;
 
 {$R *.DFM}
 

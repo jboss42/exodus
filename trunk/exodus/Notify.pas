@@ -48,7 +48,7 @@ procedure DoNotify(win: TForm; pref_name: string; msg: Widestring; icon: integer
 
 implementation
 uses
-    BaseChat, ExUtils, ExEvents, GnuGetText,
+    BaseChat, JabberUtils, ExUtils,  ExEvents, GnuGetText,
     Jabber1, PrefController, RiserWindow,
     Room, NodeItem, Roster, MMSystem, Debug, Session;
 

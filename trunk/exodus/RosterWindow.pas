@@ -35,9 +35,6 @@ type
     StatBar: TStatusBar;
     popStatus: TTntPopupMenu;
     pnlShow: TPanel;
-    popVersion: TMenuItem;
-    popTime: TMenuItem;
-    popLast: TMenuItem;
     ImageList2: TImageList;
     popActions: TTntPopupMenu;
     imgStatus: TPaintBox;
@@ -109,6 +106,9 @@ type
     popSendInvisible: TTntMenuItem;
     popSendPres: TTntMenuItem;
     popTransEdit: TTntMenuItem;
+    popLast: TTntMenuItem;
+    popTime: TTntMenuItem;
+    popVersion: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -300,7 +300,7 @@ uses
     ExSession, XferManager, CustomPres, RegForm, 
     JabberConst, Chat, ChatController, GrpManagement, GnuGetText, InputPassword,
     SelContact, Invite, Bookmark, S10n, MsgRecv, PrefController,
-    ExEvents, ExUtils, Room, Profile, JabberID, RiserWindow, ShellAPI,
+    ExEvents, JabberUtils, ExUtils,  Room, Profile, JabberID, RiserWindow, ShellAPI,
     IQ, RosterAdd, GrpRemove, RemoveContact, ChatWin, Jabber1,
     Transports, Session, StrUtils;
 
@@ -2078,6 +2078,9 @@ begin
         popHistory.Enabled := e;
         popBlock.Enabled := (not me);
         popRemove.Enabled := (not me);
+
+        // only enable this if we have a logger.
+        popHistory.Enabled := MainSession.LoggingEnabled;
 
         if ((ri <> nil) and (MainSession.isBlocked(ri.jid))) then begin
             popBlock.Caption := _(sBtnUnBlock);

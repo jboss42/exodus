@@ -310,7 +310,7 @@ uses
     Browser, 
     CapPresence,
     ChatWin, COMChatController, CustomNotify,
-    ExSession, ExUtils,
+    ExSession, JabberUtils, ExUtils, 
     GnuGetText,
     InputPassword,
     Invite,

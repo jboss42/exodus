@@ -129,7 +129,7 @@ uses
     ChatWin, MsgRecv, Entity, EntityCache,
     InputPassword, NodeItem, GnuGetText, 
     JabberConst, Profile, Roster, JabberID, fGeneric,
-    Session, ExUtils, XMLUtils, fTopLabel, Jabber1;
+    Session, JabberUtils, ExUtils,  XMLUtils, fTopLabel, Jabber1;
 
 var
     cur_sort: integer;

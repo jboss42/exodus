@@ -46,7 +46,7 @@ implementation
 
 uses
     Dialogs, GnuGetText, AutoUpdateStatus, Controls, 
-    InvalidRoster, ChatWin, ExEvents, ExUtils, Subscribe, Notify, Jabber1,
+    InvalidRoster, ChatWin, ExEvents, JabberUtils, ExUtils,  Subscribe, Notify, Jabber1,
     MsgQueue, NodeItem, Roster, JabberID, Session;
 
 const

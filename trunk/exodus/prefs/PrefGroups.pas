@@ -56,7 +56,7 @@ implementation
 
 {$R *.dfm}
 uses
-    GnuGetText, ExUtils, Session, PrefController, Unicode;
+    GnuGetText, JabberUtils, ExUtils,  Session, PrefController, Unicode;
 
 procedure TfrmPrefGroups.LoadPrefs();
 var

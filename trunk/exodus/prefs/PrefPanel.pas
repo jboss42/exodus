@@ -48,7 +48,7 @@ implementation
 
 uses
     Menus, StdCtrls, ComCtrls, TntComCtrls, TntStdCtrls,
-    Session, PrefFile, PrefController, GnuGetText, ExUtils, XMLUtils;
+    Session, PrefFile, PrefController, GnuGetText, JabberUtils, ExUtils,  XMLUtils;
 
 procedure TfrmPrefPanel.LoadPrefs();
 begin

@@ -178,7 +178,8 @@ uses
   Emote in 'Emote.pas',
   GIFImage in 'GIFImage.pas',
   PrefEmote in 'prefs\PrefEmote.pas' {frmPrefEmote},
-  EmoteProps in 'EmoteProps.pas' {frmEmoteProps};
+  EmoteProps in 'EmoteProps.pas' {frmEmoteProps},
+  JabberUtils in '..\jopl\JabberUtils.pas';
 
 {$R *.TLB}
 

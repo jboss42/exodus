@@ -162,7 +162,7 @@ implementation
 
 uses
     EntityCache, Entity, 
-    ExUtils, GnuGetText, JabberID, XMLUtils, JabberConst, Session;
+    JabberUtils, ExUtils,  GnuGetText, JabberID, XMLUtils, JabberConst, Session;
 
 const
     sXferStreamError = 'There was an error trying to read the file.';

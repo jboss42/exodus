@@ -1,6 +1,6 @@
 object frmRosterWindow: TfrmRosterWindow
-  Left = 550
-  Top = 260
+  Left = 269
+  Top = 184
   Width = 195
   Height = 446
   AlphaBlendValue = 220
@@ -319,6 +319,10 @@ object frmRosterWindow: TfrmRosterWindow
       Caption = 'Message...'
       OnClick = popMsgClick
     end
+    object popHistory: TTntMenuItem
+      Caption = 'Show History...'
+      OnClick = popHistoryClick
+    end
     object popSendFile: TTntMenuItem
       Caption = 'Send File...'
       OnClick = popSendFileClick
@@ -333,15 +337,15 @@ object frmRosterWindow: TfrmRosterWindow
     end
     object popClientInfo: TTntMenuItem
       Caption = 'Client Info'
-      object popVersion: TMenuItem
+      object popVersion: TTntMenuItem
         Caption = 'Version Request'
         OnClick = popVersionClick
       end
-      object popTime: TMenuItem
+      object popTime: TTntMenuItem
         Caption = 'Time Request'
         OnClick = popVersionClick
       end
-      object popLast: TMenuItem
+      object popLast: TTntMenuItem
         Caption = 'Last Activity'
         OnClick = popVersionClick
       end
@@ -368,10 +372,6 @@ object frmRosterWindow: TfrmRosterWindow
       Caption = 'Rename...'
       ShortCut = 113
       OnClick = popRenameClick
-    end
-    object popHistory: TTntMenuItem
-      Caption = 'History'
-      OnClick = popHistoryClick
     end
     object N1: TTntMenuItem
       Caption = '-'

@@ -37,7 +37,7 @@ implementation
 
 {$R *.dfm}
 uses
-    NodeItem, Roster, Session, ExUtils, GnuGetText;
+    NodeItem, Roster, Session, JabberUtils, ExUtils,  GnuGetText;
 
 {---------------------------------------}
 function ShowGrpManagement(items: TList): TfrmGrpManagement;

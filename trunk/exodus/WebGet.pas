@@ -55,7 +55,7 @@ var
 implementation
 {$R *.dfm}
 uses
-    GnuGetText, ExUtils, IdException;
+    GnuGetText, JabberUtils, ExUtils,  IdException;
 
 const
     sDownloading      = 'Downloading...';

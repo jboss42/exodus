@@ -59,7 +59,7 @@ implementation
 {$R *.dfm}
 
 uses
-    ExUtils, GnuGetText, JabberID, Session, RosterWindow;
+    JabberUtils, ExUtils,  GnuGetText, JabberID, Session, RosterWindow;
 
 function ShowBookmark(jid: string): TfrmBookmark;
 var

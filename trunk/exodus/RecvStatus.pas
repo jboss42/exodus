@@ -146,7 +146,7 @@ type
 implementation
 uses
     XMLUtils, StrUtils,
-    IQ, GnuGetText, Session, JabberConst, ExUtils;
+    IQ, GnuGetText, Session, JabberConst, JabberUtils, ExUtils;
 
 const
     sXferOverwrite = 'This file already exists. Overwrite?';

@@ -85,7 +85,7 @@ implementation
 {$R *.dfm}
 uses
     EmoteProps, 
-    XMLTag, XMLParser, GnuGetText, ExUtils, Session, PrefController;
+    XMLTag, XMLParser, GnuGetText, JabberUtils, ExUtils,  Session, PrefController;
 
 {---------------------------------------}
 procedure TfrmPrefEmote.LoadPrefs();
