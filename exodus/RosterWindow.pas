@@ -844,10 +844,11 @@ begin
         // ignore
     else if (event = '/presence/offline') then begin
         // remove the node
-        if (ritem.jid.jid <> MainSession.BareJid) then
+        if ((ritem <> nil) and (ritem.jid.jid <> MainSession.BareJid)) then
             p := MainSession.PPDB.FindPres(jid, '');
         if (ritem <> nil) then
             RenderNode(ritem, p);
+
     end
     else if (ritem <> nil) then begin
         // possibly re-render the node based on this pres packet
