@@ -75,8 +75,8 @@ type
         property Resource: Widestring read _resource;
         property Window: TObject read _window write SetWindow;
         property OnMessage: TChatMessageEvent read _event write _event;
-
-end;
+        property RefCount: integer read _refs;
+    end;
 
 {---------------------------------------}
 implementation
