@@ -53,6 +53,7 @@ type
     procedure lblNewProfileClick(Sender: TObject);
     procedure lblDeleteClick(Sender: TObject);
     procedure chkSSLClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -120,6 +121,7 @@ end;
 {---------------------------------------}
 procedure TfrmLogin.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+    MainSession.Prefs.SavePosition(Self);
     Action := caFree;
 end;
 
@@ -198,6 +200,11 @@ begin
         if (txtPort.Text = '5223') then
             txtPort.Text := '5222';
         end;
+end;
+
+procedure TfrmLogin.FormCreate(Sender: TObject);
+begin
+    MainSession.Prefs.RestorePosition(Self);
 end;
 
 end.
