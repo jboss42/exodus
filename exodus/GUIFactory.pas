@@ -21,7 +21,7 @@ unit GUIFactory;
 
 interface
 uses
-    XMLTag,
+    XMLTag, Unicode, 
     Forms, Classes, SysUtils;
 
 type
@@ -29,9 +29,13 @@ type
     private
         _js: TObject;
         _cb: integer;
+        _blockers: TWidestringlist;
     published
         procedure SessionCallback(event: string; tag: TXMLTag);
     public
+        constructor Create;
+        destructor Destroy; override;
+
         procedure SetSession(js: TObject);
     end;
 
@@ -44,9 +48,21 @@ resourcestring
 implementation
 
 uses
-    Dialogs, 
+    Dialogs,
     InvalidRoster, ChatWin, ExEvents, ExUtils, Subscribe, Notify, Jabber1,
     MsgQueue, NodeItem, Roster, JabberID, Session;
+
+{---------------------------------------}
+constructor TGUIFactory.Create();
+begin
+    _blockers := TWideStringList.Create();
+end;
+
+{---------------------------------------}
+destructor TGUIFactory.Destroy();
+begin
+    _blockers.Free();
+end;
 
 {---------------------------------------}
 procedure TGUIFactory.setSession(js: TObject);
@@ -55,13 +71,16 @@ var
 begin
     _js := js;
     s := TJabberSession(js);
-    _cb := s.RegisterCallback(SessionCallback, '/session')
+    _cb := s.RegisterCallback(SessionCallback, '/session');
+    _blockers.Clear();
+    s.Prefs.fillStringlist('blockers', _blockers);
 end;
 
 {---------------------------------------}
 procedure TGUIFactory.SessionCallback(event: string; tag: TXMLTag);
 var
-    sjid: string;
+    i: integer;
+    sjid: Widestring;
     tmp_jid: TJabberID;
     tmp_b: boolean;
     chat: TfrmChat;
@@ -108,6 +127,15 @@ begin
         MessageDlg(sPrefWriteError, mtError, [mbOK], 0);
     end
 
+    else if (event = '/session/block') then begin
+        _blockers.Add(tag.getAttribute('jid'));
+    end
+
+    else if (event = '/session/unblock') then begin
+        i := _blockers.IndexOf(tag.getAttribute('jid'));
+        if (i >= 0) then _blockers.Delete(i);
+    end
+
     else if (event = '/session/gui/subscribe') then begin
         // Subscription window
         sjid := tag.getAttribute('from');
@@ -124,7 +152,9 @@ begin
         end;
 
         // block list?
-        if (MainSession.IsBlocked(tmp_jid)) then exit;
+        // Don't use MainSession.IsBlocked since it also
+        // blocks people not on my roster. Just check our sync'd blocker list.
+        if (_blockers.IndexOf(tmp_jid.jid) >= 0) then exit;
 
         sub := TfrmSubscribe.Create(Application);
         with sub do begin
