@@ -24,24 +24,27 @@ unit ICQPlugin;
 interface
 
 uses
-  ExodusCOM_TLB, ComObj, ActiveX, ICQImport_TLB, StdVcl;
+    XMLParser, ExodusCOM_TLB, ComObj, ActiveX, ICQImport_TLB, StdVcl;
 
 type
   TICQImportPlugin = class(TAutoObject, IICQImportPlugin, IExodusPlugin)
   protected
-    procedure menuClick(const ID: WideString); safecall;
-    procedure NewChat(const jid: WideString; const Chat: IExodusChat);
-      safecall;
-    procedure NewRoom(const jid: WideString; const Room: IExodusChat);
-      safecall;
-    procedure Process(const xml: WideString); safecall;
-    procedure Shutdown; safecall;
     procedure Startup(const ExodusController: IExodusController); safecall;
-    procedure onAgentsList(const Server: WideString); safecall;
+    procedure Shutdown; safecall;
+    procedure Process(const xpath: WideString; const event: WideString; const xml: WideString); safecall;
+    procedure NewChat(const jid: WideString; const Chat: IExodusChat); safecall;
+    procedure NewRoom(const jid: WideString; const Room: IExodusChat); safecall;
+    procedure menuClick(const ID: WideString); safecall;
+    function onInstantMsg(const Body: WideString; const Subject: WideString): WideString; safecall;
+    procedure Configure; safecall;
     { Protected declarations }
+
   private
     _controller: IExodusController;
     _menu_id: Widestring;
+    _parser: TXMLTagParser;
+
+    procedure AgentsList(const Server: WideString); safecall;
   end;
 
 {-----------------------------------------}
@@ -50,7 +53,7 @@ type
 {-----------------------------------------}
 implementation
 uses
-    Importer, StrUtils, SysUtils,
+    XMLTag, Importer, StrUtils, SysUtils,
     Dialogs, ComServ;
 
 {-----------------------------------------}
@@ -71,7 +74,7 @@ begin
 end;
 
 {-----------------------------------------}
-procedure TICQImportPlugin.onAgentsList(const Server: WideString);
+procedure TICQImportPlugin.AgentsList(const Server: WideString);
 var
     f: TfrmImport;
 begin
@@ -99,9 +102,18 @@ begin
 end;
 
 {-----------------------------------------}
-procedure TICQImportPlugin.Process(const xml: WideString);
+procedure TICQImportPlugin.Process(const xpath: WideString;
+    const event: WideString; const xml: WideString);
+var
+    a: TXMLTag;
 begin
-
+    if (xpath = '/session/agents') then begin
+        _parser.ParseString(xml, '');
+        if (_parser.Count < 1) then exit;
+        a := _parser.popTag();
+        AgentsList(a.GetAttribute('from'));
+        a.Free();
+    end;
 end;
 
 {-----------------------------------------}
@@ -116,7 +128,23 @@ procedure TICQImportPlugin.Startup(
 begin
     _controller := ExodusController;
     _menu_id := _controller.addPluginMenu('Import ICQ Contacts');
+    _parser := TXMLTagParser.Create();
+    _controller.RegisterCallback('/session/agents', Self);
 end;
+
+{-----------------------------------------}
+function TICQImportPlugin.onInstantMsg(const Body: WideString;
+    const Subject: WideString): WideString;
+begin
+    //
+end;
+
+{-----------------------------------------}
+procedure TICQImportPlugin.Configure;
+begin
+    //
+end;
+
 
 initialization
   TAutoObjectFactory.Create(ComServer, TICQImportPlugin, Class_ICQImportPlugin,

@@ -467,6 +467,7 @@ end;
 {---------------------------------------}
 procedure TExodusController.getAgentList(const Server: WideString);
 var
+    atag: TXMLTag;
     al: TAgents;
 begin
     al := MainSession.GetAgentsList(Server);
@@ -476,7 +477,10 @@ begin
     end
     else begin
         // we already have it, fire now.
-        // fireAgentsList(Server);
+        atag := TXMLTag.Create('iq');
+        atag.setAttribute('from', Server);
+        MainSession.FireEvent('/session/agents', atag);
+        atag.Free();
     end;
 end;
 
