@@ -394,7 +394,7 @@ begin
         WM_CONNECTED: begin
             // Socket is connected
             {$ifdef INDY9}
-            _local_ip := _socket.BoundIP;
+            _local_ip := _socket.Socket.Binding.IP;
             {$else}
             _local_ip := _Socket.Binding.IP;
             {$endif}
