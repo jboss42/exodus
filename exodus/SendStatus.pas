@@ -804,9 +804,9 @@ var
 begin
     // We are getting the address of a streamhost back
     assert(_iq <> nil);
-    _iq := nil;
 
     if ((event = 'xml') and (tag.getAttribute('type') = 'result')) then begin
+        _iq := nil;
         sh := tag.QueryXPTags('/iq/query/streamhost');
         for j := 0 to sh.Count - 1 do begin
             i := shosts.indexOf(sh[j].GetAttribute('jid'));
