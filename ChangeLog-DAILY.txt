@@ -1,10 +1,101 @@
-2004-02-09 08:18  pgmillard
+2004-02-17 08:18  pgmillard
 
 	* exodus/: default.po, version.h, version.nsi: daily build
 
-2004-02-09 07:01  pgmillard
+2004-02-17 07:29  pgmillard
 
-	* exodus/: Exodus.dof, ExodusCOM_TLB.pas, prefs/PrefPanel.pas: Bug
-	  #3322 - Make prefs code case insensitive when looking at control
-	  names
+	* build.pl, stage.pl: Add a staging script. Tweak version.pl
+
+2004-02-17 07:28  pgmillard
+
+	* exodus/default.po: stage build
+
+2004-02-17 07:24  pgmillard
+
+	* stage.pl, exodus/version.pl: Add a staging script. Tweak
+	  version.pl
+
+2004-02-17 07:20  pgmillard
+
+	* exodus/default.po: stage build
+
+2004-02-17 07:10  pgmillard
+
+	* exodus/: RosterWindow.dfm, RosterWindow.pas: Bug #3364 - Rename
+	  send available, to send visible.
+
+2004-02-15 21:42  pgmillard
+
+	* exodus/: Jabber1.pas, exodus.nsi,
+	  plugins/AIM-Import/ExodusCOM_TLB.pas,
+	  plugins/ASpeller/ExodusCOM_TLB.pas,
+	  plugins/ICQ-Import/ExodusCOM_TLB.pas,
+	  plugins/JabberStats/ExodusCOM_TLB.pas,
+	  plugins/NetMeeting/ExodusCOM_TLB.pas,
+	  plugins/RosterTools/ExodusCOM_TLB.pas, prefs/PrefNetwork.pas: Bug
+	  #3358 - Allow 0 reconnect attempts
+
+2004-02-15 21:15  pgmillard
+
+	* exodus/default.po: stage build
+
+2004-02-15 20:59  pgmillard
+
+	* exodus/default.po: stage build
+
+2004-02-15 20:45  pgmillard
+
+	* exodus/: MsgQueue.pas, MsgRecv.pas: Bug #3333 - Fixup opening the
+	  same event multiple times. Was causing errors.
+
+2004-02-13 07:21  pgmillard
+
+	* exodus/Browser.dfm, exodus/Browser.pas, jopl/Entity.pas,
+	  jopl/EntityCache.pas: Browser improvements to support the node
+	  attribute
+
+2004-02-12 20:11  pgmillard
+
+	* exodus/RegForm.pas: Bug #3336 - Tweaks to gateway registration
+
+2004-02-12 19:57  pgmillard
+
+	* exodus/ExResponders.pas, jopl/ChatController.pas,
+	  jopl/MsgList.pas, jopl/Session.pas: Use /pre for x-data, muc
+	  invites, and conf invites. Eliminate special casing in MsgList
+	  and ChatList
+
+2004-02-12 19:44  pgmillard
+
+	* exodus/SendStatus.pas: Allow send file status frames to be closed
+	  properly.
+
+2004-02-12 19:36  pgmillard
+
+	* exodus/: BaseChat.dfm, DockWizard.dfm, Dockable.dfm,
+	  ExodusCOM_TLB.pas, Jabber1.dfm, MsgRecv.pas, RegForm.dfm,
+	  Room.dfm: Bug #3333 - Cleanup event queue in FormDestroy, not
+	  FormClose.
+
+2004-02-12 15:27  pgmillard
+
+	* exodus/RiserWindow.dfm, exodus/RiserWindow.pas, jopl/Session.pas:
+	  Handle exceptions when doing StartTLS. Also fixup toast clicks so
+	  plugins work correctly.
+
+2004-02-12 07:06  pgmillard
+
+	* build.pl, exodus/Room.pas, exodus/default.po,
+	  exodus/plugins/AIM-Import/ExodusCOM_TLB.pas,
+	  exodus/plugins/ASpeller/ExodusCOM_TLB.pas,
+	  exodus/plugins/ICQ-Import/ExodusCOM_TLB.pas,
+	  exodus/plugins/JabberStats/ExodusCOM_TLB.pas,
+	  exodus/plugins/NetMeeting/ExodusCOM_TLB.pas,
+	  exodus/plugins/RosterTools/ExodusCOM_TLB.pas: Bug #3339 - Room
+	  nicks are case sensitive now.
+
+2004-02-10 17:52  hildjj
+
+	* exodus/RosterWindow.dfm: Make F2 edit the current roster item
+	  (LW)
 
