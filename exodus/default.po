@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-09-26 16:53\n"
-"PO-Revision-Date: 2003-09-26 16:53\n"
+"POT-Creation-Date: 2003-09-28 11:50\n"
+"PO-Revision-Date: 2003-09-28 11:50\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6998,11 +6998,11 @@ msgstr ""
 msgid "Branding error!"
 msgstr ""
 
-#: Jabber1.pas:1039
+#: Jabber1.pas:1040
 msgid "SSL Connection Error: \n"
 msgstr ""
 
-#: Jabber1.pas:1040
+#: Jabber1.pas:1041
 msgid "Disconnect Connection?"
 msgstr ""
 
@@ -7720,12 +7720,12 @@ msgid "..country-codes.xml"
 msgstr ""
 
 #. Programmer's name for it: sIdleAway
-#: /src/exodus/jopl/PrefController.pas:236
+#: /src/exodus/jopl/PrefController.pas:237
 msgid "Away as a result of idle."
 msgstr ""
 
 #. Programmer's name for it: sIdleXA
-#: /src/exodus/jopl/PrefController.pas:237
+#: /src/exodus/jopl/PrefController.pas:238
 msgid "XA as a result of idle."
 msgstr ""
 
