@@ -2,6 +2,7 @@
 
 use strict;
 
+$::rtype = "release";
 $::D = 'f:/lang/Delphi7';
 $::TNT = "D:\\src\\exodus\\exodus\\components\\tntUnicode";
 $::ICQ = "D:\\src\\exodus\\exodus\\plugins\\ICQ-Import\\ICQ\\Component";
@@ -21,13 +22,11 @@ my $opts = "-B -Q -DExodus -U\"$DD\\Lib\"";
 my $comp = "..\\..\\Components";
 my $plugopts = "$opts -U\"$comp\" -U\"$::TNT\"";
 
-my $rtype = "release";
-
 if ($#ARGV >= 0) {
   if ($ARGV[0] eq "daily") {
-	$rtype = "daily";
+	$::rtype = "daily";
   } elsif ($ARGV[0] eq "stage") {
-    $rtype = "stage";
+    $::rtype = "stage";
   } elsif ($ARGV[0] eq "help") {
 	print <<EOF;
 USAGE:
@@ -43,12 +42,13 @@ chdir "exodus" or die;
 unlink "setup.exe";
 unlink "Exodus.exe";
 grep unlink, glob("output/*.dcu"); # rm *.dcu
+grep unlink, glob("*.dll"); # rm *.dll
 
 e("$dcc $opts -Noutput IdleHooks.dpr");
 e("$rcc version.rc");
 e("$rcc xml.rc");
 
-if ($rtype eq "daily") {
+if ($::rtype eq "daily") {
     # Generate a detailed MAP file, and build in stack frame tracing
     e("$dcc $opts -GD -DTRACE_EXCEPTIONS -Noutput -U\"$::JCL\" -U\"$::TNT\" Exodus.dpr");
 } else {
@@ -62,7 +62,12 @@ grep unlink, glob("locale/*/LC_MESSAGES/default.mo");
 grep &msgfmt, glob("locale/*/LC_MESSAGES/default.po");
 e('zip locale ' . join(' ', glob("locale/*/LC_MESSAGES/default.mo")));
 
-chdir "plugins";
+chdir "msn-emoticons";
+e("$dcc $opts -D msn_emoticons.dpr");
+chdir "../yahoo-emoticons";
+e("$dcc $opts -D yahoo_emoticons.dpr");
+
+chdir "../plugins";
 grep unlink, glob("*.zip"); # rm *.zip
 grep unlink, glob("*.dll"); # rm *.dll
 
@@ -91,9 +96,9 @@ chdir "..";
 unlink "Exodus.zip";
 e('zip Exodus.zip @zipfiles.txt ' . join(' ', glob("plugins/*.dll")));
 
-if ($rtype eq "daily") {
+if ($::rtype eq "daily") {
   e("$::NSIS /v1 /DDAILY exodus-new.nsi");
-} elsif ($rtype eq "stage") {
+} elsif ($::rtype eq "stage") {
   e("$::NSIS /v1 /DSTAGE exodus-new.nsi");
 } else {
   e("$::NSIS /v1 exodus-new.nsi");

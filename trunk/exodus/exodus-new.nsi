@@ -553,6 +553,8 @@ ${un.StrStrAdv}
 !define CUSTOMSHELL_FONT_HEIGHT "10"
 !define CUSTOMSHELL_FONT_WEIGHT "700"
 !define NSISDL_SUCCESSFUL "success"
+!define MSN_EMOTICONS "msn_emoticons"
+!define YAHOO_EMOTICONS "yahoo_emoticons"
 !define IDLEHOOKS "IdleHooks"
 !define RICHED "riched20"
 !define RICHED_UPDATER "richupd"
@@ -1811,6 +1813,8 @@ Section "$(NAME_Exodus)" SEC_Exodus
     SetOutPath $INSTDIR
     File "${PRODUCT}${EXEC_EXTENSION}"
     File "${IDLEHOOKS}${DLL_EXTENSION}"
+    File "${MSN_EMOTICONS}${DLL_EXTENSION}"
+    File "${YAHOO_EMOTICONS}${DLL_EXTENSION}"
     
     ; Daily builds should include the MAP file to get detailed AV reports.
     !ifdef DAILY
@@ -2101,6 +2105,8 @@ Section "Uninstall"
     ; remove files
     Delete /REBOOTOK "$INSTDIR\${PRODUCT}${EXEC_EXTENSION}"
     Delete /REBOOTOK "$INSTDIR\${IDLEHOOKS}${DLL_EXTENSION}"
+    Delete /REBOOTOK "$INSTDIR\${MSN_EMOTICONS}${DLL_EXTENSION}"
+    Delete /REBOOTOK "$INSTDIR\${YAHOO_EMOTICONS}${DLL_EXTENSION}"
     Delete /REBOOTOK "$INSTDIR\${BRANDING_FILE}${XML_EXTENSION}"
     Delete /REBOOTOK "$INSTDIR\${LIBEAY}${DLL_EXTENSION}"
     Delete /REBOOTOK "$INSTDIR\${SSLEAY}${DLL_EXTENSION}"
