@@ -3,13 +3,14 @@ unit RegForm;
 interface
 
 uses
+    XMLTag, IQ, Agents, 
     fLeftLabel,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     StdCtrls, ComCtrls, ExtCtrls;
 
 type
   TfrmRegister = class(TForm)
-    PageControl1: TPageControl;
+    Tabs: TPageControl;
     pnlBottom: TPanel;
     pnlBtns: TPanel;
     btnPrev: TButton;
@@ -28,6 +29,8 @@ type
     lblOK: TLabel;
     tabWait: TTabSheet;
     Label2: TLabel;
+    procedure FormCreate(Sender: TObject);
+    procedure btnNextClick(Sender: TObject);
 
     (*
     procedure FormCreate(Sender: TObject);
@@ -38,15 +41,30 @@ type
     *)
   private
     { Private declarations }
+    {
     cbIndex: integer;
     RegKey: string;
+    }
+    cur_iq: TJabberIQ;
+    cur_stage: integer;
+    cur_key: string;
+
+    ins: string;
+    flds: TStringList;
+
+    procedure AgentCallback(event: string; tag: TXMLTag);
+
   public
     { Public declarations }
+    jid: string;
+    agent: TAgentItem;
+
+    procedure Start();
+
+    (*
     Service: string;
     WaitingID: string;
     CurStage: integer;
-
-    (*
     procedure GetRegInfo;
     // procedure DoElement(element: integer; en: boolean);
     function DoField(fld: string): TfrmField;
@@ -69,11 +87,9 @@ const
     reg_URL = 9;
 
     regStage_Welcome = 0;
-    regStage_Agent = 1;
-    regStage_Form = 2;
-    regStage_FinishAgent = 3;
-    regStage_FinishForm = 4;
-    regStage_Ack = 5;
+    regStage_Form = 1;
+    regStage_Register = 2;
+    regStage_Finish = 3;
 
     regStage_Done = 100;
 
@@ -316,5 +332,99 @@ begin
     Self.Close;
 end;
 *)
+
+{---------------------------------------}
+procedure TfrmRegister.FormCreate(Sender: TObject);
+begin
+    // Hide all the tabs and make the welcome tab visible
+    tabWelcome.TabVisible := false;
+    tabAgent.TabVisible := false;
+    tabForm.TabVisible := false;
+    tabResult.TabVisible := false;
+    tabWait.TabVisible := false;
+
+    cur_stage := regStage_Welcome;
+    Tabs.ActivePage := tabWelcome;
+    cur_iq := nil;
+    agent := TAgentItem.Create();
+end;
+
+{---------------------------------------}
+procedure TfrmRegister.Start();
+var
+    a: TAgentItem;
+begin
+    // start the whole process off
+    btnPrev.Enabled := false;
+    btnNext.Enabled := false;
+    btnCancel.Enabled := true;
+    Self.Show();
+    cur_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), AgentCallback);
+end;
+
+{---------------------------------------}
+procedure TfrmRegister.AgentCallback(event: string; tag: TXMLTag);
+var
+    i: integer;
+    f, ag_tag: TXMLTag;
+    flds: TXMLTagList;
+begin
+    // we got back a response..
+    if (event = 'xml') then begin
+        if (tag.GetAttribute('type') = 'error') then begin
+            // error packet
+            end
+        else begin
+            // normal result
+            ag_tag := tag.QueryXPTag('/iq/query/agent');
+            flds := ag_tag.ChildTags();
+            for i := 0 to flds.count - 1 do begin
+                f := flds[i];
+                if (f.Name = 'instructions') then
+                    lblIns.Caption := f.Data
+                else if (f.Name = 'key') then
+                    cur_key := f.Data
+                else
+                    doField(f.Name);
+                end;
+
+            cur_stage := regStage_Form;
+            btnNext.Enabled := true;
+            end;
+        end
+    else begin
+        // todo: timeout on agent query
+        end;
+end;
+
+{---------------------------------------}
+function TfrmRegister.doField(fld: string): TfrmField;
+var
+    frm: TfrmField;
+begin
+    // create a new panel
+    frm := TfrmField.Create(tabAgent);
+    with frm do begin
+        Parent := tabAgent;
+        Name := 'fld_' + fld;
+        lblPrompt.Caption := fld;
+        if Lowercase(fld) = 'password' then
+            txtData.PasswordChar := '*';
+        Align := alTop;
+        Visible := true;
+        TabOrder := 0;
+        field := fld;
+        end;
+    Result := frm;
+end;
+
+procedure TfrmRegister.btnNextClick(Sender: TObject);
+begin
+    // goto the next tab
+
+    if (cur_stage = regStage_Form) then begin
+        Tabs.ActivePage := tabAgent;        
+        end;
+end;
 
 end.

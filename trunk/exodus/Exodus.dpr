@@ -56,7 +56,8 @@ uses
   fTopLabel in 'fTopLabel.pas' {frameTopLabel: TFrame},
   Agents in 'Agents.pas',
   Register in 'Register.pas',
-  RegForm in 'RegForm.pas' {frmRegister};
+  RegForm in 'RegForm.pas' {frmRegister},
+  fLeftLabel in 'fLeftLabel.pas' {frmField: TFrame};
 
 {$R *.RES}
 
