@@ -431,12 +431,25 @@ var
     cp: TPoint;
 begin
     // this gets fired when the user clicks on the tray icon
-    if ((Msg.LParam = WM_LBUTTONDBLCLK) and (_hidden)) then begin
-        // restore our app
-        _hidden := false;
-        ShowWindow(Handle, SW_RESTORE);
-        msg.Result := 0;
+    if (Msg.LParam = WM_LBUTTONDBLCLK) then begin
+        if (_hidden) then begin
+            // restore our app
+            _hidden := false;
+            ShowWindow(Handle, SW_RESTORE);
+            SetForegroundWindow(Self.Handle);
+            msg.Result := 0;
+            end
+        else begin
+            _hidden := true;
+            self.WindowState := wsMinimized;
+            ShowWindow(Handle, SW_HIDE);
+            PostMessage(Self.handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
+            end;
         end
+    else if ((Msg.LParam = WM_LBUTTONDOWN) and (not Application.Active) and (not _hidden))then begin
+        SetForegroundWindow(Self.Handle);
+        end
+
     else if (Msg.LParam = WM_RBUTTONDOWN) then begin
         GetCursorPos(cp);
         SetForegroundWindow(Self.Handle);
