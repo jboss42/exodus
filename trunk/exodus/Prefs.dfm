@@ -1,6 +1,6 @@
 object frmPrefs: TfrmPrefs
-  Left = 161
-  Top = 322
+  Left = 234
+  Top = 214
   Width = 468
   Height = 455
   Caption = 'Exodus Preferences'
@@ -1677,140 +1677,20 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 389
-    ActivePage = tbsAway
+    ActivePage = tbsKeywords
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
     TabIndex = 0
     TabOrder = 1
-    object tbsAway: TTabSheet
-      Caption = 'AutoAway'
-      ImageIndex = 7
-      object Label2: TLabel
-        Left = 8
-        Top = 72
-        Width = 213
-        Height = 13
-        Caption = 'Minutes to wait before setting status to Away:'
-      end
-      object Label3: TLabel
-        Left = 8
-        Top = 96
-        Width = 201
-        Height = 13
-        Caption = 'Minutes to wait before setting status to XA:'
-      end
-      object Label4: TLabel
-        Left = 8
-        Top = 128
-        Width = 62
-        Height = 13
-        Caption = 'Away Status:'
-      end
-      object Label9: TLabel
-        Left = 8
-        Top = 152
-        Width = 50
-        Height = 13
-        Caption = 'XA Status:'
-      end
-      object chkAutoAway: TCheckBox
-        Left = 8
-        Top = 32
-        Width = 177
-        Height = 17
-        Caption = 'Enable Auto Away'
-        TabOrder = 0
-      end
-      object StaticText7: TStaticText
-        Left = 0
-        Top = 0
-        Width = 363
-        Height = 20
-        Align = alTop
-        Alignment = taCenter
-        Caption = 'Auto Away Options'
-        Color = clHighlight
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clCaptionText
-        Font.Height = -13
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentColor = False
-        ParentFont = False
-        TabOrder = 6
-      end
-      object txtAwayTime: TEdit
-        Left = 232
-        Top = 70
-        Width = 33
-        Height = 21
-        TabOrder = 2
-        Text = '5'
-      end
-      object spnAway: TUpDown
-        Left = 265
-        Top = 70
-        Width = 15
-        Height = 21
-        Associate = txtAwayTime
-        Min = 1
-        Max = 600
-        Position = 5
-        TabOrder = 7
-        Wrap = False
-      end
-      object txtXATime: TEdit
-        Left = 232
-        Top = 94
-        Width = 33
-        Height = 21
-        TabOrder = 3
-        Text = '30'
-      end
-      object spnXA: TUpDown
-        Left = 265
-        Top = 94
-        Width = 15
-        Height = 21
-        Associate = txtXATime
-        Min = 1
-        Max = 600
-        Position = 30
-        TabOrder = 8
-        Wrap = False
-      end
-      object txtAway: TEdit
-        Left = 80
-        Top = 126
-        Width = 201
-        Height = 21
-        TabOrder = 4
-      end
-      object txtXA: TEdit
-        Left = 80
-        Top = 150
-        Width = 201
-        Height = 21
-        TabOrder = 5
-      end
-      object chkAAReducePri: TCheckBox
-        Left = 8
-        Top = 48
-        Width = 273
-        Height = 17
-        Caption = 'Reduce priority to 0 during auto-away.'
-        TabOrder = 1
-      end
-    end
     object tbsKeywords: TTabSheet
       Caption = 'Keywords'
       ImageIndex = 8
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 112
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1829,7 +1709,7 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 73
         Width = 363
-        Height = 280
+        Height = 285
         Align = alClient
         TabOrder = 1
       end
@@ -1844,7 +1724,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TLabel
           Left = 0
           Top = 0
-          Width = 306
+          Width = 363
           Height = 13
           Align = alTop
           Caption = 
@@ -1901,332 +1781,6 @@ object frmPrefs: TfrmPrefs
         Height = 312
         Align = alClient
         TabOrder = 1
-      end
-    end
-    object tbsCustomPres: TTabSheet
-      Caption = 'CustPres'
-      ImageIndex = 10
-      object Label8: TLabel
-        Left = 5
-        Top = 287
-        Width = 126
-        Height = 13
-        Caption = 'Presence tracking in chats'
-      end
-      object lstCustomPres: TListBox
-        Left = 0
-        Top = 20
-        Width = 363
-        Height = 77
-        Align = alTop
-        ItemHeight = 13
-        TabOrder = 0
-        OnClick = lstCustomPresClick
-      end
-      object StaticText10: TStaticText
-        Left = 0
-        Top = 0
-        Width = 363
-        Height = 20
-        Align = alTop
-        Alignment = taCenter
-        Caption = 'Custom Presence'
-        Color = clHighlight
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clCaptionText
-        Font.Height = -13
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentColor = False
-        ParentFont = False
-        TabOrder = 6
-      end
-      object pnlCustomPresButtons: TPanel
-        Left = 0
-        Top = 97
-        Width = 363
-        Height = 34
-        Align = alTop
-        BevelOuter = bvNone
-        TabOrder = 1
-        object btnCustomPresAdd: TButton
-          Left = 4
-          Top = 4
-          Width = 60
-          Height = 25
-          Caption = 'Add'
-          TabOrder = 0
-          OnClick = btnCustomPresAddClick
-        end
-        object btnCustomPresRemove: TButton
-          Left = 68
-          Top = 4
-          Width = 60
-          Height = 25
-          Caption = 'Remove'
-          TabOrder = 1
-          OnClick = btnCustomPresRemoveClick
-        end
-        object btnCustomPresClear: TButton
-          Left = 132
-          Top = 4
-          Width = 60
-          Height = 25
-          Caption = 'Clear'
-          TabOrder = 2
-          OnClick = btnCustomPresClearClick
-        end
-      end
-      object GroupBox1: TGroupBox
-        Left = 8
-        Top = 131
-        Width = 281
-        Height = 119
-        Caption = 'Custom Presence Properties'
-        TabOrder = 2
-        object Label11: TLabel
-          Left = 6
-          Top = 23
-          Width = 31
-          Height = 13
-          Caption = 'Name:'
-        end
-        object Label12: TLabel
-          Left = 6
-          Top = 47
-          Width = 33
-          Height = 13
-          Caption = 'Status:'
-        end
-        object Label13: TLabel
-          Left = 5
-          Top = 71
-          Width = 27
-          Height = 13
-          Caption = 'Type:'
-        end
-        object Label14: TLabel
-          Left = 177
-          Top = 73
-          Width = 34
-          Height = 13
-          Caption = 'Priority:'
-        end
-        object lblHotkey: TLabel
-          Left = 5
-          Top = 94
-          Width = 38
-          Height = 13
-          Caption = 'HotKey:'
-        end
-        object txtCPTitle: TEdit
-          Left = 48
-          Top = 20
-          Width = 225
-          Height = 21
-          TabOrder = 0
-          OnChange = txtCPTitleChange
-        end
-        object txtCPStatus: TEdit
-          Left = 48
-          Top = 44
-          Width = 225
-          Height = 21
-          TabOrder = 1
-          OnChange = txtCPTitleChange
-        end
-        object cboCPType: TComboBox
-          Left = 48
-          Top = 68
-          Width = 97
-          Height = 21
-          Style = csDropDownList
-          ItemHeight = 13
-          TabOrder = 2
-          OnChange = txtCPTitleChange
-          Items.Strings = (
-            'Chat'
-            'Available'
-            'Away'
-            'Ext. Away'
-            'Do Not Disturb')
-        end
-        object txtCPPriority: TEdit
-          Left = 218
-          Top = 69
-          Width = 39
-          Height = 21
-          TabOrder = 3
-          Text = '0'
-          OnChange = txtCPTitleChange
-        end
-        object spnPriority: TUpDown
-          Left = 257
-          Top = 69
-          Width = 16
-          Height = 21
-          Associate = txtCPPriority
-          Min = 0
-          Max = 1000
-          Position = 0
-          TabOrder = 4
-          Wrap = False
-        end
-        object txtCPHotkey: THotKey
-          Left = 48
-          Top = 92
-          Width = 97
-          Height = 19
-          HotKey = 32833
-          InvalidKeys = [hcNone, hcShift]
-          Modifiers = [hkAlt]
-          TabOrder = 5
-          OnChange = txtCPTitleChange
-        end
-      end
-      object chkPresenceMessageListen: TCheckBox
-        Left = 4
-        Top = 270
-        Width = 273
-        Height = 17
-        Caption = 'When Windows message received, change presence'
-        Checked = True
-        State = cbChecked
-        TabOrder = 4
-      end
-      object chkPresenceMessageSend: TCheckBox
-        Left = 4
-        Top = 254
-        Width = 281
-        Height = 17
-        Caption = 'When presence changes, send Windows message'
-        Checked = True
-        State = cbChecked
-        TabOrder = 3
-      end
-      object cboPresTracking: TComboBox
-        Left = 23
-        Top = 304
-        Width = 207
-        Height = 21
-        ItemHeight = 13
-        TabOrder = 5
-        Items.Strings = (
-          'Track all presence changes'
-          'Show only last presence change'
-          'Don'#39't show presence changes')
-      end
-    end
-    object tbsPlugins: TTabSheet
-      Caption = 'Plugins'
-      ImageIndex = 11
-      object Label6: TLabel
-        Left = 6
-        Top = 279
-        Width = 191
-        Height = 13
-        Caption = 'Plugin Directory (automatically scanned):'
-      end
-      object lblPluginScan: TLabel
-        Left = 16
-        Top = 324
-        Width = 155
-        Height = 13
-        Cursor = crHandPoint
-        Caption = 'Re-Scan this directory for plugins'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsUnderline]
-        ParentFont = False
-        OnClick = lblPluginScanClick
-      end
-      object StaticText12: TStaticText
-        Left = 0
-        Top = 0
-        Width = 363
-        Height = 20
-        Align = alTop
-        Alignment = taCenter
-        Caption = 'Plugins'
-        Color = clHighlight
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clCaptionText
-        Font.Height = -13
-        Font.Name = 'Arial'
-        Font.Style = [fsBold]
-        ParentColor = False
-        ParentFont = False
-        TabOrder = 0
-      end
-      object btnAddPlugin: TButton
-        Left = 6
-        Top = 240
-        Width = 75
-        Height = 25
-        Caption = 'Add'
-        TabOrder = 2
-      end
-      object btnConfigPlugin: TButton
-        Left = 90
-        Top = 240
-        Width = 75
-        Height = 25
-        Caption = 'Configure'
-        Enabled = False
-        TabOrder = 3
-        OnClick = btnConfigPluginClick
-      end
-      object btnRemovePlugin: TButton
-        Left = 174
-        Top = 240
-        Width = 75
-        Height = 25
-        Caption = 'Remove'
-        Enabled = False
-        TabOrder = 4
-      end
-      object txtPluginDir: TEdit
-        Left = 8
-        Top = 300
-        Width = 225
-        Height = 21
-        TabOrder = 5
-        OnChange = txtCPTitleChange
-      end
-      object btnBrowsePluginPath: TButton
-        Left = 239
-        Top = 298
-        Width = 75
-        Height = 25
-        Caption = 'Browse'
-        TabOrder = 6
-        OnClick = btnBrowsePluginPathClick
-      end
-      object lstPlugins: TTntListView
-        Left = 0
-        Top = 20
-        Width = 363
-        Height = 213
-        Align = alTop
-        BevelWidth = 0
-        Checkboxes = True
-        Columns = <
-          item
-            Caption = 'Plugin'
-            Width = 100
-          end
-          item
-            Caption = 'Description'
-            Width = 150
-          end
-          item
-            Caption = 'Filename'
-            Width = 80
-          end>
-        TabOrder = 1
-        ViewStyle = vsReport
       end
     end
     object tbsNetwork: TTabSheet

@@ -139,8 +139,11 @@ uses
   PrefSubscription in 'prefs\PrefSubscription.pas' {frmPrefSubscription},
   PrefFont in 'prefs\PrefFont.pas' {frmPrefFont},
   PrefDialogs in 'prefs\PrefDialogs.pas' {frmPrefDialogs},
-  PrefNotify in 'prefs\PrefNotify.pas' {frmPrefNotify}, 
-  PrefMsg in 'prefs\PrefMsg.pas' {frmPrefMsg};
+  PrefNotify in 'prefs\PrefNotify.pas' {frmPrefNotify},
+  PrefMsg in 'prefs\PrefMsg.pas' {frmPrefMsg},
+  PrefAway in 'prefs\PrefAway.pas' {frmPrefAway},
+  PrefPresence in 'prefs\PrefPresence.pas' {frmPrefPresence},
+  PrefPlugins in 'prefs\PrefPlugins.pas' {frmPrefPlugins};
 
 {$R *.TLB}
 
@@ -163,6 +166,9 @@ begin
   Application.CreateForm(TfrmPrefFont, frmPrefFont);
   Application.CreateForm(TfrmPrefDialogs, frmPrefDialogs);
   Application.CreateForm(TfrmPrefMsg, frmPrefMsg);
+  Application.CreateForm(TfrmPrefAway, frmPrefAway);
+  Application.CreateForm(TfrmPrefPresence, frmPrefPresence);
+  Application.CreateForm(TfrmPrefPlugins, frmPrefPlugins);
   if (frmExodus = nil) then
     Halt;
 
