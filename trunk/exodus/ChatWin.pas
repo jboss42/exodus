@@ -90,6 +90,7 @@ type
     _check_event: boolean;
     _send_composing: boolean;
 
+    procedure SetupPrefs();
     procedure ChangePresImage(show: widestring; status: widestring);
     procedure ResetPresImage;
 
@@ -240,18 +241,23 @@ begin
     if (MainSession.Profile.ConnectionType = conn_normal) then
         DragAcceptFiles( Handle, True );
 
-    AssignDefaultFont(Self.Font);
-    lblJID.Font.Color := clBlue;
-    lblJID.Font.Style := [fsUnderline];
-    
-    // setup prefs
-//    AssignDefaultFont(MsgList.Font);
-    MsgList.Color := TColor(MainSession.Prefs.getInt('color_bg'));
-    MsgOut.Color := MsgList.Color;
-    MsgOut.Font.Assign(MsgList.Font);
+    SetupPrefs();
 
     mnuSendFile.Enabled := (MainSession.Profile.ConnectionType = conn_normal);
 end;
+
+procedure TfrmChat.SetupPrefs();
+begin
+    AssignDefaultFont(Self.Font);
+    lblJID.Font.Color := clBlue;
+    lblJID.Font.Style := [fsUnderline];
+
+    // setup prefs
+    MsgList.Color := TColor(MainSession.Prefs.getInt('color_bg'));
+    MsgOut.Color := MsgList.Color;
+    MsgOut.Font.Assign(MsgList.Font);
+end;
+
 
 {---------------------------------------}
 procedure TfrmChat.SetJID(cjid: widestring);
@@ -510,6 +516,8 @@ begin
     else if (event = '/session/connected') then begin
         Self.SetJID(jid);
         end
+    else if (event = '/session/prefs') then
+        SetupPrefs()
     else if (event = '/session/block') then begin
         // if this jid just got blocked, just close the window.
         if (_jid.jid = tag.GetAttribute('jid')) then begin
