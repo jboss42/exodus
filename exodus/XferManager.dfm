@@ -28,23 +28,9 @@ inherited frmXferManager: TfrmXferManager
     BevelOuter = bvNone
     BorderWidth = 5
     TabOrder = 1
-    object TntLabel1: TTntLabel
-      Left = 5
-      Top = 5
-      Width = 97
-      Height = 23
-      Align = alLeft
-      Caption = 'File Transfers'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
     object btnClose: TSpeedButton
       Left = 410
-      Top = 2
+      Top = 5
       Width = 23
       Height = 21
       Caption = 'X'
@@ -57,6 +43,17 @@ inherited frmXferManager: TfrmXferManager
       ParentFont = False
       Visible = False
       OnClick = btnCloseClick
+    end
+    object pnlCaption: TTntPanel
+      Left = 3
+      Top = 4
+      Width = 403
+      Height = 26
+      BevelOuter = bvLowered
+      Caption = 'File Transfers'
+      Color = clHighlight
+      ParentBackground = False
+      TabOrder = 0
     end
   end
   object httpServer: TIdHTTPServer

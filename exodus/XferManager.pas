@@ -31,7 +31,7 @@ uses
     Dialogs, Dockable, ExtCtrls, IdCustomHTTPServer, IdHTTPServer, IdSocks,
     IdTCPServer, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
     IdHTTP, IdServerIOHandler, IdServerIOHandlerSocket, StdCtrls,
-  TntStdCtrls, Buttons;
+  TntStdCtrls, Buttons, TntExtCtrls;
 
 const
     WM_CLOSE_FRAME = WM_USER + 6005;
@@ -77,8 +77,8 @@ type
     OpenDialog1: TOpenDialog;
     tcpServer: TIdTCPServer;
     Panel1: TPanel;
-    TntLabel1: TTntLabel;
     btnClose: TSpeedButton;
+    pnlCaption: TTntPanel;
     procedure FormCreate(Sender: TObject);
     procedure httpServerCommandGet(AThread: TIdPeerThread;
       ARequestInfo: TIdHTTPRequestInfo;
@@ -430,6 +430,10 @@ begin
         _current := 0;
     end;
     _cb := MainSession.RegisterCallback(SessionCallback, '/session');
+
+    pnlCaption.Font.Color := clHighlightText;
+    pnlCaption.Font.Size := 10;
+    pnlCaption.Font.Style := [fsBold];
 end;
 
 {---------------------------------------}
@@ -789,6 +793,7 @@ procedure TfrmXferManager.FormResize(Sender: TObject);
 begin
   inherited;
     btnClose.Left := Panel1.Width - btnClose.Width - 2;
+    pnlCaption.Width := btnClose.Left - 5;
 end;
 
 {---------------------------------------}
