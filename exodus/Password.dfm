@@ -54,12 +54,6 @@ object frmPassword: TfrmPassword
     inherited Panel1: TPanel
       Left = 73
       Height = 28
-      inherited btnOK: TButton
-        Default = True
-      end
-      inherited btnCancel: TButton
-        Cancel = True
-      end
     end
   end
   object txtNewPassword: TEdit

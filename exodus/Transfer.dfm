@@ -63,7 +63,7 @@ object frmTransfer: TfrmTransfer
     Left = 0
     Top = 22
     Width = 259
-    Height = 97
+    Height = 92
     Align = alClient
     ReadOnly = True
     TabOrder = 1
@@ -71,7 +71,7 @@ object frmTransfer: TfrmTransfer
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 144
+    Top = 139
     Width = 259
     Height = 34
     Align = alBottom
@@ -94,7 +94,7 @@ object frmTransfer: TfrmTransfer
   end
   object pnlProgress: TPanel
     Left = 0
-    Top = 119
+    Top = 114
     Width = 259
     Height = 25
     Align = alBottom

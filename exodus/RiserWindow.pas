@@ -69,12 +69,12 @@ var
 begin
 
     // Don't show toast while auto away
-    if ((frmJabber.IsAutoAway) or (frmJabber.IsAutoXA)) then exit;
+    if ((frmExodus.IsAutoAway) or (frmExodus.IsAutoXA)) then exit;
 
-    pre_last_tick := frmJabber.last_tick;
+    pre_last_tick := frmExodus.last_tick;
 
     bmp := TBitmap.Create;
-    frmJabber.ImageList2.GetBitmap(imgIndex, bmp);
+    frmExodus.ImageList2.GetBitmap(imgIndex, bmp);
 
     if singleToast = nil then begin
         // create a new instance
@@ -210,7 +210,7 @@ end;
 
 procedure TfrmRiser.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-    frmJabber.ResetLastTick(pre_last_tick + (5 * 1000));
+    frmExodus.ResetLastTick(pre_last_tick + (5 * 1000));
     singleToast := nil;
     Action := caFree;
 end;

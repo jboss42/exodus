@@ -1,8 +1,8 @@
 object frmMsgRecv: TfrmMsgRecv
-  Left = 267
-  Top = 170
-  Width = 531
-  Height = 410
+  Left = 229
+  Top = 162
+  Width = 333
+  Height = 416
   Caption = 'Message'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,33 +18,31 @@ object frmMsgRecv: TfrmMsgRecv
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 186
-    Width = 523
+    Top = 187
+    Width = 325
     Height = 3
     Cursor = crVSplit
     Align = alBottom
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 152
-    Width = 523
+    Top = 153
+    Width = 325
     Height = 34
     Align = alBottom
     AutoScroll = False
     TabOrder = 0
     inherited Bevel1: TBevel
-      Width = 523
+      Width = 325
     end
     inherited Panel1: TPanel
-      Left = 363
+      Left = 165
       Height = 29
       inherited btnOK: TButton
-        Top = 0
         Caption = 'Reply'
         OnClick = frameButtons1btnOKClick
       end
       inherited btnCancel: TButton
-        Top = 0
         Caption = 'Close'
         OnClick = frameButtons1btnCancelClick
       end
@@ -53,7 +51,7 @@ object frmMsgRecv: TfrmMsgRecv
   object pnlFrom: TPanel
     Left = 0
     Top = 0
-    Width = 523
+    Width = 325
     Height = 22
     Align = alTop
     BevelOuter = bvNone
@@ -79,7 +77,7 @@ object frmMsgRecv: TfrmMsgRecv
     object txtFrom: TStaticText
       Left = 53
       Top = 2
-      Width = 468
+      Width = 270
       Height = 18
       Align = alClient
       Caption = '<JID>'
@@ -97,7 +95,7 @@ object frmMsgRecv: TfrmMsgRecv
   object pnlSubject: TPanel
     Left = 0
     Top = 22
-    Width = 523
+    Width = 325
     Height = 22
     Align = alTop
     BevelOuter = bvNone
@@ -123,7 +121,7 @@ object frmMsgRecv: TfrmMsgRecv
     object txtSubject: TStaticText
       Left = 53
       Top = 2
-      Width = 468
+      Width = 270
       Height = 18
       Align = alClient
       Caption = '<JID>'
@@ -140,8 +138,8 @@ object frmMsgRecv: TfrmMsgRecv
   end
   object pnlReply: TPanel
     Left = 0
-    Top = 189
-    Width = 523
+    Top = 190
+    Width = 325
     Height = 192
     Align = alBottom
     BevelOuter = bvNone
@@ -151,26 +149,25 @@ object frmMsgRecv: TfrmMsgRecv
     object MsgOut: TRichEdit
       Left = 3
       Top = 3
-      Width = 517
+      Width = 319
       Height = 152
       Align = alClient
       ScrollBars = ssBoth
       TabOrder = 0
-      WantTabs = True
     end
     inline frameButtons2: TframeButtons
       Left = 3
       Top = 155
-      Width = 517
+      Width = 319
       Height = 34
       Align = alBottom
       AutoScroll = False
       TabOrder = 1
       inherited Bevel1: TBevel
-        Width = 517
+        Width = 319
       end
       inherited Panel1: TPanel
-        Left = 357
+        Left = 159
         Height = 29
         inherited btnOK: TButton
           Caption = 'Send'
@@ -185,8 +182,8 @@ object frmMsgRecv: TfrmMsgRecv
   object txtMsg: TExRichEdit
     Left = 0
     Top = 68
-    Width = 523
-    Height = 84
+    Width = 325
+    Height = 85
     Align = alClient
     TabOrder = 4
     OnURLClick = txtMsgURLClick
@@ -194,7 +191,7 @@ object frmMsgRecv: TfrmMsgRecv
   object pnlSendSubject: TPanel
     Left = 0
     Top = 44
-    Width = 523
+    Width = 325
     Height = 24
     Align = alTop
     BevelOuter = bvNone
@@ -221,7 +218,7 @@ object frmMsgRecv: TfrmMsgRecv
     object txtSendSubject: TMemo
       Left = 66
       Top = 2
-      Width = 455
+      Width = 257
       Height = 20
       Align = alClient
       TabOrder = 0

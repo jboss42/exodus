@@ -84,7 +84,7 @@ begin
         frmDebug.ShowDefault();
 
     if (frmDebug.Docked) then
-        frmJabber.Tabs.ActivePage := frmDebug.TabSheet
+        frmExodus.Tabs.ActivePage := frmDebug.TabSheet
     else
         frmDebug.Show();
 end;

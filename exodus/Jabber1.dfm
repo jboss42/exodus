@@ -1,6 +1,6 @@
-object Exodus: TExodus
-  Left = 295
-  Top = 201
+object frmExodus: TfrmExodus
+  Left = 215
+  Top = 204
   Width = 457
   Height = 278
   AlphaBlendValue = 240
@@ -29,7 +29,7 @@ object Exodus: TExodus
     Left = 0
     Top = 30
     Width = 449
-    Height = 194
+    Height = 195
     ActivePage = tbsMsg
     Align = alClient
     DockSite = True
@@ -52,7 +52,7 @@ object Exodus: TExodus
         Left = 209
         Top = 0
         Width = 3
-        Height = 166
+        Height = 167
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = Splitter1Moved
@@ -61,7 +61,7 @@ object Exodus: TExodus
         Left = 0
         Top = 0
         Width = 209
-        Height = 166
+        Height = 167
         Align = alLeft
         BevelOuter = bvNone
         UseDockManager = False
@@ -73,7 +73,7 @@ object Exodus: TExodus
         Left = 212
         Top = 0
         Width = 229
-        Height = 166
+        Height = 167
         Align = alClient
         BevelOuter = bvNone
         DragCursor = crDefault
@@ -217,6 +217,7 @@ object Exodus: TExodus
       object mnuMessage: TMenuItem
         Caption = 'Send Message'
         ShortCut = 116
+        OnClick = mnuMessageClick
       end
       object mnuChat: TMenuItem
         Caption = 'Start Chat'

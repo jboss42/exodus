@@ -164,7 +164,7 @@ begin
 
     f.Show;
     if f.TabSheet <> nil then
-        frmJabber.Tabs.ActivePage := f.TabSheet;
+        frmExodus.Tabs.ActivePage := f.TabSheet;
     Result := f;
 end;
 

@@ -29,6 +29,7 @@ type
         evt_None,
         evt_Message,
         evt_Invite,
+        evt_RosterItems, 
         evt_Presence,
         evt_OOB,
         evt_Version,
@@ -63,7 +64,7 @@ function CreateJabberEvent(tag: TXMLTag): TJabberEvent;
 {---------------------------------------}
 implementation
 uses
-    Messages, Windows, ExUtils, Session;
+    Roster, Messages, Windows, ExUtils, Session;
 
 var
     _taskbar_rect: TRect;
@@ -117,8 +118,9 @@ procedure TJabberEvent.Parse(tag: TXMLTag);
 var
     tmps, s, ptype, ns, t: string;
     delay, qtag, tmp_tag: TXMLTag;
-    c_tags: TXMLTagList;
-    i: integer;
+    i_tags, c_tags: TXMLTagList;
+    i, j: integer;
+    ri: TJabberRosterItem;
 begin
     // create the event from a xml tag
     data_type := '';
@@ -128,6 +130,8 @@ begin
         if (t = 'chat') then exit;
 
         eType := evt_Message;
+
+        // Look at all of the child tags of <message>
         c_tags := tag.ChildTags();
         for i := 0 to c_tags.Count - 1 do begin
             tmp_tag := c_tags[i];
@@ -140,20 +144,38 @@ begin
                 else
                     data_type := tmp_tag.GetAttribute('jid');
                 end
+            else if (ns = 'jabber:x:roster') then begin
+                // we are getting roster items
+                eType := evt_RosterItems;
+                data_type := tag.GetBasicText('body');
+                i_tags := tmp_tag.QueryTags('item');
+                for j := 0 to i_tags.Count - 1 do begin
+                    ri := TJabberRosterItem.Create();
+                    ri.parse(i_tags[j]);
+                    _data_list.AddObject(ri.jid.jid, ri);
+                    end;
+                i_tags.Free();
+                end;
             end;
         c_tags.Free();
 
+        // pull out from & ID for all types of events
         from := tag.getAttribute('from');
         id := tag.getAttribute('id');
 
+        // For messages, pull out the subject
         if (eType = evt_Message) then begin
             tmp_tag := tag.GetFirstTag('subject');
             if (tmp_tag <> nil) then
                 data_type := tmp_tag.Data;
             end;
-        tmp_tag := tag.GetFirstTag('body');
-        if (tmp_tag <> nil) then
-            _data_list.Text := tmp_tag.Data;
+
+        // When we are doing roster items, the _data_list contains the items.
+        if (eType <> evt_RosterItems) then begin
+            tmp_tag := tag.GetFirstTag('body');
+            if (tmp_tag <> nil) then
+                _data_list.Text := tmp_tag.Data;
+            end;
 
         delay := tag.QueryXPTag('/message/x[@xmlns="jabber:x:delay"]');
         if (delay <> nil) then begin
@@ -240,22 +262,6 @@ begin
             data_type := 'Last Activity';
             _data_list.Add('Idle for' + secsToDuration(qTag.getAttribute('seconds')) + '.');
             end;
-
-        {
-        else if (ns = XMLNS_IQOOB) then begin
-            eType := evt_OOB;
-            qTag := tag.getFirstTag('query');
-            tmp_tag := qtag.GetFirstTag('url');
-
-            _data_list.Add(tag.GetAttribute('from') + ' is sending you a file. Click on the link below');
-            _data_list.Add('File Transfer URL: ' + tmp_tag.Data);
-
-            tmp_tag := qTag.GetFirstTag('desc');
-            if (tmp_tag <> nil) then
-                _data_list.Add('Description: ' + tmp_tag.Data);
-
-            end;
-        }
         end;
 end;
 

@@ -210,8 +210,8 @@ var
 begin
     // Build the regex expression and
     // compile the emoticon_list for fast lookups.
-    y := frmJabber.imgYahooEmoticons;
-    msn := frmJabber.imgMSNEmoticons;
+    y := frmExodus.imgYahooEmoticons;
+    msn := frmExodus.imgMSNEmoticons;
 
     // This is a "meta-regex" that should match everything
     e := '(.*)((\([a-zA-Z0-9@{}%&~?/^]+\))|([:;BoOxX][^\t ]+)|(=;))(\s|$)';

@@ -175,7 +175,7 @@ begin
 
         with AddTag('query') do begin
             PutAttribute('xmlns', XMLNS_LAST);
-            idle := (GetTickCount() - frmJabber.last_tick) div 1000;
+            idle := (GetTickCount() - frmExodus.last_tick) div 1000;
             PutAttribute('seconds', IntToStr(idle));
             end;
         end;

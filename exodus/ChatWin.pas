@@ -126,7 +126,7 @@ var
     ritem: TJabberRosterItem;
 begin
     // either show an existing chat or start one.
-    lt := frmJabber.last_tick;
+    lt := frmExodus.last_tick;
 
     chat := MainSession.ChatList.FindChat(sjid, resource, '');
     if chat = nil then begin
@@ -167,7 +167,7 @@ begin
             Show();
         end;
     Result := TfrmChat(chat.window);
-    frmJabber.ResetLastTick(lt + 1000);
+    frmExodus.ResetLastTick(lt + 1000);
 end;
 
 {---------------------------------------}
@@ -374,7 +374,7 @@ begin
         // Flash Window
         if (cn and notify_flash) > 0 then begin
             if (Self.Docked) then
-                FlashWindow(frmJabber.Handle, true)
+                FlashWindow(frmExodus.Handle, true)
             else
                 FlashWindow(Self.Handle, true);
             end;
@@ -603,6 +603,7 @@ begin
     timFlash.Enabled := false;
     _pres_img := _old_img;
     imgStatus.Repaint();
+    imgStatus.Refresh();
 end;
 
 {---------------------------------------}
@@ -643,6 +644,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmChat.AcceptFiles( var msg : TMessage );
 const
   cnMaxFileNameLen = 255;
@@ -672,6 +674,7 @@ begin
   DragFinish( msg.WParam );
 end;
 
+{---------------------------------------}
 procedure TfrmChat.FormDestroy(Sender: TObject);
 begin
     inherited;

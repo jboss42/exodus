@@ -77,6 +77,9 @@ var
 procedure FileReceive(from, url, desc: string);
 procedure FileSend(tojid: string; fn: string = '');
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 
 {$R *.dfm}
@@ -84,11 +87,12 @@ implementation
 uses
     JabberID,
     Session,
-    Presence, 
-    XMLTag, 
+    Presence,
+    XMLTag,
     ShellAPI,
     ExUtils;
 
+{---------------------------------------}
 procedure FileReceive(from, url, desc: string);
 var
     xfer: TfrmTransfer;
@@ -108,6 +112,7 @@ begin
     xfer.Show;
 end;
 
+{---------------------------------------}
 procedure FileSend(tojid: string; fn: string = '');
 var
     xfer: TFrmTransfer;
@@ -151,6 +156,7 @@ begin
     xfer.Show;
 end;
 
+{---------------------------------------}
 procedure TfrmTransfer.txtMsgURLClick(Sender: TObject; url: String);
 begin
     // Browse for a new file..
@@ -166,6 +172,7 @@ begin
         ShellExecute(0, 'open', PChar(filename), '', '', SW_NORMAL);
 end;
 
+{---------------------------------------}
 procedure TfrmTransfer.frameButtons1btnOKClick(Sender: TObject);
 var
     iq: TXMLTag;
@@ -213,6 +220,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmTransfer.httpClientWork(Sender: TObject;
   AWorkMode: TWorkMode; const AWorkCount: Integer);
 begin
@@ -221,12 +229,14 @@ begin
     bar1.Position := totBytes;
 end;
 
+{---------------------------------------}
 procedure TfrmTransfer.httpClientWorkBegin(Sender: TObject;
   AWorkMode: TWorkMode; const AWorkCountMax: Integer);
 begin
     bar1.Max := AWorkCountMax;
 end;
 
+{---------------------------------------}
 procedure TfrmTransfer.httpClientWorkEnd(Sender: TObject;
   AWorkMode: TWorkMode);
 begin
@@ -235,6 +245,7 @@ begin
     Self.mode := 2;
 end;
 
+{---------------------------------------}
 procedure TfrmTransfer.frameButtons1btnCancelClick(Sender: TObject);
 begin
     case Self.Mode of
@@ -243,12 +254,14 @@ begin
     Self.Close;
 end;
 
+{---------------------------------------}
 procedure TfrmTransfer.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
     Action := caFree;
 end;
 
+{---------------------------------------}
 procedure TfrmTransfer.httpServerCommandGet(AThread: TIdPeerThread;
   RequestInfo: TIdHTTPRequestInfo; ResponseInfo: TIdHTTPResponseInfo);
 begin
@@ -257,12 +270,14 @@ begin
     httpServer.ServeFile(AThread, ResponseInfo, filename);
 end;
 
+{---------------------------------------}
 procedure TfrmTransfer.httpServerDisconnect(AThread: TIdPeerThread);
 begin
     txtMsg.Lines.Add('Receiver Disconnected.');
     SendMessage(Self.Handle, WM_XFER, 0, 0);
 end;
 
+{---------------------------------------}
 procedure TfrmTransfer.WMXFER(var msg: TMessage);
 begin
     // we are getting told to shutdown..
@@ -270,7 +285,7 @@ begin
     Self.Close();
 end;
 
-
+{---------------------------------------}
 procedure TfrmTransfer.httpServerConnect(AThread: TIdPeerThread);
 begin
     txtMsg.Lines.Add('Got Connection.');

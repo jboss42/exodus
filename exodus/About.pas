@@ -23,19 +23,20 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, jpeg, ExtCtrls, StdCtrls, buttonFrame;
+  Dialogs, jpeg, ExtCtrls, StdCtrls, buttonFrame, ComCtrls, OLERichEdit,
+  ExRichEdit;
 
 type
   TfrmAbout = class(TForm)
     Panel1: TPanel;
     Image1: TImage;
-    Label1: TLabel;
     frameButtons1: TframeButtons;
-    Memo1: TMemo;
     pnlVersion: TPanel;
+    InfoBox: TExRichEdit;
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
+    procedure InfoBoxURLClick(Sender: TObject; url: String);
   private
     { Private declarations }
   public
@@ -50,7 +51,7 @@ implementation
 {$R *.dfm}
 
 uses
-    ExUtils;
+    ShellAPI, ExUtils;
 
 procedure TfrmAbout.frameButtons1btnCancelClick(Sender: TObject);
 begin
@@ -65,6 +66,11 @@ end;
 procedure TfrmAbout.FormCreate(Sender: TObject);
 begin
     pnlVersion.Caption := 'Version: ' + GetAppVersion();
+end;
+
+procedure TfrmAbout.InfoBoxURLClick(Sender: TObject; url: String);
+begin
+    ShellExecute(0, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
 end;
 
 end.

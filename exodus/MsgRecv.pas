@@ -26,7 +26,7 @@ uses
     ExEvents,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit,
-  OLERichEdit;
+    OLERichEdit;
 
 type
   TfrmMsgRecv = class(TfrmDockable)
@@ -64,40 +64,58 @@ var
   frmMsgRecv: TfrmMsgRecv;
 
 function StartMsg(jid: string): TfrmMsgRecv;
-function ShowEvent(e: TJabberEvent): TfrmMsgRecv;
+procedure ShowEvent(e: TJabberEvent);
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 uses
-    ShellAPI, 
+    ShellAPI,
     ExUtils, JabberMsg,
-    Room,
-    Session;
+    RosterRecv, Room,
+    Session, Jabber1;
 
 {$R *.DFM}
 
-function ShowEvent(e: TJabberEvent): TfrmMsgRecv;
+{---------------------------------------}
+procedure ShowEvent(e: TJabberEvent);
+var
+    fmsg: TfrmMsgRecv;
+    fcts: TfrmRosterRecv;
 begin
     // display this msg in a new window
-    Result := TfrmMsgRecv.Create(nil);
-    with Result do begin
-        eType := e.eType;
-        txtFrom.Caption := e.from;
-        txtSubject.Caption := e.data_type;
-        txtMsg.Lines.Assign(e.Data);
+    case e.eType of
+    evt_RosterItems: begin
+        // roster items
+        fcts := TfrmRosterRecv.Create(nil);
+        fcts.Restore(e);
+        end
+    else begin
+        // other things
+        fmsg := TfrmMsgRecv.Create(nil);
+        with fmsg do begin
+            eType := e.eType;
+            txtFrom.Caption := e.from;
+            txtSubject.Caption := e.data_type;
+            txtMsg.Lines.Assign(e.Data);
 
-        if eType = evt_Invite then begin
-            // Change button captions for TC Invites
-            frameButtons1.btnOK.Caption := 'Accept';
-            frameButtons1.btnCancel.Caption := 'Decline';
-            end
-        else
-            // normally, we don't want a REPLY button
-            frameButtons1.btnOK.Visible := (eType = evt_Message);
+            if eType = evt_Invite then begin
+                // Change button captions for TC Invites
+                frameButtons1.btnOK.Caption := 'Accept';
+                frameButtons1.btnCancel.Caption := 'Decline';
+                end
+            else
+                // normally, we don't want a REPLY button
+                frameButtons1.btnOK.Visible := (eType = evt_Message);
 
-        ShowDefault;
+            ShowDefault;
+            end;
         end;
+    end;
 end;
 
+{---------------------------------------}
 function StartMsg(jid: string): TfrmMsgRecv;
 begin
     // send a normal msg to this person
@@ -113,11 +131,12 @@ begin
         txtMsg.Visible := false;
         pnlReply.Visible := true;
         pnlReply.Align := alClient;
+        ActiveControl := MsgOut;
         ShowDefault;
-        Result.FocusControl(txtSendSubject);
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmMsgRecv.FormCreate(Sender: TObject);
 begin
     // pre-fill parts of the header grid
@@ -126,21 +145,25 @@ begin
     Self.ClientHeight := 200;
 end;
 
+{---------------------------------------}
 procedure TfrmMsgRecv.FormResize(Sender: TObject);
 begin
     // Resize some of the form elements
 end;
 
+{---------------------------------------}
 procedure TfrmMsgRecv.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     Action := caFree;
 end;
 
+{---------------------------------------}
 procedure TfrmMsgRecv.frameButtons1btnCancelClick(Sender: TObject);
 begin
     Self.Close;
 end;
 
+{---------------------------------------}
 procedure TfrmMsgRecv.frameButtons1btnOKClick(Sender: TObject);
 var
     jid: string;
@@ -160,6 +183,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmMsgRecv.frameButtons2btnOKClick(Sender: TObject);
 var
     m: TJabberMessage;
@@ -175,11 +199,13 @@ begin
     Self.Close;
 end;
 
+{---------------------------------------}
 procedure TfrmMsgRecv.frameButtons2btnCancelClick(Sender: TObject);
 begin
     Self.Close;
 end;
 
+{---------------------------------------}
 procedure TfrmMsgRecv.txtMsgURLClick(Sender: TObject; url: String);
 begin
     ShellExecute(0, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);

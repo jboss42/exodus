@@ -130,7 +130,7 @@ begin
 
     if ((n and notify_flash) > 0) then
         // flash the main window
-        FlashWindow(frmJabber.Handle, true);
+        FlashWindow(frmExodus.Handle, true);
 end;
 
 end.
