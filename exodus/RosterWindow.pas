@@ -72,7 +72,7 @@ type
     popSendContacts: TMenuItem;
     N4: TMenuItem;
     NewGroup1: TMenuItem;
-    InvitetoConference1: TMenuItem;
+    popInvite: TMenuItem;
     SendContactsTo1: TMenuItem;
     popBlock: TMenuItem;
     popGroupBlock: TMenuItem;
@@ -135,7 +135,7 @@ type
     procedure popGrpRenameClick(Sender: TObject);
     procedure popGrpRemoveClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
-    procedure InvitetoConference1Click(Sender: TObject);
+    procedure popInviteClick(Sender: TObject);
     procedure popGrpInviteClick(Sender: TObject);
     procedure popSendContactsClick(Sender: TObject);
     procedure popBlockClick(Sender: TObject);
@@ -188,6 +188,9 @@ type
     _cur_bm: TJabberBookmark;       // current bookmark selected
     _cur_myres: TJabberMyResource;  // current My Resource selected
     _cur_status: integer;           // current status for the current item
+
+    _brand_muc: boolean;
+    _brand_ft: boolean;
 
     _collapsed_grps: TWideStringList;
     _blockers: TWideStringlist;     // current list of jids being blocked
@@ -360,6 +363,16 @@ begin
     aniWait.ResName := 'Status';
     pnlConnect.Visible := true;
     pnlConnect.Align := alClient;
+
+    // branding stuff
+    with (MainSession.Prefs) do begin
+        _brand_muc := getBool('brand_muc');
+        _brand_ft := getBool('brand_ft');
+
+        popInvite.Visible := _brand_muc;
+        popGrpInvite.Visible := _brand_muc;
+        popSendFile.Visible := _brand_ft;
+    end;
 
     treeRoster.Visible := false;
     pnlStatus.Visible := true;
@@ -561,11 +574,13 @@ begin
         treeRoster.AlphaSort();
     end
     else if event = '/roster/bookmark' then begin
-        bi := MainSession.Roster.Bookmarks.indexOf(tag.getAttribute('jid'));
-        if bi >= 0 then begin
-            bm := TJabberBookmark(MainSession.roster.Bookmarks.Objects[bi]);
-            if (bm <> nil) then
-                RenderBookmark(bm);
+        if (_brand_muc) then begin
+            bi := MainSession.Roster.Bookmarks.indexOf(tag.getAttribute('jid'));
+            if bi >= 0 then begin
+                bm := TJabberBookmark(MainSession.roster.Bookmarks.Objects[bi]);
+                if (bm <> nil) then
+                    RenderBookmark(bm);
+            end;
         end;
     end
     else if event = '/roster/item' then begin
@@ -583,6 +598,8 @@ var
     bm_node: TTreeNode;
 begin
     // render this bookmark
+    if (not _brand_muc) then exit;
+    
     if _bookmark = nil then begin
         // create some container for bookmarks
         bi := MainSession.Roster.GrpList.indexOf(g_bookmarks);
@@ -784,9 +801,11 @@ begin
 
     // re-render each item
     with MainSession.Roster do begin
-        for i := 0 to Bookmarks.Count - 1 do begin
-            bm := TJabberBookmark(Bookmarks.Objects[i]);
-            RenderBookmark(bm);
+        if (_brand_muc) then begin
+            for i := 0 to Bookmarks.Count - 1 do begin
+                bm := TJabberBookmark(Bookmarks.Objects[i]);
+                RenderBookmark(bm);
+            end;
         end;
 
         for i := 0 to Count - 1 do begin
@@ -2272,7 +2291,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRosterWindow.InvitetoConference1Click(Sender: TObject);
+procedure TfrmRosterWindow.popInviteClick(Sender: TObject);
 var
     jids: TWideStringList;
 begin

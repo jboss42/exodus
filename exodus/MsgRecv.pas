@@ -285,6 +285,9 @@ begin
 
     pnlTop.Height := pnlSubject.Top + pnlSubject.Height + 3;
 
+    //branding
+    mnuSendFile.Visible := MainSession.Prefs.getBool('brand_ft');
+
     _xtags := '';
     _events := TQueue.Create();
     _controller := TExMsgController.Create();

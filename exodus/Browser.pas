@@ -483,6 +483,9 @@ begin
     _iq := nil;
     vwBrowse.ViewStyle := TViewStyle(MainSession.Prefs.getInt('browse_view'));
 
+    // Branding
+    mJoinConf.Visible := MainSession.Prefs.getBool('brand_muc');
+    mBookmark.Visible := MainSession.Prefs.getBool('brand_muc');
 end;
 
 {---------------------------------------}

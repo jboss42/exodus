@@ -243,6 +243,15 @@ begin
     // Load the system panel
     _system := nil;
     _cur_panel := nil;
+
+    // branding
+    with (MainSession.Prefs) do begin
+        imgTransfer.Visible := getBool('brand_ft');
+        lblTransfer.Visible := getBool('brand_ft');
+        imgPlugins.Visible := getBool('brand_plugs');
+        lblPlugins.Visible := getBool('brand_plugs');
+    end;
+
     TabSelect(lblSystem);
 
     // Init all the other panels
@@ -287,7 +296,9 @@ procedure TfrmPrefs.TabSelect(Sender: TObject);
             c := ScrollBox1.Controls[i];
             if (c is TTntLabel) then begin
                 if (c = lbl) then begin
-                    Shape1.Top := c.Top - 40;
+                    // left, top, width, height
+                    Shape1.SetBounds(1, c.Top - 39,
+                        ScrollBox1.ClientWidth - 2, c.Height + 41);
                     TTntLabel(c).Font.Color := clMenuText;
                     _cur_label := TTntLabel(c);
                 end

@@ -161,6 +161,7 @@ object frmRosterWindow: TfrmRosterWindow
         Align = alLeft
         Caption = 'Offline'
         Transparent = False
+        Layout = tlCenter
         OnClick = pnlStatusClick
       end
     end
@@ -239,9 +240,9 @@ object frmRosterWindow: TfrmRosterWindow
       Caption = 'Send File...'
       OnClick = popSendFileClick
     end
-    object InvitetoConference1: TMenuItem
+    object popInvite: TMenuItem
       Caption = 'Invite to Conference'
-      OnClick = InvitetoConference1Click
+      OnClick = popInviteClick
     end
     object popSendContacts: TMenuItem
       Caption = 'Send Contact To...'
