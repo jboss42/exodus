@@ -442,11 +442,11 @@ Section Exodus SEC_Exodus
     !ifdef DAILY
         File "${PRODUCT}${MAP_EXTENSION}"
     !endif
-    
+
     ; BRANDING: Uncomment if you are doing a branded setup.
     ; SetOverwrite off ; only if you don't want to overwrite existing file.
     ; File "${BRANDING_FILE}${XML_EXTENSION}"
-    ; SetOverwrite on    
+    ; SetOverwrite on
 
     ; Create the plugins dir, and lay down the default logger
     CreateDirectory "$INSTDIR\${PLUGINS_DIR}"
@@ -651,32 +651,46 @@ Extra Shell Shortcuts
 ================================================================================
 */
 SubSection "$(NAME_SHELL)" SEC_Shell
-
-    ; if we're in silent mode, don't do any of the shell stuff, ever.    
-    Push "${INSTALLER_SWITCH_SILENT}"
-    Call funcGetConfigParam
-    Pop $0
-    IntCmpU '$0' '1' shellsilent
-    
     Section "Desktop Shortcut" SEC_Desktop
+
+        ; if we're in silent mode, don't do any of the shell stuff, ever.
+        Push "${INSTALLER_SWITCH_SILENT}"
+        Call funcGetConfigParam
+        Pop $0
+        IntCmpU '$0' '1' silent1
+
         !ifdef USE_HKLM_KEY
             SetShellVarContext all
         !else
             SetShellVarContext current
         !endif
         CreateShortcut "$DESKTOP\${PRODUCT}${LINK_EXTENSION}" "$INSTDIR\${PRODUCT}${EXEC_EXTENSION}"
+
+        silent1:
 	SectionEnd
 
 	Section "Quickluanch Shortcut" SEC_Quicklaunch
+        Push "${INSTALLER_SWITCH_SILENT}"
+        Call funcGetConfigParam
+        Pop $0
+        IntCmpU '$0' '1' silent2
+
         !ifdef USE_HKLM_KEY
             SetShellVarContext all
         !else
             SetShellVarContext current
         !endif
         CreateShortcut "$QUICKLAUNCH\${PRODUCT}${LINK_EXTENSION}" "$INSTDIR\${PRODUCT}${EXEC_EXTENSION}"
+
+        silent2:
     SectionEnd
 
     Section "Start Exodus with Windows" SEC_AutoStart
+        Push "${INSTALLER_SWITCH_SILENT}"
+        Call funcGetConfigParam
+        Pop $0
+        IntCmpU '$0' '1' silent3
+
         !ifdef USE_HKLM_KEY
             SetShellVarContext all
             WriteRegStr HKLM "${PRODUCT_RUN_KEY}" "${PRODUCT}" "$INSTDIR\${PRODUCT}${EXEC_EXTENSION}"
@@ -684,9 +698,9 @@ SubSection "$(NAME_SHELL)" SEC_Shell
             SetShellVarContext current
             WriteRegStr HKCU "${PRODUCT_RUN_KEY}" "${PRODUCT}" "$INSTDIR\${PRODUCT}${EXEC_EXTENSION}"
         !endif
+
+        silent3:
     SectionEnd
-    
-  shellsilent:
 SubSectionEnd
 
 /*

@@ -184,8 +184,7 @@ uses
   Random in '..\jopl\Random.pas',
   stringprep in '..\jopl\stringprep.pas',
   CommandWizard in 'CommandWizard.pas' {frmCommandWizard},
-  fResults in 'fResults.pas' {frameResults: TFrame},
-  test1 in 'test1.pas' {frmTest1};
+  fResults in 'fResults.pas' {frameResults: TFrame};
 
 {$R *.TLB}
 
