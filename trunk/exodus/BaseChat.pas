@@ -481,6 +481,7 @@ end;
 procedure TfrmBaseChat.WMThrob(var msg: TMessage);
 begin
     // Enable the flash timer
+    timWinFlash.Enabled := false;
     timWinFlash.Enabled := true;
 end;
 

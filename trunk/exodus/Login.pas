@@ -168,6 +168,7 @@ begin
         cboProfilesChange(Self);
         p.Resource := sProfileDefaultResource;
         ShowConnDetails(p);
+        lblJID.Caption := p.Username + '@' + p.Server + '/' + p.Resource;
     end;
 end;
 
