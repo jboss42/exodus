@@ -292,9 +292,14 @@ inherited frmRoom: TfrmRoom
       OnClick = popRosterSubscribeClick
     end
     object popRosterVCard: TTntMenuItem
-      Caption = 'Lookup vCard'
+      Caption = 'Contact'#39's Profile'
       Enabled = False
       OnClick = popRosterVCardClick
+    end
+    object popRosterBrowse: TTntMenuItem
+      Caption = 'Browse contact'
+      Enabled = False
+      OnClick = popRosterBrowseClick
     end
     object N3: TTntMenuItem
       Caption = '-'

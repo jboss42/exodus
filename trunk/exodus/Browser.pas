@@ -76,6 +76,7 @@ type
     pnlNode: TPanel;
     pnlNodeID: TTntPanel;
     cboNode: TTntComboBox;
+    mAddContact: TTntMenuItem;
     procedure btnGoClick(Sender: TObject);
     procedure ResizeAddressBar(Sender: TObject);
     procedure cboJIDKeyPress(Sender: TObject; var Key: Char);
@@ -448,6 +449,7 @@ begin
     mSearch.Enabled := enabled;
     mRegister.Enabled := enabled;
     mJoinConf.Enabled := enabled;
+    mAddContact.Enabled := enabled;
 end;
 
 {---------------------------------------}
@@ -479,6 +481,15 @@ begin
     else if (b.hasFeature('gc-1.0')) then mJoinConf.Enabled := true
     else if (b.category = 'conference') then mJoinConf.Enabled := true
     else mJoinConf.Enabled := false;
+
+    // contacts
+    if (b.category = 'client') then mAddContact.Enabled := true
+    else if (b.category = 'user') then mAddContact.Enabled := true
+    else if ((b.category = 'directory') and (b.CatType = 'user')) then
+        mAddContact.Enabled := true
+    else mAddContact.Enabled := false;
+
+    
 end;
 
 {---------------------------------------}
@@ -710,6 +721,8 @@ var
 begin
   inherited;
     with TTntListItem(Item) do begin
+        if (index >= _blist.count) then exit;
+          
         b := TJabberEntity(_blist[index]);
         if (b.name <> '') then
             caption := b.name

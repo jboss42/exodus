@@ -157,7 +157,6 @@ begin
     // check for a handler for this JID already
     try
         // check for messages we don't care about
-
         if (event <> '/unhandled') then begin
             if (mtype = 'normal') then mtype := '';
 
