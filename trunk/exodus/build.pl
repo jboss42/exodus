@@ -20,6 +20,20 @@ my $opts = "-B -Q -DExodus -U\"$DD\\Lib\"";
 my $comp = "..\\..\\Components";
 my $plugopts = "$opts -U\"$comp\" -U\"$::TNT\"";
 
+my $rtype = "release";
+if ($#ARGV >= 0) {
+  if ($ARGV[0] eq "daily") {
+	$rtype = "daily";
+  } elsif ($ARGV[0] eq "help") {
+	print <<EOF;
+USAGE:
+build.pl [daily]
+   defaults to release.
+EOF
+	exit(64);
+  }
+}
+
 unlink "setup.exe";
 unlink "Exodus.exe";
 grep unlink, glob("output/*.dcu"); # rm *.dcu
@@ -60,8 +74,12 @@ close DESC;
 close EN;
 
 chdir "..";
-e("$::NSIS /v1 exodus.nsi");
-
+if ($rtype eq "daily") {
+  e("$::NSIS /v1 /DDAILY exodus.nsi");
+} else {
+  e("$::NSIS /v1 exodus.nsi");
+}
+  
 print "SUCCESS!!!\n";
 
 sub e {
