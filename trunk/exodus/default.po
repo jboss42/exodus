@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-12-08 08:32\n"
-"PO-Revision-Date: 2003-12-08 08:32\n"
+"POT-Creation-Date: 2003-12-09 08:42\n"
+"PO-Revision-Date: 2003-12-09 08:42\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -694,7 +694,7 @@ msgstr ""
 #. frmInvite..pnlMain..lstJIDS......Caption
 #: invite.dfm:77
 #. frmRoomAdminList..lstItems......Caption
-#: RoomAdminList.dfm:86
+#: RoomAdminList.dfm:88
 #. frmRosterRecv..lvContacts......Caption
 #: RosterRecv.dfm:204
 msgid "Jabber ID"
@@ -1131,7 +1131,7 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksPassword..Caption
 #: ConnDetails.dfm:339
 #. frmJoinRoom..Tabs..TabSheet1..lblPassword..Caption
-#: JoinRoom.dfm:58
+#: JoinRoom.dfm:60
 #. frmPrefNetwork..GroupBox2..lblProxyPassword..Caption
 #: prefs/PrefNetwork.dfm:117
 #. frmPrefTransfer..grpWebDav..Label8..Caption
@@ -1181,7 +1181,7 @@ msgstr ""
 #. frmInputPass..txtPassword..PasswordChar
 #: InputPassword.dfm:60
 #. frmJoinRoom..Tabs..TabSheet1..txtPassword..PasswordChar
-#: JoinRoom.dfm:91
+#: JoinRoom.dfm:107
 #. frmPassword..txtOldPassword..PasswordChar
 #: Password.dfm:42
 #. frmPassword..txtNewPassword..PasswordChar
@@ -1445,7 +1445,7 @@ msgstr ""
 #: RosterWindow.dfm:604
 #. init the cmd line stuff
 #: ExSession.pas:189
-#: Jabber1.pas:2685
+#: Jabber1.pas:2700
 #: RosterWindow.pas:346
 #: RosterWindow.pas:368
 #: RosterWindow.pas:1617
@@ -1466,7 +1466,7 @@ msgstr ""
 #: Jabber1.dfm:2668
 #. frmRosterWindow..popStatus..presAway..Caption
 #: RosterWindow.dfm:413
-#: Jabber1.pas:2683
+#: Jabber1.pas:2698
 #: RosterWindow.pas:348
 #: RosterWindow.pas:369
 #: RosterWindow.pas:1601
@@ -1617,8 +1617,8 @@ msgstr ""
 #: DockWizard.dfm:46
 #. frmWizard..TntPanel1..Panel3..btnNext..Caption
 #: Wizard.dfm:54
-#: JoinRoom.pas:360
-#: JoinRoom.pas:381
+#: JoinRoom.pas:372
+#: JoinRoom.pas:393
 msgid "Next >"
 msgstr ""
 
@@ -1866,7 +1866,7 @@ msgstr ""
 #. do this.
 #: ExSession.pas:475
 #: ExUtils.pas:1207
-#: Jabber1.pas:1189
+#: Jabber1.pas:1197
 #: Login.pas:104
 #: Login.pas:177
 msgid "Exodus"
@@ -2226,59 +2226,66 @@ msgid "Join Room"
 msgstr ""
 
 #. frmJoinRoom..Panel1..lblWizardTitle..Caption
-#: JoinRoom.dfm:30
+#: JoinRoom.dfm:31
 msgid "Join or Browse for a Room"
 msgstr ""
 
 #. frmJoinRoom..Panel1..lblWizardDetails..Caption
-#: JoinRoom.dfm:33
+#: JoinRoom.dfm:34
 msgid "Specify or browse for a room to join or "
 "create."
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..Label2..Caption
-#: JoinRoom.dfm:44
+#: JoinRoom.dfm:46
 msgid "Room Server:"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..Label1..Caption
-#: JoinRoom.dfm:51
+#: JoinRoom.dfm:53
 msgid "Room Name:"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..Label3..Caption
-#: JoinRoom.dfm:65
-#. frmAdd..Label2..Caption
-#: RosterAdd.dfm:33
-#. frmSubscribe..boxAdd..Label2..Caption
-#: subscribe.dfm:81
-msgid "Nickname:"
+#: JoinRoom.dfm:67
+msgid "My Nickname:"
+msgstr ""
+
+#. frmJoinRoom..Tabs..TabSheet1..TntLabel1..Caption
+#: JoinRoom.dfm:74
+msgid "If a new room is created you may be prompted to configure "
+"it."
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..txtServer..Hint
-#: JoinRoom.dfm:72
+#: JoinRoom.dfm:88
 #. frmJoinRoom..Tabs..TabSheet2..Panel2..txtServerFilter..Hint
-#: JoinRoom.dfm:175
+#: JoinRoom.dfm:203
 msgid "Select the room server to use."
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..txtServer..Text
-#: JoinRoom.dfm:77
+#: JoinRoom.dfm:93
 msgid "txtServer"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..optSpecify..Caption
-#: JoinRoom.dfm:106
+#: JoinRoom.dfm:122
 msgid "Join or Create the following room:"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..optBrowse..Caption
-#: JoinRoom.dfm:117
+#: JoinRoom.dfm:133
 msgid "Browse servers for a room to join"
 msgstr ""
 
+#. frmJoinRoom..Tabs..TabSheet1..chkDefaultConfig..Caption
+#: JoinRoom.dfm:142
+msgid "Always accept default room configuration."
+msgstr ""
+
 #. frmJoinRoom..Tabs..TabSheet2..Caption
-#: JoinRoom.dfm:123
+#: JoinRoom.dfm:148
 #. frmJud..Tabs..TabSheet2..Caption
 #: jud.dfm:77
 #. frmRegister..Tabs..TabSheet2..Caption
@@ -2287,29 +2294,29 @@ msgid "TabSheet2"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet2..lstRooms......Caption
-#: JoinRoom.dfm:133
+#: JoinRoom.dfm:158
 msgid "Room"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet2..lstRooms......Caption
-#: JoinRoom.dfm:137
+#: JoinRoom.dfm:162
 msgid "Server"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet2..lstRooms......Caption
-#: JoinRoom.dfm:141
+#: JoinRoom.dfm:166
 #. frmPrefPlugins..lstPlugins......Caption
 #: prefs/PrefPlugins.dfm:89
 msgid "Description"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet2..Panel2..lblFetch..Caption
-#: JoinRoom.dfm:168
+#: JoinRoom.dfm:196
 msgid "Show rooms found on this server"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet2..Panel2..btnFetch..Caption
-#: JoinRoom.dfm:189
+#: JoinRoom.dfm:217
 msgid "Fetch Rooms"
 msgstr ""
 
@@ -2384,7 +2391,7 @@ msgstr ""
 #: jud.dfm:214
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:142
-#: Jabber1.pas:2256
+#: Jabber1.pas:2271
 msgid "Start Chat"
 msgstr ""
 
@@ -5865,37 +5872,37 @@ msgstr ""
 #. frmRoom..popRoom..popAdmin..popVoiceList..Caption
 #: Room.dfm:199
 #. edit a list
-#: Room.pas:1712
+#: Room.pas:1741
 msgid "Edit Voice List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popBanList..Caption
 #: Room.dfm:203
-#: Room.pas:1714
+#: Room.pas:1743
 msgid "Edit Ban List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popMemberList..Caption
 #: Room.dfm:207
-#: Room.pas:1716
+#: Room.pas:1745
 msgid "Edit Member List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popModeratorList..Caption
 #: Room.dfm:211
-#: Room.pas:1718
+#: Room.pas:1747
 msgid "Edit Moderator List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popAdminList..Caption
 #: Room.dfm:218
-#: Room.pas:1720
+#: Room.pas:1749
 msgid "Edit Admin List"
 msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popOwnerList..Caption
 #: Room.dfm:222
-#: Room.pas:1722
+#: Room.pas:1751
 msgid "Edit Owner List"
 msgstr ""
 
@@ -5906,7 +5913,7 @@ msgstr ""
 
 #. frmRoom..popRoom..popAdmin..popDestroy..Caption
 #: Room.dfm:233
-#: Room.pas:1736
+#: Room.pas:1765
 msgid "Destroy Room"
 msgstr ""
 
@@ -5926,7 +5933,7 @@ msgstr ""
 #: RosterWindow.dfm:378
 #. frmRosterWindow..popGroup..popGroupBlock..Caption
 #: RosterWindow.dfm:632
-#: Room.pas:1458
+#: Room.pas:1487
 #: RosterWindow.pas:2048
 #. do blocking madness
 #: RosterWindow.pas:2085
@@ -5980,18 +5987,25 @@ msgid "Room List Modifier"
 msgstr ""
 
 #. frmRoomAdminList..Label1..Caption
-#: RoomAdminList.dfm:35
+#: RoomAdminList.dfm:37
 msgid "Enter New Jabber ID's for this list:"
 msgstr ""
 
 #. frmRoomAdminList..lstItems......Caption
-#: RoomAdminList.dfm:82
+#: RoomAdminList.dfm:84
 msgid "Nick"
 msgstr ""
 
 #. frmAdd..Label1..Caption
 #: RosterAdd.dfm:26
 msgid "Contact ID:"
+msgstr ""
+
+#. frmAdd..Label2..Caption
+#: RosterAdd.dfm:33
+#. frmSubscribe..boxAdd..Label2..Caption
+#: subscribe.dfm:81
+msgid "Nickname:"
 msgstr ""
 
 #. frmAdd..Label3..Caption
@@ -6422,61 +6436,61 @@ msgid "Chat Activity: "
 msgstr ""
 
 #: ChatWin.pas:742
-#: Jabber1.pas:2573
-#: Jabber1.pas:2579
+#: Jabber1.pas:2588
+#: Jabber1.pas:2594
 #. post a msg to the window and disable the text input box.
-#: Room.pas:646
+#: Room.pas:652
 msgid "You have been disconnected."
 msgstr ""
 
 #. if this jid just got blocked, just close the window.
-#: ChatWin.pas:760
+#: ChatWin.pas:759
 msgid "This user is now blocked."
 msgstr ""
 
 #. Change the bulb
-#: ChatWin.pas:782
+#: ChatWin.pas:781
 #. make sure the user is still connected
+#: ChatWin.pas:826
 #: ChatWin.pas:827
-#: ChatWin.pas:828
 msgid "offline"
 msgstr ""
 
-#: ChatWin.pas:784
+#: ChatWin.pas:783
 msgid "unknown"
 msgstr ""
 
-#: ChatWin.pas:786
+#: ChatWin.pas:785
 msgid "away"
 msgstr ""
 
-#: ChatWin.pas:788
+#: ChatWin.pas:787
 msgid "xa"
 msgstr ""
 
-#: ChatWin.pas:790
+#: ChatWin.pas:789
 msgid "dnd"
 msgstr ""
 
-#: ChatWin.pas:792
+#: ChatWin.pas:791
 msgid "chat"
 msgstr ""
 
-#: ChatWin.pas:842
+#: ChatWin.pas:841
 msgid "available"
 msgstr ""
 
-#: ChatWin.pas:846
-#: ChatWin.pas:848
+#: ChatWin.pas:845
+#: ChatWin.pas:847
 msgid "is now"
 msgstr ""
 
 #. check to see if we're already subscribed...
-#: ChatWin.pas:877
+#: ChatWin.pas:876
 msgid "You are already subscribed to this contact"
 msgstr ""
 
-#: ChatWin.pas:1195
+#: ChatWin.pas:1194
 msgid "This chat window is busy. Close anyways?"
 msgstr ""
 
@@ -6586,8 +6600,8 @@ msgstr ""
 #. check for errors..
 #: ExEvents.pas:447
 #: ExEvents.pas:448
-#: Room.pas:443
-#: Room.pas:445
+#: Room.pas:449
+#: Room.pas:451
 msgid "ERROR: "
 msgstr ""
 
@@ -6902,7 +6916,7 @@ msgstr ""
 
 #: invite.pas:192
 #. otherwise, just join..
-#: JoinRoom.pas:233
+#: JoinRoom.pas:243
 msgid "The Room Address you entered is invalid. It must be valid Jabber "
 "ID."
 msgstr ""
@@ -6921,105 +6935,105 @@ msgid "Enter Password"
 msgstr ""
 
 #. For other OS's we need to use the wicked nasty DLL
-#: Jabber1.pas:977
+#: Jabber1.pas:981
 msgid "Trying to setup the Auto Away timer."
 msgstr ""
 
-#: Jabber1.pas:999
+#: Jabber1.pas:1003
 msgid "AutoAway Setup FAILED!"
 msgstr ""
 
 #. do nothing here..
-#: Jabber1.pas:1006
+#: Jabber1.pas:1010
 msgid "Using Win32 API for Autoaway checks!!"
 msgstr ""
 
-#: Jabber1.pas:1010
+#: Jabber1.pas:1014
 msgid "ERROR GETTING WIN32 API ADDR FOR GetLastInputInfo!!"
 msgstr ""
 
-#: Jabber1.pas:1066
+#: Jabber1.pas:1076
 msgid "There was an error trying to authenticate you.\n"
 "Either you used the wrong password, or this account is already in use "
 "by someone else."
 msgstr ""
 
-#: Jabber1.pas:1101
+#: Jabber1.pas:1111
 msgid "An Error occurred trying to register your new account. This server "
 "may not allow open registration."
 msgstr ""
 
-#: Jabber1.pas:1116
+#: Jabber1.pas:1126
 msgid "This account does not exist on this server. Create a new "
 "account?"
 msgstr ""
 
 #. if we have a new account, prompt for reg info
-#: Jabber1.pas:1168
+#: Jabber1.pas:1176
 msgid "Your new jabber account is activated. Would you like to fill out "
 "additional registration information?"
 msgstr ""
 
 #. set us to away
-#: Jabber1.pas:2055
+#: Jabber1.pas:2067
 msgid "Setting AutoAway"
 msgstr ""
 
 #. set us to xa
-#: Jabber1.pas:2091
+#: Jabber1.pas:2103
 msgid "Setting AutoXA"
 msgstr ""
 
 #. reset our status to available
-#: Jabber1.pas:2105
+#: Jabber1.pas:2120
 msgid "Setting Auto Available"
 msgstr ""
 
 #. lookup some arbitrary vcard..
-#: Jabber1.pas:2140
+#: Jabber1.pas:2155
 msgid "Lookup Profile"
 msgstr ""
 
-#: Jabber1.pas:2140
-#: Jabber1.pas:2256
-#: Jabber1.pas:2513
+#: Jabber1.pas:2155
+#: Jabber1.pas:2271
+#: Jabber1.pas:2528
 msgid "Enter Jabber ID: "
 msgstr ""
 
-#: Jabber1.pas:2355
+#: Jabber1.pas:2370
 msgid "Old password is incorrect."
 msgstr ""
 
-#: Jabber1.pas:2359
+#: Jabber1.pas:2374
 msgid "New password does not match."
 msgstr ""
 
-#: Jabber1.pas:2379
-#: Jabber1.pas:2384
+#: Jabber1.pas:2394
+#: Jabber1.pas:2399
 msgid "Error changing password."
 msgstr ""
 
-#: Jabber1.pas:2382
+#: Jabber1.pas:2397
 msgid "Password changed."
 msgstr ""
 
 #. kick off a service registration..
-#: Jabber1.pas:2460
+#: Jabber1.pas:2475
 msgid "Register with Service"
 msgstr ""
 
-#: Jabber1.pas:2460
+#: Jabber1.pas:2475
 msgid "Enter Jabber ID of Service: "
 msgstr ""
 
-#: Jabber1.pas:2513
+#: Jabber1.pas:2528
 msgid "Send a Message"
 msgstr ""
 
 #. fire up an invite for this room using the selected contacts
-#: Jabber1.pas:2776
+#: Jabber1.pas:2791
 #. send roster items to this contact.
-#: Jabber1.pas:2786
+#: Jabber1.pas:2801
 #. Send contacts to this JID..
 #: RosterWindow.pas:2522
 #. we got a URL drop
@@ -7028,23 +7042,23 @@ msgstr ""
 msgid "You must select one or more contacts."
 msgstr ""
 
-#: Jabber1.pas:2914
+#: Jabber1.pas:2929
 msgid "Branding error!"
 msgstr ""
 
-#: JoinRoom.pas:189
+#: JoinRoom.pas:197
 msgid "- ALL SERVERS -"
 msgstr ""
 
 #. change tabs if they selected browse
-#: JoinRoom.pas:225
-#: JoinRoom.pas:379
+#: JoinRoom.pas:235
+#: JoinRoom.pas:391
 #. normal result
 #: RegForm.pas:415
 msgid "Finish"
 msgstr ""
 
-#: JoinRoom.pas:244
+#: JoinRoom.pas:254
 msgid "You must enter a nickname"
 msgstr ""
 
@@ -7253,187 +7267,192 @@ msgstr ""
 msgid "Remove this contact from the %s group."
 msgstr ""
 
-#: Room.pas:359
+#: Room.pas:365
 msgid "%s Room"
 msgstr ""
 
 #. if blocked ignore anything they say, even subject changes.
-#: Room.pas:451
-#: Room.pas:1008
-#: Room.pas:1415
+#: Room.pas:457
+#: Room.pas:1037
+#: Room.pas:1444
 #. block
-#: Room.pas:1423
-#: Room.pas:1455
+#: Room.pas:1452
+#: Room.pas:1484
 #. get the data for this person..
-#: Room.pas:1906
+#: Room.pas:1935
 msgid "Blocked"
 msgstr ""
 
 #. check for keywords
-#: Room.pas:463
+#: Room.pas:469
 msgid "Keyword in "
 msgstr ""
 
-#: Room.pas:469
+#: Room.pas:475
 msgid "Activity in "
 msgstr ""
 
 #. check for various presence errors
-#: Room.pas:722
-#: Room.pas:959
+#: Room.pas:728
+#: Room.pas:965
 #. they match
-#: Room.pas:1282
+#: Room.pas:1311
 msgid "Your nickname is already being used. Please select another "
 "one."
 msgstr ""
 
-#: Room.pas:731
+#: Room.pas:737
 msgid "You supplied an invalid password to enter this "
 "room."
 msgstr ""
 
-#: Room.pas:739
+#: Room.pas:745
 msgid "The room is being created. Please try again "
 "later."
 msgstr ""
 
-#: Room.pas:744
+#: Room.pas:750
 msgid "You are not allowed to enter the room. You must be on the member "
 "list."
 msgstr ""
 
-#: Room.pas:749
-#: Room.pas:958
+#: Room.pas:755
+#: Room.pas:964
 msgid "You are not on the member list for this room. Try and "
 "register?"
 msgstr ""
 
-#: Room.pas:765
+#: Room.pas:771
 msgid "The room has been destroyed for an unknown "
 "reason."
 msgstr ""
 
 #. this user has changed their nick..
-#: Room.pas:788
-#: Room.pas:954
+#: Room.pas:794
+#: Room.pas:960
 msgid "%s is now known as %s."
 msgstr ""
 
-#: Room.pas:796
-#: Room.pas:952
+#: Room.pas:802
+#: Room.pas:958
 msgid "%s has been banned from this room. %s"
 msgstr ""
 
-#: Room.pas:797
-#: Room.pas:955
+#: Room.pas:803
+#: Room.pas:961
 msgid "%s has been kicked from this room. %s"
 msgstr ""
 
-#: Room.pas:803
+#: Room.pas:809
 msgid "%s has left the room."
 msgstr ""
 
 #. show new user message
-#: Room.pas:828
+#: Room.pas:834
 msgid "%s has entered the room."
 msgstr ""
 
 #. someone maybe changed my role
-#: Room.pas:853
+#: Room.pas:859
 msgid "You have been granted voice."
 msgstr ""
 
-#: Room.pas:855
+#: Room.pas:861
 msgid "Your voice has been revoked."
 msgstr ""
 
-#: Room.pas:857
+#: Room.pas:863
 msgid "%s has a new role of %s."
 msgstr ""
 
-#: Room.pas:953
+#: Room.pas:959
 msgid "This room has been destroyed."
 msgstr ""
 
-#: Room.pas:956
+#: Room.pas:962
 msgid "You are on the ban list for this room."
 msgstr ""
 
-#: Room.pas:957
+#: Room.pas:963
 msgid "You are not allowed to create rooms."
 msgstr ""
 
-#: Room.pas:1102
+#: Room.pas:1007
+msgid "There was an error using the default room configuration. Configuring "
+"it manually."
+msgstr ""
+
+#: Room.pas:1131
 msgid "Your room keyword regular expressions are invalid. Keyword matching "
 "will be turned off for this room."
 msgstr ""
 
 #. send the msg out
-#: Room.pas:1243
+#: Room.pas:1272
 msgid "/me has changed the subject to: "
 msgstr ""
 
 #. Change the subject
-#: Room.pas:1257
+#: Room.pas:1286
 msgid "Change room subject"
 msgstr ""
 
-#: Room.pas:1257
+#: Room.pas:1286
 msgid "New subject"
 msgstr ""
 
-#: Room.pas:1301
-#: Room.pas:1301
+#: Room.pas:1330
+#: Room.pas:1330
 msgid "New nickname"
 msgstr ""
 
-#: Room.pas:1324
+#: Room.pas:1353
 msgid "Bookmark Room"
 msgstr ""
 
-#: Room.pas:1324
+#: Room.pas:1353
 msgid "Enter bookmark name:"
 msgstr ""
 
-#: Room.pas:1456
+#: Room.pas:1485
 #: RosterWindow.pas:2044
 #: RosterWindow.pas:2095
 msgid "UnBlock"
 msgstr ""
 
-#: Room.pas:1614
+#: Room.pas:1643
 msgid "You have been kicked."
 msgstr ""
 
-#: Room.pas:1615
-#: Room.pas:1615
+#: Room.pas:1644
+#: Room.pas:1644
 msgid "Kick Reason"
 msgstr ""
 
-#: Room.pas:1618
+#: Room.pas:1647
 msgid "You have been banned."
 msgstr ""
 
-#: Room.pas:1619
-#: Room.pas:1619
+#: Room.pas:1648
+#: Room.pas:1648
 msgid "Ban Reason"
 msgstr ""
 
 #. Destroy Room
-#: Room.pas:1733
+#: Room.pas:1762
 msgid "Do you really want to destroy the room? All users will be "
 "removed."
 msgstr ""
 
-#: Room.pas:1735
+#: Room.pas:1764
 msgid "The owner has destroyed the room."
 msgstr ""
 
-#: Room.pas:1736
+#: Room.pas:1765
 msgid "Destroy Reason"
 msgstr ""
 
-#: RoomAdminList.pas:141
+#: RoomAdminList.pas:144
 msgid "There was an error fetching this room "
 "list."
 msgstr ""
