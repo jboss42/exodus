@@ -1293,19 +1293,14 @@ begin
            if (rm.show = sBlocked) then begin
               //unblock
               rm.show := rm.blockShow;
-
-              if rm.Show = 'away' then rm.Node.ImageIndex := ico_Away
-              else if rm.Show = 'xa' then rm.Node.ImageIndex := ico_XA
-              else if rm.Show = 'dnd' then rm.Node.ImageIndex := ico_DND
-              else if rm.Show = 'chat' then rm.Node.ImageIndex := ico_Chat
-              else rm.Node.ImageIndex := ico_Online;
+              rm.blockShow := '';
           end
            else begin
               //block
               rm.blockShow := rm.show;
               rm.show := sBlocked;
-              rm.Node.ImageIndex := ico_blocked;
           end;
+          lstRoster.Invalidate();
        end;
     end;
 
@@ -1773,7 +1768,8 @@ begin
     // get the data for this person..
     rm := TRoomMember(_rlist[Item.Index]);
     Item.Caption := rm.Nick;
-    if rm.show = 'away' then Item.ImageIndex := 2
+    if (rm.show = sBlocked) then item.ImageIndex := ico_blocked
+    else if rm.show = 'away' then Item.ImageIndex := 2
     else if rm.show = 'xa' then Item.ImageIndex := 10
     else if rm.show = 'dnd' then Item.ImageIndex := 3
     else if rm.show = 'chat' then Item.ImageIndex := 4
