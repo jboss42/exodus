@@ -57,6 +57,7 @@ InstallDirRegKey HKLM "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
 !define MUI_UNICON "exodus.ico"
 !define MUI_LICENSEPAGE
 !define MUI_COMPONENTSPAGE
+;!define MUI_COMPONENTSPAGE_SMALLDESC
 !define MUI_DIRECTORYPAGE
 !define MUI_STARTMENUPAGE
 !define MUI_STARTMENUPAGE_DEFAULTFOLDER "${MUI_PRODUCT}"
@@ -74,11 +75,12 @@ InstallDirRegKey HKLM "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
 ;Modern UI System
 !define MUI_BRANDINGTEXT " "
 ;  !insertmacro MUI_SYSTEM
+!define MUI_HEADERBITMAP "exodus-installer.bmp"
 !insertmacro MUI_LANGUAGE "English"
 
 
 ; The stuff to install
-Section "!${MUI_PRODUCT} (Required)" SEC_Exodus
+Section "!${MUI_PRODUCT}" SEC_Exodus
         ; this one is required
         SectionIn 1 RO
 
@@ -88,7 +90,7 @@ Section "!${MUI_PRODUCT} (Required)" SEC_Exodus
         ; Set output path to the installation directory.
         SetOutPath $INSTDIR
         File "Exodus.exe"
-	File "IdleHooks.dll"
+	    File "IdleHooks.dll"
 
         ; BRANDING: Uncomment if you are doing a branded setup.
         ; SetOverwrite off ; only if you don't want to overwrite existing file.
@@ -111,7 +113,7 @@ Section "!${MUI_PRODUCT} (Required)" SEC_Exodus
             Abort "Error downloading richtext library"
   lbl_execrich:
 !else
-	File richupd.exe
+	    File richupd.exe
 !endif
         WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Runonce \
           "Exodus-Setup" "$CMDLINE"
@@ -136,16 +138,16 @@ Section "!${MUI_PRODUCT} (Required)" SEC_Exodus
           "UninstallString" '"$INSTDIR\uninstall.exe"'
         WriteUninstaller "uninstall.exe"
 
-	; register file associations.  TODO: figure this out for real, and
-	; remove these semi-bogus ones.
-	WriteRegStr HKCR .xmpp "" XMPPfile
-	WriteRegStr HKCR .xmpp "Content Type" "application/xmpp"
-	WriteRegStr HKCR XMPPfile "" "eXtensible Messaging and Presence Protocol"
-	WriteRegDword HKCR XMPPfile "EditFlags" 0x10000
-	WriteRegDword HKCR XMPPfile "BrowserFlags" 0x8
-	WriteRegStr HKCR "XMPPfile\shell" "" "Open"
-	WriteRegStr HKCR "XMPPfile\shell\Open\command" "" '"$INSTDIR\Exodus.exe" -o "%1"'
-	WriteRegStr HKCR "MIME\Database\Content Type\application/xmpp" "Extension" ".xmpp"
+    	; register file associations.  TODO: figure this out for real, and
+    	; remove these semi-bogus ones.
+    	WriteRegStr HKCR .xmpp "" XMPPfile
+    	WriteRegStr HKCR .xmpp "Content Type" "application/xmpp"
+    	WriteRegStr HKCR XMPPfile "" "eXtensible Messaging and Presence Protocol"
+    	WriteRegDword HKCR XMPPfile "EditFlags" 0x10000
+    	WriteRegDword HKCR XMPPfile "BrowserFlags" 0x8
+    	WriteRegStr HKCR "XMPPfile\shell" "" "Open"
+    	WriteRegStr HKCR "XMPPfile\shell\Open\command" "" '"$INSTDIR\Exodus.exe" -o "%1"'
+    	WriteRegStr HKCR "MIME\Database\Content Type\application/xmpp" "Extension" ".xmpp"
 
         StrCpy $0 0
   outer_loop:
@@ -208,7 +210,7 @@ Section "SSL Support" SEC_SSL
   ssl:
         ZipDLL::extractall $INSTDIR $INSTDIR\indy_openssl096.zip
         Delete $INSTDIR\indy_openssl096.zip
-	Delete $INSTDIR\readme.txt
+	    Delete $INSTDIR\readme.txt
 !else
 	File libeay32.dll
 	File ssleay32.dll
@@ -225,22 +227,21 @@ SubSectionEnd
 
 ; Start menu shortcuts
 Section "" SEC_Menu
-  	; register all of the plugin .dll's
-  	ClearErrors
-  	FindFirst $0 $1 "$INSTDIR\plugins\*.dll"
-  	IfErrors nodlls
+    ; register all of the plugin .dll's
+    ClearErrors
+    FindFirst $0 $1 "$INSTDIR\plugins\*.dll"
+    IfErrors nodlls
   nextdll:
-
-  	ClearErrors
-  	RegDll $INSTDIR\plugins\$1
-  	IfErrors regerror findnextdll
+    ClearErrors
+    RegDll $INSTDIR\plugins\$1
+    IfErrors regerror findnextdll
   regerror:
     DetailPrint "Error trying to register $INSTDIR\plugins\$1"
 
   findnextdll:
-  	ClearErrors
-  	FindNext $0 $1
-  	IfErrors dllregdone nextdll
+    ClearErrors
+    FindNext $0 $1
+    IfErrors dllregdone nextdll
 
   dllregdone:
   	FindClose $0
@@ -348,7 +349,7 @@ LangString DESC_Exodus ${LANG_ENGLISH} \
 "The main exodus program."
 
 LangString DESC_SSL ${LANG_ENGLISH} \
-"You will need these libraries to use SSL connections.  These will be retrieved via the Internet, using your IE proxy settings."
+"You will need these libraries to use SSL connections.  These will be retrieved via the Internet, using your IE proxy settings. This does not work with auto-configured proxies."
 
 LangString DESC_Bleed ${LANG_ENGLISH} \
 "Exodus will check for new versions of the latest development build whenever you login.  These sometimes happen several times a day."
@@ -385,6 +386,14 @@ Function NotifyInstances
 
 start:
         StrCpy $1 0
+        
+        ; check to see if we have any instances
+        ; if we do, show a warning..
+        FindWindow $0 "TfrmExodus" "" 0
+        IntCmp $0 0 done
+        MessageBox MB_OKCANCEL|MB_ICONQUESTION "Click OK, to close all running copies of Exodus, and install the new version. Cancel will abort the installation." IDOK loop
+        ; cancel
+        Quit
 loop:
     FindWindow $0 "TfrmExodus" "" 0
     IntCmp $0 0 done
