@@ -170,14 +170,25 @@ end;
 {---------------------------------------}
 procedure TfrmAdd.txtJIDExit(Sender: TObject);
 var
+    new: Widestring;
     tmp_id: TJabberID;
 begin
-    // add the nickname if it's not there.
-    if (txtNickname.Text = '') then begin
-        tmp_id := TJabberID.Create(txtJID.Text);
-        txtNickname.Text := tmp_id.user;
+    if (txtJID.Text = '') then exit;
+    tmp_id := TJabberID.Create(txtJID.Text);
+
+    if ((cboType.ItemIndex = 0) and (tmp_id.user = '')) then begin
+        new := txtJid.Text + '@' + MainSession.Profile.Server;
         tmp_id.Free();
+        tmp_id := TJabberID.Create(new);
+        txtJid.Text := new;
     end;
+
+    // add the nickname if it's not there.
+    if (txtNickname.Text = '') then
+        txtNickname.Text := tmp_id.user;
+
+    tmp_id.Free();
+
 end;
 
 {---------------------------------------}
