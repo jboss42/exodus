@@ -745,8 +745,7 @@ begin
 
         // this should make sure that hidden windows
         // just go away when we get disconnected.
-        if (not Visible) then
-            Self.Free();
+        if (not Visible) then Self.Free();
     end
     else if (event = '/session/connected') then begin
         Self.SetJID(jid);

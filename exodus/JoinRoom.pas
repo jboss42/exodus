@@ -45,6 +45,9 @@ type
     lblFetch: TTntLabel;
     txtServerFilter: TTntComboBox;
     btnFetch: TTntButton;
+    chkDefaultConfig: TTntCheckBox;
+    TntLabel1: TTntLabel;
+    Bevel3: TBevel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -61,6 +64,11 @@ type
     procedure lstRoomsData(Sender: TObject; Item: TListItem);
     procedure lstRoomsColumnClick(Sender: TObject; Column: TListColumn);
     procedure txtServerFilterChange(Sender: TObject);
+    procedure lstRoomsDataFind(Sender: TObject; Find: TItemFind;
+      const FindString: WideString; const FindPosition: TPoint;
+      FindData: Pointer; StartIndex: Integer; Direction: TSearchDirection;
+      Wrap: Boolean; var Index: Integer);
+    procedure lstRoomsKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     _cb: integer;
@@ -192,7 +200,8 @@ begin
         optBrowse.Checked := true
     else
         optSpecify.Checked := true;
-
+    chkDefaultConfig.Checked := MainSession.Prefs.getBool('tc_default_config');
+    optSpecifyClick(Self);
 end;
 
 {---------------------------------------}
@@ -214,6 +223,7 @@ end;
 {---------------------------------------}
 procedure TfrmJoinRoom.btnNextClick(Sender: TObject);
 var
+    dconfig: boolean;
     pass: Widestring;
     rjid: Widestring;
     li: TTntListItem;
@@ -246,13 +256,15 @@ begin
     end;
 
     pass := Trim(txtPassword.Text);
-    StartRoom(rjid, txtNick.Text, pass);
+    dconfig := chkDefaultConfig.Checked;
+    StartRoom(rjid, txtNick.Text, pass, true, dconfig);
 
     with MainSession.Prefs do begin
         setString('tc_lastroom', txtRoom.Text);
         setString('tc_lastserver', txtServer.Text);
         setString('tc_lastnick', txtNick.Text);
         setBool('tc_browse', optBrowse.Checked);
+        setBool('tc_default_config', dconfig);
     end;
     Self.Close;
     exit;
@@ -436,6 +448,7 @@ begin
     Item.SubItems.Add(ce.Name);
 end;
 
+{---------------------------------------}
 procedure TfrmJoinRoom.lstRoomsColumnClick(Sender: TObject;
   Column: TListColumn);
 begin
@@ -451,9 +464,44 @@ begin
     _processFilter();
 end;
 
+{---------------------------------------}
 procedure TfrmJoinRoom.txtServerFilterChange(Sender: TObject);
 begin
     btnFetch.Enabled := (txtServerFilter.ItemIndex <> 0);
+end;
+
+{---------------------------------------}
+procedure TfrmJoinRoom.lstRoomsDataFind(Sender: TObject; Find: TItemFind;
+  const FindString: WideString; const FindPosition: TPoint;
+  FindData: Pointer; StartIndex: Integer; Direction: TSearchDirection;
+  Wrap: Boolean; var Index: Integer);
+var
+    ci: TJabberEntity;
+    i: integer;
+    f: boolean;
+begin
+    // incremental search for items..
+    // shamelessly stolen from our JUD code :)
+    i := StartIndex;
+
+    if (Find = ifExactString) or (Find = ifPartialString) then begin
+        repeat
+            if (i = _cur.Count - 1) then begin
+                if (Wrap) then i := 0 else exit;
+            end;
+            ci := TJabberEntity(_cur[i]);
+            f := Pos(FindString, ci.Jid.user) > 0;
+            inc(i);
+        until (f or (i = StartIndex));
+        if (f) then Index := i - 1;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmJoinRoom.lstRoomsKeyPress(Sender: TObject; var Key: Char);
+begin
+    if (Key = Chr(13)) then btnNextClick(Self);
+
 end;
 
 end.
