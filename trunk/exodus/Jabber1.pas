@@ -531,7 +531,7 @@ uses
     JabberConst, ComController, CommCtrl, CustomPres,
     JoinRoom, Login, MsgController, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow, Room,
-    Roster, RosterAdd, Session, StandardAuth, Transfer, Unicode, VCard, xData,
+    Roster, RosterAdd, Session, StandardAuth, Subscribe, Transfer, Unicode, VCard, xData,
     XMLUtils, XMLParser;
 
 {$R *.DFM}
@@ -1055,6 +1055,7 @@ begin
             DragAcceptFiles(Handle, False);
 
         timAutoAway.Enabled := false;
+        CloseSubscribeWindows();
 
         Self.Caption := sExodus;
         setTrayInfo(Self.Caption);

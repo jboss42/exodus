@@ -18,6 +18,7 @@ object frmSubscribe: TfrmSubscribe
   Position = poMainFormCenter
   OnClose = FormClose
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -112,19 +113,23 @@ object frmSubscribe: TfrmSubscribe
     Align = alBottom
     AutoScroll = False
     TabOrder = 2
-    inherited Bevel1: TBevel
+    inherited Panel2: TPanel
       Width = 252
-    end
-    inherited Panel1: TPanel
-      Left = 92
-      Height = 31
-      inherited btnOK: TButton
-        Caption = 'Accept'
-        OnClick = frameButtons1btnOKClick
+      Height = 36
+      inherited Bevel1: TBevel
+        Width = 252
       end
-      inherited btnCancel: TButton
-        Caption = 'Deny'
-        OnClick = frameButtons1btnCancelClick
+      inherited Panel1: TPanel
+        Left = 92
+        Height = 31
+        inherited btnOK: TButton
+          Caption = 'Accept'
+          OnClick = frameButtons1btnOKClick
+        end
+        inherited btnCancel: TButton
+          Caption = 'Deny'
+          OnClick = frameButtons1btnCancelClick
+        end
       end
     end
   end
