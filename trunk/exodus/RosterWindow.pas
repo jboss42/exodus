@@ -1528,22 +1528,23 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popRosterPopup(Sender: TObject);
+{
 var
     ntype: integer;
     n: TTreeNode;
     p: TJabberPres;
     ritem: TJabberRosterItem;
+}
 begin
     // Check to see if this person is online or not
+    {
     p := nil;
     n := treeRoster.Selected;
-
     ntype := getNodeType(n);
     if (ntype = node_ritem) then begin
         ritem := TJabberRosterItem(n.Data);
         if ritem <> nil then
             p := MainSession.ppdb.FindPres(ritem.jid.jid, '');
-
         popVersion.Enabled := (p <> nil);
         popTime.Enabled := (p <> nil);
     end
@@ -1551,6 +1552,7 @@ begin
         popVersion.Enabled := true;
         popTime.Enabled := true;
     end;
+    }
 end;
 
 {---------------------------------------}
@@ -1692,13 +1694,21 @@ begin
         treeRoster.PopupMenu := popRoster;
         treeRoster.Selected := n;
         o := false;
-        me := (r = node_myres);
-        e := (TObject(n.Data) is TJabberRosterItem);
-        if (e) then begin
-            // check to see if this person is online
-            ri := TJabberRosterItem(n.Data);
-            pri := MainSession.ppdb.FindPres(ri.jid.jid, '');
-            o := (pri <> nil);
+        if (r = node_myres) then begin
+            me := true;
+            e := (_cur_myres.item <> nil);
+            ri := _cur_myres.item;
+            pri := _cur_myres.Presence;
+        end
+        else begin
+            me := false;
+            e := (_cur_ritem <> nil);
+            if (e) then begin
+                // check to see if this person is online
+                ri := TJabberRosterItem(n.Data);
+                pri := MainSession.ppdb.FindPres(ri.jid.jid, '');
+                o := (pri <> nil);
+            end;
         end;
 
         popChat.Enabled := e;
@@ -1805,30 +1815,27 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.popChatClick(Sender: TObject);
 var
-    node: TTreeNode;
+    nt: integer;
 begin
     // chat w/ contact
-    node := treeRoster.Selected;
-    if node = nil then exit;
-    if node.Data = nil then exit;
-
-    if (TObject(node.Data) is TJabberRosterItem) then begin
-        StartChat(TJabberRosterItem(node.Data).jid.jid, '', true);
-    end;
+    nt := getNodeType();
+    if (nt = node_ritem) then
+        StartChat(_cur_ritem.jid.jid, '', true)
+    else if (nt = node_myres) then
+        StartChat(_cur_myres.jid.jid, _cur_myres.Resource, true);
 end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popMsgClick(Sender: TObject);
 var
-    node: TTreeNode;
+    nt: integer;
 begin
     // send a normal msg
-    node := treeRoster.Selected;
-    if node = nil then exit;
-    if node.Data = nil then exit;
-
-    if (TObject(node.Data) is TJabberRosterItem) then
-        StartMsg(TJabberRosterItem(node.Data).jid.jid);
+    nt := getNodeType();
+    if (nt = node_ritem) then
+        StartMsg(_cur_ritem.jid.jid)
+    else if (nt = node_myres) then
+        StartMsg(_cur_myres.jid.full);
 end;
 
 {---------------------------------------}
