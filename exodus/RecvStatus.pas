@@ -395,7 +395,16 @@ begin
         p.Free();
     end;
 
-    hosts := tag.QUeryXPTags('/iq/query/streamhost');
+    hosts := tag.QueryXPTags('/iq/query/streamhost');
+
+    if (_hosts.Count = 0) then begin
+        MessageDlg(_('No acceptable stream hosts were sent. Have the sender check their settings.'),
+            mtError, [mbOK], 0);
+        SendError('406', 'not-acceptable');
+        kill();
+        exit;
+    end;
+
     for i := 0 to hosts.Count - 1 do begin
         pi := SafeInt(hosts[i].getAttribute('port'));
         // xxx: support zero-conf ID's
@@ -406,14 +415,6 @@ begin
             p.jid := hosts[i].GetAttribute('jid');
             _hosts.Push(p);
         end;
-    end;
-
-    if (_hosts.Count = 0) then begin
-        MessageDlg(_('No acceptable stream hosts were sent. Have the sender check their settings.'),
-            mtError, [mbOK], 0);
-        SendError('406', 'not-acceptable');
-        kill();
-        exit;
     end;
 
     // use the save as dialog

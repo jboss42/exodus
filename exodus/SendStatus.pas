@@ -373,9 +373,9 @@ end;
 procedure TfSendStatus.DoState();
 var
     fld, x: TXMLTag;
-    f: File of Byte;
+    fs: TFileStream;
     p: THostPortPair;
-    i: integer;
+    sh, i: integer;
     tmp_jid: TJabberID;
     tmps: Widestring;
     spkg: TStreamPkg;
@@ -409,10 +409,17 @@ begin
         x.setAttribute('name', ExtractFilename(_pkg.pathname));
 
         // get the file size
-        AssignFile(f, _pkg.pathname);
-        Reset(f);
-        _size := FileSize(f);
-        CloseFile(f);
+        try
+            fs := TFileStream.Create(_pkg.pathname, (fmOpenRead or fmShareDenyNone));
+            _size := fs.Size;
+            fs.Free();
+        except
+            on EStreamError do begin
+                MessageDlg(sXferStreamError, mtError, [mbOK], 0);
+                exit;
+            end;
+        end;
+
         x.setAttribute('size', IntToStr(_size));
 
         // put in the fneg stuff
@@ -482,9 +489,11 @@ begin
         _iq.iqType := 'set';
         _iq.toJid := _pkg.recip;
         _iq.Namespace := XMLNS_BYTESTREAMS;
+        sh := 0;
 
         // add in myself here..
         if (not MainSession.Prefs.getBool('xfer_proxy')) then begin
+            sh := 1;
             x := _iq.qTag.AddTag('streamhost');
             x.setAttribute('jid', MainSession.jid);
             x.setAttribute('host', MainSession.Stream.LocalIP);
@@ -493,7 +502,7 @@ begin
 
         // get a handle to the stream
         try
-            _stream := TFileStream.Create(_pkg.pathname, fmOpenRead);
+            _stream := TFileStream.Create(_pkg.pathname, (fmOpenRead or fmShareDenyNone));
         except
             on EStreamError do begin
                 MessageDlg(sXferStreamError, mtError, [mbOK], 0);
@@ -501,6 +510,22 @@ begin
             end;
         end;
 
+        // Make sure we have at least one host to use..
+        sh := sh + shosts.Count;
+        if (sh = 0) then begin
+            // we have no hosts!
+            MessageDlg(_('Could not contact any usable stream host proxies.'),
+                mtError, [mbOK], 0);
+
+            // XXX: we need to send something to the recip.
+            FreeAndNil(_iq);
+            _state := send_cancel;
+            DoState();
+            getXferManager().killFrame(Self);
+            exit;
+        end;
+
+        // Build the pkg object
         tmps := _sid + MainSession.Jid + _pkg.recip;
         _hash:= Sha1Hash(tmps);
         spkg := TStreamPkg.Create();
@@ -603,7 +628,7 @@ begin
         p := THostPortPair(shosts.Objects[i]);
         if ((p.host = '') or (p.Port = 0)) then begin
             _iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
-                Self.AddrCallback, 30);
+                Self.AddrCallback, 20);
             _iq.toJid := p.jid;
             _iq.iqType := 'get';
             _iq.Namespace := XMLNS_BYTESTREAMS;
@@ -819,8 +844,8 @@ var
     sh: TXMLTagList;
 begin
     // We are getting the address of a streamhost back
-    _iq := nil;
     if ((event = 'xml') and (tag.getAttribute('type') = 'result')) then begin
+        _iq := nil;
         sh := tag.QUeryXPTags('/iq/query/streamhost');
         for j := 0 to sh.Count - 1 do begin
             i := shosts.indexOf(sh[j].GetAttribute('jid'));
@@ -850,7 +875,7 @@ begin
             i := shosts.indexOf(tag.getAttribute('from'))
         else
             i := shosts.indexOf(_iq.toJid);
-
+        _iq := nil;
         if (i >= 0) then begin
             p := THostPortPair(shosts.objects[i]);
             shosts.Delete(i);
