@@ -29,10 +29,10 @@ object frmProfile: TfrmProfile
     Top = 0
     Width = 317
     Height = 293
-    ActivePage = TabSheet3
+    ActivePage = TabSheet1
     Align = alLeft
     Style = tsFlatButtons
-    TabIndex = 3
+    TabIndex = 0
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'General'
@@ -176,9 +176,18 @@ object frmProfile: TfrmProfile
         StopFrame = 8
         Visible = False
       end
+      object btnUpdateNick: TTntButton
+        Left = 8
+        Top = 184
+        Width = 75
+        Height = 25
+        Caption = 'Update Nick'
+        TabOrder = 8
+        OnClick = btnUpdateNickClick
+      end
     end
     object TabSheet7: TTabSheet
-      Caption = 'TabSheet7'
+      Caption = 'Resources'
       ImageIndex = 6
       object ResListBox: TListBox
         Left = 0
@@ -809,7 +818,7 @@ object frmProfile: TfrmProfile
       end
     end
     object TabSheet6: TTabSheet
-      Caption = 'TabSheet6'
+      Caption = 'Address'
       ImageIndex = 5
       object Label15: TLabel
         Left = 10

@@ -109,6 +109,7 @@ type
     btnTime: TButton;
     memDesc: TTntMemo;
     Label3: TLabel;
+    btnUpdateNick: TTntButton;
     procedure FormCreate(Sender: TObject);
     procedure TreeView1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -117,6 +118,7 @@ type
     procedure TreeView1Change(Sender: TObject; Node: TTreeNode);
     procedure btnVersionClick(Sender: TObject);
     procedure lblEmailClick(Sender: TObject);
+    procedure btnUpdateNickClick(Sender: TObject);
   private
     { Private declarations }
     iq: TJabberIQ;
@@ -377,6 +379,12 @@ begin
     else
         url := 'mailto:' + txtPriEmail.Text;
     ShellExecute(0, 'open', PChar(url), '', '', SW_SHOW);
+end;
+
+procedure TfrmProfile.btnUpdateNickClick(Sender: TObject);
+begin
+    if (txtFirst.Text <> '') or (txtLast.Text <> '') then
+        txtNick.Text := txtFirst.Text + ' ' + txtLast.Text;
 end;
 
 end.
