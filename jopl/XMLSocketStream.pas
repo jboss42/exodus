@@ -810,15 +810,26 @@ end;
 
 {---------------------------------------}
 procedure TXMLSocketStream.EnableSSL();
+var
+    fp: Widestring;
+    cert: TIdX509;
+    tag: TXMLTag;
 begin
     if (_ssl_int = nil) then exit;
 
     if (_ssl_int.PassThrough = false) then
         exit
     else begin
-        _ssl_int.PassThrough := true;
-
-        // XXX: Validate here???
+        _ssl_int.PassThrough := false;
+        FixIndy9SSL();
+        cert := _ssl_int.SSLSocket.PeerCert;
+        if (VerifyPeer(cert) <> SVE_NONE) then begin
+            tag := TXMLTag.Create('ssl');
+            tag.AddCData(_ssl_err);
+            fp := cert.FingerprintAsString;
+            tag.setAttribute('fingerprint', fp);
+            DoCallbacks('ssl-error', tag);
+        end;
     end;
 end;
 

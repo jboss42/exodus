@@ -4,6 +4,11 @@ use strict;
 #$::USER = 'hildjj@jabberstudio.org';
 $::USER = 'pgmillard@jabberstudio.org';
 
+#$::SCP = 'scp -C';
+#$::SSH = 'ssh';
+$::SCP = 'pscp';
+$::SSH = 'plink';
+
 do "dopts.pl";
 
 my $rtype = "daily";
@@ -45,12 +50,12 @@ chdir ".." or die;
 e("cvs tag -F " . uc($rtype));
 chdir "exodus" or die;
 if ($rtype eq "daily") {
-  e("scp -C setup.exe plugins/*.zip $::USER:/var/projects/exodus/www/daily/stage");
-  e("ssh $::USER \"cd /var/projects/exodus/www/daily/stage; chmod 644 *; mv setup.exe ..; mv *.zip ../plugins\"");
+  e("$::SCP -C setup.exe Exodus.zip plugins/*.zip $::USER:/var/projects/exodus/www/daily/stage");
+  e("$::SSH $::USER \"cd /var/projects/exodus/www/daily/stage; chmod 644 *; mv setup.exe ..; mv Exodus.zip ..; mv *.zip ../plugins\"");
 } else {
-  e("scp -C setup.exe $::USER:/var/projects/exodus/files/exodus_$version.exe");
-  e("scp -C plugins/*.zip $::USER:/var/projects/exodus/www/plugins");
-  e("ssh $::USER \"chmod 644 /var/projects/exodus/files/exodus_$version.exe /var/projects/exodus/www/plugins/*.zip\"");
+  e("$::SCP setup.exe $::USER:/var/projects/exodus/files/exodus_$version.exe");
+  e("$::SCP plugins/*.zip $::USER:/var/projects/exodus/www/plugins");
+  e("$::SSH $::USER \"chmod 644 /var/projects/exodus/files/exodus_$version.exe /var/projects/exodus/www/plugins/*.zip\"");
 }
 
 print "\n\nSUCCESS!\n";

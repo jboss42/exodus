@@ -40,6 +40,7 @@ type
         minimized: boolean;
         testaa: boolean;
         ssl_ok: boolean;
+        xmllang: Widestring;
     end;
 
 procedure PlayXMPPActions();
@@ -72,6 +73,7 @@ resourcestring
     sCmdPriority =  ' -i [pri] '#9' : Priority'#13#10;
     sCmdProfile =   ' -f [prof] '#9' : Profile name'#13#10;
     sCmdConfig =    ' -c [file] '#9' : Config path name'#13#10;
+    sCmdLang =      ' -l [xmllang] '#9' : Start streams with the specified xml:lang'#13#10;
     sUnkArg = 'Invalid command line:%s';
     sWinsock2 = 'Winsock2 is required for this application. Please obtain the winsock2 installer from Microsoft for your operating system.';
 
@@ -176,6 +178,7 @@ begin
     show_help := false;
 
     ExStartup := TExStartParams.Create();
+    ExStartup.xmllang := '';
 
     // Hide the application's window, and set our own
     // window to the proper parameters..
@@ -203,10 +206,11 @@ begin
             // -c [file]   : config file name
             // -s [status] : presence status
             // -w [show]   : presence show
-            Options  := 'dmva?xjprifcswo';
-            OptFlags := '-----::::::::::';
-            ReqFlags := '               ';
-            LongOpts := 'debug,minimized,invisible,aatest,help,expanded,jid,password,resource,priority,profile,config,status,show,xmpp';
+            // -l [xmllang]
+            Options  := 'dmva?xjprifcswol';
+            OptFlags := '-----:::::::::::';
+            ReqFlags := '                ';
+            LongOpts := 'debug,minimized,invisible,aatest,help,expanded,jid,password,resource,priority,profile,config,status,show,xmpp,xmllang';
             while GetOpt do begin
                 case Ord(OptChar) of
                     0: raise EConfigException.Create(format(sUnkArg, [CmdLine()]));
@@ -225,6 +229,7 @@ begin
                     Ord('w'): cli_show := OptArg;
                     Ord('s'): cli_status := OptArg;
                     Ord('o'): xmpp_file := OptArg;
+                    Ord('l'): ExStartup.xmllang := OptArg;
                 end;
             end;
         finally
@@ -246,6 +251,7 @@ begin
         help_msg := help_msg + sCmdPriority;
         help_msg := help_msg + sCmdProfile;
         help_msg := help_msg + sCmdConfig;
+        help_msg := help_msg + sCmdLang;
         MessageDlg(help_msg, mtInformation, [mbOK], 0);
         Result := false;
         exit;

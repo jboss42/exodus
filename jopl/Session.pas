@@ -44,6 +44,7 @@ type
         _xmpp: boolean;
         _cur_server: Widestring;
         _tls_cb: integer;
+        _lang: Widestring;
 
         // Dispatcher
         _dispatcher: TSignalDispatcher;
@@ -88,9 +89,12 @@ type
         function GetBareJid(): Widestring;
         function GetActive(): boolean;
 
+        procedure doConnect();
+
     published
         procedure DataEvent(send: boolean; data: Widestring);
         procedure SessionCallback(event: string; tag: TXMLTag);
+        procedure BindCallback(event: string; tag: TXMLTag);
         procedure TLSCallback(event: string; tag: TXMLTag);
 
     public
@@ -107,7 +111,8 @@ type
         Destructor Destroy; override;
 
         procedure CreateAccount;
-        procedure Connect;
+        procedure Connect; overload;
+        procedure Connect(xmllang: Widestring); overload;
         procedure Disconnect;
 
 
@@ -381,7 +386,20 @@ begin
 end;
 
 {---------------------------------------}
+procedure TJabberSession.Connect(xmllang: Widestring);
+begin
+    _lang := xmllang;
+    DoConnect();
+end;
+
+{---------------------------------------}
 procedure TJabberSession.Connect;
+begin
+    _lang := '';
+    DoConnect();
+end;
+
+procedure TJabberSession.DoConnect;
 begin
     if (_profile = nil) then
         raise Exception.Create('Invalid profile')
@@ -485,15 +503,16 @@ end;
 {---------------------------------------}
 procedure TJabberSession.StreamCallback(msg: string; tag: TXMLTag);
 var
-    siq: TJabberIQ;
-    tmps: WideString;
+    biq: TJabberIQ;
+    l, tmps: WideString;
 begin
     // Process callback info..
     if msg = 'connected' then begin
         // we are connected... send auth stuff.
+        if (_lang <> '') then l := ' xml:lang="' + _lang + '" ' else l := '';
         tmps := '<stream:stream to="' + Trim(Server) +
             '" xmlns="jabber:client" ' +
-            'xmlns:stream="http://etherx.jabber.org/streams" ' +
+            'xmlns:stream="http://etherx.jabber.org/streams" ' + l +
             'version="1.0" ' +
             '>';
         _stream.Send(tmps);
@@ -543,12 +562,13 @@ begin
             _features := TXMLTag.Create(tag);
 
             if (_authd) then begin
-                // send session start
-                siq := TJabberIQ.Create(Self, generateID(), SessionCallback);
-                siq.Namespace := 'urn:ietf:params:xml:ns:xmpp-session';
-                siq.qTag.Name := 'session';
-                siq.iqType := 'set';
-                siq.Send();
+                // bind to our resource
+                biq := TJabberIQ.Create(Self, generateID(), BindCallback);
+                biq.Namespace := 'urn:ietf:params:xml:ns:xmpp-bind';
+                biq.qTag.Name := 'bind';
+                biq.qTag.AddBasicTag('resource', Self.Resource);
+                biq.iqType := 'set';
+                biq.Send();
             end
             else begin
                 if (_features.GetFirstTag('starttls') <> nil) then begin
@@ -560,7 +580,10 @@ begin
                 end;
 
                 // start auth.
-                _auth_agent.StartAuthentication();
+                if ((_register) or (_profile.NewAccount)) then
+                    CreateAccount()
+                else
+                    _auth_agent.StartAuthentication();
             end;
         end
 
@@ -568,6 +591,24 @@ begin
             _dispatcher.DispatchSignal('/packet', tag);
     end;
 
+end;
+
+{---------------------------------------}
+procedure TJabberSession.BindCallback(event: string; tag: TXMLTag);
+var
+    iq: TJabberIQ;
+begin
+    if ((event <> 'xml') or (tag.getAttribute('type') <> 'result')) then begin
+        _dispatcher.DispatchSignal('/session/autherror', tag);
+        exit;
+    end
+    else begin
+        iq := TJabberIQ.Create(Self, generateID(), SessionCallback);
+        iq.Namespace := 'urn:ietf:params:xml:ns:xmpp-session';
+        iq.qTag.Name := 'session';
+        iq.iqType := 'set';
+        iq.Send();
+    end;
 end;
 
 {---------------------------------------}
