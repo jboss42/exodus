@@ -268,6 +268,7 @@ type
     _edge_snap: integer;                // edge snap fuzziness
     _auto_away: boolean;                // perform auto-away ops
     _auto_away_interval: integer;
+    _auto_login: boolean;
     _last_tick: dword;                  // last tick when something happened
     _expanded: boolean;                 // are we expanded or not?
     _docked_forms: TList;               // list of all of the docked forms
@@ -594,8 +595,11 @@ begin
         DebugMsg('Got a PBT_APMQUERYSUSPEND. Logging off');
         MainSession.Prefs.SaveProfiles();
         MainSession.Prefs.SaveServerPrefs();
-        _logoff := true;
-        PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
+        if (MainSession.Active) then begin
+            _logoff := true;
+            PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
+            _auto_login := true;
+        end;
         msg.Result := 1;
         exit;
         end;
@@ -609,7 +613,10 @@ begin
         DebugMsg('Got a PBT_RESUME*.');
         _logoff := false;
         _reconnect_tries := 0;
-        setupReconnect();
+        if (_auto_login) then begin
+            _auto_login := false;
+            setupReconnect();
+        end;
         msg.Result := 1;
         end;
     end;
@@ -769,6 +776,7 @@ begin
     ActiveChat := nil;
     _docked_forms := TList.Create;
     _new_tabindex := -1;
+    _auto_login := false;
 
     // Do translation magic
     AssignUnicodeFont(Self);
