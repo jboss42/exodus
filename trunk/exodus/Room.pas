@@ -997,7 +997,7 @@ begin
                     ShowMsg(mtag);
                 end;
             end
-            else if (member.role <> '') then begin
+            else if ((member.role <> '') and (MainSession.Prefs.getBool('room_joins'))) then begin
                 mtag := newRoomMessage(WideFormat(_(sUserLeave), [member.Nick]));
                 ShowMsg(mtag);
             end;
@@ -1024,8 +1024,11 @@ begin
             // show new user message
             if (xtag <> nil) then begin
                 _isMUC := true;
-                mtag := newRoomMessage(WideFormat(_(sNewUser), [member.nick]));
-                showMsg(mtag);
+
+                if (MainSession.Prefs.getBool('room_joins')) then begin
+                    mtag := newRoomMessage(WideFormat(_(sNewUser), [member.nick]));
+                    showMsg(mtag);
+                end;
 
                 t := xtag.GetFirstTag('status');
                 if ((t <> nil) and (t.getAttribute('code') = '201')) then begin
@@ -2268,7 +2271,7 @@ begin
                 Font.Color := clGrayText
             else
                 Font.Color := clWindowText;
-            Brush.Color := lstRoster.Color;
+            Brush.Color := clWindow;
             Brush.Style := bsSolid;
             FillRect(xRect);
         end;
@@ -2300,7 +2303,7 @@ begin
 
         SetTextColor(lstRoster.Canvas.Handle, ColorToRGB(main_color));
         CanvasTextOutW(lstRoster.Canvas, xRect.Left + 1,
-            xRect.Top + 1, rm.Nick);
+            xRect.Top + 1, c1);
 
         if (cdsSelected in State) then
             // Draw the focus box.
