@@ -198,9 +198,9 @@ begin
         _body := Value;
 
     // Check for actions
-    if (Pos ('/me', _body) = 1) then begin
+    if (Pos ('/me ', _body) = 1) then begin
         _action := true;
-        Delete(_body, 1, 3);
+        Delete(_body, 1, 4);
     end
     else
         _action := false;
