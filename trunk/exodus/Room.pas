@@ -24,7 +24,7 @@ uses
     Unicode, XMLTag, RegExpr,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, ExRichEdit, ExtCtrls,
-    RichEdit2, TntStdCtrls, Buttons, TntComCtrls;
+    RichEdit2, TntStdCtrls, Buttons, TntComCtrls, Grids, TntGrids;
 
 type
   TMemberNode = TTntListItem;
@@ -1149,7 +1149,6 @@ begin
         repeat
             // for i := _nick_idx to lstRoster.Items.Count - 1 do begin
             for i := _nick_idx to _roster.Count - 1 do begin
-                // nick := lstRoster.Items[i].Caption;
                 nick := TRoomMember(_roster.Objects[i]).Nick;
                 if nick[1] = '@' then nick := Copy(nick, 2, length(nick) - 1);
                 if nick[1] = '+' then nick := Copy(nick, 2, length(nick) - 1);
@@ -1649,7 +1648,6 @@ begin
     // voice by changing roles
     for i := 0 to lstRoster.Items.Count - 1 do begin
         if (lstRoster.Items[i].Selected) then begin
-            // cur_member := TRoomMember(lstRoster.Items[i].Data);
             cur_member := TRoomMember(_rlist[i]);
             new_role := '';
             if (cur_member.role = MUC_PART) then

@@ -1,23 +1,28 @@
 inherited frmRoom: TfrmRoom
   Left = 249
   Top = 196
+  Width = 395
   Caption = 'Conference Room'
   OldCreateOrder = True
   OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 13
+  inherited Splitter1: TSplitter
+    Width = 387
+  end
   inherited Panel3: TPanel
     Top = 23
+    Width = 387
     Height = 225
     object Splitter2: TSplitter [0]
-      Left = 268
+      Left = 275
       Top = 4
       Height = 217
       Align = alRight
       ResizeStyle = rsUpdate
     end
     inherited MsgList: TExRichEdit
-      Width = 264
+      Width = 271
       Height = 217
       Font.Name = 'Arial'
       ParentFont = False
@@ -27,7 +32,7 @@ inherited frmRoom: TfrmRoom
       PlainRTF = True
     end
     object Panel6: TPanel
-      Left = 271
+      Left = 278
       Top = 4
       Width = 105
       Height = 217
@@ -45,6 +50,7 @@ inherited frmRoom: TfrmRoom
         Columns = <
           item
             AutoSize = True
+            Caption = 'foo'
           end>
         IconOptions.Arrangement = iaLeft
         IconOptions.WrapText = False
@@ -68,7 +74,14 @@ inherited frmRoom: TfrmRoom
       end
     end
   end
+  inherited pnlInput: TPanel
+    Width = 387
+    inherited MsgOut: TExRichEdit
+      Width = 383
+    end
+  end
   inherited Panel1: TPanel
+    Width = 387
     Height = 23
     BorderWidth = 1
     object btnClose: TSpeedButton
