@@ -24,7 +24,8 @@ interface
 uses
     Menus, ShellAPI, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    ComCtrls, StdCtrls, ExtCtrls, buttonFrame, CheckLst;
+    ComCtrls, StdCtrls, ExtCtrls, buttonFrame, CheckLst, OLERichEdit,
+    ExRichEdit;
 
 type
   TfrmPrefs = class(TForm)
@@ -48,18 +49,6 @@ type
     StaticText2: TStaticText;
     optIncomingS10n: TRadioGroup;
     tbsFonts: TTabSheet;
-    Label5: TLabel;
-    pnlFont: TPanel;
-    Button1: TButton;
-    Label6: TLabel;
-    pnlMyColor: TPanel;
-    Button2: TButton;
-    Label7: TLabel;
-    pnlOtherColor: TPanel;
-    Button3: TButton;
-    Label8: TLabel;
-    pnlBGColor: TPanel;
-    Button4: TButton;
     FontDialog1: TFontDialog;
     ColorDialog1: TColorDialog;
     StaticText3: TStaticText;
@@ -145,13 +134,6 @@ type
     chkSnap: TCheckBox;
     txtSnap: TEdit;
     spnSnap: TUpDown;
-    Label17: TLabel;
-    pnlRoster: TPanel;
-    Button5: TButton;
-    Label16: TLabel;
-    cboRosterBG: TColorBox;
-    Label18: TLabel;
-    cboRosterFontColor: TColorBox;
     Panel1: TPanel;
     Bevel1: TBevel;
     Panel3: TPanel;
@@ -181,12 +163,17 @@ type
     chkMsgQueue: TCheckBox;
     chkOnTop: TCheckBox;
     chkToolbox: TCheckBox;
-    Label21: TLabel;
-    cboChatFontColor: TColorBox;
-    procedure Button1Click(Sender: TObject);
-    procedure Button4Click(Sender: TObject);
-    procedure Button2Click(Sender: TObject);
-    procedure Button3Click(Sender: TObject);
+    Label22: TLabel;
+    colorRoster: TTreeView;
+    Label23: TLabel;
+    Label24: TLabel;
+    clrBoxBG: TColorBox;
+    clrBoxFont: TColorBox;
+    Label25: TLabel;
+    btnFont: TButton;
+    lblColor: TLabel;
+    colorChat: TExRichEdit;
+    Label5: TLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -208,17 +195,27 @@ type
     procedure btnLogBrowseClick(Sender: TObject);
     procedure btnTransferBrowseClick(Sender: TObject);
     procedure chkSnapClick(Sender: TObject);
-    procedure Button5Click(Sender: TObject);
-    procedure cboRosterBGChange(Sender: TObject);
-    procedure cboRosterFontColorChange(Sender: TObject);
     procedure Label20Click(Sender: TObject);
-    procedure cboChatFontColorChange(Sender: TObject);
+    procedure colorRosterMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure clrBoxBGChange(Sender: TObject);
+    procedure clrBoxFontChange(Sender: TObject);
+    procedure btnFontClick(Sender: TObject);
+    procedure colorChatMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private declarations }
     _notify: array of integer;
     _no_notify_update: boolean;
     _no_pres_change: boolean;
     _pres_list: TList;
+
+    _clr_control: TControl;
+    _clr_font_color: string;
+    _clr_font: string;
+    _clr_bg: string;
+
+    procedure redrawChat();
   public
     { Public declarations }
     procedure LoadPrefs;
@@ -246,7 +243,7 @@ implementation
 uses
     FileCtrl,
     XMLUtils,
-    Presence,
+    Presence, MsgDisplay, JabberMsg,  
     PrefController,
     Registry,
     Session;
@@ -263,27 +260,6 @@ begin
     f := TfrmPrefs.Create(Application);
     f.LoadPrefs;
     f.ShowModal;
-end;
-
-{---------------------------------------}
-procedure TfrmPrefs.Button1Click(Sender: TObject);
-var
-    mColor: TColor;
-    oColor: TColor;
-begin
-    if FontDialog1.Execute then begin
-        mColor := (pnlMyColor.Font.Color);
-        oColor := (pnlOtherColor.Font.Color);
-
-        pnlFont.Font.Assign(FontDialog1.Font);
-        pnlFont.Caption := pnlFont.Font.Name + ', ' + IntToStr(pnlFont.Font.Size) + ' pt.';
-        pnlBGColor.Font.Assign(FontDialog1.Font);
-        pnlMyColor.Font.Assign(FontDialog1.Font);
-        pnlOtherColor.Font.Assign(FontDialog1.Font);
-
-        pnlMyColor.Font.Color := (mColor);
-        pnlOtherColor.Font.Color := (oColor);
-        end;
 end;
 
 {---------------------------------------}
@@ -310,42 +286,35 @@ begin
         optIncomingS10n.ItemIndex := getInt('s10n_auto_accept');
 
         // Font, Color prefs
-        pnlFont.Font.Name := getString('font_name');
-        pnlFont.Font.Size := getInt('font_size');
-        pnlFont.Font.Color := TColor(getInt('font_color'));
-        pnlFont.Font.Style := [];
-        cboChatFontColor.Selected := TColor(getInt('font_color'));
+        with colorChat do begin
+            Font.Name := getString('font_name');
+            Font.Size := getInt('font_size');
+            Font.Color := TColor(getInt('font_color'));
+            Font.Style := [];
+            if (getBool('font_bold')) then Font.Style := Font.Style + [fsBold];
+            if (getBool('font_italic')) then Font.Style := Font.Style + [fsItalic];
+            if (getBool('font_underline')) then Font.Style := Font.Style + [fsUnderline];
+            Color := TColor(getInt('color_bg'));
+            Self.redrawChat();
+            end;
 
-        if getBool('font_bold') then
-            pnlFont.Font.Style := pnlFont.Font.Style + [fsBold];
-        if getBool('font_italic') then
-            pnlFont.Font.Style := pnlFont.Font.Style + [fsItalic];
-        if getBool('font_underline') then
-            pnlFont.Font.Style := pnlFont.Font.Style + [fsUnderline];
+        with colorRoster do begin
+            Items[0].Expand(true);
+            Color := TColor(getInt('roster_bg'));
+            Font.Color := TColor(getInt('roster_font_color'));
+            Font.Name := getString('roster_font_name');
+            Font.Size := getInt('roster_font_size');
+            Font.Style := [];
+            end;
+        lblColor.Caption := 'Roster Font and Background';
+        _clr_font := 'roster_font';
+        _clr_font_color := 'roster_font_color';
+        _clr_bg := 'roster_bg';
+        _clr_control := colorRoster;
 
-        pnlBGColor.Color := TColor(getInt('color_bg'));
-        pnlFont.Color := pnlBGColor.Color;
-        pnlMyColor.Color := pnlBGColor.Color;
-        pnlOtherColor.Color := pnlBGColor.Color;
-
-        pnlBGColor.Font.Assign(pnlFont.Font);
-        pnlMyColor.Font.Assign(pnlFont.Font);
-        pnlOtherColor.Font.Assign(pnlFont.Font);
-        pnlMyColor.Font.Color := TColor(getInt('color_me'));
-        pnlOtherColor.Font.Color := TColor(getInt('color_other'));
-
-        FontDialog1.Font.Assign(pnlFont.Font);
-        pnlFont.Caption := pnlFont.Font.Name + ', ' +
-            IntToStr(pnlFont.Font.Size) + ' pt.';
-
-        cboRosterBG.Selected := TColor(getInt('roster_bg'));
-        cboRosterFontColor.Selected := TColor(getInt('roster_font_color'));
-        pnlRoster.Color := cboRosterBG.Selected;
-        pnlRoster.Font.Name := getString('roster_font_name');
-        pnlRoster.Font.Size := getInt('roster_font_size');
-        pnlRoster.Font.Color := cboRosterFontColor.Selected;
-        pnlRoster.Font.Style := [];
-
+        btnFont.Enabled := true;
+        clrBoxBG.Selected := TColor(MainSession.Prefs.getInt(_clr_bg));
+        clrBoxFont.Selected := TColor(Mainsession.Prefs.getInt(_clr_font_color));
 
         // System Prefs
         chkAutoUpdate.Checked := getBool('auto_updates');
@@ -420,7 +389,6 @@ begin
         chkToast.Checked := false;
         chkFlash.Checked := false;
 
-
         // Autoaway options
         chkAutoAway.Checked := getBool('auto_away');
         spnAway.Position := getInt('away_time');
@@ -460,15 +428,12 @@ begin
         setBool('inline_status', chkInlineStatus.Checked);
         setInt('inline_color', integer(cboInlineStatus.Selected));
         setBool('roster_chat', (optDBlClick.ItemIndex = 0));
-        setInt('roster_bg', integer(cboRosterBG.Selected));
-        setString('roster_font_name', pnlRoster.Font.Name);
-        setInt('roster_font_size', pnlRoster.Font.Size);
-        setInt('roster_font_color', Integer(pnlRoster.Font.Color));
 
         // S10n prefs
         setInt('s10n_auto_accept', optIncomingS10n.ItemIndex);
 
         // Font, Color prefs
+        {
         setString('font_name', pnlFont.Font.Name);
         setInt('font_size', pnlFont.Font.Size);
         setInt('font_color', integer(pnlFont.Font.Color));
@@ -478,6 +443,7 @@ begin
         setInt('color_bg', integer(pnlBGColor.Color));
         setInt('color_me', integer(pnlMyColor.Font.Color));
         setInt('color_other', integer(pnlOtherColor.Font.Color));
+        }
 
         // System Prefs
         setBool('auto_updates', chkAutoUpdate.Checked);
@@ -562,34 +528,6 @@ begin
         EndUpdate();
         end;
     MainSession.FireEvent('/session/prefs', nil);
-end;
-
-{---------------------------------------}
-procedure TfrmPrefs.Button4Click(Sender: TObject);
-begin
-    // change the bgcolor
-    if ColorDialog1.Execute then begin
-        pnlFont.Color := ColorDialog1.Color;
-        pnlBGColor.Color := ColorDialog1.Color;
-        pnlMyColor.Color := ColorDialog1.Color;
-        pnlOtherColor.Color := ColorDialog1.Color;
-        end;
-end;
-
-{---------------------------------------}
-procedure TfrmPrefs.Button2Click(Sender: TObject);
-begin
-    // change my color
-    if ColorDialog1.Execute then
-        pnlMyColor.Font.Color := ColorDialog1.Color;
-end;
-
-{---------------------------------------}
-procedure TfrmPrefs.Button3Click(Sender: TObject);
-begin
-    // change other color
-    if ColorDialog1.Execute then
-        pnlOtherColor.Font.Color := ColorDialog1.Color;
 end;
 
 {---------------------------------------}
@@ -938,41 +876,140 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmPrefs.Button5Click(Sender: TObject);
-begin
-    // Change the roster font
-    with FontDialog1 do begin
-        Font.Assign(pnlRoster.Font);
-        if Execute then
-            pnlRoster.Font.Assign(Font);
-        end;
-end;
-
-{---------------------------------------}
-procedure TfrmPrefs.cboRosterBGChange(Sender: TObject);
-begin
-    // Change the roster BG color
-    pnlRoster.Color := cboRosterBG.Selected;
-end;
-
-{---------------------------------------}
-procedure TfrmPrefs.cboRosterFontColorChange(Sender: TObject);
-begin
-    // Change the roster font color.
-    pnlRoster.Font.Color := cboRosterFontColor.Selected;
-end;
-
 procedure TfrmPrefs.Label20Click(Sender: TObject);
 begin
     ShellExecute(Self.Handle, nil, 'rundll32.exe',
       'shell32.dll,Control_RunDLL mmsys.cpl,,1', nil, SW_SHOW);
 end;
 
-procedure TfrmPrefs.cboChatFontColorChange(Sender: TObject);
+{---------------------------------------}
+procedure TfrmPrefs.colorRosterMouseDown(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
-    // Change the font color for chats
-    pnlFont.Font.Color := cboChatFontColor.Selected;
-    pnlBGColor.Font.Color := cboChatFontColor.Selected;
+    // find the "thing" that we clicked on in the window..
+    lblColor.Caption := 'Roster Font and Background';
+    _clr_font := 'roster_font';
+    _clr_font_color := 'roster_font_color';
+    _clr_bg := 'roster_bg';
+    _clr_control := colorRoster;
+
+    btnFont.Enabled := true;
+    clrBoxBG.Selected := TColor(MainSession.Prefs.getInt(_clr_bg));
+    clrBoxFont.Selected := TColor(Mainsession.Prefs.getInt(_clr_font_color));
+end;
+
+{---------------------------------------}
+procedure TfrmPrefs.clrBoxBGChange(Sender: TObject);
+begin
+    // change in the bg color
+    MainSession.Prefs.setInt(_clr_bg, Integer(clrBoxBG.Selected));
+    if (_clr_control = colorChat) then
+        colorChat.Color := clrBoxBG.Selected
+    else
+        colorRoster.Color := clrBoxBG.Selected;
+end;
+
+{---------------------------------------}
+procedure TfrmPrefs.clrBoxFontChange(Sender: TObject);
+begin
+    // change the font color
+    MainSession.Prefs.setInt(_clr_font_color, integer(clrBoxFont.Selected));
+    if (_clr_control = colorChat) then
+        redrawChat()
+    else
+        colorRoster.Font.Color := clrBoxFont.Selected;
+end;
+
+{---------------------------------------}
+procedure TfrmPrefs.redrawChat();
+var
+    m1, m2: TJabberMessage;
+begin
+    with colorChat do begin
+        Lines.Clear;
+        m1 := TJabberMessage.Create();
+        with m1 do begin
+            Body := 'Some text from me';
+            isMe := true;
+            Nick := 'pgm';
+            end;
+        m2 := TJabberMessage.Create();
+        with m2 do begin
+            Body := 'Some reply text';
+            isMe := false;
+            Nick := 'c-neal';
+            end;
+
+        DisplayMsg(m1, colorChat);
+        DisplayMsg(m2, colorChat);
+
+        m1.Free();
+        m2.Free();
+        end;
+end;
+
+{---------------------------------------}
+procedure TfrmPrefs.btnFontClick(Sender: TObject);
+begin
+    // Change the roster font
+    with FontDialog1 do begin
+        if (_clr_control = colorRoster) then
+            Font.Assign(colorRoster.Font)
+        else
+            Font.Assign(colorChat.Font);
+
+        if Execute then begin
+            if (_clr_control = colorRoster) then
+                colorRoster.Font.Assign(Font)
+            else begin
+                colorChat.Font.Assign(Font);
+                redrawChat();
+                end;
+
+            with MainSession.prefs do begin
+                setString(_clr_font + '_name', Font.Name);
+                setInt(_clr_font + '_size', Font.Size);
+                setBool(_clr_font + '_bold', (fsBold in Font.Style));
+                setBool(_clr_font + '_italic', (fsItalic in Font.Style));
+                setBool(_clr_font + '_underline', (fsUnderline in Font.Style));
+                end;
+            end;
+        end;
+end;
+
+{---------------------------------------}
+procedure TfrmPrefs.colorChatMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+var
+    start: integer;
+begin
+    // Select the chat window
+    lblColor.Caption := 'Chat Window';
+    _clr_control := colorChat;
+    _clr_bg := 'color_bg';
+    clrBoxBG.Selected := TColor(MainSession.Prefs.getInt(_clr_bg));
+
+    start := colorChat.SelStart;
+
+    if ((start >= 7) and (start <=  11)) then begin
+        // on <pgm>, color-me
+        _clr_font_color := 'color_me';
+        _clr_font := '';
+        end
+    else if ((start >= 41) and (start <= 48)) then begin
+        // on <c-neal>, color-other
+        _clr_font_color := 'color_other';
+        _clr_font := '';
+        end
+    else begin
+        // normal window, font_color
+        _clr_font_color := 'font_color';
+        _clr_font := 'font';
+        end;
+
+    btnFont.Enabled := (_clr_font <> '');
+    clrBoxFont.Selected := TColor(Mainsession.Prefs.getInt(_clr_font_color));
+
 end;
 
 end.

@@ -739,28 +739,23 @@ end;
 {---------------------------------------}
 procedure TfrmChat.CTCPClick(Sender: TObject);
 var
-    iq: TJabberIQ;
+    jid: string;
     p: TJabberPres;
 begin
-    iq := TJabberIQ.Create(MainSession, MainSession.generateID, frmExodus.CTCPCallback);
-    iq.iqType := 'get';
-
+    // get some CTCP query sent out
     p := MainSession.ppdb.FindPres(_jid.jid, '');
-    if p = nil then begin
+    if p = nil then
         // this person isn't online.
-        iq.toJid := _jid.jid;
-        end
-    else begin
-        iq.toJID := p.fromJID.full;
-        end;
+        jid := _jid.jid
+    else
+        jid := p.fromJID.full;
 
     if Sender = mnuVersionRequest then
-        iq.Namespace := XMLNS_VERSION
+        jabberSendCTCP(jid, XMLNS_VERSION)
     else if Sender = mnuTimeRequest then
-        iq.Namespace := XMLNS_TIME
+        jabberSendCTCP(jid, XMLNS_TIME)
     else if Sender = mnuLastActivity then
-        iq.Namespace := XMLNS_LAST;
-    iq.Send;
+        jabberSendCTCP(jid, XMLNS_LAST);
 end;
 
 {---------------------------------------}

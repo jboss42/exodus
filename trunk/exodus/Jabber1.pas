@@ -333,7 +333,6 @@ type
     procedure Startup();
     procedure DoConnect();
     procedure CTCPCallback(event: string; tag: TXMLTag);
-    procedure ResetLastTick(value: longint);
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
     procedure DefaultHandler(var msg); override;
   end;
@@ -488,6 +487,8 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.WMSysCommand(var msg: TWmSysCommand);
 begin
+    // Catch some of the important windows msgs
+    // so that we can handle minimizing & stuff properly
     case (msg.CmdType and $FFF0) of
     SC_MINIMIZE: begin
         // ShowWindow(Handle, SW_MINIMIZE);
@@ -549,7 +550,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.WMQueryEndSession(var msg: TMessage);
 begin
-    //
+    // Allow windows to shutdown
     _shutdown := true;
     msg.Result := 1;
 end;
@@ -557,7 +558,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.WMEndSession(var msg: TMessage);
 begin
-    //
+    // Kill the application
     _shutdown := true;
     msg.Result := 0;
 end;
@@ -565,18 +566,21 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.WMShowLogin(var msg: TMessage);
 begin
+    // Show the login window
     ShowLogin();
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.WMCloseApp(var msg: TMessage);
 begin
+    // Close the main form
     Self.Close();
 end;
 
 {---------------------------------------}
 procedure AddSound(reg: TRegistry; pref_name: string; user_text: string);
 begin
+    // Add a new sound entry into the registry
     reg.CreateKey('\AppEvents\Schemes\Apps\Exodus\EXODUS_' + pref_name);
     reg.OpenKey('\AppEvents\EventLabels\EXODUS_' + pref_name, true);
     reg.WriteString('', user_text);
@@ -781,16 +785,7 @@ begin
                 end;
 
             MainSession.Invisible := invisible;
-
-            if (debug) then begin
-                ShowDebugForm();
-            {
-                frmDebug := TfrmDebug.Create(nil);
-                if getBool('expanded') then
-                    frmDebug.DockForm;
-                frmDebug.Show;
-                }
-                end;
+            if (debug) then ShowDebugForm();
             end;
     except
         on E : EConfigException do begin
@@ -881,6 +876,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.Startup;
 begin
+    // Setup initial startup stuff
     if (MainSession.Prefs.getBool('expanded')) then begin
         getMsgQueue();
         frmMsgQueue.ManualDock(Self.pnlRight, nil, alClient);
@@ -910,7 +906,6 @@ begin
     If not, pop up the password prompt,
     otherwise, just call connect
     }
-
     with MainSession do begin
         if Password = '' then begin
             pf := TfrmInputPass.Create(nil);
@@ -928,6 +923,13 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.setupAutoAwayTimer();
 begin
+    {
+    Setup the auto-away timer
+    Note that for W2k and XP, we are just going to
+    use the special API calls for getting inactivity.
+
+    For other OS's we need to use the wicked nasty DLL
+    }
     DebugMsg(sSetupAutoAway);
     if ((_windows_ver < cWIN_2000) or (_windows_ver = cWIN_ME)) then begin
         // Use the DLL
@@ -970,6 +972,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.setTrayInfo(tip: string);
 begin
+    // setup the tray tool-tip
     StrPCopy(@_tray.szTip, tip);
     Shell_NotifyIcon(NIM_MODIFY, @_tray);
 end;
@@ -977,6 +980,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.setTrayIcon(iconNum: integer);
 begin
+    // setup the tray icon based on a specific icon index
     ImageList2.GetIcon(iconNum, _tray_icon);
     _tray.hIcon := _tray_icon.Handle;
     Shell_NotifyIcon(NIM_MODIFY, @_tray);
@@ -1107,6 +1111,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.restoreToolbar;
 begin
+    // setup the toolbar based on prefs
     with MainSession.Prefs do begin
         mnuExpanded.Checked := getBool('expanded');
         mnuOnline.Checked := getBool('roster_only_online');
@@ -1127,6 +1132,8 @@ procedure TfrmExodus.restoreAlpha;
 var
     alpha: boolean;
 begin
+    // setup the alpha-transparency for the main window
+    // based on the prefs
     with MainSession.Prefs do begin
         alpha := getBool('roster_alpha');
         Self.AlphaBlend := (alpha);
@@ -1219,8 +1226,8 @@ var
     qTag, tmp_tag: TXMLTag;
     from, url, desc: string;
 begin
+    // Callback for receiving file transfers
     from := tag.GetAttribute('from');
-
     qTag := tag.getFirstTag('query');
     tmp_tag := qtag.GetFirstTag('url');
     url := tmp_tag.Data;
@@ -1366,8 +1373,9 @@ end;
 procedure TfrmExodus.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
-    // Unregister callbacks, etc.
-
+    // If we are not already disconnected, then
+    // disconnect. Once we successfully disconnect,
+    // we'll close the form properly (xref _appclosing)
     if ((MainSession.Active) and (not _appclosing))then begin
         _appclosing := true;
         MainSession.Stream.Disconnect();
@@ -1375,6 +1383,7 @@ begin
         exit;
         end;
 
+    // Unregister callbacks, etc.
     MainSession.UnRegisterCallback(_sessioncb);
     MainSession.UnRegisterCallback(_msgcb);
     MainSession.UnRegisterCallback(_iqcb);
@@ -1385,20 +1394,25 @@ begin
     _last.Free();
     _browse.Free();
 
+    // Unhook the auto-away DLL
     if (_hookLib <> 0) then begin
         dec(_lpHookRec^.InstanceCount);
         _StopHooks();
         end;
 
+    // Free the Richedit library
     if (_richedit <> 0) then
         FreeLibrary(_richedit);
 
+    // Close up the msg queue
     MainSession.Prefs.SavePosition(Self);
     if (frmMsgQueue <> nil) then begin
         frmMsgQueue.lstEvents.Items.Clear;
         frmMsgQueue.Close;
         end;
 
+    // If we have a session, close it up
+    // and all of the associated windows
     if MainSession <> nil then begin
         _event := next_Exit;
         {
@@ -1419,12 +1433,14 @@ begin
         MainSession := nil;
         end;
 
+    // Kill the tray icon stuff
     _tray_icon.Free();
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+    // Kill the application
     Shell_NotifyIcon(NIM_DELETE, @_tray);
     Action := caFree;
 end;
@@ -1469,6 +1485,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.FormResize(Sender: TObject);
 begin
+    // When we are resized, save the new position
     if MainSession <> nil then
         MainSession.Prefs.SavePosition(Self);
 end;
@@ -1530,6 +1547,7 @@ begin
         Tabs.DockSite := false;
         Self.Show;
         end;
+
     MainSession.Prefs.setBool('expanded', newval);
     restoreToolbar();
     restoreEvents(newval);
@@ -1541,6 +1559,7 @@ var
     ew, w: longint;
     activeTab: integer;
 begin
+    // Setup the msg queue window based on the prefs
     with MainSession.Prefs do begin
         w := getInt(P_EVENT_WIDTH);
         setBool('expanded', expanded);
@@ -1574,7 +1593,6 @@ begin
             w := pnlRight.Width;
             setInt('event_width', w);
             tbsRoster.TabVisible := false;
-            //tbsDebug.TabVisible := false;
             Tabs.Docksite := false;
             Tabs.ActivePage := tbsRoster;
             pnlRoster.align := alClient;
@@ -1597,6 +1615,7 @@ procedure TfrmExodus.WMWindowPosChanging(var msg: TWMWindowPosChanging);
 var
     r: TRect;
 begin
+    // Handle snapping this window to the screen edges.
     if _noMoveCheck then exit;
     if _edge_snap = -1 then exit;
 
@@ -1655,7 +1674,7 @@ var
     n: TTreeNode;
     ritem: TJabberRosterItem;
 begin
-    // delete the current
+    // delete the current contact
     n := frmRosterWindow.treeRoster.Selected;
     ritem := TJabberRosterItem(n.Data);
     if ritem <> nil then
@@ -1666,11 +1685,6 @@ end;
 procedure TfrmExodus.ShowXML1Click(Sender: TObject);
 begin
     // show the debug window if it's hidden
-    {
-    if (frmDebug = nil) then
-        frmDebug := TfrmDebug.Create(nil);
-    frmDebug.ShowDefault();
-    }
     ShowDebugForm();
 end;
 
@@ -1684,6 +1698,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.Exit2Click(Sender: TObject);
 begin
+    // Close the whole honkin' thing
     _shutdown := true;
     Self.Close;
 end;
@@ -1691,6 +1706,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.timFlasherTimer(Sender: TObject);
 begin
+    // Flash the window
     _flash := not _flash;
     FlashWindow(Application.Handle, _flash);
 end;
@@ -1785,6 +1801,7 @@ function TfrmExodus.getLastTick(): dword;
 var
     last_info: TLastInputInfo;
 begin
+    // Return the last tick count of activity
     Result := 0;
     if (_windows_ver < cWIN_2000) then begin
         if (_lpHookRec <> nil) then
@@ -1806,7 +1823,20 @@ var
     // dmsg: string;
     avail: boolean;
 begin
-    // get the latest idle amount
+    {
+    Auto-away mad-ness......
+
+    Get the current idle time, and based
+    on that, "do the right thing".
+
+    Note that we don't want to set a-away if we're already
+    away, XA, or DND.
+
+    getLasTick() uses either the idleHooks.dll or the appropriate
+    API call if they are available (w2k and xp) to get the last
+    tick count which had activity.
+    }
+
     if (MainSession = nil) then exit;
     if (not MainSession.Active) then exit;
 
@@ -1940,7 +1970,6 @@ var
 begin
     // select a tab automatically if we have a right click.
     if Button = mbRight then begin
-
         {
         EEK! this is really gross because the pagecontrol sucks.
         Make sure the tab is visible before fetching it's bounding rect,
@@ -2092,15 +2121,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmExodus.ResetLastTick(value: longint);
-begin
-    if (_windows_ver >= cWIN_2000) then exit;
-
-    // DebugMsg('Setting LastTick to ' + IntToStr(value) + ', Current=' + IntToStr(GetTickCount()));
-    _lpHookRec^.LastTick := value;
-end;
-
-{---------------------------------------}
 procedure TfrmExodus.WinJabWebsite1Click(Sender: TObject);
 begin
     // goto exodus.sf.net
@@ -2116,17 +2136,12 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.mnuVersionClick(Sender: TObject);
-var
-    iq: TJabberIQ;
 begin
-    iq := TJabberIQ.Create(MainSession, MainSession.generateID, Self.CTCPCallback);
-    iq.iqType := 'get';
-    iq.toJID := MainSession.Server;
+    // get either version of time request from the jabber server
     if Sender = mnuVersion then
-        iq.Namespace := XMLNS_VERSION
+        jabberSendCTCP(MainSession.Server, XMLNS_VERSION)
     else if Sender = mnuTime then
-        iq.Namespace := XMLNS_TIME;
-    iq.Send;
+        jabberSendCTCP(MainSession.Server, XMLNS_TIME);
 end;
 
 {---------------------------------------}
@@ -2187,22 +2202,28 @@ procedure TfrmExodus.AcceptFiles( var msg : TWMDropFiles );
 const
   cnMaxFileNameLen = 255;
 var
-  i,
-  nCount     : integer;
-  acFileName : array [0..cnMaxFileNameLen] of char;
-  p          : TPoint;
-  Node       : TTreeNode;
-  ri         : TJabberRosterItem;
-  f          : TForm;
+    i,
+    nCount     : integer;
+    acFileName : array [0..cnMaxFileNameLen] of char;
+    p          : TPoint;
+    Node       : TTreeNode;
+    ri         : TJabberRosterItem;
+    f          : TForm;
 begin
+    // Accept some files being dropped on this form
+
+    // If we are expaned, and not showing the roster tab,
+    // and the current tab has a chat window, then
+    // call the chat window's AcceptFiles() method.
     if ((MainSession.Prefs.getBool('expanded')) and
         (Tabs.ActivePage <> tbsRoster)) then begin
         f := getTabForm(Tabs.ActivePage);
-         if (f is TfrmChat) then begin
+        if (f is TfrmChat) then begin
             TfrmChat(f).AcceptFiles(msg);
             end;
         exit;
         end;
+
     // figure out which node was the drop site.
     if (DragQueryPoint(msg.Drop, p) = false) then exit;
 
@@ -2239,6 +2260,8 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.FormDestroy(Sender: TObject);
 begin
+    // Make sure windows knows we don't want files
+    // dropped on us anymore.
     DragAcceptFiles(Handle, False);
 end;
 
@@ -2248,7 +2271,7 @@ var
     tmps: string;
     f: TfrmRegister;
 begin
-    // kick off a registration..
+    // kick off a service registration..
     tmps := '';
     if (InputQuery(sRegService, sEnterSvcJID, tmps) = false) then
         exit;
@@ -2283,6 +2306,7 @@ var
     n: TTreeNode;
     ritem: TJabberRosterItem;
 begin
+    // Message someone
     jid := '';
     if (frmRosterWindow.treeRoster.SelectionCount > 0) then begin
         n := frmRosterWindow.treeRoster.Selected;
@@ -2314,7 +2338,7 @@ var
     fsel: TfrmSelContact;
     jid : string;
 begin
-    //
+    // Send a msg via the tray menu popup
     fsel := TfrmSelContact.Create(nil);
     fsel.frameTreeRoster1.DrawRoster(true);
     fsel.frameTreeRoster1.treeRoster.MultiSelect := false;
@@ -2356,8 +2380,10 @@ begin
         inherited;
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.mnuBrowserClick(Sender: TObject);
 begin
+    // Show a jabber browser.
     ShowBrowser();
 end;
 

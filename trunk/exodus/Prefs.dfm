@@ -1,8 +1,8 @@
 object frmPrefs: TfrmPrefs
   Left = 264
   Top = 181
-  Width = 407
-  Height = 441
+  Width = 468
+  Height = 411
   Caption = 'Exodus Preferences'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,7 +20,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 370
+    Height = 340
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1433,8 +1433,8 @@ object frmPrefs: TfrmPrefs
   object PageControl1: TPageControl
     Left = 89
     Top = 0
-    Width = 310
-    Height = 370
+    Width = 371
+    Height = 340
     ActivePage = tbsFonts
     Align = alClient
     Constraints.MinHeight = 340
@@ -1455,7 +1455,7 @@ object frmPrefs: TfrmPrefs
       object StaticText1: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1526,7 +1526,7 @@ object frmPrefs: TfrmPrefs
       object StaticText2: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1558,166 +1558,70 @@ object frmPrefs: TfrmPrefs
     object tbsFonts: TTabSheet
       Caption = 'Fonts'
       ImageIndex = 2
-      object Label5: TLabel
+      object Label22: TLabel
         Left = 8
-        Top = 24
-        Width = 88
+        Top = 56
+        Width = 87
         Height = 13
-        Caption = 'Default Font Face:'
-      end
-      object Label6: TLabel
-        Left = 8
-        Top = 152
-        Width = 108
-        Height = 13
-        Caption = 'Color for my messages:'
-      end
-      object Label7: TLabel
-        Left = 8
-        Top = 200
-        Width = 119
-        Height = 13
-        Caption = 'Color for other messages:'
-      end
-      object Label8: TLabel
-        Left = 8
-        Top = 104
-        Width = 131
-        Height = 13
-        Caption = 'Background color for chats:'
-      end
-      object Label17: TLabel
-        Left = 8
-        Top = 246
-        Width = 58
-        Height = 13
-        Caption = 'Roster Font:'
-      end
-      object Label16: TLabel
-        Left = 136
-        Top = 290
-        Width = 61
-        Height = 13
-        Caption = 'Background:'
-      end
-      object Label18: TLabel
-        Left = 32
-        Top = 290
-        Width = 51
-        Height = 13
-        Caption = 'Font Color:'
-      end
-      object Label21: TLabel
-        Left = 32
-        Top = 74
-        Width = 51
-        Height = 13
-        Caption = 'Font Color:'
-      end
-      object pnlFont: TPanel
-        Left = 32
-        Top = 40
-        Width = 150
-        Height = 27
-        BevelOuter = bvLowered
-        Caption = 'Verdona, 8 pt'
-        Color = clWindow
-        Font.Charset = ANSI_CHARSET
+        Caption = 'Roster Window'
+        Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -11
-        Font.Name = 'Verdana'
-        Font.Style = []
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
         ParentFont = False
-        TabOrder = 0
       end
-      object Button1: TButton
-        Left = 191
-        Top = 40
-        Width = 75
-        Height = 25
-        Caption = 'Change'
-        TabOrder = 1
-        OnClick = Button1Click
+      object Label23: TLabel
+        Left = 136
+        Top = 56
+        Width = 82
+        Height = 13
+        Caption = 'Chat Windows'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
+        ParentFont = False
       end
-      object pnlMyColor: TPanel
-        Left = 32
+      object Label24: TLabel
+        Left = 8
+        Top = 194
+        Width = 88
+        Height = 13
+        Caption = 'Background Color:'
+      end
+      object Label25: TLabel
+        Left = 8
+        Top = 218
+        Width = 51
+        Height = 13
+        Caption = 'Font Color:'
+      end
+      object lblColor: TLabel
+        Left = 8
         Top = 168
-        Width = 150
-        Height = 27
-        BevelOuter = bvLowered
-        Caption = '<me>'
-        Color = clWindow
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clRed
+        Width = 87
+        Height = 13
+        Caption = 'Roster Window'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clWindowText
         Font.Height = -11
-        Font.Name = 'Verdana'
-        Font.Style = []
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsBold]
         ParentFont = False
-        TabOrder = 2
       end
-      object Button2: TButton
-        Left = 191
-        Top = 168
-        Width = 75
-        Height = 25
-        Caption = 'Change'
-        TabOrder = 3
-        OnClick = Button2Click
-      end
-      object pnlOtherColor: TPanel
-        Left = 32
-        Top = 216
-        Width = 150
-        Height = 27
-        BevelOuter = bvLowered
-        Caption = '<someone>'
-        Color = clWindow
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clBlue
-        Font.Height = -11
-        Font.Name = 'Verdana'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 4
-      end
-      object Button3: TButton
-        Left = 191
-        Top = 216
-        Width = 75
-        Height = 25
-        Caption = 'Change'
-        TabOrder = 5
-        OnClick = Button3Click
-      end
-      object pnlBGColor: TPanel
-        Left = 32
-        Top = 120
-        Width = 150
-        Height = 27
-        BevelOuter = bvLowered
-        Caption = 'Some Message'
-        Color = clWindow
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clBlack
-        Font.Height = -11
-        Font.Name = 'Verdana'
-        Font.Style = []
-        ParentFont = False
-        TabOrder = 6
-      end
-      object Button4: TButton
-        Left = 191
-        Top = 120
-        Width = 75
-        Height = 25
-        Caption = 'Change'
-        TabOrder = 7
-        OnClick = Button4Click
+      object Label5: TLabel
+        Left = 8
+        Top = 32
+        Width = 286
+        Height = 13
+        Caption = 'Click on the approprriate font or window to change elements.'
       end
       object StaticText3: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1730,64 +1634,70 @@ object frmPrefs: TfrmPrefs
         Font.Style = [fsBold]
         ParentColor = False
         ParentFont = False
-        TabOrder = 8
+        TabOrder = 0
       end
-      object pnlRoster: TPanel
-        Left = 32
-        Top = 264
-        Width = 150
-        Height = 21
-        BevelOuter = bvLowered
-        Caption = 'Cowboy Neal'
-        TabOrder = 9
+      object colorRoster: TTreeView
+        Left = 8
+        Top = 72
+        Width = 121
+        Height = 90
+        Images = frmRosterWindow.ImageList1
+        Indent = 19
+        ReadOnly = True
+        ShowButtons = False
+        ShowLines = False
+        TabOrder = 1
+        OnMouseDown = colorRosterMouseDown
+        Items.Data = {
+          01000000200000001B00000000000000FFFFFFFFFFFFFFFF0000000002000000
+          0747726F75702031210000000100000000000000FFFFFFFFFFFFFFFF00000000
+          00000000085065746572204D2E240000000000000000000000FFFFFFFFFFFFFF
+          FF00000000000000000B436F77626F79204E65616C}
       end
-      object Button5: TButton
-        Left = 191
-        Top = 262
-        Width = 75
+      object clrBoxBG: TColorBox
+        Left = 111
+        Top = 191
+        Width = 90
+        Height = 22
+        DefaultColorColor = clBlue
+        Selected = clBlue
+        Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
+        DropDownCount = 12
+        ItemHeight = 16
+        TabOrder = 2
+        OnChange = clrBoxBGChange
+      end
+      object clrBoxFont: TColorBox
+        Left = 111
+        Top = 215
+        Width = 90
+        Height = 22
+        DefaultColorColor = clBlue
+        Selected = clBlue
+        Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
+        DropDownCount = 12
+        ItemHeight = 16
+        TabOrder = 3
+        OnChange = clrBoxFontChange
+      end
+      object btnFont: TButton
+        Left = 111
+        Top = 242
+        Width = 90
         Height = 25
-        Caption = 'Change'
-        TabOrder = 10
-        OnClick = Button5Click
+        Caption = 'Change Font'
+        TabOrder = 4
+        OnClick = btnFontClick
       end
-      object cboRosterBG: TColorBox
-        Left = 135
-        Top = 306
-        Width = 90
-        Height = 22
-        DefaultColorColor = clBlue
-        Selected = clBlue
-        Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
-        DropDownCount = 12
-        ItemHeight = 16
-        TabOrder = 11
-        OnChange = cboRosterBGChange
-      end
-      object cboRosterFontColor: TColorBox
-        Left = 31
-        Top = 306
-        Width = 90
-        Height = 22
-        DefaultColorColor = clBlue
-        Selected = clBlue
-        Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
-        DropDownCount = 12
-        ItemHeight = 16
-        TabOrder = 12
-        OnChange = cboRosterFontColorChange
-      end
-      object cboChatFontColor: TColorBox
-        Left = 95
-        Top = 71
-        Width = 90
-        Height = 22
-        DefaultColorColor = clBlue
-        Selected = clBlue
-        Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
-        DropDownCount = 12
-        ItemHeight = 16
-        TabOrder = 13
-        OnChange = cboChatFontColorChange
+      object colorChat: TExRichEdit
+        Left = 136
+        Top = 72
+        Width = 225
+        Height = 89
+        ReadOnly = True
+        ScrollBars = ssBoth
+        TabOrder = 5
+        OnMouseUp = colorChatMouseUp
       end
     end
     object tbsSystem: TTabSheet
@@ -1803,7 +1713,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1906,7 +1816,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 97
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2210,7 +2120,7 @@ object frmPrefs: TfrmPrefs
       object StaticText6: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2290,7 +2200,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 124
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2368,7 +2278,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 112
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2386,15 +2296,15 @@ object frmPrefs: TfrmPrefs
       object memKeywords: TMemo
         Left = 0
         Top = 73
-        Width = 302
-        Height = 266
+        Width = 363
+        Height = 236
         Align = alClient
         TabOrder = 1
       end
       object Panel2: TPanel
         Left = 0
         Top = 20
-        Width = 302
+        Width = 363
         Height = 53
         Align = alTop
         BevelOuter = bvNone
@@ -2402,7 +2312,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TLabel
           Left = 0
           Top = 0
-          Width = 256
+          Width = 363
           Height = 26
           Align = alTop
           Caption = 
@@ -2467,7 +2377,7 @@ object frmPrefs: TfrmPrefs
       object lstCustomPres: TListBox
         Left = 0
         Top = 20
-        Width = 302
+        Width = 363
         Height = 109
         Align = alTop
         ItemHeight = 13
@@ -2477,7 +2387,7 @@ object frmPrefs: TfrmPrefs
       object StaticText10: TStaticText
         Left = 0
         Top = 0
-        Width = 302
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2495,7 +2405,7 @@ object frmPrefs: TfrmPrefs
       object pnlCustomPresButtons: TPanel
         Left = 0
         Top = 129
-        Width = 302
+        Width = 363
         Height = 34
         Align = alTop
         BevelOuter = bvNone
@@ -2659,8 +2569,8 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 370
-    Width = 399
+    Top = 340
+    Width = 460
     Height = 37
     Align = alBottom
     BevelOuter = bvNone
@@ -2668,14 +2578,14 @@ object frmPrefs: TfrmPrefs
     object Bevel1: TBevel
       Left = 0
       Top = 0
-      Width = 399
+      Width = 460
       Height = 5
       Align = alTop
       Shape = bsTopLine
       Visible = False
     end
     object Panel3: TPanel
-      Left = 158
+      Left = 219
       Top = 5
       Width = 241
       Height = 32
