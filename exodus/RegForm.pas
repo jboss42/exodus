@@ -86,7 +86,7 @@ resourcestring
     sBtnFinish = 'Finish';
     sBtnCancel = 'Cancel';
     sServiceRegTitle = 'Jabber Service Registration';
-    sServiceRegDetails = 'This wizard will guide you through registration with a jabber service.'; 
+    sServiceRegDetails = 'This wizard will guide you through registration with a jabber service.';
     sServiceRegError = 'The agent you are trying to register with returned an error.';
     sServiceRegTimeout = 'The agent you are trying to register with can not be reached.';
     sServiceRegRemoveError = 'There was an error trying to remove your registration.';
@@ -101,7 +101,7 @@ var
 implementation
 {$R *.DFM}
 uses
-    NodeItem, 
+    NodeItem,
     GnuGetText, Math, JabberConst, Transports, S10n, Roster, Session, ExUtils;
 
 {---------------------------------------}
@@ -304,7 +304,7 @@ begin
             with frm do begin
                 n := lblPrompt.Caption;
                 v := txtData.Text;
-                
+
                 if ((lowercase(n) = 'password') and (Trim(v) = '')) then begin
                     // don't add a password element in..
                 end
@@ -357,7 +357,7 @@ begin
             // The s10n.pas handler will catch this.
             tmps := agent.name;
             if (tmps = '') then
-                tmps = pres.fromJid.domain;
+                tmps := pres.fromJid.domain;
 
             MainSession.roster.AddItem(pres.fromJID.full, tmps,
                 MainSession.Prefs.getString('roster_transport_grp'), false);
