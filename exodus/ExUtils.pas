@@ -486,12 +486,12 @@ function getDisplayField(fld: string): string;
 begin
     // send back "well formatted" field names
 
-    if (fld = 'nick') then result := 'Nickname:'
-    else if (fld = 'first') then result := 'First Name:'
-    else if (fld = 'last') then result := 'Last Name:'
-    else if (fld = 'email') then result := 'EMail Address:'
-    else if (fld = 'password') then result := 'Password'
-    else if (fld = 'username') then result := 'UserName:'
+    if (fld = 'nick') then result := _('Nickname:')
+    else if (fld = 'first') then result := _('First Name:')
+    else if (fld = 'last') then result := _('Last Name:')
+    else if (fld = 'email') then result := _('EMail Address:')
+    else if (fld = 'password') then result := _('Password')
+    else if (fld = 'username') then result := _('UserName:')
     else
         result := fld;
 end;
@@ -591,14 +591,23 @@ var
     h : integer;
     m : integer;
     s : integer;
+    day_str: Widestring;
+    hrs_str: Widestring;
+    min_str: Widestring;
+    sec_str: Widestring;
 begin
     s := StrToIntDef(seconds, -1);
+
+    day_str := _('days');
+    hrs_str := _('hours');
+    min_str := _('minutes');
+    sec_str := _('seconds');
 
     if (s < 0) then begin
         result := _(' unknown last result: ') + seconds
     end
     else if (s = 0) then begin
-        result := ' 0 seconds';
+        result := ' 0 ' + sec_str;
     end
     else begin
         d := s div 86400;
@@ -606,10 +615,10 @@ begin
         m := ((s mod 86400) mod 3600) div 60;
         s := s mod 60;
         Result :=
-            WideFormat(ngettext('%d day, ', '%d days, ', d), [d]) +
-            WideFormat(ngettext('%d hour, ', '%d hours, ', h), [h]) +
-            WideFormat(ngettext('%d minute, ', '%d minutes, ', m), [m]) +
-            WideFormat(ngettext('%d second.', '%d seconds.', s), [s]);
+            WideFormat(ngettext('%d day, ', '%d %s, ', d), [d, day_str]) +
+            WideFormat(ngettext('%d hour, ', '%d %s, ', h), [h, hrs_str]) +
+            WideFormat(ngettext('%d minute, ', '%d %s, ', m), [m, min_str]) +
+            WideFormat(ngettext('%d second.', '%d %s.', s), [s, sec_str]);
     end;
 end;
 
