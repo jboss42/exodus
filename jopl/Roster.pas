@@ -52,6 +52,20 @@ type
         property Nickname: Widestring read getNick write _nickname;
     end;
 
+    TJabberMyResource = class
+    private
+    public
+        jid: TJabberID;
+        Groups: TWidestringList;
+        Data: TObject;
+        Presence: TJabberPres;
+        Resource: Widestring;
+        item: TJabberRosterItem;
+
+        constructor Create;
+        destructor Destroy; override;
+    end;
+
     TJabberBookmark = class
     public
         jid: TJabberID;
@@ -192,6 +206,32 @@ begin
         if (nick <> '') then
             AddBasicTag('nick', nick);
     end;
+end;
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+constructor TJabberMyResource.Create;
+begin
+    //
+    inherited;
+
+    Groups := TWidestringList.Create();
+    Data := nil;
+    Presence := nil;
+    Resource := '';
+    item := nil;
+end;
+
+destructor TJabberMyResource.Destroy;
+begin
+    //
+    Groups.Free();
+    jid.Free();
+    if (Data <> nil) then
+        TObject(Data).Free();
+
+    inherited Destroy;
 end;
 
 {---------------------------------------}
