@@ -13,11 +13,12 @@ type
   protected
     procedure Startup(const ExodusController: IExodusController); safecall;
     procedure Shutdown; safecall;
-    procedure Process(const xml: WideString); safecall;
+    procedure Process(const xpath: WideString; const event: WideString; const xml: WideString); safecall;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat); safecall;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat); safecall;
     procedure menuClick(const ID: WideString); safecall;
-    procedure onAgentsList(const Server: WideString); safecall;
+    function onInstantMsg(const Body: WideString; const Subject: WideString): WideString; safecall;
+    procedure Configure; safecall;
     { Protected declarations }
   private
     _exodus: IExodusController;
@@ -39,6 +40,7 @@ begin
     // init the word instance for the plugin
     try
         _word := TWordApplication.Create(nil);
+        _word.Connect();
         _word.CheckSpelling('hello');
     except
         on E: Exception do begin
@@ -53,8 +55,9 @@ procedure TWordSpeller.Shutdown;
 begin
     // exodus is shutting down... do cleanup
     OutputDebugString('WORDPLUGIN - SHUTDOWN');
-    _exodus._Release();
-    _word.FreeInstance();
+    _word.Disconnect();
+    _word.Free();
+    _word := nil;
 end;
 
 procedure TWordSpeller.NewChat(const JID: WideString; Const Chat: IExodusChat);
@@ -74,7 +77,8 @@ begin
     // a new TC Room is firing up
 end;
 
-procedure TWordSpeller.Process(const xml: WideString);
+procedure TWordSpeller.Process(const xpath: WideString;
+    const event: WideString; const xml: WideString);
 begin
     // we are getting some kind of Packet from a callback
 end;
@@ -84,10 +88,17 @@ begin
     //
 end;
 
-procedure TWordSpeller.onAgentsList(const Server: WideString);
+function TWordSpeller.onInstantMsg(const Body: WideString;
+    const Subject: WideString): WideString;
 begin
     //
 end;
+
+procedure TWordSpeller.Configure;
+begin
+    //
+end;
+
 
 initialization
   TAutoObjectFactory.Create(ComServer, TWordSpeller, Class_WordSpeller,
