@@ -119,6 +119,10 @@ inherited frmChat: TfrmChat
         OnClick = CTCPClick
       end
     end
+    object popAddContact: TMenuItem
+      Caption = 'Add to roster ...'
+      OnClick = doAddToRoster
+    end
     object mnuBlock: TMenuItem
       Caption = 'Block Contact'
       OnClick = mnuBlockClick
