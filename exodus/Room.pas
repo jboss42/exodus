@@ -563,13 +563,11 @@ begin
     else if (cmd = '/voice') then begin
         selectNicks(wsl);
         popVoiceClick(nil);
-
         Result := true;
     end
     else if (cmd = '/block') then begin
         selectNicks(wsl);
         popRosterBlockClick(nil);
-
         Result := true;
     end;
 
