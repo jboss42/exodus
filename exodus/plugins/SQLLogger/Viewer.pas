@@ -4,15 +4,22 @@ interface
 
 uses
     SQLiteTable,
-    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+    Contnrs, Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, ExtCtrls, ComCtrls, RichEdit2, ExRichEdit,
-    TntStdCtrls, Buttons, TntExtCtrls, Grids, TntGrids;
+    TntStdCtrls, Buttons, TntExtCtrls, Grids, TntGrids, TntComCtrls;
 
 type
   TMonthDay = 1..31;
-  
+
+  TConversation = class
+    jid: Widestring;
+    thread: Widestring;
+    count: integer;
+    msgs: TSQLiteTable;
+    dt: TDateTime;
+  end;
+
   TfrmView = class(TForm)
-    MsgList: TExRichEdit;
     Panel1: TPanel;
     Panel2: TPanel;
     pnlCal: TPanel;
@@ -21,6 +28,14 @@ type
     btnPrevMonth: TSpeedButton;
     btnNextMonth: TSpeedButton;
     gridCal: TTntStringGrid;
+    TntLabel1: TTntLabel;
+    cboJid: TTntComboBox;
+    TntLabel2: TTntLabel;
+    txtWords: TTntEdit;
+    pnlRight: TPanel;
+    MsgList: TExRichEdit;
+    Splitter1: TSplitter;
+    gridConv: TDrawGrid;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure gridCalSelectCell(Sender: TObject; ACol, ARow: Integer;
@@ -28,6 +43,12 @@ type
     procedure gridCalDrawCell(Sender: TObject; ACol, ARow: Integer;
       Rect: TRect; State: TGridDrawState);
     procedure btnNextMonthClick(Sender: TObject);
+    procedure cboJidChange(Sender: TObject);
+    procedure gridConvDrawCell(Sender: TObject; ACol, ARow: Integer;
+      Rect: TRect; State: TGridDrawState);
+    procedure FormDestroy(Sender: TObject);
+    procedure gridConvSelectCell(Sender: TObject; ACol, ARow: Integer;
+      var CanSelect: Boolean);
   private
     { Private declarations }
     _jid: String;
@@ -35,6 +56,9 @@ type
     _last: TDatetime;
     _m: Word;
     _y: Word;
+
+    // persistent result sets
+    _convs: TObjectList;
 
     procedure DisplayMsg(tmp: TSQLiteTable);
     procedure SelectMonth(d: TDateTime);
@@ -62,6 +86,7 @@ uses
 {---------------------------------------}
 procedure TfrmView.ShowJid(jid: Widestring);
 begin
+    cboJid.Text := jid;
     _jid := UTF8Encode(jid);
     _last := 0;
     SelectMonth(Now());
@@ -73,19 +98,54 @@ procedure TfrmView.SelectDay(d: TDateTime);
 var
     td, c1, r, c, i: integer;
     d1: TDateTime;
-    sql, cmd: string;
+    w, sql, cmd: string;
     tmp: TSQLiteTable;
+    conv: TConversation;
+    tmp_b: boolean;
 begin
-    MsgList.WideLines.Clear();
+    if (_last = d) then exit;
+    
+    // Get the list of conversations..
     td := Trunc(d);
-    cmd := 'SELECT * FROM jlogs WHERE jid="%s" AND date=%d ORDER BY DATE, TIME;';
-    sql := Format(cmd, [_jid, td]);
+    sql := 'SELECT Min(date) as min_date, Min(time) as min_time,  Count(body) as msg_count, thread';
+    if (_jid <> '') then begin
+        cmd := 'WHERE jid="%s" AND date=%d ';
+        w := Format(cmd, [_jid, td]);
+        sql := sql + ' FROM jlogs ' + w + ' GROUP BY thread ORDER BY min_time;';
+    end
+    else begin
+        cmd := 'WHERE date=%d ';
+        w := Format(cmd, [td]);
+        sql := sql + ', jid FROM jlogs ' + w + ' GROUP BY jid, thread ORDER BY min_time;';
+    end;
+
+    // Get the conversations for this day..
+    if (_convs <> nil) then
+        FreeAndNil(_convs);
+
     tmp := db.GetTable(sql);
 
+    _convs := TObjectList.Create();
+    _convs.OwnsObjects := true;
+
+    // 0 = min_date, 1 = min_time, 2 = msg_count, 3 = thread, [4 = jid]
     for i := 0 to tmp.RowCount - 1 do begin
-        DisplayMsg(tmp);
+        conv := TConversation.Create();
+        if (_jid <> '') then
+            conv.jid := _jid
+        else
+            conv.jid := tmp.Fields[4];
+        conv.count := SafeInt(tmp.Fields[2]);
+        conv.dt := SafeInt(tmp.Fields[0]) + StrToFloat(tmp.Fields[1]);
+        conv.thread := tmp.Fields[3];
+        _convs.Add(conv);
         tmp.Next();
     end;
+    tmp.Free();
+
+    gridConv.RowCount := _convs.Count;
+    gridConv.Invalidate();
+    gridConv.Refresh();
 
     _last := d;
 
@@ -104,6 +164,12 @@ begin
 
     gridCal.Row := r;
     gridCal.Col := c;
+
+    // Select the first thing in the list automatically.
+    if (_convs.Count > 0) then begin
+        gridConv.Row := 0;
+        gridConvSelectCell(Self, 0, 0, tmp_b);
+    end;
 end;
 
 {---------------------------------------}
@@ -123,8 +189,15 @@ begin
     i1 := Trunc(d1);
     i2 := Trunc(d2);
 
-    cmd := 'SELECT DISTINCT date FROM jlogs WHERE jid="%s" AND date > %d AND date < %d;';
-    sql := Format(cmd, [_jid, i1, i2]);
+    if (_jid <> '') then begin
+        cmd := 'SELECT DISTINCT date FROM jlogs WHERE jid="%s" AND date > %d AND date < %d;';
+        sql := Format(cmd, [_jid, i1, i2]);
+    end
+    else begin
+        cmd := 'SELECT DISTINCT date FROM jlogs WHERE date > %d AND date < %d;';
+        sql := Format(cmd, [i1, i2]);
+    end;
+
     tmp := db.GetTable(sql);
 
     _days := [];
@@ -133,6 +206,11 @@ begin
         dd := StrToInt(tmp.Fields[0]);
         _days := _days + [DayOf(dd)];
         tmp.Next();
+    end;
+
+    if (_convs <> nil) then begin
+        FreeAndNil(_convs);
+        gridConv.RowCount := 0;
     end;
 end;
 
@@ -202,6 +280,7 @@ begin
     gridCal.Cells[5, 0] := 'F';
     gridCal.Cells[6, 0] := 'S';
 
+    _convs := nil;
     cw := Trunc(gridCal.Width / 7.0);
     for i := 0 to 6 do
         gridCal.ColWidths[i] := cw;
@@ -320,4 +399,70 @@ begin
     SelectDay(new);
 end;
 
+procedure TfrmView.cboJidChange(Sender: TObject);
+var
+    td: TDatetime;
+    idx: integer;
+begin
+    // Select this JID
+    idx := cboJid.ItemIndex;
+    td := _last;
+    _last := 0;
+    if (idx = 0) then begin
+        _jid := '';
+        SelectDay(td)
+    end
+    else begin
+        _jid := cboJid.Text;
+        SelectDay(td);
+    end;
+end;
+
+procedure TfrmView.gridConvDrawCell(Sender: TObject; ACol, ARow: Integer;
+  Rect: TRect; State: TGridDrawState);
+var
+    dtstr, txt, fmt: String;
+    c: TConversation;
+begin
+    // Draw this conversation
+    if (_convs = nil) then exit;
+    if (ARow >= _convs.Count) then exit;
+
+    c := TConversation(_convs[ARow]);
+
+    fmt := '%s, %d Messages from %s';
+    dtstr := TimeToStr(c.dt);
+    txt := Format(fmt, [dtstr, c.count, c.jid]);
+    gridConv.Canvas.TextOut(Rect.Left, Rect.Top, txt);
+end;
+
+procedure TfrmView.FormDestroy(Sender: TObject);
+begin
+    if (_convs <> nil) then
+        FreeAndNil(_convs);
+end;
+
+procedure TfrmView.gridConvSelectCell(Sender: TObject; ACol, ARow: Integer;
+  var CanSelect: Boolean);
+var
+    i: integer;
+    c: TConversation;
+    tmp: TSQLiteTable;
+    cmd, sql: string;
+begin
+    // Show this conversation
+    MsgList.WideLines.Clear();
+    c := TConversation(_convs[ARow]);
+
+    cmd := 'SELECT * FROM jlogs WHERE jid="%s" AND thread="%s" AND date=%d ORDER BY time;';
+    sql := Format(cmd, [c.jid, c.thread, Trunc(double(c.dt))]);
+
+    tmp := db.GetTable(sql);
+    for i := 0 to tmp.RowCount - 1 do begin
+        DisplayMsg(tmp);
+        tmp.Next();
+    end;
+end;
+
 end.
+

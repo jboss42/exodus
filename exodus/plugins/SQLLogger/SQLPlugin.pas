@@ -204,8 +204,9 @@ begin
     end
     else begin
         // TODO: convert old db's
-        tmp := _db.GetTable('SELECT version FROM jlog_info;');
+        tmp := _db.GetTable('SELECT version, machine_id FROM jlog_info;');
         ver := SafeInt(tmp.Fields[0]);
+        _mid := tmp.Fields[1];
         if (ver < SCHEMA_VER) then begin
             MessageDlgW('SCHEMA VERSION is incorrect!', mtError, [mbOK], 0);
             _db.Free();
