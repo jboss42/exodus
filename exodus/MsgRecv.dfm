@@ -279,9 +279,9 @@ object frmMsgRecv: TfrmMsgRecv
   end
   object txtMsg: TExRichEdit
     Left = 0
-    Top = 68
+    Top = 75
     Width = 325
-    Height = 85
+    Height = 78
     Align = alClient
     AutoURLDetect = adDefault
     CustomURLs = <
@@ -376,7 +376,7 @@ object frmMsgRecv: TfrmMsgRecv
     Left = 0
     Top = 44
     Width = 325
-    Height = 24
+    Height = 31
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 2
@@ -386,7 +386,7 @@ object frmMsgRecv: TfrmMsgRecv
       Left = 2
       Top = 2
       Width = 64
-      Height = 20
+      Height = 27
       Align = alLeft
       Caption = 'Subject:    '
       Color = clBtnFace
@@ -403,7 +403,7 @@ object frmMsgRecv: TfrmMsgRecv
       Left = 66
       Top = 2
       Width = 257
-      Height = 20
+      Height = 27
       Align = alClient
       TabOrder = 0
       WantReturns = False
