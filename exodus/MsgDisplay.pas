@@ -463,9 +463,19 @@ end;
 
 {---------------------------------------}
 procedure DisplayPresence(txt: string; Browser: TExRichEdit);
+var
+    pt : integer;
 begin
-    // add presence to the richEdit control
+    pt := MainSession.Prefs.getInt('pres_tracking');
+    if (pt = 2) then exit;
     with Browser do begin
+        if (pt = 1) then begin
+            Browser.SelStart := Length(Browser.Lines.Text) - 3;
+            Browser.SelLength := 1;
+            if (Browser.SelAttributes.Color = clGray) then
+                Browser.WideLines.Delete(Browser.Lines.Count-1);
+            end;
+
         SelStart := Length(Lines.Text);
         SelLength := 0;
 

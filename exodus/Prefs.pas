@@ -185,6 +185,8 @@ type
     chkLogRooms: TCheckBox;
     Label7: TLabel;
     cboMsgOptions: TComboBox;
+    Label8: TLabel;
+    cboPresTracking: TComboBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -365,6 +367,7 @@ begin
         chkLogRooms.Checked := getBool('log_rooms');
         txtLogPath.Text := getString('log_path');
         cboMsgOptions.ItemIndex := getInt('msg_treatment');
+        cboPresTracking.ItemIndex := getInt('pres_tracking');
         self.chkLogClick(nil);
 
         // Dialog Options
@@ -503,6 +506,7 @@ begin
         setBool('log_rooms', chkLogRooms.Checked);
         setString('log_path', txtLogPath.Text);
         setInt('msg_treatment', cboMsgOptions.ItemIndex);
+        setInt('pres_tracking', cboPresTracking.ItemIndex);
 
         reg := TRegistry.Create();
         try
