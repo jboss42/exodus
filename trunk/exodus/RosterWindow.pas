@@ -573,21 +573,10 @@ begin
 
         if (show_status) then begin
             if (p <> nil) then begin
-
                 if (p.Status <> '') then
-                    tmps := tmps + ': ' + p.Status
-                else begin
-                    if (p.Show = 'away') then tmps := tmps + ': Away'
-                    else if (p.Show = 'xa') then tmps := tmps + ': Ext. Away'
-                    else if (p.Show = 'dnd') then tmps := tmps + ': DND'
-                    else if (p.Show = 'chat') then tmps := tmps + ': Chatty'
-                    else tmps := tmps + ': Available';
-                    end;
-                end
-            else
-                tmps := tmps + ': Offline';
+                    tmps := tmps + ': ' + p.Status;
+                end;
             end;
-
 
         if cur_node = nil then begin
             // add a node for this person under this group
