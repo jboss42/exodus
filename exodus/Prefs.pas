@@ -465,7 +465,7 @@ begin
         reg := TRegistry.Create();
         try
             reg.RootKey := HKEY_CURRENT_USER;
-            reg.OpenKey(RUN_ONCE, false);
+            reg.OpenKey(RUN_ONCE, true);
 
             if (not chkAutoStart.Checked) then begin
                 if (reg.ValueExists('Exodus')) then
