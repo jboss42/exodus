@@ -1047,7 +1047,7 @@ procedure BuildPresMenus(parent: TObject; clickev: TNotifyEvent);
     end;
 
 var
-    plist: TList;
+    plist: TWidestringList;
     grp, i: integer;
     mnu: TMenuItem;
     cp: TJabberCustompres;
@@ -1096,7 +1096,7 @@ begin
 
     plist := MainSession.prefs.getAllPresence();
     for i := 0 to plist.count - 1 do begin
-        cp := TJabberCustomPres(plist[i]);
+        cp := TJabberCustomPres(plist.Objects[i]);
 
         if (cp.show = 'chat') then begin
             grp := 0;
