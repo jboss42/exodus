@@ -35,6 +35,8 @@ function LeftChar(instring: Widestring; nchar: word): Widestring;
 function SToInt(inp: Widestring): integer;
 function NameMatch(s1, s2: Widestring): boolean;
 function Sha1Hash(fkey: Widestring): Widestring;
+function MD5File(filename: Widestring): string; overload;
+function MD5File(stream: TStream): string; overload;
 function EncodeString(value: Widestring): Widestring;
 function DecodeString(value: Widestring): Widestring;
 function MungeName(str: Widestring): Widestring;
@@ -75,7 +77,7 @@ uses
 
     IdGlobal,
     {$ifdef INDY9}
-    IdCoderMime,
+    IdHashMessageDigest, IdHash, IdCoderMime,
     {$else}
     IdCoder3To4,
     {$endif}
@@ -285,6 +287,53 @@ begin
     hasher.Free;
     Result := s;
 end;
+
+{$ifdef INDY9}
+function MD5File(filename: Widestring): string;
+var
+    fstream: TFileStream;
+begin
+    try
+        fstream := TFileStream.Create(filename, fmOpenRead or fmShareDenyNone);
+        Result := MD5File(fstream);
+        fStream.Free();
+    except
+        Result := '';
+    end;
+end;
+
+function MD5File(stream: TStream): string;
+var
+    md: TIdHashMessageDigest5;
+    Digest: T4x4LongWordRecord;
+    S: String;
+    pos: int64;
+begin
+    // XXX: fix md5 sum stuff
+    md := TIdHashMessageDigest5.Create();
+    pos := stream.Position;
+    stream.Seek(0, soFromBeginning);
+    Digest := md.HashValue(stream);
+    //Move(Digest, S[1], 16);
+    S := md.AsHex(Digest);
+    Result := Lowercase(S);
+    stream.Position := pos;
+    md.Free();
+end;
+
+{$else}
+// TODO: Do we need a version of md5file for < INDY9??
+function MD5File(filename: Widestring): string
+begin
+    Result := '';
+end;
+
+function MD5File(stream: TStream): string;
+begin
+    Result := '';
+end;
+{$endif}
+
 
 {---------------------------------------}
 function EncodeString(value: Widestring): Widestring;

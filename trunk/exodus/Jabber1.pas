@@ -2646,13 +2646,18 @@ var
 var
     e: TJabberEntity;
 }
+{
 var
     f, m, x: TXMLTag;
+}
+var
+    hex: string;
 begin
     // Test something..
     // LoadPlugin('RosterClean.ExodusRosterClean');
 
     // Do some xdata tests
+    {
     m := TXMLTag.Create('message');
     x := m.AddTag('x');
     x.setAttribute('xmlns', 'jabber:x:data');
@@ -2686,6 +2691,10 @@ begin
     f.addBasicTag('value', 'foo bar'#13#10' sdkfjls'#13#10'kjdflksjdf;ljsf;'#13#10'klsjf;lkjsafkjsaldfj;lasjfd;klsajd;kljasdjf;ajdf;ljsfd;kjasdf;jas;fkja;df;ljaslfkj;asdf;klasdfklasdfj;ajdf;ljsf;ksafd;kjadsf;jkasdjfs;lf;lsdf');
 
     ShowXData(m);
+    }
+
+    hex := MD5File('d:\temp\64ptn_en.pdf');
+    ShowMessage(hex);
 
     // Cause an AV
     // PInteger(nil)^ := 0;

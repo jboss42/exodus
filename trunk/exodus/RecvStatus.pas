@@ -207,6 +207,7 @@ end;
 procedure TFileRecvThread.Execute();
 var
     tmps: string;
+//    i: integer;
 begin
     try
         try
@@ -220,8 +221,9 @@ begin
                 // This is BS, but we're getting a NULL in the first
                 // byte of the stream, so just suck it off the socket,
                 // and move on. *sigh* I have no idea where it's coming from.
-                tmps := _client.ReadString(1);
-                _client.ReadStream(_stream, _size, false);
+                tmps := _client.ReadChar();
+                //i := _client.ReadSmallInt();
+                _client.ReadStream(_stream, -1, true);
             end
             else if (_method = 'get') then
                 _http.Get(_url, _stream)
@@ -461,7 +463,7 @@ begin
     end;
 
     _stream := fStream;
-    _stream.Seek(0, soFromBeginning);
+    //_stream.Seek(0, soFromBeginning);
 
     attemptSIConnection();
 end;
@@ -607,6 +609,7 @@ end;
 procedure TfRecvStatus.WMRecvDone(var msg: TMessage);
 var
     tmps: Widestring;
+    hex: String;
 begin
     // our thread completed.
     if (_pkg.Mode = recv_si) then begin
@@ -617,6 +620,14 @@ begin
             _state := recv_done;
             _thread := nil;
             bar1.Position := bar1.Max;
+
+            // Create a new read-only stream so we can hash it.
+            if (_pkg.hash <> '') then begin
+                hex := MD5File(_filename);
+                if (hex <> _pkg.hash) then begin
+                    // XXX: show msg for non-match hash
+                end;
+            end;
         end;
     end
     else if (_state = recv_recv) then begin
@@ -633,6 +644,8 @@ begin
             DeleteFile(_filename);
         end;
     end;
+    MainSession.UnRegisterCallback(_pres);
+    _pres := -1;
 end;
 
 {---------------------------------------}
@@ -738,6 +751,7 @@ begin
         kill();
 end;
 
+{---------------------------------------}
 procedure TfRecvStatus.presCallback(event: string; tag: TXMLTag; pres: TJabberPres);
 begin
     // the sender went offline
