@@ -717,8 +717,8 @@ begin
     _auth_iq := nil;
     if ((tag = nil) or (tag.getAttribute('type') = 'error')) then begin
         // timeout
-        Disconnect();
         _dispatcher.DispatchSignal('/session/autherror', tag);
+        Disconnect();
         end
     else begin
         _dispatcher.DispatchSignal('/session/authenticated', tag);
