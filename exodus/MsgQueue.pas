@@ -473,7 +473,7 @@ end;
 procedure TfrmMsgQueue.txtMsgURLClick(Sender: TObject; URL: String);
 begin
   inherited;
-    ShellExecute(0, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
+    ShellExecute(Application.Handle, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
 end;
 
 {---------------------------------------}

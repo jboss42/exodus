@@ -3,6 +3,7 @@ inherited frmRegister: TfrmRegister
   Caption = 'Registration'
   TransparentColor = True
   TransparentColorValue = clFuchsia
+  OldCreateOrder = True
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
@@ -17,11 +18,7 @@ inherited frmRegister: TfrmRegister
       OnClick = btnCancelClick
     end
   end
-  inherited Panel1: TPanel
-    ParentBackground = False
-  end
   inherited Tabs: TPageControl
-    ActivePage = TabSheet2
     inherited TabSheet1: TTabSheet
       object Label1: TTntLabel
         Left = 0
