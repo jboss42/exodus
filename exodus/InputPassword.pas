@@ -71,8 +71,8 @@ begin
         txtPassword.Top := r.Bottom + 15;
 
         pf.ClientHeight := txtPassword.Top + txtPassword.Height + 60;
-        pf.ClientWidth := w + 40;
-
+        w := w + 40;
+        if (w > 265) then pf.ClientWidth := w;
         Label1.Caption := APrompt;
         txtPassword.Text := Value;
     end;
