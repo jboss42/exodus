@@ -547,7 +547,6 @@ begin
                 siq.Send();
             end
             else begin
-
                 if (_features.GetFirstTag('starttls') <> nil) then begin
                     // XXX: do startTLS
                 end;

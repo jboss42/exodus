@@ -66,11 +66,49 @@ type
 
     end;
 
+function checkSASLFeatures(feats: TXMLTag): boolean;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 uses
     XMLUtils, IdHash;
 
+var
+    _best_mech: Widestring;
+
+{---------------------------------------}
+function checkSASLFeatures(feats: TXMLTag): boolean;
+var
+    i: integer;
+    mstr: Widestring;
+    m: TXMLTag;
+    mechs: TXMLTagList;
+begin
+    // TODO: Brute force look for plain or MD5-Digest
+    m := feats.GetFirstTag('mechanisms');
+    _best_mech := '';
+    if (m <> nil) then begin
+        mechs := m.ChildTags();
+        for i := 0 to mechs.Count - 1 do begin
+            mstr := mechs[i].Data;
+            if (mstr = 'DIGEST-MD5') then begin
+                // We have Digest!
+                _best_mech := mstr;
+            end
+            else if ((mstr = 'PLAIN') and (_best_mech = '')) then begin
+                // We have plain!
+                _best_mech := mstr;
+            end;
+        end;
+    end;
+    Result := (_best_mech <> '');
+end;
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 constructor TSASLAuth.Create(session: TJabberSession);
 begin
     //
@@ -91,34 +129,14 @@ end;
 
 {---------------------------------------}
 procedure TSASLAuth.StartAuthentication();
-var
-    i: integer;
-    mstr: Widestring;
-    m, feats: TXMLTag;
-    mechs: TXMLTagList;
 begin
     // TODO: Brute force look for plain or MD5-Digest
-    feats := _session.xmppFeatures;
-    m := feats.GetFirstTag('mechanisms');
-    if (m <> nil) then begin
-        mechs := m.ChildTags();
-        for i := 0 to mechs.Count - 1 do begin
-            mstr := mechs[i].Data;
-            if (mstr = 'DIGEST-MD5') then begin
-                // We have Digest!
-                mechs.Free();
-                StartDigest();
-                exit;
-            end
-            else if (mstr = 'PLAIN') then begin
-                // We have plain!
-                mechs.Free();
-                StartPlain();
-                exit;
-            end;
-        end;
-    end;
-    _session.setAuthenticated(false, nil);
+    if (_best_mech = 'DIGEST-MD5') then
+        StartDigest()
+    else if (_best_mech = 'PLAIN') then
+        StartPlain()
+    else
+        _session.setAuthenticated(false, nil);
 end;
 
 {---------------------------------------}
@@ -168,15 +186,35 @@ end;
 {---------------------------------------}
 procedure TSASLAuth.StartPlain();
 var
+    len: integer;
     a: TXMLTag;
+    ms: TMemoryStream;
+    uu, upass, ujid, c, buff: string;
+    jid: Widestring;
 begin
     _digest := false;
     RegCallbacks();
-    //_ccb := _session.RegisterCallback(C1Callback, '/packet/challenge');
 
     a := TXMLTag.Create('auth');
     a.setAttribute('xmlns', 'urn:ietf:params:xml:ns:xmpp-sasl');
     a.setAttribute('mechanism', 'PLAIN');
+
+    jid := _session.Username + '@' + _session.Server + '/' + _session.Resource;
+    ujid := UTF8Encode(jid);
+    uu := UTF8Encode(_session.Username);
+    upass := UTF8Encode(_session.Password);
+
+    ms := TMemoryStream.Create();
+    len := Length(ujid) + 1 + Length(uu) + 1 + Length(upass) + 1;
+    buff := ujid + ''#0 + uu + ''#0 + upass + ''#0;
+    ms.Write(Pointer(buff)^, len);
+
+    ms.Seek(0, soFromBeginning);
+    c := _encoder.Encode(ms);
+    FreeAndNil(ms);
+
+    a.AddCData(c);
+
     _session.SendTag(a);
 end;
 
@@ -190,8 +228,8 @@ end;
 {---------------------------------------}
 procedure TSASLAuth.C1Callback(event: string; xml: TXMLTag);
 var
-    resp: Widestring;
-    pass, uname, uri, az, dig, a1, a2, p1, p2, e, c: string;
+    azjid: Widestring;
+    resp, pass, uname, uri, az, dig, a1, a2, p1, p2, e, c: string;
     pairs: TStringlist;
     i, v, rands: integer;
     tmp, ha1, ha2, res: T4x4LongWordRecord;
@@ -224,13 +262,15 @@ begin
     res := _hasher.HashValue(e);
     _cnonce := Lowercase(_hasher.AsHex(res));
 
-    uname := _session.Username;
-    pass := _session.Password;
-    az := _session.Username + '@' + _session.Server + '/' +
-        _session.Resource;
-    uri := 'xmpp/' + _session.Server;
+    // make sure all parms are UTF8 Encoded
+    uname := UTF8Encode(_session.Username);
+    pass := UTF8Encode(_session.Password);
+    azjid := _session.Username + '@' + _session.Server + '/' +
+             _session.Resource;
+    az := UTF8Encode(azjid);
+    uri := UTF8Encode('xmpp/' + _session.Server);
 
-    resp := 'username="' + _session.Username + '",';
+    resp := 'username="' + uname + '",';
     resp := resp + 'realm="' + _realm + '",';
     resp := resp + 'nonce="' + _nonce + '",';
     resp := resp + 'cnonce="' + _cnonce + '",';
@@ -270,7 +310,6 @@ begin
     if (az <> '') then
         resp := resp + 'authzid="' + az + '",';
     resp := resp + 'response=' + dig;
-
 
     _session.UnRegisterCallback(_ccb);
     _ccb := _session.RegisterCallback(C2Callback, '/packet/challenge');
