@@ -69,8 +69,8 @@ type
     TDNSResolverThread = class(TThread)
     protected
         _resolver: TIdDNSResolver;
-        _srv: string;
-        _a: string;
+        _srv: Widestring;
+        _a: Widestring;
         _ip: string;
         _p: Word;
         _session: TJabberSession;
@@ -81,9 +81,9 @@ type
     end;
 
 procedure GetSRVAsync(Session: TJabberSession; Resolver: TIdDNSResolver;
-    srv_req, a_req: string);
+    srv_req, a_req: Widestring);
 procedure CancelDNS();
-function GetSRVRecord(Resolver: TIdDNSResolver; srv_req, a_req: string;
+function GetSRVRecord(Resolver: TIdDNSResolver; srv_req, a_req: Widestring;
     var ip: string; var port: Word): boolean;
 function GetNameServers(): string;
 
@@ -103,12 +103,14 @@ var
 
 {---------------------------------------}
 procedure GetSRVAsync(Session: TJabberSession; Resolver: TIdDNSResolver;
-    srv_req, a_req: string);
+    srv_req, a_req: Widestring);
 begin
     cur_thd := TDNSResolverThread.Create(true);
     cur_thd._session := Session;
-    cur_thd._a := a_req;
-    cur_thd._srv := srv_req;
+
+    // XXX: should be doing stringprep for idn's
+    cur_thd._a := Lowercase(a_req);
+    cur_thd._srv := Lowercase(srv_req);
     cur_thd._resolver := Resolver;
     cur_thd.FreeOnTerminate := true;
     cur_thd.Resume();
@@ -212,7 +214,7 @@ begin
 end;
 
 {---------------------------------------}
-function GetSRVRecord(Resolver: TIdDNSResolver; srv_req, a_req: string;
+function GetSRVRecord(Resolver: TIdDNSResolver; srv_req, a_req: Widestring;
     var ip: string; var port: Word): boolean;
 var
     i: integer;
