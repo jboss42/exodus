@@ -190,6 +190,7 @@ begin
     subscription := 'none';
     _nickname := '';
     ask := '';
+    Data := nil;
 end;
 
 {---------------------------------------}
