@@ -211,30 +211,30 @@ begin
     _dispatcher := TSignalDispatcher.Create;
 
     // Core packet signals
-    _logSignal := TPacketSignal.Create('');
-    _filterSignal := TPacketSignal.Create('/pre');
-    _preSignal := TPacketSignal.Create('/packet');
-    _packetSignal := TPacketSignal.Create('/post');
-    _postSignal := TPacketSignal.Create('/unhandled');
-    _unhandledSignal := TBasicSignal.Create();
-    _dispatcher.AddSignal('/log', _logSignal);
-    _dispatcher.AddSignal('/filter', _filterSignal);
-    _dispatcher.AddSignal('/pre', _preSignal);
-    _dispatcher.AddSignal('/packet', _packetSignal);
-    _dispatcher.AddSignal('/post', _postSignal);
-    _dispatcher.AddSignal('/unhandled', _unhandledSignal);
+    _logSignal := TPacketSignal.Create('/log', '');
+    _filterSignal := TPacketSignal.Create('/filter', '/pre');
+    _preSignal := TPacketSignal.Create('/pre', '/packet');
+    _packetSignal := TPacketSignal.Create('/packet', '/post');
+    _postSignal := TPacketSignal.Create('/post', '/unhandled');
+    _unhandledSignal := TBasicSignal.Create('/unhandled');
+    _dispatcher.AddSignal(_logSignal);
+    _dispatcher.AddSignal(_filterSignal);
+    _dispatcher.AddSignal(_preSignal);
+    _dispatcher.AddSignal(_packetSignal);
+    _dispatcher.AddSignal(_postSignal);
+    _dispatcher.AddSignal(_unhandledSignal);
 
     // other signals
-    _sessionSignal := TBasicSignal.Create();
-    _rosterSignal := TRosterSignal.Create();
-    _presSignal := TPresenceSignal.Create();
-    _dataSignal := TStringSignal.Create();
-    _winSignal := TPacketSignal.Create();
-    _dispatcher.AddSignal('/session', _sessionSignal);
-    _dispatcher.AddSignal('/roster', _rosterSignal);
-    _dispatcher.AddSignal('/presence', _presSignal);
-    _dispatcher.AddSignal('/data', _dataSignal);
-    _dispatcher.AddSignal('/windows', _winSignal);
+    _sessionSignal := TBasicSignal.Create('/session');
+    _rosterSignal := TRosterSignal.Create('/roster');
+    _presSignal := TPresenceSignal.Create('/presence');
+    _dataSignal := TStringSignal.Create('/data');
+    _winSignal := TPacketSignal.Create('/windows');
+    _dispatcher.AddSignal(_sessionSignal);
+    _dispatcher.AddSignal(_rosterSignal);
+    _dispatcher.AddSignal(_presSignal);
+    _dispatcher.AddSignal(_dataSignal);
+    _dispatcher.AddSignal(_winSignal);
 
     _pauseQueue := TQueue.Create();
     _avails := TWidestringlist.Create();

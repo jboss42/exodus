@@ -376,7 +376,7 @@ begin
     setFrom(e.from);
     frameButtons1.btnOK.Enabled := true;
     frameButtons1.btnCancel.Enabled := true;
-    txtSubject.Caption := e.data_type;
+    txtSubject.Caption := e.str_content;
     txtMsg.InputFormat := ifUnicode;
     txtMsg.WideText := e.Data.Text;
 

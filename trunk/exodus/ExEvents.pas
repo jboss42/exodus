@@ -21,7 +21,7 @@ unit ExEvents;
 
 interface
 uses
-    XMLTag, Unicode,
+    XMLTag, ChatController, Unicode, JabberID, 
     Types, SysUtils, Classes;
 
 type
@@ -33,7 +33,8 @@ type
         evt_OOB,
         evt_Version,
         evt_Time,
-        evt_Last);
+        evt_Last,
+        evt_Chat);
 
     TJabberEvent = class
     private
@@ -44,9 +45,10 @@ type
         Timestamp: TDateTime;
         eType: TJabberEventType;
         from: WideString;
+        from_jid: TJabberID;
         id: WideString;
         edate: TDateTime;
-        data_type: WideString;
+        str_content: WideString;
         delayed: boolean;
         elapsed_time: longint;
         img_idx: integer;
@@ -56,12 +58,13 @@ type
 
         constructor create; overload;
         constructor create(evt: TJabberEvent); overload;
-        
+
         destructor destroy; override;
         procedure Parse(tag: TXMLTag);
 
         property Data: TWideStringlist read _data_list;
-        property Tag: TXMLTag read _tag;
+        property tag: TXMLTag read _tag;
+
     end;
 
 function CreateJabberEvent(tag: TXMLTag): TJabberEvent;
@@ -79,7 +82,7 @@ implementation
 uses
     // Exodus/JOPL stuff
     GnuGetText,
-    ExUtils, JabberConst, Jabber1, JabberID, JabberMsg, MsgController, MsgRecv,
+    ExUtils, JabberConst, Jabber1, JabberMsg, MsgController, MsgRecv,
     MsgQueue, Notify, PrefController, NodeItem, Roster, Session, XMLUtils,
 
     // delphi stuff
@@ -134,19 +137,23 @@ begin
     case e.etype of
     evt_Time: begin
         img_idx := 12;
-        msg := e.data_type;
+        msg := e.str_content;
+    end;
+
+    evt_Chat: begin
+        img_idx := 23;
+        DoNotify(nil, 'notify_newchat',
+            _('Chat with ') + tmp_jid.jid, img_idx);
     end;
 
     evt_Message: begin
-        img_idx := 18;
-        msg := e.data_type;
+        if (e.error) then img_idx := ico_error else img_idx := 18;
+        msg := e.str_content;
         DoNotify(nil, 'notify_normalmsg',
                  _(sMsgMessage) + tmp_jid.jid, img_idx);
-        if (e.error) then img_idx := ico_error;
 
         xml := e.tag;
         if (xml <> nil) then begin
-
             // check for displayed events
             etag := xml.QueryXPTag(XP_MSGXEVENT);
             if ((etag <> nil) and (etag.GetFirstTag('id') = nil)) then begin
@@ -174,19 +181,19 @@ begin
 
     evt_Invite: begin
         img_idx := 21;
-        msg := e.data_type;
+        msg := e.str_content;
         DoNotify(nil, 'notify_invite',
                  _(sMsgInvite) + tmp_jid.jid, img_idx);
     end;
 
     evt_RosterItems: begin
         img_idx := 26;
-        msg := e.data_type;
+        msg := e.str_content;
     end;
 
     else begin
         img_idx := 12;
-        msg := e.data_type;
+        msg := e.str_content;
     end;
     end;
 
@@ -200,9 +207,12 @@ begin
         end;
     end
 
-    else if (e.delayed) or (MainSession.Prefs.getBool('msg_queue')) then begin
+    else if ((e.delayed) or
+        (MainSession.Prefs.getBool('msg_queue')) or
+        (e.eType = evt_Chat)) then begin
         // we are collapsed, but this event was delayed (offline'd)
-        // or we always want to use the msg queue
+        // OR we always want to use the msg queue
+        // OR it's a queued chat event
         // so display it in the msg queue, not live
         mqueue := getMsgQueue();
 
@@ -213,7 +223,6 @@ begin
                 ShowWindow(Handle, SW_SHOWNOACTIVATE);
             Visible := true;
         end;
-
 
         // Note that LogEvent takes ownership of e
         mqueue.LogEvent(e, msg, img_idx);
@@ -328,9 +337,10 @@ begin
     Timestamp := evt.Timestamp;
     eType := evt.eType;
     from := evt.from;
+    from_jid := TJabberID.Create(from);
     id := evt.id;
     edate := evt.edate;
-    data_type := evt.data_type;
+    str_content := evt.str_content;
     delayed := evt.delayed;
     elapsed_time := evt.elapsed_time;
     img_idx := evt.img_idx;
@@ -343,10 +353,19 @@ end;
 
 {---------------------------------------}
 destructor TJabberEvent.destroy;
+var
+    c: TChatController;
 begin
+    if ((eType = evt_Chat) and (from_jid <> nil) and (MainSession <> nil)) then begin
+        c := MainSession.ChatList.FindChat(from_jid.jid, '', '');
+        c.Release();
+    end;
+
     ClearStringListObjects(_data_list);
-    _data_list.Free;
-    FreeAndNil(_tag);
+    _data_list.Free();
+
+    if (_tag <> nil) then FreeAndNil(_tag);
+    if (from_jid <> nil) then FreeAndNil(from_jid);
 
     inherited Destroy;
 end;
@@ -360,22 +379,46 @@ var
     j: integer;
     ri: TJabberRosterItem;
     url_tags: TXMLTagList;
+    cjid: TJabberID;
+    c: TChatController;
 begin
     // create the event from a xml tag
+    assert(_tag = nil);
     _tag := TXMLTag.Create(tag);
 
-    data_type := '';
+    str_content := '';
     if (tag.name = 'message') then begin
         t := tag.getAttribute('type');
         if (t = 'groupchat') then exit;
-        if (t = 'chat') then exit;
-
-        // normal default event type
-        eType := evt_Message;
-        _data_list.Clear();
 
         // pull out from & ID for all types of events
         from := tag.getAttribute('from');
+
+        if (tag.getAttribute('type') = 'error') then begin
+            tmp_tag := tag.GetFirstTag('error');
+            if (tmp_tag <> nil) then begin
+                str_content := _('ERROR: ') + tmp_tag.Data();
+                _data_list.Insert(0, _('ERROR: ') + tmp_tag.Data() + _(', Code=') +
+                    tmp_tag.getAttribute('code'));
+            end
+            else
+                str_content := _('Unknown Error');
+            error := true;
+            _data_list.Insert(1, _('Original Message was:'));
+        end;
+
+        // Check for delay'd msgs
+        delay := tag.QueryXPTag(XP_MSGDELAY);
+        if (delay <> nil) then begin
+            // we have a delay tag
+            edate := JabberToDateTime(delay.getAttribute('stamp'));
+            delayed := true;
+        end
+        else
+            edate := Now();
+
+        // normal default event type
+        _data_list.Clear();
         id := tag.getAttribute('id');
 
         // Look for various x-tags
@@ -384,7 +427,7 @@ begin
             eType := evt_Invite;
             tmp_tag := tag.QueryXPTag(XP_MUCINVITE);
             from := tmp_tag.QueryXPData('/x/invite@from');
-            data_type := tag.getAttribute('from');
+            str_content := tag.getAttribute('from');
             _data_list.Add(tmp_tag.QueryXPData('/x/invite/reason'));
         end
 
@@ -392,20 +435,20 @@ begin
             // conference invite
             eType := evt_Invite;
             tmp_tag := tag.QueryXPTag(XP_CONFINVITE);
-            data_type := tmp_tag.getAttribute('jid');
+            str_content := tmp_tag.getAttribute('jid');
         end
 
         else if (tag.QueryXPTag(XP_JCFINVITE) <> nil) then begin
             // GC Invite
             eType := evt_Invite;
-            data_type := tag.GetAttribute('from')
+            str_content := tag.GetAttribute('from')
         end
 
         else if (tag.QueryXPTag(XP_MSGXROSTER) <> nil) then begin
             // we are getting roster items
             eType := evt_RosterItems;
             tmp_tag := tag.QueryXPTag(XP_MSGXROSTER);
-            data_type := tag.GetBasicText('body');
+            str_content := tag.GetBasicText('body');
             i_tags := tmp_tag.QueryTags('item');
             for j := 0 to i_tags.Count - 1 do begin
                 ri := TJabberRosterItem.Create();
@@ -413,16 +456,34 @@ begin
                 _data_list.AddObject(ri.jid.jid, ri);
             end;
             i_tags.Free();
-        end;
+        end
 
-        // When we are doing roster items, the _data_list contains the items.
-        if (eType <> evt_RosterItems) then begin
-            tmp_tag := tag.GetFirstTag('body');
-            if (tmp_tag <> nil) then
-                _data_list.Add(tmp_tag.Data);
+        else if (t = 'chat') then begin
+            // this is a queue'd chat msg
+            eType := evt_Chat;
+            str_content := tag.QueryXPData('/subject');
+            _data_list.Clear();
+            _data_list.Add(_('New chat conversation'));
+            _data_list.Add('Double click to open chat window');
+            cjid := TJabberID.Create(from);
+            c := MainSession.ChatList.FindChat(cjid.jid, cjid.resource, '');
+            if (c = nil) then
+                c := MainSession.ChatList.FindChat(cjid.jid, '', '');
+            assert(c <> nil);
+            c.addRef();
+            FreeAndNil(_tag);
+        end
+
+        else begin
+            // general non-chat message
+            eType := evt_Message;
+            str_content := tag.QueryXPData('/subject');
+
+            // Add the body to the event
+            _data_list.Add(tag.QueryXPData('/body'));
 
             // check for x:oob URL's
-            url_tags := tag.QUeryXPTags(XP_XOOB);
+            url_tags := tag.QueryXPTags(XP_XOOB);
             for j := 0 to url_tags.Count - 1 do begin
                 tmp_tag := url_tags[j];
                 _data_list.Add(_(sMsgURL));
@@ -433,35 +494,6 @@ begin
             url_tags.Free();
         end;
 
-        // For messages, pull out the subject
-        if (eType = evt_Message) then begin
-            tmp_tag := tag.GetFirstTag('subject');
-            if (tmp_tag <> nil) then
-                data_type := tmp_tag.Data;
-
-            // check for errors..
-            if (tag.getAttribute('type') = 'error') then begin
-                tmp_tag := tag.GetFirstTag('error');
-                if (tmp_tag <> nil) then begin
-                    data_type := _('ERROR: ') + tmp_tag.Data();
-                    _data_list.Insert(0, _('ERROR: ') + tmp_tag.Data() + _(', Code=') +
-                        tmp_tag.getAttribute('code'));
-                end
-                else
-                    data_type := _('Unknown Error');
-                error := true;
-                _data_list.Insert(1, _('Original Message was:'));
-            end;
-        end;
-
-        delay := tag.QueryXPTag(XP_MSGDELAY);
-        if (delay <> nil) then begin
-            // we have a delay tag
-            edate := JabberToDateTime(delay.getAttribute('stamp'));
-            delayed := true;
-        end
-        else
-            edate := Now();
     end
 
     else if (tag.name = 'iq') then begin
@@ -471,25 +503,28 @@ begin
         ns := tag.Namespace(true);
         if ns = XMLNS_TIME then begin
             eType := evt_Time;
-            data_type := _(sMsgTime);
+            str_content := _(sMsgTime);
             _data_list.Add(ParseTimeEvent(tag));
         end
 
         else if ns = XMLNS_VERSION then begin
             eType := evt_Version;
-            data_type := _(sMsgVersion);
+            str_content := _(sMsgVersion);
             _data_list.Add(ParseVersionEvent(tag));
         end
 
         else if ns = XMLNS_LAST then begin
             eType := evt_Last;
-            data_type := _(sMsgLast);
+            str_content := _(sMsgLast);
             _data_list.Add(ParseLastEvent(tag));
         end;
     end;
 
-    if (from <> '') then
+    if (from <> '') then begin
+        if (from_jid <> nil) then FreeAndNil(from_jid);
+        from_jid := TJabberID.Create(from);
         caption := from;
+    end;
 end;
 
 

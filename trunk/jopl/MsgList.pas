@@ -94,9 +94,9 @@ var
 begin
     _s := s;
     ss := TJabberSession(s);
-    _cb1 := ss.RegisterCallback(MsgCallback, '/packet/message[@type="headline"]');
-    _cb2 := ss.RegisterCallback(MsgCallback, '/packet/message[@type="normal"]');
-    _cb3 := ss.RegisterCallback(MsgCallback, '/packet/message[!type]');
+    _cb1 := ss.RegisterCallback(MsgCallback, '/post/message[@type="headline"]');
+    _cb2 := ss.RegisterCallback(MsgCallback, '/post/message[@type="normal"]');
+    _cb3 := ss.RegisterCallback(MsgCallback, '/post/message[!type]');
 end;
 
 {---------------------------------------}

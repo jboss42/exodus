@@ -47,6 +47,8 @@ type
     OpenDialog1: TOpenDialog;
     txtTimestampFmt: TTntComboBox;
     chkLogRoster: TTntCheckBox;
+    chkQueueDNDChats: TTntCheckBox;
+    chkQueueOffline: TTntCheckBox;
     procedure btnLogBrowseClick(Sender: TObject);
     procedure btnLogClearAllClick(Sender: TObject);
     procedure btnSpoolBrowseClick(Sender: TObject);

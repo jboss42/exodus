@@ -241,6 +241,7 @@ begin
         chat.Window := win;
         chat.stopTimer();
         win.chat_object := chat;
+        win.chat_object.AddRef();
         hist := TrimRight(chat.getHistory());
         if (hist <> '') then with win.MsgList do begin
             // repopulate history..
@@ -1011,14 +1012,12 @@ end;
 
 {---------------------------------------}
 procedure TfrmChat.freeChatObject();
-var
-    idx: integer;
 begin
     if (chat_object = nil) then exit;
-    idx := MainSession.ChatList.IndexOfObject(chat_object);
-    if (idx >= 0) then
-        MainSession.ChatList.Delete(idx);
-    FreeAndNil(chat_object);
+    chat_object.unassignEvent();
+    chat_object.window := nil;
+    chat_object.Release();
+    chat_object := nil;
 end;
 
 {---------------------------------------}
@@ -1209,13 +1208,14 @@ begin
         (MsgList.Lines.Count > 0) and
         (chat_object <> nil) and
         (not _destroying)) then begin
+
         MsgList.Visible := false;
         MsgList.SelectAll();
         s := MsgList.RTFSelText;
         chat_object.SetHistory(s);
         chat_object.unassignEvent();
-        chat_object.startTimer();
         chat_object.window := nil;
+        chat_object.TimedRelease();
         chat_object := nil;
     end;
 

@@ -33,14 +33,7 @@ object frmRosterRecv: TfrmRosterRecv
     AutoScroll = False
     TabOrder = 0
     inherited Panel2: TPanel
-      Width = 374
-      Height = 34
-      inherited Bevel1: TBevel
-        Width = 374
-      end
       inherited Panel1: TPanel
-        Left = 214
-        Height = 29
         inherited btnOK: TTntButton
           Caption = 'Add Contacts'
           OnClick = frameButtons1btnOKClick

@@ -81,7 +81,7 @@ implementation
 {$R *.dfm}
 
 uses
-    MsgList, MsgController,  
+    MsgList, MsgController, ChatWin,
     ShellAPI, CommCtrl, GnuGetText,   
     NodeItem, Roster, JabberID, XMLUtils, XMLParser, XMLTag,
     ExUtils, MsgRecv, Session, PrefController;
@@ -165,9 +165,11 @@ begin
             e.setAttribute('etype', IntToStr(integer(event.eType)));
             e.setAttribute('from', event.from);
             e.setAttribute('id', event.id);
-            e.setAttribute('data_type', event.data_type);
+            e.setAttribute('str_content', event.str_content);
             for d := 0 to event.Data.Count - 1 do
                 e.AddBasicTag('data', event.Data.Strings[d]);
+
+            // XXX: spool out queue chat messages to disk.
         end;
     end;
 
@@ -221,7 +223,10 @@ begin
                 on EConvertError do
                     e.edate := Now();
             end;
-            e.data_type := cur_e.GetAttribute('data_type');
+            e.str_content := cur_e.GetAttribute('str_content');
+            if (e.str_content = '') then
+                // check data_type for backwards compat.
+                e.str_content := cur_e.getAttribute('data_type');
             e.elapsed_time := SafeInt(cur_e.GetAttribute('elapsed_time'));
             e.msg := cur_e.GetAttribute('msg');
             e.caption := cur_e.GetAttribute('caption');
@@ -365,8 +370,14 @@ begin
     if (not MainSession.Active) then exit;
 
     e := TJabberEvent(_queue.Items[lstEvents.Selected.Index]);
-    edup := TJabberEvent.Create(e);
-    StartRecvMsg(edup);
+    if (e.eType = evt_Chat) then begin
+        // startChat will automatically play the queue of msgs
+        StartChat(e.from_jid.jid, '', true);
+    end
+    else begin
+        edup := TJabberEvent.Create(e);
+        StartRecvMsg(edup);
+    end;
 end;
 
 {---------------------------------------}
