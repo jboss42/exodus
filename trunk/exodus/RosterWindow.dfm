@@ -72,7 +72,7 @@ object frmRosterWindow: TfrmRosterWindow
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
-    ChangeDelay = 50
+    ChangeDelay = 75
     DragMode = dmAutomatic
     HideSelection = False
     Images = frmExodus.ImageList2
