@@ -23,10 +23,8 @@ interface
 
 uses
     Session,
-    HttpDetails,
-    SocketDetails,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    StdCtrls, buttonFrame, ComCtrls;
+    StdCtrls, buttonFrame, ComCtrls, Menus;
 
 type
   TfrmLogin = class(TForm)
@@ -41,22 +39,19 @@ type
     frameButtons1: TframeButtons;
     Label5: TLabel;
     cboProfiles: TComboBox;
-    Label6: TLabel;
-    txtPriority: TEdit;
-    spnPriority: TUpDown;
-    lblNewProfile: TLabel;
-    lblDelete: TLabel;
     chkInvisible: TCheckBox;
-    Label8: TLabel;
-    cboConnection: TComboBox;
     btnDetails: TButton;
+    popProfiles: TPopupMenu;
+    CreateNew1: TMenuItem;
+    Delete1: TMenuItem;
 
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure cboProfilesChange(Sender: TObject);
-    procedure lblNewProfileClick(Sender: TObject);
-    procedure lblDeleteClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnDetailsClick(Sender: TObject);
+    procedure CreateNew1Click(Sender: TObject);
+    procedure Delete1Click(Sender: TObject);
+    procedure Label5Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -77,7 +72,7 @@ implementation
 
 uses
     Jabber1,
-    PrefController;
+    ConnDetails, PrefController;
 
 {---------------------------------------}
 procedure ShowLogin;
@@ -101,8 +96,6 @@ begin
         p.Username := l.txtUsername.Text;
         p.password := l.txtPassword.Text;
         p.resource := l.cboResource.Text;
-        p.Priority := l.spnPriority.Position;
-        p.ConnectionType := l.cboConnection.ItemIndex;
 
         MainSession.Prefs.setInt('profile_active', i);
         MainSession.Prefs.SaveProfiles();
@@ -139,13 +132,27 @@ begin
     txtPassword.Text := p.Password;
     cboServer.Text := p.Server;
     cboResource.Text := p.Resource;
-    spnPriority.Position := p.Priority;
+    // spnPriority.Position := p.Priority;
     chkInvisible.Checked := false;
-    cboConnection.ItemIndex := p.ConnectionType;
+    // cboConnection.ItemIndex := p.ConnectionType;
 end;
 
-{---------------------------------------}
-procedure TfrmLogin.lblNewProfileClick(Sender: TObject);
+procedure TfrmLogin.FormCreate(Sender: TObject);
+begin
+    MainSession.Prefs.RestorePosition(Self);
+end;
+
+procedure TfrmLogin.btnDetailsClick(Sender: TObject);
+var
+    i : integer;
+    p : TJabberProfile;
+begin
+    i := cboProfiles.ItemIndex;
+    p := TJabberProfile(MainSession.Prefs.Profiles.Objects[i]);
+    ShowConnDetails(p);
+end;
+
+procedure TfrmLogin.CreateNew1Click(Sender: TObject);
 var
     pname: string;
     i: integer;
@@ -162,8 +169,7 @@ begin
         end;
 end;
 
-{---------------------------------------}
-procedure TfrmLogin.lblDeleteClick(Sender: TObject);
+procedure TfrmLogin.Delete1Click(Sender: TObject);
 var
     i: integer;
     p: TJabberProfile;
@@ -188,32 +194,13 @@ begin
 
 end;
 
-procedure TfrmLogin.FormCreate(Sender: TObject);
-begin
-    MainSession.Prefs.RestorePosition(Self);
-end;
-
-procedure TfrmLogin.btnDetailsClick(Sender: TObject);
+procedure TfrmLogin.Label5Click(Sender: TObject);
 var
-    i : integer;
-    p : TJabberProfile;
+    cp: TPoint;
 begin
-    i := cboProfiles.ItemIndex;
-    p := TJabberProfile(MainSession.Prefs.Profiles.Objects[i]);
-    if (cboConnection.ItemIndex = 0) then begin
-        if (frmSocketDetails = nil) then
-            frmSocketDetails := TfrmSocketDetails.Create(Self);
-        frmSocketDetails.SetDefaults(p);
-        if (frmSocketDetails.ShowModal() = mrOK) then
-            frmSocketDetails.GetValues(p);
-        end
-    else if (cboConnection.ItemIndex = 1) then begin
-        if (frmHttpDetails = nil) then
-            frmHttpDetails := TfrmHttpDetails.Create(Self);
-        frmHttpDetails.SetDefaults(p);
-        if (frmHttpDetails.ShowModal() = mrOK) then
-            frmHttpDetails.GetValues(p);
-        end;
+    // show the popup
+    GetCursorPos(cp);
+    popProfiles.Popup(cp.x, cp.y);
 end;
 
 end.
