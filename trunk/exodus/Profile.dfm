@@ -21,14 +21,14 @@ object frmProfile: TfrmProfile
   object Splitter1: TSplitter
     Left = 137
     Top = 0
-    Height = 288
+    Height = 292
   end
   object PageControl1: TTntPageControl
     Left = 140
     Top = 0
     Width = 314
-    Height = 288
-    ActivePage = TabSheet1
+    Height = 292
+    ActivePage = TabSheet2
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 0
@@ -226,7 +226,7 @@ object frmProfile: TfrmProfile
         Left = 0
         Top = 0
         Width = 306
-        Height = 216
+        Height = 220
         Align = alClient
         ItemHeight = 13
         Sorted = True
@@ -234,7 +234,7 @@ object frmProfile: TfrmProfile
       end
       object Panel3: TPanel
         Left = 0
-        Top = 216
+        Top = 220
         Width = 306
         Height = 41
         Align = alBottom
@@ -1142,7 +1142,7 @@ object frmProfile: TfrmProfile
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 288
+    Top = 292
     Width = 454
     Height = 34
     Align = alBottom
@@ -1150,11 +1150,13 @@ object frmProfile: TfrmProfile
     TabOrder = 1
     inherited Panel2: TPanel
       Width = 454
+      Height = 34
       inherited Bevel1: TBevel
         Width = 454
       end
       inherited Panel1: TPanel
         Left = 294
+        Height = 29
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end
@@ -1168,7 +1170,7 @@ object frmProfile: TfrmProfile
     Left = 0
     Top = 0
     Width = 137
-    Height = 288
+    Height = 292
     Align = alLeft
     BevelWidth = 0
     Indent = 19
