@@ -95,7 +95,7 @@ begin
     // join this room
     rjid := txtRoom.Text + '@' + txtServer.Text;
     if (not isValidJid(rjid)) then begin
-        MessageDlg(sInvalidJID, mtError, [mbOK], 0);
+        MessageDlg(sInvalidRoomJID, mtError, [mbOK], 0);
         exit;
         end;
 

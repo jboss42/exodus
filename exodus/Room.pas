@@ -53,11 +53,11 @@ type
     popRosterChat: TMenuItem;
     popRosterBlock: TMenuItem;
     pnlSubj: TPanel;
-    lblSubject: TLabel;
     lblSubjectURL: TLabel;
     btnClose: TSpeedButton;
     popClearHistory: TMenuItem;
     popShowHistory: TMenuItem;
+    lblSubject: TTntEdit;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -137,6 +137,8 @@ resourcestring
     sBlocked = 'Blocked';
     sBlock = 'Block';
     sUnblock = 'UnBlock';
+    sInvalidRoomJID = 'The Room Address you entered is invalid. It must be valid Jabber ID.';
+
 
 function StartRoom(rjid, rnick: Widestring): TfrmRoom;
 function IsRoom(rjid: Widestring): boolean;
@@ -157,6 +159,7 @@ uses
     Presence,
     Roster,
     Session,
+    StrUtils,
     JabberID,
     MsgDisplay,
     Notify,
@@ -227,6 +230,7 @@ var
     tmp_jid: TJabberID;
     server: boolean;
     rm: TRoomMember;
+    tmps: string;
 begin
     // display the body of the msg
     Msg := TJabberMessage.Create(tag);
@@ -269,8 +273,11 @@ begin
         end;
 
     if Msg.Subject <> '' then begin
-        lblSubject.Caption := '  ' + Msg.Subject;
-        lblSubject.Hint := Msg.Subject;
+        lblSubject.Text := '  ' + Msg.Subject;
+        tmps := Msg.Subject;
+        tmps := AnsiReplaceText(tmps, '|', Chr(13));
+        tmps := AnsiReplaceText(tmps, '&', '&&');
+        lblSubject.Hint := tmps;
         end;
 
     // this check is needed only to prevent extraneous regexing.
@@ -734,7 +741,7 @@ var
     s: string;
 begin
     // Change the subject
-    s := lblSubject.Caption;
+    s := lblSubject.Text;
     if InputQuery(sRoomSubjPrompt, sRoomNewSubj, s) then begin
         changeSubject(s);
         end;

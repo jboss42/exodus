@@ -143,13 +143,12 @@ object frmDebug: TfrmDebug
       LangOptions = [loAutoFont]
       Language = 1033
       ParentFont = False
-      ReadOnly = True
       ScrollBars = ssVertical
       ShowSelectionBar = False
       TabOrder = 1
       URLColor = clBlue
       URLCursor = crHandPoint
-      OnKeyDown = MsgDebugKeyDown
+      OnKeyPress = MsgDebugKeyPress
       InputFormat = ifUnicode
       OutputFormat = ofUnicode
       SelectedInOut = False

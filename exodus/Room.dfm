@@ -9,19 +9,19 @@ inherited frmRoom: TfrmRoom
   TextHeight = 13
   inherited Panel3: TPanel
     Top = 23
-    Height = 232
+    Height = 227
     object Splitter2: TSplitter [0]
       Left = 270
       Top = 4
       Width = 3
-      Height = 224
+      Height = 219
       Cursor = crHSplit
       Align = alRight
       ResizeStyle = rsUpdate
     end
     inherited MsgList: TExRichEdit
       Width = 266
-      Height = 224
+      Height = 219
       PopupMenu = popRoom
       OnDragDrop = treeRosterDragDrop
       OnDragOver = treeRosterDragOver
@@ -31,7 +31,7 @@ inherited frmRoom: TfrmRoom
       Left = 273
       Top = 4
       Width = 105
-      Height = 224
+      Height = 219
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -41,7 +41,7 @@ inherited frmRoom: TfrmRoom
         Left = 1
         Top = 1
         Width = 103
-        Height = 222
+        Height = 217
         Align = alClient
         Images = frmRosterWindow.ImageList1
         Indent = 19
@@ -86,18 +86,10 @@ inherited frmRoom: TfrmRoom
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
-      object lblSubject: TLabel
-        Left = 41
-        Top = 2
-        Width = 3
-        Height = 13
-        ParentShowHint = False
-        ShowHint = True
-      end
       object lblSubjectURL: TLabel
         Left = 0
         Top = 0
-        Width = 39
+        Width = 41
         Height = 21
         Cursor = crHandPoint
         Align = alLeft
@@ -109,6 +101,23 @@ inherited frmRoom: TfrmRoom
         Font.Style = [fsUnderline]
         ParentFont = False
         OnClick = lblSubjectURLClick
+      end
+      object lblSubject: TTntEdit
+        Left = 42
+        Top = 0
+        Width = 47
+        Height = 17
+        AutoSelect = False
+        BorderStyle = bsNone
+        Color = clBtnFace
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -12
+        Font.Name = 'Arial'
+        Font.Style = []
+        ParentFont = False
+        ReadOnly = True
+        TabOrder = 0
       end
     end
   end

@@ -407,7 +407,7 @@ end;
 {---------------------------------------}
 procedure TfrmChat.showMsg(tag: TXMLTag);
 var
-    Msg: TJabberMessage;
+    subj_msg, msg: TJabberMessage;
 begin
     // display the body of the msg
     if (timFlash.Enabled) then
@@ -419,6 +419,14 @@ begin
     Msg.IsMe := false;
 
     // only display + notify if we have something to display :)
+    if (Msg.Subject <> '') then begin
+        subj_msg := TJabberMessage.Create(tag);
+        subj_msg.Body := 'The subject has been changed to: ' + subj_msg.Subject;
+        subj_msg.Subject := '';
+        subj_msg.Nick := '';
+        DisplayMsg(subj_msg, MsgList);
+        end;
+
     if (Msg.Body <> '') then begin
         DoNotify(Self, 'notify_chatactivity', sChatActivity + OtherNick, ico_user);
         DisplayMsg(Msg, MsgList);

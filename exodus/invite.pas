@@ -134,7 +134,7 @@ begin
     room := cboRoom.Text;
 
     if (not isValidJID(room)) then begin
-        MessageDlg('Invalid JID', mtError, [mbOK], 0);
+        MessageDlg(sInvalidRoomJID, mtError, [mbOK], 0);
         exit;
         end;
 
