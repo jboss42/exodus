@@ -103,6 +103,8 @@ type
         procedure RemoveBookmark(sjid: string);
 
         function Find(sjid: string): TJabberRosterItem; reintroduce; overload;
+        function GetGroupItems(grp: string; online: boolean): TList;
+
         property Items[index: integer]: TJabberRosterItem read getItem;
     end;
 
@@ -486,6 +488,23 @@ begin
     else
         Result := nil;
 end;
+
+{---------------------------------------}
+function TJabberRoster.GetGroupItems(grp: string; online: boolean): TList;
+var
+    i: integer;
+    ri: TJabberRosterItem;
+begin
+    Result := TList.Create();
+    for i := 0 to Self.Count - 1 do begin
+        ri := Self.Items[i];
+        if (ri.Groups.IndexOf(grp) >= 0) then begin
+            if (((online) and (ri.IsOnline)) or (not online)) then
+                Result.add(ri);
+            end;
+        end;
+end;
+
 
 {---------------------------------------}
 procedure TJabberRoster.AddItem(sjid, nickname, group: string; subscribe: boolean);

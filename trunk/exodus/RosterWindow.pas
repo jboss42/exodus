@@ -190,7 +190,7 @@ uses
     RiserWindow,
     IQ,
     RosterAdd,
-    RemoveContact,
+    GrpRemove, RemoveContact,
     ChatWin,
     Jabber1,
     Session;
@@ -273,7 +273,6 @@ procedure TfrmRosterWindow.SessionCallback(event: string; tag: TXMLTag);
 var
     i: integer;
     grp_node: TTreeNode;
-    grp_idx: integer;
 begin
     // catch session events
     if event = '/session/disconnected' then begin
@@ -494,16 +493,9 @@ begin
                     end;
                 end;
             end
-        else begin
+        else
             // we have a single grp selected
-            for i := 0 to MainSession.roster.Count - 1 do begin
-                ri := MainSession.Roster.Items[i];
-                if (ri.Groups.IndexOf(_cur_grp) >= 0) then begin
-                    if (((online) and (ri.IsOnline)) or (not online)) then
-                        Result.add(ri);
-                    end;
-                end;
-            end;
+            Result := MainSession.Roster.GetGroupItems(_cur_grp, online);
         end;
     end;
 end;
@@ -1503,9 +1495,16 @@ begin
 end;
 
 procedure TfrmRosterWindow.popGrpRemoveClick(Sender: TObject);
+var
+    recips: TList;
 begin
     // Remove the grp..
-    
+    if (treeRoster.SelectionCount = 1) then
+        RemoveGroup(_cur_grp)
+    else begin
+        recips := getSelectedContacts(false);
+        RemoveGroup('', recips);
+        end;
 end;
 
 end.
