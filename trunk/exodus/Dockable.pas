@@ -38,6 +38,7 @@ type
     _docked: boolean;
     _pos: TRect;
     _noMoveCheck: boolean;
+    _top: boolean;
 
     _onDockStartChange: TDockNotify;
     _onDockEndChange: TDockNotify;
@@ -49,6 +50,7 @@ type
     procedure CreateParams(var Params: TCreateParams); override;
     procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
     procedure WMDisplayChange(var msg: TMessage); message WM_DISPLAYCHANGE;
+    procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
   published
     property OnDockStartChange: TDockNotify read _onDockStartChange write _onDockStartChange;
     property OnDockEndChange: TDockNotify read _onDockEndChange write _onDockEndChange;
@@ -171,7 +173,6 @@ begin
     inherited CreateParams(Params);
     with Params do begin
         ExStyle := ExStyle or WS_EX_APPWINDOW;
-        // WndParent := GetDesktopWindow();
     end;
 end;
 
@@ -213,16 +214,35 @@ end;
 
 {---------------------------------------}
 procedure TfrmDockable.WMActivate(var msg: TMessage);
+var
+    m: String;
 begin
-    if ((Application.Active) or (Msg.WParamLo = WA_CLICKACTIVE)) then begin
+    if ((not _top) and
+        ((Application.Active) or (Msg.WParamLo = WA_CLICKACTIVE))) then begin
         // we are getting clicked..
-        OutputDebugString('frmDockable.WMActivate');
+        m := 'frmDockable.WMActivate ' + Self.Caption;
+        OutputDebugString(PChar(m));
+
+        _top := true;
+        SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
+            Self.Width, Self.Height, HWND_TOP);
+        _top := false;
+
         StopTrayAlert();
         gotActivate();
-        inherited;
-    end
-    else
-        inherited;
+    end;
+
+    inherited;
+end;
+
+{---------------------------------------}
+procedure TfrmDockable.WMWindowPosChanging(var msg: TWMWindowPosChanging);
+begin
+    //
+    if (not _top) then
+        msg.WindowPos^.flags := msg.WindowPos^.flags or SWP_NOZORDER;
+
+    inherited;
 end;
 
 {---------------------------------------}
