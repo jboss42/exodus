@@ -25,7 +25,7 @@ uses
     XMLStream,
     PrefController,
     {$ifdef linux}
-    QExtCtrls, IdSSLIntercept, 
+    QExtCtrls, IdSSLIntercept,
     {$else}
     ExtCtrls, IdSSLOpenSSL,
     {$endif}
@@ -48,8 +48,10 @@ type
         _ssl_ok:    boolean;
         _timer:     TTimer;
         _profile:   TJabberProfile;
+        _cert:      TIdX509;
 
         {$ifdef Win32}
+        procedure VerifyUI();
         function VerifyPeer(Certificate: TIdX509): Boolean;
         {$endif}
         procedure Keepalive(Sender: TObject);
@@ -97,6 +99,7 @@ uses
     Controls, Dialogs,
     {$endif}
     Classes,
+    IdThread,
     IdSocks;
 
 {---------------------------------------}
@@ -282,24 +285,16 @@ begin
 end;
 
 {$ifdef Win32}
-function TXMLSocketStream.VerifyPeer(Certificate: TIdX509): Boolean;
+procedure TXMLSocketStream.VerifyUI();
 var
     sl : TStringList;
     i  : integer;
     n  : TDateTime;
 begin
-    if (_ssl_check) then begin
-        result := _ssl_ok;
-        exit;
-        end;
-
-    _ssl_check := true;
-    result := false;
-
     sl := TStringList.Create();
     sl.Delimiter := '/';
     sl.QuoteChar := #0;
-    sl.DelimitedText := Certificate.Subject.OneLine;
+    sl.DelimitedText := _cert.Subject.OneLine;
 
     _ssl_ok := false;
     for i := 0 to sl.Count - 1 do begin
@@ -312,34 +307,37 @@ begin
 
     // TODO: timing.  really shouldn't have graphics here, also.
     if (not _ssl_ok) then begin
-        _ssl_ok := (MessageDlg('Certificate does not match host: ' +
-                               Certificate.Subject.OneLine +
-                               #13#10'Continue?',
-                               mtWarning, mbOKCancel, 0) = mrOK);
-        if (not _ssl_ok) then
-            exit;
+        _ssl_ok := false;
+        MessageDlg('Certificate does not match host: ' +
+                   _cert.Subject.OneLine,
+                   mtWarning, [mbOK], 0);
         end;
 
     // TODO: check issuer.
 
     n := Now();
-    if (n < Certificate.NotBefore) then begin
-        _ssl_ok := (MessageDlg('Certificate not valid until ' + DateTimeToStr(Certificate.NotBefore) +
-                               #13#10'Continue?',
-                               mtWarning, mbOKCancel, 0) = mrOK);
-        if (not _ssl_ok) then
-            exit;
+    if (n < _cert.NotBefore) then begin
+        _ssl_ok := false;
+        MessageDlg('Certificate not valid until ' + DateTimeToStr(_cert.NotBefore)
+                               mtWarning, [mbOK], 0);
         end;
 
-    if (n < Certificate.NotAfter) then begin
-        _ssl_ok := (MessageDlg('Certificate expired on ' + DateTimeToStr(Certificate.NotAfter) +
-                               #13#10'Continue?',
-                               mtWarning, mbOKCancel, 0) = mrOK);
-        if (not _ssl_ok) then
-            exit;
+    if (n > _cert.NotAfter) then begin
+        _ssl_ok := false;
+        MessageDlg('Certificate expired on ' + DateTimeToStr(_cert.NotAfter),
+                               mtWarning, [mbOK], 0);
+        end;
+end;
+
+function TXMLSocketStream.VerifyPeer(Certificate: TIdX509): Boolean;
+begin
+    if (not _ssl_check) then begin
+        _cert := Certificate;
+        _thread.synchronize(VerifyUI);
+        _ssl_check := true;
         end;
 
-    result := true;
+    result := _ssl_ok;
 end;
 {$endif}
 
@@ -450,6 +448,9 @@ begin
         // that would be *cool*.
         SSLOptions.CertFile := '';
         SSLOptions.RootCertFile := '';
+        SSLOptions.VerifyMode := [sslvrfPeer, sslvrfFailIfNoPeerCert];
+        SSLOptions.VerifyDepth := 2;
+        SSLOptions.Method :=  sslvSSLv23;
         OnVerifyPeer := VerifyPeer;
         end;
     {$endif}
