@@ -80,7 +80,7 @@ begin
     else if (event = '/session/gui/headline') then begin
         e := CreateJabberEvent(tag);
         q := getMsgQueue();
-        q.LogEvent(e, e.caption, ico_headline);
+        q.LogEvent(e, e.msg, ico_headline);
         if (not q.visible) then q.ShowDefault();
     end
 

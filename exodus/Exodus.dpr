@@ -32,7 +32,7 @@ program Exodus;
 uses
   Forms,
   Controls,
-  Windows,  
+  Windows,
   About in 'About.pas' {frmAbout},
   Agents in '..\jopl\Agents.pas',
   AutoUpdate in '..\jopl\AutoUpdate.pas',
@@ -151,7 +151,8 @@ uses
   WebGet in 'WebGet.pas' {frmWebDownload},
   PrefNetwork in 'prefs\PrefNetwork.pas' {frmPrefNetwork},
   PrefGroups in 'prefs\PrefGroups.pas' {frmPrefGroups},
-  HttpProxyIOHandler in '..\jopl\HttpProxyIOHandler.pas';
+  HttpProxyIOHandler in '..\jopl\HttpProxyIOHandler.pas',
+  GTLanguagesEx in 'GTLanguagesEx.pas';
 
 {$R *.TLB}
 
