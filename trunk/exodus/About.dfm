@@ -1410,13 +1410,11 @@ object frmAbout: TfrmAbout
     TabOrder = 1
     inherited Panel2: TPanel
       Width = 371
-      Height = 34
       inherited Bevel1: TBevel
         Width = 371
       end
       inherited Panel1: TPanel
         Left = 211
-        Height = 29
         ParentColor = True
         inherited btnOK: TTntButton
           Visible = False
@@ -1530,32 +1528,11 @@ object frmAbout: TfrmAbout
     URLColor = clBlue
     URLCursor = crHandPoint
     OnURLClick = InfoBoxURLClick
-    InputFormat = ifRTF
+    InputFormat = ifUnicode
     OutputFormat = ofRTF
     SelectedInOut = False
     PlainRTF = False
     UndoLimit = 0
     AllowInPlace = False
-    RTF = 
-      '{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcha' +
-      'rset0 MS Sans Serif;}}'#13#10'\viewkind4\uc1\pard\f0\fs16 Exodus is th' +
-      'e creation of Peter Millard  (mailto:me@pgmillard.com).  Checkou' +
-      't the website at http://exodus.jabberstudio.org for more informa' +
-      'tion. It is currently licensed under the GNU Public License (GPL' +
-      ') see www.gnu.org for more information on the GPL.\par'#13#10'\par'#13#10'Pr' +
-      'eference Icons used with permission from collections of "Foood"\' +
-      'par'#13#10'http://www.foood.net/icons/index.htm\par'#13#10'\par'#13#10'Portions of' +
-      ' this software are Copyright (c) 1993 - 2002, Chad Z. Hower (Kud' +
-      'zu) and the Indy Pit Crew - http://www.nevrona.com/Indy/. This a' +
-      'pplication may also be using the IndySSL components from Nevrona' +
-      ', and the Open-SSL binaries available from Intellicom.si.\par'#13#10'\' +
-      'par'#13#10'SAX XML Parser by: Stefan Heymann\par'#13#10'Eschenweg 3, 72076 T' +
-      '\'#39'fcbingen, GERMANY mailto:stefan@destructor.de, http://www.dest' +
-      'ructor.de\par'#13#10'\par'#13#10'Unicode library is Copyright (c) 1999, 2000' +
-      ' Mike Lischke (public@lischke-online.de) and Portions Copyright ' +
-      '(c) 1999, 2000 Azret Botash (az).\par'#13#10'\par'#13#10'RichEdit98 and DBRi' +
-      'chEdit98 components for Delphi 3.0-4.0. version 1.40 Author Alex' +
-      'ander Obukhov, Minsk, Belarus <alex@niiomr.belpak.minsk.by>\par'#13 +
-      #10'\par'#13#10'\par'#13#10'}'#13#10
   end
 end
