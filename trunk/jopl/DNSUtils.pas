@@ -217,7 +217,7 @@ end;
 function GetSRVRecord(Resolver: TIdDNSResolver; srv_req, a_req: Widestring;
     var ip: string; var port: Word): boolean;
 var
-    i: integer;
+    idx, i: integer;
     lo_pri, cur_w, cur: integer;
     srv: TSRVRecord;
     ar: TARecord;
@@ -247,88 +247,85 @@ begin
     end;
 
     // TODO: iterate over all possible DNS servers if something fails
-    Resolver.Host := slist[0];
+    idx := 0;
+    ip := '';
+    port := 0;
+    while ((ip = '') and (idx < slist.count)) do begin
+        Resolver.Host := slist[idx];
+        idx := idx + 1;
 
-    // Use this for testing
-    // Resolver.Host := '192.168.2.1';
+        // Use this for testing
+        // Resolver.Host := '192.168.2.1';
 
-    Resolver.ReceiveTimeout := DNS_TIMEOUT;
-    Resolver.AllowRecursiveQueries := true;
-    slist.Free();
+        Resolver.ReceiveTimeout := DNS_TIMEOUT;
+        Resolver.AllowRecursiveQueries := true;
 
-    try
-        Resolver.QueryRecords := [qtSRV];
-        Resolver.Resolve(srv_req);
+        try
+            Resolver.QueryRecords := [qtSRV];
+            Resolver.Resolve(srv_req);
 
-        // Worked... Pick the correct SRV Record.. Lowest priority, highest weight.
-        lo_pri := 65535;
-        cur := -1;
-        cur_w := 0;
+            // Worked... Pick the correct SRV Record.. Lowest priority, highest weight.
+            lo_pri := 65535;
+            cur := -1;
+            cur_w := 0;
+            for i := 0 to Resolver.QueryResult.Count - 1 do begin
+                if (Resolver.QueryResult[i] is TSRVRecord) then begin
+                    srv := TSRVRecord(Resolver.QueryResult[i]);
+                    if (srv.Priority < lo_pri) then begin
+                        cur := i;
+                        lo_pri := srv.Priority;
+                        cur_w := srv.Weight;
+                    end
+                    else if ((srv.Priority = lo_pri) and (srv.Weight > cur_w)) then begin
+                        cur := i;
+                        cur_w := srv.Weight;
+                    end;
+                end;
+            end;
+
+            if (cur = -1) then begin
+                // it worked, but we got 0 results back
+                raise EIdDNSResolverError.Create('No SRV records');
+            end
+            else begin
+                assert(cur < Resolver.QueryResult.Count);
+                srv := TSRVRecord(Resolver.QueryResult[cur]);
+                ip := srv.IP;
+                port := srv.Port;
+                a_req := srv.IP;
+            end;
+        except
+            on EAssertionFailed do begin
+                // jump to the next DNS server
+                continue;
+            end;
+            on EIdDnsResolverError do begin
+                try
+                    Resolver.QueryRecords := [qtA];
+                    Resolver.Resolve(a_req);
+                except
+                    // jump to the next DNS server
+                    continue;
+                end;
+            end
+            else begin
+                continue;
+            end;
+        end;
+
+        // Check to see if we have an A Record matching this name
         for i := 0 to Resolver.QueryResult.Count - 1 do begin
-            if (Resolver.QueryResult[i] is TSRVRecord) then begin
-                srv := TSRVRecord(Resolver.QueryResult[i]);
-                if (srv.Priority < lo_pri) then begin
-                    cur := i;
-                    lo_pri := srv.Priority;
-                    cur_w := srv.Weight;
-                end
-                else if ((srv.Priority = lo_pri) and (srv.Weight > cur_w)) then begin
-                    cur := i;
-                    cur_w := srv.Weight;
+            if (Resolver.QueryResult[i] is TARecord) then begin
+                ar := TARecord(Resolver.QueryResult[i]);
+                if (ar.Name = a_req) then begin
+                    ip := ar.IPAddress;
+                    break;
                 end;
             end;
         end;
-
-        if (cur = -1) then begin
-            // it worked, but we got 0 results back
-            raise EIdDNSResolverError.Create('No SRV records');
-        end
-        else begin
-            assert(cur < Resolver.QueryResult.Count);
-            srv := TSRVRecord(Resolver.QueryResult[cur]);
-            ip := srv.IP;
-            port := srv.Port;
-            a_req := srv.IP;
-        end;
-    except
-        on EAssertionFailed do begin
-            ip := '';
-            port := 0;
-            Result := false;
-            exit;
-        end;
-        on EIdDnsResolverError do begin
-            ip := '';
-            port := 0;
-            try
-                Resolver.QueryRecords := [qtA];
-                Resolver.Resolve(a_req);
-            except
-                Result := false;
-                exit;
-            end;
-        end
-        else begin
-            ip := '';
-            port := 0;
-            Result := false;
-            exit;
-        end;
     end;
-
-    // Check to see if we have an A Record matching this name
-    for i := 0 to Resolver.QueryResult.Count - 1 do begin
-        if (Resolver.QueryResult[i] is TARecord) then begin
-            ar := TARecord(Resolver.QueryResult[i]);
-            if (ar.Name = a_req) then begin
-                ip := ar.IPAddress;
-                break;
-            end;
-        end;
-    end;
-
-    Result := true;
-
+    slist.Free();
+    Result := (ip <> '');
 end;
 
 end.
