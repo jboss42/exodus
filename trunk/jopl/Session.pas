@@ -689,7 +689,7 @@ begin
         end;
     blockers.Free();
     block := TXMLTag.Create('block');
-    block.PutAttribute('to', jid.jid);
+    block.PutAttribute('jid', jid.jid);
     MainSession.FireEvent('/session/block', block);
 end;
 
