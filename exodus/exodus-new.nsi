@@ -1358,6 +1358,27 @@ LangString MSG_NotifyInstances ${LANG_RUSSIAN} "${i18n_MSG_NotifyInstances_RU}"
 LangString MSG_NotifyInstances ${LANG_SLOVENIAN} "${i18n_MSG_NotifyInstances_SL}"
 LangString MSG_NotifyInstances ${LANG_TRADCHINESE} "${i18n_MSG_NotifyInstances_ZH}"
 
+; hildjj: moved here so it doesn't have to be generated
+; Plugin upgrade abort message (MSG_PluginAbort)
+LangString MSG_PluginAbort ${LANG_ENGLISH} "${i18n_MSG_PluginAbort_EN}"
+LangString MSG_PluginAbort ${LANG_CATALAN} "${i18n_MSG_PluginAbort_CA}"
+LangString MSG_PluginAbort ${LANG_CZECH} "${i18n_MSG_PluginAbort_CZ}"
+LangString MSG_PluginAbort ${LANG_DANISH} "${i18n_MSG_PluginAbort_DA}"
+LangString MSG_PluginAbort ${LANG_GERMAN} "${i18n_MSG_PluginAbort_DE}"
+LangString MSG_PluginAbort ${LANG_SPANISH} "${i18n_MSG_PluginAbort_ES}"
+LangString MSG_PluginAbort ${LANG_FRENCH} "${i18n_MSG_PluginAbort_FR}"
+LangString MSG_PluginAbort ${LANG_JAPANESE} "${i18n_MSG_PluginAbort_JA}"
+LangString MSG_PluginAbort ${LANG_KOREAN} "${i18n_MSG_PluginAbort_KO}"
+LangString MSG_PluginAbort ${LANG_LITHUANIAN} "${i18n_MSG_PluginAbort_LT}"
+LangString MSG_PluginAbort ${LANG_DUTCH} "${i18n_MSG_PluginAbort_NL}"
+LangString MSG_PluginAbort ${LANG_NORWEGIAN} "${i18n_MSG_PluginAbort_NO}"
+LangString MSG_PluginAbort ${LANG_POLISH} "${i18n_MSG_PluginAbort_PL}"
+LangString MSG_PluginAbort ${LANG_PORTUGUESEBR} "${i18n_MSG_PluginAbort_PT_BR}"
+LangString MSG_PluginAbort ${LANG_PORTUGUESE} "${i18n_MSG_PluginAbort_PT_PT}"
+LangString MSG_PluginAbort ${LANG_RUSSIAN} "${i18n_MSG_PluginAbort_RU}"
+LangString MSG_PluginAbort ${LANG_SLOVENIAN} "${i18n_MSG_PluginAbort_SL}"
+LangString MSG_PluginAbort ${LANG_TRADCHINESE} "${i18n_MSG_PluginAbort_ZH}"
+
 ; Shortcut creation window caption (CUSTOMSHELL_TITLE)
 LangString CUSTOMSHELL_TITLE ${LANG_ENGLISH} "${i18n_CUSTOMSHELL_TITLE_EN}"
 LangString CUSTOMSHELL_TITLE ${LANG_CATALAN} "${i18n_CUSTOMSHELL_TITLE_CA}"
@@ -1774,7 +1795,7 @@ VIAddVersionKey /LANG=${LANG_TRADCHINESE} "OriginalFilename" "${INSTALLER_OUTPUT
         plugin-i18n-new.nsi
         plugin-off-new.nsi
 */
-!include "plugin-i18n-new.nsi"
+!include "plugin-i18n-new.nsh"
 
 
 /*

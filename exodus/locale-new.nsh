@@ -30,12 +30,6 @@
                  magic, I'll leave it in a TODO state for now).
 */
 
-
-/*
-    include the installer plugin localization strings
-*/
-!include "plugin-locale-new.nsh"
-
 ; Only Admins allowed to install message (MSG_NoAdmin)
 !ifdef USE_HKLM_KEY
     !define i18n_MSG_NoAdmin_EN "Only members of the Administrators group may run this application."

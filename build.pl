@@ -74,7 +74,7 @@ grep unlink, glob("*.dll"); # rm *.dll
 open OFF,">plugin-off-new.nsi" or die $!;
 open SEC,">plugin-sections-new.nsi" or die $!;
 open DESC,">plugin-desc-new.nsi" or die $!;
-open EN,">plugin-en-new.nsi" or die $!;
+open I18N,">plugin-i18n-new.nsh" or die $!;
 
 # for each non-CVS directory
 my $f;
@@ -88,7 +88,7 @@ for (glob("*")) {
 close OFF;
 close SEC;
 close DESC;
-close EN;
+close I18N;
 
 chdir "..";
 
@@ -120,7 +120,7 @@ sub plug {
 
   my $dpr = (glob("*.dpr"))[0];
   unless ($dpr) { chdir ".."; return };
-  unless (-e("README.txt")) { chdir ".."; return };
+  unless (-e("plugin-info.nsh")) { chdir ".."; return };
 
   grep unlink, glob("ExodusCOM_TLB.*");
   e("copy ..\\..\\ExodusCOM_TLB.pas");
@@ -155,12 +155,10 @@ EOF
   !insertmacro MUI_DESCRIPTION_TEXT \${SEC_$base} \$(DESC_$base)
 EOF
 
-  my $readme = `cat README.txt`;
-  print EN <<"EOF";
-LangString DESC_$base \${LANG_ENGLISH} "$readme"
-
+  print I18N <<"EOF";
+!include "$p\\plugin-info.nsh"
 EOF
-
+  
   chdir "..";
   e("zip $base.zip $base.dll");
 }

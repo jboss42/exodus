@@ -1,3 +1,6 @@
 *.dll
 *.zip
-*.nsi
+plugin-desc-new.nsi
+plugin-i18n-new.nsi
+plugin-off-new.nsi
+plugin-sections-new.nsi
