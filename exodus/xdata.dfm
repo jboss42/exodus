@@ -1,10 +1,10 @@
 object frmXData: TfrmXData
-  Left = 221
-  Top = 114
+  Left = 879
+  Top = 474
   Width = 328
   Height = 413
   BorderWidth = 5
-  Caption = 'frmXData'
+  Caption = 'Jabber Form'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
