@@ -644,8 +644,10 @@ begin
             ecode := etag.GetAttribute('code');
             if (ecode = '409') then begin
                 MessageDlg(sStatus_409, mtError, [mbOK], 0);
-                if (_old_nick = '') then
-                    Self.Close()
+                if (_old_nick = '') then begin
+                    Self.Close();
+                    exit;
+                end
                 else
                     myNick := _old_nick;
             end
