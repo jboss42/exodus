@@ -73,7 +73,7 @@ function checkSASLFeatures(feats: TXMLTag): boolean;
 {---------------------------------------}
 implementation
 uses
-    XMLUtils, IdHash;
+    Debug, XMLUtils, IdHash;
 
 var
     _best_mech: Widestring;
@@ -116,6 +116,11 @@ begin
     _decoder := TIdDecoderMime.Create(nil);
     _encoder := TIdEncoderMime.Create(nil);
     _hasher := TIdHashMessageDigest5.Create();
+
+    //
+    _ccb := -1;
+    _fail := -1;
+    _resp := -1;
 end;
 
 {---------------------------------------}
@@ -131,6 +136,7 @@ end;
 procedure TSASLAuth.StartAuthentication();
 begin
     // TODO: Brute force look for plain or MD5-Digest
+    CancelAuthentication();
     if (_best_mech = 'DIGEST-MD5') then
         StartDigest()
     else if (_best_mech = 'PLAIN') then
@@ -144,10 +150,13 @@ procedure TSASLAuth.CancelAuthentication();
 begin
     // Make sure to remove callbacks
     if (_session <> nil) then begin
-        _session.UnRegisterCallback(_ccb);
-        _session.UnRegisterCallback(_fail);
-        _session.UnRegisterCallback(_resp);
+        if (_ccb <> -1) then _session.UnRegisterCallback(_ccb);
+        if (_fail <> -1) then _session.UnRegisterCallback(_fail);
+        if (_resp <> -1) then _session.UnRegisterCallback(_resp);
     end;
+    _ccb := -1;
+    _fail := -1;
+    _resp := -1;
 end;
 
 {---------------------------------------}
@@ -266,7 +275,7 @@ begin
     uname := UTF8Encode(_session.Username);
     pass := UTF8Encode(_session.Password);
     azjid := _session.Username + '@' + _session.Server;
-    az := UTF8Encode(azjid);
+    //az := UTF8Encode(azjid);
     uri := UTF8Encode('xmpp/' + _session.Server);
 
     resp := 'username="' + uname + '",';
@@ -316,6 +325,9 @@ begin
     // Gin up the response and fire!
     r := TXMLTag.Create('response');
     r.setAttribute('xmlns', 'urn:ietf:params:xml:ns:xmpp-sasl');
+
+    DebugMessage(resp);
+
     r.AddCData(_encoder.Encode(resp));
     _session.SendTag(r);
 
