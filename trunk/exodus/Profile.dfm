@@ -21,14 +21,14 @@ object frmProfile: TfrmProfile
     Left = 121
     Top = 0
     Width = 3
-    Height = 293
+    Height = 298
     Cursor = crHSplit
   end
   object PageControl1: TPageControl
     Left = 124
     Top = 0
     Width = 317
-    Height = 293
+    Height = 298
     ActivePage = TabSheet1
     Align = alLeft
     Style = tsFlatButtons
@@ -52,7 +52,7 @@ object frmProfile: TfrmProfile
       end
       object lblEmail: TLabel
         Left = 4
-        Top = 103
+        Top = 127
         Width = 28
         Height = 13
         Cursor = crHandPoint
@@ -98,6 +98,21 @@ object frmProfile: TfrmProfile
         Font.Style = []
         ParentFont = False
       end
+      object lblUpdateNick: TLabel
+        Left = 56
+        Top = 99
+        Width = 168
+        Height = 13
+        Cursor = crHandPoint
+        Caption = 'Update nickname based on names.'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlue
+        Font.Height = -11
+        Font.Name = 'MS Sans Serif'
+        Font.Style = [fsUnderline]
+        ParentFont = False
+        OnClick = btnUpdateNickClick
+      end
       object txtJID: TEdit
         Left = 56
         Top = 53
@@ -115,7 +130,7 @@ object frmProfile: TfrmProfile
       end
       object optSubscrip: TRadioGroup
         Left = 8
-        Top = 128
+        Top = 152
         Width = 257
         Height = 49
         Caption = 'Subscription Type'
@@ -130,7 +145,7 @@ object frmProfile: TfrmProfile
       end
       object txtPriEmail: TEdit
         Left = 56
-        Top = 100
+        Top = 124
         Width = 185
         Height = 21
         Font.Charset = DEFAULT_CHARSET
@@ -176,15 +191,6 @@ object frmProfile: TfrmProfile
         StopFrame = 8
         Visible = False
       end
-      object btnUpdateNick: TTntButton
-        Left = 8
-        Top = 184
-        Width = 75
-        Height = 25
-        Caption = 'Update Nick'
-        TabOrder = 8
-        OnClick = btnUpdateNickClick
-      end
     end
     object TabSheet7: TTabSheet
       Caption = 'Resources'
@@ -193,7 +199,7 @@ object frmProfile: TfrmProfile
         Left = 0
         Top = 25
         Width = 161
-        Height = 237
+        Height = 242
         Align = alLeft
         ItemHeight = 13
         TabOrder = 0
@@ -242,7 +248,7 @@ object frmProfile: TfrmProfile
       ImageIndex = 1
       DesignSize = (
         309
-        262)
+        267)
       object GrpListBox: TCheckListBox
         Left = 8
         Top = 8
@@ -253,15 +259,7 @@ object frmProfile: TfrmProfile
         Sorted = True
         TabOrder = 0
       end
-      object txtNewGrp: TEdit
-        Left = 8
-        Top = 231
-        Width = 211
-        Height = 21
-        Anchors = [akLeft, akRight, akBottom]
-        TabOrder = 1
-      end
-      object Button1: TButton
+      object btnAddGroup: TButton
         Left = 224
         Top = 229
         Width = 75
@@ -269,6 +267,15 @@ object frmProfile: TfrmProfile
         Anchors = [akRight, akBottom]
         Caption = 'Add Group'
         TabOrder = 2
+        OnClick = btnAddGroupClick
+      end
+      object txtNewGrp: TTntEdit
+        Left = 8
+        Top = 231
+        Width = 211
+        Height = 21
+        Anchors = [akLeft, akRight, akBottom]
+        TabOrder = 1
       end
     end
     object TabSheet3: TTabSheet
@@ -1157,7 +1164,7 @@ object frmProfile: TfrmProfile
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 293
+    Top = 298
     Width = 451
     Height = 34
     Align = alBottom
@@ -1181,7 +1188,7 @@ object frmProfile: TfrmProfile
     Left = 0
     Top = 0
     Width = 121
-    Height = 293
+    Height = 298
     Align = alLeft
     Indent = 19
     ReadOnly = True
