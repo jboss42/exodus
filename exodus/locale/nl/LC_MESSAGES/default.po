@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exodus Jabber Client\n"
 "POT-Creation-Date: 2003-05-08 06:59\n"
-"PO-Revision-Date: 2003-12-03 21:38+0100\n"
+"PO-Revision-Date: 2003-12-07 04:04+0100\n"
 "Last-Translator: Bart Cornelis <cobaco@linux.be>\n"
 "Language-Team: Dutch <exodus-dev@jabberstudio.org>\n"
 "MIME-Version: 1.0\n"
@@ -1605,7 +1605,7 @@ msgstr "Volgende >"
 #: DockWizard.dfm:84
 #: Wizard.dfm:84
 msgid "Wizard Label goes here"
-msgstr ""
+msgstr "Wizarlabel komt hier"
 
 #. frmDockWizard..Panel1..lblWizardDetails..Caption
 #. frmWizard..Panel1..lblWizardDetails..Caption
@@ -1960,7 +1960,7 @@ msgstr "Berichten"
 #. frmExodus..MainMenu1..Exodus1..ClearMessages1..Caption
 #: Jabber1.dfm:257
 msgid "Clear &Instant Messages"
-msgstr ""
+msgstr "Berichten wegvegen"
 
 #. frmExodus..MainMenu1..Exodus1..mnuMessage..Caption
 #: Jabber1.dfm:265
@@ -2218,7 +2218,7 @@ msgstr "Schermnaam"
 #. frmJoinRoom..Panel1..lblFetch..Caption
 #: JoinRoom.dfm:112
 msgid "Get room list from this server..."
-msgstr ""
+msgstr "Kamerlijst van deze server ophalen..."
 
 #. frmJoinRoom..Panel1..txtServer..Text
 #: JoinRoom.dfm:122
@@ -2233,7 +2233,7 @@ msgstr "Jabber Zoektocht"
 #. frmJud..Panel1..lblWizardTitle..Caption
 #: jud.dfm:42
 msgid "Jabber Search Wizard"
-msgstr ""
+msgstr "Jabber Zoekwizard"
 
 #. frmJud..Tabs..TabSheet1..lblSelect....Align
 #: jud.dfm:63
@@ -2562,7 +2562,7 @@ msgstr "Groepen"
 #. frmPrefs..Scroller..lblLayouts..Caption
 #: Prefs.dfm:2999
 msgid "Layouts"
-msgstr ""
+msgstr "Indelingen"
 
 #. frmPrefs..Scroller..lblNetwork..Caption
 #: Prefs.dfm:3012
@@ -2602,7 +2602,7 @@ msgstr "bezig met doorsturen"
 #. frmPrefs..PageControl1..tbsBlockList..Memo1....Lines.WideStrings
 #: Prefs.dfm:3107
 msgid "you messages. All messages from these contacts will be blocked."
-msgstr ""
+msgstr "Uw berichten. alle berichten van deze contactpersonen worden geblokkeerd."
 
 #. frmPrefs..PageControl1..tbsBlockList..pnlBlocked..Caption
 #: Prefs.dfm:3119
@@ -5849,12 +5849,12 @@ msgstr "Omschakelen stem"
 #. frmRoom..popRoomRoster..popModerator..Caption
 #: Room.dfm:300
 msgid "Make Moderator"
-msgstr ""
+msgstr "Maak moderator"
 
 #. frmRoom..popRoomRoster..popAdministrator..Caption
 #: Room.dfm:305
 msgid "Make Administrator"
-msgstr ""
+msgstr "Maak beheerder"
 
 #. frmRoom..dlgSave..DefaultExt
 #: Room.dfm:311
@@ -5961,7 +5961,7 @@ msgstr "Zoek:"
 #. frmRosterWindow..pnlFind..txtFind..Hint
 #: RosterWindow.dfm:102
 msgid "Esc to quit, Enter to select current,  F3 to search again"
-msgstr ""
+msgstr "Esc om af te sluiten, enter om huidige te selecteren, F3 om opnieuw te zoeken"
 
 #. frmRosterWindow..pnlFind..radJID..Caption
 #: RosterWindow.dfm:114
@@ -6215,7 +6215,7 @@ msgstr "lblStatus"
 #. frmWizard..Caption
 #: Wizard.dfm:5
 msgid "Wizard"
-msgstr ""
+msgstr "Wizard"
 
 #. frmXData..Caption
 #: xdata.dfm:7
@@ -6586,7 +6586,7 @@ msgstr "Nieuw gesprek"
 #: ExSession.pas:480
 #: prefs/PrefNotify.pas:96
 msgid "Received a normal message"
-msgstr ""
+msgstr "Normaal bericht ontvangen"
 
 #: ExSession.pas:481
 #: prefs/PrefNotify.pas:94
@@ -6611,7 +6611,7 @@ msgstr "Aanvraag abonnement"
 #: ExSession.pas:486
 #: prefs/PrefNotify.pas:103
 msgid "Auto response generated"
-msgstr ""
+msgstr "Automatische respons is aangemaakt"
 
 #. Show the log, or ask the user to turn on logging
 #: ExUtils.pas:336
@@ -6745,7 +6745,7 @@ msgstr "Chat met "
 
 #: GUIFactory.pas:128
 msgid "There was an error attempting to save your options. Another process may be accessing your options file. Some options may be lost. "
-msgstr ""
+msgstr "Er is een fout opgetreden bij het opslaan van uw instellingen. Mogelijk is een ander proces met uw instellingsbestand aan de slag. De gemaakte instellingen kunnen hierdoor verloren gaan."
 
 #. join this room
 #: invite.pas:192
@@ -6973,7 +6973,7 @@ msgstr "Bestandsoverzetting is gelukt."
 
 #: RecvStatus.pas:382
 msgid "Receive request timed out."
-msgstr ""
+msgstr "Ontvangaanvraag nam teveel tijd in beslag."
 
 #: RecvStatus.pas:409
 msgid "No acceptable stream hosts were sent. Have the sender check their settings."
@@ -6999,7 +6999,7 @@ msgstr "E is een fout opgetreden bij het aanmaken van het bestand."
 #. send SI accept
 #: RecvStatus.pas:512
 msgid "Negotiating with sender..."
-msgstr ""
+msgstr "Er wordt onderhandeld met de verzender..."
 
 #. our thread completed.
 #: RecvStatus.pas:609
@@ -7014,7 +7014,7 @@ msgstr "E is een fout opgetreden tijdens het ontvangen van het bestand."
 #. we ran out of streamhosts to try. bummer :(
 #: RecvStatus.pas:689
 msgid "Exodus was unable to connect to any file transfer proxies or the sender."
-msgstr ""
+msgstr "Exodus kon geen bestandsoverzetproxies met de verzender verbinden."
 
 #. immediately turn around and refuse.
 #: RecvStatus.pas:720
@@ -7024,7 +7024,7 @@ msgstr "Wachtend op overdrachtsannulering..."
 #. the sender went offline
 #: RecvStatus.pas:742
 msgid "The sender of a file transfer (%s) went offline."
-msgstr ""
+msgstr "De verzender van de bestandsoverdracht ging offline."
 
 #: RegForm.pas:130
 msgid "Jabber Service Registration"
@@ -7032,7 +7032,7 @@ msgstr "Jabber dienstregistratie"
 
 #: RegForm.pas:131
 msgid "This wizard will guide you through registration with a jabber service."
-msgstr ""
+msgstr "Deze wizard loodst u door het registratieproces voor een jabberdienst."
 
 #. error packet
 #: RegForm.pas:176
@@ -7168,7 +7168,7 @@ msgstr "U heeft geen toestemming om kamers aan te maken."
 
 #: Room.pas:1102
 msgid "Your room keyword regular expressions are invalid. Keyword matching will be turned off for this room."
-msgstr ""
+msgstr "Uw reguliere expressies voor de kamersleutelwoorden zijn ongeldig. Sleutelwoordherkenning voor deze kamer wordt uitgeschakeld."
 
 #. send the msg out
 #: Room.pas:1243
@@ -8472,28 +8472,28 @@ msgstr ""
 
 #: prefs/PrefGroups.pas:113
 msgid "The offline group will only show up if you have show only online contacts turned off."
-msgstr ""
+msgstr "De groep 'offline' is enkel te zien wanneer u 'toon enkel online contactpersonen' uitgeschakeld heeft."
 
 #: prefs/PrefLayouts.pas:118
 msgid "The main window shows only the roster. Other windows are opened in seperate windows and never docked"
-msgstr ""
+msgstr "Het hoofdvenster toont enkel het rooster. Andere vensters worden apart geopend en niet gedokt."
 
 #: prefs/PrefLayouts.pas:119
 msgid "The main window always shows the roster. Other windows are docked using a tabbed interface to the main window."
-msgstr ""
+msgstr "Het hoofdvenster toont enkel het ooster. Andere vensters worden gedokt via tabs in het hoofdvenster."
 
 #: prefs/PrefLayouts.pas:120
 msgid "The main window shows the roster. Other windows are docked using a tabbed interface to the main window."
-msgstr ""
+msgstr "Het hoofdvenster toont het rooster. Andere vensters worden gedokt via tabs in het hoofdvenster."
 
 #. Network
 #: prefs/PrefNetwork.pas:115
 msgid "Your IE proxy settings won't help, since you use an autoconfiguration script.  Please configure your proxy manually."
-msgstr ""
+msgstr "Uw IE-proxyinstellingen zijn niet van toepassingen omdat u een autoconfiguratiescript gebruikt. Gelieve uw proxy handmatig in te stellen."
 
 #: prefs/PrefNotify.pas:250
 msgid "Make sure to configure sounds in your Sounds Control Panel using the hotlink provided."
-msgstr ""
+msgstr "Vergeet niet de geluiden in te stellen via het Geluid Controlepaneel dat bereikbaar is me de voorziene hotlink"
 
 #: prefs/PrefPlugins.pas:157
 #: prefs/PrefPlugins.pas:165
@@ -8504,17 +8504,17 @@ msgstr "Registreren van de plugin bij Windows is mislukt."
 #. clear all entries
 #: prefs/PrefPresence.pas:250
 msgid "Clear all custom presence entries?"
-msgstr ""
+msgstr "Alle op maat gemaakte aanwezigheidstoestanden wegvegen?"
 
 #: prefs/PrefSystem.pas:178
 msgid "Exodus is set to use a language which is not available on your system. Resetting language to default."
-msgstr ""
+msgstr "Exodus is ingesteld op een taal die op uw systeem niet beschikbaar is. Taal wordt opnieuwe op de standaard ingesteld."
 
 #: prefs/PrefSystem.pas:230
 msgid "You must exit exodus, and restart it before your new locale settings will take affect."
-msgstr ""
+msgstr "U dient exodus af te sluiten, en te herstarten alvorens uw nieuwe localizatieinstellingen van kracht worden."
 
 #: prefs/PrefSystem.pas:268
 msgid "No new update available."
-msgstr ""
+msgstr "Er zijn geen opwaarderingen beschikbaar."
 
