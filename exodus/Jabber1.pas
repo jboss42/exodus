@@ -439,6 +439,7 @@ var
     show_help: boolean;
     debug: boolean;
     minimized: boolean;
+    invisible: boolean;
     expanded: string;
     jid: TJabberID;
     pass: string;
@@ -451,6 +452,7 @@ begin
     // initialize vars.  wish we were using a 'real' compiler.
     debug := false;
     minimized := false;
+    invisible := false;
     show_help := false;
     jid := nil;
     priority := -1;
@@ -473,6 +475,7 @@ begin
                 // -d          : debug
                 // -m          : minimized
                 // -?          : help
+                // -n          : invisible
                 // -x [yes|no] : expanded
                 // -j [jid]    : jid
                 // -p [pass]   : password
@@ -480,16 +483,17 @@ begin
                 // -i [pri]    : priority
                 // -f [prof]   : profile name
                 // -c [file]   : config file name
-                Options  := 'dm?xjprifc';
-                OptFlags := '---:::::::';
-                ReqFlags := '          ';
-                LongOpts := 'debug,minimized,help,expanded,jid,password,resource,priority,profile,config';
+                Options  := 'dmn?xjprifc';
+                OptFlags := '----:::::::';
+                ReqFlags := '           ';
+                LongOpts := 'debug,minimized,invisible,help,expanded,jid,password,resource,priority,profile,config';
                 while GetOpt do begin
                   case Ord(OptChar) of
                      0: raise EConfigException.Create('unknown argument');
                      Ord('d'): debug := true;
                      Ord('x'): expanded := OptArg;
                      Ord('m'): minimized := true;
+                     Ord('n'): invisible := true;
                      Ord('j'): jid := TJabberID.Create(OptArg);
                      Ord('p'): pass := OptArg;
                      Ord('r'): resource := OptArg;
@@ -602,6 +606,8 @@ begin
                 self.WindowState := wsMinimized;
                 ShowWindow(Handle, SW_HIDE);
                 end;
+
+            MainSession.Invisible := invisible;
 
             if (debug) then begin
                 frmDebug := TfrmDebug.Create(nil);
