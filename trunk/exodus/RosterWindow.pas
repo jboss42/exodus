@@ -223,6 +223,10 @@ resourcestring
     sAuthenticating = 'Connected. '#13#10 + 'Authenticating...';
     sAuthenticated = 'Authenticated.'#13#10 + 'Getting Settings...';
 
+    sBtnBlock = 'Block';
+    sBtnUnBlock = 'UnBlock';
+
+
 implementation
 uses
     SelContact,
@@ -1451,11 +1455,11 @@ begin
         popHistory.Enabled := e;
 
         if ((ri <> nil) and (MainSession.isBlocked(ri.jid))) then begin
-            popBlock.Caption := 'UnBlock';
+            popBlock.Caption := sBtnUnBlock;
             popBlock.OnClick := popUnblockClick;
             end
         else begin
-            popBlock.Caption := 'Block';
+            popBlock.Caption := sBtnBlock;
             popBlock.OnClick := popBlockClick;
             end;
         popGroupBlock.OnClick := popBlock.OnClick;
@@ -1486,17 +1490,17 @@ begin
                 end;
             end;
         if ((not b) and (not u)) then begin
-            popGroupBlock.Caption := 'Block';
+            popGroupBlock.Caption := sBtnBlock;
             popGroupBlock.Enabled := false;
             popBlock.OnClick := popBlockClick;
             end
         else if (b) then begin
-            popGroupBlock.Caption := 'Block';
+            popGroupBlock.Caption := sBtnBlock;
             popGroupBlock.Enabled := true;
             popBlock.OnClick := popBlockClick;
             end
         else if (u) then begin
-            popGroupBlock.Caption := 'UnBlock';
+            popGroupBlock.Caption := sBtnUnBlock;
             popGroupBlock.Enabled := true;
             popBlock.OnClick := popUnBlockClick;
             end;

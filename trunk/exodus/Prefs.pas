@@ -261,6 +261,9 @@ resourcestring
     sSoundOOB = 'File Transfers';
     sSoundAutoResponse = 'Auto response generated';
 
+    sRosterFontLabel = 'Roster Font and Background';
+    sChatFontLabel = 'Roster Font and Background';
+
 procedure StartPrefs;
 
 {---------------------------------------}
@@ -341,7 +344,7 @@ begin
             Font.Size := getInt('roster_font_size');
             Font.Style := [];
             end;
-        lblColor.Caption := 'Roster Font and Background';
+        lblColor.Caption := sRosterFontLabel;
         _clr_font := 'roster_font';
         _clr_font_color := 'roster_font_color';
         _clr_bg := 'roster_bg';
@@ -973,7 +976,7 @@ procedure TfrmPrefs.colorRosterMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
     // find the "thing" that we clicked on in the window..
-    lblColor.Caption := 'Roster Font and Background';
+    lblColor.Caption := sRosterFontLabel;
     _clr_font := 'roster_font';
     _clr_font_color := 'roster_font_color';
     _clr_bg := 'roster_bg';
@@ -1070,7 +1073,7 @@ var
     start: integer;
 begin
     // Select the chat window
-    lblColor.Caption := 'Chat Window';
+    lblColor.Caption := sChatFontLabel;
     _clr_control := colorChat;
     _clr_bg := 'color_bg';
     clrBoxBG.Selected := TColor(MainSession.Prefs.getInt(_clr_bg));
