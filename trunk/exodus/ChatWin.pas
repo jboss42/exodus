@@ -709,20 +709,21 @@ end;
 {---------------------------------------}
 procedure TfrmChat.Emoticons1Click(Sender: TObject);
 var
-    t: integer;
+    l, t: integer;
     cp: TPoint;
 begin
   inherited;
     // Show the emoticons form
-    GetCursorPos(cp);
+    GetCaretPos(cp);
+    l := MsgOut.ClientOrigin.x + cp.X;
 
     if (Self.Docked) then begin
         t := frmJabber.Top + frmJabber.ClientHeight - 10;
-        frmEmoticons.Left := frmJabber.Left + 20;
+        frmEmoticons.Left := l + 10;
         end
     else begin
         t := Self.Top + Self.ClientHeight - 10;
-        frmEmoticons.Left := Self.Left + 20;
+        frmEmoticons.Left := l + 10;
         end;
 
     if ((t + frmEmoticons.Height) > Screen.Height) then
@@ -736,7 +737,7 @@ end;
 {---------------------------------------}
 procedure TfrmChat.SetEmoticon(msn: boolean; imgIndex: integer);
 var
-    i, m: integer;
+    l, i, m: integer;
     eo: TEmoticon;
 begin
     // Setup some Emoticon
@@ -757,8 +758,12 @@ begin
             end;
         end;
 
-    if (m >= 0) then
+    if (m >= 0) then begin
+        l := length(MsgOut.Text);
+        if ((l > 0) and ((MsgOut.Text[l]) <> ' ')) then
+            MsgOut.SelText := ' ';
         MsgOut.SelText := emoticon_list[m];
+        end;
 end;
 
 end.

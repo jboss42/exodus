@@ -1,6 +1,6 @@
 object frmEmoticons: TfrmEmoticons
-  Left = 248
-  Top = 222
+  Left = 235
+  Top = 413
   BorderIcons = []
   BorderStyle = bsNone
   Caption = 'frmEmoticons'
@@ -16,7 +16,7 @@ object frmEmoticons: TfrmEmoticons
   KeyPreview = True
   OldCreateOrder = False
   OnDeactivate = FormDeactivate
-  OnKeyPress = FormKeyPress
+  OnKeyDown = FormKeyDown
   PixelsPerInch = 96
   TextHeight = 13
   object ToolBar1: TToolBar
@@ -428,6 +428,13 @@ object frmEmoticons: TfrmEmoticons
       Top = 0
       Caption = 'ToolButton54'
       ImageIndex = 0
+      OnClick = ToolButton1Click
+    end
+    object ToolButton55: TToolButton
+      Left = 225
+      Top = 0
+      Caption = 'ToolButton55'
+      ImageIndex = 20
       OnClick = ToolButton1Click
     end
   end

@@ -84,10 +84,12 @@ type
     ToolButton52: TToolButton;
     ToolButton53: TToolButton;
     ToolButton54: TToolButton;
+    ToolButton55: TToolButton;
     procedure ToolButton1Click(Sender: TObject);
     procedure FormDeactivate(Sender: TObject);
-    procedure FormKeyPress(Sender: TObject; var Key: Char);
     procedure ToolBar1Click(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -134,16 +136,18 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmEmoticons.FormKeyPress(Sender: TObject; var Key: Char);
-begin
-    if Key = Chr(27) then
-        Self.Hide;
-end;
-
-{---------------------------------------}
 procedure TfrmEmoticons.ToolBar1Click(Sender: TObject);
 begin
     Self.Hide;
+end;
+
+{---------------------------------------}
+procedure TfrmEmoticons.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    case key of
+    VK_ESCAPE: Self.Hide
+    end;
 end;
 
 end.

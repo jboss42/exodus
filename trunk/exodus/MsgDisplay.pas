@@ -45,8 +45,6 @@ function GetMsgHTML(Msg: TJabberMessage): string;
 procedure ProcessEmoticons(RichEdit: TOLEEdit; txt: string);
 procedure ConfigEmoticons();
 
-function getEmoticonIndex(match: string): integer;
-
 // procedure AddHTML(html: string; Browser: TRichEdit);
 
 {---------------------------------------}
@@ -155,6 +153,7 @@ begin
         if (pic = nil) then pic := TPicture.Create();
 
         eo := nil;
+        // Grab the match text and look it up in our emoticon list
         ms := emoticon_regex.Match[2];
         if (ms <> '') then begin
             im := emoticon_list.IndexOf(ms);
@@ -162,6 +161,8 @@ begin
                 eo := TEmoticon(emoticon_list.Objects[im]);
             end;
 
+        // if we have a legal emoticon object, insert it..
+        // otherwise insert the matched text
         if (eo <> nil) then begin
             eo.il.GetBitmap(eo.idx, pic.Bitmap);
             RichEdit.InsertBitmap(pic.Bitmap);
@@ -169,8 +170,10 @@ begin
         else
             RichEdit.SelText := ms;
 
-        // RichEdit.SelText := ' ';
+        // Match-6 is any trailing whitespace
         RichEdit.SelText := emoticon_regex.Match[6];
+
+        // Search for the next emoticon
         m := emoticon_regex.ExecNext();
         end;
 
@@ -310,6 +313,8 @@ begin
     AddEmot('(B)', msn, 16);
     (*
     Emoticon map:
+
+    GO Client
     :bones
     x:lips
     x:rose
@@ -402,26 +407,15 @@ begin
     128     (O)
     104     (6)
 
-    GO CLient:
     *)
 
+
+    // Create the static regex object and compile it.
     emoticon_regex := TRegExpr.Create();
     emoticon_regex.ModifierG := false;
     emoticon_regex.Expression := e;
     emoticon_regex.Compile();
 end;
-
-{---------------------------------------}
-function getEmoticonIndex(match: string): integer;
-begin
-    // return the image index for a specific match
-
-    // Default to normal smiley
-    Result := 1;
-    if ((match = ':(') or (match = ':-(')) then
-        Result := 2;
-end;
-
 
 {---------------------------------------}
 procedure DisplayPresence(txt: string; Browser: TRichEdit);
