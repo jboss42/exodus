@@ -76,7 +76,7 @@ end;
 procedure TJabberChatList.SetSession(s: TObject);
 begin
     _s := s;
-    _callback := TJabberSession(s).RegisterCallback(MsgCallback, '/packet/message');
+    _callback := TJabberSession(s).RegisterCallback(MsgCallback, '/packet/message[@type!="error"]');
 end;
 
 {---------------------------------------}

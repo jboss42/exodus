@@ -159,12 +159,9 @@ begin
         // check for messages we don't care about
 
         if (event <> '/unhandled') then begin
-            if ((mtype = 'groupchat') or (mtype = 'chat')) then exit;
             if (mtype = 'normal') then mtype := '';
 
             // We'll handle message-errors in our unhandled handler
-            if (mtype = 'error') then exit;
-
             if (tag.QueryXPTag(XP_MSGXDATA) <> nil) then exit;
             if (tag.QueryXPTag(XP_MUCINVITE) <> nil) then exit;
             if (tag.QueryXPTag(XP_CONFINVITE) <> nil) then exit;
