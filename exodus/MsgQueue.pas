@@ -81,7 +81,7 @@ implementation
 
 uses
     ShellAPI, CommCtrl,  
-    Roster, JabberID, XMLUtils, XMLParser, XMLTag,
+    NodeItem, Roster, JabberID, XMLUtils, XMLParser, XMLTag,
     ExUtils, MsgRecv, Session, PrefController;
 
 {---------------------------------------}

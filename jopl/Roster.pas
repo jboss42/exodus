@@ -22,65 +22,10 @@ unit Roster;
 interface
 
 uses
-    JabberID, Presence, Signals, Unicode, XMLTag,
+    NodeItem, JabberID, Presence, Signals, Unicode, XMLTag,
     SysUtils, Classes;
 
 type
-    TJabberRosterItem = class
-    private
-        _nickname: WideString;
-        function getNick(): Widestring;
-        procedure fillTag(tag: TXMLTag);
-    public
-        jid: TJabberID;
-        subscription: string;
-        ask: string;
-        Groups: TWideStringList;
-        Data: TObject;
-
-        constructor Create; overload;
-        destructor Destroy; override;
-
-        function xml: string;
-        function IsOnline: boolean;
-
-        procedure parse(tag: TXMLTag);
-        procedure remove;
-        procedure update;
-
-        property RawNickname: Widestring read _nickname write _nickname;
-        property Nickname: Widestring read getNick write _nickname;
-    end;
-
-    TJabberMyResource = class
-    private
-    public
-        jid: TJabberID;
-        Groups: TWidestringList;
-        Data: TObject;
-        Presence: TJabberPres;
-        Resource: Widestring;
-        item: TJabberRosterItem;
-
-        constructor Create;
-        destructor Destroy; override;
-    end;
-
-    TJabberBookmark = class
-    public
-        jid: TJabberID;
-        bmType: string;
-        bmName: string;
-        nick: string;
-        autoJoin: boolean;
-        Data: TObject;
-
-        constructor Create(tag: TXMLTag);
-        destructor Destroy; override;
-
-        function AddToTag(parent: TXMLTag): TXMLTag;
-        procedure Copy(bm: TJabberBookmark);
-    end;
 
     TRosterEvent = procedure(event: string; tag: TXMLTag; ritem: TJabberRosterItem) of object;
     TRosterListener = class(TSignalListener)
@@ -97,7 +42,7 @@ type
     private
         _js: TObject;
         _groups: TWidestringlist;
-        _unfiled: TWidestringlist;
+        _unfiled: TJabberGroup;
         _pres_cb: integer;
 
         procedure ParseFullRoster(event: string; tag: TXMLTag);
@@ -105,14 +50,14 @@ type
         procedure bmCallback(event: string; tag: TXMLTag);
         procedure presCallback(event: string; tag: TXMLTag; pres: TJabberPres);
         procedure checkGroups(ri: TJabberRosterItem);
-        procedure checkGroup(grp: Widestring);
+        function  checkGroup(grp: Widestring): TJabberGroup;
+        function  getNumGroups: integer;
+        function  getGroupIndex(idx: integer): TJabberGroup;
         procedure fireBookmark(bm: TJabberBookmark);
 
         function getItem(index: integer): TJabberRosterItem;
-        function getGroupList(grp_name: Widestring): TWidestringlist;
 
     public
-        GrpList: TWideStringList;
         Bookmarks: TWideStringList;
 
         constructor Create;
@@ -132,9 +77,16 @@ type
 
         function Find(sjid: Widestring): TJabberRosterItem; reintroduce; overload;
 
+        function addGroup(grp: Widestring): TJabberGroup;
+        function getGroup(grp: Widestring): TJabberGroup;
+        procedure removeGroup(grp: TJabberGroup);
+
         function getGroupItems(grp: Widestring; online: boolean): TList;
         function getGroupCount(grp_name: Widestring; online: boolean): integer;
 
+        property GrpList: TWidestringlist read _groups;
+        property GroupsCount: integer read getNumGroups;
+        property Groups[index: integer]: TJabberGroup read getGroupIndex;
         property Items[index: integer]: TJabberRosterItem read getItem;
     end;
 
@@ -158,204 +110,7 @@ resourcestring
 {---------------------------------------}
 implementation
 uses
-    JabberConst, iq, s10n,
-    XMLUtils, Session;
-
-{---------------------------------------}
-constructor TJabberBookmark.Create(tag: TXMLTag);
-begin
-    //
-    inherited Create();
-
-    jid := nil;
-    bmName := '';
-    bmType := 'conference';
-    nick := '';
-    autoJoin := false;
-
-    if (tag <> nil) then begin
-        jid := TJabberID.Create(tag.GetAttribute('jid'));
-        bmName := tag.getAttribute('name');
-        autoJoin := SafeBool(tag.GetAttribute('autojoin'));
-        bmType := tag.name;
-        nick := tag.GetBasicText('nick');
-    end;
-end;
-
-{---------------------------------------}
-destructor TJabberBookmark.Destroy;
-begin
-    if (jid <> nil) then
-        jid.Free;
-    inherited Destroy;
-end;
-
-procedure TJabberBookmark.Copy(bm: TJabberBookmark);
-begin
-    bmType := bm.bmType;
-    bmName := bm.bmName;
-    nick := bm.nick;
-    autoJoin := bm.autoJoin;
-end;
-
-{---------------------------------------}
-function TJabberBookmark.AddToTag(parent: TXMLTag): TXMLTag;
-begin
-    // add this bookmark as another tag onto the parent
-    Result := parent.AddTag(bmType);
-    with Result do begin
-        setAttribute('jid', jid.full);
-        setAttribute('name', bmName);
-        setAttribute('autojoin', BoolToStr(autoJoin));
-        if (nick <> '') then
-            AddBasicTag('nick', nick);
-    end;
-end;
-
-{---------------------------------------}
-{---------------------------------------}
-{---------------------------------------}
-constructor TJabberMyResource.Create;
-begin
-    //
-    inherited;
-
-    Groups := TWidestringList.Create();
-    Data := nil;
-    Presence := nil;
-    Resource := '';
-    item := nil;
-end;
-
-destructor TJabberMyResource.Destroy;
-begin
-    //
-    Groups.Free();
-    jid.Free();
-    if (Data <> nil) then
-        TObject(Data).Free();
-
-    inherited Destroy;
-end;
-
-{---------------------------------------}
-{---------------------------------------}
-{---------------------------------------}
-constructor TJabberRosterItem.Create;
-begin
-    inherited;
-    Groups := TWideStringList.Create;
-    jid := TJabberID.Create('');
-    subscription := 'none';
-    _nickname := '';
-    ask := '';
-    Data := nil;
-end;
-
-{---------------------------------------}
-destructor TJabberRosterItem.Destroy;
-begin
-    Groups.Free;
-    jid.Free;
-
-    if (Data <> nil) then
-        TObject(Data).Free();
-
-    inherited Destroy;
-end;
-
-{---------------------------------------}
-procedure TJabberRosterItem.fillTag(tag: TXMLTag);
-var
-    i: integer;
-begin
-    tag.name := 'item';
-    tag.setAttribute('jid', jid.Full);
-    tag.setAttribute('name', _nickname);
-
-    for i := 0 to Groups.Count - 1 do
-        tag.AddBasicTag('group', Groups[i]);
-
-    if (subscription = 'remove') then
-        tag.setAttribute('subscription', subscription);
-end;
-
-{---------------------------------------}
-procedure TJabberRosterItem.Update;
-var
-    item, iq: TXMLTag;
-begin
-    iq := TXMLTag.Create('iq');
-    iq.setAttribute('type', 'set');
-    iq.setAttribute('id', MainSession.generateID());
-    with iq.AddTag('query') do begin
-        setAttribute('xmlns', XMLNS_ROSTER);
-        item := AddTag('item');
-        Self.fillTag(item);
-    end;
-    MainSession.Roster.UpdateGroupLists(Self);
-    MainSession.SendTag(iq);
-end;
-
-{---------------------------------------}
-procedure TJabberRosterItem.remove;
-begin
-    // remove this roster item from my roster;
-    subscription := 'remove';
-    update();
-end;
-
-{---------------------------------------}
-function TJabberRosterItem.xml: string;
-var
-    x: TXMLTag;
-begin
-    x := TXMLTag.Create('item');
-    Self.FillTag(x);
-    Result := x.xml;
-    x.Free;
-end;
-
-{---------------------------------------}
-procedure TJabberRosterItem.parse(tag: TXMLTag);
-var
-    tmp_grp: string;
-    grps: TXMLTagList;
-    i: integer;
-begin
-    // fill the object based on the tag
-    jid.ParseJID(tag.GetAttribute('jid'));
-    subscription := tag.GetAttribute('subscription');
-    ask := tag.GetAttribute('ask');
-    if subscription = 'none' then subscription := '';
-    _nickname := tag.GetAttribute('name');
-
-    Groups.Clear;
-    grps := tag.QueryXPTags('/item/group');
-    for i := 0 to grps.Count - 1 do begin
-        tmp_grp := Trim(TXMLTag(grps[i]).Data);
-        if (tmp_grp <> '') then
-            Groups.Add(TXMLTag(grps[i]).Data);
-    end;
-    grps.Free();
-end;
-
-{---------------------------------------}
-function TJabberRosterItem.IsOnline: boolean;
-begin
-    Result := (MainSession.ppdb.FindPres(Self.jid.jid, '') <> nil);
-end;
-
-{---------------------------------------}
-function TJabberRosterItem.getNick(): Widestring;
-begin
-    // either return the nickname, or the <user> part of the jid
-    if (Trim(_nickname)) <> '' then
-        result := _nickname
-    else
-        result := jid.user;
-end;
-
+    JabberConst, iq, s10n, XMLUtils, Session;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -363,10 +118,9 @@ end;
 constructor TJabberRoster.Create;
 begin
     inherited;
-    GrpList := TWideStringList.Create();
     Bookmarks := TWideStringList.Create();
     _groups := TWidestringlist.Create();
-    _unfiled := TWidestringList.Create();
+    _unfiled := TJabberGroup.Create('Unfiled');
 end;
 
 {---------------------------------------}
@@ -374,15 +128,6 @@ destructor TJabberRoster.Destroy;
 begin
     ClearStringListObjects(_groups);
     _groups.Free();
-
-    {
-    NB:
-    The GrpList list contains group nodes in the treeview
-    The Bookmarks list contains bm nodes in the treeview.
-    We should NOT free these objects since they will be free'd
-    when the window shuts down.
-    }
-    GrpList.Free;
     Bookmarks.Free;
 
     inherited Destroy;
@@ -393,12 +138,10 @@ procedure TJabberRoster.Clear;
 begin
     // Free all the roster items.
     ClearStringListObjects(Bookmarks);
-    ClearStringListObjects(GrpList);
     ClearStringListObjects(Self);
     ClearStringListObjects(_groups);
 
     Bookmarks.Clear;
-    GrpList.Clear;
     _groups.Clear();
 
     inherited Clear();
@@ -544,16 +287,16 @@ begin
     ritems := q.QueryTags('item');
 
     for i := 0 to ritems.Count - 1 do begin
+        // XXX: stringprep instead of WideLowerCase
         j := WideLowerCase(ritems[i].GetAttribute('jid'));
         ri := Find(j);
 
         if ri = nil then begin
             ri := TJabberRosterItem.Create;
             Self.AddObject(j, ri);
-        end
-        else
-            UpdateGroupLists(ri);
+        end;
 
+        UpdateGroupLists(ri);
         ri.parse(ritems[i]);
         checkGroups(ri);
         s.FireEvent('/roster/item', tag, ri);
@@ -573,13 +316,12 @@ var
     ri: TJabberRosterItem;
     i, idx: integer;
     cur_grp: Widestring;
-    grp_list: TWidestringlist;
-    insert: boolean;
+    go: TJabberGroup;
 begin
     // we are getting /preseence events
     if ((event = '/presence/online') or (event = '/presence/offline')) then begin
+
         // this JID is coming online... inc group counters
-        insert := (event = '/presence/online');
         ri := Self.Find(pres.fromJid.jid);
         if (ri = nil) then
             ri := Self.Find(pres.fromJid.full);
@@ -588,180 +330,144 @@ begin
 
         // special case for unfiled
         if (ri.Groups.Count = 0) then begin
-            idx := _unfiled.IndexOf(ri.jid.full);
-            if (idx < 0) then
-                idx := _unfiled.Add(ri.jid.full);
-
-            assert(idx < _unfiled.Count);
-            if (insert) then
-                _unfiled.Objects[idx] := pres
-            else
-                _unfiled.Objects[idx] := nil;
+            _unfiled.setPresence(ri.jid.jid, pres);
             exit;
         end;
 
         // iterate over all groups for this user.
         for i := 0 to ri.Groups.Count - 1 do begin
             cur_grp := ri.Groups[i];
-            grp_list := getGroupList(cur_grp);
-
-            // we didn't find a group.. assert here?
-            if ((grp_list = nil) and (insert)) then begin
-                grp_list := TWidestringlist.Create();
-                _groups.AddObject(cur_grp, grp_list);
+            idx := _groups.IndexOf(cur_grp);
+            if (idx >= 0) then begin
+                go := TJabberGroup(_groups.Objects[i]);
+                go.setPresence(ri.jid, pres);
             end;
-            idx := grp_list.IndexOf(ri.jid.full);
-
-            // this jid isn't in the grp list.. assert here?
-            if ((idx < 0) and (insert)) then
-                idx := grp_list.add(ri.jid.full);
-
-            assert(idx < grp_list.Count);
-            if (insert) then
-                grp_list.Objects[idx] := pres
-            else
-                grp_list.Objects[idx] := nil;
         end;
     end;
+    
 end;
 
 {---------------------------------------}
 procedure TJabberRoster.UpdateGroupLists(ritem: TJabberRosterItem);
 var
-    g: Widestring;
-    jids: TWidestringList;
     i, idx: integer;
-    p: TJabberPres;
+    g: TJabberGroup;
 begin
+
+    // OK, the groups in this item, have been updated from an
+    // event inside Exodus... We're getting a push from the server
+    // telling us to update the data structures we already have manipulated.
 
     // make sure we remove them from unfiled if they
     // were there, and they now have at least 1 group.
     if (ritem.groups.Count > 0) then begin
-        idx := _unfiled.IndexOf(ritem.jid.full);
-        if (idx >= 0) then
-            _unfiled.Delete(idx);
+        if (_unfiled.inGroup(ritem.jid)) then
+            _unfiled.removeJid(ritem.jid);
     end;
 
-    // get whether or not they are online
-    p := MainSession.ppdb.FindPres(ritem.jid.jid, '');
-
-    // iterate over all the groups
+    // So look at all of the groups.. if the jid was in that
+    // group, but ritem doesn't have that jid listed anymore,
+    // then remove it from the Group object.
+    // If the group is listed in groups, but isn't in the grp object, then
+    // add it back
     for i := 0 to _groups.Count - 1 do begin
-        g := _groups[i];
-        jids := TWidestringlist(_groups.Objects[i]);
-        idx := jids.indexOf(ritem.jid.full);
-        if (idx >= 0) then begin
-            // check to make sure this grp is in ritem.groups
-            if (ritem.groups.IndexOf(g) = -1) then
-                jids.Delete(idx);
+        g := TJabberGroup(_groups.Objects[i]);
+        if (g.inGroup(ritem.jid)) then begin
+            idx := ritem.Groups.IndexOf(g.FullName);
+            if (idx = -1) then
+                g.RemoveJid(ritem.jid);
         end
-        else begin
-            // if this grp is in groups, add this jid back in
-            if (ritem.groups.IndexOf(g) >= 0) then
-                jids.AddObject(ritem.jid.full, p);
-        end;
+        else if (ritem.Groups.IndexOf(g.Fullname) >= 0) then
+            g.AddJid(ritem.jid);
     end;
 
+    // If they aren't in any groups, put them in unfiled.
     if (ritem.Groups.Count = 0) then begin
-        idx := _unfiled.IndexOf(ritem.jid.full);
-        if (idx = -1) then
-            _unfiled.AddObject(ritem.jid.full, p);
+        if (not _unfiled.inGroup(ritem.jid)) then
+            _unfiled.AddJid(ritem.jid);
     end;
 
-end;
-
-{---------------------------------------}
-function TJabberRoster.getGroupList(grp_name: Widestring): TWidestringlist;
-var
-    idx: integer;
-begin
-    idx := _groups.indexOf(grp_name);
-    if (idx >= 0) then
-        Result := TWidestringList(_groups.Objects[idx])
-    else
-        Result := nil;
 end;
 
 {---------------------------------------}
 function TJabberRoster.GetGroupCount(grp_name: Widestring; online: boolean): integer;
 var
-    grp_list: TWidestringList;
-    c, i: integer;
+    i: integer;
+    go: TJabberGroup;
 begin
     if (grp_name = '') then begin
         // get all items in no groups
-        if (not online) then begin
-            Result := _unfiled.Count;
-            exit;
-        end;
-
-        c := 0;
-        for i := 0 to _unfiled.Count - 1 do begin
-            if (_unfiled.Objects[i] <> nil) then inc(c);
-        end;
-        Result := c;
+        if (online) then
+            Result := _unfiled.Online
+        else
+            Result := _unfiled.Total;
         exit;
     end;
 
     Result := 0;
-    grp_list := getGroupList(grp_name);
-    if (grp_list <> nil) then begin
+    i := _groups.IndexOf(grp_name);
+    if (i = -1) then exit;
 
-        if (not online) then begin
-            Result := grp_list.Count;
-            exit;
-        end;
-
-        // iterate through each JID...
-        c := 0;
-        for i := 0 to grp_list.Count - 1 do begin
-            if (grp_list.Objects[i] <> nil) then inc(c);
-        end;
-        Result := c;
-    end;
+    go := TJabberGroup(_groups.Objects[i]);
+    if (online) then
+        Result := go.Online
+    else
+        Result := go.Total;
 end;
 
 {---------------------------------------}
 procedure TJabberRoster.checkGroups(ri: TJabberRosterItem);
 var
     g: integer;
+    go: TJabberGroup;
     cur_grp: Widestring;
-    grp_list: TWidestringlist;
-    idx: integer;
+    p: TJabberPres;
 begin
     if ((ri.Subscription <> 'to') and (ri.Subscription <> 'both')) then exit;
 
-    if (ri.Groups.Count = 0) then begin
-        idx := _unfiled.indexOf(ri.jid.full);
-        if (idx < 0) then
-            _unfiled.Add(ri.jid.full);
-        exit;
-    end;
-
-    // make sure the GrpList is populated.
+    // make sure _groups is populated.
+    p := MainSession.ppdb.FindPres(ri.jid.jid, '');
     for g := 0 to ri.Groups.Count - 1 do begin
         cur_grp := ri.Groups[g];
-        checkGroup(cur_grp);
 
-        // make sure this grp exists
-        grp_list := getGroupList(cur_grp);
-        if (grp_list = nil) then begin
-            grp_list := TWidestringList.Create();
-            _groups.AddObject(cur_grp, grp_list);
-        end;
+        go := checkGroup(cur_grp);
+        if (not go.inGroup(ri.jid)) then
+            go.AddJid(ri.jid);
 
-        idx := grp_list.IndexOf(ri.jid.full);
-        if (idx < 0) then
-            grp_list.Add(ri.jid.full);
+        go.setPresence(ri.jid.jid, p);
     end;
 end;
 
 {---------------------------------------}
-procedure TJabberRoster.checkGroup(grp: Widestring);
+function TJabberRoster.checkGroup(grp: Widestring): TJabberGroup;
+var
+    i: integer;
+    go: TJabberGroup;
 begin
-    if GrpList.indexOf(grp) < 0 then
-        GrpList.Add(grp);
+    i := _groups.IndexOf(grp);
+    if (i = -1) then begin
+        go := TJabberGroup.Create(grp);
+        _groups.AddObject(grp, go);
+    end
+    else
+        go := TJabberGroup(_groups.Objects[i]);
 
+    Result := go;
+end;
+
+{---------------------------------------}
+function TJabberRoster.getNumGroups: integer;
+begin
+    Result := _groups.Count;
+end;
+
+{---------------------------------------}
+function  TJabberRoster.getGroupIndex(idx: integer): TJabberGroup;
+begin
+    if (idx >= _groups.Count) then
+        Result := nil
+    else
+        Result := TJabberGroup(_groups.Objects[idx]);
 end;
 
 {---------------------------------------}
@@ -774,6 +480,36 @@ begin
         Result := TJabberRosterItem(Objects[i])
     else
         Result := nil;
+end;
+
+{---------------------------------------}
+function TJabberRoster.getGroup(grp: Widestring): TJabberGroup;
+var
+    i: integer;
+begin
+    i := _groups.indexOf(grp);
+    if (i >= 0) then
+        Result := TJabberGroup(_groups.Objects[i])
+    else
+        Result := nil;
+end;
+
+{---------------------------------------}
+function TJabberRoster.addGroup(grp: Widestring): TJabberGroup;
+begin
+    Result := checkGroup(grp);
+end;
+
+{---------------------------------------}
+procedure TJabberRoster.removeGroup(grp: TJabberGroup);
+var
+    i: integer;
+begin
+    i := _groups.IndexOfObject(grp);
+    if (i = -1) then exit;
+
+    _groups.Delete(i);
+    grp.Free();
 end;
 
 {---------------------------------------}

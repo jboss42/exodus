@@ -40,6 +40,7 @@ type
         _isme     : boolean;
         _time     : TDateTime;
         _isxdata  : boolean;
+        _highlight: boolean;
 
         procedure SetSubject(const Value: WideString);
         procedure SetBody(const Value: WideString);
@@ -70,6 +71,7 @@ type
         property isMe: boolean read _isme write _isme;
         property Time: TDateTime read _time;
         property isXdata: boolean read _isxdata;
+        property highlight: boolean read _highlight write _highlight;
   end;
 
 

@@ -80,7 +80,7 @@ implementation
 uses
     ExEvents, ExUtils, GnuGetText, Jabber1, JabberID, PrefController,
     JabberConst, InputPassword,
-    Session, Room, RosterWindow, Roster;
+    Session, Room, RosterWindow, NodeItem, Roster;
 
 {$R *.dfm}
 

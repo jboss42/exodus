@@ -48,7 +48,7 @@ type
 implementation
 
 uses
-    COMRosterItem, Roster, JabberID, Session, Jabber1, ComServ;
+    COMRosterItem, NodeItem, Roster, JabberID, Session, Jabber1, ComServ;
 
 {---------------------------------------}
 procedure TExodusRoster.AddItem(const JabberID, nickname,

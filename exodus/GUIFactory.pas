@@ -46,7 +46,7 @@ implementation
 uses
     Dialogs, 
     InvalidRoster, ChatWin, ExEvents, ExUtils, Subscribe, Notify, Jabber1,
-    MsgQueue, Roster, JabberID, Session;
+    MsgQueue, NodeItem, Roster, JabberID, Session;
 
 {---------------------------------------}
 procedure TGUIFactory.setSession(js: TObject);

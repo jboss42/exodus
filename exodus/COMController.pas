@@ -188,7 +188,7 @@ uses
     Chat, ChatController, JabberID, MsgRecv, Room, Browser, Jud,
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
     COMChatController, Dockable, Agents, RegForm,
-    Jabber1, Session, Roster, RosterWindow, PluginAuth, PrefController,
+    Jabber1, Session, NodeItem, Roster, RosterWindow, PluginAuth, PrefController,
     Controls, Dialogs, Variants, Forms, SysUtils, ComServ;
 
 var

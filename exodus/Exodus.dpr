@@ -157,7 +157,8 @@ uses
   XferManager in 'XferManager.pas' {frmXferManager},
   RecvStatus in 'RecvStatus.pas' {fRecvStatus: TFrame},
   GrpManagement in 'GrpManagement.pas' {frmGrpManagement},
-  CapPresence in '..\jopl\CapPresence.pas';
+  CapPresence in '..\jopl\CapPresence.pas',
+  NodeItem in '..\jopl\NodeItem.pas';
 
 {$R *.TLB}
 

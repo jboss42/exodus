@@ -21,7 +21,7 @@ unit Bookmark;
 interface
 
 uses
-    Roster, 
+    Roster, NodeItem,  
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, buttonFrame, StdCtrls, TntStdCtrls;
 

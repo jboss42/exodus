@@ -172,7 +172,7 @@ uses
     Clipbrd, COMChatController, JabberConst, ShellAPI, Profile,
     XferManager,
     ExSession, ExUtils, JabberMsg, JabberID,
-    RosterWindow, RemoveContact, RosterRecv, Room, Roster,
+    RosterWindow, RemoveContact, RosterRecv, Room, NodeItem, Roster,
     Presence, Session, Jabber1;
 
 {$R *.DFM}

@@ -22,7 +22,7 @@ unit RosterWindow;
 interface
 
 uses
-    DropTarget, Unicode, XMLTag, Presence, Roster,
+    DropTarget, Unicode, XMLTag, Presence, Roster, NodeItem, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ComCtrls, ExtCtrls, Buttons, ImgList, Menus, StdCtrls, TntStdCtrls,
     TntExtCtrls;
@@ -259,7 +259,7 @@ type
     procedure FloatRoster;
     procedure ShowPresence(show: Widestring);
 
-    function RenderGroup(grp_idx: integer): TTreeNode;
+    function RenderGroup(grp: TJabberGroup): TTreeNode;
     function getSelectedContacts(online: boolean = true): TList;
 
     property CurRosterItem: TJabberRosterItem read _cur_ritem;
@@ -434,7 +434,7 @@ begin
     if event = '/session/disconnected' then begin
         ClearNodes();
         ShowPresence('offline');
-        MainSession.Roster.GrpList.Clear();
+        MainSession.Roster.Clear();
         treeRoster.Visible := false;
         aniWait.Active := false;
         aniWait.Visible := false;
@@ -597,26 +597,25 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.RenderBookmark(bm: TJabberBookmark);
 var
-    bi: integer;
+    bgrp: TJabberGroup;
     bm_node: TTreeNode;
 begin
     // render this bookmark
     if (not _brand_muc) then exit;
     
     if _bookmark = nil then begin
-        // create some container for bookmarks
-        bi := MainSession.Roster.GrpList.indexOf(g_bookmarks);
-        if bi >= 0 then
-            _bookmark := TTreeNode(MainSession.Roster.GrpList.Objects[bi])
-        else
-            bi := MainSession.roster.GrpList.Add(g_bookmarks);
+        // create some container for bookmarks.. addGrp returns
+        // the group if it already exists.
+        bgrp := MainSession.Roster.AddGroup(g_bookmarks);
 
-        if (_bookmark = nil) then begin
+        if (bgrp.Data = nil) then begin
             _bookmark := treeRoster.Items.AddChild(nil, sGrpBookmarks);
             _bookmark.ImageIndex := ico_down;
             _bookmark.SelectedIndex := ico_down;
-            MainSession.roster.GrpList.Objects[bi] :=  _bookmark;
-        end;
+            bgrp.Data := _bookmark;
+        end
+        else
+            _bookmark := TTreeNode(bgrp.Data);
 
         treeRoster.AlphaSort();
     end;
@@ -938,10 +937,12 @@ procedure TfrmRosterWindow.RemoveEmptyGroups();
 var
     i: integer;
     node: TTreeNode;
+    go: TJabberGroup;
 begin
     // scan for any empty grps
-    for i := MainSession.Roster.GrpList.Count - 1 downto 0 do begin
-        node := TTreeNode(MainSession.Roster.GrpList.Objects[i]);
+    for i := MainSession.Roster.GroupsCount - 1 downto 0 do begin
+        go := MainSession.Roster.Groups[i];
+        node := TTreeNode(go.Data);
         if ((node <> nil) and (node.Count = 0)) then
             RemoveGroupNode(node);
     end;
@@ -950,15 +951,12 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.RemoveGroupNode(node: TTreeNode);
 var
-    grp_idx: integer;
-    grp: Widestring;
+    go: TJabberGroup;
 begin
-    grp := node.Text;
-    grp_idx := MainSession.roster.GrpList.indexOf(grp);
-    if (grp_idx >= 0) then begin
-        MainSession.roster.GrpList.Objects[grp_idx] := nil;
-        MainSession.roster.GrpList.Delete(grp_idx);
-    end;
+    go := TJabberGroup(node.Data);
+    if (go = nil) then exit;
+
+    MainSession.Roster.RemoveGroup(go);
 
     if (node = _offline) then
         _offline := nil;
@@ -973,7 +971,7 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.RenderNode(ritem: TJabberRosterItem; p: TJabberPres);
 var
-    i, g, grp_idx: integer;
+    i, g: integer;
     cur_grp, tmps: Widestring;
     top_item, cur_node, grp_node, n: TTreeNode;
     node_list, tmp_grps: TWideStringlist;
@@ -985,6 +983,7 @@ var
     grp_rect, node_rect: TRect;
     my_res: TJabberMyResource;
     plevel: integer;
+    go: TJabberGroup;
 begin
     // Render a specific roster item, with the given presence info.
     is_blocked := MainSession.isBlocked(ritem.jid);
@@ -1170,15 +1169,13 @@ begin
 
         else begin
             // Make sure the grp exists in the GrpList
-            grp_idx := MainSession.Roster.GrpList.indexOf(cur_grp);
-            if (grp_idx < 0) then
-                grp_idx := MainSession.Roster.GrpList.Add(cur_grp);
+            go := MainSession.Roster.addGroup(cur_grp);
 
             // Make sure we have a node for this grp and keep
             // a pointer to the node in the Roster's grp list
-            grp_node := TTreeNode(MainSession.Roster.GrpList.Objects[grp_idx]);
+            grp_node := TTreeNode(go.Data);
             if (grp_node = nil) then begin
-                grp_node := RenderGroup(grp_idx);
+                grp_node := RenderGroup(go);
             end;
         end;
 
@@ -1297,20 +1294,21 @@ begin
 end;
 
 {---------------------------------------}
-function TfrmRosterWindow.RenderGroup(grp_idx: integer): TTreeNode;
+function TfrmRosterWindow.RenderGroup(grp: TJabberGroup): TTreeNode;
 var
     grp_node: TTreeNode;
     cur_grp: Widestring;
 begin
     // Show this group node
-    cur_grp := MainSession.Roster.GrpList[grp_idx];
+    cur_grp := grp.getText();
 
     treeRoster.Items.BeginUpdate();
     grp_node := treeRoster.Items.AddChild(nil, cur_grp);
-    MainSession.Roster.GrpList.Objects[grp_idx] := grp_node;
+    grp.Data := grp_node;
+
+    grp_node.Data := grp;
     grp_node.ImageIndex := ico_Right;
     grp_node.SelectedIndex := ico_Right;
-    grp_node.Data := nil;
     treeRoster.AlphaSort(true);
     treeRoster.Items.EndUpdate();
 
