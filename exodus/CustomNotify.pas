@@ -59,7 +59,7 @@ var
 implementation
 
 uses
-    PrefController;
+    GnuGetText, PrefController;
 
 {
 0 Contact is online
@@ -85,6 +85,7 @@ end;
 
 procedure TfrmCustomNotify.FormCreate(Sender: TObject);
 begin
+    TranslateProperties(Self);
     SetLength(_vals, 20);
 end;
 

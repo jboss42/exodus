@@ -90,6 +90,7 @@ type
     procedure ToolBar1Click(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -109,7 +110,7 @@ implementation
 
 {$R *.dfm}
 uses
-    Jabber1;
+    GnuGetText, Jabber1;
 
 {---------------------------------------}
 procedure TfrmEmoticons.ToolButton1Click(Sender: TObject);
@@ -148,6 +149,11 @@ begin
     case key of
     VK_ESCAPE: Self.Hide
 end;
+end;
+
+procedure TfrmEmoticons.FormCreate(Sender: TObject);
+begin
+    TranslateProperties(Self);
 end;
 
 end.

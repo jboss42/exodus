@@ -1,8 +1,8 @@
 object frmPrefSystem: TfrmPrefSystem
-  Left = 289
-  Top = 184
+  Left = 259
+  Top = 156
   Width = 327
-  Height = 318
+  Height = 342
   BorderWidth = 6
   Caption = 'frmPrefSystem'
   Color = clBtnFace
@@ -20,6 +20,21 @@ object frmPrefSystem: TfrmPrefSystem
     Width = 133
     Height = 13
     Caption = 'Exodus language file to use:'
+  end
+  object lblPluginScan: TLabel
+    Left = 27
+    Top = 262
+    Width = 130
+    Height = 13
+    Cursor = crHandPoint
+    Caption = 'Scan for language catalogs'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlue
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsUnderline]
+    ParentFont = False
+    OnClick = lblPluginScanClick
   end
   object StaticText4: TStaticText
     Left = 0

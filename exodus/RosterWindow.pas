@@ -263,7 +263,7 @@ resourcestring
 
 implementation
 uses
-    JabberConst, Chat, ChatController, InputPassword,
+    JabberConst, Chat, ChatController, GnuGetText, InputPassword,
     SelContact, Invite, Bookmark, S10n, Transfer, MsgRecv, PrefController,
     ExEvents, ExUtils, Room, Profile, JabberID, RiserWindow, ShellAPI,
     IQ, RosterAdd, GrpRemove, RemoveContact, ChatWin, Jabber1,
@@ -285,6 +285,8 @@ procedure TfrmRosterWindow.FormCreate(Sender: TObject);
 var
     s : widestring;
 begin
+    TranslateProperties(Self);
+
     // register the callback
     _FullRoster := false;
     _collapsed_grps := TWideStringList.Create();

@@ -74,7 +74,7 @@ procedure ShowInvite(room_jid: WideString; jids: TWideStringList); overload;
 implementation
 uses
     JabberConst, InputPassword,
-    ExEvents, ExUtils, Jabber1, JabberID, PrefController,
+    ExEvents, ExUtils, GnuGetText, Jabber1, JabberID, PrefController,
     Session, Room, RosterWindow, Roster;
 
 {$R *.dfm}
@@ -222,6 +222,7 @@ end;
 procedure TfrmInvite.FormCreate(Sender: TObject);
 begin
     // make the form the same width as the list view
+    TranslateProperties(Self);
     Self.ClientWidth := pnlMain.Width + 2;
     cboRoom.Items.Assign(room.room_list);
     pnlMain.Align := alClient;

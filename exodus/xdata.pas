@@ -37,6 +37,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormResize(Sender: TObject);
     procedure Cancel();
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     packet: string;
@@ -69,7 +70,7 @@ implementation
 
 {$R *.dfm}
 uses
-    JabberConst, Session, ExUtils, StrUtils, fGeneric, IQ, Math;
+    GnuGetText, JabberConst, Session, ExUtils, StrUtils, fGeneric, IQ, Math;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -335,6 +336,11 @@ begin
       MainSession.SendTag(m);
       _responded := true;
     end;
+end;
+
+procedure TfrmXData.FormCreate(Sender: TObject);
+begin
+    TranslateProperties(Self);
 end;
 
 end.

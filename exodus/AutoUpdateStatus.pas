@@ -73,12 +73,7 @@ implementation
 {$R *.dfm}
 
 uses
-    ExUtils,
-    IdException,
-    IQ,
-    Registry,
-    Session,
-    ShellAPI;
+    ExUtils, GnuGetText, IdException, IQ, Registry, Session, ShellAPI;
 
 {---------------------------------------}
 procedure ShowAutoUpdateStatus(URL : string);
@@ -92,6 +87,7 @@ end;
 {---------------------------------------}
 procedure TfrmAutoUpdateStatus.FormCreate(Sender: TObject);
 begin
+    TranslateProperties(Self);
     Image1.Picture.Icon.Handle := LoadIcon(0, IDI_QUESTION);
     _downloading := false;
     _url := '';

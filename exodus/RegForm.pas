@@ -106,11 +106,13 @@ var
 implementation
 {$R *.DFM}
 uses
-    Math, JabberConst, Transports, S10n, Roster, Session, ExUtils;
+    GnuGetText, Math, JabberConst, Transports, S10n, Roster, Session, ExUtils;
 
 {---------------------------------------}
 procedure TfrmRegister.FormCreate(Sender: TObject);
 begin
+    TranslateProperties(Self);
+
     // Hide all the tabs and make the welcome tab visible
     tabWelcome.TabVisible := false;
     tabAgent.TabVisible := false;

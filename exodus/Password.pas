@@ -32,6 +32,7 @@ type
     txtNewPassword: TEdit;
     Label3: TLabel;
     txtConfirmPassword: TEdit;
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -44,6 +45,13 @@ var
 implementation
 
 {$R *.dfm}
+uses
+    GnuGetText;
+
+procedure TfrmPassword.FormCreate(Sender: TObject);
+begin
+    TranslateProperties(Self);
+end;
 
 end.
  

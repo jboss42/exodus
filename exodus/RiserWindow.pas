@@ -70,7 +70,7 @@ implementation
 
 {$R *.dfm}
 uses
-    ExUtils, Session, Dockable, Jabber1;
+    ExUtils, GnuGetText, Session, Dockable, Jabber1;
 
 {---------------------------------------}
 procedure ShowRiserWindow(clickForm: TForm; msg: Widestring; imgIndex: integer);
@@ -164,6 +164,7 @@ end;
 {---------------------------------------}
 procedure TfrmRiser.FormCreate(Sender: TObject);
 begin
+    TranslateProperties(Self);
     Timer2.Interval := MainSession.Prefs.getInt('toast_duration') * 1000;
 end;
 

@@ -73,7 +73,7 @@ implementation
 {$R *.DFM}
 
 uses
-    ExUtils, Jabber1,  JabberID, Unicode, InputPassword, 
+    ExUtils, GnuGetText, Jabber1,  JabberID, Unicode, InputPassword, 
     ConnDetails, PrefController;
 
 {---------------------------------------}
@@ -135,6 +135,7 @@ end;
 {---------------------------------------}
 procedure TfrmLogin.FormCreate(Sender: TObject);
 begin
+    TranslateProperties(Self);
     MainSession.Prefs.RestorePosition(Self);
 end;
 

@@ -6,30 +6,30 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-02-26 22:21\n"
-"PO-Revision-Date: 2003-02-26 22:21\n"
+"POT-Creation-Date: 2003-03-01 10:06\n"
+"PO-Revision-Date: 2003-03-01 10:06\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: dxgettext 1.1\n"
+"X-Generator: dxgettext 1.2\n"
 
 #. frmBaseChat..popOut..N2..Caption
 #. frmBrowse..popContext..N1..Caption
 #. frmChat..popContact..N1..Caption
 #. frmChat..popContact..N3..Caption
 #. frmDebug..PopupMenu1..N1..Caption
-#. frmExodus..MainMenu1..WInJab1..N7..Caption
-#. frmExodus..MainMenu1..WInJab1..N14..Caption
-#. frmExodus..MainMenu1..WInJab1..N6..Caption
-#. frmExodus..MainMenu1..WInJab1..N9..Caption
-#. frmExodus..MainMenu1..PGPTools1..mnuContacts..N13..Caption
-#. frmExodus..MainMenu1..PGPTools1..mnuContacts..N8..Caption
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..N10..Caption
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..N11..Caption
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presCustom..N18..Caption
-#. frmExodus..MainMenu1..PGPTools1..N2..Caption
-#. frmExodus..MainMenu1..PGPTools1..N3..Caption
-#. frmExodus..MainMenu1..PGPTools1..N1..Caption
+#. frmExodus..MainMenu1..Exodus1..N7..Caption
+#. frmExodus..MainMenu1..Exodus1..N14..Caption
+#. frmExodus..MainMenu1..Exodus1..N6..Caption
+#. frmExodus..MainMenu1..Exodus1..N9..Caption
+#. frmExodus..MainMenu1..Tools1..mnuContacts..N13..Caption
+#. frmExodus..MainMenu1..Tools1..mnuContacts..N8..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..N10..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..N11..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..presCustom..N18..Caption
+#. frmExodus..MainMenu1..Tools1..N2..Caption
+#. frmExodus..MainMenu1..Tools1..N3..Caption
+#. frmExodus..MainMenu1..Tools1..N1..Caption
 #. frmExodus..MainMenu1..Help1..N12..Caption
 #. frmExodus..popTray..trayPresence..N15..Caption
 #. frmExodus..popTray..trayPresence..N5..Caption
@@ -97,22 +97,22 @@ msgid " (Pending)"
 msgstr ""
 
 #: Jabber1.pas:431
-msgid " -? \0x09\0x09 : Show Help\r\n"
+msgid " -? \x09\x09 : Show Help\n"
 ""
 msgstr ""
 
 #: Jabber1.pas:438
-msgid " -c [file] \0x09 : Config path name\r\n"
+msgid " -c [file] \x09 : Config path name\n"
 ""
 msgstr ""
 
 #: Jabber1.pas:428
-msgid " -d \0x09\0x09 : Debug mode on\r\n"
+msgid " -d \x09\x09 : Debug mode on\n"
 ""
 msgstr ""
 
 #: Jabber1.pas:437
-msgid " -f [prof] \0x09 : Profile name\r\n"
+msgid " -f [prof] \x09 : Profile name\n"
 ""
 msgstr ""
 
@@ -127,7 +127,7 @@ msgid " Foo HIJK "
 msgstr ""
 
 #: Jabber1.pas:436
-msgid " -i [pri] \0x09 : Priority\r\n"
+msgid " -i [pri] \x09 : Priority\n"
 ""
 msgstr ""
 
@@ -144,7 +144,7 @@ msgid " is replying."
 msgstr ""
 
 #: Jabber1.pas:433
-msgid " -j [jid] \0x09\0x09 : Jid\r\n"
+msgid " -j [jid] \x09\x09 : Jid\n"
 ""
 msgstr ""
 
@@ -154,32 +154,32 @@ msgid " lblSubject"
 msgstr ""
 
 #: Jabber1.pas:429
-msgid " -m \0x09\0x09 : Start minimized\r\n"
+msgid " -m \x09\x09 : Start minimized\n"
 ""
 msgstr ""
 
 #: Jabber1.pas:434
-msgid " -p [pass] \0x09 : Password\r\n"
+msgid " -p [pass] \x09 : Password\n"
 ""
 msgstr ""
 
 #: Jabber1.pas:435
-msgid " -r [res] \0x09 : Resource\r\n"
+msgid " -r [res] \x09 : Resource\n"
 ""
 msgstr ""
 
 #: Jabber1.pas:430
-msgid " -v \0x09\0x09 : invisible mode\r\n"
+msgid " -v \x09\x09 : invisible mode\n"
 ""
 msgstr ""
 
 #: Jabber1.pas:432
-msgid " -x [yes|no] \0x09 : Expanded Mode\r\n"
+msgid " -x [yes|no] \x09 : Expanded Mode\n"
 ""
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..Label9..Caption
-#: ConnDetails.dfm:349
+#: ConnDetails.dfm:348
 msgid "# of Keys:"
 msgstr ""
 
@@ -249,17 +249,17 @@ msgid "%s: Unknown option %s."
 msgstr ""
 
 #. frmLogin..btnDetails..Caption
-#: Login.dfm:84
+#: Login.dfm:102
 msgid "&Details..."
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..Label10..Caption
-#: ConnDetails.dfm:63
+#: ConnDetails.dfm:62
 msgid "&Password:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..Label12..Caption
-#: ConnDetails.dfm:77
+#: ConnDetails.dfm:76
 msgid "&Resource:"
 msgstr ""
 
@@ -269,12 +269,12 @@ msgid "&Send"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..Label11..Caption
-#: ConnDetails.dfm:70
+#: ConnDetails.dfm:69
 msgid "&Server:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..Label3..Caption
-#: ConnDetails.dfm:56
+#: ConnDetails.dfm:55
 msgid "&Username:"
 msgstr ""
 
@@ -295,8 +295,8 @@ msgstr ""
 #. frmPassword..txtNewPassword..PasswordChar
 #. frmPassword..txtConfirmPassword..PasswordChar
 #. frmPrefs..PageControl1..tbsNetwork..GroupBox2..txtProxyPassword..PasswordChar
-#: ConnDetails.dfm:112
-#: ConnDetails.dfm:314
+#: ConnDetails.dfm:111
+#: ConnDetails.dfm:313
 #: InputPassword.dfm:55
 #: JoinRoom.dfm:99
 #: Password.dfm:41
@@ -323,38 +323,38 @@ msgstr ""
 #. frmAbout..InfoBox....AllowInPlace
 #: About.dfm:1549
 msgid "{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang1033{\\fonttbl{\\f0\\fnil\\"
-"fcharset0 MS Sans Serif;}}\r\n"
+"fcharset0 MS Sans Serif;}}\n"
 "\\viewkind4\\uc1\\pard\\f0\\fs16 Exod"
 "us is the creation of Peter Millard  (mailto:me@pgmillard.co"
 "m).  Checkout the website at http://exodus.jabberstudio.org "
 "for more information. It is currently licensed under the GNU"
 " Public License (GPL) see www.gnu.org for more information o"
-"n the GPL.\\par\r\n"
-"\\par\r\n"
+"n the GPL.\\par\n"
+"\\par\n"
 "Portions of this software are Copyrigh"
 "t (c) 1993 - 2002, Chad Z. Hower (Kudzu) and the Indy Pit Cr"
 "ew - http://www.nevrona.com/Indy/. This application may also"
 " be using the IndySSL components from Nevrona, and the Open-"
-"SSL binaries available from Intellicom.si.\\par\r\n"
-"\\par\r\n"
+"SSL binaries available from Intellicom.si.\\par\n"
+"\\par\n"
 "SAX XM"
-"L Parser by: Stefan Heymann\\par\r\n"
+"L Parser by: Stefan Heymann\\par\n"
 "Eschenweg 3, 72076 T\\'fcbin"
 "gen, GERMANY mailto:stefan@destructor.de, http://www.destruc"
-"tor.de\\par\r\n"
-"\\par\r\n"
+"tor.de\\par\n"
+"\\par\n"
 "Unicode library is Copyright (c) 1999, 200"
 "0 Mike Lischke (public@lischke-online.de) and Portions Copyr"
-"ight (c) 1999, 2000 Azret Botash (az).\\par\r\n"
-"\\par\r\n"
+"ight (c) 1999, 2000 Azret Botash (az).\\par\n"
+"\\par\n"
 "RichEdit98"
 " and DBRichEdit98 components for Delphi 3.0-4.0. version 1.4"
 "0 Author Alexander Obukhov, Minsk, Belarus <alex@niiomr.belp"
-"ak.minsk.by>\\par\r\n"
-"\\par\r\n"
-"\\par\r\n"
-"}\r\n"
-"\r\n"
+"ak.minsk.by>\\par\n"
+"\\par\n"
+"\\par\n"
+"}\n"
+"\n"
 ""
 msgstr ""
 
@@ -380,7 +380,7 @@ msgstr ""
 #. frmAutoUpdateStatus..Label1....Height
 #: AutoUpdateStatus.dfm:31
 msgid "A new version of Exodus is available.  Would you like to ins"
-"tall it?\r\n"
+"tall it?\n"
 ""
 msgstr ""
 
@@ -404,29 +404,29 @@ msgstr ""
 #. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #: Profile.dfm:390
 #: vcard.dfm:242
-msgid "Accounting/Finance\r\n"
-"Computer related (IS, MIS, DP)\r\n"
-"Computer"
-" related (WWW)\r\n"
-"Consulting\r\n"
-"Education/training\r\n"
-"Engineering\r"
-"\n"
-"Executive/senior management\r\n"
-"General administrative/supervi"
-"sory\r\n"
-"Government/Military\r\n"
-"Manufacturing/production/operatio"
-"ns\r\n"
-"Professional services (medical, legal, etc.)\r\n"
-"Research a"
-"nd development\r\n"
-"Retired\r\n"
-"Sales/marketing/advertising\r\n"
-"Self-e"
-"mployed/owner\r\n"
-"Student\r\n"
-"Unemployed/Between Jobs\r\n"
+msgid "Accounting/Finance\n"
+"Computer related (IS, MIS, DP)\n"
+"Computer r"
+"elated (WWW)\n"
+"Consulting\n"
+"Education/training\n"
+"Engineering\n"
+"Execu"
+"tive/senior management\n"
+"General administrative/supervisory\n"
+"Go"
+"vernment/Military\n"
+"Manufacturing/production/operations\n"
+"Profes"
+"sional services (medical, legal, etc.)\n"
+"Research and developm"
+"ent\n"
+"Retired\n"
+"Sales/marketing/advertising\n"
+"Self-employed/owner\n"
+""
+"Student\n"
+"Unemployed/Between Jobs\n"
 ""
 msgstr ""
 
@@ -442,7 +442,7 @@ msgid "Add"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnBookmark..Hint
-#. frmExodus..MainMenu1..PGPTools1..mnuBookmark..Caption
+#. frmExodus..MainMenu1..Tools1..mnuBookmark..Caption
 #: Browser.dfm:1130
 #: Jabber1.dfm:475
 msgid "Add a Bookmark"
@@ -461,7 +461,7 @@ msgid "Add Bookmark to Roster"
 msgstr ""
 
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Hint
-#. frmExodus..MainMenu1..PGPTools1..mnuContacts..AddPerson1..Caption
+#. frmExodus..MainMenu1..Tools1..mnuContacts..AddPerson1..Caption
 #. frmJUD..PopupMenu1..popAdd..Caption
 #. frmAdd..Caption
 #. frmRosterWindow..popActions..popAddContact..Caption
@@ -479,6 +479,11 @@ msgstr ""
 msgid "Add Contacts"
 msgstr ""
 
+#. frmRosterRecv..Panel1..Label2..Caption
+#: RosterRecv.dfm:222
+msgid "Add contacts to this group:"
+msgstr ""
+
 #. frmJUD..pnlLeft..pnlResults..Label3..Caption
 #: jud.dfm:142
 msgid "Add Contacts to this group:"
@@ -491,7 +496,7 @@ msgstr ""
 msgid "Add Group"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuContacts..NewGroup2..Caption
+#. frmExodus..MainMenu1..Tools1..mnuContacts..NewGroup2..Caption
 #: Jabber1.dfm:333
 msgid "Add Roster Group"
 msgstr ""
@@ -538,615 +543,607 @@ msgstr ""
 msgid "Admin"
 msgstr ""
 
-#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.Strings
-#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.Strings
-#: Profile.dfm:761
-#: Profile.dfm:1177
-msgid "Afghanistan  \r\n"
-"Albania  \r\n"
-"Algeria  \r\n"
-"American Samoa  \r\n"
-"Andor"
-"ra  \r\n"
-"Angola  \r\n"
-"Anguilla  \r\n"
-"Antarctica  \r\n"
-"Antigua and Barbud"
-"a  \r\n"
-"Argentina  \r\n"
-"Armenia  \r\n"
-"Aruba  \r\n"
-"Australia  \r\n"
-"Austia  \r"
-"\n"
-"Azerbaijan  \r\n"
-"Bahamas  \r\n"
-"Bahrain  \r\n"
-"Bangladesh  \r\n"
-"Barbados "
-" \r\n"
-"Belarus  \r\n"
-"Belgium  \r\n"
-"Belize  \r\n"
-"Benin  \r\n"
-"Bermuda  \r\n"
-"Bhuta"
-"n  \r\n"
-"Bolivia  \r\n"
-"Bosnia and Herzogovina  \r\n"
-"Botswana  \r\n"
-"Bouvet"
-" Island  \r\n"
-"Brazil  \r\n"
-"British Indian Ocean Territory  \r\n"
-"Brune"
-"i Darussalam  \r\n"
-"Bulgaria  \r\n"
-"Burkina Faso  \r\n"
-"Burundi  \r\n"
-"Cambo"
-"dia  \r\n"
-"Cameroon  \r\n"
-"Canada  \r\n"
-"Care Verde  \r\n"
-"Cayman Islands  \r"
-"\n"
-"Central African Republic  \r\n"
-"Chad  \r\n"
-"Chile  \r\n"
-"China  \r\n"
-"Chris"
-"tmas Island  \r\n"
-"Cocos (Keeling) \r\n"
-"Islands  \r\n"
-"Colobmia  \r\n"
-"Como"
-"ros  \r\n"
-"Congo (Republic of) \r\n"
-"Congo (Democratic Republic of) "
-"\r\n"
-"Cook Islands  \r\n"
-"Costa Rica  \r\n"
-"Cote d'Ivoire  \r\n"
-"Croatia  \r\n"
-""
-"Cuba  \r\n"
-"Cyprus  \r\n"
-"Czech Republic  \r\n"
-"Denmark  \r\n"
-"Djibouti  \r\n"
-"D"
-"ominica  \r\n"
-"Dominican Republic  \r\n"
-"East Timor  \r\n"
-"Ecuador  \r\n"
-"Eg"
-"ypt  \r\n"
-"El Salvador  \r\n"
-"Equatorial Guinea  \r\n"
-"Eritrea  \r\n"
-"Estoni"
-"a  \r\n"
-"Ethiopia  \r\n"
-"Falkland Islands (Malvinas) \r\n"
-"Faroe Islands"
-"  \r\n"
-"Fiji  \r\n"
-"Finland  \r\n"
-"France  \r\n"
-"French Guiana  \r\n"
-"French Pol"
-"ynesia  \r\n"
-"French Southern Territories  \r\n"
-"Gabon  \r\n"
-"Gambia  \r\n"
-""
-"Georgia  \r\n"
-"Germany  \r\n"
-"Ghana  \r\n"
-"Gibraltar  \r\n"
-"Greece  \r\n"
-"Greenl"
-"and  \r\n"
-"Grenada  \r\n"
-"Guadeloupe  \r\n"
-"Guam  \r\n"
-"Guatemala  \r\n"
-"Guinea "
-" \r\n"
-"Guinea-Bissau  \r\n"
-"Guyana  \r\n"
-"Haiti  \r\n"
-"Heard Island and McDo"
-"nald Islands  \r\n"
-"Holy See (Vatican City State) \r\n"
-"Honduras  \r\n"
-""
-"Hong Kong  \r\n"
-"Hungary  \r\n"
-"Iceland  \r\n"
-"India  \r\n"
-"Indonesia  \r\n"
-"Ira"
-"n, Islamic Republic of  \r\n"
-"Iraq  \r\n"
-"Ireland  \r\n"
-"Israel  \r\n"
-"Italy"
-"  \r\n"
-"Jamaica  \r\n"
-"Japan  \r\n"
-"Jordan  \r\n"
-"Kazakhstan  \r\n"
-"Kenya  \r\n"
-"Kir"
-"ibati  \r\n"
-"Korea, Democratic People's Republic of  \r\n"
-"Korea, Re"
-"public of  \r\n"
-"Kuwait  \r\n"
-"Kyrgyzstan  \r\n"
-"Lao People's Democratic"
-" Republic  \r\n"
-"Latvia  \r\n"
-"Lebanon  \r\n"
-"Lesotho  \r\n"
-"Liberia  \r\n"
-"Liby"
-"an Arab Jamahiriya  \r\n"
-"Liechtenstein  \r\n"
-"Lithuania  \r\n"
-"Luxembou"
-"rg  \r\n"
-"Macau  \r\n"
-"Macedonia  \r\n"
-"Madagascar  \r\n"
-"Malawi  \r\n"
-"Malaysia"
-"  \r\n"
-"Maldives  \r\n"
-"Mali  \r\n"
-"Malta  \r\n"
-"Marshall Islands  \r\n"
-"Martini"
-"que  \r\n"
-"Mauritania  \r\n"
-"Mauritius  \r\n"
-"Mayotte  \r\n"
-"Mexico  \r\n"
-"Micro"
-"nesia, Federated States of  \r\n"
-"Moldova, Republic of  \r\n"
-"Monaco"
-"  \r\n"
-"Mongolia  \r\n"
-"Montserrat  \r\n"
-"Morocoo  \r\n"
-"Mozambique  \r\n"
-"Myanm"
-"ar  \r\n"
-"Namibia  \r\n"
-"Nauru  \r\n"
-"Nepal  \r\n"
-"Netherlands  \r\n"
-"Netherland"
-"s Antilles  \r\n"
-"New Caledonia  \r\n"
-"New Zealand  \r\n"
-"Nicaragua  \r\n"
-"N"
-"iger  \r\n"
-"Nigeria  \r\n"
-"Niue  \r\n"
-"Norfolk Island  \r\n"
-"Nothern Mariana"
-" Islands  \r\n"
-"Norway  \r\n"
-"Oman  \r\n"
-"Pakistan  \r\n"
-"Palau  \r\n"
-"Palestini"
-"an Territory, Occupied  \r\n"
-"Panama  \r\n"
-"Papua New Guinea  \r\n"
-"Para"
-"guay  \r\n"
-"Peru  \r\n"
-"Philippines  \r\n"
-"Pitcairn  \r\n"
-"Poland  \r\n"
-"Portuga"
-"l  \r\n"
-"Puerto Rico  \r\n"
-"Qatar  \r\n"
-"Reunion  \r\n"
-"Romania  \r\n"
-"Russian F"
-"ederation  \r\n"
-"Rwanda  \r\n"
-"Saint Helena  \r\n"
-"Saint Kitts and Nevis"
-"  \r\n"
-"Saint Lucia  \r\n"
-"Saint Pierre and Miquelon  \r\n"
-"Saint Vincen"
-"t and the Grenadines  \r\n"
-"Samoa  \r\n"
-"San Marino  \r\n"
-"Sao Tome and "
-"Principe  \r\n"
-"Saudi Arabia  \r\n"
-"Senegal  \r\n"
-"Seychelles  \r\n"
-"Sierra "
-"Leone  \r\n"
-"Singapore  \r\n"
-"Slovakia  \r\n"
-"Slovenia  \r\n"
-"Solomon Island"
-"s  \r\n"
-"Somalia  \r\n"
-"South Africa  \r\n"
-"South Georgia and the South "
-"Sandwich Islands  \r\n"
-"Spain  \r\n"
-"Sri Lanka  \r\n"
-"Sudan  \r\n"
-"Suriname "
-" \r\n"
-"Svalbard and Jan Mayen Islands  \r\n"
-"Swaziland  \r\n"
-"Sweden  \r\n"
-""
-"Switzerland  \r\n"
-"Syrian Arab Republic  \r\n"
-"Taiwan, Province of C"
-"hina  \r\n"
-"Tajikistan  \r\n"
-"Tanzania, United Republic of  \r\n"
-"Thaila"
-"nd  \r\n"
-"Togo  \r\n"
-"Tokelau  \r\n"
-"Tonga  \r\n"
-"Trinidad and Tobago  \r\n"
-"Tun"
-"isia  \r\n"
-"Turkey  \r\n"
-"Turkmenistan  \r\n"
-"Turks and Caicos Islands  "
-"\r\n"
-"Tuvalu  \r\n"
-"Uganda  \r\n"
-"Ukraine  \r\n"
-"United Arab Emirates  \r\n"
-"Uni"
-"ted Kingdom  \r\n"
-"United States  \r\n"
-"United States Minor Outlying"
-" Islands  \r\n"
-"Uruguay  \r\n"
-"Uzbekistan  \r\n"
-"Vanuatu  \r\n"
-"Venezuela  \r"
-"\n"
-"Vietnam  \r\n"
-"Virgin Islands, British  \r\n"
-"Virgin Islands, U.S. "
-" \r\n"
-"Wallis and Futuna  \r\n"
-"Western Sahara  \r\n"
-"Yemen  \r\n"
-"Yugoslavi"
-"a  \r\n"
-"Zambia  \r\n"
-"Zimbabwe  \r\n"
-""
-msgstr ""
-
 #. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:591
 #: vcard.dfm:1062
-msgid "Afghanistan  \r\n"
-"Albania  \r\n"
-"Algeria  \r\n"
-"American Samoa  \r\n"
-"Andor"
-"ra  \r\n"
-"Angola  \r\n"
-"Anguilla  \r\n"
-"Antarctica  \r\n"
-"Antigua and Barbud"
-"a  \r\n"
-"Argentina  \r\n"
-"Armenia  \r\n"
-"Aruba  \r\n"
-"Australia  \r\n"
-"Austria  "
-"\r\n"
-"Azerbaijan  \r\n"
-"Bahamas  \r\n"
-"Bahrain  \r\n"
-"Bangladesh  \r\n"
-"Barbados"
-"  \r\n"
-"Belarus  \r\n"
-"Belgium  \r\n"
-"Belize  \r\n"
-"Benin  \r\n"
-"Bermuda  \r\n"
-"Bhut"
-"an  \r\n"
-"Bolivia  \r\n"
-"Bosnia and Herzogovina  \r\n"
-"Botswana  \r\n"
-"Bouve"
-"t Island  \r\n"
-"Brazil  \r\n"
-"British Indian Ocean Territory  \r\n"
-"Brun"
-"ei Darussalam  \r\n"
-"Bulgaria  \r\n"
-"Burkina Faso  \r\n"
-"Burundi  \r\n"
-"Camb"
-"odia  \r\n"
-"Cameroon  \r\n"
-"Canada  \r\n"
-"Care Verde  \r\n"
-"Cayman Islands  "
-"\r\n"
-"Central African Republic  \r\n"
-"Chad  \r\n"
-"Chile  \r\n"
-"China  \r\n"
-"Chri"
-"stmas Island  \r\n"
-"Cocos (Keeling) \r\n"
-"Islands  \r\n"
-"Colobmia  \r\n"
-"Com"
-"oros  \r\n"
-"Congo (Republic of) \r\n"
-"Congo (Democratic Republic of)"
-" \r\n"
-"Cook Islands  \r\n"
-"Costa Rica  \r\n"
-"Cote d'Ivoire  \r\n"
-"Croatia  \r"
+msgid "Afghanistan  \n"
+"Albania  \n"
+"Algeria  \n"
+"American Samoa  \n"
+"Andorra  "
 "\n"
-"Cuba  \r\n"
-"Cyprus  \r\n"
-"Czech Republic  \r\n"
-"Denmark  \r\n"
-"Djibouti  \r\n"
+"Angola  \n"
+"Anguilla  \n"
+"Antarctica  \n"
+"Antigua and Barbuda  \n"
+"Arge"
+"ntina  \n"
+"Armenia  \n"
+"Aruba  \n"
+"Australia  \n"
+"Austria  \n"
+"Azerbaijan  "
+"\n"
+"Bahamas  \n"
+"Bahrain  \n"
+"Bangladesh  \n"
+"Barbados  \n"
+"Belarus  \n"
+"Belgi"
+"um  \n"
+"Belize  \n"
+"Benin  \n"
+"Bermuda  \n"
+"Bhutan  \n"
+"Bolivia  \n"
+"Bosnia an"
+"d Herzogovina  \n"
+"Botswana  \n"
+"Bouvet Island  \n"
+"Brazil  \n"
+"British "
+"Indian Ocean Territory  \n"
+"Brunei Darussalam  \n"
+"Bulgaria  \n"
+"Burk"
+"ina Faso  \n"
+"Burundi  \n"
+"Cambodia  \n"
+"Cameroon  \n"
+"Canada  \n"
+"Care Ver"
+"de  \n"
+"Cayman Islands  \n"
+"Central African Republic  \n"
+"Chad  \n"
+"Chil"
+"e  \n"
+"China  \n"
+"Christmas Island  \n"
+"Cocos (Keeling) \n"
+"Islands  \n"
+"Co"
+"lobmia  \n"
+"Comoros  \n"
+"Congo (Republic of) \n"
+"Congo (Democratic Re"
+"public of) \n"
+"Cook Islands  \n"
+"Costa Rica  \n"
+"Cote d'Ivoire  \n"
+"Croa"
+"tia  \n"
+"Cuba  \n"
+"Cyprus  \n"
+"Czech Republic  \n"
+"Denmark  \n"
+"Djibouti  \n"
 ""
-"Dominica  \r\n"
-"Dominican Republic  \r\n"
-"East Timor  \r\n"
-"Ecuador  \r\n"
-"E"
-"gypt  \r\n"
-"El Salvador  \r\n"
-"Equatorial Guinea  \r\n"
-"Eritrea  \r\n"
-"Eston"
-"ia  \r\n"
-"Ethiopia  \r\n"
-"Falkland Islands (Malvinas) \r\n"
-"Faroe Island"
-"s  \r\n"
-"Fiji  \r\n"
-"Finland  \r\n"
-"France  \r\n"
-"French Guiana  \r\n"
-"French Po"
-"lynesia  \r\n"
-"French Southern Territories  \r\n"
-"Gabon  \r\n"
-"Gambia  \r"
-"\n"
-"Georgia  \r\n"
-"Germany  \r\n"
-"Ghana  \r\n"
-"Gibraltar  \r\n"
-"Greece  \r\n"
-"Green"
-"land  \r\n"
-"Grenada  \r\n"
-"Guadeloupe  \r\n"
-"Guam  \r\n"
-"Guatemala  \r\n"
-"Guinea"
-"  \r\n"
-"Guinea-Bissau  \r\n"
-"Guyana  \r\n"
-"Haiti  \r\n"
-"Heard Island and McD"
-"onald Islands  \r\n"
-"Holy See (Vatican City State) \r\n"
-"Honduras  \r"
-"\n"
-"Hong Kong  \r\n"
-"Hungary  \r\n"
-"Iceland  \r\n"
-"India  \r\n"
-"Indonesia  \r\n"
-"Ir"
-"an, Islamic Republic of  \r\n"
-"Iraq  \r\n"
-"Ireland  \r\n"
-"Israel  \r\n"
-"Ital"
-"y  \r\n"
-"Jamaica  \r\n"
-"Japan  \r\n"
-"Jordan  \r\n"
-"Kazakhstan  \r\n"
-"Kenya  \r\n"
-"Ki"
-"ribati  \r\n"
-"Korea, Democratic People's Republic of  \r\n"
-"Korea, R"
-"epublic of  \r\n"
-"Kuwait  \r\n"
-"Kyrgyzstan  \r\n"
-"Lao People's Democrati"
-"c Republic  \r\n"
-"Latvia  \r\n"
-"Lebanon  \r\n"
-"Lesotho  \r\n"
-"Liberia  \r\n"
-"Lib"
-"yan Arab Jamahiriya  \r\n"
-"Liechtenstein  \r\n"
-"Lithuania  \r\n"
-"Luxembo"
-"urg  \r\n"
-"Macau  \r\n"
-"Macedonia  \r\n"
-"Madagascar  \r\n"
-"Malawi  \r\n"
-"Malaysi"
-"a  \r\n"
-"Maldives  \r\n"
-"Mali  \r\n"
-"Malta  \r\n"
-"Marshall Islands  \r\n"
-"Martin"
-"ique  \r\n"
-"Mauritania  \r\n"
-"Mauritius  \r\n"
-"Mayotte  \r\n"
-"Mexico  \r\n"
-"Micr"
-"onesia, Federated States of  \r\n"
-"Moldova, Republic of  \r\n"
-"Monac"
-"o  \r\n"
-"Mongolia  \r\n"
-"Montserrat  \r\n"
-"Morocoo  \r\n"
-"Mozambique  \r\n"
-"Myan"
-"mar  \r\n"
-"Namibia  \r\n"
-"Nauru  \r\n"
-"Nepal  \r\n"
-"Netherlands  \r\n"
-"Netherlan"
-"ds Antilles  \r\n"
-"New Caledonia  \r\n"
-"New Zealand  \r\n"
-"Nicaragua  \r\n"
+"Dominica  \n"
+"Dominican Republic  \n"
+"East Timor  \n"
+"Ecuador  \n"
+"Egypt"
+"  \n"
+"El Salvador  \n"
+"Equatorial Guinea  \n"
+"Eritrea  \n"
+"Estonia  \n"
+"Eth"
+"iopia  \n"
+"Falkland Islands (Malvinas) \n"
+"Faroe Islands  \n"
+"Fiji  \n"
 ""
-"Niger  \r\n"
-"Nigeria  \r\n"
-"Niue  \r\n"
-"Norfolk Island  \r\n"
-"Nothern Marian"
-"a Islands  \r\n"
-"Norway  \r\n"
-"Oman  \r\n"
-"Pakistan  \r\n"
-"Palau  \r\n"
-"Palestin"
-"ian Territory, Occupied  \r\n"
-"Panama  \r\n"
-"Papua New Guinea  \r\n"
-"Par"
-"aguay  \r\n"
-"Peru  \r\n"
-"Philippines  \r\n"
-"Pitcairn  \r\n"
-"Poland  \r\n"
-"Portug"
-"al  \r\n"
-"Puerto Rico  \r\n"
-"Qatar  \r\n"
-"Reunion  \r\n"
-"Romania  \r\n"
-"Russian "
-"Federation  \r\n"
-"Rwanda  \r\n"
-"Saint Helena  \r\n"
-"Saint Kitts and Nevi"
-"s  \r\n"
-"Saint Lucia  \r\n"
-"Saint Pierre and Miquelon  \r\n"
-"Saint Vince"
-"nt and the Grenadines  \r\n"
-"Samoa  \r\n"
-"San Marino  \r\n"
-"Sao Tome and"
-" Principe  \r\n"
-"Saudi Arabia  \r\n"
-"Senegal  \r\n"
-"Seychelles  \r\n"
-"Sierra"
-" Leone  \r\n"
-"Singapore  \r\n"
-"Slovakia  \r\n"
-"Slovenia  \r\n"
-"Solomon Islan"
-"ds  \r\n"
-"Somalia  \r\n"
-"South Africa  \r\n"
-"South Georgia and the South"
-" Sandwich Islands  \r\n"
-"Spain  \r\n"
-"Sri Lanka  \r\n"
-"Sudan  \r\n"
-"Suriname"
-"  \r\n"
-"Svalbard and Jan Mayen Islands  \r\n"
-"Swaziland  \r\n"
-"Sweden  \r"
+"Finland  \n"
+"France  \n"
+"French Guiana  \n"
+"French Polynesia  \n"
+"French"
+" Southern Territories  \n"
+"Gabon  \n"
+"Gambia  \n"
+"Georgia  \n"
+"Germany  "
 "\n"
-"Switzerland  \r\n"
-"Syrian Arab Republic  \r\n"
-"Taiwan, Province of "
-"China  \r\n"
-"Tajikistan  \r\n"
-"Tanzania, United Republic of  \r\n"
-"Thail"
-"and  \r\n"
-"Togo  \r\n"
-"Tokelau  \r\n"
-"Tonga  \r\n"
-"Trinidad and Tobago  \r\n"
-"Tu"
-"nisia  \r\n"
-"Turkey  \r\n"
-"Turkmenistan  \r\n"
-"Turks and Caicos Islands "
-" \r\n"
-"Tuvalu  \r\n"
-"Uganda  \r\n"
-"Ukraine  \r\n"
-"United Arab Emirates  \r\n"
-"Un"
-"ited Kingdom  \r\n"
-"United States  \r\n"
-"United States Minor Outlyin"
-"g Islands  \r\n"
-"Uruguay  \r\n"
-"Uzbekistan  \r\n"
-"Vanuatu  \r\n"
-"Venezuela  "
-"\r\n"
-"Vietnam  \r\n"
-"Virgin Islands, British  \r\n"
-"Virgin Islands, U.S."
-"  \r\n"
-"Wallis and Futuna  \r\n"
-"Western Sahara  \r\n"
-"Yemen  \r\n"
-"Yugoslav"
-"ia  \r\n"
-"Zambia  \r\n"
-"Zimbabwe  \r\n"
+"Ghana  \n"
+"Gibraltar  \n"
+"Greece  \n"
+"Greenland  \n"
+"Grenada  \n"
+"Guadelou"
+"pe  \n"
+"Guam  \n"
+"Guatemala  \n"
+"Guinea  \n"
+"Guinea-Bissau  \n"
+"Guyana  \n"
+"Ha"
+"iti  \n"
+"Heard Island and McDonald Islands  \n"
+"Holy See (Vatican "
+"City State) \n"
+"Honduras  \n"
+"Hong Kong  \n"
+"Hungary  \n"
+"Iceland  \n"
+"Indi"
+"a  \n"
+"Indonesia  \n"
+"Iran, Islamic Republic of  \n"
+"Iraq  \n"
+"Ireland  "
+"\n"
+"Israel  \n"
+"Italy  \n"
+"Jamaica  \n"
+"Japan  \n"
+"Jordan  \n"
+"Kazakhstan  \n"
+"Ke"
+"nya  \n"
+"Kiribati  \n"
+"Korea, Democratic People's Republic of  \n"
+"Ko"
+"rea, Republic of  \n"
+"Kuwait  \n"
+"Kyrgyzstan  \n"
+"Lao People's Democr"
+"atic Republic  \n"
+"Latvia  \n"
+"Lebanon  \n"
+"Lesotho  \n"
+"Liberia  \n"
+"Libya"
+"n Arab Jamahiriya  \n"
+"Liechtenstein  \n"
+"Lithuania  \n"
+"Luxembourg  "
+"\n"
+"Macau  \n"
+"Macedonia  \n"
+"Madagascar  \n"
+"Malawi  \n"
+"Malaysia  \n"
+"Maldiv"
+"es  \n"
+"Mali  \n"
+"Malta  \n"
+"Marshall Islands  \n"
+"Martinique  \n"
+"Mauritan"
+"ia  \n"
+"Mauritius  \n"
+"Mayotte  \n"
+"Mexico  \n"
+"Micronesia, Federated St"
+"ates of  \n"
+"Moldova, Republic of  \n"
+"Monaco  \n"
+"Mongolia  \n"
+"Montser"
+"rat  \n"
+"Morocoo  \n"
+"Mozambique  \n"
+"Myanmar  \n"
+"Namibia  \n"
+"Nauru  \n"
+"Nep"
+"al  \n"
+"Netherlands  \n"
+"Netherlands Antilles  \n"
+"New Caledonia  \n"
+"Ne"
+"w Zealand  \n"
+"Nicaragua  \n"
+"Niger  \n"
+"Nigeria  \n"
+"Niue  \n"
+"Norfolk Isl"
+"and  \n"
+"Nothern Mariana Islands  \n"
+"Norway  \n"
+"Oman  \n"
+"Pakistan  \n"
+"P"
+"alau  \n"
+"Palestinian Territory, Occupied  \n"
+"Panama  \n"
+"Papua New "
+"Guinea  \n"
+"Paraguay  \n"
+"Peru  \n"
+"Philippines  \n"
+"Pitcairn  \n"
+"Poland  "
+"\n"
+"Portugal  \n"
+"Puerto Rico  \n"
+"Qatar  \n"
+"Reunion  \n"
+"Romania  \n"
+"Russia"
+"n Federation  \n"
+"Rwanda  \n"
+"Saint Helena  \n"
+"Saint Kitts and Nevis"
+"  \n"
+"Saint Lucia  \n"
+"Saint Pierre and Miquelon  \n"
+"Saint Vincent a"
+"nd the Grenadines  \n"
+"Samoa  \n"
+"San Marino  \n"
+"Sao Tome and Princi"
+"pe  \n"
+"Saudi Arabia  \n"
+"Senegal  \n"
+"Seychelles  \n"
+"Sierra Leone  \n"
+"Si"
+"ngapore  \n"
+"Slovakia  \n"
+"Slovenia  \n"
+"Solomon Islands  \n"
+"Somalia  \n"
+""
+"South Africa  \n"
+"South Georgia and the South Sandwich Islands "
+" \n"
+"Spain  \n"
+"Sri Lanka  \n"
+"Sudan  \n"
+"Suriname  \n"
+"Svalbard and Jan Ma"
+"yen Islands  \n"
+"Swaziland  \n"
+"Sweden  \n"
+"Switzerland  \n"
+"Syrian Arab"
+" Republic  \n"
+"Taiwan, Province of China  \n"
+"Tajikistan  \n"
+"Tanzani"
+"a, United Republic of  \n"
+"Thailand  \n"
+"Togo  \n"
+"Tokelau  \n"
+"Tonga  \n"
+""
+"Trinidad and Tobago  \n"
+"Tunisia  \n"
+"Turkey  \n"
+"Turkmenistan  \n"
+"Turk"
+"s and Caicos Islands  \n"
+"Tuvalu  \n"
+"Uganda  \n"
+"Ukraine  \n"
+"United Ar"
+"ab Emirates  \n"
+"United Kingdom  \n"
+"United States  \n"
+"United States"
+" Minor Outlying Islands  \n"
+"Uruguay  \n"
+"Uzbekistan  \n"
+"Vanuatu  \n"
+"V"
+"enezuela  \n"
+"Vietnam  \n"
+"Virgin Islands, British  \n"
+"Virgin Island"
+"s, U.S.  \n"
+"Wallis and Futuna  \n"
+"Western Sahara  \n"
+"Yemen  \n"
+"Yugos"
+"lavia  \n"
+"Zambia  \n"
+"Zimbabwe  \n"
+""
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.Strings
+#. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.Strings
+#: Profile.dfm:761
+#: Profile.dfm:1177
+msgid "Afghanistan  \n"
+"Albania  \n"
+"Algeria  \n"
+"American Samoa  \n"
+"Andorra  "
+"\n"
+"Angola  \n"
+"Anguilla  \n"
+"Antarctica  \n"
+"Antigua and Barbuda  \n"
+"Arge"
+"ntina  \n"
+"Armenia  \n"
+"Aruba  \n"
+"Australia  \n"
+"Austia  \n"
+"Azerbaijan  \n"
+""
+"Bahamas  \n"
+"Bahrain  \n"
+"Bangladesh  \n"
+"Barbados  \n"
+"Belarus  \n"
+"Belgiu"
+"m  \n"
+"Belize  \n"
+"Benin  \n"
+"Bermuda  \n"
+"Bhutan  \n"
+"Bolivia  \n"
+"Bosnia and"
+" Herzogovina  \n"
+"Botswana  \n"
+"Bouvet Island  \n"
+"Brazil  \n"
+"British I"
+"ndian Ocean Territory  \n"
+"Brunei Darussalam  \n"
+"Bulgaria  \n"
+"Burki"
+"na Faso  \n"
+"Burundi  \n"
+"Cambodia  \n"
+"Cameroon  \n"
+"Canada  \n"
+"Care Verd"
+"e  \n"
+"Cayman Islands  \n"
+"Central African Republic  \n"
+"Chad  \n"
+"Chile"
+"  \n"
+"China  \n"
+"Christmas Island  \n"
+"Cocos (Keeling) \n"
+"Islands  \n"
+"Col"
+"obmia  \n"
+"Comoros  \n"
+"Congo (Republic of) \n"
+"Congo (Democratic Rep"
+"ublic of) \n"
+"Cook Islands  \n"
+"Costa Rica  \n"
+"Cote d'Ivoire  \n"
+"Croat"
+"ia  \n"
+"Cuba  \n"
+"Cyprus  \n"
+"Czech Republic  \n"
+"Denmark  \n"
+"Djibouti  \n"
+"D"
+"ominica  \n"
+"Dominican Republic  \n"
+"East Timor  \n"
+"Ecuador  \n"
+"Egypt "
+" \n"
+"El Salvador  \n"
+"Equatorial Guinea  \n"
+"Eritrea  \n"
+"Estonia  \n"
+"Ethi"
+"opia  \n"
+"Falkland Islands (Malvinas) \n"
+"Faroe Islands  \n"
+"Fiji  \n"
+"F"
+"inland  \n"
+"France  \n"
+"French Guiana  \n"
+"French Polynesia  \n"
+"French "
+"Southern Territories  \n"
+"Gabon  \n"
+"Gambia  \n"
+"Georgia  \n"
+"Germany  \n"
+""
+"Ghana  \n"
+"Gibraltar  \n"
+"Greece  \n"
+"Greenland  \n"
+"Grenada  \n"
+"Guadeloup"
+"e  \n"
+"Guam  \n"
+"Guatemala  \n"
+"Guinea  \n"
+"Guinea-Bissau  \n"
+"Guyana  \n"
+"Hai"
+"ti  \n"
+"Heard Island and McDonald Islands  \n"
+"Holy See (Vatican C"
+"ity State) \n"
+"Honduras  \n"
+"Hong Kong  \n"
+"Hungary  \n"
+"Iceland  \n"
+"India"
+"  \n"
+"Indonesia  \n"
+"Iran, Islamic Republic of  \n"
+"Iraq  \n"
+"Ireland  \n"
+""
+"Israel  \n"
+"Italy  \n"
+"Jamaica  \n"
+"Japan  \n"
+"Jordan  \n"
+"Kazakhstan  \n"
+"Ken"
+"ya  \n"
+"Kiribati  \n"
+"Korea, Democratic People's Republic of  \n"
+"Kor"
+"ea, Republic of  \n"
+"Kuwait  \n"
+"Kyrgyzstan  \n"
+"Lao People's Democra"
+"tic Republic  \n"
+"Latvia  \n"
+"Lebanon  \n"
+"Lesotho  \n"
+"Liberia  \n"
+"Libyan"
+" Arab Jamahiriya  \n"
+"Liechtenstein  \n"
+"Lithuania  \n"
+"Luxembourg  \n"
+""
+"Macau  \n"
+"Macedonia  \n"
+"Madagascar  \n"
+"Malawi  \n"
+"Malaysia  \n"
+"Maldive"
+"s  \n"
+"Mali  \n"
+"Malta  \n"
+"Marshall Islands  \n"
+"Martinique  \n"
+"Mauritani"
+"a  \n"
+"Mauritius  \n"
+"Mayotte  \n"
+"Mexico  \n"
+"Micronesia, Federated Sta"
+"tes of  \n"
+"Moldova, Republic of  \n"
+"Monaco  \n"
+"Mongolia  \n"
+"Montserr"
+"at  \n"
+"Morocoo  \n"
+"Mozambique  \n"
+"Myanmar  \n"
+"Namibia  \n"
+"Nauru  \n"
+"Nepa"
+"l  \n"
+"Netherlands  \n"
+"Netherlands Antilles  \n"
+"New Caledonia  \n"
+"New"
+" Zealand  \n"
+"Nicaragua  \n"
+"Niger  \n"
+"Nigeria  \n"
+"Niue  \n"
+"Norfolk Isla"
+"nd  \n"
+"Nothern Mariana Islands  \n"
+"Norway  \n"
+"Oman  \n"
+"Pakistan  \n"
+"Pa"
+"lau  \n"
+"Palestinian Territory, Occupied  \n"
+"Panama  \n"
+"Papua New G"
+"uinea  \n"
+"Paraguay  \n"
+"Peru  \n"
+"Philippines  \n"
+"Pitcairn  \n"
+"Poland  \n"
+""
+"Portugal  \n"
+"Puerto Rico  \n"
+"Qatar  \n"
+"Reunion  \n"
+"Romania  \n"
+"Russian"
+" Federation  \n"
+"Rwanda  \n"
+"Saint Helena  \n"
+"Saint Kitts and Nevis "
+" \n"
+"Saint Lucia  \n"
+"Saint Pierre and Miquelon  \n"
+"Saint Vincent an"
+"d the Grenadines  \n"
+"Samoa  \n"
+"San Marino  \n"
+"Sao Tome and Princip"
+"e  \n"
+"Saudi Arabia  \n"
+"Senegal  \n"
+"Seychelles  \n"
+"Sierra Leone  \n"
+"Sin"
+"gapore  \n"
+"Slovakia  \n"
+"Slovenia  \n"
+"Solomon Islands  \n"
+"Somalia  \n"
+"S"
+"outh Africa  \n"
+"South Georgia and the South Sandwich Islands  "
+"\n"
+"Spain  \n"
+"Sri Lanka  \n"
+"Sudan  \n"
+"Suriname  \n"
+"Svalbard and Jan May"
+"en Islands  \n"
+"Swaziland  \n"
+"Sweden  \n"
+"Switzerland  \n"
+"Syrian Arab "
+"Republic  \n"
+"Taiwan, Province of China  \n"
+"Tajikistan  \n"
+"Tanzania"
+", United Republic of  \n"
+"Thailand  \n"
+"Togo  \n"
+"Tokelau  \n"
+"Tonga  \n"
+"T"
+"rinidad and Tobago  \n"
+"Tunisia  \n"
+"Turkey  \n"
+"Turkmenistan  \n"
+"Turks"
+" and Caicos Islands  \n"
+"Tuvalu  \n"
+"Uganda  \n"
+"Ukraine  \n"
+"United Ara"
+"b Emirates  \n"
+"United Kingdom  \n"
+"United States  \n"
+"United States "
+"Minor Outlying Islands  \n"
+"Uruguay  \n"
+"Uzbekistan  \n"
+"Vanuatu  \n"
+"Ve"
+"nezuela  \n"
+"Vietnam  \n"
+"Virgin Islands, British  \n"
+"Virgin Islands"
+", U.S.  \n"
+"Wallis and Futuna  \n"
+"Western Sahara  \n"
+"Yemen  \n"
+"Yugosl"
+"avia  \n"
+"Zambia  \n"
+"Zimbabwe  \n"
 ""
 msgstr ""
 
@@ -1200,7 +1197,6 @@ msgstr ""
 #. frmPrefs..PageControl1..tbsKeywords..StaticText8..Font.Name
 #. frmPrefs..PageControl1..tbsBlockList..StaticText9..Font.Name
 #. frmPrefs..PageControl1..tbsNetwork..StaticText13..Font.Name
-#. frmPrefTransfer..StaticText7..Font.Name
 #. frmRegister..Tabs..tabWelcome..Label1..Font.Name
 #. frmRegister..Tabs..tabWelcome..lblIns..Font.Name
 #. frmRegister..Tabs..tabWait..Label2..Font.Name
@@ -1219,7 +1215,6 @@ msgstr ""
 #: Prefs.dfm:1701
 #: Prefs.dfm:1770
 #: Prefs.dfm:1906
-#: PrefTransfer.dfm:50
 #: RegForm.dfm:93
 #: RegForm.dfm:109
 #: RegForm.dfm:161
@@ -1273,7 +1268,7 @@ msgstr ""
 #: CustomPres.dfm:86
 #: Debug.dfm:124
 #: Jabber1.dfm:47
-#: Login.dfm:12
+#: Login.dfm:13
 #: RemoveContact.dfm:102
 #: Room.dfm:122
 #: subscribe.dfm:51
@@ -1307,13 +1302,13 @@ msgid "Arial Unicode MS"
 msgstr ""
 
 #: RosterWindow.pas:255
-msgid "Authenticated.\r\n"
+msgid "Authenticated.\n"
 "Getting Settings..."
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSocket..chkSocksAuth..Caption
 #. frmPrefs..PageControl1..tbsNetwork..GroupBox2..chkProxyAuth..Caption
-#: ConnDetails.dfm:262
+#: ConnDetails.dfm:261
 #: Prefs.dfm:1855
 msgid "Authentication Required"
 msgstr ""
@@ -1332,6 +1327,14 @@ msgstr ""
 msgid "AutoAway Setup FAILED!"
 msgstr ""
 
+#. frmRosterWindow..popStatus..presAvailable..Caption
+#. frmRosterWindow..popGroup..popGrpPresence..popGrpAvailable..Caption
+#: Jabber1.pas:449
+#: RosterWindow.dfm:336
+#: RosterWindow.dfm:522
+msgid "Available"
+msgstr ""
+
 #: ChatWin.pas:157
 msgid "available"
 msgstr ""
@@ -1340,8 +1343,8 @@ msgstr ""
 msgid "Available presence"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presAway..Caption
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presAway..Away2..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..presAway..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..presAway..Away2..Caption
 #. frmExodus..popTray..trayPresence..Away1..Caption
 #. frmExodus..popTray..trayPresence..Away1..Away3..Caption
 #. frmRosterWindow..popStatus..presAway..Caption
@@ -1372,7 +1375,7 @@ msgstr ""
 msgid "Ban Reason"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presAway..Bank1..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..presAway..Bank1..Caption
 #. frmExodus..popTray..trayPresence..Away1..Bank2..Caption
 #: Jabber1.dfm:386
 #: Jabber1.dfm:2736
@@ -1452,10 +1455,8 @@ msgid "Broadcast Message"
 msgstr ""
 
 #. frmBrowse..popContext..mBrowse..Caption
-#. frmPrefTransfer..btnTransferBrowse..Caption
 #: ExResponders.pas:126
 #: Browser.dfm:4055
-#: PrefTransfer.dfm:69
 msgid "Browse"
 msgstr ""
 
@@ -1489,7 +1490,7 @@ msgstr ""
 msgid "btnHome"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presDND..Busy1..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..presDND..Busy1..Caption
 #. frmExodus..popTray..trayPresence..DoNotDisturb1..Busy2..Caption
 #: Jabber1.dfm:421
 #: Jabber1.dfm:2771
@@ -1510,7 +1511,7 @@ msgstr ""
 msgid "Cancelled"
 msgstr ""
 
-#. frmExodus..MainMenu1..WInJab1..mnuPassword..Caption
+#. frmExodus..MainMenu1..Exodus1..mnuPassword..Caption
 #: Jabber1.dfm:284
 msgid "Change Jabber Password"
 msgstr ""
@@ -1527,6 +1528,16 @@ msgstr ""
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..ToolButton1..Hint
 #: Browser.dfm:1121
 msgid "Change Views"
+msgstr ""
+
+#. frmCustomPres..cboType....Items.Strings
+#: CustomPres.dfm:77
+msgid "Chat\n"
+"Available\n"
+"Away\n"
+"Ext. Away\n"
+"Do Not Disturb\n"
+""
 msgstr ""
 
 #. frmRoom..popRoomRoster..popRosterChat..Caption
@@ -1550,16 +1561,6 @@ msgstr ""
 
 #: Notify.pas:52
 msgid "Chat with "
-msgstr ""
-
-#. frmCustomPres..cboType....Items.Strings
-#: CustomPres.dfm:77
-msgid "Chat\r\n"
-"Available\r\n"
-"Away\r\n"
-"Ext. Away\r\n"
-"Do Not Disturb\r\n"
-""
 msgstr ""
 
 #. frmRosterWindow..popRoster..popChat..Caption
@@ -1588,7 +1589,7 @@ msgstr ""
 msgid "Clear "
 msgstr ""
 
-#. frmExodus..MainMenu1..WInJab1..ClearMessages1..Caption
+#. frmExodus..MainMenu1..Exodus1..ClearMessages1..Caption
 #: Jabber1.dfm:254
 msgid "Clear Events"
 msgstr ""
@@ -1687,7 +1688,7 @@ msgstr ""
 
 #. frmBookmark..cboType....Items.Strings
 #: Bookmark.dfm:79
-msgid "Conference Room\r\n"
+msgid "Conference Room\n"
 ""
 msgstr ""
 
@@ -1711,12 +1712,12 @@ msgid "Connect/Disconnect"
 msgstr ""
 
 #: RosterWindow.pas:254
-msgid "Connected. \r\n"
+msgid "Connected. \n"
 "Authenticating..."
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsConn..Caption
-#: ConnDetails.dfm:126
+#: ConnDetails.dfm:125
 msgid "Connection"
 msgstr ""
 
@@ -1735,7 +1736,7 @@ msgstr ""
 msgid "Contact ID:"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuContacts..Properties2..Caption
+#. frmExodus..MainMenu1..Tools1..mnuContacts..Properties2..Caption
 #. frmProfile..Caption
 #: Jabber1.dfm:320
 #: Profile.dfm:7
@@ -1747,7 +1748,7 @@ msgstr ""
 msgid "Contact Type:"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuContacts..Caption
+#. frmExodus..MainMenu1..Tools1..mnuContacts..Caption
 #: Jabber1.dfm:299
 msgid "Contacts"
 msgstr ""
@@ -1756,7 +1757,7 @@ msgstr ""
 msgid "Contacts from "
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuContacts..MessageHistory2..Caption
+#. frmExodus..MainMenu1..Tools1..mnuContacts..MessageHistory2..Caption
 #: Jabber1.dfm:315
 msgid "Contact's Message History"
 msgstr ""
@@ -1795,7 +1796,7 @@ msgid "Country:"
 msgstr ""
 
 #. frmLogin..popProfiles..CreateNew1..Caption
-#: Login.dfm:92
+#: Login.dfm:110
 msgid "Create New Profile..."
 msgstr ""
 
@@ -1804,8 +1805,8 @@ msgstr ""
 msgid "Current JID:"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presCustom..Caption
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presCustom..Custom3..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..presCustom..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..presCustom..Custom3..Caption
 #. frmExodus..popTray..trayPresence..trayCustom..Caption
 #. frmExodus..popTray..trayPresence..trayCustom..Custom2..Caption
 #: Jabber1.dfm:440
@@ -1844,15 +1845,15 @@ msgstr ""
 msgid "Decline"
 msgstr ""
 
-#: Jabber1.pas:456
-#: Login.pas:61
-msgid "Default Profile"
+#. frmLogin..cboProfiles....Items.WideStrings
+#: Login.dfm:87
+msgid "Default Profile\n"
+""
 msgstr ""
 
-#. frmLogin..cboProfiles....Items.WideStrings
-#: Login.dfm:69
-msgid "Default Profile\r\n"
-""
+#: Jabber1.pas:456
+#: Login.pas:63
+msgid "Default Profile"
 msgstr ""
 
 #. frmMsgQueue..PopupMenu1..D1..Caption
@@ -1866,7 +1867,7 @@ msgid "Delete My Registration"
 msgstr ""
 
 #. frmLogin..popProfiles..Delete1..Caption
-#: Login.dfm:96
+#: Login.dfm:114
 msgid "Delete Profile..."
 msgstr ""
 
@@ -1921,7 +1922,7 @@ msgstr ""
 msgid "Disconnected."
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presDND..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..presDND..Caption
 #. frmExodus..popTray..trayPresence..DoNotDisturb1..Caption
 #. frmRosterWindow..popStatus..presDND..Caption
 #: Jabber1.pas:453
@@ -1970,12 +1971,12 @@ msgstr ""
 msgid "Edit Member List"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuRegistration..Caption
+#. frmExodus..MainMenu1..Tools1..mnuRegistration..Caption
 #: Jabber1.dfm:460
 msgid "Edit My Registration"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuMyVCard..Caption
+#. frmExodus..MainMenu1..Tools1..mnuMyVCard..Caption
 #: Jabber1.dfm:464
 msgid "Edit My vCard / Profile"
 msgstr ""
@@ -2044,14 +2045,14 @@ msgstr ""
 #. frmPrefs..PageControl1..tbsBlockList..Label10....Align
 #: Prefs.dfm:1756
 msgid "Enter in the Jabber Address (JIDs) of the people to block fr"
-"om sending you messages. (Normal, chats, etc..)\r\n"
+"om sending you messages. (Normal, chats, etc..)\n"
 ""
 msgstr ""
 
 #. frmPrefs..PageControl1..tbsKeywords..Panel2..Label1....Align
 #: Prefs.dfm:1732
 msgid "Enter in the strings that you want Exodus to look for in mes"
-"sages.\r\n"
+"sages.\n"
 ""
 msgstr ""
 
@@ -2081,7 +2082,7 @@ msgstr ""
 msgid "Enter password:"
 msgstr ""
 
-#: Login.pas:64
+#: Login.pas:66
 msgid "Enter Profile Name"
 msgstr ""
 
@@ -2106,7 +2107,7 @@ msgstr ""
 msgid "Events"
 msgstr ""
 
-#. frmExodus..MainMenu1..WInJab1..View1..ShowEventsWindow1..Caption
+#. frmExodus..MainMenu1..Exodus1..View1..ShowEventsWindow1..Caption
 #: Jabber1.dfm:249
 msgid "Events Window"
 msgstr ""
@@ -2116,7 +2117,7 @@ msgstr ""
 msgid "Exception Tracer"
 msgstr ""
 
-#. frmExodus..MainMenu1..WInJab1..Exit2..Caption
+#. frmExodus..MainMenu1..Exodus1..Exit2..Caption
 #: Jabber1.dfm:291
 msgid "Exit"
 msgstr ""
@@ -2127,9 +2128,9 @@ msgid "Exit Exodus"
 msgstr ""
 
 #. frmExodus..Caption
-#. frmExodus..MainMenu1..WInJab1..Caption
+#. frmExodus..MainMenu1..Exodus1..Caption
 #: Jabber1.pas:441
-#: Login.pas:59
+#: Login.pas:61
 #: Jabber1.dfm:7
 #: Jabber1.dfm:219
 msgid "Exodus"
@@ -2156,7 +2157,7 @@ msgstr ""
 msgid "Expanded"
 msgstr ""
 
-#. frmExodus..MainMenu1..WInJab1..View1..mnuExpanded..Caption
+#. frmExodus..MainMenu1..Exodus1..View1..mnuExpanded..Caption
 #: Jabber1.dfm:244
 msgid "Expanded Mode"
 msgstr ""
@@ -2171,7 +2172,7 @@ msgstr ""
 msgid "Ext. Away presence"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presXA..ExtendedAway1..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..presXA..ExtendedAway1..Caption
 #. frmExodus..popTray..trayPresence..XtendedAway1..ExtendedAway2..Caption
 #: Jabber1.dfm:396
 #: Jabber1.dfm:2746
@@ -2219,16 +2220,6 @@ msgstr ""
 #. frmTransfer..Caption
 #: Transfer.dfm:7
 msgid "File Transfer"
-msgstr ""
-
-#. frmPrefTransfer..Label15..Caption
-#: PrefTransfer.dfm:14
-msgid "File transfer download directory:"
-msgstr ""
-
-#. frmPrefTransfer..StaticText7..Caption
-#: PrefTransfer.dfm:45
-msgid "File Transfer Options"
 msgstr ""
 
 #: Transfer.pas:89
@@ -2288,6 +2279,11 @@ msgstr ""
 msgid "Fonts, Colors"
 msgstr ""
 
+#. frmLogin..lblJID..Caption
+#: Login.dfm:45
+msgid "foo@bar.com/resource"
+msgstr ""
+
 #. frmRemove..lblJID..Caption
 #. frmRosterWindow..StatBar......Text
 #: RemoveContact.dfm:97
@@ -2314,7 +2310,7 @@ msgstr ""
 msgid "Format: YYYY-MM-DD"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presChat..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..presChat..Caption
 #. frmExodus..popTray..trayPresence..FreeforChat1..Caption
 #: Jabber1.dfm:355
 #: Jabber1.dfm:2708
@@ -2329,11 +2325,6 @@ msgstr ""
 #. frmEmoticons..Caption
 #: Emoticons.dfm:6
 msgid "frmEmoticons"
-msgstr ""
-
-#. frmPrefTransfer..Caption
-#: PrefTransfer.dfm:4
-msgid "frmPrefTransfer"
 msgstr ""
 
 #. frmMsgQueue..lstEvents......Caption
@@ -2393,14 +2384,14 @@ msgstr ""
 msgid "GO"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presXA..GoneHome1..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..presXA..GoneHome1..Caption
 #. frmExodus..popTray..trayPresence..XtendedAway1..GoneHome2..Caption
 #: Jabber1.dfm:401
 #: Jabber1.dfm:2751
 msgid "Gone Home"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presXA..GonetoWork1..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..presXA..GonetoWork1..Caption
 #. frmExodus..popTray..trayPresence..XtendedAway1..GonetoWork2..Caption
 #: Jabber1.dfm:406
 #: Jabber1.dfm:2756
@@ -2477,8 +2468,8 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsConn..Label4..Caption
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksHost..Caption
 #. frmPrefs..PageControl1..tbsNetwork..GroupBox2..lblProxyHost..Caption
-#: ConnDetails.dfm:133
-#: ConnDetails.dfm:223
+#: ConnDetails.dfm:132
+#: ConnDetails.dfm:222
 #: Prefs.dfm:1800
 msgid "Host:"
 msgstr ""
@@ -2517,7 +2508,7 @@ msgid "http"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..Caption
-#: ConnDetails.dfm:319
+#: ConnDetails.dfm:318
 msgid "HTTP Polling"
 msgstr ""
 
@@ -2559,7 +2550,7 @@ msgid "Idle for "
 msgstr ""
 
 #. frmLogin..chkInvisible..Caption
-#: Login.dfm:75
+#: Login.dfm:93
 msgid "In&visible"
 msgstr ""
 
@@ -2627,6 +2618,16 @@ msgstr ""
 msgid "Item"
 msgstr ""
 
+#. frmAdd..cboType....Items.Strings
+#: RosterAdd.dfm:135
+msgid "Jabber\n"
+"MSN\n"
+"Yahoo\n"
+"AIM\n"
+"ICQ\n"
+""
+msgstr ""
+
 #. frmBaseChat..Panel3..MsgList......Name
 #: BaseChat.dfm:129
 msgid "jabber"
@@ -2638,7 +2639,7 @@ msgid "Jabber Address:   "
 msgstr ""
 
 #. frmBrowse..Caption
-#. frmExodus..MainMenu1..PGPTools1..mnuBrowser..Caption
+#. frmExodus..MainMenu1..Tools1..mnuBrowser..Caption
 #: Browser.dfm:6
 #: Jabber1.dfm:479
 msgid "Jabber Browser"
@@ -2674,26 +2675,21 @@ msgstr ""
 msgid "Jabber User"
 msgstr ""
 
-#. frmAdd..cboType....Items.Strings
-#: RosterAdd.dfm:135
-msgid "Jabber\r\n"
-"MSN\r\n"
-"Yahoo\r\n"
-"AIM\r\n"
-"ICQ\r\n"
-""
-msgstr ""
-
 #. frmConnDetails..PageControl1..tbsProfile..cboServer....Items.WideStrings
-#: ConnDetails.dfm:90
-msgid "jabber.org\r\n"
-"jabber.com\r\n"
+#: ConnDetails.dfm:89
+msgid "jabber.org\n"
+"jabber.com\n"
 ""
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet1..Label1..Caption
 #: Profile.dfm:41
 msgid "JID:"
+msgstr ""
+
+#. frmExodus..MainMenu1..Exodus1..mnuConference..Caption
+#: Jabber1.dfm:272
+msgid "Join a Conference"
 msgstr ""
 
 #. frameObjectActions..pConf..lblConf..Caption
@@ -2842,11 +2838,11 @@ msgid "Log On/Off"
 msgstr ""
 
 #. frmLogin..Caption
-#: Login.dfm:7
+#: Login.dfm:8
 msgid "Login"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuVCard..Caption
+#. frmExodus..MainMenu1..Tools1..mnuVCard..Caption
 #: Jabber1.dfm:471
 msgid "Lookup a vCard"
 msgstr ""
@@ -2855,14 +2851,14 @@ msgstr ""
 msgid "Lookup Profile"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presAway..Lunch3..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..presAway..Lunch3..Caption
 #. frmExodus..popTray..trayPresence..Away1..Lunch1..Caption
 #: Jabber1.dfm:374
 #: Jabber1.dfm:2726
 msgid "Lunch"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presDND..Mad1..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..presDND..Mad1..Caption
 #. frmExodus..popTray..trayPresence..DoNotDisturb1..Mad2..Caption
 #: Jabber1.dfm:431
 #: Jabber1.dfm:2781
@@ -2897,7 +2893,7 @@ msgstr ""
 msgid "Make Owner"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presAway..Meeting1..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..presAway..Meeting1..Caption
 #. frmExodus..popTray..trayPresence..Away1..Meeting2..Caption
 #: Jabber1.dfm:380
 #: Jabber1.dfm:2731
@@ -2994,7 +2990,6 @@ msgstr ""
 #. frmPrefs..Font.Name
 #. frmPrefs..ScrollBox1..lblRoster..Font.Name
 #. frmPrefs..ScrollBox1..lblSystem..Font.Name
-#. frmPrefTransfer..Label2..Font.Name
 #. frmProfile..Font.Name
 #. frmProfile..PageControl1..TabSheet1..lblEmail..Font.Name
 #. frmProfile..PageControl1..TabSheet1..Label7..Font.Name
@@ -3057,7 +3052,7 @@ msgstr ""
 #: JoinRoom.dfm:13
 #: jud.dfm:132
 #: jud.dfm:155
-#: Login.dfm:34
+#: Login.dfm:35
 #: MsgQueue.dfm:11
 #: MsgRecv.dfm:11
 #: MsgRecv.dfm:294
@@ -3070,7 +3065,6 @@ msgstr ""
 #: Prefs.dfm:11
 #: Prefs.dfm:812
 #: Prefs.dfm:1074
-#: PrefTransfer.dfm:33
 #: Profile.dfm:12
 #: Profile.dfm:60
 #: Profile.dfm:74
@@ -3167,7 +3161,7 @@ msgstr ""
 msgid "New password:"
 msgstr ""
 
-#: Login.pas:63
+#: Login.pas:65
 msgid "New Profile"
 msgstr ""
 
@@ -3279,39 +3273,39 @@ msgstr ""
 msgid "No vCard response was ever returned."
 msgstr ""
 
-#. frmConnDetails..PageControl1..tbsSocket..cboSocksType..Text
-#: ConnDetails.dfm:292
-msgid "None"
-msgstr ""
-
 #. frmProfile..PageControl1..TabSheet1..optSubscrip....Items.Strings
 #: Profile.dfm:141
-msgid "None\r\n"
-"From\r\n"
-"To\r\n"
-"Both\r\n"
+msgid "None\n"
+"From\n"
+"To\n"
+"Both\n"
 ""
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.Strings
-#: ConnDetails.dfm:299
-msgid "None\r\n"
-"Version 4\r\n"
-"Version 4a\r\n"
-"Version 5\r\n"
+#: ConnDetails.dfm:298
+msgid "None\n"
+"Version 4\n"
+"Version 4a\n"
+"Version 5\n"
+""
+msgstr ""
+
+#. frmConnDetails..PageControl1..tbsSocket..cboSocksType..Text
+#: ConnDetails.dfm:291
+msgid "None"
+msgstr ""
+
+#. frmConnDetails..PageControl1..tbsConn..cboConnection....Items.Strings
+#: ConnDetails.dfm:196
+msgid "Normal\n"
+"HTTP\n"
 ""
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsConn..cboConnection..Text
-#: ConnDetails.dfm:192
+#: ConnDetails.dfm:191
 msgid "Normal"
-msgstr ""
-
-#. frmConnDetails..PageControl1..tbsConn..cboConnection....Items.Strings
-#: ConnDetails.dfm:197
-msgid "Normal\r\n"
-"HTTP\r\n"
-""
 msgstr ""
 
 #. frmPrefs..ScrollBox1..lblNotify..Caption
@@ -3342,6 +3336,13 @@ msgstr ""
 msgid "Occupation:"
 msgstr ""
 
+#. frmRosterWindow..pnlShow..pnlStatus..lblStatusLink..Caption
+#: Jabber1.pas:446
+#: Jabber1.pas:454
+#: RosterWindow.dfm:165
+msgid "Offline"
+msgstr ""
+
 #: ChatWin.pas:158
 msgid "offline"
 msgstr ""
@@ -3364,7 +3365,7 @@ msgstr ""
 msgid "Old password:"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presOnline..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..presOnline..Caption
 #. frmExodus..popTray..trayPresence..Online1..Caption
 #: Jabber1.dfm:348
 #: Jabber1.dfm:2702
@@ -3380,7 +3381,7 @@ msgstr ""
 msgid "Open"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..Preferences1..Caption
+#. frmExodus..MainMenu1..Tools1..Preferences1..Caption
 #: Jabber1.dfm:510
 msgid "Options..."
 msgstr ""
@@ -3420,7 +3421,7 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksPassword..Caption
 #. frmJoinRoom..lblPassword..Caption
 #. frmPrefs..PageControl1..tbsNetwork..GroupBox2..lblProxyPassword..Caption
-#: ConnDetails.dfm:254
+#: ConnDetails.dfm:253
 #: JoinRoom.dfm:47
 #: Prefs.dfm:1824
 msgid "Password:"
@@ -3454,7 +3455,7 @@ msgstr ""
 
 #. frmInvite..pnlMain..Panel2..memReason....Lines.Strings
 #: invite.dfm:142
-msgid "Please join us in this conference room.\r\n"
+msgid "Please join us in this conference room.\n"
 ""
 msgstr ""
 
@@ -3480,7 +3481,7 @@ msgstr ""
 msgid "Plugin could not be created. (%s)"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuPlugins..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPlugins..Caption
 #. frmPrefs..ScrollBox1..lblPlugins..Caption
 #: Jabber1.dfm:504
 #: Prefs.dfm:1584
@@ -3493,20 +3494,15 @@ msgid "pnlMsgs"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..Label2..Caption
-#: ConnDetails.dfm:335
+#: ConnDetails.dfm:334
 msgid "Poll Time:"
-msgstr ""
-
-#. frmPrefTransfer..Label1..Caption
-#: PrefTransfer.dfm:21
-msgid "Port to use for HTTP file transfers:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsConn..Label7..Caption
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksPort..Caption
 #. frmPrefs..PageControl1..tbsNetwork..GroupBox2..lblProxyPort..Caption
-#: ConnDetails.dfm:140
-#: ConnDetails.dfm:231
+#: ConnDetails.dfm:139
+#: ConnDetails.dfm:230
 #: Prefs.dfm:1808
 msgid "Port:"
 msgstr ""
@@ -3517,7 +3513,7 @@ msgid "Pres. Error"
 msgstr ""
 
 #. frmDebug..PopupMenu1..popPres..Caption
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..Caption
 #. frmExodus..popTray..trayPresence..Caption
 #. frmPrefs..ScrollBox1..lblCustomPres..Caption
 #. frmRosterWindow..popRoster..popPresence..Caption
@@ -3545,17 +3541,17 @@ msgid "Priority"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsConn..Label6..Caption
-#: ConnDetails.dfm:156
+#: ConnDetails.dfm:155
 msgid "Priority:"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..Caption
-#: ConnDetails.dfm:49
+#: ConnDetails.dfm:48
 msgid "Profile"
 msgstr ""
 
 #. frmLogin..Label5..Caption
-#: Login.dfm:30
+#: Login.dfm:31
 msgid "Profile:"
 msgstr ""
 
@@ -3630,7 +3626,7 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
-#. frmExodus..MainMenu1..WInJab1..mnuRegisterService..Caption
+#. frmExodus..MainMenu1..Exodus1..mnuRegisterService..Caption
 #: Jabber1.dfm:280
 msgid "Register with a Service"
 msgstr ""
@@ -3664,7 +3660,7 @@ msgstr ""
 msgid "Remove %d contacts"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuContacts..RemovePerson1..Caption
+#. frmExodus..MainMenu1..Tools1..mnuContacts..RemovePerson1..Caption
 #: Jabber1.dfm:306
 msgid "Remove a Contact"
 msgstr ""
@@ -3727,7 +3723,7 @@ msgid "Remove this plugin from the list of plugins to be loaded at "
 "startup?"
 msgstr ""
 
-#: Login.pas:60
+#: Login.pas:62
 msgid "Remove this profile?"
 msgstr ""
 
@@ -3757,11 +3753,6 @@ msgstr ""
 #. frmMsgRecv..frameButtons1..Panel1..btnOK..Caption
 #: MsgRecv.dfm:472
 msgid "Reply"
-msgstr ""
-
-#. frmPrefTransfer..Label2..Caption
-#: PrefTransfer.dfm:29
-msgid "Reset all file transfer options to defaults"
 msgstr ""
 
 #. frmCustomNotify..Label1..Caption
@@ -3848,7 +3839,7 @@ msgid "Save Conversation"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsProfile..chkSavePasswd..Caption
-#: ConnDetails.dfm:96
+#: ConnDetails.dfm:95
 msgid "Save pass&word"
 msgstr ""
 
@@ -3875,7 +3866,7 @@ msgstr ""
 msgid "Search Again"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuContacts..SearchforPerson1..Caption
+#. frmExodus..MainMenu1..Tools1..mnuContacts..SearchforPerson1..Caption
 #: Jabber1.dfm:310
 msgid "Search for a Contact"
 msgstr ""
@@ -3893,7 +3884,7 @@ msgid "Search using this service or agent"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..Label5..Caption
-#: ConnDetails.dfm:342
+#: ConnDetails.dfm:341
 msgid "seconds"
 msgstr ""
 
@@ -3911,14 +3902,10 @@ msgstr ""
 msgid "Select Contact"
 msgstr ""
 
-#: PrefTransfer.pas:54
-msgid "Select download directory"
-msgstr ""
-
 #. frmJUD..pnlLeft..lblSelect....Align
 #: jud.dfm:44
 msgid "Select the user database or enter in the Jabber ID of the se"
-"arch agent to use:\r\n"
+"arch agent to use:\n"
 ""
 msgstr ""
 
@@ -3965,7 +3952,7 @@ msgstr ""
 msgid "Send Invisible"
 msgstr ""
 
-#. frmExodus..MainMenu1..WInJab1..mnuMessage..Caption
+#. frmExodus..MainMenu1..Exodus1..mnuMessage..Caption
 #. frmExodus..popTray..trayMessage..Caption
 #. frmJUD..PopupMenu1..popMessage..Caption
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
@@ -3994,7 +3981,7 @@ msgstr ""
 msgid "Sending you a file."
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuServer..Caption
+#. frmExodus..MainMenu1..Tools1..mnuServer..Caption
 #: Jabber1.dfm:484
 msgid "Server Info"
 msgstr ""
@@ -4025,7 +4012,7 @@ msgstr ""
 msgid "Show a \"Toast\" popup"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..ShowXML1..Caption
+#. frmExodus..MainMenu1..Tools1..ShowXML1..Caption
 #: Jabber1.dfm:499
 msgid "Show Debug XML"
 msgstr ""
@@ -4052,7 +4039,7 @@ msgstr ""
 msgid "Show Online Only"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuContacts..mnuOnline..Caption
+#. frmExodus..MainMenu1..Tools1..mnuContacts..mnuOnline..Caption
 #: Jabber1.dfm:328
 msgid "Show Only Online"
 msgstr ""
@@ -4069,22 +4056,22 @@ msgstr ""
 msgid "Show Profile ..."
 msgstr ""
 
-#. frmExodus..MainMenu1..WInJab1..View1..mnuStatBar..Caption
+#. frmExodus..MainMenu1..Exodus1..View1..mnuStatBar..Caption
 #: Jabber1.dfm:240
 msgid "Show Status Bar"
 msgstr ""
 
-#. frmExodus..MainMenu1..WInJab1..View1..mnuToolbar..Caption
+#. frmExodus..MainMenu1..Exodus1..View1..mnuToolbar..Caption
 #: Jabber1.dfm:236
 msgid "Show Toolbar"
 msgstr ""
 
-#. frmExodus..MainMenu1..WInJab1..Connect2..Caption
+#. frmExodus..MainMenu1..Exodus1..Connect2..Caption
 #: Jabber1.dfm:226
 msgid "Sign On/Off"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presXA..Sleeping1..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..presXA..Sleeping1..Caption
 #. frmExodus..popTray..trayPresence..XtendedAway1..Sleeping2..Caption
 #: Jabber1.dfm:411
 #: Jabber1.dfm:2761
@@ -4097,7 +4084,7 @@ msgid "Small Icons"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSocket..Caption
-#: ConnDetails.dfm:217
+#: ConnDetails.dfm:216
 msgid "SOCKS"
 msgstr ""
 
@@ -4110,7 +4097,7 @@ msgstr ""
 msgid "Start"
 msgstr ""
 
-#. frmExodus..MainMenu1..WInJab1..mnuChat..Caption
+#. frmExodus..MainMenu1..Exodus1..mnuChat..Caption
 #. frmJUD..PopupMenu1..popChat..Caption
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: Jabber1.pas:489
@@ -4162,7 +4149,7 @@ msgstr ""
 msgid "Subscribe"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuContacts..SubscribetoPresence2..Caption
+#. frmExodus..MainMenu1..Tools1..mnuContacts..SubscribetoPresence2..Caption
 #: Jabber1.dfm:340
 msgid "Subscribe to Presence"
 msgstr ""
@@ -4173,6 +4160,11 @@ msgstr ""
 
 #: ExEvents.pas:79
 msgid "Subscription granted"
+msgstr ""
+
+#. frmSubscribe..Caption
+#: subscribe.dfm:7
+msgid "Subscription Request"
 msgstr ""
 
 #: ExEvents.pas:78
@@ -4247,7 +4239,7 @@ msgstr ""
 msgid "telnet"
 msgstr ""
 
-#. frmExodus..MainMenu1..WInJab1..Test1..Caption
+#. frmExodus..MainMenu1..Exodus1..Test1..Caption
 #: Jabber1.dfm:221
 msgid "Test"
 msgstr ""
@@ -4286,8 +4278,8 @@ msgstr ""
 
 #: Jabber1.pas:427
 msgid "The following command line parameters are available in Exodu"
-"s: \r\n"
-"\r\n"
+"s: \n"
+"\n"
 ""
 msgstr ""
 
@@ -4351,7 +4343,7 @@ msgid "There was an error processing your request."
 msgstr ""
 
 #: Jabber1.pas:461
-msgid "There was an error trying to authenticate you.\r\n"
+msgid "There was an error trying to authenticate you.\n"
 "Either you u"
 "sed the wrong password, or this account is already in use by"
 " someone else."
@@ -4398,7 +4390,7 @@ msgstr ""
 #. frmSubscribe..Label1....Align
 #: subscribe.dfm:31
 msgid "This person or agent would like to see your online presence "
-"and add you to their roster.\r\n"
+"and add you to their roster.\n"
 ""
 msgstr ""
 
@@ -4418,12 +4410,12 @@ msgstr ""
 #: RegForm.dfm:90
 msgid "This wizard will register you with a service or Agent. Use t"
 "he Next button to advance through the steps. Use Cancel anyt"
-"ime to cancel this registration.\r\n"
+"ime to cancel this registration.\n"
 ""
 msgstr ""
 
 #. frmBrowse..popContext..mTime..Caption
-#. frmExodus..MainMenu1..PGPTools1..mnuServer..mnuTime..Caption
+#. frmExodus..MainMenu1..Tools1..mnuServer..mnuTime..Caption
 #: ExResponders.pas:124
 #: Browser.dfm:4078
 #: Jabber1.dfm:490
@@ -4464,7 +4456,7 @@ msgstr ""
 msgid "To:     "
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presToggle..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..presToggle..Caption
 #: Jabber1.dfm:451
 msgid "Toggle"
 msgstr ""
@@ -4773,7 +4765,7 @@ msgstr ""
 msgid "ToolButton9"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..Caption
+#. frmExodus..MainMenu1..Tools1..Caption
 #: Jabber1.dfm:297
 msgid "Tools"
 msgstr ""
@@ -4822,8 +4814,8 @@ msgstr ""
 
 #. frmConnDetails..PageControl1..tbsConn..Label8..Caption
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksType..Caption
-#: ConnDetails.dfm:148
-#: ConnDetails.dfm:239
+#: ConnDetails.dfm:147
+#: ConnDetails.dfm:238
 msgid "Type:"
 msgstr ""
 
@@ -4872,7 +4864,7 @@ msgstr ""
 msgid "Untitled Group"
 msgstr ""
 
-#: Login.pas:62
+#: Login.pas:64
 msgid "Untitled Profile"
 msgstr ""
 
@@ -4882,26 +4874,21 @@ msgid "Update nickname based on names."
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsHttp..Label1..Caption
-#: ConnDetails.dfm:327
+#: ConnDetails.dfm:326
 msgid "URL:"
 msgstr ""
 
-#. frmPrefTransfer..chkIP..Caption
-#: PrefTransfer.dfm:78
-msgid "Use a custom IP address for HTTP transfers"
+#. frmPrefs..PageControl1..tbsNetwork..GroupBox2..cboProxyApproach....Items.Strings
+#: Prefs.dfm:1892
+msgid "Use IE settings\n"
+"Direct Connection\n"
+"Custom\n"
+""
 msgstr ""
 
 #. frmPrefs..PageControl1..tbsNetwork..GroupBox2..cboProxyApproach..Text
 #: Prefs.dfm:1886
 msgid "Use IE settings"
-msgstr ""
-
-#. frmPrefs..PageControl1..tbsNetwork..GroupBox2..cboProxyApproach....Items.Strings
-#: Prefs.dfm:1892
-msgid "Use IE settings\r\n"
-"Direct Connection\r\n"
-"Custom\r\n"
-""
 msgstr ""
 
 #. frmPrefs..PageControl1..tbsKeywords..Panel2..chkRegex..Caption
@@ -4910,13 +4897,13 @@ msgid "Use Regular Expressions for Keyword matches"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsConn..chkSSL..Caption
-#: ConnDetails.dfm:178
+#: ConnDetails.dfm:177
 msgid "Use SSL"
 msgstr ""
 
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksUsername..Caption
 #. frmPrefs..PageControl1..tbsNetwork..GroupBox2..lblProxyUsername..Caption
-#: ConnDetails.dfm:246
+#: ConnDetails.dfm:245
 #: Prefs.dfm:1816
 msgid "Username:"
 msgstr ""
@@ -4930,7 +4917,7 @@ msgid "Validator"
 msgstr ""
 
 #. frmBrowse..popContext..mVCard..Caption
-#. frmExodus..MainMenu1..PGPTools1..mnuServer..mnuServerVCard..Caption
+#. frmExodus..MainMenu1..Tools1..mnuServer..mnuServerVCard..Caption
 #: Browser.dfm:4070
 #: Jabber1.dfm:494
 msgid "vCard"
@@ -4947,7 +4934,7 @@ msgstr ""
 msgid "Version"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuServer..mnuVersion..Caption
+#. frmExodus..MainMenu1..Tools1..mnuServer..mnuVersion..Caption
 #: Jabber1.dfm:486
 msgid "Version "
 msgstr ""
@@ -4972,7 +4959,7 @@ msgid "Version: "
 msgstr ""
 
 #. frmExodus..Toolbar..ToolBar1..btnOnlineRoster..Caption
-#. frmExodus..MainMenu1..WInJab1..View1..Caption
+#. frmExodus..MainMenu1..Exodus1..View1..Caption
 #: Jabber1.dfm:137
 #: Jabber1.dfm:234
 msgid "View"
@@ -5060,7 +5047,7 @@ msgstr ""
 msgid "Work"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presDND..Working1..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..presDND..Working1..Caption
 #. frmExodus..popTray..trayPresence..DoNotDisturb1..Working2..Caption
 #: Jabber1.dfm:426
 #: Jabber1.dfm:2776
@@ -5090,7 +5077,7 @@ msgstr ""
 msgid "xmpp"
 msgstr ""
 
-#. frmExodus..MainMenu1..PGPTools1..mnuPresence..presXA..Caption
+#. frmExodus..MainMenu1..Tools1..mnuPresence..presXA..Caption
 #. frmExodus..popTray..trayPresence..XtendedAway1..Caption
 #: Jabber1.dfm:392
 #: Jabber1.dfm:2742
@@ -5195,7 +5182,7 @@ msgstr ""
 #. frmRegister..Tabs..tabResult..lblOK....AutoSize
 #: RegForm.dfm:200
 msgid "Your Registration to this service has been completed Success"
-"fully. Press the 'Next' button to Finish.\r\n"
+"fully. Press the 'Next' button to Finish.\n"
 ""
 msgstr ""
 
@@ -5203,7 +5190,7 @@ msgstr ""
 #: RegForm.dfm:181
 msgid "Your Registration to this service has Failed! Press Previous"
 " to go back and verify that all of the parameters have been "
-"filled in correctly. Press Cancel to close this wizard.\r\n"
+"filled in correctly. Press Cancel to close this wizard.\n"
 ""
 msgstr ""
 

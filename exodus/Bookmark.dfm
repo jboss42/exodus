@@ -14,6 +14,7 @@ object frmBookmark: TfrmBookmark
   OldCreateOrder = False
   Position = poMainFormCenter
   OnClose = FormClose
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -46,7 +47,7 @@ object frmBookmark: TfrmBookmark
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 148
+    Top = 153
     Width = 280
     Height = 34
     Align = alBottom
@@ -57,7 +58,6 @@ object frmBookmark: TfrmBookmark
     end
     inherited Panel1: TPanel
       Left = 120
-      Height = 29
       inherited btnOK: TButton
         OnClick = frameButtons1btnOKClick
       end

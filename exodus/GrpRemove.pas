@@ -60,7 +60,7 @@ implementation
 
 {$R *.dfm}
 uses
-    ExUtils, JabberConst, Roster, XMLTag, IQ, Session, S10n;
+    ExUtils, GnuGetText, JabberConst, Roster, XMLTag, IQ, Session, S10n;
 
 {---------------------------------------}
 procedure RemoveGroup(grp: string; contacts: TList = nil);
@@ -154,6 +154,7 @@ end;
 procedure TfrmGrpRemove.FormCreate(Sender: TObject);
 begin
     //
+    TranslateProperties(Self);
     cur_grp := '';
     ct_list := TList.Create;
 end;
