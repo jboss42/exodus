@@ -327,7 +327,10 @@ begin
     if _Stage = 0 then begin
         // We can't connect
         _socket := nil;
-        if E is EIdSocketError then begin
+        if (E is EIdOSSLCouldNotLoadSSLLibrary) then begin
+            _Data := 'Failed to load the OpenSSL libraries.';
+        end
+        else if (E is EIdSocketError) then begin
             se := E as EIdSocketError;
             if (se.LastError = 10060) then begin
                 _Data := 'Server not listening on that port.';
