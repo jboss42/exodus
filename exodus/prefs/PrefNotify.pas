@@ -48,6 +48,7 @@ type
     { Private declarations }
     _notify: array of integer;
     _no_notify_update: boolean;
+    _loading: boolean;
 
   public
     { Public declarations }
@@ -85,6 +86,9 @@ procedure TfrmPrefNotify.LoadPrefs();
 var
     i: integer;
 begin
+
+    _loading := true;
+
     chkNotify.Items.Strings[0]  := sSoundOnline;
     chkNotify.Items.Strings[1]  := sSoundOffline;
     chkNotify.Items.Strings[2]  := sSoundNewchat;
@@ -129,6 +133,8 @@ begin
         chkNotify.ItemIndex := 0;
         chkNotifyClick(Self);
     end;
+
+    _loading := false;
 end;
 
 procedure TfrmPrefNotify.SavePrefs();
@@ -235,6 +241,8 @@ end;
 procedure TfrmPrefNotify.chkSoundClick(Sender: TObject);
 begin
   inherited;
+
+    if (_loading) then exit;
     if (chkSound.Checked) then
         MessageDlg(sSoundSetup, mtInformation, [mbOK], 0);
 end;
