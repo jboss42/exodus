@@ -12,7 +12,7 @@ unit ExodusCOM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 11/17/2004 7:54:45 AM from Type Library described below.
+// File generated on 12/27/2004 3:59:06 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: C:\src\exodus\exodus\Exodus.tlb (1)
@@ -143,7 +143,7 @@ type
     procedure StartChat(const jid: WideString; const resource: WideString; 
                         const nickname: WideString); safecall;
     procedure GetProfile(const jid: WideString); safecall;
-    procedure CreateDockableWindow(HWND: Integer; const Caption: WideString); safecall;
+    function CreateDockableWindow(const Caption: WideString): Integer; safecall;
     function addPluginMenu(const Caption: WideString): WideString; safecall;
     procedure removePluginMenu(const ID: WideString); safecall;
     procedure monitorImplicitRegJID(const JabberID: WideString; FullJID: WordBool); safecall;
@@ -241,7 +241,7 @@ type
     procedure StartChat(const jid: WideString; const resource: WideString; 
                         const nickname: WideString); dispid 12;
     procedure GetProfile(const jid: WideString); dispid 13;
-    procedure CreateDockableWindow(HWND: Integer; const Caption: WideString); dispid 16;
+    function CreateDockableWindow(const Caption: WideString): Integer; dispid 16;
     function addPluginMenu(const Caption: WideString): WideString; dispid 14;
     procedure removePluginMenu(const ID: WideString); dispid 15;
     procedure monitorImplicitRegJID(const JabberID: WideString; FullJID: WordBool); dispid 17;
