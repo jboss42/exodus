@@ -162,6 +162,7 @@ begin
         cnt := (_end_idx - _start_idx) + 1
     else
         cnt := 0;
+    lstConv.Items.Clear();
     lstConv.Items.Count := cnt;
     lstConv.Invalidate();
     lstConv.Refresh();
@@ -481,14 +482,17 @@ end;
 {---------------------------------------}
 procedure TfrmView.lstConvData(Sender: TObject; Item: TListItem);
 var
+    idx: integer;
     c: TConversation;
     dtstr: Widestring;
 begin
     //
-    if (_convs = nil) then exit;
-    if (Item.Index >= _convs.Count) then exit;
+    if ((_convs = nil) or (_start_idx = -1) or (_end_idx = -1)) then exit;
 
-    c := TConversation(_convs[Item.Index]);
+    idx := Item.Index + _start_idx;
+    if (idx >= _convs.Count) then exit;
+
+    c := TConversation(_convs[idx]);
 
     dtstr := TimeToStr(c.dt);
     Item.Caption := dtstr;
@@ -597,7 +601,7 @@ begin
             w := true;
         end;
     end;
-
+    
     // if we have a date filter, do so..
     if (_date_filter <> 2) then begin
         if (w) then f := f + ' AND ' else f := f + ' WHERE ';
@@ -626,9 +630,9 @@ begin
     // get all the conversations
     // columns are
     // min_date, min_time, count, thread, jid
-    sql := 'SELECT Min(date) as min_date, Min(time) as min_time,  Count(body) as msg_count, thread, jid FROM jlogs';
+    sql := 'SELECT Min(date) as min_date, Min(time) as min_time, Count(body) as msg_count, thread, jid FROM jlogs';
     sql := sql + f;
-    sql := sql + ' GROUP BY jid, thread ORDER BY min_date, min_time;';
+    sql := sql + ' GROUP BY jid, date, thread ORDER BY min_date, min_time;';
 
     lblSQL.Caption := sql;
     tmp := db.GetTable(sql);
@@ -654,6 +658,8 @@ begin
     _start_idx := -1;
     _end_idx := -1;
     _last := 0;
+
+    DrawCal(_i1);
     MsgList.Widelines.Clear();
 
     // select the first day thats in this set
