@@ -305,7 +305,7 @@ resourcestring
     sDisconnected = 'Disconnected.';
     sConnecting = 'Trying to connect...';
     sAuthenticating = 'Connected. '#13#10'Authenticating...';
-    sAuthenticated = 'Authenticated.'#13#10'Getting Settings...';
+    sAuthenticated = 'Authenticated.'#13#10'Getting Contacts...';
 
     sBtnBlock = 'Block';
     sBtnUnBlock = 'UnBlock';

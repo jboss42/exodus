@@ -159,7 +159,8 @@ uses
   CapPresence in '..\jopl\CapPresence.pas',
   NodeItem in '..\jopl\NodeItem.pas',
   Jud in 'Jud.pas' {frmJud},
-  DockWizard in 'DockWizard.pas' {frmDockWizard};
+  DockWizard in 'DockWizard.pas' {frmDockWizard},
+  SSLWarn in 'SSLWarn.pas' {frmSSLWarn};
 
 {$R *.TLB}
 
@@ -182,6 +183,7 @@ begin
   if (not continue) then exit;
 
   Application.CreateForm(TfrmExodus, frmExodus);
+  Application.CreateForm(TfrmSSLWarn, frmSSLWarn);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);

@@ -512,7 +512,7 @@ uses
     JabberConst, ComController, CommCtrl, CustomPres,
     JoinRoom, Login, MsgController, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow, Room,
-    XferManager, NodeItem, 
+    XferManager, NodeItem, SSLWarn, 
     Roster, RosterAdd, Session, StandardAuth, Subscribe, Unicode, VCard, xData,
     XMLUtils, XMLParser;
 
@@ -1012,11 +1012,12 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.SessionCallback(event: string; tag: TXMLTag);
 var
-    rtries, rint: integer; 
+    ssl, rtries, rint: integer; 
     msg : TMessage;
     exp: boolean;
     tmp: TXMLTag;
-    m: Widestring;
+    fp, m: Widestring;
+    fps: TWidestringlist;
 begin
     // session related events
     if event = '/session/connected' then begin
@@ -1037,13 +1038,29 @@ begin
     end
 
     else if ((event = '/session/sslerror') and (tag <> nil)) then begin
-        m := _('SSL Connection Error: '#13#10) + tag.Data() + ''#13#10 +
-            _('Continue?');
-        if (MessageDlg(m, mtError, [mbYes, mbNo], 0) = mrNo) then begin
+        fp := tag.getAttribute('fingerprint');
+
+        // check for an allowed cert.
+        fps := TWidestringlist.Create();
+        MainSession.Prefs.fillStringlist('allow-certs', fps);
+        if (fps.IndexOf(fp) >= 0) then begin
+            fps.Free();
+            exit;
+        end;
+
+        ssl := ShowSSLWarn(tag.Data(), fp);
+        if (ssl = sslAllowAlways) then begin
+            // save this cert in prefs
+            fps.Add(fp);
+            MainSession.Prefs.setStringlist('allow-certs', fps);
+        end
+        else if (ssl = sslReject) then begin
+            // kick the connection off
             _logoff := true;
             PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
             PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
         end;
+        fps.Free();
     end
 
     else if event = '/session/regerror' then begin
