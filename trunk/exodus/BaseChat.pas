@@ -444,6 +444,7 @@ end;
 procedure TfrmBaseChat.timWinFlashTimer(Sender: TObject);
 begin
     // Flash the window
+    OutputDebugString('timWinFlashTimer');
     FlashWindow(Self.Handle, true);
 end;
 
@@ -452,10 +453,10 @@ procedure TfrmBaseChat.Flash;
 begin
     if Self.Active then exit;
 
+    OutputDebugString('Flash');
     if MainSession.Prefs.getBool('notify_flasher') then begin
-        if (not timWinFlash.Enabled) then
-            PostMessage(Self.Handle, WM_THROB, 0, 0);
-        end
+        timWinFlash.Enabled := true;
+    end
     else begin
         timWinFlash.Enabled := false;
         timWinFlashTimer(Self);
@@ -484,6 +485,7 @@ end;
 procedure TfrmBaseChat.WMThrob(var msg: TMessage);
 begin
     // Enable the flash timer
+    OutputDebugString('WMThrob');
     timWinFlash.Enabled := false;
     timWinFlash.Enabled := true;
 end;
