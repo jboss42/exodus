@@ -483,7 +483,7 @@ var
 begin
     if _state = recv_done then begin
         // Open the file.
-        ShellExecute(0, 'open', PChar(_filename), '', '', SW_NORMAL);
+        ShellExecute(Application.Handle, 'open', PChar(_filename), '', '', SW_NORMAL);
     end;
 
     if (_pkg.mode = recv_si) then begin
