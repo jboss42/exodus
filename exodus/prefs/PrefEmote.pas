@@ -308,6 +308,8 @@ begin
             el.Remove(e);
         end;
     end;
+
+    lstCustomEmotes.Arrange(arDefault);
 end;
 
 {---------------------------------------}
@@ -318,7 +320,7 @@ var
     box_r, lbl_r, icon_r: TRect;
     e: TEmoticon;
     txt: string;
-    tw, w, h: integer;
+    tw, w: integer;
 begin
   inherited;
     // draw this item
