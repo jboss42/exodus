@@ -67,7 +67,12 @@ uses
     {$ifdef Win32}
     Registry, StrUtils,
     {$endif}
-    IdGlobal, IdHTTPHeaderInfo;
+
+    {$ifdef INDY9}
+    IdHTTPHeaderInfo,
+    {$endif}
+    
+    IdGlobal;
 
 const
     MIN_TIME : integer = 250;
@@ -180,7 +185,9 @@ begin
     _poll_id := '0';
     _poll_time := MIN_TIME;
     _http := TIdHTTP.Create(nil);
+    {$ifdef INDY9}
     _http.AllowCookies := true;
+    {$endif}
     _cookie_list := TStringList.Create();
     _cookie_list.Delimiter := ';';
     _cookie_list.QuoteChar := #0;
