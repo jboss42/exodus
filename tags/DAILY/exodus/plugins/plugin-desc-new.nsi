@@ -1,8 +1,0 @@
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_ExImportAIM} $(DESC_ExImportAIM)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_ExAspell} $(DESC_ExAspell)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_ExHTMLLogger} $(DESC_ExHTMLLogger)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_ExImportICQ} $(DESC_ExImportICQ)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_ExJabberStats} $(DESC_ExJabberStats)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_ExNetMeeting} $(DESC_ExNetMeeting)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_ExRosterTools} $(DESC_ExRosterTools)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SEC_ExSQLLogger} $(DESC_ExSQLLogger)

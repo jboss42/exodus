@@ -1,1 +1,0 @@
-A spell checker that uses aspell (http://aspell.net/win32), which needs to be downloaded seperately.

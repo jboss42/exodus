@@ -1,1 +1,0 @@
-Import contacts from your local ICQ installation.
