@@ -53,10 +53,8 @@ type
     popClearHistory: TTntMenuItem;
     mnuHistory: TTntMenuItem;
     mnuSave: TTntMenuItem;
-    Panel2: TPanel;
     Panel3: TPanel;
     imgAvatar: TPaintBox;
-    lblReply: TTntLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -136,7 +134,7 @@ type
     procedure freeChatObject();
     procedure _sendMsg(txt: Widestring);
     procedure _sendComposing(id: Widestring);
-
+    
     function GetThread: String;
 
   published
@@ -311,7 +309,7 @@ begin
         end;
 
         if (hist <> '') then begin
-            win.MsgList.populate(hist);
+            MsgList.populate(hist);
             do_scroll := true;
         end;
 
@@ -626,7 +624,7 @@ begin
 
                 // Setup the cache'd old versions in ChangePresImage
                 _cur_img := _pres_img;
-                lblReply.Visible := true;
+                MsgList.DisplayComposing('-- ' + OtherNick + _(' is replying --'));
 
                 {
                 should we really bail here??
@@ -638,9 +636,8 @@ begin
 
                 exit;
             end
-            else if ((etag.GetFirstTag('id') <> nil) and
-                (lblReply.Visible)) then 
-                lblReply.Visible := false;
+            else if (etag.GetFirstTag('id') <> nil) then
+                MsgList.HideComposing();
         end;
     end;
 
@@ -700,7 +697,7 @@ begin
     end;
 
     _check_event := false;
-    lblReply.Visible := false;
+    MsgList.HideComposing();
 
     Msg := TJabberMessage.Create(tag);
     Msg.Nick := OtherNick;
@@ -1293,7 +1290,7 @@ var
     s: String;
 begin
     if ((_warn_busyclose) and
-        ((timBusy.Enabled) or (lblReply.Visible))) then begin
+        ((timBusy.Enabled) or (MsgList.isComposing()))) then begin
         if MessageDlgW(_(sCloseBusy), mtConfirmation, [mbYes, mbNo], 0) = mrNo then begin
             CanClose := false;
             exit;

@@ -93,9 +93,8 @@ type
     btnOnlineRoster: TToolButton;
     btnAddContact: TToolButton;
     btnRoom: TToolButton;
-    btnDelContact: TToolButton;
+    btnBrowser: TToolButton;
     btnFind: TToolButton;
-    btnExpanded: TToolButton;
     timReconnect: TTimer;
     ImageList3: TImageList;
     pnlLeft: TPanel;
@@ -193,7 +192,6 @@ type
     procedure mnuConferenceClick(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure Preferences1Click(Sender: TObject);
-    procedure btnExpandedClick(Sender: TObject);
     procedure ClearMessages1Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure btnDelPersonClick(Sender: TObject);
@@ -1475,13 +1473,6 @@ begin
 
         btnOnlineRoster.Down := getBool('roster_only_online');
         mnuOnline.Checked := btnOnlineRoster.Down;
-
-        if getBool('expanded') then begin
-            btnExpanded.ImageIndex := 9;
-        end
-        else begin
-            btnExpanded.ImageIndex := 8;
-        end;
         Toolbar.Visible := getBool('toolbar');
         mnuToolbar.Checked := Toolbar.Visible;
     end;
@@ -1540,6 +1531,7 @@ begin
     btnAddContact.Enabled := enable;
     btnRoom.Enabled := enable;
     btnFind.Enabled := enable;
+    btnBrowser.Enabled := enable;
 
     // Build the custom presence menus.
     if (enable) then begin
@@ -1716,16 +1708,6 @@ procedure TfrmExodus.Preferences1Click(Sender: TObject);
 begin
     // Show the prefs
     StartPrefs();
-end;
-
-{---------------------------------------}
-procedure TfrmExodus.btnExpandedClick(Sender: TObject);
-var
-    newval: boolean;
-begin
-    // either expand or compress the whole thing
-    newval := not MainSession.Prefs.getBool('expanded');
-    setupExpanded(newval);
 end;
 
 {---------------------------------------}
@@ -3039,7 +3021,9 @@ begin
     end
     else if ((Tabs.ActivePage = tbsRoster) and
         (tbsRoster.ImageIndex <> ico_ResFolder)) then
-        tbsRoster.ImageIndex := ico_ResFolder;
+        tbsRoster.ImageIndex := ico_ResFolder
+    else if (f is TfrmDockable) then
+        Tabs.ActivePage.ImageIndex := TfrmDockable(f).ImageIndex;
 
     if (f is TfrmBaseChat) then begin
         if (TfrmBaseChat(f).MsgOut.Visible) then

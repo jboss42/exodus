@@ -25,6 +25,7 @@ uses
     ExRichEdit, RichEdit2, RegExpr, Classes, JabberMsg,
     Graphics, ComCtrls, Controls, Messages, Windows, SysUtils;
 
+function RTFColor(color_pref: string) : string;
 procedure DisplayMsg(Msg: TJabberMessage; msglist: TfBaseMsgList; AutoScroll: boolean = true);
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true);
 
@@ -141,6 +142,8 @@ begin
 
     RichEdit.SelStart := Length(RichEdit.Lines.Text);
     RichEdit.SelLength := 0;
+    RichEdit.Paragraph.Alignment := taLeft;
+    RichEdit.SelAttributes.BackColor := RichEdit.Color;
     RichEdit.RTFSelText := txt;
 
     // AutoScroll the window

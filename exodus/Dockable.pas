@@ -80,8 +80,8 @@ uses
 {---------------------------------------}
 procedure TfrmDockable.FormCreate(Sender: TObject);
 begin
-    ImageIndex := -1;
-    
+    ImageIndex := 43;
+
     _docked := false;
     _noMoveCheck := true;
 
@@ -268,7 +268,6 @@ begin
 
     if Self.TabSheet <> nil then begin
         Self.TabSheet.ImageIndex := ImageIndex;
-        //frmExodus.Tabs.ActivePage.ImageIndex := -1;
     end;
 end;
 

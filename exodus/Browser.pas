@@ -304,6 +304,8 @@ end;
 procedure TfrmBrowse.FormCreate(Sender: TObject);
 begin
     // Create the History list
+    inherited;
+    
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
     _History := TWidestringList.Create();
