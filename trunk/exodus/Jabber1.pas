@@ -1342,7 +1342,7 @@ procedure TfrmExodus.FormCloseQuery(Sender: TObject;
 begin
     // Unregister callbacks, etc.
 
-    if (MainSession.Stream.Active) then begin
+    if ((MainSession.Stream.Active) and (not _appclosing))then begin
         MainSession.Stream.Disconnect();
         _appclosing := true;
         CanClose := false;

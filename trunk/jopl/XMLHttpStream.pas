@@ -11,7 +11,7 @@ uses
     {$else}
     ExtCtrls,
     {$endif}
-    SysUtils, IdException,
+    Classes, SysUtils, IdException,
     IdHTTP, SyncObjs;
 
 type
@@ -32,61 +32,77 @@ type
     THttpThread = class(TParseThread)
     private
         _profile : TJabberProfile;
-
+        _poll_id: string;
+        _http: TIdHttp;
+        _request: TStringlist;
+        _response: TStringStream;
     protected
         procedure Run; override;
-
     public
         constructor Create(strm: TXMLHttpStream; profile: TJabberProfile; root: string);
     end;
-implementation
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+implementation
 uses
-    Classes;
-    
+    IdGlobal;
+
+{---------------------------------------}
 constructor TXMLHttpStream.Create(root: string);
 begin
     //
+    inherited;
+
 end;
 
+{---------------------------------------}
 destructor TXMLHttpStream.Destroy;
+begin
+    //
+    inherited;
+end;
+
+{---------------------------------------}
+procedure TXMLHttpStream.Connect(profile: TJabberProfile);
+begin
+    // kick off the thread.
+    _thread := THttpThread.Create(Self, profile, _root_tag);
+    _thread.Start();
+end;
+
+{---------------------------------------}
+procedure TXMLHttpStream.Send(xml: string);
 begin
     //
 end;
 
-procedure TXMLHttpStream.Connect(profile: TJabberProfile);
-begin
-    _thread := THttpThread.Create(Self, profile, _root_tag);
-end;
-
-procedure TXMLHttpStream.Send(xml: string);
-begin
-//
-end;
-
+{---------------------------------------}
 procedure TXMLHttpStream.Disconnect;
 begin
     //
 end;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 constructor THttpThread.Create(strm: TXMLHttpStream; profile: TJabberProfile; root: string);
 begin
-    _profile := profile;
     inherited Create(strm, root);
-end;
 
-procedure THttpThread.Run();
-var
-    request : TStringStream;
-    response : TStringStream;
-    http: TIdHTTP;
-begin
-    http := TIdHTTP.Create(nil);
-    if (_profile.ProxyApproach = 0) then begin
+    _profile := profile;
+    _poll_id := '0';
+    _http := TIdHTTP.Create(nil);
+
+    _request := TStringlist.Create();
+    _response := TStringstream.Create('');
+
+    if (_profile.ProxyApproach = http_proxy_ie) then begin
         //TODO: get IE settings from registry
         end;
-    if (_profile.ProxyApproach = 2) then begin
-        with http.Request do begin
+    if (_profile.ProxyApproach = http_proxy_custom) then begin
+        with _http.Request do begin
             ProxyServer := _profile.ProxyHost;
             ProxyPort := _profile.ProxyPort;
             if (_profile.ProxyAuth) then begin
@@ -96,12 +112,27 @@ begin
             end;
         end;
 
-    request := TStringStream.Create('');
-    response := TStringStream.Create('');
-    repeat
-        http.Post(_profile.URL, request, response);
-        Sleep(_profile.Poll * 1000);
-    until true;
+end;
+
+{---------------------------------------}
+procedure THttpThread.Run();
+var
+    new_cookie, r: string;
+begin
+    if ((Self.Stopped) or (Self.Suspended) or (Self.Terminated)) then
+        exit;
+
+    // nuke whatever is currently in the stream
+    _response.Size := 0;
+
+    _request.Insert(0, _poll_id + ',');
+
+    _http.Post(_profile.URL, _request, _response);
+
+    // parse the response stream
+    new_cookie := _http.Response.ExtraHeaders.Values['Set-Cookie'];
+
+    Sleep(_profile.Poll * 1000);
 end;
 
 end.

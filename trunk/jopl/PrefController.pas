@@ -37,6 +37,10 @@ const
     conn_normal = 0;
     conn_http = 1;
 
+    http_proxy_none = 1;
+    http_proxy_ie = 0;
+    http_proxy_custom = 2;
+
     roster_chat = 0;
     roster_msg = 1;
 
