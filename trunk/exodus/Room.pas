@@ -141,6 +141,7 @@ type
     _old_nick: WideString;      // Our own last nickname
     _passwd: WideString;        // Room password
     _disconTime: TDateTime;     // Date/Time that we last got disconnected, local TZ
+    _default_config: boolean;   // auto-accept the default room configuration.
 
     // Stuff for nick completions
     _nick_prefix: Widestring;
@@ -156,7 +157,7 @@ type
     procedure SetPassword(pass: WideString);
     procedure RenderMember(member: TRoomMember; tag: TXMLTag);
     procedure changeSubject(subj: Widestring);
-    procedure configRoom();
+    procedure configRoom(use_default: boolean = false);
     procedure AddMemberItems(tag: TXMLTag; reason: WideString = '';
         NewRole: WideString = ''; NewAffiliation: WideString = '');
     procedure showStatusCode(t: TXMLTag);
@@ -171,6 +172,7 @@ type
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
     procedure ConfigCallback(event: string; Tag: TXMLTag);
+    procedure autoConfigCallback(event: string; tag: TXMLTag);
 
   public
     { Public declarations }
@@ -190,6 +192,7 @@ type
     property HintText: Widestring read _hint_text;
     property getJid: WideString read jid;
     property isMUCRoom: boolean read _isMUC;
+    property UseDefaultConfig: boolean read _default_config write _default_config;
 
     procedure DockForm; override;
     procedure FloatForm; override;
@@ -275,7 +278,8 @@ const
 
 function FindRoom(rjid: Widestring): TfrmRoom;
 function StartRoom(rjid: Widestring; rnick: Widestring = '';
-    Password: WideString = ''; send_presence: boolean = true): TfrmRoom;
+    Password: WideString = ''; send_presence: boolean = true;
+    default_config: boolean = false): TfrmRoom;
 function IsRoom(rjid: Widestring): boolean;
 function FindRoomNick(rjid: Widestring): Widestring;
 
@@ -312,6 +316,7 @@ uses
     Roster,
     RosterWindow,
     Session,
+    Signals, 
     ShellAPI,
     StrUtils,
     xData,
@@ -323,8 +328,8 @@ uses
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-function StartRoom(rjid: Widestring; rnick: Widestring = '';
-    Password: WideString = ''; send_presence: boolean = true): TfrmRoom;
+function StartRoom(rjid: Widestring; rnick, Password: Widestring;
+    send_presence, default_config: boolean): TfrmRoom;
 var
     f: TfrmRoom;
     tmp_jid: TJabberID;
@@ -351,6 +356,7 @@ begin
         f.MyNick := n;
         tmp_jid := TJabberID.Create(rjid);
         f.SetPassword(Password);
+        f.UseDefaultConfig := default_config;
 
         if (send_presence) then begin
             f.sendStartPresence();
@@ -832,7 +838,7 @@ begin
                 if ((t <> nil) and (t.getAttribute('code') = '201')) then begin
                     // we are the owner... config the room
                     _isMUC := true;
-                    configRoom();
+                    configRoom(_default_config);
                 end;
             end;
         end
@@ -966,19 +972,42 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRoom.configRoom();
+procedure TfrmRoom.configRoom(use_default: boolean);
 var
+    cb: TPacketEvent;
     iq: TJabberIQ;
+    x: TXMLTag;
 begin
-    //
-    iq := TJabberIQ.Create(MainSession, MainSession.generateID(),
-        configCallback, 10);
+    if (use_default) then
+        cb := autoConfigCallback
+    else
+        cb := configCallback;
+
+    iq := TJabberIQ.Create(MainSession, MainSession.generateID(), cb, 10);
     with iq do begin
         toJid := Self.jid;
         Namespace := XMLNS_MUCOWNER;
         iqType := 'get';
     end;
+
+    if (use_default) then begin
+        iq.iqType := 'set';
+        x := iq.qTag.AddTag('x');
+        x.setAttribute('xmlns', 'jabber:x:data');
+        x.setAttribute('type', 'submit');
+    end;
     iq.Send();
+
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.autoConfigCallback(event: string; tag: TXMLTag);
+begin
+    if ((event <> 'xml') or (tag.getAttribute('type') <> 'result')) then begin
+        MessageDlgW(_('There was an error using the default room configuration. Configuring it manually.'),
+            mtError, [mbOK], 0);
+        configRoom();
+    end;
 end;
 
 {---------------------------------------}

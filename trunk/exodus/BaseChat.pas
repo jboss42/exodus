@@ -221,8 +221,8 @@ procedure TfrmBaseChat.MsgOutKeyUp(Sender: TObject;
 var
     m : string;
 begin
-// for now.
-// TODO: use the message history that's in MsgList
+    // for now.
+    // TODO: use the message history that's in MsgList
     if ((Key = VK_UP) and (Shift = [ssCtrl])) then begin
         dec(_lastMsg);
         if (_lastMsg < 0) then begin
