@@ -239,7 +239,7 @@ begin
         memDesc.Lines.Text := Desc;
 
         if (Picture <> nil) then
-            Picture.Draw(PaintBox1.Canvas);
+            Picture.Draw(PaintBox1.Canvas, PaintBox1.ClientRect);
     end;
 end;
 
@@ -339,7 +339,6 @@ end;
 procedure TfrmVCard.btnPicBrowseClick(Sender: TObject);
 var
     a: TAvatar;
-    msg: Widestring;
     d: string;
 begin
     // browse for a new vcard picture

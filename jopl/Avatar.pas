@@ -244,10 +244,32 @@ end;
 
 {---------------------------------------}
 procedure TAvatar.Draw(c: TCanvas; r: TRect);
+var
+    aspect: single;
+    rw, rh, pw, ph: integer;
 begin
     if (_pic = nil) then exit;
 
-    // XXX: draw while maintaing the aspect ratio
+    // draw while maintaing the aspect ratio
+    ph := _pic.Height;
+    pw := _pic.Width;
+
+    rw := (r.Right - r.Left);
+    rh := (r.Bottom - r.Top);
+
+    // adjust the rectangle to ensure proper aspect control
+    aspect := (ph / pw);
+
+    if (aspect > 1.0) then begin
+        rw := Round(rh / aspect);
+        r.Right := r.Left + rw
+    end
+    else begin
+        rh := Round(rw * aspect);
+        r.Bottom := r.Top + rh;
+    end;
+
+    // draw
     c.StretchDraw(r, _pic);
 end;
 
