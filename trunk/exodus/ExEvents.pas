@@ -79,7 +79,7 @@ resourcestring
     sMsgLocalTime = 'Local Time: ';
 
     sMsgVersion = 'Version Response';
-    sMsgVerClient = 'Client: ';
+    sMsgVerClient = 'Description: ';
     sMsgVerVersion = 'Version: ';
     sMsgVerOS = 'OS: ';
 
