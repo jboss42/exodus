@@ -672,14 +672,12 @@ var
     config: string;
     help_msg: string;
     win_ver: string;
-    timestamp : boolean;
 begin
     // initialize vars.  wish we were using a 'real' compiler.
     debug := false;
     minimized := false;
     invisible := false;
     show_help := false;
-    timestamp := false;
     _testaa := false;
     jid := nil;
     _cli_priority := -1;
@@ -711,7 +709,6 @@ begin
                 // -m          : minimized
                 // -v          : invisible
                 // -?          : help
-                // -t          : write last time to registry
                 // -x [yes|no] : expanded
                 // -j [jid]    : jid
                 // -p [pass]   : password
@@ -721,10 +718,10 @@ begin
                 // -c [file]   : config file name
                 // -s [status] : presence status
                 // -w [show]   : presence show
-                Options  := 'dmvat?xjprifcsw';
-                OptFlags := '------:::::::::';
-                ReqFlags := '               ';
-                LongOpts := 'debug,minimized,invisible,aatest,timestamp,help,expanded,jid,password,resource,priority,profile,config,status,show';
+                Options  := 'dmva?xjprifcsw';
+                OptFlags := '-----:::::::::';
+                ReqFlags := '              ';
+                LongOpts := 'debug,minimized,invisible,aatest,help,expanded,jid,password,resource,priority,profile,config,status,show';
                 while GetOpt do begin
                   case Ord(OptChar) of
                      0: raise EConfigException.Create('unknown argument');
@@ -742,7 +739,6 @@ begin
                      Ord('?'): show_help := true;
                      Ord('w'): _cli_show := OptArg;
                      Ord('s'): _cli_status := OptArg;
-                     Ord('t'): timestamp := true;
                   end;
                 end;
             finally
@@ -927,13 +923,6 @@ begin
     AddSound(reg, 'notify_s10n', sSoundS10n);
     AddSound(reg, 'notify_oob', sSoundOOB);
 
-    if (timestamp) then begin
-        reg.CloseKey();
-        reg.RootKey :=  HKEY_LOCAL_MACHINE;
-        reg.OpenKey('\Software\Jabber\Exodus', true);
-        reg.WriteDateTime('Last_Update', Now());
-        end;
-
     reg.CloseKey();
     reg.Free();
 
@@ -946,11 +935,9 @@ begin
     DragAcceptFiles(Handle, True);
     MainSession.setPresence(_cli_show, _cli_status, _cli_priority);
 
-    // check for new version
-    if (MainSession.Prefs.getBool('auto_updates')) then
-        mnuNewVersionClick(nil);
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.setupTrayIcon();
 var
     picon: TIcon;
@@ -995,6 +982,10 @@ begin
         else
             PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
         end;
+
+    // check for new version
+    if (MainSession.Prefs.getBool('auto_updates')) then
+        mnuNewVersionClick(nil);
 end;
 
 {---------------------------------------}
@@ -2569,7 +2560,8 @@ begin
             end;
 
 
-        last := reg.ReadDateTime('Last_Update');
+        last := FileDateToDateTime(FileAge(Application.EXEName));
+
         if (http.Response.LastModified <= last) then begin
             if (Sender <> nil) then ShowMessage(sUpdateNone);
             exit;
@@ -2579,11 +2571,10 @@ begin
                       mtConfirmation, [mbOK,mbCancel], 0) = mrCancel then
             exit;
 
-        //ok, there's a new one.
+        // ok, there's a new one.
         SetLength(tmp, 256);
         SetLength(tmp, GetTempPath(255, PChar(tmp)));
 
-        //FIXME: blah.
         tmp := tmp + ExtractFileName(URLToFilename(url));
         fstream := TFileStream.Create(tmp, fmCreate);
         http.Get(url, fstream);
