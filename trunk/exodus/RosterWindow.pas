@@ -150,6 +150,7 @@ type
     procedure popTransUnRegisterClick(Sender: TObject);
     procedure popTransRemoveClick(Sender: TObject);
     procedure imgAdClick(Sender: TObject);
+    procedure treeRosterKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     _rostercb: integer;
@@ -850,6 +851,10 @@ begin
     else if ((ritem.Groups.IndexOf(_transports) <> -1) and
         (ritem.Groups.Count = 1)) then begin
         // we have a transport... always let them pass
+        end
+
+    else if (ritem.jid.user = '') then begin
+        // maybe a transport? let them pass
         end
 
     else if ((ritem.subscription = 'none') or
@@ -2052,6 +2057,15 @@ procedure TfrmRosterWindow.imgAdClick(Sender: TObject);
 begin
     if (_adURL <> '') then
         ShellExecute(0, 'open', PChar(_adURL), nil, nil, SW_SHOWNORMAL);
+end;
+
+procedure TfrmRosterWindow.treeRosterKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+    if Key = #13 then begin
+        Self.treeRosterDblClick(Self);
+        Key := #0;
+        end;
 end;
 
 initialization

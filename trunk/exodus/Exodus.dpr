@@ -23,6 +23,10 @@ program Exodus;
 {%File 'README.txt'}
 {%File '..\todo.txt'}
 
+{$ifdef VER150}
+    {$define INDY9}
+{$endif}
+
 uses
   Forms,
   Controls,

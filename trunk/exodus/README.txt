@@ -1,6 +1,7 @@
 Getting started with Exodus development
 
-1. Install Delphi6.  Make sure to install the Indy components.
+1. Install Delphi6 or Delphi7.  Make sure to install the Indy components.
+   a) If you are using Delphi 7, then define INDY9 as a copiler conditional.
 2. Set up CVS.
    a) Make sure you *don't* use cygwin CVS.  It will munge CR/LFs.
    b) set CVS_RSH=ssh
