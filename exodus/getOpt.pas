@@ -18,7 +18,7 @@ unit getopt;
       positon of the OptFlags property string, and a : (colon) for every option that
       requires one
     - Put an 'x' for every option that is required in the corresponding position
-      of the ReqFlags property string, and a '-' (dash) for optional ones
+      of the ReqFlags property string, and a ' ' (space) for optional ones
     - optionally supply a comma-delimited string with "long option" forms
       in the LongOpts property (in the same sequence as Options). Long options
       are of the form --option, short ones are -o. You can supply an argument
@@ -43,9 +43,9 @@ unit getopt;
   Example of use :
     with TGetOpts.Create do begin
       try
-        Options  := 'dnf';            // -d -n and -c supported
-        OptFlags := ':-:';            // -d and -c need an argument, -x doesn't
-        ReqFlags := '-xx';            // -d optional, -n and -f required
+        Options  := 'dnc';            // -d -n and -c supported
+        OptFlags := ':-:';            // -d and -c need an argument, -n doesn't
+        ReqFlags := ' xx';            // -d optional, -n and -c required
         Defaults := '0,-,-';          // defaults: -d 0
         LongOpts := 'debuglevel,dryrun,filename'; //long form of the options d, n and f
         while GetOpt do begin
@@ -70,6 +70,8 @@ type
   EGetOpt = class(Exception);
 
 type
+  EConfigException = Exception;
+
   TGetOpts = class(TComponent)
     private
       FIndex:      integer;
@@ -205,7 +207,7 @@ begin
        (Length(Foptions) = 0) or
        ((FLongOpts.Count > 0) and (FLongOpts.Count <> Length(Foptions))) or
        ((FDefaults.Count > 0) and (FDefaults.Count <> Length(Foptions))) then
-      raise EGetOpt.Create(Format(SPropertiesMissing, [CmdLine]));
+      raise EGetOpt.Create(SPropertiesMissing);
     // initialize  required Options array
     OptsNeeded := FReqFlags;
   end;
@@ -213,10 +215,10 @@ begin
   FOptInd := -1;
   strOptDef := '-';
   s1 := LowerCase(Paramstr(FIndex));
-  if s1[1] = '-' then begin             // option flag ?
+  if (s1[1] = '-') or (s1[1] = '/') then begin             // option flag ?
     if s1[2] = '-' then begin           // yes, long option
       if FLongOpts.Count = 0 then       // no long options allowed !
-        raise EGetOpt.Create(Format(SNoLongOpt, [CmdLine]));
+        raise EGetOpt.Create(SNoLongOpt);
       Inc(Findex);                      // long option found and allowed
       strOpt := Copy(s1, 3, Length(s1) - 2);
       iPosEq := Pos('=', stropt);       // embedded value with = ?
@@ -248,7 +250,7 @@ begin
               FOptArg := strOptDef;
             end;
           end else begin                      // some left,
-            if ParamStr(Findex)[1] <> '-' then begin  // and it's not an option
+            if (ParamStr(Findex)[1] <> '-') and (ParamStr(Findex)[1] <> '/') then begin  // and it's not an option
               FOptArg := ParamStr(FIndex);            // so get the argument
               Inc(Findex);
             end else begin                            // it is an option,
@@ -274,7 +276,7 @@ begin
             FOptArg := strOptDef;
           end;
         end else begin                      // some left,
-          if ParamStr(Findex)[1] <> '-' then begin  // and not an option
+          if (ParamStr(Findex)[1] <> '-') and (ParamStr(Findex)[1] <> '/') then begin  // and not an option
             FOptArg := ParamStr(FIndex);            // so get the argument
             Inc(Findex);
           end else begin

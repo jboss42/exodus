@@ -45,17 +45,19 @@ procedure LogMessage(Msg: TJabberMessage);
 procedure ShowLog(jid: string);
 
 function getDisplayField(fld: string): string;
+procedure DebugMsg(Message : string);
 
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 implementation
 uses
-    ShellAPI, 
+    ShellAPI,
     MsgDisplay,
     Session,
     XMLUtils,
-    JabberID;
+    JabberID,
+    Debug;
 
 {---------------------------------------}
 function GetAppVersion: string;
@@ -318,5 +320,10 @@ begin
         result := fld;
 end;
 
+procedure DebugMsg(Message : string);
+begin
+    if (frmDebug <> nil) then
+        frmDebug.debugMsg(Message);
+end;
 
 end.

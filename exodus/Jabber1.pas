@@ -219,6 +219,8 @@ type
     _flash: boolean;
     _edge_snap: integer;
     _fade_limit: integer;
+    _prof_index: integer;
+    _auto_login: boolean;
 
     // Various other key controllers
     _guibuilder: TGUIFactory;
@@ -276,8 +278,9 @@ type
   public
     // other stuff..
     function  getTabForm(tab: TTabSheet): TForm;
-    
+
     procedure RenderEvent(e: TJabberEvent);
+    procedure Startup;
     procedure CTCPCallback(event: string; tag: TXMLTag);
   end;
 
@@ -313,13 +316,13 @@ const
 {---------------------------------------}
 implementation
 uses
-    JUD, Bookmark, CustomPres, 
+    JUD, Bookmark, CustomPres,
     Transfer, Profile,
     RiserWindow, RemoveContact,
     MsgRecv, Prefs, Dockable,
     JoinRoom, Login, ChatWin, RosterAdd,
     VCard, PrefController, Roster, S10n,
-    Session, Debug, About;
+    Session, Debug, About, getOpt, JabberID, XMLUtils, ExUtils;
 
 {$R *.DFM}
 
@@ -403,7 +406,7 @@ procedure TfrmJabber.WMAutoAway(var msg: TMessage);
 begin
     if (_first_instance) then exit;
 
-    frmDebug.debugMsg('GOT AUTOAWAY MSG!');
+    DebugMsg('GOT AUTOAWAY MSG!');
 
     if msg.LParam = 0 then
         SetAutoAvailable()
@@ -421,8 +424,22 @@ var
     exp: boolean;
     profile: TJabberProfile;
     reg: TRegistry;
+
+    debug: boolean;
+    minimized: boolean;
+    expanded: string;
+    jid: TJabberID;
+    pass: string;
+    resource: string;
+    priority: integer;
+    profile_name: string;
+    config: string;
 begin
-    // We should already have the wjSession
+    // initialize vars.  wish we were using a 'real' compiler.
+    debug := false;
+    minimized := false;
+    jid := nil;
+    priority := -1;
 
     // Hide the application's window, and set our own
     // window to the proper parameters..
@@ -436,29 +453,141 @@ begin
     _noMoveCheck := true;
     frmDebug := nil;
 
-    // Create our main Session object
-    MainSession := TJabberSession.Create;
-    _guibuilder := TGUIFactory.Create();
-    _guibuilder.SetSession(MainSession);
 
-    _regController := TRegController.Create();
-    _regController.SetSession(MainSession);
+    try
 
-    _Notify := TNotifyController.Create;
-    _Notify.SetSession(MainSession);
+        with TGetOpts.Create(nil) do begin
+          try
+            // -d          : debug
+            // -m          : minimized
+            // -x [yes|no] : expanded
+            // -j [jid]    : jid
+            // -p [pass]   : password
+            // -r [res]    : resource
+            // -i [pri]    : priority
+            // -f [prof]   : profile name
+            // -c [file]   : config file name
 
-    with MainSession.Prefs do begin
-        RestorePosition(Self);
-
-        // If we have no profiles, setup some default
-        if Profiles.Count = 0 then begin
-            profile := MainSession.Prefs.CreateProfile('Default Profile');
-            profile.Server := 'jabber.org';
-            profile.Resource := 'Exodus';
-            profile.Priority := 0;
+            Options  := 'dmxjprifc';
+            OptFlags := '--:::::::';
+            ReqFlags := '         ';
+            LongOpts := 'debug,minimized,expanded,jid,password,resource,priority,profile,config';
+            while GetOpt do begin
+              case Ord(OptChar) of
+                 0: raise EConfigException.Create('unknown argument');
+                 Ord('d'): debug := true;
+                 Ord('x'): expanded := OptArg;
+                 Ord('m'): minimized := true;
+                 Ord('j'): jid := TJabberID.Create(OptArg);
+                 Ord('p'): pass := OptArg;
+                 Ord('r'): resource := OptArg;
+                 Ord('i'): priority := SafeInt(OptArg);
+                 Ord('f'): profile_name := OptArg;
+                 Ord('c'): config := OptArg;
+              end;
             end;
-        SaveProfiles();
+          finally
+            Free
+          end;
         end;
+
+        if (config = '') then
+            config := getUserDir() + 'exodus.xml';
+
+        // Create our main Session object
+        MainSession := TJabberSession.Create(config);
+
+
+        _guibuilder := TGUIFactory.Create();
+        _guibuilder.SetSession(MainSession);
+
+        _regController := TRegController.Create();
+        _regController.SetSession(MainSession);
+
+        _Notify := TNotifyController.Create;
+        _Notify.SetSession(MainSession);
+
+        with MainSession.Prefs do begin
+            RestorePosition(Self);
+
+            if (expanded <> '') then
+                SetBool('expanded', (expanded = 'yes'));
+
+            // if a profile name was specified, use it.
+            // otherwise, if a jid was specified, use it as the profile name.
+            // otherwise, if we have no profiles yet, use the default profile name.
+            if (profile_name = '') then begin
+                if (jid <> nil) then
+                    profile_name := jid.jid
+                else if (Profiles.Count = 0) then
+                    profile_name := 'Default Profile';
+                end;
+
+            // if a profile was specified, use it, or create it if it doesn't exist.
+            if (profile_name <> '') then begin
+                _prof_index := Profiles.IndexOf(profile_name);
+
+                if (_prof_index = -1) then begin
+                    // no profile called this, yet
+                    if (jid = nil) or (pass = '') then
+                        raise EConfigException.Create('need jid and password for new profile');
+
+                    profile := CreateProfile(profile_name);
+                    if (jid = nil) then
+                        profile.Server := 'jabber.org';
+                    if (resource = '') then
+                        resource := 'Exodus';
+                    if (priority = -1) then
+                        priority := 0;
+                    end
+                else
+                    profile := TJabberProfile(Profiles.Objects[_prof_index]);
+
+                if (jid <> nil) then begin
+                    profile.Username := jid.user;
+                    profile.Server := jid.domain;
+                    end;
+
+                if (resource <> '') then
+                    profile.Resource := resource;
+                if (priority <> -1) then
+                    profile.Priority := priority;
+                if (pass <> '') then
+                    profile.password := pass;
+
+                SaveProfiles();
+                _prof_index := Profiles.IndexOfObject(profile);
+                setInt('profile_active', _prof_index);
+                _auto_login := true;
+                end
+            else begin
+                _prof_index := getInt('profile_active');
+                _auto_login := getBool('autologin');
+                end;
+
+            if (minimized) then begin
+                _hidden := true;
+                self.WindowState := wsMinimized;
+                ShowWindow(Handle, SW_HIDE);
+                end;
+
+            if (debug) then begin
+                frmDebug := TfrmDebug.Create(nil);
+
+                if getBool('expanded') then
+                    frmDebug.DockForm;
+
+                frmDebug.Show;
+                end;
+            end;
+
+
+    except
+        on E : EConfigException do begin
+            MessageDlg(E.Message, mtError, [mbOK], 0);
+            Halt;
+        end;
+    end;
 
     // Setup callbacks
     MainSession.RegisterCallback(SessionCallback, '/session');
@@ -518,6 +647,19 @@ begin
 
     // Make sure we read in and setup the prefs..
     Self.SessionCallback('/session/prefs', nil);
+end;
+
+procedure TfrmJabber.Startup;
+begin
+  with MainSession.Prefs do begin
+    if (_auto_login) then begin
+        // snag default profile, etc..
+        MainSession.ActivateProfile(_prof_index);
+        MainSession.Connect;
+        end
+    else
+        ShowLogin();
+    end;
 end;
 
 procedure TfrmJabber.setupAutoAwayTimer();
