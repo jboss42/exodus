@@ -39,6 +39,7 @@ type
         _pres     : TXMLTag;
         _pos      : TXMLTag;
         _prof     : TXMLTag;
+        _bms      : TXMLTag;
         _filename : Widestring;
         _ctrlHash : TWideStringList;
         _dirty    : boolean;
@@ -55,12 +56,11 @@ type
 
         procedure save();
 
+        // Generic get & sets
         function getString(pkey: Widestring): Widestring;
-
         function getState(pkey: Widestring): TPrefState;
         function getControl(pkey: Widestring): Widestring;
         function getPref(control: Widestring): Widestring;
-
         procedure setString(pkey: Widestring; val: Widestring);
 {$ifdef Exodus}
         procedure setStringlist(pkey: Widestring; pvalue: TWideStrings); overload;
@@ -68,10 +68,11 @@ type
         function fillStringlist(pkey: Widestring; sl: TWideStrings): boolean; overload;
         function fillStringlist(pkey: Widestring; sl: TTntStrings): boolean; overload;
 {$else}
-        procedure setStringlist(pkey: Widestring; pvalue: TWideStrings);
         function fillStringlist(pkey: Widestring; sl: TWideStrings): boolean;
+        procedure setStringlist(pkey: Widestring; pvalue: TWideStrings);
 {$endif}
 
+        // Custom pres
         function findPresenceTag(pkey: Widestring): TXMLTag;
         function getAllPresence(): TWidestringList;
         function getPresence(pkey: Widestring): TJabberCustomPres;
@@ -80,12 +81,16 @@ type
         procedure removePresence(pkey: Widestring);
         procedure removeAllPresence();
 
+        // misc.
         function getPositionTag(pkey: WideString; setDirty: boolean = false): TXMLTag;
         procedure clearProfiles();
+        procedure SaveBookmarks(tag: TXMLTag);
 
+        // read only props
         property Dirty : boolean read _dirty;
         property NeedDefaultPresence : boolean read _need_default_pres;
         property Profiles : TXMLTag read _prof;
+        property Bookmarks : TXMLTag read _bms;
 end;
 
 implementation
@@ -94,14 +99,15 @@ uses
     SysUtils, XMLParser, Session;
 
 const
-    PRES    = 'presii';         // DO NOT LOCALIZE
-    ROOT    = 'exodus';         // DO NOT LOCALIZE
-    VER     = 'version';        // DO NOT LOCALIZE
-    VER_NUM = '0.9';            // DO NOT LOCALIZE
-    VALUE   = 'value';          // DO NOT LOCALIZE
-    POS     = 'positions';      // DO NOT LOCALIZE
-    PROF    = 'profiles';       // DO NOT LOCALIZE
-    PREF    = 'prefs';          // DO NOT LOCALIZE
+    PRES    = 'presii';           // DO NOT LOCALIZE
+    ROOT    = 'exodus';           // DO NOT LOCALIZE
+    VER     = 'version';          // DO NOT LOCALIZE
+    VER_NUM = '0.9';              // DO NOT LOCALIZE
+    VALUE   = 'value';            // DO NOT LOCALIZE
+    POS     = 'positions';        // DO NOT LOCALIZE
+    PROF    = 'profiles';         // DO NOT LOCALIZE
+    PREF    = 'prefs';            // DO NOT LOCALIZE
+    BMS     = 'local-bookmarks';  // DO NOT LOCALIZE
 
 {---------------------------------------}
 constructor TPrefFile.Create(tag: TXMLTag);
@@ -183,6 +189,7 @@ begin
         _pres := _root.AddTag(PRES);
         _pos  := _root.AddTag(POS);
         _prof := _root.AddTag(PROF);
+        _bms  := _root.AddTag(BMS);
         exit;
     end;
 
@@ -201,6 +208,10 @@ begin
     _prof := _root.GetFirstTag(PROF);
     if (_prof = nil) then
         _prof := _root.AddTag(PROF);
+
+    _bms := _root.GetFirstTag(BMS);
+    if (_bms = nil) then
+        _bms := _root.AddTag(BMS);
 
     // If the format changes again, also check VER_NUM.
     if (_root.getAttribute(VER) = '') then begin
@@ -230,6 +241,7 @@ begin
                 (t.Name <> PRES) and
                 (t.Name <> POS) and
                 (t.Name <> PROF) and
+                (t.Name <> BMS) and
                 (t.Name <> PREF)) then begin  // in case there was a custom_pres
 
                 // if there are s's inside, leave them.  otherwise, pull
@@ -586,6 +598,21 @@ procedure TPrefFile.ClearProfiles();
 begin
     _dirty := true;
     _prof.ClearTags();
+end;
+
+{---------------------------------------}
+procedure TPrefFile.SaveBookmarks(tag: TXMLTag);
+var
+    blist: TXMLTagList;
+    i: integer;
+begin
+    _dirty := true;
+    _bms.ClearTags();
+    blist := tag.ChildTags();
+    for i := 0 to blist.count - 1 do begin
+        _bms.AddTag(TXMLTag.Create(blist[i]));
+    end;
+    Save();
 end;
 
 end.
