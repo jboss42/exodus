@@ -33,7 +33,6 @@ type
     imgView1: TImage;
     lblViewHelp: TTntLabel;
     StaticText4: TTntPanel;
-    TntLabel1: TTntLabel;
     procedure cboViewChange(Sender: TObject);
   private
     { Private declarations }

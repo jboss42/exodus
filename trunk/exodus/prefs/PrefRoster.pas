@@ -37,7 +37,6 @@ type
     chkInlineStatus: TTntCheckBox;
     cboInlineStatus: TColorBox;
     StaticText4: TTntPanel;
-    TntLabel1: TTntLabel;
     procedure chkInlineStatusClick(Sender: TObject);
   private
     { Private declarations }

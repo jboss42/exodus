@@ -1,85 +1,32 @@
-object frmRegister: TfrmRegister
-  Left = 230
-  Top = 175
-  Width = 312
-  Height = 327
-  Caption = 'Agent Registration'
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
-  Font.Style = []
-  OldCreateOrder = False
-  OnClose = FormClose
+inherited frmRegister: TfrmRegister
+  BorderStyle = bsSizeable
+  Caption = 'Registration'
+  TransparentColor = True
+  TransparentColorValue = clFuchsia
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object pnlBottom: TTntPanel
-    Left = 0
-    Top = 258
-    Width = 304
-    Height = 35
-    Align = alBottom
-    BevelOuter = bvNone
-    TabOrder = 0
-    object pnlBtns: TTntPanel
-      Left = 55
-      Top = 0
-      Width = 249
-      Height = 35
-      Align = alRight
-      BevelOuter = bvNone
-      TabOrder = 0
-      object btnPrev: TTntButton
-        Left = 8
-        Top = 8
-        Width = 75
-        Height = 25
-        Caption = '< Previous'
-        Enabled = False
-        TabOrder = 0
-        OnClick = btnPrevClick
-      end
-      object btnNext: TTntButton
-        Left = 88
-        Top = 8
-        Width = 75
-        Height = 25
-        Caption = 'Next >'
-        Default = True
-        Enabled = False
-        TabOrder = 1
-        OnClick = btnNextClick
-      end
-      object btnCancel: TTntButton
-        Left = 168
-        Top = 8
-        Width = 75
-        Height = 25
-        Cancel = True
-        Caption = 'Cancel'
-        TabOrder = 2
-        OnClick = btnCancelClick
-      end
+  inherited TntPanel1: TTntPanel
+    inherited btnBack: TTntButton
+      OnClick = btnPrevClick
+    end
+    inherited btnNext: TTntButton
+      OnClick = btnNextClick
+    end
+    inherited btnCancel: TTntButton
+      OnClick = btnCancelClick
     end
   end
-  object Tabs: TTntPageControl
-    Left = 0
-    Top = 0
-    Width = 304
-    Height = 258
-    ActivePage = tabAgent
-    Align = alClient
-    MultiLine = True
-    Style = tsButtons
-    TabOrder = 1
-    object tabWelcome: TTntTabSheet
-      Caption = 'tabWelcome'
+  inherited Panel1: TPanel
+    ParentBackground = False
+  end
+  inherited Tabs: TPageControl
+    ActivePage = TabSheet2
+    inherited TabSheet1: TTabSheet
       object Label1: TTntLabel
         Left = 0
         Top = 0
-        Width = 296
+        Width = 410
         Height = 90
         Align = alTop
         AutoSize = False
@@ -98,8 +45,8 @@ object frmRegister: TfrmRegister
       object lblIns: TTntLabel
         Left = 0
         Top = 90
-        Width = 296
-        Height = 142
+        Width = 410
+        Height = 137
         Align = alClient
         AutoSize = False
         Caption = 'Waiting for agent instructions.....'
@@ -112,45 +59,48 @@ object frmRegister: TfrmRegister
         WordWrap = True
       end
     end
-    object tabAgent: TTntTabSheet
-      Caption = 'tabAgent'
+    object TabSheet2: TTabSheet
+      Caption = 'TabSheet2'
       ImageIndex = 1
       object Panel2: TPanel
         Left = 0
-        Top = 194
-        Width = 296
-        Height = 33
+        Top = 195
+        Width = 410
+        Height = 32
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 0
-        object Panel3: TTntPanel
-          Left = 128
-          Top = 0
-          Width = 168
-          Height = 33
-          Align = alRight
-          BevelOuter = bvNone
-          Caption = 'Panel3'
+        object btnDelete: TTntButton
+          Left = 243
+          Top = 3
+          Width = 161
+          Height = 25
+          Caption = 'Delete My Registration'
           TabOrder = 0
-          object btnDelete: TTntButton
-            Left = 3
-            Top = 3
-            Width = 161
-            Height = 25
-            Caption = 'Delete My Registration'
-            TabOrder = 0
-            OnClick = btnDeleteClick
-          end
+          OnClick = btnDeleteClick
         end
       end
+      object formBox: TScrollBox
+        Left = 0
+        Top = 0
+        Width = 410
+        Height = 195
+        Align = alClient
+        BevelInner = bvNone
+        BevelOuter = bvNone
+        BorderStyle = bsNone
+        Ctl3D = True
+        ParentCtl3D = False
+        TabOrder = 1
+      end
     end
-    object tabWait: TTntTabSheet
-      Caption = 'tabWait'
-      ImageIndex = 4
+    object TabSheet3: TTabSheet
+      Caption = 'TabSheet3'
+      ImageIndex = 2
       object Label2: TTntLabel
         Left = 0
         Top = 0
-        Width = 296
+        Width = 410
         Height = 90
         Align = alTop
         AutoSize = False
@@ -164,20 +114,19 @@ object frmRegister: TfrmRegister
         WordWrap = True
       end
     end
-    object tabResult: TTntTabSheet
-      Caption = 'tabResult'
+    object TabSheet4: TTabSheet
+      Caption = 'TabSheet4'
       ImageIndex = 3
-      object lblBad: TTntLabel
+      object lblOK: TTntLabel
         Left = 0
-        Top = 90
-        Width = 296
+        Top = 0
+        Width = 410
         Height = 90
         Align = alTop
         AutoSize = False
         Caption = 
-          'Your Registration to this service has Failed! Press Previous to ' +
-          'go back and verify that all of the parameters have been filled i' +
-          'n correctly. Press Cancel to close this wizard.'
+          'Your Registration to this service has been completed Successfull' +
+          'y. Press the '#39'Next'#39' button to Finish.'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -13
@@ -187,16 +136,17 @@ object frmRegister: TfrmRegister
         Visible = False
         WordWrap = True
       end
-      object lblOK: TTntLabel
+      object lblBad: TTntLabel
         Left = 0
-        Top = 0
-        Width = 296
+        Top = 90
+        Width = 410
         Height = 90
         Align = alTop
         AutoSize = False
         Caption = 
-          'Your Registration to this service has been completed Successfull' +
-          'y. Press the '#39'Next'#39' button to Finish.'
+          'Your Registration to this service has Failed! Press Previous to ' +
+          'go back and verify that all of the parameters have been filled i' +
+          'n correctly. Press Cancel to close this wizard.'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -13

@@ -29,7 +29,6 @@ type
   TfrmPrefSubscription = class(TfrmPrefPanel)
     optIncomingS10n: TRadioGroup;
     StaticText4: TTntPanel;
-    TntLabel1: TTntLabel;
   private
     { Private declarations }
   public

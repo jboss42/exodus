@@ -60,14 +60,17 @@ object frmWizard: TfrmWizard
     Left = 0
     Top = 0
     Width = 418
-    Height = 65
+    Height = 60
     Align = alTop
     BevelOuter = bvNone
     Color = clWhite
+    Ctl3D = False
+    ParentBackground = False
+    ParentCtl3D = False
     TabOrder = 1
     object Bevel2: TBevel
       Left = 0
-      Top = 56
+      Top = 51
       Width = 418
       Height = 9
       Align = alBottom
@@ -85,20 +88,23 @@ object frmWizard: TfrmWizard
       Font.Name = 'MS Sans Serif'
       Font.Style = [fsBold]
       ParentFont = False
+      Transparent = True
     end
     object lblWizardDetails: TTntLabel
       Left = 32
       Top = 24
       Width = 297
-      Height = 33
+      Height = 29
       AutoSize = False
       Caption = 'lblWizardDetails'
+      Transparent = True
     end
     object Image1: TImage
-      Left = 368
-      Top = 8
+      Left = 377
+      Top = 0
       Width = 41
-      Height = 48
+      Height = 51
+      Align = alRight
       Center = True
       Picture.Data = {
         055449636F6E000001000C00303010000100040068060000C600000020201000
@@ -1037,6 +1043,20 @@ object frmWizard: TfrmWizard
         5151AAFFFFFFFF00FFFFFF00C3E70000E3E70000E3870000F18F0000F88F0000
         F80F0000FC1F0000FE3F0000FC3F0000F81F0000F81F0000F08F0000F8070000
         F8070000FE230000FFE30000}
+      Transparent = True
+    end
+  end
+  object Tabs: TPageControl
+    Left = 0
+    Top = 60
+    Width = 418
+    Height = 258
+    ActivePage = TabSheet1
+    Align = alClient
+    Style = tsFlatButtons
+    TabOrder = 2
+    object TabSheet1: TTabSheet
+      Caption = 'TabSheet1'
     end
   end
 end

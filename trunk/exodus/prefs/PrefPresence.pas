@@ -51,7 +51,6 @@ type
     cboPresTracking: TTntComboBox;
     Label1: TTntLabel;
     StaticText4: TTntPanel;
-    TntLabel1: TTntLabel;
     procedure FormDestroy(Sender: TObject);
     procedure lstCustomPresClick(Sender: TObject);
     procedure txtCPTitleChange(Sender: TObject);

@@ -47,7 +47,6 @@ type
     OpenDialog1: TOpenDialog;
     txtTimestampFmt: TTntComboBox;
     StaticText4: TTntPanel;
-    TntLabel1: TTntLabel;
     procedure btnLogBrowseClick(Sender: TObject);
     procedure btnLogClearAllClick(Sender: TObject);
     procedure btnSpoolBrowseClick(Sender: TObject);

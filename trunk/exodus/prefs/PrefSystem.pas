@@ -42,7 +42,6 @@ type
     Label7: TTntLabel;
     cboLocale: TTntComboBox;
     lblPluginScan: TTntLabel;
-    TntLabel1: TTntLabel;
     procedure btnUpdateCheckClick(Sender: TObject);
     procedure btnUpdateCheckMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);

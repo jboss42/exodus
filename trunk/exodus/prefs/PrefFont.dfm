@@ -222,28 +222,16 @@ inherited frmPrefFont: TfrmPrefFont
     Height = 24
     Align = alTop
     BevelOuter = bvLowered
-    ParentColor = True
+    Caption = 'Fonts and Colors'
+    Color = clHighlight
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clHighlightText
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentBackground = False
+    ParentFont = False
     TabOrder = 5
-    object TntLabel1: TTntLabel
-      Left = 1
-      Top = 1
-      Width = 401
-      Height = 22
-      Align = alClient
-      Alignment = taCenter
-      AutoSize = False
-      Caption = 'Fonts and Colors'
-      Color = clHighlight
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWhite
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentColor = False
-      ParentFont = False
-      Transparent = False
-      Layout = tlCenter
-    end
   end
   object FontDialog1: TFontDialog
     Font.Charset = DEFAULT_CHARSET

@@ -86,16 +86,21 @@ type
     Memo1: TTntMemo;
     StaticText4: TTntPanel;
     TntPanel1: TTntPanel;
-    TntLabel1: TTntLabel;
-    TntLabel2: TTntLabel;
+    Shape1: TShape;
+    Shape2: TShape;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure imgSystemMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure OffBoxMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
   private
     { Private declarations }
     _cur_panel: TfrmPrefPanel;
+    _cur_label: TTntLabel;
     _system: TfrmPrefSystem;
     _roster: TfrmPrefRoster;
     _groups: TfrmPrefGroups;
@@ -231,7 +236,7 @@ end;
 procedure TfrmPrefs.FormCreate(Sender: TObject);
 begin
     TranslateProperties(Self);
-    
+
     tbsKeywords.TabVisible := false;
     tbsBlockList.TabVisible := false;
 
@@ -256,6 +261,18 @@ begin
     _network := nil;
 
     MainSession.Prefs.RestorePosition(Self);
+
+    with Shape1 do begin
+        Left := 1;
+        Top := 1;
+        Width := imgSystem.Width - 1;
+    end;
+    with Shape2 do begin
+        Left := 1;
+        Width := Shape1.Width;
+        Visible := false;
+    end;
+    _cur_label := lblSystem;
 end;
 
 {---------------------------------------}
@@ -270,11 +287,13 @@ procedure TfrmPrefs.TabSelect(Sender: TObject);
             c := ScrollBox1.Controls[i];
             if (c is TTntLabel) then begin
                 if (c = lbl) then begin
-                    TTntLabel(c).Color := clHighlight;
-                    TTntLabel(c).Font.Color := clHighlightText;
+                    //TTntLabel(c).Color := clHighlight;
+                    Shape1.Top := c.Top - 40;
+                    TTntLabel(c).Font.Color := clMenuText;
+                    _cur_label := TTntLabel(c);
                 end
                 else begin
-                    TTntLabel(c).Color := clWindow;
+                    //TTntLabel(c).Color := clWindow;
                     TTntLabel(c).Font.Color := clWindowText;
                 end;
             end;
@@ -286,6 +305,7 @@ procedure TfrmPrefs.TabSelect(Sender: TObject);
 var
     f: TfrmPrefPanel;
 begin
+    Shape2.Visible := false;
     f := nil;
     if ((Sender = imgSystem) or (Sender = lblSystem)) then begin
         // PageControl1.ActivePage := tbsSystem;
@@ -298,7 +318,6 @@ begin
         end;
     end
     else if ((Sender = imgRoster) or (Sender = lblRoster)) then begin
-        // PageControl1.ActivePage := tbsRoster;
         toggleSelector(lblRoster);
         if (_roster <> nil) then
             f := _roster
@@ -308,7 +327,6 @@ begin
         end;
     end
     else if ((Sender = imgGroups) or (Sender = lblGroups)) then begin
-        // PageControl1.ActivePage := tbsRoster;
         toggleSelector(lblGroups);
         if (_groups <> nil) then
             f := _groups
@@ -318,7 +336,6 @@ begin
         end;
     end
     else if ((Sender = imgS10n) or (Sender = lblS10n)) then begin
-        // PageControl1.ActivePage := tbsSubscriptions;
         toggleSelector(lblS10n);
         if (_subscription <> nil) then
             f := _subscription
@@ -328,7 +345,6 @@ begin
         end;
     end
     else if ((Sender = imgFonts) or (Sender = lblFonts)) then begin
-        // PageControl1.ActivePage := tbsFonts;
         toggleSelector(lblFonts);
         if (_font <> nil) then
             f := _font
@@ -338,7 +354,6 @@ begin
         end;
     end
     else if ((Sender = imgDialog) or (Sender = lblDialog)) then begin
-        // PageControl1.ActivePage := tbsDialog;
         toggleSelector(lblDialog);
         if (_dialogs <> nil) then
             f := _dialogs
@@ -348,7 +363,6 @@ begin
         end;
     end
     else if ((Sender = imgLayouts) or (Sender = lblLayouts)) then begin
-        // PageControl1.ActivePage := tbsDialog;
         toggleSelector(lblLayouts);
         if (_layouts <> nil) then
             f := _layouts
@@ -358,7 +372,6 @@ begin
         end;
     end
     else if ((Sender = imgMessages) or (Sender = lblMessages)) then begin
-        // PageControl1.ActivePage := tbsMessages;
         toggleSelector(lblMessages);
         if (_message <> nil) then
             f := _message
@@ -368,7 +381,6 @@ begin
         end;
     end
     else if ((Sender = imgNotify) or (Sender = lblNotify)) then begin
-        // PageControl1.ActivePage := tbsNotify;
         toggleSelector(lblNotify);
         if (_notify <> nil) then
             f := _notify
@@ -430,12 +442,11 @@ begin
         PageControl1.ActivePage := tbsBlockList;
         toggleSelector(lblBlocklist);
     end;
-    
+
     // setup the panel..
     if (f <> nil) then begin
         if PageControl1.Visible then
             PageControl1.Visible := false;
-
         f.Parent := Self;
         f.Align := alClient;
         f.Visible := true;
@@ -473,6 +484,105 @@ begin
     _plugs.Free();
     _xfer.Free();
     _network.Free();
+end;
+
+procedure TfrmPrefs.imgSystemMouseMove(Sender: TObject; Shift: TShiftState;
+  X, Y: Integer);
+begin
+    // We are moving over one of the images..
+    // Move shape2 to highlight.
+
+    (*
+    if ((Sender = imgSystem) or (Sender = lblSystem) and
+        (_cur_label <> lblSystem)) then begin
+        Shape2.Top := lblSystem.Top - 40;
+        Shape2.Visible := true;
+    end
+    else if ((Sender = imgRoster) or (Sender = lblRoster) and
+        (_cur_label <> lblRoster)) then begin
+        Shape2.Top := lblRoster.Top - 40;
+        Shape2.Visible := true;
+    end
+    else if ((Sender = imgGroups) or (Sender = lblGroups) and
+        (_cur_label <> lblGroups)) then begin
+        Shape2.Top := lblGroups.Top - 40;
+        Shape2.Visible := true;
+    end
+    else if ((Sender = imgS10n) or (Sender = lblS10n) and
+        (_cur_label <> lblS10n)) then begin
+        Shape2.Top := lblS10n.Top - 40;
+        Shape2.Visible := true;
+    end
+    else if ((Sender = imgFonts) or (Sender = lblFonts) and
+        (_cur_label <> lblFonts)) then begin
+        Shape2.Top := lblFonts.Top - 40;
+        Shape2.Visible := true;
+    end
+    else if ((Sender = imgDialog) or (Sender = lblDialog) and
+        (_cur_label <> lblDialog)) then begin
+        Shape2.Top := lblDialog.Top - 40;
+        Shape2.Visible := true;
+    end
+    else if ((Sender = imgLayouts) or (Sender = lblLayouts) and
+        (_cur_label <> lblLayouts)) then begin
+        Shape2.Top := lblLayouts.Top - 40;
+        Shape2.Visible := true;
+    end
+    else if ((Sender = imgMessages) or (Sender = lblMessages) and
+        (_cur_label <> lblMessages)) then begin
+        Shape2.Top := lblMessages.Top - 40;
+        Shape2.Visible := true;
+    end
+    else if ((Sender = imgNotify) or (Sender = lblNotify) and
+        (_cur_label <> lblNotify)) then begin
+        Shape2.Top := lblNotify.Top - 40;
+        Shape2.Visible := true;
+    end
+    else if ((Sender = imgAway) or (Sender = lblAway) and
+        (_cur_label <> lblAway)) then begin
+        Shape2.Top := lblAway.Top - 40;
+        Shape2.Visible := true;
+    end
+    else if ((Sender = imgCustompres) or (Sender = lblCustomPres) and
+        (_cur_label <> lblCustomPres)) then begin
+        Shape2.Top := lblCustomPres.Top - 40;
+        Shape2.Visible := true;
+    end
+    else if ((Sender = imgPlugins) or (Sender = lblPlugins) and
+        (_cur_label <> lblPlugins)) then begin
+        Shape2.Top := lblPlugins.Top - 40;
+        Shape2.Visible := true;
+    end
+    else if ((Sender = imgTransfer) or (Sender = lblTransfer) and
+        (_cur_label <> lblTransfer)) then begin
+        Shape2.Top := lblTransfer.Top - 40;
+        Shape2.Visible := true;
+    end
+    else if ((Sender = imgNetwork) or (Sender = lblNetwork) and
+        (_cur_label <> lblNetwork)) then begin
+        Shape2.Top := lblNetwork.Top - 40;
+        Shape2.Visible := true;
+    end
+    else if ((Sender = imgKeywords) or (Sender = lblBlockList) and
+        (_cur_label <> lblBlockList)) then begin
+        Shape2.Top := lblBlockList.Top - 40;
+        Shape2.Visible := true;
+    end
+    else if ((Sender = imgBlockList) or (Sender = lblBlockList) and
+        (_cur_label <> lblBlockList)) then begin
+        Shape2.Top := lblBlockList.Top - 40;
+        Shape2.Visible := true;
+    end
+    else
+        Shape2.Visible := false;
+    *)
+
+end;
+
+procedure TfrmPrefs.OffBoxMouseMove(Sender: TObject;
+  Shift: TShiftState; X, Y: Integer);
+begin
+    Shape2.Visible := false;
 end;
 
 end.

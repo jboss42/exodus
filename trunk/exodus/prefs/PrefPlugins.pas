@@ -38,7 +38,6 @@ type
     btnBrowsePluginPath: TTntButton;
     lstPlugins: TTntListView;
     StaticText4: TTntPanel;
-    TntLabel1: TTntLabel;
     procedure btnBrowsePluginPathClick(Sender: TObject);
     procedure lblPluginScanClick(Sender: TObject);
     procedure btnConfigPluginClick(Sender: TObject);

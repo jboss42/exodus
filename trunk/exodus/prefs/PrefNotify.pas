@@ -40,7 +40,6 @@ type
     chkNotifyActiveWindow: TTntCheckBox;
     chkFront: TTntCheckBox;
     StaticText4: TTntPanel;
-    TntLabel1: TTntLabel;
     procedure lblConfigSoundsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure chkNotifyClick(Sender: TObject);

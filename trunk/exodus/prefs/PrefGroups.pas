@@ -38,7 +38,6 @@ type
     chkOfflineGrp: TTntCheckBox;
     chkOnlineOnly: TTntCheckBox;
     StaticText4: TTntPanel;
-    TntLabel1: TTntLabel;
     procedure chkOfflineGrpClick(Sender: TObject);
   private
     { Private declarations }

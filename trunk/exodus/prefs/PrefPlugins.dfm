@@ -104,27 +104,15 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     Height = 24
     Align = alTop
     BevelOuter = bvLowered
-    ParentColor = True
+    Caption = 'Application Plugins'
+    Color = clHighlight
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clHighlightText
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentBackground = False
+    ParentFont = False
     TabOrder = 6
-    object TntLabel1: TTntLabel
-      Left = 1
-      Top = 1
-      Width = 351
-      Height = 22
-      Align = alClient
-      Alignment = taCenter
-      AutoSize = False
-      Caption = 'Application Plugins'
-      Color = clHighlight
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWhite
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentColor = False
-      ParentFont = False
-      Transparent = False
-      Layout = tlCenter
-    end
   end
 end
