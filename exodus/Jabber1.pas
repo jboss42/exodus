@@ -1453,9 +1453,8 @@ begin
         if MainSession.IsPaused then begin
             with tag.AddTag('x') do begin
                 PutAttribute('xmlns', XMLNS_DELAY);
-                // TODO: fix this so that queue'd msgs include the TZ offset.
-                PutAttribute('stamp', DateTimeToJabber(Now));
-                end;
+                PutAttribute('stamp', DateTimeToJabber(Now) + TimeZoneBias());
+                end; + TimeZoneBias()
             MainSession.QueueEvent(event, tag, Self.MsgCallback)
             end
         else begin
