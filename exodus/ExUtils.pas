@@ -463,7 +463,7 @@ begin
 
             // put some UTF-8 header fu in here
             buff := '<html><head>';
-            buff := buff + '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">'
+            buff := buff + '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
             buff := buff + '</head>';
             fs.Write(Pointer(buff)^, Length(buff));
 
