@@ -375,7 +375,7 @@ begin
 
     if (_check_event) then begin
         // check for composing events
-        etag := tag.QueryXPTag('/message/*[@xmlns="jabber:x:event"]');
+        etag := tag.QueryXPTag(XP_MSGXEVENT);
         if ((etag <> nil) and (etag.GetFirstTag('composing') <> nil))then begin
             // we are composing a message
             if (etag.GetBasicText('id') = _last_id) then begin
@@ -402,7 +402,7 @@ begin
 
     // if (msg_type = 'chat') then begin
     // normal chat message
-    etag := tag.QueryXPTag('/message/*[@xmlns="jabber:x:event"]/composing');
+    etag := tag.QueryXPTag(XP_MSGCOMPOSING);
     _send_composing := (etag <> nil);
     if (_send_composing) then
         _reply_id := tag.GetAttribute('id');
@@ -481,7 +481,7 @@ begin
 
     mtag := msg.Tag;
     with mtag.AddTag('x') do begin
-        PutAttribute('xmlns', XMLNS_MSGEVENTS);
+        PutAttribute('xmlns', XMLNS_XEVENT);
         AddTag('composing');
         end;
 
@@ -723,7 +723,7 @@ begin
         with c do begin
             PutAttribute('to', jid);
             with AddTag('x') do begin
-                PutAttribute('xmlns', XMLNS_MSGEVENTS);
+                PutAttribute('xmlns', XMLNS_XEVENT);
                 AddTag('composing');
                 AddBasicTag('id', _reply_id);
                 end;

@@ -499,7 +499,7 @@ begin
     else if pkey = 'emoticons' then
         result := '1'
     else if pkey = 'timestamp_format' then
-        result := 'HH:MM'
+        result := 'H:MM AM/PM'
     else if pkey = 'notify_online' then
         result := IntToStr(notify_toast)
     else if pkey = 'notify_normalmsg' then

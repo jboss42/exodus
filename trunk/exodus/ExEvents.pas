@@ -235,7 +235,7 @@ begin
                 end;
             end;
 
-        delay := tag.QueryXPTag('/message/x[@xmlns="jabber:x:delay"]');
+        delay := tag.QueryXPTag(XP_MSGDELAY);
         if (delay <> nil) then begin
             // we have a delay tag
             edate := JabberToDateTime(delay.getAttribute('stamp'));

@@ -627,7 +627,7 @@ begin
 
     else if (tag.GetAttribute('type') = 'error') then begin
         // some kind of roster fetch error
-        etag := tag.QueryXPTag('/iq/error');
+        etag := tag.GetFirstTag('error');
         if (etag <> nil) then begin
             if (etag.GetAttribute('code') = '404') then
                 Self.Fetch();

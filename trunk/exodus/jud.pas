@@ -29,10 +29,14 @@ uses
 type
 
   TJUDItem = class
+  private
+    _count: integer;
+    procedure setCount(value: integer);
   public
+    xdata: boolean;
     jid: string;
-    count: integer;
-    cols: array[1..20] of Widestring;
+    cols: array of Widestring;
+    property Count: integer read _count write setCount;
   end;
 
   TfrmJUD = class(TfrmDockable)
@@ -59,6 +63,7 @@ type
     Label3: TLabel;
     cboGroup: TComboBox;
     lblAddGrp: TLabel;
+    Splitter1: TSplitter;
     procedure btnCloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnActionClick(Sender: TObject);
@@ -87,6 +92,8 @@ type
     cur_key: string;
     cur_state: string;
     cur_iq: TJabberIQ;
+
+    jid_col: integer;
 
     procedure getFields;
     procedure sendRequest();
@@ -119,10 +126,9 @@ function ItemCompare(Item1, Item2: Pointer): integer;
 implementation
 
 uses
-    JabberConst, Profile, Roster, Agents,
-    JabberID, fGeneric,
-    Session, ExUtils, XMLUtils,
-    fTopLabel, Jabber1;
+    Unicode, 
+    JabberConst, Profile, Roster, Agents, JabberID, fGeneric,
+    Session, ExUtils, XMLUtils, fTopLabel, Jabber1;
 
 var
     cur_sort: integer;
@@ -174,6 +180,13 @@ begin
 end;
 
 {---------------------------------------}
+procedure TJUDItem.setCount(value: integer);
+begin
+    SetLength(cols, value + 1);
+    _count := value;
+end;
+
+{---------------------------------------}
 procedure TfrmJUD.FormCreate(Sender: TObject);
 begin
   inherited;
@@ -188,6 +201,8 @@ begin
         cboGroup.ItemIndex := 0;
     virtlist := TObjectList.Create();
     virtlist.OwnsObjects := true;
+    AssignDefaultFont(pnlFields.Font);
+    pnlFields.Font.Size := pnlFields.Font.Size - 1;
 end;
 
 {---------------------------------------}
@@ -320,6 +335,7 @@ begin
         cur_frame := nil;
         field_set.Clear();
 
+        // Check for x-data support
         x := tag.QueryXPTag('/iq/query/x[@xmlns="jabber:x:data"]');
         if (x <> nil) then begin
             cur_state := 'xsearch';
@@ -327,6 +343,7 @@ begin
             if (cur_tag <> nil) then
                 lblInstructions.Caption := trimNewLines(cur_tag.Data);
             fields := x.QueryTags('field');
+            pnlFields.Visible := false;
             for i := fields.Count - 1 downto 0 do begin
                 cur_gen := TframeGeneric.Create(Self);
                 with cur_gen do begin
@@ -338,6 +355,7 @@ begin
                     TabOrder := 0;
                     end;
                 end;
+            pnlFields.Visible := true;
             fields.Free();
             end
         else begin
@@ -378,14 +396,18 @@ end;
 {---------------------------------------}
 procedure TfrmJUD.ItemsCallback(event: string; tag: TXMLTag);
 var
-    i,c: integer;
+    cidx, i,c: integer;
     items, cols: TXMLTagList;
     cur: TXMLTag;
     col: TListColumn;
     ji: TJUDItem;
+    jid_fld: Widestring;
+    clist: TWideStringList;
+    tmps: Widestring;
 begin
     // callback when we get our search results back
     cur_iq := nil;
+    clist := nil;
     lblWait.Visible := false;
     aniWait.Visible := false;
     aniWait.Active := false;
@@ -413,11 +435,12 @@ begin
         }
 
         // get all the returned items
-        items := tag.QueryXPTags('/iq/query/item');
+        items := nil;
+        if (cur_state = 'items') then
+            items := tag.QueryXPTags('/iq/query/item');
 
         if ((items = nil) or (items.Count = 0)) then
             items := tag.QueryXPTags('//x[@xmlns="jabber:x:data"]/item');
-
 
         if ((items = nil) or (items.Count = 0)) then begin
             cur_state := 'get_fields';
@@ -431,35 +454,20 @@ begin
         lstContacts.Items.Clear;
         virtlist.Clear();
 
-        // reported columns
-        cols := tag.QueryXPTags('//x[@xmlns="jabber:x:data"]/reported/field');
         lstContacts.Columns.Clear();
 
-        with lstContacts.Columns.Add() do begin
-            Caption := sJID;
-            Width := 100;
-            end;
-
-        for i := 0 to cols.Count - 1 do begin
-            with lstContacts.Columns.Add() do begin
-                Caption := cols[i].GetAttribute('label');
-                Width := 100;
-                end;
-            end;
-
-
+        // setup the columns for items (no x-data)
         if (cur_state = 'items') then begin
-            // setup the columns...
             // use the first item in the list
             cur :=  items[0];
             cols := cur.ChildTags();
 
-            lstContacts.Columns.Clear();
-
-            // add a JID column by default
-            col := lstContacts.Columns.Add();
-            col.Caption := sJID;
-            col.Width := 100;
+            with lstContacts.Columns.Add() do begin
+                // add a JID column by default
+                Caption := sJID;
+                Width := 100;
+                jid_col := 0;
+                end;
 
             for i := 0 to cols.count - 1 do begin
                 col := lstContacts.Columns.Add();
@@ -468,26 +476,56 @@ begin
                 end;
 
             cols.Free();
+            end
+        else begin
+            // reported columns for x-data, setup columns
+            cols := tag.QueryXPTags('//x[@xmlns="jabber:x:data"]/reported/field');
+            clist := TWidestringList.Create();
+            if (cols <> nil) then begin
+                for i := 0 to cols.Count - 1 do begin
+                    with lstContacts.Columns.Add() do begin
+                        Caption := cols[i].GetAttribute('label');
+                        Width := 100;
+                        tmps := cols[i].getAttribute('type');
+                        if ((tmps = 'jid') or (tmps = 'jid-single')) then begin
+                            jid_col := i;
+                            jid_fld := cols[i].GetAttribute('var');
+                            end;
+                        end;
+                    clist.Add(cols[i].GetAttribute('var'));
+                    end;
+                cols.Free();
+                end;
             end;
 
         // populate the listview.
         for i := 0 to items.count - 1 do begin
             cur := items[i];
             ji := TJUDItem.Create();
-            ji.jid := cur.GetAttribute('jid');
+
             if (cur_state = 'items') then begin
+                ji.xdata := false;
                 cols := cur.ChildTags();
+                ji.jid := cur.GetAttribute('jid');
                 ji.count := cols.Count;
                 for c := 0 to cols.count - 1 do
                     ji.cols[c + 1] := cols[c].Data;
                 cols.Free();
                 end
+
             else begin // xitems
-                cols := cur.QueryXPTags('/item/field');
+                ji.xdata := true;
+                cols := cur.QueryTags('field');
                 ji.count := cols.Count;
-                for c := 0 to cols.count - 1 do
-                    // TODO: look up right column based on var
-                    ji.cols[c + 1] := cols[c].GetBasicText('value');
+                for c := 0 to cols.count - 1 do begin
+                    tmps := cols[c].getAttribute('var');
+                    cidx := clist.indexOf(tmps);
+                    if (cidx > -1) then begin
+                        ji.cols[cidx] := cols[c].GetBasicText('value');
+                        if (tmps = jid_fld) then
+                            ji.jid := ji.cols[cidx];
+                        end;
+                    end;
                 cols.Free();
                 end;
 
@@ -495,7 +533,6 @@ begin
             end;
 
         lstContacts.Items.Count := virtlist.Count;
-        // lstContacts.Items.EndUpdate();
 
         // show results panel
         lblSelect.Visible := false;
@@ -531,10 +568,10 @@ procedure TfrmJUD.btnActionClick(Sender: TObject);
 begin
   inherited;
     {
-    states go:
+    states go (for non-xdata):
     init -> get_fields -> fields -> search -> items
-    or:
-    init -> get_fields -> fields -> search -> xitems
+    or (for x-data):
+    init -> get_fields -> fields -> xsearch -> xitems
     }
     if ((cur_state = 'fields') or
         (cur_state = 'items') or
@@ -767,7 +804,10 @@ begin
 
     ji := TJUDItem(virtlist[Item.Index]);
     if ji <> nil then begin
-        Item.Caption := ji.jid;
+        if (ji.xdata) then
+            Item.Caption := ji.cols[0]
+        else
+            Item.Caption := ji.jid;
         Item.SubItems.Clear();
         for i := 1 to ji.count do
             item.SubItems.Add(ji.cols[i]);

@@ -671,22 +671,13 @@ end;
 {$ifndef NOTRACE_EXCEPTIONS}
 procedure ExceptionTracker(ExceptObj: TObject; ExceptAddr: Pointer; OSException: Boolean);
 var
-    // trace: TStringList;
-    // tracer: TfrmTracer;
     e: Exception;
 begin
-    //
     // trace := TStringList.Create();
     e := Exception(ExceptObj);
-
     if (e is EConvertError) then exit;
     if (e is EIdSocketError) then exit;
 
-    {
-    tracer := TfrmTracer.Create(Application);
-    JclLastExceptStackListToStrings(tracer.Memo1.Lines, true, true, true);
-    tracer.ShowModal();
-    }
 end;
 {$endif}
 
@@ -983,28 +974,6 @@ begin
     Self.setupTrayIcon();
     MainSession.setPresence(_cli_show, _cli_status, _cli_priority);
     _controller := TExodusController.Create();
-
-    (*
-    // test AppBar stuff
-    appbar.cbSize := Sizeof(TAppBarData);
-    appbar.hWnd := Self.Handle;
-    appbar.uEdge := ABE_RIGHT;
-
-    appbar.uCallbackMessage := uint(@TfrmExodus.WMAppBar);
-
-    res := SHAppBarMessage(ABM_NEW, appbar);
-
-    appbar.rc.Left := Screen.Width - Self.Width;
-    appbar.rc.Top := 0;
-    appbar.rc.Bottom := Screen.Height;
-    appbar.rc.Right := appbar.rc.Left + Self.Width;
-    res := SHAppBarMessage(ABM_QUERYPOS, appbar);
-    res := SHAppBarMessage(ABM_SETPOS, appbar);
-    MoveWindow(Self.Handle, appbar.rc.Left, appbar.rc.Top,
-        Self.Width, Screen.Height, true);
-    appbar.lParam := 1;
-    SHAppBarMessage(ABM_SETAUTOHIDEBAR, appbar);
-    *)
 
     {$ifndef NOTRACE_EXCEPTIONS}
     // Start Exception tracking
