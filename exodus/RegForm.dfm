@@ -1,7 +1,7 @@
 inherited frmRegister: TfrmRegister
   Left = 245
   Top = 360
-  Caption = 'frmRegister'
+  Caption = 'Service Registration'
   OldCreateOrder = True
   OnClose = FormClose
   OnCreate = FormCreate
