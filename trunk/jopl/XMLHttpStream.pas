@@ -65,7 +65,7 @@ type
 implementation
 uses
     {$ifdef Win32}
-    Registry, StrUtils, ExUtils, 
+    Registry, StrUtils,
     {$endif}
     IdGlobal;
 

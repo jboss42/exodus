@@ -323,17 +323,12 @@ begin
     e := Pos('>', tmps);
     i := Pos('/>', tmps);
 
-    if _root = '' then begin
-        // snag the first tag off the front
-        {
-        p := Pos('<', sbuff);
-        if p <= 0 then raise EXMLStream.Create('');
-        tmps := Copy(sbuff, p, l - p + 1);
-        e := Pos('>', tmps);
-        i := Pos('/>', tmps);
-        }
+    // If we have no end tags at all, then bail
+    if ((e = 0) and (i = 0)) then exit; 
 
-        // various kinds of whitespace
+    if _root = '' then begin
+        // snag the first tag off the front and cache it as the "root" of our fragment
+        // check various kinds of whitespace
         sp := Pos(' ', tmps);
         tb := Pos(#09, tmps);
         cr := Pos(#10, tmps);
@@ -347,8 +342,16 @@ begin
 
         // find the _root tag
         if ((i > 0) and (i < ws)) then
+            // we have an end marker /> before whitespace
+            // this is something like <foo/>
             _root := Trim(Copy(sbuff, p + 1, i - p))
+        else if (e < ws) then
+            // we have an end begin tag > before whitespace
+            // this is something like <foo>cdata goes here</foo>
+            _root := Trim(Copy(sbuff, p + 1, e - p - 1))
         else
+            // Normal <foo bar="baz">...</foo> or
+            // <foo bar="baz"/>
             _root := Trim(Copy(sbuff, p + 1, ws - p));
 
         // return special entity tags and bail

@@ -433,6 +433,7 @@ begin
         // process XML
         // always fire debug
         if (tag.Name = 'stream:stream') then begin
+            // we got dropped
             _stream_id := tag.getAttribute('id');
             _dispatcher.DispatchSignal('/session/connected', nil);
 
@@ -441,6 +442,10 @@ begin
             else
                 AuthGet();
 
+            end
+        else if (tag.Name = 'stream:error') then begin
+            // we got a stream error
+            FireEvent('/session/stream:error', tag, 'STREAM ERROR!');
             end
         else
             _dispatcher.DispatchSignal('/packet', tag);
