@@ -1,1 +1,7 @@
-<exodus version="0.9"><prefs><branding_url value="http://exodus.jabberstudio.org/daily/branding.xml"/><auto_update_url value="http://exodus.jabberstudio.org/daily/setup.exe"/><auto_update_changelog_url value="http://exodus.jabberstudio.org/daily/ChangeLog-DAILY.txt"/></prefs><presii/><positions/><profiles/><local-bookmarks/></exodus>
+<exodus version="0.9"><prefs>
+<branding_url value="http://exodus.jabberstudio.org/daily/branding.xml"/>
+<auto_update_url value="http://exodus.jabberstudio.org/daily/setup.exe"/>
+<auto_update_changelog_url value="http://exodus.jabberstudio.org/daily/ChangeLog-DAILY.txt"/>
+<recon_tries value="4" state="ro"/>
+<recon_time value="10" state="ro"/>
+</prefs><presii/><positions/><profiles/><local-bookmarks/></exodus>

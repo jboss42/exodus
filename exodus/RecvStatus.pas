@@ -79,7 +79,6 @@ type
         _stream: TFileStream;
         _size: longint;
 
-        procedure kill();
         procedure attemptSIConnection();
         procedure SendError(code, condition: string);
 
@@ -96,6 +95,7 @@ type
     public
         { Public declarations }
         procedure setup(pkg: TFileXferPkg);
+        procedure Kill();
     end;
 
     TFileRecvThread = class(TThread)
@@ -745,8 +745,5 @@ begin
         getXferManager().killFrame(Self);
     end;
 end;
-
-
-
 
 end.

@@ -108,6 +108,7 @@ type
         procedure SendStart();
         procedure SendDav();
         procedure SendIQ();
+        procedure Kill();
     end;
 
     TFileSendThread = class(TThread)
@@ -1006,8 +1007,24 @@ end;
 procedure TfSendStatus.btnCancelClick(Sender: TObject);
 begin
     if ((_state = send_done) or (_state = send_cancel) or
-        (_state = send_do_oob) or (_state = send_do_dav)) then
+        (_state = send_do_oob) or (_state = send_do_dav)) then begin
+
+        if (_iq <> nil) then begin
+            _iq.Free();
+            _iq := nil;
+        end;
+
         getXferManager().killFrame(Self);
+    end;
+end;
+
+procedure TfSendStatus.Kill();
+begin
+    if (_iq <> nil) then begin
+        _iq.Free();
+        _iq := nil;
+    end;
+    getXferManager().killFrame(Self);
 end;
 
 initialization

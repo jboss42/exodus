@@ -92,6 +92,7 @@ type
     procedure FormResize(Sender: TObject);
     procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
     procedure btnCloseClick(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 
   protected
     procedure WMCloseFrame(var msg: TMessage); message WM_CLOSE_FRAME;
@@ -810,6 +811,14 @@ procedure TfrmXferManager.btnCloseClick(Sender: TObject);
 begin
   inherited;
     Self.Close();
+end;
+
+{---------------------------------------}
+procedure TfrmXferManager.FormCloseQuery(Sender: TObject;
+  var CanClose: Boolean);
+begin
+  inherited;
+    // Kill each frame
 end;
 
 initialization

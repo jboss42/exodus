@@ -3,7 +3,6 @@ inherited frmXferManager: TfrmXferManager
   Top = 229
   Width = 444
   Caption = 'File Transfer Manager'
-  DefaultMonitor = dmDesktop
   OldCreateOrder = True
   OnClose = FormClose
   OnDestroy = FormDestroy
@@ -13,7 +12,7 @@ inherited frmXferManager: TfrmXferManager
     Left = 0
     Top = 33
     Width = 436
-    Height = 178
+    Height = 168
     Align = alClient
     BevelInner = bvNone
     BevelOuter = bvNone
