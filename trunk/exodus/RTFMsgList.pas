@@ -291,7 +291,7 @@ end;
 {---------------------------------------}
 function TfRTFMsgList.empty(): boolean;
 begin
-    Result := MsgList.Lines.Count > 0;
+    Result := (MsgList.Lines.Count = 0);
 end;
 
 {---------------------------------------}
