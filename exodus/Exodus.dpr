@@ -139,6 +139,7 @@ uses
   PrefSubscription in 'prefs\PrefSubscription.pas' {frmPrefSubscription},
   PrefFont in 'prefs\PrefFont.pas' {frmPrefFont},
   PrefDialogs in 'prefs\PrefDialogs.pas' {frmPrefDialogs},
+  PrefNotify in 'prefs\PrefNotify.pas' {frmPrefNotify}, 
   PrefMsg in 'prefs\PrefMsg.pas' {frmPrefMsg};
 
 {$R *.TLB}
