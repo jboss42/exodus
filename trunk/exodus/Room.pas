@@ -47,7 +47,6 @@ type
     popRoom: TTntPopupMenu;
     popRoomRoster: TTntPopupMenu;
     pnlSubj: TPanel;
-    lblSubjectURL: TTntLabel;
     btnClose: TSpeedButton;
     lstRoster: TTntListView;
     lblSubject: TTntLabel;
@@ -91,6 +90,7 @@ type
     popRosterVCard: TTntMenuItem;
     N7: TTntMenuItem;
     popRosterBrowse: TTntMenuItem;
+    SpeedButton1: TSpeedButton;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -284,6 +284,9 @@ const
     sEditAdmin     = 'Edit Admin List';
     sEditOwner     = 'Edit Owner List';
     sEditModerator = 'Edit Moderator List';
+
+    sNoSubjectHint = 'Click the button to change the room subject.';
+    sNoSubject     = 'No room subject';
 
 const
     MUC_OWNER = 'owner';
@@ -512,10 +515,16 @@ begin
 
     if (Msg.Subject <> '') then begin
         _subject := Msg.Subject;
-        lblSubject.Hint := AnsiReplaceText(_subject, '|', Chr(13));
-        lblSubject.Caption := AnsiReplaceText(_subject, '&', '&&');
-        Msg.Body := _(sRoomSubjChange) + Msg.Subject;
-        DisplayMsg(Msg, MsgList);
+        if (_subject = '') then begin
+            lblSubject.Hint := _(sNoSubjectHint);
+            lblSubject.Caption := _(sNoSubject);
+        end
+        else begin
+            lblSubject.Hint := AnsiReplaceText(_subject, '|', Chr(13));
+            lblSubject.Caption := AnsiReplaceText(_subject, '&', '&&');
+            Msg.Body := _(sRoomSubjChange) + Msg.Subject;
+            DisplayMsg(Msg, MsgList);
+        end;
     end
     else if (Msg.Body <> '') then begin
         DisplayMsg(Msg, MsgList);
@@ -1356,7 +1365,10 @@ begin
     _notify[0] := MainSession.Prefs.getInt('notify_roomactivity');
     _notify[1] := MainSession.Prefs.getInt('notify_keyword');
 
-    lblSubject.Caption := '';
+    AssignUnicodeFont(lblSubject.Font, 8);
+    lblSubject.Font.Style := [fsBold];
+    lblSubject.Hint := _(sNoSubjectHint);
+    lblSubject.Caption := _(sNoSubject);
     _subject := '';
 
     if (_notify[1] <> 0) then
@@ -2071,17 +2083,17 @@ begin
   inherited;
     // edit a list
     if (Sender = popVoiceList) then
-        ShowRoomAdminList(self.jid, MUC_PART, '', _(sEditVoice))
+        ShowRoomAdminList(self, self.jid, MUC_PART, '', _(sEditVoice))
     else if (Sender = popBanList) then
-        ShowRoomAdminList(self.jid, '', MUC_OUTCAST, _(sEditBan))
+        ShowRoomAdminList(self, self.jid, '', MUC_OUTCAST, _(sEditBan))
     else if (Sender = popMemberList) then
-        ShowRoomAdminList(self.jid, '', MUC_MEMBER, _(sEditMember))
+        ShowRoomAdminList(self, self.jid, '', MUC_MEMBER, _(sEditMember))
     else if (Sender = popModeratorList) then
-        ShowRoomAdminList(self.jid, MUC_MOD, '', _(sEditModerator))
+        ShowRoomAdminList(self, self.jid, MUC_MOD, '', _(sEditModerator))
     else if (Sender = popAdminList) then
-        ShowRoomAdminList(self.jid, '', MUC_ADMIN, _(sEditAdmin))
+        ShowRoomAdminList(self, self.jid, '', MUC_ADMIN, _(sEditAdmin))
     else if (Sender = popOwnerList) then
-        ShowRoomAdminList(self.jid, '', MUC_OWNER, _(sEditOwner));
+        ShowRoomAdminList(self, self.jid, '', MUC_OWNER, _(sEditOwner));
 end;
 
 {---------------------------------------}
