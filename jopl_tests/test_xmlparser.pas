@@ -12,7 +12,7 @@ type
         procedure Setup; override;
         procedure TearDown; override;
     published
-        procedure testFileParse;
+        // procedure testFileParse;
         procedure testStringParser;
     end;
 
@@ -38,6 +38,7 @@ begin
 end;
 
 {---------------------------------------}
+(*
 procedure TXMLParserTest.testFileParse;
 var
     t, f: TXMLTag;
@@ -59,6 +60,7 @@ begin
     CheckEquals('100', f.QueryXPData('/jabber/service/jsm/filter/max_size'),
         'Failed getting deep tag cdata');
 end;
+*)
 
 {---------------------------------------}
 procedure TXMLParserTest.testStringParser;

@@ -102,7 +102,8 @@ uses
   fService in 'fService.pas' {frameObjectActions: TFrame},
   ChatController in '..\jopl\ChatController.pas',
   WStrList in '..\jopl\WStrList.pas',
-  Langs in '..\jopl\Langs.pas';
+  Langs in '..\jopl\Langs.pas',
+  Unicode in '..\jopl\Unicode.pas';
 
 {$R *.RES}
 

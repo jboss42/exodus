@@ -23,7 +23,18 @@ uses
   test_xmlparser in 'test_xmlparser.pas',
   test_dispatcher in 'test_dispatcher.pas',
   XMLSocketStream in '..\jopl\XMLSocketStream.pas',
-  test_xmlstream in 'test_xmlstream.pas';
+  WStrList in '..\jopl\WStrList.pas',
+  Langs in '..\jopl\Langs.pas',
+  Unicode in '..\jopl\Unicode.pas',
+  Presence in '..\jopl\Presence.pas',
+  Roster in '..\jopl\Roster.pas',
+  Session in '..\jopl\Session.pas',
+  IQ in '..\jopl\IQ.pas',
+  PrefController in '..\jopl\PrefController.pas',
+  Chat in '..\jopl\Chat.pas',
+  ChatController in '..\jopl\ChatController.pas',
+  XMLHttpStream in '..\jopl\XMLHttpStream.pas',
+  S10n in '..\jopl\S10n.pas';
 
 {$R *.res}
 
@@ -37,7 +48,7 @@ begin
 
   Application.Title := 'DUnit';
   // Application.CreateForm(TGUITestRunner, MyForm);
-  Application.CreateForm(TMyForm, MyForm);
+  Application.CreateForm(TGUITestRunner, MyForm);
   with MyForm do begin
         Show();
         suite := registeredTests;

@@ -22,6 +22,7 @@ unit XMLParser;
 interface
 
 uses
+    WStrList, 
     XMLTag,
     XMLUtils,
     LibXMLParser,
@@ -37,15 +38,21 @@ type
         constructor Create;
         destructor Destroy; override;
 
-        procedure ParseString(buff, stream_tag: string);
-        procedure ParseFile(filename: string);
+        procedure ParseString(buff, stream_tag: WideString);
+        procedure ParseFile(filename: String);
         function Count: integer;
         function popTag: TXMLTag;
     end;
 
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
+uses
+    Unicode;
 
+{---------------------------------------}
 constructor TXMLTagParser.Create();
 begin
     inherited;
@@ -55,6 +62,7 @@ begin
     _dom_list := TList.Create;
 end;
 
+{---------------------------------------}
 destructor TXMLTagParser.Destroy;
 begin
     _parser.Free;
@@ -62,6 +70,7 @@ begin
     inherited Destroy;
 end;
 
+{---------------------------------------}
 function TXMLTagParser.Count: integer;
 begin
     Result := _dom_list.Count;
@@ -77,17 +86,18 @@ begin
         Result := nil;
 end;
 
-procedure TXMLTagParser.ParseFile(filename: string);
+{---------------------------------------}
+procedure TXMLTagParser.ParseFile(filename: String);
 var
-    f: TStringList;
-    s: String;
+    f: TWideStringList;
+    s: WideString;
 begin
     // Open the file, suck it into a stringlist
     // and send it off to the parser.
 
     if (not FileExists(filename)) then exit;
 
-    f := TStringList.Create();
+    f := TWideStringList.Create();
     f.LoadFromFile(filename);
 
     s := f.Text;
@@ -95,17 +105,19 @@ begin
     f.Free();
 end;
 
-procedure TXMLTagParser.ParseString(buff, stream_tag: string);
+{---------------------------------------}
+procedure TXMLTagParser.ParseString(buff, stream_tag: Widestring);
 var
     i: longint;
-    cp_buff, tmps: string;
-    pbuff: PChar;
+    cp_buff, tmps: Widestring;
+    pbuff: PWideChar;
     curtag: TXMLTag;
 begin
     // copy the buffer into a PChar
     cp_buff := buff;
-    pbuff := StrAlloc(length(cp_buff) + 1);
-    StrPCopy(pbuff, cp_buff);
+    pbuff := StrAllocW(length(cp_buff) + 1);
+    StrCopyW(pbuff, PWideChar(cp_buff));
+    // StrPCopy(pbuff, cp_buff);
 
     // parse the buffer
     _parser.LoadFromBuffer(pbuff);
@@ -161,7 +173,8 @@ begin
         end;
 
         end;
-    StrDispose(pbuff);
+    // StrDispose(pbuff);
+    StrDisposeW(pbuff);
 end;
 
 {---------------------------------------}
@@ -183,4 +196,3 @@ end;
 
 
 end.
- 
