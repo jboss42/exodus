@@ -2929,6 +2929,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.timTrayAlertTimer(Sender: TObject);
 var
     iconNum : integer;
@@ -2946,11 +2947,13 @@ begin
     Shell_NotifyIcon(NIM_MODIFY, @_tray);
 end;
 
+{---------------------------------------}
 procedure StartTrayAlert();
 begin
      frmExodus.timTrayAlert.Enabled := true;
 end;
 
+{---------------------------------------}
 procedure StopTrayAlert();
 begin
      if (frmExodus.timTrayAlert.Enabled) then begin
@@ -2960,11 +2963,13 @@ begin
      end;
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.JabberUserGuide1Click(Sender: TObject);
 begin
     ShellExecute(0, 'open', 'http://www.jabber.org/user/userguide/', '', '', SW_SHOW);
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.mnuPluginDummyClick(Sender: TObject);
 begin
     // call the COM Controller

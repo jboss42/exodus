@@ -324,16 +324,19 @@ end;
 procedure TfrmDockable.FormEndDock(Sender, Target: TObject; X, Y: Integer);
 begin
     if (Target <> frmExodus.Tabs) then exit;
-    
+
     if Self.TabSheet <> nil then begin
         Self.TabSheet.ImageIndex := -1;
         frmExodus.Tabs.ActivePage.ImageIndex := -1;
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmDockable.FormPaint(Sender: TObject);
 begin
     inherited;
+    if timFlasher.Enabled then
+        timFlasher.Enabled := false;
     StopTrayAlert();
 end;
 
