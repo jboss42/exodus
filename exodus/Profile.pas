@@ -160,7 +160,7 @@ begin
         txtJID.Text := tmp_jid.jid;
         ritem := MainSession.Roster.Find(tmp_jid.jid);
         if (ritem <> nil) then begin
-            txtNick.Text := ritem.nickname;
+            txtNick.Text := ritem.RawNickname;
             if ritem.subscription = 'from' then
                 optSubscrip.ItemIndex := 1
             else if ritem.subscription = 'to' then
@@ -302,8 +302,8 @@ begin
     ritem := MainSession.roster.Find(txtJID.Text);
     changed := false;
     if ritem <> nil then begin
-        if ritem.nickname <> txtNick.Text then begin
-            ritem.Nickname := txtNick.Text;
+        if ritem.RawNickname <> txtNick.Text then begin
+            ritem.RawNickname := txtNick.Text;
             changed := true;
             end;
 

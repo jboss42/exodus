@@ -1,5 +1,23 @@
 unit AutoUpdateStatus;
+{
+    Copyright 2002, Peter Millard
 
+    This file is part of Exodus.
+
+    Exodus is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Exodus is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Exodus; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
 interface
 
 uses
@@ -53,6 +71,9 @@ resourcestring
     sInstalling       = 'Installing...';
     sError            = 'Error: %s';
     
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 
 {$R *.dfm}
@@ -68,6 +89,7 @@ uses
 var
   frmAutoUpdateStatus: TfrmAutoUpdateStatus;
 
+{---------------------------------------}
 procedure ShowAutoUpdateStatus(tag : TXMLTag);
 begin
      if (frmAutoUpdateStatus = nil) then
@@ -75,6 +97,7 @@ begin
     frmAutoUpdateStatus.Show();
 end;
 
+{---------------------------------------}
 procedure ShowAutoUpdateStatus(URL : string);
 begin
      if (frmAutoUpdateStatus = nil) then
@@ -83,6 +106,7 @@ begin
     frmAutoUpdateStatus.Show();
 end;
 
+{---------------------------------------}
 procedure TfrmAutoUpdateStatus.FormCreate(Sender: TObject);
 begin
     Image1.Picture.Icon.Handle := LoadIcon(0, IDI_QUESTION);
@@ -91,6 +115,7 @@ begin
     _url := '';
 end;
 
+{---------------------------------------}
 procedure TfrmAutoUpdateStatus.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
@@ -98,6 +123,7 @@ begin
     frmAutoUpdateStatus := nil;
 end;
 
+{---------------------------------------}
 procedure TfrmAutoUpdateStatus.frameButtons1btnCancelClick(
   Sender: TObject);
 begin
@@ -107,12 +133,14 @@ begin
         Self.Close();
 end;
 
+{---------------------------------------}
 procedure TfrmAutoUpdateStatus.HttpClientWork(Sender: TObject;
   AWorkMode: TWorkMode; const AWorkCount: Integer);
 begin
     ProgressBar1.Position := AWorkCount;
 end;
 
+{---------------------------------------}
 procedure TfrmAutoUpdateStatus.HttpClientWorkBegin(Sender: TObject;
   AWorkMode: TWorkMode; const AWorkCountMax: Integer);
 begin
@@ -121,6 +149,7 @@ begin
     label1.Refresh();
 end;
 
+{---------------------------------------}
 procedure TfrmAutoUpdateStatus.frameButtons1btnOKClick(Sender: TObject);
 var
     iq: TJabberIQ;
@@ -138,6 +167,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmAutoUpdateStatus.getFile();
 var
     tmp : string;
@@ -162,7 +192,7 @@ begin
             httpClient.Get(_url, _fstream);
             _fstream.Free();
             _fstream := nil;
-            
+
             if (httpClient.ResponseCode = 200) then begin
                 label1.Caption := sDownloadComplete;
                 label1.Refresh();
@@ -194,12 +224,14 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmAutoUpdateStatus.setTag(tag: TXMLTag);
 begin
     //
     _tag := TXMLTag.Create(tag);
 end;
 
+{---------------------------------------}
 procedure TfrmAutoUpdateStatus.IQCallback(event: string; tag: TXMLTag);
 var
     c: TXMLTagList;

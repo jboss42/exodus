@@ -344,9 +344,8 @@ begin
         MainSession.UnRegisterCallback(_pcallback);
         // MainSession.UnRegisterCallback(_scallback);
 
-        _callback := 0;
-        _pcallback := 0;
-        _scallback := 0;
+        _callback := -1;
+        _pcallback := -1;
         end
     else if (event = '/session/presence') then begin
         // We changed our own presence, send it to the room
@@ -513,7 +512,7 @@ end;
 procedure TfrmRoom.SetJID(sjid: Widestring);
 begin
     // setup our callbacks
-    if (_callback < 0) then begin
+    if (_callback = -1) then begin
         _callback := MainSession.RegisterCallback(MsgCallback, '/packet/message[@type="groupchat"][@from="' + sjid + '*"]');
         _pcallback := MainSession.RegisterCallback(PresCallback, '/packet/presence[@from="' + sjid + '*"]');
         if (_scallback = -1) then
@@ -627,11 +626,9 @@ var
     i: integer;
 begin
     // Unregister callbacks and send unavail pres.
-    if (_callback >= 0) then begin
-        MainSession.UnRegisterCallback(_callback);
-        MainSession.UnRegisterCallback(_pcallback);
-        MainSession.UnRegisterCallback(_scallback);
-        end;
+    MainSession.UnRegisterCallback(_callback);
+    MainSession.UnRegisterCallback(_pcallback);
+    MainSession.UnRegisterCallback(_scallback);
 
     if ((MainSession <> nil) and (MainSession.Active)) then begin
         p := TJabberPres.Create();
