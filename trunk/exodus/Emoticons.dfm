@@ -5,7 +5,7 @@ object frmEmoticons: TfrmEmoticons
   BorderStyle = bsNone
   Caption = 'frmEmoticons'
   ClientHeight = 163
-  ClientWidth = 273
+  ClientWidth = 258
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,7 +22,7 @@ object frmEmoticons: TfrmEmoticons
   object ToolBar1: TToolBar
     Left = 0
     Top = 0
-    Width = 273
+    Width = 258
     Height = 135
     AutoSize = True
     ButtonHeight = 27
@@ -356,7 +356,7 @@ object frmEmoticons: TfrmEmoticons
   object ToolBar2: TToolBar
     Left = 0
     Top = 135
-    Width = 273
+    Width = 258
     Height = 24
     AutoSize = True
     ButtonHeight = 24
