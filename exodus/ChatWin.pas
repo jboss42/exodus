@@ -87,8 +87,7 @@ type
     procedure timBusyTimer(Sender: TObject);
     procedure popResourcesClick(Sender: TObject);
     procedure imgAvatarPaint(Sender: TObject);
-    procedure imgAvatarMouseMove(Sender: TObject; Shift: TShiftState; X,
-      Y: Integer);
+    procedure imgAvatarClick(Sender: TObject);
   private
     { Private declarations }
     jid: widestring;        // jid of the person we are talking to
@@ -1388,8 +1387,7 @@ begin
     end;
 end;
 
-procedure TfrmChat.imgAvatarMouseMove(Sender: TObject; Shift: TShiftState;
-  X, Y: Integer);
+procedure TfrmChat.imgAvatarClick(Sender: TObject);
 var
   r : TRect;
 begin
@@ -1406,7 +1404,6 @@ begin
     Avatar := _avatar;
     Show();
   end;
-
 end;
 
 end.
