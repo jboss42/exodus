@@ -8,17 +8,17 @@ inherited frmRoom: TfrmRoom
   TextHeight = 13
   inherited Panel3: TPanel
     Top = 23
-    Height = 230
+    Height = 225
     object Splitter2: TSplitter [0]
       Left = 268
       Top = 4
-      Height = 222
+      Height = 217
       Align = alRight
       ResizeStyle = rsUpdate
     end
     inherited MsgList: TExRichEdit
       Width = 264
-      Height = 222
+      Height = 217
       Font.Name = 'Arial'
       ParentFont = False
       PopupMenu = popRoom
@@ -30,7 +30,7 @@ inherited frmRoom: TfrmRoom
       Left = 271
       Top = 4
       Width = 105
-      Height = 222
+      Height = 217
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -40,7 +40,7 @@ inherited frmRoom: TfrmRoom
         Left = 1
         Top = 1
         Width = 103
-        Height = 220
+        Height = 215
         Align = alClient
         Columns = <
           item
@@ -130,7 +130,14 @@ inherited frmRoom: TfrmRoom
       end
     end
   end
+  inherited popMsgList: TPopupMenu
+    AutoHotkeys = maManual
+  end
+  inherited popOut: TPopupMenu
+    AutoHotkeys = maManual
+  end
   object popRoom: TPopupMenu
+    AutoHotkeys = maManual
     Left = 16
     Top = 152
     object popClear: TMenuItem
@@ -223,6 +230,7 @@ inherited frmRoom: TfrmRoom
     end
   end
   object popRoomRoster: TPopupMenu
+    AutoHotkeys = maManual
     OnPopup = popRoomRosterPopup
     Left = 48
     Top = 152

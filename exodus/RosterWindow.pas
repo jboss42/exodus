@@ -98,6 +98,7 @@ type
     lblLogin: TTntLabel;
     pnlStatus: TTntPanel;
     lblStatusLink: TTntLabel;
+    MoveorCopyContacts1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -156,9 +157,9 @@ type
       Data: Integer; var Compare: Integer);
     procedure pluginClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure treeRosterDeletion(Sender: TObject; Node: TTreeNode);
     procedure treeRosterMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure MoveorCopyContacts1Click(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;             // roster callback id
@@ -289,7 +290,7 @@ resourcestring
 implementation
 uses
     ExSession, XferManager, 
-    JabberConst, Chat, ChatController, GnuGetText, InputPassword,
+    JabberConst, Chat, ChatController, GrpManagement, GnuGetText, InputPassword,
     SelContact, Invite, Bookmark, S10n, MsgRecv, PrefController,
     ExEvents, ExUtils, Room, Profile, JabberID, RiserWindow, ShellAPI,
     IQ, RosterAdd, GrpRemove, RemoveContact, ChatWin, Jabber1,
@@ -2613,35 +2614,12 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRosterWindow.treeRosterDeletion(Sender: TObject;
-  Node: TTreeNode);
-(*
+procedure TfrmRosterWindow.MoveorCopyContacts1Click(Sender: TObject);
 var
-    o: TObject;
-    ri: TJabberRosterItem;
-    nl: TList;
-    i: integer;
-*)
+    sel: TList;
 begin
-    // Make sure the node isn't ref'd by a RosterItem's node list
-    // This may be paranoid programming...
-    // but I'm trying to solve those weird AV's when
-    // presence arrives.
-(*
-    if (Node.Data <> nil) then begin
-        o := TObject(Node.Data);
-        if (o is TJabberRosterItem) then begin
-            ri := TJabberRosterItem(o);
-            nl := TList(ri.Data);
-            if (nl <> nil) then begin
-                i := nl.indexOf(Node);
-                if (i >= 0) then
-                    nl.Delete(i);
-            end;
-        end;
-    end;
-*)
-
+    sel := Self.getSelectedContacts(true);
+    ShowGrpManagement(sel);
 end;
 
 initialization
