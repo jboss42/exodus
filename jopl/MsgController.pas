@@ -26,6 +26,8 @@ uses
 
 type
     TMsgController = class
+        Data: TObject;
+        
         procedure HandleMessage(tag: TXMLTag); virtual; abstract;
     end;
 

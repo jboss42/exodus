@@ -62,7 +62,7 @@ type
 
         property Data: TWideStringlist read _data_list;
         property Tag: TXMLTag read _tag;
-end;
+    end;
 
 function CreateJabberEvent(tag: TXMLTag): TJabberEvent;
 procedure RenderEvent(e: TJabberEvent);
@@ -223,7 +223,7 @@ begin
         // we are collapsed, just display in regular popup windows
         mc := MainSession.MsgList.FindJid(e.from);
         if (mc <> nil) then
-            TfrmMsgRecv(mc).PushEvent(e)
+            TfrmMsgRecv(mc.Data).PushEvent(e)
         else
             StartRecvMsg(e);
     end;

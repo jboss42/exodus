@@ -310,6 +310,7 @@ begin
     _events := TQueue.Create();
     _controller := TExMsgController.Create();
     _controller.MessageEvent := Self.MessageEvent;
+    _controller.Data := Self;
     cid := -1;
 
     // COM interface for this MsgWindow
