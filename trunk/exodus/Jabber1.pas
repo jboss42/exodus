@@ -482,7 +482,7 @@ implementation
 uses
     About, AutoUpdate, Bookmark, Browser, ChatWin, CommCtrl, CustomPres,
     Debug, Dockable, ExUtils, GetOpt, InputPassword,
-    Iq, JUD, JabberID,
+    Iq, JUD, JabberID, JabberMsg, 
     JoinRoom, Login, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, Profile, RegForm, RemoveContact, RiserWindow,
     Roster, RosterAdd, Session, Transfer, VCard, XMLUtils;
@@ -1344,6 +1344,11 @@ begin
     mnuBrowser.Enabled := enable;
     mnuServer.Enabled := enable;
 
+    // (dis)enable the tray menus
+    trayPresence.Enabled := enable;
+    trayMessage.Enabled := enable;
+
+
     // Enable toolbar btns
     btnOnlineRoster.Enabled := enable;
     btnAddContact.Enabled := enable;
@@ -1413,6 +1418,7 @@ procedure TfrmExodus.MsgCallback(event: string; tag: TXMLTag);
 var
     b, mtype: string;
     e: TJabberEvent;
+    msg: TJabberMessage;
 begin
     // record the event
     mtype := tag.getAttribute('type');
@@ -1421,6 +1427,7 @@ begin
         if MainSession.IsPaused then begin
             with tag.AddTag('x') do begin
                 PutAttribute('xmlns', XMLNS_DELAY);
+                // TODO: fix this so that queue'd msgs include the TZ offset.
                 PutAttribute('stamp', DateTimeToJabber(Now));
                 end;
             MainSession.QueueEvent(event, tag, Self.MsgCallback)
@@ -1429,7 +1436,16 @@ begin
             e := CreateJabberEvent(tag);
             RenderEvent(e);
             end;
+
+        // log the msg if we're logging.
+        if (MainSession.Prefs.getBool('log')) then begin
+            msg := TJabberMessage.Create(tag);
+            LogMessage(msg);
+            msg.Free();
+            end;
+
         end;
+
 end;
 
 {---------------------------------------}

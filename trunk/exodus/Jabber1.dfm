@@ -2513,6 +2513,7 @@ object frmExodus: TfrmExodus
     end
     object trayMessage: TMenuItem
       Caption = 'Send Message'
+      Enabled = False
       OnClick = trayMessageClick
     end
     object N4: TMenuItem
