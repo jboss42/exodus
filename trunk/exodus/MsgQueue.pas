@@ -207,8 +207,18 @@ begin
             e.eType := TJabberEventType(SafeInt(cur_e.GetAttribute('etype')));
             e.from := cur_e.GetAttribute('from');
             e.id := cur_e.GetAttribute('id');
-            e.Timestamp := StrToDateTime(cur_e.GetAttribute('timestamp'));
-            e.edate := StrToDateTime(cur_e.GetAttribute('edate'));
+            try
+                e.Timestamp := StrToDateTime(cur_e.GetAttribute('timestamp'));
+            except
+                on EConvertError do
+                    e.Timestamp := Now();
+            end;
+            try
+                e.edate := StrToDateTime(cur_e.GetAttribute('edate'));
+            except
+                on EConvertError do
+                    e.edate := Now();
+            end;
             e.data_type := cur_e.GetAttribute('date_type');
             e.elapsed_time := SafeInt(cur_e.GetAttribute('elapsed_time'));
             e.msg := cur_e.GetAttribute('msg');
