@@ -799,6 +799,12 @@ begin
     grp_idx := MainSession.roster.GrpList.indexOf(grp);
     if (grp_idx >= 0) then
         MainSession.roster.GrpList.Objects[grp_idx] := nil;
+
+    if (node = _offline) then
+        _offline := nil;
+    if (node = _bookmark) then
+        _bookmark := nil;
+
     node.Free();
 end;
 
