@@ -131,7 +131,12 @@ begin
         p := MainSession.Prefs.getPref(c.name);
 
         // only update if this the primary control, and we have a pref
-        if (p = '') then continue;
+        if (p = '') then begin
+            if (c.inheritsFrom(TWinControl)) then
+                savePrefsOwner(TWinControl(c));
+            continue;
+        end;
+
         if (c.name <> MainSession.Prefs.getControl(p)) then continue;
 
         // don't bother w/ RO or INV prefs
