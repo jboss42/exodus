@@ -191,7 +191,7 @@ begin
             // The window is the main window
             if frmExodus.Tabs.ActivePage <> frmExodus.tbsRoster then
                 frmExodus.tbsRoster.ImageIndex := tab_notify;
-            if (active_win <> frmExodus.Handle) then
+            if ((active_win <> frmExodus.Handle) and (not Application.Active)) then
                 frmExodus.Flash();
         end
         else if (w is TfrmDockable) then begin
@@ -202,7 +202,7 @@ begin
                     d.TabSheet.ImageIndex := tab_notify;
                     frmExodus.Tabs.Repaint();
                 end;
-                if (active_win <> frmExodus.Handle) then
+                if ((active_win <> frmExodus.Handle) and (not Application.Active)) then
                     frmExodus.Flash();
             end
             else if (w is TfrmBaseChat) then
