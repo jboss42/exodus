@@ -12,18 +12,18 @@ type
   TExRichEdit = class(TRichEdit98)
   private
     { Private declarations }
-    FOnURLClick: TRichEditURLClick;
+    // FOnURLClick: TRichEditURLClick;
   protected
     { Protected declarations }
     procedure CreateWnd; override;
     // procedure CreateParams(var Params: TCreateParams); override;
-    procedure CN_NOTIFY(var Msg: TWMNotify); message CN_NOTIFY;
+    // procedure CN_NOTIFY(var Msg: TWMNotify); message CN_NOTIFY;
   public
     { Public declarations }
     procedure InsertBitmap(bmp: Graphics.TBitmap);
   published
     { Published declarations }
-    property OnURLClick: TRichEditURLClick read FOnURLClick write FOnURLClick;
+    // property OnURLClick: TRichEditURLClick read FOnURLClick write FOnURLClick;
   end;
 
 const
@@ -37,11 +37,9 @@ uses
     ShellAPI;
 
 procedure TExRichEdit.CreateWnd;
-var
-    mask: integer;
 begin
     inherited;
-
+    {
     // Tell the window to auto-detect URL's
     SendMessage(Self.Handle, EM_AUTOURLDETECT, integer(true), 0);
 
@@ -50,6 +48,7 @@ begin
 
     // Tell the window we want EN_LINK events
     SendMessage(Self.Handle, EM_SETEVENTMASK, 0, (mask + ENM_LINK));
+    }
 end;
 
 (*
@@ -70,6 +69,8 @@ end;
 This is our custom CN_NOTIFY event handler..
 It will pick up the EN_LINK events.
 }
+
+{
 procedure TExRichEdit.CN_NOTIFY(var Msg: TWMNotify);
 var
     purl: PChar;
@@ -96,6 +97,7 @@ begin
             inherited;
         end;
 end;
+}
 
 {
 pgm 3/3/02 - Adding stuff to the rich edit control

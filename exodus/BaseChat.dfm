@@ -1,6 +1,6 @@
 object frmBaseChat: TfrmBaseChat
-  Left = 749
-  Top = 149
+  Left = 833
+  Top = 178
   Width = 390
   Height = 315
   Color = clBtnFace
@@ -43,7 +43,7 @@ object frmBaseChat: TfrmBaseChat
       Width = 374
       Height = 220
       Align = alClient
-      AutoURLDetect = adNone
+      AutoURLDetect = adDefault
       CustomURLs = <
         item
           Name = 'e-mail'
