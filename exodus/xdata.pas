@@ -16,6 +16,8 @@ type
     insBevel: TBevel;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     packet: string;
@@ -36,6 +38,7 @@ procedure showXData(tag: TXMLTag);
 
 resourcestring
     sAllRequired = 'All required fields must be filled out';
+    sFormFrom = 'Form from %s';
 
 implementation
 
@@ -50,6 +53,7 @@ begin
     f := TfrmXData.Create(nil);
     f.render(tag);
     f.Show();
+    f.BringToFront();
 end;
 
 procedure TfrmXData.render(tag: TXMLTag);
@@ -103,12 +107,13 @@ begin
         frm.Align := alTop;
         end;
 
+    Self.Caption := Format(sFormFrom, [to_jid]);
+    
     insBevel.Visible := lblIns.Visible;
     if (lblIns.Visible) then begin
         insBevel.Align := alTop;
         lblIns.Align := alTop;
         end;
-
 end;
 
 procedure TfrmXData.frameButtons1btnOKClick(Sender: TObject);
@@ -221,6 +226,19 @@ begin
             it.SubItems.Add(field.GetBasicText('value'));
             end;
         end;
+end;
+
+procedure TfrmXData.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+    Action := caFree;
+    MainSession.Prefs.SavePosition(Self);
+    inherited;
+end;
+
+procedure TfrmXData.FormCreate(Sender: TObject);
+begin
+    MainSession.Prefs.RestorePosition(Self);
+    inherited;
 end;
 
 end.
