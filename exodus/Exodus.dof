@@ -45,7 +45,7 @@ OutputDir=
 UnitOutputDir=.\output
 PackageDLLOutputDir=
 PackageDCPOutputDir=
-SearchPath=.\components
+SearchPath=.\components;D:\lang\delphi\jcl\source
 Packages=vcl;rtl;dbrtl;adortl;vcldb;vclx;bdertl;vcldbx;ibxpress;dsnap;cds;bdecds;qrpt;teeui;teedb;tee;dss;teeqr;visualclx;visualdbclx;dsnapcrba;dsnapcon;VclSmp;vclshlctrls;vclie;xmlrtl;inet;inetdbbde;inetdbxpress;inetdb;nmfast;webdsnap;websnap;dbexpress;dbxcds;dclOffice2k;ExComponents;indy
 Conditionals=
 DebugSourceDirs=D:\Dev\Delphi6\Source\Indy\;D:\src\exodus\exodus\components\
@@ -109,7 +109,7 @@ ActiveLang=
 ProjectLang=$00000409
 RootDir=
 [Version Info]
-IncludeVerInfo=1
+IncludeVerInfo=0
 AutoIncBuild=1
 MajorVer=0
 MinorVer=8
@@ -143,9 +143,10 @@ Item0=INDY9
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlSearchPath]
-Count=2
-Item0=.\components
-Item1=$(DELPHI)\Lib\Debug;.\components
+Count=3
+Item0=.\components;D:\lang\delphi\jcl\source
+Item1=.\components
+Item2=$(DELPHI)\Lib\Debug;.\components
 [HistoryLists\hlUnitOutputDirectory]
 Count=1
 Item0=.\output
