@@ -27,8 +27,8 @@ object Exodus: TExodus
   object Tabs: TPageControl
     Left = 0
     Top = 30
-    Width = 453
-    Height = 203
+    Width = 449
+    Height = 199
     ActivePage = tbsMsg
     Align = alClient
     DockSite = True
@@ -49,7 +49,7 @@ object Exodus: TExodus
         Left = 209
         Top = 0
         Width = 3
-        Height = 166
+        Height = 171
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = Splitter1Moved
@@ -58,7 +58,7 @@ object Exodus: TExodus
         Left = 0
         Top = 0
         Width = 209
-        Height = 166
+        Height = 171
         Align = alLeft
         BevelOuter = bvNone
         UseDockManager = False
@@ -70,7 +70,7 @@ object Exodus: TExodus
         Left = 212
         Top = 0
         Width = 229
-        Height = 166
+        Height = 171
         Align = alClient
         BevelOuter = bvNone
         DragCursor = crDefault
@@ -2338,7 +2338,7 @@ object Exodus: TExodus
     Left = 120
     Top = 72
     Bitmap = {
-      494C010130003100040015001500FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C010130003100040015001500FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       00000000000036000000280000005400000011010000010010000000000028B3
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -3878,6 +3878,6 @@ object Exodus: TExodus
       1070100083060C000060808710601000C3001E1810F0000790403000E0001F00
       01F80007C0007000E0003F0001F8000FC0007000F0007F8003FC001FC000F000
       FC01FFE00FFF007FC001F000FE03FFF01FFF80FFF007F000FFFFFFFFFFFFFFFF
-      FFFFF000}
+      FFFFF00000000000000000000000000000000000000000000000}
   end
 end

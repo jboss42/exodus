@@ -1123,12 +1123,8 @@ procedure TExodus.FormCloseQuery(Sender: TObject;
 begin
     // Unregister callbacks, etc.
 
-    if (MainSession.Stream.Active) then begin
-        MainSession.Stream.Disconnect();
-        _event := next_Exit;
-        CanClose := false;
-        exit;
-        end;
+    if (MainSession.Stream.Active) then
+        MainSession.Disconnect();
 
     MainSession.UnRegisterCallback(_sessioncb);
     MainSession.UnRegisterCallback(_msgcb);
