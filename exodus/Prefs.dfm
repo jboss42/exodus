@@ -1,38 +1,33 @@
 object frmPrefs: TfrmPrefs
-  Left = 272
-  Top = 238
+  Left = 194
+  Top = 317
   Width = 466
   Height = 462
   BorderWidth = 1
   Caption = 'Exodus Preferences'
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
+  Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
-  Font.Name = 'MS Sans Serif'
+  Font.Name = 'Arial'
   Font.Style = []
   OldCreateOrder = False
   Position = poDefaultPosOnly
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnShow = FormShow
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 14
   object Scroller: TScrollBox
     Left = 0
     Top = 0
-    Width = 96
-    Height = 389
+    Width = 99
+    Height = 393
     VertScrollBar.Tracking = True
     Align = alLeft
     Color = clWindow
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'MS Sans Serif'
-    Font.Style = []
     ParentColor = False
-    ParentFont = False
     TabOrder = 0
     TabStop = True
     OnMouseMove = OffBoxMouseMove
@@ -56,8 +51,8 @@ object frmPrefs: TfrmPrefs
     end
     object imgDialog: TImage
       Left = 0
-      Top = 318
-      Width = 75
+      Top = 282
+      Width = 80
       Height = 33
       Align = alTop
       Center = True
@@ -237,12 +232,11 @@ object frmPrefs: TfrmPrefs
     end
     object lblDialog: TTntLabel
       Left = 0
-      Top = 351
-      Width = 75
-      Height = 20
+      Top = 315
+      Width = 80
+      Height = 14
       Align = alTop
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Windows'
       Transparent = True
       WordWrap = True
@@ -251,8 +245,8 @@ object frmPrefs: TfrmPrefs
     end
     object imgFonts: TImage
       Left = 0
-      Top = 212
-      Width = 75
+      Top = 188
+      Width = 80
       Height = 33
       Align = alTop
       Center = True
@@ -432,12 +426,11 @@ object frmPrefs: TfrmPrefs
     end
     object lblFonts: TTntLabel
       Left = 0
-      Top = 245
-      Width = 75
-      Height = 20
+      Top = 221
+      Width = 80
+      Height = 14
       Align = alTop
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Fonts, Colors'
       Transparent = True
       WordWrap = True
@@ -446,8 +439,8 @@ object frmPrefs: TfrmPrefs
     end
     object imgS10n: TImage
       Left = 0
-      Top = 159
-      Width = 75
+      Top = 141
+      Width = 80
       Height = 33
       Align = alTop
       Center = True
@@ -628,12 +621,11 @@ object frmPrefs: TfrmPrefs
     end
     object lblS10n: TTntLabel
       Left = 0
-      Top = 192
-      Width = 75
-      Height = 20
+      Top = 174
+      Width = 80
+      Height = 14
       Align = alTop
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Subscriptions'
       Transparent = True
       WordWrap = True
@@ -642,8 +634,8 @@ object frmPrefs: TfrmPrefs
     end
     object imgRoster: TImage
       Left = 0
-      Top = 53
-      Width = 75
+      Top = 47
+      Width = 80
       Height = 33
       Align = alTop
       Center = True
@@ -823,12 +815,11 @@ object frmPrefs: TfrmPrefs
     end
     object lblRoster: TTntLabel
       Left = 0
-      Top = 86
-      Width = 75
-      Height = 20
+      Top = 80
+      Width = 80
+      Height = 14
       Align = alTop
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Roster'
       Transparent = True
       WordWrap = True
@@ -838,7 +829,7 @@ object frmPrefs: TfrmPrefs
     object imgSystem: TImage
       Left = 0
       Top = 0
-      Width = 75
+      Width = 80
       Height = 33
       Align = alTop
       Center = True
@@ -1019,11 +1010,10 @@ object frmPrefs: TfrmPrefs
     object lblSystem: TTntLabel
       Left = 0
       Top = 33
-      Width = 75
-      Height = 20
+      Width = 80
+      Height = 14
       Align = alTop
       Alignment = taCenter
-      AutoSize = False
       Caption = 'System'
       Transparent = True
       WordWrap = True
@@ -1032,8 +1022,8 @@ object frmPrefs: TfrmPrefs
     end
     object imgNotify: TImage
       Left = 0
-      Top = 371
-      Width = 75
+      Top = 329
+      Width = 80
       Height = 33
       Align = alTop
       Center = True
@@ -1157,12 +1147,11 @@ object frmPrefs: TfrmPrefs
     end
     object lblNotify: TTntLabel
       Left = 0
-      Top = 404
-      Width = 75
-      Height = 20
+      Top = 362
+      Width = 80
+      Height = 14
       Align = alTop
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Notification'
       Transparent = True
       WordWrap = True
@@ -1171,8 +1160,8 @@ object frmPrefs: TfrmPrefs
     end
     object imgAway: TImage
       Left = 0
-      Top = 530
-      Width = 75
+      Top = 470
+      Width = 80
       Height = 33
       Align = alTop
       Center = True
@@ -1352,12 +1341,11 @@ object frmPrefs: TfrmPrefs
     end
     object lblAway: TTntLabel
       Left = 0
-      Top = 563
-      Width = 75
-      Height = 20
+      Top = 503
+      Width = 80
+      Height = 14
       Align = alTop
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Auto-Away'
       Transparent = True
       WordWrap = True
@@ -1366,8 +1354,8 @@ object frmPrefs: TfrmPrefs
     end
     object imgKeywords: TImage
       Left = 0
-      Top = 583
-      Width = 75
+      Top = 517
+      Width = 80
       Height = 33
       Align = alTop
       Center = True
@@ -1547,12 +1535,11 @@ object frmPrefs: TfrmPrefs
     end
     object lblKeywords: TTntLabel
       Left = 0
-      Top = 616
-      Width = 75
-      Height = 20
+      Top = 550
+      Width = 80
+      Height = 14
       Align = alTop
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Keywords'
       Transparent = True
       WordWrap = True
@@ -1561,8 +1548,8 @@ object frmPrefs: TfrmPrefs
     end
     object imgBlockList: TImage
       Left = 0
-      Top = 636
-      Width = 75
+      Top = 564
+      Width = 80
       Height = 33
       Align = alTop
       Center = True
@@ -1742,12 +1729,11 @@ object frmPrefs: TfrmPrefs
     end
     object lblBlockList: TTntLabel
       Left = 0
-      Top = 669
-      Width = 75
-      Height = 20
+      Top = 597
+      Width = 80
+      Height = 14
       Align = alTop
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Block List'
       Transparent = True
       WordWrap = True
@@ -1756,8 +1742,8 @@ object frmPrefs: TfrmPrefs
     end
     object imgCustompres: TImage
       Left = 0
-      Top = 689
-      Width = 75
+      Top = 611
+      Width = 80
       Height = 33
       Align = alTop
       Center = True
@@ -1937,12 +1923,11 @@ object frmPrefs: TfrmPrefs
     end
     object lblCustomPres: TTntLabel
       Left = 0
-      Top = 722
-      Width = 75
-      Height = 20
+      Top = 644
+      Width = 80
+      Height = 14
       Align = alTop
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Presence'
       Transparent = True
       WordWrap = True
@@ -1951,8 +1936,8 @@ object frmPrefs: TfrmPrefs
     end
     object imgMessages: TImage
       Left = 0
-      Top = 424
-      Width = 75
+      Top = 376
+      Width = 80
       Height = 33
       Align = alTop
       Center = True
@@ -2132,12 +2117,11 @@ object frmPrefs: TfrmPrefs
     end
     object lblMessages: TTntLabel
       Left = 0
-      Top = 457
-      Width = 75
-      Height = 20
+      Top = 409
+      Width = 80
+      Height = 14
       Align = alTop
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Messages'
       Transparent = True
       WordWrap = True
@@ -2146,8 +2130,8 @@ object frmPrefs: TfrmPrefs
     end
     object imgPlugins: TImage
       Left = 0
-      Top = 795
-      Width = 75
+      Top = 705
+      Width = 80
       Height = 33
       Align = alTop
       Center = True
@@ -2271,12 +2255,11 @@ object frmPrefs: TfrmPrefs
     end
     object lblPlugins: TTntLabel
       Left = 0
-      Top = 828
-      Width = 75
-      Height = 20
+      Top = 738
+      Width = 80
+      Height = 14
       Align = alTop
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Plugins'
       Transparent = True
       WordWrap = True
@@ -2285,8 +2268,8 @@ object frmPrefs: TfrmPrefs
     end
     object imgNetwork: TImage
       Left = 0
-      Top = 742
-      Width = 75
+      Top = 658
+      Width = 80
       Height = 33
       Align = alTop
       Center = True
@@ -2464,23 +2447,10 @@ object frmPrefs: TfrmPrefs
       OnClick = TabSelect
       OnMouseMove = imgSystemMouseMove
     end
-    object lblNetwork: TTntLabel
-      Left = 0
-      Top = 775
-      Width = 75
-      Height = 20
-      Align = alTop
-      Alignment = taCenter
-      AutoSize = False
-      Caption = 'Network'
-      Transparent = True
-      OnClick = TabSelect
-      OnMouseMove = imgSystemMouseMove
-    end
     object imgTransfer: TImage
       Left = 0
-      Top = 477
-      Width = 75
+      Top = 423
+      Width = 80
       Height = 33
       Align = alTop
       Center = True
@@ -2660,12 +2630,11 @@ object frmPrefs: TfrmPrefs
     end
     object lblTransfer: TTntLabel
       Left = 0
-      Top = 510
-      Width = 75
-      Height = 20
+      Top = 456
+      Width = 80
+      Height = 14
       Align = alTop
       Alignment = taCenter
-      AutoSize = False
       Caption = 'File Transfers'
       Transparent = True
       WordWrap = True
@@ -2674,8 +2643,8 @@ object frmPrefs: TfrmPrefs
     end
     object imgGroups: TImage
       Left = 0
-      Top = 106
-      Width = 75
+      Top = 94
+      Width = 80
       Height = 33
       Align = alTop
       Center = True
@@ -2855,12 +2824,11 @@ object frmPrefs: TfrmPrefs
     end
     object lblGroups: TTntLabel
       Left = 0
-      Top = 139
-      Width = 75
-      Height = 20
+      Top = 127
+      Width = 80
+      Height = 14
       Align = alTop
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Groups'
       Transparent = True
       WordWrap = True
@@ -2869,8 +2837,8 @@ object frmPrefs: TfrmPrefs
     end
     object imgLayouts: TImage
       Left = 0
-      Top = 265
-      Width = 75
+      Top = 235
+      Width = 80
       Height = 33
       Align = alTop
       Center = True
@@ -3023,13 +2991,25 @@ object frmPrefs: TfrmPrefs
     end
     object lblLayouts: TTntLabel
       Left = 0
-      Top = 298
-      Width = 75
-      Height = 20
+      Top = 268
+      Width = 80
+      Height = 14
       Align = alTop
       Alignment = taCenter
-      AutoSize = False
       Caption = 'Layouts'
+      Transparent = True
+      WordWrap = True
+      OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
+    end
+    object lblNetwork: TTntLabel
+      Left = 0
+      Top = 691
+      Width = 80
+      Height = 14
+      Align = alTop
+      Alignment = taCenter
+      Caption = 'Network'
       Transparent = True
       WordWrap = True
       OnClick = TabSelect
@@ -3037,10 +3017,10 @@ object frmPrefs: TfrmPrefs
     end
   end
   object PageControl1: TTntPageControl
-    Left = 96
+    Left = 99
     Top = 0
-    Width = 360
-    Height = 389
+    Width = 357
+    Height = 393
     ActivePage = tbsKeywords
     Align = alClient
     Constraints.MinHeight = 340
@@ -3055,15 +3035,15 @@ object frmPrefs: TfrmPrefs
       object memKeywords: TTntMemo
         Left = 0
         Top = 114
-        Width = 352
-        Height = 244
+        Width = 349
+        Height = 247
         Align = alClient
         TabOrder = 0
       end
       object Panel2: TPanel
         Left = 0
         Top = 24
-        Width = 352
+        Width = 349
         Height = 90
         Align = alTop
         BevelOuter = bvNone
@@ -3071,8 +3051,8 @@ object frmPrefs: TfrmPrefs
         object Label1: TTntLabel
           Left = 0
           Top = 0
-          Width = 352
-          Height = 26
+          Width = 349
+          Height = 28
           Align = alTop
           Caption = 
             'Exodus can notify you when a keyword appears in chat room. Enter' +
@@ -3091,7 +3071,7 @@ object frmPrefs: TfrmPrefs
       object pnlKeyword: TTntPanel
         Left = 0
         Top = 0
-        Width = 352
+        Width = 349
         Height = 24
         Align = alTop
         BevelOuter = bvLowered
@@ -3107,22 +3087,23 @@ object frmPrefs: TfrmPrefs
       object memBlocks: TTntMemo
         Left = 0
         Top = 108
-        Width = 352
-        Height = 250
+        Width = 349
+        Height = 253
         Align = alClient
         TabOrder = 0
       end
       object Memo1: TTntMemo
         Left = 0
         Top = 24
-        Width = 352
+        Width = 349
         Height = 84
         Align = alTop
         BorderStyle = bsNone
         Lines.WideStrings = (
           
             'Enter in the Jabber Addresses (JIDs) of the people to block from' +
-            ' sending '
+            ' '
+          'sending '
           'you messages. All messages from these contacts will be blocked.')
         ParentColor = True
         ReadOnly = True
@@ -3131,7 +3112,7 @@ object frmPrefs: TfrmPrefs
       object pnlBlocked: TTntPanel
         Left = 0
         Top = 0
-        Width = 352
+        Width = 349
         Height = 24
         Align = alTop
         BevelOuter = bvLowered
@@ -3150,7 +3131,7 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 389
+    Top = 393
     Width = 456
     Height = 37
     Align = alBottom
@@ -3204,7 +3185,7 @@ object frmPrefs: TfrmPrefs
     end
   end
   object ColorDialog1: TColorDialog
-    Left = 69
-    Top = 388
+    Left = 133
+    Top = 380
   end
 end
