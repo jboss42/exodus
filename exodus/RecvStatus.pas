@@ -74,6 +74,7 @@ type
         _hosts: TQueue;
         _cur: integer;
         _stream: TFileStream;
+        _size: longint;
 
         procedure attemptSIConnection();
 
@@ -103,6 +104,7 @@ type
         _lock: TCriticalSection;
         _url: string;
         _method: string;
+        _size: longint;
 
         procedure Update();
         procedure setHttp(value: TIdHttp);
@@ -132,6 +134,7 @@ type
         property url: String read _url write _url;
         property method: String read _method write _method;
         property client: TIdTCPClient read _client write setClient;
+        property size: longint read _size write _size;
     end;
 
 implementation
@@ -200,7 +203,7 @@ begin
                     SendMessage(_form.Handle, WM_RECV_SIDISCONN, 0, 0);
                     exit;
                 end;
-                _client.ReadStream(_stream, -1, true);
+                _client.ReadStream(_stream,_size, false);
             end
             else if (_method = 'get') then
                 _http.Get(_url, _stream)
@@ -460,6 +463,7 @@ begin
     _thread.client := tcpClient;
     _thread.stream := _stream;
     _thread.method := 'si';
+    _thread.size := _size;
     _thread.Resume();
 end;
 
@@ -483,6 +487,7 @@ begin
             p := _pkg.packet;
             _sid := p.QueryXPData('/iq/si@id');
             _filename := ExtractFilename(p.QueryXPData('/iq/si/file@name'));
+            _size := SafeInt(p.QueryXPData('/iq/si/file@size')); 
             fp := MainSession.Prefs.getString('xfer_path');
             if (AnsiEndsText('\', fp)) then
                 _filename := fp + _filename
