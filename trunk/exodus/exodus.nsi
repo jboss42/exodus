@@ -133,12 +133,12 @@ Section "SSL Support (web connection needed)"
   libea:
 	IfFileExists $INSTDIR\libeay32.dll no_ssl
   need_ssl:
-	NSISdl::download http://download.sourceforge.net/jabbercom/jabbercom_openssl096.zip $INSTDIR\jabbercom_openssl096.zip
+	NSISdl::download http://exodus.jabberstudio.org/indy_openssl096g.zip $INSTDIR\indy_openssl096.zip
 	StrCmp $0 "success" ssl
 	    Abort "Error downloading ssl libraries"
   ssl:
-	ZipDLL::extractall $INSTDIR $INSTDIR\jabbercom_openssl096.zip
-	Delete $INSTDIR\jabbercom_openssl096.zip
+	ZipDLL::extractall $INSTDIR $INSTDIR\indy_openssl096.zip
+	Delete $INSTDIR\indy_openssl096.zip
 	goto ssl_done
   no_ssl:
 	DetailPrint "SSL libraries already installed."
