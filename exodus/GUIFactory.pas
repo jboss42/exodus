@@ -29,6 +29,7 @@ type
     private
         _js: TObject;
         _cb: integer;
+    published
         procedure SessionCallback(event: string; tag: TXMLTag);
     public
         procedure SetSession(js: TObject);

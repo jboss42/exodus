@@ -38,6 +38,7 @@ type
     pres_cb: integer;
 
     function doField(fld: string): TfrmField;
+  published
     procedure AgentCallback(event: string; tag: TXMLTag);
     procedure doRegister();
     procedure RegCallback(event: string; tag: TXMLTag);

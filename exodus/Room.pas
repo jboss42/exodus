@@ -86,10 +86,6 @@ type
     _nick_start: integer;
     _keywords: TRegExpr;     // list of keywords to monitor for
 
-    procedure MsgCallback(event: string; tag: TXMLTag);
-    procedure PresCallback(event: string; tag: TXMLTag);
-    procedure SessionCallback(event: string; tag: TXMLTag);
-
     procedure SetJID(sjid: string);
     procedure ShowMsg(tag: TXMLTag);
     procedure SendMsg;
@@ -98,6 +94,11 @@ type
     function  checkCommand(txt: string): boolean;
     // procedure ShowPresence(nick, msg: string);
     procedure RenderMember(member: TRoomMember; tag: TXMLTag);
+  published
+    procedure MsgCallback(event: string; tag: TXMLTag);
+    procedure PresCallback(event: string; tag: TXMLTag);
+    procedure SessionCallback(event: string; tag: TXMLTag);
+
   public
     { Public declarations }
     mynick: string;

@@ -98,10 +98,6 @@ type
     _check_event: boolean;
     _send_composing: boolean;
 
-    procedure MsgCallback(event: string; tag: TXMLTag);
-    procedure PresCallback(event: string; tag: TXMLTag);
-    procedure SessionCallback(event: string; tag: TXMLTag);
-
     procedure ChangePresImage(show: string);
     procedure ResetPresImage;
 
@@ -109,6 +105,12 @@ type
 
   protected
     {protected stuff}
+
+  published
+    procedure MsgCallback(event: string; tag: TXMLTag);
+    procedure PresCallback(event: string; tag: TXMLTag);
+    procedure SessionCallback(event: string; tag: TXMLTag);
+
   public
     { Public declarations }
     OtherNick: string;
@@ -305,13 +307,10 @@ procedure TfrmChat.FormClose(Sender: TObject; var Action: TCloseAction);
 var
     i: integer;
 begin
-    if (_callback >= 0) then begin
-        MainSession.UnRegisterCallback(_pcallback);
-        MainSession.UnRegisterCallback(_callback);
-        end;
-
-    if (_scallback >= 0) then
-        MainSession.UnRegisterCallback(_scallback);
+    // Unregister the callbacks + stuff
+    MainSession.UnRegisterCallback(_pcallback);
+    MainSession.UnRegisterCallback(_callback);
+    MainSession.UnRegisterCallback(_scallback);
 
     if chat_object <> nil then begin
         i := MainSession.ChatList.IndexOfObject(chat_object);

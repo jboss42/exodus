@@ -31,6 +31,7 @@ type
         _cb: integer;
     protected
         _session: TJabberSession;
+    published
         procedure iqCallback(event: string; tag: TXMLTag); virtual; abstract;
     public
         constructor Create(Session: TJabberSession; namespace: string); overload; virtual;

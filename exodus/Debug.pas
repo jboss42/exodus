@@ -65,7 +65,7 @@ implementation
 
 {$R *.dfm}
 uses
-    Session, Jabber1;
+    Signals, Session, Jabber1;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -147,6 +147,10 @@ end;
 procedure TfrmDebug.btnSendRawClick(Sender: TObject);
 var
     cmd: string;
+    sig: TSignal;
+    i, s: integer;
+    msg: string;
+    l: TSignalListener;
 begin
     // Send the text in the MsgSend memo box
     cmd := MemoSend.Lines.Text;
@@ -154,6 +158,26 @@ begin
         // we are giving some kind of interactive debugger cmd
         if (cmd = '/dispcount') then
             DebugMsg('Dispatcher listener count: ' + IntToStr(MainSession.Dispatcher.TotalCount) + ''#13#10);
+        if (cmd = '/dispdump') then begin
+            // dump out all signals
+            with MainSession.Dispatcher do begin
+                for s := 0 to Count - 1 do begin
+                    sig := TSignal(Objects[s]);
+                    DebugMsg('SIGNAL: ' + Strings[s] + ' of class: ' + sig.ClassName + ''#13#10);
+                    DebugMsg('-----------------------------------'#13#10);
+                    for i := 0 to sig.Count - 1 do begin
+                        l := TSignalListener(sig.Objects[i]);
+                        msg := 'LID: ' + IntToStr(l.cb_id) + ', ';
+                        msg := msg + sig.Strings[i] + ', ';
+                        msg := msg + 'Class: ' + l.ClassName + ', ';
+                        msg := msg + l.classname + ', ';
+                        msg := msg + l.methodname;
+                        DebugMsg(msg + ''#13#10);
+                        end;
+                    DebugMsg(''#13#10#13#10);
+                    end;
+                end;
+            end;
         end
     else
         MainSession.Stream.Send(cmd);
