@@ -65,6 +65,7 @@ var
 procedure ShowLogin;
 
 resourcestring
+    sProfileDefaultResource = 'Exodus';
     sProfileRemove = 'Remove this profile?';
     sProfileDefault = 'Default Profile';
     sProfileNew = 'Untitled Profile';
@@ -113,6 +114,9 @@ begin
         p.SavePasswd := l.chkSavePasswd.Checked;
         p.password := l.txtPassword.Text;
         p.resource := l.cboResource.Text;
+
+        if (Trim(p.Resource) = '') then
+            p.Resource := sProfileDefaultResource;
 
         MainSession.Prefs.setInt('profile_active', i);
         MainSession.Prefs.SaveProfiles();
@@ -189,6 +193,7 @@ begin
         i := cboProfiles.Items.Indexof(pname);
         cboProfiles.ItemIndex := i;
         cboProfilesChange(Self);
+        cboResource.Text := sProfileDefaultResource;
         txtUsername.SetFocus();
         end;
 end;
