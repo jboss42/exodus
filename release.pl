@@ -54,13 +54,13 @@ my $cl = "ChangeLog-$urtype.txt";
 e("perl build.pl $::RTYPE");
 e("$::CVS ci -m \"$::RTYPE build\" exodus/version.h exodus/version.nsi exodus/default.po") if $::CVS;
 
-e("perl cvs2cl.pl --delta $urtype:HEAD -f $cl");
-e("$::CVS ci -m \"$::RTYPE build\" $cl");
+e("perl cvs2cl.pl --delta $urtype:HEAD -f exodus/$cl");
+e("$::CVS ci -m \"$::RTYPE build\" exodus/$cl");
 e("$::CVS tag -F $urtype") if $::CVS;
   
 chdir "exodus" or die;
 if ($::RTYPE eq "daily") {
-  e("$::SCP ../$cl setup.exe Exodus.zip plugins/*.zip $userhost:$::ROOT/www/daily/stage");
+  e("$::SCP $cl setup.exe Exodus.zip plugins/*.zip $userhost:$::ROOT/www/daily/stage");
   e("$::SSH $userhost \"cd $::ROOT/www/daily/stage; chmod 664 *; mv setup.exe $cl ..; mv Exodus.zip ..; mv *.zip ../plugins\"");
 } else {
   my $uver;

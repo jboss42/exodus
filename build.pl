@@ -18,13 +18,17 @@ my $DD;
 my $imports = "\"$DD\\Imports\"";
 my $dcc = "\"$::D/Bin/dcc32.exe\"";
 my $rcc = "\"$::D/Bin/brcc32.exe\"";
-my $opts = "-B -Q -U\"$DD\\Lib\"";
+my $opts = "-LUvcl -LUrtl -B -Q -U\"$DD\\Lib\"";
 my $comp = "..\\..\\Components";
 my $plugopts = "$opts -U\"$comp\" -U\"$::TNT\"";
+my $installer = "1";
 
 if ($#ARGV >= 0) {
   if ($ARGV[0] eq "daily") {
 	$::rtype = "daily";
+  } elsif ($ARGV[0] eq "compile") {
+    $::rtype = "daily";
+    $installer = "0";
   } elsif ($ARGV[0] eq "stage") {
     $::rtype = "stage";
   } elsif ($ARGV[0] eq "help") {
@@ -74,6 +78,11 @@ chdir "../plugins";
 grep unlink, glob("*.zip"); # rm *.zip
 grep unlink, glob("*.dll"); # rm *.dll
 
+# Always build the HTML Logger plugin
+chdir "HTMLLogger";
+e("$dcc $plugopts -U$imports -E.. -N.\\\\output ExHTMLLogger.dpr");
+chdir ".." ;
+
 open SEC,">plugin-sections-new.nsi" or die $!;
 open DESC,">plugin-desc-new.nsi" or die $!;
 open I18N,">plugin-i18n-new.nsh" or die $!;
@@ -98,7 +107,9 @@ unlink "Exodus.zip";
 e('zip Exodus.zip @zipfiles.txt ' . join(' ', glob("plugins/*.dll")));
 
 # Build the installer
-if ($::rtype eq "daily") {
+if ($installer eq "0") { 
+    # do nothing in this case
+} elsif ($::rtype eq "daily") {
   e("$::NSIS /v1 /DDAILY exodus-new.nsi");
 } elsif ($::rtype eq "stage") {
   e("$::NSIS /v1 /DSTAGE exodus-new.nsi");

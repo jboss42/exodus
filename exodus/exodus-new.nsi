@@ -104,7 +104,8 @@ EXODUS.NSI
 !addincludedir ".."
 !addincludedir "plugins"
 !addincludedir "${NSISDIR}\Include"
-!addplugindir ".."
+!addincludedir "..\redist"
+!addplugindir  "..\redist"
 
 !include "MUI.nsh"
 !include "Sections.nsh"
@@ -157,7 +158,7 @@ REAL STUFF STARTS HERE
 !define PLUGINS_PATH "${NSISDIR}\Plugins\"
 !define SYSTEMDLL_FILENAME "System"
 !define ZIPDLL_FILENAME "ZipDLL"
-!define ZIPDLL_PATH "..\"
+!define ZIPDLL_PATH "..\redist\"
 !define EXEC_EXTENSION ".exe"
 !define DLL_EXTENSION ".dll"
 !define ICON_EXTENSION ".ico"
@@ -198,6 +199,8 @@ REAL STUFF STARTS HERE
 !define IDLEHOOKS "IdleHooks"
 !define LIBIDN "libidn"
 !define RICHED "riched20"
+!define VCL "$SYSDIR\vcl70.bpl"
+!define RTL "$SYSDIR\rtl70.bpl"
 !define RICHED_UPDATER "richupd"
 !define COMCTL "comctl32"
 !define COMCTL_UPDATER "50comupd"
@@ -432,6 +435,8 @@ Section Exodus SEC_Exodus
     File "${MSN_EMOTICONS}${DLL_EXTENSION}"
     File "${YAHOO_EMOTICONS}${DLL_EXTENSION}"
     File "${LIBIDN}${DLL_EXTENSION}"
+    File "C:\Windows\System32\vcl70.bpl"
+    File "C:\Windows\System32\rtl70.bpl"
     
     ; Daily builds should include the MAP file to get detailed AV reports.
     !ifdef DAILY
@@ -470,7 +475,7 @@ Section Exodus SEC_Exodus
         Abort "$(MSG_RichEdAbort)"
       lbl_execrich:
     !else
-        File "..\${RICHED_UPDATER}${EXEC_EXTENSION}"
+        File "..\redist\${RICHED_UPDATER}${EXEC_EXTENSION}"
     !endif
     
     MessageBox MB_OK "$(MSG_NoReboot)"
@@ -509,7 +514,7 @@ Section Exodus SEC_Exodus
         Abort "$(MSG_COMCtlAbort)"
       lbl_exec_com:
     !else
-        File "..\${COMCTL_UPDATER}${EXEC_EXTENSION}"
+        File "..\redist\${COMCTL_UPDATER}${EXEC_EXTENSION}"
     !endif
     
     MessageBox MB_OK "$(MSG_NoReboot)"
@@ -543,7 +548,7 @@ Section Exodus SEC_Exodus
         Abort "$(MSG_WinsockAbort)"
       lbl_exec_winsock2:
     !else
-        File "..\${WINSOCK_UPDATER}${EXEC_EXTENSION}"
+        File "..\redist\${WINSOCK_UPDATER}${EXEC_EXTENSION}"
     !endif
     
     MessageBox MB_OK "$(MSG_NoReboot)"
