@@ -173,8 +173,6 @@ uses
   NetMeetingFix in 'NetMeetingFix.pas',
   BaseMsgList in 'BaseMsgList.pas' {fBaseMsgList: TFrame},
   RTFMsgList in 'RTFMsgList.pas' {fRTFMsgList: TFrame},
-  IEMsgList in 'IEMsgList.pas' {fBaseMsgList1: TFrame},
-  MSHTMLEvents in 'MSHTMLEvents.pas',
   Emote in 'Emote.pas',
   GIFImage in 'GIFImage.pas',
   PrefEmote in 'prefs\PrefEmote.pas' {frmPrefEmote},

@@ -101,7 +101,6 @@ type
     N9: TTntMenuItem;
     mnuPassword: TTntMenuItem;
     mnuRegisterService: TTntMenuItem;
-    N6: TTntMenuItem;
     mnuConference: TTntMenuItem;
     mnuChat: TTntMenuItem;
     mnuMessage: TTntMenuItem;
@@ -150,7 +149,6 @@ type
     N8: TTntMenuItem;
     NewGroup2: TTntMenuItem;
     mnuOnline: TTntMenuItem;
-    N13: TTntMenuItem;
     mnuSearch: TTntMenuItem;
     mnuFindAgain: TTntMenuItem;
     mnuFind: TTntMenuItem;
