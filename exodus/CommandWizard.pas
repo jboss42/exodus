@@ -151,7 +151,8 @@ end;
 {---------------------------------------}
 procedure TfrmCommandWizard.btnCancelClick(Sender: TObject);
 begin
-  inherited;
+    inherited;
+    if (_iq <> nil) then _iq.Free();
     Self.Close();
 end;
 
@@ -195,10 +196,10 @@ begin
         exit;
         end;
     cwzSupport: begin
-        jEntityCache.discoInfo(txtJid.Text, MainSession);
+        jEntityCache.discoInfo(jid, MainSession);
         end;
     cwzList: begin
-        jEntityCache.fetch(jid, MainSession, false, XMLNS_COMMANDS);
+        jEntityCache.discoItems(jid, MainSession, XMLNS_COMMANDS);
         end;
     cwzSelect: begin
         Tabs.ActivePage := tbsSelect;

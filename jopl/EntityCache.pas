@@ -48,6 +48,8 @@ type
             items_limit: boolean = true; node: Widestring = ''): TJabberEntity;
         function discoInfo(jid: Widestring; js: TJabberSession;
             node: Widestring = ''): TJabberEntity;
+        function discoItems(jid: Widestring; js: TJabberSession;
+            node: Widestring = ''): TJabberEntity;
 
         function getFirstFeature(f: Widestring): TJabberEntity;
         function getFirstSearch(): Widestring;
@@ -340,6 +342,27 @@ begin
     _cache.AddObject(jid, e);
 
     e.walk(js, items_limit);
+    Result := e;
+end;
+
+{---------------------------------------}
+function TJabberEntityCache.discoItems(jid: Widestring; js: TJabberSession;
+    node: Widestring = ''): TJabberEntity;
+var
+    e: TJabberEntity;
+begin
+    e := getByJid(jid, node);
+    if (e <> nil) then begin
+        Result := e;
+        e.fallbackProtocols := false;
+        e.getItems(js);
+        exit;
+    end;
+
+    e := TJabberEntity.Create(TJabberID.Create(jid), node);
+    e.fallbackProtocols := false;
+    _cache.AddObject(jid, e);
+    e.getItems(js);
     Result := e;
 end;
 
