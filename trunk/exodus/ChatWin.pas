@@ -451,8 +451,8 @@ var
     p: TJabberPres;
     m, i: integer;
     a: TAvatar;
-    do_pres: boolean;
-    dp: TCapPresence;
+    //do_pres: boolean;
+    //dp: TCapPresence;
     n: Widestring;
 begin
     jid := cjid;
@@ -499,9 +499,10 @@ begin
     p := MainSession.ppdb.FindPres(_jid.jid, _jid.resource);
 
     // whether or not to send directed presence to this person
-    do_pres := true;
+    // do_pres := true;
 
-    if ritem <> nil then begin
+    if (ritem <> nil) then begin
+        // This person is in our roster
         lblNick.Caption := ritem.Nickname;
         Caption := ritem.Nickname + ' - ' + _(sChat);
         lblNick.Hint := _jid.full;
@@ -510,10 +511,12 @@ begin
             ChangePresImage('offline', 'offline')
         else
             ChangePresImage(p.show, p.status);
+
+        {
         if ((ritem.Subscription = 'to') or (ritem.Subscription = 'both')) then
             do_pres := false;
+        }
     end
-
     else begin
         if (OtherNick <> '') then
             n := OtherNick
@@ -532,6 +535,9 @@ begin
             ChangePresImage(p.show, p.status);
     end;
 
+    // TODO: Can't send directed presence to people not in roster. Cope w/ TC??
+    // because this causes havoc w/ TC rooms that we are in, or NOT in
+    {
     if (do_pres) then begin
         dp := TCapPresence.Create();
         dp.Status := MainSession.Status;
@@ -540,6 +546,7 @@ begin
         dp.setAttribute('to', _jid.full);
         MainSession.SendTag(dp);
     end;
+    }
 
     // synchronize the session chat list with this JID
     i := MainSession.ChatList.indexOfObject(chat_object);
