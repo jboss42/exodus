@@ -61,7 +61,7 @@ type
         constructor Create();
         destructor Destroy(); override;
 
-        procedure AddSignal(event: string; sig: TSignal);
+        procedure AddSignal(sig: TSignal);
         procedure DispatchSignal(event: string; tag: TXMLTag);
         procedure DeleteListener(lid: longint);
         procedure AddListenerInfo(lid: integer; sig: TSignal; l: TSignalListener);
@@ -121,6 +121,7 @@ type
     // Base class for all signals..
     TSignal = class(TStringList)
     private
+        _my_event: String;
         _change_list: TObjectQueue;
     protected
         invoking: boolean;
@@ -132,10 +133,11 @@ type
         procedure Invoke(event: string; tag: TXMLTag); overload; virtual;
         procedure processChangeList();
     public
-        constructor Create();
+        constructor Create(my_event: String);
         destructor Destroy; override;
 
         property change_list: TObjectQueue read _change_list;
+        property Event: String read _my_event;
     end;
 
     {---------------------------------------}
@@ -163,8 +165,9 @@ type
     TPacketSignal = class(TSignal)
     private
         _next: string;
+        _len_event: integer;
     public
-        constructor Create(next_sig: string = '');
+        constructor Create(my_event: string; next_sig: string = '');
         function addListener(xplite: string; callback: TPacketEvent): TPacketListener; overload;
         procedure Invoke(event: string; tag: TXMLTag); override;
     end;
@@ -229,10 +232,10 @@ begin
 end;
 
 {---------------------------------------}
-procedure TSignalDispatcher.AddSignal(event: string; sig: TSignal);
+procedure TSignalDispatcher.AddSignal(sig: TSignal);
 begin
     // add a signal to the list
-    Self.AddObject(event, sig);
+    Self.AddObject(sig.event, sig);
     sig.Dispatcher := Self;
 end;
 
@@ -352,10 +355,10 @@ begin
     inc(_lid);
 end;
 
-constructor TSignal.Create();
+constructor TSignal.Create(my_event: String);
 begin
-    inherited;
-
+    inherited Create(); 
+    _my_event := my_event;
     _change_list := TObjectQueue.Create();
     Dispatcher := nil;
 end;
@@ -524,11 +527,11 @@ end;
 
 {------------------------------------------------------------------------------}
 {------------------------------------------------------------------------------}
-constructor TPacketSignal.Create(next_sig: string);
+constructor TPacketSignal.Create(my_event: string; next_sig: string);
 begin
-    inherited Create();
-    
+    inherited Create(my_event);
     _next := next_sig;
+    _len_event := length(my_event);
 end;
 
 {---------------------------------------}
@@ -540,7 +543,9 @@ begin
     // create a new PacketListener for this signal
     l := TPacketListener.Create;
     l.callback := TMethod(callback);
-    xps := Copy(xplite, 8, length(xplite) - 7);
+
+    // /packet
+    xps := Copy(xplite, _len_event + 1, length(xplite) - _len_event);
     l.xp.Parse(xps);
 
     inherited addListener(xplite, l);

@@ -71,7 +71,7 @@ var
 begin
     // Fill up the GUI based on the event
     txtFrom.Caption := e.from;
-    txtMsg.Lines.Text := e.data_type;
+    txtMsg.Lines.Text := e.str_content;
 
     for i := 0 to e.Data.Count - 1 do begin
         ri := TJabberRosterItem(e.Data.Objects[i]);

@@ -1,6 +1,6 @@
 <exodus version="0.9">
   <prefs>
-    <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.35 2004/01/27 14:01:03 pgmillard Exp $"/>
+    <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.36 2004/03/01 05:55:52 pgmillard Exp $"/>
     
     <!-- System Options -->
     <auto_update_url value="http://exodus.jabberstudio.org/exodus-released.exe"/>
@@ -131,7 +131,9 @@
     </invite_treatment>
     <msg_treatment value="0" control="cboMsgOptions">
       <control name="lblMsgOptions"/>
-    </msg_treatment>  
+    </msg_treatment>
+    <queue_offline value="1" control="chkQueueOffline"/>
+    <queue_dnd_chats value="0" control="chkQueueDNDChats"/>  
     
     <!-- Network Options -->
 

@@ -76,7 +76,7 @@ end;
 procedure TJabberChatList.SetSession(s: TObject);
 begin
     _s := s;
-    _callback := TJabberSession(s).RegisterCallback(MsgCallback,'/packet/message[@type!="error"]');
+    _callback := TJabberSession(s).RegisterCallback(MsgCallback,'/post/message[@type!="error"]');
 end;
 
 {---------------------------------------}
@@ -95,8 +95,9 @@ begin
 
     mt := MainSession.Prefs.getInt('msg_treatment');
 
+    // pgm 2/29/04 - we should never get these packets anymore...
     // throw out any x-data msgs we get.. the xdata handler will pick them up.
-    if (tag.QueryXPTag(XP_MSGXDATA) <> nil) then exit;
+    //if (tag.QueryXPTag(XP_MSGXDATA) <> nil) then exit;
 
     // we are only interested in packets w/ a body tag
     if (tag.GetFirstTag('body') = nil) then exit;
@@ -114,7 +115,7 @@ begin
                 exit;
         end;
 
-        if (Self.indexOf(fjid) < 0) then begin
+        if ((idx1 = -1) and (idx2 = -1)) then begin
             // Create a new session
             if (Self.indexOf(tmp_jid.jid) >= 0) then
                 exit;

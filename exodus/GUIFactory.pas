@@ -93,18 +93,30 @@ var
 begin
     // check for various events to start GUIS
     if (event = '/session/gui/chat') then begin
-        // New Chat Window
-        tmp_jid := TJabberID.Create(tag.getAttribute('from'));
-        chat := StartChat(tmp_jid.jid, tmp_jid.resource, true);
-        tmp_jid.Free;
-        DoNotify(chat, 'notify_newchat', _(sNotifyChat) +
-                 chat.Othernick, ico_user)
+        // if we are DND, or this is an offline msg, then possibly queue it,
+        // depending on prefs.
+        if (((MainSession.Prefs.getBool('queue_dnd_chats')) and
+             (MainSession.Show = 'dnd')) or
+            ((MainSession.Prefs.getBool('queue_offline')) and
+             (tag.QueryXPTag('/message/x[@xmlns="jabber:x:delay"]') <> nil))) then begin
+            // queue the chat window
+            e := CreateJabberEvent(tag);
+            RenderEvent(e);
+        end
+        else begin
+            // New Chat Window
+            tmp_jid := TJabberID.Create(tag.getAttribute('from'));
+            chat := StartChat(tmp_jid.jid, tmp_jid.resource, true);
+            tmp_jid.Free;
+            DoNotify(chat, 'notify_newchat', _(sNotifyChat) +
+                     chat.Othernick, ico_user)
+        end;
     end
 
     else if (event = '/session/gui/headline') then begin
         e := CreateJabberEvent(tag);
         q := getMsgQueue();
-        q.LogEvent(e, e.data_type, ico_headline);
+        q.LogEvent(e, e.str_content, ico_headline);
         if (not q.visible) then q.ShowDefault();
     end
 

@@ -43,6 +43,7 @@ type
         _history: Widestring;
         _memory: TTimer;
         _window: TObject;
+        _refs: integer;
 
         procedure SetWindow(new_window: TObject);
     protected
@@ -62,6 +63,10 @@ type
         procedure unassignEvent();
 
         function getHistory: Widestring;
+
+        procedure addRef();
+        procedure Release();
+        procedure TimedRelease();
 
         property JID: WideString read _jid;
         property Resource: Widestring read _resource;
@@ -117,6 +122,30 @@ begin
 end;
 
 {---------------------------------------}
+procedure TChatController.addRef();
+begin
+    inc(_refs);
+end;
+
+{---------------------------------------}
+procedure TChatController.Release();
+begin
+    dec(_refs);
+    assert(_refs >= 0);
+    if (_refs = 0) then
+        Self.Free();
+end;
+
+{---------------------------------------}
+procedure TChatController.TimedRelease();
+begin
+    if (_refs = 1) then
+        startTimer()
+    else
+        dec(_refs);
+end;
+
+{---------------------------------------}
 procedure TChatController.SetJID(sjid: Widestring);
 begin
     // If we already have a callback, then unregister
@@ -143,12 +172,21 @@ end;
 
 {---------------------------------------}
 destructor TChatController.Destroy;
+var
+    idx: integer;
 begin
-    // Unregister the callback, and free the queue
+    // Unregister the callback and remove us from the chat list.
+    if (MainSession <> nil) then begin
+        if (_cb >= 0) then
+            MainSession.UnRegisterCallback(_cb);
+        idx := MainSession.ChatList.IndexOfObject(Self);
+        if (idx >= 0) then
+            MainSession.ChatList.Delete(idx);
+    end;
+
+    // Free stuff
     ComController.Free();
     _memory.Free();
-    if (_cb >= 0) then
-        MainSession.UnRegisterCallback(_cb);
     msg_queue.Free();
     inherited;
 end;
@@ -209,8 +247,11 @@ begin
         if MainSession.IsPaused then
             MainSession.QueueEvent(event, tag, Self.MsgCallback)
         else begin
-            msg_queue.Push(tag);
-            MainSession.FireEvent('/session/gui/chat', tag);
+            msg_queue.Push(TXMLTag.Create(tag));
+
+            // if this is the first msg into the queue, fire gui event
+            if (msg_queue.Count = 1) then
+                MainSession.FireEvent('/session/gui/chat', tag);
         end;
     end;
 end;
@@ -230,14 +271,9 @@ end;
 
 {---------------------------------------}
 procedure TChatController.timMemoryTimer(Sender: TObject);
-var
-    idx: integer;
 begin
     // time to free the window..
-    idx := MainSession.ChatList.IndexOfObject(Self);
-    if (idx >= 0) then
-        MainSession.ChatList.Delete(idx);
-    Self.Free();
+    Self.Release();
 end;
 
 {---------------------------------------}
@@ -253,6 +289,7 @@ begin
     _memory.Enabled := false;
 end;
 
+{---------------------------------------}
 procedure TChatController.unassignEvent();
 begin
     _event := nil;
