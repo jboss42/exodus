@@ -51,17 +51,7 @@ type
     btnClose: TSpeedButton;
     lstRoster: TTntListView;
     lblSubject: TTntLabel;
-    popBanList: TMenuItem;
-    popMemberList: TMenuItem;
-    popVoiceList: TMenuItem;
-    popConfigure: TMenuItem;
-    N4: TMenuItem;
-    popDestroy: TMenuItem;
-    popAdminList: TMenuItem;
-    N5: TMenuItem;
-    popOwnerList: TMenuItem;
     dlgSave: TSaveDialog;
-    popModeratorList: TMenuItem;
     N6: TTntMenuItem;
     popClose: TTntMenuItem;
     mnuOnTop: TTntMenuItem;
@@ -87,6 +77,16 @@ type
     popRosterSendJID: TTntMenuItem;
     popRosterChat: TTntMenuItem;
     popRosterMsg: TTntMenuItem;
+    popDestroy: TTntMenuItem;
+    popConfigure: TTntMenuItem;
+    N5: TTntMenuItem;
+    popOwnerList: TTntMenuItem;
+    popAdminList: TTntMenuItem;
+    N4: TTntMenuItem;
+    popModeratorList: TTntMenuItem;
+    popMemberList: TTntMenuItem;
+    popBanList: TTntMenuItem;
+    popVoiceList: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -1635,7 +1635,7 @@ end;
 procedure TfrmRoom.popConfigureClick(Sender: TObject);
 begin
   inherited;
-    configRoom();
+    configRoom(false);
 end;
 
 {---------------------------------------}
