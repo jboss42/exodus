@@ -1026,7 +1026,6 @@ begin
             Result := Result + ritem.jid.full;
             if (i < clist.count - 1) then
                 Result := Result + ' | ';
-            ritem.Free();
         end;
     end;
     clist.Clear();
