@@ -93,7 +93,7 @@ begin
         MainSession.UnRegisterCallback(_cb);
 
     _cb := MainSession.RegisterCallback(MsgCallback,
-            '/packet/message[@from="' + Lowercase(sjid) + '*"]');
+            '/packet/message[@from="' + XPLiteEscape(Lowercase(sjid)) + '*"]');
 end;
 
 {---------------------------------------}

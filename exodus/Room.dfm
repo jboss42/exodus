@@ -66,6 +66,11 @@ inherited frmRoom: TfrmRoom
       end
     end
   end
+  inherited pnlInput: TPanel
+    inherited MsgOut: TExRichEdit
+      WordWrap = False
+    end
+  end
   inherited Panel1: TPanel
     Height = 23
     BorderWidth = 1

@@ -86,7 +86,7 @@ const
 
 type
     TPrefController = class;
-    
+
     TJabberProfile = class
     private
         _password: Widestring;
@@ -217,7 +217,7 @@ uses
     {$else}
     QGraphics,
     {$endif}
-    JabberConst, StrUtils, 
+    JabberConst, StrUtils,
     IdGlobal, IdCoder3To4, Session, IQ, XMLUtils;
 
 
@@ -229,50 +229,76 @@ var
 {---------------------------------------}
 function getUserDir: string;
 var
+    appdata: string;
+    local_appdata: string;
+    exe_path: string;
     reg: TRegistry;
-    f: TFileStream;
+
+    function testDir(dir: string): boolean;
+    var
+        dir_ok: boolean;
+        f: TFileStream;
+        fn: string;
+    begin
+        // first just check the file
+        Result := false;
+        fn := dir + 'exodus.xml';
+        if (fileExists(fn)) then begin
+            Result := true;
+            exit;
+        end;
+
+        // check the directory
+        dir_ok := DirectoryExists(dir);
+        if (dir_ok = false) then begin
+            dir_ok := CreateDir(dir);
+        end;
+        if (dir_ok = false) then exit;
+
+        // try to create a new file
+        try
+            f := TFileStream.Create(dir + 'test.xml', fmCreate);
+            f.Free();
+            DeleteFile(dir + 'test.xml');
+            Result := true;
+        except
+            // just eat these.
+            on EFOpenError do exit;
+        end;
+    end;
+
 begin
-    try //except
+    try
     reg := TRegistry.Create;
     try //finally free
         with reg do begin
             RootKey := HKEY_CURRENT_USER;
             OpenKeyReadOnly('Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders');
             if ValueExists('AppData') then begin
-                Result := ReadString('AppData') + '\Exodus\';
-                Result := ReplaceEnvPaths(Result);
-            end
-            else
-                Result := ExtractFilePath(Application.EXEName);
+                appdata := ReadString('AppData') + '\Exodus\';
+                appdata := ReplaceEnvPaths(appdata);
+            end;
 
-            // Try to create a file here if the prefs don't already exist
-            if not (FileExists(Result + 'exodus.xml')) then begin
-                try
-                    f := TFileStream.Create(Result + 'test.xml', fmOpenWrite);
-                    f.Free();
-                    DeleteFile(Result + 'test.xml');
-                except
-                    on EFOpenError do begin
-                        // If we can't write to AppData, then use Local AppData
-                        if ValueExists('Local AppData') then begin
-                            Result := ReadString('Local AppData') + '\Exodus\';
-                            Result := ReplaceEnvPaths(Result);
-                        end;
-                    end; // EFOpenError
-                end; // except
-            end; // if not fileExists
-        end; // with reg
+            if ValueExists('Local AppData') then begin
+                local_appdata := ReadString('Local AppData') + '\Exodus\';
+                local_appdata := ReplaceEnvPaths(local_appdata);
+            end;
+
+            exe_path := ExtractFilePath(Application.EXEName);
+        end;
     finally
-        reg.Free;
-end;
+        reg.Free();
+    end;
     except
-        // As a last result, just try the appdir
-        Result := ExtractFilePath(Application.EXEName);
-end;
+        exe_path := ExtractFilePath(Application.EXEName);
+    end;
 
-    // Finally, if the directory doesn't exist.. create it.
-    if (not DirectoryExists(Result)) then
-        MkDir(Result);
+    // first try appdata,
+    // then try local_appdata,
+    // then use exe_path as a last resort
+    if (testDir(appdata)) then Result := appdata
+    else if (testDir(local_appdata)) then Result := local_appdata
+    else Result := exe_path;
 end;
 
 {---------------------------------------}
@@ -415,7 +441,7 @@ begin
         pkServer:  t := _server_node.GetFirstTag(pkey);
 end;
 
-    if (t = nil) then 
+    if (t = nil) then
         Result := getDefault(pkey)
     else
         Result := t.Data;
@@ -478,7 +504,7 @@ begin
     end
     else
         n := _pref_node;
-        
+
     t := n.GetFirstTag(pkey);
     if (t <> nil) then begin
         t.ClearCData;
@@ -1108,7 +1134,7 @@ begin
     else
         // create some default node
         s_brand_node := TXMLTag.Create('brand');
-        
+
     parser.Free();
 end;
 
