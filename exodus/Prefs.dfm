@@ -1570,12 +1570,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 362
-    ActivePage = tbsMessages
+    ActivePage = tbsPlugins
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 5
+    TabIndex = 11
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1950,7 +1950,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 102
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2052,7 +2052,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 97
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2219,6 +2219,13 @@ object frmPrefs: TfrmPrefs
         Height = 13
         Caption = 'Simple Message (non-chat) Handling'
       end
+      object Label16: TLabel
+        Left = 6
+        Top = 283
+        Width = 46
+        Height = 13
+        Caption = 'Spool file:'
+      end
       object chkEmoticons: TCheckBox
         Left = 5
         Top = 24
@@ -2338,6 +2345,22 @@ object frmPrefs: TfrmPrefs
         Height = 17
         Caption = 'Automatically accept all room invites'
         TabOrder = 12
+      end
+      object txtSpoolPath: TEdit
+        Left = 66
+        Top = 279
+        Width = 164
+        Height = 21
+        TabOrder = 13
+      end
+      object btnSpoolBrowse: TButton
+        Left = 243
+        Top = 277
+        Width = 75
+        Height = 25
+        Caption = 'Browse'
+        TabOrder = 14
+        OnClick = btnSpoolBrowseClick
       end
     end
     object tbsNotify: TTabSheet
@@ -2501,7 +2524,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 124
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2587,7 +2610,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 112
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2606,7 +2629,7 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 73
         Width = 363
-        Height = 253
+        Height = 258
         Align = alClient
         TabOrder = 1
       end
@@ -2621,7 +2644,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TLabel
           Left = 0
           Top = 0
-          Width = 306
+          Width = 363
           Height = 13
           Align = alTop
           Caption = 
@@ -2645,7 +2668,7 @@ object frmPrefs: TfrmPrefs
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 352
+        Width = 363
         Height = 26
         Align = alTop
         Caption = 
@@ -2656,7 +2679,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 146
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2675,7 +2698,7 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 46
         Width = 363
-        Height = 280
+        Height = 285
         Align = alClient
         TabOrder = 1
       end
@@ -2900,7 +2923,7 @@ object frmPrefs: TfrmPrefs
       object Label6: TLabel
         Left = 0
         Top = 20
-        Width = 335
+        Width = 363
         Height = 26
         Align = alTop
         Caption = 
@@ -2911,7 +2934,7 @@ object frmPrefs: TfrmPrefs
       object StaticText12: TStaticText
         Left = 0
         Top = 0
-        Width = 51
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2930,7 +2953,7 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 46
         Width = 363
-        Height = 263
+        Height = 285
         Align = alClient
         TabOrder = 1
       end
@@ -3007,6 +3030,13 @@ object frmPrefs: TfrmPrefs
   object ColorDialog1: TColorDialog
     Ctl3D = True
     Left = 69
+    Top = 364
+  end
+  object OpenDialog1: TOpenDialog
+    Filter = 'XML|*.xml'
+    Options = [ofHideReadOnly, ofNoValidate, ofPathMustExist, ofEnableSizing]
+    Title = 'Select a spool file'
+    Left = 108
     Top = 364
   end
 end

@@ -192,6 +192,10 @@ type
     chkFlashInfinite: TCheckBox;
     chkAAReducePri: TCheckBox;
     chkAutoAcceptInvites: TCheckBox;
+    txtSpoolPath: TEdit;
+    Label16: TLabel;
+    btnSpoolBrowse: TButton;
+    OpenDialog1: TOpenDialog;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -223,6 +227,7 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure chkLogClick(Sender: TObject);
     procedure btnLogClearAllClick(Sender: TObject);
+    procedure btnSpoolBrowseClick(Sender: TObject);
   private
     { Private declarations }
     _notify: array of integer;
@@ -381,6 +386,7 @@ begin
         chkLog.Checked := getBool('log');
         chkLogRooms.Checked := getBool('log_rooms');
         txtLogPath.Text := getString('log_path');
+        txtSpoolPath.Text := getString('spool_path');
         chkAutoAcceptInvites.Checked := getBool('auto_accept_invites');
         cboMsgOptions.ItemIndex := getInt('msg_treatment');
         cboPresTracking.ItemIndex := getInt('pres_tracking');
@@ -513,6 +519,7 @@ begin
         setBool('auto_accept_invites', chkAutoAcceptInvites.Checked);
         setBool('log_rooms', chkLogRooms.Checked);
         setString('log_path', txtLogPath.Text);
+        setString('spool_path', txtSpoolPath.Text);
         setInt('msg_treatment', cboMsgOptions.ItemIndex);
         setInt('pres_tracking', cboPresTracking.ItemIndex);
 
@@ -1111,6 +1118,13 @@ end;
 procedure TfrmPrefs.btnLogClearAllClick(Sender: TObject);
 begin
     ClearAllLogs();
+end;
+
+procedure TfrmPrefs.btnSpoolBrowseClick(Sender: TObject);
+begin
+    OpenDialog1.FileName := txtSpoolPath.Text;
+    if (OpenDialog1.Execute) then
+        txtSpoolPath.Text := OpenDialog1.FileName;
 end;
 
 end.

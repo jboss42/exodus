@@ -117,7 +117,8 @@ var
 begin
     // save all of the events in the listview out to a file
     // fn := ExtractFilePath(Application.EXEName) + 'spool.xml';
-    fn := getUserDir() + 'spool.xml';
+    // fn := getUserDir() + 'spool.xml';
+    fn := MainSession.Prefs.getString('spool_path');
 
     s := TXMLTag.Create('spool');
     for i := 0 to _queue.Count - 1 do begin
@@ -158,7 +159,8 @@ var
 begin
     // Load events from the spool file
     // fn := ExtractFilePath(Application.EXEName) + 'spool.xml';
-    fn := getUserDir() + 'spool.xml';
+    // fn := getUserDir() + 'spool.xml';
+    fn := MainSession.Prefs.getString('spool_path');
 
     if (not FileExists(fn)) then exit;
 
