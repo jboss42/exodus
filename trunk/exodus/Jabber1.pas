@@ -677,7 +677,8 @@ begin
         reg.RootKey := HKEY_CURRENT_USER;
         reg.OpenKey('\Software\Jabber\Exodus\Restart\' + IntToStr(Application.Handle), true);
 
-        reg.WriteString('cmdline', ParamStr(0));
+        reg.WriteString('cmdline', '"' + ParamStr(0) +
+                        '" -c "' + MainSession.Prefs.Filename + '"');
         GetDir(0, cmd);
         reg.WriteString('cwd', cmd);
 
