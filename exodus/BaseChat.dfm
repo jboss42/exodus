@@ -1,6 +1,6 @@
 object frmBaseChat: TfrmBaseChat
-  Left = 634
-  Top = 389
+  Left = 864
+  Top = 181
   Width = 390
   Height = 315
   Color = clBtnFace
@@ -42,6 +42,7 @@ object frmBaseChat: TfrmBaseChat
       Width = 374
       Height = 220
       Align = alClient
+      PopupMenu = popOut
       ReadOnly = True
       ScrollBars = ssBoth
       TabOrder = 0
@@ -73,8 +74,11 @@ object frmBaseChat: TfrmBaseChat
       PopupMenu = popOut
       TabOrder = 0
       WantReturns = False
+      OnDragDrop = MsgOutDragDrop
+      OnDragOver = MsgOutDragOver
       OnKeyPress = MsgOutKeyPress
       OnKeyUp = MsgOutKeyUp
+      OnStartDrag = MsgOutStartDrag
     end
   end
   object Panel1: TPanel
@@ -92,12 +96,22 @@ object frmBaseChat: TfrmBaseChat
     Top = 184
     object Copy1: TMenuItem
       Caption = 'Copy'
+      OnClick = Copy1Click
     end
     object CopyAll1: TMenuItem
       Caption = 'Copy All'
+      OnClick = CopyAll1Click
+    end
+    object Paste1: TMenuItem
+      Caption = 'Paste'
+      OnClick = Paste1Click
     end
     object Clear1: TMenuItem
       Caption = 'Clear'
+      OnClick = Clear1Click
+    end
+    object dash1: TMenuItem
+      Caption = '-'
     end
     object Emoticons1: TMenuItem
       Caption = 'Emoticons'

@@ -39,6 +39,8 @@ type
     CopyAll1: TMenuItem;
     Clear1: TMenuItem;
     Emoticons1: TMenuItem;
+    Paste1: TMenuItem;
+    dash1: TMenuItem;
 
     procedure Emoticons1Click(Sender: TObject);
     procedure MsgListURLClick(Sender: TObject; url: String);
@@ -50,6 +52,15 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure MsgListKeyPress(Sender: TObject; var Key: Char);
     procedure Splitter1Moved(Sender: TObject);
+    procedure CopyAll1Click(Sender: TObject);
+    procedure Clear1Click(Sender: TObject);
+    procedure Copy1Click(Sender: TObject);
+    procedure Paste1Click(Sender: TObject);
+    procedure MsgOutDragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
+    procedure MsgOutStartDrag(Sender: TObject;
+      var DragObject: TDragObject);
+    procedure MsgOutDragDrop(Sender, Source: TObject; X, Y: Integer);
   private
     { Private declarations }
     _msgHistory : TStringList;
@@ -279,6 +290,54 @@ begin
   inherited;
     // save the new position to use on all new windows
     MainSession.prefs.setInt('chat_textbox', pnlInput.Height);
+end;
+
+procedure TfrmBaseChat.CopyAll1Click(Sender: TObject);
+begin
+  inherited;
+  MsgList.SelectAll;
+  MsgList.CopyToClipboard;
+end;
+
+procedure TfrmBaseChat.Clear1Click(Sender: TObject);
+begin
+    inherited;
+    MsgList.Clear();
+end;
+
+procedure TfrmBaseChat.Copy1Click(Sender: TObject);
+begin
+    inherited;
+    MsgList.CopyToClipboard();
+end;
+
+procedure TfrmBaseChat.Paste1Click(Sender: TObject);
+begin
+    inherited;
+    MsgOut.PasteFromClipboard();
+end;
+
+procedure TfrmBaseChat.MsgOutDragOver(Sender, Source: TObject; X,
+  Y: Integer; State: TDragState; var Accept: Boolean);
+begin
+  inherited;
+  ShowMessage('dragover');
+end;
+
+procedure TfrmBaseChat.MsgOutStartDrag(Sender: TObject;
+  var DragObject: TDragObject);
+begin
+  inherited;
+  ShowMessage('startdrag');
+
+end;
+
+procedure TfrmBaseChat.MsgOutDragDrop(Sender, Source: TObject; X,
+  Y: Integer);
+begin
+  inherited;
+  ShowMessage('dragdrop');
+
 end;
 
 end.
