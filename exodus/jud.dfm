@@ -1,8 +1,8 @@
 inherited frmJUD: TfrmJUD
-  Left = 680
-  Top = 107
+  Left = 270
+  Top = 183
   Width = 435
-  Height = 440
+  Height = 371
   BorderWidth = 3
   Caption = 'Search for Contacts'
   OldCreateOrder = True
@@ -12,7 +12,7 @@ inherited frmJUD: TfrmJUD
     Left = 0
     Top = 0
     Width = 164
-    Height = 400
+    Height = 331
     Align = alLeft
     BevelOuter = bvNone
     TabOrder = 0
@@ -67,7 +67,7 @@ inherited frmJUD: TfrmJUD
     end
     object pnlBottom: TPanel
       Left = 0
-      Top = 366
+      Top = 297
       Width = 164
       Height = 34
       Align = alBottom
@@ -98,7 +98,7 @@ inherited frmJUD: TfrmJUD
       Left = 0
       Top = 276
       Width = 164
-      Height = 90
+      Height = 21
       Align = alClient
       BevelOuter = bvNone
       TabOrder = 1
@@ -178,16 +178,28 @@ inherited frmJUD: TfrmJUD
     Left = 164
     Top = 0
     Width = 257
-    Height = 400
+    Height = 331
     Align = alClient
-    Columns = <>
+    Columns = <
+      item
+      end
+      item
+      end
+      item
+      end>
+    HideSelection = False
     MultiSelect = True
+    OwnerData = True
+    ReadOnly = True
+    RowSelect = True
     PopupMenu = PopupMenu1
     TabOrder = 1
     ViewStyle = vsReport
     OnColumnClick = lstContactsColumnClick
     OnCompare = lstContactsCompare
     OnContextPopup = lstContactsContextPopup
+    OnData = lstContactsData
+    OnDataFind = lstContactsDataFind
   end
   object PopupMenu1: TPopupMenu
     Left = 176

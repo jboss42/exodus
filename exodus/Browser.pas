@@ -585,7 +585,6 @@ end;
 procedure TfrmBrowse.mBookmarkClick(Sender: TObject);
 var
     itm: TListItem;
-    bm:  TJabberBookmark;
     fbm: TfrmBookmark;
 begin
     itm := vwBrowse.Selected;
