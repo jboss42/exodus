@@ -74,12 +74,14 @@ object frmRosterWindow: TfrmRosterWindow
     BevelInner = bvNone
     BevelOuter = bvNone
     ChangeDelay = 30
+    Ctl3D = True
     DragMode = dmAutomatic
     HideSelection = False
     Images = frmExodus.ImageList2
     Indent = 19
     MultiSelect = True
     MultiSelectStyle = [msControlSelect, msShiftSelect, msVisibleOnly]
+    ParentCtl3D = False
     PopupMenu = popRoster
     ShowButtons = False
     ShowLines = False

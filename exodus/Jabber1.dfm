@@ -17,12 +17,12 @@ object frmExodus: TfrmExodus
   ShowHint = True
   Visible = True
   OnActivate = FormActivate
-  OnClick = FormActivate
+  OnClick = FormPaint
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  OnPaint = FormActivate
+  OnPaint = FormPaint
   OnResize = FormResize
   OnShow = FormShow
   PixelsPerInch = 96
