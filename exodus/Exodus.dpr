@@ -161,8 +161,7 @@ uses
   Jud in 'Jud.pas' {frmJud},
   DockWizard in 'DockWizard.pas' {frmDockWizard},
   SSLWarn in 'SSLWarn.pas' {frmSSLWarn},
-  SASLAuth in 'SASLAuth.pas',
-  JSASL in '..\jopl\JSASL.pas';
+  SASLAuth in 'SASLAuth.pas';
 
 {$R *.TLB}
 
