@@ -139,7 +139,7 @@ end;
 procedure TfrmLogin.FormCreate(Sender: TObject);
 begin
     AssignUnicodeFont(Self, 10);
-    TranslateProperties(Self);
+    TranslateComponent(Self);
     URLLabel(lblProfile);
     MainSession.Prefs.RestorePosition(Self);
 end;

@@ -149,7 +149,7 @@ end;
 procedure TfrmSubscribe.FormCreate(Sender: TObject);
 begin
     AssignUnicodeFont(Self);
-    TranslateProperties(Self);
+    TranslateComponent(Self);
     _subscribe_windows.Add(Self);
 end;
 

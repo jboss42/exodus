@@ -169,7 +169,7 @@ end;
 procedure TfrmRiser.FormCreate(Sender: TObject);
 begin
     AssignUnicodeFont(Self, 9);
-    TranslateProperties(Self);
+    TranslateComponent(Self);
     Timer2.Interval := MainSession.Prefs.getInt('toast_duration') * 1000;
 end;
 

@@ -163,7 +163,7 @@ end;
 procedure TfrmRemove.FormCreate(Sender: TObject);
 begin
     AssignUnicodeFont(Self);
-    TranslateProperties(Self);
+    TranslateComponent(Self);
 end;
 
 end.

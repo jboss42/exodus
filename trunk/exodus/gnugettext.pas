@@ -3,15 +3,31 @@ unit gnugettext;
 (*                                                            *)
 (*  (C) Copyright by Lars B. Dybdahl and others               *)
 (*  E-mail: Lars@dybdahl.dk, phone +45 70201241               *)
-(*  You may distribute and modify this file as you wish       *)
-(*  for free                                                  *)
 (*                                                            *)
 (*  Contributors: Peter Thornqvist, Troy Wolbrink,            *) 
-(*                Frank Andreas de Groot                      *)
+(*                Frank Andreas de Groot, Igor Siticov,       *)
+(*                Jacques Garcia Vazquez                      *)
 (*                                                            *)
 (*  See http://dybdahl.dk/dxgettext/ for more information     *)
 (*                                                            *)
 (**************************************************************)
+
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// The names of any contributor may not be used to endorse or promote
+// products derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+// DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+// SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+// CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+// OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 interface
 
@@ -39,6 +55,7 @@ procedure TranslateComponent(AnObject: TComponent; TextDomain:string='');
 // This is useful for adding mo files for certain runtime libraries and 3rd
 // party component libraries
 procedure AddDomainForResourceString (domain:string);
+procedure RemoveDomainForResourceString (domain:string);
 
 // Set language to use
 procedure UseLanguage(LanguageCode: string);
@@ -61,6 +78,9 @@ function GetTranslatorNameAndEmail:widestring;
 
 const
   DefaultTextDomain = 'default';
+
+var
+  ExecutableFilename:string;    // This is set to paramstr(0). Modify it for dll-files to point to the full dll path filename.
 
 (*
  Make sure that the next TranslateProperties(self) will ignore
@@ -89,31 +109,37 @@ type
 // property of TComponent is already added and doesn't have to be added.
 procedure TP_GlobalHandleClass (HClass:TClass;Handler:TTranslator);
 
-// Translate a component's properties and all subcomponents
-// Use this on a Delphi TForm or a CLX program's QForm.
-// It will only translate string properties, but see TP_ functions
-// below if there are things you don't want to have translated.
+// Deprecated!! Use TranslateComponent() or DefaultInstance.TranslateProperties() instead.
 procedure TranslateProperties(AnObject: TObject; TextDomain:string='');
+  deprecated;
 
-// Load an external GNU gettext dll to be used instead of the internal
-// implementation. Returns true if the dll is loaded. If the dll was already
-// loaded, this function can be used to query whether it was loaded.
-// On Linux, this function enables the Libc version of GNU gettext
-// After calling this function, you must set all settings again
+// This function is deprecated. Please stop using the gnu_gettext.dll.
 function LoadDLLifPossible (dllname:string='gnu_gettext.dll'):boolean;
+  deprecated;
 
 function GetCurrentLanguage:string;
 
 // These functions are also from the orginal GNU gettext implementation.
 // Only use these, if you need to split up your translation into several
 // .mo files.
-function dgettext(const szDomain: string; const szMsgId: widestring): widestring; 
+function dgettext(const szDomain: string; const szMsgId: widestring): widestring;
 function dngettext(const szDomain: string; const singular,plural: widestring; Number:longint): widestring;
 function ngettext(const singular,plural: widestring; Number:longint): widestring;
 procedure textdomain(const szDomain: string);
 function getcurrenttextdomain: string;
 procedure bindtextdomain(const szDomain: string; const szDirectory: string);
 
+// This function will turn resourcestring hooks on or off, eventually with BPL file support.
+// Please do not activate BPL file support when the package is in design mode.
+const AutoCreateHooks=true;
+procedure HookIntoResourceStrings (enabled:boolean=true; SupportPackages:boolean=false);
+
+// DEBUGGING stuff. If the conditional define DXGETTEXTDEBUG is defined, it is activated.
+{ $define DXGETTEXTDEBUG}
+{$ifdef DXGETTEXTDEBUG}
+const
+  DebugLogFilename='c:\dxgettext-log.txt';
+{$endif}
 
 
 
@@ -143,6 +169,7 @@ type
       function GetCurrentLanguage:string;
       function GetTranslationProperty (Propertyname:string):WideString;
       function GetTranslatorNameAndEmail:widestring;
+      procedure GetListOfLanguages (domain:string; list:TStrings); // Puts list of language codes, for which there are translations in the specified domain, into list
 
       // Form translation tools, these are not threadsafe. All TP_ procs must be called just before TranslateProperites()
       procedure TP_Ignore(AnObject:TObject; const name:string);
@@ -159,11 +186,19 @@ type
       procedure textdomain(const szDomain: string);
       function getcurrenttextdomain: string;
       procedure bindtextdomain(const szDomain: string; const szDirectory: string);
-
+      procedure bindtextdomainToFile (const szDomain: string; const filename: string); // Also works with files embedded in exe file
+      
       // Debugging and advanced tools
       procedure SaveUntranslatedMsgids(filename: string);
     protected
       procedure TranslateStrings (sl:TStrings;TextDomain:string);
+
+      // Override these three, if you want to inherited from this class
+      // to create a new class that handles other domain and language dependent
+      // issues
+      procedure WhenNewLanguage (LanguageID:string); virtual;         // Override to know when language changes
+      procedure WhenNewDomain (TextDomain:string); virtual; // Override to know when text domain changes. Directory is purely informational
+      procedure WhenNewDomainDirectory (TextDomain,Directory:string); virtual; // Override to know when any text domain's directory changes. It won't be called if a domain is fixed to a specific file.
     private
       curlang: string;
       curGetPluralForm:TGetPluralForm;
@@ -201,6 +236,15 @@ implementation
 {$WARN UNSAFE_CAST OFF}
 {$endif}
 {$endif}
+
+(**************************************************************************)
+// Some comments on the implementation:
+// This unit should be independent of other units where possible.
+// It should have a small footprint in any way.
+(**************************************************************************)
+// TMultiReadExclusiveWriteSynchronizer is used instead of TCriticalSection
+// because it makes this unit independent of the SyncObjs unit
+(**************************************************************************)
 
 uses
   {$ifdef MSWINDOWS}
@@ -256,18 +300,22 @@ type
     private
       vDirectory: string;
       procedure setDirectory(dir: string);
-    public                    
+    public
       Domain: string;
       property Directory: string read vDirectory write setDirectory;
       constructor Create;
       destructor Destroy; override;
       procedure SetLanguageCode (langcode:string);
       function gettext(msgid: ansistring): ansistring; // uses mo file
+      procedure GetListOfLanguages(list:TStrings);
+      procedure SetFilename (filename:string); // Bind this domain to a specific file
+      function GetTranslationProperty(Propertyname: string): WideString;
     private
       moCS: TMultiReadExclusiveWriteSynchronizer; // Covers next three lines
       doswap: boolean;
       N, O, T: Cardinal; // Values defined at http://www.linuxselfhelp.com/gnu/gettext/html_chapter/gettext_6.html
       FileOffset:int64;
+      SpecificFilename:string;
       {$ifdef mswindows}
       mo: THandle;
       momapping: THandle;
@@ -304,6 +352,25 @@ type
   tpbindtextdomain = function(const szDomain: PChar; const szDirectory: PChar): PChar; cdecl;
   tpgettext_putenv = function(const envstring: PChar): integer; cdecl;
   {$endif}
+  TCharArray5=array[0..4] of ansichar;
+  THook=  // Replaces a runtime library procedure with a custom procedure
+    class
+    public
+      constructor Create (OldProcedure, NewProcedure: pointer; FollowJump:boolean=false);
+      destructor Destroy; override;  // Restores unhooked state
+      procedure Reset (FollowJump:boolean=false); // Disables and picks up patch points again
+      procedure Disable;
+      procedure Enable;
+    private
+      oldproc,newproc:Pointer;
+      {$ifdef MSWindows}
+      ov: cardinal;
+      {$endif}
+      Patch:TCharArray5;
+      Original:TCharArray5;
+      PatchPosition:PChar;
+      procedure Shutdown; // Same as destroy, except that object is not destroyed
+    end;
 
 var
   Win32PlatformIsUnicode:boolean=False;
@@ -311,6 +378,10 @@ var
   TPDomainListCS:TMultiReadExclusiveWriteSynchronizer;
   TPDomainList:TStringList;
   DLLisLoaded: boolean=false;
+  {$ifdef DXGETTEXTDEBUG}
+  DebugLog:TStream;
+  DebugLogCS:TMultiReadExclusiveWriteSynchronizer;
+  {$endif}
   {$ifdef MSWINDOWS}
   pgettext: tpgettext;
   pdgettext: tpdgettext;
@@ -319,6 +390,33 @@ var
   pgettext_putenv: tpgettext_putenv;
   dllmodule: THandle;
   {$endif}
+  HookLoadResString:THook;
+  HookLoadStr:THook;
+  HookFmtLoadStr:THook;
+
+{$ifdef DXGETTEXTDEBUG}
+procedure DebugWriteln(line: ansistring);
+begin
+  Assert (DebugLog<>nil);
+  line:=line+sLineBreak;
+  DebugLogCS.BeginWrite;
+  try
+    DebugLog.WriteBuffer(line[1],length(line));
+  finally
+    DebugLogCS.EndWrite;
+  end;
+end;
+
+procedure StartDebugLog(filename: string);
+begin
+  if DebugLog<>nil then
+    raise Exception.Create ('Debug log for gnugettext.pas is already active.');
+  DebugLog:=TFileStream.Create (filename,fmCreate);
+  DebugLogCS:=TMultiReadExclusiveWriteSynchronizer.Create;
+  DebugWriteln('Debug log started '+DateTimeToStr(Now));
+  DebugWriteln('');
+end;
+{$endif}
 
 function StripCR (s:string):string;
 var
@@ -624,28 +722,6 @@ begin
   end;
   Result := langcode;
 end;
-
-procedure OverwriteProcedure(OldProcedure, NewProcedure: pointer);
-{ OverwriteProcedure originally from Igor Siticov }
-var
-  x: pchar;
-  y: integer;
-  ov2, ov: cardinal;
-begin
-  x := PChar(OldProcedure);
-  if not VirtualProtect(Pointer(x), 5, PAGE_EXECUTE_READWRITE, @ov) then
-    RaiseLastOSError;
-
-  x[0] := char($E9);
-  y := integer(NewProcedure) - integer(OldProcedure) - 5;
-  x[1] := char(y and 255);
-  x[2] := char((y shr 8) and 255);
-  x[3] := char((y shr 16) and 255);
-  x[4] := char((y shr 24) and 255);
-
-  if not VirtualProtect(Pointer(x), 5, ov, @ov2) then
-    RaiseLastOSError;
-end;
 {$endif}
 
 function LoadResStringA(ResStringRec: PResStringRec): string;
@@ -671,40 +747,126 @@ begin
   DefaultInstance.UseLanguage(LanguageCode);
 end;
 
+type
+  PStrData = ^TStrData;
+  TStrData = record
+    Ident: Integer;
+    Str: string;
+  end;
+  
+function SysUtilsEnumStringModules(Instance: Longint; Data: Pointer): Boolean;
+{$IFDEF MSWINDOWS}
+var
+  Buffer: array [0..1023] of char;
+begin
+  with PStrData(Data)^ do begin
+    SetString(Str, Buffer,
+      LoadString(Instance, Ident, Buffer, sizeof(Buffer)));
+    Result := Str = '';
+  end;
+end;
+{$ENDIF}
+{$IFDEF LINUX}
+var
+  rs:TResStringRec;
+  Module:HModule;
+begin
+  Module:=Instance;
+  rs.Module:=@Module;
+  with PStrData(Data)^ do begin
+    rs.Identifier:=Ident;
+    Str:=System.LoadResString(@rs);
+    Result:=Str='';
+  end;
+end;
+{$ENDIF}
+
+function SysUtilsFindStringResource(Ident: Integer): string;
+var
+  StrData: TStrData;
+begin
+  StrData.Ident := Ident;
+  StrData.Str := '';
+  EnumResourceModules(SysUtilsEnumStringModules, @StrData);
+  Result := StrData.Str;
+end;
+
+function SysUtilsLoadStr(Ident: Integer): string;
+begin
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln ('Sysutils.LoadRes('+IntToStr(ident)+') called');
+  {$endif}
+  Result := ResourceStringGettext(SysUtilsFindStringResource(Ident));
+end;
+
+function SysUtilsFmtLoadStr(Ident: Integer; const Args: array of const): string;
+begin
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln ('Sysutils.FmtLoadRes('+IntToStr(ident)+',Args) called');
+  {$endif}
+  FmtStr(Result, SysUtilsFindStringResource(Ident), Args);
+  Result:=ResourceStringGettext(Result);
+end;
+
 function LoadResString(ResStringRec: PResStringRec): widestring;
 {$ifdef MSWINDOWS}
 var
   Len: Integer;
   Buffer: array [0..1023] of char;
 {$endif}
+{$ifdef LINUX }
+const
+  ResStringTableLen = 16;
+type
+  ResStringTable = array [0..ResStringTableLen-1] of LongWord;
+var
+  Handle: TResourceHandle;
+  Tab: ^ResStringTable;
+  ResMod: HMODULE;
+{$endif }
 begin
-  if (ResStringRec = nil) then
+  if ResStringRec=nil then
     exit;
-  if ResStringRec.Identifier >= 64*1024 then
+  if ResStringRec.Identifier>=64*1024 then begin
+    {$ifdef DXGETTEXTDEBUG}
+    DebugWriteln ('LoadResString was given an invalid ResStringRec.Identifier');
+    {$endif}
     Result:=PChar(ResStringRec.Identifier)
-  else
-  {$ifdef LINUX}
-  // This works with Unicode if the Linux has utf-8 character set
-  Result:=System.LoadResString(ResStringRec);
-  {$endif}
-  {$ifdef MSWINDOWS}
-  if not Win32PlatformIsUnicode then begin
-    SetString(Result, Buffer,
-      LoadString(FindResourceHInstance(ResStringRec.Module^),
-        ResStringRec.Identifier, Buffer, SizeOf(Buffer)))
   end else begin
-    Result := '';
-    Len := 0;
-    While Len = Length(Result) do begin
-      if Length(Result) = 0 then
-        SetLength(Result, 1024)
-      else
-        SetLength(Result, Length(Result) * 2);
-      Len := LoadStringW(FindResourceHInstance(ResStringRec.Module^),
-        ResStringRec.Identifier, PWideChar(Result), Length(Result));
+    {$ifdef LINUX}
+    // This works with Unicode if the Linux has utf-8 character set
+    // Result:=System.LoadResString(ResStringRec);
+    ResMod:=FindResourceHInstance(ResStringRec^.Module^);
+    Handle:=FindResource(ResMod,
+      PChar(ResStringRec^.Identifier div ResStringTableLen), PChar(6));   // RT_STRING
+    Tab:=Pointer(LoadResource(ResMod, Handle));
+    if Tab=nil then
+      Result:=''
+    else
+      Result:=PWideChar(PChar(Tab)+Tab[ResStringRec^.Identifier mod ResStringTableLen]);
+    {$endif}
+    {$ifdef MSWINDOWS}
+    if not Win32PlatformIsUnicode then begin
+      SetString(Result, Buffer,
+        LoadString(FindResourceHInstance(ResStringRec.Module^),
+          ResStringRec.Identifier, Buffer, SizeOf(Buffer)))
+    end else begin
+      Result := '';
+      Len := 0;
+      While Len = Length(Result) do begin
+        if Length(Result) = 0 then
+          SetLength(Result, 1024)
+        else
+          SetLength(Result, Length(Result) * 2);
+        Len := LoadStringW(FindResourceHInstance(ResStringRec.Module^),
+          ResStringRec.Identifier, PWideChar(Result), Length(Result));
+      end;
+      SetLength(Result, Len);
     end;
-    SetLength(Result, Len);
+    {$endif}
   end;
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln ('Loaded resourcestring: '+utf8encode(Result));
   {$endif}
   Result:=ResourceStringGettext(Result);
 end;
@@ -777,11 +939,17 @@ begin
   try
     if isopen then begin
       {$ifdef mswindows}
+      {$ifdef DXGETTEXTDEBUG}
+      DebugWriteln ('Unmapping .mo file for domain '+Domain);
+      {$endif}
       UnMapViewOfFile (momemoryHandle);
       CloseHandle (momapping);
       CloseHandle (mo);
       {$endif}
       {$ifdef linux}
+      {$ifdef DXGETTEXTDEBUG}
+      DebugWriteln ('Releasing .mo file copy from memory for domain '+Domain);
+      {$endif}
       FreeMem (momemoryHandle);
       {$endif}
 
@@ -833,6 +1001,9 @@ begin
   if (not isopen) and moexists then
     OpenMoFile;
   if not isopen then begin
+    {$ifdef DXGETTEXTDEBUG}
+    DebugWriteln ('.mo file is not open. Not translating "'+msgid+'"');
+    {$endif}
     Result := msgid;
     exit;
   end;
@@ -853,10 +1024,16 @@ begin
     if msgid = s then begin
       // Found the msgid
       Result := getdsttextbyid(i-1);
+      {$ifdef DXGETTEXTDEBUG}
+      DebugWriteln ('Found in .mo ('+Domain+'): "'+utf8encode(msgid)+'"->"'+utf8encode(Result)+'"');
+      {$endif}
       break;
     end;
     if step = 0 then begin
       // Not found
+      {$ifdef DXGETTEXTDEBUG}
+      DebugWriteln ('Translation not found in .mo file ('+Domain+') : "'+utf8encode(msgid)+'"');
+      {$endif}
       Result := msgid;
       break;
     end;
@@ -910,9 +1087,13 @@ begin
     if sizeof(i) <> 4 then
       raise Exception.Create('TDomain in gnugettext is written for an architecture that has 32 bit integers.');
 
-    filename := Directory + curlang + PathDelim + 'LC_MESSAGES' + PathDelim + domain + '.mo';
-    if (not AssemblyAnalyzer.FileExists(filename)) and (not fileexists(filename)) then
-      filename := Directory + copy(curlang, 1, 2) + PathDelim + 'LC_MESSAGES' + PathDelim + domain + '.mo';
+    if SpecificFilename<>'' then
+      filename:=SpecificFilename
+    else begin
+      filename := Directory + curlang + PathDelim + 'LC_MESSAGES' + PathDelim + domain + '.mo';
+      if (not AssemblyAnalyzer.FileExists(filename)) and (not fileexists(filename)) then
+        filename := Directory + copy(curlang, 1, 2) + PathDelim + 'LC_MESSAGES' + PathDelim + domain + '.mo';
+    end;
     if (not AssemblyAnalyzer.FileExists(filename)) and (not fileexists(filename)) then begin
       moexists := False;
       exit;
@@ -925,6 +1106,9 @@ begin
     size:=0;
     offset:=0;
     // Map the mo file into memory and let the operating system decide how to cache
+    {$ifdef DXGETTEXTDEBUG}
+    DebugWriteln ('Memory mapping file '''+filename+'''');
+    {$endif}
     mo:=createfile (PChar(filename),GENERIC_READ,FILE_SHARE_READ,nil,OPEN_EXISTING,0,0);
     if mo=INVALID_HANDLE_VALUE then
       raise Exception.Create ('Cannot open file '+filename);
@@ -939,6 +1123,9 @@ begin
     {$endif}
     {$ifdef linux}
     // Read the whole file into memory
+    {$ifdef DXGETTEXTDEBUG}
+    DebugWriteln ('Reading from file '''+filename+'''');
+    {$endif}
     mofile:=TFileStream.Create (filename, fmOpenRead or fmShareDenyNone);
     try
       if size=0 then
@@ -959,6 +1146,10 @@ begin
     if (i <> $950412DE) and (i <> $DE120495) then
       raise Exception.Create('This file is not a valid GNU gettext mo file: ' + filename);
     doswap := (i = $DE120495);
+    {$ifdef DXGETTEXTDEBUG}
+    if doswap then DebugWriteln ('.mo file is swapped (comes from another CPU architecture)');
+    {$endif}
+
 
     CardinalInMem(momemory,4);       // Read the version number, but don't use it for anything.
     N:=CardinalInMem(momemory,8);    // Get string count
@@ -967,11 +1158,50 @@ begin
   finally
     moCS.EndWrite;
   end;
+
+  if pos('CHARSET=UTF-8',uppercase(GetTranslationProperty('Content-Type')))=0 then begin
+    CloseMoFile;
+    {$ifdef DXGETTEXTDEBUG}
+    DebugWriteln ('The translation for the language code '+curlang+' (in '+filename+') does not have charset=utf-8 in its Content-Type. Translations are turned off.');
+    {$endif}
+    raise Exception.Create ('The translation for the language code '+curlang+' (in '+filename+') does not have charset=utf-8 in its Content-Type. Translations are turned off.');
+  end;
+end;
+
+function TDomain.GetTranslationProperty(
+  Propertyname: string): WideString;
+var
+  sl:TStringList;
+  i:integer;
+  s:string;
+begin
+  Propertyname:=uppercase(Propertyname)+': ';
+  sl:=TStringList.Create;
+  try
+    sl.Text:=utf8encode(gettext(''));
+    for i:=0 to sl.Count-1 do begin
+      s:=sl.Strings[i];
+      if uppercase(copy(s,1,length(Propertyname)))=Propertyname then begin
+        Result:=utf8decode(trim(copy(s,length(PropertyName)+1,maxint)));
+        {$ifdef DXGETTEXTDEBUG}
+        DebugWriteln ('GetTranslationProperty('+PropertyName+') returns '''+Result+'''.');
+        {$endif}
+        exit;
+      end;
+    end;
+  finally
+    FreeAndNil (sl);
+  end;
+  Result:='';
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln ('GetTranslationProperty('+PropertyName+') did not find any value. An empty string is returned.');
+  {$endif}
 end;
 
 procedure TDomain.setDirectory(dir: string);
 begin
   vDirectory := IncludeTrailingPathDelimiter(dir);
+  SpecificFilename:='';
   CloseMoFile;
 end;
 
@@ -1000,9 +1230,30 @@ end;
 
 procedure AddDomainForResourceString (domain:string);
 begin
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln ('Extra domain for resourcestring: '+domain);
+  {$endif}
   TPDomainListCS.BeginWrite;
   try
-    TPDomainList.Add (domain);
+    if TPDomainList.IndexOf(domain)=-1 then
+      TPDomainList.Add (domain);
+  finally
+    TPDomainListCS.EndWrite;
+  end;
+end;
+
+procedure RemoveDomainForResourceString (domain:string);
+var
+  i:integer;
+begin
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln ('Remove domain for resourcestring: '+domain);
+  {$endif}
+  TPDomainListCS.BeginWrite;
+  try
+    i:=TPDomainList.IndexOf(domain);
+    if i<>-1 then
+      TPDomainList.Delete (i);
   finally
     TPDomainListCS.EndWrite;
   end;
@@ -1104,6 +1355,59 @@ begin
     Result:=3;
 end;
 
+procedure TDomain.GetListOfLanguages(list: TStrings);
+var
+  sr:TSearchRec;
+  more:boolean;
+  filename, path, langcode:string;
+  i, j:integer;
+begin
+  list.Clear;
+
+  // Iterate through filesystem
+  more:=FindFirst (Directory+'*',faAnyFile,sr)=0;
+  while more do begin
+    if (sr.Attr and faDirectory<>0) and (sr.name<>'.') and (sr.name<>'..') then begin
+      filename := Directory + sr.Name + PathDelim + 'LC_MESSAGES' + PathDelim + domain + '.mo';
+      if fileexists(filename) then begin
+        langcode:=lowercase(sr.name);
+        if list.IndexOf(langcode)=-1 then
+          list.Add(langcode);
+      end;
+    end;
+    more:=FindNext (sr)=0;
+  end;
+
+  // Iterate through embedded files
+  for i:=0 to AssemblyAnalyzer.filelist.Count-1 do begin
+    filename:=AssemblyAnalyzer.basedirectory+AssemblyAnalyzer.filelist.Strings[i];
+    path:=Directory;
+    {$ifdef MSWINDOWS}
+    path:=uppercase(path);
+    filename:=uppercase(filename);
+    {$endif}
+    j:=length(path);
+    if copy(filename,1,j)=path then begin
+      path:=PathDelim + 'LC_MESSAGES' + PathDelim + domain + '.mo';
+      {$ifdef MSWINDOWS}
+      path:=uppercase(path);
+      {$endif}
+      if copy(filename,length(filename)-length(path)+1,length(path))=path then begin
+        langcode:=lowercase(copy(filename,j+1,length(filename)-length(path)-j));
+        if list.IndexOf(langcode)=-1 then
+          list.Add(langcode);
+      end;
+    end;
+  end;
+end;
+
+procedure TDomain.SetFilename(filename: string);
+begin
+  vDirectory := '';
+  SpecificFilename:=filename;
+  CloseMoFile;
+end;
+
 { TGnuGettextInstance }
 
 procedure TGnuGettextInstance.bindtextdomain(const szDomain,
@@ -1112,6 +1416,9 @@ var
   dir:string;
 begin
   dir:=IncludeTrailingPathDelimiter(szDirectory);
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln ('Text domain "'+szDomain+'" is now located at "'+dir+'"');
+  {$endif}
   getdomain(domainlist,szDomain,DefaultDomainDirectory,CurLang).Directory := dir;
   {$ifdef LINUX}
   dir:=ExcludeTrailingPathDelimiter(szDirectory);
@@ -1121,6 +1428,7 @@ begin
   if DLLisLoaded then
     pbindtextdomain(PChar(szDomain), PChar(dir));
   {$endif}
+  WhenNewDomainDirectory (szDomain, szDirectory);
 end;
 
 constructor TGnuGettextInstance.Create;
@@ -1137,7 +1445,7 @@ begin
   TP_ClassHandling:=TList.Create;
 
   // Set some settings
-  DefaultDomainDirectory := IncludeTrailingPathDelimiter(extractfilepath(paramstr(0)))+'locale';
+  DefaultDomainDirectory := IncludeTrailingPathDelimiter(extractfilepath(ExecutableFilename))+'locale';
 
   UseLanguage(lang);
 
@@ -1183,6 +1491,9 @@ function TGnuGettextInstance.dgettext(const szDomain: string;
   const szMsgId: widestring): widestring;
 begin
   if not Enabled then begin
+    {$ifdef DXGETTEXTDEBUG}
+    DebugWriteln ('Translation has been disabled. Text is not being translated: '+szMsgid);
+    {$endif}
     Result:=szMsgId;
     exit;
   end;
@@ -1262,6 +1573,9 @@ end;
 
 procedure TGnuGettextInstance.textdomain(const szDomain: string);
 begin
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln ('Changed text domain to "'+szDomain+'"');
+  {$endif}
   curmsgdomain := szDomain;
   {$ifdef LINUX}
   Libc.textdomain(PChar(szDomain));
@@ -1271,6 +1585,7 @@ begin
     ptextdomain(PChar(szDomain));
   end;
   {$endif}
+  WhenNewDomain (szDomain);
 end;
 
 function TGnuGettextInstance.TP_CreateRetranslator : TExecutable;
@@ -1281,6 +1596,9 @@ begin
   ttpr.Instance:=self;
   TP_Retranslator:=ttpr;
   Result:=ttpr;
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln ('A retranslator was created.');
+  {$endif}
 end;
 
 procedure TGnuGettextInstance.TP_GlobalHandleClass(HClass: TClass;
@@ -1299,6 +1617,9 @@ begin
       cm.HClass:=HClass;
       cm.SpecialHandler:=Handler;
       TP_ClassHandling.Insert(i,cm);
+      {$ifdef DXGETTEXTDEBUG}
+      DebugWriteln ('A handler was set for class '+HClass.ClassName+'.');
+      {$endif}
       exit;
     end;
   end;
@@ -1306,6 +1627,9 @@ begin
   cm.HClass:=HClass;
   cm.SpecialHandler:=Handler;
   TP_ClassHandling.Add(cm);
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln ('A handler was set for class '+HClass.ClassName+'.');
+  {$endif}
 end;
 
 procedure TGnuGettextInstance.TP_GlobalIgnoreClass(IgnClass: TClass);
@@ -1322,12 +1646,18 @@ begin
       cm:=TClassMode.Create;
       cm.HClass:=IgnClass;
       TP_ClassHandling.Insert(i,cm);
+      {$ifdef DXGETTEXTDEBUG}
+      DebugWriteln ('Globally, class '+IgnClass.ClassName+' is being ignored.');
+      {$endif}
       exit;
     end;
   end;
   cm:=TClassMode.Create;
   cm.HClass:=IgnClass;
   TP_ClassHandling.Add(cm);
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln ('Globally, class '+IgnClass.ClassName+' is being ignored.');
+  {$endif}
 end;
 
 procedure TGnuGettextInstance.TP_GlobalIgnoreClassProperty(
@@ -1343,6 +1673,9 @@ begin
       if Assigned(cm.SpecialHandler) then
         raise Exception.Create ('You cannot ignore a class property for a class that has a handler set.');
       cm.PropertiesToIgnore.Add(propertyname);
+      {$ifdef DXGETTEXTDEBUG}
+      DebugWriteln ('Globally, the '+propertyname+' property of class '+IgnClass.ClassName+' is being ignored.');
+      {$endif}
       exit;
     end;
     if IgnClass.InheritsFrom(cm.HClass) then begin
@@ -1351,6 +1684,9 @@ begin
       cm.HClass:=IgnClass;
       cm.PropertiesToIgnore.Add(propertyname);
       TP_ClassHandling.Insert(i,cm);
+      {$ifdef DXGETTEXTDEBUG}
+      DebugWriteln ('Globally, the '+propertyname+' property of class '+IgnClass.ClassName+' is being ignored.');
+      {$endif}
       exit;
     end;
   end;
@@ -1358,12 +1694,18 @@ begin
   cm.HClass:=IgnClass;
   cm.PropertiesToIgnore.Add(propertyname);
   TP_ClassHandling.Add(cm);
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln ('Globally, the '+propertyname+' property of class '+IgnClass.ClassName+' is being ignored.');
+  {$endif}
 end;
 
 procedure TGnuGettextInstance.TP_Ignore(AnObject: TObject;
   const name: string);
 begin
   TP_IgnoreList.Add(uppercase(name));
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln ('On object with class name '+AnObject.ClassName+', ignore is set on '+name);
+  {$endif}
 end;
 
 procedure TGnuGettextInstance.TranslateComponent(AnObject: TComponent;
@@ -1371,6 +1713,10 @@ procedure TGnuGettextInstance.TranslateComponent(AnObject: TComponent;
 var
   comp:TGnuGettextComponentMarker;
 begin
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln ('======================================================================');
+  DebugWriteln ('TranslateComponent() was called for a component with name '+AnObject.Name+'.');
+  {$endif}
   comp:=AnObject.FindComponent('GNUgettextMarker') as TGnuGettextComponentMarker;
   if comp=nil then begin
     comp:=TGnuGettextComponentMarker.Create (nil);
@@ -1378,22 +1724,43 @@ begin
     comp.Retranslator:=TP_CreateRetranslator;
     TranslateProperties (AnObject, TextDomain);
     AnObject.InsertComponent(comp);
+    {$ifdef DXGETTEXTDEBUG}
+    DebugWriteln ('This is the first time, that this component has been translated. A retranslator component has been created for this component.');
+    {$endif}
   end else begin
+    {$ifdef DXGETTEXTDEBUG}
+    DebugWriteln ('This is not the first time, that this component has been translated.');
+    {$endif}
     if comp.LastLanguage<>curlang then begin
+      {$ifdef DXGETTEXTDEBUG}
+      DebugWriteln ('The retranslator is being executed.');
+      {$endif}
       comp.Retranslator.Execute;
+    end else begin
+      {$ifdef DXGETTEXTDEBUG}
+      DebugWriteln ('The language has not changed. The retranslator is not executed.');
+      {$endif}
     end;
   end;
   comp.LastLanguage:=curlang;
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln ('======================================================================');
+  {$endif}
 end;
 
 procedure TGnuGettextInstance.TranslateProperty (AnObject:TObject; PropInfo:PPropInfo; TodoList:TStrings; TextDomain:string);
 var
+  {$ifdef DELPHI5OROLDER}
+  ws: string;
+  old: string;
+  Data: PTypeData;
+  {$endif}
+  {$ifndef DELPHI5OROLDER}
   ppi:PPropInfo;
   ws: WideString;
   old: WideString;
+  {$endif}
   obj:TObject;
-  sl:TStrings;
-  i, k:integer;
   Propname:string;
 begin
   PropName:=PropInfo^.Name;
@@ -1402,43 +1769,34 @@ begin
     case PropInfo^.PropType^.Kind of
       tkString, tkLString, tkWString:
         begin
+          {$ifdef DELPHI5OROLDER}
+          old := GetStrProp(AnObject, PropName);
+          {$endif}
+          {$ifndef DELPHI5OROLDER}
           old := GetWideStrProp(AnObject, PropName);
+          {$endif}
           if (old <> '') and (IsWriteProp(PropInfo)) then begin
             if TP_Retranslator<>nil then
               (TP_Retranslator as TTP_Retranslator).Remember(AnObject, PropName, old);
             ws := dgettext(textdomain,old);
             if ws <> old then begin
+              {$ifdef DELPHI5OROLDER}
+              SetStrProp(AnObject, PropName, ws);
+              {$endif}
+              {$ifndef DELPHI5OROLDER}
               ppi:=GetPropInfo(AnObject, Propname);
               if ppi=nil then
-                raise Exception.Create ('Property disappeared...');
+                raise Exception.Create ('Property disappeared when retranslating an object of class '+AnObject.ClassName+'. Use the DXGETTEXTDEBUG define to get a log that shows what component that has the problem.');
               SetWideStrProp(AnObject, ppi, ws);
+              {$endif}
             end;
           end;
         end { case item };
       tkClass:
         begin
           obj:=GetObjectProp(AnObject, PropName);
-          if obj<>nil then begin
-            // Check the global class ignore list
-            for k:=0 to TP_ClassHandling.Count-1 do begin
-              if AnObject.InheritsFrom(TClass(TP_ClassHandling.Items[k])) then
-                exit;
-            end;
-            // Check for TStrings translation
-            if obj is TStrings then begin
-              sl:=obj as TStrings;
-              if (sl.Text<>'') and (TP_Retranslator<>nil) then
-                (TP_Retranslator as TTP_Retranslator).Remember(obj, 'Text', sl.Text);
-              TranslateStrings (sl,TextDomain);
-            end else
-            // Check for TCollection
-            if obj is TCollection then
-              for i := 0 to TCollection(obj).Count - 1 do
-                TodoList.AddObject('',TCollection(obj).Items[i]);
-            // Check for TComponent
-            if obj is TComponent then
-              TodoList.AddObject ('',obj);
-          end { if not nil };
+          if obj<>nil then 
+            TodoList.AddObject ('',obj);
         end { case item };
       end { case };
   except
@@ -1462,7 +1820,14 @@ var
   cm,currentcm:TClassMode;
   ObjectPropertyIgnoreList:TStringList;
   objid, Name:string;
+  {$ifdef DELPHI5OROLDER}
+  Data:PTypeData;
+  {$endif}
 begin
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln ('----------------------------------------------------------------------');
+  DebugWriteln ('TranslateProperties() was called for an object of class '+AnObject.ClassName+' with domain "'+textdomain+'".');
+  {$endif}
   if textdomain='' then
     textdomain:=curmsgdomain;
   if TP_Retranslator<>nil then
@@ -1474,16 +1839,18 @@ begin
     TodoList.AddObject('', AnObject);
     DoneList.Sorted:=True;
     ObjectPropertyIgnoreList.Sorted:=True;
+    {$ifndef DELPHI5OROLDER}
     ObjectPropertyIgnoreList.Duplicates:=dupIgnore;
     ObjectPropertyIgnoreList.CaseSensitive:=False;
     DoneList.Duplicates:=dupError;
     DoneList.CaseSensitive:=True;
+    {$endif}
 
     while TodoList.Count<>0 do begin
       AnObject:=TodoList.Objects[0];
       Name:=TodoList.Strings[0];
       TodoList.Delete(0);
-      if AnObject<>nil then begin
+      if (AnObject<>nil) and (AnObject is TPersistent) then begin
         // Make sure each object is only translated once
         Assert (sizeof(integer)=sizeof(TObject));
         objid:=IntToHex(integer(AnObject),8);
@@ -1516,8 +1883,24 @@ begin
           continue;
         end;
 
+        {$ifdef DELPHI5OROLDER}
+        if AnObject.ClassInfo=nil then begin
+          {$ifdef DXGETTEXTDEBUG}
+          DebugWriteln ('ClassInfo=nil encountered for class '+AnObject.ClassName+'. Translation of that component has stopped. You should ignore this object.');
+          {$endif}
+          continue;
+        end;
+        Data := GetTypeData(AnObject.Classinfo);
+        Count := Data^.PropCount;
+        GetMem(PropList, Count * Sizeof(PPropInfo));
+        {$endif}
+        {$ifndef DELPHI5OROLDER}
+        Count := GetPropList(AnObject, PropList);
+        {$endif}
         try
-          Count := GetPropList(AnObject, PropList);
+          {$ifdef DELPHI5OROLDER}
+          GetPropInfos(AnObject.ClassInfo, PropList);
+          {$endif}
           for j := 0 to Count - 1 do begin
             PropInfo := PropList[j];
             UPropName:=uppercase(PropInfo^.Name);
@@ -1529,9 +1912,23 @@ begin
             end;  // if
           end;  // for
         finally
+          {$ifdef DELPHI5OROLDER}
+          FreeMem(PropList, Data^.PropCount * Sizeof(PPropInfo));
+          {$endif}
+          {$ifndef DELPHI5OROLDER}
+          if Count<>0 then
+            FreeMem (PropList);
+          {$endif}
         end;
         if AnObject is TStrings then begin
+          if ((AnObject as TStrings).Text<>'') and (TP_Retranslator<>nil) then
+            (TP_Retranslator as TTP_Retranslator).Remember(AnObject, 'Text', (AnObject as TStrings).Text);
           TranslateStrings (AnObject as TStrings,TextDomain);
+        end;
+        // Check for TCollection
+        if AnObject is TCollection then begin
+          for i := 0 to (AnObject as TCollection).Count - 1 do
+            TodoList.AddObject('',(AnObject as TCollection).Items[i]);
         end;
         if AnObject is TComponent then
           for i := 0 to TComponent(AnObject).ComponentCount - 1 do begin
@@ -1549,6 +1946,9 @@ begin
   end;
   TP_IgnoreList.Clear;
   TP_Retranslator:=nil;
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln ('----------------------------------------------------------------------');
+  {$endif}
 end;
 
 procedure TGnuGettextInstance.UseLanguage(LanguageCode: string);
@@ -1557,15 +1957,29 @@ var
   dom:TDomain;
   l2:string[2];
 begin
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln('UseLanguage('''+LanguageCode+'''); called');
+  {$endif}
+
   if LanguageCode='' then begin
     LanguageCode:=GGGetEnvironmentVariable('LANG');
+    {$ifdef DXGETTEXTDEBUG}
+    DebugWriteln ('LANG env variable is '''+LanguageCode+'''.');
+    {$endif}
     {$ifdef MSWINDOWS}
-    if LanguageCode='' then
+    if LanguageCode='' then begin
       LanguageCode:=GetWindowsLanguage;
+      {$ifdef DXGETTEXTDEBUG}
+      DebugWriteln ('Found Windows language code to be '''+LanguageCode+'''.');
+      {$endif}
+    end;
     {$endif}
     p:=pos('.',LanguageCode);
     if p<>0 then
       LanguageCode:=copy(LanguageCode,1,p-1);
+    {$ifdef DXGETTEXTDEBUG}
+    DebugWriteln ('Language code that will be set is '''+LanguageCode+'''.');
+    {$endif}
   end;
 
   curlang := LanguageCode;
@@ -1587,8 +2001,18 @@ begin
   if (l2='lt') then curGetPluralForm:=GetPluralForm3LT else
   if (l2='ru') or (l2='cs') or (l2='sk') or (l2='uk') or (l2='hr') then curGetPluralForm:=GetPluralForm3RU else
   if (l2='pl') then curGetPluralForm:=GetPluralForm3PL else
-  if (l2='sl') then curGetPluralForm:=GetPluralForm4SL else
-    curGetPluralForm:=GetPluralForm2EN
+  if (l2='sl') then curGetPluralForm:=GetPluralForm4SL else begin
+    curGetPluralForm:=GetPluralForm2EN;
+    {$ifdef DXGETTEXTDEBUG}
+    DebugWriteln ('Plural form for the language was not found. English plurality system assumed.');
+    {$endif}
+  end;
+
+  WhenNewLanguage (curlang);
+
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln('');
+  {$endif}
 end;
 
 procedure TGnuGettextInstance.TranslateStrings(sl: TStrings;TextDomain:string);
@@ -1599,13 +2023,13 @@ var
 begin
   s:=TStringList.Create;
   try
-    s.AddStrings (sl);
+    s.Assign (sl);
     for i:=0 to s.Count-1 do begin
       line:=s.Strings[i];
       if line<>'' then
         s.Strings[i]:=dgettext(TextDomain,line);
     end;
-    sl.Text:=s.Text;
+    sl.Assign(s);
   finally
     FreeAndNil (s);
   end;
@@ -1618,26 +2042,8 @@ end;
 
 function TGnuGettextInstance.GetTranslationProperty(
   Propertyname: string): WideString;
-var
-  sl:TStringList;
-  i:integer;
-  s:string;
 begin
-  Propertyname:=uppercase(Propertyname)+': ';
-  sl:=TStringList.Create;
-  try
-    sl.Text:=utf8encode(gettext(''));
-    for i:=0 to sl.Count-1 do begin
-      s:=sl.Strings[i];
-      if uppercase(copy(s,1,length(Propertyname)))=Propertyname then begin
-        Result:=utf8decode(trim(copy(s,length(PropertyName)+1,maxint)));
-        exit;
-      end;
-    end;
-  finally
-    FreeAndNil (sl);
-  end;
-  Result:='';
+  Result:=getdomain(domainlist,curmsgdomain,DefaultDomainDirectory,CurLang).GetTranslationProperty (Propertyname);
 end;
 
 function TGnuGettextInstance.dngettext(const szDomain,singular, plural: widestring;
@@ -1647,19 +2053,34 @@ var
   idx:integer;
   p:integer;
 begin
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln ('dngettext translation (domain '+szDomain+', number is '+IntTostr(Number)+') of '+singular+'/'+plural);
+  {$endif}
   org:=singular+#0+plural;
   trans:=dgettext(szDomain,org);
-  if org=trans then
+  if org=trans then begin
+    {$ifdef DXGETTEXTDEBUG}
+    DebugWriteln ('Translation was equal to english version. English plural forms assumed.');
+    {$endif}
     idx:=GetPluralForm2EN(Number)
-  else
+  end else
     idx:=curGetPluralForm(Number);
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln ('Index '+IntToStr(idx)+' will be used');
+  {$endif}
   while true do begin
     p:=pos(#0,trans);
     if p=0 then begin
+      {$ifdef DXGETTEXTDEBUG}
+      DebugWriteln ('Last translation used: '+utf8encode(trans));
+      {$endif}
       Result:=trans;
       exit;
     end;
     if idx=0 then begin
+      {$ifdef DXGETTEXTDEBUG}
+      DebugWriteln ('Translation found: '+utf8encode(trans));
+      {$endif}
       Result:=copy(trans,1,p-1);
       exit;
     end;
@@ -1672,6 +2093,37 @@ function TGnuGettextInstance.ngettext(const singular, plural: widestring;
   Number: Integer): widestring;
 begin
   Result := dngettext(curmsgdomain, singular, plural, Number);
+end;
+
+procedure TGnuGettextInstance.WhenNewDomain(TextDomain: string);
+begin
+  // This is meant to be empty.
+end;
+
+procedure TGnuGettextInstance.WhenNewLanguage(LanguageID: string);
+begin
+  // This is meant to be empty.
+end;
+
+procedure TGnuGettextInstance.WhenNewDomainDirectory(TextDomain,
+  Directory: string);
+begin
+  // This is meant to be empty.
+end;
+
+procedure TGnuGettextInstance.GetListOfLanguages(domain: string;
+  list: TStrings);
+begin
+  getdomain(domainlist,Domain,DefaultDomainDirectory,CurLang).GetListOfLanguages(list);
+end;
+
+procedure TGnuGettextInstance.bindtextdomainToFile(const szDomain,
+  filename: string);
+begin
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln ('Text domain "'+szDomain+'" is now bound to file named "'+filename+'"');
+  {$endif}
+  getdomain(domainlist,szDomain,DefaultDomainDirectory,CurLang).SetFilename (filename);
 end;
 
 { TClassMode }
@@ -1707,9 +2159,9 @@ begin
     offset:=offset shl 8+ord(s[i]);  
   if offset=0 then
     exit;
-  BaseDirectory:=ExtractFilePath(paramstr(0));
+  BaseDirectory:=ExtractFilePath(ExecutableFilename);
   try
-    fs:=TFileStream.Create(paramstr(0),fmOpenRead or fmShareDenyNone);
+    fs:=TFileStream.Create(ExecutableFilename,fmOpenRead or fmShareDenyNone);
     try
       while true do begin
         fs.Seek(offset,soFromBeginning);
@@ -1743,8 +2195,12 @@ begin
   filelist.Duplicates:=dupError;
   filelist.CaseSensitive:=True;
   {$endif}
+  {$ifndef DELPHI5OROLDER}
+  {$ifdef MSWINDOWS}
   filelist.Duplicates:=dupError;
   filelist.CaseSensitive:=False;
+  {$endif}
+  {$endif}
   filelist.Sorted:=True;
 end;
 
@@ -1780,12 +2236,18 @@ begin
     filename:=copy(filename,length(basedirectory)+1,maxint);
     idx:=filelist.IndexOf(filename);
     if idx<>-1 then begin
+      {$ifdef DXGETTEXTDEBUG}
+      DebugWriteln ('File named '''+filename+''' is included inside the executable file.');
+      {$endif}
       fi:=filelist.Objects[idx] as TAssemblyFileInfo;
-      realfilename:=paramstr(0);
+      realfilename:=ExecutableFilename;
       offset:=fi.offset;
       size:=fi.size;
     end;
   end;
+  {$ifdef DXGETTEXTDEBUG}
+  DebugWriteln ('Using '''+realfilename+''' from offset '+IntTostr(offset)+', size '+IntToStr(size));
+  {$endif}
 end;
 
 function TAssemblyAnalyzer.ReadInt64(str: TStream): int64;
@@ -1817,7 +2279,9 @@ var
   sl:TStrings;
   item:TTP_RetranslatorItem;
   newvalue:WideString;
+  {$ifndef DELPHI5OROLDER}
   ppi:PPropInfo;
+  {$endif}
 begin
   for i:=0 to list.Count-1 do begin
     item:=TObject(list.items[i]) as TTP_RetranslatorItem;
@@ -1827,10 +2291,15 @@ begin
       Instance.TranslateStrings(sl,textdomain);
     end else begin
       newValue:=instance.dgettext(textdomain,item.OldValue);
+      {$ifdef DELPHI5OROLDER}
+      SetStrProp(item.obj, item.PropName, newValue);
+      {$endif}
+      {$ifndef DELPHI5OROLDER}
       ppi:=GetPropInfo(item.obj, item.Propname);
       if ppi=nil then
         raise Exception.Create ('Property disappeared...');
       SetWideStrProp(item.obj, ppi, newValue);
+      {$endif}
     end;
   end;
 end;
@@ -1855,7 +2324,122 @@ begin
   inherited;
 end;
 
+{ THook }
+
+constructor THook.Create(OldProcedure, NewProcedure: pointer; FollowJump:boolean=false);
+{ Idea and original code from Igor Siticov }
+{ Modified by Jacques Garcia Vazquez and Lars Dybdahl }
+begin
+  {$ifndef CPU386}
+  'This procedure only works on Intel i386 compatible processors.'
+  {$endif}
+
+  oldproc:=OldProcedure;
+  newproc:=NewProcedure;
+
+  Reset (FollowJump);
+end;
+
+destructor THook.Destroy;
+begin
+  Shutdown;
+  inherited;
+end;
+
+procedure THook.Disable;
+begin
+  Assert (PatchPosition<>nil,'Patch position in THook was nil when Disable was called');
+  PatchPosition[0]:=Original[0];
+  PatchPosition[1]:=Original[1];
+  PatchPosition[2]:=Original[2];
+  PatchPosition[3]:=Original[3];
+  PatchPosition[4]:=Original[4];
+end;
+
+procedure THook.Enable;
+begin
+  Assert (PatchPosition<>nil,'Patch position in THook was nil when Enable was called');
+  PatchPosition[0]:=Patch[0];
+  PatchPosition[1]:=Patch[1];
+  PatchPosition[2]:=Patch[2];
+  PatchPosition[3]:=Patch[3];
+  PatchPosition[4]:=Patch[4];
+end;
+
+procedure THook.Reset(FollowJump: boolean);
+var
+  offset:integer;
+  {$ifdef LINUX}
+  p:pointer;
+  pagesize:integer;
+  {$endif}
+begin
+  if PatchPosition<>nil then
+    Shutdown;
+
+  patchPosition := OldProc;
+  if FollowJump and (Word(OldProc^) = $25FF) then begin
+    // This finds the correct procedure if a virtual jump has been inserted
+    // at the procedure address
+    Inc(Integer(patchPosition), 2); // skip the jump
+    patchPosition := pChar(Pointer(pointer(patchPosition)^)^);
+  end;
+  offset:=integer(NewProc)-integer(pointer(patchPosition))-5;
+
+  Patch[0] := char($E9);
+  Patch[1] := char(offset and 255);
+  Patch[2] := char((offset shr 8) and 255);
+  Patch[3] := char((offset shr 16) and 255);
+  Patch[4] := char((offset shr 24) and 255);
+
+  Original[0]:=PatchPosition[0];
+  Original[1]:=PatchPosition[1];
+  Original[2]:=PatchPosition[2];
+  Original[3]:=PatchPosition[3];
+  Original[4]:=PatchPosition[4];
+
+  {$ifdef MSWINDOWS}
+  if not VirtualProtect(Pointer(PatchPosition), 5, PAGE_EXECUTE_READWRITE, @ov) then
+    RaiseLastOSError;
+  {$endif}
+  {$ifdef LINUX}
+  pageSize:=sysconf (_SC_PAGE_SIZE);
+  p:=pointer(PatchPosition);
+  p:=pointer((integer(p) + PAGESIZE-1) and not (PAGESIZE-1) - pageSize);
+  if mprotect (p, pageSize, PROT_READ + PROT_WRITE + PROT_EXEC) <> 0 then
+    RaiseLastOSError;
+  {$endif}
+end;
+
+procedure THook.Shutdown;
+begin
+  Disable;
+  PatchPosition:=nil;
+end;
+
+procedure HookIntoResourceStrings (enabled:boolean=true; SupportPackages:boolean=false);
+begin
+  HookLoadResString.Reset (SupportPackages);
+  HookLoadStr.Reset (SupportPackages);
+  HookFmtLoadStr.Reset (SupportPackages);
+  if enabled then begin
+    HookLoadResString.Enable;
+    HookLoadStr.Enable;
+    HookFmtLoadStr.Enable;
+  end;
+end;
+
 initialization
+  {$ifdef DXGETTEXTDEBUG}
+  StartDebugLog(DebugLogFilename);
+  {$endif}
+
+  if IsLibrary then begin
+    // Get DLL/shared object filename
+    SetLength (ExecutableFilename,300);
+    SetLength (ExecutableFilename,GetModuleFileName(0, PChar(ExecutableFilename), length(ExecutableFilename)));
+  end else
+    ExecutableFilename:=Paramstr(0);
   AssemblyAnalyzer:=TAssemblyAnalyzer.Create;
   AssemblyAnalyzer.Analyze;
   TPDomainList:=TStringList.Create;
@@ -1864,11 +2448,16 @@ initialization
   DefaultInstance:=TGnuGettextInstance.Create;
   {$ifdef MSWINDOWS}
   Win32PlatformIsUnicode := (Win32Platform = VER_PLATFORM_WIN32_NT);
-  // replace Borlands LoadResString with gettext enabled version:
-  OverwriteProcedure(@system.LoadResString, @LoadResStringA);
   {$endif}
 
+  // replace Borlands LoadResString with gettext enabled version:
+  HookLoadResString:=THook.Create (@system.LoadResString, @LoadResStringA);
+  HookLoadStr:=THook.Create (@sysutils.LoadStr, @SysUtilsLoadStr);
+  HookFmtLoadStr:=THook.Create (@sysutils.FmtLoadStr, @SysUtilsFmtLoadStr);
+  HookIntoResourceStrings (AutoCreateHooks,false);
+
 finalization
+  // Stop debugging
   FreeAndNil (DefaultInstance);
   FreeAndNil (TPDomainListCS);
   FreeAndNil (TPDomainList);
@@ -1877,7 +2466,14 @@ finalization
   if dllmodule <> 0 then
     FreeLibrary(dllmodule);
   {$endif}
+  FreeAndNil (HookFmtLoadStr);
+  FreeAndNil (HookLoadStr);
+  FreeAndNil (HookLoadResString);
   FreeAndNil (AssemblyAnalyzer);
+  {$ifdef DXGETTEXTDEBUG}
+  FreeAndNil (DebugLog);
+  FreeAndNil (DebugLogCS);
+  {$endif}
 
 end.
 

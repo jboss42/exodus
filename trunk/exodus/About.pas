@@ -68,7 +68,7 @@ end;
 
 procedure TfrmAbout.FormCreate(Sender: TObject);
 begin
-    TranslateProperties(Self);
+    TranslateComponent(Self);
     pnlVersion.Caption := 'Version: ' + GetAppVersion();
     MainSession.Prefs.RestorePosition(Self);
 end;

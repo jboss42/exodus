@@ -142,7 +142,7 @@ var
     iq: TJabberIQ;
 begin
     AssignUnicodeFont(Self);
-    TranslateProperties(Self);
+    TranslateComponent(Self);
 
     // Hide all the tabs
     TabSheet1.TabVisible := false;

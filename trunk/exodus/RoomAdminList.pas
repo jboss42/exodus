@@ -218,7 +218,7 @@ end;
 procedure TfrmRoomAdminList.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
-    TranslateProperties(Self);
+    TranslateComponent(Self);
     Action := caFree;
 end;
 

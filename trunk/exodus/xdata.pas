@@ -307,7 +307,7 @@ end;
 {---------------------------------------}
 procedure TfrmXData.FormCreate(Sender: TObject);
 begin
-    TranslateProperties(Self);
+    TranslateComponent(Self);
 end;
 
 end.

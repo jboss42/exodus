@@ -160,7 +160,7 @@ end;
 procedure TfrmAdd.FormCreate(Sender: TObject);
 begin
     AssignUnicodeFont(Self);
-    TranslateProperties(Self);
+    TranslateComponent(Self);
     URLLabel(lblAddGrp);
     AssignTntStrings(MainSession.Roster.GrpList, cboGroup.Items);
     removeSpecialGroups(cboGroup.Items);

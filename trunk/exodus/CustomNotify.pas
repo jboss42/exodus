@@ -85,7 +85,7 @@ end;
 
 procedure TfrmCustomNotify.FormCreate(Sender: TObject);
 begin
-    TranslateProperties(Self);
+    TranslateComponent(Self);
     SetLength(_vals, 20);
     SetLength(_defs, 20);
 end;

@@ -154,7 +154,7 @@ end;
 procedure TfrmGrpRemove.FormCreate(Sender: TObject);
 begin
     //
-    TranslateProperties(Self);
+    TranslateComponent(Self);
     cur_grp := '';
     ct_list := TList.Create;
 end;
