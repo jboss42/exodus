@@ -132,7 +132,7 @@ begin
         t := GetFirstTag('thread');
         if t <> nil then _thread := t.Data;
 
-        t := QueryXPTag('/message/x[@xmlns="jabber:x:delay"]');
+        t := QueryXPTag(XP_MSGDELAY);
         if (t = nil) then
             _time := Now()
         else begin

@@ -1,6 +1,6 @@
 inherited frmJUD: TfrmJUD
-  Left = 270
-  Top = 183
+  Left = 341
+  Top = 213
   Width = 435
   Height = 371
   BorderWidth = 3
@@ -9,10 +9,17 @@ inherited frmJUD: TfrmJUD
   OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 13
-  object pnlLeft: TPanel
+  object Splitter1: TSplitter [0]
+    Left = 217
+    Top = 0
+    Width = 3
+    Height = 331
+    Cursor = crHSplit
+  end
+  object pnlLeft: TPanel [1]
     Left = 0
     Top = 0
-    Width = 200
+    Width = 217
     Height = 331
     Align = alLeft
     BevelOuter = bvNone
@@ -20,7 +27,7 @@ inherited frmJUD: TfrmJUD
     object lblInstructions: TLabel
       Left = 0
       Top = 70
-      Width = 200
+      Width = 217
       Height = 26
       Align = alTop
       Caption = 'Fill in the search criteria to find contacts on.'
@@ -30,7 +37,7 @@ inherited frmJUD: TfrmJUD
     object lblSelect: TLabel
       Left = 0
       Top = 0
-      Width = 200
+      Width = 217
       Height = 26
       Align = alTop
       Caption = 
@@ -41,7 +48,7 @@ inherited frmJUD: TfrmJUD
     object lblWait: TLabel
       Left = 0
       Top = 57
-      Width = 200
+      Width = 217
       Height = 13
       Align = alTop
       Caption = 'Please wait. Contacting search agent:'
@@ -51,7 +58,7 @@ inherited frmJUD: TfrmJUD
     object Panel1: TPanel
       Left = 0
       Top = 26
-      Width = 200
+      Width = 217
       Height = 31
       Align = alTop
       BevelOuter = bvNone
@@ -69,7 +76,7 @@ inherited frmJUD: TfrmJUD
     object pnlBottom: TPanel
       Left = 0
       Top = 297
-      Width = 200
+      Width = 217
       Height = 34
       Align = alBottom
       BevelOuter = bvNone
@@ -98,7 +105,7 @@ inherited frmJUD: TfrmJUD
     object pnlFields: TPanel
       Left = 0
       Top = 250
-      Width = 200
+      Width = 217
       Height = 47
       Align = alClient
       BevelOuter = bvNone
@@ -107,7 +114,7 @@ inherited frmJUD: TfrmJUD
     object aniWait: TAnimate
       Left = 0
       Top = 96
-      Width = 200
+      Width = 217
       Height = 50
       Align = alTop
       Active = False
@@ -118,7 +125,7 @@ inherited frmJUD: TfrmJUD
     object pnlResults: TPanel
       Left = 0
       Top = 146
-      Width = 200
+      Width = 217
       Height = 104
       Align = alTop
       BevelOuter = bvNone
@@ -175,10 +182,10 @@ inherited frmJUD: TfrmJUD
       end
     end
   end
-  object lstContacts: TListView
-    Left = 200
+  object lstContacts: TListView [2]
+    Left = 220
     Top = 0
-    Width = 221
+    Width = 201
     Height = 331
     Align = alClient
     Columns = <

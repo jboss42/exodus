@@ -88,7 +88,7 @@ begin
     if (tag.QueryXPTag(XP_MSGXDATA) <> nil) then exit;
 
     // we are only interested in packets w/ a body tag
-    if (tag.QueryXPTag('/message/body') = nil) then exit;
+    if (tag.GetFirstTag('body') = nil) then exit;
 
     tmp_jid := TJabberID.Create(fjid);
 
