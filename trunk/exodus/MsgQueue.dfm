@@ -1,7 +1,7 @@
 object frmMsgQueue: TfrmMsgQueue
   Left = 237
   Top = 185
-  Width = 432
+  Width = 464
   Height = 324
   Caption = 'Events'
   Color = clBtnFace
@@ -20,7 +20,7 @@ object frmMsgQueue: TfrmMsgQueue
   object Splitter1: TSplitter
     Left = 0
     Top = 150
-    Width = 424
+    Width = 456
     Height = 3
     Cursor = crVSplit
     Align = alTop
@@ -28,7 +28,7 @@ object frmMsgQueue: TfrmMsgQueue
   object lstEvents: TListView
     Left = 0
     Top = 0
-    Width = 424
+    Width = 456
     Height = 150
     Align = alTop
     Columns = <
@@ -38,7 +38,7 @@ object frmMsgQueue: TfrmMsgQueue
       end
       item
         Caption = 'Date/Time'
-        Width = 100
+        Width = 125
       end
       item
         Caption = 'Subject'
@@ -61,8 +61,8 @@ object frmMsgQueue: TfrmMsgQueue
   object txtMsg: TExRichEdit
     Left = 0
     Top = 153
-    Width = 424
-    Height = 137
+    Width = 456
+    Height = 142
     Align = alClient
     AutoURLDetect = adDefault
     CustomURLs = <

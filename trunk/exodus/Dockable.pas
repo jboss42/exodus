@@ -90,7 +90,9 @@ begin
         MainSession.Prefs.RestorePosition(Self);
 
     _edge_snap := MainSession.Prefs.getInt('edge_snap');
+
     Self.SavePos();
+
     _noMoveCheck := false;
 end;
 

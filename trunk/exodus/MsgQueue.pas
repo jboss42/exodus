@@ -51,6 +51,13 @@ type
     procedure SaveEvents();
     procedure LoadEvents();
     procedure removeItems();
+
+    function FindColumnIndex(pHeader: pNMHdr): integer;
+    function FindColumnWidth(pHeader: pNMHdr): integer;
+
+  protected
+    procedure WMNotify(var Msg: TWMNotify); message WM_NOTIFY;
+
   public
     { Public declarations }
     procedure LogEvent(e: TJabberEvent; msg: string; img_idx: integer);
@@ -73,7 +80,7 @@ implementation
 {$R *.dfm}
 
 uses
-    ShellAPI, 
+    ShellAPI, CommCtrl,  
     Roster, JabberID, XMLUtils, XMLParser, XMLTag,
     ExUtils, MsgRecv, Session, PrefController;
 
@@ -222,6 +229,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmMsgQueue.FormCreate(Sender: TObject);
+var
+    tmp: integer;
 begin
     inherited;
 
@@ -234,7 +243,84 @@ begin
     AssignDefaultFont(lstEvents.Font);
     AssignDefaultFont(txtMsg.Font);
 
+    with lstEvents do begin
+        tmp := MainSession.Prefs.getInt('quecol_1');
+        if (tmp <> 0) then Column[0].Width := tmp;
+        tmp := MainSession.Prefs.getInt('quecol_2');
+        if (tmp <> 0) then Column[1].Width := tmp;
+        tmp := MainSession.Prefs.getInt('quecol_3');
+        if (tmp <> 0) then Column[2].Width := tmp;
+    end;
+
     Self.LoadEvents();
+end;
+
+{---------------------------------------}
+procedure TfrmMsgQueue.WMNotify(var Msg: TWMNotify);
+var
+    c: integer;
+    w: longint;
+    pref: string;
+begin
+    inherited;
+    if MainSession = nil then exit;
+
+    // pgm 1/26/03 - More API madness. ph3ar my mad skillz.
+    // do insane Win32 API magic to trap column resize events
+    // thanx to google & the Swiss Delphi center..
+    // http://www.swissdelphicenter.ch/en/showcode.php?id=1264
+    case Msg.NMHdr^.code of
+        HDN_ENDTRACK: begin
+            // a column got resized
+            c := FindColumnIndex(Msg.NMHdr);
+            if (c >= 0) then begin
+                w := FindColumnWidth(Msg.NMHdr);
+                pref := 'quecol_' + IntToStr(c + 1);
+                MainSession.Prefs.setInt(pref, w);
+            end;
+        end;
+    end;
+end;
+
+{---------------------------------------}
+function TfrmMsgQueue.FindColumnIndex(pHeader: pNMHdr): integer;
+var
+    hwndHeader: HWND;
+    iteminfo: THdItem;
+    i: integer;
+    buf: array [0..128] of Char;
+begin
+    Result := -1;
+    with lstEvents do begin
+        hwndHeader := pHeader^.hwndFrom;
+        i := pHDNotify(pHeader)^.Item;
+        FillChar(iteminfo, sizeof(iteminfo), 0);
+        iteminfo.Mask := HDI_TEXT;
+        iteminfo.pszText := buf;
+        iteminfo.cchTextMax := sizeof(buf) - 1;
+        Header_GetItem(hwndHeader, i, iteminfo);
+
+        // compare the column captions
+        if CompareStr(Columns[i].Caption, iteminfo.pszText) = 0 then
+            Result := i
+        else begin
+            for i := 0 to Columns.Count - 1 do begin
+                if CompareStr(Columns[i].Caption, iteminfo.pszText) = 0 then begin
+                    Result := i;
+                    break;
+                end;
+            end;
+        end;
+    end;
+end;
+
+{---------------------------------------}
+function TfrmMsgQueue.FindColumnWidth(pHeader: pNMHdr): integer;
+begin
+    Result := -1;
+    if  (Assigned(PHDNotify(pHeader)^.pItem) and
+        ((PHDNotify(pHeader)^.pItem^.mask and HDI_WIDTH) <> 0)) then
+        Result := PHDNotify(pHeader)^.pItem^.cxy;
 end;
 
 {---------------------------------------}
@@ -342,8 +428,7 @@ begin
         Key := $0;
         removeItems();
     end;
-
-end;
+    end;
 
 end;
 
