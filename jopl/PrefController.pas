@@ -1413,7 +1413,6 @@ var
 begin
     parser := TXMLTagParser.Create;
 
-    // WTF is HInstance?
     res := TResourceStream.Create(HInstance, 'defaults', 'XML');
     sl := TStringList.Create();
     sl.LoadFromStream(res);
