@@ -22,8 +22,9 @@ unit JoinRoom;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  buttonFrame, StdCtrls;
+    JabberID, 
+    Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+    buttonFrame, StdCtrls;
 
 type
   TfrmJoinRoom = class(TForm)
@@ -48,7 +49,8 @@ type
 var
   frmJoinRoom: TfrmJoinRoom;
 
-procedure StartJoinRoom;
+procedure StartJoinRoom; overload;
+procedure StartJoinRoom(room_jid: TJabberID; nick, password: WideString); overload; 
 
 resourcestring
     sInvalidNick = 'You must enter a nickname';
@@ -56,7 +58,6 @@ resourcestring
 implementation
 uses
     Jabber1, 
-    JabberID, 
     Agents,
     Session,
     Room;
@@ -74,6 +75,35 @@ begin
         txtRoom.Text := MainSession.Prefs.getString('tc_lastroom');
         txtServer.Text := MainSession.Prefs.getString('tc_lastserver');
         txtNick.Text := MainSession.Prefs.getString('tc_lastnick');
+        if (txtNick.Text = '') then
+            txtNick.Text := MainSession.Username;
+
+        with txtServer do begin
+            Items.Clear;
+            agents := MainSession.MyAgents;
+            for i := 0 to agents.Count -1 do begin
+                a := agents.getAgent(i);
+                if (a.groupchat) then
+                    Items.Add(a.jid);
+                end;
+            end;
+        Show;
+        end;
+end;
+
+procedure StartJoinRoom(room_jid: TJabberID; nick, password: WideString); overload;
+var
+    f: TfrmJoinRoom;
+    i: integer;
+    agents: TAgents;
+    a: TAgentItem;
+begin
+    f := TfrmJoinRoom.Create(Application);
+    with f do begin
+        txtRoom.Text := room_jid.user;
+        txtServer.Text := room_jid.domain;
+        txtNick.Text := nick;
+
         if (txtNick.Text = '') then
             txtNick.Text := MainSession.Username;
 

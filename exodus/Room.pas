@@ -580,7 +580,7 @@ begin
                 MessageDlg('You supplied an invalid password to enter this room.',
                     mtError, [mbOK], 0);
                 Self.Close();
-                StartJoinRoom();
+                StartJoinRoom(_jid, MyNick, '');
                 end
             else if (ecode = '404') then begin
                 MessageDlg('The room is being created. Please try again later.',
@@ -732,6 +732,8 @@ begin
 
         RenderMember(member, tag);
         end;
+
+    _jid.Free();
 end;
 
 {---------------------------------------}
