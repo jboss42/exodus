@@ -757,8 +757,15 @@ begin
 
     else if event = '/session/authenticated' then with MainSession do begin
         Roster.Fetch;
+
+        // Send invisible or Available presence..
         p := TJabberPres.Create;
-        p.Status := 'available';
+
+        if (MainSession.Invisible) then
+            p.PresType := 'invisible'
+        else
+            p.Status := 'available';
+
         SendTag(p);
         SubController := TSubController.Create;
         Tabs.ActivePage := tbsMsg;

@@ -1188,7 +1188,7 @@ begin
     if (TObject(node.Data) is TJabberRosterItem) then begin
         ri := TJabberRosterItem(node.Data);
         p := TJabberPres.Create();
-        p.toJID := ri.jid;
+        p.toJID := TJabberID.Create(ri.jid.full);
         p.Show := MainSession.Show;
         p.Status := MainSession.Status;
         p.Priority := MainSession.Priority;
