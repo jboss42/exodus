@@ -1,3 +1,8 @@
+{$A+,B-,C+,D+,E-,F-,G+,H+,I+,J-,K-,L+,M-,N+,O+,P+,Q-,R+,S-,T-,U-,V+,W+,X+,Y+,Z1}
+{$MINSTACKSIZE $00004000}
+{$MAXSTACKSIZE $00100000}
+{$IMAGEBASE $00400000}
+{$APPTYPE GUI}
 unit AutoUpdate;
 {
     Copyright 2002, Peter Millard
@@ -26,6 +31,8 @@ uses
   XMLTag;
 
 type
+  TNewUrlEvent = procedure(url: widestring);
+
   TAutoUpdateThread = class(TThread)
   private
     { Private declarations }
@@ -33,6 +40,7 @@ type
     _last : TDateTime;
     _available : boolean;
     _background : boolean;
+    _onNew : TNewUrlEvent;
     procedure checkDoUpdate();
   protected
     procedure Execute; override;
@@ -41,16 +49,15 @@ type
     property Last : TDateTime read _last write _last;
     property Available : boolean read _available;
     property Background : boolean write _background;
+    property OnNewUrl :  TNewUrlEvent write _onNew;
   end;
 
-procedure InitAutoUpdate(background : boolean = true);
+function InitAutoUpdate(background : boolean = true) : boolean;
+procedure InitUpdateBranding();
 
 const
     EXODUS_REG = '\Software\Jabber\Exodus';
     
-resourcestring
-    sNoUpdate = 'No new update available.';
-
 implementation
 
 uses
@@ -71,18 +78,17 @@ uses
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-procedure InitAutoUpdate(background : boolean = true);
+function InitAutoUpdate(background : boolean = true) : boolean;
 var
-    url : string;
+    url  : string;
     last : TDateTime;
-    t : TAutoUpdateThread;
-    reg : TRegistry;
+    t    : TAutoUpdateThread;
+    reg  : TRegistry;
 begin
+    result := false;
     if (background and (not MainSession.Prefs.getBool('auto_updates'))) then exit;
 
-    if (not background) then
-        Screen.Cursor := crHourGlass;
-
+    {$ifdef Win32}
     // If we have the magic reg key, this is the first time we've run this version,
     // with the new "save to session" logic.  Copy over the value, and keep going.
     // NOTE:  Take this out later, after everyone updates a couple of times.
@@ -94,6 +100,7 @@ begin
         MainSession.Prefs.setString('auto_update_url', url);
         reg.DeleteValue('Update_URL');
         end;
+    {$endif}
 
     // NOTE: if you want to do auto-update, the easiest way to turn it on is
     // to create a branding.xml next to your exodus.exe, which contains this:
@@ -115,16 +122,73 @@ begin
     t.URL := url;
     t.Last := last;
     t.Background := background;
+    t.OnNewUrl := @ShowAutoUpdateStatus;
     if (background) then begin
         t.FreeOnTerminate := true;
         t.Resume();
         end
     else begin
         t.Execute();
-        Screen.Cursor := crDefault;
-        if (not t.Available) then
-            MessageDlg(sNoUpdate, mtInformation, [mbOK], 0);
+        result := t.Available;
         end;
+end;
+
+procedure OnNewBrand(url : widestring);
+var
+    bfn : string;
+    bfs : TFileStream;
+    http : TIdHTTP;
+begin
+    bfn := ExtractFilePath(Application.EXEName) + 'branding.new';
+    bfs := TFileStream.Create(bfn, fmOpenWrite or fmCreate);
+    http := nil;
+    try
+      http := TIdHTTP.Create(nil);
+      http.HandleRedirects := true;
+      http.Get(url, bfs);
+      bfs.Free();
+      if (http.ResponseCode = 200) then begin
+          DeleteFile(pchar(ExtractFilePath(Application.EXEName) + 'branding.xml'));
+          RenameFile(bfn, 'branding.xml');
+          MainSession.Prefs.setString('last_branding_update', DateTimeToStr(http.Response.LastModified));
+          // Harumph.  There's no good way to reparse the branding file.  Even if
+          // there was, there's no way to know where those prefs have been used
+          // at this time.  Therefore, just wait patiently until the next time
+          // the client starts up.
+          end
+      else
+          DeleteFile(pchar(bfn));
+    finally
+        if (http <> nil) then http.Free();
+      end;
+end;
+
+{---------------------------------------}
+procedure InitUpdateBranding();
+var
+    url  : string;
+    last : TDateTime;
+    t    : TAutoUpdateThread;
+begin
+    url  := MainSession.Prefs.getString('branding_url');
+    if (url = '') then exit;
+    
+    try
+        last := StrToDateTime(MainSession.Prefs.getString('last_branding_update'));
+    except
+        on EConvertError do begin
+            last := Now();
+            MainSession.Prefs.setString('last_branding_update', DateTimeToStr(last));
+            end;
+    end;
+
+    t := TAutoUpdateThread.Create(true);
+    t.URL := url;
+    t.Last := last;
+    t.Background := true;
+    t.OnNewUrl := @OnNewBrand;
+    t.FreeOnTerminate := true;
+    t.Resume();
 end;
 
 {---------------------------------------}
@@ -140,6 +204,7 @@ begin
     http := nil;
     try
         http := TIdHTTP.Create(nil);
+        http.HandleRedirects := true;
         http.Head(_url);
         if (http.ResponseCode <> 200) then begin
             exit;
@@ -147,12 +212,14 @@ begin
 
         if (http.Response.LastModified <= _last) then
             exit;
-        if (_background) then
-            synchronize(checkDoUpdate)
-        else
-            checkDoUpdate();
+        if (Assigned(_onNew)) then begin
+            if (_background) then
+                synchronize(checkDoUpdate)
+            else
+                _onNew(_url);
+            end;
 
-        _available := true; 
+        _available := true;
     finally
         if (http <> nil) then http.Free();
         end;
@@ -161,7 +228,7 @@ end;
 {---------------------------------------}
 procedure TAutoUpdateThread.checkDoUpdate();
 begin
-    ShowAutoUpdateStatus(_url);
+    _onNew(_url);
 end;
 
 end.
