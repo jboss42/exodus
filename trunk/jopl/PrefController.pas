@@ -178,7 +178,7 @@ end;
         function getInt(pkey: Widestring; server_side: TPrefKind = pkClient): integer;
         function getBool(pkey: Widestring; server_side: TPrefKind = pkClient): boolean;
         function getDateTime(pkey: Widestring; server_side: TPrefKind = pkClient): TDateTime;
-        function getSetDateTime(pkey: Widestring; server_side: TPrefKind = pkClient): TDateTime;        
+        function getSetDateTime(pkey: Widestring; server_side: TPrefKind = pkClient): TDateTime;
         procedure fillStringlist(pkey: Widestring; sl: TWideStrings; server_side: TPrefKind = pkClient); overload;
         {$ifdef Exodus}
         procedure fillStringlist(pkey: Widestring; sl: TTntStrings; server_side: TPrefKind = pkClient); overload;
@@ -467,7 +467,6 @@ begin
     dflt_left := 10;
     }
 end;
-
 {$endif}
 
 {---------------------------------------}
@@ -933,7 +932,7 @@ begin
     c := _pref_node.GetFirstTag('custom_pres');
     if (c = nil) then
         _pref_node.AddTag('custom_pres');
-        
+
     Self.Save();
 
 end;

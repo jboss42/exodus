@@ -290,10 +290,15 @@ begin
     via the synchronized Dispatch method.
     }
     Result := nil;
-    if _domstack.count <= 0 then exit;
+    _lock.Acquire();
+    if _domstack.count <= 0 then begin
+        _lock.Release();
+        exit;
+    end;
 
     Result := TXMLTag(_domstack[0]);
     _domstack.Delete(0);
+    _lock.Release();
 end;
 
 {---------------------------------------}
@@ -314,8 +319,8 @@ begin
         if (c_tag <> nil) then begin
             _lock.Acquire;
             _domStack.Add(c_tag);
-            doMessage(WM_XML);
             _lock.Release;
+            doMessage(WM_XML);
         end;
     until (c_tag = nil);
 

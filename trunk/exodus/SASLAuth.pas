@@ -265,8 +265,7 @@ begin
     // make sure all parms are UTF8 Encoded
     uname := UTF8Encode(_session.Username);
     pass := UTF8Encode(_session.Password);
-    azjid := _session.Username + '@' + _session.Server + '/' +
-             _session.Resource;
+    azjid := _session.Username + '@' + _session.Server;
     az := UTF8Encode(azjid);
     uri := UTF8Encode('xmpp/' + _session.Server);
 

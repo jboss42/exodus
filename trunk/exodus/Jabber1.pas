@@ -930,7 +930,7 @@ begin
         MainSession.Password := pw;
     end;
     MainSession.FireEvent('/session/connecting', nil);
-    MainSession.Connect();
+    MainSession.Connect(ExStartup.xmllang);
 end;
 
 {---------------------------------------}
