@@ -246,7 +246,11 @@ begin
     if (cmd[1] = '/') then begin
         // we are giving some kind of interactive debugger cmd
         if (cmd ='/help') then
-            DebugMessage('/dispcount'#13#10'/dispdump')
+            DebugMessage('/dispcount'#13#10'/dispdump'#13#10'/args')
+        else if (cmd = '/args') then begin
+            for i := 0 to ParamCount do
+                DebugMessage(ParamStr(i))
+            end
         else if (cmd = '/dispcount') then
             DebugMessage('Dispatcher listener count: ' + IntToStr(MainSession.Dispatcher.TotalCount))
         else if (cmd = '/dispdump') then begin
