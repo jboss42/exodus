@@ -58,7 +58,7 @@ var
 {---------------------------------------}
 implementation
 uses
-    S10n, Roster, Session, Jabber1;
+    ExUtils, S10n, Roster, Session, Jabber1;
 
 {$R *.DFM}
 
@@ -115,8 +115,10 @@ begin
 
             ri := MainSession.Roster.Find(jid);
             if (ri <> nil) then begin
-                if (ri.Subscription = 'to') or (ri.Subscription = 'both') then
+                if (ri.Subscription = 'to') or (ri.Subscription = 'both') then begin
+                    DebugMsg('Roster item already in roster: ' + jid);
                     break;
+                    end;
                 end;
 
             {
