@@ -1,0 +1,9 @@
+<brand>
+<!--
+  <brand_icon></brand_icon>
+  <brand_caption></brand_caption>
+  <brand_ad></brand_ad>
+  <brand_ad_url></brand_ad_url>
+-->
+  <auto_update_url>http://exodus.jabberstudio.org/daily/setup.exe</auto_update_url>
+</brand>
