@@ -78,6 +78,7 @@ type
 
     procedure ClearTags;
     procedure ClearCData;
+    procedure RemoveTag(node: TXMLTag);
     procedure AssignTag(const xml: TXMLTag);
 
     property Attributes: TAttrList read _AttrList;
@@ -208,12 +209,20 @@ begin
     // clear out all child tags
     for i := _children.Count - 1 downto 0 do begin
         n := TXMLNode(_children[i]);
-        if n is TXMLTag then begin
-            // remove it
-            TXMLTag(n).Free;
+        if n is TXMLTag then
             _children.Delete(i);
-            end;
         end;
+end;
+
+{---------------------------------------}
+procedure TXMLTag.RemoveTag(node: TXMLTag);
+var
+    i: integer;
+begin
+    // remove this tag
+    i := _Children.IndexOf(node);
+    if (i >= 0) then
+        _children.Delete(i);
 end;
 
 {---------------------------------------}
@@ -222,14 +231,11 @@ var
     i: integer;
     n: TXMLNode;
 begin
-    // clear out all child tags
+    // clear out all child tags that are CDATA
     for i := _children.Count - 1 downto 0 do begin
         n := TXMLNode(_children[i]);
-        if n is TXMLCDATA then begin
-            // remove it
-            TXMLCDATA(n).Free;
+        if n is TXMLCDATA then
             _children.Delete(i);
-            end;
         end;
 end;
 
@@ -300,9 +306,39 @@ end;
 
 {---------------------------------------}
 function TXMLTag.QueryXPData(path: string): string;
+var
+    i: integer;
+    spath, att: string;
+    ftags: TXMLTagList;
+    t: TXMLTag;
 begin
     // Return a string based on the xpath stuff
+    att := '';
+    spath := path;
     Result := '';
+
+    // check to see if we are getting an attribute "/foo/bar@attribute"
+    i := length(path);
+    while (i >= 1) do begin
+        if (path[i] = '@') then begin
+            att := Copy(path, i + 1, length(path) - i);
+            spath := Copy(path, 1, i-1);
+            break;
+            end
+        else if (path[i] = '/') then
+            break;
+        dec(i);
+        end;
+
+    if (att <> '') then begin
+        t := Self.QueryXPTag(spath);
+        Result := t.GetAttribute(att);
+        end
+    else begin
+        ftags := Self.QueryXPTags(spath);
+        for i := 0 to ftags.Count - 1 do
+            Result := Result + ftags.tags[i].Data;
+        end;
 end;
 
 {---------------------------------------}

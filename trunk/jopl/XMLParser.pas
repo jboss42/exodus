@@ -38,6 +38,7 @@ type
         destructor Destroy; override;
 
         procedure ParseString(buff, stream_tag: string);
+        procedure ParseFile(filename: string);
         function Count: integer;
         function popTag: TXMLTag;
     end;
@@ -74,6 +75,23 @@ begin
         end
     else
         Result := nil;
+end;
+
+procedure TXMLTagParser.ParseFile(filename: string);
+var
+    f: TStringList;
+    s: String;
+begin
+    // Open the file, suck it into a stringlist
+    // and send it off to the parser.
+
+    if (not FileExists(filename)) then exit;
+
+    f := TStringList.Create();
+    f.LoadFromFile(filename);
+
+    s := f.Text;
+    Self.ParseString(s, '');
 end;
 
 procedure TXMLTagParser.ParseString(buff, stream_tag: string);

@@ -34,6 +34,8 @@ function LeftChar(instring: string; nchar: word): string;
 function SToInt(inp: string): integer;
 function NameMatch(s1, s2: string): boolean;
 function Sha1Hash(fkey: string): string;
+function MungeName(str: string): string;
+function SafeInt(str: string): integer;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -197,6 +199,33 @@ begin
     s := Lowercase(s);
     hasher.Free;
     Result := s;
+end;
+
+{---------------------------------------}
+function MungeName(str: string): string;
+var
+    i: integer;
+    c, fn: string;
+begin
+    fn := '';
+    for i := 0 to Length(str) - 1 do begin
+        c := str[i + 1];
+        if ( (c='@') or (c=':') or (c='|') or (c='<') or
+        (c='>') or (c='\') or (c='/') or (c='*') or (c=' ') ) then
+            fn := fn + '_'
+        else
+            fn := fn + c;
+        end;
+    Result := fn;
+end;
+
+function SafeInt(str: string): integer;
+begin
+    try
+        Result := StrToInt(str);
+    except
+        Result := 0;
+    end;
 end;
 
 

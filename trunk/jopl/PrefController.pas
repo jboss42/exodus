@@ -21,7 +21,7 @@ unit PrefController;
 
 interface
 uses
-    XMLParser,
+    XMLTag, XMLParser, Presence, 
     {$ifdef Win32}
     Forms, Windows, Registry,
     {$else}
@@ -78,27 +78,19 @@ type
         Resource: string;
         Priority: integer;
 
-        {$ifdef Win32}
-        procedure Load(pkey: string);
-        procedure Save(pkey: string);
-        {$endif}
-
-        {$ifdef linux}
-        procedure Load(pkey: string; _ini: TiniFile);
-        procedure Save(pkey: string; _ini: TiniFile);
-        {$endif}
+        procedure Load(tag: TXMLTag);
+        procedure Save(node: TXMLTag);
     end;
 
     TPrefController = class
     private
-        {$ifdef linux}
-        _ini: TiniFile;
-        {$else}
-        _reg: TRegistry;
-        {$endif}
+        _pref_filename: string;
+        _pref_node: TXMLTag;
         _profiles: TStringList;
         _parser: TXMLTagParser;
         function getDefault(pkey: string): string;
+
+        procedure Save;
     public
         constructor Create(RegKey: string);
 
@@ -106,11 +98,13 @@ type
         function getInt(pkey: string): integer;
         function getBool(pkey: string): boolean;
         function getStringlist(pkey: string): TStringList;
+        function getPresence(pkey: string): TJabberCustomPres;
 
         procedure setString(pkey, pvalue: string);
         procedure setInt(pkey: string; pvalue: integer);
         procedure setBool(pkey: string; pvalue: boolean);
         procedure setStringlist(pkey: string; pvalue: TStrings);
+        procedure setPresence(pkey: string; pvalue: TJabberCustomPres);
 
         procedure SavePosition(form: TForm);
         procedure RestorePosition(form: TForm);
@@ -124,34 +118,96 @@ type
         property Profiles: TStringlist read _profiles write _profiles;
     end;
 
+
+{$ifdef Win32}
+function getUserDir: string;
+{$endif}
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 uses
+    XMLUtils,
     {$ifdef Win32}
-    Graphics, Dialogs,
+    Graphics; 
     {$else}
-    QGraphics, QDialogs,
+    QGraphics;
     {$endif}
-    XMLTag;
 
+{$ifdef Win32}
+{---------------------------------------}
+function getUserDir: string;
+var
+    reg: TRegistry;
+    tP   : PChar;
+begin
+    try //except
+        reg := TRegistry.Create;
+        try //finally free
+            with reg do begin
+                RootKey := HKEY_CURRENT_USER;
+                OpenKeyReadOnly('Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders');
+                if ValueExists('AppData') then begin
+                    Result := ReadString('AppData') + '\Exodus\';
+
+                    //get userprofile env var and replace in path
+                    getMem(tP,1024);
+                    If (GetEnvironmentVariable('USERPROFILE', tP, 512) <> 0) and
+                    (pos('%USERPROFILE%',Result) > 0) then
+                       Result := string(tP) + copy(Result, 14,length(Result) - 13);
+                    FreeMem(tP);
+                end
+                else
+                    Result := ExtractFilePath(Application.EXEName);
+            end;
+        finally
+            reg.Free;
+        end;
+    except
+        Result := ExtractFilePath(Application.EXEName);
+    end;
+
+    if (not DirectoryExists(Result)) then
+        MkDir(Result);
+end; //getProfilePath
+{$endif}
+
+{---------------------------------------}
 constructor TPrefController.Create(RegKey: string);
 begin
     inherited Create;
 
-    {$ifdef Win32}
-    _reg := TRegistry.Create;
-    with _reg do begin
-        RootKey := HKEY_CURRENT_USER;
-        OpenKey(RegKey, true);
-        Access := KEY_ALL_ACCESS;
-        end;
+    {$ifdef linux}
+    _pref_filename := '~/.exodus.xml';
     {$else}
-    _ini := TiniFile.Create(RegKey);
+    _pref_filename := getUserDir() + 'exodus.xml';
     {$endif}
 
-    _profiles := TStringList.Create;
     _parser := TXMLTagParser.Create;
+    _parser.ParseFile(_pref_filename);
+
+    if (_parser.Count > 0) then begin
+        // we have something to read.. hopefully it's correct :)
+        _pref_node := _parser.popTag();
+        end
+    else
+        _pref_node := TXMLTag.Create('exodus');
+
+    _profiles := TStringList.Create;
 end;
 
+{---------------------------------------}
+procedure TPrefController.Save;
+var
+    fs: TStringList;
+begin
+    fs := TStringList.Create;
+    fs.Text := _pref_node.xml;
+    fs.SaveToFile(_pref_filename);
+end;
+
+{---------------------------------------}
 function TPrefController.getDefault(pkey: string): string;
 begin
     // set the defaults for the pref controller
@@ -219,192 +275,180 @@ begin
         result := '0';
 end;
 
+{---------------------------------------}
 function TPrefController.getString(pkey: string): string;
+var
+    t: TXMLTag;
 begin
     // find string value
-    {$ifdef Win32}
-    if _reg.ValueExists(pkey) then
-        Result := _reg.ReadString(pkey)
-    else begin
-        Result := getDefault(pkey);
-        setString(pkey, Result);
-    end;
-    {$else}
-    Result := _ini.ReadString('Registry', pkey, getDefault(pkey));
-    {$endif}
+    t := _pref_node.GetFirstTag(pkey);
+    if (t = nil) then
+        Result := getDefault(pkey)
+    else
+        Result := t.Data;
 end;
 
+{---------------------------------------}
 function TPrefController.getInt(pkey: string): integer;
 begin
     // find int value
-    {$ifdef Win32}
-    try
-        Result := _reg.ReadInteger(pkey);
-    except
-        Result := StrToInt(getDefault(pkey));
-        setInt(pkey, Result);
-    end;
-    {$else}
-    Result := StrToInt(getString(pkey));
-    {$endif}
+    Result := SafeInt(getString(pkey));
 end;
 
+{---------------------------------------}
 function TPrefController.getBool(pkey: string): boolean;
-var
-    i: integer;
 begin
-    {$ifdef Win32}
-    try
-        Result := _reg.ReadBool(pkey);
-    except
-        i := StrToInt(getDefault(pkey));
-        if i = 0 then Result := false else Result := true;
-        setBool(pkey, Result);
-    end;
-    {$else}
     if (lowercase(getString(pkey)) = 'true') then
         Result := true
     else
         Result := false;
-    {$endif}
 end;
 
+{---------------------------------------}
 function TPrefController.getStringlist(pkey: string): TStringList;
 var
     sl: TStringList;
-    txt: string;
-    c, t: TXMLTag;
+    p: TXMLTag;
     s: TXMLTagList;
     i: integer;
 begin
     sl := TStringList.Create;
-    txt := getString(pkey);
-    _parser.ParseString(txt, '');
 
-    if (_parser.Count > 0) then begin
-        t := _parser.popTag();
-        s := t.QueryTags('s');
-        for i := 0 to s.Count - 1 do begin
-            c := s.Tags[i];
-            sl.Add(c.Data);
-            end;
+    p := _pref_node.getFirstTag(pkey);
+    if (p <> nil) then begin
+        s := p.QueryTags('s');
+        for i := 0 to s.Count - 1 do
+            sl.Add(s.Tags[i].Data);
         end;
 
     Result := sl;
 end;
 
+{---------------------------------------}
 procedure TPrefController.setBool(pkey: string; pvalue: boolean);
 begin
-    {$ifdef Win32}
-     _reg.WriteBool(pkey, pvalue);
-     {$else}
      if (pvalue) then
         setString(pkey, 'true')
      else
         setString(pkey, 'false');
-     {$endif}
 end;
 
+{---------------------------------------}
 procedure TPrefController.setString(pkey, pvalue: string);
+var
+    t: TXMLTag;
 begin
-    {$ifdef Win32}
-    _reg.WriteString(pkey, pvalue);
-    {$else}
-    _ini.WriteString('Registry', pkey, pvalue);
-    {$endif}
+    t := _pref_node.GetFirstTag(pkey);
+    if (t <> nil) then begin
+        t.ClearCData;
+        t.AddCData(pvalue);
+        end
+    else
+        _pref_node.AddBasicTag(pkey, pvalue);
+
+    // do we really want to ALWAYS save here?
+    Self.Save();
 end;
 
+{---------------------------------------}
 procedure TPrefController.setInt(pkey: string; pvalue: integer);
 begin
-    {$ifdef Win32}
-    _reg.WriteInteger(pkey, pvalue);
-    {$else}
     setString(pkey, IntToStr(pvalue));
-    {$endif}
-
 end;
 
+{---------------------------------------}
 procedure TPrefController.setStringlist(pkey: string; pvalue: TStrings);
 var
     i: integer;
-    t: TXMLTag;
+    p: TXMLTag;
 begin
-    // write out all of the strings
-    t := TXMLTag.Create(pkey);
+    // setup the stringlist in it's own parent..
+    // with multiple <s> tags for each value.
+    p := _pref_node.GetFirstTag(pkey);
+
+    if (p = nil) then
+        p := _pref_node.AddTag(pkey)
+    else
+        p.ClearTags();
+
+    // plug in all the values
     for i := 0 to pvalue.Count - 1 do
-        t.AddBasicTag('s', pvalue[i]);
-    setString(pkey, t.xml);
+        p.AddBasicTag('s', pvalue[i]);
+
+    Self.Save();
 end;
 
+{---------------------------------------}
+function TPrefController.getPresence(pkey: string): TJabberCustomPres;
+begin
+    // get some custom pres from the list
+    Result := nil;
+end;
+
+{---------------------------------------}
+procedure TPrefController.setPresence(pkey: string; pvalue: TJabberCustomPres);
+begin
+    // set some custom pres into the list
+end;
+
+{---------------------------------------}
 procedure TPrefController.SavePosition(form: TForm);
 var
-    {$ifdef Win32}
-    fkey: TRegistry;
-    {$else}
-    tmps: string;
-    {$endif}
+    fkey: string;
+    p, f: TXMLTag;
 begin
     // save the positions for this form
-    {$ifdef Win32}
-    fkey := TRegistry.Create;
-    fkey.OpenKey(_reg.CurrentPath + '\' + form.name, true);
+    fkey := MungeName(form.ClassName);
+    p := _pref_node.GetFirstTag('positions');
+    if (p = nil) then
+        p := _pref_node.AddTag('positions');
 
-    fkey.WriteInteger('top', Form.top);
-    fkey.WriteInteger('left', Form.left);
-    fkey.WriteInteger('height', Form.height);
-    fkey.WriteInteger('width', Form.width);
-    {$else}
-    _ini.WriteString('FORM_' + form.name, 'top', IntToStr(Form.top));
-    _ini.WriteString('FORM_' + form.name, 'left', IntToStr(Form.left));
-    _ini.WriteString('FORM_' + form.name, 'height', IntToStr(Form.height));
-    _ini.WriteString('FORM_' + form.name, 'width', IntToStr(Form.width));
-    {$endif}
+    f := p.GetFirstTag(fkey);
+    if (f = nil) then
+        f := p.AddTag(fkey);
 
+    f.PutAttribute('top', IntToStr(Form.top));
+    f.PutAttribute('left', IntToStr(Form.left));
+    f.PutAttribute('width', IntToStr(Form.width));
+    f.PutAttribute('height', IntToStr(Form.height));
+
+    Self.Save();
 end;
 
+{---------------------------------------}
 procedure TPrefController.RestorePosition(form: TForm);
 var
-    {$ifdef Win32}
-    fkey: TRegistry;
-    {$else}
+    f: TXMLTag;
     fkey: string;
-    {$endif}
     t,l,w,h: integer;
 begin
     // set the bounds based on the position info
-    {$ifdef Win32}
-    if (_reg.KeyExists(form.name)) then begin
-        fkey := TRegistry.Create;
-        fkey.OpenKey(_reg.CurrentPath + '\' + form.Name, false);
-        t := fkey.ReadInteger('top');
-        l := fkey.ReadInteger('left');
-        w := fkey.ReadInteger('width');
-        h := fkey.ReadInteger('height');
+    t := 10;
+    l := 10;
+    w := 300;
+    h := 300;
 
-    {$else}
-    fkey := 'FORM_' + form.name;
-    if  (_ini.SectionExists(fkey)) then begin
-        t := StrToInt(_ini.ReadString(fkey, 'top', '100'));
-        l := StrToInt(_ini.ReadString(fkey, 'left', '100'));
-        w := StrToInt(_ini.ReadString(fkey, 'width', '300'));
-        h := StrToInt(_ini.ReadString(fkey, 'height', '300'));
-    {$endif}
+    fkey := MungeName(form.Classname);
 
-        if (t + h > Screen.Height) then begin
-            t := Screen.Height - h;
-        end;
-        if (l + w > Screen.Width) then begin
-            l := Screen.Width - w;
+    f := _pref_node.QueryXPTag('/exodus/positions/' + fkey);
+    if (f <> nil) then begin
+        t := SafeInt(f.getAttribute('top'));
+        l := SafeInt(f.getAttribute('left'));
+        w := SafeInt(f.getAttribute('width'));
+        h := SafeInt(f.getAttribute('height'));
         end;
 
-        Form.SetBounds(l, t, w, h);
-        end
-    else begin
-        Form.Width := 300;
-        Form.Height := 300;
-        end;
+    if (t + h > Screen.Height) then begin
+        t := Screen.Height - h;
+    end;
+    if (l + w > Screen.Width) then begin
+        l := Screen.Width - w;
+    end;
+
+    Form.SetBounds(l, t, w, h);
 end;
 
+{---------------------------------------}
 function TPrefController.CreateProfile(name: string): TJabberProfile;
 begin
     Result := TJabberProfile.Create();
@@ -412,6 +456,7 @@ begin
     _profiles.AddObject(name, Result);
 end;
 
+{---------------------------------------}
 procedure TPrefController.RemoveProfile(p: TJabberProfile);
 var
     i: integer;
@@ -422,126 +467,76 @@ begin
         _profiles.Delete(i);
 end;
 
+{---------------------------------------}
 procedure TPrefController.LoadProfiles;
 var
+    ptags: TXMLTagList;
     i, pcount: integer;
     cur_profile: TJabberProfile;
 begin
     _profiles.Clear;
 
-    {$ifdef Win32}
-    if _reg.ValueExists('profile_count') then begin
-        pcount := _reg.ReadInteger('profile_count');
-    {$else}
-    pcount := getInt('profile_count');
-    if (pcount > 0) then begin
-    {$endif}
-        for i := 0 to pcount - 1 do begin
-            cur_profile := TJabberProfile.Create;
-            {$ifdef Win32}
-            cur_profile.Load(_reg.CurrentPath + '\profile_' + Trim(IntToStr(i)));
-            {$else}
-            cur_profile.Load('Profile_' + Trim(IntToStr(i)), _ini);
-            {$endif}
-            _profiles.AddObject(cur_profile.name, cur_profile);
-            end;
+    ptags := _pref_node.QueryTags('profile');
+    pcount := ptags.Count;
+
+    for i := 0 to pcount - 1 do begin
+        cur_profile := TJabberProfile.Create;
+        cur_profile.Load(ptags[i]);
+        _profiles.AddObject(cur_profile.name, cur_profile);
         end;
 end;
 
+{---------------------------------------}
 procedure TPrefController.SaveProfiles;
 var
+    ptag: TXMLTag;
+    ptags: TXMLTagList;
     i: integer;
     cur_profile: TJabberProfile;
 begin
-    setInt('profile_count', _profiles.Count);
+
+    ptags := _pref_node.QueryTags('profile');
+
+    for i := 0 to ptags.count - 1 do
+        _pref_node.RemoveTag(ptags[i]);
+
     for i := 0 to _profiles.Count - 1 do begin
         cur_profile := TJabberProfile(_profiles.Objects[i]);
-        {$ifdef Win32}
-        cur_profile.Save(_reg.CurrentPath + '\profile_' + Trim(IntToStr(i)));
-        {$else}
-        cur_profile.Save('Profile_' + Trim(IntToStr(i)), _ini);
-        {$endif}
+        ptag := _pref_node.AddTag('profile');
+        cur_profile.Save(ptag);
         end;
 
+    Self.Save();
 end;
 
-{$ifdef Win32}
-procedure TJabberProfile.Load(pkey: string);
-var
-    r: TRegistry;
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+procedure TJabberProfile.Load(tag: TXMLTag);
 begin
     // Read this profile from the registry
-    r := TRegistry.Create;
-    r.OpenKey(pkey, true);
-    if r.ValueExists('name') then
-        Name := r.ReadString('name')
-    else
-        Name := 'Untitled Profile';
+    Name := tag.getAttribute('name');
+    Username := tag.GetBasicText('username');
+    Server := tag.GetBasicText('server');
+    Password := tag.GetBasicText('password');
+    Resource := tag.GetBasicText('resource');
+    Priority := SafeInt(tag.GetBasicText('priority'));
 
-    if r.ValueExists('username') then
-        Username := r.ReadString('username')
-    else
-        Username := '';
-
-    if r.ValueExists('server') then
-        Server := r.ReadString('server')
-    else
-        Server := 'jabber.org';
-
-    if r.ValueExists('password') then
-        Password := r.ReadString('password')
-    else
-        Password := '';
-
-    if r.ValueExists('resource') then
-        Resource := r.ReadString('resource')
-    else
-        Resource := 'Exodus';
-
-    if r.ValueExists('priority') then
-        Priority := r.ReadInteger('priority')
-    else
-        Priority := 0;
-    r.Free;
+    if (Name = '') then Name := 'Untitled Profile';
+    if (Server = '') then Server := 'jabber.org';
+    if (Resource = '') then Resource := 'Exodus';
 end;
 
-procedure TJabberProfile.Save(pkey: string);
-var
-    r: TRegistry;
+{---------------------------------------}
+procedure TJabberProfile.Save(node: TXMLTag);
 begin
-    r := TRegistry.Create();
-    r.OpenKey(pkey, true);
-
-    r.WriteString('name', Name);
-    r.WriteString('username', Username);
-    r.WriteString('server', Server);
-    r.WriteString('password', Password);
-    r.WriteString('resource', Resource);
-    r.WriteInteger('priority', Priority);
-    r.Free;
+    node.ClearTags();
+    node.PutAttribute('name', Name);
+    node.AddBasicTag('username', Username);
+    node.AddBasicTag('server', Server);
+    node.AddBasicTag('password', Password);
+    node.AddBasicTag('resource', Resource);
+    node.AddBasicTag('priority', IntToStr(Priority));
 end;
-{$endif}
-
-{$ifdef linux}
-procedure TJabberProfile.Load(pkey: string; _ini: TiniFile);
-begin
-    Name := _ini.ReadString(pkey, 'name', 'Untitled Profile');
-    Username := _ini.ReadString(pkey, 'username', '');
-    Server := _ini.ReadString(pkey, 'server', 'jabber.org');
-    Password := _ini.ReadString(pkey, 'password', '');
-    Resource := _ini.ReadString(pkey, 'resource', 'Exodus');
-    Priority := StrToInt(_ini.ReadString(pkey, 'priority', '0'));
-end;
-
-procedure TJabberProfile.Save(pkey: string; _ini: TiniFile);
-begin
-    _ini.WriteString(pkey, 'name', Name);
-    _ini.WriteString(pkey, 'username', Username);
-    _ini.WriteString(pkey, 'pasword', Password);
-    _ini.WriteString(pkey, 'server', Server);
-    _ini.WriteString(pkey, 'resource', Resource);
-    _ini.WriteString(pkey, 'priority', IntToStr(Priority));
-end;
-{$endif}
 
 end.
