@@ -11,8 +11,8 @@ unit ExodusPlugin_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.4 $
-// File generated on 12/7/2002 4:30:46 PM from Type Library described below.
+// PASTLWTR : $Revision: 1.5 $
+// File generated on 12/10/2002 7:28:58 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\ExodusPlugin.tlb (1)
@@ -21,7 +21,8 @@ unit ExodusPlugin_TLB;
 // Helpfile: 
 // DepndLst: 
 //   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
-//   (2) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
+//   (2) v1.0 Exodus, (D:\src\exodus\runner\exodus.exe)
+//   (3) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
@@ -29,7 +30,7 @@ unit ExodusPlugin_TLB;
 
 interface
 
-uses Windows, ActiveX, Classes, Graphics, StdVCL, Variants;
+uses Windows, ActiveX, Classes, Exodus_TLB, Graphics, StdVCL, Variants;
   
 
 // *********************************************************************//
@@ -41,13 +42,13 @@ uses Windows, ActiveX, Classes, Graphics, StdVCL, Variants;
 // *********************************************************************//
 const
   // TypeLibrary Major and minor versions
-  ExodusPluginMajorVersion = 1;
-  ExodusPluginMinorVersion = 0;
+  NewChatMajorVersion = 1;
+  NewChatMinorVersion = 0;
 
-  LIBID_ExodusPlugin: TGUID = '{053C946B-D466-4686-BC8F-CB5B5D7C9C2A}';
+  LIBID_NewChat: TGUID = '{053C946B-D466-4686-BC8F-CB5B5D7C9C2A}';
 
   IID_IExodusPlugin: TGUID = '{ACC22059-DC3D-4C6E-B1B1-A6DB095A983E}';
-  DIID_ExodusPlugin_: TGUID = '{7A44F5FC-3C6D-4982-B375-1E04E899F49C}';
+  DIID_ExodusPlugin: TGUID = '{7A44F5FC-3C6D-4982-B375-1E04E899F49C}';
   IID_IExodusChatPlugin: TGUID = '{46DA66FE-CDA8-469F-A632-E9EBFB7E85FE}';
   DIID_ExodusChatPlugin: TGUID = '{39EA70E1-35B8-43DD-83EC-D2B8ED5D3481}';
 type
@@ -57,7 +58,7 @@ type
 // *********************************************************************//
   IExodusPlugin = interface;
   IExodusPluginDisp = dispinterface;
-  ExodusPlugin_ = dispinterface;
+  ExodusPlugin = dispinterface;
   IExodusChatPlugin = interface;
   IExodusChatPluginDisp = dispinterface;
   ExodusChatPlugin = dispinterface;
@@ -69,9 +70,11 @@ type
 // *********************************************************************//
   IExodusPlugin = interface(IDispatch)
     ['{ACC22059-DC3D-4C6E-B1B1-A6DB095A983E}']
-    procedure Startup(Exodus: OleVariant); safecall;
+    procedure Startup(const Exodus: ExodusController); safecall;
     procedure Shutdown; safecall;
     procedure Process(const xml: WideString); safecall;
+    procedure NewChat(const JID: WideString; const Chat: ExodusChat); safecall;
+    procedure NewRoom(const JID: WideString; const Chat: ExodusChat); safecall;
   end;
 
 // *********************************************************************//
@@ -81,17 +84,19 @@ type
 // *********************************************************************//
   IExodusPluginDisp = dispinterface
     ['{ACC22059-DC3D-4C6E-B1B1-A6DB095A983E}']
-    procedure Startup(Exodus: OleVariant); dispid 1;
+    procedure Startup(const Exodus: ExodusController); dispid 1;
     procedure Shutdown; dispid 2;
     procedure Process(const xml: WideString); dispid 3;
+    procedure NewChat(const JID: WideString; const Chat: ExodusChat); dispid 4;
+    procedure NewRoom(const JID: WideString; const Chat: ExodusChat); dispid 5;
   end;
 
 // *********************************************************************//
-// DispIntf:  ExodusPlugin_
+// DispIntf:  ExodusPlugin
 // Flags:     (4096) Dispatchable
 // GUID:      {7A44F5FC-3C6D-4982-B375-1E04E899F49C}
 // *********************************************************************//
-  ExodusPlugin_ = dispinterface
+  ExodusPlugin = dispinterface
     ['{7A44F5FC-3C6D-4982-B375-1E04E899F49C}']
   end;
 
@@ -107,8 +112,6 @@ type
     procedure onKeyPress(const Key: WideString); safecall;
     procedure onContextMenu(const ID: WideString); safecall;
     procedure onMsg(const xml: WideString); safecall;
-    procedure NewRoom(const jid: WideString); safecall;
-    procedure NewChat(const jid: WideString); safecall;
   end;
 
 // *********************************************************************//
@@ -123,8 +126,6 @@ type
     procedure onKeyPress(const Key: WideString); dispid 3;
     procedure onContextMenu(const ID: WideString); dispid 4;
     procedure onMsg(const xml: WideString); dispid 5;
-    procedure NewRoom(const jid: WideString); dispid 6;
-    procedure NewChat(const jid: WideString); dispid 7;
   end;
 
 // *********************************************************************//

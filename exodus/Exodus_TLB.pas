@@ -11,17 +11,18 @@ unit Exodus_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.3 $
-// File generated on 12/6/2002 7:13:50 AM from Type Library described below.
+// PASTLWTR : $Revision: 1.4 $
+// File generated on 12/10/2002 7:16:29 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
+// Type Lib: D:\src\exodus\runner\exodus.exe (1)
 // LIBID: {219E0029-5710-4C9B-BE33-4C7F046D7792}
 // LCID: 0
 // Helpfile: 
 // DepndLst: 
 //   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
-//   (2) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
+// Parent TypeLibrary:
+//   (0) v1.0 Register, (D:\src\exodus\exodus\Exodus.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}

@@ -6,8 +6,8 @@ interface
 
 uses
     XMLTag,
-    ExodusPlugin_TLB, 
-    Classes, ComObj, ActiveX, Exodus_TLB, StdVcl;
+    ExodusPlugin_TLB,
+    Classes, ComObj, ActiveX, Register_TLB, StdVcl;
 
 type
   TExodusController = class(TAutoObject, IExodusController)
@@ -20,26 +20,20 @@ type
         Priority: Integer); safecall;
     function isRosterJID(const jid: WideString): WordBool; safecall;
     function isSubscribed(const jid: WideString): WordBool; safecall;
-    procedure RegisterCallback(const xpath: WideString;
-      var callback: OleVariant); safecall;
+    function RegisterCallback(const xpath: WideString;
+      var callback: OleVariant): Integer; safecall;
     procedure RemoveRosterItem(const jid: WideString); safecall;
     procedure Send(const xml: WideString); safecall;
     procedure UnRegisterCallback(callback_id: Integer); safecall;
     procedure GetProfile(const jid: WideString); safecall;
     procedure StartChat(const jid, resource, nickname: WideString); safecall;
-    procedure RegisterChatPlugin(var Plugin: OleVariant); safecall;
-    procedure RegisterRoomPlugin(var Plugin: OleVariant); safecall;
     procedure CreateDockableWindow(HWND: Integer; const Caption: WideString);
       safecall;
     { Protected declarations }
   public
     constructor Create();
 
-    procedure fireNewChat(jid: WideString);
-
-  private
-    _chats: TList;
-    _rooms: TList;
+    procedure fireNewChat(jid: WideString; ExodusChat: IExodusChat);
 
   end;
 
@@ -118,9 +112,9 @@ begin
     plugin := idisp as IExodusPlugin;
     p := TPlugin.Create();
     p.com := plugin;
-    plugs.Add(com_name);
+    plugs.AddObject(com_name, p);
     try
-        p.com.Startup(frmExodus.ComController as IExodusController);
+        // p.com.Startup(frmExodus.ComController as ExodusController);
     except
         MessageDlg('Plugin class could not be initialized.',
             mtError, [mbOK], 0);
@@ -186,21 +180,15 @@ end;
 constructor TExodusController.Create();
 begin
     inherited Create();
-
-    _chats := TList.Create();
-    _rooms := TList.Create();
 end;
 
 {---------------------------------------}
-procedure TExodusController.fireNewChat(jid: WideString);
+procedure TExodusController.fireNewChat(jid: WideString; ExodusChat: IExodusChat);
 var
     i: integer;
-    cp: IExodusChatPlugin;
 begin
-    for i := 0 to _chats.Count - 1 do begin
-        cp := IUnknown(TChatPlugin(_chats[0]).com) as IExodusChatPlugin;
-        cp.NewChat(jid);
-        end;
+    for i := 0 to plugs.count - 1 do
+        // TPlugin(plugs.Objects[i]).com.NewChat(jid, ExodusChat);
 end;
 
 {---------------------------------------}
@@ -255,8 +243,8 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusController.RegisterCallback(const xpath: WideString;
-  var callback: OleVariant);
+function TExodusController.RegisterCallback(const xpath: WideString;
+  var callback: OleVariant): Integer;
 begin
     TPluginProxy.Create(xpath, callback);
 end;
@@ -299,28 +287,12 @@ begin
     // todo: start chat for COM
 end;
 
-procedure TExodusController.RegisterChatPlugin(var Plugin: OleVariant);
-var
-    cp: TChatPlugin;
-begin
-    cp := TChatPlugin.Create();
-    cp.com := IUnknown(Plugin) as IExodusChatPlugin;
-    _chats.Add(cp);
-end;
-
-procedure TExodusController.RegisterRoomPlugin(var Plugin: OleVariant);
-var
-    cp: TChatPlugin;
-begin
-    cp := TChatPlugin.Create();
-    cp.com := IUnknown(Plugin) as IExodusChatPlugin;
-    _rooms.Add(cp);
-end;
-
+{---------------------------------------}
 procedure TExodusController.CreateDockableWindow(HWND: Integer;
   const Caption: WideString);
 begin
-
+    // subclass frmDockable, and re-parent
+    // this HWND to the new form
 end;
 
 initialization

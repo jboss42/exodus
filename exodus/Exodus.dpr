@@ -111,20 +111,19 @@ uses
   Unicode in '..\jopl\Unicode.pas',
   InvalidRoster in 'InvalidRoster.pas' {frmInvalidRoster},
   AutoUpdateStatus in 'AutoUpdateStatus.pas' {frmAutoUpdateStatus},
-  Exodus_TLB in 'Exodus_TLB.pas',
-  ExodusPlugin_TLB in 'plugins\ExodusPlugin_TLB.pas',
+  Register_TLB in 'Register_TLB.pas',
   xdata in 'xdata.pas' {frmXData},
   fGeneric in 'fGeneric.pas' {frameGeneric: TFrame},
   Transports in 'Transports.pas',
-  {$IFDEF TRACE_EXCEPTIONS}
   ExceptDlg in 'tracer\ExceptDlg.pas' {ExceptionDialog},
   ExceptTracer in 'ExceptTracer.pas' {frmTracer},
-  {$ENDIF}
   RoomAdminList in 'RoomAdminList.pas' {frmRoomAdminList},
   JabberConst in '..\jopl\JabberConst.pas',
   AutoUpdate in '..\jopl\AutoUpdate.pas',
   COMController in 'COMController.pas' {ExodusController: CoClass},
-  COMChatController in 'COMChatController.pas' {ExodusChatController: CoClass};
+  COMChatController in 'COMChatController.pas' {ExodusChatController: CoClass},
+  ExodusPlugin_TLB in 'plugins\ExodusPlugin_TLB.pas',
+  NewChat_TLB in 'Plugins\NewChat_TLB.pas';
 
 {$R *.TLB}
 
