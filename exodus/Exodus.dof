@@ -47,7 +47,7 @@ PackageDLLOutputDir=
 PackageDCPOutputDir=
 SearchPath=.\components
 Packages=vcl;rtl;dbrtl;adortl;vcldb;vclx;bdertl;vcldbx;ibxpress;dsnap;cds;bdecds;qrpt;teeui;teedb;tee;dss;teeqr;visualclx;visualdbclx;dsnapcrba;dsnapcon;VclSmp;vclshlctrls;vclie;xmlrtl;inet;inetdbbde;inetdbxpress;inetdb;nmfast;webdsnap;websnap;dbexpress;dbxcds;indy;dclOffice2k;ExComponents
-Conditionals=NOTRACE_EXCEPTIONS
+Conditionals=
 DebugSourceDirs=D:\Dev\Delphi6\Source\Indy\;D:\src\exodus\exodus\components\
 UsePackages=0
 [Parameters]
@@ -66,7 +66,7 @@ AutoIncBuild=1
 MajorVer=0
 MinorVer=7
 Release=0
-Build=20
+Build=21
 Debug=0
 PreRelease=0
 Special=0
@@ -77,7 +77,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PeterMillard
 FileDescription=
-FileVersion=0.7.0.20
+FileVersion=0.7.0.21
 InternalName=
 LegalCopyright=Peter Millard, 2002
 LegalTrademarks=
@@ -86,14 +86,8 @@ ProductName=Exodus
 ProductVersion=1.0.0.0
 Comments=This is free! Promote jabber and give it to a friend.
 [HistoryLists\hlDebugSourcePath]
-Count=2
+Count=1
 Item0=D:\Dev\Delphi6\Source\Indy\;D:\src\exodus\exodus\components\
-Item1=D:\Dev\Delphi6\Source\Indy\
-[HistoryLists\hlConditionals]
-Count=3
-Item0=NOTRACE_EXCEPTIONS
-Item1=TRACE_EXCEPTIONS
-Item2=TRACE_EXTENSIONS
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
