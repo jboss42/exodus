@@ -1,6 +1,6 @@
 object frmConnDetails: TfrmConnDetails
-  Left = 256
-  Top = 236
+  Left = 245
+  Top = 199
   Width = 260
   Height = 366
   Caption = 'Connection Details'
@@ -86,7 +86,7 @@ object frmConnDetails: TfrmConnDetails
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 305
+    Top = 300
     Width = 252
     Height = 32
     Align = alBottom

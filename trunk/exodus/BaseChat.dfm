@@ -1,5 +1,5 @@
 object frmBaseChat: TfrmBaseChat
-  Left = 762
+  Left = 634
   Top = 389
   Width = 390
   Height = 315

@@ -1012,7 +1012,7 @@ begin
             p.PresType := 'invisible'
         else
             p.Status := 'available';
-
+        p.Priority := MainSession.Profile.Priority;
         SendTag(p);
         Tabs.ActivePage := tbsRoster;
         restoreMenus(true);

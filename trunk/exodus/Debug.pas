@@ -218,7 +218,8 @@ var
     l: TSignalListener;
 begin
     // Send the text in the MsgSend memo box
-    cmd := MemoSend.Lines.Text;
+    cmd := Trim(MemoSend.Lines.Text);
+    if (cmd = '') then exit;
     if (cmd[1] = '/') then begin
         // we are giving some kind of interactive debugger cmd
         if (cmd = '/dispcount') then
@@ -277,6 +278,7 @@ begin
     frmDebug := nil;
 end;
 
+{---------------------------------------}
 procedure TfrmDebug.MemoSendKeyPress(Sender: TObject; var Key: Char);
 begin
       if ( (Key = #10) and (HiWord(GetKeyState(VK_CONTROL)) <> 0)) then begin
