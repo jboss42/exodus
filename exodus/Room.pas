@@ -125,6 +125,7 @@ type
     procedure lstRosterData(Sender: TObject; Item: TListItem);
     procedure popRegisterClick(Sender: TObject);
     procedure sendStartPresence();
+    procedure lstRosterKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
@@ -1950,6 +1951,20 @@ begin
     p.Status := MainSession.Status;
 
     MainSession.SendTag(p);
+end;
+
+procedure TfrmRoom.lstRosterKeyPress(Sender: TObject; var Key: Char);
+begin
+  inherited;
+    // If typing starts on the MsgList, then bump it to the outgoing
+    // text box.
+    if (not Self.Visible) then exit;
+    if (Ord(key) < 32) then exit;
+
+    if (pnlInput.Visible) then begin
+        MsgOut.SetFocus();
+        MsgOut.SelText := Key;
+    end;
 end;
 
 initialization

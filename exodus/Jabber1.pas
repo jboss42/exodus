@@ -2762,10 +2762,18 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.TabsChange(Sender: TObject);
+var
+    f: TForm;
 begin
     // Don't show any notification images on the current tab
+    if (Tabs.ActivePage = nil) then exit;
+
     if (Tabs.ActivePage.ImageIndex <> -1) then
         Tabs.ActivePage.ImageIndex := -1;
+
+    f := getTabForm(Tabs.ActivePage);
+    if (f is TfrmBaseChat) then
+        TfrmBaseChat(f).MsgOut.SetFocus;
 end;
 
 {---------------------------------------}

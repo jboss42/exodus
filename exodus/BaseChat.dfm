@@ -14,13 +14,12 @@ object frmBaseChat: TfrmBaseChat
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnEndDock = FormEndDock
-  OnPaint = FormPaint
   OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 253
+    Top = 248
     Width = 380
     Height = 3
     Cursor = crVSplit
@@ -33,7 +32,7 @@ object frmBaseChat: TfrmBaseChat
     Left = 0
     Top = 22
     Width = 380
-    Height = 231
+    Height = 226
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
@@ -43,7 +42,7 @@ object frmBaseChat: TfrmBaseChat
       Left = 4
       Top = 4
       Width = 372
-      Height = 223
+      Height = 218
       Align = alClient
       AutoURLDetect = adDefault
       CustomURLs = <
@@ -155,7 +154,7 @@ object frmBaseChat: TfrmBaseChat
   end
   object pnlInput: TPanel
     Left = 0
-    Top = 256
+    Top = 251
     Width = 380
     Height = 28
     Align = alBottom

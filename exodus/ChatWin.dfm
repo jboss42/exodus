@@ -1,6 +1,6 @@
 inherited frmChat: TfrmChat
-  Left = 266
-  Top = 236
+  Left = 290
+  Top = 159
   ActiveControl = MsgOut
   Caption = 'Chat Window'
   Font.Charset = ANSI_CHARSET

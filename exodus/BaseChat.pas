@@ -73,7 +73,6 @@ type
     procedure MsgOutKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure timWinFlashTimer(Sender: TObject);
-    procedure FormPaint(Sender: TObject);
     procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
     procedure MsgListEnter(Sender: TObject);
     procedure MsgOutEnter(Sender: TObject);
@@ -188,6 +187,8 @@ end;
 {---------------------------------------}
 procedure TfrmBaseChat.FormActivate(Sender: TObject);
 begin
+    inherited;
+    
     if (timWinFlash.Enabled) then
         timWinFlash.Enabled := false;
 
@@ -196,12 +197,6 @@ begin
     if ((frmEmoticons <> nil) and (frmEmoticons.Visible)) then
         frmEmoticons.Hide;
 
-    if (Self.Visible) and (pnlInput.Visible) then begin
-        MsgList.Invalidate();
-        MsgOut.SetFocus;
-    end;
-
-    inherited;
 end;
 
 {---------------------------------------}
@@ -472,12 +467,6 @@ begin
         timWinFlash.Enabled := false;
         timWinFlashTimer(Self);
     end;
-end;
-
-{---------------------------------------}
-procedure TfrmBaseChat.FormPaint(Sender: TObject);
-begin
-  inherited;
 end;
 
 {---------------------------------------}

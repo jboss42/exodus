@@ -1,6 +1,6 @@
 inherited frmRoom: TfrmRoom
-  Left = 249
-  Top = 196
+  Left = 255
+  Top = 265
   Width = 395
   Caption = 'Conference Room'
   OldCreateOrder = True
@@ -14,6 +14,7 @@ inherited frmRoom: TfrmRoom
     Top = 23
     Width = 387
     Height = 225
+    TabOrder = 1
     object Splitter2: TSplitter [0]
       Left = 275
       Top = 4
@@ -71,11 +72,13 @@ inherited frmRoom: TfrmRoom
         OnDragDrop = lstRosterDragDrop
         OnDragOver = lstRosterDragOver
         OnInfoTip = lstRosterInfoTip
+        OnKeyPress = lstRosterKeyPress
       end
     end
   end
   inherited pnlInput: TPanel
     Width = 387
+    TabOrder = 0
     inherited MsgOut: TExRichEdit
       Width = 383
     end

@@ -194,12 +194,6 @@ begin
         if ((not Application.Active) or
             (frmExodus.Tabs.ActivePage = frmExodus.tbsRoster)) then begin
             frmExodus.Tabs.ActivePage := TabSheet;
-            {
-            if ((not frmExodus.isMinimized()) and
-                (Application.Active) and
-                (frmExodus.Visible)) then
-                TabSheet.SetFocus();
-            }
         end;
     end
     else begin
