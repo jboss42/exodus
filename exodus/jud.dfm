@@ -51,7 +51,6 @@ inherited frmJud: TfrmJud
   end
   inherited Tabs: TPageControl
     Width = 409
-    ActivePage = TabSheet2
     inherited TabSheet1: TTabSheet
       object lblSelect: TTntLabel
         Left = 0
@@ -108,23 +107,6 @@ inherited frmJud: TfrmJud
         Caption = 'Fill in the search criteria to find contacts on.'
         WordWrap = True
       end
-      inline xDataBox: TframeXData
-        Left = 0
-        Top = 13
-        Width = 401
-        Height = 212
-        Align = alClient
-        TabOrder = 0
-        Visible = False
-        inherited Panel1: TPanel
-          Width = 401
-          Height = 212
-          inherited ScrollBox1: TScrollBox
-            Width = 391
-            Height = 202
-          end
-        end
-      end
     end
     object TabSheet4: TTabSheet
       Caption = 'TabSheet4'
@@ -170,7 +152,7 @@ inherited frmJud: TfrmJud
           Width = 228
           Height = 21
           Style = csDropDownList
-          ItemHeight = 0
+          ItemHeight = 13
           Sorted = True
           TabOrder = 0
         end
@@ -208,6 +190,26 @@ inherited frmJud: TfrmJud
         OnColumnClick = lstContactsColumnClick
         OnContextPopup = lstContactsContextPopup
         OnData = lstContactsData
+      end
+    end
+    object TabXData: TTabSheet
+      Caption = 'TabXData'
+      ImageIndex = 4
+      inline xdataBox: TframeXData
+        Left = 0
+        Top = 0
+        Width = 401
+        Height = 225
+        Align = alClient
+        TabOrder = 0
+        inherited Panel1: TPanel
+          Width = 401
+          Height = 225
+          inherited ScrollBox1: TScrollBox
+            Width = 391
+            Height = 215
+          end
+        end
       end
     end
   end
