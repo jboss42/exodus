@@ -120,6 +120,7 @@ begin
         _queue.Free();
         _queue := nil;
     end;
+    inherited;
 end;
 
 {---------------------------------------}
