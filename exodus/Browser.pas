@@ -274,6 +274,7 @@ procedure TfrmBrowse.FormCreate(Sender: TObject);
 begin
     // Create the History list
     AssignUnicodeFont(Self);
+    TranslateComponent(Self);
     _History := TWidestringList.Create;
     _blist := TList.Create();
     _iq := nil;
