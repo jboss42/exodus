@@ -25,9 +25,13 @@
     procedure Process(const xpath: WideString; const event: WideString; const xml: WideString); safecall;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat); safecall;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat); safecall;
-    procedure menuClick(const ID: WideString); safecall;
-    function onInstantMsg(const Body: WideString; const Subject: WideString): WideString; safecall;
+    function NewIM(const jid: WideString; var Body: WideString; var Subject: WideString;
+                   const XTags: WideString): WideString; safecall;
     procedure Configure; safecall;
+    procedure MenuClick(const ID: WideString); safecall;
+    procedure MsgMenuClick(const ID: WideString; const jid: WideString; var Body: WideString;
+                           var Subject: WideString); safecall;
+    procedure NewOutgoingIM(const jid: WideString; const InstantMsg: IExodusChat); safecall;
   end;
 -->
 
@@ -69,9 +73,24 @@ When a new chat window is started by either the user, or an incoming message ele
 Almost identical to the NewChat event, but fired when new conference rooms are started. The same IExodusChat controller is used to manipulate the room object.
 </dd>
 
+<a name="newoutgoingim"><dt>NewOutgoingIM(BSTR jid, IExodusChat InstantMsg)</dt></a>
+<dd>
+Almost identical to the NewChat event, but fired when a new instant message window is opened. The same IExodusChat controller is used to get events and manipulate the IM window.
+</dd>
+
 <a name="menuclick"><dt>MenuClick(BSTR ID)</dt></a>
 <dd>
-Plugins are allowed to add menu items into either the roster contact right-click menus, or to the main menu under the Tools | Plugins selection. When a menu item is clicked which belongs to <em>any</em> plugin, this method is fired for all plugins. Plugins MUST cache the ID's which are returned from the <a href="controller.html#addpluginmenu">AddPluginMenu</a> method or from the <a href="controller.html#addcontactmenu">AddContactMenu</a> method. When this method is called, compare the ID passed to the cached id's of the menu items that your plugin added, and act accordingly.
+Plugins are allowed to add menu items into the main menu under the Tools | Plugins selection. When a menu item is clicked which belongs to <em>any</em> plugin, this method is fired for all plugins. Plugins MUST cache the ID's which are returned from the <a href="controller.html#addpluginmenu">AddPluginMenu</a> method or from the <a href="controller.html#addcontactmenu">AddContactMenu</a> method. When this method is called, compare the ID passed to the cached id's of the menu items that your plugin added, and act accordingly.
+</dd>
+
+<a name="msgmenuclick"><dt>MsgMenuClick(BSTR ID)</dt></a>
+<dd>
+Plugins are also allowed to add menu items to the context menu for Instant Message (IM) windows. This event is fired whenever one of these menu items is clicked which belongs to <em>any</em> plugin. Similar to the MenuClick event, plugins should cache the ID which they receive from <a href="controller.html#addmsgmenu">addMessageMenu</a> method.
+</dd>
+
+<a name="newim"><dt>NewIM(BSTR jid, BSTR Body, BSTR Subject, BSTR xtags): BSTR</dt></a>
+<dd>
+This event is fired whenever an IM message (not a chat or groupchat) is being sent from the system. This includes messages like room invites, and roster items being sent. Plugins are allowed to change the value of the Body and Subject paramaters if necessary. Plugins should return WELL-FORMED XML as a return value if that plugin needs to append additional elements into the message stanza. For example, a plugin could return: &lt;x xmlns="foo"&gt;Some CDATA&lt;/x&gt; and have that x tag be inserted into the outgoing message.
 </dd>
 
 </body>
