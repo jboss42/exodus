@@ -120,7 +120,10 @@ uses
   JabberConst in '..\jopl\JabberConst.pas',
   AutoUpdate in '..\jopl\AutoUpdate.pas',
   COMController in 'COMController.pas' {ExodusController: CoClass},
-  COMChatController in 'COMChatController.pas' {ExodusChatController: CoClass};
+  COMChatController in 'COMChatController.pas' {ExodusChatController: CoClass},
+  COMRoster in 'COMRoster.pas' {ExodusRoster: CoClass},
+  COMPPDB in 'COMPPDB.pas' {ExodusPPDB: CoClass};
+
 //  COMPluginShell in 'COMPluginShell.pas' {ExodusPlugin: CoClass},
 //  COMChatPluginShell in 'COMChatPluginShell.pas' {ExodusChatPlugin: CoClass};
 

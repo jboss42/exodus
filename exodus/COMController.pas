@@ -36,6 +36,43 @@ type
     function getAgentService(const Server, Service: WideString): WideString;
       safecall;
     procedure getAgentList(const Server: WideString); safecall;
+    function generateID: WideString; safecall;
+    function Get_IsInvisible: WordBool; safecall;
+    function Get_IsPaused: WordBool; safecall;
+    function Get_Port: Integer; safecall;
+    function Get_PresenceShow: WideString; safecall;
+    function Get_PresenceStatus: WideString; safecall;
+    function Get_Priority: Integer; safecall;
+    function Get_Resource: WideString; safecall;
+    function isBlocked(const JabberID: WideString): WordBool; safecall;
+    procedure Block(const JabberID: WideString); safecall;
+    procedure Connect; safecall;
+    procedure Disconnect; safecall;
+    procedure UnBlock(const JabberID: WideString); safecall;
+    function getPrefAsBool(const Key: WideString): WordBool; safecall;
+    function getPrefAsInt(const Key: WideString): Integer; safecall;
+    function getPrefAsString(const Key: WideString): WideString; safecall;
+    procedure setPrefAsBool(const Key: WideString; Value: WordBool); safecall;
+    procedure setPrefAsInt(const Key: WideString; Value: Integer); safecall;
+    procedure setPrefAsString(const Key_, Value: WideString); safecall;
+    function findChat(const JabberID, Resource: WideString): Integer; safecall;
+    procedure startInstantMsg(const JabberID: WideString); safecall;
+    procedure startRoom(const RoomJID, Nickname, Password: WideString);
+      safecall;
+    procedure startSearch(const SearchJID: WideString); safecall;
+    procedure showJoinRoom(const RoomJID, Nickname, Password: WideString);
+      safecall;
+    procedure startBrowser(const BrowseJID: WideString); safecall;
+    procedure showCustomPresDialog; safecall;
+    procedure showDebug; safecall;
+    procedure showLogin; safecall;
+    procedure showPrefs; safecall;
+    procedure showToast(const Message: WideString; wndHandle,
+      imageIndex: Integer); safecall;
+    procedure setPresence(const Show, Status: WideString; Priority: Integer);
+      safecall;
+    function Get_Roster: IExodusRoster; safecall;
+    function Get_PPDB: IExodusPPDB; safecall;
     { Protected declarations }
   private
     _menu_items: TWideStringList;
@@ -74,6 +111,8 @@ procedure UnloadPlugins();
 implementation
 
 uses
+    Chat, ChatController, JabberID, MsgRecv, Room, Browser, Jud,
+    ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug, 
     COMChatController, Dockable, Agents,
     Jabber1, Session, Roster, PrefController, 
     Menus, Dialogs, Variants, Forms, SysUtils, ComServ;
@@ -425,6 +464,199 @@ end;
 procedure TExodusController.agentsCallback(event: string; tag: TXMLTag);
 begin
     fireAgentsList(tag.GetAttribute('from'));
+end;
+
+function TExodusController.generateID: WideString;
+begin
+    Result := MainSession.generateID();
+end;
+
+function TExodusController.Get_IsInvisible: WordBool;
+begin
+    Result := MainSession.Invisible;
+end;
+
+function TExodusController.Get_IsPaused: WordBool;
+begin
+    Result := MainSession.IsPaused;
+end;
+
+function TExodusController.Get_Port: Integer;
+begin
+    Result := MainSession.Port;
+end;
+
+function TExodusController.Get_PresenceShow: WideString;
+begin
+    Result := MainSession.Show;
+end;
+
+function TExodusController.Get_PresenceStatus: WideString;
+begin
+    Result := MainSession.Status;
+end;
+
+function TExodusController.Get_Priority: Integer;
+begin
+    Result := MainSession.Priority;
+end;
+
+function TExodusController.Get_Resource: WideString;
+begin
+    Result := MainSession.Resource;
+end;
+
+function TExodusController.isBlocked(const JabberID: WideString): WordBool;
+begin
+    Result := MainSession.IsBlocked(JabberID);
+end;
+
+procedure TExodusController.Block(const JabberID: WideString);
+var
+    tmpjid: TJabberID;
+begin
+    tmpjid := TJabberID.Create(jabberID);
+    MainSession.Block(tmpjid);
+    tmpjid.Free();
+end;
+
+procedure TExodusController.Connect;
+begin
+    if not MainSession.Active then
+        MainSession.Connect();
+end;
+
+procedure TExodusController.Disconnect;
+begin
+    if MainSession.Active then
+        MainSession.Disconnect();
+end;
+
+procedure TExodusController.UnBlock(const JabberID: WideString);
+var
+    tmpjid: TJabberID;
+begin
+    tmpjid := TJabberID.Create(JabberID);
+    MainSession.UnBlock(tmpjid);
+    tmpjid.Free();
+end;
+
+function TExodusController.getPrefAsBool(const Key: WideString): WordBool;
+begin
+    Result := MainSession.Prefs.getBool(key);
+end;
+
+function TExodusController.getPrefAsInt(const Key: WideString): Integer;
+begin
+    Result := MainSession.Prefs.getInt(key);
+end;
+
+function TExodusController.getPrefAsString(
+  const Key: WideString): WideString;
+begin
+    Result := MainSession.Prefs.getString(key);
+end;
+
+procedure TExodusController.setPrefAsBool(const Key: WideString;
+  Value: WordBool);
+begin
+    MainSession.Prefs.setBool(key, value);
+end;
+
+procedure TExodusController.setPrefAsInt(const Key: WideString;
+  Value: Integer);
+begin
+    MainSession.Prefs.setInt(key, value);
+end;
+
+procedure TExodusController.setPrefAsString(const Key_, Value: WideString);
+begin
+    MainSession.Prefs.setString(Key_, value);    
+end;
+
+function TExodusController.findChat(const JabberID,
+  Resource: WideString): Integer;
+var
+    c: TChatController;
+begin
+    c := MainSession.ChatList.FindChat(JabberID, Resource, '');
+    if (c = nil) then
+        Result := 0
+    else
+        Result := TForm(c.window).Handle;
+end;
+
+procedure TExodusController.startInstantMsg(const JabberID: WideString);
+begin
+    startMsg(JabberID);
+end;
+
+procedure TExodusController.startRoom(const RoomJID, Nickname,
+  Password: WideString);
+begin
+    startRoom(RoomJID, Nickname, Password);
+end;
+
+procedure TExodusController.startSearch(const SearchJID: WideString);
+begin
+    startSearch(SearchJID);
+end;
+
+procedure TExodusController.showJoinRoom(const RoomJID, Nickname,
+  Password: WideString);
+var
+    tmpjid: TJabberID;
+begin
+    tmpjid := TJabberID.Create(RoomJID);
+    startJoinRoom(tmpjid, NickName, Password);
+    tmpjid.free();
+end;
+
+procedure TExodusController.startBrowser(const BrowseJID: WideString);
+begin
+    showBrowser(BrowseJID);
+end;
+
+procedure TExodusController.showCustomPresDialog;
+begin
+    ShowCustomPresence();
+end;
+
+procedure TExodusController.showDebug;
+begin
+    ShowDebugForm();
+end;
+
+procedure TExodusController.showLogin;
+begin
+    PostMessage(frmExodus.Handle, WM_SHOWLOGIN, 0, 0);
+end;
+
+procedure TExodusController.showPrefs;
+begin
+    startPrefs();
+end;
+
+procedure TExodusController.showToast(const Message: WideString; wndHandle,
+  imageIndex: Integer);
+begin
+    showRiserWindow(wndHandle, Message, imageIndex);
+end;
+
+procedure TExodusController.setPresence(const Show, Status: WideString;
+  Priority: Integer);
+begin
+    MainSession.setPresence(Show, Status, Priority);
+end;
+
+function TExodusController.Get_Roster: IExodusRoster;
+begin
+    // xxx: finish COMRoster
+end;
+
+function TExodusController.Get_PPDB: IExodusPPDB;
+begin
+    // xxx: finish COMPPDB
 end;
 
 initialization

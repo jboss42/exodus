@@ -58,7 +58,10 @@ var
     singleToast: TfrmRiser;
     frmRiser: TfrmRiser;
 
-procedure ShowRiserWindow(clickForm: TForm; msg: Widestring; imgIndex: integer);
+procedure ShowRiserWindow(clickForm: TForm; msg: Widestring; imgIndex: integer); overload;
+procedure ShowRiserWindow(clickHandle: HWND; msg: Widestring; imgIndex: integer); overload;
+
+procedure ShowRiserWindow(clickForm: TForm; clickHandle: HWND; msg: Widestring; imgIndex: integer); overload;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -71,6 +74,18 @@ uses
 
 {---------------------------------------}
 procedure ShowRiserWindow(clickForm: TForm; msg: Widestring; imgIndex: integer);
+begin
+    ShowRiserWindow(clickForm, 0, msg, imgIndex);
+end;
+
+{---------------------------------------}
+procedure ShowRiserWindow(clickHandle: HWND; msg: Widestring; imgIndex: integer);
+begin
+    ShowRiserWindow(nil, clickHandle, msg, imgIndex);
+end;
+
+{---------------------------------------}
+procedure ShowRiserWindow(clickForm: TForm; clickHandle: HWND; msg: Widestring; imgIndex: integer);
 var
     animate: boolean;
 begin
@@ -103,7 +118,7 @@ begin
     end;
 
     singleToast._clickForm := clickForm;
-    singleToast._clickHandle := clickForm.Handle;
+    singleToast._clickHandle := clickHandle;
     with singleToast.Label1 do begin
         Top := 5;
         Left := singleToast.Image1.Left + singleToast.Image1.Width + 2;
