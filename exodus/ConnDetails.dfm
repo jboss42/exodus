@@ -108,10 +108,10 @@ object frmConnDetails: TfrmConnDetails
     Top = 65
     Width = 252
     Height = 235
-    ActivePage = tbsHttp
+    ActivePage = tbsSocket
     Align = alClient
     Style = tsFlatButtons
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 2
     object tbsSocket: TTabSheet
       Caption = 'tbsSocket'
