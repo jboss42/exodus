@@ -118,6 +118,9 @@ end;
     _history: TStringList;
     _iq: TJabberIQ;
     _blist: TObjectList;
+    _scb: integer;
+
+    procedure SessionCallback(event: string; tag: TXMLTag);
     procedure BrowseCallback(event: string; tag: TXMLTag);
 
     procedure ShowMain(tag: TXMLTag);
@@ -454,6 +457,8 @@ begin
 
     pnlInfo.Visible := false;
     pnlInfo.Align := alClient;
+
+    _scb := MainSession.RegisterCallback(SessionCallback, '/session/disconnected');
 end;
 
 {---------------------------------------}
@@ -461,6 +466,8 @@ procedure TfrmBrowse.FormDestroy(Sender: TObject);
 begin
     // Free the History list
     if (_iq <> nil) then FreeAndNil(_iq);
+    if (MainSession <> nil) then
+        MainSession.UnRegisterCallback(_scb);
     
     _History.Free();
     _blist.Clear();
@@ -733,6 +740,16 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmBrowse.SessionCallback(event: string; tag: TXMLTag);
+begin
+    if (event = '/session/disconnected') then begin
+        StartList;
+        StartBar;
+    end;
+end;
+
+
+{---------------------------------------}
 procedure TfrmBrowse.BrowseCallback(event: string; tag: TXMLTag);
 var
     i: integer;
@@ -894,7 +911,7 @@ begin
     btnClose.Visible := false;
 end;
 
-
+{---------------------------------------}
 procedure TfrmBrowse.FormDragOver(Sender, Source: TObject; X, Y: Integer;
   State: TDragState; var Accept: Boolean);
 begin
@@ -902,11 +919,12 @@ begin
     btnClose.Visible := Docked;
 end;
 
+{---------------------------------------}
 procedure TfrmBrowse.popContextPopup(Sender: TObject);
 begin
   inherited;
     // Check for valid actions..
-    if (vwBrowse.Selected = nil) then
+    if ((vwBrowse.Selected = nil) or (not MainSession.Active)) then
         ContextMenu(false);
 end;
 
