@@ -268,7 +268,10 @@ begin
     else begin
         // Some exception occured during Read ops
         _socket := nil;
-        if E is EIdConnClosedGracefully then exit;
+        if E is EIdConnClosedGracefully then begin
+            doMessage(WM_DISCONNECTED);
+            exit;
+        end;
 
         if E is EIdSocketError then begin
             se := E as EIdSocketError;
