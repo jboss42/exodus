@@ -719,6 +719,9 @@ begin
     if (_no_notify_update) then exit;
     i := chkNotify.ItemIndex;
 
+    if (i < 0) then exit;
+    if (i > NUM_NOTIFIES) then exit;
+
     _notify[i] := 0;
     if (chkToast.Checked) then _notify[i] := _notify[i] + notify_toast;
     if (chkFlash.Checked) then _notify[i] := _notify[i] + notify_flash;

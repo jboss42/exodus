@@ -37,7 +37,7 @@ var
     emoticon_regex: TRegExpr;
     emoticon_list: THashedStringList;
 
-procedure DisplayMsg(Msg: TJabberMessage; RichEdit: TExRichEdit);
+procedure DisplayMsg(Msg: TJabberMessage; RichEdit: TExRichEdit; AutoScroll: boolean = true);
 procedure DisplayPresence(txt: string; Browser: TExRichEdit);
 
 function GetMsgHTML(Msg: TJabberMessage): string;
@@ -59,21 +59,29 @@ uses
     XMLUtils, Session;
 
 {---------------------------------------}
-procedure DisplayMsg(Msg: TJabberMessage; RichEdit: TExRichEdit);
+procedure DisplayMsg(Msg: TJabberMessage; RichEdit: TExRichEdit; AutoScroll: boolean = true);
 var
     txt: WideString;
     c: TColor;
-    min, max, thumb: integer;
+    bot_thumb: integer;
     at_bottom: boolean;
+    ScrollInfo: TSCROLLINFO;
 begin
     // add the message to the richedit control
 
     with RichEdit do begin
+        ScrollInfo.cbSize := SizeOf(TScrollInfo);
+        ScrollInfo.fMask := SIF_PAGE + SIF_POS + SIF_RANGE;
+        GetScrollInfo(Handle, SB_VERT, ScrollInfo);
+        bot_thumb := ScrollInfo.nPos + Integer(ScrollInfo.nPage) + 2;
+        at_bottom := (bot_thumb >= ScrollInfo.nMax) or (ScrollInfo.nMax = 0);
+        {
         GetScrollRange(Handle, SB_VERT, min, max);
         thumb := GetScrollPos(Handle, SB_VERT);
         // if the thumb is at the bottom, or we don't have a scrollbar yet,
         // assume we're at the bottom
         at_bottom := ((thumb >= max) or (max = 0));
+        }
         end;
 
     txt := Msg.Body;
@@ -132,7 +140,9 @@ begin
 
     // AutoScroll the window
     if (at_bottom) then with RichEdit do begin
+        SetFocus();
         SelStart := GetTextLen;
+        SelLength := 0;
         Perform(EM_SCROLLCARET, 0, 0);
         end;
 

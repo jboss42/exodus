@@ -10,8 +10,10 @@ Getting started with Exodus development
    cvs -z3 -d:ext:developername@cvs.exodus.sourceforge.net:/cvsroot/exodus co jopl
 4. Start delphi
 5. Load the exodus components.
-   a) Open ExComponents.dpk
+   a) Open .\components\ExComponents.dpk
    b) Click "install"
+   c) Open .\components\TntUnicodeVcl_D60.dpk
+   d) Click "install"
 6. Open Exodus.dpr
 7. Compile
 8. Disable annoying exceptions
