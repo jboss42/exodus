@@ -80,7 +80,7 @@ type
     function TagExists(key: WideString): boolean;
 
     function Data: WideString;
-    function Namespace: WideString;
+    function Namespace(children: boolean = false): WideString;
     function xml: WideString; override;
 
     procedure ClearTags;
@@ -496,14 +496,15 @@ begin
 end;
 
 {---------------------------------------}
-function TXMLTag.Namespace: WideString;
+function TXMLTag.Namespace(children: boolean = false): WideString;
 var
     n:  TXMLNode;
     i:  integer;
 begin
     // find the namespace for this tag
     if _ns = '' then begin
-        _ns := Self.GetAttribute('xmlns');
+        if (not children) then
+            _ns := Self.GetAttribute('xmlns');
         if _ns = '' then begin
             // check thru all the tag elements
             for i := 0 to _Children.Count - 1 do begin
