@@ -164,7 +164,7 @@ implementation
 
 uses
     CustomNotify, COMChatController, Debug, ExEvents,
-    JabberConst, ExUtils, Presence, PrefController, Room,
+    JabberConst, ExSession, ExUtils, Presence, PrefController, Room,
     Transfer, RosterAdd, RiserWindow, Notify,
     Jabber1, Profile, MsgDisplay, IQ,
     JabberMsg, Roster, Session, Unicode, XMLUtils,
@@ -284,7 +284,7 @@ begin
     end;
 
     if (new_chat) then
-        frmExodus.ComController.fireNewChat(sjid, TExodusChat(chat.ComController));
+        ExCOMController.fireNewChat(sjid, TExodusChat(chat.ComController));
 
 
 

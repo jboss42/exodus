@@ -116,6 +116,7 @@ implementation
 {$R *.dfm}
 
 uses
+    ExSession,
     JabberConst, Notify, JabberID, Roster, Session, Presence,
     ShellAPI, Jabber1, ExUtils;
 
@@ -319,7 +320,7 @@ begin
             end;
         end;
         MainSession.SendTag(iq);
-        frmExodus.FileServer.AddFile(filename);
+        ExFileServer.AddFile(filename);
         Self.Close();
     end
     else if Self.Mode = 2 then begin

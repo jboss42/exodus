@@ -76,7 +76,7 @@ function ShowAddContact: TfrmAdd;
 {---------------------------------------}
 implementation
 uses
-    InputPassword, ExUtils, 
+    InputPassword, ExSession, ExUtils, 
     GnuGetText, Jabber1, JabberID,  Presence, Session;
 {$R *.DFM}
 
@@ -217,7 +217,7 @@ begin
                     j := j + sjid[i];
             end;
             sjid := j + '@' + a.jid;
-            frmExodus.RegisterController.MonitorJid(sjid, false);
+            ExRegController.MonitorJid(sjid, false);
             MainSession.Roster.AddItem(sjid, snick, sgrp, true);
             Self.Close;
         end

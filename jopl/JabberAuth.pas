@@ -27,6 +27,8 @@ uses
 type
     TJabberAuth = Class
     public
+        prompt_password: boolean;
+        
         procedure StartAuthentication(); virtual; abstract;
         procedure CancelAuthentication(); virtual; abstract;
 

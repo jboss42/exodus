@@ -32,9 +32,11 @@ type
         _session: TJabberSession;
         _AuthType: TJabberAuthType;
         _auth_iq: TJabberIQ;
+        _token: TXMLTag;
 
         procedure SendAuthGet;
         procedure SendRegistration;
+        procedure SetTokenAuth(tag: TXMLTag);
 
     published
         procedure RegistrationCallback(event: string; xml: TXMLTag);
@@ -52,6 +54,7 @@ type
         function StartRegistration(): boolean; override;
         procedure CancelRegistration(); override;
 
+        property TokenAuth: TXMLTag read _token write SetTokenAuth;
     end;
 
 
@@ -65,12 +68,16 @@ begin
     //
     _session := session;
     _auth_iq := nil;
+    _token := nil;
+    prompt_password := true;
 end;
 
 {---------------------------------------}
 destructor TStandardAuth.Destroy();
 begin
     //
+    FreeAndNil(_auth_iq);
+    FreeAndNil(_token);
 end;
 
 // IAuth Implementation
@@ -194,9 +201,9 @@ begin
         qTag.AddBasicTag('resource', _session.Resource);
     end;
 
-    if (_session.TokenAuth <> nil) then begin
+    if (_token <> nil) then begin
         // token auth
-        _auth_iq.qTag.AddTag(_session.TokenAuth);
+        _auth_iq.qTag.AddTag(_token);
         end
 
     else if seq <> nil then begin
@@ -254,6 +261,11 @@ begin
     end;
 end;
 
-
+{---------------------------------------}
+procedure TStandardAuth.SetTokenAuth(tag: TXMLTag);
+begin
+    prompt_password := false;
+    _token := tag;
+end;
 
 end.

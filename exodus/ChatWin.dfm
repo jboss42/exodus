@@ -10,12 +10,12 @@ inherited frmChat: TfrmChat
   OnCloseQuery = FormCloseQuery
   OnShow = FormShow
   PixelsPerInch = 96
-  TextHeight = 18
+  TextHeight = 16
   inherited Panel3: TPanel
-    Top = 24
-    Height = 229
+    Top = 21
+    Height = 230
     inherited MsgList: TExRichEdit
-      Height = 221
+      Height = 222
       PlainRTF = True
     end
   end
@@ -26,17 +26,17 @@ inherited frmChat: TfrmChat
     end
   end
   inherited Panel1: TPanel
-    Height = 24
+    Height = 21
     object btnClose: TSpeedButton
-      Left = 354
+      Left = 315
       Top = 2
-      Width = 23
-      Height = 20
+      Width = 20
+      Height = 18
       Caption = 'X'
       Flat = True
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
-      Font.Height = -13
+      Font.Height = -12
       Font.Name = 'Arial'
       Font.Style = [fsBold]
       ParentFont = False
@@ -47,8 +47,8 @@ inherited frmChat: TfrmChat
     object pnlJID: TPanel
       Left = 2
       Top = 2
-      Width = 351
-      Height = 20
+      Width = 312
+      Height = 17
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
@@ -56,33 +56,33 @@ inherited frmChat: TfrmChat
         Tag = 1
         Left = 0
         Top = 0
-        Width = 20
-        Height = 20
+        Width = 18
+        Height = 17
         Align = alLeft
         ParentShowHint = False
         ShowHint = True
         OnPaint = imgStatusPaint
       end
       object lblNick: TTntLabel
-        Left = 20
+        Left = 18
         Top = 0
-        Width = 86
-        Height = 20
+        Width = 74
+        Height = 17
         Align = alLeft
         Caption = ' Foo '#32072#32073#32074#32075' '
         Caption_UTF7 = ' Foo +fUh9SX1KfUs '
       end
       object lblJID: TTntLabel
-        Left = 106
+        Left = 92
         Top = 0
-        Width = 35
-        Height = 20
+        Width = 32
+        Height = 17
         Cursor = crHandPoint
         Align = alLeft
         Caption = '<JID>'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
-        Font.Height = -13
+        Font.Height = -12
         Font.Name = 'Arial Unicode MS'
         Font.Style = []
         ParentFont = False

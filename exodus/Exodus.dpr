@@ -161,15 +161,12 @@ var
 
 begin
   Application.Initialize;
-  //Application.Title := '';
-
+  Application.Title := '';
   Application.ShowMainForm := false;
 
   // Main startup stuff
-  {
   continue := SetupSession();
-  if (!continue) then exit;
-  }
+  if (not continue) then exit;
 
   Application.CreateForm(TfrmExodus, frmExodus);
 

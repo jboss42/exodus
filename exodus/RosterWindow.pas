@@ -263,6 +263,7 @@ resourcestring
 
 implementation
 uses
+    ExSession,
     JabberConst, Chat, ChatController, GnuGetText, InputPassword,
     SelContact, Invite, Bookmark, S10n, Transfer, MsgRecv, PrefController,
     ExEvents, ExUtils, Room, Profile, JabberID, RiserWindow, ShellAPI,
@@ -2450,7 +2451,7 @@ end;
 procedure TfrmRosterWindow.pluginClick(Sender: TObject);
 begin
     // a plugin menu got clicked
-    frmExodus.COMController.fireRosterMenuClick(Sender);
+    ExCOMController.fireRosterMenuClick(Sender);
 end;
 
 {---------------------------------------}

@@ -22,15 +22,37 @@ unit ExSession;
 interface
 uses
     // Exodus'y stuff
+    COMController, COMRoster, COMPPDB,
     Unicode, Signals, XMLTag, Session, GUIFactory, Register, Notify,
     S10n, FileServer,
 
     // Delphi stuff
-    Classes, Dialogs, Forms, SysUtils, Windows;
+    Registry, Classes, Dialogs, Forms, SysUtils, Windows;
+
+type
+    TExStartParams = class
+    public
+        auto_login: boolean;
+        priority: integer;
+        show: Widestring;
+        status: Widestring;
+        debug: boolean;
+        minimized: boolean;
+        testaa: boolean;
+    end;
+
 
 // forward declares
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 function SetupSession(): boolean;
+procedure TeardownSession();
 
+procedure AddSound(reg: TRegistry; pref_name: string; user_text: string);
+function CmdLine(): string;
+
+{---------------------------------------}
 resourcestring
     sCmdDebug =     ' -d '#9#9' : Debug mode on'#13#10;
     sCmdMinimized = ' -m '#9#9' : Start minimized'#13#10;
@@ -43,35 +65,51 @@ resourcestring
     sCmdPriority =  ' -i [pri] '#9' : Priority'#13#10;
     sCmdProfile =   ' -f [prof] '#9' : Profile name'#13#10;
     sCmdConfig =    ' -c [file] '#9' : Config path name'#13#10;
+    sUnkArg = 'Invalid command line:%s';
 
-const
+var
     sExodusMutex: Cardinal;
 
     ExCOMController: TExodusController;
     ExCOMRoster: TExodusRoster;
     ExCOMPPDB: TExodusPPDB;
 
+    ExFileServer: TExodusFileServer;
+    ExRegController: TRegController;
+    ExStartup: TExStartParams;
+
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
+
+{$WARN UNIT_PLATFORM OFF}
+
+uses
+    GnuGetText,
+    ChatWin, GetOpt, Jabber1, JabberID, PrefController, StandardAuth,
+    PrefNotify,
+    ExResponders, MsgDisplay,
+    XMLParser, XMLUtils;
 
 var
     // Various other key controllers
     _guibuilder: TGUIFactory;
-    _regController: TRegController;
     _Notify: TNotifyController;
     _subcontroller: TSubController;
-    _fileserver: TExodusFileServer;
-
     _richedit: THandle;
     _mutex: THandle;
 
-
-
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 function SetupSession(): boolean;
 var
-    debug, minimized, expanded, testaa, invisible, show_help: boolean;
-    show_help: boolean;
+    invisible, show_help: boolean;
     jid: TJabberID;
-    pass, resource, profile_name, config, xmpp_file : String;
+    expanded, pass, resource, profile_name, config, xmpp_file : String;
+    prof_index: integer;
 
     cli_priority: integer;
     cli_show: string;
@@ -102,6 +140,11 @@ begin
     cli_priority := -1;
     cli_status := sAvailable;
     cli_show := '';
+    jid := nil;
+    invisible := false;
+    show_help := false;
+
+    ExStartup := TExStartParams.Create();
 
     // Hide the application's window, and set our own
     // window to the proper parameters..
@@ -136,10 +179,10 @@ begin
             while GetOpt do begin
                 case Ord(OptChar) of
                     0: raise EConfigException.Create(format(sUnkArg, [CmdLine()]));
-                    Ord('d'): debug := true;
+                    Ord('d'): ExStartup.debug := true;
                     Ord('x'): expanded := OptArg;
-                    Ord('m'): minimized := true;
-                    Ord('a'): testaa := true;
+                    Ord('m'): ExStartup.minimized := true;
+                    Ord('a'): ExStartup.testaa := true;
                     Ord('v'): invisible := true;
                     Ord('j'): jid := TJabberID.Create(OptArg);
                     Ord('p'): pass := OptArg;
@@ -198,36 +241,40 @@ begin
 
     // Check for a single instance
     if (MainSession.Prefs.getBool('single_instance')) then begin
-        mutex := CreateMutex(nil, true, PChar('Exodus' +
+        _mutex := CreateMutex(nil, true, PChar('Exodus' +
             ExtractFileName(config)));
-        if (mutex <> 0) and (GetLastError = 0) then begin
+        if (_mutex <> 0) and (GetLastError = 0) then begin
             // we are good to go..
         end
         else begin
             // We are not good to go..
             // Send the Windows Msg, and bail.
             PostMessage(HWND_BROADCAST, sExodusMutex, 0, 0);
-            Halt;
+            Result := false;
+            exit;
         end;
     end;
 
+    ExRegController := TRegController.Create();
+    ExRegController.SetSession(MainSession);
+    ExFileServer := TExodusFileServer.Create();
+
     _guibuilder := TGUIFactory.Create();
     _guibuilder.SetSession(MainSession);
-
-    _regController := TRegController.Create();
-    _regController.SetSession(MainSession);
 
     _Notify := TNotifyController.Create;
     _Notify.SetSession(MainSession);
 
     _subcontroller := TSubController.Create();
-    _fileserver := TExodusFileServer.Create();
 
-    if not debug then
-        debug := MainSession.Prefs.getBool('debug');
+    if not ExStartup.debug then
+        ExStartup.debug := MainSession.Prefs.getBool('debug');
 
-    if not minimized then
-        minimized := MainSession.Prefs.getBool('min_start');
+    if not ExStartup.minimized then
+        ExStartup.minimized := MainSession.Prefs.getBool('min_start');
+
+    if (expanded <> '') then
+        MainSession.Prefs.SetBool('expanded', (expanded = 'yes'));
 
     with MainSession.Prefs do begin
         s := GetString('brand_icon');
@@ -250,11 +297,10 @@ begin
         // if a profile name was specified, use it.
         // otherwise, if a jid was specified, use it as the profile name.
         // otherwise, if we have no profiles yet, use the default profile name.
-
-        // TODO: Let's add a profile.temp flag, and not save it
-        // for .xmpp stuff, we'll just spin up a whole new profile then.
         if (connect_node <> nil) then begin
             profile_name := Format(sXMPP_Profile, [jid.jid]);
+            profile := CreateProfile(profile_name);
+            profile.temp := true;
         end
         else begin
             if (profile_name = '') then begin
@@ -267,21 +313,20 @@ begin
 
         // if a profile was specified, use it, or create it if it doesn't exist.
         if (profile_name <> '') then begin
-            _prof_index := Profiles.IndexOf(profile_name);
+            prof_index := Profiles.IndexOf(profile_name);
 
-            if (_prof_index = -1) then begin
-                // no profile called this, yet
+            if (prof_index = -1) then begin
+                // We don't have a profile with this name
                 if (jid = nil) or (pass = '') then begin
                     MessageDlg('You must specify a JID and password to create a new profile',
                         mtError, [mbOK], 0);
                     Result := false;
                     exit;
                 end;
-
                 profile := CreateProfile(profile_name);
             end
             else
-                profile := TJabberProfile(Profiles.Objects[_prof_index]);
+                profile := TJabberProfile(Profiles.Objects[prof_index]);
 
             if (jid <> nil) then begin
                 profile.Username := jid.user;
@@ -290,8 +335,8 @@ begin
 
             if (resource <> '') then
                 profile.Resource := resource;
-            if (_cli_priority <> -1) then
-                profile.Priority := _cli_priority;
+            if (cli_priority <> -1) then
+                profile.Priority := cli_priority;
             if (pass <> '') then
                 profile.password := pass;
 
@@ -327,38 +372,37 @@ begin
 
                     node := auth_node.GetFirstTag('tokenauth');
                     if (node <> nil) then
-                        MainSession.TokenAuth := node;
+                        auth.TokenAuth := node;
                 end;
 
-                _prof_index := Profiles.IndexOfObject(profile);
-                setInt('profile_active', _prof_index);
-                _auto_login := true;
+                prof_index := Profiles.IndexOfObject(profile);
+                setInt('profile_active', prof_index);
+                ExStartup.auto_login := true;
             end
             else begin
                 SaveProfiles();
-                _prof_index := Profiles.IndexOfObject(profile);
+                prof_index := Profiles.IndexOfObject(profile);
 
                 if (profile.IsValid()) then begin
-                    setInt('profile_active', _prof_index);
-                    _auto_login := true;
+                    setInt('profile_active', prof_index);
+                    ExStartup.auto_login := true;
                 end;
             end;
         end
         else begin
-            _prof_index := getInt('profile_active');
-            if ((_prof_index < 0) or (_prof_index >= Profiles.Count)) then
-                _prof_index := 0;
-            _auto_login := getBool('autologin');
+            prof_index := getInt('profile_active');
+            if ((prof_index < 0) or (prof_index >= Profiles.Count)) then
+                prof_index := 0;
+            ExStartup.auto_login := getBool('autologin');
         end;
 
+        // assign the profile we want and setup invisible
+        MainSession.ActivateProfile(prof_index);
         MainSession.Invisible := invisible;
     end;
 
     // Initialize the global responders/xpath events
     initResponders();
-
-    // Setup emoticons
-    ConfigEmoticons();
 
     // if we don't have sound registry settings, then add them
     // sigh.  If we had an installer, that would be the place to
@@ -392,6 +436,12 @@ begin
     JclAddExceptNotifier(ExceptionTracker);
     {$endif}
 
+    ExStartup.priority := cli_priority;
+    ExStartup.show := cli_show;
+    ExStartup.status := cli_status;
+
+    Result := true;
+
 end;
 
 {---------------------------------------}
@@ -404,10 +454,52 @@ begin
     reg.WriteString('', user_text);
 end;
 
+{---------------------------------------}
+{---------------------------------------}
+function CmdLine(): string;
+var
+    i : integer;
+begin
+    result := '';
+    for i := 0 to ParamCount do
+        result := result + ' ' + ParamStr(i);
+end;
 
+{---------------------------------------}
+{---------------------------------------}
 procedure TeardownSession();
 begin
     // free all of the stuff we created
+    // kill all of the auto-responders..
+    cleanupResponders();
+
+    // Free the Richedit library
+    if (_richedit <> 0) then begin
+        FreeLibrary(_richedit);
+        _richedit := 0;
+    end;
+
+    // If we have a session, close it up
+    // and all of the associated windows
+    if MainSession <> nil then begin
+        ExFileserver.Free();
+        _notify.Free();
+        _guiBuilder.Free();
+        ExRegController.Free();
+        _SubController.Free();
+
+        MainSession.Free();
+        MainSession := nil;
+    end;
+
+    if (_mutex <> 0) then begin
+        CloseHandle(_mutex);
+        _mutex := 0;
+    end;
+
+    FreeAndNil(ExCOMRoster);
+    FreeAndNil(ExCOMPPDB);
+    FreeAndNil(ExCOMController);
 end;
 
 initialization

@@ -90,7 +90,7 @@ object frmTransfer: TfrmTransfer
     Left = 0
     Top = 57
     Width = 259
-    Height = 62
+    Height = 60
     Align = alClient
     AutoURLDetect = adDefault
     CustomURLs = <
@@ -182,30 +182,34 @@ object frmTransfer: TfrmTransfer
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 144
+    Top = 142
     Width = 259
     Height = 34
     Align = alBottom
     AutoScroll = False
     TabOrder = 2
-    inherited Bevel1: TBevel
+    inherited Panel2: TPanel
       Width = 259
-    end
-    inherited Panel1: TPanel
-      Left = 99
-      Height = 29
-      inherited btnOK: TButton
-        Caption = 'Receive'
-        OnClick = frameButtons1btnOKClick
+      Height = 34
+      inherited Bevel1: TBevel
+        Width = 259
       end
-      inherited btnCancel: TButton
-        OnClick = frameButtons1btnCancelClick
+      inherited Panel1: TPanel
+        Left = 99
+        Height = 29
+        inherited btnOK: TButton
+          Caption = 'Receive'
+          OnClick = frameButtons1btnOKClick
+        end
+        inherited btnCancel: TButton
+          OnClick = frameButtons1btnCancelClick
+        end
       end
     end
   end
   object pnlProgress: TPanel
     Left = 0
-    Top = 119
+    Top = 117
     Width = 259
     Height = 25
     Align = alBottom
