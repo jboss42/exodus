@@ -282,7 +282,10 @@ uses
     {$else}
     QGraphics,
     {$endif}
-    JabberConst, StrUtils, GnuGetText,
+    {$ifdef Exodus}
+    GnuGetText,
+    {$endif}
+    JabberConst, StrUtils,
     IdGlobal, IdCoder3To4, Session, IQ, XMLUtils, IdHTTPHeaderInfo, Types;
 
 
@@ -300,6 +303,13 @@ begin
     if (Result = psUnknown) then
         Result := psReadWrite;
 end;
+
+{$ifndef Exodus}
+function _(inp: Widestring): Widestring;
+begin
+    Result := inp;
+end;
+{$endif}
 
 {$ifdef Win32}
 {---------------------------------------}
@@ -475,7 +485,7 @@ end;
 {---------------------------------------}
 constructor TPrefController.Create(filename: Widestring);
 var
-{$ifdef Win32}
+{$ifdef Exodus}
     reg  : TRegistry;
 {$endif}
     p    : WideString;
