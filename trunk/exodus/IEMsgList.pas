@@ -24,16 +24,47 @@ interface
 uses
     TntMenus, JabberMsg,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, BaseMsgList, OleCtrls, SHDocVw;
+    Dialogs, Regexpr, iniFiles,
+    BaseMsgList, Session, gnugettext, unicode,
+    XMLTag, XMLNode, XMLConstants, XMLCdata, LibXmlParser, XMLUtils,
+    OleCtrls, SHDocVw, MSHTML, mshtmlevents, ActiveX;
 
 type
   TfIEMsgList = class(TfBaseMsgList)
-    Browser: TWebBrowser;
+    browser: TWebBrowser;
+    procedure browserDocumentComplete(Sender: TObject;
+      const pDisp: IDispatch; var URL: OleVariant);
+    procedure browserEnter(Sender: TObject);
+
   private
     { Private declarations }
+    _home: WideString;
+
+    _doc: IHTMLDocument2;
+    _win: IHTMLWindow2;
+    _body2: IHTMLElement2;
+    _body: IHTMLElement;
+    _style: IHTMLStyleSheet;
+
+    _we: TMSHTMLHTMLWindowEvents;
+    _de: TMSHTMLHTMLDocumentEvents;
+
+    _bottom: Boolean;
+    _menu:  TTntPopupMenu;
+    _queue: TWideStringList;
+
+    procedure onScroll(Sender: TObject);
+    procedure onResize(Sender: TObject);
+    function onContextMenu(Sender: TObject): WordBool;
+
+  protected
+      procedure writeHTML(html: WideString);
+
   public
     { Public declarations }
     constructor Create(Owner: TComponent); override;
+    destructor Destroy; override;
+
     procedure Invalidate(); override;
     procedure CopyAll(); override;
     procedure Copy(); override;
@@ -51,15 +82,24 @@ type
     procedure Save(fn: string); override;
     procedure populate(history: Widestring); override;
     procedure setupPrefs(); override;
+
+    procedure ChangeStylesheet(url: WideString);
   end;
 
 var
   fIEMsgList: TfIEMsgList;
+  xp_xhtml: TXPLite;
+  url_regex: TRegExpr;
+  ok_tags: THashedStringList;
+  style_tags: THashedStringList;
+  style_props: THashedStringList;
 
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 implementation
+
+uses Jabber1, BaseChat, ExUtils;
 
 {$R *.dfm}
 
@@ -67,66 +107,257 @@ implementation
 constructor TfIEMsgList.Create(Owner: TComponent);
 begin
     inherited;
+    _queue := TWideStringList.Create();
+    clear();
+end;
+
+destructor TfIEMsgList.Destroy;
+begin
+    if (_queue <> nil) then begin
+        _queue.Free();
+        _queue := nil;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfIEMsgList.writeHTML(html: WideString);
+begin
+    if (_body = nil) then begin
+        assert(_queue <> nil);
+        _queue.Add(html);
+        exit;
+    end;
+
+    _body.insertAdjacentHTML('beforeEnd', html);
 end;
 
 {---------------------------------------}
 procedure TfIEMsgList.Invalidate();
 begin
-    //
+    browser.Invalidate();
 end;
 
 {---------------------------------------}
 procedure TfIEMsgList.CopyAll();
 begin
-    //
+    _doc.execCommand('SelectAll', false, varNull);
+    _doc.execCommand('Copy', true, varNull);
+    _doc.execCommand('Unselect', false, varNull);
 end;
 
 {---------------------------------------}
 procedure TfIEMsgList.Copy();
 begin
-    //
+    _doc.execCommand('Copy', true, varNull);
 end;
 
 {---------------------------------------}
 procedure TfIEMsgList.ScrollToBottom();
 begin
-    //
+    if (_win <> nil) then
+        _win.scrollTo(0, _body2.scrollHeight);
 end;
 
 {---------------------------------------}
 procedure TfIEMsgList.Clear();
 begin
-    //
+    _home := 'res://' + Application.ExeName;
+    browser.Navigate(_home + '/iemsglist');
 end;
 
 {---------------------------------------}
 procedure TfIEMsgList.setContextMenu(popup: TTntPopupMenu);
 begin
-    //
+    _menu := popup;
 end;
 
 {---------------------------------------}
 function TfIEMsgList.getHandle(): THandle;
 begin
-    Result := Browser.Handle;
+    Result := 0; //Browser.Handle;
 end;
 
 {---------------------------------------}
 function TfIEMsgList.getObject(): TObject;
 begin
-    Result := Browser;
+    // Result := Browser;
+    result := nil;
+end;
+
+{---------------------------------------}
+function ProcessTag(parent: TXMLTag; n: TXMLNode): WideString;
+var
+    nodes: TXMLNodeList;
+    i, j: integer;
+    attrs: TAttrList;
+    attr: TAttr;
+    tag: TXMLTag;
+    chunks: TWideStringList;
+    nv : TWideStringList;
+    started: boolean;
+begin
+
+    // See JEP-71 (http://www.jabber.org/jeps/jep-0071.html) for details.
+
+    result := '';
+    // any tag not in the good list should be deleted, but everything else
+    // around it should stay.
+    // opted to do own serialization for efficiency; didn't want to have to
+    // make many passes over the same data.
+    if (n.NodeType = xml_Tag) then begin
+        tag := TXMLTag(n);
+        if (ok_tags.IndexOf(tag.Name) < 0) then
+            exit;
+
+        result := result + '<' + tag.Name;
+
+        nv := TWideStringList.Create();
+        chunks := TWideStringList.Create();
+        attrs := tag.Attributes;
+        for i := 0 to attrs.Count - 1 do begin
+            attr := TAttr(attrs[i]);
+            if (attr.Name = 'style') then begin
+                // style attribute only allowed on style_tags.
+                if (style_tags.IndexOf(tag.Name) >= 0) then begin
+                    //  remove any style properties that aren't in the allowed list
+                    chunks.Clear();
+                    split(attr.value, chunks, ';');
+                    started := false;
+                    for j := 0 to chunks.Count - 1 do begin
+                        nv.Clear();
+                        split(chunks[j], nv, ':');
+                        if (nv.Count < 1) then
+                            continue;
+                        if (style_props.IndexOf(nv[0]) >= 0) then begin
+                            if (not started) then begin
+                                started := true;
+                                result := result + ' style="';
+                            end;
+                            result := result + XML_EscapeChars(chunks[j]) + ';';
+                        end;
+                    end;
+                    if (started) then
+                        result := result + '"';
+                end;
+            end
+            else if (tag.Name = 'a') then begin
+                if (attr.Name = 'href') then
+                    result := result + ' ' +
+                        attr.Name + '="' + XML_EscapeChars(attr.Value) + '"';
+            end
+            else if (tag.Name = 'img') then begin
+                if ((attr.Name = 'alt') or
+                    (attr.Name = 'height') or
+                    (attr.Name = 'longdesc') or
+                    (attr.Name = 'src') or
+                    (attr.Name = 'width')) then begin
+                    result := result + ' ' +
+                        attr.Name + '="' + XML_EscapeChars(attr.Value) + '"';
+                end;
+            end
+        end;
+        nv.Free();
+        chunks.Free();
+
+        nodes := tag.Nodes;
+        if (nodes.Count = 0) then
+            result := result + '/>'
+        else begin
+            // iterate over all the children
+            result := result + '>';
+            for i := 0 to nodes.Count - 1 do
+                result := result + ProcessTag(tag, TXMLNode(nodes[i]));
+            result := result + '</' + tag.name + '>';
+        end;
+    end
+    else if (n.NodeType = xml_CDATA) then begin
+        // Check for URLs
+        if (parent.Name <> 'a') then
+            result := result +
+                url_regex.Replace(TXMLCData(n).Data,
+                                  '<a href="$0">$0</a>', true)
+        else
+            result := result + TXMLCData(n).Data;
+
+        // TODO: process emoticons
+    end;
 end;
 
 {---------------------------------------}
 procedure TfIEMsgList.DisplayMsg(Msg: TJabberMessage; AutoScroll: boolean = true);
+var
+    txt: WideString;
+    body: TXmlTag;
+    i: integer;
+    nodes: TXMLNodeList;
 begin
-    //
+    body := Msg.Tag.QueryXPTag(xp_xhtml);
+    if (body <> nil) then begin
+        nodes := body.nodes;
+        for i := 0 to nodes.Count - 1 do
+            txt := txt + ProcessTag(body, TXMLNode(nodes[i]));
+    end;
+
+    if (txt = '') then
+        txt := Msg.Body;
+
+    if (MainSession.Prefs.getBool('timestamp')) then begin
+        try
+            writeHTML('<span class="ts">[' +
+                FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
+                               Msg.Time) + ']</span>');
+        except
+            on EConvertError do begin
+                writeHTML('<span class="ts">[' +
+                    FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
+                    Now()) + ']</span>');
+            end;
+        end;
+    end;
+
+    if (Msg.Nick = '') then begin
+        // Server generated msgs (mostly in TC Rooms)
+        writeHTML('&nbsp;<span class="svr">' + txt + '</span>');
+    end
+    else if not Msg.Action then begin
+        // This is a normal message
+        if Msg.isMe then
+            // our own msgs
+            writeHTML('&nbsp;<span class="me">&lt;' + Msg.Nick + '&gt;</span>')
+        else
+            writeHTML('&nbsp;<span class="other">&lt;' + Msg.Nick + '&gt;</span>');
+
+        if (Msg.Highlight) then
+            writeHTML('&nbsp;<span class="alert"> ' + txt + '</span>')
+        else
+            writeHTML('&nbsp;<span class="msg">' + txt + '</span>');
+    end
+    else
+        // This is an action
+        writeHTML('<span class="action">&nbsp;*&nbsp;' + Msg.Nick + '&nbsp;' + txt + '</span>');
+
+    writeHTML('<br />');
+
+    if (_bottom) then
+        ScrollToBottom();
 end;
 
 {---------------------------------------}
 procedure TfIEMsgList.DisplayPresence(txt: string);
+var
+    pt : integer;
 begin
-    //
+    pt := MainSession.Prefs.getInt('pres_tracking');
+    if (pt = 2) then exit;
+
+    if (pt = 1) then begin
+        // if previous is a presence, replace with this one.
+    end;
+
+    writeHTML('<span class="pres">' + txt + '</span><br />');
+
+    if (_bottom) then
+        ScrollToBottom();
 end;
 
 {---------------------------------------}
@@ -138,7 +369,7 @@ end;
 {---------------------------------------}
 procedure TfIEMsgList.populate(history: Widestring);
 begin
-    //
+    writeHTML(history);
 end;
 
 {---------------------------------------}
@@ -150,13 +381,13 @@ end;
 {---------------------------------------}
 function TfIEMsgList.empty(): boolean;
 begin
-    Result := true;
+    Result := (_body.innerHTML = '');
 end;
 
 {---------------------------------------}
 function TfIEMsgList.getHistory(): Widestring;
 begin
-    Result := '';
+    Result := _body.innerHTML;
 end;
 
 {---------------------------------------}
@@ -171,5 +402,139 @@ begin
     //
 end;
 
+procedure TfIEMsgList.ChangeStylesheet(url: WideString);
+begin
+    // TODO: remove or disable old stylesheets
+    _style := _doc.createStyleSheet(url, 0);
+end;
 
+procedure TfIEMsgList.onScroll(Sender: TObject);
+begin
+    _bottom :=
+        ((_body2.scrollTop + _body2.clientHeight) >= _body2.scrollHeight);
+end;
+
+procedure TfIEMsgList.onResize(Sender: TObject);
+begin
+    if (_bottom) then
+         _win.scrollTo(0, _body2.scrollHeight);
+end;
+
+function TfIEMsgList.onContextMenu(Sender: TObject): WordBool;
+begin
+    _menu.Popup(_win.event.screenX, _win.event.screeny);
+
+    result := false;
+end;
+
+
+procedure TfIEMsgList.browserDocumentComplete(Sender: TObject;
+  const pDisp: IDispatch; var URL: OleVariant);
+var
+    i: integer;
+begin
+    inherited;
+    if (browser.Document = nil) then
+        exit;
+
+    _doc := browser.Document as IHTMLDocument2;
+    ChangeStylesheet(_home + '/iemsglist_style');
+
+    _win := _doc.parentWindow;
+    if (_we <> nil) then
+        _we.Free();
+
+    _we := TMSHTMLHTMLWindowEvents.Create(self);
+    _we.Connect(_win);
+    _we.onscroll := onscroll;
+    _we.onresize := onresize;
+
+    if (_de <> nil) then
+        _de.Free();
+    _de := TMSHTMLHTMLDocumentEvents.Create(self);
+    _de.Connect(_doc);
+    _de.oncontextmenu := onContextMenu;
+
+    _body := _doc.body;
+    _body2 := _body as IHTMLElement2;
+    _bottom := true;
+
+    assert (_queue <> nil);
+    for i := 0 to _queue.Count - 1 do begin
+        writeHTML(_queue.Strings[i]);
+    end;
+    _queue.Clear();
+    ScrollToBottom();
+end;
+
+procedure TfIEMsgList.browserEnter(Sender: TObject);
+var
+    bc: TfrmBaseChat;
+begin
+    bc := TfrmBaseChat(_base);
+    if (frmExodus.ActiveChat <> bc) then
+        bc.FormActivate(bc);
+    inherited;
+end;
+
+initialization
+    TP_GlobalIgnoreClassProperty(TWebBrowser, 'StatusText');
+
+    xp_xhtml := TXPLite.Create('/message/html/body');
+
+    url_regex := TRegExpr.Create();
+    url_regex.expression := '(https?|ftp|xmpp)://[^ \r\n\t]+';
+    url_regex.Compile();
+
+    ok_tags := THashedStringList.Create();
+    ok_tags.Add('blockquote');
+    ok_tags.Add('br');
+    ok_tags.Add('cite');
+    ok_tags.Add('code');
+    ok_tags.Add('div');
+    ok_tags.Add('em');
+    ok_tags.Add('h1');
+    ok_tags.Add('h2');
+    ok_tags.Add('h3');
+    ok_tags.Add('p');
+    ok_tags.Add('pre');
+    ok_tags.Add('q');
+    ok_tags.Add('span');
+    ok_tags.Add('strong');
+    ok_tags.Add('a');
+    ok_tags.Add('ol');
+    ok_tags.Add('ul');
+    ok_tags.Add('li');
+    ok_tags.Add('img');
+
+    style_tags := THashedStringList.Create();
+    style_tags.Add('blockquote');
+    style_tags.Add('body');
+    style_tags.Add('div');
+    style_tags.Add('h1');
+    style_tags.Add('h2');
+    style_tags.Add('h3');
+    style_tags.Add('li');
+    style_tags.Add('ol');
+    style_tags.Add('p');
+    style_tags.Add('pre');
+    style_tags.Add('q');
+    style_tags.Add('span');
+    style_tags.Add('ul');
+
+    style_props := THashedStringList.Create();
+    style_props.Add('color');
+    style_props.Add('font-family');
+    style_props.Add('font-size');
+    style_props.Add('font-style');
+    style_props.Add('font-weight');
+    style_props.Add('text-align');
+    style_props.Add('text-decoration');
+
+finalization
+    xp_xhtml.Free();
+    url_regex.Free();
+    ok_tags.Free();
+    style_tags.Free();
+    style_props.Free();
 end.

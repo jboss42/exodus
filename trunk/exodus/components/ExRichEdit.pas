@@ -22,6 +22,7 @@ type
   public
     { Public declarations }
     procedure InsertBitmap(bmp: Graphics.TBitmap);
+    procedure InsertRTF(rtf: string);
     procedure ScrollToBottom();
   published
     { Published declarations }
@@ -56,6 +57,11 @@ begin
     s := TStringStream.Create(BitmapToRTF(bmp));
     RTFSelText := s.DataString;
     s.Free;
+end;
+
+procedure TExRichEdit.InsertRTF(rtf: string);
+begin
+    RTFSelText := rtf;
 end;
 
 // pgm 3/16/04 - Let's catch the scroll event and set our state
