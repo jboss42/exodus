@@ -43,6 +43,7 @@ object frmSubscribe: TfrmSubscribe
     Top = 0
     Width = 252
     Height = 21
+    Cursor = crHandPoint
     Align = alTop
     AutoSize = False
     Caption = 'lblJID'
@@ -53,6 +54,7 @@ object frmSubscribe: TfrmSubscribe
     Font.Style = [fsUnderline]
     ParentFont = False
     Transparent = False
+    OnClick = lblJIDClick
   end
   object chkSubscribe: TCheckBox
     Left = 8

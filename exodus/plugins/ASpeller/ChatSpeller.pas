@@ -5,9 +5,9 @@ unit ChatSpeller;
 interface
 
 uses
-    ASpellHeadersDyn, 
+    ASpellHeadersDyn,
     ExodusCOM_TLB, RichEdit2, ExRichEdit,
-    ComObj, ActiveX, ExASpell_TLB, StdVcl;
+    Classes, ComObj, ActiveX, ExASpell_TLB, StdVcl, Unicode;
 
 type
   TChatSpeller = class(TAutoObject, IExodusChatPlugin)
@@ -25,12 +25,34 @@ type
     _msgout: TExRichEdit;
     _speller: ASpellSpeller;
 
+    // stuff to do replacements, etc..
+    _cur_start: integer;
+    _cur_len: integer;
+    _cur_word: string;
+
+    // menu's we add on mis-spelled words.
+    _ignore: Widestring;
+    _ign_all: Widestring;
+    _add: Widestring;
+    _add_lower: Widestring;
+    _sep: Widestring;
+    
+    _suggs: TWideStringlist;
+    _words: TStringlist;
+
     function checkWord(w: Widestring): boolean;
+    procedure removeMenus();
+
   public
     reg_id: integer;
+
     constructor Create(Speller: ASpellSpeller; chat_controller: IExodusChat);
+    destructor Destroy(); override;
   end;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 
 uses
@@ -40,6 +62,15 @@ const
     // space, tab, LF, CR, !, ,, .
     WhitespaceChars = [#32, #09, #10, #13, #33, #44, #46];
 
+resourcestring
+    sIgnore = 'Ignore';
+    sIgnoreAll = 'Ignore All';
+    sAddCustom = 'Add to Dictionary';
+    sAddCustomLower = 'Add Lowercase to Dictionary';
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 constructor TChatSpeller.Create(Speller: ASpellSpeller;
     chat_controller: IExodusChat);
 begin
@@ -48,29 +79,47 @@ begin
     _speller := Speller;
     _chat := chat_controller;
     _msgout := nil;
+
+    _suggs := TWidestringlist.Create();
+    _words := TStringlist.Create();
 end;
 
+{---------------------------------------}
+destructor TChatSpeller.Destroy();
+begin
+    //
+    _suggs.Free();
+    _words.Free();
+end;
 
+{---------------------------------------}
 function TChatSpeller.onAfterMessage(var Body: WideString): WideString;
 begin
-
+    if (_ignore <> '') then removeMenus();
 end;
 
+{---------------------------------------}
 procedure TChatSpeller.onBeforeMessage(var Body: WideString);
 begin
 
 end;
 
+{---------------------------------------}
 procedure TChatSpeller.onClose;
 begin
+    if (_ignore <> '') then
+        removeMenus();
+
     _chat.UnRegister(reg_id);
 end;
 
+{---------------------------------------}
 procedure TChatSpeller.onContextMenu(const ID: WideString);
 begin
 
 end;
 
+{---------------------------------------}
 procedure TChatSpeller.onKeyPress(const Key: WideString);
 var
     adr: integer;
@@ -107,9 +156,11 @@ begin
                 SelAttributes.Style := [];
             end
             else begin
+                _cur_start := SelStart;
+                _cur_len := SelLength;
                 SelAttributes.Color := clRed;
-                SelAttributes.UnderlineType := ultWave;
                 SelAttributes.Style := [fsUnderline];
+                SelAttributes.UnderlineType := ultDotted;
             end;
             SelStart := cur;
             SelLength := 0;
@@ -119,73 +170,151 @@ begin
     end;
 end;
 
+{---------------------------------------}
 function TChatSpeller.checkWord(w: Widestring): boolean;
 var
     tmps: String;
     res: integer;
-    {
     suggestions: AspellWordList;
     elements: AspellStringEnumeration;
     word_: PChar;
-    sWord: string;
-    }
+    menu_id: widestring;
 begin
     tmps := w;
+    _cur_word := tmps;
     res := aspell_speller_check(_speller, PChar(tmps), length(tmps));
     Result := (res = 1);
 
-    (*
+    // handle suggestions
     if (res <> 1) then begin
-        suggestions := aspell_speller_suggest(spell_checker, PChar(sWord), length(sWord));
+        suggestions := aspell_speller_suggest(_speller, PChar(tmps), length(tmps));
         elements := aspell_word_list_elements(suggestions);
 
-        // InitSuggestionMenu(sWord);
+        if (_ignore <> '') then removeMenus();
+
+        // populate our lists..
+        _ignore := _chat.AddMsgOutMenu(sIgnore);
+        _ign_all := _chat.AddMsgOutMenu(sIgnoreAll);
+        _add := _chat.AddMsgOutMenu(sAddCustom);
+        _add_lower := _chat.AddMsgOutMenu(sAddCustomLower);
+        _sep := _chat.AddMsgOutMenu('-');
+
         repeat
             word_ := aspell_string_enumeration_next(elements);
-            if (word_ <> nil) then AddToSuggestionMenu(word_);
-        until (word_ = NIL);
-
+            if (word_ <> nil) then begin
+                menu_id := _chat.AddMsgOutMenu(word_);
+                if (menu_id <> '') then begin
+                    _suggs.Add(menu_id);
+                    _words.Add(word_);
+                end;
+            end;
+        until (word_ = nil);
         delete_aspell_string_enumeration(elements);
-        HighlightNextWord(true);
-        case ShowSuggestionMenu of
-        0 : break;   // Escape pressed
-        1 : ;        // Ignore
-        2 :          // Ignore all
-            aspell_speller_add_to_session(spell_checker,
-                   PChar(sWord), length(sWord));
-//      3 : Beep;    // Replace
-//      4 : Beep;    // Replace all
-        5 :          // Add
-            aspell_speller_add_to_personal(spell_checker,
-                   PChar(sWord), length(sWord));
-        6 :          // Add Lower
-            aspell_speller_add_to_personal( spell_checker,
-                   PChar(LowerCase(sWord)), length(sWord));
-        7 : break ;  // Abort
-        8 : break ;  // Exit
-        100..MAXINT : begin // suggestion
-            HighlightNextWord(false);
-            ReplaceNextWord(SuggestionText);
-            aspell_speller_store_replacement(spell_checker,
-                PChar(sWord), length(sWord),
-                PChar(SuggestionText), length(SuggestionText));
-        end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TChatSpeller.onMenu(const ID: WideString);
+
+    procedure doSelection(new_word: string = '');
+    var
+        o_start, o_len: integer;
+    begin
+        with _MsgOut do begin
+            o_start := SelStart;
+            o_len := SelLength;
+
+            SelStart := _cur_start;
+            SelLength := _cur_len;
+
+            SelAttributes.Color := clBlack;
+            SelAttributes.Style := [];
+            if (new_word <> '') then
+                SelText := new_word;
+
+            SelStart := o_start;
+            SelLength := o_len;
         end;
     end;
-    *)
-end;
 
 
-procedure TChatSpeller.onMenu(const ID: WideString);
+var
+    sidx: integer;
+    rep: string;
 begin
+    // check for our various menus
+    sidx := _suggs.IndexOf(ID);
+    if (sidx >= 0) then begin
+        // they clicked a suggestion
+        rep := _words[sidx];
+        aspell_speller_store_replacement(_speller, PChar(_cur_word),
+            length(_cur_word), PChar(rep), length(rep));
+        doSelection(rep);
+    end
+
+    else if (ID = _ignore) then begin
+        // ignore, just change formatting back
+        doSelection();
+    end
+
+    else if (ID = _ign_all) then begin
+        // ignore all
+        aspell_speller_add_to_session(_speller, PChar(_cur_word), length(_cur_word));
+        doSelection();
+    end
+
+    else if (ID = _add) then begin
+        // add to dict
+        aspell_speller_add_to_personal(_speller, PChar(_cur_word), length(_cur_word));
+        doSelection();
+    end
+
+    else if (ID = _add_lower) then begin
+        // add lower to dict
+        aspell_speller_add_to_personal(_speller, PChar(LowerCase(_cur_word)),
+            length(_cur_word));
+        doSelection();
+    end
+    else
+        // break out so we don't removeMenus
+        exit;
+
+    removeMenus();
+end;
+
+{---------------------------------------}
+procedure TChatSpeller.removeMenus();
+var
+    i: integer;
+begin
+    // remove all the context menus
+    _chat.RemoveMsgOutMenu(_ignore);
+    _chat.RemoveMsgOutMenu(_ign_all);
+    _chat.RemoveMsgOutMenu(_add);
+    _chat.RemoveMsgOutMenu(_add_lower);
+    _chat.RemoveMsgOutMenu(_sep);
+
+    for i := 0 to _suggs.Count - 1 do
+        _chat.RemoveMsgOutMenu(_suggs[i]);
+
+    _suggs.Clear();
+    _words.Clear();
+
+    _ignore := '';
+    _ign_all := '';
+    _add := '';
+    _add_lower := '';
+    _sep := '';
 
 end;
 
+{---------------------------------------}
 procedure TChatSpeller.onNewWindow(HWND: Integer);
 begin
     _MsgOut := nil;
 end;
 
+{---------------------------------------}
 procedure TChatSpeller.onRecvMessage(const Body, xml: WideString);
 begin
 

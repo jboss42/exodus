@@ -49,6 +49,7 @@ type
     Emoticons2: TMenuItem;
     MsgOut: TExRichEdit;
     timWinFlash: TTimer;
+    emot_sep: TMenuItem;
 
     procedure Emoticons1Click(Sender: TObject);
     procedure MsgListURLClick(Sender: TObject; url: String);
