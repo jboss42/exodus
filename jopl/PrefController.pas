@@ -409,6 +409,7 @@ begin
         result := '0'
     else if pkey = 'roster_bg' then
         result := IntToStr(Integer(clWindow))
+
     {$ifdef Win32}
     else if pkey = 'roster_font_name' then
         result := Screen.IconFont.Name
@@ -416,7 +417,6 @@ begin
         result := IntToStr(Screen.IconFont.Size)
     else if pkey = 'roster_font_color' then
         result := IntToStr(Integer(Screen.IconFont.Color))
-
     {$else}
     else if pkey = 'roster_font_name' then
         result := Application.Font.Name
@@ -445,6 +445,8 @@ begin
     else if pkey = 'notify_invite' then
         result := IntToStr(notify_toast)
     else if pkey = 'notify_roomactivity' then
+        result := IntToStr(notify_toast)
+    else if pkey = 'notify_oob' then
         result := IntToStr(notify_toast)
     else if pkey = 'presence_message_listen' then
         result := '1'
