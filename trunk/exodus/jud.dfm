@@ -17,11 +17,13 @@ inherited frmJud: TfrmJud
     inherited btnBack: TTntButton
       Left = 167
       Anchors = [akTop, akRight]
+      Cancel = True
       OnClick = btnBackClick
     end
     inherited btnNext: TTntButton
       Left = 243
       Anchors = [akTop, akRight]
+      Default = True
       OnClick = btnNextClick
     end
     inherited btnCancel: TTntButton
