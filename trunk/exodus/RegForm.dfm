@@ -1,4 +1,5 @@
 inherited frmRegister: TfrmRegister
+  Width = 429
   BorderStyle = bsSizeable
   Caption = 'Registration'
   TransparentColor = True
@@ -7,12 +8,40 @@ inherited frmRegister: TfrmRegister
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
+  inherited TntPanel1: TTntPanel
+    Width = 421
+    inherited Bevel1: TBevel
+      Width = 421
+    end
+    inherited Panel3: TPanel
+      Left = 164
+      inherited btnBack: TTntButton
+        OnClick = btnPrevClick
+      end
+      inherited btnNext: TTntButton
+        OnClick = btnNextClick
+      end
+      inherited btnCancel: TTntButton
+        OnClick = btnCancelClick
+      end
+    end
+  end
+  inherited Panel1: TPanel
+    Width = 421
+    inherited Bevel2: TBevel
+      Width = 421
+    end
+    inherited Image1: TImage
+      Left = 380
+    end
+  end
   inherited Tabs: TPageControl
+    Width = 421
     inherited TabSheet1: TTabSheet
       object Label1: TTntLabel
         Left = 0
         Top = 0
-        Width = 402
+        Width = 413
         Height = 90
         Align = alTop
         AutoSize = False
@@ -31,7 +60,7 @@ inherited frmRegister: TfrmRegister
       object lblIns: TTntLabel
         Left = 0
         Top = 90
-        Width = 402
+        Width = 413
         Height = 136
         Align = alClient
         AutoSize = False
@@ -51,7 +80,7 @@ inherited frmRegister: TfrmRegister
       object Panel2: TPanel
         Left = 0
         Top = 194
-        Width = 402
+        Width = 413
         Height = 32
         Align = alBottom
         BevelOuter = bvNone
@@ -69,7 +98,7 @@ inherited frmRegister: TfrmRegister
       object formBox: TScrollBox
         Left = 0
         Top = 0
-        Width = 402
+        Width = 413
         Height = 194
         Align = alClient
         BevelInner = bvNone
@@ -86,7 +115,7 @@ inherited frmRegister: TfrmRegister
       object Label2: TTntLabel
         Left = 0
         Top = 0
-        Width = 402
+        Width = 413
         Height = 90
         Align = alTop
         AutoSize = False
@@ -106,7 +135,7 @@ inherited frmRegister: TfrmRegister
       object lblOK: TTntLabel
         Left = 0
         Top = 0
-        Width = 402
+        Width = 413
         Height = 90
         Align = alTop
         AutoSize = False
@@ -125,7 +154,7 @@ inherited frmRegister: TfrmRegister
       object lblBad: TTntLabel
         Left = 0
         Top = 90
-        Width = 402
+        Width = 413
         Height = 90
         Align = alTop
         AutoSize = False
