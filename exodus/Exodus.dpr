@@ -186,7 +186,7 @@ uses
   FloatingImage in 'FloatingImage.pas' {FloatImage},
   xdata in 'xdata.pas' {frmXData},
   fXData in 'fXData.pas' {frameXData: TFrame},
-  NewUser in 'NewUser.pas' {frmWizard1};
+  NewUser in 'NewUser.pas' {frmNewUser};
 
 {$R *.TLB}
 

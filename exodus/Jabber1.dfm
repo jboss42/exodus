@@ -1,7 +1,7 @@
 object frmExodus: TfrmExodus
-  Left = 252
+  Left = 253
   Top = 193
-  Width = 209
+  Width = 208
   Height = 371
   AlphaBlendValue = 240
   Caption = 'Exodus'
@@ -36,7 +36,7 @@ object frmExodus: TfrmExodus
   object Tabs: TTntPageControl
     Left = 60
     Top = 31
-    Width = 141
+    Width = 140
     Height = 286
     ActivePage = tbsRoster
     Align = alClient
@@ -88,7 +88,7 @@ object frmExodus: TfrmExodus
       object pnlRight: TPanel
         Left = 108
         Top = 0
-        Width = 25
+        Width = 24
         Height = 257
         Align = alClient
         BevelOuter = bvNone
@@ -102,7 +102,7 @@ object frmExodus: TfrmExodus
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 201
+    Width = 200
     Height = 31
     AutoSize = True
     BandBorderStyle = bsNone
@@ -111,7 +111,7 @@ object frmExodus: TfrmExodus
         Control = ToolBar1
         ImageIndex = -1
         MinHeight = 27
-        Width = 197
+        Width = 196
       end>
     object ToolBar1: TToolBar
       Left = 9
