@@ -49,6 +49,7 @@ type
     procedure popMsgClick(Sender: TObject);
     procedure MemoSendKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
     procedure DebugCallback(send: boolean; data: string);
@@ -212,6 +213,12 @@ begin
         btnSendRawClick(Self);
         Key := 0;
         end;
+end;
+
+procedure TfrmDebug.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  inherited;
+    Action := caFree;
 end;
 
 end.

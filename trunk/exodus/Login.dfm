@@ -1,5 +1,5 @@
 object frmLogin: TfrmLogin
-  Left = 1006
+  Left = 902
   Top = 181
   Width = 250
   Height = 297

@@ -111,7 +111,7 @@ begin
         MainSession.Invisible := l.chkInvisible.Checked;
         MainSession.Connect;
 
-        frmJabber.Tabs.ActivePage := frmJabber.Tabs.Pages[1];
+        // frmJabber.Tabs.ActivePage := frmJabber.Tabs.Pages[0];
         end;
 
     l.Free;
