@@ -163,7 +163,9 @@ uses
   SSLWarn in 'SSLWarn.pas' {frmSSLWarn},
   SASLAuth in 'SASLAuth.pas',
   DNSUtils in '..\jopl\DNSUtils.pas',
-  IdDNSResolver in '..\jopl\IdDNSResolver.pas';
+  IdDNSResolver in '..\jopl\IdDNSResolver.pas',
+  Entity in '..\jopl\Entity.pas',
+  EntityCache in '..\jopl\EntityCache.pas';
 
 {$R *.TLB}
 

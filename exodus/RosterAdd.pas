@@ -22,7 +22,7 @@ unit RosterAdd;
 interface
 
 uses
-    Agents,
+    Entity, EntityCache,
     XMLTag,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, TntStdCtrls;
@@ -51,7 +51,7 @@ type
   private
     { Private declarations }
     cb: integer;
-    agents: TAgents;
+    gw_ent: TJabberEntity;
     svc, gw, sjid, snick, sgrp: Widestring;
     procedure doAdd;
   published
@@ -111,12 +111,11 @@ begin
     if (cboType.ItemIndex > 0) then begin
         // Adding a gateway'd user
         gw := txtGateway.Text;
-        agents := MainSession.GetAgentsList(gw);
-        if (agents = nil) then begin
-            cb := MainSession.RegisterCallback(agentsCallback, '/session/agents');
-            agents := MainSession.NewAgentsList(gw);
-            agents.Fetch(gw);
-            Self.Hide;
+        gw_ent := jEntityCache.getByJid(gw);
+        if (gw_ent = nil) then begin
+            cb := MainSession.RegisterCallback(agentsCallback, '/session/entity/items');
+            gw_ent := jEntityCache.walk(gw, MainSession);
+            self.Hide();
         end
         else
             doAdd();
@@ -214,8 +213,8 @@ end;
 {---------------------------------------}
 procedure TfrmAdd.doAdd;
 var
-    a: TAgentItem;
-    j: string;
+    a: TJabberEntity;
+    j: Widestring;
     i: integer;
 begin
     // check to see if there is an agent for this type
@@ -225,7 +224,7 @@ begin
         Self.Close;
     end
     else begin
-        a := agents.findService(Lowercase(svc));
+        a := gw_ent.getItemByFeature(Lowercase(svc));
         if (a <> nil) then begin
             // we have this type of svc..
             j := '';
@@ -235,7 +234,7 @@ begin
                 else
                     j := j + sjid[i];
             end;
-            sjid := j + '@' + a.jid;
+            sjid := j + '@' + a.jid.full;
             ExRegController.MonitorJid(sjid, false);
             MainSession.Roster.AddItem(sjid, snick, sgrp, true);
             Self.Close;

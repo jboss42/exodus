@@ -59,6 +59,7 @@ type
         procedure Send;
 
         property ElapsedTime: longint read _ticks;
+        property JabberSession: TJabberSession read _js;
 end;
 
 {---------------------------------------}
