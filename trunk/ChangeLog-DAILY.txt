@@ -1,50 +1,35 @@
-2004-03-17 08:27  pgmillard
+2004-03-18 08:23  pgmillard
 
 	* exodus/: default.po, version.h, version.nsi: daily build
 
-2004-03-17 07:22  pgmillard
+2004-03-18 07:20  pgmillard
 
-	* exodus/: Jabber1.pas, RecvStatus.pas, SendStatus.pas,
-	  XferManager.dfm, XferManager.pas, branding.xml, defaults.xml: Bug
-	  #3512 - Fixup sending files to another resource.
+	* jopl/PrefFile.pas: Add in bits to check for writability before
+	  saving prefs files.
 
-2004-03-17 07:03  pgmillard
+2004-03-17 21:41  pgmillard
 
-	* exodus/: defaults.xml, xml.res: Bug #3509 - Don't make autoaway
-	  prefs read-only by default.
+	* exodus/branding.xml: Make sure branding.xml is not some test
+	  version.
 
-2004-03-17 06:57  pgmillard
+2004-03-17 21:36  pgmillard
 
-	* exodus/Debug.dfm, jopl/PrefController.pas: Tweaks to
-	  checkPositions for forms. PtInRect has some oddness about edge
-	  conditions.
+	* exodus/ExUtils.pas, exodus/GUIFactory.pas, jopl/Session.pas,
+	  jopl/StandardAuth.pas: Bug #3483, Bug #3484 - Give the user the
+	  chance to force registration with 1.0 servers. Also allow SASL
+	  auth to work after inband registration
 
-2004-03-16 22:14  pgmillard
+2004-03-17 21:15  pgmillard
 
-	* exodus/Debug.pas: Inherit scrolling fixes into the debug window.
-	  AT LAST!
+	* exodus/GUIFactory.pas, jopl/Session.pas: Bug #3483 - Allow
+	  StartTLS to happen before inband registration, and check for the
+	  in-band stream feature when connecting to 1.0 servers and
+	  attempting inband reg.
 
-2004-03-16 22:11  pgmillard
+2004-03-17 20:58  pgmillard
 
-	* exodus/: BaseChat.pas, MsgDisplay.pas, Transports.pas,
-	  components/ExRichEdit.pas: Lots of win32 magic to always make
-	  sure we're at the bottom of a chat window
-
-2004-03-16 20:17  pgmillard
-
-	* exodus/Room.pas, exodus/xdata.pas, jopl/IQ.pas: Fixup MUC rooms
-	  that have empty x-data forms. Submit a blank form automatically.
-	  Needed to add ability to have TJabberIQ objects which have no
-	  callback.
-
-2004-03-11 06:52  pgmillard
-
-	* exodus/: Dockable.dfm, Jabber1.pas: [no log message]
-
-2004-03-10 21:05  pgmillard
-
-	* exodus/Debug.dfm, exodus/Debug.pas, exodus/Dockable.dfm,
-	  exodus/Exodus.dof, exodus/ExodusCOM_TLB.pas, exodus/Jabber1.dfm,
-	  exodus/RosterWindow.dfm, jopl/PrefController.pas: Tweaks to the
-	  multi-head and form position code
+	* exodus/RosterWindow.pas, exodus/SendStatus.pas,
+	  exodus/XferManager.pas, jopl/Entity.pas, jopl/EntityCache.pas:
+	  Refactor send file to use the master entity cache. Eliminates
+	  tons of whacky race conditions, and orphan'd TJabberIQ objects
 

@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-03-17 08:26\n"
-"PO-Revision-Date: 2004-03-17 08:26\n"
+"POT-Creation-Date: 2004-03-18 08:23\n"
+"PO-Revision-Date: 2004-03-18 08:23\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -163,8 +163,8 @@ msgstr ""
 #: RecvStatus.pas:383
 #: RecvStatus.pas:610
 #: RecvStatus.pas:621
-#: SendStatus.pas:843
-#: SendStatus.pas:963
+#: SendStatus.pas:780
+#: SendStatus.pas:904
 #: xdata.pas:212
 msgid "Close"
 msgstr ""
@@ -1917,7 +1917,7 @@ msgstr ""
 #: ConnDetails.pas:402
 #. do this.
 #: ExSession.pas:470
-#: ExUtils.pas:1224
+#: ExUtils.pas:1225
 #: Jabber1.pas:1220
 #: Login.pas:110
 #: Login.pas:184
@@ -5991,10 +5991,10 @@ msgstr ""
 #. frmRosterWindow..popGroup..popGroupBlock..Caption
 #: RosterWindow.dfm:634
 #: Room.pas:1502
-#: RosterWindow.pas:2084
+#: RosterWindow.pas:2085
 #. do blocking madness
-#: RosterWindow.pas:2121
-#: RosterWindow.pas:2126
+#: RosterWindow.pas:2122
+#: RosterWindow.pas:2127
 msgid "Block"
 msgstr ""
 
@@ -6949,20 +6949,20 @@ msgstr ""
 msgid "Unfiled"
 msgstr ""
 
-#: ExUtils.pas:1245
+#: ExUtils.pas:1246
 msgid "Untitled Group"
 msgstr ""
 
-#: ExUtils.pas:1246
+#: ExUtils.pas:1247
 msgid "New Roster Group"
 msgstr ""
 
-#: ExUtils.pas:1246
+#: ExUtils.pas:1247
 msgid "Enter new group name: "
 msgstr ""
 
 #. add the new grp.
-#: ExUtils.pas:1251
+#: ExUtils.pas:1252
 msgid "This group already exists!"
 msgstr ""
 
@@ -7006,11 +7006,16 @@ msgid "Remove the %s group"
 msgstr ""
 
 #: GUIFactory.pas:130
+msgid "This server does not advertise support for in-band registration. Try "
+"to register a new account anyway?"
+msgstr ""
+
+#: GUIFactory.pas:138
 msgid "Your authentication mechanism does not support "
 "registration."
 msgstr ""
 
-#: GUIFactory.pas:145
+#: GUIFactory.pas:153
 msgid "There was an error attempting to save your options. Another process "
 "may be accessing your options file. Some options may be lost. "
 msgstr ""
@@ -7140,10 +7145,10 @@ msgstr ""
 #. send roster items to this contact.
 #: Jabber1.pas:2835
 #. Send contacts to this JID..
-#: RosterWindow.pas:2558
+#: RosterWindow.pas:2561
 #. we got a URL drop
-#: RosterWindow.pas:2860
-#: RosterWindow.pas:2892
+#: RosterWindow.pas:2863
+#: RosterWindow.pas:2895
 msgid "You must select one or more contacts."
 msgstr ""
 
@@ -7272,12 +7277,12 @@ msgid "Work Information"
 msgstr ""
 
 #: RecvStatus.pas:284
-#: SendStatus.pas:290
+#: SendStatus.pas:289
 msgid "Got connection."
 msgstr ""
 
 #: RecvStatus.pas:307
-#: SendStatus.pas:313
+#: SendStatus.pas:312
 msgid "File transfer is done."
 msgstr ""
 
@@ -7525,8 +7530,8 @@ msgid "Enter bookmark name:"
 msgstr ""
 
 #: Room.pas:1500
-#: RosterWindow.pas:2080
-#: RosterWindow.pas:2131
+#: RosterWindow.pas:2081
+#: RosterWindow.pas:2132
 msgid "UnBlock"
 msgstr ""
 
@@ -7611,7 +7616,7 @@ msgstr ""
 #. we've been authenticated
 #: RosterWindow.pas:518
 #. Login to the client..
-#: RosterWindow.pas:2660
+#: RosterWindow.pas:2663
 msgid "Click to Cancel..."
 msgstr ""
 
@@ -7630,94 +7635,94 @@ msgstr ""
 msgid "Remove this bookmark?"
 msgstr ""
 
-#: RosterWindow.pas:2359
+#: RosterWindow.pas:2362
 msgid " (Pending)"
 msgstr ""
 
-#: RosterWindow.pas:2471
+#: RosterWindow.pas:2474
 msgid "Rename group"
 msgstr ""
 
-#: RosterWindow.pas:2471
+#: RosterWindow.pas:2474
 msgid "New group name:"
 msgstr ""
 
 #. Block or Unblock this user
-#: RosterWindow.pas:2586
+#: RosterWindow.pas:2589
 msgid "Block %d contacts?"
 msgstr ""
 
 #. Block or Unblock this user
-#: RosterWindow.pas:2615
+#: RosterWindow.pas:2618
 msgid "Unblock %d contacts?"
 msgstr ""
 
-#: RosterWindow.pas:2643
+#: RosterWindow.pas:2646
 msgid "You must select more than one online contact to "
 "broadcast."
 msgstr ""
 
 #. Cancel the connection
-#: RosterWindow.pas:2664
-#: RosterWindow.pas:3002
+#: RosterWindow.pas:2667
+#: RosterWindow.pas:3005
 msgid "Click to Cancel Reconnect"
 msgstr ""
 
 #. processing of Editing events
-#: RosterWindow.pas:2769
+#: RosterWindow.pas:2772
 msgid "Rename Roster Item"
 msgstr ""
 
-#: RosterWindow.pas:2769
+#: RosterWindow.pas:2772
 msgid "New Nickname: "
 msgstr ""
 
-#: RosterWindow.pas:3003
+#: RosterWindow.pas:3006
 msgid "Reconnect in %d seconds."
 msgstr ""
 
-#: SendStatus.pas:370
+#: SendStatus.pas:369
 msgid "Waiting for connection..."
 msgstr ""
 
 #. get the file size
-#: SendStatus.pas:472
+#: SendStatus.pas:509
 #. get a handle to the stream
-#: SendStatus.pas:536
+#: SendStatus.pas:573
 #. get a handle to the stream
-#: SendStatus.pas:685
+#: SendStatus.pas:722
 msgid "There was an error trying to read the "
 "file."
 msgstr ""
 
-#: SendStatus.pas:841
+#: SendStatus.pas:778
 msgid "Your file transfer was refused to %s"
 msgstr ""
 
 #. they refused
-#: SendStatus.pas:920
+#: SendStatus.pas:860
 msgid "The recipient (%s) refused your file: "
 "%s"
 msgstr ""
 
 #. error
-#: SendStatus.pas:942
+#: SendStatus.pas:883
 msgid "The stream was not activated for file: "
 "%s"
 msgstr ""
 
 #. our thread completed.
-#: SendStatus.pas:958
+#: SendStatus.pas:899
 msgid "There was an error trying to upload the file to your web "
 "host."
 msgstr ""
 
-#: SendStatus.pas:979
+#: SendStatus.pas:920
 msgid "Send failed."
 msgstr ""
 
 #. PChar is in lparam
-#: SendStatus.pas:1003
+#: SendStatus.pas:944
 msgid "Connected."
 msgstr ""
 
