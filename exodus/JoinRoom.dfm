@@ -36,7 +36,6 @@ inherited frmJoinRoom: TfrmJoinRoom
   end
   inherited Tabs: TPageControl
     Height = 254
-    ActivePage = TabSheet2
     TabOrder = 0
     inherited TabSheet1: TTabSheet
       object Label2: TTntLabel
@@ -150,9 +149,9 @@ inherited frmJoinRoom: TfrmJoinRoom
       ImageIndex = 1
       object lstRooms: TTntListView
         Left = 0
-        Top = 49
+        Top = 56
         Width = 402
-        Height = 174
+        Height = 167
         Align = alClient
         Columns = <
           item
@@ -184,7 +183,7 @@ inherited frmJoinRoom: TfrmJoinRoom
         Left = 0
         Top = 0
         Width = 402
-        Height = 49
+        Height = 56
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
@@ -195,6 +194,15 @@ inherited frmJoinRoom: TfrmJoinRoom
           Height = 13
           Cursor = crHandPoint
           Caption = 'Show rooms found on this server'
+        end
+        object aniWait: TAnimate
+          Left = 294
+          Top = 4
+          Width = 80
+          Height = 50
+          CommonAVI = aviFindFolder
+          StopFrame = 29
+          Visible = False
         end
         object txtServerFilter: TTntComboBox
           Left = 19

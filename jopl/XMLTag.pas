@@ -27,7 +27,7 @@ uses
     XMLAttrib,
     XMLCData,
     LibXmlParser,
-    Classes,
+    Classes, SyncObjs, 
     Contnrs;
 
 type
@@ -53,6 +53,8 @@ type
     _Children: TXMLNodeList; // list of nodes
     _ns: WideString;
     _xml_buff: WideString;
+    _refs: integer;
+    _lock: TCriticalSection;
 
   public
     pTag: TXMLTag;
@@ -62,6 +64,9 @@ type
     constructor Create(tag: TXMLTag); reintroduce; overload; virtual;
     constructor Create(tagname, CDATA: WideString); reintroduce; overload; virtual;
     destructor Destroy; override;
+
+    procedure AddRef();
+    procedure Release();
 
     function AddTag(tagname: WideString): TXMLTag; overload;
     function AddTag(child_tag: TXMLTag): TXMLTag; overload;
@@ -77,7 +82,7 @@ type
     function ChildCount: integer;
     function ChildTags: TXMLTagList;
     function QueryXPTags(path: WideString): TXMLTagList; overload;
-    function QUeryXPTags(xp: TXPLite): TXMLTagList; overload;
+    function QueryXPTags(xp: TXPLite): TXMLTagList; overload;
     function QueryXPTag(path: WideString): TXMLTag; overload;
     function QueryXPTag(xp: TXPLite): TXMLTag; overload;
     function QueryXPData(path: WideString): WideString;
@@ -182,6 +187,8 @@ begin
     _AttrList := TAttrList.Create();
     _Children := TXMLNodeList.Create(true);
     _xml_buff := '';
+    _refs := 0;
+    _lock := nil;
 
     pTag := nil;
 end;
@@ -218,6 +225,36 @@ begin
     _Children.Free;
 
     inherited Destroy;
+end;
+
+{---------------------------------------}
+procedure TXMLTag.Release();
+begin
+    if (_lock = nil) then begin
+        Self.Free();
+        exit;
+    end;
+
+    _lock.Acquire();
+    if (_refs = 0) then begin
+        _lock.Release();
+        inherited Free;
+    end
+    else begin
+        Dec(_refs);
+        _lock.Release();
+    end;
+end;
+
+{---------------------------------------}
+procedure TXMLTag.AddRef();
+begin
+    if (_lock = nil) then
+        _lock := TCriticalSection.Create();
+
+    _lock.Acquire();
+    Inc(_refs);
+    _lock.Release();
 end;
 
 {---------------------------------------}

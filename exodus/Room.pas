@@ -145,6 +145,7 @@ type
     _ecallback: integer;        // Error msg callback
     _pcallback: integer;        // Presence Callback
     _scallback: integer;        // Session callback
+    _dcallback: integer;
     _keywords: TRegExpr;        // list of keywords to monitor for
     _hint_text: Widestring;     // Current hint for nickname
     _old_nick: WideString;      // Our own last nickname
@@ -154,6 +155,7 @@ type
     _subject: WideString;
     _send_unavailable: boolean;
     _custom_pres: boolean;
+    _pending_start: boolean;
 
     // Stuff for nick completions
     _nick_prefix: Widestring;
@@ -188,6 +190,7 @@ type
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
     procedure ConfigCallback(event: string; Tag: TXMLTag);
+    procedure EntityCallback(event: string; tag: TXMLTag);
     procedure autoConfigCallback(event: string; tag: TXMLTag);
 
   public
@@ -311,7 +314,7 @@ uses
     Browser,
     CapPresence,
     ChatWin, COMChatController, CustomNotify,
-    ExSession, JabberUtils, ExUtils, 
+    ExSession, JabberUtils, ExUtils, Entity, EntityCache,  
     GnuGetText,
     InputPassword,
     Invite,
@@ -381,9 +384,8 @@ begin
         f.SetPassword(Password);
         f.UseDefaultConfig := default_config;
 
-        if (send_presence) then begin
+        if (send_presence) then
             f.sendStartPresence();
-        end;
 
         f.Caption := WideFormat(_(sRoom), [tmp_jid.user]);
         if MainSession.Prefs.getBool('expanded') then
@@ -868,10 +870,12 @@ begin
         MainSession.UnRegisterCallback(_mcallback);
         MainSession.UnRegisterCallback(_ecallback);
         MainSession.UnRegisterCallback(_pcallback);
+        MainSession.UnRegisterCallback(_dcallback);
 
         _mcallback := -1;
         _ecallback := -1;
         _pcallback := -1;
+        _dcallback := -1;
 
         _roster.Clear();
         ClearListObjects(_rlist);
@@ -1301,6 +1305,7 @@ begin
     _ecallback := -1;
     _pcallback := -1;
     _scallback := -1;
+    _dcallback := -1;
     _roster := TWideStringList.Create;
     _roster.CaseSensitive := true;
     _rlist := TList.Create;
@@ -1314,6 +1319,7 @@ begin
     _keywords := nil;
     _send_unavailable := false;
     _custom_pres := false;
+    _pending_start := false;
 
     _notify[0] := MainSession.Prefs.getInt('notify_roomactivity');
     _notify[1] := MainSession.Prefs.getInt('notify_keyword');
@@ -1390,6 +1396,7 @@ begin
         _mcallback := MainSession.RegisterCallback(MsgCallback, '/packet/message[@type="groupchat"][@from="' + sjid + '*"]');
         _ecallback := MainSession.RegisterCallback(MsgCallback, '/packet/message[@type="error"][@from="' + sjid + '"]');
         _pcallback := MainSession.RegisterCallback(PresCallback, '/packet/presence[@from="' + sjid + '*"]');
+        _dcallback := MainSession.RegisterCallback(EntityCallback, '/session/entity/info');
         if (_scallback = -1) then
             _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
     end;
@@ -2093,6 +2100,7 @@ begin
         MainSession.UnRegisterCallback(_ecallback);
         MainSession.UnRegisterCallback(_pcallback);
         MainSession.UnRegisterCallback(_scallback);
+        MainSession.UnRegisterCallback(_dcallback);
 
         if (MainSession.Invisible) then
             MainSession.removeAvailJid(jid);
@@ -2249,10 +2257,40 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmRoom.EntityCallback(event: string; tag: TXMLTag);
+begin
+    if (_pending_start = false) then exit;
+    if (tag = nil) then exit;
+
+    if (tag.getAttribute('from') = Self.jid) then begin
+        // we got info from our room...
+        sendStartPresence();
+    end;
+end;
+
+{---------------------------------------}
 procedure TfrmRoom.sendStartPresence();
 var
+    e: TJabberEntity;
     p : TJabberPres;
 begin
+    e := jEntityCache.getByJid(Self.jid, '');
+    if ((e = nil) or (not e.hasInfo)) then begin
+        // try to disco#info this room
+        _pending_start := true;
+        jEntityCache.discoInfo(self.jid, MainSession);
+        exit;
+    end
+    else if ((_passwd = '') and
+        ((e.hasFeature('muc_passwordprotected')) or
+         (e.hasFeature('muc_password')))) then begin
+
+        // this room needs a passwd, and they didn't give us one..
+        if (InputQueryW(_('Password Prompt'), _('Room Password'), _passwd, true) = false) then
+            exit;
+    end;
+
+    _pending_start := false;
     p := TCapPresence.Create;
     p.toJID := TJabberID.Create(self.jid + '/' + self.mynick);
     with p.AddTag('x') do begin

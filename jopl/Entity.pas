@@ -21,7 +21,7 @@ unit Entity;
 
 interface
 uses
-    IQ, JabberID, XMLTag, Signals, Session, Unicode, 
+    IQ, JabberID, XMLTag, Signals, Session, Unicode,
     Classes, SysUtils;
 
 const
@@ -92,8 +92,13 @@ type
         procedure _processDiscoInfo(tag: TXMLTag);
         procedure _processDiscoItems(tag: TXMLTag);
         procedure _processLegacyFeatures();
+        procedure _processBrowse(tag: TXMLTag);
         procedure _processBrowseItem(item: TXMLTag);
         procedure _processAgent(item: TXMLTag);
+
+        procedure _finishDiscoItems(jso: TObject; tag: TXMLTag);
+        procedure _finishWalk(jso: TObject);
+        procedure _finishBrowse(jso: TObject);
 
     public
         Tag: integer;
@@ -133,10 +138,75 @@ type
 
     end;
 
+    TJabberEntityProcess = class(TThread)
+    public
+        jso: TObject;
+        tag: TXMLTag;
+        e: TJabberEntity;
+        ptype: integer;
+    private
+        procedure FinishDisco();
+        procedure FinishBrowse();
+        procedure FinishWalk();
+
+    protected
+        procedure Execute(); override;
+    end;
+
+
 implementation
 uses
+    {$ifdef Win32}
+    Windows,
+    {$endif}
     EntityCache, JabberConst, XMLUtils;
 
+const
+    ProcDisco = 0;
+    ProcBrowse = 1;
+    ProcWalk = 2;
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+procedure TJabberEntityProcess.Execute();
+begin
+    if (ptype = ProcDisco) then begin
+        e._processDiscoItems(tag);
+        Synchronize(FinishDisco);
+    end
+    else if (ptype = ProcBrowse) then begin
+        e._processBrowse(tag);
+        Synchronize(FinishBrowse);
+    end
+    else if (ptype = ProcWalk) then begin
+        if (tag <> nil) then
+            e._processDiscoitems(tag);
+        Synchronize(FinishWalk);
+    end;
+    tag.Release();
+end;
+
+{---------------------------------------}
+procedure TJabberEntityProcess.FinishDisco();
+begin
+    e._finishDiscoItems(jso, tag);
+end;
+
+{---------------------------------------}
+procedure TJabberEntityProcess.FinishWalk();
+begin
+    e._finishWalk(jso);
+end;
+
+{---------------------------------------}
+procedure TJabberEntityProcess.FinishBrowse();
+begin
+    e._finishBrowse(jso);
+end;
+
+{---------------------------------------}
+{---------------------------------------}
 {---------------------------------------}
 constructor TJabberEntity.Create(jid: TJabberID; node: Widestring);
 begin
@@ -148,7 +218,10 @@ begin
     _type := ent_unknown;
     _has_info := false;
     _has_items := false;
+
     _items := TWidestringlist.Create();
+    _items.Sorted := false;
+
     _timeout := 10;
     _node := node;
     _fallback := true;
@@ -311,6 +384,7 @@ end;
 {---------------------------------------}
 procedure TJabberEntity.ItemsCallback(event: string; tag: TXMLTag);
 var
+    pt: TJabberEntityProcess;
     js: TJabberSession;
 begin
     assert(_iq <> nil);
@@ -321,7 +395,7 @@ begin
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Dispatch a disco#items query
         if (not _fallback) then exit;
-        
+
         _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, _timeout);
         _iq.toJid := _jid.full;
         _iq.Namespace := XMLNS_BROWSE;
@@ -330,8 +404,43 @@ begin
         exit;
     end;
 
-    _processDiscoItems(tag);
-    js.FireEvent('/session/entity/items', tag);
+    tag.AddRef();
+    pt := TJabberEntityProcess.Create(true);
+    pt.jso := js;
+    pt.tag := tag;
+    pt.ptype := ProcDisco;
+    pt.e := Self;
+    pt.FreeOnTerminate := true;
+    pt.Resume();
+end;
+
+{---------------------------------------}
+procedure TJabberEntity._finishDiscoItems(jso: TObject; tag: TXMLTag);
+begin
+    TJabberSession(jso).FireEvent('/session/entity/items', tag);
+end;
+
+{---------------------------------------}
+procedure TJabberEntity._finishBrowse(jso: TObject);
+var
+    i: integer;
+    js: TJabberSession;
+    ce: TJabberEntity;
+    t: TXMLTag;
+begin
+    // send events for this entity
+    js := TJabberSession(jso);
+    getInfo(js);
+    getItems(js);
+
+    // Send info for each child
+    t := TXMLTag.Create('entity');
+    for i := 0 to _items.Count - 1 do begin
+        ce := TJabberEntity(_items.Objects[i]);
+        t.setAttribute('from', ce.jid.full);
+        js.FireEvent('/session/entity/info', t);
+    end;
+    t.Free();
 end;
 
 {---------------------------------------}
@@ -498,6 +607,11 @@ begin
     </iq>
     }
 
+
+    {$ifdef WIN32}
+    OutputDebugString(PChar('111: _processDiscoItems '));
+    {$endif}
+
     _has_items := true;
     q := tag.GetFirstTag('query');
     if (q = nil) then exit;
@@ -511,24 +625,29 @@ begin
         for i := 0 to iset.Count - 1 do begin
             tmps := iset[i].getAttribute('jid');
             nid := iset[i].getAttribute('node');
+            cj := TJabberID.Create(tmps);
             if (nid = '') then
-                id := tmps
+                id := cj.full
             else
-                id := nid + ':' + tmps;
+                id := nid + ':' + cj.full;
             idx := _items.IndexOf(id);
             if (idx < 0) then begin
-                cj := TJabberID.Create(tmps);
                 ce := TJabberEntity.Create(cj);
                 ce._parent := Self;
                 _items.AddObject(tmps, ce);
                 ce._name := iset[i].getAttribute('name');
                 ce._node := nid;
                 jEntityCache.Add(id, ce);
-            end;
+            end
+            else
+                cj.Free();
         end;
     end;
     iset.Free();
 
+    {$ifdef Win32}
+    OutputDebugString(PChar('222: _processDiscoItems ' + IntToStr(_items.Count)));
+    {$endif}
 end;
 
 
@@ -566,8 +685,8 @@ end;
 {---------------------------------------}
 procedure TJabberEntity.WalkItemsCallback(event: string; tag: TXMLTag);
 var
+    pt: TJabberEntityProcess;
     js: TJabberSession;
-    i: integer;
 begin
     assert(_iq <> nil);
     js := _iq.JabberSession;
@@ -582,7 +701,23 @@ begin
     end;
 
     // We got items back... process them
-    _processDiscoItems(tag);
+    tag.AddRef();
+    pt := TJabberEntityProcess.Create(true);
+    pt.jso := js;
+    pt.tag := tag;
+    pt.ptype := ProcWalk;
+    pt.e := Self;
+    pt.FreeOnTerminate := true;
+    pt.Resume();
+end;
+
+{---------------------------------------}
+procedure TJabberEntity._finishWalk(jso: TObject);
+var
+    i: integer;
+    js: TJabberSession;
+begin
+    js := TJabberSession(jso);
     getItems(js);
 
     // Don't fetch info on all items if we have tons
@@ -623,13 +758,8 @@ end;
 {---------------------------------------}
 procedure TJabberEntity.BrowseCallback(event: string; tag: TXMLTag);
 var
-    idx, i: integer;
-    t, q: TXMLTag;
+    pt: TJabberEntityProcess;
     js: TJabberSession;
-    clist: TXMLTagList;
-    tmps: Widestring;
-    cj: TJabberID;
-    ce: TJabberEntity;
 begin
     // if browse didn't work out so well, try agents
     assert(_iq <> nil);
@@ -647,7 +777,29 @@ begin
         exit;
     end;
 
-    // we got disco info back.. process it.
+    //_processBrowse(tag);
+    tag.AddRef();
+    pt := TJabberEntityProcess.Create(true);
+    pt.jso := js;
+    pt.tag := tag;
+    pt.ptype := ProcBrowse;
+    pt.e := Self;
+    pt.FreeOnTerminate := true;
+    pt.Resume();
+
+end;
+
+{---------------------------------------}
+procedure TJabberEntity._processBrowse(tag: TXMLTag);
+var
+    idx, i: integer;
+    q: TXMLTag;
+    clist: TXMLTagList;
+    tmps: Widestring;
+    cj: TJabberID;
+    ce: TJabberEntity;
+begin
+    // we got browse back
     _type := ent_browse;
     _has_info := true;
     _has_items := true;
@@ -689,6 +841,7 @@ begin
 
     end;
 
+    {
     // send events for this entity
     getInfo(js);
     getItems(js);
@@ -701,6 +854,7 @@ begin
         js.FireEvent('/session/entity/info', t);
     end;
     t.Free();
+    }
 
 end;
 

@@ -536,7 +536,7 @@ begin
 
     // free the tag here after it's been dispatched thru the system
     if (tag <> nil) then
-        tag.Free();
+        tag.Release();
 end;
 
 {---------------------------------------}
