@@ -30,7 +30,6 @@ uses
 type
   TfrmDebug = class(TfrmDockable)
     Panel2: TPanel;
-    MemoSend: TTntMemo;
     Splitter1: TSplitter;
     PopupMenu1: TPopupMenu;
     popMsg: TMenuItem;
@@ -48,13 +47,13 @@ type
     WordWrap1: TMenuItem;
     FindDialog1: TFindDialog;
     Label1: TLabel;
+    MemoSend: TExRichEdit;
     procedure FormCreate(Sender: TObject);
     procedure chkDebugWrapClick(Sender: TObject);
     procedure btnClearDebugClick(Sender: TObject);
     procedure btnSendRawClick(Sender: TObject);
     procedure popMsgClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure MemoSendKeyPress(Sender: TObject; var Key: Char);
     procedure btnCloseClick(Sender: TObject);
     procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
     procedure WordWrap1Click(Sender: TObject);
@@ -63,6 +62,8 @@ type
     procedure Find1Click(Sender: TObject);
     procedure FindDialog1Find(Sender: TObject);
     procedure MsgDebugKeyPress(Sender: TObject; var Key: Char);
+    procedure MemoSendKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
     _cb: integer;
@@ -94,7 +95,7 @@ implementation
 
 {$R *.dfm}
 uses
-    Signals, Session, Jabber1;
+    Signals, Session, ExUtils, Jabber1;
 
 var
     frmDebug: TfrmDebug;
@@ -241,7 +242,8 @@ var
     l: TSignalListener;
 begin
     // Send the text in the MsgSend memo box
-    cmd := Trim(MemoSend.Lines.Text);
+    cmd := getInputText(MemoSend);
+    // cmd := Trim(MemoSend.Lines.Text);
     if (cmd = '') then exit;
     if (cmd[1] = '/') then begin
         // we are giving some kind of interactive debugger cmd
@@ -309,17 +311,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmDebug.MemoSendKeyPress(Sender: TObject; var Key: Char);
-begin
-    if ( (Key = #10) and ((GetKeyState(VK_CONTROL) and (1 shl 16)) = (1 shl 16))) then begin
-        btnSendRawClick(Self);
-        Key := #0;
-        end
-    else
-        inherited;
-
-end;
-
 procedure TfrmDebug.btnCloseClick(Sender: TObject);
 begin
   inherited;
@@ -420,6 +411,26 @@ procedure TfrmDebug.MsgDebugKeyPress(Sender: TObject; var Key: Char);
 begin
   inherited;
     Key := Chr(0);
+end;
+
+procedure TfrmDebug.MemoSendKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  inherited;
+    if (Key = 0) then exit;
+
+    // handle Ctrl-Tab to switch tabs
+    if ((Key = VK_TAB) and (ssCtrl in Shift) and (self.Docked))then begin
+        Self.TabSheet.PageControl.SelectNextPage(not (ssShift in Shift));
+        Key := 0;
+        end
+
+    // handle Ctrl-ENTER and ENTER to send msgs
+    else if ((Key = VK_RETURN) and (Shift = [ssCtrl])) then begin
+        Key := 0;
+        btnSendRawClick(Self);
+        end;
+
 end;
 
 end.
