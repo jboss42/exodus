@@ -475,6 +475,7 @@ var
     q: TQueuedEvent;
 begin
     // Queue an event to a specific Callback
+
     q := TQueuedEvent.Create();
     q.callback := TMethod(Callback);
     q.event := event;
@@ -483,6 +484,7 @@ begin
     // it makes the rounds thru the dispatcher.
     q.tag := TXMLTag.Create(tag);
     _pauseQueue.Push(q);
+
 end;
 
 {---------------------------------------}

@@ -49,7 +49,7 @@ type
         _timer:     TTimer;
         _profile:   TJabberProfile;
 
-        {$ifdef Windows}
+        {$ifdef Win32}
         function VerifyPeer(Certificate: TIdX509): Boolean;
         {$endif}
         procedure Keepalive(Sender: TObject);
@@ -92,10 +92,11 @@ type
 implementation
 
 uses
+    {$ifdef Win32}
+    // todo: REMOVE this dependency!!
+    Controls, Dialogs,
+    {$endif}
     Classes,
-    // Controls,
-    // TODO: remove!
-    // Dialogs,
     IdSocks;
 
 {---------------------------------------}
@@ -269,7 +270,7 @@ begin
     _sock_lock.Free;
 end;
 
-{$ifdef Windows}
+{$ifdef Win32}
 function TXMLSocketStream.VerifyPeer(Certificate: TIdX509): Boolean;
 var
     sl : TStringList;

@@ -180,12 +180,13 @@ function getUserDir: string;
 {---------------------------------------}
 implementation
 uses
-    IdGlobal, IdCoder3To4, Session, IQ, XMLUtils,
     {$ifdef Win32}
-    Graphics; StrUtils,
+    Graphics,
     {$else}
-    QGraphics;
+    QGraphics,
     {$endif}
+    IdGlobal, IdCoder3To4, Session, IQ, XMLUtils;
+
 
 var
     dflt_top: integer;
@@ -408,7 +409,7 @@ begin
         result := '0'
     else if pkey = 'roster_bg' then
         result := IntToStr(Integer(clWindow))
-    {$ifdef Windows}
+    {$ifdef Win32}
     else if pkey = 'roster_font_name' then
         result := Screen.IconFont.Name
     else if pkey = 'roster_font_size' then

@@ -27,7 +27,7 @@ UNIT LibXmlComps;
 INTERFACE
 
 USES
-    {$ifdef Windows}
+    {$ifdef Win32}
     Windows,
     {$endif}
     SysUtils, Classes,
