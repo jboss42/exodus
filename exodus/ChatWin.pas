@@ -901,8 +901,10 @@ end;
 procedure TfrmChat.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   inherited;
+  {
     if (chat_object <> nil) then
         TExodusChat(chat_object.ComController).fireClose();
+  }
 end;
 
 end.
