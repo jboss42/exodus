@@ -11,8 +11,8 @@ unit ExNetMeeting_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.1 $
-// File generated on 1/26/2003 9:07:04 PM from Type Library described below.
+// PASTLWTR : $Revision: 1.2 $
+// File generated on 2/7/2003 6:37:29 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\NetMeeting\ExNetMeeting.tlb (1)
@@ -20,9 +20,9 @@ unit ExNetMeeting_TLB;
 // LCID: 0
 // Helpfile: 
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
-//   (2) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
-//   (3) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
+//   (1) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
+//   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
+//   (3) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
