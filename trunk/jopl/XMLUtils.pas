@@ -129,41 +129,23 @@ end;
 {---------------------------------------}
 function HTML_EscapeChars(txt: Widestring; DoAPOS: boolean): Widestring;
 var
-    tok, tmps: Widestring;
-    j, i: integer;
+    tmps: Widestring;
+    i: integer;
 begin
     // escape special chars .. not &apos; --> only XML
 
-    // XXX: Joe, Can we optimize this w/ regex please??
-    tok := '';
+    // Joe, Can we optimize this w/ regex please??
+    // No.  Regexes don't do well where the replacement has to be different
+    // based on the input.  Any regex would be N times slower than this.
     tmps := '';
-    i := 1;
-    while i <= length(txt) do begin
-        if txt[i] = '&' then begin
-            j := i + 1;
-            tok := '';
-            repeat
-                if (j >= length(txt)) then
-                    tok := Copy(txt, i, j - i + 1)
-                else if (txt[j] = ' ') or (txt[j] = ';') then
-                    tok := Copy(txt, i, j - i + 1)
-                else
-                    inc(j);
-            until (tok <> '') or (j > length(txt));
-
-            if (tok = '&amp;') or (tok = '&quot;') or
-            (tok = '&apos;') or (tok = '&lt;') or (tok = '&gt;') then
-                tmps := tmps + tok
-            else
-                tmps := tmps + '&amp;'
-        end
+    for i := 1 to length(txt) do begin
+        if txt[i] = '&' then tmps := tmps + '&amp;'
         else if (txt[i] = Chr(39)) and (DoAPOS) then tmps := tmps + '&apos;'
         else if txt[i] = '"' then tmps := tmps + '&quot;'
         else if txt[i] = '<' then tmps := tmps + '&lt;'
         else if txt[i] = '>' then tmps := tmps + '&gt;'
         else tmps := tmps + txt[i];
-        inc(i);
-end;
+    end;
     Result := tmps;
 end;
 
