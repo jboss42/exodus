@@ -35,7 +35,6 @@ uses
 
 const
     WM_RECV_DONE = WM_USER + 6001;
-    
     WM_RECV_SICONN = WM_USER + 6010;
     WM_RECV_SIDISCONN = WM_USER + 6011;
     WM_RECV_NEXT = WM_USER + 6012;
