@@ -82,6 +82,8 @@ type
     NewGroup1: TMenuItem;
     InvitetoConference1: TMenuItem;
     SendContactsTo1: TMenuItem;
+    popBlock: TMenuItem;
+    Block1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -122,6 +124,7 @@ type
     procedure InvitetoConference1Click(Sender: TObject);
     procedure popGrpInviteClick(Sender: TObject);
     procedure popSendContactsClick(Sender: TObject);
+    procedure popBlockClick(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;
@@ -319,7 +322,7 @@ begin
         end
     else if event = '/session/server_prefs' then begin
         // we are getting server side prefs
-        _collapsed_grps := MainSession.Prefs.getStringlist('col_groups', true);
+        MainSession.Prefs.fillStringlist('col_groups', _collapsed_grps, true);
 
         // Iterate over all grp nodes
         for i := 0 to MainSession.Roster.GrpList.Count - 1 do begin
@@ -1655,6 +1658,20 @@ begin
 
     sel.Free();
     fSel.Free();
+end;
+
+procedure TfrmRosterWindow.popBlockClick(Sender: TObject);
+var
+    recips: TList;
+    i: integer;
+begin
+    recips := getSelectedContacts(false);
+    if (recips.Count > 1) then begin
+        if (MessageDlg('Block ' + IntToStr(recips.Count) + ' contacts?', mtConfirmation,
+            [mbYes, mbNo], 0) = mrNo) then exit;
+        end;
+    for i := 0 to recips.Count - 1 do
+        MainSession.Block(TJabberRosterItem(recips[i]).jid);
 end;
 
 end.

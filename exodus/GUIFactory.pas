@@ -83,6 +83,10 @@ begin
             if ((ri.subscription = 'to')) then
                 tmp_b := false;
             end;
+
+        // block list?
+        if (MainSession.IsBlocked(tmp_jid)) then exit;
+
         sub := TfrmSubscribe.Create(Application);
         with sub do begin
             lblJID.Caption := sjid;
