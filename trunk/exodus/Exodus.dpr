@@ -103,7 +103,8 @@ uses
   ChatController in '..\jopl\ChatController.pas',
   WStrList in '..\jopl\WStrList.pas',
   Langs in '..\jopl\Langs.pas',
-  Unicode in '..\jopl\Unicode.pas';
+  Unicode in '..\jopl\Unicode.pas',
+  InvalidRoster in 'InvalidRoster.pas' {frmInvalidRoster};
 
 {$R *.RES}
 

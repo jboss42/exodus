@@ -297,6 +297,7 @@ begin
             s.FireEvent('/session/register', t);
             t.Free;
             end
+
         else if ((MainSession.Invisible) and
         (curp.error_code = '400') and
         (tag.GetAttribute('from') = '') ) then begin
@@ -304,6 +305,14 @@ begin
             MainSession.Invisible := false;
             MainSession.setPresence('', 'Available', MainSession.Priority);
             end
+
+        else if ((curp.error_code = '502') or
+        (curp.error_code = '504')) then begin
+            // we are getting a pres. packet for some kind of
+            // invalid roster item
+            s.FireEvent('/session/gui/pres-error', tag);
+            end
+
         else
             s.FireEvent('/presence/error', tag, curp);
         curp.Free();
