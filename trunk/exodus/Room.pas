@@ -1067,6 +1067,7 @@ begin
     _pcallback := -1;
     _scallback := -1;
     _roster := TWideStringList.Create;
+    _roster.CaseSensitive := true;
     _rlist := TList.Create;
     _isMUC := false;
     _nick_prefix := '';

@@ -6,13 +6,13 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-02-09 08:17\n"
-"PO-Revision-Date: 2004-02-09 08:17\n"
+"POT-Creation-Date: 2004-02-11 07:05\n"
+"PO-Revision-Date: 2004-02-11 07:05\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: dxgettext 1.1.1\n"
+"X-Generator: dxgettext 1.2 beta 2\n"
 
 #. frmAbout..Caption
 #: About.dfm:8
@@ -638,7 +638,7 @@ msgstr ""
 #. frmExodus..popTray..N01..Caption
 #: Jabber1.dfm:2707
 #. frmJud..PopupMenu1..N1..Caption
-#: jud.dfm:220
+#: Jud.dfm:220
 #. frmMsgRecv..popContact..N1..Caption
 #: MsgRecv.dfm:519
 #. frmMsgRecv..popContact..N2..Caption
@@ -656,19 +656,19 @@ msgstr ""
 #. frmRosterWindow..popRoster..popPresence..N2..Caption
 #: RosterWindow.dfm:360
 #. frmRosterWindow..popRoster..N1..Caption
-#: RosterWindow.dfm:376
+#: RosterWindow.dfm:377
 #. frmRosterWindow..popRoster..N7..Caption
-#: RosterWindow.dfm:393
+#: RosterWindow.dfm:394
 #. frmRosterWindow..popStatus..N8..Caption
-#: RosterWindow.dfm:432
+#: RosterWindow.dfm:433
 #. frmRosterWindow..popGroup..N3..Caption
-#: RosterWindow.dfm:630
+#: RosterWindow.dfm:631
 #. frmRosterWindow..popGroup..N4..Caption
-#: RosterWindow.dfm:645
+#: RosterWindow.dfm:646
 #. frmRosterWindow..popBookmark..N5..Caption
-#: RosterWindow.dfm:661
+#: RosterWindow.dfm:662
 #. frmRosterWindow..popTransport..N6..Caption
-#: RosterWindow.dfm:686
+#: RosterWindow.dfm:687
 msgid "-"
 msgstr ""
 
@@ -1454,9 +1454,9 @@ msgstr ""
 #. frmExodus..popTray..trayPresence..trayPresOnline..Caption
 #: Jabber1.dfm:2656
 #. frmRosterWindow..popStatus..presOnline..Caption
-#: RosterWindow.dfm:402
+#: RosterWindow.dfm:403
 #. frmRosterWindow..popGroup..popGrpPresence..popGrpAvailable..Caption
-#: RosterWindow.dfm:605
+#: RosterWindow.dfm:606
 #. init the cmd line stuff
 #: ExSession.pas:184
 #: Jabber1.pas:2710
@@ -1480,7 +1480,7 @@ msgstr ""
 #. frmExodus..popTray..trayPresence..trayPresAway..Caption
 #: Jabber1.dfm:2668
 #. frmRosterWindow..popStatus..presAway..Caption
-#: RosterWindow.dfm:414
+#: RosterWindow.dfm:415
 #: Jabber1.pas:2708
 #: RosterWindow.pas:348
 #: RosterWindow.pas:369
@@ -1508,7 +1508,7 @@ msgstr ""
 #. frmExodus..popTray..trayPresence..trayPresDND..Caption
 #: Jabber1.dfm:2680
 #. frmRosterWindow..popStatus..presDND..Caption
-#: RosterWindow.dfm:426
+#: RosterWindow.dfm:427
 #: RosterWindow.pas:350
 #: RosterWindow.pas:371
 #: RosterWindow.pas:1615
@@ -1803,13 +1803,13 @@ msgstr ""
 #. frmInvite..pnlMain..Panel1..btnRemove..Caption
 #: invite.dfm:100
 #. frmRosterWindow..popRoster..popRemove..Caption
-#: RosterWindow.dfm:383
+#: RosterWindow.dfm:384
 #. frmRosterWindow..popGroup..popGrpRemove..Caption
-#: RosterWindow.dfm:641
+#: RosterWindow.dfm:642
 #. frmRosterWindow..popBookmark..Delete1..Caption
-#: RosterWindow.dfm:664
+#: RosterWindow.dfm:665
 #. frmRosterWindow..popTransport..popTransUnRegister..Caption
-#: RosterWindow.dfm:693
+#: RosterWindow.dfm:694
 #. frmPrefPlugins..btnRemovePlugin..Caption
 #: prefs/PrefPlugins.dfm:55
 #. frmPrefPresence..pnlCustomPresButtons..btnCustomPresRemove..Caption
@@ -1842,7 +1842,7 @@ msgstr ""
 #. frmRosterWindow..popRoster..popInvite..Caption
 #: RosterWindow.dfm:327
 #. frmRosterWindow..popGroup..popGrpInvite..Caption
-#: RosterWindow.dfm:614
+#: RosterWindow.dfm:615
 msgid "Invite to Conference"
 msgstr ""
 
@@ -1916,11 +1916,11 @@ msgstr ""
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Hint
 #: Jabber1.dfm:146
 #. frmJud..PopupMenu1..popAdd..Caption
-#: jud.dfm:212
+#: Jud.dfm:212
 #. frmAdd..Caption
 #: RosterAdd.dfm:6
 #. frmRosterWindow..popActions..popAddContact..Caption
-#: RosterWindow.dfm:590
+#: RosterWindow.dfm:591
 msgid "Add Contact"
 msgstr ""
 
@@ -1952,7 +1952,7 @@ msgstr ""
 #. frmExodus..Toolbar..ToolBar1..btnConnect..Caption
 #: Jabber1.dfm:190
 #. frmRosterWindow..popTransport..popTransLogon..Caption
-#: RosterWindow.dfm:682
+#: RosterWindow.dfm:683
 msgid "Log On"
 msgstr ""
 
@@ -2108,7 +2108,7 @@ msgstr ""
 #. frmExodus..popTray..trayPresence..trayPresChat..Caption
 #: Jabber1.dfm:2662
 #. frmRosterWindow..popStatus..presChat..Caption
-#: RosterWindow.dfm:408
+#: RosterWindow.dfm:409
 #: RosterWindow.pas:347
 #. display this show type
 #: RosterWindow.pas:1603
@@ -2122,7 +2122,7 @@ msgstr ""
 #. frmExodus..popTray..trayPresence..trayPresXA..Caption
 #: Jabber1.dfm:2674
 #. frmRosterWindow..popStatus..presXA..Caption
-#: RosterWindow.dfm:420
+#: RosterWindow.dfm:421
 #: RosterWindow.pas:349
 #: RosterWindow.pas:1611
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
@@ -2218,14 +2218,14 @@ msgstr ""
 #. frmExodus..popTray..trayPresence..Custom2..Caption
 #: Jabber1.dfm:2690
 #. frmRosterWindow..popStatus..Custom1..Caption
-#: RosterWindow.dfm:436
+#: RosterWindow.dfm:437
 msgid "Custom ..."
 msgstr ""
 
 #. frmExodus..popTray..trayMessage..Caption
 #: Jabber1.dfm:2695
 #. frmJud..PopupMenu1..popMessage..Caption
-#: jud.dfm:227
+#: Jud.dfm:227
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
 #: subscribe.dfm:150
 msgid "Send Message"
@@ -2308,7 +2308,7 @@ msgstr ""
 #. frmJoinRoom..Tabs..TabSheet2..Caption
 #: JoinRoom.dfm:148
 #. frmJud..Tabs..TabSheet2..Caption
-#: jud.dfm:78
+#: Jud.dfm:78
 #. frmRegister..Tabs..TabSheet2..Caption
 #: RegForm.dfm:60
 msgid "TabSheet2"
@@ -2342,79 +2342,79 @@ msgid "Fetch Rooms"
 msgstr ""
 
 #. frmJud..Caption
-#: jud.dfm:5
+#: Jud.dfm:5
 msgid "Jabber Search"
 msgstr ""
 
 #. frmJud..Panel1..lblWizardTitle..Caption
-#: jud.dfm:43
+#: Jud.dfm:43
 msgid "Jabber Search Wizard"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet1..lblSelect....Align
-#: jud.dfm:64
+#: Jud.dfm:64
 msgid "Select the user database or enter in the Jabber ID of the search "
 "agent to use:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet2..lblWait..Caption
-#: jud.dfm:86
+#: Jud.dfm:86
 msgid "Please wait. Contacting search agent:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..Caption
-#: jud.dfm:100
+#: Jud.dfm:100
 #. frmRegister..Tabs..TabSheet3..Caption
 #: RegForm.dfm:95
 msgid "TabSheet3"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet3..lblInstructions..Caption
-#: jud.dfm:108
+#: Jud.dfm:108
 msgid "Fill in the search criteria to find contacts "
 "on."
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Caption
-#: jud.dfm:124
+#: Jud.dfm:124
 #. frmRegister..Tabs..TabSheet4..Caption
 #: RegForm.dfm:115
 msgid "TabSheet4"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Label3..Caption
-#: jud.dfm:140
+#: Jud.dfm:140
 msgid "Add Contacts to this group:"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Caption
-#: jud.dfm:148
+#: Jud.dfm:148
 #. frmAdd..lblAddGrp..Caption
 #: RosterAdd.dfm:49
 msgid "Add a new Group"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblCount..Caption
-#: jud.dfm:159
+#: Jud.dfm:159
 msgid "N items found"
 msgstr ""
 
 #. frmJud..Tabs..TabSheet4..Panel2..Button1..Caption
-#: jud.dfm:176
+#: Jud.dfm:176
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: RosterRecv.dfm:45
-#: jud.pas:641
-#: jud.pas:643
+#: Jud.pas:641
+#: Jud.pas:643
 msgid "Add Contacts"
 msgstr ""
 
 #. frmJud..PopupMenu1..popProfile..Caption
-#: jud.dfm:216
+#: Jud.dfm:216
 msgid "View Profile"
 msgstr ""
 
 #. frmJud..PopupMenu1..popChat..Caption
-#: jud.dfm:223
+#: Jud.dfm:223
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #: subscribe.dfm:146
 #: Jabber1.pas:2279
@@ -2830,7 +2830,7 @@ msgstr ""
 #. frmProfile..PageControl1..TabSheet2..Panel3..btnAddGroup..Caption
 #: Profile.dfm:261
 #. frmRosterWindow..popActions..popAddGroup..Caption
-#: RosterWindow.dfm:594
+#: RosterWindow.dfm:595
 msgid "Add Group"
 msgstr ""
 
@@ -5956,9 +5956,9 @@ msgstr ""
 #. frmRoom..popRoomRoster..popRosterBlock..Caption
 #: Room.dfm:280
 #. frmRosterWindow..popRoster..popBlock..Caption
-#: RosterWindow.dfm:379
+#: RosterWindow.dfm:380
 #. frmRosterWindow..popGroup..popGroupBlock..Caption
-#: RosterWindow.dfm:633
+#: RosterWindow.dfm:634
 #: Room.pas:1490
 #: RosterWindow.pas:2054
 #. do blocking madness
@@ -6180,69 +6180,69 @@ msgid "Rename..."
 msgstr ""
 
 #. frmRosterWindow..popRoster..popHistory..Caption
-#: RosterWindow.dfm:372
+#: RosterWindow.dfm:373
 msgid "History"
 msgstr ""
 
 #. frmRosterWindow..popRoster..popProperties..Caption
-#: RosterWindow.dfm:388
+#: RosterWindow.dfm:389
 msgid "Properties..."
 msgstr ""
 
 #. frmRosterWindow..popGroup..popGrpPresence..Caption
-#: RosterWindow.dfm:603
+#: RosterWindow.dfm:604
 msgid "Send Presence"
 msgstr ""
 
 #. frmRosterWindow..popGroup..popGrpPresence..popGrpInvisible..Caption
-#: RosterWindow.dfm:609
+#: RosterWindow.dfm:610
 msgid "Invisible"
 msgstr ""
 
 #. frmRosterWindow..popGroup..BroadcastMessage1..Caption
-#: RosterWindow.dfm:618
+#: RosterWindow.dfm:619
 msgid "Broadcast Message"
 msgstr ""
 
 #. frmRosterWindow..popGroup..SendContactsTo1..Caption
-#: RosterWindow.dfm:622
+#: RosterWindow.dfm:623
 msgid "Send Contacts To..."
 msgstr ""
 
 #. frmRosterWindow..popGroup..MoveorCopyContacts1..Caption
-#: RosterWindow.dfm:626
+#: RosterWindow.dfm:627
 msgid "Move or Copy Contacts..."
 msgstr ""
 
 #. frmRosterWindow..popGroup..popGrpRename..Caption
-#: RosterWindow.dfm:637
+#: RosterWindow.dfm:638
 msgid "Rename"
 msgstr ""
 
 #. frmRosterWindow..popGroup..NewGroup1..Caption
-#: RosterWindow.dfm:648
+#: RosterWindow.dfm:649
 msgid "New Group"
 msgstr ""
 
 #. frmRosterWindow..popBookmark..Join1..Caption
-#: RosterWindow.dfm:657
+#: RosterWindow.dfm:658
 msgid "Join Group"
 msgstr ""
 
 #. frmRosterWindow..popBookmark..Properties1..Caption
-#: RosterWindow.dfm:669
+#: RosterWindow.dfm:670
 #. frmPrefPresence..GroupBox1..Caption
 #: prefs/PrefPresence.dfm:133
 msgid "Properties"
 msgstr ""
 
 #. frmRosterWindow..popTransport..popTransLogoff..Caption
-#: RosterWindow.dfm:678
+#: RosterWindow.dfm:679
 msgid "Log Off"
 msgstr ""
 
 #. frmRosterWindow..popTransport..popTransProperties..Caption
-#: RosterWindow.dfm:689
+#: RosterWindow.dfm:690
 msgid "Rename ..."
 msgstr ""
 
@@ -7127,22 +7127,22 @@ msgid "You must enter a nickname"
 msgstr ""
 
 #. timeout
-#: jud.pas:317
+#: Jud.pas:317
 #. we got an iq-error back
-#: jud.pas:323
+#: Jud.pas:323
 msgid "Could not contact the search agent."
 msgstr ""
 
 #. timeout
-#: jud.pas:425
+#: Jud.pas:425
 msgid "The search timed out."
 msgstr ""
 
-#: jud.pas:454
+#: Jud.pas:454
 msgid "No Results were found."
 msgstr ""
 
-#: jud.pas:556
+#: Jud.pas:556
 msgid "%d items found."
 msgstr ""
 
