@@ -2720,8 +2720,11 @@ begin
     // PInteger(nil)^ := 0;
 
     // Show a toast window
-    i := Random(40);
-    ShowRiserWindow(Self, 'Test Toast ' + IntToStr(i) + ' Some more text to Some more text to Some more text to Some more text to make toast really long.', i);
+    i := Random(2);
+    if (i = 0) then
+        ShowRiserWindow(Self, 'Test Toast ' + IntToStr(i) + ' Some more text to Some more text to Some more text to Some more text to make toast really long.', i)
+    else
+        ShowRiserWindow(Self, 'Test Toast ' + IntToStr(i) + ' cvs commit from cvsnotify@jabberstudio.org', i);
     //ShowRiserWindow(Self, 'Test Toast ' + IntToStr(i), i);
 end;
 

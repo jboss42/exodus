@@ -51,6 +51,7 @@ type
     procedure CreateParams(var Params: TCreateParams); override;
   public
     { Public declarations }
+    procedure Position();
   end;
 
 var
@@ -105,10 +106,17 @@ begin
     singleToast._clickHandle := clickForm.Handle;
     with singleToast.Label1 do begin
         Top := 5;
-        Left := 38;
-        Width := singleToast.ClientWidth - 55;
+        Left := singleToast.Image1.Left + singleToast.Image1.Width + 2;
+        Width := singleToast.ClientWidth - Left - 5;
         Caption := msg;
+
+        if (Width > (singleToast.ClientWidth - 55)) then
+            singleToast.ClientWidth := Width + 70;
+
+        if (Height > (singleToast.ClientHeight + 15)) then
+            SingleToast.ClientHeight := Height + 15;
     end;
+    singleToast.Position();
 
     // madness to make sure toast images are transparent.
     with singleToast.Image1 do begin
@@ -140,6 +148,12 @@ end;
 
 {---------------------------------------}
 procedure TfrmRiser.FormCreate(Sender: TObject);
+begin
+    //
+end;
+
+{---------------------------------------}
+procedure TfrmRiser.Position();
 var
     taskbar: HWND;
     mh, mw: longint;
@@ -266,6 +280,7 @@ begin
     Panel2Click(Shape1);
 end;
 
+{---------------------------------------}
 procedure TfrmRiser.FormResize(Sender: TObject);
 begin
     // resize the border shape
