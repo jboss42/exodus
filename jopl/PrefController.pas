@@ -126,11 +126,15 @@ type
         property password: Widestring read getPassword write setPassword;
     end;
 
+    TPrefKind = (pkClient, pkServer, pkBrand);
+
     TPrefController = class
     private
         _js: TObject;
         _pref_filename: Widestring;
+        _brand_filename: Widestring;
         _pref_node: TXMLTag;
+        _brand_node: TXMLTag;
         _server_node: TXMLTag;
         _profiles: TStringList;
         _parser: TXMLTagParser;
@@ -142,22 +146,22 @@ type
         procedure Save;
         procedure ServerPrefsCallback(event: string; tag: TXMLTag);
     public
-        constructor Create(filename: Widestring);
+        constructor Create(filename: Widestring; BrandingFile: widestring);
         Destructor Destroy; override;
 
-        function getString(pkey: Widestring; server_side: boolean = false): Widestring;
-        function getInt(pkey: Widestring; server_side: boolean = false): integer;
-        function getBool(pkey: Widestring; server_side: boolean = false): boolean;
-        procedure fillStringlist(pkey: Widestring; sl: TWideStrings; server_side: boolean = false);
+        function getString(pkey: Widestring; server_side: TPrefKind = pkClient): Widestring;
+        function getInt(pkey: Widestring; server_side: TPrefKind = pkClient): integer;
+        function getBool(pkey: Widestring; server_side: TPrefKind = pkClient): boolean;
+        procedure fillStringlist(pkey: Widestring; sl: TWideStrings; server_side: TPrefKind = pkClient);
 
         function getAllPresence(): TList;
         function getPresence(pkey: Widestring): TJabberCustomPres;
         function getPresIndex(idx: integer): TJabberCustomPres;
 
-        procedure setString(pkey, pvalue: Widestring; server_side: boolean = false);
-        procedure setInt(pkey: Widestring; pvalue: integer; server_side: boolean = false);
-        procedure setBool(pkey: Widestring; pvalue: boolean; server_side: boolean = false);
-        procedure setStringlist(pkey: Widestring; pvalue: TWideStrings; server_side: boolean = false);
+        procedure setString(pkey, pvalue: Widestring; server_side: TPrefKind = pkClient);
+        procedure setInt(pkey: Widestring; pvalue: integer; server_side: TPrefKind = pkClient);
+        procedure setBool(pkey: Widestring; pvalue: boolean; server_side: TPrefKind = pkClient);
+        procedure setStringlist(pkey: Widestring; pvalue: TWideStrings; server_side: TPrefKind = pkClient);
         procedure setPresence(pvalue: TJabberCustomPres);
         procedure removePresence(pvalue: TJabberCustomPres);
         procedure removeAllPresence();
@@ -324,20 +328,33 @@ end;
 {$endif}
 
 {---------------------------------------}
-constructor TPrefController.Create(filename: Widestring);
+constructor TPrefController.Create(filename: Widestring; BrandingFile: Widestring);
 begin
     inherited Create();
 
     _pref_filename := filename;
+    _brand_filename := BrandingFile;
     _parser := TXMLTagParser.Create;
     _parser.ParseFile(_pref_filename);
     if (_parser.Count > 0) then begin
         // we have something to read.. hopefully it's correct :)
         _pref_node := _parser.popTag();
+        _parser.Clear();
         end
     else
         // create some default node
         _pref_node := TXMLTag.Create('exodus');
+
+    _parser.ParseFile(_brand_filename);
+    if (_parser.Count > 0) then begin
+        // we have something to read.. hopefully it's correct :)
+        _brand_node := _parser.popTag();
+        _parser.Clear();
+        end
+    else
+        // create some default node
+        _brand_node := TXMLTag.Create('brand');
+
     _server_node := nil;
     _server_dirty := false;
     _profiles := TStringList.Create;
@@ -352,6 +369,8 @@ begin
     // Kill our cache'd nodes, etc.
     if (_pref_node <> nil) then
         _pref_node.Free();
+    if (_brand_node <> nil) then
+        _brand_node.Free();
     if (_server_node <> nil) then
         _server_node.Free();
     _parser.Free();
@@ -379,8 +398,14 @@ end;
 {---------------------------------------}
 function TPrefController.getDefault(pkey: Widestring): Widestring;
 begin
+    result := getString(pkey, pkBrand);
+    if (result <> '') then
+        exit;
+
     // set the defaults for the pref controller
-    if pkey = P_EXPANDED then
+    if pkey = 'brand_caption' then
+        result := 'Exodus'
+    else if pkey = P_EXPANDED then
         result := '0'
     else if pkey = P_SHOWONLINE then
         result := '0'
@@ -498,31 +523,38 @@ begin
 end;
 
 {---------------------------------------}
-function TPrefController.getString(pkey: Widestring; server_side: boolean = false): Widestring;
+function TPrefController.getString(pkey: Widestring; server_side: TPrefKind = pkClient): Widestring;
 var
     t: TXMLTag;
 begin
-    // find string value
-    if (Server_side) then
-        t := _server_node.GetFirstTag(pkey)
-    else
-        t := _pref_node.GetFirstTag(pkey);
+    t := nil;
 
-    if (t = nil) then
-        Result := getDefault(pkey)
+    // find string value
+    case server_side of
+        pkClient: t := _pref_node.GetFirstTag(pkey);
+        pkServer: t := _server_node.GetFirstTag(pkey);
+        pkBrand:  t := _brand_node.GetFirstTag(pkey);
+    end;
+
+    if (t = nil) then begin
+        if (server_side = pkBrand) then
+            Result := ''
+        else
+            Result := getDefault(pkey);
+        end
     else
         Result := t.Data;
 end;
 
 {---------------------------------------}
-function TPrefController.getInt(pkey: Widestring; server_side: boolean = false): integer;
+function TPrefController.getInt(pkey: Widestring; server_side: TPrefKind = pkClient): integer;
 begin
     // find int value
     Result := SafeInt(getString(pkey, server_side));
 end;
 
 {---------------------------------------}
-function TPrefController.getBool(pkey: Widestring; server_side: boolean = false): boolean;
+function TPrefController.getBool(pkey: Widestring; server_side: TPrefKind = pkClient): boolean;
 begin
     if ((lowercase(getString(pkey, server_side)) = 'true') or
     (getString(pkey, server_side) = '1')) then
@@ -532,7 +564,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TPrefController.fillStringlist(pkey: Widestring; sl: TWideStrings; server_side: boolean = false);
+procedure TPrefController.fillStringlist(pkey: Widestring; sl: TWideStrings; server_side: TPrefKind = pkClient);
 var
     p: TXMLTag;
     s: TXMLTagList;
@@ -540,10 +572,13 @@ var
 begin
     sl.Clear();
 
-    if (server_side) then
-        p := _server_node.getFirstTag(pkey)
-    else
-        p := _pref_node.getFirstTag(pkey);
+    p := nil;
+    
+    case server_side of
+        pkClient: p := _pref_node.GetFirstTag(pkey);
+        pkServer: p := _server_node.GetFirstTag(pkey);
+        pkBrand:  p := _brand_node.GetFirstTag(pkey);
+    end;
 
     if (p <> nil) then begin
         s := p.QueryTags('s');
@@ -554,7 +589,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TPrefController.setBool(pkey: Widestring; pvalue: boolean; server_side: boolean = false);
+procedure TPrefController.setBool(pkey: Widestring; pvalue: boolean; server_side: TPrefKind = pkClient);
 begin
      if (pvalue) then
         setString(pkey, 'true', server_side)
@@ -563,16 +598,18 @@ begin
 end;
 
 {---------------------------------------}
-procedure TPrefController.setString(pkey, pvalue: Widestring; server_side: boolean = false);
+procedure TPrefController.setString(pkey, pvalue: Widestring; server_side: TPrefKind = pkClient);
 var
     n, t: TXMLTag;
 begin
-    if (server_side) then begin
+    if (server_side = pkServer) then begin
         n := _server_node;
         _server_dirty := true;
         end
-    else
-        n := _pref_node;
+    else if (server_side = pkClient) then
+        n := _pref_node
+    else // brand
+        n := _brand_node;
 
     t := n.GetFirstTag(pkey);
     if (t <> nil) then begin
@@ -583,29 +620,31 @@ begin
         n.AddBasicTag(pkey, pvalue);
 
     // do we really want to ALWAYS save here?
-    if (not server_side) then Self.Save();
+    if (server_side = pkClient) then Self.Save();
 end;
 
 {---------------------------------------}
-procedure TPrefController.setInt(pkey: Widestring; pvalue: integer; server_side: boolean = false);
+procedure TPrefController.setInt(pkey: Widestring; pvalue: integer; server_side: TPrefKind = pkClient);
 begin
     setString(pkey, IntToStr(pvalue), server_side);
 end;
 
 {---------------------------------------}
-procedure TPrefController.setStringlist(pkey: Widestring; pvalue: TWideStrings; server_side: boolean = false);
+procedure TPrefController.setStringlist(pkey: Widestring; pvalue: TWideStrings; server_side: TPrefKind = pkClient);
 var
     i: integer;
     n, p: TXMLTag;
 begin
     // setup the stringlist in it's own parent..
     // with multiple <s> tags for each value.
-    if (Server_side) then begin
+    if (Server_side = pkServer) then begin
         n := _server_node;
         _server_dirty := true;
         end
-    else
-        n := _pref_node;
+    else if (Server_side = pkClient) then
+        n := _pref_node
+    else // brand
+        n := _brand_node;
 
     p := n.GetFirstTag(pkey);
 
@@ -620,7 +659,7 @@ begin
             p.AddBasicTag('s', pvalue[i]);
         end;
 
-    if (not server_side) then
+    if (server_side = pkClient) then
         Self.Save();
 end;
 

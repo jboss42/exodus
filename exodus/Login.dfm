@@ -3,7 +3,7 @@ object frmLogin: TfrmLogin
   Top = 419
   Width = 246
   Height = 262
-  Caption = 'Jabber Login'
+  Caption = 'Login'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -74,7 +74,7 @@ object frmLogin: TfrmLogin
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 191
+    Top = 196
     Width = 238
     Height = 37
     Align = alBottom

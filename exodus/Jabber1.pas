@@ -710,6 +710,7 @@ var
     config: string;
     help_msg: string;
     win_ver: string;
+    s : string;
 
     //appbar: TAppBarData;
     //res: Cardinal;
@@ -824,7 +825,7 @@ begin
             config := getUserDir() + 'exodus.xml';
 
         // Create our main Session object
-        MainSession := TJabberSession.Create(config);
+        MainSession := TJabberSession.Create(config, ExtractFilePath(Application.EXEName) + 'branding.xml');
         _guibuilder := TGUIFactory.Create();
         _guibuilder.SetSession(MainSession);
 
@@ -840,6 +841,11 @@ begin
             debug := MainSession.Prefs.getBool('debug');
 
         with MainSession.Prefs do begin
+            s := GetString('brand_icon');
+            if (s <> '') then
+                Application.Icon.LoadFromFile(s);
+            self.Caption := GetString('brand_caption');
+                
             RestorePosition(Self);
 
             if (expanded <> '') then
@@ -1170,7 +1176,7 @@ begin
         _logoff := false;
         _reconnect_tries := 0;
         btnConnect.Down := true;
-        Self.Caption := 'Exodus - ' + MainSession.Username + '@' + MainSession.Server;
+        Self.Caption := MainSession.Prefs.getString('brand_caption') + ' - ' + MainSession.Username + '@' + MainSession.Server;
         setTrayInfo(Self.Caption);
         setTrayIcon(1);
         end

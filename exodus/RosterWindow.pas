@@ -443,12 +443,12 @@ begin
 
     // someone has been blocked
     else if ((event = '/session/block') or (event = '/session/unblock')) then begin
-        MainSession.Prefs.fillStringlist('col_groups', _collapsed_grps, true);
+        MainSession.Prefs.fillStringlist('col_groups', _collapsed_grps, pkServer);
         end
 
     // we are getting server side prefs
     else if event = '/session/server_prefs' then begin
-        MainSession.Prefs.fillStringlist('col_groups', _collapsed_grps, true);
+        MainSession.Prefs.fillStringlist('col_groups', _collapsed_grps, pkServer);
 
         // Iterate over all grp nodes
         for i := 0 to MainSession.Roster.GrpList.Count - 1 do begin
@@ -1182,7 +1182,7 @@ begin
 
         if (_collapsed_grps.IndexOf(Node.Text) < 0) then begin
             _collapsed_grps.Add(Node.Text);
-            MainSession.Prefs.setStringlist('col_groups', _collapsed_grps, true);
+            MainSession.Prefs.setStringlist('col_groups', _collapsed_grps, pkServer);
             end;
         end;
 end;
@@ -1207,7 +1207,7 @@ begin
         until (i < 0);
 
         if (dirty) then
-            MainSession.Prefs.setStringlist('col_groups', _collapsed_grps, true);
+            MainSession.Prefs.setStringlist('col_groups', _collapsed_grps, pkServer);
         end;
 end;
 
