@@ -19,8 +19,11 @@ object frameXData: TframeXData
       Top = 5
       Width = 310
       Height = 122
+      VertScrollBar.Tracking = True
       Align = alClient
       BorderStyle = bsNone
+      ParentShowHint = False
+      ShowHint = True
       TabOrder = 0
     end
   end

@@ -97,6 +97,7 @@ var
 const V_WS = 5;
 const H_WS = 5;
 const BTN_W = 30;
+const XDATA_FONT_SIZE = 9;
 
 function  showXDataEx(tag: TXMLTag): boolean;
 procedure showXData(tag: TXMLTag);
@@ -322,7 +323,7 @@ begin
 
     // put stars on required fields
     if (req) then
-        lbl.Caption := l + '*'
+        lbl.Caption := l + ' ' + _('(Required)')
     else
         lbl.Caption := l;
 
@@ -339,7 +340,7 @@ begin
     // fetch data from controls into d params
     // and send back the <field/> element
     valid := true;
-    if (t = 'fixed') then begin
+    if ((t = 'fixed') or (t = 'instructions')) then begin
         Result := nil;
         exit;
     end;
@@ -626,7 +627,7 @@ end;
 {---------------------------------------}
 procedure TfrmXData.frameButtons1btnOKClick(Sender: TObject);
 var
-    r,x: TXMLTag;
+    r, q, x: TXMLTag;
 begin
   inherited;
 
@@ -641,8 +642,12 @@ begin
 
         try
             r := getResponseTag();
+            if (_packet = 'iq') then
+                q := r.GetFirstTag('query')
+            else
+                q := r;
             x := frameXData.submit();
-            r.AddTag(x);
+            q.AddTag(x);
             x.setAttribute('type', 'submit');
         except
             on EXDataValidationError do begin
