@@ -12,6 +12,13 @@
       RegDll "$INSTDIR\plugins\ExAspell.dll"
 	SectionEnd
 
+	Section /o "HTMLLogger" SEC_ExHTMLLogger
+	  AddSize 265
+	  Push "ExHTMLLogger"
+	  Call DownloadPlugin
+      RegDll "$INSTDIR\plugins\ExHTMLLogger.dll"
+	SectionEnd
+
 	Section /o "ImportICQ" SEC_ExImportICQ
 	  AddSize 196
 	  Push "ExImportICQ"

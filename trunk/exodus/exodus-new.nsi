@@ -199,8 +199,8 @@ REAL STUFF STARTS HERE
 !define IDLEHOOKS "IdleHooks"
 !define LIBIDN "libidn"
 !define RICHED "riched20"
-!define VCL "$SYSDIR\vcl70.bpl"
-!define RTL "$SYSDIR\rtl70.bpl"
+!define VCL "..\redist\vcl70.bpl"
+!define RTL "..\redist\rtl70.bpl"
 !define RICHED_UPDATER "richupd"
 !define COMCTL "comctl32"
 !define COMCTL_UPDATER "50comupd"
@@ -336,7 +336,7 @@ CRCCheck on
 ================================================================================
  Modern UI Languages (first is default language)
 ================================================================================
-*/ 
+*/
 !insertmacro MUI_LANGUAGE "English"
 !insertmacro MUI_LANGUAGE "Catalan"
 !insertmacro MUI_LANGUAGE "Czech"
@@ -359,7 +359,7 @@ CRCCheck on
 ReserveFile "${PLUGINS_PATH}${SYSTEMDLL_FILENAME}${DLL_EXTENSION}"
 ReserveFile "${ZIPDLL_PATH}${ZIPDLL_FILENAME}${DLL_EXTENSION}"
 
-/* 
+/*
 ================================================================================
     localization stuff
 ================================================================================
@@ -435,9 +435,9 @@ Section Exodus SEC_Exodus
     File "${MSN_EMOTICONS}${DLL_EXTENSION}"
     File "${YAHOO_EMOTICONS}${DLL_EXTENSION}"
     File "${LIBIDN}${DLL_EXTENSION}"
-    File "C:\Windows\System32\vcl70.bpl"
-    File "C:\Windows\System32\rtl70.bpl"
-    
+    File "${VCL}"
+    File "${RTL}"
+
     ; Daily builds should include the MAP file to get detailed AV reports.
     !ifdef DAILY
         File "${PRODUCT}${MAP_EXTENSION}"
@@ -446,7 +446,7 @@ Section Exodus SEC_Exodus
     ; Create the plugins dir, and lay down the default logger
     CreateDirectory "$INSTDIR\${PLUGINS_DIR}"
     SetOutPath "$INSTDIR\${PLUGINS_DIR}"
-    File "plugins\ExHTMLLogger.dll" 
+    File "plugins\ExHTMLLogger.dll"
 
     ; Make sure exodus is registered, for Win95 and NT4
     ; We need to do this to ensure that plugins can register properly.
@@ -477,7 +477,7 @@ Section Exodus SEC_Exodus
     !else
         File "..\redist\${RICHED_UPDATER}${EXEC_EXTENSION}"
     !endif
-    
+
     MessageBox MB_OK "$(MSG_NoReboot)"
 
     ExecWait '"$INSTDIR\${RICHED_UPDATER}${EXEC_EXTENSION} /Q"'
@@ -490,12 +490,12 @@ Section Exodus SEC_Exodus
     ; if the file doesn't exist.
     Delete $INSTDIR\${RICHED_UPDATER}${EXEC_EXTENSION}
 
-    /* 
+    /*
     ---------------------------------------------------------------------------
     Update common controls, if needed 5.80
     ---------------------------------------------------------------------------
     */
-    
+
     GetDLLVersion "$SYSDIR\${COMCTL}${DLL_EXTENSION}" $R0 $R1
     IntOp $R1 $R0 / 65536
     IntOp $R2 $R0 & 0x00FF
@@ -516,7 +516,7 @@ Section Exodus SEC_Exodus
     !else
         File "..\redist\${COMCTL_UPDATER}${EXEC_EXTENSION}"
     !endif
-    
+
     MessageBox MB_OK "$(MSG_NoReboot)"
     ExecWait '"$INSTDIR\${COMCTL_UPDATER}${EXEC_EXTENSION}" /Q'
     SetRebootFlag true
@@ -529,7 +529,7 @@ Section Exodus SEC_Exodus
     Delete "$INSTDIR\${COMCTL_UPDATER}${EXEC_EXTENSION}"
 
     /*
-    ---------------------------------------------------------------------------    
+    ---------------------------------------------------------------------------
     Check for Win95, and no Winsock2
     ---------------------------------------------------------------------------
     */
@@ -550,7 +550,7 @@ Section Exodus SEC_Exodus
     !else
         File "..\redist\${WINSOCK_UPDATER}${EXEC_EXTENSION}"
     !endif
-    
+
     MessageBox MB_OK "$(MSG_NoReboot)"
     ExecWait '"$INSTDIR\${WINSOCK_UPDATER}${EXEC_EXTENSION}" /Q'
     SetRebootFlag true
@@ -560,7 +560,7 @@ Section Exodus SEC_Exodus
     Delete "$INSTDIR\${WINSOCK_UPDATER}${EXEC_EXTENSION}"
 
     /*
-    ---------------------------------------------------------------------------    
+    ---------------------------------------------------------------------------
     Write the installation and uninstaller paths into the registry
     ---------------------------------------------------------------------------
     */
@@ -608,10 +608,10 @@ Section /o "$(NAME_SSL)" SEC_SSL
         AddSize 824
     !endif
     IfFileExists "$INSTDIR\${SSLEAY}${DLL_EXTENSION}" libea need_ssl
-    
+
   libea:
     IfFileExists "$INSTDIR\${LIBEAY}${DLL_EXTENSION}" no_ssl
-    
+
   need_ssl:
 
     !ifndef NO_NETWORK
@@ -629,10 +629,10 @@ Section /o "$(NAME_SSL)" SEC_SSL
         File "${SSLEAY}${DLL_EXTENSION}"
     !endif
     goto ssl_done
-    
+
   no_ssl:
     DetailPrint "$(MSG_SSLOK)"
-    
+
   ssl_done:
 SectionEnd
 
@@ -659,7 +659,7 @@ SubSection "$(NAME_SHELL)" SEC_Shell
         !endif
         CreateShortcut "$DESKTOP\${PRODUCT}${LINK_EXTENSION}" "$INSTDIR\${PRODUCT}${EXEC_EXTENSION}"
 	SectionEnd
-	
+
 	Section "Quickluanch Shortcut" SEC_Quicklaunch
         !ifdef USE_HKLM_KEY
             SetShellVarContext all
@@ -668,7 +668,7 @@ SubSection "$(NAME_SHELL)" SEC_Shell
         !endif
         CreateShortcut "$QUICKLAUNCH\${PRODUCT}${LINK_EXTENSION}" "$INSTDIR\${PRODUCT}${EXEC_EXTENSION}"
     SectionEnd
-    
+
     Section "Start Exodus with Windows" SEC_AutoStart
         !ifdef USE_HKLM_KEY
             SetShellVarContext all
@@ -678,7 +678,7 @@ SubSection "$(NAME_SHELL)" SEC_Shell
             WriteRegStr HKCU "${PRODUCT_RUN_KEY}" "${PRODUCT}" "$INSTDIR\${PRODUCT}${EXEC_EXTENSION}"
         !endif
     SectionEnd
-    
+
 SubSectionEnd
 
 /*
@@ -764,7 +764,7 @@ Section "Uninstall"
     ; remove shell hooks
     Delete /REBOOTOK "$DESKTOP\${PRODUCT}${LINK_EXTENSION}"
     Delete /REBOOTOK "$QUICKLAUNCH\${PRODUCT}${LINK_EXTENSION}"
-    
+
 !warning "$\r$\nATTENTION:  The UnRegDLL command is making the uninstaller crash.$\r$\n$\t$\tIt was disabled, chech the source starting at line: ${__LINE__}"
 /*
     ; unregister all of the plugin .dll's
