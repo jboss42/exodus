@@ -287,7 +287,8 @@ end;
 {---------------------------------------}
 procedure TAvatar.parse(tag: TXMLTag);
 var
-    mt: Widestring;
+    bv: TXMLTag;
+    data, mt: Widestring;
     m: TMemoryStream;
     d: TIdDecoderMime;
     i: integer;
@@ -296,8 +297,20 @@ begin
     Valid := false;
     if (_pic <> nil) then FreeAndNil(_pic);
 
+    // check for cdata attached directly to <PHOTO>
+    data := tag.Data;
+    if (trim(data) = '') then begin
+        // check for <BINVAL>...</BINVAL>
+        bv := tag.GetFirstTag('BINVAL');
+        if (bv <> nil) then
+            data := bv.Data;
+    end;
+
+    // if we have no data, then bail
+    if (trim(data) = '') then exit;
+
     tmps := TWidestringList.Create();
-    split(tag.Data, tmps);
+    split(data, tmps);
     _data := '';
     for i := 0 to tmps.Count - 1 do begin
         _data := _data + tmps[i];
@@ -545,8 +558,10 @@ begin
     x2 := tag.QueryXPTag(_xp2);
 
     if (x2 <> nil) then
+        // iChat mode
         hash := x2.GetBasicText('photo')
     else
+        // old iq:avatar mode
         hash := x1.GetBasicText('hash');
 
     assert((x1 <> nil) or (x2 <> nil));

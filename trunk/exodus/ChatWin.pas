@@ -392,7 +392,7 @@ end;
 procedure TfrmChat.SetupPrefs();
 begin
     AssignDefaultFont(Self.Font);
-    AssignUnicodeURL(lblNick.Font, 14);
+    AssignUnicodeURL(lblNick.Font, 12);
 
     // setup prefs
     MsgList.setupPrefs();
@@ -460,8 +460,6 @@ begin
 
     _jid := TJabberID.Create(cjid);
     _avatar := nil;
-    // XXX: check pref
-    //imgAvatar.Visible := false;
     Panel1.ClientHeight := 28;
 
     // check for an avatar
@@ -484,7 +482,12 @@ begin
                 //imgAvatar.Visible := true;
             end;
         end
+    end
+    else begin
+        // No avatars are displayed
+        imgAvatar.Visible := false;
     end;
+
 
 
     // setup the callbacks if we don't have them already
@@ -1366,7 +1369,6 @@ end;
 procedure TfrmChat.imgAvatarPaint(Sender: TObject);
 var
     r: TRect;
-    b: TBitmap;
 begin
   inherited;
     if (_avatar <> nil) then begin

@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2005-03-18 09:41\n"
-"PO-Revision-Date: 2005-03-18 09:41\n"
+"POT-Creation-Date: 2005-03-23 08:30\n"
+"PO-Revision-Date: 2005-03-23 08:30\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -629,11 +629,11 @@ msgstr ""
 #. frmExodus..MainMenu1..Help1..N12..Caption
 #: Jabber1.dfm:473
 #. frmExodus..popTray..trayPresence..N5..Caption
-#: Jabber1.dfm:2687
+#: Jabber1.dfm:2686
 #. frmExodus..popTray..N4..Caption
-#: Jabber1.dfm:2701
+#: Jabber1.dfm:2700
 #. frmExodus..popTray..N01..Caption
-#: Jabber1.dfm:2708
+#: Jabber1.dfm:2707
 #. frmJud..PopupMenu1..N1..Caption
 #: jud.dfm:226
 #. frmMsgRecv..popContact..N1..Caption
@@ -1551,7 +1551,7 @@ msgstr ""
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presOnline..Caption
 #: Jabber1.dfm:360
 #. frmExodus..popTray..trayPresence..trayPresOnline..Caption
-#: Jabber1.dfm:2657
+#: Jabber1.dfm:2656
 #. frmRosterWindow..popStatus..presOnline..Caption
 #: RosterWindow.dfm:403
 #. init the cmd line stuff
@@ -1575,7 +1575,7 @@ msgstr ""
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presAway..Caption
 #: Jabber1.dfm:372
 #. frmExodus..popTray..trayPresence..trayPresAway..Caption
-#: Jabber1.dfm:2669
+#: Jabber1.dfm:2668
 #. frmRosterWindow..popStatus..presAway..Caption
 #: RosterWindow.dfm:415
 #: Jabber1.pas:2976
@@ -1603,7 +1603,7 @@ msgstr ""
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presDND..Caption
 #: Jabber1.dfm:384
 #. frmExodus..popTray..trayPresence..trayPresDND..Caption
-#: Jabber1.dfm:2681
+#: Jabber1.dfm:2680
 #. frmRosterWindow..popStatus..presDND..Caption
 #: RosterWindow.dfm:427
 #: RosterWindow.pas:365
@@ -1701,7 +1701,7 @@ msgstr ""
 #. frmDebug..PopupMenu1..popPres..Caption
 #: Debug.dfm:319
 #. frmExodus..popTray..trayPresence..Caption
-#: Jabber1.dfm:2654
+#: Jabber1.dfm:2653
 #. frmPrefs..Scroller..lblCustomPres..Caption
 #: Prefs.dfm:1932
 #. frmRosterWindow..popRoster..popPresence..Caption
@@ -2231,7 +2231,7 @@ msgstr ""
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presChat..Caption
 #: Jabber1.dfm:366
 #. frmExodus..popTray..trayPresence..trayPresChat..Caption
-#: Jabber1.dfm:2663
+#: Jabber1.dfm:2662
 #. frmRosterWindow..popStatus..presChat..Caption
 #: RosterWindow.dfm:409
 #: RosterWindow.pas:362
@@ -2245,7 +2245,7 @@ msgstr ""
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presXA..Caption
 #: Jabber1.dfm:378
 #. frmExodus..popTray..trayPresence..trayPresXA..Caption
-#: Jabber1.dfm:2675
+#: Jabber1.dfm:2674
 #. frmRosterWindow..popStatus..presXA..Caption
 #: RosterWindow.dfm:421
 #: RosterWindow.pas:364
@@ -2337,29 +2337,29 @@ msgid "About"
 msgstr ""
 
 #. frmExodus..popTabs..popCloseTab..Caption
-#: Jabber1.dfm:2635
+#: Jabber1.dfm:2634
 msgid "Close Window"
 msgstr ""
 
 #. frmExodus..popTabs..popFloatTab..Caption
-#: Jabber1.dfm:2640
+#: Jabber1.dfm:2639
 msgid "Float Window"
 msgstr ""
 
 #. frmExodus..popTray..trayShow..Caption
-#: Jabber1.dfm:2650
+#: Jabber1.dfm:2649
 msgid "Show Exodus"
 msgstr ""
 
 #. frmExodus..popTray..trayPresence..Custom2..Caption
-#: Jabber1.dfm:2691
+#: Jabber1.dfm:2690
 #. frmRosterWindow..popStatus..Custom1..Caption
 #: RosterWindow.dfm:437
 msgid "Custom ..."
 msgstr ""
 
 #. frmExodus..popTray..trayMessage..Caption
-#: Jabber1.dfm:2696
+#: Jabber1.dfm:2695
 #. frmJud..PopupMenu1..popMessage..Caption
 #: jud.dfm:233
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
@@ -2368,12 +2368,12 @@ msgid "Send Message"
 msgstr ""
 
 #. frmExodus..popTray..trayConnect..Caption
-#: Jabber1.dfm:2704
+#: Jabber1.dfm:2703
 msgid "Log On/Off"
 msgstr ""
 
 #. frmExodus..popTray..trayExit..Caption
-#: Jabber1.dfm:2711
+#: Jabber1.dfm:2710
 msgid "Exit Exodus"
 msgstr ""
 
