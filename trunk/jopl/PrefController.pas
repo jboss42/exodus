@@ -237,6 +237,7 @@ end;
         procedure RemoveProfile(p: TJabberProfile);
         procedure BeginUpdate();
         procedure EndUpdate();
+        procedure setupDefaultPresence();
 
 //        function getXMLTag(name: Widestring): TXMLTag;
 
@@ -504,8 +505,6 @@ var
     reg  : TRegistry;
 {$endif}
     p    : WideString;
-    allp : TWideStringList;
-    i    : integer;
 begin
     inherited Create();
 
@@ -519,16 +518,8 @@ begin
     end;
 
     _pref_file := TPrefFile.Create(_pref_filename);
-    if (_pref_file.NeedDefaultPresence) then begin
-        allp := s_default_file.getAllPresence();
-
-        for i := 0 to allp.Count - 1 do begin
-            _pref_file.setPresence(TJabberCustomPres(allp.Objects[i]));
-        end;
-        
-        ClearStringListObjects(allp);
-        allp.free();
-    end;
+    if (_pref_file.NeedDefaultPresence) then
+        setupDefaultPresence();
 
     _server_file := nil;
     _profiles := TStringList.Create;
@@ -1230,6 +1221,144 @@ begin
     _updating := false;
     Save();
 end;
+
+{---------------------------------------}
+procedure TPrefController.setupDefaultPresence();
+var
+    cp: TJabberCustomPres;
+begin
+    // recreate the canned presence stuff.
+    _pref_file.removeAllPresence();
+
+    cp := TJabberCustomPres.Create();
+    with cp do begin
+        Status := _('Available');
+        title := Status;
+        Show := '';
+        hotkey := 'Ctrl + O';
+    end;
+    _pref_file.setPresence(cp);
+
+    cp := TJabberCustomPres.Create();
+    with cp do begin
+        Status := _('Free for Chat');
+        Show := 'chat';
+        title := Status;
+        hotkey := '';
+    end;
+    _pref_file.setPresence(cp);
+
+    cp := TJabberCustomPres.Create();
+    with cp do begin
+        Status := _('Away');
+        Show := 'away';
+        title := Status;
+        hotkey := 'Ctrl + A';
+    end;
+    _pref_file.setPresence(cp);
+
+    cp := TJabberCustomPres.Create();
+    with cp do begin
+        Status := _('Lunch');
+        Show := 'away';
+        title := Status;
+        hotkey := 'Ctrl + L';
+    end;
+    _pref_file.setPresence(cp);
+
+    cp := TJabberCustomPres.Create();
+    with cp do begin
+        Status := _('Meeting');
+        Show := 'away';
+        title := Status;
+        hotkey := 'Ctrl + M';
+    end;
+    _pref_file.setPresence(cp);
+
+    cp := TJabberCustomPres.Create();
+    with cp do begin
+        Status := _('Bank');
+        Show := 'away';
+        title := Status;
+        hotkey := '';
+    end;
+    _pref_file.setPresence(cp);
+
+    cp := TJabberCustomPres.Create();
+    with cp do begin
+        Status := _('Extended Away');
+        Show := 'xa';
+        title := Status;
+        hotkey := '';
+    end;
+    _pref_file.setPresence(cp);
+
+    cp := TJabberCustomPres.Create();
+    with cp do begin
+        Status := _('Gone Home');
+        Show := 'xa';
+        title := Status;
+        hotkey := '';
+    end;
+    _pref_file.setPresence(cp);
+
+    cp := TJabberCustomPres.Create();
+    with cp do begin
+        Status := _('Gone to Work');
+        Show := 'xa';
+        title := Status;
+        hotkey := '';
+    end;
+    _pref_file.setPresence(cp);
+
+    cp := TJabberCustomPres.Create();
+    with cp do begin
+        Status := _('Sleeping');
+        Show := 'xa';
+        title := Status;
+        hotkey := '';
+    end;
+    _pref_file.setPresence(cp);
+
+    cp := TJabberCustomPres.Create();
+    with cp do begin
+        Status := _('Do Not disturb');
+        Show := 'dnd';
+        title := Status;
+        hotkey := '';
+    end;
+    _pref_file.setPresence(cp);
+
+    cp := TJabberCustomPres.Create();
+    with cp do begin
+        Status := _('Busy');
+        Show := 'dnd';
+        title := Status;
+        hotkey := '';
+    end;
+    _pref_file.setPresence(cp);
+
+    cp := TJabberCustomPres.Create();
+    with cp do begin
+        Status := _('Working');
+        Show := 'dnd';
+        title := Status;
+        hotkey := '';
+    end;
+    _pref_file.setPresence(cp);
+
+    cp := TJabberCustomPres.Create();
+    with cp do begin
+        Status := _('Mad');
+        Show := 'dnd';
+        title := Status;
+        hotkey := '';
+    end;
+    _pref_file.setPresence(cp);
+
+    _pref_file.save();
+end;
+
 
 {---------------------------------------}
 {---------------------------------------}

@@ -81,7 +81,7 @@ begin
         s := getPrefState(p);
         sval := MainSession.Prefs.getString(p);
 
-        // XXX: lots more controls need to go here.
+        // Do stuff based on the controls type
         if (c.inheritsFrom(TTntCheckBox)) then
             TCheckBox(c).Checked := SafeBool(sval)
         else if ((c.inheritsFrom(TUpDown)) or (c.inheritsFrom(TTntUpDown))) then
