@@ -359,8 +359,7 @@ end;
 
 procedure DebugMsg(Message : string);
 begin
-    if (frmDebug <> nil) then
-        frmDebug.debugMsg(Message);
+    DebugMessage(Message);
 end;
 
 procedure AssignDefaultFont(font: TFont);

@@ -50,19 +50,21 @@ type
     procedure MemoSendKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormShow(Sender: TObject);
   private
     { Private declarations }
     procedure DebugCallback(send: boolean; data: string);
-  public
-    { Public declarations }
-    procedure debugMsg(txt: string);
   end;
+
+    procedure ShowDebugForm();
+    procedure DockDebugForm();
+    procedure FloatDebugForm();
+    procedure CloseDebugForm();
+    procedure DebugMessage(txt: string);
 
 const
     DEBUG_LIMIT = 500;
 
-var
-  frmDebug: TfrmDebug;
 
 implementation
 
@@ -70,21 +72,55 @@ implementation
 uses
     Signals, Session, Jabber1;
 
-{---------------------------------------}
-{---------------------------------------}
-{---------------------------------------}
-procedure TfrmDebug.FormCreate(Sender: TObject);
+var
+    frmDebug: TfrmDebug;
+
+
+// Singleton factory
+procedure ShowDebugForm();
 begin
-    // make sure the output is showing..
-    inherited;
-    MainSession.Stream.RegisterSocketCallback(DebugCallback);
+    if ( frmDebug = nil ) then
+        frmDebug := TfrmDebug.Create(nil);
+    if (not frmDebug.Visible) then
+        frmDebug.ShowDefault();
+
+    if (frmDebug.Docked) then
+        frmJabber.Tabs.ActivePage := frmDebug.TabSheet
+    else
+        frmDebug.Show();
+end;
+
+procedure DockDebugForm();
+begin
+    if ((frmDebug <> nil) and (not frmDebug.Docked)) then begin
+        frmDebug.DockForm;
+        frmDebug.Show;
+        end;
+end;
+
+procedure FloatDebugForm();
+begin
+    // make sure debug window is hidden and undocked
+    if ((frmDebug <> nil) and (frmDebug.Docked)) then begin
+        frmDebug.Hide;
+        frmDebug.FloatForm;
+        end;
+end;
+
+procedure CloseDebugForm();
+begin
+    if ( frmDebug = nil ) then exit;
+    frmDebug.Close();
 end;
 
 {---------------------------------------}
-procedure TfrmDebug.debugMsg(txt: string);
+procedure DebugMessage(txt: string);
 begin
+    if (frmDebug = nil) then exit;
+    if (not frmDebug.Visible) then exit;
+        
     // add some text to the debug log
-    with MsgDebug do begin
+    with frmDebug.MsgDebug do begin
         SelStart := GetTextLen;
         SelLength := 0;
         SelAttributes.Color := clRed;
@@ -94,10 +130,22 @@ begin
 end;
 
 {---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+procedure TfrmDebug.FormCreate(Sender: TObject);
+begin
+    // make sure the output is showing..
+    inherited;
+end;
+
+
+{---------------------------------------}
 procedure TfrmDebug.DebugCallback(send: boolean; data: string);
 var
     l, d: integer;
 begin
+    if (frmDebug = nil) then exit;
+    if (not frmDebug.Visible) then exit;
 
     if (MsgDebug.Lines.Count >= DEBUG_LIMIT) then begin
         d := (MsgDebug.Lines.Count - DEBUG_LIMIT) + 1;
@@ -160,23 +208,23 @@ begin
     if (cmd[1] = '/') then begin
         // we are giving some kind of interactive debugger cmd
         if (cmd = '/dispcount') then
-            DebugMsg('Dispatcher listener count: ' + IntToStr(MainSession.Dispatcher.TotalCount) + ''#13#10);
+            DebugMessage('Dispatcher listener count: ' + IntToStr(MainSession.Dispatcher.TotalCount) + ''#13#10);
         if (cmd = '/dispdump') then begin
             // dump out all signals
             with MainSession.Dispatcher do begin
                 for s := 0 to Count - 1 do begin
                     sig := TSignal(Objects[s]);
-                    DebugMsg('SIGNAL: ' + Strings[s] + ' of class: ' + sig.ClassName + ''#13#10);
-                    DebugMsg('-----------------------------------'#13#10);
+                    DebugMessage('SIGNAL: ' + Strings[s] + ' of class: ' + sig.ClassName + ''#13#10);
+                    DebugMessage('-----------------------------------'#13#10);
                     for i := 0 to sig.Count - 1 do begin
                         l := TSignalListener(sig.Objects[i]);
                         msg := 'LID: ' + IntToStr(l.cb_id) + ', ';
                         msg := msg + sig.Strings[i] + ', ';
                         msg := msg + l.classname + ', ';
                         msg := msg + l.methodname;
-                        DebugMsg(msg + ''#13#10);
+                        DebugMessage(msg + ''#13#10);
                         end;
-                    DebugMsg(''#13#10#13#10);
+                    DebugMessage(''#13#10#13#10);
                     end;
                 end;
             end;
@@ -208,7 +256,7 @@ end;
 procedure TfrmDebug.MemoSendKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  inherited;
+    inherited;
     if ((Key = VK_RETURN) and (ssCtrl in Shift)) then begin
         btnSendRawClick(Self);
         Key := 0;
@@ -217,8 +265,17 @@ end;
 
 procedure TfrmDebug.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  inherited;
     Action := caFree;
+    //Action := caHide;
+    MainSession.Stream.UnregisterDataCallback(DebugCallback);
+    inherited;
+    frmDebug := nil;
+end;
+
+procedure TfrmDebug.FormShow(Sender: TObject);
+begin
+    inherited;
+    MainSession.Stream.RegisterDataCallback(DebugCallback);
 end;
 
 end.
