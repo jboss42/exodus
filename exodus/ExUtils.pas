@@ -492,8 +492,12 @@ begin
 end;
 
 function ColorToHTML( Color: TColor): string;
+var
+    rgb: longint;
 begin
-  result := Format( '#%.2x%.2x%.2x', [ GetRValue( Color), GetGValue( Color), GetBValue( Color)]);
+    rgb := ColorToRGB(Color);
+    result := Format( '#%.2x%.2x%.2x', [ GetRValue(rgb),
+                GetGValue(rgb), GetBValue(rgb)]);
 end;
 
 procedure jabberSendCTCP(jid, xmlns: string);
