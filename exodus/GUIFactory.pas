@@ -132,8 +132,7 @@ begin
             chkSubscribe.Checked := tmp_b;
             chkSubscribe.Enabled := tmp_b;
             boxAdd.Enabled := tmp_b;
-            AssignTntStrings(MainSession.Roster.GrpList, cboGroup.Items);
-            removeSpecialGroups(cboGroup.Items);
+            MainSession.Roster.AssignGroups(cboGroup.Items);
             if (tmp_b) then begin
                 txtNickname.Text := tmp_jid.user;
                 cboGroup.Text := MainSession.Prefs.getString('roster_default');

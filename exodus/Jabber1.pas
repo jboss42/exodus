@@ -418,13 +418,6 @@ resourcestring
     sExodus = 'Exodus';
     sChat = 'Chat';
 
-    sGrpUnfiled = 'Unfiled';
-    sGrpOnline = 'Available';
-    sGrpAway = 'Away';
-    sGrpXA = 'Ext. Away';
-    sGrpDND = 'Do Not Disturb';
-    sGrpOffline = 'Offline';
-
     sRosterPending = ' (Pending)';
     sRosterAvail = 'Available';
     sRosterChat = 'Wants to chat';

@@ -159,8 +159,7 @@ begin
     f := TfrmProfile.Create(Application);
 
     with f do begin
-        AssignTntStrings(MainSession.Roster.GrpList, GrpListBox.Items);
-        removeSpecialGroups(GrpListBox.Items);
+        MainSession.Roster.AssignGroups(GrpListBox.Items);
         ResListBox.Items.Clear;
         optSubscrip.ItemIndex := 3;
         txtJID.Text := tmp_jid.jid;

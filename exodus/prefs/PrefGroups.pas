@@ -65,8 +65,7 @@ var
 begin
     // populate grp drop-downs.
     gs := TWidestringList.Create();
-    gs.Assign(MainSession.Roster.GrpList);
-    removeSpecialGroups(gs);
+    MainSession.Roster.AssignGroups(gs);
     gs.Sorted := true;
     gs.Sort();
 

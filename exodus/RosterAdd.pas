@@ -150,9 +150,8 @@ begin
     // Add a new group to the list...
     ngrp := sDefaultGroup;
     if InputQueryW(sNewGroup, sNewGroupPrompt, ngrp) then begin
-        MainSession.Roster.GrpList.Add(ngrp);
-        AssignTntStrings(MainSession.Roster.GrpList, cboGroup.Items);
-        removeSpecialGroups(cboGroup.Items);
+        MainSession.Roster.AddGroup(ngrp);
+        MainSession.Roster.AssignGroups(cboGroup.Items);
     end;
 end;
 
@@ -162,8 +161,7 @@ begin
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
     URLLabel(lblAddGrp);
-    AssignTntStrings(MainSession.Roster.GrpList, cboGroup.Items);
-    removeSpecialGroups(cboGroup.Items);
+    MainSession.Roster.AssignGroups(cboGroup.Items);
     cboGroup.Text := MainSession.Prefs.getString('roster_default');
     cboType.ItemIndex := 0;
     txtGateway.Text := MainSession.Server;

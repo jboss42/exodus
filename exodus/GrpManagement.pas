@@ -52,10 +52,8 @@ procedure TfrmGrpManagement.FormCreate(Sender: TObject);
 begin
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
-    AssignTntStrings(MainSession.Roster.GrpList, lstGroups.Items);
-    removeSpecialGroups(lstGroups.Items);
+    MainSession.Roster.AssignGroups(lstGroups.Items);
     lstGroups.ItemIndex := lstGroups.Items.IndexOf(MainSession.Prefs.getString('roster_default'));
-    // lstGroups.Selected[lstGroups.IndexOf(MainSession.Prefs.getString('roster_default'))] := true;
 end;
 
 {---------------------------------------}
