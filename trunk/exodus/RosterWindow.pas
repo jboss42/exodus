@@ -238,7 +238,7 @@ type
     procedure Redraw;
     procedure DockRoster;
     procedure FloatRoster;
-    procedure ShowPresence(show: string);
+    procedure ShowPresence(show: Widestring);
 
     function RenderGroup(grp_idx: integer): TTreeNode;
     function getSelectedContacts(online: boolean = true): TList;
@@ -958,7 +958,7 @@ end;
 procedure TfrmRosterWindow.RemoveGroupNode(node: TTreeNode);
 var
     grp_idx: integer;
-    grp: string;
+    grp: Widestring;
 begin
     grp := node.Text;
     grp_idx := MainSession.roster.GrpList.indexOf(grp);
@@ -981,7 +981,7 @@ end;
 procedure TfrmRosterWindow.RenderNode(ritem: TJabberRosterItem; p: TJabberPres);
 var
     i, g, grp_idx: integer;
-    cur_grp, tmps: string;
+    cur_grp, tmps: Widestring;
     top_item, cur_node, grp_node, n: TTreeNode;
     node_list: TList;
     tmp_grps: TWideStringlist;
@@ -1146,8 +1146,7 @@ begin
     // ---------------------- Stage #3 -------------------------
     // For each grp in the temp. grp list,
     // make sure a node already exists, or create one.
-
-    // xxx: for my resources, we need to add each PPDB entry
+    // For my resources, we need to add each PPDB entry
     for g := 0 to tmp_grps.Count - 1 do begin
         cur_grp := tmp_grps[g];
 
@@ -1298,7 +1297,7 @@ end;
 function TfrmRosterWindow.RenderGroup(grp_idx: integer): TTreeNode;
 var
     grp_node: TTreeNode;
-    cur_grp: string;
+    cur_grp: Widestring;
 begin
     // Show this group node
     cur_grp := MainSession.Roster.GrpList[grp_idx];
@@ -1445,7 +1444,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmRosterWindow.ShowPresence(show: string);
+procedure TfrmRosterWindow.ShowPresence(show: Widestring);
 begin
     // display this show type
     if show = 'chat' then begin
@@ -1477,7 +1476,7 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.presAvailableClick(Sender: TObject);
 var
-    show: string;
+    show: Widestring;
 begin
     // change our own presence
     case TMenuItem(Sender).Tag of
@@ -1720,7 +1719,7 @@ procedure TfrmRosterWindow.treeRosterDragDrop(Sender, Source: TObject; X,
 var
     i: integer;
     ritem: TJabberRosterItem;
-    d_grp: string;
+    d_grp: Widestring;
     d_node: TTreeNode;
     s_node: TTreeNode;
 begin
@@ -1989,7 +1988,7 @@ var
     t: TXMLTag;
     recips: TList;
     invis: boolean;
-    pshow, pstatus: string;
+    pshow, pstatus: Widestring;
     pri: integer;
     cur_jid: Widestring;
 begin
