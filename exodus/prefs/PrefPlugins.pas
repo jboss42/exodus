@@ -46,7 +46,6 @@ type
     procedure loadPlugins();
     procedure savePlugins();
     procedure scanPluginDir(selected: TWidestringList);
-    procedure CheckPluginDll(dll : WideString; selected: TWidestringlist);
 
   public
     { Public declarations }
@@ -190,89 +189,27 @@ procedure TfrmPrefPlugins.scanPluginDir(selected: TWidestringList);
 var
     dir: Widestring;
     sr: TSearchRec;
+    idx: integer;
+    item: TTntListItem;
+    dll, libname, obname, doc: WideString;
 begin
     dir := txtPluginDir.Text;
     if (not DirectoryExists(dir)) then exit;
     if (FindFirst(dir + '\\*.dll', faAnyFile, sr) = 0) then begin
         repeat
-            CheckPluginDll(dir + '\' + sr.Name, selected);
+            dll := dir + '\' + sr.Name;
+            if (CheckPluginDll(dll, libname, obname, doc)) then begin
+                item := lstPlugins.Items.Add();
+                item.Caption := libname + '.' + obname;
+                item.SubItems.Add(doc);
+                item.SubItems.Add(dll);
+
+                // check to see if this is selected
+                idx := selected.IndexOf(item.Caption);
+                item.Checked := (idx >= 0);
+            end;
         until FindNext(sr) <> 0;
         FindClose(sr);
-    end;
-end;
-
-{---------------------------------------}
-procedure TfrmPrefPlugins.CheckPluginDll(dll : WideString; selected: TWidestringList);
-var
-    lib : ITypeLib;
-    idx, i, j : integer;
-    item: TTntListItem;
-    tinfo, iface : ITypeInfo;
-    tattr, iattr: PTypeAttr;
-    r: cardinal;
-    libname, obname, doc: WideString;
-begin
-    // load the .dll.  This SHOULD register the bloody thing if it's not, but that
-    // doesn't seem to work for me.
-    try
-        OleCheck(LoadTypeLibEx(PWideChar(dll), REGKIND_REGISTER, lib));
-        // get the project name
-        OleCheck(lib.GetDocumentation(-1, @libname, nil, nil, nil));
-    except
-        on EOleSysError do exit;
-    end;
-
-    // for each type in the project
-    for i := 0 to lib.GetTypeInfoCount() - 1 do begin
-        // get the info about the type
-        try
-            OleCheck(lib.GetTypeInfo(i, tinfo));
-
-            // get attributes of the type
-            OleCheck(tinfo.GetTypeAttr(tattr));
-        except
-            on EOleSysError do exit;
-        end;
-        // is this a coclass?
-        if (tattr.typekind <> TKIND_COCLASS) then continue;
-
-        // for each interface that the coclass implements
-        for j := 0 to tattr.cImplTypes - 1 do begin
-            // get the type info for the interface
-            try
-                OleCheck(tinfo.GetRefTypeOfImplType(j, r));
-                OleCheck(tinfo.GetRefTypeInfo(r, iface));
-
-                // get the attributes of the interface
-                OleCheck(iface.GetTypeAttr(iattr));
-            except
-                on EOleSysError do continue;
-            end;
-
-            // is this the IExodusPlugin interface?
-            if  (IsEqualGUID(iattr.guid, ExodusCOM_TLB.IID_IExodusPlugin)) then begin
-                // oho!  it IS.  Get the name of this coclass, so we can show
-                // what we did.  Get the doc string, just to show off.
-                try
-                    OleCheck(tinfo.GetDocumentation(-1, @obname, @doc, nil, nil));
-                    // SysFreeString of obname and doc needed?  In C, yes, but here?
-
-                    item := lstPlugins.Items.Add();
-                    item.Caption := libname + '.' + obname;
-                    item.SubItems.Add(doc);
-                    item.SubItems.Add(dll);
-
-                    // check to see if this is selected
-                    idx := selected.IndexOf(item.Caption);
-                    item.Checked := (idx >= 0);
-                except
-                    on EOleSysError do exit;
-                end;
-
-            end;
-            iface.ReleaseTypeAttr(iattr);
-        end;
-        tinfo.ReleaseTypeAttr(tattr);
     end;
 end;
 

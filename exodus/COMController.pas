@@ -165,8 +165,11 @@ type
 
 
 // Forward declares for plugin utils
-procedure InitPlugins();
+function CheckPluginDll(dll : WideString; var libname: Widestring;
+    var obname: Widestring; var doc: Widestring): boolean;
 function LoadPlugin(com_name: string): boolean;
+
+procedure InitPlugins();
 procedure UnloadPlugins();
 procedure ConfigurePlugin(com_name: string);
 procedure ReloadPlugins(sl: TWidestringlist);
@@ -177,7 +180,7 @@ var
 implementation
 
 uses
-    ExResponders, ExSession, GnuGetText, ExUtils,  
+    ExResponders, ExSession, GnuGetText, ExUtils,
     Chat, ChatController, JabberID, MsgRecv, Room, Browser, Jud,
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
     COMChatController, Dockable, RegForm,
@@ -224,6 +227,74 @@ begin
     s.Free();
     ok.Free();
 end;
+
+{---------------------------------------}
+function CheckPluginDll(dll : WideString; var libname: Widestring;
+    var obname: Widestring; var doc: Widestring): boolean;
+var
+    lib : ITypeLib;
+    i, j : integer;
+    tinfo, iface : ITypeInfo;
+    tattr, iattr: PTypeAttr;
+    r: cardinal;
+begin
+    // load the .dll.  This SHOULD register the bloody thing if it's not, but that
+    // doesn't seem to work for me.
+    Result := false;
+    try
+        OleCheck(LoadTypeLibEx(PWideChar(dll), REGKIND_REGISTER, lib));
+        OleCheck(lib.GetDocumentation(-1, @libname, nil, nil, nil));
+    except
+        on EOleSysError do exit;
+    end;
+
+    // for each type in the project
+    for i := 0 to lib.GetTypeInfoCount() - 1 do begin
+        // get the info about the type
+        try
+            OleCheck(lib.GetTypeInfo(i, tinfo));
+
+            // get attributes of the type
+            OleCheck(tinfo.GetTypeAttr(tattr));
+        except
+            on EOleSysError do exit;
+        end;
+        // is this a coclass?
+        if (tattr.typekind <> TKIND_COCLASS) then continue;
+
+        // for each interface that the coclass implements
+        for j := 0 to tattr.cImplTypes - 1 do begin
+            // get the type info for the interface
+            try
+                OleCheck(tinfo.GetRefTypeOfImplType(j, r));
+                OleCheck(tinfo.GetRefTypeInfo(r, iface));
+
+                // get the attributes of the interface
+                OleCheck(iface.GetTypeAttr(iattr));
+            except
+                on EOleSysError do continue;
+            end;
+
+            // is this the IExodusPlugin interface?
+            if  (IsEqualGUID(iattr.guid, ExodusCOM_TLB.IID_IExodusPlugin)) then begin
+                // oho!  it IS.  Get the name of this coclass, so we can show
+                // what we did.  Get the doc string, just to show off.
+                try
+                    OleCheck(tinfo.GetDocumentation(-1, @obname, @doc, nil, nil));
+                    // SysFreeString of obname and doc needed?  In C, yes, but here?
+                    Result := true;
+                    break;
+                except
+                    on EOleSysError do exit;
+                end;
+
+            end;
+            iface.ReleaseTypeAttr(iattr);
+        end;
+        tinfo.ReleaseTypeAttr(tattr);
+    end;
+end;
+
 
 {---------------------------------------}
 function LoadPlugin(com_name: string): boolean;
