@@ -4,6 +4,7 @@ inherited frmPrefEmote: TfrmPrefEmote
   Caption = 'frmPrefEmote'
   ClientHeight = 216
   ClientWidth = 330
+  OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   inherited pnlHeader: TTntPanel
@@ -25,6 +26,7 @@ inherited frmPrefEmote: TfrmPrefEmote
       Height = 25
       Caption = 'Add'
       TabOrder = 0
+      OnClick = btnEmoteAddClick
     end
     object btnEmoteRemove: TTntButton
       Left = 68
@@ -33,6 +35,7 @@ inherited frmPrefEmote: TfrmPrefEmote
       Height = 25
       Caption = 'Remove'
       TabOrder = 1
+      OnClick = btnEmoteRemoveClick
     end
     object btnEmoteClear: TTntButton
       Left = 132
@@ -41,6 +44,7 @@ inherited frmPrefEmote: TfrmPrefEmote
       Height = 25
       Caption = 'Clear'
       TabOrder = 2
+      OnClick = btnEmoteClearClick
     end
     object btnEmoteDefault: TTntButton
       Left = 196
@@ -49,6 +53,7 @@ inherited frmPrefEmote: TfrmPrefEmote
       Height = 25
       Caption = 'Defaults'
       TabOrder = 3
+      OnClick = btnEmoteDefaultClick
     end
   end
   object lstEmotes: TTntListBox
