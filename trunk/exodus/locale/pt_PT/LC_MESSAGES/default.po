@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exodus 0.8-Daily\n"
 "POT-Creation-Date: 2003-05-08 06:59\n"
-"PO-Revision-Date: 2003-11-09 11:20-0000\n"
+"PO-Revision-Date: 2003-11-12 05:32-0000\n"
 "Last-Translator: Lazarus Long <lazarus.long@bigfoot.com>\n"
 "Language-Team: pt_PT <lazarus.long@bigfoot.com>\n"
 "MIME-Version: 1.0\n"
@@ -161,7 +161,7 @@ msgstr "Acerca do Exodus"
 #: fService.dfm:86
 #: fService.dfm:113
 #: invite.dfm:12
-#: jud.dfm:150
+#: jud.dfm:152
 #: prefs/PrefFont.dfm:19
 #: prefs/PrefFont.dfm:32
 #: prefs/PrefFont.dfm:66
@@ -196,8 +196,8 @@ msgstr "MS Sans Serif"
 #: MsgRecv.pas:163
 #: RecvStatus.pas:375
 #: RosterRecv.dfm:48
-#: SendStatus.pas:838
-#: SendStatus.pas:958
+#: SendStatus.pas:837
+#: SendStatus.pas:957
 #: XferManager.pas:138
 #: xdata.pas:65
 msgid "Close"
@@ -696,7 +696,7 @@ msgstr "Colar "
 #: RosterWindow.dfm:636
 #: RosterWindow.dfm:652
 #: RosterWindow.dfm:677
-#: jud.dfm:215
+#: jud.dfm:217
 msgid "-"
 msgstr "-"
 
@@ -1020,7 +1020,7 @@ msgstr "Última vez/Actividade"
 #. frmBrowse..popContext..mSearch..Caption
 #. Programmer's name for it: sJUDSearch
 #: Browser.dfm:3178
-#: jud.pas:111
+#: jud.pas:110
 msgid "Search"
 msgstr "Localizar"
 
@@ -1066,6 +1066,11 @@ msgstr "Cancelar"
 #: ChatWin.dfm:5
 msgid "Chat Window"
 msgstr "Janela de conversa"
+
+#. frmChat..Panel1..pnlJID..lblNick..Caption
+#: ChatWin.dfm:71
+msgid " Foo 絈絉絊絋 "
+msgstr " Foo 絈絉絊絋 "
 
 #. frmChat..Panel1..pnlJID..lblNick..Caption_UTF7
 #: ChatWin.dfm:73
@@ -1990,7 +1995,7 @@ msgstr "Ver"
 #: Jabber1.dfm:145
 #: RosterAdd.dfm:6
 #: RosterWindow.dfm:581
-#: jud.dfm:207
+#: jud.dfm:209
 msgid "Add Contact"
 msgstr "Adicionar contacto"
 
@@ -2293,7 +2298,7 @@ msgstr "Personalizado ..."
 #. frmJud..PopupMenu1..popMessage..Caption
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
 #: Jabber1.dfm:2678
-#: jud.dfm:222
+#: jud.dfm:224
 #: subscribe.dfm:146
 msgid "Send Message"
 msgstr "Enviar mensagem"
@@ -2343,55 +2348,55 @@ msgid "Jabber Search"
 msgstr "Pesquisa Jabber"
 
 #. frmJud..Panel1..lblWizardTitle..Caption
-#: jud.dfm:40
+#: jud.dfm:42
 msgid "Jabber Search Wizard"
 msgstr "Assistente de pesquisa Jabber"
 
 #. frmJud..Tabs..TabSheet1..lblSelect....Align
-#: jud.dfm:61
+#: jud.dfm:63
 msgid "Select the user database or enter in the Jabber ID of the search agent to use:"
 msgstr "Seleccione a base de dados de utilizadores ou indique o ID Jabber do agente de busca a usar:"
 
 #. frmJud..Tabs..TabSheet2..Caption
 #. frmRegister..Tabs..TabSheet2..Caption
 #: RegForm.dfm:61
-#: jud.dfm:75
+#: jud.dfm:77
 msgid "TabSheet2"
 msgstr "TabSheet2"
 
 #. frmJud..Tabs..TabSheet2..lblWait..Caption
-#: jud.dfm:83
+#: jud.dfm:85
 msgid "Please wait. Contacting search agent:"
 msgstr "Por favor aguarde. A contactar o agente de busca:"
 
 #. frmJud..Tabs..TabSheet3..Caption
 #. frmRegister..Tabs..TabSheet3..Caption
 #: RegForm.dfm:96
-#: jud.dfm:97
+#: jud.dfm:99
 msgid "TabSheet3"
 msgstr "TabSheet3"
 
 #. frmJud..Tabs..TabSheet3..lblInstructions..Caption
-#: jud.dfm:105
+#: jud.dfm:107
 msgid "Fill in the search criteria to find contacts on."
 msgstr "Preencha os parâmetros para localizar os contactos."
 
 #. frmJud..Tabs..TabSheet4..Caption
 #. frmRegister..Tabs..TabSheet4..Caption
 #: RegForm.dfm:116
-#: jud.dfm:121
+#: jud.dfm:123
 msgid "TabSheet4"
 msgstr "TabSheet4"
 
 #. frmJud..Tabs..TabSheet4..Panel2..Label3..Caption
-#: jud.dfm:137
+#: jud.dfm:139
 msgid "Add Contacts to this group:"
 msgstr "Adicionar contactos a este grupo:"
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Caption
 #. frmAdd..lblAddGrp..Caption
 #: RosterAdd.dfm:48
-#: jud.dfm:145
+#: jud.dfm:147
 msgid "Add a new Group"
 msgstr "Adicionar um grupo novo"
 
@@ -2399,13 +2404,13 @@ msgstr "Adicionar um grupo novo"
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
 #. Programmer's name for it: sJUDAdd
 #: RosterRecv.dfm:44
-#: jud.dfm:171
-#: jud.pas:117
+#: jud.dfm:173
+#: jud.pas:116
 msgid "Add Contacts"
 msgstr "Adicionar contactos"
 
 #. frmJud..PopupMenu1..popProfile..Caption
-#: jud.dfm:211
+#: jud.dfm:213
 msgid "View Profile"
 msgstr "Ver perfil"
 
@@ -2413,7 +2418,7 @@ msgstr "Ver perfil"
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #. Programmer's name for it: sStartChat
 #: Jabber1.pas:441
-#: jud.dfm:218
+#: jud.dfm:220
 #: subscribe.dfm:142
 msgid "Start Chat"
 msgstr "Iniciar conversa"
@@ -7045,27 +7050,27 @@ msgid "You must enter a nickname"
 msgstr "Tem que indicar uma alcunha"
 
 #. Programmer's name for it: sJUDStart
-#: jud.pas:112
+#: jud.pas:111
 msgid "Start"
 msgstr "Iniciar"
 
 #. Programmer's name for it: sJUDStop
-#: jud.pas:113
+#: jud.pas:112
 msgid "Stop"
 msgstr "Parar"
 
 #. Programmer's name for it: sJUDErrorContacting
-#: jud.pas:114
+#: jud.pas:113
 msgid "Could not contact the search agent."
 msgstr "Não foi possível contactar o agente de procura."
 
 #. Programmer's name for it: sJUDTimeout
-#: jud.pas:115
+#: jud.pas:114
 msgid "The search timed out."
 msgstr "A pesquisa excedeu o tempo."
 
 #. Programmer's name for it: sJUDEmpty
-#: jud.pas:116
+#: jud.pas:115
 msgid "No Results were found."
 msgstr "Não foram encontrados resultados."
 
@@ -7529,26 +7534,26 @@ msgstr "Não preenchido"
 msgid "Bookmarks"
 msgstr "Favoritos"
 
-#: SendStatus.pas:836
+#: SendStatus.pas:835
 msgid "Your file transfer was refused to %s"
 msgstr "O seu envio de ficheiro para %s foi recusado"
 
 #. they refused
-#: SendStatus.pas:916
+#: SendStatus.pas:915
 msgid "The recipient (%s) refused your file: %s"
 msgstr "O destinatário (%s) recusou o seu fcheiro: %s"
 
 #. error
-#: SendStatus.pas:938
+#: SendStatus.pas:937
 msgid "The stream was not actived for file: %s"
 msgstr "O fluxo de transferência não foi activado para o ficheiro: %s"
 
-#: SendStatus.pas:974
+#: SendStatus.pas:973
 msgid "Send failed."
 msgstr "O envio falhou."
 
 #. PChar is in lparam
-#: SendStatus.pas:998
+#: SendStatus.pas:997
 msgid "Connected."
 msgstr "Ligado."
 
