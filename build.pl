@@ -90,6 +90,7 @@ if ($rtype eq "daily") {
   e("$::NSIS /v1 /DSTAGE exodus-new.nsi");  
 } else {
   e("$::NSIS /v1 exodus-new.nsi");
+  e("$::NSIS /v1 /DNO_NETWORK exodus-new.nsi");
 }
   
 print "SUCCESS!!!\n";
