@@ -39,6 +39,7 @@ type
         _nick     : WideString;
         _isme     : boolean;
         _time     : TDateTime;
+        _isxdata  : boolean;
 
         procedure SetSubject(const Value: WideString);
         procedure SetBody(const Value: WideString);
@@ -68,6 +69,7 @@ type
         property Nick: WideString read _nick write _nick;
         property isMe: boolean read _isme write _isme;
         property Time: TDateTime read _time;
+        property isXdata: boolean read _isxdata;
   end;
 
 {---------------------------------------}
@@ -120,6 +122,8 @@ begin
                 Delete(_body, 1, 4);
                 end;
             end;
+
+        _isxdata := (mTag.QueryXPTag('//x[@xmlns="jabber:x:data"]') <> nil);
 
         t := GetFirstTag('subject');
         if t <> nil then _subject := t.Data;

@@ -20,7 +20,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 357
+    Height = 362
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1569,13 +1569,13 @@ object frmPrefs: TfrmPrefs
     Left = 89
     Top = 0
     Width = 371
-    Height = 357
-    ActivePage = tbsRoster
+    Height = 362
+    ActivePage = tbsMessages
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 0
+    TabIndex = 5
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -2331,6 +2331,14 @@ object frmPrefs: TfrmPrefs
         Caption = 'Close the Event window going to Compressed Mode'
         TabOrder = 11
       end
+      object chkAutoAcceptInvites: TCheckBox
+        Left = 5
+        Top = 259
+        Width = 236
+        Height = 17
+        Caption = 'Automatically accept all room invites'
+        TabOrder = 12
+      end
     end
     object tbsNotify: TTabSheet
       Caption = 'Notifications'
@@ -2579,7 +2587,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 112
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2613,7 +2621,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TLabel
           Left = 0
           Top = 0
-          Width = 363
+          Width = 306
           Height = 13
           Align = alTop
           Caption = 
@@ -2637,7 +2645,7 @@ object frmPrefs: TfrmPrefs
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 363
+        Width = 352
         Height = 26
         Align = alTop
         Caption = 
@@ -2648,7 +2656,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 363
+        Width = 146
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2930,7 +2938,7 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 357
+    Top = 362
     Width = 460
     Height = 37
     Align = alBottom
