@@ -339,7 +339,7 @@ begin
             grp_node := _offline;
         end
         else begin
-            // Make sure the grp exists in the GrpList
+            // Make sure the grp exists in _grp_nodes
             grp_idx := _grp_nodes.IndexOf(cur_grp);
             if (grp_idx < 0) then
                 grp_idx := _grp_nodes.Add(cur_grp);

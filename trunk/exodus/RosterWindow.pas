@@ -186,6 +186,7 @@ type
 
     _cur_ritem: TJabberRosterItem;  // current roster item selected
     _cur_grp: Widestring;           // current group selected
+    _cur_go: TJabberGroup;      // current group object
     _cur_bm: TJabberBookmark;       // current bookmark selected
     _cur_myres: TJabberMyResource;  // current My Resource selected
     _cur_status: integer;           // current status for the current item
@@ -612,6 +613,7 @@ begin
             _bookmark := treeRoster.Items.AddChild(nil, sGrpBookmarks);
             _bookmark.ImageIndex := ico_down;
             _bookmark.SelectedIndex := ico_down;
+            _bookmark.Data := bgrp;
             bgrp.Data := _bookmark;
         end
         else
@@ -642,12 +644,17 @@ procedure TfrmRosterWindow.ExpandNodes;
 var
     i: integer;
     n: TTreeNode;
+    ni: TJabberNodeItem;
+    go: TJabberGroup;
 begin
     // expand all nodes except special nodes
     for i := 0 to treeRoster.Items.Count - 1 do begin
         n := treeRoster.Items[i];
-        if ((n.Level = 0) and (n <> _offline)) then begin
-            if (_collapsed_grps.IndexOf(n.Text) < 0) then
+        ni := TJabberNodeItem(n.Data);
+        assert(ni <> nil);
+        if ((ni is TJabberGroup) and (n <> _offline)) then begin
+            go := TJabberGroup(ni);
+            if (_collapsed_grps.indexOf(go.FullName) = -1) then
                 n.Expand(true);
         end;
     end;
@@ -659,14 +666,17 @@ var
     i:          integer;
     ri:         TJabberRosterItem;
     node_list:  TWideStringlist;
+    go:         TJabberGroup;
 begin
     treeRoster.Items.BeginUpdate;
     treeRoster.Items.Clear;
 
     with MainSession.Roster do begin
         // remove the grp list node pointers
-        for i := 0 to GrpList.Count - 1 do
-            GrpList.Objects[i] := nil;
+        for i := 0 to GroupsCount - 1 do begin
+            go := Groups[i];
+            go.Data := nil;
+        end;
 
         // remove all item pointers to tree nodes
         for i := 0 to Count - 1 do begin
@@ -688,7 +698,9 @@ end;
 {---------------------------------------}
 function TfrmRosterWindow.getNodeType(Node: TTreeNode): integer;
 var
-    grp_node, n: TTreeNode;
+    o: TObject;
+    n: TTreeNode;
+    go: TJabberGroup;
 begin
     // return the type of node this is..
     if (Node = nil) then
@@ -703,10 +715,15 @@ begin
 
     if (n = nil) then exit;
 
-    if ((n.Level = 0) or
-    ((treeRoster.SelectionCount > 1) and (node = nil))) then begin
+    o := TObject(n.Data);
+    if (o = nil) then exit;
+
+    if ((o is TJabberGroup) or
+        ((treeRoster.SelectionCount > 1) and (node = nil))) then begin
         Result := node_grp;
-        _cur_grp := n.Text;
+        go := TJabberGroup(n.Data);
+        _cur_grp := go.FullName;
+        _cur_go := go;
     end
 
     else if (TObject(n.Data) is TJabberBookmark) then begin
@@ -725,8 +742,8 @@ begin
 
         // check to see if it's a transport
         if (n.Level > 0) then begin
-            grp_node := n.Parent;
-            if (grp_node.Text = _transports) then
+            go := TJabberGroup(n.Parent.Data);
+            if (go.FullName = _transports) then
                 Result := node_transport;
         end;
     end;
@@ -735,11 +752,10 @@ end;
 {---------------------------------------}
 function TfrmRosterWindow.getSelectedContacts(online: boolean = true): TList;
 var
-    c, i, j: integer;
+    c, i: integer;
     ri: TJabberRosterItem;
     node: TTreeNode;
     ntype: integer;
-    glist: TList;
 begin
     // return a list of the selected roster items
     Result := TList.Create();
@@ -771,10 +787,7 @@ begin
 
             else if (ntype = node_grp) then begin
                 // add this grp to the selection
-                glist := MainSession.roster.GetGroupItems(node.Text, online);
-                for j := 0 to glist.count - 1 do
-                    Result.Add(TJabberRosterItem(glist[j]));
-                glist.Free();
+                _cur_go.getRosterItems(Result, online);
             end;
         end;
     end;
@@ -1111,8 +1124,12 @@ begin
         tmp_grps.Assign(ritem.Groups);
 
     // If they aren't in any grps, put them into the Unfiled grp
-    if ((tmp_grps.Count <= 0) and (not is_me)) then
+    if ((tmp_grps.Count <= 0) and (not is_me)) then begin
+        go := MainSession.Roster.AddGroup(g_unfiled);
+        go.AddJid(ritem.jid);
+        go.setPresence(ritem.jid, p);
         tmp_grps.Add(g_unfiled);
+    end;
 
     // Remove nodes that are in node_list but aren't in the grp list
     // This takes care of changing grps, or going to the offline grp
@@ -1168,7 +1185,7 @@ begin
         end
 
         else begin
-            // Make sure the grp exists in the GrpList
+            // Make sure the grp exists
             go := MainSession.Roster.addGroup(cur_grp);
 
             // Make sure we have a node for this grp and keep
@@ -1182,7 +1199,7 @@ begin
         // Expand any grps that are not supposed to be collapsed
         if ((not _FullRoster) and
             (grp_node <> _offline) and
-            (_collapsed_grps.IndexOf(grp_node.Text) < 0) and
+            (_collapsed_grps.IndexOf(cur_grp) < 0) and
             (not _collapse_all)) then
             exp_grpnode := true
         else
@@ -1366,13 +1383,12 @@ begin
     if (Node = nil) then exit;
 
     // For groups just display the group name:
-    if (Node.HasChildren) then begin
-        _hint_text := Node.Text;
-    end
-    else if (Node.Data = nil) then begin
+    if (Node.Data = nil) then begin
         _hint_text := '';
     end
-
+    else if (TObject(Node.Data) is TJabberGroup) then begin
+        _hint_text := TJabberGroup(Node.Data).getText();
+    end
     else if (TObject(Node.Data) is TJabberBookmark) then begin
         _hint_text := TJabberBookmark(Node.Data).bmName;
     end
@@ -1520,13 +1536,19 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterCollapsed(Sender: TObject;
   Node: TTreeNode);
+var
+    go: TJabberGroup;
 begin
     if Node.Data = nil then begin
         Node.ImageIndex := ico_Right;
         Node.SelectedIndex := ico_Right;
-
-        if (_collapsed_grps.IndexOf(Node.Text) < 0) then begin
-            _collapsed_grps.Add(Node.Text);
+        if (Node.Data = nil) then exit;
+        if (TObject(Node.Data) is TJabberGroup) then
+            go := TJabberGroup(Node.Data)
+        else
+            exit;
+        if (_collapsed_grps.indexOf(go.FullName) = -1) then begin
+            _collapsed_grps.Add(go.FullName);
             MainSession.Prefs.setStringlist('col_groups', _collapsed_grps);
         end;
     end;
@@ -1538,13 +1560,15 @@ procedure TfrmRosterWindow.treeRosterExpanded(Sender: TObject;
 var
     i: integer;
     dirty: boolean;
+    go: TJabberGroup;
 begin
-    if Node.Data = nil then begin
+    if (TObject(Node.Data) is TJabberGroup) then begin
+        go := TJabberGroup(Node.Data);
         Node.ImageIndex := ico_Down;
         Node.SelectedIndex := ico_Down;
         dirty := false;
         repeat
-            i := _collapsed_grps.IndexOf(node.Text);
+            i := _collapsed_grps.IndexOf(go.Fullname);
             if (i >= 0) then begin
                 dirty := true;
                 _collapsed_grps.Delete(i);
@@ -1572,9 +1596,9 @@ begin
         end;
     end;
 
-    if n.Data <> nil then begin
-    end
-    else if X < (frmExodus.ImageList2.Width + 5) then begin
+    // xxx: indent
+    if ((TObject(n.Data) is TJabberGroup) and
+        (X < (frmExodus.ImageList2.Width + 5))) then begin
         // clicking on a grp's widget
         if n.Expanded then
             n.Collapse(false)
@@ -1726,10 +1750,10 @@ var
     i: integer;
     ritem: TJabberRosterItem;
     d_grp: Widestring;
-    d_node: TTreeNode;
-    s_node: TTreeNode;
+    s_node, d_node: TTreeNode;
     grp_rect: TRect;
 begin
+
     // Drop the roster items onto the roster
 
     // d_node   : the new group node
@@ -1738,14 +1762,19 @@ begin
 
     d_node := treeRoster.GetNodeAt(X, Y);
     if d_node = nil then exit;
-    if d_node.Data <> nil then begin
-        if (TObject(d_node.Data) is TJabberRosterItem) then
-            d_node := d_node.Parent
-        else
-            exit;
-    end;
 
-    d_grp := d_node.Text;
+    if (TObject(d_node.Data) is TJabberGroup) then begin
+        // they dropped on a grp
+        d_grp := TJabberGroup(d_node.Data).FullName
+    end
+    else if (TObject(d_node.Data) is TJabberRosterItem) then begin
+        // they dropped on another item
+        d_node := d_node.Parent;
+        d_grp := TJabberGroup(d_node.Data).FullName
+    end
+    else
+        exit;
+
     for i := 0 to treeRoster.SelectionCount - 1 do begin
         s_node := treeRoster.Selections[i];
         ritem := TJabberRosterItem(s_node.Data);
@@ -1877,7 +1906,7 @@ begin
     end;
     node_grp: begin
         // check to see if we have the Transports grp selected
-        if (n.Text = _transports) then begin
+        if (_cur_go.FullName = _transports) then begin
             treeRoster.PopupMenu := popActions;
             popProperties.Enabled := false;
             exit;
@@ -2072,34 +2101,35 @@ procedure TfrmRosterWindow.treeRosterCustomDrawItem(
 var
     cur_grp, c1, c2: WideString;
     p: TJabberPres;
-    ntype, online, total: integer;
+    ntype: integer;
+    go: TJabberGroup;
+    o: TObject;
 begin
     // Try drawing the roster custom..
-    DefaultDraw := true;
-    if (Node.Level = 0) then begin
-        treeRoster.Canvas.Font.Style := [fsBold];
+    if (not Node.isVisible) then exit;
 
-        if (not Node.isVisible) then exit;
+    DefaultDraw := true;
+    o := TObject(Node.Data);
+
+    if (o is TJabberGroup) then begin
         if (not _group_counts) then exit;
 
-        // XXX: We need a unicode way of dealing with node.txt here
+        go := TJabberGroup(o);
+        treeRoster.Canvas.Font.Style := [fsBold];
+
         if ((Node = _offline) or
             (Node = _bookmark) or
             (Node = _myres) or
-            (Node.Text = _transports) or
+            (go.FullName = _transports) or
             (_sort_roster)) then begin
-            c1 := Node.Text + ' ';
+            c1 := go.getText() + ' ';
             c2 := '(' + IntToStr(Node.Count) + ')';
             DrawNodeText(Node, State, c1, c2);
         end
         else begin
-            cur_grp := Node.Text;
-            if (cur_grp = g_unfiled) then
-                cur_grp := '';
-            total := MainSession.roster.getGroupCount(cur_grp, false);
-            online := MainSession.roster.getGroupCount(cur_grp, true);
-            c1 := Node.Text + ' ';
-            c2 := '(' + IntToStr(online) + '/' + IntToStr(total) + ')';
+            cur_grp := go.getText();
+            c1 := cur_grp + ' ';
+            c2 := '(' + IntToStr(go.Online) + '/' + IntToStr(go.Total) + ')';
             DrawNodeText(Node, State, c1, c2);
         end;
         DefaultDraw := false;
@@ -2210,7 +2240,7 @@ begin
         CanvasTextOutW(treeRoster.Canvas, xRect.Left + 1,
             xRect.Top + 1, c1);
         if (c2 <> '') then begin
-            if (Node.Level = 0) then begin
+            if (TObject(Node.Data) is TJabberGroup) then begin
                 Font.Style := [];
                 //Font.Size := Font.Size - 1;
                 SelectObject(treeRoster.Canvas.Handle, Font.Handle);
@@ -2219,7 +2249,7 @@ begin
             CanvasTextOutW(treeRoster.Canvas, xRect.Left + tw + 5,
                 xRect.Top + 1, c2);
 
-            if (Node.Level = 0) then
+            if (TObject(Node.Data) is TJabberGroup) then
                 Font.Size := Font.Size + 1;
         end;
 
@@ -2238,14 +2268,18 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.popGrpRenameClick(Sender: TObject);
 var
+    go: TJabberGroup;
     old_grp, new_grp: WideString;
     gi, i: integer;
     ri: TJabberRosterItem;
 begin
     // Rename some grp.
-    new_grp := treeRoster.Selected.Text;
+    go := TJabberGroup(treeRoster.Selected.Data);
+    if (go = nil) then exit;
+    
+    new_grp := go.FullName;
     if (InputQueryW(sRenameGrp, sRenameGrpPrompt, new_grp)) then begin
-        old_grp := treeRoster.Selected.Text;
+        old_grp := go.FullName;
         new_grp := Trim(new_grp);
         if (new_grp <> old_grp) then begin
             for i := 0 to MainSession.Roster.Count - 1 do begin
@@ -2552,6 +2586,7 @@ procedure TfrmRosterWindow.treeRosterCompare(Sender: TObject; Node1,
 var
     trans1: boolean;
     trans2: boolean;
+    t1, t2: Widestring;
 begin
     // define a custom sort routine for two roster nodes
 
@@ -2570,7 +2605,15 @@ begin
 
     // handle normal cases.
     else if (Node1.Level = Node2.Level) then begin
-        Compare := AnsiCompareText(Node1.Text, Node2.Text);
+        if (TObject(Node1.Data) is TJabberNodeItem) then
+            t1 := TJabberNodeItem(Node1.Data).GetText()
+        else
+            t1 := Node1.Text;
+        if (TObject(Node2.Data) is TJabberNodeItem) then
+            t2 := TJabberNodeItem(Node2.Data).GetText()
+        else
+            t2 := Node2.Text;
+        Compare := AnsiCompareText(t1, t2);
     end
     else begin
         if (Node1.Level < Node2.Level) then

@@ -178,13 +178,15 @@ end;
 {---------------------------------------}
 procedure TJabberGroup.AddJid(jid: Widestring);
 begin
-    _jids.Add(jid);
+    if (_jids.indexOf(jid) = -1) then
+        _jids.Add(jid);
 end;
 
 {---------------------------------------}
 procedure TJabberGroup.AddJid(jid: TJabberID);
 begin
-    _jids.Add(jid.jid);
+    if (_jids.indexOf(jid.jid) = -1) then
+        _jids.Add(jid.jid);
 end;
 
 {---------------------------------------}
@@ -436,7 +438,6 @@ begin
         item := AddTag('item');
         Self.fillTag(item);
     end;
-    MainSession.Roster.UpdateGroupLists(Self);
     MainSession.SendTag(iq);
 end;
 
