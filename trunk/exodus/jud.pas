@@ -256,7 +256,7 @@ begin
 
         if (cur_state = 'xsearch') then begin
             x := cur_iq.qTag.AddTag('x');
-            x.PutAttribute('xmlns', XMLNS_XDATA);
+            x.setAttribute('xmlns', XMLNS_XDATA);
             cur_state := 'xitems';
             end
         else begin

@@ -110,9 +110,9 @@ begin
 
     item := iq.qTag.AddTag('item');
     if (role) then
-        item.putAttribute('role', onList)
+        item.setAttribute('role', onList)
     else
-        item.putAttribute('affiliation', onList);
+        item.setAttribute('affiliation', onList);
     iq.Send();
 
     Show();
@@ -166,22 +166,22 @@ var
 begin
     // submit the new list
     iq := TXMLTag.Create('iq');
-    iq.PutAttribute('to', room_jid);
-    iq.PutAttribute('id', MainSession.generateID());
-    iq.PutAttribute('type', 'set');
+    iq.setAttribute('to', room_jid);
+    iq.setAttribute('id', MainSession.generateID());
+    iq.setAttribute('type', 'set');
     q := iq.AddTag('query');
-    q.PutAttribute('xmlns', XMLNS_MUCADMIN);
+    q.setAttribute('xmlns', XMLNS_MUCADMIN);
 
     // Take the unchecked items off the list
     for i := 0 to lstItems.Items.Count - 1 do begin
         li := lstItems.Items[i];
         item := q.AddTag('item');
-        item.PutAttribute('jid', li.SubItems[0]);
+        item.setAttribute('jid', li.SubItems[0]);
         if (not li.Checked) then begin
             if (role) then
-                item.PutAttribute('role', offList)
+                item.setAttribute('role', offList)
             else
-                item.PutAttribute('affiliation', offList);
+                item.setAttribute('affiliation', offList);
             end;
         end;
 
@@ -190,11 +190,11 @@ begin
         tmps := Trim(memNew.Lines[i]);
         if ((tmps <> '') and (isValidJID(tmps))) then begin
             item := q.AddTag('item');
-            item.PutAttribute('jid', tmps);
+            item.setAttribute('jid', tmps);
             if (role) then
-                item.PutAttribute('role', onList)
+                item.setAttribute('role', onList)
             else
-                item.PutAttribute('affiliation', onList);
+                item.setAttribute('affiliation', onList);
             end;
         end;
 

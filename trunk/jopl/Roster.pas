@@ -171,8 +171,8 @@ begin
     // add this bookmark as another tag onto the parent
     Result := parent.AddTag(bmType);
     with Result do begin
-        putAttribute('jid', jid.full);
-        putAttribute('name', bmName);
+        setAttribute('jid', jid.full);
+        setAttribute('name', bmName);
         if (nick <> '') then
             AddBasicTag('nick', nick);
         end;
@@ -210,14 +210,14 @@ var
     i: integer;
 begin
     tag.name := 'item';
-    tag.PutAttribute('jid', jid.Full);
-    tag.PutAttribute('name', _nickname);
+    tag.setAttribute('jid', jid.Full);
+    tag.setAttribute('name', _nickname);
 
     for i := 0 to Groups.Count - 1 do
         tag.AddBasicTag('group', Groups[i]);
 
     if (subscription = 'remove') then
-        tag.PutAttribute('subscription', subscription);
+        tag.setAttribute('subscription', subscription);
 end;
 
 {---------------------------------------}
@@ -226,10 +226,10 @@ var
     item, iq: TXMLTag;
 begin
     iq := TXMLTag.Create('iq');
-    iq.PutAttribute('type', 'set');
-    iq.PutAttribute('id', MainSession.generateID());
+    iq.setAttribute('type', 'set');
+    iq.setAttribute('id', MainSession.generateID());
     with iq.AddTag('query') do begin
-        putAttribute('xmlns', XMLNS_ROSTER);
+        setAttribute('xmlns', XMLNS_ROSTER);
         item := AddTag('item');
         Self.fillTag(item);
         end;
@@ -378,7 +378,7 @@ begin
         toJid := '';
         Namespace := XMLNS_PRIVATE;
         with qtag.AddTag('bookmarks') do
-            putAttribute('xmlns', XMLNS_BM);
+            setAttribute('xmlns', XMLNS_BM);
         Send();
         end;
 end;
@@ -440,12 +440,12 @@ begin
 
     iq := TXMLTag.Create('iq');
     with iq do begin
-        putAttribute('type', 'set');
-        putAttribute('id', s.generateID());
+        setAttribute('type', 'set');
+        setAttribute('id', s.generateID());
         with AddTag('query') do begin
-            putAttribute('xmlns', XMLNS_PRIVATE);
+            setAttribute('xmlns', XMLNS_PRIVATE);
             stag := AddTag('storage');
-            stag.PutAttribute('xmlns', XMLNS_BM);
+            stag.setAttribute('xmlns', XMLNS_BM);
             for i := 0 to Bookmarks.Count - 1 do
                 TJabberBookmark(Bookmarks.Objects[i]).AddToTag(stag);
             end;
@@ -676,8 +676,8 @@ begin
         Namespace := XMLNS_ROSTER;
         iqType := 'set';
         with qTag.AddTag('item') do begin
-            PutAttribute('jid', jid);
-            PutAttribute('name', nick);
+            setAttribute('jid', jid);
+            setAttribute('name', nick);
             if group <> '' then
                 AddBasicTag('group', grp);
             end;

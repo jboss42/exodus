@@ -280,11 +280,11 @@ begin
         Self.Mode := 3;
         iq := TXMLTag.Create('iq');
         with iq do begin
-            PutAttribute('to', jid);
-            PutAttribute('id', MainSession.generateID());
-            PutAttribute('type', 'set');
+            setAttribute('to', jid);
+            setAttribute('id', MainSession.generateID());
+            setAttribute('type', 'set');
             with AddTag('query') do begin
-                putAttribute('xmlns', XMLNS_IQOOB);
+                setAttribute('xmlns', XMLNS_IQOOB);
                 AddBasicTag('url', url);
                 AddBasicTag('desc', txtMsg.WideText);
                 end;

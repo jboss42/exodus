@@ -266,7 +266,7 @@ begin
         end;
 
     Result := TXMLTag.Create('field');
-    Result.PutAttribute('var', fld_var);
+    Result.setAttribute('var', fld_var);
 
     for i := 0 to vals.Count - 1 do
         Result.AddBasicTag('value', vals[i]);

@@ -216,11 +216,11 @@ begin
 
     r := TXMLTag.Create('iq');
     with r do begin
-        PutAttribute('id', tag.getAttribute('id'));
-        PutAttribute('type', 'result');
-        PutAttribute('to', tag.getAttribute('from'));
+        setAttribute('id', tag.getAttribute('id'));
+        setAttribute('type', 'result');
+        setAttribute('to', tag.getAttribute('from'));
         with AddTag('query') do begin
-            PutAttribute('xmlns', XMLNS_VERSION);
+            setAttribute('xmlns', XMLNS_VERSION);
             AddBasicTag('name', 'Exodus');
             AddBasicTag('version', app);
             AddBasicTag('os', win);
@@ -270,12 +270,12 @@ begin
         utc := Now + (tzi.Bias / 1440.0);
 
     with r do begin
-        PutAttribute('to', tag.getAttribute('from'));
-        PutAttribute('id', tag.getAttribute('id'));
-        PutAttribute('type', 'result');
+        setAttribute('to', tag.getAttribute('from'));
+        setAttribute('id', tag.getAttribute('id'));
+        setAttribute('type', 'result');
 
         with AddTag('query') do begin
-            PutAttribute('xmlns', XMLNS_TIME);
+            setAttribute('xmlns', XMLNS_TIME);
             AddBasicTag('utc', DateTimeToJabber(utc));
             AddBasicTag('tz', tzi.StandardName);
             AddBasicTag('display', DateTimeToStr(Now));
@@ -307,14 +307,14 @@ begin
     // Respond to last queries
     r := TXMLTag.Create('iq');
     with r do begin
-        PutAttribute('to', tag.getAttribute('from'));
-        PutAttribute('id', tag.getAttribute('id'));
-        PutAttribute('type', 'result');
+        setAttribute('to', tag.getAttribute('from'));
+        setAttribute('id', tag.getAttribute('id'));
+        setAttribute('type', 'result');
 
         with AddTag('query') do begin
-            PutAttribute('xmlns', XMLNS_LAST);
+            setAttribute('xmlns', XMLNS_LAST);
             idle := (GetTickCount() - frmExodus.getLastTick()) div 1000;
-            PutAttribute('seconds', IntToStr(idle));
+            setAttribute('seconds', IntToStr(idle));
             end;
         end;
 
@@ -341,16 +341,16 @@ begin
 
     r := TXMLTag.Create('iq');
     with r do begin
-        PutAttribute('to', tag.getAttribute('from'));
-        PutAttribute('id', tag.GetAttribute('id'));
-        PutAttribute('type', 'result');
+        setAttribute('to', tag.getAttribute('from'));
+        setAttribute('id', tag.GetAttribute('id'));
+        setAttribute('type', 'result');
 
         with AddTag('user') do begin
-            PutAttribute('xmlns', XMLNS_BROWSE);
-            PutAttribute('type', 'client');
-            PutAttribute('jid', _session.Username + '@' + _session.Server +
+            setAttribute('xmlns', XMLNS_BROWSE);
+            setAttribute('type', 'client');
+            setAttribute('jid', _session.Username + '@' + _session.Server +
                 '/' + _session.Resource);
-            PutAttribute('name', _session.Username);
+            setAttribute('name', _session.Username);
 
             AddBasicTag('ns', XMLNS_SEARCH);
             AddBasicTag('ns', XMLNS_AGENTS);
@@ -396,11 +396,11 @@ begin
 
     r := TXMLTag.Create('iq');
     with r do begin
-        PutAttribute('to', tag.getAttribute('from'));
-        PutAttribute('id', tag.GetAttribute('id'));
-        PutAttribute('type', 'result');
+        setAttribute('to', tag.getAttribute('from'));
+        setAttribute('id', tag.GetAttribute('id'));
+        setAttribute('type', 'result');
         q := AddTag('query');
-        q.PutAttribute('xmlns', XMLNS_DISCOITEMS);
+        q.setAttribute('xmlns', XMLNS_DISCOITEMS);
         end;
     _session.SendTag(r);
 end;
@@ -417,7 +417,7 @@ procedure TDiscoInfoResponder.iqCallback(event: string; tag:TXMLTag);
     procedure addFeature(qtag: TXMLTag; stype: WideString);
     begin
         with qtag.AddTag('feature') do
-            PutAttribute('type', stype);
+            setAttribute('type', stype);
     end;
 
 var
@@ -432,16 +432,16 @@ begin
 
     r := TXMLTag.Create('iq');
     with r do begin
-        PutAttribute('to', tag.getAttribute('from'));
-        PutAttribute('id', tag.GetAttribute('id'));
-        PutAttribute('type', 'result');
+        setAttribute('to', tag.getAttribute('from'));
+        setAttribute('id', tag.GetAttribute('id'));
+        setAttribute('type', 'result');
         q := AddTag('query');
         with q do begin
-            PutAttribute('xmlns', XMLNS_DISCOINFO);
+            setAttribute('xmlns', XMLNS_DISCOINFO);
             with AddTag('identity') do begin
-                PutAttribute('category', 'user');
-                PutAttribute('type', 'client');
-                PutAttribute('name', _session.Username);
+                setAttribute('category', 'user');
+                setAttribute('type', 'client');
+                setAttribute('name', _session.Username);
                 end;
             end;
 

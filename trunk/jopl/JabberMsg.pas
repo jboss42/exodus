@@ -174,10 +174,10 @@ begin
 
     with Result do begin
         Name := 'message';
-        PutAttribute('to', _toJID);
-        PutAttribute('id', _id);
+        setAttribute('to', _toJID);
+        setAttribute('id', _id);
         if (_msg_type <> 'normal') then
-            PutAttribute('type', _msg_type);
+            setAttribute('type', _msg_type);
         ClearTags;
         if _thread <> '' then
             AddBasicTag('thread', _thread);

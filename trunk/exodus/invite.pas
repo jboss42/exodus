@@ -192,11 +192,11 @@ begin
         msg := TXMLTag.Create('message');
         if ((frm <> nil) and (frm.isMUCRoom)) then begin
             // this is MUC.. use muc#user
-            msg.PutAttribute('to', room);
+            msg.setAttribute('to', room);
             with msg.AddTag('x') do begin
-                putAttribute('xmlns', xmlns_mucuser);
+                setAttribute('xmlns', xmlns_mucuser);
                 with AddTag('invie') do begin
-                    putAttribute('to', lstJIDS.Items[i].SubItems[0]);
+                    setAttribute('to', lstJIDS.Items[i].SubItems[0]);
                     AddBasicTag('reason', memReason.Lines.Text);
                     end;
                 end;
@@ -204,10 +204,10 @@ begin
         else begin
             // this is GC 1.0, or we aren't in the room yet..
             // Use jabber;x:conference
-            msg.PutAttribute('to', lstJIDS.Items[i].SubItems[0]);
+            msg.setAttribute('to', lstJIDS.Items[i].SubItems[0]);
             with msg.AddTag('x') do begin
-                putAttribute('xmlns', 'jabber:x:conference');
-                putAttribute('jid', room);
+                setAttribute('xmlns', 'jabber:x:conference');
+                setAttribute('jid', room);
                 end;
             msg.AddBasicTag('body', memReason.Lines.Text);
             end;

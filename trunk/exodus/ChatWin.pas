@@ -483,7 +483,7 @@ begin
 
     mtag := msg.Tag;
     with mtag.AddTag('x') do begin
-        PutAttribute('xmlns', XMLNS_XEVENT);
+        setAttribute('xmlns', XMLNS_XEVENT);
         AddTag('composing');
         end;
 
@@ -723,9 +723,9 @@ begin
         _send_composing := false;
         c := TXMLTag.Create('message');
         with c do begin
-            PutAttribute('to', jid);
+            setAttribute('to', jid);
             with AddTag('x') do begin
-                PutAttribute('xmlns', XMLNS_XEVENT);
+                setAttribute('xmlns', XMLNS_XEVENT);
                 AddTag('composing');
                 AddBasicTag('id', _reply_id);
                 end;

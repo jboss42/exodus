@@ -119,13 +119,13 @@ begin
                 // send a subscription='remove'
                 iq := TXMLTag.Create('iq');
                 with iq do begin
-                    PutAttribute('type', 'set');
-                    PutAttribute('id', MainSession.generateID);
+                    setAttribute('type', 'set');
+                    setAttribute('id', MainSession.generateID);
                     with AddTag('query') do begin
-                        PutAttribute('xmlns', XMLNS_ROSTER);
+                        setAttribute('xmlns', XMLNS_ROSTER);
                         with AddTag('item') do begin
-                            PutAttribute('jid', cur_jid);
-                            PutAttribute('subscription', 'remove');
+                            setAttribute('jid', cur_jid);
+                            setAttribute('subscription', 'remove');
                             end;
                         end;
                     end;

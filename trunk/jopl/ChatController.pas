@@ -108,8 +108,8 @@ begin
     // if we are paused, put on a delay tag.
     if (MainSession.IsPaused) then begin
         with tag.AddTag('x') do begin
-            PutAttribute('xmlns', 'jabber:x:delay');
-            PutAttribute('stamp', DateTimeToJabber(Now + TimeZoneBias()));
+            setAttribute('xmlns', 'jabber:x:delay');
+            setAttribute('stamp', DateTimeToJabber(Now + TimeZoneBias()));
             end;
         end;
 
