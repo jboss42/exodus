@@ -148,9 +148,9 @@ var
 implementation
 uses
     {$ifdef Win32}
-    Dialogs,
+    Forms, Dialogs,
     {$else}
-    QDialogs,
+    QForms, QDialogs,
     {$endif}
     XMLUtils,
     iq;
@@ -253,6 +253,10 @@ begin
         Prefs.SaveServerPrefs();
         _stream.Send('<presence type="unavailable"/>');
         _stream.Disconnect;
+
+        while (_stream.Active) do
+            Application.ProcessMessages();
+
         end;
     _register := false;
 end;
