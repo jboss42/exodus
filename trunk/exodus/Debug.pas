@@ -131,7 +131,6 @@ procedure DockDebugForm();
 begin
     if ((frmDebug <> nil) and (not frmDebug.Docked)) then begin
         frmDebug.DockForm;
-        //frmDebug.TabSheet.ImageIndex := ico_render;
         frmDebug.Show;
     end;
 end;
@@ -359,12 +358,6 @@ procedure TfrmDebug.FormEndDock(Sender, Target: TObject; X, Y: Integer);
 begin
     inherited;
     btnClose.Visible := Docked;
-
-    {
-    if (Docked) then
-        Self.TabSheet.ImageIndex := ico_render;
-    }
-
 end;
 
 {---------------------------------------}
