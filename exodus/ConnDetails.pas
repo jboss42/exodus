@@ -49,7 +49,6 @@ type
     chkSocksAuth: TTntCheckBox;
     txtSocksHost: TTntEdit;
     txtSocksPort: TTntEdit;
-    cboSocksType: TComboBox;
     txtSocksUsername: TTntEdit;
     txtSocksPassword: TTntEdit;
     cboServer: TTntComboBox;
@@ -83,6 +82,7 @@ type
     txtPort: TTntEdit;
     Label7: TTntLabel;
     optSSL: TTntRadioGroup;
+    cboSocksType: TTntComboBox;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure chkSocksAuthClick(Sender: TObject);
     procedure cboSocksTypeChange(Sender: TObject);

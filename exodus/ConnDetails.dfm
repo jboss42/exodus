@@ -1,9 +1,8 @@
 object frmConnDetails: TfrmConnDetails
-  Left = 249
-  Top = 169
+  Left = 209
+  Top = 154
   Width = 304
   Height = 307
-  ActiveControl = txtUsername
   Caption = 'Connection Details'
   Color = clBtnFace
   DefaultMonitor = dmDesktop
@@ -19,7 +18,7 @@ object frmConnDetails: TfrmConnDetails
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 245
+    Top = 241
     Width = 296
     Height = 32
     Align = alBottom
@@ -45,7 +44,7 @@ object frmConnDetails: TfrmConnDetails
     Left = 0
     Top = 0
     Width = 296
-    Height = 245
+    Height = 241
     ActivePage = tbsProfile
     Align = alClient
     TabOrder = 1
@@ -261,7 +260,7 @@ object frmConnDetails: TfrmConnDetails
       end
     end
     object tbsSSL: TTntTabSheet
-      Caption = 'SSL'
+      Caption = 'Encryption'
       object TntLabel1: TTntLabel
         Left = 1
         Top = 9
@@ -287,14 +286,15 @@ object frmConnDetails: TfrmConnDetails
         OnClick = btnCertBrowseClick
       end
       object optSSL: TTntRadioGroup
-        Left = 16
-        Top = 72
+        Left = 8
+        Top = 64
         Width = 265
         Height = 105
+        Caption = 'SSL Modes'
         Items.WideStrings = (
-          'Use StartTLS whenever the server allows it.'
-          'Only allow connections which use StartTLS.'
-          'Use SSL immediately when connected.')
+          'Encrypt the connection whenever possible.'
+          'All connections must be encrypted.'
+          'Use old SSL port method.')
         TabOrder = 2
       end
     end
@@ -352,7 +352,7 @@ object frmConnDetails: TfrmConnDetails
         Height = 17
         Caption = 'Authentication Required'
         Enabled = False
-        TabOrder = 3
+        TabOrder = 2
         OnClick = chkSocksAuthClick
       end
       object txtSocksHost: TTntEdit
@@ -361,7 +361,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 130
         Height = 21
         Enabled = False
-        TabOrder = 1
+        TabOrder = 0
       end
       object txtSocksPort: TTntEdit
         Left = 91
@@ -369,23 +369,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 39
         Height = 21
         Enabled = False
-        TabOrder = 2
-      end
-      object cboSocksType: TComboBox
-        Left = 91
-        Top = 8
-        Width = 130
-        Height = 22
-        Style = csOwnerDrawFixed
-        ItemHeight = 16
-        TabOrder = 0
-        OnChange = cboSocksTypeChange
-        Items.Strings = (
-          'None'
-          'Version 4'
-          'Version 4a'
-          'Version 5'
-          'HTTP')
+        TabOrder = 1
       end
       object txtSocksUsername: TTntEdit
         Left = 90
@@ -393,7 +377,7 @@ object frmConnDetails: TfrmConnDetails
         Width = 130
         Height = 21
         Enabled = False
-        TabOrder = 4
+        TabOrder = 3
       end
       object txtSocksPassword: TTntEdit
         Left = 90
@@ -402,7 +386,22 @@ object frmConnDetails: TfrmConnDetails
         Height = 21
         Enabled = False
         PasswordChar = '*'
+        TabOrder = 4
+      end
+      object cboSocksType: TTntComboBox
+        Left = 91
+        Top = 8
+        Width = 132
+        Height = 21
+        Style = csDropDownList
+        ItemHeight = 13
         TabOrder = 5
+        Items.WideStrings = (
+          'None'
+          'Version 4'
+          'Version 4a'
+          'Version 5'
+          'HTTP')
       end
     end
     object tbsHttp: TTntTabSheet
