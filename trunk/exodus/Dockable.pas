@@ -291,7 +291,6 @@ begin
         _top := true;
         SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
             Self.Width, Self.Height, HWND_TOP);
-        Self.Activate();
         StopTrayAlert();
         _top := false;
         inherited;
