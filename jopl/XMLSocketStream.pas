@@ -200,7 +200,9 @@ begin
         end
         else begin
             // Get any pending incoming data
-            utf := _Socket.CurrentReadBuffer;
+            // utf := _Socket.CurrentReadBuffer;
+            _socket.ReadFromStack();
+            utf := _socket.InputBuffer.Extract(_socket.InputBuffer.Size);
             buff := UTF8Decode(utf);
 
             // We are shutting down, or we've got an exception, so just bail
@@ -635,7 +637,9 @@ begin
 
     // Create our socket
     _socket := TIdTCPClient.Create(nil);
-    _socket.RecvBufferSize := 4096;
+    // SUCK, make the recv buffer fuckin' gigantic
+    //_socket.RecvBufferSize := 4096;
+    _socket.RecvBufferSize := (1024 * 1024);
     _socket.Port := _profile.port;
 
     _server := _profile.Server;
@@ -713,10 +717,9 @@ begin
         _timer.Enabled := false;
         _timer.Enabled := true;
     except
-        on E: EIdException do begin
+        on E: EIdException do
             _timer.Enabled := false;
-        end;
-end;
+    end;
 end;
 
 end.
