@@ -91,6 +91,8 @@ type
     txtWorkCity: TTntEdit;
     txtWorkStreet2: TTntEdit;
     txtWorkStreet1: TTntEdit;
+    memDesc: TTntMemo;
+    Label1: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure frameButtons1btnCancelClick(Sender: TObject);
@@ -211,6 +213,7 @@ begin
         txtOrgName.Text := OrgName;
         txtOrgUnit.Text := OrgUnit;
         txtOrgTitle.Text := OrgTitle;
+        memDesc.Lines.Text := Desc;
         end;
 end;
 
@@ -240,6 +243,7 @@ begin
         url := txtWeb.Text;
         role := cboOcc.Text;
         bday := txtBday.Text;
+        Desc := memDesc.Lines.Text;
 
         WorkPhone.number := txtWorkVoice.Text;
         WorkPhone.work := true; WorkPhone.voice := true;

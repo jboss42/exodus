@@ -1,8 +1,8 @@
 object frmVCard: TfrmVCard
   Left = 333
   Top = 241
-  Width = 422
-  Height = 281
+  Width = 450
+  Height = 360
   Caption = 'My Profile'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,18 +19,18 @@ object frmVCard: TfrmVCard
     Left = 121
     Top = 0
     Width = 3
-    Height = 213
+    Height = 292
     Cursor = crHSplit
   end
   object PageControl1: TPageControl
     Left = 124
     Top = 0
-    Width = 290
-    Height = 213
-    ActivePage = TabSheet1
+    Width = 318
+    Height = 292
+    ActivePage = TabSheet3
     Align = alClient
     Style = tsFlatButtons
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'General'
@@ -181,9 +181,9 @@ object frmVCard: TfrmVCard
       object Label28: TLabel
         Left = 92
         Top = 56
-        Width = 96
+        Width = 106
         Height = 13
-        Caption = 'Format: mm/dd/yyyy'
+        Caption = 'Format: YYYY-MM-DD'
       end
       object Label8: TLabel
         Left = 1
@@ -198,6 +198,13 @@ object frmVCard: TfrmVCard
         Width = 38
         Height = 13
         Caption = 'Fax Tel:'
+      end
+      object Label1: TLabel
+        Left = 1
+        Top = 137
+        Width = 56
+        Height = 13
+        Caption = 'Description:'
       end
       object cboOcc: TTntComboBox
         Left = 92
@@ -269,6 +276,14 @@ object frmVCard: TfrmVCard
         Font.Style = []
         ParentFont = False
         TabOrder = 3
+      end
+      object memDesc: TTntMemo
+        Left = 8
+        Top = 152
+        Width = 289
+        Height = 105
+        ScrollBars = ssVertical
+        TabOrder = 4
       end
     end
     object TabSheet4: TTabSheet
@@ -1112,17 +1127,17 @@ object frmVCard: TfrmVCard
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 213
-    Width = 414
+    Top = 292
+    Width = 442
     Height = 34
     Align = alBottom
     AutoScroll = False
     TabOrder = 1
     inherited Bevel1: TBevel
-      Width = 414
+      Width = 442
     end
     inherited Panel1: TPanel
-      Left = 254
+      Left = 282
       Height = 29
       inherited btnOK: TButton
         OnClick = frameButtons1btnOKClick
@@ -1136,7 +1151,7 @@ object frmVCard: TfrmVCard
     Left = 0
     Top = 0
     Width = 121
-    Height = 213
+    Height = 292
     Align = alLeft
     Indent = 19
     TabOrder = 2

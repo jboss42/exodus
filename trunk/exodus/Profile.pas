@@ -25,7 +25,7 @@ uses
     XMLTag, IQ,
     ShellAPI, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    buttonFrame, StdCtrls, CheckLst, ExtCtrls, ComCtrls;
+    buttonFrame, StdCtrls, CheckLst, ExtCtrls, ComCtrls, TntStdCtrls;
 
 type
   TfrmProfile = class(TForm)
@@ -107,6 +107,8 @@ type
     btnLast: TButton;
     btnVersion: TButton;
     btnTime: TButton;
+    memDesc: TTntMemo;
+    Label3: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure TreeView1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -249,6 +251,7 @@ begin
         txtOrgName.Text := OrgName;
         txtOrgUnit.Text := OrgUnit;
         txtOrgTitle.Text := OrgTitle;
+        memDesc.Lines.Text := Desc;
         end;
 end;
 
