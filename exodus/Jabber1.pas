@@ -2764,7 +2764,8 @@ var
     i: integer;
 }
 var
-    o: TObject;
+    i: integer;
+    c: TChatController;
 begin
     // Test something..
     // LoadPlugin('RosterClean.ExodusRosterClean');
@@ -2787,8 +2788,12 @@ begin
     TrackWindowsMsg(WM_ACTIVATE);
     }
 
-    o := nil;
-    o.Free();
+    for i := MainSession.ChatList.Count - 1 downto 0 do begin
+        c := TChatController(MainSession.ChatList.Objects[i]);
+        if ((c <> nil) and (c.window is TfrmChat)) then
+            c.window.Free();
+    end;
+
 end;
 
 {---------------------------------------}

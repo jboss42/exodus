@@ -339,7 +339,7 @@ begin
     btnClose.Visible := Docked;
 end;
 
-
+{---------------------------------------}
 procedure TfrmDebug.WordWrap1Click(Sender: TObject);
 begin
   inherited;
@@ -347,12 +347,14 @@ begin
     MsgDebug.WordWrap := WordWrap1.Checked;
 end;
 
+{---------------------------------------}
 procedure TfrmDebug.Clear1Click(Sender: TObject);
 begin
   inherited;
     MsgDebug.Lines.Clear;
 end;
 
+{---------------------------------------}
 procedure TfrmDebug.SessionCallback(event: string; tag: TXMLTag);
 begin
     if (event = '/session/authenticated') then begin
@@ -363,6 +365,7 @@ begin
         lblJID.Caption := '(Disconnected)';
 end;
 
+{---------------------------------------}
 procedure TfrmDebug.lblJIDClick(Sender: TObject);
 var
     cp: TPoint;
@@ -372,12 +375,14 @@ begin
     popupMenu1.popup(cp.x, cp.y);
 end;
 
+{---------------------------------------}
 procedure TfrmDebug.Find1Click(Sender: TObject);
 begin
   inherited;
     FindDialog1.Execute();
 end;
 
+{---------------------------------------}
 procedure TfrmDebug.FindDialog1Find(Sender: TObject);
 var
     FoundAt: LongInt;
@@ -408,12 +413,14 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmDebug.MsgDebugKeyPress(Sender: TObject; var Key: Char);
 begin
   inherited;
     Key := Chr(0);
 end;
 
+{---------------------------------------}
 procedure TfrmDebug.MemoSendKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
@@ -434,6 +441,7 @@ begin
 
 end;
 
+{---------------------------------------}
 procedure TfrmDebug.FormActivate(Sender: TObject);
 begin
   inherited;

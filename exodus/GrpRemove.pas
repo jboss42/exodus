@@ -168,6 +168,7 @@ end;
 procedure TfrmGrpRemove.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
+    ct_list.Free();
     Action := caFree;
 end;
 

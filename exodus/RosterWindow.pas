@@ -1057,9 +1057,7 @@ end;
 {---------------------------------------}
 procedure TfrmRosterWindow.treeRosterDblClick(Sender: TObject);
 var
-    r: integer;
-    chatc: TChatController;
-    cw: TfrmChat;
+    m, r: integer;
 begin
     // Chat with this person
     _change_node := nil;
@@ -1067,36 +1065,15 @@ begin
     node_ritem: begin
         // chat w/ this person
         r := MainSession.Prefs.getInt(P_CHAT);
+        m := MainSession.Prefs.getInt('chat_memory');
 
-        // If we are keeping chats, always use r = 2 instead of r = 0
-        if ((r = 0) and
-            (MainSession.Prefs.getInt('chat_memory') > 0)) then begin
-            r := 2;
-        end;
-
-        if (r = 0) then
-            // always start chat window
+        if ((r = 0) or (r = 2) or (m > 0)) then
+            // StartChat will handle doing the right thing
             StartChat(_cur_ritem.jid.jid, '', true)
+
         else if (r = 1) then
             // instant message
-            StartMsg(_cur_ritem.jid.jid)
-        else if (r = 2) then begin
-            // either raise, or start chat
-            chatc := MainSession.ChatList.FindChat(_cur_ritem.jid.jid, '', '');
-            if (chatc <> nil) then begin
-                cw := TfrmChat(chatc.window);
-                if (cw.Docked) then begin
-                    if (not cw.Visible) then
-                        cw.ShowDefault()
-                    else
-                        frmExodus.Tabs.ActivePage := cw.TabSheet
-                    end
-                else
-                    cw.Show();
-            end
-            else
-                StartChat(_cur_ritem.jid.jid, '', true);
-        end;
+            StartMsg(_cur_ritem.jid.jid);
     end;
     node_bm: begin
         // enter this conference
