@@ -152,7 +152,7 @@ object frmMsgRecv: TfrmMsgRecv
       Width = 319
       Height = 152
       Align = alClient
-      ScrollBars = ssBoth
+      ScrollBars = ssVertical
       TabOrder = 0
       OnKeyUp = MsgOutKeyUp
     end
@@ -262,7 +262,7 @@ object frmMsgRecv: TfrmMsgRecv
       end>
     LangOptions = [loAutoFont]
     Language = 1033
-    ScrollBars = ssBoth
+    ScrollBars = ssVertical
     ShowSelectionBar = False
     TabOrder = 4
     URLColor = clBlue

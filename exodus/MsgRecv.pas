@@ -174,6 +174,8 @@ begin
     // pre-fill parts of the header grid
     AssignDefaultFont(txtMsg.Font);
     txtMsg.Color := TColor(MainSession.Prefs.getInt('color_bg'));
+    AssignDefaultFont(MsgOut.Font);
+    MsgOut.Color := TColor(MainSession.Prefs.getInt('color_bg'));
     Self.ClientHeight := 200;
     recips := TStringlist.Create();
 end;

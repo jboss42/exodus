@@ -153,6 +153,7 @@ object frmBaseChat: TfrmBaseChat
       Width = 378
       Height = 24
       Align = alClient
+      PopupMenu = popOut
       TabOrder = 0
       WantReturns = False
       WantTabs = True
