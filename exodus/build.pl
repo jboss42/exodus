@@ -6,7 +6,7 @@ $::D = 'f:/lang/Delphi7';
 $::TNT = "D:\\src\\exodus\\exodus\\components\\tntUnicode";
 $::ICQ = "\"D:\\src\\exodus\\exodus\\plugins\\ICQ-Import\\ICQ\\Component\"";
 $::NSIS = "\"D:\\Program Files\\NSIS\\makensis.exe\"";
-
+$::MSGFMT = "F:\\lang\\dxgettext\\msgfmt.exe";
 do "dopts.pl";
 
 my $DD;
@@ -26,7 +26,14 @@ e("$dcc $opts -Noutput IdleHooks.dpr");
 e("$rcc version.rc");
 e("$dcc $opts -Noutput -U\"$::TNT\" Exodus.dpr");
 
-chdir "plugins";
+
+chdir "locale";
+unlink "mo.zip";
+grep unlink, glob("*/LC_MESSAGES/default.mo");
+grep &msgfmt, glob("*/LC_MESSAGES/default.po");
+e('find . -name default.mo -print | zip mo -@');
+
+chdir "../plugins";
 grep unlink, glob("*.zip"); # rm *.zip
 grep unlink, glob("*.dll"); # rm *.dll
 
@@ -104,4 +111,11 @@ EOF
   
   chdir "..";
   e("zip -9 $base.zip $base.dll");
+}
+
+sub msgfmt() {
+  my $po = $_;
+  (my $mo = $po) =~ s/po$/mo/;
+  
+  e("$::MSGFMT $po -o $mo");
 }
