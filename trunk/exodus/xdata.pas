@@ -155,7 +155,7 @@ begin
         frm.Align := alTop;
         frm.TabOrder := 0;
         h := h + frm.Height;
-        m :=  max(m, frm.getLabelWidth());
+        m := max(m, frm.getLabelWidth());
     end;
 
     for i := 0 to Self.box.ControlCount - 1 do begin
@@ -182,7 +182,8 @@ begin
     end;
 
     MainSession.Prefs.RestorePosition(Self);
-    Self.ClientHeight := h + lblIns.Height + 10 + frameButtons1.Height;
+    //Self.ClientHeight := h + lblIns.Height + 10 + frameButtons1.Height;
+    Self.ClientHeight := h;
 
 end;
 

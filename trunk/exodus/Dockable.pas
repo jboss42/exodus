@@ -217,6 +217,10 @@ begin
     In this case, we don't want to subvert the normal z-order raising,
     otherwise, we DO want to subvert normal behavior so toast doesn't
     bring this window to the top of the z-order
+
+    Note that the application object tries to raise this window in odd
+    circumstances, like displaying hints in another window. Hence the
+    removal of the check for Application.Active.
     }
 
     // if ((not Application.Active) and (not _top)) then
