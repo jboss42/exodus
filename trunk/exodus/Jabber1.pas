@@ -386,6 +386,7 @@ type
 
     procedure Startup();
     procedure DoConnect();
+    procedure CancelConnect();
     procedure CTCPCallback(event: string; tag: TXMLTag);
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
     procedure DefaultHandler(var msg); override;
@@ -1177,7 +1178,6 @@ begin
             MainSession.ActivateProfile(_prof_index);
             if (_cli_priority <> -1) then
                 MainSession.Priority := _cli_priority;
-
             Self.DoConnect();
         end
         else
@@ -1267,6 +1267,17 @@ begin
     ImageList2.GetIcon(iconNum, _tray_icon);
     _tray.hIcon := _tray_icon.Handle;
     Shell_NotifyIcon(NIM_MODIFY, @_tray);
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.CancelConnect();
+begin
+    _logoff := true;
+    if (MainSession.Active) then
+        MainSession.Stream.Disconnect()
+    else
+        timReconnect.Enabled := false;
+    // MainSession.FireCallback('/session/disconnected', nil);
 end;
 
 {---------------------------------------}
@@ -1360,15 +1371,11 @@ begin
 
         timAutoAway.Enabled := false;
 
-        {
-        if (frmMsgQueue <> nil) then
-            frmMsgQueue.lstEvents.Items.Clear;
-        }
-
         Self.Caption := sExodus;
         setTrayInfo(Self.Caption);
         setTrayIcon(0);
 
+        _new_account := false;
         btnConnect.Down := false;
         restoreMenus(false);
 

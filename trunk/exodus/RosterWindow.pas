@@ -2301,7 +2301,7 @@ begin
     // Login to the client..
     if (lblLogin.Caption = sCancelLogin) then begin
         // Cancel the connection
-        MainSession.Disconnect();
+        frmExodus.CancelConnect();
     end
     else if (lblLogin.Caption = sCancelReconnect) then begin
         // cancel reconnect
