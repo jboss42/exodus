@@ -323,6 +323,8 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.FormEndDock(Sender, Target: TObject; X, Y: Integer);
 begin
+    if (Target <> frmExodus.Tabs) then exit;
+    
     if Self.TabSheet <> nil then begin
         Self.TabSheet.ImageIndex := -1;
         frmExodus.Tabs.ActivePage.ImageIndex := -1;
