@@ -66,6 +66,8 @@ function getDisplayField(fld: string): string;
 procedure DebugMsg(Message : string);
 procedure AssignDefaultFont(font: TFont);
 function secsToDuration(seconds: string): string;
+function GetPresenceAtom(status: string): ATOM;
+function GetPresenceString(a: ATOM): string;
 
 var
     _GetLastInputInfo: Pointer;
@@ -82,7 +84,23 @@ uses
     Session,
     XMLUtils,
     JabberID,
+    IniFiles,
     Debug;
+
+type
+    TAtom = class
+    public
+        a : ATOM;
+        constructor Create(at: ATOM);
+    end;
+
+var
+    presenceToAtom: TStringList;
+
+constructor TAtom.Create(at: ATOM);
+begin
+    a := at;
+end;
 
 {---------------------------------------}
 function GetLastInputInfo;
@@ -426,10 +444,78 @@ begin
 end;
 
 {---------------------------------------}
+function GetPresenceAtom(status: string): ATOM;
+var
+    ind : integer;
+    a: ATOM;
+begin
+    // atom functions don't like ''.
+    if (status = '') then begin
+        result := 0;
+        exit;
+        end;
+
+    ind := presenceToAtom.IndexOf(status);
+    if (ind = -1) then begin
+        a := GlobalAddAtom(pchar(status));
+        if (a = 0) then
+            raise Exception.Create('Bad string to atom: ' + status);
+        presenceToAtom.AddObject(status, TAtom.Create(a));
+        result := a;
+        end
+    else
+        result := TAtom(presenceToAtom.Objects[ind]).a;
+end;
+
+{---------------------------------------}
+function GetPresenceString(a: ATOM): string;
+var
+    i : integer;
+    buf: array[0..255] of char;
+    status : string;
+begin
+    if (a = 0) then begin
+        result := '';
+        exit;
+        end;
+        
+    // hm.  better data structure needed...
+    // Luckily, there shouldn't be more than ~10 of these,
+    // so it doesn't matter that much.
+    for i:=0 to presenceToAtom.Count-1 do begin
+        if (TAtom(presenceToAtom.Objects[i]).a = a) then begin
+            result := presenceToAtom[i];
+            exit;
+            end;
+        end;
+    // not found
+    if (GlobalGetAtomName(a, buf, sizeof(buf)) = 0) then
+        raise Exception.Create('Global atom not found for: ' + IntToStr(a));
+    status := StrPas(buf);
+    presenceToAtom.AddObject(status, TAtom.Create(a));
+    result := status;
+end;
+
+{---------------------------------------}
+procedure FreeAtoms(pta: TStringList);
+var
+    i : integer;
+begin
+    for i:=0 to pta.Count-1 do
+        GlobalDeleteAtom(TAtom(pta.Objects[i]).a);
+end;
+
+{---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 initialization
     _GetLastInputInfo := GetProcAddress(GetModuleHandle('user32.dll'), 'GetLastInputInfo');
+    presenceToAtom := TStringList.Create();
 
+finalization
+    if (presenceToAtom <> nil) then begin
+        FreeAtoms(presenceToAtom);
+        presenceToAtom.Free();
+        end;
 end.
 

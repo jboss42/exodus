@@ -330,10 +330,12 @@ type
     procedure CTCPCallback(event: string; tag: TXMLTag);
     procedure ResetLastTick(value: longint);
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
+    procedure DefaultHandler(var msg); override;
   end;
 
 var
     frmExodus: TfrmExodus;
+    sExodusPresence: Cardinal;
 
 resourcestring
     sCommandLine =  'The following command line parameters are available in Exodus: '#13#10#13#10;
@@ -892,6 +894,7 @@ end;
 procedure TfrmExodus.SessionCallback(event: string; tag: TXMLTag);
 var
     p: TJabberPres;
+    msg : TMessage;
 begin
     // session events
     if event = '/session/connected' then begin
@@ -986,6 +989,13 @@ begin
             SetTrayIcon(4)
         else if (MainSession.Show = 'xa') then
             SetTrayIcon(10);
+
+        // don't send message on autoaway
+        if (_is_autoaway or _is_autoxa) then exit;
+        if (not MainSession.Prefs.getBool('presence_message_send')) then exit;
+        msg.LParamHi := GetPresenceAtom(MainSession.Show);
+        msg.LParamLo := GetPresenceAtom(MainSession.Status);
+        PostMessage(HWND_BROADCAST, sExodusPresence, self.Handle, msg.LParam);
         end;
 end;
 
@@ -2193,5 +2203,28 @@ begin
     fSel.Free();
 end;
 
+procedure TfrmExodus.DefaultHandler(var msg);
+var
+    m : TMessage;
+    status: string;
+    show: string;
+begin
+    m := TMessage(msg);
+    if (m.Msg = sExodusPresence) then begin
+        if (HWND(m.WParam) = Self.Handle) then exit;
+        if (not MainSession.Prefs.getBool('presence_message_listen')) then exit;
+
+        show := GetPresenceString(m.LParamHi);
+        status := GetPresenceString(m.LParamLo);
+        // already there.
+        if ((MainSession.Show = show) and (MainSession.Status = status)) then exit;
+        MainSession.setPresence(show, status, MainSession.Priority);
+        end
+    else
+        inherited;
+end;
+
+initialization
+    sExodusPresence := RegisterWindowMessage('EXODUS_PRESENCE');
 end.
 
