@@ -1214,7 +1214,10 @@ begin
 
         // Don't broadcast
         _is_broadcast := true;
-        MainSession.setPresence(MainSession.Show, MainSession.Status, MainSession.Priority);
+        if (_last_show <> '') then
+            MainSession.setPresence(_last_show, _last_status, _last_priority)
+        else
+            MainSession.setPresence(MainSession.Show, MainSession.Status, MainSession.Priority);
         _is_broadcast := false;
 
         Tabs.ActivePage := tbsRoster;
@@ -1246,6 +1249,11 @@ begin
         if (_appclosing) then
             PostMessage(Self.Handle, WM_CLOSEAPP, 0, 0)
         else if (not _logoff) then with timReconnect do begin
+
+            _last_show := MainSession.Show;
+            _last_status := MainSession.Status;
+            _last_priority := MainSession.Priority;
+
             inc(_reconnect_tries);
 
             if (_reconnect_tries < RECONNECT_RETRIES) then begin
@@ -1260,12 +1268,15 @@ begin
                 end
             else
                 DebugMsg('Attempted to reconnect too many times.');
+            end
+        else begin
+            _last_show := '';
+            _last_status := '';
             end;
         end
 
     else if event = '/session/commerror' then begin
         timAutoAway.Enabled := false;
-        // MessageDlg(sCommError,  mtError, [mbOK], 0);
         end
 
     else if event = '/session/stream:error' then begin
