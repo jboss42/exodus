@@ -287,8 +287,12 @@ var
     img: WideString;
     res: WideString;
 begin
-    // search for various smileys
+    if (not use_emoticons) then begin
+        result := txt;
+        exit;
+    end;
 
+    // search for various smileys
     res := '';
     s := txt;
     m := emoticon_regex.Exec(txt);
