@@ -135,7 +135,7 @@ implementation
 uses
     XMLUtils,
     {$ifdef Win32}
-    Graphics; 
+    Graphics;
     {$else}
     QGraphics;
     {$endif}
@@ -280,6 +280,14 @@ begin
         result := ExtractFilePath(Application.EXEName)
     else if pkey = 'inline_status' then
         result := '0'
+    else if pkey = 'roster_bg' then
+        result := IntToStr(Integer(clWindow))
+    else if pkey = 'roster_font_name' then
+        result := Screen.IconFont.Name
+    else if pkey = 'roster_font_size' then
+        result := IntToStr(Screen.IconFont.Size)
+    else if pkey = 'roster_font_color' then
+        result := IntToStr(Integer(Screen.IconFont.Color))
     else
         result := '0';
 end;

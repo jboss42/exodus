@@ -164,6 +164,7 @@ type
     N16: TMenuItem;
     Custom3: TMenuItem;
     N18: TMenuItem;
+    btnRoom: TToolButton;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -721,6 +722,9 @@ var
     item: TListItem;
 begin
     // create a listview item for this event
+    n_flag := 0;
+    img_idx := 0;
+
     case e.eType of
     evt_Message: n_flag := MainSession.Prefs.getInt('notify_normalmsg');
     evt_Invite: n_flag := MainSession.Prefs.getInt('notify_invite');

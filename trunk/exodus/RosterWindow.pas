@@ -66,7 +66,7 @@ type
     popActions: TPopupMenu;
     popAddContact: TMenuItem;
     popAddGroup: TMenuItem;
-    imgStatus: TImage;
+    imgStatus: TPaintBox;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -100,6 +100,7 @@ type
     procedure popSendSubscribeClick(Sender: TObject);
     procedure treeRosterCustomDrawItem(Sender: TCustomTreeView;
       Node: TTreeNode; State: TCustomDrawState; var DefaultDraw: Boolean);
+    procedure imgStatusPaint(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;
@@ -117,6 +118,7 @@ type
 
     _cur_ritem: TJabberRosterItem;
     _cur_bm: TJabberBookmark;
+    _cur_status: integer;
 
 
     procedure RosterCallback(event: string; tag: TXMLTag; ritem: TJabberRosterItem);
@@ -242,16 +244,9 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.ChangeStatusImage(idx: integer);
-var
-    bmp: TBitmap;
 begin
-    bmp := TBitmap.Create();
-    ImageList1.BkColor := clWhite;
-    ImageList1.GetBitmap(idx, bmp);
-    imgStatus.Picture.Assign(bmp);
-    ImageList1.BkColor := clNone;
-    imgStatus.Refresh;
-    bmp.Free;
+    _cur_status := idx;
+    imgStatus.Repaint();
 end;
 
 {---------------------------------------}
@@ -288,6 +283,10 @@ begin
     else if event = '/session/prefs' then begin
         _show_status := MainSession.Prefs.getBool('inline_status');
         _status_color := TColor(MainSession.Prefs.getInt('inline_color'));
+        treeRoster.Font.Name := MainSession.Prefs.getString('roster_font_name');
+        treeRoster.Font.Size := MainSession.Prefs.getInt('roster_font_size');
+        treeRoster.Font.Color := TColor(MainSession.Prefs.getInt('roster_font_color'));
+
         frmJabber.pnlRoster.ShowHint := not _show_status;
         Redraw();
         end;
@@ -1238,6 +1237,11 @@ begin
         end;
 
         end;
+end;
+
+procedure TfrmRosterWindow.imgStatusPaint(Sender: TObject);
+begin
+    ImageList1.Draw(imgStatus.Canvas, 1, 1, _cur_status);
 end;
 
 end.

@@ -89,7 +89,6 @@ var
     ritem: TJabberRosterItem;
     tmp_jid: TJabberID;
     n: integer;
-    e: TJabberEvent;
 begin
     // we are getting some event to do notification on
     sess := TJabberSession(_session);

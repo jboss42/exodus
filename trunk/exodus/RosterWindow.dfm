@@ -110,19 +110,18 @@ object frmRosterWindow: TfrmRosterWindow
     BevelOuter = bvNone
     BorderWidth = 2
     TabOrder = 2
-    object imgStatus: TImage
+    object imgStatus: TPaintBox
       Left = 2
       Top = 2
-      Width = 18
+      Width = 23
       Height = 20
       Align = alLeft
-      Transparent = True
-      OnClick = pnlStatusClick
+      OnPaint = imgStatusPaint
     end
     object pnlStatus: TPanel
-      Left = 20
+      Left = 25
       Top = 2
-      Width = 175
+      Width = 170
       Height = 20
       Align = alClient
       Alignment = taLeftJustify
