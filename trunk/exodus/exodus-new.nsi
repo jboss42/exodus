@@ -442,6 +442,11 @@ Section Exodus SEC_Exodus
     !ifdef DAILY
         File "${PRODUCT}${MAP_EXTENSION}"
     !endif
+    
+    ; BRANDING: Uncomment if you are doing a branded setup.
+    ; SetOverwrite off ; only if you don't want to overwrite existing file.
+    ; File "${BRANDING_FILE}${XML_EXTENSION}"
+    ; SetOverwrite on    
 
     ; Create the plugins dir, and lay down the default logger
     CreateDirectory "$INSTDIR\${PLUGINS_DIR}"
@@ -451,11 +456,6 @@ Section Exodus SEC_Exodus
     ; Make sure exodus is registered, for Win95 and NT4
     ; We need to do this to ensure that plugins can register properly.
     ExecWait '"$INSTDIR\${PRODUCT}${EXEC_EXTENSION}" -0'
-
-    ; BRANDING: Uncomment if you are doing a branded setup.
-    ; SetOverwrite off ; only if you don't want to overwrite existing file.
-    ; File "${BRANDING_FILE}${XML_EXTENSION}"
-    ; SetOverwrite on
 
     ; version(riched20) >= 5.30
     GetDLLVersion "$SYSDIR\${RICHED}${DLL_EXTENSION}" $R0 $R1
