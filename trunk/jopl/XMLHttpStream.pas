@@ -111,7 +111,7 @@ uses
     {$ifdef Win32}
     Registry, StrUtils,
     {$endif}
-
+    Session,
     IdGlobal;
 
 const
@@ -215,12 +215,6 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 constructor THttpThread.Create(strm: TXMLHttpStream; profile: TJabberProfile; root: string);
-var
-    {$ifdef Win32}
-    reg: TRegistry;
-    {$endif}
-    srv: string;
-    colon: integer;
 begin
     inherited Create(strm, root);
 
@@ -231,6 +225,8 @@ begin
     {$ifdef INDY9}
     _http.AllowCookies := true;
     {$endif}
+    MainSession.Prefs.setProxy(_http);
+    
     _cookie_list := TStringList.Create();
     _cookie_list.Delimiter := ';';
     _cookie_list.QuoteChar := #0;
@@ -242,56 +238,12 @@ begin
     {$else}
     _encoder := TIdBase64Encoder.Create(nil);
     {$endif}
-    SetLength(_keys, _profile.NumPollKeys); 
+    SetLength(_keys, _profile.NumPollKeys);
     GenKeys();
 
     _request := TStringlist.Create();
     _response := TStringstream.Create('');
 
-    if (_profile.ProxyApproach = http_proxy_ie) then begin
-        // get IE settings from registry
-
-        // todo: figure out some way of doing this XP??
-        {$ifdef Win32}
-        reg := TRegistry.Create();
-        try
-            reg.OpenKey('Software\Microsoft\Windows\CurrentVersion\Internet Settings', false);
-            if (reg.ValueExists('ProxyEnable') and
-                (reg.ReadInteger('ProxyEnable') <> 0)) then begin
-                srv := reg.ReadString('ProxyServer');
-                colon := pos(':', srv);
-                {$ifdef INDY9}
-                with _http.ProxyParams do begin
-                    ProxyServer := Copy(srv, 1, colon-1);
-                    ProxyPort := StrToInt(Copy(srv, colon+1, length(srv)));
-                end;
-                {$else}
-                with _http.Request do begin
-                    ProxyServer := Copy(srv, 1, colon-1);
-                    ProxyPort := StrToInt(Copy(srv, colon+1, length(srv)));
-                end;
-                {$endif}
-            end;
-        finally
-            reg.Free();
-        end;
-        {$endif}
-        
-    end
-    else if (_profile.ProxyApproach = http_proxy_custom) then begin
-        {$ifdef INDY9}
-        with _http.ProxyParams do begin
-        {$else}
-        with _http.Request do begin
-        {$endif}
-            ProxyServer := _profile.ProxyHost;
-            ProxyPort := _profile.ProxyPort;
-            if (_profile.ProxyAuth) then begin
-                ProxyUsername := _profile.ProxyUsername;
-                ProxyPassword := _profile.ProxyPassword;
-            end;
-        end;
-    end;
 end;
 
 {---------------------------------------}

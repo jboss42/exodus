@@ -21,7 +21,8 @@ unit PrefController;
 
 interface
 uses
-    Unicode, XMLTag, XMLParser, Presence,
+    Unicode, XMLTag, XMLParser, Presence, IdHTTP,
+    
     {$ifdef Win32}
     Forms, Windows, Registry,
     {$else}
@@ -119,13 +120,6 @@ type
         Poll: integer;
         NumPollKeys: integer;
 
-        ProxyApproach: integer;
-        ProxyHost: Widestring;
-        ProxyPort: integer;
-        ProxyAuth: boolean;
-        ProxyUsername: Widestring;
-        ProxyPassword: Widestring;
-
         constructor Create(prof_name: string);
 
         procedure Load(tag: TXMLTag);
@@ -178,6 +172,7 @@ end;
         procedure RestorePosition(form: TForm); overload;
         function RestorePosition(form: TForm; key: Widestring): boolean; overload;
 
+        procedure setProxy(http: TIdHttp);
 
         procedure LoadProfiles;
         procedure SaveProfiles;
@@ -790,6 +785,62 @@ begin
 end;
 
 {---------------------------------------}
+procedure TPrefController.setProxy(http: TIdHttp);
+var
+    {$ifdef Win32}
+    reg: TRegistry;
+    {$endif}
+    srv: string;
+    colon: integer;
+begin
+    if (getInt('http_proxy_approach') = http_proxy_ie) then begin
+        // get IE settings from registry
+
+        // todo: figure out some way of doing this XP??
+        {$ifdef Win32}
+        reg := TRegistry.Create();
+        try
+            reg.OpenKey('Software\Microsoft\Windows\CurrentVersion\Internet Settings', false);
+            if (reg.ValueExists('ProxyEnable') and
+                (reg.ReadInteger('ProxyEnable') <> 0)) then begin
+                srv := reg.ReadString('ProxyServer');
+                colon := pos(':', srv);
+                {$ifdef INDY9}
+                with http.ProxyParams do begin
+                    ProxyServer := Copy(srv, 1, colon-1);
+                    ProxyPort := StrToInt(Copy(srv, colon+1, length(srv)));
+                end;
+                {$else}
+                with http.Request do begin
+                    ProxyServer := Copy(srv, 1, colon-1);
+                    ProxyPort := StrToInt(Copy(srv, colon+1, length(srv)));
+                end;
+                {$endif}
+            end;
+        finally
+            reg.Free();
+        end;
+        {$endif}
+        
+    end
+    else if (getInt('http_proxy_approach') = http_proxy_custom) then begin
+        {$ifdef INDY9}
+        with http.ProxyParams do begin
+        {$else}
+        with http.Request do begin
+        {$endif}
+            ProxyServer := getString('http_proxy_host');
+            ProxyPort := SafeInt(getString('http_proxy_port'));
+            if (getBool('http_proxy_auth')) then begin
+                ProxyUsername := getString('http_proxy_user');
+                ProxyPassword := getString('http_proxy_password');
+            end;
+        end;
+    end;
+end;
+
+
+{---------------------------------------}
 function TPrefController.CreateProfile(name: Widestring): TJabberProfile;
 begin
     Result := TJabberProfile.Create(name);
@@ -961,12 +1012,6 @@ begin
     URL           := getDefault('brand_profile_http_url');
     Poll          := SafeInt(getDefault('brand_profile_http_poll'));
     NumPollKeys   := SafeInt(getDefault('brand_profile_num_poll_keys'));
-    ProxyApproach := SafeInt(getDefault('brand_profile_http_proxy_approach'));
-    ProxyHost     := getDefault('brand_profile_http_proxy_host');
-    ProxyPort     := SafeInt(getDefault('brand_profile_http_proxy_port'));
-    ProxyAuth     := SafeBool(getDefault('brand_profile_http_proxy_auth'));
-    ProxyUsername := getDefault('brand_profile_http_proxy_user');
-    ProxyPassword := getDefault('brand_profile_http_proxy_password');
 end;
 
 {---------------------------------------}
@@ -1025,13 +1070,7 @@ begin
     // HTTP Connection
     URL := tag.GetBasicText('url');
     Poll := StrToIntDef(tag.GetBasicText('poll'), 10);
-    ProxyApproach := StrToIntDef(tag.GetBasicText('proxy_approach'), 0);
     NumPollKeys := StrToIntDef(tag.GetBasicText('num_poll_keys'), 256);
-    ProxyHost := tag.GetBasicText('proxy_host');
-    ProxyPort := StrToIntDef(tag.GetBasicText('proxy_port'), 0);
-    ProxyAuth := SafeBool(tag.GetBasicText('proxy_auth'));
-    ProxyUsername := tag.GetBasicText('proxy_username');
-    ProxyPassword := tag.GetBasicText('proxy_password');
 
     if (Name = '') then Name := 'Untitled Profile';
     if (Server = '') then Server := 'jabber.org';
@@ -1075,13 +1114,7 @@ begin
     // HTTP Connection
     node.AddBasicTag('url', URL);
     node.AddBasicTag('poll', FloatToStr(Poll));
-    node.AddBasicTag('proxy_approach', IntToStr(ProxyApproach));
     node.AddBasicTag('num_poll_keys', IntToStr(NumPollKeys));
-    node.AddBasicTag('proxy_host', ProxyHost);
-    node.AddBasicTag('proxy_port', IntToStr(ProxyPort));
-    node.AddBasicTag('proxy_auth', SafeBoolStr(ProxyAuth));
-    node.AddBasicTag('proxy_username', ProxyUsername);
-    node.AddBasicTag('proxy_password', ProxyPassword);
 end;
 
 {---------------------------------------}

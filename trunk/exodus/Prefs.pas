@@ -221,6 +221,22 @@ type
     chkBusy: TCheckBox;
     chkCollapsed: TCheckBox;
     chkGroupCounts: TCheckBox;
+    imgNetwork: TImage;
+    lblNetwork: TLabel;
+    tbsNetwork: TTabSheet;
+    GroupBox2: TGroupBox;
+    lblProxyHost: TLabel;
+    lblProxyPort: TLabel;
+    lblProxyUsername: TLabel;
+    lblProxyPassword: TLabel;
+    Label28: TLabel;
+    txtProxyHost: TEdit;
+    txtProxyPort: TEdit;
+    chkProxyAuth: TCheckBox;
+    txtProxyUsername: TEdit;
+    txtProxyPassword: TEdit;
+    cboProxyApproach: TComboBox;
+    StaticText13: TStaticText;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -259,6 +275,8 @@ type
     procedure btnBrowsePluginPathClick(Sender: TObject);
     procedure lblPluginScanClick(Sender: TObject);
     procedure btnConfigPluginClick(Sender: TObject);
+    procedure cboProxyApproachChange(Sender: TObject);
+    procedure chkProxyAuthClick(Sender: TObject);
   private
     { Private declarations }
     _notify: array of integer;
@@ -514,6 +532,16 @@ begin
         fillStringList('keywords', memKeywords.Lines);
         chkRegex.Checked := getBool('regex_keywords');
         fillStringList('blockers', memBlocks.Lines);
+
+        // Network config
+        cboProxyApproach.ItemIndex := getInt('http_proxy_approach');
+        cboProxyApproachChange(cboProxyApproach);
+        txtProxyHost.Text := getString('http_proxy_host');
+        txtProxyPort.Text := getString('http_proxy_port');
+        chkProxyAuth.Checked := getBool('http_proxy_auth');
+        chkProxyAuthClick(chkProxyAuth);
+        txtProxyUsername.Text := getString('http_proxy_user');
+        txtProxyPassword.Text := getString('http_proxy_password');
 
         // plugins
         dir := getString('plugin_dir');
@@ -779,6 +807,14 @@ begin
         setBool('regex_keywords', chkRegex.Checked);
         setStringList('blockers', memBlocks.Lines);
 
+        // Network
+        setInt('http_proxy_approach', cboProxyApproach.ItemIndex);
+        setString('http_proxy_host', txtProxyHost.Text);
+        setInt('http_proxy_port', StrToIntDef(txtProxyPort.Text, 0));
+        setBool('http_proxy_auth', chkProxyAuth.Checked);
+        setString('http_proxy_user', txtProxyUsername.Text);
+        setString('http_proxy_password', txtProxyPassword.Text);
+
         // Plugins
         setString('plugin_dir', txtPluginDir.Text);
         savePlugins();
@@ -829,6 +865,7 @@ begin
     tbsKeywords.TabVisible := false;
     tbsBlockList.TabVisible := false;
     tbsCustomPres.TabVisible := false;
+    tbsNetwork.TabVisible := false;
     tbsPlugins.TabVisible := false;
 
     // note these are already pre-populated, so no leaks
@@ -915,6 +952,11 @@ begin
         PageControl1.ActivePage := tbsMessages;
         // img := imgMessages;
         lbl := lblMessages;
+    end
+    else if ((Sender = imgNetwork) or (Sender = lblNetwork)) then begin
+        PageControl1.ActivePage := tbsNetwork;
+        // img := imgNetwork;
+        lbl := lblNetwork;
     end
     else if ((Sender = imgPlugins) or (Sender = lblPlugins)) then begin
         PageControl1.ActivePage := tbsPlugins;
@@ -1410,5 +1452,45 @@ begin
     ConfigurePlugin(com_name);
 end;
 
+{---------------------------------------}
+procedure TfrmPrefs.cboProxyApproachChange(Sender: TObject);
+begin
+    if (cboProxyApproach.ItemIndex = http_proxy_custom) then begin
+        txtProxyHost.Enabled := true;
+        txtProxyPort.Enabled := true;
+        chkProxyAuth.Enabled := true;
+        lblProxyHost.Enabled := true;
+        lblProxyPort.Enabled := true;
+    end
+    else begin
+        txtProxyHost.Enabled := false;
+        txtProxyPort.Enabled := false;
+        chkProxyAuth.Enabled := false;
+        chkProxyAuth.Checked := false;
+        txtProxyUsername.Enabled := false;
+        txtProxyPassword.Enabled := false;
+        lblProxyHost.Enabled := false;
+        lblProxyPort.Enabled := false;
+        lblProxyUsername.Enabled := false;
+        lblProxyPassword.Enabled := false;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmPrefs.chkProxyAuthClick(Sender: TObject);
+begin
+    if (chkProxyAuth.Checked) then begin
+        lblProxyUsername.Enabled := true;
+        lblProxyPassword.Enabled := true;
+        txtProxyUsername.Enabled := true;
+        txtProxyPassword.Enabled := true;
+    end
+    else begin
+        lblProxyUsername.Enabled := false;
+        lblProxyPassword.Enabled := false;
+        txtProxyUsername.Enabled := false;
+        txtProxyPassword.Enabled := false;
+    end;
+end;
 end.
 
