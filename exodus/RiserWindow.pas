@@ -26,6 +26,9 @@ uses
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
     Dialogs, ExtCtrls, StdCtrls, TntStdCtrls;
 
+const
+    TOAST_BUFFER_PIX = 2;
+
 type
   TfrmRiser = class(TForm)
     Timer1: TTimer;
@@ -70,7 +73,7 @@ implementation
 
 {$R *.dfm}
 uses
-    ExUtils, GnuGetText, Session, Dockable, Jabber1;
+    Types, ExUtils, GnuGetText, Session, Dockable, Jabber1;
 
 {---------------------------------------}
 procedure ShowRiserWindow(clickForm: TForm; msg: Widestring; imgIndex: integer);
@@ -176,11 +179,24 @@ end;
 {---------------------------------------}
 procedure TfrmRiser.Position();
 var
+    midx: integer;
+    dc, tc: TPoint;
+    dtop: TRect;
     taskbar: HWND;
-    mh, mw: longint;
+    dx, dy: longint;
+    //dh, dw, mh, mw: longint;
 begin
+    // Netmeeting hack
+    if (Assigned(Application.MainForm)) then
+        Application.MainForm.Monitor;
+
+    // Find the taskbar, and it's monitor
     taskbar := FindWindow('Shell_TrayWnd', '');
     GetWindowRect(taskbar, _taskrect);
+
+    tc := CenterPoint(_taskrect);
+    midx := Screen.MonitorFromPoint(tc, mdNearest).MonitorNum;
+    dtop := Screen.Monitors[midx].WorkareaRect;
 
     // eval the rect to get it's direction
     {
@@ -190,39 +206,36 @@ begin
     3 = bottom
     }
 
-    mh := Screen.DesktopHeight div 2;
-    mw := Screen.DesktopWidth div 2;
-    if ((_taskrect.Left < mw) and (_taskrect.Top < mh) and (_taskrect.Right < mw)) then
-        _taskdir := 0
-    else if ((_taskrect.left > mw) and (_taskrect.Top < mh)) then
-        _taskdir := 1
-    else if (_taskrect.top < mh) then
-        _taskdir := 2
-    else
-        _taskdir := 3;
+    // check tc (taskbar center) vs. dc (desktop center)
+    // Use geometry, yo.
+    dc := CenterPoint(dtop);
+    dx := dc.X - tc.X;
+    dy := dc.Y - tc.Y;
 
-    case _taskdir of
-    0: begin
-        // taskbar on left side
-        Self.Left := -Self.Width - 2;
-        Self.Top := Screen.DesktopHeight - Self.Height - 2;
+    if ((dx > 0) and (dy = 0)) then begin
+        // Left side
+        _taskdir := 0;
+        Self.Left := _taskrect.Left - Self.Width - TOAST_BUFFER_PIX;
+        Self.Top := _taskrect.Bottom - Self.Height - TOAST_BUFFER_PIX;
+    end
+    else if ((dx < 0) and (dy = 0)) then begin
+        // Right side
+        _taskdir := 1;
+        Self.Left := _taskrect.Right + Self.Width + TOAST_BUFFER_PIX;
+        Self.Top := _taskrect.Bottom - Self.Height - TOAST_BUFFER_PIX;
+    end
+    else if ((dx = 0) and (dy > 0)) then begin
+        // Top
+        _taskdir := 2;
+        Self.Left := _taskrect.Right - Self.Width - TOAST_BUFFER_PIX;
+        Self.Top := _taskrect.Top - Self.Height - TOAST_BUFFER_PIX;
+    end
+    else begin
+        // Bottom
+        _taskdir := 3;
+        Self.Left := _taskrect.Right - Self.Width - TOAST_BUFFER_PIX;
+        Self.Top := _taskrect.Bottom + Self.Height + TOAST_BUFFER_PIX;
     end;
-    1: begin
-        // taskbar on right side
-        Self.Left := Screen.DesktopWidth + Self.Width + 2;
-        Self.Top := Screen.DesktopHeight - Self.Height - 2;
-    end;
-    2: begin
-        // taskbar on top
-        Self.Left := Screen.DesktopWidth - Self.Width - 2;
-        Self.Top := -Self.Height - 2;
-    end;
-    3: begin
-        // taskbar on bottom
-        Self.Left := Screen.DesktopWidth - Self.Width - 2;
-        Self.Top := Screen.DesktopHeight;
-    end;
-end;
 end;
 
 {---------------------------------------}
@@ -252,7 +265,7 @@ begin
         Self.Top := Self.Top - 2;
         if (Self.Top + Self.Height) < _taskrect.top then stop := true;
     end;
-end;
+    end;
 
     if (stop) then begin
         Timer1.Enabled := false;

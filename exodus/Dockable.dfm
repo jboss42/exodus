@@ -1,5 +1,5 @@
 object frmDockable: TfrmDockable
-  Left = 308
+  Left = 310
   Top = 235
   Width = 249
   Height = 231
