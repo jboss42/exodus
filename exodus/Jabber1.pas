@@ -265,6 +265,7 @@ type
     _auto_away_interval: integer;
     _last_tick: dword;                  // last tick when something happened
     _expanded: boolean;                 // are we expanded or not?
+    _docked_forms: TList;               // list of all of the docked forms
 
     // Various state flags
     _windows_ver: integer;
@@ -308,6 +309,7 @@ type
     // Stuff for tracking win32 API events
     _win32_tracker: Array of integer;
     _win32_idx: integer;
+
 
     procedure presCustomPresClick(Sender: TObject);
 
@@ -737,6 +739,7 @@ begin
     {$endif}
 
     ActiveChat := nil;
+    _docked_forms := TList.Create;
     _new_tabindex := -1;
 
     // Do translation magic
@@ -1655,11 +1658,23 @@ begin
                 frmMsgQueue.Close;
         end;
 
-        // make sure we undock all of the tabs..
+        // pgm: 7/20/03 - This sucks, but apparently, the TNT Page control
+        // doesn't track DockClients and things correctly. Thus, lets
+        // track our docked windows directly. *sigh*
+        {
         while (Tabs.DockClientCount > 0) do begin
             docked := TfrmDockable(Tabs.DockClients[0]);
             docked.FloatForm;
         end;
+        }
+
+        // make sure we undock all of the tabs..
+        for i := _docked_forms.Count - 1 downto 0 do begin
+            docked := TfrmDockable(_docked_forms[i]);
+            docked.FloatForm();
+        end;
+        _docked_forms.Clear();
+
 
         // make sure all invisible chat windows are undocked
         for i := 0 to MainSession.ChatList.Count - 1 do begin
@@ -2396,11 +2411,16 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.TabsUnDock(Sender: TObject; Client: TControl;
   NewTarget: TWinControl; var Allow: Boolean);
+var
+    idx: integer;
 begin
     // check to see if the tab is a frmDockable
     Allow := true;
     if (Client is TfrmDockable) then begin
         TfrmDockable(Client).Docked := false;
+        idx := _docked_forms.IndexOf(TfrmDockable(Client));
+        if (idx >= 0) then
+            _docked_forms.Delete(idx);
     end;
 end;
 
@@ -2413,6 +2433,7 @@ begin
         TfrmDockable(Source.Control).Docked := true;
         TfrmDockable(Source.Control).TabSheet := TTntTabSheet(Tabs.Pages[Tabs.PageCount - 1]);
         _new_tabindex := Tabs.PageCount;
+        _docked_forms.Add(TfrmDockable(Source.Control));
     end;
 end;
 
