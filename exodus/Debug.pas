@@ -186,7 +186,8 @@ begin
         end;
 
     if (event = '/data/send') then
-        AddWideText('SENT: ' + data, clBlue)
+        if (data <> ' ') then
+            AddWideText('SENT: ' + data, clBlue)
     else
         AddWideText('RECV: ' + data, clGreen);
 end;
@@ -217,9 +218,11 @@ begin
     if (cmd = '') then exit;
     if (cmd[1] = '/') then begin
         // we are giving some kind of interactive debugger cmd
-        if (cmd = '/dispcount') then
-            DebugMessage('Dispatcher listener count: ' + IntToStr(MainSession.Dispatcher.TotalCount));
-        if (cmd = '/dispdump') then begin
+        if (cmd ='/help') then
+            DebugMessage('/dispcount'#13#10'/dispdump')
+        else if (cmd = '/dispcount') then
+            DebugMessage('Dispatcher listener count: ' + IntToStr(MainSession.Dispatcher.TotalCount))
+        else if (cmd = '/dispdump') then begin
             // dump out all signals
             with MainSession.Dispatcher do begin
                 for s := 0 to Count - 1 do begin
@@ -277,7 +280,7 @@ end;
 {---------------------------------------}
 procedure TfrmDebug.MemoSendKeyPress(Sender: TObject; var Key: Char);
 begin
-      if ( (Key = #10) and (HiWord(GetKeyState(VK_CONTROL)) <> 0)) then begin
+    if ( (Key = #10) and ((GetKeyState(VK_CONTROL) and (1 shl 16)) = (1 shl 16))) then begin
         btnSendRawClick(Self);
         Key := #0;
         end
