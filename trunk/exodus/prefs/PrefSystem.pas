@@ -117,6 +117,7 @@ procedure TfrmPrefSystem.LoadPrefs();
 var
     i: integer;
     tmps: Widestring;
+    reg: TRegistry;
 begin
     // System Prefs
     ScanLocales();
@@ -146,6 +147,17 @@ begin
         end
         else
             cboLocale.ItemIndex := 0;
+
+        // Check to see if Exodus runs when windows starts
+        reg := TRegistry.Create();
+        try
+            reg.RootKey := HKEY_CURRENT_USER;
+            reg.OpenKey(RUN_ONCE, true);
+            chkAutoStart.Checked := (reg.ValueExists('Exodus'));
+            reg.CloseKey();
+        finally
+            reg.Free();
+        end;
 
         _old_locale := cboLocale.Text;
     end;
