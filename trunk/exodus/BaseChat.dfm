@@ -121,7 +121,7 @@ object frmBaseChat: TfrmBaseChat
       Language = 1033
       PopupMenu = popOut
       ReadOnly = True
-      ScrollBars = ssBoth
+      ScrollBars = ssVertical
       ShowSelectionBar = False
       TabOrder = 0
       URLColor = clBlue
