@@ -43,6 +43,7 @@ type
         _features: TXMLTag;
         _xmpp: boolean;
         _cur_server: Widestring;
+        _tls_cb: integer;
 
         // Dispatcher
         _dispatcher: TSignalDispatcher;
@@ -75,6 +76,8 @@ type
         procedure handleDisconnect();
         procedure manualBlastPresence(p: TXMLTag);
         procedure StartSession(tag: TXMLTag);
+        procedure ResetStream();
+        procedure StartTLS();
 
         function GetUsername(): WideString;
         function GetPassword(): WideString;
@@ -88,6 +91,7 @@ type
     published
         procedure DataEvent(send: boolean; data: Widestring);
         procedure SessionCallback(event: string; tag: TXMLTag);
+        procedure TLSCallback(event: string; tag: TXMLTag);
 
     public
         ppdb: TJabberPPDB;
@@ -548,7 +552,11 @@ begin
             end
             else begin
                 if (_features.GetFirstTag('starttls') <> nil) then begin
-                    // XXX: do startTLS
+                    // check to see if we can do startTLS
+                    if (_stream.isSSLCapable()) then begin
+                        StartTLS();
+                        exit;
+                    end;
                 end;
 
                 // start auth.
@@ -958,8 +966,6 @@ end;
 
 {---------------------------------------}
 procedure TJabberSession.setAuthenticated(ok: boolean; tag: TXMLTag);
-var
-    tmps: Widestring;
 begin
     // our auth-agent is all set
     if (ok) then begin
@@ -967,16 +973,8 @@ begin
         _profile.NewAccount := false;
         _register := false;
 
-        if (_xmpp) then begin
-            // send a new stream:stream...
-            _stream.ResetParser();
-            tmps := '<stream:stream to="' + Trim(Server) +
-                '" xmlns="jabber:client" ' +
-                'xmlns:stream="http://etherx.jabber.org/streams" ' +
-                'version="1.0" ' +
-                '>';
-            _stream.Send(tmps);
-        end
+        if (_xmpp) then
+            ResetStream()
         else
             StartSession(tag);
     end
@@ -985,6 +983,48 @@ begin
     end;
 end;
 
+{---------------------------------------}
+procedure TJabberSession.ResetStream();
+var
+    tmps: Widestring;
+begin
+    // send a new stream:stream...
+    _stream.ResetParser();
+    tmps := '<stream:stream to="' + Trim(Server) +
+        '" xmlns="jabber:client" ' +
+        'xmlns:stream="http://etherx.jabber.org/streams" ' +
+        'version="1.0" ' +
+        '>';
+    _stream.Send(tmps);
+end;
+
+{---------------------------------------}
+procedure TJabberSession.StartTLS();
+var
+    s: TXMLTag;
+begin
+    _tls_cb := Self.RegisterCallback(TLSCallback,
+        '/packet/proceed[@xmlns="urn:ietf:params:xml:ns:xmpp-tls"]');
+
+    s := TXMLTag.Create('starttls');
+    s.setAttribute('xmlns', 'urn:ietf:params:xml:ns:xmpp-tls');
+    Self.SendTag(s);
+end;
+
+{---------------------------------------}
+procedure TJabberSession.TLSCallback(event: string; tag: TXMLTag);
+begin
+    Self.UnRegisterCallback(_tls_cb);
+    _tls_cb := -1;
+
+    if (event <> 'xml') then begin
+        // XXX: kill everything here?
+        exit;
+    end;
+
+    _stream.EnableSSL();
+    ResetStream();
+end;
 
 end.
 

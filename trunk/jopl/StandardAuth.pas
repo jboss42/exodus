@@ -88,11 +88,7 @@ end;
 {---------------------------------------}
 procedure TStandardAuth.StartAuthentication();
 var
-    mstr: Widestring;
-    i: integer;
-    dm, pm: boolean;
-    feats, m: TXMLTag;
-    mechs: TXMLTagList;
+    feats: TXMLTag;
 begin
     if (_session.isXMPP) then begin
         feats := _session.xmppFeatures;
