@@ -233,6 +233,10 @@ begin
                 _Data := E.Message;
                 doMessage(WM_COMMERROR);
                 end;
+            end
+        else begin
+            _Data := E.Message;
+            doMessage(WM_COMMERROR);
             end;
 
         // reset the stage
@@ -407,6 +411,9 @@ begin
                 tmps := _thread.Data
             else
                 tmps := '';
+
+            // show the exception
+            DoDataCallbacks(false, tmps);
 
             _timer.Enabled := false;
             _active := false;
