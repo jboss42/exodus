@@ -169,6 +169,10 @@ begin
         if (_pic <> nil) then FreeAndNil(_pic);
     end;
 
+    if (_pic.Width > 256) then begin
+        // resize
+    end;
+
     _genData();
 end;
 

@@ -350,6 +350,8 @@ const
     sGrpBookmarks = 'Bookmarks';
     sGrpOffline = 'Offline';
 
+    MIN_WIDTH = 150;
+
 {$R *.DFM}
 
 {---------------------------------------}
