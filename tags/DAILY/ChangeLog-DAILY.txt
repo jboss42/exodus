@@ -1,0 +1,8 @@
+2004-07-09 08:09  pgmillard
+
+	* exodus/: default.po, version.h, version.nsi: daily build
+
+2004-07-08 12:56  pgmillard
+
+	* exodus/SendStatus.pas: Fix Craig's file-send a/v.
+
