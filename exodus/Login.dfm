@@ -60,45 +60,17 @@ object frmLogin: TfrmLogin
     ParentFont = False
     OnClick = Label5Click
   end
-  object txtUsername: TEdit
-    Left = 66
-    Top = 28
-    Width = 150
-    Height = 21
-    TabOrder = 1
-  end
-  object txtPassword: TEdit
-    Left = 66
-    Top = 52
-    Width = 150
-    Height = 21
-    PasswordChar = '*'
-    TabOrder = 2
-  end
   object cboServer: TComboBox
     Left = 66
     Top = 76
     Width = 150
     Height = 21
     ItemHeight = 13
-    TabOrder = 3
+    TabOrder = 1
     Text = 'jabber.org'
     Items.Strings = (
       'jabber.org'
       'jabber.com')
-  end
-  object cboResource: TComboBox
-    Left = 66
-    Top = 100
-    Width = 150
-    Height = 21
-    ItemHeight = 13
-    TabOrder = 4
-    Text = 'exodus'
-    Items.Strings = (
-      'home'
-      'work'
-      'exodus')
   end
   inline frameButtons1: TframeButtons
     Left = 0
@@ -107,7 +79,7 @@ object frmLogin: TfrmLogin
     Height = 37
     Align = alBottom
     AutoScroll = False
-    TabOrder = 8
+    TabOrder = 5
     inherited Bevel1: TBevel
       Width = 238
     end
@@ -135,7 +107,7 @@ object frmLogin: TfrmLogin
     Width = 97
     Height = 15
     Caption = 'In&visible'
-    TabOrder = 6
+    TabOrder = 3
   end
   object btnDetails: TButton
     Left = 65
@@ -143,7 +115,7 @@ object frmLogin: TfrmLogin
     Width = 75
     Height = 23
     Caption = '&Details...'
-    TabOrder = 7
+    TabOrder = 4
     OnClick = btnDetailsClick
   end
   object chkSavePasswd: TCheckBox
@@ -152,7 +124,30 @@ object frmLogin: TfrmLogin
     Width = 127
     Height = 17
     Caption = 'Save pass&word'
-    TabOrder = 5
+    TabOrder = 2
+  end
+  object txtUsername: TTntEdit
+    Left = 66
+    Top = 29
+    Width = 151
+    Height = 21
+    TabOrder = 6
+  end
+  object txtPassword: TTntEdit
+    Left = 66
+    Top = 53
+    Width = 151
+    Height = 21
+    PasswordChar = '*'
+    TabOrder = 7
+  end
+  object cboResource: TTntComboBox
+    Left = 65
+    Top = 101
+    Width = 152
+    Height = 21
+    ItemHeight = 13
+    TabOrder = 8
   end
   object popProfiles: TPopupMenu
     Left = 8

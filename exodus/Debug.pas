@@ -385,7 +385,7 @@ end;
 procedure TfrmDebug.FindDialog1Find(Sender: TObject);
 var
     FoundAt: LongInt;
-    StartPos, ToEnd: Integer;
+    StartPos: Integer;
 begin
   inherited;
     { begin the search after the current selection if there is one }
@@ -396,9 +396,6 @@ begin
         else
           StartPos := 0;
 
-        { ToEnd is the length from StartPos to the end of the text
-          in the rich edit control }
-        ToEnd := Length(Text) - StartPos;
         FoundAt := FindText(FindDialog1.FindText, StartPos, -1, [stMatchCase]);
         if FoundAt <> -1 then begin
             SetFocus;
