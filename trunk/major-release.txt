@@ -1,0 +1,27 @@
+REM Usage: major-release version.pl-flag exe-extension cvs-tag
+
+@echo off
+cd exodus
+@echo Incrementing version number
+perl version.pl %1
+cvs ci -m "NEW RELEASE" version.h
+
+@echo Tagging current CVS
+cd ..
+cvs tag -R %3 
+cd exodus
+
+@echo Building Project
+call build.cmd
+
+@echo compiling installer
+"D:\Dev\NSIS\makensis.exe" /v2 exodus.nsi
+
+@echo renaming setup to exodus_%2.exe
+move setup.exe exodus_%2.exe
+
+@echo copying to jabberstudio
+pscp exodus_%2.exe user@jabberstudio.org:/var/projects/exodus/files
+plink user@jabberstudio.org "cd /var/projects/exodus/www/files; chmod 777 *.exe"
+cd ..
+@echo done
