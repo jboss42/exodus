@@ -2900,6 +2900,7 @@ begin
     f.Start();
 end;
 
+{---------------------------------------}
 procedure TfrmExodus.XMPPActionExecuteMacro(Sender: TObject;
   Msg: TStrings);
 var

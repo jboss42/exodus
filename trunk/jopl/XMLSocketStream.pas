@@ -89,7 +89,7 @@ type
         procedure Connect(profile: TJabberProfile); override;
         procedure Send(xml: Widestring); override;
         procedure Disconnect; override;
-        
+
     end;
 
 
@@ -675,6 +675,14 @@ begin
         end;
         {$endif}
         _socket.Disconnect();
+    end
+    else begin
+        if (_thread <> nil) then
+            _thread.Terminate();
+        _timer.Enabled := false;
+        _active := false;
+        _thread := nil;
+        DoCallbacks('disconnected', nil);
     end;
 end;
 
