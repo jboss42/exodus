@@ -2,7 +2,7 @@ object frmBrowse: TfrmBrowse
   Left = 257
   Top = 277
   Width = 427
-  Height = 428
+  Height = 425
   Caption = 'Jabber Browser'
   Color = clBtnFace
   DragKind = dkDock
@@ -24,7 +24,7 @@ object frmBrowse: TfrmBrowse
     Left = 0
     Top = 46
     Width = 419
-    Height = 328
+    Height = 325
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 3
@@ -33,7 +33,7 @@ object frmBrowse: TfrmBrowse
       Left = 145
       Top = 3
       Width = 271
-      Height = 322
+      Height = 319
       Align = alClient
       Columns = <
         item
@@ -67,7 +67,7 @@ object frmBrowse: TfrmBrowse
       Left = 3
       Top = 3
       Width = 142
-      Height = 322
+      Height = 319
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 4
@@ -94,7 +94,7 @@ object frmBrowse: TfrmBrowse
   end
   object StatBar: TStatusBar
     Left = 0
-    Top = 374
+    Top = 371
     Width = 419
     Height = 20
     Panels = <
@@ -183,7 +183,7 @@ object frmBrowse: TfrmBrowse
           OnClick = btnBackClick
         end
         object btnFwd: TToolButton
-          Left = 36
+          Left = 38
           Top = 0
           Hint = 'Next JID'
           Caption = 'btnFwd'
@@ -191,7 +191,7 @@ object frmBrowse: TfrmBrowse
           OnClick = btnFwdClick
         end
         object ToolButton2: TToolButton
-          Left = 59
+          Left = 61
           Top = 0
           Width = 20
           Caption = 'ToolButton2'
@@ -199,7 +199,7 @@ object frmBrowse: TfrmBrowse
           Style = tbsSeparator
         end
         object btnHome: TToolButton
-          Left = 79
+          Left = 81
           Top = 0
           Hint = 'Home'
           Caption = 'btnHome'
@@ -207,7 +207,7 @@ object frmBrowse: TfrmBrowse
           OnClick = btnHomeClick
         end
         object ToolButton1: TToolButton
-          Left = 102
+          Left = 104
           Top = 0
           Hint = 'Change Views'
           Caption = 'ToolButton1'
@@ -216,7 +216,7 @@ object frmBrowse: TfrmBrowse
           Style = tbsDropDown
         end
         object btnBookmark: TToolButton
-          Left = 138
+          Left = 142
           Top = 0
           Hint = 'Add a Bookmark'
           Caption = 'btnBookmark'
@@ -224,7 +224,7 @@ object frmBrowse: TfrmBrowse
           OnClick = mBookmarkClick
         end
         object ToolButton3: TToolButton
-          Left = 161
+          Left = 165
           Top = 0
           Hint = 'Get properties for all items in this window'
           Caption = 'btnProps'
@@ -2973,7 +2973,7 @@ object frmBrowse: TfrmBrowse
     Left = 7
     Top = 301
     Bitmap = {
-      494C010107000900040010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C010107000900040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -3373,7 +3373,8 @@ object frmBrowse: TfrmBrowse
       0001C003FFFFFFFF0001C003FDFFFFBF0001C003F9FFFF9F0831C003F1FFFF8F
       1001C003E003C0072A798001C003C00301018001C003C0030279C003E003C007
       0001E003F1FFFF8F21F1F003F9FFFF9F0001F803FDFFFFBF0001FC23FFFFFFFF
-      0001FE63FFFFFFFF0001FFFFFFFFFFFF}
+      0001FE63FFFFFFFF0001FFFFFFFFFFFF00000000000000000000000000000000
+      000000000000}
   end
   object DisToolbar: TImageList
     Left = 38
@@ -3782,74 +3783,74 @@ object frmBrowse: TfrmBrowse
       0001FE63FFFFFFFF0001FFFFFFFFFFFF00000000000000000000000000000000
       000000000000}
   end
-  object popHistory: TPopupMenu
+  object popHistory: TTntPopupMenu
     Left = 42
     Top = 268
   end
-  object popViewStyle: TPopupMenu
+  object popViewStyle: TTntPopupMenu
     Left = 10
     Top = 267
-    object Details1: TMenuItem
+    object Details1: TTntMenuItem
       Caption = 'Details'
       OnClick = Details1Click
     end
-    object LargeIcons1: TMenuItem
+    object LargeIcons1: TTntMenuItem
       Caption = 'Large Icons'
       OnClick = Details1Click
     end
-    object SmallIcons1: TMenuItem
+    object SmallIcons1: TTntMenuItem
       Caption = 'Small Icons'
       OnClick = Details1Click
     end
-    object List1: TMenuItem
+    object List1: TTntMenuItem
       Caption = 'List'
       OnClick = Details1Click
     end
   end
-  object popContext: TPopupMenu
+  object popContext: TTntPopupMenu
     OnPopup = popContextPopup
     Left = 73
     Top = 269
-    object mBrowse: TMenuItem
+    object mBrowse: TTntMenuItem
       Caption = 'Browse'
       OnClick = mBrowseClick
     end
-    object mBrowseNew: TMenuItem
+    object mBrowseNew: TTntMenuItem
       Caption = 'Browse in New Window'
       OnClick = mBrowseNewClick
     end
-    object mBookmark: TMenuItem
+    object mBookmark: TTntMenuItem
       Caption = 'Add Bookmark to Roster'
       OnClick = mBookmarkClick
     end
-    object N1: TMenuItem
+    object N1: TTntMenuItem
       Caption = '-'
     end
-    object mVCard: TMenuItem
+    object mVCard: TTntMenuItem
       Caption = 'vCard'
       OnClick = mVCardClick
     end
-    object mVersion: TMenuItem
+    object mVersion: TTntMenuItem
       Caption = 'Version'
       OnClick = mVCardClick
     end
-    object mTime: TMenuItem
+    object mTime: TTntMenuItem
       Caption = 'Time'
       OnClick = mVCardClick
     end
-    object mLast: TMenuItem
+    object mLast: TTntMenuItem
       Caption = 'Last Time/Activity'
       OnClick = mVCardClick
     end
-    object mSearch: TMenuItem
+    object mSearch: TTntMenuItem
       Caption = 'Search'
       OnClick = mSearchClick
     end
-    object mRegister: TMenuItem
+    object mRegister: TTntMenuItem
       Caption = 'Register'
       OnClick = mRegisterClick
     end
-    object mJoinConf: TMenuItem
+    object mJoinConf: TTntMenuItem
       Caption = 'Join Conference'
       OnClick = mJoinConfClick
     end

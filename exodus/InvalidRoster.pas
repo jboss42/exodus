@@ -23,14 +23,14 @@ interface
 uses
     Dockable, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, buttonFrame, ComCtrls, ExtCtrls, Menus, TntComCtrls;
+    Dialogs, buttonFrame, ComCtrls, ExtCtrls, Menus, TntComCtrls, TntMenus;
 
 type
   TfrmInvalidRoster = class(TfrmDockable)
     frameButtons1: TframeButtons;
     ListView1: TTntListView;
-    popItems: TPopupMenu;
-    oggleCheckboxes1: TMenuItem;
+    popItems: TTntPopupMenu;
+    oggleCheckboxes1: TTntMenuItem;
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

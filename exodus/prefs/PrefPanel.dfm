@@ -1,11 +1,11 @@
 object frmPrefPanel: TfrmPrefPanel
-  Left = 383
-  Top = 392
+  Left = 322
+  Top = 497
   BorderStyle = bsNone
   BorderWidth = 6
   Caption = 'frmPrefPanel'
-  ClientHeight = 303
-  ClientWidth = 272
+  ClientHeight = 301
+  ClientWidth = 270
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,4 +16,16 @@ object frmPrefPanel: TfrmPrefPanel
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
+  object pnlHeader: TTntPanel
+    Left = 0
+    Top = 0
+    Width = 270
+    Height = 26
+    Align = alTop
+    BevelOuter = bvLowered
+    Caption = 'pnlHeader'
+    Color = clHighlight
+    ParentBackground = False
+    TabOrder = 0
+  end
 end

@@ -32,7 +32,6 @@ type
     imgView3: TImage;
     imgView1: TImage;
     lblViewHelp: TTntLabel;
-    StaticText4: TTntPanel;
     procedure cboViewChange(Sender: TObject);
   private
     { Private declarations }
@@ -46,7 +45,7 @@ type
 var
   frmPrefLayouts: TfrmPrefLayouts;
 
-resourcestring
+const
     sViewSimple = 'The main window shows only the roster. Other windows are opened in seperate windows and never docked';
     sViewShare = 'The main window always shows the roster. Other windows are docked using a tabbed interface to the main window.';
     sViewExpanded = 'The main window shows the roster. Other windows are docked using a tabbed interface to the main window.';
@@ -59,7 +58,7 @@ implementation
 
 {$R *.dfm}
 uses
-    Session, PrefController; 
+    GnuGetText, Session, PrefController; 
 
 {---------------------------------------}
 procedure TfrmPrefLayouts.LoadPrefs();
@@ -116,9 +115,9 @@ begin
     imgView3.Visible := (idx = 2);
 
     case idx of
-    0: lblViewHelp.Caption := sViewSimple;
-    1: lblViewHelp.Caption := sViewShare;
-    2: lblViewHelp.Caption := sViewExpanded;
+    0: lblViewHelp.Caption := _(sViewSimple);
+    1: lblViewHelp.Caption := _(sViewShare);
+    2: lblViewHelp.Caption := _(sViewExpanded);
     end;
     
 end;

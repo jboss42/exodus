@@ -64,7 +64,7 @@ type
 var
   frmInvite: TfrmInvite;
 
-resourcestring
+const
     sConfRoom = 'Conference Room:';
     sInviteBody = 'You have been invited to the %s room.';
 
@@ -188,7 +188,7 @@ begin
     room := cboRoom.Text;
 
     if ((room = '') or (not isValidJID(room))) then begin
-        MessageDlg(sInvalidRoomJID, mtError, [mbOK], 0);
+        MessageDlgW(_(sInvalidRoomJID), mtError, [mbOK], 0);
         exit;
     end;
 

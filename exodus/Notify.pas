@@ -46,7 +46,7 @@ procedure DoNotify(win: TForm; notify: integer; msg: Widestring; icon: integer;
     sound_name: string); overload;
 procedure DoNotify(win: TForm; pref_name: string; msg: Widestring; icon: integer); overload;
 
-resourcestring
+const
     sNotifyOnline = ' is now online.';
     sNotifyOffline = ' is now offline.';
     sNotifyChat = 'Chat with ';

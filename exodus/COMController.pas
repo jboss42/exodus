@@ -184,7 +184,7 @@ var
 implementation
 
 uses
-    ExResponders, ExSession,
+    ExResponders, ExSession, GnuGetText, ExUtils,  
     Chat, ChatController, JabberID, MsgRecv, Room, Browser, Jud,
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
     COMChatController, Dockable, RegForm,
@@ -210,7 +210,7 @@ begin
     for i := 0 to s.count - 1 do begin
         if (LoadPlugin(s[i]) = false) then begin
             // remove from list?
-            if (MessageDlg(sPluginRemove, mtConfirmation, [mbYes, mbNo], 0) = mrNo) then
+            if (MessageDlgW(_(sPluginRemove), mtConfirmation, [mbYes, mbNo], 0) = mrNo) then
                 ok.Add(s[i]);
         end
         else
@@ -241,8 +241,8 @@ begin
         idisp := CreateOleObject(com_name);
     except
         on EOleSysError do begin
-            msg := WideFormat(sPluginErrCreate, [com_name]);
-            MessageDlg(msg, mtError, [mbOK], 0);
+            msg := WideFormat(_(sPluginErrCreate), [com_name]);
+            MessageDlgW(msg, mtError, [mbOK], 0);
             exit;
         end;
     end;
@@ -251,8 +251,8 @@ begin
         plugin := IUnknown(idisp) as IExodusPlugin;
     except
         on EIntfCastError do begin
-            msg := WideFormat(sPluginErrNoIntf, [com_name]);
-            MessageDlg(msg, mtError, [mbOK], 0);
+            msg := WideFormat(_(sPluginErrNoIntf), [com_name]);
+            MessageDlgW(msg, mtError, [mbOK], 0);
             exit;
         end;
     end;
@@ -263,8 +263,8 @@ begin
     try
         p.com.Startup(ExComController);
     except
-        msg := WideFormat(sPluginErrInit, [com_name]);
-        MessageDlg(msg, mtError, [mbOK], 0);
+        msg := WideFormat(_(sPluginErrInit), [com_name]);
+        MessageDlgW(msg, mtError, [mbOK], 0);
         exit;
     end;
 
@@ -285,7 +285,7 @@ begin
     end;
 
     if (idx < 0) then begin
-        MessageDlg('Plugin could not be initialized or configured.',
+        MessageDlgW(_('Plugin could not be initialized or configured.'),
             mtError, [mbOK], 0);
         exit;
     end;

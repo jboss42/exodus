@@ -101,7 +101,7 @@ inherited frmJud: TfrmJud
       object lblInstructions: TTntLabel
         Left = 0
         Top = 0
-        Width = 401
+        Width = 204
         Height = 13
         Align = alTop
         Caption = 'Fill in the search criteria to find contacts on.'
@@ -124,7 +124,7 @@ inherited frmJud: TfrmJud
       ImageIndex = 3
       object Panel2: TPanel
         Left = 0
-        Top = 168
+        Top = 166
         Width = 401
         Height = 59
         Align = alBottom
@@ -179,7 +179,7 @@ inherited frmJud: TfrmJud
         Left = 0
         Top = 0
         Width = 401
-        Height = 168
+        Height = 166
         Align = alClient
         Columns = <
           item
@@ -202,25 +202,25 @@ inherited frmJud: TfrmJud
       end
     end
   end
-  object PopupMenu1: TPopupMenu
+  object PopupMenu1: TTntPopupMenu
     Left = 296
     Top = 16
-    object popAdd: TMenuItem
+    object popAdd: TTntMenuItem
       Caption = 'Add Contact'
       OnClick = popAddClick
     end
-    object popProfile: TMenuItem
+    object popProfile: TTntMenuItem
       Caption = 'View Profile'
       OnClick = popProfileClick
     end
-    object N1: TMenuItem
+    object N1: TTntMenuItem
       Caption = '-'
     end
-    object popChat: TMenuItem
+    object popChat: TTntMenuItem
       Caption = 'Start Chat'
       OnClick = popChatClick
     end
-    object popMessage: TMenuItem
+    object popMessage: TTntMenuItem
       Caption = 'Send Message'
       OnClick = popMessageClick
     end

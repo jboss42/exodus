@@ -55,7 +55,7 @@ var
 implementation
 {$R *.dfm}
 uses
-    ExUtils, IdException;
+    GnuGetText, ExUtils, IdException;
 
 function ExWebDownload(caption, url: string): String;
 var
@@ -64,7 +64,7 @@ begin
     Result := '';
     f := TfrmWebDownload.Create(nil);
     f.caption := caption;
-    f.lblStatus.Caption := sInitializing;
+    f.lblStatus.Caption := _(sInitializing);
     f.Show();
     f.lblStatus.Refresh();
     Application.ProcessMessages();
@@ -72,7 +72,7 @@ begin
     try
         Result := f.IdHTTP1.Get(url);
         if (f.IdHTTP1.ResponseCode = 200) then begin
-            f.lblStatus.Caption := sDownloadComplete;
+            f.lblStatus.Caption := _(sDownloadComplete);
             f.lblStatus.Refresh();
             Application.ProcessMessages();
         end
@@ -84,7 +84,7 @@ begin
             f.Free();
         on E: EIdProtocolReplyError do begin
             f.Free();
-            MessageDlg(WideFormat(sError, [E.Message]), mtError, [mbOK], 0);
+            MessageDlgW(WideFormat(_(sError), [E.Message]), mtError, [mbOK], 0);
         end;
     end;
 end;
@@ -110,7 +110,7 @@ end;
 
 procedure TfrmWebDownload.IdHTTP1Connected(Sender: TObject);
 begin
-    lblStatus.Caption := sDownloading;
+    lblStatus.Caption := _(sDownloading);
 end;
 
 end.

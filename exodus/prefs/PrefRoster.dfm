@@ -1,20 +1,20 @@
 inherited frmPrefRoster: TfrmPrefRoster
-  Left = 253
-  Top = 161
+  Left = 254
+  Top = 162
   Caption = 'frmPrefRoster'
-  ClientHeight = 244
-  ClientWidth = 344
+  ClientHeight = 242
+  ClientWidth = 342
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object Label21: TTntLabel
+  object Label21: TTntLabel [0]
     Left = 0
     Top = 125
     Width = 164
     Height = 13
     Caption = 'When I double click a contact, do:'
   end
-  object chkShowUnsubs: TTntCheckBox
+  object chkShowUnsubs: TTntCheckBox [1]
     Left = 0
     Top = 33
     Width = 337
@@ -22,7 +22,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Caption = 'Show contacts which I do not have a subscription to.'
     TabOrder = 0
   end
-  object chkHideBlocked: TTntCheckBox
+  object chkHideBlocked: TTntCheckBox [2]
     Left = 0
     Top = 68
     Width = 337
@@ -30,7 +30,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Caption = 'Hide blocked contacts '
     TabOrder = 2
   end
-  object chkPresErrors: TTntCheckBox
+  object chkPresErrors: TTntCheckBox [3]
     Left = 0
     Top = 86
     Width = 337
@@ -38,7 +38,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Caption = 'Detect contacts which are unreachable or no longer exist'
     TabOrder = 3
   end
-  object chkShowPending: TTntCheckBox
+  object chkShowPending: TTntCheckBox [4]
     Left = 0
     Top = 50
     Width = 337
@@ -46,7 +46,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Caption = 'Show contacts I have asked to add as "Pending"'
     TabOrder = 1
   end
-  object cboDblClick: TTntComboBox
+  object cboDblClick: TTntComboBox [5]
     Left = 24
     Top = 141
     Width = 201
@@ -59,7 +59,7 @@ inherited frmPrefRoster: TfrmPrefRoster
       'An instant message window'
       'A new or existing chat window')
   end
-  object chkRosterUnicode: TTntCheckBox
+  object chkRosterUnicode: TTntCheckBox [6]
     Left = 0
     Top = 103
     Width = 337
@@ -67,7 +67,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Caption = 'Allow Unicode characters in the roster (requires 2000, ME, XP).'
     TabOrder = 4
   end
-  object chkInlineStatus: TTntCheckBox
+  object chkInlineStatus: TTntCheckBox [7]
     Left = 0
     Top = 176
     Width = 241
@@ -76,7 +76,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     TabOrder = 6
     OnClick = chkInlineStatusClick
   end
-  object cboInlineStatus: TColorBox
+  object cboInlineStatus: TColorBox [8]
     Left = 24
     Top = 195
     Width = 201
@@ -88,22 +88,9 @@ inherited frmPrefRoster: TfrmPrefRoster
     ItemHeight = 16
     TabOrder = 7
   end
-  object StaticText4: TTntPanel
-    Left = 0
-    Top = 0
-    Width = 344
-    Height = 24
-    Align = alTop
-    BevelOuter = bvLowered
+  inherited pnlHeader: TTntPanel
+    Width = 342
     Caption = 'Roster Options'
-    Color = clHighlight
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clHighlightText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentBackground = False
-    ParentFont = False
     TabOrder = 8
   end
 end

@@ -31,7 +31,7 @@ uses
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
     Buttons, OleCtrls, AppEvnts, ToolWin,
     IdHttp, TntComCtrls, DdeMan, IdBaseComponent, IdComponent, IdUDPBase,
-  IdUDPClient, IdDNSResolver;
+  IdUDPClient, IdDNSResolver, TntMenus;
 
 const
     UpdateKey = '001';
@@ -57,77 +57,19 @@ type
     Tabs: TTntPageControl;
     tbsRoster: TTntTabSheet;
     pnlRoster: TPanel;
-    MainMenu1: TMainMenu;
-    Exodus1: TMenuItem;
-    Connect2: TMenuItem;
-    Preferences1: TMenuItem;
-    N7: TMenuItem;
-    mnuPresence: TMenuItem;
-    Exit2: TMenuItem;
-    mnuContacts: TMenuItem;
-    AddPerson1: TMenuItem;
-    RemovePerson1: TMenuItem;
-    N8: TMenuItem;
-    SubscribetoPresence2: TMenuItem;
-    Help1: TMenuItem;
-    About1: TMenuItem;
-    mnuMessage: TMenuItem;
-    mnuChat: TMenuItem;
-    N9: TMenuItem;
-    mnuConference: TMenuItem;
-    ClearMessages1: TMenuItem;
-    Properties2: TMenuItem;
-    MessageHistory2: TMenuItem;
-    presAway: TMenuItem;
-    presXA: TMenuItem;
-    presDND: TMenuItem;
-    N11: TMenuItem;
-    N12: TMenuItem;
-    ShowXML1: TMenuItem;
-    mnuSearch: TMenuItem;
-    mnuPassword: TMenuItem;
-    N6: TMenuItem;
-    N14: TMenuItem;
-    NewGroup2: TMenuItem;
-    Test1: TMenuItem;
-    Tools1: TMenuItem;
-    mnuBrowser: TMenuItem;
-    mnuServer: TMenuItem;
-    mnuVersion: TMenuItem;
-    mnuTime: TMenuItem;
-    mnuServerVCard: TMenuItem;
-    mnuVCard: TMenuItem;
-    N13: TMenuItem;
-    mnuMyVCard: TMenuItem;
-    mnuBookmark: TMenuItem;
+    MainMenu1: TTntMainMenu;
     ImageList2: TImageList;
-    mnuExpanded: TMenuItem;
     SplitterRight: TSplitter;
-    N1: TMenuItem;
-    N2: TMenuItem;
     timFlasher: TTimer;
-    mnuOnline: TMenuItem;
-    mnuToolbar: TMenuItem;
-    mnuStatBar: TMenuItem;
-    View1: TMenuItem;
     ImageList1: TImageList;
     timAutoAway: TTimer;
-    popTabs: TPopupMenu;
-    popCloseTab: TMenuItem;
-    popFloatTab: TMenuItem;
-    popTray: TPopupMenu;
-    trayShow: TMenuItem;
-    N4: TMenuItem;
-    trayConnect: TMenuItem;
-    N01: TMenuItem;
-    trayExit: TMenuItem;
-    trayPresence: TMenuItem;
+    popTabs: TTntPopupMenu;
+    popTray: TTntPopupMenu;
     N5: TMenuItem;
     trayPresDND: TMenuItem;
     trayPresXA: TMenuItem;
     trayPresAway: TMenuItem;
     Custom2: TMenuItem;
-    Custom3: TMenuItem;
     pnlRight: TPanel;
     ApplicationEvents1: TApplicationEvents;
     Toolbar: TCoolBar;
@@ -140,28 +82,86 @@ type
     imgYahooEmoticons: TImageList;
     btnFind: TToolButton;
     imgMSNEmoticons: TImageList;
-    mnuRegisterService: TMenuItem;
     btnExpanded: TToolButton;
-    trayMessage: TMenuItem;
     timReconnect: TTimer;
-    ShowEventsWindow1: TMenuItem;
-    presToggle: TMenuItem;
     ImageList3: TImageList;
     pnlLeft: TPanel;
     SplitterLeft: TSplitter;
     timTrayAlert: TTimer;
-    mnuPlugins: TMenuItem;
-    mnuRegistration: TMenuItem;
-    N3: TMenuItem;
     XMPPAction: TDdeServerConv;
-    presOnline: TMenuItem;
-    mnuFind: TMenuItem;
-    mnuFindAgain: TMenuItem;
     trayPresOnline: TMenuItem;
-    presChat: TMenuItem;
     trayPresChat: TMenuItem;
-    N10: TMenuItem;
     Resolver: TIdDNSResolver;
+    Exit2: TTntMenuItem;
+    N9: TTntMenuItem;
+    mnuPassword: TTntMenuItem;
+    mnuRegisterService: TTntMenuItem;
+    N6: TTntMenuItem;
+    mnuConference: TTntMenuItem;
+    mnuChat: TTntMenuItem;
+    mnuMessage: TTntMenuItem;
+    N14: TTntMenuItem;
+    ClearMessages1: TTntMenuItem;
+    View1: TTntMenuItem;
+    N7: TTntMenuItem;
+    Connect2: TTntMenuItem;
+    Test1: TTntMenuItem;
+    Help1: TTntMenuItem;
+    Tools1: TTntMenuItem;
+    Exodus1: TTntMenuItem;
+    ShowEventsWindow1: TTntMenuItem;
+    mnuExpanded: TTntMenuItem;
+    mnuStatBar: TTntMenuItem;
+    mnuToolbar: TTntMenuItem;
+    Preferences1: TTntMenuItem;
+    N1: TTntMenuItem;
+    mnuPlugins: TTntMenuItem;
+    ShowXML1: TTntMenuItem;
+    mnuServer: TTntMenuItem;
+    mnuBrowser: TTntMenuItem;
+    mnuBookmark: TTntMenuItem;
+    mnuVCard: TTntMenuItem;
+    N3: TTntMenuItem;
+    mnuMyVCard: TTntMenuItem;
+    mnuRegistration: TTntMenuItem;
+    N2: TTntMenuItem;
+    mnuPresence: TTntMenuItem;
+    mnuContacts: TTntMenuItem;
+    popFloatTab: TTntMenuItem;
+    popCloseTab: TTntMenuItem;
+    trayExit: TTntMenuItem;
+    N01: TTntMenuItem;
+    trayConnect: TTntMenuItem;
+    N4: TTntMenuItem;
+    trayMessage: TTntMenuItem;
+    trayPresence: TTntMenuItem;
+    trayShow: TTntMenuItem;
+    mnuServerVCard: TTntMenuItem;
+    mnuTime: TTntMenuItem;
+    mnuVersion: TTntMenuItem;
+    About1: TTntMenuItem;
+    N12: TTntMenuItem;
+    SubscribetoPresence2: TTntMenuItem;
+    N8: TTntMenuItem;
+    NewGroup2: TTntMenuItem;
+    mnuOnline: TTntMenuItem;
+    N13: TTntMenuItem;
+    mnuSearch: TTntMenuItem;
+    mnuFindAgain: TTntMenuItem;
+    mnuFind: TTntMenuItem;
+    N10: TTntMenuItem;
+    Properties2: TTntMenuItem;
+    MessageHistory2: TTntMenuItem;
+    RemovePerson1: TTntMenuItem;
+    AddPerson1: TTntMenuItem;
+    presToggle: TTntMenuItem;
+    Custom3: TTntMenuItem;
+    N11: TTntMenuItem;
+    presDND: TTntMenuItem;
+    presXA: TTntMenuItem;
+    presAway: TTntMenuItem;
+    presChat: TTntMenuItem;
+    presOnline: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
@@ -377,23 +377,9 @@ var
     sExodusGMHook: HHOOK;
     sExodusCWPHook: HHOOK;
 
-resourcestring
-    sCommandLine =  'The following command line parameters are available in Exodus: '#13#10#13#10;
-    sCmdDebug =     ' -d '#9#9' : Debug mode on'#13#10;
-    sCmdMinimized = ' -m '#9#9' : Start minimized'#13#10;
-    sCmdInvisible = ' -v '#9#9' : invisible mode'#13#10;
-    sCmdHelp =      ' -? '#9#9' : Show Help'#13#10;
-    sCmdExpanded =  ' -x [yes|no] '#9' : Expanded Mode'#13#10;
-    sCmdJID =       ' -j [jid] '#9#9' : Jid'#13#10;
-    sCmdPassword =  ' -p [pass] '#9' : Password'#13#10;
-    sCmdResource =  ' -r [res] '#9' : Resource'#13#10;
-    sCmdPriority =  ' -i [pri] '#9' : Priority'#13#10;
-    sCmdProfile =   ' -f [prof] '#9' : Profile name'#13#10;
-    sCmdConfig =    ' -c [file] '#9' : Config path name'#13#10;
-    sUnkArg = 'Invalid command line:%s';
-
+const
     sXMPP_Profile = '-*- Temp profile: %s -*-';
-    
+
     sExodus = 'Exodus';
     sChat = 'Chat';
 
@@ -839,16 +825,16 @@ begin
     sExodusGMHook := 0;
 
     // Make sure presence menus have unified captions
-    presOnline.Caption := sRosterAvail;
-    presChat.Caption := sRosterChat;
-    presAway.Caption := sRosterAway;
-    presXA.Caption := sRosterXA;
-    presDND.Caption := sRosterDND;
-    trayPresOnline.Caption := sRosterAvail;
-    trayPresChat.Caption := sRosterChat;
-    trayPresAway.Caption := sRosterAway;
-    trayPresXA.Caption := sRosterXA;
-    trayPresDND.Caption := sRosterDND;
+    presOnline.Caption := _(sRosterAvail);
+    presChat.Caption := _(sRosterChat);
+    presAway.Caption := _(sRosterAway);
+    presXA.Caption := _(sRosterXA);
+    presDND.Caption := _(sRosterDND);
+    trayPresOnline.Caption := _(sRosterAvail);
+    trayPresChat.Caption := _(sRosterChat);
+    trayPresAway.Caption := _(sRosterAway);
+    trayPresXA.Caption := _(sRosterXA);
+    trayPresDND.Caption := _(sRosterDND);
 
 
 end;
@@ -1106,7 +1092,7 @@ begin
     else if event = '/session/autherror' then begin
         _logoff := true;
         MainSession.Profile.password := '';
-        MessageDlg(sAuthError, mtError, [mbOK], 0);
+        MessageDlgW(_(sAuthError), mtError, [mbOK], 0);
         PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
         PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
         exit;
@@ -1141,7 +1127,7 @@ begin
     else if event = '/session/regerror' then begin
         _logoff := true;
 
-        m := sRegError;
+        m := _(sRegError);
         if (tag <> nil) then begin
             // try to find out a more detailed error message
             tmp := tag.GetFirstTag('error');
@@ -1150,13 +1136,13 @@ begin
             end;
         end;
         
-        MessageDlg(m, mtError, [mbOK], 0);
+        MessageDlgW(m, mtError, [mbOK], 0);
         PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
         exit;
     end
 
     else if event = '/session/noaccount' then begin
-        if (MessageDlg(sAuthNoAccount, mtConfirmation, [mbYes, mbNo], 0) = mrNo) then begin
+        if (MessageDlgW(_(sAuthNoAccount), mtConfirmation, [mbYes, mbNo], 0) = mrNo) then begin
             // Just disconnect, they don't want an account
             _logoff := true;
             PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
@@ -1208,7 +1194,7 @@ begin
 
         // if we have a new account, prompt for reg info
         if (_new_account) then begin
-            if (MessageDlg(sNewAccount, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
+            if (MessageDlgW(_(sNewAccount), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
                 mnuRegistrationClick(Self);
             end;
             _new_account := false;
@@ -1229,7 +1215,7 @@ begin
         timAutoAway.Enabled := false;
         CloseSubscribeWindows();
 
-        Self.Caption := sExodus;
+        Self.Caption := _(sExodus);
         setTrayInfo(Self.Caption);
         setTrayIcon(0);
 
@@ -1986,7 +1972,7 @@ begin
     // add the new grp.
     go := MainSession.Roster.getGroup(new_grp);
     if (go <> nil) then begin
-        MessageDlg(sNewGroupExists, mtError, [mbOK], 0);
+        MessageDlgW(_(sNewGroupExists), mtError, [mbOK], 0);
     end
     else begin
         // add the new grp.
@@ -2405,11 +2391,11 @@ begin
         exit;
 
     if (f.txtOldPassword.Text <> MainSession.Password) then begin
-        MessageDlg(sPasswordOldError, mtError, [mbOK], 0);
+        MessageDlgW(_(sPasswordOldError), mtError, [mbOK], 0);
         exit;
     end;
     if (f.txtNewPassword.Text <> f.txtConfirmPassword.Text) then begin
-        MessageDlg(sPasswordNewError, mtError, [mbOK], 0);
+        MessageDlgW(_(sPasswordNewError), mtError, [mbOK], 0);
         exit;
     end;
 
@@ -2429,12 +2415,12 @@ end;
 procedure TfrmExodus.ChangePasswordCallback(event: string; tag: TXMLTag);
 begin
     if (event <> 'xml') then
-        MessageDlg(sPasswordError, mtError, [mbOK], 0)
+        MessageDlgW(_(sPasswordError), mtError, [mbOK], 0)
     else begin
         if (tag.GetAttribute('type') = 'result') then
-            MessageDlg(sPasswordChanged, mtInformation, [mbOK], 0)
+            MessageDlgW(_(sPasswordChanged), mtInformation, [mbOK], 0)
         else
-            MessageDlg(sPasswordError, mtError, [mbOK], 0);
+            MessageDlgW(_(sPasswordError), mtError, [mbOK], 0);
     end;
 end;
 
@@ -2577,8 +2563,10 @@ var
     i: integer;
     c: TChatController;
 }
+{
 var
     e: TJabberEntity;
+}
 begin
     // Test something..
     // LoadPlugin('RosterClean.ExodusRosterClean');
@@ -2617,8 +2605,16 @@ begin
     //MainSession.RegisterCallback(BadCallback, '/packet/message/x[@xmlns="exodus:puke"]');
 
     //e := TJabberEntity.Create(TJabberID.Create('jabberd.jabberstudio.org'));
-    e := TJabberEntity.Create(TJabberID.Create('jabber.org'));
-    e.walk(MainSession);
+    //e := TJabberEntity.Create(TJabberID.Create('jabber.org'));
+    //e.walk(MainSession);
+
+    MessageDlg(_(sDisconnected), mtInformation, [mbOK], 0);
+
+    {
+    MessageBoxW(Application.Handle, PWideChar(_(sDisconnected)), 'Foo',
+        MB_OK + MB_ICONINFORMATION);
+    }
+    MessageDlgW(_(sDisconnected), mtInformation, [mbOK], 0);
 end;
 
 {---------------------------------------}
@@ -2708,9 +2704,9 @@ begin
         DoConnect();
     end
     else begin
-        frmRosterWindow.lblLogin.Caption := sCancelReconnect;
-        frmRosterWindow.lblStatus.Caption := sReconnectIn +
-            IntToStr(_reconnect_interval - _reconnect_cur) + ' ' + sSeconds;
+        frmRosterWindow.lblLogin.Caption := _(sCancelReconnect);
+        frmRosterWindow.lblStatus.Caption := _(sReconnectIn) +
+            IntToStr(_reconnect_interval - _reconnect_cur) + ' ' + _(sSeconds);
     end;
 end;
 
@@ -2815,7 +2811,7 @@ begin
                 if (sel_contacts.count > 0) then
                     ShowInvite(TfrmRoom(form).getJid, sel_contacts)
                 else
-                    MessageDlg(sNoContactsSel, mtError, [mbOK], 0);
+                    MessageDlgW(_(sNoContactsSel), mtError, [mbOK], 0);
                 sel_contacts.Free();
             end
 
@@ -2825,7 +2821,7 @@ begin
                 if (sel_contacts.count > 0) then
                     jabberSendRosterItems(TfrmChat(form).getJid, sel_contacts)
                 else
-                    MessageDlg(sNoContactsSel, mtError, [mbOK], 0);
+                    MessageDlgW(_(sNoContactsSel), mtError, [mbOK], 0);
                 sel_contacts.Free();
             end;
         end;
@@ -2953,7 +2949,7 @@ begin
                      pchar(string(url_list.Strings[i])),
                      '', '', SW_SHOW)
     else
-        MessageDlg(sBrandingError, mtWarning, [mbOK], 0);
+        MessageDlgW(_(sBrandingError), mtWarning, [mbOK], 0);
 
     url_list.Free();
 end;

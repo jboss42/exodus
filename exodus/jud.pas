@@ -24,7 +24,7 @@ uses
     IQ, XMLTag, Contnrs, Unicode, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, DockWizard, ComCtrls, TntComCtrls, StdCtrls, TntStdCtrls, ExtCtrls,
-    TntExtCtrls, Menus, Wizard;
+    TntExtCtrls, Menus, Wizard, TntMenus;
 
 type
 
@@ -54,13 +54,13 @@ type
     cboGroup: TTntComboBox;
     lblAddGrp: TTntLabel;
     lstContacts: TTntListView;
-    PopupMenu1: TPopupMenu;
-    popAdd: TMenuItem;
-    popProfile: TMenuItem;
-    N1: TMenuItem;
-    popChat: TMenuItem;
-    popMessage: TMenuItem;
+    PopupMenu1: TTntPopupMenu;
     Button1: TButton;
+    popMessage: TTntMenuItem;
+    popChat: TTntMenuItem;
+    N1: TTntMenuItem;
+    popProfile: TTntMenuItem;
+    popAdd: TTntMenuItem;
     procedure btnCloseClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnNextClick(Sender: TObject);
@@ -106,7 +106,7 @@ type
 var
   frmJud: TfrmJud;
 
-resourceString
+const
     sJUDSearch = 'Search';
     sJUDStart = 'Start';
     sJUDStop = 'Stop';
@@ -123,7 +123,7 @@ implementation
 
 uses
     ChatWin, MsgRecv, Entity, EntityCache,
-    InputPassword, NodeItem,
+    InputPassword, NodeItem, GnuGetText, 
     JabberConst, Profile, Roster, JabberID, fGeneric,
     Session, ExUtils, XMLUtils, fTopLabel, Jabber1;
 
@@ -313,13 +313,13 @@ begin
 
     if (event <> 'xml') then begin
         // timeout
-        MessageDlg(sJUDErrorContacting , mtError, [mbOK], 0);
+        MessageDlgW(_(sJUDErrorContacting), mtError, [mbOK], 0);
         self.reset();
         exit;
     end
     else if ((tag <> nil) and (tag.GetAttribute('type') = 'error')) then begin
         // we got an iq-error back
-        MessageDlg(sJUDErrorContacting, mtError, [mbOK], 0);
+        MessageDlgW(_(sJUDErrorContacting), mtError, [mbOK], 0);
         Self.Reset();
         exit;
     end
@@ -422,7 +422,7 @@ begin
     if (event <> 'xml') then begin
         // timeout
         cur_state := 'get_fields';
-        MessageDlg(sJUDTimeout, mtError, [mbOK], 0);
+        MessageDlgW(_(sJUDTimeout), mtError, [mbOK], 0);
         self.reset();
         exit;
     end
@@ -451,7 +451,7 @@ begin
             items.Free();
             cur_state := 'get_fields';
             lstContacts.Clear();
-            MessageDlg(sJUDEmpty, mtInformation, [mbOK], 0);
+            MessageDlgW(_(sJUDEmpty), mtInformation, [mbOK], 0);
             reset();
             exit;
         end;
@@ -637,9 +637,9 @@ begin
   inherited;
     multi := (lstContacts.SelCount > 1);
     if multi then
-        popAdd.Caption := sJUDAdd
+        popAdd.Caption := _(sJUDAdd)
     else
-        popAdd.Caption := sJUDAdd;
+        popAdd.Caption := _(sJUDAdd);
 
     popProfile.Enabled := not multi;
     popChat.Enabled := not multi;

@@ -28,7 +28,6 @@ uses
 
 type
   TfrmPrefSystem = class(TfrmPrefPanel)
-    StaticText4: TTntPanel;
     chkAutoUpdate: TTntCheckBox;
     chkDebug: TTntCheckBox;
     chkAutoLogin: TTntCheckBox;
@@ -63,7 +62,7 @@ type
 var
   frmPrefSystem: TfrmPrefSystem;
 
-resourcestring
+const
     sNoUpdate = 'No new update available.';
     sBadLocale = 'Exodus is set to use a language which is not available on your system. Resetting language to default.';
     sNewLocale = 'You must exit exodus, and restart it before your new locale settings will take affect.';
@@ -75,7 +74,7 @@ implementation
 {$WARNINGS OFF}
 {$R *.dfm}
 uses
-    LocalUtils, 
+    LocalUtils, ExUtils, GnuGetText,   
     AutoUpdate, FileCtrl,
     PathSelector, PrefController, Registry, Session, StrUtils;
 
@@ -172,7 +171,7 @@ begin
                 end;
 
                 if (i = -1) then begin
-                    MessageDlg(sBadLocale, mtError, [mbOK], 0);
+                    MessageDlgW(_(sBadLocale), mtError, [mbOK], 0);
                     cboLocale.ItemIndex := 0;
                 end
                 else begin
@@ -222,7 +221,7 @@ begin
         if (i < 0) then i := 0;
         tmp := _lang_codes[i];
         if (tmp <> _old_locale) then
-            MessageDlg(sNewLocale, mtInformation, [mbOK], 0);
+            MessageDlgW(_(sNewLocale), mtInformation, [mbOK], 0);
         setString('locale', tmp);
 
         reg := TRegistry.Create();
@@ -258,7 +257,7 @@ begin
     Screen.Cursor := crDefault;
 
     if (not available) then
-        MessageDlg(sNoUpdate, mtInformation, [mbOK], 0);
+        MessageDlgW(_(sNoUpdate), mtInformation, [mbOK], 0);
 end;
 
 {---------------------------------------}

@@ -1,6 +1,7 @@
 inherited frmChat: TfrmChat
   Left = 290
   Top = 159
+  Height = 305
   ActiveControl = MsgOut
   Caption = 'Chat Window'
   Font.Charset = ANSI_CHARSET
@@ -10,15 +11,19 @@ inherited frmChat: TfrmChat
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
+  inherited Splitter1: TSplitter
+    Top = 240
+  end
   inherited Panel3: TPanel
     Top = 24
-    Height = 224
+    Height = 216
     inherited MsgList: TExRichEdit
-      Height = 216
+      Height = 208
       PlainRTF = True
     end
   end
   inherited pnlInput: TPanel
+    Top = 243
     inherited MsgOut: TExRichEdit
       WantReturns = False
       OnChange = MsgOutChange
@@ -85,44 +90,44 @@ inherited frmChat: TfrmChat
       end
     end
   end
-  object popContact: TPopupMenu [5]
+  object popContact: TTntPopupMenu [5]
     Left = 16
     Top = 152
-    object mnuSave: TMenuItem
+    object mnuSave: TTntMenuItem
       Caption = 'Save Conversation'
       OnClick = mnuSaveClick
     end
-    object mnuHistory: TMenuItem
+    object mnuHistory: TTntMenuItem
       Caption = 'Show History ...'
       OnClick = doHistory
     end
-    object popClearHistory: TMenuItem
+    object popClearHistory: TTntMenuItem
       Caption = 'Clear History'
       OnClick = popClearHistoryClick
     end
-    object N5: TMenuItem
+    object N5: TTntMenuItem
       Caption = '-'
     end
-    object popResources: TMenuItem
+    object popResources: TTntMenuItem
       AutoHotkeys = maManual
       Caption = 'Resources'
     end
-    object N4: TMenuItem
+    object N4: TTntMenuItem
       Caption = '-'
     end
-    object mnuSendFile: TMenuItem
+    object mnuSendFile: TTntMenuItem
       Caption = 'Send File ...'
       OnClick = mnuSendFileClick
     end
-    object popAddContact: TMenuItem
+    object popAddContact: TTntMenuItem
       Caption = 'Add to roster ...'
       OnClick = doAddToRoster
     end
-    object mnuProfile: TMenuItem
+    object mnuProfile: TTntMenuItem
       Caption = 'Show Profile ...'
       OnClick = doProfile
     end
-    object C1: TMenuItem
+    object C1: TTntMenuItem
       Caption = 'Contact Info'
       object mnuVersionRequest: TMenuItem
         Caption = 'Version Request'
@@ -137,30 +142,30 @@ inherited frmChat: TfrmChat
         OnClick = CTCPClick
       end
     end
-    object mnuBlock: TMenuItem
+    object mnuBlock: TTntMenuItem
       Caption = 'Block Contact'
       OnClick = mnuBlockClick
     end
-    object N1: TMenuItem
+    object N1: TTntMenuItem
       Caption = '-'
     end
-    object NotificationOptions1: TMenuItem
+    object NotificationOptions1: TTntMenuItem
       Caption = 'Notification Options ...'
       OnClick = NotificationOptions1Click
     end
-    object mnuOnTop: TMenuItem
+    object mnuOnTop: TTntMenuItem
       Caption = 'Always on Top'
       OnClick = mnuOnTopClick
     end
-    object mnuReturns: TMenuItem
+    object mnuReturns: TTntMenuItem
       Caption = 'Embed Returns'
       OnClick = mnuReturnsClick
     end
-    object mnuWordwrap: TMenuItem
+    object mnuWordwrap: TTntMenuItem
       Caption = 'Word Wrap Input'
       OnClick = mnuWordwrapClick
     end
-    object N3: TMenuItem
+    object N3: TTntMenuItem
       Caption = '-'
     end
   end

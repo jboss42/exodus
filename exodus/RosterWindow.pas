@@ -25,89 +25,89 @@ uses
     DropTarget, Unicode, XMLTag, Presence, Roster, NodeItem, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ComCtrls, ExtCtrls, Buttons, ImgList, Menus, StdCtrls, TntStdCtrls,
-    TntExtCtrls;
+    TntExtCtrls, TntMenus;
 
 type
 
   TfrmRosterWindow = class(TForm)
     treeRoster: TTreeView;
-    popRoster: TPopupMenu;
-    popProperties: TMenuItem;
-    popRemove: TMenuItem;
-    popChat: TMenuItem;
-    popMsg: TMenuItem;
-    N1: TMenuItem;
+    popRoster: TTntPopupMenu;
     StatBar: TStatusBar;
-    popStatus: TPopupMenu;
+    popStatus: TTntPopupMenu;
     pnlShow: TPanel;
-    presAway: TMenuItem;
-    presXA: TMenuItem;
-    presDND: TMenuItem;
-    popClientInfo: TMenuItem;
     popVersion: TMenuItem;
     popTime: TMenuItem;
     popLast: TMenuItem;
-    popHistory: TMenuItem;
-    popPresence: TMenuItem;
     popSendPres: TMenuItem;
     popSendSubscribe: TMenuItem;
     ImageList2: TImageList;
-    popSendFile: TMenuItem;
-    popActions: TPopupMenu;
-    popAddContact: TMenuItem;
-    popAddGroup: TMenuItem;
+    popActions: TTntPopupMenu;
     imgStatus: TPaintBox;
     N2: TMenuItem;
     popSendInvisible: TMenuItem;
-    popGroup: TPopupMenu;
-    popGrpPresence: TMenuItem;
-    popGrpAvailable: TMenuItem;
-    popGrpInvisible: TMenuItem;
-    popGrpInvite: TMenuItem;
-    N3: TMenuItem;
-    popGrpRename: TMenuItem;
-    popGrpRemove: TMenuItem;
-    popSendContacts: TMenuItem;
-    N4: TMenuItem;
-    NewGroup1: TMenuItem;
-    popInvite: TMenuItem;
-    SendContactsTo1: TMenuItem;
-    popBlock: TMenuItem;
-    popGroupBlock: TMenuItem;
-    BroadcastMessage1: TMenuItem;
+    popGroup: TTntPopupMenu;
     pnlConnect: TPanel;
     pnlAnimation: TPanel;
     aniWait: TAnimate;
-    popBookmark: TPopupMenu;
-    Join1: TMenuItem;
-    Properties1: TMenuItem;
-    Delete1: TMenuItem;
-    N5: TMenuItem;
-    popTransport: TPopupMenu;
-    popTransLogoff: TMenuItem;
-    popTransLogon: TMenuItem;
-    N6: TMenuItem;
-    popTransUnRegister: TMenuItem;
-    popTransProperties: TMenuItem;
+    popBookmark: TTntPopupMenu;
+    popTransport: TTntPopupMenu;
     imgAd: TImage;
-    popRename: TMenuItem;
-    N7: TMenuItem;
     lblStatus: TTntLabel;
     lblLogin: TTntLabel;
     pnlStatus: TTntPanel;
     lblStatusLink: TTntLabel;
-    MoveorCopyContacts1: TMenuItem;
     imgSSL: TImage;
-    N8: TMenuItem;
-    Custom1: TMenuItem;
     pnlFind: TPanel;
     txtFind: TTntEdit;
     lblFind: TTntLabel;
     radJID: TTntRadioButton;
     radNick: TTntRadioButton;
-    presOnline: TMenuItem;
-    presChat: TMenuItem;
     btnFindClose: TSpeedButton;
+    N7: TTntMenuItem;
+    popProperties: TTntMenuItem;
+    popRemove: TTntMenuItem;
+    popBlock: TTntMenuItem;
+    N1: TTntMenuItem;
+    popHistory: TTntMenuItem;
+    popRename: TTntMenuItem;
+    popPresence: TTntMenuItem;
+    popClientInfo: TTntMenuItem;
+    popSendContacts: TTntMenuItem;
+    popInvite: TTntMenuItem;
+    popSendFile: TTntMenuItem;
+    popMsg: TTntMenuItem;
+    popChat: TTntMenuItem;
+    popAddGroup: TTntMenuItem;
+    popAddContact: TTntMenuItem;
+    Custom1: TTntMenuItem;
+    N8: TTntMenuItem;
+    presDND: TTntMenuItem;
+    presXA: TTntMenuItem;
+    presAway: TTntMenuItem;
+    presChat: TTntMenuItem;
+    presOnline: TTntMenuItem;
+    popGrpInvisible: TTntMenuItem;
+    popGrpAvailable: TTntMenuItem;
+    NewGroup1: TTntMenuItem;
+    N4: TTntMenuItem;
+    popGrpRemove: TTntMenuItem;
+    popGrpRename: TTntMenuItem;
+    popGroupBlock: TTntMenuItem;
+    N3: TTntMenuItem;
+    MoveorCopyContacts1: TTntMenuItem;
+    SendContactsTo1: TTntMenuItem;
+    BroadcastMessage1: TTntMenuItem;
+    popGrpInvite: TTntMenuItem;
+    popGrpPresence: TTntMenuItem;
+    Properties1: TTntMenuItem;
+    Delete1: TTntMenuItem;
+    N5: TTntMenuItem;
+    Join1: TTntMenuItem;
+    popTransUnRegister: TTntMenuItem;
+    popTransProperties: TTntMenuItem;
+    N6: TTntMenuItem;
+    popTransLogon: TTntMenuItem;
+    popTransLogoff: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -205,6 +205,7 @@ type
     _cur_myres: TJabberMyResource;  // current My Resource selected
     _cur_status: integer;           // current status for the current item
     _last_search: integer;          // last item found by search
+    _cur_show: Widestring;          // current pres <show> type
 
     _brand_muc: boolean;
     _brand_ft: boolean;
@@ -286,7 +287,7 @@ type
 var
   frmRosterWindow: TfrmRosterWindow;
 
-resourcestring
+const 
     sRemoveBookmark = 'Remove this bookmark?';
     sRenameGrp = 'Rename group';
     sRenameGrpPrompt = 'New group name:';
@@ -327,13 +328,8 @@ var
 begin
     // Deal with fonts & stuff
     AssignUnicodeFont(Self, 9);
-
-
-    lblLogin.Font.Color := clBlue;
-    lblLogin.Font.Style := [fsUnderline];
-    lblStatusLink.Font.Assign(lblLogin.Font);
+    AssignUnicodeURL(lblLogin.Font, 8);
     StatBar.Font.Size := 8;
-
     TranslateComponent(Self);
 
     g_offline := _('Offline');
@@ -345,12 +341,15 @@ begin
     g_bookmarks := _('Bookmarks');
     g_myres := _('My Resources');
 
+    lblStatus.Caption := _(sDisconnected);
+    lblLogin.Caption := _(sSignOn);
+
     // Make sure presence menus have unified captions
-    presOnline.Caption := sRosterAvail;
-    presChat.Caption := sRosterChat;
-    presAway.Caption := sRosterAway;
-    presXA.Caption := sRosterXA;
-    presDND.Caption := sRosterDND;
+    presOnline.Caption := _(sRosterAvail);
+    presChat.Caption := _(sRosterChat);
+    presAway.Caption := _(sRosterAway);
+    presXA.Caption := _(sRosterXA);
+    presDND.Caption := _(sRosterDND);
 
     // register the callback
     _FullRoster := false;
@@ -462,8 +461,8 @@ begin
         aniWait.Visible := false;
         pnlConnect.Visible := true;
         pnlConnect.Align := alClient;
-        lblStatus.Caption := sDisconnected;
-        lblLogin.Caption := sSignOn;
+        lblStatus.Caption := _(sDisconnected);
+        lblLogin.Caption := _(sSignOn);
     end
 
     // We are in the process of connecting
@@ -471,15 +470,15 @@ begin
         pnlConnect.Visible := true;
         pnlConnect.Align := alClient;
         lblStatus.Visible := true;
-        lblStatus.Caption := sConnecting;
-        lblLogin.Caption := sCancelLogin;
+        lblStatus.Caption := _(sConnecting);
+        lblLogin.Caption := _(sCancelLogin);
         Self.showAniStatus();
     end
 
     // we've got a socket connection
     else if event = '/session/connected' then begin
-        lblLogin.Caption := sCancelLogin;
-        lblStatus.Caption := sAuthenticating;
+        lblLogin.Caption := _(sCancelLogin);
+        lblStatus.Caption := _(sAuthenticating);
         Self.showAniStatus();
         ShowPresence('online');
         ResetPanels;
@@ -487,8 +486,8 @@ begin
 
     // we've been authenticated
     else if event = '/session/authenticated' then begin
-        lblLogin.Caption := sCancelLogin;
-        lblStatus.Caption := sAuthenticated;
+        lblLogin.Caption := _(sCancelLogin);
+        lblStatus.Caption := _(sAuthenticated);
         Self.showAniStatus();
     end
 
@@ -1567,33 +1566,35 @@ var
 begin
     // display this show type
     if show = 'chat' then begin
-        lblStatusLink.Caption := sRosterChat;
+        lblStatusLink.Caption := _(sRosterChat);
         ChangeStatusImage(ico_Chat);
     end
     else if show = 'away' then begin
-        lblStatusLink.Caption := sRosterAway;
+        lblStatusLink.Caption := _(sRosterAway);
         ChangeStatusImage(ico_Away);
     end
     else if show = 'xa' then begin
-        lblStatusLink.Caption := sRosterXA;
+        lblStatusLink.Caption := _(sRosterXA);
         ChangeStatusImage(ico_XA);
     end
     else if show = 'dnd' then begin
-        lblStatusLink.Caption := sRosterDND;
+        lblStatusLink.Caption := _(sRosterDND);
         ChangeStatusImage(ico_DND);
     end
     else if show = 'offline' then begin
-        lblStatusLink.Caption := sRosterOffline;
+        lblStatusLink.Caption := _(sRosterOffline);
         ChangeStatusImage(ico_Offline);
     end
     else begin
-        lblStatusLink.Caption := sRosterAvail;
+        lblStatusLink.Caption := _(sRosterAvail);
         ChangeStatusImage(ico_Online);
     end;
 
     s := Lowercase(MainSession.Status);
-    if ((s <> '') and (s <> Lowercase(lblStatusLink.Caption))) then
+    if ((s <> '') and (s <> _cur_show)) then begin
+        _cur_show := s;
         lblStatusLink.Caption := lblStatusLink.Caption + ' (' + MainSession.Status + ')';
+    end;
 
 end;
 
@@ -1814,7 +1815,7 @@ begin
     case getNodeType() of
     node_bm: begin
         // remove a bookmark
-        if (MessageDlg(sRemoveBookmark, mtConfirmation,
+        if (MessageDlgW(_(sRemoveBookmark), mtConfirmation,
             [mbYes, mbNo], 0) = mrNo) then exit;
         MainSession.roster.RemoveBookmark(_cur_bm.jid.full);
         treeRoster.Selected.Free;
@@ -2012,11 +2013,11 @@ begin
         popRemove.Enabled := (not me);
 
         if ((ri <> nil) and (MainSession.isBlocked(ri.jid))) then begin
-            popBlock.Caption := sBtnUnBlock;
+            popBlock.Caption := _(sBtnUnBlock);
             popBlock.OnClick := popUnblockClick;
         end
         else begin
-            popBlock.Caption := sBtnBlock;
+            popBlock.Caption := _(sBtnBlock);
             popBlock.OnClick := popBlockClick;
         end;
         popGroupBlock.OnClick := popBlock.OnClick;
@@ -2053,17 +2054,17 @@ begin
             end;
         end;
         if ((not b) and (not u)) then begin
-            popGroupBlock.Caption := sBtnBlock;
+            popGroupBlock.Caption := _(sBtnBlock);
             popGroupBlock.Enabled := false;
             popBlock.OnClick := popBlockClick;
         end
         else if (b) then begin
-            popGroupBlock.Caption := sBtnBlock;
+            popGroupBlock.Caption := _(sBtnBlock);
             popGroupBlock.Enabled := true;
             popBlock.OnClick := popBlockClick;
         end
         else if (u) then begin
-            popGroupBlock.Caption := sBtnUnBlock;
+            popGroupBlock.Caption := _(sBtnUnBlock);
             popGroupBlock.Enabled := true;
             popBlock.OnClick := popUnBlockClick;
         end;
@@ -2490,7 +2491,7 @@ begin
     // Send contacts to this JID..
     sel := getSelectedContacts(false);
     if (sel.Count = 0) then begin
-        MessageDlg(sNoContactsSel, mtError, [mbOK], 0);
+        MessageDlgW(_(sNoContactsSel), mtError, [mbOK], 0);
         sel.Free();
         exit;
     end;
@@ -2518,7 +2519,7 @@ begin
     // Block or Unblock this user
     recips := getSelectedContacts(false);
     if (recips.Count > 1) then begin
-        if (MessageDlg(WideFormat(sBlockContacts, [recips.Count]), mtConfirmation,
+        if (MessageDlgW(WideFormat(_(sBlockContacts), [recips.Count]), mtConfirmation,
             [mbYes, mbNo], 0) = mrNo) then exit;
     end;
     for i := 0 to recips.Count - 1 do begin
@@ -2547,7 +2548,7 @@ begin
     // Block or Unblock this user
     recips := getSelectedContacts(false);
     if (recips.Count > 1) then begin
-        if (MessageDlg(WideFormat(sUnblockContacts, [recips.Count]), mtConfirmation,
+        if (MessageDlgW(WideFormat(_(sUnblockContacts), [recips.Count]), mtConfirmation,
             [mbYes, mbNo], 0) = mrNo) then exit;
     end;
     for i := 0 to recips.Count - 1 do begin
@@ -2575,7 +2576,7 @@ begin
         r := getSelectedContacts(false);
 
     if (r.Count <= 1) then
-        MessageDlg(sNoBroadcast, mtError, [mbOK], 0)
+        MessageDlgW(_(sNoBroadcast), mtError, [mbOK], 0)
     else begin
         jl := TWideStringlist.Create();
         for i := 0 to r.Count - 1 do
@@ -2792,7 +2793,7 @@ begin
     tp := treeRoster.ScreenToClient(p);
     n := treeRoster.GetNodeAt(tp.X, tp.Y);
     if (n = nil) then begin
-        MessageDlg(sNoContactsSel, mtWarning, [mbOK], 0);
+        MessageDlgW(_(sNoContactsSel), mtWarning, [mbOK], 0);
         exit;
     end;
 
@@ -2824,7 +2825,7 @@ begin
         r.Free();
         end
     else begin
-        MessageDlg(sNoContactsSel, mtWarning, [mbOK], 0);
+        MessageDlgW(_(sNoContactsSel), mtWarning, [mbOK], 0);
         exit;
         end;
     end;

@@ -305,32 +305,32 @@ object frmRosterWindow: TfrmRosterWindow
       end
     end
   end
-  object popRoster: TPopupMenu
+  object popRoster: TTntPopupMenu
     AutoHotkeys = maManual
     OnPopup = popRosterPopup
     Left = 8
     Top = 208
-    object popChat: TMenuItem
+    object popChat: TTntMenuItem
       Caption = 'Chat...'
       OnClick = popChatClick
     end
-    object popMsg: TMenuItem
+    object popMsg: TTntMenuItem
       Caption = 'Message...'
       OnClick = popMsgClick
     end
-    object popSendFile: TMenuItem
+    object popSendFile: TTntMenuItem
       Caption = 'Send File...'
       OnClick = popSendFileClick
     end
-    object popInvite: TMenuItem
+    object popInvite: TTntMenuItem
       Caption = 'Invite to Conference'
       OnClick = popInviteClick
     end
-    object popSendContacts: TMenuItem
+    object popSendContacts: TTntMenuItem
       Caption = 'Send Contact To...'
       OnClick = popSendContactsClick
     end
-    object popClientInfo: TMenuItem
+    object popClientInfo: TTntMenuItem
       Caption = 'Client Info'
       object popVersion: TMenuItem
         Caption = 'Version Request'
@@ -345,7 +345,7 @@ object frmRosterWindow: TfrmRosterWindow
         OnClick = popVersionClick
       end
     end
-    object popPresence: TMenuItem
+    object popPresence: TTntMenuItem
       Caption = 'Presence'
       object popSendPres: TMenuItem
         Caption = 'Send Available'
@@ -363,67 +363,67 @@ object frmRosterWindow: TfrmRosterWindow
         OnClick = popSendSubscribeClick
       end
     end
-    object popRename: TMenuItem
+    object popRename: TTntMenuItem
       Caption = 'Rename...'
       OnClick = popRenameClick
     end
-    object popHistory: TMenuItem
+    object popHistory: TTntMenuItem
       Caption = 'History'
       OnClick = popHistoryClick
     end
-    object N1: TMenuItem
+    object N1: TTntMenuItem
       Caption = '-'
     end
-    object popBlock: TMenuItem
+    object popBlock: TTntMenuItem
       Caption = 'Block'
       OnClick = popBlockClick
     end
-    object popRemove: TMenuItem
+    object popRemove: TTntMenuItem
       Caption = 'Remove'
       ShortCut = 46
       OnClick = popRemoveClick
     end
-    object popProperties: TMenuItem
+    object popProperties: TTntMenuItem
       Caption = 'Properties...'
       ShortCut = 121
       OnClick = popPropertiesClick
     end
-    object N7: TMenuItem
+    object N7: TTntMenuItem
       Caption = '-'
     end
   end
-  object popStatus: TPopupMenu
+  object popStatus: TTntPopupMenu
     AutoHotkeys = maManual
     Images = frmExodus.ImageList2
     Left = 8
     Top = 240
-    object presOnline: TMenuItem
+    object presOnline: TTntMenuItem
       Caption = 'Available'
       ImageIndex = 1
     end
-    object presChat: TMenuItem
+    object presChat: TTntMenuItem
       Caption = 'Free to Chat'
       ImageIndex = 4
     end
-    object presAway: TMenuItem
+    object presAway: TTntMenuItem
       Tag = 2
       Caption = 'Away'
       ImageIndex = 2
     end
-    object presXA: TMenuItem
+    object presXA: TTntMenuItem
       Tag = 3
       Caption = 'Xtended Away'
       ImageIndex = 10
     end
-    object presDND: TMenuItem
+    object presDND: TTntMenuItem
       Tag = 4
       Caption = 'Do Not Disturb'
       ImageIndex = 3
     end
-    object N8: TMenuItem
+    object N8: TTntMenuItem
       Caption = '-'
     end
-    object Custom1: TMenuItem
+    object Custom1: TTntMenuItem
       Caption = 'Custom ...'
       OnClick = presCustomClick
     end
@@ -573,114 +573,114 @@ object frmRosterWindow: TfrmRosterWindow
       FFFFFFFF00000000FFFFFFFF0000000000000000000000000000000000000000
       000000000000}
   end
-  object popActions: TPopupMenu
+  object popActions: TTntPopupMenu
     AutoHotkeys = maManual
     Left = 40
     Top = 208
-    object popAddContact: TMenuItem
+    object popAddContact: TTntMenuItem
       Caption = 'Add Contact'
       OnClick = popAddContactClick
     end
-    object popAddGroup: TMenuItem
+    object popAddGroup: TTntMenuItem
       Caption = 'Add Group'
       OnClick = popAddGroupClick
     end
   end
-  object popGroup: TPopupMenu
+  object popGroup: TTntPopupMenu
     AutoHotkeys = maManual
     Left = 40
     Top = 240
-    object popGrpPresence: TMenuItem
+    object popGrpPresence: TTntMenuItem
       Caption = 'Send Presence'
-      object popGrpAvailable: TMenuItem
+      object popGrpAvailable: TTntMenuItem
         Caption = 'Available'
         OnClick = popSendPresClick
       end
-      object popGrpInvisible: TMenuItem
+      object popGrpInvisible: TTntMenuItem
         Caption = 'Invisible'
         OnClick = popSendPresClick
       end
     end
-    object popGrpInvite: TMenuItem
+    object popGrpInvite: TTntMenuItem
       Caption = 'Invite to Conference'
       OnClick = popGrpInviteClick
     end
-    object BroadcastMessage1: TMenuItem
+    object BroadcastMessage1: TTntMenuItem
       Caption = 'Broadcast Message'
       OnClick = BroadcastMessage1Click
     end
-    object SendContactsTo1: TMenuItem
+    object SendContactsTo1: TTntMenuItem
       Caption = 'Send Contacts To...'
       OnClick = popSendContactsClick
     end
-    object MoveorCopyContacts1: TMenuItem
+    object MoveorCopyContacts1: TTntMenuItem
       Caption = 'Move or Copy Contacts...'
       OnClick = MoveorCopyContacts1Click
     end
-    object N3: TMenuItem
+    object N3: TTntMenuItem
       Caption = '-'
     end
-    object popGroupBlock: TMenuItem
+    object popGroupBlock: TTntMenuItem
       Caption = 'Block'
       OnClick = popBlockClick
     end
-    object popGrpRename: TMenuItem
+    object popGrpRename: TTntMenuItem
       Caption = 'Rename'
       OnClick = popGrpRenameClick
     end
-    object popGrpRemove: TMenuItem
+    object popGrpRemove: TTntMenuItem
       Caption = 'Remove'
       OnClick = popGrpRemoveClick
     end
-    object N4: TMenuItem
+    object N4: TTntMenuItem
       Caption = '-'
     end
-    object NewGroup1: TMenuItem
+    object NewGroup1: TTntMenuItem
       Caption = 'New Group'
       OnClick = popAddGroupClick
     end
   end
-  object popBookmark: TPopupMenu
+  object popBookmark: TTntPopupMenu
     AutoHotkeys = maManual
     Left = 8
     Top = 272
-    object Join1: TMenuItem
+    object Join1: TTntMenuItem
       Caption = 'Join Group'
       OnClick = treeRosterDblClick
     end
-    object N5: TMenuItem
+    object N5: TTntMenuItem
       Caption = '-'
     end
-    object Delete1: TMenuItem
+    object Delete1: TTntMenuItem
       Caption = 'Remove'
       ShortCut = 46
       OnClick = popRemoveClick
     end
-    object Properties1: TMenuItem
+    object Properties1: TTntMenuItem
       Caption = 'Properties'
       OnClick = popPropertiesClick
     end
   end
-  object popTransport: TPopupMenu
+  object popTransport: TTntPopupMenu
     AutoHotkeys = maManual
     Left = 40
     Top = 272
-    object popTransLogoff: TMenuItem
+    object popTransLogoff: TTntMenuItem
       Caption = 'Log Off'
       OnClick = popTransLogoffClick
     end
-    object popTransLogon: TMenuItem
+    object popTransLogon: TTntMenuItem
       Caption = 'Log On'
       OnClick = popTransLogoffClick
     end
-    object N6: TMenuItem
+    object N6: TTntMenuItem
       Caption = '-'
     end
-    object popTransProperties: TMenuItem
+    object popTransProperties: TTntMenuItem
       Caption = 'Rename ...'
       OnClick = popRenameClick
     end
-    object popTransUnRegister: TMenuItem
+    object popTransUnRegister: TTntMenuItem
       Caption = 'Remove'
       OnClick = popTransUnRegisterClick
     end

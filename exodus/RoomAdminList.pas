@@ -61,7 +61,7 @@ procedure ShowRoomAdminList(room_jid, role, affiliation: WideString;
 implementation
 
 uses
-    GnuGetText, IQ, JabberConst, JabberID, Session, Room;
+    ExUtils, GnuGetText, IQ, JabberConst, JabberID, Session, Room;
 
 {$R *.dfm}
 
@@ -138,7 +138,7 @@ begin
 
     if ((tag.Name <> 'iq') or
         (tag.getAttribute('type') = 'error')) then begin
-        MessageDlg('There was an error fetching this room list.',
+        MessageDlgW(_('There was an error fetching this room list.'),
             mtError, [mbOK], 0);
         Self.Close;
         exit;

@@ -54,7 +54,7 @@ type
     property FormType: string read frm_type write frm_type;
   end;
 
-resourcestring
+const 
     sRequired = '(Required)';
 
 implementation

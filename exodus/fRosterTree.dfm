@@ -1,14 +1,14 @@
 object frameTreeRoster: TframeTreeRoster
   Left = 0
   Top = 0
-  Width = 174
-  Height = 274
+  Width = 172
+  Height = 272
   TabOrder = 0
   object treeRoster: TTreeView
     Left = 0
     Top = 0
-    Width = 174
-    Height = 274
+    Width = 172
+    Height = 272
     Cursor = crArrow
     Hint = 'Roster Hint'
     Align = alClient

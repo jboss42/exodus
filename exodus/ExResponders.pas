@@ -118,7 +118,7 @@ var
     Exodus_Disco_Info: TDiscoInfoResponder;
     Exodus_Browse: TBrowseResponder;
 
-resourcestring
+const
     sNotifyAutoResponse = '%s query from: %s';
     sVersion = 'Version';
     sTime = 'Time';
@@ -132,7 +132,7 @@ resourcestring
 {---------------------------------------}
 implementation
 uses
-    COMController, ExSession, 
+    COMController, ExSession, GnuGetText,  
     JabberConst, Invite, Dialogs, PrefController, Registry, Forms,   
     XferManager, xData, XMLUtils, Jabber1, JabberID, Notify, NodeItem, Roster;
 
@@ -207,7 +207,7 @@ var
     l: TSignalListener;
 begin
     // We got an exception during signal dispatching.
-    MessageDlg(sExceptionMsg, mtError, [mbOK], 0);
+    MessageDlgW(_(sExceptionMsg), mtError, [mbOK], 0);
 
     dir := '';
     try

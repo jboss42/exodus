@@ -39,7 +39,7 @@ type
         procedure SetSession(js: TObject);
     end;
 
-resourcestring
+const
     sPrefWriteError = 'There was an error attempting to save your options. Another process may be accessing your options file. Some options may be lost. ';
 
 {---------------------------------------}
@@ -48,7 +48,7 @@ resourcestring
 implementation
 
 uses
-    Dialogs,
+    Dialogs, GnuGetText, 
     InvalidRoster, ChatWin, ExEvents, ExUtils, Subscribe, Notify, Jabber1,
     MsgQueue, NodeItem, Roster, JabberID, Session;
 
@@ -124,7 +124,7 @@ begin
     end
 
     else if (event = '/session/gui/prefs-write-error') then begin
-        MessageDlg(sPrefWriteError, mtError, [mbOK], 0);
+        MessageDlgW(_(sPrefWriteError), mtError, [mbOK], 0);
     end
 
     else if (event = '/session/block') then begin

@@ -127,7 +127,7 @@ type
 var
   frmXferManager: TfrmXferManager;
 
-resourcestring
+const
     sXferNewPort = 'Your new file transfer port will not take affect until all current trasfers are stopped. Stop existing transfers?';
     sXferRecv = '%s is sending you a file.';
     sXferURL = 'File transfer URL: ';
@@ -168,7 +168,7 @@ implementation
 {$R *.dfm}
 uses
     ExUtils, Jabber1, JabberConst, JabberID, Presence, InputPassword,
-    XMLUtils, Notify, RecvStatus, SendStatus, Session;
+    GnuGetText, XMLUtils, Notify, RecvStatus, SendStatus, Session;
 
 {---------------------------------------}
 procedure FileSend(tojid: string; fn: string = '');
@@ -186,7 +186,7 @@ begin
     if (tmp_id.resource = '') then begin
         pri := MainSession.ppdb.FindPres(tmp_id.jid, '');
         if (pri = nil) then begin
-            MessageDlg(sXferOnline, mtError, [mbOK], 0);
+            MessageDlgW(_(sXferOnline), mtError, [mbOK], 0);
             exit;
         end;
         tmps := pri.fromJID.full;
@@ -474,7 +474,7 @@ begin
 
             // check to see if we should disconnect current xfers
             if ((httpServer.Active) or (_current > 0)) then
-                if (MessageDlg(sXferNewPort, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
+                if (MessageDlgW(_(sXferNewPort), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
                     httpServer.Active := false;
                     _current := 0;
                 end;

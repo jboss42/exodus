@@ -1,8 +1,8 @@
 object frmExodus: TfrmExodus
-  Left = 284
-  Top = 191
-  Width = 221
-  Height = 387
+  Left = 285
+  Top = 192
+  Width = 219
+  Height = 384
   AlphaBlendValue = 240
   Caption = 'Exodus'
   Color = clBtnFace
@@ -29,14 +29,14 @@ object frmExodus: TfrmExodus
   object SplitterLeft: TSplitter
     Left = 57
     Top = 31
-    Height = 302
+    Height = 300
     OnMoved = SplitterRightMoved
   end
   object Tabs: TTntPageControl
     Left = 60
     Top = 31
-    Width = 153
-    Height = 302
+    Width = 151
+    Height = 300
     ActivePage = tbsRoster
     Align = alClient
     DockSite = True
@@ -67,7 +67,7 @@ object frmExodus: TfrmExodus
       object SplitterRight: TSplitter
         Left = 105
         Top = 0
-        Height = 273
+        Height = 271
         ResizeStyle = rsUpdate
         OnMoved = SplitterRightMoved
       end
@@ -75,7 +75,7 @@ object frmExodus: TfrmExodus
         Left = 0
         Top = 0
         Width = 105
-        Height = 273
+        Height = 271
         Align = alLeft
         BevelOuter = bvNone
         BorderWidth = 1
@@ -87,8 +87,8 @@ object frmExodus: TfrmExodus
       object pnlRight: TPanel
         Left = 108
         Top = 0
-        Width = 37
-        Height = 273
+        Width = 35
+        Height = 271
         Align = alClient
         BevelOuter = bvNone
         Caption = 'THIS IS PNLRIGHT'
@@ -101,7 +101,7 @@ object frmExodus: TfrmExodus
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 213
+    Width = 211
     Height = 31
     AutoSize = True
     BandBorderStyle = bsNone
@@ -110,7 +110,7 @@ object frmExodus: TfrmExodus
         Control = ToolBar1
         ImageIndex = -1
         MinHeight = 27
-        Width = 209
+        Width = 207
       end>
     object ToolBar1: TToolBar
       Left = 9
@@ -207,261 +207,260 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 31
     Width = 57
-    Height = 302
+    Height = 300
     Align = alLeft
     BevelOuter = bvNone
     BorderWidth = 1
     TabOrder = 2
   end
-  object MainMenu1: TMainMenu
+  object MainMenu1: TTntMainMenu
     AutoHotkeys = maManual
     Images = ImageList2
     Left = 52
     Top = 74
-    object Exodus1: TMenuItem
+    object Exodus1: TTntMenuItem
       Caption = '&Exodus'
-      object Test1: TMenuItem
+      object Test1: TTntMenuItem
         Caption = 'Test'
-        Visible = False
         OnClick = Test1Click
       end
-      object Connect2: TMenuItem
+      object Connect2: TTntMenuItem
         Caption = 'Sign &On/Off'
         ShortCut = 120
         OnClick = btnConnectClick
       end
-      object N7: TMenuItem
+      object N7: TTntMenuItem
         Caption = '-'
       end
-      object View1: TMenuItem
+      object View1: TTntMenuItem
         Caption = '&View'
-        object mnuToolbar: TMenuItem
+        object mnuToolbar: TTntMenuItem
           Caption = 'Show Toolbar'
           OnClick = mnuToolbarClick
         end
-        object mnuStatBar: TMenuItem
+        object mnuStatBar: TTntMenuItem
           Caption = 'Show Status Bar'
           Visible = False
         end
-        object mnuExpanded: TMenuItem
+        object mnuExpanded: TTntMenuItem
           Caption = 'Dock Windows'
           Checked = True
           Visible = False
           OnClick = btnExpandedClick
         end
-        object ShowEventsWindow1: TMenuItem
+        object ShowEventsWindow1: TTntMenuItem
           Caption = 'Instant Messages'
           OnClick = ShowEventsWindow1Click
         end
       end
-      object ClearMessages1: TMenuItem
+      object ClearMessages1: TTntMenuItem
         Caption = 'Clear &Instant Messages'
         ShortCut = 16430
         OnClick = ClearMessages1Click
       end
-      object N14: TMenuItem
+      object N14: TTntMenuItem
         Caption = '-'
       end
-      object mnuMessage: TMenuItem
+      object mnuMessage: TTntMenuItem
         Caption = 'Send Instant &Message'
         ShortCut = 116
         OnClick = mnuMessageClick
       end
-      object mnuChat: TMenuItem
+      object mnuChat: TTntMenuItem
         Caption = 'Start &Chat'
         ShortCut = 117
         OnClick = mnuChatClick
       end
-      object mnuConference: TMenuItem
+      object mnuConference: TTntMenuItem
         Caption = '&Join a Chat Room'
         ShortCut = 118
         OnClick = mnuConferenceClick
       end
-      object N6: TMenuItem
+      object N6: TTntMenuItem
         Caption = '-'
       end
-      object mnuRegisterService: TMenuItem
+      object mnuRegisterService: TTntMenuItem
         Caption = '&Register with a Service'
         OnClick = mnuRegisterServiceClick
       end
-      object mnuPassword: TMenuItem
+      object mnuPassword: TTntMenuItem
         Caption = 'Change &Password'
         OnClick = mnuPasswordClick
       end
-      object N9: TMenuItem
+      object N9: TTntMenuItem
         Caption = '-'
       end
-      object Exit2: TMenuItem
+      object Exit2: TTntMenuItem
         Caption = 'E&xit'
         ShortCut = 16465
         OnClick = Exit2Click
       end
     end
-    object Tools1: TMenuItem
+    object Tools1: TTntMenuItem
       Caption = '&Tools'
-      object mnuContacts: TMenuItem
+      object mnuContacts: TTntMenuItem
         Caption = '&Contacts'
-        object AddPerson1: TMenuItem
+        object AddPerson1: TTntMenuItem
           Caption = '&Add Contact'
           ShortCut = 16462
           OnClick = btnAddContactClick
         end
-        object RemovePerson1: TMenuItem
+        object RemovePerson1: TTntMenuItem
           Caption = '&Remove a Contact'
           OnClick = btnDelPersonClick
         end
-        object MessageHistory2: TMenuItem
+        object MessageHistory2: TTntMenuItem
           Caption = 'Contact'#39's Message &History'
           ShortCut = 16456
           OnClick = MessageHistory2Click
         end
-        object Properties2: TMenuItem
+        object Properties2: TTntMenuItem
           Caption = 'Contact &Properties'
           ShortCut = 121
           OnClick = Properties2Click
         end
-        object N10: TMenuItem
+        object N10: TTntMenuItem
           Caption = '-'
         end
-        object mnuFind: TMenuItem
+        object mnuFind: TTntMenuItem
           Caption = '&Find Contact in Roster'
           ShortCut = 16454
           OnClick = mnuFindClick
         end
-        object mnuFindAgain: TMenuItem
+        object mnuFindAgain: TTntMenuItem
           Caption = 'Fin&d Contact Again'
           ShortCut = 114
           OnClick = mnuFindAgainClick
         end
-        object mnuSearch: TMenuItem
+        object mnuSearch: TTntMenuItem
           Caption = '&Search for a Contact'
           ShortCut = 16467
           OnClick = mnuSearchClick
         end
-        object N13: TMenuItem
+        object N13: TTntMenuItem
           Caption = '-'
         end
-        object mnuOnline: TMenuItem
+        object mnuOnline: TTntMenuItem
           Caption = 'Show &Only Online'
           ShortCut = 119
           OnClick = btnOnlineRosterClick
         end
-        object NewGroup2: TMenuItem
+        object NewGroup2: TTntMenuItem
           Caption = 'Add Roster &Group'
           OnClick = NewGroup2Click
         end
-        object N8: TMenuItem
+        object N8: TTntMenuItem
           Caption = '-'
         end
-        object SubscribetoPresence2: TMenuItem
+        object SubscribetoPresence2: TTntMenuItem
           Caption = 'Su&bscribe to Presence'
         end
       end
-      object mnuPresence: TMenuItem
+      object mnuPresence: TTntMenuItem
         AutoHotkeys = maManual
         Caption = '&Presence'
-        object presOnline: TMenuItem
+        object presOnline: TTntMenuItem
           Caption = 'Available'
           ImageIndex = 1
         end
-        object presChat: TMenuItem
+        object presChat: TTntMenuItem
           Caption = 'Free to Chat'
           ImageIndex = 4
         end
-        object presAway: TMenuItem
+        object presAway: TTntMenuItem
           Tag = 2
           Caption = 'Away'
           ImageIndex = 2
         end
-        object presXA: TMenuItem
+        object presXA: TTntMenuItem
           Tag = 3
           Caption = 'Xtended Away'
           ImageIndex = 10
         end
-        object presDND: TMenuItem
+        object presDND: TTntMenuItem
           Tag = 4
           Caption = 'Do Not Disturb'
           ImageIndex = 3
         end
-        object N11: TMenuItem
+        object N11: TTntMenuItem
           Caption = '-'
         end
-        object Custom3: TMenuItem
+        object Custom3: TTntMenuItem
           Caption = 'Custom'
           ShortCut = 16464
           OnClick = presCustomClick
         end
-        object presToggle: TMenuItem
+        object presToggle: TTntMenuItem
           Caption = 'Toggle'
           ShortCut = 16468
           OnClick = presToggleClick
         end
       end
-      object N2: TMenuItem
+      object N2: TTntMenuItem
         Caption = '-'
       end
-      object mnuRegistration: TMenuItem
+      object mnuRegistration: TTntMenuItem
         Caption = 'Edit My &Registration'
         OnClick = mnuRegistrationClick
       end
-      object mnuMyVCard: TMenuItem
+      object mnuMyVCard: TTntMenuItem
         Caption = 'Edit My &vCard / Profile'
         OnClick = mnuMyVCardClick
       end
-      object N3: TMenuItem
+      object N3: TTntMenuItem
         Caption = '-'
       end
-      object mnuVCard: TMenuItem
+      object mnuVCard: TTntMenuItem
         Caption = '&Lookup a vCard'
         OnClick = mnuVCardClick
       end
-      object mnuBookmark: TMenuItem
+      object mnuBookmark: TTntMenuItem
         Caption = 'Add a Boo&kmark'
         OnClick = mnuBookmarkClick
       end
-      object mnuBrowser: TMenuItem
+      object mnuBrowser: TTntMenuItem
         Caption = 'Jabber &Browser'
         ShortCut = 122
         OnClick = mnuBrowserClick
       end
-      object mnuServer: TMenuItem
+      object mnuServer: TTntMenuItem
         Caption = 'Server Info'
-        object mnuVersion: TMenuItem
+        object mnuVersion: TTntMenuItem
           Caption = 'Version '
           OnClick = mnuVersionClick
         end
-        object mnuTime: TMenuItem
+        object mnuTime: TTntMenuItem
           Caption = 'Time'
           OnClick = mnuVersionClick
         end
-        object mnuServerVCard: TMenuItem
+        object mnuServerVCard: TTntMenuItem
           Caption = 'vCard'
           Visible = False
         end
       end
-      object ShowXML1: TMenuItem
+      object ShowXML1: TTntMenuItem
         Caption = 'Show Debug XML'
         ShortCut = 123
         OnClick = ShowXML1Click
       end
-      object mnuPlugins: TMenuItem
+      object mnuPlugins: TTntMenuItem
         Caption = 'Plu&gins'
       end
-      object N1: TMenuItem
+      object N1: TTntMenuItem
         Caption = '-'
       end
-      object Preferences1: TMenuItem
+      object Preferences1: TTntMenuItem
         Caption = '&Options...'
         ShortCut = 115
         OnClick = Preferences1Click
       end
     end
-    object Help1: TMenuItem
+    object Help1: TTntMenuItem
       Caption = '&Help'
-      object N12: TMenuItem
+      object N12: TTntMenuItem
         Caption = '-'
       end
-      object About1: TMenuItem
+      object About1: TTntMenuItem
         Caption = 'About'
         OnClick = About1Click
       end
@@ -2617,30 +2616,30 @@ object frmExodus: TfrmExodus
     Left = 16
     Top = 136
   end
-  object popTabs: TPopupMenu
+  object popTabs: TTntPopupMenu
     AutoHotkeys = maManual
     Left = 48
     Top = 104
-    object popCloseTab: TMenuItem
+    object popCloseTab: TTntMenuItem
       Caption = 'Close Window'
       ShortCut = 16499
       OnClick = popCloseTabClick
     end
-    object popFloatTab: TMenuItem
+    object popFloatTab: TTntMenuItem
       Caption = 'Float Window'
       OnClick = popFloatTabClick
     end
   end
-  object popTray: TPopupMenu
+  object popTray: TTntPopupMenu
     AutoHotkeys = maManual
     Images = ImageList2
     Left = 48
     Top = 136
-    object trayShow: TMenuItem
+    object trayShow: TTntMenuItem
       Caption = 'Show Exodus'
       OnClick = trayShowClick
     end
-    object trayPresence: TMenuItem
+    object trayPresence: TTntMenuItem
       Caption = 'Presence'
       Enabled = False
       object trayPresOnline: TMenuItem
@@ -2674,22 +2673,22 @@ object frmExodus: TfrmExodus
         OnClick = presCustomClick
       end
     end
-    object trayMessage: TMenuItem
+    object trayMessage: TTntMenuItem
       Caption = 'Send Message'
       Enabled = False
       OnClick = trayMessageClick
     end
-    object N4: TMenuItem
+    object N4: TTntMenuItem
       Caption = '-'
     end
-    object trayConnect: TMenuItem
+    object trayConnect: TTntMenuItem
       Caption = 'Log On/Off'
       OnClick = btnConnectClick
     end
-    object N01: TMenuItem
+    object N01: TTntMenuItem
       Caption = '-'
     end
-    object trayExit: TMenuItem
+    object trayExit: TTntMenuItem
       Caption = 'Exit Exodus'
       OnClick = trayExitClick
     end

@@ -37,13 +37,11 @@ object frmJoinRoom: TfrmJoinRoom
     TabOrder = 2
     inherited Panel2: TPanel
       Width = 439
-      Height = 34
       inherited Bevel1: TBevel
         Width = 439
       end
       inherited Panel1: TPanel
         Left = 279
-        Height = 29
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end

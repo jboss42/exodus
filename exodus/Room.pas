@@ -24,7 +24,7 @@ uses
     Unicode, XMLTag, RegExpr,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ComCtrls, StdCtrls, Menus, ExRichEdit, ExtCtrls,
-    RichEdit2, TntStdCtrls, Buttons, TntComCtrls, Grids, TntGrids;
+    RichEdit2, TntStdCtrls, Buttons, TntComCtrls, Grids, TntGrids, TntMenus;
 
 type
   TMemberNode = TTntListItem;
@@ -44,49 +44,49 @@ type
   TfrmRoom = class(TfrmBaseChat)
     Panel6: TPanel;
     Splitter2: TSplitter;
-    popRoom: TPopupMenu;
-    popClear: TMenuItem;
-    popBookmark: TMenuItem;
-    popInvite: TMenuItem;
-    popNick: TMenuItem;
-    N1: TMenuItem;
-    popClose: TMenuItem;
-    mnuOnTop: TMenuItem;
-    popRoomRoster: TPopupMenu;
-    popRosterChat: TMenuItem;
-    popRosterBlock: TMenuItem;
+    popRoom: TTntPopupMenu;
+    popRoomRoster: TTntPopupMenu;
     pnlSubj: TPanel;
     lblSubjectURL: TTntLabel;
     btnClose: TSpeedButton;
-    popClearHistory: TMenuItem;
-    popShowHistory: TMenuItem;
     lstRoster: TTntListView;
     lblSubject: TTntLabel;
-    popAdmin: TMenuItem;
     popBanList: TMenuItem;
     popMemberList: TMenuItem;
     popVoiceList: TMenuItem;
-    popKick: TMenuItem;
-    popBan: TMenuItem;
-    popVoice: TMenuItem;
     popConfigure: TMenuItem;
-    N3: TMenuItem;
     N4: TMenuItem;
     popDestroy: TMenuItem;
     popAdminList: TMenuItem;
     N5: TMenuItem;
     popOwnerList: TMenuItem;
-    mnuWordwrap: TMenuItem;
-    NotificationOptions1: TMenuItem;
-    S1: TMenuItem;
     dlgSave: TSaveDialog;
-    N6: TMenuItem;
-    popRosterMsg: TMenuItem;
-    popRosterSendJID: TMenuItem;
     popModeratorList: TMenuItem;
-    popModerator: TMenuItem;
-    popAdministrator: TMenuItem;
-    popRegister: TMenuItem;
+    N6: TTntMenuItem;
+    popClose: TTntMenuItem;
+    mnuOnTop: TTntMenuItem;
+    mnuWordwrap: TTntMenuItem;
+    NotificationOptions1: TTntMenuItem;
+    N1: TTntMenuItem;
+    popAdmin: TTntMenuItem;
+    S1: TTntMenuItem;
+    popNick: TTntMenuItem;
+    popInvite: TTntMenuItem;
+    popRegister: TTntMenuItem;
+    popBookmark: TTntMenuItem;
+    popClearHistory: TTntMenuItem;
+    popShowHistory: TTntMenuItem;
+    popClear: TTntMenuItem;
+    popAdministrator: TTntMenuItem;
+    popModerator: TTntMenuItem;
+    popVoice: TTntMenuItem;
+    popBan: TTntMenuItem;
+    popKick: TTntMenuItem;
+    N3: TTntMenuItem;
+    popRosterBlock: TTntMenuItem;
+    popRosterSendJID: TTntMenuItem;
+    popRosterChat: TTntMenuItem;
+    popRosterMsg: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -205,7 +205,7 @@ var
   xp_muc_item: TXPLite;
   xp_muc_reason: TXPLite;
 
-resourcestring
+const
     sRoom = '%s Room';
     sNotifyKeyword = 'Keyword in ';
     sNotifyActivity = 'Activity in ';
@@ -355,7 +355,7 @@ begin
             f.sendStartPresence();
         end;
 
-        f.Caption := WideFormat(sRoom, [tmp_jid.user]);
+        f.Caption := WideFormat(_(sRoom), [tmp_jid.user]);
         if MainSession.Prefs.getBool('expanded') then
             f.DockForm;
 
@@ -718,7 +718,7 @@ begin
         if (etag <> nil) then begin
             ecode := etag.GetAttribute('code');
             if (ecode = '409') then begin
-                MessageDlg(sStatus_409, mtError, [mbOK], 0);
+                MessageDlgW(_(sStatus_409), mtError, [mbOK], 0);
                 if (_old_nick = '') then begin
                     Self.Close();
                     exit;
@@ -727,7 +727,7 @@ begin
                     myNick := _old_nick;
             end
             else if (ecode = '401') then begin
-                MessageDlg(sStatus_401, mtError, [mbOK], 0);
+                MessageDlgW(_(sStatus_401), mtError, [mbOK], 0);
                 Self.Close();
                 tmp_jid := TJabberID.Create(from);
                 StartJoinRoom(tmp_jid, MyNick, '');
@@ -735,17 +735,17 @@ begin
                 exit;
             end
             else if (ecode = '404') then begin
-                MessageDlg(sStatus_404, mtError, [mbOK], 0);
+                MessageDlgW(_(sStatus_404), mtError, [mbOK], 0);
                 Self.Close();
                 exit;
             end
             else if (ecode = '405') then begin
-                MessageDlg(sStatus_405a, mtError, [mbOK], 0);
+                MessageDlgW(_(sStatus_405a), mtError, [mbOK], 0);
                 Self.Close();
                 exit;
             end
             else if (ecode = '407') then begin
-                if (messageDlg(sStatus_407, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
+                if (MessageDlgW(_(sStatus_407), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
                     t := TXMLTag.Create('register');
                     t.setAttribute('jid', Self.jid);
                     MainSession.FireEvent('/session/register', t);
@@ -755,13 +755,13 @@ begin
                 exit;
             end
             else if (ecode = '403') then begin
-                MessageDlg(etag.Data(), mtError, [mbOK], 0);
+                MessageDlgW(etag.Data(), mtError, [mbOK], 0);
                 Self.Close();
                 exit;
             end
         end;
 
-        MessageDlg(sStatus_Unknown, mtError, [mbOK], 0);
+        MessageDlgW(_(sStatus_Unknown), mtError, [mbOK], 0);
         Self.Close();
         exit;
     end
@@ -958,10 +958,10 @@ begin
     else if (scode = '409') then msg := sStatus_409;
 
     if (fmt <> '') then
-        msg := WideFormat(fmt, [MyNick, '']);
+        msg := WideFormat(_(fmt), [MyNick, '']);
 
     if (msg <> '') then
-        MessageDlg(msg, mtInformation, [mbOK], 0);
+        MessageDlgW(msg, mtInformation, [mbOK], 0);
 end;
 
 {---------------------------------------}
@@ -1098,7 +1098,7 @@ begin
             _keywords.Compile();
         except
             FreeAndNil(_keywords);
-            MessageDlg(_('Your room keyword regular expressions are invalid. Keyword matching will be turned off for this room.'),
+            MessageDlgW(_('Your room keyword regular expressions are invalid. Keyword matching will be turned off for this room.'),
                 mtError, [mbOK], 0);
         end;
     end;
@@ -1276,7 +1276,7 @@ begin
         rm := TRoomMember(_roster.Objects[i]);
         if (AnsiCompareText(rm.Nick, new_nick) = 0) then begin
             // they match
-            MessageDlg(sStatus_409, mtError, [mbOK], 0);
+            MessageDlgW(_(sStatus_409), mtError, [mbOK], 0);
             exit;
         end;
     end;
@@ -1450,9 +1450,9 @@ begin
     rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
     if (rm <> nil) then begin
         if (rm.show = sBlocked) then
-            popRosterBlock.Caption := sUnblock
+            popRosterBlock.Caption := _(sUnblock)
         else
-            popRosterBlock.Caption := sBlock;
+            popRosterBlock.Caption := _(sBlock);
     end;
     inherited;
 end;
@@ -1727,7 +1727,7 @@ var
 begin
   inherited;
     // Destroy Room
-    if (MessageDlg(sDestroyRoomConfirm, mtConfirmation, [mbYes,mbNo], 0) = mrNo) then
+    if (MessageDlgW(_(sDestroyRoomConfirm), mtConfirmation, [mbYes,mbNo], 0) = mrNo) then
         exit;
     reason := sDestroyDefault;
     if InputQueryW(sDestroyRoom, sDestroyReason, reason) = false then exit;

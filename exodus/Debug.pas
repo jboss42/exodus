@@ -25,29 +25,29 @@ uses
     Dockable, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, ExtCtrls, ComCtrls, Menus, RichEdit2, ExRichEdit,
-    Buttons, TntStdCtrls;
+    Buttons, TntStdCtrls, TntMenus;
 
 type
   TfrmDebug = class(TfrmDockable)
     Panel2: TPanel;
     Splitter1: TSplitter;
-    PopupMenu1: TPopupMenu;
-    popMsg: TMenuItem;
-    popIQGet: TMenuItem;
-    popIQSet: TMenuItem;
-    popPres: TMenuItem;
+    PopupMenu1: TTntPopupMenu;
     MsgDebug: TExRichEdit;
     pnlTop: TPanel;
     btnClose: TSpeedButton;
     lblJID: TTntLabel;
-    N1: TMenuItem;
-    Clear1: TMenuItem;
-    SendXML1: TMenuItem;
-    Find1: TMenuItem;
-    WordWrap1: TMenuItem;
     FindDialog1: TFindDialog;
     lblLabel: TTntLabel;
     MemoSend: TExRichEdit;
+    popPres: TTntMenuItem;
+    popIQSet: TTntMenuItem;
+    popIQGet: TTntMenuItem;
+    popMsg: TTntMenuItem;
+    N1: TTntMenuItem;
+    WordWrap1: TTntMenuItem;
+    Find1: TTntMenuItem;
+    SendXML1: TTntMenuItem;
+    Clear1: TTntMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure chkDebugWrapClick(Sender: TObject);
     procedure btnClearDebugClick(Sender: TObject);
@@ -99,7 +99,7 @@ implementation
 
 {$R *.dfm}
 uses
-    Signals, Session, ExUtils, Jabber1;
+    GnuGetText, Signals, Session, ExUtils, Jabber1;
 
 var
     frmDebug: TfrmDebug;
@@ -181,7 +181,7 @@ begin
             '/' + MainSession.Resource;
     end
     else
-        lblJID.Caption := '(Disconnected)';
+        lblJID.Caption := _('Disconnected');
 
 end;
 
@@ -380,7 +380,7 @@ begin
             '/' + MainSession.Resource;
     end
     else if (event = '/session/disconnected') then
-        lblJID.Caption := '(Disconnected)';
+        lblJID.Caption := _('Disconnected');
 end;
 
 {---------------------------------------}

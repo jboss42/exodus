@@ -40,7 +40,6 @@ type
     colorChat: TExRichEdit;
     FontDialog1: TFontDialog;
     lblColor: TTntLabel;
-    StaticText4: TTntPanel;
     procedure btnFontClick(Sender: TObject);
     procedure colorChatMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -66,7 +65,7 @@ type
 var
   frmPrefFont: TfrmPrefFont;
 
-resourcestring
+const
     sRosterFontLabel = 'Roster Font and Background';
     sChatFontLabel = 'Roster Font and Background';
 
@@ -77,7 +76,7 @@ resourcestring
 implementation
 {$R *.dfm}
 uses
-    JabberMsg, MsgDisplay, Session;
+    GnuGetText, JabberMsg, MsgDisplay, Session;
 
 {---------------------------------------}
 procedure TfrmPrefFont.LoadPrefs();
@@ -109,7 +108,7 @@ begin
             if (Font.Charset = 0) then Font.Charset := 1;
             Font.Style := [];
         end;
-        lblColor.Caption := sRosterFontLabel;
+        lblColor.Caption := _(sRosterFontLabel);
         _clr_font := 'roster_font';
         _clr_font_color := 'roster_font_color';
         _clr_bg := 'roster_bg';
@@ -198,7 +197,7 @@ var
     start: integer;
 begin
     // Select the chat window
-    lblColor.Caption := sChatFontLabel;
+    lblColor.Caption := _(sChatFontLabel);
     _clr_control := colorChat;
     _clr_bg := 'color_bg';
     clrBoxBG.Selected := TColor(MainSession.Prefs.getInt(_clr_bg));
@@ -255,7 +254,7 @@ procedure TfrmPrefFont.colorRosterMouseDown(Sender: TObject;
 begin
   inherited;
     // find the "thing" that we clicked on in the window..
-    lblColor.Caption := sRosterFontLabel;
+    lblColor.Caption := _(sRosterFontLabel);
     _clr_font := 'roster_font';
     _clr_font_color := 'roster_font_color';
     _clr_bg := 'roster_bg';

@@ -1,30 +1,30 @@
 inherited frmPrefGroups: TfrmPrefGroups
-  Left = 271
-  Top = 196
+  Left = 272
+  Top = 197
   Caption = 'frmPrefGroups'
-  ClientHeight = 301
-  ClientWidth = 274
+  ClientHeight = 299
+  ClientWidth = 272
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object Label18: TTntLabel
+  object Label18: TTntLabel [0]
     Left = 0
-    Top = 180
+    Top = 187
     Width = 150
     Height = 13
     Caption = 'Group to be used for Gateways:'
   end
-  object Label1: TTntLabel
+  object Label1: TTntLabel [1]
     Left = 0
-    Top = 228
+    Top = 235
     Width = 69
     Height = 13
     Caption = 'Default Group:'
   end
-  object lblFilter: TTntLabel
+  object lblFilter: TTntLabel [2]
     Left = 2
     Top = 121
-    Width = 183
+    Width = 231
     Height = 24
     AutoSize = False
     Caption = 
@@ -32,23 +32,23 @@ inherited frmPrefGroups: TfrmPrefGroups
       'east:'
     WordWrap = True
   end
-  object txtGatewayGrp: TTntComboBox
+  object txtGatewayGrp: TTntComboBox [3]
     Left = 20
-    Top = 196
+    Top = 203
     Width = 169
     Height = 21
     ItemHeight = 13
     TabOrder = 6
   end
-  object txtDefaultGrp: TTntComboBox
+  object txtDefaultGrp: TTntComboBox [4]
     Left = 20
-    Top = 244
+    Top = 251
     Width = 169
     Height = 21
     ItemHeight = 13
     TabOrder = 7
   end
-  object chkSort: TTntCheckBox
+  object chkSort: TTntCheckBox [5]
     Left = 0
     Top = 32
     Width = 193
@@ -56,9 +56,9 @@ inherited frmPrefGroups: TfrmPrefGroups
     Caption = 'Sort Contacts by their availability'
     TabOrder = 0
   end
-  object cboVisible: TTntComboBox
+  object cboVisible: TTntComboBox [6]
     Left = 20
-    Top = 149
+    Top = 156
     Width = 169
     Height = 21
     Style = csDropDownList
@@ -70,7 +70,7 @@ inherited frmPrefGroups: TfrmPrefGroups
       'Away'
       'Available')
   end
-  object chkCollapsed: TTntCheckBox
+  object chkCollapsed: TTntCheckBox [7]
     Left = 0
     Top = 48
     Width = 200
@@ -78,7 +78,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     Caption = 'Collapse all roster groups initially.'
     TabOrder = 1
   end
-  object chkGroupCounts: TTntCheckBox
+  object chkGroupCounts: TTntCheckBox [8]
     Left = 0
     Top = 64
     Width = 217
@@ -86,7 +86,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     Caption = 'Show group counts in roster (eg, 5/10)'
     TabOrder = 2
   end
-  object chkOfflineGrp: TTntCheckBox
+  object chkOfflineGrp: TTntCheckBox [9]
     Left = 0
     Top = 80
     Width = 217
@@ -95,7 +95,7 @@ inherited frmPrefGroups: TfrmPrefGroups
     TabOrder = 3
     OnClick = chkOfflineGrpClick
   end
-  object chkOnlineOnly: TTntCheckBox
+  object chkOnlineOnly: TTntCheckBox [10]
     Left = 0
     Top = 96
     Width = 217
@@ -103,22 +103,9 @@ inherited frmPrefGroups: TfrmPrefGroups
     Caption = 'Only show online contacts'
     TabOrder = 4
   end
-  object StaticText4: TTntPanel
-    Left = 0
-    Top = 0
-    Width = 274
-    Height = 24
-    Align = alTop
-    BevelOuter = bvLowered
+  inherited pnlHeader: TTntPanel
+    Width = 272
     Caption = 'Roster Group Options'
-    Color = clHighlight
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clHighlightText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentBackground = False
-    ParentFont = False
     TabOrder = 8
   end
 end

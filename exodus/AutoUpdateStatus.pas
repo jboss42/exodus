@@ -177,7 +177,7 @@ procedure TfrmAutoUpdateStatus.HttpClientWorkBegin(Sender: TObject;
   AWorkMode: TWorkMode; const AWorkCountMax: Integer);
 begin
     ProgressBar1.Max := AWorkCountMax;
-    label1.Caption := sDownloading;
+    label1.Caption := _(sDownloading);
     label1.Refresh();
     Application.ProcessMessages();
 end;
@@ -200,7 +200,7 @@ begin
 
     ProgressBar1.Visible := true;
     frameButtons1.btnOK.Enabled := false;
-    label1.Caption := sInitializing;
+    label1.Caption := _(sInitializing);
     label1.Refresh();
     Image1.Picture.Icon.Handle := LoadIcon(0, IDI_INFORMATION);
     Image1.Refresh();
@@ -216,7 +216,7 @@ begin
             _fstream := nil;
 
             if ((_cancel = false) and (httpClient.ResponseCode = 200)) then begin
-                label1.Caption := sDownloadComplete;
+                label1.Caption := _(sDownloadComplete);
                 label1.Refresh();
                 Application.ProcessMessages();
 
@@ -227,7 +227,7 @@ begin
                 MainSession.Prefs.setDateTime('last_update',
                     (httpClient.Response.LastModified + (2/24)));
 
-                label1.Caption := sInstalling;
+                label1.Caption := _(sInstalling);
                 label1.Refresh();
                 Application.ProcessMessages();
 
@@ -235,14 +235,14 @@ begin
                     SW_SHOWNORMAL);
             end
             else if (_cancel = false) then begin
-                label1.Caption := WideFormat(sError, [httpClient.ResponseText]);
+                label1.Caption := WideFormat(_(sError), [httpClient.ResponseText]);
                 Application.ProcessMessages();
             end;
         except
             on EIdConnClosedGracefully do
                 Self.Close();
             on E: EIdProtocolReplyError do begin
-                label1.Caption := WideFormat(sError, [E.Message]);
+                label1.Caption := WideFormat(_(sError), [E.Message]);
             end;
         end;
     finally

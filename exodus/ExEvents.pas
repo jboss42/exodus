@@ -69,19 +69,7 @@ procedure RenderEvent(e: TJabberEvent);
 
 function getTaskBarRect(): TRect;
 
-
-resourcestring
-    sPresUnavailable = 'Unavailable presence';
-    sPresAvailable = 'Available presence';
-    sPresChat = 'Chat presence';
-    sPresAway = 'Away presence';
-    sPresXA = 'Ext. Away presence';
-    sPresDND = 'Do Not Disturb presence';
-    sPresS10n = 'Subscription request';
-    sPresGrant = 'Subscription granted';
-    sPresDeny = 'Subscription denied/revoked';
-    sPresUnsub = 'Unsubscribe presence packet';
-
+const
     sMsgTime = 'Time Response';
     sMsgTimeInfo = 'Time, Ping Response: ';
     sMsgLocalTime = 'Local Time: ';
@@ -95,9 +83,6 @@ resourcestring
     sMsgLastInfo = 'Idle for ';
 
     sMsgURL = 'This message contains a URL: ';
-
-    sPresError = 'The jabber server can not contact the server where this user is hosted.' +
-        'Click "Remove" to remove this contact from your roster.';
 
 
 {---------------------------------------}

@@ -53,7 +53,7 @@ implementation
 {$R *.dfm}
 
 uses
-    GnuGetText, ShellAPI, XMLUtils, Session;
+    ExUtils, GnuGetText, ShellAPI, XMLUtils, Session;
 
 procedure TfrmAbout.frameButtons1btnCancelClick(Sender: TObject);
 begin
@@ -89,7 +89,7 @@ begin
     str := Application.ExeName;
     for i := 1 to ParamCount do
         str := str + ' ' + ParamStr(i);
-    MessageDlg(str, mtInformation, [mbOK], 0);
+    MessageDlgW(str, mtInformation, [mbOK], 0);
 end;
 
 end.

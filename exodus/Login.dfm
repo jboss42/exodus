@@ -114,14 +114,14 @@ object frmLogin: TfrmLogin
       TabOrder = 3
     end
   end
-  object popProfiles: TPopupMenu
+  object popProfiles: TTntPopupMenu
     Left = 16
     Top = 24
-    object CreateNew1: TMenuItem
+    object CreateNew1: TTntMenuItem
       Caption = 'Create New Profile...'
       OnClick = CreateNew1Click
     end
-    object Delete1: TMenuItem
+    object Delete1: TTntMenuItem
       Caption = 'Delete Profile...'
       OnClick = Delete1Click
     end

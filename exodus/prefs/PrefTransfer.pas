@@ -55,7 +55,6 @@ type
     txtDavPassword: TTntEdit;
     Label8: TTntLabel;
     Label9: TTntLabel;
-    StaticText4: TTntPanel;
     cboXferMode: TTntComboBox;
     grpProxy: TGroupBox;
     TntLabel1: TTntLabel;
@@ -76,7 +75,7 @@ type
 var
     frmPrefTransfer: TfrmPrefTransfer;
 
-resourcestring
+const
     sPrefsXFerDir = 'Select download directory';
 
 

@@ -47,7 +47,6 @@ type
     txtToastDuration: TTntEdit;
     txtChatMemory: TTntEdit;
     spnChatMemory: TTntUpDown;
-    StaticText4: TTntPanel;
     TntLabel1: TTntLabel;
     hkClose: THotKey;
     chkEscClose: TTntCheckBox;

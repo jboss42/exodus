@@ -7,14 +7,14 @@ inherited frmPrefPlugins: TfrmPrefPlugins
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object Label6: TTntLabel
+  object Label6: TTntLabel [0]
     Left = 6
     Top = 239
     Width = 191
     Height = 13
     Caption = 'Plugin Directory (automatically scanned):'
   end
-  object lblPluginScan: TTntLabel
+  object lblPluginScan: TTntLabel [1]
     Left = 16
     Top = 284
     Width = 155
@@ -28,6 +28,11 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     Font.Style = [fsUnderline]
     ParentFont = False
     OnClick = lblPluginScanClick
+  end
+  inherited pnlHeader: TTntPanel
+    Width = 353
+    Caption = 'Application Plugins'
+    TabOrder = 6
   end
   object btnAddPlugin: TTntButton
     Left = 6
@@ -75,7 +80,7 @@ inherited frmPrefPlugins: TfrmPrefPlugins
   end
   object lstPlugins: TTntListView
     Left = 0
-    Top = 24
+    Top = 26
     Width = 353
     Height = 173
     Align = alTop
@@ -96,23 +101,5 @@ inherited frmPrefPlugins: TfrmPrefPlugins
       end>
     TabOrder = 0
     ViewStyle = vsReport
-  end
-  object StaticText4: TTntPanel
-    Left = 0
-    Top = 0
-    Width = 353
-    Height = 24
-    Align = alTop
-    BevelOuter = bvLowered
-    Caption = 'Application Plugins'
-    Color = clHighlight
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clHighlightText
-    Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold]
-    ParentBackground = False
-    ParentFont = False
-    TabOrder = 6
   end
 end

@@ -251,7 +251,7 @@ var
     s_brand_node: TXMLTag;
     s_default_node: TXmlTag;
 
-resourceString
+const
     sIdleAway = 'Away as a result of idle.';
     sIdleXA = 'XA as a result of idle.';
 

@@ -51,7 +51,7 @@ type
 var
   frmRemove: TfrmRemove;
 
-resourcestring
+const
     sRemoveGrpLabel = 'Remove this contact from the %s group.';
 
 procedure RemoveRosterItem(sjid: Widestring; grp: Widestring = '');
@@ -76,7 +76,7 @@ begin
         lblJID.Caption := sjid;
         sel_grp := grp;
         jid := sjid;
-        optMove.Caption := WideFormat(sRemoveGrpLabel, [grp]);
+        optMove.Caption := WideFormat(_(sRemoveGrpLabel), [grp]);
         ritem := MainSession.Roster.Find(sjid);
         optMove.Enabled := ((ritem <> nil) and (ritem.Groups.Count > 1));
         Show;

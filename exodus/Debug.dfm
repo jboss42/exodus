@@ -24,7 +24,7 @@ object frmDebug: TfrmDebug
     Left = 0
     Top = 25
     Width = 400
-    Height = 360
+    Height = 355
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
@@ -32,7 +32,7 @@ object frmDebug: TfrmDebug
     TabOrder = 0
     object Splitter1: TSplitter
       Left = 4
-      Top = 311
+      Top = 306
       Width = 392
       Height = 5
       Cursor = crVSplit
@@ -42,7 +42,7 @@ object frmDebug: TfrmDebug
       Left = 4
       Top = 4
       Width = 392
-      Height = 307
+      Height = 302
       Align = alClient
       AutoURLDetect = adNone
       CustomURLs = <
@@ -136,7 +136,7 @@ object frmDebug: TfrmDebug
     end
     object MemoSend: TExRichEdit
       Left = 4
-      Top = 316
+      Top = 311
       Width = 392
       Height = 40
       Align = alBottom
@@ -275,46 +275,46 @@ object frmDebug: TfrmDebug
       Caption = 'Current JID:  '
     end
   end
-  object PopupMenu1: TPopupMenu
+  object PopupMenu1: TTntPopupMenu
     AutoHotkeys = maManual
     Left = 40
-    Top = 136
-    object Clear1: TMenuItem
+    Top = 144
+    object Clear1: TTntMenuItem
       Caption = 'Clear '
       ShortCut = 16430
       OnClick = Clear1Click
     end
-    object SendXML1: TMenuItem
+    object SendXML1: TTntMenuItem
       Caption = 'Send XML'
       OnClick = btnSendRawClick
     end
-    object Find1: TMenuItem
+    object Find1: TTntMenuItem
       Caption = 'Find'
       ShortCut = 49222
       OnClick = Find1Click
     end
-    object WordWrap1: TMenuItem
+    object WordWrap1: TTntMenuItem
       Caption = 'Word Wrap'
       Checked = True
       ShortCut = 49239
       OnClick = WordWrap1Click
     end
-    object N1: TMenuItem
+    object N1: TTntMenuItem
       Caption = '-'
     end
-    object popMsg: TMenuItem
+    object popMsg: TTntMenuItem
       Caption = 'Message'
       OnClick = popMsgClick
     end
-    object popIQGet: TMenuItem
+    object popIQGet: TTntMenuItem
       Caption = 'IQ Get'
       OnClick = popMsgClick
     end
-    object popIQSet: TMenuItem
+    object popIQSet: TTntMenuItem
       Caption = 'IQ Set'
       OnClick = popMsgClick
     end
-    object popPres: TMenuItem
+    object popPres: TTntMenuItem
       Caption = 'Presence'
       OnClick = popMsgClick
     end

@@ -25,15 +25,15 @@ uses
     Jabber1, ExEvents, Contnrs, Unicode, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Dockable, ComCtrls, StdCtrls, ExtCtrls, ToolWin, RichEdit2,
-    ExRichEdit, Menus, TntComCtrls;
+    ExRichEdit, Menus, TntComCtrls, TntMenus;
 
 type
   TfrmMsgQueue = class(TfrmDockable)
     lstEvents: TTntListView;
     Splitter1: TSplitter;
     txtMsg: TExRichEdit;
-    PopupMenu1: TPopupMenu;
-    D1: TMenuItem;
+    PopupMenu1: TTntPopupMenu;
+    D1: TTntMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure lstEventsChange(Sender: TObject; Item: TListItem;
       Change: TItemChange);
@@ -68,7 +68,7 @@ type
 var
   frmMsgQueue: TfrmMsgQueue;
 
-resourcestring
+const
     sNoSpoolDir = 'Exodus could not create or write to the spool directory specified in the options.';
 
 function getMsgQueue: TfrmMsgQueue;
@@ -81,7 +81,7 @@ implementation
 {$R *.dfm}
 
 uses
-    ShellAPI, CommCtrl,  
+    ShellAPI, CommCtrl, GnuGetText,   
     NodeItem, Roster, JabberID, XMLUtils, XMLParser, XMLTag,
     ExUtils, MsgRecv, Session, PrefController;
 
@@ -145,7 +145,7 @@ begin
     if (not DirectoryExists(dir)) then begin
         MkDir(dir);
         if (not DirectoryExists(dir)) then begin
-            MessageDlg(sNoSpoolDir, mtError, [mbOK], 0);
+            MessageDlgW(_(sNoSpoolDir), mtError, [mbOK], 0);
             exit;
         end;
     end;

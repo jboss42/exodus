@@ -110,7 +110,7 @@ type
         constructor Create(sjid, nickname, group: string; subscribe: boolean);
     end;
 
-resourcestring
+const
     sGrpBookmarks = 'Bookmarks';
     sGrpUnfiled = 'Unfiled';
     sGrpOnline = 'Available';

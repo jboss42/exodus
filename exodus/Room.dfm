@@ -2,29 +2,31 @@ inherited frmRoom: TfrmRoom
   Left = 255
   Top = 265
   Width = 395
+  Height = 305
   Caption = 'Conference Room'
   OldCreateOrder = True
   OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
+    Top = 240
     Width = 387
   end
   inherited Panel3: TPanel
     Top = 23
     Width = 387
-    Height = 225
+    Height = 217
     TabOrder = 1
     object Splitter2: TSplitter [0]
       Left = 275
       Top = 4
-      Height = 217
+      Height = 209
       Align = alRight
       ResizeStyle = rsUpdate
     end
     inherited MsgList: TExRichEdit
       Width = 271
-      Height = 217
+      Height = 209
       Font.Name = 'Arial'
       ParentFont = False
       PopupMenu = popRoom
@@ -36,7 +38,7 @@ inherited frmRoom: TfrmRoom
       Left = 278
       Top = 4
       Width = 105
-      Height = 217
+      Height = 209
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -46,7 +48,7 @@ inherited frmRoom: TfrmRoom
         Left = 1
         Top = 1
         Width = 103
-        Height = 215
+        Height = 207
         Align = alClient
         Columns = <
           item
@@ -77,6 +79,7 @@ inherited frmRoom: TfrmRoom
     end
   end
   inherited pnlInput: TPanel
+    Top = 243
     Width = 387
     TabOrder = 0
     inherited MsgOut: TExRichEdit
@@ -147,49 +150,49 @@ inherited frmRoom: TfrmRoom
       end
     end
   end
-  inherited popMsgList: TPopupMenu
+  inherited popMsgList: TTntPopupMenu
     AutoHotkeys = maManual
   end
-  inherited popOut: TPopupMenu
+  inherited popOut: TTntPopupMenu
     AutoHotkeys = maManual
   end
-  object popRoom: TPopupMenu
+  object popRoom: TTntPopupMenu
     AutoHotkeys = maManual
     Left = 16
     Top = 152
-    object popClear: TMenuItem
+    object popClear: TTntMenuItem
       Caption = 'Clear Window'
       OnClick = popClearClick
     end
-    object popShowHistory: TMenuItem
+    object popShowHistory: TTntMenuItem
       Caption = 'Show History'
       OnClick = popShowHistoryClick
     end
-    object popClearHistory: TMenuItem
+    object popClearHistory: TTntMenuItem
       Caption = 'Clear History'
       OnClick = popClearHistoryClick
     end
-    object popBookmark: TMenuItem
+    object popBookmark: TTntMenuItem
       Caption = 'Bookmark Room...'
       OnClick = popBookmarkClick
     end
-    object popRegister: TMenuItem
+    object popRegister: TTntMenuItem
       Caption = 'Register with Room...'
       OnClick = popRegisterClick
     end
-    object popInvite: TMenuItem
+    object popInvite: TTntMenuItem
       Caption = 'Invite Contacts...'
       OnClick = popInviteClick
     end
-    object popNick: TMenuItem
+    object popNick: TTntMenuItem
       Caption = 'Change Nickname...'
       OnClick = popNickClick
     end
-    object S1: TMenuItem
+    object S1: TTntMenuItem
       Caption = 'Save As...'
       OnClick = S1Click
     end
-    object popAdmin: TMenuItem
+    object popAdmin: TTntMenuItem
       Caption = 'Admin'
       Enabled = False
       object popVoiceList: TMenuItem
@@ -231,74 +234,74 @@ inherited frmRoom: TfrmRoom
         OnClick = popDestroyClick
       end
     end
-    object N1: TMenuItem
+    object N1: TTntMenuItem
       Caption = '-'
     end
-    object NotificationOptions1: TMenuItem
+    object NotificationOptions1: TTntMenuItem
       Caption = 'Notification Options ...'
       OnClick = NotificationOptions1Click
     end
-    object mnuWordwrap: TMenuItem
+    object mnuWordwrap: TTntMenuItem
       Caption = 'Word Wrap Input'
       OnClick = mnuWordwrapClick
     end
-    object mnuOnTop: TMenuItem
+    object mnuOnTop: TTntMenuItem
       Caption = 'Always on Top'
       OnClick = mnuOnTopClick
     end
-    object popClose: TMenuItem
+    object popClose: TTntMenuItem
       Caption = 'Close Room'
       OnClick = popCloseClick
     end
-    object N6: TMenuItem
+    object N6: TTntMenuItem
       Caption = '-'
     end
   end
-  object popRoomRoster: TPopupMenu
+  object popRoomRoster: TTntPopupMenu
     AutoHotkeys = maManual
     OnPopup = popRoomRosterPopup
     Left = 48
     Top = 152
-    object popRosterMsg: TMenuItem
+    object popRosterMsg: TTntMenuItem
       Caption = 'Message'
       OnClick = popRosterMsgClick
     end
-    object popRosterChat: TMenuItem
+    object popRosterChat: TTntMenuItem
       Caption = 'Chat'
       OnClick = lstRosterDblClick
     end
-    object popRosterSendJID: TMenuItem
+    object popRosterSendJID: TTntMenuItem
       Caption = 'Send my JID'
       OnClick = popRosterSendJIDClick
     end
-    object popRosterBlock: TMenuItem
+    object popRosterBlock: TTntMenuItem
       Caption = 'Block'
       OnClick = popRosterBlockClick
     end
-    object N3: TMenuItem
+    object N3: TTntMenuItem
       Caption = '-'
     end
-    object popKick: TMenuItem
+    object popKick: TTntMenuItem
       Caption = 'Kick'
       Enabled = False
       OnClick = popKickClick
     end
-    object popBan: TMenuItem
+    object popBan: TTntMenuItem
       Caption = 'Ban'
       Enabled = False
       OnClick = popKickClick
     end
-    object popVoice: TMenuItem
+    object popVoice: TTntMenuItem
       Caption = 'Toggle Voice'
       Enabled = False
       OnClick = popVoiceClick
     end
-    object popModerator: TMenuItem
+    object popModerator: TTntMenuItem
       Caption = 'Make Moderator'
       Enabled = False
       OnClick = popKickClick
     end
-    object popAdministrator: TMenuItem
+    object popAdministrator: TTntMenuItem
       Caption = 'Make Administrator'
       Enabled = False
       OnClick = popKickClick
