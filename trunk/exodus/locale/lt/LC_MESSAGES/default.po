@@ -920,16 +920,6 @@ msgstr "Jabber adresas:   "
 msgid "Node Identifier:"
 msgstr "Mazgo identifikatorius:"
 
-#. frmBrowse..pnlJid..pnlJidID..Caption
-#: Browser.dfm:301
-msgid "Jabber Address:   "
-msgstr "Jabber adresas:   "
-
-#. frmBrowse..pnlNode..pnlNodeID..Caption
-#: Browser.dfm:334
-msgid "Node Identifier:"
-msgstr "Mazgo identifikatorius:"
-
 #. frmBrowse..popViewStyle..Details1..Caption
 #: Browser.dfm:3836
 #: Browser.dfm:3834
@@ -6219,9 +6209,6 @@ msgstr "Kam išsiųsti įrašą..."
 msgid "Send Visible"
 msgstr "Rodytis"
 
-msgid "Send Visible"
-msgstr "&Matytis"
-
 #. frmRosterWindow..popRoster..popPresence..popSendInvisible..Caption
 #: RosterWindow.dfm:356
 msgid "Send Invisible"
@@ -6256,11 +6243,6 @@ msgstr "Rodyti mano būseną"
 #: RosterWindow.dfm:606
 msgid "Visible"
 msgstr "Matoma(s)"
-
-#. frmRosterWindow..popGroup..popGrpPresence..popGrpAvailable..Caption
-#: RosterWindow.dfm:606
-msgid "Visible"
-msgstr "&Matoma(s)"
 
 #. frmRosterWindow..popGroup..popGrpPresence..popGrpInvisible..Caption
 #: RosterWindow.dfm:610
@@ -6698,11 +6680,6 @@ msgstr "Tikra žinutė buvo:"
 #: ExEvents.pas:468
 msgid "New chat conversation"
 msgstr "Naujas pokalbis"
-
-#. check for x:oob URL's
-#: ExEvents.pas:491
-msgid "This message contains a URL: "
-msgstr "Šioje žinutėje yra nuoroda:"
 
 #. We got an exception during signal dispatching.
 #: ExResponders.pas:210
