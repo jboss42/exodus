@@ -338,88 +338,21 @@ object frmRosterWindow: TfrmRosterWindow
     object Online1: TMenuItem
       Caption = 'Available'
       ImageIndex = 1
-      OnClick = presAvailableClick
-      object Available1: TMenuItem
-        Tag = -1
-        Caption = 'Available'
-        OnClick = presAvailableClick
-      end
-      object presChat: TMenuItem
-        Tag = -1
-        Caption = 'I Want to Chat'
-        ImageIndex = 4
-        OnClick = presAvailableClick
-      end
     end
     object presAway: TMenuItem
       Tag = 2
       Caption = 'Away'
       ImageIndex = 2
-      object Away1: TMenuItem
-        Tag = -1
-        Caption = 'Away'
-        GroupIndex = 1
-      end
-      object Lunch1: TMenuItem
-        Tag = -1
-        Caption = 'Lunch'
-        GroupIndex = 1
-      end
-      object Meeting1: TMenuItem
-        Tag = -1
-        Caption = 'Meeting'
-        GroupIndex = 1
-      end
-      object Bank1: TMenuItem
-        Tag = -1
-        Caption = 'Bank'
-        GroupIndex = 1
-      end
     end
     object presXA: TMenuItem
       Tag = 3
       Caption = 'Xtended Away'
       ImageIndex = 10
-      object ExtendedAway1: TMenuItem
-        Tag = -1
-        Caption = 'Extended Away'
-        GroupIndex = 2
-      end
-      object GoneHome1: TMenuItem
-        Tag = -1
-        Caption = 'Gone Home'
-        GroupIndex = 2
-      end
-      object GonetoWork1: TMenuItem
-        Tag = -1
-        Caption = 'Gone to Work'
-        GroupIndex = 2
-      end
-      object Sleeping1: TMenuItem
-        Tag = -1
-        Caption = 'Sleeping'
-        GroupIndex = 2
-      end
     end
     object presDND: TMenuItem
       Tag = 4
       Caption = 'Do Not Disturb'
       ImageIndex = 3
-      object Busy1: TMenuItem
-        Tag = -1
-        Caption = 'Busy'
-        GroupIndex = 3
-      end
-      object Working1: TMenuItem
-        Tag = -1
-        Caption = 'Working'
-        GroupIndex = 3
-      end
-      object Mad1: TMenuItem
-        Tag = -1
-        Caption = 'Mad'
-        GroupIndex = 3
-      end
     end
     object N8: TMenuItem
       Caption = '-'

@@ -350,102 +350,21 @@ object frmExodus: TfrmExodus
         object presOnline: TMenuItem
           Caption = 'Available'
           ImageIndex = 1
-          object Available1: TMenuItem
-            Tag = -1
-            Caption = 'Available'
-            ShortCut = 16463
-            OnClick = presOnlineClick
-          end
-          object presChat: TMenuItem
-            Tag = -1
-            Caption = 'Free for Chat'
-            ImageIndex = 4
-            OnClick = presOnlineClick
-          end
         end
         object presAway: TMenuItem
           Tag = 2
           Caption = 'Away'
           ImageIndex = 2
-          object Away2: TMenuItem
-            Tag = -1
-            Caption = 'Away'
-            GroupIndex = 1
-            ShortCut = 16449
-            OnClick = presOnlineClick
-          end
-          object Lunch3: TMenuItem
-            Tag = -1
-            Caption = 'Lunch'
-            GroupIndex = 1
-            ShortCut = 16460
-            OnClick = presOnlineClick
-          end
-          object Meeting1: TMenuItem
-            Tag = -1
-            Caption = 'Meeting'
-            GroupIndex = 1
-            ShortCut = 16461
-            OnClick = presOnlineClick
-          end
-          object Bank1: TMenuItem
-            Tag = -1
-            Caption = 'Bank'
-            GroupIndex = 1
-            OnClick = presOnlineClick
-          end
         end
         object presXA: TMenuItem
           Tag = 3
           Caption = 'Xtended Away'
           ImageIndex = 10
-          object ExtendedAway1: TMenuItem
-            Tag = -1
-            Caption = 'Extended Away'
-            GroupIndex = 2
-            OnClick = presOnlineClick
-          end
-          object GoneHome1: TMenuItem
-            Tag = -1
-            Caption = 'Gone Home'
-            GroupIndex = 2
-            OnClick = presOnlineClick
-          end
-          object GonetoWork1: TMenuItem
-            Tag = -1
-            Caption = 'Gone to Work'
-            GroupIndex = 2
-            OnClick = presOnlineClick
-          end
-          object Sleeping1: TMenuItem
-            Tag = -1
-            Caption = 'Sleeping'
-            GroupIndex = 2
-            OnClick = presOnlineClick
-          end
         end
         object presDND: TMenuItem
           Tag = 4
           Caption = 'Do Not Disturb'
           ImageIndex = 3
-          object Busy1: TMenuItem
-            Tag = -1
-            Caption = 'Busy'
-            GroupIndex = 3
-            OnClick = presOnlineClick
-          end
-          object Working1: TMenuItem
-            Tag = -1
-            Caption = 'Working'
-            GroupIndex = 3
-            OnClick = presOnlineClick
-          end
-          object Mad1: TMenuItem
-            Tag = -1
-            Caption = 'Mad'
-            GroupIndex = 3
-            OnClick = presOnlineClick
-          end
         end
         object N11: TMenuItem
           Caption = '-'
@@ -2710,97 +2629,21 @@ object frmExodus: TfrmExodus
       object Available2: TMenuItem
         Caption = 'Available'
         ImageIndex = 1
-        object Available3: TMenuItem
-          Tag = -1
-          Caption = 'Available'
-        end
-        object FreeforChat1: TMenuItem
-          Tag = -1
-          Caption = 'Free for Chat'
-          ImageIndex = 4
-          OnClick = presOnlineClick
-        end
       end
       object Away1: TMenuItem
         Tag = 2
         Caption = 'Away'
         ImageIndex = 2
-        object Away3: TMenuItem
-          Tag = -1
-          Caption = 'Away'
-          GroupIndex = 1
-          OnClick = presOnlineClick
-        end
-        object Lunch1: TMenuItem
-          Tag = -1
-          Caption = 'Lunch'
-          GroupIndex = 1
-          OnClick = presOnlineClick
-        end
-        object Meeting2: TMenuItem
-          Tag = -1
-          Caption = 'Meeting'
-          GroupIndex = 1
-          OnClick = presOnlineClick
-        end
-        object Bank2: TMenuItem
-          Tag = -1
-          Caption = 'Bank'
-          GroupIndex = 1
-          OnClick = presOnlineClick
-        end
       end
       object XtendedAway1: TMenuItem
         Tag = 3
         Caption = 'Xtended Away'
         ImageIndex = 10
-        object ExtendedAway2: TMenuItem
-          Tag = -1
-          Caption = 'Extended Away'
-          GroupIndex = 2
-          OnClick = presOnlineClick
-        end
-        object GoneHome2: TMenuItem
-          Tag = -1
-          Caption = 'Gone Home'
-          GroupIndex = 2
-          OnClick = presOnlineClick
-        end
-        object GonetoWork2: TMenuItem
-          Tag = -1
-          Caption = 'Gone to Work'
-          GroupIndex = 2
-          OnClick = presOnlineClick
-        end
-        object Sleeping2: TMenuItem
-          Tag = -1
-          Caption = 'Sleeping'
-          GroupIndex = 2
-          OnClick = presOnlineClick
-        end
       end
       object DoNotDisturb1: TMenuItem
         Tag = 4
         Caption = 'Do Not Disturb'
         ImageIndex = 3
-        object Busy2: TMenuItem
-          Tag = -1
-          Caption = 'Busy'
-          GroupIndex = 3
-          OnClick = presOnlineClick
-        end
-        object Working2: TMenuItem
-          Tag = -1
-          Caption = 'Working'
-          GroupIndex = 3
-          OnClick = presOnlineClick
-        end
-        object Mad2: TMenuItem
-          Tag = -1
-          Caption = 'Mad'
-          GroupIndex = 3
-          OnClick = presOnlineClick
-        end
       end
       object N5: TMenuItem
         Caption = '-'

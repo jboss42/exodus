@@ -78,19 +78,8 @@ type
     Properties2: TMenuItem;
     MessageHistory2: TMenuItem;
     presAway: TMenuItem;
-    Lunch3: TMenuItem;
-    Bank1: TMenuItem;
     presXA: TMenuItem;
-    GoneHome1: TMenuItem;
-    GonetoWork1: TMenuItem;
-    Sleeping1: TMenuItem;
     presDND: TMenuItem;
-    presChat: TMenuItem;
-    Away2: TMenuItem;
-    ExtendedAway1: TMenuItem;
-    Busy1: TMenuItem;
-    Working1: TMenuItem;
-    Mad1: TMenuItem;
     N11: TMenuItem;
     N12: TMenuItem;
     ShowXML1: TMenuItem;
@@ -122,7 +111,6 @@ type
     View1: TMenuItem;
     ImageList1: TImageList;
     timAutoAway: TTimer;
-    Meeting1: TMenuItem;
     popTabs: TPopupMenu;
     popCloseTab: TMenuItem;
     popFloatTab: TMenuItem;
@@ -135,20 +123,8 @@ type
     trayPresence: TMenuItem;
     N5: TMenuItem;
     DoNotDisturb1: TMenuItem;
-    Mad2: TMenuItem;
-    Working2: TMenuItem;
-    Busy2: TMenuItem;
     XtendedAway1: TMenuItem;
-    Sleeping2: TMenuItem;
-    GonetoWork2: TMenuItem;
-    GoneHome2: TMenuItem;
-    ExtendedAway2: TMenuItem;
     Away1: TMenuItem;
-    Bank2: TMenuItem;
-    Meeting2: TMenuItem;
-    Lunch1: TMenuItem;
-    Away3: TMenuItem;
-    FreeforChat1: TMenuItem;
     Custom2: TMenuItem;
     Custom3: TMenuItem;
     pnlRight: TPanel;
@@ -178,9 +154,7 @@ type
     N3: TMenuItem;
     XMPPAction: TDdeServerConv;
     presOnline: TMenuItem;
-    Available1: TMenuItem;
     Available2: TMenuItem;
-    Available3: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -1837,10 +1811,10 @@ begin
     m := TMenuItem(Sender);
     case m.GroupIndex of
     0: Show := '';
-    1: Show := 'chat';
-    2: Show := 'away';
-    3: Show := 'xa';
-    4: Show := 'dnd';
+    5: Show := 'chat';
+    1: Show := 'away';
+    2: Show := 'xa';
+    3: Show := 'dnd';
     end;
 
     Status := m.Caption;

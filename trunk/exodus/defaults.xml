@@ -123,4 +123,88 @@
     <xa_time>30</xa_time>
     <roster_default>Friends</roster_default>
     <xfer_port>5280</xfer_port>
+
+    <!-- default custom presence stuff -->
+    <presence name='Available'>
+    	<show/>
+        <status>Available</status>
+        <priority/>
+        <hotkey>Ctrl+O</hotkey>
+    </presence>
+    <presence name='Free for Chat'>
+    	<show>chat</show>
+        <status>Free for Chat</status>
+        <priority/>
+        <hotkey/>
+    </presence>
+
+    <presence name='Away'>
+    	<show>away</show>
+        <status>Away</status>
+        <priority/>
+        <hotkey>Ctrl+A</hotkey>
+    </presence>
+    <presence name='Lunch'>
+    	<show>away</show>
+        <status>Lunch</status>
+        <priority/>
+        <hotkey>Ctrl+L</hotkey>
+    </presence>
+    <presence name='Meeting'>
+    	<show>away</show>
+        <status>Meeting</status>
+        <priority/>
+        <hotkey>Ctrl+M</hotkey>
+    </presence>
+    <presence name='Bank'>
+    	<show>away</show>
+        <status>Bank</status>
+        <priority/>
+        <hotkey/>
+    </presence>
+
+    <presence name='Extended Away'>
+    	<show>xa</show>
+        <status>Extended Away</status>
+        <priority/>
+        <hotkey/>
+    </presence>
+    <presence name='Gone Home'>
+    	<show>xa</show>
+        <status>Gone Home</status>
+        <priority/>
+        <hotkey/>
+    </presence>
+    <presence name='Gone to Work'>
+    	<show>xa</show>
+        <status>Gone to Work</status>
+        <priority/>
+        <hotkey/>
+    </presence>
+    <presence name='Sleeping'>
+    	<show>xa</show>
+        <status>Sleeping</status>
+        <priority/>
+        <hotkey/>
+    </presence>
+
+    <presence name='Busy'>
+    	<show>dnd</show>
+        <status>Busy</status>
+        <priority/>
+        <hotkey/>
+    </presence>
+    <presence name='Working'>
+    	<show>dnd</show>
+        <status>Working</status>
+        <priority/>
+        <hotkey/>
+    </presence>
+    <presence name='Mad'>
+    	<show>dnd</show>
+        <status>Mad</status>
+        <priority/>
+        <hotkey/>
+    </presence>
+
 </brand>
