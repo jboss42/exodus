@@ -244,6 +244,7 @@ var
 begin
     // callback when we get the fields back
     cur_state := 'search';
+    cur_iq := nil;
     lblWait.Visible := false;
     aniWait.Visible := false;
     aniWait.Active := false;
@@ -308,6 +309,7 @@ var
     col: TListColumn;
 begin
     // callback when we get our search results back
+    cur_iq := nil;
     lblWait.Visible := false;
     aniWait.Visible := false;
     aniWait.Active := false;
