@@ -85,7 +85,13 @@ var
     i: integer;
     p: TJabberProfile;
 begin
+    if (frmLogin <> nil) then begin
+        frmLogin.Show();
+        exit;
+    end;
+
     l := TfrmLogin.Create(Application);
+    frmLogin := l;
     l.cboProfiles.Items.Assign(MainSession.Prefs.Profiles);
     i := MainSession.Prefs.getInt('profile_active');
     if (i < 0) then i := 0;
@@ -106,7 +112,7 @@ begin
         MainSession.Prefs.setInt('profile_active', i);
         MainSession.Prefs.SaveProfiles();
 
-        // Active this profile, and fire it UP!
+        // Activate this profile, and fire it UP!
         MainSession.ActivateProfile(i);
         MainSession.Invisible := l.chkInvisible.Checked;
         l.Close();
@@ -122,6 +128,7 @@ end;
 procedure TfrmLogin.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     MainSession.Prefs.SavePosition(Self);
+    frmLogin := nil;
     Action := caFree;
 end;
 
