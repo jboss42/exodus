@@ -164,7 +164,8 @@ var
 begin
     if ( Key = #27 ) then
         Close()
-    else if ((Key = #127) and (HiWord(GetKeyState(VK_CONTROL)) <> 0)) then begin
+    else if ((Key = #127) and
+             (HiWord(DWORD(GetKeyState(VK_CONTROL))) <> 0)) then begin
         Key := #0;
         // delete the last word.
         // JJH: yes, this is at least slight overkill, but it was bothering me.
