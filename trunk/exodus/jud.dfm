@@ -51,7 +51,7 @@ inherited frmJud: TfrmJud
   end
   inherited Tabs: TPageControl
     Width = 409
-    ActivePage = TabFields
+    ActivePage = TabSheet2
     inherited TabSheet1: TTabSheet
       object lblSelect: TTntLabel
         Left = 0
@@ -122,9 +122,6 @@ inherited frmJud: TfrmJud
           inherited ScrollBox1: TScrollBox
             Width = 391
             Height = 202
-            inherited xGrid: TTntStringGrid
-              Width = 391
-            end
           end
         end
       end
@@ -173,7 +170,7 @@ inherited frmJud: TfrmJud
           Width = 228
           Height = 21
           Style = csDropDownList
-          ItemHeight = 13
+          ItemHeight = 0
           Sorted = True
           TabOrder = 0
         end
