@@ -26,7 +26,7 @@ interface
 
 uses
     XMLParser, XMLTag, 
-    ExodusCOM_TLB, ComObj, ActiveX, JabberStats_TLB, StdVcl;
+    ExodusCOM_TLB, ComObj, ActiveX, ExJabberStats_TLB, StdVcl;
 
 type
   TStatsPlugin = class(TAutoObject, IExodusPlugin)
