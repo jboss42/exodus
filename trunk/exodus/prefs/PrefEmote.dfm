@@ -3,18 +3,18 @@ inherited frmPrefEmote: TfrmPrefEmote
   Top = 185
   Caption = 'frmPrefEmote'
   ClientHeight = 326
-  ClientWidth = 312
+  ClientWidth = 338
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   inherited pnlHeader: TTntPanel
-    Width = 312
+    Width = 338
     Caption = 'Emoticon Options'
   end
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 312
+    Width = 338
     Height = 26
     Align = alTop
     BevelOuter = bvNone
@@ -31,7 +31,7 @@ inherited frmPrefEmote: TfrmPrefEmote
   object pageEmotes: TTntPageControl
     Left = 0
     Top = 52
-    Width = 312
+    Width = 338
     Height = 274
     ActivePage = TntTabSheet1
     Align = alClient
@@ -41,7 +41,7 @@ inherited frmPrefEmote: TfrmPrefEmote
       object pnlCustomPresButtons: TPanel
         Left = 0
         Top = 212
-        Width = 304
+        Width = 330
         Height = 34
         Align = alBottom
         BevelOuter = bvNone
@@ -49,34 +49,34 @@ inherited frmPrefEmote: TfrmPrefEmote
         object btnEmoteAdd: TTntButton
           Left = 4
           Top = 4
-          Width = 60
+          Width = 75
           Height = 25
           Caption = 'Add'
           TabOrder = 0
           OnClick = btnEmoteAddClick
         end
         object btnEmoteRemove: TTntButton
-          Left = 68
+          Left = 84
           Top = 4
-          Width = 60
+          Width = 75
           Height = 25
           Caption = 'Remove'
           TabOrder = 1
           OnClick = btnEmoteRemoveClick
         end
         object btnEmoteClear: TTntButton
-          Left = 132
+          Left = 164
           Top = 4
-          Width = 60
+          Width = 75
           Height = 25
           Caption = 'Clear'
           TabOrder = 2
           OnClick = btnEmoteClearClick
         end
         object btnEmoteDefault: TTntButton
-          Left = 196
+          Left = 245
           Top = 4
-          Width = 60
+          Width = 75
           Height = 25
           Caption = 'Defaults'
           TabOrder = 3
@@ -86,7 +86,7 @@ inherited frmPrefEmote: TfrmPrefEmote
       object lstEmotes: TTntListBox
         Left = 0
         Top = 0
-        Width = 304
+        Width = 330
         Height = 212
         Align = alClient
         ItemHeight = 13
@@ -98,7 +98,7 @@ inherited frmPrefEmote: TfrmPrefEmote
       object Panel2: TPanel
         Left = 0
         Top = 158
-        Width = 304
+        Width = 330
         Height = 34
         Align = alBottom
         BevelOuter = bvNone
@@ -106,25 +106,25 @@ inherited frmPrefEmote: TfrmPrefEmote
         object btnCustomEmoteAdd: TTntButton
           Left = 4
           Top = 4
-          Width = 60
+          Width = 75
           Height = 25
           Caption = 'Add ...'
           TabOrder = 0
           OnClick = btnCustomEmoteAddClick
         end
         object btnCustomEmoteRemove: TTntButton
-          Left = 132
+          Left = 164
           Top = 4
-          Width = 60
+          Width = 75
           Height = 25
           Caption = 'Remove'
           TabOrder = 1
           OnClick = btnCustomEmoteRemoveClick
         end
         object btnCustomEmoteEdit: TTntButton
-          Left = 68
+          Left = 84
           Top = 4
-          Width = 60
+          Width = 75
           Height = 25
           Caption = 'Edit ...'
           TabOrder = 2
@@ -134,7 +134,7 @@ inherited frmPrefEmote: TfrmPrefEmote
       object Panel3: TPanel
         Left = 0
         Top = 192
-        Width = 304
+        Width = 330
         Height = 54
         Align = alBottom
         BevelOuter = bvNone
@@ -166,7 +166,7 @@ inherited frmPrefEmote: TfrmPrefEmote
       object lstCustomEmotes: TTntListView
         Left = 0
         Top = 0
-        Width = 304
+        Width = 330
         Height = 158
         Align = alClient
         Columns = <>
