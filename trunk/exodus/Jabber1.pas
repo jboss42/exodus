@@ -333,6 +333,7 @@ type
     // Window message handlers
     procedure CreateParams(var Params: TCreateParams); override;
     procedure WMSysCommand(var msg: TWmSysCommand); message WM_SYSCOMMAND;
+    procedure WMShowWindow(var msg: TWMShowWindow); message WM_SHOWWINDOW;
     procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
     procedure WMTray(var msg: TMessage); message WM_TRAY;
     procedure WMQueryEndSession(var msg: TMessage); message WM_QUERYENDSESSION;
@@ -565,6 +566,12 @@ begin
     end
     else if (Self.WindowState = wsMaximized) then
         ShowWindow(Handle, SW_RESTORE)
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.WMShowWindow(var msg: TWMShowWindow);
+begin
+    // xxx Windows-M is supposed to use this to hide all windows
 end;
 
 {---------------------------------------}

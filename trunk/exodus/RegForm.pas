@@ -54,6 +54,7 @@ type
     cur_stage: RegFormStage;
     cur_key: Widestring;
     pres_cb: integer;
+    fld_cnt: integer;
     function doField(fld: string): TfrmField;
   published
     procedure GetCallback(event: string; tag: TXMLTag);
@@ -213,6 +214,7 @@ begin
             else begin
                 // Normal non-xdata reg form
                 flds := ag_tag.ChildTags();
+                fld_cnt := 0;
                 for i := 0 to flds.count - 1 do begin
                     f := flds[i];
                     if (f.Name = 'instructions') then
@@ -261,7 +263,8 @@ begin
     frm := TfrmField.Create(formBox);
     with frm do begin
         Parent := formBox;
-        Name := 'fld_' + fld;
+        fld_cnt := fld_cnt + 1;
+        Name := 'fld_' + fld + IntToStr(fld_cnt);
         lblPrompt.Caption := fld;
         if Lowercase(fld) = 'password' then
             txtData.PasswordChar := '*';
