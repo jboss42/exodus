@@ -138,12 +138,13 @@ Section "!${MUI_PRODUCT} (Required)" SEC_Exodus
 	; register file associations.  TODO: figure this out for real, and
 	; remove these semi-bogus ones.
 	WriteRegStr HKCR .xmpp "" XMPPfile
-	WriteRegStr HKCR .xmpp "ContentType" "application/xmpp"
+	WriteRegStr HKCR .xmpp "Content Type" "application/xmpp"
 	WriteRegStr HKCR XMPPfile "" "eXtensible Messaging and Presence Protocol"
-	WriteRegDword HKCR XMPPfile "EditFlags" 00000000
-	WriteRegDword HKCR XMPPfile "BrowserFlags" 8
+	WriteRegDword HKCR XMPPfile "EditFlags" 0x10000
+	WriteRegDword HKCR XMPPfile "BrowserFlags" 0x8
 	WriteRegStr HKCR "XMPPfile\shell" "" "Open"
 	WriteRegStr HKCR "XMPPfile\shell\Open\command" "" '"$INSTDIR\Exodus.exe" -o "%1"'
+	WriteRegStr HKCR "MIME\Database\Content Type\application/xmpp" "Extension" ".xmpp"
 
         StrCpy $0 0
   outer_loop:
