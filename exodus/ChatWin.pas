@@ -21,7 +21,7 @@ unit ChatWin;
 interface
 
 uses
-    Chat, ChatController, JabberID, XMLTag, IQ,
+    Chat, ChatController, JabberID, XMLTag, IQ, Unicode, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2,
     RichEdit, TntStdCtrls, Buttons;
@@ -97,6 +97,7 @@ type
     _thread : string;       // thread for conversation
     _pres_img: integer;     // current index of the presence image
     _msg_out: boolean;
+    _res_menus: TWidestringlist;
 
     // Stuff for composing events
     _flash_ticks: integer;
@@ -113,7 +114,7 @@ type
     _redock: boolean;
 
     _cur_ver: TJabberIQ;    // pending events
-    _cur_time: TJabberIQ;  
+    _cur_time: TJabberIQ;
     _cur_last: TJabberIQ;
 
     _mynick: Widestring;
@@ -181,7 +182,7 @@ uses
     JabberConst, ExSession, ExUtils, Presence, PrefController, Room,
     XferManager, RosterAdd, RiserWindow, Notify,
     Jabber1, Profile, MsgDisplay,
-    JabberMsg, NodeItem, Roster, Session, Unicode, XMLUtils,
+    JabberMsg, NodeItem, Roster, Session, XMLUtils,
     ShellAPI, RosterWindow, Emoticons;
 
 {---------------------------------------}
@@ -348,6 +349,7 @@ begin
     _jid := nil;
     _destroying := false;
     _redock := false;
+    _res_menus := TWidestringlist.Create();
 
     _notify[0] := MainSession.Prefs.getInt('notify_chatactivity');
 
@@ -393,16 +395,31 @@ end;
 {---------------------------------------}
 procedure TfrmChat.SetupResources();
 var
+    i: integer;
     p: TJabberPres;
     m: TMenuItem;
 begin
+    // Make sure we have menu items for all resources
     p := MainSession.ppdb.FindPres(_jid.jid, '');
     while (p <> nil) do begin
-        m := TMenuItem.Create(popContact);
-        m.Caption := p.fromJID.resource;
-        m.OnClick := popResourcesClick;
-        popResources.Add(m);
+        i := _res_menus.IndexOf(p.fromJid.Resource);
+        if (i = -1) then begin
+            m := TMenuItem.Create(popContact);
+            m.Caption := p.fromJID.resource;
+            m.OnClick := popResourcesClick;
+            popResources.Add(m);
+            _res_menus.AddObject(p.fromJid.resource, m);
+        end;
         p := MainSession.ppdb.NextPres(p);
+    end;
+
+    // Make sure we purge old ones..
+    for i := _res_menus.Count - 1 downto 0 do begin
+        p := MainSession.ppdb.FindPres(_jid.jid, _res_menus[i]);
+        if (p = nil) then begin
+            TMenuItem(_res_menus.Objects[i]).Free();
+            _res_menus.Delete(i);
+        end;
     end;
 end;
 
@@ -750,8 +767,10 @@ end;
 procedure TfrmChat.PresCallback(event: string; tag: TXMLTag);
 begin
     // display some presence packet
-    if Event = 'xml' then
+    if (event = 'xml') then begin
         showPres(tag);
+        SetupResources();
+    end;
 end;
 
 {---------------------------------------}
@@ -1012,6 +1031,9 @@ begin
 
     if (_jid <> nil) then
         FreeAndNil(_jid);
+
+    _res_menus.Clear();
+    _res_menus.Free();
 
     DragAcceptFiles(Handle, false);
 
