@@ -68,6 +68,7 @@ type
 
         // other misc. flags
         _paused: boolean;
+        _resuming: boolean;
         _pauseQueue: TQueue;
         _id: longint;
         _cb_id: longint;
@@ -176,6 +177,7 @@ type
         property StreamID: Widestring read _stream_id;
         property Dispatcher: TSignalDispatcher read _dispatcher;
         property IsPaused: boolean read _paused;
+        property IsResuming: boolean read _resuming;
         property Invisible: boolean read _invisible write _invisible;
         property Active: boolean read GetActive;
         property Profile: TJabberProfile read _profile;
@@ -688,6 +690,7 @@ var
     sig: TSignalEvent;
 begin
     // playback the stuff in the queue
+    _resuming := true;
     _paused := false;
 
     // WOAH! Make sure things are played back or cleared when we get disconnected.
@@ -697,6 +700,7 @@ begin
         sig(q.event, q.tag);
         q.Free;
     end;
+    _resuming := false;
 end;
 
 {---------------------------------------}
