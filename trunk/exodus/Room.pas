@@ -1014,10 +1014,15 @@ end;
 
 {---------------------------------------}
 procedure TfrmRoom.configCallback(event: string; Tag: TXMLTag);
+//var
+//    x: TXMLTag;
 begin
     // We are configuring the room
-    if ((event = 'xml') and (tag.GetAttribute('type') = 'result')) then
+    if ((event = 'xml') and (tag.GetAttribute('type') = 'result')) then begin
+        //x := tag.QueryXPTag('//x[xmlns="jabber:x:data"]');
+        //if (x = nil) then exit;
         ShowXData(tag);
+    end;
 end;
 
 {---------------------------------------}
