@@ -340,6 +340,9 @@ type
     procedure SessionCallback(event: string; tag: TXMLTag);
     procedure ChangePasswordCallback(event: string; tag: TXMLTag);
 
+    // This is only used for testing..
+    procedure BadCallback(event: string; tag: TXMLTag);
+
     procedure restoreToolbar;
     procedure restoreAlpha;
     procedure restoreMenus(enable: boolean);
@@ -695,7 +698,6 @@ begin
     e := Exception(ExceptObj);
     if (e is EConvertError) then exit;
     if (e is EIdSocketError) then exit;
-
 end;
 {$endif}
 
@@ -2439,6 +2441,14 @@ begin
     }
 
     //FileReceive('pgmillard@jabber.org', 'http://exodus.jabberstudio.org/indy_openssl096g.zip', 'SSL Zip Files');
+    MainSession.RegisterCallback(BadCallback, '/packet/message/x[@xmlns="exodus:puke"]');
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.BadCallback(event: string; tag: TXMLTag);
+begin
+    // Cause an AV
+    PInteger(nil)^ := 0;
 end;
 
 {---------------------------------------}
