@@ -218,6 +218,7 @@ type
     btnBrowsePluginPath: TButton;
     lstPlugins: TTntListView;
     lblPluginScan: TLabel;
+    chkBusy: TCheckBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -437,6 +438,7 @@ begin
         chkRosterAlpha.Checked := getBool('roster_alpha');
         chkToastAlpha.Checked := getBool('toast_alpha');
         chkSnap.Checked := getBool('snap_on');
+        chkBusy.Checked := getBool('warn_closebusy');
         chkRosterAlphaClick(Self);
         if chkRosterAlpha.Checked then begin
             trkRosterAlpha.Position := getInt('roster_alpha_val');
@@ -736,6 +738,7 @@ begin
         setBool('toast_alpha', chkToastAlpha.Checked);
         setInt('toast_alpha_val', trkToastAlpha.Position);
         setBool('snap_on', chkSnap.Checked);
+        setBool('warn_closebusy', chkBusy.Checked);
         setInt('edge_snap', spnSnap.Position);
         setInt('chat_memory', spnChatMemory.Position);
 
