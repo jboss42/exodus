@@ -60,7 +60,7 @@ implementation
 
 {$R *.dfm}
 uses
-    JabberConst, Roster, XMLTag, IQ, Session, S10n;
+    ExUtils, JabberConst, Roster, XMLTag, IQ, Session, S10n;
 
 {---------------------------------------}
 procedure RemoveGroup(grp: string; contacts: TList = nil);
@@ -83,6 +83,7 @@ begin
             Caption := Format(sRemoveGroup, [grp]);
             cboNewGroup.Items.Assign(MainSession.Roster.GrpList);
             cboNewGroup.Items.Delete(cboNewGroup.Items.IndexOf(grp));
+            removeSpecialGroups(cboNewGroup.Items);
             cboNewGroup.ItemIndex := 0;
         end;
         cur_grp := grp;

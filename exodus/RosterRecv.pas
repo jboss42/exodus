@@ -92,6 +92,7 @@ begin
 
     // Fill up the groups drop down
     cboGroup.Items.Assign(MainSession.Roster.GrpList);
+    removeSpecialGroups(cboGroup.Items);
     cboGroup.ItemIndex := 0;
 end;
 

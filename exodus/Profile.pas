@@ -134,7 +134,7 @@ implementation
 
 {$R *.DFM}
 uses
-    JabberConst, XMLVCard,
+    JabberConst, XMLVCard, ExUtils, 
     Presence, Roster, JabberID, Session, Jabber1;
 
 {---------------------------------------}
@@ -154,6 +154,7 @@ begin
 
     with f do begin
         GrpListBox.Items.Assign(MainSession.roster.GrpList);
+        removeSpecialGroups(GrpListBox.Items);
         ResListBox.Items.Clear;
         optSubscrip.ItemIndex := 3;
         txtJID.Text := tmp_jid.jid;
