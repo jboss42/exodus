@@ -1533,14 +1533,16 @@ object frmAbout: TfrmAbout
       'e creation of Peter Millard  (mailto:me@pgmillard.com).  Checkou' +
       't the website at http://exodus.jabberstudio.org for more informa' +
       'tion. It is currently licensed under the GNU Public License (GPL' +
-      ') see www.gnu.org for more information on the GPL.\par'#13#10'\par'#13#10'SA' +
-      'X XML Parser by: Stefan Heymann\par'#13#10'Eschenweg 3, 72076 T\'#39'fcbin' +
-      'gen, GERMANY mailto:stefan@destructor.de, http://www.destructor.' +
-      'de\par'#13#10'\par'#13#10'Unicode library is Copyright (c) 1999, 2000 Mike L' +
-      'ischke (public@lischke-online.de) and Portions Copyright (c) 199' +
-      '9, 2000 Azret Botash (az).\par'#13#10'\par'#13#10'RichEdit98 and DBRichEdit9' +
-      '8 components for Delphi 3.0-4.0. version 1.40 Author Alexander O' +
-      'bukhov, Minsk, Belarus <alex@niiomr.belpak.minsk.by>\par'#13#10'\par'#13#10 +
-      '\par'#13#10'}'#13#10
+      ') see www.gnu.org for more information on the GPL.\par'#13#10'\par'#13#10'Po' +
+      'rtions of this software are Copyright (c) 1993 - 2002, Chad Z. H' +
+      'ower (Kudzu) and the Indy Pit Crew - http://www.nevrona.com/Indy' +
+      '/\par'#13#10'\par'#13#10'SAX XML Parser by: Stefan Heymann\par'#13#10'Eschenweg 3,' +
+      ' 72076 T\'#39'fcbingen, GERMANY mailto:stefan@destructor.de, http://' +
+      'www.destructor.de\par'#13#10'\par'#13#10'Unicode library is Copyright (c) 19' +
+      '99, 2000 Mike Lischke (public@lischke-online.de) and Portions Co' +
+      'pyright (c) 1999, 2000 Azret Botash (az).\par'#13#10'\par'#13#10'RichEdit98 ' +
+      'and DBRichEdit98 components for Delphi 3.0-4.0. version 1.40 Aut' +
+      'hor Alexander Obukhov, Minsk, Belarus <alex@niiomr.belpak.minsk.' +
+      'by>\par'#13#10'\par'#13#10'\par'#13#10'}'#13#10
   end
 end
