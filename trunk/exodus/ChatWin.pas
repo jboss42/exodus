@@ -59,6 +59,7 @@ type
     mnuAdd: TMenuItem;
     lblNick: TStaticText;
     imgStatus: TPaintBox;
+    timFlash: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnCloseClick(Sender: TObject);
@@ -74,6 +75,8 @@ type
     procedure mnuReturnsClick(Sender: TObject);
     procedure mnuSendFileClick(Sender: TObject);
     procedure imgStatusPaint(Sender: TObject);
+    procedure timFlashTimer(Sender: TObject);
+    procedure MsgOutChange(Sender: TObject);
   private
     { Private declarations }
     jid: string;            // jid of the person we are talking to
@@ -84,13 +87,24 @@ type
     _thread : string;       // thread for conversation
     _pres_img: integer;     // current index of the presence image
 
+    // Stuff for composing events
+    _flash_ticks: integer;
+    _cur_img: integer;
+    _old_img: integer;
+    _last_id: string;
+    _reply_id: string;
+    _check_event: boolean;
+    _send_composing: boolean;
+
     procedure MsgCallback(event: string; tag: TXMLTag);
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
 
     procedure ChangePresImage(show: string);
+    procedure ResetPresImage;
 
     function GetThread: String;
+
   protected
     {protected stuff}
   public
@@ -212,6 +226,9 @@ begin
     _scallback := -1;
     OtherNick := '';
     _pres_img := -1;
+    _check_event := false;
+    _last_id := '';
+    _reply_id := '';
 end;
 
 {---------------------------------------}
@@ -226,9 +243,12 @@ begin
 
     // setup the callbacks if we don't have them already
     if (_callback < 0) then begin
-        _callback := MainSession.RegisterCallback(MsgCallback, '/packet/message[@type="chat"][@from="' + cjid + '*"]');
-        _pcallback := MainSession.RegisterCallback(PresCallback, '/packet/presence[@from="' + cjid + '*"]');
+        _callback := MainSession.RegisterCallback(MsgCallback,
+            '/packet/message[@from="' + cjid + '*"]');
+        _pcallback := MainSession.RegisterCallback(PresCallback,
+            '/packet/presence[@from="' + cjid + '*"]');
         end;
+
     if (_scallback < 0) then
         _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
 
@@ -306,8 +326,8 @@ end;
 {---------------------------------------}
 procedure TfrmChat.MsgCallback(event: string; tag: TXMLTag);
 var
-    from_jid: string;
-    tagThread : TXMLTag;
+    msg_type, from_jid: string;
+    etag, tagThread : TXMLTag;
 begin
     // callback
     if MainSession.IsPaused then begin
@@ -316,18 +336,47 @@ begin
         end;
 
     if Event = 'xml' then begin
+        // check for a jabber:x:event tag
+        msg_type := tag.GetAttribute('type');
         from_jid := tag.getAttribute('from');
         if from_jid <> jid then
             SetJID(from_jid);
-        showMsg(tag);
-        end;
 
-    if _thread = '' then begin
-        //get thread from message
-        tagThread := tag.GetFirstTag('thread');
-        if tagThread <> nil then
-            _thread := tagThread.Data;
-       end;
+        if (msg_type = 'chat') then begin
+            // normal chat message
+            if (timFlash.Enabled) then
+                Self.ResetPresImage();
+            _check_event := false;
+
+            etag := tag.QueryXPTag('/message/*[@xmlns="jabber:x:event"]/composing');
+            _send_composing := (etag <> nil);
+            if (_send_composing) then
+                _reply_id := tag.GetAttribute('id');
+
+            showMsg(tag);
+            if _thread = '' then begin
+                //get thread from message
+                tagThread := tag.GetFirstTag('thread');
+                if tagThread <> nil then
+                    _thread := tagThread.Data;
+               end;
+            end
+        else if (_check_event) then begin
+            // check for composing events
+            etag := tag.QueryXPTag('/message/*[@xmlns="jabber:x:event"]');
+            if ((etag <> nil) and (etag.GetFirstTag('composing') <> nil))then begin
+                // they are composing a message
+                if (etag.GetBasicText('id') = _last_id) then begin
+                    _flash_ticks := 0;
+                    _old_img := _pres_img;
+                    _cur_img := _pres_img;
+                    timFlashTimer(Self);
+                    timFlash.Enabled := true;
+                    end;
+                end;
+            end;
+
+        end;
 end;
 
 {---------------------------------------}
@@ -377,6 +426,7 @@ end;
 procedure TfrmChat.SendMsg;
 var
     msg: TJabberMessage;
+    mtag: TXMLTag;
 begin
     // Send the actual message out
     if _thread = '' then begin   //get thread from message
@@ -388,8 +438,18 @@ begin
     msg.thread := _thread;
     msg.nick := MainSession.Username;
     msg.isMe := true;
-    msg.id := MainSession.generateID();
-    MainSession.SendTag(msg.Tag);
+
+    _last_id := MainSession.generateID();
+    _check_event := true;
+    msg.id := _last_id;
+
+    mtag := msg.Tag;
+    with mtag.AddTag('x') do begin
+        PutAttribute('xmlns', XMLNS_MSGEVENTS);
+        AddTag('composing');
+        end;
+
+    MainSession.SendTag(mtag);
     DisplayMsg(Msg, MsgList);
 
     // log the msg
@@ -594,6 +654,52 @@ begin
   inherited;
     // repaint
     frmRosterWindow.ImageList1.Draw(imgStatus.Canvas, 1, 1, _pres_img);
+end;
+
+{---------------------------------------}
+procedure TfrmChat.ResetPresImage;
+begin
+    timFlash.Enabled := false;
+    _pres_img := _old_img;
+    imgStatus.Repaint();
+end;
+
+{---------------------------------------}
+procedure TfrmChat.timFlashTimer(Sender: TObject);
+begin
+  inherited;
+    // Flash the presence image for 30 seconds..
+    inc(_flash_ticks);
+    if (_cur_img = _old_img) then
+        _cur_img := ico_Chat
+    else
+        _cur_img := _old_img;
+
+    _pres_img := _cur_img;
+    imgStatus.Repaint();
+
+    if (_flash_ticks >= 60) then resetPresImage();
+end;
+
+{---------------------------------------}
+procedure TfrmChat.MsgOutChange(Sender: TObject);
+var
+    c: TXMLTag;
+begin
+  inherited;
+    if (_send_composing) then begin
+        _send_composing := false;
+        c := TXMLTag.Create('message');
+        with c do begin
+            PutAttribute('to', jid);
+            with AddTag('x') do begin
+                PutAttribute('xmlns', XMLNS_MSGEVENTS);
+                AddTag('composing');
+                AddBasicTag('id', _reply_id);
+                end;
+            end;
+        MainSession.SendTag(c);
+        end;
 end;
 
 end.
