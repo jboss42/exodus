@@ -123,7 +123,7 @@ implementation
 {$R *.dfm}
 
 uses
-    Presence, PrefController,
+    Presence, PrefController, Room, 
     Transfer, RosterAdd, RiserWindow, Notify,
     Jabber1, Profile, ExUtils, MsgDisplay, IQ,
     JabberMsg, Roster, Session, XMLUtils,
@@ -157,8 +157,16 @@ begin
         tmp_jid := TJabberID.Create(sjid);
         if (chat_nick = '') then begin
             ritem := MainSession.roster.Find(sjid);
-            if (ritem = nil) then
-                OtherNick := tmp_jid.user
+            if (ritem = nil) then begin
+                // If not in our roster, check for a TC room
+                if (IsRoom(sjid)) then
+                    chat_nick := FindRoomNick(sjid + '/' + resource);
+                
+                if (chat_nick = '') then
+                    OtherNick := tmp_jid.user
+                else
+                    OtherNick := chat_nick;
+                end
             else
                 OtherNick := ritem.nickname;
             end

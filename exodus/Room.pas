@@ -98,6 +98,7 @@ type
     { Public declarations }
     mynick: string;
     procedure SendMsg; override;
+    function GetNick(rjid: string): string;
     property HintText: string read _hint_text;
   end;
 
@@ -116,11 +117,9 @@ resourcestring
     sRoomBMPrompt = 'Bookmark Room';
     sRoomNewBookmark = 'Enter bookmark name:';
 
-    
-
-
 function StartRoom(rjid, rnick: string): TfrmRoom;
 function IsRoom(rjid: string): boolean;
+function FindRoomNick(rjid: string): string;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -461,7 +460,7 @@ var
     re : bool;
 begin
     inherited;
-    
+
     // Create
     _callback := -1;
     _pcallback := -1;
@@ -665,6 +664,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmRoom.changeSubject(subj: string);
 var
     msg: TJabberMessage;
@@ -729,6 +729,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmRoom.popClearClick(Sender: TObject);
 begin
   inherited;
@@ -824,9 +825,41 @@ begin
 end;
 
 {---------------------------------------}
+function TfrmRoom.GetNick(rjid: string): string;
+var
+    i: integer;
+begin
+    //
+    i := _roster.indexOf(rjid);
+    if (i >= 0) then
+        Result := TRoomMember(_roster.Objects[i]).Nick
+    else
+        Result := '';
+end;
+
+{---------------------------------------}
 function IsRoom(rjid: string): boolean;
 begin
     result := (room_list.IndexOf(rjid) >= 0);
+end;
+
+{---------------------------------------}
+function FindRoomNick(rjid: string): string;
+var
+    i: integer;
+    room: TfrmRoom;
+    tmp_jid: TJabberID;
+begin
+    // find the proper nick
+    Result := '';
+
+    tmp_jid := TJabberID.Create(rjid);
+    i := room_list.IndexOf(tmp_jid.jid);
+    tmp_jid.Free();
+    if (i < 0) then exit;
+
+    room := TfrmRoom(room_list.Objects[i]);
+    Result := room.GetNick(rjid);
 end;
 
 initialization
