@@ -1501,6 +1501,7 @@ object frmRosterWindow: TfrmRosterWindow
     end
     object popProperties: TMenuItem
       Caption = 'Properties'
+      ShortCut = 121
       OnClick = popPropertiesClick
     end
   end
