@@ -91,7 +91,7 @@ object frmJoinRoom: TfrmJoinRoom
     TabOrder = 1
     Text = 'txtServer'
   end
-  object Edit1: TEdit
+  object txtPassword: TEdit
     Left = 91
     Top = 102
     Width = 139
