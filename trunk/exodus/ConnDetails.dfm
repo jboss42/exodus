@@ -18,7 +18,7 @@ object frmConnDetails: TfrmConnDetails
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 244
+    Top = 239
     Width = 296
     Height = 32
     Align = alBottom
@@ -33,7 +33,7 @@ object frmConnDetails: TfrmConnDetails
       inherited Panel1: TPanel
         Left = 136
         Height = 27
-        inherited btnOK: TButton
+        inherited btnOK: TTntButton
           ModalResult = 0
           OnClick = frameButtons1btnOKClick
         end
@@ -44,7 +44,7 @@ object frmConnDetails: TfrmConnDetails
     Left = 0
     Top = 0
     Width = 296
-    Height = 244
+    Height = 239
     ActivePage = tbsProfile
     Align = alClient
     TabOrder = 1
