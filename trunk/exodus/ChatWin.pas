@@ -359,7 +359,8 @@ begin
 
     // branding/menus
     with MainSession.Prefs do begin
-        if (getBool('brand_ft') and (MainSession.Profile.ConnectionType = conn_normal)) then begin
+        if ((getBool('brand_ft')) and
+            (MainSession.Profile.ConnectionType = conn_normal)) then begin
             mnuSendFile.Enabled := true;
             DragAcceptFiles( Handle, True );
         end
@@ -993,6 +994,8 @@ var
     acFileName : array [0..cnMaxFileNameLen] of char;
 begin
     // find out how many files we're accepting
+    if (MainSession.Prefs.getBool('brand_ft') = false) then exit;
+
     nCount := DragQueryFile( msg.Drop, $FFFFFFFF, acFileName, cnMaxFileNameLen );
 
     // query Windows one at a time for the file name
