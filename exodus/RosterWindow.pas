@@ -190,6 +190,8 @@ type
     _show_offgrp: boolean;          // all of the time through each render node
     _show_pending: boolean;         // call.
 
+    _drop_copy: boolean;            // is the drag operation trying to copy?
+
     _drop: TExDropTarget;
 
     procedure popUnBlockClick(Sender: TObject);
@@ -1540,7 +1542,9 @@ begin
             end;
             n.EditText();
         end
-    end
+    end;
+
+    _drop_copy :=  (ssCtrl in Shift);
 end;
 
 {---------------------------------------}
@@ -1690,7 +1694,8 @@ begin
         ritem := TJabberRosterItem(s_node.Data);
         if ritem <> nil then begin
             if (ritem.Groups.IndexOf(d_grp) < 0) then begin
-                ritem.Groups.Clear;
+                if (not _drop_copy) then
+                    ritem.Groups.Clear;
                 ritem.Groups.Add(d_grp);
                 ritem.update;
             end;
