@@ -54,6 +54,9 @@ type
     popAddContact: TMenuItem;
     lblJID: TTntLabel;
     N3: TMenuItem;
+    N4: TMenuItem;
+    popResources: TMenuItem;
+    N5: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -84,6 +87,7 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure NotificationOptions1Click(Sender: TObject);
     procedure timBusyTimer(Sender: TObject);
+    procedure popResourcesClick(Sender: TObject);
   private
     { Private declarations }
     jid: widestring;        // jid of the person we are talking to
@@ -131,6 +135,8 @@ type
     procedure MessageEvent(tag: TXMLTag);
     procedure showMsg(tag: TXMLTag);
     procedure showPres(tag: TXMLTag);
+    procedure SetupResources();
+
     procedure sendMsg; override;
     procedure SetJID(cjid: widestring);
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
@@ -266,6 +272,7 @@ begin
             cjid := sjid;
         tmp_jid.Free;
         SetJID(cjid);
+        SetupResources();
 
         chat.OnMessage := MessageEvent;
 
@@ -376,6 +383,22 @@ begin
     mnuWordwrap.Checked := _wrap_input;
     MsgOut.WantReturns := _embed_returns;
     MsgOut.WordWrap := _wrap_input;
+end;
+
+{---------------------------------------}
+procedure TfrmChat.SetupResources();
+var
+    p: TJabberPres;
+    m: TMenuItem;
+begin
+    p := MainSession.ppdb.FindPres(_jid.jid, '');
+    while (p <> nil) do begin
+        m := TMenuItem.Create(popContact);
+        m.Caption := p.fromJID.resource;
+        m.OnClick := popResourcesClick;
+        popResources.Add(m);
+        p := MainSession.ppdb.NextPres(p);
+    end;
 end;
 
 
@@ -1212,5 +1235,12 @@ begin
         TExodusChat(chat_object.ComController).fireMenuClick(Sender);
 end;
 
+{---------------------------------------}
+procedure TfrmChat.popResourcesClick(Sender: TObject);
+begin
+  inherited;
+    // set the message to this resource.
+    SetJid(_jid.jid + '/' + TMenuItem(Sender).Caption);
+end;
 
 end.
