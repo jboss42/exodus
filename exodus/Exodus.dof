@@ -94,7 +94,7 @@ OutputDir=
 UnitOutputDir=.\output
 PackageDLLOutputDir=
 PackageDCPOutputDir=.\output
-SearchPath=$(DELPHI)\Lib\Debug;.\components
+SearchPath=.\components
 Packages=vcl;rtl;vclshlctrls
 Conditionals=Exodus
 DebugSourceDirs=
@@ -144,8 +144,9 @@ Item1=Exodus; LEAKCHECK
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlSearchPath]
-Count=1
-Item0=$(DELPHI)\Lib\Debug;.\components
+Count=2
+Item0=.\components
+Item1=$(DELPHI)\Lib\Debug;.\components
 [HistoryLists\hlUnitOutputDirectory]
 Count=1
 Item0=.\output
