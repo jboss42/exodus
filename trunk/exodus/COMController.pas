@@ -122,7 +122,8 @@ type
     _menu_items: TWideStringList;
     _roster_menus: TWidestringlist;
     _msg_menus: TWidestringList;
-
+    _nextid: longint;
+    
   public
     constructor Create();
     destructor Destroy(); override;
@@ -481,6 +482,7 @@ begin
     _menu_items := TWidestringList.Create();
     _roster_menus := Twidestringlist.Create();
     _msg_menus := TWidestringlist.Create();
+    _nextid := 0;
 end;
 
 {---------------------------------------}
@@ -684,7 +686,8 @@ begin
     frmExodus.mnuPlugins.Add(mi);
     mi.Caption := caption;
     mi.OnClick := frmExodus.mnuPluginDummyClick;
-    id := 'plugin_' + IntToStr(_menu_items.Count);
+    inc(_nextid);
+    id := 'plugin_' + IntToStr(_nextid);
     mi.Name := id;
     _menu_items.AddObject(id, mi);
     Result := id;
