@@ -188,10 +188,6 @@ end;
 {---------------------------------------}
 procedure TfrmDebug.AddWideText(txt: WideString; txt_color: TColor);
 var
-    ScrollInfo: TScrollInfo;
-    r: integer;
-    ts: longword;
-    bot_thumb: integer;
     at_bottom: boolean;
 begin
     //

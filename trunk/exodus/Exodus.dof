@@ -94,7 +94,7 @@ OutputDir=
 UnitOutputDir=.\output
 PackageDLLOutputDir=
 PackageDCPOutputDir=.\output
-SearchPath=.\components
+SearchPath=$(DELPHI)\Lib\Debug;.\components
 Packages=vcl;rtl;vclshlctrls
 Conditionals=Exodus
 DebugSourceDirs=
@@ -146,8 +146,8 @@ Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlSearchPath]
 Count=2
-Item0=.\components
-Item1=$(DELPHI)\Lib\Debug;.\components
+Item0=$(DELPHI)\Lib\Debug;.\components
+Item1=.\components
 [HistoryLists\hlUnitOutputDirectory]
 Count=1
 Item0=.\output

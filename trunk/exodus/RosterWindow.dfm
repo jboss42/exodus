@@ -1,5 +1,5 @@
 object frmRosterWindow: TfrmRosterWindow
-  Left = 275
+  Left = 550
   Top = 260
   Width = 195
   Height = 446

@@ -1,5 +1,5 @@
 object frmDebug: TfrmDebug
-  Left = 266
+  Left = 532
   Top = 203
   Width = 408
   Height = 414

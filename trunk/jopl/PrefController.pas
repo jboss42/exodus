@@ -287,8 +287,6 @@ uses
 
 
 var
-    dtops: array of TRect;
-    dtop_count: integer;
     task_rect: TRect;
     task_dir: integer;
 
@@ -438,7 +436,7 @@ end;
 procedure getDefaultPos;
 var
     taskbar: HWND;
-    i, mh, mw: integer;
+    mh, mw: integer;
 begin
     //
     taskbar := FindWindow('Shell_TrayWnd', '');
@@ -454,37 +452,6 @@ begin
         task_dir := 2
     else
         task_dir := 3;
-
-    // Create an array for all of the monitors
-    dtop_count := Screen.MonitorCount;
-    setLength(dtops, dtop_count);
-    for i := 0 to Screen.MonitorCount - 1 do
-        dtops[i] := Screen.Monitors[i].WorkareaRect;
-
-    {
-    case _taskdir of
-    0: begin
-        // left
-        dflt_top := 0;
-        dflt_left := _taskrect.Left + 10;
-    end;
-    1: begin
-        // right
-        dflt_top := 0;
-        dflt_left := 0;
-    end;
-    2: begin
-        // top
-        dflt_top := _taskrect.Bottom + 10;
-        dflt_left := 0;
-    end;
-    3: begin
-        // bottom
-        dflt_top := 0;
-        dflt_left := 0;
-    end;
-    end;
-    }
 end;
 
 {$else}
@@ -501,10 +468,7 @@ end;
 
 procedure getDefaultPos;
 begin
-    {
-    dflt_top := 10;
-    dflt_left := 10;
-    }
+    //
 end;
 {$endif}
 
@@ -905,25 +869,27 @@ end;
 procedure TPrefController.CheckPositions(form: TForm; t, l, w, h: integer);
 var
     ok: boolean;
-    tmp: TRect;
-    i: integer;
+    dtop, tmp: TRect;
+    mon: TMonitor;
     cp: TPoint;
 begin
     tmp := Bounds(l, t, w, h);
 
+    // Netmeeting hack
+    if (Assigned(Application.MainForm)) then
+        Application.MainForm.Monitor;
+
     // Get the nearest monitor to the form
     cp := CenterPoint(tmp);
-    i := Screen.MonitorFromPoint(cp, mdNearest).MonitorNum;
-    if (i >= dtop_count) then i := 0;
+    mon := Screen.MonitorFromWindow(form.Handle, mdNearest);
+    dtop := mon.WorkareaRect;
 
-    ok := (tmp.Left >= dtops[i].Left) and
-        (tmp.Right <= dtops[i].Right) and
-        (tmp.Top >= dtops[i].Top) and
-        (tmp.Bottom <= dtops[i].Bottom);
+    ok := PtInRect(dtop, tmp.TopLeft) and
+          PtInRect(dtop, tmp.BottomRight);
 
     if (ok = false) then begin
         // center it on the default monitor
-        cp := CenterPoint(dtops[i]);
+        cp := CenterPoint(dtop);
         l := cp.x - (w div 2);
         t := cp.y - (h div 2);
         tmp := Bounds(l, t, w, h);
