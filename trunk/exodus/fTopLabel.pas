@@ -50,13 +50,14 @@ uses
 procedure RenderTopFields(ParentControl: TWinControl; fields: TXMLTagList;
     var key: Widestring);
 var
-    cur_field, field_name: Widestring;
+    cur_field: Widestring;
     ti, tt, i: integer;
     cur_tag: TXMLTag;
     ff, cur_frame: TframeTopLabel;
 begin
     ti := 0;
     tt := 0;
+    ff := nil;
     for i := 0 to fields.Count -1 do begin
         cur_tag := fields[i];
         if (cur_tag.Name = 'instructions') then
