@@ -308,6 +308,7 @@ var
     ritems: TXMLTagList;
     ri: TJabberRosterItem;
     idx, i: integer;
+    tmp_jid: TJabberID;
     iq_type, j: Widestring;
     s: TJabberSession;
 begin
@@ -324,8 +325,9 @@ begin
     ritems := q.QueryTags('item');
 
     for i := 0 to ritems.Count - 1 do begin
-        // XXX: stringprep instead of WideLowerCase
-        j := WideLowerCase(ritems[i].GetAttribute('jid'));
+        tmp_jid := TJabberID.Create(ritems[i].getAttribute('jid'));
+        j := tmp_jid.full;
+        tmp_jid.Free();
         ri := Find(j);
 
         if ri = nil then begin

@@ -151,6 +151,8 @@ end;
 
 {---------------------------------------}
 function TJabberPres.xml: Widestring;
+var
+    x: TXMLTag;
 begin
     if toJID.jid <> '' then
         setAttribute('to', toJID.full);
@@ -158,7 +160,14 @@ begin
     if fromJID.jid <> '' then
         setAttribute('from', fromJID.jid);
 
-    if Status <> '' then
+    x := Self.GetFirstTag('status');
+    if (x <> nil) then Self.RemoveTag(x);
+    x := Self.GetFirstTag('show');
+    if (x <> nil) then Self.RemoveTag(x);
+    x := Self.GetFirstTag('priority');
+    if (x <> nil) then Self.RemoveTag(x);
+
+    if (Status <> '') then
         Self.AddBasicTag('status', Status);
 
     if Show <> '' then

@@ -155,6 +155,7 @@ const
     sXferRecvError = 'There was an error receiving the file. (%d)';
     sXferDone = 'File transfer is done.';
     sXferConn = 'Got connection.';
+    sXferHashError = 'The file transfer for %s completed, but the file appears to be corrupt.';
 
 {$R *.dfm}
 
@@ -625,7 +626,8 @@ begin
             if (_pkg.hash <> '') then begin
                 hex := MD5File(_filename);
                 if (hex <> _pkg.hash) then begin
-                    // XXX: show msg for non-match hash
+                    tmps := WideFormat(_(sXferHashError), [_pkg.pathname]);
+                    MessageDlgW(tmps, mtError, [mbOK], 0);
                 end;
             end;
         end;

@@ -17,6 +17,7 @@ inherited frmChat: TfrmChat
   inherited pnlMsgList: TPanel
     Top = 24
     Height = 220
+    Caption = ''
   end
   inherited pnlInput: TPanel
     Top = 247
