@@ -11,18 +11,18 @@ unit ExodusWordSpeller_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.5 $
-// File generated on 1/7/2003 7:38:47 PM from Type Library described below.
+// PASTLWTR : $Revision: 1.6 $
+// File generated on 1/8/2003 9:58:27 PM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: C:\src\jabber\exodus\exodus\plugins\MSWordSpeller\ExodusWordSpeller.tlb (1)
+// Type Lib: D:\src\exodus\exodus\plugins\MSWordSpeller\ExodusWordSpeller.tlb (1)
 // LIBID: {ADD14710-280B-4B21-8AA5-DC33EC6B1C4B}
 // LCID: 0
 // Helpfile: 
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINNT\System32\Stdole2.tlb)
-//   (2) v4.0 StdVCL, (C:\WINNT\System32\stdvcl40.dll)
-//   (3) v1.0 ExodusCOM, (C:\Program Files\Exodus\Exodus.exe)
+//   (1) v1.0 ExodusCOM, (D:\src\exodus\runner\exodus.exe)
+//   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
+//   (3) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
