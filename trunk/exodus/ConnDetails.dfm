@@ -281,12 +281,12 @@ object frmConnDetails: TfrmConnDetails
         TabOrder = 1
         OnClick = btnCertBrowseClick
       end
-      object optSSL: TRadioGroup
-        Left = 8
+      object optSSL: TTntRadioGroup
+        Left = 16
         Top = 72
-        Width = 273
-        Height = 89
-        Items.Strings = (
+        Width = 265
+        Height = 105
+        Items.WideStrings = (
           'Use StartTLS whenever the server allows it.'
           'Only allow connections which use StartTLS.'
           'Use SSL immediately when connected.')

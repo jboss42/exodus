@@ -30,14 +30,14 @@ type
   TfrmPrefNotify = class(TfrmPrefPanel)
     lblConfigSounds: TTntLabel;
     chkNotify: TTntCheckListBox;
-    optNotify: TGroupBox;
-    chkFlash: TTntCheckBox;
-    chkToast: TTntCheckBox;
-    chkTrayNotify: TTntCheckBox;
     chkSound: TTntCheckBox;
     chkNotifyActive: TTntCheckBox;
     chkFlashInfinite: TTntCheckBox;
     chkNotifyActiveWindow: TTntCheckBox;
+    optNotify: TTntGroupBox;
+    chkFlash: TTntCheckBox;
+    chkToast: TTntCheckBox;
+    chkTrayNotify: TTntCheckBox;
     chkFront: TTntCheckBox;
     procedure lblConfigSoundsClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);

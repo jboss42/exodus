@@ -27,7 +27,7 @@ uses
 
 type
   TfrmPrefNetwork = class(TfrmPrefPanel)
-    GroupBox1: TGroupBox;
+    GroupBox1: TTntGroupBox;
     Label2: TTntLabel;
     Label3: TTntLabel;
     Label4: TTntLabel;
@@ -35,7 +35,7 @@ type
     spnAttempts: TUpDown;
     txtReconnectTime: TTntEdit;
     spnTime: TUpDown;
-    GroupBox2: TGroupBox;
+    GroupBox2: TTntGroupBox;
     lblProxyHost: TTntLabel;
     lblProxyPort: TTntLabel;
     lblProxyUsername: TTntLabel;

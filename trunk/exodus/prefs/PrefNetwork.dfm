@@ -1,6 +1,6 @@
 inherited frmPrefNetwork: TfrmPrefNetwork
-  Left = 270
-  Top = 426
+  Left = 254
+  Top = 159
   Caption = 'frmPrefNetwork'
   ClientHeight = 326
   ClientWidth = 343
@@ -12,7 +12,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     Caption = 'Connection Options'
     TabOrder = 2
   end
-  object GroupBox1: TGroupBox
+  object GroupBox1: TTntGroupBox
     Left = 3
     Top = 29
     Width = 294
@@ -25,6 +25,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Width = 121
       Height = 13
       Caption = '# of Reconnect attempts:'
+      Transparent = False
     end
     object Label3: TTntLabel
       Left = 8
@@ -32,6 +33,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Width = 141
       Height = 13
       Caption = 'Time lapse between attempts:'
+      Transparent = False
     end
     object Label4: TTntLabel
       Left = 9
@@ -39,6 +41,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Width = 240
       Height = 13
       Caption = 'Time is in seconds. Use 0 for a random time period.'
+      Transparent = False
     end
     object txtReconnectTries: TTntEdit
       Left = 200
@@ -53,7 +56,6 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Top = 16
       Width = 16
       Height = 21
-      Associate = txtReconnectTries
       TabOrder = 1
     end
     object txtReconnectTime: TTntEdit
@@ -69,60 +71,64 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Top = 48
       Width = 16
       Height = 21
-      Associate = txtReconnectTime
       Max = 3600
       TabOrder = 3
     end
   end
-  object GroupBox2: TGroupBox
+  object GroupBox2: TTntGroupBox
     Left = 3
     Top = 135
     Width = 294
-    Height = 186
+    Height = 178
     Caption = 'HTTP Proxy'
     TabOrder = 1
     object lblProxyHost: TTntLabel
       Left = 5
-      Top = 55
+      Top = 48
       Width = 25
       Height = 13
       Caption = 'Host:'
       Enabled = False
+      Transparent = False
     end
     object lblProxyPort: TTntLabel
       Left = 5
-      Top = 81
+      Top = 74
       Width = 22
       Height = 13
       Caption = 'Port:'
       Enabled = False
+      Transparent = False
     end
     object lblProxyUsername: TTntLabel
       Left = 5
-      Top = 129
+      Top = 122
       Width = 51
       Height = 13
       Caption = 'Username:'
       Enabled = False
+      Transparent = False
     end
     object lblProxyPassword: TTntLabel
       Left = 5
-      Top = 152
+      Top = 145
       Width = 49
       Height = 13
       Caption = 'Password:'
       Enabled = False
+      Transparent = False
     end
     object Label28: TLabel
       Left = 5
-      Top = 28
+      Top = 21
       Width = 49
       Height = 13
       Caption = 'Approach:'
+      Transparent = False
     end
     object txtProxyHost: TTntEdit
       Left = 107
-      Top = 51
+      Top = 44
       Width = 130
       Height = 21
       Enabled = False
@@ -130,7 +136,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     end
     object txtProxyPort: TTntEdit
       Left = 107
-      Top = 77
+      Top = 70
       Width = 39
       Height = 21
       Enabled = False
@@ -138,8 +144,8 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     end
     object chkProxyAuth: TTntCheckBox
       Left = 107
-      Top = 102
-      Width = 135
+      Top = 95
+      Width = 174
       Height = 17
       Caption = 'Authentication Required'
       Enabled = False
@@ -148,7 +154,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     end
     object txtProxyUsername: TTntEdit
       Left = 107
-      Top = 124
+      Top = 117
       Width = 130
       Height = 21
       Enabled = False
@@ -156,7 +162,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     end
     object txtProxyPassword: TTntEdit
       Left = 107
-      Top = 150
+      Top = 143
       Width = 130
       Height = 21
       Enabled = False
@@ -165,19 +171,13 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     end
     object cboProxyApproach: TTntComboBox
       Left = 107
-      Top = 24
+      Top = 17
       Width = 130
       Height = 22
       Style = csOwnerDrawFixed
       ItemHeight = 16
-      ItemIndex = 0
       TabOrder = 0
-      Text = 'Use IE settings'
       OnChange = cboProxyApproachChange
-      Items.WideStrings = (
-        'Use IE settings'
-        'Direct Connection'
-        'Custom')
     end
   end
 end

@@ -28,17 +28,17 @@ uses
 type
   TfrmCustomNotify = class(TForm)
     chkNotify: TTntCheckListBox;
-    optNotify: TGroupBox;
+    frameButtons1: TframeButtons;
+    lblDefault: TTntLabel;
+    optNotify: TTntGroupBox;
     chkFlash: TTntCheckBox;
     chkToast: TTntCheckBox;
     chkTrayNotify: TTntCheckBox;
-    frameButtons1: TframeButtons;
-    Label1: TTntLabel;
     procedure FormCreate(Sender: TObject);
     procedure chkNotifyClick(Sender: TObject);
     procedure chkToastClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure Label1Click(Sender: TObject);
+    procedure lblDefaultClick(Sender: TObject);
   private
     { Private declarations }
     _no_notify_update: boolean;
@@ -59,7 +59,7 @@ var
 implementation
 
 uses
-    GnuGetText, PrefController;
+    ExUtils, GnuGetText, PrefController;
 
 {
 0 Contact is online
@@ -85,6 +85,9 @@ end;
 
 procedure TfrmCustomNotify.FormCreate(Sender: TObject);
 begin
+    AssignUnicodeFont(Self);
+    AssignUnicodeURL(lblDefault.Font, 8);
+    
     TranslateComponent(Self);
     SetLength(_vals, 20);
     SetLength(_defs, 20);
@@ -176,7 +179,7 @@ begin
     end;
 end;
 
-procedure TfrmCustomNotify.Label1Click(Sender: TObject);
+procedure TfrmCustomNotify.lblDefaultClick(Sender: TObject);
 var
     i: integer;
 begin

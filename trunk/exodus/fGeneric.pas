@@ -175,17 +175,6 @@ begin
         end;
     end
     else if (t = 'fixed') then begin
-    (*
-        c := lblLabel;
-        self.AutoSize := true;
-        with lblLabel do begin
-            AutoSize := true;
-            Layout := tlTop;
-            WordWrap := true;
-            Caption := value;
-            Align := alTop;
-        end;
-        *)
         lblLabel.Visible := false;
         Self.Height := Self.Height * 2;
         c := TExRichEdit.Create(Self);

@@ -82,7 +82,7 @@ type
     txtHost: TTntEdit;
     txtPort: TTntEdit;
     Label7: TTntLabel;
-    optSSL: TRadioGroup;
+    optSSL: TTntRadioGroup;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure chkSocksAuthClick(Sender: TObject);
     procedure cboSocksTypeChange(Sender: TObject);

@@ -26,7 +26,7 @@ uses
     ShellAPI, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, CheckLst, ExtCtrls, ComCtrls, TntStdCtrls,
-    TntComCtrls, TntCheckLst;
+    TntComCtrls, TntCheckLst, TntExtCtrls;
 
 type
   TfrmProfile = class(TForm)
@@ -38,7 +38,6 @@ type
     Label7: TTntLabel;
     Label4: TTntLabel;
     Label5: TTntLabel;
-    optSubscrip: TRadioGroup;
     TabSheet2: TTntTabSheet;
     GrpListBox: TTntCheckListBox;
     TabSheet3: TTntTabSheet;
@@ -113,6 +112,7 @@ type
     txtMiddle: TTntEdit;
     txtLast: TTntEdit;
     ResListBox: TTntListBox;
+    optSubscrip: TTntRadioGroup;
     procedure FormCreate(Sender: TObject);
     procedure TreeView1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -161,15 +161,16 @@ begin
     with f do begin
         MainSession.Roster.AssignGroups(GrpListBox.Items);
         ResListBox.Items.Clear;
-        optSubscrip.ItemIndex := 3;
+        optSubscrip.ItemIndex := 0;
         txtJID.Text := tmp_jid.jid;
+
         ritem := MainSession.Roster.Find(tmp_jid.jid);
         if (ritem <> nil) then begin
             txtNick.Text := ritem.RawNickname;
             if ritem.subscription = 'from' then
-                optSubscrip.ItemIndex := 1
-            else if ritem.subscription = 'to' then
                 optSubscrip.ItemIndex := 2
+            else if ritem.subscription = 'to' then
+                optSubscrip.ItemIndex := 1
             else if ritem.subscription = 'both' then
                 optSubscrip.ItemIndex := 3;
 

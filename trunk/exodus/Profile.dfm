@@ -20,14 +20,14 @@ object frmProfile: TfrmProfile
   object Splitter1: TSplitter
     Left = 121
     Top = 0
-    Height = 293
+    Height = 288
   end
   object PageControl1: TTntPageControl
     Left = 124
     Top = 0
     Width = 330
-    Height = 293
-    ActivePage = TabSheet2
+    Height = 288
+    ActivePage = TabSheet1
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 0
@@ -86,21 +86,6 @@ object frmProfile: TfrmProfile
         Caption = 'Update nickname based on names.'
         OnClick = btnUpdateNickClick
       end
-      object optSubscrip: TRadioGroup
-        Left = 8
-        Top = 152
-        Width = 257
-        Height = 49
-        Caption = 'Subscription Type'
-        Columns = 4
-        ItemIndex = 0
-        Items.Strings = (
-          'None'
-          'From'
-          'To'
-          'Both')
-        TabOrder = 2
-      end
       object aniProfile: TAnimate
         Left = 248
         Top = 24
@@ -157,6 +142,21 @@ object frmProfile: TfrmProfile
         ReadOnly = True
         TabOrder = 6
       end
+      object optSubscrip: TTntRadioGroup
+        Left = 8
+        Top = 152
+        Width = 257
+        Height = 49
+        Caption = 'Subscription Type'
+        Columns = 4
+        ItemIndex = 0
+        Items.WideStrings = (
+          'None'
+          'To'
+          'From'
+          'Both')
+        TabOrder = 2
+      end
     end
     object TabSheet7: TTntTabSheet
       Caption = 'Resources'
@@ -176,7 +176,7 @@ object frmProfile: TfrmProfile
         Left = 217
         Top = 25
         Width = 105
-        Height = 237
+        Height = 232
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 2
@@ -212,7 +212,7 @@ object frmProfile: TfrmProfile
         Left = 0
         Top = 25
         Width = 217
-        Height = 237
+        Height = 232
         Align = alClient
         ItemHeight = 13
         TabOrder = 0
@@ -225,7 +225,7 @@ object frmProfile: TfrmProfile
         Left = 0
         Top = 0
         Width = 322
-        Height = 221
+        Height = 216
         Align = alClient
         ItemHeight = 13
         Sorted = True
@@ -233,7 +233,7 @@ object frmProfile: TfrmProfile
       end
       object Panel3: TPanel
         Left = 0
-        Top = 221
+        Top = 216
         Width = 322
         Height = 41
         Align = alBottom
@@ -1141,7 +1141,7 @@ object frmProfile: TfrmProfile
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 293
+    Top = 288
     Width = 454
     Height = 34
     Align = alBottom
@@ -1149,13 +1149,11 @@ object frmProfile: TfrmProfile
     TabOrder = 1
     inherited Panel2: TPanel
       Width = 454
-      Height = 34
       inherited Bevel1: TBevel
         Width = 454
       end
       inherited Panel1: TPanel
         Left = 294
-        Height = 29
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end
@@ -1169,7 +1167,7 @@ object frmProfile: TfrmProfile
     Left = 0
     Top = 0
     Width = 121
-    Height = 293
+    Height = 288
     Align = alLeft
     Indent = 19
     ReadOnly = True

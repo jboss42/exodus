@@ -68,116 +68,6 @@ inherited frmPrefPresence: TfrmPrefPresence
       OnClick = btnDefaultsClick
     end
   end
-  object GroupBox1: TGroupBox
-    Left = 0
-    Top = 283
-    Width = 349
-    Height = 147
-    Align = alTop
-    Caption = 'Properties'
-    TabOrder = 3
-    object Label11: TTntLabel
-      Left = 6
-      Top = 23
-      Width = 31
-      Height = 13
-      Caption = 'Name:'
-    end
-    object Label12: TTntLabel
-      Left = 6
-      Top = 47
-      Width = 33
-      Height = 13
-      Caption = 'Status:'
-    end
-    object Label13: TTntLabel
-      Left = 5
-      Top = 71
-      Width = 27
-      Height = 13
-      Caption = 'Type:'
-    end
-    object Label14: TTntLabel
-      Left = 6
-      Top = 97
-      Width = 34
-      Height = 13
-      Caption = 'Priority:'
-    end
-    object lblHotkey: TTntLabel
-      Left = 5
-      Top = 120
-      Width = 38
-      Height = 13
-      Caption = 'HotKey:'
-    end
-    object txtCPTitle: TTntEdit
-      Left = 88
-      Top = 20
-      Width = 225
-      Height = 21
-      TabOrder = 0
-      OnChange = txtCPTitleChange
-    end
-    object txtCPStatus: TTntEdit
-      Left = 88
-      Top = 44
-      Width = 225
-      Height = 21
-      TabOrder = 1
-      OnChange = txtCPTitleChange
-    end
-    object cboCPType: TTntComboBox
-      Left = 88
-      Top = 68
-      Width = 227
-      Height = 21
-      Style = csDropDownList
-      ItemHeight = 13
-      TabOrder = 2
-      OnChange = txtCPTitleChange
-      Items.WideStrings = (
-        'Chat'
-        'Available'
-        'Away'
-        'Ext. Away'
-        'Do Not Disturb')
-    end
-    object txtCPPriority: TTntEdit
-      Left = 88
-      Top = 93
-      Width = 74
-      Height = 21
-      Hint = 'Priority of -1 uses current priority.'
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 3
-      Text = '0'
-      OnChange = txtCPTitleChange
-    end
-    object spnPriority: TTntUpDown
-      Left = 166
-      Top = 93
-      Width = 16
-      Height = 21
-      Hint = 'Priority of -1 uses current priority.'
-      Associate = txtCPPriority
-      Min = -1
-      Max = 1000
-      ParentShowHint = False
-      ShowHint = True
-      TabOrder = 4
-    end
-    object txtCPHotkey: THotKey
-      Left = 88
-      Top = 118
-      Width = 97
-      Height = 19
-      HotKey = 32833
-      TabOrder = 5
-      OnChange = txtCPTitleChange
-    end
-  end
   object Panel1: TPanel
     Left = 0
     Top = 26
@@ -237,6 +127,114 @@ inherited frmPrefPresence: TfrmPrefPresence
       Checked = True
       State = cbChecked
       TabOrder = 1
+    end
+  end
+  object GroupBox1: TTntGroupBox
+    Left = 0
+    Top = 283
+    Width = 349
+    Height = 147
+    Align = alTop
+    Caption = 'Properties'
+    TabOrder = 3
+    object Label11: TTntLabel
+      Left = 6
+      Top = 23
+      Width = 31
+      Height = 13
+      Caption = 'Name:'
+      Transparent = False
+    end
+    object Label12: TTntLabel
+      Left = 6
+      Top = 47
+      Width = 33
+      Height = 13
+      Caption = 'Status:'
+      Transparent = False
+    end
+    object Label13: TTntLabel
+      Left = 5
+      Top = 71
+      Width = 27
+      Height = 13
+      Caption = 'Type:'
+      Transparent = False
+    end
+    object Label14: TTntLabel
+      Left = 6
+      Top = 97
+      Width = 34
+      Height = 13
+      Caption = 'Priority:'
+      Transparent = False
+    end
+    object lblHotkey: TTntLabel
+      Left = 5
+      Top = 120
+      Width = 38
+      Height = 13
+      Caption = 'HotKey:'
+      Transparent = False
+    end
+    object txtCPTitle: TTntEdit
+      Left = 88
+      Top = 20
+      Width = 225
+      Height = 21
+      TabOrder = 0
+      OnChange = txtCPTitleChange
+    end
+    object txtCPStatus: TTntEdit
+      Left = 88
+      Top = 44
+      Width = 225
+      Height = 21
+      TabOrder = 1
+      OnChange = txtCPTitleChange
+    end
+    object cboCPType: TTntComboBox
+      Left = 88
+      Top = 68
+      Width = 227
+      Height = 21
+      Style = csDropDownList
+      ItemHeight = 13
+      TabOrder = 2
+      OnChange = txtCPTitleChange
+    end
+    object txtCPPriority: TTntEdit
+      Left = 88
+      Top = 93
+      Width = 74
+      Height = 21
+      Hint = 'Priority of -1 uses current priority.'
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 3
+      Text = '0'
+      OnChange = txtCPTitleChange
+    end
+    object spnPriority: TTntUpDown
+      Left = 162
+      Top = 93
+      Width = 16
+      Height = 21
+      Hint = 'Priority of -1 uses current priority.'
+      Min = -1
+      Max = 1000
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 4
+    end
+    object txtCPHotkey: THotKey
+      Left = 88
+      Top = 118
+      Width = 97
+      Height = 19
+      HotKey = 32833
+      TabOrder = 5
+      OnChange = txtCPTitleChange
     end
   end
 end
