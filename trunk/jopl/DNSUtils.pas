@@ -154,7 +154,7 @@ begin
         exit;
     end
     else begin
-        // Everything else can use GetNetworkParams
+        // Everything else can use GetNetworkParams from iphlpapi.dll
         info_size := 0;
         iphlp := LoadLibrary(IpHlpDLL);
         if (iphlp = 0) then exit;

@@ -5,9 +5,9 @@ object frmBrowse: TfrmBrowse
   Height = 425
   Caption = 'Jabber Browser'
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   DragKind = dkDock
   DragMode = dmAutomatic
-  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

@@ -346,7 +346,7 @@ end;
 {---------------------------------------}
 procedure TfrmBrowse.vwBrowseClick(Sender: TObject);
 var
-    itm: TListItem;
+    itm: TTntListItem;
 begin
     // Browse to this object
     itm := vwBrowse.Selected;
@@ -459,7 +459,7 @@ end;
 {---------------------------------------}
 procedure TfrmBrowse.mBookmarkClick(Sender: TObject);
 var
-    itm: TListItem;
+    itm: TTntListItem;
     fbm: TfrmBookmark;
 begin
     itm := vwBrowse.Selected;
@@ -473,8 +473,8 @@ end;
 {---------------------------------------}
 procedure TfrmBrowse.mVCardClick(Sender: TObject);
 var
-    itm: TListItem;
-    jid: string;
+    itm: TTntListItem;
+    jid: Widestring;
 begin
     // do some CTCP stuff
     itm := vwBrowse.Selected;
@@ -503,7 +503,7 @@ end;
 {---------------------------------------}
 procedure TfrmBrowse.mBrowseClick(Sender: TObject);
 var
-    itm: TListItem;
+    itm: TTntListItem;
 begin
     // Browse to this JID
     itm := vwBrowse.Selected;
@@ -516,7 +516,7 @@ end;
 {---------------------------------------}
 procedure TfrmBrowse.mBrowseNewClick(Sender: TObject);
 var
-    itm: TListItem;
+    itm: TTntListItem;
 begin
     // Browse to this JID
     itm := vwBrowse.Selected;
@@ -528,9 +528,9 @@ end;
 {---------------------------------------}
 procedure TfrmBrowse.mJoinConfClick(Sender: TObject);
 var
-    itm: TListItem;
+    itm: TTntListItem;
     tmpjid: TJabberID;
-    cjid: string;
+    cjid: Widestring;
 begin
     // join conf. room
     cjid := '';
@@ -548,8 +548,8 @@ end;
 {---------------------------------------}
 procedure TfrmBrowse.mSearchClick(Sender: TObject);
 var
-    itm: TListItem;
-    j: string;
+    itm: TTntListItem;
+    j: Widestring;
 begin
     // Search using this service.
     j := '';
@@ -673,7 +673,7 @@ var
     b: TJabberEntity;
 begin
   inherited;
-    with Item do begin
+    with TTntListItem(Item) do begin
         b := TJabberEntity(_blist[index]);
         if (b.name <> '') then
             caption := b.name
