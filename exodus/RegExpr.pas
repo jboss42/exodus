@@ -3780,7 +3780,9 @@ function TRegExpr.ExecPrim (AOffset: integer) : boolean;
       Result := RegMatch (s);
       if Result
        then EXIT;
-      inc (s);
+      // pgm 5/9/02 - Fix Unicode A/V bug
+      if (s^ <> #0) then
+        inc (s);
      UNTIL s^ = #0;
      {$ENDIF}
     end;
