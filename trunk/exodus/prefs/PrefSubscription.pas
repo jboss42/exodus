@@ -46,12 +46,16 @@ uses
 
 procedure TfrmPrefSubscription.LoadPrefs();
 begin
-    optIncomingS10n.ItemIndex := MainSession.Prefs.getInt('s10n_auto_accept');
+    inherited;
+
+    //optIncomingS10n.ItemIndex := MainSession.Prefs.getInt('s10n_auto_accept');
 end;
 
 procedure TfrmPrefSubscription.SavePrefs();
 begin
-    MainSession.Prefs.setInt('s10n_auto_accept', optIncomingS10n.ItemIndex);
+    inherited;
+    
+    //MainSession.Prefs.setInt('s10n_auto_accept', optIncomingS10n.ItemIndex);
 end;
 
 

@@ -61,47 +61,13 @@ uses
 procedure TfrmPrefRoster.LoadPrefs();
 begin
     inherited;
-
-    {
-    with MainSession.Prefs do begin
-        // Roster Prefs
-        chkShowUnsubs.Checked := getBool('roster_show_unsub');
-        chkShowPending.Checked := getBool('roster_show_pending');
-        chkHideBlocked.Checked := getBool('roster_hide_block');
-        chkPresErrors.Checked := getBool('roster_pres_errors');
-        chkRosterUnicode.Checked := getBool('roster_unicode');
-        cboDblClick.ItemIndex := getInt('roster_chat');
-        chkInlineStatus.Checked := getBool('inline_status');
-        cboInlineStatus.Selected := TColor(getInt('inline_color'));
-        chkNestedGrps.Checked := getBool('nested_groups');
-        txtGrpSeperator.Text := getString('group_seperator');
-    end;
-    }
-
     cboInlineStatus.Enabled := chkInlineStatus.Checked;
     txtGrpSeperator.Enabled := chkNestedGrps.Checked;
-
 end;
 
 procedure TfrmPrefRoster.SavePrefs();
 begin
-    //
-    with MainSession.Prefs do begin
-        // Roster prefs
-        setBool('roster_show_unsub', chkShowUnsubs.Checked);
-        setBool('roster_show_pending', chkShowPending.Checked);
-        setBool('roster_hide_block', chkHideBlocked.Checked);
-        setBool('roster_pres_errors', chkPresErrors.Checked);
-        setBool('roster_unicode', chkRosterUnicode.Checked);
-        setInt('roster_chat', cboDblClick.ItemIndex);
-
-        setBool('inline_status', chkInlineStatus.Checked);
-        setInt('inline_color', integer(cboInlineStatus.Selected));
-
-        setBool('nested_groups', chkNestedGrps.Checked);
-        setString('group_seperator', txtGrpSeperator.Text);
-
-    end;
+    inherited;
 end;
 
 procedure TfrmPrefRoster.chkInlineStatusClick(Sender: TObject);

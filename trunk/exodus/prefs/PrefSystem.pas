@@ -38,15 +38,15 @@ type
     btnUpdateCheck: TTntButton;
     chkSingleInstance: TTntCheckBox;
     chkStartMin: TTntCheckBox;
-    Label7: TTntLabel;
+    lblLang: TTntLabel;
     cboLocale: TTntComboBox;
-    lblPluginScan: TTntLabel;
-    Label15: TTntLabel;
+    lblLangScan: TTntLabel;
+    lblDefaultNick: TTntLabel;
     txtDefaultNick: TTntEdit;
     procedure btnUpdateCheckClick(Sender: TObject);
     procedure btnUpdateCheckMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure lblPluginScanClick(Sender: TObject);
+    procedure lblLangScanClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
@@ -139,18 +139,10 @@ begin
     if (_lang_codes = nil) then
         _lang_codes := TStringlist.Create();
     ScanLocales();
-    with MainSession.Prefs do begin
-        chkAutoUpdate.Checked := getBool('auto_updates');
-        chkAutoStart.Checked := getBool('auto_start');
-        chkDebug.Checked := getBool('debug');
-        chkStartMin.Checked := getBool('min_start');
-        chkAutoLogin.Checked := getBool('autologin');
-        chkOnTop.Checked := getBool('window_ontop');
-        chkToolbox.Checked := getBool('window_toolbox');
-        chkCloseMin.Checked := getBool('close_min');
-        chkSingleInstance.Checked := getBool('single_instance');
-        txtDefaultNick.Text := getString('default_nick');
 
+    inherited;
+
+    with MainSession.Prefs do begin
         // locale info, we should always have at least "default-english"
         // in the drop down box here.
         tmps := getString('locale');
@@ -209,18 +201,9 @@ var
     i: integer;
 begin
     // System Prefs
-    with MainSession.Prefs do begin
-        setBool('auto_updates', chkAutoUpdate.Checked);
-        setBool('auto_start', chkAutoStart.Checked);
-        setBool('debug', chkDebug.Checked);
-        setBool('min_start', chkStartMin.Checked);
-        setBool('window_ontop', chkOnTop.Checked);
-        setBool('window_toolbox', chkToolbox.Checked);
-        setBool('autologin', chkAutoLogin.Checked);
-        setBool('close_min', chkCloseMin.Checked);
-        setBool('single_instance', chkSingleInstance.Checked);
-        setString('default_nick', txtDefaultNick.Text);
+    inherited;
 
+    with MainSession.Prefs do begin
         i := cboLocale.ItemIndex;
         if (i < 0) then i := 0;
         tmp := _lang_codes[i];
@@ -278,7 +261,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmPrefSystem.lblPluginScanClick(Sender: TObject);
+procedure TfrmPrefSystem.lblLangScanClick(Sender: TObject);
 begin
   inherited;
     ScanLocales();
@@ -287,7 +270,7 @@ end;
 procedure TfrmPrefSystem.FormCreate(Sender: TObject);
 begin
   inherited;
-    AssignUnicodeURL(lblPluginScan.Font, 8);
+    AssignUnicodeURL(lblLangScan.Font, 8);
 end;
 
 end.

@@ -7,14 +7,14 @@ inherited frmPrefGroups: TfrmPrefGroups
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object Label18: TTntLabel [0]
+  object lblGatewayGrp: TTntLabel [0]
     Left = 0
     Top = 193
     Width = 150
     Height = 13
     Caption = 'Group to be used for Gateways:'
   end
-  object Label1: TTntLabel [1]
+  object lblDefaultGrp: TTntLabel [1]
     Left = 0
     Top = 241
     Width = 69
@@ -24,7 +24,7 @@ inherited frmPrefGroups: TfrmPrefGroups
   object lblFilter: TTntLabel [2]
     Left = 2
     Top = 121
-    Width = 263
+    Width = 250
     Height = 26
     Caption = 
       'When showing only online contacts, visible contacts must be at l' +

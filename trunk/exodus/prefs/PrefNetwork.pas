@@ -28,19 +28,19 @@ uses
 type
   TfrmPrefNetwork = class(TfrmPrefPanel)
     GroupBox1: TTntGroupBox;
-    Label2: TTntLabel;
-    Label3: TTntLabel;
-    Label4: TTntLabel;
-    txtReconnectTries: TTntEdit;
+    lblAttempts: TTntLabel;
+    lblTime: TTntLabel;
+    lblTime2: TTntLabel;
+    txtAttempts: TTntEdit;
     spnAttempts: TUpDown;
-    txtReconnectTime: TTntEdit;
+    txtTime: TTntEdit;
     spnTime: TUpDown;
     GroupBox2: TTntGroupBox;
     lblProxyHost: TTntLabel;
     lblProxyPort: TTntLabel;
     lblProxyUsername: TTntLabel;
     lblProxyPassword: TTntLabel;
-    Label28: TLabel;
+    lblProxyApproach: TLabel;
     txtProxyHost: TTntEdit;
     txtProxyPort: TTntEdit;
     chkProxyAuth: TTntCheckBox;
@@ -70,61 +70,34 @@ uses
     GnuGetText, ExUtils, PrefController, Session, Registry;
 
 procedure TfrmPrefNetwork.LoadPrefs();
-var
-    i: integer;
 begin
-    with MainSession.Prefs do begin
-        // reconnect config
-        i := getInt('recon_tries');
-        if (i <= 0) then i := 3;
-        spnAttempts.Position := i;
-        spnTime.Position := getInt('recon_time');
-
-        // proxy config
-        cboProxyApproach.ItemIndex := getInt('http_proxy_approach');
-        cboProxyApproachChange(cboProxyApproach);
-        txtProxyHost.Text := getString('http_proxy_host');
-        txtProxyPort.Text := getString('http_proxy_port');
-        chkProxyAuth.Checked := getBool('http_proxy_auth');
-        chkProxyAuthClick(chkProxyAuth);
-        txtProxyUsername.Text := getString('http_proxy_user');
-        txtProxyPassword.Text := getString('http_proxy_password');
-    end;
+    inherited;
+    if (spnAttempts.Position <= 0) then spnAttempts.Position := 3;
+    chkProxyAuthClick(chkProxyAuth);
 end;
 
 procedure TfrmPrefNetwork.SavePrefs();
 var
     reg: TRegistry;
 begin
-    with MainSession.Prefs do begin
-        // reconnect config
-        setInt('recon_tries', spnAttempts.Position);
-        setInt('recon_time', spnTime.Position);
+    inherited;
 
-        // Network
-        setInt('http_proxy_approach', cboProxyApproach.ItemIndex);
-        if (cboProxyApproach.ItemIndex = http_proxy_ie) then begin
-            reg := TRegistry.Create();
-            try
-                reg.OpenKey('Software\Microsoft\Windows\CurrentVersion\Internet Settings', false);
-                if (reg.ValueExists('AutoConfigURL')) then begin
-                    setInt('http_proxy_approach', http_proxy_custom);
-                    cboProxyApproach.ItemIndex := http_proxy_custom;
-                    cboProxyApproachChange(Self);
-                    txtProxyHost.SetFocus();
-                    MessageDlgW(_(sBadProxy), mtWarning, [mbOK], 0);
-                end;
-            finally
-                reg.Free();
+    if (cboProxyApproach.ItemIndex = http_proxy_ie) then begin
+        reg := TRegistry.Create();
+        try
+            reg.OpenKey('Software\Microsoft\Windows\CurrentVersion\Internet Settings', false);
+            if (reg.ValueExists('AutoConfigURL')) then begin
+                MainSession.Prefs.setInt('http_proxy_approach', http_proxy_custom);
+                cboProxyApproach.ItemIndex := http_proxy_custom;
+                cboProxyApproachChange(Self);
+                txtProxyHost.SetFocus();
+                MessageDlgW(_(sBadProxy), mtWarning, [mbOK], 0);
             end;
+        finally
+            reg.Free();
         end;
-
-        setString('http_proxy_host', txtProxyHost.Text);
-        setInt('http_proxy_port', StrToIntDef(txtProxyPort.Text, 0));
-        setBool('http_proxy_auth', chkProxyAuth.Checked);
-        setString('http_proxy_user', txtProxyUsername.Text);
-        setString('http_proxy_password', txtProxyPassword.Text);
     end;
+
 end;
 
 

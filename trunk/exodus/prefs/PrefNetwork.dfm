@@ -19,7 +19,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     Height = 97
     Caption = 'Reconnect Options'
     TabOrder = 0
-    object Label2: TTntLabel
+    object lblAttempts: TTntLabel
       Left = 8
       Top = 20
       Width = 121
@@ -27,7 +27,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Caption = '# of Reconnect attempts:'
       Transparent = False
     end
-    object Label3: TTntLabel
+    object lblTime: TTntLabel
       Left = 8
       Top = 52
       Width = 141
@@ -35,7 +35,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Caption = 'Time lapse between attempts:'
       Transparent = False
     end
-    object Label4: TTntLabel
+    object lblTime2: TTntLabel
       Left = 9
       Top = 71
       Width = 240
@@ -43,7 +43,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Caption = 'Time is in seconds. Use 0 for a random time period.'
       Transparent = False
     end
-    object txtReconnectTries: TTntEdit
+    object txtAttempts: TTntEdit
       Left = 200
       Top = 16
       Width = 33
@@ -56,10 +56,10 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Top = 16
       Width = 16
       Height = 21
-      Associate = txtReconnectTries
+      Associate = txtAttempts
       TabOrder = 1
     end
-    object txtReconnectTime: TTntEdit
+    object txtTime: TTntEdit
       Left = 200
       Top = 48
       Width = 33
@@ -72,7 +72,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Top = 48
       Width = 16
       Height = 21
-      Associate = txtReconnectTime
+      Associate = txtTime
       Max = 3600
       TabOrder = 3
     end
@@ -120,7 +120,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Enabled = False
       Transparent = False
     end
-    object Label28: TLabel
+    object lblProxyApproach: TLabel
       Left = 5
       Top = 21
       Width = 49

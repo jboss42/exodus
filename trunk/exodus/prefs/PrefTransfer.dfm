@@ -1,29 +1,29 @@
 inherited frmPrefTransfer: TfrmPrefTransfer
-  Left = 249
-  Top = 172
+  Left = 243
+  Top = 168
   Caption = 'frmPrefTransfer'
   ClientHeight = 343
   ClientWidth = 318
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object Label15: TTntLabel [0]
+  object lblXferPath: TTntLabel [0]
     Left = 0
     Top = 35
     Width = 149
     Height = 13
     Caption = 'File transfer download directory:'
   end
-  object lblDefault: TTntLabel [1]
+  object lblXferDefault: TTntLabel [1]
     Left = 0
     Top = 320
     Width = 184
     Height = 13
     Cursor = crHandPoint
     Caption = 'Reset all file transfer options to defaults'
-    OnClick = lblDefaultClick
+    OnClick = lblXferDefaultClick
   end
-  object TntLabel2: TTntLabel [2]
+  object lblXferMethod: TTntLabel [2]
     Left = 0
     Top = 83
     Width = 129
@@ -42,49 +42,49 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     Height = 178
     TabOrder = 4
     Visible = False
-    object Label3: TTntLabel
+    object lblDavHost: TTntLabel
       Left = 8
       Top = 16
       Width = 51
       Height = 13
       Caption = 'Web Host:'
     end
-    object Label4: TTntLabel
+    object lblDavPort: TTntLabel
       Left = 8
       Top = 56
       Width = 22
       Height = 13
       Caption = 'Port:'
     end
-    object Label5: TTntLabel
+    object lblDavPath: TTntLabel
       Left = 8
       Top = 80
       Width = 51
       Height = 13
       Caption = 'Web Path:'
     end
-    object Label6: TTntLabel
+    object lblDavPath2: TTntLabel
       Left = 85
       Top = 99
       Width = 131
       Height = 13
       Caption = 'Example: /~foo/public_html'
     end
-    object Label7: TTntLabel
+    object lblDavUsername: TTntLabel
       Left = 8
       Top = 128
       Width = 51
       Height = 13
       Caption = 'Username:'
     end
-    object Label8: TTntLabel
+    object lblDavPassword: TTntLabel
       Left = 8
       Top = 152
       Width = 49
       Height = 13
       Caption = 'Password:'
     end
-    object Label9: TTntLabel
+    object lblDavHost2: TTntLabel
       Left = 85
       Top = 35
       Width = 150
@@ -151,32 +151,32 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     Height = 113
     TabOrder = 3
     Visible = False
-    object Label1: TTntLabel
-      Left = 16
-      Top = 19
+    object lblXferPort: TTntLabel
+      Left = 9
+      Top = 12
       Width = 160
       Height = 13
       Caption = 'Port to use for HTTP file transfers:'
     end
-    object txtPort: TTntEdit
-      Left = 37
-      Top = 36
+    object txtXferPort: TTntEdit
+      Left = 30
+      Top = 29
       Width = 140
       Height = 21
       TabOrder = 0
     end
-    object chkIP: TTntCheckBox
-      Left = 16
-      Top = 64
+    object chkXferIP: TTntCheckBox
+      Left = 9
+      Top = 57
       Width = 249
       Height = 17
       Caption = 'Use a custom IP address for HTTP transfers'
       TabOrder = 1
-      OnClick = chkIPClick
+      OnClick = chkXferIPClick
     end
-    object txtIP: TTntEdit
-      Left = 37
-      Top = 84
+    object txtXferIP: TTntEdit
+      Left = 30
+      Top = 77
       Width = 140
       Height = 21
       TabOrder = 2
@@ -203,14 +203,14 @@ inherited frmPrefTransfer: TfrmPrefTransfer
     Width = 281
     Height = 79
     TabOrder = 5
-    object TntLabel1: TTntLabel
+    object lbl65Proxy: TTntLabel
       Left = 8
       Top = 16
       Width = 183
       Height = 13
       Caption = 'Jabber Address of File Transfer Server:'
     end
-    object txtS5bProxy: TTntEdit
+    object txt65Proxy: TTntEdit
       Left = 8
       Top = 32
       Width = 257

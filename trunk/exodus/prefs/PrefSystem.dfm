@@ -7,23 +7,23 @@ inherited frmPrefSystem: TfrmPrefSystem
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object Label7: TTntLabel [0]
+  object lblLang: TTntLabel [0]
     Left = 8
     Top = 186
     Width = 133
     Height = 13
     Caption = 'Exodus language file to use:'
   end
-  object lblPluginScan: TTntLabel [1]
+  object lblLangScan: TTntLabel [1]
     Left = 30
     Top = 226
     Width = 130
     Height = 13
     Cursor = crHandPoint
     Caption = 'Scan for language catalogs'
-    OnClick = lblPluginScanClick
+    OnClick = lblLangScanClick
   end
-  object Label15: TTntLabel [2]
+  object lblDefaultNick: TTntLabel [2]
     Left = 8
     Top = 251
     Width = 111
