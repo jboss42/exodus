@@ -161,7 +161,11 @@ type
   public
     { Public declarations }
     mynick: Widestring;
+    COMController: TObject;
+
     procedure SendMsg; override;
+    procedure pluginMenuClick(Sender: TObject); override;
+
     function GetNick(rjid: Widestring): Widestring;
 
     property HintText: Widestring read _hint_text;
@@ -257,12 +261,33 @@ function FindRoomNick(rjid: Widestring): Widestring;
 {---------------------------------------}
 implementation
 uses
-    CustomNotify, JabberConst, InputPassword,
-    IQ, xData, JoinRoom, RoomAdminList,
-    ExUtils, RiserWindow, ShellAPI, RichEdit,
-    Invite, ChatWin, RosterWindow, Presence, Roster,
-    Session, StrUtils, JabberID, MsgDisplay, Notify,
-    PrefController, JabberMsg, Jabber1, XMLNode, XMLUtils;
+    ChatWin,
+    COMChatController, 
+    CustomNotify,
+    ExUtils,
+    InputPassword,
+    Invite,
+    IQ,
+    Jabber1,
+    JabberConst,
+    JabberID,
+    JabberMsg,
+    JoinRoom,
+    MsgDisplay,
+    Notify,
+    PrefController,
+    Presence,
+    RichEdit,
+    RiserWindow,
+    RoomAdminList,
+    Roster,
+    RosterWindow,
+    Session,
+    ShellAPI,
+    StrUtils,
+    xData,
+    XMLNode,
+    XMLUtils;
 
 {$R *.DFM}
 
@@ -315,6 +340,9 @@ begin
                 lstRoster.Font.Charset := 1;
         end;
 
+        // let the plugins know about the new room
+        frmExodus.ComController.fireNewRoom(tmp_jid.jid, TExodusChat(f.ComController));
+        
         tmp_jid.Free();
         room_list.AddObject(rjid, f);
     end;
@@ -327,7 +355,14 @@ end;
 
 {---------------------------------------}
 procedure TfrmRoom.MsgCallback(event: string; tag: TXMLTag);
+var
+    body, xml: Widestring;
 begin
+    // plugin
+    xml := tag.xml();
+    body := tag.GetBasicText('body');
+    TExodusChat(ComController).fireRecvMsg(body, xml);
+
     // We are getting a msg
     if (tag.getAttribute('type') = 'groupchat') then
         ShowMsg(tag)
@@ -417,11 +452,15 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.SendMsg;
 var
-    txt: Widestring;
+    xml, txt: Widestring;
     msg: TJabberMessage;
+    mtag: TXMLTag;
 begin
     // Send the actual message out
     txt := getInputText(MsgOut);
+
+    // plugin madness
+    TExodusChat(ComController).fireBeforeMsg(txt);
 
     if (txt = '') then exit;
 
@@ -433,7 +472,14 @@ begin
     msg.nick := MyNick;
     msg.isMe := true;
     msg.ID := MainSession.generateID();
-    MainSession.SendTag(msg.Tag);
+
+    // additional plugin madness
+    mtag := msg.Tag;
+    xml := TExodusChat(ComController).fireAfterMsg(txt);
+    if (xml <> '') then
+        mtag.addInsertedXML(xml);
+
+    MainSession.SendTag(mtag);
     msg.Free();
     inherited;
 end;
@@ -863,6 +909,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmRoom.FormCreate(Sender: TObject);
+var
+    e: TExodusChat;
 begin
     inherited;
 
@@ -894,6 +942,11 @@ begin
     _wrap_input := MainSession.Prefs.getBool('wrap_input');
     MsgOut.WordWrap := _wrap_input;
     mnuWordwrap.Checked := _wrap_input;
+
+    e := TExodusChat.Create();
+    e.setRoom(Self);
+    e.ObjAddRef();
+    COMController := e;
 end;
 
 {---------------------------------------}
@@ -954,6 +1007,9 @@ var
 begin
     inherited;
     if (Key = #0) then exit;
+
+    // dispatch key-presses to Plugins
+    TExodusChat(ComController).fireMsgKeyPress(Key);
 
     // Send the msg if they hit return
     if (Key = #09) then begin
@@ -1658,6 +1714,12 @@ begin
     MsgList.WideLines.SaveToFile(fn);
     MsgList.OutputFormat := fmt;
 end;
+
+procedure TfrmRoom.pluginMenuClick(Sender: TObject);
+begin
+    TExodusChat(COMController).fireMenuClick(Sender);
+end;
+
 
 initialization
     // list for all of the current rooms

@@ -12,9 +12,7 @@ inherited frmRoom: TfrmRoom
     object Splitter2: TSplitter [0]
       Left = 268
       Top = 4
-      Width = 3
       Height = 217
-      Cursor = crHSplit
       Align = alRight
       ResizeStyle = rsUpdate
     end

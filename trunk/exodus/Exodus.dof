@@ -94,10 +94,10 @@ OutputDir=
 UnitOutputDir=.\output
 PackageDLLOutputDir=
 PackageDCPOutputDir=
-SearchPath=.\components;D:\lang\delphi\jcl\source
+SearchPath=.\components
 Packages=vcl;rtl;vclshlctrls;vclx
 Conditionals=
-DebugSourceDirs=D:\Dev\Delphi6\Source\Indy\;D:\src\exodus\exodus\components\
+DebugSourceDirs=.\components
 UsePackages=0
 [Parameters]
 RunParams=-d -c debug.xml
@@ -176,14 +176,16 @@ CompanyName=PeterMillard
 FileDescription=
 FileVersion=0.8.0.80
 [HistoryLists\hlDebugSourcePath]
-Count=1
-Item0=D:\Dev\Delphi6\Source\Indy\;D:\src\exodus\exodus\components\
+Count=2
+Item0=.\components
+Item1=D:\Dev\Delphi6\Source\Indy\;D:\src\exodus\exodus\components\
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 [HistoryLists\hlSearchPath]
-Count=1
-Item0=.\components;D:\lang\delphi\jcl\source
+Count=2
+Item0=.\components
+Item1=.\components;D:\lang\delphi\jcl\source
 [HistoryLists\hlUnitOutputDirectory]
 Count=1
 Item0=.\output

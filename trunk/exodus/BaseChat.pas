@@ -94,6 +94,10 @@ type
     procedure HideEmoticons();
     procedure Flash;
 
+    function newMsgoutMenu(caption: Widestring): Widestring;
+    function newContextMenu(caption: Widestring): Widestring;
+    procedure pluginMenuClick(Sender: TObject); virtual; abstract;
+
   end;
 
 resourcestring
@@ -469,6 +473,18 @@ procedure TfrmBaseChat.WMThrob(var msg: TMessage);
 begin
     // Enable the flash timer
     timWinFlash.Enabled := true;
+end;
+
+{---------------------------------------}
+function TfrmBaseChat.newMsgoutMenu(caption: Widestring): Widestring;
+begin
+    // xxx: code me
+end;
+
+{---------------------------------------}
+function TfrmBaseChat.newContextMenu(caption: Widestring): Widestring;
+begin
+    // xxx: code me
 end;
 
 end.

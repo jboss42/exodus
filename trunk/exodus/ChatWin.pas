@@ -46,7 +46,6 @@ type
     mnuOnTop: TMenuItem;
     btnClose: TSpeedButton;
     pnlJID: TPanel;
-    lblJID: TTntStaticText;
     imgStatus: TPaintBox;
     popClearHistory: TMenuItem;
     lblNick: TTntLabel;
@@ -54,6 +53,7 @@ type
     NotificationOptions1: TMenuItem;
     timBusy: TTimer;
     popAddContact: TMenuItem;
+    lblJID: TTntLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -136,6 +136,8 @@ type
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
     procedure DockForm; override;
     procedure FloatForm; override;
+
+    procedure pluginMenuClick(Sender: TObject); override;
 
     property getJid: Widestring read jid;
     property redock: boolean read _redock;
@@ -355,6 +357,7 @@ end;
 procedure TfrmChat.SetupPrefs();
 begin
     AssignDefaultFont(Self.Font);
+
     lblJID.Font.Color := clBlue;
     lblJID.Font.Style := [fsUnderline];
 
@@ -1195,10 +1198,19 @@ begin
     f.Free();
 end;
 
+{---------------------------------------}
 procedure TfrmChat.timBusyTimer(Sender: TObject);
 begin
   inherited;
     timBusy.Enabled := false;
 end;
+
+{---------------------------------------}
+procedure TfrmChat.pluginMenuClick(Sender: TObject);
+begin
+    if (chat_object <> nil) then
+        TExodusChat(chat_object.ComController).fireMenuClick(Sender);
+end;
+
 
 end.
