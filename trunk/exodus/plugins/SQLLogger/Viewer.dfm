@@ -288,7 +288,6 @@ object frmView: TfrmView
       TabOrder = 0
       URLColor = clBlue
       URLCursor = crHandPoint
-      WordWrap = False
       InputFormat = ifRTF
       OutputFormat = ofRTF
       SelectedInOut = False
