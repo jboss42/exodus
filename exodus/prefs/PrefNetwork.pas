@@ -74,7 +74,8 @@ procedure TfrmPrefNetwork.LoadPrefs();
 begin
     inherited;
     if (spnAttempts.Position < 0) then spnAttempts.Position := 3;
-    chkProxyAuthClick(chkProxyAuth);
+    cboProxyApproachChange(Self);
+    chkProxyAuthClick(Self);
 end;
 
 {---------------------------------------}
