@@ -68,6 +68,7 @@ type
   private
     { Private declarations }
     _cb: integer;
+    _scb: integer;
     procedure DataCallback(event: string; tag: TXMLTag; data: Widestring);
   protected
     procedure SessionCallback(event: string; tag: TXMLTag);
@@ -167,8 +168,9 @@ procedure TfrmDebug.FormCreate(Sender: TObject);
 begin
     // make sure the output is showing..
     inherited;
+
     _cb := MainSession.RegisterCallback(DataCallback);
-    MainSession.RegisterCallback(SessionCallback, '/session');
+    _scb := MainSession.RegisterCallback(SessionCallback, '/session');
 
     if MainSession.Active then begin
         lblJID.Caption := MainSession.Username + '@' + MainSession.Server +
@@ -312,11 +314,15 @@ end;
 procedure TfrmDebug.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     Action := caFree;
-    if ((MainSession <> nil) and (_cb <> -1)) then
+
+    if ((MainSession <> nil) and (_cb <> -1)) then begin
+        MainSession.UnregisterCallback(_scb);
         MainSession.UnregisterCallback(_cb);
+    end;
+
+    frmDebug := nil;
 
     inherited;
-    frmDebug := nil;
 end;
 
 {---------------------------------------}

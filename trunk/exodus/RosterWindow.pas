@@ -193,7 +193,8 @@ type
     _group_counts: boolean;
 
     _show_pending: boolean;
-    _show_visible: integer;
+    _show_online: boolean;
+    _show_filter: integer;
     _sort_roster: boolean;
     _offline_grp: boolean;
 
@@ -436,7 +437,6 @@ var
     grp_node: TTreeNode;
     ritem: TJabberRosterItem;
     b_jid: Widestring;
-    tmpb: boolean;
 begin
     // catch session events
     if event = '/session/disconnected' then begin
@@ -526,17 +526,16 @@ begin
             end;
         end;
 
-        _show_visible := MainSession.Prefs.getInt('roster_visible');
+        _show_online := MainSession.Prefs.getBool('roster_only_online');
+        _show_filter := MainSession.Prefs.getInt('roster_filter');
+        if (_show_filter = show_offline) then begin
+            _show_filter := show_dnd;
+            MainSession.Prefs.setInt('roster_filter', _show_filter);
+        end;
+
         _sort_roster := MainSession.Prefs.getBool('roster_sort');
         _show_pending := MainSession.Prefs.getBool('roster_show_pending');
         _offline_grp := MainSession.Prefs.getBool('roster_offline_group');
-
-        tmpb := MainSession.Prefs.getBool('roster_only_online');
-        if ((tmpb) and (_show_visible = show_offline)) then begin
-            _show_visible := show_dnd;
-            MainSession.Prefs.setInt('roster_visible', _show_visible);
-            frmExodus.restoreToolbar();
-        end;
 
         frmExodus.pnlRoster.ShowHint := not _show_status;
         Redraw();
@@ -801,7 +800,7 @@ var
 begin
     // Make sure we have current settings
     // SessionCallback('/session/prefs', nil);
-
+    
     // loop through all roster items and draw them
     _FullRoster := true;
     treeRoster.Color := TColor(MainSession.prefs.getInt('roster_bg'));
@@ -1033,7 +1032,7 @@ begin
         // maybe a transport? let them pass
     end
 
-    else if (_show_visible > show_offline) then begin
+    else if ((_show_online) and (_show_filter > show_offline)) then begin
         // we are filtering visible contacts
 
         if (p = nil) then plevel := show_offline
@@ -1042,7 +1041,7 @@ begin
         else if (p.show = 'away') then plevel := show_away
         else plevel := show_available;
 
-        if (plevel < _show_visible) then begin
+        if (plevel < _show_filter) then begin
             // we shouldn't show this ritem
             if ((plevel = show_offline) and (not _offline_grp) and
                 (ritem.jid.jid = MainSession.BareJid)) then
