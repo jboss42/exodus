@@ -913,6 +913,9 @@ begin
         if not debug then
             debug := MainSession.Prefs.getBool('debug');
 
+        if not minimized then
+            minimized := MainSession.Prefs.getBool('min_start');
+
         with MainSession.Prefs do begin
             s := GetString('brand_icon');
             if (s <> '') then
