@@ -50,7 +50,7 @@ ShowUninstDetails show
 InstallDir "$PROGRAMFILES\${MUI_PRODUCT}"
 ; Registry key to check for directory (so if you install again, it will
 ; overwrite the old one automatically)
-InstallDirRegKey HKLM "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
+InstallDirRegKey HKCU "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
 
 !define MUI_INNERTEXT_LICENSE_TOP \
     "Exodus is licensed under the GPL.  Press Page Down to see the rest of the agreement."
@@ -203,7 +203,7 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ; Write the installation path into the registry
-    WriteRegStr HKLM SOFTWARE\Jabber\Exodus "Install_Dir" "$INSTDIR"
+    WriteRegStr HKCU SOFTWARE\Jabber\Exodus "Install_Dir" "$INSTDIR"
     
     ; Write the uninstall keys for Windows
     WriteRegStr HKLM \
@@ -230,29 +230,29 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
     StrCpy $0 0
   outer_loop:
 
-    EnumRegKey $1 HKLM "Software\Jabber\Exodus\Restart" $0
+    EnumRegKey $1 HKCU "Software\Jabber\Exodus\Restart" $0
     StrCmp $1 "" abort
     
-    ReadRegStr $2 HKLM "Software\Jabber\Exodus\Restart\$1" "cwd"
+    ReadRegStr $2 HKCU "Software\Jabber\Exodus\Restart\$1" "cwd"
     StrCmp $2 "" done
     SetOutPath $2
     
-    ReadRegStr $2 HKLM "Software\Jabber\Exodus\Restart\$1" "cmdline"
+    ReadRegStr $2 HKCU "Software\Jabber\Exodus\Restart\$1" "cmdline"
     
-    ReadRegDWORD $3 HKLM "Software\Jabber\Exodus\Restart\$1" "priority"
+    ReadRegDWORD $3 HKCU "Software\Jabber\Exodus\Restart\$1" "priority"
     StrCmp $3 "" done
 
-    ReadRegStr $4 HKLM "Software\Jabber\Exodus\Restart\$1" "profile"
+    ReadRegStr $4 HKCU "Software\Jabber\Exodus\Restart\$1" "profile"
     StrCmp $4 "" show
     StrCpy $4 '-f "$4"'
 
   show:
-    ReadRegStr $5 HKLM "Software\Jabber\Exodus\Restart\$1" "show"
+    ReadRegStr $5 HKCU "Software\Jabber\Exodus\Restart\$1" "show"
     StrCmp $5 "" status
     StrCpy $5 '-w "$5"'
     
   status:
-    ReadRegStr $6 HKLM "Software\Jabber\Exodus\Restart\$1" "status"
+    ReadRegStr $6 HKCU "Software\Jabber\Exodus\Restart\$1" "status"
     StrCmp $6 "" exec
     StrCpy $6 '-s "$6"'
 
@@ -262,7 +262,7 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
     SetAutoClose "true"
 
   done:
-    DeleteRegKey HKLM "Software\Jabber\Exodus\Restart\$1"
+    DeleteRegKey HKCU "Software\Jabber\Exodus\Restart\$1"
 
 ;    IntOp $0 $0 + 1
     Goto outer_loop
@@ -355,7 +355,7 @@ Section "" SEC_Menu
     CreateShortCut \
         "$SMPROGRAMS\${MUI_STARTMENUPAGE_VARIABLE}\Exodus Homepage.lnk" \
         "${HOME_URL}"
-    WriteRegStr HKLM SOFTWARE\Jabber\Exodus "StartMenu" \
+    WriteRegStr HKCU SOFTWARE\Jabber\Exodus "StartMenu" \
         "${MUI_STARTMENUPAGE_VARIABLE}"
 
     !insertmacro MUI_STARTMENU_WRITE_END
@@ -376,7 +376,7 @@ SectionEnd
 ;UninstallText "This will uninstall Exodus.  Click Uninstall to continue."
 Section "Uninstall"
     ; remove shortcuts
-    ReadRegStr $0 HKLM "SOFTWARE\Jabber\Exodus" "StartMenu"
+    ReadRegStr $0 HKCU "SOFTWARE\Jabber\Exodus" "StartMenu"
     StrCmp $0 "" noshortcuts
     Delete "$SMPROGRAMS\$0\Uninstall.lnk"
     Delete "$SMPROGRAMS\$0\Exodus.lnk"
@@ -410,18 +410,29 @@ Section "Uninstall"
     Delete $INSTDIR\libeay32.dll
     Delete $INSTDIR\ssleay32.dll
     
+	; remove shell hooks
+	Delete "$DESKTOP\Exodus.lnk"
+	Delete "$QUICKLAUNCH\Exodus.lnk"
+
     ; MUST REMOVE UNINSTALLER, too
     Delete $INSTDIR\uninstall.exe
     RMDir "$INSTDIR"
 
-    ; xxx Remove prefs??
+	ReadRegStr $0 HKCU "Software\Jabber\Exodus" "prefs_file"
+	Delete $0
+	DeleteRegValue HKCU "Software\Jabber\Exodus" "prefs_file"
+
+    ; TODO: Remove logs, if user says so
 
     ; remove registry keys
     DeleteRegKey HKLM \
         "Software\Microsoft\Windows\CurrentVersion\Uninstall\Exodus"
 
-    DeleteRegKey HKLM SOFTWARE\Jabber\Exodus\Restart
-    DeleteRegKey HKLM SOFTWARE\Jabber\Exodus
+    DeleteRegKey HKCU SOFTWARE\Jabber\Exodus\Restart
+    DeleteRegKey HKCU SOFTWARE\Jabber\Exodus
+
+    DeleteRegValue HKCU Software\Microsoft\Windows\CurrentVersion\Run \
+        "Exodus"
 
 SectionEnd
 
