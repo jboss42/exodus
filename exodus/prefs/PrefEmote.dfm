@@ -3,18 +3,18 @@ inherited frmPrefEmote: TfrmPrefEmote
   Top = 185
   Caption = 'frmPrefEmote'
   ClientHeight = 326
-  ClientWidth = 308
+  ClientWidth = 312
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   inherited pnlHeader: TTntPanel
-    Width = 308
+    Width = 312
     Caption = 'Emoticon Options'
   end
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 308
+    Width = 312
     Height = 26
     Align = alTop
     BevelOuter = bvNone
@@ -31,9 +31,9 @@ inherited frmPrefEmote: TfrmPrefEmote
   object pageEmotes: TTntPageControl
     Left = 0
     Top = 52
-    Width = 308
+    Width = 312
     Height = 274
-    ActivePage = TntTabSheet1
+    ActivePage = TntTabSheet2
     Align = alClient
     TabOrder = 2
     object TntTabSheet1: TTntTabSheet
@@ -41,7 +41,7 @@ inherited frmPrefEmote: TfrmPrefEmote
       object pnlCustomPresButtons: TPanel
         Left = 0
         Top = 212
-        Width = 300
+        Width = 304
         Height = 34
         Align = alBottom
         BevelOuter = bvNone
@@ -86,7 +86,7 @@ inherited frmPrefEmote: TfrmPrefEmote
       object lstEmotes: TTntListBox
         Left = 0
         Top = 0
-        Width = 300
+        Width = 304
         Height = 212
         Align = alClient
         ItemHeight = 13
@@ -97,8 +97,8 @@ inherited frmPrefEmote: TfrmPrefEmote
       Caption = 'Custom Emoticons'
       object Panel2: TPanel
         Left = 0
-        Top = 97
-        Width = 300
+        Top = 158
+        Width = 304
         Height = 34
         Align = alBottom
         BevelOuter = bvNone
@@ -108,96 +108,75 @@ inherited frmPrefEmote: TfrmPrefEmote
           Top = 4
           Width = 60
           Height = 25
-          Caption = 'Add'
+          Caption = 'Add ...'
           TabOrder = 0
-          OnClick = btnEmoteAddClick
+          OnClick = btnCustomEmoteAddClick
         end
         object btnCustomEmoteRemove: TTntButton
-          Left = 68
+          Left = 132
           Top = 4
           Width = 60
           Height = 25
           Caption = 'Remove'
           TabOrder = 1
-          OnClick = btnEmoteRemoveClick
+          OnClick = btnCustomEmoteRemoveClick
         end
-        object btnCustomEmoteClear: TTntButton
-          Left = 132
+        object btnCustomEmoteEdit: TTntButton
+          Left = 68
           Top = 4
           Width = 60
           Height = 25
-          Caption = 'Clear'
+          Caption = 'Edit ...'
           TabOrder = 2
-          OnClick = btnEmoteClearClick
+          OnClick = btnCustomEmoteEditClick
         end
       end
       object Panel3: TPanel
         Left = 0
-        Top = 131
-        Width = 300
-        Height = 115
+        Top = 192
+        Width = 304
+        Height = 54
         Align = alBottom
         BevelOuter = bvNone
         TabOrder = 1
-        object TntLabel1: TTntLabel
-          Left = 2
-          Top = 17
-          Width = 77
-          Height = 13
-          Caption = 'Image Filename:'
-        end
-        object TntLabel2: TTntLabel
-          Left = 2
-          Top = 41
-          Width = 57
-          Height = 13
-          Caption = 'Text Match:'
-        end
         object TntLabel3: TTntLabel
           Left = 2
-          Top = 72
+          Top = 8
           Width = 190
           Height = 13
           Caption = 'Filename of custom emoticon definitions:'
         end
-        object txtEmoteFilename: TTntEdit
-          Left = 120
-          Top = 9
-          Width = 173
+        object txtCustomEmoteFilename: TTntEdit
+          Left = 16
+          Top = 22
+          Width = 249
           Height = 21
           TabOrder = 0
         end
-        object txtEmoteText: TTntEdit
-          Left = 120
-          Top = 33
-          Width = 173
-          Height = 21
-          TabOrder = 1
-        end
-        object txtCustomEmoteFilename: TTntEdit
-          Left = 16
-          Top = 86
-          Width = 201
-          Height = 21
-          TabOrder = 2
-        end
         object btnCustomEmoteBrowse: TTntButton
-          Left = 222
-          Top = 84
-          Width = 75
+          Left = 270
+          Top = 20
+          Width = 27
           Height = 25
-          Caption = 'Browse'
-          TabOrder = 3
+          Caption = '...'
+          TabOrder = 1
+          OnClick = btnCustomEmoteBrowseClick
         end
       end
       object lstCustomEmotes: TTntListView
         Left = 0
         Top = 0
-        Width = 300
-        Height = 97
+        Width = 304
+        Height = 158
         Align = alClient
         Columns = <>
+        IconOptions.AutoArrange = True
+        LargeImages = imagesCustom
+        MultiSelect = True
+        OwnerDraw = True
         TabOrder = 2
+        OnAdvancedCustomDrawItem = lstCustomEmotesAdvancedCustomDrawItem
+        OnDblClick = btnCustomEmoteEditClick
       end
     end
   end
@@ -212,6 +191,10 @@ inherited frmPrefEmote: TfrmPrefEmote
     Top = 34
   end
   object imagesCustom: TImageList
+    BlendColor = clWindow
+    BkColor = 15857655
+    Height = 32
+    Width = 32
     Left = 288
     Top = 34
   end

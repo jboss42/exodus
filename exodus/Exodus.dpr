@@ -177,7 +177,8 @@ uses
   MSHTMLEvents in 'MSHTMLEvents.pas',
   Emote in 'Emote.pas',
   GIFImage in 'GIFImage.pas',
-  PrefEmote in 'prefs\PrefEmote.pas' {frmPrefEmote};
+  PrefEmote in 'prefs\PrefEmote.pas' {frmPrefEmote},
+  EmoteProps in 'EmoteProps.pas' {frmEmoteProps};
 
 {$R *.TLB}
 
