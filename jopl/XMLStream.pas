@@ -46,7 +46,6 @@ const
     WM_HTTPPROXY = WM_USER + 7002;
     WM_COMMERROR = WM_USER + 7003;
     WM_DROPPED = WM_USER + 7004;
-    WM_RESET = WM_USER + 7005;
     WM_CONNECTED = WM_USER + 7006;
     WM_DISCONNECTED = WM_USER + 7007;
     WM_SEND = WM_USER + 7008;
@@ -252,7 +251,9 @@ begin
             utf := _Socket.CurrentReadBuffer;
             buff := Utf8ToAnsi(utf);
 
-            if (Self.Stopped) or (Self.Suspended) then exit;
+            if ((Self.Stopped) or (Self.Suspended) or (Self.Terminated)) then
+                exit;
+
             bytes := length(buff);
             if bytes > 0 then begin
                 // stuff the socket data into the stream
@@ -319,7 +320,6 @@ end;
 procedure TDataThread.Sock_Disconnect(Sender: TObject);
 begin
     // Socket is disconnected
-    doMessage(WM_DISCONNECTED);
 end;
 
 {---------------------------------------}
@@ -337,12 +337,16 @@ begin
         doMessage(WM_COMMERROR);
     end
     else begin
-        // Some exception occurded during Read ops
+        // Some exception occured during Read ops
         if E is EIdConnClosedGracefully then exit;
 
         if E is EIdSocketError then begin
             se := E as EIdSocketError;
-            if se.LastError <> 10038 then begin
+            if se.LastError = 10038 then
+                // normal disconnect
+                doMessage(WM_DISCONNECTED)
+            else begin
+                // some other socket exception
                 _Data := E.Message;
                 doMessage(WM_COMMERROR);
                 end;
@@ -630,11 +634,7 @@ begin
             if (_socket.Connected) then
                 _socket.Disconnect();
             _thread := nil;
-            end;
-
-        WM_RESET: begin
-            // Reset the data thread pointer
-            _thread := nil;
+            _timer.Enabled := false;
             end;
 
         // pgm 8/9/01 - Handle these windows messages
@@ -673,7 +673,8 @@ end;
 procedure TXMLStream.Disconnect;
 begin
     // Disconnect the stream and stop the thread
-    _socket.Disconnect;
+    if ((_socket <> nil) and (_socket.Connected)) then
+        _socket.Disconnect;
     _timer.Enabled := false;
 end;
 
