@@ -48,7 +48,7 @@
 	SectionEnd
 
 	Section /o "SQLLogger" SEC_ExSQLLogger
-	  AddSize 351
+	  AddSize 396
 	  Push "ExSQLLogger"
 	  Call DownloadPlugin
       RegDll "$INSTDIR\plugins\ExSQLLogger.dll"

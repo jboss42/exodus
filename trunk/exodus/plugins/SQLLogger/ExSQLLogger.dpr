@@ -28,7 +28,8 @@ uses
   ExRichEdit in '..\..\components\ExRichEdit.pas',
   RegExpr in '..\..\..\jopl\RegExpr.pas',
   Stringprep in '..\..\..\jopl\Stringprep.pas',
-  SQLUtils in 'SQLUtils.pas';
+  SQLUtils in 'SQLUtils.pas',
+  gnugettext in '..\..\gnugettext.pas';
 
 exports
   DllGetClassObject,
