@@ -106,11 +106,17 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
 	    File "IdleHooks.dll"
 
         ; Setup stuff based on custom Shell page
+        Push $CMDLINE
+        Push "/S"
+        Call StrStr
+        Pop $0
+        StrCmp $0 "/S" noshell
+
         !insertmacro MUI_INSTALLOPTIONS_READ $R0 "notify.ini" "Field 2" "State"
         StrCmp $R0 "1" "" +2
             ;Checked
             CreateShortcut "$DESKTOP\Exodus.lnk" "$INSTDIR\Exodus.exe"
-    
+
         !insertmacro MUI_INSTALLOPTIONS_READ $R0 "notify.ini" "Field 3" "State"
         StrCmp $R0 "1" "" +2
             ;Checked
@@ -120,7 +126,7 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
             ;Checked
             CreateShortcut "$SMSTARTUP\Exodus.lnk" "$INSTDIR\Exodus.exe"
 
-
+    noshell:
 
         ; BRANDING: Uncomment if you are doing a branded setup.
         ; SetOverwrite off ; only if you don't want to overwrite existing file.
@@ -294,7 +300,6 @@ Section "" SEC_Menu
     Push "/S"
     Call StrStr
     Pop $0
-
     StrCmp $0 "/S" silent
     !insertmacro MUI_STARTMENU_WRITE_BEGIN
       CreateDirectory "$SMPROGRAMS\${MUI_STARTMENUPAGE_VARIABLE}"
@@ -309,7 +314,7 @@ Section "" SEC_Menu
         "${HOME_URL}"
       WriteRegStr HKLM SOFTWARE\Jabber\Exodus "StartMenu" \
         "${MUI_STARTMENUPAGE_VARIABLE}"
-        
+
     !insertmacro MUI_STARTMENU_WRITE_END
 
   silent:
@@ -365,7 +370,7 @@ Section "Uninstall"
   ; MUST REMOVE UNINSTALLER, too
   Delete $INSTDIR\uninstall.exe
   RMDir "$INSTDIR"
-  
+
   ; xxx Remove prefs??
 
   ; remove registry keys
@@ -417,7 +422,7 @@ SubCaption 3 ": Exit running Exodus versions!"
 !insertmacro MUI_FUNCTIONS_DESCRIPTION_BEGIN
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Exodus} $(DESC_Exodus)
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_SSL} $(DESC_SSL)
-    !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Bleed} $(DESC_Bleed)  
+    !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Bleed} $(DESC_Bleed)
     !insertmacro MUI_DESCRIPTION_TEXT ${SEC_Plugins} $(DESC_Plugins)
     !include plugins\plugin-desc.nsi
 !insertmacro MUI_FUNCTIONS_DESCRIPTION_END
@@ -437,7 +442,7 @@ Function NotifyInstances
 
 start:
         StrCpy $1 0
-        
+
         ; check to see if we have any instances
         ; if we do, show a warning..
         FindWindow $0 "TfrmExodus" "" 0
@@ -541,7 +546,7 @@ Function .onInit
 	Push ${SEC_Plugins}
 	Call TurnOff
 
-	; BRANDING: To turn off bleeding edge updates, 
+	; BRANDING: To turn off bleeding edge updates,
 	; Comment these 2 lines out.
 	Push ${SEC_Bleed}
 	Call TurnOff
@@ -554,31 +559,31 @@ Function .onInit
 FunctionEnd
 
 Function SetCustomShell
-  !insertmacro MUI_HEADER_TEXT "$(CUSTOMSHELL_TITLE)" "$(CUSTOMSHELL_SUBTITLE)"
+    !insertmacro MUI_HEADER_TEXT "$(CUSTOMSHELL_TITLE)" "$(CUSTOMSHELL_SUBTITLE)"
 
-  Push $R0
-  Push $R1
-  Push $R2
+    Push $R0
+    Push $R1
+    Push $R2
 
     !insertmacro MUI_INSTALLOPTIONS_INITDIALOG "notify.ini"
     Pop $R0
-    
+
     GetDlgItem $R1 $R0 1200
-    
+
     ;$R1 contains the HWND of the first field
-    CreateFont $R2 "Tahoma" 10 700 
+    CreateFont $R2 "Tahoma" 10 700
     SendMessage $R1 ${WM_SETFONT} $R2 0
 
     GetDlgItem $R1 $R0 1204
-    
+
     ;$R1 contains the HWND of the first field
     CreateFont $R2 "Tahoma" 10 700 /ITALIC
     SendMessage $R1 ${WM_SETFONT} $R2 0
-	
+
     !insertmacro MUI_INSTALLOPTIONS_SHOW
-	
-  Pop $R1
-  Pop $R1
-  Pop $R0
+
+    Pop $R1
+    Pop $R1
+    Pop $R0
 
 FunctionEnd
