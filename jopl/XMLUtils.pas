@@ -346,6 +346,8 @@ begin
         if ( (c='@') or (c=':') or (c='|') or (c='<') or
         (c='>') or (c='\') or (c='/') or (c='*') or (c=' ') ) then
             fn := fn + '_'
+        else if (c > Chr(122)) then
+            fn := fn + '_'
         else
             fn := fn + c;
     end;
