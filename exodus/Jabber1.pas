@@ -1654,12 +1654,6 @@ begin
             exit;
         end;
 
-        // Unload all of the remaining plugins
-        UnloadPlugins();
-
-        // Unregister callbacks, etc.
-        MainSession.UnRegisterCallback(_sessioncb);
-        MainSession.Prefs.SavePosition(Self);
     end;
 
     // kill all of the auto-responders..
@@ -1702,6 +1696,13 @@ begin
         frmRosterWindow.ClearNodes();
         frmRosterWindow.Close;
         CloseAllChats();
+
+        // Unload all of the remaining plugins
+        UnloadPlugins();
+
+        // Unregister callbacks, etc.
+        MainSession.UnRegisterCallback(_sessioncb);
+        MainSession.Prefs.SavePosition(Self);
 
         _fileserver.Free();
         _notify.Free();

@@ -75,9 +75,9 @@ begin
     _menu_items.Free();
 
     // free all of our plugin proxies
-    for i := 0 to _plugs.Count - 1 do begin
+    for i := _plugs.Count - 1 downto 0 do begin
         TChatPlugin(_plugs[i]).com.onClose();
-        TChatPlugin(_plugs[i]).Free();
+        //TChatPlugin(_plugs[i]).Free();
     end;
 
     _plugs.Clear();

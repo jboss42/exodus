@@ -129,6 +129,7 @@ end;
 procedure TChatSpeller.onNewWindow(HWND: Integer);
 begin
     // we have a new window assigned to us
+    _MsgOut := nil;
 end;
 
 
