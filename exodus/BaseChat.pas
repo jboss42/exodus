@@ -312,6 +312,7 @@ procedure TfrmBaseChat.Clear1Click(Sender: TObject);
 begin
     inherited;
     MsgList.Clear();
+    _msgHistory.Clear();
 end;
 
 {---------------------------------------}
