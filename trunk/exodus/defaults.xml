@@ -128,6 +128,8 @@
     <roster_default>Friends</roster_default>
     <xfer_port>5280</xfer_port>
     <close_hotkey>Alt + W</close_hotkey>
+    <nested_groups>1</nested_groups>
+    <group_seperator>/</group_seperator>
 
     <!-- default custom presence stuff -->
     <presence name='Available'>

@@ -36,7 +36,11 @@ type
     chkRosterUnicode: TTntCheckBox;
     chkInlineStatus: TTntCheckBox;
     cboInlineStatus: TColorBox;
+    chkNestedGrps: TTntCheckBox;
+    txtGrpSeperator: TTntEdit;
+    TntLabel1: TTntLabel;
     procedure chkInlineStatusClick(Sender: TObject);
+    procedure chkNestedGrpsClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -70,6 +74,9 @@ begin
         cboInlineStatus.Selected := TColor(getInt('inline_color'));
         cboInlineStatus.Enabled := chkInlineStatus.Checked;
 
+        chkNestedGrps.Checked := getBool('nested_groups');
+        txtGrpSeperator.Text := getString('group_seperator');
+
     end;
 end;
 
@@ -88,6 +95,9 @@ begin
         setBool('inline_status', chkInlineStatus.Checked);
         setInt('inline_color', integer(cboInlineStatus.Selected));
 
+        setBool('nested_groups', chkNestedGrps.Checked);
+        setString('group_seperator', txtGrpSeperator.Text);
+
     end;
 end;
 
@@ -96,6 +106,12 @@ begin
   inherited;
     // toggle the color drop down on/off
     cboInlineStatus.Enabled := chkInlineStatus.Checked;
+end;
+
+procedure TfrmPrefRoster.chkNestedGrpsClick(Sender: TObject);
+begin
+  inherited;
+    txtGrpSeperator.Enabled := chkNestedGrps.Checked;
 end;
 
 end.
