@@ -1010,12 +1010,12 @@ begin
         end;
     2: begin
         // top
-        if ((t <= task_rect.bottom) and (t >= task_rect.top)) then
+        if ((t < task_rect.bottom) and (t >= task_rect.top)) then
             t := task_rect.bottom + 2;
         end;
     3: begin
         // bottom;
-        if (((t+h) >= task_rect.top) and ((t+h) <= task_rect.bottom)) then
+        if (((t+h) > task_rect.top) and ((t+h) <= task_rect.bottom)) then
             t := t - tbh;
         end;
     end;
