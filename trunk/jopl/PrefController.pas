@@ -88,8 +88,9 @@ type
         _pref_node: TXMLTag;
         _profiles: TStringList;
         _parser: TXMLTagParser;
+        
         function getDefault(pkey: string): string;
-
+        function findPresenceTag(pkey: string): TXMLTag;
         procedure Save;
     public
         constructor Create(RegKey: string);
@@ -98,13 +99,15 @@ type
         function getInt(pkey: string): integer;
         function getBool(pkey: string): boolean;
         function getStringlist(pkey: string): TStringList;
+        function getAllPresence(): TList;
         function getPresence(pkey: string): TJabberCustomPres;
+        function getPresIndex(idx: integer): TJabberCustomPres;
 
         procedure setString(pkey, pvalue: string);
         procedure setInt(pkey: string; pvalue: integer);
         procedure setBool(pkey: string; pvalue: boolean);
         procedure setStringlist(pkey: string; pvalue: TStrings);
-        procedure setPresence(pkey: string; pvalue: TJabberCustomPres);
+        procedure setPresence(pvalue: TJabberCustomPres);
 
         procedure SavePosition(form: TForm);
         procedure RestorePosition(form: TForm);
@@ -319,8 +322,8 @@ begin
         s := p.QueryTags('s');
         for i := 0 to s.Count - 1 do
             sl.Add(s.Tags[i].Data);
+        s.Free;
         end;
-
     Result := sl;
 end;
 
@@ -379,16 +382,80 @@ begin
 end;
 
 {---------------------------------------}
-function TPrefController.getPresence(pkey: string): TJabberCustomPres;
+function TPrefController.findPresenceTag(pkey: string): TXMLTag;
+var
+    i: integer;
+    ptags: TXMLTagList;
 begin
     // get some custom pres from the list
     Result := nil;
+
+    ptags := _pref_node.QueryTags('presence');
+    for i := 0 to ptags.count - 1 do begin
+        if (ptags[i].GetAttribute('title') = pkey) then begin
+            Result := ptags[i];
+            break;
+            end;
+        end;
+
+    ptags.Free;
 end;
 
 {---------------------------------------}
-procedure TPrefController.setPresence(pkey: string; pvalue: TJabberCustomPres);
+function TPrefController.getAllPresence(): TList;
+var
+    i: integer;
+    ptags: TXMLTagList;
+    cp: TJabberCustompres;
+begin
+    Result := Tlist.Create();
+    ptags := _pref_node.QueryTags('presence');
+
+    for i := 0 to ptags.Count - 1 do begin
+        cp := TJabberCustompres.Create();
+        cp.Parse(ptags[i]);
+        Result.Add(cp);
+        end;
+end;
+
+{---------------------------------------}
+function TPrefController.getPresence(pkey: string): TJabberCustomPres;
+var
+    p: TXMLTag;
+begin
+    // get some custom pres from the list
+    Result := nil;
+
+    p := Self.findPresenceTag(pkey);
+
+    if (p <> nil) then begin
+        Result := TJabberCustomPres.Create();
+        Result.Parse(p);
+        end;
+end;
+
+{---------------------------------------}
+function TPrefController.getPresIndex(idx: integer): TJabberCustomPres;
+var
+    ptags: TXMLTagList;
+begin
+    Result := nil;
+    ptags := _pref_node.QueryTags('presence');
+    if ((idx >= 0) and (idx < ptags.Count)) then
+        Result := getPresence(ptags[idx].GetAttribute('title'));
+end;
+
+{---------------------------------------}
+procedure TPrefController.setPresence(pvalue: TJabberCustomPres);
+var
+    p: TXMLTag;
 begin
     // set some custom pres into the list
+    p := Self.findPresenceTag(pvalue.title);
+    if (p = nil) then
+        p := _pref_node.AddTag('presence');
+    pvalue.FillTag(p);
+    Self.Save();
 end;
 
 {---------------------------------------}
@@ -484,6 +551,8 @@ begin
         cur_profile.Load(ptags[i]);
         _profiles.AddObject(cur_profile.name, cur_profile);
         end;
+
+    ptags.Free;
 end;
 
 {---------------------------------------}
@@ -507,6 +576,7 @@ begin
         end;
 
     Self.Save();
+    ptags.Free;
 end;
 
 {---------------------------------------}

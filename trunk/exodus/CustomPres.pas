@@ -3,8 +3,9 @@ unit CustomPres;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, buttonFrame, StdCtrls, ComCtrls;
+    Menus, 
+    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+    Dialogs, buttonFrame, StdCtrls, ComCtrls;
 
 type
   TfrmCustomPres = class(TForm)
@@ -71,22 +72,10 @@ end;
 
 procedure TfrmCustomPres.frameButtons1btnOKClick(Sender: TObject);
 var
-    plist: TStringlist;
     show, status: string;
-    i, pri: integer;
+    pri: integer;
+    cp: TJabberCustomPres;
 begin
-    // todo: save custom presence
-    if (chkSave.Checked) then begin
-        plist := MainSession.Prefs.getStringlist('custom_pres');
-        i := plist.indexOf(txtTitle.Text);
-
-        if (i >= 0) then begin
-            // it already exists
-            end;
-
-
-        end;
-
     // apply the new presence to the session
     case cboType.ItemIndex of
     0: show := 'chat';
@@ -100,6 +89,18 @@ begin
     pri := StrToInt(txtPriority.Text);
 
     MainSession.setPresence(show, status, pri);
+
+    // todo: save custom presence
+    if (chkSave.Checked) then begin
+        cp := TJabberCustomPres.Create();
+        cp.title := txtTitle.Text;
+        cp.Show := show;
+        cp.Status := status;
+        cp.Priority := pri;
+        cp.hotkey := ShortCutToText(txtHotkey.HotKey);
+        MainSession.Prefs.setPresence(cp);
+        MainSession.FireEvent('/session/prefs', nil);
+        end;
 
     Self.Close;
 end;

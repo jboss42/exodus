@@ -1,7 +1,7 @@
 object frmJabber: TfrmJabber
-  Left = 241
+  Left = 242
   Top = 192
-  Width = 540
+  Width = 539
   Height = 341
   AlphaBlendValue = 240
   Caption = 'Exodus'
@@ -26,7 +26,7 @@ object frmJabber: TfrmJabber
   object Tabs: TPageControl
     Left = 0
     Top = 30
-    Width = 532
+    Width = 531
     Height = 257
     ActivePage = tbsMsg
     Align = alClient
@@ -68,7 +68,7 @@ object frmJabber: TfrmJabber
       object lstEvents: TListView
         Left = 212
         Top = 0
-        Width = 312
+        Width = 311
         Height = 229
         Align = alClient
         Columns = <
@@ -93,7 +93,7 @@ object frmJabber: TfrmJabber
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 532
+    Width = 531
     Height = 30
     BandBorderStyle = bsNone
     Bands = <
@@ -101,7 +101,7 @@ object frmJabber: TfrmJabber
         Control = ToolBar1
         ImageIndex = -1
         MinHeight = 22
-        Width = 524
+        Width = 523
       end>
     BorderWidth = 1
     DockSite = True
@@ -109,7 +109,7 @@ object frmJabber: TfrmJabber
     object ToolBar1: TToolBar
       Left = 9
       Top = 0
-      Width = 511
+      Width = 510
       Height = 22
       AutoSize = True
       ButtonWidth = 24
@@ -166,6 +166,7 @@ object frmJabber: TfrmJabber
     end
   end
   object MainMenu1: TMainMenu
+    Images = ImageList2
     Left = 52
     Top = 74
     object WInJab1: TMenuItem
@@ -285,12 +286,14 @@ object frmJabber: TfrmJabber
         object presOnline: TMenuItem
           AutoHotkeys = maManual
           Caption = 'Online'
+          ImageIndex = 1
           ShortCut = 16463
           OnClick = presOnlineClick
         end
         object presChat: TMenuItem
           Tag = 1
           Caption = 'Free for Chat'
+          ImageIndex = 4
           OnClick = presOnlineClick
         end
         object N10: TMenuItem
@@ -299,6 +302,7 @@ object frmJabber: TfrmJabber
         object presAway: TMenuItem
           Tag = 2
           Caption = 'Away'
+          ImageIndex = 2
           object Away2: TMenuItem
             Tag = 2
             Caption = 'Away'
@@ -326,6 +330,7 @@ object frmJabber: TfrmJabber
         object presXA: TMenuItem
           Tag = 3
           Caption = 'Xtended Away'
+          ImageIndex = 10
           object ExtendedAway1: TMenuItem
             Tag = 3
             Caption = 'Extended Away'
@@ -350,6 +355,7 @@ object frmJabber: TfrmJabber
         object presDND: TMenuItem
           Tag = 4
           Caption = 'Do Not Disturb'
+          ImageIndex = 3
           object Busy1: TMenuItem
             Tag = 4
             Caption = 'Busy'
@@ -372,10 +378,10 @@ object frmJabber: TfrmJabber
         object presCustom: TMenuItem
           Tag = 5
           Caption = 'Custom'
-          OnClick = presCustomClick
           object Custom3: TMenuItem
             Caption = 'Custom'
             ShortCut = 16464
+            OnClick = presCustomClick
           end
           object N18: TMenuItem
             Caption = '-'
@@ -2242,6 +2248,7 @@ object frmJabber: TfrmJabber
     end
   end
   object popTray: TPopupMenu
+    Images = ImageList2
     Left = 80
     Top = 136
     object trayShow: TMenuItem
@@ -2253,11 +2260,13 @@ object frmJabber: TfrmJabber
       Enabled = False
       object Online1: TMenuItem
         Caption = 'Online'
+        ImageIndex = 1
         OnClick = presOnlineClick
       end
       object FreeforChat1: TMenuItem
         Tag = 1
         Caption = 'Free for Chat'
+        ImageIndex = 4
         OnClick = presOnlineClick
       end
       object N15: TMenuItem
@@ -2266,6 +2275,7 @@ object frmJabber: TfrmJabber
       object Away1: TMenuItem
         Tag = 2
         Caption = 'Away'
+        ImageIndex = 2
         object Away3: TMenuItem
           Tag = 2
           Caption = 'Away'
@@ -2290,6 +2300,7 @@ object frmJabber: TfrmJabber
       object XtendedAway1: TMenuItem
         Tag = 3
         Caption = 'Xtended Away'
+        ImageIndex = 10
         object ExtendedAway2: TMenuItem
           Tag = 3
           Caption = 'Extended Away'
@@ -2314,6 +2325,7 @@ object frmJabber: TfrmJabber
       object DoNotDisturb1: TMenuItem
         Tag = 4
         Caption = 'Do Not Disturb'
+        ImageIndex = 3
         object Busy2: TMenuItem
           Tag = 4
           Caption = 'Busy'
