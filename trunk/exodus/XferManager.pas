@@ -547,8 +547,11 @@ end;
 procedure TfrmXferManager.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
-  inherited;
+    inherited;
+    httpServer.Active := false;
+    tcpServer.Active := false;
     frmXferManager := nil;
+    
     Action := caFree;
 end;
 
@@ -816,9 +819,21 @@ end;
 {---------------------------------------}
 procedure TfrmXferManager.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
+var
+    o: TObject;
+    i: integer;
 begin
-  inherited;
     // Kill each frame
+    for i := 0 to box.ControlCount - 1 do begin
+        o := TObject(box.Controls[i]);
+        if (o is TfSendStatus) then
+            TfSendStatus(o).kill()
+        else if (o is TfRecvStatus) then
+            TfSendStatus(o).kill();
+    end;
+
+    // only close if there are no frames left.
+    CanClose := (box.ControlCount = 0);
 end;
 
 initialization

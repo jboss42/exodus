@@ -78,6 +78,7 @@ type
 
         _use_limit: boolean;
         _timeout: integer;
+        _fallback: boolean;
 
         function _getFeature(i: integer): Widestring;
         function _getFeatureCount: integer;
@@ -128,6 +129,8 @@ type
         property ItemCount: Integer read _getItemCount;
         property Items[Index: integer]: TJabberEntity read _getItem;
 
+        property fallbackProtocols: boolean read _fallback write _fallback;
+
     end;
 
 implementation
@@ -148,6 +151,7 @@ begin
     _items := TWidestringlist.Create();
     _timeout := 10;
     _node := node;
+    _fallback := true;
 
     Tag := -1;
     Data := nil;
@@ -316,6 +320,8 @@ begin
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
         // Dispatch a disco#items query
+        if (not _fallback) then exit;
+        
         _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, _timeout);
         _iq.toJid := _jid.full;
         _iq.Namespace := XMLNS_BROWSE;
@@ -340,7 +346,9 @@ begin
     _iq := nil;
 
     if ((event <> 'xml') or (tag.getAttribute('type') = 'error')) then begin
-        // Dispatch a disco#items query
+        // Dispatch a browse query
+        if (not _fallback) then exit;
+
         _iq := TJabberIQ.Create(js, js.generateID(), Self.BrowseCallback, _timeout);
         _iq.toJid := _jid.full;
         _iq.Namespace := XMLNS_BROWSE;
@@ -426,7 +434,7 @@ begin
         _feats.Add(fset[i].GetAttribute('var'));
     fset.Free();
 
-    // TODO: What to do w/ the other <identity> elements?
+    // XXX: What to do w/ the other <identity> elements?
     id := q.getFirstTag('identity');
     if (id <> nil) then begin
         _cat := id.getAttribute('category');

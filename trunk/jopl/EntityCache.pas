@@ -45,10 +45,13 @@ type
         function getByJid(jid: Widestring; node: Widestring = ''): TJabberEntity;
         function fetch(jid: Widestring; js: TJabberSession;
             items_limit: boolean = true; node: Widestring = ''): TJabberEntity;
+        function discoInfo(jid: Widestring; js: TJabberSession;
+            node: Widestring = ''): TJabberEntity;
 
         function getFirstFeature(f: Widestring): TJabberEntity;
         function getFirstSearch(): Widestring;
         function getFirstGroupchat(): Widestring;
+
 
         {$ifdef Exodus}
         procedure getByFeature(f: Widestring; jid_list: TWidestringList); overload;
@@ -56,6 +59,8 @@ type
         {$else}
         procedure getByFeature(f: Widestring; jid_list: TWidestringList);
         {$endif}
+        
+        procedure getByIdentity(icat, itype: Widestring; jid_list: TWidestringlist);
 
         function indexOf(e: TJabberEntity): integer;
         property Entities[index: integer]: TJabberEntity read _getEntity;
@@ -310,6 +315,27 @@ begin
 end;
 
 {---------------------------------------}
+function TJabberEntityCache.discoInfo(jid: Widestring; js: TJabberSession;
+    node: Widestring = ''): TJabberEntity;
+var
+    e: TJabberEntity;
+begin
+    e := getByJid(jid, node);
+    if (e <> nil) then begin
+        Result := e;
+        e.fallbackProtocols := false;
+        e.getInfo(js);
+        exit;
+    end;
+
+    e := TJabberEntity.Create(TJabberID.Create(jid), node);
+    e.fallbackProtocols := false;
+    _cache.AddObject(jid, e);
+    e.getInfo(js);
+    Result := e;
+end;
+
+{---------------------------------------}
 function TJabberEntityCache.getFirstFeature(f: Widestring): TJabberEntity;
 var
     c: TJabberEntity;
@@ -358,6 +384,19 @@ begin
     for i := 0 to _cache.Count -1  do begin
         e := TJabberEntity(_cache.Objects[i]);
         if (e.hasFeature(f)) then
+            jid_list.Add(e.jid.full);
+    end;
+end;
+
+procedure TJabberEntityCache.getByIdentity(icat, itype: Widestring; jid_list: TWidestringlist);
+var
+    i: integer;
+    e: TJabberEntity;
+begin
+    for i := 0 to _cache.Count - 1 do begin
+        e := TJabberEntity(_cache.Objects[i]);
+        if ((AnsiCompareText(icat, e.Category) = 0) and
+            (AnsiCompareText(itype, e.CatType) = 0)) then
             jid_list.Add(e.jid.full);
     end;
 end;
