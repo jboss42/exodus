@@ -115,6 +115,7 @@ type
     procedure mSearchClick(Sender: TObject);
     procedure vwBrowseData(Sender: TObject; Item: TListItem);
     procedure btnCloseClick(Sender: TObject);
+    procedure vwBrowseResize(Sender: TObject);
   private
     { Private declarations }
     _cur: integer;
@@ -784,6 +785,13 @@ procedure TfrmBrowse.btnCloseClick(Sender: TObject);
 begin
   inherited;
     Self.Close;
+end;
+
+{---------------------------------------}
+procedure TfrmBrowse.vwBrowseResize(Sender: TObject);
+begin
+  inherited;
+    vwBrowse.Invalidate();
 end;
 
 initialization
