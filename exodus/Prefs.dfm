@@ -4,7 +4,7 @@ object frmPrefs: TfrmPrefs
   Width = 466
   Height = 462
   BorderWidth = 1
-  Caption = 'Exodus Preferences'
+  Caption = 'Exodus Options'
   Color = clBtnFace
   DefaultMonitor = dmDesktop
   Font.Charset = ANSI_CHARSET
