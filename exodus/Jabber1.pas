@@ -1196,10 +1196,6 @@ begin
     // setup the toolbar based on prefs
     with MainSession.Prefs do begin
         mnuExpanded.Checked := getBool('expanded');
-        {
-        mnuOnline.Checked := getBool('roster_only_online');
-        btnOnlineRoster.Down := getBool('roster_only_online');
-        }
 
         i := getInt('roster_visible');
         mnuOnline.Checked := (i <> show_offline);
@@ -1421,23 +1417,14 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.btnOnlineRosterClick(Sender: TObject);
 var
-    i: integer;
+    filter: boolean;
 begin
     // show only online
     with MainSession.Prefs do begin
-        {
-        e := getBool('roster_only_online');
-        e := not e;
-        setBool('roster_only_online', e);
-        }
-        i := getInt('roster_visible');
-        if (i = show_offline) then
-            i := show_dnd
-        else
-            i := show_offline;
-        setInt('roster_visible', i);
-        btnOnlineRoster.Down := (i <> show_offline);
-        mnuOnline.Checked := (i <> show_offline);
+        filter := not getBool('roster_only_online');
+        setBool('roster_only_online', filter);
+        btnOnlineRoster.Down := filter;
+        mnuOnline.Checked := filter;
     end;
 
     if MainSession.Active then begin

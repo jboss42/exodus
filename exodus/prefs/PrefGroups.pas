@@ -14,11 +14,12 @@ type
     txtGatewayGrp: TTntComboBox;
     txtDefaultGrp: TTntComboBox;
     chkSort: TCheckBox;
-    Label2: TLabel;
+    lblFilter: TLabel;
     cboVisible: TTntComboBox;
     chkCollapsed: TCheckBox;
     chkGroupCounts: TCheckBox;
     chkOfflineGrp: TCheckBox;
+    chkOnlineOnly: TCheckBox;
   private
     { Private declarations }
   public
@@ -52,14 +53,14 @@ begin
 
     gs.Free();
 
-    //
     with MainSession.Prefs do begin
         // Roster Prefs
-        cboVisible.ItemIndex := getInt('roster_visible');
         chkSort.Checked := getBool('roster_sort');
         chkGroupCounts.Checked := getBool('roster_groupcounts');
         chkCollapsed.Checked := getBool('roster_collapsed');
         chkOfflineGrp.Checked := getBool('roster_offline_group');
+        chkOnlineOnly.Checked := getBool('roster_only_online');
+        cboVisible.ItemIndex := getInt('roster_filter') - 1;
         txtDefaultGrp.Text := getString('roster_default');
         txtGatewayGrp.Text := getString('roster_transport_grp');
     end;
@@ -70,7 +71,8 @@ begin
     //
     with MainSession.Prefs do begin
         // Roster prefs
-        setInt('roster_visible', cboVisible.ItemIndex);
+        setBool('roster_only_online', chkOnlineOnly.Checked);
+        setInt('roster_filter', cboVisible.ItemIndex + 1);
         setBool('roster_sort', chkSort.Checked);
         setBool('roster_groupcounts', chkGroupCounts.Checked);
         setBool('roster_collapsed', chkCollapsed.Checked);
