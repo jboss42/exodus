@@ -526,7 +526,7 @@ begin
 
         //font-family: Arial Black; font-size: 10pt
         font := 'font-family: ' + getString('font_name') + '; ' +
-                'font-size: ' +getString('font_size') + 'pt;';
+                'font-size: ' + getString('font_size') + 'pt;';
         if Msg.Action then
             html := '<div style="' + bg + font + '">' + time +
                     '<span style="color: purple;">* ' + txt + '</span></div>'

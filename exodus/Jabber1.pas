@@ -1500,10 +1500,12 @@ var
     cc: TChatController;
     tmp_jid: TJabberID;
     xoob: TXMLTag;
+    ritem: TJabberRosterItem;
 begin
     // record the event
     mtype := tag.getAttribute('type');
     b := Trim(tag.GetBasicText('body'));
+    tmp_jid := TJabberID.Create(tag.getAttribute('from'));
     if ((mtype <> 'groupchat') and (mtype <> 'chat')) then begin
 
         // Some exclusions...
@@ -1534,7 +1536,6 @@ begin
             else if (msg_treatment = msg_existing_chat) then begin
                 // check for an existing chat window..
                 // if we have one, then bail.
-                tmp_jid := TJabberID.Create(tag.getAttribute('from'));
                 cc := MainSession.ChatList.FindChat(tmp_jid.jid, '', '');
                 if (cc = nil) then
                     cc := MainSession.ChatList.FindChat(tmp_jid.jid, tmp_jid.resource, '');
@@ -1557,12 +1558,18 @@ begin
         // log the msg if we're logging.
         if (MainSession.Prefs.getBool('log')) then begin
             msg := TJabberMessage.Create(tag);
+            msg.isMe := false;
+            ritem := MainSession.roster.Find(tmp_jid.jid);
+            if (ritem <> nil) then
+                msg.Nick := ritem.Nickname
+            else
+                msg.Nick := msg.FromJID;
             LogMessage(msg);
             msg.Free();
             end;
-
         end;
 
+    tmp_jid.Free();
 end;
 
 {---------------------------------------}

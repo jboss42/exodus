@@ -80,6 +80,8 @@ type
     procedure mnuBlockClick(Sender: TObject);
     procedure mnuSendFileClick(Sender: TObject);
     procedure txtFromClick(Sender: TObject);
+    procedure MsgOutKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
     _base_jid: WideString;
@@ -340,11 +342,7 @@ var
     i: integer;
 begin
     // Send the outgoing msg
-    if (MsgOut.Lines.Count = 0) then
-        txt := ''
-    else
-        txt := Trim(MsgOut.WideText);
-        
+    txt := getInputText(MsgOut);
     if (txt = '') then exit;
 
     if (pnlSendSubject.Visible) then
@@ -355,6 +353,16 @@ begin
     // send to ALL recips
     for i := 0 to recips.Count - 1 do begin
         m := TJabberMessage.Create(recips[i], '', Trim(txt), s);
+
+        // these must be set so that logging works right
+        m.ToJID := recips[i];
+        m.isMe := true;
+        m.Nick := MainSession.Username;
+
+        // log the msg
+        if (MainSession.Prefs.getBool('log')) then
+            LogMessage(m);
+
         MainSession.SendTag(m.Tag);
         m.Free();
         end;
@@ -379,8 +387,10 @@ procedure TfrmMsgRecv.MsgOutKeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
   inherited;
-    if ((Key = 13) and (Shift = [ssCtrl])) then
+    if ((Key = 13) and (Shift = [ssCtrl])) then begin
+        Key := 0;
         frameButtons2btnOKClick(self);
+        end;
 end;
 
 {---------------------------------------}
@@ -513,6 +523,28 @@ begin
     tmp_jid.Free();
 end;
 
+
+procedure TfrmMsgRecv.MsgOutKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  inherited;
+    if (Key = 0) then exit;
+
+    // handle Ctrl-Tab to switch tabs
+    {
+    if ((Key = VK_TAB) and (ssCtrl in Shift) and (self.Docked))then begin
+        Self.TabSheet.PageControl.SelectNextPage(not (ssShift in Shift));
+        Key := 0;
+        end
+    }
+
+    // handle Ctrl-ENTER and ENTER to send msgs
+    if ((Key = VK_RETURN) and (Shift = [ssCtrl])) then begin
+        Key := 0;
+        frameButtons2btnOKClick(Self);
+        end;
+
+end;
 
 end.
 

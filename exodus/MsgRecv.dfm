@@ -173,6 +173,7 @@ object frmMsgRecv: TfrmMsgRecv
       TabOrder = 0
       URLColor = clBlue
       URLCursor = crHandPoint
+      OnKeyDown = MsgOutKeyDown
       OnKeyUp = MsgOutKeyUp
       OnURLClick = txtMsgURLClick
       InputFormat = ifUnicode

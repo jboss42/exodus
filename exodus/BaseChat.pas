@@ -71,6 +71,10 @@ type
     { Private declarations }
     _msgHistory : TStringList;
     _lastMsg : integer;
+
+  protected
+    _embed_returns: boolean;
+
   public
     { Public declarations }
     AutoScroll: boolean;
@@ -240,21 +244,33 @@ begin
         MsgOut.SelStart := length(m);
         MsgOut.SetFocus();
         end
-    else if ((Key = 13) and (Shift = [ssCtrl]) and (MsgOut.WantReturns)) then
-        SendMsg()
     else
         inherited;
 end;
 
+{---------------------------------------}
 procedure TfrmBaseChat.MsgOutKeyDown(Sender: TObject; var Key: Word;
                                      Shift: TShiftState);
 begin
+    if (Key = 0) then exit;
+
+    // handle Ctrl-Tab to switch tabs
     if ((Key = VK_TAB) and (ssCtrl in Shift) and (self.Docked))then begin
         Self.TabSheet.PageControl.SelectNextPage(not (ssShift in Shift));
         Key := 0;
         end
-    else
-        inherited;
+
+    // handle Ctrl-ENTER and ENTER to send msgs
+    else if (Key = VK_RETURN) then begin
+        if ((Shift = []) and (not _embed_returns)) then begin
+            Key := 0;
+            SendMsg();
+            end
+        else if (Shift = [ssCtrl]) then begin
+            Key := 0;
+            SendMsg()
+            end;
+        end;
 end;
 
 {---------------------------------------}
@@ -389,7 +405,5 @@ begin
         MsgList.PopupMenu.Popup(cp.x, cp.y);
         end;
 end;
-
-
 
 end.
