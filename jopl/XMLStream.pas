@@ -219,6 +219,7 @@ end;
 {---------------------------------------}
 procedure TDataThread.DispatchMsg;
 begin
+    assert(_stream <> nil, 'Trying to dispatch to a nil stream');
     _stream.Dispatch(_cur_msg);
 end;
 
@@ -336,6 +337,7 @@ end;
 procedure TDataThread.Sock_Disconnect(Sender: TObject);
 begin
     // Socket is disconnected
+
 end;
 
 {---------------------------------------}
@@ -705,9 +707,10 @@ end;
 procedure TXMLStream.Disconnect;
 begin
     // Disconnect the stream and stop the thread
-    if ((_socket <> nil) and (_socket.Connected)) then
-        _socket.Disconnect;
     _timer.Enabled := false;
+    if ((_socket <> nil) and (_socket.Connected)) then begin
+        _socket.Disconnect();
+        end;
 end;
 
 {---------------------------------------}

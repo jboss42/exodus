@@ -23,7 +23,7 @@ unit Jabber1;
 interface
 
 uses
-    GUIFactory, Register, Notify, S10n, 
+    GUIFactory, Register, Notify, S10n,
     ExResponders, ExEvents,
     RosterWindow, Presence, XMLTag,
     ShellAPI, Registry,
@@ -36,6 +36,8 @@ const
 
     WM_TRAY = WM_USER + 5269;
     WM_PREFS = WM_USER + 5272;
+    WM_SHOWLOGIN = WM_USER + 5273;
+    WM_CLOSEAPP = WM_USER + 5274;
 
 type
     TNextEventType = (next_none, next_Exit, next_Login, next_Disconnect);
@@ -120,7 +122,6 @@ type
     mnuMyVCard: TMenuItem;
     N17: TMenuItem;
     mnuBookmark: TMenuItem;
-    nextTimer: TTimer;
     ImageList2: TImageList;
     mnuExpanded: TMenuItem;
     Splitter1: TSplitter;
@@ -185,7 +186,6 @@ type
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure nextTimerTimer(Sender: TObject);
     procedure btnOnlineRosterClick(Sender: TObject);
     procedure btnAddContactClick(Sender: TObject);
     procedure mnuConferenceClick(Sender: TObject);
@@ -224,6 +224,7 @@ type
     procedure WinJabWebsite1Click(Sender: TObject);
     procedure JabberBugzilla1Click(Sender: TObject);
     procedure mnuVersionClick(Sender: TObject);
+    procedure mnuPasswordClick(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -261,6 +262,7 @@ type
     _hidden: boolean;
     _shutdown: boolean;
     _close_min: boolean;
+    _appclosing: boolean;
 
     _sessioncb: integer;
     _msgcb: integer;
@@ -292,11 +294,14 @@ type
     procedure WMTray(var msg: TMessage); message WM_TRAY;
     procedure WMQueryEndSession(var msg: TMessage); message WM_QUERYENDSESSION;
     procedure WMEndSession(var msg: TMessage); message WM_ENDSESSION;
+    procedure WMShowLogin(var msg: TMessage); message WM_SHOWLOGIN;
+    procedure WMCloseApp(var msg: TMessage); message WM_CLOSEAPP;
   published
     // Callbacks
     procedure SessionCallback(event: string; tag: TXMLTag);
     procedure MsgCallback(event: string; tag: TXMLTag);
     procedure iqCallback(event: string; tag: TXMLTag);
+    procedure ChangePasswordCallback(event: string; tag: TXMLTag);
 
   public
     // other stuff..
@@ -361,7 +366,7 @@ uses
     RiserWindow, RemoveContact,
     Session, Debug, About, getOpt, JabberID, XMLUtils, ExUtils,
     Transfer, Profile,
-    VCard, PrefController, Roster;
+    VCard, PrefController, Roster, Password;
 
 {$R *.DFM}
 
@@ -440,6 +445,16 @@ begin
     msg.Result := 0;
 end;
 
+procedure TExodus.WMShowLogin(var msg: TMessage);
+begin
+    ShowLogin();
+end;
+
+procedure TExodus.WMCloseApp(var msg: TMessage);
+begin
+    Self.Close();
+end;
+
 {---------------------------------------}
 procedure TExodus.FormCreate(Sender: TObject);
 var
@@ -477,6 +492,7 @@ begin
         and not WS_EX_APPWINDOW or WS_EX_TOOLWINDOW);
     ShowWindow(Application.Handle, SW_SHOW);
 
+    _appclosing := false;
     _event := next_none;
     _noMoveCheck := true;
     frmDebug := nil;
@@ -714,7 +730,7 @@ begin
             MainSession.Connect;
             end
         else
-            ShowLogin();
+            PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
         end;
 end;
 
@@ -775,14 +791,14 @@ begin
 
     else if event = '/session/autherror' then begin
         MessageDlg('There was an error trying to authenticate you. Please try again, or create a new account',
-            mtError, [mbOK], 0);
-        ShowLogin();
+                   mtError, [mbOK], 0);
+        PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
         exit;
         end
 
     else if event = '/session/noaccount' then begin
         if (MessageDlg('This account does not exist on this server. Create a new account?',
-        mtConfirmation, [mbYes, mbNo], 0) = mrNo) then
+                       mtConfirmation, [mbYes, mbNo], 0) = mrNo) then
             // Just disconnect, they don't want an account
             MainSession.Disconnect()
         else
@@ -808,8 +824,6 @@ begin
         end
 
     else if (event = '/session/disconnected') then begin
-        if _event <> next_none then
-            nextTimer.Enabled := true;
         timAutoAway.Enabled := false;
 
         if (frmMsgQueue <> nil) then
@@ -820,6 +834,9 @@ begin
 
         btnConnect.Down := false;
         restoreMenus(false);
+
+        if (_appclosing) then
+            PostMessage(Self.Handle, WM_CLOSEAPP, 0, 0);
         end
 
     else if event = '/session/commerror' then begin
@@ -1123,8 +1140,12 @@ procedure TExodus.FormCloseQuery(Sender: TObject;
 begin
     // Unregister callbacks, etc.
 
-    if (MainSession.Stream.Active) then
-        MainSession.Disconnect();
+    if (MainSession.Stream.Active) then begin
+        MainSession.Stream.Disconnect();
+        _appclosing := true;
+        CanClose := false;
+        exit;
+        end;
 
     MainSession.UnRegisterCallback(_sessioncb);
     MainSession.UnRegisterCallback(_msgcb);
@@ -1172,15 +1193,6 @@ procedure TExodus.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     Shell_NotifyIcon(NIM_DELETE, @_tray);
     Action := caFree;
-end;
-
-{---------------------------------------}
-procedure TExodus.nextTimerTimer(Sender: TObject);
-begin
-    if _event = next_Exit then
-        Self.Close
-    else if _event = next_Disconnect then
-        MainSession.Disconnect();
 end;
 
 {---------------------------------------}
@@ -1834,6 +1846,55 @@ begin
     iq.Send;
 end;
 
+procedure TExodus.mnuPasswordClick(Sender: TObject);
+var
+    iq: TJabberIQ;
+    f : TfrmPassword;
+begin
+    {
+    <iq type='set' to='jabberhostname[e.g., jabber.org]'>
+      <query xmlns='jabber:iq:register'>
+        <username>username</username>
+        <password>newpassword</password>
+      </query>
+    </iq>
+    }
+
+    f := TfrmPassword.Create(self);
+    if (f.ShowModal() = mrCancel) then
+        exit;
+
+    if (f.txtOldPassword.Text <> MainSession.Password) then begin
+        MessageDlg('Old password is incorrect.', mtError, [mbOK], 0);
+        exit;
+        end;
+    if (f.txtNewPassword.Text <> f.txtConfirmPassword.Text) then begin
+        MessageDlg('New password does not match.', mtError, [mbOK], 0);
+        exit;
+        end;
+
+    iq := TJabberIQ.Create(MainSession, MainSession.generateID, Self.ChangePasswordCallback);
+    iq.iqType := 'set';
+    iq.toJid := MainSession.Server;
+    iq.Namespace := XMLNS_REGISTER;
+    iq.qTag.AddBasicTag('username', MainSession.Username);
+    iq.qTag.AddBasicTag('password', f.txtNewPassword.Text);
+    f.Free();
+
+    iq.Send();
+end;
+
+procedure TExodus.ChangePasswordCallback(event: string; tag: TXMLTag);
+begin
+    if (event <> 'xml') then
+        MessageDlg('Error changing password.', mtError, [mbOK], 0)
+    else begin
+        if (tag.GetAttribute('type') = 'result') then
+            MessageDlg('Password changed.', mtInformation, [mbOK], 0)
+        else
+            MessageDlg('Error changing password.', mtError, [mbOK], 0);
+        end;
+end;
 
 end.
 

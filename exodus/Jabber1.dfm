@@ -229,6 +229,7 @@ object Exodus: TExodus
       end
       object mnuPassword: TMenuItem
         Caption = 'Change Jabber Password'
+        OnClick = mnuPasswordClick
       end
       object N9: TMenuItem
         Caption = '-'
@@ -476,13 +477,6 @@ object Exodus: TExodus
         OnClick = About1Click
       end
     end
-  end
-  object nextTimer: TTimer
-    Enabled = False
-    Interval = 50
-    OnTimer = nextTimerTimer
-    Left = 19
-    Top = 74
   end
   object ImageList2: TImageList
     BlendColor = clBtnFace

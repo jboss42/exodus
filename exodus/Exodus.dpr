@@ -66,7 +66,8 @@ uses
   Emoticons in 'Emoticons.pas' {frmEmoticons},
   BaseChat in 'BaseChat.pas' {frmBaseChat},
   ChatWin in 'ChatWin.pas' {frmChat},
-  Room in 'Room.pas' {frmRoom};
+  Room in 'Room.pas' {frmRoom},
+  Password in 'Password.pas' {frmPassword};
 
 {$R *.RES}
 
