@@ -205,23 +205,43 @@ procedure TfrmPrefEmote.btnCustomEmoteAddClick(Sender: TObject);
 var
     f: TfrmEmoteProps;
     e: TEmoticon;
-    txt, ffn, fn, key: Widestring;
+    ms, txt, ffn, fn, key: Widestring;
+    valid: boolean;
 begin
   inherited;
     // make sure they don't add dupes.
     f := TfrmEmoteProps.Create(Self);
-    if (f.ShowModal = mrCancel) then begin
-        f.Free();
-        exit;
+
+    valid := false;
+    while (valid = false) do begin
+        if (f.ShowModal = mrCancel) then begin
+            f.Free();
+            exit;
+        end;
+
+        fn := f.txtFilename.Text;
+        txt := f.txtText.Text;
+        ffn := txtCustomEmoteFilename.Text;
+
+        // validate the text matches our regex.
+        if (emoticon_regex.Exec(txt)) then begin
+            // we have a match
+            ms := emoticon_regex.Match[2];
+            if (ms = txt) then valid := true;
+        end;
+
+        if (valid = false) then begin
+
+            if (MessageDlgW(_('The text you entered is not a valid emoticon string. Try (foo), or ::foo::'),
+                mtError, [mbOK, mbCancel], 0) = mrCancel) then begin
+                f.Free();
+                exit;
+            end;
+
+        end;
     end;
 
-    fn := f.txtFilename.Text;
-    txt := f.txtText.Text;
-    ffn := txtCustomEmoteFilename.Text;
-
     f.Free();
-
-    // XXX: validate the text matches our regex.
 
     if (not FileExists(fn)) then begin
         MessageDlgW(_('The emoticon file specified does not exist.'),
@@ -349,7 +369,7 @@ begin
         // draw the bmp
         e.Draw(canvas, icon_r);
 
-        // XXX: Center text
+        // Center text
         txt := el.GetText(e);
         tw := canvas.TextWidth(txt);
         w := ((lbl_r.Right - lbl_r.left) - tw) div 2;
