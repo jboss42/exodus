@@ -322,6 +322,7 @@ type
     procedure WMReconnect(var msg: TMessage); message WM_RECONNECT;
     procedure WMInstaller(var msg: TMessage); message WM_INSTALLER;
     procedure WMDisconnect(var msg: TMessage); message WM_DISCONNECT;
+    procedure WMDisplayChange(var msg: TMessage); message WM_DISPLAYCHANGE;
 
     function WMAppBar(dwMessage: DWORD; var pData: TAppBarData): UINT; stdcall;
 
@@ -542,6 +543,12 @@ begin
     end
     else
         inherited;
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.WMDisplayChange(var msg: TMessage);
+begin
+    checkAndCenterForm(Self);
 end;
 
 {---------------------------------------}

@@ -108,6 +108,7 @@ function jabberIQResult(orig: TXMLTag): TXMLTag;
 function jabberIQError(orig: TXMLTag): TXMLTag;
 
 procedure centerMainForm(f: TForm);
+procedure checkAndCenterForm(f: TForm);
 procedure BuildPresMenus(parent: TObject; clickev: TNotifyEvent);
 function promptNewGroup: TJabberGroup;
 
@@ -126,7 +127,7 @@ var
 implementation
 uses
     ExSession, GnuGetText, Presence, InputPassword, 
-    IniFiles, StrUtils, IdGlobal, ShellAPI,
+    IniFiles, StrUtils, IdGlobal, ShellAPI, Types, 
     XMLUtils, Session, JabberID, Jabber1, Roster,
     JabberConst, MsgDisplay, Debug;
 
@@ -1255,6 +1256,34 @@ begin
         Result := MainSession.Roster.addGroup(new_grp);
     end;
 end;
+
+procedure checkAndCenterForm(f: TForm);
+var
+    ok: boolean;
+    dtop, tmp: TRect;
+    cp: TPoint;
+    idx: integer;
+begin
+    // Get the nearest monitor to the form
+    tmp := f.BoundsRect;
+    cp := CenterPoint(tmp);
+
+    idx := Screen.MonitorFromPoint(cp, mdNearest).MonitorNum;
+    dtop := Screen.Monitors[idx].WorkareaRect;
+
+    ok := (tmp.Left >= dtop.Left) and
+        (tmp.Right <= dtop.Right) and
+        (tmp.Top >= dtop.Top) and
+        (tmp.Bottom <= dtop.Bottom);
+
+    if (ok = false) then begin
+        // center it on the default monitor
+        cp := CenterPoint(dtop);
+        f.Left := cp.x - (f.Width div 2);
+        f.Top := cp.y - (f.Height div 2);
+    end;
+end;
+
 
 {---------------------------------------}
 {---------------------------------------}
