@@ -1,6 +1,6 @@
 object frmBaseChat: TfrmBaseChat
-  Left = 286
-  Top = 165
+  Left = 315
+  Top = 462
   Width = 388
   Height = 310
   Color = clBtnFace
@@ -29,7 +29,7 @@ object frmBaseChat: TfrmBaseChat
     Beveled = True
     OnMoved = Splitter1Moved
   end
-  object Panel3: TPanel
+  object pnlMsgList: TPanel
     Left = 0
     Top = 22
     Width = 380
@@ -39,119 +39,6 @@ object frmBaseChat: TfrmBaseChat
     BorderWidth = 4
     Caption = 'pnlMsgs'
     TabOrder = 0
-    object MsgList: TExRichEdit
-      Left = 4
-      Top = 4
-      Width = 372
-      Height = 219
-      Align = alClient
-      AutoURLDetect = adDefault
-      CustomURLs = <
-        item
-          Name = 'e-mail'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'http'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'file'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'mailto'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'ftp'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'https'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'gopher'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'nntp'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'prospero'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'telnet'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'news'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'wais'
-          Color = clWindowText
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'xmpp'
-          Color = clBlack
-          Cursor = crDefault
-          Underline = True
-        end
-        item
-          Name = 'jabber'
-          Color = clBlack
-          Cursor = crDefault
-          Underline = True
-        end>
-      LangOptions = [loAutoFont]
-      Language = 1033
-      PopupMenu = popMsgList
-      ReadOnly = True
-      ScrollBars = ssVertical
-      ShowSelectionBar = False
-      TabOrder = 0
-      URLColor = clBlue
-      URLCursor = crHandPoint
-      OnEnter = MsgListEnter
-      OnKeyPress = MsgListKeyPress
-      OnMouseUp = MsgListMouseUp
-      OnURLClick = MsgListURLClick
-      InputFormat = ifUnicode
-      OutputFormat = ofRTF
-      SelectedInOut = False
-      PlainRTF = False
-      UndoLimit = 0
-      IncludeOLE = True
-      AllowInPlace = False
-    end
   end
   object pnlInput: TPanel
     Left = 0

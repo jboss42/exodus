@@ -245,16 +245,8 @@ begin
         win.chat_object := chat;
         win.chat_object.AddRef();
         hist := TrimRight(chat.getHistory());
-        if (hist <> '') then with win.MsgList do begin
-            // repopulate history..
-            InputFormat := ifRTF;
-            SelStart := 0;
-            SelLength := Length(Lines.Text);
-            RTFSelText := hist;
-            InputFormat := ifUnicode;
-
-            // always remove the last line..
-            Lines.Delete(Lines.Count - 1);
+        if (hist <> '') then begin
+            win.MsgList.populate(hist);
             do_scroll := true;
         end;
     end;
@@ -381,9 +373,9 @@ begin
     lblJID.Font.Style := [fsUnderline];
 
     // setup prefs
-    MsgList.Color := TColor(MainSession.Prefs.getInt('color_bg'));
-    MsgOut.Color := MsgList.Color;
-    MsgOut.Font.Assign(MsgList.Font);
+    MsgList.setupPrefs();
+    MsgOut.Color := TColor(MainSession.Prefs.getInt('color_bg'));
+    MsgOut.Font.Assign(Self.Font);
 
     _embed_returns := MainSession.Prefs.getBool('embed_returns');
     _wrap_input := MainSession.Prefs.getBool('wrap_input');
@@ -748,7 +740,7 @@ end;
 procedure TfrmChat.SessionCallback(event: string; tag: TXMLTag);
 begin
     if (event = '/session/disconnected') then begin
-        DisplayPresence(_('You have been disconnected.'), MsgList);
+        MsgList.DisplayPresence(_('You have been disconnected.'));
         MainSession.UnRegisterCallback(_pcallback);
         _pcallback := -1;
 
@@ -765,7 +757,7 @@ begin
     else if (event = '/session/block') then begin
         // if this jid just got blocked, just close the window.
         if (_jid.jid = tag.GetAttribute('jid')) then begin
-            DisplayPresence(_(sUserBlocked), Self.MsgList);
+            MsgList.DisplayPresence(_(sUserBlocked));
             MainSession.UnRegisterCallback(_pcallback);
             _pcallback := -1;
             freeChatObject();
@@ -855,7 +847,7 @@ begin
     else
         txt :=  jid + ' ' + _(sIsNow) + ' ' + txt;
 
-    DisplayPresence(txt, MsgList);
+    MsgList.DisplayPresence(txt);
 end;
 
 {---------------------------------------}
@@ -1169,8 +1161,11 @@ begin
   inherited;
     // save the conversation as RTF
     if SaveDialog1.Execute then begin
+        MsgList.Save(SaveDialog1.Filename);
+        {
         MsgList.PlainRTF := false;
         MsgList.WideLines.SaveToFile(SaveDialog1.Filename);
+        }
     end;
 end;
 
@@ -1231,13 +1226,10 @@ begin
 
     if ((MainSession.Prefs.getInt('chat_memory') > 0) and
         (MainSession.Prefs.getInt(P_CHAT) = msg_existing_chat) and
-        (MsgList.Lines.Count > 0) and
+        (not MsgList.empty()) and
         (chat_object <> nil) and
         (not _destroying)) then begin
-
-        MsgList.Visible := false;
-        MsgList.SelectAll();
-        s := MsgList.RTFSelText;
+        s := MsgList.getHistory();
         chat_object.SetHistory(s);
         chat_object.unassignEvent();
         chat_object.window := nil;

@@ -62,7 +62,8 @@ end;
 
 implementation
 
-uses XMLTag, ComServ, Menus, SysUtils;
+uses
+    BaseMsgList, RTFMsgList, XMLTag, ComServ, Menus, SysUtils;
 
 {---------------------------------------}
 constructor TExodusChat.Create();
@@ -346,7 +347,7 @@ begin
     end;
     HWND_MsgOutput: begin
         if (_chat <> nil) then
-            Result := TfrmChat(_chat.window).MsgList.Handle
+            Result := TfrmChat(_chat.window).MsgList.getHandle()
         else if (_room <> nil) then
             Result := _room.MsgOut.Handle
         else if (_im <> nil) then
@@ -354,24 +355,42 @@ begin
         else exit;
     end;
     Ptr_MsgInput: begin
-        if (_chat <> nil) then
-            p := @(TfrmChat(_chat.window).MsgOut)
-        else if (_room <> nil) then
-            p := @(_room.MsgOut)
-        else if (_im <> nil) then
-            p := @(_im.MsgOut)
-        else exit;
-        Result := integer(p);
+        if (_chat <> nil) then begin
+            p := @(TfrmChat(_chat.window).MsgOut);
+            Result := integer(p);
+        end
+        else if (_room <> nil) then begin
+            p := @(_room.MsgOut);
+            Result := integer(p);
+        end
+        else if (_im <> nil) then begin
+            p := @(_im.MsgOut);
+            Result := integer(p);
+        end;
     end;
     Ptr_MsgOutput: begin
-        if (_chat <> nil) then
-            p := @(TfrmChat(_chat.window).MsgList)
-        else if (_room <> nil) then
-            p := @(_room.MsgList)
-        else if (_im <> nil) then
-            p := @(_im.txtMsg)
-        else exit;
-        Result := integer(p);
+        if (_chat <> nil) then begin
+
+            // If we have an RTF msg list, use that
+            p := nil;
+            if (TfrmChat(_chat.window).MsgList is TfRTFMsgList) then
+                p := @(TfRTFMsgList(TfrmChat(_chat.window).MsgList).MsgList);
+
+            // XXX: put IE MsgList stuff here
+            Result := integer(p);
+        end
+        else if (_room <> nil) then begin
+            p := nil;
+            if (_room.MsgList is TfRTFMsgList) then
+                p := @(TfRTFMsgList(_room.MsgList).MsgList);
+
+            // XXX: put IE MsgList stuff here
+            Result := integer(p);
+        end
+        else if (_im <> nil) then begin
+            p := @(_im.txtMsg);
+            Result := integer(p);
+        end;
     end;
     end;
 
@@ -381,12 +400,16 @@ end;
 procedure TExodusChat.AddMsgOut(const Value: WideString);
 begin
     // add something to the RichEdit control
+
+    // XXX: FIX AddMsgOut for new MsgList stuff
+    (*
     if (_chat <> nil) then
         TfrmChat(_chat.window).MsgList.WideLines.Add(Value)
     else if (_room <> nil) then
         _room.MsgList.WideLines.Add(Value)
     else if (_im <> nil) then
         _im.txtMsg.WideLines.Add(Value);
+    *)
 end;
 
 {---------------------------------------}
