@@ -99,7 +99,7 @@ implementation
 
 {$R *.dfm}
 uses
-    GnuGetText, Signals, Session, ExUtils, Jabber1;
+    MsgDisplay, GnuGetText, Signals, Session, ExUtils, Jabber1;
 
 var
     frmDebug: TfrmDebug;
@@ -195,23 +195,14 @@ var
     at_bottom: boolean;
 begin
     //
+    at_bottom := atBottom(MsgDebug);
     with MsgDebug do begin
-        ScrollInfo.cbSize := SizeOf(TScrollInfo);
-        ScrollInfo.fMask := SIF_PAGE + SIF_POS + SIF_RANGE;
-        GetScrollInfo(Handle, SB_VERT, ScrollInfo);
-        ts := ScrollInfo.nPage;
-        r := ScrollInfo.nMax - Scrollinfo.nMin;
-        bot_thumb := ScrollInfo.nPos + Integer(ScrollInfo.nPage) + 2;
-        at_bottom := (bot_thumb >= ScrollInfo.nMax) or (ScrollInfo.nMax = 0) or
-            (ts >= Trunc(0.8 * r));
-
         SelStart := GetTextLen;
         SelLength := 0;
         SelAttributes.Color := txt_Color;
         WideSelText := txt + ''#13#10;
-
         if (at_bottom) then
-        Perform(EM_SCROLL, SB_PAGEDOWN, 0);
+            Perform(EM_SCROLL, SB_PAGEDOWN, 0);
     end;
 end;
 
