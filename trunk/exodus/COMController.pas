@@ -107,13 +107,16 @@ type
     procedure removeContactMenu(const ID: WideString); safecall;
     function getActiveContact: WideString; safecall;
     function getActiveGroup: WideString; safecall;
-    function getActiveContacts(Online: WordBool): WideString; safecall;
+    function getActiveContacts(Online: WordBool): PSafeArray; safecall;
     function Get_LocalIP: WideString; safecall;
     procedure setPluginAuth(const AuthAgent: IExodusAuth); safecall;
     procedure setAuthenticated(Authed: WordBool; const XML: WideString);
       safecall;
     procedure setAuthJID(const Username, Host, Resource: WideString); safecall;
     function addMessageMenu(const Caption: WideString): WideString; safecall;
+    function addGroupMenu(const Caption: WideString): WideString; safecall;
+    procedure removeGroupMenu(const ID: WideString); safecall;
+    procedure registerWithService(const JabberID: WideString); safecall;
     { Protected declarations }
   private
     _menu_items: TWideStringList;
@@ -181,7 +184,7 @@ uses
     ExResponders, ExSession,
     Chat, ChatController, JabberID, MsgRecv, Room, Browser, Jud,
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
-    COMChatController, Dockable, Agents,
+    COMChatController, Dockable, Agents, RegForm,
     Jabber1, Session, Roster, RosterWindow, PluginAuth, PrefController,
     Controls, Dialogs, Variants, Forms, SysUtils, ComServ;
 
@@ -1010,26 +1013,31 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusController.getActiveContacts(Online: WordBool): WideString;
+function TExodusController.getActiveContacts(Online: WordBool): PSafeArray;
 var
     clist: TList;
     i: integer;
     ritem: TJabberRosterItem;
+    ArrayBounds : TSafeArrayBound;
+    psa : PSafeArray;
+    ArrayData : pointer;
+    type WideStringArray = Array of WideString;
 begin
-    // send back: jid1 | jid2 | jid3 ...
-    Result := '';
     clist := frmRosterWindow.getSelectedContacts(Online);
-
-    for i := 0 to clist.count - 1 do begin
-        ritem := TJabberRosterItem(clist[i]);
-        if (ritem <> nil) then begin
-            Result := Result + ritem.jid.full;
-            if (i < clist.count - 1) then
-                Result := Result + ' | ';
+    ArrayBounds.lLbound := 0;
+    ArrayBounds.cElements := clist.Count;
+    psa := SafeArrayCreate(varOleStr, 1, ArrayBounds);
+    if SafeArrayAccessData(psa, ArrayData) = S_OK then begin
+        for i := 0 to clist.count - 1 do begin
+            ritem := TJabberRosterItem(clist[i]);
+            WideStringArray(ArrayData)[i] := ritem.jid.full;
         end;
+
+        SafeArrayUnAccessData(psa);
     end;
     clist.Clear();
     clist.Free();
+    result := psa;
 end;
 
 {---------------------------------------}
@@ -1098,6 +1106,44 @@ begin
     end;
 end;
 
+
+function TExodusController.addGroupMenu(
+  const Caption: WideString): WideString;
+var
+    id: Widestring;
+    mi: TMenuItem;
+begin
+    // add a new TMenuItem to the Plugins menu
+    mi := TMenuItem.Create(frmRosterWindow);
+    frmRosterWindow.popGroup.Items.Add(mi);
+    mi.Caption := caption;
+    mi.OnClick := frmRosterWindow.pluginClick;
+    id := 'group_menu_' + IntToStr(_roster_menus.Count);
+    mi.Name := id;
+    _roster_menus.AddObject(id, mi);
+    Result := id;
+end;
+
+procedure TExodusController.removeGroupMenu(const ID: WideString);
+var
+    idx: integer;
+begin
+    idx := _roster_menus.IndexOf(ID);
+    if (idx >= 0) then begin
+        TMenuItem(_roster_menus.Objects[idx]).Free();
+        _roster_menus.Delete(idx);
+    end;
+end;
+
+procedure TExodusController.registerWithService(
+  const JabberID: WideString);
+var
+    regform: TfrmRegister;
+begin
+    regform := TfrmRegister.Create(Application);
+    regform.jid := JabberID;
+    regform.Start();
+end;
 
 initialization
   TAutoObjectFactory.Create(ComServer, TExodusController, Class_ExodusController,
