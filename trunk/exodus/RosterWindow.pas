@@ -1944,7 +1944,7 @@ begin
         if (c2 <> '') then begin
             if (Node.Level = 0) then begin
                 Font.Style := [];
-                Font.Size := Font.Size - 1;
+                //Font.Size := Font.Size - 1;
                 SelectObject(treeRoster.Canvas.Handle, Font.Handle);
             end;
             SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(stat_color));
