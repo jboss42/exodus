@@ -24,7 +24,7 @@ interface
 uses
     // panels
     PrefPanel, PrefSystem, PrefRoster, PrefSubscription, PrefFont, PrefDialogs,
-    PrefMsg, PrefNotify, PrefAway, PrefPresence, PrefPlugins,      
+    PrefMsg, PrefNotify, PrefAway, PrefPresence, PrefPlugins, PrefTransfer,     
 
     // other stuff
     Menus, ShellAPI, Unicode,
@@ -93,6 +93,8 @@ type
     txtProxyPassword: TEdit;
     cboProxyApproach: TComboBox;
     StaticText13: TStaticText;
+    imgTransfer: TImage;
+    lblTransfer: TLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -113,6 +115,7 @@ type
     _away: TfrmPrefAway;
     _pres: TfrmPrefPresence;
     _plugs: TfrmPrefPlugins;
+    _xfer: TfrmPrefTransfer;
     
   public
     { Public declarations }
@@ -211,6 +214,9 @@ begin
         if (_plugs <> nil) then
             _plugs.SavePrefs();
 
+        if (_xfer <> nil) then
+            _xfer.SavePrefs();
+
         // Keywords
         setStringList('keywords', memKeywords.Lines);
         setBool('regex_keywords', chkRegex.Checked);
@@ -257,6 +263,7 @@ begin
     _away := nil;
     _pres := nil;
     _plugs := nil;
+    _xfer := nil;
 
     MainSession.Prefs.RestorePosition(Self);
 end;
@@ -387,6 +394,15 @@ begin
             f := _plugs;
         end;
     end
+    else if ((Sender = imgTransfer) or (Sender = lblTransfer)) then begin
+        toggleSelector(lblTransfer);
+        if (_plugs <> nil) then
+            f := _xfer
+        else begin
+            _xfer := TfrmPrefTransfer.Create(Self);
+            f := _xfer;
+        end;
+    end
     else if ((Sender = imgKeywords) or (Sender = lblKeywords)) then begin
         PageControl1.ActivePage := tbsKeywords;
         toggleSelector(lblKeywords);
@@ -480,6 +496,7 @@ begin
     _away.Free();
     _pres.Free();
     _plugs.Free();
+    _xfer.Free();
 end;
 
 end.

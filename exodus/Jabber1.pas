@@ -22,7 +22,7 @@ unit Jabber1;
 interface
 
 uses
-    BaseChat, GUIFactory, Register, Notify, S10n,
+    BaseChat, GUIFactory, Register, Notify, S10n, FileServer, 
     COMController, COMRoster, COMPPDB,
     ExResponders, ExEvents, RosterWindow, Presence, XMLTag,
     ShellAPI, Registry,
@@ -271,6 +271,7 @@ type
     _regController: TRegController;
     _Notify: TNotifyController;
     _subcontroller: TSubController;
+    _fileserver: TExodusFileServer;
 
     // Various state flags
     _windows_ver: integer;
@@ -400,6 +401,7 @@ type
     property COMPPDB: TExodusPPDB read _com_ppdb;
 
     property RegisterController: TRegController read _regController;
+    property FileServer: TExodusFileServer read _fileserver;
 
   end;
 
@@ -915,6 +917,7 @@ begin
         _Notify.SetSession(MainSession);
 
         _subcontroller := TSubController.Create();
+        _fileserver := TExodusFileServer.Create();
 
         if not debug then
             debug := MainSession.Prefs.getBool('debug');
@@ -1685,6 +1688,7 @@ begin
         frmRosterWindow.Close;
         CloseAllChats();
 
+        _fileserver.Free();
         _notify.Free();
         _guiBuilder.Free();
         _regController.Free();

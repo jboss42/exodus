@@ -3,9 +3,10 @@ object frmSubscribe: TfrmSubscribe
   Top = 495
   BorderIcons = []
   BorderStyle = bsDialog
+  BorderWidth = 3
   Caption = 'Subscription Request'
-  ClientHeight = 197
-  ClientWidth = 258
+  ClientHeight = 198
+  ClientWidth = 252
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,8 +21,8 @@ object frmSubscribe: TfrmSubscribe
   TextHeight = 13
   object Label1: TLabel
     Left = 0
-    Top = 22
-    Width = 258
+    Top = 23
+    Width = 252
     Height = 26
     Align = alTop
     Caption = 
@@ -31,31 +32,26 @@ object frmSubscribe: TfrmSubscribe
   end
   object Bevel1: TBevel
     Left = 0
-    Top = 20
-    Width = 258
+    Top = 21
+    Width = 252
     Height = 2
     Align = alTop
   end
-  object lblJID: TStaticText
+  object lblJID: TTntLabel
     Left = 0
     Top = 0
-    Width = 258
-    Height = 20
-    Cursor = crHandPoint
-    Hint = 'Show contact profile'
+    Width = 252
+    Height = 21
     Align = alTop
-    Caption = ' foo@jabber.org'
-    Color = clBtnFace
+    AutoSize = False
+    Caption = 'lblJID'
     Font.Charset = ANSI_CHARSET
     Font.Color = clBlue
     Font.Height = -13
-    Font.Name = 'Arial'
-    Font.Style = [fsBold, fsUnderline]
-    ParentColor = False
+    Font.Name = 'Arial Unicode MS'
+    Font.Style = [fsUnderline]
     ParentFont = False
-    PopupMenu = PopupMenu1
-    TabOrder = 0
-    OnClick = lblJIDClick
+    Transparent = False
   end
   object chkSubscribe: TCheckBox
     Left = 8
@@ -65,14 +61,14 @@ object frmSubscribe: TfrmSubscribe
     Caption = 'Add this person to my roster'
     Checked = True
     State = cbChecked
-    TabOrder = 1
+    TabOrder = 0
   end
   object boxAdd: TGroupBox
     Left = 24
     Top = 72
     Width = 209
     Height = 81
-    TabOrder = 2
+    TabOrder = 1
     object Label2: TLabel
       Left = 8
       Top = 16
@@ -107,17 +103,17 @@ object frmSubscribe: TfrmSubscribe
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 161
-    Width = 258
+    Top = 162
+    Width = 252
     Height = 36
     Align = alBottom
     AutoScroll = False
-    TabOrder = 3
+    TabOrder = 2
     inherited Bevel1: TBevel
-      Width = 258
+      Width = 252
     end
     inherited Panel1: TPanel
-      Left = 98
+      Left = 92
       Height = 31
       inherited btnOK: TButton
         Caption = 'Accept'

@@ -143,8 +143,9 @@ uses
   XMLStream in '..\jopl\XMLStream.pas',
   XMLTag in '..\jopl\XMLTag.pas',
   XMLUtils in '..\jopl\XMLUtils.pas',
-  XMLVCard in '..\jopl\XMLVCard.pas';
-
+  XMLVCard in '..\jopl\XMLVCard.pas',
+  FileServer in 'FileServer.pas',
+  PrefTransfer in 'PrefTransfer.pas' {frmPrefTransfer};
 
 {$R *.TLB}
 
@@ -159,6 +160,7 @@ begin
 
   Application.ShowMainForm := false;
   Application.CreateForm(TfrmExodus, frmExodus);
+  Application.CreateForm(TfrmPrefTransfer, frmPrefTransfer);
   if (frmExodus = nil) then
     Halt;
 

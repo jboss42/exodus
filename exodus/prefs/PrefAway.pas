@@ -36,10 +36,10 @@ type
     Label4: TLabel;
     Label9: TLabel;
     chkAutoAway: TCheckBox;
-    StaticText7: TStaticText;
     txtAway: TEdit;
     txtXA: TEdit;
     chkAAReducePri: TCheckBox;
+    StaticText7: TStaticText;
   private
     { Private declarations }
   public

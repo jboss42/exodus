@@ -81,6 +81,28 @@ inherited frmPrefAway: TfrmPrefAway
     Caption = 'Enable Auto Away'
     TabOrder = 4
   end
+  object txtAway: TEdit
+    Left = 80
+    Top = 126
+    Width = 201
+    Height = 21
+    TabOrder = 5
+  end
+  object txtXA: TEdit
+    Left = 80
+    Top = 150
+    Width = 201
+    Height = 21
+    TabOrder = 6
+  end
+  object chkAAReducePri: TCheckBox
+    Left = 8
+    Top = 48
+    Width = 273
+    Height = 17
+    Caption = 'Reduce priority to 0 during auto-away.'
+    TabOrder = 7
+  end
   object StaticText7: TStaticText
     Left = 0
     Top = 0
@@ -97,29 +119,7 @@ inherited frmPrefAway: TfrmPrefAway
     Font.Style = [fsBold]
     ParentColor = False
     ParentFont = False
-    TabOrder = 5
-    Transparent = False
-  end
-  object txtAway: TEdit
-    Left = 80
-    Top = 126
-    Width = 201
-    Height = 21
-    TabOrder = 6
-  end
-  object txtXA: TEdit
-    Left = 80
-    Top = 150
-    Width = 201
-    Height = 21
-    TabOrder = 7
-  end
-  object chkAAReducePri: TCheckBox
-    Left = 8
-    Top = 48
-    Width = 273
-    Height = 17
-    Caption = 'Reduce priority to 0 during auto-away.'
     TabOrder = 8
+    Transparent = False
   end
 end

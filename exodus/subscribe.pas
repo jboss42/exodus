@@ -23,11 +23,10 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, buttonFrame, ExtCtrls, Menus;
+  StdCtrls, buttonFrame, ExtCtrls, Menus, TntStdCtrls;
 
 type
   TfrmSubscribe = class(TForm)
-    lblJID: TStaticText;
     Label1: TLabel;
     chkSubscribe: TCheckBox;
     boxAdd: TGroupBox;
@@ -41,6 +40,7 @@ type
     mnuProfile: TMenuItem;
     mnuChat: TMenuItem;
     mnuMessage: TMenuItem;
+    lblJID: TTntLabel;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

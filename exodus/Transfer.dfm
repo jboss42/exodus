@@ -230,22 +230,6 @@ object frmTransfer: TfrmTransfer
       TabOrder = 0
     end
   end
-  object httpServer: TIdHTTPServer
-    OnStatus = httpServerStatus
-    Bindings = <>
-    CommandHandlers = <>
-    DefaultPort = 5280
-    Greeting.NumericCode = 0
-    MaxConnectionReply.NumericCode = 0
-    OnConnect = httpServerConnect
-    OnDisconnect = httpServerDisconnect
-    ReplyExceptionCode = 0
-    ReplyTexts = <>
-    ReplyUnknownCommand.NumericCode = 0
-    AutoStartSession = True
-    Left = 184
-    Top = 32
-  end
   object httpClient: TIdHTTP
     OnStatus = httpClientStatus
     MaxLineAction = maException
@@ -266,15 +250,15 @@ object frmTransfer: TfrmTransfer
     Request.BasicAuthentication = False
     Request.UserAgent = 'Mozilla/3.0 (compatible; Indy Library)'
     HTTPOptions = [hoForceEncodeParams]
-    Left = 216
-    Top = 32
+    Left = 168
+    Top = 8
   end
   object OpenDialog1: TOpenDialog
-    Left = 144
-    Top = 32
+    Left = 136
+    Top = 8
   end
   object SaveDialog1: TSaveDialog
-    Left = 112
-    Top = 32
+    Left = 104
+    Top = 8
   end
 end

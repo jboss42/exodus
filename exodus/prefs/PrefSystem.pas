@@ -28,22 +28,18 @@ uses
 
 type
   TfrmPrefSystem = class(TfrmPrefPanel)
-    Label15: TLabel;
     StaticText4: TStaticText;
     chkAutoUpdate: TCheckBox;
     chkExpanded: TCheckBox;
     chkDebug: TCheckBox;
     chkAutoLogin: TCheckBox;
     chkCloseMin: TCheckBox;
-    txtXFerPath: TEdit;
-    btnTransferBrowse: TButton;
     chkAutoStart: TCheckBox;
     chkOnTop: TCheckBox;
     chkToolbox: TCheckBox;
     btnUpdateCheck: TButton;
     chkSingleInstance: TCheckBox;
     chkStartMin: TCheckBox;
-    procedure btnTransferBrowseClick(Sender: TObject);
     procedure btnUpdateCheckClick(Sender: TObject);
     procedure btnUpdateCheckMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -60,7 +56,6 @@ var
 
 resourcestring
     sNoUpdate = 'No new update available.';
-    sPrefsXFerDir = 'Select download directory';
 
 implementation
 {$WARN UNIT_PLATFORM OFF}
@@ -86,7 +81,6 @@ begin
         chkOnTop.Checked := getBool('window_ontop');
         chkToolbox.Checked := getBool('window_toolbox');
         chkCloseMin.Checked := getBool('close_min');
-        txtXFerPath.Text := getString('xfer_path');
         chkSingleInstance.Checked := getBool('single_instance');
     end;
 end;
@@ -108,7 +102,6 @@ begin
         setBool('autologin', chkAutoLogin.Checked);
         setBool('close_min', chkCloseMin.Checked);
         setBool('single_instance', chkSingleInstance.Checked);
-        setString('xfer_path', txtXFerPath.Text);
 
         reg := TRegistry.Create();
         try
@@ -131,16 +124,6 @@ begin
         end;
 
     end;
-end;
-
-procedure TfrmPrefSystem.btnTransferBrowseClick(Sender: TObject);
-var
-    tmps: string;
-begin
-    tmps := txtXFerPath.Text;
-    if SelectDirectory(sPrefsXFerDir, '', tmps) then
-        txtXFerPath.Text := tmps;
-
 end;
 
 procedure TfrmPrefSystem.btnUpdateCheckClick(Sender: TObject);
