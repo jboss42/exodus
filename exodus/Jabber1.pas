@@ -1725,7 +1725,7 @@ begin
         w := MainSession.Prefs.getInt('event_width');
         Self.ClientWidth := Self.ClientWidth + w - delta;
         restoreRoster();
-    end
+    end      
     else begin
         // we are compressed now
         w := pnlRight.Width;
@@ -1756,7 +1756,11 @@ begin
     // figure out the width of the msg queue
     event_w := MainSession.Prefs.getInt(P_EVENT_WIDTH);
     roster_w := Self.ClientWidth - event_w;
-    if (event_w < 0) then event_w := Self.ClientWidth div 2;
+    if (event_w <= 0) then event_w := Self.ClientWidth div 2;
+    if (roster_w <= 0) then begin
+        event_w := 2 * (Self.ClientWidth div 3);
+        roster_w := Self.ClientWidth - event_w;
+    end;
 
     // make sure the roster is docked in the appropriate place.
     messenger := MainSession.Prefs.getBool('roster_messenger');

@@ -466,7 +466,7 @@ begin
     else begin
         _avatar := nil;
         imgAvatar.Visible := false;
-        Panel1.Height := 28;
+        Panel1.ClientHeight := 28;
     end;
 
     // setup the callbacks if we don't have them already
