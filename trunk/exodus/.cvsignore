@@ -12,3 +12,5 @@
 *.ddp
 ./output/*
 *.~*
+version.res
+build.cmd

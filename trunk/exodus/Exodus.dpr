@@ -22,6 +22,7 @@ program Exodus;
 
 {%File 'README.txt'}
 {%File '..\todo.txt'}
+{$R 'version.res' 'version.rc'}
 
 {$ifdef VER150}
     {$define INDY9}
