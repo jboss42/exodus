@@ -49,24 +49,7 @@ inherited frmPrefFont: TfrmPrefFont
     Height = 13
     Caption = 'Element Name'
   end
-  object colorRoster: TTreeView [6]
-    Left = 8
-    Top = 72
-    Width = 121
-    Height = 90
-    Indent = 19
-    ReadOnly = True
-    ShowButtons = False
-    ShowLines = False
-    TabOrder = 0
-    OnMouseDown = colorRosterMouseDown
-    Items.Data = {
-      01000000200000001B0000001B00000000000000FFFFFFFF0000000002000000
-      0747726F7570203121000000010000000100000000000000FFFFFFFF00000000
-      00000000085065746572204D2E24000000000000000000000000000000FFFFFF
-      FF00000000000000000B436F77626F79204E65616C}
-  end
-  object clrBoxBG: TColorBox [7]
+  object clrBoxBG: TColorBox [6]
     Left = 135
     Top = 183
     Width = 170
@@ -79,7 +62,7 @@ inherited frmPrefFont: TfrmPrefFont
     TabOrder = 2
     OnChange = clrBoxBGChange
   end
-  object clrBoxFont: TColorBox [8]
+  object clrBoxFont: TColorBox [7]
     Left = 135
     Top = 207
     Width = 170
@@ -92,7 +75,7 @@ inherited frmPrefFont: TfrmPrefFont
     TabOrder = 3
     OnChange = clrBoxFontChange
   end
-  object btnFont: TTntButton [9]
+  object btnFont: TTntButton [8]
     Left = 135
     Top = 234
     Width = 90
@@ -101,7 +84,7 @@ inherited frmPrefFont: TfrmPrefFont
     TabOrder = 4
     OnClick = btnFontClick
   end
-  object colorChat: TExRichEdit [10]
+  object colorChat: TExRichEdit [9]
     Left = 136
     Top = 72
     Width = 225
@@ -201,6 +184,19 @@ inherited frmPrefFont: TfrmPrefFont
     Width = 403
     Caption = 'Fonts and Colors'
     TabOrder = 5
+  end
+  object colorRoster: TTntTreeView
+    Left = 8
+    Top = 72
+    Width = 121
+    Height = 90
+    BevelWidth = 0
+    Indent = 19
+    ReadOnly = True
+    ShowButtons = False
+    ShowLines = False
+    TabOrder = 0
+    OnMouseDown = colorRosterMouseDown
   end
   object FontDialog1: TFontDialog
     Font.Charset = DEFAULT_CHARSET
