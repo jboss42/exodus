@@ -17,36 +17,45 @@ type
     procedure ConnectClient(const AHost: string; const APort: Integer; const ABoundIP: string;
      const ABoundPort: Integer; const ABoundPortMin: Integer; const ABoundPortMax: Integer;
      const ATimeout: Integer = IdTimeoutDefault); override;
+    procedure HttpProxyConnect(const AHost: string; const APort: Integer);
   end;
 
-procedure HttpProxyConnect(handler: TIdIOHandler; const AHost: string; const APort: Integer);
 
 implementation
 
 uses
-  IdException, IdResourceStrings, SysUtils;
+  IdException, IdResourceStrings, SysUtils, IdCoderMime;
 
-procedure HttpProxyConnect(handler: TIdIOHandler; const AHost: string; const APort: Integer);
+procedure THttpProxyIOHandler.HttpProxyConnect(const AHost: string; const APort: Integer);
 var
     hostport: string;
     connect: string;
     state: integer;
     c: char;
     len: integer;
+    encoder: TIdEncoderMIME;
 begin
+
     hostport := AHost + ':' + IntToStr(APort);
-    connect := 'CONNECT ' + hostport + ' HTTP/1.1'#13#10'Host: ' + hostport + ''#13#10#13#10;
+    connect := 'CONNECT ' + hostport + ' HTTP/1.1'#13#10'Host: ' + hostport + ''#13#10;
+
+    if (FSocksInfo.Authentication = saUsernamePassword) then begin
+        encoder := TIdEncoderMIME.Create(nil);
+        connect := connect + 'Proxy-Authorization: Basic ' + encoder.Encode(FSocksInfo.Username + ':' + FSocksInfo.Password);
+        encoder.Free();
+    end;
+    connect := connect + #13#10;
 
     len := length(connect);
 
-    if (handler.Send(Pointer(connect)^, len) <> len) then
+    if (Send(Pointer(connect)^, len) <> len) then
         raise Exception.Create('HTTP proxy send error');
 
     state := 0;
 
     // search forward for eand of response header
     while (state < 4) do begin
-        len := handler.Recv(c, 1);
+        len := Recv(c, 1);
         if (len <> 1) then
             raise Exception.Create('HTTP proxy recv error');
 
@@ -90,15 +99,9 @@ begin
     inherited ConnectClient(FSocksInfo.Host, FSocksInfo.Port,
                             ABoundIP, ABoundPort, ABoundPortMin,
                             ABoundPortMax, ATimeout);
-    HttpProxyConnect(self, AHost, APort);
+    HttpProxyConnect(AHost, APort);
 end;
 {$endif}
 
 end.
-
-
-
-
-
-
 

@@ -25,7 +25,7 @@ unit PrefController;
 
 interface
 uses
-    Unicode, XMLTag, XMLParser, Presence, IdHTTP,
+    Unicode, XMLTag, XMLParser, Presence, IdHTTP, IdSocks,
 
     {$ifdef Win32}
     Forms, Windows, Registry,
@@ -209,6 +209,7 @@ end;
         function RestorePosition(form: TForm; key: Widestring): boolean; overload;
 
         procedure setProxy(http: TIdHttp);
+        procedure getHttpProxy(var host: string; var port: integer);
 
         procedure LoadProfiles;
         procedure SaveProfiles;
@@ -259,7 +260,7 @@ uses
     QGraphics,
     {$endif}
     JabberConst, StrUtils,
-    IdGlobal, IdCoder3To4, Session, IQ, XMLUtils;
+    IdGlobal, IdCoder3To4, Session, IQ, XMLUtils, IdHTTPHeaderInfo;
 
 
 var
@@ -1055,7 +1056,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TPrefController.setProxy(http: TIdHttp);
+procedure TPrefController.getHttpProxy(var host: string; var port: integer);
 var
     {$ifdef Win32}
     reg: TRegistry;
@@ -1075,36 +1076,39 @@ begin
                 (reg.ReadInteger('ProxyEnable') <> 0)) then begin
                 srv := reg.ReadString('ProxyServer');
                 colon := pos(':', srv);
-                {$ifdef INDY9}
-                with http.ProxyParams do begin
-                    ProxyServer := Copy(srv, 1, colon-1);
-                    ProxyPort := StrToInt(Copy(srv, colon+1, length(srv)));
-                end;
-                {$else}
-                with http.Request do begin
-                    ProxyServer := Copy(srv, 1, colon-1);
-                    ProxyPort := StrToInt(Copy(srv, colon+1, length(srv)));
-                end;
-                {$endif}
+                host := Copy(srv, 1, colon-1);
+                port := StrToInt(Copy(srv, colon+1, length(srv)));
             end;
         finally
             reg.Free();
         end;
         {$endif}
-
     end
     else if (getInt('http_proxy_approach') = http_proxy_custom) then begin
-        {$ifdef INDY9}
-        with http.ProxyParams do begin
-        {$else}
-        with http.Request do begin
-        {$endif}
-            ProxyServer := getString('http_proxy_host');
-            ProxyPort := SafeInt(getString('http_proxy_port'));
-            if (getBool('http_proxy_auth')) then begin
-                ProxyUsername := getString('http_proxy_user');
-                ProxyPassword := getString('http_proxy_password');
-            end;
+        host := getString('http_proxy_host');
+        port := getInt('http_proxy_port');
+    end;
+end;
+
+{---------------------------------------}
+procedure TPrefController.setProxy(http: TIdHttp);
+var
+    host: string;
+    port: integer;
+begin
+    getHttpProxy(host, port);
+
+    {$ifdef INDY9}
+    with http.ProxyParams do begin
+    {$else}
+    with http.Request do begin
+    {$endif}
+        ProxyServer := host;
+        ProxyPort := port;
+        if (getBool('http_proxy_auth')) then begin
+            BasicAuthentication := true;
+            ProxyUsername := getString('http_proxy_user');
+            ProxyPassword := getString('http_proxy_password');
         end;
     end;
 end;
