@@ -56,6 +56,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Top = 16
       Width = 16
       Height = 21
+      Associate = txtReconnectTries
       TabOrder = 1
     end
     object txtReconnectTime: TTntEdit
@@ -71,6 +72,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Top = 48
       Width = 16
       Height = 21
+      Associate = txtReconnectTime
       Max = 3600
       TabOrder = 3
     end
@@ -173,11 +175,15 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Left = 107
       Top = 17
       Width = 130
-      Height = 22
-      Style = csOwnerDrawFixed
-      ItemHeight = 16
+      Height = 21
+      Style = csDropDownList
+      ItemHeight = 13
       TabOrder = 0
       OnChange = cboProxyApproachChange
+      Items.WideStrings = (
+        'Use IE Settings'
+        'No HTTP Proxy'
+        'Custom HTTP Proxy')
     end
   end
 end
