@@ -347,6 +347,8 @@ type
     procedure iqCallback(event: string; tag: TXMLTag);
     procedure ChangePasswordCallback(event: string; tag: TXMLTag);
 
+    procedure xDataCallback(event: string; tag: TXMLTag);
+
   public
     function getLastTick(): dword;
     function getTabForm(tab: TTabSheet): TForm;
@@ -486,10 +488,10 @@ implementation
 uses
     About, AutoUpdate, Bookmark, Browser, ChatWin, CommCtrl, CustomPres,
     Debug, Dockable, ExUtils, GetOpt, InputPassword,
-    Iq, JUD, JabberID, JabberMsg, 
+    Iq, JUD, JabberID, JabberMsg,
     JoinRoom, Login, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, Profile, RegForm, RemoveContact, RiserWindow,
-    Roster, RosterAdd, Session, Transfer, VCard, XMLUtils;
+    Roster, RosterAdd, Session, Transfer, VCard, xData, XMLUtils;
 
 {$R *.DFM}
 
@@ -871,6 +873,8 @@ begin
     _sessioncb := MainSession.RegisterCallback(SessionCallback, '/session');
     _msgcb := MainSession.RegisterCallback(MsgCallback, '/packet/message');
     _iqcb := MainSession.RegisterCallback(iqCallback, '/packet/iq[@type="set"]/query[@xmlns="jabber:iq:oob"]');
+
+    MainSession.RegisterCallback(xDataCallback, '/packet/message/x[@xmlns="jabber:x:data"]');
 
     // Create responders to other queries on us.
     _version := TVersionResponder.Create(MainSession);
@@ -2610,6 +2614,11 @@ end;
 procedure TfrmExodus.ShowEventsWindow1Click(Sender: TObject);
 begin
     getMsgQueue.Show();
+end;
+
+procedure TfrmExodus.xDataCallback(event: string; tag: TXMLTag);
+begin
+    showXData(tag);
 end;
 
 initialization
