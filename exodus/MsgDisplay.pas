@@ -73,9 +73,6 @@ begin
     at_bottom := RichEdit.atBottom;
     is_scrolling := RichEdit.isScrolling;
 
-    RichEdit.SelStart := Length(RichEdit.WideLines.Text);
-    RichEdit.SelLength := 0;
-
     txt := '{\rtf1 {\colortbl;'  +
         RTFColor('color_time')   + // \cf1
         RTFColor('color_server') + // \cf2
@@ -142,6 +139,8 @@ begin
 
     txt := txt + '\cf6\par }';
 
+    RichEdit.SelStart := Length(RichEdit.Lines.Text);
+    RichEdit.SelLength := 0;
     RichEdit.RTFSelText := txt;
 
     // AutoScroll the window

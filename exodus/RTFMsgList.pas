@@ -255,18 +255,10 @@ end;
 {---------------------------------------}
 procedure TfRTFMsgList.populate(history: Widestring);
 begin
-    with MsgList do begin
-        // repopulate history..
-        Line := 0;
-        InputFormat := ifRTF;
-        SelStart := 0;
-        SelLength := Length(Lines.Text);
-        RTFSelText := history;
-        InputFormat := ifUnicode;
-
-        // always remove the last line..
-        Lines.Delete(Lines.Count - 1);
-    end;
+    MsgList.SelStart := 0;
+    MsgList.SelLength := length(MsgList.Lines.Text);
+    MsgList.RTFSelText := history;
+    MsgList.Lines.Delete(MsgList.Lines.Count - 1);
 end;
 
 {---------------------------------------}
