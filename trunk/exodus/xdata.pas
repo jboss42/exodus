@@ -30,7 +30,6 @@ type
   TfrmXData = class(TForm)
     frameButtons1: TframeButtons;
     lblIns: TLabel;
-    lstReport: TListView;
     box: TScrollBox;
     insBevel: TBevel;
     procedure frameButtons1btnOKClick(Sender: TObject);
@@ -41,8 +40,9 @@ type
     packet: string;
     ns: string;
     to_jid: string;
-    report_cols: TStringList;
-    procedure ResultsCB(event: string; tag: TXMLTag);
+    _type: string;
+    _thread: WideString;
+    _title: WideString;
 
   public
     { Public declarations }
@@ -57,6 +57,7 @@ procedure showXData(tag: TXMLTag);
 resourcestring
     sAllRequired = 'All required fields must be filled out';
     sFormFrom = 'Form from %s';
+    sClose = 'Close';
 
 implementation
 
@@ -81,11 +82,10 @@ end;
 procedure TfrmXData.render(tag: TXMLTag);
 var
     report, ins, x: TXMLTag;
-    rflds, flds: TXMLTagList;
+    flds: TXMLTagList;
     h, i: integer;
-    c: TListColumn;
     frm: TframeGeneric;
-    subj: string;
+    thread: string;
 begin
     //
     packet := tag.Name;
@@ -94,35 +94,35 @@ begin
     if (packet = 'iq') then
         ns := tag.QueryXPData('/iq/query@xmlns')
     else if (packet = 'message') then begin
-        subj := tag.GetBasicText('subject');
-        if (subj <> '') then self.Caption := subj;
+        thread := tag.GetBasicText('thread');
+        if (thread <> '') then _thread := thread;
         end;
 
     x := tag.QueryXPTag('//x[@xmlns="jabber:x:data"]');
-    flds := x.QueryTags('field');
 
+    _type := x.GetAttribute('type');
 
+    ins := x.GetFirstTag('title');
+    if (ins <> nil) then begin
+        _title := ins.Data;
+        self.Caption := _title;
+        end;
+        
     ins := x.GetFirstTag('instructions');
-    lblIns.Visible := (ins <> nil);
     if (ins <> nil) then
-        lblIns.Caption := trimNewLines(ins.Data);
-
-    report := x.GetFirstTag('reported');
-    lstReport.Visible := (report <> nil);
-
-    if (report <> nil) then begin
-        report_cols := TStringList.Create();
-        rflds := report.QueryTags('field');
-        for i := 0 to rflds.Count - 1 do begin
-            c := lstReport.Columns.Add();
-            c.Caption := rflds[i].getAttribute('label');
-            report_cols.Add(rflds[i].GetAttribute('var'));
-            end;
+        lblIns.Caption := ins.Data
+    else begin
+        lblIns.Visible := false;
+        lblIns.Height := 0;
+        insBevel.Visible := false;
+        insBevel.Height := 0;
         end;
 
+    flds := x.QueryTags('field');
     h := 10;
     for i := flds.Count - 1 downto 0 do begin
         frm := TframeGeneric.Create(Self);
+        frm.FormType := _type;
         frm.Name := 'xDataFrame' + IntToStr(i);
         frm.Parent := box;
         frm.Visible := true;
@@ -145,6 +145,11 @@ begin
     if (lblIns.Visible) then begin
         insBevel.Align := alTop;
         lblIns.Align := alTop;
+        end;
+
+    if (_type = 'submit') then begin
+        frameButtons1.btnOK.Visible := false;
+        frameButtons1.btnCancel.Caption := sClose;
         end;
 
     MainSession.Prefs.RestorePosition(Self);
@@ -171,21 +176,22 @@ begin
     if (packet = 'message') then begin
         m := TXMLTag.Create('message');
         m.PutAttribute('to', to_jid);
+        if (_thread <> '') then
+            m.AddBasicTag('thread', _thread);
         x := m.AddTag('x');
-        x.PutAttribute('xmlns', XMLNS_DATA);
         body := m.AddTag('body');
         end
     else if (packet = 'iq') then begin
-        iq := TJabberIQ.Create(MainSession,
-                               MainSession.generateID(),
-                               Self.ResultsCB);
         iq.toJid := to_jid;
         iq.iqType := 'set';
         iq.Namespace := ns;
         x := iq.qTag.AddTag('x');
-        x.PutAttribute('xmlns', XMLNS_DATA);
         end;
 
+    x.PutAttribute('xmlns', XMLNS_DATA);
+    x.PutAttribute('type', 'submit');
+    if (_title <> '') then
+        x.AddBasicTag('title', _title);
 
     valid := true;
     for i := 0 to Self.box.ControlCount - 1 do begin
@@ -218,8 +224,7 @@ begin
     else if (iq <> nil) then
         iq.Send();
 
-    if (not lstReport.Visible) then
-        Self.Close();
+    Self.Close();
 end;
 
 {---------------------------------------}
@@ -228,6 +233,7 @@ begin
     Self.Close;
 end;
 
+(*
 {---------------------------------------}
 procedure TfrmXData.ResultsCB(event: string; tag: TXMLTag);
 var
@@ -266,6 +272,7 @@ begin
             end;
         end;
 end;
+*)
 
 {---------------------------------------}
 procedure TfrmXData.FormClose(Sender: TObject; var Action: TCloseAction);

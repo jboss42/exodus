@@ -36,7 +36,7 @@ object frmXData: TfrmXData
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 337
+    Top = 342
     Width = 310
     Height = 32
     Align = alBottom
@@ -55,26 +55,16 @@ object frmXData: TfrmXData
       end
     end
   end
-  object lstReport: TListView
-    Left = 0
-    Top = 187
-    Width = 310
-    Height = 150
-    Align = alBottom
-    Columns = <>
-    TabOrder = 1
-    ViewStyle = vsReport
-  end
   object box: TScrollBox
     Left = 0
     Top = 23
     Width = 310
-    Height = 164
+    Height = 319
     Align = alClient
     BevelEdges = []
     BevelInner = bvNone
     BevelOuter = bvNone
     BorderStyle = bsNone
-    TabOrder = 2
+    TabOrder = 1
   end
 end

@@ -31,19 +31,22 @@ type
     lblLabel: TLabel;
   private
     { Private declarations }
+    value: Widestring;
+    fld_type: string;
+    fld_var: Widestring;
+    frm_type: string;
+    req: boolean;
+    c: TControl;
     opts_vals: TStringList;
+
     function getValues: TWideStringList;
     procedure JidFieldDotClick(Sender: TObject);
   public
     { Public declarations }
-    value: Widestring;
-    fld_type: string;
-    fld_var: Widestring;
-    req: boolean;
-    c: TControl;
     procedure render(tag: TXMLTag);
     function isValid: boolean;
     function getXML: TXMLTag;
+    property FormType: string read frm_type write frm_type;
   end;
 
 resourcestring
@@ -158,10 +161,10 @@ begin
         c := lblLabel;
         lblLabel.AutoSize := true;
         lblLabel.WordWrap := true;
-        lblLabel.Caption := trimNewLines(value);
+        lblLabel.Caption := value;
         lblLabel.Align := alClient;
         end
-    else if (t = 'hidden') then begin
+    else if ((t = 'hidden') and (frm_type <> 'submit')) then begin
         Self.Height := 0;
         c := nil;
         end
@@ -205,6 +208,8 @@ begin
         end;
 
     fld_type := t;
+    if (frm_type = 'submit') then
+        c.Enabled := false;
 end;
 
 {---------------------------------------}
