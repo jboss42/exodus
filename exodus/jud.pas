@@ -345,8 +345,7 @@ begin
                     Align := alTop;
                     TabOrder := 0;
                 end;
-                AssignDefaultFont(cur_gen.Font);
-                cur_gen.Font.Size := cur_gen.Font.size - 1;
+                AssignUnicodeFont(cur_gen.Font, 8);
             end;
             pnlFields.Visible := true;
             fields.Free();
@@ -380,7 +379,7 @@ begin
                           txtData.PasswordChar := '*';
                       inc(ti);
                   end;
-
+                  AssignUnicodeFont(cur_frame.Font, 8);
                   tt := tt + cur_frame.height + 1;
                   cur_frame.Align := alTop;
 
@@ -808,20 +807,22 @@ procedure TfrmJUD.lstContactsData(Sender: TObject; Item: TListItem);
 var
     i: integer;
     ji: TJUDItem;
+    ti: TTntListItem;
 begin
   inherited;
     if (Item.Index < 0) then exit;
     if (Item.Index >= virtlist.Count) then exit;
 
+    ti := TTntListItem(Item);
     ji := TJUDItem(virtlist[Item.Index]);
     if ji <> nil then begin
         if (ji.xdata) then
-            Item.Caption := ji.cols[0]
+            ti.Caption := ji.cols[0]
         else
-            Item.Caption := ji.jid;
-        Item.SubItems.Clear();
+            ti.Caption := ji.jid;
+        ti.SubItems.Clear();
         for i := 1 to ji.count do
-            item.SubItems.Add(ji.cols[i]);
+            ti.SubItems.Add(ji.cols[i]);
     end;
 end;
 
