@@ -31,7 +31,7 @@ ShowHints=1
 ShowWarnings=1
 UnitAliases=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;
 NamespacePrefix=
-SymbolDeprecated=1
+SymbolDeprecated=0
 SymbolLibrary=1
 SymbolPlatform=1
 UnitLibrary=1
@@ -95,7 +95,7 @@ UnitOutputDir=.\output
 PackageDLLOutputDir=
 PackageDCPOutputDir=
 SearchPath=.\components;D:\lang\delphi\jcl\source
-Packages=vcl;rtl;vclshlctrls
+Packages=vcl;rtl;vclshlctrls;vclx
 Conditionals=
 DebugSourceDirs=D:\Dev\Delphi6\Source\Indy\;D:\src\exodus\exodus\components\
 UsePackages=0
@@ -163,7 +163,7 @@ AutoIncBuild=1
 MajorVer=0
 MinorVer=8
 Release=0
-Build=75
+Build=80
 Debug=0
 PreRelease=0
 Special=0
@@ -174,7 +174,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PeterMillard
 FileDescription=
-FileVersion=0.8.0.75
+FileVersion=0.8.0.80
 [HistoryLists\hlDebugSourcePath]
 Count=1
 Item0=D:\Dev\Delphi6\Source\Indy\;D:\src\exodus\exodus\components\

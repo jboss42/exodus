@@ -4,6 +4,7 @@ inherited frmPrefNotify: TfrmPrefNotify
   Caption = 'frmPrefNotify'
   ClientHeight = 346
   ClientWidth = 283
+  OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   object lblConfigSounds: TLabel
@@ -97,6 +98,7 @@ inherited frmPrefNotify: TfrmPrefNotify
     ParentColor = False
     ParentFont = False
     TabOrder = 2
+    Transparent = False
   end
   object chkSound: TCheckBox
     Left = 8

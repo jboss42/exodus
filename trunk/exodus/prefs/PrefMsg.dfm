@@ -4,6 +4,7 @@ inherited frmPrefMsg: TfrmPrefMsg
   Caption = 'frmPrefMsg'
   ClientHeight = 399
   ClientWidth = 406
+  OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   object Label19: TLabel
@@ -83,6 +84,7 @@ inherited frmPrefMsg: TfrmPrefMsg
     ParentColor = False
     ParentFont = False
     TabOrder = 4
+    Transparent = False
   end
   object txtTimestampFmt: TEdit
     Left = 69

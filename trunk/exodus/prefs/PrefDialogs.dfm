@@ -3,6 +3,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
   Top = 545
   Caption = 'frmPrefDialogs'
   ClientWidth = 362
+  OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   object Label26: TLabel
@@ -43,6 +44,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     ParentColor = False
     ParentFont = False
     TabOrder = 0
+    Transparent = False
   end
   object chkRosterAlpha: TCheckBox
     Left = 8
@@ -61,14 +63,10 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Enabled = False
     Max = 255
     Min = 10
-    Orientation = trHorizontal
     Frequency = 5
     Position = 255
-    SelEnd = 0
-    SelStart = 0
     TabOrder = 2
     ThumbLength = 15
-    TickMarks = tmBottomRight
     TickStyle = tsNone
     OnChange = trkRosterAlphaChange
   end
@@ -93,7 +91,6 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Max = 255
     Position = 255
     TabOrder = 4
-    Wrap = False
   end
   object chkToastAlpha: TCheckBox
     Left = 8
@@ -112,14 +109,10 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Enabled = False
     Max = 255
     Min = 10
-    Orientation = trHorizontal
     Frequency = 5
     Position = 255
-    SelEnd = 0
-    SelStart = 0
     TabOrder = 6
     ThumbLength = 15
-    TickMarks = tmBottomRight
     TickStyle = tsNone
     OnChange = trkToastAlphaChange
   end
@@ -144,7 +137,6 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Max = 255
     Position = 255
     TabOrder = 8
-    Wrap = False
   end
   object chkSnap: TCheckBox
     Left = 8
@@ -175,7 +167,6 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Max = 255
     Position = 255
     TabOrder = 11
-    Wrap = False
   end
   object txtChatMemory: TEdit
     Left = 32
@@ -191,12 +182,10 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Width = 16
     Height = 21
     Associate = txtChatMemory
-    Min = 0
     Max = 360
     Increment = 5
     Position = 60
     TabOrder = 13
-    Wrap = False
   end
   object chkBusy: TCheckBox
     Left = 8

@@ -1,9 +1,10 @@
 inherited frmPrefAway: TfrmPrefAway
-  Left = 236
+  Left = 254
   Top = 167
   Caption = 'frmPrefAway'
   ClientHeight = 306
   ClientWidth = 396
+  OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   object Label2: TLabel
@@ -52,7 +53,6 @@ inherited frmPrefAway: TfrmPrefAway
     Max = 600
     Position = 5
     TabOrder = 1
-    Wrap = False
   end
   object txtXATime: TEdit
     Left = 232
@@ -72,7 +72,6 @@ inherited frmPrefAway: TfrmPrefAway
     Max = 600
     Position = 30
     TabOrder = 3
-    Wrap = False
   end
   object chkAutoAway: TCheckBox
     Left = 8
@@ -99,6 +98,7 @@ inherited frmPrefAway: TfrmPrefAway
     ParentColor = False
     ParentFont = False
     TabOrder = 5
+    Transparent = False
   end
   object txtAway: TEdit
     Left = 80

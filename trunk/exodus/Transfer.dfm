@@ -227,33 +227,43 @@ object frmTransfer: TfrmTransfer
       Width = 200
       Height = 19
       Align = alClient
-      Min = 0
-      Max = 100
       TabOrder = 0
     end
   end
   object httpServer: TIdHTTPServer
     OnStatus = httpServerStatus
     Bindings = <>
+    CommandHandlers = <>
     DefaultPort = 5280
+    Greeting.NumericCode = 0
+    MaxConnectionReply.NumericCode = 0
     OnConnect = httpServerConnect
     OnDisconnect = httpServerDisconnect
+    ReplyExceptionCode = 0
+    ReplyTexts = <>
+    ReplyUnknownCommand.NumericCode = 0
     AutoStartSession = True
     Left = 184
     Top = 32
   end
   object httpClient: TIdHTTP
+    MaxLineAction = maException
+    ReadTimeout = 0
     OnDisconnected = httpClientDisconnected
     OnWork = httpClientWork
     OnWorkBegin = httpClientWorkBegin
     OnWorkEnd = httpClientWorkEnd
-    Request.Accept = 'text/html, */*'
+    AllowCookies = True
+    ProxyParams.BasicAuthentication = False
+    ProxyParams.ProxyPort = 0
     Request.ContentLength = 0
     Request.ContentRangeEnd = 0
     Request.ContentRangeStart = 0
     Request.ContentType = 'text/html'
-    Request.ProxyPort = 0
+    Request.Accept = 'text/html, */*'
+    Request.BasicAuthentication = False
     Request.UserAgent = 'Mozilla/3.0 (compatible; Indy Library)'
+    HTTPOptions = [hoForceEncodeParams]
     Left = 216
     Top = 32
   end

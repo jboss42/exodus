@@ -4,6 +4,7 @@ inherited frmPrefFont: TfrmPrefFont
   Caption = 'frmPrefFont'
   ClientHeight = 276
   ClientWidth = 403
+  OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   object Label22: TLabel
@@ -83,6 +84,7 @@ inherited frmPrefFont: TfrmPrefFont
     ParentColor = False
     ParentFont = False
     TabOrder = 0
+    Transparent = False
   end
   object colorRoster: TTreeView
     Left = 8
@@ -238,8 +240,6 @@ inherited frmPrefFont: TfrmPrefFont
     Font.Height = -11
     Font.Name = 'MS Sans Serif'
     Font.Style = []
-    MinFontSize = 0
-    MaxFontSize = 0
     Options = []
     Left = 301
     Top = 27

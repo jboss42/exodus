@@ -122,7 +122,7 @@ end;
     protected
         function GetData(): Widestring;
         procedure Push(buff: Widestring);
-        procedure CleanUp();
+        procedure ThreadCleanUp();
         procedure doMessage(msg: integer);
         procedure doMessageSync(msg: integer);
 
@@ -221,7 +221,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TParseThread.CleanUp();
+procedure TParseThread.ThreadCleanUp();
 begin
     {
     NOTE: This method is called from descendant classes..

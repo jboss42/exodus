@@ -4,6 +4,7 @@ inherited frmPrefPresence: TfrmPrefPresence
   Caption = 'frmPrefPresence'
   ClientHeight = 392
   ClientWidth = 329
+  OldCreateOrder = True
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
@@ -34,6 +35,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     ParentColor = False
     ParentFont = False
     TabOrder = 1
+    Transparent = False
   end
   object pnlCustomPresButtons: TPanel
     Left = 0
@@ -161,11 +163,8 @@ inherited frmPrefPresence: TfrmPrefPresence
       Width = 16
       Height = 21
       Associate = txtCPPriority
-      Min = 0
       Max = 1000
-      Position = 0
       TabOrder = 4
-      Wrap = False
     end
     object txtCPHotkey: THotKey
       Left = 48
@@ -173,8 +172,6 @@ inherited frmPrefPresence: TfrmPrefPresence
       Width = 97
       Height = 19
       HotKey = 32833
-      InvalidKeys = [hcNone, hcShift]
-      Modifiers = [hkAlt]
       TabOrder = 5
       OnChange = txtCPTitleChange
     end

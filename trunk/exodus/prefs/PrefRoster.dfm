@@ -4,6 +4,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   Caption = 'frmPrefRoster'
   ClientHeight = 347
   ClientWidth = 344
+  OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   object Label18: TLabel
@@ -45,6 +46,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     ParentColor = False
     ParentFont = False
     TabOrder = 1
+    Transparent = False
   end
   object chkShowUnsubs: TCheckBox
     Left = 8

@@ -488,6 +488,7 @@ begin
 
         pnlConnect.Color := TColor(MainSession.prefs.getInt('roster_bg'));
         pnlAnimation.Color := pnlConnect.Color;
+        lblStatus.Color := pnlConnect.Color;
         aniWait.Color := pnlConnect.Color;
 
         // Iterate over all grp nodes
