@@ -189,7 +189,12 @@ begin
     if (fn <> '') then
         filename := fn
     else begin
-        if not getXferManager().OpenDialog1.Execute then exit;
+        if not getXferManager().OpenDialog1.Execute then begin
+            if (getXferManager().box.ControlCount = 0) then
+                getXferManager().Close();
+            exit;
+        end;
+        
         filename := getXferManager().OpenDialog1.Filename;
     end;
 
