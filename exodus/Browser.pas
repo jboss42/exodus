@@ -42,22 +42,7 @@ type
     pnlInfo: TTntPanel;
     pnlTop: TTntPanel;
     btnClose: TSpeedButton;
-    CoolBar1: TCoolBar;
-    tlbToolBar: TToolBar;
-    btnBack: TToolButton;
-    btnFwd: TToolButton;
-    ToolButton2: TToolButton;
-    btnHome: TToolButton;
-    ToolButton1: TToolButton;
-    btnBookmark: TToolButton;
-    tlbJID: TToolBar;
-    pnlJID: TTntPanel;
-    cboJID: TTntComboBox;
-    pnlButtons: TTntPanel;
-    btnGo: TSpeedButton;
-    btnRefresh: TSpeedButton;
     lblError: TTntLabel;
-    ToolButton3: TToolButton;
     List1: TTntMenuItem;
     SmallIcons1: TTntMenuItem;
     LargeIcons1: TTntMenuItem;
@@ -73,6 +58,24 @@ type
     mBookmark: TTntMenuItem;
     mBrowseNew: TTntMenuItem;
     mBrowse: TTntMenuItem;
+    CoolBar1: TCoolBar;
+    tlbToolBar: TToolBar;
+    btnBack: TToolButton;
+    btnFwd: TToolButton;
+    ToolButton2: TToolButton;
+    btnHome: TToolButton;
+    ToolButton1: TToolButton;
+    btnBookmark: TToolButton;
+    ToolButton3: TToolButton;
+    btnNode: TToolButton;
+    pnlJid: TPanel;
+    pnlJidID: TTntPanel;
+    cboJID: TTntComboBox;
+    btnGo: TSpeedButton;
+    btnRefresh: TSpeedButton;
+    pnlNode: TPanel;
+    pnlNodeID: TTntPanel;
+    cboNode: TTntComboBox;
     procedure btnGoClick(Sender: TObject);
     procedure ResizeAddressBar(Sender: TObject);
     procedure cboJIDKeyPress(Sender: TObject; var Key: Char);
@@ -102,16 +105,18 @@ type
       State: TDragState; var Accept: Boolean);
     procedure popContextPopup(Sender: TObject);
     procedure ToolButton3Click(Sender: TObject);
+    procedure btnNodeClick(Sender: TObject);
   private
     { Private declarations }
     _cur: integer;
     _history: TWidestringList;
+    _node_hist: TWidestringlist;
     _iq: TJabberIQ;
     _blist: TList;
     _scb: integer;
     _ecb: integer;
-
     _ent: TJabberEntity;
+    _node: boolean;
 
     procedure SessionCallback(event: string; tag: TXMLTag);
     procedure EntityCallback(event: string; tag:TXMLTag);
@@ -121,15 +126,16 @@ type
     // Generic GUI stuff
     procedure SetupTitle(name, jid: Widestring);
     procedure StartList();
-    procedure DoBrowse(jid: Widestring; refresh: boolean);
-    procedure PushJID(jid: Widestring);
+    procedure DoBrowse(jid: Widestring; refresh: boolean; node: Widestring = '');
+    procedure PushJID(jid, node: Widestring);
     procedure StartBar();
     procedure StopBar();
     procedure ContextMenu(enabled: boolean);
+    procedure NodeVisible(vis: Boolean);
 
   public
     { Public declarations }
-    procedure GoJID(jid: Widestring; refresh: boolean);
+    procedure GoJID(jid: Widestring; refresh: boolean; node: Widestring = '');
 
     procedure DockForm; override;
     procedure FloatForm; override;
@@ -197,7 +203,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmBrowse.DoBrowse(jid: Widestring; refresh: boolean);
+procedure TfrmBrowse.DoBrowse(jid: Widestring; refresh: boolean; node: Widestring);
 begin
     // Actually Browse to the JID entered in the address box
     if (not isValidJID(jid)) then begin
@@ -209,43 +215,50 @@ begin
     StartBar;
 
     // do the browse query
-    _ent := jEntityCache.getByJid(jid);
+    _ent := jEntityCache.getByJid(jid, node);
     if (_ent = nil) then
-        _ent := jEntityCache.fetch(jid, MainSession)
+        _ent := jEntityCache.fetch(jid, MainSession, true, node)
     else if (refresh = false) then
-        _ent := jEntityCache.fetch(jid, MainSession)
+        _ent := jEntityCache.fetch(jid, MainSession, true, node)
     else
         _ent.Refresh(MainSession);
 end;
 
 {---------------------------------------}
-procedure TfrmBrowse.GoJID(jid: Widestring; refresh: boolean);
+procedure TfrmBrowse.GoJID(jid: Widestring; refresh: boolean; node: Widestring);
 begin
     cboJID.Text := jid;
-    DoBrowse(jid, refresh);
-    PushJID(jid);
+    DoBrowse(jid, refresh, node);
+    PushJID(jid, node);
 end;
 
 {---------------------------------------}
-procedure TfrmBrowse.PushJID(jid: Widestring);
+procedure TfrmBrowse.PushJID(jid, node: Widestring);
 var
     hi, lo, i: integer;
 begin
     // Deal with the history list, and menu items
-    if _cur < _history.count then begin
+    if (_cur < _history.count) then begin
         // we aren't at the beginning..
         // clear the history stack from here.
         for i := _history.count - 1 downto _cur + 1 do
             _history.Delete(i);
+        for i := _node_hist.count - 1 downto _cur + 1 do
+            _node_hist.Delete(i);
     end;
 
     _history.Add(jid);
+    _node_hist.Add(node);
+    
     hi := _history.Count - 1;
     lo := hi - 10;
     if lo < 0 then lo := 0;
     cboJID.Items.Clear;
-    for i := lo to hi do
+    cboNode.Items.Clear;
+    for i := lo to hi do begin
         cboJID.Items.Add(_history[i]);
+        cboNode.Items.Add(_node_hist[i]);
+    end;
     _cur := _history.count;
     btnBack.Enabled := true;
 end;
@@ -253,16 +266,24 @@ end;
 {---------------------------------------}
 procedure TfrmBrowse.btnGoClick(Sender: TObject);
 begin
-    DoBrowse(cboJID.Text, false);
-    PushJID(cboJID.Text);
+    DoBrowse(cboJID.Text, false, cboNode.Text);
+    PushJID(cboJID.Text, cboNode.Text);
 end;
 
 {---------------------------------------}
 procedure TfrmBrowse.ResizeAddressBar(Sender: TObject);
 begin
-    cboJid.Width := tlbJID.Width - (pnlJID.Width + pnlButtons.Width);
-    btnClose.Left := Self.ClientWidth - btnClose.Width - 2;
-    Coolbar1.Width := Self.ClientWidth - btnClose.Width - 5;
+    cboJid.Width := pnlJID.Width - (pnlJidID.Width + btnGo.Width + btnRefresh.Width + 10);
+    cboNode.Width := cboJid.Width;
+    btnGo.Left := cboJid.Width + cboJid.Left + 1;
+    btnRefresh.Left := btnGo.Width + btnGo.Left + 1;
+    if (btnClose.Visible) then begin
+        btnClose.Left := btnRefresh.Left;
+        Coolbar1.Width := btnClose.Left - 5;
+    end
+    else begin
+        Coolbar1.Width := pnlTop.ClientWidth - 1;
+    end;
 end;
 
 {---------------------------------------}
@@ -278,10 +299,13 @@ begin
     // Create the History list
     AssignUnicodeFont(Self);
     TranslateComponent(Self);
-    _History := TWidestringList.Create;
+    _History := TWidestringList.Create();
+    _node_hist := TWidestringList.Create();
     _blist := TList.Create();
     _iq := nil;
     vwBrowse.ViewStyle := TViewStyle(MainSession.Prefs.getInt('browse_view'));
+    _node := MainSession.Prefs.getBool('browse_node');
+    NodeVisible(_node);
 
     // Branding
     mJoinConf.Visible := MainSession.Prefs.getBool('brand_muc');
@@ -306,7 +330,8 @@ begin
         MainSession.UnRegisterCallback(_ecb);
     end;
 
-    _History.Free();
+    _history.Free();
+    _node_hist.Free();
     _blist.Clear();
     _blist.Free();
 end;
@@ -315,11 +340,12 @@ end;
 procedure TfrmBrowse.btnBackClick(Sender: TObject);
 begin
     // Browse to the last JID
-    if _cur >= _history.count then
+    if (_cur >= _history.count) then
         _cur := _cur - 2
     else
         dec(_cur);
-    if _cur < 0 then begin
+
+    if (_cur < 0) then begin
         _cur := 0;
         btnBack.Enabled := false;
         exit;
@@ -327,7 +353,8 @@ begin
 
     btnFwd.Enabled := true;
     cboJID.Text := _history[_cur];
-    DoBrowse(_history[_cur], false);
+    cboNode.Text := _node_hist[_cur];
+    DoBrowse(_history[_cur], false, _node_hist[_cur]);
     if _cur = 0 then btnBack.Enabled := false;
 end;
 
@@ -336,13 +363,15 @@ procedure TfrmBrowse.btnFwdClick(Sender: TObject);
 begin
     // Browse to the next JID in the history
     inc(_cur);
-    if _cur >= _history.Count then begin
+    if (_cur >= _history.Count) then begin
         _cur := _History.Count;
         btnFwd.Enabled := false;
         exit;
     end;
+    cboJID.Text := _history[_cur];
+    cboNode.Text := _node_hist[_cur];
     btnBack.Enabled := true;
-    DoBrowse(_history[_cur], false);
+    DoBrowse(_history[_cur], false, _node_hist[_cur]);
     if _cur = _history.Count then btnFwd.Enabled := false;
 end;
 
@@ -355,6 +384,7 @@ begin
     itm := vwBrowse.Selected;
     if itm <> nil then begin
         cboJID.Text := itm.SubItems[0];
+        cboNode.Text := itm.SubItems[2];
         btnGOClick(Self);
     end;
 end;
@@ -385,6 +415,7 @@ procedure TfrmBrowse.btnHomeClick(Sender: TObject);
 begin
     // browse to the Jabber Server
     cboJID.Text := MainSession.Server;
+    cboNode.Text := '';
     btnGOClick(btnHome);
     btnBack.Enabled := false;
     btnFwd.Enabled := false;
@@ -397,8 +428,8 @@ begin
     StartList;
 
     // re-browse to this JID..
-    DoBrowse(cboJID.Text, true);
-    PushJID(cboJID.Text);
+    DoBrowse(cboJID.Text, true, cboNode.Text);
+    PushJID(cboJID.Text, cboNode.Text);
 end;
 
 {---------------------------------------}
@@ -513,6 +544,7 @@ begin
     if itm = nil then exit;
 
     cboJID.Text := itm.SubItems[0];
+    cboNode.Text := itm.SubItems[2];
     btnGoClick(Self);
 end;
 
@@ -688,6 +720,7 @@ begin
             ImageIndex := b.tag;
         SubItems.Add(b.jid.full);
         SubItems.Add(b.catType);
+        SubItems.Add(b.Node);
     end;
 end;
 
@@ -824,6 +857,21 @@ begin
         ce := TJabberEntity(_blist[i]);
         if (not ce.hasInfo) then ce.getInfo(MainSession);
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmBrowse.btnNodeClick(Sender: TObject);
+begin
+    _node := not _node;
+    NodeVisible(_node);
+end;
+
+{---------------------------------------}
+procedure TfrmBrowse.NodeVisible(vis: Boolean);
+begin
+    btnNode.Down := _node;
+    pnlNode.Visible := vis;
+    MainSession.Prefs.setBool('browse_node', _node);
 end;
 
 end.

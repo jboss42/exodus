@@ -42,9 +42,9 @@ type
         procedure Remove(e: TJabberEntity);
         procedure Delete(i: integer);
 
-        function getByJid(jid: Widestring): TJabberEntity;
+        function getByJid(jid: Widestring; node: Widestring = ''): TJabberEntity;
         function fetch(jid: Widestring; js: TJabberSession;
-            items_limit: boolean = true): TJabberEntity;
+            items_limit: boolean = true; node: Widestring = ''): TJabberEntity;
 
         function getFirstFeature(f: Widestring): TJabberEntity;
         function getFirstSearch(): Widestring;
@@ -181,6 +181,8 @@ end;
 constructor TJabberEntityCache.Create();
 begin
     _cache := TWidestringlist.Create();
+    _cache.CaseSensitive := true;
+    _cache.Duplicates := dupAccept;
 end;
 
 {---------------------------------------}
@@ -244,25 +246,45 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberEntityCache.getByJid(jid: Widestring): TJabberEntity;
+function TJabberEntityCache.getByJid(jid: Widestring; node: Widestring): TJabberEntity;
 var
+    cur: TJabberEntity;
     i: integer;
 begin
     i := _cache.IndexOf(jid);
-    if (i >= 0) then
-        Result := TJabberEntity(_cache.Objects[i])
+    if (i >= 0) then begin
+        Result := nil;
+        cur := TJabberEntity(_cache.Objects[i]);
+        if (node <> '') then begin
+            while (Result = nil) do begin
+                if ((node = cur.Node) and (cur.Jid.jid = jid)) then begin
+                    // we found a match
+                    Result := cur;
+                    break;
+                end
+                else if (cur.jid.jid <> jid) then
+                    // we found the next jid, so no match
+                    break;
+                inc(i);
+                if (i >= _cache.Count) then break;
+                cur := TJabberEntity(_cache.Objects[i]);
+            end;
+        end
+        else
+            Result := cur;
+    end
     else
         Result := nil;
 end;
 
 {---------------------------------------}
 function TJabberEntityCache.fetch(jid: Widestring; js: TJabberSession;
-    items_limit: boolean): TJabberEntity;
+    items_limit: boolean; node: Widestring): TJabberEntity;
 var
     i: integer;
     e: TJabberEntity;
 begin
-    e := getByJid(jid);
+    e := getByJid(jid, node);
     if (e <> nil) then begin
         Result := e;
 
@@ -280,9 +302,10 @@ begin
         exit;
     end;
 
-    e := TJabberEntity.Create(TJabberID.Create(jid));
-    e.walk(js, items_limit);
+    e := TJabberEntity.Create(TJabberID.Create(jid), node);
     _cache.AddObject(jid, e);
+
+    e.walk(js, items_limit);
     Result := e;
 end;
 
