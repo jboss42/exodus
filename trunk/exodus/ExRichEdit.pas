@@ -16,7 +16,7 @@ type
   protected
     { Protected declarations }
     procedure CreateWnd; override;
-    procedure CreateParams(var Params: TCreateParams); override;
+    // procedure CreateParams(var Params: TCreateParams); override;
     procedure CN_NOTIFY(var Msg: TWMNotify); message CN_NOTIFY;
   public
     { Public declarations }
@@ -53,6 +53,7 @@ begin
     SendMessage(Self.Handle, EM_SETEVENTMASK, 0, (mask + ENM_LINK));
 end;
 
+(*
 procedure TExRichEdit.CreateParams(var Params: TCreateParams);
 begin
     // Make sure the richedit controls are subclassed using riched20.dll
@@ -64,6 +65,7 @@ begin
     inherited CreateParams(Params);
     CreateSubClass(Params, RICHEDIT_CLASS);
 end;
+*)
 
 {
 This is our custom CN_NOTIFY event handler..
