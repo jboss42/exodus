@@ -33,6 +33,7 @@
 	  <li><a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/exodus/exodus/checks.bmp?rev=HEAD&content-type=image/bitmap">checks.bmp</a></li>
       <li><a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/exodus/ZipDLL.dll?rev=HEAD">ZipDll.dll</a></li>
       <li><a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/exodus/exodus/exodus.nsi?rev=HEAD&amp;content-type=text/plain">exodus.nsi</a></li>
+     <li><a href="http://www.jabberstudio.org/cgi-bin/viewcvs.cgi/*checkout*/exodus/exodus/version.nsi?rev=HEAD&amp;content-type=text/plain">version.nsi</a></li>
       <li><a href="http://sourceforge.net/project/showfiles.php?group_id=22049">NSIS
         2</a></li>
     </ul>
@@ -53,12 +54,18 @@
   <li>Read the <a href="http://nsis.sourceforge.net/Docs/">NSIS docs</a>, to
     find out how to customize exodus.nsi.&nbsp; I'd suggest removing the &quot;Bleeding-edge updates&quot;
     section, and adding branding.xml to the !Exodus section.  Search for the word <strong>BRANDING</strong> for hints.</li>
-  <li>If you want your branding file to auto-update, put the file on a web
-    server, and set the <code>&lt;branding_url/&gt;</code> option.</li>
-  <li>Build your setup.exe file.&nbsp; I use: &quot;makensis.exe /v2 exodus.nsi&quot;</li>
+
+  <li>If you want your branding.xml file to auto-update (seperately
+  from your setup.exe file), put your branding.xml file on a web
+  server, and set the <code>&lt;branding_url/&gt;</code> option in the
+  branding.xml that you distribute in your setup.exe.  When your uses
+  start up exodus, it will check to see if there is a later
+  branding.xml file at the specified URL.</li>
+
+  <li>Build your setup.exe file.&nbsp; I use: <code>&quot;c:\program files\nsis\makensis.exe&quot; /v2 exodus.nsi</code></li>
   <li>Distribute your new setup.exe.</li>
 </ol>
 
-<p>$Id: branding.html,v 1.6 2003/01/03 22:04:05 hildjj Exp $</p>
+<p>$Id: branding.html,v 1.7 2003/02/12 06:34:44 hildjj Exp $</p>
 
 </html>
