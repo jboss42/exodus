@@ -57,7 +57,7 @@ type
 
 implementation
 uses
-    JabberConst, XMLUtils;
+    JabberConst, XMLUtils, JabberID;
 
 {---------------------------------------}
 constructor TStandardAuth.Create(session: TJabberSession);
@@ -232,6 +232,7 @@ end;
 procedure TStandardAuth.AuthCallback(event: string; tag: TXMLTag);
 var
     val: TXMLTag;
+    jid: TJabberID;
 begin
     // check the result of the authentication
     _auth_iq := nil;
@@ -240,13 +241,16 @@ begin
         _session.setAuthenticated(false, tag);
     end
     else begin
-        _session.setAuthenticated(true, tag);
         // look for tokenauth username, put in session.
         if (_session.Username = '') then begin
             val := tag.QueryXPTag('/iq/query[@xmlns="jabber:iq:auth"]/tokenauth[@xmlns="http://www.jabber.com/schemas/tokenauth.xsd"/x[@xmlns="jabber:x:data"]/field[@var="jid"]/value');
-            if (val = nil) then exit;
-            _session.Username := val.Data;
+            if (val <> nil) then begin
+              jid := TJabberID.Create(val.Data);
+              _session.Username := jid.user;
+              jid.Free();
+            end;
         end;
+        _session.setAuthenticated(true, tag);
     end;
 end;
 
