@@ -297,6 +297,9 @@ begin
         else
             _dispatcher.DispatchSignal('/packet', tag);
         end;
+
+    if (tag <> nil) then
+        tag.Free();
 end;
 
 {---------------------------------------}
@@ -343,7 +346,7 @@ var
     l: TSignalListener;
     pk: TPacketListener;
     sig: TBasicSignal;
-    msg, tok1: string;
+    tok1: string;
 begin
     // add this callback to the packet signal
     Result := -1;
@@ -363,37 +366,26 @@ begin
         l := sig.addListener(xplite, callback);
         result := l.cb_id;
         end;
-
-    msg := 'Registering callback for: ' + xplite + '. Total=' + IntToStr(_dispatcher.TotalCount);
-    // OutputDebugString(PChar(msg));
 end;
 
 {---------------------------------------}
 function TJabberSession.RegisterCallback(callback: TRosterEvent): integer;
 var
     l: TRosterListener;
-    msg: string;
 begin
     // add a callback to the roster signal
     l := _rosterSignal.addListener(callback);
     Result := l.cb_id;
-
-    msg := 'Registering roster callback. Total=' + IntToStr(_dispatcher.TotalCount);
-    // OutputDebugString(PChar(msg));
 end;
 
 {---------------------------------------}
 function TJabberSession.RegisterCallback(callback: TPresenceEvent): integer;
 var
     l: TPresenceListener;
-    msg: string;
 begin
     // add a callback to the presence signal
     l := _presSignal.addListener(callback);
     Result := l.cb_id;
-
-    msg := 'Registering presence callback. Total=' + IntToStr(_dispatcher.TotalCount);
-    // OutputDebugString(PChar(msg));
 end;
 
 {---------------------------------------}
@@ -419,14 +411,9 @@ end;
 
 {---------------------------------------}
 procedure TJabberSession.UnRegisterCallback(index: integer);
-var
-    msg: string;
 begin
     // Unregister a callback
     _dispatcher.DeleteListener(index);
-
-    msg := 'UnRegistering callback. Total=' + IntToStr(_dispatcher.TotalCount);
-    //OutputDebugString(PChar(msg));
 end;
 
 {---------------------------------------}
