@@ -28,11 +28,14 @@ type
     lblOK: TLabel;
     tabWait: TTabSheet;
     Label2: TLabel;
+
+    (*
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnCancelClick(Sender: TObject);
     procedure btnNextClick(Sender: TObject);
     procedure btnDeleteClick(Sender: TObject);
+    *)
   private
     { Private declarations }
     cbIndex: integer;
@@ -42,11 +45,14 @@ type
     Service: string;
     WaitingID: string;
     CurStage: integer;
+
+    (*
     procedure GetRegInfo;
     // procedure DoElement(element: integer; en: boolean);
     function DoField(fld: string): TfrmField;
     function GetInfo(Data: OleVariant): boolean;
     function GetResult(Data: OleVariant): boolean;
+    *)
   end;
 
 {---------------------------------------}
@@ -80,10 +86,9 @@ var
 implementation
 {$R *.DFM}
 uses
-    StringTable, 
-    wjUtils,
-    JabberCOM_TLB, CallBacks, Jabber1;
+    Session;
 
+(*
 {---------------------------------------}
 function TfrmRegister.GetInfo(Data: OleVariant): boolean;
 var
@@ -310,5 +315,6 @@ begin
     frmJabber.Jabber.SendXML(iq.xml);
     Self.Close;
 end;
+*)
 
 end.

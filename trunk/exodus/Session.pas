@@ -144,8 +144,6 @@ uses
 
 {---------------------------------------}
 Constructor TJabberSession.Create;
-var
-    my_agents: TAgents;
 begin
     //
     inherited Create;

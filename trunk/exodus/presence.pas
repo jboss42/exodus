@@ -38,7 +38,7 @@ type
         Status: string;
         Show: string;
         Priority: integer;
-        error_code: integer;
+        error_code: string;
 
         constructor Create; override;
         destructor Destroy; override;
@@ -179,7 +179,7 @@ begin
         // get the error code.
         err_tag := tag.GetFirstTag('error');
         if (err_tag <> nil) then
-            error_code = err_tag.getAttribute('code');
+            error_code := err_tag.getAttribute('code');
         end;
 end;
 
