@@ -238,4 +238,8 @@
     <text>;-)</text>
     <object mime="image/gif">msn_wink.gif</object>
   </icon>
+  <icon>
+    <text>:moo</text>
+    <object mime="image/gif">moo.gif</object>
+  </icon>
 </icondef>
