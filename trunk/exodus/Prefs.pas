@@ -166,10 +166,13 @@ type
     procedure lstCustomPresClick(Sender: TObject);
     procedure txtCPTitleChange(Sender: TObject);
     procedure btnCustomPresAddClick(Sender: TObject);
+    procedure btnCustomPresRemoveClick(Sender: TObject);
+    procedure btnCustomPresClearClick(Sender: TObject);
   private
     { Private declarations }
     _notify: array of integer;
     _no_notify_update: boolean;
+    _no_pres_change: boolean;
     _pres_list: TList;
   public
     { Public declarations }
@@ -307,7 +310,7 @@ begin
             end;
 
         // Notify Options
-        SetLength(_notify, 7);
+        SetLength(_notify, 8);
         _notify[0] := getInt('notify_online');
         _notify[1] := getInt('notify_offline');
         _notify[2] := getInt('notify_newchat');
@@ -315,6 +318,7 @@ begin
         _notify[4] := getInt('notify_s10n');
         _notify[5] := getInt('notify_invite');
         _notify[6] := getInt('notify_keyword');
+        _notify[7] := getInt('notify_chatactivity');
 
         for i := 0 to High(_notify) do
             chkNotify.Checked[i] := (_notify[i] > 0);
@@ -395,6 +399,7 @@ begin
         setInt('notify_s10n', _notify[4]);
         setInt('notify_invite', _notify[5]);
         setInt('notify_keyword', _notify[6]);
+        setInt('notify_chatactivity', _notify[7]);
 
         // Autoaway options
         setBool('auto_away', chkAutoAway.Checked);
@@ -468,6 +473,7 @@ begin
     PageControl1.ActivePage := tbsRoster;
 
     _no_notify_update := false;
+    _no_pres_change := false;
 end;
 
 {---------------------------------------}
@@ -584,40 +590,63 @@ begin
     txtToastAlpha.Enabled := chkToastAlpha.Checked;
 end;
 
+{---------------------------------------}
 procedure TfrmPrefs.trkToastAlphaChange(Sender: TObject);
 begin
     spnToastAlpha.Position := trkToastAlpha.Position;
 end;
 
+{---------------------------------------}
 procedure TfrmPrefs.chkInlineStatusClick(Sender: TObject);
 begin
     // toggle the color drop down on/off
     cboInlineStatus.Enabled := chkInlineStatus.Checked;
 end;
 
+{---------------------------------------}
 procedure TfrmPrefs.lstCustomPresClick(Sender: TObject);
+var
+    e: boolean;
 begin
     // show the props of this presence object
-    with  TJabberCustomPres(_pres_list[lstCustomPres.ItemIndex]) do begin
-        txtCPTitle.Text := title;
-        txtCPStatus.Text := status;
-        txtCPPriority.Text := IntToStr(priority);
-        txtCPHotkey.HotKey := TextToShortcut(hotkey);
+    _no_pres_change := true;
+
+    e := (lstCustomPres.ItemIndex = -1);
+    txtCPTitle.Enabled := e;
+    txtCPStatus.Enabled := e;
+    txtCPPriority.Enabled := e;
+    txtCPHotkey.Enabled := e;
+
+    if (e) then begin
+        txtCPTitle.Text := '';
+        txtCPStatus.Text := '';
+        txtCPPriority.Text := '0';
+        end
+    else with TJabberCustomPres(_pres_list[lstCustomPres.ItemIndex]) do begin
+
         if (show = 'chat') then cboCPType.ItemIndex := 0
         else if (show = 'away') then cboCPType.Itemindex := 2
         else if (show = 'xa') then cboCPType.ItemIndex := 3
         else if (show = 'dnd') then cboCPType.ItemIndex := 4
         else
             cboCPType.ItemIndex := 1;
+
+        txtCPTitle.Text := title;
+        txtCPStatus.Text := status;
+        txtCPPriority.Text := IntToStr(priority);
+        txtCPHotkey.HotKey := TextToShortcut(hotkey);
         end;
+    _no_pres_change := false;
 end;
 
+{---------------------------------------}
 procedure TfrmPrefs.txtCPTitleChange(Sender: TObject);
 begin
     // something changed on the current custom pres object
     // automatically update it.
     if (lstCustomPres.ItemIndex < 0) then exit;
     if (not tbsCustomPres.Visible) then exit;
+    if (_no_pres_change) then exit;
 
     with  TJabberCustomPres(_pres_list[lstCustomPres.ItemIndex]) do begin
         title := txtCPTitle.Text;
@@ -634,6 +663,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmPrefs.btnCustomPresAddClick(Sender: TObject);
 var
     cp: TJabberCustomPres;
@@ -648,6 +678,27 @@ begin
     _pres_list.Add(cp);
     lstCustompres.Items.Add(cp.title);
     lstCustompres.ItemIndex := lstCustompres.Items.Count - 1;
+end;
+
+{---------------------------------------}
+procedure TfrmPrefs.btnCustomPresRemoveClick(Sender: TObject);
+var
+    cp: TJabberCustomPres;
+begin
+    // delete the current pres
+    cp := TJabberCustomPres(_pres_list[lstCustomPres.ItemIndex]);
+    MainSession.Prefs.removePresence(cp);
+    lstCustompres.Items.Delete(lstCustomPres.ItemIndex);
+end;
+
+{---------------------------------------}
+procedure TfrmPrefs.btnCustomPresClearClick(Sender: TObject);
+begin
+    // clear all entries
+    if MessageDlg('Clear all custom presence entries',
+        mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
+
+    MainSession.Prefs.removeAllPresence();
 end;
 
 end.
