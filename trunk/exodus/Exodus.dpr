@@ -67,7 +67,8 @@ uses
   BaseChat in 'BaseChat.pas' {frmBaseChat},
   ChatWin in 'ChatWin.pas' {frmChat},
   Room in 'Room.pas' {frmRoom},
-  Password in 'Password.pas' {frmPassword};
+  Password in 'Password.pas' {frmPassword},
+  XMLSocketStream in '..\jopl\XMLSocketStream.pas';
 
 {$R *.RES}
 
