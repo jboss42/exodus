@@ -303,7 +303,7 @@ begin
     _esc := false;
 
     // Pick which frame to build
-    ms := MainSession.prefs.getInt('msglist_style');
+    ms := MainSession.prefs.getInt('msglist_type');
     if (ms = 0) then
         _msgframe := TfRTFMsgList.Create(Self)
     else if (ms = 1) then

@@ -1,11 +1,37 @@
-body {background:#eee; font-family:Arial Unicode MS; margin: 0pt }
-.ts {color:gray}
-.me {color:blue}
+body {
+    font-family:Arial Unicode MS;
+    background: #eee;
+    margin: 0pt;
+    overflow: hidden;
+}
+.ts {
+    color:gray;
+}
+.ts:before { content:"[" }
+.ts:after { content:"]" }
+.me {
+    color: blue;
+}
 .other {color:red}
-.msg {color:black}
+.msg {
+    color:black;
+}
 .svr {color:green}
 .alert {color:blue}
 .action {color:purple}
 .pres {color:gray}
-
-
+#content {
+  height: 100%;
+  overflow: auto;    
+}
+#splash {
+    z-index: -1;
+    position: absolute; 
+    left: 0;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    font-size: 24pt;
+    font-weight: bold;
+    color: #ddd;
+}

@@ -52,6 +52,7 @@ type
     procedure Save(fn: string); virtual;
     procedure populate(history: Widestring); virtual;
     procedure setupPrefs(); virtual;
+    procedure setTitle(title: Widestring); virtual;
 
     property Handle: THandle read getHandle;
     property winObject: TObject read getObject;
@@ -151,6 +152,11 @@ begin
 end;
 
 procedure TfBaseMsgList.setDragDrop(event: TDragDropEvent);
+begin
+    // NOOP
+end;
+
+procedure TfBaseMsgList.setTitle(title: Widestring);
 begin
     // NOOP
 end;
