@@ -24,12 +24,23 @@ interface
 uses
     Unicode, XMLTag,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    StdCtrls, TntCheckLst, TntStdCtrls;
+    StdCtrls, TntCheckLst, TntStdCtrls, ExtCtrls, Contnrs;
 
 type
+
+  TURLRect = class
+    url: string;
+    rect: TRect;
+  end;
+
   TframeGeneric = class(TFrame)
     lblLabel: TTnTLabel;
     procedure FrameResize(Sender: TObject);
+    procedure PaintBox1Paint(Sender: TObject);
+    procedure PaintBox1MouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
+    procedure PaintBox1MouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private declarations }
     value: Widestring;
@@ -39,10 +50,10 @@ type
     req: boolean;
     c: TControl;
     opts_vals: TStringList;
+    urls: TObjectList;
 
     function getValues: TWideStringList;
     procedure JidFieldDotClick(Sender: TObject);
-    procedure URLClick(Sender: TObject; url: String);
   public
     { Public declarations }
     procedure render(tag: TXMLTag);
@@ -50,8 +61,7 @@ type
     function getXML: TXMLTag;
     function getLabelWidth: integer;
     procedure setLabelWidth(val: integer);
-    procedure formResize();
-    
+
     property FormType: string read frm_type write frm_type;
   end;
 
@@ -59,10 +69,11 @@ implementation
 
 {$R *.dfm}
 uses
+    Math, JabberConst, 
     Jabber1, GnuGetText,
     JabberID, ShellAPI,
     SelContact, ExRichEdit,
-    JabberUtils, ExUtils,  CheckLst, RichEdit2;
+    JabberUtils, ExUtils,  CheckLst, RichEdit2, Types;
 
 const
     sRequired = '(Required)';
@@ -80,6 +91,10 @@ begin
     // take a x-data field tag and do the right thing
     Self.BorderWidth := 1;
     AssignDefaultFont(Self.Font);
+
+    // XXX: PGM: where does this get freed?
+    urls := TObjectList.Create();
+    urls.OwnsObjects := true;
 
     fld_var := tag.GetAttribute('var');
     t := tag.GetAttribute('type');
@@ -189,23 +204,13 @@ begin
     end
     else if (t = 'fixed') then begin
         lblLabel.Visible := false;
-        Self.Height := Self.Height * 2;
-        c := TExRichEdit.Create(Self);
-        with TExRichEdit(c) do begin
+        c := TPaintbox.Create(Self);
+        with TPaintbox(c) do begin
             Parent := Self;
-            BorderWidth := 0;
-            BorderStyle := Forms.TBorderStyle(0);
-            AutoURLDetect := adDefault;
             Align := alClient;
-            ScrollBars := ssVertical;
-            URLColor := clBlue;
-            URLCursor := crHandPoint;
-            AllowInPlace := false;
-            Color := clBtnFace;
-            LangOptions := [loAutoFont];
-            WideText := value;
-            ReadOnly := true;
-            OnURLClick := URLClick;
+            onPaint := PaintBox1Paint;
+            onMouseMove := PaintBox1MouseMove;
+            onMouseUp := PaintBox1MouseUp;
         end;
     end
 
@@ -253,17 +258,11 @@ begin
         c.Left := lblLabel.Width + 5;
         c.Top := 1;
         Self.ClientHeight := c.Height + (2 * Self.BorderWidth);
-        formResize();
     end;
 
     fld_type := t;
     if (frm_type = 'submit') then
         c.Enabled := false;
-end;
-
-procedure TframeGeneric.URLClick(Sender: TObject; url: String);
-begin
-    ShellExecute(Application.Handle, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
 end;
 
 {---------------------------------------}
@@ -394,42 +393,161 @@ begin
 end;
 
 
-{---------------------------------------}
-procedure TframeGeneric.formResize();
+procedure TframeGeneric.PaintBox1Paint(Sender: TObject);
 var
-    rich: TExRichEdit;
-    rect: TRect;
-    h: integer;
-    errcode: integer;
-    err: string;
-    text: PWideChar;
+    pb: TPaintBox;
+    w: TRect;
+    word, txt, txt2: Widestring;
+    p1, i, x, y, l, ws: integer;
+    words: TWidestringlist;
+    p2: double;
+    wonkus: boolean;
+    ur: TUrlRect;
 begin
-    if (fld_type = 'fixed') then begin
-        rich := TExRichEdit(c);
+    // paint a fixed label, doing m4dd w0rd wr4pp1ng.
+    pb := TPaintBox(c);
 
-        DebugMsg('rich width: ' + IntToStr(rich.Width));
-        rect.Left := 0;
-        rect.Right := rich.Width;
-        rect.Top := 0;
-        rect.Bottom := 99999;
+    x := 0;
+    y := 0;
 
-        DebugMsg('canvas: ' + IntToStr(TForm(self.Owner).canvas.Handle));
+    // cache the width of a space.
+    txt := ' ';
+    w.Left := 0;
+    w.Right := 0;
+    w.Top := 0;
+    w.Bottom := 0;
+    DrawTextExW(pb.Canvas.Handle, PWideChar(txt), Length(txt), w,
+            DT_SINGLELINE or DT_CALCRECT, nil);
+    ws := w.Right;
 
-        text := rich.WideLines.GetText;
-        h := DrawTextW(TForm(self.Owner).Canvas.Handle, text, -1, rect, DT_CALCRECT or DT_WORDBREAK);
-        if (h = 0) then begin
-            errcode := GetLastError();
-            if (errcode <> 0) then begin
-                SetLength(err, 2000);
-                Windows.FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM,nil,errcode,0,PChar(err),2000,nil);
-                DebugMsg(err);
+    words := TWidestringlist.Create();
+    WordSplit(value, words);
+
+    urls.Clear();
+    wonkus := false;
+    i := 0;
+    while (i < words.count) do begin
+        word := words[i];
+        txt := words[i];
+        if (x > 0) then txt := ' ' + txt;
+        w.top := y;
+        w.Left := x;
+        w.right := x + 1;
+        w.Bottom := y + 1;
+
+        DrawTextExW(pb.Canvas.Handle, PWideChar(txt), Length(txt), w,
+            DT_SINGLELINE or DT_CALCRECT, nil);
+
+        l := w.Right - w.Left;
+
+        if (w.Right > pb.Width) then begin
+            // we need to wrap, since this word would put us over the edge
+            if (l > pb.Width) then begin
+                // we can't fit in our rect..
+                // chop the string and hope for the best :)
+                p2 := (pb.Width - x)/l;
+                p1 := Floor(p2 * length(txt)) - 1;
+                txt := Copy(words[i], 0, p1);
+                if (x > 0) then txt := ' ' + txt;
+                txt2 := Copy(words[i], p1+1, length(words[i]) - p1);
+                words[i] := txt2;
+                i := i - 1;
+                wonkus := true;
+            end
+            else begin
+                txt := word;
+
+                // re-measure, without the space
+                x := 0;
+                w.Right := 0;
+                w.Top := w.Bottom + 1;
+                DrawTextExW(pb.Canvas.Handle, PWideChar(txt), Length(txt), w,
+                            DT_SINGLELINE or DT_CALCRECT, nil);
+                l := w.Right - w.Left;
+                y := w.Top;
+                wonkus := false;
             end;
+        end;
+
+        if (REGEX_URL.Exec(word)) then begin
+            if txt[1] = ' ' then begin
+                // can't reassign to word, since we may be wonkus,
+                // in which case we want the truncated word.
+                txt := Copy(txt, 2, length(txt) - 1);
+                
+                // don't draw the space, but move over for it.  This
+                // way the space won't be underlined, and it won't be
+                // hit-test.
+                x := x + ws;
+                l := l - ws;
+            end;
+            pb.Canvas.Font.Style := [fsUnderline];
+            SetTextColor(pb.Canvas.Handle, clBlue);
+            ur := TURLRect.Create();
+            ur.rect.Left := x;
+            ur.rect.Right := x + l;
+            ur.rect.Top := y;
+            ur.rect.Bottom := w.bottom;
+            ur.url := word;
+            urls.Add(ur);
+        end
+        else begin
+            pb.Canvas.Font.Style := [];
+            SetTextColor(pb.Canvas.Handle, clBlack);
+        end;
+
+        TextOutW(pb.canvas.Handle, x, y, PWideChar(txt), length(txt));
+        if (wonkus) then begin
+            x := 0;
+            y := w.bottom + 2;
+            wonkus := false;
+        end
+        else
+            x := x + l + 1;
+        inc(i);
+    end;
+
+    Self.Height := w.Bottom + 2;
+end;
+
+procedure TframeGeneric.PaintBox1MouseMove(Sender: TObject;
+  Shift: TShiftState; X, Y: Integer);
+var
+    p: TPoint;
+    i: integer;
+begin
+    // check for URL's
+    p.x := x;
+    p.y := y;
+
+    for i := 0 to urls.Count - 1 do begin
+        if PtInRect(TURLRect(urls[i]).rect, p) then begin
+            SetCursor(LoadCursor(0, IDC_HAND));
             exit;
         end;
-        DebugMsg('rich height: ' + IntToStr(h) + ', ' + IntToStr(rect.Bottom));
-        self.Height := h;
-        rich.Invalidate();
     end;
+    SetCursor(LoadCursor(0, IDC_ARROW));
+end;
+
+procedure TframeGeneric.PaintBox1MouseUp(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var
+    p: TPoint;
+    i: integer;
+    ur: TURLRect;
+begin
+    // check for URL's
+    p.X := x;
+    p.y := y;
+
+    for i := 0 to urls.Count - 1 do begin
+        ur := TURLRect(urls[i]);
+        if PtInRect(ur.rect, p) then begin
+            ShellExecute(Application.Handle, 'open', PChar(ur.url), nil, nil, SW_SHOWNORMAL);
+            exit;
+        end;
+    end;
+
 end;
 
 end.
