@@ -1,7 +1,6 @@
 package ExComponents;
 
 {$R *.res}
-{$R 'RichEdit2.dcr'}
 {$ALIGN 8}
 {$ASSERTIONS ON}
 {$BOOLEVAL OFF}
