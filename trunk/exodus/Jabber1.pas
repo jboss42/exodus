@@ -529,7 +529,7 @@ uses
     JclHookExcept, JclDebug, ExceptTracer,
     {$endif}
 
-    About, AutoUpdate, Bookmark, Browser, Chat, ChatController, ChatWin,
+    About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat, ChatController, ChatWin,
     JabberConst, CommCtrl, CustomPres,
     Debug, Dockable, ExUtils, GetOpt, InputPassword, Invite, 
     Iq, JUD, JabberID, JabberMsg, IdGlobal,
@@ -577,7 +577,7 @@ begin
     end;
     else
         inherited;
-end;
+    end;
 end;
 
 {---------------------------------------}
