@@ -182,7 +182,7 @@ begin
         m := emoticon_regex.ExecNext();
         end;
 
-    if (lm < length(txt)) then begin
+    if (lm <= length(txt)) then begin
         // we have a remainder
         txt := Copy(txt, lm, length(txt) - lm + 1);
         RichEdit.SelText := txt;
