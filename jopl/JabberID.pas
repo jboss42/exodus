@@ -46,10 +46,74 @@ type
     end;
 
 
+function isValidJID(jid: Widestring): boolean;
+
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 implementation
+
+function isValidJID(jid: Widestring): boolean;
+var
+    curlen, part, i: integer;
+    c: Cardinal;
+    valid_char: boolean;
+begin
+    Result := false;
+
+    if (Pos('@', jid) >= 0) then part := 0 else part := 1;
+
+    curlen := 0;
+    for i := 1 to Length(jid) do begin
+        c := Ord(jid[i]);
+        valid_char := false;
+        if ((jid[i] = '@') and (part = 0)) then begin
+            part := 1;
+            curlen := 0;
+            end
+        else if ((jid[i] = '/') and (part < 2)) then begin
+            part := 2;
+            curlen := 0;
+            end
+        else begin
+            inc(curlen);
+            case part of
+            0: begin
+                // user or domain
+                case c of
+                $21, $23..$25, $28..$2E,
+                $30..$39, $3B, $3D, $3F,
+                $41..$7E, $80..$D7FF,
+                $E000..$FFFD, $10000..$10FFFF: valid_char := true;
+                end;
+                if (not valid_char) then exit;
+                if (curlen > 256) then exit;
+                end;
+            1: begin
+                // domain
+                case c of
+                $2D, $2E, $5F, $41..$5A, $61..$7A: valid_char := true;
+                end;
+                if (not valid_char) then exit;
+                if (curlen > 256) then exit;
+                end;
+            2: begin
+                // resource
+                case c of
+                $20..$D7FF, $E000..$FFFD,
+                $10000..$10FFFF: valid_char := true;
+                end;
+
+                if (not valid_char) then exit;
+                if (curlen > 256) then exit;
+                end;
+            end;
+            
+            end;
+        end;
+    Result := true;
+end;
 
 {---------------------------------------}
 constructor TJabberID.Create(jid: string);

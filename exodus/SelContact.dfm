@@ -42,11 +42,16 @@ object frmSelContact: TfrmSelContact
     inherited treeRoster: TTreeView
       Width = 219
       Height = 254
-      OnContextPopup = nil
+      PopupMenu = PopupMenu1
       OnDblClick = frameTreeRoster1treeRosterDblClick
-      OnDragDrop = nil
-      OnDragOver = nil
-      OnMouseMove = nil
+    end
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 16
+    Top = 56
+    object ShowOnlineOnly1: TMenuItem
+      Caption = 'Show Online Only'
+      OnClick = ShowOnlineOnly1Click
     end
   end
 end

@@ -1,4 +1,23 @@
 unit fGeneric;
+{
+    Copyright 2002, Peter Millard
+
+    This file is part of Exodus.
+
+    Exodus is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Exodus is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Exodus; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
 
 interface
 
@@ -18,6 +37,7 @@ type
   public
     { Public declarations }
     value: Widestring;
+    fld_type: string;
     fld_var: Widestring;
     req: boolean;
     c: TControl;
@@ -33,9 +53,14 @@ implementation
 
 {$R *.dfm}
 uses
+    Jabber1,
+    JabberID,
     SelContact,
     ExUtils;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 procedure TframeGeneric.render(tag: TXMLTag);
 var
     t: Widestring;
@@ -178,17 +203,26 @@ begin
         c.Left := lblLabel.Width + 5;
         c.Top := 5;
         end;
+
+    fld_type := t;
 end;
 
+{---------------------------------------}
 function TframeGeneric.isValid: boolean;
 begin
     Result := (not req) or (getValues().Count > 0);
+
+    if (fld_type = 'jid') then
+        // make sure we have a valid JID
+        Result := isValidJID(TEdit(c).Text);
+
     if (Result) then
        lblLabel.Font.Color := clWindowText
     else
        lblLabel.Font.Color := clRed;
 end;
 
+{---------------------------------------}
 function TframeGeneric.getXML: TXMLTag;
 var
     vals: TWideStringlist;
@@ -209,6 +243,7 @@ begin
         Result.AddBasicTag('value', vals[i]);
 end;
 
+{---------------------------------------}
 function TframeGeneric.getValues: TWideStringList;
 var
     tmps: WideString;
@@ -245,17 +280,21 @@ begin
         Result.Add(value);
 end;
 
+{---------------------------------------}
 procedure TframeGeneric.JidFieldDotClick(Sender: TObject);
 var
     fsel: TfrmSelContact;
 begin
     fsel := TfrmSelContact.Create(Application);
-    fsel.frameTreeRoster1.DrawRoster(false);
     fsel.frameTreeRoster1.treeRoster.MultiSelect := false;
+
+    frmExodus.PreModal(fsel);
 
     if (fsel.ShowModal = mrOK) then begin
         TEdit(c).Text := fsel.GetSelectedJID();
         end;
+
+    frmExodus.PostModal();
 end;
 
 end.

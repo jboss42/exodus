@@ -84,7 +84,6 @@ begin
     _jid_nodes := TStringlist.Create();
     _collapsed_grps := TStringlist.Create();
     _grp_nodes := TStringlist.Create();
-
     _show_status := MainSession.Prefs.getBool('inline_status');
     _status_color := TColor(MainSession.Prefs.getInt('inline_color'));
 end;
@@ -167,7 +166,6 @@ end;
 procedure TframeTreeRoster.ClearNodes();
 var
     i:          integer;
-    ri:         TJabberRosterItem;
     node_list:  TList;
 begin
     treeRoster.Items.BeginUpdate;
@@ -180,10 +178,8 @@ begin
         _grp_nodes.Objects[i] := nil;
 
     for i := 0 to _jid_nodes.Count - 1 do begin
-        ri := TJabberRosterItem(_jid_nodes.Objects[i]);
-        node_list := GetNodeList(ri);
-        if (node_list <> nil) then
-            node_list.Clear();
+        node_list := TList(_jid_nodes.Objects[i]);
+        node_list.Clear();
         end;
 
     {

@@ -67,6 +67,7 @@ procedure ShowInvite(room_jid: string; jids: TStringList);
 {---------------------------------------}
 implementation
 uses
+    JabberID, 
     XMLTag,
     Session,
     Room, 
@@ -128,9 +129,16 @@ var
     msg: TXMLTag;
     room: string;
     room_idx: integer;
+    tmp_jid: TJabberID;
 begin
     // Make sure we are actually in this room...
     room := cboRoom.Text;
+
+    if (not isValidJID(room)) then begin
+        MessageDlg('Invalid JID', mtError, [mbOK], 0);
+        exit;
+        end;
+
     room_idx := room_list.IndexOf(room);
     if (room_idx < 0) then
         StartRoom(room, MainSession.Username);
@@ -208,7 +216,7 @@ end;
 
 procedure TfrmInvite.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-    action := caFree;
+    Action := caFree;
 end;
 
 end.

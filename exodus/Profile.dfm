@@ -28,10 +28,10 @@ object frmProfile: TfrmProfile
     Top = 0
     Width = 317
     Height = 211
-    ActivePage = TabSheet3
+    ActivePage = TabSheet2
     Align = alLeft
     Style = tsFlatButtons
-    TabIndex = 3
+    TabIndex = 2
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'General'
@@ -240,6 +240,7 @@ object frmProfile: TfrmProfile
         Height = 131
         Anchors = [akLeft, akTop, akRight, akBottom]
         ItemHeight = 13
+        Sorted = True
         TabOrder = 0
       end
       object txtNewGrp: TEdit

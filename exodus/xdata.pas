@@ -1,4 +1,23 @@
 unit xdata;
+{
+    Copyright 2002, Peter Millard
+
+    This file is part of Exodus.
+
+    Exodus is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Exodus is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Exodus; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
 
 interface
 
@@ -45,6 +64,9 @@ implementation
 uses
     Session, ExUtils, StrUtils, fGeneric, IQ;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 procedure showXData(tag: TXMLTag);
 var
     f: TfrmXData;
@@ -55,6 +77,7 @@ begin
     f.BringToFront();
 end;
 
+{---------------------------------------}
 procedure TfrmXData.render(tag: TXMLTag);
 var
     report, ins, x: TXMLTag;
@@ -129,6 +152,7 @@ begin
 
 end;
 
+{---------------------------------------}
 procedure TfrmXData.frameButtons1btnOKClick(Sender: TObject);
 var
     i: integer;
@@ -143,7 +167,7 @@ begin
     x := nil;
     body := nil;
     iq := nil;
-    
+
     if (packet = 'message') then begin
         m := TXMLTag.Create('message');
         m.PutAttribute('to', to_jid);
@@ -193,16 +217,18 @@ begin
         MainSession.SendTag(m)
     else if (iq <> nil) then
         iq.Send();
-        
+
     if (not lstReport.Visible) then
         Self.Close();
 end;
 
+{---------------------------------------}
 procedure TfrmXData.frameButtons1btnCancelClick(Sender: TObject);
 begin
     Self.Close;
 end;
 
+{---------------------------------------}
 procedure TfrmXData.ResultsCB(event: string; tag: TXMLTag);
 var
     item, field: TXMLTag;
@@ -241,6 +267,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmXData.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
     Action := caFree;

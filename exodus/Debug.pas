@@ -186,7 +186,7 @@ begin
         end;
 
     if (event = '/data/send') then begin
-        if (data <> ' ') then
+        if (Trim(data) <> '') then
             AddWideText('SENT: ' + data, clBlue);
         end
     else

@@ -97,6 +97,8 @@ begin
     l.cboProfiles.ItemIndex := i;
     l.cboProfilesChange(nil);
 
+    frmExodus.PreModal(l);
+    
     if l.ShowModal = mrOK then begin
         // Save the info on the profile and login
         i := l.cboProfiles.ItemIndex;
@@ -120,6 +122,8 @@ begin
         end
     else
         l.Close();
+
+    frmExodus.PostModal();
 end;
 
 {---------------------------------------}

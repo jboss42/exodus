@@ -1,6 +1,6 @@
 object frmXData: TfrmXData
-  Left = 879
-  Top = 474
+  Left = 857
+  Top = 529
   Width = 328
   Height = 413
   BorderWidth = 5
@@ -36,7 +36,7 @@ object frmXData: TfrmXData
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 342
+    Top = 337
     Width = 310
     Height = 32
     Align = alBottom
@@ -57,7 +57,7 @@ object frmXData: TfrmXData
   end
   object lstReport: TListView
     Left = 0
-    Top = 192
+    Top = 187
     Width = 310
     Height = 150
     Align = alBottom
@@ -69,7 +69,7 @@ object frmXData: TfrmXData
     Left = 0
     Top = 23
     Width = 310
-    Height = 169
+    Height = 164
     Align = alClient
     BevelEdges = []
     BevelInner = bvNone

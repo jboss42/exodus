@@ -282,7 +282,9 @@ var
 begin
     f := TfrmPrefs.Create(Application);
     f.LoadPrefs;
+    frmExodus.PreModal(f);
     f.ShowModal;
+    frmExodus.PostModal();
 end;
 
 {---------------------------------------}

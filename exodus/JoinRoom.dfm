@@ -1,6 +1,6 @@
 object frmJoinRoom: TfrmJoinRoom
-  Left = 311
-  Top = 114
+  Left = 235
+  Top = 158
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'Join Room'
@@ -46,19 +46,12 @@ object frmJoinRoom: TfrmJoinRoom
     Height = 21
     TabOrder = 0
   end
-  object txtServer: TEdit
-    Left = 91
-    Top = 38
-    Width = 139
-    Height = 21
-    TabOrder = 1
-  end
   object txtNick: TEdit
     Left = 91
     Top = 70
     Width = 139
     Height = 21
-    TabOrder = 2
+    TabOrder = 1
   end
   inline frameButtons1: TframeButtons
     Left = 0
@@ -67,12 +60,13 @@ object frmJoinRoom: TfrmJoinRoom
     Height = 34
     Align = alBottom
     AutoScroll = False
-    TabOrder = 3
+    TabOrder = 2
     inherited Bevel1: TBevel
       Width = 241
     end
     inherited Panel1: TPanel
       Left = 81
+      Height = 29
       inherited btnOK: TButton
         OnClick = frameButtons1btnOKClick
       end
@@ -80,5 +74,14 @@ object frmJoinRoom: TfrmJoinRoom
         OnClick = frameButtons1btnCancelClick
       end
     end
+  end
+  object txtServer: TComboBox
+    Left = 91
+    Top = 37
+    Width = 140
+    Height = 21
+    ItemHeight = 13
+    TabOrder = 3
+    Text = 'txtServer'
   end
 end
