@@ -1,22 +1,108 @@
 unit DNSUtils;
+{
+    Copyright 2003, Peter Millard
+
+    This file is part of Exodus.
+
+    Exodus is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Exodus is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Exodus; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
 
 interface
 
 uses
-  SysUtils, Classes,
+  SysUtils, Classes, Windows, 
   IdBaseComponent, IdComponent, IdUDPBase, IdUDPClient,
   IdDNSResolver;
 
 
 function GetSRVRecord(Resolver: TIdDNSResolver; srv_req, a_req: string;
     var ip: string; var port: Word): boolean;
+function GetNameServers(): string;
 
-
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 
 uses
-    IdException;
+    Registry, IdException;
 
+{---------------------------------------}
+function GetNameServers(): string;
+var
+    r: TRegistry;
+    OSVersionInfo32: OSVERSIONINFO;
+    key: string;
+    vals: string;
+begin
+
+    // Look in different places depending on OS.
+    r := TRegistry.Create();
+    r.RootKey := HKEY_LOCAL_MACHINE;
+
+    OSVersionInfo32.dwOSVersionInfoSize := SizeOf(OSVersionInfo32);
+    GetVersionEx(OSVersionInfo32);
+    case OSVersionInfo32.dwPlatformId of
+    VER_PLATFORM_WIN32_WINDOWS: begin
+        with OSVersionInfo32 do begin
+            { If minor version is zero, we are running on Win 95.
+              Otherwise we are running on Win 98 }
+            if (dwMinorVersion = 0) then begin
+                { Windows 95 }
+                Result := '';
+                exit;
+            end
+            else if (dwMinorVersion < 90) then begin
+                { Windows 98 }
+                key := '\SYSTEM\CurrentControlSet\Services\VxD\MSTCP';
+            end
+            else if (dwMinorVersion >= 90) then begin
+                { Windows ME }
+                key := '\SYSTEM\CurrentControlSet\Services\VxD\MSTCP';
+            end;
+        end;
+    end;
+    VER_PLATFORM_WIN32_NT: begin
+        with OSVersionInfo32 do begin
+            if (dwMajorVersion <= 4) then begin
+                { Windows NT 3.5/4.0 }
+                key := '\System\CurrentControlSet\Services\Tcpip\Parameters';
+            end
+            else if (dwMinorVersion > 0) then begin
+                { Windows XP }
+                key := '\System\CurrentControlSet\Services\Tcpip\Parameters';
+            end
+            else begin
+                { Windows 2000 }
+                key := '\System\CurrentControlSet\Services\Tcpip\Parameters';
+            end;
+        end;
+    end;
+    end;
+
+    r.OpenKeyReadOnly(key);
+    vals := r.ReadString('Nameserver');
+    if (vals = '') then
+        vals := r.ReadString('DhcpNameServer');
+
+    Result := vals;
+    r.Free();
+
+end;
+
+{---------------------------------------}
 function GetSRVRecord(Resolver: TIdDNSResolver; srv_req, a_req: string;
     var ip: string; var port: Word): boolean;
 var
@@ -24,9 +110,31 @@ var
     lo_pri, cur_w, cur: integer;
     srv: TSRVRecord;
     ar: TARecord;
+    dns: string;
+    slist: TStringlist;
 begin
     // Make a SRV request first..
     // if that fails, fall back on A Records
+    dns := GetNameServers();
+    if (dns = '') then begin
+        ip := a_req;
+        port := 0;
+        Result := false;
+        exit;
+    end;
+
+    slist := TStringlist.Create();
+    slist.Delimiter := ' ';
+    slist.DelimitedText := dns;
+
+    if (slist.Count = 0) then begin
+        ip := a_req;
+        port := 0;
+        Result := false;
+        exit;
+    end;
+
+    Resolver.Host := slist[0];
     Resolver.AllowRecursiveQueries := true;
     try
         Resolver.QueryRecords := [qtSRV];

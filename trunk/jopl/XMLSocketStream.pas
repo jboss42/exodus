@@ -507,10 +507,7 @@ begin
             if ((_profile.ssl = ssl_port) and (_profile.SocksType <> proxy_none) and
                 (_ssl_int.PassThrough)) then begin
                 if (_profile.SocksType = proxy_http) then begin
-                    if (_profile.Host <> '') then
-                        HttpProxyConnect(_iohandler, _profile.Host, _profile.Port)
-                    else
-                        HttpProxyConnect(_iohandler, _profile.Server, _profile.Port)
+                    HttpProxyConnect(_iohandler, _profile.ResolvedIP, _profile.ResolvedPort);
                 end;
 
                 _ssl_int.PassThrough := false;
@@ -659,14 +656,18 @@ begin
         _ssl_int.OnStatusInfo := TSocketThread(_thread).StatusInfo;
     end;
 
+    // Create an HTTP Proxy if we need one
     if (_profile.SocksType = proxy_http) then begin
         // no ssl.  we'll have to deal with CONNECT on connect
         if (_iohandler = nil) then
             _iohandler := THttpProxyIOHandler.Create(nil);
     end;
+
+    // Create a default IOHandler if we don't have on yet
     if (_iohandler = nil) then
         _iohandler := TIdIOHandlerSocket.Create(nil);
 
+    // Link our socket to our IOHandler
     _iohandler.UseNagle := false;
     _socket.IOHandler := _iohandler;
 
@@ -681,9 +682,9 @@ begin
             end;
 
             Authentication := saNoAuthentication;
+
             if (_profile.SocksType = proxy_http) then begin
                 MainSession.Prefs.getHttpProxy(hhost, hport);
-
                 // yes, this is confusing.  If we are doing http connect, and
                 // we're doing SSL, then jump through hoops by having the
                 // socket connect to the proxy, and don't actually do ssl for now.
@@ -768,19 +769,16 @@ end;
 procedure TXMLSocketStream.Connect(profile: TJabberProfile);
 begin
     _profile := profile;
+    _server := _profile.Server;
 
     // Create our socket
     _socket := TIdTCPClient.Create(nil);
-    // SUCK, make the recv buffer fuckin' gigantic
+    // SUCK, make the recv buffer freaken' gigantic to avoid weird SSL issues
     //_socket.RecvBufferSize := 4096;
     _socket.RecvBufferSize := (1024 * 1024);
-    _socket.Port := _profile.port;
 
-    _server := _profile.Server;
-    if (_profile.Host = '') then
-        _socket.Host := _profile.Server
-    else
-        _socket.Host := _profile.Host;
+    _socket.Port := _profile.ResolvedPort;
+    _socket.Host := _profile.ResolvedIP;
 
     _ssl_cert := _profile.SSL_Cert;
 

@@ -170,7 +170,7 @@ begin
         mov esp, ebp
         pop ebp
         jmp [_GetLastInputInfo]
-end;
+    end;
 end;
 
 {---------------------------------------}
