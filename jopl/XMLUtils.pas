@@ -60,7 +60,14 @@ uses
     {$else}
     QForms,
     {$endif}
-    IdGlobal, IdCoder3To4, sechash;
+
+    IdGlobal,
+    {$ifdef INDY9}
+    IdCoderMime,
+    {$else}
+    IdCoder3To4,
+    {$endif}
+    sechash;
 
 
 {---------------------------------------}
@@ -224,13 +231,22 @@ end;
 function EncodeString(value: Widestring): Widestring;
 var
     tmps: String;
+    {$ifdef INDY9}
+    e: TIdEncoderMIME;
+    {$else}
     e: TIdBase64Encoder;
+    {$endif}
 begin
     // do base64 encode
+    {$ifdef INDY9}
+    e := TIdEncoderMime.Create(nil);
+    tmps := e.Encode(value);
+    {$else}
     e := TIdBase64Encoder.Create(nil);
     e.CodeString(value);
     tmps := e.CompletedInput();
     Fetch(tmps, ';');
+    {$endif}
     e.Free();
     Result := tmps;
 end;
@@ -239,13 +255,22 @@ end;
 function DecodeString(value: Widestring): Widestring;
 var
     tmps: string;
+    {$ifdef INDY9}
+    d: TIdDecoderMime;
+    {$else}
     d: TIdBase64Decoder;
+    {$endif}
 begin
     // do base64 decode
+    {$ifdef INDY9}
+    d := TIdDecoderMime.Create(nil);
+    tmps := d.DecodeString(value);
+    {$else}
     d := TIdBase64Decoder.Create(nil);
     d.CodeString(value);
     tmps := d.CompletedInput();
     Fetch(tmps, ';');
+    {$endif}
     d.Free();
     Result := tmps;
 end;

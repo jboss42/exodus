@@ -21,17 +21,16 @@ unit XMLSocketStream;
 
 interface
 uses
-    XMLTag,
-    XMLStream,
-    PrefController,
+    XMLTag, XMLStream, PrefController,
+
     {$ifdef linux}
     QExtCtrls, IdSSLIntercept,
     {$else}
     ExtCtrls, IdSSLOpenSSL,
     {$endif}
-    SysUtils, IdException,
-    IdTCPConnection, IdTCPClient,
-    SyncObjs;
+
+    IdTCPConnection, IdTCPClient, IdException, IdThread, IdSocks,
+    SysUtils, SyncObjs;
 
 type
     TSocketThread = class;
@@ -40,9 +39,15 @@ type
         _socket:    TidTCPClient;
         _sock_lock: TCriticalSection;
         {$ifdef Linux}
-        _ssl_int:   TIdSSLConnectionIntercept;
+            _ssl_int: TIdSSLConnectionIntercept;
         {$else}
-        _ssl_int:   TIdConnectionInterceptOpenSSL;
+            {$ifdef INDY9}
+            _ssl_int: TIdSSLIOHandlerSocket;
+            _socks_info: TIdSocksInfo;
+            {$else}
+            _ssl_int: TIdConnectionInterceptOpenSSL;
+            _socks_info: TObject;
+            {$endif}
         {$endif}
         _ssl_check: boolean;
         _ssl_ok:    boolean;
@@ -88,7 +93,7 @@ type
         constructor Create(strm: TXMLStream; Socket: TidTCPClient; root: string); //reintroduce;
 
         procedure DataTerminate (Sender: TObject);
-        procedure GotException (Sender: TObject; E: Exception);
+        procedure GotException (Sender: TIdThread; E: Exception);
 
     end;
 implementation
@@ -98,10 +103,7 @@ uses
     // todo: REMOVE this dependency!!
     Controls, Dialogs,
     {$endif}
-    Classes,
-    IdThread,
-    IdSocks;
-
+    Classes;
 {---------------------------------------}
 {      TSocketThread Class                }
 {---------------------------------------}
@@ -207,7 +209,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TSocketThread.GotException(Sender: TObject; E: Exception);
+procedure TSocketThread.GotException(Sender: TIdThread; E: Exception);
 var
     se: EIdSocketError;
 begin
@@ -260,11 +262,12 @@ begin
     }
     inherited;
 
-    _ssl_int   := nil;
-    _ssl_check := false;
-    _ssl_ok    := false;
-    _socket    := nil;
-    _sock_lock := TCriticalSection.Create();
+    _ssl_int    := nil;
+    _ssl_check  := false;
+    _ssl_ok     := false;
+    _socket     := nil;
+    _sock_lock  := TCriticalSection.Create();
+    _socks_info := nil;
 
     _timer := TTimer.Create(nil);
     _timer.Interval := 60000;
@@ -366,7 +369,11 @@ begin
     case msg.lparam of
         WM_CONNECTED: begin
             // Socket is connected
+            {$ifdef INDY9}
+            _local_ip := _socket.BoundIP;
+            {$else}
             _local_ip := _Socket.Binding.IP;
+            {$endif}
             _active := true;
             _timer.Enabled := true;
             DoCallbacks('connected', nil);
@@ -439,7 +446,12 @@ begin
     {$ifdef Linux}
     _ssl_int := TIdSSLConnectionIntercept.Create(nil);
     {$else}
+    {$ifdef INDY9}
+    _ssl_int := TIdSSLIOHandlerSocket.Create(nil);
+    _socks_info := TIdSocksInfo.Create(nil);
+    {$else}
     _ssl_int := TIdConnectionInterceptOpenSSL.Create(nil);
+    {$endif}
     with _ssl_int do begin
         // TODO: get certs from profile
         // that would be *cool*.
@@ -456,8 +468,13 @@ begin
     _socket := TIdTCPClient.Create(nil);
     _socket.RecvBufferSize := 4096;
     _socket.Port := _profile.port;
+    {$ifdef INDY9}
+    if (_profile.ssl) then
+        _socket.IOHandler := _ssl_int;
+    {$else}
     _socket.Intercept := _ssl_int;
     _socket.InterceptEnabled := _profile.ssl;
+    {$endif}
 
     _server := _profile.Server;
     if (_profile.Host = '') then
@@ -465,10 +482,16 @@ begin
     else
         _socket.Host := _profile.Host;
 
-    if (_profile.SocksType = 0) then
-        _socket.Intercept := _ssl_int
+    if (_profile.SocksType = 0) then begin
+        // don't do anything here??
+        // _socket.Intercept := _ssl_int;
+        end
     else begin
+        {$ifdef INDY9}
+        with _socks_info do begin
+        {$else}
         with _socket.SocksInfo do begin
+        {$endif}
             case _profile.SocksType of
             1: Version := svSocks4;
             2: Version := svSocks4a;
@@ -477,8 +500,13 @@ begin
             Host := _profile.SocksHost;
             Port := _profile.SocksPort;
             if (_profile.SocksAuth) then begin
+                {$ifdef INDY9}
+                _socks_info.Username := _profile.SocksUsername;
+                _socks_info.Password := _profile.SocksPassword;
+                {$else}
                 UserID := _profile.SocksUsername;
                 Password := _profile.SocksPassword;
+                {$endif}
                 Authentication := saUsernamePassword;
                 end;
             end;
@@ -506,8 +534,10 @@ begin
     _sock_lock.Acquire();
 
     if (_socket <> nil) then begin
+        {$ifndef INDY9}
         _socket.InterceptEnabled := false;
         _socket.Intercept := nil;
+        {$endif}
 
         if (_ssl_int <> nil) then begin
             _ssl_int.Free();

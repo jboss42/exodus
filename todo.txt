@@ -2,15 +2,15 @@ TODO List
 ===============
 
 0.8 Stuff
-- Tweak branding
-- Remove jabber auto-update stuff.. Prefer only HTTP
-- Auto-update should be on by default
-- Look at JUD + x-data
-- Look at Register + x-data
-- Look at using precompiled xplites in more places?
+-  Tweak branding
+jh Remove jabber auto-update stuff.. Prefer only HTTP
+-  Auto-update should be on by default
+-  Look at JUD + x-data
+-  Look at Register + x-data
+-  Look at using precompiled xplites in more places?
 
 Future Stuff
-- Grow toast horizontally & word-wrap
-- Disco support
+-  Grow toast horizontally & word-wrap
+-  Disco support
 
 

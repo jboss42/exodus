@@ -21,6 +21,7 @@ program Exodus;
 }
 
 {%File 'README.txt'}
+{%File '..\todo.txt'}
 
 uses
   Forms,

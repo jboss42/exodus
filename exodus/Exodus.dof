@@ -46,8 +46,8 @@ UnitOutputDir=.\output
 PackageDLLOutputDir=
 PackageDCPOutputDir=
 SearchPath=.\components
-Packages=vcl;rtl;dbrtl;adortl;vcldb;vclx;bdertl;vcldbx;ibxpress;dsnap;cds;bdecds;qrpt;teeui;teedb;tee;dss;teeqr;visualclx;visualdbclx;dsnapcrba;dsnapcon;VclSmp;vclshlctrls;vclie;xmlrtl;inet;inetdbbde;inetdbxpress;inetdb;nmfast;webdsnap;websnap;dbexpress;dbxcds;indy;dclOffice2k;ExComponents
-Conditionals=
+Packages=vcl;rtl;dbrtl;adortl;vcldb;vclx;bdertl;vcldbx;ibxpress;dsnap;cds;bdecds;qrpt;teeui;teedb;tee;dss;teeqr;visualclx;visualdbclx;dsnapcrba;dsnapcon;VclSmp;vclshlctrls;vclie;xmlrtl;inet;inetdbbde;inetdbxpress;inetdb;nmfast;webdsnap;websnap;dbexpress;dbxcds;dclOffice2k;ExComponents
+Conditionals=INDY9
 DebugSourceDirs=D:\Dev\Delphi6\Source\Indy\;D:\src\exodus\exodus\components\
 UsePackages=0
 [Parameters]
@@ -88,6 +88,9 @@ Comments=This is free! Promote jabber and give it to a friend.
 [HistoryLists\hlDebugSourcePath]
 Count=1
 Item0=D:\Dev\Delphi6\Source\Indy\;D:\src\exodus\exodus\components\
+[HistoryLists\hlConditionals]
+Count=1
+Item0=INDY9
 [HistoryLists\hlUnitAliases]
 Count=1
 Item0=WinTypes=Windows;WinProcs=Windows;DbiTypes=BDE;DbiProcs=BDE;DbiErrs=BDE;

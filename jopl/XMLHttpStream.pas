@@ -67,7 +67,7 @@ uses
     {$ifdef Win32}
     Registry, StrUtils,
     {$endif}
-    IdGlobal;
+    IdGlobal, IdHTTPHeaderInfo;
 
 const
     MIN_TIME : integer = 250;
@@ -180,6 +180,7 @@ begin
     _poll_id := '0';
     _poll_time := MIN_TIME;
     _http := TIdHTTP.Create(nil);
+    _http.AllowCookies := true;
     _cookie_list := TStringList.Create();
     _cookie_list.Delimiter := ';';
     _cookie_list.QuoteChar := #0;
@@ -198,11 +199,20 @@ begin
         try
             reg.OpenKey('Software\Microsoft\Windows\CurrentVersion\Internet Settings', false);
             if (reg.ValueExists('ProxyEnable') and
-                (reg.ReadInteger('ProxyEnable') <> 0)) then with _http.Request do begin
+                (reg.ReadInteger('ProxyEnable') <> 0)) then begin
                 srv := reg.ReadString('ProxyServer');
                 colon := pos(':', srv);
-                ProxyServer := Copy(srv, 1, colon-1);
-                ProxyPort := StrToInt(Copy(srv, colon+1, length(srv)));
+                {$ifdef INDY9}
+                with _http.ProxyParams do begin
+                    ProxyServer := Copy(srv, 1, colon-1);
+                    ProxyPort := StrToInt(Copy(srv, colon+1, length(srv)));
+                    end;
+                {$else}
+                with _http.Request do begin
+                    ProxyServer := Copy(srv, 1, colon-1);
+                    ProxyPort := StrToInt(Copy(srv, colon+1, length(srv)));
+                    end;
+                {$endif}
                 end;
         finally
             reg.Free();
@@ -211,7 +221,11 @@ begin
         
         end
     else if (_profile.ProxyApproach = http_proxy_custom) then begin
+        {$ifdef INDY9}
+        with _http.ProxyParams do begin
+        {$else}
         with _http.Request do begin
+        {$endif}
             ProxyServer := _profile.ProxyHost;
             ProxyPort := _profile.ProxyPort;
             if (_profile.ProxyAuth) then begin
@@ -287,6 +301,10 @@ begin
     pid := '';
 
     // Get the cookie values + parse them, looking for the ID
+    {$ifdef INDY9}
+    // TODO: Make this work w/ Indy9... this is probably close
+    pid := _http.CookieManager.CookieCollection.Cookie['ID', ''].CookieText;
+    {$else}
     new_cookie := _http.Response.ExtraHeaders.Values['Set-Cookie'];
     _cookie_list.DelimitedText := new_cookie;
     for i := 0 to _cookie_list.Count - 1 do begin
@@ -295,6 +313,7 @@ begin
             break;
             end;
         end;
+    {$endif}
 
     if (_poll_id = '0') then begin
         _poll_id := pid;
