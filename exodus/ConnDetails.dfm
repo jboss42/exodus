@@ -18,7 +18,7 @@ object frmConnDetails: TfrmConnDetails
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 244
+    Top = 239
     Width = 296
     Height = 32
     Align = alBottom
@@ -44,7 +44,7 @@ object frmConnDetails: TfrmConnDetails
     Left = 0
     Top = 0
     Width = 296
-    Height = 244
+    Height = 239
     ActivePage = tbsProfile
     Align = alClient
     TabOrder = 1
@@ -390,7 +390,7 @@ object frmConnDetails: TfrmConnDetails
       end
       object lblNote: TTntLabel
         Left = 0
-        Top = 100
+        Top = 95
         Width = 284
         Height = 112
         Align = alBottom
