@@ -145,7 +145,7 @@ var
     f: TfrmConnDetails;
 begin
     //
-    f := TfrmConnDetails.Create(Application);
+    f := TfrmConnDetails.Create(nil);
 
     with f do begin
         _profile := p;
@@ -158,6 +158,7 @@ begin
     end;
 
     result := f.ShowModal();
+    f.Free();
 end;
 
 {---------------------------------------}
