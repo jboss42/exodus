@@ -12,7 +12,7 @@ unit ExImportAIM_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/4/2003 6:58:26 AM from Type Library described below.
+// File generated on 3/4/2003 7:35:46 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\AIM-Import\ExImportAIM.tlb (1)
@@ -21,7 +21,7 @@ unit ExImportAIM_TLB;
 // Helpfile: 
 // HelpString: AIM Buddy List File Import Plugin
 // DepndLst: 
-//   (1) v1.0 ExodusCOM, (D:\src\exodus\runner\Exodus.exe)
+//   (1) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
 //   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 

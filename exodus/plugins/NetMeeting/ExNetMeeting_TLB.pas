@@ -12,16 +12,16 @@ unit ExNetMeeting_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/1/2003 3:41:20 PM from Type Library described below.
+// File generated on 3/4/2003 7:16:11 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\NetMeeting\ExNetMeeting.tlb (1)
 // LIBID: {D00007FF-BE47-4D97-9DC9-C700FC050CE3}
 // LCID: 0
 // Helpfile: 
-// HelpString: ExNetMeeting Library
+// HelpString: Send Netmeeting requests to other Jabber users.
 // DepndLst: 
-//   (1) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
+//   (1) v1.0 ExodusCOM, (D:\src\exodus\runner\Exodus.exe)
 //   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
