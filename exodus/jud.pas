@@ -474,8 +474,18 @@ begin
         // setup the columns for items (no x-data)
         if (cur_state = 'items') then begin
             // use the first item in the list
-            cur :=  items[0];
-            cols := cur.ChildTags();
+
+            // This is an UGLY UGLY hack for really crappy
+            // JUD components which return guineauo like:
+            // <item jid="foo"><remove/></item>
+            cols := nil;
+            i := 0;
+            repeat
+                if (cols <> nil) then cols.Free();
+                cur := items[i];
+                cols := cur.ChildTags();
+                inc(i);
+            until ((cols.Count > 1) or (cols[0].Name = 'remove'));
 
             with lstContacts.Columns.Add() do begin
                 // add a JID column by default
