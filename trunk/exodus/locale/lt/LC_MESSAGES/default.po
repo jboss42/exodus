@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exodus\n"
 "POT-Creation-Date: 2003-08-03 07:30\n"
-"PO-Revision-Date: 2004-02-29 00:39+0200\n"
+"PO-Revision-Date: 2004-03-01 17:52+0200\n"
 "Last-Translator: Rimas Kudelis <rq@akl.lt>\n"
 "Language-Team: Lithuanian <komp_lt@konferencijos.lt>\n"
 "MIME-Version: 1.0\n"
@@ -748,7 +748,7 @@ msgstr "Tipas"
 #. frmBrowse..Panel3..vwBrowse......Caption
 #: Browser.dfm:53
 msgid "Node ID"
-msgstr ""
+msgstr "Mazgo ID"
 
 #. frmBrowse..Panel3..pnlInfo..lblError..Caption
 #: Browser.dfm:89
@@ -885,7 +885,7 @@ msgstr "btnProps"
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnNode..Hint
 #: Browser.dfm:246
 msgid "Show Node Identifier"
-msgstr ""
+msgstr "Rodyti mazgo identifikatorių"
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnNode..Caption
 #: Browser.dfm:249
@@ -910,7 +910,7 @@ msgstr "Jabber adresas:   "
 #. frmBrowse..pnlNode..pnlNodeID..Caption
 #: Browser.dfm:334
 msgid "Node Identifier:"
-msgstr ""
+msgstr "Mazgo identifikatorius:"
 
 #. frmBrowse..popViewStyle..Details1..Caption
 #: Browser.dfm:3834
@@ -1107,7 +1107,7 @@ msgstr "Blokuoti asmenį"
 #: ChatWin.dfm:153
 #: Room.dfm:244
 msgid "Notification Options ..."
-msgstr "Pranešimų nustatymai..."
+msgstr "Pranešimų parametrai..."
 
 #. frmChat..popContact..mnuOnTop..Caption
 #. frmRoom..popRoom..mnuOnTop..Caption
@@ -1401,14 +1401,14 @@ msgstr "Papildomi įspėjimų nustatymai"
 #. frmCustomNotify..lblDefault..Caption
 #: CustomNotify.dfm:26
 msgid "Reset to default preferences ..."
-msgstr "Atkurti nutylimasias nuostatas..."
+msgstr "Atkurti nutylimuosius nustatymus..."
 
 #. frmCustomNotify..optNotify..Caption
 #. frmPrefNotify..optNotify..Caption
 #: CustomNotify.dfm:63
 #: prefs/PrefNotify.dfm:93
 msgid "Notify Options"
-msgstr "Įspėjimų nustatymai"
+msgstr "Įspėjimų parametrai"
 
 #. frmCustomNotify..optNotify..chkFlash..Caption
 #. frmPrefNotify..optNotify..chkFlash..Caption
@@ -1536,7 +1536,7 @@ msgstr "Netrukdyti"
 #. frmCustomPres..chkSave..Caption
 #: CustomPres.dfm:107
 msgid "Save this presence to my preferences."
-msgstr "Išsaugoti šią būseną mano nuostatose."
+msgstr "Išsaugoti šią būseną mano nustatymuose."
 
 #. frmCustomPres..boxSave..lblTitle..Caption
 #. frmProfile..PageControl1..TabSheet5..Label24..Caption
@@ -2607,7 +2607,7 @@ msgstr "rfDesktop"
 #. frmPrefs..Caption
 #: Prefs.dfm:7
 msgid "Exodus Preferences"
-msgstr "Exodus nuostatos"
+msgstr "Exodus nustatymai"
 
 #. frmPrefs..Scroller..lblDialog..Caption
 #: Prefs.dfm:241
@@ -2637,7 +2637,7 @@ msgstr "Sistema"
 #. frmPrefs..Scroller..lblNotify..Caption
 #: Prefs.dfm:1156
 msgid "Notification"
-msgstr "Pranešimai"
+msgstr "Įspėjimai"
 
 #. frmPrefs..Scroller..lblAway..Caption
 #: Prefs.dfm:1350
@@ -5929,7 +5929,7 @@ msgstr "Keisti savininkų sąrašą"
 #. frmRoom..popRoom..popAdmin..popConfigure..Caption
 #: Room.dfm:232
 msgid "Configure Room"
-msgstr "Kambario nuostatos"
+msgstr "Kambario parametrai"
 
 #. frmRoom..popRoom..popAdmin..popDestroy..Caption
 #: Room.dfm:236
@@ -6383,7 +6383,7 @@ msgstr "Exodus autorius - Peter Millard (mailto:me@pgmillard.com). Daugiau infor
 
 #: About.pas:86
 msgid "Preference Icons used with permission from collections of \"Foood\". http://www.foood.net/icons/index.htm"
-msgstr "Nuostatų dialogo piktogramos, gavus leidimą, paimtos iš „Foood“ kolekcijų. http://www.foood.net/icons/index.htm"
+msgstr "Nustatymų dialogo piktogramos, gavus leidimą, paimtos iš „Foood“ kolekcijų. http://www.foood.net/icons/index.htm"
 
 #: About.pas:88
 msgid "TCP/IP components are Copyright (c) 1993 - 2002, Chad Z. Hower (Kudzu) and the Indy Pit Crew - http://www.nevrona.com/Indy/. This application may also be using the IndySSL components from Nevrona, and the Open-SSL binaries available from Intellicom.si."
@@ -6922,7 +6922,7 @@ msgstr "Jūsų autentikacijos mechanizmas nepalaiko registracijos."
 
 #: GUIFactory.pas:133
 msgid "There was an error attempting to save your options. Another process may be accessing your options file. Some options may be lost. "
-msgstr "Bandant išsaugoti jūsų nuostatas, įvyko klaida. Gali būti, jog kitas procesas šiuo metu naudoja nuostatų bylą. Dalis nuostatų gali būti prarasta."
+msgstr "Bandant išsaugoti jūsų nustatymus, įvyko klaida. Gali būti, jog kitas procesas šiuo metu naudoja nustatymų bylą. Dalis nustatymų gali būti prarasta."
 
 #. otherwise, just join..
 #: JoinRoom.pas:245
@@ -7114,7 +7114,7 @@ msgstr "Pašalinti šį profilį?"
 
 #: MsgQueue.pas:149
 msgid "Exodus could not create or write to the spool directory specified in the options."
-msgstr "Exodus nepavyko sukuri arba rašyti į kaupties segtuvą, nurodytą nuostatose."
+msgstr "Exodus nepavyko sukuri arba rašyti į kaupties aplanką, nurodytą nustatymuose."
 
 #: MsgRecv.pas:388
 msgid "Decline"
@@ -7192,7 +7192,7 @@ msgstr "Nesulaukta sutikimo gauti bylą."
 
 #: RecvStatus.pas:409
 msgid "No acceptable stream hosts were sent. Have the sender check their settings."
-msgstr "Nesulaukta tinkamo  ryšio kanalo parametrų. Pasiūlykite siuntėjui pasitikrinti nuostatas."
+msgstr "Nesulaukta tinkamų ryšio kanalo parametrų. Pasiūlykite siuntėjui pasitikrinti nustatymus."
 
 #: RecvStatus.pas:438
 #: RecvStatus.pas:552
@@ -7378,7 +7378,7 @@ msgstr "Jums neleidžiama kurti kambarius."
 
 #: Room.pas:1012
 msgid "There was an error using the default room configuration. Configuring it manually."
-msgstr "Įvyko klaida, bandant naudoti nutylimasias kambario nuostastas. Konfigūruojame rankiniu būdu."
+msgstr "Įvyko klaida, bandant naudoti nutylimuosius kambario nustatymus. Konfigūruojame rankiniu būdu."
 
 #: Room.pas:1138
 msgid "Your room keyword regular expressions are invalid. Keyword matching will be turned off for this room."
@@ -7833,7 +7833,7 @@ msgstr "Aktyvuoti automatinį atjungimą"
 #. frmPrefAway..pnlHeader..Caption
 #: prefs/PrefAway.dfm:153
 msgid "Auto Away Options"
-msgstr "Automatinio nebuvimo nuostatos"
+msgstr "Automatinio nebuvimo nustatymai"
 
 #. frmPrefDialogs..Caption
 #: prefs/PrefDialogs.dfm:4
@@ -7888,7 +7888,7 @@ msgstr "Naudoti ESC klavišą pokalbio langui uždaryti."
 #. frmPrefDialogs..pnlHeader..Caption
 #: prefs/PrefDialogs.dfm:248
 msgid "Window Options"
-msgstr "Lango nuostatos"
+msgstr "Lango parametrai"
 
 #. frmPrefFont..Caption
 #: prefs/PrefFont.dfm:4
@@ -7983,7 +7983,7 @@ msgstr "Nerodyti atsijungusių asmenų"
 #. frmPrefGroups..pnlHeader..Caption
 #: prefs/PrefGroups.dfm:107
 msgid "Roster Group Options"
-msgstr "Adresinės grupės nuostatos"
+msgstr "Adresinės grupių nustatymai"
 
 #. frmPrefLayouts..Caption
 #: prefs/PrefLayouts.dfm:4
@@ -8140,7 +8140,7 @@ msgstr "Kurti žurnalo įrašus tik žinutėms, kurias atsiunčia mano adresinė
 #. frmPrefMsg..pnlHeader..Caption
 #: prefs/PrefMsg.dfm:178
 msgid "Message Options"
-msgstr "Žinučių nuostatos"
+msgstr "Žinučių parametrai"
 
 #. frmPrefMsg..OpenDialog1..Filter
 #: prefs/PrefMsg.dfm:182
@@ -8160,12 +8160,12 @@ msgstr "frmPrefNetwork"
 #. frmPrefNetwork..pnlHeader..Caption
 #: prefs/PrefNetwork.dfm:12
 msgid "Connection Options"
-msgstr "Prisijungimo nuostatos"
+msgstr "Prisijungimo nustatymai"
 
 #. frmPrefNetwork..GroupBox1..Caption
 #: prefs/PrefNetwork.dfm:20
 msgid "Reconnect Options"
-msgstr "Pakartotinio prisijungimo nuostatos"
+msgstr "Pakartotinio prisijungimo nustatymai"
 
 #. frmPrefNetwork..GroupBox1..lblAttempts..Caption
 #: prefs/PrefNetwork.dfm:27
@@ -8195,7 +8195,7 @@ msgstr "Požiūris:"
 #. frmPrefNetwork..GroupBox2..cboProxyApproach....Items.WideStrings
 #: prefs/PrefNetwork.dfm:184
 msgid "Use IE Settings"
-msgstr "Naudoti IE nuostatas"
+msgstr "Naudoti IE nustatymus"
 
 #. frmPrefNetwork..GroupBox2..cboProxyApproach....Items.WideStrings
 #: prefs/PrefNetwork.dfm:185
@@ -8225,7 +8225,7 @@ msgstr "Konfigūruoti garsus..."
 #. frmPrefNotify..pnlHeader..Caption
 #: prefs/PrefNotify.dfm:24
 msgid "Notification Options"
-msgstr "Pranešimų nuostatos"
+msgstr "Įspėjimų parametrai"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:34
@@ -8360,7 +8360,7 @@ msgstr "frmPrefPresence"
 #. frmPrefPresence..pnlHeader..Caption
 #: prefs/PrefPresence.dfm:13
 msgid "Presence Options"
-msgstr "Būsenų nuostatos"
+msgstr "Būsenų nustatymai"
 
 #. frmPrefPresence..pnlCustomPresButtons..btnDefaults..Caption
 #: prefs/PrefPresence.dfm:66
@@ -8472,7 +8472,7 @@ msgstr "Rodyti būseną adresinėje: Jonas <susitikime>"
 #. frmPrefRoster..pnlHeader..Caption
 #: prefs/PrefRoster.dfm:100
 msgid "Roster Options"
-msgstr "Adresinės nuostatos"
+msgstr "Adresinės parametrai"
 
 #. frmPrefRoster..chkNestedGrps..Caption
 #: prefs/PrefRoster.dfm:108
@@ -8487,7 +8487,7 @@ msgstr "frmPrefSubscription"
 #. frmPrefSubscription..pnlHeader..Caption
 #: prefs/PrefSubscription.dfm:12
 msgid "Subscription Options"
-msgstr "Prenumeratų nuostatos"
+msgstr "Prenumeratų nustatymai"
 
 #. frmPrefSubscription..optIncomingS10n..Caption
 #: prefs/PrefSubscription.dfm:19
@@ -8537,7 +8537,7 @@ msgstr "Mano pagrindinis slapyvardys yra:"
 #. frmPrefSystem..pnlHeader..Caption
 #: prefs/PrefSystem.dfm:35
 msgid "System Options"
-msgstr "Pagrindinės nuostatos"
+msgstr "Pagrindiniai nustatymai"
 
 #. frmPrefSystem..chkAutoUpdate..Caption
 #: prefs/PrefSystem.dfm:43
@@ -8607,7 +8607,7 @@ msgstr "Persiunčiamų bylų aplankas:"
 #. frmPrefTransfer..lblXferDefault..Caption
 #: prefs/PrefTransfer.dfm:23
 msgid "Reset all file transfer options to defaults"
-msgstr "Aktyvuoti nutylimąsias persiunčiamų bylų nuostatas"
+msgstr "Aktyvuoti nutylimuosius persiunčiamų bylų nustatymus"
 
 #. frmPrefTransfer..lblXferMethod..Caption
 #: prefs/PrefTransfer.dfm:31
@@ -8617,7 +8617,7 @@ msgstr "Siųsti bylas šiuo būdu:"
 #. frmPrefTransfer..pnlHeader..Caption
 #: prefs/PrefTransfer.dfm:35
 msgid "File Transfer Options"
-msgstr "Bylų persiuntimų nuostatos"
+msgstr "Bylų persiuntimų nustatymai"
 
 #. frmPrefTransfer..grpWebDav..lblDavHost..Caption
 #: prefs/PrefTransfer.dfm:50
@@ -8728,7 +8728,7 @@ msgstr "Pagrindinis langas rodo adresinę. Kiti langai pritvirtinami prie pagrin
 
 #: prefs/PrefNetwork.pas:96
 msgid "Your IE proxy settings won't help, since you use an autoconfiguration script.  Please configure your proxy manually."
-msgstr "Jūsų IE tarpinės stoties nustatymai nepadės, nes jūs naudojate automatinės konfigūracijos skriptą. Sukonfigūruokite arpinę stotį rankomis."
+msgstr "Jūsų IE tarpinės stoties nustatymai nepadės, nes jūs naudojate automatinės konfigūracijos skriptą. Sukonfigūruokite tarpinę stotį rankomis."
 
 #: prefs/PrefNotify.pas:245
 msgid "Make sure to configure sounds in your Sounds Control Panel using the hotlink provided."
