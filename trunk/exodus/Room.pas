@@ -635,7 +635,6 @@ begin
     i := _roster.indexOf(from);
 
     // check for MUC presence
-    xtag := nil;
     xtag := tag.QueryXPTag(xp_muc_presence);
     if ((xtag <> nil) and (not _isMUC)) then
         _isMUC := true;
