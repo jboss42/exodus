@@ -500,7 +500,14 @@ begin
                      ico_conf, 'notify_roomactivity');
     end;
 
-    if (Msg.Body <> '') then begin
+    if (Msg.Subject <> '') then begin
+        _subject := Msg.Subject;
+        lblSubject.Hint := AnsiReplaceText(_subject, '|', Chr(13));
+        lblSubject.Caption := AnsiReplaceText(_subject, '&', '&&');
+        Msg.Body := _(sRoomSubjChange) + Msg.Subject;
+        DisplayMsg(Msg, MsgList);
+    end
+    else if (Msg.Body <> '') then begin
         DisplayMsg(Msg, MsgList);
 
         // log if we have logs for TC turned on.
@@ -514,11 +521,6 @@ begin
             MsgOut.SetFocus();
     end;
 
-    if (Msg.Subject <> '') then begin
-        _subject := Msg.Subject;
-        lblSubject.Hint := AnsiReplaceText(_subject, '|', Chr(13));
-        lblSubject.Caption := AnsiReplaceText(_subject, '&', '&&');
-    end;
 
     Msg.Free();
 end;
