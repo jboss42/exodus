@@ -282,6 +282,7 @@ type
     _msgcb: integer;
     _iqcb: integer;
 
+    last_tick: dword;
 
     procedure presCustomPresClick(Sender: TObject);
 
@@ -319,8 +320,8 @@ type
     procedure ChangePasswordCallback(event: string; tag: TXMLTag);
 
   public
-    // other stuff..
-    last_tick: dword;
+
+    function getLastTick(): dword;
     function getTabForm(tab: TTabSheet): TForm;
     function IsAutoAway(): boolean;
     function IsAutoXA(): boolean;
@@ -1717,12 +1718,29 @@ begin
 end;
 
 {---------------------------------------}
+function TfrmExodus.getLastTick(): dword;
+var
+    last_info: TLastInputInfo;
+begin
+    Result := 0;
+    if (_windows_ver < cWIN_2000) then begin
+        if (_lpHookRec <> nil) then
+            Result := _lpHookRec^.LastTick;
+        end
+    else begin
+        // use GetLastInputInfo
+        last_info.cbSize := sizeof(last_info);
+        if (GetLastInputInfo(last_info)) then
+            Result := last_info.dwTime
+        end;
+end;
+
+{---------------------------------------}
 procedure TfrmExodus.timAutoAwayTimer(Sender: TObject);
 var
     mins, away, xa: integer;
     cur_idle: longword;
     // dmsg: string;
-    last_info: TLastInputInfo;
     avail: boolean;
 begin
     // get the latest idle amount
@@ -1733,21 +1751,10 @@ begin
         if ((_auto_away)) then begin
 
             if (not _testaa) then begin
-                if (_windows_ver < cWIN_2000) then begin
-                    if (_lpHookRec <> nil) then
-                        last_tick := _lpHookRec^.LastTick
-                    else
-                        exit;
-                    end
-                else begin
-                    // use GetLastInputInfo
-                    last_info.cbSize := sizeof(last_info);
-                    if (GetLastInputInfo(last_info)) then
-                        last_tick := last_info.dwTime
-                    else
-                        exit;
-                    end;
+                last_tick := getLastTick();
+                if (last_tick = 0) then exit;
                 end;
+
             cur_idle := (GetTickCount() - last_tick) div 1000;
             mins := cur_idle div 60;
 

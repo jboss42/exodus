@@ -50,7 +50,6 @@ type
   end;
 
 var
-    pre_last_tick: integer;
     singleToast: TfrmRiser;
     frmRiser: TfrmRiser;
 
@@ -75,8 +74,6 @@ begin
 
     // Don't show toast while auto away
     if ((frmExodus.IsAutoAway) or (frmExodus.IsAutoXA)) then exit;
-
-    pre_last_tick := frmExodus.last_tick;
 
     bmp := TBitmap.Create;
     frmExodus.ImageList2.GetBitmap(imgIndex, bmp);
@@ -222,7 +219,6 @@ end;
 {---------------------------------------}
 procedure TfrmRiser.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-    frmExodus.ResetLastTick(pre_last_tick + (5 * 1000));
     singleToast := nil;
     Action := caFree;
 end;
