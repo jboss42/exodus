@@ -45,7 +45,7 @@ close VF;
 
 open VF, ">version.nsi";
 print VF <<"EOF";
-!define MUI_VERSION "$maj.$min.$sp.$build"
+!define EXODUS_VERSION "$maj.$min.$sp.$build"
 EOF
 close VF;
 

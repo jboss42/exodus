@@ -1,1 +1,1 @@
-!define MUI_VERSION "0.8.6.54"
+!define EXODUS_VERSION "0.8.6.54"
