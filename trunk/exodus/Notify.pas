@@ -44,7 +44,7 @@ end;
 
 const
     // image index for tab notification.
-    tab_notify = 12;
+    tab_notify = 42;
 
 procedure DoNotify(win: TForm; notify: integer; msg: Widestring; icon: integer;
     sound_name: string); overload;
