@@ -337,6 +337,9 @@ var
     n: Widestring;
 begin
 
+    // Make sure we have TC..
+    if (not MainSession.Prefs.getBool('brand_muc')) then exit;
+
     // Find out nick..
     if (rnick = '') then begin
         n := MainSession.Prefs.getString('default_nick');

@@ -111,6 +111,7 @@ procedure StartJoinRoom;
 var
     jr: TfrmJoinRoom;
 begin
+    if (not MainSession.Prefs.getBool('brand_muc')) then exit;
     jr := TfrmJoinRoom.Create(Application);
     with jr do begin
         txtRoom.Text := MainSession.Prefs.getString('tc_lastroom');
@@ -130,6 +131,7 @@ procedure StartJoinRoom(room_jid: TJabberID; nick, password: WideString); overlo
 var
     jr: TfrmJoinRoom;
 begin
+    if (not MainSession.Prefs.getBool('brand_muc')) then exit;
     jr := TfrmJoinRoom.Create(Application);
     with jr do begin
         txtRoom.Text := room_jid.user;
