@@ -432,7 +432,6 @@ procedure TfrmBaseChat.timWinFlashTimer(Sender: TObject);
 begin
     // Flash the window
     FlashWindow(Self.Handle, true);
-    FlashWindow(Self.Handle, true);
 end;
 
 {---------------------------------------}
