@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-02-26 20:02\n"
-"PO-Revision-Date: 2004-02-26 20:02\n"
+"POT-Creation-Date: 2004-02-26 22:52\n"
+"PO-Revision-Date: 2004-02-26 22:52\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1480,9 +1480,9 @@ msgstr ""
 #: Jabber1.pas:2720
 #: RosterWindow.pas:346
 #: RosterWindow.pas:368
-#: RosterWindow.pas:1619
+#: RosterWindow.pas:1642
 #. reset status to online;
-#: RosterWindow.pas:1662
+#: RosterWindow.pas:1685
 #: /src/exodus/jopl/PrefController.pas:1257
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:70
@@ -1502,7 +1502,7 @@ msgstr ""
 #: Jabber1.pas:2718
 #: RosterWindow.pas:348
 #: RosterWindow.pas:369
-#: RosterWindow.pas:1603
+#: RosterWindow.pas:1626
 #: /src/exodus/jopl/PrefController.pas:1275
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:69
@@ -1529,7 +1529,7 @@ msgstr ""
 #: RosterWindow.dfm:427
 #: RosterWindow.pas:350
 #: RosterWindow.pas:371
-#: RosterWindow.pas:1611
+#: RosterWindow.pas:1634
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:67
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
@@ -2129,7 +2129,7 @@ msgstr ""
 #: RosterWindow.dfm:409
 #: RosterWindow.pas:347
 #. display this show type
-#: RosterWindow.pas:1599
+#: RosterWindow.pas:1622
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
 #: prefs/PrefPresence.dfm:201
 msgid "Free to Chat"
@@ -2142,7 +2142,7 @@ msgstr ""
 #. frmRosterWindow..popStatus..presXA..Caption
 #: RosterWindow.dfm:421
 #: RosterWindow.pas:349
-#: RosterWindow.pas:1607
+#: RosterWindow.pas:1630
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
 #: prefs/PrefPresence.dfm:204
 msgid "Xtended Away"
@@ -5978,10 +5978,10 @@ msgstr ""
 #. frmRosterWindow..popGroup..popGroupBlock..Caption
 #: RosterWindow.dfm:634
 #: Room.pas:1491
-#: RosterWindow.pas:2050
+#: RosterWindow.pas:2074
 #. do blocking madness
-#: RosterWindow.pas:2087
-#: RosterWindow.pas:2092
+#: RosterWindow.pas:2111
+#: RosterWindow.pas:2116
 msgid "Block"
 msgstr ""
 
@@ -6138,9 +6138,9 @@ msgstr ""
 #: ExUtils.pas:898
 #: RosterWindow.pas:367
 #. it at all times (if it exists).
-#: RosterWindow.pas:1243
-#: RosterWindow.pas:1247
-#: RosterWindow.pas:1615
+#: RosterWindow.pas:1267
+#: RosterWindow.pas:1271
+#: RosterWindow.pas:1638
 msgid "Offline"
 msgstr ""
 
@@ -7122,10 +7122,10 @@ msgstr ""
 #. send roster items to this contact.
 #: Jabber1.pas:2823
 #. Send contacts to this JID..
-#: RosterWindow.pas:2524
+#: RosterWindow.pas:2548
 #. we got a URL drop
-#: RosterWindow.pas:2826
-#: RosterWindow.pas:2858
+#: RosterWindow.pas:2850
+#: RosterWindow.pas:2882
 msgid "You must select one or more contacts."
 msgstr ""
 
@@ -7507,8 +7507,8 @@ msgid "Enter bookmark name:"
 msgstr ""
 
 #: Room.pas:1489
-#: RosterWindow.pas:2046
-#: RosterWindow.pas:2097
+#: RosterWindow.pas:2070
+#: RosterWindow.pas:2121
 msgid "UnBlock"
 msgstr ""
 
@@ -7572,8 +7572,8 @@ msgstr ""
 
 #: RosterWindow.pas:374
 #. The My resources grp is also special.. same as offline
-#: RosterWindow.pas:1259
-#: RosterWindow.pas:1263
+#: RosterWindow.pas:1283
+#: RosterWindow.pas:1287
 msgid "My Resources"
 msgstr ""
 
@@ -7593,7 +7593,7 @@ msgstr ""
 #. we've been authenticated
 #: RosterWindow.pas:518
 #. Login to the client..
-#: RosterWindow.pas:2626
+#: RosterWindow.pas:2650
 msgid "Click to Cancel..."
 msgstr ""
 
@@ -7608,53 +7608,53 @@ msgid "Authenticated.\n"
 msgstr ""
 
 #. remove a bookmark
-#: RosterWindow.pas:1848
+#: RosterWindow.pas:1872
 msgid "Remove this bookmark?"
 msgstr ""
 
-#: RosterWindow.pas:2325
+#: RosterWindow.pas:2349
 msgid " (Pending)"
 msgstr ""
 
-#: RosterWindow.pas:2437
+#: RosterWindow.pas:2461
 msgid "Rename group"
 msgstr ""
 
-#: RosterWindow.pas:2437
+#: RosterWindow.pas:2461
 msgid "New group name:"
 msgstr ""
 
 #. Block or Unblock this user
-#: RosterWindow.pas:2552
+#: RosterWindow.pas:2576
 msgid "Block %d contacts?"
 msgstr ""
 
 #. Block or Unblock this user
-#: RosterWindow.pas:2581
+#: RosterWindow.pas:2605
 msgid "Unblock %d contacts?"
 msgstr ""
 
-#: RosterWindow.pas:2609
+#: RosterWindow.pas:2633
 msgid "You must select more than one online contact to "
 "broadcast."
 msgstr ""
 
 #. Cancel the connection
-#: RosterWindow.pas:2630
-#: RosterWindow.pas:2968
+#: RosterWindow.pas:2654
+#: RosterWindow.pas:2992
 msgid "Click to Cancel Reconnect"
 msgstr ""
 
 #. processing of Editing events
-#: RosterWindow.pas:2735
+#: RosterWindow.pas:2759
 msgid "Rename Roster Item"
 msgstr ""
 
-#: RosterWindow.pas:2735
+#: RosterWindow.pas:2759
 msgid "New Nickname: "
 msgstr ""
 
-#: RosterWindow.pas:2969
+#: RosterWindow.pas:2993
 msgid "Reconnect in %d seconds."
 msgstr ""
 
