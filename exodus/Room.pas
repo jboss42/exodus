@@ -164,7 +164,7 @@ type
     function  checkCommand(txt: Widestring): boolean;
     function _countPossibleNicks(tmps: Widestring): integer;
     function _selectNick(wsl: TWidestringlist): Widestring;
-    
+
     procedure _sendPresence(ptype, msg: Widestring);
 
     procedure SetJID(sjid: Widestring);
@@ -323,7 +323,7 @@ uses
     Notify,
     PrefController,
     Presence,
-    Profile, 
+    Profile,
     RegForm,
     RichEdit,
     RiserWindow,
@@ -402,7 +402,7 @@ begin
 
         // let the plugins know about the new room
         ExComController.fireNewRoom(tmp_jid.jid, TExodusChat(f.ComController));
-        
+
         tmp_jid.Free();
         room_list.AddObject(rjid, f);
     end;
@@ -1816,7 +1816,7 @@ begin
                 n := Selections[i];
                 o := TObject(n.Data);
                 assert(o <> nil);
-                
+
                 if (o is TJabberRosterItem) then begin
                     ritem := TJabberRosterItem(n.Data);
                     jids.Add(ritem);
@@ -2271,7 +2271,7 @@ begin
                 Font.Color := clGrayText
             else
                 Font.Color := clWindowText;
-            Brush.Color := clWindow;
+            Brush.Color := lstRoster.Color;
             Brush.Style := bsSolid;
             FillRect(xRect);
         end;
