@@ -71,6 +71,8 @@ type
     popVoice: TMenuItem;
     popConfigure: TMenuItem;
     N3: TMenuItem;
+    N4: TMenuItem;
+    popDestroy: TMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -99,6 +101,7 @@ type
     procedure popKickClick(Sender: TObject);
     procedure popVoiceClick(Sender: TObject);
     procedure popVoiceListClick(Sender: TObject);
+    procedure popDestroyClick(Sender: TObject);
   private
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
@@ -176,6 +179,7 @@ resourcestring
     sBanReason = 'Ban Reason';
     sKickDefault = 'You have been kicked.';
     sBanDefault = 'You have been banned.';
+    sDestroyDefault = 'The owner has destroyed the room.';
 
     sGrantVoice = 'You have been granted voice.';
     sRevokeVoice = 'Your voice has been revoked.';
@@ -183,6 +187,8 @@ resourcestring
     sNewUser = '%s has entered the room.';
     sUserLeave = '%s has left the room.';
     sNewRole = '%s has a new role of %s.';
+
+    sDestroyRoom = 'Do you really want to destroy the room? All users will be removed.';
 
     sStatus_100 = 'This room is not anonymous';
     sStatus_301 = '%s has been banned from this room. %s';
@@ -615,6 +621,7 @@ begin
         if (member.Nick = myNick) then begin
             // check to see what my role is
             popConfigure.Enabled := (member.Affil = MUC_OWNER);
+            popDestroy.Enabled := popConfigure.Enabled;
             popAdmin.Enabled := (member.Role = MUC_MOD) or popConfigure.Enabled;
             popKick.Enabled := popAdmin.Enabled;
             popBan.Enabled := popAdmin.Enabled;
@@ -1386,6 +1393,29 @@ begin
     if event <> 'xml' then exit;
     if tag = nil then exit;
     ShowRoomAdminList(tag);
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.popDestroyClick(Sender: TObject);
+var
+    reason: string;
+    iq, d: TXMLTag;
+begin
+  inherited;
+    // Destroy Room
+    if (MessageDlg(sDestroyRoom, mtConfirmation, [mbYes,mbNo], 0) = mrNo) then
+        exit;
+    reason := sDestroyDefault;
+    if InputQuery('Destroy Room', 'Destroy Reason: ', reason) = false then exit;
+
+    iq := TXMLTag.Create('iq');
+    iq.PutAttribute('type', 'set');
+    iq.PutAttribute('id', MainSession.generateID());
+    iq.PutAttribute('to', jid);
+    d := iq.AddTag('destroy');
+    d.PutAttribute('xmlns', XMLNS_MUCOWNER);
+    d.AddBasicTag('reason', reason);
+    MainSession.SendTag(iq);
 end;
 
 initialization

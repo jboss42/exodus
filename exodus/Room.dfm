@@ -171,9 +171,16 @@ inherited frmRoom: TfrmRoom
         Caption = 'Edit Member List'
         OnClick = popVoiceListClick
       end
+      object N4: TMenuItem
+        Caption = '-'
+      end
       object popConfigure: TMenuItem
         Caption = 'Configure Room'
         OnClick = popConfigureClick
+      end
+      object popDestroy: TMenuItem
+        Caption = 'Destroy Room'
+        OnClick = popDestroyClick
       end
     end
     object N1: TMenuItem
