@@ -73,6 +73,9 @@ type
     Image1: TImage;
     frameButtons1: TframeButtons;
     N2: TMenuItem;
+    popClipboard: TPopupMenu;
+    popCopy: TMenuItem;
+    popPaste: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -94,6 +97,9 @@ type
     procedure MsgOutKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure popCopyClick(Sender: TObject);
+    procedure popPasteClick(Sender: TObject);
+    procedure popClipboardPopup(Sender: TObject);
   private
     { Private declarations }
     _base_jid: WideString;
@@ -155,9 +161,9 @@ resourcestring
 {---------------------------------------}
 implementation
 uses
-    JabberConst, ShellAPI, Profile, Transfer,
+    Clipbrd, JabberConst, ShellAPI, Profile, Transfer,
     ExUtils, JabberMsg, JabberID,
-    RosterWindow, RemoveContact, RosterRecv, Room, Roster, 
+    RosterWindow, RemoveContact, RosterRecv, Room, Roster,
     Presence, Session, Jabber1;
 
 {$R *.DFM}
@@ -471,6 +477,8 @@ begin
         jabberSendMsg(recips[i], mtag, _xtags, txt, s);
         m.Free();
     end;
+    recips.Clear();
+    MsgOut.WideLines.Clear();
     pnlReply.Visible := false;
     NextOrClose();
 end;
@@ -682,6 +690,31 @@ begin
         CanClose := false;
         MessageDlg(sMsgsPending, mtError, [mbOK], 0);
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.popCopyClick(Sender: TObject);
+begin
+  inherited;
+    //
+    if (Self.ActiveControl = MsgOut) then
+        MsgOut.CopyToClipboard()
+    else
+        txtMsg.CopyToClipboard();
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.popPasteClick(Sender: TObject);
+begin
+  inherited;
+    MsgOut.SelText := Clipboard.AsText;
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.popClipboardPopup(Sender: TObject);
+begin
+  inherited;
+    popPaste.Enabled := (Self.ActiveControl = MsgOut);
 end;
 
 end.
