@@ -155,7 +155,8 @@ uses
   LocalUtils in 'LocalUtils.pas',
   SendStatus in 'SendStatus.pas' {fSendStatus: TFrame},
   XferManager in 'XferManager.pas' {frmXferManager},
-  RecvStatus in 'RecvStatus.pas' {fRecvStatus: TFrame};
+  RecvStatus in 'RecvStatus.pas' {fRecvStatus: TFrame},
+  GrpManagement in 'GrpManagement.pas' {frmGrpManagement};
 
 {$R *.TLB}
 
@@ -178,6 +179,7 @@ begin
   if (not continue) then exit;
 
   Application.CreateForm(TfrmExodus, frmExodus);
+  Application.CreateForm(TfrmGrpManagement, frmGrpManagement);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);

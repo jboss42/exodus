@@ -98,7 +98,6 @@ object frmRosterWindow: TfrmRosterWindow
     OnContextPopup = treeRosterContextPopup
     OnCustomDrawItem = treeRosterCustomDrawItem
     OnDblClick = treeRosterDblClick
-    OnDeletion = treeRosterDeletion
     OnDragDrop = treeRosterDragDrop
     OnDragOver = treeRosterDragOver
     OnEdited = treeRosterEdited
@@ -224,6 +223,7 @@ object frmRosterWindow: TfrmRosterWindow
     end
   end
   object popRoster: TPopupMenu
+    AutoHotkeys = maManual
     OnPopup = popRosterPopup
     Left = 8
     Top = 208
@@ -310,6 +310,7 @@ object frmRosterWindow: TfrmRosterWindow
     end
   end
   object popStatus: TPopupMenu
+    AutoHotkeys = maManual
     Images = frmExodus.ImageList2
     Left = 8
     Top = 240
@@ -489,6 +490,7 @@ object frmRosterWindow: TfrmRosterWindow
       000000000000}
   end
   object popActions: TPopupMenu
+    AutoHotkeys = maManual
     Left = 40
     Top = 208
     object popAddContact: TMenuItem
@@ -501,6 +503,7 @@ object frmRosterWindow: TfrmRosterWindow
     end
   end
   object popGroup: TPopupMenu
+    AutoHotkeys = maManual
     Left = 40
     Top = 240
     object popGrpPresence: TMenuItem
@@ -526,6 +529,10 @@ object frmRosterWindow: TfrmRosterWindow
       Caption = 'Send Contacts To...'
       OnClick = popSendContactsClick
     end
+    object MoveorCopyContacts1: TMenuItem
+      Caption = 'Move or Copy Contacts...'
+      OnClick = MoveorCopyContacts1Click
+    end
     object N3: TMenuItem
       Caption = '-'
     end
@@ -550,6 +557,7 @@ object frmRosterWindow: TfrmRosterWindow
     end
   end
   object popBookmark: TPopupMenu
+    AutoHotkeys = maManual
     Left = 8
     Top = 272
     object Join1: TMenuItem
@@ -570,6 +578,7 @@ object frmRosterWindow: TfrmRosterWindow
     end
   end
   object popTransport: TPopupMenu
+    AutoHotkeys = maManual
     Left = 40
     Top = 272
     object popTransLogoff: TMenuItem

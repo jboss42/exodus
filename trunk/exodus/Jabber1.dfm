@@ -2678,6 +2678,7 @@ object frmExodus: TfrmExodus
     Top = 136
   end
   object popTabs: TPopupMenu
+    AutoHotkeys = maManual
     Left = 48
     Top = 104
     object popCloseTab: TMenuItem
