@@ -106,8 +106,12 @@ begin
             _event(tag);
         end
     else begin
-        msg_queue.Push(tag);
-        MainSession.FireEvent('/session/gui/chat', tag);
+        if MainSession.IsPaused then
+            MainSession.QueueEvent(event, tag, Self.MsgCallback)
+        else begin
+            msg_queue.Push(tag);
+            MainSession.FireEvent('/session/gui/chat', tag);
+            end;
         end;
 end;
 
