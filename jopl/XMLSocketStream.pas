@@ -60,7 +60,6 @@ type
 
         {$ifdef Win32}
         // _cert:      TIdX509;
-
         // procedure VerifyUI();
         // function VerifyPeer(Certificate: TIdX509): Boolean;
         {$endif}

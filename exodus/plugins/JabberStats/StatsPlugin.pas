@@ -54,7 +54,7 @@ type
 implementation
 
 uses
-    ComServ, Config, SysUtils;
+    ComServ, Config, Controls, Dialogs, SysUtils;
 
 function TStatsPlugin.onInstantMsg(const Body,
   Subject: WideString): WideString;
@@ -66,10 +66,10 @@ procedure TStatsPlugin.Configure;
 var
     fConfig: TfrmConfig;
 begin
-    fConfig := TfrmConfig.Create();
+    fConfig := TfrmConfig.Create(nil);
     fConfig.txtFilename.Text := _filename;
 
-    if (fConfig.ShowModal = mrOK) then begin
+    if (fConfig.ShowModal() = mrOK) then begin
         _filename := fConfig.txtFilename.Text;
         _exodus.setPrefAsString('stats_filename', _filename);
     end;
