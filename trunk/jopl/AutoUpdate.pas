@@ -159,6 +159,7 @@ var
     url  : string;
     t    : TAutoUpdateThread;
 begin
+    if (not MainSession.Prefs.getBool('auto_updates')) then exit;
     url  := MainSession.Prefs.getString('branding_url');
     if (url = '') then exit;
 

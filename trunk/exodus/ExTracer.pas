@@ -38,8 +38,14 @@ type
     { Public declarations }
   end;
 
+  TCatchersMit = class
+  public
+    procedure gotException(Sender: TObject; e: Exception);
+  end;
+
 var
   frmException: TfrmException;
+  CatchersMit: TCatchersMit;
 
 procedure ExodusException(ExceptObj: TObject; ExceptAddr: Pointer; OSException: Boolean);
 {$endif}
@@ -48,10 +54,20 @@ implementation
 
 {$R *.dfm}
 
-{$ifdef TRACE_EXCEPTIONS}
 uses
-    ExResponders, Unicode,
-    IdException, JclDebug, JclHookExcept, TypInfo;
+    {$ifdef TRACE_EXCEPTIONS}
+    IdException, JclDebug, JclHookExcept, TypInfo,
+    {$endif}
+    ExResponders, Unicode;
+
+procedure TCatchersMit.gotException(Sender: TObject; e: Exception);
+var
+    l: TWidestringlist;
+begin
+    l := TWidestringlist.Create();
+    l.Add('Exception: ' + e.Message);
+    ExHandleException(l);
+end;
 
 procedure ExodusException(ExceptObj: TObject; ExceptAddr: Pointer; OSException: Boolean);
 var
@@ -66,7 +82,7 @@ begin
     if (e is EIdClosedSocket) then exit;
     if (e is EIdDNSResolverError) then exit;
     if (e is EIdConnClosedGracefully) then exit;
-    //if (e is EIdTerminateThreadTimeout) then exit;
+    if (e.inheritsFrom(EIdException)) then exit;
 
     // Just use the existing error log stuff.
     l := TWidestringlist.Create();
@@ -86,12 +102,23 @@ begin
 end;
 
 initialization
+
+    {$ifdef TRACE_EXCEPTIONS}
     frmException := nil;
     JclStackTrackingOptions := JclStackTrackingOptions + [stRawMode];
     JclStackTrackingOptions := JclStackTrackingOptions + [stExceptFrame];
     JclStackTrackingOptions := JclStackTrackingOptions + [stStaticModuleList];
     JclStartExceptionTracking;
-    JclAddExceptNotifier(ExodusException);
-{$endif}
+    // Just use Application.onException since these notifiers
+    // always fire, even if the exception is about to be caught.
+    // JclAddExceptNotifier(ExodusException);
+    {$endif}
+
+    CatchersMit := TCatchersMit.Create();
+    Application.OnException := CatchersMit.gotException;
+
+finalization
+    Application.onException := nil;
+    CatchersMit.Free();
 
 end.
