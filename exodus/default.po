@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-09-09 13:07\n"
-"PO-Revision-Date: 2003-09-09 13:07\n"
+"POT-Creation-Date: 2003-09-13 11:05\n"
+"PO-Revision-Date: 2003-09-13 11:05\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6298,52 +6298,52 @@ msgid "File Transfer Manager"
 msgstr ""
 
 #. Programmer's name for it: sService
-#: Browser.pas:165
+#: Browser.pas:168
 msgid "Service"
 msgstr ""
 
 #. Programmer's name for it: sConference
-#: Browser.pas:166
+#: Browser.pas:169
 msgid "Conference"
 msgstr ""
 
 #. Programmer's name for it: sUser
-#: Browser.pas:167
+#: Browser.pas:170
 msgid "Jabber User"
 msgstr ""
 
 #. Programmer's name for it: sApplication
-#: Browser.pas:168
+#: Browser.pas:171
 msgid "Application"
 msgstr ""
 
 #. Programmer's name for it: sHeadline
-#: Browser.pas:169
+#: Browser.pas:172
 msgid "Headline Svc."
 msgstr ""
 
 #. Programmer's name for it: sRender
-#: Browser.pas:170
+#: Browser.pas:173
 msgid "Rendering Svc."
 msgstr ""
 
 #. Programmer's name for it: sKeyword
-#: Browser.pas:171
+#: Browser.pas:174
 msgid "Keyword Lookup"
 msgstr ""
 
 #. Programmer's name for it: sValidate
-#: Browser.pas:172
+#: Browser.pas:175
 msgid "Validator"
 msgstr ""
 
 #. Programmer's name for it: sItem
-#: Browser.pas:173
+#: Browser.pas:176
 msgid "Jabber Object"
 msgstr ""
 
 #. Programmer's name for it: sObjects
-#: Browser.pas:174
+#: Browser.pas:177
 msgid "Objects"
 msgstr ""
 
@@ -7350,7 +7350,7 @@ msgid "The room has been destroyed for an unknown "
 "reason."
 msgstr ""
 
-#: Room.pas:1051
+#: Room.pas:1054
 msgid "Your room keyword regular expressions are invalid. Keyword matching "
 "will be turned off for this room."
 msgstr ""
