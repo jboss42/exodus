@@ -22,7 +22,7 @@
     <brand_profile_ssl>false</brand_profile_ssl>
     <brand_profile_socks_type>0</brand_profile_socks_type>
     <brand_profile_socks_host></brand_profile_socks_host>
-    <brand_profile_socks_port>1</brand_profile_socks_port>
+    <brand_profile_socks_port>1080</brand_profile_socks_port>
     <brand_profile_socks_auth>false</brand_profile_socks_auth>
     <brand_profile_socks_user></brand_profile_socks_user>
     <brand_profile_socks_password></brand_profile_socks_password>
@@ -32,7 +32,7 @@
     <brand_profile_num_poll_keys>256</brand_profile_num_poll_keys>
     <brand_profile_http_proxy_approach>0</brand_profile_http_proxy_approach>
     <brand_profile_http_proxy_host></brand_profile_http_proxy_host>
-    <brand_profile_http_proxy_port>0</brand_profile_http_proxy_port>
+    <brand_profile_http_proxy_port>8080</brand_profile_http_proxy_port>
     <brand_profile_http_proxy_auth>false</brand_profile_http_proxy_auth>
     <brand_profile_http_proxy_user></brand_profile_http_proxy_user>
     <brand_profile_http_proxy_password></brand_profile_http_proxy_password>
