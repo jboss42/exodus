@@ -63,7 +63,9 @@ uses
   Register in 'Register.pas',
   Notify in 'Notify.pas',
   getopt in 'getOpt.pas',
-  GrpRemove in 'GrpRemove.pas' {frmGrpRemove};
+  GrpRemove in 'GrpRemove.pas' {frmGrpRemove},
+  RegExpr in 'RegExpr.pas',
+  Emoticons in 'Emoticons.pas' {frmEmoticons};
 
 {$R *.RES}
 
@@ -75,6 +77,7 @@ begin
   Application.CreateForm(TExodus, frmJabber);
   Application.CreateForm(TfrmRosterWindow, frmRosterWindow);
   Application.CreateForm(TfrmCustomPres, frmCustomPres);
+  Application.CreateForm(TfrmEmoticons, frmEmoticons);
   Application.ShowMainForm := false;
   frmRosterWindow.DockRoster;
   frmRosterWindow.Show;

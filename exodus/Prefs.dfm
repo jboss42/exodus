@@ -2,7 +2,7 @@ object frmPrefs: TfrmPrefs
   Left = 266
   Top = 151
   Width = 407
-  Height = 406
+  Height = 411
   Caption = 'Exodus Preferences'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -28,7 +28,7 @@ object frmPrefs: TfrmPrefs
     object imgDialog: TImage
       Left = 0
       Top = 212
-      Width = 70
+      Width = 68
       Height = 40
       Align = alTop
       Center = True
@@ -152,7 +152,7 @@ object frmPrefs: TfrmPrefs
     object lblDialog: TLabel
       Left = 0
       Top = 252
-      Width = 70
+      Width = 68
       Height = 13
       Align = alTop
       Alignment = taCenter
@@ -163,7 +163,7 @@ object frmPrefs: TfrmPrefs
     object imgFonts: TImage
       Left = 0
       Top = 106
-      Width = 70
+      Width = 68
       Height = 40
       Align = alTop
       Center = True
@@ -405,7 +405,7 @@ object frmPrefs: TfrmPrefs
     object lblFonts: TLabel
       Left = 0
       Top = 146
-      Width = 70
+      Width = 68
       Height = 13
       Align = alTop
       Alignment = taCenter
@@ -416,7 +416,7 @@ object frmPrefs: TfrmPrefs
     object imgS10n: TImage
       Left = 0
       Top = 53
-      Width = 70
+      Width = 68
       Height = 40
       Align = alTop
       Center = True
@@ -658,7 +658,7 @@ object frmPrefs: TfrmPrefs
     object lblS10n: TLabel
       Left = 0
       Top = 93
-      Width = 70
+      Width = 68
       Height = 13
       Align = alTop
       Alignment = taCenter
@@ -669,7 +669,7 @@ object frmPrefs: TfrmPrefs
     object imgRoster: TImage
       Left = 0
       Top = 0
-      Width = 70
+      Width = 68
       Height = 40
       Align = alTop
       Center = True
@@ -793,7 +793,7 @@ object frmPrefs: TfrmPrefs
     object lblRoster: TLabel
       Left = 0
       Top = 40
-      Width = 70
+      Width = 68
       Height = 13
       Align = alTop
       Alignment = taCenter
@@ -805,7 +805,7 @@ object frmPrefs: TfrmPrefs
     object imgSystem: TImage
       Left = 0
       Top = 159
-      Width = 70
+      Width = 68
       Height = 40
       Align = alTop
       Center = True
@@ -1047,7 +1047,7 @@ object frmPrefs: TfrmPrefs
     object lblSystem: TLabel
       Left = 0
       Top = 199
-      Width = 70
+      Width = 68
       Height = 13
       Align = alTop
       Alignment = taCenter
@@ -1058,7 +1058,7 @@ object frmPrefs: TfrmPrefs
     object imgNotify: TImage
       Left = 0
       Top = 265
-      Width = 70
+      Width = 68
       Height = 40
       Align = alTop
       Center = True
@@ -1182,7 +1182,7 @@ object frmPrefs: TfrmPrefs
     object lblNotify: TLabel
       Left = 0
       Top = 305
-      Width = 70
+      Width = 68
       Height = 13
       Align = alTop
       Alignment = taCenter
@@ -1193,7 +1193,7 @@ object frmPrefs: TfrmPrefs
     object imgAway: TImage
       Left = 0
       Top = 318
-      Width = 70
+      Width = 68
       Height = 40
       Align = alTop
       Center = True
@@ -1228,7 +1228,7 @@ object frmPrefs: TfrmPrefs
     object lblAway: TLabel
       Left = 0
       Top = 358
-      Width = 70
+      Width = 68
       Height = 13
       Align = alTop
       Alignment = taCenter
@@ -1239,7 +1239,7 @@ object frmPrefs: TfrmPrefs
     object imgKeywords: TImage
       Left = 0
       Top = 371
-      Width = 70
+      Width = 68
       Height = 40
       Align = alTop
       Center = True
@@ -1274,7 +1274,7 @@ object frmPrefs: TfrmPrefs
     object lblKeywords: TLabel
       Left = 0
       Top = 411
-      Width = 70
+      Width = 68
       Height = 13
       Align = alTop
       Alignment = taCenter
@@ -1285,7 +1285,7 @@ object frmPrefs: TfrmPrefs
     object imgBlockList: TImage
       Left = 0
       Top = 424
-      Width = 70
+      Width = 68
       Height = 40
       Align = alTop
       Center = True
@@ -1320,7 +1320,7 @@ object frmPrefs: TfrmPrefs
     object lblBlockList: TLabel
       Left = 0
       Top = 464
-      Width = 70
+      Width = 68
       Height = 13
       Align = alTop
       Alignment = taCenter
@@ -1331,7 +1331,7 @@ object frmPrefs: TfrmPrefs
     object imgCustomPres: TImage
       Left = 0
       Top = 477
-      Width = 70
+      Width = 68
       Height = 40
       Align = alTop
       Center = True
@@ -1366,7 +1366,7 @@ object frmPrefs: TfrmPrefs
     object lblCustomPres: TLabel
       Left = 0
       Top = 517
-      Width = 70
+      Width = 68
       Height = 13
       Align = alTop
       Alignment = taCenter
@@ -1380,12 +1380,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 310
     Height = 340
-    ActivePage = tbsRoster
+    ActivePage = tbsSystem
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 0
+    TabIndex = 3
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1720,7 +1720,7 @@ object frmPrefs: TfrmPrefs
       ImageIndex = 3
       object Label15: TLabel
         Left = 8
-        Top = 224
+        Top = 248
         Width = 149
         Height = 13
         Caption = 'File transfer download directory:'
@@ -1728,7 +1728,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 102
+        Width = 302
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1753,7 +1753,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkAutoUpdate: TCheckBox
         Left = 8
-        Top = 152
+        Top = 176
         Width = 233
         Height = 17
         Caption = 'Check for updates automatically'
@@ -1761,7 +1761,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkLog: TCheckBox
         Left = 8
-        Top = 176
+        Top = 200
         Width = 97
         Height = 17
         Caption = 'Log Messages'
@@ -1801,14 +1801,14 @@ object frmPrefs: TfrmPrefs
       end
       object txtLogPath: TEdit
         Left = 29
-        Top = 194
+        Top = 218
         Width = 188
         Height = 21
         TabOrder = 8
       end
       object btnLogBrowse: TButton
         Left = 224
-        Top = 192
+        Top = 216
         Width = 75
         Height = 25
         Caption = 'Browse'
@@ -1817,19 +1817,27 @@ object frmPrefs: TfrmPrefs
       end
       object txtXFerPath: TEdit
         Left = 29
-        Top = 242
+        Top = 266
         Width = 188
         Height = 21
         TabOrder = 10
       end
       object btnTransferBrowse: TButton
         Left = 222
-        Top = 240
+        Top = 264
         Width = 75
         Height = 25
         Caption = 'Browse'
         TabOrder = 11
         OnClick = btnTransferBrowseClick
+      end
+      object chkEmoticons: TCheckBox
+        Left = 8
+        Top = 152
+        Width = 241
+        Height = 17
+        Caption = 'Auto detect Emoticons in messages'
+        TabOrder = 12
       end
     end
     object tbsDialog: TTabSheet

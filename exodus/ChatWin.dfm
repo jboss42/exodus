@@ -1,6 +1,6 @@
 object frmChat: TfrmChat
-  Left = 132
-  Top = 145
+  Left = 249
+  Top = 209
   ActiveControl = MsgOut
   AutoScroll = False
   Caption = 'Chat Window'
@@ -134,6 +134,7 @@ object frmChat: TfrmChat
       Height = 200
       Align = alClient
       PopupMenu = popContact
+      ReadOnly = True
       ScrollBars = ssBoth
       TabOrder = 0
       OnURLClick = MsgListURLClick
@@ -160,6 +161,7 @@ object frmChat: TfrmChat
       Font.Name = 'Verdana'
       Font.Style = []
       ParentFont = False
+      PopupMenu = PopupMenu1
       TabOrder = 0
       WantReturns = False
       OnChange = MsgOutChange
@@ -178,6 +180,10 @@ object frmChat: TfrmChat
     end
     object Clear1: TMenuItem
       Caption = 'Clear'
+    end
+    object Emoticons1: TMenuItem
+      Caption = 'Emoticons'
+      OnClick = Emoticons1Click
     end
   end
   object SaveDialog1: TSaveDialog
