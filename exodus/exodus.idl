@@ -1,3 +1,25 @@
+/** @mainpage Exodus Plugin Interfaces
+
+Creating a new plugin for Exodus is a simple process using COM libraries.
+
+<ol>
+<li> Create a new .DLL which implements at least the IExodusPlugin interface.
+<li> Copy the file into the ./plugins directory where-ever Exodus has been installed.
+<li> Start Exodus.
+<li> Goto Tools | Options | Plugins, and enable your plugin.
+</ol>
+
+<p>
+The basic idea is that when your plugin is initialized, you will get called back via the IExodusPlugin interface with a reference to an IExodusController object. Your plugin MUST cache this object and use it to make calls to the client itself.
+</p>
+
+<p>
+If your plugin needs to receive packets, it should use IExodusPlugin::RegisterCallback with the appropriate xpath-link filter for packets which you are interested in receiving.
+</p>
+
+<p>Good starting places are the <a href="./interfaceExodusCOM_1_1IExodusController.html">IExodusController</a> reference and the <a href="./interfaceExodusCOM_1_1IExodusPlugin.html">IExodusPlugin</a> reference. If you have questions about using the plugin interface, please post them to the <a href="http://jabberstudio.org/cgi-bin/mailman/listinfo/exodus-dev">Exodus-Dev mailing list</a>.
+**/
+
 [
   uuid(219E0029-5710-4C9B-BE33-4C7F046D7792),
   version(1.0),
@@ -948,21 +970,24 @@ library ExodusCOM
     id(0x00000015)
     ]
     /**
-    @ingroup block
+    Check to see if a jid is currently being blocked (client side).
+    @return True if the jid is blocked, false, otherwise.
     **/
     HRESULT _stdcall isBlocked([in] BSTR JabberID, [out, retval] VARIANT_BOOL * Blocked );
     [
     id(0x00000016)
     ]
     /**
-    @ingroup block
+    Block the specified JID. This means the client will drop any packets FROM this jabber id.
+    @param JabberID The jid to block.
     **/
     HRESULT _stdcall Block([in] BSTR JabberID );
     [
     id(0x00000017)
     ]
     /**
-    @ingroup block
+    UnBlock the specified JID. Packets from this jid will no longer be blocked.
+    @param JabberID The jid to unblock.
     **/
     HRESULT _stdcall UnBlock([in] BSTR JabberID );
     //@}
@@ -977,42 +1002,52 @@ library ExodusCOM
     id(0x00000022)
     ]
     /**
-    @ingroup pref
+    Get a preference as a string. Preferences are always stored as name-value pairs. 
+    @param Key The key of the preference to lookup. 
+    @return The current value. If the key does not exist, a default value (or '0') will be returned.
     **/
     HRESULT _stdcall getPrefAsString([in] BSTR Key, [out, retval] BSTR * Value );
     [
     id(0x00000023)
     ]
     /**
-    @ingroup pref
+    @param Key The key of the preference to lookup. 
+    @return The current value. If the key does not exist, a default value (or 0) will be returned.
     **/
     HRESULT _stdcall getPrefAsInt([in] BSTR Key, [out, retval] long * Value );
     [
     id(0x00000024)
     ]
     /**
-    @ingroup pref
+    @param Key The key of the preference to lookup. 
+    @return The current value. If the key does not exist, a default value (or false) will be returned.    
     **/
     HRESULT _stdcall getPrefAsBool([in] BSTR Key, [out, retval] VARIANT_BOOL * Value );
     [
     id(0x00000025)
     ]
     /**
-    @ingroup pref
+    Store a preference as a string.
+    @param Key The key of the preference to store.
+    @param Value The new value of the preference.    
     **/
     HRESULT _stdcall setPrefAsString([in] BSTR Key, [in] BSTR Value );
     [
     id(0x00000026)
     ]
     /**
-    @ingroup pref
+    Store a preference as an integer.
+    @param Key The key of the preference to store.
+    @param Value The new value of the preference.    
     **/
     HRESULT _stdcall setPrefAsInt([in] BSTR Key, [in] long Value );
     [
     id(0x00000027)
     ]
     /**
-    @ingroup pref
+    Store a preference as a boolean.
+    @param Key The key of the preference to store.
+    @param Value The new value of the preference.    
     **/
     HRESULT _stdcall setPrefAsBool([in] BSTR Key, [in] VARIANT_BOOL Value );
     
@@ -1027,42 +1062,52 @@ library ExodusCOM
     id(0x00000009)
     ]
     /**
-    @ingroup auto
+    If your plugin responds to a namespace which is not normally "advertised" by Exodus, use this method to add your custom namespace to the list of namespaces sent in browse results.
+    @param Namespace The new namespace to send back in browse results.
+    @return ID The identifier to use when removing this item.
     **/
     HRESULT _stdcall registerBrowseNS([in] BSTR Namespace, [out, retval] BSTR * ID );
     [
     id(0x0000000A)
     ]
     /**
-    @ingroup auto
+    Add a new disco item to those normally sent in disco#items results.
+    @param JabberID The jid of the item.
+    @param Name The name attribute to use for the disco item.
+    @return ID The identifier to use when removing this item.
     **/
     HRESULT _stdcall registerDiscoItem([in] BSTR JabberID, [in] BSTR Name, [out, retval] BSTR * ID );
     [
     id(0x0000001B)
     ]
     /**
-    @ingroup auto
+    Add a new disco feature to those normally sent in disco#info results.
+    @param Feature The contents of the var attribute to send.
+    @return ID The identifier to use when removing this item.
     **/
     HRESULT _stdcall registerDiscoFeature([in] BSTR Feature, [out, retval] BSTR * ID );
     [
     id(0x00000034)
     ]
     /**
-    @ingroup auto
+    Remove a browse namespace previously registered. 
+    @param ID The identifier received from registerBrowseNS.
     **/
     HRESULT _stdcall removeBrowseNS([in] BSTR ID );
     [
     id(0x00000035)
     ]
     /**
-    @ingroup auto
+    Remove a disco item previously registered. 
+    @param ID The identifier received from registerDiscoItem.
     **/
     HRESULT _stdcall removeDiscoItem([in] BSTR ID );
     [
     id(0x00000038)
     ]
     /**
-    @ingroup auto
+    Remove a disco feature previously registered. 
+    @param ID The identifier received from registerDiscoFeature.
     **/
     HRESULT _stdcall removeDiscoFeature([in] BSTR ID );
     
@@ -1077,17 +1122,20 @@ library ExodusCOM
     id(0x00000012)
     ]
     /**
-    @ingroup agent
+    Send a agents query to the specified server. The results will be cached in the global session cache of agent lists.
+    @param Server The hostname to send the agents query to.
     **/
     HRESULT _stdcall getAgentList([in] BSTR Server );
     [
     id(0x00000013)
     ]
     /**
-    @ingroup agent
+    Get the jabber id of a service on a remote host. This method will lookup the service in the agents list and return the jid.
+    @param Server The hostname to use when searching for the service.
+    @param Service The contents of the service element to search for.
+    @return The jabber ID of the service found. Empty if no service is found.
     **/
-    HRESULT _stdcall getAgentService([in] BSTR Server, [in] BSTR Service, [out, retval] BSTR * JabberID );
-    
+    HRESULT _stdcall getAgentService([in] BSTR Server, [in] BSTR Service, [out, retval] BSTR * JabberID );    
     //@}   
 
     /**
@@ -1099,21 +1147,27 @@ library ExodusCOM
     id(0x00000042)
     ]
     /**
-    @ingroup auth
+    If your plugin provides an alternate authentication mechanism, use this call to inform the session object. This MUST be called while the session is disconnected (check the connected property first). The object which is passed in MUST implement the IExodusAuth interface which is used to receive authentication events.
+    @param AuthAgent The object which implements the IExodusAuth interface.
     **/
     HRESULT _stdcall setPluginAuth([in] IExodusAuth * AuthAgent /*Warning: unable to validate structure name: */ );
     [
     id(0x00000043)
     ]
     /**
-    @ingroup auth
+    Once your plugin completes it's authentication process, call this method to inform the rest of the client that the session has been authenticated. 
+    @param Authed True if authentication was successful. False if authenticated failed.
+    @param xml The last packet received as part of the authentication sequence. May be empty if not applicable.
     **/
     HRESULT _stdcall setAuthenticated([in] VARIANT_BOOL Authed, [in] BSTR xml );
     [
     id(0x00000044)
     ]
     /**
-    @ingroup auth
+    If your authentication mechanism does not use username/password, and the jid is unknown until after the authentication has completed, use this method to inform the client of the actual JID of the client. 
+    @param Username The username of the authenticated entity.
+    @param Host The hostname of the authenticated entity.
+    @param resource The resource of the authenticated entity.
     **/
     HRESULT _stdcall setAuthJID([in] BSTR Username, [in] BSTR Host, [in] BSTR resource );
     
