@@ -45,6 +45,7 @@ type
     _taskrect: TRect;
     _taskdir: integer;
     _clickForm: TForm;
+    _clickHandle: HWND;
   protected
     procedure CreateParams(var Params: TCreateParams); override;
   public
@@ -100,6 +101,7 @@ begin
         end;
 
     singleToast._clickForm := clickForm;
+    singleToast._clickHandle := clickForm.Handle;
     singleToast.Image1.Picture.Assign(bmp);
     singleToast.Label1.Caption := msg;
 
@@ -214,6 +216,11 @@ end;
 procedure TfrmRiser.Panel2Click(Sender: TObject);
 begin
     Self.Close;
+
+    // make sure the window handle is still valid
+    if (not IsWindow(_clickHandle)) then exit;
+
+    // ok, try and raise the window
     if (_clickForm is TfrmDockable) then with TfrmDockable(_clickForm) do begin
         if Docked then begin
             frmExodus.Tabs.ActivePage := TabSheet;
@@ -238,6 +245,7 @@ begin
     Self.Close;
 end;
 
+{---------------------------------------}
 procedure TfrmRiser.Shape1MouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
