@@ -23,7 +23,7 @@ interface
 
 uses
     ExRichEdit, RichEdit2,
-    Graphics, GIFImage, Unicode, iniFiles, RegExpr;
+    Types, Graphics, GIFImage, Unicode, iniFiles, RegExpr;
 
 type
     {---------------------------------------}
@@ -42,6 +42,8 @@ type
         constructor Create(filename: string); overload;
         constructor Create(resHandle: cardinal; resFile: WideString; resType: string; fileName: WideString); overload;
 
+        procedure Draw(canvas: TCanvas; r: TRect); virtual; abstract;
+
         property RTF: string read GetRTF;
         property Bitmap: Graphics.TBitmap read GetBitmap;
         property Filename: Widestring read _file;
@@ -51,12 +53,14 @@ type
     TGifEmoticon = class(TEmoticon)
     private
         _gif: TGifImage;
+        _bmp: Graphics.TBitmap;
     protected
         function getRTF(): string; override;
         function getBitmap(): Graphics.TBitmap; override;
     public
         constructor Create(filename: string); overload;
         constructor Create(resHandle: cardinal; resFile: WideString; resType: string; fileName: WideString); overload;
+        procedure Draw(canvas: TCanvas; r: TRect); override;
     end;
 
     {---------------------------------------}
@@ -69,6 +73,7 @@ type
     public
         constructor Create(filename: string); overload;
         constructor Create(resHandle: cardinal; resFile: Widestring; resType: string; filename: Widestring); overload;
+        procedure Draw(canvas: TCanvas; r: TRect); override;
     end;
 
     {---------------------------------------}
@@ -153,6 +158,7 @@ begin
     _img_tag := '<img src="file://' + _file + '" />';
     _gif := TGifImage.Create();
     _gif.LoadFromFile(_file);
+    _bmp := nil;
 end;
 
 {---------------------------------------}
@@ -166,6 +172,7 @@ begin
     rs := TResourceStream.Create(_resHandle, _file, 'GIF');
     _gif := TGifImage.Create();
     _gif.LoadFromStream(rs);
+    _bmp := nil;
 
     rs.Free();
 end;
@@ -177,14 +184,34 @@ begin
         result := _rtf;
         exit;
     end;
-    _rtf := BitmapToRTF(_gif.Bitmap);
+    _rtf := BitmapToRTF(getBitmap());
     result := _rtf;
 end;
 
 {---------------------------------------}
 function TGifEmoticon.getBitmap: Graphics.TBitmap;
 begin
-    Result := _gif.Bitmap;
+    if (_bmp = nil) then begin
+        _bmp := _gif.Bitmap;
+        _bmp.Transparent := true;
+    end;
+    Result := _bmp;
+end;
+
+{---------------------------------------}
+procedure TGifEmoticon.Draw(canvas: TCanvas; r: TRect);
+var
+    cr: TRect;
+    w, h: integer;
+begin
+    // center the image in the rect
+    w := ((r.Right - r.Left) - (_gif.Width)) div 2;
+    h := ((r.Bottom - r.Top) - (_gif.Height)) div 2;
+    cr.Left := r.left + w;
+    cr.Top := r.Top + h;
+    cr.Right := cr.Left + _gif.Width;
+    cr.Bottom := cr.Top + _gif.Height;
+    _gif.Paint(canvas, cr, [goTransparent, goDirectDraw]);
 end;
 
 {---------------------------------------}
@@ -195,6 +222,7 @@ begin
     inherited;
     _bmp := Graphics.TBitmap.Create();
     _bmp.LoadFromFile(_file);
+    _bmp.Transparent := true;
 end;
 
 {---------------------------------------}
@@ -209,6 +237,7 @@ begin
 
     _bmp := Graphics.TBitmap.Create();
     _bmp.LoadFromStream(rs);
+    _bmp.Transparent := true;
 
     rs.Free();
 end;
@@ -231,6 +260,17 @@ begin
 end;
 
 {---------------------------------------}
+procedure TBMPEmoticon.Draw(canvas: TCanvas; r: TRect);
+var
+    w, h: integer;
+begin
+    // center the image in the rect
+    w := ((r.Right - r.left) - (_bmp.Width)) div 2;
+    h := ((r.Bottom - r.Top) - (_bmp.Height)) div 2;
+    canvas.Draw(r.left + w, r.Top + h, _bmp);
+end;
+
+{---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 function BitmapToRTF(pict: Graphics.TBitmap): string;
@@ -240,11 +280,31 @@ var
     achar: ShortString;
     hexpict: string;
     i: Integer;
+
+    tbmp: Graphics.TBitmap;
 begin
-    GetDIBSizes(pict.Handle, bis, bbs);
+
+    // transparent fu.. The idea here, is that we create a temp bitmap which
+    // is the same size, and we first draw the bg color onto it,
+    // THEN draw the pict bitmap over the top. When we draw pict, if it's
+    // transparent property is set to true, the only pixels that are affected
+    // on tbmp are those that are not the same color as the transparent color.
+    tbmp := Graphics.TBitmap.Create();
+    tbmp.Width := pict.Width;
+    tbmp.Height := pict.Height;
+    with tbmp.Canvas do begin
+        Pen.Width := 0;
+        Brush.Style := bsSolid;
+        Brush.Color := TColor(MainSession.Prefs.getInt('color_bg'));
+        Pen.Color := Brush.Color;
+        Rectangle(0, 0, tbmp.Width, tbmp.Height);
+        Draw(0, 0, pict);
+    end;
+
+    GetDIBSizes(tbmp.Handle, bis, bbs);
     SetLength(bi,bis);
     SetLength(bb,bbs);
-    GetDIB(pict.Handle, pict.Palette, PChar(bi)^, PChar(bb)^);
+    GetDIB(tbmp.Handle, tbmp.Palette, PChar(bi)^, PChar(bb)^);
     rtf := '{\rtf1 {\pict\dibitmap ';
     SetLength(hexpict,(Length(bb) + Length(bi)) * 2);
     i := 2;
@@ -266,6 +326,9 @@ begin
     end;
     rtf := rtf + hexpict + ' }}';
     Result := rtf;
+
+    // Free the temp bmp we used.
+    tbmp.Free();
 end;
 
 {---------------------------------------}
