@@ -85,7 +85,6 @@ type
     cur_jid: string;
     cur_key: string;
     cur_state: string;
-
     cur_iq: TJabberIQ;
 
     procedure getFields;
@@ -120,7 +119,7 @@ implementation
 
 uses
     Profile, Roster, Agents,
-    JabberID,
+    JabberID, fGeneric,
     Session, ExUtils, XMLUtils,
     fTopLabel, Jabber1;
 
@@ -225,11 +224,12 @@ end;
 procedure TfrmJUD.sendRequest();
 var
     i: integer;
+    valid: boolean;
+    x, fx: TXMLTag;
 begin
     // send the iq-set to the agent
-    cur_state := 'items';
-
     cur_jid := cboJID.Text;
+    valid := true;
 
     // make sure we wait for a long time for really nasty queries and slow agents :)
     cur_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), ItemsCallback, 120);
@@ -238,33 +238,59 @@ begin
         Namespace := XMLNS_SEARCH;
         toJid := cur_jid;
 
+        if (cur_state = 'xsearch') then begin
+            x := cur_iq.qTag.AddTag('x');
+            x.PutAttribute('xmlns', XMLNS_DATA);
+            cur_state := 'xitems';
+            end
+        else begin
+            cur_state := 'items';
+            x := nil;
+            end;
+
         // go thru all the frames and add tags for each field
         for i := 0 to pnlFields.ControlCount - 1 do begin
-            if (pnlFields.Controls[i] is TframeTopLabel) then
-            with TframeTopLabel(pnlFields.Controls[i]) do begin
-                if (txtData.Text <> '') then
-                    cur_iq.qTag.AddBasicTag(field_name, txtData.Text);
+            if (pnlFields.Controls[i] is TframeTopLabel) then begin
+                with TframeTopLabel(pnlFields.Controls[i]) do begin
+                    if (txtData.Text <> '') then
+                        cur_iq.qTag.AddBasicTag(field_name, txtData.Text);
+                    end;
+                end
+            else if (pnlFields.Controls[i] is TframeGeneric) then begin
+                with TframeGeneric(pnlFields.Controls[i]) do begin
+                    if (not isValid()) then
+                        valid := false;
+
+                    if (valid and (x <> nil)) then begin
+                        fx := getXML();
+                        if (fx <> nil) then
+                            x.AddTag(fx);
+                        end;
+                    end;
                 end;
             end;
         end;
 
-    clearFields();
-    lblInstructions.Visible := false;
-    lblWait.Visible := true;
-    aniWait.Visible := true;
-    aniWait.Active := true;
-    btnAction.Caption := sJUDStop;
+    if (valid) then begin
+        clearFields();
+        lblInstructions.Visible := false;
+        lblWait.Visible := true;
+        aniWait.Visible := true;
+        aniWait.Active := true;
+        btnAction.Caption := sJUDStop;
 
-    cur_iq.Send();
+        cur_iq.Send();
+        end;
 end;
 
 {---------------------------------------}
 procedure TfrmJUD.FieldsCallback(event: string; tag: TXMLTag);
 var
     fields: TXMLTagList;
-    cur_tag: TXMLTag;
+    cur_tag, x: TXMLTag;
     i: integer;
     cur_frame: TframeTopLabel;
+    cur_gen: TframeGeneric;
     cur_field: string;
 begin
     // callback when we get the fields back
@@ -292,33 +318,75 @@ begin
         lblInstructions.Visible := true;
         cur_frame := nil;
         field_set.Clear();
-        fields := tag.QueryXPTag('/iq/query').ChildTags();
-        for i := fields.Count - 1 downto 0 do begin
-            cur_tag := fields[i];
-            if (cur_tag.Name = 'instructions') then
-                // do nothing
-            else if (cur_tag.Namespace <> '') then
-                // ignore stuff in other namesapces
-            else if (cur_tag.Name = 'key') then begin
-                cur_key := cur_tag.Data;
-                end
-            else begin
-                cur_field := cur_tag.Name;
-                field_set.Add(cur_field);
-                cur_frame := TframeTopLabel.Create(Self);
-                with cur_frame do begin
+
+        x := tag.QueryXPTag('/iq/query/x[@xmlns="jabber:x:data"]');
+        if (x <> nil) then begin
+            cur_state := 'xsearch';
+            cur_tag := x.GetFirstTag('instructions');
+            if (cur_tag <> nil) then
+                lblInstructions.Caption := trimNewLines(cur_tag.Data);
+            fields := x.QueryTags('field');
+            for i := fields.Count - 1 downto 0 do begin
+                cur_gen := TframeGeneric.Create(Self);
+                with cur_gen do begin
+                    Name := 'xDataFrame' + IntToStr(i);
                     Parent := pnlFields;
+                    Visible := true;
+                    render(fields[i]);
                     Align := alTop;
-                    field_name := cur_field;
-                    lbl.Caption := getDisplayField(cur_field);
-                    Name := 'frame_' + field_name;
                     TabOrder := 0;
-                    if (cur_field = 'password') then
-                        txtData.PasswordChar := '*';
                     end;
                 end;
-            end;
-        fields.Free();
+            fields.Free();
+
+            // reported columns
+            fields := x.QueryXPTags('/x/reported/field');
+            lstContacts.Columns.Clear();
+
+            with lstContacts.Columns.Add() do begin
+                Caption := sJID;
+                Width := 100;
+                end;
+
+            for i := 0 to fields.Count - 1 do begin
+                with lstContacts.Columns.Add() do begin
+                    Caption := fields[i].GetAttribute('label');
+                    Width := 100;
+                    end;
+                end;
+
+            fields.Free();
+            end
+        else begin
+          fields := tag.QueryXPTag('/iq/query').ChildTags();
+          for i := fields.Count - 1 downto 0 do begin
+              cur_tag := fields[i];
+              if (cur_tag.Name = 'instructions') then
+                  // do nothing
+              else if (cur_tag.Namespace <> '') then
+                  // ignore stuff in other namesapces
+              else if (cur_tag.Name = 'key') then begin
+                  cur_key := cur_tag.Data;
+                  end
+              else begin
+                  cur_field := cur_tag.Name;
+                  field_set.Add(cur_field);
+                  cur_frame := TframeTopLabel.Create(Self);
+                  with cur_frame do begin
+                      Parent := pnlFields;
+                      Align := alTop;
+                      field_name := cur_field;
+                      lbl.Caption := getDisplayField(cur_field);
+                      Name := 'frame_' + field_name;
+                      TabOrder := 0;
+                      if (cur_field = 'password') then
+                          txtData.PasswordChar := '*';
+                      end;
+                  end;
+              end;
+          fields.Free();
+          end;
+
         if (cur_frame <> nil) then
             cur_frame.txtData.SetFocus();
         end;
@@ -372,32 +440,34 @@ begin
             exit;
             end;
 
-        // setup the columns...
-        // use the first item in the list
-        cur :=  items[0];
-        cols := cur.ChildTags();
-
-        // add a JID column by default
-        virtlist.Clear();
-
         lstContacts.AllocBy := 25;
         // lstContacts.Items.BeginUpdate();
         lstContacts.Items.Clear;
+        virtlist.Clear();
 
-        lstContacts.Columns.Clear();
-        col := lstContacts.Columns.Add();
-        col.Caption := sJID;
-        // col.Width := ColumnTextWidth;
-        col.Width := 100;
+        if (cur_state = 'items') then begin
+            // setup the columns...
+            // use the first item in the list
+            cur :=  items[0];
+            cols := cur.ChildTags();
 
-        for i := 0 to cols.count - 1 do begin
+            lstContacts.Columns.Clear();
+
+            // add a JID column by default
             col := lstContacts.Columns.Add();
-            col.Caption := getDisplayField(cols[i].Name);
+            col.Caption := sJID;
             // col.Width := ColumnTextWidth;
             col.Width := 100;
-            end;
 
-        cols.Free();
+            for i := 0 to cols.count - 1 do begin
+                col := lstContacts.Columns.Add();
+                col.Caption := getDisplayField(cols[i].Name);
+                // col.Width := ColumnTextWidth;
+                col.Width := 100;
+                end;
+
+            cols.Free();
+            end;
 
         // populate the listview.
         for i := 0 to items.count - 1 do begin
@@ -412,11 +482,22 @@ begin
             }
             ji := TJUDItem.Create();
             ji.jid := cur.GetAttribute('jid');
-            cols := cur.ChildTags();
-            ji.count := cols.Count;
-            for c := 0 to cols.count - 1 do
-                ji.cols[c + 1] := cols[c].Data;
-            cols.Free();
+            if (cur_state = 'items') then begin
+                cols := cur.ChildTags();
+                ji.count := cols.Count;
+                for c := 0 to cols.count - 1 do
+                    ji.cols[c + 1] := cols[c].Data;
+                cols.Free();
+                end
+            else begin // xitems
+                cols := cur.QueryXPTags('/item/x/field');
+                ji.count := cols.Count;
+                for c := 0 to cols.count - 1 do
+                    // TODO: look up right column based on var
+                    ji.cols[c + 1] := cols[c].GetBasicText('value');
+                cols.Free();
+                end;
+
             virtlist.Add(ji);
             end;
 
@@ -459,8 +540,12 @@ begin
     {
     states go:
     init -> get_fields -> fields -> search -> items
+    or:
+    init -> get_fields -> fields -> search -> xitems
     }
-    if ((cur_state = 'fields') or (cur_state = 'items')) then begin
+    if ((cur_state = 'fields') or
+        (cur_state = 'items') or
+        (cur_state = 'xitems')) then begin
         // stop waiting for the fields, or results
         cur_iq.Free();
         self.reset();
@@ -471,7 +556,7 @@ begin
         getFields();
         end
 
-    else if (cur_state = 'search') then begin
+    else if ((cur_state = 'search') or (cur_state = 'xsearch')) then begin
         // fire off the iq-set to do the actual search
         sendRequest();
         end
