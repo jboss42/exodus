@@ -188,16 +188,22 @@ begin
     if ((notify and notify_flash) > 0) then begin
         // flash or show img
         if (w = frmExodus) then begin
+            // The window is the main window
             if frmExodus.Tabs.ActivePage <> frmExodus.tbsRoster then
                 frmExodus.tbsRoster.ImageIndex := tab_notify;
+            if (active_win <> frmExodus.Handle) then
+                frmExodus.Flash();
         end
         else if (w is TfrmDockable) then begin
+            // it's a dockable window
             d := TfrmDockable(w);
             if d.Docked then begin
                 if frmExodus.Tabs.ActivePage <> d.TabSheet then begin
                     d.TabSheet.ImageIndex := tab_notify;
                     frmExodus.Tabs.Repaint();
                 end;
+                if (active_win <> frmExodus.Handle) then
+                    frmExodus.Flash();
             end
             else if (w is TfrmBaseChat) then
                 TfrmBaseChat(w).Flash()
@@ -207,6 +213,7 @@ begin
             end;
         end
         else begin
+            // it's something else
             FlashWindow(w.Handle, true);
             FlashWindow(w.Handle, true);
         end;
