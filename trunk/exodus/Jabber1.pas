@@ -1323,8 +1323,10 @@ begin
 
         timAutoAway.Enabled := false;
 
+        {
         if (frmMsgQueue <> nil) then
             frmMsgQueue.lstEvents.Items.Clear;
+        }
 
         Self.Caption := sExodus;
         setTrayInfo(Self.Caption);

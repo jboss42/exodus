@@ -157,6 +157,7 @@ begin
   Application.Initialize;
   Application.Title := 'Exodus';
 
+  Application.ShowMainForm := false;
   Application.CreateForm(TfrmExodus, frmExodus);
   if (frmExodus = nil) then
     Halt;
@@ -164,8 +165,6 @@ begin
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);
-
-  Application.ShowMainForm := false;
 
   frmRosterWindow.DockRoster;
   frmRosterWindow.Show;
