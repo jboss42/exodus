@@ -19,6 +19,8 @@ type
   private
     { Private declarations }
     packet: string;
+    id: string;
+    ns: string;
     to_jid: string;
     report_cols: TStringList;
   public
@@ -30,6 +32,9 @@ var
   frmXData: TfrmXData;
 
 procedure showXData(tag: TXMLTag);
+
+resourcestring
+    sAllRequired = 'All required fields must be filled out';
 
 implementation
 
@@ -53,13 +58,23 @@ var
     i: integer;
     c: TListColumn;
     frm: TframeGeneric;
+    subj: string;
 begin
     //
     packet := tag.Name;
+    id := tag.GetAttribute('id');
     to_jid := tag.GetAttribute('from');
-    
+
+    if (packet = 'iq') then
+        ns := tag.QueryXPData('/iq/query@xmlns')
+    else if (packet = 'message') then begin
+        subj := tag.GetBasicText('subject');
+        if (subj <> '') then self.Caption := subj;
+        end;
+
     x := tag.QueryXPTag('//x[@xmlns="jabber:x:data"]');
     flds := x.QueryTags('field');
+
 
     ins := x.GetFirstTag('instructions');
     lblIns.Visible := (ins <> nil);
@@ -101,39 +116,58 @@ var
     i: integer;
     c: TControl;
     f: TframeGeneric;
-    fx, m, x: TXMLTag;
+    fx, m, x, body: TXMLTag;
+    valid: boolean;
 begin
     // do something
     m := nil;
     x := nil;
+    body := nil;
     if (packet = 'message') then begin
         m := TXMLTag.Create('message');
         m.putAttribute('to', to_jid);
         x := m.AddTag('x');
-        // todo: add cool body
-        x.PutAttribute('xmlns', 'jabber:x:data');
+        body := m.AddTag('body');
+        end
+    else if (packet = 'iq') then begin
+        m := TXMLTag.Create('iq');
+        if (id <> '') then
+            m.PutAttribute('id', id);
+        body := m.AddTag('query');
+        body.PutAttribute('xmlns', ns);
+        x := body.AddTag('x');
         end;
 
+    x.PutAttribute('xmlns', XMLNS_DATA);
+
+    valid := true;
     for i := 0 to Self.box.ControlCount - 1 do begin
         c := Self.box.Controls[i];
         if (c is TframeGeneric) then begin
             f := TframeGeneric(c);
-            // todo: Change GUI for invalid fields
-            if (not f.isValid()) then begin
-                if (m <> nil) then m.Free();
-                MessageDlg('All required fields must be filled out', mtError,
-                    [mbOK], 0);
-                exit;
-                end;
+
+            if (not f.isValid()) then
+               valid := false;
             if (x <> nil) then begin
                 fx := f.getXML();
-                if (fx <> nil) then
+                if (fx <> nil) then begin
                     x.AddTag(fx);
+                    if (body <> nil) then
+                       body.AddCData(fx.GetAttribute('var') + ': ' +
+                                     fx.GetBasicText('value') + ''#13#10);
+                    end;
                 end;
             end;
         end;
 
+        if (not valid) then begin
+          if (m <> nil) then m.Free();
+          MessageDlg(sAllRequired, mtError, [mbOK], 0);
+          exit;
+          end;
+
     MainSession.SendTag(m);
+    Self.Close();
 end;
 
 procedure TfrmXData.frameButtons1btnCancelClick(Sender: TObject);
