@@ -371,6 +371,7 @@ end;
 {---------------------------------------}
 procedure TfrmChat.MessageEvent(tag: TXMLTag);
 var
+    xml, body: Widestring;
     msg_type, from_jid: WideString;
     etag, tagThread : TXMLTag;
 begin
@@ -411,21 +412,24 @@ begin
             end;
         end;
 
-    // if (msg_type = 'chat') then begin
-    // normal chat message
+    // process the msg
     etag := tag.QueryXPTag(XP_MSGCOMPOSING);
     _send_composing := (etag <> nil);
     if (_send_composing) then
         _reply_id := tag.GetAttribute('id');
 
+    // plugin
+    xml := tag.xml();
+    body := tag.GetBasicText('body');
+    TExodusChat(chat_object.ComController).fireRecvMsg(body, xml);
+
     showMsg(tag);
     if _thread = '' then begin
-        //get thread from message
+        // cache thread from message
         tagThread := tag.GetFirstTag('thread');
         if tagThread <> nil then
             _thread := tagThread.Data;
        end;
-    // end;
 end;
 
 {---------------------------------------}

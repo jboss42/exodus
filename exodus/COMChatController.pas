@@ -7,7 +7,7 @@ interface
 uses
     ExodusPlugins_TLB, 
     Session, ChatController, ChatWin, Chat,
-    Classes, ComObj, ActiveX, Register_TLB, StdVcl;
+    Classes, ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
 
 type
   TExodusChat = class(TAutoObject, IExodusChat)
@@ -16,7 +16,7 @@ type
     function AddContextMenu(const Caption: WideString): WideString; safecall;
     function Get_MsgOutText: WideString; safecall;
     function UnRegister(ID: Integer): WordBool; safecall;
-    function RegisterPlugin(var Plugin: OleVariant): Integer; safecall;
+    function RegisterPlugin(const Plugin: ExodusChatPlugin): Integer; safecall;
     function getMagicInt(Part: ChatParts): Integer; safecall;
     { Protected declarations }
 
@@ -28,6 +28,7 @@ type
     procedure fireMsgKeyPress(Key: Char);
     procedure fireBeforeMsg(var body: Widestring);
     function  fireAfterMsg(var body: WideString): Widestring;
+    procedure fireRecvMsg(body, xml: Widestring);
 
   private
     _chat: TChatController;
@@ -103,6 +104,15 @@ begin
 end;
 
 {---------------------------------------}
+procedure TExodusChat.fireRecvMsg(body, xml: Widestring);
+var
+    i: integer;
+begin
+    for i := 0 to _plugs.Count - 1 do
+        TChatPlugin(_plugs[i]).com.onMsg(body, xml);
+end;
+
+{---------------------------------------}
 function TExodusChat.Get_jid: WideString;
 begin
     Result := _chat.JID;
@@ -138,7 +148,8 @@ begin
 end;
 
 {---------------------------------------}
-function TExodusChat.RegisterPlugin(var Plugin: OleVariant): Integer;
+function TExodusChat.RegisterPlugin(
+  const Plugin: ExodusChatPlugin): Integer;
 var
     p: IExodusChatPlugin;
     cp: TChatPlugin;

@@ -7,7 +7,7 @@ interface
 uses
     XMLTag,
     ExodusPlugins_TLB, Windows, 
-    Classes, ComObj, ActiveX, Register_TLB, StdVcl;
+    Classes, ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
 
 type
   TExodusController = class(TAutoObject, IExodusController)

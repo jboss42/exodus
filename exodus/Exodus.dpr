@@ -111,7 +111,7 @@ uses
   Unicode in '..\jopl\Unicode.pas',
   InvalidRoster in 'InvalidRoster.pas' {frmInvalidRoster},
   AutoUpdateStatus in 'AutoUpdateStatus.pas' {frmAutoUpdateStatus},
-  Register_TLB in 'Register_TLB.pas',
+  ExodusCOM_TLB in 'ExodusCOM_TLB.pas',
   xdata in 'xdata.pas' {frmXData},
   fGeneric in 'fGeneric.pas' {frameGeneric: TFrame},
   Transports in 'Transports.pas',
