@@ -47,8 +47,8 @@ type
   public
     { Public declarations }
     TabSheet: TTabSheet;
-    procedure DockForm;
-    procedure FloatForm;
+    procedure DockForm; virtual;
+    procedure FloatForm; virtual;
 
     procedure ShowDefault;
 
@@ -148,7 +148,7 @@ begin
         Self.Show;
         Self.Visible := true;
         if ((not Application.Active) or
-        (frmExodus.Tabs.ActivePage = frmExodus.tbsMsg)) then
+        (frmExodus.Tabs.ActivePage = frmExodus.tbsRoster)) then
             frmExodus.Tabs.ActivePage := TabSheet;
         end
     else begin

@@ -61,6 +61,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure CTCPClick(Sender: TObject);
     procedure mnuBlockClick(Sender: TObject);
+    procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
   private
     { Private declarations }
     jid: string;            // jid of the person we are talking to
@@ -99,7 +100,9 @@ type
     procedure showPres(tag: TXMLTag);
     procedure sendMsg; override;
     procedure SetJID(cjid: string);
-    procedure AcceptFiles( var msg : TMessage ); message WM_DROPFILES;
+    procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
+    procedure DockForm; override;
+    procedure FloatForm; override;
   end;
 
 var
@@ -678,7 +681,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmChat.AcceptFiles( var msg : TMessage );
+procedure TfrmChat.AcceptFiles( var msg : TWMDropFiles );
 const
     cnMaxFileNameLen = 255;
 var
@@ -687,17 +690,17 @@ var
     acFileName : array [0..cnMaxFileNameLen] of char;
 begin
     // find out how many files we're accepting
-    nCount := DragQueryFile( msg.WParam, $FFFFFFFF, acFileName, cnMaxFileNameLen );
+    nCount := DragQueryFile( msg.Drop, $FFFFFFFF, acFileName, cnMaxFileNameLen );
 
     // query Windows one at a time for the file name
     for i := 0 to nCount-1 do begin
-        DragQueryFile( msg.WParam, i, acFileName, cnMaxFileNameLen );
+        DragQueryFile( msg.Drop, i, acFileName, cnMaxFileNameLen );
         // do your thing with the acFileName
         FileSend(_jid.full, acFileName);
         end;
 
     // let Windows know that you're done
-    DragFinish( msg.WParam );
+    DragFinish( msg.Drop );
 end;
 
 {---------------------------------------}
@@ -747,6 +750,24 @@ end;
 procedure TfrmChat.mnuBlockClick(Sender: TObject);
 begin
     MainSession.Block(_jid);
+end;
+
+procedure TfrmChat.DockForm;
+begin
+    inherited;
+    DragAcceptFiles( Handle, False );
+end;
+
+procedure TfrmChat.FloatForm;
+begin
+    inherited;
+    DragAcceptFiles( Handle, True );
+end;
+
+procedure TfrmChat.FormEndDock(Sender, Target: TObject; X, Y: Integer);
+begin
+    inherited;
+    DragAcceptFiles( Handle, not Docked);
 end;
 
 end.
