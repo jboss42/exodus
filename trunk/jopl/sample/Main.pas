@@ -41,17 +41,20 @@ implementation
 
 {$R *.dfm}
 uses
-    PrefController, Session;
+    PrefController, StandardAuth, Session;
 
 procedure TForm1.FormCreate(Sender: TObject);
 var
     config_file: string;
+    auth: TStandardAuth;
 begin
     // Create some the main session and associated objects
 
     config_file := ExtractFilePath(Application.EXEName) + 'jopl-sample.xml';
 
     MainSession := TJabberSession.Create(config_file);
+    auth := TStandardAuth.Create(MainSession);
+    MainSession.setAuthAgent(auth);
 
     MainSession.Prefs.LoadProfiles();
     if (MainSession.Prefs.Profiles.Count = 0) then
@@ -84,7 +87,6 @@ begin
 
     Memo1.Lines.Clear();
     ListBox1.Items.Clear();
-
     MainSession.Connect();
 end;
 
@@ -114,19 +116,24 @@ var
     itm_index: integer;
 begin
     // we are getting some kind of roster item
-
     // store a reference to the roster item in the listbox's item
     // this way, we can find them.
-    itm_index := Listbox1.Items.IndexOfObject(roster_item);
-    if (itm_index = -1) then
-        itm_index := Listbox1.Items.AddObject('', roster_item);
 
-    if (roster_item.Nickname <> '') then
-        // if the roster item has a nickname, show it
-        Listbox1.Items[itm_index] := roster_item.Nickname
-    else
-        // otherwise, just show the JID.
-        Listbox1.Items[itm_index] := roster_item.jid.jid;
+    if (event = '/roster/start') then
+        Listbox1.Items.Clear
+    else if (event = '/roster/end') then exit
+    else if ((event = '/roster/item') and (roster_item <> nil)) then begin
+        itm_index := Listbox1.Items.IndexOfObject(roster_item);
+        if (itm_index = -1) then
+            itm_index := Listbox1.Items.AddObject('', roster_item);
+
+        if (roster_item.Nickname <> '') then
+            // if the roster item has a nickname, show it
+            Listbox1.Items[itm_index] := roster_item.Nickname
+        else
+            // otherwise, just show the JID.
+            Listbox1.Items[itm_index] := roster_item.jid.jid;
+    end;
 end;
 
 procedure TForm1.PresenceCallback(event: string; tag: TXMLTag; p: TJabberPres);
@@ -136,6 +143,7 @@ var
     cap: string;
 begin
     // we want to ignore subscription packets
+    if (tag = nil) then exit;
     if (p.isSubscription) then exit;
 
     ritem := MainSession.Roster.Find(p.fromJID.jid);
