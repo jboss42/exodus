@@ -26,19 +26,16 @@ unit Transfer;
 interface
 
 uses
-    {$ifdef INDY9}
-    IdCustomHTTPServer,
-    {$endif}
+    // Exodus things
+    XMLTag, Dockable, ExRichEdit, RichEdit2, buttonFrame,
 
-    XMLTag, Dockable, 
+    // Indy Things
+    IdTCPConnection, IdTCPClient, IdHTTP, IdBaseComponent,
+    IdComponent, IdThreadMgr,
+
+    // Normal Delphi things
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, IdTCPConnection, IdTCPClient, IdHTTP, IdBaseComponent,
-    IdComponent, IdTCPServer, IdHTTPServer, ComCtrls, StdCtrls, buttonFrame,
-    ExRichEdit, ExtCtrls, IdThreadMgr, IdThreadMgrPool, IdAntiFreezeBase,
-    IdAntiFreeze, IdThreadMgrDefault, RichEdit2, Grids;
-
-const
-    WM_XFER = WM_USER + 5000;
+    Dialogs, ComCtrls, StdCtrls, ExtCtrls;
 
 type
   TfrmTransfer = class(TfrmDockable)
@@ -48,7 +45,6 @@ type
     pnlProgress: TPanel;
     Label1: TLabel;
     bar1: TProgressBar;
-    httpServer: TIdHTTPServer;
     httpClient: TIdHTTP;
     OpenDialog1: TOpenDialog;
     SaveDialog1: TSaveDialog;
@@ -65,23 +61,11 @@ type
     procedure httpClientWorkEnd(Sender: TObject; AWorkMode: TWorkMode);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    {$ifdef INDY9}
-    procedure httpServerCommandGet9(AThread: TIdPeerThread;
-      ARequestInfo: TIdHTTPRequestInfo;
-      AResponseInfo: TIdHTTPResponseInfo);
-    {$else}
-    procedure httpServerCommandGet8(AThread: TIdPeerThread;
-      RequestInfo: TIdHTTPRequestInfo; ResponseInfo: TIdHTTPResponseInfo);
-    {$endif}
-    procedure httpServerDisconnect(AThread: TIdPeerThread);
-    procedure httpServerConnect(AThread: TIdPeerThread);
     procedure lblFileClick(Sender: TObject);
     procedure txtMsgKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
     procedure httpClientDisconnected(Sender: TObject);
-    procedure httpServerStatus(axSender: TObject;
-      const axStatus: TIdStatus; const asStatusText: String);
     procedure FormDestroy(Sender: TObject);
     procedure httpClientStatus(ASender: TObject; const AStatus: TIdStatus;
       const AStatusText: String);
@@ -89,8 +73,6 @@ type
   private
     { Private declarations }
     fstream: TFileStream;
-  protected
-    procedure WMXFer(var msg: TMessage); message WM_XFER;
   public
     { Public declarations }
     Mode: integer;
@@ -210,9 +192,10 @@ procedure FileSend(tojid: string; fn: string = '');
 var
     xfer: TFrmTransfer;
     tmp_id: TJabberID;
-    tmps: string;
+    ip, tmps: string;
     pri: TJabberPres;
     ritem: TJabberRosterItem;
+    p: integer;
 begin
     xfer := TfrmTransfer.Create(Application);
 
@@ -260,8 +243,14 @@ begin
             if not OpenDialog1.Execute then exit;
             filename := OpenDialog1.Filename;
         end;
-        url := 'http://' + MainSession.Stream.LocalIP + ':5280/' +
-               ExtractFileName(filename);
+
+        // get xfer prefs, and spin up URL
+        ip := MainSession.Prefs.getString('xfer_ip');
+        p := MainSession.Prefs.getInt('xfer_port');
+
+        if (ip = '') then ip := MainSession.Stream.LocalIP;
+        url := 'http://' + ip + ':' + IntToStr(p) + '/' + ExtractFileName(filename);
+        
         txtMsg.Lines.Clear();
         txtMsg.Lines.Add(sXferDefaultDesc);
         lblFile.Hint := filename;
@@ -330,8 +319,8 @@ begin
             end;
         end;
         MainSession.SendTag(iq);
-        txtMsg.Lines.Add(sXferWaiting);
-        httpServer.Active := true;
+        frmExodus.FileServer.AddFile(filename);
+        Self.Close();
     end
     else if Self.Mode = 2 then begin
         // Open the file.
@@ -381,46 +370,6 @@ begin
 end;
 
 {---------------------------------------}
-{$ifdef INDY9}
-procedure TfrmTransfer.httpServerCommandGet9(AThread: TIdPeerThread;
-  ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
-begin
-    // send the file.
-    txtMsg.Lines.Add(sXferSending);
-    httpServer.ServeFile(AThread, AResponseInfo, filename);
-end;
-{$else}
-procedure TfrmTransfer.httpServerCommandGet8(AThread: TIdPeerThread;
-  RequestInfo: TIdHTTPRequestInfo; ResponseInfo: TIdHTTPResponseInfo);
-begin
-    // send the file
-    txtMsg.Lines.Add(sXferSending);
-    httpServer.ServeFile(AThread, ResponseInfo, filename);
-end;
-{$endif}
-
-{---------------------------------------}
-procedure TfrmTransfer.httpServerDisconnect(AThread: TIdPeerThread);
-begin
-    txtMsg.Lines.Add(sXferRecvDisconnected);
-    SendMessage(Self.Handle, WM_XFER, 0, 0);
-end;
-
-{---------------------------------------}
-procedure TfrmTransfer.WMXFER(var msg: TMessage);
-begin
-    // we are getting told to shutdown..
-    txtMsg.Lines.Add(sXferTryingClose);
-    Self.Close();
-end;
-
-{---------------------------------------}
-procedure TfrmTransfer.httpServerConnect(AThread: TIdPeerThread);
-begin
-    txtMsg.Lines.Add(sXferConn);
-end;
-
-{---------------------------------------}
 procedure TfrmTransfer.lblFileClick(Sender: TObject);
 begin
     // Browse for a new file..
@@ -452,11 +401,7 @@ end;
 {---------------------------------------}
 procedure TfrmTransfer.FormCreate(Sender: TObject);
 begin
-    {$ifdef INDY9}
-    httpServer.onCommandGet := httpServerCommandGet9;
-    {$else}
-    httpServer.onCommandGet := httpServerCommandGet8;
-    {$endif}
+    //
 end;
 
 {---------------------------------------}
@@ -469,13 +414,6 @@ begin
     if (fstream <> nil) then
         FreeAndNil(fstream);
     {$endif}
-end;
-
-{---------------------------------------}
-procedure TfrmTransfer.httpServerStatus(axSender: TObject;
-  const axStatus: TIdStatus; const asStatusText: String);
-begin
-    txtMsg.Lines.Add(asStatusText);
 end;
 
 {---------------------------------------}
@@ -492,6 +430,7 @@ begin
     txtMsg.Lines.Add(AStatusText);
 end;
 
+{---------------------------------------}
 procedure TfrmTransfer.httpClientConnected(Sender: TObject);
 begin
     txtMsg.Lines.Add(sXferConn);
