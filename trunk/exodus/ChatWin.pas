@@ -1021,17 +1021,19 @@ begin
     if (timMemory.Interval > 0) then begin
         CanClose := false;
         timMemory.Enabled := true;
-        Self.Hide();
+        // Self.Hide();
+        Self.Visible := false;
         if (Docked) then begin
             // We must float the form, so when it is free'd
             // there is no tab flashing madness.
             // the redock flag tells the roster window
             // that this form SHOULD be redocked,
             // instead of a window that is manually undocked
-            LockWindowUpdate(frmExodus.Tabs.Handle);
+
+            // LockWindowUpdate(frmExodus.Tabs.Handle);
             Self.FloatForm();
             _redock := true;
-            LockWindowUpdate(0);
+            // LockWindowUpdate(0);
         end;
     end
 
@@ -1053,6 +1055,7 @@ begin
     timMemory.Enabled := false;
 end;
 
+{---------------------------------------}
 procedure TfrmChat.FormActivate(Sender: TObject);
 begin
   inherited;
