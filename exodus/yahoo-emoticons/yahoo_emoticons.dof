@@ -90,12 +90,12 @@ MaxStackSize=1048576
 ImageBase=4194304
 ExeDescription=
 [Directories]
-OutputDir=
+OutputDir=..
 UnitOutputDir=
 PackageDLLOutputDir=
 PackageDCPOutputDir=
 SearchPath=
-Packages=
+Packages=vcl;rtl;vclx;indy;inet;xmlrtl;vclie;inetdbbde;inetdbxpress;dbrtl;dsnap;dsnapcon;vcldb;soaprtl;dbexpress;dbxcds;bdertl;webdsnap;websnap;ibxpress;visualclx;dclOfficeXP;ExComponents;inetdb;vcldbx;adortl;teeui;teedb;tee;dss;visualdbclx;vclactnband;A406_R70;DJcl;P164_D70;P164_R70
 Conditionals=
 DebugSourceDirs=
 UsePackages=0
@@ -149,6 +149,9 @@ Item1=.\components
 [HistoryLists\hlUnitOutputDirectory]
 Count=1
 Item0=.\output
+[HistoryLists\hlOutputDirectorry]
+Count=1
+Item0=..
 [HistoryLists\hlDCPOutput]
 Count=1
 Item0=.\output
