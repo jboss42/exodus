@@ -182,10 +182,10 @@ type
     _adURL : string;            // the URL for the ad graphic
     _transports: Widestring;    // current group name for special transports grp
     _roster_unicode: boolean;   // Use unicode chars in the roster?
+    _collapse_all: boolean;     // Collapse all groups by default?
 
     procedure popUnBlockClick(Sender: TObject);
     procedure ExpandNodes();
-    procedure CollapseNodes();
     procedure RenderNode(ritem: TJabberRosterItem; p: TJabberPres);
     procedure RenderBookmark(bm: TJabberBookmark);
     procedure RemoveItemNodes(ritem: TJabberRosterItem);
@@ -295,6 +295,7 @@ begin
     _status_color := TColor(MainSession.Prefs.getInt('inline_color'));
     _transports := MainSession.Prefs.getString('roster_transport_grp');
     _roster_unicode := MainSession.Prefs.getBool('roster_unicode');
+    _collapse_all := MainSession.Prefs.getBool('roster_collapsed');
 
     frmExodus.pnlRoster.ShowHint := not _show_status;
 
@@ -459,6 +460,7 @@ begin
         _status_color := TColor(MainSession.Prefs.getInt('inline_color'));
         _transports := MainSession.Prefs.getString('roster_transport_grp');
         _roster_unicode := MainSession.Prefs.getBool('roster_unicode');
+        _collapse_all := MainSession.Prefs.getBool('roster_collapsed');
         treeRoster.Font.Name := MainSession.Prefs.getString('roster_font_name');
         treeRoster.Font.Size := MainSession.Prefs.getInt('roster_font_size');
         treeRoster.Font.Color := TColor(MainSession.Prefs.getInt('roster_font_color'));
@@ -469,6 +471,19 @@ begin
         pnlConnect.Color := TColor(MainSession.prefs.getInt('roster_bg'));
         pnlAnimation.Color := pnlConnect.Color;
         aniWait.Color := pnlConnect.Color;
+
+        // Iterate over all grp nodes
+        MainSession.Prefs.fillStringlist('col_groups', _collapsed_grps);
+        for i := 0 to MainSession.Roster.GrpList.Count - 1 do begin
+            grp_node := TTreeNode(MainSession.Roster.GrpList.Objects[i]);
+            if (grp_node <> nil) then begin
+                if (_collapsed_grps.IndexOf(grp_node.Text) >= 0) then
+                    grp_node.Collapse(true)
+                else if (not _collapse_all) then
+                    grp_node.Expand(true);
+            end;
+        end;
+
 
         frmExodus.pnlRoster.ShowHint := not _show_status;
         Redraw();
@@ -482,23 +497,11 @@ begin
         if (ritem <> nil) then begin
             RenderNode(ritem, MainSession.ppdb.FindPres(b_jid, ''));
         end;
-        MainSession.Prefs.fillStringlist('col_groups', _collapsed_grps, pkServer);
+        MainSession.Prefs.fillStringlist('col_groups', _collapsed_grps);
     end
 
     // we are getting server side prefs
     else if event = '/session/server_prefs' then begin
-        MainSession.Prefs.fillStringlist('col_groups', _collapsed_grps, pkServer);
-
-        // Iterate over all grp nodes
-        for i := 0 to MainSession.Roster.GrpList.Count - 1 do begin
-            grp_node := TTreeNode(MainSession.Roster.GrpList.Objects[i]);
-            if (grp_node <> nil) then begin
-                if (_collapsed_grps.IndexOf(grp_node.Text) >= 0) then
-                    grp_node.Collapse(true)
-                else
-                    grp_node.Expand(true);
-            end;
-        end;
     end;
 end;
 
@@ -524,9 +527,7 @@ begin
         treeRoster.Items.EndUpdate;
         treeRoster.AlphaSort;
         
-        if (MainSession.Prefs.getBool('roster_collapsed')) then
-            Self.CollapseNodes()
-        else
+        if (not MainSession.Prefs.getBool('roster_collapsed')) then
             Self.ExpandNodes();
 
         if treeRoster.items.Count > 0 then
@@ -603,19 +604,6 @@ begin
             if (_collapsed_grps.IndexOf(n.Text) < 0) then
                 n.Expand(true);
         end;
-    end;
-end;
-
-{---------------------------------------}
-procedure TfrmRosterWindow.CollapseNodes();
-var
-    i: integer;
-    n: TTreeNode;
-begin
-    for i := 0 to treeRoster.Items.Count - 1 do begin
-        n := treeRoster.Items[i];
-        if (n.Level = 0) then
-            n.Collapse(true);
     end;
 end;
 
@@ -898,7 +886,6 @@ begin
     show_offgrp := MainSession.Prefs.getBool('roster_offline_group');
     show_pending := MainSession.Prefs.getBool('roster_show_pending');
 
-    exp_grpnode := false;
     is_transport := false;
     resort := false;
 
@@ -1037,8 +1024,11 @@ begin
         // Expand any grps that are not supposed to be collapsed
         if ((not _FullRoster) and
             (grp_node <> _offline) and
-            (_collapsed_grps.IndexOf(grp_node.Text) < 0)) then
-            exp_grpnode := true;
+            (_collapsed_grps.IndexOf(grp_node.Text) < 0) and
+            (not _collapse_all)) then
+            exp_grpnode := true
+        else
+            exp_grpnode := false;
 
         // Now that we are sure we have a grp_node,
         // check to see if this jid node exists under it
@@ -1081,7 +1071,8 @@ begin
         end;
 
         cur_node.SelectedIndex := cur_node.ImageIndex;
-        if (exp_grpnode) then grp_node.Expand(true);
+        if (exp_grpnode) then
+            grp_node.Expand(true);
         node_rect := cur_node.DisplayRect(false);
 
         // invalidate just the rect which contains our node
@@ -1310,7 +1301,7 @@ begin
 
         if (_collapsed_grps.IndexOf(Node.Text) < 0) then begin
             _collapsed_grps.Add(Node.Text);
-            MainSession.Prefs.setStringlist('col_groups', _collapsed_grps, pkServer);
+            MainSession.Prefs.setStringlist('col_groups', _collapsed_grps);
         end;
     end;
 end;
@@ -1335,7 +1326,7 @@ begin
         until (i < 0);
 
         if (dirty) then
-            MainSession.Prefs.setStringlist('col_groups', _collapsed_grps, pkServer);
+            MainSession.Prefs.setStringlist('col_groups', _collapsed_grps);
     end;
 end;
 
