@@ -20,7 +20,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 340
+    Height = 345
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1434,13 +1434,13 @@ object frmPrefs: TfrmPrefs
     Left = 89
     Top = 0
     Width = 371
-    Height = 340
-    ActivePage = tbsRoster
+    Height = 345
+    ActivePage = tbsSystem
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 0
+    TabIndex = 3
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1807,7 +1807,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 102
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1828,7 +1828,6 @@ object frmPrefs: TfrmPrefs
         Width = 233
         Height = 17
         Caption = 'Check for updates automatically'
-        Enabled = False
         TabOrder = 6
       end
       object chkExpanded: TCheckBox
@@ -2663,7 +2662,7 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 340
+    Top = 345
     Width = 460
     Height = 37
     Align = alBottom
