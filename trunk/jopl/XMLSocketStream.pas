@@ -125,6 +125,7 @@ type
         {$else}
         procedure GotException (Sender: TObject; E: Exception);
         {$endif}
+        procedure SSLGetPassword(var Password: string);
 
 end;
 implementation
@@ -282,6 +283,12 @@ begin
                 Push(buff);
         end;
     end;
+end;
+
+{---------------------------------------}
+procedure TSocketThread.SSLGetPassword(var Password: string);
+begin
+    Password := '';
 end;
 
 {---------------------------------------}
@@ -621,14 +628,12 @@ begin
         SSLOptions.CertFile := '';
         SSLOptions.RootCertFile := '';
 
-        if (_ssl_cert <> '') then
+        if (_ssl_cert <> '') then begin
+            SSLOptions.CertFile := _ssl_cert;
             SSLOptions.KeyFile := _ssl_cert;
+        end;
 
-        // XXX: Indy9 problems... if we try and verify, it disconnects us.
-        //SSLOptions.VerifyMode := [sslvrfPeer, sslvrfFailIfNoPeerCert];
-        //SSLOptions.VerifyMode := [sslvrfPeer];
-        //SSLOptions.VerifyMode := [sslvrfClientOnce];
-        SSLOptions.VerifyDepth := 9;
+        // TODO: Add verification options here!
     end;
 end;
 
@@ -653,6 +658,7 @@ begin
         _setupSSL();
         _iohandler := _ssl_int;
         _ssl_int.OnStatusInfo := TSocketThread(_thread).StatusInfo;
+        _ssl_int.OnGetPassword := TSocketThread(_thread).SSLGetPassword;
     end;
 
     // Create an HTTP Proxy if we need one

@@ -119,7 +119,7 @@ type
         // AuthAgent stuff
         procedure setAuthAgent(new_auth: TJabberAuth);
         procedure setAuthdJID(user, host, res: Widestring);
-        procedure setAuthenticated(ok: boolean; tag: TXMLTag);
+        procedure setAuthenticated(ok: boolean; tag: TXMLTag; reset_stream: boolean);
         function  getAuthAgent: TJabberAuth;
 
         procedure setPresence(show, status: WideString; priority: integer);
@@ -189,7 +189,7 @@ uses
     {$else}
     QForms, QDialogs,
     {$endif}
-    XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal, IQ, 
+    XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal, IQ,
     JabberConst, CapPresence;
 
 {---------------------------------------}
@@ -252,7 +252,7 @@ begin
         _lang := Prefs.getString('locale')
     else
         _lang := '';
-    
+
     // Create the agents master list, and the Presence_XML list.
     Agents := TStringList.Create();
     Presence_XML := TWideStringlist.Create();
@@ -459,7 +459,7 @@ begin
     if (_stream <> nil) then begin
         if (_lang <> '') then
             tag.setAttribute('xml:lang', _lang);
-            
+
         _stream.SendTag(tag);
         tag.Free;
     end
@@ -1012,7 +1012,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberSession.setAuthenticated(ok: boolean; tag: TXMLTag);
+procedure TJabberSession.setAuthenticated(ok: boolean; tag: TXMLTag; reset_stream: boolean);
 begin
     // our auth-agent is all set
     if (ok) then begin
@@ -1020,7 +1020,7 @@ begin
         _profile.NewAccount := false;
         _register := false;
 
-        if (_xmpp) then
+        if (reset_stream) then
             ResetStream()
         else
             StartSession(tag);

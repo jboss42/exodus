@@ -20,7 +20,7 @@ unit SASLAuth;
 }
 interface
 uses
-    JabberAuth, IQ, Session, XMLTag, IdCoderMime, IdHashMessageDigest, 
+    JabberAuth, IQ, Session, XMLTag, IdCoderMime, IdHashMessageDigest,
     Classes, SysUtils;
 
 type
@@ -142,7 +142,7 @@ begin
     else if (_best_mech = 'PLAIN') then
         StartPlain()
     else
-        _session.setAuthenticated(false, nil);
+        _session.setAuthenticated(false, nil, false);
 end;
 
 {---------------------------------------}
@@ -246,7 +246,7 @@ var
     a1s: TMemoryStream;
 begin
     if (event <> 'xml') then begin
-        _session.SetAuthenticated(false, nil);
+        _session.SetAuthenticated(false, nil, false);
         exit;
     end;
 
@@ -342,7 +342,7 @@ var
     pairs: TStringlist;
 begin
     if (event <> 'xml') then begin
-        _session.SetAuthenticated(false, nil);
+        _session.SetAuthenticated(false, nil, false);
         exit;
     end;
 
@@ -369,14 +369,14 @@ end;
 procedure TSASLAuth.FailCallback(event: string; xml: TXMLTag);
 begin
     CancelAuthentication();
-    _session.setAuthenticated(false, nil);
+    _session.setAuthenticated(false, nil, false);
 end;
 
 {---------------------------------------}
 procedure TSASLAuth.SuccessCallback(event: string; xml: TXMLTag);
 begin
     CancelAuthentication();
-    _session.SetAuthenticated(true, xml);
+    _session.SetAuthenticated(true, xml, true);
 end;
 
 

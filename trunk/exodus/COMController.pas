@@ -220,7 +220,7 @@ begin
     // re-save the "ok" ones.
     if (ok.Count <> s.Count) then
         MainSession.Prefs.setStringlist('plugin_selected', ok);
-    
+
     s.Free();
     ok.Free();
 end;
@@ -1063,7 +1063,7 @@ procedure TExodusController.setAuthenticated(Authed: WordBool;
   const XML: WideString);
 begin
     // xxx: parse & pass along the XML Tag.
-    MainSession.setAuthenticated(authed, nil);
+    MainSession.setAuthenticated(authed, nil, false);
 end;
 
 {---------------------------------------}
