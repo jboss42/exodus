@@ -1,8 +1,8 @@
 object frmExodus: TfrmExodus
-  Left = 275
-  Top = 182
-  Width = 239
-  Height = 416
+  Left = 282
+  Top = 189
+  Width = 225
+  Height = 393
   AlphaBlendValue = 240
   Caption = 'Exodus'
   Color = clBtnFace
@@ -31,15 +31,15 @@ object frmExodus: TfrmExodus
     Left = 57
     Top = 27
     Width = 3
-    Height = 335
+    Height = 317
     Cursor = crHSplit
     OnMoved = SplitterRightMoved
   end
   object Tabs: TTntPageControl
     Left = 60
     Top = 27
-    Width = 171
-    Height = 335
+    Width = 157
+    Height = 317
     ActivePage = tbsRoster
     Align = alClient
     DockSite = True
@@ -72,7 +72,7 @@ object frmExodus: TfrmExodus
         Left = 105
         Top = 0
         Width = 3
-        Height = 305
+        Height = 287
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = SplitterRightMoved
@@ -81,7 +81,7 @@ object frmExodus: TfrmExodus
         Left = 0
         Top = 0
         Width = 105
-        Height = 305
+        Height = 287
         Align = alLeft
         BevelOuter = bvNone
         BorderWidth = 1
@@ -93,8 +93,8 @@ object frmExodus: TfrmExodus
       object pnlRight: TPanel
         Left = 108
         Top = 0
-        Width = 55
-        Height = 305
+        Width = 41
+        Height = 287
         Align = alClient
         BevelOuter = bvNone
         Caption = 'THIS IS PNLRIGHT'
@@ -107,7 +107,7 @@ object frmExodus: TfrmExodus
   object Toolbar: TCoolBar
     Left = 0
     Top = 0
-    Width = 231
+    Width = 217
     Height = 27
     AutoSize = True
     Bands = <
@@ -115,7 +115,7 @@ object frmExodus: TfrmExodus
         Control = ToolBar1
         ImageIndex = -1
         MinHeight = 23
-        Width = 227
+        Width = 213
       end>
     object ToolBar1: TToolBar
       Left = 9
@@ -210,7 +210,7 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 27
     Width = 57
-    Height = 335
+    Height = 317
     Align = alLeft
     BevelOuter = bvNone
     BorderWidth = 1
@@ -224,7 +224,6 @@ object frmExodus: TfrmExodus
       Caption = 'Exodus'
       object Test1: TMenuItem
         Caption = 'Test'
-        Visible = False
         OnClick = Test1Click
       end
       object Connect2: TMenuItem
@@ -2845,7 +2844,6 @@ object frmExodus: TfrmExodus
   object ApplicationEvents1: TApplicationEvents
     OnActivate = ApplicationEvents1Activate
     OnDeactivate = ApplicationEvents1Deactivate
-    OnMessage = ApplicationEvents1Message
     Left = 88
     Top = 136
   end
