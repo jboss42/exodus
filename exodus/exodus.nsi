@@ -107,31 +107,6 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
     File "Exodus.exe"
     File "IdleHooks.dll"
 
-    ; Setup stuff based on custom Shell page
-    Push $CMDLINE
-    Push "/S"
-    Call StrStr
-    Pop $0
-    StrCmp $0 "/S" noshell
-
-    !insertmacro MUI_INSTALLOPTIONS_READ $R0 "notify.ini" "Field 2" "State"
-    StrCmp $R0 "1" "" +2
-    ;Checked
-    CreateShortcut "$DESKTOP\Exodus.lnk" "$INSTDIR\Exodus.exe"
-
-    !insertmacro MUI_INSTALLOPTIONS_READ $R0 "notify.ini" "Field 3" "State"
-    StrCmp $R0 "1" "" +2
-    ;Checked
-    CreateShortcut "$QUICKLAUNCH\Exodus.lnk" "$INSTDIR\Exodus.exe"
-    !insertmacro MUI_INSTALLOPTIONS_READ $R0 "notify.ini" "Field 4" "State"
-    StrCmp $R0 "1" "" noshell
-    ;Checked
-;    CreateShortcut "$SMSTARTUP\Exodus.lnk" "$INSTDIR\Exodus.exe"
-    WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Run \
-        "Exodus" "$INSTDIR\Exodus.exe"  
-
-  noshell:
-
     ; BRANDING: Uncomment if you are doing a branded setup.
     ; SetOverwrite off ; only if you don't want to overwrite existing file.
     ; File "branding.xml"
@@ -200,6 +175,32 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
     ; delete any leftover 50comupd.exe file.  This should not error
     ; if the file doesn't exist.
     Delete $INSTDIR\50comupd.exe
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;    
+    ; Setup stuff based on custom Shell page
+    Push $CMDLINE
+    Push "/S"
+    Call StrStr
+    Pop $0
+    StrCmp $0 "/S" noshell
+
+    !insertmacro MUI_INSTALLOPTIONS_READ $R0 "notify.ini" "Field 2" "State"
+    StrCmp $R0 "1" "" +2
+    ;Checked
+    CreateShortcut "$DESKTOP\Exodus.lnk" "$INSTDIR\Exodus.exe"
+
+    !insertmacro MUI_INSTALLOPTIONS_READ $R0 "notify.ini" "Field 3" "State"
+    StrCmp $R0 "1" "" +2
+    ;Checked
+    CreateShortcut "$QUICKLAUNCH\Exodus.lnk" "$INSTDIR\Exodus.exe"
+    !insertmacro MUI_INSTALLOPTIONS_READ $R0 "notify.ini" "Field 4" "State"
+    StrCmp $R0 "1" "" noshell
+    ;Checked
+    WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Run \
+        "Exodus" "$INSTDIR\Exodus.exe"  
+
+  noshell:
+    
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     ; Write the installation path into the registry
