@@ -554,7 +554,8 @@ uses
     Iq, JUD, JabberID, JabberMsg, IdGlobal,
     JoinRoom, Login, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, Profile, RegForm, RemoveContact, RiserWindow, Room,
-    Roster, RosterAdd, Session, Transfer, Unicode, VCard, xData, XMLUtils;
+    Roster, RosterAdd, Session, StandardAuth, Transfer, Unicode, VCard, xData,
+    XMLUtils;
 
 {$R *.DFM}
 
@@ -754,6 +755,7 @@ var
     help_msg: string;
     win_ver: string;
     s : string;
+    auth: TStandardAuth;
 begin
     // initialize vars
 
@@ -867,6 +869,8 @@ begin
 
         // Create our main Session object
         MainSession := TJabberSession.Create(config);
+        auth := TStandardAuth.Create(MainSession);
+        MainSession.setAuthAgent(auth);
 
         // Check for a single instance
         if (MainSession.Prefs.getBool('single_instance')) then begin

@@ -127,7 +127,9 @@ uses
   COMPresence in 'COMPresence.pas' {ExodusPresence: CoClass},
   PathSelector in 'PathSelector.pas' {frmPathSelector},
   CustomNotify in 'CustomNotify.pas' {frmCustomNotify},
-  DropTarget in 'DropTarget.pas' {ExDropTarget: CoClass};
+  DropTarget in 'DropTarget.pas' {ExDropTarget: CoClass},
+  JabberAuth in '..\jopl\JabberAuth.pas',
+  IAuth in '..\jopl\IAuth.pas';
 
 {$R *.TLB}
 
