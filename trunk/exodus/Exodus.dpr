@@ -61,7 +61,8 @@ uses
   Bookmark in 'Bookmark.pas' {frmBookmark},
   CustomPres in 'CustomPres.pas' {frmCustomPres},
   Register in 'Register.pas',
-  Notify in 'Notify.pas';
+  Notify in 'Notify.pas',
+  getopt in 'getOpt.pas';
 
 {$R *.RES}
 
@@ -77,23 +78,7 @@ begin
   Application.ShowMainForm := false;
   frmRosterWindow.DockRoster;
   frmRosterWindow.Show;
-
-  with MainSession.Prefs do begin
-
-    if getBool('expanded') then begin
-        frmDebug.DockForm;
-        frmDebug.Show;
-        end;
-
-    if getBool('autologin') then begin
-        // snag default profile, etc..
-        MainSession.ActivateProfile(getInt('profile_active'));
-        MainSession.Connect;
-        end
-    else
-        ShowLogin();
-    end;
-
+  frmJabber.Startup();
   Application.Run;
 end.
 

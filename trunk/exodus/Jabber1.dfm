@@ -28,7 +28,7 @@ object frmJabber: TfrmJabber
     Left = 0
     Top = 30
     Width = 531
-    Height = 257
+    Height = 262
     ActivePage = tbsMsg
     Align = alClient
     DockSite = True
@@ -49,7 +49,7 @@ object frmJabber: TfrmJabber
         Left = 209
         Top = 0
         Width = 3
-        Height = 229
+        Height = 234
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = Splitter1Moved
@@ -58,7 +58,7 @@ object frmJabber: TfrmJabber
         Left = 0
         Top = 0
         Width = 209
-        Height = 229
+        Height = 234
         Align = alLeft
         BevelOuter = bvNone
         UseDockManager = False
@@ -70,7 +70,7 @@ object frmJabber: TfrmJabber
         Left = 212
         Top = 0
         Width = 311
-        Height = 229
+        Height = 234
         Align = alClient
         Columns = <
           item
@@ -240,6 +240,7 @@ object frmJabber: TfrmJabber
       end
       object Exit2: TMenuItem
         Caption = 'Exit'
+        ShortCut = 16472
         OnClick = Exit2Click
       end
     end
