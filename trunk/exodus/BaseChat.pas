@@ -22,7 +22,7 @@ unit BaseChat;
 interface
 
 uses
-    Dockable, ActiveX, ComObj, BaseMsgList, 
+    Dockable, ActiveX, ComObj, BaseMsgList,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Menus, StdCtrls, ExtCtrls, ComCtrls, ExRichEdit, RichEdit2,
     TntStdCtrls, TntMenus;
@@ -90,7 +90,7 @@ type
     procedure _scrollBottom();
     procedure WMVScroll(var msg: TMessage); message WM_VSCROLL;
     function getMsgList(): TfBaseMsgList;
-    
+
   public
     { Public declarations }
     AutoScroll: boolean;
@@ -293,7 +293,7 @@ end;
 {---------------------------------------}
 procedure TfrmBaseChat.FormCreate(Sender: TObject);
 var
-    ht: integer;
+    ms, ht: integer;
     sc: TShortcut;
 begin
     AutoScroll := true;
@@ -302,9 +302,14 @@ begin
     _lastMsg := -1;
     _esc := false;
 
-    // XXX: Put IE MsgList frame creation here
-    // _msgframe := TfRTFMsgList.Create(Self);
-    _msgframe := TfIEMsgList.Create(Self);
+    // Pick which frame to build
+    ms := MainSession.prefs.getInt('msglist_style');
+    if (ms = 0) then
+        _msgframe := TfRTFMsgList.Create(Self)
+    else if (ms = 1) then
+        _msgframe := TfIEMsgList.Create(Self)
+    else
+        assert(false);
 
     with MsgList do begin
         Name := 'msg_list_frame';
