@@ -173,7 +173,8 @@ inherited frmPrefEmote: TfrmPrefEmote
         IconOptions.AutoArrange = True
         LargeImages = imagesCustom
         MultiSelect = True
-        OwnerDraw = True
+        ReadOnly = True
+        ShowWorkAreas = True
         TabOrder = 2
         OnAdvancedCustomDrawItem = lstCustomEmotesAdvancedCustomDrawItem
         OnDblClick = btnCustomEmoteEditClick
