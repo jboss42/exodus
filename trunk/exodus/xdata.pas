@@ -19,10 +19,11 @@ type
   private
     { Private declarations }
     packet: string;
-    id: string;
     ns: string;
     to_jid: string;
     report_cols: TStringList;
+    procedure ResultsCB(event: string; tag: TXMLTag);
+
   public
     { Public declarations }
     procedure render(tag: TXMLTag);
@@ -40,7 +41,7 @@ implementation
 
 {$R *.dfm}
 uses
-    Session, ExUtils, StrUtils, fGeneric;
+    Session, ExUtils, StrUtils, fGeneric, IQ;
 
 procedure showXData(tag: TXMLTag);
 var
@@ -62,7 +63,6 @@ var
 begin
     //
     packet := tag.Name;
-    id := tag.GetAttribute('id');
     to_jid := tag.GetAttribute('from');
 
     if (packet = 'iq') then
@@ -118,27 +118,32 @@ var
     f: TframeGeneric;
     fx, m, x, body: TXMLTag;
     valid: boolean;
+    iq : TJabberIQ;
 begin
     // do something
     m := nil;
     x := nil;
     body := nil;
+    iq := nil;
+    
     if (packet = 'message') then begin
         m := TXMLTag.Create('message');
-        m.putAttribute('to', to_jid);
+        m.PutAttribute('to', to_jid);
         x := m.AddTag('x');
+        x.PutAttribute('xmlns', XMLNS_DATA);
         body := m.AddTag('body');
         end
     else if (packet = 'iq') then begin
-        m := TXMLTag.Create('iq');
-        if (id <> '') then
-            m.PutAttribute('id', id);
-        body := m.AddTag('query');
-        body.PutAttribute('xmlns', ns);
-        x := body.AddTag('x');
+        iq := TJabberIQ.Create(MainSession,
+                               MainSession.generateID(),
+                               Self.ResultsCB);
+        iq.toJid := to_jid;
+        iq.iqType := 'set';
+        iq.Namespace := ns;
+        x := iq.qTag.AddTag('x');
+        x.PutAttribute('xmlns', XMLNS_DATA);
         end;
 
-    x.PutAttribute('xmlns', XMLNS_DATA);
 
     valid := true;
     for i := 0 to Self.box.ControlCount - 1 do begin
@@ -166,13 +171,56 @@ begin
           exit;
           end;
 
-    MainSession.SendTag(m);
-    Self.Close();
+    if (m <> nil) then
+        MainSession.SendTag(m)
+    else if (iq <> nil) then
+        iq.Send();
+        
+    if (not lstReport.Visible) then
+        Self.Close();
 end;
 
 procedure TfrmXData.frameButtons1btnCancelClick(Sender: TObject);
 begin
     Self.Close;
+end;
+
+procedure TfrmXData.ResultsCB(event: string; tag: TXMLTag);
+var
+    item, field: TXMLTag;
+    items, fields : TXMLTagList;
+    i, j: integer;
+    it: TListItem;
+begin
+{
+<iq from='users.jabber.org' id='jcl_8' to='hildjj-foo@jabber.org/Exodus' type='result'>
+  <query xmlns='jabber:iq:search'>
+    <item jid='JoshHi@jabber.org'>
+      <x xmlns='jabber:x:data'>
+        <field var='first'><value>Josh</value></field>
+        <field var='last'><value>Hildebrand</value></field>
+        <field var='nick'><value>JoshHi</value></field>
+        <field var='email'><value>josh@jedi.net</value></field>
+      </x>
+    </item>
+  </query>
+</iq>
+}
+
+    // timeout
+    if (event <> 'xml') then exit;
+
+    items := tag.QueryXPTags('/iq/query/item');
+    for i := 0 to items.Count - 1 do begin
+        item := items[i];
+        it := lstReport.Items.Add();
+        fields := item.QueryXPTags('/item/x/field');
+        for j := 0 to fields.Count - 1 do begin
+            field := fields[j];
+            // TODO: look up the right column, based on the var of the field.
+            it.SubItems.Add(field.GetBasicText('value'));
+            end;
+        end;
 end;
 
 end.
