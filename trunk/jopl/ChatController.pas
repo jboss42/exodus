@@ -68,7 +68,7 @@ end;
 {---------------------------------------}
 implementation
 uses
-    COMChatController, 
+    COMChatController, PrefController, 
     JabberConst, XMLUtils, Session, Chat, IdGlobal;
 
 {---------------------------------------}
@@ -130,6 +130,8 @@ end;
 {---------------------------------------}
 procedure TChatController.MsgCallback(event: string; tag: TXMLTag);
 var
+    mt: integer;
+    mtype: Widestring;
     m, etag: TXMLTag;
 begin
     // do stuff
@@ -137,7 +139,11 @@ begin
     if (tag.QueryXPTag(XP_MSGXDATA) <> nil) then exit;
     if (tag.QueryXPTag(XP_MUCINVITE) <> nil) then exit;
     if (tag.QueryXPTag(XP_CONFINVITE) <> nil) then exit;
-    if (tag.GetAttribute('type') = 'groupchat') then exit;
+
+    mt := MainSession.Prefs.getInt('msg_treatment');
+    mtype := tag.getAttribute('type');
+    if (mtype = 'groupchat') then exit;
+    if ((mtype <> 'chat') and (mt = msg_normal)) then exit;
 
     // if we don't have a window, then ignore composing events
     etag := tag.QueryXPTag(XP_MSGXEVENT);
