@@ -40,6 +40,8 @@ type
         _socket:    TidTCPClient;
         _sock_lock: TCriticalSection;
         _ssl_int:   TIdConnectionInterceptOpenSSL;
+        _ssl_check: boolean;
+        _ssl_ok:    boolean;
         _timer:     TTimer;
         _profile:   TJabberProfile;
 
@@ -84,8 +86,12 @@ type
 implementation
 
 uses
+    Classes,
+    Controls,
+    // TODO: remove!
+    Dialogs,
     IdSocks;
-    
+
 {---------------------------------------}
 {      TSocketThread Class                }
 {---------------------------------------}
@@ -233,8 +239,10 @@ begin
     }
     inherited;
 
-    _ssl_int := nil;
-    _socket := nil;
+    _ssl_int   := nil;
+    _ssl_check := false;
+    _ssl_ok    := false;
+    _socket    := nil;
     _sock_lock := TCriticalSection.Create();
 
     _timer := TTimer.Create(nil);
@@ -256,7 +264,62 @@ begin
 end;
 
 function TXMLSocketStream.VerifyPeer(Certificate: TIdX509): Boolean;
+var
+    sl : TStringList;
+    i  : integer;
+    n  : TDateTime;
 begin
+    if (_ssl_check) then begin
+        result := _ssl_ok;
+        exit;
+        end;
+
+    _ssl_check := true;
+    result := false;
+
+    sl := TStringList.Create();
+    sl.Delimiter := '/';
+    sl.QuoteChar := #0;
+    sl.DelimitedText := Certificate.Subject.OneLine;
+
+    _ssl_ok := false;
+    for i := 0 to sl.Count - 1 do begin
+        if (sl[i] = ('CN=' + _profile.Server)) then begin
+            _ssl_ok := true;
+            break;
+            end;
+        end;
+    sl.Free();
+
+    // TODO: timing.  really shouldn't have graphics here, also.
+    if (not _ssl_ok) then begin
+        _ssl_ok := (MessageDlg('Certificate does not match host: ' +
+                               Certificate.Subject.OneLine +
+                               #13#10'Continue?',
+                               mtWarning, mbOKCancel, 0) = mrOK);
+        if (not _ssl_ok) then
+            exit;
+        end;
+
+    // TODO: check issuer.
+
+    n := Now();
+    if (n < Certificate.NotBefore) then begin
+        _ssl_ok := (MessageDlg('Certificate not valid until ' + DateTimeToStr(Certificate.NotBefore) +
+                               #13#10'Continue?',
+                               mtWarning, mbOKCancel, 0) = mrOK);
+        if (not _ssl_ok) then
+            exit;
+        end;
+
+    if (n < Certificate.NotAfter) then begin
+        _ssl_ok := (MessageDlg('Certificate expired on ' + DateTimeToStr(Certificate.NotAfter) +
+                               #13#10'Continue?',
+                               mtWarning, mbOKCancel, 0) = mrOK);
+        if (not _ssl_ok) then
+            exit;
+        end;
+
     result := true;
 end;
 
