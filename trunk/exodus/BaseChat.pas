@@ -56,11 +56,6 @@ type
     procedure Clear1Click(Sender: TObject);
     procedure Copy1Click(Sender: TObject);
     procedure Paste1Click(Sender: TObject);
-    procedure MsgOutDragOver(Sender, Source: TObject; X, Y: Integer;
-      State: TDragState; var Accept: Boolean);
-    procedure MsgOutStartDrag(Sender: TObject;
-      var DragObject: TDragObject);
-    procedure MsgOutDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure FormResize(Sender: TObject);
   private
     { Private declarations }
@@ -316,29 +311,6 @@ procedure TfrmBaseChat.Paste1Click(Sender: TObject);
 begin
     inherited;
     MsgOut.PasteFromClipboard();
-end;
-
-procedure TfrmBaseChat.MsgOutDragOver(Sender, Source: TObject; X,
-  Y: Integer; State: TDragState; var Accept: Boolean);
-begin
-  inherited;
-  ShowMessage('dragover');
-end;
-
-procedure TfrmBaseChat.MsgOutStartDrag(Sender: TObject;
-  var DragObject: TDragObject);
-begin
-  inherited;
-  ShowMessage('startdrag');
-
-end;
-
-procedure TfrmBaseChat.MsgOutDragDrop(Sender, Source: TObject; X,
-  Y: Integer);
-begin
-  inherited;
-  ShowMessage('dragdrop');
-
 end;
 
 procedure TfrmBaseChat.FormResize(Sender: TObject);
