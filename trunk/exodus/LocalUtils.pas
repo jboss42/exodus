@@ -37,8 +37,6 @@ var
 implementation
 
 var
-    tmps: TWidestringlist;
-    res: TResourceStream;
     p: TXMLTagParser;
 
 
@@ -75,22 +73,12 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 initialization
-    res := TResourceStream.Create(HInstance, 'langs', 'XML');
-    tmps := TWidestringList.Create();
-    tmps.LoadFromStream(res);
-    res.Free();
-
     p := TXMLTagParser.Create();
-    p.parseString(tmps.Text, '');
+    p.ParseResource('langs');
     if (p.Count > 0) then
         langs := p.popTag();
 
-    res := TResourceStream.Create(HInstance, 'countries', 'XML');
-    tmps.Clear();
-    tmps.LoadFromStream(res);
-    res.Free();
-
-    p.parseString(tmps.Text, '');
+    p.ParseResource('countries');
     if (p.Count > 0) then
         codes := p.popTag();
 

@@ -160,9 +160,11 @@ begin
     // Setup some Emoticon
     m := -1;
 
+
     if (emoticon_list.Count = 0) then
         ConfigEmoticons();
 
+    // XXX: PGM: TEmoticon needs to go away, when you are done.
     for i := 0 to emoticon_list.Count - 1 do begin
         eo := TEmoticon(emoticon_list.Objects[i]);
         if (((msn) and (eo.il = frmExodus.imgMSNEmoticons)) or

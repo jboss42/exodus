@@ -51,7 +51,7 @@ type
 
     public
         constructor Create(filename: Widestring); overload;
-        constructor Create(const ResName: string; ResType: PChar); overload;
+        constructor CreateFromResource(const ResName: string);
         constructor Create(tag: TXMLTag); overload;
 
         Destructor Destroy; override;
@@ -142,22 +142,15 @@ begin
 end;
 
 {---------------------------------------}
-constructor TPrefFile.Create(const ResName: string; ResType: PChar);
+constructor TPrefFile.CreateFromResource(const ResName: string);
 var
-    res: TResourceStream;
-    sl: TStringList;
     parser: TXMLTagParser;
 begin
     _filename := '';
     parser := TXMLTagParser.Create;
 
     try
-        res := TResourceStream.Create(HInstance, ResName, ResType);
-        sl := TStringList.Create();
-        sl.LoadFromStream(res);
-        res.Free();
-        parser.ParseString(sl.Text, '');
-        sl.Free();
+        parser.ParseResource(resName);
         if (parser.Count > 0) then begin
             _root := parser.popTag();
         end

@@ -1529,7 +1529,7 @@ begin
 end;
 
 initialization
-    s_default_file := TPrefFile.Create('defaults', 'XML');
+    s_default_file := TPrefFile.CreateFromResource('defaults');
     s_brand_file := TPrefFile.Create(ExtractFilePath(Application.EXEName) + 'branding.xml');
 
 finalization
