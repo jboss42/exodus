@@ -1,6 +1,6 @@
 object frmJabber: TfrmJabber
-  Left = 291
-  Top = 168
+  Left = 241
+  Top = 192
   Width = 540
   Height = 341
   AlphaBlendValue = 240
@@ -27,7 +27,7 @@ object frmJabber: TfrmJabber
     Left = 0
     Top = 30
     Width = 532
-    Height = 258
+    Height = 257
     ActivePage = tbsMsg
     Align = alClient
     DockSite = True
@@ -48,7 +48,7 @@ object frmJabber: TfrmJabber
         Left = 209
         Top = 0
         Width = 3
-        Height = 230
+        Height = 229
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = Splitter1Moved
@@ -57,7 +57,7 @@ object frmJabber: TfrmJabber
         Left = 0
         Top = 0
         Width = 209
-        Height = 230
+        Height = 229
         Align = alLeft
         BevelOuter = bvNone
         UseDockManager = False
@@ -69,7 +69,7 @@ object frmJabber: TfrmJabber
         Left = 212
         Top = 0
         Width = 312
-        Height = 230
+        Height = 229
         Align = alClient
         Columns = <
           item
@@ -372,8 +372,14 @@ object frmJabber: TfrmJabber
         object presCustom: TMenuItem
           Tag = 5
           Caption = 'Custom'
-          ShortCut = 16464
           OnClick = presCustomClick
+          object Custom3: TMenuItem
+            Caption = 'Custom'
+            ShortCut = 16464
+          end
+          object N18: TMenuItem
+            Caption = '-'
+          end
         end
       end
       object N2: TMenuItem
@@ -2238,23 +2244,120 @@ object frmJabber: TfrmJabber
   object popTray: TPopupMenu
     Left = 80
     Top = 136
-    object ShowExodus1: TMenuItem
+    object trayShow: TMenuItem
       Caption = 'Show Exodus'
-      OnClick = ShowExodus1Click
+      OnClick = trayShowClick
+    end
+    object trayPresence: TMenuItem
+      Caption = 'Presence'
+      Enabled = False
+      object Online1: TMenuItem
+        Caption = 'Online'
+        OnClick = presOnlineClick
+      end
+      object FreeforChat1: TMenuItem
+        Tag = 1
+        Caption = 'Free for Chat'
+        OnClick = presOnlineClick
+      end
+      object N15: TMenuItem
+        Caption = '-'
+      end
+      object Away1: TMenuItem
+        Tag = 2
+        Caption = 'Away'
+        object Away3: TMenuItem
+          Tag = 2
+          Caption = 'Away'
+          OnClick = presOnlineClick
+        end
+        object Lunch1: TMenuItem
+          Tag = 2
+          Caption = 'Lunch'
+          OnClick = presOnlineClick
+        end
+        object Meeting2: TMenuItem
+          Tag = 2
+          Caption = 'Meeting'
+          OnClick = presOnlineClick
+        end
+        object Bank2: TMenuItem
+          Tag = 2
+          Caption = 'Bank'
+          OnClick = presOnlineClick
+        end
+      end
+      object XtendedAway1: TMenuItem
+        Tag = 3
+        Caption = 'Xtended Away'
+        object ExtendedAway2: TMenuItem
+          Tag = 3
+          Caption = 'Extended Away'
+          OnClick = presOnlineClick
+        end
+        object GoneHome2: TMenuItem
+          Tag = 3
+          Caption = 'Gone Home'
+          OnClick = presOnlineClick
+        end
+        object GonetoWork2: TMenuItem
+          Tag = 3
+          Caption = 'Gone to Work'
+          OnClick = presOnlineClick
+        end
+        object Sleeping2: TMenuItem
+          Tag = 3
+          Caption = 'Sleeping'
+          OnClick = presOnlineClick
+        end
+      end
+      object DoNotDisturb1: TMenuItem
+        Tag = 4
+        Caption = 'Do Not Disturb'
+        object Busy2: TMenuItem
+          Tag = 4
+          Caption = 'Busy'
+          OnClick = presOnlineClick
+        end
+        object Working2: TMenuItem
+          Tag = 4
+          Caption = 'Working'
+          OnClick = presOnlineClick
+        end
+        object Mad2: TMenuItem
+          Tag = 4
+          Caption = 'Mad'
+          OnClick = presOnlineClick
+        end
+      end
+      object N5: TMenuItem
+        Caption = '-'
+      end
+      object trayCustom: TMenuItem
+        Tag = 5
+        Caption = 'Custom'
+        object Custom2: TMenuItem
+          Caption = 'Custom'
+          OnClick = presCustomClick
+        end
+        object N16: TMenuItem
+          Caption = '-'
+        end
+      end
     end
     object N4: TMenuItem
       Caption = '-'
     end
-    object LogOff1: TMenuItem
+    object trayConnect: TMenuItem
       Caption = 'Log On/Off'
       OnClick = btnConnectClick
     end
     object N01: TMenuItem
       Caption = '-'
     end
-    object ExitExodus1: TMenuItem
+    object trayExit: TMenuItem
       Caption = 'Exit Exodus'
-      OnClick = ExitExodus1Click
+      OnClick = trayExitClick
     end
   end
 end

@@ -138,11 +138,35 @@ type
     popCloseTab: TMenuItem;
     popFloatTab: TMenuItem;
     popTray: TPopupMenu;
-    ShowExodus1: TMenuItem;
+    trayShow: TMenuItem;
     N4: TMenuItem;
-    LogOff1: TMenuItem;
+    trayConnect: TMenuItem;
     N01: TMenuItem;
-    ExitExodus1: TMenuItem;
+    trayExit: TMenuItem;
+    trayPresence: TMenuItem;
+    trayCustom: TMenuItem;
+    N5: TMenuItem;
+    DoNotDisturb1: TMenuItem;
+    Mad2: TMenuItem;
+    Working2: TMenuItem;
+    Busy2: TMenuItem;
+    XtendedAway1: TMenuItem;
+    Sleeping2: TMenuItem;
+    GonetoWork2: TMenuItem;
+    GoneHome2: TMenuItem;
+    ExtendedAway2: TMenuItem;
+    Away1: TMenuItem;
+    Bank2: TMenuItem;
+    Meeting2: TMenuItem;
+    Lunch1: TMenuItem;
+    Away3: TMenuItem;
+    N15: TMenuItem;
+    FreeforChat1: TMenuItem;
+    Online1: TMenuItem;
+    Custom2: TMenuItem;
+    N16: TMenuItem;
+    Custom3: TMenuItem;
+    N18: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -184,8 +208,8 @@ type
     procedure mnuChatClick(Sender: TObject);
     procedure mnuBookmarkClick(Sender: TObject);
     procedure presCustomClick(Sender: TObject);
-    procedure ShowExodus1Click(Sender: TObject);
-    procedure ExitExodus1Click(Sender: TObject);
+    procedure trayShowClick(Sender: TObject);
+    procedure trayExitClick(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -270,7 +294,7 @@ const
 {---------------------------------------}
 implementation
 uses
-    JUD, Bookmark,
+    JUD, Bookmark, CustomPres, 
     Transfer, Profile,
     RiserWindow, RemoveContact,
     MsgRecv, Prefs, Dockable,
@@ -546,6 +570,10 @@ end;
 
 {---------------------------------------}
 procedure TfrmJabber.restoreMenus(enable: boolean);
+var
+    plist: TStringlist;
+    i: integer;
+    mnu: TMenuItem;
 begin
     // (dis)enable the menus
     mnuMessage.Enabled := enable;
@@ -555,6 +583,7 @@ begin
 
     mnuContacts.Enabled := enable;
     mnuPresence.Enabled := enable;
+    trayPresence.Enabled := enable;
 
     mnuMyVCard.Enabled := enable;
     mnuVCard.Enabled := enable;
@@ -563,6 +592,24 @@ begin
     mnuFilters.Enabled := enable;
     mnuBrowser.Enabled := enable;
     mnuServer.Enabled := enable;
+
+    // Build the custom presence menus.
+    // make sure to leave the main "Custom" entry and the divider
+    for i := presCustom.Count - 1 downto 2 do
+        presCustom.Items[i].Free;
+    for i := trayCustom.Count - 1 downto 2 do
+        trayCustom.Items[i].Free;
+
+    plist := MainSession.prefs.getStringlist('custom_pres');
+    for i := 0 to plist.count - 1 do begin
+        mnu := TMenuItem.Create(presCustom);
+        mnu.Caption := plist[i];
+        presCustom.Add(mnu);
+
+        mnu := TMenuItem.Create(trayCustom);
+        mnu.Caption := plist[i];
+        trayCustom.Add(mnu);
+        end;
 end;
 
 {---------------------------------------}
@@ -1249,16 +1296,17 @@ end;
 procedure TfrmJabber.presCustomClick(Sender: TObject);
 begin
     // Custom presence
+    ShowCustomPresence();
 end;
 
-procedure TfrmJabber.ShowExodus1Click(Sender: TObject);
+procedure TfrmJabber.trayShowClick(Sender: TObject);
 begin
     // Show the application from the popup Menu
     _hidden := false;
     ShowWindow(Handle, SW_RESTORE);
 end;
 
-procedure TfrmJabber.ExitExodus1Click(Sender: TObject);
+procedure TfrmJabber.trayExitClick(Sender: TObject);
 begin
     // Close the application
     Self.Close;
