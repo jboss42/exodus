@@ -153,7 +153,7 @@ function ShowBrowser(jid: string = ''): TfrmBrowse;
 implementation
 {$R *.DFM}
 uses
-    JabberConst, Room, Roster, JabberID, Bookmark,
+    JabberConst, JoinRoom, Room, Roster, JabberID, Bookmark,
     ExUtils, Session, JUD, Profile, RegForm, Jabber1;
 
 var
@@ -331,7 +331,9 @@ begin
                 pRegister.Visible := true;
             if (cur_ns = XMLNS_SEARCH) then
                 pSearch.Visible := true;
-            if (cur_ns = XMLNS_CONFERENCE) then
+            if ((cur_ns = XMLNS_CONFERENCE) or
+                (cur_ns = XMLNS_MUC) or
+                (cur_ns = 'gc-1.0')) then
                 pConf.Visible := true;
         end;
     end;
@@ -589,7 +591,11 @@ begin
         mLast.Enabled := Indexof(XMLNS_LAST) >= 0;
         mSearch.Enabled := IndexOf(XMLNS_SEARCH) >= 0;
         mRegister.Enabled := IndexOf(XMLNS_REGISTER) >= 0;
-        mJoinConf.Enabled := IndexOf(XMLNS_CONFERENCE) >= 0;
+
+        // various conference namespaces
+        if (IndexOf(XMLNS_CONFERENCE) >= 0) then mJoinConf.Enabled := true;
+        if (IndexOf(XMLNS_MUC) >= 0) then mJoinConf.Enabled := true;
+        if (IndexOf('gc-1.0') >= 0) then mJoinConf.Enabled := true;
     end;
 end;
 
@@ -683,11 +689,24 @@ end;
 {---------------------------------------}
 procedure TfrmBrowse.mJoinConfClick(Sender: TObject);
 var
+    itm: TListItem;
+    tmpjid: TJabberID;
     cjid: string;
 begin
     // join conf. room
-    cjid := _history[_cur - 1];
-    StartRoom(cjid, MainSession.Username);
+    cjid := '';
+    if (Sender = fActions.lblConf) then
+        cjid := cboJID.Text
+    else begin
+        itm := vwBrowse.Selected;
+        cjid := itm.SubItems[0];
+    end;
+    tmpjid := TJabberID.Create(cjid);
+    if (tmpjid.user = '') then
+        StartJoinRoom(tmpjid, MainSession.username, '')
+    else
+        StartRoom(cjid, MainSession.Username);
+    tmpjid.Free();
 end;
 
 {---------------------------------------}
@@ -810,6 +829,7 @@ begin
     vwBrowse.Invalidate();
 end;
 
+{---------------------------------------}
 function ItemCompare(Item1, Item2: Pointer): integer;
 var
     j1, j2: TBrowseItem;
@@ -841,7 +861,7 @@ begin
         Result := 0;
         exit;
     end;
-end;
+    end;
 
     if (cur_dir) then
         Result := StrComp(PChar(LowerCase(s1)),
@@ -852,6 +872,7 @@ end;
 
 end;
 
+{---------------------------------------}
 procedure TfrmBrowse.vwBrowseColumnClick(Sender: TObject;
   Column: TListColumn);
 begin
