@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-12-02 10:27\n"
-"PO-Revision-Date: 2003-12-02 10:27\n"
+"POT-Creation-Date: 2003-12-03 11:31\n"
+"PO-Revision-Date: 2003-12-03 11:31\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,8 +81,6 @@ msgstr ""
 #: Jabber1.dfm:46
 #. frmExodus..Tabs..tbsRoster..Font.Name
 #: Jabber1.dfm:63
-#. frmJoinRoom..Font.Name
-#: JoinRoom.dfm:13
 #. frmLogin..Font.Name
 #: Login.dfm:12
 #. frmMsgQueue..Font.Name
@@ -718,15 +716,15 @@ msgstr ""
 #. frmPrefs..Font.Name
 #: Prefs.dfm:12
 #. frmRegister..Tabs..TabSheet1..Label1..Font.Name
-#: RegForm.dfm:38
+#: RegForm.dfm:37
 #. frmRegister..Tabs..TabSheet1..lblIns..Font.Name
-#: RegForm.dfm:54
+#: RegForm.dfm:53
 #. frmRegister..Tabs..TabSheet3..Label2..Font.Name
-#: RegForm.dfm:109
+#: RegForm.dfm:108
 #. frmRegister..Tabs..TabSheet4..lblOK..Font.Name
-#: RegForm.dfm:131
+#: RegForm.dfm:130
 #. frmRegister..Tabs..TabSheet4..lblBad..Font.Name
-#: RegForm.dfm:151
+#: RegForm.dfm:150
 #. frmRoom..Panel3..MsgList..Font.Name
 #: Room.dfm:30
 #. frmRoom..Panel1..btnClose..Font.Name
@@ -1122,8 +1120,8 @@ msgstr ""
 #: ConnDetails.dfm:67
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksPassword..Caption
 #: ConnDetails.dfm:339
-#. frmJoinRoom..Panel1..lblPassword..Caption
-#: JoinRoom.dfm:75
+#. frmJoinRoom..Tabs..TabSheet1..lblPassword..Caption
+#: JoinRoom.dfm:52
 #. frmPrefNetwork..GroupBox2..lblProxyPassword..Caption
 #: prefs/PrefNetwork.dfm:117
 #. frmPrefTransfer..grpWebDav..Label8..Caption
@@ -1172,8 +1170,8 @@ msgstr ""
 #: ConnDetails.dfm:399
 #. frmInputPass..txtPassword..PasswordChar
 #: InputPassword.dfm:60
-#. frmJoinRoom..Panel1..txtPassword..PasswordChar
-#: JoinRoom.dfm:124
+#. frmJoinRoom..Tabs..TabSheet1..txtPassword..PasswordChar
+#: JoinRoom.dfm:85
 #. frmPassword..txtOldPassword..PasswordChar
 #: Password.dfm:42
 #. frmPassword..txtNewPassword..PasswordChar
@@ -1609,6 +1607,7 @@ msgstr ""
 #: DockWizard.dfm:46
 #. frmWizard..TntPanel1..btnNext..Caption
 #: Wizard.dfm:46
+#: JoinRoom.pas:277
 msgid "Next >"
 msgstr ""
 
@@ -2211,24 +2210,33 @@ msgid "Exit Exodus"
 msgstr ""
 
 #. frmJoinRoom..Caption
-#: JoinRoom.dfm:8
-#. frmJoinRoom..Panel1..lstRooms..Hint
-#: JoinRoom.dfm:139
+#: JoinRoom.dfm:4
 msgid "Join Room"
 msgstr ""
 
-#. frmJoinRoom..Panel1..Label2..Caption
-#: JoinRoom.dfm:61
+#. frmJoinRoom..Panel1..lblWizardTitle..Caption
+#: JoinRoom.dfm:25
+msgid "Join or Browse for a Room"
+msgstr ""
+
+#. frmJoinRoom..Panel1..lblWizardDetails..Caption
+#: JoinRoom.dfm:28
+msgid "Specify or browse for a room to join or "
+"create."
+msgstr ""
+
+#. frmJoinRoom..Tabs..TabSheet1..Label2..Caption
+#: JoinRoom.dfm:38
 msgid "Room Server:"
 msgstr ""
 
-#. frmJoinRoom..Panel1..Label1..Caption
-#: JoinRoom.dfm:68
+#. frmJoinRoom..Tabs..TabSheet1..Label1..Caption
+#: JoinRoom.dfm:45
 msgid "Room Name:"
 msgstr ""
 
-#. frmJoinRoom..Panel1..Label3..Caption
-#: JoinRoom.dfm:82
+#. frmJoinRoom..Tabs..TabSheet1..Label3..Caption
+#: JoinRoom.dfm:59
 #. frmAdd..Label2..Caption
 #: RosterAdd.dfm:33
 #. frmSubscribe..boxAdd..Label2..Caption
@@ -2236,19 +2244,55 @@ msgstr ""
 msgid "Nickname:"
 msgstr ""
 
-#. frmJoinRoom..Panel1..lblFetch..Caption
-#: JoinRoom.dfm:90
-msgid "Get room list from this server..."
-msgstr ""
-
-#. frmJoinRoom..Panel1..txtServer..Hint
-#: JoinRoom.dfm:105
+#. frmJoinRoom..Tabs..TabSheet1..txtServer..Hint
+#: JoinRoom.dfm:66
+#. frmJoinRoom..Tabs..TabSheet2..Panel2..txtServerFilter..Hint
+#: JoinRoom.dfm:160
 msgid "Select the room server to use."
 msgstr ""
 
-#. frmJoinRoom..Panel1..txtServer..Text
-#: JoinRoom.dfm:110
+#. frmJoinRoom..Tabs..TabSheet1..txtServer..Text
+#: JoinRoom.dfm:71
 msgid "txtServer"
+msgstr ""
+
+#. frmJoinRoom..Tabs..TabSheet1..optSpecify..Caption
+#: JoinRoom.dfm:100
+msgid "Join or Create the following room:"
+msgstr ""
+
+#. frmJoinRoom..Tabs..TabSheet1..optBrowse..Caption
+#: JoinRoom.dfm:111
+msgid "Browse servers for a room to join"
+msgstr ""
+
+#. frmJoinRoom..Tabs..TabSheet2..Caption
+#: JoinRoom.dfm:117
+#. frmJud..Tabs..TabSheet2..Caption
+#: jud.dfm:77
+#. frmRegister..Tabs..TabSheet2..Caption
+#: RegForm.dfm:60
+msgid "TabSheet2"
+msgstr ""
+
+#. frmJoinRoom..Tabs..TabSheet2..lstRooms......Caption
+#: JoinRoom.dfm:127
+msgid "Room"
+msgstr ""
+
+#. frmJoinRoom..Tabs..TabSheet2..lstRooms......Caption
+#: JoinRoom.dfm:131
+msgid "Server"
+msgstr ""
+
+#. frmJoinRoom..Tabs..TabSheet2..Panel2..lblFetch..Caption
+#: JoinRoom.dfm:153
+msgid "Show rooms found on this server"
+msgstr ""
+
+#. frmJoinRoom..Tabs..TabSheet2..Panel2..btnFetch..Caption
+#: JoinRoom.dfm:172
+msgid "Fetch Rooms"
 msgstr ""
 
 #. frmJud..Caption
@@ -2267,13 +2311,6 @@ msgid "Select the user database or enter in the Jabber ID of the search "
 "agent to use:"
 msgstr ""
 
-#. frmJud..Tabs..TabSheet2..Caption
-#: jud.dfm:77
-#. frmRegister..Tabs..TabSheet2..Caption
-#: RegForm.dfm:61
-msgid "TabSheet2"
-msgstr ""
-
 #. frmJud..Tabs..TabSheet2..lblWait..Caption
 #: jud.dfm:85
 msgid "Please wait. Contacting search agent:"
@@ -2282,7 +2319,7 @@ msgstr ""
 #. frmJud..Tabs..TabSheet3..Caption
 #: jud.dfm:99
 #. frmRegister..Tabs..TabSheet3..Caption
-#: RegForm.dfm:96
+#: RegForm.dfm:95
 msgid "TabSheet3"
 msgstr ""
 
@@ -2295,7 +2332,7 @@ msgstr ""
 #. frmJud..Tabs..TabSheet4..Caption
 #: jud.dfm:123
 #. frmRegister..Tabs..TabSheet4..Caption
-#: RegForm.dfm:116
+#: RegForm.dfm:115
 msgid "TabSheet4"
 msgstr ""
 
@@ -5681,36 +5718,36 @@ msgid "Registration"
 msgstr ""
 
 #. frmRegister..Tabs..TabSheet1..Label1....AutoSize
-#: RegForm.dfm:34
+#: RegForm.dfm:33
 msgid "This wizard will register you with a service or Agent. Use the Next "
 "button to advance through the steps. Use Cancel anytime to cancel "
 "this registration."
 msgstr ""
 
 #. frmRegister..Tabs..TabSheet1..lblIns..Caption
-#: RegForm.dfm:50
+#: RegForm.dfm:49
 msgid "Waiting for agent instructions....."
 msgstr ""
 
 #. frmRegister..Tabs..TabSheet2..Panel2..btnDelete..Caption
-#: RegForm.dfm:76
+#: RegForm.dfm:75
 msgid "Delete My Registration"
 msgstr ""
 
 #. frmRegister..Tabs..TabSheet3..Label2..Caption
-#: RegForm.dfm:105
+#: RegForm.dfm:104
 msgid "Please wait, Sending your registration to the "
 "service...."
 msgstr ""
 
 #. frmRegister..Tabs..TabSheet4..lblOK....AutoSize
-#: RegForm.dfm:127
+#: RegForm.dfm:126
 msgid "Your Registration to this service has been completed Successfully. "
 "Press the 'Next' button to Finish."
 msgstr ""
 
 #. frmRegister..Tabs..TabSheet4..lblBad....AutoSize
-#: RegForm.dfm:147
+#: RegForm.dfm:146
 msgid "Your Registration to this service has Failed! Press Previous to go "
 "back and verify that all of the parameters have been filled in "
 "correctly. Press Cancel to close this "
@@ -6839,8 +6876,8 @@ msgid "There was an error attempting to save your options. Another process "
 msgstr ""
 
 #: invite.pas:192
-#. join this room
-#: JoinRoom.pas:212
+#. otherwise, just join..
+#: JoinRoom.pas:202
 msgid "The Room Address you entered is invalid. It must be valid Jabber "
 "ID."
 msgstr ""
@@ -6970,7 +7007,14 @@ msgstr ""
 msgid "Branding error!"
 msgstr ""
 
-#: JoinRoom.pas:217
+#. change tabs if they selected browse
+#: JoinRoom.pas:194
+#. normal result
+#: RegForm.pas:415
+msgid "Finish"
+msgstr ""
+
+#: JoinRoom.pas:213
 msgid "You must enter a nickname"
 msgstr ""
 
@@ -7147,11 +7191,6 @@ msgstr ""
 #: RegForm.pas:475
 msgid "The agent you are trying to register with can not be "
 "reached."
-msgstr ""
-
-#. normal result
-#: RegForm.pas:415
-msgid "Finish"
 msgstr ""
 
 #: RegForm.pas:479
