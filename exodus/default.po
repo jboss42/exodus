@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-08-13 10:19\n"
-"PO-Revision-Date: 2003-08-13 10:19\n"
+"POT-Creation-Date: 2003-08-19 17:38\n"
+"PO-Revision-Date: 2003-08-19 17:38\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -7327,6 +7327,11 @@ msgstr ""
 #: Room.pas:239
 msgid "The room has been destroyed for an unknown "
 "reason."
+msgstr ""
+
+#: Room.pas:992
+msgid "Your room keyword regular expressions are invalid. Keyword matching "
+"will be turned off for this room."
 msgstr ""
 
 #. Programmer's name for it: sNoDomain
