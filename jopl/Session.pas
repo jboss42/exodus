@@ -198,6 +198,7 @@ uses
     {$else}
     QForms, QDialogs,
     {$endif}
+    EntityCache, 
     XMLUtils, XMLSocketStream, XMLHttpStream, IdGlobal, IQ,
     JabberConst, CapPresence;
 
@@ -455,12 +456,14 @@ begin
     // Save the server side prefs and kill our connection.
     if (_stream = nil) then exit;
 
+
     if (Self.Stream.Active) then begin
         if (_authd) then begin
             Prefs.SaveServerPrefs();
             _stream.Send('<presence type="unavailable"/>');
         end;
-        
+
+        // disconnect the stream
         _stream.Disconnect;
     end
     else
@@ -526,6 +529,10 @@ begin
 
     _stream.Free();
     _stream := nil;
+
+    // clear the entity cache
+    jEntityCache.Clear();
+
 end;
 
 {---------------------------------------}
