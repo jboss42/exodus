@@ -355,7 +355,7 @@ end;
 {---------------------------------------}
 procedure TXMLSocketStream.MsgHandler(var msg: TJabberMsg);
 var
-    tmps: string;
+    tmps: WideString;
     tag: TXMLTag;
 begin
     {

@@ -101,7 +101,6 @@ uses
   fListbox in 'fListbox.pas' {frameListbox: TFrame},
   fService in 'fService.pas' {frameObjectActions: TFrame},
   ChatController in '..\jopl\ChatController.pas',
-  WStrList in '..\jopl\WStrList.pas',
   Langs in '..\jopl\Langs.pas',
   Unicode in '..\jopl\Unicode.pas',
   InvalidRoster in 'InvalidRoster.pas' {frmInvalidRoster},
