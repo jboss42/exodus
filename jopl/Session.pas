@@ -932,7 +932,6 @@ begin
     end
     else begin
         _dispatcher.DispatchSignal('/session/autherror', tag);
-        Disconnect();
     end;
 
 end;

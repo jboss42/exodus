@@ -971,7 +971,6 @@ begin
         MainSession.Stream.Disconnect()
     else
         timReconnect.Enabled := false;
-    // MainSession.FireCallback('/session/disconnected', nil);
 end;
 
 {---------------------------------------}
@@ -992,6 +991,7 @@ begin
     else if event = '/session/autherror' then begin
         _logoff := true;
         MessageDlg(sAuthError, mtError, [mbOK], 0);
+        PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
         PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
         exit;
     end
