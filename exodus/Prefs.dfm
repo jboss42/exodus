@@ -1,6 +1,6 @@
 object frmPrefs: TfrmPrefs
-  Left = 241
-  Top = 172
+  Left = 255
+  Top = 176
   Width = 468
   Height = 428
   Caption = 'Exodus Preferences'
@@ -1570,12 +1570,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 357
-    ActivePage = tbsFonts
+    ActivePage = tbsAway
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 2
+    TabIndex = 7
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -2493,7 +2493,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 124
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2563,6 +2563,14 @@ object frmPrefs: TfrmPrefs
         Width = 201
         Height = 21
         TabOrder = 7
+      end
+      object chkAAReducePri: TCheckBox
+        Left = 8
+        Top = 168
+        Width = 273
+        Height = 17
+        Caption = 'Reduce priority to 0 during auto-away.'
+        TabOrder = 8
       end
     end
     object tbsKeywords: TTabSheet

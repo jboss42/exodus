@@ -266,8 +266,9 @@ type
     _is_autoaway: boolean;
     _is_autoxa: boolean;
     _is_min: boolean;
-    _last_show: string;
-    _last_status: string;
+    _last_show: Widestring;
+    _last_status: Widestring;
+    _last_priority: integer;
     _hidden: boolean;
     _logoff: boolean;
     _shutdown: boolean;
@@ -2123,6 +2124,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.SetAutoAway;
+var
+    new_pri: integer;
 begin
     // set us to away
     DebugMsg(sSetAutoAway);
@@ -2135,13 +2138,19 @@ begin
 
     _last_show := MainSession.Show;
     _last_status := MainSession.Status;
+    _last_priority := MainSession.Priority;
 
     // must be before SetPresence
     _is_autoaway := true;
     _is_autoxa := false;
 
+    if MainSession.Prefs.getBool('aa_reduce_pri') then
+        new_pri := 0
+    else
+        new_pri := _last_priority;
+
     MainSession.SetPresence('away', MainSession.prefs.getString('away_status'),
-        MainSession.Priority);
+        new_pri);
 
     timAutoAway.Interval := 1000;
 end;
@@ -2167,7 +2176,7 @@ begin
     DebugMsg(sSetAutoAvailable);
     timAutoAway.Enabled := false;
     timAutoAway.Interval := _auto_away_interval * 1000;
-    MainSession.SetPresence(_last_show, _last_status, MainSession.Priority);
+    MainSession.SetPresence(_last_show, _last_status, _last_priority);
 
     // must be *after* SetPresence
     _is_autoaway := false;
