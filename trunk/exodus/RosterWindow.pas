@@ -109,6 +109,7 @@ type
     popLast: TTntMenuItem;
     popTime: TTntMenuItem;
     popVersion: TTntMenuItem;
+    autoScroll: TTimer;
 
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -178,6 +179,7 @@ type
     procedure btnFindCloseClick(Sender: TObject);
     procedure presDNDClick(Sender: TObject);
     procedure popTransEditClick(Sender: TObject);
+    procedure autoScrollTimer(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;             // roster callback id
@@ -230,6 +232,7 @@ type
     _drop_copy: boolean;            // is the drag operation trying to copy?
 
     _drop: TExDropTarget;
+    _auto_dir: integer;
 
     g_offline: Widestring;
     g_online: Widestring;
@@ -1999,6 +2002,19 @@ begin
     end
     else
         Accept := false;
+
+    if (Y < treeRoster.Top + 20) then begin
+        _auto_dir := +1;
+        autoScroll.Enabled := true;
+        //treeRoster.Perform(WM_VSCROLL, SB_LINEUP, 0);
+    end
+    else if (Y > (treeRoster.Top + treeRoster.Height - 20)) then begin
+        _auto_dir := -1;
+        autoScroll.Enabled := true;
+        //treeRoster.Perform(WM_VSCROLL, SB_LINEDOWN, 0);
+    end
+    else
+        autoScroll.Enabled := false;
 end;
 
 {---------------------------------------}
@@ -2386,8 +2402,7 @@ procedure TfrmRosterWindow.DrawNodeText(Node: TTreeNode; State: TCustomDrawState
     c1, c2: Widestring);
 var
     ico, tw: integer;
-    xRect: TRect;
-    nRect: TRect;
+    nRect, xRect: TRect;
     main_color, stat_color: TColor;
 begin
     with treeRoster.Canvas do begin
@@ -3026,6 +3041,16 @@ begin
     if (_cur_ritem <> nil) then begin
         StartServiceReg(_cur_ritem.jid.full);
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.autoScrollTimer(Sender: TObject);
+begin
+    if (_auto_dir = +1) then
+        treeRoster.Perform(WM_VSCROLL, SB_LINEUP, 0)
+    else
+        treeRoster.Perform(WM_VSCROLL, SB_LINEDOWN, 0);
+    treeRoster.Invalidate();
 end;
 
 initialization
