@@ -498,7 +498,11 @@ begin
     if _socket.Connected then begin
         xml := '    ';
         DoDataCallbacks(true, xml);
-        _socket.Write(xml);
+        try
+            _socket.Write(xml);
+        except
+            on EIdSocketError do Disconnect();
+        end;
     end;
 end;
 
