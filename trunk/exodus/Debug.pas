@@ -145,9 +145,18 @@ end;
 
 {---------------------------------------}
 procedure TfrmDebug.btnSendRawClick(Sender: TObject);
+var
+    cmd: string;
 begin
     // Send the text in the MsgSend memo box
-    MainSession.Stream.Send(MemoSend.Lines.Text);
+    cmd := MemoSend.Lines.Text;
+    if (cmd[1] = '/') then begin
+        // we are giving some kind of interactive debugger cmd
+        if (cmd = '/dispcount') then
+            DebugMsg('Dispatcher listener count: ' + IntToStr(MainSession.Dispatcher.TotalCount) + ''#13#10);
+        end
+    else
+        MainSession.Stream.Send(cmd);
 end;
 
 {---------------------------------------}

@@ -1,6 +1,6 @@
 object frmDebug: TfrmDebug
-  Left = 264
-  Top = 331
+  Left = 8
+  Top = 342
   Width = 351
   Height = 320
   Caption = 'Debug'

@@ -22,26 +22,44 @@ unit Signals;
 interface
 uses
     XMLTag,
-    Classes, SysUtils;
+    Contnrs, Classes, SysUtils;
 
 type
+
+    {---------------------------------------}
+    TSignalEvent = procedure (event: string; tag: TXMLTag) of object;
+
+    TSignal = class;
+    TSignalListener = class;
+
+    {---------------------------------------}
+    TListenerInfo = class
+    public
+        lid: longint;
+        sig: TSignal;
+        l: TSignalListener;
+    end;
 
     {---------------------------------------}
     TSignalDispatcher = class(TStringList)
     private
         _id: longint;
+        _lid_info: TStringList;
     public
         constructor Create();
         destructor Destroy(); override;
 
-        procedure DeleteListener(id: longint);
+        procedure AddSignal(event: string; sig: TSignal);
         procedure DispatchSignal(event: string; tag: TXMLTag);
+        procedure DeleteListener(lid: longint);
+
+        procedure AddListenerInfo(lid: integer; sig: TSignal; l: TSignalListener);
+
         function getNextID: longint;
         function TotalCount: longint;
     end;
 
     {---------------------------------------}
-    TSignalEvent = procedure (event: string; tag: TXMLTag) of object;
     TSignalListener = class
     public
         cb_id: longint;
@@ -55,19 +73,47 @@ type
         tag: TXMLTag;
     end;
 
-    TSignal = class(TStringList)
-    private
-        _pattern: string;
+    {---------------------------------------}
+    TChangeListOps = (cl_add, cl_delete);
+    TChangeListEvent = class
     public
-        constructor Create(event_pattern: string);
-        destructor Destroy; override;
-
-        function addListener(event: string; callback: TSignalEvent): TSignalListener; overload;
-        procedure Invoke(event: string; tag: TXMLTag); overload; virtual;
+        l: TSignalListener;
+        event: string;
+        op: TChangeListOps;
     end;
 
 
     {---------------------------------------}
+    // Base class for all signals..
+    // This should never be implemented.
+    TSignal = class(TStringList)
+    private
+        _change_list: TQueue;
+    protected
+        invoking: boolean;
+        Dispatcher: TSignalDispatcher;      // pointer to the disp that owns us
+
+        function addListener(event: string; l: TSignalListener): boolean; overload; virtual;
+        function delListener(l: TSignalListener): boolean;
+        procedure Invoke(event: string; tag: TXMLTag); overload; virtual;
+        procedure processChangeList();
+    public
+        constructor Create();
+        destructor Destroy; override;
+
+        property change_list: TQueue read _change_list;
+    end;
+
+    {---------------------------------------}
+    // Just a simple implementation of TSignal
+    TBasicSignal = class(TSignal)
+    public
+        function addListener(event: string; callback: TSignalEvent): TSignalListener; overload;
+    end;
+
+
+    {---------------------------------------}
+    // Signal that understands XPLite statements and invokes based on them
     TPacketEvent = procedure(event: string; tag: TXMLTag) of object;
 
     TPacketListener = class(TSignalListener)
@@ -82,7 +128,7 @@ type
 
     TPacketSignal = class(TSignal)
     public
-        function addListener(callback: TPacketEvent; xplite: string): TPacketListener; overload;
+        function addListener(xplite: string; callback: TPacketEvent): TPacketListener; overload;
         procedure Invoke(event: string; tag: TXMLTag); override;
     end;
 
@@ -98,12 +144,22 @@ constructor TSignalDispatcher.Create();
 begin
     inherited Create();
     _id := 0;
+    _lid_info := TStringList.Create();
 end;
 
 {---------------------------------------}
 destructor TSignalDispatcher.Destroy();
 begin
+    _lid_info.Free();
     inherited Destroy;
+end;
+
+{---------------------------------------}
+procedure TSignalDispatcher.AddSignal(event: string; sig: TSignal);
+begin
+    // add a signal to the list
+    Self.AddObject(event, sig);
+    sig.Dispatcher := Self;
 end;
 
 {---------------------------------------}
@@ -132,22 +188,51 @@ begin
 end;
 
 {---------------------------------------}
-procedure TSignalDispatcher.DeleteListener(id: longint);
+procedure TSignalDispatcher.AddListenerInfo(lid: integer; sig: TSignal; l: TSignalListener);
 var
-    i,j: integer;
-    sig: TSignal;
-    l: TSignalListener;
+    i: integer;
+    ls: string;
+    li: TListenerInfo;
 begin
-    for i := 0 to Self.Count - 1 do begin
-        sig := TSignal(Objects[i]);
-        for j := 0 to sig.Count - 1 do begin
-            l := TSignalListener(sig.Objects[j]);
-            if l.cb_id = id then begin
-                l.Free;
-                sig.Delete(j);
-                exit;
-                end;
+    // add an entry into the stringlist
+
+    // first check to see if this lid is already in the list
+    ls := IntToStr(lid);
+    i := _lid_info.IndexOf(ls);
+    if (i < 0) then begin
+        i := _lid_info.Add(ls);
+        li := TListenerInfo.Create();
+        end
+    else
+        li := TListenerInfo(_lid_info.Objects[i]);
+
+    li.lid := lid;
+    li.sig := sig;
+    li.l := l;
+
+    _lid_info.Objects[i] := li;
+end;
+
+{---------------------------------------}
+procedure TSignalDispatcher.DeleteListener(lid: longint);
+var
+    ls: string;
+    li: TListenerInfo;
+    i: integer;
+begin
+    // lookup the lid in the stringlist,
+    // and then call the corresponding signal's delListener method
+    ls := IntToStr(lid);
+    i := _lid_info.indexOf(ls);
+    if (i >= 0) then begin
+        // the lid is in our list
+        li := TListenerInfo(_lid_info.Objects[i]);
+        if (li <> nil) then begin
+            // we have a good entry..
+            li.sig.delListener(li.l);
+            li.Free();
             end;
+        _lid_info.Delete(i);
         end;
 end;
 
@@ -166,29 +251,76 @@ end;
 
 {------------------------------------------------------------------------------}
 {------------------------------------------------------------------------------}
-constructor TSignal.Create(event_pattern: string);
+constructor TSignal.Create();
 begin
     inherited Create;
-    _pattern := event_pattern;
+
+    _change_list := TQueue.Create();
+    Dispatcher := nil;
 end;
 
 {---------------------------------------}
 destructor TSignal.Destroy;
 begin
-    _pattern := '';
+    Dispatcher := nil;
+    _change_list.Free();
 
     inherited Destroy;
 end;
 
 {---------------------------------------}
-function TSignal.addListener(event: string; callback: TSignalEvent): TSignalListener;
+function TSignal.addListener(event: string; l: TSignalListener): boolean;
 var
-    l: TSignalListener;
+    co: TChangeListEvent;
 begin
-    l := TSignalListener.Create;
-    l.callback := TMethod(callback);
-    Self.AddObject(event, l);
-    Result := l;
+    // handle adding this listener to the list,
+    // or stick it  into the change list
+
+    // return true if added now,
+    // return false if added to the change list
+    if (Dispatcher <> nil) then
+        l.cb_id := Dispatcher.getNextID();
+
+    if (invoking) then begin
+        // add to change list
+        co := TChangeListEvent.Create();
+        co.l := l;
+        co.event := event;
+        co.op := cl_add;
+        _change_list.Push(co);
+
+        Result := false;
+        end
+    else begin
+        Self.AddObject(event, l);
+        if (Dispatcher <> nil) then
+            Dispatcher.AddListenerInfo(l.cb_id, Self, l);
+        Result := true;
+        end;
+end;
+
+{---------------------------------------}
+function TSignal.delListener(l: TSignalListener): boolean;
+var
+    idx: integer;
+    co: TChangeListEvent;
+begin
+    // remove the listener from the list
+    Result := false;
+    idx := Self.IndexOfObject(l);
+    if (idx < 0) then exit;
+
+    if (not invoking) then begin
+        l.Free();
+        Self.Delete(idx);
+        Result := true;
+        end
+    else if (invoking) then begin
+        co := TChangeListEvent.Create();
+        co.l := l;
+        co.op := cl_delete;
+        _change_list.Push(co);
+        end;
 end;
 
 {---------------------------------------}
@@ -202,7 +334,8 @@ begin
     // dispatch this to all interested listeners
     cmp := Lowercase(Trim(event));
 
-    for i := Self.Count - 1 downto 0 do begin
+    invoking := true;
+    for i := 0 to Self.Count - 1 do begin
         e := Strings[i];
         l := TSignalListener(Objects[i]);
         if (l <> nil) then begin
@@ -217,6 +350,40 @@ begin
                 sig(event, tag);
             end;
         end;
+    invoking := false;
+
+    if change_list.Count > 0 then
+        Self.processChangeList();
+end;
+
+{---------------------------------------}
+procedure TSignal.processChangeList();
+var
+    co: TChangeListEvent;
+begin
+    // process the change list
+    while (_change_list.Count > 0) do begin
+        co := TChangeListEvent(_change_list.Pop());
+        if (co.op = cl_add) then
+            Self.addListener(co.event, co.l)
+        else
+            Self.delListener(co.l);
+        co.Free;
+        end;
+end;
+
+{------------------------------------------------------------------------------}
+{------------------------------------------------------------------------------}
+function TBasicSignal.addListener(event: string; callback: TSignalEvent): TSignalListener;
+var
+    l: TSignalListener;
+begin
+    l := TSignalListener.Create;
+    l.callback := TMethod(callback);
+
+    inherited addListener(event, l);
+
+    Result := l;
 end;
 
 {------------------------------------------------------------------------------}
@@ -242,7 +409,7 @@ end;
 
 {------------------------------------------------------------------------------}
 {------------------------------------------------------------------------------}
-function TPacketSignal.addListener(callback: TPacketEvent; xplite: string): TPacketListener;
+function TPacketSignal.addListener(xplite: string; callback: TPacketEvent): TPacketListener;
 var
     l: TPacketListener;
     xps: string;
@@ -252,7 +419,8 @@ begin
     l.callback := TMethod(callback);
     xps := Copy(xplite, 8, length(xplite) - 7);
     l.xp.Parse(xps);
-    Self.AddObject(xplite, l);
+
+    inherited addListener(xplite, l);
     Result := l;
 end;
 
@@ -269,7 +437,8 @@ begin
     use basic syntax like:
     /iq/query@xmlns='jabber:iq:roster'
     }
-    for i := Self.Count - 1 downto 0 do begin
+    invoking := true;
+    for i := 0 to Self.Count - 1 do begin
         pl := TPacketListener(Self.Objects[i]);
         xp := pl.XPLite;
         if xp.Compare(tag) then begin
@@ -277,6 +446,11 @@ begin
             pe('xml', tag);
             end;
         end;
+    invoking := false;
+
+    if change_list.Count > 0 then
+        Self.processChangeList();
+
 end;
 
 
