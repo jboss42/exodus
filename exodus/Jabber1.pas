@@ -2834,9 +2834,8 @@ begin
     f := x.addTag('field');
     f.setAttribute('type',  'boolean');
     f.setAttribute('var',   'C');
-    f.setAttribute('label', 'Some boolean');
+    f.setAttribute('label', 'Some really really really really really really really really long boolean');
     f.AddBasicTag('value', 'YES');
-
 
     // a bunch of fixed fields
     f := x.AddTag('field');
