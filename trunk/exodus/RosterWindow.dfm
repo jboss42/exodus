@@ -88,6 +88,7 @@ object frmRosterWindow: TfrmRosterWindow
     ShowRoot = False
     SortType = stData
     TabOrder = 0
+    ToolTips = False
     Visible = False
     OnChange = treeRosterChange
     OnCollapsed = treeRosterCollapsed
