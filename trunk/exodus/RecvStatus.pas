@@ -27,6 +27,7 @@ unit RecvStatus;
 interface
 
 uses
+    Presence, 
     Unicode, SyncObjs, XferManager, ShellApi, Contnrs, XMLTag,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, StdCtrls, ComCtrls, TntStdCtrls, ExtCtrls, IdSocks,
@@ -74,9 +75,11 @@ type
         _sid: Widestring;
         _hosts: TQueue;
         _cur: integer;
+        _pres: integer;
         _stream: TFileStream;
         _size: longint;
 
+        procedure kill();
         procedure attemptSIConnection();
         procedure SendError(code, condition: string);
 
@@ -88,6 +91,7 @@ type
 
     published
        procedure BytestreamCallback(event: string; tag: TXMLTag);
+       procedure PresCallback(event: string; tag: TXMLTag; pres: TJabberPres);
 
     public
         { Public declarations }
@@ -344,6 +348,15 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
+procedure TfRecvStatus.kill();
+begin
+    if (_pres <> -1) then
+        MainSession.UnRegisterCallback(_pres);
+    if (_cur <> -1) then
+        MainSession.UnRegisterCallback(_cur);
+    getXferManager().killFrame(Self);
+end;
+
 procedure TfRecvStatus.BytestreamCallback(event: string; tag: TXMLTag);
 var
     i: integer;
@@ -372,7 +385,7 @@ begin
     // check to see if they cancel'd before
     if (_state = recv_si_cancel) then begin
         SendError('406', 'not-acceptable');
-        getXferManager().killFrame(Self);
+        kill();
         exit;
     end;
 
@@ -399,7 +412,7 @@ begin
         MessageDlg(_('No acceptable stream hosts were sent. Have the sender check their settings.'),
             mtError, [mbOK], 0);
         SendError('406', 'not-acceptable');
-        getXFerManager().killFrame(Self);
+        kill();
         exit;
     end;
 
@@ -407,7 +420,7 @@ begin
     SaveDialog1.Filename := _filename;
     if (not SaveDialog1.Execute) then begin
         SendError('406', 'not-acceptable');
-        getXferManager().killFrame(Self);
+        kill();
         exit;
     end;
     _filename := SaveDialog1.filename;
@@ -508,7 +521,6 @@ begin
             x.setAttribute('var', 'stream-method');
             x.AddBasicTag('value', XMLNS_BYTESTREAMS);
             _state := recv_si_wait;
-
             _cur := MainSession.RegisterCallback(
                 Self.BytestreamCallback,
                 '/packet/iq[@type="set"]/query[@xmlns="' + XMLNS_BYTESTREAMS + '"]');
@@ -567,10 +579,13 @@ begin
     _pkg := pkg;
     _state := recv_si_offer;
     _hosts := TQueue.Create();
+    _cur := -1;
+    _pres := -1;
     bar1.Max := pkg.size;
     lblFrom.Caption := pkg.recip;
     lblFile.Caption := ExtractFilename(pkg.pathname);
     lblStatus.Caption := '';
+    _pres := MainSession.RegisterCallback(PresCallback);
 end;
 
 {---------------------------------------}
@@ -667,7 +682,7 @@ begin
 
         // send error back to sender.
         SendError('404', 'item-not-found');
-        getXferManager().killFrame(Self);
+        kill();
         exit;
     end
     else
@@ -676,9 +691,6 @@ end;
 
 {---------------------------------------}
 procedure TfRecvStatus.btnCancelClick(Sender: TObject);
-var
-    xfm: TfrmXferManager;
-    i: integer;
 begin
     // cancel, or close
     if (_pkg.mode = recv_si) then begin
@@ -691,7 +703,7 @@ begin
         recv_si_offer: begin
             // just refuse the SI, and close panel
             SendError('406', 'not-acceptable');
-            getXferManager().killFrame(Self);
+            kill();
             end;
         recv_si_wait: begin
             // disable btn, and wait for stream hosts, then
@@ -704,17 +716,27 @@ begin
             // kill the socket and close panel.
             if (_thread <> nil) then
                 _thread.Terminate();
-            getXferManager().killFrame(Self);
+            kill();
             end;
         end;
     end
-    else begin
-        xfm := getXferManager();
-        i := xfm.getFrameIndex(Self);
-        if (i = -1) then exit;
-        SendMessage(xfm.Handle, WM_CLOSE_FRAME, i, 0);
+    else
+        kill();
+end;
+
+procedure TfRecvStatus.presCallback(event: string; tag: TXMLTag; pres: TJabberPres);
+begin
+    // the sender went offline
+    if ((pres.PresType = 'unavailable') and (pres.fromJid.full = _pkg.recip)) then begin
+        MainSession.UnRegisterCallback(_pres);
+        _pres := -1;
+        MessageDlg(Format(_('The sender of a file transfer (%s) went offline.'),
+            [_pkg.recip]), mtError, [mbOK], 0);
+        _state := recv_si_cancel;
+        getXferManager().killFrame(Self);
     end;
 end;
+
 
 
 

@@ -482,6 +482,10 @@ begin
             // change it.
             httpServer.DefaultPort := p;
         end;
+    end
+    else if (event = '/session/disconnected') then begin
+        // kill all frames
+        Self.Close();
     end;
 end;
 
