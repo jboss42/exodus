@@ -133,6 +133,8 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
 !endif
     ;WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Runonce \
     ;    "Exodus-Setup" "$CMDLINE"
+    MessageBox MB_OK "When prompted to reboot your computer after this update runs, answer NO. This installer will reboot when it finishes."
+
     ExecWait "$INSTDIR\richupd.exe /Q"
     SetRebootFlag true
     
@@ -167,6 +169,7 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
 !endif
     ;WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Runonce \
     ;    "Exodus-Setup" "$CMDLINE"
+    MessageBox MB_OK "When prompted to reboot your computer after this update runs, answer NO. This installer will reboot when it finishes."
     ExecWait "$INSTDIR\50comupd.exe /Q"
     SetRebootFlag true
 
@@ -198,6 +201,7 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
 !endif
     ;WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Runonce \
     ;    "Exodus-Setup" "$CMDLINE"
+    MessageBox MB_OK "When prompted to reboot your computer after this update runs, answer NO. This installer will reboot when it finishes."
     ExecWait "$INSTDIR\W95ws2setup.exe /Q"
     SetRebootFlag true
         
