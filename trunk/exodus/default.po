@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-02-04 08:07\n"
-"PO-Revision-Date: 2004-02-04 08:07\n"
+"POT-Creation-Date: 2004-02-06 08:10\n"
+"PO-Revision-Date: 2004-02-06 08:10\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2227,7 +2227,7 @@ msgstr ""
 #. frmJud..PopupMenu1..popMessage..Caption
 #: jud.dfm:227
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
-#: subscribe.dfm:147
+#: subscribe.dfm:150
 msgid "Send Message"
 msgstr ""
 
@@ -2416,7 +2416,7 @@ msgstr ""
 #. frmJud..PopupMenu1..popChat..Caption
 #: jud.dfm:223
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
-#: subscribe.dfm:143
+#: subscribe.dfm:146
 #: Jabber1.pas:2279
 msgid "Start Chat"
 msgstr ""
@@ -2541,7 +2541,7 @@ msgstr ""
 #. frmMsgRecv..popContact..mnuProfile..Caption
 #: MsgRecv.dfm:492
 #. frmSubscribe..PopupMenu1..mnuProfile..Caption
-#: subscribe.dfm:139
+#: subscribe.dfm:142
 msgid "Show Profile"
 msgstr ""
 
@@ -6029,16 +6029,16 @@ msgstr ""
 
 #. frmAdd..Label2..Caption
 #: RosterAdd.dfm:34
-#. frmSubscribe..boxAdd..Label2..Caption
-#: subscribe.dfm:82
+#. frmSubscribe..boxAdd..lblNickname..Caption
+#: subscribe.dfm:83
 #: ExUtils.pas:489
 msgid "Nickname:"
 msgstr ""
 
 #. frmAdd..Label3..Caption
 #: RosterAdd.dfm:41
-#. frmSubscribe..boxAdd..Label3..Caption
-#: subscribe.dfm:89
+#. frmSubscribe..boxAdd..lblGroup..Caption
+#: subscribe.dfm:90
 msgid "Group:"
 msgstr ""
 
@@ -6315,14 +6315,14 @@ msgid "Add this person to my roster"
 msgstr ""
 
 #. frmSubscribe..frameButtons1..Panel2..Panel1..btnOK..Caption
-#: subscribe.dfm:125
+#: subscribe.dfm:128
 #. Change button captions for TC Invites
 #: MsgRecv.pas:379
 msgid "Accept"
 msgstr ""
 
 #. frmSubscribe..frameButtons1..Panel2..Panel1..btnCancel..Caption
-#: subscribe.dfm:129
+#: subscribe.dfm:132
 msgid "Deny"
 msgstr ""
 
