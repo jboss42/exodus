@@ -239,9 +239,10 @@ end;
 procedure TJabberSession.Connect;
 begin
     // Switch port for SSL connections
+    { Now done in dialog box
     if (_port = 5222) and (_use_ssl) then
         _port := 5223;
-        
+    }
     _stream.Connect(_server, _port, _use_ssl);
 end;
 
@@ -433,10 +434,11 @@ end;
 procedure TJabberSession.AssignProfile(profile: TJabberProfile);
 begin
     Username := profile.Username;
-    Server := profile.Server;
+    Server   := profile.Server;
     Password := profile.Password;
     Resource := profile.Resource;
     Priority := profile.Priority;
+    Port     := profile.Port;
 end;
 
 {---------------------------------------}
@@ -585,6 +587,7 @@ begin
     password := p.password;
     resource := p.Resource;
     Priority := p.Priority;
+    Port     := p.Port;
     _use_ssl := p.ssl;
 end;
 
