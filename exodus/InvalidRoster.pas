@@ -122,6 +122,12 @@ begin
                 ritem.remove();
             end;
         end;
+
+    for i := ListView1.Items.Count - 1 downto 0 do begin
+        li := ListView1.Items[i];
+        if (li.Checked) then
+            ListView1.Items.Delete(i);
+        end;
 end;
 
 end.
