@@ -10,6 +10,10 @@
 *.map
 *.dof
 *.ddp
+*.bmp
+*.jpg
+*.psd
+*.dcr
 ./output/*
 *.~*
 version.res
