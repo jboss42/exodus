@@ -1,4 +1,4 @@
-unit AIMImport_TLB;
+unit ExImportAIM_TLB;
 
 // ************************************************************************ //
 // WARNING                                                                    
@@ -12,14 +12,14 @@ unit AIMImport_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 3/4/2003 6:55:46 AM from Type Library described below.
+// File generated on 3/4/2003 6:58:26 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\AIM-Import\ExImportAIM.tlb (1)
 // LIBID: {1DC7B769-E8C0-42B0-BD6A-A89E9000854F}
 // LCID: 0
 // Helpfile: 
-// HelpString: AIMImport Library
+// HelpString: AIM Buddy List File Import Plugin
 // DepndLst: 
 //   (1) v1.0 ExodusCOM, (D:\src\exodus\runner\Exodus.exe)
 //   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
@@ -42,10 +42,10 @@ uses Windows, ActiveX, Classes, ExodusCOM_TLB, Graphics, StdVCL, Variants;
 // *********************************************************************//
 const
   // TypeLibrary Major and minor versions
-  AIMImportMajorVersion = 1;
-  AIMImportMinorVersion = 0;
+  ExImportAIMMajorVersion = 1;
+  ExImportAIMMinorVersion = 0;
 
-  LIBID_AIMImport: TGUID = '{1DC7B769-E8C0-42B0-BD6A-A89E9000854F}';
+  LIBID_ExImportAIM: TGUID = '{1DC7B769-E8C0-42B0-BD6A-A89E9000854F}';
 
   CLASS_AIMImportPlugin: TGUID = '{13E0E3B0-4CFB-4EE0-A508-C3B9EC969BAA}';
 type
