@@ -276,6 +276,7 @@ type
     _last_status: Widestring;           // last status    (ditto)
     _last_priority: integer;            // last priority  (ditto)
     _hidden: boolean;                   // are we minimized to the tray
+    _was_max: boolean;                  // was the main window maximized before?
     _logoff: boolean;                   // are we logging off on purpose
     _shutdown: boolean;                 // are we being shutdown
     _close_min: boolean;                // should the close btn minimize, not close
@@ -317,6 +318,8 @@ type
     procedure SetAutoXA();
     procedure SetAutoAvailable();
     procedure SetupAutoAwayTimer();
+
+    procedure doRestore();
 
     function win32TrackerIndex(windows_msg: integer): integer;
 
@@ -554,6 +557,20 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmExodus.doRestore();
+begin
+    if (_hidden) then begin
+        _hidden := false;
+        if (_was_max) then
+            ShowWindow(Handle, SW_MAXIMIZE)
+        else
+            ShowWindow(Handle, SW_RESTORE);
+    end
+    else if (Self.WindowState = wsMaximized) then
+        ShowWindow(Handle, SW_RESTORE)
+end;
+
+{---------------------------------------}
 procedure TfrmExodus.WMSysCommand(var msg: TWmSysCommand);
 begin
     // Catch some of the important windows msgs
@@ -561,11 +578,12 @@ begin
     case (msg.CmdType and $FFF0) of
     SC_MINIMIZE: begin
         _hidden := true;
+        _was_max := (Self.WindowState = wsMaximized);
         ShowWindow(Handle, SW_HIDE);
         msg.Result := 0;
     end;
     SC_RESTORE: begin
-        ShowWindow(Handle, SW_RESTORE);
+        doRestore();
         msg.Result := 0;
     end;
     SC_CLOSE: begin
@@ -593,8 +611,7 @@ begin
     if (Msg.LParam = WM_LBUTTONDBLCLK) then begin
         if (_hidden) then begin
             // restore our app
-            _hidden := false;
-            ShowWindow(Handle, SW_RESTORE);
+            doRestore();
             SetForegroundWindow(Self.Handle);
             msg.Result := 0;
         end
@@ -2184,8 +2201,7 @@ end;
 procedure TfrmExodus.trayShowClick(Sender: TObject);
 begin
     // Show the application from the popup Menu
-    _hidden := false;
-    ShowWindow(Handle, SW_RESTORE);
+    doRestore();
 end;
 
 {---------------------------------------}
@@ -2526,7 +2542,7 @@ begin
     else if (m.Msg = sExodusMutex) then begin
         // show the form
         Self.Show;
-        ShowWindow(Handle, SW_RESTORE);
+        doRestore();
         SetForegroundWindow(Self.Handle);
     end
     else if (m.Msg = sShellRestart) then begin
