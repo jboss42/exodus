@@ -1,6 +1,6 @@
 object frmRosterWindow: TfrmRosterWindow
-  Left = 250
-  Top = 146
+  Left = 397
+  Top = 223
   Width = 195
   Height = 446
   AlphaBlendValue = 220
@@ -63,11 +63,62 @@ object frmRosterWindow: TfrmRosterWindow
     Visible = False
     OnClick = imgAdClick
   end
+  object pnlFind: TPanel
+    Left = 0
+    Top = 0
+    Width = 187
+    Height = 49
+    Align = alTop
+    BevelOuter = bvNone
+    TabOrder = 4
+    Visible = False
+    DesignSize = (
+      187
+      49)
+    object lblFind: TTntLabel
+      Left = 8
+      Top = 8
+      Width = 23
+      Height = 13
+      Caption = 'Find:'
+    end
+    object txtFind: TTntEdit
+      Left = 40
+      Top = 4
+      Width = 145
+      Height = 21
+      Hint = 'Esc to quit, Enter to select current,  F3 to search again'
+      Anchors = [akLeft, akTop, akRight]
+      ParentShowHint = False
+      ShowHint = True
+      TabOrder = 0
+      OnChange = txtFindChange
+      OnKeyUp = txtFindKeyUp
+    end
+    object radJID: TTntRadioButton
+      Left = 39
+      Top = 28
+      Width = 41
+      Height = 17
+      Caption = 'JID'
+      TabOrder = 1
+    end
+    object radNick: TTntRadioButton
+      Left = 88
+      Top = 28
+      Width = 80
+      Height = 17
+      Caption = 'Nickname'
+      Checked = True
+      TabOrder = 2
+      TabStop = True
+    end
+  end
   object treeRoster: TTreeView
     Left = 0
-    Top = 161
+    Top = 210
     Width = 187
-    Height = 196
+    Height = 147
     Cursor = crArrow
     Hint = 'Roster Hint'
     Align = alClient
@@ -188,7 +239,7 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object pnlConnect: TPanel
     Left = 0
-    Top = 0
+    Top = 49
     Width = 187
     Height = 161
     Align = alTop

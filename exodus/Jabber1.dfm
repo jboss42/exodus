@@ -29,14 +29,14 @@ object frmExodus: TfrmExodus
   object SplitterLeft: TSplitter
     Left = 57
     Top = 31
-    Height = 302
+    Height = 303
     OnMoved = SplitterRightMoved
   end
   object Tabs: TTntPageControl
     Left = 60
     Top = 31
     Width = 153
-    Height = 302
+    Height = 303
     ActivePage = tbsRoster
     Align = alClient
     DockSite = True
@@ -67,7 +67,7 @@ object frmExodus: TfrmExodus
       object SplitterRight: TSplitter
         Left = 105
         Top = 0
-        Height = 273
+        Height = 274
         ResizeStyle = rsUpdate
         OnMoved = SplitterRightMoved
       end
@@ -75,7 +75,7 @@ object frmExodus: TfrmExodus
         Left = 0
         Top = 0
         Width = 105
-        Height = 273
+        Height = 274
         Align = alLeft
         BevelOuter = bvNone
         BorderWidth = 1
@@ -88,7 +88,7 @@ object frmExodus: TfrmExodus
         Left = 108
         Top = 0
         Width = 37
-        Height = 273
+        Height = 274
         Align = alClient
         BevelOuter = bvNone
         Caption = 'THIS IS PNLRIGHT'
@@ -207,7 +207,7 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 31
     Width = 57
-    Height = 302
+    Height = 303
     Align = alLeft
     BevelOuter = bvNone
     BorderWidth = 1
@@ -310,9 +310,19 @@ object frmExodus: TfrmExodus
           Caption = '&Remove a Contact'
           OnClick = btnDelPersonClick
         end
+        object FindContactinRoster1: TMenuItem
+          Caption = '&Find Contact in Roster'
+          ShortCut = 16454
+          OnClick = FindContactinRoster1Click
+        end
+        object FindContactAgain1: TMenuItem
+          Caption = 'Fin&d Contact Again'
+          ShortCut = 114
+          OnClick = FindContactAgain1Click
+        end
         object SearchforPerson1: TMenuItem
           Caption = '&Search for a Contact'
-          ShortCut = 16454
+          ShortCut = 16467
           OnClick = SearchforPerson1Click
         end
         object MessageHistory2: TMenuItem

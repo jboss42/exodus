@@ -154,9 +154,12 @@ type
     N3: TMenuItem;
     XMPPAction: TDdeServerConv;
     presOnline: TMenuItem;
+    FindContactinRoster1: TMenuItem;
+    FindContactAgain1: TMenuItem;
     trayPresOnline: TMenuItem;
     presChat: TMenuItem;
     trayPresChat: TMenuItem;
+
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -227,6 +230,8 @@ type
     procedure FormPaint(Sender: TObject);
     procedure mnuRegistrationClick(Sender: TObject);
     procedure XMPPActionExecuteMacro(Sender: TObject; Msg: TStrings);
+    procedure FindContactinRoster1Click(Sender: TObject);
+    procedure FindContactAgain1Click(Sender: TObject);
 
   private
     { Private declarations }
@@ -2902,6 +2907,16 @@ begin
             // TODO: Handle xmpp connect's via DDE
         end;
     end;
+end;
+
+procedure TfrmExodus.FindContactinRoster1Click(Sender: TObject);
+begin
+    frmRosterWindow.StartFind();
+end;
+
+procedure TfrmExodus.FindContactAgain1Click(Sender: TObject);
+begin
+    frmRosterWindow.FindAgain();
 end;
 
 initialization

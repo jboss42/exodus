@@ -100,8 +100,14 @@ type
     imgSSL: TImage;
     N8: TMenuItem;
     Custom1: TMenuItem;
+    pnlFind: TPanel;
+    txtFind: TTntEdit;
+    lblFind: TTntLabel;
+    radJID: TTntRadioButton;
+    radNick: TTntRadioButton;
     presOnline: TMenuItem;
     presChat: TMenuItem;
+
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -164,6 +170,9 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure MoveorCopyContacts1Click(Sender: TObject);
     procedure presCustomClick(Sender: TObject);
+    procedure txtFindKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure txtFindChange(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;             // roster callback id
@@ -198,6 +207,7 @@ type
     _cur_bm: TJabberBookmark;       // current bookmark selected
     _cur_myres: TJabberMyResource;  // current My Resource selected
     _cur_status: integer;           // current status for the current item
+    _last_search: integer;          // last item found by search
 
     _brand_muc: boolean;
     _brand_ft: boolean;
@@ -262,6 +272,8 @@ type
 
     function getNodeType(node: TTreeNode = nil): integer;
 
+    procedure StartFind;
+    procedure FindAgain;
     procedure ClearNodes;
     procedure Redraw;
     procedure DockRoster;
@@ -307,7 +319,7 @@ uses
     SelContact, Invite, Bookmark, S10n, MsgRecv, PrefController,
     ExEvents, ExUtils, Room, Profile, JabberID, RiserWindow, ShellAPI,
     IQ, RosterAdd, GrpRemove, RemoveContact, ChatWin, Jabber1,
-    Transports, Session;
+    Transports, Session, StrUtils;
 
 {$R *.DFM}
 
@@ -675,6 +687,22 @@ begin
                 n.Expand(true);
         end;
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.StartFind;
+begin
+    _last_search := 0;
+    pnlFind.Visible := true;
+    txtFind.SetFocus();
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.FindAgain;
+begin
+    pnlFind.Visible := true;
+    txtFind.SetFocus();
+    txtFindChange(self);
 end;
 
 {---------------------------------------}
@@ -2827,6 +2855,50 @@ end;
 procedure TfrmRosterWindow.presCustomClick(Sender: TObject);
 begin
     ShowCustomPresence();
+end;
+
+procedure TfrmRosterWindow.txtFindKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    case key of
+        VK_ESCAPE: pnlFind.Visible := false;
+        VK_RETURN: begin
+            Self.treeRosterDblClick(Self);
+            pnlFind.Visible := false;
+        end
+        else
+            _last_search := 0;
+    end;
+end;
+
+procedure TfrmRosterWindow.txtFindChange(Sender: TObject);
+var
+    i:         integer;
+    ri:        TJabberRosterItem;
+    node_list: TWidestringlist;
+    node:      TTreeNode;
+    comp:      WideString;
+begin
+    for i := _last_search to MainSession.roster.Count - 1 do begin
+        ri := MainSession.roster.Items[i];
+        if radNick.Checked then
+            comp := ri.Nickname
+        else
+            comp := ri.jid.jid;
+
+        if Pos(txtFind.Text, comp) <> 0 then begin
+            if (ri.Data = nil) then continue;
+            node_list := TWideStringList(ri.Data);
+            if (node_list.Count = 0) then continue;
+            node := TTreeNode(node_list.Objects[0]);
+            if (treeRoster.Selected <> node) then begin
+                treeRoster.Selected := node;
+                _last_search := i + 1;
+                exit;
+            end;
+        end;
+    end;
+    _last_search := 0;
 end;
 
 initialization
