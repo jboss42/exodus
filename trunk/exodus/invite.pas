@@ -72,6 +72,7 @@ procedure ShowInvite(room_jid: WideString; jids: TWideStringList); overload;
 {---------------------------------------}
 implementation
 uses
+    JabberConst, 
     ExEvents, Jabber1, JabberID, PrefController, 
     Session, Room, RosterWindow, Roster;
 
@@ -84,7 +85,6 @@ var
 begin
     // factory for GUI
     // kick and ban get here.. because of status codes
-
 
     e := CreateJabberEvent(tag);
 
@@ -159,6 +159,7 @@ end;
 {---------------------------------------}
 procedure TfrmInvite.frameButtons1btnOKClick(Sender: TObject);
 var
+    frm: TfrmRoom;
     i: integer;
     msg: TXMLTag;
     room: WideString;
@@ -175,17 +176,34 @@ begin
     room_idx := room_list.IndexOf(room);
     if (room_idx < 0) then
         StartRoom(room, MainSession.Username);
+    frm := FindRoom(room);
 
     // Send out invites.
     memReason.Lines.Add(sConfRoom + ' ' + room);
+
     for i := 0 to lstJIDS.Items.Count - 1 do begin
         msg := TXMLTag.Create('message');
-        msg.PutAttribute('to', lstJIDS.Items[i].SubItems[0]);
-        with msg.AddTag('x') do begin
-            putAttribute('xmlns', 'jabber:x:conference');
-            putAttribute('jid', room);
+        if ((frm <> nil) and (not frm.isGC)) then begin
+            // this is MUC.. use muc#user
+            msg.PutAttribute('to', room);
+            with msg.AddTag('x') do begin
+                putAttribute('xmlns', xmlns_mucuser);
+                with AddTag('invie') do begin
+                    putAttribute('to', lstJIDS.Items[i].SubItems[0]);
+                    AddBasicTag('reason', memReason.Lines.Text);
+                    end;
+                end;
+            end
+        else begin
+            // this is GC 1.0, or we aren't in the room yet..
+            // Use jabber;x:conference
+            msg.PutAttribute('to', lstJIDS.Items[i].SubItems[0]);
+            with msg.AddTag('x') do begin
+                putAttribute('xmlns', 'jabber:x:conference');
+                putAttribute('jid', room);
+                end;
+            msg.AddBasicTag('body', memReason.Lines.Text);
             end;
-        msg.AddBasicTag('body', memReason.Lines.Text);
         MainSession.SendTag(msg);
         end;
     Self.Close;
