@@ -183,7 +183,8 @@ begin
         // We got a good registration...
         // Go do the entire Auth sequence now.
         if (_auto_auth) then
-            SendAuthGet()
+            // SendAuthGet()
+            StartAuthentication()
         else
             _session.FireEvent('/session/regok', xml);
     end;
