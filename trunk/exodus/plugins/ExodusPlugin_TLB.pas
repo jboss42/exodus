@@ -11,17 +11,17 @@ unit ExodusPlugin_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.1 $
-// File generated on 6/16/2002 3:48:27 PM from Type Library described below.
+// PASTLWTR : $Revision: 1.2 $
+// File generated on 12/5/2002 7:21:07 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\Src\exodus\plugins\ExodusPlugin.tlb (1)
+// Type Lib: D:\src\exodus\exodus\plugins\ExodusPlugin.tlb (1)
 // LIBID: {053C946B-D466-4686-BC8F-CB5B5D7C9C2A}
 // LCID: 0
 // Helpfile: 
 // DepndLst: 
 //   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
-//   (2) v4.0 StdVCL, (C:\WINDOWS\System32\STDVCL40.DLL)
+//   (2) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
 // Errors:
 //   Hint: TypeInfo 'ExodusPlugin' changed to 'ExodusPlugin_'
 // ************************************************************************ //
@@ -50,6 +50,8 @@ const
 
   IID_IExodusPlugin: TGUID = '{ACC22059-DC3D-4C6E-B1B1-A6DB095A983E}';
   DIID_ExodusPlugin_: TGUID = '{7A44F5FC-3C6D-4982-B375-1E04E899F49C}';
+  IID_IExodusChatPlugin: TGUID = '{46DA66FE-CDA8-469F-A632-E9EBFB7E85FE}';
+  DIID_ExodusChatPlugin: TGUID = '{39EA70E1-35B8-43DD-83EC-D2B8ED5D3481}';
 type
 
 // *********************************************************************//
@@ -58,6 +60,9 @@ type
   IExodusPlugin = interface;
   IExodusPluginDisp = dispinterface;
   ExodusPlugin_ = dispinterface;
+  IExodusChatPlugin = interface;
+  IExodusChatPluginDisp = dispinterface;
+  ExodusChatPlugin = dispinterface;
 
 // *********************************************************************//
 // Interface: IExodusPlugin
@@ -85,11 +90,52 @@ type
 
 // *********************************************************************//
 // DispIntf:  ExodusPlugin_
-// Flags:     (0)
+// Flags:     (4096) Dispatchable
 // GUID:      {7A44F5FC-3C6D-4982-B375-1E04E899F49C}
 // *********************************************************************//
   ExodusPlugin_ = dispinterface
     ['{7A44F5FC-3C6D-4982-B375-1E04E899F49C}']
+  end;
+
+// *********************************************************************//
+// Interface: IExodusChatPlugin
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {46DA66FE-CDA8-469F-A632-E9EBFB7E85FE}
+// *********************************************************************//
+  IExodusChatPlugin = interface(IDispatch)
+    ['{46DA66FE-CDA8-469F-A632-E9EBFB7E85FE}']
+    procedure onBeforeMessage(const Body: WideString); safecall;
+    procedure onAfterMessage(const Body: WideString; const xml: WideString); safecall;
+    procedure onKeyPress(const Key: WideString); safecall;
+    procedure onContextMenu(const ID: WideString); safecall;
+    procedure onMsg(const xml: WideString); safecall;
+    procedure NewRoom(const jid: WideString); safecall;
+    procedure NewChat(const jid: WideString); safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusChatPluginDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {46DA66FE-CDA8-469F-A632-E9EBFB7E85FE}
+// *********************************************************************//
+  IExodusChatPluginDisp = dispinterface
+    ['{46DA66FE-CDA8-469F-A632-E9EBFB7E85FE}']
+    procedure onBeforeMessage(const Body: WideString); dispid 1;
+    procedure onAfterMessage(const Body: WideString; const xml: WideString); dispid 2;
+    procedure onKeyPress(const Key: WideString); dispid 3;
+    procedure onContextMenu(const ID: WideString); dispid 4;
+    procedure onMsg(const xml: WideString); dispid 5;
+    procedure NewRoom(const jid: WideString); dispid 6;
+    procedure NewChat(const jid: WideString); dispid 7;
+  end;
+
+// *********************************************************************//
+// DispIntf:  ExodusChatPlugin
+// Flags:     (4096) Dispatchable
+// GUID:      {39EA70E1-35B8-43DD-83EC-D2B8ED5D3481}
+// *********************************************************************//
+  ExodusChatPlugin = dispinterface
+    ['{39EA70E1-35B8-43DD-83EC-D2B8ED5D3481}']
   end;
 
 implementation

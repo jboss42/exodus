@@ -26,6 +26,9 @@ type
     procedure UnRegisterCallback(callback_id: Integer); safecall;
     procedure GetProfile(const jid: WideString); safecall;
     procedure StartChat(const jid, resource, nickname: WideString); safecall;
+    procedure RegisterChatPlugin(var Plugin: OleVariant); safecall;
+    procedure RegisterRoomPlugin(var Plugin: OleVariant); safecall;
+    procedure CreateDockableWindow(HWND: Integer); safecall;
     { Protected declarations }
   end;
 
@@ -257,6 +260,21 @@ procedure TExodusController.StartChat(const jid, resource,
   nickname: WideString);
 begin
     // todo: start chat for COM
+end;
+
+procedure TExodusController.RegisterChatPlugin(var Plugin: OleVariant);
+begin
+
+end;
+
+procedure TExodusController.RegisterRoomPlugin(var Plugin: OleVariant);
+begin
+
+end;
+
+procedure TExodusController.CreateDockableWindow(HWND: Integer);
+begin
+
 end;
 
 initialization
