@@ -100,6 +100,7 @@ type
     procedure popCopyClick(Sender: TObject);
     procedure popPasteClick(Sender: TObject);
     procedure popClipboardPopup(Sender: TObject);
+    procedure frameButtons2btnCancelClick(Sender: TObject);
   private
     { Private declarations }
     _base_jid: WideString;
@@ -715,6 +716,16 @@ procedure TfrmMsgRecv.popClipboardPopup(Sender: TObject);
 begin
   inherited;
     popPaste.Enabled := (Self.ActiveControl = MsgOut);
+end;
+
+procedure TfrmMsgRecv.frameButtons2btnCancelClick(Sender: TObject);
+begin
+  inherited;
+    // cancel the reply window
+    Self.ClientHeight := Self.ClientHeight - pnlReply.Height + frameButtons1.Height + 3;
+    frameButtons1.btnOK.Enabled := true;
+    pnlReply.Visible := false;
+    frameButtons1.Align := alBottom;
 end;
 
 end.

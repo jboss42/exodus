@@ -51,10 +51,9 @@ object frmMsgRecv: TfrmMsgRecv
         Left = 211
         Height = 29
         inherited btnCancel: TButton [0]
-          Visible = False
+          OnClick = frameButtons2btnCancelClick
         end
         inherited btnOK: TButton [1]
-          Left = 84
           Caption = '&Send'
           OnClick = frameButtons2btnOKClick
         end
