@@ -180,6 +180,7 @@ var
 implementation
 
 uses
+    DockContainer, 
     ExResponders, ExSession, GnuGetText, JabberUtils, ExUtils,  EntityCache, Entity,
     Chat, ChatController, JabberID, MsgRecv, Room, Browser, Jud,
     ChatWin, JoinRoom, CustomPres, Prefs, RiserWindow, Debug,
@@ -649,16 +650,22 @@ end;
 procedure TExodusController.CreateDockableWindow(HWND: Integer;
   const Caption: WideString);
 var
-    f: TfrmDockable;
+    r: integer;
+    f: TfrmDockContainer;
 begin
     // subclass frmDockable, and re-parent
     // this HWND to the new form
-    f := TfrmDockable.Create(Application);
-
-    SetParent(HWND, f.Handle);
+    f := TfrmDockContainer.Create(Application);
     f.ShowDefault();
 
-    ShowWindow(HWND, SW_SHOW);
+    r := SetParent(HWND, f.Panel1.Handle);
+    if (r = 0) then begin
+        r := GetLastError();
+        ShowMessage('SetParent error: ' + IntToStr(r));
+    end;
+
+    //ShowWindow(HWND, SW_SHOW);
+
 end;
 
 {---------------------------------------}

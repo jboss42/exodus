@@ -179,7 +179,8 @@ uses
   GIFImage in 'GIFImage.pas',
   PrefEmote in 'prefs\PrefEmote.pas' {frmPrefEmote},
   EmoteProps in 'EmoteProps.pas' {frmEmoteProps},
-  JabberUtils in '..\jopl\JabberUtils.pas';
+  JabberUtils in '..\jopl\JabberUtils.pas',
+  DockContainer in 'DockContainer.pas' {frmDockContainer};
 
 {$R *.TLB}
 
@@ -213,6 +214,7 @@ begin
   if (not continue) then exit;
 
   Application.CreateForm(TfrmExodus, frmExodus);
+  Application.CreateForm(TfrmDockContainer, frmDockContainer);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
 
