@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2003-05-08 06:59\n"
-"PO-Revision-Date: 2003-10-03 08:57-0000\n"
+"PO-Revision-Date: 2003-10-12 18:49-0000\n"
 "Last-Translator: Lazarus Long <lazarus.long@bigfoot.com>\n"
 "Language-Team: pt_PT <lazarus.long@bigfoot.com>\n"
 "MIME-Version: 1.0\n"
@@ -77,6 +77,7 @@ msgstr "Acerca do Exodus"
 #. frmRosterRecv..pnlFrom..txtFrom..Font.Name
 #. frmRosterWindow..Font.Name
 #. frmSelContact..Font.Name
+#. frmSSLWarn..Font.Name
 #. frmSubscribe..Font.Name
 #. frmSubscribe..lblJID..Font.Name
 #. frmVCard..Font.Name
@@ -145,6 +146,7 @@ msgstr "Acerca do Exodus"
 #: RosterRecv.dfm:74
 #: RosterRecv.dfm:91
 #: RosterWindow.dfm:15
+#: SSLWarn.dfm:11
 #: SelContact.dfm:11
 #: WebGet.dfm:10
 #: Wizard.dfm:12
@@ -1028,8 +1030,10 @@ msgstr "Entrar na conferência"
 #. frameButtons..Panel2..Panel1..btnOK..Caption
 #. frmTracer..frameButtons1..Panel1..btnCancel..Caption
 #. frmPrefs..Panel1..Panel3..btnOK..Caption
+#. frmSSLWarn..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: ExceptTracer.dfm:36
 #: Prefs.dfm:3225
+#: SSLWarn.dfm:182
 #: buttonFrame.dfm:37
 msgid "OK"
 msgstr "OK"
@@ -1511,7 +1515,7 @@ msgstr "Conversa"
 #: Jabber1.pas:399
 #: RosterWindow.dfm:401
 #: RosterWindow.dfm:596
-#: RosterWindow.pas:345
+#: RosterWindow.pas:339
 #: prefs/PrefGroups.dfm:71
 #: prefs/PrefPresence.dfm:136
 msgid "Available"
@@ -1531,7 +1535,7 @@ msgstr "Disponível"
 #: Jabber1.dfm:2656
 #: Jabber1.pas:401
 #: RosterWindow.dfm:410
-#: RosterWindow.pas:346
+#: RosterWindow.pas:340
 #: prefs/PrefGroups.dfm:70
 #: prefs/PrefPresence.dfm:137
 msgid "Away"
@@ -1543,7 +1547,7 @@ msgstr "Ausente"
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
 #: /src/exodus/jopl/Roster.pas:118
 #: CustomPres.dfm:79
-#: RosterWindow.pas:347
+#: RosterWindow.pas:341
 #: prefs/PrefGroups.dfm:69
 #: prefs/PrefPresence.dfm:138
 msgid "Ext. Away"
@@ -1563,7 +1567,7 @@ msgstr "Ausência prolongada"
 #: Jabber1.dfm:2666
 #: Jabber1.pas:403
 #: RosterWindow.dfm:420
-#: RosterWindow.pas:348
+#: RosterWindow.pas:342
 #: prefs/PrefGroups.dfm:68
 #: prefs/PrefPresence.dfm:139
 msgid "Do Not Disturb"
@@ -2584,12 +2588,14 @@ msgstr "Tipos de letra, Cores"
 #. frmPrefs..Scroller..lblSystem..Font.Name
 #. frmPrefs..Scroller..lblGroups..Font.Name
 #. frmPrefs..Scroller..lblLayouts..Font.Name
+#. frmSSLWarn..lblHeader..Font.Name
 #: Prefs.dfm:438
 #: Prefs.dfm:641
 #: Prefs.dfm:844
 #: Prefs.dfm:1047
 #: Prefs.dfm:2892
 #: Prefs.dfm:3067
+#: SSLWarn.dfm:148
 msgid "Arial Unicode MS"
 msgstr "Arial Unicode MS"
 
@@ -5917,7 +5923,7 @@ msgstr "Enviar o meu JID"
 #: Room.pas:209
 #: RosterWindow.dfm:378
 #: RosterWindow.dfm:624
-#: RosterWindow.pas:310
+#: RosterWindow.pas:304
 msgid "Block"
 msgstr "Bloquear"
 
@@ -6054,14 +6060,14 @@ msgstr "JID"
 #: /src/exodus/jopl/Roster.pas:120
 #: Jabber1.pas:404
 #: RosterWindow.dfm:244
-#: RosterWindow.pas:344
+#: RosterWindow.pas:338
 msgid "Offline"
 msgstr "Desligado"
 
 #. frmRosterWindow..pnlConnect..lblStatus..Caption
 #. Programmer's name for it: sDisconnected
 #: RosterWindow.dfm:272
-#: RosterWindow.pas:305
+#: RosterWindow.pas:299
 msgid "Disconnected."
 msgstr "Desligado."
 
@@ -6191,6 +6197,31 @@ msgstr "Mostrar apenas em linha"
 #: SendStatus.dfm:76
 msgid "lblTo"
 msgstr "lblTo"
+
+#. frmSSLWarn..Caption
+#: SSLWarn.dfm:6
+msgid "Security Warning"
+msgstr "Alerta de Segurança"
+
+#. frmSSLWarn..lblHeader..Caption
+#: SSLWarn.dfm:144
+msgid "SSL Security Warning"
+msgstr "Alerta de segurança SSL"
+
+#. frmSSLWarn..optDisconnect..Caption
+#: SSLWarn.dfm:193
+msgid "Reject SSL certificate. Disconnect jabber session."
+msgstr "Rejeitar o certificado SSL. Terminar a sessão Jabber."
+
+#. frmSSLWarn..optAllowSession..Caption
+#: SSLWarn.dfm:201
+msgid "Allow this SSL certificate for this jabber session."
+msgstr "Permitir este certificado SSL para esta sessão Jabber."
+
+#. frmSSLWarn..optAllowAlways..Caption
+#: SSLWarn.dfm:211
+msgid "Always allow this SSL certificate."
+msgstr "Permitir sempre este certificado SSL."
 
 #. frmSubscribe..Caption
 #: subscribe.dfm:7
@@ -6734,7 +6765,7 @@ msgid "Remove the %s group"
 msgstr "Remover o grupo %s"
 
 #. Programmer's name for it: sPrefWriteError
-#: GUIFactory.pas:39
+#: GUIFactory.pas:43
 msgid "There was an error attempting to save your options. Another process may be accessing your options file. Some options may be lost. "
 msgstr "Houve um erro ao tentar guardar as suas opções. Um outro processo poderá estar a tentar aceder ao seu  ficheiro de opções. Algumas opções poderão ter ficado perdidas. "
 
@@ -6961,14 +6992,6 @@ msgstr "Já subscreveu este contacto"
 msgid "Branding error!"
 msgstr "Erro de personalização!"
 
-#: Jabber1.pas:1040
-msgid "SSL Connection Error: \n"
-msgstr "Erro na ligação SSL: \n"
-
-#: Jabber1.pas:1041
-msgid "Continue?"
-msgstr "Continuar?"
-
 #. Programmer's name for it: sInvalidNick
 #: JoinRoom.pas:57
 msgid "You must enter a nickname"
@@ -7190,7 +7213,7 @@ msgstr "Bloqueado"
 #. Programmer's name for it: sUnblock
 #. Programmer's name for it: sBtnUnBlock
 #: Room.pas:210
-#: RosterWindow.pas:311
+#: RosterWindow.pas:305
 msgid "UnBlock"
 msgstr "Desbloquear"
 
@@ -7359,57 +7382,57 @@ msgid "You can not add yourself to your roster."
 msgstr "Não pode adicionar-se a si próprio ao seu rol."
 
 #. Programmer's name for it: sRemoveBookmark
-#: RosterWindow.pas:296
+#: RosterWindow.pas:290
 msgid "Remove this bookmark?"
 msgstr "Remover este 'Favorito'?"
 
 #. Programmer's name for it: sRenameGrp
-#: RosterWindow.pas:297
+#: RosterWindow.pas:291
 msgid "Rename group"
 msgstr "Renomear o grupo"
 
 #. Programmer's name for it: sRenameGrpPrompt
-#: RosterWindow.pas:298
+#: RosterWindow.pas:292
 msgid "New group name:"
 msgstr "Nome a dar ao grupo:"
 
 #. Programmer's name for it: sNoContactsSel
-#: RosterWindow.pas:299
+#: RosterWindow.pas:293
 msgid "You must select one or more contacts."
 msgstr "Tem que seleccionar um ou mais contactos."
 
 #. Programmer's name for it: sUnblockContacts
-#: RosterWindow.pas:300
+#: RosterWindow.pas:294
 msgid "Unblock %d contacts?"
 msgstr "Desbloquear %d contactos?"
 
 #. Programmer's name for it: sBlockContacts
-#: RosterWindow.pas:301
+#: RosterWindow.pas:295
 msgid "Block %d contacts?"
 msgstr "Bloquear %d contactos?"
 
 #. Programmer's name for it: sNoBroadcast
-#: RosterWindow.pas:302
+#: RosterWindow.pas:296
 msgid "You must select more than one online contact to broadcast."
 msgstr "Tem que seleccionar mais do que um contacto para poder difundir."
 
 #. Programmer's name for it: sSignOn
-#: RosterWindow.pas:303
+#: RosterWindow.pas:297
 msgid "Click to Sign On"
 msgstr "Clique para estabelecer ligação"
 
 #. Programmer's name for it: sCancelLogin
-#: RosterWindow.pas:304
+#: RosterWindow.pas:298
 msgid "Click to Cancel..."
 msgstr "Clique para cancelar..."
 
 #. Programmer's name for it: sConnecting
-#: RosterWindow.pas:306
+#: RosterWindow.pas:300
 msgid "Trying to connect..."
 msgstr "A estabelecer ligação..."
 
 #. Programmer's name for it: sAuthenticating
-#: RosterWindow.pas:307
+#: RosterWindow.pas:301
 msgid ""
 "Connected. \n"
 "Authenticating..."
@@ -7418,34 +7441,34 @@ msgstr ""
 "A autenticar..."
 
 #. Programmer's name for it: sAuthenticated
-#: RosterWindow.pas:308
+#: RosterWindow.pas:302
 msgid ""
 "Authenticated.\n"
-"Getting Settings..."
+"Getting Contacts..."
 msgstr ""
 "Autenticado.\n"
-"A obter parâmetros..."
+"A obter contactos..."
 
 #. Programmer's name for it: sMyResources
-#: RosterWindow.pas:312
-#: RosterWindow.pas:351
+#: RosterWindow.pas:306
+#: RosterWindow.pas:345
 msgid "My Resources"
 msgstr "Os meus recursos"
 
 #. Programmer's name for it: sNetMeetingConnError
-#: RosterWindow.pas:314
+#: RosterWindow.pas:308
 msgid "Your connection type does not support direct connections."
 msgstr "O seu tipo de ligação não suporta ligações directas."
 
 #. Programmer's name for it: sGrpUnfiled
 #: /src/exodus/jopl/Roster.pas:115
-#: RosterWindow.pas:349
+#: RosterWindow.pas:343
 msgid "Unfiled"
 msgstr "Não preenchido"
 
 #. Programmer's name for it: sGrpBookmarks
 #: /src/exodus/jopl/Roster.pas:114
-#: RosterWindow.pas:350
+#: RosterWindow.pas:344
 msgid "Bookmarks"
 msgstr "Favoritos"
 
@@ -7471,6 +7494,14 @@ msgstr "O envio falhou."
 #: SendStatus.pas:966
 msgid "Connected."
 msgstr "Ligado."
+
+#: SSLWarn.pas:66
+msgid "The SSL certificate received from the server has errors."
+msgstr "O certificado SSL recebido do servidor apresenta erros."
+
+#: SSLWarn.pas:68
+msgid "Certificate fingerprint: "
+msgstr "Impressão do certificado:"
 
 #. Programmer's name for it: sTransportRemove
 #: Transports.pas:46
@@ -8370,11 +8401,9 @@ msgid "Send client capabilities in presence."
 msgstr "Enviar as capacidades do cliente com a presença."
 
 #. frmPrefPresence..StaticText4..Caption
-#. frmPrefRoster..StaticText4..Caption
 #: prefs/PrefPresence.dfm:244
-#: prefs/PrefRoster.dfm:98
-msgid "Roster Options"
-msgstr "Opções para o rol"
+msgid "Presence Options"
+msgstr "Opções de presença"
 
 #. frmPrefRoster..Caption
 #: prefs/PrefRoster.dfm:4
@@ -8430,6 +8459,11 @@ msgstr "Permitir caracteres Unicode no rol (apenas ME, 2000 ou XP)."
 #: prefs/PrefRoster.dfm:75
 msgid "Show status in the roster: Joe <Meeting>"
 msgstr "Mostrar estado no rol: Zé <Reunião>"
+
+#. frmPrefRoster..StaticText4..Caption
+#: prefs/PrefRoster.dfm:98
+msgid "Roster Options"
+msgstr "Opções para o rol"
 
 #. frmPrefSubscription..Caption
 #: prefs/PrefSubscription.dfm:4
