@@ -258,6 +258,11 @@ Section "!${MUI_PRODUCT}" SEC_Exodus
     WriteRegStr HKCR "XMPPfile\shell" "" "Open"
     WriteRegStr HKCR "XMPPfile\shell\Open\command" "" \
         '"$INSTDIR\Exodus.exe" -o "%1"'
+	WriteRegStr HKCR "XMPPfile\shell\Open\ddeexec" "" 'open "%1"'
+	WriteRegStr HKCR "XMPPfile\shell\Open\ddeexec\Application" "" "Exodus"
+	WriteRegStr HKCR "XMPPfile\shell\Open\ddeexec\IfExec" "" "ignore"
+	WriteRegStr HKCR "XMPPfile\shell\Open\ddeexec\Topic" "" "XMPPAction"
+
     WriteRegStr HKCR "MIME\Database\Content Type\application/xmpp" \
         "Extension" ".xmpp"
     
