@@ -1,6 +1,6 @@
 inherited frmRoom: TfrmRoom
-  Left = 512
-  Top = 468
+  Left = 268
+  Top = 405
   Caption = 'Conference Room'
   OldCreateOrder = True
   OnClose = FormClose
@@ -45,7 +45,7 @@ inherited frmRoom: TfrmRoom
         Images = frmRosterWindow.ImageList1
         Indent = 19
         ParentShowHint = False
-        PopupMenu = popRoom
+        PopupMenu = popRoomRoster
         ReadOnly = True
         ShowHint = True
         ShowLines = False
@@ -116,6 +116,14 @@ inherited frmRoom: TfrmRoom
     object popClose: TMenuItem
       Caption = 'Close Room'
       OnClick = popCloseClick
+    end
+  end
+  object popRoomRoster: TPopupMenu
+    Left = 80
+    Top = 184
+    object popRosterChat: TMenuItem
+      Caption = 'Chat'
+      OnClick = treeRosterDblClick
     end
   end
 end

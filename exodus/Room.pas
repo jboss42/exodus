@@ -50,6 +50,8 @@ type
     N1: TMenuItem;
     popClose: TMenuItem;
     mnuOnTop: TMenuItem;
+    popRoomRoster: TPopupMenu;
+    popRosterChat: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
     procedure btnCloseClick(Sender: TObject);
@@ -871,6 +873,7 @@ begin
     Result := room.GetNick(rjid);
 end;
 
+{---------------------------------------}
 procedure TfrmRoom.mnuOnTopClick(Sender: TObject);
 begin
   inherited;

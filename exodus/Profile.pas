@@ -151,7 +151,7 @@ var
     i, gi: integer;
 begin
     tmp_jid := TJabberID.Create(jid);
-    f := TfrmProfile.Create(nil);
+    f := TfrmProfile.Create(Application);
 
     with f do begin
         GrpListBox.Items.Assign(MainSession.roster.GrpList);

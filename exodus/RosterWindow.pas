@@ -125,6 +125,13 @@ type
     procedure popBlockClick(Sender: TObject);
     procedure BroadcastMessage1Click(Sender: TObject);
     procedure lblLoginClick(Sender: TObject);
+    procedure treeRosterEditing(Sender: TObject; Node: TTreeNode;
+      var AllowEdit: Boolean);
+    procedure treeRosterEdited(Sender: TObject; Node: TTreeNode;
+      var S: String);
+    procedure treeRosterChange(Sender: TObject; Node: TTreeNode);
+    procedure treeRosterExit(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;
@@ -136,6 +143,7 @@ type
     _show_status: boolean;
     _status_color: TColor;
 
+    _change_node: TTreeNode;
     _bookmark: TTreeNode;
     _offline: TTreeNode;
     _hint_text : String;
@@ -243,6 +251,7 @@ begin
     _task_collapsed := false;
     _bookmark := nil;
     _offline := nil;
+    _change_node := nil;
     _show_status := MainSession.Prefs.getBool('inline_status');
     _status_color := TColor(MainSession.Prefs.getInt('inline_color'));
 
@@ -674,22 +683,14 @@ begin
     jid := tmp_jid.jid;
     ritem := MainSession.Roster.Find(jid);
 
-    if event = '/presence/error' then begin
-        // check for 504 errors..
-        {
-        if MainSession.Prefs.getBool('roster_pres_errors') then begin
-            e := CreateJabberEvent(tag);
-            frmExodus.RenderEvent(e);
-            end;
-        }
-        end
-    else if (event = '/presence/unavailable') then begin
+    if (event = '/presence/unavailable') then begin
         // remove the node
         p := MainSession.PPDB.FindPres(jid, '');
         if ritem <> nil then
             RenderNode(ritem, p);
         end
     else begin
+        // possibly re-render the node based on this pres packet
         ritem := MainSession.Roster.Find(jid);
         if ritem <> nil then
             RenderNode(ritem, p);
@@ -841,10 +842,9 @@ begin
     else
         tmps := ritem.jid.Full;
 
-    {
-    if (ritem.ask = 'subscribe') then
-        tmps := tmps + sRosterPending;
-    }
+
+    //if (ritem.ask = 'subscribe') then
+    //    tmps := tmps + sRosterPending;
 
     if (_show_status) then begin
         if (p <> nil) then begin
@@ -859,10 +859,8 @@ begin
     for g := 0 to tmp_grps.Count - 1 do begin
         cur_grp := tmp_grps[g];
 
-        {
-        The offline grp is special, we keep a pointer to
-        it at all times (if it exists).
-        }
+        // The offline grp is special, we keep a pointer to
+        // it at all times (if it exists).
         if (cur_grp = sGrpOffline) then begin
             if (_offline = nil) then begin
                 _offline := treeRoster.Items.AddChild(nil, sGrpOffline);
@@ -955,6 +953,7 @@ var
     grp_node: TTreeNode;
     cur_grp: string;
 begin
+    // Show this group node
     cur_grp := MainSession.Roster.GrpList[grp_idx];
     grp_node := treeRoster.Items.AddChild(nil, cur_grp);
     MainSession.Roster.GrpList.Objects[grp_idx] := grp_node;
@@ -968,6 +967,7 @@ end;
 procedure TfrmRosterWindow.treeRosterDblClick(Sender: TObject);
 begin
     // Chat with this person
+    _change_node := nil;
     case getNodeType() of
     node_ritem: begin
         // chat w/ this person
@@ -1190,11 +1190,13 @@ begin
         end;
 
     // if we have a legit node.... make sure it's selected..
-    if ((treeRoster.SelectionCount = 1) and
-        (treeRoster.Selected <> n)) then begin
-        treeRoster.Selected := n;
-        end;
+    if (treeRoster.SelectionCount = 1) then begin
+        if (treeRoster.Selected <> n) then
+            treeRoster.Selected := n;
 
+        if ((n = _change_node) and (Button = mbLeft)) then
+            n.EditText();
+        end;
 end;
 
 {---------------------------------------}
@@ -1774,7 +1776,7 @@ begin
         exit;
         end;
 
-    fsel := TfrmSelContact.Create(nil);
+    fsel := TfrmSelContact.Create(Application);
     fsel.frameTreeRoster1.DrawRoster(false);
     fsel.frameTreeRoster1.treeRoster.MultiSelect := false;
 
@@ -1880,6 +1882,7 @@ begin
     r.Free();
 end;
 
+{---------------------------------------}
 procedure TfrmRosterWindow.lblLoginClick(Sender: TObject);
 begin
     // Login to the client..
@@ -1895,6 +1898,51 @@ begin
     else
         // Normal, show the login window
         PostMessage(frmExodus.Handle, WM_SHOWLOGIN, 0, 0);
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.treeRosterEditing(Sender: TObject;
+  Node: TTreeNode; var AllowEdit: Boolean);
+var
+    ntype: integer;
+begin
+    // user is trying to change a node caption
+    ntype := getNodeType(Node);
+    AllowEdit := not (ntype = node_grp);
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.treeRosterEdited(Sender: TObject;
+  Node: TTreeNode; var S: String);
+begin
+    // user is done editing a node
+    if (_cur_ritem <> nil) then begin
+        _cur_ritem.Nickname := s;
+        _cur_ritem.update();
+        end
+    else if (_cur_bm <> nil) then begin
+        _cur_bm.bmName := S;
+        MainSession.Roster.UpdateBookmark(_cur_bm);
+        end;
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.treeRosterChange(Sender: TObject;
+  Node: TTreeNode);
+begin
+    _change_node := Node;
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.treeRosterExit(Sender: TObject);
+begin
+    _change_node := nil;
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.FormActivate(Sender: TObject);
+begin
+    _change_node := nil;
 end;
 
 end.

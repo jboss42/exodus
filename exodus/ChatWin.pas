@@ -154,7 +154,7 @@ begin
 
     if (chat.window = nil) then begin
         // if we don't have a window, then create one.
-        win := TfrmChat.Create(nil);
+        win := TfrmChat.Create(Application);
         chat.window := win;
         win.chat_object := chat;
         end;

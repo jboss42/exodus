@@ -128,7 +128,7 @@ procedure ShowMyProfile;
 var
     f: TfrmVCard;
 begin
-    f := TfrmVCard.Create(nil);
+    f := TfrmVCard.Create(Application);
     f.Show;
 end;
 

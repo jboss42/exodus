@@ -162,7 +162,7 @@ resourceString
 
 function ShowBrowser(jid: string = ''): TfrmBrowse;
 begin
-    Result := TfrmBrowse.Create(nil);
+    Result := TfrmBrowse.Create(Application);
     Application.CreateForm(TfrmBrowse, Result);
     Result.ShowDefault();
 

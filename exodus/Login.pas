@@ -90,7 +90,7 @@ var
     i: integer;
     p: TJabberProfile;
 begin
-    l := TfrmLogin.Create(nil);
+    l := TfrmLogin.Create(Application);
     l.cboProfiles.Items.Assign(MainSession.Prefs.Profiles);
     l.cboProfiles.ItemIndex := MainSession.Prefs.getInt('profile_active');
     l.cboProfilesChange(nil);

@@ -82,7 +82,7 @@ begin
 
     if singleToast = nil then begin
         // create a new instance
-        singleToast := TfrmRiser.Create(nil);
+        singleToast := TfrmRiser.Create(Application);
         animate := true;
         // Setup alpha blending..
         if MainSession.Prefs.getBool('toast_alpha') then begin
