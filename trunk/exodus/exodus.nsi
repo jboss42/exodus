@@ -43,7 +43,7 @@ InstallDir "$PROGRAMFILES\${MUI_PRODUCT}"
 InstallDirRegKey HKLM "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
 
 !define MUI_INNERTEXT_LICENSE_TOP "Exodus is licensed under the GPL.  Press Page Down to see the rest of the agreement."
-!define MUI_CHECKBITMAP "checks.bmp"
+;!define MUI_CHECKBITMAP "checks.bmp"
 !define MUI_ICON "exodus.ico"
 !define MUI_UNICON "exodus.ico"
 !define MUI_LICENSEPAGE
