@@ -484,7 +484,7 @@ const
     ico_blocked = 30;
     ico_error = 32;
 
-{$ifndef NOTRACE_EXCEPTIONS}
+{$ifdef TRACE_EXCEPTIONS}
 procedure ExceptionTracker(ExceptObj: TObject; ExceptAddr: Pointer; OSException: Boolean);
 {$endif}
 
@@ -494,7 +494,7 @@ procedure ExceptionTracker(ExceptObj: TObject; ExceptAddr: Pointer; OSException:
 {---------------------------------------}
 implementation
 uses
-    {$ifndef NOTRACE_EXCEPTIONS}
+    {$ifdef TRACE_EXCEPTIONS}
     IdException,
     JclHookExcept, JclDebug, ExceptTracer,
     {$endif}
@@ -668,7 +668,7 @@ end;
 
 {---------------------------------------}
 {---------------------------------------}
-{$ifndef NOTRACE_EXCEPTIONS}
+{$ifdef TRACE_EXCEPTIONS}
 procedure ExceptionTracker(ExceptObj: TObject; ExceptAddr: Pointer; OSException: Boolean);
 var
     e: Exception;
@@ -709,7 +709,7 @@ var
 begin
     // initialize vars.  wish we were using a 'real' compiler.
 
-    {$ifndef NOTRACE_EXCEPTIONS}
+    {$ifdef TRACE_EXCEPTIONS}
     // Application.OnException := ApplicationException;
     Include(JclStackTrackingOptions, stRawMode);
     {$endif}
@@ -975,7 +975,7 @@ begin
     MainSession.setPresence(_cli_show, _cli_status, _cli_priority);
     _controller := TExodusController.Create();
 
-    {$ifndef NOTRACE_EXCEPTIONS}
+    {$ifdef TRACE_EXCEPTIONS}
     // Start Exception tracking
     JclStartExceptionTracking;
     JclAddExceptNotifier(ExceptionTracker);
