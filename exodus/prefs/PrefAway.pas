@@ -67,40 +67,11 @@ uses
 procedure TfrmPrefAway.LoadPrefs();
 begin
     inherited;
-    (*
-    with MainSession.Prefs do begin
-        // Autoaway options
-        chkAutoAway.Checked := getBool('auto_away');
-        chkAAReducePri.Checked := getBool('aa_reduce_pri');
-        chkAutoXA.Checked := getBool('auto_xa');
-        chkAutoDisconnect.Checked := getBool('auto_disconnect');
-
-        spnAway.Position := getInt('away_time');
-        spnXA.Position := getInt('xa_time');
-        spnDisconnect.Position := getInt('disconnect_time');
-
-        txtAway.Text := getString('away_status');
-        txtXA.Text := getString('xa_status');
-    end;
-    *)
 end;
 
 procedure TfrmPrefAway.SavePrefs();
 begin
-    with MainSession.Prefs do begin
-        // Autoaway options
-        setBool('auto_away', chkAutoAway.Checked);
-        setBool('aa_reduce_pri', chkAAReducePri.Checked);
-        setBool('auto_xa', chkAutoXA.Checked);
-        setBool('auto_disconnect', chkAutoDisconnect.Checked);
-
-        setInt('away_time', spnAway.Position);
-        setInt('xa_time', spnXA.Position);
-        setInt('disconnect_time', spnDisconnect.Position);
-
-        setString('away_status', txtAway.Text);
-        setString('xa_status', txtXA.Text);
-    end;
+    inherited;
 end;
 
 procedure TfrmPrefAway.chkAutoAwayClick(Sender: TObject);

@@ -23,7 +23,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ComCtrls, ExtCtrls, TntStdCtrls, TntExtCtrls;
+  Dialogs, ExtCtrls, TntExtCtrls;
 
 type
   TfrmPrefPanel = class(TForm)
@@ -31,6 +31,8 @@ type
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
+    procedure loadPrefsOwner(owner: TWinControl);
+    procedure savePrefsOwner(owner: TWinControl);
   public
     { Public declarations }
     procedure LoadPrefs(); virtual;
@@ -45,9 +47,20 @@ implementation
 {$R *.dfm}
 
 uses
+    Menus, StdCtrls, ComCtrls, TntComCtrls, TntStdCtrls,
     Session, PrefFile, PrefController, GnuGetText, ExUtils, XMLUtils;
 
 procedure TfrmPrefPanel.LoadPrefs();
+begin
+    loadPrefsOwner(Self);
+end;
+
+procedure TfrmPrefPanel.SavePrefs();
+begin
+    savePrefsOwner(Self);
+end;
+
+procedure TfrmPrefPanel.loadPrefsOwner(owner: TWinControl);
 var
     s: TPrefState;
     p, sval: Widestring;
@@ -55,10 +68,15 @@ var
     i: integer;
 begin
     // auto-load prefs based on controls and their types.
-    for i := 0 to Self.ControlCount - 1 do begin
-        c := Self.Controls[i];
+    for i := 0 to Owner.ControlCount - 1 do begin
+        c := owner.Controls[i];
         p := MainSession.Prefs.getPref(c.name);
-        if (p = '') then continue;
+
+        if (p = '') then begin
+            if (c.inheritsFrom(TWinControl)) then
+                loadPrefsOwner(TWinControl(c));
+            continue;
+        end;
 
         s := getPrefState(p);
         sval := MainSession.Prefs.getString(p);
@@ -66,15 +84,28 @@ begin
         // XXX: lots more controls need to go here.
         if (c.inheritsFrom(TTntCheckBox)) then
             TCheckBox(c).Checked := SafeBool(sval)
-        else if (c.inheritsFrom(TUpDown)) then
+        else if ((c.inheritsFrom(TUpDown)) or (c.inheritsFrom(TTntUpDown))) then
             TUpDown(c).Position := SafeInt(sval)
-        else if (c.inheritsFrom(TTntComboBox)) then
-            TTntComboBox(c).ItemIndex := SafeInt(sval)
+        else if (c.inheritsFrom(TTntComboBox)) then begin
+            if (TTntComboBox(c).Style = csDropDown) then
+                TTntComboBox(c).Text := sval
+            else
+                TTntComboBox(c).ItemIndex := SafeInt(sval);
+        end
         else if (c.inheritsFrom(TColorBox)) then
             TColorBox(c).Selected := TColor(SafeInt(sval))
-
+        else if (c.inheritsFrom(TTrackBar)) then
+            TTrackBar(c).Position := SafeInt(sval)
+        else if (c.inheritsFrom(THotKey)) then
+            THotkey(c).HotKey := TextToShortcut(sval)
+        else if (c.inheritsFrom(TTntRadioGroup)) then
+            TTntRadioGroup(c).ItemIndex := SafeInt(sval)
         else if (c.inheritsFrom(TTntEdit)) then
-            TTntEdit(c).Text := sval;
+            TTntEdit(c).Text := sval
+        else if ((c.inheritsFrom(TTntLabel)) or (c.inheritsFrom(TLabel))) then
+            // do nothing
+        else
+            assert(false);
 
         // Make sure to set state for this control
         if (s = psReadOnly) then begin
@@ -88,9 +119,46 @@ begin
     end;
 end;
 
-procedure TfrmPrefPanel.SavePrefs();
+procedure TfrmPrefPanel.savePrefsOwner(owner: TWinControl);
+var
+    c: TControl;
+    i: integer;
+    p: Widestring;
+    s: TPrefState;
 begin
-    // XXX: save prefs using controls array
+    for i := 0 to owner.ControlCount - 1 do begin
+        c := owner.Controls[i];
+        p := MainSession.Prefs.getPref(c.name);
+
+        // only update if this the primary control, and we have a pref
+        if (p = '') then continue;
+        if (c.name <> MainSession.Prefs.getControl(p)) then continue;
+
+        // don't bother w/ RO or INV prefs
+        s := getPrefState(p);
+        if ((s = psReadOnly) or (s = psInvisible)) then continue;
+
+        if (c.inheritsFrom(TTntCheckBox)) then
+            MainSession.Prefs.setBool(p, TCheckBox(c).Checked)
+        else if ((c.inheritsFrom(TUpDown)) or (c.inheritsFrom(TTntUpDown))) then
+            MainSession.Prefs.setInt(p, TUpDown(c).Position)
+        else if (c.inheritsFrom(TTntComboBox)) then begin
+            if (TTntComboBox(c).Style = csDropDown) then
+                MainSession.Prefs.setString(p, TTntComboBox(c).Text)
+            else
+                MainSession.Prefs.setInt(p, TTntComboBox(c).ItemIndex);
+        end
+        else if (c.inheritsFrom(TColorBox)) then
+            MainSession.Prefs.setInt(p, integer(TColorBox(c).Selected))
+        else if (c.inheritsFrom(TTrackBar)) then
+            MainSession.Prefs.setInt(p, TTrackBar(c).Position)
+        else if (c.inheritsFrom(THotKey)) then
+            MainSession.Prefs.setString(p, ShortcutToText(THotKey(c).Hotkey))
+        else if (c.inheritsFrom(TTntRadioGroup)) then
+            MainSession.Prefs.setInt(p, TTntRadioGroup(c).ItemIndex)
+        else if (c.inheritsFrom(TTntEdit)) then
+            MainSession.Prefs.setString(p, TTntEdit(c).Text);
+    end;
 end;
 
 procedure TfrmPrefPanel.FormCreate(Sender: TObject);

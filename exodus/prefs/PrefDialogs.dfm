@@ -7,28 +7,28 @@ inherited frmPrefDialogs: TfrmPrefDialogs
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object Label26: TTntLabel [0]
+  object lblMem1: TTntLabel [0]
     Left = 8
     Top = 199
     Width = 197
     Height = 13
     Caption = 'Minutes to keep chat windows in memory:'
   end
-  object Label27: TTntLabel [1]
+  object lblMem2: TTntLabel [1]
     Left = 8
     Top = 213
     Width = 244
     Height = 13
     Caption = 'Use 0 minutes to destroy chat windows immediately.'
   end
-  object Label29: TTntLabel [2]
+  object lblToastDuration: TTntLabel [2]
     Left = 39
     Top = 131
     Width = 120
     Height = 13
     Caption = 'Toast duration (seconds):'
   end
-  object TntLabel1: TTntLabel [3]
+  object lblClose: TTntLabel [3]
     Left = 8
     Top = 291
     Width = 242

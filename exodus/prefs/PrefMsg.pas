@@ -27,10 +27,10 @@ uses
 
 type
   TfrmPrefMsg = class(TfrmPrefPanel)
-    Label19: TTntLabel;
-    Label7: TTntLabel;
-    Label16: TTntLabel;
-    Label17: TTntLabel;
+    lblTimestampFmt: TTntLabel;
+    lblMsgOptions: TTntLabel;
+    lblSpoolPath: TTntLabel;
+    lblInviteOptions: TTntLabel;
     chkEmoticons: TTntCheckBox;
     chkTimestamp: TTntCheckBox;
     chkLog: TTntCheckBox;
@@ -73,41 +73,13 @@ uses
 
 procedure TfrmPrefMsg.LoadPrefs();
 begin
-    with MainSession.Prefs do begin
-        // Message Options
-        chkTimestamp.Checked := getBool('timestamp');
-        txtTimestampFmt.Text := getString('timestamp_format');
-        chkMsgQueue.Checked := getBool('msg_queue');
-        chkEmoticons.Checked := getBool('emoticons');
-        chkBlockNonRoster.Checked := getBool('block_nonroster');
-        chkLog.Checked := getBool('log');
-        chkLogRooms.Checked := getBool('log_rooms');
-        chkLogRoster.Checked := getBool('log_roster');
-        txtLogPath.Text := getString('log_path');
-        txtSpoolPath.Text := getString('spool_path');
-        cboInviteOptions.ItemIndex := getInt('invite_treatment');
-        cboMsgOptions.ItemIndex := getInt('msg_treatment');
-        self.chkLogClick(nil);
-    end;
+    inherited;
+    chkLogClick(self);
 end;
 
 procedure TfrmPrefMsg.SavePrefs();
 begin
-    with MainSession.Prefs do begin
-        // Message Prefs
-        setBool('timestamp', chkTimestamp.Checked);
-        setString('timestamp_format', txtTimestampFmt.Text);
-        setBool('emoticons', chkEmoticons.Checked);
-        setBool('block_nonroster', chkBlockNonRoster.Checked);
-        setBool('msg_queue', chkMsgQueue.Checked);
-        setBool('log', chkLog.Checked);
-        setBool('log_rooms', chkLogRooms.Checked);
-        setBool('log_roster', chkLogRoster.Checked);
-        setString('log_path', txtLogPath.Text);
-        setString('spool_path', txtSpoolPath.Text);
-        setInt('invite_treatment', cboInviteOptions.ItemIndex);
-        setInt('msg_treatment', cboMsgOptions.ItemIndex);
-    end;
+    inherited;
 end;
 
 

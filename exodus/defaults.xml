@@ -1,20 +1,35 @@
 <exodus version="0.9">
     <prefs>
-        <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.30 2003/12/19 23:18:05 hildjj Exp $"/>
-
-        <!-- AutoAway prefs -->
+        <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.31 2003/12/20 18:52:53 pgmillard Exp $"/>
+        
+        <!-- System Options -->
+        <auto_update_url value="http://exodus.jabberstudio.org/exodus-released.exe"/>
+        <auto_update_changelog_url value="http://exodus.jabberstudio.org/ChangeLog-RELEASE.txt"/>
+    	
+        <auto_updates value="1" control="chkAutoUpdate"/>
+        <auto_start value="0" control="chkAutoStart"/>
+        <debug value="0" control="chkDebug"/>
+        <min_start value="0" control="chkStartMin"/>        
+        <autologin value="0" control="chkAutoLogin"/>        
+        <window_ontop value="0" control="chkOnTop" state="inv"/>
+        <window_toolbox value="0" control="chkToolbox"/>        
+        <close_min value="1" control="chkCloseMin"/>
+        <single_instance value="1" control="chkSingleInstance"/>
+        <default_nick control="txtDefaultNick">
+            <control name="lblDefaultNick"/>
+        </default_nick>
+        
+        <!-- AutoAway Options -->
         <auto_away value="1" control="chkAutoAway"/>
     	<aa_reduce_pri value="1" control="chkAAReducePri"/>
         <auto_xa value="1" control="chkAutoXA"/>
         <auto_disconnect value="0" control="chkAutoDisconnect"/>
         <away_time value="5" control="spnAway"/>
         <xa_time value="30" control="spnXA"/>
-        <disconnect_time value="180" control="spnDisconnect"/>
-        
+        <disconnect_time value="180" control="spnDisconnect"/>        
         <away_status control="txtAway" state="ro">
             <control name="lblAwayStatus"/>
-        </away_status>
-        
+        </away_status>        
         <xa_status control="txtXA" state="ro">
             <control name="lblXAStatus"/>
         </xa_status>
@@ -28,31 +43,185 @@
         <roster_chat value="2" control="cboDblClick">
         	<control name="lblDblClick"/>
     	</roster_chat>
-
         <inline_status value="0" control="chkInlineStatus"/>
         <inline_color value="$0000FF00" control="cboInlineStatus"/>
         <nested_groups value="1" control="chkNestedGrps"/>
         <group_seperator value="/" control="txtGrpSeperator"/>
-
-
-        <!-- unfiled -->
+        
+        <!-- Roster Group Options -->
+        <roster_sort value="0" control="chkSort"/>
+        <roster_groupcounts value="1" control="chkGroupCounts"/>
+        <roster_collapsed value="0" control="chkCollapsed"/>
+        <roster_offline_group value="0" control="chkOfflineGrp"/>
+        <roster_only_online value="0" control="chkOnlineOnly"/>
+        <roster_default value="Friends" control="txtDefaultGrp">
+            <control name="lblDefaultGrp"/>
+        </roster_default>
+        <roster_transport_grp value="Transports" control="txtGatewayGrp">
+            <control name="lblGatewayGrp"/>
+        </roster_transport_grp>
+        <roster_filter value="0" control="cboVisible">
+            <control name="lblFilter"/>
+        </roster_filter>            
+        
+        <!-- Dialog Options -->
+        <roster_alpha value="0" control="chkRosterAlpha"/>
+        <toast_alpha value="0" control="chkToastAlpha"/>
+        <snap_on value="1" control="chkSnap"/>
+        <warn_closebusy value="1" control="chkBusy"/>
+        <roster_alpha_val value="255" control="spnRosterAlpha">
+            <control name="trkRosterAlpha"/>
+            <control name="txtRosterAlpha"/>
+        </roster_alpha_val>
+        <toast_alpha_val value="255" control="spnToastAlpha">
+            <control name="trkToastAlpha"/>
+            <control name="txtToastAlpha"/>
+        </toast_alpha_val>
+        <toast_duration value="5" control="txtToastDuration">
+            <control name="lblToastDuration"/>
+        </toast_duration>
+        <edge_snap value="15" control="spnSnap">
+            <control name="txtSnap"/>
+            <control name="trkSnap"/>
+        </edge_snap>
+        <chat_memory value="60" control="spnChatMemory">
+            <control name="txtChatMemory"/>
+            <control name="trkChatMemory"/>
+        </chat_memory>
+        <esc_close value="1" control="chkEscClose"/>
+        <close_hotkey value="Alt + W"/>
+        
+        <!-- fonts and colors -->
+        <font_name value="Arial"/>
+        <font_size value="10"/>
+        <font_color value="0"/>
+        <font_charset value="1"/>
+        <font_bold value="0"/>
+        <font_italic value="0"/>
+        <font_underline value="0"/>
+        <color_bg value="$ffffff"/>
+        <color_me value="$ff0000"/>
+        <color_other value="$0000ff"/>
         <roster_bg value="$80000005"/>
-        <roster_groupcounts value="1"/>
+        <roster_font_color="0"/>
+        <roster_font_size="10"/>
+        <roster_font_charset="1"/>
+        
+        <!-- Layouts -->
+        <expanded value="0"/>
         <roster_messenger value="1"/>
-        <roster_offline_group value="0"/>
-        <roster_only_online value="0"/>
-        <roster_transport_grp value="Transports"/>
-
-        <always_lang value="0"></always_lang>
         
-        <auto_update_url value="http://exodus.jabberstudio.org/exodus-released.exe">
-        </auto_update_url>
+        <!-- Message Options -->
+        <timestamp value="1" control="chkTimestamp"/>
+        <timestamp_format value="t" control="txtTimestampFmt">
+            <control name="lblTimestampFmt"/>
+        </timestamp_format>
+        <msg_queue value="0" control="chkMsgQueue"/>
+        <emoticons value="1" control="chkEmoticons"/>
+        <block_nonroster value="0" control="chkBlockNonRoster"/>
+        <log value="1" control="chkLog"/>
+        <log_rooms value="0" control="chkLogRooms"/>
+        <log_roster value="0" control="chkLogRoster"/>
+        <log_path control="txtLogPath"/>
+        <spool_path control="txtSpoolPath">
+            <control name="lblSpoolPath"/>
+        </spool_path>
+        <invite_treatment value="0" control="cboInviteOptions">
+            <control name="lblInviteOptions"/>
+        </invite_treatment>
+        <msg_treament value="0" control="cboMsgOptions">
+            <control name="lblMsgOptions"/>
+        </msg_treatment>  
         
-    	<auto_update_changelog_url value="http://exodus.jabberstudio.org/ChangeLog-RELEASE.txt">
-    	</auto_update_changelog_url>
-    	
-        <auto_updates value="1"></auto_updates>
-        <autologin value="0"></autologin>
+        <!-- Network Options -->
+        <recon_tries value="3" control="spnAttempts">
+            <control name="lblAttempts"/>
+            <control name="txtAttempts"/>
+        </recon_tries>
+        <recon_time value="0" control="spnTime">
+            <control name="lblTime"/>
+            <control name="txtTime"/>
+        </recon_time>        
+        <http_proxy_approach value="0" control="cboProxyApproach">
+            <control name="lblProxyApproach"/>
+        </http_proxy_approach>
+        <http_proxy_auth value="false" control="chkProxyAuth"/>
+        <http_proxy_host control="txtProxyHost">
+            <control name="lblProxyHost"/>
+        </http_proxy_host>
+        <http_proxy_port value="8080" control="txtProxyPort">
+            <control name="lblProxyPort"/>
+        </http_proxy_port>
+        <http_proxy_password control="txtProxyPassword">
+            <control name="lblProxyPassword"/>
+        </http_proxy_password>
+        <http_proxy_user control="txtProxyUsername">
+            <control name="lblProxyUsername"/>
+        </http_proxy_user>
+        
+        <!-- Notification Options -->
+        <notify_sounds value="1" control="chkSound"/>
+        <notify_active value="1" control="chkNotifyActive"/>
+        <notify_active_win value="0" control="chkNotifyActiveWindow"/>
+        <notify_flasher value="1" control="chkFlashInfinite"/>
+        
+        <notify_online value="1"/>
+        <notify_offline value="0"/>
+        <notify_newchat value="1"/>
+        <notify_normalmsg value="1"/>
+        <notify_s10n value="1"/>
+        <notify_invite value="1"/>
+        <notify_keyword value="1"/>
+        <notify_chatactivity value="4"/>
+        <notify_roomactivity value="1"/>
+        <notify_oob value="1"/>
+        <notify_autoresponse value="0"/>                     
+        
+        <!-- Presence Options -->
+        <pres_tracking value="1" control="cboPresTracking">
+            <control name="lblPresTracking"/>
+        </pres_tracking>
+        <presence_message_listen value="1" control="chkPresenceSync"/>
+        <presence_message_send value="1" control="chkPresenceSync"/>
+        <client_caps value="1" control="chkClientCaps"/>
+        <client_caps_uri value="http://exodus.jabberstudio.org/caps"/>        
+        
+        <!-- Subscription Options -->
+        <s10n_auto_accept value="0" control="optIncomingS10n"/>
+        
+        <!-- file xfer Options -->
+        <xfer_path control="txtXferPath">
+            <control name="lblXferPath"/>
+        </xfer_path>        
+        <xfer_port value="5280" control="txtXferPort">
+            <control name="lblXferPort"/>
+        </xfer_port>
+        <xfer_ip control="txtXferIP">
+            <control name="chkXferIP"/>
+        </xfer_ip>
+        <xfer_davhost control="txtDavHost">
+            <control name="lblDavHost"/>
+        </xfer_davhost>
+        <xfer_davport control="txtDavPort">
+            <control name="lblDavPort"/>
+        </xfer_davport>
+        <xfer_davpath control="txtDavPath">
+            <control name="lblDavPath"/>
+        </xfer_davpath>
+        <xfer_davusername control="txtDavUsername">
+            <control name="lblDavUsername"/>
+        </xfer_davusername>
+        <xfer_davpassword control="txtDavPassword">
+            <control name="lblDavPassword"/>
+        </xfer_davpassword>        
+        <xfer_prefproxy control="txt65Proxy">
+            <control name="lbl65Proxy"/>
+        </xfer_prefproxy>
+        
+    
+        <!-- unfiled -->
+        <toolbar value="1" />
+        <always_lang value="0"></always_lang>       
         <brand_ad ></brand_ad>
         <brand_ad_url ></brand_ad_url>
         <brand_caption value="Exodus"></brand_caption>
@@ -114,63 +283,12 @@
         <brand_browser value="1"/>
         <brand_vcard value="1"></brand_vcard>
         <browse_view value="0"></browse_view>
-        <chat_memory value="60"></chat_memory>
-        <client_caps value="1"></client_caps>
-        
-        <client_caps_uri value="http://exodus.jabberstudio.org/caps">
-        </client_caps_uri>
-        
-        <close_min value="1"></close_min>
-        <color_bg value="$ffffff"></color_bg>
-        <color_me value="$ff0000"></color_me>
-        <color_other value="$0000ff"></color_other>
-        <debug value="0"></debug>
-        <edge_snap value="15"></edge_snap>
-        <emoticons value="1"></emoticons>
+                
         <event_width value="315"></event_width>
-        <expanded value="0"></expanded>
         <fade_limit value="100"></fade_limit>
-        <font_bold value="0"></font_bold>
-        <font_color value="0"></font_color>
-        <font_italic value="0"></font_italic>
-        <font_name value="Arial"></font_name>
-        <font_size value="10"></font_size>
-        <font_underline value="0"></font_underline>
-        <http_proxy_approach value="0"></http_proxy_approach>
-        <http_proxy_auth value="false"></http_proxy_auth>
-        <http_proxy_host ></http_proxy_host>
-        <http_proxy_password ></http_proxy_password>
-        <http_proxy_port value="8080"></http_proxy_port>
-        <http_proxy_user ></http_proxy_user>
-        <log value="1"></log>
-        <notify_active value="1"></notify_active>
-        <notify_chatactivity value="4"></notify_chatactivity>
-        <notify_invite value="1"></notify_invite>
-        <notify_keyword value="1"></notify_keyword>
-        <notify_newchat value="1"></notify_newchat>
-        <notify_normalmsg value="1"></notify_normalmsg>
-        <notify_online value="1"></notify_online>
-        <notify_oob value="1"></notify_oob>
-        <notify_roomactivity value="1"></notify_roomactivity>
-        <notify_s10n value="1"></notify_s10n>
-        <notify_sounds value="1"></notify_sounds>
-        <notify_flasher value="1"></notify_flasher>
-        <pres_tracking value="1"></pres_tracking>
-        <presence_message_listen value="1"></presence_message_listen>
-        <presence_message_send value="1"></presence_message_send>
         <profile_active value="0"></profile_active>
-        <s10n_auto_accept value="0"></s10n_auto_accept>
-        <single_instance value="1"></single_instance>
-        <snap_on value="1"></snap_on>
-        <timestamp value="1"></timestamp>
-        <timestamp_format value="t"></timestamp_format>
-        <toolbar value="1"></toolbar>
-        <toast_duration value="5"></toast_duration>
-        <warn_closebusy value="1"></warn_closebusy>
         <wrap_input value="1"></wrap_input>
-        <roster_default value="Friends"></roster_default>
-        <xfer_port value="5280"></xfer_port>
-        <close_hotkey value="Alt + W"></close_hotkey>
+        
     </prefs>
 
     <!-- default custom presence stuff -->

@@ -29,9 +29,9 @@ uses
 
 type
   TfrmPrefDialogs = class(TfrmPrefPanel)
-    Label26: TTntLabel;
-    Label27: TTntLabel;
-    Label29: TTntLabel;
+    lblMem1: TTntLabel;
+    lblMem2: TTntLabel;
+    lblToastDuration: TTntLabel;
     chkRosterAlpha: TTntCheckBox;
     trkRosterAlpha: TTrackBar;
     txtRosterAlpha: TTntEdit;
@@ -47,7 +47,7 @@ type
     txtToastDuration: TTntEdit;
     txtChatMemory: TTntEdit;
     spnChatMemory: TTntUpDown;
-    TntLabel1: TTntLabel;
+    lblClose: TTntLabel;
     hkClose: THotKey;
     chkEscClose: TTntCheckBox;
     trkSnap: TTrackBar;
@@ -69,7 +69,6 @@ type
     { Public declarations }
     procedure LoadPrefs(); override;
     procedure SavePrefs(); override;
-    
   end;
 
 var
@@ -83,67 +82,15 @@ uses
 procedure TfrmPrefDialogs.LoadPrefs();
 begin
     //
-
-    with MainSession.Prefs do begin
-        // Dialog Options
-        chkRosterAlpha.Checked := getBool('roster_alpha');
-        chkToastAlpha.Checked := getBool('toast_alpha');
-        chkSnap.Checked := getBool('snap_on');
-        chkBusy.Checked := getBool('warn_closebusy');
-        chkRosterAlphaClick(Self);
-        if chkRosterAlpha.Checked then begin
-            trkRosterAlpha.Position := getInt('roster_alpha_val');
-            spnRosterAlpha.Position := trkRosterAlpha.Position;
-        end
-        else begin
-            trkRosterAlpha.Position := 255;
-            spnRosterAlpha.Position := 255;
-        end;
-
-        chkToastAlphaClick(Self);
-        if chkToastAlpha.Checked then begin
-            trkToastAlpha.Position := getInt('toast_alpha_val');
-            spnToastAlpha.Position := trkToastAlpha.Position;
-        end
-        else begin
-            trkToastAlpha.Position := 255;
-            spnToastAlpha.Position := 255;
-        end;
-
-        txtToastDuration.Text := IntToStr(getInt('toast_duration'));
-
-        chkSnapClick(Self);
-        if (chkSnap.Checked) then
-            spnSnap.Position := getInt('edge_snap')
-        else
-            spnSnap.Position := 10;
-        trkSnap.Position := spnSnap.Position;
-
-        spnChatMemory.Position := getInt('chat_memory');
-        trkChatMemory.Position := spnChatMemory.Position;
-        
-        chkEscClose.Checked := getBool('esc_close');
-        hkClose.HotKey := TextToShortcut(getString('close_hotkey'));
-    end;
+    inherited;
+    chkRosterAlphaClick(Self);
+    chkSnapClick(Self);
+    chkToastAlphaClick(Self);
 end;
 
 procedure TfrmPrefDialogs.SavePrefs();
 begin
-    with MainSession.Prefs do begin
-        // Dialog Prefs
-        setBool('roster_alpha', chkRosterAlpha.Checked);
-        setInt('roster_alpha_val', trkRosterAlpha.Position);
-        setBool('toast_alpha', chkToastAlpha.Checked);
-        setInt('toast_alpha_val', trkToastAlpha.Position);
-        setInt('toast_duration', SafeInt(txtToastDuration.Text));
-
-        setBool('snap_on', chkSnap.Checked);
-        setBool('warn_closebusy', chkBusy.Checked);
-        setInt('edge_snap', trkSnap.Position);
-        setInt('chat_memory', trkChatMemory.Position);
-        setBool('esc_close', chkEscClose.Checked);
-        setString('close_hotkey', ShortCutToText(hkClose.HotKey));
-    end;
+    inherited;
 end;
     
 

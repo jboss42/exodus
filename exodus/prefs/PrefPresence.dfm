@@ -76,7 +76,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    object Label8: TTntLabel
+    object lblPresTracking: TTntLabel
       Left = 5
       Top = 52
       Width = 217
@@ -105,6 +105,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       Top = 68
       Width = 306
       Height = 21
+      Style = csDropDownList
       ItemHeight = 13
       TabOrder = 2
       Items.WideStrings = (

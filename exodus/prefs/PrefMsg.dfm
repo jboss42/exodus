@@ -7,28 +7,28 @@ inherited frmPrefMsg: TfrmPrefMsg
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object Label19: TTntLabel [0]
+  object lblTimestampFmt: TTntLabel [0]
     Left = 26
     Top = 98
     Width = 35
     Height = 13
     Caption = 'Format:'
   end
-  object Label7: TTntLabel [1]
+  object lblMsgOptions: TTntLabel [1]
     Left = 5
     Top = 234
     Width = 170
     Height = 13
     Caption = 'Simple message (non-chat) handling'
   end
-  object Label16: TTntLabel [2]
+  object lblSpoolPath: TTntLabel [2]
     Left = 5
     Top = 320
     Width = 128
     Height = 13
     Caption = 'Store Unread messages to:'
   end
-  object Label17: TTntLabel [3]
+  object lblInviteOptions: TTntLabel [3]
     Left = 5
     Top = 274
     Width = 198

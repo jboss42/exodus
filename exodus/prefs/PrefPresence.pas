@@ -35,7 +35,7 @@ type
     btnCustomPresClear: TTntButton;
     Panel1: TPanel;
     chkPresenceSync: TTntCheckBox;
-    Label8: TTntLabel;
+    lblPresTracking: TTntLabel;
     cboPresTracking: TTntComboBox;
     Label1: TTntLabel;
     chkClientCaps: TTntCheckBox;
@@ -93,6 +93,8 @@ var
     ws: TWidestringlist;
     cp: TJabberCustomPres;
 begin
+    inherited;
+
     with MainSession.Prefs do begin
         // Custom Presence options
         ws := getAllPresence();
@@ -102,9 +104,6 @@ begin
             lstCustomPres.Items.Add(cp.title);
             _pres_list.Add(cp);
         end;
-        cboPresTracking.ItemIndex := getInt('pres_tracking');
-        chkPresenceSync.Checked := getBool('presence_message_listen');
-        chkClientCaps.Checked := getBool('client_caps');
     end;
 end;
 
@@ -114,6 +113,8 @@ var
     i: integer;
     cp: TJabberCustomPres;
 begin
+    inherited;
+
     with MainSession.Prefs do begin
         // Custom presence list
         RemoveAllPresence();
@@ -121,10 +122,6 @@ begin
             cp := TJabberCustomPres(_pres_list.Items[i]);
             setPresence(cp);
         end;
-        setInt('pres_tracking', cboPresTracking.ItemIndex);
-        setBool('presence_message_send', chkPresenceSync.Checked);
-        setBool('presence_message_listen', chkPresenceSync.Checked);
-        setBool('client_caps', chkClientCaps.Checked);
     end;
 end;
 

@@ -240,9 +240,6 @@ begin
     AssignUnicodeFont(Self);
     AssignUnicodeFont(memKeywords.Font, 10);
     AssignUnicodeFont(memBlocks.Font, 10);
-    //AssignUnicodeFont(Scroller.Font, 8);
-    //AssignUnicodeFont(Panel1.Font, 8);
-    //AssignUnicodeFont(PageControl1.Font, 8);
 
     // Our panels..
     AssignUnicodeHighlight(pnlKeyword.Font, 10);

@@ -101,15 +101,12 @@ begin
     chkNotify.Items.Add(_(sSoundRoomactivity));
     chkNotify.Items.Add(_(sSoundOOB));
     chkNotify.Items.Add(_(sSoundAutoResponse));
+    SetLength(_notify, NUM_NOTIFIES);
+
+    inherited;
 
     with MainSession.Prefs do begin
         // Notify Options
-        SetLength(_notify, NUM_NOTIFIES);
-
-        chkSound.Checked := getBool('notify_sounds');
-        chkNotifyActive.Checked := getBool('notify_active');
-        chkNotifyActiveWindow.Checked := getBool('notify_active_win');
-        chkFlashInfinite.Checked := getBool('notify_flasher');
         _notify[0]  := getInt('notify_online');
         _notify[1]  := getInt('notify_offline');
         _notify[2]  := getInt('notify_newchat');
@@ -131,22 +128,20 @@ begin
         for i := 0 to NUM_NOTIFIES - 1 do
             chkNotify.Checked[i] := (_notify[i] > 0);
 
-        chkNotify.ItemIndex := 0;
-        chkNotifyClick(Self);
     end;
+    
+    chkNotify.ItemIndex := 0;
+    chkNotifyClick(Self);
 
     _loading := false;
 end;
 
 procedure TfrmPrefNotify.SavePrefs();
 begin
+    inherited;
+    
     with MainSession.Prefs do begin
         // Notify events
-        setBool('notify_sounds', chkSound.Checked);
-        setBool('notify_active', chkNotifyActive.Checked);
-        setBool('notify_active_win', chkNotifyActiveWindow.Checked);
-        setBool('notify_flasher', chkFlashInfinite.Checked);
-
         setInt('notify_online', _notify[0]);
         setInt('notify_offline', _notify[1]);
         setInt('notify_newchat', _notify[2]);
