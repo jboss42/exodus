@@ -300,7 +300,7 @@ begin
         lblOK.Visible := false;
         lblBad.Visible := true;
         btnPrev.Enabled := false;
-        btnNext.Caption := 'Finish';
+        btnNext.Caption := 'Cancel';
         btnNext.Enabled := true;
         btnCancel.Enabled := false;
         end;
