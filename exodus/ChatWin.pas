@@ -84,6 +84,7 @@ type
     procedure popResourcesClick(Sender: TObject);
     procedure imgAvatarPaint(Sender: TObject);
     procedure imgAvatarClick(Sender: TObject);
+
   private
     { Private declarations }
     jid: widestring;        // jid of the person we are talking to
@@ -552,6 +553,8 @@ begin
     i := MainSession.ChatList.indexOfObject(chat_object);
     if (i >= 0) then
         MainSession.ChatList[i] := cjid;
+        
+    SetUnread(0);
 end;
 
 {---------------------------------------}
@@ -920,8 +923,10 @@ begin
     frmExodus.ImageList2.GetIcon(_pres_img, Self.Icon);
     if (Docked) then
         Self.TabSheet.ImageIndex := _pres_img;
+    ImageIndex := _pres_img;
     _old_img := _pres_img;
 
+    SetUnread(Unread);
 end;
 
 {---------------------------------------}

@@ -2985,8 +2985,7 @@ begin
         f := getTabForm(Tabs.ActivePage);
 
         if (f is TfrmDockable) then begin
-           TfrmDockable(f).Unread := 0;
-           f.Perform(WM_ACTIVATE, WA_CLICKACTIVE, f.Handle);
+            TfrmDockable(f).gotActivate();
         end;
     end;
 
@@ -3030,9 +3029,8 @@ begin
 
     f := getTabForm(Tabs.ActivePage);
 
-    if (f is TfrmDockable) then begin
-       TfrmDockable(f).Unread := 0;
-    end;
+    if (f is TfrmDockable) then
+       TfrmDockable(f).ClearUnread();
 
     if (f is TfrmChat) then begin
         if (Tabs.ActivePage.ImageIndex = tab_notify) then begin

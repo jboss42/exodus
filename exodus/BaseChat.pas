@@ -97,6 +97,8 @@ type
     procedure Flash;
     procedure pluginMenuClick(Sender: TObject); virtual; abstract;
     procedure gotActivate; override;
+    procedure ShowFront; override;
+    
     property MsgList: TfBaseMsgList read getMsgList;
   end;
 
@@ -165,6 +167,7 @@ end;
 {---------------------------------------}
 procedure TfrmBaseChat.gotActivate;
 begin
+    inherited;
     OutputDebugString('frmBaseChat.gotActivate');
     if (timWinFlash.Enabled) then
         timWinFlash.Enabled := false;
@@ -186,7 +189,8 @@ procedure TfrmBaseChat.MsgOutKeyUp(Sender: TObject;
     begin
         MsgOut.WideText := m;
         MsgOut.SelStart := length(m);
-        MsgOut.SetFocus();
+        if (MsgOut.Visible) then
+            MsgOut.SetFocus();
     end;
 
 begin
@@ -266,7 +270,8 @@ begin
     _pending := '';
 
     MsgOut.Lines.Clear();
-    MsgOut.SetFocus;
+    if (MsgOut.Visible) then
+        MsgOut.SetFocus;
 end;
 
 {---------------------------------------}
@@ -428,6 +433,14 @@ end;
 function TfrmBaseChat.getMsgList(): TfBaseMsgList;
 begin
     Result := TfBaseMsgList(_msgframe);
+end;
+
+{---------------------------------------}
+procedure TfrmBaseChat.ShowFront;
+begin
+    inherited;
+    if MsgOut.Visible then
+        MsgOut.SetFocus();
 end;
 
 end.
