@@ -253,7 +253,7 @@ var
     fn: string;
 begin
     fn := MainSession.Prefs.getString('log_path');
-    fn := fn + MungeName(jid) + '.html';
+    fn := fn + '\' + MungeName(jid) + '.html';
 
     ShellExecute(0, 'open', PChar(fn), '', '', SW_NORMAL);
 end;

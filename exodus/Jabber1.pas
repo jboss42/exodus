@@ -38,7 +38,7 @@ const
     WM_PREFS = WM_USER + 5272;
 
 type
-    TNextEventType = (next_none, next_Exit, next_Login);
+    TNextEventType = (next_none, next_Exit, next_Login, next_Disconnect);
 
     THookRec = packed record
         InstanceCount: integer;
@@ -747,10 +747,12 @@ begin
 
     else if event = '/session/noaccount' then begin
         if (MessageDlg('This account does not exist on this server. Create a new account?',
-            mtConfirmation, [mbYes, mbNo], 0) = mrNo) then exit;
-
-        // create a new account
-        MainSession.CreateAccount();
+        mtConfirmation, [mbYes, mbNo], 0) = mrNo) then
+            // Just disconnect, they don't want an account
+            MainSession.Disconnect()
+        else
+            // create the new account
+            MainSession.CreateAccount();
         end
 
     else if event = '/session/authenticated' then with MainSession do begin
@@ -846,8 +848,11 @@ begin
             Self.AlphaBlendValue := MainSession.Prefs.getInt('roster_alpha_val')
         else
             Self.AlphaBlendValue := 255;
-        if (frmMsgQueue <> nil) then
+        if (frmMsgQueue <> nil) then begin
             frmMsgQueue.lstEvents.Color := TColor(getInt('roster_bg'));
+            frmMsgQueue.txtMsg.Color := TColor(getInt('roster_bg'));
+            AssignDefaultFont(frmMsgQueue.txtMsg.Font);
+            end;
         end;
 end;
 
@@ -1104,7 +1109,9 @@ end;
 procedure TExodus.nextTimerTimer(Sender: TObject);
 begin
     if _event = next_Exit then
-        Self.Close;
+        Self.Close
+    else if _event = next_Disconnect then
+        MainSession.Disconnect();
 end;
 
 {---------------------------------------}
