@@ -493,7 +493,7 @@ begin
             LogMessage(Msg);
         end;
 
-        if (GetActiveWindow = Self.Handle) and (pnlInput.Visible) then
+        if (GetActiveWindow = Self.Handle) and (MsgOut.Visible) then
             MsgOut.SetFocus();
     end;
 
@@ -653,7 +653,7 @@ begin
     // session callback...look for our own presence changes
     if (event = '/session/disconnected') then begin
         // post a msg to the window and disable the text input box.
-        pnlInput.Visible := false;
+        MsgOut.Visible := false;
         DisplayPresence(_('You have been disconnected.'), MsgList);
 
         MainSession.UnRegisterCallback(_mcallback);
@@ -678,7 +678,7 @@ begin
 
         // previously disconnected
         if (_mcallback = -1) then begin
-            pnlInput.Visible := true;
+            MsgOut.Visible := true;
             DisplayPresence(sReconnected, MsgList);
 
             // re-register callbacks
@@ -2002,7 +2002,7 @@ begin
     if (not Self.Visible) then exit;
     if (Ord(key) < 32) then exit;
 
-    if (pnlInput.Visible) then begin
+    if (MsgOut.Visible) then begin
         MsgOut.SetFocus();
         MsgOut.WideSelText := Key;
     end;

@@ -81,6 +81,7 @@ inherited frmRoom: TfrmRoom
   inherited pnlInput: TPanel
     Top = 243
     Width = 387
+    AutoSize = True
     TabOrder = 0
     inherited MsgOut: TExRichEdit
       Width = 383
