@@ -36,7 +36,7 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     Height = 25
     Caption = 'Add'
     Enabled = False
-    TabOrder = 0
+    TabOrder = 1
   end
   object btnConfigPlugin: TTntButton
     Left = 90
@@ -45,7 +45,7 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     Height = 25
     Caption = 'Configure'
     Enabled = False
-    TabOrder = 1
+    TabOrder = 2
     OnClick = btnConfigPluginClick
   end
   object btnRemovePlugin: TTntButton
@@ -55,14 +55,14 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     Height = 25
     Caption = 'Remove'
     Enabled = False
-    TabOrder = 2
+    TabOrder = 3
   end
   object txtPluginDir: TTntEdit
     Left = 8
     Top = 260
     Width = 225
     Height = 21
-    TabOrder = 3
+    TabOrder = 4
   end
   object btnBrowsePluginPath: TTntButton
     Left = 239
@@ -70,7 +70,7 @@ inherited frmPrefPlugins: TfrmPrefPlugins
     Width = 75
     Height = 25
     Caption = 'Browse'
-    TabOrder = 4
+    TabOrder = 5
     OnClick = btnBrowsePluginPathClick
   end
   object lstPlugins: TTntListView
@@ -94,7 +94,7 @@ inherited frmPrefPlugins: TfrmPrefPlugins
         Caption = 'Filename'
         Width = 80
       end>
-    TabOrder = 5
+    TabOrder = 0
     ViewStyle = vsReport
   end
   object StaticText4: TTntPanel

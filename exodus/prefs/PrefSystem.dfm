@@ -60,7 +60,7 @@ object frmPrefSystem: TfrmPrefSystem
     Font.Style = [fsBold]
     ParentBackground = False
     ParentFont = False
-    TabOrder = 0
+    TabOrder = 11
   end
   object chkAutoUpdate: TTntCheckBox
     Left = 8
@@ -68,7 +68,7 @@ object frmPrefSystem: TfrmPrefSystem
     Width = 185
     Height = 17
     Caption = 'Check for updates automatically'
-    TabOrder = 1
+    TabOrder = 7
   end
   object chkDebug: TTntCheckBox
     Left = 8
@@ -84,7 +84,7 @@ object frmPrefSystem: TfrmPrefSystem
     Width = 241
     Height = 17
     Caption = 'Automatically login with last profile'
-    TabOrder = 3
+    TabOrder = 0
   end
   object chkCloseMin: TTntCheckBox
     Left = 8
@@ -92,7 +92,7 @@ object frmPrefSystem: TfrmPrefSystem
     Width = 233
     Height = 17
     Caption = 'Close button minimizes to the tray'
-    TabOrder = 4
+    TabOrder = 5
   end
   object chkAutoStart: TTntCheckBox
     Left = 8
@@ -100,7 +100,7 @@ object frmPrefSystem: TfrmPrefSystem
     Width = 233
     Height = 17
     Caption = 'Run Exodus when windows starts'
-    TabOrder = 5
+    TabOrder = 1
   end
   object chkOnTop: TTntCheckBox
     Left = 0
@@ -108,7 +108,7 @@ object frmPrefSystem: TfrmPrefSystem
     Width = 169
     Height = 17
     Caption = 'Exodus is always on top'
-    TabOrder = 6
+    TabOrder = 12
     Visible = False
   end
   object chkToolbox: TTntCheckBox
@@ -117,7 +117,7 @@ object frmPrefSystem: TfrmPrefSystem
     Width = 217
     Height = 17
     Caption = 'Small Titlebar for Exodus window'
-    TabOrder = 7
+    TabOrder = 4
   end
   object btnUpdateCheck: TTntButton
     Left = 222
@@ -135,7 +135,7 @@ object frmPrefSystem: TfrmPrefSystem
     Width = 209
     Height = 17
     Caption = 'Only allow a single instance of Exodus'
-    TabOrder = 9
+    TabOrder = 6
   end
   object chkStartMin: TTntCheckBox
     Left = 8
@@ -143,7 +143,7 @@ object frmPrefSystem: TfrmPrefSystem
     Width = 225
     Height = 17
     Caption = 'Start minimized to the system tray'
-    TabOrder = 10
+    TabOrder = 3
   end
   object cboLocale: TTntComboBox
     Left = 29
@@ -152,7 +152,7 @@ object frmPrefSystem: TfrmPrefSystem
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 11
+    TabOrder = 9
     Items.WideStrings = (
       'English (American)')
   end
@@ -161,6 +161,6 @@ object frmPrefSystem: TfrmPrefSystem
     Top = 267
     Width = 188
     Height = 21
-    TabOrder = 12
+    TabOrder = 10
   end
 end

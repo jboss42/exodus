@@ -15,7 +15,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     Height = 102
     Align = alTop
     ItemHeight = 13
-    TabOrder = 0
+    TabOrder = 1
     OnClick = lstCustomPresClick
   end
   object pnlCustomPresButtons: TPanel
@@ -25,7 +25,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     Height = 34
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 1
+    TabOrder = 2
     object btnCustomPresAdd: TTntButton
       Left = 4
       Top = 4
@@ -70,7 +70,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     Height = 119
     Align = alTop
     Caption = 'Properties'
-    TabOrder = 2
+    TabOrder = 3
     object Label11: TTntLabel
       Left = 6
       Top = 23
@@ -180,7 +180,7 @@ inherited frmPrefPresence: TfrmPrefPresence
     Height = 121
     Align = alTop
     BevelOuter = bvNone
-    TabOrder = 3
+    TabOrder = 0
     object Label8: TTntLabel
       Left = 5
       Top = 52
@@ -217,7 +217,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       Width = 258
       Height = 21
       ItemHeight = 13
-      TabOrder = 1
+      TabOrder = 2
       Items.WideStrings = (
         'Track all presence changes'
         'Show only last presence change'
@@ -231,7 +231,7 @@ inherited frmPrefPresence: TfrmPrefPresence
       Caption = 'Send client capabilities in presence.'
       Checked = True
       State = cbChecked
-      TabOrder = 2
+      TabOrder = 1
     end
   end
   object StaticText4: TTntPanel

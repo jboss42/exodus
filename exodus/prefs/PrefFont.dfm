@@ -94,7 +94,7 @@ inherited frmPrefFont: TfrmPrefFont
     Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
     DropDownCount = 12
     ItemHeight = 16
-    TabOrder = 1
+    TabOrder = 2
     OnChange = clrBoxBGChange
   end
   object clrBoxFont: TColorBox
@@ -107,7 +107,7 @@ inherited frmPrefFont: TfrmPrefFont
     Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
     DropDownCount = 12
     ItemHeight = 16
-    TabOrder = 2
+    TabOrder = 3
     OnChange = clrBoxFontChange
   end
   object btnFont: TTntButton
@@ -116,7 +116,7 @@ inherited frmPrefFont: TfrmPrefFont
     Width = 90
     Height = 25
     Caption = 'Change Font'
-    TabOrder = 3
+    TabOrder = 4
     OnClick = btnFontClick
   end
   object colorChat: TExRichEdit
@@ -203,7 +203,7 @@ inherited frmPrefFont: TfrmPrefFont
     ReadOnly = True
     ScrollBars = ssBoth
     ShowSelectionBar = False
-    TabOrder = 4
+    TabOrder = 1
     URLColor = clBlue
     URLCursor = crHandPoint
     WordWrap = False

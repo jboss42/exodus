@@ -133,7 +133,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Width = 273
     Height = 17
     Caption = 'Make the main window snap to screen edges'
-    TabOrder = 8
+    TabOrder = 9
     OnClick = chkSnapClick
   end
   object txtSnap: TTntEdit
@@ -142,7 +142,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Width = 49
     Height = 21
     Enabled = False
-    TabOrder = 9
+    TabOrder = 11
     Text = '255'
   end
   object spnSnap: TTntUpDown
@@ -155,7 +155,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Min = 10
     Max = 250
     Position = 250
-    TabOrder = 10
+    TabOrder = 12
   end
   object chkBusy: TTntCheckBox
     Left = 8
@@ -163,21 +163,21 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Width = 305
     Height = 17
     Caption = 'Warn when trying to close busy chat windows.'
-    TabOrder = 11
+    TabOrder = 16
   end
   object txtToastDuration: TTntEdit
     Left = 168
     Top = 127
     Width = 49
     Height = 21
-    TabOrder = 12
+    TabOrder = 8
   end
   object txtChatMemory: TTntEdit
     Left = 168
     Top = 229
     Width = 49
     Height = 21
-    TabOrder = 13
+    TabOrder = 14
     Text = '60'
   end
   object spnChatMemory: TTntUpDown
@@ -189,7 +189,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Max = 180
     Increment = 5
     Position = 60
-    TabOrder = 14
+    TabOrder = 15
   end
   object StaticText4: TTntPanel
     Left = 0
@@ -207,7 +207,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     Font.Style = [fsBold]
     ParentBackground = False
     ParentFont = False
-    TabOrder = 15
+    TabOrder = 19
   end
   object hkClose: THotKey
     Left = 32
@@ -217,7 +217,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     HotKey = 57431
     InvalidKeys = []
     Modifiers = [hkShift, hkCtrl, hkAlt]
-    TabOrder = 16
+    TabOrder = 18
   end
   object chkEscClose: TTntCheckBox
     Left = 8
@@ -238,7 +238,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     PageSize = 10
     Frequency = 5
     Position = 250
-    TabOrder = 18
+    TabOrder = 10
     ThumbLength = 15
     TickStyle = tsNone
     OnChange = trkSnapChange
@@ -253,7 +253,7 @@ inherited frmPrefDialogs: TfrmPrefDialogs
     PageSize = 10
     Frequency = 15
     Position = 60
-    TabOrder = 19
+    TabOrder = 13
     ThumbLength = 15
     TickStyle = tsNone
     OnChange = trkChatMemoryChange

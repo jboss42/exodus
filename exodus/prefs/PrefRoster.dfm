@@ -28,7 +28,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Width = 337
     Height = 17
     Caption = 'Hide blocked contacts '
-    TabOrder = 1
+    TabOrder = 2
   end
   object chkPresErrors: TTntCheckBox
     Left = 0
@@ -36,7 +36,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Width = 337
     Height = 17
     Caption = 'Detect contacts which are unreachable or no longer exist'
-    TabOrder = 2
+    TabOrder = 3
   end
   object chkShowPending: TTntCheckBox
     Left = 0
@@ -44,7 +44,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Width = 337
     Height = 17
     Caption = 'Show contacts I have asked to add as "Pending"'
-    TabOrder = 3
+    TabOrder = 1
   end
   object cboDblClick: TTntComboBox
     Left = 24
@@ -53,7 +53,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 4
+    TabOrder = 5
     Items.WideStrings = (
       'A new one to one chat window'
       'An instant message window'
@@ -65,7 +65,7 @@ inherited frmPrefRoster: TfrmPrefRoster
     Width = 337
     Height = 17
     Caption = 'Allow Unicode characters in the roster (requires 2000, ME, XP).'
-    TabOrder = 5
+    TabOrder = 4
   end
   object chkInlineStatus: TTntCheckBox
     Left = 0

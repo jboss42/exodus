@@ -28,6 +28,7 @@ object frmPrefs: TfrmPrefs
     Color = clWindow
     ParentColor = False
     TabOrder = 0
+    TabStop = True
     OnMouseMove = OffBoxMouseMove
     object Shape2: TShape
       Left = 0
@@ -3078,7 +3079,7 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 362
     Height = 388
-    ActivePage = tbsBlockList
+    ActivePage = tbsKeywords
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
@@ -3092,7 +3093,7 @@ object frmPrefs: TfrmPrefs
       object memKeywords: TTntMemo
         Left = 0
         Top = 77
-        Width = 361
+        Width = 354
         Height = 280
         Align = alClient
         TabOrder = 0
@@ -3100,7 +3101,7 @@ object frmPrefs: TfrmPrefs
       object Panel2: TPanel
         Left = 0
         Top = 24
-        Width = 361
+        Width = 354
         Height = 53
         Align = alTop
         BevelOuter = bvNone
@@ -3108,7 +3109,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TTntLabel
           Left = 0
           Top = 0
-          Width = 350
+          Width = 354
           Height = 26
           Align = alTop
           Caption = 
@@ -3128,7 +3129,7 @@ object frmPrefs: TfrmPrefs
       object TntPanel1: TTntPanel
         Left = 0
         Top = 0
-        Width = 361
+        Width = 354
         Height = 24
         Align = alTop
         BevelOuter = bvLowered
