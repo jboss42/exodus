@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-08-13 07:09\n"
-"PO-Revision-Date: 2003-08-13 07:09\n"
+"POT-Creation-Date: 2003-08-13 10:19\n"
+"PO-Revision-Date: 2003-08-13 10:19\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -140,8 +140,6 @@ msgstr ""
 #: subscribe.dfm:14
 #. frmSubscribe..lblJID..Font.Name
 #: subscribe.dfm:54
-#. Form1..Font.Name
-#: Test1.dfm:11
 #. frmVCard..Font.Name
 #: vcard.dfm:11
 #. frmWebDownload..Font.Name
@@ -6193,11 +6191,6 @@ msgstr ""
 msgid "Deny"
 msgstr ""
 
-#. Form1..Caption
-#: Test1.dfm:6
-msgid "Form1"
-msgstr ""
-
 #. frmVCard..Caption
 #: vcard.dfm:6
 msgid "My Profile"
@@ -6542,91 +6535,91 @@ msgid "An error has occurred. Exodus will automatically save an error log "
 msgstr ""
 
 #. Programmer's name for it: sCmdDebug
-#: ExSession.pas:63
+#: ExSession.pas:64
 #. Programmer's name for it: sCmdDebug
 #: Jabber1.pas:403
 msgid " -d \t\t : Debug mode on\n"
 msgstr ""
 
 #. Programmer's name for it: sCmdMinimized
-#: ExSession.pas:64
+#: ExSession.pas:65
 #. Programmer's name for it: sCmdMinimized
 #: Jabber1.pas:404
 msgid " -m \t\t : Start minimized\n"
 msgstr ""
 
 #. Programmer's name for it: sCmdInvisible
-#: ExSession.pas:65
+#: ExSession.pas:66
 #. Programmer's name for it: sCmdInvisible
 #: Jabber1.pas:405
 msgid " -v \t\t : invisible mode\n"
 msgstr ""
 
 #. Programmer's name for it: sCmdHelp
-#: ExSession.pas:66
+#: ExSession.pas:67
 #. Programmer's name for it: sCmdHelp
 #: Jabber1.pas:406
 msgid " -? \t\t : Show Help\n"
 msgstr ""
 
 #. Programmer's name for it: sCmdExpanded
-#: ExSession.pas:67
+#: ExSession.pas:68
 #. Programmer's name for it: sCmdExpanded
 #: Jabber1.pas:407
 msgid " -x [yes|no] \t : Expanded Mode\n"
 msgstr ""
 
 #. Programmer's name for it: sCmdJID
-#: ExSession.pas:68
+#: ExSession.pas:69
 #. Programmer's name for it: sCmdJID
 #: Jabber1.pas:408
 msgid " -j [jid] \t\t : Jid\n"
 msgstr ""
 
 #. Programmer's name for it: sCmdPassword
-#: ExSession.pas:69
+#: ExSession.pas:70
 #. Programmer's name for it: sCmdPassword
 #: Jabber1.pas:409
 msgid " -p [pass] \t : Password\n"
 msgstr ""
 
 #. Programmer's name for it: sCmdResource
-#: ExSession.pas:70
+#: ExSession.pas:71
 #. Programmer's name for it: sCmdResource
 #: Jabber1.pas:410
 msgid " -r [res] \t : Resource\n"
 msgstr ""
 
 #. Programmer's name for it: sCmdPriority
-#: ExSession.pas:71
+#: ExSession.pas:72
 #. Programmer's name for it: sCmdPriority
 #: Jabber1.pas:411
 msgid " -i [pri] \t : Priority\n"
 msgstr ""
 
 #. Programmer's name for it: sCmdProfile
-#: ExSession.pas:72
+#: ExSession.pas:73
 #. Programmer's name for it: sCmdProfile
 #: Jabber1.pas:412
 msgid " -f [prof] \t : Profile name\n"
 msgstr ""
 
 #. Programmer's name for it: sCmdConfig
-#: ExSession.pas:73
+#: ExSession.pas:74
 #. Programmer's name for it: sCmdConfig
 #: Jabber1.pas:413
 msgid " -c [file] \t : Config path name\n"
 msgstr ""
 
 #. Programmer's name for it: sUnkArg
-#: ExSession.pas:74
+#: ExSession.pas:75
 #. Programmer's name for it: sUnkArg
 #: Jabber1.pas:414
 msgid "Invalid command line:%s"
 msgstr ""
 
 #. Programmer's name for it: sWinsock2
-#: ExSession.pas:75
+#: ExSession.pas:76
 msgid "Winsock2 is required for this application. Please obtain the winsock2 "
 "installer from Microsoft for your operating "
 "system."
