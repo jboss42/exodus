@@ -93,7 +93,7 @@ function GetNameServers(): string;
 implementation
 
 uses
-    XMLTag, Registry, IdException;
+    Stringprep, XMLTag, Registry, IdException;
 
 const
     IpHlpDLL = 'IPHLPAPI.DLL'; // DO NOT TRANSLATE
@@ -104,12 +104,14 @@ var
 {---------------------------------------}
 procedure GetSRVAsync(Session: TJabberSession; Resolver: TIdDNSResolver;
     srv_req, a_req: Widestring);
+var
+    tmpw: Widestring;
 begin
     cur_thd := TDNSResolverThread.Create(true);
     cur_thd._session := Session;
 
-    // XXX: should be doing stringprep for idn's
-    cur_thd._a := Lowercase(a_req);
+    // use stringprep for idn's
+    cur_thd._a := xmpp_nameprep(a_req);
     cur_thd._srv := Lowercase(srv_req);
     cur_thd._resolver := Resolver;
     cur_thd.FreeOnTerminate := true;
