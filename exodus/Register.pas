@@ -54,9 +54,11 @@ var
     f: TfrmRegister;
 begin
     // Create a new registration form and kick the process off
-    f := TfrmRegister.Create(nil);
-    f.jid := tag.getAttribute('jid');
-    f.Start();
+    if ((event = '/session/register') and (tag <> nil)) then begin
+        f := TfrmRegister.Create(nil);
+        f.jid := tag.getAttribute('jid');
+        f.Start();
+        end;
 end;
 
 

@@ -3,7 +3,7 @@ object frmRegister: TfrmRegister
   Top = 167
   Width = 312
   Height = 327
-  Caption = 'Service Registration'
+  Caption = 'Agent Registration'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,17 +14,62 @@ object frmRegister: TfrmRegister
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
+  object pnlBottom: TPanel
+    Left = 0
+    Top = 258
+    Width = 304
+    Height = 35
+    Align = alBottom
+    BevelOuter = bvNone
+    TabOrder = 0
+    object pnlBtns: TPanel
+      Left = 55
+      Top = 0
+      Width = 249
+      Height = 35
+      Align = alRight
+      BevelOuter = bvNone
+      TabOrder = 0
+      object btnPrev: TButton
+        Left = 8
+        Top = 8
+        Width = 75
+        Height = 25
+        Caption = '< Previous'
+        Enabled = False
+        TabOrder = 0
+      end
+      object btnNext: TButton
+        Left = 88
+        Top = 8
+        Width = 75
+        Height = 25
+        Caption = 'Next >'
+        Enabled = False
+        TabOrder = 1
+        OnClick = btnNextClick
+      end
+      object btnCancel: TButton
+        Left = 168
+        Top = 8
+        Width = 75
+        Height = 25
+        Caption = 'Cancel'
+        TabOrder = 2
+      end
+    end
+  end
   object Tabs: TPageControl
     Left = 0
     Top = 0
     Width = 304
     Height = 258
-    ActivePage = tabAgent
+    ActivePage = tabResult
     Align = alClient
     MultiLine = True
     Style = tsButtons
-    TabIndex = 1
-    TabOrder = 0
+    TabIndex = 3
+    TabOrder = 1
     object tabWelcome: TTabSheet
       Caption = 'tabWelcome'
       object Label1: TLabel
@@ -94,9 +139,25 @@ object frmRegister: TfrmRegister
         end
       end
     end
-    object tabForm: TTabSheet
-      Caption = 'tabForm'
-      ImageIndex = 2
+    object tabWait: TTabSheet
+      Caption = 'tabWait'
+      ImageIndex = 4
+      object Label2: TLabel
+        Left = 0
+        Top = 0
+        Width = 296
+        Height = 90
+        Align = alTop
+        AutoSize = False
+        Caption = 'Please wait, Sending your registration to the service....'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = []
+        ParentFont = False
+        WordWrap = True
+      end
     end
     object tabResult: TTabSheet
       Caption = 'tabResult'
@@ -139,71 +200,6 @@ object frmRegister: TfrmRegister
         ParentFont = False
         Visible = False
         WordWrap = True
-      end
-    end
-    object tabWait: TTabSheet
-      Caption = 'tabWait'
-      ImageIndex = 4
-      object Label2: TLabel
-        Left = 0
-        Top = 0
-        Width = 296
-        Height = 90
-        Align = alTop
-        AutoSize = False
-        Caption = 'Please wait, Sending your registration to the service....'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -13
-        Font.Name = 'Arial'
-        Font.Style = []
-        ParentFont = False
-        WordWrap = True
-      end
-    end
-  end
-  object pnlBottom: TPanel
-    Left = 0
-    Top = 258
-    Width = 304
-    Height = 35
-    Align = alBottom
-    BevelOuter = bvNone
-    TabOrder = 1
-    object pnlBtns: TPanel
-      Left = 55
-      Top = 0
-      Width = 249
-      Height = 35
-      Align = alRight
-      BevelOuter = bvNone
-      TabOrder = 0
-      object btnPrev: TButton
-        Left = 8
-        Top = 8
-        Width = 75
-        Height = 25
-        Caption = '< Previous'
-        Enabled = False
-        TabOrder = 0
-      end
-      object btnNext: TButton
-        Left = 88
-        Top = 8
-        Width = 75
-        Height = 25
-        Caption = 'Next >'
-        Enabled = False
-        TabOrder = 1
-        OnClick = btnNextClick
-      end
-      object btnCancel: TButton
-        Left = 168
-        Top = 8
-        Width = 75
-        Height = 25
-        Caption = 'Cancel'
-        TabOrder = 2
       end
     end
   end

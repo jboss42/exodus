@@ -10,25 +10,24 @@ uses
 
 type
   TfrmRegister = class(TForm)
-    Tabs: TPageControl;
     pnlBottom: TPanel;
     pnlBtns: TPanel;
     btnPrev: TButton;
     btnNext: TButton;
     btnCancel: TButton;
+    Tabs: TPageControl;
     tabWelcome: TTabSheet;
     Label1: TLabel;
     lblIns: TLabel;
     tabAgent: TTabSheet;
-    tabForm: TTabSheet;
     Panel2: TPanel;
     Panel3: TPanel;
     btnDelete: TButton;
+    tabWait: TTabSheet;
+    Label2: TLabel;
     tabResult: TTabSheet;
     lblBad: TLabel;
     lblOK: TLabel;
-    tabWait: TTabSheet;
-    Label2: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure btnNextClick(Sender: TObject);
 
@@ -52,8 +51,11 @@ type
     ins: string;
     flds: TStringList;
 
-    procedure AgentCallback(event: string; tag: TXMLTag);
+    function doField(fld: string): TfrmField;
 
+    procedure AgentCallback(event: string; tag: TXMLTag);
+    procedure doRegister();
+    procedure RegCallback(event: string; tag: TXMLTag);
   public
     { Public declarations }
     jid: string;
@@ -339,13 +341,13 @@ begin
     // Hide all the tabs and make the welcome tab visible
     tabWelcome.TabVisible := false;
     tabAgent.TabVisible := false;
-    tabForm.TabVisible := false;
     tabResult.TabVisible := false;
     tabWait.TabVisible := false;
 
     cur_stage := regStage_Welcome;
     Tabs.ActivePage := tabWelcome;
     cur_iq := nil;
+    cur_key := '';
     agent := TAgentItem.Create();
 end;
 
@@ -360,6 +362,12 @@ begin
     btnCancel.Enabled := true;
     Self.Show();
     cur_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), AgentCallback);
+    with cur_iq do begin
+        toJid := self.jid;
+        iqType := 'get';
+        Namespace := XMLNS_REGISTER;
+        Send();
+        end;
 end;
 
 {---------------------------------------}
@@ -370,6 +378,7 @@ var
     flds: TXMLTagList;
 begin
     // we got back a response..
+    cur_iq := nil;
     if (event = 'xml') then begin
         if (tag.GetAttribute('type') = 'error') then begin
             // error packet
@@ -418,12 +427,73 @@ begin
     Result := frm;
 end;
 
+{---------------------------------------}
+procedure TfrmRegister.doRegister();
+var
+    i: integer;
+    frm: TfrmField;
+begin
+    // send the iq-set
+    cur_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), AgentCallback);
+    cur_iq.iqType := 'set';
+    cur_iq.toJID := self.jid;
+    cur_iq.Namespace := XMLNS_REGISTER;
+
+    for i := 0 to tabAgent.ControlCount - 1 do begin
+        if tabAgent.Controls[i] is TfrmField then begin
+            frm := TfrmField(tabAgent.Controls[i]);
+            with frm do
+                cur_iq.qTag.AddBasicTag(lblPrompt.Caption, txtData.Text);
+            end;
+        end;
+
+    if (cur_key <> '') then
+        cur_iq.qTag.AddBasicTag('key', cur_key);
+
+    cur_stage := regStage_Register;
+    cur_iq.Send();
+end;
+
+{---------------------------------------}
+procedure TfrmRegister.RegCallback(event: string; tag: TXMLTag);
+begin
+    Tabs.ActivePage := tabResult;
+
+    if ((event = 'xml') and (tag.getAttribute('type') = 'result')) then begin
+        // normal result
+        lblOK.Visible := true;
+        lblBad.Visible := false;
+        btnPrev.Enabled := false;
+        btnNext.Caption := 'Finish';
+        btnCancel.Enabled := false;
+        end
+    else begin
+        // some kind of error
+        lblOK.Visible := false;
+        lblBad.Visible := true;
+        btnPrev.Enabled := false;
+        btnNext.Caption := 'Finish';
+        btnCancel.Enabled := false;
+        end;
+end;
+
+{---------------------------------------}
 procedure TfrmRegister.btnNextClick(Sender: TObject);
 begin
     // goto the next tab
+    if (Tabs.ActivePage = tabWelcome) then
+        Tabs.ActivePage := tabAgent
 
-    if (cur_stage = regStage_Form) then begin
-        Tabs.ActivePage := tabAgent;        
+    else if (Tabs.ActivePage = tabAgent) then begin
+        // do the actual registration
+        Tabs.ActivePage := tabWait;
+        doRegister();
+        btnNext.Enabled := false;
+        btnPrev.Enabled := false;
+        end
+
+    else if (Tabs.ActivePage = tabResult) then begin
+        Self.Close();
         end;
 end;
 
