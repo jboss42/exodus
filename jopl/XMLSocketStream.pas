@@ -131,7 +131,7 @@ uses
     {$ifdef INDY9}
     HttpProxyIOHandler,
     {$endif}
-    StrUtils, Classes;
+    Session, StrUtils, Classes;
 
 {---------------------------------------}
 {      TSocketThread Class                }
@@ -490,9 +490,9 @@ begin
                 (_ssl_int.PassThrough)) then begin
                 if (_profile.SocksType = proxy_http) then begin
                     if (_profile.Host <> '') then
-                        HttpProxyConnect(_iohandler, _profile.Host, _profile.Port)
+                        THttpProxyIOHandler(_iohandler).HttpProxyConnect(_profile.Host, _profile.Port)
                     else
-                        HttpProxyConnect(_iohandler, _profile.Server, _profile.Port)
+                        THttpProxyIOHandler(_iohandler).HttpProxyConnect(_profile.Server, _profile.Port)
                 end;
 
                 _ssl_int.PassThrough := false;
@@ -620,10 +620,15 @@ end;
 {$ifdef INDY9}
 
 procedure TXMLSocketStream._connectIndy9();
+var
+    host: string;
+    port: integer;
 begin
     // Setup everything for Indy9 objects
     _ssl_int := nil;
     _socks_info := TIdSocksInfo.Create(nil);
+    _iohandler := nil;
+
     if (_profile.ssl) then begin
         _ssl_int := TIdSSLIOHandlerSocket.Create(nil);
         _ssl_int.PassThrough := (_profile.SocksType <> proxy_none);
@@ -631,29 +636,38 @@ begin
         _setupSSL();
         _iohandler := _ssl_int;
         _ssl_int.OnStatusInfo := TSocketThread(_thread).StatusInfo;
-        if (_profile.SocksType = proxy_http) then begin
-            _socket.Host := _profile.SocksHost;
-            _socket.Port := _profile.SocksPort;
+    end;
+    if (_profile.SocksType = proxy_http) then begin
+        MainSession.Prefs.getHttpProxy(host, port);
+        _socket.Host := host;
+        _socket.Port := port;
+        // no ssl.  we'll have to deal with CONNECT on connect
+        if (_iohandler = nil) then
+            _iohandler := THttpProxyIOHandler.Create(nil);
+        if (MainSession.Prefs.getBool('http_proxy_auth')) then begin
+            _socks_info.Authentication := saUsernamePassword;
+            _socks_info.Username := MainSession.Prefs.getString('http_proxy_user');
+            _socks_info.Password := MainSession.Prefs.getString('http_proxy_password');
         end;
-    end
-    else if (_profile.SocksType = proxy_http) then begin
-        _iohandler := THttpProxyIOHandler.Create(nil);
-    end
-    else
+        _iohandler.SocksInfo := _socks_info;
+    end;
+    if (_iohandler = nil) then
         _iohandler := TIdIOHandlerSocket.Create(nil);
 
     _iohandler.UseNagle := false;
     _socket.IOHandler := _iohandler;
 
-    if (_profile.SocksType <> proxy_none) then begin
+    if (_profile.SocksType <> proxy_none) and
+       (_profile.SocksType <> proxy_http) then begin
         // setup the socket to point to the handler..
         // and the handler to point to our SOCKS stuff
         with _socks_info do begin
             case _profile.SocksType of
-            proxy_socks4: Version := svSocks4;
-            proxy_socks4a: Version := svSocks4a;
-            proxy_socks5: Version := svSocks5;
+                proxy_socks4:  Version := svSocks4;
+                proxy_socks4a: Version := svSocks4a;
+                proxy_socks5:  Version := svSocks5;
             end;
+
             Host := _profile.SocksHost;
             Port := _profile.SocksPort;
             Authentication := saNoAuthentication;
@@ -665,7 +679,6 @@ begin
         end;
         _iohandler.SocksInfo := _socks_info;
     end;
-
 end;
 {$endif}
 
