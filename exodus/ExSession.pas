@@ -339,8 +339,11 @@ begin
             // we either have an absolute or relative path
             if (FileExists(s)) then
                 Application.Icon.LoadFromFile(s)
-            else
-                Application.Icon.LoadFromFile(ExtractFilePath(Application.EXEName) + s);
+            else begin
+                s := ExtractFilePath(Application.EXEName) + s;
+                if (FileExists(s)) then
+                    Application.Icon.LoadFromFile(s);
+            end;
         end;
 
         connect_node := nil;
