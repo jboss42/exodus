@@ -60,9 +60,13 @@ type
     _path: Widestring;
     _fn: Widestring;
     _cur_user: Widestring;
+    _mid: String;
 
     // db stuff
     _db: TSQLiteDatabase;
+
+    procedure _convertLogs0();
+    function _createInfoTable(): string;
 
   public
     procedure logMessage(log: TXMLTag);
@@ -71,15 +75,63 @@ type
     procedure purgeLogs();
   end;
 
+const
+    // Original schema
+    F0_UJID = 0;
+    F0_JID = 1;
+    F0_DATE = 2;
+    F0_TIME = 3;
+    F0_THREAD = 4;
+    F0_SUBJECT = 5;
+    F0_NICK = 6;
+    F0_BODY = 7;
+    F0_TYPE = 8;
+    F0_OUT = 9;
+
+    // Current ver 1 schema
+    F1_UJID = 0;
+    F1_MID = 1;
+    F1_JID = 2;
+    F1_DATE = 3;
+    F1_TIME = 4;
+    F1_THREAD = 5;
+    F1_SUBJECT = 6;
+    F1_NICK = 7;
+    F1_BODY = 8;
+    F1_TYPE = 9;
+    F1_OUT = 10;
+
 implementation
 
 uses
-    Viewer, 
+    Viewer, XMLUtils, 
     SysUtils, Dialogs, JabberUtils, JabberID, ComServ;
+
+const
+    SCHEMA_VER = 1;
+
+{---------------------------------------}
+function TSQLLogger._createInfoTable(): string;
+var
+    mid, cmd, sql: string;
+begin
+    // Create the info table..
+    sql := 'CREATE TABLE jlog_info (machine_id text, version text);';
+    _db.ExecSQL(sql);
+
+    // Use a GUID for this machine
+    mid := CreateClassID();
+    sql := 'INSERT INTO jlog_info VALUES ("%s", %d);';
+    cmd := Format(sql, [mid, SCHEMA_VER]);
+    _db.ExecSQL(cmd);
+
+    Result := mid;
+end;
 
 {---------------------------------------}
 procedure TSQLLogger.Startup(const ExodusController: IExodusController);
 var
+    ver: integer;
     sql: string;
     tmp: TSQLiteTable;
 begin
@@ -104,14 +156,22 @@ begin
         exit;
     end;
 
-    tmp := _db.getTable('SELECT name from sqlite_master where name="logs";');
+    // cache our current username@server
+    _cur_user := _exodus.Username + '@' + _exodus.Server;
+
+    // check for original logs table
+    tmp := _db.getTable('SELECT name from sqlite_master where name="jlog_info";');
     if (tmp.RowCount = 0) then begin
+        tmp.Free();
+        _mid := _createInfoTable();
+
         // Create the table..
-        sql := 'CREATE TABLE logs (';
+        sql := 'CREATE TABLE jlogs (';
         sql := sql + 'user_jid text, ';
+        sql := sql + 'machine_id text, ';
         sql := sql + 'jid text, ';
-        sql := sql + 'date text, ';
-        sql := sql + 'time text, ';
+        sql := sql + 'date integer, ';
+        sql := sql + 'time float, ';
         sql := sql + 'thread text, ';
         sql := sql + 'subject text, ';
         sql := sql + 'nick text, ';
@@ -124,14 +184,35 @@ begin
         if (tmp.RowCount = 0) then begin
             MessageDlgW('SQL Logging plugin was unable to initialize the database.',
                 mtError, [mbOK], 0);
+            tmp.Free();
             _db.Free();
             _db := nil;
+            exit;
         end;
+        tmp.Free();
 
         // Create the indices
-        _db.ExecSQL('CREATE INDEX logs_1 on logs(jid);');
-        _db.ExecSQL('CREATE INDEX logs_2 on logs(jid, time);');
-        _db.ExecSQL('CREATE INDEX logs_3 on logs(jid, time, thread);');
+        _db.ExecSQL('CREATE INDEX jlogs_1 on jlogs(jid);');
+        _db.ExecSQL('CREATE INDEX jlogs_2 on jlogs(jid, time);');
+        _db.ExecSQL('CREATE INDEX jlogs_3 on jlogs(jid, time, thread);');
+
+        // Check for the old-school logs table
+        tmp := _db.getTable('SELECT name from sqlite_master where name="logs";');
+        if (tmp.RowCount > 0) then
+            _convertLogs0();
+        tmp.Free();
+    end
+    else begin
+        // TODO: convert old db's
+        tmp := _db.GetTable('SELECT version FROM jlog_info;');
+        ver := SafeInt(tmp.Fields[0]);
+        if (ver < SCHEMA_VER) then begin
+            MessageDlgW('SCHEMA VERSION is incorrect!', mtError, [mbOK], 0);
+            _db.Free();
+            _db := nil;
+            exit;
+        end;
+        tmp.Free();
     end;
 
     // Register for packets
@@ -140,9 +221,30 @@ begin
     _clear := _exodus.RegisterCallback('/log/clear', Self);
     _purge := _exodus.RegisterCallback('/log/purge', Self);
     _sess := _exodus.RegisterCallback('/session', Self);
+end;
 
-    // cache our current username@server
-    _cur_user := _exodus.Username + '@' + _exodus.Server;
+{---------------------------------------}
+procedure TSQLLogger._convertLogs0();
+var
+    di, i: integer;
+    ti: double;
+    cmd, sql: string;
+    logs: TSQLiteTable;
+begin
+    logs := _db.GetTable('SELECT * FROM logs;');
+
+    sql := 'INSERT INTO jlogs VALUES ("%s", "%s", "%s", %d, %8.6f, "%s", "%s", "%s", "%s", "%s", "%s");';
+    for i := 0 to logs.RowCount - 1 do begin
+        di := Trunc(StrToDate(logs.Fields[F0_DATE]));
+        ti := double(StrToTime(logs.Fields[F0_TIME]));
+        cmd := Format(sql, [_cur_user, _mid, logs.Fields[F0_JID], di, ti,
+            logs.Fields[F0_THREAD], logs.Fields[F0_SUBJECT],
+            logs.Fields[F0_NICK], logs.Fields[F0_BODY], logs.Fields[F0_TYPE],
+            logs.Fields[F0_OUT]]);
+        _db.ExecSQL(cmd);
+        logs.Next();
+    end;
+    logs.Free();
 end;
 
 {---------------------------------------}
@@ -234,6 +336,9 @@ end;
 {---------------------------------------}
 procedure TSQLLogger.logMessage(log: TXMLTag);
 var
+    di: integer;
+    ti: double;
+
     d: TXMLTag;
     cmd: String;
     sql: String;
@@ -250,8 +355,6 @@ var
     nick: string;
     body: string;
     mtype: string;
-    dstr: string;
-    tstr: string;
     outstr: string;
 begin
     outb := (log.getAttribute('dir') = 'out');
@@ -280,12 +383,10 @@ begin
             ts := JabberToDateTime(d.Data);
     end;
 
-    dstr := DateToStr(ts);
-    tstr := TimeToStr(ts);
-
-    cmd := 'INSERT INTO logs VALUES("%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s", "%s");';
-    sql := Format(cmd, [user_jid, jid, dstr, tstr, thread, subject, nick, body, mtype, outstr]);
-
+    cmd := 'INSERT INTO jlogs VALUES ("%s", "%s", "%s", %d, %8.6f, "%s", "%s", "%s", "%s", "%s", "%s");';
+    di := Trunc(ts);
+    ti := Frac(double(ts));
+    sql := Format(cmd, [user_jid, _mid, jid, di, ti, thread, subject, nick, body, mtype, outstr]);
     _db.ExecSQL(sql);
 end;
 
