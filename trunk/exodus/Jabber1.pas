@@ -182,6 +182,7 @@ type
     mnuPluginOpts: TTntMenuItem;
     N15: TTntMenuItem;
     imgListClients: TImageList;
+    bigImages: TImageList;
 
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
@@ -3026,6 +3027,9 @@ begin
     if (f is TfrmChat) then begin
         if (Tabs.ActivePage.ImageIndex = tab_notify) then
             Tabs.ActivePage.ImageIndex := TfrmChat(f).LastImage
+    end
+    else if (f is TfrmRoom) then begin
+        Tabs.ActivePage.ImageIndex := ico_conf;
     end
     else if (Tabs.ActivePage.ImageIndex <> -1) then
         Tabs.ActivePage.ImageIndex := -1;
