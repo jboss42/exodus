@@ -27,7 +27,7 @@ object frmVCard: TfrmVCard
     Top = 0
     Width = 318
     Height = 292
-    ActivePage = TabSheet3
+    ActivePage = TabSheet6
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 0
@@ -308,7 +308,7 @@ object frmVCard: TfrmVCard
           'Christmas Island  '
           'Cocos (Keeling) '
           'Islands  '
-          'Colubmia  '
+          'Columbia  '
           'Comoros  '
           'Congo (Republic of) '
           'Congo (Democratic Republic of) '
@@ -406,7 +406,7 @@ object frmVCard: TfrmVCard
           'Monaco  '
           'Mongolia  '
           'Montserrat  '
-          'Morocoo  '
+          'Morocco  '
           'Mozambique  '
           'Myanmar  '
           'Namibia  '
@@ -713,7 +713,7 @@ object frmVCard: TfrmVCard
           'Christmas Island  '
           'Cocos (Keeling) '
           'Islands  '
-          'Colubmia  '
+          'Columbia  '
           'Comoros  '
           'Congo (Republic of) '
           'Congo (Democratic Republic of) '
@@ -811,7 +811,7 @@ object frmVCard: TfrmVCard
           'Monaco  '
           'Mongolia  '
           'Montserrat  '
-          'Morocoo  '
+          'Morocco  '
           'Mozambique  '
           'Myanmar  '
           'Namibia  '
@@ -954,13 +954,11 @@ object frmVCard: TfrmVCard
     TabOrder = 1
     inherited Panel2: TPanel
       Width = 442
-      Height = 34
       inherited Bevel1: TBevel
         Width = 442
       end
       inherited Panel1: TPanel
         Left = 282
-        Height = 29
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end
