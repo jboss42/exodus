@@ -114,12 +114,9 @@ end;
 {---------------------------------------}
 function TStandardAuth.StartRegistration(): boolean;
 begin
-    if (_session.isXMPP) then
-        Result := false
-    else begin
-        Result := true;
-        SendRegistration();
-    end;
+    // Always try to register, even if XMPP
+    SendRegistration();
+    Result := true;
 end;
 
 {---------------------------------------}
