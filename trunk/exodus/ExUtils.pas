@@ -78,8 +78,6 @@ uses
     Debug;
 
 {---------------------------------------}
-// function GetLastInputInfo; external 'user32.dll' name 'GetLastInputInfo';
-
 function GetLastInputInfo;
 begin
     Result := false;
