@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-08-30 08:19\n"
-"PO-Revision-Date: 2004-08-30 08:19\n"
+"POT-Creation-Date: 2004-08-30 10:12\n"
+"PO-Revision-Date: 2004-08-30 10:12\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6395,16 +6395,6 @@ msgstr ""
 #. frmRosterWindow..popTransport..popTransEdit..Caption
 #: RosterWindow.dfm:694
 msgid "Properties ..."
-msgstr ""
-
-#. fRTFMsgList..MsgList......Name
-#: RTFMsgList.dfm:83
-msgid "xmpp"
-msgstr ""
-
-#. fRTFMsgList..MsgList......Name
-#: RTFMsgList.dfm:89
-msgid "jabber"
 msgstr ""
 
 #. frmSelContact..Caption
