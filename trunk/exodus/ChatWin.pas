@@ -400,6 +400,8 @@ begin
     // Send the msg if they hit return
     if ( (Key = #13) and not(mnuReturns.Checked)) then
         SendMsg();
+    if ( Key = #27 ) then
+        Close();
 end;
 
 {---------------------------------------}
