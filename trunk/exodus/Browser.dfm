@@ -25,7 +25,7 @@ object frmBrowse: TfrmBrowse
     Left = 0
     Top = 84
     Width = 422
-    Height = 287
+    Height = 291
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 3
@@ -34,7 +34,7 @@ object frmBrowse: TfrmBrowse
       Left = 145
       Top = 3
       Width = 274
-      Height = 281
+      Height = 285
       Align = alClient
       Columns = <
         item
@@ -72,7 +72,7 @@ object frmBrowse: TfrmBrowse
       Left = 3
       Top = 3
       Width = 142
-      Height = 281
+      Height = 285
       Align = alLeft
       BevelOuter = bvNone
       BorderWidth = 4
@@ -99,7 +99,7 @@ object frmBrowse: TfrmBrowse
   end
   object StatBar: TStatusBar
     Left = 0
-    Top = 371
+    Top = 375
     Width = 422
     Height = 20
     Panels = <
@@ -186,7 +186,7 @@ object frmBrowse: TfrmBrowse
           OnClick = btnBackClick
         end
         object btnFwd: TToolButton
-          Left = 38
+          Left = 36
           Top = 0
           Hint = 'Next JID'
           AllowAllUp = True
@@ -195,7 +195,7 @@ object frmBrowse: TfrmBrowse
           OnClick = btnFwdClick
         end
         object ToolButton2: TToolButton
-          Left = 61
+          Left = 59
           Top = 0
           Width = 13
           AllowAllUp = True
@@ -204,7 +204,7 @@ object frmBrowse: TfrmBrowse
           Style = tbsSeparator
         end
         object btnHome: TToolButton
-          Left = 74
+          Left = 72
           Top = 0
           Hint = 'Home'
           AllowAllUp = True
@@ -213,7 +213,7 @@ object frmBrowse: TfrmBrowse
           OnClick = btnHomeClick
         end
         object ToolButton1: TToolButton
-          Left = 97
+          Left = 95
           Top = 0
           Hint = 'Change Views'
           AllowAllUp = True
@@ -223,7 +223,7 @@ object frmBrowse: TfrmBrowse
           Style = tbsDropDown
         end
         object btnBookmark: TToolButton
-          Left = 135
+          Left = 131
           Top = 0
           Hint = 'Add a Bookmark'
           AllowAllUp = True
@@ -232,7 +232,7 @@ object frmBrowse: TfrmBrowse
           OnClick = mBookmarkClick
         end
         object ToolButton3: TToolButton
-          Left = 158
+          Left = 154
           Top = 0
           Hint = 'Get properties for all items in this window'
           AllowAllUp = True
@@ -241,7 +241,7 @@ object frmBrowse: TfrmBrowse
           OnClick = ToolButton3Click
         end
         object btnNode: TToolButton
-          Left = 181
+          Left = 177
           Top = 0
           Hint = 'Show Node Identifier'
           AllowAllUp = True
@@ -259,6 +259,7 @@ object frmBrowse: TfrmBrowse
     Width = 422
     Height = 31
     Align = alTop
+    BevelOuter = bvNone
     BorderWidth = 1
     TabOrder = 3
     DesignSize = (
@@ -292,10 +293,10 @@ object frmBrowse: TfrmBrowse
       OnClick = btnRefreshClick
     end
     object pnlJidID: TTntPanel
-      Left = 2
-      Top = 2
+      Left = 1
+      Top = 1
       Width = 88
-      Height = 27
+      Height = 29
       Align = alLeft
       BevelOuter = bvNone
       Caption = 'Jabber Address:   '
@@ -318,16 +319,17 @@ object frmBrowse: TfrmBrowse
     Width = 422
     Height = 31
     Align = alTop
+    BevelOuter = bvNone
     BorderWidth = 1
     TabOrder = 4
     DesignSize = (
       422
       31)
     object pnlNodeID: TTntPanel
-      Left = 2
-      Top = 2
+      Left = 1
+      Top = 1
       Width = 88
-      Height = 27
+      Height = 29
       Align = alLeft
       Alignment = taLeftJustify
       BevelOuter = bvNone

@@ -107,7 +107,7 @@ type
             timeout: integer = 10);
         procedure refresh(js: TJabberSession);
 
-        function ItemByJid(jid: Widestring): TJabberEntity;
+        function ItemByJid(jid: Widestring; node: Widestring = ''): TJabberEntity;
         function hasFeature(f: Widestring): boolean;
         function getItemByFeature(f: Widestring): TJabberEntity;
 
@@ -198,11 +198,17 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberEntity.ItemByJid(jid: Widestring): TJabberEntity;
+function TJabberEntity.ItemByJid(jid: Widestring; node: Widestring): TJabberEntity;
 var
+    id: Widestring;
     i: integer;
 begin
-    i := _items.IndexOf(jid);
+    if (node <> '') then
+        id := node + ':' + jid
+    else
+        id := jid;
+
+    i := _items.IndexOf(id);
     if (i >= 0) then
         Result := TJabberEntity(_items.Objects[i])
     else
@@ -456,7 +462,7 @@ var
     q: TXMLTag;
     iset: TXMLTagList;
     idx, i: integer;
-    tmps: Widestring;
+    id, nid, tmps: Widestring;
     cj: TJabberID;
     ce: TJabberEntity;
 begin
@@ -495,15 +501,20 @@ begin
 
         for i := 0 to iset.Count - 1 do begin
             tmps := iset[i].getAttribute('jid');
-            idx := _items.IndexOf(tmps);
+            nid := iset[i].getAttribute('node');
+            if (nid = '') then
+                id := tmps
+            else
+                id := nid + ':' + tmps;
+            idx := _items.IndexOf(id);
             if (idx < 0) then begin
                 cj := TJabberID.Create(tmps);
                 ce := TJabberEntity.Create(cj);
                 ce._parent := Self;
                 _items.AddObject(tmps, ce);
                 ce._name := iset[i].getAttribute('name');
-                ce._node := iset[i].getAttribute('node');
-                jEntityCache.Add(tmps, ce);
+                ce._node := nid;
+                jEntityCache.Add(id, ce);
             end;
         end;
     end;
