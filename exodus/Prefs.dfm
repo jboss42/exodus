@@ -1352,10 +1352,10 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 307
     Height = 321
-    ActivePage = tbsRoster
+    ActivePage = tbsSystem
     Align = alClient
     Style = tsFlatButtons
-    TabIndex = 0
+    TabIndex = 3
     TabOrder = 2
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1403,7 +1403,7 @@ object frmPrefs: TfrmPrefs
       end
       object optDblClick: TRadioGroup
         Left = 8
-        Top = 120
+        Top = 160
         Width = 161
         Height = 73
         Caption = 'Double Click Action '
@@ -1420,6 +1420,19 @@ object frmPrefs: TfrmPrefs
         Height = 17
         Caption = 'Show status in the roster: Joe <Meeting>'
         TabOrder = 5
+        OnClick = chkInlineStatusClick
+      end
+      object cboInlineStatus: TColorBox
+        Left = 32
+        Top = 120
+        Width = 145
+        Height = 22
+        DefaultColorColor = clBlue
+        Selected = clBlue
+        Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
+        DropDownCount = 12
+        ItemHeight = 16
+        TabOrder = 6
       end
     end
     object tbsSubscriptions: TTabSheet
@@ -1591,7 +1604,7 @@ object frmPrefs: TfrmPrefs
       object StaticText3: TStaticText
         Left = 0
         Top = 0
-        Width = 142
+        Width = 299
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1613,7 +1626,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 102
+        Width = 299
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1630,7 +1643,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkTimestamp: TCheckBox
         Left = 8
-        Top = 104
+        Top = 128
         Width = 241
         Height = 17
         Caption = 'Timestamp displayed messages'
@@ -1638,7 +1651,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkAutoUpdate: TCheckBox
         Left = 8
-        Top = 128
+        Top = 152
         Width = 233
         Height = 17
         Caption = 'Check for updates automatically'
@@ -1646,7 +1659,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkLog: TCheckBox
         Left = 8
-        Top = 152
+        Top = 176
         Width = 97
         Height = 17
         Caption = 'Log Messages'
@@ -1675,6 +1688,14 @@ object frmPrefs: TfrmPrefs
         Height = 17
         Caption = 'Automatically login with last profile'
         TabOrder = 6
+      end
+      object chkCloseMin: TCheckBox
+        Left = 8
+        Top = 104
+        Width = 241
+        Height = 17
+        Caption = 'Close button minimizes to the tray'
+        TabOrder = 7
       end
     end
     object tbsDialog: TTabSheet
@@ -2052,7 +2073,7 @@ object frmPrefs: TfrmPrefs
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 299
+        Width = 292
         Height = 26
         Align = alTop
         Caption = 
@@ -2063,7 +2084,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 299
+        Width = 146
         Height = 20
         Align = alTop
         Alignment = taCenter

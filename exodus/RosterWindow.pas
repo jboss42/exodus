@@ -110,6 +110,7 @@ type
     _task_height: longint;
     _task_collapsed: boolean;
     _show_status: boolean;
+    _status_color: TColor;
 
     _bookmark: TTreeNode;
     _hint_text : String;
@@ -207,10 +208,13 @@ begin
     SessionCallback('prefs', nil);
     _task_collapsed := false;
     _bookmark := nil;
+    _show_status := MainSession.Prefs.getBool('inline_status');
+    _status_color := TColor(MainSession.Prefs.getInt('inline_color'));
+
+    frmJabber.pnlRoster.ShowHint := not _show_status;
 
     Application.ShowHint := true;
     Application.OnShowHint := DoShowHint;
-
 end;
 
 {---------------------------------------}
@@ -267,8 +271,12 @@ begin
     else if event = '/session/presence' then begin
         ShowPresence(MainSession.show);
         end
-    else if event = '/session/prefs' then
+    else if event = '/session/prefs' then begin
+        _show_status := MainSession.Prefs.getBool('inline_status');
+        _status_color := TColor(MainSession.Prefs.getInt('inline_color'));
+        frmJabber.pnlRoster.ShowHint := not _show_status;
         Redraw();
+        end;
 end;
 
 {---------------------------------------}
@@ -504,7 +512,6 @@ var
 begin
     // The Data parameter contains a list of nodes for this item
     show_online := MainSession.Prefs.getBool('roster_only_online');
-    _show_status := MainSession.Prefs.getBool('inline_status');
 
     if ((show_online) and ((p = nil) or (p.PresType = 'unavailable'))) then begin
         RemoveItemNodes(ritem);
@@ -1206,7 +1213,7 @@ begin
                     tw := TextWidth(c1);
                     SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(treeRoster.Font.Color));
                     TextOut(xRect.Left + 1, xRect.Top + 1, c1);
-                    SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(clBlue));
+                    SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(_status_color));
                     TextOut(xRect.Left + tw + 5, xRect.Top + 1, c2);
                     end;
 

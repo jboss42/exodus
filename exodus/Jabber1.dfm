@@ -1,6 +1,6 @@
 object frmJabber: TfrmJabber
-  Left = 253
-  Top = 163
+  Left = 291
+  Top = 168
   Width = 540
   Height = 341
   AlphaBlendValue = 240
@@ -27,7 +27,7 @@ object frmJabber: TfrmJabber
     Left = 0
     Top = 30
     Width = 532
-    Height = 257
+    Height = 258
     ActivePage = tbsMsg
     Align = alClient
     DockSite = True
@@ -48,7 +48,7 @@ object frmJabber: TfrmJabber
         Left = 209
         Top = 0
         Width = 3
-        Height = 229
+        Height = 230
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = Splitter1Moved
@@ -57,7 +57,7 @@ object frmJabber: TfrmJabber
         Left = 0
         Top = 0
         Width = 209
-        Height = 229
+        Height = 230
         Align = alLeft
         BevelOuter = bvNone
         UseDockManager = False
@@ -69,7 +69,7 @@ object frmJabber: TfrmJabber
         Left = 212
         Top = 0
         Width = 312
-        Height = 229
+        Height = 230
         Align = alClient
         Columns = <
           item
@@ -2233,6 +2233,28 @@ object frmJabber: TfrmJabber
     object popFloatTab: TMenuItem
       Caption = 'Float Window'
       OnClick = popFloatTabClick
+    end
+  end
+  object popTray: TPopupMenu
+    Left = 80
+    Top = 136
+    object ShowExodus1: TMenuItem
+      Caption = 'Show Exodus'
+      OnClick = ShowExodus1Click
+    end
+    object N4: TMenuItem
+      Caption = '-'
+    end
+    object LogOff1: TMenuItem
+      Caption = 'Log On/Off'
+      OnClick = btnConnectClick
+    end
+    object N01: TMenuItem
+      Caption = '-'
+    end
+    object ExitExodus1: TMenuItem
+      Caption = 'Exit Exodus'
+      OnClick = ExitExodus1Click
     end
   end
 end
