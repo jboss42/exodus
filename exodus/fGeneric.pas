@@ -270,6 +270,8 @@ begin
 
     for i := 0 to vals.Count - 1 do
         Result.AddBasicTag('value', vals[i]);
+
+    vals.Free();
 end;
 
 {---------------------------------------}

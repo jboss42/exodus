@@ -251,6 +251,7 @@ begin
     _last_id := '';
     _reply_id := '';
     _msg_out := false;
+    _jid := nil;
 
     if (MainSession.Profile.ConnectionType = conn_normal) then
         DragAcceptFiles( Handle, True );
@@ -352,6 +353,9 @@ begin
             MainSession.ChatList.Delete(i);
         chat_object.Free;
         end;
+
+    if (_jid <> nil) then
+        _jid.Free();
 
     Action := caFree;
     inherited;

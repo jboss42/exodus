@@ -503,6 +503,7 @@ begin
             Self.Delete(idx);
             end;
         end;
+    ritems.Free();
 end;
 
 {---------------------------------------}

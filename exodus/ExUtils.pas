@@ -616,6 +616,7 @@ begin
         for i := 0 to ins_list.Count - 1 do
             tmps := tmps + Trim(ins_list[i]) + ' ';
         Result := tmps;
+        ins_list.Free();
         end;
 end;
 

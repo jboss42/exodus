@@ -1732,6 +1732,9 @@ begin
     // Kill the tray icon stuff
     _tray_icon.Free();
 
+    // remove the COM Plugin _controller
+    _controller.Free();
+
 end;
 
 {---------------------------------------}

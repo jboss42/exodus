@@ -450,10 +450,11 @@ begin
                     t.Add(s[j]);
                     if (first) then break;
                     end;
+                if (s <> nil) then s.Free();
                 end;
             end;
+        if (c <> nil) then c.Free();
         end;
-    
     Result := t;
 end;
 

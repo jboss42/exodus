@@ -541,7 +541,6 @@ begin
         if (clist <> nil) then clist.Free();
         if (items <> nil) then Items.Free();
 
-
         // show results panel
         lblSelect.Visible := false;
         cboJID.Visible := false;
@@ -860,6 +859,8 @@ end;
 procedure TfrmJUD.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   inherited;
+    field_set.Free();
+    virtlist.Free();
     Action := caFree;
 end;
 
