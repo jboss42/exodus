@@ -38,6 +38,8 @@ type
     procedure Panel2Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Timer2Timer(Sender: TObject);
+    procedure Shape1MouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private declarations }
     _taskrect: TRect;
@@ -234,6 +236,12 @@ procedure TfrmRiser.Timer2Timer(Sender: TObject);
 begin
     // close ourself
     Self.Close;
+end;
+
+procedure TfrmRiser.Shape1MouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+    Panel2Click(Shape1);
 end;
 
 initialization
