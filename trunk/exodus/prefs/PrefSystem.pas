@@ -40,6 +40,8 @@ type
     btnUpdateCheck: TButton;
     chkSingleInstance: TCheckBox;
     chkStartMin: TCheckBox;
+    Label7: TLabel;
+    cboLocale: TComboBox;
     procedure btnUpdateCheckClick(Sender: TObject);
     procedure btnUpdateCheckMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -82,6 +84,7 @@ begin
         chkToolbox.Checked := getBool('window_toolbox');
         chkCloseMin.Checked := getBool('close_min');
         chkSingleInstance.Checked := getBool('single_instance');
+        cboLocale.Text := getString('locale');
     end;
 end;
 
@@ -102,6 +105,7 @@ begin
         setBool('autologin', chkAutoLogin.Checked);
         setBool('close_min', chkCloseMin.Checked);
         setBool('single_instance', chkSingleInstance.Checked);
+        setString('locale', cboLocale.Text);
 
         reg := TRegistry.Create();
         try

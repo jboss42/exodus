@@ -1,6 +1,6 @@
 object frmPrefSystem: TfrmPrefSystem
-  Left = 418
-  Top = 551
+  Left = 289
+  Top = 184
   Width = 327
   Height = 318
   BorderWidth = 6
@@ -14,6 +14,13 @@ object frmPrefSystem: TfrmPrefSystem
   OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
+  object Label7: TLabel
+    Left = 8
+    Top = 221
+    Width = 133
+    Height = 13
+    Caption = 'Exodus language file to use:'
+  end
   object StaticText4: TStaticText
     Left = 0
     Top = 0
@@ -122,5 +129,17 @@ object frmPrefSystem: TfrmPrefSystem
     Height = 17
     Caption = 'Start minimized to the system tray'
     TabOrder = 11
+  end
+  object cboLocale: TComboBox
+    Left = 29
+    Top = 237
+    Width = 143
+    Height = 21
+    Style = csDropDownList
+    ItemHeight = 13
+    TabOrder = 12
+    Items.Strings = (
+      'English (American)'
+      '')
   end
 end

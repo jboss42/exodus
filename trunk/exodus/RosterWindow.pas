@@ -251,8 +251,8 @@ resourcestring
     sCancelLogin = 'Click to Cancel...';
     sDisconnected = 'Disconnected.';
     sConnecting = 'Trying to connect...';
-    sAuthenticating = 'Connected. '#13#10 + 'Authenticating...';
-    sAuthenticated = 'Authenticated.'#13#10 + 'Getting Settings...';
+    sAuthenticating = 'Connected. '#13#10'Authenticating...';
+    sAuthenticated = 'Authenticated.'#13#10'Getting Settings...';
 
     sBtnBlock = 'Block';
     sBtnUnBlock = 'UnBlock';

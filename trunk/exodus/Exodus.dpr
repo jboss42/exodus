@@ -145,7 +145,8 @@ uses
   XMLUtils in '..\jopl\XMLUtils.pas',
   XMLVCard in '..\jopl\XMLVCard.pas',
   FileServer in 'FileServer.pas',
-  PrefTransfer in 'PrefTransfer.pas' {frmPrefTransfer};
+  gnugettext in 'gnugettext.pas',
+  PrefTransfer in 'prefs\PrefTransfer.pas' {frmPrefTransfer};
 
 {$R *.TLB}
 
