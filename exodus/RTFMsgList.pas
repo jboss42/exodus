@@ -147,6 +147,14 @@ begin
     bc := TfrmBaseChat(_base);
 
     if (not bc.Visible) then exit;
+
+    if (Ord(key) = 22) then begin
+        // paste, Ctrl-V
+        bc.MsgOut.SetFocus();
+        bc.MsgOut.PasteFromClipboard();
+        exit;
+    end;
+
     if (Ord(key) < 32) then exit;
 
     if (bc.pnlInput.Visible) then begin
