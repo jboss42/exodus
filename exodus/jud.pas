@@ -169,13 +169,11 @@ begin
     // or pre-select the first item
     if (sjid <> '') then begin
         f.cboJID.Text := sjid;
-        f.getFields();
     end
     else if (f.cboJID.Items.Count > 0) then begin
         f.cboJID.ItemIndex := 0;
-        f.getFields();
     end;
-
+    f.btnAction.Caption := sJUDStart;
     Result := f;
 end;
 
@@ -188,6 +186,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmJUD.FormCreate(Sender: TObject);
+var
+    dflt_grp: Widestring;
 begin
   inherited;
     cur_jid := '';
@@ -198,7 +198,11 @@ begin
     field_set := TStringList.Create();
     cboGroup.Items.Assign(MainSession.Roster.GrpList);
     removeSpecialGroups(cboGroup.Items);
-    cboGroup.Text := MainSession.Prefs.getString('roster_default');
+    dflt_grp := MainSession.Prefs.getString('roster_default');
+
+    if (dflt_grp <> '') then
+        cboGroup.ItemIndex := cboGroup.Items.IndexOf(dflt_grp);
+        
     virtlist := TObjectList.Create();
     virtlist.OwnsObjects := true;
     AssignDefaultFont(pnlLeft.Font);
