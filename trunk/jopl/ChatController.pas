@@ -99,6 +99,8 @@ end;
 procedure TChatController.MsgCallback(event: string; tag: TXMLTag);
 begin
     // do stuff
+    if (tag.QueryXPTag('/message/x[@xmlns="jabber:x:data"]') <> nil) then exit;
+    
     // if we are paused, put on a delay tag.
     if (MainSession.IsPaused) then begin
         with tag.AddTag('x') do begin
