@@ -54,8 +54,6 @@ end;
 {---------------------------------------}
 destructor TExDropTarget.Destroy;
 begin
-    OutputDebugString('TExDropTarget.Destroy');
-
     inherited Destroy;
 end;
 
@@ -140,8 +138,6 @@ var
     sep: integer;
 begin
     //
-    OutputDebugString('Dropped!');
-
     with fe do begin
         // cfFormat := CF_HDROP;
         cfFormat := CF_UNICODETEXT;

@@ -748,9 +748,7 @@ begin
     // loop through all roster items and draw them
     _FullRoster := true;
     treeRoster.Color := TColor(MainSession.prefs.getInt('roster_bg'));
-    OutputDebugString('Clearing Nodes.');
     ClearNodes;
-    OutputDebugString('Starting Update trans.');
     treeRoster.Items.BeginUpdate;
 
     // re-render each item
@@ -766,13 +764,9 @@ begin
             RenderBookmark(bm);
         end;
     end;
-    OutputDebugString('Finished rendering nodes');
-
     _FullRoster := false;
     treeRoster.AlphaSort;
-    OutputDebugString('Finished sorting');
     ExpandNodes();
-    OutputDebugString('Finished expanding');
     if (treeRoster.Items.Count > 0) then
         treeRoster.TopItem := treeRoster.Items[0];
     treeRoster.Items.EndUpdate;

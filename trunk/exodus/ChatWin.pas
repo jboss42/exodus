@@ -1144,6 +1144,7 @@ begin
         (MsgList.Lines.Count > 0) and
         (chat_object <> nil) and
         (not _destroying)) then begin
+        MsgList.Visible := false;
         MsgList.SelectAll();
         s := MsgList.RTFSelText;
         chat_object.SetHistory(s);

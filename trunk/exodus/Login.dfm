@@ -68,13 +68,14 @@ object frmLogin: TfrmLogin
     Height = 21
     ItemHeight = 13
     TabOrder = 3
+    OnKeyPress = txtUsernameKeyPress
     Items.WideStrings = (
       'jabber.org'
       'jabber.com')
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 191
+    Top = 196
     Width = 238
     Height = 37
     Align = alBottom
@@ -132,6 +133,7 @@ object frmLogin: TfrmLogin
     Width = 151
     Height = 21
     TabOrder = 1
+    OnKeyPress = txtUsernameKeyPress
   end
   object txtPassword: TTntEdit
     Left = 66
@@ -148,6 +150,7 @@ object frmLogin: TfrmLogin
     Height = 21
     ItemHeight = 13
     TabOrder = 4
+    OnKeyPress = txtUsernameKeyPress
   end
   object popProfiles: TPopupMenu
     Left = 8
