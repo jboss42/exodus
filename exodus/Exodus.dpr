@@ -147,7 +147,8 @@ uses
   gnugettext in 'gnugettext.pas',
   PrefTransfer in 'prefs\PrefTransfer.pas' {frmPrefTransfer},
   buttonFrame in 'buttonFrame.pas' {frameButtons: TFrame},
-  ExSession in 'ExSession.pas';
+  ExSession in 'ExSession.pas',
+  WebGet in 'WebGet.pas' {frmWebDownload};
 
 {$R *.TLB}
 
@@ -169,7 +170,7 @@ begin
   if (not continue) then exit;
 
   Application.CreateForm(TfrmExodus, frmExodus);
-
+  Application.CreateForm(TfrmWebDownload, frmWebDownload);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);

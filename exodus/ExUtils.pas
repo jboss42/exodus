@@ -95,6 +95,14 @@ procedure jabberSendMsg(to_jid: Widestring; mtag, xtags: TXMLTag;
 procedure jabberSendMsg(to_jid: Widestring; mtag: TXMLTag;
     xtags, body, subject: Widestring); overload;
 
+resourcestring
+    sDownloading      = 'Downloading...';
+    sDownloadComplete = 'Download Complete';
+    sInitializing     = 'Initializing...';
+    sInstalling       = 'Installing...';
+    sError            = 'Error: %s';
+
+
 var
     _GetLastInputInfo: Pointer;
 
