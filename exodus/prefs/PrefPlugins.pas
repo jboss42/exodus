@@ -22,7 +22,7 @@ unit PrefPlugins;
 interface
 
 uses
-    Unicode, 
+    Unicode,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, PrefPanel, ComCtrls, TntComCtrls, StdCtrls;
 
@@ -55,7 +55,7 @@ type
   end;
 
 type
-    TRegProc = function : HResult; stdcall;
+    TRegProc = function: HResult; stdcall;
 
 var
   frmPrefPlugins: TfrmPrefPlugins;
@@ -170,7 +170,7 @@ var
 
     // stuff for reg
     dll_inst: THandle;
-    dll_reg: TDLLRegProc;
+    dll_reg: TRegProc;
 begin
     // load the .dll.  This SHOULD register the bloody thing if it's not, but that
     // doesn't seem to work for me.
