@@ -844,7 +844,7 @@ begin
     node_bm: begin
         // enter this conference
         if _cur_bm.bmType = 'conference' then
-            StartRoom(_cur_bm.jid.jid, MainSession.Username);
+            StartRoom(_cur_bm.jid.jid, _cur_bm.nick);
         end;
     end;
 end;
