@@ -709,7 +709,6 @@ procedure TfRecvStatus.btnCancelClick(Sender: TObject);
 begin
     // cancel, or close
     if (_pkg.mode = recv_si) then begin
-
         if (_cur <> -1) then begin
             MainSession.UnRegisterCallback(_cur);
         end;
