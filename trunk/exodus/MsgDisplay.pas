@@ -196,6 +196,7 @@ begin
         // otherwise insert the matched text
         if (eo <> nil) then begin
             eo.il.GetBitmap(eo.idx, _pic.Bitmap);
+            _pic.Bitmap.Transparent := true;
             RichEdit.InsertBitmap(_pic.Bitmap);
         end
         else begin

@@ -3,6 +3,7 @@ object frmInputPass: TfrmInputPass
   Top = 143
   Width = 281
   Height = 131
+  ActiveControl = txtPassword
   BorderWidth = 3
   Caption = 'Exodus Password'
   Color = clBtnFace
@@ -49,7 +50,7 @@ object frmInputPass: TfrmInputPass
     Left = 12
     Top = 29
     Width = 246
-    Height = 25
+    Height = 21
     Anchors = [akLeft, akTop, akRight]
     PasswordChar = '*'
     TabOrder = 1

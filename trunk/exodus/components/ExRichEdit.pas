@@ -121,16 +121,16 @@ end;
 
 function BitmapToRTF(pict: Graphics.TBitmap): string;
 var
-    bi,bb,rtf: string;
-    bis,bbs: Cardinal;
+    bi, bb, rtf: string;
+    bis, bbs: Cardinal;
     achar: ShortString;
     hexpict: string;
-    I: Integer;
+    i: Integer;
 begin
-    GetDIBSizes(pict.Handle,bis,bbs);
+    GetDIBSizes(pict.Handle, bis, bbs);
     SetLength(bi,bis);
     SetLength(bb,bbs);
-    GetDIB(pict.Handle,pict.Palette,PChar(bi)^,PChar(bb)^);
+    GetDIB(pict.Handle, pict.Palette, PChar(bi)^, PChar(bb)^);
     rtf := '{\rtf1 {\pict\dibitmap ';
     SetLength(hexpict,(Length(bb) + Length(bi)) * 2);
     i := 2;
@@ -141,7 +141,7 @@ begin
         hexpict[i-1] := achar[1];
         hexpict[i] := achar[2];
         inc(i,2);
-        end;
+    end;
     for bbs := 1 to Length(bb) do begin
         achar := Format('%x',[Integer(bb[bbs])]);
         if Length(achar) = 1 then
@@ -149,7 +149,7 @@ begin
         hexpict[i-1] := achar[1];
         hexpict[i] := achar[2];
         inc(i,2);
-        end;
+    end;
     rtf := rtf + hexpict + ' }}';
     Result := rtf;
 end;
