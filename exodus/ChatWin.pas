@@ -339,6 +339,7 @@ begin
 
     if (not Application.Active) then begin
         if (cn and notify_toast) > 0 then begin
+            
             end;
         if (cn and notify_flash) > 0 then begin
             if (Self.Docked) then

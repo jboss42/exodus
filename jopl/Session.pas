@@ -22,9 +22,6 @@ unit Session;
 interface
 
 uses
-    {$ifdef Win32}
-    Register, Notify, 
-    {$endif}
     PrefController,
     Agents, Chat, Presence, Roster,
     Signals, XMLStream, XMLTag,
@@ -57,9 +54,6 @@ type
 
         _id: longint;
         _cb_id: longint;
-        {$ifdef Win32}
-        _regcontroller: TRegController;
-        {$endif}
 
         procedure StreamCallback(msg: string; tag: TXMLTag);
 
@@ -78,10 +72,6 @@ type
         ChatList: TJabberChatList;
         Prefs: TPrefController;
         Agents: TStringList;
-        {$ifdef Win32}
-        Notify: TNotifyController;
-        {$endif}
-
         dock_windows: boolean;
 
         Constructor Create;
@@ -201,15 +191,6 @@ begin
     {$endif}
     
     Prefs.LoadProfiles;
-
-    {$ifdef Win32}
-    _regController := TRegController.Create();
-    _regController.SetSession(Self);
-
-    Notify := TNotifyController.Create;
-    Notify.SetSession(Self);
-    {$endif}
-
     Agents := TStringList.Create();
 end;
 
@@ -221,7 +202,6 @@ begin
     ppdb.Free;
     roster.Free;
     ChatList.Free;
-    // Notify.Free;
 
     _stream.Free;
 
@@ -250,7 +230,6 @@ end;
 procedure TJabberSession.Disconnect;
 begin
     _stream.Send('<presence type="unavailable"/>');
-    // ChatList.CloseAll;
     _stream.Disconnect;
     _register := false;
 end;
