@@ -42,18 +42,6 @@ type
     txtURL: TEdit;
     txtTime: TEdit;
     Label2: TLabel;
-    GroupBox1: TGroupBox;
-    lblProxyHost: TLabel;
-    lblProxyPort: TLabel;
-    lblProxyUsername: TLabel;
-    lblProxyPassword: TLabel;
-    Label3: TLabel;
-    txtProxyHost: TEdit;
-    txtProxyPort: TEdit;
-    chkProxyAuth: TCheckBox;
-    txtProxyUsername: TEdit;
-    txtProxyPassword: TEdit;
-    cboProxyApproach: TComboBox;
     txtHost: TEdit;
     Label4: TLabel;
     Label7: TLabel;
@@ -78,8 +66,6 @@ type
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure chkSocksAuthClick(Sender: TObject);
     procedure cboSocksTypeChange(Sender: TObject);
-    procedure cboProxyApproachChange(Sender: TObject);
-    procedure chkProxyAuthClick(Sender: TObject);
     procedure chkSSLClick(Sender: TObject);
     procedure cboConnectionChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -237,62 +223,12 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmConnDetails.cboProxyApproachChange(Sender: TObject);
-begin
-    if (cboProxyApproach.ItemIndex = 2) then begin
-        txtProxyHost.Enabled := true;
-        txtProxyPort.Enabled := true;
-        chkProxyAuth.Enabled := true;
-        lblProxyHost.Enabled := true;
-        lblProxyPort.Enabled := true;
-    end
-    else begin
-        txtProxyHost.Enabled := false;
-        txtProxyPort.Enabled := false;
-        chkProxyAuth.Enabled := false;
-        chkProxyAuth.Checked := false;
-        txtProxyUsername.Enabled := false;
-        txtProxyPassword.Enabled := false;
-        lblProxyHost.Enabled := false;
-        lblProxyPort.Enabled := false;
-        lblProxyUsername.Enabled := false;
-        lblProxyPassword.Enabled := false;
-    end;
-
-end;
-
-{---------------------------------------}
-procedure TfrmConnDetails.chkProxyAuthClick(Sender: TObject);
-begin
-    if (chkProxyAuth.Checked) then begin
-        lblProxyUsername.Enabled := true;
-        lblProxyPassword.Enabled := true;
-        txtProxyUsername.Enabled := true;
-        txtProxyPassword.Enabled := true;
-    end
-    else begin
-        lblProxyUsername.Enabled := false;
-        lblProxyPassword.Enabled := false;
-        txtProxyUsername.Enabled := false;
-        txtProxyPassword.Enabled := false;
-    end;
-end;
-
-{---------------------------------------}
 procedure TfrmConnDetails.SetHttp(profile: TJabberProfile);
 begin
     with profile do begin
         txtURL.Text := URL;
         txtTime.Text := FloatToStr(Poll / 1000.0);
         txtKeys.Text := IntToStr(NumPollKeys);
-        cboProxyApproach.ItemIndex := ProxyApproach;
-        cboProxyApproachChange(cboProxyApproach);
-        txtProxyHost.Text := ProxyHost;
-        txtProxyPort.Text := IntToStr(ProxyPort);
-        chkProxyAuth.Checked := ProxyAuth;
-        chkProxyAuthClick(chkProxyAuth);
-        txtProxyUsername.Text := ProxyUsername;
-        txtProxyPassword.Text := ProxyPassword;
     end;
 end;
 
@@ -308,12 +244,7 @@ begin
             txtKeys.Text := '256';
             MessageDlg(sSmallKeys, mtWarning, [mbOK], 0);
         end;
-        ProxyApproach := cboProxyApproach.ItemIndex ;
-        ProxyHost := txtProxyHost.Text;
-        ProxyPort := StrToIntDef(txtProxyPort.Text, 0);
-        ProxyAuth := chkProxyAuth.Checked;
-        ProxyUsername := txtProxyUsername.Text;
-        ProxyPassword := txtProxyPassword.Text;
+        
     end;
 end;
 

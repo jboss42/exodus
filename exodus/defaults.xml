@@ -11,12 +11,6 @@
     <brand_profile_conn_type>0</brand_profile_conn_type>
     <brand_profile_host></brand_profile_host>
     <brand_profile_http_poll>1000</brand_profile_http_poll>
-    <brand_profile_http_proxy_approach>0</brand_profile_http_proxy_approach>
-    <brand_profile_http_proxy_auth>false</brand_profile_http_proxy_auth>
-    <brand_profile_http_proxy_host></brand_profile_http_proxy_host>
-    <brand_profile_http_proxy_password></brand_profile_http_proxy_password>
-    <brand_profile_http_proxy_port>8080</brand_profile_http_proxy_port>
-    <brand_profile_http_proxy_user></brand_profile_http_proxy_user>
     <brand_profile_http_url></brand_profile_http_url>
     <brand_profile_num_poll_keys>256</brand_profile_num_poll_keys>
     <brand_profile_password></brand_profile_password>
@@ -59,6 +53,12 @@
     <font_name>Arial</font_name>
     <font_size>10</font_size>
     <font_underline>0</font_underline>
+    <http_proxy_approach>0</http_proxy_approach>
+    <http_proxy_auth>false</http_proxy_auth>
+    <http_proxy_host></http_proxy_host>
+    <http_proxy_password></http_proxy_password>
+    <http_proxy_port>8080</http_proxy_port>
+    <http_proxy_user></http_proxy_user>
     <inline_status>0</inline_status>
     <notify_chatactivity>4</notify_chatactivity>
     <notify_invite>1</notify_invite>

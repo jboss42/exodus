@@ -309,118 +309,12 @@ object frmConnDetails: TfrmConnDetails
         Height = 21
         TabOrder = 1
       end
-      object GroupBox1: TGroupBox
-        Left = 6
-        Top = 53
-        Width = 214
-        Height = 172
-        Caption = 'HTTP Proxy'
-        TabOrder = 2
-        object lblProxyHost: TLabel
-          Left = 5
-          Top = 53
-          Width = 25
-          Height = 13
-          Caption = 'Host:'
-          Enabled = False
-        end
-        object lblProxyPort: TLabel
-          Left = 5
-          Top = 76
-          Width = 22
-          Height = 13
-          Caption = 'Port:'
-          Enabled = False
-        end
-        object lblProxyUsername: TLabel
-          Left = 5
-          Top = 121
-          Width = 51
-          Height = 13
-          Caption = 'Username:'
-          Enabled = False
-        end
-        object lblProxyPassword: TLabel
-          Left = 5
-          Top = 144
-          Width = 49
-          Height = 13
-          Caption = 'Password:'
-          Enabled = False
-        end
-        object Label3: TLabel
-          Left = 5
-          Top = 28
-          Width = 49
-          Height = 13
-          Caption = 'Approach:'
-        end
-        object txtProxyHost: TEdit
-          Left = 59
-          Top = 49
-          Width = 130
-          Height = 21
-          Enabled = False
-          TabOrder = 0
-        end
-        object txtProxyPort: TEdit
-          Left = 59
-          Top = 72
-          Width = 39
-          Height = 21
-          Enabled = False
-          TabOrder = 1
-        end
-        object chkProxyAuth: TCheckBox
-          Left = 59
-          Top = 94
-          Width = 135
-          Height = 17
-          Caption = 'Authentication Required'
-          Enabled = False
-          TabOrder = 2
-          OnClick = chkProxyAuthClick
-        end
-        object txtProxyUsername: TEdit
-          Left = 59
-          Top = 116
-          Width = 130
-          Height = 21
-          Enabled = False
-          TabOrder = 3
-        end
-        object txtProxyPassword: TEdit
-          Left = 59
-          Top = 142
-          Width = 130
-          Height = 21
-          Enabled = False
-          PasswordChar = '*'
-          TabOrder = 4
-        end
-        object cboProxyApproach: TComboBox
-          Left = 59
-          Top = 24
-          Width = 130
-          Height = 22
-          Style = csOwnerDrawFixed
-          ItemHeight = 16
-          ItemIndex = 0
-          TabOrder = 5
-          Text = 'Use IE settings'
-          OnChange = cboProxyApproachChange
-          Items.Strings = (
-            'Use IE settings'
-            'Direct Connection'
-            'Custom')
-        end
-      end
       object txtKeys: TEdit
         Left = 167
         Top = 27
         Width = 34
         Height = 21
-        TabOrder = 3
+        TabOrder = 2
       end
     end
   end

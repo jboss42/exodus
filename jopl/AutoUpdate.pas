@@ -28,6 +28,7 @@ interface
 
 uses
   Classes,
+  IdHttp,
   XMLTag;
 
 type
@@ -64,7 +65,6 @@ uses
     AutoUpdateStatus,
     Controls,
     ExUtils,
-    IdHttp,
     IQ,
     Dialogs,
     Forms,
@@ -79,6 +79,7 @@ function RoundDateTime(val: TDateTime) : TDateTime;
 begin
     Result := StrToDateTime(DateTimeToStr(val));
 end;
+
 
 {---------------------------------------}
 {---------------------------------------}
@@ -151,6 +152,7 @@ begin
     try
       http := TIdHTTP.Create(nil);
       http.HandleRedirects := true;
+      MainSession.Prefs.setProxy(http);
       http.Get(url, bfs);
       bfs.Free();
       if (http.ResponseCode = 200) then begin
@@ -211,6 +213,7 @@ begin
     try
         http := TIdHTTP.Create(nil);
         http.HandleRedirects := true;
+        MainSession.Prefs.setProxy(http);
         http.Head(_url);
         if (http.ResponseCode <> 200) then begin
             exit;

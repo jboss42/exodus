@@ -20,7 +20,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 389
+    Height = 384
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1438,7 +1438,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgPlugins: TImage
       Left = 0
-      Top = 583
+      Top = 636
       Width = 68
       Height = 40
       Align = alTop
@@ -1562,7 +1562,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblPlugins: TLabel
       Left = 0
-      Top = 623
+      Top = 676
       Width = 68
       Height = 13
       Align = alTop
@@ -1571,18 +1571,117 @@ object frmPrefs: TfrmPrefs
       WordWrap = True
       OnClick = TabSelect
     end
+    object imgNetwork: TImage
+      Left = 0
+      Top = 583
+      Width = 68
+      Height = 40
+      Align = alTop
+      Center = True
+      Picture.Data = {
+        07544269746D6170B6090000424DB60900000000000036040000280000002A00
+        000020000000010008000000000080050000120B0000120B0000000100000001
+        00009A9A9A009A9A9A009A9A9A00ECDFD00000000000494949005B5B5B006D6D
+        6D008080800092929200A4A4A400B6B6B600C8C8C800DBDBDB00EDEDED00FFFF
+        FF000000330000004D000000660000008000000099000000B3000000CC000000
+        E6000000FF001D1DFF003A3AFF005757FF007575FF009292FF00AFAFFF00CCCC
+        FF000011330000194A000020600000287700002F8E000037A400003EBB000046
+        D200004DE8000055FF00226CFF004482FF006699FF0088B0FF00AAC6FF00CCDD
+        FF000022330000314A0000406000004F7700005E8E00006EA400007DBB00008C
+        D200009BE80000AAFF0022B5FF0044C1FF0066CCFF0088D7FF00AAE3FF00CCEE
+        FF000033330000474700005C5C0000707000008585000099990000ADAD0000C2
+        C20000D6D60000EBEB0000FFFF0029FFFF0052FFFF007AFFFF00A3FFFF00CCFF
+        FF0000332200004A31000060400000774F00008E5E0000A46E0000BB7D0000D2
+        8C0000E89B0000FFAA0022FFB50044FFC10066FFCC0088FFD700AAFFE300CCFF
+        EE0000331100004D1A000066220000802B000099330000B33C0000CC440000E6
+        4D0000FF55001DFF68003AFF7C0057FF8F0075FFA30092FFB600AFFFCA00CCFF
+        DD000033000000500000006D0000008A000000A8000000C5000000E2000000FF
+        00001AFF1A0033FF33004DFF4D0066FF660080FF800099FF9900B3FFB300CCFF
+        CC00113300001A4D0000226600002B800000339900003CB3000044CC00004DE6
+        000055FF000068FF1D007CFF3A008FFF5700A3FF7500B6FF9200CAFFAF00DDFF
+        CC0022330000314A0000406000004F7700005E8E00006EA400007DBB00008CD2
+        00009BE80000AAFF0000B5FF2200C1FF4400CCFF6600D7FF8800E3FFAA00EEFF
+        CC00333300004D4D0000666600008080000099990000B3B30000CCCC0000E6E6
+        0000FFFF0000FFFF1D00FFFF3A00FFFF5700FFFF7500FFFF9200FFFFAF00FFFF
+        CC00331A0000502800006D3700008A450000A8540000C5620000E2710000FF80
+        0000FF8C1A00FF993300FFA64D00FFB36600FFBF8000FFCC9900FFD9B300FFE6
+        CC0033000000550000007700000099000000BB000000DD000000FF000000FF17
+        1700FF2D2D00FF444400FF5B5B00FF717100FF888800FF9F9F00FFB5B500FFCC
+        CC0033001A004D002600660033008000400099004D00B3005900CC006600E600
+        7300FF008000FF1D8E00FF3A9D00FF57AB00FF75BA00FF92C800FFAFD700FFCC
+        E600330033004D004D00660066008000800099009900B300B300CC00CC00E600
+        E600FF00FF00FF1DFF00FF3AFF00FF57FF00FF75FF00FF92FF00FFAFFF00FFCC
+        FF001A00330026004D0033006600400080004D0099005900B3006600CC007300
+        E6008000FF008E1DFF009D3AFF00AB57FF00BA75FF00C892FF00D7AFFF00FFFF
+        FF000F0F0F0F0F0F0F0F0F0F0F0F0F0F000000000F0F0F0F0F0F0F0F0000000F
+        0F0F0F0F0F0F0F0F0F0F0F0F00000F0F0F0F0F0F0F0F0F0F0F0F0F0000000000
+        00000F0F0F0F000000000000000F0F0F0F0F0F0F0F0F0F0F00000F0F0F0F0F0F
+        0F0F0F0F0F00B4B4B4B4B4000000000F0FB4B4B4B4B4B4000000000F0F0F0F0F
+        0F0F0F0F00000F0F0F0F0F0F0F0F0F0FB4B4B4B4B4B4B4B4B4000000B4B4B4B4
+        B4B4B4B4000000000F0F0F0F0F0F0F0F00000F0F0F0F0F0F0F0F0FB4B4B4B4B4
+        B4B4B4B4B4B400B4B4B4B4B4B4B4B4B4B40000000F0F0F0F0F0F0F0F00000F0F
+        0F0F0F0F0F0FB4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B40000
+        000F0F0F0F0F0F0F00000F0F0F0F0F0F0F0FB4B4B4B4B4B4B4B4B4B4B4B4B4B4
+        B4B4B4B4B4B4B4B4B4B4B400000F0F0F0F0F0F0F00000F0F0F0F0F0F0FB4B4B4
+        B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B40000000F0F0F0F0F0F
+        00000F0F0F0F0F0000B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4
+        B4B4B4B400000000000F0F0F00000F0F0F0FB4B4B4B4B4B4B4B4B4B4B4B4B4B4
+        B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4000000000F0F00000F0FB4B4B4B4
+        B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4
+        0000000F00000F0FB4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4
+        B4B4B4B4B4B4B4B4B4B4B4B4B400000F00000FB4B4B4B4B4B4B4B4B4B4B4B4B4
+        B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B400000F00000FB4
+        B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4
+        B4B4B4B4B4B4000000000FB4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4
+        B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B400000000B4B4B4B4B4B4B4B4B4B4
+        B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B40000
+        0000B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4
+        B4B4B4B4B4B4B4B4B4B400000000B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4
+        B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B400000000B4B4B4B4B4B4
+        B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4
+        B4B4000F00000FB4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4
+        B4B4B4B4B4B4B4B4B4B4B4B4B4B4000F00000FB4B4B4B4B4B4B4B4B4B4B4B4B4
+        B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B40F0F00000FB4
+        B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4
+        B4B4B4B4B4000F0F00000F0FB4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4
+        B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B40F0F0F0F00000F0F0FB4B4B4B4B4B4B4
+        B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B40F0F0F0F0F
+        00000F0F0F0F0F0FB4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4
+        B4B4B4B4000F0F0F0F0F0F0F00000F0F0F0F0F0F0FB4B4B4B4B4B4B4B4B4B4B4
+        B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4000F0F0F0F0F0F0F00000F0F0F0F0F0F
+        0FB4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4000F0F0F0F
+        0F0F0F0F00000F0F0F0F0F0F0F0FB4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4
+        B4B4B4B4B4B4B40F0F0F0F0F0F0F0F0F00000F0F0F0F0F0F0F0F0FB4B4B4B4B4
+        B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B4B40F0F0F0F0F0F0F0F0F0F00000F0F
+        0F0F0F0F0F0F0F0FB4B4B4B4B4B4B4B4B40F0FB4B4B4B4B4B4B4B4B4B40F0F0F
+        0F0F0F0F0F0F0F0F00000F0F0F0F0F0F0F0F0F0F0FB4B4B4B4B4B4B40F0F0F0F
+        0FB4B4B4B4B4B4B40F0F0F0F0F0F0F0F0F0F0F0F00000F0F0F0F0F0F0F0F0F0F
+        0F0F0FB4B40F0F0F0F0F0F0F0F0F0FB4B40F0F0F0F0F0F0F0F0F0F0F0F0F0F0F
+        0000}
+      OnClick = TabSelect
+    end
+    object lblNetwork: TLabel
+      Left = 0
+      Top = 623
+      Width = 68
+      Height = 13
+      Align = alTop
+      Alignment = taCenter
+      Caption = 'Network'
+      OnClick = TabSelect
+    end
   end
   object PageControl1: TPageControl
     Left = 89
     Top = 0
     Width = 371
-    Height = 389
-    ActivePage = tbsRoster
+    Height = 384
+    ActivePage = tbsSystem
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 0
+    TabIndex = 3
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -2018,7 +2117,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 102
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2691,7 +2790,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 124
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2777,7 +2876,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 112
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2796,7 +2895,7 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 73
         Width = 363
-        Height = 253
+        Height = 280
         Align = alClient
         TabOrder = 1
       end
@@ -2811,7 +2910,7 @@ object frmPrefs: TfrmPrefs
         object Label1: TLabel
           Left = 0
           Top = 0
-          Width = 306
+          Width = 363
           Height = 13
           Align = alTop
           Caption = 
@@ -2835,7 +2934,7 @@ object frmPrefs: TfrmPrefs
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 352
+        Width = 363
         Height = 26
         Align = alTop
         Caption = 
@@ -2846,7 +2945,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 146
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2865,7 +2964,7 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 46
         Width = 363
-        Height = 280
+        Height = 307
         Align = alClient
         TabOrder = 1
       end
@@ -3085,7 +3184,7 @@ object frmPrefs: TfrmPrefs
       end
     end
     object tbsPlugins: TTabSheet
-      Caption = 'tbsPlugins'
+      Caption = 'Plugins'
       ImageIndex = 11
       object Label6: TLabel
         Left = 6
@@ -3196,10 +3295,138 @@ object frmPrefs: TfrmPrefs
         ViewStyle = vsReport
       end
     end
+    object tbsNetwork: TTabSheet
+      Caption = 'Network'
+      ImageIndex = 12
+      object GroupBox2: TGroupBox
+        Left = 3
+        Top = 23
+        Width = 214
+        Height = 172
+        Caption = 'HTTP Proxy'
+        TabOrder = 0
+        object lblProxyHost: TLabel
+          Left = 5
+          Top = 53
+          Width = 25
+          Height = 13
+          Caption = 'Host:'
+          Enabled = False
+        end
+        object lblProxyPort: TLabel
+          Left = 5
+          Top = 76
+          Width = 22
+          Height = 13
+          Caption = 'Port:'
+          Enabled = False
+        end
+        object lblProxyUsername: TLabel
+          Left = 5
+          Top = 121
+          Width = 51
+          Height = 13
+          Caption = 'Username:'
+          Enabled = False
+        end
+        object lblProxyPassword: TLabel
+          Left = 5
+          Top = 144
+          Width = 49
+          Height = 13
+          Caption = 'Password:'
+          Enabled = False
+        end
+        object Label28: TLabel
+          Left = 5
+          Top = 28
+          Width = 49
+          Height = 13
+          Caption = 'Approach:'
+        end
+        object txtProxyHost: TEdit
+          Left = 59
+          Top = 49
+          Width = 130
+          Height = 21
+          Enabled = False
+          TabOrder = 0
+        end
+        object txtProxyPort: TEdit
+          Left = 59
+          Top = 72
+          Width = 39
+          Height = 21
+          Enabled = False
+          TabOrder = 1
+        end
+        object chkProxyAuth: TCheckBox
+          Left = 59
+          Top = 94
+          Width = 135
+          Height = 17
+          Caption = 'Authentication Required'
+          Enabled = False
+          TabOrder = 2
+          OnClick = chkProxyAuthClick
+        end
+        object txtProxyUsername: TEdit
+          Left = 59
+          Top = 116
+          Width = 130
+          Height = 21
+          Enabled = False
+          TabOrder = 3
+        end
+        object txtProxyPassword: TEdit
+          Left = 59
+          Top = 142
+          Width = 130
+          Height = 21
+          Enabled = False
+          PasswordChar = '*'
+          TabOrder = 4
+        end
+        object cboProxyApproach: TComboBox
+          Left = 59
+          Top = 24
+          Width = 130
+          Height = 22
+          Style = csOwnerDrawFixed
+          ItemHeight = 16
+          ItemIndex = 0
+          TabOrder = 5
+          Text = 'Use IE settings'
+          OnChange = cboProxyApproachChange
+          Items.Strings = (
+            'Use IE settings'
+            'Direct Connection'
+            'Custom')
+        end
+      end
+      object StaticText13: TStaticText
+        Left = 0
+        Top = 0
+        Width = 363
+        Height = 20
+        Align = alTop
+        Alignment = taCenter
+        Caption = 'Network Options'
+        Color = clHighlight
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clCaptionText
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+        TabOrder = 1
+      end
+    end
   end
   object Panel1: TPanel
     Left = 0
-    Top = 389
+    Top = 384
     Width = 460
     Height = 37
     Align = alBottom
