@@ -30,7 +30,12 @@ uses
     {$ifdef linux}
     QExtCtrls, IdSSLIntercept,
     {$else}
+
+    {$ifdef INDY9}
+    IdIOHandlerSocket,
+    {$endif}
     ExtCtrls, IdSSLOpenSSL,
+
     {$endif}
 
     IdTCPConnection, IdTCPClient, IdException, IdThread, IdSocks,
@@ -48,6 +53,7 @@ type
             {$ifdef INDY9}
             _ssl_int: TIdSSLIOHandlerSocket;
             _socks_info: TIdSocksInfo;
+            _iohandler: TIdIOHandlerSocket;
             {$else}
             _ssl_int: TIdConnectionInterceptOpenSSL;
             _socks_info: TObject;
@@ -58,13 +64,18 @@ type
         _timer:     TTimer;
         _profile:   TJabberProfile;
 
-        {$ifdef Win32}
-        // _cert:      TIdX509;
-        // procedure VerifyUI();
-        // function VerifyPeer(Certificate: TIdX509): Boolean;
-        {$endif}
         procedure Keepalive(Sender: TObject);
         procedure KillSocket();
+
+        procedure _setupSSL();
+
+        {$ifdef INDY9}
+        procedure _connectIndy9();
+        {$elseif Linux}
+        procedure _connectLinux();
+        {$else}
+        procedure _connectIndy8();
+        {$ifend}
 
     protected
         // TODO: make this a real event handler, so that other subclasses
@@ -108,10 +119,6 @@ end;
 implementation
 
 uses
-    {$ifdef Win32}
-    // todo: REMOVE this dependency!!
-    Controls, Dialogs,
-    {$endif}
     Classes;
 
 {---------------------------------------}
@@ -496,62 +503,81 @@ begin
 end;
 
 {---------------------------------------}
-procedure TXMLSocketStream.Connect(profile: TJabberProfile);
+procedure TXMLSocketStream._setupSSL();
 begin
-    _profile := profile;
-
-    {$ifdef Linux}
-    _ssl_int := TIdSSLConnectionIntercept.Create(nil);
-    {$else}
-    {$ifdef INDY9}
-    _ssl_int := TIdSSLIOHandlerSocket.Create(nil);
-    _socks_info := TIdSocksInfo.Create(nil);
-    {$else}
-    _ssl_int := TIdConnectionInterceptOpenSSL.Create(nil);
-    {$endif}
+    //
     with _ssl_int do begin
-        Passthrough := false;
-        UseNagle := false;
         SSLOptions.Method :=  sslvTLSv1;
+
         // TODO: get certs from profile, that would be *cool*.
         SSLOptions.CertFile := '';
         SSLOptions.RootCertFile := '';
+
         // TODO: Indy9 problems... if we try and verify, it disconnects us.
         // SSLOptions.VerifyMode := [sslvrfPeer, sslvrfFailIfNoPeerCert];
         // SSLOptions.VerifyDepth := 2;
         // OnVerifyPeer := VerifyPeer;
     end;
-    {$endif}
+end;
 
-    // connect to this server
-    _socket := TIdTCPClient.Create(nil);
-    _socket.RecvBufferSize := 4096;
-    _socket.Port := _profile.port;
-    {$ifdef INDY9}
-    _socket.IOHandler := _ssl_int;
-    {$else}
-    _socket.UseNagle := false;
-    _socket.Intercept := _ssl_int;
-    _socket.InterceptEnabled := _profile.ssl;
-    {$endif}
-
-    _server := _profile.Server;
-    if (_profile.Host = '') then
-        _socket.Host := _profile.Server
-    else
-        _socket.Host := _profile.Host;
-
-    if (_profile.SocksType = 0) then begin
-        _ssl_int.PassThrough := not _profile.ssl;
+{---------------------------------------}
+{$ifdef INDY9}
+procedure TXMLSocketStream._connectIndy9();
+begin
+    // Setup everything for Indy9 objects
+    _ssl_int := nil;
+    _socks_info := TIdSocksInfo.Create(nil);
+    if (_profile.ssl) then begin
+        _ssl_int := TIdSSLIOHandlerSocket.Create(nil);
+        _ssl_int.PassThrough := (_profile.SocksType <> 0);
+        _ssl_int.UseNagle := false;
+        _setupSSL();
+        _iohandler := _ssl_int;
+        _ssl_int.OnStatusInfo := TSocketThread(_thread).StatusInfo;
     end
-    else begin
-        {$ifdef INDY9}
+    else
+        _iohandler := TIdIOHandlerSocket.Create(nil);
+    _socket.IOHandler := _iohandler;
+
+    if (_profile.SocksType <> 0) then begin
         // setup the socket to point to the handler..
         // and the handler to point to our SOCKS stuff
         with _socks_info do begin
-        {$else}
+            case _profile.SocksType of
+            1: Version := svSocks4;
+            2: Version := svSocks4a;
+            3: Version := svSocks5;
+            end;
+            Host := _profile.SocksHost;
+            Port := _profile.SocksPort;
+            Authentication := saNoAuthentication;
+            if (_profile.SocksAuth) then begin
+                _socks_info.Username := _profile.SocksUsername;
+                _socks_info.Password := _profile.SocksPassword;
+                Authentication := saUsernamePassword;
+            end;
+            _iohandler.SocksInfo := _socks_info;
+        end;
+    end;
+end;
+{$endif}
+
+{---------------------------------------}
+{$ifndef INDY9}
+procedure TXMLSocketStream._connectIndy8();
+begin
+    // Setup everything for Indy8
+    if (_profile.ssl) then begin
+        _ssl_int := TIdConnectionInterceptOpenSSL.Create(nil);
+        _setupSSL();
+    end;
+
+    _socket.UseNagle := false;
+    _socket.Intercept := _ssl_int;
+    _socket.InterceptEnabled := _profile.ssl;
+
+    if (_profile.SocksType <> 0) then begin
         with _socket.SocksInfo do begin
-        {$endif}
             case _profile.SocksType of
             1: Version := svSocks4;
             2: Version := svSocks4a;
@@ -562,30 +588,52 @@ begin
             Port := _profile.SocksPort;
             Authentication := saNoAuthentication;
             if (_profile.SocksAuth) then begin
-                {$ifdef INDY9}
-                _socks_info.Username := _profile.SocksUsername;
-                _socks_info.Password := _profile.SocksPassword;
-                {$else}
                 UserID := _profile.SocksUsername;
                 Password := _profile.SocksPassword;
-                {$endif}
                 Authentication := saUsernamePassword;
             end;
-
-            {$ifdef INDY9}
-            _ssl_int.SocksInfo := _socks_info;
-            _ssl_int.PassThrough := true;
-            _socket.IOHandler := _ssl_int;
-            {$endif}
         end;
     end;
+end;
+{$endif}
+
+{---------------------------------------}
+{$ifdef Linux}
+procedure TXMLSocketStream._connectLinux();
+begin
+    //
+    _ssl_int := TIdSSLConnectionIntercept.Create(nil);
+end;
+{$endif}
+
+{---------------------------------------}
+procedure TXMLSocketStream.Connect(profile: TJabberProfile);
+begin
+    _profile := profile;
+
+    // Create our socket
+    _socket := TIdTCPClient.Create(nil);
+    _socket.RecvBufferSize := 4096;
+    _socket.Port := _profile.port;
+
+    _server := _profile.Server;
+    if (_profile.Host = '') then
+        _socket.Host := _profile.Server
+    else
+        _socket.Host := _profile.Host;
 
     // Create the socket reader thread and start it.
     // The thread will open the socket and read all of the data.
     _thread := TSocketThread.Create(Self, _socket, _root_tag);
+
     {$ifdef INDY9}
-    _ssl_int.OnStatusInfo := TSocketThread(_thread).StatusInfo;
-    {$endif}
+    _connectIndy9();
+    {$elseif Linux}
+    _connectLinux();
+    {$else}
+    _connectIndy8();
+    {$ifend}
+
     _thread.Start;
 end;
 
@@ -610,13 +658,11 @@ begin
         _socket.Intercept := nil;
         {$endif}
 
-        {
         if (_ssl_int <> nil) then
             FreeAndNil(_ssl_int);
 
         if (_socks_info <> nil) then
             FreeAndNil(_socks_info);
-        }
 
         _socket.Free();
         _socket := nil;
