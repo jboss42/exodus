@@ -48,7 +48,7 @@ object frmMsgQueue: TfrmMsgQueue
     MultiSelect = True
     ReadOnly = True
     RowSelect = True
-    SmallImages = Exodus.ImageList2
+    SmallImages = frmExodus.ImageList2
     TabOrder = 0
     ViewStyle = vsReport
     OnChange = lstEventsChange
@@ -59,14 +59,14 @@ object frmMsgQueue: TfrmMsgQueue
     Left = 0
     Top = 153
     Width = 428
-    Height = 127
+    Height = 122
     Align = alClient
     ReadOnly = True
     TabOrder = 1
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 280
+    Top = 275
     Width = 428
     Height = 19
     Panels = <>
