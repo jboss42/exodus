@@ -112,6 +112,7 @@ var
   frmChat: TfrmChat;
 
 function StartChat(sjid, resource: string; show_window: boolean): TfrmChat;
+procedure CloseAllChats;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -186,8 +187,28 @@ begin
         end;
 
     Result := TfrmChat(chat.window);
-
 end;
+
+{---------------------------------------}
+procedure CloseAllChats;
+var
+    i: integer;
+    c: TJabberChat;
+begin
+    with MainSession.ChatList do begin
+        for i := Count - 1 downto 0 do begin
+            c := TJabberChat(Objects[i]);
+            if c <> nil then begin
+                if c.window <> nil then
+                    TfrmChat(c.window).chat_object := nil;
+                    c.window.Close;
+                end;
+            c.Free;
+            Delete(i);
+            end;
+        end;
+end;
+
 
 {---------------------------------------}
 procedure TfrmChat.FormCreate(Sender: TObject);

@@ -23,6 +23,7 @@ unit Jabber1;
 interface
 
 uses
+    GUIFactory,
     ExResponders, 
     ExEvents,
     RosterWindow,
@@ -179,6 +180,7 @@ type
     _flash: boolean;
     _edge_snap: integer;
     _fade_limit: integer;
+    _guibuilder: TGUIFactory;
 
     _is_autoaway: boolean;
     _is_autoxa: boolean;
@@ -246,22 +248,13 @@ const
 {---------------------------------------}
 implementation
 uses
-    JUD, 
-    Transfer, 
-    Profile,
-    RiserWindow,
-    RemoveContact,
-    Roster,
-    VCard,
+    JUD,
+    Transfer, Profile,
+    RiserWindow, RemoveContact,
     ShellAPI,
-    Dockable,
-    MsgRecv,
-    PrefController,
-    Prefs,
-    JoinRoom,
-    RosterAdd,
-    S10n,
-    Login,
+    MsgRecv, Prefs, Dockable,
+    JoinRoom, Login, ChatWin, RosterAdd,
+    VCard, PrefController, Roster, S10n,
     Session, Debug, About;
 
 {$R *.DFM}
@@ -316,6 +309,9 @@ begin
 
     // Create our main Session object
     MainSession := TJabberSession.Create;
+    _guibuilder := TGUIFactory.Create();
+    _guibuilder.SetSession(MainSession);
+    
     with MainSession.Prefs do begin
         RestorePosition(Self);
 
@@ -616,7 +612,7 @@ begin
         _event := next_Exit;
         frmDebug.Free;
         frmRosterWindow.Free;
-        MainSession.ChatList.CloseAll;
+        ChatWin.CloseAllChats();
         MainSession.Free;
         MainSession := nil;
         end;
