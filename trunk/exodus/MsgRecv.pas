@@ -26,7 +26,7 @@ uses
     ExEvents,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2,
-  Buttons;
+    Buttons, TntStdCtrls;
 
 type
   TfrmMsgRecv = class(TfrmDockable)
@@ -36,16 +36,16 @@ type
     txtFrom: TStaticText;
     pnlSubject: TPanel;
     StaticText3: TStaticText;
-    txtSubject: TStaticText;
     pnlReply: TPanel;
     frameButtons2: TframeButtons;
     Splitter1: TSplitter;
     txtMsg: TExRichEdit;
     pnlSendSubject: TPanel;
     Label1: TLabel;
-    txtSendSubject: TMemo;
     MsgOut: TExRichEdit;
     btnClose: TSpeedButton;
+    txtSubject: TTntLabel;
+    txtSendSubject: TTntMemo;
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -115,7 +115,8 @@ begin
             recips.Add(e.from);
             txtFrom.Caption := e.from;
             txtSubject.Caption := e.data_type;
-            txtMsg.Lines.Assign(e.Data);
+            txtMsg.InputFormat := ifUnicode;
+            txtMsg.WideText := e.Data.Text;
 
             if eType = evt_Invite then begin
                 // Change button captions for TC Invites
@@ -255,18 +256,21 @@ end;
 procedure TfrmMsgRecv.frameButtons2btnOKClick(Sender: TObject);
 var
     m: TJabberMessage;
-    s: string;
+    txt, s: WideString;
     i: integer;
 begin
     // Send the outgoing msg
+    txt := Trim(MsgOut.WideText);
+    if (txt = '') then exit;
+
     if (pnlSendSubject.Visible) then
-        s := txtSendSubject.Lines.Text
+        s := txtSendSubject.Text
     else
         s := txtSubject.Caption;
 
     // send to ALL recips
     for i := 0 to recips.Count - 1 do begin
-        m := TJabberMessage.Create(recips[i], '', MsgOut.Lines.Text, s);
+        m := TJabberMessage.Create(recips[i], '', Trim(txt), s);
         MainSession.SendTag(m.Tag);
         m.Free();
         end;

@@ -1,6 +1,6 @@
 object frmMsgRecv: TfrmMsgRecv
-  Left = 246
-  Top = 179
+  Left = 329
+  Top = 314
   Width = 333
   Height = 416
   Caption = 'Message'
@@ -120,6 +120,14 @@ object frmMsgRecv: TfrmMsgRecv
     BevelOuter = bvNone
     BorderWidth = 2
     TabOrder = 5
+    object txtSubject: TTntLabel
+      Left = 53
+      Top = 2
+      Width = 270
+      Height = 18
+      Align = alClient
+      Caption = 'txtSubject'
+    end
     object StaticText3: TStaticText
       Left = 2
       Top = 2
@@ -136,23 +144,6 @@ object frmMsgRecv: TfrmMsgRecv
       ParentColor = False
       ParentFont = False
       TabOrder = 0
-    end
-    object txtSubject: TStaticText
-      Left = 53
-      Top = 2
-      Width = 270
-      Height = 18
-      Align = alClient
-      Caption = '<JID>'
-      Color = clBtnFace
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
-      TabOrder = 1
     end
   end
   object pnlReply: TPanel
@@ -278,7 +269,7 @@ object frmMsgRecv: TfrmMsgRecv
       URLCursor = crHandPoint
       OnKeyUp = MsgOutKeyUp
       OnURLClick = txtMsgURLClick
-      InputFormat = ifRTF
+      InputFormat = ifUnicode
       OutputFormat = ofRTF
       SelectedInOut = False
       PlainRTF = False
@@ -374,7 +365,7 @@ object frmMsgRecv: TfrmMsgRecv
     URLColor = clBlue
     URLCursor = crHandPoint
     OnURLClick = txtMsgURLClick
-    InputFormat = ifRTF
+    InputFormat = ifUnicode
     OutputFormat = ofRTF
     SelectedInOut = False
     PlainRTF = False
@@ -408,7 +399,7 @@ object frmMsgRecv: TfrmMsgRecv
       ParentFont = False
       Layout = tlCenter
     end
-    object txtSendSubject: TMemo
+    object txtSendSubject: TTntMemo
       Left = 66
       Top = 2
       Width = 257
@@ -416,6 +407,7 @@ object frmMsgRecv: TfrmMsgRecv
       Align = alClient
       TabOrder = 0
       WantReturns = False
+      WordWrap = False
     end
   end
 end

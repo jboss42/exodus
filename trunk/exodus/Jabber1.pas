@@ -1447,7 +1447,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.MsgCallback(event: string; tag: TXMLTag);
 var
-    b, mtype: string;
+    b, mtype: Widestring;
     e: TJabberEvent;
     msg: TJabberMessage;
     msg_treatment: integer;

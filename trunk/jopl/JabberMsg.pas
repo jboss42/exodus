@@ -51,7 +51,7 @@ type
         // I use cBody to distinguish between the create's body varialbe and the classes.
         constructor Create; overload;
         constructor Create(mTag: TXMLTag); overload;
-        constructor Create(cToJID,cMsgType,cBody,cSubject : WideString); overload;
+        constructor Create(cToJID, cMsgType, cBody, cSubject : WideString); overload;
         destructor Destroy; override;
 
         property Tag: TXMLTag read GetTag;
