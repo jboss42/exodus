@@ -982,7 +982,8 @@ begin
         else
             DebugMsg('Got A: ' + ResolvedIP + '  ' + IntToStr(ResolvedPort));
     end;
-    MainSession.Connect();
+
+    if (not MainSession.Active) then MainSession.Connect();
 end;
 
 {---------------------------------------}
