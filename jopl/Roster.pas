@@ -767,16 +767,22 @@ end;
 {---------------------------------------}
 procedure TJabberRoster.RemoveBookmark(sjid: Widestring);
 var
+    bm: TJabberBookmark;
     i: integer;
+    t: TXMLTag;
 begin
     // remove a bm from the list
     i := Bookmarks.IndexOf(sjid);
     if ((i >= 0) and (i < Bookmarks.Count)) then begin
-        TJabberBookmark(Bookmarks.Objects[i]).Free;
+        t := TXMLTag.Create('bm-delete');
+        bm := TJabberBookmark(Bookmarks.Objects[i]);
+        bm.AddToTag(t);
+        TJabberSession(_js).FireEvent('/session/del-bookmark', t);
+        t.Free();
+        bm.Free();
         Bookmarks.Delete(i);
     end;
     Self.SaveBookmarks();
-    // todo: Fire an event here to tell everyone we nuked a BM???
 end;
 
 {---------------------------------------}

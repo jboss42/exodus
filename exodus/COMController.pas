@@ -484,9 +484,11 @@ begin
 end;
 
 {---------------------------------------}
-procedure TExodusController.ChangePresence;
+procedure TExodusController.ChangePresence(const Show, Status: WideString;
+        Priority: Integer);
 begin
-    // todo: plugin change presence
+    // Change our presence
+    MainSession.setPresence(Show, Status, Priority);
 end;
 
 {---------------------------------------}
@@ -538,7 +540,6 @@ begin
         TPluginProxy(proxies.Objects[idx]).Free;
         proxies.Delete(idx);
     end;
-
 end;
 
 {---------------------------------------}
@@ -551,7 +552,8 @@ end;
 procedure TExodusController.StartChat(const jid, resource,
   nickname: WideString);
 begin
-    // todo: start chat for COM
+    // start chat
+    StartChat(jid, resource, nickname);
 end;
 
 {---------------------------------------}

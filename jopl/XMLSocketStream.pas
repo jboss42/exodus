@@ -495,8 +495,7 @@ begin
     _ssl_int := TIdConnectionInterceptOpenSSL.Create(nil);
     {$endif}
     with _ssl_int do begin
-        // TODO: get certs from profile
-        // that would be *cool*.
+        // TODO: get certs from profile, that would be *cool*.
         SSLOptions.CertFile := '';
         SSLOptions.RootCertFile := '';
         // TODO: Indy9 problems... if we try and verify, it disconnects us.

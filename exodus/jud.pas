@@ -844,7 +844,7 @@ var
     f: boolean;
 begin
   inherited;
-    // pgm todo: implement this!!
+    // todo: This may have bugs still.. incremental searching in JUD results
 
     // OnDataFind gets called in response to calls to FindCaption, FindData,
     // GetNearestItem, etc. It also gets called for each keystroke sent to the
@@ -858,7 +858,7 @@ begin
                 if Wrap then i := 0 else exit;
             end;
             ji := TJUDItem(virtlist[i]);
-            f := Pos(Uppercase(FindString), ji.jid) > 0;
+            f := Pos(FindString, ji.jid) > 0;
             inc(i);
         until (f or (i = StartIndex));
         if (f) then Index := i - 1;
