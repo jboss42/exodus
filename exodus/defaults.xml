@@ -1,6 +1,6 @@
 <exodus version="0.9">
   <prefs>
-    <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.34 2004/01/14 00:18:17 hildjj Exp $"/>
+    <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.35 2004/01/27 14:01:03 pgmillard Exp $"/>
     
     <!-- System Options -->
     <auto_update_url value="http://exodus.jabberstudio.org/exodus-released.exe"/>
@@ -135,7 +135,7 @@
     
     <!-- Network Options -->
 
-    <recon_tries value="3" control="spnAttempts">
+    <recon_tries value="25" control="spnAttempts">
       <control name="lblAttempts"/>
       <control name="txtAttempts"/>
     </recon_tries>
