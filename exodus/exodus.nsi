@@ -39,7 +39,11 @@
 !include "${NSISDIR}\Contrib\Modern UI\System.nsh"
 
 ; BRANDING: change this URL
-!define HOME_URL "http://exodus.jabberstudio.org"
+!ifdef STAGE
+    !define HOME_URL "http://192.168.1.1/stage"
+!else
+    !define HOME_URL "http://exodus.jabberstudio.org"
+!endif
 
 ; The file to write
 Name "${PRODUCT} ${EXODUS_VERSION}"

@@ -73,7 +73,7 @@ uses
 procedure TfrmPrefNetwork.LoadPrefs();
 begin
     inherited;
-    if (spnAttempts.Position <= 0) then spnAttempts.Position := 3;
+    if (spnAttempts.Position < 0) then spnAttempts.Position := 3;
     chkProxyAuthClick(chkProxyAuth);
 end;
 
