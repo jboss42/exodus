@@ -220,29 +220,30 @@ begin
         lblSubject.Hint := Msg.Subject;
         end;
 
-    cn := MainSession.Prefs.getInt('notify_roomactivity');
+    if ((not Application.Active) and (not MainSession.IsPaused)) then begin
+        // check for keywords
+        if (_keywords <> nil) then begin
+            if (_keywords.Exec(Msg.Body)) then begin
+                ShowRiserWindow('Keyword in ' + Self.Caption + ': ' + _keywords.Match[1], 12);
+                end;
+            end
+        else begin
+            cn := MainSession.Prefs.getInt('notify_roomactivity');
 
-    if (not Application.Active) then begin
-        // Pop toast
-        if (cn and notify_toast) > 0 then begin
-            ShowRiserWindow('Activity in ' + Self.Caption, 21);
-            end;
+            // Pop toast
+            if (cn and notify_toast) > 0 then begin
+                ShowRiserWindow('Activity in ' + Self.Caption, 21);
+                end;
 
-        // Flash Window
-        if (cn and notify_flash) > 0 then begin
-            if (Self.Docked) then
-                FlashWindow(frmExodus.Handle, true)
-            else
-                FlashWindow(Self.Handle, true);
+            // Flash Window
+            if (cn and notify_flash) > 0 then begin
+                if (Self.Docked) then
+                    FlashWindow(frmExodus.Handle, true)
+                else
+                    FlashWindow(Self.Handle, true);
+                end;
             end;
         end;
-
-    // check for keywords
-    if ((not Application.Active) and (not MainSession.IsPaused) and (_keywords <> nil)) then begin
-        if (_keywords.Exec(Msg.Body)) then begin
-            ShowRiserWindow('Keyword in ' + Self.Caption + ': ' + _keywords.Match[1], 12);
-        end;
-    end;
 end;
 
 {---------------------------------------}
