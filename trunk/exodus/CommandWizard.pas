@@ -181,6 +181,15 @@ end;
 
 {---------------------------------------}
 procedure TfrmCommandWizard.RunState();
+    procedure SetGui();
+    begin
+        Tabs.ActivePage := tbsWait;
+        lblWait.Caption := _('Please wait...');
+        btnBack.Enabled := false;
+        btnNext.Enabled := false;
+        btnCancel.Enabled := true;
+    end;
+
 var
     x: TXMLTag;
 begin
@@ -194,9 +203,11 @@ begin
         exit;
         end;
     cwzSupport: begin
+        SetGUI();
         jEntityCache.discoInfo(jid, MainSession);
         end;
     cwzList: begin
+        SetGUI();
         jEntityCache.discoItems(jid, MainSession, XMLNS_COMMANDS);
         end;
     cwzSelect: begin
@@ -206,6 +217,7 @@ begin
         end;
     cwzExecute: begin
         createIQSet();
+        SetGUI();
         _iq.Send();
         end;
     cwzSubmit: begin
@@ -221,15 +233,11 @@ begin
                 exit;
             end;
         end;
+        SetGUI();
         _iq.qTag.AddTag(x);
         _iq.Send();
         end;
     end;
-    Tabs.ActivePage := tbsWait;
-    lblWait.Caption := _('Please wait...');
-    btnBack.Enabled := false;
-    btnNext.Enabled := false;
-    btnCancel.Enabled := true;
 end;
 
 {---------------------------------------}

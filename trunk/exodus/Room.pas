@@ -1366,7 +1366,7 @@ begin
     _notify[1] := MainSession.Prefs.getInt('notify_keyword');
 
     AssignUnicodeFont(lblSubject.Font, 8);
-    lblSubject.Font.Style := [fsBold];
+    //lblSubject.Font.Style := [fsBold];
     lblSubject.Hint := _(sNoSubjectHint);
     lblSubject.Caption := _(sNoSubject);
     _subject := '';

@@ -10,7 +10,7 @@ inherited frmCommandWizard: TfrmCommandWizard
   PixelsPerInch = 96
   TextHeight = 13
   inherited TntPanel1: TTntPanel
-    Top = 219
+    Top = 223
     inherited Panel3: TPanel
       inherited btnBack: TTntButton
         OnClick = btnBackClick
@@ -33,8 +33,7 @@ inherited frmCommandWizard: TfrmCommandWizard
     end
   end
   inherited Tabs: TPageControl
-    Height = 159
-    ActivePage = tbsExecute
+    Height = 163
     inherited TabSheet1: TTabSheet
       object TntLabel1: TTntLabel
         Left = 0
@@ -95,18 +94,13 @@ inherited frmCommandWizard: TfrmCommandWizard
         Left = 0
         Top = 0
         Width = 402
-        Height = 128
+        Height = 132
         Align = alClient
         TabOrder = 0
         inherited Panel1: TPanel
           Width = 402
-          Height = 128
           inherited ScrollBox1: TScrollBox
             Width = 392
-            Height = 118
-            inherited xGrid: TTntStringGrid
-              Width = 392
-            end
           end
         end
       end
@@ -121,7 +115,7 @@ inherited frmCommandWizard: TfrmCommandWizard
       object lblWait: TTntLabel
         Left = 0
         Top = 0
-        Width = 63
+        Width = 402
         Height = 13
         Align = alTop
         Caption = 'Please wait...'
