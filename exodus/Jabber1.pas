@@ -239,7 +239,7 @@ type
     _noMoveCheck: boolean;              // don't check form moves
     _tray_notify: boolean;              // boolean for flashing tray icon
     _edge_snap: integer;                // edge snap fuzziness
-    _auto_away: boolean;                // are we auto away
+    _auto_away: boolean;                // perform auto-away ops
     _auto_away_interval: integer;
     _last_tick: dword;                  // last tick when something happened
     _expanded: boolean;                 // are we expanded or not?
@@ -247,9 +247,9 @@ type
 
     // Various state flags
     _windows_ver: integer;
-    _is_broadcast: boolean;
-    _is_autoaway: boolean;
-    _is_autoxa: boolean;
+    _is_broadcast: boolean;             // Should this copy broadcast pres changes
+    _is_autoaway: boolean;              // Are we currently auto-away
+    _is_autoxa: boolean;                // Are we currently auto-xa
     _last_show: Widestring;             // last show for restoring after auto-away
     _last_status: Widestring;           // last status    (ditto)
     _last_priority: integer;            // last priority  (ditto)
@@ -286,7 +286,6 @@ type
     // Stuff for tracking win32 API events
     _win32_tracker: Array of integer;
     _win32_idx: integer;
-
 
     procedure setupTrayIcon();
     procedure setTrayInfo(tip: string);
@@ -532,12 +531,13 @@ end;
 procedure TfrmExodus.doRestore();
 begin
     if (_hidden) then begin
-        _hidden := false;
+        Self.WindowState := wsNormal;
         Self.Visible := true;
         if (_was_max) then
             ShowWindow(Handle, SW_MAXIMIZE)
         else
             ShowWindow(Handle, SW_RESTORE);
+        _hidden := false;
     end
     else if (Self.WindowState = wsMaximized) then
         ShowWindow(Handle, SW_RESTORE)
@@ -608,7 +608,7 @@ begin
         else begin
             // minimize our app
             _hidden := true;
-            self.WindowState := wsMinimized;
+            //self.WindowState := wsMinimized;
             ShowWindow(Handle, SW_HIDE);
             PostMessage(Self.handle, WM_SYSCOMMAND, SC_MINIMIZE , 0);
         end;
