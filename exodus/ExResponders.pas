@@ -171,16 +171,16 @@ begin
     _time := TTimeResponder.Create(MainSession);
     _last := TLastResponder.Create(MainSession);
     _xdata := TFactoryResponder.Create(MainSession,
-        '/packet/message/x[@xmlns="' + XMLNS_XDATA +'"]',
+        '/pre/message/x[@xmlns="' + XMLNS_XDATA +'"]',
         showXData);
     _iqoob := TFactoryResponder.Create(MainSession,
-        '/packet/iq[@type="set"]/query[@xmlns="' + XMLNS_IQOOB + '"]',
+        '/pack/iq[@type="set"]/query[@xmlns="' + XMLNS_IQOOB + '"]',
         FileReceive);
     _muc_invite := TFactoryResponder.Create(MainSession,
-        '/packet/message/x[@xmlns="' + XMLNS_MUCUSER + '"]/invite',
+        '/pre/message/x[@xmlns="' + XMLNS_MUCUSER + '"]/invite',
         showRecvInvite);
     _conf_invite := TFactoryResponder.Create(MainSession,
-        '/packet/message/x[@xmlns="' + XMLNS_XCONFERENCE + '"]',
+        '/pre/message/x[@xmlns="' + XMLNS_XCONFERENCE + '"]',
         showConfInvite);
     _unhandled := TUnhandledResponder.Create(MainSession);
     _sistart := TFactoryResponder.Create(MainSession,

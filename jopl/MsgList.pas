@@ -161,11 +161,6 @@ begin
         if (event <> '/unhandled') then begin
             if (mtype = 'normal') then mtype := '';
 
-            // We'll handle message-errors in our unhandled handler
-            if (tag.QueryXPTag(XP_MSGXDATA) <> nil) then exit;
-            if (tag.QueryXPTag(XP_MUCINVITE) <> nil) then exit;
-            if (tag.QueryXPTag(XP_CONFINVITE) <> nil) then exit;
-
             // check for headlines w/ JUST a x-oob.
             // otherwise, throw out cases where body is empty
             if ((tag.QueryXPTag(XP_XOOB) = nil) and (b = '')) then exit;
