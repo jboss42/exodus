@@ -72,7 +72,8 @@ function ForceForegroundWindow(hwnd: THandle): boolean;
 
 function trimNewLines(value: WideString): WideString;
 
-procedure CanvasTextOutW(Canvas: TCanvas; X, Y: Integer; const Text: WideString);
+procedure CanvasTextOutW(Canvas: TCanvas; X, Y: Integer;
+    const Text: WideString; max_right: integer = -1);
 function CanvasTextWidthW(Canvas: TCanvas; const Text: WideString): integer;
 
 procedure removeSpecialGroups(grps: TStrings); overload;
@@ -618,16 +619,32 @@ begin
 end;
 
 {---------------------------------------}
-procedure CanvasTextOutW(Canvas: TCanvas; X, Y: Integer; const Text: WideString);
+procedure CanvasTextOutW(Canvas: TCanvas; X, Y: Integer; const Text: WideString;
+    max_right: integer);
+var
+    opts: integer;
+    r: TRect;
 begin
     // Use ExtTextOutW:
     // function ExtTextOutW(DC: HDC; X, Y: Integer; Options: Longint;
     //   Rect: PRect; Str: PWideChar; Count: Longint; Dx: PInteger): BOOL; stdcall;
     if (Canvas.CanvasOrientation = coRightToLeft) then
         Inc(X, CanvasTextWidthW(Canvas, Text) + 1);
-    Windows.ExtTextOutW(Canvas.Handle, X, Y, Canvas.TextFlags, nil,
-        PWideChar(Text), Length(Text), nil);
-    Canvas.MoveTo(X + CanvasTextWidthW(Canvas, Text), Y);
+    if (max_right > 0) then begin
+        r.Top := Y;
+        r.Left := X;
+        r.Right := max_right;
+        r.Bottom := Y + 100;
+        opts := Canvas.TextFlags + ETO_CLIPPED;
+        Windows.ExtTextOutW(Canvas.Handle, X, Y, opts, @r,
+            PWideChar(Text), Length(Text), nil);
+        Canvas.MoveTo(r.right, Y);
+    end
+    else begin
+        Windows.ExtTextOutW(Canvas.Handle, X, Y, Canvas.TextFlags, nil,
+            PWideChar(Text), Length(Text), nil);
+        Canvas.MoveTo(X + CanvasTextWidthW(Canvas, Text), Y);
+    end;
 end;
 
 {---------------------------------------}

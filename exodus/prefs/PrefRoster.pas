@@ -39,6 +39,7 @@ type
     chkNestedGrps: TTntCheckBox;
     txtGrpSeperator: TTntEdit;
     TntLabel1: TTntLabel;
+    chkRosterAvatars: TTntCheckBox;
     procedure chkInlineStatusClick(Sender: TObject);
     procedure chkNestedGrpsClick(Sender: TObject);
   private

@@ -2,7 +2,7 @@ object frmProfile: TfrmProfile
   Left = 261
   Top = 186
   Width = 462
-  Height = 356
+  Height = 398
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Contact Properties'
   Color = clBtnFace
@@ -21,14 +21,14 @@ object frmProfile: TfrmProfile
   object Splitter1: TSplitter
     Left = 137
     Top = 0
-    Height = 292
+    Height = 330
   end
   object PageControl1: TTntPageControl
     Left = 140
     Top = 0
     Width = 314
-    Height = 292
-    ActivePage = TabSheet2
+    Height = 330
+    ActivePage = TabSheet1
     Align = alClient
     Style = tsFlatButtons
     TabOrder = 0
@@ -86,6 +86,22 @@ object frmProfile: TfrmProfile
         Cursor = crHandPoint
         Caption = 'Update nickname based on names.'
         OnClick = btnUpdateNickClick
+      end
+      object picBox: TPaintBox
+        Left = 56
+        Top = 216
+        Width = 97
+        Height = 81
+        OnPaint = picBoxPaint
+      end
+      object TntLabel1: TTntLabel
+        Left = 4
+        Top = 215
+        Width = 36
+        Height = 13
+        Cursor = crHandPoint
+        Caption = 'Picture:'
+        OnClick = lblEmailClick
       end
       object aniProfile: TAnimate
         Left = 248
@@ -177,7 +193,7 @@ object frmProfile: TfrmProfile
         Left = 201
         Top = 25
         Width = 105
-        Height = 236
+        Height = 274
         Align = alRight
         BevelOuter = bvNone
         TabOrder = 2
@@ -213,7 +229,7 @@ object frmProfile: TfrmProfile
         Left = 0
         Top = 25
         Width = 201
-        Height = 236
+        Height = 274
         Align = alClient
         ItemHeight = 13
         TabOrder = 0
@@ -226,7 +242,7 @@ object frmProfile: TfrmProfile
         Left = 0
         Top = 0
         Width = 306
-        Height = 220
+        Height = 258
         Align = alClient
         ItemHeight = 13
         Sorted = True
@@ -234,7 +250,7 @@ object frmProfile: TfrmProfile
       end
       object Panel3: TPanel
         Left = 0
-        Top = 220
+        Top = 258
         Width = 306
         Height = 41
         Align = alBottom
@@ -1142,7 +1158,7 @@ object frmProfile: TfrmProfile
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 292
+    Top = 330
     Width = 454
     Height = 34
     Align = alBottom
@@ -1170,7 +1186,7 @@ object frmProfile: TfrmProfile
     Left = 0
     Top = 0
     Width = 137
-    Height = 292
+    Height = 330
     Align = alLeft
     BevelWidth = 0
     Indent = 19

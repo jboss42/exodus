@@ -2,21 +2,21 @@ inherited frmPrefRoster: TfrmPrefRoster
   Left = 254
   Top = 162
   Caption = 'frmPrefRoster'
-  ClientHeight = 308
+  ClientHeight = 349
   ClientWidth = 342
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   object lblDblClick: TTntLabel [0]
     Left = 0
-    Top = 125
+    Top = 139
     Width = 164
     Height = 13
     Caption = 'When I double click a contact, do:'
   end
   object TntLabel1: TTntLabel [1]
     Left = 24
-    Top = 250
+    Top = 264
     Width = 144
     Height = 13
     Caption = 'Seperator for nested groups is:'
@@ -55,7 +55,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object cboDblClick: TTntComboBox [6]
     Left = 24
-    Top = 141
+    Top = 155
     Width = 201
     Height = 21
     Style = csDropDownList
@@ -76,7 +76,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object chkInlineStatus: TTntCheckBox [8]
     Left = 0
-    Top = 176
+    Top = 190
     Width = 241
     Height = 17
     Caption = 'Show status in the roster: Joe <Meeting>'
@@ -85,7 +85,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object cboInlineStatus: TColorBox [9]
     Left = 24
-    Top = 195
+    Top = 209
     Width = 201
     Height = 22
     DefaultColorColor = clBlue
@@ -102,7 +102,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object chkNestedGrps: TTntCheckBox
     Left = 0
-    Top = 232
+    Top = 246
     Width = 241
     Height = 17
     Caption = 'Use nested groups'
@@ -111,9 +111,17 @@ inherited frmPrefRoster: TfrmPrefRoster
   end
   object txtGrpSeperator: TTntEdit
     Left = 24
-    Top = 267
+    Top = 281
     Width = 201
     Height = 21
     TabOrder = 10
+  end
+  object chkRosterAvatars: TTntCheckBox
+    Left = 0
+    Top = 120
+    Width = 337
+    Height = 17
+    Caption = 'Show Avatars in the roster'
+    TabOrder = 11
   end
 end

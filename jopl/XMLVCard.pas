@@ -21,7 +21,7 @@ unit XMLVCard;
 
 interface
 uses
-    XMLTag,
+    Avatar, XMLTag,
     SysUtils, Classes;
 
 type
@@ -75,6 +75,8 @@ end;
         HomeFax: TXMLVCardTel;
         WorkPhone: TXMLVCardTel;
         WorkFax: TXMLVCardTel;
+
+        Picture: TAvatar;
 
         constructor Create;
         destructor Destroy; override;
@@ -274,6 +276,8 @@ begin
         vtag := tag.GetFirstTag('VCARD');
     if (vtag = nil) then
         vtag := tag.GetFirstTag('vCard');
+    if (vtag = nil) then
+        vtag := tag.GetFirstTag('query');
     if vtag = nil then exit;
 
     if (vtag.ChildCount = 0) then exit;
@@ -294,6 +298,13 @@ begin
     // get primary email addy
     t1 := vtag.GetFirstTag('EMAIL');
     if t1 <> nil then Email := t1.Data;
+
+    // get picture
+    t1 := vtag.GetFirstTag('PHOTO');
+    if (t1 <> nil) then begin
+        Picture := TAvatar.Create();
+        Picture.parse(t1);
+    end;
 
     // get personal info
     t1 := vtag.GetFirstTag('URL');
@@ -348,6 +359,7 @@ begin
         t.Free();
     end;
     tags.Free();
+
 end;
 
 {---------------------------------------}

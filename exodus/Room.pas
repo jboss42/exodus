@@ -1257,8 +1257,8 @@ begin
         member.show := ''
 
     else begin
-        p := TJabberPres.Create;
-        p.parse(tag);
+        p := TJabberPres.Create(tag);
+        p.parse();
 
         if (member.show = _(sBlocked)) then
            member.blockShow := p.Show

@@ -47,6 +47,7 @@ type
         _toJID: TJabberID;
         _fromJID: TJabberID;
         _pri: SmallInt;
+        _tag: TXMLTag;
         procedure setToJid(value: TJabberID);
         procedure setFromJid(value: TJabberID);
         procedure setPri(value: SmallInt);
@@ -61,11 +62,12 @@ type
 
         function xml: Widestring; override;
         function isSubscription: boolean;
-        procedure parse(tag: TXMLTag);
+        procedure parse();
 
         property toJid: TJabberID read _toJID write setToJid;
         property fromJid: TJabberID read _fromJID write setFromJid;
         property Priority: SmallInt read _pri write setPri;
+        property Tag: TXMLTag read _tag;
     end;
 
     TJabberPPDB = class;
@@ -135,9 +137,8 @@ end;
 {---------------------------------------}
 destructor TJabberPres.Destroy;
 begin
-    _toJID.Free;
-    _fromJID.Free;
-
+    _toJID.Free();
+    _fromJID.Free();
     inherited Destroy;
 end;
 
@@ -210,16 +211,16 @@ begin
 end;
 
 {---------------------------------------}
-procedure TJabberPres.parse(tag: TXMLTag);
+procedure TJabberPres.parse();
 var
     err_tag, pri_tag, stat_tag, show_tag: TXMLTag;
     f,t: WideString;
 begin
     // parse the tag into the proper elements
-    stat_tag := tag.GetFirstTag('status');
-    show_tag := tag.GetFirstTag('show');
-    pri_tag  := tag.GetFirstTag('priority');
-    PresType := tag.GetAttribute('type');
+    stat_tag := self.GetFirstTag('status');
+    show_tag := self.GetFirstTag('show');
+    pri_tag  := self.GetFirstTag('priority');
+    PresType := self.GetAttribute('type');
 
     if stat_tag <> nil then
         Status := stat_tag.Data;
@@ -228,8 +229,8 @@ begin
     if pri_tag <> nil then
         Priority := SToInt(Trim(pri_tag.Data));
 
-    f := tag.GetAttribute('from');
-    t := tag.GetAttribute('to');
+    f := self.GetAttribute('from');
+    t := self.GetAttribute('to');
     if f <> '' then
         fromJID.ParseJID(f);
     if t <> '' then
@@ -237,7 +238,7 @@ begin
 
     if (presType = 'error') then begin
         // get the error code.
-        err_tag := tag.GetFirstTag('error');
+        err_tag := self.GetFirstTag('error');
         if (err_tag <> nil) then
             error_code := err_tag.getAttribute('code');
     end;
@@ -327,8 +328,8 @@ var
     s: TJabberSession;
 begin
     // we are getting a new pres packet
-    curp := TJabberPres.Create;
-    curp.Parse(tag);
+    curp := TJabberPres.Create(tag);
+    curp.Parse();
     _last_pres := curp;
     pi := Self.IndexOf(curp.fromJID.jid);
     s := TJabberSession(_js);
@@ -388,7 +389,6 @@ begin
 
     else begin
         // some kind of available pres
-        //p := FindPres(curp.fromJID.jid, curp.fromJID.resource);
         p := FindPresSpec(curp.fromJID.jid, curp.fromJID.resource);
         if p <> nil then begin
             // this already exists, nuke it and put it back in
