@@ -1038,9 +1038,15 @@ end;
 procedure TfrmExodus.CancelConnect();
 begin
     _logoff := true;
-    if (MainSession.Active) then
+
+    // we don't care about DNS lookups anymore
+    if (_dns_cb <> -1) then begin
+        MainSession.UnRegisterCallback(_dns_cb);
+        _dns_cb := -1;
+        SessionCallback('/session/disconnect', nil);
+    end
+    else if (MainSession.Active) then
         MainSession.Disconnect()
-        //MainSession.Stream.Disconnect()
     else
         timReconnect.Enabled := false;
 end;
@@ -1138,25 +1144,19 @@ begin
         if (MainSession.Profile.ConnectionType = conn_normal) then
             DragAcceptFiles(Handle, True);
 
-        // Fetch the roster
+        // 1. Fetch the roster
+        // 2. Discover our server stuff..
+        // 3. Make the roster the active tab
+        // 4. Activate the menus
+        // 5. turn on the auto-away timer
+        // 6. check for new brand.xml file
+        // 7. check for new version
         Roster.Fetch;
-
-        // Discover our server stuff..
         jEntityCache.fetch(MainSession.Server, MainSession);
-
-        // Make the roster the active tab
         Tabs.ActivePage := tbsRoster;
-
-        // Activate the menus
         restoreMenus(true);
-
-        // turn on the auto-away timer
         if (_valid_aa) then timAutoAway.Enabled := true;
-
-        // check for new brand.
         InitUpdateBranding();
-
-        // check for new version
         InitAutoUpdate();
 
         // Don't broadcast our initial presence
