@@ -419,6 +419,11 @@ object frmExodus: TfrmExodus
             Caption = '-'
           end
         end
+        object presToggle: TMenuItem
+          Caption = 'Toggle'
+          ShortCut = 16468
+          OnClick = presToggleClick
+        end
       end
       object N2: TMenuItem
         Caption = '-'
