@@ -64,20 +64,26 @@ object frmAutoUpdateStatus: TfrmAutoUpdateStatus
     Width = 218
     Height = 17
     Align = alBottom
-    Min = 0
     Max = 1
     TabOrder = 1
     Visible = False
   end
   object HttpClient: TIdHTTP
+    MaxLineAction = maException
+    ReadTimeout = 0
     OnWork = HttpClientWork
     OnWorkBegin = HttpClientWorkBegin
-    Request.Accept = 'text/html, */*'
+    AllowCookies = True
+    ProxyParams.BasicAuthentication = False
+    ProxyParams.ProxyPort = 0
     Request.ContentLength = 0
     Request.ContentRangeEnd = 0
     Request.ContentRangeStart = 0
-    Request.ProxyPort = 0
+    Request.ContentType = 'text/html'
+    Request.Accept = 'text/html, */*'
+    Request.BasicAuthentication = False
     Request.UserAgent = 'Mozilla/3.0 (compatible; Indy Library)'
+    HTTPOptions = [hoForceEncodeParams]
     Left = 6
     Top = 57
   end
