@@ -134,6 +134,10 @@ begin
     else if (event = '/session/gui/chat') then
         DoNotify(nil, 'notify_newchat', sNotifyChat + ''#10#13 + nick, 20)
 
+    // don't display normal presence changes
+    else if ((event = '/presence/available') or (event = '/presence/error')) then
+        // do nothing
+
     // unkown.
     else
         DebugMessage('Unknown notify event: ' + event);

@@ -126,7 +126,7 @@ begin
         SelStart := GetTextLen;
         SelLength := 0;
         SelAttributes.Color := clRed;
-        SelText := txt;
+        SelText := txt + ''#13#10;
         SelAttributes.Color := clBlack;
         end;
 end;
@@ -211,23 +211,23 @@ begin
     if (cmd[1] = '/') then begin
         // we are giving some kind of interactive debugger cmd
         if (cmd = '/dispcount') then
-            DebugMessage('Dispatcher listener count: ' + IntToStr(MainSession.Dispatcher.TotalCount) + ''#13#10);
+            DebugMessage('Dispatcher listener count: ' + IntToStr(MainSession.Dispatcher.TotalCount));
         if (cmd = '/dispdump') then begin
             // dump out all signals
             with MainSession.Dispatcher do begin
                 for s := 0 to Count - 1 do begin
                     sig := TSignal(Objects[s]);
-                    DebugMessage('SIGNAL: ' + Strings[s] + ' of class: ' + sig.ClassName + ''#13#10);
-                    DebugMessage('-----------------------------------'#13#10);
+                    DebugMessage('SIGNAL: ' + Strings[s] + ' of class: ' + sig.ClassName);
+                    DebugMessage('-----------------------------------');
                     for i := 0 to sig.Count - 1 do begin
                         l := TSignalListener(sig.Objects[i]);
                         msg := 'LID: ' + IntToStr(l.cb_id) + ', ';
                         msg := msg + sig.Strings[i] + ', ';
                         msg := msg + l.classname + ', ';
                         msg := msg + l.methodname;
-                        DebugMessage(msg + ''#13#10);
+                        DebugMessage(msg);
                         end;
-                    DebugMessage(''#13#10#13#10);
+                    DebugMessage(''#13#10);
                     end;
                 end;
             end;

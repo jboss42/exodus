@@ -252,6 +252,7 @@ begin
     // If typing starts on the MsgList, then bump it to the outgoing
     // text box.
     if (not Self.Visible) then exit;
+    if (Ord(key) < 32) then exit;
 
     MsgOut.SetFocus();
     MsgOut.SelText := Key;
