@@ -92,6 +92,8 @@ resourcestring
     sMsgLast = 'Last Activity';
     sMsgLastInfo = 'Idle for ';
 
+    sMsgURL = 'This message contains a URL: ';
+
     sPresError = 'The jabber server can not contact the server where this user is hosted.' +
         'Click "Remove" to remove this contact from your roster.';
 
@@ -333,6 +335,14 @@ begin
             tmp_tag := tag.GetFirstTag('body');
             if (tmp_tag <> nil) then
                 _data_list.Add(tmp_tag.Data);
+
+            // check for x:oob URL's
+            tmp_tag := tag.QueryXPTag(XP_XOOB);
+            if (tmp_tag <> nil) then begin
+                _data_list.Add(sMsgURL);
+                _data_list.Add(tmp_tag.GetBasicText('desc'));
+                _data_list.Add(tmp_tag.GetBasicText('url'));
+            end;
         end;
 
         // For messages, pull out the subject
