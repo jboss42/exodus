@@ -43,7 +43,7 @@ object frmRemove: TfrmRemove
     Caption = ' foo@jabber.org'
     Color = clBtnFace
     Font.Charset = ANSI_CHARSET
-    Font.Color = clHighlightText
+    Font.Color = clWindowText
     Font.Height = -13
     Font.Name = 'Arial'
     Font.Style = [fsBold]
@@ -74,6 +74,7 @@ object frmRemove: TfrmRemove
     end
     inherited Panel1: TPanel
       Left = 139
+      Height = 29
       inherited btnOK: TButton
         OnClick = frameButtons1btnOKClick
       end
