@@ -287,8 +287,8 @@ var
 begin
     //
     for i := 0 to sl.Count - 1 do begin
-        o := TObject(sl.Objects[i]);
-        if (o <> nil) then begin
+        if (sl.Objects[i] <> nil) then begin
+            o := TObject(sl.Objects[i]);
             o.Free();
             sl.Objects[i] := nil;
             end;
@@ -303,8 +303,8 @@ var
 begin
     //
     for i := 0 to sl.Count - 1 do begin
-        o := TObject(sl.Objects[i]);
-        if (o <> nil) then begin
+        if (sl.Objects[i] <> nil) then begin
+            o := TObject(sl.Objects[i]);
             o.Free();
             sl.Objects[i] := nil;
             end;
