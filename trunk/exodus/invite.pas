@@ -234,7 +234,7 @@ begin
     // make the form the same width as the list view
     TranslateProperties(Self);
     Self.ClientWidth := pnlMain.Width + 2;
-    cboRoom.Items.Assign(room.room_list);
+    AssignTntStrings(room.room_list, cboRoom.Items);
     pnlMain.Align := alClient;
 
     _selector := TfrmSelContact.Create(nil);

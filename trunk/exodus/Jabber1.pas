@@ -810,6 +810,8 @@ begin
     // Show the debug form, if they've asked for it.
     if (ExStartup.debug) then ShowDebugForm();
 
+    if Tabs.Visible then
+        Tabs.ActivePage := tbsRoster;
 
     MainSession.setPresence(ExStartup.show, ExStartup.Status, ExStartup.Priority);
 

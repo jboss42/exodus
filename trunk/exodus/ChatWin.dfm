@@ -104,8 +104,6 @@ inherited frmChat: TfrmChat
     object popResources: TMenuItem
       AutoHotkeys = maManual
       Caption = 'Resources'
-      object TMenuItem
-      end
     end
     object N4: TMenuItem
       Caption = '-'

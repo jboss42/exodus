@@ -338,20 +338,6 @@ begin
     _destroying := false;
     _redock := false;
 
-    {
-        _notify[0]  := getInt('notify_online');
-        _notify[1]  := getInt('notify_offline');
-        _notify[2]  := getInt('notify_newchat');
-        _notify[3]  := getInt('notify_normalmsg');
-        _notify[4]  := getInt('notify_s10n');
-        _notify[5]  := getInt('notify_invite');
-        _notify[6]  := getInt('notify_keyword');
-        _notify[7]  := getInt('notify_chatactivity');
-        _notify[8]  := getInt('notify_roomactivity');
-        _notify[9]  := getInt('notify_oob');
-        _notify[10] := getInt('notify_autoresponse');
-    }
-
     _notify[0] := MainSession.Prefs.getInt('notify_chatactivity');
 
     if (MainSession.Profile.ConnectionType = conn_normal) then
