@@ -28,17 +28,17 @@ uses
 type
   TfrmCustomPres = class(TForm)
     frameButtons1: TframeButtons;
-    Label1: TLabel;
-    cboType: TComboBox;
-    Label2: TLabel;
+    Label1: TTntLabel;
+    cboType: TTntComboBox;
+    Label2: TTntLabel;
     txtStatus: TTntEdit;
-    Label3: TLabel;
-    txtPriority: TEdit;
-    chkSave: TCheckBox;
+    Label3: TTntLabel;
+    txtPriority: TTntEdit;
+    chkSave: TTntCheckBox;
     boxSave: TGroupBox;
-    lblTitle: TLabel;
-    txtTitle: TEdit;
-    lblHotkey: TLabel;
+    lblTitle: TTntLabel;
+    txtTitle: TTntEdit;
+    lblHotkey: TTntLabel;
     txtHotkey: THotKey;
     procedure FormCreate(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);

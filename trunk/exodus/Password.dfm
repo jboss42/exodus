@@ -13,28 +13,28 @@ object frmPassword: TfrmPassword
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
+  object Label1: TTntLabel
     Left = 8
     Top = 9
     Width = 67
     Height = 13
     Caption = 'Old password:'
   end
-  object Label2: TLabel
+  object Label2: TTntLabel
     Left = 8
     Top = 57
     Width = 73
     Height = 13
     Caption = 'New password:'
   end
-  object Label3: TLabel
+  object Label3: TTntLabel
     Left = 8
     Top = 105
     Width = 109
     Height = 13
     Caption = 'Confirm new password:'
   end
-  object txtOldPassword: TEdit
+  object txtOldPassword: TTntEdit
     Left = 8
     Top = 27
     Width = 217
@@ -50,15 +50,19 @@ object frmPassword: TfrmPassword
     Align = alBottom
     AutoScroll = False
     TabOrder = 3
-    inherited Bevel1: TBevel
+    inherited Panel2: TPanel
       Width = 233
-    end
-    inherited Panel1: TPanel
-      Left = 73
-      Height = 28
+      Height = 33
+      inherited Bevel1: TBevel
+        Width = 233
+      end
+      inherited Panel1: TPanel
+        Left = 73
+        Height = 28
+      end
     end
   end
-  object txtNewPassword: TEdit
+  object txtNewPassword: TTntEdit
     Left = 8
     Top = 75
     Width = 217
@@ -66,7 +70,7 @@ object frmPassword: TfrmPassword
     PasswordChar = '*'
     TabOrder = 1
   end
-  object txtConfirmPassword: TEdit
+  object txtConfirmPassword: TTntEdit
     Left = 8
     Top = 123
     Width = 217

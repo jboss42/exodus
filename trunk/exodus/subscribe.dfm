@@ -21,7 +21,7 @@ object frmSubscribe: TfrmSubscribe
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
+  object Label1: TTntLabel
     Left = 0
     Top = 23
     Width = 252
@@ -57,7 +57,7 @@ object frmSubscribe: TfrmSubscribe
     Transparent = False
     OnClick = lblJIDClick
   end
-  object chkSubscribe: TCheckBox
+  object chkSubscribe: TTntCheckBox
     Left = 8
     Top = 56
     Width = 217
@@ -73,28 +73,28 @@ object frmSubscribe: TfrmSubscribe
     Width = 209
     Height = 81
     TabOrder = 1
-    object Label2: TLabel
+    object Label2: TTntLabel
       Left = 8
       Top = 16
       Width = 51
       Height = 13
       Caption = 'Nickname:'
     end
-    object Label3: TLabel
+    object Label3: TTntLabel
       Left = 8
       Top = 48
       Width = 32
       Height = 13
       Caption = 'Group:'
     end
-    object txtNickname: TEdit
+    object txtNickname: TTntEdit
       Left = 70
       Top = 14
       Width = 121
       Height = 21
       TabOrder = 0
     end
-    object cboGroup: TComboBox
+    object cboGroup: TTntComboBox
       Left = 70
       Top = 44
       Width = 123
@@ -115,36 +115,34 @@ object frmSubscribe: TfrmSubscribe
     TabOrder = 2
     inherited Panel2: TPanel
       Width = 252
-      Height = 36
       inherited Bevel1: TBevel
         Width = 252
       end
       inherited Panel1: TPanel
         Left = 92
-        Height = 31
-        inherited btnOK: TButton
+        inherited btnOK: TTntButton
           Caption = 'Accept'
           OnClick = frameButtons1btnOKClick
         end
-        inherited btnCancel: TButton
+        inherited btnCancel: TTntButton
           Caption = 'Deny'
           OnClick = frameButtons1btnCancelClick
         end
       end
     end
   end
-  object PopupMenu1: TPopupMenu
+  object PopupMenu1: TTntPopupMenu
     Left = 8
     Top = 168
-    object mnuProfile: TMenuItem
+    object mnuProfile: TTntMenuItem
       Caption = 'Show Profile'
       OnClick = mnuProfileClick
     end
-    object mnuChat: TMenuItem
+    object mnuChat: TTntMenuItem
       Caption = 'Start Chat'
       OnClick = mnuChatClick
     end
-    object mnuMessage: TMenuItem
+    object mnuMessage: TTntMenuItem
       Caption = 'Send Message'
       OnClick = mnuMessageClick
     end

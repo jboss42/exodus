@@ -25,22 +25,22 @@ uses
     Agents,
     XMLTag,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    buttonFrame, StdCtrls;
+    buttonFrame, StdCtrls, TntStdCtrls;
 
 type
   TfrmAdd = class(TForm)
-    Label1: TLabel;
-    txtJID: TEdit;
-    Label2: TLabel;
-    txtNickname: TEdit;
-    Label3: TLabel;
-    cboGroup: TComboBox;
+    Label1: TTntLabel;
+    txtJID: TTntEdit;
+    Label2: TTntLabel;
+    txtNickname: TTntEdit;
+    Label3: TTntLabel;
+    cboGroup: TTntComboBox;
     frameButtons1: TframeButtons;
-    lblAddGrp: TLabel;
-    cboType: TComboBox;
-    Label4: TLabel;
-    lblGateway: TLabel;
-    txtGateway: TEdit;
+    lblAddGrp: TTntLabel;
+    cboType: TTntComboBox;
+    Label4: TTntLabel;
+    lblGateway: TTntLabel;
+    txtGateway: TTntEdit;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure frameButtons1btnCancelClick(Sender: TObject);
@@ -159,6 +159,7 @@ end;
 {---------------------------------------}
 procedure TfrmAdd.FormCreate(Sender: TObject);
 begin
+    AssignUnicodeFont(Self);
     TranslateProperties(Self);
     cboGroup.Items.Assign(MainSession.Roster.GrpList);
     removeSpecialGroups(cboGroup.Items);

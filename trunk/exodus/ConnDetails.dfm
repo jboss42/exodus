@@ -1,9 +1,9 @@
 object frmConnDetails: TfrmConnDetails
-  Left = 253
-  Top = 168
+  Left = 249
+  Top = 169
   Width = 304
   Height = 305
-  ActiveControl = txtURL
+  ActiveControl = txtUsername
   Caption = 'Connection Details'
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -40,67 +40,73 @@ object frmConnDetails: TfrmConnDetails
       end
     end
   end
-  object PageControl1: TPageControl
+  object PageControl1: TTntPageControl
     Left = 0
     Top = 0
     Width = 296
     Height = 244
-    ActivePage = tbsHttp
+    ActivePage = tbsProfile
     Align = alClient
     TabOrder = 1
-    object tbsProfile: TTabSheet
+    object tbsProfile: TTntTabSheet
       Caption = 'Profile'
       ImageIndex = -1
-      object Label3: TLabel
+      object lblUsername: TTntLabel
         Left = 2
         Top = 8
         Width = 51
         Height = 13
-        Caption = '&Username:'
+        Caption = 'Username:'
+        Transparent = False
       end
-      object Label10: TLabel
+      object Label10: TTntLabel
         Left = 2
         Top = 151
         Width = 49
         Height = 13
-        Caption = '&Password:'
+        Caption = 'Password:'
+        Transparent = False
       end
-      object Label11: TLabel
+      object Label11: TTntLabel
         Left = 2
         Top = 71
         Width = 34
         Height = 13
-        Caption = '&Server:'
+        Caption = 'Server:'
+        Transparent = False
       end
-      object Label12: TLabel
+      object Label12: TTntLabel
         Left = 2
         Top = 120
         Width = 49
         Height = 13
-        Caption = '&Resource:'
+        Caption = 'Resource:'
+        Transparent = False
       end
-      object lblServerList: TLabel
-        Left = 90
+      object lblServerList: TTntLabel
+        Left = 100
         Top = 93
-        Width = 121
+        Width = 57
         Height = 13
         Cursor = crHandPoint
-        Caption = 'Download a list of servers'
+        Caption = 'lblServerList'
+        Transparent = False
         OnClick = lblServerListClick
       end
-      object Label13: TLabel
-        Left = 91
+      object Label13: TTntLabel
+        Left = 100
         Top = 32
-        Width = 175
+        Width = 170
         Height = 29
         AutoSize = False
-        Caption = 'Enter desired username for new accounts'
+        Caption = 'Enter desired username for new accounts.'
+        Transparent = False
         WordWrap = True
       end
       object cboServer: TTntComboBox
-        Left = 90
+        Left = 100
         Top = 67
-        Width = 175
+        Width = 170
         Height = 21
         ItemHeight = 13
         TabOrder = 1
@@ -109,89 +115,88 @@ object frmConnDetails: TfrmConnDetails
           'jabber.org'
           'jabber.com')
       end
-      object chkSavePasswd: TCheckBox
-        Left = 90
+      object chkSavePasswd: TTntCheckBox
+        Left = 100
         Top = 173
-        Width = 175
+        Width = 170
         Height = 17
         Caption = 'Save pass&word'
         TabOrder = 4
       end
       object txtUsername: TTntEdit
-        Left = 90
+        Left = 100
         Top = 5
-        Width = 175
+        Width = 170
         Height = 21
         TabOrder = 0
         OnKeyPress = txtUsernameKeyPress
       end
       object txtPassword: TTntEdit
-        Left = 90
+        Left = 100
         Top = 148
-        Width = 175
+        Width = 170
         Height = 21
         PasswordChar = '*'
         TabOrder = 3
       end
       object cboResource: TTntComboBox
-        Left = 90
+        Left = 100
         Top = 117
-        Width = 175
+        Width = 170
         Height = 21
-        ItemHeight = 0
+        ItemHeight = 13
         TabOrder = 2
         OnKeyPress = txtUsernameKeyPress
       end
     end
-    object tbsConn: TTabSheet
+    object tbsConn: TTntTabSheet
       Caption = 'Connection'
       ImageIndex = -1
-      object Label4: TLabel
+      object Label4: TTntLabel
         Left = 2
         Top = 38
         Width = 25
         Height = 13
         Caption = 'Host:'
       end
-      object Label7: TLabel
+      object Label7: TTntLabel
         Left = 2
         Top = 65
         Width = 22
         Height = 13
         Caption = 'Port:'
       end
-      object Label8: TLabel
+      object Label8: TTntLabel
         Left = 2
         Top = 9
         Width = 27
         Height = 13
-        Alignment = taRightJustify
         Caption = 'Type:'
       end
-      object Label6: TLabel
+      object Label6: TTntLabel
         Left = 2
         Top = 94
         Width = 34
         Height = 13
         Caption = 'Priority:'
       end
-      object txtHost: TEdit
-        Left = 59
+      object txtHost: TTntEdit
+        Left = 75
         Top = 34
         Width = 190
         Height = 21
         TabOrder = 1
       end
-      object txtPort: TEdit
-        Left = 59
+      object txtPort: TTntEdit
+        Left = 75
         Top = 62
         Width = 46
         Height = 21
         TabOrder = 2
         Text = '5222'
       end
-      object chkSSL: TCheckBox
-        Left = 131
+      object chkSSL: TTntCheckBox
+        Left = 147
         Top = 64
         Width = 93
         Height = 17
@@ -199,11 +204,11 @@ object frmConnDetails: TfrmConnDetails
         TabOrder = 3
         OnClick = chkSSLClick
       end
-      object cboConnection: TComboBox
-        Left = 59
+      object cboConnection: TTntComboBox
+        Left = 75
         Top = 7
         Width = 191
-        Height = 21
+        Height = 24
         Style = csOwnerDrawFixed
         DropDownCount = 2
         ItemHeight = 15
@@ -211,12 +216,12 @@ object frmConnDetails: TfrmConnDetails
         TabOrder = 0
         Text = 'Normal'
         OnChange = cboConnectionChange
-        Items.Strings = (
+        Items.WideStrings = (
           'Normal'
           'HTTP')
       end
-      object txtPriority: TEdit
-        Left = 59
+      object txtPriority: TTntEdit
+        Left = 75
         Top = 90
         Width = 46
         Height = 21
@@ -224,7 +229,7 @@ object frmConnDetails: TfrmConnDetails
         Text = '0'
       end
       object spnPriority: TUpDown
-        Left = 105
+        Left = 121
         Top = 90
         Width = 16
         Height = 21
@@ -233,10 +238,10 @@ object frmConnDetails: TfrmConnDetails
         TabOrder = 5
       end
     end
-    object tbsSocket: TTabSheet
+    object tbsSocket: TTntTabSheet
       Caption = 'Proxy'
       ImageIndex = -1
-      object lblSocksHost: TLabel
+      object lblSocksHost: TTntLabel
         Left = 5
         Top = 38
         Width = 25
@@ -244,7 +249,7 @@ object frmConnDetails: TfrmConnDetails
         Caption = 'Host:'
         Enabled = False
       end
-      object lblSocksPort: TLabel
+      object lblSocksPort: TTntLabel
         Left = 5
         Top = 65
         Width = 22
@@ -252,14 +257,14 @@ object frmConnDetails: TfrmConnDetails
         Caption = 'Port:'
         Enabled = False
       end
-      object lblSocksType: TLabel
+      object lblSocksType: TTntLabel
         Left = 5
         Top = 13
         Width = 27
         Height = 13
         Caption = 'Type:'
       end
-      object lblSocksUsername: TLabel
+      object lblSocksUsername: TTntLabel
         Left = 5
         Top = 112
         Width = 51
@@ -267,7 +272,7 @@ object frmConnDetails: TfrmConnDetails
         Caption = 'Username:'
         Enabled = False
       end
-      object lblSocksPassword: TLabel
+      object lblSocksPassword: TTntLabel
         Left = 5
         Top = 140
         Width = 49
@@ -275,26 +280,26 @@ object frmConnDetails: TfrmConnDetails
         Caption = 'Password:'
         Enabled = False
       end
-      object chkSocksAuth: TCheckBox
-        Left = 75
+      object chkSocksAuth: TTntCheckBox
+        Left = 91
         Top = 85
-        Width = 182
+        Width = 190
         Height = 17
         Caption = 'Authentication Required'
         Enabled = False
         TabOrder = 3
         OnClick = chkSocksAuthClick
       end
-      object txtSocksHost: TEdit
-        Left = 75
+      object txtSocksHost: TTntEdit
+        Left = 91
         Top = 34
         Width = 130
         Height = 21
         Enabled = False
         TabOrder = 1
       end
-      object txtSocksPort: TEdit
-        Left = 75
+      object txtSocksPort: TTntEdit
+        Left = 91
         Top = 61
         Width = 39
         Height = 21
@@ -302,7 +307,7 @@ object frmConnDetails: TfrmConnDetails
         TabOrder = 2
       end
       object cboSocksType: TComboBox
-        Left = 75
+        Left = 91
         Top = 8
         Width = 130
         Height = 22
@@ -317,16 +322,16 @@ object frmConnDetails: TfrmConnDetails
           'Version 5'
           'HTTP')
       end
-      object txtSocksUsername: TEdit
-        Left = 74
+      object txtSocksUsername: TTntEdit
+        Left = 90
         Top = 108
         Width = 130
         Height = 21
         Enabled = False
         TabOrder = 4
       end
-      object txtSocksPassword: TEdit
-        Left = 74
+      object txtSocksPassword: TTntEdit
+        Left = 90
         Top = 136
         Width = 130
         Height = 21
@@ -335,39 +340,39 @@ object frmConnDetails: TfrmConnDetails
         TabOrder = 5
       end
     end
-    object tbsHttp: TTabSheet
+    object tbsHttp: TTntTabSheet
       BorderWidth = 2
       Caption = 'HTTP Polling'
       ImageIndex = -1
-      object Label1: TLabel
+      object Label1: TTntLabel
         Left = 1
         Top = 5
         Width = 25
         Height = 13
         Caption = 'URL:'
       end
-      object Label2: TLabel
+      object Label2: TTntLabel
         Left = 1
         Top = 38
         Width = 46
         Height = 13
         Caption = 'Poll Time:'
       end
-      object Label5: TLabel
+      object Label5: TTntLabel
         Left = 140
         Top = 39
         Width = 40
         Height = 13
         Caption = 'seconds'
       end
-      object Label9: TLabel
+      object Label9: TTntLabel
         Left = 1
         Top = 73
         Width = 48
         Height = 13
         Caption = '# of Keys:'
       end
-      object lblNote: TLabel
+      object lblNote: TTntLabel
         Left = 0
         Top = 100
         Width = 284
@@ -381,21 +386,21 @@ object frmConnDetails: TfrmConnDetails
           'ion.'
         WordWrap = True
       end
-      object txtURL: TEdit
+      object txtURL: TTntEdit
         Left = 76
         Top = 2
         Width = 197
         Height = 21
         TabOrder = 0
       end
-      object txtTime: TEdit
+      object txtTime: TTntEdit
         Left = 76
         Top = 35
         Width = 53
         Height = 21
         TabOrder = 1
       end
-      object txtKeys: TEdit
+      object txtKeys: TTntEdit
         Left = 76
         Top = 68
         Width = 53

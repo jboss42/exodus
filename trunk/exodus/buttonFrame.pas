@@ -23,15 +23,15 @@ interface
 
 uses 
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ExtCtrls, StdCtrls;
+  ExtCtrls, StdCtrls, TntStdCtrls;
 
 type
   TframeButtons = class(TFrame)
     Panel2: TPanel;
     Bevel1: TBevel;
     Panel1: TPanel;
-    btnOK: TButton;
-    btnCancel: TButton;
+    btnOK: TTntButton;
+    btnCancel: TTntButton;
   private
     { Private declarations }
   public

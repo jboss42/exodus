@@ -24,19 +24,19 @@ interface
 uses
     JabberID, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    buttonFrame, StdCtrls;
+    buttonFrame, StdCtrls, TntStdCtrls;
 
 type
   TfrmJoinRoom = class(TForm)
-    Label1: TLabel;
-    Label2: TLabel;
-    Label3: TLabel;
-    txtRoom: TEdit;
-    txtNick: TEdit;
+    Label1: TTntLabel;
+    Label2: TTntLabel;
+    Label3: TTntLabel;
+    txtRoom: TTntEdit;
+    txtNick: TTntEdit;
     frameButtons1: TframeButtons;
-    txtServer: TComboBox;
-    txtPassword: TEdit;
-    lblPassword: TLabel;
+    txtServer: TTntComboBox;
+    txtPassword: TTntEdit;
+    lblPassword: TTntLabel;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -58,7 +58,7 @@ resourcestring
 
 implementation
 uses
-    GnuGetText, Jabber1, Agents, Session, Room;
+    ExUtils, GnuGetText, Jabber1, Agents, Session, Room;
 {$R *.DFM}
 
 procedure StartJoinRoom;
@@ -160,6 +160,7 @@ end;
 
 procedure TfrmJoinRoom.FormCreate(Sender: TObject);
 begin
+    AssignUnicodeFont(Self);
     TranslateProperties(Self);
 end;
 

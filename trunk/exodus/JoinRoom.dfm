@@ -5,7 +5,7 @@ object frmJoinRoom: TfrmJoinRoom
   BorderStyle = bsDialog
   Caption = 'Join Room'
   ClientHeight = 177
-  ClientWidth = 241
+  ClientWidth = 267
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,43 +19,43 @@ object frmJoinRoom: TfrmJoinRoom
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
+  object Label1: TTntLabel
     Left = 8
     Top = 9
     Width = 62
     Height = 13
     Caption = 'Room Name:'
   end
-  object Label2: TLabel
+  object Label2: TTntLabel
     Left = 8
     Top = 41
     Width = 65
     Height = 13
     Caption = 'Room Server:'
   end
-  object Label3: TLabel
+  object Label3: TTntLabel
     Left = 8
     Top = 73
     Width = 51
     Height = 13
     Caption = 'Nickname:'
   end
-  object lblPassword: TLabel
+  object lblPassword: TTntLabel
     Left = 8
     Top = 105
     Width = 49
     Height = 13
     Caption = 'Password:'
   end
-  object txtRoom: TEdit
-    Left = 91
+  object txtRoom: TTntEdit
+    Left = 115
     Top = 6
     Width = 139
     Height = 21
     TabOrder = 0
   end
-  object txtNick: TEdit
-    Left = 91
+  object txtNick: TTntEdit
+    Left = 115
     Top = 70
     Width = 139
     Height = 21
@@ -64,26 +64,31 @@ object frmJoinRoom: TfrmJoinRoom
   inline frameButtons1: TframeButtons
     Left = 0
     Top = 143
-    Width = 241
+    Width = 267
     Height = 34
     Align = alBottom
     AutoScroll = False
     TabOrder = 4
-    inherited Bevel1: TBevel
-      Width = 241
-    end
-    inherited Panel1: TPanel
-      Left = 81
-      inherited btnOK: TButton
-        OnClick = frameButtons1btnOKClick
+    inherited Panel2: TPanel
+      Width = 267
+      Height = 34
+      inherited Bevel1: TBevel
+        Width = 267
       end
-      inherited btnCancel: TButton
-        OnClick = frameButtons1btnCancelClick
+      inherited Panel1: TPanel
+        Left = 107
+        Height = 29
+        inherited btnOK: TTntButton
+          OnClick = frameButtons1btnOKClick
+        end
+        inherited btnCancel: TTntButton
+          OnClick = frameButtons1btnCancelClick
+        end
       end
     end
   end
-  object txtServer: TComboBox
-    Left = 91
+  object txtServer: TTntComboBox
+    Left = 115
     Top = 37
     Width = 140
     Height = 21
@@ -91,8 +96,8 @@ object frmJoinRoom: TfrmJoinRoom
     TabOrder = 1
     Text = 'txtServer'
   end
-  object txtPassword: TEdit
-    Left = 91
+  object txtPassword: TTntEdit
+    Left = 115
     Top = 102
     Width = 139
     Height = 21

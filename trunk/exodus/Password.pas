@@ -21,17 +21,17 @@ unit Password;
 interface
 
 uses Windows, SysUtils, Classes, Graphics, Forms, Controls, StdCtrls, 
-  Buttons, buttonFrame;
+  Buttons, buttonFrame, TntStdCtrls;
 
 type
   TfrmPassword = class(TForm)
-    Label1: TLabel;
-    txtOldPassword: TEdit;
+    Label1: TTntLabel;
+    txtOldPassword: TTntEdit;
     frameButtons1: TframeButtons;
-    Label2: TLabel;
-    txtNewPassword: TEdit;
-    Label3: TLabel;
-    txtConfirmPassword: TEdit;
+    Label2: TTntLabel;
+    txtNewPassword: TTntEdit;
+    Label3: TTntLabel;
+    txtConfirmPassword: TTntEdit;
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
@@ -46,10 +46,11 @@ implementation
 
 {$R *.dfm}
 uses
-    GnuGetText;
+    ExUtils, GnuGetText;
 
 procedure TfrmPassword.FormCreate(Sender: TObject);
 begin
+    AssignUnicodeFont(Self);
     TranslateProperties(Self);
 end;
 
