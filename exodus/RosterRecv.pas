@@ -94,6 +94,7 @@ begin
     cboGroup.Items.Assign(MainSession.Roster.GrpList);
     removeSpecialGroups(cboGroup.Items);
     cboGroup.ItemIndex := 0;
+    cboGroup.Text := MainSession.Prefs.getString('roster_default');
 end;
 
 {---------------------------------------}
