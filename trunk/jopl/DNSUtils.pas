@@ -229,6 +229,12 @@ begin
             a_req := srv.IP;
         end;
     except
+        on E: EAssertionFailed do begin
+            ip := '';
+            port := 0;
+            Result := false;
+            exit;
+        end;
         on E: EIdDNSResolverError do begin
             ip := '';
             port := 0;
