@@ -238,6 +238,9 @@ begin
     ClearStringListObjects(ppdb);
     ClearStringListObjects(Agents);
 
+    ppdb.Clear();
+    Agents.Clear();
+
     Prefs.Free;
     ppdb.Free;
     roster.Free;
