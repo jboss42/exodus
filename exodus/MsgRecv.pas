@@ -30,21 +30,11 @@ uses
 type
   TfrmMsgRecv = class(TfrmDockable)
     frameButtons1: TframeButtons;
-    pnlFrom: TPanel;
-    StaticText1: TStaticText;
-    txtFrom: TStaticText;
-    pnlSubject: TPanel;
-    StaticText3: TStaticText;
     pnlReply: TPanel;
     frameButtons2: TframeButtons;
     Splitter1: TSplitter;
     txtMsg: TExRichEdit;
-    pnlSendSubject: TPanel;
-    Label1: TLabel;
     MsgOut: TExRichEdit;
-    btnClose: TSpeedButton;
-    txtSubject: TTntLabel;
-    txtSendSubject: TTntMemo;
     popContact: TPopupMenu;
     mnuHistory: TMenuItem;
     popClearHistory: TMenuItem;
@@ -57,6 +47,20 @@ type
     mnuSendFile: TMenuItem;
     N1: TMenuItem;
     mnuResources: TMenuItem;
+    pnlTop: TPanel;
+    pnlHeader: TPanel;
+    pnlSendSubject: TPanel;
+    lblSubject1: TLabel;
+    txtSendSubject: TTntMemo;
+    pnlSubject: TPanel;
+    txtSubject: TTntLabel;
+    lblSubject2: TStaticText;
+    pnlFrom: TPanel;
+    btnClose: TSpeedButton;
+    lblFrom: TStaticText;
+    txtFrom: TStaticText;
+    pnlError: TPanel;
+    Image1: TImage;
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -104,6 +108,7 @@ resourcestring
     sAccept = 'Accept';
     sDecline = 'Decline';
     sTo = 'To:';
+    sError = 'Error:';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -149,11 +154,19 @@ begin
                 frameButtons1.btnCancel.Caption := sDecline;
                 end
 
+            else if e.error then begin
+                // This is an error.. show the error panel
+                frameButtons1.btnOK.Visible := false;
+                pnlError.Visible := true;
+                lblSubject2.Caption := sError;
+                end
+
             else
                 // normally, we don't want a REPLY button
                 frameButtons1.btnOK.Visible := (eType = evt_Message);
 
             ShowDefault;
+            pnlTop.Height := pnlSubject.Top + pnlSubject.Height + 3;
             btnClose.Visible := Docked;
             FormResize(nil);
             end;
@@ -250,6 +263,8 @@ begin
 
     Self.ClientHeight := 200;
     recips := TWideStringlist.Create();
+
+    pnlTop.Height := pnlSubject.Top + pnlSubject.Height + 3;
 end;
 
 {---------------------------------------}
@@ -262,16 +277,20 @@ begin
     pnlReply.Visible := true;
     pnlReply.Align := alClient;
     ActiveControl := MsgOut;
-    StaticText1.Caption := sTo;
+    lblFrom.Caption := sTo;
     btnClose.Visible := Docked;
+
+    pnlTop.Height := pnlSendSubject.Top + pnlSendSubject.Height + 3;
 end;
 
 {---------------------------------------}
 procedure TfrmMsgRecv.FormResize(Sender: TObject);
 begin
     // Resize some of the form element
-    btnClose.Left := Self.ClientWidth - btnClose.Width - 2;
-    // txtFrom.Width := pnlFrom.Width - btnClose.Width - StaticText1.Width - 5;
+    if pnlError.Visible then
+        btnClose.Left := Self.ClientWidth - btnClose.Width - pnlError.Width - 5
+    else
+        btnClose.Left := Self.ClientWidth - btnClose.Width - 2;
     txtMsg.Repaint();
 end;
 
