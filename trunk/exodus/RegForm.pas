@@ -168,6 +168,8 @@ begin
                     cur_key := f.Data
                 else if (f.Name = 'registered') then
                     btnDelete.Enabled := true
+                else if (f.Name = 'x') then
+                     // TODO: jabber:x:data
                 else begin
                     cur_fld := doField(f.Name);
                     if (f.Data <> '') then
@@ -203,7 +205,6 @@ begin
             txtData.PasswordChar := '*';
         Align := alTop;
         Visible := true;
-        TabOrder := 0;
         field := fld;
         end;
     Result := frm;
