@@ -1,5 +1,5 @@
 object frmBrowse: TfrmBrowse
-  Left = 257
+  Left = 129
   Top = 277
   Width = 427
   Height = 425
