@@ -61,6 +61,7 @@ type
         function getHistory: Widestring;
 
         property JID: WideString read _jid;
+        property Resource: Widestring read _resource;
         property OnMessage: TChatMessageEvent read _event write _event;
 
 end;

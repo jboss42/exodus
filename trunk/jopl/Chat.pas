@@ -154,8 +154,7 @@ begin
     if full <> '' then
         i := indexOf(full);
 
-    // only check for other resources if we didn't specify one
-    if ((i < 0) and (sresource = '')) then begin
+    if (i < 0) then begin
         p := nil;
         i := indexOf(sjid);
         while (i < 0) do begin
@@ -174,8 +173,17 @@ begin
 
     if (i < 0) then
         Result := nil
-    else
+    else begin
         Result := TChatController(Objects[i]);
+
+        // if we have a resource specified...
+        // and the chat controller has a different one,
+        // then don't return it.
+        if ((sresource <> '') and
+            (Result.resource <> '') and
+            (sresource <> Result.Resource)) then
+            Result := nil;
+    end;
 end;
 
 {---------------------------------------}
