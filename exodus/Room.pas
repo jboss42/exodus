@@ -259,8 +259,10 @@ begin
 
         // log if we have logs for TC turned on.
         if ((MainSession.Prefs.getBool('log_rooms')) and
-            (MainSession.Prefs.getBool('log'))) then
+            (MainSession.Prefs.getBool('log'))) then begin
+            Msg.isMe := False;
             LogMessage(Msg);
+            end;
 
         if (GetActiveWindow = Self.Handle) and (pnlInput.Visible) then
             MsgOut.SetFocus();
