@@ -1342,6 +1342,7 @@ begin
         e := not e;
         setBool('roster_only_online', e);
         btnOnlineRoster.Down := e;
+        mnuOnline.Checked := e;
         end;
 
     if MainSession.Stream.Active then
