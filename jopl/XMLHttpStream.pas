@@ -64,7 +64,7 @@ type
 {---------------------------------------}
 implementation
 uses
-    {$ifdef Windows}
+    {$ifdef Win32}
     Registry, StrUtils, ExUtils, 
     {$endif}
     IdGlobal;
@@ -168,7 +168,7 @@ end;
 {---------------------------------------}
 constructor THttpThread.Create(strm: TXMLHttpStream; profile: TJabberProfile; root: string);
 var
-    {$ifdef Windows}
+    {$ifdef Win32}
     reg: TRegistry;
     {$endif}
     srv: string;
@@ -193,7 +193,7 @@ begin
         // get IE settings from registry
 
         // todo: figure out some way of doing this XP??
-        {$ifdef Windows}
+        {$ifdef Win32}
         reg := TRegistry.Create();
         try
             reg.OpenKey('Software\Microsoft\Windows\CurrentVersion\Internet Settings', false);

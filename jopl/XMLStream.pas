@@ -26,7 +26,7 @@ uses
     XMLUtils,
     XMLParser,
     LibXMLParser,
-    {$ifdef Windows}
+    {$ifdef Win32}
     Messages,
     {$endif}
     PrefController,
