@@ -1,101 +1,68 @@
-2004-02-17 08:18  pgmillard
+2004-02-26 09:22  pgmillard
 
 	* exodus/: default.po, version.h, version.nsi: daily build
 
-2004-02-17 07:29  pgmillard
+2004-02-26 07:11  pgmillard
 
-	* build.pl, stage.pl: Add a staging script. Tweak version.pl
+	* ZipDLL.nsh, build.pl, exodus/exodus-new.nsi,
+	  exodus/locale-new.nsh, exodus/locale.nsh,
+	  exodus/plugins/example-plugin-desc.nsi,
+	  exodus/plugins/example-plugin-off.nsi,
+	  exodus/plugins/example-plugin-sections.nsi: New installer work
 
-2004-02-17 07:28  pgmillard
+2004-02-26 07:02  pgmillard
 
-	* exodus/default.po: stage build
+	* exodus/: default.po, version.h, version.nsi: stage build
 
-2004-02-17 07:24  pgmillard
+2004-02-25 22:41  pgmillard
 
-	* stage.pl, exodus/version.pl: Add a staging script. Tweak
-	  version.pl
+	* jopl/SASLAuth.pas: [no log message]
 
-2004-02-17 07:20  pgmillard
+2004-02-25 22:38  pgmillard
 
-	* exodus/default.po: stage build
+	* exodus/Browser.pas: Fixup sorting logic in the browser.
 
-2004-02-17 07:10  pgmillard
+2004-02-25 22:20  pgmillard
 
-	* exodus/: RosterWindow.dfm, RosterWindow.pas: Bug #3364 - Rename
-	  send available, to send visible.
+	* exodus/: BaseChat.dfm, Dockable.dfm, Jabber1.dfm, MsgQueue.dfm,
+	  MsgRecv.dfm, Room.dfm: [no log message]
 
-2004-02-15 21:42  pgmillard
+2004-02-25 22:14  pgmillard
 
-	* exodus/: Jabber1.pas, exodus.nsi,
-	  plugins/AIM-Import/ExodusCOM_TLB.pas,
-	  plugins/ASpeller/ExodusCOM_TLB.pas,
-	  plugins/ICQ-Import/ExodusCOM_TLB.pas,
-	  plugins/JabberStats/ExodusCOM_TLB.pas,
-	  plugins/NetMeeting/ExodusCOM_TLB.pas,
-	  plugins/RosterTools/ExodusCOM_TLB.pas, prefs/PrefNetwork.pas: Bug
-	  #3358 - Allow 0 reconnect attempts
+	* exodus/: Dockable.pas, ExUtils.pas, Jabber1.pas: Bug #3267 - Add
+	  code to catch screen resolution changes and make sure windows are
+	  still reachable.
 
-2004-02-15 21:15  pgmillard
+2004-02-25 21:32  pgmillard
 
-	* exodus/default.po: stage build
+	* exodus/Dockable.pas: Bug #2986 - Fix x-mouse and other
+	  bring-to-front issues with undocked TfrmDockable windows
 
-2004-02-15 20:59  pgmillard
+2004-02-25 21:02  pgmillard
 
-	* exodus/default.po: stage build
+	* exodus/: MsgQueue.pas, MsgRecv.pas, Room.pas: Bug #3271 - Handle
+	  error msgs in TC better. Also fixup some issues w/ the msg queue
+	  and how is spools events properly.
 
-2004-02-15 20:45  pgmillard
+2004-02-25 20:28  pgmillard
 
-	* exodus/: MsgQueue.pas, MsgRecv.pas: Bug #3333 - Fixup opening the
-	  same event multiple times. Was causing errors.
+	* exodus/Jabber1.pas: Bug #3373 - Make sure _was_max is reset after
+	  we do a restore operation.
 
-2004-02-13 07:21  pgmillard
+2004-02-25 20:21  pgmillard
 
-	* exodus/Browser.dfm, exodus/Browser.pas, jopl/Entity.pas,
-	  jopl/EntityCache.pas: Browser improvements to support the node
-	  attribute
+	* exodus/RosterWindow.pas, jopl/Session.pas: Bug #3273 - Make sure
+	  _ssl_on is set correctly after disconnect and reconnects
 
-2004-02-12 20:11  pgmillard
+2004-02-25 20:13  pgmillard
 
-	* exodus/RegForm.pas: Bug #3336 - Tweaks to gateway registration
+	* exodus/RosterWindow.pas, exodus/branding.xml, jopl/Presence.pas:
+	  Fixup bugs with multiple resources going offline affecting group
+	  counts. Only dispatch /presence/offline when the users last
+	  resource goes away.
 
-2004-02-12 19:57  pgmillard
+2004-02-18 17:02  pgmillard
 
-	* exodus/ExResponders.pas, jopl/ChatController.pas,
-	  jopl/MsgList.pas, jopl/Session.pas: Use /pre for x-data, muc
-	  invites, and conf invites. Eliminate special casing in MsgList
-	  and ChatList
-
-2004-02-12 19:44  pgmillard
-
-	* exodus/SendStatus.pas: Allow send file status frames to be closed
-	  properly.
-
-2004-02-12 19:36  pgmillard
-
-	* exodus/: BaseChat.dfm, DockWizard.dfm, Dockable.dfm,
-	  ExodusCOM_TLB.pas, Jabber1.dfm, MsgRecv.pas, RegForm.dfm,
-	  Room.dfm: Bug #3333 - Cleanup event queue in FormDestroy, not
-	  FormClose.
-
-2004-02-12 15:27  pgmillard
-
-	* exodus/RiserWindow.dfm, exodus/RiserWindow.pas, jopl/Session.pas:
-	  Handle exceptions when doing StartTLS. Also fixup toast clicks so
-	  plugins work correctly.
-
-2004-02-12 07:06  pgmillard
-
-	* build.pl, exodus/Room.pas, exodus/default.po,
-	  exodus/plugins/AIM-Import/ExodusCOM_TLB.pas,
-	  exodus/plugins/ASpeller/ExodusCOM_TLB.pas,
-	  exodus/plugins/ICQ-Import/ExodusCOM_TLB.pas,
-	  exodus/plugins/JabberStats/ExodusCOM_TLB.pas,
-	  exodus/plugins/NetMeeting/ExodusCOM_TLB.pas,
-	  exodus/plugins/RosterTools/ExodusCOM_TLB.pas: Bug #3339 - Room
-	  nicks are case sensitive now.
-
-2004-02-10 17:52  hildjj
-
-	* exodus/RosterWindow.dfm: Make F2 edit the current roster item
-	  (LW)
+	* exodus/: exodus-new.nsi, locale.nsh, plugins/plugin-i18n.nsi,
+	  plugins/plugin-locale.nsh: Checked in NSIS stuff from llong
 
