@@ -119,7 +119,7 @@ type
     _xfer: TfrmPrefTransfer;
     _network: TfrmPrefNetwork;
     _layouts: TfrmPrefLayouts;
-    
+
   public
     { Public declarations }
     procedure LoadPrefs;
@@ -129,7 +129,27 @@ type
 var
   frmPrefs: TfrmPrefs;
 
-procedure StartPrefs;
+const
+    pref_system = 'system';
+    pref_roster = 'roster';
+    pref_groups = 'groups';
+    pref_s10n = 's10n';
+    pref_fonts = 'fonts';
+    pref_layout = 'layout';
+    pref_win = 'windows';
+    pref_notify = 'notify';
+    pref_msgs = 'msgs';
+    pref_emoticons = 'emoticons';
+    pref_xfers = 'xfers';
+    pref_away = 'away';
+    pref_keywords = 'keywords';
+    pref_block = 'block';
+    pref_pres = 'presence';
+    pref_network = 'network';
+    pref_plugins = 'plugins';
+
+
+procedure StartPrefs(start_page: string = '');
 
 {---------------------------------------}
 {---------------------------------------}
@@ -143,15 +163,41 @@ uses
     GnuGetText, PrefController, Session, ExUtils;
 
 {---------------------------------------}
-procedure StartPrefs;
+procedure StartPrefs(start_page: string);
 var
+    l: TTntLabel;
     f: TfrmPrefs;
 begin
     f := TfrmPrefs.Create(Application);
     f.LoadPrefs;
-    // frmExodus.PreModal(f);
+
+    if (start_page <> '') then begin
+        l := nil;
+        if (start_page = pref_system) then l := f.lblSystem
+        else if (start_page = pref_roster) then l := f.lblRoster
+        else if (start_page = pref_groups) then l := f.lblGroups
+        else if (start_page = pref_s10n) then l := f.lbls10n
+        else if (start_page = pref_fonts) then l := f.lblFonts
+        else if (start_page = pref_layout) then l := f.lblLayouts
+        else if (start_page = pref_win) then l := f.lblDialog
+        else if (start_page = pref_notify) then l := f.lblNotify
+        else if (start_page = pref_msgs) then l := f.lblMessages
+        else if (start_page = pref_emoticons) then l := f.lblEmote
+        else if (start_page = pref_xfers) then l := f.lblTransfer
+        else if (start_page = pref_away) then l := f.lblAway
+        else if (start_page = pref_keywords) then l := f.lblKeywords
+        else if (start_page = pref_block) then l := f.lblBlocklist
+        else if (start_page = pref_pres) then l := f.lblCustomPres
+        else if (start_page = pref_network) then l := f.lblNetwork
+        else if (start_page = pref_plugins) then l := f.lblPlugins;
+
+        if (l <> nil) then begin
+            f._cur_label := l;
+        end;
+        
+    end;
+
     f.ShowModal;
-    //frmExodus.PostModal();
     f.Free();
 end;
 
@@ -259,6 +305,7 @@ begin
     // Load the system panel
     _system := nil;
     _cur_panel := nil;
+    _cur_label := nil;
 
     // branding
     with (MainSession.Prefs) do begin
@@ -630,6 +677,7 @@ var
     c: TControl;
     cap: Widestring;
 begin
+
     for i := 0 to Scroller.ControlCount - 1 do begin
         c := Scroller.Controls[i];
         if (c is TTntLabel) then with TTntLabel(c) do begin
@@ -643,8 +691,14 @@ begin
         end;
     end;
 
-    TabSelect(lblSystem);
-    _cur_label := lblSystem;
+    if (_cur_label = nil) then begin
+        TabSelect(lblSystem);
+        _cur_label := lblSystem;
+    end
+    else begin
+        Scroller.ScrollInView(_cur_label);
+        TabSelect(_cur_label);
+    end;
 
 end;
 

@@ -455,6 +455,13 @@ object frmExodus: TfrmExodus
       end
       object mnuPlugins: TTntMenuItem
         Caption = 'Plu&gins'
+        object mnuPluginOpts: TTntMenuItem
+          Caption = 'Options ...'
+          OnClick = mnuPluginOptsClick
+        end
+        object N15: TTntMenuItem
+          Caption = '-'
+        end
       end
       object N1: TTntMenuItem
         Caption = '-'

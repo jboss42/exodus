@@ -176,6 +176,8 @@ type
     trayPresChat: TTntMenuItem;
     trayPresOnline: TTntMenuItem;
     IdAntiFreeze1: TIdAntiFreeze;
+    mnuPluginOpts: TTntMenuItem;
+    N15: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
@@ -252,6 +254,7 @@ type
     procedure presDNDClick(Sender: TObject);
     procedure ResolverStatus(ASender: TObject; const AStatus: TIdStatus;
       const AStatusText: String);
+    procedure mnuPluginOptsClick(Sender: TObject);
 
   private
     { Private declarations }
@@ -3209,6 +3212,13 @@ procedure TfrmExodus.ResolverStatus(ASender: TObject;
 begin
     // DNS status
     DebugMsg('DNS Lookup status: ' + AStatusText);
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.mnuPluginOptsClick(Sender: TObject);
+begin
+    // Show the prefs/plugins page.
+    StartPrefs(pref_plugins);
 end;
 
 initialization
