@@ -618,20 +618,25 @@ procedure TXMLTag.AssignTag(const xml: TXMLTag);
 var
     i: integer;
     c: TXMLTag;
-    tags: TXMLTagList;
+    tags: TXMLNodeList;
+    n: TXMLNode;
 begin
     // Make self contain all the info that xml does
+
+    // NOTE: mixed content may now exist (XHTML)
     Self.Name := xml.Name;
-    tags := xml.ChildTags();
+    tags := xml.Nodes;
 
     for i := 0 to tags.Count - 1 do begin
-        c := Self.AddTag(tags[i].Name);
-        c.AssignTag(tags[i]);
+        n := TXMLNode(tags[i]);
+        if (n.NodeType = xml_Tag) then begin
+            c := Self.AddTag(TXMLTag(n).Name);
+            c.AssignTag(TXMLTag(n));
+        end
+        else if (n.NodeType = xml_CDATA) then begin
+            Self.AddCData(TXMLCData(n).Data)
+        end;
     end;
-
-    tags.Free();
-
-    Self.AddCData(xml.Data);
 
     for i := 0 to xml._AttrList.Count - 1 do
         Self.setAttribute(xml._AttrList.Name(i), xml._AttrList.Value(i));
