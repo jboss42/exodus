@@ -95,21 +95,6 @@ begin
     result := false;
     if (background and (not MainSession.Prefs.getBool('auto_updates'))) then exit;
 
-    {$ifdef Win32}
-    // If we have the magic reg key, this is the first time we've run this version,
-    // with the new "save to session" logic.  Copy over the value, and keep going.
-    // TODO:  Take this out later, after everyone updates a couple of times.
-    reg := TRegistry.Create();
-    reg.RootKey := HKEY_LOCAL_MACHINE;
-    reg.OpenKey(EXODUS_REG, true);
-    url := reg.ReadString('Update_URL');
-    if (url <> '') then begin
-        MainSession.Prefs.setString('auto_update_url', url);
-        reg.DeleteValue('Update_URL');
-    end;
-    reg.Free();
-    {$endif}
-
     // NOTE: if you want to do auto-update, the easiest way to turn it on is
     // to create a branding.xml next to your exodus.exe, which contains this:
     // <brand>
