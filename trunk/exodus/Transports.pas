@@ -42,22 +42,35 @@ type
 
 procedure RemoveTransport(jid: WideString);
 
+resourceString
+    sTransportRemove = 'Remove Registration?';
+    sTransportTimeout = 'The transport could not be reached. Your request timed out.';
+    sTransportError = 'There was an error processing your request.';
+    sTransportNotReg = 'You are not registered with this transport.';
+    sTransportSuccess = 'Your request was successful.';
+
+
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 uses
     Controls, Dialogs;
 
+{---------------------------------------}
 procedure RemoveTransport(jid: Widestring);
 var
     proxy: TTransportProxy;
 begin
     // Delete the registration
-    if MessageDlg('Remove Registration?', mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
+    if MessageDlg(sTransportRemove, mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
 
     proxy := TTransportProxy.Create();
     proxy.jid := jid;
     proxy.UnRegister();
 end;
 
+{---------------------------------------}
 procedure TTransportProxy.UnRegister();
 var
     iq: TJabberIQ;
@@ -73,12 +86,14 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TTransportProxy.ShowError(msg: Widestring);
 begin
     MessageDlg(msg, mtError, [mbOK], 0);
     Self.Free();
 end;
 
+{---------------------------------------}
 procedure TTransportProxy.RemoveGetCallback(event: string; tag: TXMLTag);
 var
     user_tag, key_tag: TXMLTag;
@@ -87,12 +102,12 @@ var
 begin
     //
     if (event = 'timeout') then begin
-        ShowError('The transport could not be reached. Your request timed out.');
+        ShowError(sTransportTimeout);
         exit;
         end;
 
     if (tag.GetAttribute('type') = 'error') then begin
-        ShowError('There was an error processing your request.');
+        ShowError(sTransportError);
         exit;
         end;
 
@@ -106,7 +121,7 @@ begin
             key := key_tag.Data();
 
         if (user = '') then begin
-            ShowError('You are not registered with this transport.');
+            ShowError(sTransportNotReg);
             exit;
             end;
 
@@ -125,20 +140,21 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TTransportProxy.RemoveSetCallback(event: string; tag: TXMLTag);
 begin
     //
     if (event = 'timeout') then begin
-        ShowError('The transport could not be reached. Your request timed out.');
+        ShowError(sTransportTimeout);
         exit;
         end;
 
     if (tag.GetAttribute('type') = 'error') then begin
-        ShowError('There was an error processing your request.');
+        ShowError(sTransportError);
         exit;
         end
     else begin
-        MessageDlg('Your request was successful.', mtInformation, [mbOK], 0);
+        MessageDlg(sTransportSuccess, mtInformation, [mbOK], 0);
         self.free();
         exit;
         end;
@@ -146,4 +162,3 @@ end;
 
 
 end.
- 
