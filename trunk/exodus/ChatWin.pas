@@ -21,7 +21,7 @@ unit ChatWin;
 interface
 
 uses
-    Chat, ChatController, JabberID, XMLTag, IQ, Unicode, 
+    Avatar, Chat, ChatController, JabberID, XMLTag, IQ, Unicode, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, BaseChat, ExtCtrls, StdCtrls, Menus, ComCtrls, ExRichEdit, RichEdit2,
     RichEdit, TntStdCtrls, Buttons, TntMenus;
@@ -56,6 +56,7 @@ type
     popClearHistory: TTntMenuItem;
     mnuHistory: TTntMenuItem;
     mnuSave: TTntMenuItem;
+    imgAvatar: TPaintBox;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -85,6 +86,7 @@ type
     procedure NotificationOptions1Click(Sender: TObject);
     procedure timBusyTimer(Sender: TObject);
     procedure popResourcesClick(Sender: TObject);
+    procedure imgAvatarPaint(Sender: TObject);
   private
     { Private declarations }
     jid: widestring;        // jid of the person we are talking to
@@ -118,6 +120,9 @@ type
 
     // custom notification options to use..
     _notify: array[0..3] of integer;
+
+    // the current contact's avatar
+    _avatar: TAvatar;
 
     procedure SetupPrefs();
     procedure SetupMenus();
@@ -435,12 +440,34 @@ procedure TfrmChat.SetJID(cjid: widestring);
 var
     ritem: TJabberRosterItem;
     p: TJabberPres;
-    i: integer;
+    m, i: integer;
+    a: TAvatar;
 begin
     jid := cjid;
     if (_jid <> nil) then _jid.Free();
 
     _jid := TJabberID.Create(cjid);
+
+    // check for an avatar
+    a := Avatars.Find(_jid.jid);
+    if (a <> nil) then begin
+        _avatar := a;
+        // Put some upper bounds on avatars in chat windows
+        m := _avatar.Height;
+        if (m > 32) then begin
+            m := 32;
+            imgAvatar.Width := Trunc((32 / _avatar.Height) * (_avatar.Width))
+        end
+        else
+            imgAvatar.Width := _avatar.Width;
+        Panel1.ClientHeight := m + 1;
+        imgAvatar.Visible := true;
+    end
+    else begin
+        _avatar := nil;
+        imgAvatar.Visible := false;
+        Panel1.Height := 28;
+    end;
 
     // setup the callbacks if we don't have them already
     if (_pcallback = -1) then
@@ -941,10 +968,14 @@ end;
 
 {---------------------------------------}
 procedure TfrmChat.imgStatusPaint(Sender: TObject);
+var
+    top_margin: integer;
 begin
   inherited;
     // repaint
-    frmExodus.ImageList2.Draw(imgStatus.Canvas, 1, 1, _pres_img);
+    top_margin := (Panel1.Height - frmExodus.ImageList2.Height) div 2;
+    if (top_margin < 0) then top_margin := 0;
+    frmExodus.ImageList2.Draw(imgStatus.Canvas, 1, top_margin, _pres_img);
 end;
 
 {---------------------------------------}
@@ -1307,6 +1338,24 @@ begin
   inherited;
     // set the message to this resource.
     SetJid(_jid.jid + '/' + TMenuItem(Sender).Caption);
+end;
+
+procedure TfrmChat.imgAvatarPaint(Sender: TObject);
+var
+    r: TRect;
+begin
+  inherited;
+    if (_avatar <> nil) then begin
+        if (_avatar.Height > imgAvatar.Height) then begin
+            r.Top := 1;
+            r.Left := 1;
+            r.Bottom := imgAvatar.Height;
+            r.Right := imgAvatar.Width;
+            _avatar.Draw(imgAvatar.Canvas, r);
+        end
+        else
+            _avatar.Draw(imgAvatar.Canvas);
+    end;
 end;
 
 end.
