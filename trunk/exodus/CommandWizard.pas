@@ -251,6 +251,8 @@ end;
 procedure TfrmCommandWizard.execCallback(event: string; tag: TXMLTag);
 var
     x, c: TXMLTag;
+    i: integer;
+    a: TControl;
 begin
     _iq := nil;
     if (event <> 'xml') then begin
@@ -281,6 +283,11 @@ begin
     end
     else begin
         // we're not done yet
+        // Make sure xdataBox is empty.
+        for i := xDataBox.ControlCount - 1 downto 0 do begin
+            a := xDataBox.Controls[i];
+            a.Free();
+        end;
         state := cwzSubmit;
         _session_id := c.GetAttribute('sessionid');
         x := c.QueryXPTag('/command/x[@xmlns="jabber:x:data"]');

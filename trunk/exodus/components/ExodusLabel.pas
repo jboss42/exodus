@@ -94,7 +94,7 @@ end;
 procedure TExodusLabel.SetCaption(cap: WideString);
 begin
     _caption := cap;
-    Self.Invalidate();
+    //Self.Invalidate();
 end;
 
 procedure TExodusLabel.MeasureMaybeDraw(doDraw : boolean);
