@@ -126,7 +126,7 @@ implementation
 {$R *.dfm}
 
 uses
-    ExSession,
+    ExSession, Stringprep, 
     JabberUtils, ExUtils,  GnuGetText, JabberID, Unicode, Session, WebGet, XMLTag, XMLParser,
     Registry;
 
@@ -507,8 +507,34 @@ end;
 
 {---------------------------------------}
 procedure TfrmConnDetails.txtUsernameExit(Sender: TObject);
+var
+    inp, outp: Widestring;
 begin
-    // XXX: stringprep txtUsername, cboServer, or cboResource. 
+    // stringprep txtUsername, cboServer, or cboResource.
+    if (Sender = txtUsername) then begin
+        inp := txtUsername.Text;
+        outp := xmpp_nodeprep(inp);
+        if (outp = '') then
+            MessageDlgW(_('The username you entered is not allowed.'), mtError, [mbOK], 0)
+        else
+            txtUsername.Text := outp;
+    end
+    else if (Sender = cboServer) then begin
+        inp := cboServer.Text;
+        outp := xmpp_nameprep(inp);
+        if (outp = '') then
+            MessageDlgW(_('The hostname you entered is invald.'), mtError, [mbOK], 0)
+        else
+            cboServer.Text := outp;
+    end
+    else if (Sender = cboResource) then begin
+        inp := cboResource.Text;
+        outp := xmpp_resourceprep(inp);
+        if (outp = '') then
+            MessageDlgW(_('The resource you entered is not allowed.'), mtError, [mbOK], 0)
+        else
+            cboResource.Text := outp;
+    end;
 end;
 
 end.
