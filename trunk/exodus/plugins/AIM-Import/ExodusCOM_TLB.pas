@@ -11,8 +11,8 @@ unit ExodusCOM_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.5 $
-// File generated on 1/8/2003 7:37:53 AM from Type Library described below.
+// PASTLWTR : $Revision: 1.6 $
+// File generated on 1/9/2003 7:35:53 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\runner\exodus.exe (1)

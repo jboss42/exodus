@@ -25,7 +25,7 @@ uses
     Menus, ShellAPI,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, 
     ComCtrls, StdCtrls, ExtCtrls, buttonFrame, CheckLst,
-    ExRichEdit, Dialogs, RichEdit2, TntStdCtrls;
+    ExRichEdit, Dialogs, RichEdit2, TntStdCtrls, TntComCtrls;
 
 type
   TfrmPrefs = class(TForm)
@@ -177,8 +177,6 @@ type
     chkPresErrors: TCheckBox;
     tbsPlugins: TTabSheet;
     StaticText12: TStaticText;
-    Label6: TLabel;
-    memPlugins: TTntMemo;
     imgPlugins: TImage;
     lblPlugins: TLabel;
     chkLogRooms: TCheckBox;
@@ -212,6 +210,13 @@ type
     txtChatMemory: TEdit;
     spnChatMemory: TUpDown;
     Label27: TLabel;
+    btnAddPlugin: TButton;
+    btnConfigPlugin: TButton;
+    btnRemove: TButton;
+    Label6: TLabel;
+    txtPluginDir: TEdit;
+    btnBrowsePluginPath: TButton;
+    lstPlugins: TTntListView;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -262,6 +267,10 @@ type
     procedure redrawChat();
     procedure clearPresList();
 
+    procedure loadPlugins();
+    procedure scanPluginDir();
+    procedure CheckPluginDll(dll : WideString);
+
   public
     { Public declarations }
     procedure LoadPrefs;
@@ -303,14 +312,12 @@ implementation
 {$R *.DFM}
 {$WARN UNIT_PLATFORM OFF}
 uses
+    ActiveX, ComObj, 
     AutoUpdate,
-    ExUtils,
-    FileCtrl,
-    XMLUtils,
+    ExUtils, ExodusCOM_TLB, 
+    FileCtrl, XMLUtils,
     Presence, MsgDisplay, JabberMsg, Jabber1,
-    PrefController,
-    Registry,
-    Session;
+    PrefController, Registry, Session;
 
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
@@ -494,7 +501,11 @@ begin
         fillStringList('keywords', memKeywords.Lines);
         chkRegex.Checked := getBool('regex_keywords');
         fillStringList('blockers', memBlocks.Lines);
-        fillStringList('plugins', memPlugins.Lines);
+
+        // plugins
+        // fillStringList('plugins', memPlugins.Lines);
+        txtPluginDir.Text := getString('plugin_dir');
+        loadPlugins();
 
         // Custom Presence options
         _pres_list := getAllPresence();
@@ -504,6 +515,95 @@ begin
         chkPresenceMessageListen.Checked := getBool('presence_message_listen');
     end;
 end;
+
+procedure TfrmPrefs.loadPlugins();
+begin
+    // load the listview
+    lstPlugins.Clear();
+    scanPluginDir();
+end;
+
+procedure TfrmPrefs.scanPluginDir();
+var
+    dir: Widestring;
+    sr: TSearchRec;
+begin
+    dir := MainSession.Prefs.getString('plugin_dir');
+    if (dir[1] = '.') then begin
+        // skip ./
+        dir := Copy(dir, 3, length(dir) - 2);
+        dir := ExtractFilePath(Application.ExeName) + dir;
+    end;
+
+    if (FindFirst(dir + '\\*.dll', faAnyFile, sr) = 0) then begin
+        repeat
+            CheckPluginDll(dir + '\' + sr.Name);
+        until FindNext(sr) <> 0;
+        FindClose(sr);
+    end;
+end;
+
+procedure TfrmPrefs.CheckPluginDll(dll : WideString);
+var
+    lib : ITypeLib;
+    i, j : integer;
+    item: TTntListItem;
+    tinfo, iface : ITypeInfo;
+    tattr, iattr: PTypeAttr;
+    r: cardinal;
+    libname, obname, doc: WideString;
+begin
+    // load the .dll.  This SHOULD register the bloody thing if it's not, but that
+    // doesn't seem to work for me.
+    OleCheck(LoadTypeLibEx(pwidechar(dll), REGKIND_REGISTER, lib));
+    // get the project name
+    OleCheck(lib.GetDocumentation(-1, @libname, nil, nil, nil));
+
+    // for each type in the project
+    for i := 0 to lib.GetTypeInfoCount() - 1 do begin
+        // get the info about the type
+        OleCheck(lib.GetTypeInfo(i, tinfo));
+
+        // get attributes of the type
+        OleCheck(tinfo.GetTypeAttr(tattr));
+        // is this a coclass?
+        if (tattr.typekind <> TKIND_COCLASS) then continue;
+
+        // for each interface that the coclass implements
+        for j := 0 to tattr.cImplTypes - 1 do begin
+            // get the type info for the interface
+            OleCheck(tinfo.GetRefTypeOfImplType(j, r));
+            OleCheck(tinfo.GetRefTypeInfo(r, iface));
+
+            // get the attributes of the interface
+            OleCheck(iface.GetTypeAttr(iattr));
+
+            // is this the IExodusPlugin interface?
+            if  (IsEqualGUID(iattr.guid, ExodusCOM_TLB.IID_IExodusPlugin)) then begin
+                // oho!  it IS.  Get the name of this coclass, so we can show
+                // what we did.  Get the doc string, just to show off.
+                OleCheck(tinfo.GetDocumentation(-1, @obname, @doc, nil, nil));
+                // SysFreeString of obname and doc needed?  In C, yes, but here?
+
+                item := lstPlugins.Items.Add();
+                item.Caption := libname + '.' + obname;
+                item.SubItems.Add(doc);
+                item.SubItems.Add(dll);
+
+                // let her rip!!
+                // OleCheck(tinfo.CreateInstance(nil, ExodusCOM_TLB.IID_IExodusPlugin, ep));
+
+                item.Checked := false;
+            end;
+            iface.ReleaseTypeAttr(iattr);
+            //iface._Release(); // crash
+        end;
+        tinfo.ReleaseTypeAttr(tattr);
+        //tinfo._Release();
+    end;
+    // lib._Release(); // crash
+end;
+
 
 {---------------------------------------}
 procedure TfrmPrefs.SavePrefs;
@@ -619,7 +719,9 @@ begin
         setStringList('keywords', memKeywords.Lines);
         setBool('regex_keywords', chkRegex.Checked);
         setStringList('blockers', memBlocks.Lines);
-        setStringList('plugins', memPlugins.Lines);
+
+        // Plugins
+        //setStringList('plugins', memPlugins.Lines);
 
         // Custom presence list
         RemoveAllPresence();
