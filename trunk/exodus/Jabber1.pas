@@ -277,7 +277,8 @@ type
     procedure restoreMenus(enable: boolean);
 
     procedure setTrayInfo(tip: string);
-
+    procedure setTrayIcon(iconNum: integer);
+    
     procedure SetAutoAway();
     procedure SetAutoXA();
     procedure SetAutoAvailable();
@@ -475,6 +476,7 @@ var
     config: string;
     help_msg: string;
     win_ver: string;
+    picon: TIcon;
 begin
     // initialize vars.  wish we were using a 'real' compiler.
     debug := false;
@@ -687,16 +689,20 @@ begin
     ConfigEmoticons();
 
     // Create the tray icon, etc..
+    picon := TIcon.Create();
+    ImageList2.GetIcon(0, picon);
+
     with _tray do begin
         Wnd := Self.Handle;
         uFlags := NIF_ICON + NIF_MESSAGE + NIF_TIP;
         uCallbackMessage := WM_TRAY;
-        hIcon := Application.Icon.Handle;
+        hIcon := picon.Handle;
         szTip := 'Exodus';
         cbSize := SizeOf(_tray);
         end;
     Shell_NotifyIcon(NIM_ADD, @_tray);
-
+    picon.Free();
+    
     _hidden := false;
     _shutdown := false;
     _close_min := MainSession.prefs.getBool('close_min');
@@ -778,6 +784,18 @@ begin
 end;
 
 {---------------------------------------}
+procedure TExodus.setTrayIcon(iconNum: integer);
+var
+    picon : TIcon;
+begin
+    picon := TIcon.Create();
+    ImageList2.GetIcon(iconNum, picon);
+    _tray.hIcon := picon.Handle;
+    Shell_NotifyIcon(NIM_MODIFY, @_tray);
+    picon.Free();
+end;
+
+{---------------------------------------}
 procedure TExodus.SessionCallback(event: string; tag: TXMLTag);
 var
     p: TJabberPres;
@@ -787,6 +805,7 @@ begin
         btnConnect.Down := true;
         Self.Caption := 'Exodus - ' + MainSession.Username + '@' + MainSession.Server;
         setTrayInfo(Self.Caption);
+        setTrayIcon(1);
         end
 
     else if event = '/session/autherror' then begin
@@ -831,6 +850,7 @@ begin
 
         Self.Caption := 'Exodus';
         setTrayInfo(Self.Caption);
+        setTrayIcon(0);
 
         btnConnect.Down := false;
         restoreMenus(false);
@@ -865,16 +885,26 @@ begin
             tbsMsg.TabVisible := false;
         end
 
-    else if ((event = '/session/presence') and (MainSession.IsPaused)) then begin
-        // If the session is paused, and we're changing back
-        // to available, or chat, then make sure we play the session
-        if (MainSession.Show = 'xa') or (MainSession.show = 'xa') or
-        (MainSession.Show = 'dnd') then
-            // do nothing
-        else
-            MainSession.Play();
-        end;
+    else if (event = '/session/presence') then begin
+        if (MainSession.Show = '') then
+            SetTrayIcon(1)
+        else if (MainSession.Show = 'away') then
+            SetTrayIcon(2)
+        else if (MainSession.Show = 'dnd') then
+            SetTrayIcon(3)
+        else if (MainSession.Show = 'chat') then
+            SetTrayIcon(4)
+        else if (MainSession.Show = 'xa') then
+            SetTrayIcon(10);
 
+        if (MainSession.IsPaused) then begin
+            // If the session is paused, and we're changing back
+            // to available, or chat, then make sure we play the session
+            if (MainSession.Show <> 'xa') and (MainSession.show <> 'xa') and
+               (MainSession.Show <> 'dnd') then
+                MainSession.Play();
+            end;
+        end;
 end;
 
 {---------------------------------------}
