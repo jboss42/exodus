@@ -22,7 +22,7 @@ unit Prefs;
 interface
 
 uses
-    Menus, ShellAPI,
+    Menus, ShellAPI, Unicode, 
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, 
     ComCtrls, StdCtrls, ExtCtrls, buttonFrame, CheckLst,
     ExRichEdit, Dialogs, RichEdit2, TntStdCtrls, TntComCtrls;
@@ -212,11 +212,12 @@ type
     Label27: TLabel;
     btnAddPlugin: TButton;
     btnConfigPlugin: TButton;
-    btnRemove: TButton;
+    btnRemovePlugin: TButton;
     Label6: TLabel;
     txtPluginDir: TEdit;
     btnBrowsePluginPath: TButton;
     lstPlugins: TTntListView;
+    lblPluginScan: TLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -252,6 +253,8 @@ type
     procedure btnUpdateCheckClick(Sender: TObject);
     procedure btnUpdateCheckMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure btnBrowsePluginPathClick(Sender: TObject);
+    procedure lblPluginScanClick(Sender: TObject);
   private
     { Private declarations }
     _notify: array of integer;
@@ -268,8 +271,9 @@ type
     procedure clearPresList();
 
     procedure loadPlugins();
-    procedure scanPluginDir();
-    procedure CheckPluginDll(dll : WideString);
+    procedure savePlugins();
+    procedure scanPluginDir(selected: TWidestringList);
+    procedure CheckPluginDll(dll : WideString; selected: TWidestringlist);
 
   public
     { Public declarations }
@@ -312,10 +316,10 @@ implementation
 {$R *.DFM}
 {$WARN UNIT_PLATFORM OFF}
 uses
-    ActiveX, ComObj, 
+    ActiveX, ComObj,
     AutoUpdate,
-    ExUtils, ExodusCOM_TLB, 
-    FileCtrl, XMLUtils,
+    ExUtils, ExodusCOM_TLB,
+    FileCtrl, XMLUtils, PathSelector,
     Presence, MsgDisplay, JabberMsg, Jabber1,
     PrefController, Registry, Session;
 
@@ -340,6 +344,7 @@ end;
 procedure TfrmPrefs.LoadPrefs;
 var
     i: integer;
+    dir: Widestring;
 begin
     // load prefs from the reg.
     with MainSession.Prefs do begin
@@ -503,8 +508,14 @@ begin
         fillStringList('blockers', memBlocks.Lines);
 
         // plugins
-        // fillStringList('plugins', memPlugins.Lines);
-        txtPluginDir.Text := getString('plugin_dir');
+        dir := getString('plugin_dir');
+        if (dir = '') then
+            dir := ExtractFilePath(Application.ExeName) + 'plugins';
+
+        if (not DirectoryExists(dir)) then
+            dir := ExtractFilePath(Application.ExeName) + 'plugins';
+
+        txtPluginDir.Text := dir;
         loadPlugins();
 
         // Custom Presence options
@@ -516,37 +527,72 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmPrefs.loadPlugins();
+var
+    sl: TWidestringList;
 begin
     // load the listview
     lstPlugins.Clear();
-    scanPluginDir();
+
+    // get the list of selected plugins..
+    sl := TWidestringList.Create();
+    MainSession.Prefs.fillStringlist('plugin_selected', sl);
+
+    // Scan the director
+    scanPluginDir(sl);
+
+    with lstPlugins do begin
+        btnConfigPlugin.Enabled := (Items.Count > 0);
+        btnRemovePlugin.Enabled := (Items.Count > 0);
+    end;
+
+    sl.Free();
 end;
 
-procedure TfrmPrefs.scanPluginDir();
+{---------------------------------------}
+procedure TfrmPrefs.savePlugins();
+var
+    i: integer;
+    item: TTntListItem;
+    sl: TWidestringlist;
+begin
+    // save all "checked" captions
+    sl := TWidestringlist.Create();
+
+    for i := 0 to lstPlugins.Items.Count - 1 do begin
+        item := lstPlugins.Items[i];
+        if (item.Checked) then begin
+            // save the Classname
+            sl.Add(item.Caption);
+        end;
+    end;
+
+    MainSession.Prefs.setStringlist('plugin_selected', sl);
+    sl.Free();
+end;
+
+{---------------------------------------}
+procedure TfrmPrefs.scanPluginDir(selected: TWidestringList);
 var
     dir: Widestring;
     sr: TSearchRec;
 begin
-    dir := MainSession.Prefs.getString('plugin_dir');
-    if (dir[1] = '.') then begin
-        // skip ./
-        dir := Copy(dir, 3, length(dir) - 2);
-        dir := ExtractFilePath(Application.ExeName) + dir;
-    end;
-
+    dir := txtPluginDir.Text;
+    if (not DirectoryExists(dir)) then exit;
     if (FindFirst(dir + '\\*.dll', faAnyFile, sr) = 0) then begin
         repeat
-            CheckPluginDll(dir + '\' + sr.Name);
+            CheckPluginDll(dir + '\' + sr.Name, selected);
         until FindNext(sr) <> 0;
         FindClose(sr);
     end;
 end;
 
-procedure TfrmPrefs.CheckPluginDll(dll : WideString);
+{---------------------------------------}
+procedure TfrmPrefs.CheckPluginDll(dll : WideString; selected: TWidestringList);
 var
     lib : ITypeLib;
-    i, j : integer;
+    idx, i, j : integer;
     item: TTntListItem;
     tinfo, iface : ITypeInfo;
     tattr, iattr: PTypeAttr;
@@ -590,10 +636,12 @@ begin
                 item.SubItems.Add(doc);
                 item.SubItems.Add(dll);
 
+                // check to see if this is selected
+                idx := selected.IndexOf(item.Caption);
+                item.Checked := (idx >= 0);
+
                 // let her rip!!
                 // OleCheck(tinfo.CreateInstance(nil, ExodusCOM_TLB.IID_IExodusPlugin, ep));
-
-                item.Checked := false;
             end;
             iface.ReleaseTypeAttr(iattr);
             //iface._Release(); // crash
@@ -603,7 +651,6 @@ begin
     end;
     // lib._Release(); // crash
 end;
-
 
 {---------------------------------------}
 procedure TfrmPrefs.SavePrefs;
@@ -721,7 +768,8 @@ begin
         setStringList('blockers', memBlocks.Lines);
 
         // Plugins
-        //setStringList('plugins', memPlugins.Lines);
+        setString('plugin_dir', txtPluginDir.Text);
+        savePlugins();
 
         // Custom presence list
         RemoveAllPresence();
@@ -1310,6 +1358,25 @@ begin
     if (ssShift in Shift) or (ssCtrl in Shift) then begin
         MainSession.Prefs.setString('last_update', DateTimeToStr(Now()));
     end;
+end;
+
+procedure TfrmPrefs.btnBrowsePluginPathClick(Sender: TObject);
+var
+    p: String;
+begin
+    // Change the plugin dir
+    p := txtPluginDir.Text;
+    if (browsePath(p)) then begin
+        if (p <> txtPluginDir.Text) then begin
+            txtPluginDir.Text := p;
+            loadPlugins();
+        end;
+    end;
+end;
+
+procedure TfrmPrefs.lblPluginScanClick(Sender: TObject);
+begin
+    loadPlugins();
 end;
 
 end.

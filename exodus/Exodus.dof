@@ -51,7 +51,7 @@ Conditionals=
 DebugSourceDirs=D:\Dev\Delphi6\Source\Indy\;D:\src\exodus\exodus\components\
 UsePackages=0
 [Parameters]
-RunParams=-d -c importplugs.xml
+RunParams=-d -c debug.xml
 HostApplication=
 Launcher=
 UseLauncher=0
@@ -114,7 +114,7 @@ AutoIncBuild=1
 MajorVer=0
 MinorVer=8
 Release=0
-Build=45
+Build=46
 Debug=0
 PreRelease=0
 Special=0
@@ -125,7 +125,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PeterMillard
 FileDescription=
-FileVersion=0.8.0.45
+FileVersion=0.8.0.46
 InternalName=
 LegalCopyright=Peter Millard, 2002
 LegalTrademarks=

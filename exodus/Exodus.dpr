@@ -124,7 +124,8 @@ uses
   COMRoster in 'COMRoster.pas' {ExodusRoster: CoClass},
   COMPPDB in 'COMPPDB.pas' {ExodusPPDB: CoClass},
   COMRosterItem in 'COMRosterItem.pas' {ExodusRosterItem: CoClass},
-  COMPresence in 'COMPresence.pas' {ExodusPresence: CoClass};
+  COMPresence in 'COMPresence.pas' {ExodusPresence: CoClass},
+  PathSelector in 'PathSelector.pas' {frmPathSelector};
 
 //  COMPluginShell in 'COMPluginShell.pas' {ExodusPlugin: CoClass},
 //  COMChatPluginShell in 'COMChatPluginShell.pas' {ExodusChatPlugin: CoClass};
@@ -141,6 +142,7 @@ begin
   Application.Title := 'Exodus';
 
   Application.CreateForm(TfrmExodus, frmExodus);
+  Application.CreateForm(TfrmPathSelector, frmPathSelector);
   if (frmExodus = nil) then
     Halt;
 

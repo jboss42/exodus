@@ -95,6 +95,5 @@
     <roster_bg>$80000005</roster_bg>
     <browse_view>0</browse_view>
     <chat_memory>60</chat_memory>
-    <plugin_dir>.\plugins</plugindir>
 
 </brand>
