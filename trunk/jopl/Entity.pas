@@ -439,7 +439,8 @@ begin
     if (id <> nil) then begin
         _cat := id.getAttribute('category');
         _cat_type := id.getAttribute('type');
-        _name := id.getAttribute('name');
+        if (_name = '') then
+            _name := id.getAttribute('name');
     end;
 
     _processLegacyFeatures();
