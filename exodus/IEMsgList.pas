@@ -421,7 +421,10 @@ begin
         end;
     end;
 
-    writeHTML('<div class="line"><span class="ts">[' + timestamp + ']</span><span class="pres">' + txt + '</span></div>');
+    if timestamp <> '') then
+        writeHTML('<div class="line"><span class="ts">[' + timestamp + ']</span><span class="pres">' + txt + '</span></div>')
+    else
+        writeHTML('<div class="line"><span class="pres">' + txt + '</span></div>');
 
     if (_bottom) then
         ScrollToBottom();

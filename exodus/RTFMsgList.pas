@@ -225,7 +225,10 @@ begin
         SelLength := 0;
 
         SelAttributes.Color := clGray;
-        WideSelText := '[' + timestamp + '] ' + txt + #13#10;
+        if timestamp <> '' then
+            txt := '[' + timestamp + '] ' + txt;
+
+        WideSelText := txt + #13#10;
     end;
 
     if (at_bottom) then MsgList.ScrollToBottom();
