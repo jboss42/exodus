@@ -19,3 +19,13 @@ Getting started with Exodus development
    b) Add
    c) EConvertError
 9. Run
+
+Important DELPHI 7 NOTES
+=========================
+
+If you are using D7 to compile exodus, 
+you'll have to remove the ComCtrls.dcu file in
+the main .\exodus source dir. It conflicts with the 
+other versions in your library path.
+
+

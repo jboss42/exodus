@@ -167,11 +167,13 @@ var
     cjid: widestring;
     ritem: TJabberRosterItem;
     new_chat: boolean;
+    do_scroll: boolean;
     hist: string;
 begin
     // either show an existing chat or start one.
     chat := MainSession.ChatList.FindChat(sjid, resource, '');
     new_chat := false;
+    do_scroll := false;
 
     // If we have an existing chat, we may just want to raise it
     // or redock it, etc...
@@ -215,6 +217,7 @@ begin
 
             // always remove the last line..
             Lines.Delete(Lines.Count - 1);
+            do_scroll := true;
         end;
     end;
 
@@ -263,6 +266,12 @@ begin
 
     if (new_chat) then
         frmExodus.ComController.fireNewChat(sjid, TExodusChat(chat.ComController));
+
+    if (do_scroll) then begin
+        // scroll to the bottom..
+        win._scrollBottom();
+    end;
+
 
     Result := TfrmChat(chat.window);
 end;
