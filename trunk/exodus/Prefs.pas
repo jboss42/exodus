@@ -24,7 +24,8 @@ interface
 uses
     // panels
     PrefPanel, PrefSystem, PrefRoster, PrefSubscription, PrefFont, PrefDialogs,
-    PrefMsg, PrefNotify, PrefAway, PrefPresence, PrefPlugins, PrefTransfer,     
+    PrefMsg, PrefNotify, PrefAway, PrefPresence, PrefPlugins, PrefTransfer,
+    PrefNetwork,      
 
     // other stuff
     Menus, ShellAPI, Unicode,
@@ -78,20 +79,6 @@ type
     lblPlugins: TLabel;
     imgNetwork: TImage;
     lblNetwork: TLabel;
-    tbsNetwork: TTabSheet;
-    GroupBox2: TGroupBox;
-    lblProxyHost: TLabel;
-    lblProxyPort: TLabel;
-    lblProxyUsername: TLabel;
-    lblProxyPassword: TLabel;
-    Label28: TLabel;
-    txtProxyHost: TEdit;
-    txtProxyPort: TEdit;
-    chkProxyAuth: TCheckBox;
-    txtProxyUsername: TEdit;
-    txtProxyPassword: TEdit;
-    cboProxyApproach: TComboBox;
-    StaticText13: TStaticText;
     imgTransfer: TImage;
     lblTransfer: TLabel;
     Bevel1: TBevel;
@@ -116,6 +103,7 @@ type
     _pres: TfrmPrefPresence;
     _plugs: TfrmPrefPlugins;
     _xfer: TfrmPrefTransfer;
+    _network: TfrmPrefNetwork;
     
   public
     { Public declarations }
@@ -162,16 +150,6 @@ begin
         fillStringList('keywords', memKeywords.Lines);
         chkRegex.Checked := getBool('regex_keywords');
         fillStringList('blockers', memBlocks.Lines);
-
-        // Network config
-        cboProxyApproach.ItemIndex := getInt('http_proxy_approach');
-        cboProxyApproachChange(cboProxyApproach);
-        txtProxyHost.Text := getString('http_proxy_host');
-        txtProxyPort.Text := getString('http_proxy_port');
-        chkProxyAuth.Checked := getBool('http_proxy_auth');
-        chkProxyAuthClick(chkProxyAuth);
-        txtProxyUsername.Text := getString('http_proxy_user');
-        txtProxyPassword.Text := getString('http_proxy_password');
    end;
 end;
 
@@ -217,18 +195,13 @@ begin
         if (_xfer <> nil) then
             _xfer.SavePrefs();
 
+        if (_network <> nil) then
+            _network.SavePrefs();
+
         // Keywords
         setStringList('keywords', memKeywords.Lines);
         setBool('regex_keywords', chkRegex.Checked);
         setStringList('blockers', memBlocks.Lines);
-
-        // Network
-        setInt('http_proxy_approach', cboProxyApproach.ItemIndex);
-        setString('http_proxy_host', txtProxyHost.Text);
-        setInt('http_proxy_port', StrToIntDef(txtProxyPort.Text, 0));
-        setBool('http_proxy_auth', chkProxyAuth.Checked);
-        setString('http_proxy_user', txtProxyUsername.Text);
-        setString('http_proxy_password', txtProxyPassword.Text);
 
         endUpdate();
     end;
@@ -267,6 +240,7 @@ begin
     _pres := nil;
     _plugs := nil;
     _xfer := nil;
+    _network := nil;
 
     MainSession.Prefs.RestorePosition(Self);
 end;
