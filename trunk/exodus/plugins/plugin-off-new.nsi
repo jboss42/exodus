@@ -4,6 +4,9 @@
 	Push ${SEC_ExAspell}
 	Call TurnOff
 
+	Push ${SEC_ExHTMLLogger}
+	Call TurnOff
+
 	Push ${SEC_ExImportICQ}
 	Call TurnOff
 
