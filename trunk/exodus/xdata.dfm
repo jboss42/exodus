@@ -1,8 +1,8 @@
 object frmXData: TfrmXData
-  Left = 264
-  Top = 251
-  Width = 537
-  Height = 243
+  Left = 269
+  Top = 256
+  Width = 527
+  Height = 229
   BorderWidth = 5
   Caption = 'x:data Form'
   Color = clBtnFace
@@ -22,7 +22,7 @@ object frmXData: TfrmXData
   object insBevel: TBevel
     Left = 0
     Top = 13
-    Width = 519
+    Width = 509
     Height = 8
     Align = alTop
     Shape = bsTopLine
@@ -30,7 +30,7 @@ object frmXData: TfrmXData
   object lblIns: TTntLabel
     Left = 0
     Top = 0
-    Width = 519
+    Width = 509
     Height = 13
     Align = alTop
     Caption = 'lblIns'
@@ -38,8 +38,8 @@ object frmXData: TfrmXData
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 167
-    Width = 519
+    Top = 157
+    Width = 509
     Height = 32
     Align = alBottom
     AutoScroll = False
@@ -51,13 +51,13 @@ object frmXData: TfrmXData
     ParentFont = False
     TabOrder = 0
     inherited Panel2: TPanel
-      Width = 519
+      Width = 509
       Height = 32
       inherited Bevel1: TBevel
-        Width = 519
+        Width = 509
       end
       inherited Panel1: TPanel
-        Left = 359
+        Left = 349
         Height = 27
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
@@ -71,8 +71,8 @@ object frmXData: TfrmXData
   object box: TScrollBox
     Left = 0
     Top = 21
-    Width = 519
-    Height = 146
+    Width = 509
+    Height = 136
     Align = alClient
     BevelEdges = []
     BevelInner = bvNone

@@ -1,8 +1,8 @@
 object frmDockable: TfrmDockable
-  Left = 302
-  Top = 229
-  Width = 259
-  Height = 245
+  Left = 307
+  Top = 234
+  Width = 249
+  Height = 231
   Caption = 'frmDockable'
   Color = clBtnFace
   DefaultMonitor = dmDesktop

@@ -22,7 +22,7 @@ unit MsgQueue;
 interface
 
 uses
-    Jabber1, ExEvents, Contnrs, Unicode, 
+    Jabber1, ExEvents, XMLTag, Contnrs, Unicode,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Dockable, ComCtrls, StdCtrls, ExtCtrls, ToolWin, RichEdit2,
     ExRichEdit, Menus, TntComCtrls, TntMenus;
@@ -49,6 +49,9 @@ type
   private
     { Private declarations }
     _queue: TObjectList;
+    _cb: integer;
+    _loading: boolean;
+    
     procedure SaveEvents();
     procedure LoadEvents();
     procedure removeItems();
@@ -58,6 +61,9 @@ type
 
   protected
     procedure WMNotify(var Msg: TWMNotify); message WM_NOTIFY;
+
+  published
+    procedure SessionCallback(event: string; tag: TXMLTag);
 
   public
     { Public declarations }
@@ -81,17 +87,16 @@ implementation
 {$R *.dfm}
 
 uses
-    MsgList, MsgController, ChatWin,
-    ShellAPI, CommCtrl, GnuGetText,   
-    NodeItem, Roster, JabberID, XMLUtils, XMLParser, XMLTag,
+    MsgList, MsgController, ChatWin, ChatController,
+    ShellAPI, CommCtrl, GnuGetText,
+    NodeItem, Roster, JabberID, XMLUtils, XMLParser,
     ExUtils, MsgRecv, Session, PrefController;
 
 {---------------------------------------}
 function getMsgQueue: TfrmMsgQueue;
 begin
-    if frmMsgQueue = nil then begin
+    if frmMsgQueue = nil then
         frmMsgQueue := TfrmMsgQueue.Create(Application);
-    end;
 
     Result := frmMsgQueue;
 end;
@@ -124,18 +129,30 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmMsgQueue.SessionCallback(event: string; tag: TXMLTag);
+begin
+    if (event <> '/session/gui/update-chat') then exit;
+    if (tag = nil) then exit;
+
+    SaveEvents();
+end;
+
+{---------------------------------------}
 procedure TfrmMsgQueue.SaveEvents();
 var
-    i,d: integer;
+    t, i, d: integer;
     dir, fn: string;
     s, e: TXMLTag;
     event: TJabberEvent;
     ss: TStringList;
+    c: TChatController;
+    tl: TXMLTagList;
 begin
     // save all of the events in the listview out to a file
     // fn := ExtractFilePath(Application.EXEName) + 'spool.xml';
     // fn := getUserDir() + 'spool.xml';
     if (MainSession = nil) then exit;
+    if (_loading) then exit;
     
     fn := MainSession.Prefs.getString('spool_path');
     dir := ExtractFilePath(fn);
@@ -169,7 +186,15 @@ begin
             for d := 0 to event.Data.Count - 1 do
                 e.AddBasicTag('data', event.Data.Strings[d]);
 
-            // XXX: spool out queue chat messages to disk.
+            // spool out queue chat messages to disk.
+            if (event.eType = evt_Chat) then begin
+                c := MainSession.ChatList.FindChat(event.from_jid.jid, event.from_jid.resource, '');
+                assert(c <> nil);
+                tl := c.getTags();
+                for t := 0 to tl.Count - 1 do
+                    e.AddTag(tl[t]);
+                tl.Free();
+            end;
         end;
     end;
 
@@ -183,12 +208,13 @@ end;
 {---------------------------------------}
 procedure TfrmMsgQueue.LoadEvents();
 var
-    i,d: integer;
+    m,i,d: integer;
     p: TXMLTagParser;
     cur_e, s: TXMLTag;
-    dtags, etags: TXMLTagList;
+    msgs, dtags, etags: TXMLTagList;
     e: TJabberEvent;
     fn: string;
+    c: TChatController;
 begin
     // Load events from the spool file
     // fn := ExtractFilePath(Application.EXEName) + 'spool.xml';
@@ -196,6 +222,8 @@ begin
     fn := MainSession.Prefs.getString('spool_path');
 
     if (not FileExists(fn)) then exit;
+
+    _loading := true;
 
     p := TXMLTagParser.Create();
     p.ParseFile(fn);
@@ -210,6 +238,7 @@ begin
             _queue.Add(e);
             e.eType := TJabberEventType(SafeInt(cur_e.GetAttribute('etype')));
             e.from := cur_e.GetAttribute('from');
+            e.from_jid := TJabberID.Create(e.from);
             e.id := cur_e.GetAttribute('id');
             try
                 e.Timestamp := StrToDateTime(cur_e.GetAttribute('timestamp'));
@@ -239,11 +268,22 @@ begin
                 e.Data.Add(dtags[d].Data);
             dtags.Free();
 
+            // create a new chat controller for this event and populate it
+            msgs := cur_e.QueryTags('message');
+            c := MainSession.ChatList.FindChat(e.from_jid.jid, e.from_jid.resource, '');
+            if (c = nil) then 
+                c := MainSession.ChatList.AddChat(e.from_jid.jid, e.from_jid.resource);
+            c.AddRef();
+            for m := 0 to msgs.Count - 1 do
+                c.PushMessage(msgs[m]);
+            msgs.Free();
         end;
         etags.Free();
         s.Free();
     end;
     p.Free();
+
+    _loading := false;
 end;
 
 
@@ -254,6 +294,7 @@ var
 begin
     inherited;
 
+    _loading := false;
     _queue := TObjectList.Create();
     _queue.OwnsObjects := true;
 
@@ -274,6 +315,8 @@ begin
     end;
 
     Self.LoadEvents();
+
+    _cb := MainSession.RegisterCallback(SessionCallback, '/session/gui');
 end;
 
 {---------------------------------------}

@@ -1,8 +1,8 @@
 object frmMsgQueue: TfrmMsgQueue
-  Left = 242
-  Top = 189
-  Width = 464
-  Height = 324
+  Left = 247
+  Top = 194
+  Width = 454
+  Height = 310
   Caption = 'Events'
   Color = clBtnFace
   DefaultMonitor = dmDesktop
@@ -21,7 +21,7 @@ object frmMsgQueue: TfrmMsgQueue
   object Splitter1: TSplitter
     Left = 0
     Top = 150
-    Width = 456
+    Width = 446
     Height = 3
     Cursor = crVSplit
     Align = alTop
@@ -29,7 +29,7 @@ object frmMsgQueue: TfrmMsgQueue
   object lstEvents: TTntListView
     Left = 0
     Top = 0
-    Width = 456
+    Width = 446
     Height = 150
     Align = alTop
     Columns = <
@@ -63,8 +63,8 @@ object frmMsgQueue: TfrmMsgQueue
   object txtMsg: TExRichEdit
     Left = 0
     Top = 153
-    Width = 456
-    Height = 141
+    Width = 446
+    Height = 127
     Align = alClient
     AutoURLDetect = adDefault
     CustomURLs = <

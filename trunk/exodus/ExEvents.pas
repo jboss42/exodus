@@ -142,6 +142,7 @@ begin
 
     evt_Chat: begin
         img_idx := 23;
+        msg := e.str_content;
         DoNotify(nil, 'notify_newchat',
             _('Chat with ') + tmp_jid.jid, img_idx);
     end;

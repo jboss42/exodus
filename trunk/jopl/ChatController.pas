@@ -62,7 +62,10 @@ type
         procedure stopTimer();
         procedure unassignEvent();
 
+        procedure PushMessage(tag: TXMLTag);
+
         function getHistory: Widestring;
+        function getTags: TXMLTagList;
 
         procedure addRef();
         procedure Release();
@@ -251,9 +254,17 @@ begin
 
             // if this is the first msg into the queue, fire gui event
             if (msg_queue.Count = 1) then
-                MainSession.FireEvent('/session/gui/chat', tag);
+                MainSession.FireEvent('/session/gui/chat', tag)
+            else
+                MainSession.FireEvent('/session/gui/update-chat', tag); 
         end;
     end;
+end;
+
+{---------------------------------------}
+procedure TChatController.PushMessage(tag: TXMLTag);
+begin
+    msg_queue.Push(TXMLTag.Create(tag));
 end;
 
 {---------------------------------------}
@@ -267,6 +278,29 @@ function TChatController.getHistory: Widestring;
 begin
     Result := _history;
     _history := '';
+end;
+
+{---------------------------------------}
+function TChatController.getTags: TXMLTagList;
+var
+    tmp_queue: TQueue;
+    c, m: TXMLTag;
+begin
+    // return a copy of all of the tags in the queue
+    tmp_queue := TQueue.Create();
+    Result := TXMLTagList.Create();
+
+    while (msg_queue.AtLeast(1)) do begin
+        m := TXMLTag(msg_queue.Pop());
+        c := TXMLTag.Create(m);
+        Result.Add(c);
+        tmp_queue.Push(m);
+    end;
+
+    while (tmp_queue.AtLeast(1)) do
+        msg_queue.Push(tmp_queue.Pop());
+
+    tmp_queue.Free();
 end;
 
 {---------------------------------------}
