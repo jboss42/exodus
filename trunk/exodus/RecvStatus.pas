@@ -373,6 +373,7 @@ var
     pi: integer;
     file_path: string;
     fStream: TFileStream;
+    tmp_jid, tmp_host: Widestring;
 begin
     //
     MainSession.UnRegisterCallback(_cur);
@@ -414,13 +415,15 @@ begin
     end;
 
     for i := 0 to hosts.Count - 1 do begin
+        tmp_host := hosts[i].getAttribute('host');
+        tmp_jid := hosts[i].getAttribute('jid');
         pi := SafeInt(hosts[i].getAttribute('port'));
         // todo: support zero-conf ID's
-        if (pi > 0) then begin
+        if ((pi > 0) and (tmp_host <> '') and (tmp_jid <> '')) then begin
             p := THostPortPair.Create();
-            p.host := hosts[i].GetAttribute('host');
+            p.host := tmp_host;
+            p.jid := tmp_jid;
             p.port := pi;
-            p.jid := hosts[i].GetAttribute('jid');
             _hosts.Push(p);
         end;
     end;
