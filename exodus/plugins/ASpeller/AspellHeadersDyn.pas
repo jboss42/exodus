@@ -715,6 +715,7 @@ var AspellHandle:THandle;
     except
       exit;
     end;
+    Result := true;
   end; // LinkFunctions
   // LoadAspell
 begin
