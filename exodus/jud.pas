@@ -159,6 +159,7 @@ begin
     end;
 
     f.Show;
+    f.reset();
 
     if f.TabSheet <> nil then
         frmExodus.Tabs.ActivePage := f.TabSheet;
@@ -225,8 +226,11 @@ begin
     lstContacts.Items.EndUpdate();
 
     // show the wait stuff
+    clearFields();
     aniWait.Active := true;
     Tabs.ActivePage := TabSheet2;
+    btnBack.Enabled := false;
+    btnNext.Enabled := false;
 
     cur_jid := cboJID.Text;
     cur_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), FieldsCallback);
@@ -291,7 +295,8 @@ begin
     end;
 
     if (valid) then begin
-        clearFields();
+        btnBack.Enabled := false;
+        btnNext.Enabled := false;
         aniWait.Active := true;
         Tabs.ActivePage := TabSheet2;
         cur_iq.Send();
@@ -313,6 +318,8 @@ begin
     cur_iq := nil;
     ff := nil;
     aniWait.Active := false;
+    btnBack.Enabled := true;
+    btnNext.Enabled := true;
 
     if (event <> 'xml') then begin
         // timeout
@@ -418,6 +425,8 @@ begin
     clist := nil;
     aniWait.Active := false;
     cboJID.Enabled := true;
+    btnBack.Enabled := true;
+    btnNext.Enabled := true;
 
     if (event <> 'xml') then begin
         // timeout
@@ -451,8 +460,8 @@ begin
             items.Free();
             cur_state := 'get_fields';
             lstContacts.Clear();
-            self.reset();
             MessageDlg(sJUDEmpty, mtInformation, [mbOK], 0);
+            reset();
             exit;
         end;
 
@@ -517,6 +526,7 @@ begin
                 for c := 0 to cols.count - 1 do
                     ji.cols[c + 1] := cols[c].Data;
                 cols.Free();
+                cur_state := 'add';
             end
 
             else begin // xitems
@@ -533,8 +543,8 @@ begin
                     end;
                 end;
                 cols.Free();
+                cur_state := 'xadd';
             end;
-
             virtlist.Add(ji);
         end;
 
@@ -544,7 +554,6 @@ begin
         if (items <> nil) then Items.Free();
 
         aniWait.Active := false;
-        cur_state := 'add';
         Tabs.ActivePage := TabSheet4;
     end;
 end;
@@ -580,6 +589,7 @@ begin
     or (for x-data):
     init -> get_fields -> fields -> xsearch -> xitems
     }
+    btnBack.Enabled := true;
     if (cur_state = 'get_fields') then begin
         // get the fields for this agent
         getFields();
@@ -590,7 +600,7 @@ begin
         sendRequest();
     end
 
-    else if (cur_state = 'add') then begin
+    else if ((cur_state = 'add') or (cur_state = 'xadd')) then begin
         // loop back and search again
         reset();
     end
@@ -608,8 +618,9 @@ begin
     cur_sort := -1;
     cur_dir := true;
     cboJID.Enabled := true;
-    self.ClearFields();
+    clearFields();
     Tabs.ActivePage := TabSheet1;
+    btnBack.Enabled := false;
 end;
 
 {---------------------------------------}
@@ -869,7 +880,25 @@ end;
 procedure TfrmJud.btnBackClick(Sender: TObject);
 begin
   inherited;
-    // xxx
+    {
+    states go (for non-xdata):
+    init -> get_fields -> fields -> search -> items
+    or (for x-data):
+    init -> get_fields -> fields -> xsearch -> xitems
+    }
+    if (cur_state = 'search') or (cur_state = 'xsearch') then begin
+        cur_state := 'get_fields';
+        Tabs.ActivePage := TabSheet1;
+        btnBack.Enabled := false;
+    end
+    else if (cur_state = 'add') then begin
+        cur_state := 'search';
+        Tabs.ActivePage := TabSheet3;
+    end
+    else if (cur_state = 'xadd') then begin
+        cur_state := 'xsearch';
+        Tabs.ActivePage := TabSheet3;
+    end;
 end;
 
 end.
