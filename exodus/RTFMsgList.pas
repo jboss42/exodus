@@ -29,7 +29,6 @@ uses
 type
   TfRTFMsgList = class(TfBaseMsgList)
     MsgList: TExRichEdit;
-    procedure MsgListEnter(Sender: TObject);
     procedure MsgListKeyPress(Sender: TObject; var Key: Char);
     procedure MsgListMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -83,7 +82,8 @@ end;
 procedure TfRTFMsgList.Invalidate();
 begin
     inherited;
-    MsgList.invalidate();
+    //MsgList.invalidate();
+    //MsgList.Repaint();
 end;
 
 {---------------------------------------}
@@ -134,17 +134,6 @@ end;
 procedure TfRTFMsgList.setContextMenu(popup: TTntPopupMenu);
 begin
     MsgList.PopupMenu := popup;
-end;
-
-{---------------------------------------}
-procedure TfRTFMsgList.MsgListEnter(Sender: TObject);
-var
-    bc: TfrmBaseChat;
-begin
-    bc := TfrmBaseChat(_base);
-    if (frmExodus.ActiveChat <> bc) then
-        bc.FormActivate(bc);
-    inherited;
 end;
 
 {---------------------------------------}
@@ -233,22 +222,6 @@ begin
 
     if (at_bottom) then MsgList.ScrollToBottom();
 end;
-
-(*
-{---------------------------------------}
-function atBottom(RichEdit: TExRichEdit): boolean;
-var
-    si: TSCROLLINFO;
-begin
-    si.cbSize := SizeOf(TScrollInfo);
-    si.fMask := SIF_ALL;
-    GetScrollInfo(RichEdit.Handle, SB_VERT, si);
-    if (si.nMax = -1) then
-        Result := true
-    else
-        Result := ((si.nPos + integer(si.nPage)) >= si.nMax);
-end;
-*)
 
 {---------------------------------------}
 procedure TfRTFMsgList.Save(fn: string);

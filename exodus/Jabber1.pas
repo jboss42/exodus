@@ -489,6 +489,7 @@ const
 {---------------------------------------}
 implementation
 uses
+    test1, 
     CommandWizard, 
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
     ChatController, ChatWin, Debug, Dockable, DNSUtils, Entity,
@@ -2659,6 +2660,8 @@ end;
 procedure TfrmExodus.Test1Click(Sender: TObject);
 begin
     //
+    Application.CreateForm(TfrmTest1, frmTest1);
+    frmTest1.ShowDefault();
 end;
 
 {---------------------------------------}

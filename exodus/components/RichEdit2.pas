@@ -449,8 +449,6 @@ type
     procedure WMDestroy(var Msg: TMessage); message WM_DESTROY;
     function PrivatePerform(Msg: Cardinal; WParam, LParam: Longint): Longint;
 
-    procedure BeginUpdate;
-    procedure EndUpdate;
     procedure FindNonSpace(var CR: TCharRange);
     procedure DetectURLs(CR: TCharRange);
   protected
@@ -521,6 +519,10 @@ type
     property OutputFormat: TOutputFormat read FPlainTextOut write FPlainTextOut;
     property SelectedInOut: Boolean read FSelectedInOut write FSelectedInOut;
     property PlainRTF: Boolean read FPlainRTF write FPlainRTF;
+
+    // pgm 8/29/04 - Move these to public API
+    procedure BeginUpdate;
+    procedure EndUpdate;
 
     procedure InsertFromFile(const FileName: String);
     property Line: Integer read GetLine write SetLine;

@@ -1766,7 +1766,9 @@ end;
 {---------------------------------------}
 procedure TfrmRoom.FormEndDock(Sender, Target: TObject; X, Y: Integer);
 begin
-  inherited;
+    if (target = nil) then exit;
+
+    inherited;
     if (Docked and (Self.TabSheet <> nil)) then
         Self.TabSheet.ImageIndex := -1;
 

@@ -34,7 +34,6 @@ type
     browser: TWebBrowser;
     procedure browserDocumentComplete(Sender: TObject;
       const pDisp: IDispatch; var URL: OleVariant);
-    procedure browserEnter(Sender: TObject);
     procedure browserBeforeNavigate2(Sender: TObject;
       const pDisp: IDispatch; var URL, Flags, TargetFrameName, PostData,
       Headers: OleVariant; var Cancel: WordBool);
@@ -575,17 +574,6 @@ begin
         setTitle(_title);
     end;
     ScrollToBottom();
-end;
-
-{---------------------------------------}
-procedure TfIEMsgList.browserEnter(Sender: TObject);
-var
-    bc: TfrmBaseChat;
-begin
-    bc := TfrmBaseChat(_base);
-    if (frmExodus.ActiveChat <> bc) then
-        bc.FormActivate(bc);
-    inherited;
 end;
 
 {---------------------------------------}

@@ -11,7 +11,6 @@ object frmBaseChat: TfrmBaseChat
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
-  OnActivate = FormActivate
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnEndDock = FormEndDock
@@ -37,7 +36,6 @@ object frmBaseChat: TfrmBaseChat
     Align = alClient
     BevelOuter = bvNone
     BorderWidth = 4
-    Caption = 'pnlMsgs'
     TabOrder = 0
   end
   object pnlInput: TPanel
@@ -141,11 +139,9 @@ object frmBaseChat: TfrmBaseChat
       URLCursor = crHandPoint
       WantTabs = True
       WordWrap = False
-      OnEnter = MsgOutEnter
       OnKeyDown = MsgOutKeyDown
       OnKeyPress = MsgOutKeyPress
       OnKeyUp = MsgOutKeyUp
-      OnMouseDown = MsgOutMouseDown
       AutoVerbMenu = False
       InputFormat = ifUnicode
       OutputFormat = ofUnicode

@@ -91,21 +91,23 @@ inherited fRTFMsgList: TfRTFMsgList
         Cursor = crDefault
         Underline = True
       end>
+    HideScrollBars = False
     LangOptions = [loAutoFont]
     Language = 1033
+    ParentShowHint = False
     ReadOnly = True
     ScrollBars = ssVertical
-    ShowSelectionBar = False
+    ShowHint = False
+    ShowSelectionBar = True
     TabOrder = 0
     URLColor = clBlue
     URLCursor = crHandPoint
-    OnEnter = MsgListEnter
     OnKeyPress = MsgListKeyPress
     OnMouseUp = MsgListMouseUp
     OnURLClick = MsgListURLClick
     InputFormat = ifUnicode
     OutputFormat = ofRTF
-    SelectedInOut = False
+    SelectedInOut = True
     PlainRTF = True
     UndoLimit = 0
     IncludeOLE = True

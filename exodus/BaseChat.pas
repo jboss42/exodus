@@ -52,7 +52,6 @@ type
     Copy2: TTntMenuItem;
 
     procedure Emoticons1Click(Sender: TObject);
-    procedure FormActivate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
     procedure MsgOutKeyUp(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -63,16 +62,12 @@ type
     procedure Clear1Click(Sender: TObject);
     procedure Copy1Click(Sender: TObject);
     procedure Paste1Click(Sender: TObject);
-    procedure FormResize(Sender: TObject);
     procedure Copy2Click(Sender: TObject);
     procedure Copy3Click(Sender: TObject);
     procedure MsgOutKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure timWinFlashTimer(Sender: TObject);
     procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
-    procedure MsgOutEnter(Sender: TObject);
-    procedure MsgOutMouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
 
   private
     { Private declarations }
@@ -90,7 +85,6 @@ type
     _msgframe: TObject;
 
     procedure _scrollBottom();
-    procedure WMVScroll(var msg: TMessage); message WM_VSCROLL;
     function getMsgList(): TfBaseMsgList;
 
   public
@@ -103,9 +97,7 @@ type
     procedure Flash;
     procedure pluginMenuClick(Sender: TObject); virtual; abstract;
     procedure gotActivate; override;
-
     property MsgList: TfBaseMsgList read getMsgList;
-
   end;
 
 var
@@ -171,22 +163,12 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmBaseChat.FormActivate(Sender: TObject);
-begin
-    inherited;
-
-    if (timWinFlash.Enabled) then
-        timWinFlash.Enabled := false;
-
-    frmExodus.ActiveChat := Self;
-    if (_msgframe <> nil) then
-        MsgList.invalidate();
-end;
-
-{---------------------------------------}
 procedure TfrmBaseChat.gotActivate;
 begin
-    Self.FormActivate(Self);
+    OutputDebugString('frmBaseChat.gotActivate');
+    if (timWinFlash.Enabled) then
+        timWinFlash.Enabled := false;
+    frmExodus.ActiveChat := Self;
 end;
 
 {---------------------------------------}
@@ -252,10 +234,9 @@ begin
         Key := 0;
     end
 
-    // handle Ctrl-W to close tab
+    // handle close window/tab hotkeys
     else if ((Key = _close_key) and (Shift = _close_shift)) then
         Self.Close()
-
     else if ((_esc) and (Key = 27)) then
         Self.Close()
 
@@ -384,17 +365,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmBaseChat.FormResize(Sender: TObject);
-begin
-  inherited;
-    if (timWinFlash.Enabled) then
-        timWinFlash.Enabled := false;
-
-    if (_msgframe <> nil) then
-        MsgList.Invalidate();
-end;
-
-{---------------------------------------}
 procedure TfrmBaseChat.HideEmoticons();
 begin
     if frmEmoticons.Visible then
@@ -419,6 +389,7 @@ end;
 {---------------------------------------}
 procedure TfrmBaseChat._scrollBottom();
 begin
+    OutputDebugString('_scrollBottom');
     MsgList.ScrollToBottom();
 end;
 
@@ -448,34 +419,14 @@ end;
 {---------------------------------------}
 procedure TfrmBaseChat.FormEndDock(Sender, Target: TObject; X, Y: Integer);
 begin
-  inherited;
+    if (Target = nil) then exit;
+
+    inherited;
     if timWinFlash.Enabled then
         timWinFlash.Enabled := false;
     MsgList.refresh();
 end;
 
-{---------------------------------------}
-procedure TfrmBaseChat.WMVScroll(var msg: TMessage);
-begin
-    //
-end;
-
-{---------------------------------------}
-procedure TfrmBaseChat.MsgOutEnter(Sender: TObject);
-begin
-    if (frmExodus.ActiveChat <> Self) then
-        Self.FormActivate(Self);
-  inherited;
-end;
-
-{---------------------------------------}
-procedure TfrmBaseChat.MsgOutMouseDown(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-begin
-    if (frmExodus.ActiveChat <> Self) then
-        Self.FormActivate(Self);
-  inherited;
-end;
 
 {---------------------------------------}
 function TfrmBaseChat.getMsgList(): TfBaseMsgList;
@@ -483,5 +434,4 @@ begin
     Result := TfBaseMsgList(_msgframe);
 end;
 
-{---------------------------------------}
 end.
