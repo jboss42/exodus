@@ -1488,29 +1488,29 @@ end;
 procedure TfrmRoom.lstRosterDragDrop(Sender, Source: TObject; X,
   Y: Integer);
 var
-    r, n: TTreeNode;
+    n: TTreeNode;
     ritem: TJabberRosterItem;
-    i,j: integer;
-    jids: TWideStringList;
+    i: integer;
+    jids: TList;
+    o: TObject;
 begin
   inherited;
     // drag drop
     if (Source = frmRosterWindow.treeRoster) then begin
         // We want to invite someone into this TC room
-        jids := TWideStringList.Create;
+        jids := TList.Create();
         with frmRosterWindow.treeRoster do begin
             for i := 0 to SelectionCount - 1 do begin
                 n := Selections[i];
-                if ((n.Data <> nil) and (TObject(n.Data) is TJabberRosterItem)) then begin
+                o := TObject(n.Data);
+                assert(o <> nil);
+                
+                if (o is TJabberRosterItem) then begin
                     ritem := TJabberRosterItem(n.Data);
-                    jids.Add(ritem.jid.jid);
+                    jids.Add(ritem);
                 end
-                else if (n.Level = 0) then begin
-                    for j := 0 to n.Count - 1 do begin
-                        r := n.Item[j];
-                        if ((r.Data <> nil) and (TObject(r.Data) is TJabberRosterItem)) then
-                            jids.Add(TJabberRosterItem(r.Data).jid.jid);
-                    end;
+                else if (o is TJabberGroup) then begin
+                    TJabberGroup(o).getRosterItems(jids, true);
                 end;
             end;
         end;
