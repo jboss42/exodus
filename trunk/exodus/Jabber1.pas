@@ -1029,6 +1029,7 @@ begin    // get the latest idle amount
                          MainSession.Priority);
                      _is_autoaway := false;
                      _is_autoxa := false;
+                     timAutoAway.Interval := 30000;
                      end;
                  end
 
