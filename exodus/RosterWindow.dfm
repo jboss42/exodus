@@ -427,9 +427,11 @@ object frmRosterWindow: TfrmRosterWindow
       OnClick = presDNDClick
     end
     object N8: TTntMenuItem
+      Tag = 99
       Caption = '-'
     end
     object Custom1: TTntMenuItem
+      Tag = 99
       Caption = 'Custom ...'
       OnClick = presCustomClick
     end

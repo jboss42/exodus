@@ -31,7 +31,7 @@ uses
     ScktComp, StdCtrls, ComCtrls, Menus, ImgList, ExtCtrls,
     Buttons, OleCtrls, AppEvnts, ToolWin,
     IdHttp, TntComCtrls, DdeMan, IdBaseComponent, IdComponent, IdUDPBase,
-  IdUDPClient, IdDNSResolver, TntMenus;
+    IdUDPClient, IdDNSResolver, TntMenus;
 
 const
     UpdateKey = '001';
