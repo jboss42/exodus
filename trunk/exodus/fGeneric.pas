@@ -56,6 +56,9 @@ begin
 
     lblLabel.Caption := tag.GetAttribute('label');
     if (lblLabel.Caption = '') then
+        lblLabel.Caption := tag.GetAttribute('var');
+
+    if (lblLabel.Caption = '') then
         lblLabel.Width := 0
     else begin
         lblLabel.Caption := lblLabel.Caption + ':';
@@ -63,18 +66,7 @@ begin
            lblLabel.Caption := '* ' + lblLabel.Caption;
         end;
 
-    if ((t = 'text-single') or (t = 'text-private')) then begin
-        c := TEdit.Create(Self);
-        with TEdit(c) do begin
-            Text := value;
-            Width := Self.ClientWidth - 5 - lblLabel.Width;
-            Anchors := [akLeft, akTop, akRight];
-
-            if (t = 'text-private') then
-                PasswordChar := '*';
-            end;
-        end
-    else if (t = 'text-multi') then begin
+    if (t = 'text-multi') then begin
         c := TMemo.Create(Self);
         with TMemo(c) do begin
             Text := value;
@@ -144,6 +136,17 @@ begin
     else if (t = 'hidden') then begin
         Self.Height := 0;
         c := nil;
+        end
+    else begin  // 'text-single', 'text-private', or unknown
+        c := TEdit.Create(Self);
+        with TEdit(c) do begin
+            Text := value;
+            Width := Self.ClientWidth - 5 - lblLabel.Width;
+            Anchors := [akLeft, akTop, akRight];
+
+            if (t = 'text-private') then
+                PasswordChar := '*';
+            end;
         end;
 
     if (c <> nil) then begin
