@@ -247,7 +247,7 @@ begin
     Resolver.Host := slist[0];
 
     // Use this for testing
-    Resolver.Host := '192.168.2.1';
+    // Resolver.Host := '192.168.2.1';
 
     Resolver.ReceiveTimeout := DNS_TIMEOUT;
     Resolver.AllowRecursiveQueries := true;
