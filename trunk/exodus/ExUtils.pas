@@ -21,7 +21,7 @@ unit ExUtils;
 
 interface
 uses
-    Unicode, ExRichEdit, RichEdit2,
+    Unicode, ExRichEdit, RichEdit2, Signals,
     JabberMsg, Graphics, Controls, StdCtrls, Forms, Classes, SysUtils, Windows;
 
 const
@@ -67,7 +67,7 @@ procedure ShowLog(jid: string);
 procedure DebugMsg(Message : string);
 procedure AssignDefaultFont(font: TFont);
 
-procedure jabberSendCTCP(jid, xmlns: string);
+procedure jabberSendCTCP(jid, xmlns: string; callback: TPacketEvent = nil);
 procedure jabberSendRosterItems(to_jid: WideString; items: TList);
 procedure split(value: WideString; list: TWideStringList; seps : WideString = ' '#9#10#13);
 
@@ -97,8 +97,8 @@ var
 implementation
 uses
     IniFiles, Dialogs, StrUtils, IdGlobal, ShellAPI,
-    XMLTag, XMLUtils, Session, IQ, JabberID, Roster, 
-    JabberConst, Jabber1, MsgDisplay, Debug;
+    XMLTag, XMLUtils, Session, IQ, JabberID, Jabber1, Roster, 
+    JabberConst, MsgDisplay, Debug;
 
 type
     TAtom = class
@@ -577,12 +577,14 @@ begin
 end;
 
 {---------------------------------------}
-procedure jabberSendCTCP(jid, xmlns: string);
+procedure jabberSendCTCP(jid, xmlns: string; callback: TPacketEvent);
 var
     iq: TJabberIQ;
 begin
     // Send an iq-get to some jid, with this namespace
-    iq := TJabberIQ.Create(MainSession, MainSession.generateID, frmExodus.CTCPCallback);
+    if (@callback = nil) then
+        callback := frmExodus.CTCPCallback; 
+    iq := TJabberIQ.Create(MainSession, MainSession.generateID, callback);
     iq.iqType := 'get';
     iq.toJID := jid;
     iq.Namespace := xmlns;

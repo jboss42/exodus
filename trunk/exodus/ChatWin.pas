@@ -142,7 +142,7 @@ implementation
 {$R *.dfm}
 
 uses
-    COMChatController, 
+    COMChatController, ExEvents, 
     JabberConst, ExUtils, Presence, PrefController, Room,
     Transfer, RosterAdd, RiserWindow, Notify,
     Jabber1, Profile, MsgDisplay, IQ,
@@ -303,6 +303,7 @@ begin
 
     if (_scallback = -1) then
         _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
+
 
     // setup the captions, etc..
     ritem := MainSession.Roster.Find(_jid.jid);
@@ -840,20 +841,70 @@ begin
         jid := p.fromJID.full;
 
     if Sender = mnuVersionRequest then
-        jabberSendCTCP(jid, XMLNS_VERSION)
+        jabberSendCTCP(jid, XMLNS_VERSION, CTCPCallback)
     else if Sender = mnuTimeRequest then
-        jabberSendCTCP(jid, XMLNS_TIME)
+        jabberSendCTCP(jid, XMLNS_TIME, CTCPCallback)
     else if Sender = mnuLastActivity then
-        jabberSendCTCP(jid, XMLNS_LAST);
+        jabberSendCTCP(jid, XMLNS_LAST, CTCPCallback);
 end;
 
 {---------------------------------------}
 procedure TfrmChat.CTCPCallback(event: string; tag: TXMLTag);
+var
+    from: WideString;
+    s: WideString;
+    ns: WideString;
+    qtag: TXMLTag;
+    tmp_tag: TXMLTag;
+    msg: WideString;
+    procedure DispString(str: WideString);
+    var
+        subj_msg: TJabberMessage;
+    begin
+        subj_msg := TJabberMessage.Create();
+        subj_msg.Body := str;
+        subj_msg.Subject := '';
+        subj_msg.Nick := '';
+        DisplayMsg(subj_msg, MsgList);
+        subj_msg.Free();
+    end;
 begin
     // record some kind of CTCP result
     if ((tag <> nil) and (tag.getAttribute('type') = 'result')) then begin
-        //
-    end
+        from := tag.getAttribute('from');
+
+        ns := tag.Namespace(true);
+        if ns = XMLNS_TIME then begin
+            qTag := tag.getFirstTag('query');
+            msg := sMsgTime;
+
+            tmp_tag := qtag.getFirstTag('display');
+            if (tmp_tag <> nil) then
+                msg := msg + #13 + sMsgLocalTime + tmp_tag.Data;
+            s := tag.GetAttribute('iq_elapsed_time');
+            if (s <> '') then
+                msg := msg + #13 + Format(sMsgPing, [s]);
+            DispString(msg);
+        end
+
+        else if ns = XMLNS_VERSION then begin
+            qTag := tag.getFirstTag('query');
+            tmp_tag := qtag.getFirstTag('name');
+            msg := sMsgVersion + #13 + sMsgVerClient + tmp_tag.Data + #13;
+
+            tmp_tag := qtag.getFirstTag('version');
+            msg := msg + sMsgVerVersion + tmp_tag.Data + #13;
+
+            tmp_tag := qtag.getFirstTag('os');
+            DispString(msg + sMsgVerOS + tmp_tag.Data);
+        end
+
+        else if ns = XMLNS_LAST then begin
+            qTag := tag.getFirstTag('query');
+            DispString(sMsgLastInfo + secsToDuration(qTag.getAttribute('seconds')) + '.');
+        end;
+
+    end;
 end;
 
 {---------------------------------------}
