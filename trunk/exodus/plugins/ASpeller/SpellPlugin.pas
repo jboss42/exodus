@@ -40,7 +40,7 @@ resourcestring
 
 implementation
 uses
-    Dialogs, ComServ;
+    ComServ, ChatSpeller, Dialogs;
 
 function TSpellPlugin.NewIM(const jid: WideString; var Body,
   Subject: WideString; const XTags: WideString): WideString;
@@ -66,8 +66,15 @@ end;
 
 procedure TSpellPlugin.NewChat(const jid: WideString;
   const Chat: IExodusChat);
+var
+    cp: TChatSpeller;
+    chat_com: IExodusChat;
 begin
-
+    // a new chat window is firing up
+    chat_com := IUnknown(Chat) as IExodusChat;
+    cp := TChatSpeller.Create(_speller, chat_com);
+    cp.ObjAddRef();
+    cp.reg_id := chat_com.RegisterPlugin(IExodusChatPlugin(cp));
 end;
 
 procedure TSpellPlugin.NewRoom(const jid: WideString;
