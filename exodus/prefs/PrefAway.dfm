@@ -21,14 +21,14 @@ inherited frmPrefAway: TfrmPrefAway
     Height = 13
     Caption = 'Minutes to wait before setting status to XA:'
   end
-  object Label4: TTntLabel [2]
+  object lblAwayStatus: TTntLabel [2]
     Left = 8
     Top = 186
     Width = 62
     Height = 13
     Caption = 'Away Status:'
   end
-  object Label9: TTntLabel [3]
+  object lblXAStatus: TTntLabel [3]
     Left = 8
     Top = 210
     Width = 50

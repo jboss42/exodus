@@ -1,217 +1,246 @@
-<brand>
-	<aa_reduce_pri>1</aa_reduce_pri>
-    <always_lang>0</always_lang>
-    <auto_away>1</auto_away>
-    <auto_xa>1</auto_xa>
-    <auto_update_url>http://exodus.jabberstudio.org/exodus-released.exe</auto_update_url>
-	<auto_update_changelog_url>http://exodus.jabberstudio.org/ChangeLog-RELEASE.txt</auto_update_changelog_url>
-    <auto_updates>1</auto_updates>
-    <autologin>0</autologin>
-    <away_time>5</away_time>
-    <brand_ad></brand_ad>
-    <brand_ad_url></brand_ad_url>
-    <brand_caption>Exodus</brand_caption>
-    <brand_help_menu_list>
-        <s>Jabber User Guide</s>
-        <s>Exodus Website</s>
-        <s>Add Feature Request</s>
-        <s>Report Bug</s>
-        <s>Jabber.org Website</s>
-        <s>JabberStudio Website</s>
-    </brand_help_menu_list>
-    <brand_help_url_list>
-        <s>http://www.jabber.org/user/userguide/</s>
-        <s>http://exodus.jabberstudio.org/</s>
-        <s>http://www.jabberstudio.org/projects/exodus/features/</s>
-        <s>http://www.jabberstudio.org/projects/exodus/bugs/</s>
-        <s>http://www.jabber.org/</s>
-        <s>http://www.jabberstudio.org/</s>
-    </brand_help_url_list>
-    <brand_icon></brand_icon>
-    <brand_profile_conn_type>0</brand_profile_conn_type>
-    <brand_profile_host></brand_profile_host>
-    <brand_profile_http_poll>1000</brand_profile_http_poll>
-    <brand_profile_http_url></brand_profile_http_url>
-    <brand_profile_num_poll_keys>256</brand_profile_num_poll_keys>
-    <brand_profile_password></brand_profile_password>
-    <brand_profile_port>5222</brand_profile_port>
-    <brand_profile_priority>1</brand_profile_priority>
-    <brand_profile_resource>Exodus</brand_profile_resource>
-    <brand_profile_resource_list>
-        <s>Home</s>
-        <s>Work</s>
-        <s>Exodus</s>
-    </brand_profile_resource_list>
-    <brand_profile_save_password></brand_profile_save_password>
-    <brand_profile_server>jabber.org</brand_profile_server>
-    <brand_profile_server_list>
-        <s>jabber.org</s>
-        <s>jabber.com</s>
-    </brand_profile_server_list>
-    <brand_profile_socks_auth>false</brand_profile_socks_auth>
-    <brand_profile_socks_host></brand_profile_socks_host>
-    <brand_profile_socks_password></brand_profile_socks_password>
-    <brand_profile_socks_port>1080</brand_profile_socks_port>
-    <brand_profile_socks_type>0</brand_profile_socks_type>
-    <brand_profile_socks_user></brand_profile_socks_user>
-    <brand_profile_ssl>false</brand_profile_ssl>
-    <brand_profile_srv>true</brand_profile_srv>
-    <brand_profile_username></brand_profile_username>
-    <brand_muc>1</brand_muc>
-    <brand_ft>1</brand_ft>
-    <brand_plugs>1</brand_plugs>
-    <brand_vcard>1</brand_vcard>
-    <browse_view>0</browse_view>
-    <chat_memory>60</chat_memory>
-    <client_caps>1</client_caps>
-    <client_caps_uri>http://exodus.jabberstudio.org/caps</client_caps_uri>
-    <close_min>1</close_min>
-    <color_bg>$ffffff</color_bg>
-    <color_me>$ff0000</color_me>
-    <color_other>$0000ff</color_other>
-    <debug>0</debug>
-    <edge_snap>15</edge_snap>
-    <emoticons>1</emoticons>
-    <event_width>315</event_width>
-    <expanded>0</expanded>
-    <fade_limit>100</fade_limit>
-    <font_bold>0</font_bold>
-    <font_color>0</font_color>
-    <font_italic>0</font_italic>
-    <font_name>Arial</font_name>
-    <font_size>10</font_size>
-    <font_underline>0</font_underline>
-    <http_proxy_approach>0</http_proxy_approach>
-    <http_proxy_auth>false</http_proxy_auth>
-    <http_proxy_host></http_proxy_host>
-    <http_proxy_password></http_proxy_password>
-    <http_proxy_port>8080</http_proxy_port>
-    <http_proxy_user></http_proxy_user>
-    <inline_status>0</inline_status>
-    <log>1</log>
-    <notify_active>1</notify_active>
-    <notify_chatactivity>4</notify_chatactivity>
-    <notify_invite>1</notify_invite>
-    <notify_keyword>1</notify_keyword>
-    <notify_newchat>1</notify_newchat>
-    <notify_normalmsg>1</notify_normalmsg>
-    <notify_online>1</notify_online>
-    <notify_oob>1</notify_oob>
-    <notify_roomactivity>1</notify_roomactivity>
-    <notify_s10n>1</notify_s10n>
-    <notify_sounds>1</notify_sounds>
-    <notify_flasher>1</notify_flasher>
-    <pres_tracking>1</pres_tracking>
-    <presence_message_listen>1</presence_message_listen>
-    <presence_message_send>1</presence_message_send>
-    <profile_active>0</profile_active>
-    <roster_bg>$80000005</roster_bg>
-    <roster_chat>2</roster_chat>
-    <roster_groupcounts>1</roster_groupcounts>
-    <roster_messenger>1</roster_messenger>
-    <roster_offline_group>0</roster_offline_group>
-    <roster_only_online>0</roster_only_online>
-    <roster_show_pending>1</roster_show_pending>
-    <roster_show_unsub>0</roster_show_unsub>
-    <roster_transport_grp>Transports</roster_transport_grp>
-    <roster_unicode>true</roster_unicode>
-    <s10n_auto_accept>0</s10n_auto_accept>
-    <single_instance>1</single_instance>
-    <snap_on>1</snap_on>
-    <timestamp>1</timestamp>
-    <timestamp_format>t</timestamp_format>
-    <toolbar>1</toolbar>
-    <toast_duration>5</toast_duration>
-    <warn_closebusy>1</warn_closebusy>
-    <wrap_input>1</wrap_input>
-    <xa_time>30</xa_time>
-    <roster_default>Friends</roster_default>
-    <xfer_port>5280</xfer_port>
-    <close_hotkey>Alt + W</close_hotkey>
-    <nested_groups>1</nested_groups>
-    <group_seperator>/</group_seperator>
+<exodus>
+    <prefs>
+        <!-- AutoAway prefs -->
+        <auto_away value="1" control="chkAutoAway"/>
+    	<aa_reduce_pri value="1" control="chkAAReducePri"/>
+        <auto_xa value="1" control="chkAutoXA"/>
+        <auto_disconnect value="0" control="chkAutoDisconnect"/>
+        <away_time value="5" control="spnAway"/>
+        <xa_time value="30" control="spnXA"/>
+        <disconnect_time value="180" control="spnDisconnect"/>
+        
+        <away_status control="txtAway" state="ro">
+            <control name="lblAwayStatus"/>
+        </away_status>
+        
+        <xa_status control="txtXA" state="ro">
+            <control name="lblXAStatus"/>
+        </xa_status>                    	
+                    	
+        <!-- unfiled -->                    	
+        <always_lang value="0"></always_lang>
+        
+        <auto_update_url value="http://exodus.jabberstudio.org/exodus-released.exe">
+        </auto_update_url>
+        
+    	<auto_update_changelog_url value="http://exodus.jabberstudio.org/ChangeLog-RELEASE.txt">
+    	</auto_update_changelog_url>
+    	
+        <auto_updates value="1"></auto_updates>
+        <autologin value="0"></autologin>
+        <brand_ad ></brand_ad>
+        <brand_ad_url ></brand_ad_url>
+        <brand_caption value="Exodus"></brand_caption>
+        <brand_help_menu_list>
+            <s>Jabber User Guide</s>
+            <s>Exodus Website</s>
+            <s>Add Feature Request</s>
+            <s>Report Bug</s>
+            <s>Jabber.org Website</s>
+            <s>JabberStudio Website</s>
+        </brand_help_menu_list>
+        <brand_help_url_list>
+            <s>http://www.jabber.org/user/userguide/</s>
+            <s>http://exodus.jabberstudio.org/</s>
+            <s>http://www.jabberstudio.org/projects/exodus/features/</s>
+            <s>http://www.jabberstudio.org/projects/exodus/bugs/</s>
+            <s>http://www.jabber.org/</s>
+            <s>http://www.jabberstudio.org/</s>
+        </brand_help_url_list>
+        <brand_icon ></brand_icon>
+        <brand_profile_conn_type value="0"></brand_profile_conn_type>
+        <brand_profile_host ></brand_profile_host>
+        <brand_profile_http_poll value="1000"></brand_profile_http_poll>
+        <brand_profile_http_url ></brand_profile_http_url>
+        <brand_profile_num_poll_keys value="256"></brand_profile_num_poll_keys>
+        <brand_profile_password ></brand_profile_password>
+        <brand_profile_port value="5222"></brand_profile_port>
+        <brand_profile_priority value="1"></brand_profile_priority>
+        <brand_profile_resource value="Exodus"></brand_profile_resource>
+        
+        <brand_profile_resource_list>
+            <s>Home</s>
+            <s>Work</s>
+            <s>Exodus</s>
+        </brand_profile_resource_list>
+        
+        <brand_profile_save_password ></brand_profile_save_password>
+        <brand_profile_server value="jabber.org"></brand_profile_server>
+        
+        <brand_profile_server_list>
+            <s>jabber.org</s>
+            <s>jabber.com</s>
+        </brand_profile_server_list>
+        
+        <brand_profile_socks_auth value="false"></brand_profile_socks_auth>
+        <brand_profile_socks_host ></brand_profile_socks_host>
+        <brand_profile_socks_password ></brand_profile_socks_password>
+        <brand_profile_socks_port value="1080"></brand_profile_socks_port>
+        <brand_profile_socks_type value="0"></brand_profile_socks_type>
+        <brand_profile_socks_user ></brand_profile_socks_user>
+        <brand_profile_ssl value="false"></brand_profile_ssl>
+        <brand_profile_srv value="true"></brand_profile_srv>
+        <brand_profile_username ></brand_profile_username>
+        <brand_muc value="1"></brand_muc>
+        <brand_ft value="1"></brand_ft>
+        <brand_plugs value="1"></brand_plugs>
+        <brand_vcard value="1"></brand_vcard>
+        <browse_view value="0"></browse_view>
+        <chat_memory value="60"></chat_memory>
+        <client_caps value="1"></client_caps>
+        
+        <client_caps_uri value="http://exodus.jabberstudio.org/caps">
+        </client_caps_uri>
+        
+        <close_min value="1"></close_min>
+        <color_bg value="$ffffff"></color_bg>
+        <color_me value="$ff0000"></color_me>
+        <color_other value="$0000ff"></color_other>
+        <debug value="0"></debug>
+        <edge_snap value="15"></edge_snap>
+        <emoticons value="1"></emoticons>
+        <event_width value="315"></event_width>
+        <expanded value="0"></expanded>
+        <fade_limit value="100"></fade_limit>
+        <font_bold value="0"></font_bold>
+        <font_color value="0"></font_color>
+        <font_italic value="0"></font_italic>
+        <font_name value="Arial"></font_name>
+        <font_size value="10"></font_size>
+        <font_underline value="0"></font_underline>
+        <http_proxy_approach value="0"></http_proxy_approach>
+        <http_proxy_auth value="false"></http_proxy_auth>
+        <http_proxy_host ></http_proxy_host>
+        <http_proxy_password ></http_proxy_password>
+        <http_proxy_port value="8080"></http_proxy_port>
+        <http_proxy_user ></http_proxy_user>
+        <inline_status value="0"></inline_status>
+        <log value="1"></log>
+        <notify_active value="1"></notify_active>
+        <notify_chatactivity value="4"></notify_chatactivity>
+        <notify_invite value="1"></notify_invite>
+        <notify_keyword value="1"></notify_keyword>
+        <notify_newchat value="1"></notify_newchat>
+        <notify_normalmsg value="1"></notify_normalmsg>
+        <notify_online value="1"></notify_online>
+        <notify_oob value="1"></notify_oob>
+        <notify_roomactivity value="1"></notify_roomactivity>
+        <notify_s10n value="1"></notify_s10n>
+        <notify_sounds value="1"></notify_sounds>
+        <notify_flasher value="1"></notify_flasher>
+        <pres_tracking value="1"></pres_tracking>
+        <presence_message_listen value="1"></presence_message_listen>
+        <presence_message_send value="1"></presence_message_send>
+        <profile_active value="0"></profile_active>
+        <roster_bg value="$80000005"></roster_bg>
+        <roster_chat value="2"></roster_chat>
+        <roster_groupcounts value="1"></roster_groupcounts>
+        <roster_messenger value="1"></roster_messenger>
+        <roster_offline_group value="0"></roster_offline_group>
+        <roster_only_online value="0"></roster_only_online>
+        <roster_show_pending value="1"></roster_show_pending>
+        <roster_show_unsub value="0"></roster_show_unsub>
+        <roster_transport_grp value="Transports"></roster_transport_grp>
+        <roster_unicode value="true"></roster_unicode>
+        <s10n_auto_accept value="0"></s10n_auto_accept>
+        <single_instance value="1"></single_instance>
+        <snap_on value="1"></snap_on>
+        <timestamp value="1"></timestamp>
+        <timestamp_format value="t"></timestamp_format>
+        <toolbar value="1"></toolbar>
+        <toast_duration value="5"></toast_duration>
+        <warn_closebusy value="1"></warn_closebusy>
+        <wrap_input value="1"></wrap_input>
+        <roster_default value="Friends"></roster_default>
+        <xfer_port value="5280"></xfer_port>
+        <close_hotkey value="Alt + W"></close_hotkey>
+        <nested_groups value="1"></nested_groups>
+        <group_seperator value="/"></group_seperator>
+    </prefs>
 
     <!-- default custom presence stuff -->
-    <presence name='Available'>
-    	<show/>
-        <status>Available</status>
-        <priority/>
-        <hotkey>Ctrl+O</hotkey>
-    </presence>
-    <presence name='Free for Chat'>
-    	<show>chat</show>
-        <status>Free for Chat</status>
-        <priority/>
-        <hotkey/>
-    </presence>
+    <presii>
+        <presence name='Available'>
+        	<show/>
+            <status>Available</status>
+            <priority/>
+            <hotkey>Ctrl+O</hotkey>
+        </presence>
+        <presence name='Free for Chat'>
+        	<show>chat</show>
+            <status>Free for Chat</status>
+            <priority/>
+            <hotkey/>
+        </presence>
+    
+        <presence name='Away'>
+        	<show>away</show>
+            <status>Away</status>
+            <priority/>
+            <hotkey>Ctrl+A</hotkey>
+        </presence>
+        <presence name='Lunch'>
+        	<show>away</show>
+            <status>Lunch</status>
+            <priority/>
+            <hotkey>Ctrl+L</hotkey>
+        </presence>
+        <presence name='Meeting'>
+        	<show>away</show>
+            <status>Meeting</status>
+            <priority/>
+            <hotkey>Ctrl+M</hotkey>
+        </presence>
+        <presence name='Bank'>
+        	<show>away</show>
+            <status>Bank</status>
+            <priority/>
+            <hotkey/>
+        </presence>
+    
+        <presence name='Extended Away'>
+        	<show>xa</show>
+            <status>Extended Away</status>
+            <priority/>
+            <hotkey/>
+        </presence>
+        <presence name='Gone Home'>
+        	<show>xa</show>
+            <status>Gone Home</status>
+            <priority/>
+            <hotkey/>
+        </presence>
+        <presence name='Gone to Work'>
+        	<show>xa</show>
+            <status>Gone to Work</status>
+            <priority/>
+            <hotkey/>
+        </presence>
+        <presence name='Sleeping'>
+        	<show>xa</show>
+            <status>Sleeping</status>
+            <priority/>
+            <hotkey/>
+        </presence>
+    
+        <presence name='Busy'>
+        	<show>dnd</show>
+            <status>Busy</status>
+            <priority/>
+            <hotkey/>
+        </presence>
+        <presence name='Working'>
+        	<show>dnd</show>
+            <status>Working</status>
+            <priority/>
+            <hotkey/>
+        </presence>
+        <presence name='Mad'>
+        	<show>dnd</show>
+            <status>Mad</status>
+            <priority/>
+            <hotkey/>
+        </presence>
+    </presii>
 
-    <presence name='Away'>
-    	<show>away</show>
-        <status>Away</status>
-        <priority/>
-        <hotkey>Ctrl+A</hotkey>
-    </presence>
-    <presence name='Lunch'>
-    	<show>away</show>
-        <status>Lunch</status>
-        <priority/>
-        <hotkey>Ctrl+L</hotkey>
-    </presence>
-    <presence name='Meeting'>
-    	<show>away</show>
-        <status>Meeting</status>
-        <priority/>
-        <hotkey>Ctrl+M</hotkey>
-    </presence>
-    <presence name='Bank'>
-    	<show>away</show>
-        <status>Bank</status>
-        <priority/>
-        <hotkey/>
-    </presence>
-
-    <presence name='Extended Away'>
-    	<show>xa</show>
-        <status>Extended Away</status>
-        <priority/>
-        <hotkey/>
-    </presence>
-    <presence name='Gone Home'>
-    	<show>xa</show>
-        <status>Gone Home</status>
-        <priority/>
-        <hotkey/>
-    </presence>
-    <presence name='Gone to Work'>
-    	<show>xa</show>
-        <status>Gone to Work</status>
-        <priority/>
-        <hotkey/>
-    </presence>
-    <presence name='Sleeping'>
-    	<show>xa</show>
-        <status>Sleeping</status>
-        <priority/>
-        <hotkey/>
-    </presence>
-
-    <presence name='Busy'>
-    	<show>dnd</show>
-        <status>Busy</status>
-        <priority/>
-        <hotkey/>
-    </presence>
-    <presence name='Working'>
-    	<show>dnd</show>
-        <status>Working</status>
-        <priority/>
-        <hotkey/>
-    </presence>
-    <presence name='Mad'>
-    	<show>dnd</show>
-        <status>Mad</status>
-        <priority/>
-        <hotkey/>
-    </presence>
-
-</brand>
+</exodus>
