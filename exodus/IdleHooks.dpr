@@ -11,7 +11,7 @@ library IdleHooks;
   using PChar or ShortString parameters. }
 
 uses
-    Dialogs, Windows, Messages, SysUtils;
+    Windows, Messages, SysUtils;
 
 {$R *.res}
 
@@ -74,21 +74,34 @@ end;
 function MouseHook(code: integer; wParam: word; lParam: longword): longword; stdcall;
 begin
     Result := 0;
-    if (code = HC_ACTION) then 
+    if (code = HC_ACTION) then
         lpHookRec^.LastTick := GetTickCount()
-    else if (Code < 0) then 
+    else if (Code < 0) then
         Result := CallNextHookEx(lpHookRec^.MouseHook, code, wParam, lParam);
 end;
 
 procedure InitHooks; stdcall;
 begin
-    if ((lpHookRec <> nil) and (lpHookRec^.KeyHook = 0)) then begin
+    // if ((lpHookRec <> nil) and (lpHookRec^.KeyHook = 0)) then begin
+    if ((lpHookRec <> nil)) then begin
+
+        // Unhook old hooks..
+        try
+            if (lpHookRec^.KeyHook <> 0) then
+                UnHookWindowsHookEx(lpHookRec^.KeyHook);
+        except
+        end;
+
+        try
+            if (lpHookRec^.MouseHook <> 0) then
+                UnHookWindowsHookEx(lpHookRec^.MouseHook);
+        except
+        end;
+
         // setup the hook and store it
         lpHookRec^.KeyHook := SetWindowsHookEx(WH_KEYBOARD, @KeyHook, hInstance, 0);
         lpHookRec^.MouseHook := SetWindowsHookEx(WH_MOUSE, @MouseHook, hInstance, 0);
-        end
-    else
-        ShowMessage('Failed to setup Hooks');
+        end;
 end;
 
 procedure StopHooks; stdcall;
@@ -97,6 +110,8 @@ begin
         if (lpHookRec^.InstanceCount <= 1) then begin
             UnHookWindowsHookEx(lpHookRec^.KeyHook);
             UnHookWindowsHookEx(lpHookRec^.MouseHook);
+            lpHookRec^.KeyHook := 0;
+            lpHookRec^.MouseHook := 0;
             end;
         end;
 end;

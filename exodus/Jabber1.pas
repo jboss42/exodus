@@ -293,7 +293,10 @@ type
   public
     // other stuff..
     last_tick: longword;
-    function  getTabForm(tab: TTabSheet): TForm;
+    function getTabForm(tab: TTabSheet): TForm;
+    function IsAutoAway(): boolean;
+    function IsAutoXA(): boolean;
+
     procedure RenderEvent(e: TJabberEvent);
     procedure Startup;
     procedure CTCPCallback(event: string; tag: TXMLTag);
@@ -302,8 +305,11 @@ type
 var
     frmJabber: TExodus;
 
+{
 function KeyboardHook(code: integer; wParam: word; lparam: longword): longword; stdcall;
 function MouseHook(code: integer; wParam: word; lparam: longword): longword; stdcall;
+}
+
 
 {---------------------------------------}
 {---------------------------------------}
@@ -675,49 +681,47 @@ begin
 end;
 
 (*
-LRESULT CALLBACK MyKbdHook(int code, WPARAM wParam, LPARAM lParam)
-{
-	if (code==HC_ACTION) {
-		g_dwLastInputTick = GetTickCount();
-	}
-	return ::CallNextHookEx(g_hHookKbd, code, wParam, lParam);
-}
-
-/////////////////
-// Mouse hook: record tick count
-//
-LRESULT CALLBACK MyMouseHook(int code, WPARAM wParam, LPARAM lParam)
-{
-	if (code==HC_ACTION) {
-		g_dwLastInputTick = GetTickCount();
-	}
-	return ::CallNextHookEx(g_hHookMouse, code, wParam, lParam);
-}
-*)
-
-function KeyboardHook(code: integer; wParam: word; lparam: longword): longword; stdcall;
+{---------------------------------------}
+function KeyboardHook(code: integer; wParam: word; lparam: longword): longword; stdcall; export;
 begin
     //
-    if (code = HC_ACTION) then
+    if (((HiWord(lParam) and KF_UP) <> 0) and (code = HC_ACTION)) then
         frmJabber.last_tick := GetTickCount();
 
     Result := CallNextHookEx(frmJabber._hook_keyboard, code, wparam, lparam);
 end;
 
-function MouseHook(code: integer; wParam: word; lparam: longword): longword; stdcall;
+{---------------------------------------}
+function MouseHook(code: integer; wParam: word; lparam: longword): longword; stdcall; export;
 begin
     //
-    if (code = HC_ACTION) then
-        frmJabber.last_tick := GetTickCount();
+    if (code = HC_ACTION) then begin
+        {
+        case wParam of
+        WM_LBUTTONDOWN, WM_LBUTTONUP, WM_LBUTTONDBLCLK,
+        WM_RBUTTONDOWN, WM_RBUTTONUP, WM_RBUTTONDBLCLK,
+        WM_MBUTTONDOWN, WM_MBUTTONUP, WM_MBUTTONDBLCLK,
+        WM_MOUSEMOVE: begin
+        }
+            DebugMsg('MouseHook ');
+            frmJabber.last_tick := GetTickCount();
+        {
+            end;
+        else
+            // do nothing
+        end;
+        }
+        end;
 
     Result := CallNextHookEx(frmJabber._hook_mouse, code, wparam, lparam);
 end;
-
+*)
 
 {---------------------------------------}
 procedure TExodus.setupAutoAwayTimer();
 begin
     DebugMsg('Trying to setup the Auto Away timer.'#13#10);
+
     {
     _hook_keyboard := SetWindowsHookEx(WH_KEYBOARD, @KeyboardHook, 0, GetCurrentThreadID());
     _hook_mouse := SetWindowsHookEx(WH_MOUSE, @MouseHook, 0, GetCurrentThreadID());
@@ -735,10 +739,12 @@ begin
         @_StopHooks := GetProcAddress(_hookLib, 'StopHooks');
         _lpHookRec := _GetHookPointer();
         inc(_lpHookRec^.InstanceCount);
-        if (_lpHookRec^.KeyHook = 0) then
-            _InitHooks();
+        // if (_lpHookRec^.KeyHook = 0) then
+        _InitHooks();
         _lpHookRec^.LastTick := GetTickCount();
-        end;
+        end
+    else
+        DebugMsg('AutoAway Setup FAILED!');
     //last_tick := GetTickCount();
 end;
 
@@ -1531,7 +1537,6 @@ begin
             else if (_is_autoxa) then exit
             else if ((mins >= xa) and (_is_autoaway)) then SetAutoXA()
             else if ((mins >= away) and (not _is_autoaway)) then SetAutoAway();
-
             end;
         end;
 end;
@@ -1542,6 +1547,10 @@ begin
     // set us to away
     DebugMsg('Setting AutoAway '#13#10);
     Application.ProcessMessages;
+
+    if ((MainSession.Show = 'away') or
+        (MainSession.Show = 'xa') or
+        (MainSession.Show = 'dnd')) then exit;
 
     _last_show := MainSession.Show;
     _last_status := MainSession.Status;
@@ -1732,6 +1741,17 @@ procedure TExodus.FormActivate(Sender: TObject);
 begin
     // FlashWindow(Self.Handle, false);
 end;
+
+function TExodus.IsAutoAway(): boolean;
+begin
+    Result := _is_autoaway;
+end;
+
+function TExodus.IsAutoXA(): boolean;
+begin
+    Result := _is_autoxa;
+end;
+
 
 end.
 
