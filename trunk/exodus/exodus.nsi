@@ -135,8 +135,17 @@ Section "!${MUI_PRODUCT} (Required)" SEC_Exodus
           "UninstallString" '"$INSTDIR\uninstall.exe"'
         WriteUninstaller "uninstall.exe"
 
-        StrCpy $0 0
+	; register file associations.  TODO: figure this out for real, and
+	; remove these semi-bogus ones.
+	WriteRegStr HKCR .xmpp "" XMPPfile
+	WriteRegStr HKCR .xmpp "ContentType" "application/xmpp"
+	WriteRegStr HKCR XMPPfile "" "eXtensible Messaging and Presence Protocol"
+	WriteRegDword HKCR XMPPfile "EditFlags" 00000000
+	WriteRegDword HKCR XMPPfile "BrowserFlags" 00000008
+	WriteRegStr HKCR "XMPPfile\shell" "" "Open"
+	WriteRegStr HKCR "XMPPfile\shell\Open\command" "" '"$INSTDIR\Exodus.exe" -o "%1"'
 
+        StrCpy $0 0
   outer_loop:
 
     EnumRegKey $1 HKLM "Software\Jabber\Exodus\Restart" $0
