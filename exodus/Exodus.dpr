@@ -95,7 +95,8 @@ uses
   fRosterTree in 'fRosterTree.pas' {frameTreeRoster: TFrame},
   SelContact in 'SelContact.pas' {frmSelContact},
   XMLHttpStream in '..\jopl\XMLHttpStream.pas',
-  ConnDetails in 'ConnDetails.pas' {frmConnDetails};
+  ConnDetails in 'ConnDetails.pas' {frmConnDetails},
+  InputPassword in 'InputPassword.pas' {frmInputPass};
 
 {$R *.RES}
 
@@ -107,6 +108,7 @@ begin
 
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TfrmConnDetails, frmConnDetails);
+  Application.CreateForm(TfrmInputPass, frmInputPass);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);

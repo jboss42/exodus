@@ -327,7 +327,8 @@ type
     function IsAutoXA(): boolean;
 
     procedure RenderEvent(e: TJabberEvent);
-    procedure Startup;
+    procedure Startup();
+    procedure DoConnect();
     procedure CTCPCallback(event: string; tag: TXMLTag);
     procedure ResetLastTick(value: longint);
     procedure AcceptFiles( var msg : TWMDropFiles ); message WM_DROPFILES;
@@ -460,6 +461,7 @@ const
 {---------------------------------------}
 implementation
 uses
+    InputPassword, 
     RegForm, MsgDisplay, MsgQueue, JoinRoom, Login, ChatWin, RosterAdd,
     iq, JUD, Bookmark, CustomPres,
     MsgRecv, Prefs, Dockable,
@@ -887,10 +889,37 @@ begin
         if (_auto_login) then begin
             // snag default profile, etc..
             MainSession.ActivateProfile(_prof_index);
-            MainSession.Connect;
+            // MainSession.Connect;
+            Self.DoConnect();
             end
         else
             PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
+        end;
+end;
+
+{---------------------------------------}
+procedure TfrmExodus.DoConnect();
+var
+    pf: TfrmInputPass;
+begin
+    {
+    Make sure that the active profile
+    has the password field filled out.
+    If not, pop up the password prompt,
+    otherwise, just call connect
+    }
+
+    with MainSession do begin
+        if Password = '' then begin
+            pf := TfrmInputPass.Create(nil);
+            if (pf.ShowModal) = mrOK then begin
+                MainSession.Password := pf.txtPassword.Text;
+                MainSession.Connect();
+                end;
+            pf.Close();
+            end
+        else
+            Connect();
         end;
 end;
 
