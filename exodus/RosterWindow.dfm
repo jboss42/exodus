@@ -366,6 +366,7 @@ object frmRosterWindow: TfrmRosterWindow
     end
     object popRename: TTntMenuItem
       Caption = 'Rename...'
+      ShortCut = 113
       OnClick = popRenameClick
     end
     object popHistory: TTntMenuItem
