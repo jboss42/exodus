@@ -31,8 +31,6 @@ uses
 type
   TStatsPlugin = class(TAutoObject, IExodusPlugin)
   protected
-    function onInstantMsg(const Body, Subject: WideString): WideString;
-      safecall;
     procedure Configure; safecall;
     procedure menuClick(const ID: WideString); safecall;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat);
@@ -42,6 +40,10 @@ type
     procedure Process(const xpath, event, xml: WideString); safecall;
     procedure Shutdown; safecall;
     procedure Startup(const ExodusController: IExodusController); safecall;
+    function NewIM(const jid: WideString; var Body, Subject: WideString;
+      const XTags: WideString): WideString; safecall;
+    procedure MsgMenuClick(const ID, jid: WideString; var Body,
+      Subject: WideString); safecall;
     { Protected declarations }
   private
     _parser: TXMLTagParser;
@@ -55,12 +57,6 @@ implementation
 
 uses
     ComServ, Config, Controls, Dialogs, SysUtils;
-
-function TStatsPlugin.onInstantMsg(const Body,
-  Subject: WideString): WideString;
-begin
-
-end;
 
 procedure TStatsPlugin.Configure;
 var
@@ -144,6 +140,18 @@ begin
     _exodus.setPrefAsString('stats_filename', _filename);
 
     _cb := _exodus.RegisterCallback('/packet', Self);
+end;
+
+function TStatsPlugin.NewIM(const jid: WideString; var Body,
+  Subject: WideString; const XTags: WideString): WideString;
+begin
+
+end;
+
+procedure TStatsPlugin.MsgMenuClick(const ID, jid: WideString; var Body,
+  Subject: WideString);
+begin
+
 end;
 
 initialization
