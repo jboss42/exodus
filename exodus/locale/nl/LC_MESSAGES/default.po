@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exodus Jabber Client\n"
 "POT-Creation-Date: 2003-05-08 06:59\n"
-"PO-Revision-Date: 2003-12-07 04:04+0100\n"
-"Last-Translator: Bart Cornelis <cobaco@linux.be>\n"
+"PO-Revision-Date: 2004-10-28 15:40+0100\n"
+"Last-Translator: R. van Zantvoort <___the.loeki___ATgmail.com>\n"
 "Language-Team: Dutch <exodus-dev@jabberstudio.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -195,7 +195,7 @@ msgstr "Versie: "
 #: RosterRecv.dfm:107
 #: prefs/PrefFont.dfm:112
 msgid "e-mail"
-msgstr "email"
+msgstr "e-mail"
 
 #. frmAbout..InfoBox......Name
 #. frmBaseChat..Panel3..MsgList......Name
@@ -463,7 +463,7 @@ msgstr "Er is een nieuwe versie van Exodus beschibaar. Wilt u deze installeren?"
 #. frmAutoUpdateStatus..TntLabel1..Caption
 #: AutoUpdateStatus.dfm:45
 msgid "What's New?"
-msgstr "Wat is nieuw?"
+msgstr "Is er nieuws?"
 
 #. frmAutoUpdateStatus..HttpClient..Request.ContentType
 #. fRecvStatus..httpClient..Request.ContentType
@@ -628,7 +628,7 @@ msgstr "-"
 #. frmBaseChat..popOut..Emoticons2..Caption
 #: BaseChat.dfm:315
 msgid "Emoticons"
-msgstr "emoticons"
+msgstr "Emoticons"
 
 #. frmBookmark..Caption
 #: Bookmark.dfm:7
@@ -657,14 +657,14 @@ msgstr "Jabber ID:"
 #. frmBookmark..Label4..Caption
 #: Bookmark.dfm:46
 msgid "Room Nickname:"
-msgstr "Kamer Nickname:"
+msgstr "Schermnaam in kamer:"
 
 #. frmBookmark..cboType....Items.WideStrings
 #. frmRoom..Caption
 #: Bookmark.dfm:83
 #: Room.dfm:6
 msgid "Conference Room"
-msgstr "Conferentie kamer"
+msgstr "Vergaderkamer"
 
 #. frmBookmark..chkAutoJoin..Caption
 #: Bookmark.dfm:111
@@ -837,7 +837,7 @@ msgstr "Jabber Adres: "
 #. frmBrowse..pnlTop..CoolBar1..tlbJID..pnlButtons..btnGo..Caption
 #: Browser.dfm:282
 msgid "GO"
-msgstr "Ga"
+msgstr "Gaan"
 
 #. frmBrowse..pnlTop..CoolBar1..tlbJID..pnlButtons..btnRefresh..Hint
 #: Browser.dfm:291
@@ -929,7 +929,7 @@ msgstr "Registreer"
 #. frmBrowse..popContext..mJoinConf..Caption
 #: Browser.dfm:3854
 msgid "Join Conference"
-msgstr "Sluit aan bij Conferentie"
+msgstr "Sluit aan bij Vergadering"
 
 #. frameButtons..Panel2..Panel1..btnOK..Caption
 #. frmTracer..frameButtons1..Panel1..btnCancel..Caption
@@ -1064,7 +1064,7 @@ msgstr "Blokkeer contact"
 #: ChatWin.dfm:153
 #: Room.dfm:241
 msgid "Notification Options ..."
-msgstr "Notificatie instellingen ..."
+msgstr "Meldingsinstellingen ..."
 
 #. frmChat..popContact..mnuOnTop..Caption
 #. frmRoom..popRoom..mnuOnTop..Caption
@@ -1083,7 +1083,7 @@ msgstr "Returns invoegen"
 #: ChatWin.dfm:165
 #: Room.dfm:245
 msgid "Word Wrap Input"
-msgstr "Input word wrappen"
+msgstr "Automatische terugloop voor Input"
 
 #. frmChat..SaveDialog1..DefaultExt
 #: ChatWin.dfm:180
@@ -1228,7 +1228,7 @@ msgstr "HTTP"
 #. frmConnDetails..PageControl1..tbsConn..chkSRV..Caption
 #: ConnDetails.dfm:215
 msgid "Automatically discover host and port"
-msgstr "Server en poort automatisch ontdekken"
+msgstr "Server en poort automatisch vinden"
 
 #. frmConnDetails..PageControl1..tbsConn..boxHost..Label4..Caption
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksHost..Caption
@@ -1352,7 +1352,7 @@ msgstr "SSL Sleutelbestanden|*.pem|Alle bestanden|*.*"
 #. frmCustomNotify..Caption
 #: CustomNotify.dfm:7
 msgid "Custom Notification Options"
-msgstr "Aangepaste Notificatie instellingen"
+msgstr "Aangepaste Meldingsinstellingen"
 
 #. frmCustomNotify..lblDefault..Caption
 #: CustomNotify.dfm:25
@@ -1364,7 +1364,7 @@ msgstr "Terugzetten naar default instellingen ..."
 #: CustomNotify.dfm:62
 #: prefs/PrefNotify.dfm:93
 msgid "Notify Options"
-msgstr "Notificatie instellingen"
+msgstr "Notificatie Instellingen"
 
 #. frmCustomNotify..optNotify..chkFlash..Caption
 #. frmPrefNotify..optNotify..chkFlash..Caption
@@ -1465,7 +1465,7 @@ msgstr "Afwezig"
 #: RosterWindow.pas:370
 #: prefs/PrefGroups.dfm:68
 msgid "Ext. Away"
-msgstr "Lang Afwezig"
+msgstr "Langdurig Afwezig"
 
 #. frmCustomPres..cboType....Items.WideStrings
 #. frmExodus..MainMenu1..Tools1..mnuPresence..presDND..Caption
@@ -1544,7 +1544,7 @@ msgstr "Vindt"
 #. frmDebug..PopupMenu1..WordWrap1..Caption
 #: Debug.dfm:297
 msgid "Word Wrap"
-msgstr "Word Wrap"
+msgstr "Automatische terugloop"
 
 #. frmDebug..PopupMenu1..popMsg..Caption
 #. frmMsgRecv..Caption
@@ -1574,7 +1574,7 @@ msgstr "IQ Set"
 #: Prefs.dfm:1931
 #: RosterWindow.dfm:349
 msgid "Presence"
-msgstr "Verstuur Aanwezigheid"
+msgstr "Aanwezigheid"
 
 #. frmDockable..Caption
 #: Dockable.dfm:6
@@ -1584,7 +1584,7 @@ msgstr "frmDockable"
 #. frmDockWizard..Caption
 #: DockWizard.dfm:5
 msgid "Dockable Wizard"
-msgstr "Dokbare wizard"
+msgstr "Dockbare wizard"
 
 #. frmDockWizard..TntPanel1..btnBack..Caption
 #. frmWizard..TntPanel1..btnBack..Caption
@@ -1605,7 +1605,7 @@ msgstr "Volgende >"
 #: DockWizard.dfm:84
 #: Wizard.dfm:84
 msgid "Wizard Label goes here"
-msgstr "Wizarlabel komt hier"
+msgstr "Wizard Label komt hier"
 
 #. frmDockWizard..Panel1..lblWizardDetails..Caption
 #. frmWizard..Panel1..lblWizardDetails..Caption
@@ -1639,12 +1639,12 @@ msgstr "ToolBar2"
 #. frmTracer..Caption
 #: ExceptTracer.dfm:7
 msgid "Tracer"
-msgstr "Spoorzoeker"
+msgstr "Tracer"
 
 #. frmTracer..Panel1..Caption
 #: ExceptTracer.dfm:48
 msgid "Exception Tracer"
-msgstr "Exception spoorzoeker"
+msgstr "Exception Tracer"
 
 #. frameGeneric..lblLabel..Caption
 #: fGeneric.dfm:23
@@ -1676,7 +1676,7 @@ msgstr "Registreer met dit object"
 #. frameObjectActions..pSearch..lblSearch..Caption
 #: fService.dfm:55
 msgid "Search using this service or agent"
-msgstr "Laat deze dienst of agent zoeken "
+msgstr "Met deze dienst of agent zoeken"
 
 #. frameObjectActions..pConf..lblConf..Caption
 #. frmExodus..Toolbar..ToolBar1..btnRoom..Hint
@@ -1698,7 +1698,7 @@ msgstr "lbl"
 #. frmGrpManagement..Caption
 #: GrpManagement.dfm:6
 msgid "Group Management"
-msgstr "Groepbeheer"
+msgstr "Groepsbeheer"
 
 #. frmGrpManagement..optMove..Caption
 #: GrpManagement.dfm:53
@@ -1708,12 +1708,12 @@ msgstr "Verplaats contactpersonen naar de groep:"
 #. frmGrpManagement..optCopy..Caption
 #: GrpManagement.dfm:64
 msgid "Copy the selected contacts to the following group:"
-msgstr "Contactpersonen kopieren naar de groep:"
+msgstr "Contacten kopiëren naar de groep:"
 
 #. frmGrpRemove..Caption
 #: GrpRemove.dfm:6
 msgid "Remove Contacts"
-msgstr "Verwijder Contactpersonen"
+msgstr "Verwijder Contacten"
 
 #. frmGrpRemove..optMove..Caption
 #: GrpRemove.dfm:50
@@ -1733,7 +1733,7 @@ msgstr "Verwijder deze contactpersonen van mijn rooster."
 #. frmGrpRemove..chkUnsubed..Caption
 #: GrpRemove.dfm:88
 msgid "Force the contacts to remove me from their roster"
-msgstr "Dwing de contactersonen om mij van hun rooster te verwijderen"
+msgstr "Dwing de contactpersonen om mij van hun rooster te verwijderen"
 
 #. frmInputPass..Caption
 #. accordingly.
@@ -1750,7 +1750,7 @@ msgstr "Voer wachtwoord in:"
 #. frmInvalidRoster..Caption
 #: InvalidRoster.dfm:6
 msgid "Invalid Roster Items"
-msgstr "Invalide rooster items"
+msgstr "Ongeldige rooster items"
 
 #. frmInvalidRoster..frameButtons1..Panel2..Panel1..btnOK..Caption
 #. frmInvite..pnlMain..Panel1..btnRemove..Caption
@@ -1798,7 +1798,7 @@ msgstr "Selectievakjes Omschakelen"
 #: RosterWindow.dfm:326
 #: RosterWindow.dfm:613
 msgid "Invite to Conference"
-msgstr "Naar Conferentie Uitnodigen"
+msgstr "Voor Vergadering Uitnodigen"
 
 #. frmInvite..pnlMain..lstJIDS......Caption
 #. frmRosterRecv..lvContacts......Caption
@@ -1828,12 +1828,12 @@ msgstr "Reden:"
 #. frmInvite..pnlMain..Panel2..Label1..Caption
 #: invite.dfm:137
 msgid "Invite the following contacts to:"
-msgstr "Nodig de volgende contactien uit naar:"
+msgstr "Nodig de volgende contacten uit naar:"
 
 #. frmInvite..pnlMain..Panel2..memReason....Lines.WideStrings
 #: invite.dfm:146
 msgid "Please join us in this conference room."
-msgstr "Gelieve ons in deze conferentie te vervoegen."
+msgstr "Gelieve u in deze conferentie te vervoegen."
 
 #. frmExodus..Caption
 #. do this.
@@ -1850,7 +1850,7 @@ msgstr "Exodus"
 #. frmExodus..Tabs..tbsRoster..Caption
 #: Jabber1.dfm:59
 msgid "Messenger"
-msgstr "Boodschaper"
+msgstr "Berichten"
 
 #. frmExodus..Tabs..tbsRoster..pnlRight..Caption
 #: Jabber1.dfm:94
@@ -1876,7 +1876,7 @@ msgstr "Beeld"
 #: RosterAdd.dfm:6
 #: RosterWindow.dfm:589
 msgid "Add Contact"
-msgstr "Contactpersoon Toevoegen"
+msgstr "Contact Toevoegen"
 
 #. frmExodus..Toolbar..ToolBar1..btnRoom..Caption
 #: Jabber1.dfm:158
@@ -1886,7 +1886,7 @@ msgstr "Kamers"
 #. frmExodus..Toolbar..ToolBar1..btnFind..Hint
 #: Jabber1.dfm:165
 msgid "Search for Contacts"
-msgstr "Contactpersonen Zoeken"
+msgstr "Contacten Zoeken"
 
 #. frmExodus..Toolbar..ToolBar1..btnExpanded..Hint
 #: Jabber1.dfm:175
@@ -1915,7 +1915,7 @@ msgstr "Start Log"
 #: Jabber1.dfm:197
 #: RemoveContact.dfm:7
 msgid "Remove Contact"
-msgstr "Verwijder contactpersoon"
+msgstr "Verwijder Contact"
 
 #. frmExodus..MainMenu1..Exodus1..Caption
 #: Jabber1.dfm:222
@@ -1960,7 +1960,7 @@ msgstr "Berichten"
 #. frmExodus..MainMenu1..Exodus1..ClearMessages1..Caption
 #: Jabber1.dfm:257
 msgid "Clear &Instant Messages"
-msgstr "Berichten wegvegen"
+msgstr "Alle berichten verwijderen"
 
 #. frmExodus..MainMenu1..Exodus1..mnuMessage..Caption
 #: Jabber1.dfm:265
@@ -2000,57 +2000,57 @@ msgstr "&Extra"
 #. frmExodus..MainMenu1..Tools1..mnuContacts..Caption
 #: Jabber1.dfm:302
 msgid "&Contacts"
-msgstr "&Contactpersonen"
+msgstr "&Contacten"
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..AddPerson1..Caption
 #: Jabber1.dfm:304
 msgid "&Add Contact"
-msgstr "Contactpersoon &Toevoegen"
+msgstr "Contact &Toevoegen"
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..RemovePerson1..Caption
 #: Jabber1.dfm:309
 msgid "&Remove a Contact"
-msgstr "Contactpersoon &Verwijderen"
+msgstr "Contact &Verwijderen"
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..MessageHistory2..Caption
 #: Jabber1.dfm:313
 msgid "Contact's Message &History"
-msgstr "&Berichten Geschiedenis van Contactpersoon"
+msgstr "&Berichtgeschiedenis van Contact"
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..Properties2..Caption
 #: Jabber1.dfm:318
 msgid "Contact &Properties"
-msgstr "&Eigenschappen contactpersoon"
+msgstr "&Eigenschappen Contact"
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..mnuFind..Caption
 #: Jabber1.dfm:326
 msgid "&Find Contact in Roster"
-msgstr "Contactpersoon zoeken in rooster"
+msgstr "Contact Zoeken in Rooster"
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..mnuFindAgain..Caption
 #: Jabber1.dfm:331
 msgid "Fin&d Contact Again"
-msgstr "Contactpersoon terugvinden"
+msgstr "Contact Opnieuw Vinden"
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..mnuSearch..Caption
 #: Jabber1.dfm:336
 msgid "&Search for a Contact"
-msgstr "Naar Contactpersoon &zoeken"
+msgstr "Naar Contact &zoeken"
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..mnuOnline..Caption
 #: Jabber1.dfm:344
 msgid "Show &Only Online"
-msgstr "Toon enkel &online"
+msgstr "Toon Enkel &Online"
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..NewGroup2..Caption
 #: Jabber1.dfm:349
 msgid "Add Roster &Group"
-msgstr "Toevoegen &rooster groep"
+msgstr "Toevoegen &Roostergroep"
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..SubscribetoPresence2..Caption
 #: Jabber1.dfm:356
 msgid "Su&bscribe to Presence"
-msgstr "&Abonneer op aanwezigheid"
+msgstr "&Abonneer op Aanwezigheid"
 
 #. frmExodus..MainMenu1..Tools1..mnuPresence..Caption
 #: Jabber1.dfm:361
@@ -2158,7 +2158,7 @@ msgstr "Sluit venster"
 #. frmExodus..popTabs..popFloatTab..Caption
 #: Jabber1.dfm:2638
 msgid "Float Window"
-msgstr "Zweef Venster"
+msgstr "Ontkoppel Venster"
 
 #. frmExodus..popTray..trayShow..Caption
 #: Jabber1.dfm:2648
@@ -2228,7 +2228,7 @@ msgstr "txtServer"
 #. frmJud..Caption
 #: jud.dfm:5
 msgid "Jabber Search"
-msgstr "Jabber Zoektocht"
+msgstr "Jabber Zoekopdracht"
 
 #. frmJud..Panel1..lblWizardTitle..Caption
 #: jud.dfm:42
@@ -2250,7 +2250,7 @@ msgstr "TabSheet2"
 #. frmJud..Tabs..TabSheet2..lblWait..Caption
 #: jud.dfm:85
 msgid "Please wait. Contacting search agent:"
-msgstr "Even geduld. Bezig met contacteren zoek agent:"
+msgstr "Even geduld. Verbinden met zoekagent:"
 
 #. frmJud..Tabs..TabSheet3..Caption
 #. frmRegister..Tabs..TabSheet3..Caption
@@ -2262,7 +2262,7 @@ msgstr "TabSheet3"
 #. frmJud..Tabs..TabSheet3..lblInstructions..Caption
 #: jud.dfm:107
 msgid "Fill in the search criteria to find contacts on."
-msgstr "Vul de criteria voor het zoeken naar contactpersonen in."
+msgstr "Vul de criteria voor het zoeken naar contacten in."
 
 #. frmJud..Tabs..TabSheet4..Caption
 #. frmRegister..Tabs..TabSheet4..Caption
@@ -2274,7 +2274,7 @@ msgstr "TabSheet4"
 #. frmJud..Tabs..TabSheet4..Panel2..Label3..Caption
 #: jud.dfm:139
 msgid "Add Contacts to this group:"
-msgstr "Contactpersonen toevoegen aan deze groep"
+msgstr "Contacten toevoegen aan deze groep"
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Caption
 #. frmAdd..lblAddGrp..Caption
@@ -2290,7 +2290,7 @@ msgstr "Nieuwe groep toevoegen"
 #: jud.pas:641
 #: jud.pas:643
 msgid "Add Contacts"
-msgstr "Contactpersonen Toevoegen"
+msgstr "Contacten Toevoegen"
 
 #. frmJud..PopupMenu1..popProfile..Caption
 #: jud.dfm:207
@@ -2327,7 +2327,7 @@ msgstr "&Details ..."
 #: ExSession.pas:373
 #: Login.pas:200
 msgid "Default Profile"
-msgstr "Default profiel"
+msgstr "Standaard profiel"
 
 #. frmLogin..Panel1..chkInvisible..Caption
 #: Login.dfm:105
@@ -2482,7 +2482,7 @@ msgstr "rfDesktop"
 #. frmPrefs..Caption
 #: Prefs.dfm:7
 msgid "Exodus Preferences"
-msgstr "Exodus instellingen"
+msgstr "Exodus Voorkeuren"
 
 #. frmPrefs..Scroller..lblDialog..Caption
 #: Prefs.dfm:240
@@ -2512,12 +2512,12 @@ msgstr "Systeem"
 #. frmPrefs..Scroller..lblNotify..Caption
 #: Prefs.dfm:1155
 msgid "Notification"
-msgstr "Waarschuwing"
+msgstr "Meldingen"
 
 #. frmPrefs..Scroller..lblAway..Caption
 #: Prefs.dfm:1349
 msgid "Auto-Away"
-msgstr "Auto-afwezig"
+msgstr "Auto-Afwezig"
 
 #. frmPrefs..Scroller..lblKeywords..Caption
 #. frmPrefs..PageControl1..tbsKeywords..Caption
@@ -2529,7 +2529,7 @@ msgstr "Sleutelwoorden"
 #. frmPrefs..Scroller..lblBlockList..Caption
 #: Prefs.dfm:1737
 msgid "Block List"
-msgstr "Zwarte lijst"
+msgstr "Zwarte Lijst"
 
 #. frmPrefs..Scroller..lblMessages..Caption
 #: Prefs.dfm:2125
@@ -2550,7 +2550,7 @@ msgstr "Plugins"
 #: prefs/PrefNotify.dfm:43
 #: prefs/PrefNotify.pas:102
 msgid "File Transfers"
-msgstr "Bestanden overzetten"
+msgstr "Overdrachten"
 
 #. frmPrefs..Scroller..lblGroups..Caption
 #. frmProfile..PageControl1..TabSheet2..Caption
@@ -2577,37 +2577,37 @@ msgstr "Exodus kan u waarschuwen wanneer een sleutelwoord in een chatkamer geuit
 #. frmPrefs..PageControl1..tbsKeywords..Panel2..chkRegex..Caption
 #: Prefs.dfm:3067
 msgid "Use Regular Expressions for Keyword matches"
-msgstr "Gebruik Regular Expressions voor bij het vergelijken van sleutelwoorden"
+msgstr "Gebruik Reguliere Expressies in sleutelwoorden"
 
 #. frmPrefs..PageControl1..tbsKeywords..pnlKeyword..Caption
 #: Prefs.dfm:3078
 msgid "Notification Keywords"
-msgstr "Waarschuwingssleutelwoorden"
+msgstr "Meldingssleutelwoorden"
 
 #. frmPrefs..PageControl1..tbsBlockList..Caption
 #: Prefs.dfm:3085
 msgid "BlockList"
-msgstr "Zwarte lijst"
+msgstr "Zwarte Lijst"
 
 #. frmPrefs..PageControl1..tbsBlockList..Memo1......Lines.WideStrings
-#: Prefs.dfm:3105
+#: Prefs.dfm:3106
 msgid "Enter in the Jabber Addresses (JIDs) of the people to block from "
 msgstr "Voer het Jabber adres (JID) in van de personen die u wilt blokkeren "
 
 #. frmPrefs..PageControl1..tbsBlockList..Memo1....Lines.WideStrings
 #: Prefs.dfm:3106
 msgid "sending "
-msgstr "bezig met doorsturen"
+msgstr "voor het verzenden"
 
 #. frmPrefs..PageControl1..tbsBlockList..Memo1....Lines.WideStrings
 #: Prefs.dfm:3107
 msgid "you messages. All messages from these contacts will be blocked."
-msgstr "Uw berichten. alle berichten van deze contactpersonen worden geblokkeerd."
+msgstr "van berichten. Alle berichten van deze contactpersonen worden geblokkeerd."
 
 #. frmPrefs..PageControl1..tbsBlockList..pnlBlocked..Caption
 #: Prefs.dfm:3119
 msgid "Blocked Contacts"
-msgstr "Geblokkeerde contactpersonen"
+msgstr "Geblokkeerde Contacten"
 
 #. frmPrefs..Panel1..Panel3..Button6..Caption
 #: Prefs.dfm:3181
@@ -2617,7 +2617,7 @@ msgstr "Toepassen"
 #. frmProfile..Caption
 #: Profile.dfm:7
 msgid "Contact Properties"
-msgstr "Eigenschappen Contactpersoon"
+msgstr "Eigenschappen van Contact"
 
 #. frmProfile..PageControl1..TabSheet1..Caption
 #. frmVCard..PageControl1..TabSheet1..Caption
@@ -2735,14 +2735,14 @@ msgstr "Beroep:"
 #: Profile.dfm:290
 #: vcard.dfm:124
 msgid "Birthday:"
-msgstr "Geboortedag:"
+msgstr "Geboortedatum:"
 
 #. frmProfile..PageControl1..TabSheet3..Label28..Caption
 #. frmVCard..PageControl1..TabSheet3..Label28..Caption
 #: Profile.dfm:297
 #: vcard.dfm:131
 msgid "Typical Format: YYYY-MM-DD"
-msgstr "Typisch formaat: YYYY-MM-DD"
+msgstr "Typisch formaat: JJJJ-MM-DD"
 
 #. frmProfile..PageControl1..TabSheet3..Label8..Caption
 #. frmProfile..PageControl1..TabSheet5..Label19..Caption
@@ -2778,7 +2778,7 @@ msgstr "Beschrijving:"
 #: Profile.dfm:337
 #: vcard.dfm:162
 msgid "Accounting/Finance"
-msgstr "Boekhouden/Financiën"
+msgstr "Boekhouding/Financiën"
 
 #. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
@@ -3140,7 +3140,7 @@ msgstr "Oostenrijk "
 #: vcard.dfm:278
 #: vcard.dfm:683
 msgid "Azerbaijan  "
-msgstr "AzerBeidzjan "
+msgstr "Azerbeidzjan "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3162,7 +3162,7 @@ msgstr "Bahamas "
 #: vcard.dfm:280
 #: vcard.dfm:685
 msgid "Bahrain  "
-msgstr "Bahrain "
+msgstr "Bahrein "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3294,7 +3294,7 @@ msgstr "Botswana "
 #: vcard.dfm:292
 #: vcard.dfm:697
 msgid "Bouvet Island  "
-msgstr "Bouvet Eiland "
+msgstr "Bouvet Eilanden "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3316,7 +3316,7 @@ msgstr "Brazilië "
 #: vcard.dfm:294
 #: vcard.dfm:699
 msgid "British Indian Ocean Territory  "
-msgstr "Brits Teritorium in de INdische Oceaan "
+msgstr "Brits Indische Oceaan Territorium "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3382,7 +3382,7 @@ msgstr "Cambodja "
 #: vcard.dfm:300
 #: vcard.dfm:705
 msgid "Cameroon  "
-msgstr "Cameroon "
+msgstr "Kameroen "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3818,7 +3818,7 @@ msgstr "Frans-Polynesië "
 #: vcard.dfm:341
 #: vcard.dfm:746
 msgid "French Southern Territories  "
-msgstr "Franse Gebieden in de zuidelijke Indische Oceaan "
+msgstr "Franse Zuidelijke Territoria "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -3972,7 +3972,7 @@ msgstr "Guinee "
 #: vcard.dfm:355
 #: vcard.dfm:760
 msgid "Guinea-Bissau  "
-msgstr "Ginee-Bissau "
+msgstr "Guinee-Bissau "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4027,7 +4027,7 @@ msgstr "Vaticaanstad "
 #: vcard.dfm:360
 #: vcard.dfm:765
 msgid "Honduras  "
-msgstr "Hondura "
+msgstr "Honduras "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4060,7 +4060,7 @@ msgstr "Hongarije "
 #: vcard.dfm:363
 #: vcard.dfm:768
 msgid "Iceland  "
-msgstr "Ijsland "
+msgstr "IJsland "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4093,7 +4093,7 @@ msgstr "Indonesië "
 #: vcard.dfm:366
 #: vcard.dfm:771
 msgid "Iran, Islamic Republic of  "
-msgstr "Iran "
+msgstr "Iran, Islamitische Republiek  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4214,7 +4214,7 @@ msgstr "Kiribati "
 #: vcard.dfm:377
 #: vcard.dfm:782
 msgid "Korea, Democratic People's Republic of  "
-msgstr "Koreaanse Democratische Volksrepubliek "
+msgstr "Korea, Democratische Volksrepubliek  "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4225,7 +4225,7 @@ msgstr "Koreaanse Democratische Volksrepubliek "
 #: vcard.dfm:378
 #: vcard.dfm:783
 msgid "Korea, Republic of  "
-msgstr "Koreaanse Republiek "
+msgstr "Korea, Republiek "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4247,7 +4247,7 @@ msgstr "Koeweit "
 #: vcard.dfm:380
 #: vcard.dfm:785
 msgid "Kyrgyzstan  "
-msgstr "Kirgizi "
+msgstr "Kirgizië "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4522,7 +4522,7 @@ msgstr "Mironesië "
 #: vcard.dfm:405
 #: vcard.dfm:810
 msgid "Moldova, Republic of  "
-msgstr "Moldavi "
+msgstr "Moldavië "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4720,7 +4720,7 @@ msgstr "Niue "
 #: vcard.dfm:423
 #: vcard.dfm:828
 msgid "Norfolk Island  "
-msgstr "Norfolkeilad "
+msgstr "Norfolkeiland "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4786,7 +4786,7 @@ msgstr "Palau "
 #: vcard.dfm:429
 #: vcard.dfm:834
 msgid "Palestinian Territory, Occupied  "
-msgstr "Palestijnze Bezette Gebieden "
+msgstr "Palestijnse Bezette Gebieden "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4808,7 +4808,7 @@ msgstr "Panama "
 #: vcard.dfm:431
 #: vcard.dfm:836
 msgid "Papua New Guinea  "
-msgstr "PapuPapoea-Nieuw-Guinea "
+msgstr "Papoea Nieuw-Guinea "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4907,7 +4907,7 @@ msgstr "Qatar "
 #: vcard.dfm:440
 #: vcard.dfm:845
 msgid "Reunion  "
-msgstr "Réunion "
+msgstr "Réunie "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4962,7 +4962,7 @@ msgstr "Sint-Helena "
 #: vcard.dfm:445
 #: vcard.dfm:850
 msgid "Saint Kitts and Nevis  "
-msgstr "Saint kitts and Neveis "
+msgstr "Sint-Kitts en Neveis "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4973,7 +4973,7 @@ msgstr "Saint kitts and Neveis "
 #: vcard.dfm:446
 #: vcard.dfm:851
 msgid "Saint Lucia  "
-msgstr "Saint Lucia "
+msgstr "Santa Lucia "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -5094,7 +5094,7 @@ msgstr "Singapore "
 #: vcard.dfm:457
 #: vcard.dfm:862
 msgid "Slovakia  "
-msgstr "Slovakije "
+msgstr "Slowakije "
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -5597,7 +5597,7 @@ msgstr "Zimbabwe "
 #: vcard.dfm:542
 #: ConnDetails.pas:400
 msgid "Work"
-msgstr "Op 't Werk"
+msgstr "Werkplek"
 
 #. frmProfile..PageControl1..TabSheet5..Label22..Caption
 #. frmVCard..PageControl1..TabSheet5..Label22..Caption
@@ -5611,7 +5611,7 @@ msgstr "Naam Bedrijf:"
 #: Profile.dfm:741
 #: vcard.dfm:556
 msgid "Org. Unit (Dept):"
-msgstr "Organizatorische afdeling:"
+msgstr "Afdeling:"
 
 #. frmProfile..PageControl1..TabSheet6..Caption
 #: Profile.dfm:806
@@ -5650,12 +5650,12 @@ msgstr "Registratie"
 #. frmRegister..Tabs..TabSheet1..Label1....AutoSize
 #: RegForm.dfm:34
 msgid "This wizard will register you with a service or Agent. Use the Next button to advance through the steps. Use Cancel anytime to cancel this registration."
-msgstr "Deze wizard helpt u bij de registratie procedure van een dienst of agent. Gebruik de knop Volgende om naar de daaropvolgende stap over te gaan. Gebruik op elk moment afbreken om de registratie af te breken."
+msgstr "Deze wizard helpt u bij de registratie procedure van een dienst of agent. Gebruik de knop Volgende om door de stappen te gaan. Gebruik op elk moment afbreken om de registratie af te breken."
 
 #. frmRegister..Tabs..TabSheet1..lblIns..Caption
 #: RegForm.dfm:50
 msgid "Waiting for agent instructions....."
-msgstr "Wachtend op instructies van agent ..."
+msgstr "Wacht op instructies van agent ..."
 
 #. frmRegister..Tabs..TabSheet2..Panel2..btnDelete..Caption
 #: RegForm.dfm:76
@@ -5680,22 +5680,22 @@ msgstr "Uw registratie bij deze dienst is mislukt! Ga terug en ga na of alle par
 #. frmRemove..optMove..Caption
 #: RemoveContact.dfm:61
 msgid "Remove this contact from this group"
-msgstr "Verwijder deze contactpersoon van deze groep"
+msgstr "Verwijder dit contact uit deze groep"
 
 #. frmRemove..optRemove..Caption
 #: RemoveContact.dfm:70
 msgid "Remove this contact from my roster."
-msgstr "Verwijder deze contactpersoon van mijn rooster."
+msgstr "Verwijder dit contact uit mijn rooster."
 
 #. frmRemove..chkRemove1..Caption
 #: RemoveContact.dfm:81
 msgid "Remove this person from my roster."
-msgstr "Verwijder deze contactpersoon van mijn rooster."
+msgstr "Verwijder dit uit mijn rooster."
 
 #. frmRemove..chkRemove2..Caption
 #: RemoveContact.dfm:91
 msgid "Force this person to remove me from their roster"
-msgstr "Dwing deze persoon om me van zijn rooster te verwijderen"
+msgstr "Dwing deze persoon om me uit zijn rooster te verwijderen"
 
 #. frmRemove..lblJID..Caption
 #. frmRosterWindow..StatBar......Text
@@ -5707,7 +5707,7 @@ msgstr "foo@jabber.org"
 #. frmRiser..Label1..Caption
 #: RiserWindow.dfm:81
 msgid "something really long"
-msgstr "iets heeeel lang"
+msgstr "iets heeeel langs"
 
 #. frmRoom..Panel3..Panel6..Caption
 #: Room.dfm:45
@@ -5732,7 +5732,7 @@ msgstr "Venster leegmaken"
 #. frmRoom..popRoom..popBookmark..Caption
 #: Room.dfm:176
 msgid "Bookmark Room..."
-msgstr "Kamerbladwijzer aanmeken ..."
+msgstr "Bladwijzer voor deze Kamer maken..."
 
 #. frmRoom..popRoom..popRegister..Caption
 #: Room.dfm:180
@@ -5742,7 +5742,7 @@ msgstr "Kamerregistratie ..."
 #. frmRoom..popRoom..popInvite..Caption
 #: Room.dfm:184
 msgid "Invite Contacts..."
-msgstr "Contactpersonen uitnodigen..."
+msgstr "Contacten uitnodigen..."
 
 #. frmRoom..popRoom..popNick..Caption
 #: Room.dfm:188
@@ -5752,7 +5752,7 @@ msgstr "Schermnaam veranderen..."
 #. frmRoom..popRoom..S1..Caption
 #: Room.dfm:192
 msgid "Save As..."
-msgstr "Opslaan als ..."
+msgstr "Opslaan Als..."
 
 #. frmRoom..popRoom..popAdmin..Caption
 #: Room.dfm:196
@@ -5834,7 +5834,7 @@ msgstr "Blokkeer"
 #. frmRoom..popRoomRoster..popKick..Caption
 #: Room.dfm:285
 msgid "Kick"
-msgstr "Buitenwippen"
+msgstr "Naar buiten trappen"
 
 #. frmRoom..popRoomRoster..popBan..Caption
 #: Room.dfm:290
@@ -5889,7 +5889,7 @@ msgstr "Schermnaam"
 #. frmAdd..Label1..Caption
 #: RosterAdd.dfm:26
 msgid "Contact ID:"
-msgstr "ID Contactpersoon:"
+msgstr "ID van Contact:"
 
 #. frmAdd..Label3..Caption
 #. frmSubscribe..boxAdd..Label3..Caption
@@ -5901,7 +5901,7 @@ msgstr "Groep:"
 #. frmAdd..Label4..Caption
 #: RosterAdd.dfm:58
 msgid "Contact Type:"
-msgstr "Type contactpersoon:"
+msgstr "Type Contact:"
 
 #. frmAdd..lblGateway..Caption
 #: RosterAdd.dfm:65
@@ -5936,7 +5936,7 @@ msgstr "ICQ"
 #. frmRosterRecv..Caption
 #: RosterRecv.dfm:6
 msgid "Receiving Contacts"
-msgstr "Ontvangen Contactpersonen"
+msgstr "Bezig met het Ontvangen van Contacten"
 
 #. frmRosterRecv..pnlFrom..StaticText1..Caption
 #: RosterRecv.dfm:69
@@ -5946,7 +5946,7 @@ msgstr "Van: "
 #. frmRosterRecv..Panel1..Label2..Caption
 #: RosterRecv.dfm:226
 msgid "Add contacts to this group:"
-msgstr "Contactpersonen toevoegen aan deze groep:"
+msgstr "Contacten toevoegen aan deze groep:"
 
 #. frmRosterWindow..Caption
 #: RosterWindow.dfm:8
@@ -5961,7 +5961,7 @@ msgstr "Zoek:"
 #. frmRosterWindow..pnlFind..txtFind..Hint
 #: RosterWindow.dfm:102
 msgid "Esc to quit, Enter to select current,  F3 to search again"
-msgstr "Esc om af te sluiten, enter om huidige te selecteren, F3 om opnieuw te zoeken"
+msgstr "Esc om af te sluiten, Enter om huidige te selecteren, F3 om opnieuw te zoeken"
 
 #. frmRosterWindow..pnlFind..radJID..Caption
 #: RosterWindow.dfm:114
@@ -6027,7 +6027,7 @@ msgstr "Onzichtbaar"
 #. frmRosterWindow..popRoster..popPresence..popSendSubscribe..Caption
 #: RosterWindow.dfm:362
 msgid "Subscribe Again"
-msgstr "Opnieuw abonneren"
+msgstr "Opnieuw Abonneren"
 
 #. frmRosterWindow..popRoster..popRename..Caption
 #: RosterWindow.dfm:367
@@ -6047,7 +6047,7 @@ msgstr "Eigenschappen ..."
 #. frmRosterWindow..popGroup..popGrpPresence..Caption
 #: RosterWindow.dfm:602
 msgid "Send Presence"
-msgstr "Verstuur aanwezigheid"
+msgstr "Verstuur Aanwezigheid"
 
 #. frmRosterWindow..popGroup..popGrpPresence..popGrpInvisible..Caption
 #: RosterWindow.dfm:608
@@ -6057,17 +6057,17 @@ msgstr "Onzichtbaar"
 #. frmRosterWindow..popGroup..BroadcastMessage1..Caption
 #: RosterWindow.dfm:617
 msgid "Broadcast Message"
-msgstr "Broadcast bericht"
+msgstr "Broadcast Bericht"
 
 #. frmRosterWindow..popGroup..SendContactsTo1..Caption
 #: RosterWindow.dfm:621
 msgid "Send Contacts To..."
-msgstr "Verstuur contactgegevens naar ..."
+msgstr "Verstuur Contactgegevens Naar..."
 
 #. frmRosterWindow..popGroup..MoveorCopyContacts1..Caption
 #: RosterWindow.dfm:625
 msgid "Move or Copy Contacts..."
-msgstr "Contactpersonen verplaatsen of kopieren..."
+msgstr "Contacten Verplaatsen of Kopiëren..."
 
 #. frmRosterWindow..popGroup..popGrpRename..Caption
 #: RosterWindow.dfm:636
@@ -6104,12 +6104,12 @@ msgstr "Hernoemen ..."
 #. frmSelContact..Caption
 #: SelContact.dfm:6
 msgid "Select Contact"
-msgstr "Contactpersoon selecteren"
+msgstr "Contact Selecteren"
 
 #. frmSelContact..PopupMenu1..ShowOnlineOnly1..Caption
 #: SelContact.dfm:85
 msgid "Show Online Only"
-msgstr "Toon enkel Online"
+msgstr "Toon Enkel Online"
 
 #. fSendStatus..Panel3..lblTo..Caption
 #: SendStatus.dfm:76
@@ -6119,12 +6119,12 @@ msgstr "lblTo"
 #. frmSSLWarn..Caption
 #: SSLWarn.dfm:6
 msgid "Security Warning"
-msgstr "Beveiliginswaarschuwing"
+msgstr "Beveiligingswaarschuwing"
 
 #. frmSSLWarn..lblHeader..Caption
 #: SSLWarn.dfm:144
 msgid "SSL Security Warning"
-msgstr "SSL beveiliginswaarschuwing"
+msgstr "SSL Beveiliginswaarschuwing"
 
 #. frmSSLWarn..lblHeader..Font.Name
 #: SSLWarn.dfm:148
@@ -6230,7 +6230,7 @@ msgstr "lbllns"
 #. frmXferManager..Caption
 #: XferManager.dfm:5
 msgid "File Transfer Manager"
-msgstr "Bestandoverzet Beheerder"
+msgstr "Bestandsoverdracht Beheer"
 
 #: About.pas:83
 msgid "Exodus is the creation of Peter Millard  (mailto:me@pgmillard.com).  Checkout the website at http://exodus.jabberstudio.org for more information. It is currently licensed under the GNU Public License (GPL) see www.gnu.org for more information on the GPL."
@@ -6264,12 +6264,12 @@ msgstr "Downloading ..."
 #: AutoUpdateStatus.pas:210
 #: WebGet.pas:74
 msgid "Initializing..."
-msgstr "Bezig met initializatie ..."
+msgstr "Bezig met initialiseren ..."
 
 #: AutoUpdateStatus.pas:226
 #: WebGet.pas:82
 msgid "Download Complete"
-msgstr "Download gelukt"
+msgstr "Download Gereed"
 
 #: AutoUpdateStatus.pas:237
 msgid "Installing..."
@@ -6293,11 +6293,11 @@ msgstr "Objecten"
 #. Setup the cache'd old versions in ChangePresImage
 #: ChatWin.pas:547
 msgid " is replying."
-msgstr "bezig met antwoorden."
+msgstr " typt een antwoord."
 
 #: ChatWin.pas:625
 msgid "Chat Activity: "
-msgstr "Chat drukte: "
+msgstr "Chat Activiteit: "
 
 #. post a msg to the window and disable the text input box.
 #: ChatWin.pas:742
@@ -6342,7 +6342,7 @@ msgstr "chat"
 
 #: ChatWin.pas:842
 msgid "available"
-msgstr "Beschibaar"
+msgstr "beschibaar"
 
 #: ChatWin.pas:846
 #: ChatWin.pas:848
@@ -6373,7 +6373,7 @@ msgstr "Plugin klasse ondersteund geen IExodusPlugin. (%s)"
 
 #: COMController.pas:337
 msgid "Plugin class could not be initialized. (%s)"
-msgstr "Plugin klasse kon niet geinitializeerd worden. (%s)"
+msgstr "Plugin klasse kon niet geinitialiseerd worden. (%s)"
 
 #: COMController.pas:359
 msgid "Plugin could not be initialized or configured."
@@ -6397,11 +6397,11 @@ msgstr "Er is een groter aantal poll sleutels vereist."
 
 #: ConnDetails.pas:453
 msgid "Download the public server list from jabber.org? (Requires an internet connection)."
-msgstr "Download de publiekde server lijst van jabber.org? (Vereist een internet connectie)."
+msgstr "Download de publieke serverlijst van jabber.org? (Vereist een internet connectie)."
 
 #: ConnDetails.pas:458
 msgid "Downloading public server list"
-msgstr "Bezig met downloaden publieke server lijst"
+msgstr "Bezig met downloaden publieke serverlijst"
 
 #: Debug.pas:184
 #: Debug.pas:383
@@ -6476,7 +6476,7 @@ msgstr "Oorspronkelijk bericht was:"
 #. We got an exception during signal dispatching.
 #: ExResponders.pas:210
 msgid "An error has occurred. Exodus will automatically save an error log file to your desktop. Use this file to a bug report at the exodus website."
-msgstr "Er heeft zich een fout voorgedaan. Exodus zal automatisch een error log op je bureaublad plaatsen. Gebruik dit om een bug rapport in te vullen op de exodus website."
+msgstr "Er heeft zich een fout voorgedaan. Exodus zal automatisch een error log op het bureaublad plaatsen. Gebruik dit om een bug rapport in te vullen op de exodus website."
 
 #: ExResponders.pas:323
 #: ExResponders.pas:375
@@ -6553,7 +6553,7 @@ msgstr " -i [pri] \t : Prioiteit\n"
 
 #: ExSession.pas:272
 msgid " -f [prof] \t : Profile name\n"
-msgstr " -f [prof] \t : Profiel naam\n"
+msgstr " -f [prof] \t : Profielnaam\n"
 
 #: ExSession.pas:273
 msgid " -c [file] \t : Config path name\n"
@@ -6591,12 +6591,12 @@ msgstr "Normaal bericht ontvangen"
 #: ExSession.pas:481
 #: prefs/PrefNotify.pas:94
 msgid "Contact went offline"
-msgstr "Contactpersoon is offline"
+msgstr "Contact is niet aangemeld"
 
 #: ExSession.pas:482
 #: prefs/PrefNotify.pas:93
 msgid "Contact came online"
-msgstr "Contactpersoon is online"
+msgstr "Contact heeft zich aangemeld"
 
 #: ExSession.pas:483
 #: prefs/PrefNotify.pas:101
@@ -6620,11 +6620,11 @@ msgstr "U logt momenteel niet. Wilt u loggen aanzetten? (Waarschuwing: logbestan
 
 #: ExUtils.pas:349
 msgid "There is no history file for this contact."
-msgstr "Er is geen geschiedenis bestand voor deze contactpersoon."
+msgstr "Er is geen geschiedenisbestand voor deze contactpersoon."
 
 #: ExUtils.pas:361
 msgid "Do you really want to clear the log for %s?"
-msgstr "Bent u zeker dat u het logboek van %s wil leegmaken?"
+msgstr "Bent u zeker dat u het logboek van %s wilt wissen?"
 
 #. Munge the filename
 #: ExUtils.pas:374
@@ -6633,15 +6633,15 @@ msgstr "Geschiedenis is gewist."
 
 #: ExUtils.pas:376
 msgid "Could not delete history file."
-msgstr "Kon het geschiedenis bestand niet verwijderen."
+msgstr "Kon het geschiedenisbestand niet verwijderen."
 
 #: ExUtils.pas:379
 msgid "No history file for this user."
-msgstr "Er is geen geschiedenis bestand voor deze gebruiker."
+msgstr "Er is geen geschiedenisbestand voor deze gebruiker."
 
 #: ExUtils.pas:389
 msgid "Are you sure you want to delete all of your message and room logs?"
-msgstr "Bent u zeker dat u alle bericht en kamer logboeken wil leegmaken?"
+msgstr "Bent u zeker dat u alle bericht- en kamerlogboeken wilt wissen?"
 
 #: ExUtils.pas:409
 msgid "%d log files deleted."
@@ -6723,12 +6723,12 @@ msgstr "%s: De optie %s vereist een argument."
 #. Programmer's name for it: SOPtUnknown
 #: getOpt.pas:125
 msgid "%s: Unknown option %s."
-msgstr "%s: onbekende optie %s."
+msgstr "%s: Onbekende optie %s."
 
 #. Programmer's name for it: SNoLongOpt
 #: getOpt.pas:126
 msgid "%s: long option format not supported."
-msgstr "%s: lang formaat voor opties is niet ondersteund."
+msgstr "%s: Lang formaat voor opties is niet ondersteund."
 
 #: GrpRemove.pas:76
 msgid "Remove %d contacts"
@@ -6751,7 +6751,7 @@ msgstr "Er is een fout opgetreden bij het opslaan van uw instellingen. Mogelijk 
 #: invite.pas:192
 #: JoinRoom.pas:214
 msgid "The Room Address you entered is invalid. It must be valid Jabber ID."
-msgstr "Het kamer adres dat u invoerde is ongeldig. Dit moet een geldige Jabber ID zijn."
+msgstr "Het ingevoerde kamer adres is ongeldig. Dit moet een geldige Jabber ID zijn."
 
 #. Send out invites.
 #: invite.pas:202
@@ -6760,7 +6760,7 @@ msgstr "U bent uitgenodigd in kamer %s."
 
 #: invite.pas:203
 msgid "Conference Room:"
-msgstr "Conferentie kamer:"
+msgstr "Vergaderkamer:"
 
 #: Jabber1.pas:892
 msgid "Enter Password"
@@ -6789,12 +6789,12 @@ msgid ""
 "There was an error trying to authenticate you.\n"
 "Either you used the wrong password, or this account is already in use by someone else."
 msgstr ""
-"Uw authenticatie liep fout.\n"
+"Er is een fout opgetreden in authenticatie-proces.\n"
 "U heeft ofwel het verkeerde wachtwoord gebruikt, of deze account wordt reeds door iemand anders gebruikt."
 
 #: Jabber1.pas:1101
 msgid "An Error occurred trying to register your new account. This server may not allow open registration."
-msgstr "Er is een fout opgetreden bij het registreren van uw accoutn. Mischien laat deze server geen open registratie toe."
+msgstr "Er is een fout opgetreden bij het registreren van uw account. Misschien laat deze server geen open registratie toe."
 
 #: Jabber1.pas:1116
 msgid "This account does not exist on this server. Create a new account?"
@@ -6803,12 +6803,12 @@ msgstr "Deze account bestaat niet op deze server. Nieuwe account aanmaken?"
 #. if we have a new account, prompt for reg info
 #: Jabber1.pas:1168
 msgid "Your new jabber account is activated. Would you like to fill out additional registration information?"
-msgstr "Uw nieuwe jabber account is geactiveerd. Wilt u aanvullende registratie informatie invullen?"
+msgstr "Uw nieuwe Jabber account is geactiveerd. Wilt u aanvullende registratie informatie invullen?"
 
 #. set us to away
 #: Jabber1.pas:2055
 msgid "Setting AutoAway"
-msgstr "Instellen Auto Afwezig"
+msgstr "Instellen Auto-Afwezig"
 
 #. set us to xa
 #: Jabber1.pas:2091
@@ -6837,7 +6837,7 @@ msgstr "Oude wachtwoord is onjuist."
 
 #: Jabber1.pas:2359
 msgid "New password does not match."
-msgstr "Instanties van het nieuwe wachtwoord komen niet overeen."
+msgstr "Nieuwe wachtwoorden komen niet overeen."
 
 #: Jabber1.pas:2379
 #: Jabber1.pas:2384
@@ -6886,7 +6886,7 @@ msgstr "U dient een schermnaam in te geven"
 #: jud.pas:317
 #: jud.pas:323
 msgid "Could not contact the search agent."
-msgstr "Kon de zoek agent niet bereiken."
+msgstr "Kon de zoek-agent niet bereiken."
 
 #. timeout
 #: jud.pas:426
@@ -6908,7 +6908,7 @@ msgstr "Nieuw Profiel"
 
 #: Login.pas:171
 msgid "Enter Profile Name"
-msgstr "Voer de profiel naam in"
+msgstr "Voer de profielnaam in"
 
 #. Delete this profile
 #: Login.pas:191
@@ -6917,7 +6917,7 @@ msgstr "Dit profiel verwijderen?"
 
 #: MsgQueue.pas:148
 msgid "Exodus could not create or write to the spool directory specified in the options."
-msgstr "Exodus kan niet schrijven of aanmaken in de spool map opgegeven in de instellingen."
+msgstr "Exodus kan niet schrijven of aanmaken in de spoolmap opgegeven in de instellingen."
 
 #: MsgRecv.pas:372
 msgid "Decline"
@@ -6969,25 +6969,25 @@ msgstr "Verbinding gemaakt."
 #: RecvStatus.pas:307
 #: SendStatus.pas:312
 msgid "File transfer is done."
-msgstr "Bestandsoverzetting is gelukt."
+msgstr "Bestandsoverdracht is gereed."
 
 #: RecvStatus.pas:382
 msgid "Receive request timed out."
-msgstr "Ontvangaanvraag nam teveel tijd in beslag."
+msgstr "Ontvangstaanvraag duurde te lang."
 
 #: RecvStatus.pas:409
 msgid "No acceptable stream hosts were sent. Have the sender check their settings."
-msgstr ""
+msgstr "Er zijn geen acceptabele stream hosts verzonden. Vraag de verzender de instellingen te controleren."
 
 #: RecvStatus.pas:438
 #: RecvStatus.pas:552
 msgid "This file already exists. Overwrite?"
-msgstr "Dit bestand bestond reeds. Overschrijven?"
+msgstr "Dit bestand bestaat reeds. Overschrijven?"
 
 #: RecvStatus.pas:445
 #: RecvStatus.pas:559
 msgid "This directory does not exist. Create it?"
-msgstr "Deze map bestaat niet. Aanmaken?"
+msgstr "Deze directory bestaat niet. Aanmaken?"
 
 #. Create a stream, and get the file into it.
 #. Create a stream, and get the file into it.
@@ -6999,7 +6999,7 @@ msgstr "E is een fout opgetreden bij het aanmaken van het bestand."
 #. send SI accept
 #: RecvStatus.pas:512
 msgid "Negotiating with sender..."
-msgstr "Er wordt onderhandeld met de verzender..."
+msgstr "Onderhandelingen met de verzender lopen..."
 
 #. our thread completed.
 #: RecvStatus.pas:609
@@ -7009,17 +7009,17 @@ msgstr "Open"
 
 #: RecvStatus.pas:625
 msgid "There was an error receiving the file. (%d)"
-msgstr "E is een fout opgetreden tijdens het ontvangen van het bestand."
+msgstr "Er is een fout opgetreden bij het ontvangen van het bestand."
 
 #. we ran out of streamhosts to try. bummer :(
 #: RecvStatus.pas:689
 msgid "Exodus was unable to connect to any file transfer proxies or the sender."
-msgstr "Exodus kon geen bestandsoverzetproxies met de verzender verbinden."
+msgstr "Exodus kon geen verbinding maken met de proxies of de verzender."
 
 #. immediately turn around and refuse.
 #: RecvStatus.pas:720
 msgid "Waiting to cancel transfer..."
-msgstr "Wachtend op overdrachtsannulering..."
+msgstr "Wacht op annulering van de overdracht..."
 
 #. the sender went offline
 #: RecvStatus.pas:742
@@ -7060,7 +7060,7 @@ msgstr "Uw registratie is verwijderd."
 
 #: RemoveContact.pas:79
 msgid "Remove this contact from the %s group."
-msgstr "Verwijder deze contactpersoon van de groep %s."
+msgstr "Verwijder dit contact uit de groep %s."
 
 #: Room.pas:359
 msgid "%s Room"
@@ -7097,15 +7097,15 @@ msgstr "Uw schermnaam is reeds in gebruik. Gelieve een andere op te geven."
 
 #: Room.pas:731
 msgid "You supplied an invalid password to enter this room."
-msgstr "U heeft geen voor deze kamer geldig wachtwoord ingegeven."
+msgstr "U heeft een ongeldig wachtwoord voor deze kamer ingegeven."
 
 #: Room.pas:739
 msgid "The room is being created. Please try again later."
-msgstr "De kamer wordt aangemaakt. Probeer straks nog eens."
+msgstr "De kamer wordt aangemaakt. Probeer het later opnieuw."
 
 #: Room.pas:744
 msgid "You are not allowed to enter the room. You must be on the member list."
-msgstr "U heeft geen toestemming om deze kamer binnen te gaan. U dient op de leden lijst te staan."
+msgstr "U heeft geen toestemming om deze kamer binnen te gaan. U dient op de ledenlijst te staan."
 
 #: Room.pas:749
 #: Room.pas:958
@@ -7114,7 +7114,7 @@ msgstr "U staat niet op de ledenlijst voor deze kamer. Opnieuw proberen en regis
 
 #: Room.pas:765
 msgid "The room has been destroyed for an unknown reason."
-msgstr "De kamer is omwille van onbekende redenen vernietigd."
+msgstr "De kamer is om onbekende redenen vernietigd."
 
 #. this user has changed their nick..
 #: Room.pas:788
@@ -7125,12 +7125,12 @@ msgstr "%s is niet bekend als %s."
 #: Room.pas:796
 #: Room.pas:952
 msgid "%s has been banned from this room. %s"
-msgstr "%s  is gebant van deze kamer. %s"
+msgstr "%s is uitgesloten van deze kamer. %s"
 
 #: Room.pas:797
 #: Room.pas:955
 msgid "%s has been kicked from this room. %s"
-msgstr "%s is deze kamer buitengesmeten. %s"
+msgstr "%s is deze kamer uitgetrapt. %s"
 
 #: Room.pas:803
 msgid "%s has left the room."
@@ -7173,7 +7173,7 @@ msgstr "Uw reguliere expressies voor de kamersleutelwoorden zijn ongeldig. Sleut
 #. send the msg out
 #: Room.pas:1243
 msgid "/me has changed the subject to: "
-msgstr "/ik heb het onderwerp veranderd naar: "
+msgstr "/me heeft het onderwerp veranderd naar: "
 
 #. Change the subject
 #: Room.pas:1257
@@ -7204,24 +7204,24 @@ msgstr "De-blokkeer"
 
 #: Room.pas:1614
 msgid "You have been kicked."
-msgstr "U bent buitengesmeten."
+msgstr "U bent eruit getrapt."
 
 #: Room.pas:1615
 msgid "Kick Reason"
-msgstr "Reden voor het buitenwippen"
+msgstr "Reden voor de uitsluiting"
 
 #: Room.pas:1618
 msgid "You have been banned."
-msgstr "U bent gebant."
+msgstr "U bent verbannen."
 
 #: Room.pas:1619
 msgid "Ban Reason"
-msgstr "Reden voor de ban"
+msgstr "Reden voor het verbannen"
 
 #. Destroy Room
 #: Room.pas:1733
 msgid "Do you really want to destroy the room? All users will be removed."
-msgstr "Bent u zeker dat u de kamer wil vernietigen? Alle gebruikers zullen verweiderd worden."
+msgstr "Weet u zeker dat u de kamer wilt vernietigen? Alle gebruikers zullen verwijderd worden."
 
 #: Room.pas:1735
 msgid "The owner has destroyed the room."
@@ -7238,7 +7238,7 @@ msgstr "Er was een fout bij het ophalen van de kamerlijst."
 #. check to see if we have an "@" sign
 #: RosterAdd.pas:127
 msgid "You can not add yourself to your roster."
-msgstr "Je kan jezelf niet toevoegen aan je rooster."
+msgstr "U kunt uzelf niet toevoegen aan uw rooster."
 
 #: RosterAdd.pas:133
 msgid "The contact ID you entered does not follow the standard user@host convention. Do you want to continue?"
@@ -7246,7 +7246,7 @@ msgstr "De contactpersoon ID die u ingevoerd heeft voldoet niet aan de standaard
 
 #: RosterAdd.pas:135
 msgid "Jabber Contact IDs do not typically include a resource. Are you sure you want to add this contact ID?"
-msgstr "Jabber Contactpersoon IDs gebruiken normaliter geen medium. Ben je zeker dat je deze ID wil toevoegen?"
+msgstr "Jabber Contact ID's gebruiken normaliter geen medium. Ben je zeker dat je deze ID wil toevoegen?"
 
 #. we don't have this svc..
 #: RosterAdd.pas:242
@@ -7268,7 +7268,7 @@ msgstr "Klik om Aan te melden"
 #. We are in the process of connecting
 #: RosterWindow.pas:501
 msgid "Trying to connect..."
-msgstr "Poog te verbinden ..."
+msgstr "Probeert te verbinden ..."
 
 #. we've got a socket connection
 #. we've been authenticated
@@ -7294,7 +7294,7 @@ msgid ""
 "Getting Contacts..."
 msgstr ""
 "Geauthenticeerd.\n"
-"Contactpersonen worden opgehaald ..."
+"Contacten worden opgehaald..."
 
 #. remove a bookmark
 #: RosterWindow.pas:1846
@@ -7307,11 +7307,11 @@ msgstr "(In afwachting)"
 
 #: RosterWindow.pas:2435
 msgid "Rename group"
-msgstr "Groep herbenoemen"
+msgstr "Groep hernoemen"
 
 #: RosterWindow.pas:2435
 msgid "New group name:"
-msgstr "Nieuwe groep naam:"
+msgstr "Nieuwe groepnaam:"
 
 #. Block or Unblock this user
 #: RosterWindow.pas:2550
@@ -7331,7 +7331,7 @@ msgstr "U dient meer dan 1 online contactpersoon te selecteren voor een broadcas
 #: RosterWindow.pas:2628
 #: RosterWindow.pas:2966
 msgid "Click to Cancel Reconnect"
-msgstr "Klik om het opnieuw tot stand brengen van de verbinding af te breken"
+msgstr "Klik om de poging tot herverbinding af te breken"
 
 #: RosterWindow.pas:2967
 msgid "Reconnect in %d seconds."
@@ -7339,7 +7339,7 @@ msgstr "Herverbinden in %d seconden."
 
 #: SendStatus.pas:369
 msgid "Waiting for connection..."
-msgstr "Wachtend op verbinding ..."
+msgstr "Wacht op verbinding ..."
 
 #. get the file size
 #. get a handle to the stream
@@ -7367,7 +7367,7 @@ msgstr ""
 #. our thread completed.
 #: SendStatus.pas:960
 msgid "There was an error trying to upload the file to your web host."
-msgstr "Er is een fout opgetreden bij het uploaden van uw bestand naar de web server."
+msgstr "Er is een fout opgetreden bij het uploaden van uw bestand naar de webserver."
 
 #: SendStatus.pas:980
 msgid "Send failed."
@@ -7403,16 +7403,16 @@ msgstr "Er is fout opgetreden bij het afhandelen van uw aanvraag."
 
 #: Transports.pas:126
 msgid "You are not registered with this transport."
-msgstr "U bent niew bij deze transport geregistreerd."
+msgstr "U bent nieuw bij deze transport geregistreerd."
 
 #: Transports.pas:159
 msgid "Your request was successful."
-msgstr "Uw aanvraag was onsuccesvol."
+msgstr "Uw aanvraag is gelukt."
 
 #. callback for vcard info
 #: vcard.pas:179
 msgid "No vCard response was ever returned."
-msgstr "Er is geen vCard teruggegeven."
+msgstr "Er is nooit een vCard teruggegeven."
 
 #. this is a cancel notice
 #: xdata.pas:122
@@ -7432,7 +7432,7 @@ msgstr "Formulier van %s"
 #: xdata.pas:210
 #: xdata.pas:308
 msgid "You are currently disconnected. Please reconnect before responding to this form."
-msgstr ""
+msgstr "U bent niet verbonden. Verbindt eerst voordat u reageert op het formulier"
 
 #: xdata.pas:239
 msgid "All required fields must be filled out"
@@ -7441,7 +7441,7 @@ msgstr "Alle verplichte velden moeten ingevuld zijn"
 #. Make sure the contact is online
 #: XferManager.pas:180
 msgid "The Contact must be online before you can send a file."
-msgstr "De contactpersooon dient online te zijn wanneer u een bestand wil overzetten."
+msgstr "De Contact dient online te zijn wanneer u een bestand wil versturen."
 
 #: XferManager.pas:272
 #: XferManager.pas:339
@@ -7451,7 +7451,7 @@ msgstr "%s stuurt u een bestand."
 #. check to see if we should disconnect current xfers
 #: XferManager.pas:468
 msgid "Your new file transfer port will not take affect until all current trasfers are stopped. Stop existing transfers?"
-msgstr "Het overzetten van bestanden zal pas via de nieuwe poort verlopen eens alle in overzetting zijnde bestanden overgezet zijn. Wilt u de bezig zijnde transfers stoppen?"
+msgstr "De nieuwe poort zal pas actief zijn nadat alle huidige overdrachten gestopt zijn. Huidige overdrachten stoppen?"
 
 #. Programmer's name: 1 24
 #: manifest.rc:1
@@ -7516,7 +7516,7 @@ msgstr "Product Versie"
 #. Programmer's name: BLOCK
 #: version.rc:30
 msgid "VarFileInfo"
-msgstr "Variable bestandsinformatie"
+msgstr "Variable Bestandsinformatie"
 
 #. Programmer's name: VALUE
 #: version.rc:32
@@ -7541,42 +7541,42 @@ msgstr "..country-codes.xml"
 #. Programmer's name for it: SUREBaseString
 #: /src/exodus/jopl/Unicode.pas:822
 msgid "Error in regular expression: %s"
-msgstr ""
+msgstr "Fout in reguliere expressie: %s"
 
 #. Programmer's name for it: SUREUnexpectedEOS
 #: /src/exodus/jopl/Unicode.pas:823
 msgid "Unexpected end of pattern."
-msgstr ""
+msgstr "Onverwacht einde van patroon."
 
 #. Programmer's name for it: SURECharacterClassOpen
 #: /src/exodus/jopl/Unicode.pas:824
 msgid "Character class not closed, ']' is missing."
-msgstr ""
+msgstr "Karakter klasse niet gesloten, een ']' mist."
 
 #. Programmer's name for it: SUREUnbalancedGroup
 #: /src/exodus/jopl/Unicode.pas:825
 msgid "Unbalanced group expression, ')' is missing."
-msgstr ""
+msgstr "Ongebalanceerde groepsexpressie, een ')' mist."
 
 #. Programmer's name for it: SUREInvalidCharProperty
 #: /src/exodus/jopl/Unicode.pas:826
 msgid "A character property is invalid"
-msgstr ""
+msgstr "Een karaktereigenschap is ongeldig"
 
 #. Programmer's name for it: SUREInvalidRepeatRange
 #: /src/exodus/jopl/Unicode.pas:827
 msgid "Invalid repeation range."
-msgstr ""
+msgstr "Ongeldig herhalingsbereik."
 
 #. Programmer's name for it: SURERepeatRangeOpen
 #: /src/exodus/jopl/Unicode.pas:828
 msgid "Repeation range not closed, '}' is missing."
-msgstr ""
+msgstr "Herhalingsbereik niet gesloten, een '}' mist."
 
 #. Programmer's name for it: SUREExpressionEmpty
 #: /src/exodus/jopl/Unicode.pas:829
 msgid "Expression is empty."
-msgstr ""
+msgstr "Exressie is leeg."
 
 #. frmPrefAway..Caption
 #: prefs/PrefAway.dfm:4
@@ -7586,52 +7586,52 @@ msgstr "frmPrefAway"
 #. frmPrefAway..Label2..Caption
 #: prefs/PrefAway.dfm:15
 msgid "Minutes to wait before setting status to Away:"
-msgstr "Minuten resterend voordat de status naar afwezig springt:"
+msgstr "Minuten tot status Afwezig wordt:"
 
 #. frmPrefAway..Label3..Caption
 #: prefs/PrefAway.dfm:22
 msgid "Minutes to wait before setting status to XA:"
-msgstr "Minuten resterend voordat de status naar verlengd-afwezig springt:"
+msgstr "Minuten tot status Langdurig Afwezig wordt:"
 
 #. frmPrefAway..Label4..Caption
 #: prefs/PrefAway.dfm:29
 msgid "Away Status:"
-msgstr "Afwezig-status:"
+msgstr "Afwezig-Status:"
 
 #. frmPrefAway..Label9..Caption
 #: prefs/PrefAway.dfm:36
 msgid "XA Status:"
-msgstr "XA-status:"
+msgstr "LA-Status:"
 
 #. frmPrefAway..TntLabel1..Caption
 #: prefs/PrefAway.dfm:43
 msgid "Minutes to wait before Disconnecting:"
-msgstr "Minuten resterend voordat de verbinding verbroken wordt:"
+msgstr "Min. voordat de verbinding verbroken wordt:"
 
 #. frmPrefAway..chkAutoAway..Caption
 #: prefs/PrefAway.dfm:88
 msgid "Enable Auto Away"
-msgstr "Automatisch afwezig activeren"
+msgstr "Automatisch Afwezig activeren"
 
 #. frmPrefAway..chkAAReducePri..Caption
 #: prefs/PrefAway.dfm:111
 msgid "Reduce priority to 0 during auto-away."
-msgstr "Prioriteit naar 0 verminderen wanneer automatische-afwezig."
+msgstr "Bij Auto-Afwezig prioriteit naar 0."
 
 #. frmPrefAway..chkAutoXA..Caption
 #: prefs/PrefAway.dfm:119
 msgid "Enable Auto Extended Away"
-msgstr "Automatisch verlengd-afwezig activeren"
+msgstr "Automatisch Langdurig Afwezig activeren"
 
 #. frmPrefAway..chkAutoDisconnect..Caption
 #: prefs/PrefAway.dfm:128
 msgid "Enable Auto Disconnect"
-msgstr "Automatisch afmelden activeren"
+msgstr "Automatisch Afmelden activeren"
 
 #. frmPrefAway..pnlHeader..Caption
 #: prefs/PrefAway.dfm:153
 msgid "Auto Away Options"
-msgstr "Auto-afwezig-instellingen"
+msgstr "Auto-Afwezig instellingen"
 
 #. frmPrefDialogs..Caption
 #: prefs/PrefDialogs.dfm:4
@@ -7646,42 +7646,42 @@ msgstr "Aantal minuten dat chatvensters in geheugen gehouden worden:"
 #. frmPrefDialogs..Label27..Caption
 #: prefs/PrefDialogs.dfm:22
 msgid "Use 0 minutes to destroy chat windows immediately."
-msgstr ""
+msgstr "Geef 0 minuten op om chat vensters onmiddellijk te vernietigen."
 
 #. frmPrefDialogs..Label29..Caption
 #: prefs/PrefDialogs.dfm:29
 msgid "Toast duration (seconds):"
-msgstr ""
+msgstr "Meldingsduur (seconden):"
 
 #. frmPrefDialogs..TntLabel1..Caption
 #: prefs/PrefDialogs.dfm:36
 msgid "Use this key sequence used to close chat windows"
-msgstr ""
+msgstr "Toetsencombinatie voor sluiten chatvensters:"
 
 #. frmPrefDialogs..chkRosterAlpha..Caption
 #: prefs/PrefDialogs.dfm:43
 msgid "Use Alpha Blending for Roster "
-msgstr ""
+msgstr "Gebruik Alpha Blending voor Rooster "
 
 #. frmPrefDialogs..chkToastAlpha..Caption
 #: prefs/PrefDialogs.dfm:89
 msgid "Use Alpha Blending for Toast Notifications"
-msgstr ""
+msgstr "Gebruik Alpha Blending voor Toast Meldingen"
 
 #. frmPrefDialogs..chkSnap..Caption
 #: prefs/PrefDialogs.dfm:135
 msgid "Make the main window snap to screen edges"
-msgstr ""
+msgstr "Hoofdvenster springt naar schermhoeken vanaf (pixels)"
 
 #. frmPrefDialogs..chkBusy..Caption
 #: prefs/PrefDialogs.dfm:166
 msgid "Warn when trying to close busy chat windows."
-msgstr ""
+msgstr "Waarschuwing bij sluiten van actieve chat vensters."
 
 #. frmPrefDialogs..chkEscClose..Caption
 #: prefs/PrefDialogs.dfm:211
 msgid "Use ESC key to close chat windows."
-msgstr ""
+msgstr "Gebruik ESC om chatvensters te sluiten."
 
 #. frmPrefDialogs..pnlHeader..Caption
 #: prefs/PrefDialogs.dfm:246
@@ -7706,17 +7706,17 @@ msgstr "Chatvenster"
 #. frmPrefFont..Label24..Caption
 #: prefs/PrefFont.dfm:29
 msgid "Background Color:"
-msgstr ""
+msgstr "Achtergrondkleur:"
 
 #. frmPrefFont..Label25..Caption
 #: prefs/PrefFont.dfm:36
 msgid "Font Color:"
-msgstr "Fontkleur"
+msgstr "Letterkleur"
 
 #. frmPrefFont..Label5..Caption
 #: prefs/PrefFont.dfm:43
 msgid "Click on the appropriate font or window to change elements."
-msgstr ""
+msgstr "Klik op desbetreffend lettertype of venster om te veranderen."
 
 #. frmPrefFont..lblColor..Caption
 #: prefs/PrefFont.dfm:50
@@ -7726,7 +7726,7 @@ msgstr "Elementnaam"
 #. frmPrefFont..btnFont..Caption
 #: prefs/PrefFont.dfm:100
 msgid "Change Font"
-msgstr "Lettertype veranderen"
+msgstr "Lettertype"
 
 #. frmPrefFont..pnlHeader..Caption
 #: prefs/PrefFont.dfm:202
@@ -7741,7 +7741,7 @@ msgstr "frmPrefGroups"
 #. frmPrefGroups..Label18..Caption
 #: prefs/PrefGroups.dfm:15
 msgid "Group to be used for Gateways:"
-msgstr ""
+msgstr "Groep voor Gateways:"
 
 #. frmPrefGroups..Label1..Caption
 #: prefs/PrefGroups.dfm:22
@@ -7751,32 +7751,32 @@ msgstr "Standaardgroep"
 #. frmPrefGroups..lblFilter....Height
 #: prefs/PrefGroups.dfm:31
 msgid "When showing only online contacts, visible contacts must be at least:"
-msgstr ""
+msgstr "Indien alleen online contacten worden weergegeven, moeten zichtbare contacten minstens:"
 
 #. frmPrefGroups..chkSort..Caption
 #: prefs/PrefGroups.dfm:55
 msgid "Sort Contacts by their availability"
-msgstr ""
+msgstr "Sorteer Contacten op beschikbaarheid"
 
 #. frmPrefGroups..chkCollapsed..Caption
 #: prefs/PrefGroups.dfm:77
 msgid "Collapse all roster groups initially."
-msgstr ""
+msgstr "Toon alle groepen eerst ingeklapt."
 
 #. frmPrefGroups..chkGroupCounts..Caption
 #: prefs/PrefGroups.dfm:85
 msgid "Show group counts in roster (eg, 5/10)"
-msgstr ""
+msgstr "Toon groeptotalen in rooster (bijv. 5/10)"
 
 #. frmPrefGroups..chkOfflineGrp..Caption
 #: prefs/PrefGroups.dfm:93
 msgid "Show offline contacts in an Offline group"
-msgstr "Offline contactpersonen tonen in groep offline"
+msgstr "Toon afgemeldde contacten in aparte groep"
 
 #. frmPrefGroups..chkOnlineOnly..Caption
 #: prefs/PrefGroups.dfm:102
 msgid "Only show online contacts"
-msgstr ""
+msgstr "Alleen online contacten tonen"
 
 #. frmPrefGroups..pnlHeader..Caption
 #: prefs/PrefGroups.dfm:107
@@ -7796,27 +7796,27 @@ msgstr ""
 #. frmPrefLayouts..lblViewHelp....AutoSize
 #: prefs/PrefLayouts.dfm:1141
 msgid "Main window shows only the roster. Other windows are opened seperatly and are never docked."
-msgstr ""
+msgstr "Hoofdvenster toont alleen het rooster, andere vensters worden apart geopend en worden niet gedocked."
 
 #. frmPrefLayouts..cboView....Items.WideStrings
 #: prefs/PrefLayouts.dfm:1154
 msgid "Show small roster and never dock"
-msgstr ""
+msgstr "Klein rooster, nooit docken"
 
 #. frmPrefLayouts..cboView....Items.WideStrings
 #: prefs/PrefLayouts.dfm:1155
 msgid "Dock windows. Roster is always visible"
-msgstr ""
+msgstr "Vensters docken, rooster altijd zichtbaar"
 
 #. frmPrefLayouts..cboView....Items.WideStrings
 #: prefs/PrefLayouts.dfm:1156
 msgid "Dock windows and use tabs"
-msgstr ""
+msgstr "Vensters docken met gebruik van tabs"
 
 #. frmPrefLayouts..pnlHeader..Caption
 #: prefs/PrefLayouts.dfm:1160
 msgid "Window Layouts"
-msgstr ""
+msgstr "Venster Layouts"
 
 #. frmPrefMsg..Caption
 #: prefs/PrefMsg.dfm:4
@@ -7831,27 +7831,27 @@ msgstr "Indeling:"
 #. frmPrefMsg..Label7..Caption
 #: prefs/PrefMsg.dfm:22
 msgid "Simple message (non-chat) handling"
-msgstr ""
+msgstr "Afhandeling simpele (niet-chat) berichten"
 
 #. frmPrefMsg..Label16..Caption
 #: prefs/PrefMsg.dfm:29
 msgid "Store Unread messages to:"
-msgstr ""
+msgstr "Sla ongelezen berichten op in:"
 
 #. frmPrefMsg..Label17..Caption
 #: prefs/PrefMsg.dfm:36
 msgid "When I get invited to a chat room, do this:"
-msgstr ""
+msgstr "Bij het ontvangen van een uitnodiging voor een kamer, doe dit:"
 
 #. frmPrefMsg..chkEmoticons..Caption
 #: prefs/PrefMsg.dfm:43
 msgid "Auto detect Emoticons in messages"
-msgstr ""
+msgstr "Automatische detectie van Emoticons in berichten"
 
 #. frmPrefMsg..chkTimestamp..Caption
 #: prefs/PrefMsg.dfm:51
 msgid "Timestamp messages"
-msgstr ""
+msgstr "Tijd weergeven bij berichten"
 
 #. frmPrefMsg..chkLog..Caption
 #: prefs/PrefMsg.dfm:59
@@ -7861,52 +7861,52 @@ msgstr "Berichtenlogboek bijhouden"
 #. frmPrefMsg..chkMsgQueue..Caption
 #: prefs/PrefMsg.dfm:84
 msgid "Instant Messages never popup a new window"
-msgstr ""
+msgstr "Instant Messages maken nooit een nieuw venster"
 
 #. frmPrefMsg..chkLogRooms..Caption
 #: prefs/PrefMsg.dfm:92
 msgid "Log conference rooms"
-msgstr "Conferentiekamerlogboek bijhouden"
+msgstr "Vergaderingslogboek bijhouden"
 
 #. frmPrefMsg..cboMsgOptions....Items.WideStrings
 #: prefs/PrefMsg.dfm:104
 msgid "Use default message handling"
-msgstr ""
+msgstr "Gebruik standaard berichtafhandeling"
 
 #. frmPrefMsg..cboMsgOptions....Items.WideStrings
 #: prefs/PrefMsg.dfm:105
 msgid "Treat all messages as chats"
-msgstr ""
+msgstr "Behandel alle berichten als chats"
 
 #. frmPrefMsg..cboMsgOptions....Items.WideStrings
 #: prefs/PrefMsg.dfm:106
 msgid "Put messages into existing chats"
-msgstr ""
+msgstr "Voeg berichten toe aan bestaande chats"
 
 #. frmPrefMsg..btnLogClearAll..Caption
 #: prefs/PrefMsg.dfm:113
 msgid "Clear All Logs"
-msgstr "Alle logboeken leegmaken"
+msgstr "Alle logs wissen"
 
 #. frmPrefMsg..cboInviteOptions....Items.WideStrings
 #: prefs/PrefMsg.dfm:142
 msgid "Treat as a normal instant message"
-msgstr ""
+msgstr "Behandel als normaal instant message"
 
 #. frmPrefMsg..cboInviteOptions....Items.WideStrings
 #: prefs/PrefMsg.dfm:143
 msgid "Always popup the invitation"
-msgstr ""
+msgstr "Toon de uitnodiging altijd"
 
 #. frmPrefMsg..cboInviteOptions....Items.WideStrings
 #: prefs/PrefMsg.dfm:144
 msgid "Automatically join the room."
-msgstr ""
+msgstr "Accepteer automatisch."
 
 #. frmPrefMsg..chkBlockNonRoster..Caption
 #: prefs/PrefMsg.dfm:151
 msgid "Block messages from people not on my roster"
-msgstr ""
+msgstr "Accepteer alleen berichten van mensen in mijn rooster"
 
 #. frmPrefMsg..txtTimestampFmt..Text
 #. frmPrefMsg..txtTimestampFmt....Items.WideStrings
@@ -7933,7 +7933,7 @@ msgstr "tt"
 #. frmPrefMsg..chkLogRoster..Caption
 #: prefs/PrefMsg.dfm:173
 msgid "Only log messages from people in my roster"
-msgstr ""
+msgstr "Schrijf alleen berichten van mensen in mijn rooster in het logboek"
 
 #. frmPrefMsg..pnlHeader..Caption
 #: prefs/PrefMsg.dfm:178
@@ -7948,7 +7948,7 @@ msgstr "XML|*.xml"
 #. frmPrefMsg..OpenDialog1..Title
 #: prefs/PrefMsg.dfm:184
 msgid "Select a spool file"
-msgstr ""
+msgstr "Selecteer een spoolbestand"
 
 #. frmPrefNetwork..Caption
 #: prefs/PrefNetwork.dfm:4
@@ -7968,17 +7968,17 @@ msgstr "Herverbindingsinstellingen"
 #. frmPrefNetwork..GroupBox1..Label2..Caption
 #: prefs/PrefNetwork.dfm:27
 msgid "# of Reconnect attempts:"
-msgstr ""
+msgstr "Aantal pogingen tot herverbinden:"
 
 #. frmPrefNetwork..GroupBox1..Label3..Caption
 #: prefs/PrefNetwork.dfm:35
 msgid "Time lapse between attempts:"
-msgstr ""
+msgstr "Tijdsduur tussen pogingen:"
 
 #. frmPrefNetwork..GroupBox1..Label4..Caption
 #: prefs/PrefNetwork.dfm:43
 msgid "Time is in seconds. Use 0 for a random time period."
-msgstr ""
+msgstr "Tijd is in seconden. Gebruik 0 voor een willekeurige tijdsduur."
 
 #. frmPrefNetwork..GroupBox2..Caption
 #: prefs/PrefNetwork.dfm:83
@@ -7998,7 +7998,7 @@ msgstr "frmPrefNotify"
 #. frmPrefNotify..lblConfigSounds..Hint
 #: prefs/PrefNotify.dfm:16
 msgid "Open Sounds Control Panel"
-msgstr ""
+msgstr "Open Geluidsconfiguratiescherm"
 
 #. frmPrefNotify..lblConfigSounds..Caption
 #: prefs/PrefNotify.dfm:17
@@ -8008,22 +8008,22 @@ msgstr "Geluidsinstellingen..."
 #. frmPrefNotify..pnlHeader..Caption
 #: prefs/PrefNotify.dfm:24
 msgid "Notification Options"
-msgstr "Waarschuwingsinstellingen"
+msgstr "Meldingsinstellingen"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:34
 msgid "Contact is online"
-msgstr "Contactpersoon is nu online"
+msgstr "Contact is nu aangemeld"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:35
 msgid "Contact is offline"
-msgstr "Contactpersoon is nu offline."
+msgstr "Contact is nu afgemeld."
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:36
 msgid "New chat session"
-msgstr ""
+msgstr "Nieuwe chatsessie"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:37
@@ -8038,57 +8038,57 @@ msgstr "Abbonementsaanvragen"
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:39
 msgid "Conference Invites"
-msgstr "Conferentie uitnodigingen"
+msgstr "Vergader Uitnodigingen"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:40
 msgid "Keywords (Conf. Rooms)"
-msgstr "Sleutelwoorden (Conferentiekamers) "
+msgstr "Sleutelwoorden (Vergaderkamers) "
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:41
 msgid "Chat window activity"
-msgstr "Chatvensteractiviteit"
+msgstr "Chatvenster Activiteit"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:42
 msgid "Conf. Room activity"
-msgstr ""
+msgstr "Verg. Kamer activiteit"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:44
 msgid "Auto Response generated"
-msgstr ""
+msgstr "Automatisch Antwoord gegeneerd"
 
 #. frmPrefNotify..chkSound..Caption
 #: prefs/PrefNotify.dfm:53
 msgid "Use sound notifications"
-msgstr "Geluidswaarschuwingen gebruiken"
+msgstr "Geluiden gebruiken"
 
 #. frmPrefNotify..chkNotifyActive....Height
 #: prefs/PrefNotify.dfm:64
 msgid "NOTE: Notifications always occur when Exodus is in the background."
-msgstr ""
+msgstr "NB: Meldingen worden altijd gedaan als Exodus in de achtergrond staat."
 
 #. frmPrefNotify..chkNotifyActive..Caption
 #: prefs/PrefNotify.dfm:65
 msgid "Perform notifications when I am using Exodus."
-msgstr ""
+msgstr "Geef meldingen terwijl ik Exodus gebruik."
 
 #. frmPrefNotify..chkFlashInfinite..Caption
 #: prefs/PrefNotify.dfm:75
 msgid "Flash taskbar continuously until Exodus gets focus."
-msgstr ""
+msgstr "Blijf knipperen in de taakbalk tot Exodus in beeld komt."
 
 #. frmPrefNotify..chkNotifyActiveWindow..Caption
 #: prefs/PrefNotify.dfm:85
 msgid "Perform notifications for the window I'm typing in."
-msgstr ""
+msgstr "Geef meldingen voor het actieve venster."
 
 #. frmPrefNotify..optNotify..chkFront..Caption
 #: prefs/PrefNotify.dfm:127
 msgid "Bring window to front"
-msgstr ""
+msgstr "Breng het venster naar voren"
 
 #. frmPrefPanel..Caption
 #: prefs/PrefPanel.dfm:6
@@ -8108,12 +8108,12 @@ msgstr "frmPrefPlugins"
 #. frmPrefPlugins..Label6..Caption
 #: prefs/PrefPlugins.dfm:15
 msgid "Plugin Directory (automatically scanned):"
-msgstr ""
+msgstr "Plugin Directory (automatisch gescanned):"
 
 #. frmPrefPlugins..lblPluginScan..Caption
 #: prefs/PrefPlugins.dfm:23
 msgid "Re-Scan this directory for plugins"
-msgstr ""
+msgstr "Herscan deze directory op plugins"
 
 #. frmPrefPlugins..pnlHeader..Caption
 #: prefs/PrefPlugins.dfm:28
@@ -8153,49 +8153,49 @@ msgstr "Aanwezigheidsinstellingen"
 #. frmPrefPresence..pnlCustomPresButtons..btnDefaults..Caption
 #: prefs/PrefPresence.dfm:66
 msgid "Defaults"
-msgstr "Standaardinstellingen"
+msgstr "Standaard"
 
 #. frmPrefPresence..Panel1..Label8..Caption
 #: prefs/PrefPresence.dfm:84
 msgid "Presence tracking in chat windows and rooms"
-msgstr ""
+msgstr "Aanwezigheid bijhouden in chatvensters en kamers"
 
 #. frmPrefPresence..Panel1..Label1..Caption
 #: prefs/PrefPresence.dfm:91
 msgid "Custom Presence Entries"
-msgstr "Eigen aanwezigheidstanden"
+msgstr "Eigen Aanwezigheidsstanden"
 
 #. frmPrefPresence..Panel1..chkPresenceSync..Caption
 #: prefs/PrefPresence.dfm:98
 msgid "Synchronize presence of multiple copies of Exodus"
-msgstr ""
+msgstr "Synchroniseer aanwezigheid van meerdere Exodi"
 
 #. frmPrefPresence..Panel1..cboPresTracking....Items.WideStrings
 #: prefs/PrefPresence.dfm:111
 msgid "Track all presence changes"
-msgstr ""
+msgstr "Houd alle aanwezigheidsveranderingen bij"
 
 #. frmPrefPresence..Panel1..cboPresTracking....Items.WideStrings
 #: prefs/PrefPresence.dfm:112
 msgid "Show only last presence change"
-msgstr ""
+msgstr "Toon alleen laatste aanwezigheidsverandering"
 
 #. frmPrefPresence..Panel1..cboPresTracking....Items.WideStrings
 #: prefs/PrefPresence.dfm:113
 msgid "Don't show any presence changes"
-msgstr ""
+msgstr "Toon geen enkele aanwezigheidsveranderingen"
 
 #. frmPrefPresence..Panel1..chkClientCaps..Caption
 #: prefs/PrefPresence.dfm:120
 msgid "Send client capabilities in presence."
-msgstr ""
+msgstr "Verstuur clientmogelijkheden in aanwezigheid."
 
 #. frmPrefPresence..GroupBox1..txtCPPriority..Hint
 #. frmPrefPresence..GroupBox1..spnPriority..Hint
 #: prefs/PrefPresence.dfm:205
 #: prefs/PrefPresence.dfm:217
 msgid "Priority of -1 uses current priority."
-msgstr ""
+msgstr "Een prioriteit van -1 gebruikt de huidige prioriteit"
 
 #. frmPrefRoster..Caption
 #: prefs/PrefRoster.dfm:4
@@ -8205,17 +8205,17 @@ msgstr "frmPrefRoster"
 #. frmPrefRoster..Label21..Caption
 #: prefs/PrefRoster.dfm:15
 msgid "When I double click a contact, do:"
-msgstr ""
+msgstr "Als ik dubbelklik op een persoon, doe:"
 
 #. frmPrefRoster..TntLabel1..Caption
 #: prefs/PrefRoster.dfm:22
 msgid "Seperator for nested groups is:"
-msgstr ""
+msgstr "Scheidingsteken voor geneste groepen is:"
 
 #. frmPrefRoster..chkShowUnsubs..Caption
 #: prefs/PrefRoster.dfm:29
 msgid "Show contacts which I do not have a subscription to."
-msgstr ""
+msgstr "Toon contacten waar ik geen abonnement op heb."
 
 #. frmPrefRoster..chkHideBlocked..Caption
 #: prefs/PrefRoster.dfm:37
@@ -8225,37 +8225,37 @@ msgstr "Geblokkeerde contactpersonen verbergen"
 #. frmPrefRoster..chkPresErrors..Caption
 #: prefs/PrefRoster.dfm:45
 msgid "Detect contacts which are unreachable or no longer exist"
-msgstr ""
+msgstr "Detecteer contacten die onbereikbaar zijn of niet meer bestaan"
 
 #. frmPrefRoster..chkShowPending..Caption
 #: prefs/PrefRoster.dfm:53
 msgid "Show contacts I have asked to add as \"Pending\""
-msgstr ""
+msgstr "Toon lopende abonnementsaanvragen als \"In Afwachting\""
 
 #. frmPrefRoster..cboDblClick....Items.WideStrings
 #: prefs/PrefRoster.dfm:65
 msgid "A new one to one chat window"
-msgstr ""
+msgstr "Een nieuw 1-op-1 chatvenster"
 
 #. frmPrefRoster..cboDblClick....Items.WideStrings
 #: prefs/PrefRoster.dfm:66
 msgid "An instant message window"
-msgstr ""
+msgstr "Een instant message venster"
 
 #. frmPrefRoster..cboDblClick....Items.WideStrings
 #: prefs/PrefRoster.dfm:67
 msgid "A new or existing chat window"
-msgstr ""
+msgstr "Een nieuw of bestaand chatvenster"
 
 #. frmPrefRoster..chkRosterUnicode..Caption
 #: prefs/PrefRoster.dfm:74
 msgid "Allow Unicode characters in the roster (requires 2000, ME, XP)."
-msgstr ""
+msgstr "Sta Unicode karakters in het rooster toe (ME, 2000 of XP vereist)."
 
 #. frmPrefRoster..chkInlineStatus..Caption
 #: prefs/PrefRoster.dfm:82
 msgid "Show status in the roster: Joe <Meeting>"
-msgstr ""
+msgstr "Toon status in het rooster: Jan <Vergadering>"
 
 #. frmPrefRoster..pnlHeader..Caption
 #: prefs/PrefRoster.dfm:100
@@ -8280,27 +8280,27 @@ msgstr "Abonnementinstellingen"
 #. frmPrefSubscription..optIncomingS10n..Caption
 #: prefs/PrefSubscription.dfm:19
 msgid "Incoming Behavior"
-msgstr ""
+msgstr "Gedrag bij binnenkomst"
 
 #. frmPrefSubscription..optIncomingS10n....Items.WideStrings
 #: prefs/PrefSubscription.dfm:21
 msgid "Ask me for all requests"
-msgstr ""
+msgstr "Vraag mij voor alle verzoeken"
 
 #. frmPrefSubscription..optIncomingS10n....Items.WideStrings
 #: prefs/PrefSubscription.dfm:22
 msgid "Auto-Accept requests from people in my roster."
-msgstr ""
+msgstr "Accepteer verzoeken van mensen in mijn rooster."
 
 #. frmPrefSubscription..optIncomingS10n....Items.WideStrings
 #: prefs/PrefSubscription.dfm:23
 msgid "Auto-Accept all requests"
-msgstr ""
+msgstr "Accepteer alle verzoeken."
 
 #. frmPrefSubscription..optIncomingS10n....Items.WideStrings
 #: prefs/PrefSubscription.dfm:24
 msgid "Auto-Deny all requests"
-msgstr ""
+msgstr "Weiger alle verzoeken."
 
 #. frmPrefSystem..Caption
 #: prefs/PrefSystem.dfm:4
@@ -8310,17 +8310,17 @@ msgstr "frmPrefSystem"
 #. frmPrefSystem..Label7..Caption
 #: prefs/PrefSystem.dfm:15
 msgid "Exodus language file to use:"
-msgstr ""
+msgstr "Te gebruiken Exodus taalbestand:"
 
 #. frmPrefSystem..lblPluginScan..Caption
 #: prefs/PrefSystem.dfm:23
 msgid "Scan for language catalogs"
-msgstr ""
+msgstr "Scan naar taalcatalogi"
 
 #. frmPrefSystem..Label15..Caption
 #: prefs/PrefSystem.dfm:31
 msgid "My default nickname is:"
-msgstr ""
+msgstr "Mijn standaard schermnaam is:"
 
 #. frmPrefSystem..pnlHeader..Caption
 #: prefs/PrefSystem.dfm:35
@@ -8330,52 +8330,52 @@ msgstr "Systeeminstellingen"
 #. frmPrefSystem..chkAutoUpdate..Caption
 #: prefs/PrefSystem.dfm:43
 msgid "Check for updates automatically"
-msgstr ""
+msgstr "Automatisch controleren op updates"
 
 #. frmPrefSystem..chkDebug..Caption
 #: prefs/PrefSystem.dfm:51
 msgid "Start with Debug visible"
-msgstr ""
+msgstr "Start met Debug zichtbaar"
 
 #. frmPrefSystem..chkAutoLogin..Caption
 #: prefs/PrefSystem.dfm:59
 msgid "Automatically login with last profile"
-msgstr ""
+msgstr "Gebruik laatste profiel automatisch weer"
 
 #. frmPrefSystem..chkCloseMin..Caption
 #: prefs/PrefSystem.dfm:67
 msgid "Close button minimizes to the tray"
-msgstr ""
+msgstr "Sluitknop minimaliseert naar tray"
 
 #. frmPrefSystem..chkAutoStart..Caption
 #: prefs/PrefSystem.dfm:75
 msgid "Run Exodus when windows starts"
-msgstr ""
+msgstr "Start Exodus met Windows"
 
 #. frmPrefSystem..chkOnTop..Caption
 #: prefs/PrefSystem.dfm:83
 msgid "Exodus is always on top"
-msgstr "Exodus altijd boven ales"
+msgstr "Exodus altijd boven alles"
 
 #. frmPrefSystem..chkToolbox..Caption
 #: prefs/PrefSystem.dfm:92
 msgid "Small Titlebar for Exodus window"
-msgstr ""
+msgstr "Kleine titelbalk voor Exodus venster"
 
 #. frmPrefSystem..btnUpdateCheck..Caption
 #: prefs/PrefSystem.dfm:100
 msgid "Check Now"
-msgstr ""
+msgstr "Controleer Nu"
 
 #. frmPrefSystem..chkSingleInstance..Caption
 #: prefs/PrefSystem.dfm:110
 msgid "Only allow a single instance of Exodus"
-msgstr ""
+msgstr "Sta slechts 1 gelijktijdige Exodus toe"
 
 #. frmPrefSystem..chkStartMin..Caption
 #: prefs/PrefSystem.dfm:118
 msgid "Start minimized to the system tray"
-msgstr ""
+msgstr "Start geminimaliseerd in de tray"
 
 #. frmPrefSystem..cboLocale....Items.WideStrings
 #: prefs/PrefSystem.dfm:130
@@ -8390,17 +8390,17 @@ msgstr "frmPrefTransfer"
 #. frmPrefTransfer..Label15..Caption
 #: prefs/PrefTransfer.dfm:15
 msgid "File transfer download directory:"
-msgstr ""
+msgstr "Bestandsoverdracht directory:"
 
 #. frmPrefTransfer..lblDefault..Caption
 #: prefs/PrefTransfer.dfm:23
 msgid "Reset all file transfer options to defaults"
-msgstr ""
+msgstr "Reset alle bestandsoverdrachtinstellingen naar standaard."
 
 #. frmPrefTransfer..TntLabel2..Caption
 #: prefs/PrefTransfer.dfm:31
 msgid "Send file using this method:"
-msgstr ""
+msgstr "Verstuur bestand met deze methode:"
 
 #. frmPrefTransfer..pnlHeader..Caption
 #: prefs/PrefTransfer.dfm:35
@@ -8420,47 +8420,47 @@ msgstr "Webpad:"
 #. frmPrefTransfer..grpWebDav..Label6..Caption
 #: prefs/PrefTransfer.dfm:71
 msgid "Example: /~foo/public_html"
-msgstr ""
+msgstr "Bijvoorbeeld: /~foo/public_html"
 
 #. frmPrefTransfer..grpWebDav..Label9..Caption
 #: prefs/PrefTransfer.dfm:92
 msgid "Example: http://dav.server.com"
-msgstr ""
+msgstr "Bijvoorbeeld: http://dav.server.com"
 
 #. frmPrefTransfer..grpPeer..Label1..Caption
 #: prefs/PrefTransfer.dfm:159
 msgid "Port to use for HTTP file transfers:"
-msgstr ""
+msgstr "Poortnummer voor HTTP bestandsoverdrachten:"
 
 #. frmPrefTransfer..grpPeer..chkIP..Caption
 #: prefs/PrefTransfer.dfm:173
 msgid "Use a custom IP address for HTTP transfers"
-msgstr ""
+msgstr "Gebruik een ander IP-adres voor HTTP overdrachten"
 
 #. frmPrefTransfer..cboXferMode....Items.WideStrings
 #: prefs/PrefTransfer.dfm:195
 msgid "Discover a file transfer component using my server."
-msgstr ""
+msgstr "Zoek een bestandsoverdracht component met mijn server."
 
 #. frmPrefTransfer..cboXferMode....Items.WideStrings
 #: prefs/PrefTransfer.dfm:196
 msgid "Always use a specific file transfer component."
-msgstr ""
+msgstr "Gebruik altijd een specifieke overdrachtscomponent."
 
 #. frmPrefTransfer..cboXferMode....Items.WideStrings
 #: prefs/PrefTransfer.dfm:197
 msgid "Send files directly from my machine to the recipient."
-msgstr ""
+msgstr "Verstuur bestanden direct naar de ontvanger."
 
 #. frmPrefTransfer..cboXferMode....Items.WideStrings
 #: prefs/PrefTransfer.dfm:198
 msgid "Use a web server to host the files which I send."
-msgstr ""
+msgstr "Plaats te verzenden bestanden op een webserver."
 
 #. frmPrefTransfer..grpProxy..TntLabel1..Caption
 #: prefs/PrefTransfer.dfm:211
 msgid "Jabber Address of File Transfer Server:"
-msgstr ""
+msgstr "Jabber adres van bestandsoverdracht server:"
 
 #. Select the chat window
 #. find the "thing" that we clicked on in the window..
@@ -8468,23 +8468,23 @@ msgstr ""
 #: prefs/PrefFont.pas:201
 #: prefs/PrefFont.pas:258
 msgid "Roster Font and Background"
-msgstr ""
+msgstr "Rooster Lettertype en Achtergrond"
 
 #: prefs/PrefGroups.pas:113
 msgid "The offline group will only show up if you have show only online contacts turned off."
-msgstr "De groep 'offline' is enkel te zien wanneer u 'toon enkel online contactpersonen' uitgeschakeld heeft."
+msgstr "De groep 'offline' is enkel te zien wanneer u 'toon enkel aangemeldde contactpersonen' uitgeschakeld heeft."
 
 #: prefs/PrefLayouts.pas:118
 msgid "The main window shows only the roster. Other windows are opened in seperate windows and never docked"
-msgstr "Het hoofdvenster toont enkel het rooster. Andere vensters worden apart geopend en niet gedokt."
+msgstr "Het hoofdvenster toont enkel het rooster. Andere vensters worden apart geopend en niet gedocked."
 
 #: prefs/PrefLayouts.pas:119
 msgid "The main window always shows the roster. Other windows are docked using a tabbed interface to the main window."
-msgstr "Het hoofdvenster toont enkel het ooster. Andere vensters worden gedokt via tabs in het hoofdvenster."
+msgstr "Het hoofdvenster toont enkel het rooster. Andere vensters worden gedocked via tabs in het hoofdvenster."
 
 #: prefs/PrefLayouts.pas:120
 msgid "The main window shows the roster. Other windows are docked using a tabbed interface to the main window."
-msgstr "Het hoofdvenster toont het rooster. Andere vensters worden gedokt via tabs in het hoofdvenster."
+msgstr "Het hoofdvenster toont het rooster. Andere vensters worden gedocked via tabs in het hoofdvenster."
 
 #. Network
 #: prefs/PrefNetwork.pas:115
@@ -8493,7 +8493,7 @@ msgstr "Uw IE-proxyinstellingen zijn niet van toepassingen omdat u een autoconfi
 
 #: prefs/PrefNotify.pas:250
 msgid "Make sure to configure sounds in your Sounds Control Panel using the hotlink provided."
-msgstr "Vergeet niet de geluiden in te stellen via het Geluid Controlepaneel dat bereikbaar is me de voorziene hotlink"
+msgstr "Vergeet niet de geluiden in te stellen via het Configuratiescherm Geluid dat bereikbaar is met de voorziene hotlink"
 
 #: prefs/PrefPlugins.pas:157
 #: prefs/PrefPlugins.pas:165
@@ -8504,17 +8504,17 @@ msgstr "Registreren van de plugin bij Windows is mislukt."
 #. clear all entries
 #: prefs/PrefPresence.pas:250
 msgid "Clear all custom presence entries?"
-msgstr "Alle op maat gemaakte aanwezigheidstoestanden wegvegen?"
+msgstr "Alle zelfgemaakte aanwezigheidsstanden wissen?"
 
 #: prefs/PrefSystem.pas:178
 msgid "Exodus is set to use a language which is not available on your system. Resetting language to default."
-msgstr "Exodus is ingesteld op een taal die op uw systeem niet beschikbaar is. Taal wordt opnieuwe op de standaard ingesteld."
+msgstr "Exodus is ingesteld op een taal die op uw systeem niet beschikbaar is. Taal wordt terug op standaard gezet."
 
 #: prefs/PrefSystem.pas:230
 msgid "You must exit exodus, and restart it before your new locale settings will take affect."
-msgstr "U dient exodus af te sluiten, en te herstarten alvorens uw nieuwe localizatieinstellingen van kracht worden."
+msgstr "U dient Exodus af te sluiten en te herstarten alvorens uw nieuwe taalinstellingen van kracht worden."
 
 #: prefs/PrefSystem.pas:268
 msgid "No new update available."
-msgstr "Er zijn geen opwaarderingen beschikbaar."
+msgstr "Er zijn geen nieuwere versies beschikbaar."
 
