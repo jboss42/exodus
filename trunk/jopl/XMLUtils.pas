@@ -49,6 +49,10 @@ function GetAppVersion: string;
 procedure ClearStringListObjects(sl: TStringList); overload;
 procedure ClearStringListObjects(sl: TWideStringList); overload;
 
+{$ifdef VER150}
+    {$define INDY9}
+{$endif}
+
 
 {---------------------------------------}
 {---------------------------------------}

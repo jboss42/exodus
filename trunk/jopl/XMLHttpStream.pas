@@ -3,6 +3,32 @@
 {$MAXSTACKSIZE $00100000}
 {$IMAGEBASE $00400000}
 {$APPTYPE GUI}
+
+{
+    Copyright 2001, Peter Millard
+
+    This file is part of Exodus.
+
+    Exodus is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Exodus is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Exodus; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
+
+
+{$ifdef VER150}
+    {$define INDY9}
+{$endif}
+
 unit XMLHttpStream;
 
 interface
@@ -16,8 +42,8 @@ uses
     {$else}
     ExtCtrls,
     {$endif}
-    
-   {$ifdef INDY9}
+
+    {$ifdef INDY9}
     IdHTTPHeaderInfo,
     IdCoderMime,
     {$else}
@@ -56,7 +82,11 @@ type
         _lock: TCriticalSection;
         _event: TEvent;
         _hasher : TSecHash;
+        {$ifdef INDY9}
+        _encoder: TIdEncoderMIME;
+        {$else}
         _encoder: TIdBase64Encoder;
+        {$endif}
 
         _keys: array of string;
         _kcount: integer;
@@ -207,7 +237,11 @@ begin
     _lock := TCriticalSection.Create();
     _event := TEvent.Create(nil, false, false, 'exodus_http_poll');
     _hasher := TSecHash.Create(nil);
+    {$ifdef INDY9}
+    _encoder := TIdEncoderMIME.Create(nil);
+    {$else}
     _encoder := TIdBase64Encoder.Create(nil);
+    {$endif}
     SetLength(_keys, _profile.NumPollKeys); 
     GenKeys();
 
@@ -289,10 +323,15 @@ begin
         ts := '';
         for j := 0 to 19 do
             ts := ts + chr(b[j]);
+        {$ifdef INDY9}
+        seed := _encoder.Encode(ts);
+        _keys[i] := seed;
+        {$else}
         _encoder.CodeString(ts);
         seed := _encoder.CompletedInput;
         Fetch(seed, ';');
         _keys[i] := seed;
+        {$endif}
         end;
 end;
 

@@ -19,6 +19,10 @@ unit XMLSocketStream;
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 }
 
+{$ifdef VER150}
+    {$define INDY9}
+{$endif}
+
 interface
 uses
     XMLTag, XMLStream, PrefController,
@@ -508,11 +512,11 @@ begin
     _socket := TIdTCPClient.Create(nil);
     _socket.RecvBufferSize := 4096;
     _socket.Port := _profile.port;
-    _socket.UseNagle := false;
     {$ifdef INDY9}
     if (_profile.ssl) then
         _socket.IOHandler := _ssl_int;
     {$else}
+    _socket.UseNagle := false;
     _socket.Intercept := _ssl_int;
     _socket.InterceptEnabled := _profile.ssl;
     {$endif}

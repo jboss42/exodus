@@ -11,8 +11,8 @@ unit ExodusCOM_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.2 $
-// File generated on 12/12/2002 5:15:35 PM from Type Library described below.
+// PASTLWTR : $Revision: 1.3 $
+// File generated on 12/28/2002 4:20:28 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -20,8 +20,8 @@ unit ExodusCOM_TLB;
 // LCID: 0
 // Helpfile: 
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
-//   (2) v4.0 StdVCL, (C:\WINNT\System32\STDVCL40.DLL)
+//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
+//   (2) v4.0 StdVCL, (C:\WINDOWS\System32\stdvcl40.dll)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
