@@ -157,6 +157,8 @@ type
     procedure pluginClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure treeRosterDeletion(Sender: TObject; Node: TTreeNode);
+    procedure treeRosterMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private declarations }
     _rostercb: integer;             // roster callback id
@@ -1533,13 +1535,6 @@ begin
             n.Expand(false);
     end;
 
-    if ((treeRoster.SelectionCount > 1) and (Button = mbLeft) and
-        (Shift = [ssLeft])) then begin
-        // de-select everything, and select this node
-        for i := 0 to treeRoster.Items.Count - 1 do
-            treeRoster.Items[i].Selected := false;
-    end;
-
     // if we have a legit node.... make sure it's selected..
     if (treeRoster.SelectionCount = 1) then begin
         if (treeRoster.Selected <> n) then
@@ -1555,6 +1550,20 @@ begin
     end;
 
     _drop_copy :=  (ssCtrl in Shift);
+end;
+
+{---------------------------------------}
+procedure TfrmRosterWindow.treeRosterMouseUp(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+var
+    i: integer;
+begin
+    if ((treeRoster.SelectionCount > 1) and (Button = mbLeft) and
+        (Shift = [ssLeft])) then begin
+        // de-select everything, and select this node
+        for i := 0 to treeRoster.Items.Count - 1 do
+            treeRoster.Items[i].Selected := false;
+    end;
 end;
 
 {---------------------------------------}

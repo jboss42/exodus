@@ -108,6 +108,7 @@ object frmRosterWindow: TfrmRosterWindow
     OnKeyPress = treeRosterKeyPress
     OnMouseDown = treeRosterMouseDown
     OnMouseMove = treeRosterMouseMove
+    OnMouseUp = treeRosterMouseUp
   end
   object StatBar: TStatusBar
     Left = 0
