@@ -25,7 +25,7 @@ uses
     Emote, Dockable, ActiveX, ComObj, BaseMsgList,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Menus, StdCtrls, ExtCtrls, ComCtrls, ExRichEdit, RichEdit2,
-    TntStdCtrls, TntMenus;
+    TntStdCtrls, TntMenus, Unicode;
 
 const
     WM_THROB = WM_USER + 5400;
@@ -76,7 +76,8 @@ type
 
   private
     { Private declarations }
-    _msgHistory : TStringList;
+    _msgHistory : TWideStringList;
+    _pending : WideString;
     _lastMsg : integer;
 
   protected
@@ -195,33 +196,41 @@ end;
 procedure TfrmBaseChat.MsgOutKeyUp(Sender: TObject;
                                    var Key: Word;
                                    Shift: TShiftState);
-var
-    m : string;
+    procedure newText(m: WideString);
+    begin
+        MsgOut.Text := m;
+        MsgOut.SelStart := length(m);
+        MsgOut.SetFocus();
+    end;
+
 begin
     // for now.
     // TODO: use the message history that's in MsgList
     if ((Key = VK_UP) and (Shift = [ssCtrl])) then begin
+        if (_lastMsg >= _msgHistory.Count) then
+            _pending := getInputText(MsgOut);
+
         dec(_lastMsg);
         if (_lastMsg < 0) then begin
             _lastMsg := 0;
             exit;
         end;
-        m := _msgHistory[_lastMsg];
-        MsgOut.Text := m;
-        MsgOut.SelStart := length(m);
-        MsgOut.SetFocus();
+        newText(_msgHistory[_lastMsg]);
     end
     else if ((Key = VK_DOWN) and (Shift = [ssCtrl])) then begin
-        if (_lastMsg = _msgHistory.Count) then exit;
-        inc(_lastMsg);
         if (_lastMsg >= _msgHistory.Count) then begin
-            _lastMsg := _msgHistory.Count - 1;
+            if (_pending <> '') then
+                newText(_pending);
             exit;
         end;
-        m := _msgHistory[_lastMsg];
-        MsgOut.Text := m;
-        MsgOut.SelStart := length(m);
-        MsgOut.SetFocus();
+
+        inc(_lastMsg);
+        if (_lastMsg >= _msgHistory.Count) then begin
+            if (_pending <> '') then
+                newText(_pending);
+            exit;
+        end;
+        newText(_msgHistory[_lastMsg]);
     end
     else
         inherited;
@@ -267,8 +276,9 @@ end;
 {---------------------------------------}
 procedure TfrmBaseChat.SendMsg();
 begin
-    _msgHistory.Add(MsgOut.Text);
+    _msgHistory.Add(getInputText(MsgOut));
     _lastMsg := _msgHistory.Count;
+    _pending := '';
 
     MsgOut.Lines.Clear();
     MsgOut.SetFocus;
@@ -282,7 +292,8 @@ var
 begin
     AutoScroll := true;
 
-    _msgHistory := TStringList.Create();
+    _msgHistory := TWideStringList.Create();
+    _pending := '';
     _lastMsg := -1;
     _esc := false;
 
