@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-12-04 08:27\n"
-"PO-Revision-Date: 2003-12-04 08:27\n"
+"POT-Creation-Date: 2003-12-05 08:20\n"
+"PO-Revision-Date: 2003-12-05 08:20\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -134,7 +134,7 @@ msgstr ""
 #. frmWizard..Font.Name
 #: Wizard.dfm:12
 #. frmWizard..Panel1..lblWizardTitle..Font.Name
-#: Wizard.dfm:88
+#: Wizard.dfm:97
 #. frmXData..Font.Name
 #: xdata.dfm:13
 #. frmXData..frameButtons1..Font.Name
@@ -716,15 +716,15 @@ msgstr ""
 #. frmPrefs..Font.Name
 #: Prefs.dfm:12
 #. frmRegister..Tabs..TabSheet1..Label1..Font.Name
-#: RegForm.dfm:37
+#: RegForm.dfm:26
 #. frmRegister..Tabs..TabSheet1..lblIns..Font.Name
-#: RegForm.dfm:53
+#: RegForm.dfm:42
 #. frmRegister..Tabs..TabSheet3..Label2..Font.Name
-#: RegForm.dfm:108
+#: RegForm.dfm:97
 #. frmRegister..Tabs..TabSheet4..lblOK..Font.Name
-#: RegForm.dfm:130
+#: RegForm.dfm:119
 #. frmRegister..Tabs..TabSheet4..lblBad..Font.Name
-#: RegForm.dfm:150
+#: RegForm.dfm:139
 #. frmRoom..Panel3..MsgList..Font.Name
 #: Room.dfm:30
 #. frmRoom..Panel1..btnClose..Font.Name
@@ -952,8 +952,8 @@ msgstr ""
 #: RecvStatus.dfm:100
 #. fSendStatus..Panel1..btnCancel..Caption
 #: SendStatus.dfm:20
-#. frmWizard..TntPanel1..btnCancel..Caption
-#: Wizard.dfm:55
+#. frmWizard..TntPanel1..Panel3..btnCancel..Caption
+#: Wizard.dfm:63
 msgid "Cancel"
 msgstr ""
 
@@ -1121,7 +1121,7 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksPassword..Caption
 #: ConnDetails.dfm:339
 #. frmJoinRoom..Tabs..TabSheet1..lblPassword..Caption
-#: JoinRoom.dfm:53
+#: JoinRoom.dfm:58
 #. frmPrefNetwork..GroupBox2..lblProxyPassword..Caption
 #: prefs/PrefNetwork.dfm:117
 #. frmPrefTransfer..grpWebDav..Label8..Caption
@@ -1171,7 +1171,7 @@ msgstr ""
 #. frmInputPass..txtPassword..PasswordChar
 #: InputPassword.dfm:60
 #. frmJoinRoom..Tabs..TabSheet1..txtPassword..PasswordChar
-#: JoinRoom.dfm:86
+#: JoinRoom.dfm:91
 #. frmPassword..txtOldPassword..PasswordChar
 #: Password.dfm:42
 #. frmPassword..txtNewPassword..PasswordChar
@@ -1435,7 +1435,7 @@ msgstr ""
 #: RosterWindow.dfm:604
 #. init the cmd line stuff
 #: ExSession.pas:189
-#: Jabber1.pas:2684
+#: Jabber1.pas:2685
 #: RosterWindow.pas:346
 #: RosterWindow.pas:368
 #: RosterWindow.pas:1617
@@ -1456,7 +1456,7 @@ msgstr ""
 #: Jabber1.dfm:2668
 #. frmRosterWindow..popStatus..presAway..Caption
 #: RosterWindow.dfm:413
-#: Jabber1.pas:2682
+#: Jabber1.pas:2683
 #: RosterWindow.pas:348
 #: RosterWindow.pas:369
 #: RosterWindow.pas:1601
@@ -1598,37 +1598,38 @@ msgstr ""
 
 #. frmDockWizard..TntPanel1..btnBack..Caption
 #: DockWizard.dfm:38
-#. frmWizard..TntPanel1..btnBack..Caption
-#: Wizard.dfm:38
+#. frmWizard..TntPanel1..Panel3..btnBack..Caption
+#: Wizard.dfm:46
 msgid "< Back"
 msgstr ""
 
 #. frmDockWizard..TntPanel1..btnNext..Caption
 #: DockWizard.dfm:46
-#. frmWizard..TntPanel1..btnNext..Caption
-#: Wizard.dfm:46
-#: JoinRoom.pas:349
+#. frmWizard..TntPanel1..Panel3..btnNext..Caption
+#: Wizard.dfm:54
+#: JoinRoom.pas:360
+#: JoinRoom.pas:381
 msgid "Next >"
 msgstr ""
 
 #. frmDockWizard..Panel1..lblWizardTitle..Caption
 #: DockWizard.dfm:84
 #. frmWizard..Panel1..lblWizardTitle..Caption
-#: Wizard.dfm:84
+#: Wizard.dfm:93
 msgid "Wizard Label goes here"
 msgstr ""
 
 #. frmDockWizard..Panel1..lblWizardDetails..Caption
 #: DockWizard.dfm:99
 #. frmWizard..Panel1..lblWizardDetails..Caption
-#: Wizard.dfm:99
+#: Wizard.dfm:108
 msgid "lblWizardDetails"
 msgstr ""
 
 #. frmDockWizard..Tabs..TabSheet1..Caption
 #: DockWizard.dfm:1059
 #. frmWizard..Tabs..TabSheet1..Caption
-#: Wizard.dfm:1059
+#: Wizard.dfm:1068
 msgid "TabSheet1"
 msgstr ""
 
@@ -2210,33 +2211,33 @@ msgid "Exit Exodus"
 msgstr ""
 
 #. frmJoinRoom..Caption
-#: JoinRoom.dfm:4
+#: JoinRoom.dfm:6
 msgid "Join Room"
 msgstr ""
 
 #. frmJoinRoom..Panel1..lblWizardTitle..Caption
-#: JoinRoom.dfm:25
+#: JoinRoom.dfm:30
 msgid "Join or Browse for a Room"
 msgstr ""
 
 #. frmJoinRoom..Panel1..lblWizardDetails..Caption
-#: JoinRoom.dfm:28
+#: JoinRoom.dfm:33
 msgid "Specify or browse for a room to join or "
 "create."
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..Label2..Caption
-#: JoinRoom.dfm:39
+#: JoinRoom.dfm:44
 msgid "Room Server:"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..Label1..Caption
-#: JoinRoom.dfm:46
+#: JoinRoom.dfm:51
 msgid "Room Name:"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..Label3..Caption
-#: JoinRoom.dfm:60
+#: JoinRoom.dfm:65
 #. frmAdd..Label2..Caption
 #: RosterAdd.dfm:33
 #. frmSubscribe..boxAdd..Label2..Caption
@@ -2245,60 +2246,60 @@ msgid "Nickname:"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..txtServer..Hint
-#: JoinRoom.dfm:67
+#: JoinRoom.dfm:72
 #. frmJoinRoom..Tabs..TabSheet2..Panel2..txtServerFilter..Hint
-#: JoinRoom.dfm:170
+#: JoinRoom.dfm:175
 msgid "Select the room server to use."
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..txtServer..Text
-#: JoinRoom.dfm:72
+#: JoinRoom.dfm:77
 msgid "txtServer"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..optSpecify..Caption
-#: JoinRoom.dfm:101
+#: JoinRoom.dfm:106
 msgid "Join or Create the following room:"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet1..optBrowse..Caption
-#: JoinRoom.dfm:112
+#: JoinRoom.dfm:117
 msgid "Browse servers for a room to join"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet2..Caption
-#: JoinRoom.dfm:118
+#: JoinRoom.dfm:123
 #. frmJud..Tabs..TabSheet2..Caption
 #: jud.dfm:77
 #. frmRegister..Tabs..TabSheet2..Caption
-#: RegForm.dfm:60
+#: RegForm.dfm:49
 msgid "TabSheet2"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet2..lstRooms......Caption
-#: JoinRoom.dfm:128
+#: JoinRoom.dfm:133
 msgid "Room"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet2..lstRooms......Caption
-#: JoinRoom.dfm:132
+#: JoinRoom.dfm:137
 msgid "Server"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet2..lstRooms......Caption
-#: JoinRoom.dfm:136
+#: JoinRoom.dfm:141
 #. frmPrefPlugins..lstPlugins......Caption
 #: prefs/PrefPlugins.dfm:89
 msgid "Description"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet2..Panel2..lblFetch..Caption
-#: JoinRoom.dfm:163
+#: JoinRoom.dfm:168
 msgid "Show rooms found on this server"
 msgstr ""
 
 #. frmJoinRoom..Tabs..TabSheet2..Panel2..btnFetch..Caption
-#: JoinRoom.dfm:184
+#: JoinRoom.dfm:189
 msgid "Fetch Rooms"
 msgstr ""
 
@@ -2326,7 +2327,7 @@ msgstr ""
 #. frmJud..Tabs..TabSheet3..Caption
 #: jud.dfm:99
 #. frmRegister..Tabs..TabSheet3..Caption
-#: RegForm.dfm:95
+#: RegForm.dfm:84
 msgid "TabSheet3"
 msgstr ""
 
@@ -2339,7 +2340,7 @@ msgstr ""
 #. frmJud..Tabs..TabSheet4..Caption
 #: jud.dfm:123
 #. frmRegister..Tabs..TabSheet4..Caption
-#: RegForm.dfm:115
+#: RegForm.dfm:104
 msgid "TabSheet4"
 msgstr ""
 
@@ -5725,36 +5726,36 @@ msgid "Registration"
 msgstr ""
 
 #. frmRegister..Tabs..TabSheet1..Label1....AutoSize
-#: RegForm.dfm:33
+#: RegForm.dfm:22
 msgid "This wizard will register you with a service or Agent. Use the Next "
 "button to advance through the steps. Use Cancel anytime to cancel "
 "this registration."
 msgstr ""
 
 #. frmRegister..Tabs..TabSheet1..lblIns..Caption
-#: RegForm.dfm:49
+#: RegForm.dfm:38
 msgid "Waiting for agent instructions....."
 msgstr ""
 
 #. frmRegister..Tabs..TabSheet2..Panel2..btnDelete..Caption
-#: RegForm.dfm:75
+#: RegForm.dfm:64
 msgid "Delete My Registration"
 msgstr ""
 
 #. frmRegister..Tabs..TabSheet3..Label2..Caption
-#: RegForm.dfm:104
+#: RegForm.dfm:93
 msgid "Please wait, Sending your registration to the "
 "service...."
 msgstr ""
 
 #. frmRegister..Tabs..TabSheet4..lblOK....AutoSize
-#: RegForm.dfm:126
+#: RegForm.dfm:115
 msgid "Your Registration to this service has been completed Successfully. "
 "Press the 'Next' button to Finish."
 msgstr ""
 
 #. frmRegister..Tabs..TabSheet4..lblBad....AutoSize
-#: RegForm.dfm:146
+#: RegForm.dfm:135
 msgid "Your Registration to this service has Failed! Press Previous to go "
 "back and verify that all of the parameters have been filled in "
 "correctly. Press Cancel to close this "
@@ -6404,8 +6405,8 @@ msgid "Chat Activity: "
 msgstr ""
 
 #: ChatWin.pas:742
-#: Jabber1.pas:2572
-#: Jabber1.pas:2578
+#: Jabber1.pas:2573
+#: Jabber1.pas:2579
 #. post a msg to the window and disable the text input box.
 #: Room.pas:646
 msgid "You have been disconnected."
@@ -6884,7 +6885,7 @@ msgstr ""
 
 #: invite.pas:192
 #. otherwise, just join..
-#: JoinRoom.pas:223
+#: JoinRoom.pas:233
 msgid "The Room Address you entered is invalid. It must be valid Jabber "
 "ID."
 msgstr ""
@@ -6964,7 +6965,7 @@ msgstr ""
 
 #: Jabber1.pas:2140
 #: Jabber1.pas:2256
-#: Jabber1.pas:2512
+#: Jabber1.pas:2513
 msgid "Enter Jabber ID: "
 msgstr ""
 
@@ -6994,14 +6995,14 @@ msgstr ""
 msgid "Enter Jabber ID of Service: "
 msgstr ""
 
-#: Jabber1.pas:2512
+#: Jabber1.pas:2513
 msgid "Send a Message"
 msgstr ""
 
 #. fire up an invite for this room using the selected contacts
-#: Jabber1.pas:2775
+#: Jabber1.pas:2776
 #. send roster items to this contact.
-#: Jabber1.pas:2785
+#: Jabber1.pas:2786
 #. Send contacts to this JID..
 #: RosterWindow.pas:2522
 #. we got a URL drop
@@ -7010,22 +7011,23 @@ msgstr ""
 msgid "You must select one or more contacts."
 msgstr ""
 
-#: Jabber1.pas:2913
+#: Jabber1.pas:2914
 msgid "Branding error!"
 msgstr ""
 
-#: JoinRoom.pas:187
+#: JoinRoom.pas:189
 msgid "- ALL SERVERS -"
 msgstr ""
 
 #. change tabs if they selected browse
-#: JoinRoom.pas:215
+#: JoinRoom.pas:225
+#: JoinRoom.pas:379
 #. normal result
 #: RegForm.pas:415
 msgid "Finish"
 msgstr ""
 
-#: JoinRoom.pas:234
+#: JoinRoom.pas:244
 msgid "You must enter a nickname"
 msgstr ""
 
@@ -7082,21 +7084,21 @@ msgid "To:"
 msgstr ""
 
 #: MsgRecv.pas:436
-#: MsgRecv.pas:748
+#: MsgRecv.pas:749
 msgid "Next"
 msgstr ""
 
-#: MsgRecv.pas:681
-#: MsgRecv.pas:688
+#: MsgRecv.pas:682
+#: MsgRecv.pas:689
 msgid "Message to "
 msgstr ""
 
-#: MsgRecv.pas:683
-#: MsgRecv.pas:690
+#: MsgRecv.pas:684
+#: MsgRecv.pas:691
 msgid "Message from "
 msgstr ""
 
-#: MsgRecv.pas:760
+#: MsgRecv.pas:761
 msgid "You have unread messages. Read all messages before closing the "
 "window."
 msgstr ""
