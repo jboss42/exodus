@@ -33,7 +33,7 @@
 !define SECTION_OFF   0xFFFFFFFE
 
 ; The name of the installer
-!define MUI_PRODUCT "Exodus"
+;!define MUI_PRODUCT "Exodus"
 
 !include version.nsi
 !include "${NSISDIR}\Contrib\Modern UI\System.nsh"
@@ -42,6 +42,7 @@
 !define HOME_URL "http://exodus.jabberstudio.org"
 
 ; The file to write
+Name "Exodus ${EXODUS_VERSION}"
 OutFile "setup.exe"
 ShowInstDetails show
 ShowUninstDetails show
@@ -52,42 +53,43 @@ InstallDir "$PROGRAMFILES\${MUI_PRODUCT}"
 ; overwrite the old one automatically)
 InstallDirRegKey HKCU "SOFTWARE\Jabber\${MUI_PRODUCT}" "Install_Dir"
 
-!define MUI_INNERTEXT_LICENSE_TOP \
-    "Exodus is licensed under the GPL.  Press Page Down to see the rest of the agreement."
-
+; Modern UI Settings
 !define MUI_ICON "exodus.ico"
 !define MUI_UNICON "exodus.ico"
-
-!define MUI_CUSTOMPAGECOMMANDS
-
-!define MUI_LICENSEPAGE
-!define MUI_COMPONENTSPAGE
-!define MUI_COMPONENTSPAGE_SMALLDESC
-!define MUI_DIRECTORYPAGE
-!define MUI_STARTMENUPAGE
-!define MUI_STARTMENUPAGE_DEFAULTFOLDER "${MUI_PRODUCT}"
-
-!define MUI_FINISHPAGE
-!define MUI_FINISHPAGE_RUN "$INSTDIR\Exodus.exe"
-;!define MUI_FINISHPAGE_RUN_NOTCHECKED
-!define MUI_FINISHPAGE_NOAUTOCLOSE
-
-!insertmacro MUI_PAGECOMMAND_LICENSE
-!insertmacro MUI_PAGECOMMAND_COMPONENTS
-!insertmacro MUI_PAGECOMMAND_DIRECTORY
-!insertmacro MUI_PAGECOMMAND_STARTMENU
-Page custom SetCustomShell ;Custom page
-!insertmacro MUI_PAGECOMMAND_INSTFILES
-!insertmacro MUI_PAGECOMMAND_FINISH
-
+!define MUI_HEADERBITMAP "exodus-installer.bmp"
+!define MUI_BRANDINGTEXT " "
 !define MUI_ABORTWARNING
 !define MUI_UNINSTALLER
 !define MUI_UNCONFIRMPAGE
 
-;Modern UI System
-!define MUI_BRANDINGTEXT " "
-;!insertmacro MUI_SYSTEM
-!define MUI_HEADERBITMAP "exodus-installer.bmp"
+; Modern UI variables
+Var STARTMENU_FOLDER
+
+;!define MUI_CUSTOMPAGECOMMANDS
+;!define MUI_LICENSEPAGE
+;!define MUI_COMPONENTSPAGE
+;!define MUI_COMPONENTSPAGE_SMALLDESC
+;!define MUI_DIRECTORYPAGE
+;!define MUI_STARTMENUPAGE
+;!define MUI_FINISHPAGE
+
+!define MUI_LICENSEPAGE_TEXT_TOP  \
+    "Exodus is licensed under the GPL.  Press Page Down to see the rest of the agreement."   
+!define MUI_STARTMENUPAGE_DEFAULTFOLDER "${MUI_PRODUCT}"
+!define MUI_FINISHPAGE_RUN "$INSTDIR\Exodus.exe"
+!define MUI_FINISHPAGE_RUN_NOTCHECKED
+!define MUI_FINISHPAGE_NOAUTOCLOSE
+
+; Modern UI Pages
+!insertmacro MUI_PAGE_LICENSE "GPL-LICENSE.TXT"
+!insertmacro MUI_PAGE_COMPONENTS
+!insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_STARTMENU APPLICATION $STARTMENU_FOLDER 
+Page custom SetCustomShell ;Custom page
+!insertmacro MUI_PAGE_INSTFILES
+!insertmacro MUI_PAGE_FINISH
+
+; Modern UI Languages
 !insertmacro MUI_LANGUAGE "English"
 
 ReserveFile "notify.ini"
@@ -322,7 +324,7 @@ Section "" SEC_Menu
     Call StrStr
     Pop $0
     StrCmp $0 "/S" silent
-    !insertmacro MUI_STARTMENU_WRITE_BEGIN
+    !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     CreateDirectory "$SMPROGRAMS\${MUI_STARTMENUPAGE_VARIABLE}"
     CreateShortCut "$SMPROGRAMS\${MUI_STARTMENUPAGE_VARIABLE}\Uninstall.lnk" \
         "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
@@ -459,7 +461,7 @@ LangString CUSTOMSHELL_SUBTITLE ${LANG_ENGLISH} \
 !include plugins\plugin-en.nsi
 
 ; BRANDING: YOU MUST NOT REMOVE THE GPL!
-LicenseData GPL-LICENSE.TXT
+;LicenseData GPL-LICENSE.TXT
 SubCaption 3 ": Exit running Exodus versions!"
 
 !insertmacro MUI_FUNCTIONS_DESCRIPTION_BEGIN
