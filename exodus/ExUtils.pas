@@ -31,7 +31,19 @@ const
     cWIN_ME = 5;
     cWIN_XP = 6;
 
+type
+    PLASTINPUTINFO = ^LASTINPUTINFO;
+    tagLASTINPUTINFO = record
+        cbSize: UINT;
+        dwTime: DWORD;
+        end;
+    {$EXTERNALSYM tagLASTINPUTINFO}
+    LASTINPUTINFO = tagLASTINPUTINFO;
+    {$EXTERNALSYM LASTINPUTINFO}
+    TLastInputInfo = LASTINPUTINFO;
 
+function GetLastInputInfo(var plii: LASTINPUTINFO): BOOL; stdcall;
+{$EXTERNALSYM GetLastInputInfo}
 
 function GetAppVersion: string;
 function WindowsVersion(var verinfo: string): integer;
@@ -48,6 +60,10 @@ function getDisplayField(fld: string): string;
 procedure DebugMsg(Message : string);
 procedure AssignDefaultFont(font: TFont);
 
+var
+    _GetLastInputInfo: Pointer;
+
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -60,6 +76,21 @@ uses
     XMLUtils,
     JabberID,
     Debug;
+
+{---------------------------------------}
+// function GetLastInputInfo; external 'user32.dll' name 'GetLastInputInfo';
+
+function GetLastInputInfo;
+begin
+    Result := false;
+    asm
+        mov esp, ebp
+        pop ebp
+        jmp [_GetLastInputInfo]
+    end;
+end;
+
+{---------------------------------------}
 
 {---------------------------------------}
 function GetAppVersion: string;
@@ -346,4 +377,8 @@ begin
         end;
 end;
 
+initialization
+    _GetLastInputInfo := GetProcAddress(GetModuleHandle('user32.dll'), 'GetLastInputInfo');
+
 end.
+
