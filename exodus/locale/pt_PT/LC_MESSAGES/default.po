@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "POT-Creation-Date: 2003-05-08 06:59\n"
-"PO-Revision-Date: 2003-09-30 10:06-0000\n"
+"PO-Revision-Date: 2003-10-03 08:57-0000\n"
 "Last-Translator: Lazarus Long <lazarus.long@bigfoot.com>\n"
 "Language-Team: pt_PT <lazarus.long@bigfoot.com>\n"
 "MIME-Version: 1.0\n"
@@ -53,8 +53,6 @@ msgstr "Acerca do Exodus"
 #. frmExodus..Tabs..tbsRoster..Font.Name
 #. frmJoinRoom..Font.Name
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Font.Name
-#. frmJUD..pnlLeft..pnlResults..Label1..Font.Name
-#. frmJUD..pnlLeft..pnlResults..lblAddGrp..Font.Name
 #. frmLogin..Font.Name
 #. frmMsgQueue..Font.Name
 #. frmMsgRecv..Font.Name
@@ -81,7 +79,6 @@ msgstr "Acerca do Exodus"
 #. frmSelContact..Font.Name
 #. frmSubscribe..Font.Name
 #. frmSubscribe..lblJID..Font.Name
-#. Form1..Font.Name
 #. frmVCard..Font.Name
 #. frmWebDownload..Font.Name
 #. frmWizard..Font.Name
@@ -125,7 +122,6 @@ msgstr "Acerca do Exodus"
 #: Jabber1.dfm:46
 #: Jabber1.dfm:63
 #: JoinRoom.dfm:13
-#: Jud.dfm:150
 #: Login.dfm:12
 #: MsgQueue.dfm:11
 #: MsgRecv.dfm:11
@@ -150,7 +146,6 @@ msgstr "Acerca do Exodus"
 #: RosterRecv.dfm:91
 #: RosterWindow.dfm:15
 #: SelContact.dfm:11
-#: Test1.dfm:11
 #: WebGet.dfm:10
 #: Wizard.dfm:12
 #: Wizard.dfm:88
@@ -162,8 +157,7 @@ msgstr "Acerca do Exodus"
 #: fService.dfm:86
 #: fService.dfm:113
 #: invite.dfm:12
-#: jud-old.dfm:132
-#: jud-old.dfm:155
+#: jud.dfm:150
 #: prefs/PrefFont.dfm:19
 #: prefs/PrefFont.dfm:32
 #: prefs/PrefFont.dfm:66
@@ -186,7 +180,6 @@ msgstr "MS Sans Serif"
 
 #. frmAbout..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #. frmInvalidRoster..frameButtons1..Panel2..Panel1..btnCancel..Caption
-#. frmJUD..pnlLeft..pnlBottom..btnClose..Caption
 #. frmMsgRecv..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #. Programmer's name for it: sBtnClose
@@ -197,10 +190,11 @@ msgstr "MS Sans Serif"
 #: InvalidRoster.dfm:41
 #: MsgRecv.dfm:500
 #: MsgRecv.pas:163
+#: RecvStatus.pas:375
 #: RosterRecv.dfm:48
-#: SendStatus.pas:910
+#: SendStatus.pas:807
+#: SendStatus.pas:926
 #: XferManager.pas:138
-#: jud-old.dfm:98
 #: xdata.pas:65
 msgid "Close"
 msgstr "Fechar"
@@ -543,7 +537,7 @@ msgstr "Encontra-se disponível uma nova versão do Exodus. Gostaria de a instal
 #. frmWebDownload..IdHTTP1..Request.ContentType
 #: AutoUpdateStatus.dfm:86
 #: RecvStatus.dfm:114
-#: SendStatus.dfm:104
+#: SendStatus.dfm:105
 #: WebGet.dfm:75
 msgid "text/html"
 msgstr "text/html"
@@ -554,7 +548,7 @@ msgstr "text/html"
 #. frmWebDownload..IdHTTP1..Request.Accept
 #: AutoUpdateStatus.dfm:87
 #: RecvStatus.dfm:115
-#: SendStatus.dfm:105
+#: SendStatus.dfm:106
 #: WebGet.dfm:76
 msgid "text/html, */*"
 msgstr "text/html, */*"
@@ -565,7 +559,7 @@ msgstr "text/html, */*"
 #. frmWebDownload..IdHTTP1..Request.UserAgent
 #: AutoUpdateStatus.dfm:89
 #: RecvStatus.dfm:117
-#: SendStatus.dfm:107
+#: SendStatus.dfm:108
 #: WebGet.dfm:78
 msgid "Mozilla/3.0 (compatible; Indy Library)"
 msgstr "Mozilla/3.0 (compatible; Indy Library)"
@@ -640,7 +634,6 @@ msgstr "Colar "
 #. frmExodus..popTray..N4..Caption
 #. frmExodus..popTray..N01..Caption
 #. frmJud..PopupMenu1..N1..Caption
-#. frmJUD..PopupMenu1..N1..Caption
 #. frmMsgRecv..popContact..N1..Caption
 #. frmMsgRecv..popContact..N2..Caption
 #. frmRoom..popRoom..popAdmin..N4..Caption
@@ -679,7 +672,6 @@ msgstr "Colar "
 #: Jabber1.dfm:2670
 #: Jabber1.dfm:2683
 #: Jabber1.dfm:2690
-#: Jud.dfm:215
 #: MsgRecv.dfm:545
 #: MsgRecv.dfm:554
 #: Room.dfm:188
@@ -695,7 +687,7 @@ msgstr "Colar "
 #: RosterWindow.dfm:636
 #: RosterWindow.dfm:652
 #: RosterWindow.dfm:677
-#: jud-old.dfm:221
+#: jud.dfm:215
 msgid "-"
 msgstr "-"
 
@@ -1017,13 +1009,9 @@ msgid "Last Time/Activity"
 msgstr "Última vez/Actividade"
 
 #. frmBrowse..popContext..mSearch..Caption
-#. frmJUD..pnlLeft..pnlBottom..btnAction..Caption
-#. Programmer's name for it: sJUDSearch
 #. Programmer's name for it: sJUDSearch
 #: Browser.dfm:3178
-#: Jud.pas:111
-#: jud-old.dfm:87
-#: jud-old.pas:113
+#: jud.pas:111
 msgid "Search"
 msgstr "Localizar"
 
@@ -1516,7 +1504,7 @@ msgstr "Conversa"
 #. Programmer's name for it: sGrpOnline
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
-#: /src/exodus/jopl/Roster.pas:115
+#: /src/exodus/jopl/Roster.pas:116
 #: CustomPres.dfm:77
 #: Jabber1.dfm:364
 #: Jabber1.dfm:2647
@@ -1537,7 +1525,7 @@ msgstr "Disponível"
 #. Programmer's name for it: sGrpAway
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
-#: /src/exodus/jopl/Roster.pas:116
+#: /src/exodus/jopl/Roster.pas:117
 #: CustomPres.dfm:78
 #: Jabber1.dfm:373
 #: Jabber1.dfm:2656
@@ -1553,7 +1541,7 @@ msgstr "Ausente"
 #. Programmer's name for it: sGrpXA
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
-#: /src/exodus/jopl/Roster.pas:117
+#: /src/exodus/jopl/Roster.pas:118
 #: CustomPres.dfm:79
 #: RosterWindow.pas:347
 #: prefs/PrefGroups.dfm:69
@@ -1569,7 +1557,7 @@ msgstr "Ausência prolongada"
 #. Programmer's name for it: sGrpDND
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
-#: /src/exodus/jopl/Roster.pas:118
+#: /src/exodus/jopl/Roster.pas:119
 #: CustomPres.dfm:80
 #: Jabber1.dfm:383
 #: Jabber1.dfm:2666
@@ -1966,14 +1954,12 @@ msgstr "Ver"
 
 #. frmExodus..Toolbar..ToolBar1..btnAddContact..Hint
 #. frmJud..PopupMenu1..popAdd..Caption
-#. frmJUD..PopupMenu1..popAdd..Caption
 #. frmAdd..Caption
 #. frmRosterWindow..popActions..popAddContact..Caption
 #: Jabber1.dfm:145
-#: Jud.dfm:207
 #: RosterAdd.dfm:6
 #: RosterWindow.dfm:581
-#: jud-old.dfm:213
+#: jud.dfm:207
 msgid "Add Contact"
 msgstr "Adicionar contacto"
 
@@ -1983,9 +1969,7 @@ msgid "Rooms"
 msgstr "Salas"
 
 #. frmExodus..Toolbar..ToolBar1..btnFind..Hint
-#. frmJUD..Caption
 #: Jabber1.dfm:165
-#: jud-old.dfm:7
 msgid "Search for Contacts"
 msgstr "Procurar contactos"
 
@@ -2276,11 +2260,9 @@ msgstr "Personalizado ..."
 
 #. frmExodus..popTray..trayMessage..Caption
 #. frmJud..PopupMenu1..popMessage..Caption
-#. frmJUD..PopupMenu1..popMessage..Caption
 #. frmSubscribe..PopupMenu1..mnuMessage..Caption
 #: Jabber1.dfm:2678
-#: Jud.dfm:222
-#: jud-old.dfm:228
+#: jud.dfm:222
 #: subscribe.dfm:146
 msgid "Send Message"
 msgstr "Enviar mensagem"
@@ -2325,106 +2307,85 @@ msgid "txtServer"
 msgstr "txtServer"
 
 #. frmJud..Caption
-#: Jud.dfm:5
+#: jud.dfm:5
 msgid "Jabber Search"
 msgstr "Pesquisa Jabber"
 
 #. frmJud..Panel1..lblWizardTitle..Caption
-#: Jud.dfm:40
+#: jud.dfm:40
 msgid "Jabber Search Wizard"
 msgstr "Assistente de pesquisa Jabber"
 
 #. frmJud..Tabs..TabSheet1..lblSelect....Align
-#. frmJUD..pnlLeft..lblSelect....Align
-#: Jud.dfm:61
-#: jud-old.dfm:43
+#: jud.dfm:61
 msgid "Select the user database or enter in the Jabber ID of the search agent to use:"
 msgstr "Seleccione a base de dados de utilizadores ou indique o ID Jabber do agente de busca a usar:"
 
 #. frmJud..Tabs..TabSheet2..Caption
 #. frmRegister..Tabs..TabSheet2..Caption
-#: Jud.dfm:75
 #: RegForm.dfm:61
+#: jud.dfm:75
 msgid "TabSheet2"
 msgstr "TabSheet2"
 
 #. frmJud..Tabs..TabSheet2..lblWait..Caption
-#. frmJUD..pnlLeft..lblWait..Caption
-#: Jud.dfm:83
-#: jud-old.dfm:52
+#: jud.dfm:83
 msgid "Please wait. Contacting search agent:"
 msgstr "Por favor aguarde. A contactar o agente de busca:"
 
 #. frmJud..Tabs..TabSheet3..Caption
 #. frmRegister..Tabs..TabSheet3..Caption
-#: Jud.dfm:97
 #: RegForm.dfm:96
+#: jud.dfm:97
 msgid "TabSheet3"
 msgstr "TabSheet3"
 
 #. frmJud..Tabs..TabSheet3..lblInstructions..Caption
-#. frmJUD..pnlLeft..lblInstructions..Caption
-#: Jud.dfm:105
-#: jud-old.dfm:31
+#: jud.dfm:105
 msgid "Fill in the search criteria to find contacts on."
 msgstr "Preencha os parâmetros para localizar os contactos."
 
 #. frmJud..Tabs..TabSheet4..Caption
 #. frmRegister..Tabs..TabSheet4..Caption
-#: Jud.dfm:121
 #: RegForm.dfm:116
+#: jud.dfm:121
 msgid "TabSheet4"
 msgstr "TabSheet4"
 
 #. frmJud..Tabs..TabSheet4..Panel2..Label3..Caption
-#. frmJUD..pnlLeft..pnlResults..Label3..Caption
-#: Jud.dfm:137
-#: jud-old.dfm:142
+#: jud.dfm:137
 msgid "Add Contacts to this group:"
 msgstr "Adicionar contactos a este grupo:"
 
 #. frmJud..Tabs..TabSheet4..Panel2..lblAddGrp..Caption
-#. frmJUD..pnlLeft..pnlResults..lblAddGrp..Caption
 #. frmAdd..lblAddGrp..Caption
-#: Jud.dfm:145
 #: RosterAdd.dfm:48
-#: jud-old.dfm:150
+#: jud.dfm:145
 msgid "Add a new Group"
 msgstr "Adicionar um grupo novo"
 
 #. frmJud..Tabs..TabSheet4..Panel2..Button1..Caption
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
 #. Programmer's name for it: sJUDAdd
-#. Programmer's name for it: sJUDAdd
-#: Jud.dfm:171
-#: Jud.pas:117
 #: RosterRecv.dfm:44
-#: jud-old.pas:119
+#: jud.dfm:171
+#: jud.pas:117
 msgid "Add Contacts"
 msgstr "Adicionar contactos"
 
 #. frmJud..PopupMenu1..popProfile..Caption
-#. frmJUD..PopupMenu1..popProfile..Caption
-#: Jud.dfm:211
-#: jud-old.dfm:217
+#: jud.dfm:211
 msgid "View Profile"
 msgstr "Ver perfil"
 
 #. frmJud..PopupMenu1..popChat..Caption
-#. frmJUD..PopupMenu1..popChat..Caption
 #. frmSubscribe..PopupMenu1..mnuChat..Caption
 #. Programmer's name for it: sStartChat
 #: Jabber1.pas:439
-#: Jud.dfm:218
-#: jud-old.dfm:224
+#: jud.dfm:218
 #: subscribe.dfm:142
 msgid "Start Chat"
 msgstr "Iniciar conversa"
-
-#. frmJUD..pnlLeft..pnlResults..Label1..Caption
-#: jud-old.dfm:128
-msgid "Search Again"
-msgstr "Pesquisar novamente"
 
 #. frmLogin..Caption
 #: Login.dfm:7
@@ -5760,7 +5721,7 @@ msgstr "Endereço"
 #. fRecvStatus..Panel3..lblFile..Caption
 #. fSendStatus..Panel3..lblFile..Caption
 #: RecvStatus.dfm:22
-#: SendStatus.dfm:65
+#: SendStatus.dfm:66
 msgid "lblFile"
 msgstr "lblFile"
 
@@ -5772,7 +5733,7 @@ msgstr "lblFrom"
 #. fRecvStatus..Panel2..lblStatus..Caption
 #. fSendStatus..Panel2..lblStatus..Caption
 #: RecvStatus.dfm:67
-#: SendStatus.dfm:39
+#: SendStatus.dfm:40
 msgid "Status..."
 msgstr "Estado..."
 
@@ -6090,7 +6051,7 @@ msgstr "JID"
 #. frmRosterWindow..pnlShow..pnlStatus..lblStatusLink..Caption
 #. Programmer's name for it: sRosterOffline
 #. Programmer's name for it: sGrpOffline
-#: /src/exodus/jopl/Roster.pas:119
+#: /src/exodus/jopl/Roster.pas:120
 #: Jabber1.pas:404
 #: RosterWindow.dfm:244
 #: RosterWindow.pas:344
@@ -6227,7 +6188,7 @@ msgid "Show Online Only"
 msgstr "Mostrar apenas em linha"
 
 #. fSendStatus..Panel3..lblTo..Caption
-#: SendStatus.dfm:75
+#: SendStatus.dfm:76
 msgid "lblTo"
 msgstr "lblTo"
 
@@ -6262,11 +6223,6 @@ msgstr "Aceitar"
 #: subscribe.dfm:128
 msgid "Deny"
 msgstr "Recusar"
-
-#. Form1..Caption
-#: Test1.dfm:6
-msgid "Form1"
-msgstr "Form1"
 
 #. frmVCard..Caption
 #: vcard.dfm:6
@@ -7010,8 +6966,8 @@ msgid "SSL Connection Error: \n"
 msgstr "Erro na ligação SSL: \n"
 
 #: Jabber1.pas:1041
-msgid "Disconnect Connection?"
-msgstr "Interromper a ligação?"
+msgid "Continue?"
+msgstr "Continuar?"
 
 #. Programmer's name for it: sInvalidNick
 #: JoinRoom.pas:57
@@ -7019,37 +6975,27 @@ msgid "You must enter a nickname"
 msgstr "Tem que indicar uma alcunha"
 
 #. Programmer's name for it: sJUDStart
-#. Programmer's name for it: sJUDStart
-#: Jud.pas:112
-#: jud-old.pas:114
+#: jud.pas:112
 msgid "Start"
 msgstr "Iniciar"
 
 #. Programmer's name for it: sJUDStop
-#. Programmer's name for it: sJUDStop
-#: Jud.pas:113
-#: jud-old.pas:115
+#: jud.pas:113
 msgid "Stop"
 msgstr "Parar"
 
 #. Programmer's name for it: sJUDErrorContacting
-#. Programmer's name for it: sJUDErrorContacting
-#: Jud.pas:114
-#: jud-old.pas:116
+#: jud.pas:114
 msgid "Could not contact the search agent."
 msgstr "Não foi possível contactar o agente de procura."
 
 #. Programmer's name for it: sJUDTimeout
-#. Programmer's name for it: sJUDTimeout
-#: Jud.pas:115
-#: jud-old.pas:117
+#: jud.pas:115
 msgid "The search timed out."
 msgstr "A pesquisa excedeu o tempo."
 
 #. Programmer's name for it: sJUDEmpty
-#. Programmer's name for it: sJUDEmpty
-#: Jud.pas:116
-#: jud-old.pas:118
+#: jud.pas:116
 msgid "No Results were found."
 msgstr "Não foram encontrados resultados."
 
@@ -7128,9 +7074,33 @@ msgstr " desligou."
 msgid "Chat with "
 msgstr "Conversa com "
 
-#: RecvStatus.pas:579
+#: RecvStatus.pas:374
+msgid "Receive request timed out."
+msgstr "O pedido de recepção excedeu o tempo."
+
+#: RecvStatus.pas:412
+msgid "No acceptable stream hosts were sent. Have the sender check their settings."
+msgstr "Nenhum servidor de fluxo aceitável foi enviado. Peça ao remetente que verifique os parâmetros."
+
+#. send SI accept
+#: RecvStatus.pas:503
 msgid "Negotiating with sender..."
 msgstr "A negociar com o remetente..."
+
+#. we ran out of streamhosts to try. bummer :(
+#: RecvStatus.pas:680
+msgid "Exodus was unable to connect to any file transfer proxies or the sender."
+msgstr "O Exodus não se conseguiu ligar a qualquer dos proxies de transferência, nem ao remetente."
+
+#. immediately turn around and refuse.
+#: RecvStatus.pas:711
+msgid "Waiting to cancel transfer..."
+msgstr "A aguardar o cancelamento da transferência..."
+
+#. the sender went offline
+#: RecvStatus.pas:733
+msgid "The sender of a file transfer (%s) went offline."
+msgstr "O remetente de um ficheiro (%s) desligou-se."
 
 #. Programmer's name for it: sBtnFinish
 #: RegForm.pas:86
@@ -7468,16 +7438,39 @@ msgid "Your connection type does not support direct connections."
 msgstr "O seu tipo de ligação não suporta ligações directas."
 
 #. Programmer's name for it: sGrpUnfiled
-#: /src/exodus/jopl/Roster.pas:114
+#: /src/exodus/jopl/Roster.pas:115
 #: RosterWindow.pas:349
 msgid "Unfiled"
 msgstr "Não preenchido"
 
 #. Programmer's name for it: sGrpBookmarks
-#: /src/exodus/jopl/Roster.pas:113
+#: /src/exodus/jopl/Roster.pas:114
 #: RosterWindow.pas:350
 msgid "Bookmarks"
 msgstr "Favoritos"
+
+#: SendStatus.pas:805
+msgid "Your file transfer was refused to %s"
+msgstr "O seu envio de ficheiro para %s foi recusado"
+
+#. they refused
+#: SendStatus.pas:884
+msgid "The recipient (%s) refused your file: %s"
+msgstr "O destinatário (%s) recusou o seu fcheiro: %s"
+
+#. error
+#: SendStatus.pas:906
+msgid "The stream was not actived for file: %s"
+msgstr "O fluxo de transferência não foi activado para o ficheiro: %s"
+
+#: SendStatus.pas:942
+msgid "Send failed."
+msgstr "O envio falhou."
+
+#. PChar is in lparam
+#: SendStatus.pas:966
+msgid "Connected."
+msgstr "Ligado."
 
 #. Programmer's name for it: sTransportRemove
 #: Transports.pas:46
@@ -7715,12 +7708,12 @@ msgid "..country-codes.xml"
 msgstr "..country-codes.xml"
 
 #. Programmer's name for it: sIdleAway
-#: /src/exodus/jopl/PrefController.pas:240
+#: /src/exodus/jopl/PrefController.pas:244
 msgid "Away as a result of idle."
 msgstr "Ausência resultante de inactividade."
 
 #. Programmer's name for it: sIdleXA
-#: /src/exodus/jopl/PrefController.pas:241
+#: /src/exodus/jopl/PrefController.pas:245
 msgid "XA as a result of idle."
 msgstr "Ausência prolongada resultante de inactividade."
 
