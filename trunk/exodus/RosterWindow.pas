@@ -747,8 +747,10 @@ var
 begin
     // loop through all roster items and draw them
     _FullRoster := true;
-    ClearNodes;
     treeRoster.Color := TColor(MainSession.prefs.getInt('roster_bg'));
+    OutputDebugString('Clearing Nodes.');
+    ClearNodes;
+    OutputDebugString('Starting Update trans.');
     treeRoster.Items.BeginUpdate;
 
     // re-render each item
@@ -764,10 +766,15 @@ begin
             RenderBookmark(bm);
         end;
     end;
+    OutputDebugString('Finished rendering nodes');
 
     _FullRoster := false;
     treeRoster.AlphaSort;
+    OutputDebugString('Finished sorting');
     ExpandNodes();
+    OutputDebugString('Finished expanding');
+    if (treeRoster.Items.Count > 0) then
+        treeRoster.TopItem := treeRoster.Items[0];
     treeRoster.Items.EndUpdate;
 end;
 
@@ -1106,18 +1113,22 @@ begin
         end;
 
         cur_node.SelectedIndex := cur_node.ImageIndex;
-        if (exp_grpnode) then
-            grp_node.Expand(true);
-        node_rect := cur_node.DisplayRect(false);
 
-        // invalidate just the rect which contains our node
-        if (cur_node.IsVisible) then
-            InvalidateRect(treeRoster.Handle, @node_rect, false);
+        // only invalid if we're not doing a full roster draw.
+        if (not _FullRoster) then begin
+            if (exp_grpnode) then
+                grp_node.Expand(true);
+            node_rect := cur_node.DisplayRect(false);
 
-        // if we showing grp counts, then invalidate the grp rect as well.
-        if ((_group_counts) and (grp_node.isVisible)) then begin
-            grp_rect := cur_node.Parent.DisplayRect(false);
-            InvalidateRect(treeRoster.Handle, @grp_rect, false);
+            // invalidate just the rect which contains our node
+            if (cur_node.IsVisible) then
+                InvalidateRect(treeRoster.Handle, @node_rect, false);
+
+            // if we showing grp counts, then invalidate the grp rect as well.
+            if ((_group_counts) and (grp_node.isVisible)) then begin
+                grp_rect := cur_node.Parent.DisplayRect(false);
+                InvalidateRect(treeRoster.Handle, @grp_rect, false);
+            end;
         end;
     end;
 
