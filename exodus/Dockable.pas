@@ -22,14 +22,13 @@ unit Dockable;
 interface
 
 uses
-    TntForms, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     ComCtrls, Dialogs, ExtCtrls;
 
 type
   TDockNotify = procedure of object;
 
-  TfrmDockable = class(TTntForm)
+  TfrmDockable = class(TForm)
     timFlasher: TTimer;
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
