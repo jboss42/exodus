@@ -40,6 +40,9 @@ type
     procedure popAddClick(Sender: TObject);
     procedure Label1Click(Sender: TObject);
     procedure lblAddGrpClick(Sender: TObject);
+    procedure popProfileClick(Sender: TObject);
+    procedure popChatClick(Sender: TObject);
+    procedure popMessageClick(Sender: TObject);
   private
     { Private declarations }
     field_set: TStringList;
@@ -70,7 +73,7 @@ function StartSearch(sjid: string): TfrmJUD;
 implementation
 
 uses
-    Roster, Agents,
+    Profile, Roster, Agents,
     JabberID,
     Session, ExUtils,
     fTopLabel, Jabber1;
@@ -309,8 +312,7 @@ begin
             cur_state := 'get_fields';
             lstContacts.Clear();
             self.reset();
-            item := lstContacts.Items.Add();
-            item.Caption := 'No Results were returned';
+            MessageDlg('No Results were returned', mtInformation, [mbOK], 0);
             exit;
             end;
 
@@ -508,6 +510,28 @@ begin
         MainSession.Roster.GrpList.Add(ngrp);
         cboGroup.Items.Assign(MainSession.Roster.GrpList);
         end;
+end;
+
+{---------------------------------------}
+procedure TfrmJUD.popProfileClick(Sender: TObject);
+begin
+  inherited;
+    // view the profile for the user
+    ShowProfile(lstContacts.Selected.Caption);
+end;
+
+{---------------------------------------}
+procedure TfrmJUD.popChatClick(Sender: TObject);
+begin
+  inherited;
+    // Chat with this person
+end;
+
+{---------------------------------------}
+procedure TfrmJUD.popMessageClick(Sender: TObject);
+begin
+  inherited;
+    // Send a message to this person
 end;
 
 end.

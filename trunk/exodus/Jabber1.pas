@@ -1467,7 +1467,10 @@ begin
     else begin
         // add the new grp.
         gl.Add(new_grp);
-        frmRosterWindow.RenderGroup(gl.Count - 1);
+        with frmRosterWindow do begin
+            RenderGroup(gl.Count - 1);
+            treeRoster.AlphaSort(true);
+            end;
         end;
 end;
 
