@@ -39,6 +39,7 @@ type
         debug: boolean;
         minimized: boolean;
         testaa: boolean;
+        ssl_ok: boolean;
     end;
 
 procedure PlayXMPPActions();
@@ -97,7 +98,7 @@ uses
     Controls, GnuGetText, ConnDetails, IdWinsock2,
     ChatWin, GetOpt, Jabber1, PrefController, StandardAuth,
     PrefNotify, Room, RosterAdd, MsgRecv, Profile, RegForm,
-    ExResponders, MsgDisplay,
+    ExUtils, ExResponders, MsgDisplay,
     XMLParser, XMLUtils;
 
 var
@@ -113,6 +114,19 @@ var
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
+function checkSSL(): boolean;
+var
+    c, s: THandle;
+begin
+    c := LoadLibrary('libeay32.dll');
+    s := LoadLibrary('ssleay32.dll');
+
+    Result := ((c > 0) and (s > 0));
+
+    FreeLibrary(c);
+    FreeLibrary(s);
+end;
+
 function SetupSession(): boolean;
 var
     invisible, show_help: boolean;
@@ -459,6 +473,8 @@ begin
     ExStartup.priority := cli_priority;
     ExStartup.show := cli_show;
     ExStartup.status := cli_status;
+
+    ExStartup.ssl_ok := checkSSL();
 
     Result := true;
 
