@@ -25,7 +25,7 @@ uses
     Unicode, Dockable, ExEvents,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     buttonFrame, StdCtrls, ComCtrls, Grids, ExtCtrls, ExRichEdit, RichEdit2,
-    Buttons, TntStdCtrls;
+    Buttons, TntStdCtrls, Menus;
 
 type
   TfrmMsgRecv = class(TfrmDockable)
@@ -45,6 +45,18 @@ type
     btnClose: TSpeedButton;
     txtSubject: TTntLabel;
     txtSendSubject: TTntMemo;
+    popContact: TPopupMenu;
+    mnuHistory: TMenuItem;
+    popClearHistory: TMenuItem;
+    mnuProfile: TMenuItem;
+    C1: TMenuItem;
+    mnuVersionRequest: TMenuItem;
+    mnuTimeRequest: TMenuItem;
+    mnuLastActivity: TMenuItem;
+    mnuBlock: TMenuItem;
+    mnuSendFile: TMenuItem;
+    N1: TMenuItem;
+    mnuResources: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -57,12 +69,24 @@ type
       Shift: TShiftState);
     procedure btnCloseClick(Sender: TObject);
     procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
+    procedure mnuHistoryClick(Sender: TObject);
+    procedure popClearHistoryClick(Sender: TObject);
+    procedure mnuProfileClick(Sender: TObject);
+    procedure mnuVersionRequestClick(Sender: TObject);
+    procedure mnuBlockClick(Sender: TObject);
+    procedure mnuSendFileClick(Sender: TObject);
+    procedure txtFromClick(Sender: TObject);
   private
     { Private declarations }
+    _base_jid: WideString;
+
+    procedure SetupResources();
+    procedure DisablePopup();
+    procedure mnuResourceClick(Sender: TObject);
   public
     { Public declarations }
     eType: TJabberEventType;
-    recips: TStringlist;
+    recips: TWideStringlist;
 
     procedure SetupSend();
   end;
@@ -86,10 +110,10 @@ resourcestring
 {---------------------------------------}
 implementation
 uses
-    ShellAPI,
-    ExUtils, JabberMsg,
-    RemoveContact, RosterRecv, Room,
-    Session, Jabber1;
+    ShellAPI, Profile, Transfer,
+    ExUtils, JabberMsg, JabberID,
+    RosterWindow, RemoveContact, RosterRecv, Room,
+    Presence, Session, Jabber1;
 
 {$R *.DFM}
 
@@ -116,6 +140,8 @@ begin
             txtSubject.Caption := e.data_type;
             txtMsg.InputFormat := ifUnicode;
             txtMsg.WideText := e.Data.Text;
+
+            DisablePopup();
 
             if eType = evt_Invite then begin
                 // Change button captions for TC Invites
@@ -146,6 +172,7 @@ begin
         eType := evt_Message;
         recips.Assign(jids);
         SetupSend();
+        DisablePopup();
 
         // setup the form for sending a msg
         txtFrom.Caption := '';
@@ -172,12 +199,39 @@ begin
         // setup the form for sending a msg
         SetupSend();
         recips.Add(jid);
+        SetupResources();
 
         txtFrom.Caption := jid;
         ShowDefault;
         btnClose.Visible := Docked;
         FormResize(nil);
         txtSendSubject.SetFocus();
+        end;
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.DisablePopup();
+var
+    i: integer;
+begin
+    for i := 0 to popContact.Items.Count - 1 do
+        popCOntact.Items[i].Enabled := false;
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.SetupResources();
+var
+    p: TJabberPres;
+    m: TMenuItem;
+begin
+    _base_jid := recips[0];
+    p := MainSession.ppdb.FindPres(recips[0], '');
+    while (p <> nil) do begin
+        m := TMenuItem.Create(popContact);
+        m.Caption := p.fromJID.resource;
+        m.OnClick := mnuResourceClick;
+        mnuResources.Add(m);
+        p := MainSession.ppdb.NextPres(p);
         end;
 end;
 
@@ -194,7 +248,7 @@ begin
     AssignDefaultFont(txtSendSubject.Font);
 
     Self.ClientHeight := 200;
-    recips := TStringlist.Create();
+    recips := TWideStringlist.Create();
 end;
 
 {---------------------------------------}
@@ -216,7 +270,7 @@ procedure TfrmMsgRecv.FormResize(Sender: TObject);
 begin
     // Resize some of the form element
     btnClose.Left := Self.ClientWidth - btnClose.Width - 2;
-    txtFrom.Width := pnlFrom.Width - btnClose.Width - StaticText1.Width - 5;
+    // txtFrom.Width := pnlFrom.Width - btnClose.Width - StaticText1.Width - 5;
     txtMsg.Repaint();
 end;
 
@@ -309,12 +363,104 @@ begin
     Self.Close;
 end;
 
-
+{---------------------------------------}
 procedure TfrmMsgRecv.FormEndDock(Sender, Target: TObject; X, Y: Integer);
 begin
   inherited;
     btnClose.Visible := Docked;
 end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.mnuHistoryClick(Sender: TObject);
+begin
+  inherited;
+    if recips.count > 0 then
+        ShowLog(recips[0]);
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.popClearHistoryClick(Sender: TObject);
+begin
+  inherited;
+    if recips.count <= 0 then exit;
+    ClearLog(recips[0])
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.mnuProfileClick(Sender: TObject);
+begin
+  inherited;
+    if recips.count <= 0 then exit;
+    ShowProfile(recips[0]);
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.mnuVersionRequestClick(Sender: TObject);
+var
+    jid: WideString;
+    p: TJabberPres;
+begin
+  inherited;
+    // get some CTCP query sent out
+    if recips.count <= 0 then exit;
+    p := MainSession.ppdb.FindPres(recips[0], '');
+    if p = nil then
+        // this person isn't online.
+        jid := recips[0]
+    else
+        jid := p.fromJID.full;
+
+    if Sender = mnuVersionRequest then
+        jabberSendCTCP(jid, XMLNS_VERSION)
+    else if Sender = mnuTimeRequest then
+        jabberSendCTCP(jid, XMLNS_TIME)
+    else if Sender = mnuLastActivity then
+        jabberSendCTCP(jid, XMLNS_LAST);
+
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.mnuBlockClick(Sender: TObject);
+begin
+  inherited;
+    if recips.count <= 0 then exit;
+    MainSession.Block(TJabberID.Create(recips[0]));
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.mnuSendFileClick(Sender: TObject);
+var
+    p: TJabberPres;
+begin
+  inherited;
+    if recips.count <= 0 then exit;
+    p := MainSession.ppdb.FindPres(recips[0], '');
+    if (p = nil) then begin
+        // xxx: can't send to offline contacts
+        end;
+
+    FileSend(p.fromJID.full);
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.mnuResourceClick(Sender: TObject);
+begin
+  inherited;
+    // set the message to this resource.
+    recips[0] := _base_jid + '/' + TMenuItem(Sender).Caption;
+    txtFrom.Caption := recips[0];
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.txtFromClick(Sender: TObject);
+var
+    cp: TPoint;
+begin
+  inherited;
+    GetCursorPos(cp);
+    popContact.popup(cp.x, cp.y);
+end;
+
 
 end.
 

@@ -98,17 +98,19 @@ object frmMsgRecv: TfrmMsgRecv
       Top = 2
       Width = 32
       Height = 18
+      Cursor = crHandPoint
       Align = alLeft
       Caption = '<JID>'
       Color = clBtnFace
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
+      Font.Color = clBlue
       Font.Height = -11
       Font.Name = 'MS Sans Serif'
-      Font.Style = []
+      Font.Style = [fsUnderline]
       ParentColor = False
       ParentFont = False
       TabOrder = 1
+      OnClick = txtFromClick
     end
   end
   object pnlSubject: TPanel
@@ -408,6 +410,51 @@ object frmMsgRecv: TfrmMsgRecv
       TabOrder = 0
       WantReturns = False
       WordWrap = False
+    end
+  end
+  object popContact: TPopupMenu
+    Left = 8
+    Top = 80
+    object mnuHistory: TMenuItem
+      Caption = 'Show History'
+      OnClick = mnuHistoryClick
+    end
+    object popClearHistory: TMenuItem
+      Caption = 'Clear History'
+      OnClick = popClearHistoryClick
+    end
+    object mnuProfile: TMenuItem
+      Caption = 'Show Profile'
+      OnClick = mnuProfileClick
+    end
+    object C1: TMenuItem
+      Caption = 'Client Info'
+      object mnuVersionRequest: TMenuItem
+        Caption = 'Version Request'
+        OnClick = mnuVersionRequestClick
+      end
+      object mnuTimeRequest: TMenuItem
+        Caption = 'Time Request'
+        OnClick = mnuVersionRequestClick
+      end
+      object mnuLastActivity: TMenuItem
+        Caption = 'Last Activity'
+        OnClick = mnuVersionRequestClick
+      end
+    end
+    object mnuBlock: TMenuItem
+      Caption = 'Block Contact'
+      OnClick = mnuBlockClick
+    end
+    object mnuSendFile: TMenuItem
+      Caption = 'Send File'
+      OnClick = mnuSendFileClick
+    end
+    object N1: TMenuItem
+      Caption = '-'
+    end
+    object mnuResources: TMenuItem
+      Caption = 'Resources'
     end
   end
 end
