@@ -790,6 +790,9 @@ begin
         if (_invisible) then
             p.PresType := 'invisible';
 
+        // allow plugins to add stuff, by trapping this event
+        MainSession.FireEvent('/session/before_presence', p);
+
         for i := 0 to Presence_XML.Count - 1 do
             p.addInsertedXML(Presence_XML[i]);
 

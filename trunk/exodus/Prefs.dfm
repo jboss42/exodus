@@ -20,7 +20,7 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 384
+    Height = 389
     Align = alLeft
     Color = clWindow
     ParentColor = False
@@ -1061,7 +1061,13 @@ object frmPrefs: TfrmPrefs
       Alignment = taCenter
       Caption = 'System'
       Color = clHighlight
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clHighlightText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
       ParentColor = False
+      ParentFont = False
       WordWrap = True
       OnClick = TabSelect
     end
@@ -1570,7 +1576,7 @@ object frmPrefs: TfrmPrefs
     Left = 89
     Top = 0
     Width = 371
-    Height = 384
+    Height = 389
     ActivePage = tbsPlugins
     Align = alClient
     Constraints.MinHeight = 340
@@ -3113,6 +3119,7 @@ object frmPrefs: TfrmPrefs
         Caption = 'Configure'
         Enabled = False
         TabOrder = 3
+        OnClick = btnConfigPluginClick
       end
       object btnRemovePlugin: TButton
         Left = 174
@@ -3168,7 +3175,7 @@ object frmPrefs: TfrmPrefs
   end
   object Panel1: TPanel
     Left = 0
-    Top = 384
+    Top = 389
     Width = 460
     Height = 37
     Align = alBottom

@@ -255,6 +255,7 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure btnBrowsePluginPathClick(Sender: TObject);
     procedure lblPluginScanClick(Sender: TObject);
+    procedure btnConfigPluginClick(Sender: TObject);
   private
     { Private declarations }
     _notify: array of integer;
@@ -318,7 +319,7 @@ implementation
 uses
     ActiveX, ComObj,
     AutoUpdate,
-    ExUtils, ExodusCOM_TLB,
+    ExUtils, ExodusCOM_TLB, COMController, 
     FileCtrl, XMLUtils, PathSelector,
     Presence, MsgDisplay, JabberMsg, Jabber1,
     PrefController, Registry, Session;
@@ -556,6 +557,7 @@ var
     i: integer;
     item: TTntListItem;
     sl: TWidestringlist;
+    loaded: TStringlist;
 begin
     // save all "checked" captions
     sl := TWidestringlist.Create();
@@ -569,6 +571,7 @@ begin
     end;
 
     MainSession.Prefs.setStringlist('plugin_selected', sl);
+    ReloadPlugins(sl);
     sl.Free();
 end;
 
@@ -1321,6 +1324,7 @@ begin
 
 end;
 
+{---------------------------------------}
 procedure TfrmPrefs.chkLogClick(Sender: TObject);
 begin
     chkLogRooms.Enabled := chkLog.Checked;
@@ -1328,11 +1332,13 @@ begin
     btnLogBrowse.Enabled := chkLog.Checked;
 end;
 
+{---------------------------------------}
 procedure TfrmPrefs.btnLogClearAllClick(Sender: TObject);
 begin
     ClearAllLogs();
 end;
 
+{---------------------------------------}
 procedure TfrmPrefs.btnSpoolBrowseClick(Sender: TObject);
 begin
     OpenDialog1.FileName := txtSpoolPath.Text;
@@ -1340,6 +1346,7 @@ begin
         txtSpoolPath.Text := OpenDialog1.FileName;
 end;
 
+{---------------------------------------}
 procedure TfrmPrefs.btnUpdateCheckClick(Sender: TObject);
 var
     available : boolean;
@@ -1352,6 +1359,7 @@ begin
         MessageDlg(sNoUpdate, mtInformation, [mbOK], 0);
 end;
 
+{---------------------------------------}
 procedure TfrmPrefs.btnUpdateCheckMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
@@ -1360,6 +1368,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmPrefs.btnBrowsePluginPathClick(Sender: TObject);
 var
     p: String;
@@ -1374,9 +1383,22 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmPrefs.lblPluginScanClick(Sender: TObject);
 begin
     loadPlugins();
+end;
+
+{---------------------------------------}
+procedure TfrmPrefs.btnConfigPluginClick(Sender: TObject);
+var
+    li: TListItem;
+    com_name: string;
+begin
+    li := lstPlugins.Selected;
+    if (li = nil) then exit;
+    com_name := li.Caption;
+    ConfigurePlugin(com_name);
 end;
 
 end.

@@ -121,7 +121,7 @@ end;
 {---------------------------------------}
 procedure TAIMImportPlugin.Shutdown;
 begin
-
+    _controller.removePluginMenu(_menu_id);
 end;
 
 {---------------------------------------}
