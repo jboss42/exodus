@@ -1313,8 +1313,9 @@ begin
     if MainSession.Prefs.getBool('expanded') then begin
         getMsgQueue().LogEvent(e, msg, img_idx);
         end
-    else if (e.delayed) then begin
+    else if (e.delayed) or (MainSession.Prefs.getBool('msg_queue')) then begin
         // we are collapsed, but this event was delayed (offline'd)
+        // or we always want to use the msg queue
         // so display it in the msg queue, not live
         mqueue := getMsgQueue();
         mqueue.Show;
@@ -1479,8 +1480,10 @@ begin
 
         // Undock the MsgQueue... if it's empty, close it.
         if (frmMsgQueue <> nil) then begin
-            if (frmMsgQueue.lstEvents.Items.Count > 0) then
-                frmMsgQueue.FloatForm
+            if (frmMsgQueue.lstEvents.Items.Count > 0) then begin
+                frmMsgQueue.Align := alNone;
+                frmMsgQueue.FloatForm;
+                end
             else
                 frmMsgQueue.Close;
             end;
