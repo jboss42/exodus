@@ -497,7 +497,7 @@ const
 {---------------------------------------}
 implementation
 uses
-    CommandWizard, ExodusCOM_TLB, Notify,  
+    NewUser, CommandWizard, ExodusCOM_TLB, Notify,  
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
     ChatController, ChatWin, Debug, Dockable, DNSUtils, Entity,
     EntityCache, ExSession, JabberUtils, ExUtils,
@@ -2739,15 +2739,18 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.Test1Click(Sender: TObject);
+{
 var
-    {
     h: integer;
     i: IExodusController;
-    }
     f, o, m, x: TXMLTag;
+    }
 begin
+
+    ShowNewUserWizard();
+
     //
-    ShowMessage(BoolToStr(IsUnicodeEnabled()));
+    //ShowMessage(BoolToStr(IsUnicodeEnabled()));
     {
     Application.CreateForm(TfrmTest1, frmTest1);
     frmTest1.ShowDefault();
@@ -2759,6 +2762,7 @@ begin
     }
 
     // Do some xdata tests
+    {
     m := TXMLTag.Create('message');
     x := m.AddTag('x');
     x.setAttribute('xmlns', 'jabber:x:data');
@@ -2857,6 +2861,8 @@ begin
     f.addBasicTag('value', '666 foo bar'#13#10' sdkfjls'#13#10'kjdflksjdf;ljsf;'#13#10'klsjf;lkjsafkjsaldfj;lasjfd;klsajd;kljasdjf;ajdf;ljsfd;kjasdf;jas;fkja;df;ljaslfkj;asdf;klasdfklasdfj;ajdf;ljsf;ksafd;kjadsf;jkasdjfs;lf;lsdf');
 
     ShowXData(m);
+    }
+    
 end;
 
 {---------------------------------------}
