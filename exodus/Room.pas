@@ -2136,6 +2136,8 @@ begin
   inherited;
     // start chat w/ room participant
     // Chat w/ this person..
+    if (lstRoster.Selected = nil) then exit;
+
     rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
     if (rm <> nil) then begin
         tmp_jid := TJabberID.Create(rm.jid);
@@ -2153,6 +2155,8 @@ var
 begin
   inherited;
     // Send my JID to this user
+    if (lstRoster.Selected = nil) then exit;
+
     rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
     if (rm <> nil) then begin
         ri := MainSession.Roster.Find(MainSession.BareJid);
@@ -2331,6 +2335,8 @@ var
 begin
   inherited;
     // subscribe to this person
+    if (lstRoster.Selected = nil) then exit;
+
     rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
     if ((rm <> nil) and (rm.real_jid <> '')) then begin
         j := TJabberID.Create(rm.real_jid);
@@ -2348,6 +2354,8 @@ var
 begin
   inherited;
     // lookup the vcard.
+    if (lstRoster.Selected = nil) then exit;
+
     rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
     if ((rm <> nil) and (rm.real_jid <> '')) then begin
         j := TJabberID.Create(rm.real_jid);
@@ -2363,6 +2371,8 @@ var
     rm: TRoomMember;
 begin
   inherited;
+    if (lstRoster.Selected = nil) then exit;
+
     rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
     if ((rm <> nil) and (rm.real_jid <> '')) then begin
         j := TJabberID.Create(rm.real_jid);
