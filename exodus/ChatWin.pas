@@ -53,6 +53,7 @@ type
     mnuWordwrap: TMenuItem;
     NotificationOptions1: TMenuItem;
     timBusy: TTimer;
+    popAddContact: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
