@@ -189,6 +189,7 @@ begin
         tmps := MainSession.generateID();
         iq := TJabberIQ.Create(MainSession, tmps, vcard);
         iq.Namespace := 'vcard-temp';
+        iq.qTag.Name := 'vCard';
         iq.iqType := 'get';
         iq.toJid := tmp_jid.jid;
         iq.Send;
