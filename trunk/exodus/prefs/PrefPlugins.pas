@@ -54,6 +54,9 @@ type
     procedure SavePrefs(); override;
   end;
 
+type
+    TRegProc = function : HResult; stdcall;
+
 var
   frmPrefPlugins: TfrmPrefPlugins;
 
@@ -164,10 +167,34 @@ var
     tattr, iattr: PTypeAttr;
     r: cardinal;
     libname, obname, doc: WideString;
+
+    // stuff for reg
+    dll_inst: THandle;
+    dll_reg: TDLLRegProc;
 begin
     // load the .dll.  This SHOULD register the bloody thing if it's not, but that
     // doesn't seem to work for me.
-    OleCheck(LoadTypeLibEx(pwidechar(dll), REGKIND_REGISTER, lib));
+    OleCheck(LoadTypeLibEx(PWideChar(dll), REGKIND_REGISTER, lib));
+
+    // try to register it??
+    // OleCheck(RegisterTypeLib(lib, PWideChar(dll), nil));
+    {
+    // From the TRegSvr example.
+    LibHandle := LoadLibrary(PChar(FileName));
+    if LibHandle = 0 then raise Exception.CreateFmt(SLoadFail, [FileName]);
+    try
+    @RegProc := GetProcAddress(LibHandle, ProcName[RegAction]);
+    if @RegProc = Nil then
+      raise Exception.CreateFmt(SCantFindProc, [ProcName[RegAction],
+        FileName]);
+    if RegProc <> 0 then
+      raise Exception.CreateFmt(SRegFail, [ProcName[RegAction], FileName]);
+    OutputStr(Format(SRegSuccessful, [ProcName[RegAction]]))
+    finally
+    FreeLibrary(LibHandle);
+    end;
+    }
+
     // get the project name
     OleCheck(lib.GetDocumentation(-1, @libname, nil, nil, nil));
 
@@ -205,20 +232,14 @@ begin
                 // check to see if this is selected
                 idx := selected.IndexOf(item.Caption);
                 item.Checked := (idx >= 0);
-
-                // let her rip!!
-                // OleCheck(tinfo.CreateInstance(nil, ExodusCOM_TLB.IID_IExodusPlugin, ep));
             end;
             iface.ReleaseTypeAttr(iattr);
-            //iface._Release(); // crash
         end;
         tinfo.ReleaseTypeAttr(tattr);
-        //tinfo._Release();
     end;
-    // lib._Release(); // crash
 end;
 
-
+{---------------------------------------}
 procedure TfrmPrefPlugins.btnBrowsePluginPathClick(Sender: TObject);
 var
     p: String;
@@ -233,12 +254,14 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmPrefPlugins.lblPluginScanClick(Sender: TObject);
 begin
   inherited;
     loadPlugins();
 end;
 
+{---------------------------------------}
 procedure TfrmPrefPlugins.btnConfigPluginClick(Sender: TObject);
 var
     li: TListItem;
