@@ -59,9 +59,9 @@ e("$rcc iehtml.rc");
 
 if ($::rtype eq "daily") {
     # Generate a detailed MAP file, and build in stack frame tracing
-    e("$dcc $opts -DExodus -GD -DTRACE_EXCEPTIONS -Noutput -U\"$::TNT\" Exodus.dpr");
+    e("$dcc $opts -DExodus -GD -DTRACE_EXCEPTIONS -Noutput -U\"Components\" -U\"$::TNT\" Exodus.dpr");
 } else {
-    e("$dcc $opts -DExodus -D -Noutput -U\"$::TNT\" Exodus.dpr");
+    e("$dcc $opts -DExodus -DTRACE_EXCEPTIONS -D -Noutput -U\"Components\" -U\"$::TNT\" Exodus.dpr");
 }
 
 e("$::DXGETTEXT *.pas *.inc *.dpr *.xfm *.dfm prefs\\*.pas prefs\\*.inc prefs\\*.rc prefs\\*.dpr prefs\\*.xfm prefs\\*.dfm ..\\jopl\\*.pas ..\\jopl\\*.inc ..\\jopl\\*.rc ..\\jopl\\*.dpr ..\\jopl\\*.xfm ..\\jopl\\*.dfm");
