@@ -2,7 +2,7 @@ object frmPrefSystem: TfrmPrefSystem
   Left = 259
   Top = 156
   Width = 327
-  Height = 342
+  Height = 430
   BorderWidth = 6
   Caption = 'frmPrefSystem'
   Color = clBtnFace
@@ -23,8 +23,8 @@ object frmPrefSystem: TfrmPrefSystem
     Caption = 'Exodus language file to use:'
   end
   object lblPluginScan: TTntLabel
-    Left = 27
-    Top = 227
+    Left = 30
+    Top = 226
     Width = 130
     Height = 13
     Cursor = crHandPoint
@@ -36,6 +36,13 @@ object frmPrefSystem: TfrmPrefSystem
     Font.Style = [fsUnderline]
     ParentFont = False
     OnClick = lblPluginScanClick
+  end
+  object Label15: TTntLabel
+    Left = 8
+    Top = 251
+    Width = 111
+    Height = 13
+    Caption = 'My default nickname is:'
   end
   object StaticText4: TTntPanel
     Left = 0
@@ -96,8 +103,8 @@ object frmPrefSystem: TfrmPrefSystem
     TabOrder = 5
   end
   object chkOnTop: TTntCheckBox
-    Left = 8
-    Top = 256
+    Left = 0
+    Top = 352
     Width = 169
     Height = 17
     Caption = 'Exodus is always on top'
@@ -141,12 +148,19 @@ object frmPrefSystem: TfrmPrefSystem
   object cboLocale: TTntComboBox
     Left = 29
     Top = 202
-    Width = 143
+    Width = 188
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
     TabOrder = 11
     Items.WideStrings = (
       'English (American)')
+  end
+  object txtDefaultNick: TTntEdit
+    Left = 29
+    Top = 267
+    Width = 188
+    Height = 21
+    TabOrder = 12
   end
 end

@@ -1,8 +1,8 @@
 inherited frmPrefMsg: TfrmPrefMsg
-  Left = 277
-  Top = 150
+  Left = 282
+  Top = 230
   Caption = 'frmPrefMsg'
-  ClientHeight = 366
+  ClientHeight = 426
   ClientWidth = 348
   OldCreateOrder = True
   PixelsPerInch = 96
@@ -17,21 +17,21 @@ inherited frmPrefMsg: TfrmPrefMsg
   object Label7: TTntLabel
     Left = 5
     Top = 229
-    Width = 287
+    Width = 170
     Height = 13
     Caption = 'Simple message (non-chat) handling'
   end
   object Label16: TTntLabel
     Left = 5
     Top = 315
-    Width = 287
+    Width = 128
     Height = 13
     Caption = 'Store Unread messages to:'
   end
   object Label17: TTntLabel
     Left = 5
     Top = 269
-    Width = 287
+    Width = 198
     Height = 13
     Caption = 'When I get invited to a chat room, do this:'
   end

@@ -116,6 +116,8 @@ type
     _cur_time: TJabberIQ;  
     _cur_last: TJabberIQ;
 
+    _mynick: Widestring;
+
     // custom notification options to use..
     _notify: array[0..3] of integer;
 
@@ -382,6 +384,10 @@ begin
     mnuWordwrap.Checked := _wrap_input;
     MsgOut.WantReturns := _embed_returns;
     MsgOut.WordWrap := _wrap_input;
+
+    _mynick := MainSession.Prefs.getString('default_nick');
+    if (_mynick = '') then
+        _mynick := MainSession.Username;
 end;
 
 {---------------------------------------}
@@ -632,7 +638,7 @@ begin
     // send the msg
     msg := TJabberMessage.Create(jid, 'chat', Trim(body), '');
     msg.thread := _thread;
-    msg.nick := MainSession.Username;
+    msg.nick := _mynick;
     msg.isMe := true;
 
     _last_id := MainSession.generateID();
@@ -728,6 +734,7 @@ begin
     end
     else if (event = '/session/prefs') then
         SetupPrefs()
+
     else if (event = '/session/block') then begin
         // if this jid just got blocked, just close the window.
         if (_jid.jid = tag.GetAttribute('jid')) then begin

@@ -74,6 +74,8 @@ begin
         txtServer.Text := MainSession.Prefs.getString('tc_lastserver');
         txtNick.Text := MainSession.Prefs.getString('tc_lastnick');
         if (txtNick.Text = '') then
+            txtNick.Text := MainSession.Prefs.getString('default_nick');
+        if (txtNick.Text = '') then
             txtNick.Text := MainSession.Username;
 
         with txtServer do begin

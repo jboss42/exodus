@@ -450,7 +450,7 @@ begin
     if eType = evt_Invite then begin
         // join this grp... grp is in the subject
         jid := txtSubject.Caption;
-        StartRoom(jid, MainSession.Username);
+        StartRoom(jid, '');
         Self.Close();
     end
 
@@ -495,7 +495,8 @@ begin
         // these must be set so that logging works right
         m.ToJID := recips[i];
         m.isMe := true;
-        m.Nick := MainSession.Username;
+        m.Nick := MainSession.Prefs.getString('default_nick');
+        if (m.Nick = '') then m.Nick := MainSession.Username;
 
         mtag := m.Tag;
 

@@ -706,9 +706,9 @@ begin
 
     tmpjid := TJabberID.Create(cjid);
     if (tmpjid.user = '') then
-        StartJoinRoom(tmpjid, MainSession.username, '')
+        StartJoinRoom(tmpjid, '', '')
     else
-        StartRoom(cjid, MainSession.Username);
+        StartRoom(cjid, '');
     tmpjid.Free();
 end;
 

@@ -53,17 +53,13 @@ type
         _dataSignal: TStringSignal;
         _unhandledSignal: TBasicSignal;
         _winSignal: TPacketSignal;
-
         _paused: boolean;
         _pauseQueue: TQueue;
-
         _id: longint;
         _cb_id: longint;
-
         _authd: boolean;
         _first_pres: boolean;
         _avails: TWidestringlist;
-
         _auth_agent: TJabberAuth;
 
         procedure StreamCallback(msg: string; tag: TXMLTag);

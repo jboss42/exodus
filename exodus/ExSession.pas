@@ -598,8 +598,9 @@ begin
                 StartChat(jid, '', true);
         end
         else if (node.Name = 'groupchat') then begin
-            if (jid <> '') then
-                StartRoom(jid, MainSession.Username);
+            if (jid <> '') then begin
+                StartRoom(jid, '');
+            end;
         end
         else if (node.Name = 'subscribe') then begin
             if (jid <> '') then begin
