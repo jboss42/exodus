@@ -1,40 +1,31 @@
-2004-06-28 08:36  pgmillard
+2004-07-01 08:23  pgmillard
 
 	* exodus/: default.po, version.h, version.nsi: daily build
 
-2004-06-28 08:30  pgmillard
+2004-06-30 22:51  pgmillard
 
-	* exodus/: default.po, plugins/plugin-desc-new.nsi,
-	  plugins/plugin-off-new.nsi, plugins/plugin-sections-new.nsi,
-	  plugins/AIM-Import/ExodusCOM_TLB.pas,
-	  plugins/ASpeller/ExodusCOM_TLB.pas,
-	  plugins/HTMLLogger/ExodusCOM_TLB.pas,
-	  plugins/ICQ-Import/ExodusCOM_TLB.pas,
-	  plugins/JabberStats/ExodusCOM_TLB.pas,
-	  plugins/NetMeeting/ExodusCOM_TLB.pas,
-	  plugins/RosterTools/ExodusCOM_TLB.pas,
-	  plugins/SQLLogger/ExodusCOM_TLB.pas: [no log message]
+	* exodus/: Jabber1.dfm, Jabber1.pas, Prefs.pas: Make plugins menu
+	  have ability to go directly to the options dialog.
 
-2004-06-28 08:18  pgmillard
+2004-06-30 21:48  pgmillard
 
-	* exodus/Exodus.dpr: Fixup Exodus.dpr to NOT include md5.pas
+	* exodus/: Jabber1.pas, Login.pas: Bug #3952 - Fix AV on exit when
+	  login window is showing.
 
-2004-06-28 07:22  pgmillard
+2004-06-30 21:35  pgmillard
 
-	* exodus/Exodus.dpr, exodus/ExodusCOM_TLB.pas, jopl/XMLUtils.pas:
-	  Add in initial md5 stuff for file-xfers
+	* exodus/prefs/PrefNetwork.pas: Bug #3924 - Fixup HTTP proxy
+	  controls for network prefs
 
-2004-06-27 21:41  pgmillard
+2004-06-30 21:02  pgmillard
 
-	* exodus/Jabber1.dfm, exodus/Jabber1.pas, exodus/RecvStatus.pas,
-	  exodus/SendStatus.pas, exodus/XferManager.pas, jopl/XMLUtils.pas:
-	  File transfer appears to now work correctly. Looks like a bug in
-	  indy is repsponsible. SIGH
+	* exodus/: RosterWindow.dfm, RosterWindow.pas: Bug #3894 - Added
+	  auto-scrolling to the roster during drag-n-drop ops
 
-2004-06-24 14:10  pgmillard
+2004-06-30 20:14  pgmillard
 
-	* exodus/: XferManager.pas, fGeneric.dfm,
-	  plugins/plugin-desc-new.nsi, plugins/plugin-off-new.nsi,
-	  plugins/plugin-sections-new.nsi: Yet more file transfer tweaks in
-	  an attempt to fix off-by-one byte error
+	* exodus/ChatWin.dfm, exodus/ChatWin.pas, exodus/Jabber1.pas,
+	  exodus/RecvStatus.pas, jopl/NodeItem.pas, jopl/Presence.pas,
+	  jopl/Roster.pas: Bug #3949 - Make sure multiple priority, status,
+	  and show elements don't get inside a presence packet
 
