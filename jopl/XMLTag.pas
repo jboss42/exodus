@@ -645,6 +645,7 @@ begin
     m := nil;
     while (i <= l) do begin
         c := xps[i];
+
         if ((c = '"') or (c = Chr(39))) then begin
             // we are in a quote sequence, find the matching quote
             f := i + 1;
@@ -652,8 +653,9 @@ begin
                 inc(f);
             if (f <= l) then
                 i := f;
-            end
-        else if ((c = '/') or (i = l)) then begin
+            end;
+
+        if ((c = '/') or (i = l)) then begin
             // we've reached a seperator
             if c = '/' then
                 cur := Copy(xps, s, (i-s))

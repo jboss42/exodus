@@ -1,6 +1,6 @@
 object frmLogin: TfrmLogin
-  Left = 239
-  Top = 211
+  Left = 289
+  Top = 210
   Width = 250
   Height = 265
   Caption = 'Jabber Login'
@@ -92,7 +92,7 @@ object frmLogin: TfrmLogin
     Top = 28
     Width = 130
     Height = 21
-    TabOrder = 0
+    TabOrder = 1
   end
   object txtPassword: TEdit
     Left = 98
@@ -100,7 +100,7 @@ object frmLogin: TfrmLogin
     Width = 130
     Height = 21
     PasswordChar = '*'
-    TabOrder = 1
+    TabOrder = 2
   end
   object cboServer: TComboBox
     Left = 98
@@ -108,7 +108,7 @@ object frmLogin: TfrmLogin
     Width = 131
     Height = 21
     ItemHeight = 13
-    TabOrder = 2
+    TabOrder = 3
     Text = 'jabber.org'
     Items.Strings = (
       'jabber.org'
@@ -134,7 +134,7 @@ object frmLogin: TfrmLogin
     Height = 37
     Align = alBottom
     AutoScroll = False
-    TabOrder = 5
+    TabOrder = 8
     inherited Bevel1: TBevel
       Width = 242
     end
@@ -157,7 +157,7 @@ object frmLogin: TfrmLogin
     Height = 21
     Style = csDropDownList
     ItemHeight = 13
-    TabOrder = 3
+    TabOrder = 0
     OnChange = cboProfilesChange
     Items.Strings = (
       'Default Profile')
@@ -167,7 +167,7 @@ object frmLogin: TfrmLogin
     Top = 124
     Width = 39
     Height = 21
-    TabOrder = 6
+    TabOrder = 5
     Text = '0'
   end
   object spnPriority: TUpDown
@@ -179,7 +179,7 @@ object frmLogin: TfrmLogin
     Min = 0
     Max = 1000
     Position = 0
-    TabOrder = 7
+    TabOrder = 6
     Wrap = False
   end
   object chkSSL: TCheckBox
@@ -188,6 +188,6 @@ object frmLogin: TfrmLogin
     Width = 127
     Height = 17
     Caption = 'Use SSL to connect'
-    TabOrder = 8
+    TabOrder = 7
   end
 end

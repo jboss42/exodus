@@ -43,7 +43,9 @@ type
         eType: TJabberEventType;
         from: string;
         id: string;
+        edate: TDateTime;
         data_type: string;
+        delayed: boolean;
 
         constructor create;
         destructor destroy; override;
@@ -59,7 +61,7 @@ function CreateJabberEvent(tag: TXMLTag): TJabberEvent;
 {---------------------------------------}
 implementation
 uses
-    Session;
+    ExUtils, Session;
 
 {---------------------------------------}
 function CreateJabberEvent(tag: TXMLTag): TJabberEvent;
@@ -78,6 +80,8 @@ constructor TJabberEvent.create;
 begin
     inherited Create;
     _data_list := TStringList.Create;
+    delayed := false;
+    edate := Now();
 end;
 
 {---------------------------------------}
@@ -91,7 +95,7 @@ end;
 procedure TJabberEvent.Parse(tag: TXMLTag);
 var
     tmps, s, ptype, ns, t: string;
-    qtag, tmp_tag: TXMLTag;
+    delay, qtag, tmp_tag: TXMLTag;
     c_tags: TXMLTagList;
     i: integer;
 begin
@@ -128,6 +132,15 @@ begin
         tmp_tag := tag.GetFirstTag('body');
         if (tmp_tag <> nil) then
             _data_list.Text := tmp_tag.Data;
+
+        delay := tag.QueryXPTag('/message/x[@xmlns="jabber:x:delay"]');
+        if (delay <> nil) then begin
+            // we have a delay tag
+            edate := JabberToDateTime(delay.getAttribute('stamp'));
+            delayed := true;
+            end
+        else
+            edate := Now();
         end
     else if (tag.name = 'presence') then begin
         eType := evt_Presence;

@@ -286,7 +286,7 @@ begin
     else if pkey = 'roster_font_color' then
         result := IntToStr(Integer(Screen.IconFont.Color))
     else
-        result := '0';
+        result := '';
 end;
 
 {---------------------------------------}

@@ -29,15 +29,18 @@ type
   TfrmDockable = class(TForm)
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure FormResize(Sender: TObject);
   private
     { Private declarations }
     _docked: boolean;
     _pos: TRect;
     _noMoveCheck: boolean;
     _edge_snap: integer;
+    procedure CheckPos();
+    procedure SavePos();
   protected
-      procedure CreateParams(var Params: TCreateParams); override;
-      procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
+    procedure CreateParams(var Params: TCreateParams); override;
+    procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
   public
     { Public declarations }
     TabSheet: TTabSheet;
@@ -57,7 +60,7 @@ implementation
 {$R *.dfm}
 
 uses
-    Session, 
+    Session,
     Jabber1;
 
 {---------------------------------------}
@@ -68,11 +71,7 @@ begin
 
     MainSession.Prefs.RestorePosition(Self);
     _edge_snap := MainSession.Prefs.getInt('edge_snap');
-    _pos.Left := Self.Left;
-    _pos.Right := Self.Left + Self.Width;
-    _pos.Top := Self.Top;
-    _pos.Bottom := Self.Top + Self.Height;
-
+    Self.SavePos();
     _noMoveCheck := false;
 end;
 
@@ -80,6 +79,7 @@ end;
 procedure TfrmDockable.DockForm;
 begin
     // dock the window to the main form
+    Self.SavePos();
     Self.ManualDock(frmJabber.Tabs);
     Self.Align := alClient;
     _docked := true;
@@ -87,8 +87,29 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmDockable.CheckPos();
+begin
+    //
+    if (_pos.Right - _pos.Left) <= 100 then
+        _pos.Right := _pos.Left + 150;
+
+    if (_pos.Bottom - _pos.Top) <= 100 then
+        _pos.Bottom := _pos.Top + 150;
+end;
+
+{---------------------------------------}
+procedure TfrmDockable.SavePos();
+begin
+    _pos.Left := Self.Left;
+    _pos.Right := Self.Left + Self.Width;
+    _pos.Top := Self.Top;
+    _pos.Bottom := Self.Top + Self.Height;
+end;
+
+{---------------------------------------}
 procedure TfrmDockable.FloatForm;
 begin
+    Self.CheckPos();
     Self.ManualFloat(_pos);
     _docked := false;
     Self.TabSheet := nil;
@@ -98,7 +119,7 @@ end;
 procedure TfrmDockable.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
-    if (not _docked) then
+    if (not _docked) then 
         MainSession.Prefs.SavePosition(Self);
 end;
 
@@ -183,5 +204,11 @@ begin
     inherited;
 end;
 
+
+procedure TfrmDockable.FormResize(Sender: TObject);
+begin
+    if (MainSession <> nil) then 
+        MainSession.Prefs.SavePosition(Self);
+end;
 
 end.

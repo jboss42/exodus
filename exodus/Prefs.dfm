@@ -1,8 +1,8 @@
 object frmPrefs: TfrmPrefs
-  Left = 247
-  Top = 162
+  Left = 274
+  Top = 168
   Width = 410
-  Height = 407
+  Height = 427
   Caption = 'Exodus Preferences'
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -11,39 +11,20 @@ object frmPrefs: TfrmPrefs
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  Position = poDefaultPosOnly
   OnClose = FormClose
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  inline frameButtons1: TframeButtons
-    Left = 0
-    Top = 336
-    Width = 402
-    Height = 37
-    Align = alBottom
-    AutoScroll = False
-    TabOrder = 0
-    inherited Bevel1: TBevel
-      Width = 402
-      Visible = False
-    end
-    inherited Panel1: TPanel
-      Left = 242
-      Height = 32
-      inherited btnOK: TButton
-        OnClick = frameButtons1btnOKClick
-      end
-    end
-  end
   object ScrollBox1: TScrollBox
     Left = 0
     Top = 0
     Width = 89
-    Height = 336
+    Height = 356
     Align = alLeft
     Color = clWindow
     ParentColor = False
-    TabOrder = 1
+    TabOrder = 0
     object imgDialog: TImage
       Left = 0
       Top = 212
@@ -1398,28 +1379,14 @@ object frmPrefs: TfrmPrefs
     Left = 89
     Top = 0
     Width = 313
-    Height = 336
+    Height = 356
     ActivePage = tbsRoster
     Align = alClient
     Style = tsFlatButtons
     TabIndex = 0
-    TabOrder = 2
+    TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
-      object Label16: TLabel
-        Left = 8
-        Top = 146
-        Width = 95
-        Height = 13
-        Caption = 'Roster Background:'
-      end
-      object Label17: TLabel
-        Left = 8
-        Top = 190
-        Width = 58
-        Height = 13
-        Caption = 'Roster Font:'
-      end
       object chkOnlineOnly: TCheckBox
         Left = 8
         Top = 24
@@ -1464,7 +1431,7 @@ object frmPrefs: TfrmPrefs
       end
       object optDblClick: TRadioGroup
         Left = 8
-        Top = 240
+        Top = 160
         Width = 161
         Height = 55
         Caption = 'Double Click Action '
@@ -1494,37 +1461,6 @@ object frmPrefs: TfrmPrefs
         DropDownCount = 12
         ItemHeight = 16
         TabOrder = 6
-      end
-      object cboRosterBG: TColorBox
-        Left = 31
-        Top = 162
-        Width = 146
-        Height = 22
-        DefaultColorColor = clBlue
-        Selected = clBlue
-        Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
-        DropDownCount = 12
-        ItemHeight = 16
-        TabOrder = 7
-        OnChange = cboRosterBGChange
-      end
-      object pnlRoster: TPanel
-        Left = 32
-        Top = 208
-        Width = 145
-        Height = 21
-        BevelOuter = bvLowered
-        Caption = 'Cowboy Neal (foo)'
-        TabOrder = 8
-      end
-      object Button5: TButton
-        Left = 184
-        Top = 206
-        Width = 75
-        Height = 25
-        Caption = 'Change'
-        TabOrder = 9
-        OnClick = Button5Click
       end
     end
     object tbsSubscriptions: TTabSheet
@@ -1574,24 +1510,45 @@ object frmPrefs: TfrmPrefs
       end
       object Label6: TLabel
         Left = 8
-        Top = 136
+        Top = 120
         Width = 108
         Height = 13
         Caption = 'Color for my messages:'
       end
       object Label7: TLabel
         Left = 8
-        Top = 192
+        Top = 168
         Width = 119
         Height = 13
         Caption = 'Color for other messages:'
       end
       object Label8: TLabel
         Left = 8
-        Top = 80
+        Top = 72
         Width = 131
         Height = 13
         Caption = 'Background color for chats:'
+      end
+      object Label17: TLabel
+        Left = 8
+        Top = 214
+        Width = 58
+        Height = 13
+        Caption = 'Roster Font:'
+      end
+      object Label16: TLabel
+        Left = 136
+        Top = 258
+        Width = 61
+        Height = 13
+        Caption = 'Background:'
+      end
+      object Label18: TLabel
+        Left = 32
+        Top = 258
+        Width = 51
+        Height = 13
+        Caption = 'Font Color:'
       end
       object pnlFont: TPanel
         Left = 32
@@ -1620,7 +1577,7 @@ object frmPrefs: TfrmPrefs
       end
       object pnlMyColor: TPanel
         Left = 32
-        Top = 152
+        Top = 136
         Width = 137
         Height = 27
         BevelOuter = bvLowered
@@ -1636,7 +1593,7 @@ object frmPrefs: TfrmPrefs
       end
       object Button2: TButton
         Left = 176
-        Top = 152
+        Top = 136
         Width = 75
         Height = 25
         Caption = 'Change'
@@ -1645,7 +1602,7 @@ object frmPrefs: TfrmPrefs
       end
       object pnlOtherColor: TPanel
         Left = 32
-        Top = 208
+        Top = 184
         Width = 137
         Height = 27
         BevelOuter = bvLowered
@@ -1661,7 +1618,7 @@ object frmPrefs: TfrmPrefs
       end
       object Button3: TButton
         Left = 176
-        Top = 208
+        Top = 184
         Width = 75
         Height = 25
         Caption = 'Change'
@@ -1670,7 +1627,7 @@ object frmPrefs: TfrmPrefs
       end
       object pnlBGColor: TPanel
         Left = 32
-        Top = 96
+        Top = 88
         Width = 137
         Height = 27
         BevelOuter = bvLowered
@@ -1686,7 +1643,7 @@ object frmPrefs: TfrmPrefs
       end
       object Button4: TButton
         Left = 176
-        Top = 96
+        Top = 88
         Width = 75
         Height = 25
         Caption = 'Change'
@@ -1696,7 +1653,7 @@ object frmPrefs: TfrmPrefs
       object StaticText3: TStaticText
         Left = 0
         Top = 0
-        Width = 142
+        Width = 305
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1710,6 +1667,50 @@ object frmPrefs: TfrmPrefs
         ParentColor = False
         ParentFont = False
         TabOrder = 8
+      end
+      object pnlRoster: TPanel
+        Left = 32
+        Top = 232
+        Width = 137
+        Height = 21
+        BevelOuter = bvLowered
+        Caption = 'Cowboy Neal'
+        TabOrder = 9
+      end
+      object Button5: TButton
+        Left = 176
+        Top = 230
+        Width = 75
+        Height = 25
+        Caption = 'Change'
+        TabOrder = 10
+        OnClick = Button5Click
+      end
+      object cboRosterBG: TColorBox
+        Left = 135
+        Top = 274
+        Width = 90
+        Height = 22
+        DefaultColorColor = clBlue
+        Selected = clBlue
+        Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
+        DropDownCount = 12
+        ItemHeight = 16
+        TabOrder = 11
+        OnChange = cboRosterBGChange
+      end
+      object cboRosterFontColor: TColorBox
+        Left = 31
+        Top = 274
+        Width = 90
+        Height = 22
+        DefaultColorColor = clBlue
+        Selected = clBlue
+        Style = [cbStandardColors, cbExtendedColors, cbSystemColors, cbIncludeDefault, cbCustomColor, cbPrettyNames]
+        DropDownCount = 12
+        ItemHeight = 16
+        TabOrder = 12
+        OnChange = cboRosterFontColorChange
       end
     end
     object tbsSystem: TTabSheet
@@ -1725,7 +1726,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 102
+        Width = 305
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1835,7 +1836,7 @@ object frmPrefs: TfrmPrefs
       object StaticText5: TStaticText
         Left = 0
         Top = 0
-        Width = 97
+        Width = 305
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -1901,26 +1902,18 @@ object frmPrefs: TfrmPrefs
         TabOrder = 4
         Wrap = False
       end
-      object chkFadeRoster: TCheckBox
-        Left = 8
-        Top = 80
-        Width = 265
-        Height = 17
-        Caption = 'Fade Roster to transparent when not Focused'
-        TabOrder = 5
-      end
       object chkToastAlpha: TCheckBox
         Left = 8
-        Top = 104
+        Top = 80
         Width = 273
         Height = 17
         Caption = 'Use Alpha Blending for Toast Notifications'
-        TabOrder = 6
+        TabOrder = 5
         OnClick = chkToastAlphaClick
       end
       object trkToastAlpha: TTrackBar
         Left = 32
-        Top = 128
+        Top = 104
         Width = 137
         Height = 25
         Enabled = False
@@ -1931,7 +1924,7 @@ object frmPrefs: TfrmPrefs
         Position = 255
         SelEnd = 0
         SelStart = 0
-        TabOrder = 7
+        TabOrder = 6
         ThumbLength = 15
         TickMarks = tmBottomRight
         TickStyle = tsNone
@@ -1939,17 +1932,17 @@ object frmPrefs: TfrmPrefs
       end
       object txtToastAlpha: TEdit
         Left = 168
-        Top = 126
+        Top = 102
         Width = 49
         Height = 21
         Enabled = False
-        TabOrder = 8
+        TabOrder = 7
         Text = '255'
         OnChange = txtToastAlphaChange
       end
       object spnToastAlpha: TUpDown
         Left = 217
-        Top = 126
+        Top = 102
         Width = 16
         Height = 21
         Associate = txtToastAlpha
@@ -1957,31 +1950,31 @@ object frmPrefs: TfrmPrefs
         Min = 10
         Max = 255
         Position = 255
-        TabOrder = 9
+        TabOrder = 8
         Wrap = False
       end
       object chkSnap: TCheckBox
         Left = 8
-        Top = 152
+        Top = 128
         Width = 273
         Height = 17
         Caption = 'Make the main window snap to screen edges'
-        TabOrder = 10
+        TabOrder = 9
         OnClick = chkSnapClick
       end
       object txtSnap: TEdit
         Left = 32
-        Top = 174
+        Top = 150
         Width = 49
         Height = 21
         Enabled = False
-        TabOrder = 11
+        TabOrder = 10
         Text = '255'
         OnChange = txtToastAlphaChange
       end
       object spnSnap: TUpDown
         Left = 81
-        Top = 174
+        Top = 150
         Width = 16
         Height = 21
         Associate = txtSnap
@@ -1989,7 +1982,7 @@ object frmPrefs: TfrmPrefs
         Min = 10
         Max = 255
         Position = 255
-        TabOrder = 12
+        TabOrder = 11
         Wrap = False
       end
     end
@@ -2018,7 +2011,7 @@ object frmPrefs: TfrmPrefs
         Left = 8
         Top = 152
         Width = 257
-        Height = 137
+        Height = 105
         Caption = 'Notify Options'
         TabOrder = 1
         object chkFlash: TCheckBox
@@ -2109,7 +2102,7 @@ object frmPrefs: TfrmPrefs
       object StaticText7: TStaticText
         Left = 0
         Top = 0
-        Width = 124
+        Width = 305
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2187,7 +2180,7 @@ object frmPrefs: TfrmPrefs
       object Label1: TLabel
         Left = 0
         Top = 20
-        Width = 256
+        Width = 305
         Height = 26
         Align = alTop
         Caption = 
@@ -2198,7 +2191,7 @@ object frmPrefs: TfrmPrefs
       object StaticText8: TStaticText
         Left = 0
         Top = 0
-        Width = 112
+        Width = 305
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2217,7 +2210,7 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 46
         Width = 305
-        Height = 259
+        Height = 279
         Align = alClient
         TabOrder = 1
       end
@@ -2228,7 +2221,7 @@ object frmPrefs: TfrmPrefs
       object Label10: TLabel
         Left = 0
         Top = 20
-        Width = 292
+        Width = 305
         Height = 26
         Align = alTop
         Caption = 
@@ -2239,7 +2232,7 @@ object frmPrefs: TfrmPrefs
       object StaticText9: TStaticText
         Left = 0
         Top = 0
-        Width = 146
+        Width = 305
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2258,7 +2251,7 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 46
         Width = 305
-        Height = 259
+        Height = 279
         Align = alClient
         TabOrder = 1
       end
@@ -2439,6 +2432,62 @@ object frmPrefs: TfrmPrefs
       end
     end
   end
+  object Panel1: TPanel
+    Left = 0
+    Top = 356
+    Width = 402
+    Height = 37
+    Align = alBottom
+    BevelOuter = bvNone
+    Caption = 'Panel1'
+    TabOrder = 2
+    object Bevel1: TBevel
+      Left = 0
+      Top = 0
+      Width = 402
+      Height = 5
+      Align = alTop
+      Shape = bsTopLine
+      Visible = False
+    end
+    object Panel3: TPanel
+      Left = 161
+      Top = 5
+      Width = 241
+      Height = 32
+      Align = alRight
+      BevelOuter = bvNone
+      TabOrder = 0
+      object btnOK: TButton
+        Left = 83
+        Top = 1
+        Width = 75
+        Height = 25
+        Caption = 'OK'
+        ModalResult = 1
+        TabOrder = 0
+        OnClick = frameButtons1btnOKClick
+      end
+      object btnCancel: TButton
+        Left = 162
+        Top = 1
+        Width = 75
+        Height = 25
+        Caption = 'Cancel'
+        ModalResult = 2
+        TabOrder = 1
+      end
+      object Button6: TButton
+        Left = 4
+        Top = 1
+        Width = 75
+        Height = 25
+        Caption = 'Apply'
+        TabOrder = 2
+        OnClick = frameButtons1btnOKClick
+      end
+    end
+  end
   object FontDialog1: TFontDialog
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -2447,12 +2496,13 @@ object frmPrefs: TfrmPrefs
     Font.Style = []
     MinFontSize = 0
     MaxFontSize = 0
-    Left = 85
+    Options = []
+    Left = 37
     Top = 339
   end
   object ColorDialog1: TColorDialog
     Ctl3D = True
-    Left = 117
+    Left = 69
     Top = 340
   end
 end

@@ -22,26 +22,138 @@ unit MsgQueue;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, Dockable, ComCtrls, StdCtrls, ExtCtrls;
+    Jabber1, ExEvents,  
+    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+    Dialogs, Dockable, ComCtrls, StdCtrls, ExtCtrls;
 
 type
   TfrmMsgQueue = class(TfrmDockable)
-    ListView1: TListView;
+    lstEvents: TListView;
     Splitter1: TSplitter;
-    RichEdit1: TRichEdit;
+    txtMsg: TRichEdit;
     StatusBar1: TStatusBar;
+    procedure FormCreate(Sender: TObject);
+    procedure FormResize(Sender: TObject);
+    procedure lstEventsChange(Sender: TObject; Item: TListItem;
+      Change: TItemChange);
+    procedure lstEventsDblClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure lstEventsKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     { Private declarations }
   public
     { Public declarations }
+    procedure LogEvent(e: TJabberEvent; msg: string; img_idx: integer);
   end;
 
 var
   frmMsgQueue: TfrmMsgQueue;
 
+function getMsgQueue: TfrmMsgQueue;
+
 implementation
 
 {$R *.dfm}
+
+uses
+    MsgRecv, Session, PrefController;
+
+function getMsgQueue: TfrmMsgQueue;
+begin
+    if frmMsgQueue = nil then begin
+        frmMsgQueue := TfrmMsgQueue.Create(nil);
+        frmMsgQueue.Show;
+        end;
+
+    Result := frmMsgQueue;
+end;
+
+procedure TfrmMsgQueue.LogEvent(e: TJabberEvent; msg: string; img_idx: integer);
+var
+    item: TListItem;
+begin
+    // display this item
+    item := lstEvents.Items.Add;
+    item.Caption := e.from;
+    item.Data := e;
+    item.ImageIndex := img_idx;
+    item.SubItems.Add(DateTimeToStr(e.edate));
+    item.SubItems.Add(msg);         // Subject
+end;
+
+procedure TfrmMsgQueue.FormCreate(Sender: TObject);
+begin
+  inherited;
+    MainSession.Prefs.RestorePosition(Self);
+end;
+
+procedure TfrmMsgQueue.FormResize(Sender: TObject);
+begin
+  inherited;
+    MainSession.prefs.SavePosition(Self);
+end;
+
+procedure TfrmMsgQueue.lstEventsChange(Sender: TObject; Item: TListItem;
+  Change: TItemChange);
+var
+    e: TJabberEvent;
+begin
+  inherited;
+    e := TJabberEvent(Item.Data);
+    if (e <> nil) then
+        txtMsg.Lines.Assign(e.Data);
+end;
+
+procedure TfrmMsgQueue.lstEventsDblClick(Sender: TObject);
+var
+    e: TJabberEvent;
+begin
+  inherited;
+    if (lstEvents.SelCount <= 0) then exit;
+
+    e := TJabberEvent(lstEvents.Selected.Data);
+    ShowEvent(e);
+end;
+
+procedure TfrmMsgQueue.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  inherited;
+    Action := caFree;
+    frmMsgQueue := nil;
+end;
+
+procedure TfrmMsgQueue.lstEventsKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var
+    i: integer;
+begin
+  inherited;
+    // pickup hot-keys on the list view..
+    case Key of
+    VK_DELETE, VK_BACK, Ord('d'), Ord('D'): begin
+        // delete the selected item
+        if lstEvents.Selected <> nil then begin
+            i := lstEvents.Selected.Index;
+            lstEvents.Items.Delete(i);
+            if (i < lstEvents.Items.Count) then
+                lstEvents.Selected := lstEvents.Items[i]
+            else if (lstEvents.Items.Count > 0) then
+                lstEvents.Selected := lstEvents.Items[lstEvents.Items.Count - 1];
+            end;
+        Key := $0;
+        end;
+    end;
+
+end;
+
+procedure TfrmMsgQueue.FormCloseQuery(Sender: TObject;
+  var CanClose: Boolean);
+begin
+  inherited;
+    lstEvents.Items.Clear;
+end;
 
 end.
