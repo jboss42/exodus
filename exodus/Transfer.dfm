@@ -1,6 +1,6 @@
 object frmTransfer: TfrmTransfer
-  Left = 269
-  Top = 184
+  Left = 241
+  Top = 279
   Width = 267
   Height = 207
   Caption = 'File Transfer'

@@ -116,6 +116,7 @@ type
     procedure imgStatusPaint(Sender: TObject);
     procedure popGrpRenameClick(Sender: TObject);
     procedure popGrpRemoveClick(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
   private
     { Private declarations }
     _rostercb: integer;
@@ -232,13 +233,6 @@ end;
 procedure TfrmRosterWindow.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
-    if MainSession <> nil then with MainSession do begin
-        UnRegisterCallback(_rostercb);
-        UnRegisterCallback(_prescb);
-        end;
-
-    _collapsed_grps.Free();
-
     Action := caFree;
 end;
 
@@ -1530,6 +1524,16 @@ begin
     else begin
         recips := getSelectedContacts(false);
         RemoveGroup('', recips);
+        end;
+end;
+
+procedure TfrmRosterWindow.FormCloseQuery(Sender: TObject;
+  var CanClose: Boolean);
+begin
+    _collapsed_grps.Free();
+    if MainSession <> nil then with MainSession do begin
+        UnRegisterCallback(_rostercb);
+        UnRegisterCallback(_prescb);
         end;
 end;
 

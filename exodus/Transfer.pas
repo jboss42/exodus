@@ -26,7 +26,7 @@ uses
     Dialogs, IdTCPConnection, IdTCPClient, IdHTTP, IdBaseComponent,
     IdComponent, IdTCPServer, IdHTTPServer, ComCtrls, StdCtrls, buttonFrame,
     ExRichEdit, ExtCtrls, IdThreadMgr, IdThreadMgrPool, IdAntiFreezeBase,
-  IdAntiFreeze, IdThreadMgrDefault;
+  IdAntiFreeze, IdThreadMgrDefault, OLERichEdit;
 
 const
     WM_XFER = WM_USER + 5000;
@@ -175,7 +175,7 @@ begin
         SaveDialog1.Filename := filename;
         if (not SaveDialog1.Execute) then exit;
         filename := SaveDialog1.filename;
-        
+
         if FileExists(filename) then begin
             if MessageDlg('This file already exists. Overwrite?',
                 mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
@@ -205,6 +205,7 @@ begin
     else if Self.Mode = 2 then begin
         // Open the file.
         ShellExecute(0, 'open', PChar(filename), '', '', SW_NORMAL);
+        Self.Close;
         end;
 end;
 
