@@ -689,7 +689,7 @@ begin
         bm_node.Data := bm;
     end;
 
-    _bookmark.Expand(true);
+    if (not _collapse_all) then _bookmark.Expand(true);
     treeRoster.AlphaSort(true);
 end;
 
@@ -706,7 +706,8 @@ begin
         n := treeRoster.Items[i];
         ni := TJabberNodeItem(n.Data);
         assert(ni <> nil);
-        if ((ni is TJabberGroup) and (n <> _offline)) then begin
+        if (((ni is TJabberGroup) and (n <> _offline)) or
+            (n = _bookmark)) then begin
             cur_grp := TJabberGroup(ni).Fullname;
             if (_collapsed_grps.indexOf(cur_grp) = -1) then
                 n.Expand(true);
