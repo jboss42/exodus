@@ -675,10 +675,14 @@ begin
     for i := 0 to ScrollBox1.ControlCount - 1 do begin
         c := ScrollBox1.Controls[i];
         if (c is TLabel) then begin
-            if (c = lbl) then
-                TLabel(c).Color := clHighlight
-            else
+            if (c = lbl) then begin
+                TLabel(c).Color := clHighlight;
+                TLabel(c).Font.Color := clHighlightText;
+                end
+            else begin
                 TLabel(c).Color := clWindow;
+                TLabel(c).Font.Color := clWindowText;
+                end;
             end;
         end;
 end;
