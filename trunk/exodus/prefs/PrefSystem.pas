@@ -50,6 +50,7 @@ type
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
+    _dirty_locale: Widestring;
     _old_locale: Widestring;
     _lang_codes: TStringlist;
 
@@ -134,6 +135,7 @@ var
     reg: TRegistry;
 begin
     // System Prefs
+    _dirty_locale := '';
     if (_lang_codes = nil) then
         _lang_codes := TStringlist.Create();
     ScanLocales();
@@ -157,6 +159,7 @@ begin
             tmps := 'Default';
         end;
         _old_locale := tmps;
+        _dirty_locale := tmps;
 
         if (tmps <> '') then begin
             i := _lang_codes.IndexOf(tmps);
@@ -221,8 +224,12 @@ begin
         i := cboLocale.ItemIndex;
         if (i < 0) then i := 0;
         tmp := _lang_codes[i];
-        if (tmp <> _old_locale) then
+
+        if (tmp <> _dirty_locale) then begin
+            _dirty_locale := tmp;
             MessageDlgW(_(sNewLocale), mtInformation, [mbOK], 0);
+        end;
+
         setString('locale', tmp);
 
         reg := TRegistry.Create();
