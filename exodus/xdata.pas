@@ -91,18 +91,19 @@ procedure TfrmXData.render(tag: TXMLTag);
 var
     ins, x: TXMLTag;
     flds: TXMLTagList;
-    h, i: integer;
+    xtra, h, i: integer;
     frm: TframeGeneric;
     thread: string;
     m : integer;
     c: TControl;
 begin
-    //
+    // Build the dialog based on the tag.
     AssignDefaultFont(Self.Canvas.Font);
     packet := tag.Name;
     to_jid := tag.GetAttribute('from');
     AssignDefaultFont(Self.Font);
 
+    // Get our context/xmlns
     if (packet = 'iq') then
         ns := tag.QueryXPData('/iq/query@xmlns')
     else if (packet = 'message') then begin
@@ -110,42 +111,47 @@ begin
         if (thread <> '') then _thread := thread;
     end;
 
+    // Get the x-data container.
     x := tag.QueryXPTag('//x[@xmlns="jabber:x:data"]');
 
     _type := x.GetAttribute('type');
     _responded := false;
 
     if (_type = 'cancel') then begin
+        // this is a cancel notice
         self.Caption := sCancelled;
         lblIns.Caption := Format(sCancelMsg, [to_jid]);
         insBevel.Visible := false;
         insBevel.Height := 0;
     end
     else begin
-      ins := x.GetFirstTag('title');
-      if (ins <> nil) then begin
+        // Get instructions and title
+        ins := x.GetFirstTag('title');
+        if (ins <> nil) then begin
           _title := ins.Data;
           self.Caption := _title;
-      end
-      else
+        end
+        else
         Self.Caption := Format(sFormFrom, [to_jid]);
 
-
-      ins := x.GetFirstTag('instructions');
-      if (ins <> nil) then begin
+        ins := x.GetFirstTag('instructions');
+        if (ins <> nil) then begin
           lblIns.Caption := ins.Data
-      end
-      else begin
+        end
+        else begin
           lblIns.Visible := false;
           lblIns.Height := 0;
           insBevel.Visible := false;
           insBevel.Height := 0;
-      end;
+        end;
     end;
 
+    // Get all of our fields.
     flds := x.QueryTags('field');
-    h := 10;
+    h := 1;
     m := 0;
+    xtra := lblIns.Height + 10 + frameButtons1.Height;
+
     for i := flds.Count - 1 downto 0 do begin
         frm := TframeGeneric.Create(Self);
         frm.FormType := _type;
@@ -168,7 +174,7 @@ begin
     end;
 
     if (h > Trunc(Screen.Height * 0.667)) then
-        h := Trunc(Screen.Height * 0.667);
+        h := Trunc(Screen.Height * 0.667) - xtra;
 
 
     insBevel.Visible := lblIns.Visible;
@@ -183,9 +189,9 @@ begin
     end;
 
     MainSession.Prefs.RestorePosition(Self);
-    //Self.ClientHeight := h + lblIns.Height + 10 + frameButtons1.Height;
-    Self.ClientHeight := h;
+    Self.ClientHeight := h + xtra;
 
+    centerMainForm(Self);
 end;
 
 {---------------------------------------}

@@ -694,7 +694,8 @@ begin
     else if ptype = 'unavailable' then begin
         t := tag.QueryXPTag(xp_muc_status);
         if ((from = jid) or (from = jid + '/' + MyNick)) then begin
-            if (t <> nil) then ShowStatusCode(t);
+            if (t <> nil) then
+                ShowStatusCode(t);
             Self.Close();
             exit;
         end
@@ -839,7 +840,8 @@ begin
     if (fmt <> '') then
         msg := Format(fmt, [MyNick, '']);
 
-    MessageDlg(msg, mtInformation, [mbOK], 0);
+    if (msg <> '') then
+        MessageDlg(msg, mtInformation, [mbOK], 0);
 end;
 
 {---------------------------------------}
