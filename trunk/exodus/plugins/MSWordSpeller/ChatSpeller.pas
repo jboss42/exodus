@@ -1,0 +1,119 @@
+unit ChatSpeller;
+
+{$WARN SYMBOL_PLATFORM OFF}
+
+interface
+
+uses
+    ComCtrls, RichEdit2, ExRichEdit, SysUtils, Graphics,   
+    Word2000, ExodusCOM_TLB,
+    ComObj, ActiveX, ExodusPlugins_TLB, ExodusWordSpeller_TLB, StdVcl;
+
+type
+  TChatSpeller = class(TAutoObject, IChatSpeller)
+  protected
+    function onAfterMessage(var Body: WideString): WideString; safecall;
+    procedure onBeforeMessage(var Body: WideString); safecall;
+    procedure onContextMenu(const ID: WideString); safecall;
+    procedure onKeyPress(const Key: WideString); safecall;
+    procedure onMsg(const Body, xml: WideString); safecall;
+    { Protected declarations }
+  private
+    _word: TWordApplication;
+    _chat: IExodusChat;
+    _msgout: TExRichEdit;
+  public
+    constructor Create(word_app: TWordApplication; chat_controller: IExodusChat);
+    destructor Destroy(); override;
+  end;
+
+implementation
+
+uses ComServ;
+
+const
+    // space, tab, LF, CR, !, ,, .
+    WhitespaceChars = [#32, #09, #10, #13, #33, #44, #46];
+
+constructor TChatSpeller.Create(word_app: TWordApplication;
+    chat_controller: IExodusChat);
+begin
+    inherited Create();
+    _word := word_app;
+    _chat := chat_controller;
+    _msgOut := TExRichEdit(_chat.getMagicInt(Ptr_MsgOutput));
+    _chat.RegisterPlugin(Self as ExodusChatPlugin);
+end;
+
+destructor TChatSpeller.Destroy();
+begin
+    //
+    inherited Destroy();
+end;
+
+function TChatSpeller.onAfterMessage(var Body: WideString): WideString;
+begin
+    // a msg is about to be sent
+end;
+
+procedure TChatSpeller.onBeforeMessage(var Body: WideString);
+begin
+    // a msg is being checked
+end;
+
+procedure TChatSpeller.onContextMenu(const ID: WideString);
+begin
+    // a menu was clicked
+end;
+
+procedure TChatSpeller.onKeyPress(const Key: WideString);
+var
+    tmps: String;
+    k: Char;
+    ok: boolean;
+    last, cur: longint;
+    word: WideString;
+begin
+    tmps := Key;
+    k := tmps[1];
+
+    if ((k in WhitespaceChars) and (_MsgOut.SelStart > 0)) then begin
+        // check spelling for this word
+        cur := _MsgOut.SelStart;
+        last := cur;
+
+        // find the last word break..
+        while ((last > 0) and ((_MsgOut.Text[last] in WhitespaceChars) = false)) do
+            dec(last);
+
+        word := Trim(Copy(_MsgOut.Text, last, (cur - last) + 1));
+        ok := _word.CheckSpelling(word);
+        with _MsgOut do begin
+            SelStart := last;
+            SelLength := (cur - last);
+            if (ok) then begin
+                SelAttributes.Color := clBlack;
+                SelAttributes.Style := [];
+                end
+            else begin
+                SelAttributes.Color := clRed;
+                SelAttributes.UnderlineType := ultWave;
+                SelAttributes.Style := [fsUnderline];
+                end;
+            SelStart := cur;
+            SelLength := 0;
+            SelAttributes.Color := clBlack;
+            SelAttributes.Style := [];
+            end;
+        end;
+end;
+
+procedure TChatSpeller.onMsg(const Body, xml: WideString);
+begin
+    // a msg was just received
+end;
+
+initialization
+  TAutoObjectFactory.Create(ComServer, TChatSpeller, Class_ChatSpeller,
+    ciMultiInstance, tmApartment);
+end.
