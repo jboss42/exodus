@@ -1435,12 +1435,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 310
     Height = 370
-    ActivePage = tbsSystem
+    ActivePage = tbsNotify
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 3
+    TabIndex = 6
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -2145,7 +2145,7 @@ object frmPrefs: TfrmPrefs
         Left = 8
         Top = 72
         Width = 257
-        Height = 121
+        Height = 97
         ItemHeight = 13
         Items.Strings = (
           'Contact is online'
@@ -2156,13 +2156,14 @@ object frmPrefs: TfrmPrefs
           'Conference Invites'
           'Keywords (Conf. Rooms)'
           'Chat window activity'
-          'Conf. Room activity')
+          'Conf. Room activity'
+          'File Transfers')
         TabOrder = 0
         OnClick = chkNotifyClick
       end
       object optNotify: TGroupBox
         Left = 8
-        Top = 200
+        Top = 176
         Width = 257
         Height = 73
         Caption = 'Notify Options'

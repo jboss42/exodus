@@ -240,6 +240,7 @@ begin
     AddEmot(':-D', msn, 42);
     AddEmot(':>', msn, 42);
     AddEmot(':->', msn, 42);
+    AddEmot(':blush', msn, 3);   // blushing
     AddEmot(':-/', y, 5);        // question
     AddEmot(':-\', y, 5);
     AddEmot(':x', y, 6);         // love
