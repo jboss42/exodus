@@ -592,12 +592,15 @@ procedure TJabberRoster.ParseFullRoster(event: string; tag: TXMLTag);
 var
     ct, etag: TXMLTag;
     ritems: TXMLTagList;
-    i: integer;
+    idx, i: integer;
     ri: TJabberRosterItem;
     s: TJabberSession;
 begin
     // parse the full roster push
-    Self.Clear;
+
+    // Don't clear out the list.. we may have gotten roster pushes
+    // in before this from mod_groups or something similar.
+
     s := TJabberSession(_js);
 
     if (event <> 'xml') then begin
@@ -615,14 +618,21 @@ begin
         end
 
     else begin
+        // fire off the start event..
+        // then cycle thru all the item tags
         s.FireEvent('/roster/start', tag);
         ritems := tag.QueryXPTags('/iq/query/item');
         for i := 0 to ritems.Count - 1 do begin
             ct := ritems.Tags[i];
-            ri := TJabberRosterItem.Create;
+            idx := Self.IndexOf(ct.GetAttribute('jid'));
+            if (idx = -1) then
+                ri := TJabberRosterItem.Create
+            else
+                ri := TJabberRosterItem(Self.Objects[idx]);
             ri.parse(ct);
             checkGroups(ri);
-            AddObject(Lowercase(ri.jid.Full), ri);
+            if (idx = -1) then 
+                AddObject(Lowercase(ri.jid.Full), ri);
             s.FireEvent('/roster/item', ritems.Tags[i], ri);
             end;
         ritems.Free();

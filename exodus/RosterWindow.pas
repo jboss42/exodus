@@ -351,7 +351,9 @@ begin
         frmExodus.tabs.ActivePage := frmExodus.tbsMsg;
         _FullRoster := true;
         treeRoster.Items.BeginUpdate;
-        ClearNodes();
+        // Don't clear the nodes here so mod_groups works ok..
+        // maybe a better way to handle this??
+        // ClearNodes();
         end
     else if event = '/roster/end' then begin
         _FullRoster := false;
