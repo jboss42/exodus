@@ -99,11 +99,15 @@ Section "!${MUI_PRODUCT} (Required)" SEC_Exodus
 
         IfFileExists IdleHooks.dll lbl_noIdle
 
+!ifndef NO_NETWORK
         ; BRANDING: change this URL.
         NSISdl::download "${HOME_URL}/daily/extras/IdleHooks.dll" \
                          $INSTDIR\IdleHooks.dll
         StrCmp $0 "success" lbl_noIdle
             Abort "Error downloading IdleHooks library"
+!else
+	File IdleHooks.dll
+!endif
 
   lbl_noIdle:
         ; version(riched20) >= 5.30
@@ -115,11 +119,15 @@ Section "!${MUI_PRODUCT} (Required)" SEC_Exodus
         IntCmp 327710 $R0 lbl_reportVer lbl_reportVer
 
         DetailPrint "Old version of richedit controls.  Upgrading."
+!ifndef NO_NETWORK
         ; BRANDING: change this URL
         NSISdl::download "${HOME_URL}/richupd.exe" $INSTDIR\richupd.exe
         StrCmp $0 "success" lbl_execrich
             Abort "Error downloading richtext library"
   lbl_execrich:
+!else
+	File richupd.exe
+!endif
         WriteRegStr HKCU Software\Microsoft\Windows\CurrentVersion\Runonce \
           "Exodus-Setup" "$CMDLINE"
         Exec $INSTDIR\richupd.exe
@@ -188,11 +196,15 @@ Section "!${MUI_PRODUCT} (Required)" SEC_Exodus
 SectionEnd ; end the section
 
 Section "SSL Support" SEC_SSL
+!ifndef NO_NETWORK
         AddSize 824
+!endif
         IfFileExists $INSTDIR\ssleay32.dll libea need_ssl
   libea:
         IfFileExists $INSTDIR\libeay32.dll no_ssl
   need_ssl:
+
+!ifndef NO_NETWORK
         ; BRANDING: Change this URL
         NSISdl::download "${HOME_URL}/indy_openssl096g.zip" \
                          $INSTDIR\indy_openssl096.zip
@@ -202,8 +214,11 @@ Section "SSL Support" SEC_SSL
         ZipDLL::extractall $INSTDIR $INSTDIR\indy_openssl096.zip
         Delete $INSTDIR\indy_openssl096.zip
 	Delete $INSTDIR\readme.txt
+!else
+	File libeay32.dll  
+	File ssleay32.dll
+!endif
         goto ssl_done
-
   no_ssl:
         DetailPrint "SSL libraries already installed."
         ssl_done:
@@ -571,4 +586,9 @@ Function .onInit
 
 	Push ${SEC_Bleed}
 	Call TurnOff
+
+!ifndef NO_NETWORK
+	Push ${SEC_SSL}
+	Call TurnOff
+!endif
 FunctionEnd
