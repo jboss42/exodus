@@ -41,7 +41,7 @@ end;
 implementation
 
 uses
-    InvalidRoster, ChatWin, Subscribe, Notify, Jabber1,
+    InvalidRoster, ChatWin, ExUtils, Subscribe, Notify, Jabber1,
     Roster, JabberID, Session;
 
 {---------------------------------------}
@@ -110,9 +110,9 @@ begin
             chkSubscribe.Enabled := tmp_b;
             boxAdd.Enabled := tmp_b;
             cboGroup.Items.Assign(MainSession.Roster.GrpList);
+            removeSpecialGroups(cboGroup.Items);
             if (tmp_b) then begin
                 txtNickname.Text := tmp_jid.user;
-                cboGroup.Items.Assign(MainSession.Roster.GrpList);
                 if cboGroup.Items.Count > 0 then
                     cboGroup.ItemIndex := 0;
             end

@@ -84,6 +84,9 @@ function trimNewLines(value: WideString): WideString;
 procedure CanvasTextOutW(Canvas: TCanvas; X, Y: Integer; const Text: WideString);
 function CanvasTextWidthW(Canvas: TCanvas; const Text: WideString): integer;
 
+procedure removeSpecialGroups(grps: TStrings); overload;
+procedure removeSpecialGroups(grps: TWidestrings); overload;
+
 var
     _GetLastInputInfo: Pointer;
 
@@ -714,6 +717,43 @@ begin
   Windows.GetTextExtentPoint32W(Canvas.Handle, PWideChar(Text), Length(Text), s);
   Result := s.cx;
 end;
+
+{---------------------------------------}
+procedure removeSpecialGroups(grps: TStrings);
+var
+    i: integer;
+begin
+    i := grps.IndexOf(sGrpBookmarks);
+    if (i >= 0) then grps.Delete(i);
+
+    i := grps.IndexOf(sGrpUnfiled);
+    if (i >= 0) then grps.Delete(i);
+
+    i := grps.IndexOf(sGrpOffline);
+    if (i >= 0) then grps.Delete(i);
+
+    i := grps.IndexOf(MainSession.Prefs.getString('roster_transport_grp'));
+    if (i >= 0) then grps.Delete(i);
+end;
+
+{---------------------------------------}
+procedure removeSpecialGroups(grps: TWidestrings);
+var
+    i: integer;
+begin
+    i := grps.IndexOf(sGrpBookmarks);
+    if (i >= 0) then grps.Delete(i);
+
+    i := grps.IndexOf(sGrpUnfiled);
+    if (i >= 0) then grps.Delete(i);
+
+    i := grps.IndexOf(sGrpOffline);
+    if (i >= 0) then grps.Delete(i);
+
+    i := grps.IndexOf(MainSession.Prefs.getString('roster_transport_grp'));
+    if (i >= 0) then grps.Delete(i);
+end;
+
 
 {---------------------------------------}
 {---------------------------------------}

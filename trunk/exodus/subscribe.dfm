@@ -1,6 +1,6 @@
 object frmSubscribe: TfrmSubscribe
-  Left = 556
-  Top = 483
+  Left = 309
+  Top = 495
   BorderIcons = []
   BorderStyle = bsDialog
   Caption = 'Subscription Request'

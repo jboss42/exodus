@@ -197,6 +197,7 @@ begin
     cur_dir := true;
     field_set := TStringList.Create();
     cboGroup.Items.Assign(MainSession.Roster.GrpList);
+    removeSpecialGroups(cboGroup.Items);
     if cboGroup.Items.Count > 0 then
         cboGroup.ItemIndex := 0;
     virtlist := TObjectList.Create();
@@ -711,6 +712,7 @@ begin
     if InputQueryW(sNewGroup, sNewGroupPrompt, ngrp) then begin
         MainSession.Roster.GrpList.Add(ngrp);
         cboGroup.Items.Assign(MainSession.Roster.GrpList);
+        removeSpecialGroups(cboGroup.Items);
     end;
 end;
 

@@ -76,11 +76,8 @@ function ShowAddContact: TfrmAdd;
 {---------------------------------------}
 implementation
 uses
-    InputPassword,
-    Jabber1,
-    JabberID,
-    Presence,
-    Session;
+    InputPassword, ExUtils, 
+    Jabber1, JabberID,  Presence, Session;
 {$R *.DFM}
 
 {---------------------------------------}
@@ -155,6 +152,7 @@ begin
     if InputQueryW(sNewGroup, sNewGroupPrompt, ngrp) then begin
         MainSession.Roster.GrpList.Add(ngrp);
         cboGroup.Items.Assign(MainSession.Roster.GrpList);
+        removeSpecialGroups(cboGroup.Items);
     end;
 end;
 
@@ -162,6 +160,7 @@ end;
 procedure TfrmAdd.FormCreate(Sender: TObject);
 begin
     cboGroup.Items.Assign(MainSession.Roster.GrpList);
+    removeSpecialGroups(cboGroup.Items);
     if cboGroup.Items.Count > 0 then
         cboGroup.ItemIndex := 0;
     cboType.ItemIndex := 0;
