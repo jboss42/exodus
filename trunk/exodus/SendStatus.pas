@@ -28,8 +28,8 @@ unit SendStatus;
 interface
 
 uses
-    Unicode, SyncObjs, XferManager, XMLTag, IQ,   
-    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms, 
+    Unicode, SyncObjs, XferManager, XMLTag, IQ,
+    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, ComCtrls, StdCtrls, ExtCtrls, IdBaseComponent, IdComponent,
     IdTCPConnection, IdTCPClient, IdHTTP, TntStdCtrls, IdIOHandler,
     IdIOHandlerSocket, IdSocks;
@@ -219,7 +219,7 @@ begin
                     exit;
                 end;
                 //_client.WriteStream(_stream, true, false, 0);
-                _client.WriteStream(_stream, false, true, _size);
+                _client.WriteStream(_stream, true, false, _size);
             end
             else if (_method = 'get') then
                 _http.Get(_url, _stream)
