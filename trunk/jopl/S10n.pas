@@ -109,13 +109,36 @@ end;
 procedure TSubController.Subscribe(event: string; tag: TXMLTag);
 var
     j: TJabberID;
+    incoming: integer;
+    prompt: boolean;
+    ritem: TJabberRosterItem;
 begin
     // getting a s10n request
     j := TJabberID.Create(tag.GetAttribute('from'));
     if (_transports.IndexOf(j.jid) >= 0) then
         SendSubscribed(j.full, MainSession)
-    else
-        MainSession.FireEvent('/session/gui/subscribe', tag);
+    else begin
+        incoming := MainSession.Prefs.getInt('s10n_auto_accept');
+        ritem := MainSession.roster.Find(j.jid);
+
+        prompt := false; // auto-accept all
+        if (incoming = 0) then // auto-accept from none
+            prompt := true
+        else if (incoming = 1) then // auto-accept from roster
+            prompt := (ritem = nil);
+
+        if (prompt) then
+            MainSession.FireEvent('/session/gui/subscribe', tag)
+        else begin
+            if ((ritem = nil) or (ritem.subscription = 'none')) then begin
+                SendSubscribe(j.jid, MainSession);
+                SendSubscribed(j.jid, MainSession);
+                end
+            else if (ritem.subscription = 'to') then
+                SendSubscribed(j.jid, MainSession);
+            end;
+
+        end;
     j.Free;
 end;
 
