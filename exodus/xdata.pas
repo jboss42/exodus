@@ -355,9 +355,9 @@ begin
 
     else if (t = 'boolean') then begin
         if (TTntCheckBox(con).Checked) then
-            d := 'true'
+            d := '1'
         else
-            d := 'false';
+            d := '0';
         f.AddBasicTag('value', d);
     end
 

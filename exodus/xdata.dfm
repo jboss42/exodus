@@ -10,7 +10,7 @@ inherited frmXData: TfrmXData
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 247
+    Top = 251
     Width = 355
     Height = 34
     Align = alBottom
@@ -38,15 +38,15 @@ inherited frmXData: TfrmXData
     Left = 0
     Top = 0
     Width = 355
-    Height = 247
+    Height = 251
     Align = alClient
     TabOrder = 1
     inherited Panel1: TPanel
       Width = 355
-      Height = 247
+      Height = 251
       inherited ScrollBox1: TScrollBox
         Width = 345
-        Height = 237
+        Height = 241
       end
     end
   end
