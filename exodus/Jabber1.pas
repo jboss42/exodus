@@ -1029,8 +1029,14 @@ begin
         exit;
     end
 
-    else if event = '/session/sslerror' then begin
-        MessageDlg(_('SSL Connection Error'), mtError, [mbOK], 0);
+    else if ((event = '/session/sslerror') and (tag <> nil)) then begin
+        m := _('SSL Connection Error: '#13#10) + tag.Data() + ''#13#10 +
+            _('Disconnect Connection?');
+        if (MessageDlg(m, mtError, [mbYes, mbNo], 0) = mrYes) then begin
+            _logoff := true;
+            PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
+            PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
+        end;
     end
 
     else if event = '/session/regerror' then begin
