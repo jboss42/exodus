@@ -27,6 +27,7 @@ function XML_EscapeChars(txt: Widestring): Widestring;
 function XML_UnEscapeChars(txt: Widestring): Widestring;
 
 function HTML_EscapeChars(txt: Widestring; DoAPOS: boolean): Widestring;
+function URL_EscapeChars(txt: Widestring): Widestring;
 
 function TrimQuotes(instring: Widestring): Widestring;
 function RightChar(instring: Widestring; nchar: word): Widestring;
@@ -164,6 +165,25 @@ begin
         inc(i);
 end;
     Result := tmps;
+end;
+
+{---------------------------------------}
+function URL_EscapeChars(txt: Widestring): Widestring;
+var
+    utxt : String;
+    tmps : String;
+    i : integer;
+const
+    az : set of char = ['a'..'z', 'A'..'Z', '0'..'9', '-', '_', '/', ':', '\', '.', '?', '@', '=', '&', '+'];
+begin
+    utxt := UTF8Encode(txt);
+    for i := 1 to length(utxt) do begin
+        if (utxt[i] in az) then
+            tmps := tmps + utxt[i]
+        else
+            tmps := tmps + '%' + format('%02x', [ord(utxt[i])]);
+    end;
+    result := tmps;
 end;
 
 {---------------------------------------}
