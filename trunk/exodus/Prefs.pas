@@ -187,6 +187,7 @@ type
     cboMsgOptions: TComboBox;
     Label8: TLabel;
     cboPresTracking: TComboBox;
+    btnLogClearAll: TButton;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -217,6 +218,7 @@ type
     procedure colorChatMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure chkLogClick(Sender: TObject);
+    procedure btnLogClearAllClick(Sender: TObject);
   private
     { Private declarations }
     _notify: array of integer;
@@ -256,7 +258,7 @@ resourcestring
     sSoundS10n = 'Subscription request';
     sSoundOOB = 'File Transfers';
     sSoundAutoResponse = 'Auto response generated';
-    
+
 procedure StartPrefs;
 
 {---------------------------------------}
@@ -1095,6 +1097,11 @@ begin
     chkLogRooms.Enabled := chkLog.Checked;
     txtLogPath.Enabled := chkLog.Checked;
     btnLogBrowse.Enabled := chkLog.Checked;
+end;
+
+procedure TfrmPrefs.btnLogClearAllClick(Sender: TObject);
+begin
+    ClearAllLogs();
 end;
 
 end.
