@@ -24,13 +24,12 @@ interface
 uses
     JabberID, XMLTag, Unicode,   
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    buttonFrame, StdCtrls, TntStdCtrls, ComCtrls, TntComCtrls, ExtCtrls;
+    buttonFrame, StdCtrls, TntStdCtrls, ComCtrls, TntComCtrls, ExtCtrls,
+  TntExtCtrls;
 
 type
   TfrmJoinRoom = class(TForm)
     frameButtons1: TframeButtons;
-    treeRooms: TTntTreeView;
-    Splitter1: TSplitter;
     Panel1: TPanel;
     Label2: TTntLabel;
     Label1: TTntLabel;
@@ -41,17 +40,20 @@ type
     txtPassword: TTntEdit;
     txtNick: TTntEdit;
     lblFetch: TTntLabel;
+    lstRooms: TTntListBox;
+    TntSplitter1: TTntSplitter;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure treeRoomsDblClick(Sender: TObject);
-    procedure treeRoomsChange(Sender: TObject; Node: TTreeNode);
     procedure lblFetchClick(Sender: TObject);
+    procedure lstRoomsClick(Sender: TObject);
+    procedure lstRoomsDblClick(Sender: TObject);
+    procedure lstRoomsMouseMove(Sender: TObject; Shift: TShiftState; X,
+      Y: Integer);
   private
     { Private declarations }
-    _servers: TWidestringlist;
     _cb: integer;
 
     procedure _addRoomJid(tmp: TJabberID);
@@ -128,55 +130,46 @@ var
     i: integer;
     tmp: TJabberID;
     ce: TJabberEntity;
-    n: TTntTreeNode;
 begin
     txtServer.Items.Clear();
     l := TWidestringlist.Create();
     jEntityCache.getByFeature(FEAT_GROUPCHAT, l);
-    tmp := TJabberID.Create('');
     for i := 0 to l.Count - 1 do begin
-        tmp.ParseJID(l[i]);
-        if (tmp.user = '') then begin
-            txtServer.Items.Add(l[i]);
+        tmp := TJabberID.Create(l[i]);
+        if (tmp.user <> '') then
+            _addRoomJid(tmp)
+        else begin
             ce := jEntityCache.getByJid(l[i]);
             if (not ce.hasItems) then
                 ce.walk(MainSession);
-            n := treeRooms.Items.AddChild(nil, l[i]);
-            _servers.AddObject(tmp.domain, n);
-        end
-        else
-            _addRoomJid(tmp);
+        end;
     end;
-    tmp.Free();
     l.Free();
 
-    if (treeRooms.Items.Count > 0) then
-        treeRooms.Selected := treeRooms.Items[0];
+    if (lstRooms.Items.Count > 0) then
+        lstRooms.ItemIndex := 0;
 end;
 
 {---------------------------------------}
 procedure TfrmJoinRoom._addRoomJid(tmp: TJabberID);
 var
-    i, idx: integer;
-    n: TTntTreeNode;
+    tmps, n: Widestring;
+    idx: integer;
+    tj: TJabberID;
 begin
-    idx := _servers.indexOf(tmp.domain);
-    if (idx >= 0) then
-        n := TTntTreeNode(_servers.Objects[idx])
+    n := tmp.User;
+    idx := lstRooms.Items.IndexOf(n);
+    if (idx = -1) then
+        lstRooms.Items.AddObject(n, tmp)
     else begin
-        n := treeRooms.Items.AddChild(nil, tmp.domain);
-        _servers.AddObject(tmp.domain, n);
-    end;
-    n.Expand(false);
+        // we have a conflict
+        tj := TJabberID(lstRooms.Items.Objects[idx]);
+        if (tj.domain = tmp.domain) then exit;
 
-    // make sure we don't add dupes.
-    if (n.Count > 0) then begin
-        for i := 0 to n.Count - 1 do begin
-            if (n.Item[i].Text = tmp.user) then exit;
-        end;
+        tmps := n + ' (' + tmp.domain + ')';
+        lstRooms.Items.AddObject(tmps, tmp);
     end;
 
-    treeRooms.Items.AddChild(n, tmp.user);
 end;
 
 {---------------------------------------}
@@ -199,7 +192,6 @@ begin
 
     if (ce.hasFeature(FEAT_GROUPCHAT)) then
         _addRoomJid(tmp);
-    tmp.Free();
 end;
 
 {---------------------------------------}
@@ -248,8 +240,6 @@ end;
 {---------------------------------------}
 procedure TfrmJoinRoom.FormCreate(Sender: TObject);
 begin
-    _servers := TWidestringlist.Create();
-
     AssignUnicodeFont(Self);
     AssignUnicodeURL(lblFetch.Font, 8);
     TranslateComponent(Self);
@@ -258,34 +248,14 @@ end;
 
 {---------------------------------------}
 procedure TfrmJoinRoom.FormDestroy(Sender: TObject);
+var
+    i: integer;
 begin
-    _servers.Free();
+    for i := 0 to lstRooms.Items.Count - 1 do
+        TJabberID(lstRooms.Items.Objects[i]).Free();
+
     if (MainSession <> nil) then
         MainSession.UnRegisterCallback(_cb);
-end;
-
-{---------------------------------------}
-procedure TfrmJoinRoom.treeRoomsDblClick(Sender: TObject);
-var
-    n: TTntTreeNode;
-begin
-    n := treeRooms.Selected;
-    if ((n = nil) or (n.Parent = nil)) then exit;
-
-    frameButtons1btnOKClick(Self);
-end;
-
-{---------------------------------------}
-procedure TfrmJoinRoom.treeRoomsChange(Sender: TObject; Node: TTreeNode);
-var
-    n: TTntTreeNode;
-begin
-    n := treeRooms.Selected;
-    if (n = nil) then exit;
-    if (n.Parent = nil) then exit;
-
-    txtServer.Text := n.Parent.Text;
-    txtRoom.Text := n.Text;
 end;
 
 {---------------------------------------}
@@ -293,6 +263,60 @@ procedure TfrmJoinRoom.lblFetchClick(Sender: TObject);
 begin
     // Walk this server.
     jEntityCache.fetch(txtServer.Text, MainSession, false);
+end;
+
+{---------------------------------------}
+procedure TfrmJoinRoom.lstRoomsClick(Sender: TObject);
+var
+    i: integer;
+    j: TJabberID;
+begin
+    i := lstRooms.ItemIndex;
+    if (i = -1) then exit;
+    j := TJabberID(lstRooms.Items.Objects[i]);
+    txtServer.Text := j.domain;
+    txtRoom.Text := j.user;
+end;
+
+{---------------------------------------}
+procedure TfrmJoinRoom.lstRoomsDblClick(Sender: TObject);
+var
+    i: integer;
+    j: TJabberID;
+begin
+    i := lstRooms.ItemIndex;
+    if (i = -1) then exit;
+
+    j := TJabberID(lstRooms.Items.Objects[i]);
+    txtServer.Text := j.domain;
+    txtRoom.Text := j.user;
+
+    frameButtons1btnOKClick(Self);    
+end;
+
+{---------------------------------------}
+procedure TfrmJoinRoom.lstRoomsMouseMove(Sender: TObject;
+  Shift: TShiftState; X, Y: Integer);
+var
+    tmps: Widestring;
+    p: TPoint;
+    i: integer;
+    j: TJabberID;
+begin
+    p.X := X;
+    p.Y := Y;
+    i := lstRooms.ItemAtPos(p, true);
+    if (i = -1) then
+        tmps := ''
+    else begin
+        j := TJabberID(lstRooms.Items.Objects[i]);
+        tmps := j.full;
+    end;
+
+    if (tmps <> lstRooms.Hint) then begin
+        lstRooms.Hint := tmps;
+        Application.CancelHint;
+    end;
 end;
 
 end.
