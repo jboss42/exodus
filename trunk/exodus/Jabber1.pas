@@ -498,7 +498,7 @@ const
     ico_render = 25;
     ico_down = 27;
     ico_right = 28;
-    ico_blocked = 30;
+    ico_blocked = 39;
     ico_error = 32;
 
 {$ifdef TRACE_EXCEPTIONS}
