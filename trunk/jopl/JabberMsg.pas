@@ -70,7 +70,7 @@ type
         property Action: boolean read _action;
         property Nick: WideString read _nick write _nick;
         property isMe: boolean read _isme write _isme;
-        property Time: TDateTime read _time;
+        property Time: TDateTime read _time write _time;
         property isXdata: boolean read _isxdata;
         property highlight: boolean read _highlight write _highlight;
   end;

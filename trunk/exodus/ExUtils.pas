@@ -411,83 +411,33 @@ begin
 end;
 
 {---------------------------------------}
-procedure LogMessage(Msg: TJabberMessage);
+procedure LogMessage(msg: TJabberMessage);
 var
-    buff: string;
-    fn: Widestring;
-    header: boolean;
-    _jid: TJabberID;
-    ndate: TDateTime;
-    fs: TFileStream;
-    ritem: TJabberRosterItem;
+    x: TXMLTag;
 begin
-    // log this msg..
-    fn := MainSession.Prefs.getString('log_path');
-
-    if (Msg.isMe) then
-        _jid := TJabberID.Create(Msg.ToJID)
+    // Fire an event so any logging plugins can do their thing.
+    x := TXMLTag.Create('logger');
+    if (msg.isMe) then
+        x.setAttribute('dir', 'out')
     else
-        _jid := TJabberID.Create(Msg.FromJID);
+        x.setAttribute('dir', 'in');
 
-    if (MainSession.Prefs.getBool('log_roster')) then begin
-        // verify this jid is on our roster..
-        ritem := MainSession.Roster.Find(_jid.jid);
-        if (ritem = nil) then
-            ritem := MainSession.Roster.Find(_jid.full);
-        if (ritem = nil) then exit;
+    x.setAttribute('nick', msg.Nick);
+    x.setAttribute('id', msg.id);
+    x.setAttribute('type', msg.MsgType);
+    x.setAttribute('to', msg.ToJid);
+    x.setAttribute('from', msg.FromJid);
+
+    x.AddBasicTag('body', msg.Body);
+    x.AddBasicTag('thread', msg.Thread);
+    x.AddBasicTag('subject', msg.Subject);
+    with x.AddTag('x') do begin
+        setAttribute('xmlns', 'jabber:x:delay');
+        setAttribute('stamp', DateTimeToJabber(msg.Time));
     end;
 
-    if (Copy(fn, length(fn), 1) <> '\') then
-        fn := fn + '\';
-
-    if (not DirectoryExists(fn)) then begin
-        // mkdir
-        if CreateDir(fn) = false then begin
-            MessageDlgW(_(sBadLogDir), mtError, [mbOK], 0);
-            exit;
-        end;
-    end;
-
-    // Munge the filename
-    fn := fn + MungeName(_jid.jid) + '.html';
-
-    try
-        if (FileExists(fn)) then begin
-            fs := TFileStream.Create(fn, fmOpenReadWrite, fmShareDenyNone);
-            ndate := FileDateToDateTime(FileGetDate(fs.Handle));
-            header := (abs(Now - nDate) > 0.04);
-            fs.Seek(0, soFromEnd);
-        end
-        else begin
-            fs := TFileStream.Create(fn, fmCreate, fmShareDenyNone);
-
-            // put some UTF-8 header fu in here
-            buff := '<html><head>';
-            buff := buff + '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
-            buff := buff + '</head>';
-            fs.Write(Pointer(buff)^, Length(buff));
-
-            // Make sure to put a new conversation header
-            header := true;
-        end;
-    except
-        on e: Exception do begin
-            MessageDlgW(_('Could not open log file: ') + fn, mtError, [mbOK], 0);
-            exit;
-        end;
-    end;
-
-    if (header) then begin
-        buff := '<p><font size=+1><b>New Conversation at: ' +
-            DateTimeToStr(Now) + '</b></font><br />';
-        fs.Write(Pointer(buff)^, Length(buff));
-    end;
-
-    buff := GetMsgHTML(Msg);
-    fs.Write(Pointer(buff)^, Length(buff));
-    fs.Free();
-
-    _jid.Free();
+    // Send it off
+    MainSession.FireEvent('/log', x);
 end;
 
 {---------------------------------------}
