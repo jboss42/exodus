@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-06-16 16:41\n"
-"PO-Revision-Date: 2004-06-16 16:41\n"
+"POT-Creation-Date: 2004-06-17 08:59\n"
+"PO-Revision-Date: 2004-06-17 08:59\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -607,7 +607,7 @@ msgstr ""
 #. frmBaseChat..popOut..emot_sep..Caption
 #: BaseChat.dfm:208
 #. frmBrowse..popContext..N1..Caption
-#: Browser.dfm:3869
+#: Browser.dfm:3870
 #. frmChat..popContact..N5..Caption
 #: ChatWin.dfm:105
 #. frmChat..popContact..N4..Caption
@@ -737,12 +737,12 @@ msgid "Jabber Browser"
 msgstr ""
 
 #. frmBrowse..Panel3..vwBrowse......Caption
-#: Browser.dfm:41
+#: Browser.dfm:42
 msgid "Name"
 msgstr ""
 
 #. frmBrowse..Panel3..vwBrowse......Caption
-#: Browser.dfm:45
+#: Browser.dfm:46
 #. frmInvite..pnlMain..lstJIDS......Caption
 #: invite.dfm:76
 #. frmRoomAdminList..lstItems......Caption
@@ -753,24 +753,24 @@ msgid "Jabber ID"
 msgstr ""
 
 #. frmBrowse..Panel3..vwBrowse......Caption
-#: Browser.dfm:49
+#: Browser.dfm:50
 msgid "Type"
 msgstr ""
 
 #. frmBrowse..Panel3..vwBrowse......Caption
-#: Browser.dfm:53
+#: Browser.dfm:54
 msgid "Node ID"
 msgstr ""
 
 #. frmBrowse..Panel3..pnlInfo..lblError..Caption
-#: Browser.dfm:89
+#: Browser.dfm:90
 msgid "Error: "
 msgstr ""
 
 #. frmBrowse..Panel3..pnlInfo..lblError..Font.Name
-#: Browser.dfm:93
+#: Browser.dfm:94
 #. frmBrowse..pnlTop..btnClose..Font.Name
-#: Browser.dfm:136
+#: Browser.dfm:137
 #. frmChat..Panel1..btnClose..Font.Name
 #: ChatWin.dfm:40
 #. frmDebug..pnlTop..btnClose..Font.Name
@@ -801,12 +801,12 @@ msgid "Arial"
 msgstr ""
 
 #. frmBrowse..StatBar......Text
-#: Browser.dfm:108
+#: Browser.dfm:109
 msgid "0 Objects"
 msgstr ""
 
 #. frmBrowse..pnlTop..btnClose..Caption
-#: Browser.dfm:131
+#: Browser.dfm:132
 #. frmChat..Panel1..btnClose..Caption
 #: ChatWin.dfm:35
 #. frmDebug..pnlTop..btnClose..Caption
@@ -823,32 +823,32 @@ msgid "X"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnBack..Hint
-#: Browser.dfm:179
+#: Browser.dfm:180
 msgid "Previous JID"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnBack..Caption
-#: Browser.dfm:182
+#: Browser.dfm:183
 msgid "Back"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnFwd..Hint
-#: Browser.dfm:191
+#: Browser.dfm:192
 msgid "Next JID"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnFwd..Caption
-#: Browser.dfm:193
+#: Browser.dfm:194
 msgid "btnFwd"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..ToolButton2..Caption
-#: Browser.dfm:202
+#: Browser.dfm:203
 msgid "ToolButton2"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnHome..Hint
-#: Browser.dfm:209
+#: Browser.dfm:210
 #. frmProfile..PageControl1..TabSheet4..Caption
 #: Profile.dfm:392
 #. frmVCard..PageControl1..TabSheet4..Caption
@@ -858,93 +858,93 @@ msgid "Home"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnHome..Caption
-#: Browser.dfm:211
+#: Browser.dfm:212
 msgid "btnHome"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..ToolButton1..Hint
-#: Browser.dfm:218
+#: Browser.dfm:219
 msgid "Change Views"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..ToolButton1..Caption
-#: Browser.dfm:220
+#: Browser.dfm:221
 msgid "ToolButton1"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnBookmark..Hint
-#: Browser.dfm:228
+#: Browser.dfm:229
 msgid "Add a Bookmark"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnBookmark..Caption
-#: Browser.dfm:230
+#: Browser.dfm:231
 msgid "btnBookmark"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..ToolButton3..Hint
-#: Browser.dfm:237
+#: Browser.dfm:238
 msgid "Get properties for all items in this "
 "window"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..ToolButton3..Caption
-#: Browser.dfm:239
+#: Browser.dfm:240
 msgid "btnProps"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnNode..Hint
-#: Browser.dfm:246
+#: Browser.dfm:247
 msgid "Show Node Identifier"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..btnNode..Caption
-#: Browser.dfm:249
+#: Browser.dfm:250
 msgid "btnNode"
 msgstr ""
 
 #. frmBrowse..pnlJid..btnGo..Caption
-#: Browser.dfm:273
+#: Browser.dfm:274
 msgid "GO"
 msgstr ""
 
 #. frmBrowse..pnlJid..btnRefresh..Hint
-#: Browser.dfm:282
+#: Browser.dfm:283
 msgid "Re-Browse this object"
 msgstr ""
 
 #. frmBrowse..pnlJid..pnlJidID..Caption
-#: Browser.dfm:302
+#: Browser.dfm:303
 msgid "Jabber Address:   "
 msgstr ""
 
 #. frmBrowse..pnlNode..pnlNodeID..Caption
-#: Browser.dfm:336
+#: Browser.dfm:337
 msgid "Node Identifier:"
 msgstr ""
 
 #. frmBrowse..popViewStyle..Details1..Caption
-#: Browser.dfm:3836
+#: Browser.dfm:3837
 msgid "Details"
 msgstr ""
 
 #. frmBrowse..popViewStyle..LargeIcons1..Caption
-#: Browser.dfm:3840
+#: Browser.dfm:3841
 msgid "Large Icons"
 msgstr ""
 
 #. frmBrowse..popViewStyle..SmallIcons1..Caption
-#: Browser.dfm:3844
+#: Browser.dfm:3845
 msgid "Small Icons"
 msgstr ""
 
 #. frmBrowse..popViewStyle..List1..Caption
-#: Browser.dfm:3848
+#: Browser.dfm:3849
 msgid "List"
 msgstr ""
 
 #. frmBrowse..popContext..mBrowse..Caption
-#: Browser.dfm:3857
+#: Browser.dfm:3858
 #. frmConnDetails..PageControl1..tbsSSL..btnCertBrowse..Caption
 #: ConnDetails.dfm:284
 #. frmEmoteProps..btnBrowse..Caption
@@ -962,30 +962,30 @@ msgid "Browse"
 msgstr ""
 
 #. frmBrowse..popContext..mBrowseNew..Caption
-#: Browser.dfm:3861
+#: Browser.dfm:3862
 msgid "Browse in New Window"
 msgstr ""
 
 #. frmBrowse..popContext..mBookmark..Caption
-#: Browser.dfm:3865
+#: Browser.dfm:3866
 msgid "Add Bookmark to Roster"
 msgstr ""
 
 #. frmBrowse..popContext..mVCard..Caption
-#: Browser.dfm:3872
+#: Browser.dfm:3873
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuServerVCard..Caption
 #: Jabber1.dfm:448
 msgid "vCard"
 msgstr ""
 
 #. frmBrowse..popContext..mVersion..Caption
-#: Browser.dfm:3876
+#: Browser.dfm:3877
 #: ExResponders.pas:342
 msgid "Version"
 msgstr ""
 
 #. frmBrowse..popContext..mTime..Caption
-#: Browser.dfm:3880
+#: Browser.dfm:3881
 #. frmExodus..MainMenu1..Tools1..mnuServer..mnuTime..Caption
 #: Jabber1.dfm:444
 #: ExResponders.pas:394
@@ -993,27 +993,27 @@ msgid "Time"
 msgstr ""
 
 #. frmBrowse..popContext..mLast..Caption
-#: Browser.dfm:3884
+#: Browser.dfm:3885
 msgid "Last Time/Activity"
 msgstr ""
 
 #. frmBrowse..popContext..mSearch..Caption
-#: Browser.dfm:3888
+#: Browser.dfm:3889
 msgid "Search"
 msgstr ""
 
 #. frmBrowse..popContext..mRegister..Caption
-#: Browser.dfm:3892
+#: Browser.dfm:3893
 msgid "Register"
 msgstr ""
 
 #. frmBrowse..popContext..mJoinConf..Caption
-#: Browser.dfm:3896
+#: Browser.dfm:3897
 msgid "Join Conference"
 msgstr ""
 
 #. frmBrowse..popContext..mAddContact..Caption
-#: Browser.dfm:3900
+#: Browser.dfm:3901
 msgid "Add this Contact "
 msgstr ""
 
@@ -6542,12 +6542,16 @@ msgstr ""
 msgid "Error: %s"
 msgstr ""
 
+#: Bookmark.pas:74
+msgid "Add a new bookmark"
+msgstr ""
+
 #. Actually Browse to the JID entered in the address box
-#: Browser.pas:211
+#: Browser.pas:212
 msgid "The Jabber ID you entered is invalid."
 msgstr ""
 
-#: Browser.pas:649
+#: Browser.pas:647
 msgid "Objects"
 msgstr ""
 
