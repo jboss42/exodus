@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: exodus\n"
-"POT-Creation-Date: 2003-11-24 10:20\n"
-"PO-Revision-Date: 2003-11-26 00:54+0100\n"
+"POT-Creation-Date: 2003-11-26 09:16\n"
+"PO-Revision-Date: 2003-11-26 20:19+0100\n"
 "Last-Translator: Luis Peralta <peralta@aditel.org>\n"
 "Language-Team: CENT <peralta@aditel.org>\n"
 "MIME-Version: 1.0\n"
@@ -49,10 +49,6 @@ msgstr "Acerca de Exodus"
 #. frmLogin..Font.Name
 #. frmMsgQueue..Font.Name
 #. frmMsgRecv..Font.Name
-#. frmMsgRecv..pnlTop..pnlHeader..pnlSendSubject..lblSubject1..Font.Name
-#. frmMsgRecv..pnlTop..pnlHeader..pnlSubject..lblSubject2..Font.Name
-#. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..txtFrom..Font.Name
-#. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..lblFrom..Font.Name
 #. frmMsgRecv..pnlTop..pnlError..Font.Name
 #. frmPathSelector..Font.Name
 #. frmPathSelector..Label1..Font.Name
@@ -116,11 +112,7 @@ msgstr "Acerca de Exodus"
 #: Login.dfm:12
 #: MsgQueue.dfm:11
 #: MsgRecv.dfm:11
-#: MsgRecv.dfm:300
-#: MsgRecv.dfm:345
-#: MsgRecv.dfm:374
-#: MsgRecv.dfm:394
-#: MsgRecv.dfm:437
+#: MsgRecv.dfm:412
 #: PathSelector.dfm:13
 #: PathSelector.dfm:31
 #: Prefs.dfm:3124
@@ -158,9 +150,9 @@ msgstr ""
 #. show the next event
 #: About.dfm:1423
 #: InvalidRoster.dfm:41
-#: MsgRecv.dfm:498
+#: MsgRecv.dfm:473
 #: RosterRecv.dfm:48
-#: MsgRecv.pas:410
+#: MsgRecv.pas:434
 #: RecvStatus.pas:383
 #: RecvStatus.pas:610
 #: RecvStatus.pas:621
@@ -464,11 +456,14 @@ msgid "A new version of Exodus is available.  Would you like to install it?"
 msgstr "Hay una nueva versión disponible del Exodus. Desea instalarla?"
 
 #. frmAutoUpdateStatus..TntLabel1..Caption
+#: AutoUpdateStatus.dfm:45
+msgid "What's New?"
+msgstr ""
+
 #. frmAutoUpdateStatus..HttpClient..Request.ContentType
 #. fRecvStatus..httpClient..Request.ContentType
 #. fSendStatus..httpClient..Request.ContentType
 #. frmWebDownload..IdHTTP1..Request.ContentType
-#: AutoUpdateStatus.dfm:45
 #: AutoUpdateStatus.dfm:101
 #: RecvStatus.dfm:114
 #: SendStatus.dfm:105
@@ -518,7 +513,7 @@ msgstr ""
 #. frmMsgRecv..popClipboard..popCopy..Caption
 #: BaseChat.dfm:284
 #: BaseChat.dfm:304
-#: MsgRecv.dfm:560
+#: MsgRecv.dfm:535
 msgid "Copy"
 msgstr "Copiar"
 
@@ -607,8 +602,8 @@ msgstr "Pegar "
 #: Jabber1.dfm:2699
 #: Jabber1.dfm:2706
 #: jud.dfm:211
-#: MsgRecv.dfm:543
-#: MsgRecv.dfm:552
+#: MsgRecv.dfm:518
+#: MsgRecv.dfm:527
 #: Room.dfm:215
 #: Room.dfm:226
 #: Room.dfm:238
@@ -723,7 +718,7 @@ msgstr "Error: "
 #: ChatWin.dfm:44
 #: Debug.dfm:256
 #: ExceptTracer.dfm:52
-#: MsgRecv.dfm:418
+#: MsgRecv.dfm:393
 #: Prefs.dfm:12
 #: RegForm.dfm:38
 #: RegForm.dfm:54
@@ -752,7 +747,7 @@ msgstr "0 Objetos"
 #: Browser.dfm:126
 #: ChatWin.dfm:39
 #: Debug.dfm:251
-#: MsgRecv.dfm:413
+#: MsgRecv.dfm:388
 #: Room.dfm:98
 #: RosterWindow.dfm:87
 #: XferManager.dfm:36
@@ -820,8 +815,11 @@ msgid "btnBookmark"
 msgstr ""
 
 #. frmBrowse..pnlTop..CoolBar1..tlbToolBar..ToolButton3..Hint
-#. frmBrowse..pnlTop..CoolBar1..tlbToolBar..ToolButton3..Caption
 #: Browser.dfm:229
+msgid "Get properties for all items in this window"
+msgstr "Obtener propiedades para todos los ítems de esta ventana"
+
+#. frmBrowse..pnlTop..CoolBar1..tlbToolBar..ToolButton3..Caption
 #: Browser.dfm:230
 msgid "btnProps"
 msgstr ""
@@ -985,7 +983,7 @@ msgstr "Mostrar historial ..."
 #. frmMsgRecv..popContact..popClearHistory..Caption
 #. frmRoom..popRoom..popClearHistory..Caption
 #: ChatWin.dfm:105
-#: MsgRecv.dfm:512
+#: MsgRecv.dfm:487
 #: Room.dfm:172
 msgid "Clear History"
 msgstr "Limpiar historial"
@@ -994,7 +992,7 @@ msgstr "Limpiar historial"
 #. frmMsgRecv..popContact..mnuResources..Caption
 #. frmProfile..PageControl1..TabSheet7..Caption
 #: ChatWin.dfm:113
-#: MsgRecv.dfm:547
+#: MsgRecv.dfm:522
 #: Profile.dfm:162
 msgid "Resources"
 msgstr "Recursos"
@@ -1023,7 +1021,7 @@ msgstr "Info de contacto"
 #. frmMsgRecv..popContact..C1..mnuVersionRequest..Caption
 #. frmRosterWindow..popRoster..popClientInfo..popVersion..Caption
 #: ChatWin.dfm:133
-#: MsgRecv.dfm:522
+#: MsgRecv.dfm:497
 #: RosterWindow.dfm:336
 msgid "Version Request"
 msgstr "Petición de versión"
@@ -1032,7 +1030,7 @@ msgstr "Petición de versión"
 #. frmMsgRecv..popContact..C1..mnuTimeRequest..Caption
 #. frmRosterWindow..popRoster..popClientInfo..popTime..Caption
 #: ChatWin.dfm:137
-#: MsgRecv.dfm:526
+#: MsgRecv.dfm:501
 #: RosterWindow.dfm:340
 msgid "Time Request"
 msgstr "Petición de hora"
@@ -1042,7 +1040,7 @@ msgstr "Petición de hora"
 #. frmProfile..PageControl1..TabSheet7..Panel2..btnLast..Caption
 #. frmRosterWindow..popRoster..popClientInfo..popLast..Caption
 #: ChatWin.dfm:141
-#: MsgRecv.dfm:530
+#: MsgRecv.dfm:505
 #: Profile.dfm:206
 #: RosterWindow.dfm:344
 #: ExEvents.pas:487
@@ -1052,7 +1050,7 @@ msgstr "Última actividad"
 #. frmChat..popContact..mnuBlock..Caption
 #. frmMsgRecv..popContact..mnuBlock..Caption
 #: ChatWin.dfm:146
-#: MsgRecv.dfm:535
+#: MsgRecv.dfm:510
 msgid "Block Contact"
 msgstr "Bloquear contacto"
 
@@ -1263,10 +1261,16 @@ msgid "Use StartTLS whenever the server allows it."
 msgstr "Usar StartTLS cuando el servidor lo permita."
 
 #. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.WideStrings
-#. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.WideStrings
-#. frmConnDetails..PageControl1..tbsSocket..Caption
 #: ConnDetails.dfm:291
+msgid "Only allow connections which use StartTLS."
+msgstr "Solo permitir conexiones que utilicen StartTLS."
+
+#. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.WideStrings
 #: ConnDetails.dfm:292
+msgid "Use SSL immediately when connected."
+msgstr "Utilizar SSL nada más conectar."
+
+#. frmConnDetails..PageControl1..tbsSocket..Caption
 #: ConnDetails.dfm:297
 msgid "Proxy"
 msgstr "Proxy"
@@ -1687,8 +1691,11 @@ msgid "lbl"
 msgstr ""
 
 #. frmGrpManagement..Caption
-#. frmGrpManagement..optMove..Caption
 #: GrpManagement.dfm:6
+msgid "Group Management"
+msgstr ""
+
+#. frmGrpManagement..optMove..Caption
 #: GrpManagement.dfm:53
 msgid "Move the selected contacts to the following group:"
 msgstr "Mover contactos seleccionados al siguiente grupo:"
@@ -1827,8 +1834,8 @@ msgstr "Per favor unete a nuestra sala de conferencias."
 #. do this.
 #: Jabber1.dfm:7
 #: ConnDetails.pas:401
-#: ExSession.pas:474
-#: ExUtils.pas:1215
+#: ExSession.pas:475
+#: ExUtils.pas:1207
 #: Jabber1.pas:1189
 #: Login.pas:104
 #: Login.pas:177
@@ -1946,8 +1953,11 @@ msgid "Instant Messages"
 msgstr "Mensajes instantaneos"
 
 #. frmExodus..MainMenu1..Exodus1..ClearMessages1..Caption
-#. frmExodus..MainMenu1..Exodus1..mnuMessage..Caption
 #: Jabber1.dfm:257
+msgid "Clear &Instant Messages"
+msgstr "Eliminar mensajes &instantáneos"
+
+#. frmExodus..MainMenu1..Exodus1..mnuMessage..Caption
 #: Jabber1.dfm:265
 msgid "Send Instant &Message"
 msgstr "Enviar &mensaje instantaneo"
@@ -2216,8 +2226,11 @@ msgid "Jabber Search"
 msgstr "Busqueda Jabber"
 
 #. frmJud..Panel1..lblWizardTitle..Caption
-#. frmJud..Tabs..TabSheet1..lblSelect....Align
 #: jud.dfm:42
+msgid "Jabber Search Wizard"
+msgstr "Wizard de búsqueda Jabber"
+
+#. frmJud..Tabs..TabSheet1..lblSelect....Align
 #: jud.dfm:63
 msgid "Select the user database or enter in the Jabber ID of the search agent to use:"
 msgstr "Seleccionar la base de datos del usuario or introduce el Jabber ID del agente de busqueda a utilizar:"
@@ -2365,66 +2378,64 @@ msgstr "&Enviar"
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlSendSubject..lblSubject1..Caption
 #: MsgRecv.dfm:295
-msgid "Subject:    "
-msgstr "Tema:    "
+msgid "Subject: "
+msgstr "Tema: "
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlSubject..txtSubject..Caption
-#: MsgRecv.dfm:332
+#: MsgRecv.dfm:326
 msgid "txtSubject"
 msgstr ""
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlSubject..lblSubject2..Caption
 #. frmRoom..Panel1..pnlSubj..lblSubjectURL..Caption
-#: MsgRecv.dfm:340
+#: MsgRecv.dfm:334
 #: Room.dfm:124
 msgid "Subject:"
 msgstr "Tema:"
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..txtFrom..Caption
-#: MsgRecv.dfm:369
+#: MsgRecv.dfm:357
 msgid "txtFrom"
 msgstr ""
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..lblFrom..Caption
-#. frmRosterRecv..pnlFrom..StaticText1..Caption
-#: MsgRecv.dfm:389
-#: RosterRecv.dfm:69
-msgid "From:    "
-msgstr "De:    "
+#: MsgRecv.dfm:370
+msgid "From: "
+msgstr "De: "
 
 #. frmMsgRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
-#: MsgRecv.dfm:494
+#: MsgRecv.dfm:469
 msgid "Reply"
 msgstr "Responder"
 
 #. frmMsgRecv..popContact..mnuHistory..Caption
 #. frmRoom..popRoom..popShowHistory..Caption
-#: MsgRecv.dfm:508
+#: MsgRecv.dfm:483
 #: Room.dfm:168
 msgid "Show History"
 msgstr "Mostrar historial"
 
 #. frmMsgRecv..popContact..mnuProfile..Caption
 #. frmSubscribe..PopupMenu1..mnuProfile..Caption
-#: MsgRecv.dfm:516
+#: MsgRecv.dfm:491
 #: subscribe.dfm:138
 msgid "Show Profile"
 msgstr "Mostrar perfiles"
 
 #. frmMsgRecv..popContact..C1..Caption
 #. frmRosterWindow..popRoster..popClientInfo..Caption
-#: MsgRecv.dfm:520
+#: MsgRecv.dfm:495
 #: RosterWindow.dfm:334
 msgid "Client Info"
 msgstr "Información del cliente"
 
 #. frmMsgRecv..popContact..mnuSendFile..Caption
-#: MsgRecv.dfm:539
+#: MsgRecv.dfm:514
 msgid "Send File"
 msgstr "Enviar archivo"
 
 #. frmMsgRecv..popClipboard..popPaste..Caption
-#: MsgRecv.dfm:564
+#: MsgRecv.dfm:539
 msgid "Paste"
 msgstr "Pegar"
 
@@ -2530,7 +2541,7 @@ msgstr ""
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: Prefs.dfm:2638
 #: XferManager.dfm:53
-#: ExSession.pas:484
+#: ExSession.pas:485
 #: prefs/PrefNotify.dfm:43
 #: prefs/PrefNotify.pas:102
 msgid "File Transfers"
@@ -2766,30 +2777,48 @@ msgstr "Contabilidad/Finanzas"
 
 #. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #: Profile.dfm:338
 #: vcard.dfm:163
+msgid "Computer related (IS, MIS, DP)"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #: Profile.dfm:339
 #: vcard.dfm:164
+msgid "Computer related (WWW)"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #: Profile.dfm:340
 #: vcard.dfm:165
+msgid "Consulting"
+msgstr "Consultoría"
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #: Profile.dfm:341
 #: vcard.dfm:166
+msgid "Education/training"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #: Profile.dfm:342
 #: vcard.dfm:167
+msgid "Engineering"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #: Profile.dfm:343
 #: vcard.dfm:168
+msgid "Executive/senior management"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #: Profile.dfm:344
 #: vcard.dfm:169
 msgid "General administrative/supervisory"
@@ -2804,14 +2833,20 @@ msgstr "Gobierno/Militar"
 
 #. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #: Profile.dfm:346
 #: vcard.dfm:171
+msgid "Manufacturing/production/operations"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #: Profile.dfm:347
 #: vcard.dfm:172
+msgid "Professional services (medical, legal, etc.)"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #: Profile.dfm:348
 #: vcard.dfm:173
 msgid "Research and development"
@@ -2833,10 +2868,13 @@ msgstr "Ventas/Marketing/Publicidad"
 
 #. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
-#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #: Profile.dfm:351
 #: vcard.dfm:176
+msgid "Self-employed/owner"
+msgstr ""
+
+#. frmProfile..PageControl1..TabSheet3..cboOcc....Items.WideStrings
+#. frmVCard..PageControl1..TabSheet3..cboOcc....Items.WideStrings
 #: Profile.dfm:352
 #: vcard.dfm:177
 msgid "Student"
@@ -3444,8 +3482,8 @@ msgstr ""
 #: Profile.dfm:946
 #: vcard.dfm:311
 #: vcard.dfm:716
-msgid "Colubmia  "
-msgstr ""
+msgid "Columbia  "
+msgstr "Colombia"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmProfile..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -4522,7 +4560,7 @@ msgstr "Montserrat  "
 #: Profile.dfm:1044
 #: vcard.dfm:409
 #: vcard.dfm:814
-msgid "Morocoo  "
+msgid "Morocco  "
 msgstr "Marruecos"
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5895,6 +5933,11 @@ msgstr ""
 msgid "Receiving Contacts"
 msgstr "Recibiendo contactos"
 
+#. frmRosterRecv..pnlFrom..StaticText1..Caption
+#: RosterRecv.dfm:69
+msgid "From:    "
+msgstr "De:    "
+
 #. frmRosterRecv..Panel1..Label2..Caption
 #: RosterRecv.dfm:226
 msgid "Add contacts to this group:"
@@ -5923,9 +5966,9 @@ msgstr "JID"
 #. frmRosterWindow..pnlShow..pnlStatus..lblStatusLink..Caption
 #. it at all times (if it exists).
 #: RosterWindow.dfm:244
-#: ExUtils.pas:860
-#: ExUtils.pas:878
-#: ExUtils.pas:896
+#: ExUtils.pas:852
+#: ExUtils.pas:870
+#: ExUtils.pas:888
 #: RosterWindow.pas:367
 #: RosterWindow.pas:1245
 #: RosterWindow.pas:1249
@@ -6121,7 +6164,7 @@ msgstr "Añadir esta persona a mi lista"
 #. frmSubscribe..frameButtons1..Panel2..Panel1..btnOK..Caption
 #. Change button captions for TC Invites
 #: subscribe.dfm:124
-#: MsgRecv.pas:347
+#: MsgRecv.pas:371
 msgid "Accept"
 msgstr "Aceptar"
 
@@ -6513,52 +6556,52 @@ msgstr " -c [archivo] \t : Fichero de configuración\n"
 msgid "Missing file:"
 msgstr "Archivo inexistente:"
 
-#: ExSession.pas:475
+#: ExSession.pas:476
 #: prefs/PrefNotify.pas:100
 msgid "Activity in a chat window"
 msgstr "Actividad en ventana de chat"
 
-#: ExSession.pas:476
+#: ExSession.pas:477
 #: prefs/PrefNotify.pas:98
 msgid "Invited to a room"
 msgstr "Invitación a una sala"
 
-#: ExSession.pas:477
+#: ExSession.pas:478
 #: prefs/PrefNotify.pas:99
 msgid "Keyword in a room"
 msgstr "Palabra clave en sala"
 
-#: ExSession.pas:478
+#: ExSession.pas:479
 #: prefs/PrefNotify.pas:95
 msgid "New conversation"
 msgstr "Nueva conversación"
 
-#: ExSession.pas:479
+#: ExSession.pas:480
 #: prefs/PrefNotify.pas:96
 msgid "Received a normal message"
 msgstr "Recibo de mensaje normal"
 
-#: ExSession.pas:480
+#: ExSession.pas:481
 #: prefs/PrefNotify.pas:94
 msgid "Contact went offline"
 msgstr "El contacto se ha desconectado"
 
-#: ExSession.pas:481
+#: ExSession.pas:482
 #: prefs/PrefNotify.pas:93
 msgid "Contact came online"
 msgstr "El contacto se ha conectado"
 
-#: ExSession.pas:482
+#: ExSession.pas:483
 #: prefs/PrefNotify.pas:101
 msgid "Activity in a room"
 msgstr "Actividad en la sala"
 
-#: ExSession.pas:483
+#: ExSession.pas:484
 #: prefs/PrefNotify.pas:97
 msgid "Subscription request"
 msgstr "Petición de subscripción"
 
-#: ExSession.pas:485
+#: ExSession.pas:486
 #: prefs/PrefNotify.pas:103
 msgid "Auto response generated"
 msgstr "Generación de auto-respuesta"
@@ -6606,39 +6649,47 @@ msgstr "El directorio de historial que has especificado es inválido. Desactiva 
 msgid "Could not open log file: "
 msgstr "No ha sido posible abrir el archivo de historial: "
 
-#: ExUtils.pas:766
+#: ExUtils.pas:598
+msgid " unknown last result: "
+msgstr " último resultado desconocido: "
+
+#: ExUtils.pas:609
+#: ExUtils.pas:610
+#: ExUtils.pas:611
+#: ExUtils.pas:612
+#: ExUtils.pas:758
 msgid "This message contains %d roster items."
 msgstr "Este mensaje contiene %d items de la lista."
 
-#: ExUtils.pas:854
-#: ExUtils.pas:872
-#: ExUtils.pas:890
+#: ExUtils.pas:846
+#: ExUtils.pas:864
+#: ExUtils.pas:882
 #: RosterWindow.pas:373
 #: RosterWindow.pas:666
 msgid "Bookmarks"
 msgstr "Marcadores"
 
-#: ExUtils.pas:857
-#: ExUtils.pas:875
-#: ExUtils.pas:893
+#: ExUtils.pas:849
+#: ExUtils.pas:867
+#: ExUtils.pas:885
 #: RosterWindow.pas:372
 msgid "Unfiled"
 msgstr "No procesado"
 
-#: ExUtils.pas:1236
+#: ExUtils.pas:1228
 msgid "Untitled Group"
 msgstr "Grupo sin nombre"
 
-#: ExUtils.pas:1237
+#: ExUtils.pas:1229
 msgid "New Roster Group"
 msgstr "Nuevo grupo a la lista"
 
-#: ExUtils.pas:1237
+#: ExUtils.pas:1229
 msgid "Enter new group name: "
 msgstr "Introduce el nuevo nombre del grupo: "
 
 #. add the new grp.
-#: ExUtils.pas:1242
+#: ExUtils.pas:1234
 msgid "This group already exists!"
 msgstr "Este grupo ya existe"
 
@@ -6650,7 +6701,7 @@ msgstr "(Requerido)"
 #. Programmer's name for it: SPropertiesMissing
 #: getOpt.pas:122
 msgid "%s: improper use of TGetOpts, one, some or more properties not initialized."
-msgstr ""
+msgstr "%s: uso inapropiado de TGetOpts, una, alguna o más propiedades no inicializadas."
 
 #. Programmer's name for it: SReqOptMissing
 #: getOpt.pas:123
@@ -6861,35 +6912,35 @@ msgstr "¿Eliminar este perfil?"
 msgid "Exodus could not create or write to the spool directory specified in the options."
 msgstr "Exodus no ha podido crear o escribir en el directorio spool especificado en las opciones."
 
-#: MsgRecv.pas:348
+#: MsgRecv.pas:372
 msgid "Decline"
 msgstr "Declinar"
 
 #. This is an error.. show the error panel
-#: MsgRecv.pas:355
+#: MsgRecv.pas:379
 msgid "Error:"
 msgstr "Error:"
 
-#: MsgRecv.pas:378
+#: MsgRecv.pas:402
 msgid "To:"
 msgstr "Para:"
 
-#: MsgRecv.pas:412
-#: MsgRecv.pas:724
+#: MsgRecv.pas:436
+#: MsgRecv.pas:748
 msgid "Next"
 msgstr "Siguiente"
 
-#: MsgRecv.pas:657
-#: MsgRecv.pas:664
+#: MsgRecv.pas:681
+#: MsgRecv.pas:688
 msgid "Message to "
 msgstr "Mensaje para"
 
-#: MsgRecv.pas:659
-#: MsgRecv.pas:666
+#: MsgRecv.pas:683
+#: MsgRecv.pas:690
 msgid "Message from "
 msgstr "Mensaje de"
 
-#: MsgRecv.pas:736
+#: MsgRecv.pas:760
 msgid "You have unread messages. Read all messages before closing the window."
 msgstr "Tienes mensajes sin leer. Lee todos los mensajes antes de cerrar la ventana"
 
@@ -7311,8 +7362,11 @@ msgstr "El stream no se activó para el archivo: %s"
 msgid "There was an error trying to upload the file to your web host."
 msgstr "Se ha producido un error intentando subir el archivo"
 
-#. PChar is in lparam
 #: SendStatus.pas:980
+msgid "Send failed."
+msgstr "El envío ha fallado."
+
+#. PChar is in lparam
 #: SendStatus.pas:1004
 msgid "Connected."
 msgstr "Conectado."
@@ -7563,8 +7617,11 @@ msgid "Enable Auto Extended Away"
 msgstr "Activar Auto Ausencia extendida"
 
 #. frmPrefAway..chkAutoDisconnect..Caption
-#. frmPrefAway..pnlHeader..Caption
 #: prefs/PrefAway.dfm:128
+msgid "Enable Auto Disconnect"
+msgstr "Activar auto desconexión"
+
+#. frmPrefAway..pnlHeader..Caption
 #: prefs/PrefAway.dfm:153
 msgid "Auto Away Options"
 msgstr "Opciones de auto ausencia"
@@ -7867,8 +7924,11 @@ msgid "tt"
 msgstr ""
 
 #. frmPrefMsg..chkLogRoster..Caption
-#. frmPrefMsg..pnlHeader..Caption
 #: prefs/PrefMsg.dfm:173
+msgid "Only log messages from people in my roster"
+msgstr "Archivar mensajes sólo de gente conocida"
+
+#. frmPrefMsg..pnlHeader..Caption
 #: prefs/PrefMsg.dfm:178
 msgid "Message Options"
 msgstr "Opciones de mensajes"
@@ -8331,8 +8391,11 @@ msgid "Reset all file transfer options to defaults"
 msgstr "Volver a poner las opciones por defecto"
 
 #. frmPrefTransfer..TntLabel2..Caption
-#. frmPrefTransfer..pnlHeader..Caption
 #: prefs/PrefTransfer.dfm:31
+msgid "Send file using this method:"
+msgstr "Enviar archivo utilizando este método:"
+
+#. frmPrefTransfer..pnlHeader..Caption
 #: prefs/PrefTransfer.dfm:35
 msgid "File Transfer Options"
 msgstr "Opciones de transferencia de archivos"
@@ -8373,8 +8436,11 @@ msgid "Discover a file transfer component using my server."
 msgstr "Descubrir un componente de transferencia de archivos usando mi servidor."
 
 #. frmPrefTransfer..cboXferMode....Items.WideStrings
-#. frmPrefTransfer..cboXferMode....Items.WideStrings
 #: prefs/PrefTransfer.dfm:196
+msgid "Always use a specific file transfer component."
+msgstr "Utilizar siempre un componente específico para las transferencias."
+
+#. frmPrefTransfer..cboXferMode....Items.WideStrings
 #: prefs/PrefTransfer.dfm:197
 msgid "Send files directly from my machine to the recipient."
 msgstr "Enviar archivos directamente desde esta máquina al recipiente."
@@ -8385,9 +8451,12 @@ msgid "Use a web server to host the files which I send."
 msgstr "Utilizar un servidor Web para servir los archivos que envie."
 
 #. frmPrefTransfer..grpProxy..TntLabel1..Caption
+#: prefs/PrefTransfer.dfm:211
+msgid "Jabber Address of File Transfer Server:"
+msgstr "Dirección Jabber del servidor de transferencias de archivos:"
+
 #. Select the chat window
 #. find the "thing" that we clicked on in the window..
-#: prefs/PrefTransfer.dfm:211
 #: prefs/PrefFont.pas:112
 #: prefs/PrefFont.pas:201
 #: prefs/PrefFont.pas:258
@@ -8416,6 +8485,9 @@ msgid "Your IE proxy settings won't help, since you use an autoconfiguration scr
 msgstr "La configuración del proxy de IE no ayudará, puesto que utilizas un script de autoconfiguración. Por favor, configúralo manualmente."
 
 #: prefs/PrefNotify.pas:250
+msgid "Make sure to configure sounds in your Sounds Control Panel using the hotlink provided."
+msgstr "Asegúrate de configurar los sonidos en el panel de control de sonidos usando el enlace provisto."
+
 #: prefs/PrefPlugins.pas:157
 #: prefs/PrefPlugins.pas:165
 #: prefs/PrefPlugins.pas:170
@@ -8427,12 +8499,15 @@ msgstr "El plugin no ha podido ser registrado con windows."
 msgid "Clear all custom presence entries?"
 msgstr "Borrar todas las presencias personalizadas"
 
-#: prefs/PrefSystem.pas:175
+#: prefs/PrefSystem.pas:178
 msgid "Exodus is set to use a language which is not available on your system. Resetting language to default."
 msgstr "Reajustado el lenguaje a su defecto."
 
-#: prefs/PrefSystem.pas:225
-#: prefs/PrefSystem.pas:261
+#: prefs/PrefSystem.pas:230
+msgid "You must exit exodus, and restart it before your new locale settings will take affect."
+msgstr "Debes salir de exodus e iniciarlo de nuevo para que los cambios de locale tengan efecto."
+
+#: prefs/PrefSystem.pas:268
 msgid "No new update available."
 msgstr "No hay nuevas actualizaciones"
 
