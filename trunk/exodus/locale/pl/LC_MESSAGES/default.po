@@ -5,11 +5,11 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: exodus\n"
+"Project-Id-Version: exodus 0.1\n"
 "POT-Creation-Date: 2003-08-03 07:30\n"
-"PO-Revision-Date: 2003-12-04 19:14+0100\n"
-"Last-Translator: Mariusz Smykuła <marian@t-system.com.pl>\n"
-"Language-Team: Mariusz Smykuła <smys@rocketmail.com>\n"
+"PO-Revision-Date: 2003-12-04 21:02+0100\n"
+"Last-Translator: Mariusz Smykuła <smys@lodz.mm.pl>\n"
+"Language-Team: Mariusz Smykuła <redakcja@jabberpl.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -697,9 +697,8 @@ msgstr "Rodzaj"
 
 #. frmBrowse..Panel3..pnlInfo..lblError..Caption
 #: Browser.dfm:84
-#, fuzzy
 msgid "Error: "
-msgstr "BłądL"
+msgstr "Błąd:"
 
 #. frmBrowse..Panel3..pnlInfo..lblError..Font.Name
 #. frmBrowse..pnlTop..btnClose..Font.Name
@@ -999,7 +998,7 @@ msgstr "Wyczyść historię"
 #: MsgRecv.dfm:522
 #: Profile.dfm:162
 msgid "Resources"
-msgstr ""
+msgstr "Zasoby"
 
 #. frmChat..popContact..mnuSendFile..Caption
 #: ChatWin.dfm:119
@@ -1018,7 +1017,6 @@ msgstr "Pokaż profil"
 
 #. frmChat..popContact..C1..Caption
 #: ChatWin.dfm:131
-#, fuzzy
 msgid "Contact Info"
 msgstr "ID kontaktu:"
 
@@ -1064,7 +1062,7 @@ msgstr "Zablokuj kontakt"
 #: ChatWin.dfm:153
 #: Room.dfm:241
 msgid "Notification Options ..."
-msgstr "Opcje zawiadomień ..."
+msgstr "Ustawienia zawiadomień ..."
 
 #. frmChat..popContact..mnuOnTop..Caption
 #. frmRoom..popRoom..mnuOnTop..Caption
@@ -1189,7 +1187,7 @@ msgstr ""
 #. frmConnDetails..PageControl1..tbsProfile..chkRegister..Caption
 #: ConnDetails.dfm:154
 msgid "This is a new account"
-msgstr ""
+msgstr "To jest nowe konto"
 
 #. frmConnDetails..PageControl1..tbsConn..Caption
 #: ConnDetails.dfm:159
@@ -1353,7 +1351,7 @@ msgstr ""
 #. frmCustomNotify..Caption
 #: CustomNotify.dfm:7
 msgid "Custom Notification Options"
-msgstr ""
+msgstr "Opcje dodatkowych powiadomień"
 
 #. frmCustomNotify..lblDefault..Caption
 #: CustomNotify.dfm:25
@@ -1365,33 +1363,33 @@ msgstr "Przywróć ustawienia domyślne..."
 #: CustomNotify.dfm:62
 #: prefs/PrefNotify.dfm:93
 msgid "Notify Options"
-msgstr ""
+msgstr "Opcje powiadomień"
 
 #. frmCustomNotify..optNotify..chkFlash..Caption
 #. frmPrefNotify..optNotify..chkFlash..Caption
 #: CustomNotify.dfm:69
 #: prefs/PrefNotify.dfm:100
 msgid "Flash Taskbar button, or highlight tab"
-msgstr ""
+msgstr "Mrugaj klawiszem w menu zadań lub podświetl zakładkę"
 
 #. frmCustomNotify..optNotify..chkToast..Caption
 #. frmPrefNotify..optNotify..chkToast..Caption
 #: CustomNotify.dfm:78
 #: prefs/PrefNotify.dfm:109
 msgid "Show a \"Toast\" popup"
-msgstr ""
+msgstr "Pokazuj wyskakujące powiadomienia"
 
 #. frmCustomNotify..optNotify..chkTrayNotify..Caption
 #. frmPrefNotify..optNotify..chkTrayNotify..Caption
 #: CustomNotify.dfm:87
 #: prefs/PrefNotify.dfm:118
 msgid "Flash tray icon"
-msgstr ""
+msgstr "Mrugaj ikonką w schowku"
 
 #. frmCustomPres..Caption
 #: CustomPres.dfm:5
 msgid "Custom Presence"
-msgstr ""
+msgstr "Inny status"
 
 #. frmCustomPres..Label1..Caption
 #: CustomPres.dfm:25
@@ -1598,9 +1596,8 @@ msgstr ""
 #. frmWizard..TntPanel1..btnBack..Caption
 #: DockWizard.dfm:38
 #: Wizard.dfm:38
-#, fuzzy
 msgid "< Back"
-msgstr "Cofnij"
+msgstr "< Cofnij"
 
 #. frmDockWizard..TntPanel1..btnNext..Caption
 #. frmWizard..TntPanel1..btnNext..Caption
@@ -1763,7 +1760,7 @@ msgstr "Podaj hasło"
 #. frmInvalidRoster..Caption
 #: InvalidRoster.dfm:6
 msgid "Invalid Roster Items"
-msgstr ""
+msgstr "Nieprawidowy wpis w rosterze"
 
 #. frmInvalidRoster..frameButtons1..Panel2..Panel1..btnOK..Caption
 #. frmInvite..pnlMain..Panel1..btnRemove..Caption
@@ -1792,17 +1789,17 @@ msgstr "ID kontaktu:"
 #. frmInvalidRoster..ListView1......Caption
 #: InvalidRoster.dfm:61
 msgid "Item"
-msgstr ""
+msgstr "Wpis"
 
 #. frmInvalidRoster..ListView1......Caption
 #: InvalidRoster.dfm:65
 msgid "Pres. Error"
-msgstr ""
+msgstr "Błąd statusu"
 
 #. frmInvalidRoster..popItems..oggleCheckboxes1..Caption
 #: InvalidRoster.dfm:76
 msgid "Toggle Checkboxes"
-msgstr ""
+msgstr "Przełącz opcje"
 
 #. frmInvite..Caption
 #. frmRosterWindow..popRoster..popInvite..Caption
@@ -1979,9 +1976,8 @@ msgstr "Wyczyść w&iadomości"
 
 #. frmExodus..MainMenu1..Exodus1..mnuMessage..Caption
 #: Jabber1.dfm:266
-#, fuzzy
 msgid "Send Instant &Message"
-msgstr "Wyślij wiadomość"
+msgstr "Wyślij wiado&mość"
 
 #. frmExodus..MainMenu1..Exodus1..mnuChat..Caption
 #: Jabber1.dfm:271
@@ -1990,9 +1986,8 @@ msgstr "Rozpocznij &rozmowę"
 
 #. frmExodus..MainMenu1..Exodus1..mnuConference..Caption
 #: Jabber1.dfm:276
-#, fuzzy
 msgid "&Join a Chat Room"
-msgstr "Dołącz do pokoju"
+msgstr "Dołącz do poko&ju"
 
 #. frmExodus..MainMenu1..Exodus1..mnuRegisterService..Caption
 #: Jabber1.dfm:284
@@ -2568,9 +2563,8 @@ msgstr "Opcje Exodusa"
 
 #. frmPrefs..Scroller..lblDialog..Caption
 #: Prefs.dfm:240
-#, fuzzy
 msgid "Windows"
-msgstr "Okno rozmowy"
+msgstr "Okienka"
 
 #. frmPrefs..Scroller..lblFonts..Caption
 #: Prefs.dfm:434
@@ -2580,7 +2574,7 @@ msgstr "Czcionki, kolory"
 #. frmPrefs..Scroller..lblS10n..Caption
 #: Prefs.dfm:629
 msgid "Subscriptions"
-msgstr "Subskrypcje"
+msgstr "Autoryzacja"
 
 #. frmPrefs..Scroller..lblRoster..Caption
 #: Prefs.dfm:823
@@ -2600,7 +2594,7 @@ msgstr "Powiadomienia"
 #. frmPrefs..Scroller..lblAway..Caption
 #: Prefs.dfm:1349
 msgid "Auto-Away"
-msgstr "Auto-zdala"
+msgstr "Bezczynność"
 
 #. frmPrefs..Scroller..lblKeywords..Caption
 #. frmPrefs..PageControl1..tbsKeywords..Caption
@@ -2645,7 +2639,7 @@ msgstr "Grupy"
 #. frmPrefs..Scroller..lblLayouts..Caption
 #: Prefs.dfm:2999
 msgid "Layouts"
-msgstr "Wyglądy"
+msgstr "Wygląd"
 
 #. frmPrefs..Scroller..lblNetwork..Caption
 #: Prefs.dfm:3012
@@ -2665,9 +2659,8 @@ msgstr "Używa wyrażeń regularnych dla słów kluczowych"
 
 #. frmPrefs..PageControl1..tbsKeywords..pnlKeyword..Caption
 #: Prefs.dfm:3078
-#, fuzzy
 msgid "Notification Keywords"
-msgstr "Opcje zawiadomień ..."
+msgstr "Powiadamianie dla słów kluczowych"
 
 #. frmPrefs..PageControl1..tbsBlockList..Caption
 #: Prefs.dfm:3085
@@ -5835,9 +5828,8 @@ msgstr "Rejestracja w usłudze"
 
 #. frmRoom..popRoom..popInvite..Caption
 #: Room.dfm:184
-#, fuzzy
 msgid "Invite Contacts..."
-msgstr "Zaproś konktakty"
+msgstr "Zaproś konktakty..."
 
 #. frmRoom..popRoom..popNick..Caption
 #: Room.dfm:188
@@ -6674,9 +6666,8 @@ msgstr "Aktywność w oknie rozmowy"
 
 #: ExSession.pas:477
 #: prefs/PrefNotify.pas:98
-#, fuzzy
 msgid "Invited to a room"
-msgstr "Zaproszenie od"
+msgstr "Zaproszenie do pokoju"
 
 #: ExSession.pas:478
 #: prefs/PrefNotify.pas:99
@@ -6686,9 +6677,8 @@ msgstr "Znajdź słowo kluczowe"
 
 #: ExSession.pas:479
 #: prefs/PrefNotify.pas:95
-#, fuzzy
 msgid "New conversation"
-msgstr "Zapisz rozmowę"
+msgstr "Nowa rozmowa"
 
 #: ExSession.pas:480
 #: prefs/PrefNotify.pas:96
@@ -6697,15 +6687,13 @@ msgstr "Odebrano zwykłą wiadomość"
 
 #: ExSession.pas:481
 #: prefs/PrefNotify.pas:94
-#, fuzzy
 msgid "Contact went offline"
-msgstr "Właściwości kontaktu"
+msgstr "Kontakt rozłączył się"
 
 #: ExSession.pas:482
 #: prefs/PrefNotify.pas:93
-#, fuzzy
 msgid "Contact came online"
-msgstr "Kontakty od"
+msgstr "Kontakt stał się dostępny"
 
 #: ExSession.pas:483
 #: prefs/PrefNotify.pas:101
@@ -6866,9 +6854,8 @@ msgstr "Nazwa pokoju którą podałeś jest nieprawidłowa. To musi być poprawn
 
 #. Send out invites.
 #: invite.pas:202
-#, fuzzy
 msgid "You have been invited to the %s room."
-msgstr "%s ma zablokowany dostęp do tego pokoju. %s"
+msgstr "Zostałeś zaproszony do pokoju. %s"
 
 #: invite.pas:203
 msgid "Conference Room:"
@@ -7061,7 +7048,7 @@ msgstr "Następna"
 #: MsgRecv.pas:681
 #: MsgRecv.pas:688
 msgid "Message to "
-msgstr "Wiadomość do"
+msgstr "Wiadomość do "
 
 #: MsgRecv.pas:683
 #: MsgRecv.pas:690
@@ -7200,7 +7187,7 @@ msgstr "Zablokowany"
 #. check for keywords
 #: Room.pas:463
 msgid "Keyword in "
-msgstr ""
+msgstr "Słowo kluczowe w "
 
 #: Room.pas:469
 msgid "Activity in "
@@ -7271,7 +7258,7 @@ msgstr "Odebrano Ci prawo zabierania głosu."
 
 #: Room.pas:857
 msgid "%s has a new role of %s."
-msgstr ""
+msgstr "%s jest teraz %s."
 
 #: Room.pas:953
 msgid "This room has been destroyed."
@@ -7287,12 +7274,12 @@ msgstr "Nie masz pozwolenia na tworzenie pokoi."
 
 #: Room.pas:1102
 msgid "Your room keyword regular expressions are invalid. Keyword matching will be turned off for this room."
-msgstr ""
+msgstr "Wyrażenie regularne dla tego pokoju są niepoprawne. Dopasowywanie słów kluczowych zostało wyłączone dla tego pokoju."
 
 #. send the msg out
 #: Room.pas:1243
 msgid "/me has changed the subject to: "
-msgstr ""
+msgstr "/me zmienił temat na:"
 
 #. Change the subject
 #: Room.pas:1257
@@ -7732,20 +7719,18 @@ msgstr ""
 
 #. frmPrefAway..chkAutoAway..Caption
 #: prefs/PrefAway.dfm:88
-#, fuzzy
 msgid "Enable Auto Away"
-msgstr "Ustawienia autobezczynności"
+msgstr "Włącz bezczynność"
 
 #. frmPrefAway..chkAAReducePri..Caption
 #: prefs/PrefAway.dfm:111
 msgid "Reduce priority to 0 during auto-away."
-msgstr ""
+msgstr "Zredukuj priorytet do 0 podczas automatycznej bezczynności"
 
 #. frmPrefAway..chkAutoXA..Caption
 #: prefs/PrefAway.dfm:119
-#, fuzzy
 msgid "Enable Auto Extended Away"
-msgstr "Odszedłem na dłużej"
+msgstr "Włącz rozszerzoną bezczynność"
 
 #. frmPrefAway..chkAutoDisconnect..Caption
 #: prefs/PrefAway.dfm:128
@@ -7766,52 +7751,52 @@ msgstr ""
 #. frmPrefDialogs..Label26..Caption
 #: prefs/PrefDialogs.dfm:15
 msgid "Minutes to keep chat windows in memory:"
-msgstr ""
+msgstr "Czas przetrzymywania okien w pamięci:"
 
 #. frmPrefDialogs..Label27..Caption
 #: prefs/PrefDialogs.dfm:22
 msgid "Use 0 minutes to destroy chat windows immediately."
-msgstr ""
+msgstr "Użyj 0 aby okno było niszczone natychmiast."
 
 #. frmPrefDialogs..Label29..Caption
 #: prefs/PrefDialogs.dfm:29
 msgid "Toast duration (seconds):"
-msgstr ""
+msgstr "Czast trwania (sekundy)"
 
 #. frmPrefDialogs..TntLabel1..Caption
 #: prefs/PrefDialogs.dfm:36
 msgid "Use this key sequence used to close chat windows"
-msgstr ""
+msgstr "Użyj tej kombinacji klawiszy do zamknięcia okna rozmów"
 
 #. frmPrefDialogs..chkRosterAlpha..Caption
 #: prefs/PrefDialogs.dfm:43
 msgid "Use Alpha Blending for Roster "
-msgstr ""
+msgstr "Używaj przeźroczystości dla Rostera"
 
 #. frmPrefDialogs..chkToastAlpha..Caption
 #: prefs/PrefDialogs.dfm:89
 msgid "Use Alpha Blending for Toast Notifications"
-msgstr ""
+msgstr "Używaj przeźroczystości dla wyskakujących powiadomień."
 
 #. frmPrefDialogs..chkSnap..Caption
 #: prefs/PrefDialogs.dfm:135
 msgid "Make the main window snap to screen edges"
-msgstr ""
+msgstr "Przyciągaj główne okno krawędzi ekranu"
 
 #. frmPrefDialogs..chkBusy..Caption
 #: prefs/PrefDialogs.dfm:166
 msgid "Warn when trying to close busy chat windows."
-msgstr ""
+msgstr "Ostrzegaj, gdy próbuję zamknąć zajęte okno rozmowy."
 
 #. frmPrefDialogs..chkEscClose..Caption
 #: prefs/PrefDialogs.dfm:211
 msgid "Use ESC key to close chat windows."
-msgstr ""
+msgstr "Użyj ESC aby zamknąć okna rozmów."
 
 #. frmPrefDialogs..pnlHeader..Caption
 #: prefs/PrefDialogs.dfm:246
 msgid "Window Options"
-msgstr ""
+msgstr "Opcje okienek"
 
 #. frmPrefFont..Caption
 #: prefs/PrefFont.dfm:4
@@ -7820,47 +7805,43 @@ msgstr ""
 
 #. frmPrefFont..lblRoster..Caption
 #: prefs/PrefFont.dfm:15
-#, fuzzy
 msgid "Roster Window"
-msgstr "Zamknij okno"
+msgstr "Okno rozmowy"
 
 #. frmPrefFont..lblChat..Caption
 #: prefs/PrefFont.dfm:22
-#, fuzzy
 msgid "Chat Windows"
-msgstr "Okno rozmowy"
+msgstr "Okna rozmowy"
 
 #. frmPrefFont..Label24..Caption
 #: prefs/PrefFont.dfm:29
 msgid "Background Color:"
-msgstr ""
+msgstr "Kolor tła:"
 
 #. frmPrefFont..Label25..Caption
 #: prefs/PrefFont.dfm:36
 msgid "Font Color:"
-msgstr ""
+msgstr "Kolor czcionki:"
 
 #. frmPrefFont..Label5..Caption
 #: prefs/PrefFont.dfm:43
 msgid "Click on the appropriate font or window to change elements."
-msgstr ""
+msgstr "Kliknij na elemencie który chcesz zmodyfikować"
 
 #. frmPrefFont..lblColor..Caption
 #: prefs/PrefFont.dfm:50
-#, fuzzy
 msgid "Element Name"
-msgstr "Czas klienta"
+msgstr "Nazwa elementu"
 
 #. frmPrefFont..btnFont..Caption
 #: prefs/PrefFont.dfm:100
-#, fuzzy
 msgid "Change Font"
-msgstr "Zmień pseudonim"
+msgstr "Zmień czcionkę"
 
 #. frmPrefFont..pnlHeader..Caption
 #: prefs/PrefFont.dfm:202
 msgid "Fonts and Colors"
-msgstr ""
+msgstr "Czcionki i kolory"
 
 #. frmPrefGroups..Caption
 #: prefs/PrefGroups.dfm:4
@@ -7871,44 +7852,42 @@ msgstr "Grupy"
 #. frmPrefGroups..Label18..Caption
 #: prefs/PrefGroups.dfm:15
 msgid "Group to be used for Gateways:"
-msgstr ""
+msgstr "Grupa używana dla Bramek:"
 
 #. frmPrefGroups..Label1..Caption
 #: prefs/PrefGroups.dfm:22
-#, fuzzy
 msgid "Default Group:"
-msgstr "Domyślny profil"
+msgstr "Domyślna grupa:"
 
 #. frmPrefGroups..lblFilter....Height
 #: prefs/PrefGroups.dfm:31
 msgid "When showing only online contacts, visible contacts must be at least:"
-msgstr ""
+msgstr "Gdy pokazuję tylko dostępnych, to widoczne kontakty muszą mieć status conajmniej:"
 
 #. frmPrefGroups..chkSort..Caption
 #: prefs/PrefGroups.dfm:55
 msgid "Sort Contacts by their availability"
-msgstr ""
+msgstr "Porządkuj kontakty zgodnie z dostępnością"
 
 #. frmPrefGroups..chkCollapsed..Caption
 #: prefs/PrefGroups.dfm:77
 msgid "Collapse all roster groups initially."
-msgstr ""
+msgstr "Zwijaj wszystkie grupy kontaktów przy starcie."
 
 #. frmPrefGroups..chkGroupCounts..Caption
 #: prefs/PrefGroups.dfm:85
 msgid "Show group counts in roster (eg, 5/10)"
-msgstr ""
+msgstr "Pokazuj liczniki przy nazwie grupy (np. 5/10)"
 
 #. frmPrefGroups..chkOfflineGrp..Caption
 #: prefs/PrefGroups.dfm:93
-#, fuzzy
 msgid "Show offline contacts in an Offline group"
-msgstr "Usuń wszystkie kontakty w tej grupie:"
+msgstr "Pokazuj niedostępnych w oddzielnej grupie"
 
 #. frmPrefGroups..chkOnlineOnly..Caption
 #: prefs/PrefGroups.dfm:102
 msgid "Only show online contacts"
-msgstr ""
+msgstr "Pokazuj tylko dostępnych"
 
 #. frmPrefGroups..pnlHeader..Caption
 #: prefs/PrefGroups.dfm:107
@@ -7924,7 +7903,7 @@ msgstr ""
 #. frmPrefLayouts..lblPreview..Caption
 #: prefs/PrefLayouts.dfm:15
 msgid "Preview"
-msgstr ""
+msgstr "Podgląd"
 
 #. frmPrefLayouts..lblViewHelp....AutoSize
 #: prefs/PrefLayouts.dfm:1141
@@ -7934,22 +7913,22 @@ msgstr ""
 #. frmPrefLayouts..cboView....Items.WideStrings
 #: prefs/PrefLayouts.dfm:1154
 msgid "Show small roster and never dock"
-msgstr ""
+msgstr "Pokazuj małe okienka i nigdy nie dokuj"
 
 #. frmPrefLayouts..cboView....Items.WideStrings
 #: prefs/PrefLayouts.dfm:1155
 msgid "Dock windows. Roster is always visible"
-msgstr ""
+msgstr "Dokuj okienka. Roster jest zawsze widoczny"
 
 #. frmPrefLayouts..cboView....Items.WideStrings
 #: prefs/PrefLayouts.dfm:1156
 msgid "Dock windows and use tabs"
-msgstr ""
+msgstr "Dokuj okienka i używaj zakładek"
 
 #. frmPrefLayouts..pnlHeader..Caption
 #: prefs/PrefLayouts.dfm:1160
 msgid "Window Layouts"
-msgstr ""
+msgstr "Zachowanie okien"
 
 #. frmPrefMsg..Caption
 #: prefs/PrefMsg.dfm:4
@@ -7980,12 +7959,12 @@ msgstr ""
 #. frmPrefMsg..chkEmoticons..Caption
 #: prefs/PrefMsg.dfm:43
 msgid "Auto detect Emoticons in messages"
-msgstr ""
+msgstr "Wykrywaj minki w wiadomościach"
 
 #. frmPrefMsg..chkTimestamp..Caption
 #: prefs/PrefMsg.dfm:51
 msgid "Timestamp messages"
-msgstr ""
+msgstr "Znaczniki czasu w wiadomościach"
 
 #. frmPrefMsg..chkLog..Caption
 #: prefs/PrefMsg.dfm:59
@@ -7996,7 +7975,7 @@ msgstr "Wiadomość"
 #. frmPrefMsg..chkMsgQueue..Caption
 #: prefs/PrefMsg.dfm:84
 msgid "Instant Messages never popup a new window"
-msgstr ""
+msgstr "Komunikator nigdy nie otwiera nowych okienek"
 
 #. frmPrefMsg..chkLogRooms..Caption
 #: prefs/PrefMsg.dfm:92
@@ -8017,12 +7996,12 @@ msgstr ""
 #. frmPrefMsg..cboMsgOptions....Items.WideStrings
 #: prefs/PrefMsg.dfm:106
 msgid "Put messages into existing chats"
-msgstr ""
+msgstr "Wrzucaj wiadomości do aktualnych rozmów"
 
 #. frmPrefMsg..btnLogClearAll..Caption
 #: prefs/PrefMsg.dfm:113
 msgid "Clear All Logs"
-msgstr ""
+msgstr "Wyczyść wszystkie logi"
 
 #. frmPrefMsg..cboInviteOptions....Items.WideStrings
 #: prefs/PrefMsg.dfm:142
@@ -8073,9 +8052,8 @@ msgstr ""
 
 #. frmPrefMsg..pnlHeader..Caption
 #: prefs/PrefMsg.dfm:178
-#, fuzzy
 msgid "Message Options"
-msgstr "Wiadomość do"
+msgstr "Ustawienia dla wiadomości"
 
 #. frmPrefMsg..OpenDialog1..Filter
 #: prefs/PrefMsg.dfm:182
@@ -8137,19 +8115,17 @@ msgstr ""
 #. frmPrefNotify..lblConfigSounds..Hint
 #: prefs/PrefNotify.dfm:16
 msgid "Open Sounds Control Panel"
-msgstr ""
+msgstr "Otwórz ustawienia dźwięku"
 
 #. frmPrefNotify..lblConfigSounds..Caption
 #: prefs/PrefNotify.dfm:17
-#, fuzzy
 msgid "Configure Sounds..."
-msgstr "Skonfiguruj pokój"
+msgstr "Skonfiguruj dźwięki... "
 
 #. frmPrefNotify..pnlHeader..Caption
 #: prefs/PrefNotify.dfm:24
-#, fuzzy
 msgid "Notification Options"
-msgstr "Opcje zawiadomień ..."
+msgstr "Ustawienia powiadomień"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:34
@@ -8176,26 +8152,23 @@ msgstr "Wiadomość"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:38
-#, fuzzy
 msgid "Subscription Requests"
-msgstr "Rodzaj subskrycji"
+msgstr "Prośba o autoryzację"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:39
-#, fuzzy
 msgid "Conference Invites"
-msgstr "Konferencja"
+msgstr "Zaproszenie na konferencję"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:40
 msgid "Keywords (Conf. Rooms)"
-msgstr ""
+msgstr "Słowa kluczowe (Pokoje konf.)"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:41
-#, fuzzy
 msgid "Chat window activity"
-msgstr "Okno rozmowy"
+msgstr "Aktywność okna rozmowy"
 
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:42
@@ -8205,12 +8178,12 @@ msgstr ""
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:44
 msgid "Auto Response generated"
-msgstr ""
+msgstr "Wygenerowano automatyczną odpowiedź"
 
 #. frmPrefNotify..chkSound..Caption
 #: prefs/PrefNotify.dfm:53
 msgid "Use sound notifications"
-msgstr ""
+msgstr "Używaj dzwięki"
 
 #. frmPrefNotify..chkNotifyActive....Height
 #: prefs/PrefNotify.dfm:64
@@ -8220,22 +8193,22 @@ msgstr ""
 #. frmPrefNotify..chkNotifyActive..Caption
 #: prefs/PrefNotify.dfm:65
 msgid "Perform notifications when I am using Exodus."
-msgstr ""
+msgstr "Powiadom gdy używam Exodusa"
 
 #. frmPrefNotify..chkFlashInfinite..Caption
 #: prefs/PrefNotify.dfm:75
 msgid "Flash taskbar continuously until Exodus gets focus."
-msgstr ""
+msgstr "Mrugaj paskiem zadań dopóki nie zostanie uaktywnione"
 
 #. frmPrefNotify..chkNotifyActiveWindow..Caption
 #: prefs/PrefNotify.dfm:85
 msgid "Perform notifications for the window I'm typing in."
-msgstr ""
+msgstr "Powiadom okno gdy wpisuję "
 
 #. frmPrefNotify..optNotify..chkFront..Caption
 #: prefs/PrefNotify.dfm:127
 msgid "Bring window to front"
-msgstr ""
+msgstr "Przesuń okno na wierzch"
 
 #. frmPrefPanel..Caption
 #: prefs/PrefPanel.dfm:6
@@ -8271,9 +8244,8 @@ msgstr "Aplikacja"
 
 #. frmPrefPlugins..btnConfigPlugin..Caption
 #: prefs/PrefPlugins.dfm:45
-#, fuzzy
 msgid "Configure"
-msgstr "Skonfiguruj pokój"
+msgstr "Konfiguracja"
 
 #. frmPrefPlugins..lstPlugins......Caption
 #: prefs/PrefPlugins.dfm:85
@@ -8283,9 +8255,8 @@ msgstr "W&tyczki"
 
 #. frmPrefPlugins..lstPlugins......Caption
 #: prefs/PrefPlugins.dfm:93
-#, fuzzy
 msgid "Filename"
-msgstr "Zmień nazwę"
+msgstr "Nazwa pliku"
 
 #. frmPrefPresence..Caption
 #: prefs/PrefPresence.dfm:4
@@ -8301,14 +8272,13 @@ msgstr "Typ dostępności:"
 
 #. frmPrefPresence..pnlCustomPresButtons..btnDefaults..Caption
 #: prefs/PrefPresence.dfm:66
-#, fuzzy
 msgid "Defaults"
-msgstr "Szczegóły"
+msgstr "Domyślne"
 
 #. frmPrefPresence..Panel1..Label8..Caption
 #: prefs/PrefPresence.dfm:84
 msgid "Presence tracking in chat windows and rooms"
-msgstr ""
+msgstr "Śledzenie obecności w oknach rozmów i pokojach"
 
 #. frmPrefPresence..Panel1..Label1..Caption
 #: prefs/PrefPresence.dfm:91
@@ -8318,12 +8288,12 @@ msgstr ""
 #. frmPrefPresence..Panel1..chkPresenceSync..Caption
 #: prefs/PrefPresence.dfm:98
 msgid "Synchronize presence of multiple copies of Exodus"
-msgstr ""
+msgstr "Synchronizacja statusu dla wielu kopii Exodusa"
 
 #. frmPrefPresence..Panel1..cboPresTracking....Items.WideStrings
 #: prefs/PrefPresence.dfm:111
 msgid "Track all presence changes"
-msgstr ""
+msgstr "Śledź wszystkie zmiany statusu"
 
 #. frmPrefPresence..Panel1..cboPresTracking....Items.WideStrings
 #: prefs/PrefPresence.dfm:112
@@ -8355,106 +8325,102 @@ msgstr ""
 #. frmPrefRoster..Label21..Caption
 #: prefs/PrefRoster.dfm:15
 msgid "When I double click a contact, do:"
-msgstr ""
+msgstr "Gdy podwójnie kliknę na kontakt, otwórz:"
 
 #. frmPrefRoster..TntLabel1..Caption
 #: prefs/PrefRoster.dfm:22
 msgid "Seperator for nested groups is:"
-msgstr ""
+msgstr "Separatorem dla zagnieżdzonych grup jest:"
 
 #. frmPrefRoster..chkShowUnsubs..Caption
 #: prefs/PrefRoster.dfm:29
 msgid "Show contacts which I do not have a subscription to."
-msgstr ""
+msgstr "Pokaż kontakty od których nie mam autoryzacji."
 
 #. frmPrefRoster..chkHideBlocked..Caption
 #: prefs/PrefRoster.dfm:37
-#, fuzzy
 msgid "Hide blocked contacts "
-msgstr "Zablokuj kontakt"
+msgstr "Ukryj zablokowane kontakty"
 
 #. frmPrefRoster..chkPresErrors..Caption
 #: prefs/PrefRoster.dfm:45
 msgid "Detect contacts which are unreachable or no longer exist"
-msgstr ""
+msgstr "Wykryj kontakty nieosiągalne oraz nieistniejące."
 
 #. frmPrefRoster..chkShowPending..Caption
 #: prefs/PrefRoster.dfm:53
 msgid "Show contacts I have asked to add as \"Pending\""
-msgstr ""
+msgstr "Pokaż kontakty które prosiłem o autoryzację jako \"Oczekujące\""
 
 #. frmPrefRoster..cboDblClick....Items.WideStrings
 #: prefs/PrefRoster.dfm:65
 msgid "A new one to one chat window"
-msgstr ""
+msgstr "Nowe oddzielne okienko rozmów"
 
 #. frmPrefRoster..cboDblClick....Items.WideStrings
 #: prefs/PrefRoster.dfm:66
 msgid "An instant message window"
-msgstr ""
+msgstr "Okienko wiadomości"
 
 #. frmPrefRoster..cboDblClick....Items.WideStrings
 #: prefs/PrefRoster.dfm:67
 msgid "A new or existing chat window"
-msgstr ""
+msgstr "Nowe lub istniejące okienko"
 
 #. frmPrefRoster..chkRosterUnicode..Caption
 #: prefs/PrefRoster.dfm:74
 msgid "Allow Unicode characters in the roster (requires 2000, ME, XP)."
-msgstr ""
+msgstr "Zezwalaj na znaki Unicode w rosterze (wymaga 2000, ME, XP)."
 
 #. frmPrefRoster..chkInlineStatus..Caption
 #: prefs/PrefRoster.dfm:82
 msgid "Show status in the roster: Joe <Meeting>"
-msgstr ""
+msgstr "Pokazuj status w rosterze. Janek (Spotkanie)"
 
 #. frmPrefRoster..pnlHeader..Caption
 #: prefs/PrefRoster.dfm:100
 msgid "Roster Options"
-msgstr ""
+msgstr "Opcje rostera"
 
 #. frmPrefRoster..chkNestedGrps..Caption
 #: prefs/PrefRoster.dfm:108
-#, fuzzy
 msgid "Use nested groups"
-msgstr "Grupa bez tytułu"
+msgstr "Włącz zagnieżdzanie dla grup"
 
 #. frmPrefSubscription..Caption
 #: prefs/PrefSubscription.dfm:4
-#, fuzzy
 msgid "frmPrefSubscription"
-msgstr "Rodzaj subskrycji"
+msgstr ""
 
 #. frmPrefSubscription..pnlHeader..Caption
 #: prefs/PrefSubscription.dfm:12
-#, fuzzy
 msgid "Subscription Options"
-msgstr "Rodzaj subskrycji"
+msgstr "Ustawienia autoryzacji"
 
 #. frmPrefSubscription..optIncomingS10n..Caption
 #: prefs/PrefSubscription.dfm:19
 msgid "Incoming Behavior"
-msgstr ""
+msgstr "Reakcja na zapytania"
 
 #. frmPrefSubscription..optIncomingS10n....Items.WideStrings
 #: prefs/PrefSubscription.dfm:21
 msgid "Ask me for all requests"
-msgstr ""
+msgstr "Zapytaj mnie przy każdym żądaniu"
 
 #. frmPrefSubscription..optIncomingS10n....Items.WideStrings
 #: prefs/PrefSubscription.dfm:22
 msgid "Auto-Accept requests from people in my roster."
-msgstr ""
+msgstr "Przyjmij od ludzi z listy kontaktów"
 
 #. frmPrefSubscription..optIncomingS10n....Items.WideStrings
 #: prefs/PrefSubscription.dfm:23
 msgid "Auto-Accept all requests"
-msgstr ""
+msgstr "Przyjmij wszystkie żądania"
 
 #. frmPrefSubscription..optIncomingS10n....Items.WideStrings
 #: prefs/PrefSubscription.dfm:24
 msgid "Auto-Deny all requests"
-msgstr ""
+msgstr "Odrzuć wszystkie żądania"
 
 #. frmPrefSystem..Caption
 #: prefs/PrefSystem.dfm:4
@@ -8520,7 +8486,7 @@ msgstr "Mała belka tytułowa"
 #. frmPrefSystem..btnUpdateCheck..Caption
 #: prefs/PrefSystem.dfm:100
 msgid "Check Now"
-msgstr "Sprawdź teraz"
+msgstr "Sprawdź"
 
 #. frmPrefSystem..chkSingleInstance..Caption
 #: prefs/PrefSystem.dfm:110
@@ -8535,7 +8501,7 @@ msgstr "Uruchom w schowku systemowym"
 #. frmPrefSystem..cboLocale....Items.WideStrings
 #: prefs/PrefSystem.dfm:130
 msgid "English (American)"
-msgstr ""
+msgstr "Angielski (Amerykański)"
 
 #. frmPrefTransfer..Caption
 #: prefs/PrefTransfer.dfm:4
@@ -8551,12 +8517,12 @@ msgstr ""
 #. frmPrefTransfer..lblDefault..Caption
 #: prefs/PrefTransfer.dfm:23
 msgid "Reset all file transfer options to defaults"
-msgstr ""
+msgstr "Przywróć domyślne ustawienia dla transferu plików"
 
 #. frmPrefTransfer..TntLabel2..Caption
 #: prefs/PrefTransfer.dfm:31
 msgid "Send file using this method:"
-msgstr ""
+msgstr "Wyślij plik przy użyciu metody:"
 
 #. frmPrefTransfer..pnlHeader..Caption
 #: prefs/PrefTransfer.dfm:35
@@ -8587,7 +8553,7 @@ msgstr ""
 #. frmPrefTransfer..grpPeer..Label1..Caption
 #: prefs/PrefTransfer.dfm:159
 msgid "Port to use for HTTP file transfers:"
-msgstr ""
+msgstr "Port HTTP do użycia dla przesyłania plików "
 
 #. frmPrefTransfer..grpPeer..chkIP..Caption
 #: prefs/PrefTransfer.dfm:173
@@ -8607,17 +8573,17 @@ msgstr ""
 #. frmPrefTransfer..cboXferMode....Items.WideStrings
 #: prefs/PrefTransfer.dfm:197
 msgid "Send files directly from my machine to the recipient."
-msgstr ""
+msgstr "Wysyłanie plików bezpośrednio z mojej maszyny do odbiorcy."
 
 #. frmPrefTransfer..cboXferMode....Items.WideStrings
 #: prefs/PrefTransfer.dfm:198
 msgid "Use a web server to host the files which I send."
-msgstr ""
+msgstr "Użyj serwer stron inteternetowych do przetrzymywania plików które wysłałem."
 
 #. frmPrefTransfer..grpProxy..TntLabel1..Caption
 #: prefs/PrefTransfer.dfm:211
 msgid "Jabber Address of File Transfer Server:"
-msgstr ""
+msgstr "Jabberowy adres serwera transferu plików:"
 
 #. Select the chat window
 #. find the "thing" that we clicked on in the window..
@@ -8625,7 +8591,7 @@ msgstr ""
 #: prefs/PrefFont.pas:201
 #: prefs/PrefFont.pas:258
 msgid "Roster Font and Background"
-msgstr ""
+msgstr "Czcionka i tło listy kontaktów"
 
 #: prefs/PrefGroups.pas:113
 msgid "The offline group will only show up if you have show only online contacts turned off."
@@ -8633,15 +8599,15 @@ msgstr ""
 
 #: prefs/PrefLayouts.pas:118
 msgid "The main window shows only the roster. Other windows are opened in seperate windows and never docked"
-msgstr ""
+msgstr "Główne okno pokazuje tylko roster. Inne okienka są otwierane w oddzielnych oknach i nigdy nie są dokowane"
 
 #: prefs/PrefLayouts.pas:119
 msgid "The main window always shows the roster. Other windows are docked using a tabbed interface to the main window."
-msgstr ""
+msgstr "Główne okno zawsze pokazuje roster. Inne okienka są dokowalne przy użyciu interfejsu zakładek do okna głównego"
 
 #: prefs/PrefLayouts.pas:120
 msgid "The main window shows the roster. Other windows are docked using a tabbed interface to the main window."
-msgstr ""
+msgstr "Główne okno pokazuje roster. Inne okienka są dokowalne przy użyciu interfejsu zakładek do głównego okna"
 
 #. Network
 #: prefs/PrefNetwork.pas:115
@@ -8662,7 +8628,7 @@ msgstr "Wtyczka nie może być utworzona. (%s)"
 #. clear all entries
 #: prefs/PrefPresence.pas:250
 msgid "Clear all custom presence entries?"
-msgstr ""
+msgstr "Usunąć wszystkie niestandardowe opisy stanu?"
 
 #: prefs/PrefSystem.pas:178
 msgid "Exodus is set to use a language which is not available on your system. Resetting language to default."
