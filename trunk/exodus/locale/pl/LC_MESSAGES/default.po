@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: exodus\n"
 "POT-Creation-Date: 2003-08-03 07:30\n"
-"PO-Revision-Date: 2003-12-04 01:22+0100\n"
+"PO-Revision-Date: 2003-12-04 09:04+0100\n"
 "Last-Translator: Mariusz Smykuła <marian@t-system.com.pl>\n"
 "Language-Team: Mariusz Smykuła <smys@rocketmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -1975,7 +1975,7 @@ msgstr "Wyślij wiadomość"
 #. frmExodus..MainMenu1..Exodus1..ClearMessages1..Caption
 #: Jabber1.dfm:258
 msgid "Clear &Instant Messages"
-msgstr ""
+msgstr "Wyczyść w&iadomości"
 
 #. frmExodus..MainMenu1..Exodus1..mnuMessage..Caption
 #: Jabber1.dfm:266
@@ -2001,9 +2001,8 @@ msgstr "&Zarejestruj w usłudze"
 
 #. frmExodus..MainMenu1..Exodus1..mnuPassword..Caption
 #: Jabber1.dfm:288
-#, fuzzy
 msgid "Change &Password"
-msgstr "Zmień &hasło Jabbera"
+msgstr "Zmień hasło"
 
 #. frmExodus..MainMenu1..Exodus1..Exit2..Caption
 #: Jabber1.dfm:295
@@ -2043,7 +2042,7 @@ msgstr "&Właściwości kontaktu"
 #. frmExodus..MainMenu1..Tools1..mnuContacts..mnuFind..Caption
 #: Jabber1.dfm:327
 msgid "&Find Contact in Roster"
-msgstr ""
+msgstr "Znajdź kontakt w Rosterze"
 
 #. frmExodus..MainMenu1..Tools1..mnuContacts..mnuFindAgain..Caption
 #: Jabber1.dfm:332
@@ -2224,12 +2223,12 @@ msgstr "Dołącz do pokoju"
 #. frmJoinRoom..Panel1..lblWizardTitle..Caption
 #: JoinRoom.dfm:25
 msgid "Join or Browse for a Room"
-msgstr ""
+msgstr "Wejdź lub obejrzyj pokój"
 
 #. frmJoinRoom..Panel1..lblWizardDetails..Caption
 #: JoinRoom.dfm:28
 msgid "Specify or browse for a room to join or create."
-msgstr ""
+msgstr "Wymyśl lub wybierz pokój "
 
 #. frmJoinRoom..Tabs..TabSheet1..Label2..Caption
 #: JoinRoom.dfm:38
@@ -6189,12 +6188,12 @@ msgstr "Właściwości"
 #. frmRosterWindow..popTransport..popTransLogoff..Caption
 #: RosterWindow.dfm:677
 msgid "Log Off"
-msgstr ""
+msgstr "Wyloguj"
 
 #. frmRosterWindow..popTransport..popTransProperties..Caption
 #: RosterWindow.dfm:688
 msgid "Rename ..."
-msgstr ""
+msgstr "Zmień nazwę..."
 
 #. frmSelContact..Caption
 #: SelContact.dfm:6
@@ -6204,7 +6203,7 @@ msgstr "Wybierz kontakt"
 #. frmSelContact..PopupMenu1..ShowOnlineOnly1..Caption
 #: SelContact.dfm:85
 msgid "Show Online Only"
-msgstr ""
+msgstr "Pokaż tylko dostępnych"
 
 #. fSendStatus..Panel3..lblTo..Caption
 #: SendStatus.dfm:76
@@ -6214,12 +6213,12 @@ msgstr ""
 #. frmSSLWarn..Caption
 #: SSLWarn.dfm:6
 msgid "Security Warning"
-msgstr ""
+msgstr "Ostrzeżenie bezpieczeństwa"
 
 #. frmSSLWarn..lblHeader..Caption
 #: SSLWarn.dfm:144
 msgid "SSL Security Warning"
-msgstr ""
+msgstr "Ostrzeżenie bezpieczeństwa SSL"
 
 #. frmSSLWarn..lblHeader..Font.Name
 #: SSLWarn.dfm:148
@@ -6229,27 +6228,27 @@ msgstr ""
 #. frmSSLWarn..optDisconnect..Caption
 #: SSLWarn.dfm:193
 msgid "Reject SSL certificate. Disconnect jabber session."
-msgstr ""
+msgstr "Odrzuć certyfikat SSL. Rozłącz sesję Jabbera."
 
 #. frmSSLWarn..optAllowSession..Caption
 #: SSLWarn.dfm:201
 msgid "Allow this SSL certificate for this jabber session."
-msgstr ""
+msgstr "Zezwól na użycie tego certyfikatu podczas tej sesji."
 
 #. frmSSLWarn..optAllowAlways..Caption
 #: SSLWarn.dfm:211
 msgid "Always allow this SSL certificate."
-msgstr ""
+msgstr "Zawsze zezwalaj na ten certyfikat SSL"
 
 #. frmSubscribe..Caption
 #: subscribe.dfm:7
 msgid "Subscription Request"
-msgstr ""
+msgstr "Zapytanie o subskrypcję"
 
 #. frmSubscribe..Label1....Align
 #: subscribe.dfm:32
 msgid "This person or agent would like to see your online presence and add you to their roster."
-msgstr ""
+msgstr "Ta osoba lub usługa chciałaby móc widzieć Twój status dostępności i dodać Cię do swojego rostera"
 
 #. frmSubscribe..lblJID..Caption
 #: subscribe.dfm:50
@@ -6259,7 +6258,7 @@ msgstr ""
 #. frmSubscribe..chkSubscribe..Caption
 #: subscribe.dfm:65
 msgid "Add this person to my roster"
-msgstr ""
+msgstr "Dodaj tą osobę do mojego rostera"
 
 #. frmSubscribe..frameButtons1..Panel2..Panel1..btnOK..Caption
 #. Change button captions for TC Invites
@@ -6281,7 +6280,7 @@ msgstr "Mój profil"
 #. frmVCard..PageControl1..TabSheet1..lblURL..Caption
 #: vcard.dfm:71
 msgid "Web:"
-msgstr ""
+msgstr "Strona:"
 
 #. frmVCard..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
@@ -6310,7 +6309,7 @@ msgstr ""
 #. frmWizard..Caption
 #: Wizard.dfm:5
 msgid "Wizard"
-msgstr ""
+msgstr "Kreator"
 
 #. frmXData..Caption
 #: xdata.dfm:7
@@ -6355,27 +6354,27 @@ msgstr ""
 #: AutoUpdateStatus.pas:187
 #: WebGet.pas:120
 msgid "Downloading..."
-msgstr ""
+msgstr "Pobieranie..."
 
 #: AutoUpdateStatus.pas:210
 #: WebGet.pas:74
 msgid "Initializing..."
-msgstr ""
+msgstr "Inicjalizacja..."
 
 #: AutoUpdateStatus.pas:226
 #: WebGet.pas:82
 msgid "Download Complete"
-msgstr ""
+msgstr "Pobieranie ukończone"
 
 #: AutoUpdateStatus.pas:237
 msgid "Installing..."
-msgstr ""
+msgstr "Instalacja..."
 
 #: AutoUpdateStatus.pas:245
 #: AutoUpdateStatus.pas:252
 #: WebGet.pas:94
 msgid "Error: %s"
-msgstr ""
+msgstr "Błąd: %s"
 
 #. Actually Browse to the JID entered in the address box
 #: Browser.pas:201
@@ -6393,7 +6392,7 @@ msgstr "odpowiada."
 
 #: ChatWin.pas:625
 msgid "Chat Activity: "
-msgstr ""
+msgstr "Aktywność rozmowy:"
 
 #. post a msg to the window and disable the text input box.
 #: ChatWin.pas:742
@@ -6451,7 +6450,7 @@ msgstr "jest teraz"
 #. check to see if we're already subscribed...
 #: ChatWin.pas:877
 msgid "You are already subscribed to this contact"
-msgstr ""
+msgstr "Jesteś już zapisany u tego kontaktu."
 
 #: ChatWin.pas:1195
 msgid "This chat window is busy. Close anyways?"
@@ -6472,7 +6471,7 @@ msgstr ""
 
 #: COMController.pas:337
 msgid "Plugin class could not be initialized. (%s)"
-msgstr ""
+msgstr "Klasa wtyczki nie może być zainicjowana. (%s)"
 
 #: COMController.pas:359
 #, fuzzy
@@ -6501,7 +6500,7 @@ msgstr "Pobrać listę publicznych serwerów z jabber.org? (Wymaga połączenia 
 
 #: ConnDetails.pas:458
 msgid "Downloading public server list"
-msgstr ""
+msgstr "Pobieranie listy publicznych serwerów"
 
 #: Debug.pas:184
 #: Debug.pas:383
@@ -6530,7 +6529,7 @@ msgstr ""
 
 #: ExEvents.pas:262
 msgid "Local Time: "
-msgstr ""
+msgstr "Czas lokalny:"
 
 #: ExEvents.pas:281
 #: ExEvents.pas:481
@@ -6572,7 +6571,7 @@ msgstr ""
 
 #: ExEvents.pas:454
 msgid "Original Message was:"
-msgstr ""
+msgstr "Orginalna wiadomość brzmiała:"
 
 #. We got an exception during signal dispatching.
 #: ExResponders.pas:210
@@ -6660,12 +6659,12 @@ msgstr ""
 
 #: ExSession.pas:354
 msgid "Missing file:"
-msgstr ""
+msgstr "Brakujący plik:"
 
 #: ExSession.pas:476
 #: prefs/PrefNotify.pas:100
 msgid "Activity in a chat window"
-msgstr ""
+msgstr "Aktywność w oknie rozmowy"
 
 #: ExSession.pas:477
 #: prefs/PrefNotify.pas:98
@@ -6688,7 +6687,7 @@ msgstr "Zapisz rozmowę"
 #: ExSession.pas:480
 #: prefs/PrefNotify.pas:96
 msgid "Received a normal message"
-msgstr ""
+msgstr "Odebrano zwykłą wiadomość"
 
 #: ExSession.pas:481
 #: prefs/PrefNotify.pas:94
@@ -6705,17 +6704,17 @@ msgstr "Kontakty od"
 #: ExSession.pas:483
 #: prefs/PrefNotify.pas:101
 msgid "Activity in a room"
-msgstr ""
+msgstr "Aktywność w pokoju"
 
 #: ExSession.pas:484
 #: prefs/PrefNotify.pas:97
 msgid "Subscription request"
-msgstr ""
+msgstr "Zapytanie o subskrypcję"
 
 #: ExSession.pas:486
 #: prefs/PrefNotify.pas:103
 msgid "Auto response generated"
-msgstr ""
+msgstr "Wygenerowano automatyczną odpowiedź"
 
 #. Show the log, or ask the user to turn on logging
 #: ExUtils.pas:336
@@ -6724,7 +6723,7 @@ msgstr ""
 
 #: ExUtils.pas:349
 msgid "There is no history file for this contact."
-msgstr ""
+msgstr "Nie ma pliku historii dla tego kontaktu."
 
 #: ExUtils.pas:361
 msgid "Do you really want to clear the log for %s?"
@@ -6733,7 +6732,7 @@ msgstr "Naprawdę chcesz usunąć dziennik wydarzeń dla &s?"
 #. Munge the filename
 #: ExUtils.pas:374
 msgid "History deleted."
-msgstr ""
+msgstr "Historia wykasowana."
 
 #: ExUtils.pas:376
 msgid "Could not delete history file."
@@ -6745,7 +6744,7 @@ msgstr "Brak historii dla tego użytkownika."
 
 #: ExUtils.pas:389
 msgid "Are you sure you want to delete all of your message and room logs?"
-msgstr ""
+msgstr "Czy jesteś pewien, że chcesz skasować wszystkie swoje wiadomości i logi z pokoju?"
 
 #: ExUtils.pas:409
 msgid "%d log files deleted."
@@ -6838,7 +6837,7 @@ msgstr ""
 
 #: GrpRemove.pas:76
 msgid "Remove %d contacts"
-msgstr ""
+msgstr "Usunięto kontakty %d"
 
 #: GrpRemove.pas:83
 msgid "Remove the %s group"
@@ -7095,12 +7094,12 @@ msgstr ""
 #: RecvStatus.pas:438
 #: RecvStatus.pas:552
 msgid "This file already exists. Overwrite?"
-msgstr ""
+msgstr "Taki plik już istnieje. Nadpisać?"
 
 #: RecvStatus.pas:445
 #: RecvStatus.pas:559
 msgid "This directory does not exist. Create it?"
-msgstr ""
+msgstr "Taki katalog nie istnieje. Utworzyć go?"
 
 #. Create a stream, and get the file into it.
 #. Create a stream, and get the file into it.
@@ -7112,13 +7111,13 @@ msgstr ""
 #. send SI accept
 #: RecvStatus.pas:512
 msgid "Negotiating with sender..."
-msgstr ""
+msgstr "Negocjacie z wysyłającym..."
 
 #. our thread completed.
 #: RecvStatus.pas:609
 #: RecvStatus.pas:620
 msgid "Open"
-msgstr ""
+msgstr "Otwórz"
 
 #: RecvStatus.pas:625
 msgid "There was an error receiving the file. (%d)"
@@ -7322,7 +7321,7 @@ msgstr "Powód wyrzucenia"
 
 #: Room.pas:1618
 msgid "You have been banned."
-msgstr ""
+msgstr "Zostałeś zablokowany."
 
 #: Room.pas:1619
 msgid "Ban Reason"
@@ -7348,7 +7347,7 @@ msgstr ""
 #. check to see if we have an "@" sign
 #: RosterAdd.pas:127
 msgid "You can not add yourself to your roster."
-msgstr ""
+msgstr "Nie możesz dodać samego siebie do swojego rostera."
 
 #: RosterAdd.pas:133
 msgid "The contact ID you entered does not follow the standard user@host convention. Do you want to continue?"
@@ -7404,7 +7403,7 @@ msgid ""
 "Getting Contacts..."
 msgstr ""
 "Autoryzowany.\n"
-"Rozpoczynam konfiguracje..."
+"Pobieramy kontakty..."
 
 #. remove a bookmark
 #: RosterWindow.pas:1846
@@ -7450,7 +7449,7 @@ msgstr "Ponownie połącz po "
 
 #: SendStatus.pas:369
 msgid "Waiting for connection..."
-msgstr ""
+msgstr "Oczekuję na połączenie..."
 
 #. get the file size
 #. get a handle to the stream
@@ -7530,7 +7529,7 @@ msgstr ""
 #. this is a cancel notice
 #: xdata.pas:122
 msgid "Cancelled"
-msgstr ""
+msgstr "Anulowany"
 
 #: xdata.pas:123
 msgid "%s cancelled your form."
