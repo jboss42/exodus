@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2004-08-31 13:24\n"
-"PO-Revision-Date: 2004-08-31 13:24\n"
+"POT-Creation-Date: 2004-09-13 16:09\n"
+"PO-Revision-Date: 2004-09-13 16:09\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -142,7 +142,7 @@ msgstr ""
 #. frmXData..Font.Name
 #: xdata.dfm:13
 #. frmXData..frameButtons1..Font.Name
-#: xdata.dfm:49
+#: xdata.dfm:48
 #. frmPrefFont..FontDialog1..Font.Name
 #: prefs/PrefFont.dfm:258
 #. frmPrefPanel..Font.Name
@@ -167,7 +167,7 @@ msgstr ""
 #: RecvStatus.pas:646
 #: SendStatus.pas:803
 #: SendStatus.pas:929
-#: xdata.pas:225
+#: xdata.pas:226
 msgid "Close"
 msgstr ""
 
@@ -1554,7 +1554,7 @@ msgstr ""
 #: RosterWindow.pas:1658
 #. reset status to online;
 #: RosterWindow.pas:1701
-#: /src/exodus/jopl/PrefController.pas:1237
+#: /src/exodus/jopl/PrefController.pas:1240
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:70
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
@@ -1574,7 +1574,7 @@ msgstr ""
 #: RosterWindow.pas:353
 #: RosterWindow.pas:374
 #: RosterWindow.pas:1642
-#: /src/exodus/jopl/PrefController.pas:1255
+#: /src/exodus/jopl/PrefController.pas:1258
 #. frmPrefGroups..cboVisible....Items.WideStrings
 #: prefs/PrefGroups.dfm:69
 #. frmPrefPresence..GroupBox1..cboCPType....Items.WideStrings
@@ -1798,9 +1798,9 @@ msgstr ""
 msgid "frmException"
 msgstr ""
 
-#. frameGeneric..lblLabel..Caption
-#: fGeneric.dfm:23
-msgid "lblLabel"
+#. frameGeneric..elCaption..Caption
+#: fGeneric.dfm:22
+msgid "Label"
 msgstr ""
 
 #. frmField..lblPrompt..Caption
@@ -6256,9 +6256,9 @@ msgstr ""
 
 #. frmRosterWindow..pnlShow..pnlStatus..lblStatusLink..Caption
 #: RosterWindow.dfm:245
-#: ExUtils.pas:651
-#: ExUtils.pas:669
-#: ExUtils.pas:687
+#: ExUtils.pas:655
+#: ExUtils.pas:673
+#: ExUtils.pas:691
 #: RosterWindow.pas:372
 #. it at all times (if it exists).
 #: RosterWindow.pas:1275
@@ -6622,59 +6622,59 @@ msgstr ""
 msgid "Chat Activity: "
 msgstr ""
 
-#: ChatWin.pas:758
+#: ChatWin.pas:760
 #. post a msg to the window and disable the text input box.
 #: Room.pas:860
 msgid "You have been disconnected."
 msgstr ""
 
 #. if this jid just got blocked, just close the window.
-#: ChatWin.pas:778
+#: ChatWin.pas:780
 msgid "This user is now blocked."
 msgstr ""
 
 #. Change the bulb
-#: ChatWin.pas:800
+#: ChatWin.pas:802
 #. make sure the user is still connected
-#: ChatWin.pas:845
-#: ChatWin.pas:846
+#: ChatWin.pas:847
+#: ChatWin.pas:848
 msgid "offline"
 msgstr ""
 
-#: ChatWin.pas:802
+#: ChatWin.pas:804
 msgid "unknown"
 msgstr ""
 
-#: ChatWin.pas:804
+#: ChatWin.pas:806
 msgid "away"
 msgstr ""
 
-#: ChatWin.pas:806
+#: ChatWin.pas:808
 msgid "xa"
 msgstr ""
 
-#: ChatWin.pas:808
+#: ChatWin.pas:810
 msgid "dnd"
 msgstr ""
 
-#: ChatWin.pas:810
+#: ChatWin.pas:812
 msgid "chat"
 msgstr ""
 
-#: ChatWin.pas:860
+#: ChatWin.pas:862
 msgid "available"
 msgstr ""
 
-#: ChatWin.pas:867
+#: ChatWin.pas:869
 msgid "is now"
 msgstr ""
 
 #. check to see if we're already subscribed...
-#: ChatWin.pas:893
+#: ChatWin.pas:895
 msgid "You are already subscribed to this contact"
 msgstr ""
 
-#: ChatWin.pas:1227
+#: ChatWin.pas:1229
 msgid "This chat window is busy. Close anyways?"
 msgstr ""
 
@@ -6703,7 +6703,7 @@ msgid "Plugin could not be initialized or configured."
 msgstr ""
 
 #: CommandWizard.pas:235
-#: xdata.pas:277
+#: xdata.pas:278
 msgid "All required fields must be filled out."
 msgstr ""
 
@@ -7053,50 +7053,56 @@ msgid "%d second."
 msgid_plural ""
 msgstr[0] ""
 
-#: ExUtils.pas:583
+#: ExUtils.pas:587
 msgid "This message contains %d roster items."
 msgstr ""
 
-#: ExUtils.pas:645
-#: ExUtils.pas:663
-#: ExUtils.pas:681
+#: ExUtils.pas:649
+#: ExUtils.pas:667
+#: ExUtils.pas:685
 #: RosterWindow.pas:378
 #: RosterWindow.pas:673
 msgid "Bookmarks"
 msgstr ""
 
-#: ExUtils.pas:648
-#: ExUtils.pas:666
-#: ExUtils.pas:684
+#: ExUtils.pas:652
+#: ExUtils.pas:670
+#: ExUtils.pas:688
 #: RosterWindow.pas:377
 msgid "Unfiled"
 msgstr ""
 
-#: ExUtils.pas:963
+#: ExUtils.pas:967
 msgid "Untitled Group"
 msgstr ""
 
-#: ExUtils.pas:964
+#: ExUtils.pas:968
 msgid "Enter new group name below. "
 msgstr ""
 
-#: ExUtils.pas:967
+#: ExUtils.pas:971
 msgid "To create a nested group a name like "
 "foo%sbar."
 msgstr ""
 
-#: ExUtils.pas:969
+#: ExUtils.pas:973
 msgid "New Roster Group"
 msgstr ""
 
 #. add the new grp.
-#: ExUtils.pas:974
+#: ExUtils.pas:978
 msgid "This group already exists!"
 msgstr ""
 
-#: fGeneric.pas:123
-#: fGeneric.pas:125
+#: fGeneric.pas:93
+#: fGeneric.pas:95
 msgid "(Required)"
+msgstr ""
+
+#: fGeneric.pas:217
+#. frmPrefEmote..pageEmotes..TntTabSheet2..Panel3..btnCustomEmoteBrowse..Caption
+#: prefs/PrefEmote.dfm:161
+msgid "..."
 msgstr ""
 
 #. Programmer's name for it: SPropertiesMissing
@@ -7927,22 +7933,22 @@ msgid "No vCard response was ever returned."
 msgstr ""
 
 #. this is a cancel notice
-#: xdata.pas:184
+#: xdata.pas:185
 msgid "Cancelled"
 msgstr ""
 
-#: xdata.pas:185
+#: xdata.pas:186
 msgid "%s cancelled your form."
 msgstr ""
 
 #. Get instructions and title
-#: xdata.pas:197
+#: xdata.pas:198
 msgid "Form from %s"
 msgstr ""
 
 #. do something
-#: xdata.pas:248
-#: xdata.pas:346
+#: xdata.pas:249
+#: xdata.pas:347
 msgid "You are currently disconnected. Please reconnect before responding to "
 "this form."
 msgstr ""
@@ -7966,59 +7972,59 @@ msgid "Your new file transfer port will not take affect until all current "
 msgstr ""
 
 #. set the defaults for the pref controller
-#: /src/exodus/jopl/PrefController.pas:617
+#: /src/exodus/jopl/PrefController.pas:620
 msgid "Away as a result of idle."
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:619
+#: /src/exodus/jopl/PrefController.pas:622
 msgid "XA as a result of idle."
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1246
+#: /src/exodus/jopl/PrefController.pas:1249
 msgid "Free for Chat"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1264
+#: /src/exodus/jopl/PrefController.pas:1267
 msgid "Lunch"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1273
+#: /src/exodus/jopl/PrefController.pas:1276
 msgid "Meeting"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1282
+#: /src/exodus/jopl/PrefController.pas:1285
 msgid "Bank"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1291
+#: /src/exodus/jopl/PrefController.pas:1294
 msgid "Extended Away"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1300
+#: /src/exodus/jopl/PrefController.pas:1303
 msgid "Gone Home"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1309
+#: /src/exodus/jopl/PrefController.pas:1312
 msgid "Gone to Work"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1318
+#: /src/exodus/jopl/PrefController.pas:1321
 msgid "Sleeping"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1327
+#: /src/exodus/jopl/PrefController.pas:1330
 msgid "Do Not disturb"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1336
+#: /src/exodus/jopl/PrefController.pas:1339
 msgid "Busy"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1345
+#: /src/exodus/jopl/PrefController.pas:1348
 msgid "Working"
 msgstr ""
 
-#: /src/exodus/jopl/PrefController.pas:1354
+#: /src/exodus/jopl/PrefController.pas:1357
 msgid "Mad"
 msgstr ""
 
@@ -8224,11 +8230,6 @@ msgstr ""
 #. frmPrefEmote..pageEmotes..TntTabSheet2..Panel3..TntLabel3..Caption
 #: prefs/PrefEmote.dfm:147
 msgid "Filename of custom emoticon definitions:"
-msgstr ""
-
-#. frmPrefEmote..pageEmotes..TntTabSheet2..Panel3..btnCustomEmoteBrowse..Caption
-#: prefs/PrefEmote.dfm:161
-msgid "..."
 msgstr ""
 
 #. frmPrefEmote..EmoteOpen..Filter
@@ -9113,27 +9114,32 @@ msgid "Cowboy Neal"
 msgstr ""
 
 #: prefs/PrefFont.pas:129
-#. Select the chat window
-#: prefs/PrefFont.pas:217
 #. find the "thing" that we clicked on in the window..
-#: prefs/PrefFont.pas:274
+#: prefs/PrefFont.pas:282
+#. Select the chat window
+#: prefs/PrefFont.pas:351
 msgid "Roster Font and Background"
 msgstr ""
 
-#: prefs/PrefFont.pas:191
+#: prefs/PrefFont.pas:207
 msgid "Some text from me"
 msgstr ""
 
-#: prefs/PrefFont.pas:193
-msgid "Your nick"
+#: prefs/PrefFont.pas:217
+#: prefs/PrefFont.pas:222
+msgid "Friend"
 msgstr ""
 
-#: prefs/PrefFont.pas:197
+#: prefs/PrefFont.pas:220
 msgid "Some reply text"
 msgstr ""
 
-#: prefs/PrefFont.pas:199
-msgid "Other nick"
+#: prefs/PrefFont.pas:232
+msgid "/me does action"
+msgstr ""
+
+#: prefs/PrefFont.pas:243
+msgid "Server says something"
 msgstr ""
 
 #: prefs/PrefGroups.pas:92
