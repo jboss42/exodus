@@ -1042,6 +1042,8 @@ begin
             end;
             _new_account := false;
         end;
+
+        PlayXMPPActions();
     end
 
     else if (event = '/session/disconnected') then begin
