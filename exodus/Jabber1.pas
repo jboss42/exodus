@@ -43,15 +43,7 @@ const
 type
     TNextEventType = (next_none, next_Exit, next_Login, next_Disconnect);
 
-    THookRec = packed record
-        InstanceCount: integer;
-        KeyHook: HHOOK;
-        MouseHook: HHOOK;
-        LastTick: longint;
-        end;
-    PHookRec = ^THookRec;
-
-    TGetHookPointer = function: pointer; stdcall;
+    TGetLastTick = function: longint; stdcall;
     TInitHooks = procedure; stdcall;
     TStopHooks = procedure; stdcall;
 
@@ -264,10 +256,9 @@ type
     _last_show: string;
     _last_status: string;
     _hookLib: THandle;
-    _getHookPointer: TGetHookPointer;
+    _GetLastTick: TGetLastTick;
     _InitHooks: TInitHooks;
     _StopHooks: TStopHooks;
-    _lpHookRec: PHookRec;
     _richedit: THandle;
 
     _version: TVersionResponder;
@@ -381,6 +372,7 @@ resourcestring
     sCommError = 'There was an error during communication with the Jabber Server';
     sDisconnected = 'You have been disconnected.';
     sAuthError = 'There was an error trying to authenticate you. Please try again, or create a new account';
+    sRegError = 'An Error occurred trying to register your new account. This server may not allow open registration.';
     sAuthNoAccount = 'This account does not exist on this server. Create a new account?';
 
 
@@ -948,27 +940,22 @@ begin
     DebugMsg(sSetupAutoAway);
     if ((_windows_ver < cWIN_2000) or (_windows_ver = cWIN_ME)) then begin
         // Use the DLL
-        @_GetHookPointer := nil;
+        @_GetLastTick := nil;
         @_InitHooks := nil;
         @_StopHooks := nil;
-        _lpHookRec := nil;
+
         _hookLib := LoadLibrary('IdleHooks.dll');
         if (_hookLib <> 0) then begin
             // start the hooks
-            @_GetHookPointer := GetProcAddress(_hookLib, 'GetHookPointer');
+            @_GetLastTick := GetProcAddress(_hookLib, 'GetLastTick');
             @_InitHooks := GetProcAddress(_hookLib, 'InitHooks');
             @_StopHooks := GetProcAddress(_hookLib, 'StopHooks');
 
-            DebugMsg('_GetHookPointer = ' + IntToStr(integer(@_GetHookPointer)));
+            DebugMsg('_GetHookPointer = ' + IntToStr(integer(@_GetLastTick)));
             DebugMsg('_InitHooks = ' + IntToStr(integer(@_InitHooks)));
             DebugMsg('_StopHooks = ' + IntToStr(integer(@_StopHooks)));
 
-            _lpHookRec := _GetHookPointer();
-            inc(_lpHookRec^.InstanceCount);
             _InitHooks();
-            _lpHookRec^.LastTick := GetTickCount();
-
-            DebugMsg('_lpHookRec = ' + IntToStr(integer(_lpHookRec)));
             end
         else
             DebugMsg(sAutoAwayFail);
@@ -1017,15 +1004,24 @@ begin
         end
 
     else if event = '/session/autherror' then begin
+        _logoff := true;
         MessageDlg(sAuthError, mtError, [mbOK], 0);
         PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
         exit;
         end
 
+    else if event = '/session/regerror' then begin
+        _logoff := true;
+        MessageDlg(sRegError, mtError, [mbOK], 0);
+        exit;
+        end
+
     else if event = '/session/noaccount' then begin
-        if (MessageDlg(sAuthNoAccount, mtConfirmation, [mbYes, mbNo], 0) = mrNo) then
+        if (MessageDlg(sAuthNoAccount, mtConfirmation, [mbYes, mbNo], 0) = mrNo) then begin
             // Just disconnect, they don't want an account
+            _logoff := true;
             MainSession.Disconnect()
+            end
         else
             // create the new account
             MainSession.CreateAccount();
@@ -1421,7 +1417,6 @@ begin
 
     // Unhook the auto-away DLL
     if (_hookLib <> 0) then begin
-        dec(_lpHookRec^.InstanceCount);
         _StopHooks();
         end;
 
@@ -1828,9 +1823,9 @@ var
 begin
     // Return the last tick count of activity
     Result := 0;
-    if (_windows_ver < cWIN_2000) then begin
-        if (_lpHookRec <> nil) then
-            Result := _lpHookRec^.LastTick;
+    if ((_windows_ver < cWIN_2000) or (_windows_ver = cWIN_ME)) then begin
+        if (_GetLastTick <> 0) then
+            Result := _GetLastTick();
         end
     else begin
         // use GetLastInputInfo
@@ -1845,7 +1840,9 @@ procedure TfrmExodus.timAutoAwayTimer(Sender: TObject);
 var
     mins, away, xa: integer;
     cur_idle: longword;
-    // dmsg: string;
+    {$ifdef TEST_AUTOAWAY}
+    dmsg: string;
+    {$endif}
     avail: boolean;
 begin
     {
@@ -1877,14 +1874,14 @@ begin
             else
                 mins := cur_idle;
 
-            {
+            {$ifdef TEST_AUTOAWAY}
             if (not _is_autoaway) and (not _is_autoxa) then begin
                 dmsg := 'Idle Check: ' + BoolToStr(_is_autoaway, true) + ', ' +
                     BoolToStr(_is_autoxa, true) + ', ' +
                     IntToStr(cur_idle ) + ' secs'#13#10;
                 DebugMsg(dmsg);
                 end;
-            }
+            {$endif}
 
             away := getInt('away_time');
             xa := getInt('xa_time');
