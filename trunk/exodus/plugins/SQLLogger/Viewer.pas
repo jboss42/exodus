@@ -209,6 +209,11 @@ var
     r, c, i: integer;
 begin
     // Draw this month in the calandar
+    for r := 0 to gridCal.RowCount - 1 do begin
+        for c := 0 to gridCal.ColCount - 1 do
+            gridCal.Cells[c,r] := '';
+    end;
+    
     r := 1;
     _m := MonthOf(d);
     _y := YearOf(d);
