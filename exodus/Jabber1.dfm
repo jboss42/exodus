@@ -2,7 +2,7 @@ object frmExodus: TfrmExodus
   Left = 567
   Top = 298
   Width = 457
-  Height = 278
+  Height = 348
   AlphaBlendValue = 240
   Caption = 'Exodus'
   Color = clBtnFace
@@ -29,7 +29,7 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 31
     Width = 449
-    Height = 193
+    Height = 263
     ActivePage = tbsRoster
     Align = alClient
     DockSite = True
@@ -52,7 +52,7 @@ object frmExodus: TfrmExodus
         Left = 209
         Top = 0
         Width = 3
-        Height = 165
+        Height = 235
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = Splitter1Moved
@@ -61,7 +61,7 @@ object frmExodus: TfrmExodus
         Left = 0
         Top = 0
         Width = 209
-        Height = 165
+        Height = 235
         Align = alLeft
         BevelOuter = bvNone
         UseDockManager = False
@@ -73,7 +73,7 @@ object frmExodus: TfrmExodus
         Left = 212
         Top = 0
         Width = 229
-        Height = 165
+        Height = 235
         Align = alClient
         BevelOuter = bvNone
         DragCursor = crDefault

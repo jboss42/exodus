@@ -453,12 +453,14 @@ end;
 {---------------------------------------}
 procedure TfrmChat.MsgOutKeyPress(Sender: TObject; var Key: Char);
 begin
-    inherited;
     if (Key = #0) then exit;
 
     // Send the msg if they hit return
-    if ( (Key = #13) and not(mnuReturns.Checked)) then
-        SendMsg();
+    if ((Key = #13) and (not mnuReturns.Checked)) then
+        SendMsg()
+    else
+        inherited;
+
 end;
 
 {---------------------------------------}
@@ -615,6 +617,7 @@ procedure TfrmChat.mnuReturnsClick(Sender: TObject);
 begin
   inherited;
     mnuReturns.Checked := not mnuReturns.Checked;
+    MsgOut.WantReturns := mnuReturns.Checked;
 end;
 
 {---------------------------------------}

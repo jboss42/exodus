@@ -53,6 +53,8 @@ type
     procedure frameButtons2btnOKClick(Sender: TObject);
     procedure frameButtons2btnCancelClick(Sender: TObject);
     procedure txtMsgURLClick(Sender: TObject; url: String);
+    procedure MsgOutKeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -262,6 +264,15 @@ end;
 procedure TfrmMsgRecv.txtMsgURLClick(Sender: TObject; url: String);
 begin
     ShellExecute(0, 'open', PChar(url), nil, nil, SW_SHOWNORMAL);
+end;
+
+{---------------------------------------}
+procedure TfrmMsgRecv.MsgOutKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  inherited;
+    if ((Key = 13) and (Shift = [ssCtrl])) then
+        frameButtons2btnOKClick(self);
 end;
 
 end.
