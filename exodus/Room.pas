@@ -2268,7 +2268,7 @@ begin
                 Font.Color := clGrayText
             else
                 Font.Color := clWindowText;
-            Brush.Color := clWindow;
+            Brush.Color := lstRoster.Color;
             Brush.Style := bsSolid;
             FillRect(xRect);
         end;
