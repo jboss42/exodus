@@ -244,7 +244,8 @@ var
     cur: TJabberEntity;
 begin
     i := _cache.indexOf(jid);
-    if ((node <> '') and (i >= 0)) then begin
+
+    if (i >= 0) then begin
         repeat
             cur := TJabberEntity(_cache.Objects[i]);
             if (cur.jid.full <> jid) then
@@ -291,23 +292,19 @@ begin
     if (i >= 0) then begin
         Result := nil;
         cur := TJabberEntity(_cache.Objects[i]);
-        if (node <> '') then begin
-            while (Result = nil) do begin
-                if ((node = cur.Node) and (cur.Jid.jid = jid)) then begin
-                    // we found a match
-                    Result := cur;
-                    break;
-                end
-                else if (cur.jid.jid <> jid) then
-                    // we found the next jid, so no match
-                    break;
-                inc(i);
-                if (i >= _cache.Count) then break;
-                cur := TJabberEntity(_cache.Objects[i]);
-            end;
-        end
-        else
-            Result := cur;
+        while ((Result = nil) and (cur <> nil)) do begin
+            if ((node = cur.Node) and (cur.Jid.jid = jid)) then begin
+                // we found a match
+                Result := cur;
+                break;
+            end
+            else if (cur.jid.jid <> jid) then
+                // we found the next jid, so no match
+                break;
+            inc(i);
+            if (i >= _cache.Count) then break;
+            cur := TJabberEntity(_cache.Objects[i]);
+        end;
     end
     else
         Result := nil;
@@ -328,8 +325,10 @@ begin
             // This fires all the events..
             e.getInfo(js);
             e.getItems(js);
-            for i := 0 to e.ItemCount - 1 do
-                e.Items[i].getInfo(js);
+            for i := 0 to e.ItemCount - 1 do begin
+                if (e.Items[i].hasInfo) then
+                    e.Items[i].getInfo(js);
+            end;
         end
         else
             // Re-walk since we don't have all the info.
