@@ -63,9 +63,12 @@ var
 
 resourcestring
     sNoUpdate = 'No new update available.';
-    sBadLocale = 'Your profile is set to use a language which is not available on your system.';
+    sBadLocale = 'Exodus is set to use a language which is not available on your system. Resetting language to default.';
     sNewLocale = 'You must exit exodus, and restart it before your new locale settings will take affect.';
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 {$WARN UNIT_PLATFORM OFF}
 {$R *.dfm}
@@ -76,6 +79,7 @@ uses
 const
     RUN_ONCE : string = '\Software\Microsoft\Windows\CurrentVersion\Run';
 
+{---------------------------------------}
 procedure TfrmPrefSystem.ScanLocales();
 var
     langs: TStringlist;
@@ -105,9 +109,10 @@ begin
     cboLocale.Items.Clear();
     cboLocale.Items.Assign(langs);
     cboLocale.Items.Insert(0, 'Default - English');
-
+    FreeAndNil(langs);
 end;
 
+{---------------------------------------}
 procedure TfrmPrefSystem.LoadPrefs();
 var
     i: integer;
@@ -134,8 +139,10 @@ begin
             i := cboLocale.Items.IndexOf(tmps);
             if (i >= 0) then
                 cboLocale.ItemIndex := i
-            else
+            else begin
                 MessageDlg(sBadLocale, mtError, [mbOK], 0);
+                cboLocale.ItemIndex := 0;
+            end;
         end
         else
             cboLocale.ItemIndex := 0;
@@ -144,6 +151,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmPrefSystem.SavePrefs();
 var
     reg: TRegistry;
@@ -191,6 +199,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmPrefSystem.btnUpdateCheckClick(Sender: TObject);
 var
     available : boolean;
@@ -203,6 +212,7 @@ begin
         MessageDlg(sNoUpdate, mtInformation, [mbOK], 0);
 end;
 
+{---------------------------------------}
 procedure TfrmPrefSystem.btnUpdateCheckMouseUp(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 begin
@@ -211,6 +221,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmPrefSystem.lblPluginScanClick(Sender: TObject);
 begin
   inherited;

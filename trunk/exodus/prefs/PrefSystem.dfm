@@ -12,6 +12,7 @@ object frmPrefSystem: TfrmPrefSystem
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Label7: TLabel
@@ -58,7 +59,7 @@ object frmPrefSystem: TfrmPrefSystem
   object chkAutoUpdate: TCheckBox
     Left = 8
     Top = 196
-    Width = 233
+    Width = 185
     Height = 17
     Caption = 'Check for updates automatically'
     TabOrder = 1
@@ -90,7 +91,7 @@ object frmPrefSystem: TfrmPrefSystem
   object chkCloseMin: TCheckBox
     Left = 8
     Top = 158
-    Width = 241
+    Width = 233
     Height = 17
     Caption = 'Close button minimizes to the tray'
     TabOrder = 5
@@ -154,7 +155,6 @@ object frmPrefSystem: TfrmPrefSystem
     ItemHeight = 13
     TabOrder = 12
     Items.Strings = (
-      'English (American)'
-      '')
+      'English (American)')
   end
 end
