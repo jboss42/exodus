@@ -22,34 +22,34 @@ unit RegForm;
 interface
 
 uses
-    XMLTag, IQ, Presence, fGeneric, fLeftLabel, Entity, 
+    IQ, XMLTag, fLeftLabel, Presence, Entity,  
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, Wizard, ComCtrls, ExtCtrls, StdCtrls, TntStdCtrls, TntExtCtrls;
+    Dialogs, DockWizard, ComCtrls, ExtCtrls, StdCtrls, TntStdCtrls,
+    TntExtCtrls;
 
 type
     RegFormStage = (rsWelcome, rsForm, rsXData, rsRegister, rsFinish, rsDone);
 
 type
-  TfrmRegister = class(TfrmWizard)
+  TfrmRegister = class(TfrmDockWizard)
     Label1: TTntLabel;
     lblIns: TTntLabel;
     TabSheet2: TTabSheet;
+    formBox: TScrollBox;
+    Panel2: TPanel;
+    btnDelete: TTntButton;
     TabSheet3: TTabSheet;
     Label2: TTntLabel;
     TabSheet4: TTabSheet;
     lblOK: TTntLabel;
     lblBad: TTntLabel;
-    Panel2: TPanel;
-    btnDelete: TTntButton;
-    formBox: TScrollBox;
     procedure FormCreate(Sender: TObject);
-    procedure btnNextClick(Sender: TObject);
-    procedure btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure btnDeleteClick(Sender: TObject);
+    procedure btnNextClick(Sender: TObject);
     procedure btnPrevClick(Sender: TObject);
+    procedure btnCancelClick(Sender: TObject);
+    procedure btnDeleteClick(Sender: TObject);
   private
-    { Private declarations }
     cur_iq: TJabberIQ;
     cur_stage: RegFormStage;
     cur_key: Widestring;
@@ -63,7 +63,6 @@ type
     procedure PresCallback(event: string; tag: TXMLTag; pres: TJabberPres);
     procedure RemoveCallback(event: string; tag: TXMLTag);
   public
-    { Public declarations }
     jid: Widestring;
     entity: TJabberEntity;
     procedure Start();
@@ -103,8 +102,9 @@ procedure StartServiceReg(jid: Widestring);
 implementation
 {$R *.DFM}
 uses
-    NodeItem, EntityCache, 
-    GnuGetText, Math, JabberConst, Transports, S10n, Roster, Session, ExUtils;
+    NodeItem, EntityCache, fGeneric, 
+    GnuGetText, Math, JabberConst, Transports, S10n, Roster, Session, ExUtils,
+    Jabber1;
 
 {---------------------------------------}
 procedure StartServiceReg(jid: Widestring);
@@ -114,6 +114,8 @@ begin
     regform := TfrmRegister.Create(Application);
     regform.jid := jid;
     regform.Start();
+    if regform.TabSheet <> nil then
+        frmExodus.Tabs.ActivePage := regform.TabSheet;
 end;
 
 {---------------------------------------}
@@ -146,7 +148,7 @@ begin
     btnNext.Enabled := false;
     btnCancel.Enabled := true;
     entity := jEntityCache.getByJid(Self.jid);    
-    Self.Show();
+    Self.ShowDefault();
     cur_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), GetCallback, 30);
     with cur_iq do begin
         toJid := self.jid;
@@ -506,6 +508,5 @@ begin
     btnNext.Enabled := true;
     btnBack.Enabled := (Tabs.ActivePage <> TabSheet1);
 end;
-
 
 end.

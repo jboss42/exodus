@@ -33,9 +33,6 @@ uses
   Forms,
   Controls,
   Windows,
-  {$ifdef TRACE_EXCEPTIONS}
-  ExTracer in 'ExTracer.pas' {frmException},
-  {$endif}
   MemCheck in '..\MemCheck.pas',
   About in 'About.pas' {frmAbout},
   AutoUpdate in '..\jopl\AutoUpdate.pas',
@@ -152,7 +149,6 @@ uses
   HttpProxyIOHandler in '..\jopl\HttpProxyIOHandler.pas',
   PrefLayouts in 'prefs\PrefLayouts.pas' {frmPrefLayouts},
   Wizard in 'Wizard.pas' {frmWizard},
-  RegForm in 'RegForm.pas' {frmRegister},
   LocalUtils in 'LocalUtils.pas',
   SendStatus in 'SendStatus.pas' {fSendStatus: TFrame},
   XferManager in 'XferManager.pas' {frmXferManager},
@@ -170,7 +166,9 @@ uses
   SASLAuth in '..\jopl\SASLAuth.pas',
   ExGettextUtils in 'ExGettextUtils.pas',
   JoinRoom in 'JoinRoom.pas',
-  PrefFile in '..\jopl\PrefFile.pas';
+  PrefFile in '..\jopl\PrefFile.pas',
+  RegForm in 'RegForm.pas' {frmRegister},
+  ExTracer in 'ExTracer.pas' {frmException};
 
 {$R *.TLB}
 
@@ -204,6 +202,7 @@ begin
   if (not continue) then exit;
 
   Application.CreateForm(TfrmExodus, frmExodus);
+  Application.CreateForm(TfrmRegister, frmRegister);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);
