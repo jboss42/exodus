@@ -987,6 +987,7 @@ var
     dtop, tmp: TRect;
     cp: TPoint;
     idx: integer;
+    m: TMonitor;
 begin
     if (Assigned(Application.MainForm)) then
         Application.MainForm.Monitor;
@@ -995,8 +996,13 @@ begin
     tmp := f.BoundsRect;
     cp := CenterPoint(tmp);
 
-    idx := Screen.MonitorFromPoint(cp, mdNearest).MonitorNum;
-    dtop := Screen.Monitors[idx].WorkareaRect;
+    m := Screen.MonitorFromPoint(cp, mdNearest);
+    if (m <> nil) then begin
+        dtop := m.WorkareaRect;
+    end
+    else begin
+        dtop := Screen.DesktopRect;
+    end;
 
     ok := (tmp.Left >= dtop.Left) and
         (tmp.Right <= dtop.Right) and
