@@ -163,8 +163,23 @@ begin
             if (i >= 0) then
                 cboLocale.ItemIndex := i
             else begin
-                MessageDlg(sBadLocale, mtError, [mbOK], 0);
-                cboLocale.ItemIndex := 0;
+
+                // check for en when given en_US
+                i := Pos('_', tmps);
+                if (i > 1) then begin
+                    tmps := Copy(tmps, 1, i - 1);
+                    i := _lang_codes.indexOf(tmps);
+                end;
+
+                if (i = -1) then begin
+                    MessageDlg(sBadLocale, mtError, [mbOK], 0);
+                    cboLocale.ItemIndex := 0;
+                end
+                else begin
+                    _old_locale := tmps;
+                    setString('locale', tmps);
+                    cboLocale.ItemIndex := i;
+                end;
             end;
         end
         else
