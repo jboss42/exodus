@@ -242,6 +242,7 @@ implementation
 {$R *.DFM}
 {$WARN UNIT_PLATFORM OFF}
 uses
+    ExUtils,
     FileCtrl,
     XMLUtils,
     Presence, MsgDisplay, JabberMsg,  
@@ -880,9 +881,17 @@ end;
 
 {---------------------------------------}
 procedure TfrmPrefs.Label20Click(Sender: TObject);
+var
+    ver : integer;
+    win : String;
 begin
-    ShellExecute(Self.Handle, nil, 'rundll32.exe',
-      'shell32.dll,Control_RunDLL mmsys.cpl,,1', nil, SW_SHOW);
+    ver := WindowsVersion(win);
+    if (ver = cWIN_XP) then
+        ShellExecute(Self.Handle, nil, 'rundll32.exe',
+          'shell32.dll,Control_RunDLL mmsys.cpl,,1', nil, SW_SHOW)
+    else 
+        ShellExecute(Self.Handle, nil, 'rundll32.exe',
+          'shell32.dll,Control_RunDLL mmsys.cpl,,0', nil, SW_SHOW);
 end;
 
 {---------------------------------------}
