@@ -31,9 +31,9 @@ type
     chkSubscribe: TTntCheckBox;
     boxAdd: TGroupBox;
     frameButtons1: TframeButtons;
-    Label2: TTntLabel;
+    lblNickname: TTntLabel;
     txtNickname: TTntEdit;
-    Label3: TTntLabel;
+    lblGroup: TTntLabel;
     cboGroup: TTntComboBox;
     Bevel1: TBevel;
     PopupMenu1: TTntPopupMenu;
@@ -50,10 +50,12 @@ type
     procedure lblJIDClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure chkSubscribeClick(Sender: TObject);
   private
     { Private declarations }
   public
     { Public declarations }
+    procedure EnableAdd(e: boolean);
   end;
 
 var
@@ -163,6 +165,20 @@ begin
         _subscribe_windows.Delete(idx);
 end;
 
+{---------------------------------------}
+procedure TfrmSubscribe.EnableAdd(e: boolean);
+begin
+    lblNickname.Enabled := e;
+    txtNickname.Enabled := e;
+    cboGroup.Enabled := e;
+    lblGroup.Enabled := e;
+end;
+
+{---------------------------------------}
+procedure TfrmSubscribe.chkSubscribeClick(Sender: TObject);
+begin
+    EnableAdd(chkSubscribe.Checked);
+end;
 
 {---------------------------------------}
 {---------------------------------------}
