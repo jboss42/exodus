@@ -21,7 +21,7 @@ unit ExUtils;
 
 interface
 uses
-    Unicode, 
+    Unicode, ExRichEdit, RichEdit2,
     JabberMsg, Graphics, Controls, StdCtrls, Forms, Classes, SysUtils, Windows;
 
 const
@@ -75,8 +75,9 @@ function getDisplayField(fld: string): string;
 function secsToDuration(seconds: string): string;
 function GetPresenceAtom(status: string): ATOM;
 function GetPresenceString(a: ATOM): string;
-function ColorToHTML( Color: TColor): string;
+function ColorToHTML(Color: TColor): string;
 function getMemoText(memo: TMemo): WideString;
+function getInputText(InputRichEdit: TExRichEdit): Widestring;
 
 function trimNewLines(value: WideString): WideString;
 
@@ -644,6 +645,7 @@ begin
     MainSession.SendTag(msg);
 end;
 
+{---------------------------------------}
 procedure split(value: WideString; list: TWideStringList; seps : WideString = ' '#9#10#13);
 var
     i, l : integer;
@@ -666,6 +668,21 @@ begin
         list.Add(Copy(tmps, l, i - l));
         l := i + 1;
 
+        end;
+end;
+
+{---------------------------------------}
+function getInputText(InputRichEdit: TExRichEdit): Widestring;
+var
+    i: integer;
+begin
+    // get a single properly formatted widestring from an input
+    // RichEdit control
+    Result := '';
+    for i := 0 to InputRichEdit.WideLines.Count - 1 do begin
+        if (Result <> '') then
+            Result := Result + Chr(13);
+        Result := Result + TrimRight(InputRichEdit.WideLines[i]);
         end;
 end;
 
