@@ -533,6 +533,8 @@ begin
     _nick_start := 0;
     _hint_text := '';
 
+    lblSubject.Caption := '';
+
     if (MainSession.Prefs.getInt('notify_keyword') <> 0) then begin
         kw_list := TWideStringList.Create();
         MainSession.Prefs.fillStringlist('keywords', kw_list);
