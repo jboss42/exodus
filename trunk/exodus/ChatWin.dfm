@@ -1,6 +1,6 @@
 inherited frmChat: TfrmChat
-  Left = 317
-  Top = 292
+  Left = 263
+  Top = 290
   Caption = 'Chat Window'
   Font.Charset = ANSI_CHARSET
   Font.Height = -13

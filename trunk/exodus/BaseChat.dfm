@@ -1,6 +1,6 @@
 object frmBaseChat: TfrmBaseChat
-  Left = 356
-  Top = 293
+  Left = 244
+  Top = 159
   Width = 388
   Height = 313
   Color = clBtnFace
@@ -13,6 +13,8 @@ object frmBaseChat: TfrmBaseChat
   OnActivate = FormActivate
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnEndDock = FormEndDock
+  OnPaint = FormPaint
   OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13
@@ -310,5 +312,11 @@ object frmBaseChat: TfrmBaseChat
       ShortCut = 16453
       OnClick = Emoticons1Click
     end
+  end
+  object timWinFlash: TTimer
+    Enabled = False
+    OnTimer = timWinFlashTimer
+    Left = 16
+    Top = 88
   end
 end

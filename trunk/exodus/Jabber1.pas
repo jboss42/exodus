@@ -2027,7 +2027,7 @@ begin
         for i := 0 to MainSession.ChatList.Count - 1 do begin
             cc := TChatController(MainSession.ChatList.Objects[i]);
             cw := TfrmChat(cc.window);
-            if ((cw.Visible = false) and (cw.Docked)) then begin
+            if ((cw <> nil) and (cw.Visible = false) and (cw.Docked)) then begin
                 cw.FloatForm();
             end;
         end;

@@ -46,7 +46,6 @@ type
     txtLast: TEdit;
     TabSheet2: TTabSheet;
     GrpListBox: TCheckListBox;
-    btnAddGroup: TButton;
     TabSheet3: TTabSheet;
     lblURL: TLabel;
     Label12: TLabel;
@@ -103,13 +102,16 @@ type
     Panel1: TPanel;
     Splitter1: TSplitter;
     aniProfile: TAnimate;
-    btnLast: TButton;
-    btnVersion: TButton;
-    btnTime: TButton;
     memDesc: TTntMemo;
     Label3: TLabel;
-    txtNewGrp: TTntEdit;
     lblUpdateNick: TLabel;
+    Panel2: TPanel;
+    btnVersion: TButton;
+    btnTime: TButton;
+    btnLast: TButton;
+    Panel3: TPanel;
+    txtNewGrp: TTntEdit;
+    btnAddGroup: TButton;
     procedure FormCreate(Sender: TObject);
     procedure TreeView1Click(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

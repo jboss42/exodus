@@ -1,8 +1,8 @@
 object frmProfile: TfrmProfile
   Left = 260
   Top = 185
-  Width = 457
-  Height = 352
+  Width = 462
+  Height = 356
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Contact Properties'
   Color = clBtnFace
@@ -21,16 +21,16 @@ object frmProfile: TfrmProfile
     Left = 121
     Top = 0
     Width = 3
-    Height = 289
+    Height = 293
     Cursor = crHSplit
   end
   object PageControl1: TPageControl
     Left = 124
     Top = 0
-    Width = 317
-    Height = 289
+    Width = 330
+    Height = 293
     ActivePage = TabSheet1
-    Align = alLeft
+    Align = alClient
     Style = tsFlatButtons
     TabIndex = 0
     TabOrder = 0
@@ -198,16 +198,16 @@ object frmProfile: TfrmProfile
       object ResListBox: TListBox
         Left = 0
         Top = 25
-        Width = 161
-        Height = 242
-        Align = alLeft
+        Width = 217
+        Height = 237
+        Align = alClient
         ItemHeight = 13
         TabOrder = 0
       end
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 309
+        Width = 322
         Height = 25
         Align = alTop
         Alignment = taLeftJustify
@@ -215,67 +215,86 @@ object frmProfile: TfrmProfile
         Caption = 'Online Resources'
         TabOrder = 1
       end
-      object btnLast: TButton
-        Left = 168
-        Top = 88
-        Width = 75
-        Height = 25
-        Caption = 'Last Activity'
+      object Panel2: TPanel
+        Left = 217
+        Top = 25
+        Width = 105
+        Height = 237
+        Align = alRight
+        BevelOuter = bvNone
         TabOrder = 2
-        OnClick = btnVersionClick
-      end
-      object btnVersion: TButton
-        Left = 168
-        Top = 24
-        Width = 75
-        Height = 25
-        Caption = 'Client Version'
-        TabOrder = 3
-        OnClick = btnVersionClick
-      end
-      object btnTime: TButton
-        Left = 168
-        Top = 56
-        Width = 75
-        Height = 25
-        Caption = 'Client Time'
-        TabOrder = 4
-        OnClick = btnVersionClick
+        object btnVersion: TButton
+          Left = 6
+          Top = 8
+          Width = 85
+          Height = 25
+          Caption = 'Client Version'
+          TabOrder = 0
+          OnClick = btnVersionClick
+        end
+        object btnTime: TButton
+          Left = 6
+          Top = 40
+          Width = 85
+          Height = 25
+          Caption = 'Client Time'
+          TabOrder = 1
+          OnClick = btnVersionClick
+        end
+        object btnLast: TButton
+          Left = 6
+          Top = 72
+          Width = 85
+          Height = 25
+          Caption = 'Last Activity'
+          TabOrder = 2
+          OnClick = btnVersionClick
+        end
       end
     end
     object TabSheet2: TTabSheet
       Caption = 'Groups'
       ImageIndex = 1
-      DesignSize = (
-        309
-        258)
       object GrpListBox: TCheckListBox
-        Left = 8
-        Top = 8
-        Width = 299
-        Height = 209
-        Anchors = [akLeft, akTop, akRight, akBottom]
+        Left = 0
+        Top = 0
+        Width = 322
+        Height = 221
+        Align = alClient
         ItemHeight = 13
         Sorted = True
         TabOrder = 0
       end
-      object btnAddGroup: TButton
-        Left = 224
-        Top = 225
-        Width = 75
-        Height = 25
-        Anchors = [akRight, akBottom]
-        Caption = 'Add Group'
-        TabOrder = 2
-        OnClick = btnAddGroupClick
-      end
-      object txtNewGrp: TTntEdit
-        Left = 8
-        Top = 227
-        Width = 211
-        Height = 21
-        Anchors = [akLeft, akRight, akBottom]
+      object Panel3: TPanel
+        Left = 0
+        Top = 221
+        Width = 322
+        Height = 41
+        Align = alBottom
+        BevelOuter = bvNone
+        Caption = 'Panel3'
         TabOrder = 1
+        DesignSize = (
+          322
+          41)
+        object txtNewGrp: TTntEdit
+          Left = 5
+          Top = 10
+          Width = 226
+          Height = 21
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 0
+        end
+        object btnAddGroup: TButton
+          Left = 239
+          Top = 8
+          Width = 75
+          Height = 25
+          Anchors = [akRight, akBottom]
+          Caption = 'Add Group'
+          TabOrder = 1
+          OnClick = btnAddGroupClick
+        end
       end
     end
     object TabSheet3: TTabSheet
@@ -1164,17 +1183,17 @@ object frmProfile: TfrmProfile
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 289
-    Width = 449
+    Top = 293
+    Width = 454
     Height = 34
     Align = alBottom
     AutoScroll = False
     TabOrder = 1
     inherited Bevel1: TBevel
-      Width = 449
+      Width = 454
     end
     inherited Panel1: TPanel
-      Left = 289
+      Left = 294
       Height = 29
       inherited btnOK: TButton
         OnClick = frameButtons1btnOKClick
@@ -1188,7 +1207,7 @@ object frmProfile: TfrmProfile
     Left = 0
     Top = 0
     Width = 121
-    Height = 289
+    Height = 293
     Align = alLeft
     Indent = 19
     ReadOnly = True

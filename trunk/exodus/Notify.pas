@@ -51,16 +51,9 @@ resourcestring
 
 implementation
 uses
-    ExUtils,
-    PrefController,
-    Jabber1,
-    ExEvents,
-    RiserWindow,
-    Room,
-    Roster,
-    MMSystem,
-    Debug,
-    Session;
+    BaseChat, ExUtils, ExEvents,
+    Jabber1, PrefController, RiserWindow,
+    Room, Roster, MMSystem, Debug, Session;
 
 const
     // image index for tab notification.
@@ -197,8 +190,12 @@ begin
                     frmExodus.Tabs.Repaint();
                 end;
             end
-            else
-                d.Flash();
+            else if (w is TfrmBaseChat) then
+                TfrmBaseChat(w).Flash()
+            else begin
+                FlashWindow(w.Handle, true);
+                FlashWindow(w.Handle, true);
+            end;
         end
         else begin
             FlashWindow(w.Handle, true);

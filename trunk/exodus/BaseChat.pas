@@ -27,6 +27,9 @@ uses
     Dialogs, Menus, StdCtrls, ExtCtrls, ComCtrls, ExRichEdit, RichEdit2,
     TntStdCtrls;
 
+const
+    WM_THROB = WM_USER + 5400;
+
 type
   TfrmBaseChat = class(TfrmDockable)
     Panel3: TPanel;
@@ -45,6 +48,7 @@ type
     N2: TMenuItem;
     Emoticons2: TMenuItem;
     MsgOut: TExRichEdit;
+    timWinFlash: TTimer;
 
     procedure Emoticons1Click(Sender: TObject);
     procedure MsgListURLClick(Sender: TObject; url: String);
@@ -67,6 +71,9 @@ type
       Shift: TShiftState; X, Y: Integer);
     procedure MsgOutKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure timWinFlashTimer(Sender: TObject);
+    procedure FormPaint(Sender: TObject);
+    procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
   private
     { Private declarations }
     _msgHistory : TStringList;
@@ -77,6 +84,8 @@ type
     _wrap_input: boolean;
     procedure _scrollBottom();
 
+    procedure WMThrob(var msg: TMessage); message WM_THROB;
+
   public
     { Public declarations }
     AutoScroll: boolean;
@@ -84,6 +93,8 @@ type
     procedure SetEmoticon(msn: boolean; imgIndex: integer);
     procedure SendMsg(); virtual;
     procedure HideEmoticons();
+    procedure Flash;
+
   end;
 
 resourcestring
@@ -171,8 +182,14 @@ begin
     frmExodus.ActiveChat := Self;
     if (frmEmoticons.Visible) then
         frmEmoticons.Hide;
-    if (Self.Visible) and (pnlInput.Visible) then
+
+    if (Self.Visible) and (pnlInput.Visible) then begin
+        MsgList.Repaint();
         MsgOut.SetFocus;
+    end;
+
+    if (timWinFlash.Enabled) then
+        timWinFlash.Enabled := false;
 end;
 
 {---------------------------------------}
@@ -342,6 +359,9 @@ end;
 procedure TfrmBaseChat.FormResize(Sender: TObject);
 begin
   inherited;
+    if (timWinFlash.Enabled) then
+        timWinFlash.Enabled := false;
+
     MsgList.Repaint();
 end;
 
@@ -401,5 +421,50 @@ begin
     end;
 end;
 
+{---------------------------------------}
+procedure TfrmBaseChat.timWinFlashTimer(Sender: TObject);
+begin
+    // Flash the window
+    FlashWindow(Self.Handle, true);
+    FlashWindow(Self.Handle, true);
+end;
+
+{---------------------------------------}
+procedure TfrmBaseChat.Flash;
+begin
+    if Self.Active then exit;
+
+    if MainSession.Prefs.getBool('notify_flasher') then begin
+        if (not timWinFlash.Enabled) then
+            PostMessage(Self.Handle, WM_THROB, 0, 0);
+        end
+    else begin
+        timWinFlash.Enabled := false;
+        timWinFlashTimer(Self);
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmBaseChat.FormPaint(Sender: TObject);
+begin
+  inherited;
+    if timWinFlash.Enabled then
+        timWinFlash.Enabled := false;
+end;
+
+{---------------------------------------}
+procedure TfrmBaseChat.FormEndDock(Sender, Target: TObject; X, Y: Integer);
+begin
+  inherited;
+    if timWinFlash.Enabled then
+        timWinFlash.Enabled := false;
+end;
+
+{---------------------------------------}
+procedure TfrmBaseChat.WMThrob(var msg: TMessage);
+begin
+    // Enable the flash timer
+    timWinFlash.Enabled := true;
+end;
 
 end.
