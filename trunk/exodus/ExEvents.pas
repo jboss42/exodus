@@ -442,6 +442,9 @@ begin
             _data_list.Add(sMsgLastInfo + secsToDuration(qTag.getAttribute('seconds')) + '.');
         end;
     end;
+
+    if (from <> '') then
+        caption := from;
 end;
 
 
