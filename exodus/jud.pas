@@ -224,7 +224,13 @@ begin
         self.reset();
         exit;
         end
-    else begin
+    else if ((tag <> nil) and (tag.GetAttribute('type') = 'error')) then begin
+        MessageDlg('There was an error trying to contact the search agent.',
+            mtError, [mbOK], 0);
+        Self.Reset();
+        exit;
+        end
+    else if (tag <> nil) then begin
         // tag
         lblInstructions.Visible := true;
         cur_frame := nil;
@@ -234,6 +240,8 @@ begin
             cur_tag := fields[i];
             if (cur_tag.Name = 'instructions') then
                 // do nothing
+            else if (cur_tag.Namespace <> '') then
+                // ignore stuff in other namesapces
             else if (cur_tag.Name = 'key') then begin
                 cur_key := cur_tag.Data;
                 end

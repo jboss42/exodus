@@ -1,6 +1,6 @@
 object Exodus: TExodus
-  Left = 268
-  Top = 375
+  Left = 243
+  Top = 260
   Width = 525
   Height = 327
   AlphaBlendValue = 240
@@ -28,7 +28,7 @@ object Exodus: TExodus
     Left = 0
     Top = 30
     Width = 517
-    Height = 246
+    Height = 243
     ActivePage = tbsMsg
     Align = alClient
     DockSite = True
@@ -49,7 +49,7 @@ object Exodus: TExodus
         Left = 209
         Top = 0
         Width = 3
-        Height = 218
+        Height = 215
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = Splitter1Moved
@@ -58,7 +58,7 @@ object Exodus: TExodus
         Left = 0
         Top = 0
         Width = 209
-        Height = 218
+        Height = 215
         Align = alLeft
         BevelOuter = bvNone
         UseDockManager = False
@@ -70,7 +70,7 @@ object Exodus: TExodus
         Left = 212
         Top = 0
         Width = 297
-        Height = 218
+        Height = 215
         Align = alClient
         BevelOuter = bvNone
         DragCursor = crDefault
