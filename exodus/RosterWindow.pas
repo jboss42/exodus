@@ -65,6 +65,9 @@ type
     Panel4: TPanel;
     btnTasks: TSpeedButton;
     popSendFile: TMenuItem;
+    popActions: TPopupMenu;
+    popAddContact: TMenuItem;
+    popAddGroup: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -92,6 +95,8 @@ type
     procedure popChatClick(Sender: TObject);
     procedure popMsgClick(Sender: TObject);
     procedure popSendFileClick(Sender: TObject);
+    procedure popAddContactClick(Sender: TObject);
+    procedure popAddGroupClick(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;
@@ -127,6 +132,7 @@ type
     procedure DockRoster;
     procedure FloatRoster;
     procedure ShowPresence(show: string);
+    function  RenderGroup(grp_idx: integer): TTreeNode;
   end;
 
 var
@@ -500,14 +506,8 @@ begin
             grp_idx := MainSession.Roster.GrpList.Add(cur_grp);
 
         grp_node := TTreeNode(MainSession.Roster.GrpList.Objects[grp_idx]);
-        if (grp_node = nil) then begin
-            // create the group node
-            grp_node := treeRoster.Items.AddChild(nil, cur_grp);
-            MainSession.Roster.GrpList.Objects[grp_idx] := grp_node;
-            grp_node.ImageIndex := ico_Down;
-            grp_node.SelectedIndex := ico_Down;
-            grp_node.Data := nil;
-            end;
+        if (grp_node = nil) then
+            grp_node := RenderGroup(grp_idx);
 
         // check to see if this node exists under this grp_node
         cur_node := nil;
@@ -563,6 +563,21 @@ begin
         treeRoster.Refresh;
         end;
 
+end;
+
+{---------------------------------------}
+function TfrmRosterWindow.RenderGroup(grp_idx: integer): TTreeNode;
+var
+    grp_node: TTreeNode;
+    cur_grp: string;
+begin
+    cur_grp := MainSession.Roster.GrpList[grp_idx];
+    grp_node := treeRoster.Items.AddChild(nil, cur_grp);
+    MainSession.Roster.GrpList.Objects[grp_idx] := grp_node;
+    grp_node.ImageIndex := ico_Down;
+    grp_node.SelectedIndex := ico_Down;
+    grp_node.Data := nil;
+    result := grp_node;
 end;
 
 {---------------------------------------}
@@ -788,11 +803,11 @@ begin
         else begin
             iq.toJID := p.fromJID.full;
             if Sender = popVersion then
-                iq.Namespace := 'jabber:iq:version'
+                iq.Namespace := XMLNS_VERSION
             else if Sender = popTime then
-                iq.Namespace := 'jabber:iq:time'
+                iq.Namespace := XMLNS_TIME
             else if Sender = popLast then
-                iq.Namespace := 'jabber:iq:last';
+                iq.Namespace := XMLNS_LAST;
             iq.Send;
             end;
         end;
@@ -927,22 +942,34 @@ end;
 procedure TfrmRosterWindow.treeRosterContextPopup(Sender: TObject;
   MousePos: TPoint; var Handled: Boolean);
 var
-    e: boolean;
+    o, e: boolean;
     n: TTreeNode;
+    ri: TJabberRosterItem;
+    pri: TJabberPres;
 begin
     n := treeRoster.GetNodeAt(MousePos.X, MousePos.Y);
-    treeRoster.Selected := n;
-
-    e := (TObject(n.Data) is TJabberRosterItem);
-    popChat.Enabled := e;
-    popMsg.Enabled := e;
-
-    if (e) then begin
-        // only activate this menu item if the contact is online
-        popSendFile.Enabled := e;
+    o := false;
+    if (n = nil) then begin
+        // show the actions popup when no node is hit
+        e := false;
+        treeRoster.PopupMenu := popActions;
         end
-    else
-        popSendFile.Enabled := false;
+    else begin
+        // show the roster menu when a node is hit
+        treeRoster.PopupMenu := popRoster;
+        treeRoster.Selected := n;
+        e := (TObject(n.Data) is TJabberRosterItem);
+        if (e) then begin
+            // check to see if this person is online
+            ri := TJabberRosterItem(n.Data);
+            pri := MainSession.ppdb.FindPres(ri.jid.jid, '');
+            o := (pri <> nil);
+            end;
+        popChat.Enabled := e;
+        popMsg.Enabled := e;
+        end;
+
+    popSendFile.Enabled := o;
     popClientInfo.Enabled := e;
     popPresence.Enabled := e;
     popHistory.Enabled := e;
@@ -1001,6 +1028,16 @@ begin
 
     if (TObject(node.Data) is TJabberRosterItem) then
         FileSend(TJabberRosterItem(node.Data).jid.jid);
+end;
+
+procedure TfrmRosterWindow.popAddContactClick(Sender: TObject);
+begin
+    frmJabber.btnAddContactClick(Self);
+end;
+
+procedure TfrmRosterWindow.popAddGroupClick(Sender: TObject);
+begin
+    frmJabber.NewGroup2Click(Self);
 end;
 
 end.

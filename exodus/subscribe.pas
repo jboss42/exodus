@@ -23,7 +23,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, buttonFrame;
+  StdCtrls, buttonFrame, ExtCtrls;
 
 type
   TfrmSubscribe = class(TForm)
@@ -36,6 +36,7 @@ type
     txtNickname: TEdit;
     Label3: TLabel;
     cboGroup: TComboBox;
+    Bevel1: TBevel;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

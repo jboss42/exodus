@@ -23,7 +23,6 @@ object frmTransfer: TfrmTransfer
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 2
-    Color = clHighlight
     TabOrder = 0
     object lblFrom: TStaticText
       Left = 2
@@ -32,7 +31,7 @@ object frmTransfer: TfrmTransfer
       Height = 18
       Align = alLeft
       Caption = 'From:     '
-      Color = clHighlight
+      Color = clBtnFace
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clHighlightText
       Font.Height = -13
@@ -49,7 +48,7 @@ object frmTransfer: TfrmTransfer
       Height = 18
       Align = alClient
       Caption = '<JID>'
-      Color = clHighlight
+      Color = clBtnFace
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clHighlightText
       Font.Height = -13
@@ -64,7 +63,7 @@ object frmTransfer: TfrmTransfer
     Left = 0
     Top = 22
     Width = 259
-    Height = 95
+    Height = 92
     Align = alClient
     ReadOnly = True
     TabOrder = 1
@@ -72,7 +71,7 @@ object frmTransfer: TfrmTransfer
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 142
+    Top = 139
     Width = 259
     Height = 34
     Align = alBottom
@@ -94,7 +93,7 @@ object frmTransfer: TfrmTransfer
   end
   object pnlProgress: TPanel
     Left = 0
-    Top = 117
+    Top = 114
     Width = 259
     Height = 25
     Align = alBottom

@@ -62,7 +62,7 @@ type
         property Thread : string read _thread write SetThread;
         property Body : string read _body write SetBody;
         property MsgType : string read _msg_type write SetMsgType;
-        property ID : string  read _id;
+        property ID : string  read _id write _id;
         property Action: boolean read _action;
         property Nick: string read _nick write _nick;
         property isMe: boolean read _isme write _isme;

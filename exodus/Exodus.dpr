@@ -3,7 +3,7 @@ program Exodus;
 uses
   Forms,
   Controls,
-  Windows, 
+  Windows,
   XMLUtils in 'XMLUtils.pas',
   ChatWin in 'ChatWin.pas' {frmChat},
   iq in 'iq.pas',
@@ -51,7 +51,9 @@ uses
   Invite in 'Invite.pas' {frmInvite},
   About in 'About.pas' {frmAbout},
   Transfer in 'Transfer.pas' {frmTransfer},
-  XMLParser in 'XMLParser.pas';
+  XMLParser in 'XMLParser.pas',
+  jud in 'jud.pas' {frmJUD},
+  fTopLabel in 'fTopLabel.pas' {frameTopLabel: TFrame};
 
 {$R *.RES}
 

@@ -20,12 +20,19 @@ object frmRemove: TfrmRemove
   TextHeight = 13
   object Label1: TLabel
     Left = 0
-    Top = 20
+    Top = 22
     Width = 299
     Height = 13
     Align = alTop
     Caption = 'You are about to remove this person from your Roster. '
     WordWrap = True
+  end
+  object Bevel1: TBevel
+    Left = 0
+    Top = 20
+    Width = 299
+    Height = 2
+    Align = alTop
   end
   object lblJID: TStaticText
     Left = 0
@@ -34,7 +41,7 @@ object frmRemove: TfrmRemove
     Height = 20
     Align = alTop
     Caption = ' foo@jabber.org'
-    Color = clHighlight
+    Color = clBtnFace
     Font.Charset = ANSI_CHARSET
     Font.Color = clHighlightText
     Font.Height = -13

@@ -1,6 +1,6 @@
 object frmChat: TfrmChat
-  Left = 292
-  Top = 206
+  Left = 243
+  Top = 150
   ActiveControl = MsgOut
   AutoScroll = False
   Caption = 'Chat Window'
@@ -229,7 +229,7 @@ object frmChat: TfrmChat
     object MsgOut: TMemo
       Left = 2
       Top = 2
-      Width = 293
+      Width = 322
       Height = 27
       Align = alClient
       Font.Charset = DEFAULT_CHARSET
@@ -242,39 +242,6 @@ object frmChat: TfrmChat
       WantReturns = False
       OnKeyDown = MsgOutKeyDown
       OnKeyPress = MsgOutKeyPress
-    end
-    object Panel5: TPanel
-      Left = 295
-      Top = 2
-      Width = 29
-      Height = 27
-      Align = alRight
-      BevelOuter = bvNone
-      TabOrder = 1
-      object btnSend: TSpeedButton
-        Left = 4
-        Top = 3
-        Width = 23
-        Height = 22
-        Hint = 'Send'
-        AllowAllUp = True
-        Flat = True
-        Glyph.Data = {
-          76010000424D7601000000000000760000002800000020000000100000000100
-          04000000000000010000120B0000120B00001000000000000000000000000000
-          800000800000008080008000000080008000808000007F7F7F00BFBFBF000000
-          FF0000FF000000FFFF00FF000000FF00FF00FFFF0000FFFFFF00555775777777
-          57705557757777775FF7555555555555000755555555555F777F555555555550
-          87075555555555F7577F5555555555088805555555555F755F75555555555033
-          805555555555F755F75555555555033B05555555555F755F75555555555033B0
-          5555555555F755F75555555555033B05555555555F755F75555555555033B055
-          55555555F755F75555555555033B05555555555F755F75555555555033B05555
-          555555F75FF75555555555030B05555555555F7F7F75555555555000B0555555
-          5555F777F7555555555501900555555555557777755555555555099055555555
-          5555777755555555555550055555555555555775555555555555}
-        NumGlyphs = 2
-        OnClick = btnSendClick
-      end
     end
   end
   object PopupMenu1: TPopupMenu

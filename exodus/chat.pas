@@ -104,6 +104,9 @@ begin
     // this jid, if not, create one.
     fjid := tag.getAttribute('from');
 
+    // we are only interested in packets w/ a body tag
+    if (tag.QueryXPTag('/message/body') = nil) then exit;
+    
     if (Self.indexOf(fjid) < 0) then begin
         // Create a new session
         tmp_jid := TJabberID.Create(fjid);

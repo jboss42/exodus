@@ -169,7 +169,7 @@ begin
     iq.PutAttribute('type', 'set');
     iq.PutAttribute('id', MainSession.generateID());
     with iq.AddTag('query') do begin
-        putAttribute('xmlns', 'jabber:iq:roster');
+        putAttribute('xmlns', XMLNS_ROSTER);
         item := AddTag('item');
         Self.fillTag(item);
         end;
@@ -199,6 +199,7 @@ end;
 {---------------------------------------}
 procedure TJabberRosterItem.parse(tag: TXMLTag);
 var
+    tmp_grp: string;
     grps: TXMLTagList;
     i: integer;
 begin
@@ -210,9 +211,12 @@ begin
     nickname := tag.GetAttribute('name');
 
     Groups.Clear;
-    grps := tag.QueryTags('group');
-    for i := 0 to grps.Count - 1 do
-        Groups.Add(TXMLTag(grps[i]).Data);
+    grps := tag.QueryXPTags('/item/group');
+    for i := 0 to grps.Count - 1 do begin
+        tmp_grp := Trim(TXMLTag(grps[i]).Data);
+        if (tmp_grp <> '') then
+            Groups.Add(TXMLTag(grps[i]).Data);
+        end;
 end;
 
 {---------------------------------------}
@@ -283,49 +287,48 @@ var
 begin
     // callback from the session
     s := TJabberSession(_js);
-    if tag.Namespace = 'jabber:iq:roster' then begin
-        // deal with it...this is some kind of roster push
-        iq_type := tag.GetAttribute('type');
-        if iq_type = 'set' then begin
-            // a roster push
-            q := tag.GetFirstTag('query');
-            if q = nil then exit;
-            ritems := q.QueryTags('item');
-            for i := 0 to ritems.Count - 1 do begin
-                j := Lowercase(ritems[i].GetAttribute('jid'));
-                ri := Find(j);
-                if ri = nil then begin
-                    ri := TJabberRosterItem.Create;
-                    Self.AddObject(j, ri);
-                    end;
-                ri.parse(ritems[i]);
-                checkGroups(ri);
-                s.FireEvent('/roster/item', tag, ri);
-                if (ri.subscription = 'remove') then begin
-                    idx := Self.indexOfObject(ri);
-                    ri.Free;
-                    Self.Delete(idx);
-                    end;
-                end;
 
-            bmtags := q.QueryTags('conference');
-            for i := 0 to bmtags.count - 1 do begin
-                j := Lowercase(bmtags[i].GetAttribute('jid'));
-                idx := Bookmarks.indexOf(j);
-                if idx >= 0 then begin
-                    TJabberBookmark(Bookmarks.Objects[idx]).Free;
-                    Bookmarks.Delete(idx);
-                    end;
-                bm := TJabberBookmark.Create(bmtags[i]);
-                Bookmarks.AddObject(j, bm);
-                checkGroup('Bookmarks');
-                s.FireEvent('/roster/conference', bmtags[i], TJabberRosterItem(nil));
+    // this is some kind of roster push
+    iq_type := tag.GetAttribute('type');
+    if iq_type = 'set' then begin
+        // a roster push
+        q := tag.GetFirstTag('query');
+        if q = nil then exit;
+        ritems := q.QueryTags('item');
+        for i := 0 to ritems.Count - 1 do begin
+            j := Lowercase(ritems[i].GetAttribute('jid'));
+            ri := Find(j);
+            if ri = nil then begin
+                ri := TJabberRosterItem.Create;
+                Self.AddObject(j, ri);
                 end;
-            end
-        else begin
-            // prolly a full roster
-            ParseFullRoster(tag);
+            ri.parse(ritems[i]);
+            checkGroups(ri);
+            s.FireEvent('/roster/item', tag, ri);
+            if (ri.subscription = 'remove') then begin
+                idx := Self.indexOfObject(ri);
+                ri.Free;
+                Self.Delete(idx);
+                end;
             end;
+
+        bmtags := q.QueryTags('conference');
+        for i := 0 to bmtags.count - 1 do begin
+            j := Lowercase(bmtags[i].GetAttribute('jid'));
+            idx := Bookmarks.indexOf(j);
+            if idx >= 0 then begin
+                TJabberBookmark(Bookmarks.Objects[idx]).Free;
+                Bookmarks.Delete(idx);
+                end;
+            bm := TJabberBookmark.Create(bmtags[i]);
+            Bookmarks.AddObject(j, bm);
+            checkGroup('Bookmarks');
+            s.FireEvent('/roster/conference', bmtags[i], TJabberRosterItem(nil));
+            end;
+        end
+    else begin
+        // prolly a full roster
+        ParseFullRoster(tag);
         end;
 end;
 

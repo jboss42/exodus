@@ -58,6 +58,8 @@ function CreateJabberEvent(tag: TXMLTag): TJabberEvent;
 {---------------------------------------}
 {---------------------------------------}
 implementation
+uses
+    Session;
 
 {---------------------------------------}
 function CreateJabberEvent(tag: TXMLTag): TJabberEvent;
@@ -174,7 +176,7 @@ begin
         id := tag.getAttribute('id');
 
         ns := tag.Namespace;
-        if ns = 'jabber:iq:time' then begin
+        if ns = XMLNS_TIME then begin
             eType := evt_Time;
             data_type := 'Time Response';
             qTag := tag.getFirstTag('query');
@@ -183,7 +185,7 @@ begin
             _data_list.Add('Local Time: ' + tmp_tag.Data);
             end
 
-        else if ns = 'jabber:iq:version' then begin
+        else if ns = XMLNS_VERSION then begin
             eType := evt_Version;
             data_type := 'Version Response';
             qTag := tag.getFirstTag('query');
@@ -199,7 +201,7 @@ begin
             _data_list.Add('OS: ' + tmp_tag.Data);
             end
 
-        else if ns = 'jabber:iq:last' then begin
+        else if ns = XMLNS_LAST then begin
             eType := evt_Last;
             qTag := tag.getFirstTag('query');
             data_type := 'Last Activity';
@@ -208,7 +210,7 @@ begin
             end;
 
         {
-        else if (ns = 'jabber:iq:oob') then begin
+        else if (ns = XMLNS_IQOOB) then begin
             eType := evt_OOB;
             qTag := tag.getFirstTag('query');
             tmp_tag := qtag.GetFirstTag('url');

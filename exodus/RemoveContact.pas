@@ -23,7 +23,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  buttonFrame, StdCtrls;
+  buttonFrame, StdCtrls, ExtCtrls;
 
 type
   TfrmRemove = class(TForm)
@@ -32,6 +32,7 @@ type
     chkRemove1: TCheckBox;
     frameButtons1: TframeButtons;
     chkRemove2: TCheckBox;
+    Bevel1: TBevel;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);

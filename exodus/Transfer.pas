@@ -186,7 +186,7 @@ begin
             PutAttribute('id', MainSession.generateID());
             PutAttribute('type', 'set');
             with AddTag('query') do begin
-                putAttribute('xmlns', 'jabber:iq:oob');
+                putAttribute('xmlns', XMLNS_IQOOB);
                 AddBasicTag('url', url);
                 end;
             end;

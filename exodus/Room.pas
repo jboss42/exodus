@@ -39,8 +39,6 @@ type
     Panel3: TPanel;
     pnlInput: TPanel;
     MsgOut: TMemo;
-    Panel5: TPanel;
-    btnSend: TSpeedButton;
     Panel7: TPanel;
     Panel1: TPanel;
     btnClose: TSpeedButton;
@@ -54,7 +52,6 @@ type
     MsgList: TExRichEdit;
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
-    procedure btnSendClick(Sender: TObject);
     procedure btnCloseClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -500,12 +497,6 @@ begin
         _nick_prefix := '';
         _nick_idx := 0;
         end;
-end;
-
-{---------------------------------------}
-procedure TfrmRoom.btnSendClick(Sender: TObject);
-begin
-    SendMsg();
 end;
 
 {---------------------------------------}
