@@ -14,6 +14,7 @@ object frmDebug: TfrmDebug
   Font.Style = []
   OldCreateOrder = False
   Position = poDefaultPosOnly
+  OnActivate = FormActivate
   OnClose = FormClose
   OnCreate = FormCreate
   OnEndDock = FormEndDock

@@ -75,6 +75,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure timMemoryTimer(Sender: TObject);
     procedure FormShow(Sender: TObject);
+    procedure FormDeactivate(Sender: TObject);
   private
     { Private declarations }
     jid: widestring;        // jid of the person we are talking to
@@ -94,6 +95,8 @@ type
     _reply_id: string;
     _check_event: boolean;
     _send_composing: boolean;
+
+    _destroying: boolean;
 
     procedure SetupPrefs();
     procedure ChangePresImage(show: widestring; status: widestring);
@@ -142,7 +145,7 @@ implementation
 {$R *.dfm}
 
 uses
-    COMChatController, ExEvents, 
+    COMChatController, Debug, ExEvents, 
     JabberConst, ExUtils, Presence, PrefController, Room,
     Transfer, RosterAdd, RiserWindow, Notify,
     Jabber1, Profile, MsgDisplay, IQ,
@@ -255,6 +258,7 @@ begin
     _reply_id := '';
     _msg_out := false;
     _jid := nil;
+    _destroying := false;
 
     if (MainSession.Profile.ConnectionType = conn_normal) then
         DragAcceptFiles( Handle, True );
@@ -360,8 +364,10 @@ begin
         timMemory.Enabled := true;
         Action := caHide;
     end
-    else
+    else begin
+        _destroying := true;
         Action := caFree;
+    end;
 
     inherited;
 end;
@@ -992,10 +998,6 @@ end;
 procedure TfrmChat.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   inherited;
-  {
-    if (chat_object <> nil) then
-        TExodusChat(chat_object.ComController).fireClose();
-  }
 end;
 
 {---------------------------------------}
@@ -1003,6 +1005,7 @@ procedure TfrmChat.timMemoryTimer(Sender: TObject);
 begin
   inherited;
     // time to free the window..
+    _destroying := true;
     Self.Free();
 end;
 
@@ -1011,6 +1014,13 @@ procedure TfrmChat.FormShow(Sender: TObject);
 begin
   inherited;
     timMemory.Enabled := false;
+end;
+
+procedure TfrmChat.FormDeactivate(Sender: TObject);
+begin
+  inherited;
+    if ((Docked) and (Visible = false)) then
+        frmExodus.ChatHiding := true;
 end;
 
 end.

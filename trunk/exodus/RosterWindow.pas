@@ -1067,6 +1067,13 @@ begin
     node_ritem: begin
         // chat w/ this person
         r := MainSession.Prefs.getInt(P_CHAT);
+
+        // If we are keeping chats, always use r = 2 instead of r = 0
+        if ((r = 0) and
+            (MainSession.Prefs.getInt('chat_memory') > 0)) then begin
+            r := 2;
+        end;
+
         if (r = 0) then
             // always start chat window
             StartChat(_cur_ritem.jid.jid, '', true)

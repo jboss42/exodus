@@ -77,9 +77,7 @@ implementation
 {$R *.dfm}
 
 uses
-    ExUtils,
-    Session,
-    Jabber1;
+    Debug, ExUtils, Session, Jabber1;
 
 {---------------------------------------}
 procedure TfrmDockable.FormCreate(Sender: TObject);
@@ -150,6 +148,7 @@ procedure TfrmDockable.FormCloseQuery(Sender: TObject;
 begin
     if ((not _docked) and (MainSession <> nil)) then
         MainSession.Prefs.SavePosition(Self);
+
     CanClose := true;
 end;
 
@@ -169,19 +168,19 @@ procedure TfrmDockable.ShowDefault;
 begin
     // show this form using the default behavior
     if MainSession.Prefs.getBool('expanded') then begin
-    	if (TabSheet <> nil) then begin
-            if (not Visible) then
-                Self.Visible := true;
-            frmExodus.Tabs.ActivePage := TabSheet;
-        end
-        else begin
-            Self.DockForm;
-            Self.Show;
-            Self.Visible := true;
-            if ((not Application.Active) or
-            (frmExodus.Tabs.ActivePage = frmExodus.tbsRoster)) then
-                frmExodus.Tabs.ActivePage := TabSheet;
+        if (TabSheet = nil) then begin
+            // dock the form
+            Self.DockForm();
+            Self.Show();
         end;
+
+        // always make sure we are visible
+        Self.Visible := true;
+
+        // focus on the new tab if we are on the roster.
+        if ((not Application.Active) or
+            (frmExodus.Tabs.ActivePage = frmExodus.tbsRoster)) then
+            frmExodus.Tabs.ActivePage := TabSheet;
     end
     else begin
         if frmExodus.WindowState = wsMinimized then

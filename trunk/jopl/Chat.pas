@@ -50,7 +50,7 @@ end;
 {---------------------------------------}
 implementation
 uses
-    COMChatController,
+    COMChatController, Presence, 
     JabberConst, PrefController, Session;
 
 {---------------------------------------}
@@ -127,6 +127,7 @@ function TJabberChatList.FindChat(sjid, sresource, sthread: string): TChatContro
 var
     full: string;
     i: integer;
+    p: TJabberPres;
 begin
     // find a chat object for this jid/resource/thread
     if sresource <> '' then
@@ -138,8 +139,22 @@ begin
     i := -1;
     if full <> '' then
         i := indexOf(full);
-    if i < 0 then
+    if i < 0 then begin
+        p := nil;
         i := indexOf(sjid);
+        while (i < 0) do begin
+            if (p = nil) then
+                p := MainSession.ppdb.FindPres(sjid, '')
+            else
+                p := MainSession.ppdb.NextPres(p);
+            if (p <> nil) then
+                i := indexOf(p.fromJid.full)
+            else begin
+                i := -1;
+                break;
+            end;
+        end;
+    end;
 
     if (i < 0) then
         Result := nil

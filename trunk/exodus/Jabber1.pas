@@ -373,6 +373,7 @@ type
 
   public
     ActiveChat: TfrmBaseChat;
+    ChatHiding: boolean;
 
     function getLastTick(): dword;
     function getTabForm(tab: TTabSheet): TForm;
@@ -765,6 +766,7 @@ begin
     _cli_show := '';
     _updating := false;
     _new_tabindex := -1;
+    ChatHiding := false;
 
     // Hide the application's window, and set our own
     // window to the proper parameters..
@@ -1894,8 +1896,10 @@ var
     docked: TfrmDockable;
     expanded, messenger: boolean;
     roster_w, event_w: integer;
-    active_tab: integer;
+    i, active_tab: integer;
     rpanel: TPanel;
+    cc: TChatController;
+    cw: TfrmChat;
 begin
     // figure out the width of the msg queue
     event_w := MainSession.Prefs.getInt(P_EVENT_WIDTH);
@@ -1992,6 +1996,15 @@ begin
         while (Tabs.DockClientCount > 0) do begin
             docked := TfrmDockable(Tabs.DockClients[0]);
             docked.FloatForm;
+        end;
+
+        // make sure all invisible chat windows are undocked
+        for i := 0 to MainSession.ChatList.Count - 1 do begin
+            cc := TChatController(MainSession.ChatList.Objects[i]);
+            cw := TfrmChat(cc.window);
+            if ((cw.Visible = false) and (cw.Docked)) then begin
+                cw.FloatForm();
+            end;
         end;
 
         Tabs.ActivePage := tbsRoster;
@@ -2417,8 +2430,8 @@ begin
         if (tab.Controls[0] is TForm) then begin
             Result := TForm(tab.Controls[0]);
             exit;
+        end;
     end;
-end;
 end;
 
 {---------------------------------------}
@@ -2705,8 +2718,10 @@ procedure TfrmExodus.TabsUnDock(Sender: TObject; Client: TControl;
 begin
     // check to see if the tab is a frmDockable
     Allow := true;
-    if (Client is TfrmDockable) then
+
+    if (Client is TfrmDockable) then begin
         TfrmDockable(Client).Docked := false;
+    end;
 end;
 
 {---------------------------------------}
@@ -2908,6 +2923,7 @@ begin
     // Don't show any notification images on the current tab
     if (Tabs.ActivePage.ImageIndex <> -1) then
         Tabs.ActivePage.ImageIndex := -1;
+    OutputDebugString('frmExodus.TabsChange');
 end;
 
 {---------------------------------------}
