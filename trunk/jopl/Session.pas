@@ -49,6 +49,7 @@ type
         _rosterSignal: TRosterSignal;
         _presSignal: TPresenceSignal;
         _dataSignal: TStringSignal;
+        _unhandledSignal: TBasicSignal;
 
         _paused: boolean;
         _pauseQueue: TQueue;
@@ -185,12 +186,14 @@ begin
     _rosterSignal := TRosterSignal.Create();
     _presSignal := TPresenceSignal.Create();
     _dataSignal := TStringSignal.Create();
+    _unhandledSignal := TBasicSignal.Create();
 
     _dispatcher.AddSignal('/packet', _packetSignal);
     _dispatcher.AddSignal('/session', _sessionSignal);
     _dispatcher.AddSignal('/roster', _rosterSignal);
     _dispatcher.AddSignal('/presence', _presSignal);
     _dispatcher.AddSignal('/data', _dataSignal);
+    _dispatcher.AddSignal('/unhandled', _unhandledSignal);
 
     _pauseQueue := TQueue.Create();
 
