@@ -1,0 +1,21 @@
+
+use strict;
+use Cwd;
+my $pwd = getcwd;
+opendir DIR, $pwd or die "$!";
+my @sub = grep -d && ! /^\.+$/ && !/CVS/, readdir DIR;
+my $s;
+my $idl;
+for $s (@sub) {
+    print "$pwd/$s\n";
+    chdir "$pwd/$s";
+    $idl = (glob("*.idl"))[0];
+    die "no idl file in $s" unless $idl;
+    e("midl -I \"c:\\program files\\exodus\" " . $idl);
+}
+
+sub e {
+    my $cmd = shift;
+    print "$cmd\n";
+    system $cmd and exit(1);
+}

@@ -1,0 +1,83 @@
+<h2>New Features</h2>
+<ul>
+<div style="margin-top: 20px;"><b>Plugins</b></div>
+<li>New plugin for Importing AIM contact lists.</li>
+<li>New plugin for Importing ICQ contact lists.</li>
+<li>New plugin for using <a href="http://aspell.sourceforge.net/">ASpell</a> as a spell checking engine.</li>
+<li>New plugin for NetMeeting integration.</li>
+<li>New plugin for exporting and importing your Jabber roster.</li>
+<li>New plugin for collecting tab-delimited file of statistics around your IM usage. (JabberStats)</li>
+<li>Developers can use this release as a basis for building Exodus plugins. Check the <a href="http://exodus.jabberstudio.org/plugin-docs/index.html">plugin documentation page</a> for more information.</li>
+<li>Plugins now have a real options UI. It also automatically scans the ./plugins directory for plugins.</li>
+<li>Plugins are now loaded and unloaded dynamically when the options are "applied".</li>
+
+<div style="margin-top: 20px;"><b>Translations</b></div>
+<li>Translation hooks have been implemented. The next release will be available in multiple translations. This release can be used with translations if you generate them manually (ie, translations are not included in the installer package). Check the exodus-dev mailing list if your interested in doing translations.</li>
+
+<div style="margin-top: 20px;"><b>Chat Windows</b></div>
+<li>Chat windows now remain in memory (they are persistent) for some time period. If you receive more messages before the timeout, you will see the entire chat window (old history).</li>
+<li>Chat windows and chat rooms can now have custom notification options instead of using the defaults.</li>
+<li>Feature Request #1024 - Warn on attempts to close busy chat windows</li>
+
+<div style="margin-top: 20px;"><b>Misc.</b></div>
+<li>My Resources now displays in the roster. This shows your other resources which are currently online</li>
+<li>Added WebDAV support for file transfers. You can also provide a custom IP and specify a port (for folks using port-forwarding firewalls).</li>
+<li>Preferences to control reconnect logic</li>
+<li>Preferences to control what items are visible in the roster. For example, this allows you to hide contacts which are xa or dnd.</li>
+<li>SOCKS proxy and HTTP proxy support tested and added. Fixed SOCKS + SSL so that it now works.</li>
+<li>If an Access Violation occurs while Exodus is processing a packet, an error log is now saved to the desktop. Previous versions would hang.</li>
+<li>Lots of installer upgrades. The installer will automatically upgrade old richedit installs, as well as old versions Common Controls. If you install on an antique Win95, it'll also install WinSock2 for you.</li>
+
+<li>Improved logic and UI around connection and profile information.</li>
+<li>Improved performance of the options dialog</li>
+<li>Improved transport handling in the roster.</li>
+<li>Improved handling of roster group counts.</li>
+<li>Improved support for x:oob in normal messages and headlines.</li>
+<li>Lots of unicode fixes.</li>
+<li>Drag-n-drop URLs to roster items works properly.</li>
+<li>Updated MUC support to the latest version of JEP-45</li>
+
+
+<li>Feature Request #1010 - Normal (non-chat) messages are queued into the same window.</li>
+<li>Feature Request #1106 - Support delivered and displayed message events for chat windows and normal messages</li>
+<li>Feature Request #1178 - Save column sizes for msg queue window</li>
+<li>Feature Request #1424 - Collapsed grps are now stored locally, so when Ctrl-Q/Exit is used, they should always be stored now.</li>
+<li>Feature Request #1425 - Added start minimized to the system prefs instead of just a cmd-line option</li>
+<li>Feature Request #1429 - Add contact to roster via chat window </li>
+<li>Feature Request #1472 - Auto-Register after creating a new account</li>
+<li>Feature Request #1617 - Add from invites pops up a roster selection dialog and a free-jid text entry box.</li>
+<li>Feature Request #996: save groupchat as RTF or TXT</li>
+<li>Feature Request #1447: toast duration</li>
+<li>Feature Request #1310: brandable Help menu</li>
+
+</ul>
+
+
+<h2>Significant Bugs Fixed</h2>
+<ul>
+<li>Chat windows now CORRECTLY word wrap the input. If you are migrating, you must turn this on explicitly.</li>
+<li>Browsing TC rooms and servers works.</li>
+<li>Special groups like Transports and Bookmarks are properly removed from dropdown boxes when applicable.</li>
+<li>Bunches of memory leaks fixed (thanks blacwet@163.com)</li>
+<li>Fixed roster renaming bug when rename updating the wrong entry.</li>
+<li>Fixed many AV's around docking and undocking chat rooms</li>
+
+<li>Bug #850 - Fixed problems when servers only use mod_groups, and return errors on roster fetches because mod_roster isn't being used by JSM</li>
+<li>Bug #857 - Fixed up algorithm for displaying roster nodes so it doesn't flicker near as much</li>
+<li>Bug #1333 - Invisible madness.</li>
+<li>Bug #1351 - Fixed dbl-clicking behavior so it always does the right thing (IM instead of chats)</li>
+<li>Bug #1356 - Add Group button in contact properties now does the right thing</li>
+<li>Bug #1346 - Fixed chat windows overlaying each other when in undocked mode</li>
+<li>Bug #1350 - Fixed up a few windows for large-font users.</li>
+<li>Bug #1384 - Fixed issue where pres icons weren't always getting updated until you clicked, or something invalidated the item's rect.</li>
+<li>Bug #1385 - JUD x-data form can now scroll vertically to accomadate large search forms in a small window</li>
+<li>Bug #1386 - Fixed up workflow and visible buttons for service registration</li>
+<li>Bug #1474 - Normal messages getting dupped. One copy going to the msg queue, another going to an existing chat window</li>
+<li>Bug #1482 - Don't clear the msg queue when going offline</li>
+<li>Bug #1525 - Hmm.. actually displaying headlines would be nice.</li>
+<li>Bug #1597 - Make sure the tray icon shows after explorer crashes and restarts</li>
+<li>Bug #1885 - Fixed AV's when viewing events from the events window.</li>
+<li>Bug #1903 - Close outstanding subscribe windows when the connection goes away.</li>
+<li>Bug #1915 - Logs and Downloads now default to My Documents</li>
+</ul>
+

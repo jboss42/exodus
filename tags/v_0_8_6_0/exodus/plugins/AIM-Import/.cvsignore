@@ -1,0 +1,16 @@
+*.zip
+*.dll
+*.exe
+*.dcu
+*.dsk
+*.xml
+*.idl
+*.bat
+*.cfg
+*.map
+*.dof
+*.ddp
+./output/*
+*.~*
+version.res
+build.cmd
