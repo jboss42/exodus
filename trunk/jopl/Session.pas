@@ -152,7 +152,7 @@ uses
     {$else}
     QForms, QDialogs,
     {$endif}
-    XMLUtils,
+    XMLUtils, IdGlobal,
     iq;
 
 {---------------------------------------}
@@ -253,10 +253,6 @@ begin
         Prefs.SaveServerPrefs();
         _stream.Send('<presence type="unavailable"/>');
         _stream.Disconnect;
-
-        while (_stream.Active) do
-            Application.ProcessMessages();
-
         end;
     _register := false;
 end;
