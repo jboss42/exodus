@@ -210,16 +210,17 @@ var
     r: IExodusRoster;
 begin
     // Add each item to the roster.
+    r := exodus.Roster;
+    r._AddRef();
     for i := 0 to ListView1.Items.Count - 1 do begin
         li := ListView1.Items[i];
 
         // this sets up implicit registration for this transport.
         if (i = 0) then
             exodus.monitorImplicitRegJID(li.SubItems[1], false);
-
-        r := exodus.Roster;
         r.AddItem(li.SubItems[1], li.SubItems[0], li.Caption, true);
     end;
+    r._Release();
 end;
 
 {---------------------------------------}

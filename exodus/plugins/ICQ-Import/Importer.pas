@@ -195,17 +195,21 @@ procedure TfrmImport.addItems();
 var
     li: TListItem;
     i: integer;
+    r: IExodusRoster;
 begin
     // Add each item to the roster.
+    r := exodus.roster;
+    r._AddRef();
     for i := 0 to ListView1.Items.Count - 1 do begin
         li := ListView1.Items[i];
         if (li.Checked) then begin
             // this sets up implicit registration for this transport.
             if (i = 0) then
                 exodus.monitorImplicitRegJID(li.SubItems[0], false);
-            exodus.AddRosterItem(li.SubItems[0], li.Caption, 'ICQ Contacts');
+            r.AddItem(li.SubItems[0], li.Caption, 'ICQ Contacts', true);
         end;
     end;
+    r._Release();
 end;
 
 {-----------------------------------------}

@@ -24,7 +24,7 @@ unit AIMPlugin;
 interface
 
 uses
-    ExodusCOM_TLB,
+    ExodusCOM_TLB, XMLParser, 
     ComObj, ActiveX, AIMImport_TLB, StdVcl;
 
 type
@@ -43,6 +43,7 @@ type
   private
     _controller: IExodusController;
     _menu_id: Widestring;
+    _parser: TXMLTagParser;
 
     procedure AgentsList(Server: Widestring);
   end;
@@ -53,7 +54,7 @@ type
 implementation
 
 uses
-    Importer, StrUtils, SysUtils,
+    XMLTag, Importer, StrUtils, SysUtils,
     Dialogs, ComServ;
 
 {---------------------------------------}
@@ -104,9 +105,16 @@ end;
 {---------------------------------------}
 procedure TAIMImportPlugin.Process(const xpath: WideString;
     const event: WideString; const xml: WideString);
+var
+    a: TXMLTag;
 begin
     if (xpath = '/session/agents') then begin
         // we have an agents list
+        _parser.ParseString(xml, '');
+        if (_parser.Count < 0) then exit;
+        a := _parser.popTag();
+        AgentsList(a.GetAttribute('from'));
+        a.Free();
     end;
 end;
 
@@ -122,7 +130,8 @@ procedure TAIMImportPlugin.Startup(
 begin
     _controller := ExodusController;
     _menu_id := _controller.addPluginMenu('Import AIM Buddy List');
-    _controller.RegisterCallback('/session/agents', Self)
+    _controller.RegisterCallback('/session/agents', Self);
+    _parser := TXMLTagParser.Create();
 end;
 
 {---------------------------------------}

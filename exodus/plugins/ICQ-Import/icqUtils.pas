@@ -63,6 +63,9 @@ var
             if RegQueryValueEx(RegKeyHandle, PChar('2002a Database'), nil,
             @DataType, PByte(@StrBuffer), @BufSize) = ERROR_SUCCESS then
                 DbPaths.Add(Copy(StrBuffer, 0, BufSize));
+            if RegQueryValueEx(RegKeyHandle, PChar('2003a Database'), nil,
+            @DataType, PByte(@StrBuffer), @BufSize) = ERROR_SUCCESS then
+                DbPaths.Add(Copy(StrBuffer, 0, BufSize));
         end;
         RegCloseKey(RegKeyHandle);
     end;

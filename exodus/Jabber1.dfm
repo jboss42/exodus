@@ -504,11 +504,11 @@ object frmExodus: TfrmExodus
         ShortCut = 123
         OnClick = ShowXML1Click
       end
+      object mnuPlugins: TMenuItem
+        Caption = 'Plugins'
+      end
       object N1: TMenuItem
         Caption = '-'
-      end
-      object mnuPlugins: TMenuItem
-        Caption = 'Plugins ...'
       end
       object Preferences1: TMenuItem
         Caption = 'Options...'
