@@ -1571,12 +1571,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 357
-    ActivePage = tbsRoster
+    ActivePage = tbsSystem
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 0
+    TabIndex = 3
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -2083,6 +2083,7 @@ object frmPrefs: TfrmPrefs
         Caption = 'Check Now'
         TabOrder = 11
         OnClick = btnUpdateCheckClick
+        OnMouseUp = btnUpdateCheckMouseUp
       end
       object chkSingleInstance: TCheckBox
         Left = 8

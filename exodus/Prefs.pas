@@ -238,6 +238,8 @@ type
     procedure btnLogClearAllClick(Sender: TObject);
     procedure btnSpoolBrowseClick(Sender: TObject);
     procedure btnUpdateCheckClick(Sender: TObject);
+    procedure btnUpdateCheckMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     { Private declarations }
     _notify: array of integer;
@@ -1170,6 +1172,14 @@ begin
 
     if (not available) then
         MessageDlg(sNoUpdate, mtInformation, [mbOK], 0);
+end;
+
+procedure TfrmPrefs.btnUpdateCheckMouseUp(Sender: TObject;
+  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
+begin
+    if (ssShift in Shift) or (ssCtrl in Shift) then begin
+        MainSession.Prefs.setString('last_update', DateTimeToStr(Now()));
+        end;
 end;
 
 end.
