@@ -220,6 +220,7 @@ end;
         procedure EndUpdate();
 
         property Profiles: TStringlist read _profiles write _profiles;
+        property Filename: WideString read _pref_filename;
 end;
 
 procedure fillDefaultStringlist(pkey: Widestring; sl: TWideStrings); overload;
@@ -465,12 +466,20 @@ constructor TPrefController.Create(filename: Widestring);
 {$ifdef Win32}
 var
     reg: TRegistry;
-    f, p: String;
+    p: WideString;
 {$endif}
 begin
     inherited Create();
 
+    // If we used -c, we may just be using the current dir,
+    // So get the current dir, and pre-pend it.
     _pref_filename := filename;
+    p := ExtractFilePath(_pref_filename);
+    if (p = '') then begin
+        p := GetCurrentDir();
+        _pref_filename := p + '\' + _pref_filename;
+    end;
+
     _parser := TXMLTagParser.Create;
     _parser.ParseFile(_pref_filename);
     if (_parser.Count > 0) then begin
@@ -495,20 +504,14 @@ begin
     // this is so the un-installer can remove the prefs
     // when it does it's thing.
 
-    // If we used -c, we may just be using the current dir,
-    // So get the current dir, and pre-pend it.
-    f := _pref_filename;
-    p := ExtractFilePath(f);
-    if (p = '') then begin
-        p := GetCurrentDir();
-        f := p + '\' + f;
-    end;
+    // Note: Joe doesn't get all *his* prefs files removed.  Probably
+    // only the one for the instance that ran last.
 
     reg := TRegistry.Create();
     try
         reg.RootKey := HKEY_CURRENT_USER;
         reg.OpenKey('\Software\Jabber\Exodus', true);
-        reg.WriteString('prefs_file', f);
+        reg.WriteString('prefs_file', _pref_filename);
         reg.CloseKey();
     finally
         reg.Free();

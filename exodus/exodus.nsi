@@ -733,6 +733,7 @@ Function .onInstSuccess
     strcpy $2 '"$INSTDIR\Exodus.exe" $2'
 
   exec:
+; For debugging -  
 ;    WriteRegStr HKCU "Software\Jabber\Exodus\Start" $1 $2
     
     DetailPrint $2
@@ -742,7 +743,6 @@ Function .onInstSuccess
   done:
     DeleteRegKey HKCU "Software\Jabber\Exodus\Restart\$1"
 
-;    IntOp $0 $0 + 1
     Goto outer_loop
   abort:
 FunctionEnd
