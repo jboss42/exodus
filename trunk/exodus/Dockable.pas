@@ -217,7 +217,7 @@ procedure TfrmDockable.WMWindowPosChanging(var msg: TWMWindowPosChanging);
 var
     r: TRect;
 begin
-    if _noMoveCheck then begin
+    if ((_noMoveCheck) or (_edge_snap <= 0)) then begin
         inherited;
         exit;
     end;
