@@ -254,7 +254,7 @@ begin
     pairs := TStringlist.Create();
     parseNameValues(pairs, c);
 
-    // TODO: Use some real entropy here instead of this weak-lame-nasty attempt.
+    // We should really use some real entropy here instead of this weak-lame-nasty attempt.
     Randomize();
     rands := Random(1024);
     v := rands;
