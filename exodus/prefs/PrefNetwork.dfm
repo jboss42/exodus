@@ -4,6 +4,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
   Caption = 'frmPrefNetwork'
   ClientHeight = 326
   ClientWidth = 343
+  OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   object StaticText13: TStaticText
@@ -163,6 +164,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       Caption = 'Authentication Required'
       Enabled = False
       TabOrder = 2
+      OnClick = chkProxyAuthClick
     end
     object txtProxyUsername: TEdit
       Left = 59
@@ -191,6 +193,7 @@ inherited frmPrefNetwork: TfrmPrefNetwork
       ItemIndex = 0
       TabOrder = 5
       Text = 'Use IE settings'
+      OnChange = cboProxyApproachChange
       Items.Strings = (
         'Use IE settings'
         'Direct Connection'

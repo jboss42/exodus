@@ -86,8 +86,6 @@ type
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
-    procedure cboProxyApproachChange(Sender: TObject);
-    procedure chkProxyAuthClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
   private
     { Private declarations }
@@ -222,7 +220,6 @@ begin
     
     tbsKeywords.TabVisible := false;
     tbsBlockList.TabVisible := false;
-    tbsNetwork.TabVisible := false;
 
     // Load the system panel
     _system := nil;
@@ -373,11 +370,20 @@ begin
     end
     else if ((Sender = imgTransfer) or (Sender = lblTransfer)) then begin
         toggleSelector(lblTransfer);
-        if (_plugs <> nil) then
+        if (_xfer <> nil) then
             f := _xfer
         else begin
             _xfer := TfrmPrefTransfer.Create(Self);
             f := _xfer;
+        end;
+    end
+    else if ((Sender = imgNetwork) or (Sender = imgNetwork)) then begin
+        toggleSelector(lblTransfer);
+        if (_network <> nil) then
+            f := _network
+        else begin
+            _network := TfrmPrefNetwork.Create(Self);
+            f := _network;
         end;
     end
     else if ((Sender = imgKeywords) or (Sender = lblKeywords)) then begin
@@ -387,12 +393,8 @@ begin
     else if ((Sender = imgBlockList) or (Sender = lblBlockList)) then begin
         PageControl1.ActivePage := tbsBlockList;
         toggleSelector(lblBlocklist);
-    end
-    else if ((Sender = imgNetwork) or (Sender = lblNetwork)) then begin
-        PageControl1.ActivePage := tbsNetwork;
-        toggleSelector(lblNetwork);
     end;
-
+    
     // setup the panel..
     if (f <> nil) then begin
         if PageControl1.Visible then
@@ -419,47 +421,6 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmPrefs.cboProxyApproachChange(Sender: TObject);
-begin
-    if (cboProxyApproach.ItemIndex = http_proxy_custom) then begin
-        txtProxyHost.Enabled := true;
-        txtProxyPort.Enabled := true;
-        chkProxyAuth.Enabled := true;
-        lblProxyHost.Enabled := true;
-        lblProxyPort.Enabled := true;
-    end
-    else begin
-        txtProxyHost.Enabled := false;
-        txtProxyPort.Enabled := false;
-        chkProxyAuth.Enabled := false;
-        chkProxyAuth.Checked := false;
-        txtProxyUsername.Enabled := false;
-        txtProxyPassword.Enabled := false;
-        lblProxyHost.Enabled := false;
-        lblProxyPort.Enabled := false;
-        lblProxyUsername.Enabled := false;
-        lblProxyPassword.Enabled := false;
-    end;
-end;
-
-{---------------------------------------}
-procedure TfrmPrefs.chkProxyAuthClick(Sender: TObject);
-begin
-    if (chkProxyAuth.Checked) then begin
-        lblProxyUsername.Enabled := true;
-        lblProxyPassword.Enabled := true;
-        txtProxyUsername.Enabled := true;
-        txtProxyPassword.Enabled := true;
-    end
-    else begin
-        lblProxyUsername.Enabled := false;
-        lblProxyPassword.Enabled := false;
-        txtProxyUsername.Enabled := false;
-        txtProxyPassword.Enabled := false;
-    end;
-end;
-
-{---------------------------------------}
 procedure TfrmPrefs.FormDestroy(Sender: TObject);
 begin
     // destroy all panels we have..
@@ -474,6 +435,7 @@ begin
     _pres.Free();
     _plugs.Free();
     _xfer.Free();
+    _network.Free();
 end;
 
 end.

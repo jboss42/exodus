@@ -957,6 +957,7 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.SessionCallback(event: string; tag: TXMLTag);
 var
+    rtries, rint: integer; 
     msg : TMessage;
 begin
     // session related events
@@ -1063,9 +1064,17 @@ begin
 
             inc(_reconnect_tries);
 
-            if (_reconnect_tries < RECONNECT_RETRIES) then begin
+            rtries := MainSession.Prefs.getInt('recon_tries');
+            if (rtries <= 0) then rtries := 3;
+            rint := MainSession.Prefs.getInt('recon_time');
+
+            if (_reconnect_tries < rtries) then begin
                 Randomize();
-                _reconnect_interval := Trunc(Random(20)) + 2;
+                if (rint <= 0) then
+                    _reconnect_interval := Trunc(Random(20)) + 2
+                else
+                    _reconnect_interval := rint;
+
                 Interval := 1000;
                 DebugMsg('Setting reconnect timer to: ' + IntToStr(_reconnect_interval));
 
