@@ -48,13 +48,12 @@ begin
   // Hack DUnit so that it automatically runs the tests
 
   Application.Title := 'DUnit';
-  //Application.CreateForm(TGUITestRunner, MyForm);
   Application.CreateForm(TGUITestRunner, MyForm);
   with MyForm do begin
         Show();
         suite := registeredTests;
-        RunActionExecute(nil);
-    end;
+        //RunActionExecute(nil);
+  end;
 
   Application.Run();
 

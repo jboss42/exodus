@@ -708,6 +708,7 @@ begin
 end;
 
 {---------------------------------------}
+{$ifdef Exodus}
 procedure TPrefController.setStringlist(pkey: Widestring; pvalue: TTntStrings; server_side: TPrefKind = pkClient);
 var
     i: integer;
@@ -741,7 +742,7 @@ begin
     if (server_side = pkClient) then
         Self.Save();
 end;
-
+{$endif}
 
 {---------------------------------------}
 function TPrefController.findPresenceTag(pkey: Widestring): TXMLTag;
@@ -1407,36 +1408,47 @@ end;
 {---------------------------------------}
 procedure init();
 var
+    fn: string;
     res: TResourceStream;
     sl: TStringList;
     parser: TXMLTagParser;
 begin
     parser := TXMLTagParser.Create;
 
-    res := TResourceStream.Create(HInstance, 'defaults', 'XML');
-    sl := TStringList.Create();
-    sl.LoadFromStream(res);
-    res.Free();
-    parser.ParseString(sl.Text, '');
-    sl.Free();
-    if (parser.Count > 0) then begin
-        s_default_node := parser.popTag();
-        parser.Clear();
-    end
-    else
-        s_default_node := TXmlTag.Create('brand');
+    try
+        res := TResourceStream.Create(HInstance, 'defaults', 'XML');
+        sl := TStringList.Create();
+        sl.LoadFromStream(res);
+        res.Free();
+        parser.ParseString(sl.Text, '');
+        sl.Free();
+        if (parser.Count > 0) then begin
+            s_default_node := parser.popTag();
+            parser.Clear();
+        end
+        else
+            s_default_node := TXmlTag.Create('brand');
+    except
+        s_default_node := TXMLTag.Create('brand');
+    end;
 
-    parser.ParseFile(ExtractFilePath(Application.EXEName) + 'branding.xml');
-    if (parser.Count > 0) then begin
-        // we have something to read.. hopefully it's correct :)
-        s_brand_node := parser.popTag();
-        parser.Clear();
-    end
-    else
+    s_brand_node := nil;
+    fn := ExtractFilePath(Application.EXEName) + 'branding.xml';
+    if (fileExists(fn)) then begin
+        parser.ParseFile(fn);
+        if (parser.Count > 0) then begin
+            // we have something to read.. hopefully it's correct :)
+            s_brand_node := parser.popTag();
+            parser.Clear();
+        end
+    end;
+
+    if (s_brand_node = nil) then
         // create some default node
         s_brand_node := TXMLTag.Create('brand');
 
     parser.Free();
+
 end;
 
 initialization

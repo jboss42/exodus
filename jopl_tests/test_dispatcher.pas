@@ -54,7 +54,7 @@ begin
     _cb1 := l.cb_id;
 
     tag := TXMLTag.Create('message');
-    tag.PutAttribute('id', 'id-test');
+    tag.setAttribute('id', 'id-test');
     tag.AddBasicTag('bar', 'some bar context');
 
     main_disp := disp;
