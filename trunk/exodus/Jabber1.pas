@@ -41,7 +41,8 @@ const
     WM_SHOWLOGIN = WM_USER + 5273;
     WM_CLOSEAPP = WM_USER + 5274;
     WM_RECONNECT = WM_USER + 5300;
-
+    WM_INSTALLER = WM_USER + 5350;
+    
 type
     TNextEventType = (next_none, next_Exit, next_Login, next_Disconnect);
 
@@ -286,8 +287,12 @@ type
     _reconnect_tries: integer;
 
     _auto_away_interval: integer;
-    last_tick: dword;             
+    last_tick: dword;
 
+    _cli_priority: integer;
+    _cli_show: string;
+    _cli_status: string;
+    
     procedure presCustomPresClick(Sender: TObject);
 
     procedure restoreEvents(expanded: boolean);
@@ -317,6 +322,7 @@ type
     procedure WMShowLogin(var msg: TMessage); message WM_SHOWLOGIN;
     procedure WMCloseApp(var msg: TMessage); message WM_CLOSEAPP;
     procedure WMReconnect(var msg: TMessage); message WM_RECONNECT;
+    procedure WMInstaller(var msg: TMessage); message WM_INSTALLER;
   published
     // Callbacks
     procedure SessionCallback(event: string; tag: TXMLTag);
@@ -590,6 +596,33 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmExodus.WMInstaller(var msg: TMessage);
+var
+    reg : TRegistry;
+    cmd : string;
+    i : integer;
+begin
+    if (not _shutdown) then begin
+        reg := TRegistry.Create();
+        reg.RootKey := HKEY_LOCAL_MACHINE;
+        reg.OpenKey('\Software\Jabber\Exodus\Restart\' + IntToStr(Application.Handle), true);
+        
+        cmd := '"' + ParamStr(0) + '"';
+        for i := 1 to ParamCount do
+            cmd := cmd + ' ' + ParamStr(i);
+        reg.WriteString('cmdline', cmd);
+        reg.WriteString('show', MainSession.Show);
+        reg.WriteString('status', MainSession.Status);
+        reg.WriteInteger('priority', MainSession.Priority);
+        reg.WriteString('profile', MainSession.Profile.Name);
+
+        reg.CloseKey();
+        _shutdown := true;
+        Self.Close;
+        end;
+end;
+
+{---------------------------------------}
 procedure AddSound(reg: TRegistry; pref_name: string; user_text: string);
 begin
     // Add a new sound entry into the registry
@@ -613,7 +646,6 @@ var
     jid: TJabberID;
     pass: string;
     resource: string;
-    priority: integer;
     profile_name: string;
     config: string;
     help_msg: string;
@@ -627,7 +659,9 @@ begin
     show_help := false;
     _testaa := false;
     jid := nil;
-    priority := -1;
+    _cli_priority := -1;
+    _cli_status := sAvailable;
+    _cli_show := '';
 
     // Hide the application's window, and set our own
     // window to the proper parameters..
@@ -660,10 +694,12 @@ begin
                 // -i [pri]    : priority
                 // -f [prof]   : profile name
                 // -c [file]   : config file name
-                Options  := 'dmva?xjprifc';
-                OptFlags := '-----:::::::';
-                ReqFlags := '            ';
-                LongOpts := 'debug,minimized,invisible,aatest,help,expanded,jid,password,resource,priority,profile,config';
+                // -s [status] : presence status
+                // -w [show]   : presence show
+                Options  := 'dmva?xjprifcsw';
+                OptFlags := '-----:::::::::';
+                ReqFlags := '              ';
+                LongOpts := 'debug,minimized,invisible,aatest,help,expanded,jid,password,resource,priority,profile,config,status,show';
                 while GetOpt do begin
                   case Ord(OptChar) of
                      0: raise EConfigException.Create('unknown argument');
@@ -675,10 +711,12 @@ begin
                      Ord('j'): jid := TJabberID.Create(OptArg);
                      Ord('p'): pass := OptArg;
                      Ord('r'): resource := OptArg;
-                     Ord('i'): priority := SafeInt(OptArg);
+                     Ord('i'): _cli_priority := SafeInt(OptArg);
                      Ord('f'): profile_name := OptArg;
                      Ord('c'): config := OptArg;
                      Ord('?'): show_help := true;
+                     Ord('w'): _cli_show := OptArg;
+                     Ord('s'): _cli_status := OptArg;
                   end;
                 end;
             finally
@@ -716,7 +754,6 @@ begin
 
         // Create our main Session object
         MainSession := TJabberSession.Create(config);
-
         _guibuilder := TGUIFactory.Create();
         _guibuilder.SetSession(MainSession);
 
@@ -758,8 +795,8 @@ begin
                         profile.Server := 'jabber.org';
                     if (resource = '') then
                         resource := 'Exodus';
-                    if (priority = -1) then
-                        priority := 0;
+                    if (_cli_priority = -1) then
+                        _cli_priority := 0;
                     end
                 else
                     profile := TJabberProfile(Profiles.Objects[_prof_index]);
@@ -771,8 +808,8 @@ begin
 
                 if (resource <> '') then
                     profile.Resource := resource;
-                if (priority <> -1) then
-                    profile.Priority := priority;
+                if (_cli_priority <> -1) then
+                    profile.Priority := _cli_priority;
                 if (pass <> '') then
                     profile.password := pass;
 
@@ -885,6 +922,7 @@ begin
 
     // Accept files dragged from Explorer
     DragAcceptFiles(Handle, True);
+    MainSession.setPresence(_cli_show, _cli_status, _cli_priority);
 end;
 
 {---------------------------------------}
@@ -902,6 +940,8 @@ begin
         if (_auto_login) then begin
             // snag default profile, etc..
             MainSession.ActivateProfile(_prof_index);
+            if (_cli_priority <> -1) then
+                MainSession.Priority := _cli_priority;
             Self.DoConnect();
             end
         else
@@ -1000,7 +1040,6 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.SessionCallback(event: string; tag: TXMLTag);
 var
-    p: TJabberPres;
     msg : TMessage;
 begin
     // session events
@@ -1041,15 +1080,11 @@ begin
     else if event = '/session/authenticated' then with MainSession do begin
         Roster.Fetch;
 
-        // Send invisible or Available presence..
-        p := TJabberPres.Create;
+        // Don't broadcast
+        _is_broadcast := true;
+        MainSession.setPresence(MainSession.Show, MainSession.Status, MainSession.Priority);
+        _is_broadcast := false;
 
-        if (MainSession.Invisible) then
-            p.PresType := 'invisible'
-        else
-            p.Status := 'available';
-        p.Priority := MainSession.Profile.Priority;
-        SendTag(p);
         Tabs.ActivePage := tbsRoster;
         restoreMenus(true);
         timAutoAway.Enabled := true;
@@ -1424,24 +1459,28 @@ begin
     // If we are not already disconnected, then
     // disconnect. Once we successfully disconnect,
     // we'll close the form properly (xref _appclosing)
-    if ((MainSession.Active) and (not _appclosing))then begin
-        _appclosing := true;
-        _logoff := true;
-        MainSession.Stream.Disconnect();
-        CanClose := false;
-        exit;
+    if (MainSession <> nil) then begin
+
+        if ((MainSession.Active) and (not _appclosing))then begin
+            _appclosing := true;
+            _logoff := true;
+            MainSession.Stream.Disconnect();
+            CanClose := false;
+            exit;
+            end;
+
+        // Unregister callbacks, etc.
+        MainSession.UnRegisterCallback(_sessioncb);
+        MainSession.UnRegisterCallback(_msgcb);
+        MainSession.UnRegisterCallback(_iqcb);
+        MainSession.Prefs.SavePosition(Self);
+
+        // Free the responders
+        _version.Free();
+        _time.Free();
+        _last.Free();
+        _browse.Free();
         end;
-
-    // Unregister callbacks, etc.
-    MainSession.UnRegisterCallback(_sessioncb);
-    MainSession.UnRegisterCallback(_msgcb);
-    MainSession.UnRegisterCallback(_iqcb);
-
-    // Free the responders
-    _version.Free();
-    _time.Free();
-    _last.Free();
-    _browse.Free();
 
     // Unhook the auto-away DLL
     if (_hookLib <> 0) then begin
@@ -1453,7 +1492,6 @@ begin
         FreeLibrary(_richedit);
 
     // Close up the msg queue
-    MainSession.Prefs.SavePosition(Self);
     if (frmMsgQueue <> nil) then begin
         frmMsgQueue.lstEvents.Items.Clear;
         frmMsgQueue.Close;

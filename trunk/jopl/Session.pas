@@ -37,6 +37,7 @@ type
         _stream_id: string;
         _show: string;
         _status: string;
+        _priority: integer;
         _AuthType: TJabberAuthType;
         _invisible: boolean;
         _profile: TJabberProfile;
@@ -68,14 +69,12 @@ type
         procedure SetServer(server: string);
         procedure SetResource(resource: string);
         procedure SetPort(port: integer);
-        procedure SetPriority(priority: integer);
 
         function GetUsername(): string;
         function GetPassword(): string;
         function GetServer(): string;
         function GetResource(): string;
         function GetPort(): integer;
-        function GetPriority(): integer;
 
         function GetActive(): boolean;
     published
@@ -134,7 +133,7 @@ type
         property Server: string read GetServer write SetServer;
         property Resource: string read GetResource write SetResource;
         property Port: integer read GetPort write SetPort;
-        property Priority: integer read GetPriority write SetPriority;
+        property Priority: integer read _priority write _priority;
         property Show: string read _show;
         property Status: string read _status;
         property Stream: TXMLStream read _stream;
@@ -318,21 +317,6 @@ begin
         result := 0
     else
         result := _profile.Port;
-end;
-
-{---------------------------------------}
-procedure TJabberSession.SetPriority(priority: integer);
-begin
-    _profile.Priority := priority;
-end;
-
-{---------------------------------------}
-function TJabberSession.GetPriority(): integer;
-begin
-    if (_profile = nil) then
-        result := 0
-    else
-        result := _profile.Priority;
 end;
 
 {---------------------------------------}
@@ -733,6 +717,7 @@ begin
 
     // make this profile the active one..
     _profile := TJabberProfile(Prefs.Profiles.Objects[i]);
+    _priority := _profile.Priority;
 end;
 
 {---------------------------------------}
@@ -740,27 +725,33 @@ procedure TJabberSession.setPresence(show, status: string; priority: integer);
 var
     p: TJabberPres;
 begin
-    p := TJabberPres.Create();
-    p.Show := show;
-    p.Status := status;
-    p.Priority := priority;
-
     _show := show;
     _status := status;
-    _profile.Priority := priority;
-    SendTag(p);
+    _priority := priority;
 
-    // if we are going away or xa, save the prefs
-    if ((show = 'away') or (show = 'xa')) then
-        Prefs.SaveServerPrefs();
+    if (Self.Active) then begin
+        p := TJabberPres.Create();
+        p.Show := show;
+        p.Status := status;
+        if (priority = -1) then priority := 0;
+        p.Priority := priority;
+        if (_invisible) then
+            p.PresType := 'invisible';
 
-    MainSession.FireEvent('/session/presence', nil);
+        SendTag(p);
 
-    if (_paused) then begin
-        // If the session is paused, and we're changing back
-        // to available, or chat, then make sure we play the session
-        if ((_show <> 'away') and (_show <> 'xa') and (_show <> 'dnd')) then
-            Self.Play();
+        // if we are going away or xa, save the prefs
+        if ((show = 'away') or (show = 'xa')) then
+            Prefs.SaveServerPrefs();
+
+        MainSession.FireEvent('/session/presence', nil);
+
+        if (_paused) then begin
+            // If the session is paused, and we're changing back
+            // to available, or chat, then make sure we play the session
+            if ((_show <> 'away') and (_show <> 'xa') and (_show <> 'dnd')) then
+                Self.Play();
+            end;
         end;
 end;
 
