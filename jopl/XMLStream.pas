@@ -90,6 +90,7 @@ end;
         procedure Send(xml: Widestring); virtual; abstract; // Make sure the imp. does ANSI -> UTF8
         procedure SendTag(tag: TXMLTag);
         procedure Disconnect; virtual; abstract;
+        procedure ResetParser();
 
         procedure RegisterStreamCallback(p: TXMLStreamCallback);
         procedure UnregisterStreamCallback(p: TXMLStreamCallback);
@@ -536,6 +537,15 @@ begin
     // Send this xml tag out the socket
     Send(tag.xml);
 end;
+
+{---------------------------------------}
+procedure TXMLStream.ResetParser();
+begin
+    //
+    _thread._tag_parser.Free();
+    _thread._tag_parser := TXMLTagParser.Create();
+end;
+
 
 end.
 

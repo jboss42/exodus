@@ -51,8 +51,9 @@ procedure ClearStringListObjects(sl: TStringList); overload;
 procedure ClearStringListObjects(sl: TWideStringList); overload;
 
 function XPLiteEscape(value: widestring): widestring;
-
 function generateEventMsg(tag: TXMLTag; event: widestring): TXMLTag;
+
+procedure parseNameValues(list: TStringlist; str: Widestring);
 
 
 {$ifdef VER150}
@@ -477,6 +478,58 @@ begin
     e.AddTag(event);
     Result := m;
 end;
+
+{---------------------------------------}
+procedure parseNameValues(list: TStringlist; str: Widestring);
+var
+    i: integer;
+    q: boolean;
+    n,v: Widestring;
+    ns, vs: integer;
+begin
+    // Parse a list of:
+    // foo="bar",thud="baz"
+    // 12345678901234567890
+
+    // foo=bar,
+    // 12345678
+
+    // ns = 1
+    // vs = 5
+    // i = 9
+    ns := 1;
+    vs := 1;
+    q := false;
+    for i := 0 to Length(str) - 1 do begin
+        if (not q) then begin
+            if (str[i] = ',') then begin
+                // end of name-value pair
+                if (v = '') then
+                    v := Copy(str, vs, i - vs);
+                list.Add(n);
+                list.Values[n] := v;
+                ns := i + 1;
+                n := '';
+                v := '';
+            end
+            else if (str[i] = '"') then begin
+                // if we are quoting... start here
+                q := true;
+                vs := i + 1;
+            end
+            else if (str[i] = '=') then begin
+                // end of name, start of value
+                n := Copy(str, ns, i - ns);
+                vs := i + 1;
+            end;
+        end
+        else if (str[i] = '"') then begin
+            v := Copy(str, vs, i - vs);
+            q := false;
+        end;
+    end;
+end;
+
 
 {---------------------------------------}
 {$ifdef Win32}
