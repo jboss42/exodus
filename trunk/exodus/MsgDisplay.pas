@@ -47,13 +47,16 @@ end;
 {---------------------------------------}
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true);
 var
+    fvl: integer;
     txt: WideString;
     c: TColor;
     at_bottom: boolean;
     is_scrolling: boolean;
 begin
     // add the message to the richedit control
-    //at_bottom := atBottom(RichEdit);
+    fvl := RichEdit.FirstVisibleLine;
+    RichEdit.BeginUpdate();
+
     at_bottom := RichEdit.atBottom;
     is_scrolling := RichEdit.isScrolling;
 
@@ -128,8 +131,16 @@ begin
     RichEdit.WideSelText := #13#10;
 
     // AutoScroll the window
-    if ((at_bottom) and (AutoScroll) and (not is_scrolling)) then
+    RichEdit.EndUpdate();
+
+    if ((at_bottom) and (AutoScroll) and (not is_scrolling)) then begin
         RichEdit.ScrollToBottom();
+    end
+    else begin
+        RichEdit.Line := fvl;
+    end;
+
+
 end;
 
 

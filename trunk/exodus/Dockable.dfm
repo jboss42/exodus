@@ -15,11 +15,10 @@ object frmDockable: TfrmDockable
   Font.Style = []
   OldCreateOrder = False
   Position = poDefaultPosOnly
-  OnActivate = FormActivate
+  ScreenSnap = True
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnEndDock = FormEndDock
-  OnPaint = FormPaint
   OnResize = FormResize
   PixelsPerInch = 96
   TextHeight = 13

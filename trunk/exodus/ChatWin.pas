@@ -79,7 +79,6 @@ type
     procedure popClearHistoryClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormShow(Sender: TObject);
-    procedure FormActivate(Sender: TObject);
     procedure mnuWordwrapClick(Sender: TObject);
     procedure btnCloseMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -110,7 +109,6 @@ type
     _warn_busyclose: boolean;
 
     _destroying: boolean;
-    _redock: boolean;
 
     _cur_ver: TJabberIQ;    // pending events
     _cur_time: TJabberIQ;
@@ -130,10 +128,12 @@ type
     procedure _sendComposing(id: Widestring);
 
     function GetThread: String;
+
   published
     procedure PresCallback(event: string; tag: TXMLTag);
     procedure SessionCallback(event: string; tag: TXMLTag);
     procedure CTCPCallback(event: string; tag: TXMLTag);
+
   public
     { Public declarations }
     OtherNick: widestring;
@@ -155,7 +155,6 @@ type
     procedure pluginMenuClick(Sender: TObject); override;
 
     property getJid: Widestring read jid;
-    property redock: boolean read _redock;
     property CurrentThread: string read _thread;
   end;
 
@@ -217,7 +216,7 @@ begin
     if (((r = msg_existing_chat) and (m > 0)) and (chat <> nil)) then begin
         win := TfrmChat(chat.window);
         if (win <> nil) then begin
-            if ((win.Docked) or (win.Redock)) then begin
+            if (win.Docked) then begin
                 if (not win.Visible) then
                     win.ShowDefault()
                 else if (win.TabSheet <> nil) then
@@ -347,7 +346,6 @@ begin
     _msg_out := false;
     _jid := nil;
     _destroying := false;
-    _redock := false;
     _res_menus := TWidestringlist.Create();
 
     _notify[0] := MainSession.Prefs.getInt('notify_chatactivity');
@@ -1163,6 +1161,8 @@ end;
 {---------------------------------------}
 procedure TfrmChat.FormEndDock(Sender, Target: TObject; X, Y: Integer);
 begin
+    if (target = nil) then exit;
+
     inherited;
     btnClose.Visible := Docked;
     if ((Docked) and (TabSheet <> nil)) then Self.TabSheet.ImageIndex := -1;
@@ -1180,10 +1180,6 @@ begin
     // save the conversation as RTF
     if SaveDialog1.Execute then begin
         MsgList.Save(SaveDialog1.Filename);
-        {
-        MsgList.PlainRTF := false;
-        MsgList.WideLines.SaveToFile(SaveDialog1.Filename);
-        }
     end;
 end;
 
@@ -1263,13 +1259,6 @@ end;
 procedure TfrmChat.FormShow(Sender: TObject);
 begin
   inherited;
-end;
-
-{---------------------------------------}
-procedure TfrmChat.FormActivate(Sender: TObject);
-begin
-  inherited;
-    if (_redock) then _redock := false;
 end;
 
 {---------------------------------------}

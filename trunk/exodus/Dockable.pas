@@ -32,16 +32,12 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormResize(Sender: TObject);
-    procedure FormActivate(Sender: TObject);
     procedure FormEndDock(Sender, Target: TObject; X, Y: Integer);
-    procedure FormPaint(Sender: TObject);
   private
     { Private declarations }
     _docked: boolean;
     _pos: TRect;
     _noMoveCheck: boolean;
-    _edge_snap: integer;
-    _top: boolean;
 
     _onDockStartChange: TDockNotify;
     _onDockEndChange: TDockNotify;
@@ -51,9 +47,9 @@ type
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
-    procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
+    //procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
     procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
-    procedure WMMouseActivate(var msg: TMessage); message WM_MOUSEACTIVATE;
+    //procedure WMMouseActivate(var msg: TMessage); message WM_MOUSEACTIVATE;
     procedure WMDisplayChange(var msg: TMessage); message WM_DISPLAYCHANGE;
   published
     property OnDockStartChange: TDockNotify read _onDockStartChange write _onDockStartChange;
@@ -84,7 +80,6 @@ procedure TfrmDockable.FormCreate(Sender: TObject);
 begin
     _docked := false;
     _noMoveCheck := true;
-    _top := false;
 
     // do translation magic
     AssignUnicodeFont(Self);
@@ -95,7 +90,7 @@ begin
     else
         MainSession.Prefs.RestorePosition(Self);
 
-    _edge_snap := MainSession.Prefs.getInt('edge_snap');
+    SnapBuffer := MainSession.Prefs.getInt('edge_snap');
 
     Self.SavePos();
 
@@ -215,85 +210,12 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmDockable.WMWindowPosChanging(var msg: TWMWindowPosChanging);
-var
-    r: TRect;
-begin
-    if ((_noMoveCheck) or (_edge_snap <= 0)) then begin
-        inherited;
-        exit;
-    end;
-
-    {
-    _top indicates that we are moving the window to the top of
-    the z-order manually using SetWindowPos()
-    In this case, we don't want to subvert the normal z-order raising,
-    otherwise, we DO want to subvert normal behavior so toast doesn't
-    bring this window to the top of the z-order
-
-    Note that the application object tries to raise this window in odd
-    circumstances, like displaying hints in another window. Hence the
-    removal of the check for Application.Active.
-    }
-
-    // if ((not Application.Active) and (not _top)) then
-    if (not _top) then
-        // if the application is not active, don't bring the window to the top.
-        msg.WindowPos^.flags := msg.WindowPos^.flags or SWP_NOZORDER;
-
-    If ((SWP_NOMOVE or SWP_NOSIZE) and msg.WindowPos^.flags) <>
-        (SWP_NOMOVE or SWP_NOSIZE) then begin
-        {  Window is moved or sized, get usable screen area. }
-
-        SystemParametersInfo(SPI_GETWORKAREA, 0, @r, 0 );
-
-        {
-        Check if operation would move part of the window out of this area.
-        If so correct position and, if required, size, to keep window fully
-        inside the workarea. Note that simply adding the SWM_NOMOVE and
-        SWP_NOSIZE flags to the flags field does not work as intended if
-        full dragging of windows is disabled. In this case the window would
-        snap back to the start position instead of stopping at the edge of the
-        workarea, and you could still move the drag rectangle outside that
-        area.
-        }
-
-        with msg.WindowPos^ do begin
-            if abs(x -  r.left) < _edge_snap then x:= r.left;
-            if abs(y -  r.top) < _edge_snap then y := r.top;
-
-            if abs( (x + cx) - r.right ) < _edge_snap then begin
-                x := r.right - cx;
-                if abs(x -  r.left) < _edge_snap then begin
-                    cx := cx - (r.left - x);
-                    x := r.Left;
-                end; { if }
-            end; { if }
-
-            if abs( (y + cy) - r.bottom ) < _edge_snap then begin
-                y := r.bottom - cy;
-                if abs(y -  r.top) < _edge_snap then begin
-                    cy := cy - (r.top - y);
-                    y := r.top;
-                end; { if }
-            end; { if }
-        end; { With }
-    end;
-
-    inherited;
-end;
-
-{---------------------------------------}
 procedure TfrmDockable.WMActivate(var msg: TMessage);
 begin
-    if ((not _top) and ((Application.Active) or (Msg.WParamLo = WA_CLICKACTIVE)))
-        then begin
+    if ((Application.Active) or (Msg.WParamLo = WA_CLICKACTIVE)) then begin
         // we are getting clicked..
-        _top := true;
-        SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
-            Self.Width, Self.Height, HWND_TOP);
+        OutputDebugString('frmDockable.WMActivate');
         StopTrayAlert();
-        _top := false;
         gotActivate();
         inherited;
     end
@@ -308,37 +230,10 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmDockable.WMMouseActivate(var msg: TMessage);
-begin
-    // pgm 2/25/04 - Remove this so x-mouse behavior works better (at all).
-    {
-    if (not _top) then begin
-        _top := true;
-        SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
-            Self.Width, Self.Height, HWND_TOP);
-        _top := false;
-    end
-    else
-    }
-    inherited;
-end;
-
-{---------------------------------------}
 procedure TfrmDockable.FormResize(Sender: TObject);
 begin
     if ((MainSession <> nil)) then
         MainSession.Prefs.SavePosition(Self);
-end;
-
-{---------------------------------------}
-procedure TfrmDockable.FormActivate(Sender: TObject);
-begin
-    StopTrayAlert();
-
-    if Self.TabSheet <> nil then begin
-        Self.TabSheet.ImageIndex := -1;
-        frmExodus.Tabs.ActivePage.ImageIndex := -1;
-    end;
 end;
 
 {---------------------------------------}
@@ -350,13 +245,6 @@ begin
         Self.TabSheet.ImageIndex := -1;
         frmExodus.Tabs.ActivePage.ImageIndex := -1;
     end;
-end;
-
-{---------------------------------------}
-procedure TfrmDockable.FormPaint(Sender: TObject);
-begin
-    inherited;
-    StopTrayAlert();
 end;
 
 end.

@@ -986,7 +986,6 @@ var
     ok: boolean;
     dtop, tmp: TRect;
     cp: TPoint;
-    idx: integer;
     m: TMonitor;
 begin
     if (Assigned(Application.MainForm)) then
