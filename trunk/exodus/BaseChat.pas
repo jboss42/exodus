@@ -229,7 +229,7 @@ begin
         MsgOut.SelStart := length(m);
         MsgOut.SetFocus();
         end
-    else if ((Key = 13) and (Shift = [ssCtrl])) then
+    else if ((Key = 13) and (Shift = [ssCtrl]) and (MsgOut.WantReturns)) then
         SendMsg()
     else
         inherited;
