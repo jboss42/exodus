@@ -11,7 +11,7 @@ for $s (@sub) {
     chdir "$pwd/$s";
     $idl = (glob("*.idl"))[0];
     die "no idl file in $s" unless $idl;
-    e("midl -I \"c:\\program files\\exodus\" " . $idl);
+    e("midl -I \"..\\..\" " . $idl);
 }
 
 sub e {
