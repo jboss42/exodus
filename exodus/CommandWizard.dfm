@@ -1,6 +1,6 @@
 inherited frmCommandWizard: TfrmCommandWizard
-  Left = 294
-  Top = 190
+  Left = 238
+  Top = 139
   Height = 294
   BorderStyle = bsSizeable
   Caption = 'frmCommandWizard'
@@ -12,6 +12,8 @@ inherited frmCommandWizard: TfrmCommandWizard
   inherited TntPanel1: TTntPanel
     Top = 223
     inherited Panel3: TPanel
+      Left = 72
+      Width = 338
       inherited btnBack: TTntButton
         OnClick = btnBackClick
       end
@@ -19,7 +21,18 @@ inherited frmCommandWizard: TfrmCommandWizard
         OnClick = btnNextClick
       end
       inherited btnCancel: TTntButton
+        Left = 255
         OnClick = btnCancelClick
+      end
+      object btnFinish: TTntButton
+        Left = 165
+        Top = 5
+        Width = 75
+        Height = 25
+        Caption = 'Finish'
+        Enabled = False
+        TabOrder = 3
+        OnClick = btnFinishClick
       end
     end
   end
@@ -34,6 +47,7 @@ inherited frmCommandWizard: TfrmCommandWizard
   end
   inherited Tabs: TPageControl
     Height = 163
+    ActivePage = tbsResults
     inherited TabSheet1: TTabSheet
       object TntLabel1: TTntLabel
         Left = 0
@@ -108,6 +122,14 @@ inherited frmCommandWizard: TfrmCommandWizard
     object tbsResults: TTabSheet
       Caption = 'tbsResults'
       ImageIndex = 3
+      object lblNote: TExodusLabel
+        Left = 0
+        Top = 0
+        Width = 402
+        Height = 30
+        Align = alTop
+        Visible = False
+      end
     end
     object tbsWait: TTabSheet
       Caption = 'tbsWait'
