@@ -58,6 +58,7 @@ type
   public
     { Public declarations }
     eType: TJabberEventType;
+    recips: TStringlist;
 
     procedure SetupSend();
   end;
@@ -121,14 +122,24 @@ end;
 
 {---------------------------------------}
 function BroadcastMsg(jids: TStringlist): TfrmMsgRecv;
+var
+    i: integer;
 begin
     // send a normal msg to this person
     Result := TfrmMsgRecv.Create(nil);
     with Result do begin
         eType := evt_Message;
+        recips.Assign(jids);
+        SetupSend();
 
         // setup the form for sending a msg
-        SetupSend();
+        txtFrom.Caption := '';
+        for i := 0 to recips.Count - 1 do begin
+            txtFrom.Caption := txtFrom.Caption + recips[i];
+            if (i < recips.Count - 1) then
+                txtFrom.Caption := txtFrom.Caption + ', ';
+            end;
+
         ShowDefault;
         end;
 end;
@@ -143,6 +154,8 @@ begin
 
         // setup the form for sending a msg
         SetupSend();
+        recips.Add(jid);
+
         txtFrom.Caption := jid;
         ShowDefault;
         end;
@@ -155,6 +168,7 @@ begin
     AssignDefaultFont(txtMsg.Font);
     txtMsg.Color := TColor(MainSession.Prefs.getInt('color_bg'));
     Self.ClientHeight := 200;
+    recips := TStringlist.Create();
 end;
 
 {---------------------------------------}
@@ -167,6 +181,7 @@ begin
     pnlReply.Visible := true;
     pnlReply.Align := alClient;
     ActiveControl := MsgOut;
+    StaticText1.Caption := 'To: ';
 end;
 
 {---------------------------------------}
@@ -178,6 +193,8 @@ end;
 {---------------------------------------}
 procedure TfrmMsgRecv.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
+    recips.Free();
+
     Action := caFree;
 end;
 
@@ -212,14 +229,20 @@ procedure TfrmMsgRecv.frameButtons2btnOKClick(Sender: TObject);
 var
     m: TJabberMessage;
     s: string;
+    i: integer;
 begin
     // Send the outgoing msg
     if (pnlSendSubject.Visible) then
         s := txtSendSubject.Lines.Text
     else
         s := txtSubject.Caption;
-    m := TJabberMessage.Create(txtFrom.Caption, '', MsgOut.Lines.Text, s);
-    MainSession.SendTag(m.Tag);
+
+    // send to ALL recips
+    for i := 0 to recips.Count - 1 do begin
+        m := TJabberMessage.Create(recips[i], '', MsgOut.Lines.Text, s);
+        MainSession.SendTag(m.Tag);
+        end;
+
     Self.Close;
 end;
 
