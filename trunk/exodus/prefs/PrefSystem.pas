@@ -73,7 +73,7 @@ implementation
 {$WARNINGS OFF}
 {$R *.dfm}
 uses
-    GTLanguagesEx, 
+    LocalUtils, 
     AutoUpdate, FileCtrl,
     PathSelector, PrefController, Registry, Session, StrUtils;
 
@@ -87,7 +87,6 @@ var
     mo, lm, lang, dir: Widestring;
     sr: TSearchRec;
     lang_name: string;
-    lid: LCID;
 begin
     // scan .\locale\... for possible lang packs
     dir := ExtractFilePath(Application.EXEName) + '\locale';
@@ -107,10 +106,7 @@ begin
                     mo := lm + '\default.mo';
                     if (FileExists(mo)) then begin
                         _lang_codes.add(sr.Name);
-                        lid := LanguagesEx.GNUGetTextID[sr.Name];
-                        if lid = 0 then
-                            lid := LanguagesEx.IDFromISO3166Name[sr.Name];
-                        lang_name := LanguagesEx.NameFromLocaleID[lid];
+                        lang_name := getLocaleName(sr.Name);
                         if (lang_name <> '') then
                             langs.add(lang_name)
                         else
