@@ -1042,7 +1042,7 @@ begin
     // doesn't exist, it'll default to true.
     ptag := tag.GetFirstTag('save_passwd');
     if (ptag <> nil) then
-        SavePasswd := StrToBool(tag.GetBasicText('save_passwd'))
+        SavePasswd := SafeBool(tag.GetBasicText('save_passwd'))
     else
         SavePasswd := true;
 
@@ -1138,16 +1138,5 @@ begin
     else if (Port = 0) then result := false
     else result := true;
 end;
-
-initialization
-    SetLength(TrueBoolStrs, 3);
-    TrueBoolStrs[0] := 'TRUE';
-    TrueBoolStrs[1] := 'YES';
-    TrueBoolStrs[2] := 'OK';
-
-    SetLength(FalseBoolStrs, 3);
-    FalseBoolStrs[0] := 'FALSE';
-    FalseBoolStrs[1] := 'NO';
-    FalseBoolStrs[2] := 'CANCEL';
 
 end.

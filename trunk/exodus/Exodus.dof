@@ -51,7 +51,7 @@ Conditionals=NOTRACE_EXCEPTIONS
 DebugSourceDirs=D:\Dev\Delphi6\Source\Indy\;D:\src\exodus\exodus\components\
 UsePackages=0
 [Parameters]
-RunParams=-d -c poll.xml
+RunParams=-d -c d:\temp\exodus-bad.xml
 HostApplication=
 Launcher=
 UseLauncher=0
