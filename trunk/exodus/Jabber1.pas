@@ -971,9 +971,6 @@ begin
         else
             PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
         end;
-
-    // check for new version
-    InitAutoUpdate();
 end;
 
 {---------------------------------------}
@@ -1118,6 +1115,9 @@ begin
         Tabs.ActivePage := tbsRoster;
         restoreMenus(true);
         timAutoAway.Enabled := true;
+
+        // check for new version
+        InitAutoUpdate();
         end
 
     else if (event = '/session/disconnected') then begin
