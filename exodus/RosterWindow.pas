@@ -700,7 +700,7 @@ end;
 {---------------------------------------}
 function TfrmRosterWindow.getSelectedContacts(online: boolean = true): TList;
 var
-    i, j: integer;
+    c, i, j: integer;
     ri: TJabberRosterItem;
     node: TTreeNode;
     ntype: integer;
@@ -716,7 +716,9 @@ begin
     end;
     node_grp: begin
         // add all online contacts in this grp to the Result list
-        for i := 0 to treeRoster.SelectionCount - 1 do begin
+        c := treeRoster.SelectionCount;
+        if (c = 0) then exit;
+        for i := 0 to c - 1 do begin
             node := treeRoster.Selections[i];
             ntype := getNodeType(node);
             if (ntype = node_ritem) then begin
@@ -867,8 +869,10 @@ var
 begin
     grp := node.Text;
     grp_idx := MainSession.roster.GrpList.indexOf(grp);
-    if (grp_idx >= 0) then
+    if (grp_idx >= 0) then begin
         MainSession.roster.GrpList.Objects[grp_idx] := nil;
+        MainSession.roster.GrpList.Delete(grp_idx);
+    end;
 
     if (node = _offline) then
         _offline := nil;
