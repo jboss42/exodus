@@ -42,11 +42,13 @@ type
         _event: TChatMessageEvent;
         _history: Widestring;
         _memory: TTimer;
+        _window: TObject;
+
+        procedure SetWindow(new_window: TObject);
     protected
         procedure timMemoryTimer(Sender: TObject);
     public
         msg_queue: TQueue;
-        window: TObject;
         ComController: TObject;
 
         constructor Create(sjid, sresource: Widestring);
@@ -58,10 +60,12 @@ type
         procedure startTimer();
         procedure stopTimer();
         procedure unassignEvent();
+
         function getHistory: Widestring;
 
         property JID: WideString read _jid;
         property Resource: Widestring read _resource;
+        property Window: TObject read _window write SetWindow;
         property OnMessage: TChatMessageEvent read _event write _event;
 
 end;
@@ -70,7 +74,8 @@ end;
 implementation
 uses
     COMChatController, PrefController, 
-    JabberConst, XMLUtils, Session, Chat, IdGlobal;
+    JabberConst, XMLUtils, Session, Chat,
+    Forms, IdGlobal;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -114,6 +119,16 @@ begin
 
     _cb := MainSession.RegisterCallback(MsgCallback,
             '/packet/message[@from="' + XPLiteEscape(Lowercase(sjid)) + '*"]');
+end;
+
+{---------------------------------------}
+procedure TChatController.SetWindow(new_window: TObject);
+begin
+    // this controller has a new window.
+    // make sure to let the plugins know about it
+    _window := new_window;
+    if ((COMController <> nil) and (new_window <> nil)) then
+        TExodusChat(COMController).fireNewWindow(TForm(new_window).Handle);
 end;
 
 {---------------------------------------}

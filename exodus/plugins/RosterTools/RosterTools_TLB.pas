@@ -12,7 +12,7 @@ unit RosterTools_TLB;
 // ************************************************************************ //
 
 // PASTLWTR : 1.2
-// File generated on 2/12/2003 9:41:50 AM from Type Library described below.
+// File generated on 2/27/2003 7:03:25 AM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\plugins\RosterTools\RosterTools.tlb (1)
@@ -22,7 +22,7 @@ unit RosterTools_TLB;
 // HelpString: RosterTools Library
 // DepndLst: 
 //   (1) v1.0 ExodusCOM, (D:\src\exodus\exodus\Exodus.exe)
-//   (2) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
+//   (2) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
 // ************************************************************************ //
 {$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
 {$WARN SYMBOL_PLATFORM OFF}
