@@ -47,6 +47,7 @@ type
     Find1: TMenuItem;
     WordWrap1: TMenuItem;
     FindDialog1: TFindDialog;
+    Label1: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure chkDebugWrapClick(Sender: TObject);
     procedure btnClearDebugClick(Sender: TObject);
@@ -165,7 +166,7 @@ begin
             '/' + MainSession.Resource;
         end
     else
-        lblJID.Caption := 'Debug Window (Disconnected)';
+        lblJID.Caption := '(Disconnected)';
 
 end;
 
@@ -364,7 +365,7 @@ begin
             '/' + MainSession.Resource;
         end
     else if (event = '/session/disconnected') then
-        lblJID.Caption := 'Debug Window (Disconnected)';
+        lblJID.Caption := '(Disconnected)';
 end;
 
 procedure TfrmDebug.lblJIDClick(Sender: TObject);

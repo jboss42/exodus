@@ -186,12 +186,12 @@ object frmDebug: TfrmDebug
       OnClick = btnCloseClick
     end
     object lblJID: TLabel
-      Left = 10
+      Left = 66
       Top = 6
-      Width = 74
+      Width = 72
       Height = 13
       Cursor = crHandPoint
-      Caption = 'Debug Window'
+      Caption = '(Disconnected)'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clBlue
       Font.Height = -11
@@ -199,6 +199,13 @@ object frmDebug: TfrmDebug
       Font.Style = [fsUnderline]
       ParentFont = False
       OnClick = lblJIDClick
+    end
+    object Label1: TLabel
+      Left = 6
+      Top = 6
+      Width = 56
+      Height = 13
+      Caption = 'Current JID:'
     end
   end
   object PopupMenu1: TPopupMenu
