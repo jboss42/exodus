@@ -713,7 +713,7 @@ end;
 procedure TExodus.setupAutoAwayTimer();
 begin
     DebugMsg('Trying to setup the Auto Away timer.'#13#10);
-    if (_windows_ver < 4) then begin
+    if (_windows_ver < cWIN_2000) then begin
         // Use the DLL
         @_GetHookPointer := nil;
         @_InitHooks := nil;
@@ -1517,7 +1517,7 @@ begin
 
     with MainSession.Prefs do begin
         if ((_auto_away)) then begin
-            if (_windows_ver < 4) then begin
+            if (_windows_ver < cWIN_2000) then begin
                 if (_lpHookRec <> nil) then
                     last_tick := _lpHookRec^.LastTick
                 else
@@ -1770,8 +1770,8 @@ end;
 {---------------------------------------}
 procedure TExodus.ResetLastTick(value: longint);
 begin
-    if (_windows_ver >= 4) then exit;
-    
+    if (_windows_ver >= cWIN_2000) then exit;
+
     DebugMsg('Setting LastTick to ' + IntToStr(value) + ', Current=' + IntToStr(GetTickCount()) + ''#13#10);
     _lpHookRec^.LastTick := value;
 end;
