@@ -80,7 +80,7 @@ inherited frmJud: TfrmJud
       object lblWait: TTntLabel
         Left = 0
         Top = 0
-        Width = 401
+        Width = 179
         Height = 13
         Align = alTop
         Caption = 'Please wait. Contacting search agent:'
@@ -102,7 +102,7 @@ inherited frmJud: TfrmJud
       object lblInstructions: TTntLabel
         Left = 0
         Top = 0
-        Width = 401
+        Width = 204
         Height = 13
         Align = alTop
         Caption = 'Fill in the search criteria to find contacts on.'
@@ -136,7 +136,7 @@ inherited frmJud: TfrmJud
           Left = 2
           Top = 2
           Width = 128
-          Height = 15
+          Height = 13
           Caption = 'Add Contacts to this group:'
         end
         object lblAddGrp: TTntLabel

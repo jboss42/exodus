@@ -65,6 +65,7 @@ const
 
     XMLNS_STREAMERR  = 'urn:ietf:params:xml:ns:xmpp-stanzas';
     XMLNS_XMPP_SASL  = 'urn:ietf:params:xml:ns:xmpp-sasl';
+    XMLNS_COMMANDS   = 'http://jabber.org/protocol/commands';
 
 var
     XP_MSGXDATA: TXPLite;

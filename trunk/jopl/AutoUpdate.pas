@@ -102,7 +102,6 @@ begin
     // <brand>
     //   <auto_update_url>http://exodus.jabberstudio.org/daily/setup.exe</auto_update_url>
     // </brand>
-    // TODO: add an edit box to the pref window?
     url  := MainSession.Prefs.getString('auto_update_url');
 
     t := TAutoUpdateThread.Create(true);

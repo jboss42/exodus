@@ -188,6 +188,7 @@ begin
     _cache := TWidestringlist.Create();
     _cache.CaseSensitive := true;
     _cache.Duplicates := dupAccept;
+    _cache.Sorted := true;
 end;
 
 {---------------------------------------}
@@ -405,11 +406,14 @@ var
 begin
     for i := 0 to _cache.Count -1  do begin
         e := TJabberEntity(_cache.Objects[i]);
-        if (e.hasFeature(f)) then
-            jid_list.Add(e.jid.full);
+        if (e.hasFeature(f)) then begin
+            if (jid_list.indexOf(e.jid.full) = -1) then
+                jid_list.Add(e.jid.full);
+        end;
     end;
 end;
 
+{---------------------------------------}
 procedure TJabberEntityCache.getByIdentity(icat, itype: Widestring; jid_list: TWidestringlist);
 var
     i: integer;
@@ -431,8 +435,10 @@ var
 begin
     for i := 0 to _cache.Count -1  do begin
         e := TJabberEntity(_cache.Objects[i]);
-        if (e.hasFeature(f)) then
-            jid_list.Add(e.jid.full);
+        if (e.hasFeature(f)) then begin
+            if (jid_list.IndexOf(e.jid.full) = -1) then
+                jid_list.Add(e.jid.full);
+        end;
     end;
 end;
 {$endif}

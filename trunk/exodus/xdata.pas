@@ -62,6 +62,7 @@ var
 
 function  showXDataEx(tag: TXMLTag): boolean;
 procedure showXData(tag: TXMLTag);
+function buildXData(x: TXMLTag; box: TScrollBox): integer;
 
 implementation
 
@@ -69,7 +70,7 @@ implementation
 uses
     GnuGetText, JabberConst, Session, JabberUtils, ExUtils,  StrUtils, fGeneric, IQ, Math;
 const
-    sAllRequired = 'All required fields must be filled out';
+    sAllRequired = 'All required fields must be filled out.';
     sFormFrom = 'Form from %s';
     sClose = 'Close';
     sCancelled = 'Cancelled';
@@ -109,15 +110,52 @@ begin
 end;
 
 {---------------------------------------}
+function buildXData(x: TXMLTag; box: TScrollBox): integer;
+var
+    tpe: Widestring;
+    i, h, m: integer;
+    flds: TXMLTagList;
+    frm: TframeGeneric;
+    c: TControl;
+begin
+    tpe := x.GetAttribute('type');
+    flds := x.QueryTags('field');
+    h := 1;
+    m := 0;
+
+    for i := flds.Count - 1 downto 0 do begin
+        frm := TframeGeneric.Create(box.owner);
+        frm.FormType := tpe;
+        frm.Name := 'xDataFrame' + IntToStr(i);
+        frm.Parent := box;
+        frm.Visible := true;
+        frm.render(flds[i]);
+        frm.Align := alTop;
+        frm.TabOrder := 0;
+        m := max(m, frm.getLabelWidth());
+    end;
+
+    // make it no bigger than this..
+    m := min(m, 350);
+
+    for i := 0 to box.ControlCount - 1 do begin
+        c := box.Controls[i];
+        if (c is TframeGeneric) then begin
+           frm := TframeGeneric(c);
+           frm.setLabelWidth(m + 5);
+           h := h + frm.Height;
+        end;
+    end;
+
+    Result := h;
+end;
+
+{---------------------------------------}
 procedure TfrmXData.render(tag: TXMLTag);
 var
     ins, x: TXMLTag;
-    flds: TXMLTagList;
-    xtra, h, i: integer;
-    frm: TframeGeneric;
+    xtra, h: integer;
     thread: string;
-    m : integer;
-    c: TControl;
 begin
     // Build the dialog based on the tag.
     _valid := false;
@@ -171,36 +209,8 @@ begin
     end;
 
     // Get all of our fields.
-    flds := x.QueryTags('field');
-    h := 1;
-    m := 0;
     xtra := lblIns.Height + 5 + frameButtons1.Height;
-
-    for i := flds.Count - 1 downto 0 do begin
-        frm := TframeGeneric.Create(Self);
-        frm.FormType := _type;
-        frm.Name := 'xDataFrame' + IntToStr(i);
-        frm.Parent := box;
-        frm.Visible := true;
-        frm.render(flds[i]);
-        frm.Align := alTop;
-        frm.TabOrder := 0;
-        m := max(m, frm.getLabelWidth());
-    end;
-
-    // make it no bigger than this..
-    m := min(m, 350);
-
-    for i := 0 to Self.box.ControlCount - 1 do begin
-        c := Self.box.Controls[i];
-        if (c is TframeGeneric) then begin
-           frm := TframeGeneric(c);
-           frm.setLabelWidth(m + 5);
-           h := h + frm.Height;
-        end;
-    end;
-
-    h := h + xtra;
+    h := buildXData(x, box) + xtra;
     if (h > Trunc(Screen.Height * 0.750)) then
         h := Trunc(Screen.Height * 0.750);
 
