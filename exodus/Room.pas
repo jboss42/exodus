@@ -94,6 +94,8 @@ type
     function  checkCommand(txt: string): boolean;
     // procedure ShowPresence(nick, msg: string);
     procedure RenderMember(member: TRoomMember; tag: TXMLTag);
+    procedure changeSubject(subj: string);
+
   published
     procedure MsgCallback(event: string; tag: TXMLTag);
     procedure PresCallback(event: string; tag: TXMLTag);
@@ -284,6 +286,9 @@ begin
             end
         else if (tok = '/subject') then begin
             // set subject
+            tok := Trim(Copy(tmps, 9, length(tmps) - 8));
+            changeSubject(tok);
+            MsgOut.Lines.Clear;
             Result := true;
             end;
         end;
@@ -605,19 +610,25 @@ begin
         end;
 end;
 
+procedure TfrmRoom.changeSubject(subj: string);
+var
+    msg: TJabberMessage;
+begin
+    // send the msg out
+    msg := TJabberMessage.Create(jid, 'groupchat', '', subj);
+    MainSession.SendTag(msg.Tag);
+    msg.Free;
+end;
+
 {---------------------------------------}
 procedure TfrmRoom.lblSubjectURLClick(Sender: TObject);
 var
     s: string;
-    msg: TJabberMessage;
 begin
     // Change the subject
     s := lblSubject.Caption;
     if InputQuery('Change Room Subject', 'New Subject', s) then begin
-        // send the msg out
-        msg := TJabberMessage.Create(jid, 'groupchat', '', s);
-        MainSession.SendTag(msg.Tag);
-        msg.Free;
+        changeSubject(s);
         end;
 end;
 
