@@ -1,6 +1,6 @@
 object frmChat: TfrmChat
-  Left = 249
-  Top = 209
+  Left = 239
+  Top = 179
   ActiveControl = MsgOut
   AutoScroll = False
   Caption = 'Chat Window'
@@ -183,6 +183,7 @@ object frmChat: TfrmChat
     end
     object Emoticons1: TMenuItem
       Caption = 'Emoticons'
+      ShortCut = 16453
       OnClick = Emoticons1Click
     end
   end

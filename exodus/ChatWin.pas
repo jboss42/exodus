@@ -118,6 +118,7 @@ type
     procedure showPres(tag: TXMLTag);
     procedure sendMsg;
     procedure SetJID(cjid: string);
+    procedure SetEmoticon(msn: boolean; imgIndex: integer);
   end;
 
 var
@@ -481,10 +482,8 @@ begin
         DisplayPresence('You have been disconnected', MsgList);
         MainSession.UnRegisterCallback(_callback);
         MainSession.UnRegisterCallback(_pcallback);
-        // MainSession.UnRegisterCallback(_scallback);
         _callback := -1;
         _pcallback := -1;
-        // _scallback := -1;
         end
     else if (event = '/session/connected') then begin
         Self.SetJID(jid);
@@ -549,7 +548,7 @@ procedure TfrmChat.FormActivate(Sender: TObject);
 begin
     if Self.Visible then
         MsgOut.SetFocus;
-    // FlashWindow(Self.Handle, false);
+        
     if (frmEmoticons.Visible) then
         frmEmoticons.Hide;
 end;
@@ -707,46 +706,56 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmChat.Emoticons1Click(Sender: TObject);
 var
-    m, i: integer;
-    eo: TEmoticon;
+    t: integer;
     cp: TPoint;
 begin
   inherited;
     // Show the emoticons form
     GetCursorPos(cp);
 
-    frmEmoticons.Left := cp.X;
     if (Self.Docked) then
-        frmEmoticons.Top := frmJabber.Top + frmJabber.ClientHeight - 10
+        t := frmJabber.Top + frmJabber.ClientHeight - 10
     else
-        frmEmoticons.Top := Self.Top + Self.ClientHeight - 10;
+        t := Self.Top + Self.ClientHeight - 10;
 
+    if ((t + frmEmoticons.Height) > Screen.Height) then
+        t := Screen.Height - frmEmoticons.Height;
+
+    frmEmoticons.Left := cp.x;
+    frmEmoticons.Top := t;
+    frmEmoticons.ChatWindow := Self;
     frmEmoticons.Show;
-    {
-    if (frmEmoticons.ShowModal = mrOK) then with frmEmoticons do begin
-        m := -1;
+end;
 
-        if (emoticon_list.Count = 0) then
-            ConfigEmoticons();
+{---------------------------------------}
+procedure TfrmChat.SetEmoticon(msn: boolean; imgIndex: integer);
+var
+    i, m: integer;
+    eo: TEmoticon;
+begin
+    // Setup some Emoticon
+    m := -1;
 
-        for i := 0 to emoticon_list.Count - 1 do begin
-            eo := TEmoticon(emoticon_list.Objects[i]);
-            if (((msn) and (eo.il = frmJabber.imgMSNEmoticons)) or
-            ((not msn) and (eo.il = frmJabber.imgYahooEmoticons))) then begin
-                // the image lists match
-                if (eo.idx = imgIndex) then begin
-                    m := i;
-                    break;
-                    end;
+    if (emoticon_list.Count = 0) then
+        ConfigEmoticons();
+
+    for i := 0 to emoticon_list.Count - 1 do begin
+        eo := TEmoticon(emoticon_list.Objects[i]);
+        if (((msn) and (eo.il = frmJabber.imgMSNEmoticons)) or
+        ((not msn) and (eo.il = frmJabber.imgYahooEmoticons))) then begin
+            // the image lists match
+            if (eo.idx = imgIndex) then begin
+                m := i;
+                break;
                 end;
             end;
-
-        if (m >= 0) then
-            MsgOut.SelText := emoticon_list[m];
         end;
-    }
+
+    if (m >= 0) then
+        MsgOut.SelText := emoticon_list[m];
 end;
 
 end.

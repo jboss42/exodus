@@ -1,10 +1,30 @@
 unit Emoticons;
+{
+    Copyright 2002, Peter Millard
+
+    This file is part of Exodus.
+
+    Exodus is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Exodus is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Exodus; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
 
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ComCtrls, ToolWin;
+    ChatWin, 
+    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+    Dialogs, ComCtrls, ToolWin;
 
 type
   TfrmEmoticons = class(TForm)
@@ -72,6 +92,7 @@ type
     { Private declarations }
   public
     { Public declarations }
+    ChatWindow: TfrmChat;
     msn: boolean;
     imgIndex: integer;
   end;
@@ -94,10 +115,11 @@ begin
         btn := TToolButton(Sender);
         msn := (Toolbar1.Buttons[btn.Index] = btn);
         imgIndex := btn.ImageIndex;
-        ModalResult := mrOK;
+        ChatWindow.SetEmoticon(msn, imgIndex);
+        Self.Hide;
         end
     else
-        ModalResult := mrCancel;
+        Self.Hide;
 end;
 
 procedure TfrmEmoticons.FormDeactivate(Sender: TObject);
@@ -108,12 +130,13 @@ end;
 
 procedure TfrmEmoticons.FormKeyPress(Sender: TObject; var Key: Char);
 begin
-    if Key = Chr(27) then ModalResult := mrCancel;
+    if Key = Chr(27) then
+        Self.Hide;
 end;
 
 procedure TfrmEmoticons.ToolBar1Click(Sender: TObject);
 begin
-    ModalResult := mrCancel;
+    Self.Hide;
 end;
 
 end.
