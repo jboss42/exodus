@@ -86,7 +86,9 @@ type
     popGroupBlock: TMenuItem;
     BroadcastMessage1: TMenuItem;
     pnlConnect: TPanel;
-    Animate1: TAnimate;
+    aniWait: TAnimate;
+    lblStatus: TLabel;
+    lblLogin: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure treeRosterDblClick(Sender: TObject);
@@ -129,6 +131,7 @@ type
     procedure popSendContactsClick(Sender: TObject);
     procedure popBlockClick(Sender: TObject);
     procedure BroadcastMessage1Click(Sender: TObject);
+    procedure lblLoginClick(Sender: TObject);
   private
     { Private declarations }
     _rostercb: integer;
@@ -165,6 +168,8 @@ type
     procedure ResetPanels;
     procedure DoShowHint(var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
     procedure ChangeStatusImage(idx: integer);
+    procedure showAniStatus();
+
   protected
     procedure CreateParams(var Params: TCreateParams); override;
   published
@@ -244,6 +249,12 @@ begin
 
     frmExodus.pnlRoster.ShowHint := not _show_status;
 
+    aniWait.Filename := '';
+    aniWait.ResName := 'Status';
+
+    treeRoster.Visible := false;
+    pnlStatus.Visible := true;
+
     Application.ShowHint := true;
     Application.OnShowHint := DoShowHint;
 end;
@@ -306,6 +317,14 @@ begin
         end;
 end;
 
+procedure TfrmRosterWindow.showAniStatus();
+begin
+    //
+    aniWait.Left := (pnlConnect.Width - aniWait.Width) div 2;
+    aniWait.Visible := true;
+    aniWait.Active := true;
+end;
+
 {---------------------------------------}
 procedure TfrmRosterWindow.SessionCallback(event: string; tag: TXMLTag);
 var
@@ -317,10 +336,36 @@ begin
         ClearNodes();
         ShowPresence('offline');
         MainSession.Roster.GrpList.Clear();
+        treeRoster.Visible := false;
+        aniWait.Active := false;
+        aniWait.Visible := false;
+        pnlConnect.Visible := true;
+        lblStatus.Caption := 'Disconnected.';
+        end
+    else if event = '/session/connecting' then begin
+        pnlConnect.Visible := true;
+        lblStatus.Visible := true;
+        lblStatus.Caption := 'Trying to connect...';
+        Self.showAniStatus();
         end
     else if event = '/session/connected' then begin
+        lblStatus.Caption := 'Connected. '#13#10 + 'Authenticating...';
+        Self.showAniStatus();
         ShowPresence('online');
         ResetPanels;
+        end
+    else if event = '/session/authenticated' then begin
+        lblStatus.Caption := 'Connected, Authenticated.'#13#10 +
+            'Fetching Roster and Preferences...';
+        Self.showAniStatus();
+        end
+    else if event = '/roster/end' then begin
+        if (not treeRoster.Visible) then begin
+            aniWait.Active := false;
+            aniWait.Visible := false;
+            pnlConnect.Visible := false;
+            treeRoster.Visible := true;
+            end;
         end
     else if event = '/session/presence' then begin
         ShowPresence(MainSession.show);
@@ -374,6 +419,7 @@ begin
         end
     else if event = '/roster/end' then begin
         _FullRoster := false;
+        Self.SessionCallback('/roster/end', nil);
         treeRoster.Items.EndUpdate;
         treeRoster.AlphaSort;
         Self.ExpandNodes();
@@ -1829,6 +1875,12 @@ begin
 
     r.Clear();
     r.Free();
+end;
+
+procedure TfrmRosterWindow.lblLoginClick(Sender: TObject);
+begin
+    // Login to the client..
+    PostMessage(frmExodus.Handle, WM_SHOWLOGIN, 0, 0);
 end;
 
 end.

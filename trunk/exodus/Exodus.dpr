@@ -105,6 +105,7 @@ uses
 {$R *.RES}
 
 {$R manifest.res}
+{$R xtra.res}
 
 begin
   Application.Initialize;

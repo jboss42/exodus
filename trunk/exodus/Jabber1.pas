@@ -920,6 +920,8 @@ begin
     otherwise, just call connect
     }
     with MainSession do begin
+        FireEvent('/session/connecting', nil);
+
         if Password = '' then begin
             pf := TfrmInputPass.Create(nil);
             if (pf.ShowModal) = mrOK then begin

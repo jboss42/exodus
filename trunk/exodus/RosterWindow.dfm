@@ -57,9 +57,9 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object treeRoster: TTreeView
     Left = 0
-    Top = 41
+    Top = 161
     Width = 189
-    Height = 247
+    Height = 127
     Cursor = crArrow
     Hint = 'Roster Hint'
     Align = alClient
@@ -78,6 +78,7 @@ object frmRosterWindow: TfrmRosterWindow
     ShowRoot = False
     SortType = stText
     TabOrder = 0
+    Visible = False
     OnCollapsed = treeRosterCollapsed
     OnContextPopup = treeRosterContextPopup
     OnCustomDrawItem = treeRosterCustomDrawItem
@@ -223,24 +224,60 @@ object frmRosterWindow: TfrmRosterWindow
     Left = 0
     Top = 0
     Width = 189
-    Height = 41
+    Height = 161
     Align = alTop
     BevelOuter = bvNone
+    BorderWidth = 4
     TabOrder = 4
-    Visible = False
-    object Animate1: TAnimate
-      Left = 56
-      Top = 3
-      Width = 65
-      Height = 31
+    object lblStatus: TLabel
+      Left = 4
+      Top = 82
+      Width = 181
+      Height = 60
+      Align = alBottom
+      Alignment = taCenter
+      AutoSize = False
+      Caption = 'Disconnected.'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -12
+      Font.Name = 'Arial'
+      Font.Style = []
+      ParentFont = False
+    end
+    object lblLogin: TLabel
+      Left = 4
+      Top = 142
+      Width = 181
+      Height = 15
+      Cursor = crHandPoint
+      Align = alBottom
+      Alignment = taCenter
+      Caption = 'Click Here to Sign On'
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clBlue
+      Font.Height = -12
+      Font.Name = 'Arial'
+      Font.Style = [fsUnderline]
+      ParentFont = False
+      OnClick = lblLoginClick
+    end
+    object aniWait: TAnimate
+      Left = 24
+      Top = 19
+      Width = 32
+      Height = 32
       Active = False
+      FileName = '.\ball.AVI'
+      StopFrame = 8
+      Visible = False
     end
   end
   object ImageList1: TImageList
     DrawingStyle = dsTransparent
     ShareImages = True
-    Left = 24
-    Top = 66
+    Left = 8
+    Top = 178
     Bitmap = {
       494C01011F002200040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000009000000001002000000000000090
@@ -1439,8 +1476,8 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object popRoster: TPopupMenu
     OnPopup = popRosterPopup
-    Left = 24
-    Top = 96
+    Left = 8
+    Top = 208
     object popChat: TMenuItem
       Caption = 'Chat'
       OnClick = popChatClick
@@ -1516,8 +1553,8 @@ object frmRosterWindow: TfrmRosterWindow
   end
   object popStatus: TPopupMenu
     Images = ImageList1
-    Left = 24
-    Top = 128
+    Left = 8
+    Top = 240
     object presChat: TMenuItem
       Caption = 'I Want to Chat'
       ImageIndex = 4
@@ -1551,8 +1588,8 @@ object frmRosterWindow: TfrmRosterWindow
   object ImageList2: TImageList
     BkColor = clWhite
     ShareImages = True
-    Left = 56
-    Top = 66
+    Left = 40
+    Top = 178
     Bitmap = {
       494C010102000400040010001000FFFFFF00FF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
@@ -1694,8 +1731,8 @@ object frmRosterWindow: TfrmRosterWindow
       000000000000}
   end
   object popActions: TPopupMenu
-    Left = 56
-    Top = 96
+    Left = 40
+    Top = 208
     object popAddContact: TMenuItem
       Caption = 'Add Contact'
       OnClick = popAddContactClick
@@ -1706,8 +1743,8 @@ object frmRosterWindow: TfrmRosterWindow
     end
   end
   object popGroup: TPopupMenu
-    Left = 56
-    Top = 128
+    Left = 40
+    Top = 240
     object popGrpPresence: TMenuItem
       Caption = 'Send Presence'
       object popGrpAvailable: TMenuItem
