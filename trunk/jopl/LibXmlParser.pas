@@ -474,7 +474,6 @@ CONST
 
   CWhitespace = ''#32#9#13#10;
   CQuoteChar = '"'#39;
-
   CDStart       = '<![CDATA[';
   CDEnd         = ']]>';
 
@@ -614,6 +613,7 @@ Unicode and UTF-8 stuff
 ===============================================================================================
 *)
 
+(*
 CONST
   // --- Character Translation Table for Unicode <-> Win-1252
   WIN1252_UNICODE : ARRAY [$00..$FF] OF WORD = (
@@ -644,6 +644,8 @@ CONST
                     $00E4, $00E5, $00E6, $00E7, $00E8, $00E9, $00EA, $00EB, $00EC, $00ED,
                     $00EE, $00EF, $00F0, $00F1, $00F2, $00F3, $00F4, $00F5, $00F6, $00F7,
                     $00F8, $00F9, $00FA, $00FB, $00FC, $00FD, $00FE, $00FF);
+
+*)
 
 (* UTF-8  (somewhat simplified)
    -----
@@ -774,7 +776,7 @@ They do exactly the same as the Assembler routines defined in SysUtils.
 (This is where you can see how great the Delphi compiler really is. The compiled code is
 faster than hand-coded assembler!)
 ===============================================================================================
---> Just move this line below the StrScan function -->  *)
+--> Just move this line below the StrScan function -->*)
 
 
 FUNCTION StrPos (CONST Str, SearchStr : PWideChar) : PWideChar;
@@ -914,50 +916,9 @@ begin
         end;
 end;
 
-(*
-procedure SetWideString(var s: WideString; buffer: PWideChar; len: Integer);
-{
-var
-    cp : PWideChar;
-    Size: integer;
-}
-begin
-    // pgm 5/8/02 - Don't use SetString, it's BAD! (AnsiStr/PChar junk, not WideString/PWideChar)
-    {
-    s_buff := StrAllocW(len);
-    StrLCopyW(s_buff, Start, len);
-    Result := WideString(s_buff);
-    }
-
-
-    //todo: move to unicode lib
-    {
-    cp := @s;
-    Dec(cp, SizeOf(Cardinal) div SizeOf(WideChar));
-    Size := SizeOf(WideChar) * len + SizeOf(Cardinal);
-    ReallocMem(cp, Size);
-    Cardinal(Pointer(cp)^) := len;
-    Inc(cp, SizeOf(Cardinal) div SizeOf(WideChar));
-    StrLCopyW(cp, buffer, len);
-    s := WideString(cp);
-    }
-
-    SetLength(s, len);
-    StrLCopyW(PWideChar(s), buffer, len);
-
-end;
-*)
-
-
 PROCEDURE SetStringSF (VAR S : WideString; BufferStart, BufferFinal : PWideChar);
 BEGIN
     SetString (S, BufferStart, BufferFinal - BufferStart + 1);
-
-    // Note to Joe: Pascal pointer is more like C pointer arithmatic than you thought.
-    // Note to pgm: Why the heck do we have 3 functions??????????
-
-    // S := SetWideString(BufferStart, BufferFinal - BufferStart + 1);
-    // StrLCopyW(PWideChar(S), BufferStart, (BufferFinal - BufferStart) + 1);
 END;
 
 FUNCTION  StrLPas  (Start : PWideChar; Len : INTEGER) : WideString;
@@ -1495,6 +1456,7 @@ BEGIN
       else if not (WideCharInSet(CurFinal, CWhitespace)) then begin
       // ELSE  IF NOT (CurFinal^ IN CWhitespace) THEN BEGIN
               CASE Phase OF
+                // todo: Verify that UnicodeIsAlpha is the "right" thing to check
                 phName : IF (UnicodeIsAlpha(Ord(CurFinal^))) then begin
                 // phName : IF (CurFinal^ IN CNameStart)  THEN BEGIN
                            ExtractName(CurFinal, CWhitespace + '[' + '>', F);
@@ -1831,6 +1793,8 @@ BEGIN
   DER.Start := Start;
   REPEAT
     IF Final^ = '>' THEN BREAK;
+
+    // todo: Verify that UnicodeIsAlpha is "right" here.
     if (UnicodeIsAlpha(Ord(Final^))) and (Element.Name = '') then begin
     // IF (Final^ IN CNameStart) AND (Element.Name = '') THEN BEGIN
       ExtractName(Final, CWhitespace, F);
