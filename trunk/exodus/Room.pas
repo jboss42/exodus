@@ -346,7 +346,7 @@ begin
             lstRoster.Font.Size := MainSession.Prefs.getInt('roster_font_size');
             lstRoster.Font.Charset := MainSession.Prefs.getInt('roster_font_charset');
             if (lstRoster.Font.Charset = 0) then
-                lstRoster.Font.Charset := 1;
+                lstRoster.Font.Charset := DEFAULT_CHARSET;
         end;
 
         // let the plugins know about the new room
