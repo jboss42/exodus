@@ -665,7 +665,8 @@ begin
     // Disconnect the stream and stop the thread
     _timer.Enabled := false;
     if ((_socket <> nil) and (_socket.Connected)) then begin
-        _socket.Disconnect();
+        _socket.ioHandler.Close();
+        //_socket.Disconnect();
     end;
 end;
 
