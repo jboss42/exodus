@@ -1499,11 +1499,12 @@ var
     msg_treatment: integer;
     cc: TChatController;
     tmp_jid: TJabberID;
+    xoob: TXMLTag;
 begin
     // record the event
     mtype := tag.getAttribute('type');
     b := Trim(tag.GetBasicText('body'));
-    if ((mtype <> 'groupchat') and (mtype <> 'chat') and (b <> '')) then begin
+    if ((mtype <> 'groupchat') and (mtype <> 'chat')) then begin
 
         // Some exclusions...
         // x-data msgs and invites
@@ -1511,9 +1512,20 @@ begin
         if (tag.QueryXPTag(XP_MUCINVITE) <> nil) then exit;
         if (tag.QueryXPTag(XP_CONFINVITE) <> nil) then exit;
 
+        // check for headlines w/ JUST a x-oob.
+        // otherwise, throw out cases where body is empty
+        xoob := tag.QueryXPTag(XP_XOOB);
+        if ((xoob = nil) and (b = '')) then
+            exit
+        else if ((xoob <> nil) and (b = '')) then begin
+            // add in a textual version of the oob:
+            b := 'This msg contains a URL: '#13#10;
+            b := b + xoob.GetBasicText('desc');
+            b := b + xoob.GetBasicText('url');
+            end;
+
         // if we have a normal msg (not a headline),
         // check for msg_treatments.
-
         msg_treatment := MainSession.Prefs.getInt('msg_treatment');
         if (mtype <> 'headline') then begin
             if (msg_treatment = msg_all_chat) then

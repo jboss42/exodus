@@ -45,6 +45,7 @@ const
     XMLNS_XROSTER    = 'jabber:x:roster';
     XMLNS_XCONFERENCE= 'jabber:x:conference';
     XMLNS_XDATA      = 'jabber:x:data';
+    XMLNS_XOOB       = 'jabber:x:oob';
 
     XMLNS_MUC        = 'http://jabber.org/protocol/muc';
     XMLNS_MUCOWNER   = 'http://jabber.org/protocol/muc#owner';
@@ -64,6 +65,7 @@ var
     XP_MSGXEVENT: TXPLite;
     XP_MSGCOMPOSING: TXPLite;
     XP_MSGDELAY: TXPLite;
+    XP_XOOB: TXPLite;
 
 implementation
 
@@ -76,8 +78,10 @@ initialization
     XP_MSGXEVENT := TXPLite.Create('/message/*[@xmlns="' + XMLNS_XEVENT + '"]');
     XP_MSGCOMPOSING := TXPLite.Create('/message/*[@xmlns="' + XMLNS_XEVENT + '"]/composing');
     XP_MSGDELAY := TXPLite.Create('/message/x[@xmlns="' + XMLNS_DELAY + '"]');
+    XP_XOOB := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XOOB + '"]');
 
 finalization
+    XP_XOOB.Free();
     XP_MSGDELAY.Free();
     XP_MSGCOMPOSING.Free();
     XP_MSGXEVENT.Free();
