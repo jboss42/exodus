@@ -771,6 +771,7 @@ end;
 procedure jabberSendMsg(to_jid: Widestring; mtag: TXMLTag;
     xtags, body, subject: Widestring);
 var
+    btag: TXMLTag;
     xml, s, b: Widestring;
 begin
     // handle allowing the plugins to get a pass at all
@@ -779,7 +780,15 @@ begin
     s := subject;
     xml := frmExodus.COMController.fireIM(to_jid, b, s, xtags);
 
-    mtag.AddBasicTag('body', b);
+    // don't put in two body elements.
+    btag := (mtag.GetFirstTag('body'));
+    if (btag = nil) then
+        mtag.AddBasicTag('body', b)
+    else begin
+        btag.ClearCData();
+        btag.AddCData(body);
+    end;
+
     if (s <> '') then
         mtag.AddBasicTag('subject', s);
 
