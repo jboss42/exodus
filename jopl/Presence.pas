@@ -269,7 +269,6 @@ var
     p, curp: TJabberPres;
     pi: integer;
     s: TJabberSession;
-    t: TXMLTag;
 begin
     // we are getting a new pres packet
     curp := TJabberPres.Create;
@@ -288,18 +287,7 @@ begin
         end
     else if curp.PresType = 'error' then begin
         // some kind of error presence
-        if (curp.error_code = '407') then begin
-            {
-            t := TXMLTag.Create('register');
-            t.PutAttribute('jid', curp.fromJID.domain);
-            s.FireEvent('/session/register', t);
-            t.Free;
-            }
-            exit;
-            end
-
-        else if ((MainSession.Invisible) and
-        (curp.error_code = '400') and
+        if ((MainSession.Invisible) and (curp.error_code = '400') and
         (tag.GetAttribute('from') = '') ) then begin
             // could be some kind of invisible packet bouncing..
             MainSession.Invisible := false;
@@ -314,9 +302,9 @@ begin
             s.FireEvent('/session/gui/pres-error', tag);
             s.FireEvent('/presence/error', tag, curp);
             end
-
         else
             s.FireEvent('/presence/error', tag, curp);
+
         curp.Free();
         end
     else if (curp.PresType = 'subscribe') or

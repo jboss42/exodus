@@ -6,11 +6,10 @@ TODO List
 jh Remove jabber auto-update stuff.. Prefer only HTTP
 jh  Auto-update should be on by default
 pm  Look at JUD + x-data
--  Look at Register + x-data
+pm  Look at Register + x-data
 pm  Look at using precompiled xplites in more places?
 
 Future Stuff
 -  Grow toast horizontally & word-wrap
--  Disco support
 
 
