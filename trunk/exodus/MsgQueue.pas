@@ -342,12 +342,12 @@ end;
 {---------------------------------------}
 procedure TfrmMsgQueue.lstEventsDblClick(Sender: TObject);
 var
-    e: TJabberEvent;
+    e, edup: TJabberEvent;
 begin
     if (lstEvents.SelCount <= 0) then exit;
-
     e := TJabberEvent(_queue.Items[lstEvents.Selected.Index]);
-    ShowEvent(e);
+    edup := CreateJabberEvent(e.Tag);
+    StartRecvMsg(edup);
 end;
 
 {---------------------------------------}

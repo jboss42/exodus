@@ -129,7 +129,10 @@ uses
   CustomNotify in 'CustomNotify.pas' {frmCustomNotify},
   DropTarget in 'DropTarget.pas' {ExDropTarget: CoClass},
   StandardAuth in '..\jopl\StandardAuth.pas',
-  JabberAuth in '..\jopl\JabberAuth.pas';
+  JabberAuth in '..\jopl\JabberAuth.pas',
+  PluginAuth in 'PluginAuth.pas',
+  MsgList in '..\jopl\MsgList.pas',
+  MsgController in '..\jopl\MsgController.pas';
 
 {$R *.TLB}
 

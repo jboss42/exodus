@@ -12,6 +12,7 @@ object frmMsgRecv: TfrmMsgRecv
   Font.Style = []
   OldCreateOrder = False
   OnClose = FormClose
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnEndDock = FormEndDock
   OnResize = FormResize
@@ -25,33 +26,6 @@ object frmMsgRecv: TfrmMsgRecv
     Cursor = crVSplit
     Align = alBottom
   end
-  inline frameButtons1: TframeButtons
-    Left = 0
-    Top = 158
-    Width = 377
-    Height = 34
-    Align = alBottom
-    AutoScroll = False
-    TabOrder = 2
-    inherited Bevel1: TBevel
-      Width = 377
-    end
-    inherited Panel1: TPanel
-      Left = 217
-      Height = 29
-      inherited btnOK: TButton
-        Left = 82
-        Top = 1
-        Caption = 'Reply'
-        OnClick = frameButtons1btnOKClick
-      end
-      inherited btnCancel: TButton
-        Top = -152
-        Caption = 'Close'
-        OnClick = frameButtons1btnCancelClick
-      end
-    end
-  end
   object pnlReply: TPanel
     Left = 0
     Top = 195
@@ -60,7 +34,7 @@ object frmMsgRecv: TfrmMsgRecv
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 3
-    TabOrder = 3
+    TabOrder = 2
     Visible = False
     inline frameButtons2: TframeButtons
       Left = 3
@@ -78,7 +52,6 @@ object frmMsgRecv: TfrmMsgRecv
         Height = 29
         inherited btnCancel: TButton [0]
           Visible = False
-          OnClick = frameButtons2btnCancelClick
         end
         inherited btnOK: TButton [1]
           Left = 84
@@ -188,7 +161,7 @@ object frmMsgRecv: TfrmMsgRecv
     Left = 0
     Top = 76
     Width = 377
-    Height = 82
+    Height = 86
     Align = alClient
     AutoURLDetect = adDefault
     CustomURLs = <
@@ -478,6 +451,29 @@ object frmMsgRecv: TfrmMsgRecv
           F000001FF800003FF800003FFC00007FFC00007FFE0000FFFE0000FFFF0001FF
           FF0001FFFF8003FFFF8003FFFFC007FFFFC007FFFFE00FFFFFE01FFFFFF07FFF
           FFF8FFFF}
+      end
+    end
+  end
+  inline frameButtons1: TframeButtons
+    Left = 0
+    Top = 162
+    Width = 377
+    Height = 30
+    Align = alBottom
+    AutoScroll = False
+    TabOrder = 3
+    inherited Bevel1: TBevel
+      Width = 377
+    end
+    inherited Panel1: TPanel
+      Left = 217
+      inherited btnOK: TButton
+        Caption = 'Reply'
+        OnClick = frameButtons1btnOKClick
+      end
+      inherited btnCancel: TButton
+        Caption = 'Close'
+        OnClick = frameButtons1btnCancelClick
       end
     end
   end

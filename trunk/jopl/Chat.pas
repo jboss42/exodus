@@ -34,10 +34,13 @@ uses
 type
     TJabberChatList = class(TStringList)
     private
+        _s: TObject;
         _callback: integer;
     public
         constructor Create;
         destructor Destroy; override;
+
+        procedure SetSession(s: TObject);
 
         function FindChat(sjid, sresource, sthread: string): TChatController;
         function AddChat(sjid, sresource: string): TChatController; overload;
@@ -50,19 +53,30 @@ type
 {---------------------------------------}
 implementation
 uses
-    COMChatController, Presence, 
+    COMChatController, Presence,
     JabberConst, PrefController, Session;
 
 {---------------------------------------}
 constructor TJabberChatList.Create;
 begin
     inherited;
+    _s := nil;
+    _callback := -1;
 end;
 
 {---------------------------------------}
 destructor TJabberChatList.Destroy;
 begin
-    MainSession.UnRegisterCallback(_callback);
+    if (_callback <> -1) then
+        MainSession.UnRegisterCallback(_callback);
+    inherited;
+end;
+
+{---------------------------------------}
+procedure TJabberChatList.SetSession(s: TObject);
+begin
+    _s := s;
+    _callback := TJabberSession(s).RegisterCallback(MsgCallback, '/packet/message');
 end;
 
 {---------------------------------------}

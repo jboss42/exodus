@@ -66,6 +66,8 @@ var
     XP_MSGCOMPOSING: TXPLite;
     XP_MSGDELAY: TXPLite;
     XP_XOOB: TXPLite;
+    XP_XDELIVER: TXPLite;
+    XP_XDISPLAY: TXPLite;
 
 implementation
 
@@ -79,6 +81,8 @@ initialization
     XP_MSGCOMPOSING := TXPLite.Create('/message/*[@xmlns="' + XMLNS_XEVENT + '"]/composing');
     XP_MSGDELAY := TXPLite.Create('/message/x[@xmlns="' + XMLNS_DELAY + '"]');
     XP_XOOB := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XOOB + '"]');
+    XP_XDELIVER := TXPLIte.Create('/message/x[@xmlns="' + XMLNS_XEVENT + '"]/delivered');
+    XP_XDISPLAY := TXPLite.Create('/message/x[@xmlns="' + XMLNS_XEVENT + '"]/displayed');
 
 finalization
     XP_XOOB.Free();

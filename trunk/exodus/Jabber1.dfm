@@ -31,7 +31,7 @@ object frmExodus: TfrmExodus
     Left = 57
     Top = 27
     Width = 3
-    Height = 312
+    Height = 317
     Cursor = crHSplit
     OnMoved = SplitterRightMoved
   end
@@ -39,7 +39,7 @@ object frmExodus: TfrmExodus
     Left = 60
     Top = 27
     Width = 157
-    Height = 312
+    Height = 317
     ActivePage = tbsRoster
     Align = alClient
     DockSite = True
@@ -72,7 +72,7 @@ object frmExodus: TfrmExodus
         Left = 105
         Top = 0
         Width = 3
-        Height = 282
+        Height = 287
         Cursor = crHSplit
         ResizeStyle = rsUpdate
         OnMoved = SplitterRightMoved
@@ -81,7 +81,7 @@ object frmExodus: TfrmExodus
         Left = 0
         Top = 0
         Width = 105
-        Height = 282
+        Height = 287
         Align = alLeft
         BevelOuter = bvNone
         BorderWidth = 1
@@ -94,7 +94,7 @@ object frmExodus: TfrmExodus
         Left = 108
         Top = 0
         Width = 41
-        Height = 282
+        Height = 287
         Align = alClient
         BevelOuter = bvNone
         Caption = 'THIS IS PNLRIGHT'
@@ -210,7 +210,7 @@ object frmExodus: TfrmExodus
     Left = 0
     Top = 27
     Width = 57
-    Height = 312
+    Height = 317
     Align = alLeft
     BevelOuter = bvNone
     BorderWidth = 1

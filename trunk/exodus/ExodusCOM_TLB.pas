@@ -11,8 +11,8 @@ unit ExodusCOM_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.22 $
-// File generated on 1/30/2003 6:51:00 AM from Type Library described below.
+// PASTLWTR : $Revision: 1.23 $
+// File generated on 2/2/2003 8:05:40 PM from Type Library described below.
 
 // ************************************************************************  //
 // Type Lib: D:\src\exodus\exodus\Exodus.tlb (1)
@@ -51,9 +51,7 @@ const
   IID_IExodusChat: TGUID = '{27176DA5-4EEB-442F-9B1F-D25EF948B9CB}';
   CLASS_ExodusChat: TGUID = '{DB3F5C90-0575-47E4-8F00-EED79757A97B}';
   IID_IExodusPlugin: TGUID = '{72470D1C-9A66-4735-A7CF-446F43561C92}';
-  CLASS_ExodusPlugin: TGUID = '{B4CEBD09-6E5E-4A42-8CEA-219989832597}';
   IID_IExodusChatPlugin: TGUID = '{2C576B16-DD6A-4E8C-8DEB-38E255B48A88}';
-  CLASS_ExodusChatPlugin: TGUID = '{4B956942-1A82-4AE9-804F-68E1B6CA4AB4}';
   IID_IExodusRoster: TGUID = '{29B1C26F-2F13-47D8-91C4-A4A5AC43F4A9}';
   CLASS_ExodusRoster: TGUID = '{438DF52E-F892-456B-9FB0-3C64DBB85240}';
   IID_IExodusPPDB: TGUID = '{284E49F2-2006-4E48-B0E0-233867A78E54}';
@@ -62,6 +60,7 @@ const
   CLASS_ExodusRosterItem: TGUID = '{9C6A0965-39B0-4D72-A143-D210FB1BA988}';
   IID_IExodusPresence: TGUID = '{D2FD3425-40CE-469F-A95C-1C80B7FF3119}';
   CLASS_ExodusPresence: TGUID = '{B9EED6FA-AB95-48CA-B485-1AF7E3CC0D0B}';
+  IID_IExodusAuth: TGUID = '{D33EA5B9-23FD-4E43-B5B7-3CCFD0F5CDD0}';
 
 // *********************************************************************//
 // Declaration of Enumerations defined in Type Library                    
@@ -104,6 +103,8 @@ type
   IExodusRosterItemDisp = dispinterface;
   IExodusPresence = interface;
   IExodusPresenceDisp = dispinterface;
+  IExodusAuth = interface;
+  IExodusAuthDisp = dispinterface;
 
 // *********************************************************************//
 // Declaration of CoClasses defined in Type Library                       
@@ -111,8 +112,6 @@ type
 // *********************************************************************//
   ExodusController = IExodusController;
   ExodusChat = IExodusChat;
-  ExodusPlugin = IExodusPlugin;
-  ExodusChatPlugin = IExodusChatPlugin;
   ExodusRoster = IExodusRoster;
   ExodusPPDB = IExodusPPDB;
   ExodusRosterItem = IExodusRosterItem;
@@ -200,6 +199,10 @@ type
     function getActiveGroup: WideString; safecall;
     function getActiveContacts(Online: WordBool): WideString; safecall;
     function Get_LocalIP: WideString; safecall;
+    procedure setPluginAuth(const AuthAgent: IExodusAuth); safecall;
+    procedure setAuthenticated(Authed: WordBool; const XML: WideString); safecall;
+    procedure setAuthJID(const Username: WideString; const Host: WideString; 
+                         const Resource: WideString); safecall;
     property Connected: WordBool read Get_Connected;
     property Username: WideString read Get_Username;
     property Server: WideString read Get_Server;
@@ -290,6 +293,10 @@ type
     function getActiveGroup: WideString; dispid 63;
     function getActiveContacts(Online: WordBool): WideString; dispid 65;
     property LocalIP: WideString readonly dispid 64;
+    procedure setPluginAuth(const AuthAgent: IExodusAuth); dispid 66;
+    procedure setAuthenticated(Authed: WordBool; const XML: WideString); dispid 67;
+    procedure setAuthJID(const Username: WideString; const Host: WideString; 
+                         const Resource: WideString); dispid 68;
   end;
 
 // *********************************************************************//
@@ -552,6 +559,32 @@ type
   end;
 
 // *********************************************************************//
+// Interface: IExodusAuth
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {D33EA5B9-23FD-4E43-B5B7-3CCFD0F5CDD0}
+// *********************************************************************//
+  IExodusAuth = interface(IDispatch)
+    ['{D33EA5B9-23FD-4E43-B5B7-3CCFD0F5CDD0}']
+    procedure StartAuth; safecall;
+    procedure CancelAuth; safecall;
+    function StartRegistration: WordBool; safecall;
+    procedure CancelRegistration; safecall;
+  end;
+
+// *********************************************************************//
+// DispIntf:  IExodusAuthDisp
+// Flags:     (4416) Dual OleAutomation Dispatchable
+// GUID:      {D33EA5B9-23FD-4E43-B5B7-3CCFD0F5CDD0}
+// *********************************************************************//
+  IExodusAuthDisp = dispinterface
+    ['{D33EA5B9-23FD-4E43-B5B7-3CCFD0F5CDD0}']
+    procedure StartAuth; dispid 1;
+    procedure CancelAuth; dispid 2;
+    function StartRegistration: WordBool; dispid 3;
+    procedure CancelRegistration; dispid 4;
+  end;
+
+// *********************************************************************//
 // The Class CoExodusController provides a Create and CreateRemote method to          
 // create instances of the default interface IExodusController exposed by              
 // the CoClass ExodusController. The functions are intended to be used by             
@@ -573,30 +606,6 @@ type
   CoExodusChat = class
     class function Create: IExodusChat;
     class function CreateRemote(const MachineName: string): IExodusChat;
-  end;
-
-// *********************************************************************//
-// The Class CoExodusPlugin provides a Create and CreateRemote method to          
-// create instances of the default interface IExodusPlugin exposed by              
-// the CoClass ExodusPlugin. The functions are intended to be used by             
-// clients wishing to automate the CoClass objects exposed by the         
-// server of this typelibrary.                                            
-// *********************************************************************//
-  CoExodusPlugin = class
-    class function Create: IExodusPlugin;
-    class function CreateRemote(const MachineName: string): IExodusPlugin;
-  end;
-
-// *********************************************************************//
-// The Class CoExodusChatPlugin provides a Create and CreateRemote method to          
-// create instances of the default interface IExodusChatPlugin exposed by              
-// the CoClass ExodusChatPlugin. The functions are intended to be used by             
-// clients wishing to automate the CoClass objects exposed by the         
-// server of this typelibrary.                                            
-// *********************************************************************//
-  CoExodusChatPlugin = class
-    class function Create: IExodusChatPlugin;
-    class function CreateRemote(const MachineName: string): IExodusChatPlugin;
   end;
 
 // *********************************************************************//
@@ -669,26 +678,6 @@ end;
 class function CoExodusChat.CreateRemote(const MachineName: string): IExodusChat;
 begin
   Result := CreateRemoteComObject(MachineName, CLASS_ExodusChat) as IExodusChat;
-end;
-
-class function CoExodusPlugin.Create: IExodusPlugin;
-begin
-  Result := CreateComObject(CLASS_ExodusPlugin) as IExodusPlugin;
-end;
-
-class function CoExodusPlugin.CreateRemote(const MachineName: string): IExodusPlugin;
-begin
-  Result := CreateRemoteComObject(MachineName, CLASS_ExodusPlugin) as IExodusPlugin;
-end;
-
-class function CoExodusChatPlugin.Create: IExodusChatPlugin;
-begin
-  Result := CreateComObject(CLASS_ExodusChatPlugin) as IExodusChatPlugin;
-end;
-
-class function CoExodusChatPlugin.CreateRemote(const MachineName: string): IExodusChatPlugin;
-begin
-  Result := CreateRemoteComObject(MachineName, CLASS_ExodusChatPlugin) as IExodusChatPlugin;
 end;
 
 class function CoExodusRoster.Create: IExodusRoster;
