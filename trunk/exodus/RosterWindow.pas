@@ -1346,23 +1346,36 @@ begin
     // Based on the current node we are hovering over.
     _hint_text := '';
     Node := treeRoster.GetNodeAt(x,y);
-    if ((Node = nil) or (Node.HasChildren)) then exit;
+    if (Node = nil) then exit;
 
-    // get the roster item attached to this node.
-    if (Node.Data = nil) then exit;
-    if (TObject(Node.Data) is TJabberBookmark) then exit;
-    if (TObject(Node.Data) is TJabberMyResource) then exit;
+    // For groups just display the group name:
+    if (Node.HasChildren) then begin
+        _hint_text := Node.Text;
+    end
+    else if (Node.Data = nil) then begin
+        _hint_text := '';
+    end
 
-    ri := TJabberRosterItem(Node.Data);
-    if ri = nil then exit;
+    else if (TObject(Node.Data) is TJabberBookmark) then begin
+        _hint_text := TJabberBookmark(Node.Data).bmName;
+    end
 
-    p := MainSession.ppdb.FindPres(ri.JID.jid, '');
-    if MainSession.Prefs.getBool('inline_status') then
-        _hint_text := ri.jid.full
-    else if P = nil then
-        _hint_text := ri.jid.full + ': ' + g_offline
-    else
-        _hint_text := ri.jid.full + ': ' + p.Status;
+    else if (TObject(Node.Data) is TJabberMyResource) then begin
+        _hint_text := TJabberMyResource(Node.Data).jid.resource;
+    end
+
+    else begin
+        ri := TJabberRosterItem(Node.Data);
+        if ri = nil then exit;
+
+        p := MainSession.ppdb.FindPres(ri.JID.jid, '');
+        if MainSession.Prefs.getBool('inline_status') then
+            _hint_text := ri.jid.full
+        else if P = nil then
+            _hint_text := ri.jid.full + ': ' + g_offline
+        else
+            _hint_text := ri.jid.full + ': ' + p.Status;
+    end;
 
     if _hint_text = treeRoster.Hint then exit;
     treeRoster.Hint := _hint_text;
@@ -2618,7 +2631,7 @@ procedure TfrmRosterWindow.MoveorCopyContacts1Click(Sender: TObject);
 var
     sel: TList;
 begin
-    sel := Self.getSelectedContacts(true);
+    sel := Self.getSelectedContacts(false);
     ShowGrpManagement(sel);
 end;
 
