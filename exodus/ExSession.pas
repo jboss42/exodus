@@ -318,8 +318,13 @@ begin
 
     with MainSession.Prefs do begin
         s := GetString('brand_icon');
-        if (s <> '') then
-            Application.Icon.LoadFromFile(ExtractFilePath(Application.EXEName) + s);
+        if (s <> '') then begin
+            // we either have an absolute or relative path
+            if (FileExists(s)) then
+                Application.Icon.LoadFromFile(s)
+            else
+                Application.Icon.LoadFromFile(ExtractFilePath(Application.EXEName) + s);
+        end;
 
         connect_node := nil;
         if (xmpp_file <> '') then begin
