@@ -7625,4 +7625,8 @@ object frmExodus: TfrmExodus
     Left = 120
     Top = 168
   end
+  object IdAntiFreeze1: TIdAntiFreeze
+    Left = 88
+    Top = 168
+  end
 end
