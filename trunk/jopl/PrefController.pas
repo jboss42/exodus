@@ -213,6 +213,8 @@ begin
         result := 'XA as a result of idle'
     else if pkey = 'log_path' then
         result := ExtractFilePath(Application.EXEName) + 'logs\'
+    else if pkey = 'inline_status' then
+        result := '0'
     else
         result := '0';
 end;
