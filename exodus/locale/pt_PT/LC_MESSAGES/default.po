@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exodus 0.8-Daily\n"
 "POT-Creation-Date: 2003-05-08 06:59\n"
-"PO-Revision-Date: 2003-10-30 12:33-0000\n"
+"PO-Revision-Date: 2003-11-05 02:47-0000\n"
 "Last-Translator: Lazarus Long <lazarus.long@bigfoot.com>\n"
 "Language-Team: pt_PT <lazarus.long@bigfoot.com>\n"
 "MIME-Version: 1.0\n"
@@ -889,7 +889,7 @@ msgstr "ToolButton2"
 #. frmVCard..PageControl1..TabSheet4..Caption
 #. Programmer's name for it: sResourceHome
 #: Browser.dfm:204
-#: ConnDetails.pas:121
+#: ConnDetails.pas:125
 #: Profile.dfm:391
 #: vcard.dfm:211
 msgid "Home"
@@ -956,14 +956,14 @@ msgid "List"
 msgstr "Lista"
 
 #. frmBrowse..popContext..mBrowse..Caption
-#. frmConnDetails..PageControl1..tbsConn..btnCertBrowse..Caption
+#. frmConnDetails..PageControl1..tbsSSL..btnCertBrowse..Caption
 #. Programmer's name for it: sBrowse
 #. frmPrefMsg..btnLogBrowse..Caption
 #. frmPrefMsg..btnSpoolBrowse..Caption
 #. frmPrefPlugins..btnBrowsePluginPath..Caption
 #. frmPrefTransfer..btnTransferBrowse..Caption
 #: Browser.dfm:3147
-#: ConnDetails.dfm:277
+#: ConnDetails.dfm:286
 #: ExResponders.pas:126
 #: prefs/PrefMsg.dfm:75
 #: prefs/PrefMsg.dfm:129
@@ -1059,11 +1059,6 @@ msgstr "Cancelar"
 #: ChatWin.dfm:5
 msgid "Chat Window"
 msgstr "Janela de conversa"
-
-#. frmChat..Panel1..pnlJID..lblNick..Caption
-#: ChatWin.dfm:71
-msgid " Foo 絈絉絊絋 "
-msgstr " Foo 絈絉絊絋 "
 
 #. frmChat..Panel1..pnlJID..lblNick..Caption_UTF7
 #: ChatWin.dfm:73
@@ -1214,7 +1209,7 @@ msgstr "Perfil"
 #. frmPrefNetwork..GroupBox2..lblProxyUsername..Caption
 #. frmPrefTransfer..grpWebDav..Label7..Caption
 #: ConnDetails.dfm:59
-#: ConnDetails.dfm:316
+#: ConnDetails.dfm:337
 #: prefs/PrefNetwork.dfm:106
 #: prefs/PrefTransfer.dfm:79
 msgid "Username:"
@@ -1226,7 +1221,7 @@ msgstr "Nome de utilizador:"
 #. frmPrefNetwork..GroupBox2..lblProxyPassword..Caption
 #. frmPrefTransfer..grpWebDav..Label8..Caption
 #: ConnDetails.dfm:67
-#: ConnDetails.dfm:325
+#: ConnDetails.dfm:346
 #: JoinRoom.dfm:48
 #: prefs/PrefNetwork.dfm:114
 #: prefs/PrefTransfer.dfm:86
@@ -1278,7 +1273,7 @@ msgstr "Guardar palavra-passe"
 #. frmPrefNetwork..GroupBox2..txtProxyPassword..PasswordChar
 #. frmPrefTransfer..grpWebDav..txtDavPassword..PasswordChar
 #: ConnDetails.dfm:143
-#: ConnDetails.dfm:385
+#: ConnDetails.dfm:406
 #: InputPassword.dfm:60
 #: JoinRoom.dfm:104
 #: Password.dfm:42
@@ -1295,141 +1290,161 @@ msgid "This is a new account"
 msgstr "Esta é uma conta nova"
 
 #. frmConnDetails..PageControl1..tbsConn..Caption
-#: ConnDetails.dfm:166
+#: ConnDetails.dfm:165
 msgid "Connection"
 msgstr "Ligação"
-
-#. frmConnDetails..PageControl1..tbsConn..Label4..Caption
-#. frmConnDetails..PageControl1..tbsSocket..lblSocksHost..Caption
-#. frmPrefNetwork..GroupBox2..lblProxyHost..Caption
-#: ConnDetails.dfm:173
-#: ConnDetails.dfm:290
-#: prefs/PrefNetwork.dfm:90
-msgid "Host:"
-msgstr "Anfitrião:"
-
-#. frmConnDetails..PageControl1..tbsConn..Label7..Caption
-#. frmConnDetails..PageControl1..tbsSocket..lblSocksPort..Caption
-#. frmPrefNetwork..GroupBox2..lblProxyPort..Caption
-#. frmPrefTransfer..grpWebDav..Label4..Caption
-#: ConnDetails.dfm:181
-#: ConnDetails.dfm:299
-#: prefs/PrefNetwork.dfm:98
-#: prefs/PrefTransfer.dfm:58
-msgid "Port:"
-msgstr "Porta:"
 
 #. frmConnDetails..PageControl1..tbsConn..Label8..Caption
 #. frmConnDetails..PageControl1..tbsSocket..lblSocksType..Caption
 #. frmPrefPresence..GroupBox1..Label13..Caption
-#: ConnDetails.dfm:189
-#: ConnDetails.dfm:308
+#: ConnDetails.dfm:172
+#: ConnDetails.dfm:329
 #: prefs/PrefPresence.dfm:93
 msgid "Type:"
 msgstr "Tipo:"
 
 #. frmConnDetails..PageControl1..tbsConn..Label6..Caption
 #. frmPrefPresence..GroupBox1..Label14..Caption
-#: ConnDetails.dfm:197
+#: ConnDetails.dfm:180
 #: prefs/PrefPresence.dfm:100
 msgid "Priority:"
 msgstr "Prioridade:"
 
-#. frmConnDetails..PageControl1..tbsConn..TntLabel1..Caption
-#: ConnDetails.dfm:205
-msgid "SSL Certificate:"
-msgstr "Certificado SSL:"
-
-#. frmConnDetails..PageControl1..tbsConn..chkSSL..Caption
-#: ConnDetails.dfm:228
-msgid "Use SSL"
-msgstr "Usar SSL"
-
 #. frmConnDetails..PageControl1..tbsConn..cboConnection..Text
 #. frmConnDetails..PageControl1..tbsConn..cboConnection....Items.WideStrings
-#: ConnDetails.dfm:242
-#: ConnDetails.dfm:245
+#: ConnDetails.dfm:193
+#: ConnDetails.dfm:196
 msgid "Normal"
 msgstr "Normal"
 
 #. frmConnDetails..PageControl1..tbsConn..cboConnection....Items.WideStrings
 #. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.Strings
-#: ConnDetails.dfm:246
-#: ConnDetails.dfm:369
+#: ConnDetails.dfm:197
+#: ConnDetails.dfm:390
 msgid "HTTP"
 msgstr "HTTP"
 
+#. frmConnDetails..PageControl1..tbsConn..chkSRV..Caption
+#: ConnDetails.dfm:221
+msgid "Automatically discover host and port"
+msgstr "Detectar automaticamente o anfitrião e a porta"
+
+#. frmConnDetails..PageControl1..tbsConn..boxHost..Label4..Caption
+#. frmConnDetails..PageControl1..tbsSocket..lblSocksHost..Caption
+#. frmPrefNetwork..GroupBox2..lblProxyHost..Caption
+#: ConnDetails.dfm:236
+#: ConnDetails.dfm:311
+#: prefs/PrefNetwork.dfm:90
+msgid "Host:"
+msgstr "Anfitrião:"
+
+#. frmConnDetails..PageControl1..tbsConn..boxHost..Label7..Caption
+#. frmConnDetails..PageControl1..tbsSocket..lblSocksPort..Caption
+#. frmPrefNetwork..GroupBox2..lblProxyPort..Caption
+#. frmPrefTransfer..grpWebDav..Label4..Caption
+#: ConnDetails.dfm:244
+#: ConnDetails.dfm:320
+#: prefs/PrefNetwork.dfm:98
+#: prefs/PrefTransfer.dfm:58
+msgid "Port:"
+msgstr "Porta:"
+
+#. frmConnDetails..PageControl1..tbsSSL..Caption
+#: ConnDetails.dfm:265
+msgid "SSL"
+msgstr "SSL"
+
+#. frmConnDetails..PageControl1..tbsSSL..TntLabel1..Caption
+#: ConnDetails.dfm:271
+msgid "SSL Certificate:"
+msgstr "Certificado SSL:"
+
+#. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.Strings
+#: ConnDetails.dfm:296
+msgid "Use StartTLS whenever the server allows it."
+msgstr "Utilizar StartTLS sempre que o servidor o permitir."
+
+#. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.Strings
+#: ConnDetails.dfm:297
+msgid "Only allow connections which use StartTLS."
+msgstr "Apenas permitir ligações que utilizem StartTLS."
+
+#. frmConnDetails..PageControl1..tbsSSL..optSSL....Items.Strings
+#: ConnDetails.dfm:298
+msgid "The specified port is SSL only."
+msgstr "A porta especificada é apenas para SSL."
+
 #. frmConnDetails..PageControl1..tbsSocket..Caption
-#: ConnDetails.dfm:283
+#: ConnDetails.dfm:304
 msgid "Proxy"
 msgstr "Proxy"
 
 #. frmConnDetails..PageControl1..tbsSocket..chkSocksAuth..Caption
 #. frmPrefNetwork..GroupBox2..chkProxyAuth..Caption
-#: ConnDetails.dfm:334
+#: ConnDetails.dfm:355
 #: prefs/PrefNetwork.dfm:145
 msgid "Authentication Required"
 msgstr "Autenticação obrigatória"
 
 #. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.Strings
 #. frmProfile..PageControl1..TabSheet1..optSubscrip....Items.Strings
-#: ConnDetails.dfm:365
+#: ConnDetails.dfm:386
 #: Profile.dfm:98
 msgid "None"
 msgstr "Nenhum"
 
 #. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.Strings
-#: ConnDetails.dfm:366
+#: ConnDetails.dfm:387
 msgid "Version 4"
 msgstr "Versão 4"
 
 #. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.Strings
-#: ConnDetails.dfm:367
+#: ConnDetails.dfm:388
 msgid "Version 4a"
 msgstr "Versão 4a"
 
 #. frmConnDetails..PageControl1..tbsSocket..cboSocksType....Items.Strings
-#: ConnDetails.dfm:368
+#: ConnDetails.dfm:389
 msgid "Version 5"
 msgstr "Versão 5"
 
 #. frmConnDetails..PageControl1..tbsHttp..Caption
-#: ConnDetails.dfm:391
+#: ConnDetails.dfm:412
 msgid "HTTP Polling"
 msgstr "Pesquisa"
 
 #. frmConnDetails..PageControl1..tbsHttp..Label1..Caption
-#: ConnDetails.dfm:398
+#: ConnDetails.dfm:419
 msgid "URL:"
 msgstr "URL:"
 
 #. frmConnDetails..PageControl1..tbsHttp..Label2..Caption
-#: ConnDetails.dfm:406
+#: ConnDetails.dfm:427
 msgid "Poll Time:"
 msgstr "Intervalo de pesquisa:"
 
 #. frmConnDetails..PageControl1..tbsHttp..Label5..Caption
-#: ConnDetails.dfm:414
+#: ConnDetails.dfm:435
 msgid "seconds"
 msgstr "segundos"
 
 #. frmConnDetails..PageControl1..tbsHttp..Label9..Caption
-#: ConnDetails.dfm:421
+#: ConnDetails.dfm:442
 msgid "# of Keys:"
 msgstr "Nº de chaves:"
 
 #. frmConnDetails..PageControl1..tbsHttp..lblNote....AutoSize
-#: ConnDetails.dfm:435
+#: ConnDetails.dfm:456
 msgid "NOTE: You must use the URL of your jabber server's HTTP tunnelling proxy. You can not use some \"standard\" HTTP proxy for this to work. Contact your server administrator for additional information."
 msgstr "NOTA: Tem que usar o endereço do proxy de encapsulamento HTTP do seu servidor jabber. Para que isto funcione não é possível usar um proxy HTTP \"padrão\" qualquer. Contacte o administrador do seu servidor para mais informações."
 
 #. frmConnDetails..OpenDialog1..DefaultExt
-#: ConnDetails.dfm:462
+#: ConnDetails.dfm:483
 msgid "pem"
 msgstr "pem"
 
 #. frmConnDetails..OpenDialog1..Filter
-#: ConnDetails.dfm:463
+#: ConnDetails.dfm:484
 msgid "SSL Key Files|*.pem|All Files|*.*"
 msgstr "Chaves SSL (*.pem)|*.pem|Todos os ficheiros (*.*)|*.*"
 
@@ -5704,7 +5719,7 @@ msgstr "Zimbabué  "
 #. frmProfile..PageControl1..TabSheet5..Caption
 #. frmVCard..PageControl1..TabSheet5..Caption
 #. Programmer's name for it: sResourceWork
-#: ConnDetails.pas:120
+#: ConnDetails.pas:124
 #: Profile.dfm:727
 #: vcard.dfm:542
 msgid "Work"
@@ -6440,32 +6455,32 @@ msgid "Remove this plugin from the list of plugins to be loaded at startup?"
 msgstr "Remover este plugin da lista de plugins a carregar no arranque?"
 
 #. Programmer's name for it: sSmallKeys
-#: ConnDetails.pas:117
+#: ConnDetails.pas:121
 msgid "Must have a larger number of poll keys."
 msgstr "Tem que ter um número maior de chaves de pesquisa."
 
 #. Programmer's name for it: sConnDetails
-#: ConnDetails.pas:118
+#: ConnDetails.pas:122
 msgid "%s Details"
 msgstr "Detalhes de %s"
 
 #. Programmer's name for it: sProfileInvalidJid
-#: ConnDetails.pas:119
+#: ConnDetails.pas:123
 msgid "The Jabber ID you entered (username@server/resource) is invalid. Please enter a valid username, server, and resource."
 msgstr "O ID de Jabber que introduziu (utilizador@servidor/recurso) é inválido. Por favor introduza um utilizador, servidor e recurso válidos."
 
 #. Programmer's name for it: sDownloadServers
-#: ConnDetails.pas:122
+#: ConnDetails.pas:126
 msgid "Download the public server list from jabber.org? (Requires an internet connection)."
 msgstr "Obter a lista de servidores públicos a partir de jabber.org? (É necessária uma ligação à Internet)."
 
 #. Programmer's name for it: sDownloadCaption
-#: ConnDetails.pas:123
+#: ConnDetails.pas:127
 msgid "Downloading public server list"
 msgstr "A transferir a lista de servidores públicos"
 
 #. Programmer's name for it: sNoSSL
-#: ConnDetails.pas:124
+#: ConnDetails.pas:128
 msgid "This profile is currently to use SSL, however, your system does not have the required libraries to use SSL. Turning SSL OFF."
 msgstr "Este perfil está configurado para usar uma ligação segura (SSL), no entanto, o seu sistema não tem as bibliotecas necessárias instaladas. A DESLIGAR o suporte ao SSL."
 
@@ -7774,12 +7789,12 @@ msgid "..country-codes.xml"
 msgstr "..country-codes.xml"
 
 #. Programmer's name for it: sIdleAway
-#: /src/exodus/jopl/PrefController.pas:244
+#: /src/exodus/jopl/PrefController.pas:250
 msgid "Away as a result of idle."
 msgstr "Ausência resultante de inactividade."
 
 #. Programmer's name for it: sIdleXA
-#: /src/exodus/jopl/PrefController.pas:245
+#: /src/exodus/jopl/PrefController.pas:251
 msgid "XA as a result of idle."
 msgstr "Ausência prolongada resultante de inactividade."
 
