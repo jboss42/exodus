@@ -188,27 +188,15 @@ inherited frmPrefNetwork: TfrmPrefNetwork
     Height = 24
     Align = alTop
     BevelOuter = bvLowered
-    ParentColor = True
+    Caption = 'Connection Options'
+    Color = clHighlight
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clHighlightText
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentBackground = False
+    ParentFont = False
     TabOrder = 2
-    object TntLabel1: TTntLabel
-      Left = 1
-      Top = 1
-      Width = 341
-      Height = 22
-      Align = alClient
-      Alignment = taCenter
-      AutoSize = False
-      Caption = 'Connection Options'
-      Color = clHighlight
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWhite
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentColor = False
-      ParentFont = False
-      Transparent = False
-      Layout = tlCenter
-    end
   end
 end

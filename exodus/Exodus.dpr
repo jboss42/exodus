@@ -109,7 +109,6 @@ uses
   presence in '..\jopl\Presence.pas',
   Profile in 'Profile.pas' {frmProfile},
   RegExpr in 'RegExpr.pas',
-  RegForm in 'RegForm.pas' {frmRegister},
   Register in 'Register.pas',
   RemoveContact in 'RemoveContact.pas' {frmRemove},
   Responder in '..\jopl\Responder.pas',
@@ -154,7 +153,8 @@ uses
   HttpProxyIOHandler in '..\jopl\HttpProxyIOHandler.pas',
   GTLanguagesEx in 'GTLanguagesEx.pas',
   PrefLayouts in 'prefs\PrefLayouts.pas' {frmPrefLayouts},
-  Wizard in 'Wizard.pas' {frmWizard};
+  Wizard in 'Wizard.pas' {frmWizard},
+  RegForm in 'RegForm.pas' {frmRegister};
 
 {$R *.TLB}
 
@@ -178,6 +178,7 @@ begin
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TfrmPrefLayouts, frmPrefLayouts);
   Application.CreateForm(TfrmWizard, frmWizard);
+  Application.CreateForm(TfrmRegister, frmRegister);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);

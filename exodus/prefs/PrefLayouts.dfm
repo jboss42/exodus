@@ -1162,27 +1162,15 @@ inherited frmPrefLayouts: TfrmPrefLayouts
     Height = 24
     Align = alTop
     BevelOuter = bvLowered
-    ParentColor = True
+    Caption = 'Window Layouts'
+    Color = clHighlight
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clHighlightText
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentBackground = False
+    ParentFont = False
     TabOrder = 1
-    object TntLabel1: TTntLabel
-      Left = 1
-      Top = 1
-      Width = 355
-      Height = 22
-      Align = alClient
-      Alignment = taCenter
-      AutoSize = False
-      Caption = 'Window Layouts'
-      Color = clHighlight
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWhite
-      Font.Height = -13
-      Font.Name = 'Arial'
-      Font.Style = [fsBold]
-      ParentColor = False
-      ParentFont = False
-      Transparent = False
-      Layout = tlCenter
-    end
   end
 end

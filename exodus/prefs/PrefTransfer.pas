@@ -52,7 +52,6 @@ type
     Label8: TTntLabel;
     Label9: TTntLabel;
     StaticText4: TTntPanel;
-    TntLabel1: TTntLabel;
     procedure btnTransferBrowseClick(Sender: TObject);
     procedure chkIPClick(Sender: TObject);
     procedure Label2Click(Sender: TObject);

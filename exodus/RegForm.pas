@@ -1,55 +1,28 @@
 unit RegForm;
-{
-    Copyright 2001, Peter Millard
-
-    This file is part of Exodus.
-
-    Exodus is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    Exodus is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License
-    along with Exodus; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-}
 
 interface
 
 uses
-    XMLTag, IQ, Agents, Presence, fGeneric,
-    fLeftLabel,
-    Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    StdCtrls, ComCtrls, ExtCtrls, TntStdCtrls, TntComCtrls, TntExtCtrls;
+    XMLTag, IQ, Agents, Presence, fGeneric, fLeftLabel,
+    Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+    Dialogs, Wizard, ComCtrls, ExtCtrls, StdCtrls, TntStdCtrls, TntExtCtrls;
 
 type
     RegFormStage = (rsWelcome, rsForm, rsXData, rsRegister, rsFinish, rsDone);
 
 type
-  TfrmRegister = class(TForm)
-    pnlBottom: TTntPanel;
-    pnlBtns: TTntPanel;
-    btnPrev: TTntButton;
-    btnNext: TTntButton;
-    btnCancel: TTntButton;
-    Tabs: TTntPageControl;
-    tabWelcome: TTntTabSheet;
-    Label1: TLabel;
+  TfrmRegister = class(TfrmWizard)
+    Label1: TTntLabel;
     lblIns: TTntLabel;
-    tabAgent: TTntTabSheet;
-    Panel2: TPanel;
-    Panel3: TTntPanel;
-    btnDelete: TTntButton;
-    tabWait: TTntTabSheet;
+    TabSheet2: TTabSheet;
+    TabSheet3: TTabSheet;
     Label2: TTntLabel;
-    tabResult: TTntTabSheet;
-    lblBad: TTntLabel;
+    TabSheet4: TTabSheet;
     lblOK: TTntLabel;
+    lblBad: TTntLabel;
+    Panel2: TPanel;
+    btnDelete: TTntButton;
+    formBox: TScrollBox;
     procedure FormCreate(Sender: TObject);
     procedure btnNextClick(Sender: TObject);
     procedure btnCancelClick(Sender: TObject);
@@ -92,6 +65,8 @@ const
 resourcestring
     sBtnFinish = 'Finish';
     sBtnCancel = 'Cancel';
+    sServiceRegTitle = 'Jabber Service Registration';
+    sServiceRegDetails = 'This wizard will guide you through registration with a jabber service.'; 
     sServiceRegError = 'The agent you are trying to register with returned an error.';
     sServiceRegTimeout = 'The agent you are trying to register with can not be reached.';
     sServiceRegRemoveError = 'There was an error trying to remove your registration.';
@@ -114,13 +89,16 @@ begin
     TranslateProperties(Self);
 
     // Hide all the tabs and make the welcome tab visible
-    tabWelcome.TabVisible := false;
-    tabAgent.TabVisible := false;
-    tabResult.TabVisible := false;
-    tabWait.TabVisible := false;
+    TabSheet1.TabVisible := false;
+    TabSheet2.TabVisible := false;
+    TabSheet3.TabVisible := false;
+    TabSheet4.TabVisible := false;
+
+    lblWizardTitle.Caption := sServiceRegTitle;
+    lblWizardDetails.Caption := sServiceRegDetails;
 
     cur_stage := rsWelcome;
-    Tabs.ActivePage := tabWelcome;
+    Tabs.ActivePage := TabSheet1;
     cur_iq := nil;
     cur_key := '';
     pres_cb := -1;
@@ -131,7 +109,7 @@ end;
 procedure TfrmRegister.Start();
 begin
     // start the whole process off
-    btnPrev.Enabled := false;
+    btnBack.Enabled := false;
     btnNext.Enabled := false;
     btnCancel.Enabled := true;
     Self.Show();
@@ -167,7 +145,7 @@ begin
         end
         else begin
             // normal result
-            AssignDefaultFont(tabAgent.Font);
+            AssignDefaultFont(TabSheet2.Font);
             btnDelete.Enabled := false;
             ag_tag := tag.QueryXPTag('/iq/query');
 
@@ -193,7 +171,7 @@ begin
                     frm := TframeGeneric.Create(Self);
                     frm.FormType := ftype;
                     frm.Name := 'xDataFrame' + IntToStr(i);
-                    frm.Parent := tabAgent;
+                    frm.Parent := formBox;
                     frm.Visible := true;
                     frm.render(flds[i]);
                     frm.Align := alTop;
@@ -202,8 +180,8 @@ begin
                 end;
                 flds.Free();
 
-                for i := 0 to Self.tabAgent.ControlCount - 1 do begin
-                    c := Self.tabAgent.Controls[i];
+                for i := 0 to Self.formBox.ControlCount - 1 do begin
+                    c := Self.formBox.Controls[i];
                     if (c is TframeGeneric) then begin
                         TframeGeneric(c).setLabelWidth(m + 20);
                         TframeGeneric(c).Repaint();
@@ -260,9 +238,9 @@ var
     frm: TfrmField;
 begin
     // create a new panel and input area for a field
-    frm := TfrmField.Create(tabAgent);
+    frm := TfrmField.Create(formBox);
     with frm do begin
-        Parent := tabAgent;
+        Parent := formBox;
         Name := 'fld_' + fld;
         lblPrompt.Caption := fld;
         if Lowercase(fld) = 'password' then
@@ -295,17 +273,17 @@ begin
 
     xdata := nil;
 
-    for i := 0 to tabAgent.ControlCount - 1 do begin
-        if (tabAgent.Controls[i] is TfrmField) then begin
+    for i := 0 to formBox.ControlCount - 1 do begin
+        if (formBox.Controls[i] is TfrmField) then begin
             // non x-data field
-            frm := TfrmField(tabAgent.Controls[i]);
+            frm := TfrmField(formBox.Controls[i]);
             with frm do
                 cur_iq.qTag.AddBasicTag(lblPrompt.Caption, txtData.Text);
 
         end
-        else if (tabAgent.Controls[i] is TframeGeneric) then begin
+        else if (formBox.Controls[i] is TframeGeneric) then begin
             // this is an x-data field
-            frmx := TframeGeneric(tabAgent.Controls[i]);
+            frmx := TframeGeneric(formBox.Controls[i]);
             if (xdata = nil) then begin
                 xdata := cur_iq.qTag.AddTag('x');
                 xdata.setAttribute('xmlns', XMLNS_XDATA);
@@ -378,12 +356,12 @@ procedure TfrmRegister.RegCallback(event: string; tag: TXMLTag);
 begin
     // We are getting a result from our iq-set
     cur_iq := nil;
-    Tabs.ActivePage := tabResult;
+    Tabs.ActivePage := TabSheet4;
     if ((event = 'xml') and (tag.getAttribute('type') = 'result')) then begin
         // normal result
         lblOK.Visible := true;
         lblBad.Visible := false;
-        btnPrev.Enabled := false;
+        btnBack.Enabled := false;
         btnNext.Caption := sBtnFinish;
         btnNext.Enabled := true;
         btnNext.Default := true;
@@ -393,7 +371,7 @@ begin
         // some kind of error
         lblOK.Visible := false;
         lblBad.Visible := true;
-        btnPrev.Enabled := true;
+        btnBack.Enabled := true;
         btnNext.Enabled := false;
         btnCancel.Enabled := true;
     end;
@@ -404,20 +382,20 @@ end;
 procedure TfrmRegister.btnNextClick(Sender: TObject);
 begin
     // goto the next tab
-    if (Tabs.ActivePage = tabWelcome) then begin
-        Tabs.ActivePage := tabAgent;
-        btnPrev.Enabled := true;
+    if (Tabs.ActivePage = TabSheet1) then begin
+        Tabs.ActivePage := TabSheet2;
+        btnBack.Enabled := true;
         end
 
-    else if (Tabs.ActivePage = tabAgent) then begin
+    else if (Tabs.ActivePage = TabSheet2) then begin
         // do the actual registration
-        Tabs.ActivePage := tabWait;
+        Tabs.ActivePage := TabSheet3;
         doRegister();
         btnNext.Enabled := false;
-        btnPrev.Enabled := false;
+        btnBack.Enabled := false;
     end
 
-    else if (tabs.ActivePage = tabResult) then
+    else if (tabs.ActivePage = TabSheet4) then
         Self.Close();
 end;
 
@@ -470,10 +448,11 @@ end;
 procedure TfrmRegister.btnPrevClick(Sender: TObject);
 begin
     // previous page
-    if (Tabs.ActivePage = tabResult) then
-        Tabs.ActivePage := tabAgent
-    else if (Tabs.ActivePage = tabAgent) then
-        Tabs.ActivePage := tabWelcome;
+    if (Tabs.ActivePage = TabSheet4) then
+        Tabs.ActivePage := TabSheet2
+    else if (Tabs.ActivePage = TabSheet2) then
+        Tabs.ActivePage := TabSheet1;
 end;
+
 
 end.

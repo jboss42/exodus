@@ -22,12 +22,33 @@ object frmPrefs: TfrmPrefs
     Left = 0
     Top = 0
     Width = 89
-    Height = 393
+    Height = 388
     VertScrollBar.Tracking = True
     Align = alLeft
     Color = clWindow
     ParentColor = False
     TabOrder = 0
+    OnMouseMove = OffBoxMouseMove
+    object Shape2: TShape
+      Left = 0
+      Top = 66
+      Width = 68
+      Height = 55
+      Brush.Color = clInfoBk
+      Pen.Color = cl3DDkShadow
+      Pen.Width = 2
+      Visible = False
+    end
+    object Shape1: TShape
+      Left = 0
+      Top = 1
+      Width = 68
+      Height = 55
+      Brush.Color = clInactiveCaptionText
+      Pen.Color = clActiveCaption
+      Pen.Width = 2
+      Shape = stRoundRect
+    end
     object imgDialog: TImage
       Left = 0
       Top = 318
@@ -207,6 +228,7 @@ object frmPrefs: TfrmPrefs
         E700FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF
         0000FFFF0000FFFF0000FFFF0000FFFF0000FFFF0000FFFFFFFFFFFF}
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object lblDialog: TTntLabel
       Left = 0
@@ -216,9 +238,10 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Windows'
-      Transparent = False
+      Transparent = True
       WordWrap = True
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object imgFonts: TImage
       Left = 0
@@ -399,6 +422,7 @@ object frmPrefs: TfrmPrefs
         0000000000000000000000000000000000000000000000000000000000000000
         00000000000000000000000000000000000000010000000180000003}
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object lblFonts: TTntLabel
       Left = 0
@@ -408,9 +432,10 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Fonts, Colors'
-      Transparent = False
+      Transparent = True
       WordWrap = True
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object imgS10n: TImage
       Left = 0
@@ -592,6 +617,7 @@ object frmPrefs: TfrmPrefs
         F00FFFFFF00FFFFFF007FFFFFC03FFFFFF83FFFFFF83FFFFFFC3FFFF}
       Transparent = True
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object lblS10n: TTntLabel
       Left = 0
@@ -603,9 +629,10 @@ object frmPrefs: TfrmPrefs
       Caption = 'Subscriptions'
       Color = clWindow
       ParentColor = False
-      Transparent = False
+      Transparent = True
       WordWrap = True
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object imgRoster: TImage
       Left = 0
@@ -786,6 +813,7 @@ object frmPrefs: TfrmPrefs
         FF0000FFFF00007FFF00007FFF00007FFF00007FFF00007FFF00007FFF0000FF
         FF0000FFFF8000FFFF8001FFFFC003FFFFC007FFFFD00BFFFFFC37FF}
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object lblRoster: TTntLabel
       Left = 0
@@ -803,9 +831,10 @@ object frmPrefs: TfrmPrefs
       Font.Style = []
       ParentColor = False
       ParentFont = False
-      Transparent = False
+      Transparent = True
       WordWrap = True
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object imgSystem: TImage
       Left = 0
@@ -986,6 +1015,7 @@ object frmPrefs: TfrmPrefs
         0001FFFF0001FFFF0001FFFF0001FFFF8001FFFF8001FFFF8003FFFF8000FFFF
         0000FFFF0000FFFF0001FFFF000FFFFF000FFFFF000FFFFFC01FFFFF}
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object lblSystem: TTntLabel
       Left = 0
@@ -995,17 +1025,18 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'System'
-      Color = clHighlight
+      Color = clWindow
       Font.Charset = DEFAULT_CHARSET
-      Font.Color = clHighlightText
+      Font.Color = clMenuText
       Font.Height = -11
       Font.Name = 'MS Sans Serif'
       Font.Style = []
       ParentColor = False
       ParentFont = False
-      Transparent = False
+      Transparent = True
       WordWrap = True
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object imgNotify: TImage
       Left = 0
@@ -1130,6 +1161,7 @@ object frmPrefs: TfrmPrefs
         C00F000000030000000000000000000000000000000100000001000000010000
         000100000001000080010000C0030000C0070000E00F0000F8FF0000}
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object lblNotify: TTntLabel
       Left = 0
@@ -1139,9 +1171,10 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Notification'
-      Transparent = False
+      Transparent = True
       WordWrap = True
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object imgAway: TImage
       Left = 0
@@ -1322,6 +1355,7 @@ object frmPrefs: TfrmPrefs
         0000000100000001000000018000000180000001C0000001E0000001F8000001
         FE000000FE000000FE000000FE000000FE000001FFF8000FFFF81FFF}
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object lblAway: TTntLabel
       Left = 0
@@ -1331,9 +1365,10 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Auto-Away'
-      Transparent = False
+      Transparent = True
       WordWrap = True
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object imgKeywords: TImage
       Left = 0
@@ -1514,6 +1549,7 @@ object frmPrefs: TfrmPrefs
         0000003F0000007F0000007F8000003F8000001FC000000FE0000007E0000003
         F0002001F0007000F880F800F9C1FC01FFE7FE03FFFFFF07FFFFFF8F}
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object lblKeywords: TTntLabel
       Left = 0
@@ -1523,9 +1559,10 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Keywords'
-      Transparent = False
+      Transparent = True
       WordWrap = True
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object imgBlockList: TImage
       Left = 0
@@ -1706,6 +1743,7 @@ object frmPrefs: TfrmPrefs
         C0000007E0000007E0000007F0000007F0000007F8000007FE000003FE000003
         FE000003FE000003FE000007FF80000FFF60007FFFFFFFFFFFFFFFFF}
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object lblBlockList: TTntLabel
       Left = 0
@@ -1715,9 +1753,10 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Block List'
-      Transparent = False
+      Transparent = True
       WordWrap = True
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object imgCustompres: TImage
       Left = 0
@@ -1898,6 +1937,7 @@ object frmPrefs: TfrmPrefs
         FC00003FFC00001FF800001FF800001FF800001FF800001FF800001FFC00001F
         FC00003FFE00003FFE00007FFF0000FFFF8001FFFFC003FFFFF00FFF}
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object lblCustomPres: TTntLabel
       Left = 0
@@ -1907,9 +1947,10 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Presence'
-      Transparent = False
+      Transparent = True
       WordWrap = True
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object imgMessages: TImage
       Left = 0
@@ -2090,6 +2131,7 @@ object frmPrefs: TfrmPrefs
         000000010000000100000001800000018000000380000003C0000007E000000F
         F000001FF800003FFE0000FFFF8003FFFFF83FFFFFFFFFFFFFFFFFFF}
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object lblMessages: TTntLabel
       Left = 0
@@ -2099,9 +2141,10 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Messages'
-      Transparent = False
+      Transparent = True
       WordWrap = True
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object imgPlugins: TImage
       Left = 0
@@ -2226,6 +2269,7 @@ object frmPrefs: TfrmPrefs
         F7C00001F3C00001F8000001FE000001FFC00001FFC00001FFFE0001FFFE0001
         FFFE0001FFF00001FFF00001FFF00031FFFFFF3FFFFFFFFFFFFFFFFF}
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object lblPlugins: TTntLabel
       Left = 0
@@ -2235,9 +2279,10 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Plugins'
-      Transparent = False
+      Transparent = True
       WordWrap = True
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object imgNetwork: TImage
       Left = 0
@@ -2418,6 +2463,7 @@ object frmPrefs: TfrmPrefs
         0000000700000007000000070000000F0000000F0000000F0000000F8000001F
         8000003FC000003FE000007FF00000FFF80001FFFC0007FFFF001FFF}
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object lblNetwork: TTntLabel
       Left = 0
@@ -2427,8 +2473,9 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Network'
-      Transparent = False
+      Transparent = True
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object imgTransfer: TImage
       Left = 0
@@ -2609,6 +2656,7 @@ object frmPrefs: TfrmPrefs
         F0000007F0000007F000000FF800000FF800000FF800000FF800001FFC00001F
         FC00001FFC00001FFC00003FFE00003FFE00007FFFC003FFFFC003FF}
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object lblTransfer: TTntLabel
       Left = 0
@@ -2618,9 +2666,10 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'File Transfers'
-      Transparent = False
+      Transparent = True
       WordWrap = True
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object imgGroups: TImage
       Left = 0
@@ -2801,6 +2850,7 @@ object frmPrefs: TfrmPrefs
         E0000007E0000007C0000007C000000FC000000FC000000FC000001FE008001F
         E018003FF01C003FFC7C007FFFFE00FFFFFF83FFFFFFFFFFFFFFFFFF}
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object lblGroups: TTntLabel
       Left = 0
@@ -2818,9 +2868,10 @@ object frmPrefs: TfrmPrefs
       Font.Style = []
       ParentColor = False
       ParentFont = False
-      Transparent = False
+      Transparent = True
       WordWrap = True
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object imgLayouts: TImage
       Left = 0
@@ -2973,6 +3024,7 @@ object frmPrefs: TfrmPrefs
         0000000000000000000000000000000000000000000000000000000000000000
         0000000000000000000000000000000000000000}
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
     object lblLayouts: TTntLabel
       Left = 0
@@ -2982,30 +3034,33 @@ object frmPrefs: TfrmPrefs
       Align = alTop
       Alignment = taCenter
       Caption = 'Layouts'
-      Transparent = False
+      Transparent = True
       WordWrap = True
       OnClick = TabSelect
+      OnMouseMove = imgSystemMouseMove
     end
   end
   object PageControl1: TTntPageControl
     Left = 89
     Top = 0
     Width = 369
-    Height = 393
-    ActivePage = tbsBlockList
+    Height = 388
+    ActivePage = tbsKeywords
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
     TabOrder = 1
+    OnMouseMove = OffBoxMouseMove
     object tbsKeywords: TTntTabSheet
       Caption = 'Keywords'
       ImageIndex = 8
+      OnMouseMove = OffBoxMouseMove
       object memKeywords: TTntMemo
         Left = 0
         Top = 77
         Width = 361
-        Height = 285
+        Height = 280
         Align = alClient
         TabOrder = 0
       end
@@ -3044,28 +3099,16 @@ object frmPrefs: TfrmPrefs
         Height = 24
         Align = alTop
         BevelOuter = bvLowered
-        ParentColor = True
+        Caption = 'Notification Keywords'
+        Color = clHighlight
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clHighlightText
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentBackground = False
+        ParentFont = False
         TabOrder = 2
-        object TntLabel1: TTntLabel
-          Left = 1
-          Top = 1
-          Width = 359
-          Height = 22
-          Align = alClient
-          Alignment = taCenter
-          AutoSize = False
-          Caption = 'Notification Keywords'
-          Color = clHighlight
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWhite
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          ParentColor = False
-          ParentFont = False
-          Transparent = False
-          Layout = tlCenter
-        end
       end
     end
     object tbsBlockList: TTntTabSheet
@@ -3075,7 +3118,7 @@ object frmPrefs: TfrmPrefs
         Left = 0
         Top = 77
         Width = 361
-        Height = 285
+        Height = 280
         Align = alClient
         TabOrder = 0
       end
@@ -3102,34 +3145,22 @@ object frmPrefs: TfrmPrefs
         Height = 24
         Align = alTop
         BevelOuter = bvLowered
-        ParentColor = True
+        Caption = 'Blocked Contacts'
+        Color = clHighlight
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clHighlightText
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentBackground = False
+        ParentFont = False
         TabOrder = 2
-        object TntLabel2: TTntLabel
-          Left = 1
-          Top = 1
-          Width = 359
-          Height = 22
-          Align = alClient
-          Alignment = taCenter
-          AutoSize = False
-          Caption = 'Blocked Contacts'
-          Color = clHighlight
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWhite
-          Font.Height = -13
-          Font.Name = 'Arial'
-          Font.Style = [fsBold]
-          ParentColor = False
-          ParentFont = False
-          Transparent = False
-          Layout = tlCenter
-        end
       end
     end
   end
   object Panel1: TPanel
     Left = 0
-    Top = 393
+    Top = 388
     Width = 458
     Height = 37
     Align = alBottom

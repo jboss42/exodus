@@ -41,7 +41,6 @@ type
     FontDialog1: TFontDialog;
     lblColor: TTntLabel;
     StaticText4: TTntPanel;
-    TntLabel1: TTntLabel;
     procedure btnFontClick(Sender: TObject);
     procedure colorChatMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
