@@ -3896,5 +3896,8 @@ object frmBrowse: TfrmBrowse
       Caption = 'Join Conference'
       OnClick = mJoinConfClick
     end
+    object mAddContact: TTntMenuItem
+      Caption = 'Add this Contact '
+    end
   end
 end

@@ -90,6 +90,7 @@ type
     popRosterSubscribe: TTntMenuItem;
     popRosterVCard: TTntMenuItem;
     N7: TTntMenuItem;
+    popRosterBrowse: TTntMenuItem;
 
     procedure FormCreate(Sender: TObject);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -133,6 +134,7 @@ type
       Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
     procedure popRosterSubscribeClick(Sender: TObject);
     procedure popRosterVCardClick(Sender: TObject);
+    procedure popRosterBrowseClick(Sender: TObject);
   private
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
@@ -305,6 +307,7 @@ function ItemCompare(Item1, Item2: Pointer): integer;
 {---------------------------------------}
 implementation
 uses
+    Browser, 
     CapPresence,
     ChatWin, COMChatController, CustomNotify,
     ExSession, ExUtils,
@@ -1691,6 +1694,7 @@ begin
 
     popRosterSubscribe.Enabled := false;
     popRosterVCard.Enabled := false;
+    popRosterBrowse.Enabled := false;
 
     if (not e) then exit;
 
@@ -1705,6 +1709,7 @@ begin
         if (rm.real_jid <> '') then begin
             popRosterSubscribe.Enabled := true;
             popRosterVCard.Enabled := true;
+            popRosterBrowse.Enabled := true;
         end;
 
     end;
@@ -2345,6 +2350,21 @@ begin
     if ((rm <> nil) and (rm.real_jid <> '')) then begin
         j := TJabberID.Create(rm.real_jid);
         ShowProfile(j.jid);
+        j.Free();
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmRoom.popRosterBrowseClick(Sender: TObject);
+var
+    j: TJabberID;
+    rm: TRoomMember;
+begin
+  inherited;
+    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
+    if ((rm <> nil) and (rm.real_jid <> '')) then begin
+        j := TJabberID.Create(rm.real_jid);
+        ShowBrowser(j.jid);
         j.Free();
     end;
 end;
