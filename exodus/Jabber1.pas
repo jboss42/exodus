@@ -1478,7 +1478,7 @@ begin
 
     if MainSession.Active then begin
         frmRosterWindow.SessionCallback('/session/prefs', nil);
-        frmRosterWindow.Redraw;
+        //frmRosterWindow.Redraw;
 
         if ((MainSession.Prefs.getBool('expanded')) and
             (Tabs.ActivePage <> tbsRoster)) then
