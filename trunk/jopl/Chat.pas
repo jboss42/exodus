@@ -1,4 +1,4 @@
-unit chat;
+unit Chat;
 {
     Copyright 2001, Peter Millard
 

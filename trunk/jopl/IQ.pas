@@ -1,4 +1,4 @@
-unit iq;
+unit IQ;
 {
     Copyright 2001, Peter Millard
 

@@ -64,7 +64,10 @@ type
 {---------------------------------------}
 implementation
 uses
-    StrUtils, IdGlobal, Registry, ExUtils;
+    {$ifdef Windows}
+    Registry, StrUtils, ExUtils, 
+    {$endif}
+    IdGlobal;
 
 const
     MIN_TIME : integer = 250;
@@ -165,7 +168,9 @@ end;
 {---------------------------------------}
 constructor THttpThread.Create(strm: TXMLHttpStream; profile: TJabberProfile; root: string);
 var
+    {$ifdef Windows}
     reg: TRegistry;
+    {$endif}
     srv: string;
     colon: integer;
 begin
@@ -186,8 +191,10 @@ begin
 
     if (_profile.ProxyApproach = http_proxy_ie) then begin
         // get IE settings from registry
-        reg := TRegistry.Create();
 
+        // todo: figure out some way of doing this XP??
+        {$ifdef Windows}
+        reg := TRegistry.Create();
         try
             reg.OpenKey('Software\Microsoft\Windows\CurrentVersion\Internet Settings', false);
             if (reg.ValueExists('ProxyEnable') and
@@ -200,6 +207,8 @@ begin
         finally
             reg.Free();
             end;
+        {$endif}
+        
         end
     else if (_profile.ProxyApproach = http_proxy_custom) then begin
         with _http.Request do begin
@@ -281,7 +290,7 @@ begin
     new_cookie := _http.Response.ExtraHeaders.Values['Set-Cookie'];
     _cookie_list.DelimitedText := new_cookie;
     for i := 0 to _cookie_list.Count - 1 do begin
-        if (AnsiStartsStr('ID=', _cookie_list[i])) then begin
+        if (Pos('ID=', _cookie_list[i]) = 1) then begin
             pid := Copy(_cookie_list[i], 4, length(_cookie_list[i]));
             break;
             end;
@@ -292,7 +301,8 @@ begin
         end;
 
     // compare the most recent pid with our stored poll_id
-    if ((pid = '') or AnsiEndsStr(':0', pid) or (pid <> _poll_id)) then begin
+    // if ((pid = '') or AnsiEndsStr(':0', pid) or (pid <> _poll_id)) then begin
+    if ((pid = '') or (Pos(':0', pid) = length(pid) - 1) or (pid <> _poll_id)) then begin
         // something really bad has happened!
         doMessage(WM_COMMERROR);
         Self.Terminate();

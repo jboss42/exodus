@@ -26,7 +26,10 @@ uses
     XMLUtils,
     XMLParser,
     LibXMLParser,
-    Messages, PrefController,
+    {$ifdef Windows}
+    Messages,
+    {$endif}
+    PrefController,
     SysUtils, IdThread, IdException,
     SyncObjs, Classes;
 

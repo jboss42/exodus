@@ -27,8 +27,11 @@ UNIT LibXmlComps;
 INTERFACE
 
 USES
-  Windows, SysUtils, Classes,
-  LibXmlParser;
+    {$ifdef Windows}
+    Windows,
+    {$endif}
+    SysUtils, Classes,
+    LibXmlParser;
 
 TYPE
   TXmlScanner     = CLASS;

@@ -38,6 +38,10 @@ function EncodeString(value: string): string;
 function DecodeString(value: string): string;
 function MungeName(str: string): string;
 function SafeInt(str: string): integer;
+
+function JabberToDateTime(datestr: string): TDateTime;
+function DateTimeToJabber(dt: TDateTime): string;
+
 procedure ClearStringListObjects(sl: TStringList);
 
 {---------------------------------------}
@@ -275,6 +279,44 @@ begin
             o.Free();
         end;
 end;
+
+{---------------------------------------}
+function JabberToDateTime(datestr: string): TDateTime;
+var
+    rdate: TDateTime;
+    ys, ms, ds, ts: string;
+    yw, mw, dw: Word;
+begin
+    // translate date from 20000110T19:54:00 to proper format..
+    ys := Copy(Datestr, 1, 4);
+    ms := Copy(Datestr, 5, 2);
+    ds := Copy(Datestr, 7, 2);
+    ts := Copy(Datestr, 10, 8);
+
+    try
+        yw := StrToInt(ys);
+        mw := StrToInt(ms);
+        dw := StrToInt(ds);
+
+        rdate := EncodeDate(yw, mw, dw);
+        rdate := rdate + StrToTime(ts);
+
+        Result := rdate - TimeZoneBias();
+    except
+        Result := Now;
+    end;
+end;
+
+{---------------------------------------}
+function DateTimeToJabber(dt: TDateTime): string;
+begin
+    // Format the current date/time into "Jabber" format
+    Result := FormatDateTime('yyyymmdd', dt);
+    Result := Result + 'T';
+    Result := Result + FormatDateTime('hh:nn:ss', dt);
+end;
+
+
 
 
 end.

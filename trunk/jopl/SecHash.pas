@@ -1,4 +1,4 @@
-unit sechash;
+unit SecHash;
 
 { Component TSecHash Version 0.03 by Frank Kroeger
 

@@ -1,4 +1,4 @@
-unit s10n;
+unit S10n;
 {
     Copyright 2001, Peter Millard
 
