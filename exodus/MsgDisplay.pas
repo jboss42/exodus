@@ -353,6 +353,7 @@ begin
     AddEmot('(B)', msn, 16);
     AddEmot(':kissme', msn, 47);
     AddEmot(':kissmyass', msn, 47);
+    AddEmot('(H)', msn, 22);
 
     (*
     Emoticon map:
