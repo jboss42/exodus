@@ -284,15 +284,6 @@ uses
 {$R *.DFM}
 
 {---------------------------------------}
-{
-procedure TfrmRosterWindow.WndProc(var Message: TMessage);
-begin
-    frmExodus.CheckWndMessage(Self.Handle, Message);
-    inherited;
-end;
-}
-
-{---------------------------------------}
 procedure TfrmRosterWindow.FormCreate(Sender: TObject);
 var
     s : widestring;
@@ -352,8 +343,6 @@ begin
     if (_adURL <> '') then
         imgAd.Cursor := crHandPoint;
 
-    //Application.ShowHint := true;
-    //Application.OnShowHint := DoShowHint;
 end;
 
 {---------------------------------------}
@@ -379,47 +368,6 @@ begin
     _cur_status := idx;
     imgStatus.Repaint();
 end;
-
-{---------------------------------------}
-(*
-procedure TfrmRosterWindow.DoShowHint(var HintStr: string; var CanShow: Boolean; var HintInfo: THintInfo);
-var
-    c: TControl;
-    f: TForm;
-begin
-    // show a hint..
-    CanShow := false;
-    c := HintInfo.HintControl;
-    if (c.Owner is TForm) then
-        f := TForm(c.Owner)
-    else
-        exit;
-
-    exit;
-
-    {
-    This is kind of hackish because the application can only
-    have a single OnShowHint handler at once.. *SIGH*
-    We have this functionality so that TC rooms can also
-    display status just like the roster window does.
-    }
-
-    if ((f = frmExodus) and (c = frmExodus.tbsRoster)) then begin
-        // Tweak the hint properties for the roster,
-        // this allows us to display custom hint text
-        // which is set in the MouseMove event.
-        CanShow := true;
-        HintInfo.ReshowTimeout := 500;
-        HintInfo.HintStr := _hint_text;
-    end
-    else if ((f is TfrmRoom) and (c is TTreeView)) then begin
-        // this is a TC room
-        CanShow := true;
-        HintInfo.ReshowTimeout := 500;
-        HintStr := TfrmRoom(f).HintText;
-    end;
-end;
-*)
 
 {---------------------------------------}
 procedure TfrmRosterWindow.showAniStatus();
@@ -838,7 +786,6 @@ var
 begin
     // callback for the ppdb
     if ((event = '/presence/error') or (event = '/presence/subscription')) then
-        // ignore
         exit;
 
     ptype := tag.getAttribute('type');
@@ -896,10 +843,10 @@ begin
         for i := node_list.count - 1 downto 0 do begin
             n := TTreeNode(node_list[i]);
             p := n.Parent;
-            n.Free;
-            if (p.Count <= 0) then
-                Self.RemoveGroupNode(p);
             node_list.Delete(i);
+            n.Free;
+            if ((p <> nil) and (p.Count <= 0)) then
+                Self.RemoveGroupNode(p);
         end;
     end;
     treeRoster.Items.EndUpdate();
@@ -1101,8 +1048,8 @@ begin
         // they are offline, and we want an offline grp
         tmp_grps.Add(sGrpOffline)
 
-    // other special groups
     else if ((_sort_roster) and (not is_transport)) then begin
+        // We are sorting the roster by <show>
         if (p = nil) then tmp_grps.Add(sGrpOffline)
         else if (p.Show = 'away') then tmp_grps.Add(sGrpAway)
         else if (p.Show = 'xa') then tmp_grps.Add(sGrpXA)
@@ -1123,11 +1070,13 @@ begin
     // This takes care of changing grps, or going to the offline grp
     for i := node_list.Count - 1 downto 0 do begin
         cur_node := TTreeNode(node_list[i]);
-        grp_node := cur_node.Parent;
-        cur_grp := grp_node.Text;
-        if (tmp_grps.IndexOf(cur_grp) < 0) then begin
-            cur_node.Free;
-            node_list.Delete(i);
+        grp_node := cur_node.Parent;        
+        if (grp_node <> nil) then begin
+            cur_grp := grp_node.Text;
+            if (tmp_grps.IndexOf(cur_grp) < 0) then begin
+                cur_node.Free;
+                node_list.Delete(i);
+            end;
         end;
     end;
 
@@ -1201,8 +1150,7 @@ begin
         cur_node := nil;
         for i := 0 to node_list.count - 1 do begin
             n := TTreeNode(node_list[i]);
-            if (n.HasAsParent(grp_node)) then begin
-                // if (is_me) and (n.Text = tmps) then
+            if (n.Parent = grp_node) then begin
                 if ((is_me) and (Pos(p.fromJid.resource, n.Text) = 1)) then
                     cur_node := n
                 else if (not is_me) then
@@ -1260,7 +1208,7 @@ begin
         cur_node.SelectedIndex := cur_node.ImageIndex;
 
         // only invalid if we're not doing a full roster draw.
-        if (not _FullRoster) then begin
+        if ((not _FullRoster) and (grp_node <> nil)) then begin
             if (exp_grpnode) then
                 grp_node.Expand(true);
             node_rect := cur_node.DisplayRect(false);
@@ -1323,15 +1271,13 @@ begin
     _change_node := nil;
     case getNodeType() of
     node_ritem: begin
-        // chat w/ this person
+        // chat or msg this person
         r := MainSession.Prefs.getInt(P_CHAT);
 
         if ((r = 0) or (r = 2)) then
-            // StartChat will handle doing the right thing
             StartChat(_cur_ritem.jid.jid, '', true)
 
         else if (r = 1) then
-            // instant message
             StartMsg(_cur_ritem.jid.jid);
     end;
     node_myres: begin
@@ -1339,11 +1285,9 @@ begin
         r := MainSession.Prefs.getInt(P_CHAT);
 
         if ((r = 0) or (r = 2)) then
-            // StartChat will handle doing the right thing
             StartChat(_cur_myres.jid.jid, _cur_myres.Resource, true)
 
         else if (r = 1) then
-            // instant message
             StartMsg(_cur_myres.jid.full);
     end;
     node_bm: begin
@@ -1640,31 +1584,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.popRosterPopup(Sender: TObject);
-{
-var
-    ntype: integer;
-    n: TTreeNode;
-    p: TJabberPres;
-    ritem: TJabberRosterItem;
-}
 begin
-    // Check to see if this person is online or not
-    {
-    p := nil;
-    n := treeRoster.Selected;
-    ntype := getNodeType(n);
-    if (ntype = node_ritem) then begin
-        ritem := TJabberRosterItem(n.Data);
-        if ritem <> nil then
-            p := MainSession.ppdb.FindPres(ritem.jid.jid, '');
-        popVersion.Enabled := (p <> nil);
-        popTime.Enabled := (p <> nil);
-    end
-    else if (ntype = node_myres) then begin
-        popVersion.Enabled := true;
-        popTime.Enabled := true;
-    end;
-    }
+    //
 end;
 
 {---------------------------------------}
@@ -2312,7 +2233,6 @@ begin
     end;
 
     fsel := TfrmSelContact.Create(Application);
-    // fsel.frameTreeRoster1.DrawRoster(false);
     fsel.frameTreeRoster1.treeRoster.MultiSelect := false;
 
     frmExodus.PreModal(fsel);
