@@ -24,7 +24,7 @@ interface
 uses
     Unicode, XMLTag,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-    StdCtrls, TntStdCtrls;
+    StdCtrls, TntCheckLst, TntStdCtrls;
 
 type
   TframeGeneric = class(TFrame)
