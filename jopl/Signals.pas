@@ -57,9 +57,6 @@ type
         _handler: TSignalExceptionHandler;
 
         procedure _setHandler(proc: TSignalExceptionHandler);
-    protected
-        procedure handleException(sig: TSignal; e: Exception;
-            sl: TSignalListener; tag: TXMLTag);
     public
         constructor Create();
         destructor Destroy(); override;
@@ -68,6 +65,8 @@ type
         procedure DispatchSignal(event: string; tag: TXMLTag);
         procedure DeleteListener(lid: longint);
         procedure AddListenerInfo(lid: integer; sig: TSignal; l: TSignalListener);
+        procedure handleException(sig: TSignal; e: Exception;
+            sl: TSignalListener; tag: TXMLTag);
 
         function TotalCount: longint;
 
