@@ -49,14 +49,21 @@ type
 
         // Dispatcher
         _dispatcher: TSignalDispatcher;
-        _preSignal: TPacketSignal;
+
+        // main packet handling signals
+        _logSignal: TPacketSignal;
+        _filterSignal: TPacketSignal;
         _packetSignal: TPacketSignal;
         _sessionSignal: TBasicSignal;
+        _unhandledSignal: TBasicSignal;
+
+        // other signals
         _rosterSignal: TRosterSignal;
         _presSignal: TPresenceSignal;
         _dataSignal: TStringSignal;
-        _unhandledSignal: TBasicSignal;
         _winSignal: TPacketSignal;
+
+        // other misc. flags
         _paused: boolean;
         _pauseQueue: TQueue;
         _id: longint;
@@ -200,22 +207,27 @@ begin
 
     // Create the event dispatcher mechanism
     _dispatcher := TSignalDispatcher.Create;
-    _preSignal := TPacketSignal.Create('/packet');
+
+    // Core packet signals
+    _logSignal := TPacketSignal.Create('');
+    _filterSignal := TPacketSignal.Create('/packet');
     _packetSignal := TPacketSignal.Create('/unhandled');
+    _unhandledSignal := TBasicSignal.Create();
+    _dispatcher.AddSignal('/log', _logSignal);
+    _dispatcher.AddSignal('/filter', _filterSignal);
+    _dispatcher.AddSignal('/packet', _packetSignal);
+    _dispatcher.AddSignal('/unhandled', _unhandledSignal);
+
+    // other signals
     _sessionSignal := TBasicSignal.Create();
     _rosterSignal := TRosterSignal.Create();
     _presSignal := TPresenceSignal.Create();
     _dataSignal := TStringSignal.Create();
-    _unhandledSignal := TBasicSignal.Create();
     _winSignal := TPacketSignal.Create();
-
-    _dispatcher.AddSignal('/pre', _preSignal);
-    _dispatcher.AddSignal('/packet', _packetSignal);
     _dispatcher.AddSignal('/session', _sessionSignal);
     _dispatcher.AddSignal('/roster', _rosterSignal);
     _dispatcher.AddSignal('/presence', _presSignal);
     _dispatcher.AddSignal('/data', _dataSignal);
-    _dispatcher.AddSignal('/unhandled', _unhandledSignal);
     _dispatcher.AddSignal('/windows', _winSignal);
 
     _pauseQueue := TQueue.Create();
@@ -590,7 +602,8 @@ begin
         end
 
         else begin
-            _dispatcher.DispatchSignal('/pre', tag);
+            _dispatcher.DispatchSignal('/log', tag);
+            _dispatcher.DispatchSignal('/filter', tag);
         end;
     end;
 
@@ -698,8 +711,12 @@ begin
 
     // Find the correct signal to register with
     i := _dispatcher.IndexOf(tok1);
-    if (tok1 = '/pre') then begin
-        pk := _preSignal.addListener(xplite, callback);
+    if (tok1 = '/log') then begin
+        pk := _logSignal.addListener(xplite, callback);
+        result := pk.cb_id;
+    end
+    else if (tok1 = '/filter') then begin
+        pk := _filterSignal.addListener(xplite, callback);
         result := pk.cb_id;
     end
     else if tok1 = '/packet' then begin
