@@ -859,7 +859,7 @@ begin
     end
     else begin
         if (_thread <> nil) then
-            _thread.TerminateAndWaitFor();            
+            _thread.Terminate;
         _timer.Enabled := false;
         _active := false;
         _thread := nil;
