@@ -688,7 +688,9 @@ begin
     jid := tmp_jid.jid;
     ritem := MainSession.Roster.Find(jid);
 
-    if (event = '/presence/unavailable') then begin
+    if (event = '/presence/error') then
+        // ignore
+    else if (event = '/presence/unavailable') then begin
         // remove the node
         p := MainSession.PPDB.FindPres(jid, '');
         if ritem <> nil then

@@ -22,11 +22,19 @@ unit jud;
 interface
 
 uses
-    IQ, XMLTag, 
+    IQ, XMLTag, Contnrs,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, Dockable, StdCtrls, ExtCtrls, ComCtrls, Menus;
 
 type
+
+  TJUDItem = class
+  public
+    jid: string;
+    count: integer;
+    cols: array[1..20] of Widestring;
+  end;
+
   TfrmJUD = class(TfrmDockable)
     pnlLeft: TPanel;
     lstContacts: TListView;
@@ -66,9 +74,17 @@ type
     procedure lstContactsColumnClick(Sender: TObject; Column: TListColumn);
     procedure lstContactsCompare(Sender: TObject; Item1, Item2: TListItem;
       Data: Integer; var Compare: Integer);
+    procedure lstContactsData(Sender: TObject; Item: TListItem);
+    procedure lstContactsDataFind(Sender: TObject; Find: TItemFind;
+      const FindString: String; const FindPosition: TPoint;
+      FindData: Pointer; StartIndex: Integer; Direction: TSearchDirection;
+      Wrap: Boolean; var Index: Integer);
   private
     { Private declarations }
     field_set: TStringList;
+
+    virtlist: TObjectList;
+
     cur_jid: string;
     cur_key: string;
     cur_state: string;
@@ -109,7 +125,7 @@ implementation
 uses
     Profile, Roster, Agents,
     JabberID,
-    Session, ExUtils,
+    Session, ExUtils, XMLUtils, 
     fTopLabel, Jabber1;
 
 {$R *.dfm}
@@ -170,6 +186,8 @@ begin
     cboGroup.Items.Assign(MainSession.Roster.GrpList);
     if cboGroup.Items.Count > 0 then
         cboGroup.ItemIndex := 0;
+    virtlist := TObjectList.Create();
+    virtlist.OwnsObjects := true;
 end;
 
 {---------------------------------------}
@@ -312,8 +330,8 @@ var
     i,c: integer;
     items, cols: TXMLTagList;
     cur: TXMLTag;
-    item: TListItem;
     col: TListColumn;
+    ji: TJUDItem;
 begin
     // callback when we get our search results back
     cur_iq := nil;
@@ -360,18 +378,23 @@ begin
         cols := cur.ChildTags();
 
         // add a JID column by default
-        lstContacts.Items.BeginUpdate();
+        virtlist.Clear();
+
+        lstContacts.AllocBy := 25;
+        // lstContacts.Items.BeginUpdate();
         lstContacts.Items.Clear;
 
         lstContacts.Columns.Clear();
         col := lstContacts.Columns.Add();
         col.Caption := sJID;
-        col.Width := ColumnTextWidth;
+        // col.Width := ColumnTextWidth;
+        col.Width := 100;
 
         for i := 0 to cols.count - 1 do begin
             col := lstContacts.Columns.Add();
             col.Caption := getDisplayField(cols[i].Name);
-            col.Width := ColumnTextWidth;
+            // col.Width := ColumnTextWidth;
+            col.Width := 100;
             end;
 
         cols.Free();
@@ -379,15 +402,26 @@ begin
         // populate the listview.
         for i := 0 to items.count - 1 do begin
             cur := items[i];
+            {
             item := lstContacts.Items.Add();
             item.Caption := cur.getAttribute('jid');
             cols := cur.ChildTags();
             for c := 0 to cols.count - 1 do
                 item.SubItems.Add(cols[c].Data);
             cols.Free();
+            }
+            ji := TJUDItem.Create();
+            ji.jid := cur.GetAttribute('jid');
+            cols := cur.ChildTags();
+            ji.count := cols.Count;
+            for c := 0 to cols.count - 1 do
+                ji.cols[c + 1] := cols[c].Data;
+            cols.Free();
+            virtlist.Add(ji);
             end;
 
-        lstContacts.Items.EndUpdate();
+        lstContacts.Items.Count := virtlist.Count;
+        // lstContacts.Items.EndUpdate();
 
         // show results panel
         lblSelect.Visible := false;
@@ -630,6 +664,33 @@ begin
 
   Compare := StrComp(pchar(LowerCase(s1)),
                      pchar(LowerCase(s2)));
+end;
+
+procedure TfrmJUD.lstContactsData(Sender: TObject; Item: TListItem);
+var
+    i: integer;
+    ji: TJUDItem;
+begin
+  inherited;
+    if (Item.Index < 0) then exit;
+    if (Item.Index >= virtlist.Count) then exit;
+    
+    ji := TJUDItem(virtlist[Item.Index]);
+    if ji <> nil then begin
+        Item.Caption := ji.jid;
+        Item.SubItems.Clear();
+        for i := 1 to ji.count do
+            item.SubItems.Add(ji.cols[i]);
+        end;
+end;
+
+procedure TfrmJUD.lstContactsDataFind(Sender: TObject; Find: TItemFind;
+  const FindString: String; const FindPosition: TPoint; FindData: Pointer;
+  StartIndex: Integer; Direction: TSearchDirection; Wrap: Boolean;
+  var Index: Integer);
+begin
+  inherited;
+    // pgm todo: implement this!!
 end;
 
 end.
