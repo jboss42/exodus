@@ -35,6 +35,7 @@ type
   {          TXMLTag Main Class Def       }
   {---------------------------------------}
   TXMLTag = class;
+  TXPLite = class;
 
   TXMLNodeList = class(TObjectList)
     end;
@@ -70,8 +71,10 @@ type
     procedure PutAttribute(key, value: WideString);
 
     function ChildTags: TXMLTagList;
-    function QueryXPTags(path: WideString): TXMLTagList;
-    function QueryXPTag(path: WideString): TXMLTag;
+    function QueryXPTags(path: WideString): TXMLTagList; overload;
+    function QUeryXPTags(xp: TXPLite): TXMLTagList; overload;
+    function QueryXPTag(path: WideString): TXMLTag; overload;
+    function QueryXPTag(xp: TXPLite): TXMLTag; overload;
     function QueryXPData(path: WideString): WideString;
     function QueryTags(key: WideString): TXMLTagList;
     function QueryRecursiveTags(key: WideString; first: boolean = false): TXMLTagList;
@@ -119,7 +122,7 @@ type
     function checkTags(Tag: TXMLTag; match_idx: integer; first: boolean = false): TXMLTagList;
     function doCompare(tag: TXMLTag; start: integer): boolean;
   public
-    Constructor Create;
+    Constructor Create(xps: Widestring = '');
     Destructor Destroy; override;
     procedure Parse(xps: Widestring);
     function Compare(Tag: TXMLTag): boolean;
@@ -306,35 +309,44 @@ begin
 end;
 
 {---------------------------------------}
+function TXMLTag.QueryXPTags(xp: TXPLite): TXMLTagList;
+begin
+    Result := xp.GetTags(Self);
+end;
+
+{---------------------------------------}
 function TXMLTag.QueryXPTags(path: WideString): TXMLTagList;
 var
     xp: TXPLite;
 begin
     // Return a tag list based on the xpath stuff
-    xp := TXPLite.Create();
-    xp.Parse(path);
+    xp := TXPLite.Create(path);
     Result := xp.GetTags(Self);
     xp.Free;
 end;
 
 {---------------------------------------}
-function TXMLTag.QueryXPTag(path: WideString): TXMLTag;
+function TXMLTag.QueryXPTag(xp: TXPLite): TXMLTag;
 var
     tl: TXMLTagList;
-    xp: TXPLite;
 begin
-    // Return a tag based on the xpath stuff
-    xp := TXPLite.Create();
-    xp.Parse(path);
     tl := xp.GetTags(Self, true);
-    xp.Free;
-
     if (tl.Count <= 0) then
         Result := nil
     else
         Result := tl[0];
-
     tl.Free();
+end;
+
+{---------------------------------------}
+function TXMLTag.QueryXPTag(path: WideString): TXMLTag;
+var
+    xp: TXPLite;
+begin
+    // Return a tag based on the xpath stuff
+    xp := TXPLite.Create(path);
+    Result := QueryXPTag(xp);
+    xp.Free;
 end;
 
 {---------------------------------------}
@@ -687,14 +699,15 @@ end;
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-constructor TXPLite.Create;
+constructor TXPLite.Create(xps: Widestring = '');
 begin
-    inherited;
-
+    inherited Create();
     attr := '';
     value := '';
-
     Matches := TWideStringList.Create;
+
+    if (xps <> '') then
+        parse(xps);
 end;
 
 {---------------------------------------}

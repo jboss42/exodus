@@ -118,7 +118,7 @@ inherited frmRoom: TfrmRoom
         Align = alLeft
         Anchors = [akLeft, akTop, akRight, akBottom]
         AutoSize = False
-        Caption = 'lblSubject'
+        Caption = ' lblSubject'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -12
@@ -211,7 +211,7 @@ inherited frmRoom: TfrmRoom
     object popBan: TMenuItem
       Caption = 'Ban'
       Enabled = False
-      OnClick = popBanClick
+      OnClick = popKickClick
     end
     object popVoice: TMenuItem
       Caption = 'Toggle Voice'

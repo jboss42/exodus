@@ -34,7 +34,7 @@ type
     txtNick: TEdit;
     frameButtons1: TframeButtons;
     txtServer: TComboBox;
-    Edit1: TEdit;
+    txtPassword: TEdit;
     lblPassword: TLabel;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure frameButtons1btnCancelClick(Sender: TObject);
@@ -92,6 +92,7 @@ end;
 
 procedure TfrmJoinRoom.frameButtons1btnOKClick(Sender: TObject);
 var
+    pass: Widestring;
     rjid: string;
 begin
     // join this room
@@ -106,7 +107,8 @@ begin
         exit;
         end;
 
-    StartRoom(rjid, txtNick.Text);
+    pass := Trim(txtPassword.Text);
+    StartRoom(rjid, txtNick.Text, pass);
 
     with MainSession.Prefs do begin
         setString('tc_lastroom', txtRoom.Text);

@@ -114,8 +114,9 @@ uses
   Transports in 'Transports.pas',
   {$ifndef NOTRACE_EXCEPTIONS}
   ExceptDlg in 'tracer\ExceptDlg.pas' {ExceptionDialog},
+  ExceptTracer in 'ExceptTracer.pas' {frmTracer},
   {$endif}
-  ExceptTracer in 'ExceptTracer.pas' {frmTracer};
+  RoomAdminList in 'RoomAdminList.pas' {frmRoomAdminList};
 
 {$R *.TLB}
 
