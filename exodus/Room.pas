@@ -475,6 +475,9 @@ var
     found, exloop: boolean;
     nick: string;
 begin
+    inherited;
+    if (Key = #0) then exit;
+
     // Send the msg if they hit return
     if (Key = #09) then begin
         // do tab completion
