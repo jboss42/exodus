@@ -47,9 +47,7 @@ type
 
   protected
     procedure CreateParams(var Params: TCreateParams); override;
-    //procedure WMWindowPosChanging(var msg: TWMWindowPosChanging); message WM_WINDOWPOSCHANGING;
     procedure WMActivate(var msg: TMessage); message WM_ACTIVATE;
-    //procedure WMMouseActivate(var msg: TMessage); message WM_MOUSEACTIVATE;
     procedure WMDisplayChange(var msg: TMessage); message WM_DISPLAYCHANGE;
   published
     property OnDockStartChange: TDockNotify read _onDockStartChange write _onDockStartChange;

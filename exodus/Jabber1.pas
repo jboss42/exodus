@@ -1526,8 +1526,10 @@ begin
     btnFind.Enabled := enable;
 
     // Build the custom presence menus.
-    BuildPresMenus(mnuPresence, presOnlineClick);
-    BuildPresMenus(trayPresence, presOnlineClick);
+    if (enable) then begin
+        BuildPresMenus(mnuPresence, presOnlineClick);
+        BuildPresMenus(trayPresence, presOnlineClick);
+    end;
 end;
 
 {---------------------------------------}
