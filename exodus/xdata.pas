@@ -113,8 +113,9 @@ end;
 {---------------------------------------}
 function buildXData(x: TXMLTag; box: TWinControl): integer;
 var
+    fake, ins: TXMLTag;
     tpe: Widestring;
-    i, h, m: integer;
+    t, i, h, m: integer;
     flds: TXMLTagList;
     frm: TframeGeneric;
     c: TControl;
@@ -123,8 +124,32 @@ begin
     flds := x.QueryTags('field');
     h := 1;
     m := 0;
+    t := 0;
 
-    for i := flds.Count - 1 downto 0 do begin
+    // build something to contain instructions if we have it.
+    ins := x.GetFirstTag('instructions');
+    if (ins <> nil) then begin
+        frm := TframeGeneric.Create(box.owner);
+        frm.FormType := tpe;
+        frm.Name := 'xDataIns';
+        frm.Parent := box;
+        frm.Visible := true;
+
+        // gin up a fixed field that contains the instructions
+        fake := TXMLTag.Create('field');
+        fake.setAttribute('type', 'fixed');
+        fake.AddBasicTag('value', ins.Data());
+        frm.render(fake);
+        fake.Free();
+
+        frm.Align := alTop;
+        frm.TabOrder := t;
+        inc(t);
+        m := max(m, frm.getLabelWidth());
+    end;
+
+    // TODO: sometimes we want reverse, and sometimes NOT. Somehow resolve.
+    for i := 0 to flds.Count - 1 do begin
         frm := TframeGeneric.Create(box.owner);
         frm.FormType := tpe;
         frm.Name := 'xDataFrame' + IntToStr(i);
@@ -132,8 +157,9 @@ begin
         frm.Visible := true;
         frm.render(flds[i]);
         frm.Align := alTop;
-        frm.TabOrder := 0;
+        frm.TabOrder := t;
         m := max(m, frm.getLabelWidth());
+        inc(t);
     end;
 
     // make it no bigger than this..

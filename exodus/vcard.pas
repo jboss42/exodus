@@ -105,6 +105,7 @@ type
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure btnPicBrowseClick(Sender: TObject);
+    procedure PaintBox1Paint(Sender: TObject);
   private
     { Private declarations }
     _vcard: TXMLVCard;
@@ -344,6 +345,7 @@ begin
         a := TAvatar.Create();
         a.LoadFromFile(OpenPic.FileName);
         if (not a.Valid) then begin
+            // a is NOT valid
             a.Free();
         end
         else begin
@@ -351,8 +353,17 @@ begin
             if (_vcard.Picture <> nil) then
                 _vcard.Picture.Free();
             _vcard.Picture := a;
-            _vcard.Picture.Draw(PaintBox1.Canvas);
+            a.Draw(PaintBox1.Canvas, PaintBox1.ClientRect);
         end;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmVCard.PaintBox1Paint(Sender: TObject);
+begin
+    // paint the avatar
+    if ((_vcard <> nil) and (_vcard.Picture <> nil)) then begin
+        _vcard.picture.Draw(PaintBox1.Canvas, PaintBox1.ClientRect);
     end;
 end;
 

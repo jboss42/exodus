@@ -1,6 +1,6 @@
 object frmVCard: TfrmVCard
-  Left = 192
-  Top = 287
+  Left = 384
+  Top = 410
   Width = 450
   Height = 360
   Caption = 'My Profile'
@@ -45,8 +45,9 @@ object frmVCard: TfrmVCard
       object PaintBox1: TPaintBox
         Left = 56
         Top = 161
-        Width = 105
-        Height = 92
+        Width = 90
+        Height = 90
+        OnPaint = PaintBox1Paint
       end
       object Label2: TTntLabel
         Left = 4

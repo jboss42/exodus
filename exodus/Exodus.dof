@@ -100,7 +100,7 @@ Conditionals=Exodus;TRACE_EXCEPTIONS
 DebugSourceDirs=D:\src\exodus\exodus\components\;D:\src\Indy\Source\
 UsePackages=1
 [Parameters]
-RunParams=-d -c debug.xml
+RunParams=-t -d -c debug.xml
 HostApplication=
 Launcher=
 UseLauncher=0

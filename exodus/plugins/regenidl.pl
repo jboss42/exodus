@@ -3,7 +3,7 @@ use strict;
 use Cwd;
 my $pwd = getcwd;
 opendir DIR, $pwd or die "$!";
-my @sub = grep -d && ! /^\.+$/ && !/CVS/, readdir DIR;
+my @sub = grep -d && ! /^\.+$/ && !/\.svn/, readdir DIR;
 my $s;
 my $idl;
 for $s (@sub) {

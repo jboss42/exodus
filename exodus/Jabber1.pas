@@ -487,7 +487,7 @@ const
 {---------------------------------------}
 implementation
 uses
-    CommandWizard,
+    CommandWizard, ExodusCOM_TLB, 
     About, AutoUpdate, AutoUpdateStatus, Bookmark, Browser, Chat,
     ChatController, ChatWin, Debug, Dockable, DNSUtils, Entity,
     EntityCache, ExSession, JabberUtils, ExUtils,
@@ -2673,12 +2673,18 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.Test1Click(Sender: TObject);
+var
+    h: integer;
+    i: IExodusController;
 begin
     //
     {
     Application.CreateForm(TfrmTest1, frmTest1);
     frmTest1.ShowDefault();
     }
+    i := ExComController as IExodusController;
+    h := i.CreateDockableWindow('foo');
+    ShowMessage(IntToStr(h));
 end;
 
 {---------------------------------------}
