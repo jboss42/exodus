@@ -60,7 +60,7 @@ implementation
 
 {$R *.dfm}
 uses
-    ExUtils, GnuGetText, JabberConst, Roster, XMLTag, IQ, Session, S10n;
+    ExUtils, GnuGetText, JabberConst, NodeItem, Roster, XMLTag, IQ, Session, S10n;
 
 {---------------------------------------}
 procedure RemoveGroup(grp: string; contacts: TList = nil);

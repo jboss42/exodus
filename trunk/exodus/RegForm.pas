@@ -100,6 +100,7 @@ var
 implementation
 {$R *.DFM}
 uses
+    NodeItem, 
     GnuGetText, Math, JabberConst, Transports, S10n, Roster, Session, ExUtils;
 
 {---------------------------------------}

@@ -70,7 +70,7 @@ uses
     {$endif}
     Presence,
     JabberID,
-    Roster;
+    NodeItem, Roster;
 
 {---------------------------------------}
 Constructor TSubController.Create;

@@ -107,7 +107,7 @@ implementation
 uses
     // Exodus/JOPL stuff
     ExUtils, JabberConst, Jabber1, JabberID, JabberMsg, MsgController, MsgRecv,
-    MsgQueue, Notify, PrefController, Roster, Session, XMLUtils,
+    MsgQueue, Notify, PrefController, NodeItem, Roster, Session, XMLUtils,
 
     // delphi stuff
     Messages, Windows;

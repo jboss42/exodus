@@ -175,7 +175,7 @@ uses
     JabberConst, ExSession, ExUtils, Presence, PrefController, Room,
     XferManager, RosterAdd, RiserWindow, Notify,
     Jabber1, Profile, MsgDisplay, IQ,
-    JabberMsg, Roster, Session, Unicode, XMLUtils,
+    JabberMsg, NodeItem, Roster, Session, Unicode, XMLUtils,
     ShellAPI, RosterWindow, Emoticons;
 
 {---------------------------------------}

@@ -23,7 +23,7 @@ interface
 
 uses
     PrefController,
-    JabberAuth, Agents, Chat, MsgList, Presence, Roster,
+    JabberAuth, Agents, Chat, MsgList, Presence, Roster, NodeItem, 
     Signals, XMLStream, XMLTag, Unicode,
     Contnrs, Classes, SysUtils, JabberID;
 

@@ -237,7 +237,6 @@ procedure TfrmPrefs.FormCreate(Sender: TObject);
 var
     i: integer;
     c: TControl;
-    l: TTntLabel;
 begin
     TranslateComponent(Self);
 

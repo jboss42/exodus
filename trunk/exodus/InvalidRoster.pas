@@ -56,7 +56,7 @@ implementation
 
 {$R *.dfm}
 uses
-    Session, Roster;
+    Session, NodeItem, Roster;
 
 {---------------------------------------}
 function getInvalidRoster: TfrmInvalidRoster;

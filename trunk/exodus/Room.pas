@@ -295,6 +295,7 @@ uses
     RichEdit,
     RiserWindow,
     RoomAdminList,
+    NodeItem, 
     Roster,
     RosterWindow,
     Session,
@@ -457,6 +458,7 @@ begin
     // this check is needed only to prevent extraneous regexing.
     if ((not server) and
         (not MainSession.IsPaused)) then begin
+
         // check for keywords
         if ((_keywords <> nil) and (_keywords.Exec(Msg.Body))) then
             DoNotify(Self, _notify[1],

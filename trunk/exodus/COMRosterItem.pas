@@ -24,7 +24,7 @@ unit COMRosterItem;
 interface
 
 uses
-    Roster, ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
+    NodeItem, Roster, ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
 
 type
   TExodusRosterItem = class(TAutoObject, IExodusRosterItem)

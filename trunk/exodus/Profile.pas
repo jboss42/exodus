@@ -141,7 +141,7 @@ implementation
 {$R *.DFM}
 uses
     JabberConst, XMLVCard, ExUtils, GnuGetText,  
-    Presence, Roster, JabberID, Session, Unicode, Jabber1;
+    Presence, NodeItem, Roster, JabberID, Session, Unicode, Jabber1;
 
 {---------------------------------------}
 {---------------------------------------}

@@ -21,7 +21,7 @@ unit fRosterTree;
 interface
 
 uses
-    Roster, Presence, Unicode, 
+    Roster, Presence, Unicode, NodeItem,  
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
     ImgList, ComCtrls;
 

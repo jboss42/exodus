@@ -55,7 +55,7 @@ implementation
 uses
     BaseChat, ExUtils, ExEvents,
     Jabber1, PrefController, RiserWindow,
-    Room, Roster, MMSystem, Debug, Session;
+    Room, NodeItem, Roster, MMSystem, Debug, Session;
 
 const
     // image index for tab notification.

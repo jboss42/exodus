@@ -128,7 +128,7 @@ implementation
 uses
     ExSession,
     IniFiles, Dialogs, StrUtils, IdGlobal, ShellAPI,
-    XMLUtils, Session, IQ, JabberID, Jabber1, Roster,
+    XMLUtils, Session, IQ, JabberID, Jabber1, NodeItem, Roster,
     JabberConst, MsgDisplay, Debug;
 
 type

@@ -57,7 +57,7 @@ implementation
 
 {$R *.dfm}
 uses
-    GnuGetText, Session, Roster;
+    GnuGetText, Session, NodeItem, Roster;
 
 {---------------------------------------}
 procedure TfrmSelContact.FormCreate(Sender: TObject);

@@ -542,7 +542,7 @@ uses
     JabberConst, ComController, CommCtrl, CustomPres,
     JoinRoom, Login, MsgController, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow, Room,
-    XferManager,
+    XferManager, NodeItem, 
     Roster, RosterAdd, Session, StandardAuth, Subscribe, Unicode, VCard, xData,
     XMLUtils, XMLParser;
 
@@ -1886,7 +1886,7 @@ end;
 procedure TfrmExodus.NewGroup2Click(Sender: TObject);
 var
     new_grp: WideString;
-    gl: TWideStringList;
+    go: TJabberGroup;
     x: TXMLTag;
 begin
     // Add a roster grp.
@@ -1894,16 +1894,15 @@ begin
     if InputQueryW(sNewGroup, sNewGroupPrompt, new_grp) = false then exit;
 
     // add the new grp.
-    gl := MainSession.Roster.GrpList;
-    if (gl.IndexOf(new_grp) >= 0) then begin
-        // this grp already exists
+    go := MainSession.Roster.getGroup(new_grp);
+    if (go <> nil) then begin
         MessageDlg(sNewGroupExists, mtError, [mbOK], 0);
     end
     else begin
         // add the new grp.
-        gl.Add(new_grp);
+        go := MainSession.Roster.addGroup(new_grp);
         with frmRosterWindow do begin
-            RenderGroup(gl.Count - 1);
+            RenderGroup(go);
             treeRoster.AlphaSort(true);
         end;
         x := TXMLTag.Create('group');

@@ -134,7 +134,7 @@ implementation
 uses
     COMController, ExSession, 
     JabberConst, Invite, Dialogs, PrefController, Registry, Forms,   
-    XferManager, xData, XMLUtils, Jabber1, JabberID, Notify, Roster;
+    XferManager, xData, XMLUtils, Jabber1, JabberID, Notify, NodeItem, Roster;
 
 var
     _version: TVersionResponder;
