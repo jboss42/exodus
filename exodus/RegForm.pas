@@ -367,7 +367,6 @@ begin
     if (pres.fromJID.jid = self.jid) then begin
         MainSession.UnRegisterCallback(pres_cb);
         pres_cb := -1;
-
         if (pres.PresType = 'error') then begin
             // some kind of error
         end
@@ -391,7 +390,8 @@ begin
             with MainSession do begin
                 for i := 0 to roster.Count - 1 do begin
                     ritem := TJabberRosterItem(Roster.Objects[i]);
-                    if ((ritem.ask = 'subscribe') and
+                    if ((ritem <> nil) and
+                        (ritem.ask = 'subscribe') and
                         (ritem.jid.domain = self.jid)) then begin
                         SendSubscribe(ritem.jid.jid, MainSession);
                     end;

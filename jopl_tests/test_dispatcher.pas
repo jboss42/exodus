@@ -47,8 +47,8 @@ var
 begin
     //
     disp := TSignalDispatcher.Create();
-    psig := TPacketSignal.Create();
-    disp.AddSignal('/packet', psig);
+    psig := TPacketSignal.Create('/packet');
+    disp.AddSignal(psig);
 
     l := psig.addListener('/packet/message', pCallback);
     _cb1 := l.cb_id;

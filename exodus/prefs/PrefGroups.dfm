@@ -1,6 +1,6 @@
 inherited frmPrefGroups: TfrmPrefGroups
-  Left = 272
-  Top = 197
+  Left = 274
+  Top = 199
   Caption = 'frmPrefGroups'
   ClientHeight = 299
   ClientWidth = 272

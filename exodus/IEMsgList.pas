@@ -272,7 +272,9 @@ begin
                                 started := true;
                                 result := result + ' style="';
                             end;
-                            result := result + HTML_EscapeChars(chunks[j], false, true) + ';';
+                            // XXX: Joe this doesn't compile!!
+                            //result := result + HTML_EscapeChars(chunks[j], false, true) + ';';
+                            result := result + HTML_EscapeChars(chunks[j], false) + ';';
                         end;
                     end;
                     if (started) then
@@ -282,7 +284,8 @@ begin
             else if (tag_name = 'a') then begin
                 if (aname = 'href') then
                     result := result + ' ' +
-                        attr.Name + '="' + HTML_EscapeChars(attr.Value, false, true) + '"';
+                        //attr.Name + '="' + HTML_EscapeChars(attr.Value, false, true) + '"';
+                        attr.Name + '="' + HTML_EscapeChars(attr.Value, false) + '"';
             end
             else if (tag_name = 'img') then begin
                 if ((aname = 'alt') or
@@ -291,7 +294,8 @@ begin
                     (aname = 'src') or
                     (aname = 'width')) then begin
                     result := result + ' ' +
-                        aname + '="' + HTML_EscapeChars(attr.Value, false, true) + '"';
+                        //aname + '="' + HTML_EscapeChars(attr.Value, false, true) + '"';
+                        aname + '="' + HTML_EscapeChars(attr.Value, false) + '"';
                 end;
             end
         end;
@@ -342,7 +346,8 @@ begin
     end;
 
     if (txt = '') then begin
-        txt := HTML_EscapeChars(Msg.Body, false, false);
+        //txt := HTML_EscapeChars(Msg.Body, false, false);
+        txt := HTML_EscapeChars(Msg.Body, false);
         txt := StringReplace(txt, ' ', '&ensp;', [rfReplaceAll]);
         cd := TXMLCData.Create(txt);
         txt := ProcessTag(nil, cd);

@@ -27,7 +27,6 @@ uses
   PrefController in '..\jopl\PrefController.pas',
   Presence in '..\jopl\Presence.pas',
   Session in '..\jopl\Session.pas',
-  Agents in '..\jopl\Agents.pas',
   Chat in '..\jopl\Chat.pas',
   ChatController in '..\jopl\ChatController.pas',
   Roster in '..\jopl\Roster.pas',
@@ -35,12 +34,14 @@ uses
   XMLHttpStream in '..\jopl\XMLHttpStream.pas',
   S10n in '..\jopl\S10n.pas',
   Unicode in '..\jopl\Unicode.pas',
-  test_widestringlist in 'test_widestringlist.pas';
+  test_widestringlist in 'test_widestringlist.pas',
+  test_prep in 'test_prep.pas',
+  stringprep in '..\jopl\stringprep.pas';
 
 {$R *.res}
 
 var
-  myform: TGUITestRunner;
+  MyForm: TGUITestRunner;
 
 begin
   Application.Initialize;

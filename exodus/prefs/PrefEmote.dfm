@@ -33,7 +33,7 @@ inherited frmPrefEmote: TfrmPrefEmote
     Top = 52
     Width = 312
     Height = 274
-    ActivePage = TntTabSheet2
+    ActivePage = TntTabSheet1
     Align = alClient
     TabOrder = 2
     object TntTabSheet1: TTntTabSheet
