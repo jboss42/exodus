@@ -61,7 +61,7 @@ const
     P_SHOWUNSUB = 'roster_show_unsub';
     P_OFFLINEGROUP = 'roster_offline_group';
     P_TIMESTAMP = 'timestamp';
-    P_AUTOUPDATE = 'auto_update';
+    P_AUTOUPDATE = 'auto_updates';
     P_CHAT = 'roster_chat';
     P_SUB_AUTO = 's10n_auto_accept';
     P_LOG = 'log';
@@ -520,6 +520,8 @@ begin
         result := '1'
     else if pkey = 'roster_show_pending' then
         result := '1'
+    else if pkey = 'auto_update_url' then
+        result := 'http://exodus.jabberstudio.org/exodus-released.exe'
     else
         result := '';
 end;

@@ -31,24 +31,25 @@ type
     { Private declarations }
     _url : string;
     _last : TDateTime;
+    _available : boolean;
+    _background : boolean;
     procedure checkDoUpdate();
   protected
     procedure Execute; override;
   public
     property URL : string read _url write _url;
     property Last : TDateTime read _last write _last;
+    property Available : boolean read _available;
+    property Background : boolean write _background;
   end;
 
-  TAutoUpdate = class
-  private
-    procedure MsgCallback(event: string; tag: TXMLTag);
-    procedure IQCallback(event: string; tag: TXMLTag);
-  public
-    initialized: boolean;
-  end;
+procedure InitAutoUpdate(background : boolean = true);
 
-procedure InitAutoUpdate();
-
+const
+    EXODUS_REG = '\Software\Jabber\Exodus';
+    
+resourcestring
+    sNoUpdate = 'No new update available.';
 
 implementation
 
@@ -65,63 +66,65 @@ uses
     ShellAPI,
     SysUtils,
     Windows,
-    XMLUtils;
-
-var
-    au: TAutoUpdate;
+    XMLUtils, PrefController;
 
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
-procedure InitAutoUpdate();
+procedure InitAutoUpdate(background : boolean = true);
 var
-    reg : TRegistry;
-    j, url : string;
+    url : string;
     last : TDateTime;
     t : TAutoUpdateThread;
-    x : TXMLTag;
+    reg : TRegistry;
 begin
-    if (not MainSession.Prefs.getBool('auto_updates')) then exit;
+    if (background and (not MainSession.Prefs.getBool('auto_updates'))) then exit;
 
-    if (not au.initialized) then begin
-        MainSession.RegisterCallback(au.MsgCallback,
-            '/packet/message/x[@xmlns="jabber:x:autoupdate"]');
-        end;
+    if (not background) then
+        Screen.Cursor := crHourGlass;
 
-    // If we have the magic reg key, check at a specific URL
+    // If we have the magic reg key, this is the first time we've run this version,
+    // with the new "save to session" logic.  Copy over the value, and keep going.
+    // NOTE:  Take this out later, after everyone updates a couple of times.
     reg := TRegistry.Create();
     reg.RootKey := HKEY_LOCAL_MACHINE;
     reg.OpenKey(EXODUS_REG, true);
     url := reg.ReadString('Update_URL');
-
-    // if this is the first time we've gotten here, then let's keep track of
-    // the current time, and get all *future* updates.
-    try
-        last := reg.ReadDateTime('Last_Update');
-    except
-        on ERegistryException do begin
-            last := Now();
-            reg.WriteDateTime('Last_Update', last);
-            end;
-        end;
-        
-    reg.CloseKey();
-    reg.Free();
-
     if (url <> '') then begin
-        t := TAutoUpdateThread.Create(true);
-        t.URL := url;
-        t.Last := last;
+        MainSession.Prefs.setString('auto_update_url', url);
+        reg.DeleteValue('Update_URL');
+        end;
+
+    // NOTE: if you want to do auto-update, the easiest way to turn it on is
+    // to create a branding.xml next to your exodus.exe, which contains this:
+    // <brand>
+    //   <auto_update_url>http://exodus.jabberstudio.org/daily/setup.exe</auto_update_url>
+    // </brand>
+    // TODO: add an edit box to the pref window?
+    url  := MainSession.Prefs.getString('auto_update_url');
+    try
+        last := StrToDateTime(MainSession.Prefs.getString('last_update'));
+    except
+        on EConvertError do begin
+            last := Now();
+            MainSession.Prefs.setString('last_update', DateTimeToStr(last));
+            end;
+    end;
+
+    t := TAutoUpdateThread.Create(true);
+    t.URL := url;
+    t.Last := last;
+    t.Background := background;
+    if (background) then begin
         t.FreeOnTerminate := true;
         t.Resume();
         end
     else begin
-        j := JID_AUTOUPDATE + '/' + Trim(GetAppVersion());
-        x := TXMLTag.Create('presence');
-        x.PutAttribute('to', j);
-        MainSession.SendTag(x);
+        t.Execute();
+        Screen.Cursor := crDefault;
+        if (not t.Available) then
+            MessageDlg(sNoUpdate, mtInformation, [mbOK], 0);
         end;
-
 end;
 
 {---------------------------------------}
@@ -133,6 +136,7 @@ procedure TAutoUpdateThread.Execute;
 var
     http : TIdHTTP;
 begin
+    _available := false;
     http := nil;
     try
         http := TIdHTTP.Create(nil);
@@ -143,8 +147,12 @@ begin
 
         if (http.Response.LastModified <= _last) then
             exit;
+        if (_background) then
+            synchronize(checkDoUpdate)
+        else
+            checkDoUpdate();
 
-        synchronize(checkDoUpdate);
+        _available := true; 
     finally
         if (http <> nil) then http.Free();
         end;
@@ -155,56 +163,5 @@ procedure TAutoUpdateThread.checkDoUpdate();
 begin
     ShowAutoUpdateStatus(_url);
 end;
-
-{---------------------------------------}
-procedure TAutoUpdate.MsgCallback(event: string; tag: TXMLTag);
-var
-    iq: TJabberIQ;
-begin
-    // we are getting a message tag telling us we have an update available
-    // do the iq to get more info.
-    if (tag <> nil) then begin
-        iq := TJabberIQ.Create(MainSession, MainSession.generateID(), Self.IQCallback);
-        iq.toJID := tag.QueryXPData('/message/x');
-        iq.iqType := 'get';
-        iq.Namespace := XMLNS_AUTOUPDATE;
-        iq.Send();
-        end;
-end;
-
-{---------------------------------------}
-procedure TAutoUpdate.IQCallback(event: string; tag: TXMLTag);
-begin
-    // parse this mess.. NB: We don't care if we have <beta> or <release>
-    {
-        <iq type="result" from="winjab@update.denmark" id="1001">
-          <query xmlns="jabber:iq:autoupdate">
-            <release priority="optional">
-              <ver>0.9.1.1</ver>
-              <desc/>
-              <url>http://update.denmark/winjab/winjab_setup.exe</url>
-            </release>
-            <beta priority="optional">
-              <ver>0.9.2.16</ver>
-              <desc/>
-              <url>http://update.denmark/winjab/winjab_beta.exe</url>
-            </beta>
-          </query>
-        </iq>
-    }
-    if (event = 'xml') then begin
-        ShowAutoUpdateStatus(tag);
-        end;
-end;
-
-
-
-{---------------------------------------}
-initialization
-    au := TAutoUpdate.Create();
-    au.initialized := false;
-
-finalization
-    au.Free();
 
 end.

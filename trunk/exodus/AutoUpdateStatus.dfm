@@ -48,6 +48,7 @@ object frmAutoUpdateStatus: TfrmAutoUpdateStatus
     end
     inherited Panel1: TPanel
       Left = 58
+      Height = 27
       inherited btnOK: TButton
         OnClick = frameButtons1btnOKClick
       end

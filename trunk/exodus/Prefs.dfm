@@ -1570,12 +1570,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 357
-    ActivePage = tbsRoster
+    ActivePage = tbsSystem
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 0
+    TabIndex = 3
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -1958,7 +1958,7 @@ object frmPrefs: TfrmPrefs
       object StaticText4: TStaticText
         Left = 0
         Top = 0
-        Width = 102
+        Width = 363
         Height = 20
         Align = alTop
         Alignment = taCenter
@@ -2052,6 +2052,15 @@ object frmPrefs: TfrmPrefs
         Height = 17
         Caption = 'Small Titlebar for Exodus window'
         TabOrder = 10
+      end
+      object btnUpdateCheck: TButton
+        Left = 222
+        Top = 196
+        Width = 75
+        Height = 25
+        Caption = 'Check Now'
+        TabOrder = 11
+        OnClick = btnUpdateCheckClick
       end
     end
     object tbsDialog: TTabSheet
@@ -2222,7 +2231,7 @@ object frmPrefs: TfrmPrefs
       end
       object Label7: TLabel
         Left = 8
-        Top = 216
+        Top = 236
         Width = 173
         Height = 13
         Caption = 'Simple Message (non-chat) Handling'
@@ -2244,7 +2253,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkTimestamp: TCheckBox
         Left = 5
-        Top = 96
+        Top = 116
         Width = 156
         Height = 17
         Caption = 'Timestamp messages'
@@ -2252,7 +2261,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkLog: TCheckBox
         Left = 5
-        Top = 143
+        Top = 163
         Width = 97
         Height = 17
         Caption = 'Log Messages'
@@ -2261,7 +2270,7 @@ object frmPrefs: TfrmPrefs
       end
       object txtLogPath: TEdit
         Left = 26
-        Top = 161
+        Top = 181
         Width = 207
         Height = 21
         TabOrder = 3
@@ -2286,14 +2295,14 @@ object frmPrefs: TfrmPrefs
       end
       object txtTimestampFmt: TEdit
         Left = 69
-        Top = 113
+        Top = 133
         Width = 164
         Height = 21
         TabOrder = 5
       end
       object btnLogBrowse: TButton
         Left = 243
-        Top = 159
+        Top = 179
         Width = 75
         Height = 25
         Caption = 'Browse'
@@ -2310,7 +2319,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkLogRooms: TCheckBox
         Left = 26
-        Top = 185
+        Top = 205
         Width = 151
         Height = 17
         Caption = 'Log conference rooms'
@@ -2318,7 +2327,7 @@ object frmPrefs: TfrmPrefs
       end
       object cboMsgOptions: TComboBox
         Left = 26
-        Top = 232
+        Top = 252
         Width = 207
         Height = 21
         Style = csDropDownList
@@ -2331,7 +2340,7 @@ object frmPrefs: TfrmPrefs
       end
       object btnLogClearAll: TButton
         Left = 243
-        Top = 189
+        Top = 209
         Width = 75
         Height = 25
         Caption = 'Clear All Logs'
@@ -2348,7 +2357,7 @@ object frmPrefs: TfrmPrefs
       end
       object chkAutoAcceptInvites: TCheckBox
         Left = 5
-        Top = 259
+        Top = 95
         Width = 236
         Height = 17
         Caption = 'Automatically accept all room invites'

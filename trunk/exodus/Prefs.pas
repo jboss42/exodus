@@ -198,6 +198,7 @@ type
     OpenDialog1: TOpenDialog;
     chkShowPending: TCheckBox;
     chkNotifyActiveWindow: TCheckBox;
+    btnUpdateCheck: TButton;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -230,6 +231,7 @@ type
     procedure chkLogClick(Sender: TObject);
     procedure btnLogClearAllClick(Sender: TObject);
     procedure btnSpoolBrowseClick(Sender: TObject);
+    procedure btnUpdateCheckClick(Sender: TObject);
   private
     { Private declarations }
     _notify: array of integer;
@@ -283,6 +285,7 @@ implementation
 {$R *.DFM}
 {$WARN UNIT_PLATFORM OFF}
 uses
+    AutoUpdate,
     ExUtils,
     FileCtrl,
     XMLUtils,
@@ -304,7 +307,7 @@ begin
     f.LoadPrefs;
     // frmExodus.PreModal(f);
     f.ShowModal;
-    frmExodus.PostModal();
+    //frmExodus.PostModal();
 end;
 
 {---------------------------------------}
@@ -1131,6 +1134,11 @@ begin
     OpenDialog1.FileName := txtSpoolPath.Text;
     if (OpenDialog1.Execute) then
         txtSpoolPath.Text := OpenDialog1.FileName;
+end;
+
+procedure TfrmPrefs.btnUpdateCheckClick(Sender: TObject);
+begin
+    InitAutoUpdate(false);
 end;
 
 end.
