@@ -738,6 +738,7 @@ begin
                 _rlist.Delete(i);
                 _rlist.Sort(ItemCompare);
                 lstRoster.Items.Count := _rlist.Count;
+                lstRoster.Invalidate();
             end;
             member.Free;
         end;
@@ -755,6 +756,7 @@ begin
             _rlist.Add(member);
             _rlist.Sort(ItemCompare);
             lstRoster.Items.Count := _rlist.Count;
+            lstRoster.Invalidate();
 
             // show new user message
             if (xtag <> nil) then begin
@@ -910,6 +912,7 @@ begin
     i := _rlist.IndexOf(member);
     if (i >= 0) then
         lstRoster.UpdateItems(i, i);
+    lstRoster.Invalidate();
 end;
 
 {---------------------------------------}

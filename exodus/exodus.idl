@@ -740,7 +740,7 @@ library ExodusCOM
        
        
     /**
-    @name Presence Methdods
+    @name Presence Methods
     IExodusController methods for manipulating the current presence information.
     **/
     //@{
