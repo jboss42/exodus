@@ -485,7 +485,7 @@ begin
 
         else
             inherited;
-end;
+    end;
 end;
 
 {---------------------------------------}
@@ -540,7 +540,6 @@ begin
     end
     else begin
         {$ifdef INDY9}
-
         // setup the socket to point to the handler..
         // and the handler to point to our SOCKS stuff
         with _socks_info do begin
