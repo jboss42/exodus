@@ -635,7 +635,7 @@ begin
 
     // Create our socket
     _socket := TIdTCPClient.Create(nil);
-    _socket.RecvBufferSize := 8192;
+    _socket.RecvBufferSize := 4096;
     _socket.Port := _profile.port;
 
     _server := _profile.Server;
