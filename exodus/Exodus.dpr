@@ -148,7 +148,8 @@ uses
   PrefTransfer in 'prefs\PrefTransfer.pas' {frmPrefTransfer},
   buttonFrame in 'buttonFrame.pas' {frameButtons: TFrame},
   ExSession in 'ExSession.pas',
-  WebGet in 'WebGet.pas' {frmWebDownload};
+  WebGet in 'WebGet.pas' {frmWebDownload},
+  PrefNetwork in 'prefs\PrefNetwork.pas' {frmPrefNetwork};
 
 {$R *.TLB}
 
@@ -171,6 +172,7 @@ begin
 
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TfrmWebDownload, frmWebDownload);
+  Application.CreateForm(TfrmPrefNetwork, frmPrefNetwork);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);
