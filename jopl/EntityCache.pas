@@ -202,15 +202,15 @@ end;
 procedure TJabberEntityCache.Clear();
 var
     ce: TJabberEntity;
-    i: integer;
 begin
-    for i := _cache.Count - 1 downto 0 do begin
-        ce := TJabberEntity(_cache.Objects[i]);
-        _cache.Objects[i] := nil;
+    // always remove to first entry until they are all gone.
+    while (_cache.Count > 0) do begin
+        ce := TJabberEntity(_cache.Objects[0]);
+        _cache.Objects[0] := nil;
         if ((ce <> nil) and (ce.Parent = nil)) then
             ce.Free();
+        _cache.Delete(0);
     end;
-    _cache.Clear();
 end;
 
 {---------------------------------------}

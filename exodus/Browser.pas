@@ -676,6 +676,7 @@ begin
 
     // set the listview count
     vwBrowse.Items.Count := _blist.Count;
+    StatBar.Panels[0].Text := IntToStr(_blist.Count) + _(' Objects');
 end;
 
 {---------------------------------------}
