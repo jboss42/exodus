@@ -451,6 +451,7 @@ begin
         lblNick.Caption := ' ' + ritem.Nickname + ' ';
         Caption := ritem.Nickname + ' - ' + _(sChat);
         lblJID.Caption := '<' + _jid.full + '>';
+        MsgList.setTitle(ritem.Nickname);
         if (p = nil) then
             ChangePresImage('offline', 'offline')
         else
@@ -460,6 +461,8 @@ begin
     else begin
         lblNick.Caption := ' ';
         lblJID.Caption := cjid;
+        MsgList.setTitle(cjid);
+        
         if OtherNick <> '' then
             Caption := OtherNick + ' - ' + _(sChat)
         else if (_jid.user <> '') then
@@ -472,6 +475,7 @@ begin
         else
             ChangePresImage(p.show, p.status);
     end;
+
 
     // synchronize the session chat list with this JID
     i := MainSession.ChatList.indexOfObject(chat_object);

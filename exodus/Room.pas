@@ -1358,6 +1358,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmRoom.SetJID(sjid: Widestring);
+var
+    j: TJabberID;
 begin
     // setup our callbacks
     if (_mcallback = -1) then begin
@@ -1368,6 +1370,10 @@ begin
             _scallback := MainSession.RegisterCallback(SessionCallback, '/session');
     end;
     Self.jid := sjid;
+
+    j := TJabberID.Create(sjid);
+    MsgList.setTitle(j.user);
+    j.Free();
 end;
 
 {---------------------------------------}

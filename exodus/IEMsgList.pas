@@ -45,16 +45,18 @@ type
 
     _doc: IHTMLDocument2;
     _win: IHTMLWindow2;
-    _body2: IHTMLElement2;
     _body: IHTMLElement;
     _style: IHTMLStyleSheet;
+    _content: IHTMLElement;
+    _content2: IHTMLElement2;
 
-    _we: TMSHTMLHTMLWindowEvents;
+    _we: TMSHTMLHTMLElementEvents;
     _de: TMSHTMLHTMLDocumentEvents;
 
     _bottom: Boolean;
     _menu:  TTntPopupMenu;
     _queue: TWideStringList;
+    _title: WideString;
 
     procedure onScroll(Sender: TObject);
     procedure onResize(Sender: TObject);
@@ -85,6 +87,7 @@ type
     procedure Save(fn: string); override;
     procedure populate(history: Widestring); override;
     procedure setupPrefs(); override;
+    procedure setTitle(title: Widestring); override;
 
     procedure ChangeStylesheet(url: WideString);
   end;
@@ -126,13 +129,13 @@ end;
 {---------------------------------------}
 procedure TfIEMsgList.writeHTML(html: WideString);
 begin
-    if (_body = nil) then begin
+    if (_content = nil) then begin
         assert(_queue <> nil);
         _queue.Add(html);
         exit;
     end;
 
-    _body.insertAdjacentHTML('beforeEnd', html);
+    _content.insertAdjacentHTML('beforeEnd', html);
 end;
 
 {---------------------------------------}
@@ -157,9 +160,20 @@ end;
 
 {---------------------------------------}
 procedure TfIEMsgList.ScrollToBottom();
+var
+    tags: IHTMLElementCollection;
+    last: IHTMLElement;
 begin
-    if (_win <> nil) then
-        _win.scrollTo(0, _body2.scrollHeight);
+    if (_win = nil) then exit;
+
+    // this is a slowness for large histories, I think, but it is the only
+    // thing that seems to work, since we are now scrolling the _content
+    // element, rather than the window, as Bill intended.
+    tags := _content.children as IHTMLElementCollection;
+    if (tags.length > 0) then begin
+        last := tags.Item(tags.length - 1, 0) as IHTMLElement;
+        last.ScrollIntoView(false);
+    end;
 end;
 
 {---------------------------------------}
@@ -308,6 +322,7 @@ begin
         txt := ProcessTag(nil, cd);
     end;
 
+    writeHTML('<div class="line">');
     if (MainSession.Prefs.getBool('timestamp')) then begin
         try
             writeHTML('<span class="ts">[' +
@@ -343,7 +358,7 @@ begin
         // This is an action
         writeHTML('<span class="action">&nbsp;*&nbsp;' + Msg.Nick + '&nbsp;' + txt + '</span>');
 
-    writeHTML('<br />');
+    writeHTML('</div>');
 
     if (_bottom) then
         ScrollToBottom();
@@ -418,13 +433,13 @@ end;
 procedure TfIEMsgList.onScroll(Sender: TObject);
 begin
     _bottom :=
-        ((_body2.scrollTop + _body2.clientHeight) >= _body2.scrollHeight);
+        ((_content2.scrollTop + _content2.clientHeight) >= _content2.scrollHeight);
 end;
 
 procedure TfIEMsgList.onResize(Sender: TObject);
 begin
     if (_bottom) then
-         _win.scrollTo(0, _body2.scrollHeight);
+         ScrollToBottom();
 end;
 
 function TfIEMsgList.onContextMenu(Sender: TObject): WordBool;
@@ -447,12 +462,17 @@ begin
     _doc := browser.Document as IHTMLDocument2;
     ChangeStylesheet(_home + '/iemsglist_style');
 
+    _content := _doc.all.item('content', 0) as IHTMLElement;
+    _content2 := _content as IHTMLElement2;
+    _body := _doc.body;
+    _bottom := true;
+
     _win := _doc.parentWindow;
     if (_we <> nil) then
         _we.Free();
 
-    _we := TMSHTMLHTMLWindowEvents.Create(self);
-    _we.Connect(_win);
+    _we := TMSHTMLHTMLElementEvents.Create(self);
+    _we.Connect(_content);
     _we.onscroll := onscroll;
     _we.onresize := onresize;
 
@@ -462,15 +482,15 @@ begin
     _de.Connect(_doc);
     _de.oncontextmenu := onContextMenu;
 
-    _body := _doc.body;
-    _body2 := _body as IHTMLElement2;
-    _bottom := true;
-
     assert (_queue <> nil);
     for i := 0 to _queue.Count - 1 do begin
         writeHTML(_queue.Strings[i]);
     end;
     _queue.Clear();
+    if (_title <> '') then begin
+        setTitle(_title);
+        _title := '';
+    end;
     ScrollToBottom();
 end;
 
@@ -497,6 +517,22 @@ begin
     end;
     inherited;
 end;
+
+procedure TfIEMsgList.setTitle(title: Widestring);
+var
+    splash : IHTMLElement;
+begin
+    if (_doc = nil) then begin
+        _title := title;
+        exit;
+    end;
+
+    splash :=  _doc.all.item('splash', 0) as IHTMLElement;
+    if (splash = nil) then exit;
+
+    splash.innerText := _title;
+end;
+
 
 initialization
     TP_GlobalIgnoreClassProperty(TWebBrowser, 'StatusText');

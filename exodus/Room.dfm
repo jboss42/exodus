@@ -9,18 +9,18 @@ inherited frmRoom: TfrmRoom
   PixelsPerInch = 96
   TextHeight = 13
   inherited Splitter1: TSplitter
-    Top = 244
+    Top = 240
     Width = 387
   end
   inherited pnlMsgList: TPanel
     Top = 23
     Width = 387
-    Height = 221
+    Height = 217
     TabOrder = 1
     object Splitter2: TSplitter
       Left = 275
       Top = 4
-      Height = 213
+      Height = 209
       Align = alRight
       ResizeStyle = rsUpdate
     end
@@ -28,7 +28,7 @@ inherited frmRoom: TfrmRoom
       Left = 278
       Top = 4
       Width = 105
-      Height = 213
+      Height = 209
       Align = alRight
       BevelOuter = bvNone
       BorderWidth = 1
@@ -38,7 +38,7 @@ inherited frmRoom: TfrmRoom
         Left = 1
         Top = 1
         Width = 103
-        Height = 211
+        Height = 207
         Align = alClient
         Columns = <
           item
@@ -71,7 +71,7 @@ inherited frmRoom: TfrmRoom
     end
   end
   inherited pnlInput: TPanel
-    Top = 247
+    Top = 243
     Width = 387
     AutoSize = True
     TabOrder = 0
