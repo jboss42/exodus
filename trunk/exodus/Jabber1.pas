@@ -178,6 +178,7 @@ type
     btnRoom: TToolButton;
     btnDelContact: TToolButton;
     btnExpanded: TToolButton;
+    imgEmoticons: TImageList;
     btnFind: TToolButton;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);

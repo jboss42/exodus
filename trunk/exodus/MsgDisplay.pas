@@ -39,7 +39,9 @@ function GetMsgHTML(Msg: TJabberMessage): string;
 {---------------------------------------}
 implementation
 uses
-    Dialogs,
+    Clipbrd,
+    Jabber1,
+    ExtCtrls, Dialogs,
     Session;
 
 {---------------------------------------}
@@ -47,10 +49,44 @@ procedure DisplayMsg(Msg: TJabberMessage; RichEdit: TRichEdit);
 var
     txt: string;
     c: TColor;
-    min, max, thumb: integer;
+    p, min, max, thumb: integer;
+    bmp: TPicture;
     at_bottom: boolean;
 begin
     // add the message to the richedit control
+
+    (*
+    Emoticon map:
+
+    1   :) :-) (-: (:
+    2   :( :-(
+    3   ;) ;-)
+    4   :D :-D
+    5   :-/ :-\
+    6   :x :-x :X :-X
+    7   :">
+    8   :p :-p :P :-P
+    9   :O :-O
+    10  X-( X( x-( x(
+    11  :> :->
+    12  B-)
+    13  >:)
+    14  :(( :-((
+    15  :)) :-))
+    16  :| :-|
+    17  O:) O:-) o:) o:-)
+    18  :B :-B
+    19  =;
+    20  I-) |-) I-|
+    21  3:-0 3:-o 3:-O 3:O
+    22  @};-
+    23  =:) =:-)
+    24  <):)
+    25  8-X
+    0  :o) :0) :O) <@:)
+
+    *)
+
     with RichEdit do begin
         GetScrollRange(Handle, SB_VERT, min, max);
         thumb := GetScrollPos(Handle, SB_VERT);
@@ -86,7 +122,18 @@ begin
         RichEdit.SelAttributes.Color := c;
         RichEdit.SelText := '<' + Msg.nick + '> ';
         RichEdit.SelAttributes.Color := TColor(MainSession.Prefs.getInt('font_color'));
-        RichEdit.SelText := txt;
+
+        p := Pos(':)', txt);
+        if (p > 0) then begin
+            RichEdit.SelText := Copy(txt, 1, p - 1);
+            bmp := TPicture.Create();
+            frmJabber.imgEmoticons.GetBitmap(1, bmp.Bitmap);
+            Clipboard.Assign(bmp);
+            RichEdit.PasteFromClipboard();
+            RichEdit.SelText := Copy(txt, p + 2, length(txt) - p - 1);
+            end
+        else
+            RichEdit.SelText := Trim(txt);
         end
 
     else begin
