@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Exodus 0.8-Daily\n"
 "POT-Creation-Date: 2003-05-08 06:59\n"
-"PO-Revision-Date: 2003-12-18 05:56-0000\n"
+"PO-Revision-Date: 2003-12-21 05:23-0000\n"
 "Last-Translator: Lazarus Long <lazarus.long@bigfoot.com>\n"
 "Language-Team: pt_PT <lazarus.long@bigfoot.com>\n"
 "MIME-Version: 1.0\n"
@@ -2164,7 +2164,7 @@ msgstr "Mostrar XML de depuração"
 #. frmExodus..MainMenu1..Tools1..mnuPlugins..Caption
 #: Jabber1.dfm:458
 msgid "Plu&gins"
-msgstr "Plu&gins"
+msgstr "E&xtensões"
 
 #. frmExodus..MainMenu1..Tools1..Preferences1..Caption
 #: Jabber1.dfm:464
@@ -2629,7 +2629,7 @@ msgstr "Mensagens"
 #. frmPrefs..Scroller..lblPlugins..Caption
 #: Prefs.dfm:2264
 msgid "Plugins"
-msgstr "Plugins"
+msgstr "Extensões"
 
 #. frmPrefs..Scroller..lblTransfer..Caption
 #. frmXferManager..Panel1..pnlCaption..Caption
@@ -6463,23 +6463,23 @@ msgstr "Esta janela de conversa está activa. Fechar na mesma?"
 #. remove from list?
 #: COMController.pas:216
 msgid "Remove this plugin from the list of plugins to be loaded at startup?"
-msgstr "Remover este plugin da lista de plugins a carregar no arranque?"
+msgstr "Remover esta extensão da lista de extensões a carregar no arranque?"
 
 #: COMController.pas:315
 msgid "Plugin could not be created. (%s)"
-msgstr "Não foi possível criar o plugin. (%s)"
+msgstr "Não foi possível criar a extensão. (%s)"
 
 #: COMController.pas:325
 msgid "Plugin class does not support IExodusPlugin. (%s)"
-msgstr "A classe do plugin não suporta IExodusPlugin. (%s)"
+msgstr "A classe da extensão não suporta IExodusPlugin. (%s)"
 
 #: COMController.pas:337
 msgid "Plugin class could not be initialized. (%s)"
-msgstr "Não foi possível inicializar a classe do plugin. (%s)"
+msgstr "Não foi possível inicializar a classe da extensão. (%s)"
 
 #: COMController.pas:359
 msgid "Plugin could not be initialized or configured."
-msgstr "Não foi possível ou inicializar ou configurar o plugin."
+msgstr "Não foi possível ou inicializar ou configurar a extensão."
 
 #: ConnDetails.pas:152
 msgid "%s Details"
@@ -8262,17 +8262,17 @@ msgstr "frmPrefPlugins"
 #. frmPrefPlugins..Label6..Caption
 #: prefs/PrefPlugins.dfm:15
 msgid "Plugin Directory (automatically scanned):"
-msgstr "Pasta de plugins (pesquisada automaticamente):"
+msgstr "Pasta das extensões (pesquisada automaticamente):"
 
 #. frmPrefPlugins..lblPluginScan..Caption
 #: prefs/PrefPlugins.dfm:23
 msgid "Re-Scan this directory for plugins"
-msgstr "Re-pesquisar por plugins nesta pasta"
+msgstr "Re-pesquisar por extensões nesta pasta"
 
 #. frmPrefPlugins..pnlHeader..Caption
 #: prefs/PrefPlugins.dfm:28
 msgid "Application Plugins"
-msgstr "Plugins"
+msgstr "Extensões"
 
 #. frmPrefPlugins..btnConfigPlugin..Caption
 #: prefs/PrefPlugins.dfm:45
@@ -8282,7 +8282,7 @@ msgstr "Configurar"
 #. frmPrefPlugins..lstPlugins......Caption
 #: prefs/PrefPlugins.dfm:85
 msgid "Plugin"
-msgstr "Plugin"
+msgstr "Extensão"
 
 #. frmPrefPlugins..lstPlugins......Caption
 #: prefs/PrefPlugins.dfm:93
@@ -8676,7 +8676,7 @@ msgstr "Não se esqueça de configurar os sons no painél de controlo dos sons u
 #: prefs/PrefPlugins.pas:165
 #: prefs/PrefPlugins.pas:170
 msgid "The plugin could not be registered with windows."
-msgstr "Não foi possível registar o plugin com o Windows."
+msgstr "Não foi possível registar a extensão com o Windows."
 
 #. clear all entries
 #: prefs/PrefPresence.pas:250
