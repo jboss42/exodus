@@ -204,6 +204,15 @@ type
 
     _drop: TExDropTarget;
 
+    g_offline: Widestring;
+    g_online: Widestring;
+    g_away: Widestring;
+    g_xa: Widestring;
+    g_dnd: Widestring;
+    g_unfiled: Widestring;
+    g_bookmarks: Widestring;
+    g_myres: Widestring;
+
     procedure popUnBlockClick(Sender: TObject);
     procedure ExpandNodes();
     procedure RenderNode(ritem: TJabberRosterItem; p: TJabberPres);
@@ -299,6 +308,15 @@ begin
     StatBar.Font.Size := 8;
 
     TranslateProperties(Self);
+
+    g_offline := _('Offline');
+    g_online := _('Available');
+    g_away := _('Away');
+    g_xa := _('Ext. Away');
+    g_dnd := _('Do Not Disturb');
+    g_unfiled := _('Unfiled');
+    g_bookmarks := _('Bookmarks');
+    g_myres := _('My Resources');
 
     // register the callback
     _FullRoster := false;
@@ -455,16 +473,19 @@ begin
     // preferences have been changed, refresh the roster
     else if event = '/session/prefs' then begin
         MainSession.Prefs.fillStringlist('blockers', _blockers);
+
         _show_status := MainSession.Prefs.getBool('inline_status');
         _status_color := TColor(MainSession.Prefs.getInt('inline_color'));
         _transports := MainSession.Prefs.getString('roster_transport_grp');
         _roster_unicode := MainSession.Prefs.getBool('roster_unicode');
         _collapse_all := MainSession.Prefs.getBool('roster_collapsed');
         _group_counts := MainSession.Prefs.getBool('roster_groupcounts');
+
         treeRoster.Font.Name := MainSession.Prefs.getString('roster_font_name');
         treeRoster.Font.Size := MainSession.Prefs.getInt('roster_font_size');
         treeRoster.Font.Color := TColor(MainSession.Prefs.getInt('roster_font_color'));
         treeRoster.Font.Charset := MainSession.Prefs.getInt('roster_font_charset');
+
         if (treeRoster.Font.Charset = 0) then
             treeRoster.Font.Charset := 1;
 
@@ -497,6 +518,7 @@ begin
         _offline_grp := MainSession.Prefs.getBool('roster_offline_group');
 
         frmExodus.pnlRoster.ShowHint := not _show_status;
+
         Redraw();
     end
 
@@ -570,11 +592,11 @@ begin
     // render this bookmark
     if _bookmark = nil then begin
         // create some container for bookmarks
-        bi := MainSession.Roster.GrpList.indexOf(sGrpBookmarks);
+        bi := MainSession.Roster.GrpList.indexOf(g_bookmarks);
         if bi >= 0 then
             _bookmark := TTreeNode(MainSession.Roster.GrpList.Objects[bi])
         else
-            bi := MainSession.roster.GrpList.Add(sGrpBookmarks);
+            bi := MainSession.roster.GrpList.Add(g_bookmarks);
 
         if (_bookmark = nil) then begin
             _bookmark := treeRoster.Items.AddChild(nil, sGrpBookmarks);
@@ -627,7 +649,7 @@ procedure TfrmRosterWindow.ClearNodes;
 var
     i:          integer;
     ri:         TJabberRosterItem;
-    node_list:  TList;
+    node_list:  TWideStringlist;
 begin
     treeRoster.Items.BeginUpdate;
     treeRoster.Items.Clear;
@@ -640,7 +662,7 @@ begin
         // remove all item pointers to tree nodes
         for i := 0 to Count - 1 do begin
             ri := TJabberRosterItem(Objects[i]);
-            node_list := TList(ri.Data);
+            node_list := TWidestringlist(ri.Data);
             if (node_list <> nil) then node_list.Clear;
         end;
         for i := 0 to Bookmarks.Count - 1 do
@@ -760,7 +782,7 @@ var
 begin
     // Make sure we have current settings
     // SessionCallback('/session/prefs', nil);
-    
+
     // loop through all roster items and draw them
     _FullRoster := true;
     treeRoster.Color := TColor(MainSession.prefs.getInt('roster_bg'));
@@ -769,17 +791,18 @@ begin
 
     // re-render each item
     with MainSession.Roster do begin
+        for i := 0 to Bookmarks.Count - 1 do begin
+            bm := TJabberBookmark(Bookmarks.Objects[i]);
+            RenderBookmark(bm);
+        end;
+
         for i := 0 to Count - 1 do begin
             ri := TJabberRosterItem(Objects[i]);
             p := MainSession.ppdb.FindPres(ri.JID.jid, '');
             RenderNode(ri, p);
         end;
-
-        for i := 0 to Bookmarks.Count - 1 do begin
-            bm := TJabberBookmark(Bookmarks.Objects[i]);
-            RenderBookmark(bm);
-        end;
     end;
+
     _FullRoster := false;
     treeRoster.AlphaSort;
     ExpandNodes();
@@ -844,15 +867,15 @@ end;
 procedure TfrmRosterWindow.RemoveItemNodes(ritem: TJabberRosterItem);
 var
     n, p: TTreeNode;
-    node_list: TList;
+    node_list: TWidestringlist;
     i: integer;
 begin
     // Remove the nodes for this item..
-    node_list := TList(ritem.Data);
+    node_list := TWideStringlist(ritem.Data);
     treeRoster.Items.BeginUpdate();
     if node_list <> nil then begin
         for i := node_list.count - 1 downto 0 do begin
-            n := TTreeNode(node_list[i]);
+            n := TTreeNode(node_list.Objects[i]);
             p := n.Parent;
             node_list.Delete(i);
             n.Free;
@@ -867,17 +890,17 @@ end;
 procedure TfrmRosterWindow.RemoveItemNode(ritem: TJabberRosterItem; p: TJabberPres);
 var
     n: TTreeNode;
-    node_list: TList;
+    node_list: TWidestringlist;
     idx, i: integer;
     mr: TJabberMyResource;
 begin
     //
     idx := -1;
-    node_list := TList(ritem.Data);
+    node_list := TWidestringlist(ritem.Data);
     if (node_list = nil) then exit;
 
     for i := 0 to node_list.Count - 1 do begin
-        n := TTreeNode(node_list[i]);
+        n := TTreeNode(node_list.Objects[i]);
         if (n.Data = nil) then continue;
 
         mr := TJabberMyResource(n.Data);
@@ -888,7 +911,7 @@ begin
     end;
 
     if (idx >= 0) then begin
-        n := TTreeNode(node_list[idx]);
+        n := TTreeNode(node_list.Objects[idx]);
         node_list.Delete(idx);
         n.Free();
         if (_myres.Count <= 0) then begin
@@ -941,8 +964,7 @@ var
     i, g, grp_idx: integer;
     cur_grp, tmps: Widestring;
     top_item, cur_node, grp_node, n: TTreeNode;
-    node_list: TList;
-    tmp_grps: TWideStringlist;
+    node_list, tmp_grps: TWideStringlist;
     is_blocked: boolean;
     is_transport: boolean;
     is_me: boolean;
@@ -1029,9 +1051,9 @@ begin
     roster item, and assign it to the .Data property
     of the roster item object
     }
-    node_list := TList(ritem.Data);
+    node_list := TWideStringlist(ritem.Data);
     if node_list = nil then begin
-        node_list := TList.Create;
+        node_list := TWideStringlist.Create;
         ritem.Data := node_list;
     end;
 
@@ -1051,21 +1073,21 @@ begin
                 exit;
             end
             else
-                tmp_grps.Add(sMyResources);
+                tmp_grps.Add(g_myres);
         end;
     end
     else if (((p = nil) or (p.PresType = 'unavailble')) and (_offline_grp)
         and (is_transport = false)) then
         // they are offline, and we want an offline grp
-        tmp_grps.Add(sGrpOffline)
+        tmp_grps.Add(g_offline)
 
     else if ((_sort_roster) and (not is_transport)) then begin
         // We are sorting the roster by <show>
-        if (p = nil) then tmp_grps.Add(sGrpOffline)
-        else if (p.Show = 'away') then tmp_grps.Add(sGrpAway)
-        else if (p.Show = 'xa') then tmp_grps.Add(sGrpXA)
-        else if (p.Show = 'dnd') then tmp_grps.Add(sGrpDND)
-        else tmp_grps.Add(sGrpOnline);
+        if (p = nil) then tmp_grps.Add(g_offline)
+        else if (p.Show = 'away') then tmp_grps.Add(g_away)
+        else if (p.Show = 'xa') then tmp_grps.Add(g_xa)
+        else if (p.Show = 'dnd') then tmp_grps.Add(g_dnd)
+        else tmp_grps.Add(g_online);
     end
 
     // otherwise... use normal grps
@@ -1075,19 +1097,16 @@ begin
 
     // If they aren't in any grps, put them into the Unfiled grp
     if ((tmp_grps.Count <= 0) and (not is_me)) then
-        tmp_grps.Add(sGrpUnfiled);
+        tmp_grps.Add(g_unfiled);
 
     // Remove nodes that are in node_list but aren't in the grp list
     // This takes care of changing grps, or going to the offline grp
     for i := node_list.Count - 1 downto 0 do begin
-        cur_node := TTreeNode(node_list[i]);
-        grp_node := cur_node.Parent;        
-        if (grp_node <> nil) then begin
-            cur_grp := grp_node.Text;
-            if (tmp_grps.IndexOf(cur_grp) < 0) then begin
-                node_list.Delete(i);
-                cur_node.Free;
-            end;
+        cur_grp  := node_list[i];
+        cur_node := TTreeNode(node_list.Objects[i]);
+        if (tmp_grps.IndexOf(cur_grp) < 0) then begin
+            node_list.Delete(i);
+            cur_node.Free();
         end;
     end;
 
@@ -1112,7 +1131,7 @@ begin
 
         // The offline grp is special, we keep a pointer to
         // it at all times (if it exists).
-        if (cur_grp = sGrpOffline) then begin
+        if (cur_grp = g_offline) then begin
             if (_offline = nil) then begin
                 _offline := treeRoster.Items.AddChild(nil, sGrpOffline);
                 _offline.ImageIndex := ico_right;
@@ -1123,7 +1142,7 @@ begin
         end
 
         // The My resources grp is also special.. same as offline
-        else if (cur_grp = sMyResources) then begin
+        else if (cur_grp = g_myres) then begin
             if (_myres = nil) then begin
                 _myres := treeRoster.Items.AddChild(nil, sMyResources);
                 _myres.ImageIndex := ico_right;
@@ -1159,23 +1178,21 @@ begin
         // Now that we are sure we have a grp_node,
         // check to see if this jid node exists under it
         cur_node := nil;
-        for i := 0 to node_list.count - 1 do begin
-            n := TTreeNode(node_list[i]);
-            if (n.Parent = grp_node) then begin
-                if ((is_me) and (Pos(p.fromJid.resource, n.Text) = 1)) then
-                    cur_node := n
-                else if (not is_me) then
-                    cur_node := n;
-                if (cur_node <> nil) then
-                    break;
-            end;
+        i := node_list.indexOf(cur_grp);
+        if (i >= 0) then begin
+            n := TTreeNode(node_list.Objects[i]);
+            if ((is_me) and (Pos(p.fromJid.resource, n.Text) = 1)) then
+                cur_node := n
+            else if (not is_me) then
+                cur_node := n
         end;
 
         my_res := nil;
         if cur_node = nil then begin
             // add a node for this person under this group
             cur_node := treeRoster.Items.AddChild(grp_node, tmps);
-            node_list.Add(cur_node);
+            node_list.AddObject(cur_grp, cur_node);
+            // node_list.Add(cur_node);
             if ((is_me) and (p <> nil))then begin
                 my_res := TJabberMyResource.Create();
                 my_res.jid := TJabberID.Create(MainSession.BareJid + '/' +
@@ -1190,7 +1207,7 @@ begin
             my_res.Presence := p;
         end;
 
-        cur_node.Text := tmps;
+        cur_node.Text := String(tmps);
         if (is_me) then
             cur_node.Data := my_res
         else
@@ -1335,7 +1352,7 @@ begin
     if MainSession.Prefs.getBool('inline_status') then
         _hint_text := ri.jid.full
     else if P = nil then
-        _hint_text := ri.jid.full + ': ' + sGrpOffline
+        _hint_text := ri.jid.full + ': ' + g_offline
     else
         _hint_text := ri.jid.full + ': ' + p.Status;
 
