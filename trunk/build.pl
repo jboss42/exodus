@@ -9,14 +9,16 @@ $::ICQ = "D:\\src\\exodus\\exodus\\plugins\\ICQ-Import\\ICQ\\Component";
 $::JCL = "D:\\src\\jcl";
 $::NSIS = "\"D:\\Program Files\\NSIS\\makensis.exe\"";
 $::DXGETDIR = "F:\\lang\\dxgettext";
+
 do "dopts.pl";
+
 $::MSGFMT = "$::DXGETDIR\\msgfmt.exe";
 $::DXGETTEXT = "$::DXGETDIR\\dxgettext.exe";
 
 my $DD;
 ($DD = $::D) =~ s/\//\\/g;
 my $imports = "\"$DD\\Imports\"";
-my $dcc = "\"$::D/Bin/dcc32.exe\"";
+my $dcc = "\"$::D\\Bin\\dcc32.exe\"";
 my $rcc = "\"$::D/Bin/brcc32.exe\"";
 my $opts = "-LUvcl -LUrtl -B -Q -U\"$DD\\Lib\"";
 my $comp = "..\\..\\Components";

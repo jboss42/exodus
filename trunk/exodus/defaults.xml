@@ -4,7 +4,7 @@
     
     <!-- System Options -->
     <auto_update_url value="http://exodus.jabberstudio.org/exodus-released.exe"/>
-    <auto_update_changelog_url value="http://exodus.jabberstudio.org/ChangeLog-RELEASE.txt"/>
+    <auto_update_changelog_url value="http://exodus.jabberstudio.org/changelog.html"/>
     
     <auto_updates value="1" control="chkAutoUpdate"/>
     <auto_start value="0" control="chkAutoStart"/>
