@@ -23,7 +23,7 @@ interface
 uses
     // Exodus'y stuff
     COMController, COMRoster, COMPPDB, JabberID, 
-    Unicode, Signals, XMLTag, Session, GUIFactory, Register, Notify,
+    Unicode, Signals, XMLTag, Session, GUIFactory, Register, Notify, Regexpr,
     S10n,
 
     // Delphi stuff
@@ -45,8 +45,12 @@ type
 
 procedure PlayXMPPActions();
 procedure ClearXMPPActions();
-procedure ParseXMPPFile(filename: string; var connect_node: TXMLTag;
-    var jid: TJabberID);
+procedure ParseXMPPFile(filename: string;
+                        var connect_node: TXMLTag;
+                        var jid: TJabberID);
+procedure ParseURI(uri: string;
+                   var connect_node: TXMLTag;
+                   var jid: TJabberID);
 
 
 // forward declares
@@ -69,7 +73,9 @@ var
 
     ExRegController: TRegController;
     ExStartup: TExStartParams;
-
+    uri_regex: TRegExpr;
+    pair_regex: TRegExpr;
+    im_regex: TRegExpr;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -82,7 +88,7 @@ uses
     Avatar, 
     ActnList, Graphics, ExtCtrls, ExRichEdit,
     Controls, GnuGetText, ConnDetails, IdWinsock2,
-    ChatWin, GetOpt, Jabber1, PrefController, StandardAuth,
+    Browser, ChatWin, GetOpt, Jabber1, PrefController, StandardAuth,
     PrefNotify, Room, RosterAdd, MsgRecv, NetMeetingFix, Profile, RegForm,
     JabberUtils, ExUtils,  ExResponders, MsgDisplay,
     XMLParser, XMLUtils;
@@ -100,6 +106,7 @@ const
     sCmdPriority =  ' -i [pri] '#9' : Priority'#13#10;
     sCmdProfile =   ' -f [prof] '#9' : Profile name'#13#10;
     sCmdConfig =    ' -c [file] '#9' : Config path name'#13#10;
+    sCmdXMPP =      ' -X [xmpp URI] '#9' : XMPP URI handling'#13#10;
     
     sUnkArg = 'Invalid command line:%s';
     sWinsock2 = 'Winsock2 is required for this application. Please obtain the winsock2 installer from Microsoft for your operating system.';
@@ -138,7 +145,7 @@ function SetupSession(): boolean;
 var
     regdll, invisible, show_help: boolean;
     jid: TJabberID;
-    expanded, pass, resource, profile_name, config, xmpp_file : String;
+    expanded, pass, resource, profile_name, config, xmpp_file, xmpp_uri : String;
     prof_index: integer;
 
     cli_priority: integer;
@@ -211,6 +218,7 @@ begin
             // -?           : help
             // -0           : DLLRegisterServer
             // -x [yes|no]  : expanded
+            // -X [URI]     : XMPP URL
             // -j [jid]     : jid
             // -p [pass]    : password
             // -r [res]     : resource
@@ -220,10 +228,10 @@ begin
             // -s [status]  : presence status
             // -w [show]    : presence show
             // -t           : show test menu
-            Options  := 'dmva?0xjprifcswot';
-            OptFlags := '------::::::::::-';
-            ReqFlags := '                 ';
-            LongOpts := 'debug,minimized,invisible,aatest,help,register,expanded,jid,password,resource,priority,profile,config,status,show,xmpp,testmenu';
+            Options  := 'dmva?0xujprifcswot';
+            OptFlags := '------:::::::::::-';
+            ReqFlags := '                  ';
+            LongOpts := 'debug,minimized,invisible,aatest,help,register,expanded,uri,jid,password,resource,priority,profile,config,status,show,xmpp,testmenu';
             while GetOpt do begin
                 case Ord(OptChar) of
                     0: raise EConfigException.Create(format(_(sUnkArg), [CmdLine()]));
@@ -244,6 +252,7 @@ begin
                     Ord('s'): cli_status := OptArg;
                     Ord('o'): xmpp_file := OptArg;
                     Ord('t'): ExStartup.test_menu := true;
+                    Ord('u'): xmpp_uri := OptArg;
                 end;
             end;
         finally
@@ -270,6 +279,7 @@ begin
         help_msg := help_msg + _(sCmdPriority);
         help_msg := help_msg + _(sCmdProfile);
         help_msg := help_msg + _(sCmdConfig);
+        help_msg := help_msg + _(sCmdXMPP);
         MessageDlgW(help_msg, mtInformation, [mbOK], 0);
         Result := false;
         exit;
@@ -351,7 +361,10 @@ begin
         end;
 
         connect_node := nil;
-        if (xmpp_file <> '') then begin
+        if (xmpp_uri <> '') then begin
+            ParseURI(xmpp_uri, connect_node, jid);
+        end
+        else if (xmpp_file <> '') then begin
             if (not FileExists(xmpp_file)) then
                 MessageDlgW(_('Missing file:') + xmpp_file, mtWarning, [mbOK], 0);
             connect_node := nil;
@@ -508,6 +521,72 @@ begin
 end;
 
 {---------------------------------------}
+procedure ParseURI(uri: string; var connect_node: TXMLTag; var jid: TJabberID);
+var
+    target: TJabberID;
+    tag: TXMLTag;
+    querytype: string;
+    pairs: string;
+begin
+    tag := nil;
+    querytype := '';
+
+    DebugMsg('Got URI: ' + uri);
+    if uri_regex.Exec(uri) then begin
+        if (uri_regex.Match[2] <> '') and (uri_regex.Match[3] <> '') then begin
+            jid := TJabberID.Create(percentDecode(uri_regex.Match[2]),
+                                                  uri_regex.Match[3],
+                                                  '');
+            connect_node := TXMLTag.Create('connect');
+        end;
+
+        if uri_regex.Match[6] = '' then exit;
+
+        target := TJabberID.Create(percentDecode(uri_regex.Match[6]),
+                                   uri_regex.Match[7],
+                                   percentDecode(uri_regex.Match[9]));
+        querytype := percentDecode(uri_regex.Match[11]);
+        pairs := uri_regex.Match[12];
+
+        if querytype = '' then querytype := 'message';  // I guess.
+    end
+    else if im_regex.Exec(uri) then begin
+        target := TJabberID.Create(percentDecode(im_regex.Match[2], true),
+                                   im_regex.Match[3],
+                                   '');
+        if im_regex.Match[1] = 'im' then
+            querytype := 'message'
+        else if im_regex.Match[1] = 'pres' then
+            querytype := 'subscribe'
+        else
+            exit;
+    end
+    else
+        exit;
+
+    if querytype = 'message' then begin
+        tag := TXMLTag.Create('chat');
+        // todo: if there is a subject, do it as message, instead
+    end
+    else if querytype = 'subscribe' then begin
+        tag := TXMLTag.Create('subscribe');
+    end
+    else if querytype = 'join' then begin
+        tag := TXMLTag.Create('groupchat');
+    end
+    else if querytype = 'register' then begin
+        tag := TXMLTag.Create('register');
+    end
+    else if querytype = 'disco' then begin
+        tag := TXMLTag.Create('disco');
+    end;
+
+    if tag <> nil then begin
+        tag.setAttribute('jid', target.full);
+        _xmpp_action_list.Add(tag);
+    end;
+end;
+
 {---------------------------------------}
 procedure ParseXMPPFile(filename: string; var connect_node: TXMLTag;
     var jid: TJabberID);
@@ -635,6 +714,11 @@ var
     jid: WideString;
     add: TfrmAdd;
 begin
+    if _xmpp_action_list.Count > 0 then begin
+        SetWindowPos(frmExodus.Handle, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE + SWP_NOMOVE);
+        BringWindowToTop(frmExodus.Handle);
+    end;
+
     for i := 0 to _xmpp_action_list.Count - 1 do begin
         node := TXMLTag(_xmpp_action_list[i]);
         jid := node.GetAttribute('jid');
@@ -670,6 +754,11 @@ begin
             if (jid <> '') then begin
                 StartServiceReg(jid);
             end;
+        end
+        else if (node.Name = 'disco') then begin
+            if (jid <> '') then begin
+                ShowBrowser(jid);
+            end;
         end;
 
         node.Free();
@@ -694,8 +783,35 @@ end;
 initialization
     sExodusMutex := RegisterWindowMessage('EXODUS_MESSAGE');
     _xmpp_action_list := TList.Create();
+    uri_regex := TRegExpr.Create();
+    with uri_regex do begin
+        Expression := 'xmpp:' +
+                '(//([^@]+)@([^/?#]+)/?)?' +            // auth-xmpp  2@3
+                '((([^@]+)@)?([^/?#]+)(/([^?#]+))?)?' + // path-xmpp  6@7/9
+                '(\?([^&#]+)' +                         // querytype  11
+                '(&[^#]+)?)?' +                         // pair       12
+                '(#(\S+))?';                            // fragment   14
+        Compile();
+    end;
+    pair_regex := TRegExpr.Create();
+    with pair_regex do begin
+        Expression := '&([^=]+)=([^&]+)';
+        Compile();
+    end;
+    im_regex := TRegExpr.Create();
+    with im_regex do begin
+        Expression := '(im|pres):([^@]+)@([^?]+)(\?(\S+))?'; // 1:2@3?4
+        Compile();
+    end;
 
 finalization
+    if (uri_regex <> nil) then
+        FreeAndNil(uri_regex);
+    if (pair_regex <> nil) then
+        FreeAndNil(pair_regex);
+    if (im_regex <> nil) then
+        FreeAndNil(im_regex);
+
     ClearXMPPActions();
     _xmpp_action_list.Free();
 end.

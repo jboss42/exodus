@@ -447,6 +447,7 @@ const
     sPasswordPrompt = 'Enter Password';
 
     sBrandingError = 'Branding error!';
+    sQueryTypeError = 'Unknown query type: ';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -499,7 +500,7 @@ uses
     JoinRoom, Login, MsgController, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow, Room,
     XferManager, NodeItem, Stringprep, SSLWarn,
-    Roster, RosterAdd, Session, StandardAuth, Subscribe, Unicode, VCard, xData,
+    Roster, RosterAdd, Session, StandardAuth, StrUtils, Subscribe, Unicode, VCard, xData,
     XMLUtils, XMLParser;
 
 {$R *.DFM}
@@ -3223,6 +3224,24 @@ begin
         else begin
             // TODO: Handle xmpp connect's via DDE
         end;
+    end
+    else if (Pos('uri', m) = 1) then begin
+        m := Msg[0];
+        Delete(m, 1, 5);
+        if LeftStr(m, 1) = '''' then begin
+            Delete(m, 1, 1);
+        end;
+
+        if RightStr(m, 1) = '''' then begin
+            Delete(m, Length(m), 1);
+        end;
+
+        ParseURI(m, c_node, c_jid);
+        if (MainSession.Active) then
+            PlayXMPPActions()
+        else begin
+            // TODO: Handle xmpp connect's via DDE
+        end;
     end;
 end;
 
@@ -3289,6 +3308,5 @@ initialization
     sExodusPresence := RegisterWindowMessage('EXODUS_PRESENCE');
     sExodusMutex := RegisterWindowMessage('EXODUS_MESSAGE');
     sShellRestart := RegisterWindowMessage('TaskbarCreated');
-
 end.
 
