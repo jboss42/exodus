@@ -648,12 +648,12 @@ procedure TfrmChat.showMsg(tag: TXMLTag);
 var
     m, etag: TXMLTag;
     subj_msg, msg: TJabberMessage;
-    err: Widestring;
+    emsg, err: Widestring;
 begin
     // display the body of the msg
     if (timFlash.Enabled) then
         Self.ResetPresImage();
-        
+
     if (_warn_busyclose) then begin
         timBusy.Enabled := false;
         timBusy.Enabled := true;
@@ -664,7 +664,9 @@ begin
         err := _('The last message bounced!. ');
         etag := tag.GetFirstTag('error');
         if (etag <> nil) then begin
-            err := err + etag.Data;
+            emsg := etag.QueryXPData('/error/text[@xmlns="urn:ietf:params:xml:ns:xmpp-streams"]');
+            if (emsg = '') then emsg := etag.Data;
+            err := err + emsg;
             err := err + '(' + _('Error Code: ') + etag.GetAttribute('code') + ')';
         end;
         MessageDlgW(err, mtError, [mbOK], 0);
