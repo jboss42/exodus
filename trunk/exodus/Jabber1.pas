@@ -496,7 +496,8 @@ const
 {---------------------------------------}
 implementation
 uses
-    About, AutoUpdate, Bookmark, Browser, ChatWin, CommCtrl, CustomPres,
+    About, AutoUpdate, Bookmark, Browser, Chat, ChatController, ChatWin,
+    CommCtrl, CustomPres,
     Debug, Dockable, ExUtils, GetOpt, InputPassword,
     Iq, JUD, JabberID, JabberMsg, IdGlobal,
     JoinRoom, Login, MsgDisplay, MsgQueue, MsgRecv, Password,
@@ -1445,11 +1446,34 @@ var
     b, mtype: string;
     e: TJabberEvent;
     msg: TJabberMessage;
+    msg_treatment: integer;
+    cc: TChatController;
+    tmp_jid: TJabberID;
 begin
     // record the event
     mtype := tag.getAttribute('type');
     b := Trim(tag.GetBasicText('body'));
     if ((mtype <> 'groupchat') and (mtype <> 'chat') and (b <> '')) then begin
+
+        // if we have a normal msg (not a headline),
+        // check for msg_treatments.
+
+        msg_treatment := MainSession.Prefs.getInt('msg_treatment');
+        if (mtype <> 'headline') then begin
+            if (msg_treatment = msg_all_chat) then
+                // forcing all msgs to chat, so bail
+                exit
+            else if (msg_treatment = msg_existing_chat) then begin
+                // check for an existing chat window..
+                // if we have one, then bail.
+                tmp_jid := TJabberID.Create(tag.getAttribute('from'));
+                cc := MainSession.ChatList.FindChat(tmp_jid.jid, '', '');
+                if (cc = nil) then
+                    cc := MainSession.ChatList.FindChat(tmp_jid.jid, tmp_jid.resource, '');
+                if (cc <> nil) then exit;
+                end;
+            end;
+
         if MainSession.IsPaused then begin
             with tag.AddTag('x') do begin
                 PutAttribute('xmlns', XMLNS_DELAY);
@@ -1936,7 +1960,7 @@ end;
 procedure TfrmExodus.JabberCentralWebsite1Click(Sender: TObject);
 begin
     // goto www.jabbecentral.org
-    ShellExecute(0, 'open', 'http://www.jabbercentral.org', '', '', SW_SHOW);
+    ShellExecute(0, 'open', 'http://www.jabberstudio.org', '', '', SW_SHOW);
 end;
 
 {---------------------------------------}
@@ -2349,14 +2373,14 @@ end;
 procedure TfrmExodus.WinJabWebsite1Click(Sender: TObject);
 begin
     // goto exodus.sf.net
-    ShellExecute(0, 'open', 'http://exodus.sf.net', '', '', SW_SHOW);
+    ShellExecute(0, 'open', 'http://exodus.jabberstudio.org', '', '', SW_SHOW);
 end;
 
 {---------------------------------------}
 procedure TfrmExodus.JabberBugzilla1Click(Sender: TObject);
 begin
     // submit a bug on SF.
-    ShellExecute(0, 'open', 'http://sourceforge.net/tracker/?func=add&group_id=2049&atid=202049', '', '', SW_SHOW);
+    ShellExecute(0, 'open', 'http://www.jabberstudio.org/projects/exodus/bugs/', '', '', SW_SHOW);
 end;
 
 {---------------------------------------}

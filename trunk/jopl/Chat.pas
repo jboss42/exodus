@@ -50,7 +50,7 @@ type
 {---------------------------------------}
 implementation
 uses
-    Session;
+    PrefController, Session;
 
 {---------------------------------------}
 constructor TJabberChatList.Create;
@@ -71,19 +71,37 @@ var
     tmp_jid: TJabberID;
     c: TChatController;
     // c: TfrmChat;
+    idx1, idx2, mt: integer;
+    mtype: string;
 begin
     // check to see if we have a session already open for
     // this jid, if not, create one.
     fjid := tag.getAttribute('from');
+    mtype := tag.getAttribute('type');
+
+    if (mtype = 'groupchat') then exit;
+    if (mtype = 'headline') then exit;
+
+    mt := MainSession.Prefs.getInt('msg_treatment');
 
     // we are only interested in packets w/ a body tag
     if (tag.QueryXPTag('/message/body') = nil) then exit;
-
     if (tag.QueryXPTag('/message/x[@xmlns="jabber:x:data"]') <> nil) then exit;
-    
+
+    tmp_jid := TJabberID.Create(fjid);
+
+    idx1 := Self.indexOf(fjid);
+    idx2 := Self.indexOf(tmp_jid.jid);
+
+    if (mtype <> 'chat') then begin
+        if ((mt = msg_existing_chat) and (idx1 = -1) and (idx2 = -1)) then
+            exit
+        else if (mt = msg_normal) then
+            exit;
+        end;
+
     if (Self.indexOf(fjid) < 0) then begin
         // Create a new session
-        tmp_jid := TJabberID.Create(fjid);
         if (Self.indexOf(tmp_jid.jid) >= 0) then begin
             tmp_jid.Free();
             exit;
@@ -99,8 +117,8 @@ begin
         c := Self.AddChat(tmp_jid.jid, tmp_jid.resource);
         c.MsgCallback(event, tag);
 
-        tmp_jid.Free();
         end;
+    tmp_jid.Free();
 end;
 
 {---------------------------------------}
@@ -129,7 +147,7 @@ begin
 end;
 
 {---------------------------------------}
-function TJabberChatList.AddChat(sjid, sresource: string): TChatController; 
+function TJabberChatList.AddChat(sjid, sresource: string): TChatController;
 begin
     //
     Result := TChatController.Create(sjid, sresource);

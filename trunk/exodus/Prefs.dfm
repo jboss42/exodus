@@ -1570,12 +1570,12 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 371
     Height = 340
-    ActivePage = tbsRoster
+    ActivePage = tbsMessages
     Align = alClient
     Constraints.MinHeight = 340
     Constraints.MinWidth = 310
     Style = tsFlatButtons
-    TabIndex = 0
+    TabIndex = 5
     TabOrder = 1
     object tbsRoster: TTabSheet
       Caption = 'Roster'
@@ -2212,6 +2212,13 @@ object frmPrefs: TfrmPrefs
         Height = 13
         Caption = 'Format:'
       end
+      object Label7: TLabel
+        Left = 8
+        Top = 192
+        Width = 173
+        Height = 13
+        Caption = 'Simple Message (non-chat) Handling'
+      end
       object chkEmoticons: TCheckBox
         Left = 5
         Top = 24
@@ -2240,7 +2247,7 @@ object frmPrefs: TfrmPrefs
       object txtLogPath: TEdit
         Left = 26
         Top = 137
-        Width = 188
+        Width = 207
         Height = 21
         TabOrder = 3
       end
@@ -2265,12 +2272,12 @@ object frmPrefs: TfrmPrefs
       object txtTimestampFmt: TEdit
         Left = 69
         Top = 89
-        Width = 145
+        Width = 164
         Height = 21
         TabOrder = 5
       end
       object btnLogBrowse: TButton
-        Left = 219
+        Left = 243
         Top = 135
         Width = 75
         Height = 25
@@ -2293,6 +2300,19 @@ object frmPrefs: TfrmPrefs
         Height = 17
         Caption = 'Log conference rooms'
         TabOrder = 8
+      end
+      object cboMsgOptions: TComboBox
+        Left = 26
+        Top = 208
+        Width = 207
+        Height = 21
+        Style = csDropDownList
+        ItemHeight = 13
+        TabOrder = 9
+        Items.Strings = (
+          'Use default message handling'
+          'Treat all messages as chats'
+          'Put messages into existing chats')
       end
     end
     object tbsNotify: TTabSheet

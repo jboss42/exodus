@@ -183,6 +183,8 @@ type
     imgPlugins: TImage;
     lblPlugins: TLabel;
     chkLogRooms: TCheckBox;
+    Label7: TLabel;
+    cboMsgOptions: TComboBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -362,6 +364,7 @@ begin
         chkLog.Checked := getBool('log');
         chkLogRooms.Checked := getBool('log_rooms');
         txtLogPath.Text := getString('log_path');
+        cboMsgOptions.ItemIndex := getInt('msg_treatment');
         self.chkLogClick(nil);
 
         // Dialog Options
@@ -499,6 +502,7 @@ begin
         setBool('log', chkLog.Checked);
         setBool('log_rooms', chkLogRooms.Checked);
         setString('log_path', txtLogPath.Text);
+        setInt('msg_treatment', cboMsgOptions.ItemIndex);
 
         reg := TRegistry.Create();
         try
