@@ -66,8 +66,6 @@ type
     txtSubject: TTntLabel;
     lblSubject2: TTntStaticText;
     pnlFrom: TPanel;
-    btnClose: TSpeedButton;
-    lblFrom: TTntStaticText;
     pnlError: TPanel;
     Image1: TImage;
     frameButtons1: TframeButtons;
@@ -76,6 +74,9 @@ type
     popCopy: TMenuItem;
     popPaste: TMenuItem;
     txtFrom: TTntLabel;
+    lblFrom: TTntLabel;
+    Panel1: TPanel;
+    btnClose: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormResize(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -384,10 +385,12 @@ end;
 procedure TfrmMsgRecv.FormResize(Sender: TObject);
 begin
     // Resize some of the form element
+    {
     if pnlError.Visible then
         btnClose.Left := Self.ClientWidth - btnClose.Width - pnlError.Width - 5
     else
         btnClose.Left := Self.ClientWidth - btnClose.Width - 2;
+    }
     txtMsg.Repaint();
 end;
 

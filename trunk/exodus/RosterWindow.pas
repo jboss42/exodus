@@ -2411,7 +2411,11 @@ var
     i: integer;
 begin
     // Broadcast a message to the grp
-    r := getSelectedContacts(true);
+    if ((_show_online) and (_show_filter > show_offline)) then
+        r := getSelectedContacts(true)
+    else
+        r := getSelectedContacts(false);
+
     if (r.Count <= 1) then
         MessageDlg(sNoBroadcast, mtError, [mbOK], 0)
     else begin
