@@ -114,6 +114,11 @@ begin
         RenderEvent(e);
     end
 
+    else if (event = '/session/gui/reg-not-supported') then begin
+        MessageDlgW(_('Your authentication mechanism does not support registration.'),
+            mtError, [mbOK], 0);
+    end
+
     else if (event = '/session/gui/pres-error') then begin
         // Presence errors
         ri := MainSession.Roster.Find(tag.GetAttribute('from'));

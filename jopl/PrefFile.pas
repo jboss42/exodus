@@ -218,7 +218,7 @@ begin
                 _pres.AddTag(TXMLTag.Create(t));
                 _root.RemoveTag(t);
             end
-            else if (t.Name = 'custom_pres') then begin // older dailies
+            else if (t.Name = 'custom_pres') then begin // older 0.8.6.x dailies
                 _need_default_pres := false;
                 _root.RemoveTag(t);
             end

@@ -378,8 +378,9 @@ procedure TJabberSession.CreateAccount;
 begin
     _register := true;
     if (not _auth_agent.StartRegistration()) then begin
-        // XXX: throw some kind of error..
         // this auth mechanism doesn't support registration
+        _register := false;
+        Self.FireEvent('/session/gui/reg-not-supported', nil);
     end;
 end;
 
@@ -501,7 +502,8 @@ var
     biq: TJabberIQ;
     l, lang, tmps: WideString;
 begin
-    // Process callback info..
+    // Something is happening... our stream says so.
+
     if msg = 'connected' then begin
         // we are connected... send auth stuff.
         lang := Prefs.getString('locale');
@@ -519,17 +521,20 @@ begin
         _dispatcher.DispatchSignal('/session/sslerror', tag)
 
     else if msg = 'disconnected' then
+        // We're not connected anymore
         Self.handleDisconnect()
 
     else if msg = 'commtimeout' then
+        // Communications timed out (woops).
         _dispatcher.DispatchSignal('/session/commtimeout', nil)
 
     else if msg = 'commerror' then
+        // Some kind of socket error
         _dispatcher.DispatchSignal('/session/commerror', nil)
 
     else if msg = 'xml' then begin
-        // process XML
-        // always fire debug
+        // We got a stanza. Whoop.
+        // Let's always fire debug events
         if (tag.Name = 'stream:stream') then begin
 
             // we got connected
@@ -558,7 +563,7 @@ begin
             _features := TXMLTag.Create(tag);
 
             if (_authd) then begin
-                // bind to our resource
+                // We are already auth'd, lets bind to our resource
                 biq := TJabberIQ.Create(Self, generateID(), BindCallback);
                 biq.Namespace := 'urn:ietf:params:xml:ns:xmpp-bind';
                 biq.qTag.Name := 'bind';
@@ -567,15 +572,15 @@ begin
                 biq.Send();
             end
             else begin
+                // We aren't authd yet, check for StartTLS
                 if (_features.GetFirstTag('starttls') <> nil) then begin
-                    // check to see if we can do startTLS
                     if (_stream.isSSLCapable()) then begin
                         StartTLS();
                         exit;
                     end;
                 end;
 
-                // start auth. if we are not registering..
+                // otherwise, start auth if we are not registering..
                 if ((not _register) and (not _profile.NewAccount)) then
                     _auth_agent.StartAuthentication();
             end;
@@ -592,6 +597,7 @@ procedure TJabberSession.BindCallback(event: string; tag: TXMLTag);
 var
     iq: TJabberIQ;
 begin
+    // Callback for our xmpp-bind request
     if ((event <> 'xml') or (tag.getAttribute('type') <> 'result')) then begin
         _dispatcher.DispatchSignal('/session/autherror', tag);
         exit;
@@ -608,6 +614,7 @@ end;
 {---------------------------------------}
 procedure TJabberSession.SessionCallback(event: string; tag: TXMLTag);
 begin
+    // callback for our xmpp-session-start
     if ((event <> 'xml') or (tag.getAttribute('type') <> 'result')) then begin
         _dispatcher.DispatchSignal('/session/autherror', tag);
         exit;
@@ -619,6 +626,7 @@ end;
 {---------------------------------------}
 procedure TJabberSession.StartSession(tag: TXMLTag);
 begin
+    // We have an active session
     _first_pres := true;
     _dispatcher.DispatchSignal('/session/authenticated', tag);
     Prefs.FetchServerPrefs();
@@ -627,7 +635,7 @@ end;
 {---------------------------------------}
 procedure TJabberSession.Pause();
 begin
-    // pause the _pDispatcher;
+    // pause the session
     _paused := true;
 end;
 
@@ -769,7 +777,6 @@ begin
     Result := 'jcl_' + IntToStr(_id);
     _id := _id + 1;
 end;
-
 
 {---------------------------------------}
 procedure TJabberSession.ActivateProfile(i: integer);
@@ -1018,7 +1025,7 @@ begin
     _tls_cb := -1;
 
     if (event <> 'xml') then begin
-        // XXX: kill everything here?
+        Self.FireEvent('/session/tlserror', nil);
         exit;
     end;
 

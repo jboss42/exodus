@@ -1091,6 +1091,14 @@ begin
         exit;
     end
 
+    else if (event = '/session/tlserror') then begin
+        MessageDlgW(_('There was an error trying to setup SSL.'), mtError,
+            [mbOK], 0);
+        _logoff := true;
+        PostMessage(Self.Handle, WM_DISCONNECT, 0, 0);
+        PostMessage(Self.Handle, WM_SHOWLOGIN, 0, 0);
+    end
+
     else if ((event = '/session/sslerror') and (tag <> nil)) then begin
         fp := tag.getAttribute('fingerprint');
 
