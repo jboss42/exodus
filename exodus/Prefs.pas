@@ -716,7 +716,7 @@ begin
     e := chkNotify.Checked[i];
     chkToast.Enabled := e;
     chkFlash.Enabled := e;
-    // chkSound.Enabled := e;
+    chkSound.Enabled := e;
 
     if optNotify.Enabled then begin
         chkToast.Checked := ((_notify[i] and notify_toast) > 0);
@@ -745,6 +745,7 @@ begin
     _notify[i] := 0;
     if (chkToast.Checked) then _notify[i] := _notify[i] + notify_toast;
     if (chkFlash.Checked) then _notify[i] := _notify[i] + notify_flash;
+    if (chkSound.Checked) then _notify[i] := _notify[i] + notify_sound;
 end;
 
 {---------------------------------------}

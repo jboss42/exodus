@@ -292,7 +292,7 @@ type
 
     procedure setTrayInfo(tip: string);
     procedure setTrayIcon(iconNum: integer);
-    
+
     procedure SetAutoAway();
     procedure SetAutoXA();
     procedure SetAutoAvailable();
@@ -395,6 +395,15 @@ resourcestring
 
     sAlreadySubscribed = 'You are already subscribed to this contact';
 
+    sSoundChatactivity = 'Activity in a chat window';
+    sSoundInvite = 'Invited to a room';
+    sSoundKeyword = 'Keyword in a room';
+    sSoundNewchat = 'New conversation';
+    sSoundNormalmsg = 'Received a normal message';
+    sSoundOffline = 'Contact went offline';
+    sSoundOnline = 'Contact came online';
+    sSoundRoomactivity = 'Activity in a room';
+    sSoundS10n = 'Subscription request';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -542,6 +551,13 @@ end;
 procedure TfrmExodus.WMCloseApp(var msg: TMessage);
 begin
     Self.Close();
+end;
+
+procedure AddSound(reg: TRegistry; pref_name: string; user_text: string);
+begin
+    reg.CreateKey('\AppEvents\Schemes\Apps\Exodus\EXODUS_' + pref_name);
+    reg.OpenKey('\AppEvents\EventLabels\EXODUS_' + pref_name, true);
+    reg.WriteString('', user_text);
 end;
 
 {---------------------------------------}
@@ -802,6 +818,27 @@ begin
     _hidden := false;
     _shutdown := false;
     _close_min := MainSession.prefs.getBool('close_min');
+
+    // if we don't have sound registry settings, then add them
+    // sigh.  If we had an installer, that would be the place to
+    // do this.
+    reg := TRegistry.Create();
+    reg.RootKey := HKEY_CURRENT_USER;
+    if (not reg.KeyExists('\AppEvents\Schemes\Apps\Exodus')) then begin
+        reg.OpenKey('\AppEvents\Schemes\Apps\Exodus', true);
+        reg.WriteString('', sExodus);
+
+        AddSound(reg, 'notify_chatactivity', sSoundChatactivity);
+        AddSound(reg, 'notify_invite', sSoundInvite);
+        AddSound(reg, 'notify_keyword', sSoundKeyword);
+        AddSound(reg, 'notify_newchat', sSoundNewchat);
+        AddSound(reg, 'notify_normalmsg', sSoundNormalmsg);
+        AddSound(reg, 'notify_offline', sSoundOffline);
+        AddSound(reg, 'notify_online', sSoundOnline);
+        AddSound(reg, 'notify_roomactivity', sSoundRoomactivity);
+        AddSound(reg, 'notify_s10n', sSoundS10n);
+        end;
+    reg.Free();
 
     // if we have an old registry pref thing, then kill it.
     // todo: REMOVE EVENTUALLY
@@ -1166,18 +1203,12 @@ end;
 {---------------------------------------}
 procedure TfrmExodus.RenderEvent(e: TJabberEvent);
 var
-    toast, msg: string;
-    img_idx, n_flag: integer;
+    msg: string;
+    img_idx: integer;
     mqueue: TfrmMsgQueue;
 begin
     // create a listview item for this event
-    n_flag := 0;
     img_idx := 0;
-
-    case e.eType of
-    evt_Message: n_flag := MainSession.Prefs.getInt('notify_normalmsg');
-    evt_Invite: n_flag := MainSession.Prefs.getInt('notify_invite');
-    end;
 
     case e.etype of
     evt_Presence: begin
@@ -1210,34 +1241,27 @@ begin
     evt_Message: begin
         img_idx := 18;
         msg := e.data_type;
-        toast := sMsgMessage + TJabberID.Create(e.from).jid;
+        DoNotify(nil, 'notify_normalmsg',
+                 sMsgMessage + TJabberID.Create(e.from).jid, img_idx);
         end;
 
     evt_Invite: begin
         img_idx := 21;
         msg := e.data_type;
-        toast := sMsgInvite + TJabberID.Create(e.from).jid;
+        DoNotify(nil, 'notify_invite',
+                 sMsgInvite + TJabberID.Create(e.from).jid, img_idx);
         end;
 
     evt_RosterItems: begin
         img_idx := 26;
         msg := e.data_type;
-        toast := sMsgContacts + TJabberID.Create(e.from).jid;
         end
 
     else begin
         img_idx := 12;
         msg := e.data_type;
-        toast := msg;
         end;
     end;
-
-
-    if (n_flag and notify_toast) > 0 then
-        ShowRiserWindow(toast, img_idx);
-
-    if (n_flag and notify_flash) > 0 then
-        FlashWindow(Self.Handle, true);
 
     if MainSession.Prefs.getBool('expanded') then begin
         getMsgQueue().LogEvent(e, msg, img_idx);
