@@ -1401,7 +1401,7 @@ object frmAbout: TfrmAbout
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 236
+    Top = 231
     Width = 334
     Height = 34
     Align = alBottom
@@ -1435,12 +1435,13 @@ object frmAbout: TfrmAbout
     BevelOuter = bvNone
     Caption = 'Version: '
     TabOrder = 2
+    OnMouseDown = pnlVersionMouseDown
   end
   object InfoBox: TExRichEdit
     Left = 0
     Top = 150
     Width = 334
-    Height = 86
+    Height = 81
     Align = alClient
     AutoURLDetect = adDefault
     Color = clBtnFace
