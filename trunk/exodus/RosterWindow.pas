@@ -1647,7 +1647,7 @@ begin
                     else begin
                         Font.Color := clWindowText;
                         Brush.Color := treeRoster.Color;
-                        Brush.Style := bsSolid;
+                        // Brush.Style := bsSolid;
                         FillRect(xRect);
                         end;
 
