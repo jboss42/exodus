@@ -785,12 +785,14 @@ end;
 {---------------------------------------}
 function TExodusController.Get_Roster: IExodusRoster;
 begin
+    frmExodus.COMRoster.ObjAddRef();
     Result := frmExodus.COMRoster;
 end;
 
 {---------------------------------------}
 function TExodusController.Get_PPDB: IExodusPPDB;
 begin
+    frmExodus.COMPPDB.ObjAddRef();
     Result := frmExodus.COMPPDB;
 end;
 
