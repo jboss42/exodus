@@ -940,7 +940,6 @@ begin
             @_StopHooks := GetProcAddress(_hookLib, 'StopHooks');
             _lpHookRec := _GetHookPointer();
             inc(_lpHookRec^.InstanceCount);
-            // if (_lpHookRec^.KeyHook = 0) then
             _InitHooks();
             _lpHookRec^.LastTick := GetTickCount();
             end

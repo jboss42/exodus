@@ -154,6 +154,7 @@ object frmMsgRecv: TfrmMsgRecv
       Align = alClient
       ScrollBars = ssBoth
       TabOrder = 0
+      OnKeyUp = MsgOutKeyUp
     end
     inline frameButtons2: TframeButtons
       Left = 3
@@ -170,7 +171,7 @@ object frmMsgRecv: TfrmMsgRecv
         Left = 159
         Height = 29
         inherited btnOK: TButton
-          Caption = 'Send'
+          Caption = '&Send'
           OnClick = frameButtons2btnOKClick
         end
         inherited btnCancel: TButton

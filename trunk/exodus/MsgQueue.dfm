@@ -62,6 +62,7 @@ object frmMsgQueue: TfrmMsgQueue
     Height = 122
     Align = alClient
     ReadOnly = True
+    ScrollBars = ssBoth
     TabOrder = 1
   end
   object StatusBar1: TStatusBar
