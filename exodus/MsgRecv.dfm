@@ -32,7 +32,7 @@ object frmMsgRecv: TfrmMsgRecv
     Height = 34
     Align = alBottom
     AutoScroll = False
-    TabOrder = 0
+    TabOrder = 3
     inherited Bevel1: TBevel
       Width = 325
     end
@@ -60,7 +60,7 @@ object frmMsgRecv: TfrmMsgRecv
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 2
-    TabOrder = 1
+    TabOrder = 0
     object btnClose: TSpeedButton
       Left = 302
       Top = 2
@@ -96,7 +96,7 @@ object frmMsgRecv: TfrmMsgRecv
     object txtFrom: TStaticText
       Left = 53
       Top = 2
-      Width = 244
+      Width = 32
       Height = 18
       Align = alLeft
       Caption = '<JID>'
@@ -119,7 +119,7 @@ object frmMsgRecv: TfrmMsgRecv
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 2
-    TabOrder = 2
+    TabOrder = 5
     object StaticText3: TStaticText
       Left = 2
       Top = 2
@@ -163,7 +163,7 @@ object frmMsgRecv: TfrmMsgRecv
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 3
-    TabOrder = 3
+    TabOrder = 4
     Visible = False
     inline frameButtons2: TframeButtons
       Left = 3
@@ -172,7 +172,7 @@ object frmMsgRecv: TfrmMsgRecv
       Height = 34
       Align = alBottom
       AutoScroll = False
-      TabOrder = 0
+      TabOrder = 1
       inherited Bevel1: TBevel
         Width = 319
       end
@@ -273,7 +273,7 @@ object frmMsgRecv: TfrmMsgRecv
       LangOptions = [loAutoFont]
       Language = 1033
       ShowSelectionBar = False
-      TabOrder = 1
+      TabOrder = 0
       URLColor = clBlue
       URLCursor = crHandPoint
       OnKeyUp = MsgOutKeyUp
@@ -370,7 +370,7 @@ object frmMsgRecv: TfrmMsgRecv
     Language = 1033
     ScrollBars = ssVertical
     ShowSelectionBar = False
-    TabOrder = 4
+    TabOrder = 2
     URLColor = clBlue
     URLCursor = crHandPoint
     OnURLClick = txtMsgURLClick
@@ -389,7 +389,7 @@ object frmMsgRecv: TfrmMsgRecv
     Align = alTop
     BevelOuter = bvNone
     BorderWidth = 2
-    TabOrder = 5
+    TabOrder = 1
     Visible = False
     object Label1: TLabel
       Left = 2

@@ -17,7 +17,7 @@ object frmRegister: TfrmRegister
   TextHeight = 13
   object pnlBottom: TPanel
     Left = 0
-    Top = 263
+    Top = 258
     Width = 304
     Height = 35
     Align = alBottom
@@ -67,12 +67,12 @@ object frmRegister: TfrmRegister
     Left = 0
     Top = 0
     Width = 304
-    Height = 263
-    ActivePage = tabAgent
+    Height = 258
+    ActivePage = tabResult
     Align = alClient
     MultiLine = True
     Style = tsButtons
-    TabIndex = 1
+    TabIndex = 3
     TabOrder = 1
     object tabWelcome: TTabSheet
       Caption = 'tabWelcome'
@@ -117,7 +117,7 @@ object frmRegister: TfrmRegister
       ImageIndex = 1
       object Panel2: TPanel
         Left = 0
-        Top = 199
+        Top = 194
         Width = 296
         Height = 33
         Align = alBottom
@@ -175,9 +175,9 @@ object frmRegister: TfrmRegister
         Align = alTop
         AutoSize = False
         Caption = 
-          'Your Registration to this service has Failed! Press Prev to go b' +
-          'ack and verify that all of the parameters have been filled in co' +
-          'rrectly. Press Cancel to close this wizard.'
+          'Your Registration to this service has Failed! Press Previous to ' +
+          'go back and verify that all of the parameters have been filled i' +
+          'n correctly. Press Cancel to close this wizard.'
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
         Font.Height = -13

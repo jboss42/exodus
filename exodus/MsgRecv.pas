@@ -177,6 +177,7 @@ begin
         ShowDefault;
         btnClose.Visible := Docked;
         FormResize(nil);
+        txtSendSubject.SetFocus();
         end;
 end;
 
