@@ -71,18 +71,18 @@ destructor TExodusChat.Destroy();
 var
     i: integer;
 begin
-    // free all of our plugin menu items
-    for i := 0 to _menu_items.Count - 1 do
-        TMenuItem(_menu_items.Objects[i]).Free();
-
-    _menu_items.Clear();
-    _menu_items.Free();
-
     // free all of our plugin proxies
     for i := _plugs.Count - 1 downto 0 do begin
         TChatPlugin(_plugs[i]).com.onClose();
         //TChatPlugin(_plugs[i]).Free();
     end;
+
+    // free all of our plugin menu items
+    for i := 0 to _menu_items.Count - 1 do
+        TMenuItem(_menu_items.Objects[i]).Free();
+    _menu_items.Clear();
+    _menu_items.Free();
+
 
     _plugs.Clear();
     _plugs.Free();

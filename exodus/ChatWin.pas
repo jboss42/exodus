@@ -221,11 +221,11 @@ begin
     // Create a new chat controller if we don't have one
     if chat = nil then begin
         chat := MainSession.ChatList.AddChat(sjid, resource);
-        new_chat := true;
     end;
 
     // Create a window if we don't have one.
     if (chat.window = nil) then begin
+        new_chat := true;
         win := TfrmChat.Create(Application);
         chat.Window := win;
         chat.stopTimer();
