@@ -5,7 +5,7 @@ TODO List
 -  Tweak branding
 jh Remove jabber auto-update stuff.. Prefer only HTTP
 jh  Auto-update should be on by default
--  Look at JUD + x-data
+pm  Look at JUD + x-data
 -  Look at Register + x-data
 pm  Look at using precompiled xplites in more places?
 

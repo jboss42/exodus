@@ -196,6 +196,7 @@ resourceString
 
 {$ifdef Win32}
 function getUserDir: string;
+function ReplaceEnvPaths(value: string): string;
 {$endif}
 
 {---------------------------------------}
@@ -208,7 +209,7 @@ uses
     {$else}
     QGraphics,
     {$endif}
-    JabberConst,
+    JabberConst, StrUtils, 
     IdGlobal, IdCoder3To4, Session, IQ, XMLUtils;
 
 
@@ -221,27 +222,20 @@ var
 function getUserDir: string;
 var
     reg: TRegistry;
-    tP   : PChar;
     f: TFileStream;
 begin
     try //except
-        reg := TRegistry.Create;
-        try //finally free
-            with reg do begin
-                RootKey := HKEY_CURRENT_USER;
-                OpenKeyReadOnly('Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders');
-                if ValueExists('AppData') then begin
-                    Result := ReadString('AppData') + '\Exodus\';
-
-                    // get userprofile env var and replace in path
-                    getMem(tP,1024);
-                    If (GetEnvironmentVariable('USERPROFILE', tP, 512) <> 0) and
-                    (pos('%USERPROFILE%',Result) > 0) then
-                       Result := string(tP) + copy(Result, 14,length(Result) - 13);
-                    FreeMem(tP);
+    reg := TRegistry.Create;
+    try //finally free
+        with reg do begin
+            RootKey := HKEY_CURRENT_USER;
+            OpenKeyReadOnly('Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders');
+            if ValueExists('AppData') then begin
+                Result := ReadString('AppData') + '\Exodus\';
+                Result := ReplaceEnvPaths(Result);
                 end
-                else
-                    Result := ExtractFilePath(Application.EXEName);
+            else
+                Result := ExtractFilePath(Application.EXEName);
 
             // Try to create a file here if the prefs don't already exist
             if not (FileExists(Result + 'exodus.xml')) then begin
@@ -254,27 +248,38 @@ begin
                         // If we can't write to AppData, then use Local AppData
                         if ValueExists('Local AppData') then begin
                             Result := ReadString('Local AppData') + '\Exodus\';
-                            // get userprofile env var and replace in path
-                            getMem(tP,1024);
-                            If (GetEnvironmentVariable('USERPROFILE', tP, 512) <> 0) and
-                            (pos('%USERPROFILE%',Result) > 0) then
-                               Result := string(tP) + copy(Result, 14,length(Result) - 13);
-                            FreeMem(tP);
+                            Result := ReplaceEnvPaths(Result);
                             end;
-                        end;
-                    end;
-                end;
-            end;
-        finally
-            reg.Free;
-        end;
+                        end; // EFOpenError
+                    end; // except
+                end; // if not fileExists
+            end; // with reg
+    finally
+        reg.Free;
+    end;
     except
+        // As a last result, just try the appdir
         Result := ExtractFilePath(Application.EXEName);
     end;
 
+    // Finally, if the directory doesn't exist.. create it.
     if (not DirectoryExists(Result)) then
         MkDir(Result);
-end; //getProfilePath
+end;
+
+{---------------------------------------}
+function ReplaceEnvPaths(value: string): string;
+var
+    tmps: String;
+    tp: PChar;
+begin
+    // Replace all of the env. paths.. must use a fixed size buff
+    getMem(tP,1024);
+    ExpandEnvironmentStrings(PChar(value), tp, 1023);
+    tmps := String(tp);
+    FreeMem(tP);
+    Result := tmps;
+end;
 
 {---------------------------------------}
 procedure getDefaultPos;
