@@ -95,7 +95,7 @@ type
     procedure RemoveMember(member: TRoomMember);
     function  AddMember(member: TRoomMember): TTreeNode;
     function  checkCommand(txt: string): boolean;
-    procedure ShowPresence(nick, msg: string);
+    // procedure ShowPresence(nick, msg: string);
     procedure RenderMember(member: TRoomMember; tag: TXMLTag);
   public
     { Public declarations }
@@ -390,6 +390,7 @@ begin
 end;
 
 {---------------------------------------}
+{
 procedure TfrmRoom.ShowPresence(nick, msg: string);
 var
     txt: string;
@@ -397,6 +398,7 @@ begin
     txt := '[' + formatdatetime('HH:MM',now) + '] ' + nick + msg;
     DisplayPresence(txt, MsgList);
 end;
+}
 
 {---------------------------------------}
 procedure TfrmRoom.RemoveMember(member: TRoomMember);

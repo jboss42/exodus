@@ -11,8 +11,6 @@ object frmRegister: TfrmRegister
   Font.Name = 'MS Sans Serif'
   Font.Style = []
   OldCreateOrder = False
-  OnClose = FormClose
-  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object PageControl1: TPageControl
@@ -91,7 +89,6 @@ object frmRegister: TfrmRegister
             Height = 25
             Caption = 'Delete My Registration'
             TabOrder = 0
-            OnClick = btnDeleteClick
           end
         end
       end
@@ -197,7 +194,6 @@ object frmRegister: TfrmRegister
         Caption = 'Next >'
         Enabled = False
         TabOrder = 1
-        OnClick = btnNextClick
       end
       object btnCancel: TButton
         Left = 168
@@ -206,7 +202,6 @@ object frmRegister: TfrmRegister
         Height = 25
         Caption = 'Cancel'
         TabOrder = 2
-        OnClick = btnCancelClick
       end
     end
   end
