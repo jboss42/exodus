@@ -13,7 +13,7 @@ my $DD;
 my $imports = "\"$DD\\Imports\"";
 my $dcc = "\"$::D/Bin/dcc32.exe\"";
 my $rcc = "\"$::D/Bin/brcc32.exe\"";
-my $opts = '-B -Q';
+my $opts = '-B -Q -DExodus';
 my $comp = "..\\..\\Components";
 my $plugopts = "$opts -U\"$comp\" -U\"$::TNT\"";
 
