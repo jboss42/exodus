@@ -1,6 +1,6 @@
 object frmDockWizard: TfrmDockWizard
-  Left = 249
-  Top = 140
+  Left = 250
+  Top = 141
   BorderStyle = bsDialog
   Caption = 'Dockable Wizard'
   ClientHeight = 357

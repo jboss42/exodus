@@ -458,11 +458,9 @@ begin
         e := TJabberEvent(_events.Pop);
         e.Free();
     end;
-    FreeAndNil(_events);
 
     if ((cid <> -1) and (MainSession <> nil)) then
         MainSession.MsgList.Delete(cid);
-    FreeAndNil(_controller);
 
     Action := caFree;
 end;
@@ -842,6 +840,9 @@ procedure TfrmMsgRecv.FormDestroy(Sender: TObject);
 begin
     if (ComController <> nil) then
         ComController.Free();
+
+    if (_events <> nil) then
+        _events.Free();
 
   inherited;
 end;
