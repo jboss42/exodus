@@ -309,8 +309,10 @@ begin
         else if (lstEvents.Items.Count > 0) then
             lstEvents.Selected := lstEvents.Items[lstEvents.Items.Count - 1];
 
-        if (lstEvents.Selected <> nil) then
+        if (lstEvents.Selected <> nil) then begin
             lstEvents.Selected.MakeVisible(false);
+            lstEvents.ItemFocused := lstEvents.Selected;
+            end;
             
         lstEvents.Refresh;
         end;
