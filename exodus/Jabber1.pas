@@ -540,8 +540,8 @@ uses
     JabberConst, ComController, CommCtrl, CustomPres,
     JoinRoom, Login, MsgController, MsgDisplay, MsgQueue, MsgRecv, Password,
     PrefController, Prefs, PrefNotify, Profile, RegForm, RemoveContact, RiserWindow, Room,
-    SendFile, 
-    Roster, RosterAdd, Session, StandardAuth, Subscribe, Transfer, Unicode, VCard, xData,
+    XferManager,
+    Roster, RosterAdd, Session, StandardAuth, Subscribe, Unicode, VCard, xData,
     XMLUtils, XMLParser;
 
 {$R *.DFM}

@@ -25,19 +25,23 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, PrefPanel, StdCtrls, TntStdCtrls, ExtCtrls, TntExtCtrls;
 
+const
+    xfer_socks = 0;
+    xfer_proxy = 1;
+    xfer_oob = 2;
+    xfer_dav = 3;
+
 type
   TfrmPrefTransfer = class(TfrmPrefPanel)
     Label15: TTntLabel;
     txtXFerPath: TTntEdit;
     btnTransferBrowse: TTntButton;
     Label2: TTntLabel;
-    optPeer: TTntRadioButton;
     grpPeer: TGroupBox;
     Label1: TTntLabel;
     txtPort: TTntEdit;
     chkIP: TTntCheckBox;
     txtIP: TTntEdit;
-    optWebDav: TTntRadioButton;
     grpWebDav: TGroupBox;
     Label3: TTntLabel;
     txtDavHost: TTntEdit;
@@ -52,10 +56,15 @@ type
     Label8: TTntLabel;
     Label9: TTntLabel;
     StaticText4: TTntPanel;
+    cboXferMode: TTntComboBox;
+    grpProxy: TGroupBox;
+    TntLabel1: TTntLabel;
+    txtS5bProxy: TTntEdit;
+    TntLabel2: TTntLabel;
     procedure btnTransferBrowseClick(Sender: TObject);
     procedure chkIPClick(Sender: TObject);
     procedure Label2Click(Sender: TObject);
-    procedure optWebDavClick(Sender: TObject);
+    procedure cboXferModeChange(Sender: TObject);
   private
     { Private declarations }
   public
@@ -79,6 +88,7 @@ uses
 
 procedure TfrmPrefTransfer.LoadPrefs();
 var
+    m: integer;
     p: integer;
 begin
     with MainSession.Prefs do begin
@@ -88,20 +98,26 @@ begin
         txtPort.Text := IntToStr(p);
         txtIP.Text := getString('xfer_ip');
 
-        optWebDav.Checked := getBool('xfer_webdav');
-        optPeer.Checked := not optWebDav.Checked;
+        m := xfer_socks;
+        if (getBool('xfer_webdav')) then m := xfer_dav;
+        if (getBool('xfer_proxy')) then m := xfer_proxy;
+        if (getBool('xfer_oob')) then m := xfer_oob;
+        cboXferMode.ItemIndex := m;
 
         txtDavHost.Text := getString('xfer_davhost');
         txtDavPort.Text := getString('xfer_davport');
         txtDavPath.Text := getString('xfer_davpath');
         txtDavUsername.Text := getString('xfer_davusername');
         txtDavPassword.Text := getString('xfer_davpassword');
+        txtS5bProxy.Text := getString('xfer_prefproxy');
+
+        cboXferModeChange(Self);
     end;
 end;
 
 procedure TfrmPrefTransfer.SavePrefs();
 var
-    p: integer;
+    m, p: integer;
 begin
     with MainSession.Prefs do begin
         setString('xfer_path', txtXFerPath.Text);
@@ -111,12 +127,17 @@ begin
         setInt('xfer_port', p);
         setString('xfer_ip', txtIP.Text);
 
-        setBool('xfer_webdav', optWebDav.Checked);
+        m := cboXferMode.ItemIndex;
+        setBool('xfer_webdav', (m = xfer_dav));
+        setBool('xfer_proxy', (m = xfer_proxy));
+        setBool('xfer_oob', (m = xfer_oob));
+
         setString('xfer_davhost', txtDavHost.Text);
         setString('xfer_davport', txtDavPort.Text);
         setString('xfer_davpath', txtDavPath.Text);
         setString('xfer_davusername', txtDavUsername.Text);
         setString('xfer_davpassword', txtDavPassword.Text);
+        setString('xfer_prefproxy', txtS5bProxy.Text);
     end;
 end;
 
@@ -141,22 +162,30 @@ begin
   inherited;
     // reset everything to defaults..
     txtXFerPath.Text := ExtractFilePath(Application.EXEName);
-    optPeer.Checked := true;
-    optWebDavClick(Self);
+    cboXferMode.ItemIndex := 0;
+    cboXferModeChange(Self);
     txtPort.Text := '5280';
     chkIP.Checked := false;
     txtIP.Text := '';
     chkIPClick(Self);
 end;
 
-procedure TfrmPrefTransfer.optWebDavClick(Sender: TObject);
+procedure TfrmPrefTransfer.cboXferModeChange(Sender: TObject);
+var
+    m: integer;
 begin
   inherited;
-    grpPeer.Enabled := optPeer.Checked;
-    grpPeer.Visible := optPeer.Checked;
+    // change the grp visible based on itemindex.
+    m := cboXferMode.ItemIndex;
 
-    grpWebDav.Enabled := optWebDav.Checked;
-    grpWebDav.Visible := optWebDav.Checked;
+    grpPeer.Enabled := (m = xfer_oob);
+    grpPeer.Visible := (m = xfer_oob);
+
+    grpWebDav.Enabled := (m = xfer_dav);
+    grpWebDav.Visible := (m = xfer_dav);
+
+    grpProxy.Enabled := (m = xfer_proxy);
+    grpProxy.Visible := (m = xfer_proxy);
 end;
 
 end.

@@ -126,7 +126,6 @@ uses
   Signals in '..\jopl\Signals.pas',
   StandardAuth in '..\jopl\StandardAuth.pas',
   Subscribe in 'subscribe.pas' {frmSubscribe},
-  Transfer in 'Transfer.pas' {frmTransfer},
   Transports in 'Transports.pas',
   Unicode in '..\jopl\Unicode.pas',
   vcard in 'vcard.pas' {frmVCard},
@@ -142,7 +141,6 @@ uses
   XMLTag in '..\jopl\XMLTag.pas',
   XMLUtils in '..\jopl\XMLUtils.pas',
   XMLVCard in '..\jopl\XMLVCard.pas',
-  FileServer in 'FileServer.pas',
   gnugettext in 'gnugettext.pas',
   PrefTransfer in 'prefs\PrefTransfer.pas' {frmPrefTransfer},
   buttonFrame in 'buttonFrame.pas' {frameButtons: TFrame},
@@ -155,8 +153,9 @@ uses
   Wizard in 'Wizard.pas' {frmWizard},
   RegForm in 'RegForm.pas' {frmRegister},
   LocalUtils in 'LocalUtils.pas',
-  SendFile in 'SendFile.pas' {frmSendFile},
-  SendStatus in 'SendStatus.pas' {fSendStatus: TFrame};
+  SendStatus in 'SendStatus.pas' {fSendStatus: TFrame},
+  XferManager in 'XferManager.pas' {frmXferManager},
+  RecvStatus in 'RecvStatus.pas' {fRecvStatus: TFrame};
 
 {$R *.TLB}
 
@@ -179,7 +178,6 @@ begin
   if (not continue) then exit;
 
   Application.CreateForm(TfrmExodus, frmExodus);
-  Application.CreateForm(TfrmSendFile, frmSendFile);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);

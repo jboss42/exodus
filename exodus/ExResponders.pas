@@ -133,7 +133,7 @@ resourcestring
 implementation
 uses
     JabberConst, Invite, Dialogs, PrefController, Registry, Forms,   
-    xData, XMLUtils, Jabber1, JabberID, Notify, Transfer, Roster;
+    XferManager, xData, XMLUtils, Jabber1, JabberID, Notify, Roster;
 
 var
     _version: TVersionResponder;
@@ -144,6 +144,7 @@ var
     _muc_invite: TFactoryResponder;
     _conf_invite: TFactoryResponder;
     _unhandled: TUnhandledResponder;
+    _sistart: TFactoryResponder;
 
 {---------------------------------------}
 function getNick(j: Widestring): Widestring;
@@ -181,6 +182,10 @@ begin
         '/packet/message/x[@xmlns="' + XMLNS_XCONFERENCE + '"]',
         showConfInvite);
     _unhandled := TUnhandledResponder.Create(MainSession);
+    _sistart := TFactoryResponder.Create(MainSession,
+        '/packet/iq[@type="set"]/si[@xmlns="' + XMLNS_SI + '"]',
+        SIStart);
+
 
     // Create some globally accessable responders.
     Exodus_Browse := TBrowseResponder.Create(MainSession);
@@ -637,6 +642,7 @@ begin
         // File xfer
         addFeature(q, XMLNS_SI);
         addFeature(q, XMLNS_FTPROFILE);
+        addFeature(q, XMLNS_BYTESTREAMS);
 
         for i := 0 to Features.Count - 1 do
             addFeature(q, Features[i]);
