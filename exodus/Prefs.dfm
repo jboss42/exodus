@@ -21,14 +21,13 @@ object frmPrefs: TfrmPrefs
     Top = 0
     Width = 89
     Height = 384
-    VertScrollBar.Position = 26
     Align = alLeft
     Color = clWindow
     ParentColor = False
     TabOrder = 0
     object imgDialog: TImage
       Left = 0
-      Top = 186
+      Top = 212
       Width = 68
       Height = 40
       Align = alTop
@@ -152,7 +151,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblDialog: TLabel
       Left = 0
-      Top = 226
+      Top = 252
       Width = 68
       Height = 13
       Align = alTop
@@ -163,7 +162,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgFonts: TImage
       Left = 0
-      Top = 133
+      Top = 159
       Width = 68
       Height = 40
       Align = alTop
@@ -405,7 +404,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblFonts: TLabel
       Left = 0
-      Top = 173
+      Top = 199
       Width = 68
       Height = 13
       Align = alTop
@@ -416,7 +415,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgS10n: TImage
       Left = 0
-      Top = 80
+      Top = 106
       Width = 68
       Height = 40
       Align = alTop
@@ -659,7 +658,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblS10n: TLabel
       Left = 0
-      Top = 120
+      Top = 146
       Width = 68
       Height = 13
       Align = alTop
@@ -671,7 +670,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgRoster: TImage
       Left = 0
-      Top = 27
+      Top = 53
       Width = 68
       Height = 40
       Align = alTop
@@ -795,7 +794,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblRoster: TLabel
       Left = 0
-      Top = 67
+      Top = 93
       Width = 68
       Height = 13
       Align = alTop
@@ -813,7 +812,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgSystem: TImage
       Left = 0
-      Top = -26
+      Top = 0
       Width = 68
       Height = 40
       Align = alTop
@@ -1055,7 +1054,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblSystem: TLabel
       Left = 0
-      Top = 14
+      Top = 40
       Width = 68
       Height = 13
       Align = alTop
@@ -1068,7 +1067,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgNotify: TImage
       Left = 0
-      Top = 239
+      Top = 265
       Width = 68
       Height = 40
       Align = alTop
@@ -1192,7 +1191,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblNotify: TLabel
       Left = 0
-      Top = 279
+      Top = 305
       Width = 68
       Height = 13
       Align = alTop
@@ -1203,7 +1202,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgAway: TImage
       Left = 0
-      Top = 345
+      Top = 371
       Width = 68
       Height = 40
       Align = alTop
@@ -1238,7 +1237,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblAway: TLabel
       Left = 0
-      Top = 385
+      Top = 411
       Width = 68
       Height = 13
       Align = alTop
@@ -1249,7 +1248,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgKeywords: TImage
       Left = 0
-      Top = 398
+      Top = 424
       Width = 68
       Height = 40
       Align = alTop
@@ -1284,7 +1283,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblKeywords: TLabel
       Left = 0
-      Top = 438
+      Top = 464
       Width = 68
       Height = 13
       Align = alTop
@@ -1295,7 +1294,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgBlockList: TImage
       Left = 0
-      Top = 451
+      Top = 477
       Width = 68
       Height = 40
       Align = alTop
@@ -1330,7 +1329,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblBlockList: TLabel
       Left = 0
-      Top = 491
+      Top = 517
       Width = 68
       Height = 13
       Align = alTop
@@ -1341,7 +1340,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgCustompres: TImage
       Left = 0
-      Top = 504
+      Top = 530
       Width = 68
       Height = 40
       Align = alTop
@@ -1376,7 +1375,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblCustomPres: TLabel
       Left = 0
-      Top = 544
+      Top = 570
       Width = 68
       Height = 13
       Align = alTop
@@ -1387,7 +1386,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgMessages: TImage
       Left = 0
-      Top = 292
+      Top = 318
       Width = 68
       Height = 40
       Align = alTop
@@ -1422,7 +1421,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblMessages: TLabel
       Left = 0
-      Top = 332
+      Top = 358
       Width = 68
       Height = 13
       Align = alTop
@@ -1433,7 +1432,7 @@ object frmPrefs: TfrmPrefs
     end
     object imgPlugins: TImage
       Left = 0
-      Top = 557
+      Top = 583
       Width = 68
       Height = 40
       Align = alTop
@@ -1557,7 +1556,7 @@ object frmPrefs: TfrmPrefs
     end
     object lblPlugins: TLabel
       Left = 0
-      Top = 597
+      Top = 623
       Width = 68
       Height = 13
       Align = alTop

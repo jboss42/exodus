@@ -232,6 +232,7 @@ object frmTransfer: TfrmTransfer
     end
   end
   object httpServer: TIdHTTPServer
+    OnStatus = httpServerStatus
     Bindings = <>
     DefaultPort = 5280
     OnConnect = httpServerConnect
@@ -241,6 +242,7 @@ object frmTransfer: TfrmTransfer
     Top = 32
   end
   object httpClient: TIdHTTP
+    OnDisconnected = httpClientDisconnected
     OnWork = httpClientWork
     OnWorkBegin = httpClientWorkBegin
     OnWorkEnd = httpClientWorkEnd

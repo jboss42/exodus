@@ -79,6 +79,9 @@ type
     procedure txtMsgKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
+    procedure httpClientDisconnected(Sender: TObject);
+    procedure httpServerStatus(axSender: TObject;
+      const axStatus: TIdStatus; const asStatusText: String);
   private
     { Private declarations }
     fstream: TFileStream;
@@ -295,8 +298,11 @@ begin
             end;
         end;
 
-        httpClient.Get(Self.url, fstream);
-        fstream.Free;
+        try
+            httpClient.Get(Self.url, fstream);
+        finally
+            FreeAndNil(fstream);
+        end;
     end
     else if Self.Mode = 1 then begin
         // send mode
@@ -360,6 +366,9 @@ end;
 procedure TfrmTransfer.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
+    if (fstream <> nil) then
+        FreeAndNil(fstream);
+
     Action := caFree;
 end;
 
@@ -404,6 +413,7 @@ begin
     txtMsg.Lines.Add(sXferConn);
 end;
 
+{---------------------------------------}
 procedure TfrmTransfer.lblFileClick(Sender: TObject);
 begin
     // Browse for a new file..
@@ -424,6 +434,7 @@ begin
         ShellExecute(0, 'open', PChar(filename), '', '', SW_NORMAL);
 end;
 
+{---------------------------------------}
 procedure TfrmTransfer.txtMsgKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
@@ -431,6 +442,7 @@ begin
         frameButtons1btnOKClick(Self);
 end;
 
+{---------------------------------------}
 procedure TfrmTransfer.FormCreate(Sender: TObject);
 begin
     {$ifdef INDY9}
@@ -438,6 +450,22 @@ begin
     {$else}
     httpServer.onCommandGet := httpServerCommandGet8;
     {$endif}
+end;
+
+{---------------------------------------}
+procedure TfrmTransfer.httpClientDisconnected(Sender: TObject);
+begin
+  inherited;
+    if (fstream <> nil) then
+        FreeAndNil(fstream);
+end;
+
+{---------------------------------------}
+procedure TfrmTransfer.httpServerStatus(axSender: TObject;
+  const axStatus: TIdStatus; const asStatusText: String);
+begin
+  inherited;
+    txtMsg.Lines.Add(asStatusText);
 end;
 
 end.
