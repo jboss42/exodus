@@ -1,24 +1,66 @@
 <html>
 <title>Exodus Plugin Documentation</title>
+<style>
+body { font-family: Tahoma, Arial, Helvetica; }
+</style>
+
 <body>
 
-<h1>Exodus Plugin Documentation</h1>
+<center>
+<a href="http://exodus.jabberstudio.org">
+<img src="..\exodus\web\exodus-logo.png" border="0"/>
+</a>
+<hr>
+<div style="font-size:20pt; font-weight: bold;">Exodus Plugin Documentation</div>
+</center>
 <hr>
 
-<h2>Interfaces implemented by Exodus</h2>
+<div style="font-size:16pt; font-weight: bold;">Basic plugin architecture</div>
+<p>
+The plugin system for exodus is based around using Microsoft's COM interfaces
+to allow third-party components access to the GUI based events and
+packets coming into the application from the jabber server.
+</p>
+
+<p>
+To function "as a plugin" in exodus, a developer must create an ActiveX library
+which implements at least the IExodusPlugin interface. This interfaces provides
+basic functionality which allows Exodus to control the plugin. Upon startup, the
+plugin is passed a reference to the main Exodus controller which allows the
+plugin itself to manipulate data, fire events, and send packets.
+</p>
+
+<div style="font-size:16pt; font-weight: bold;">
+Interfaces which should be implemented by Plugins</div>
 <ul>
-<li>IExodusController</li>
-<li>IExodusChat</li>
-<li>IExodusRoster</li>
-<li>IExodusRosterItem</li>
-<li>IExodusPPDB</li>
-<li>IExodusPresence</li>
+<li><span style="font-weight: bold">IExodusPlugin</span>
+</li>
+
+<li><span style="font-weight: bold">IExodusChatPlugin</span>
+</li>
+
 </ul>
 
-<h2>Interfaces which should be implemented by Plugins</h2>
+<div style="font-size:16pt; font-weight: bold;">
+Interfaces implemented by Exodus</div>
 <ul>
-<li>IExodusPlugin</li>
-<li>IExodusChatPlugin</li>
+<li><span style="font-weight: bold">IExodusController</span>
+</li>
+
+<li><span style="font-weight: bold">IExodusChat</span>
+</li>
+
+<li><span style="font-weight: bold">IExodusRoster</span>
+</li>
+
+<li><span style="font-weight: bold">IExodusRosterItem</span>
+</li>
+
+<li><span style="font-weight: bold">IExodusPPDB</span>
+</li>
+
+<li><span style="font-weight: bold">IExodusPresence</span>
+</li>
 </ul>
 
 </body>
