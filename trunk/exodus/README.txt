@@ -14,4 +14,8 @@ Getting started with Exodus development
    b) Click "install"
 6. Open Exodus.dpr
 7. Compile
-8. Run
+8. Disable annoying exceptions
+   a) Tools/Debugger Options/Language Exceptions
+   b) Add
+   c) EConvertError
+9. Run
