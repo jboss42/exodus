@@ -1047,22 +1047,25 @@ begin
     if (getNodeType() <> node_ritem) then exit;
     if (_cur_ritem = nil) then exit;
 
+    iq := TJabberIQ.Create(MainSession, MainSession.generateID, frmJabber.CTCPCallback);
+    iq.iqType := 'get';
+
     p := MainSession.ppdb.FindPres(_cur_ritem.jid.jid, '');
     if p = nil then begin
         // this person isn't online.
+        iq.toJid := _cur_ritem.jid.jid;
         end
     else begin
-        iq := TJabberIQ.Create(MainSession, MainSession.generateID, frmJabber.CTCPCallback);
-        iq.iqType := 'get';
         iq.toJID := p.fromJID.full;
-        if Sender = popVersion then
-            iq.Namespace := XMLNS_VERSION
-        else if Sender = popTime then
-            iq.Namespace := XMLNS_TIME
-        else if Sender = popLast then
-            iq.Namespace := XMLNS_LAST;
-        iq.Send;
         end;
+
+    if Sender = popVersion then
+        iq.Namespace := XMLNS_VERSION
+    else if Sender = popTime then
+        iq.Namespace := XMLNS_TIME
+    else if Sender = popLast then
+        iq.Namespace := XMLNS_LAST;
+    iq.Send;
 end;
 
 {---------------------------------------}

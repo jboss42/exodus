@@ -236,8 +236,7 @@ begin
             eType := evt_Last;
             qTag := tag.getFirstTag('query');
             data_type := 'Last Activity';
-
-            _data_list.Add('Idle for ' + qTag.getAttribute('seconds') + ' seconds.');
+            _data_list.Add('Idle for' + secsToDuration(qTag.getAttribute('seconds')) + '.');
             end;
 
         {

@@ -59,6 +59,7 @@ procedure ShowLog(jid: string);
 function getDisplayField(fld: string): string;
 procedure DebugMsg(Message : string);
 procedure AssignDefaultFont(font: TFont);
+function secsToDuration(seconds: string): string;
 
 var
     _GetLastInputInfo: Pointer;
@@ -373,6 +374,41 @@ begin
         if getBool('font_underline') then
             Font.Style := Font.Style + [fsUnderline];
         end;
+end;
+
+function secsToDuration(seconds: string): string;
+var
+    d : integer;
+    h : integer;
+    m : integer;
+    s : integer;
+
+    function toText(i: integer; modifier: string) : string;
+    begin
+        if (i = 0) then
+            result := ''
+        else if (i = 1) then
+            result := ' ' + IntToStr(i) + ' ' + modifier
+        else
+            result := ' ' + IntToStr(i) + ' ' + modifier + 's';
+    end;
+begin
+    s := StrToIntDef(seconds, -1);
+
+    if (s < 0) then begin
+        result := ' unknown last result: ' + seconds
+        end
+    else if (s = 0) then begin
+        result := ' 0 seconds';
+        end
+    else begin
+        d := s div 86400;
+        h := (s mod 86400) div 3600;
+        m := ((s mod 86400) mod 3600) div 60;
+        s := s mod 60;
+        result := toText(d, 'day') + toText(h, 'hour') +
+                  toText(m, 'minute') + toText(s, 'second');
+    end;
 end;
 
 initialization
