@@ -711,6 +711,7 @@ begin
     if (_last_search <> 0) then
         _last_search := _last_search + 1;
     pnlFind.Visible := true;
+    FormResize(Self);
     txtFind.SetFocus();
     txtFindChange(self);
 end;
@@ -2653,6 +2654,8 @@ procedure TfrmRosterWindow.treeRosterChange(Sender: TObject;
   Node: TTreeNode);
 begin
     _change_node := Node;
+    if (Node <> nil) then
+        _last_search := Node.AbsoluteIndex;
 end;
 
 {---------------------------------------}
