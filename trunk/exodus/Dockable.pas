@@ -284,6 +284,8 @@ begin
         _top := true;
         SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
             Self.Width, Self.Height, HWND_TOP);
+        Self.Activate();
+        StopTrayAlert();
         _top := false;
         inherited;
     end
@@ -294,6 +296,8 @@ end;
 {---------------------------------------}
 procedure TfrmDockable.WMMouseActivate(var msg: TMessage);
 begin
+    // pgm 2/25/04 - Remove this so x-mouse behavior works better (at all).
+    {
     if (not _top) then begin
         _top := true;
         SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
@@ -301,7 +305,8 @@ begin
         _top := false;
     end
     else
-        inherited;
+    }
+    inherited;
 end;
 
 {---------------------------------------}
