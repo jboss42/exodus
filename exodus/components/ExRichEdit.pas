@@ -18,7 +18,6 @@ type
     { Protected declarations }
     procedure CreateWnd; override;
     procedure WMVScroll(var msg: TMessage); message WM_VSCROLL;
-    procedure WMPaint(var msg: TMessage); message WM_PAINT;
   public
     { Public declarations }
     procedure InsertBitmap(bmp: Graphics.TBitmap);
@@ -85,21 +84,6 @@ begin
 
     inherited;
 end;
-
-procedure TExRichEdit.WMPaint(var msg: TMessage);
-var
-    fvl: integer;
-begin
-    fvl := FirstVisibleLine;
-    inherited;
-    while (FirstVisibleLine <> fvl) do begin
-        if (FirstVisibleLine < fvl) then
-            Perform(EM_SCROLL, SB_LINEDOWN, 0)
-        else
-            Perform(EM_SCROLL, SB_LINEUP, 0);
-    end;
-end;
-
 
 procedure TExRichEdit.ScrollToBottom();
 var

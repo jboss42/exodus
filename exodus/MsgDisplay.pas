@@ -55,8 +55,6 @@ var
 begin
     // add the message to the richedit control
     fvl := RichEdit.FirstVisibleLine;
-    RichEdit.BeginUpdate();
-
     at_bottom := RichEdit.atBottom;
     is_scrolling := RichEdit.isScrolling;
 
@@ -64,7 +62,6 @@ begin
 
     // Make sure we're inputting text in Unicode format.
     RichEdit.InputFormat := ifUnicode;
-    //RichEdit.SelAttributes.Protected := false;
     RichEdit.SelStart := Length(RichEdit.WideLines.Text);
     RichEdit.SelLength := 0;
 
@@ -131,8 +128,6 @@ begin
     RichEdit.WideSelText := #13#10;
 
     // AutoScroll the window
-    RichEdit.EndUpdate();
-
     if ((at_bottom) and (AutoScroll) and (not is_scrolling)) then begin
         RichEdit.ScrollToBottom();
     end

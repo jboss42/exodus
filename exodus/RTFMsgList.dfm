@@ -87,6 +87,9 @@ inherited fRTFMsgList: TfRTFMsgList
     URLColor = clBlue
     URLCursor = crHandPoint
     WantTabs = True
+    OnKeyPress = MsgListKeyPress
+    OnMouseUp = MsgListMouseUp
+    OnURLClick = MsgListURLClick
     InputFormat = ifUnicode
     OutputFormat = ofRTF
     SelectedInOut = False
