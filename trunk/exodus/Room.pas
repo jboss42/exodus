@@ -119,10 +119,12 @@ type
     procedure S1Click(Sender: TObject);
     procedure Message1Click(Sender: TObject);
     procedure SendmyJID1Click(Sender: TObject);
+    procedure lstRosterData(Sender: TObject; Item: TListItem);
   private
     { Private declarations }
     jid: Widestring;            // jid of the conf. room
     _roster: TWideStringlist;   // roster for this room
+    _rlist: TList;
     _isMUC: boolean;
     _mcallback: integer;        // Message Callback
     _ecallback: integer;        // Error msg callback
@@ -139,13 +141,10 @@ type
 
     _notify: array[0..2] of integer;
 
-    function  AddMember(member: TRoomMember): TMemberNode;
     function  checkCommand(txt: Widestring): boolean;
-    function  GetCurrentMember(Node: TMemberNode = nil): TRoomMember;
 
     procedure SetJID(sjid: Widestring);
     procedure ShowMsg(tag: TXMLTag);
-    procedure RemoveMember(member: TRoomMember);
     procedure RenderMember(member: TRoomMember; tag: TXMLTag);
     procedure changeSubject(subj: Widestring);
     procedure configRoom();
@@ -263,6 +262,9 @@ function IsRoom(rjid: Widestring): boolean;
 function FindRoomNick(rjid: Widestring): Widestring;
 
 {---------------------------------------}
+function ItemCompare(Item1, Item2: Pointer): integer;
+
+{---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
 implementation
@@ -296,6 +298,8 @@ uses
 
 {$R *.DFM}
 
+{---------------------------------------}
+{---------------------------------------}
 {---------------------------------------}
 function StartRoom(rjid, rnick: Widestring; Password: WideString = ''): TfrmRoom;
 var
@@ -728,9 +732,14 @@ begin
                 ShowMsg(mtag);
             end;
 
-            RemoveMember(member);
-            member.Free;
             _roster.Delete(i);
+            i := _rlist.IndexOf(member);
+            if (i >= 0) then begin
+                _rlist.Delete(i);
+                _rlist.Sort(ItemCompare);
+                lstRoster.Items.Count := _rlist.Count;
+            end;
+            member.Free;
         end;
     end
     else begin
@@ -743,7 +752,9 @@ begin
             member.Nick := tmp_jid.resource;
 
             _roster.AddObject(from, member);
-            member.Node := AddMember(member);
+            _rlist.Add(member);
+            _rlist.Sort(ItemCompare);
+            lstRoster.Items.Count := _rlist.Count;
 
             // show new user message
             if (xtag <> nil) then begin
@@ -869,27 +880,17 @@ begin
 end;
 
 {---------------------------------------}
-function TfrmRoom.AddMember(member: TRoomMember): TMemberNode;
-begin
-    // add a node
-    Result := lstRoster.Items.Add();
-    Result.Caption := member.Nick;
-    Result.Data := member;
-    RenderMember(member, nil);
-    lstRoster.AlphaSort();
-end;
-
-{---------------------------------------}
 procedure TfrmRoom.RenderMember(member: TRoomMember; tag: TXMLTag);
 var
+    i: integer;
     p: TJabberPres;
 begin
     // show the member
     if member = nil then exit;
-    if member.Node = nil then exit;
 
     if tag = nil then
-        member.Node.ImageIndex := 1
+        member.show := ''
+
     else begin
         p := TJabberPres.Create;
         p.parse(tag);
@@ -897,32 +898,18 @@ begin
         if (member.show = sBlocked) then
            member.blockShow := p.Show
         else begin
-            if p.Show = 'away' then member.Node.ImageIndex := 2
-            else if p.Show = 'xa' then member.Node.ImageIndex := 10
-            else if p.Show = 'dnd' then member.Node.ImageIndex := 3
-            else if p.Show = 'chat' then member.Node.ImageIndex := 4
-            else member.Node.ImageIndex := 1;
-
             member.show := p.Show;
         end;
-
         member.status := p.Status;
+        p.Free();
     end;
 
     if (member.show = '') then
         member.show := 'Available';
 
-    member.Node.Data := member;
-end;
-
-{---------------------------------------}
-procedure TfrmRoom.RemoveMember(member: TRoomMember);
-begin
-    // delete this node
-    if (member.Node <> nil) then begin
-        member.Node.Free;
-        lstRoster.Refresh();
-    end;
+    i := _rlist.IndexOf(member);
+    if (i >= 0) then
+        lstRoster.UpdateItems(i, i);
 end;
 
 {---------------------------------------}
@@ -938,6 +925,7 @@ begin
     _pcallback := -1;
     _scallback := -1;
     _roster := TWideStringList.Create;
+    _rlist := TList.Create;
     _isMUC := false;
     _nick_prefix := '';
     _nick_idx := 0;
@@ -1067,8 +1055,10 @@ begin
         found := false;
         exloop := false;
         repeat
-            for i := _nick_idx to lstRoster.Items.Count - 1 do begin
-                nick := lstRoster.Items[i].Caption;
+            // for i := _nick_idx to lstRoster.Items.Count - 1 do begin
+            for i := _nick_idx to _roster.Count - 1 do begin
+                // nick := lstRoster.Items[i].Caption;
+                nick := TRoomMember(_roster.Objects[i]).Nick;
                 if nick[1] = '@' then nick := Copy(nick, 2, length(nick) - 1);
                 if nick[1] = '+' then nick := Copy(nick, 2, length(nick) - 1);
 
@@ -1292,7 +1282,7 @@ var
     rm: TRoomMember;
 begin
     inherited;
-    rm := GetCurrentMember();
+    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
     if (rm <> nil) then begin
        if (rm.show = sBlocked) then begin
           //unblock
@@ -1318,7 +1308,7 @@ procedure TfrmRoom.popRoomRosterPopup(Sender: TObject);
 var
     rm: TRoomMember;
 begin
-  rm := GetCurrentMember();
+  rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
   if (rm <> nil) then begin
      if (rm.show = sBlocked) then
         popRosterBlock.Caption := sUnblock
@@ -1326,28 +1316,6 @@ begin
         popRosterBlock.Caption := sBlock;
  end;
   inherited;
-end;
-
-{---------------------------------------}
-function TfrmRoom.GetCurrentMember(Node: TMemberNode = nil): TRoomMember;
-var
-    i: integer;
-    rm: TRoomMember;
-    sel_nick: Widestring;
-begin
-    result := nil;
-    if (node = nil) then
-        node := lstRoster.Items[lstRoster.ItemIndex];
-    if node = nil then exit;
-
-    sel_nick := node.Caption;
-    for i := 0 to _roster.Count - 1 do begin
-        rm := TRoomMember(_roster.Objects[i]);
-        if (rm.Nick = sel_nick) then begin
-           result := rm;
-           exit;
-       end;
-    end;
 end;
 
 {---------------------------------------}
@@ -1413,7 +1381,7 @@ begin
   inherited;
     // start chat w/ room participant
     // Chat w/ this person..
-    rm := GetCurrentMember();
+    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
     if (rm <> nil) then begin
         tmp_jid := TJabberID.Create(rm.jid);
         chat_win := StartChat(tmp_jid.jid, tmp_jid.resource, true, rm.Nick);
@@ -1473,7 +1441,7 @@ var
     m: TRoomMember;
 begin
   inherited;
-    m := TRoomMember(Item.Data);
+    m := TRoomMember(_rlist[Item.Index]);
     if (m = nil) then
         InfoTip := ''
     else begin
@@ -1531,11 +1499,13 @@ procedure TfrmRoom.AddMemberItems(tag: TXMLTag; reason: WideString = '';
     NewRole: WideString = ''; NewAffiliation: WideString = '');
 var
     i: integer;
+    rm: TRoomMember;
 begin
     for i := 0 to lstRoster.Items.Count - 1 do begin
         if lstRoster.Items[i].Selected then begin
             with tag.AddTag('item') do begin
-                setAttribute('nick', lstRoster.Items[i].Caption);
+                rm := TRoomMember(_rlist[i]);
+                setAttribute('nick', rm.Nick);
                 if (NewRole <> '') then
                     setAttribute('role', NewRole);
                 if (Reason <> '') then
@@ -1570,7 +1540,8 @@ begin
     // voice by changing roles
     for i := 0 to lstRoster.Items.Count - 1 do begin
         if (lstRoster.Items[i].Selected) then begin
-            cur_member := TRoomMember(lstRoster.Items[i].Data);
+            // cur_member := TRoomMember(lstRoster.Items[i].Data);
+            cur_member := TRoomMember(_rlist[i]);
             new_role := '';
             if (cur_member.role = MUC_PART) then
                 new_role := MUC_VISITOR
@@ -1668,7 +1639,9 @@ begin
 
     _keywords.Free;
     ClearStringListObjects(_roster);
+    _rlist.Clear();
     _roster.Free();
+    _rlist.Free();
 
     i := room_list.IndexOf(jid);
     if (i >= 0) then
@@ -1677,6 +1650,7 @@ begin
     inherited;
 end;
 
+{---------------------------------------}
 procedure TfrmRoom.mnuWordwrapClick(Sender: TObject);
 begin
     inherited;
@@ -1686,6 +1660,7 @@ begin
     MainSession.Prefs.setBool('wrap_input', _wrap_input);
 end;
 
+{---------------------------------------}
 procedure TfrmRoom.NotificationOptions1Click(Sender: TObject);
 var
     f: TfrmCustomNotify;
@@ -1709,6 +1684,7 @@ begin
     f.Free();
 end;
 
+{---------------------------------------}
 procedure TfrmRoom.S1Click(Sender: TObject);
 var
     fn     : widestring;
@@ -1729,12 +1705,13 @@ begin
     MsgList.OutputFormat := fmt;
 end;
 
+{---------------------------------------}
 procedure TfrmRoom.pluginMenuClick(Sender: TObject);
 begin
     TExodusChat(COMController).fireMenuClick(Sender);
 end;
 
-
+{---------------------------------------}
 procedure TfrmRoom.Message1Click(Sender: TObject);
 var
     rm: TRoomMember;
@@ -1743,7 +1720,7 @@ begin
   inherited;
     // start chat w/ room participant
     // Chat w/ this person..
-    rm := GetCurrentMember();
+    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
     if (rm <> nil) then begin
         tmp_jid := TJabberID.Create(rm.jid);
         StartMsg(tmp_jid.full);
@@ -1751,6 +1728,7 @@ begin
     end;
 end;
 
+{---------------------------------------}
 procedure TfrmRoom.SendmyJID1Click(Sender: TObject);
 var
     rm: TRoomMember;
@@ -1759,7 +1737,7 @@ var
 begin
   inherited;
     // Send my JID to this user
-    rm := GetCurrentMember();
+    rm := TRoomMember(_rlist[lstRoster.Selected.Index]);
     if (rm <> nil) then begin
         ri := MainSession.Roster.Find(MainSession.BareJid);
         itms := TList.Create();
@@ -1769,6 +1747,40 @@ begin
         itms.Free();
     end;
 end;
+
+{---------------------------------------}
+procedure TfrmRoom.lstRosterData(Sender: TObject; Item: TListItem);
+var
+    rm: TRoomMember;
+begin
+  inherited;
+    // get the data for this person..
+    rm := TRoomMember(_rlist[Item.Index]);
+    Item.Caption := rm.Nick;
+    if rm.show = 'away' then Item.ImageIndex := 2
+    else if rm.show = 'xa' then Item.ImageIndex := 10
+    else if rm.show = 'dnd' then Item.ImageIndex := 3
+    else if rm.show = 'chat' then Item.ImageIndex := 4
+    else Item.ImageIndex := 1;
+
+end;
+
+{---------------------------------------}
+function ItemCompare(Item1, Item2: Pointer): integer;
+var
+    m1, m2: TRoomMember;
+    s1, s2: Widestring;
+begin
+    // compare 2 items..
+    m1 := TRoomMember(Item1);
+    m2 := TRoomMember(Item2);
+
+    s1 := m1.Nick;
+    s2 := m2.Nick;
+
+    Result := AnsiCompareText(s1, s2);
+end;
+
 
 initialization
     // list for all of the current rooms
