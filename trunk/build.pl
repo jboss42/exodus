@@ -18,7 +18,7 @@ my $DD;
 my $imports = "\"$DD\\Imports\"";
 my $dcc = "\"$::D/Bin/dcc32.exe\"";
 my $rcc = "\"$::D/Bin/brcc32.exe\"";
-my $opts = "-B -Q -DExodus -U\"$DD\\Lib\"";
+my $opts = "-B -Q -U\"$DD\\Lib\"";
 my $comp = "..\\..\\Components";
 my $plugopts = "$opts -U\"$comp\" -U\"$::TNT\"";
 
@@ -50,9 +50,9 @@ e("$rcc xml.rc");
 
 if ($::rtype eq "daily") {
     # Generate a detailed MAP file, and build in stack frame tracing
-    e("$dcc $opts -GD -DTRACE_EXCEPTIONS -Noutput -I\"$::JCL\" -U\"$::JCL\" -U\"$::JCL\\common\" -U\"$::JCL\\vcl\" -U\"$::JCL\\windows\" -U\"$::TNT\" Exodus.dpr");
+    e("$dcc $opts -DExodus -GD -DTRACE_EXCEPTIONS -Noutput -I\"$::JCL\" -U\"$::JCL\" -U\"$::JCL\\common\" -U\"$::JCL\\vcl\" -U\"$::JCL\\windows\" -U\"$::TNT\" Exodus.dpr");
 } else {
-    e("$dcc $opts -D -Noutput -U\"$::TNT\" Exodus.dpr");
+    e("$dcc $opts -DExodus -D -Noutput -U\"$::TNT\" Exodus.dpr");
 }
 
 e("$::DXGETTEXT *.pas *.inc *.dpr *.xfm *.dfm prefs\\*.pas prefs\\*.inc prefs\\*.rc prefs\\*.dpr prefs\\*.xfm prefs\\*.dfm ..\\jopl\\*.pas ..\\jopl\\*.inc ..\\jopl\\*.rc ..\\jopl\\*.dpr ..\\jopl\\*.xfm ..\\jopl\\*.dfm");
@@ -158,7 +158,7 @@ EOF
   print I18N <<"EOF";
 !include "$p\\plugin-info.nsh"
 EOF
-  
+
   chdir "..";
   e("zip $base.zip $base.dll");
 }
