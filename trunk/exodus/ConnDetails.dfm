@@ -97,6 +97,7 @@ object frmConnDetails: TfrmConnDetails
     end
     inherited Panel1: TPanel
       Left = 92
+      Height = 27
       inherited btnOK: TButton
         ModalResult = 0
         OnClick = frameButtons1btnOKClick
@@ -108,10 +109,10 @@ object frmConnDetails: TfrmConnDetails
     Top = 65
     Width = 252
     Height = 235
-    ActivePage = tbsSocket
+    ActivePage = tbsHttp
     Align = alClient
     Style = tsFlatButtons
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 2
     object tbsSocket: TTabSheet
       Caption = 'tbsSocket'
@@ -287,6 +288,13 @@ object frmConnDetails: TfrmConnDetails
         Height = 13
         Caption = 'seconds'
       end
+      object Label9: TLabel
+        Left = 205
+        Top = 32
+        Width = 22
+        Height = 13
+        Caption = 'keys'
+      end
       object txtURL: TEdit
         Left = 68
         Top = 2
@@ -406,6 +414,13 @@ object frmConnDetails: TfrmConnDetails
             'Direct Connection'
             'Custom')
         end
+      end
+      object txtKeys: TEdit
+        Left = 167
+        Top = 27
+        Width = 34
+        Height = 21
+        TabOrder = 3
       end
     end
   end

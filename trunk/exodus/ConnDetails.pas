@@ -73,6 +73,8 @@ type
     txtSocksPassword: TEdit;
     Bevel1: TBevel;
     Label5: TLabel;
+    txtKeys: TEdit;
+    Label9: TLabel;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure chkSocksAuthClick(Sender: TObject);
     procedure cboSocksTypeChange(Sender: TObject);
@@ -100,6 +102,9 @@ var
   frmConnDetails: TfrmConnDetails;
 
 function ShowConnDetails(p: TJabberProfile): integer;
+
+resourcestring
+    sSmallKeys = 'Must have a larger number of poll keys.';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -279,6 +284,7 @@ begin
     with profile do begin
         txtURL.Text := URL;
         txtTime.Text := FloatToStr(Poll / 1000.0);
+        txtKeys.Text := IntToStr(NumPollKeys);
         cboProxyApproach.ItemIndex := ProxyApproach;
         cboProxyApproachChange(cboProxyApproach);
         txtProxyHost.Text := ProxyHost;
@@ -296,6 +302,12 @@ begin
     with profile do begin
         URL := txtURL.Text;
         Poll := Trunc(strToFloatDef(txtTime.Text, 30) * 1000);
+        NumPollKeys := StrToInt(txtKeys.Text);
+        if (NumPollKeys < 2) then begin
+            NumPollKeys := 256;
+            txtKeys.Text := '256';
+            MessageDlg(sSmallKeys, mtWarning, [mbOK], 0);
+            end;
         ProxyApproach := cboProxyApproach.ItemIndex ;
         ProxyHost := txtProxyHost.Text;
         ProxyPort := StrToIntDef(txtProxyPort.Text, 0);
