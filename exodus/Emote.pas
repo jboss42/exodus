@@ -22,6 +22,7 @@ unit Emote;
 interface
 
 uses
+    ExRichEdit, RichEdit2,
     Graphics, GIFImage, Unicode, iniFiles, RegExpr;
 
 type
@@ -87,6 +88,11 @@ type
         procedure AddResourceFile(resdll: WideString);
         procedure Clear();
 
+        function getImageTag(candidate: WideString): WideString;
+        function getRTF(candidate: WideString): WideString;
+        function getText(e: TEmoticon): Widestring;
+
+
         property ImageCount: integer read _getImageCount;
         property Bitmaps[index: integer]: Graphics.TBitmap read _getBitmap;
         property Emoticons[index: integer]: TEmoticon read _getEmoticon;
@@ -94,10 +100,7 @@ type
 
 {---------------------------------------}
 procedure InitializeEmoticonLists();
-procedure ClearEmoticonLists();
-function GetEmoticonImgTag(candidate: WideString): WideString;
-function GetEmoticonRTF(candidate: WideString): WideString;
-function GetEmoticonText(e: TEmoticon): Widestring;
+procedure ProcessRTFEmoticons(RichEdit: TExRichEdit; color: TColor; txt: Widestring);
 function ProcessIEEmoticons(txt: Widestring): WideString;
 function BitmapToRTF(pict: Graphics.TBitmap): string;
 
@@ -387,48 +390,45 @@ begin
 end;
 
 {---------------------------------------}
-{---------------------------------------}
-{---------------------------------------}
-function GetEmoticonImgTag(candidate: WideString): WideString;
+function TEmoticonList.getImageTag(candidate: WideString): WideString;
 var
     i: integer;
 begin
     result := '';
-    i := EmoticonList._text.IndexOf(candidate);
+    i := _text.IndexOf(candidate);
     if (i >= 0) then
-        result := TEmoticon(EmoticonList._text.Objects[i])._img_tag;
+        result := TEmoticon(_text.Objects[i])._img_tag;
 end;
 
 {---------------------------------------}
-function GetEmoticonRTF(candidate: WideString): WideString;
+function TEmoticonList.getRTF(candidate: WideString): WideString;
 var
     i: integer;
 begin
     result := '';
-    i := EmoticonList._text.IndexOf(candidate);
+    i := _text.IndexOf(candidate);
     if (i >= 0) then
-        result := TEmoticon(EmoticonList._text.Objects[i]).GetRTF();
+        result := TEmoticon(_text.Objects[i]).GetRTF();
 end;
 
 {---------------------------------------}
-function GetEmoticonText(e: TEmoticon): Widestring;
+function TEmoticonList.getText(e: TEmoticon): Widestring;
 var
     i: integer;
 begin
     // just find the first text string in the list that matches
-    i := EmoticonList._text.IndexOfObject(e);
+    i := _text.IndexOfObject(e);
     if (i = -1) then
         Result := ''
     else
-        Result := EmoticonList._text[i];
+        Result := _text[i];
 end;
+
+
 
 {---------------------------------------}
-procedure ClearEmoticonLists();
-begin
-      EmoticonList.Clear();
-end;
-
+{---------------------------------------}
+{---------------------------------------}
 {---------------------------------------}
 procedure InitializeEmoticonLists();
 var
@@ -477,7 +477,7 @@ begin
         // Grab the match text and look it up in our emoticon list
         ms := emoticon_regex.Match[2];
         if (ms <> '') then begin
-            img := GetEmoticonImgTag(ms);
+            img := EmoticonList.getImageTag(ms);
         end;
 
         // if we have a legal emoticon object, insert it..
@@ -508,6 +508,72 @@ begin
     end;
     result := res;
 end;
+
+{---------------------------------------}
+procedure ProcessRTFEmoticons(RichEdit: TExRichEdit; color: TColor; txt: Widestring);
+var
+    m: boolean;
+    ms, s: Widestring;
+    lm: integer;
+    rtf: WideString;
+begin
+    // search for various smileys
+
+    // Change the control to allow pasting
+    RichEdit.ReadOnly := false;
+    s := txt;
+    m := emoticon_regex.Exec(txt);
+    lm := 0;
+    while(m) do begin
+        // we have a match
+        lm := emoticon_regex.MatchPos[0] + emoticon_regex.MatchLen[0];
+        RichEdit.SelAttributes.Color := color;
+        RichEdit.WideSelText := emoticon_regex.Match[1];
+
+        rtf := '';
+        // Grab the match text and look it up in our emoticon list
+        ms := emoticon_regex.Match[2];
+        if (ms <> '') then begin
+            rtf := EmoticonList.getRTF(ms);
+        end;
+
+        // if we have a legal emoticon object, insert it..
+        // otherwise insert the matched text
+        if (rtf <> '') then begin
+            RichEdit.InsertRTF(rtf);
+        end
+        else begin
+            RichEdit.SelAttributes.Color := color;
+            RichEdit.WideSelText := ms;
+        end;
+
+        // Match-6 is any trailing whitespace
+        RichEdit.SelAttributes.Color := color;
+        if (lm <= length(txt)) then
+            RichEdit.WideSelText := emoticon_regex.Match[6];
+
+        // Search for the next emoticon
+        m := emoticon_regex.ExecNext();
+
+        // do a sanity check here, probably because the regex prolly isn't
+        // _REALLY_ widestr compliant
+        if (m) then begin
+            if (length(txt) < emoticon_regex.MatchPos[0]) then
+                m := false;
+        end;
+    end;
+
+    if (lm <= length(txt)) then begin
+        // we have a remainder
+        txt := Copy(txt, lm, length(txt) - lm + 1);
+        RichEdit.SelAttributes.Color := color;
+        RichEdit.WideSelText := txt;
+    end;
+
+    RichEdit.ReadOnly := true;
+end;
+
+
 
 {---------------------------------------}
 {---------------------------------------}

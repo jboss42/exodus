@@ -74,9 +74,7 @@ type
     btnAddContact: TToolButton;
     btnRoom: TToolButton;
     btnDelContact: TToolButton;
-    imgYahooEmoticons: TImageList;
     btnFind: TToolButton;
-    imgMSNEmoticons: TImageList;
     btnExpanded: TToolButton;
     timReconnect: TTimer;
     ImageList3: TImageList;
@@ -1207,6 +1205,7 @@ begin
             _new_account := false;
         end;
 
+        // Play any pending XMPP actions
         PlayXMPPActions();
     end
 
@@ -1317,9 +1316,9 @@ begin
             end;
         end;
 
-        // Setup the background colors for emoticons
-        imgMSNEmoticons.BkColor := TColor(MainSession.Prefs.getInt('color_bg'));
-        imgYahooEmoticons.BkColor := TColor(MainSession.Prefs.getInt('color_bg'));
+        // XXX: Setup the background colors for emoticons
+        //imgMSNEmoticons.BkColor := TColor(MainSession.Prefs.getInt('color_bg'));
+        //imgYahooEmoticons.BkColor := TColor(MainSession.Prefs.getInt('color_bg'));
 
         // reset the tray icon stuff
         Shell_NotifyIcon(NIM_DELETE, @_tray);

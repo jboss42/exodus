@@ -21,18 +21,14 @@ unit MsgDisplay;
 
 interface
 uses
-    iniFiles,
-    BaseMsgList,
+    iniFiles, BaseMsgList,
     ExRichEdit, RichEdit2, RegExpr, Classes, JabberMsg,
-    Graphics, ComCtrls, Controls,
-    Messages, Windows, SysUtils;
+    Graphics, ComCtrls, Controls, Messages, Windows, SysUtils;
 
 procedure DisplayMsg(Msg: TJabberMessage; msglist: TfBaseMsgList; AutoScroll: boolean = true);
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true);
 
 function GetMsgHTML(Msg: TJabberMessage): string;
-
-procedure ProcessEmoticons(RichEdit: TExRichEdit; color: TColor; txt: Widestring);
 
 // procedure AddHTML(html: string; Browser: TRichEdit);
 
@@ -42,10 +38,8 @@ procedure ProcessEmoticons(RichEdit: TExRichEdit; color: TColor; txt: Widestring
 implementation
 uses
 
-    Clipbrd,
-    Jabber1, ExUtils, Emote,
-    ExtCtrls, Dialogs,
-    XMLUtils, Session;
+    Clipbrd, Jabber1, ExUtils, Emote,
+    ExtCtrls, Dialogs, XMLUtils, Session;
 
 {---------------------------------------}
 procedure DisplayMsg(Msg: TJabberMessage; msglist: TfBaseMsgList; AutoScroll: boolean = true);
@@ -119,7 +113,7 @@ begin
         RichEdit.WideSelText := ' ';
 
         if (use_emoticons) then
-            ProcessEmoticons(RichEdit, c, txt)
+            ProcessRTFEmoticons(RichEdit, c, txt)
         else
             RichEdit.WideSelText := txt;
     end
@@ -129,7 +123,7 @@ begin
         RichEdit.SelAttributes.Color := clPurple;
         RichEdit.WideSelText := ' * ' + Msg.Nick + ' ';
         if (use_emoticons) then
-            ProcessEmoticons(RichEdit, clPurple, Trim(txt))
+            ProcessRTFEmoticons(RichEdit, clPurple, Trim(txt))
         else
             RichEdit.WideSelText := txt;
     end;
@@ -140,69 +134,6 @@ begin
     // AutoScroll the window
     if ((at_bottom) and (AutoScroll) and (not is_scrolling)) then
         RichEdit.ScrollToBottom();
-end;
-
-procedure ProcessEmoticons(RichEdit: TExRichEdit; color: TColor; txt: Widestring);
-var
-    m: boolean;
-    ms, s: Widestring;
-    lm: integer;
-    rtf: WideString;
-begin
-    // search for various smileys
-
-    // Change the control to allow pasting
-    RichEdit.ReadOnly := false;
-    s := txt;
-    m := emoticon_regex.Exec(txt);
-    lm := 0;
-    while(m) do begin
-        // we have a match
-        lm := emoticon_regex.MatchPos[0] + emoticon_regex.MatchLen[0];
-        RichEdit.SelAttributes.Color := color;
-        RichEdit.WideSelText := emoticon_regex.Match[1];
-
-        rtf := '';
-        // Grab the match text and look it up in our emoticon list
-        ms := emoticon_regex.Match[2];
-        if (ms <> '') then begin
-            rtf := GetEmoticonRTF(ms);
-        end;
-
-        // if we have a legal emoticon object, insert it..
-        // otherwise insert the matched text
-        if (rtf <> '') then begin
-            RichEdit.InsertRTF(rtf);
-        end
-        else begin
-            RichEdit.SelAttributes.Color := color;
-            RichEdit.WideSelText := ms;
-        end;
-
-        // Match-6 is any trailing whitespace
-        RichEdit.SelAttributes.Color := color;
-        if (lm <= length(txt)) then
-            RichEdit.WideSelText := emoticon_regex.Match[6];
-
-        // Search for the next emoticon
-        m := emoticon_regex.ExecNext();
-
-        // do a sanity check here, probably because the regex prolly isn't
-        // _REALLY_ widestr compliant
-        if (m) then begin
-            if (length(txt) < emoticon_regex.MatchPos[0]) then
-                m := false;
-        end;
-    end;
-
-    if (lm <= length(txt)) then begin
-        // we have a remainder
-        txt := Copy(txt, lm, length(txt) - lm + 1);
-        RichEdit.SelAttributes.Color := color;
-        RichEdit.WideSelText := txt;
-    end;
-
-    RichEdit.ReadOnly := true;
 end;
 
 {---------------------------------------}

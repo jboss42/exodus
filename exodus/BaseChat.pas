@@ -158,7 +158,7 @@ var
     etxt: Widestring;
 begin
     // Setup some Emoticon
-    etxt := GetEmoticonText(e);
+    etxt := EmoticonList.getText(e);
     if (etxt = '') then exit;
 
     l := Length(MsgOut.Text);

@@ -117,6 +117,7 @@ begin
     clear();
 end;
 
+{---------------------------------------}
 destructor TfIEMsgList.Destroy;
 begin
     if (_queue <> nil) then begin
@@ -215,10 +216,10 @@ var
     started: boolean;
     str: WideString;
 begin
-
     // See JEP-71 (http://www.jabber.org/jeps/jep-0071.html) for details.
 
     result := '';
+
     // any tag not in the good list should be deleted, but everything else
     // around it should stay.
     // opted to do own serialization for efficiency; didn't want to have to
@@ -385,7 +386,7 @@ end;
 {---------------------------------------}
 procedure TfIEMsgList.Save(fn: string);
 begin
-    //
+    // XXX: Save IE MsgList
 end;
 
 {---------------------------------------}
@@ -397,7 +398,7 @@ end;
 {---------------------------------------}
 procedure TfIEMsgList.setupPrefs();
 begin
-    //
+    // XXX: IE MsgList should pick up stylesheet prefs
 end;
 
 {---------------------------------------}
@@ -415,41 +416,44 @@ end;
 {---------------------------------------}
 procedure TfIEMsgList.setDragOver(event: TDragOverEvent);
 begin
-    //
+    // XXX: IEMsgList drag-n-drop
 end;
 
 {---------------------------------------}
 procedure TfIEMsgList.setDragDrop(event: TDragDropEvent);
 begin
-    //
+    // XXX: IEMsgList drag-n-drop
 end;
 
+{---------------------------------------}
 procedure TfIEMsgList.ChangeStylesheet(url: WideString);
 begin
-    // TODO: remove or disable old stylesheets
+    // XXX: remove or disable old stylesheets
     _style := _doc.createStyleSheet(url, 0);
 end;
 
+{---------------------------------------}
 procedure TfIEMsgList.onScroll(Sender: TObject);
 begin
     _bottom :=
         ((_content2.scrollTop + _content2.clientHeight) >= _content2.scrollHeight);
 end;
 
+{---------------------------------------}
 procedure TfIEMsgList.onResize(Sender: TObject);
 begin
     if (_bottom) then
          ScrollToBottom();
 end;
 
+{---------------------------------------}
 function TfIEMsgList.onContextMenu(Sender: TObject): WordBool;
 begin
     _menu.Popup(_win.event.screenX, _win.event.screeny);
-
     result := false;
 end;
 
-
+{---------------------------------------}
 procedure TfIEMsgList.browserDocumentComplete(Sender: TObject;
   const pDisp: IDispatch; var URL: OleVariant);
 var
@@ -494,6 +498,7 @@ begin
     ScrollToBottom();
 end;
 
+{---------------------------------------}
 procedure TfIEMsgList.browserEnter(Sender: TObject);
 var
     bc: TfrmBaseChat;
@@ -504,6 +509,7 @@ begin
     inherited;
 end;
 
+{---------------------------------------}
 procedure TfIEMsgList.browserBeforeNavigate2(Sender: TObject;
   const pDisp: IDispatch; var URL, Flags, TargetFrameName, PostData,
   Headers: OleVariant; var Cancel: WordBool);
@@ -518,6 +524,7 @@ begin
     inherited;
 end;
 
+{---------------------------------------}
 procedure TfIEMsgList.setTitle(title: Widestring);
 var
     splash : IHTMLElement;
@@ -594,4 +601,5 @@ finalization
     ok_tags.Free();
     style_tags.Free();
     style_props.Free();
+
 end.
