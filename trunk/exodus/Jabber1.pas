@@ -1191,7 +1191,7 @@ begin
             Self.FormStyle := fsNormal;
 
         if (MainSession.Prefs.getBool('window_toolbox')) then
-            Self.BorderStyle := bsToolWindow
+            Self.BorderStyle := bsSizeToolWin
         else
             Self.BorderStyle := bsSizeable;
 
