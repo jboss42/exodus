@@ -208,6 +208,10 @@ type
     cboDblClick: TComboBox;
     chkRosterUnicode: TCheckBox;
     chkBlockNonRoster: TCheckBox;
+    Label26: TLabel;
+    txtChatMemory: TEdit;
+    spnChatMemory: TUpDown;
+    Label27: TLabel;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -445,6 +449,8 @@ begin
         else
             spnSnap.Position := 10;
 
+        spnChatMemory.Position := getInt('chat_memory');
+
 
         // Notify Options
         SetLength(_notify, NUM_NOTIFIES);
@@ -581,6 +587,7 @@ begin
         setInt('toast_alpha_val', trkToastAlpha.Position);
         setBool('snap_on', chkSnap.Checked);
         setInt('edge_snap', spnSnap.Position);
+        setInt('chat_memory', spnChatMemory.Position);
 
         // Notify events
         setBool('notify_sounds', chkSound.Checked);

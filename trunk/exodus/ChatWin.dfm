@@ -1,6 +1,6 @@
 inherited frmChat: TfrmChat
-  Left = 279
-  Top = 304
+  Left = 317
+  Top = 292
   Caption = 'Chat Window'
   Font.Charset = ANSI_CHARSET
   Font.Height = -13
@@ -9,6 +9,7 @@ inherited frmChat: TfrmChat
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnEndDock = FormEndDock
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 18
   inherited Panel3: TPanel
@@ -22,7 +23,6 @@ inherited frmChat: TfrmChat
   inherited pnlInput: TPanel
     inherited MsgOut: TExRichEdit
       WantReturns = False
-      WordWrap = False
       OnChange = MsgOutChange
     end
   end
@@ -158,5 +158,12 @@ inherited frmChat: TfrmChat
     Filter = 'RTF Files|*.rtf|All Files|*.*'
     Left = 48
     Top = 184
+  end
+  object timMemory: TTimer
+    Enabled = False
+    Interval = 3600000
+    OnTimer = timMemoryTimer
+    Left = 80
+    Top = 152
   end
 end

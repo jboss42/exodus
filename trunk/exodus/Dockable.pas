@@ -170,6 +170,8 @@ begin
     // show this form using the default behavior
     if MainSession.Prefs.getBool('expanded') then begin
     	if (TabSheet <> nil) then begin
+            if (not Visible) then
+                Self.Visible := true;
             frmExodus.Tabs.ActivePage := TabSheet;
         end
         else begin

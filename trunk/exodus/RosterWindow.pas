@@ -1078,8 +1078,12 @@ begin
             chatc := MainSession.ChatList.FindChat(_cur_ritem.jid.jid, '', '');
             if (chatc <> nil) then begin
                 cw := TfrmChat(chatc.window);
-                if (cw.Docked) then
-                    frmExodus.Tabs.ActivePage := cw.TabSheet
+                if (cw.Docked) then begin
+                    if (not cw.Visible) then
+                        cw.ShowDefault()
+                    else
+                        frmExodus.Tabs.ActivePage := cw.TabSheet
+                    end
                 else
                     cw.Show();
             end
