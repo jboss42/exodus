@@ -219,8 +219,10 @@ resourceString
     sIdleXA = 'XA as a result of idle.';
 
 
-{$ifdef Win32}
+function getMyDocs: string;
 function getUserDir: string;
+
+{$ifdef Win32}
 function ReplaceEnvPaths(value: string): string;
 {$endif}
 
@@ -243,6 +245,34 @@ var
     dflt_left: integer;
 
 {$ifdef Win32}
+{---------------------------------------}
+function getMyDocs: string;
+var
+    reg: TRegistry;
+begin
+    // Get the path to My Documents
+    Result := '';
+    
+    try
+    reg := TRegistry.Create;
+    try //finally free
+        with reg do begin
+            RootKey := HKEY_CURRENT_USER;
+            OpenKeyReadOnly('Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders');
+            if ValueExists('Personal') then begin
+                Result := ReadString('Personal') + '\';
+                Result := ReplaceEnvPaths(Result);
+            end;
+        end;
+    finally
+        reg.Free();
+    end;
+    except
+        Result := ExtractFilePath(Application.EXEName);
+    end;
+
+end;
+
 {---------------------------------------}
 function getUserDir: string;
 var
@@ -393,6 +423,16 @@ end;
 end;
 
 {$else}
+
+procedure getUserDir(): string;
+begin
+    Result := '~/';
+end;
+
+procedure getMyDocs(): string;
+begin
+    Result := '~/';
+end;
 
 procedure getDefaultPos;
 begin
@@ -1223,9 +1263,9 @@ begin
     else if pkey = 'xa_status' then
         result := sIdleXA
     else if pkey = 'log_path' then
-        result := ExtractFilePath(Application.EXEName) + 'logs'
+        result := getMyDocs() + 'Exodus-Logs'
     else if pkey = 'xfer_path' then
-        result := ExtractFilePath(Application.EXEName)
+        result := getMyDocs() + 'Exodus-Downloads'
     else if pkey = 'spool_path' then
         result := getUserDir() + 'spool.xml'
 
