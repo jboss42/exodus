@@ -1,4 +1,33 @@
-2004-06-15 13:22  pgmillard
+2004-06-16 16:43  pgmillard
 
 	* exodus/: default.po, version.h, version.nsi: daily build
+
+2004-06-16 16:39  pgmillard
+
+	* build.pl, exodus/default.po, exodus/exodus-new.nsi,
+	  exodus/version.h, exodus/version.nsi,
+	  exodus/plugins/plugin-sections-new.nsi,
+	  exodus/plugins/AIM-Import/ExodusCOM_TLB.pas,
+	  exodus/plugins/ASpeller/ExodusCOM_TLB.pas,
+	  exodus/plugins/HTMLLogger/ExHTMLLogger.dpr,
+	  exodus/plugins/HTMLLogger/ExodusCOM_TLB.pas,
+	  exodus/plugins/ICQ-Import/ExodusCOM_TLB.pas,
+	  exodus/plugins/JabberStats/ExJabberStats.dpr,
+	  exodus/plugins/JabberStats/ExodusCOM_TLB.pas,
+	  exodus/plugins/NetMeeting/ExodusCOM_TLB.pas,
+	  exodus/plugins/RosterTools/ExodusCOM_TLB.pas,
+	  exodus/plugins/SQLLogger/ExSQLLogger.dpr,
+	  exodus/plugins/SQLLogger/ExodusCOM_TLB.pas: Fixes to build script
+	  for IE rendering
+
+2004-06-16 07:16  pgmillard
+
+	* exodus/ChatWin.pas, jopl/ChatController.pas, jopl/DNSUtils.pas:
+	  Add debugging for refcounts on chat controllers.
+
+2004-06-16 07:04  pgmillard
+
+	* exodus/ConnDetails.pas, jopl/DNSUtils.pas, jopl/stringprep.pas:
+	  Some more stringprep stuff... make sure connection details are
+	  done when entering info.
 
