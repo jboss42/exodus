@@ -596,7 +596,7 @@ begin
     // scan for any empty grps
     for i := MainSession.Roster.GrpList.Count - 1 downto 0 do begin
         node := TTreeNode(MainSession.Roster.GrpList.Objects[i]);
-        if (node.Count = 0) then
+        if ((node <> nil) and (node.Count = 0)) then
             RemoveGroupNode(node);
         end;
 end;
