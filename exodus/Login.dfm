@@ -1,6 +1,6 @@
 object frmLogin: TfrmLogin
-  Left = 260
-  Top = 270
+  Left = 210
+  Top = 351
   Width = 372
   Height = 145
   BorderIcons = [biSystemMenu, biMinimize]
@@ -18,11 +18,11 @@ object frmLogin: TfrmLogin
   OnCreate = FormCreate
   DesignSize = (
     364
-    116)
+    114)
   PixelsPerInch = 96
-  TextHeight = 16
+  TextHeight = 15
   object Label5: TLabel
-    Left = 9
+    Left = 8
     Top = 8
     Width = 32
     Height = 13
@@ -37,39 +37,39 @@ object frmLogin: TfrmLogin
     OnClick = Label5Click
   end
   object lblJID: TTntLabel
-    Left = 66
-    Top = 32
-    Width = 125
-    Height = 16
+    Left = 62
+    Top = 30
+    Width = 126
+    Height = 15
     Caption = 'foo@bar.com/resource'
   end
   object cboProfiles: TTntComboBox
-    Left = 66
+    Left = 62
     Top = 4
-    Width = 209
-    Height = 24
+    Width = 196
+    Height = 23
     Style = csDropDownList
     Anchors = [akLeft, akTop, akRight]
     DropDownCount = 15
-    ItemHeight = 16
+    ItemHeight = 15
     TabOrder = 0
     OnChange = cboProfilesChange
     Items.WideStrings = (
       'Default Profile')
   end
   object chkInvisible: TCheckBox
-    Left = 66
-    Top = 56
-    Width = 97
-    Height = 15
+    Left = 62
+    Top = 53
+    Width = 91
+    Height = 14
     Caption = 'In&visible'
     TabOrder = 1
   end
   object btnDetails: TButton
-    Left = 278
+    Left = 261
     Top = 4
-    Width = 76
-    Height = 23
+    Width = 71
+    Height = 21
     Anchors = [akTop, akRight]
     Caption = '&Details...'
     TabOrder = 2
@@ -79,15 +79,30 @@ object frmLogin: TfrmLogin
     Left = 0
     Top = 82
     Width = 364
-    Height = 34
+    Height = 32
     Align = alBottom
     AutoScroll = False
     TabOrder = 3
-    inherited Bevel1: TBevel
+    inherited Panel2: TPanel
       Width = 364
-    end
-    inherited Panel1: TPanel
-      Left = 204
+      Height = 32
+      inherited Bevel1: TBevel
+        Width = 364
+      end
+      inherited Panel1: TPanel
+        Left = 214
+        Width = 150
+        Height = 27
+        inherited btnOK: TButton
+          Width = 70
+          Height = 23
+        end
+        inherited btnCancel: TButton
+          Left = 77
+          Width = 70
+          Height = 23
+        end
+      end
     end
   end
   object popProfiles: TPopupMenu
