@@ -114,7 +114,7 @@ AutoIncBuild=1
 MajorVer=0
 MinorVer=8
 Release=0
-Build=31
+Build=32
 Debug=0
 PreRelease=0
 Special=0
@@ -125,7 +125,7 @@ CodePage=1252
 [Version Info Keys]
 CompanyName=PeterMillard
 FileDescription=
-FileVersion=0.8.0.31
+FileVersion=0.8.0.32
 InternalName=
 LegalCopyright=Peter Millard, 2002
 LegalTrademarks=

@@ -1,7 +1,6 @@
 object frmRiser: TfrmRiser
   Left = 308
   Top = 212
-  AutoSize = True
   BorderIcons = []
   BorderStyle = bsNone
   ClientHeight = 45
@@ -38,7 +37,7 @@ object frmRiser: TfrmRiser
   object Image1: TImage
     Left = 4
     Top = 5
-    Width = 34
+    Width = 21
     Height = 34
     Center = True
     Picture.Data = {
@@ -73,10 +72,10 @@ object frmRiser: TfrmRiser
     OnClick = Panel2Click
   end
   object Label1: TTntLabel
-    Left = 38
+    Left = 28
     Top = 4
-    Width = 139
-    Height = 37
+    Width = 149
+    Height = 14
     Alignment = taCenter
     Anchors = [akLeft, akTop, akRight]
     Caption = 'something really long'
@@ -87,7 +86,6 @@ object frmRiser: TfrmRiser
     Font.Style = []
     ParentFont = False
     Transparent = True
-    Layout = tlCenter
     WordWrap = True
     OnClick = Panel2Click
   end
