@@ -7,14 +7,18 @@ uses
     Classes, SysUtils;
 
 function getLocaleName(locale: string): string;
-procedure initLocaleUtils();
-procedure cleanupLocaleUtils();
 
 var
     langs: TXMLTag;
     codes: TXMLTag;
 
 implementation
+
+var
+    tmps: TWidestringlist;
+    res: TResourceStream;
+    p: TXMLTagParser;
+
 
 function getLocaleName(locale: string): string;
 var
@@ -23,7 +27,6 @@ var
     ltag: TXMLTag;
     ctag: TXMLTag;
 begin
-    //
     // This needs to convert lang[_COUNTRY] to "language"
     Result := '';
     upos := Pos('_', locale);
@@ -34,7 +37,7 @@ begin
     end
     else begin
         lcode := Copy(locale, 1, upos - 1);
-        ccode := Copy(locale, upos + 1, length(locale) - upos - 1);
+        ccode := Copy(locale, upos + 1, length(locale) - upos);
         ltag := langs.GetFirstTag(lcode);
         if (ltag <> nil) then
             Result := ltag.Data;
@@ -45,12 +48,7 @@ begin
 end;
 
 
-procedure initLocaleUtils();
-var
-    tmps: TWidestringlist;
-    res: TResourceStream;
-    p: TXMLTagParser;
-begin
+initialization
     res := TResourceStream.Create(HInstance, 'langs', 'XML');
     tmps := TWidestringList.Create();
     tmps.LoadFromStream(res);
@@ -71,12 +69,9 @@ begin
         codes := p.popTag();
 
     p.Free();
-end;
 
-procedure cleanupLocaleUtils();
-begin
+finalization
     langs.Free();
     codes.Free();
-end;
 
 end.
