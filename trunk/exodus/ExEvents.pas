@@ -54,7 +54,9 @@ type
         caption: WideString;
         error: boolean;
 
-        constructor create;
+        constructor create; overload;
+        constructor create(evt: TJabberEvent); overload;
+        
         destructor destroy; override;
         procedure Parse(tag: TXMLTag);
 
@@ -256,6 +258,29 @@ begin
     error := false;
     edate := Now();
 end;
+
+constructor TJabberEvent.Create(evt: TJabberEvent);
+begin
+    inherited Create();
+
+    _data_list := TWidestringList.Create();
+    _tag := nil;
+
+    Timestamp := evt.Timestamp;
+    eType := evt.eType;
+    from := evt.from;
+    id := evt.id;
+    edate := evt.edate;
+    data_type := evt.data_type;
+    delayed := evt.delayed;
+    elapsed_time := evt.elapsed_time;
+    img_idx := evt.img_idx;
+    msg := evt.msg;
+    caption := evt.caption;
+    error := evt.error;
+    _data_list.Assign(evt.Data);
+end;
+
 
 {---------------------------------------}
 destructor TJabberEvent.destroy;

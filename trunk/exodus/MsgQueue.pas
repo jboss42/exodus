@@ -349,7 +349,7 @@ begin
     if (not MainSession.Active) then exit;
     
     e := TJabberEvent(_queue.Items[lstEvents.Selected.Index]);
-    edup := CreateJabberEvent(e.Tag);
+    edup := TJabberEvent.Create(e);
     StartRecvMsg(edup);
 end;
 

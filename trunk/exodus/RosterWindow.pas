@@ -1145,6 +1145,8 @@ begin
     // ---------------------- Stage #3 -------------------------
     // For each grp in the temp. grp list,
     // make sure a node already exists, or create one.
+
+    // xxx: for my resources, we need to add each PPDB entry
     for g := 0 to tmp_grps.Count - 1 do begin
         cur_grp := tmp_grps[g];
 
