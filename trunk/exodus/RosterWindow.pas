@@ -1819,7 +1819,7 @@ begin
                 tw := CanvasTextWidthW(treeRoster.Canvas, c1);
                 xRect := Node.DisplayRect(true);
                 xRect.Right := xRect.Left + tw + 2 +
-                    CanvasTextWidthW(treeRoster.Canvas, c2);
+                    CanvasTextWidthW(treeRoster.Canvas, (c2 + ' '));
                 nRect := xRect;
                 nRect.Left := nRect.Left - (2 * treeRoster.Indent);
 
@@ -1847,7 +1847,7 @@ begin
                 else begin
                     main_color := treeRoster.Font.Color;
                     stat_color := _status_color;
-            end;
+                end;
 
                 SetTextColor(treeRoster.Canvas.Handle, ColorToRGB(main_color));
                 CanvasTextOutW(treeRoster.Canvas, xRect.Left + 1,
