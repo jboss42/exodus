@@ -468,8 +468,11 @@ begin
         lblJID.Caption := cjid;
         if OtherNick <> '' then
             Caption := OtherNick + ' - ' + _(sChat)
+        else if (_jid.user <> '') then
+            Caption := _jid.user + ' - ' + _(sChat)
         else
-            Caption := _jid.user + ' - ' + _(sChat);
+            Caption := _jid.full + ' - ' + _(sChat);
+            
         if (p = nil) then
             ChangePresImage('unknown', 'Unknown Presence')
         else
