@@ -30,7 +30,7 @@ uses
     IdCustomHTTPServer,
     {$endif}
 
-    XMLTag,
+    XMLTag, Dockable, 
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
     Dialogs, IdTCPConnection, IdTCPClient, IdHTTP, IdBaseComponent,
     IdComponent, IdTCPServer, IdHTTPServer, ComCtrls, StdCtrls, buttonFrame,
@@ -41,7 +41,7 @@ const
     WM_XFER = WM_USER + 5000;
 
 type
-  TfrmTransfer = class(TForm)
+  TfrmTransfer = class(TfrmDockable)
     pnlFrom: TPanel;
     txtMsg: TExRichEdit;
     frameButtons1: TframeButtons;
@@ -111,6 +111,8 @@ resourcestring
     sXferTryingClose = 'Trying to close.';
     sXferConn = 'Got connection.';
     sXferDefaultDesc = 'Sending you a file.';
+    sXferCreateDir = 'This directory does not exist. Create it?';
+    sXferStreamError = 'There was an error trying to create the file.';
 
 procedure FileReceive(tag: TXMLTag); overload;
 procedure FileReceive(from, url, desc: string); overload;
@@ -187,9 +189,8 @@ begin
         tmp_jid.Free();
 
     end;
-    xfer.Show;
+    xfer.ShowDefault();
     DoNotify(xfer, 'notify_oob', 'File from ' + tmps, ico_service);
-    BringWindowToTop(xfer.Handle);
 end;
 
 {---------------------------------------}
@@ -254,13 +255,13 @@ begin
         lblFile.Hint := filename;
         lblFile.Caption := ExtractFileName(filename);
     end;
-    xfer.Show;
-    BringWindowToTop(xfer.Handle);
+    xfer.ShowDefault();
 end;
 
 {---------------------------------------}
 procedure TfrmTransfer.frameButtons1btnOKClick(Sender: TObject);
 var
+    file_path: String;
     iq: TXMLTag;
 begin
     if Self.Mode = 0 then begin
@@ -277,7 +278,23 @@ begin
                 mtConfirmation, [mbYes, mbNo], 0) = mrNo then exit;
             DeleteFile(filename);
         end;
-        fstream := TFileStream.Create(filename, fmCreate);
+
+        file_path := ExtractFilePath(filename);
+        if (not DirectoryExists(file_path)) then begin
+            if MessageDlg(sXferCreateDir, mtConfirmation,
+                [mbYes, mbNo], 0) = mrNo then exit;
+            CreateDir(file_path);
+        end;
+
+        try
+            fstream := TFileStream.Create(filename, fmCreate);
+        except
+            on EStreamError do begin
+                MessageDlg(sXferStreamError, mtError, [mbOK], 0);
+                exit;
+            end;
+        end;
+
         httpClient.Get(Self.url, fstream);
         fstream.Free;
     end
