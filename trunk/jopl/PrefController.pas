@@ -108,6 +108,7 @@ type
         procedure setBool(pkey: string; pvalue: boolean);
         procedure setStringlist(pkey: string; pvalue: TStrings);
         procedure setPresence(pvalue: TJabberCustomPres);
+        procedure removeAllPresence();
 
         procedure SavePosition(form: TForm);
         procedure RestorePosition(form: TForm);
@@ -301,7 +302,7 @@ end;
 {---------------------------------------}
 function TPrefController.getBool(pkey: string): boolean;
 begin
-    if (lowercase(getString(pkey)) = 'true') then
+    if ((lowercase(getString(pkey)) = 'true') or (getString(pkey) = '1')) then
         Result := true
     else
         Result := false;
@@ -399,6 +400,18 @@ begin
         end;
 
     ptags.Free;
+end;
+
+{---------------------------------------}
+procedure TPrefController.removeAllPresence();
+var
+    i: integer;
+    ptags: TXMLTagList;
+begin
+    // remove all custom pres from the list
+    ptags := _pref_node.QueryTags('presence');
+    for i := 0 to ptags.count - 1 do
+        _pref_node.RemoveTag(ptags.Tags[i]);
 end;
 
 {---------------------------------------}
