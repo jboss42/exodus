@@ -384,13 +384,25 @@ var
     _jid: TJabberID;
     i: integer;
     member: TRoomMember;
+    etag: TXMLTag;
 begin
     // We are getting presence
     from := tag.getAttribute('from');
     ptype := tag.getAttribute('type');
     _jid := TJabberID.Create(from);
     i := _roster.indexOf(from);
-    if ptype = 'unavailable' then begin
+
+    if ((ptype = 'error') and (_jid.resource = mynick)) then begin
+        // check for 409, conflicts.
+        etag := tag.GetFirstTag('error');
+        if ((etag <> nil) and (etag.GetAttribute('code') = '409')) then begin
+            MessageDlg('Your selected Nickname is already in use. Please select another.',
+                mtError, [mbOK], 0);
+            Self.Close();
+            end;
+        end
+        
+    else if ptype = 'unavailable' then begin
         if (i >= 0) then begin
             member := TRoomMember(_roster.Objects[i]);
             // ShowPresence(member.Nick, ' has left the room.');
@@ -900,6 +912,7 @@ begin
         Self.FormStyle := fsNormal;
 end;
 
+{---------------------------------------}
 procedure TfrmRoom.popRosterBlockClick(Sender: TObject);
 var
     rm: TRoomMember;
@@ -929,6 +942,7 @@ begin
        end;
 end;
 
+{---------------------------------------}
 procedure TfrmRoom.popRoomRosterPopup(Sender: TObject);
 var
     rm: TRoomMember;
@@ -943,6 +957,7 @@ begin
   inherited;
 end;
 
+{---------------------------------------}
 function TfrmRoom.GetCurrentMember(): TRoomMember;
 var
     i: integer;
@@ -964,6 +979,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TfrmRoom.FormResize(Sender: TObject);
 begin
   inherited;
@@ -974,6 +990,7 @@ begin
     pnlSubj.Width := Panel1.Width - btnClose.Width - 5;
 end;
 
+{---------------------------------------}
 procedure TfrmRoom.FormEndDock(Sender, Target: TObject; X, Y: Integer);
 begin
   inherited;
