@@ -398,7 +398,8 @@ begin
 
         x := _iq.qTag;
         x.Name := 'si';
-        _sid := 'exs_' + MainSession.generateID();
+        // _sid := 'exs_' + MainSession.generateID();
+        _sid := MainSession.generateID() + IntToStr(Random(10000000));
         x.setAttribute('id', _sid);
         x.setAttribute('mime-type', 'binary/octet-stream');
         x.setAttribute('profile', XMLNS_FTPROFILE);
@@ -528,6 +529,9 @@ begin
             SocksHandler.SocksInfo.Version := svSocks5;
             SocksHandler.SocksInfo.Host := p.host;
             SocksHandler.SocksInfo.Port := p.Port;
+
+            tmps := _sid + MainSession.Jid + _pkg.recip;
+            tmps := Sha1Hash(tmps);
 
             tcpClient.IOHandler := SocksHandler;
             tcpClient.Host := tmps;

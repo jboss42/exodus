@@ -143,7 +143,7 @@ implementation
 {$R *.dfm}
 
 uses
-    XMLUtils, StrUtils, 
+    XMLUtils, StrUtils,
     IQ, GnuGetText, Session, JabberConst, ExUtils;
 
 {---------------------------------------}
@@ -153,7 +153,7 @@ constructor TFileRecvThread.Create();
 begin
     //
     inherited Create(true);
-    
+
     _pos := 0;
     _form := nil;
     _new_txt := TWidestringlist.Create();
@@ -494,7 +494,7 @@ begin
             p := _pkg.packet;
             _sid := p.QueryXPData('/iq/si@id');
             _filename := ExtractFilename(p.QueryXPData('/iq/si/file@name'));
-            _size := SafeInt(p.QueryXPData('/iq/si/file@size')); 
+            _size := SafeInt(p.QueryXPData('/iq/si/file@size'));
             fp := MainSession.Prefs.getString('xfer_path');
             if (AnsiEndsText('\', fp)) then
                 _filename := fp + _filename

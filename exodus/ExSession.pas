@@ -159,6 +159,9 @@ begin
     Include(JclStackTrackingOptions, stRawMode);
     {$endif}
 
+    // Initialize random # generator
+    Randomize();
+
     // Make sure winsock2 is available..
     ws2 := LoadLibrary('WS2_32.DLL');
     if (ws2 = 0) then begin
