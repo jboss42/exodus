@@ -47,11 +47,12 @@ procedure DoNotify(win: TfrmDockable; pref_name: string; msg: string; icon: inte
 
 implementation
 uses
-    ExUtils,  
+    ExUtils,
     PrefController,
     Jabber1,
     ExEvents,
     RiserWindow,
+    Room,
     Roster,
     MMSystem,
     Debug,
@@ -113,11 +114,14 @@ begin
 
     tmp_jid.Free();
 
+    // don't display notifications for rooms, here.
+    if (IsRoom(j)) then exit;
+
     // someone is coming online for the first time..
     if (event = '/presence/online') then
         DoNotify(nil, 'notify_online', nick + #10#13' is now online.', 1)
 
-    // someone is coming online for the first time..
+    // someone is going offline
     else if (event = '/presence/unavailable') then
         DoNotify(nil, 'notify_offline', nick + #10#13' is now offline.', 0)
 
