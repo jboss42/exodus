@@ -98,6 +98,7 @@ type
     txtFirst: TTntEdit;
     txtLast: TTntEdit;
     txtWeb: TTntEdit;
+    btnPicClear: TTntButton;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure frameButtons1btnCancelClick(Sender: TObject);
@@ -106,6 +107,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure btnPicBrowseClick(Sender: TObject);
     procedure PaintBox1Paint(Sender: TObject);
+    procedure btnPicClearClick(Sender: TObject);
   private
     { Private declarations }
     _vcard: TXMLVCard;
@@ -373,9 +375,20 @@ end;
 procedure TfrmVCard.PaintBox1Paint(Sender: TObject);
 begin
     // paint the avatar
-    if ((_vcard <> nil) and (_vcard.Picture <> nil)) then begin
-        _vcard.picture.Draw(PaintBox1.Canvas, PaintBox1.ClientRect);
+    if ((_vcard <> nil) and (_vcard.Picture <> nil)) then
+        _vcard.picture.Draw(PaintBox1.Canvas, PaintBox1.ClientRect)
+    else begin
+        PaintBox1.Canvas.Brush.Color := clBtnFace;
+        PaintBox1.Canvas.FillRect(PaintBox1.ClientRect);
     end;
+end;
+
+{---------------------------------------}
+procedure TfrmVCard.btnPicClearClick(Sender: TObject);
+begin
+    if (_vcard.Picture <> nil) then
+        FreeAndNil(_vcard.Picture);
+    PaintBox1.Repaint();
 end;
 
 end.

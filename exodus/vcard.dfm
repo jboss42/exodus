@@ -130,6 +130,15 @@ object frmVCard: TfrmVCard
         Height = 21
         TabOrder = 4
       end
+      object btnPicClear: TTntButton
+        Left = 171
+        Top = 184
+        Width = 75
+        Height = 25
+        Caption = 'Clear'
+        TabOrder = 6
+        OnClick = btnPicClearClick
+      end
     end
     object TabSheet3: TTntTabSheet
       Caption = 'Personal Info.'
@@ -1012,6 +1021,6 @@ object frmVCard: TfrmVCard
       '*.jpeg;*.bmp;*.gif|JPEG Image File (*.jpg)|*.jpg;*jpeg;|GIF Imag' +
       'e (*.gif)|*.gif|Bitmaps (*.bmp)|*.bmp|Icons (*.ico)|*.ico'
     Left = 328
-    Top = 211
+    Top = 243
   end
 end
