@@ -71,6 +71,11 @@ function BroadcastMsg(jids: TStringlist): TfrmMsgRecv;
 
 procedure ShowEvent(e: TJabberEvent);
 
+resourcestring
+    sAccept = 'Accept';
+    sDecline = 'Decline';
+    sTo = 'To:';
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -107,8 +112,8 @@ begin
 
             if eType = evt_Invite then begin
                 // Change button captions for TC Invites
-                frameButtons1.btnOK.Caption := 'Accept';
-                frameButtons1.btnCancel.Caption := 'Decline';
+                frameButtons1.btnOK.Caption := sAccept;
+                frameButtons1.btnCancel.Caption := sDecline;
                 end
             else
                 // normally, we don't want a REPLY button
@@ -181,7 +186,7 @@ begin
     pnlReply.Visible := true;
     pnlReply.Align := alClient;
     ActiveControl := MsgOut;
-    StaticText1.Caption := 'To: ';
+    StaticText1.Caption := sTo;
 end;
 
 {---------------------------------------}

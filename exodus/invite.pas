@@ -56,6 +56,9 @@ type
 var
   frmInvite: TfrmInvite;
 
+resourcestring
+    sConfRoom = 'Conference Room:';
+
 procedure ShowInvite(room_jid: string; jids: TStringList);
 
 {---------------------------------------}
@@ -133,7 +136,7 @@ begin
         StartRoom(room, MainSession.Username);
 
     // Send out invites.
-    memReason.Lines.Add('Conference room: ' + room);
+    memReason.Lines.Add(sConfRoom + ' ' + room);
     for i := 0 to lstJIDS.Items.Count - 1 do begin
         msg := TXMLTag.Create('message');
         msg.PutAttribute('to', lstJIDS.Items[i].SubItems[0]);

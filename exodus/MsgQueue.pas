@@ -53,6 +53,9 @@ var
 
 function getMsgQueue: TfrmMsgQueue;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 
 {$R *.dfm}
@@ -60,6 +63,7 @@ implementation
 uses
     ExUtils, MsgRecv, Session, PrefController;
 
+{---------------------------------------}
 function getMsgQueue: TfrmMsgQueue;
 begin
     if frmMsgQueue = nil then begin
@@ -69,6 +73,7 @@ begin
     Result := frmMsgQueue;
 end;
 
+{---------------------------------------}
 procedure TfrmMsgQueue.LogEvent(e: TJabberEvent; msg: string; img_idx: integer);
 var
     item: TListItem;
@@ -82,6 +87,7 @@ begin
     item.SubItems.Add(msg);         // Subject
 end;
 
+{---------------------------------------}
 procedure TfrmMsgQueue.FormCreate(Sender: TObject);
 begin
     inherited;
@@ -95,6 +101,7 @@ begin
     AssignDefaultFont(txtMsg.Font);
 end;
 
+{---------------------------------------}
 procedure TfrmMsgQueue.FormResize(Sender: TObject);
 begin
     inherited;
@@ -102,6 +109,7 @@ begin
     MainSession.prefs.SavePosition(Self);
 end;
 
+{---------------------------------------}
 procedure TfrmMsgQueue.lstEventsChange(Sender: TObject; Item: TListItem;
   Change: TItemChange);
 var
@@ -114,6 +122,7 @@ begin
         txtMsg.Lines.Assign(e.Data);
 end;
 
+{---------------------------------------}
 procedure TfrmMsgQueue.lstEventsDblClick(Sender: TObject);
 var
     e: TJabberEvent;
@@ -124,6 +133,7 @@ begin
     ShowEvent(e);
 end;
 
+{---------------------------------------}
 procedure TfrmMsgQueue.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
@@ -133,6 +143,7 @@ begin
     inherited;
 end;
 
+{---------------------------------------}
 procedure TfrmMsgQueue.lstEventsKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 var
@@ -172,11 +183,12 @@ begin
 
 end;
 
+{---------------------------------------}
 procedure TfrmMsgQueue.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
     inherited;
-    
+
     lstEvents.Items.Clear;
 end;
 

@@ -1,4 +1,23 @@
 unit jud;
+{
+    Copyright 2002, Peter Millard
+
+    This file is part of Exodus.
+
+    Exodus is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Exodus is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Exodus; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
 
 interface
 
@@ -65,6 +84,15 @@ type
 var
   frmJUD: TfrmJUD;
 
+resourceString
+    sJUDSearch = 'Search';
+    sJUDStart = 'Start';
+    sJUDStop = 'Stop';
+    sJUDErrorContacting = 'Could not contact the search agent.';
+    sJUDTimeout = 'The search timed out.';
+    sJUDEmpty = 'No Results were found.';
+    sJUDAdd = 'Add Contacts';
+
 function StartSearch(sjid: string): TfrmJUD;
 
 {---------------------------------------}
@@ -103,7 +131,7 @@ begin
             end;
         end;
 
-    f.Caption := 'Search';
+    f.Caption := sJUDSearch;
     f.Show;
 
     if f.TabSheet <> nil then
@@ -155,7 +183,7 @@ begin
     aniWait.Visible := true;
     aniWait.Active := true;
 
-    btnAction.Caption := 'Stop';
+    btnAction.Caption := sJUDStop;
 
     cur_jid := cboJID.Text;
     cur_iq := TJabberIQ.Create(MainSession, MainSession.generateID(), FieldsCallback);
@@ -199,7 +227,7 @@ begin
     lblWait.Visible := true;
     aniWait.Visible := true;
     aniWait.Active := true;
-    btnAction.Caption := 'Stop';
+    btnAction.Caption := sJUDStop;
 
     cur_iq.Send();
 end;
@@ -218,18 +246,17 @@ begin
     lblWait.Visible := false;
     aniWait.Visible := false;
     aniWait.Active := false;
-    btnAction.Caption := 'Search';
+    btnAction.Caption := sJUDSearch;
     cboJID.Enabled := false;
 
     if (event <> 'xml') then begin
         // timeout
-        MessageDlg('Could not contact the search agent.', mtError, [mbOK], 0);
+        MessageDlg(sJUDErrorContacting , mtError, [mbOK], 0);
         self.reset();
         exit;
         end
     else if ((tag <> nil) and (tag.GetAttribute('type') = 'error')) then begin
-        MessageDlg('There was an error trying to contact the search agent.',
-            mtError, [mbOK], 0);
+        MessageDlg(sJUDErrorContacting, mtError, [mbOK], 0);
         Self.Reset();
         exit;
         end
@@ -283,13 +310,13 @@ begin
     lblWait.Visible := false;
     aniWait.Visible := false;
     aniWait.Active := false;
-    btnAction.Caption := 'Start';
+    btnAction.Caption := sJUDStart;
     cboJID.Enabled := true;
 
     if (event <> 'xml') then begin
         // timeout
         cur_state := 'get_fields';
-        MessageDlg('The search timed out.', mtError, [mbOK], 0);
+        MessageDlg(sJUDTimeout, mtError, [mbOK], 0);
         self.reset();
         exit;
         end
@@ -313,7 +340,7 @@ begin
             cur_state := 'get_fields';
             lstContacts.Clear();
             self.reset();
-            MessageDlg('No Results were returned', mtInformation, [mbOK], 0);
+            MessageDlg(sJUDEmpty, mtInformation, [mbOK], 0);
             exit;
             end;
 
@@ -328,7 +355,7 @@ begin
 
         lstContacts.Columns.Clear();
         col := lstContacts.Columns.Add();
-        col.Caption := 'Jabber ID';
+        col.Caption := sJID;
         col.Width := ColumnTextWidth;
 
         for i := 0 to cols.count - 1 do begin
@@ -357,7 +384,7 @@ begin
         cboJID.Visible := false;
         pnlResults.Visible := true;
         pnlResults.Align := alClient;
-        btnAction.Caption := 'Add Contacts';
+        btnAction.Caption := sJUDAdd;
         cur_state := 'add';
         end;
 end;
@@ -425,7 +452,7 @@ begin
     lblSelect.Visible := true;
     cboJID.Visible := true;
 
-    btnAction.Caption := 'Start';
+    btnAction.Caption := sJUDStart;
     cur_state := 'get_fields';
     cboJID.Enabled := true;
     self.ClearFields();
@@ -440,9 +467,10 @@ begin
   inherited;
     multi := (lstContacts.SelCount > 1);
     if multi then
-        popAdd.Caption := 'Add Contacts'
+        popAdd.Caption := sJUDAdd
     else
-        popAdd.Caption := 'Add Contact';
+        popAdd.Caption := sJUDAdd;
+
     popProfile.Enabled := not multi;
     popChat.Enabled := not multi;
     popMessage.Enabled := not multi;
@@ -472,20 +500,16 @@ var
 
 begin
   inherited;
-
-
     // add selected contacts
     if (lstContacts.SelCount = 1) then
         // only a single user
         doAdd(lstContacts.Selected)
-
     else begin
         for i := 0 to lstContacts.Items.Count - 1 do begin
             if lstContacts.Items[i].Selected then
                 doAdd(lstContacts.Items[i]);
             end;
         end;
-
 end;
 
 {---------------------------------------}
@@ -509,8 +533,8 @@ var
 begin
   inherited;
     // Add a new group to the list...
-    ngrp := 'Untitled Group';
-    if InputQuery('Add Group', 'New Group Name', ngrp) then begin
+    ngrp := sDefaultGroup;
+    if InputQuery(sNewGroup, sNewGroupPrompt, ngrp) then begin
         MainSession.Roster.GrpList.Add(ngrp);
         cboGroup.Items.Assign(MainSession.Roster.GrpList);
         end;

@@ -449,6 +449,7 @@ begin
     node.Free();
 end;
 
+{---------------------------------------}
 procedure TframeTreeRoster.treeRosterCollapsed(Sender: TObject;
   Node: TTreeNode);
 begin
@@ -463,6 +464,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TframeTreeRoster.treeRosterExpanded(Sender: TObject;
   Node: TTreeNode);
 var
@@ -488,6 +490,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 function TframeTreeRoster.getNodeType(Node: TTreeNode): integer;
 var
     n: TTreeNode;
@@ -522,7 +525,7 @@ begin
         end;
 end;
 
-
+{---------------------------------------}
 procedure TframeTreeRoster.treeRosterCustomDrawItem(
   Sender: TCustomTreeView; Node: TTreeNode; State: TCustomDrawState;
   var DefaultDraw: Boolean);
@@ -616,6 +619,7 @@ begin
         end;
 end;
 
+{---------------------------------------}
 procedure TframeTreeRoster.treeRosterMouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
 var
