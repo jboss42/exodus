@@ -1,14 +1,24 @@
 library IdleHooks;
 
-{ Important note about DLL memory management: ShareMem must be the
-  first unit in your library's USES clause AND your project's (select
-  Project-View Source) USES clause if your DLL exports any procedures or
-  functions that pass strings as parameters or function results. This
-  applies to all strings passed to and from your DLL--even those that
-  are nested in records and classes. ShareMem is the interface unit to
-  the BORLNDMM.DLL shared memory manager, which must be deployed along
-  with your DLL. To avoid using BORLNDMM.DLL, pass string information
-  using PChar or ShortString parameters. }
+{
+    Copyright 2001, Peter Millard
+
+    This file is part of Exodus.
+
+    Exodus is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Exodus is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Exodus; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
 
 uses
     Windows, Messages, SysUtils;
@@ -17,112 +27,121 @@ uses
 
 
 type
-    THookRec = packed record
-        InstanceCount: integer;
-        KeyHook: HHOOK;
-        MouseHook: HHOOK;
-        LastTick: longint;
+    {
+    This is a struct to be used in our memory mapped file
+    }
+    TSharedArea = record
+        InstanceCount: integer; // How many instances do we have
+        KeyHook: HHOOK;	        // Our keyboard hook
+        MouseHook: HHOOK;		// Our mouse hook
+        LastTick: longint;		// The last idle tick count
         end;
-    PHookRec = ^THookRec;
+    PSharedArea = ^TSharedArea;
 
 var
-    mapHandle: THandle;
-    lpHookRec: PHookRec;
+    // Local stuff
+    fShare : PSharedArea = nil;
+    mapHandle: THandle = 0;
+    newMap: boolean = false;
 
-procedure CreateMemMap(dwAllocSize: DWORD);
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
+procedure CreateMemMap();
 begin
     // create a process wide memory mnapped variable
     mapHandle := CreateFileMapping($FFFFFFFF, nil, PAGE_READWRITE,
-        0, dwAllocSize, 'ExodusHookMem');
-    if (mapHandle = 0) then exit;
+        0, SizeOf(TSharedArea), 'ExodusHookMem');
+
+    // GetLastError returns 0 for a new mem-mapped file
+    newMap := (GetLastError() = 0);
+
     // get a pointer to our record in the mem map
-    lpHookRec := MapViewOfFile(mapHandle, FILE_MAP_WRITE, 0, 0, dwAllocSize);
-    if (lpHookRec = nil) then exit;
+    fShare := MapViewOfFile(mapHandle, FILE_MAP_WRITE, 0, 0, 0);
+    fShare^.LastTick := GetTickCount();
+
+    if (newMap) then
+        fShare^.InstanceCount := 1
+    else
+        fShare^.InstanceCount := fShare^.InstanceCount + 1;
 end;
 
+{---------------------------------------}
 procedure RemoveMemMap();
 begin
     // remove the memory mapped variable
-    if (lpHookRec <> nil) then begin
-        UnMapViewOfFile(lpHookRec);
-        lpHookRec := nil;
-        end;
-
-    if (mapHandle > 0) then begin
+    if (fShare <> nil) then begin
+        fShare^.InstanceCount := fShare^.InstanceCount - 1;
+        UnMapViewOfFile(fShare);
         CloseHandle(mapHandle);
         mapHandle := 0;
+        fShare := nil;
         end;
 end;
 
-function getHookPointer: pointer; stdcall;
+{---------------------------------------}
+function GetLastTick: longint; stdcall;
 begin
-    // return a pointer to our mapped variable
-    Result := lpHookRec;
+    // return the last Tick count from our shared mem segment
+    Result := fShare^.LastTick;
 end;
 
+{---------------------------------------}
 function KeyHook(code: integer; wParam: word; lParam: longword): longword; stdcall;
 begin
-    Result := 0;
+    // This is the callback which is called whenever a keyboard event happens
     if (code = HC_ACTION) then begin
-        if ((lParam and (1 shl 31)) <> 0) then
-            lpHookRec^.LastTick := GetTickCount();
-        end
-    else if (Code < 0) then
-        Result := CallNextHookEx(lpHookRec^.KeyHook, code, wParam, lParam);
+        if ((HiWord(lParam) AND KF_UP) <> 0) then
+            fShare^.LastTick := GetTickCount();
+        end;
+    Result := CallNextHookEx(fShare^.KeyHook, code, wParam, lParam);
 end;
 
+{---------------------------------------}
 function MouseHook(code: integer; wParam: word; lParam: longword): longword; stdcall;
 begin
-    Result := 0;
+    // This is the callback which is called whenever a mouse event happens
     if (code = HC_ACTION) then
-        lpHookRec^.LastTick := GetTickCount()
-    else if (Code < 0) then
-        Result := CallNextHookEx(lpHookRec^.MouseHook, code, wParam, lParam);
+        fShare^.LastTick := GetTickCount();
+
+    Result := CallNextHookEx(fShare^.MouseHook, code, wParam, lParam);
 end;
 
+{---------------------------------------}
 procedure InitHooks; stdcall;
 begin
-    // if ((lpHookRec <> nil) and (lpHookRec^.KeyHook = 0)) then begin
-    if ((lpHookRec <> nil)) then begin
-
-        // Unhook old hooks..
-        try
-            if (lpHookRec^.KeyHook <> 0) then
-                UnHookWindowsHookEx(lpHookRec^.KeyHook);
-        except
-        end;
-
-        try
-            if (lpHookRec^.MouseHook <> 0) then
-                UnHookWindowsHookEx(lpHookRec^.MouseHook);
-        except
-        end;
-
+    // Setup the hooks if they aren't already there.
+    if (fShare^.KeyHook = 0) then begin
         // setup the hook and store it
-        lpHookRec^.KeyHook := SetWindowsHookEx(WH_KEYBOARD, @KeyHook, hInstance, 0);
-        lpHookRec^.MouseHook := SetWindowsHookEx(WH_MOUSE, @MouseHook, hInstance, 0);
+        fShare^.KeyHook := SetWindowsHookEx(WH_KEYBOARD, @KeyHook, hInstance, 0);
+        fShare^.MouseHook := SetWindowsHookEx(WH_MOUSE, @MouseHook, hInstance, 0);
         end;
 end;
 
+{---------------------------------------}
 procedure StopHooks; stdcall;
 begin
-    if ((lpHookRec <> nil) and (lpHookRec^.KeyHook <> 0)) then begin
-        if (lpHookRec^.InstanceCount <= 1) then begin
-            UnHookWindowsHookEx(lpHookRec^.KeyHook);
-            UnHookWindowsHookEx(lpHookRec^.MouseHook);
-            lpHookRec^.KeyHook := 0;
-            lpHookRec^.MouseHook := 0;
-            end;
-        end;
+    // Unregister our custom hooks
+    if (fShare^.KeyHook <> 0) then
+        UnHookWindowsHookEx(fShare^.KeyHook);
+    fShare^.KeyHook := 0;
+
+    if (fShare^.MouseHook <> 0) then
+        UnHookWindowsHookEx(fShare^.MouseHook);
+    fShare^.MouseHook := 0;
 end;
 
+{---------------------------------------}
+{---------------------------------------}
 procedure DllEntryPoint(dwReason: DWORD);
 begin
+    // This gets called when the DLL attaches itself to a process,
+    // or when it detaches itself from a process.
     case dwReason of
     Dll_Process_Attach: begin
         mapHandle := 0;
-        lpHookRec := nil;
-        CreateMemMap(sizeOf(lpHookRec^));
+        fShare := nil;
+        CreateMemMap();
         end;
     Dll_Process_Detach: begin
         RemoveMemMap();
@@ -130,9 +149,12 @@ begin
     end;
 end;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 exports
     KeyHook name 'KeyHook',
-    getHookPointer name 'GetHookPointer',
+    GetLastTick name 'GetLastTick',
     InitHooks name 'InitHooks',
     StopHooks name 'StopHooks';
 

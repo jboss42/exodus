@@ -178,7 +178,7 @@ begin
             MsgOut.Color := MsgList.Color;
             MsgOut.Font.Assign(MsgList.Font);
             treeRoster.Color := MsgList.Color;
-            //treeRoster.Font.Assign(MsgList.Font);
+            treeRoster.Font.Color := TColor(MainSession.Prefs.getInt('font_color'));
             Caption := tmp_jid.user + ' ' + sRoom;
             end;
         tmp_jid.Free();
