@@ -116,6 +116,8 @@ type
         // HTTP Connection
         URL: Widestring;
         Poll: integer;
+        NumPollKeys: integer;
+
         ProxyApproach: integer;
         ProxyHost: Widestring;
         ProxyPort: integer;
@@ -860,6 +862,7 @@ begin
     Result := TJabberProfile.Create();
     Result.Name := name;
     Result.Port := 5222;
+    Result.NumPollKeys := 256;
     _profiles.AddObject(name, Result);
 end;
 
@@ -1026,6 +1029,7 @@ begin
     // HTTP Connection
     URL := '';
     Poll := 0;
+    NumPollKeys := 256;
     ProxyApproach := 0;
     ProxyHost := '';
     ProxyPort := 0;
@@ -1089,8 +1093,9 @@ begin
 
     // HTTP Connection
     URL := tag.GetBasicText('url');
-    Poll := StrToIntDef(tag.GetBasicText('poll'), 10);;
-    ProxyApproach := StrToIntDef(tag.GetBasicText('proxy_approach'), 0);;
+    Poll := StrToIntDef(tag.GetBasicText('poll'), 10);
+    ProxyApproach := StrToIntDef(tag.GetBasicText('proxy_approach'), 0);
+    NumPollKeys := StrToIntDef(tag.GetBasicText('num_poll_keys'), 256);
     ProxyHost := tag.GetBasicText('proxy_host');
     ProxyPort := StrToIntDef(tag.GetBasicText('proxy_port'), 0);
     ProxyAuth := SafeBool(tag.GetBasicText('proxy_auth'));
@@ -1140,6 +1145,7 @@ begin
     node.AddBasicTag('url', URL);
     node.AddBasicTag('poll', FloatToStr(Poll));
     node.AddBasicTag('proxy_approach', IntToStr(ProxyApproach));
+    node.AddBasicTag('num_poll_keys', IntToStr(NumPollKeys));
     node.AddBasicTag('proxy_host', ProxyHost);
     node.AddBasicTag('proxy_port', IntToStr(ProxyPort));
     node.AddBasicTag('proxy_auth', SafeBoolStr(ProxyAuth));

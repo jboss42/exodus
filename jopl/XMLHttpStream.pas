@@ -16,7 +16,15 @@ uses
     {$else}
     ExtCtrls,
     {$endif}
-    Classes, SysUtils, IdException,
+    
+   {$ifdef INDY9}
+    IdHTTPHeaderInfo,
+    IdCoderMime,
+    {$else}
+    IdCoder3To4,
+    {$endif}
+
+    Classes, SysUtils, IdException, SecHash,
     IdHTTP, SyncObjs;
 
 type
@@ -47,7 +55,13 @@ type
         _cookie_list : TStringList;
         _lock: TCriticalSection;
         _event: TEvent;
+        _hasher : TSecHash;
+        _encoder: TIdBase64Encoder;
 
+        _keys: array of string;
+        _kcount: integer;
+
+        procedure GenKeys();
         procedure DoPost();
     protected
         procedure Run; override;
@@ -68,10 +82,6 @@ uses
     Registry, StrUtils,
     {$endif}
 
-    {$ifdef INDY9}
-    IdHTTPHeaderInfo,
-    {$endif}
-    
     IdGlobal;
 
 const
@@ -153,15 +163,18 @@ begin
             end;
         WM_CONNECTED: begin
             // Socket is connected
+            _active := true;
             DoCallbacks('connected', nil);
             end;
 
         WM_DISCONNECTED: begin
             // Socket is disconnected
+            _active := false;
             DoCallbacks('disconnected', nil);
             end;
         WM_COMMERROR: begin
             // There was a COMM ERROR
+            _active := false;
             DoCallbacks('disconnected', nil);
             DoCallbacks('commerror', nil);
             end;
@@ -193,6 +206,10 @@ begin
     _cookie_list.QuoteChar := #0;
     _lock := TCriticalSection.Create();
     _event := TEvent.Create(nil, false, false, 'exodus_http_poll');
+    _hasher := TSecHash.Create(nil);
+    _encoder := TIdBase64Encoder.Create(nil);
+    SetLength(_keys, _profile.NumPollKeys); 
+    GenKeys();
 
     _request := TStringlist.Create();
     _response := TStringstream.Create('');
@@ -247,11 +264,36 @@ end;
 destructor THttpThread.Destroy();
 begin
    _lock.Free();
+   _hasher.Free();
+   _encoder.Free();
    _event.Free();
    _cookie_list.Free();
    _http.Free();
    _request.Free();
    _response.Free();
+end;
+
+procedure THttpThread.GenKeys;
+var
+    i, j : integer;
+    seed : string;
+    b: TByteDigest;
+    ts : string;
+begin
+    for i := 1 to 21 do
+        seed := seed + chr(random(95) + 32);
+
+    _kcount := length(_keys) - 1;
+    for i := 0 to _kcount do begin
+        b := _hasher.IntDigestToByteDigest(_hasher.ComputeString(seed));
+        ts := '';
+        for j := 0 to 19 do
+            ts := ts + chr(b[j]);
+        _encoder.CodeString(ts);
+        seed := _encoder.CompletedInput;
+        Fetch(seed, ';');
+        _keys[i] := seed;
+        end;
 end;
 
 {---------------------------------------}
@@ -265,10 +307,22 @@ end;
 
 {---------------------------------------}
 procedure THttpThread.DoPost();
+var
+    key : string;
 begin
     // nuke whatever is currently in the stream
     _response.Size := 0;
-    _request.Insert(0, _poll_id + ',');
+
+    key := _poll_id + ';' + _keys[_kcount];
+    dec(_kcount);
+    if (_kcount < 0) then begin
+        GenKeys();
+        key := key + ';' + _keys[_kcount];
+        dec(_kcount);
+        Assert(_kcount <> 0);
+        end;
+
+    _request.Insert(0, key + ',');
     try
         _lock.Acquire();
         _http.Post(_profile.URL, _request, _response);
