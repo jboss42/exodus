@@ -140,6 +140,7 @@ const
     XMLNS_PREFS     = 'storage:imprefs';
     XMLNS_MSGEVENTS = 'jabber:x:event';
     XMLNS_DELAY     = 'jabber:x:delay';
+    XMLNS_XROSTER   = 'jabber:x:roster';
 
 var
     MainSession: TJabberSession;

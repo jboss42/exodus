@@ -1,6 +1,6 @@
 object frmRosterWindow: TfrmRosterWindow
-  Left = 236
-  Top = 162
+  Left = 284
+  Top = 166
   Width = 197
   Height = 448
   AlphaBlendValue = 220
@@ -1441,7 +1441,7 @@ object frmRosterWindow: TfrmRosterWindow
       OnClick = InvitetoConference1Click
     end
     object popSendContacts: TMenuItem
-      Caption = 'Send Contacts'
+      Caption = 'Send Contact To...'
       OnClick = popSendContactsClick
     end
     object popClientInfo: TMenuItem
@@ -1701,6 +1701,10 @@ object frmRosterWindow: TfrmRosterWindow
     object popGrpInvite: TMenuItem
       Caption = 'Invite to Conference'
       OnClick = popGrpInviteClick
+    end
+    object SendContactsTo1: TMenuItem
+      Caption = 'Send Contacts To...'
+      OnClick = popSendContactsClick
     end
     object N3: TMenuItem
       Caption = '-'
