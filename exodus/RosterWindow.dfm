@@ -72,23 +72,34 @@ object frmRosterWindow: TfrmRosterWindow
     BevelOuter = bvNone
     TabOrder = 4
     Visible = False
-    DesignSize = (
-      187
-      49)
     object lblFind: TTntLabel
-      Left = 8
-      Top = 8
+      Left = 3
+      Top = 4
       Width = 23
       Height = 13
       Caption = 'Find:'
     end
+    object btnFindClose: TSpeedButton
+      Left = 162
+      Top = 2
+      Width = 23
+      Height = 21
+      Caption = 'X'
+      Flat = True
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Arial'
+      Font.Style = [fsBold]
+      ParentFont = False
+      OnClick = btnFindCloseClick
+    end
     object txtFind: TTntEdit
-      Left = 40
-      Top = 4
-      Width = 145
+      Left = 38
+      Top = 1
+      Width = 119
       Height = 21
       Hint = 'Esc to quit, Enter to select current,  F3 to search again'
-      Anchors = [akLeft, akTop, akRight]
       ParentShowHint = False
       ShowHint = True
       TabOrder = 0
@@ -96,16 +107,16 @@ object frmRosterWindow: TfrmRosterWindow
       OnKeyUp = txtFindKeyUp
     end
     object radJID: TTntRadioButton
-      Left = 39
-      Top = 28
+      Left = 38
+      Top = 25
       Width = 41
       Height = 17
       Caption = 'JID'
       TabOrder = 1
     end
     object radNick: TTntRadioButton
-      Left = 88
-      Top = 28
+      Left = 86
+      Top = 25
       Width = 80
       Height = 17
       Caption = 'Nickname'
@@ -180,7 +191,7 @@ object frmRosterWindow: TfrmRosterWindow
     Align = alBottom
     BevelOuter = bvNone
     BorderWidth = 2
-    TabOrder = 2
+    TabOrder = 1
     object imgStatus: TPaintBox
       Left = 2
       Top = 2
@@ -249,7 +260,7 @@ object frmRosterWindow: TfrmRosterWindow
     Ctl3D = True
     ParentBackground = False
     ParentCtl3D = False
-    TabOrder = 3
+    TabOrder = 2
     object lblStatus: TTntLabel
       Left = 5
       Top = 62
