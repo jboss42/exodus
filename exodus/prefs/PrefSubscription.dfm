@@ -3,16 +3,18 @@ inherited frmPrefSubscription: TfrmPrefSubscription
   Top = 222
   Caption = 'frmPrefSubscription'
   ClientHeight = 173
+  ClientWidth = 324
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
   inherited pnlHeader: TTntPanel
+    Width = 324
     Caption = 'Subscription Options'
   end
   object optIncomingS10n: TTntRadioGroup
     Left = 8
     Top = 32
-    Width = 257
+    Width = 313
     Height = 121
     Caption = 'Incoming Behavior'
     Items.WideStrings = (

@@ -47,6 +47,7 @@ type
     procedure btnUpdateCheckMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure lblPluginScanClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     _old_locale: Widestring;
@@ -274,6 +275,12 @@ procedure TfrmPrefSystem.lblPluginScanClick(Sender: TObject);
 begin
   inherited;
     ScanLocales();
+end;
+
+procedure TfrmPrefSystem.FormCreate(Sender: TObject);
+begin
+  inherited;
+    AssignUnicodeURL(lblPluginScan.Font, 8);
 end;
 
 end.

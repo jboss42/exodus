@@ -118,16 +118,20 @@ uses
 {---------------------------------------}
 procedure TfrmBaseChat.Emoticons1Click(Sender: TObject);
 var
-    l, t: integer;
+    m, w, h, l, t: integer;
     cp: TPoint;
 begin
   inherited;
     // Show the emoticons form
     GetCaretPos(cp);
     l := MsgOut.ClientOrigin.x + cp.X;
+    m := Screen.MonitorFromWindow(Self.Handle).MonitorNum;
 
-    if ((l + frmEmoticons.Width) > Screen.DesktopWidth) then
-        l := Screen.DesktopWidth - frmEmoticons.Width - 5;
+    w := Screen.Monitors[m].Width;
+    h := Screen.Monitors[m].Height;
+
+    if ((l + frmEmoticons.Width) > w) then
+        l := w - frmEmoticons.Width - 5;
 
     frmEmoticons.Left := l + 10;
 
@@ -138,8 +142,8 @@ begin
         t := Self.Top + Self.ClientHeight - 10;
     end;
 
-    if ((t + frmEmoticons.Height) > Screen.DesktopHeight) then
-        t := Screen.DesktopHeight - frmEmoticons.Height;
+    if ((t + frmEmoticons.Height) > h) then
+        t := h - frmEmoticons.Height;
 
     frmEmoticons.Top := t;
     frmEmoticons.ChatWindow := Self;

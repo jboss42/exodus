@@ -36,7 +36,7 @@ type
     Label15: TTntLabel;
     txtXFerPath: TTntEdit;
     btnTransferBrowse: TTntButton;
-    Label2: TTntLabel;
+    lblDefault: TTntLabel;
     grpPeer: TGroupBox;
     Label1: TTntLabel;
     txtPort: TTntEdit;
@@ -62,8 +62,9 @@ type
     TntLabel2: TTntLabel;
     procedure btnTransferBrowseClick(Sender: TObject);
     procedure chkIPClick(Sender: TObject);
-    procedure Label2Click(Sender: TObject);
+    procedure lblDefaultClick(Sender: TObject);
     procedure cboXferModeChange(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -83,7 +84,7 @@ implementation
 {$WARN UNIT_PLATFORM OFF}
 {$R *.dfm}
 uses
-    Session, FileCtrl;
+    ExUtils, Session, FileCtrl;
 
 procedure TfrmPrefTransfer.LoadPrefs();
 var
@@ -156,7 +157,7 @@ begin
     if (not txtIP.Enabled) then txtIP.Text := '';
 end;
 
-procedure TfrmPrefTransfer.Label2Click(Sender: TObject);
+procedure TfrmPrefTransfer.lblDefaultClick(Sender: TObject);
 begin
   inherited;
     // reset everything to defaults..
@@ -185,6 +186,12 @@ begin
 
     grpProxy.Enabled := (m = xfer_proxy);
     grpProxy.Visible := (m = xfer_proxy);
+end;
+
+procedure TfrmPrefTransfer.FormCreate(Sender: TObject);
+begin
+  inherited;
+    AssignUnicodeURL(lblDefault.Font, 8);
 end;
 
 end.

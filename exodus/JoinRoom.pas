@@ -251,6 +251,7 @@ begin
     _servers := TWidestringlist.Create();
 
     AssignUnicodeFont(Self);
+    AssignUnicodeURL(lblFetch.Font, 8);
     TranslateComponent(Self);
     _cb := MainSession.RegisterCallback(EntityCallback, '/session/entity/info');
 end;

@@ -28,8 +28,8 @@ uses
 
 type
   TfrmPrefFont = class(TfrmPrefPanel)
-    Label22: TTntLabel;
-    Label23: TTntLabel;
+    lblRoster: TTntLabel;
+    lblChat: TTntLabel;
     Label24: TTntLabel;
     Label25: TTntLabel;
     Label5: TTntLabel;
@@ -47,6 +47,7 @@ type
     procedure clrBoxFontChange(Sender: TObject);
     procedure colorRosterMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
     _clr_control: TControl;
@@ -76,7 +77,7 @@ const
 implementation
 {$R *.dfm}
 uses
-    GnuGetText, JabberMsg, MsgDisplay, Session;
+    ExUtils, GnuGetText, JabberMsg, MsgDisplay, Session;
 
 {---------------------------------------}
 procedure TfrmPrefFont.LoadPrefs();
@@ -265,5 +266,16 @@ begin
     clrBoxFont.Selected := TColor(Mainsession.Prefs.getInt(_clr_font_color));
 end;
 
+
+procedure TfrmPrefFont.FormCreate(Sender: TObject);
+begin
+  inherited;
+    AssignUnicodeFont(lblRoster.Font, 9);
+    AssignUnicodeFont(lblChat.Font, 9);
+    AssignUnicodeFont(lblColor.Font, 9);
+    lblRoster.Font.Style := [fsBold];
+    lblChat.Font.Style := [fsBold];
+    lblColor.Font.Style := [fsBold];
+end;
 
 end.
