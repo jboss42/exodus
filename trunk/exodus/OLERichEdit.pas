@@ -332,7 +332,8 @@ begin
 end;
 
 procedure TOleEdit.CloseOLEObjects;                      {!!0.01 -- added method}
-var i: integer;
+var
+    i: integer;
     REObject: TREObject;
 begin
   if not Assigned(FRichEditOle) then Exit;

@@ -220,6 +220,7 @@ begin
     if ((not _top) and (Application.Active  or (Msg.WParamLo = WA_CLICKACTIVE))) then begin
         // we are getting clicked..
         _top := true;
+        PostMessage(Application.Handle, WM_ACTIVATE, 0, 0);
         SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
             Self.Width, Self.Height, HWND_TOP);
         _top := false;
@@ -233,6 +234,7 @@ procedure TfrmDockable.WMMouseActivate(var msg: TMessage);
 begin
     if (not _top) then begin
         _top := true;
+        PostMessage(Application.Handle, WM_ACTIVATE, 0, 0);
         SetWindowPos(Self.Handle, 0, Self.Left, Self.Top,
             Self.Width, Self.Height, HWND_TOP);
         _top := false;
