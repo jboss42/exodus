@@ -37,6 +37,10 @@ type
     lstJIDS: TListView;
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure frameButtons1btnOKClick(Sender: TObject);
+    procedure lstJIDSCompare(Sender: TObject; Item1, Item2: TListItem;
+      Data: Integer; var Compare: Integer);
+    procedure lstJIDSChange(Sender: TObject; Item: TListItem;
+      Change: TItemChange);
   private
     { Private declarations }
   public
@@ -74,6 +78,8 @@ begin
         n.Checked := (jids.IndexOf(ritem.jid.jid) >= 0);
         end;
 
+    f.lstJIDS.CustomSort(nil, 0);
+
     f.Show;
 end;
 
@@ -101,6 +107,27 @@ begin
             end;
         end;
     Self.Close;
+end;
+
+procedure TfrmInvite.lstJIDSCompare(Sender: TObject; Item1,
+  Item2: TListItem; Data: Integer; var Compare: Integer);
+begin
+    // sort selected options first
+    Compare := 0;
+    if (((Item1.Checked) and (Item2.Checked)) or
+       ((not Item1.Checked) and (not Item2.Checked))) then
+        // sort by caption
+        Compare := AnsiCompareText(Item1.Caption, Item2.Caption)
+    else if (Item1.Checked) and (not Item2.Checked) then
+        Compare := -1
+    else if (not Item1.Checked) and (item2.Checked) then
+        Compare := +1;
+end;
+
+procedure TfrmInvite.lstJIDSChange(Sender: TObject; Item: TListItem;
+  Change: TItemChange);
+begin
+    lstJIDS.CustomSort(nil, 0);
 end;
 
 end.

@@ -1,6 +1,6 @@
 object frmInvite: TfrmInvite
-  Left = 283
-  Top = 320
+  Left = 260
+  Top = 178
   Width = 282
   Height = 302
   Caption = 'Conference Invite'
@@ -35,6 +35,7 @@ object frmInvite: TfrmInvite
     end
     inherited Panel1: TPanel
       Left = 114
+      Height = 29
       inherited btnOK: TButton
         OnClick = frameButtons1btnOKClick
       end
@@ -103,8 +104,10 @@ object frmInvite: TfrmInvite
         Caption = 'Jabber ID'
         Width = 150
       end>
-    SortType = stText
+    SortType = stBoth
     TabOrder = 3
     ViewStyle = vsReport
+    OnChange = lstJIDSChange
+    OnCompare = lstJIDSCompare
   end
 end
