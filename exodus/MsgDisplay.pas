@@ -214,10 +214,11 @@ begin
     msn := frmExodus.imgMSNEmoticons;
 
     // This is a "meta-regex" that should match everything
-    e := '(.*)((\([a-zA-Z0-9@{}%&~?/^]+\))|([:;BoOxX][^\t ]+)|(=;))(\s|$)';
+    e := '(.*)((\([a-zA-Z0-9@{}%&~?/^]+\))|([:;BoOxX][^\t ]+)|(=[;)]))(\s|$)';
 
     // Normal smileys
     AddEmot(':)', msn, 0);       // normal
+    AddEmot('=)', msn, 0);       // normal
     AddEmot(':-)', msn, 0);
     AddEmot(':(', msn, 9);       // unhappy
     AddEmot(':-(', msn, 9);
