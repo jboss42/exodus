@@ -55,6 +55,7 @@
     <presence_message_send>1</presence_message_send>
     <notify_sounds>1</notify_sounds>
     <roster_show_pending>1</roster_show_pending>
+    <roster_unicode>true</roster_unicode>
     <auto_update_url>http://exodus.jabberstudio.org/exodus-released.exe</auto_update_url>
     <roster_messenger>1</roster_messenger>
     <single_instance>1</single_instance>
@@ -77,7 +78,7 @@
     <roster_offline_group>0</roster_offline_group>
     <timestamp>1</timestamp>
     <auto_updates>1</auto_updates>
-    <roster_chat>1</roster_chat>
+    <roster_chat>2</roster_chat>
     <s10n_auto_accept>0</s10n_auto_accept>
     <font_name>Arial</font_name>
     <font_size>10</font_size>
