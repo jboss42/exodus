@@ -208,9 +208,7 @@ begin
 
     if ((notify and notify_front) > 0) then begin
         // pop the window to the front
-        BringWindowToTop(w.Handle);
-        SetActiveWindow(w.Handle);
-        SetForegroundWindow(w.handle);
+        ForceForegroundWindow(w.Handle);
     end;
 
     if (MainSession.prefs.getBool('notify_sounds')) then

@@ -1,51 +1,26 @@
 object frmLogin: TfrmLogin
-  Left = 262
-  Top = 419
-  Width = 246
-  Height = 262
+  Left = 258
+  Top = 268
+  Width = 376
+  Height = 121
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = 'Login'
   Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
+  Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'MS Sans Serif'
+  Font.Height = -12
+  Font.Name = 'Arial Unicode MS'
   Font.Style = []
   FormStyle = fsStayOnTop
   OldCreateOrder = False
   Position = poDefaultPosOnly
   OnClose = FormClose
   OnCreate = FormCreate
+  DesignSize = (
+    368
+    92)
   PixelsPerInch = 96
-  TextHeight = 13
-  object Label1: TLabel
-    Left = 9
-    Top = 32
-    Width = 51
-    Height = 13
-    Caption = '&Username:'
-  end
-  object Label2: TLabel
-    Left = 9
-    Top = 56
-    Width = 49
-    Height = 13
-    Caption = '&Password:'
-  end
-  object Label3: TLabel
-    Left = 9
-    Top = 80
-    Width = 34
-    Height = 13
-    Caption = '&Server:'
-  end
-  object Label4: TLabel
-    Left = 9
-    Top = 104
-    Width = 49
-    Height = 13
-    Caption = '&Resource:'
-  end
+  TextHeight = 16
   object Label5: TLabel
     Left = 9
     Top = 8
@@ -61,31 +36,19 @@ object frmLogin: TfrmLogin
     ParentFont = False
     OnClick = Label5Click
   end
-  object cboServer: TTntComboBox
-    Left = 66
-    Top = 76
-    Width = 150
-    Height = 21
-    ItemHeight = 13
-    TabOrder = 3
-    OnKeyPress = txtUsernameKeyPress
-    Items.WideStrings = (
-      'jabber.org'
-      'jabber.com')
-  end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 196
-    Width = 238
+    Top = 55
+    Width = 368
     Height = 37
     Align = alBottom
     AutoScroll = False
-    TabOrder = 8
+    TabOrder = 3
     inherited Bevel1: TBevel
-      Width = 238
+      Width = 368
     end
     inherited Panel1: TPanel
-      Left = 76
+      Left = 206
       Width = 162
       Height = 32
     end
@@ -93,10 +56,12 @@ object frmLogin: TfrmLogin
   object cboProfiles: TTntComboBox
     Left = 66
     Top = 4
-    Width = 150
-    Height = 21
+    Width = 213
+    Height = 24
     Style = csDropDownList
-    ItemHeight = 13
+    Anchors = [akLeft, akTop, akRight]
+    DropDownCount = 15
+    ItemHeight = 16
     TabOrder = 0
     OnChange = cboProfilesChange
     Items.WideStrings = (
@@ -104,57 +69,25 @@ object frmLogin: TfrmLogin
   end
   object chkInvisible: TCheckBox
     Left = 66
-    Top = 144
+    Top = 32
     Width = 97
     Height = 15
     Caption = 'In&visible'
-    TabOrder = 6
+    TabOrder = 1
   end
   object btnDetails: TButton
-    Left = 65
-    Top = 162
+    Left = 287
+    Top = 3
     Width = 75
     Height = 23
+    Anchors = [akTop, akRight]
     Caption = '&Details...'
-    TabOrder = 7
+    TabOrder = 2
     OnClick = btnDetailsClick
   end
-  object chkSavePasswd: TCheckBox
-    Left = 66
-    Top = 125
-    Width = 127
-    Height = 17
-    Caption = 'Save pass&word'
-    TabOrder = 5
-  end
-  object txtUsername: TTntEdit
-    Left = 66
-    Top = 29
-    Width = 151
-    Height = 21
-    TabOrder = 1
-    OnKeyPress = txtUsernameKeyPress
-  end
-  object txtPassword: TTntEdit
-    Left = 66
-    Top = 53
-    Width = 151
-    Height = 21
-    PasswordChar = '*'
-    TabOrder = 2
-  end
-  object cboResource: TTntComboBox
-    Left = 65
-    Top = 101
-    Width = 152
-    Height = 21
-    ItemHeight = 13
-    TabOrder = 4
-    OnKeyPress = txtUsernameKeyPress
-  end
   object popProfiles: TPopupMenu
-    Left = 8
-    Top = 160
+    Left = 16
+    Top = 24
     object CreateNew1: TMenuItem
       Caption = 'Create New Profile...'
       OnClick = CreateNew1Click

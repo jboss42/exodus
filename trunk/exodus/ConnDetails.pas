@@ -24,16 +24,10 @@ interface
 uses
     PrefController,
     Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-    Dialogs, buttonFrame, ComCtrls, StdCtrls, ExtCtrls;
+    Dialogs, buttonFrame, ComCtrls, StdCtrls, ExtCtrls, TntStdCtrls;
 
 type
   TfrmConnDetails = class(TForm)
-    Panel1: TPanel;
-    Label8: TLabel;
-    cboConnection: TComboBox;
-    Label6: TLabel;
-    txtPriority: TEdit;
-    spnPriority: TUpDown;
     frameButtons1: TframeButtons;
     PageControl1: TPageControl;
     tbsSocket: TTabSheet;
@@ -42,12 +36,10 @@ type
     txtURL: TEdit;
     txtTime: TEdit;
     Label2: TLabel;
-    txtHost: TEdit;
-    Label4: TLabel;
-    Label7: TLabel;
-    txtPort: TEdit;
-    chkSSL: TCheckBox;
-    GroupBox2: TGroupBox;
+    Label5: TLabel;
+    txtKeys: TEdit;
+    Label9: TLabel;
+    tbsProfile: TTabSheet;
     lblSocksHost: TLabel;
     lblSocksPort: TLabel;
     lblSocksType: TLabel;
@@ -59,10 +51,26 @@ type
     cboSocksType: TComboBox;
     txtSocksUsername: TEdit;
     txtSocksPassword: TEdit;
-    Bevel1: TBevel;
-    Label5: TLabel;
-    txtKeys: TEdit;
-    Label9: TLabel;
+    Label3: TLabel;
+    Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    cboServer: TTntComboBox;
+    chkSavePasswd: TCheckBox;
+    txtUsername: TTntEdit;
+    txtPassword: TTntEdit;
+    cboResource: TTntComboBox;
+    tbsConn: TTabSheet;
+    Label4: TLabel;
+    Label7: TLabel;
+    txtHost: TEdit;
+    txtPort: TEdit;
+    chkSSL: TCheckBox;
+    Label8: TLabel;
+    cboConnection: TComboBox;
+    Label6: TLabel;
+    txtPriority: TEdit;
+    spnPriority: TUpDown;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure chkSocksAuthClick(Sender: TObject);
     procedure cboSocksTypeChange(Sender: TObject);
@@ -70,15 +78,20 @@ type
     procedure cboConnectionChange(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure txtUsernameKeyPress(Sender: TObject; var Key: Char);
   private
     { Private declarations }
     _profile: TJabberProfile;
 
     procedure SetSocket(profile: TJabberProfile);
-    procedure GetSocket(var profile: TJabberProfile);
-
+    procedure GetSocket(profile: TJabberProfile);
     procedure SetHttp(profile: TJabberProfile);
-    procedure GetHttp(var profile: TJabberProfile);
+    procedure GetHttp(profile: TJabberProfile);
+    procedure SetProfile(profile: TJabberProfile);
+    procedure GetProfile(profile: TJabberProfile);
+    procedure SetConn(profile: TJabberProfile);
+    procedure GetConn(profile: TJabberProfile);
+
 
   public
     { Public declarations }
@@ -91,6 +104,10 @@ function ShowConnDetails(p: TJabberProfile): integer;
 
 resourcestring
     sSmallKeys = 'Must have a larger number of poll keys.';
+    sConnDetails = '%s Details';
+    sProfileInvalidJid = 'The Jabber ID you entered (username@server/resource) is invalid. Please enter a valid username, server, and resource.';
+    sResourceWork = 'Work';
+    sResourceHome = 'Home';
 
 {---------------------------------------}
 {---------------------------------------}
@@ -100,7 +117,7 @@ implementation
 {$R *.dfm}
 
 uses
-    Session;
+    ExUtils, JabberID, Unicode, Session;
 
 {---------------------------------------}
 function ShowConnDetails(p: TJabberProfile): integer;
@@ -112,18 +129,12 @@ begin
 
     with f do begin
         _profile := p;
-        tbsSocket.TabVisible := false;
-        tbsHttp.TabVisible := false;
-
+        f.Caption := Format(sConnDetails, [p.Name]);
+        SetProfile(p);
+        SetConn(p);
         SetHttp(p);
         SetSocket(p);
-
-        cboConnection.ItemIndex := p.ConnectionType;
-        spnPriority.Position := p.Priority;
-        if (p.ConnectionType = conn_normal) then
-            PageControl1.ActivePage := tbsSocket
-        else if (p.ConnectionType = conn_http) then
-            PageControl1.ActivePage := tbsHttp;
+        PageControl1.ActivePage := tbsProfile;
     end;
 
     result := f.ShowModal();
@@ -133,8 +144,8 @@ end;
 procedure TfrmConnDetails.frameButtons1btnOKClick(Sender: TObject);
 begin
     // save the info...
-    _profile.ConnectionType := cboConnection.ItemIndex;
-    _profile.Priority := spnPriority.Position;
+    GetProfile(_profile);
+    GetConn(_profile);
 
     if _profile.ConnectionType = conn_normal then
         GetSocket(_profile)
@@ -191,9 +202,6 @@ end;
 procedure TfrmConnDetails.SetSocket(profile: TJabberProfile);
 begin
     with profile do begin
-        txtHost.Text := Host;
-        txtPort.Text := IntToStr(Port);
-        chkSSL.Checked := ssl;
         cboSocksType.ItemIndex := SocksType;
         cboSocksTypeChange(cboSocksType);
         txtSocksHost.Text := SocksHost;
@@ -206,7 +214,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmConnDetails.GetSocket(var profile: TJabberProfile);
+procedure TfrmConnDetails.GetSocket(profile: TJabberProfile);
 begin
     with profile do begin
         Host := txtHost.Text;
@@ -223,6 +231,56 @@ begin
 end;
 
 {---------------------------------------}
+procedure TfrmConnDetails.SetProfile(profile: TJabberProfile);
+begin
+    with profile do begin
+        // populate the fields
+        txtUsername.Text := Username;
+        txtPassword.Text := Password;
+        cboServer.Text := Server;
+        cboResource.Text := Resource;
+        chkSavePasswd.Checked := SavePasswd;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmConnDetails.GetProfile(profile: TJabberProfile);
+begin
+    with Profile do begin
+        // Update the profile
+        Server := cboServer.Text;
+        Username := txtUsername.Text;
+        SavePasswd := chkSavePasswd.Checked;
+        password := txtPassword.Text;
+        resource := cboResource.Text;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmConnDetails.SetConn(profile: TJabberProfile);
+begin
+    with profile do begin
+        txtHost.Text := Host;
+        txtPort.Text := IntToStr(Port);
+        chkSSL.Checked := ssl;
+        cboConnection.ItemIndex := ConnectionType;
+        spnPriority.Position := Priority;
+    end;
+end;
+
+{---------------------------------------}
+procedure TfrmConnDetails.GetConn(profile: TJabberProfile);
+begin
+    with profile do begin
+        Host := txtHost.Text;
+        Port := StrToIntDef(txtPort.Text, 5222);
+        ssl := chkSSL.Checked;
+        ConnectionType := cboConnection.ItemIndex;
+        Priority := spnPriority.Position;
+    end;
+end;
+
+{---------------------------------------}
 procedure TfrmConnDetails.SetHttp(profile: TJabberProfile);
 begin
     with profile do begin
@@ -233,7 +291,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure TfrmConnDetails.GetHttp(var profile: TJabberProfile);
+procedure TfrmConnDetails.GetHttp(profile: TJabberProfile);
 begin
     with profile do begin
         URL := txtURL.Text;
@@ -275,8 +333,31 @@ end;
 
 {---------------------------------------}
 procedure TfrmConnDetails.FormCreate(Sender: TObject);
+var
+    list : TWideStrings;
+    i : integer;
 begin
     MainSession.Prefs.RestorePosition(Self);
+
+    list := TWideStringList.Create();
+    fillDefaultStringList('brand_profile_server_list', list);
+    if (list.Count > 0) then begin
+        cboServer.Clear();
+        for i := 0 to list.Count - 1 do
+            cboServer.Items.Add(list[i]);
+    end;
+    fillDefaultStringList('brand_profile_resource_list', list);
+    if (list.Count > 0) then begin
+        cboResource.Clear();
+        for i := 0 to list.Count - 1 do
+            cboResource.Items.Add(list[i]);
+    end
+    else begin
+        cboResource.Items.Add(sResourceHome);
+        cboResource.Items.Add(sResourceWork);
+        cboResource.Items.Add('Exodus');
+    end;
+    list.Free();
 end;
 
 {---------------------------------------}
@@ -285,6 +366,29 @@ procedure TfrmConnDetails.FormClose(Sender: TObject;
 begin
     MainSession.Prefs.SavePosition(Self);
     Action := caFree;
+end;
+
+{---------------------------------------}
+procedure TfrmConnDetails.txtUsernameKeyPress(Sender: TObject;
+  var Key: Char);
+var
+    u, h, r, jid: Widestring;
+begin
+    // alway allow people to fix mistakes :)
+    if (Key = #8) then exit;
+
+    // check to make sure JID is valid
+    u := txtUsername.Text;
+    h := cboServer.Text;
+    r := cboResource.Text;
+
+    if (Sender = txtUsername) then u := u + Key
+    else if (Sender = cboServer) then h := h + Key
+    else if (Sender = cboResource) then r := r + Key;
+
+    jid := u + '@' + h + '/' + r;
+    if (not isValidJid(jid)) then
+        Key := #0;
 end;
 
 end.
