@@ -680,14 +680,11 @@ begin
         if (_mcallback = -1) then begin
             MsgOut.Visible := true;
             DisplayPresence(sReconnected, MsgList);
-
-            // re-register callbacks
-            SetJID(Self.jid);
-
-            self.sendStartPresence();
+            SetJID(Self.jid);             // re-register callbacks
+            sendStartPresence();
         end else begin
             p := TCapPresence.Create();
-            p.toJID := TJabberID.Create(self.jid);
+            p.toJID := TJabberID.Create(Self.jid + '/' + Self.myNick);
             p.Show := MainSession.Show;
             p.Status := MainSession.Status;
             MainSession.SendTag(p);
