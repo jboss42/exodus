@@ -1106,17 +1106,6 @@ begin
             else
                 continue;
             end;
-
-            (*
-            c := pm.Items[i];
-            if (c.Caption = _(sRosterAvail)) then avail := c
-            else if (c.Caption = _(sRosterChat)) then chat := c
-            else if (c.Caption = _(sRosterAway)) then away := c
-            else if (c.Caption = _(sRosterXA)) then xa := c
-            else if (c.Caption = _(sRosterDND)) then dnd := c
-            else
-                continue;
-            *)
             ClearCustoms(c);
         end;
     end
@@ -1133,16 +1122,6 @@ begin
             else
                 continue;
             end;
-
-            (*
-            if (c.Caption = _(sRosterAvail)) then avail := c
-            else if (c.Caption = _(sRosterChat)) then chat := c
-            else if (c.Caption = _(sRosterAway)) then away := c
-            else if (c.Caption = _(sRosterXA)) then xa := c
-            else if (c.Caption = _(sRosterDND)) then dnd := c
-            else
-                continue;
-            *)
             ClearCustoms(c);
         end;
     end;

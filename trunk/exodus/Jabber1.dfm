@@ -389,14 +389,17 @@ object frmExodus: TfrmExodus
           OnClick = presDNDClick
         end
         object N11: TTntMenuItem
+          Tag = 99
           Caption = '-'
         end
         object Custom3: TTntMenuItem
+          Tag = 99
           Caption = 'Custom'
           ShortCut = 16464
           OnClick = presCustomClick
         end
         object presToggle: TTntMenuItem
+          Tag = 99
           Caption = 'Toggle'
           ShortCut = 16468
           OnClick = presToggleClick
@@ -2678,9 +2681,11 @@ object frmExodus: TfrmExodus
         OnClick = presDNDClick
       end
       object N5: TTntMenuItem
+        Tag = 99
         Caption = '-'
       end
       object Custom2: TTntMenuItem
+        Tag = 99
         Caption = 'Custom ...'
         OnClick = presCustomClick
       end
