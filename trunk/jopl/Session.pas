@@ -459,12 +459,8 @@ begin
         if (_authd) then begin
             Prefs.SaveServerPrefs();
             _stream.Send('<presence type="unavailable"/>');
-        end
-        else if (_register) then
-            _auth_agent.CancelRegistration()
-        else
-            _auth_agent.CancelAuthentication();
-            
+        end;
+        
         _stream.Disconnect;
     end
     else
@@ -507,6 +503,11 @@ end;
 {---------------------------------------}
 procedure TJabberSession.handleDisconnect();
 begin
+    if ((not _authd) and (_register)) then
+        _auth_agent.CancelRegistration()
+    else if (not _authd) then 
+        _auth_agent.CancelAuthentication();
+
     // Clear the roster, ppdb and fire the callbacks
     _first_pres := false;
     _authd := false;
