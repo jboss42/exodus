@@ -7,6 +7,7 @@ object frmBrowse: TfrmBrowse
   Color = clBtnFace
   DragKind = dkDock
   DragMode = dmAutomatic
+  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

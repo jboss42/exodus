@@ -7,6 +7,7 @@ object frmInputPass: TfrmInputPass
   BorderWidth = 3
   Caption = 'Exodus Password'
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

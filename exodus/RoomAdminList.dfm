@@ -6,6 +6,7 @@ object frmRoomAdminList: TfrmRoomAdminList
   BorderWidth = 3
   Caption = 'Room List Modifier'
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

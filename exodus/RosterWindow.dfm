@@ -8,6 +8,7 @@ object frmRosterWindow: TfrmRosterWindow
   Caption = 'Roster - Exodus'
   Color = clBtnFace
   Constraints.MinWidth = 130
+  DefaultMonitor = dmDesktop
   DragKind = dkDock
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

@@ -6,6 +6,7 @@ object frmInvite: TfrmInvite
   ClientHeight = 268
   ClientWidth = 323
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -28,14 +29,12 @@ object frmInvite: TfrmInvite
     TabOrder = 0
     inherited Panel2: TPanel
       Width = 323
-      Height = 34
       inherited Bevel1: TBevel
         Width = 323
       end
       inherited Panel1: TPanel
         Left = 159
         Width = 164
-        Height = 29
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end

@@ -6,6 +6,7 @@ object frmRiser: TfrmRiser
   ClientHeight = 45
   ClientWidth = 184
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   TransparentColorValue = clWindow
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText

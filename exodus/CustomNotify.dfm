@@ -6,6 +6,7 @@ object frmCustomNotify: TfrmCustomNotify
   BorderWidth = 4
   Caption = 'Custom Notification Options'
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

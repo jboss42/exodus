@@ -5,6 +5,7 @@ object frmGrpRemove: TfrmGrpRemove
   Height = 205
   Caption = 'Remove Contacts'
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -18,7 +19,7 @@ object frmGrpRemove: TfrmGrpRemove
   TextHeight = 13
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 142
+    Top = 137
     Width = 306
     Height = 34
     Align = alBottom
@@ -26,13 +27,11 @@ object frmGrpRemove: TfrmGrpRemove
     TabOrder = 0
     inherited Panel2: TPanel
       Width = 306
-      Height = 34
       inherited Bevel1: TBevel
         Width = 306
       end
       inherited Panel1: TPanel
         Left = 146
-        Height = 29
         inherited btnOK: TTntButton
           OnClick = frameButtons1btnOKClick
         end

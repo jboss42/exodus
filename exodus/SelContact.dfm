@@ -5,6 +5,7 @@ object frmSelContact: TfrmSelContact
   Height = 321
   Caption = 'Select Contact'
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11

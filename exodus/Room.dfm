@@ -4,6 +4,7 @@ inherited frmRoom: TfrmRoom
   Width = 395
   Height = 305
   Caption = 'Conference Room'
+  DefaultMonitor = dmDesktop
   OldCreateOrder = True
   OnClose = FormClose
   PixelsPerInch = 96

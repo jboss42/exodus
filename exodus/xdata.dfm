@@ -6,7 +6,7 @@ object frmXData: TfrmXData
   BorderWidth = 5
   Caption = 'x:data Form'
   Color = clBtnFace
-  DefaultMonitor = dmMainForm
+  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -38,7 +38,7 @@ object frmXData: TfrmXData
   end
   inline frameButtons1: TframeButtons
     Left = 0
-    Top = 172
+    Top = 167
     Width = 310
     Height = 32
     Align = alBottom
@@ -72,7 +72,7 @@ object frmXData: TfrmXData
     Left = 0
     Top = 21
     Width = 310
-    Height = 151
+    Height = 146
     Align = alClient
     BevelEdges = []
     BevelInner = bvNone

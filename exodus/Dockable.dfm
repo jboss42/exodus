@@ -1,10 +1,11 @@
 object frmDockable: TfrmDockable
-  Left = 296
+  Left = 592
   Top = 222
   Width = 259
   Height = 245
   Caption = 'frmDockable'
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   DragKind = dkDock
   DragMode = dmAutomatic
   Font.Charset = DEFAULT_CHARSET

@@ -1,11 +1,12 @@
 object frmExodus: TfrmExodus
-  Left = 285
+  Left = 570
   Top = 192
   Width = 219
   Height = 384
   AlphaBlendValue = 240
   Caption = 'Exodus'
   Color = clBtnFace
+  DefaultMonitor = dmDesktop
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -216,7 +217,7 @@ object frmExodus: TfrmExodus
   object MainMenu1: TTntMainMenu
     AutoHotkeys = maManual
     Images = ImageList2
-    Left = 52
+    Left = 47
     Top = 74
     object Exodus1: TTntMenuItem
       Caption = '&Exodus'
@@ -477,7 +478,6 @@ object frmExodus: TfrmExodus
     end
   end
   object ImageList2: TImageList
-    DrawingStyle = dsTransparent
     ShareImages = True
     Left = 88
     Top = 74
