@@ -1,3 +1,56 @@
+{$A8,B-,C+,D+,E-,F-,G+,H+,I+,J-,K-,L+,M-,N+,O+,P+,Q-,R-,S-,T-,U-,V+,W-,X+,Y+,Z1}
+{$MINSTACKSIZE $00004000}
+{$MAXSTACKSIZE $00100000}
+{$IMAGEBASE $00400000}
+{$APPTYPE GUI}
+{$WARN SYMBOL_DEPRECATED ON}
+{$WARN SYMBOL_LIBRARY ON}
+{$WARN SYMBOL_PLATFORM ON}
+{$WARN UNIT_LIBRARY ON}
+{$WARN UNIT_PLATFORM ON}
+{$WARN UNIT_DEPRECATED ON}
+{$WARN HRESULT_COMPAT ON}
+{$WARN HIDING_MEMBER ON}
+{$WARN HIDDEN_VIRTUAL ON}
+{$WARN GARBAGE ON}
+{$WARN BOUNDS_ERROR ON}
+{$WARN ZERO_NIL_COMPAT ON}
+{$WARN STRING_CONST_TRUNCED ON}
+{$WARN FOR_LOOP_VAR_VARPAR ON}
+{$WARN TYPED_CONST_VARPAR ON}
+{$WARN ASG_TO_TYPED_CONST ON}
+{$WARN CASE_LABEL_RANGE ON}
+{$WARN FOR_VARIABLE ON}
+{$WARN CONSTRUCTING_ABSTRACT ON}
+{$WARN COMPARISON_FALSE ON}
+{$WARN COMPARISON_TRUE ON}
+{$WARN COMPARING_SIGNED_UNSIGNED ON}
+{$WARN COMBINING_SIGNED_UNSIGNED ON}
+{$WARN UNSUPPORTED_CONSTRUCT ON}
+{$WARN FILE_OPEN ON}
+{$WARN FILE_OPEN_UNITSRC ON}
+{$WARN BAD_GLOBAL_SYMBOL ON}
+{$WARN DUPLICATE_CTOR_DTOR ON}
+{$WARN INVALID_DIRECTIVE ON}
+{$WARN PACKAGE_NO_LINK ON}
+{$WARN PACKAGED_THREADVAR ON}
+{$WARN IMPLICIT_IMPORT ON}
+{$WARN HPPEMIT_IGNORED ON}
+{$WARN NO_RETVAL ON}
+{$WARN USE_BEFORE_DEF ON}
+{$WARN FOR_LOOP_VAR_UNDEF ON}
+{$WARN UNIT_NAME_MISMATCH ON}
+{$WARN NO_CFG_FILE_FOUND ON}
+{$WARN MESSAGE_DIRECTIVE ON}
+{$WARN IMPLICIT_VARIANTS ON}
+{$WARN UNICODE_TO_LOCALE ON}
+{$WARN LOCALE_TO_UNICODE ON}
+{$WARN IMAGEBASE_MULTIPLE ON}
+{$WARN SUSPICIOUS_TYPECAST ON}
+{$WARN PRIVATE_PROPACCESSOR ON}
+{$WARN UNSAFE_TYPE OFF}
+{$WARN UNSAFE_CODE OFF}
+{$WARN UNSAFE_CAST OFF}
 unit RTFMsgList;
 {
     Copyright 2004, Peter Millard
@@ -35,6 +88,7 @@ type
     procedure MsgListURLClick(Sender: TObject; URL: String);
   private
     { Private declarations }
+    _presence_last : boolean;
 
   public
     { Public declarations }
@@ -76,6 +130,7 @@ uses
 constructor TfRTFMsgList.Create(Owner: TComponent);
 begin
     inherited Create(Owner);
+    _presence_last := false;
 end;
 
 {---------------------------------------}
@@ -198,6 +253,7 @@ end;
 {---------------------------------------}
 procedure TfRTFMsgList.DisplayMsg(Msg: TJabberMessage; AutoScroll: boolean = true);
 begin
+    _presence_last := false;
     DisplayRTFMsg(MsgList, Msg, AutoScroll);
 end;
 
@@ -206,28 +262,30 @@ procedure TfRTFMsgList.DisplayPresence(txt: string; timestamp: string);
 var
     pt : integer;
     at_bottom: boolean;
+    c : TColor;
 begin
     at_bottom := MsgList.atBottom;
+    c := TColor(MainSession.Prefs.getInt('color_time'));
     pt := MainSession.Prefs.getInt('pres_tracking');
     if (pt = 2) then exit;
     with MsgList do begin
         if (pt = 1) then begin
-            MsgList.SelStart := Length(MsgList.Lines.Text) - 3;
-            MsgList.SelLength := 1;
-            if (MsgList.SelAttributes.Color = clGray) then
-                MsgList.WideLines.Delete(MsgList.Lines.Count-1);
+            if (_presence_last) then
+                WideLines.Delete(WideLines.Count-1);
         end;
 
-        SelStart := Length(Lines.Text);
+        SelStart := Length(WideLines.Text);
         SelLength := 0;
 
-        SelAttributes.Color := clGray;
+        // TODO: Use newfangled RTF madness
+        SelAttributes.Color := c;
         if timestamp <> '' then
             txt := '[' + timestamp + '] ' + txt;
 
         WideSelText := txt + #13#10;
     end;
 
+    _presence_last := true;
     if (at_bottom) then MsgList.ScrollToBottom();
 end;
 
@@ -282,7 +340,7 @@ end;
 {---------------------------------------}
 function TfRTFMsgList.getHistory(): Widestring;
 begin
-    MsgList.Visible := false;
+    //MsgList.Visible := false;
     MsgList.SelectAll();
     Result := MsgList.RTFSelText;
 end;

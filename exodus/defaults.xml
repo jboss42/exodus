@@ -1,6 +1,6 @@
 <exodus version="0.9">
   <prefs>
-    <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.43 2004/04/15 13:21:52 pgmillard Exp $"/>
+    <defaults_xml_cvs_id value="$Id: defaults.xml,v 1.44 2004/09/08 17:15:03 hildjj Exp $"/>
     
     <!-- System Options -->
     <auto_update_url value="http://exodus.jabberstudio.org/exodus-released.exe"/>
@@ -102,6 +102,9 @@
     <color_bg value="$ffffff"/>
     <color_me value="$ff0000"/>
     <color_other value="$0000ff"/>
+    <color_time value="$808080"/>
+    <color_action value="$800080"/>
+    <color_server value="$008000"/>
     <roster_bg value="$80000005"/>
     <roster_font_color value="0"/>
     <roster_font_size value="10"/>

@@ -48,8 +48,6 @@ type
     OpenDialog1: TOpenDialog;
     btnCSSEdit: TTntButton;
     procedure btnFontClick(Sender: TObject);
-    procedure colorChatMouseUp(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
     procedure clrBoxBGChange(Sender: TObject);
     procedure clrBoxFontChange(Sender: TObject);
     procedure colorRosterMouseDown(Sender: TObject; Button: TMouseButton;
@@ -58,12 +56,14 @@ type
     procedure cboMsgListChange(Sender: TObject);
     procedure btnCSSBrowseClick(Sender: TObject);
     procedure btnCSSEditClick(Sender: TObject);
+    procedure colorChatSelectionChange(Sender: TObject);
   private
     { Private declarations }
     _clr_control: TControl;
     _clr_font_color: string;
     _clr_font: string;
     _clr_bg: string;
+    _offsets: array of integer;
 
     procedure redrawChat();
 
@@ -87,7 +87,7 @@ const
 implementation
 {$R *.dfm}
 uses
-    ShellAPI, JabberUtils, ExUtils,  GnuGetText, JabberMsg, MsgDisplay, Session;
+    ShellAPI, JabberUtils, ExUtils,  GnuGetText, JabberMsg, MsgDisplay, Session, Dateutils;
 
 {---------------------------------------}
 procedure TfrmPrefFont.LoadPrefs();
@@ -182,63 +182,69 @@ end;
 {---------------------------------------}
 procedure TfrmPrefFont.redrawChat();
 var
-    m1, m2: TJabberMessage;
+    m: TJabberMessage;
+    n: TDateTime;
+    dl : integer;
+    my_nick: WideString;
 begin
+    SetLength(_offsets, 10);
+    n := Now();
+    dl := length(FormatDateTime(MainSession.Prefs.getString('timestamp_format'), n)) + 2;
+    my_nick := MainSession.Prefs.getString('default_nick');
+    if (my_nick = '') then
+        my_nick := MainSession.Username;
+
     with colorChat do begin
         Lines.Clear;
-        m1 := TJabberMessage.Create();
-        with m1 do begin
+
+        _offsets[0] := 0;
+        _offsets[1] := _offsets[0] + dl;
+        _offsets[2] := _offsets[1] + length(my_nick) + 2;
+        m := TJabberMessage.Create();
+        with m do begin
             Body := _('Some text from me');
             isMe := true;
-            Nick := _('Your nick');
+            Nick := my_nick;
+            Time := n;
         end;
-        m2 := TJabberMessage.Create();
-        with m2 do begin
+        DisplayRTFMsg(colorChat, m);
+        m.Free();
+
+        _offsets[3] := Length(WideLines.Text) - WideLines.Count;
+        _offsets[4] := _offsets[3] + dl;
+        _offsets[5] := _offsets[4] + length(_('Friend')) + 2;
+        m := TJabberMessage.Create();
+        with m do begin
             Body := _('Some reply text');
             isMe := false;
-            Nick := _('Other nick');
+            Nick := _('Friend');
+            Time := n;
         end;
+        DisplayRTFMsg(colorChat, m);
+        m.Free();
 
-        DisplayRTFMsg(colorChat, m1);
-        DisplayRTFMsg(colorChat, m2);
+        _offsets[6] := Length(WideLines.Text) - WideLines.Count;
+        _offsets[7] := _offsets[6] + dl;
+        m := TJabberMessage.Create();
+        with m do begin
+            Body := _('/me does action');
+            Nick := my_nick;
+            Time := n;
+        end;
+        DisplayRTFMsg(colorChat, m);
+        m.Free();
 
-        m1.Free();
-        m2.Free();
+        _offsets[8] := Length(WideLines.Text) - WideLines.Count;
+        _offsets[9] := _offsets[8] + dl;
+        m := TJabberMessage.Create();
+        with m do begin
+            Body := _('Server says something');
+            Nick := '';
+            Time := n;
+        end;
+        DisplayRTFMsg(colorChat, m);
+        m.Free();
     end;
-end;
-
-{---------------------------------------}
-procedure TfrmPrefFont.colorChatMouseUp(Sender: TObject;
-  Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
-var
-    start: integer;
-begin
-    // Select the chat window
-    lblColor.Caption := _(sChatFontLabel);
-    _clr_control := colorChat;
-    _clr_bg := 'color_bg';
-    clrBoxBG.Selected := TColor(MainSession.Prefs.getInt(_clr_bg));
-
-    start := colorChat.SelStart;
-
-    if ((start >= 7) and (start <=  11)) then begin
-        // on <pgm>, color-me
-        _clr_font_color := 'color_me';
-        _clr_font := '';
-    end
-    else if ((start >= 41) and (start <= 48)) then begin
-        // on <c-neal>, color-other
-        _clr_font_color := 'color_other';
-        _clr_font := '';
-    end
-    else begin
-        // normal window, font_color
-        _clr_font_color := 'font_color';
-        _clr_font := 'font';
-    end;
-
-    btnFont.Enabled := (_clr_font <> '');
-    clrBoxFont.Selected := TColor(Mainsession.Prefs.getInt(_clr_font_color));
 end;
 
 {---------------------------------------}
@@ -292,7 +298,6 @@ begin
     lblRoster.Font.Style := [fsBold];
     lblChat.Font.Style := [fsBold];
     lblColor.Font.Style := [fsBold];
-
 end;
 
 {---------------------------------------}
@@ -332,6 +337,58 @@ begin
     // XXX: if the stylesheet is empty, dupe the default, and create a new css file
     ShellExecute(Application.Handle, 'edit', PChar(String(cboIEStylesheet.text)), nil, nil,
         SW_SHOWNORMAL);
+end;
+
+procedure TfrmPrefFont.colorChatSelectionChange(Sender: TObject);
+var
+    start: integer;
+begin
+    inherited;
+    
+    // Select the chat window
+    lblColor.Caption := _(sChatFontLabel);
+    _clr_control := colorChat;
+    _clr_bg := 'color_bg';
+    clrBoxBG.Selected := TColor(MainSession.Prefs.getInt(_clr_bg));
+
+    start := colorChat.SelStart;
+
+    // time
+    if ((start >= _offsets[0]) and (start < _offsets[1])) or
+       ((start >= _offsets[3]) and (start < _offsets[4])) or
+       ((start >= _offsets[6]) and (start < _offsets[7])) or
+       ((start >= _offsets[8]) and (start < _offsets[9])) then begin
+        _clr_font_color := 'color_time';
+        _clr_font := '';
+    end
+    else if ((start >= _offsets[1]) and (start < _offsets[2])) then begin
+        // on <pgm>, color-me
+        _clr_font_color := 'color_me';
+        _clr_font := '';
+    end
+    else if ((start >= _offsets[4]) and (start < _offsets[5])) then begin
+        // on <c-neal>, color-other
+        _clr_font_color := 'color_other';
+        _clr_font := '';
+    end
+    else if ((start >= _offsets[7]) and (start < _offsets[8])) then begin
+        // /me
+        _clr_font_color := 'color_action';
+        _clr_font := '';
+    end
+    else if start >= _offsets[9] then begin
+        // server
+        _clr_font_color := 'color_server';
+        _clr_font := '';
+    end
+    else begin
+        // normal window, font_color
+        _clr_font_color := 'font_color';
+        _clr_font := 'font';
+    end;
+
+    btnFont.Enabled := (_clr_font <> '');
+    clrBoxFont.Selected := TColor(Mainsession.Prefs.getInt(_clr_font_color));
 end;
 
 end.

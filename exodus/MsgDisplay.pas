@@ -45,11 +45,23 @@ begin
 end;
 
 {---------------------------------------}
+function RTFColor(color_pref: string) : string;
+var
+    color: TColor;
+begin
+    color := TColor(MainSession.Prefs.getInt(color_pref));
+    result :=
+        '\red'   + IntToStr(color and clRed) +
+        '\green' + IntToStr((color and clLime) shr 8) +
+        '\blue'  + IntToStr((color and clBlue) shr 16) +
+        ';';
+end;
+
+{---------------------------------------}
 procedure DisplayRTFMsg(RichEdit: TExRichEdit; Msg: TJabberMessage; AutoScroll: boolean = true);
 var
     fvl: integer;
     txt: WideString;
-    c: TColor;
     at_bottom: boolean;
     is_scrolling: boolean;
 begin
@@ -58,74 +70,74 @@ begin
     at_bottom := RichEdit.atBottom;
     is_scrolling := RichEdit.isScrolling;
 
-    txt := Msg.Body;
-
-    // Make sure we're inputting text in Unicode format.
-    RichEdit.InputFormat := ifUnicode;
     RichEdit.SelStart := Length(RichEdit.WideLines.Text);
     RichEdit.SelLength := 0;
 
+    txt := '{\rtf1 {\colortbl;'  +
+        RTFColor('color_time')   + // \cf1
+        RTFColor('color_server') + // \cf2
+        RTFColor('color_action') + // \cf3
+        RTFColor('color_me')     + // \cf4
+        RTFColor('color_other')  + // \cf5
+        RTFColor('font_color')   + // \cf6
+        '}\uc1';
+
     if (MainSession.Prefs.getBool('timestamp')) then begin
-        RichEdit.SelAttributes.Color := clGray;
+        txt := txt + '\cf1[';
         try
-            RichEdit.WideSelText := '[' +
-                FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
-                Msg.Time) + ']';
+            txt := txt +
+                EscapeRTF(FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
+                                         Msg.Time));
         except
             on EConvertError do begin
-                RichEdit.WideSelText := '[' +
-                    FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
-                    Now()) + ']';
+                txt := txt +
+                    EscapeRTF(FormatDateTime(MainSession.Prefs.getString('timestamp_format'),
+                                             Now()));
             end;
         end;
+
+        txt := txt + ']';
     end;
 
     if (Msg.Nick = '') then begin
         // Server generated msgs (mostly in TC Rooms)
-        c := clGreen;
-        RichEdit.SelAttributes.Color := c;
-        RichEdit.WideSelText := ' ' + txt;
+        txt := txt + '\cf2  ' + EscapeRTF(Msg.Body);
     end
 
     else if not Msg.Action then begin
         // This is a normal message
         if Msg.isMe then
             // our own msgs
-            c := TColor(MainSession.Prefs.getInt('color_me'))
+            txt := txt + '\cf4 '
         else
             // other person's msgs
-            c := TColor(MainSession.Prefs.getInt('color_other'));
+            txt := txt + '\cf5 ';
 
-        RichEdit.SelAttributes.Color := c;
-        RichEdit.WideSelText := '<' + Msg.nick + '>';
+        txt := txt + '<' + EscapeRTF(Msg.nick) + '>';
 
-        if (Msg.Highlight) then begin
-            c := TColor(MainSession.Prefs.getInt('color_me'));
-        end
-        else begin
-            c := TColor(MainSession.Prefs.getInt('font_color'));
-        end;
-        RichEdit.SelAttributes.Color := c;
-        RichEdit.WideSelText := ' ';
+        if (Msg.Highlight) then
+            txt := txt + '\cf4  '
+        else
+            txt := txt + '\cf6  ';
 
         if (use_emoticons) then
-            ProcessRTFEmoticons(RichEdit, c, txt)
+            txt := txt + ProcessRTFEmoticons(Msg.Body)
         else
-            RichEdit.WideSelText := txt;
+            txt := txt + EscapeRTF(Msg.Body);
     end
 
     else begin
         // This is an action
-        RichEdit.SelAttributes.Color := clPurple;
-        RichEdit.WideSelText := ' * ' + Msg.Nick + ' ';
+        txt := txt + '\cf3  * ' + Msg.Nick + ' ';
         if (use_emoticons) then
-            ProcessRTFEmoticons(RichEdit, clPurple, Trim(txt))
+            txt := txt + ProcessRTFEmoticons(Trim(Msg.Body))
         else
-            RichEdit.WideSelText := txt;
+            txt := txt + EscapeRTF(Msg.Body);
     end;
 
-    RichEdit.SelAttributes.Color := TColor(MainSession.Prefs.getInt('font_color'));
-    RichEdit.WideSelText := #13#10;
+    txt := txt + '\cf6\par }';
+
+    RichEdit.RTFSelText := txt;
 
     // AutoScroll the window
     if ((at_bottom) and (AutoScroll) and (not is_scrolling)) then begin
@@ -137,7 +149,6 @@ begin
 
 
 end;
-
 
 end.
 

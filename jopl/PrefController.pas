@@ -107,9 +107,12 @@ const
     P_FONT_ITALIC = 'font_italic';
     P_FONT_ULINE = 'font_underline';
 
-    P_COLOR_BG = 'color_bg';
-    P_COLOR_ME = 'color_me';
-    P_COLOR_OTHER = 'color_other';
+    P_COLOR_BG     = 'color_bg';
+    P_COLOR_ME     = 'color_me';
+    P_COLOR_OTHER  = 'color_other';
+    P_COLOR_TIME   = 'color_time';
+    P_COLOR_ACTION = 'color_action';
+    P_COLOR_SERVER = 'color_server';
 
     P_EVENT_WIDTH = 'event_width';
 

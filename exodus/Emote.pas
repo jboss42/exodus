@@ -119,15 +119,18 @@ type
 
 {---------------------------------------}
 procedure InitializeEmoticonLists();
-procedure ProcessRTFEmoticons(RichEdit: TExRichEdit; color: TColor; txt: Widestring);
+function ProcessRTFEmoticons(txt: Widestring) : string;
 function ProcessIEEmoticons(txt: Widestring): WideString;
 function BitmapToRTF(pict: Graphics.TBitmap): string;
 function EmoteToRTF(e: TEmoticon): string;
+function EscapeRTF(plain: WideString): string;
+function TextileToRTF(plain: WideString): string;
 
 var
     EmoticonList   : TEmoticonList;
     use_emoticons  : boolean;
     emoticon_regex : TRegExpr;
+    textile_regex  : TRegExpr;
 
 
 {---------------------------------------}
@@ -791,25 +794,26 @@ begin
 end;
 
 {---------------------------------------}
-procedure ProcessRTFEmoticons(RichEdit: TExRichEdit; color: TColor; txt: Widestring);
+function ProcessRTFEmoticons(txt: Widestring) : string;
 var
     m: boolean;
     ms, s: Widestring;
     lm: integer;
     rtf: WideString;
+    pending: WideString;
 begin
+    result := '';
+
     // search for various smileys
 
-    // Change the control to allow pasting
-    RichEdit.ReadOnly := false;
     s := txt;
     m := emoticon_regex.Exec(txt);
     lm := 0;
+    pending := '';
     while(m) do begin
         // we have a match
         lm := emoticon_regex.MatchPos[0] + emoticon_regex.MatchLen[0];
-        RichEdit.SelAttributes.Color := color;
-        RichEdit.WideSelText := emoticon_regex.Match[1];
+        pending := pending + emoticon_regex.Match[1];
 
         rtf := '';
         // Grab the match text and look it up in our emoticon list
@@ -821,17 +825,16 @@ begin
         // if we have a legal emoticon object, insert it..
         // otherwise insert the matched text
         if (rtf <> '') then begin
-            RichEdit.InsertRTF(rtf);
+            result := result + TextileToRTF(pending);
+            pending := '';
+            result := result + rtf;
         end
-        else begin
-            RichEdit.SelAttributes.Color := color;
-            RichEdit.WideSelText := ms;
-        end;
+        else
+            pending := pending + ms;
 
         // Match-6 is any trailing whitespace
-        RichEdit.SelAttributes.Color := color;
         if (lm <= length(txt)) then
-            RichEdit.WideSelText := emoticon_regex.Match[6];
+            pending := pending + emoticon_regex.Match[6];
 
         // Search for the next emoticon
         m := emoticon_regex.ExecNext();
@@ -844,17 +847,75 @@ begin
         end;
     end;
 
+    if (pending <> '') then
+        result := result + TextileToRTF(pending);
+
     if (lm <= length(txt)) then begin
         // we have a remainder
         txt := Copy(txt, lm, length(txt) - lm + 1);
-        RichEdit.SelAttributes.Color := color;
-        RichEdit.WideSelText := txt;
+        result := result + TextileToRTF(txt);
     end;
-
-    RichEdit.ReadOnly := true;
 end;
 
+function EscapeRTF(plain: WideString): string;
+var
+    rtf: string;
+    i: integer;
+    c: WideChar;
+begin
+    rtf := '';
+    for i := 1 to length(plain) do begin
+        c := plain[i];
+        // unicode
+        if (c > #127) then
+            //TODO: Mad Unicode foo to pick the "closest" alternate character
+            rtf := rtf + '\u' + IntToStr(ord(c)) + '?'
+        else if (c = '{') or (c = '}') or (c = '\') then
+            rtf := rtf + '\' + plain[i]
+        else if (c = #$D) then
+            //TODO: state machine to handle all possible \r\n combos
+            rtf := rtf + '\par '
+        else
+            rtf := rtf + plain[i];
+    end;
+    result := rtf;
+end;
 
+function TextileToRTF(plain: WideString): string;
+var
+    m: boolean;
+    lm: integer;
+    tag: string;
+begin
+    result := '';
+    lm := 0;
+    m := textile_regex.Exec(plain);
+    while m do begin
+        lm := textile_regex.MatchPos[0] + textile_regex.MatchLen[0];
+        result := result + EscapeRTF(textile_regex.Match[1]) + textile_regex.Match[2];
+        if (textile_regex.Match[3] = '*') then
+             tag := '\b'
+        else if (textile_regex.Match[3] = '_') then
+            tag := '\ul'
+        else if (textile_regex.Match[3] = '^') then
+            tag := '\super'
+        else if (textile_regex.Match[3] = '~') then
+            tag := '\sub'
+        else if (textile_regex.Match[3] = '-') then
+            tag := '\ul';
+
+        result := result + tag + ' ' +
+                  textile_regex.Match[3] + EscapeRTF(textile_regex.Match[4]) +
+                  textile_regex.Match[3] + tag + '0 ';
+
+        m := textile_regex.ExecNext();
+    end;
+    if (lm <= length(plain)) then begin
+        // we have a remainder
+        plain := Copy(plain, lm, length(plain) - lm + 1);
+        result := result + EscapeRTF(plain);
+    end;
+end;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -871,6 +932,13 @@ initialization
         Compile();
     end;
 
+    textile_regex := TRegExpr.Create();
+    with textile_regex do begin
+        ModifierG := false;
+        Expression := '(.*)(^|\s)([*_^~-])(.+)\3(\s|$)';
+        Compile();
+    end;
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -879,5 +947,6 @@ finalization
         FreeAndNil(EmoticonList);
     if (emoticon_regex <> nil) then
         FreeAndNil(emoticon_regex);
-
+    if (textile_regex <> nil) then
+        FreeAndNil(textile_regex);
 end.
