@@ -24,14 +24,14 @@ interface
 uses
     Variants,
     Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms,
-    Dialogs, ExtCtrls, StdCtrls;
+    Dialogs, ExtCtrls, StdCtrls, TntStdCtrls;
 
 type
   TfrmRiser = class(TForm)
     Timer1: TTimer;
     Timer2: TTimer;
     Image1: TImage;
-    Label1: TLabel;
+    Label1: TTntLabel;
     Shape1: TShape;
     procedure FormCreate(Sender: TObject);
     procedure Timer1Timer(Sender: TObject);
@@ -56,7 +56,7 @@ var
     singleToast: TfrmRiser;
     frmRiser: TfrmRiser;
 
-procedure ShowRiserWindow(clickForm: TForm; msg: string; imgIndex: integer);
+procedure ShowRiserWindow(clickForm: TForm; msg: Widestring; imgIndex: integer);
 
 {---------------------------------------}
 {---------------------------------------}
@@ -65,11 +65,10 @@ implementation
 
 {$R *.dfm}
 uses
-    Session, Dockable, 
-    Jabber1;
+    ExUtils, Session, Dockable, Jabber1;
 
 {---------------------------------------}
-procedure ShowRiserWindow(clickForm: TForm; msg: string; imgIndex: integer);
+procedure ShowRiserWindow(clickForm: TForm; msg: Widestring; imgIndex: integer);
 var
     bmp: TBitmap;
     animate: boolean;
@@ -85,6 +84,8 @@ begin
         // create a new instance
         singleToast := TfrmRiser.Create(Application);
         animate := true;
+        AssignDefaultFont(singleToast.Label1.Font);
+        
         // Setup alpha blending..
         if MainSession.Prefs.getBool('toast_alpha') then begin
             singleToast.AlphaBlend := true;
