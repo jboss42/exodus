@@ -347,7 +347,7 @@ const
 {---------------------------------------}
 implementation
 uses
-    MsgQueue, JoinRoom, Login, ChatWin, RosterAdd,
+    MsgDisplay, MsgQueue, JoinRoom, Login, ChatWin, RosterAdd,
     iq, JUD, Bookmark, CustomPres,
     MsgRecv, Prefs, Dockable,
     RiserWindow, RemoveContact,
@@ -656,6 +656,7 @@ begin
     _is_min := false;
 
     setupAutoAwayTimer();
+    ConfigEmoticons();
 
     // Create the tray icon, etc..
     with _tray do begin
@@ -813,6 +814,7 @@ begin
                 _edge_snap := -1;
             _close_min := getBool('close_min');
             _auto_away := getBool('auto_away');
+            use_emoticons := getBool('emoticons');
             end;
 
         // do other stuff
@@ -1204,6 +1206,7 @@ begin
         getMsgQueue().ManualDock(pnlRight, nil, alClient);
         pnlRoster.Width := Self.ClientWidth - w;
         pnlRight.Width := w;
+        getMsgQueue.Align := alClient;
         end
     else begin
         // we are compressed now

@@ -100,12 +100,16 @@ type
 var
   frmEmoticons: TfrmEmoticons;
 
+{---------------------------------------}
+{---------------------------------------}
+{---------------------------------------}
 implementation
 
 {$R *.dfm}
 uses
     Jabber1;
 
+{---------------------------------------}
 procedure TfrmEmoticons.ToolButton1Click(Sender: TObject);
 var
     btn: TToolbutton;
@@ -122,18 +126,21 @@ begin
         Self.Hide;
 end;
 
+{---------------------------------------}
 procedure TfrmEmoticons.FormDeactivate(Sender: TObject);
 begin
     if Self.Visible then
         ModalResult := mrCancel;
 end;
 
+{---------------------------------------}
 procedure TfrmEmoticons.FormKeyPress(Sender: TObject; var Key: Char);
 begin
     if Key = Chr(27) then
         Self.Hide;
 end;
 
+{---------------------------------------}
 procedure TfrmEmoticons.ToolBar1Click(Sender: TObject);
 begin
     Self.Hide;
