@@ -226,7 +226,6 @@ object frmRosterRecv: TfrmRosterRecv
       Top = 3
       Width = 209
       Height = 21
-      Style = csDropDownList
       Anchors = [akLeft, akTop, akRight]
       ItemHeight = 13
       Sorted = True

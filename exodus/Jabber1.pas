@@ -2671,13 +2671,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmExodus.ApplicationEvents1Activate(Sender: TObject);
-var
-    last: hwnd;
 begin
-    // if prefs or login are showing bring them to the top w/ SetWindowsPos
-    last := GetLastActivePopup(Application.Handle);
-    if (last <> Application.Handle) then
-        SetWindowPos(last, HWND_TOP, 0, 0, 0, 0, (SWP_NOSIZE or SWP_NOMOVE or SWP_SHOWWINDOW));
+    // do something here maybe
 end;
 
 {---------------------------------------}
