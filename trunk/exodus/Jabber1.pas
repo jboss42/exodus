@@ -2771,8 +2771,10 @@ begin
         Tabs.ActivePage.ImageIndex := -1;
 
     f := getTabForm(Tabs.ActivePage);
-    if (f is TfrmBaseChat) then
-        TfrmBaseChat(f).MsgOut.SetFocus;
+    if (f is TfrmBaseChat) then begin
+        if (TfrmBaseChat(f).MsgOut.Visible) then
+            TfrmBaseChat(f).MsgOut.SetFocus;
+    end;
 end;
 
 {---------------------------------------}
