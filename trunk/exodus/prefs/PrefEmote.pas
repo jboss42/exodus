@@ -315,10 +315,10 @@ procedure TfrmPrefEmote.lstCustomEmotesAdvancedCustomDrawItem(
   Sender: TCustomListView; Item: TListItem; State: TCustomDrawState;
   Stage: TCustomDrawStage; var DefaultDraw: Boolean);
 var
-    icon_r: TRect;
-    lbl_r: TRect;
+    box_r, lbl_r, icon_r: TRect;
     e: TEmoticon;
-    w,h: integer;
+    txt: string;
+    tw, w, h: integer;
 begin
   inherited;
     // draw this item
@@ -329,13 +329,29 @@ begin
     lbl_r := Item.DisplayRect(drLabel);
 
     with lstCustomEmotes do begin
+
+        Canvas.Pen.Width := 1;
+        box_r := Item.DisplayRect(drBounds);
+
+        if (cdsSelected in State) then begin
+            Canvas.Brush.Color := clHighlight;
+            Canvas.Brush.Style := bsFDiagonal;
+        end
+        else begin
+            Canvas.Brush.Style := bsSolid;
+            Canvas.Brush.Color := clWindow;
+        end;
+        Canvas.Pen.Color := Canvas.Brush.Color;
+        Canvas.Rectangle(box_r);
+
         // draw the bmp
-        w := ((icon_r.Right - icon_r.left) - (e.Bitmap.Width)) div 2;
-        h := ((icon_r.Bottom - icon_r.Top) - (e.Bitmap.Height)) div 2;
-        canvas.Draw(icon_r.left + w, icon_r.Top + h, e.Bitmap);
+        e.Draw(canvas, icon_r);
 
         // XXX: Center text
-        canvas.TextOut(lbl_r.left, lbl_r.Top, el.getText(e));
+        txt := el.GetText(e);
+        tw := canvas.TextWidth(txt);
+        w := ((lbl_r.Right - lbl_r.left) - tw) div 2;
+        canvas.TextOut(lbl_r.left + w, lbl_r.Top, txt);
     end;
     DefaultDraw := false;
 

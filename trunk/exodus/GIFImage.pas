@@ -10682,8 +10682,10 @@ begin
       FireEvent(FOnEndPaint);
     finally
       // If we are running in the main thread we will have to zap our self
+      {
       if not(goAsync in DrawOptions) then
         Free;
+      }
     end;
   except
     on E: Exception do
@@ -12434,6 +12436,7 @@ begin
   if not(goAsync in Options) then
   begin
     // Run in main thread
+    Result.FreeOnTerminate := true;
     Result.Execute;
     // Note: Painter threads executing in the main thread are freed upon exit
     // from the Execute method, so no need to do it here.
