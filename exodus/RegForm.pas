@@ -187,6 +187,13 @@ begin
             btnDelete.Enabled := false;
             ag_tag := tag.QueryXPTag('/iq/query');
 
+            if (ag_tag = nil) then begin
+                // this is bad.. we didn't get back a query?
+                MessageDlgW(_(sServiceRegError), mtError, [mbOK], 0);
+                Self.Close();
+                exit;
+            end;
+
             // always check for registered
             if (ag_tag.GetFirstTag('registered') <> nil) then
                 btnDelete.Enabled := true;
