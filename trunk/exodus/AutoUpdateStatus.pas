@@ -60,8 +60,7 @@ procedure ShowAutoUpdateStatus(tag : TXMLTag); overload;
 
 const
     EXODUS_REG = '\Software\Jabber\Exodus';
-    //JID_AUTOUPDATE  = '1016321811@update.jabber.org';
-    JID_AUTOUPDATE = 'update.pgmillard.dyndns.org';
+    JID_AUTOUPDATE  = '1016321811@update.jabber.org';
     XMLNS_AUTOUPDATE = 'jabber:iq:autoupdate';
 
 resourcestring

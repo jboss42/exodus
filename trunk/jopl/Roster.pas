@@ -216,6 +216,9 @@ begin
 
     for i := 0 to Groups.Count - 1 do
         tag.AddBasicTag('group', Groups[i]);
+
+    if (subscription = 'remove') then
+        tag.PutAttribute('subscription', subscription);
 end;
 
 {---------------------------------------}

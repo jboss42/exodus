@@ -294,7 +294,7 @@ var
 begin
     // check for various / commands
     result := false;
-    tmps := Lowercase(trim(txt));
+    tmps := trim(txt);
     i := 1;
     l := length(tmps);
     repeat
@@ -476,6 +476,7 @@ begin
     _pcallback := -1;
     _scallback := -1;
     _roster := TStringList.Create;
+    _roster.CaseSensitive := true;
     _isGC := true;
     _nick_prefix := '';
     _nick_idx := 0;
