@@ -333,26 +333,26 @@ var
 
 begin
     try
-    reg := TRegistry.Create;
-    try //finally free
-        with reg do begin
-            RootKey := HKEY_CURRENT_USER;
-            OpenKeyReadOnly('Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders');
-            if ValueExists('AppData') then begin
-                appdata := ReadString('AppData') + '\Exodus\';
-                appdata := ReplaceEnvPaths(appdata);
-            end;
+        reg := TRegistry.Create;
+        try //finally free
+            with reg do begin
+                RootKey := HKEY_CURRENT_USER;
+                OpenKeyReadOnly('Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders');
+                if ValueExists('AppData') then begin
+                    appdata := ReadString('AppData') + '\Exodus\';
+                    appdata := ReplaceEnvPaths(appdata);
+                end;
 
-            if ValueExists('Local AppData') then begin
-                local_appdata := ReadString('Local AppData') + '\Exodus\';
-                local_appdata := ReplaceEnvPaths(local_appdata);
-            end;
+                if ValueExists('Local AppData') then begin
+                    local_appdata := ReadString('Local AppData') + '\Exodus\';
+                    local_appdata := ReplaceEnvPaths(local_appdata);
+                end;
 
-            exe_path := ExtractFilePath(Application.EXEName);
+                exe_path := ExtractFilePath(Application.EXEName);
+            end;
+        finally
+            reg.Free();
         end;
-    finally
-        reg.Free();
-    end;
     except
         exe_path := ExtractFilePath(Application.EXEName);
     end;

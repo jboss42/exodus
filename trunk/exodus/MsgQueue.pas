@@ -138,6 +138,9 @@ begin
     fn := MainSession.Prefs.getString('spool_path');
     dir := ExtractFilePath(fn);
 
+    if (dir = '') then
+        dir := ExtractFilePath(Application.EXEName);
+
     if (not DirectoryExists(dir)) then begin
         MkDir(dir);
         if (not DirectoryExists(dir)) then begin
