@@ -253,6 +253,7 @@ type
     _subcontroller: TSubController;
 
     _windows_ver: integer;
+    _is_broadcast: boolean;
     _is_autoaway: boolean;
     _is_autoxa: boolean;
     _is_min: boolean;
@@ -816,6 +817,8 @@ begin
     _is_autoxa := false;
     _is_min := false;
 
+    _is_broadcast := false;
+
     _windows_ver := WindowsVersion(win_ver);
     setupAutoAwayTimer();
     ConfigEmoticons();
@@ -1074,8 +1077,9 @@ begin
         else if (MainSession.Show = 'xa') then
             SetTrayIcon(10);
 
-        // don't send message on autoaway
-        if (_is_autoaway or _is_autoxa) then exit;
+        // don't send message on autoaway or auto-return
+        if (_is_autoaway or _is_autoxa or _is_broadcast) then exit;
+
         if (not MainSession.Prefs.getBool('presence_message_send')) then exit;
         msg.LParamHi := GetPresenceAtom(MainSession.Show);
         msg.LParamLo := GetPresenceAtom(MainSession.Status);
@@ -1825,11 +1829,12 @@ begin
     _last_show := MainSession.Show;
     _last_status := MainSession.Status;
 
-    MainSession.SetPresence('away', MainSession.prefs.getString('away_status'),
-        MainSession.Priority);
-
+    // must be before SetPresence
     _is_autoaway := true;
     _is_autoxa := false;
+
+    MainSession.SetPresence('away', MainSession.prefs.getString('away_status'),
+        MainSession.Priority);
 
     timAutoAway.Interval := 1000;
 end;
@@ -1839,6 +1844,8 @@ procedure TfrmExodus.SetAutoXA;
 begin
     // set us to xa
     DebugMsg(sSetAutoXA);
+
+    // must be before SetPresence
     _is_autoaway := false;
     _is_autoxa := true;
 
@@ -1853,9 +1860,11 @@ begin
     DebugMsg(sSetAutoAvailable);
     timAutoAway.Enabled := false;
     timAutoAway.Interval := 10000;
+    MainSession.SetPresence(_last_show, _last_status, MainSession.Priority);
+
+    // must be *after* SetPresence
     _is_autoaway := false;
     _is_autoxa := false;
-    MainSession.SetPresence(_last_show, _last_status, MainSession.Priority);
     timAutoAway.Enabled := true;
 
     MainSession.Play();
@@ -2308,7 +2317,9 @@ begin
         status := GetPresenceString(m.LParamLo);
         // already there.
         if ((MainSession.Show = show) and (MainSession.Status = status)) then exit;
+        _is_broadcast := true;
         MainSession.setPresence(show, status, MainSession.Priority);
+        _is_broadcast := false;
         end
     else
         inherited;
