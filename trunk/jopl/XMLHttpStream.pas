@@ -46,6 +46,8 @@ type
         _cookie_list : TStringList;
         _lock: TCriticalSection;
         _event: TEvent;
+
+        procedure DoPost();
     protected
         procedure Run; override;
     public
@@ -53,7 +55,7 @@ type
         destructor Destroy(); override;
 
         procedure Send(xml: String);
-        procedure Disconnect();
+        procedure Disconnect(end_tag: string);
     end;
 
 {---------------------------------------}
@@ -100,8 +102,15 @@ end;
 
 {---------------------------------------}
 procedure TXMLHttpStream.Disconnect;
+var
+    end_tag: string;
 begin
-    _thread.Disconnect();
+    end_tag := '</' + Self._root_tag + '>';
+    DoDataCallbacks(true, end_tag);
+    _thread.Disconnect(end_tag);
+    _thread.doMessageSync(WM_DISCONNECTED);
+
+    // Note that the free will free itself.
 end;
 
 {---------------------------------------}
@@ -184,30 +193,27 @@ end;
 destructor THttpThread.Destroy();
 begin
    _lock.Free();
+   _event.Free();
+   _cookie_list.Free();
+   _http.Free();
+   _request.Free();
+   _response.Free();
 end;
 
 {---------------------------------------}
 procedure THttpThread.Send(xml: string);
 begin
     _lock.Acquire();
-    _request.Add(xml);
-    // utf := AnsiToUTF8(xml);
+    _request.Add(AnsiToUTF8(xml));
     _lock.Release();
     _event.SetEvent();
 end;
 
 {---------------------------------------}
-procedure THttpThread.Run();
-var
-    r, pid, new_cookie: string;
-    i: integer;
+procedure THttpThread.DoPost();
 begin
-    if ((Self.Stopped) or (Self.Suspended) or (Self.Terminated)) then
-        exit;
-
     // nuke whatever is currently in the stream
     _response.Size := 0;
-
     _request.Insert(0, _poll_id + ',');
     try
         _lock.Acquire();
@@ -216,11 +222,27 @@ begin
         _lock.Release();
     except
         on E: Exception do begin
-            doMessage(WM_COMMERROR);
-            Self.Terminate();
+            if (not Self.Stopped) then begin
+                doMessage(WM_COMMERROR);
+                Self.Terminate();
+                end;
             exit;
         end;
     end;
+end;
+
+{---------------------------------------}
+procedure THttpThread.Run();
+var
+    r, pid, new_cookie: string;
+    i: integer;
+begin
+    // Bail if we're stopped.
+    if ((Self.Stopped) or (Self.Suspended) or (Self.Terminated)) then
+        exit;
+
+    Self.DoPost();
+
 
     // parse the response stream
     if (_http.ResponseCode <> 200) then begin
@@ -231,6 +253,8 @@ begin
         end;
 
     pid := '';
+
+    // Get the cookie values + parse them, looking for the ID
     new_cookie := _http.Response.ExtraHeaders.Values['Set-Cookie'];
     _cookie_list.DelimitedText := new_cookie;
     for i := 0 to _cookie_list.Count - 1 do begin
@@ -244,9 +268,9 @@ begin
         _poll_id := pid;
         end;
 
+    // compare the most recent pid with our stored poll_id
     if ((pid = '') or AnsiEndsStr(':0', pid) or (pid <> _poll_id)) then begin
         // something really bad has happened!
-        // todo: what to do??
         doMessage(WM_COMMERROR);
         Self.Terminate();
         exit;
@@ -255,18 +279,21 @@ begin
     r := _response.DataString;
     if (r <> '') then
         Push(r);
-    //Sleep(_profile.Poll * 1000);
+
     _event.WaitFor(_profile.Poll * 1000);
 end;
 
 {---------------------------------------}
-procedure THttpThread.Disconnect();
+procedure THttpThread.Disconnect(end_tag: string);
 begin
     // Yes, we analyzed to see if there is a race condition.
     // There's not.
     Stop();
-    Send('</stream:stream>');
-    Run();
+    _event.SetEvent();
+    if (end_tag <> '') then begin
+        Send(end_tag);
+        DoPost();
+        end;
 
     // Free me.  Touch me.  Feel me.
     Terminate();
