@@ -5,7 +5,6 @@ unit COMChatController;
 interface
 
 uses
-    ExodusPlugins_TLB, 
     Session, ChatController, ChatWin, Chat,
     Classes, ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
 
@@ -16,7 +15,8 @@ type
     function AddContextMenu(const Caption: WideString): WideString; safecall;
     function Get_MsgOutText: WideString; safecall;
     function UnRegister(ID: Integer): WordBool; safecall;
-    function RegisterPlugin(const Plugin: ExodusChatPlugin): Integer; safecall;
+    function RegisterPlugin(const Plugin: IExodusChatPlugin): Integer;
+      safecall;
     function getMagicInt(Part: ChatParts): Integer; safecall;
     { Protected declarations }
 
@@ -29,6 +29,7 @@ type
     procedure fireBeforeMsg(var body: Widestring);
     function  fireAfterMsg(var body: WideString): Widestring;
     procedure fireRecvMsg(body, xml: Widestring);
+    procedure fireClose();
 
   private
     _chat: TChatController;
@@ -109,7 +110,16 @@ var
     i: integer;
 begin
     for i := 0 to _plugs.Count - 1 do
-        TChatPlugin(_plugs[i]).com.onMsg(body, xml);
+        TChatPlugin(_plugs[i]).com.onRecvMessage(body, xml);
+end;
+
+{---------------------------------------}
+procedure TExodusChat.fireClose();
+var
+    i: integer;
+begin
+    for i := 0 to _plugs.Count - 1 do
+        TChatPlugin(_plugs[i]).com.onClose();
 end;
 
 {---------------------------------------}
@@ -149,19 +159,19 @@ end;
 
 {---------------------------------------}
 function TExodusChat.RegisterPlugin(
-  const Plugin: ExodusChatPlugin): Integer;
+  const Plugin: IExodusChatPlugin): Integer;
 var
-    p: IExodusChatPlugin;
     cp: TChatPlugin;
 begin
     cp := TChatPlugin.Create;
-    p := IUnknown(Plugin) as IExodusChatPlugin;
-    cp.com := p;
+    cp.com := Plugin;
     Result := _plugs.Add(cp);
 end;
 
 {---------------------------------------}
 function TExodusChat.getMagicInt(Part: ChatParts): Integer;
+var
+    p: Pointer;
 begin
     case Part of
     HWND_MsgInput: begin
@@ -171,10 +181,12 @@ begin
         Result := TfrmChat(_chat.window).MsgList.Handle;
         end;
     Ptr_MsgInput: begin
-        Result := integer(TfrmChat(_chat.window).MsgOut);
+        p := @(TfrmChat(_chat.window).MsgOut);
+        Result := integer(p);
         end;
     Ptr_MsgOutput: begin
-        Result := integer(TfrmChat(_chat.window).MsgList);
+        p := @(TfrmChat(_chat.window).MsgList);
+        Result := integer(p);
         end
     else
         Result := -1;

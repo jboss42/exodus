@@ -6,7 +6,7 @@ interface
 
 uses
     XMLTag,
-    ExodusPlugins_TLB, Windows, 
+    Windows,
     Classes, ComObj, ActiveX, ExodusCOM_TLB, StdVcl;
 
 type
@@ -21,7 +21,7 @@ type
     function isRosterJID(const jid: WideString): WordBool; safecall;
     function isSubscribed(const jid: WideString): WordBool; safecall;
     function RegisterCallback(const xpath: WideString;
-      var callback: OleVariant): Integer; safecall;
+      const callback: IExodusPlugin): Integer; safecall;
     procedure RemoveRosterItem(const jid: WideString); safecall;
     procedure Send(const xml: WideString); safecall;
     procedure UnRegisterCallback(callback_id: Integer); safecall;
@@ -93,9 +93,8 @@ begin
     // Fire up an instance of the specified COM object
     if (plugs.indexof(com_name) > -1) then exit;
 
-    //try
+    try
         idisp := CreateOleObject(com_name);
-    {
     except
         on EOleSysError do begin
             MessageDlg('Plugin class could not be initialized.',
@@ -103,14 +102,22 @@ begin
             exit;
             end;
     end;
-    }
 
-    plugin := idisp as IExodusPlugin;
+    try
+        plugin := IUnknown(idisp) as IExodusPlugin;
+    except
+        on EIntfCastError do begin
+            MessageDlg('Plugin class does not support IExodusPlugin',
+                mtError, [mbOK], 0);
+            exit;
+            end;
+    end;
+
     p := TPlugin.Create();
     p.com := plugin;
     plugs.AddObject(com_name, p);
     try
-        p.com.Startup(frmExodus.ComController as IUnknown);
+        p.com.Startup(frmExodus.ComController);
     except
         MessageDlg('Plugin class could not be initialized.',
             mtError, [mbOK], 0);
@@ -240,7 +247,7 @@ end;
 
 {---------------------------------------}
 function TExodusController.RegisterCallback(const xpath: WideString;
-  var callback: OleVariant): Integer;
+  const callback: IExodusPlugin): Integer;
 begin
     TPluginProxy.Create(xpath, callback);
 end;

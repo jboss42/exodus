@@ -38,13 +38,13 @@ type
     Copy1: TMenuItem;
     CopyAll1: TMenuItem;
     Clear1: TMenuItem;
-    MsgOut: TTntMemo;
     popOut: TPopupMenu;
     Copy2: TMenuItem;
     Copy3: TMenuItem;
     Paste2: TMenuItem;
     N2: TMenuItem;
     Emoticons2: TMenuItem;
+    MsgOut: TExRichEdit;
 
     procedure Emoticons1Click(Sender: TObject);
     procedure MsgListURLClick(Sender: TObject; url: String);

@@ -5,24 +5,26 @@ unit ChatSpeller;
 interface
 
 uses
-    ComCtrls, RichEdit2, ExRichEdit, SysUtils, Graphics,   
     Word2000, ExodusCOM_TLB,
-    ComObj, ActiveX, ExodusPlugins_TLB, ExodusWordSpeller_TLB, StdVcl;
+    ComCtrls, RichEdit2, ExRichEdit, SysUtils, Graphics,
+    ComObj, ActiveX, ExodusWordSpeller_TLB, StdVcl;
 
 type
-  TChatSpeller = class(TAutoObject, IChatSpeller)
+  TChatSpeller = class(TAutoObject, IChatSpeller, IExodusChatPlugin)
   protected
     function onAfterMessage(var Body: WideString): WideString; safecall;
     procedure onBeforeMessage(var Body: WideString); safecall;
     procedure onContextMenu(const ID: WideString); safecall;
     procedure onKeyPress(const Key: WideString); safecall;
-    procedure onMsg(const Body, xml: WideString); safecall;
+    procedure onRecvMessage(const Body, xml: WideString); safecall;
+    procedure onClose; safecall;
     { Protected declarations }
   private
     _word: TWordApplication;
     _chat: IExodusChat;
     _msgout: TExRichEdit;
   public
+    reg_id: integer;
     constructor Create(word_app: TWordApplication; chat_controller: IExodusChat);
     destructor Destroy(); override;
   end;
@@ -41,8 +43,7 @@ begin
     inherited Create();
     _word := word_app;
     _chat := chat_controller;
-    _msgOut := TExRichEdit(_chat.getMagicInt(Ptr_MsgOutput));
-    _chat.RegisterPlugin(Self as ExodusChatPlugin);
+    _MsgOut := nil;
 end;
 
 destructor TChatSpeller.Destroy();
@@ -68,12 +69,18 @@ end;
 
 procedure TChatSpeller.onKeyPress(const Key: WideString);
 var
+    adr: integer;
     tmps: String;
     k: Char;
     ok: boolean;
     last, cur: longint;
     word: WideString;
 begin
+    if (_MsgOut = nil) then begin
+        adr := _chat.getMagicInt(Ptr_MsgInput);
+        _MsgOut := TExRichEdit(Pointer(adr)^);
+        end;
+
     tmps := Key;
     k := tmps[1];
 
@@ -108,10 +115,16 @@ begin
         end;
 end;
 
-procedure TChatSpeller.onMsg(const Body, xml: WideString);
+procedure TChatSpeller.onRecvMessage(const Body, xml: WideString);
 begin
     // a msg was just received
 end;
+
+procedure TChatSpeller.onClose;
+begin
+    // _chat.UnRegister(reg_id);
+end;
+
 
 initialization
   TAutoObjectFactory.Create(ComServer, TChatSpeller, Class_ChatSpeller,

@@ -11,16 +11,16 @@ unit ExodusPlugins_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.1 $
-// File generated on 12/12/2002 7:28:18 AM from Type Library described below.
+// PASTLWTR : $Revision: 1.2 $
+// File generated on 12/12/2002 8:51:48 AM from Type Library described below.
 
 // ************************************************************************  //
-// Type Lib: D:\src\exodus\exodus\plugins\ExodusPlugin.tlb (2)
+// Type Lib: D:\src\exodus\exodus\plugins\ExodusPlugin.tlb (1)
 // LIBID: {053C946B-D466-4686-BC8F-CB5B5D7C9C2A}
 // LCID: 0
 // Helpfile: 
 // DepndLst: 
-//   (1) v2.0 stdole, (C:\WINDOWS\System32\stdole2.tlb)
+//   (1) v2.0 stdole, (C:\WINNT\System32\stdole2.tlb)
 // Parent TypeLibrary:
 //   (0) v1.0 ExodusWordSpeller, (D:\src\exodus\exodus\plugins\MSWordSpeller\ExodusWordSpeller.tlb)
 // ************************************************************************ //

@@ -51,8 +51,8 @@ Conditionals=
 DebugSourceDirs=
 UsePackages=0
 [Parameters]
-RunParams=
-HostApplication=
+RunParams=-d -c plugin.xml
+HostApplication=D:\src\exodus\exodus\exodus.exe
 Launcher=
 UseLauncher=0
 DebugCWD=
