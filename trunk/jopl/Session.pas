@@ -411,10 +411,11 @@ end;
 {---------------------------------------}
 procedure TJabberSession.DataEvent(send: boolean; data: Widestring);
 begin
-    // we are getting data from the socket
     if (send) then
+        // we are sending data
         _dataSignal.Invoke('/data/send', nil, data)
     else begin
+        // getting data from the socket
         if (Pos('<stream:error>', data) > 0) then
             _dispatcher.DispatchSignal('/session/stream:error', nil);
         _dataSignal.Invoke('/data/recv', nil, data);
