@@ -1,4 +1,23 @@
 unit ExodusLabel;
+{
+    Copyright 2005, Joe Hildebrand
+
+    This file is part of Exodus.
+
+    Exodus is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Exodus is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Exodus; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+}
 
 interface
 
@@ -16,6 +35,7 @@ type
     { Private declarations }
     _urls: TObjectList;
     _caption: WideString;
+    _unicode: boolean;
     procedure MeasureMaybeDraw(doDraw : boolean);
 
   protected
@@ -41,10 +61,12 @@ procedure Register;
 
 var
   REGEX_URL: TRegExpr;
+  unicode_enabled: integer;
 
 implementation
 
-uses Forms, Unicode, Types, Math, Graphics, ShellAPI;
+uses
+    Forms, Unicode, Types, Math, Graphics, ShellAPI;
 
 {---------------------------------------}
 {---------------------------------------}
@@ -79,6 +101,38 @@ begin
     end;
 end;
 
+function CheckUnicodeEnabled(): boolean;
+var
+    h: THandle;
+    OSVersionInfo32: OSVERSIONINFO;
+begin
+    // check to see if we're an NT based OS, or we have
+    // the unicode layer installed
+    if (unicode_enabled = 0) then begin
+        OSVersionInfo32.dwOSVersionInfoSize := SizeOf(OSVersionInfo32);
+        GetVersionEx(OSVersionInfo32);
+        case OSVersionInfo32.dwPlatformId of
+        VER_PLATFORM_WIN32_WINDOWS: begin
+            { Windows 95/98/ME }
+            h := LoadLibrary('unicows.dll');
+            if (h = 0) then
+                unicode_enabled := -1
+            else
+                unicode_enabled := +1;
+        end;
+        VER_PLATFORM_WIN32_NT: begin
+            { ALL NT based platforms }
+            unicode_enabled := +1;
+        end;
+        end;
+    end;
+
+    if (unicode_enabled = 1) then
+        Result := true
+    else
+        Result := false;
+end;
+
 {---------------------------------------}
 {---------------------------------------}
 {---------------------------------------}
@@ -88,6 +142,8 @@ begin
 
     _urls := TObjectList.Create();
     _urls.OwnsObjects := true;
+
+    _unicode := CheckUnicodeEnabled();
 
 end;
 
@@ -142,8 +198,13 @@ begin
     w.Right := 0;
     w.Top := 0;
     w.Bottom := 0;
-    DrawTextExW(hCanvas, PWideChar(txt), Length(txt), w,
+    if (_unicode) then
+        DrawTextExW(hCanvas, PWideChar(txt), Length(txt), w,
+            DT_SINGLELINE or DT_CALCRECT or DT_NOPREFIX, nil)
+    else
+        DrawTextEx(hCanvas, PChar(string(txt)), Length(String(txt)), w,
             DT_SINGLELINE or DT_CALCRECT or DT_NOPREFIX, nil);
+
     ws := w.Right;
 
     words := TWidestringlist.Create();
@@ -161,8 +222,12 @@ begin
         w.right := x + 1;
         w.Bottom := y + 1;
 
-        DrawTextExW(hCanvas, PWideChar(txt), Length(txt), w,
-            DT_SINGLELINE or DT_CALCRECT or DT_NOPREFIX, nil);
+        if (_unicode) then
+            DrawTextExW(hCanvas, PWideChar(txt), Length(txt), w,
+                DT_SINGLELINE or DT_CALCRECT or DT_NOPREFIX, nil)
+        else
+            DrawTextEx(hCanvas, PChar(String(txt)), Length(String(txt)), w,
+                DT_SINGLELINE or DT_CALCRECT or DT_NOPREFIX, nil);
 
         l := w.Right - w.Left;
 
@@ -187,8 +252,14 @@ begin
                 x := 0;
                 w.Right := 0;
                 w.Top := w.Bottom + 1;
-                DrawTextExW(hCanvas, PWideChar(txt), Length(txt), w,
+
+                if (_unicode) then
+                    DrawTextExW(hCanvas, PWideChar(txt), Length(txt), w,
+                            DT_SINGLELINE or DT_CALCRECT or DT_NOPREFIX, nil)
+                else
+                    DrawTextEx(hCanvas, PChar(String(txt)), Length(String(txt)), w,
                             DT_SINGLELINE or DT_CALCRECT or DT_NOPREFIX, nil);
+
                 l := w.Right - w.Left;
                 y := w.Top;
                 wonkus := false;
@@ -317,6 +388,7 @@ initialization
     // http://bar. this is some text
     REGEX_URL.expression := '(https?|ftp|xmpp)://[^ "'''#$D#$A#$9']+';
     REGEX_URL.Compile();
+    unicode_enabled := 0;
 
 finalization
     FreeAndNil(REGEX_URL);
