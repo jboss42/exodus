@@ -125,7 +125,8 @@ const
     sTurnOnBlocking = 'You currently have logging turned off. Turn Logging On? (Warning: Logs are not encrypted)';
 
     sNewGroup = 'New Roster Group';
-    sNewGroupPrompt = 'Enter new group name: ';
+    sNewGroupPrompt = 'Enter new group name below. ';
+    sNewGroupNested = 'To create a nested group a name like foo%sbar.';
     sNewGroupExists = 'This group already exists!';
 
 var
@@ -954,14 +955,20 @@ end;
 {---------------------------------------}
 function promptNewGroup: TJabberGroup;
 var
+    msg: Widestring;
     new_grp: WideString;
     go: TJabberGroup;
 begin
     // Add a roster grp.
     Result := nil;
-    
+
     new_grp := _(sDefaultGroup);
-    if InputQueryW(_(sNewGroup), _(sNewGroupPrompt), new_grp) = false then exit;
+    msg := _(sNewGroupPrompt);
+
+    if (MainSession.Prefs.getBool('nested_groups')) then
+        msg := msg + ''#13#10 + WideFormat(_(sNewGroupNested),
+            [MainSession.Prefs.getString('group_seperator')]);
+    if InputQueryW(_(sNewGroup), msg, new_grp) = false then exit;
 
     // add the new grp.
     go := MainSession.Roster.getGroup(new_grp);
