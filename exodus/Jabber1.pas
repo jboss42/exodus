@@ -2548,7 +2548,7 @@ begin
         exit;
     end;
 
-    iq := TJabberIQ.Create(MainSession, MainSession.generateID, Self.ChangePasswordCallback);
+    iq := TJabberIQ.Create(MainSession, MainSession.generateID, Self.ChangePasswordCallback, 120);
     with iq do begin
         iqType := 'set';
         toJid := MainSession.Server;
