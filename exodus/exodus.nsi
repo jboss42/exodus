@@ -344,7 +344,7 @@ Section "Daily updates" SEC_Bleed
     SetOverwrite on
 SectionEnd
 
-Section "Laguage packs" SEC_Locale
+Section "Language packs" SEC_Locale
     File "locale.zip"
     ZipDLL::extractall "$INSTDIR\locale.zip" "$INSTDIR"
     Delete "$INSTDIR\locale.zip"
