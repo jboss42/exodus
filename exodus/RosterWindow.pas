@@ -1085,8 +1085,8 @@ begin
         if (grp_node <> nil) then begin
             cur_grp := grp_node.Text;
             if (tmp_grps.IndexOf(cur_grp) < 0) then begin
-                cur_node.Free;
                 node_list.Delete(i);
+                cur_node.Free;
             end;
         end;
     end;

@@ -153,7 +153,8 @@ uses
   PrefGroups in 'prefs\PrefGroups.pas' {frmPrefGroups},
   HttpProxyIOHandler in '..\jopl\HttpProxyIOHandler.pas',
   GTLanguagesEx in 'GTLanguagesEx.pas',
-  PrefLayouts in 'prefs\PrefLayouts.pas' {frmPrefLayouts};
+  PrefLayouts in 'prefs\PrefLayouts.pas' {frmPrefLayouts},
+  Wizard in 'Wizard.pas' {frmWizard};
 
 {$R *.TLB}
 
@@ -176,6 +177,7 @@ begin
 
   Application.CreateForm(TfrmExodus, frmExodus);
   Application.CreateForm(TfrmPrefLayouts, frmPrefLayouts);
+  Application.CreateForm(TfrmWizard, frmWizard);
   frmRosterWindow := TfrmRosterWindow.Create(Application);
   frmCustomPres := TfrmCustomPres.Create(Application);
   frmEmoticons := TfrmEmoticons.Create(Application);
