@@ -148,7 +148,7 @@ end;
 procedure TfrmDockable.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
-    if (not _docked) then
+    if ((not _docked) and (MainSession <> nil)) then
         MainSession.Prefs.SavePosition(Self);
     CanClose := true;
 end;

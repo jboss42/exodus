@@ -47,9 +47,9 @@ type
     btnClose: TSpeedButton;
     pnlJID: TPanel;
     lblJID: TTntStaticText;
-    lblNick: TTntStaticText;
     imgStatus: TPaintBox;
     popClearHistory: TMenuItem;
+    lblNick: TTntLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure MsgOutKeyPress(Sender: TObject; var Key: Char);
@@ -299,7 +299,7 @@ begin
     p := MainSession.ppdb.FindPres(_jid.jid, _jid.resource);
 
     if ritem <> nil then begin
-        lblNick.Caption := ' ' + ritem.Nickname;
+        lblNick.Caption := ' ' + ritem.Nickname + ' ';
         Caption := ritem.Nickname + ' - ' + sChat;
         lblJID.Caption := '<' + _jid.full + '>';
         if (p = nil) then

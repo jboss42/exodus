@@ -40,6 +40,7 @@ type
     procedure Timer2Timer(Sender: TObject);
     procedure Shape1MouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure FormResize(Sender: TObject);
   private
     { Private declarations }
     _taskrect: TRect;
@@ -83,7 +84,7 @@ begin
         AssignDefaultFont(singleToast.Label1.Font);
 
         // reduce the font size by 1 pt.
-        singleToast.Label1.Font.Size := singleToast.Label1.Font.Size - 1;
+        //singleToast.Label1.Font.Size := singleToast.Label1.Font.Size - 1;
 
         // Setup alpha blending..
         if MainSession.Prefs.getBool('toast_alpha') then begin
@@ -102,7 +103,12 @@ begin
 
     singleToast._clickForm := clickForm;
     singleToast._clickHandle := clickForm.Handle;
-    singleToast.Label1.Caption := msg;
+    with singleToast.Label1 do begin
+        Top := 5;
+        Left := 38;
+        Width := singleToast.ClientWidth - 55;
+        Caption := msg;
+        end;
 
     // madness to make sure toast images are transparent.
     with singleToast.Image1 do begin
@@ -258,6 +264,13 @@ procedure TfrmRiser.Shape1MouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
     Panel2Click(Shape1);
+end;
+
+procedure TfrmRiser.FormResize(Sender: TObject);
+begin
+    // resize the border shape
+    Shape1.Width := Self.ClientWidth;
+    Shape1.Height := Self.ClientHeight;
 end;
 
 initialization

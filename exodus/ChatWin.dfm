@@ -1,13 +1,16 @@
 inherited frmChat: TfrmChat
-  Left = 311
-  Top = 370
+  Left = 279
+  Top = 304
   Caption = 'Chat Window'
+  Font.Charset = ANSI_CHARSET
+  Font.Height = -13
+  Font.Name = 'Arial Unicode MS'
   OldCreateOrder = True
   OnClose = FormClose
   OnCloseQuery = FormCloseQuery
   OnEndDock = FormEndDock
   PixelsPerInch = 96
-  TextHeight = 13
+  TextHeight = 18
   inherited Panel3: TPanel
     Top = 24
     Height = 224
@@ -58,10 +61,21 @@ inherited frmChat: TfrmChat
         ShowHint = True
         OnPaint = imgStatusPaint
       end
-      object lblJID: TTntStaticText
-        Left = 42
+      object lblNick: TTntLabel
+        Left = 20
         Top = 0
-        Width = 32
+        Width = 86
+        Height = 20
+        Align = alLeft
+        Caption = ' Foo '#32072#32073#32074#32075' '
+        Color = clBtnFace
+        ParentColor = False
+        Caption_UTF7 = ' Foo +fUh9SX1KfUs '
+      end
+      object lblJID: TTntStaticText
+        Left = 106
+        Top = 0
+        Width = 39
         Height = 20
         Cursor = crHandPoint
         Align = alLeft
@@ -70,18 +84,6 @@ inherited frmChat: TfrmChat
         ParentColor = False
         TabOrder = 0
         OnClick = lblJIDClick
-      end
-      object lblNick: TTntStaticText
-        Left = 20
-        Top = 0
-        Width = 22
-        Height = 20
-        Cursor = crHandPoint
-        Align = alLeft
-        Caption = 'Foo'
-        Color = clBtnFace
-        ParentColor = False
-        TabOrder = 1
       end
     end
   end

@@ -89,7 +89,7 @@ procedure initResponders();
 procedure cleanupResponders();
 
 resourcestring
-    sNotifyAutoResponse = '%s query from:'#10#13' %s';
+    sNotifyAutoResponse = '%s query from: %s';
     sVersion = 'Version';
     sTime = 'Time';
     sLast = 'Last';

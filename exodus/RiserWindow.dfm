@@ -1,6 +1,7 @@
 object frmRiser: TfrmRiser
   Left = 308
   Top = 212
+  AutoSize = True
   BorderIcons = []
   BorderStyle = bsNone
   ClientHeight = 45
@@ -18,6 +19,10 @@ object frmRiser: TfrmRiser
   OnClick = Panel2Click
   OnClose = FormClose
   OnCreate = FormCreate
+  OnResize = FormResize
+  DesignSize = (
+    184
+    45)
   PixelsPerInch = 96
   TextHeight = 13
   object Shape1: TShape
@@ -25,7 +30,6 @@ object frmRiser: TfrmRiser
     Top = 0
     Width = 184
     Height = 45
-    Align = alClient
     Brush.Style = bsClear
     Pen.Color = clBackground
     Pen.Width = 3
@@ -34,8 +38,8 @@ object frmRiser: TfrmRiser
   object Image1: TImage
     Left = 4
     Top = 5
-    Width = 30
-    Height = 32
+    Width = 34
+    Height = 34
     Center = True
     Picture.Data = {
       07544269746D617036030000424D360300000000000036000000280000001000
@@ -69,12 +73,13 @@ object frmRiser: TfrmRiser
     OnClick = Panel2Click
   end
   object Label1: TTntLabel
-    Left = 35
-    Top = 6
-    Width = 127
-    Height = 28
+    Left = 38
+    Top = 4
+    Width = 139
+    Height = 37
     Alignment = taCenter
-    Caption = 'Peter Millard is now online.'
+    Anchors = [akLeft, akTop, akRight]
+    Caption = 'something really long'
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
     Font.Height = -12

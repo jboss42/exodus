@@ -71,7 +71,7 @@ begin
         tmp_jid := TJabberID.Create(tag.getAttribute('from'));
         chat := StartChat(tmp_jid.jid, tmp_jid.resource, true);
         tmp_jid.Free;
-        DoNotify(chat, 'notify_newchat', sNotifyChat + ''#10#13 +
+        DoNotify(chat, 'notify_newchat', sNotifyChat +
                  chat.Othernick, ico_user)
         end
 
@@ -123,7 +123,7 @@ begin
                 end;
             end;
         DoNotify(nil, 'notify_s10n',
-                 'Subscription from '#10#13 + sjid, ico_key);
+                 'Subscription from ' + sjid, ico_key);
         tmp_jid.Free();
         sub.Show;
         end;

@@ -377,7 +377,7 @@ var
     bm_iq: TJabberIQ;
 begin
     js := TJabberSession(_js);
-    f_iq := TJabberIQ.Create(js, js.generateID(), ParseFullRoster);
+    f_iq := TJabberIQ.Create(js, js.generateID(), ParseFullRoster, 180);
     with f_iq do begin
         iqType := 'get';
         toJID := '';
@@ -385,7 +385,7 @@ begin
         Send();
         end;
 
-    bm_iq := TJabberIQ.Create(js, js.generateID(), bmCallback);
+    bm_iq := TJabberIQ.Create(js, js.generateID(), bmCallback, 180);
     with bm_iq do begin
         iqType := 'get';
         toJid := '';

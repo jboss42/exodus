@@ -125,6 +125,8 @@ begin
     // save all of the events in the listview out to a file
     // fn := ExtractFilePath(Application.EXEName) + 'spool.xml';
     // fn := getUserDir() + 'spool.xml';
+    if (MainSession = nil) then exit;
+    
     fn := MainSession.Prefs.getString('spool_path');
     dir := ExtractFilePath(fn);
 
@@ -349,9 +351,10 @@ procedure TfrmMsgQueue.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
     inherited;
-
     // xxx: how do we get into this state???
-    if (MainSession.prefs.getBool('expanded')) and (not Docked) then begin
+    if (MainSession = nil) then
+        lstEvents.Items.Clear
+    else if (MainSession.prefs.getBool('expanded')) and (not Docked) then begin
         CanClose := false;
         // frmExodus.DockMsgQueue();
         exit;

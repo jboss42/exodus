@@ -42,12 +42,12 @@ type
         procedure SetSession(js: TObject);
     end;
 
-procedure DoNotify(win: TForm; pref_name: string; msg: string; icon: integer);
+procedure DoNotify(win: TForm; pref_name: string; msg: Widestring; icon: integer);
 
 resourcestring
-    sNotifyOnline = 'is now online.';
-    sNotifyOffline = 'is now offline.';
-    sNotifyChat = 'Chat with';
+    sNotifyOnline = ' is now online.';
+    sNotifyOffline = ' is now offline.';
+    sNotifyChat = 'Chat with ';
 
 implementation
 uses
@@ -100,7 +100,7 @@ end;
 procedure TNotifyController.Callback(event: string; tag: TXMLTag);
 var
     sess: TJabberSession;
-    nick, j, from: string;
+    nick, j, from: Widestring;
     ritem: TJabberRosterItem;
     tmp_jid: TJabberID;
 begin
@@ -128,11 +128,11 @@ begin
 
     // someone is coming online for the first time..
     if (event = '/presence/online') then
-        DoNotify(nil, 'notify_online', nick + ''#10#13 + sNotifyOnline, ico_Online)
+        DoNotify(nil, 'notify_online', nick + sNotifyOnline, ico_Online)
 
     // someone is going offline
     else if (event = '/presence/unavailable') then
-        DoNotify(nil, 'notify_offline', nick + ''#10#13 + sNotifyOffline, ico_Offline)
+        DoNotify(nil, 'notify_offline', nick + sNotifyOffline, ico_Offline)
 
     // don't display normal presence changes
     else if ((event = '/presence/available') or (event = '/presence/error')) then
@@ -144,7 +144,7 @@ begin
 end;
 
 {---------------------------------------}
-procedure DoNotify(win: TForm; pref_name: string; msg: string; icon: integer);
+procedure DoNotify(win: TForm; pref_name: string; msg: Widestring; icon: integer);
 var
     notify : integer;
     w, tw: TForm;
