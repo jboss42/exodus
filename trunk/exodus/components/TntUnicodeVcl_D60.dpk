@@ -28,13 +28,11 @@ package TntUnicodeVcl_D60;
 
 requires
   vcl,
-  vclx,
-  vcldb;
+  vclx;
 
 contains
   TntComCtrls in 'TntComCtrls.pas',
   TntControls in 'TntControls.pas',
-  TntDBCtrls in 'TntDBCtrls.pas',
   TntForms in 'TntForms.pas' {TntForm},
   TntStdCtrls in 'TntStdCtrls.pas',
   TntClasses in 'TntClasses.pas',
