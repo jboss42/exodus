@@ -7,7 +7,7 @@ inherited frmPrefRoster: TfrmPrefRoster
   OldCreateOrder = True
   PixelsPerInch = 96
   TextHeight = 13
-  object Label21: TTntLabel [0]
+  object lblDblClick: TTntLabel [0]
     Left = 0
     Top = 125
     Width = 164

@@ -15,9 +15,32 @@
         
         <xa_status control="txtXA" state="ro">
             <control name="lblXAStatus"/>
-        </xa_status>                    	
-                    	
-        <!-- unfiled -->                    	
+        </xa_status>
+
+        <!-- Roster Options -->                    	
+        <roster_show_unsub value="0" control="chkShowUnsubs"/>
+        <roster_show_pending value="1" control="chkShowPending"/>
+        <roster_hide_block value="0" control="chkHideBlocked"/>
+        <roster_pres_errors  value="0" control="chkPresErrors"/>
+        <roster_unicode value="true" control="chkRosterUnicode"/>
+        <roster_chat value="2" control="cboDblClick">
+        	<control name="lblDblClick"/>
+    	</roster_chat>
+
+        <inline_status value="0" control="chkInlineStatus"/>
+        <inline_color value="$0000FF00" control="cboInlineStatus"/>
+        <nested_groups value="1" control="chkNestedGrps"/>
+        <group_seperator value="/" control="txtGrpSeperator"/>
+
+
+        <!-- unfiled -->
+        <roster_bg value="$80000005"/>
+        <roster_groupcounts value="1"/>
+        <roster_messenger value="1"/>
+        <roster_offline_group value="0"/>
+        <roster_only_online value="0"/>
+        <roster_transport_grp value="Transports"/>
+
         <always_lang value="0"></always_lang>
         
         <auto_update_url value="http://exodus.jabberstudio.org/exodus-released.exe">
@@ -117,7 +140,6 @@
         <http_proxy_password ></http_proxy_password>
         <http_proxy_port value="8080"></http_proxy_port>
         <http_proxy_user ></http_proxy_user>
-        <inline_status value="0"></inline_status>
         <log value="1"></log>
         <notify_active value="1"></notify_active>
         <notify_chatactivity value="4"></notify_chatactivity>
@@ -135,16 +157,6 @@
         <presence_message_listen value="1"></presence_message_listen>
         <presence_message_send value="1"></presence_message_send>
         <profile_active value="0"></profile_active>
-        <roster_bg value="$80000005"></roster_bg>
-        <roster_chat value="2"></roster_chat>
-        <roster_groupcounts value="1"></roster_groupcounts>
-        <roster_messenger value="1"></roster_messenger>
-        <roster_offline_group value="0"></roster_offline_group>
-        <roster_only_online value="0"></roster_only_online>
-        <roster_show_pending value="1"></roster_show_pending>
-        <roster_show_unsub value="0"></roster_show_unsub>
-        <roster_transport_grp value="Transports"></roster_transport_grp>
-        <roster_unicode value="true"></roster_unicode>
         <s10n_auto_accept value="0"></s10n_auto_accept>
         <single_instance value="1"></single_instance>
         <snap_on value="1"></snap_on>
@@ -157,8 +169,6 @@
         <roster_default value="Friends"></roster_default>
         <xfer_port value="5280"></xfer_port>
         <close_hotkey value="Alt + W"></close_hotkey>
-        <nested_groups value="1"></nested_groups>
-        <group_seperator value="/"></group_seperator>
     </prefs>
 
     <!-- default custom presence stuff -->

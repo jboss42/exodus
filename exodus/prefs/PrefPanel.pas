@@ -45,13 +45,11 @@ implementation
 {$R *.dfm}
 
 uses
-    Session, PrefFile, PrefController, GnuGetText, ExUtils;
+    Session, PrefFile, PrefController, GnuGetText, ExUtils, XMLUtils;
 
 procedure TfrmPrefPanel.LoadPrefs();
 var
     s: TPrefState;
-    bval: boolean;
-    ival: integer;
     p, sval: Widestring;
     c: TControl;
     i: integer;
@@ -63,20 +61,20 @@ begin
         if (p = '') then continue;
 
         s := getPrefState(p);
+        sval := MainSession.Prefs.getString(p);
 
         // XXX: lots more controls need to go here.
-        if (c.inheritsFrom(TTntCheckBox)) then begin
-            bval := MainSession.Prefs.getBool(p);
-            TCheckBox(c).Checked := bval;
-        end
-        else if (c.inheritsFrom(TUpDown)) then begin
-            ival := MainSession.Prefs.getInt(p);
-            TUpDown(c).Position := ival;
-        end
-        else if (c.inheritsFrom(TTntEdit)) then begin
-            sval := MainSession.Prefs.getString(p);
+        if (c.inheritsFrom(TTntCheckBox)) then
+            TCheckBox(c).Checked := SafeBool(sval)
+        else if (c.inheritsFrom(TUpDown)) then
+            TUpDown(c).Position := SafeInt(sval)
+        else if (c.inheritsFrom(TTntComboBox)) then
+            TTntComboBox(c).ItemIndex := SafeInt(sval)
+        else if (c.inheritsFrom(TColorBox)) then
+            TColorBox(c).Selected := TColor(SafeInt(sval))
+
+        else if (c.inheritsFrom(TTntEdit)) then
             TTntEdit(c).Text := sval;
-        end;
 
         // Make sure to set state for this control
         if (s = psReadOnly) then begin
