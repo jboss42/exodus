@@ -805,6 +805,7 @@ procedure TfrmChat.FormEndDock(Sender, Target: TObject; X, Y: Integer);
 begin
     inherited;
     btnClose.Visible := Docked;
+    if (Docked) then Self.TabSheet.ImageIndex := -1;
     DragAcceptFiles( Handle, not Docked);
 end;
 

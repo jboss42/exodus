@@ -189,6 +189,7 @@ type
     cboPresTracking: TComboBox;
     btnLogClearAll: TButton;
     chkCloseQueue: TCheckBox;
+    chkFlashInfinite: TCheckBox;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure TabSelect(Sender: TObject);
@@ -410,6 +411,7 @@ begin
 
         chkSound.Checked := getBool('notify_sounds');
         chkNotifyActive.Checked := getBool('notify_active');
+        chkFlashInfinite.Checked := getBool('notify_flasher');
         _notify[0]  := getInt('notify_online');
         _notify[1]  := getInt('notify_offline');
         _notify[2]  := getInt('notify_newchat');
@@ -544,6 +546,7 @@ begin
         // Notify events
         setBool('notify_sounds', chkSound.Checked);
         setBool('notify_active', chkNotifyActive.Checked);
+        setBool('notify_flasher', chkFlashInfinite.Checked);
 
         setInt('notify_online', _notify[0]);
         setInt('notify_offline', _notify[1]);

@@ -62,6 +62,10 @@ uses
     Debug,
     Session;
 
+const
+    // image index for tab notification.
+    tab_notify = 9;
+
 {---------------------------------------}
 constructor TNotifyController.Create;
 begin
@@ -143,7 +147,8 @@ end;
 procedure DoNotify(win: TForm; pref_name: string; msg: string; icon: integer);
 var
     notify : integer;
-    w : TForm;
+    w: TForm;
+    d: TfrmDockable;
 begin
     if ((Application.Active and (not MainSession.prefs.getBool('notify_active'))) or
         (MainSession.IsPaused)) then exit;
@@ -159,8 +164,26 @@ begin
         ShowRiserWindow(w, msg, icon);
 
     if ((notify and notify_flash) > 0) then begin
-        FlashWindow(w.Handle, true);
-        FlashWindow(w.Handle, true);
+        // flash or show img
+        if (w = frmExodus) then begin
+            if frmExodus.Tabs.ActivePage <> frmExodus.tbsRoster then
+                frmExodus.tbsRoster.ImageIndex := tab_notify;
+            end
+        else if (w is TfrmDockable) then begin
+            d := TfrmDockable(w);
+            if d.Docked then begin
+                if frmExodus.Tabs.ActivePage <> d.TabSheet then begin
+                    d.TabSheet.ImageIndex := tab_notify;
+                    frmExodus.Tabs.Repaint();
+                    end;
+                end
+            else
+                d.Flash();
+            end
+        else begin
+            FlashWindow(w.Handle, true);
+            FlashWindow(w.Handle, true);
+            end;
         end;
 
     if (MainSession.prefs.getBool('notify_sounds')) then

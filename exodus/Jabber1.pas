@@ -183,6 +183,7 @@ type
     timReconnect: TTimer;
     ShowEventsWindow1: TMenuItem;
     presToggle: TMenuItem;
+    ImageList3: TImageList;
     procedure FormCreate(Sender: TObject);
     procedure btnConnectClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -241,6 +242,7 @@ type
     procedure presToggleClick(Sender: TObject);
     procedure ApplicationEvents1Activate(Sender: TObject);
     procedure ApplicationEvents1Deactivate(Sender: TObject);
+    procedure TabsChange(Sender: TObject);
   private
     { Private declarations }
     _event: TNextEventType;
@@ -272,6 +274,7 @@ type
     _close_min: boolean;
     _appclosing: boolean;
     _testaa: boolean;
+    _new_tabindex: integer;
 
     // Stuff for the Autoaway DLL
     _hookLib: THandle;
@@ -698,6 +701,7 @@ begin
     _cli_status := sAvailable;
     _cli_show := '';
     _updating := false;
+    _new_tabindex := -1;
 
     // Hide the application's window, and set our own
     // window to the proper parameters..
@@ -2547,8 +2551,10 @@ end;
 procedure TfrmExodus.TabsDockDrop(Sender: TObject; Source: TDragDockObject; X,
   Y: Integer);
 begin
-    if (Source.Control is TfrmDockable) then
+    if (Source.Control is TfrmDockable) then begin
         TfrmDockable(Source.Control).Docked := true;
+        _new_tabindex := Tabs.PageCount;
+        end;
 end;
 
 {---------------------------------------}
@@ -2703,6 +2709,12 @@ begin
     // app was deactivated..
     if (Self.ActiveChat <> nil) then
         Self.ActiveChat.HideEmoticons();
+end;
+
+procedure TfrmExodus.TabsChange(Sender: TObject);
+begin
+    if (Tabs.ActivePage.ImageIndex <> -1) then
+        Tabs.ActivePage.ImageIndex := -1;
 end;
 
 initialization
