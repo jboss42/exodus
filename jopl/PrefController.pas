@@ -186,58 +186,68 @@ end;
         constructor Create(filename: Widestring);
         Destructor Destroy; override;
 
+        // Bulk update
+        procedure BeginUpdate();
+        procedure EndUpdate();
+
+        // getters
+        procedure fillStringlist(pkey: Widestring; sl: TWideStrings; server_side: TPrefKind = pkClient); overload;
         function getString(pkey: Widestring; server_side: TPrefKind = pkClient): Widestring;
         function getInt(pkey: Widestring; server_side: TPrefKind = pkClient): integer;
         function getBool(pkey: Widestring; server_side: TPrefKind = pkClient): boolean;
         function getDateTime(pkey: Widestring; server_side: TPrefKind = pkClient): TDateTime;
         function getSetDateTime(pkey: Widestring; server_side: TPrefKind = pkClient): TDateTime;
-        procedure fillStringlist(pkey: Widestring; sl: TWideStrings; server_side: TPrefKind = pkClient); overload;
-        {$ifdef Exodus}
-        procedure fillStringlist(pkey: Widestring; sl: TTntStrings; server_side: TPrefKind = pkClient); overload;
-        {$endif}
-
-        function getAllPresence(): TWidestringList;
-        function getPresence(pkey: Widestring): TJabberCustomPres;
-        function getPresIndex(idx: integer): TJabberCustomPres;
-
         function getControl(pkey: Widestring): Widestring;
         function getPref(cname: Widestring): Widestring;
 
+        // setters
         procedure setString(pkey, pvalue: Widestring; server_side: TPrefKind = pkClient);
         procedure setInt(pkey: Widestring; pvalue: integer; server_side: TPrefKind = pkClient);
         procedure setBool(pkey: Widestring; pvalue: boolean; server_side: TPrefKind = pkClient);
         procedure setDateTime(pkey: Widestring; pvalue: TDateTime; server_side: TPrefKind = pkClient);
         procedure setStringlist(pkey: Widestring; pvalue: TWideStrings; server_side: TPrefKind = pkClient); overload;
-        {$ifdef Exodus}
-        procedure setStringlist(pkey: Widestring; pvalue: TTntStrings; server_side: TPrefKind = pkClient); overload;
-        {$endif}
 
+{$ifdef Exodus}
+        procedure fillStringlist(pkey: Widestring; sl: TTntStrings; server_side: TPrefKind = pkClient); overload;
+        procedure setStringlist(pkey: Widestring; pvalue: TTntStrings; server_side: TPrefKind = pkClient); overload;
+{$endif}
+
+        // Custom presence getters
+        function getAllPresence(): TWidestringList;
+        function getPresence(pkey: Widestring): TJabberCustomPres;
+        function getPresIndex(idx: integer): TJabberCustomPres;
+
+        // Custom presence setters
         procedure setPresence(pvalue: TJabberCustomPres);
         procedure removePresence(pvalue: TJabberCustomPres);
         procedure removeAllPresence();
+        procedure setupDefaultPresence();
 
+        // Form position stuff
         procedure SavePosition(form: TForm); overload;
         procedure SavePosition(form: TForm; key: Widestring); overload;
-
         procedure CheckPositions(form: TForm; t, l, w, h: integer);
         procedure RestorePosition(form: TForm); overload;
         function RestorePosition(form: TForm; key: Widestring): boolean; overload;
 
+        // HTTP Proxy stuff
         procedure setProxy(http: TIdHttp);
         procedure getHttpProxy(var host: string; var port: integer);
 
+        // Profiles
         procedure LoadProfiles;
         procedure SaveProfiles;
+        procedure RemoveProfile(p: TJabberProfile);
+        function CreateProfile(name: Widestring): TJabberProfile;
 
+        // Local Bookmark storage
+        function LoadBookmarks(): TXMLTag;
+        procedure SaveBookmarks(tag: TXMLTag);
+
+        // Misc.
         procedure SetSession(js: TObject);
         procedure FetchServerPrefs();
         procedure SaveServerPrefs();
-
-        function CreateProfile(name: Widestring): TJabberProfile;
-        procedure RemoveProfile(p: TJabberProfile);
-        procedure BeginUpdate();
-        procedure EndUpdate();
-        procedure setupDefaultPresence();
 
 //        function getXMLTag(name: Widestring): TXMLTag;
 
@@ -1136,6 +1146,18 @@ begin
 
     Save();
     ptags.Free;
+end;
+
+{---------------------------------------}
+function TPrefController.LoadBookmarks(): TXMLTag;
+begin
+    Result := _pref_file.Bookmarks;
+end;
+
+{---------------------------------------}
+procedure TPrefController.SaveBookmarks(tag: TXMLTag);
+begin
+    _pref_file.SaveBookmarks(tag);
 end;
 
 {---------------------------------------}

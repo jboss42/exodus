@@ -238,10 +238,9 @@ begin
     else if ((event = 'xml') and (tag.getAttribute('type') = 'error')) then begin
         // XDB prolly doesn't support remote storage. Get bm's from prefs
         _xdb_bm := false;
-        // XXX: local-bookmarks
-//        p := MainSession.Prefs.getXMLTag('local-bookmarks');
-//        if (p <> nil) then
-//            bms := p.ChildTags();
+        p := MainSession.Prefs.LoadBookmarks();
+        if (p <> nil) then
+            bms := p.ChildTags();
     end;
 
     if (bms <> nil) then begin
@@ -292,17 +291,10 @@ begin
     end
     else begin
         // bookmarks from prefs
-//        MainSession.Prefs.BeginUpdate();
-        // XXX: local-bookmarks
-//        stag := MainSession.Prefs.getXMLTag('local-bookmarks');
-//        if (stag = nil) then begin
-//            MainSession.Prefs.setString('local-bookmarks', '');
-            // stag := MainSession.Prefs.getXMLTag('local-bookmarks');
-//        end;
-//        assert(stag <> nil);
-//        for i := 0 to Bookmarks.Count - 1 do
-//            TJabberBookmark(Bookmarks.Objects[i]).AddToTag(stag);
-//        MainSession.Prefs.EndUpdate();
+        stag := TXMLTag.Create('local-bookmarks');
+        for i := 0 to Bookmarks.Count - 1 do
+            TJabberBookmark(Bookmarks.Objects[i]).AddToTag(stag);
+        MainSession.Prefs.SaveBookmarks(stag);
     end;
 end;
 
