@@ -52,7 +52,7 @@ type
     _chat: TChatController;
     _plugs: TList;
     _menu_items: TWidestringlist;
-
+    _nextid: longint;
   end;
 
   TChatPlugin = class
@@ -63,7 +63,7 @@ end;
 implementation
 
 uses
-    BaseMsgList, RTFMsgList, XMLTag, ComServ, Menus, SysUtils;
+    Controls, BaseMsgList, RTFMsgList, XMLTag, ComServ, Menus, SysUtils;
 
 {---------------------------------------}
 constructor TExodusChat.Create();
@@ -71,6 +71,7 @@ begin
     inherited Create();
     _plugs := TList.Create();
     _menu_items := TWidestringlist.Create();
+    _nextid := 0;
 end;
 
 {---------------------------------------}
@@ -202,9 +203,13 @@ function TExodusChat.AddContextMenu(const Caption: WideString): WideString;
 var
     id: Widestring;
     mi: TMenuItem;
+    idx: integer;
 begin
     // add a new TMenuItem to the Plugins menu
-    id := 'plugin_' + IntToStr(_menu_items.Count);
+    inc(_nextid);
+    idx := _nextid;
+    id := 'plugin_' + IntToStr(idx);
+    
     if (_room <> nil) then begin
         mi := TMenuItem.Create(_room);
         mi.Name := id;
