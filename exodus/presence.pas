@@ -38,6 +38,7 @@ type
         Status: string;
         Show: string;
         Priority: integer;
+        error_code: integer;
 
         constructor Create; override;
         destructor Destroy; override;
@@ -103,6 +104,7 @@ begin
     Show := '';
     Priority := -1;
     Self.name := 'presence';
+    error_code := '';
 end;
 
 {---------------------------------------}
@@ -150,7 +152,7 @@ end;
 {---------------------------------------}
 procedure TJabberPres.parse(tag: TXMLTag);
 var
-    pri_tag, stat_tag, show_tag: TXMLTag;
+    err_tag, pri_tag, stat_tag, show_tag: TXMLTag;
     f,t: string;
 begin
     // parse the tag into the proper elements
@@ -172,6 +174,13 @@ begin
         fromJID.ParseJID(f);
     if t <> '' then
         toJID.ParseJID(t);
+
+    if (presType = 'error') then begin
+        // get the error code.
+        err_tag := tag.GetFirstTag('error');
+        if (err_tag <> nil) then
+            error_code = err_tag.getAttribute('code');
+        end;
 end;
 
 {---------------------------------------}
@@ -220,7 +229,11 @@ begin
         end
     else if curp.PresType = 'error' then begin
         // some kind of error presence
-        s.FireEvent('/presence/error', tag, curp);
+        if (curp.error_code = '407') then begin
+            
+            end
+        else
+            s.FireEvent('/presence/error', tag, curp);
         end
     else if (curp.PresType = 'subscribe') or
         (curp.PresType = 'subscribed') or

@@ -65,13 +65,16 @@ type
         procedure SendRegistration;
         procedure RegistrationCallback(event: string; xml: TXMLTag);
 
+        function getMyAgents(): TAgents;
+
     public
         ppdb: TJabberPPDB;
         roster: TJabberRoster;
         ChatList: TJabberChatList;
         Prefs: TPrefController;
         Notify: TNotifyController;
-        Agents: TAgents;
+        // Agents: TAgents;
+        Agents: TStringList;
 
         dock_windows: boolean;
 
@@ -97,6 +100,8 @@ type
         procedure AssignProfile(profile: TJabberProfile);
         procedure ActivateProfile(i: integer);
 
+        function NewAgentsList(srv: string): TAgents;
+        function GetAgentsList(srv: string): TAgents;
         function generateID: string;
 
         property Username: string read _username write _username;
@@ -109,6 +114,7 @@ type
         property Status: string read _status;
         property Stream: TXMLStream read _stream;
         property Dispatcher: TSignalDispatcher read _dispatcher;
+        property MyAgents: TAgents read getMyAgents;
     end;
 
 const
@@ -138,6 +144,8 @@ uses
 
 {---------------------------------------}
 Constructor TJabberSession.Create;
+var
+    my_agents: TAgents;
 begin
     //
     inherited Create;
@@ -184,7 +192,8 @@ begin
     Notify := TNotifyController.Create;
     Notify.SetSession(Self);
 
-    Agents := TAgents.Create();
+    // Agents := TAgents.Create();
+    Agents := TStringList.Create();
 end;
 
 {---------------------------------------}
@@ -500,6 +509,8 @@ end;
 
 {---------------------------------------}
 procedure TJabberSession.AuthCallback(event: string; tag: TXMLTag);
+var
+    cur_agents: TAgents;
 begin
     // check the result of the authentication
     if ((tag = nil) or (tag.getAttribute('type') = 'error')) then begin
@@ -510,7 +521,9 @@ begin
     else begin
         _dispatcher.DispatchSignal('/session/authenticated', tag);
         Self.RegisterCallback(ChatList.MsgCallback, '/packet/message[@type="chat"]');
-        Agents.Fetch(_server);
+        cur_agents := TAgents.Create();
+        Agents.AddObject(_server, cur_agents);
+        cur_agents.Fetch(_server);
         end;
 end;
 
@@ -546,6 +559,37 @@ begin
     SendTag(p);
     MainSession.FireEvent('/session/presence', nil);
 end;
+
+{---------------------------------------}
+function TJabberSession.getMyAgents: TAgents;
+begin
+    //
+    if (Agents.Count > 0) then
+        Result := TAgents(Agents.Objects[0])
+    else
+        Result := nil;
+end;
+
+{---------------------------------------}
+function TJabberSession.NewAgentsList(srv: string): TAgents;
+begin
+    // create some new agents list object and return it
+    Result := TAgents.Create();
+    Self.Agents.AddObject(srv, Result);
+end;
+
+{---------------------------------------}
+function TJabberSession.GetAgentsList(srv: string): TAgents;
+var
+    idx: integer;
+begin
+    idx := Agents.indexOf(srv);
+    if (idx >= 0) then
+        Result := TAgents(Agents.Objects[idx])
+    else
+        Result := nil;
+end;
+
 
 end.
 

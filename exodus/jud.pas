@@ -93,8 +93,8 @@ begin
     // populate the drop down box based on our current agents..
     with f.cboJID.Items do begin
         Clear;
-        for i := 0 to MainSession.Agents.Count - 1 do begin
-            a := MainSession.Agents.getAgent(i);
+        for i := 0 to MainSession.MyAgents.Count - 1 do begin
+            a := MainSession.MyAgents.getAgent(i);
             if (a.search) then
                 Add(a.jid);
             end;

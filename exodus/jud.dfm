@@ -138,7 +138,7 @@ inherited frmJUD: TfrmJUD
       object Label3: TLabel
         Left = 1
         Top = 11
-        Width = 158
+        Width = 128
         Height = 13
         Caption = 'Add Contacts to this group:'
       end

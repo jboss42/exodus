@@ -22,8 +22,10 @@ unit RosterAdd;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  buttonFrame, StdCtrls;
+    Agents,
+    XMLTag,
+    Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
+    buttonFrame, StdCtrls;
 
 type
   TfrmAdd = class(TForm)
@@ -35,14 +37,23 @@ type
     cboGroup: TComboBox;
     frameButtons1: TframeButtons;
     lblAddGrp: TLabel;
+    cboType: TComboBox;
+    Label4: TLabel;
+    lblGateway: TLabel;
+    txtGateway: TEdit;
     procedure frameButtons1btnOKClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure frameButtons1btnCancelClick(Sender: TObject);
     procedure lblAddGrpClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure txtJIDExit(Sender: TObject);
+    procedure cboTypeChange(Sender: TObject);
   private
     { Private declarations }
+    agents: TAgents;
+    svc, gw, sjid, snick, sgrp: string;
+    procedure agentsCallback(event: string; tag: TXMLTag);
+    procedure doAdd;
   public
     { Public declarations }
   end;
@@ -61,6 +72,7 @@ uses
     Presence,
     Session;
 {$R *.DFM}
+
 {---------------------------------------}
 function ShowAddContact: TfrmAdd;
 begin
@@ -70,16 +82,28 @@ end;
 
 {---------------------------------------}
 procedure TfrmAdd.frameButtons1btnOKClick(Sender: TObject);
-var
-    sjid, snick, sgrp: string;
 begin
     // Add the new roster item..
     sjid := txtJID.Text;
     snick := txtNickname.Text;
     sgrp := cboGroup.Text;
+    svc := cboType.Text;
 
-    MainSession.Roster.AddItem(sjid, snick, sgrp, true);
-    Self.Close;
+    // check to see if we need an agents list
+    if (cboType.ItemIndex > 0) then begin
+        gw := txtGateway.Text;
+        agents := MainSession.GetAgentsList(gw);
+        if (agents = nil) then begin
+            MainSession.RegisterCallback(agentsCallback, '/session/agents');
+            agents := MainSession.NewAgentsList(gw);
+            agents.Fetch(gw);
+            Self.Hide;
+            end
+        else
+            doAdd();
+        end
+    else
+        doAdd();
 end;
 
 {---------------------------------------}
@@ -113,6 +137,7 @@ begin
     cboGroup.Items.Assign(MainSession.Roster.GrpList);
     if cboGroup.Items.Count > 0 then
         cboGroup.ItemIndex := 0;
+    txtGateway.Text := MainSession.Server;
 end;
 
 {---------------------------------------}
@@ -126,6 +151,64 @@ begin
         txtNickname.Text := tmp_id.user;
         end;
 end;
+
+{---------------------------------------}
+procedure TfrmAdd.cboTypeChange(Sender: TObject);
+var
+    en: boolean;
+begin
+    //
+    en := (cboType.ItemIndex > 0);
+    lblGateway.Enabled := en;
+    txtGateway.Enabled := en;
+end;
+
+{---------------------------------------}
+procedure TfrmAdd.doAdd;
+var
+    a: TAgentItem;
+    j: string;
+    i: integer;
+begin
+    // check to see if there is an agent for this type
+    // of contact type
+
+    if (svc = 'jabber') then begin
+        MainSession.Roster.AddItem(sjid, snick, sgrp, true);
+        Self.Close;
+        end
+    else begin
+        a := agents.findService(svc);
+        if (a <> nil) then begin
+            // we have this type of svc..
+            j := '';
+            for i := 1 to length(sjid) do begin
+                if (sjid[i] = '@') then
+                    j := j + '%'
+                else
+                    j := j + sjid[i];
+                end;
+            sjid := j + '@' + a.jid;
+            MainSession.Roster.AddItem(sjid, snick, sgrp, true);
+            Self.Close();
+            end
+        else begin
+            // we don't have this svc..
+            MessageDlg('The gateway server you requested does not have a transport for this contact type.',
+                mtError, [mbOK], 0);
+            Self.Show();
+            end;
+        end;
+end;
+
+{---------------------------------------}
+procedure TfrmAdd.agentsCallback(event: string; tag: TXMLTag);
+begin
+    // we are getting some kind of agents list
+    if (tag.GetAttribute('from') = gw) then
+        doAdd();
+end;
+
 
 end.
 

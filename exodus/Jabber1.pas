@@ -1081,7 +1081,7 @@ end;
 procedure TfrmJabber.SearchforPerson1Click(Sender: TObject);
 begin
     // Start a default search
-    StartSearch(MainSession.Agents.getFirstSearch);
+    StartSearch(MainSession.MyAgents.getFirstSearch);
 end;
 
 {---------------------------------------}
