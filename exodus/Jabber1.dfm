@@ -351,6 +351,10 @@ object frmExodus: TfrmExodus
           Caption = 'Available'
           ImageIndex = 1
         end
+        object presChat: TMenuItem
+          Caption = 'Free to Chat'
+          ImageIndex = 4
+        end
         object presAway: TMenuItem
           Tag = 2
           Caption = 'Away'
@@ -2626,21 +2630,25 @@ object frmExodus: TfrmExodus
     object trayPresence: TMenuItem
       Caption = 'Presence'
       Enabled = False
-      object Available2: TMenuItem
+      object trayPresOnline: TMenuItem
         Caption = 'Available'
         ImageIndex = 1
       end
-      object Away1: TMenuItem
+      object trayPresChat: TMenuItem
+        Caption = 'Free to Chat'
+        ImageIndex = 4
+      end
+      object trayPresAway: TMenuItem
         Tag = 2
         Caption = 'Away'
         ImageIndex = 2
       end
-      object XtendedAway1: TMenuItem
+      object trayPresXA: TMenuItem
         Tag = 3
         Caption = 'Xtended Away'
         ImageIndex = 10
       end
-      object DoNotDisturb1: TMenuItem
+      object trayPresDND: TMenuItem
         Tag = 4
         Caption = 'Do Not Disturb'
         ImageIndex = 3
