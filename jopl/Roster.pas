@@ -828,7 +828,7 @@ begin
                     sig(event, tag, ritem);
                 except
                     on x: Exception do
-                        Dispatcher.handleException(Self, x, l, tag);
+                        Dispatcher.handleException(Self, x, l, event, tag);
                 end;
             end;
         end
@@ -837,7 +837,7 @@ begin
                 sig(event, tag, ritem);
             except
                 on x: Exception do
-                    Dispatcher.handleException(Self, x, l, tag);
+                    Dispatcher.handleException(Self, x, l, event, tag);
             end;
         end;
     end;

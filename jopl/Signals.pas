@@ -66,7 +66,7 @@ type
         procedure DeleteListener(lid: longint);
         procedure AddListenerInfo(lid: integer; sig: TSignal; l: TSignalListener);
         procedure handleException(sig: TSignal; e: Exception;
-            sl: TSignalListener; tag: TXMLTag);
+            sl: TSignalListener; event: string; tag: TXMLTag);
 
         function TotalCount: longint;
 
@@ -241,7 +241,7 @@ end;
 
 {---------------------------------------}
 procedure TSignalDispatcher.handleException(sig: TSignal; e: Exception;
-    sl: TSignalListener; tag: TXMLTag);
+    sl: TSignalListener; event: string; tag: TXMLTag);
 var
     data: TWideStringlist;
 begin
@@ -251,6 +251,7 @@ begin
     data := TWidestringList.Create();
     data.Add('Exception: ' + e.Message);
     data.Add('Signal Class: ' + sig.ClassName);
+    data.Add('Event: ' + event);
     data.Add('Listener Classname: ' + sl.classname);
     data.Add('Listener Methodname: ' + sl.methodname);
     if (tag <> nil) then
@@ -445,7 +446,7 @@ begin
                         sig(event, tag);
                     except
                         on e: Exception do
-                            Dispatcher.handleException(Self, e, l, tag);
+                            Dispatcher.handleException(Self, e, l, event, tag);
                     end;
                 end;
             end
@@ -455,7 +456,7 @@ begin
                     sig(event, tag);
                 except
                     on e: Exception do
-                        Dispatcher.handleException(Self, e, l, tag);
+                        Dispatcher.handleException(Self, e, l, event, tag);
                 end;
             end;
         end;
@@ -561,7 +562,7 @@ begin
                 fired := true;
             except
                 on e: Exception do
-                    Dispatcher.handleException(Self, e, pl, tag);
+                    Dispatcher.handleException(Self, e, pl, event, tag);
             end;
         end;
     end;
@@ -606,7 +607,7 @@ begin
             se(event, tag, data);
         except
             on e: Exception do
-                Dispatcher.handleException(Self, e, sl, tag);
+                Dispatcher.handleException(Self, e, sl, event, tag);
         end;
     end;
     invoking := false;
