@@ -11,7 +11,7 @@ unit ExodusCOM_TLB;
 // manual modifications will be lost.                                         
 // ************************************************************************ //
 
-// PASTLWTR : $Revision: 1.5 $
+// PASTLWTR : $Revision: 1.6 $
 // File generated on 12/31/2002 2:08:24 PM from Type Library described below.
 
 // ************************************************************************  //

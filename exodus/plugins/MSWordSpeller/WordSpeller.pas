@@ -16,6 +16,8 @@ type
     procedure Process(const xml: WideString); safecall;
     procedure NewChat(const jid: WideString; const Chat: IExodusChat); safecall;
     procedure NewRoom(const jid: WideString; const Room: IExodusChat); safecall;
+    procedure menuClick(const ID: WideString); safecall;
+    procedure onAgentsList(const Server: WideString); safecall;
     { Protected declarations }
   private
     _exodus: IExodusController;
@@ -24,16 +26,27 @@ type
 
 implementation
 
-uses ComServ;
+uses
+    Dialogs, SysUtils, ComServ;
 
 procedure TWordSpeller.Startup(const ExodusController: IExodusController);
+var
+    msg: string;
 begin
     // exodus is starting up...
     _exodus := ExodusController;
 
     // init the word instance for the plugin
-    _word := TWordApplication.Create(nil);
-    _word.CheckSpelling('hello');
+    try
+        _word := TWordApplication.Create(nil);
+        _word.CheckSpelling('hello');
+    except
+        on E: Exception do begin
+            msg := 'An Exception occurred while trying to start the WordSpeller plugin. (';
+            msg := msg + E.Message + ')';
+            MessageDlg(msg, mtError, [mbOK], 0);
+        end;
+    end;
 end;
 
 procedure TWordSpeller.Shutdown;
@@ -64,6 +77,16 @@ end;
 procedure TWordSpeller.Process(const xml: WideString);
 begin
     // we are getting some kind of Packet from a callback
+end;
+
+procedure TWordSpeller.menuClick(const ID: WideString);
+begin
+    //
+end;
+
+procedure TWordSpeller.onAgentsList(const Server: WideString);
+begin
+    //
 end;
 
 initialization
