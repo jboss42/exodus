@@ -1536,6 +1536,8 @@ end;
 
 {---------------------------------------}
 procedure TfrmRosterWindow.ShowPresence(show: Widestring);
+var
+    s: Widestring;
 begin
     // display this show type
     if show = 'chat' then begin
@@ -1562,6 +1564,11 @@ begin
         lblStatusLink.Caption := sRosterAvail;
         ChangeStatusImage(ico_Online);
     end;
+
+    s := Lowercase(MainSession.Status);
+    if ((s <> '') and (s <> Lowercase(lblStatusLink.Caption))) then
+        lblStatusLink.Caption := lblStatusLink.Caption + ' (' + MainSession.Status + ')';
+
 end;
 
 {---------------------------------------}
