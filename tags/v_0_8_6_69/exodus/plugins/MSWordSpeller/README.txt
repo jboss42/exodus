@@ -1,0 +1,1 @@
+An attempt at a spell checker that uses Microsoft Word.  Use at your own peril.
