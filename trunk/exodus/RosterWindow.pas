@@ -88,7 +88,7 @@ type
     pnlConnect: TPanel;
     lblStatus: TLabel;
     lblLogin: TLabel;
-    Panel1: TPanel;
+    pnlAnimation: TPanel;
     aniWait: TAnimate;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -382,6 +382,10 @@ begin
         treeRoster.Font.Name := MainSession.Prefs.getString('roster_font_name');
         treeRoster.Font.Size := MainSession.Prefs.getInt('roster_font_size');
         treeRoster.Font.Color := TColor(MainSession.Prefs.getInt('roster_font_color'));
+
+        pnlConnect.Color := TColor(MainSession.prefs.getInt('roster_bg'));
+        pnlAnimation.Color := pnlConnect.Color;
+        aniWait.Color := pnlConnect.Color;
 
         frmExodus.pnlRoster.ShowHint := not _show_status;
         Redraw();
