@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2003-11-24 10:20\n"
-"PO-Revision-Date: 2003-11-24 10:20\n"
+"POT-Creation-Date: 2003-11-26 09:16\n"
+"PO-Revision-Date: 2003-11-26 09:16\n"
 "Last-Translator: Somebody <your.email@address.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -89,16 +89,8 @@ msgstr ""
 #: MsgQueue.dfm:11
 #. frmMsgRecv..Font.Name
 #: MsgRecv.dfm:11
-#. frmMsgRecv..pnlTop..pnlHeader..pnlSendSubject..lblSubject1..Font.Name
-#: MsgRecv.dfm:300
-#. frmMsgRecv..pnlTop..pnlHeader..pnlSubject..lblSubject2..Font.Name
-#: MsgRecv.dfm:345
-#. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..txtFrom..Font.Name
-#: MsgRecv.dfm:374
-#. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..lblFrom..Font.Name
-#: MsgRecv.dfm:394
 #. frmMsgRecv..pnlTop..pnlError..Font.Name
-#: MsgRecv.dfm:437
+#: MsgRecv.dfm:412
 #. frmPathSelector..Font.Name
 #: PathSelector.dfm:13
 #. frmPathSelector..Label1..Font.Name
@@ -161,11 +153,11 @@ msgstr ""
 #. frmInvalidRoster..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: InvalidRoster.dfm:41
 #. frmMsgRecv..frameButtons1..Panel2..Panel1..btnCancel..Caption
-#: MsgRecv.dfm:498
+#: MsgRecv.dfm:473
 #. frmRosterRecv..frameButtons1..Panel2..Panel1..btnCancel..Caption
 #: RosterRecv.dfm:48
 #. show the next event
-#: MsgRecv.pas:410
+#: MsgRecv.pas:434
 #: RecvStatus.pas:383
 #: RecvStatus.pas:610
 #: RecvStatus.pas:621
@@ -527,7 +519,7 @@ msgstr ""
 #. frmBaseChat..popOut..Copy3..Caption
 #: BaseChat.dfm:304
 #. frmMsgRecv..popClipboard..popCopy..Caption
-#: MsgRecv.dfm:560
+#: MsgRecv.dfm:535
 msgid "Copy"
 msgstr ""
 
@@ -602,9 +594,9 @@ msgstr ""
 #. frmJud..PopupMenu1..N1..Caption
 #: jud.dfm:211
 #. frmMsgRecv..popContact..N1..Caption
-#: MsgRecv.dfm:543
+#: MsgRecv.dfm:518
 #. frmMsgRecv..popContact..N2..Caption
-#: MsgRecv.dfm:552
+#: MsgRecv.dfm:527
 #. frmRoom..popRoom..popAdmin..N4..Caption
 #: Room.dfm:215
 #. frmRoom..popRoom..popAdmin..N5..Caption
@@ -722,7 +714,7 @@ msgstr ""
 #. frmTracer..Panel1..Font.Name
 #: ExceptTracer.dfm:52
 #. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..Panel1..btnClose..Font.Name
-#: MsgRecv.dfm:418
+#: MsgRecv.dfm:393
 #. frmPrefs..Font.Name
 #: Prefs.dfm:12
 #. frmRegister..Tabs..TabSheet1..Label1..Font.Name
@@ -758,7 +750,7 @@ msgstr ""
 #. frmDebug..pnlTop..btnClose..Caption
 #: Debug.dfm:251
 #. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..Panel1..btnClose..Caption
-#: MsgRecv.dfm:413
+#: MsgRecv.dfm:388
 #. frmRoom..Panel1..btnClose..Caption
 #: Room.dfm:98
 #. frmRosterWindow..pnlFind..btnFindClose..Caption
@@ -997,7 +989,7 @@ msgstr ""
 #. frmChat..popContact..popClearHistory..Caption
 #: ChatWin.dfm:105
 #. frmMsgRecv..popContact..popClearHistory..Caption
-#: MsgRecv.dfm:512
+#: MsgRecv.dfm:487
 #. frmRoom..popRoom..popClearHistory..Caption
 #: Room.dfm:172
 msgid "Clear History"
@@ -1006,7 +998,7 @@ msgstr ""
 #. frmChat..popContact..popResources..Caption
 #: ChatWin.dfm:113
 #. frmMsgRecv..popContact..mnuResources..Caption
-#: MsgRecv.dfm:547
+#: MsgRecv.dfm:522
 #. frmProfile..PageControl1..TabSheet7..Caption
 #: Profile.dfm:162
 msgid "Resources"
@@ -1035,7 +1027,7 @@ msgstr ""
 #. frmChat..popContact..C1..mnuVersionRequest..Caption
 #: ChatWin.dfm:133
 #. frmMsgRecv..popContact..C1..mnuVersionRequest..Caption
-#: MsgRecv.dfm:522
+#: MsgRecv.dfm:497
 #. frmRosterWindow..popRoster..popClientInfo..popVersion..Caption
 #: RosterWindow.dfm:336
 msgid "Version Request"
@@ -1044,7 +1036,7 @@ msgstr ""
 #. frmChat..popContact..C1..mnuTimeRequest..Caption
 #: ChatWin.dfm:137
 #. frmMsgRecv..popContact..C1..mnuTimeRequest..Caption
-#: MsgRecv.dfm:526
+#: MsgRecv.dfm:501
 #. frmRosterWindow..popRoster..popClientInfo..popTime..Caption
 #: RosterWindow.dfm:340
 msgid "Time Request"
@@ -1053,7 +1045,7 @@ msgstr ""
 #. frmChat..popContact..C1..mnuLastActivity..Caption
 #: ChatWin.dfm:141
 #. frmMsgRecv..popContact..C1..mnuLastActivity..Caption
-#: MsgRecv.dfm:530
+#: MsgRecv.dfm:505
 #. frmProfile..PageControl1..TabSheet7..Panel2..btnLast..Caption
 #: Profile.dfm:206
 #. frmRosterWindow..popRoster..popClientInfo..popLast..Caption
@@ -1065,7 +1057,7 @@ msgstr ""
 #. frmChat..popContact..mnuBlock..Caption
 #: ChatWin.dfm:146
 #. frmMsgRecv..popContact..mnuBlock..Caption
-#: MsgRecv.dfm:535
+#: MsgRecv.dfm:510
 msgid "Block Contact"
 msgstr ""
 
@@ -1856,8 +1848,8 @@ msgstr ""
 #: Jabber1.dfm:7
 #: ConnDetails.pas:401
 #. do this.
-#: ExSession.pas:474
-#: ExUtils.pas:1215
+#: ExSession.pas:475
+#: ExUtils.pas:1207
 #: Jabber1.pas:1189
 #: Login.pas:104
 #: Login.pas:177
@@ -2402,66 +2394,64 @@ msgstr ""
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlSendSubject..lblSubject1..Caption
 #: MsgRecv.dfm:295
-msgid "Subject:    "
+msgid "Subject: "
 msgstr ""
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlSubject..txtSubject..Caption
-#: MsgRecv.dfm:332
+#: MsgRecv.dfm:326
 msgid "txtSubject"
 msgstr ""
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlSubject..lblSubject2..Caption
-#: MsgRecv.dfm:340
+#: MsgRecv.dfm:334
 #. frmRoom..Panel1..pnlSubj..lblSubjectURL..Caption
 #: Room.dfm:124
 msgid "Subject:"
 msgstr ""
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..txtFrom..Caption
-#: MsgRecv.dfm:369
+#: MsgRecv.dfm:357
 msgid "txtFrom"
 msgstr ""
 
 #. frmMsgRecv..pnlTop..pnlHeader..pnlFrom..lblFrom..Caption
-#: MsgRecv.dfm:389
-#. frmRosterRecv..pnlFrom..StaticText1..Caption
-#: RosterRecv.dfm:69
-msgid "From:    "
+#: MsgRecv.dfm:370
+msgid "From: "
 msgstr ""
 
 #. frmMsgRecv..frameButtons1..Panel2..Panel1..btnOK..Caption
-#: MsgRecv.dfm:494
+#: MsgRecv.dfm:469
 msgid "Reply"
 msgstr ""
 
 #. frmMsgRecv..popContact..mnuHistory..Caption
-#: MsgRecv.dfm:508
+#: MsgRecv.dfm:483
 #. frmRoom..popRoom..popShowHistory..Caption
 #: Room.dfm:168
 msgid "Show History"
 msgstr ""
 
 #. frmMsgRecv..popContact..mnuProfile..Caption
-#: MsgRecv.dfm:516
+#: MsgRecv.dfm:491
 #. frmSubscribe..PopupMenu1..mnuProfile..Caption
 #: subscribe.dfm:138
 msgid "Show Profile"
 msgstr ""
 
 #. frmMsgRecv..popContact..C1..Caption
-#: MsgRecv.dfm:520
+#: MsgRecv.dfm:495
 #. frmRosterWindow..popRoster..popClientInfo..Caption
 #: RosterWindow.dfm:334
 msgid "Client Info"
 msgstr ""
 
 #. frmMsgRecv..popContact..mnuSendFile..Caption
-#: MsgRecv.dfm:539
+#: MsgRecv.dfm:514
 msgid "Send File"
 msgstr ""
 
 #. frmMsgRecv..popClipboard..popPaste..Caption
-#: MsgRecv.dfm:564
+#: MsgRecv.dfm:539
 msgid "Paste"
 msgstr ""
 
@@ -2566,7 +2556,7 @@ msgstr ""
 #: Prefs.dfm:2638
 #. frmXferManager..Panel1..pnlCaption..Caption
 #: XferManager.dfm:53
-#: ExSession.pas:484
+#: ExSession.pas:485
 #. frmPrefNotify..chkNotify....Items.WideStrings
 #: prefs/PrefNotify.dfm:43
 #: prefs/PrefNotify.pas:102
@@ -3513,7 +3503,7 @@ msgstr ""
 #: vcard.dfm:311
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:716
-msgid "Colubmia  "
+msgid "Columbia  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -4591,7 +4581,7 @@ msgstr ""
 #: vcard.dfm:409
 #. frmVCard..PageControl1..TabSheet6..txtWorkCountry....Items.WideStrings
 #: vcard.dfm:814
-msgid "Morocoo  "
+msgid "Morocco  "
 msgstr ""
 
 #. frmProfile..PageControl1..TabSheet4..txtHomeCountry....Items.WideStrings
@@ -5972,6 +5962,11 @@ msgstr ""
 msgid "Receiving Contacts"
 msgstr ""
 
+#. frmRosterRecv..pnlFrom..StaticText1..Caption
+#: RosterRecv.dfm:69
+msgid "From:    "
+msgstr ""
+
 #. frmRosterRecv..Panel1..Label2..Caption
 #: RosterRecv.dfm:226
 msgid "Add contacts to this group:"
@@ -6000,9 +5995,9 @@ msgstr ""
 
 #. frmRosterWindow..pnlShow..pnlStatus..lblStatusLink..Caption
 #: RosterWindow.dfm:244
-#: ExUtils.pas:860
-#: ExUtils.pas:878
-#: ExUtils.pas:896
+#: ExUtils.pas:852
+#: ExUtils.pas:870
+#: ExUtils.pas:888
 #: RosterWindow.pas:367
 #. it at all times (if it exists).
 #: RosterWindow.pas:1245
@@ -6202,7 +6197,7 @@ msgstr ""
 #. frmSubscribe..frameButtons1..Panel2..Panel1..btnOK..Caption
 #: subscribe.dfm:124
 #. Change button captions for TC Invites
-#: MsgRecv.pas:347
+#: MsgRecv.pas:371
 msgid "Accept"
 msgstr ""
 
@@ -6620,52 +6615,52 @@ msgstr ""
 msgid "Missing file:"
 msgstr ""
 
-#: ExSession.pas:475
+#: ExSession.pas:476
 #: prefs/PrefNotify.pas:100
 msgid "Activity in a chat window"
 msgstr ""
 
-#: ExSession.pas:476
+#: ExSession.pas:477
 #: prefs/PrefNotify.pas:98
 msgid "Invited to a room"
 msgstr ""
 
-#: ExSession.pas:477
+#: ExSession.pas:478
 #: prefs/PrefNotify.pas:99
 msgid "Keyword in a room"
 msgstr ""
 
-#: ExSession.pas:478
+#: ExSession.pas:479
 #: prefs/PrefNotify.pas:95
 msgid "New conversation"
 msgstr ""
 
-#: ExSession.pas:479
+#: ExSession.pas:480
 #: prefs/PrefNotify.pas:96
 msgid "Received a normal message"
 msgstr ""
 
-#: ExSession.pas:480
+#: ExSession.pas:481
 #: prefs/PrefNotify.pas:94
 msgid "Contact went offline"
 msgstr ""
 
-#: ExSession.pas:481
+#: ExSession.pas:482
 #: prefs/PrefNotify.pas:93
 msgid "Contact came online"
 msgstr ""
 
-#: ExSession.pas:482
+#: ExSession.pas:483
 #: prefs/PrefNotify.pas:101
 msgid "Activity in a room"
 msgstr ""
 
-#: ExSession.pas:483
+#: ExSession.pas:484
 #: prefs/PrefNotify.pas:97
 msgid "Subscription request"
 msgstr ""
 
-#: ExSession.pas:485
+#: ExSession.pas:486
 #: prefs/PrefNotify.pas:103
 msgid "Auto response generated"
 msgstr ""
@@ -6717,39 +6712,63 @@ msgstr ""
 msgid "Could not open log file: "
 msgstr ""
 
-#: ExUtils.pas:766
+#: ExUtils.pas:598
+msgid " unknown last result: "
+msgstr ""
+
+#: ExUtils.pas:609
+msgid "%d day, "
+msgid_plural ""
+msgstr[0] ""
+
+#: ExUtils.pas:610
+msgid "%d hour, "
+msgid_plural ""
+msgstr[0] ""
+
+#: ExUtils.pas:611
+msgid "%d minute, "
+msgid_plural ""
+msgstr[0] ""
+
+#: ExUtils.pas:612
+msgid "%d second."
+msgid_plural ""
+msgstr[0] ""
+
+#: ExUtils.pas:758
 msgid "This message contains %d roster items."
 msgstr ""
 
-#: ExUtils.pas:854
-#: ExUtils.pas:872
-#: ExUtils.pas:890
+#: ExUtils.pas:846
+#: ExUtils.pas:864
+#: ExUtils.pas:882
 #: RosterWindow.pas:373
 #: RosterWindow.pas:666
 msgid "Bookmarks"
 msgstr ""
 
-#: ExUtils.pas:857
-#: ExUtils.pas:875
-#: ExUtils.pas:893
+#: ExUtils.pas:849
+#: ExUtils.pas:867
+#: ExUtils.pas:885
 #: RosterWindow.pas:372
 msgid "Unfiled"
 msgstr ""
 
-#: ExUtils.pas:1236
+#: ExUtils.pas:1228
 msgid "Untitled Group"
 msgstr ""
 
-#: ExUtils.pas:1237
+#: ExUtils.pas:1229
 msgid "New Roster Group"
 msgstr ""
 
-#: ExUtils.pas:1237
+#: ExUtils.pas:1229
 msgid "Enter new group name: "
 msgstr ""
 
 #. add the new grp.
-#: ExUtils.pas:1242
+#: ExUtils.pas:1234
 msgid "This group already exists!"
 msgstr ""
 
@@ -6977,35 +6996,35 @@ msgid "Exodus could not create or write to the spool directory specified in "
 "the options."
 msgstr ""
 
-#: MsgRecv.pas:348
+#: MsgRecv.pas:372
 msgid "Decline"
 msgstr ""
 
 #. This is an error.. show the error panel
-#: MsgRecv.pas:355
+#: MsgRecv.pas:379
 msgid "Error:"
 msgstr ""
 
-#: MsgRecv.pas:378
+#: MsgRecv.pas:402
 msgid "To:"
 msgstr ""
 
-#: MsgRecv.pas:412
-#: MsgRecv.pas:724
+#: MsgRecv.pas:436
+#: MsgRecv.pas:748
 msgid "Next"
 msgstr ""
 
-#: MsgRecv.pas:657
-#: MsgRecv.pas:664
+#: MsgRecv.pas:681
+#: MsgRecv.pas:688
 msgid "Message to "
 msgstr ""
 
-#: MsgRecv.pas:659
-#: MsgRecv.pas:666
+#: MsgRecv.pas:683
+#: MsgRecv.pas:690
 msgid "Message from "
 msgstr ""
 
-#: MsgRecv.pas:736
+#: MsgRecv.pas:760
 msgid "You have unread messages. Read all messages before closing the "
 "window."
 msgstr ""
@@ -8634,17 +8653,17 @@ msgstr ""
 msgid "Clear all custom presence entries?"
 msgstr ""
 
-#: prefs/PrefSystem.pas:175
+#: prefs/PrefSystem.pas:178
 msgid "Exodus is set to use a language which is not available on your "
 "system. Resetting language to default."
 msgstr ""
 
-#: prefs/PrefSystem.pas:225
+#: prefs/PrefSystem.pas:230
 msgid "You must exit exodus, and restart it before your new locale settings "
 "will take affect."
 msgstr ""
 
-#: prefs/PrefSystem.pas:261
+#: prefs/PrefSystem.pas:268
 msgid "No new update available."
 msgstr ""
 
