@@ -39,7 +39,6 @@ function WindowsVersion(var verinfo: string): integer;
 function JabberToDateTime(datestr: string): TDateTime;
 function DateTimeToJabber(dt: TDateTime): string;
 
-function JIDTOFilename(jid: string): string;
 function URLToFilename(url: string): string;
 
 procedure LogMessage(Msg: TJabberMessage);
@@ -55,6 +54,7 @@ uses
     ShellAPI, 
     MsgDisplay,
     Session,
+    XMLUtils,
     JabberID;
 
 {---------------------------------------}
@@ -244,29 +244,12 @@ begin
 end;
 
 {---------------------------------------}
-function JIDTOFilename(jid: string): string;
-var
-    i: integer;
-    c, fn: string;
-begin
-    fn := '';
-    for i := 0 to Length(jid) - 1 do begin
-        c := jid[i + 1];
-        if ( (c='@') or (c=':') or (c='|') or (c='<') or
-        (c='>') or (c='\') or (c='/') or (c='*') ) then
-            fn := fn + '_'
-        else
-            fn := fn + c;
-        end;
-    Result := fn;
-end;
-
 procedure ShowLog(jid: string);
 var
     fn: string;
 begin
     fn := MainSession.Prefs.getString('log_path');
-    fn := fn + JIDToFilename(jid) + '.html';
+    fn := fn + MungeName(jid) + '.html';
 
     ShellExecute(0, 'open', PChar(fn), '', '', SW_NORMAL);
 end;
@@ -293,7 +276,7 @@ begin
     else
         _jid := TJabberID.Create(Msg.FromJID);
 
-    fn := fn + JIDTOFilename(_jid.jid) + '.html';
+    fn := fn + MungeName(_jid.jid) + '.html';
     AssignFile(f, fn);
     if FileExists(fn) then begin
         fh := FileOpen(fn, fmOpenRead);
